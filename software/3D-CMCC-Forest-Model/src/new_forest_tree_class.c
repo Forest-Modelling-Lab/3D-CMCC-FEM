@@ -40,7 +40,7 @@ static int fill_cell(cell_t *const c)
 	}
 	c->heights[c->heights_count-1] = height;
 	//ALESSIOC change height_sapling in replanted_height
-	c->heights[c->heights_count-1].value = g_settings->height_sapling;
+	c->heights[c->heights_count-1].value = g_settings->replanted_height;
 
 	h = &c->heights[c->heights_count-1];
 			
@@ -49,8 +49,7 @@ static int fill_cell(cell_t *const c)
 		return 0;
 	}
 	h->ages[h->ages_count-1] = age;
-	//ALESSIOC change age_sapling in replanted_age
-	h->ages[h->ages_count-1].value = g_settings->age_sapling;
+	h->ages[h->ages_count-1].value = g_settings->replanted_age;
 	a = &h->ages[h->ages_count-1];
 
 	if ( ! alloc_struct((void **)&a->species, &a->species_count, sizeof(species_t)) )
@@ -65,12 +64,12 @@ static int fill_cell(cell_t *const c)
 	// ALESSIOR fix, must use e_management 
 	a->species[a->species_count-1].management = 0; /* T */
 	a->species[a->species_count-1].name = p;
-	a->species[a->species_count-1].counter[N_TREE] = g_settings->replanted_tree;
+	a->species[a->species_count-1].counter[N_TREE] = g_settings->replanted_n_tree;
 	a->species[a->species_count-1].counter[N_STUMP] = 0;
 	//ALESSIOC change avdbh_sapling in replanted_avdbh
-	a->species[a->species_count-1].value[AVDBH] = g_settings->avdbh_sapling;
+	a->species[a->species_count-1].value[AVDBH] = g_settings->replanted_avdbh;
 	//ALESSIOC change lai_sapling in replanted_lai
-	a->species[a->species_count-1].value[LAI] = g_settings->lai_sapling;
+	a->species[a->species_count-1].value[LAI] = g_settings->replanted_lai;
 	//ALESSIOC check turnover...wtf ?
 	a->species[a->species_count-1].turnover = NULL; //malloc(a->species_count*sizeof*a->species[a->species_count-1].turnover);
 	//if ( ! a->species[a->species_count-1].turnover ) return 0;
@@ -100,7 +99,7 @@ int add_new_tree_class (cell_t *const c, const int height, const int age, const 
 	logger(g_log, "**ages_count = %d \n", h->ages_count);
 	logger(g_log, "**species_count = %d \n", a->species_count);
 	logger(g_log, "**height_sapling = %f\n", h->value);
-	logger(g_log, "**age_sapling = %d\n", a->value);
+	logger(g_log, "**replanted_age = %d\n", a->value);
 	logger(g_log, "**avdbh sampling = %f\n", s->value[AVDBH]);
 	logger(g_log, "**n tree %d of %s\n", s->counter[N_TREE], s->name);
 	*/

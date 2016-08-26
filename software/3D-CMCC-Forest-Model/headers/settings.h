@@ -35,15 +35,21 @@ typedef struct {
 	double max_layer_cover;
 
 	/* management / renovation (human or natural) input */
-	double removing_basal_area; /* percentage of basal area to remove per sizecell */
-	double replanted_tree;		/* number of replanted trees per sizecell */
-	double age_sapling;
-	double avdbh_sapling;
-	double lai_sapling;
-	double height_sapling;
-	double ws_sapling;			/* probably no need to be used */
-	double wr_sapling;			/* probably no need to be used */
-	double wf_sapling;			/* probably no need to be used */
+	double removing_basal_area;          /* percentage of basal area to remove per sizecell (mandatory) */
+	double replanted_n_tree;             /* number of replanted trees per sizecell (mandatory) */
+	double replanted_age;                /* age of replanted trees (mandatory) */
+	double replanted_avdbh;              /* average dbh of replanted trees (mandatory) */
+	double replanted_lai;                /* LAI of replanted trees (mandatory) */
+	double replanted_height;             /* height of replanted trees (mandatory) */
+	/* biomass */
+	double replanted_ws;                 /* stem biomass of replanted trees (probably no need to be used) (optional)*/
+	double replanted_wcr;                /* coarse root of replanted trees (probably no need to be used) (optional) */
+	double replanted_wfr;                /* fine root biomass of replanted trees (probably no need to be used) (optional) */
+	double replanted_wl;                 /* leaf biomass of replanted trees (probably no need to be used) (optional) */
+	double replanted_wbb;                /* branch biomass of replanted trees (probably no need to be used) (optional) */
+
+	/* renovation */
+	//ALESSIOC include data for sapling (avdbh, height, number of saplings etc )
 	double light_estab_very_tolerant;
 	double light_estab_tolerant;
 	double light_estab_intermediate;

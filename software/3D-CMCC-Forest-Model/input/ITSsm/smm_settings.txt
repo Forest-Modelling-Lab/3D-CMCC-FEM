@@ -22,18 +22,21 @@ SOIL_LAYER "2"	//define soil layer/s to consider
 MIN_LAYER_COVER "0.0001"
 MAX_LAYER_COVER "0.95"
 
-//INIDIVIDUAL BIOMASS VALUES FOR SAPLING PASSING TO ADULT
+//NATURAL/HUMAN (management)REGENERATION CLASS BIOMASS VALUES
 //MANAGMENT (optional)
-REMOVING_BASAL_AREA "0" // % percentage of basal area to remove per sizecell
-REPLANTED_SPECIES "none"
-REPLANTED_TREE "0"
-AGE_SAPLING "0"
-AVDBH_SAPLING "0.5"
-LAI_SAPLING "2"
-HEIGHT_SAPLING "0.5"
-WS_SAPLING "0.00001"
-WR_SAPLING "0.000005"
-WF_SAPLING "0.0000001"
+REMOVING_BASAL_AREA "0"     // % percentage of basal area to remove per sizecell
+REPLANTED_SPECIES "none"    //species name of replanted trees (mandatory)
+REPLANTED_MANAGEMENT "T"    // (T) management of replated trees (should be only T)(mandatory)
+REPLANTED_TREE "0"          //number of replanted trees (mandatory)
+REPLANTED_AGE "0"           // (yr) age of replanted trees (mandatory)
+REPLANTED_AVDBH "0"         // (cm) average dbh of replanted trees (mandatory)
+REPLANTED_LAI "0"           // (m2/m2) lai for replanted trees (mandatory for evergreen, useless for deciduous)
+REPLANTED_HEIGHT "0"        // (m) height of replanted trees (mandatory)
+REPLANTED_WS "0"            // (tDM/ha) stem biomass of replanted trees (optional)
+REPLANTED_WCR "0"           // (tDM/ha) coarse root biomass of replanted trees (optional)
+REPLANTED_WFR "0"           // (tDM/ha) fine root biomass of replanted trees (optional)
+REPLANTED_WL "0"            // (tDM/ha) leaf biomass of replanted trees (optional for evergreen if LAI!= 0, otherwise useless)
+REPLANTED_WBB "0"           // (tDM/ha) branch biomass of replanted trees (optional)
 
 //MINIMUM PAR AT FOREST FLOOR FOR ESTABLISHMENT (W/m^2)
 LIGHT_ESTAB_VERY_TOLERANT "0.3"

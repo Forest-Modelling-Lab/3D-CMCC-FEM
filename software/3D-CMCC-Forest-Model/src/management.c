@@ -69,7 +69,7 @@ void forest_management (cell_t *const c, const int layer, const int height, cons
 
 			clearcut_timber_without_request ( c, layer, height, age, species, year );
 
-			if(g_settings->replanted_tree != 0.0)
+			if(g_settings->replanted_n_tree != 0.0)
 			{
 				if ( ! add_new_tree_class( c, height, age, species ) )
 				{
