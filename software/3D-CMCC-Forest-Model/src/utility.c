@@ -336,6 +336,11 @@ void reset_monthly_class_variables(cell_t *const c)
 			{
 				s = &a->species[species];
 
+				s->value[MONTHLY_GPP_gC] = 0;
+				s->value[MONTHLY_TOTAL_AUT_RESP] = 0.;
+				s->value[MONTHLY_NPP_gC] = 0.;
+				s->value[MONTHLY_CANOPY_EVAPO_TRANSP] = 0.;
+				s->value[MONTHLY_CANOPY_LATENT_HEAT] = 0.;
 				s->value[MONTHLY_LEAF_AUT_RESP] = 0.;
 				s->value[MONTHLY_FINE_ROOT_AUT_RESP] = 0.;
 				s->value[MONTHLY_STEM_AUT_RESP] = 0.;
