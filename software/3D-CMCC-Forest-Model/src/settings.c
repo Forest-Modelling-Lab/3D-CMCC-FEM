@@ -106,6 +106,20 @@ settings_t* settings_import(const char *const filename) {
 				strncpy(s->replanted_species, (const char*)token, SETTINGS_REPLANTED_SPECIES_MAX_SIZE-1);
 			break;
 
+			// ALESSIOR fix, must use e_management from matrix.h
+			case 21:
+				if ( ('T' == token[0]) || ('t' == token[0]) ) {
+					s->replanted_management = 0;
+				} else if ( ('C' == token[0]) || ('c' == token[0]) ) {
+					s->replanted_management = 1;
+				} else {
+					printf("bad management specified in settings: %s\n", token);
+					free(s);
+					fclose(f);
+					return 0;
+				}
+			break;
+
 			default:
 				*p_field = convert_string_to_float(token, &err);
 				if ( err ) {

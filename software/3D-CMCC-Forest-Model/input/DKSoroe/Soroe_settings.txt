@@ -27,6 +27,7 @@ MAX_LAYER_COVER "1.2"
 //MANAGMENT (optional)
 REMOVING_BASAL_AREA "0" // % percentage of basal area to remove per sizecell
 REPLANTED_SPECIES "none"
+REPLANTED_MANAGEMENT "T"
 REPLANTED_TREE "0"
 AGE_SAPLING "0"
 AVDBH_SAPLING "0.5"

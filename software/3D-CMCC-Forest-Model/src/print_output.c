@@ -1,30 +1,62 @@
 /* cumulative_balance.c */
 #include <stdlib.h>
+#include <string.h>
+#include <assert.h>
 #include "print_output.h"
 #include "common.h"
 #include "settings.h"
 #include "soil_settings.h"
 #include "logger.h"
 #include "g-function.h"
+#include "nc.h"
 
 extern settings_t* g_settings;
 extern soil_settings_t* g_soil_settings;
-//extern logger_t* g_log;
 extern logger_t* g_daily_log;
 extern logger_t* g_monthly_log;
 extern logger_t* g_annual_log;
 extern logger_t* g_soil_log;
-//extern char *g_sz_input_file;
-//extern char *g_sz_parameterization_file;
+extern char *g_sz_input_file;
+extern char *g_sz_parameterization_path;
 extern char *g_sz_soil_file;
-extern char *g_input_met_file;
-//extern char *g_sz_settings_file;
-//extern char *g_sz_topo_file;
+extern char *g_sz_input_met_file;
+extern char *g_sz_settings_file;
+extern char *g_sz_topo_file;
 
-
+extern const char sz_launched[];
 
 extern int MonthLength [];
 extern int MonthLength_Leap [];
+
+static const char* get_filename(const char *const s) {
+	const char *p;
+	const char *p2;
+
+	p = NULL;
+
+	if ( s ) {
+		p = strrchr(s, '/');
+		if ( p ) ++p;
+		p2 = strrchr(s, '\\');
+		if ( p2 ) ++p2;
+		if ( p2 > p ) p = p2;
+		if ( ! p ) p = s;
+	}
+
+	return p;
+}
+
+static void write_paths(logger_t *const _log) {
+	assert(_log);
+
+	logger(_log, "\n\nsite: %s\n", get_filename(g_soil_settings->sitename));
+	logger(_log, "input file = %s\n", get_filename(g_sz_input_met_file));
+	logger(_log, "soil file = %s\n", get_filename(g_sz_soil_file));
+	logger(_log, "topo file = %s\n", get_filename(g_sz_topo_file));
+	logger(_log, "met file = %s\n", get_filename(g_sz_input_met_file));
+	logger(_log, "settings file = %s\n", get_filename(g_sz_settings_file));
+}
+
 
 void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, const int month, const int year, const int years_of_simulation )
 {
@@ -189,16 +221,6 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 	}
 	/************************************************************************/
 
-	//	/* printing variables at cell level */
-	//	logger(g_daily_log, "\t%3.2f \t%3.2f \t%3.2f \t%3.2f \t%3.2f \t%3.2f \t%3.2f\n",
-	//			c->annual_gpp,
-	//			c->annual_npp_gC,
-	//			c->annual_aut_resp,
-	//			(c->annual_aut_resp/c->annual_gpp)*100.0,
-	//			c->annual_et,
-	//			c->annual_latent_heat_flux,
-	//			c->asw);
-
 	/* printing variables at cell level only if there's more than one layer */
 	if( c->heights_count > 1 )
 	{
@@ -222,20 +244,14 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 
 	/************************************************************************/
 
-
-
-	//ALESSIOR at the end of simulation
-	//logger(g_annual_log, "\n3D-CMCC Forest Ecosystem Model v."PROGRAM_VERSION"\n");
-	//logger(g_daily_log, "\nrunned: "__DATE__" at "__TIME__"\n");
-	if ( ( IS_LEAP_YEAR( c->years[year].year ) ? (MonthLength_Leap[11]) : (MonthLength[11] )) == c->doy )
+	if ( c->doy == ( IS_LEAP_YEAR( c->years[year].year ) ? 366 : 365 ) )
 	{
 		++years_counter;
 
 		if ( years_counter ==  years_of_simulation)
 		{
-			//ALESSIOR
-			//logger(g_annual_log, "\n3D-CMCC Forest Ecosystem Model v."PROGRAM_VERSION"\n");
-			logger(g_daily_log, "\nrunned: "__DATE__" at "__TIME__"\n");
+			logger(g_daily_log, sz_launched, netcdf_get_version(), get_datetime());
+			write_paths(g_daily_log);
 		}
 	}
 }
@@ -252,19 +268,14 @@ void EOM_print_cumulative_balance_cell_level(cell_t *const c, const int month, c
 		logger(g_monthly_log, "%s \t%2s \t%2s", "YEAR", "MONTH", "LC");
 	}
 
-
-	//ALESSIOR at the end of simulation
-	//logger(g_annual_log, "\n3D-CMCC Forest Ecosystem Model v."PROGRAM_VERSION"\n");
-	//logger(g_monthly_log, "\nrunned: "__DATE__" at "__TIME__"\n");
 	if ( ( IS_LEAP_YEAR( c->years[year].year ) ? (MonthLength_Leap[11]) : (MonthLength[11] )) == c->doy )
 	{
 		++years_counter;
 
 		if ( years_counter ==  years_of_simulation)
 		{
-			//ALESSIOR
-			//logger(g_annual_log, "\n3D-CMCC Forest Ecosystem Model v."PROGRAM_VERSION"\n");
-			logger(g_monthly_log, "\nrunned: "__DATE__" at "__TIME__"\n");
+			logger(g_monthly_log, sz_launched, netcdf_get_version(), get_datetime());
+			write_paths(g_monthly_log);
 		}
 	}
 }
@@ -506,16 +517,8 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 
 	if ( years_counter ==  years_of_simulation)
 	{
-		//ALESSIOR
-		//logger(g_annual_log, "\n3D-CMCC Forest Ecosystem Model v."PROGRAM_VERSION"\n");
-		logger(g_annual_log, "\n\nSites: %s\n", g_soil_settings->sitename);
-		//logger(g_annual_log, "input file = %s\n", );
-		//logger(g_annual_log, "parameterization file= %s\n", );
-		logger(g_annual_log, "soil file = %s\n", g_sz_soil_file);
-		//logger(g_annual_log, "topo path = %s\n", );
-		logger(g_annual_log, "met path = %s\n", g_input_met_file);
-		//logger(g_annual_log, "settings path = %s\n", );
-		logger(g_annual_log, "\nrunned: "__DATE__" at "__TIME__"\n");
+		logger(g_annual_log, sz_launched, netcdf_get_version(), get_datetime());
+		write_paths(g_annual_log);
 	}
 }
 

@@ -2,6 +2,9 @@
 #ifndef COMMON_H
 #define COMMON_H
 
+#define PROGRAM_VERSION	"5.2.2"
+#define PROGRAM_NAME "3D-CMCC Forest Ecosystem Model v."PROGRAM_VERSION""
+
 #ifdef _WIN32
 #define FOLDER_DELIMITER	"\\"
 #define FOLDER_DELIMITER_C	'\\'
@@ -48,5 +51,6 @@ char* get_current_path(void);
 int file_get_rows_count(const char* const filename);
 unsigned int file_load_in_memory(const char* const filename, char** result);
 int path_create(const char *const path);
+char* get_datetime(void);
 
 #endif /* COMMON_H */

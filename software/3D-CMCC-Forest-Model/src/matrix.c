@@ -848,20 +848,6 @@ static const char *sz_species_values[] = {
 /* error strings */
 extern const char sz_err_out_of_memory[];
 
-
-/* */
-static int alloc_struct(void** t, int* count, unsigned int size) {
-	void *no_leak;
-
-	no_leak = realloc(*t, ++*count*size);
-	if ( ! no_leak ) {
-		--*count;
-		return 0;
-	}
-	*t = no_leak;
-	return 1;
-}
-
 static int fill_cell_from_species(age_t* const a, const row_t* const row) {
 	static species_t species = { 0 };
 	char *p;
@@ -924,22 +910,6 @@ static int fill_cell_from_heights(cell_t *const c, const row_t *const row)
 
 	// add age
 	return fill_cell_from_ages(&c->heights[c->heights_count-1], row);
-}
-/****************************************************************************/
-static int layer_add(cell_t* const c)
-{
-	int ret;
-	static tree_layer_t t_layer = { 0 };
-
-	assert(c);
-
-	ret = alloc_struct((void **)&c->t_layers, &c->t_layers_count, sizeof(tree_layer_t));
-	if ( ret )
-	{
-		c->t_layers[c->t_layers_count-1] = t_layer;
-	}
-
-	return ret;
 }
 
 /****************************************************************************/
@@ -1275,6 +1245,7 @@ matrix_t* matrix_create(const char* const filename) {
 	}
 
 	/* add layer, set z, add layer */
+	/*
 	{
 		int count = 0;
 		for ( cell = 0; cell < m->cells_count; ++cell ) {
@@ -1307,6 +1278,7 @@ matrix_t* matrix_create(const char* const filename) {
 			}
 		}
 	}
+	*/
 
 	/* compute x and y cells count */
 	if ( ! compute_x_y_cells_count(m) ) {

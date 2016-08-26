@@ -244,6 +244,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\canopy_interception.c"
+				>
+			</File>
+			<File
 				RelativePath=".\src\canopy_net_radiation.c"
 				>
 			</File>
@@ -268,10 +272,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\check_prcp.c"
-				>
-			</File>
-			<File
 				RelativePath=".\src\common.c"
 				>
 			</File>
@@ -281,10 +281,6 @@
 			</File>
 			<File
 				RelativePath=".\src\crowding-competition.c"
-				>
-			</File>
-			<File
-				RelativePath=".\src\cumulative_balance.c"
 				>
 			</File>
 			<File
@@ -324,7 +320,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\leafFall.c"
+				RelativePath=".\src\leaf_fall.c"
 				>
 			</File>
 			<File
@@ -376,6 +372,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\new_forest_tree_class.c"
+				>
+			</File>
+			<File
 				RelativePath=".\src\output.c"
 				>
 			</File>
@@ -400,11 +400,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\print_output.c"
+				>
+			</File>
+			<File
 				RelativePath=".\src\renovation.c"
 				>
 			</File>
 			<File
 				RelativePath=".\src\settings.c"
+				>
+			</File>
+			<File
+				RelativePath=".\src\snow.c"
 				>
 			</File>
 			<File

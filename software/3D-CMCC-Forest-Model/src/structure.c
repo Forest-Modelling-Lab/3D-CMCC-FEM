@@ -11,22 +11,57 @@
 #include "g-function.h"
 #include "mortality.h"
 #include "structure.h"
+#include "G-Function.h"
 
 extern settings_t* g_settings;
 extern logger_t* g_log;
 
+extern const char sz_err_out_of_memory[];
+
+/* */
+int alloc_struct(void** t, int* count, unsigned int size) {
+	void *no_leak;
+
+	no_leak = realloc(*t, ++*count*size);
+	if ( ! no_leak ) {
+		--*count;
+		return 0;
+	}
+	*t = no_leak;
+	return 1;
+}
+
+static int layer_add(cell_t* const c)
+{
+	int ret;
+	static tree_layer_t t_layer = { 0 };
+
+	assert(c);
+
+	ret = alloc_struct((void **)&c->t_layers, &c->t_layers_count, sizeof(tree_layer_t));
+	if ( ret )
+	{
+		c->t_layers[c->t_layers_count-1] = t_layer;
+	}
+
+	return ret;
+}
+
 void forest_structure (cell_t *const c, const meteo_daily_t *const meteo_daily, const int day, const int month, const int year)
 {
 	logger(g_log, "day %d month %d\n", day, month);
-	if ( !day && !month)
+	if ( ! day && ! month )
 	{
-		annual_forest_structure ( c );
+		if ( ! annual_forest_structure ( c ) ) {
+			puts(sz_err_out_of_memory);
+			exit(1);
+		}
 
 		layer_self_pruning_thinning ( c );
 	}
 }
 /*************************************************************************************************************************/
-void annual_forest_structure(cell_t* const c)
+int annual_forest_structure(cell_t* const c)
 {
 	int layer;
 	int height;
@@ -42,32 +77,42 @@ void annual_forest_structure(cell_t* const c)
 
 	logger(g_log, "\n***ANNUAL FOREST STRUCTURE***\n");
 
-	/* reset values */
-	/* note: do no remove from here */
-	//fixme very porcata
+	assert(! c->t_layers_count);
+
 	c->t_layers_count = 0;
 	c->cell_n_trees = 0;
 	c->cell_cover = 0;
 
+	/* add 1 layer */
+	if ( ! layer_add(c) ) return 0;
+
+	/* compute height_z
+
+	ALESSIOR: please ALESSIOC explain...
+
+	*/
 	/* compute number of annual layers */
-	logger(g_log, "*compute number of annual forest layers*\n\n");
-
-	/* sort by descending height class*/
-	qsort ( c->heights, c->heights_count, sizeof (height_t), sort_by_heights_asc );
-
-	for ( height = c->heights_count - 1; height >= 0; --height )
+	logger(g_log, "*compute height_z*\n\n");
+	logger(g_log, "*compute number of annual forest layers*\n\n");	
 	{
-		/* first height class processed */
-		if ( height == c->heights_count - 1 )
-		{
-			c->t_layers_count = 1;
+		int count = 0;		
+
+		qsort(c->heights, c->heights_count, sizeof(height_t), sort_by_heights_desc);
+		for ( height = 0; height < c->heights_count - 1; ++height ) {
+			assert(! c->heights[height].height_z);
+			if ( (c->heights[height].value - c->heights[height+1].value) > g_settings->tree_layer_limit ) {
+				c->heights[height].height_z = 1;
+				++count;
+
+				if ( ! layer_add(c) ) return 0;
+			}
 		}
-		/* other classes processed */
-		else
-		{
-			if ( ( c->heights[height + 1].value - c->heights[height].value ) > g_settings->tree_layer_limit )
-			{
-				++c->t_layers_count;
+	
+		qsort(c->heights, c->heights_count, sizeof(height_t), sort_by_heights_desc);
+
+		for ( height = 0; height < c->heights_count - 1; ++height ) {
+			if ( c->heights[height].height_z ) {
+				c->heights[height].height_z = count--;
 			}
 		}
 	}
@@ -75,44 +120,9 @@ void annual_forest_structure(cell_t* const c)
 	logger(g_log, "-Number of layers = %d cell\n\n", c->t_layers_count);
 	logger(g_log,"***********************************\n");
 
-	/*************************************************************************************/
-	/* reset values */
-	/* note: do no remove from here */
-	//fixme very porcata
-	for ( layer = c->t_layers_count - 1; layer >= 0; --layer )
-	{
-		c->t_layers[layer].layer_n_height_class = 0;
-		c->t_layers[layer].layer_n_trees = 0;
-		c->t_layers[layer].layer_density = 0;
-		c->t_layers[layer].layer_cover = 0;
-	}
-
 	/* check */
-	CHECK_CONDITION(+c->t_layers_count, < 1);
-	CHECK_CONDITION(+c->t_layers_count, > c->heights_count);
-
-	/*************************************************************************************/
-	/* assign "z" values to height classes */
-	logger(g_log, "*assign 'z' values*\n\n");
-
-	for ( height = c->heights_count - 1; height >= 0; --height )
-	{
-		/* first height class processed */
-		if ( height == c->heights_count - 1 )
-		{
-			c->heights[height].height_z = c->t_layers_count - 1;
-		}
-		/* other class processed */
-		else
-		{
-			if ( ( c->heights[height + 1].value - c->heights[height].value ) > g_settings->tree_layer_limit )
-			{
-				c->heights[height].height_z = c->heights[height + 1].height_z - 1;
-			}
-		}
-		logger(g_log, "-height = %g, z = %d\n", c->heights[height].value, c->heights[height].height_z);
-	}
-	logger(g_log,"***********************************\n");
+	CHECK_CONDITION(c->t_layers_count, < 1);
+	CHECK_CONDITION(c->t_layers_count, > c->heights_count);
 
 	/*************************************************************************************/
 	/* compute numbers of height classes within each layer */
@@ -128,11 +138,11 @@ void annual_forest_structure(cell_t* const c)
 			}
 		}
 		logger(g_log, "-layer %d height class(es) = %d\n", layer, c->t_layers[layer].layer_n_height_class);
+
+		/* check */
+		CHECK_CONDITION(c->t_layers[layer].layer_n_height_class, < 0);
 	}
 	logger(g_log, "**************************************\n\n");
-
-	/* check */
-	CHECK_CONDITION(c->t_layers[layer].layer_n_height_class, < 0);
 
 	/*************************************************************************************/
 	/* compute numbers of trees within each layer */
@@ -310,6 +320,8 @@ void annual_forest_structure(cell_t* const c)
 	logger(g_log, "-Number of trees cell level = %d trees/cell\n", c->cell_n_trees);
 	logger(g_log, "-Canopy cover DBH-DC cell level = %g %%\n", c->cell_cover * 100.0);
 	logger(g_log, "**************************************\n");
+
+	return 1;
 }
 /*************************************************************************************************************************/
 void potential_max_min_canopy_cover (cell_t *const c)

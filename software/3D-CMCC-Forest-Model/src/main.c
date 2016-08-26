@@ -47,8 +47,6 @@
 #include "print.h"
 #include "utility.h"
 
-#define PROGRAM_VERSION	"5.2.2"
-
 /* Last cumulative days in months in non Leap years */
 int MonthLength [] = { 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365};
 
@@ -77,10 +75,9 @@ char 	*g_sz_program_path = NULL
 		, *g_sz_parameterization_path = NULL
 		, *g_sz_input_path = NULL
 		, *g_sz_dataset_file = NULL
-		, *g_input_met_file = NULL
+		, *g_sz_input_met_file = NULL
 		, *g_sz_soil_file = NULL
-		, *topo_path = NULL
-		, *output_path = NULL
+		, *g_sz_topo_file = NULL
 
 		, *g_sz_debug_output_filename = NULL
 		, *g_sz_daily_output_filename =	NULL
@@ -95,15 +92,16 @@ char 	*g_sz_program_path = NULL
 static int years_of_simulation;	// default is none
 
 /* strings */
-static const char banner_debug[] = "\n3D-CMCC Forest Ecosystem Model v."PROGRAM_VERSION"\n"
-		"compiled using: "COMPILER"\n"
-		"runned: "__DATE__" at "__TIME__"\n"
+const char sz_launched[] = "\n"PROGRAM_NAME"\n"
+		"compiled using "COMPILER" on "__DATE__" at "__TIME__"\n"
+		"using NetCDF %s\n"
+		"launched: %s\n"
 		"--------------------------------------------------------------------------------\n";
 
-static const char banner[] = "\n3D-CMCC Forest Ecosystem Model v."PROGRAM_VERSION"\n"
+static const char banner[] = "\n"PROGRAM_NAME"\n"
 		"by Alessio Collalti [alessio.collalti@cmcc.it, a.collalti@unitus.it]\n"
-		"using NetCDF %s\n"
 		"compiled using "COMPILER" on "__DATE__" at "__TIME__"\n"
+		"using NetCDF %s\n"
 		"(use -h parameter for more information)\n\n";
 
 static char copyright[] =
@@ -142,7 +140,7 @@ static char copyright[] =
 static const char msg_input_path[]				=	"input path = %s\n";
 static const char msg_parameterization_path[]	=	"parameterization path = %s\n";
 static const char msg_soil_file[]				=	"soil file = %s\n";
-static const char msg_topo_path[]				=	"topo path = %s\n";
+static const char msg_topo_file[]				=	"topo file = %s\n";
 static const char msg_met_path[]				=	"met path = %s\n";
 static const char msg_settings_path[]			=	"settings path = %s\n";
 static const char msg_debug_output_file[]		=	"debug output file path = %s\n";
@@ -200,11 +198,11 @@ static void clean_up(void) {
 	if ( g_sz_parameterization_path ) free(g_sz_parameterization_path);
 	if ( g_sz_input_path ) free(g_sz_input_path);
 	if ( g_topo ) free(g_topo);
-	if ( topo_path ) free(topo_path);
+	if ( g_sz_topo_file ) free(g_sz_topo_file);
 	if ( g_soil_settings ) free(g_soil_settings);
 	if ( g_sz_soil_file ) free(g_sz_soil_file);
 	if ( g_settings ) free(g_settings);
-	if ( g_input_met_file ) free(g_input_met_file);
+	if ( g_sz_input_met_file ) free(g_sz_input_met_file);
 	if ( g_sz_dataset_file ) free(g_sz_dataset_file);
 	if ( g_sz_program_path ) free(g_sz_program_path);
 
@@ -237,11 +235,8 @@ static int log_start(const char* const sitename) {
 	time(&rawtime);
 	data = gmtime(&rawtime);
 
-	//ALESSIOR please it seems to doesn't work
-	strcat(buffer, "_");
-	sprintf(buffer_2, "%s", PROGRAM_VERSION);
+	sprintf(buffer, "_%s", PROGRAM_VERSION);
 
-	buffer[0] = '\0';
 	if ( sitename && sitename[0] ) {
 		strcat(buffer, "_");
 		strcat(buffer, sitename);
@@ -278,7 +273,7 @@ static int log_start(const char* const sitename) {
 	{
 		char *p;
 		char *ext;
-		p = strrchr(g_input_met_file, '.');
+		p = strrchr(g_sz_input_met_file, '.');
 		if ( ! p ) {
 			puts("bad met file!\n");
 			return -1;
@@ -334,7 +329,7 @@ static int log_start(const char* const sitename) {
 	logger(g_log, copyright);
 	logger_enable_std(g_log);
 
-	logger(g_log, banner_debug, netcdf_get_version());
+	logger(g_log, sz_launched, netcdf_get_version(), get_datetime());
 
 	/* show paths */
 	if ( g_sz_input_path )
@@ -342,16 +337,14 @@ static int log_start(const char* const sitename) {
 	logger(g_log, msg_input_path, g_sz_input_path);
 	logger(g_log, msg_parameterization_path, g_sz_parameterization_path);
 	logger(g_log, msg_soil_file, g_sz_soil_file);
-	logger(g_log, msg_topo_path, topo_path);
-	logger(g_log, msg_met_path, g_input_met_file);
+	logger(g_log, msg_topo_file, g_sz_topo_file);
+	logger(g_log, msg_met_path, g_sz_input_met_file);
 	logger(g_log, msg_settings_path, g_sz_settings_file);
 	logger(g_log, msg_debug_output_file, g_sz_debug_output_filename);
 	logger(g_log, msg_daily_output_file, g_sz_daily_output_filename);
 	logger(g_log, msg_monthly_output_file, g_sz_monthly_output_filename);
 	logger(g_log, msg_annual_output_file, g_sz_yearly_output_filename);
 	logger(g_log, msg_soil_output_file, g_sz_soil_output_filename);
-
-	free(g_sz_settings_file); g_sz_settings_file = NULL;
 
 	return 1;
 }
@@ -378,6 +371,7 @@ static char* get_path(const char *const s) {
 
 	return temp;
 }
+
 /*
 	copy path and add a / at end if missing
  */
@@ -418,12 +412,11 @@ static int parse_args(int argc, char *argv[]) {
 	g_sz_yearly_output_filename = NULL;
 	g_sz_soil_output_filename = NULL;
 	g_sz_dataset_file = NULL;
-	g_input_met_file = NULL;
+	g_sz_input_met_file = NULL;
 	g_sz_soil_file = NULL;
-	topo_path = NULL;
+	g_sz_topo_file = NULL;
 	g_sz_settings_file = NULL;
 	g_sz_output_vars_file = NULL;
-
 
 	for ( i = 1; i < argc; ++i ) {
 		if ( argv[i][0] != '-' ) {
@@ -532,8 +525,8 @@ static int parse_args(int argc, char *argv[]) {
 				puts("met file not specified!");
 				goto err;
 			}
-			g_input_met_file = string_copy(argv[i+1]);
-			if ( ! g_input_met_file ) {
+			g_sz_input_met_file = string_copy(argv[i+1]);
+			if ( ! g_sz_input_met_file ) {
 				puts(sz_err_out_of_memory);
 				goto err;
 			}
@@ -556,8 +549,8 @@ static int parse_args(int argc, char *argv[]) {
 				puts("topo file not specified!");
 				goto err;
 			}
-			topo_path = string_copy(argv[i+1]);
-			if( ! topo_path ) {
+			g_sz_topo_file = string_copy(argv[i+1]);
+			if( ! g_sz_topo_file ) {
 				puts(sz_err_out_of_memory);
 				goto err;
 			}
@@ -638,7 +631,7 @@ static int parse_args(int argc, char *argv[]) {
 		goto err_show_usage;
 	}
 
-	if ( ! g_input_met_file ) {
+	if ( ! g_sz_input_met_file ) {
 		puts("met file list is missing!");
 		goto err_show_usage;
 	}
@@ -648,7 +641,7 @@ static int parse_args(int argc, char *argv[]) {
 		goto err_show_usage;
 	}
 
-	if ( ! topo_path ) {
+	if ( ! g_sz_topo_file ) {
 		puts("topo filename option is missing!");
 		goto err_show_usage;
 	}
@@ -660,7 +653,7 @@ static int parse_args(int argc, char *argv[]) {
 
 	return 1;
 
-	err_show_usage:
+err_show_usage:
 	show_usage();
 
 	err:
@@ -679,11 +672,9 @@ int main(int argc, char *argv[]) {
 	int start_year;
 	matrix_t* matrix;
 	output_t* output_vars;
-
-	/*
-	_CrtSetBreakAlloc(181);
-	 */
-
+	
+	//_CrtSetBreakAlloc(109);
+	
 	/* initialize */
 	matrix = NULL;
 	output_vars = NULL;
@@ -798,7 +789,7 @@ int main(int argc, char *argv[]) {
 		int index_vpsat;
 
 		logger(g_log, "Processing met data files for cell at %d,%d...\n", matrix->cells[cell].x, matrix->cells[cell].y);
-		logger(g_log, "input_met_path = %s\n", g_input_met_file);
+		logger(g_log, "input_met_path = %s\n", g_sz_input_met_file);
 
 		/* import soil values */
 		logger(g_log, "importing soil settings...");
@@ -835,10 +826,10 @@ int main(int argc, char *argv[]) {
 		if ( g_sz_input_path ) {
 			strcpy(temp, g_sz_input_path);
 			if ( ! flag ) strcat(temp, FOLDER_DELIMITER);
-			strcat(temp, topo_path);
+			strcat(temp, g_sz_topo_file);
 			ret = topo_import(g_topo, temp, matrix->cells[cell].x, matrix->cells[cell].y);
 		} else {
-			ret = topo_import(g_topo, topo_path, matrix->cells[cell].x, matrix->cells[cell].y);
+			ret = topo_import(g_topo, g_sz_topo_file, matrix->cells[cell].x, matrix->cells[cell].y);
 		}
 		if ( ! ret ) {
 			goto err;
@@ -856,10 +847,10 @@ int main(int argc, char *argv[]) {
 		if ( g_sz_input_path ) {
 			strcpy(temp, g_sz_input_path);
 			if ( ! flag ) strcat(temp, FOLDER_DELIMITER);
-			strcat(temp, g_input_met_file);
+			strcat(temp, g_sz_input_met_file);
 			matrix->cells[cell].years = yos_import(temp, &years_of_simulation, matrix->cells[cell].x, matrix->cells[cell].y);
 		} else {
-			matrix->cells[cell].years = yos_import(g_input_met_file, &years_of_simulation, matrix->cells[cell].x, matrix->cells[cell].y);
+			matrix->cells[cell].years = yos_import(g_sz_input_met_file, &years_of_simulation, matrix->cells[cell].x, matrix->cells[cell].y);
 		}
 		if ( ! matrix->cells[cell].years ) goto err;
 		logger(g_log, "ok\n");
@@ -916,7 +907,7 @@ int main(int argc, char *argv[]) {
 
 		for ( year = 0; year < years_of_simulation; ++year )
 		{
-			/* ALESSIOR for handling leap years */
+			/* for handling leap years */
 			int days_per_month;
 
 			index_vpsat = 0;
@@ -1274,15 +1265,16 @@ int main(int argc, char *argv[]) {
 	if ( output_vars ) output_free(output_vars);
 	if ( matrix ) matrix_free(matrix);
 
-	free(g_input_met_file); g_input_met_file = NULL;
+	free(g_sz_input_met_file); g_sz_input_met_file = NULL;
 	free(g_sz_debug_output_filename); g_sz_debug_output_filename = NULL;
 	free(g_sz_daily_output_filename); g_sz_daily_output_filename = NULL;
 	free(g_sz_monthly_output_filename); g_sz_monthly_output_filename = NULL;
 	free(g_sz_yearly_output_filename); g_sz_yearly_output_filename = NULL;
 	free(g_sz_soil_output_filename); g_sz_soil_output_filename = NULL;
+	free(g_sz_settings_file); g_sz_settings_file = NULL;
 
 	/* this should be freed before */
-	free(topo_path); topo_path = NULL;
+	free(g_sz_topo_file); g_sz_topo_file = NULL;
 	free(g_sz_soil_file); g_sz_soil_file = NULL;
 
 	return prog_ret;

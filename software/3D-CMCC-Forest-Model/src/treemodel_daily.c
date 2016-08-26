@@ -91,7 +91,10 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	print_cell_data ( c );
 
 	/* forest structure */
-	forest_structure ( c, meteo_daily, day, month, year );
+	if ( ! day && ! month && year )
+	{
+		forest_structure ( c, meteo_daily, day, month, year );
+	}
 
 	/* prephenology */
 	prephenology ( c, meteo_daily, day, month );
@@ -104,12 +107,6 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	/* loop on each cell layers starting from highest to lower */
 	for ( layer = c->t_layers_count -1 ; layer >= 0; --layer )
 	{
-		/* annual layer cover mortality (self-pruning-thinning) */
-		if( !day && !month && year != 0 )
-		{
-			//layer_self_pruning_thinning ( c, layer );
-		}
-
 		/* assign shortcut */
 		l = &m->cells[cell].t_layers[layer];
 
@@ -259,7 +256,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							/****************************************************************************************************************************************/
 							/* END OF YEAR */
 							/* last day of the year */
-							if ( ( IS_LEAP_YEAR( c->years[year].year ) ? (MonthLength_Leap[DECEMBER]) : (MonthLength[DECEMBER] )) == c->doy )
+							if ( c->doy == ( IS_LEAP_YEAR( c->years[year].year ) ? 366 : 365) )
 							{
 								logger(g_log, "*****END OF YEAR %d ******\n", c->years[year].year);
 

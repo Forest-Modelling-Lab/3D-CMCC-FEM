@@ -41,7 +41,7 @@ void layer_self_pruning_thinning ( cell_t *const c )
 			//test
 			/* first of all it checks if self-pruning is enough */
 			/* SELF-PRUNING */
-			if ( !self_pruning ( c, layer ))
+			if ( 0 == self_pruning ( c, layer ))
 			{
 				/* also self-thinning is necessary */
 				/* SELF-THINNING */

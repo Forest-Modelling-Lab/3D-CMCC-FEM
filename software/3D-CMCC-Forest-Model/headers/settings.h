@@ -17,7 +17,8 @@ typedef struct {
 	char Prog_Aut_Resp[4]; /* Prognostic autotrophic respiration */
 	char dndc[4];
 	char replanted_species[SETTINGS_REPLANTED_SPECIES_MAX_SIZE]; /* species name of replanted species */
-
+	// ALESSIOR: use e_management from matrix.h not char
+	char replanted_management;
 	/* DO NOT MODIFY BELOW, PLEASE INSERT STUFF IN SPACE ABOVE */
 
 	double sizeCell;

@@ -21,7 +21,7 @@ void live_total_wood_age(const age_t *const a, const int species)
 	double t1;
 	double t2;
 
-	int min_age;;
+	int min_age;
 	int max_age;
 
 	species_t *s;

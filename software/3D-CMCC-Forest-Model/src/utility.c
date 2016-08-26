@@ -158,7 +158,7 @@ void reset_annual_cell_variables(cell_t *const c)
 }
 void reset_daily_layer_variables(cell_t *const c)
 {
-	int layer;
+	/*int layer;
 
 	tree_layer_t *l;
 
@@ -167,7 +167,7 @@ void reset_daily_layer_variables(cell_t *const c)
 	for ( layer = c->t_layers_count -1 ; layer >= 0; --layer )
 	{
 
-	}
+	}*/
 }
 void reset_monthly_layer_variables(cell_t *const c)
 {
@@ -182,15 +182,13 @@ void reset_monthly_layer_variables(cell_t *const c)
 }
 void reset_annual_layer_variables(cell_t *const c)
 {
-	int layer;
-
 	logger(g_log, "...resetting layer level annual variables...\n");
 
-	c->t_layers_count = 0.;
-
-	for ( layer = c->t_layers_count -1 ; layer >= 0; --layer )
+	if ( c->t_layers_count )
 	{
-
+		free(c->t_layers);
+		c->t_layers = NULL;
+		c->t_layers_count = 0;
 	}
 }
 
