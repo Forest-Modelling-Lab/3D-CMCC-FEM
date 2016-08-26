@@ -11,7 +11,7 @@
 #include "g-function.h"
 #include "mortality.h"
 #include "structure.h"
-#include "G-Function.h"
+#include "g-function.h"
 
 extern settings_t* g_settings;
 extern logger_t* g_log;
@@ -31,7 +31,7 @@ int alloc_struct(void** t, int* count, unsigned int size) {
 	return 1;
 }
 
-static int layer_add(cell_t* const c)
+int layer_add(cell_t* const c)
 {
 	int ret;
 	static tree_layer_t t_layer = { 0 };
