@@ -622,7 +622,7 @@ void update_biomass_after_mortality ()
 }
 
 
-/* Age mortality function from LPJ */
+/* Age mortality function from LPJ-GUESS */
 void age_mortality (age_t *const a, species_t *const s)
 {
 	int dead_trees;
@@ -630,14 +630,13 @@ void age_mortality (age_t *const a, species_t *const s)
 	/* Age probability function */
 	s->value[AGEMORT] = (-(3 * log (0.001)) / (s->value[MAXAGE])) * pow (((double)a->value /s->value[MAXAGE]), 2);
 	logger(g_log, "Max Age = %g years\n", s->value[MAXAGE]);
-	logger(g_log, "Age factor (LPJ) = %g\n", s->value[AGEMORT]);getchar();
+	logger(g_log, "Age factor (LPJ-GUESS) = %g\n", s->value[AGEMORT]);
 
-	//ALESSIOC CHECK IT
 	if ( ( s->counter[N_TREE] * s->value[AGEMORT] ) > 1 )
 	{
 		logger(g_log, "**MORTALITY based on Tree Age (LPJ)**\n");
 		logger(g_log, "Age = %d years\n", a->value);
-		logger(g_log, "Age factor (LPJ) = %g\n", s->value[AGEMORT]);
+		logger(g_log, "Age factor (LPJ-GUESS) = %g\n", s->value[AGEMORT]);
 
 		/* casting to int dead_trees */
 		dead_trees = (int)(s->counter[N_TREE] * s->value[AGEMORT]);

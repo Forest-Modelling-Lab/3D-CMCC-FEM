@@ -289,7 +289,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 
 								//test 28 Aug 2016
 								/*Mortality based on tree Age (LPJ)*/
-								//age_mortality ( a, s);
+								age_mortality ( a, s);
 
 								/* renovation */
 								//renovation ( c, layer, height, age, species);
