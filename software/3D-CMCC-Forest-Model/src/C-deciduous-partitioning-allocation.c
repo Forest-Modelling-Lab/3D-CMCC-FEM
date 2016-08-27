@@ -38,7 +38,6 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 
 	/* for check */
 	double npp_to_alloc;
-	double npp_alloc;
 
 	height_t *h;
 	age_t *a;
@@ -287,13 +286,6 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 	logger(g_log, "C_TO_RESERVE = %g tC/cell/day\n", s->value[C_TO_RESERVE]);
 	logger(g_log, "C_TO_BRANCH = %g tC/cell/day\n", s->value[C_TO_BRANCH]);
 	logger(g_log, "C_TO_FRUIT = %g tC/cell/day\n", s->value[C_TO_FRUIT]);
-	npp_alloc = s->value[C_TO_RESERVE] +
-			s->value[C_TO_FINEROOT] +
-			s->value[C_TO_COARSEROOT] +
-			s->value[C_TO_STEM] +
-			s->value[C_TO_BRANCH] +
-			s->value[C_TO_LEAF] +
-			s->value[C_TO_FRUIT];
 
 	/* update live_total wood fraction based on age */
 	live_total_wood_age (a, species);

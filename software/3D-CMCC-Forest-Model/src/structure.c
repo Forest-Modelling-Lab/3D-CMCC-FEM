@@ -72,8 +72,16 @@ int annual_forest_structure(cell_t* const c)
 	age_t *a;
 	species_t *s;
 
-	/* this function compute annually the number of forest layers
-	 * comparing the tree height values of all tree height classes */
+	/* this function compute annually:
+	 * -the number of forest layers comparing the tree height values of all tree height classes
+	 * -layer density
+	 * -DBHDC_EFF based on overall layer cover
+	 * -crown diameter
+	 * -crown area
+	 * -class cover
+	 * -layer cover
+	 * -cell cover
+	 * */
 
 	logger(g_log, "\n***ANNUAL FOREST STRUCTURE***\n");
 
@@ -83,14 +91,9 @@ int annual_forest_structure(cell_t* const c)
 	c->cell_n_trees = 0;
 	c->cell_cover = 0;
 
-	/* add 1 layer */
+	/* add 1 layer by default */
 	if ( ! layer_add(c) ) return 0;
 
-	/* compute height_z
-
-	ALESSIOR: please ALESSIOC explain...
-
-	*/
 	/* compute number of annual layers */
 	logger(g_log, "*compute height_z*\n\n");
 	logger(g_log, "*compute number of annual forest layers*\n\n");	
@@ -104,6 +107,7 @@ int annual_forest_structure(cell_t* const c)
 				c->heights[height].height_z = 1;
 				++count;
 
+				/* if there's more than one layer create and alloc memory for a new one */
 				if ( ! layer_add(c) ) return 0;
 			}
 		}

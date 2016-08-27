@@ -66,11 +66,8 @@ static int fill_cell(cell_t *const c)
 	a->species[a->species_count-1].name = p;
 	a->species[a->species_count-1].counter[N_TREE] = g_settings->replanted_n_tree;
 	a->species[a->species_count-1].counter[N_STUMP] = 0;
-	//ALESSIOC change avdbh_sapling in replanted_avdbh
 	a->species[a->species_count-1].value[AVDBH] = g_settings->replanted_avdbh;
-	//ALESSIOC change lai_sapling in replanted_lai
 	a->species[a->species_count-1].value[LAI] = g_settings->replanted_lai;
-	//ALESSIOC check turnover...wtf ?
 	a->species[a->species_count-1].turnover = NULL; //malloc(a->species_count*sizeof*a->species[a->species_count-1].turnover);
 	//if ( ! a->species[a->species_count-1].turnover ) return 0;
 

@@ -287,8 +287,9 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 								//if ( s->management == T ) self_thinning_mortality_3PG (c, height, age, species, years);
 								//if ( s->management == C ) stool_mortality ( c, layer, height, age, species );
 
+								//test 28 Aug 2016
 								/*Mortality based on tree Age (LPJ)*/
-								//Age_Mortality ( a, s);
+								//age_mortality ( a, s);
 
 								/* renovation */
 								//renovation ( c, layer, height, age, species);

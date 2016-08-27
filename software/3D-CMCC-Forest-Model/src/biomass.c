@@ -89,7 +89,7 @@ void annual_tree_increment(cell_t *const c, const int layer, const int height, c
 	logger(g_log, "-current stand volume = %g m^3/cell\n", s->value[VOLUME] );
 
 	/* compute current stand level volume */
-	s->value[TREE_VOLUME]  = s->value[VOLUME] / (int) s->counter[N_TREE];
+	s->value[TREE_VOLUME] = s->value[VOLUME] / (int) s->counter[N_TREE];
 	logger(g_log, "-current single tree volume = %g m^3/tree\n", s->value[TREE_VOLUME] );
 
 	/* CAI-Current Annual Increment */

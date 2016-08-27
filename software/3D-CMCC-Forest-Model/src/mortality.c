@@ -383,9 +383,11 @@ void self_thinning ( cell_t *const c, const int layer )
 						/* check */
 						CHECK_CONDITION(s->counter[N_TREE], <= 0);
 
-						//ALESSIOR how remove one class??
+
 						/* remove class */
+						//ALESSIOR how remove one class??
 						//if(s->counter[N_TREE] == 0)
+						// remove_one_tree_class ();
 
 						/* update at cell level */
 						c->daily_dead_tree += deadtree;
@@ -496,23 +498,21 @@ void self_thinning ( cell_t *const c, const int layer )
 
 }
 
-/*Self-thinnig mortality function from 3PG*/
-//-----------------------------------------------------------------------------//
-//                                                                             //
-//                             GetMortality                                    //
-//This function determines the number of stems to remove to ensure the         //
-//self-thinning rule is satisfied. It applies the Newton-Rhapson method        //
-//to solve for N to an accuracy of 1 stem or less. To change this,             //
-//change the value of "accuracy".                                              //
-//This was the old mortality function:                                         //
-//getMortality = oldN - 1000 * (wSx1000 * oldN / oldW / 1000) ^ (1 / thinPower)//
-//which has been superceded by the following ..                                //
-//                                                                             //
-//-----------------------------------------------------------------------------//
+/* Self-thinnig mortality function from 3PG */
+/*-----------------------------------------------------------------------------*/
+/*                                                                             */
+/*                     Self-thinnig mortality (3-PG)                           */
+/*This function determines the number of stems to remove to ensure the         */
+/*self-thinning rule is satisfied. It applies the Newton-Rhapson method        */
+/*to solve for N to an accuracy of 1 stem or less. To change this,             */
+/*change the value of "accuracy".                                              */
+/*This was the old mortality function:                                         */
+/*getMortality = oldN - 1000 * (wSx1000 * oldN / oldW / 1000) ^ (1 / thinPower)*/
+/*which has been superceded by the following ..                                */
+/*                                                                             */
+/*-----------------------------------------------------------------------------*/
 
 void self_thinning_mortality_3PG (species_t *const s, int years)
-// TreeNumber = m->lpCell[index].InitialNTree, Ws = Ws
-// TreeNumber = m->lpCell[index].NTree, Ws = Ws
 {
 
 	int i;
@@ -520,34 +520,24 @@ void self_thinning_mortality_3PG (species_t *const s, int years)
 	double dN, n, x1, x2;
 
 
-	//deselected algorithm for 1Km^2 spatial resolution
-	/*m->cells[cell].heights[height].ages[age].species[species].value[WS_MAX] = m->cells[cell].heights[height].ages[age].species[species].value[WSX1000] *
-        pow((1000 / (double)m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE]),
-                m->cells[cell].heights[height].ages[age].species[species].value[THINPOWER]);
-	 */
+	s->value[WS_MAX] = s->value[WSX1000] * pow ( ( 1000 / (double) s->counter[N_TREE] ), s->value[THINPOWER] );
 
+	//ALESSIOC ??????????????
 	//modifified version for 1Km^2 spatial resolution
 	s->value[WS_MAX] = s->value[WSX1000];
 
-
-
 	if ( s->value[AV_STEM_MASS_KgDM] > s->value[WS_MAX])
 	{
-
-		logger(g_log, "MORTALITY based SELF-THINNING RULE\n");
+		logger(g_log, "*Self-thinnig mortality (3-PG)*\n");
 		logger(g_log, "Average Stem Mass > WSMax\n");
-		logger(g_log, "WS MAX = %g kgDM/tree\n",  s->value[WS_MAX]);
-		logger(g_log, "Average Stem Mass = %g kgDM stem /tree\n", s->value[AV_STEM_MASS_KgDM]);
-
-
-
-
+		logger(g_log, "WS MAX = %g kgC/tree\n", s->value[WS_MAX]);
+		logger(g_log, "Average Stem Mass = %g kgC stem/tree\n", s->value[AV_STEM_MASS_KgDM]);
 		logger(g_log, "Tree Number before Mortality Function = %d\n", s->counter[N_TREE]);
-		logger(g_log, "Tree Stem Mass before Mortality Function = %g\n", s->value[BIOMASS_STEM_tDM]);
 
 		n = (double)s->counter[N_TREE] / 1000;
 		logger(g_log, "n = %g\n", n);
-		x1 = 1000 * s->value[MS] * s->value[BIOMASS_STEM_tDM] / (double)s->counter[N_TREE];
+
+		x1 = 1000 * s->value[MS] * s->value[STEM_C] / (double)s->counter[N_TREE];
 		logger(g_log, "x1 = %g\n", x1);
 		i = 0;
 		while ( 1 )
@@ -556,7 +546,7 @@ void self_thinning_mortality_3PG (species_t *const s, int years)
 			logger(g_log, "i = %d\n", i);
 			x2 = s->value[WSX1000] * pow (n, (1 - s->value[THINPOWER]));
 			logger(g_log, "X2 = %g\n", x2);
-			fN = x2 - x1 * n - (1 - s->value[MS]) * s->value[BIOMASS_STEM_tDM];
+			fN = x2 - x1 * n - (1 - s->value[MS]) * s->value[STEM_C];
 			logger(g_log, "fN = %g\n", fN);
 			dfN = (1 - s->value[THINPOWER]) * x2 / n - x1;
 			logger(g_log, "dfN = %g\n", dfN);
@@ -632,47 +622,48 @@ void update_biomass_after_mortality ()
 }
 
 
-/*Age mortality function from LPJ*/
-void Age_Mortality (age_t *const a, species_t *const s)
+/* Age mortality function from LPJ */
+void age_mortality (age_t *const a, species_t *const s)
 {
-
-	static int Dead_trees;
+	int dead_trees;
 
 	/* Age probability function */
 	s->value[AGEMORT] = (-(3 * log (0.001)) / (s->value[MAXAGE])) * pow (((double)a->value /s->value[MAXAGE]), 2);
+	logger(g_log, "Max Age = %g years\n", s->value[MAXAGE]);
+	logger(g_log, "Age factor (LPJ) = %g\n", s->value[AGEMORT]);getchar();
 
-
-	if ((s->counter[N_TREE] * s->value[AGEMORT]) > 1)
+	//ALESSIOC CHECK IT
+	if ( ( s->counter[N_TREE] * s->value[AGEMORT] ) > 1 )
 	{
 		logger(g_log, "**MORTALITY based on Tree Age (LPJ)**\n");
 		logger(g_log, "Age = %d years\n", a->value);
-		logger(g_log, "Age Mortality based on Tree Age (LPJ) = %g\n", s->value[AGEMORT]);
-		Dead_trees = (int)(s->counter[N_TREE] * s->value[AGEMORT]);
-		logger(g_log, "DEAD TREES = %d\n", Dead_trees);
-		s->value[BIOMASS_FOLIAGE_tDM] = s->value[BIOMASS_FOLIAGE_tDM] - s->value[MF] * Dead_trees * (s->value[BIOMASS_FOLIAGE_tDM] / s->counter[N_TREE]);
-		s->value[BIOMASS_ROOTS_TOT_tDM] = s->value[BIOMASS_ROOTS_TOT_tDM] - s->value[MR] * Dead_trees * (s->value[BIOMASS_ROOTS_TOT_tDM] / s->counter[N_TREE]);
-		s->value[BIOMASS_STEM_tDM] = s->value[BIOMASS_STEM_tDM] - s->value[MS] * Dead_trees * (s->value[BIOMASS_STEM_tDM] / s->counter[N_TREE]);
-		//logger(g_log, "Wf after dead = %g tDM/ha\n", s->value[BIOMASS_FOLIAGE]);
-		//logger(g_log, "Wr after dead = %g tDM/ha\n", s->value[BIOMASS_ROOTS_TOT]);
-		//logger(g_log, "Ws after dead = %g tDM/ha\n", s->value[BIOMASS_STEM] );
+		logger(g_log, "Age factor (LPJ) = %g\n", s->value[AGEMORT]);
 
-		//----------------Number of trees after mortality---------------------
+		/* casting to int dead_trees */
+		dead_trees = (int)(s->counter[N_TREE] * s->value[AGEMORT]);
+		logger(g_log, "dead trees = %d\n", dead_trees);
 
-		s->counter[N_TREE] = s->counter[N_TREE] - Dead_trees;
+		/* update biomass pools */
+		s->value[LEAF_C] -= ( ( s->value[LEAF_C] / (double)s->counter[N_TREE] ) * dead_trees );
+		s->value[STEM_C] -= ( ( s->value[STEM_C] / (double)s->counter[N_TREE] ) * dead_trees );
+		s->value[COARSE_ROOT_C] -= ( ( s->value[COARSE_ROOT_C] / (double)s->counter[N_TREE] ) * dead_trees );
+		s->value[FINE_ROOT_C] -= ( ( s->value[FINE_ROOT_C] / (double)s->counter[N_TREE] ) * dead_trees );
+		s->value[BRANCH_C] -= ( ( s->value[BRANCH_C] / (double)s->counter[N_TREE] ) * dead_trees );
+		//FIXME UPDATE ALSO LIVE AND DEAD POOLS
+
+		/* update current number of trees */
+		s->counter[N_TREE] -= dead_trees;
 		logger(g_log, "Number of Trees  after age mortality = %d trees\n", s->counter[N_TREE]);
 
-		if ( !s->counter[DEAD_STEMS])
-		{
-			s->counter[DEAD_STEMS] = Dead_trees;
-		}
-		else
-		{
-			s->counter[DEAD_STEMS] += Dead_trees;
-		}
+		/* assign to global variable */
+		s->counter[DEAD_STEMS] = dead_trees;
+
 	}
 	else
 	{
 		logger(g_log, "**NO-MORTALITY based on Tree Age (LPJ)**\n");
+
+		s->counter[DEAD_STEMS] = 0;
 	}
 	logger(g_log, "**********************************\n");
 }

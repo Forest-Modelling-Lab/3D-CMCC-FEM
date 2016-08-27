@@ -594,12 +594,21 @@ typedef struct {
 
 typedef struct
 {
-	species_t* species;
+	species_t *species;
 
 	int value;
 	int species_count;
 } age_t;
 
+//ALESSIOC test 27 aug 2016//
+typedef struct
+{
+	age_t* ages;
+
+	int value;
+	int ages_count;
+} dbh_t;
+/////////////////////////////
 
 enum {
 	T_LAYER_VALUE_COVER
