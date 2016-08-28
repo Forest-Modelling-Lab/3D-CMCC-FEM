@@ -98,7 +98,7 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 							/* heading for species name */
 							logger(g_daily_log,"\t%10s", "SPECIES");
 
-							logger(g_daily_log,"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s"
+							logger(g_daily_log,"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s"
 									"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s",
 									"GPP",
 									"AR",
@@ -107,6 +107,7 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 									"AVDBH",
 									"CC",
 									"Ntree",
+									"VEG_D",
 									"CET",
 									"CLE",
 									"dWRes",
@@ -183,7 +184,7 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 						logger(g_daily_log,"\t%8.3s", c->heights[height].ages[age].species[species].name);
 
 						/* print variables at layer-class level */
-						logger(g_daily_log,"\t%6.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3d \t%3.4f \t%3.4f"
+						logger(g_daily_log,"\t%6.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3d \t%3d \t%3.4f \t%3.4f"
 								"\t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f",
 								s->value[DAILY_GPP_gC],
 								s->value[TOTAL_AUT_RESP],
@@ -192,6 +193,7 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 								s->value[AVDBH],
 								s->value[CANOPY_COVER_DBHDC],
 								s->counter[N_TREE],
+								s->counter[VEG_DAYS],
 								s->value[CANOPY_EVAPO_TRANSP],
 								s->value[CANOPY_LATENT_HEAT],
 								s->value[C_TO_RESERVE],
@@ -451,7 +453,7 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 							/* heading for species name */
 							logger(g_annual_log,"\t%10s", "SPECIES");
 
-							logger(g_annual_log,"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s"
+							logger(g_annual_log,"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s"
 									"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s",
 									"GPP",
 									"AR",
@@ -462,6 +464,7 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 									"CC",
 									"DBHDC",
 									"Ntree",
+									"VEG_D",
 									"CET",
 									"CLE",
 									"WRes",
@@ -544,7 +547,7 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 						logger(g_annual_log,"\t%8.3s", c->heights[height].ages[age].species[species].name);
 
 						/* print variables at layer-class level */
-						logger(g_annual_log,"\t%6.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3d \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f"
+						logger(g_annual_log,"\t%6.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3d \t%3d \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f"
 								"\t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f",
 								s->value[YEARLY_GPP_gC],
 								s->value[YEARLY_TOTAL_AUT_RESP],
@@ -555,6 +558,7 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 								s->value[CANOPY_COVER_DBHDC],
 								s->value[DBHDC_EFF],
 								s->counter[N_TREE],
+								s->counter[YEARLY_VEG_DAYS],
 								s->value[YEARLY_CANOPY_EVAPO_TRANSP],
 								s->value[YEARLY_CANOPY_LATENT_HEAT],
 								s->value[RESERVE_C],

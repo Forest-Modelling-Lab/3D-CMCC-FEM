@@ -554,7 +554,8 @@ enum {
 	CUT_TREES,                   /* Cut trees for Management per class */
 	N_TREE_SAP,                  /* Numbers of Saplings per class */
 	VEG_UNVEG,                   /* vegetative-un vegetative period per class */
-	VEG_DAYS,                    /* day of vegetative period for class */
+	VEG_DAYS,                    /* day of vegetative period for class if != 0 is in veg period */
+	YEARLY_VEG_DAYS,             /* annual number of vegetative days */
 	BUD_BURST_COUNTER,           /* days of budburst per class */
 	DAY_FRAC_FOLIAGE_REMOVE,     /* days of leaf fall per class */
 	DAY_FRAC_FINE_ROOT_REMOVE,   /* days of "fine root fall" per class */
