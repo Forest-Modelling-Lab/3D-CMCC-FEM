@@ -43,7 +43,7 @@
 #include "soil_water_balance.h"
 #include "leaf_fall.h"
 #include "settings.h"
-#include "new_forest_tree_class.h"
+#include "forest_tree_class.h"
 
 //extern settings_t* g_settings;
 extern logger_t* g_log;
@@ -54,8 +54,8 @@ extern logger_t* g_log;
 extern int DaysInMonth[];
 
 /* Last cumulative days in months */
-extern int MonthLength [];
-extern int MonthLength_Leap [];
+//extern int MonthLength [];
+//extern int MonthLength_Leap [];
 
 int Tree_model_daily (matrix_t *const m, const int cell, const int day, const int month, const int year)
 {
@@ -284,7 +284,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 
 								//ALESSIOC to do
 								/* Mortality based on growth efficiency */
-								growth_efficiency_mortality ( s );
+								//annual_growth_efficiency_mortality ( s );
 
 								/* Mortality based on self thinning (3-PG) */
 								//logger(g_log, "Get_Mortality COMMENTATA per bug, REINSERIRE!!!!!!!!!!!!!!!!!\n");

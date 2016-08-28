@@ -14,7 +14,7 @@
 #include "logger.h"
 #include "initialization.h"
 #include "structure.h"
-#include "new_forest_tree_class.h"
+#include "forest_tree_class.h"
 
 extern settings_t* g_settings;
 extern logger_t* g_log;
@@ -74,15 +74,15 @@ static int fill_cell(cell_t *const c)
 	return 1;
 }
 
-int add_new_tree_class (cell_t *const c, const int height, const int age, const int species)
+int add_tree_class (cell_t *const c, const int height, const int age, const int species)
 {
-	int i;
-	int y;
-	int z;
-	int flag;
-	height_t *h;
-	age_t *a;
-	species_t *s;
+//	int i;
+//	int y;
+//	int z;
+//	int flag;
+//	height_t *h;
+//	age_t *a;
+//	species_t *s;
 
 	logger(g_log, "**ADD NEW TREE CLASS**\n");
 

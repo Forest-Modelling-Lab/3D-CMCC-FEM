@@ -20,6 +20,7 @@
 #include "biomass.h"
 #include "check_balance.h"
 #include "C-allocation.h"
+#include "mortality.h"
 
 extern settings_t* g_settings;
 extern logger_t* g_log;
@@ -49,7 +50,6 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 
 	/* for check */
 	double npp_to_alloc;
-	double npp_alloc;
 
 	//height_t *h;
 	age_t *a;
@@ -65,11 +65,11 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 
 	Light_trasm = exp(- s->value[K] * s->value[LAI]);
 
-	//Marconi here the allocation of biomass reserve is divided in fineroot and leaves following the
-	//allocation ratio parameter between them. That because
-	//in evergreen we don't have bud burst phenology phase, and indeed there are two phenology phases;
-	//the former in which carbon is allocated in fineroot and foliage, the latter in
-	//every pool except foliage
+	/* Marconi: here the allocation of biomass reserve is divided in fineroot and leaves following the
+	* allocation ratio parameter between them. That because
+	* in evergreen we don't have bud burst phenology phase, and indeed there are two phenology phases;
+	* the former in which carbon is allocated in fineroot and foliage, the latter in
+	* every pool except foliage*/
 
 	logger(g_log, "\n**C-PARTITIONING-ALLOCATION**\n");
 	logger(g_log, "Carbon partitioning for evergreen\n");
@@ -171,6 +171,7 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 			s->value[C_TO_STEM] = 0.0;
 			s->value[C_TO_BRANCH] = 0.0;
 			s->value[C_TO_FRUIT] = 0.0;
+
 		}
 		else
 		{
@@ -183,7 +184,7 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 			s->value[C_TO_BRANCH] = 0.0;
 			s->value[C_TO_FRUIT] = 0.0;
 		}
-		CHECK_CONDITION(s->value[RESERVE_C], < 0.0);
+		/**********************************************************************/
 		break;
 	case 2:
 		/*
@@ -247,12 +248,13 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 			s->value[C_TO_LEAF] = 0.0;
 			s->value[C_TO_FRUIT] = 0.0;
 		}
-		CHECK_CONDITION(s->value[RESERVE_C], < 0.0);
+		/**********************************************************************/
 		break;
 	}
 
-	//todo to be checked
-	/* CHECK */
+	/* check for daily growth efficiency mortality */
+	daily_growth_efficiency_mortality ( s );
+
 	/* sum all biomass pools increments */
 	logger(g_log, "C_TO_LEAF = %g tC/cell/day\n", s->value[C_TO_LEAF]);
 	logger(g_log, "C_TO_FINEROOT = %g tC/cell/day\n", s->value[C_TO_FINEROOT]);
@@ -261,13 +263,6 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 	logger(g_log, "C_TO_RESERVE = %g tC/cell/day\n", s->value[C_TO_RESERVE]);
 	logger(g_log, "C_TO_BRANCH = %g tC/cell/day\n", s->value[C_TO_BRANCH]);
 	logger(g_log, "C_TO_FRUIT = %g tC/cell/day\n", s->value[C_TO_FRUIT]);
-	npp_alloc = s->value[C_TO_RESERVE] +
-			s->value[C_TO_FINEROOT] +
-			s->value[C_TO_COARSEROOT] +
-			s->value[C_TO_STEM] +
-			s->value[C_TO_BRANCH] +
-			s->value[C_TO_LEAF] +
-			s->value[C_TO_FRUIT];
 
 	/* update live_total wood fraction based on age */
 	live_total_wood_age (a, species);

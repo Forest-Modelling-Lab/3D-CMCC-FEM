@@ -10,7 +10,7 @@
 #include "settings.h"
 #include "common.h"
 #include "logger.h"
-#include "new_forest_tree_class.h"
+#include "forest_tree_class.h"
 
 extern settings_t* g_settings;
 extern logger_t* g_log;
@@ -47,7 +47,7 @@ void forest_management (cell_t *const c, const int layer, const int height, cons
 			if(g_settings->replanted_tree != 0.0)
 			{
 				//ALESSIOC ALESSIOR remove toggles when bug will be fixed!!
-//				if ( ! add_new_tree_class( c, height, age, species ) )
+//				if ( ! add_tree_class( c, height, age, species ) )
 //				{
 //					logger(g_log, "unable to add new height class! (exit)\n");
 //					exit(1);
@@ -71,7 +71,7 @@ void forest_management (cell_t *const c, const int layer, const int height, cons
 
 			if(g_settings->replanted_n_tree != 0.0)
 			{
-				if ( ! add_new_tree_class( c, height, age, species ) )
+				if ( ! add_tree_class( c, height, age, species ) )
 				{
 					logger(g_log, "unable to add new height class! (exit)\n");
 					exit(1);

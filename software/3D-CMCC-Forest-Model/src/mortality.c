@@ -489,17 +489,35 @@ void self_thinning ( cell_t *const c, const int layer )
 	logger(g_log, "-height class(es) = %d layer \n", c->t_layers[layer].layer_n_height_class);
 	logger(g_log, "-number of trees = %d layer\n", c->t_layers[layer].layer_n_trees);
 	logger(g_log, "-density = %g layer\n", c->t_layers[layer].layer_density);
-	logger(g_log, "--Dead tree(s) = %d\n", deadtree);
-	logger(g_log, "--Tree remaining for height class %g age %d species %s = %d\n", h->value, a->value, s->name, s->counter[N_TREE]);
-
+	logger(g_log, "-Dead tree(s) = %d\n", deadtree);
 
 	/* reset dead tree */
 	deadtree = 0;
 
 }
 
-void growth_efficiency_mortality ( species_t *const s )
+void daily_growth_efficiency_mortality ( species_t *const s )
 {
+
+	/* this function superimpose mortality  for all tree class when reserves
+	 * go under zero assuming that reserve pool hasn't be refilled during the day
+	 * and make trees class die */
+
+	/* call remove_tree_class */
+	//remove_tree_class ();
+
+	//todo it shouldn't be a "check_condition" but should kill tree class without stop the code execution
+	/* check */
+	CHECK_CONDITION(s->value[RESERVE_C], < 0.0);
+
+}
+
+void annual_growth_efficiency_mortality ( species_t *const s )
+{
+
+	//todo it shouldn't be a "check_condition" but should kill tree class without stop the code execution
+	/* check */
+	CHECK_CONDITION(s->value[RESERVE_C], < 0.0);
 
 }
 

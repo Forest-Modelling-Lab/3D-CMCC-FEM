@@ -13,6 +13,7 @@
 #include "turnover.h"
 #include "lai.h"
 #include "C-allocation.h"
+#include "mortality.h"
 
 extern settings_t* g_settings;
 extern logger_t* g_log;
@@ -153,8 +154,6 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 		s->value[C_TO_FRUIT] = 0.0;
 		s->value[C_TO_LITTER] = 0.0;
 
-		/* check */
-		CHECK_CONDITION(s->value[RESERVE_C], < 0.0);
 		break;
 		/**********************************************************************/
 	case 2:
@@ -212,8 +211,6 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 			s->value[C_TO_LITTER] = 0.0;
 		}
 
-		/* check */
-		CHECK_CONDITION(s->value[RESERVE_C], < 0.0);
 		break;
 		/**********************************************************************/
 	case 3:
@@ -252,8 +249,6 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 		/* including retranslocated C */
 		s->value[C_TO_RESERVE] = npp_to_alloc + s->value[C_LEAF_TO_RESERVE] + s->value[C_FINEROOT_TO_RESERVE];
 
-		/* check */
-		CHECK_CONDITION(s->value[RESERVE_C], < 0.0);
 		break;
 		/**********************************************************************/
 	case 0:
@@ -270,14 +265,13 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 		s->value[C_TO_LITTER] = 0.0;
 		s->value[C_TO_RESERVE] = npp_to_alloc;
 
-		/* check */
-		CHECK_CONDITION(s->value[RESERVE_C], < 0.0);
 		break;
 		/**********************************************************************/
 	}
 
-	//todo to be checked
-	/* CHECK */
+	/* check for daily growth efficiency mortality */
+	daily_growth_efficiency_mortality ( s );
+
 	/* sum all biomass pools increments */
 	logger(g_log, "C_TO_LEAF = %g tC/cell/day\n", s->value[C_TO_LEAF]);
 	logger(g_log, "C_TO_FINEROOT = %g tC/cell/day\n", s->value[C_TO_FINEROOT]);
