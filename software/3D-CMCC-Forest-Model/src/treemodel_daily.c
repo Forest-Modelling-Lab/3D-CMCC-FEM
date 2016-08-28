@@ -282,12 +282,15 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 								/************************************************************************************************************************************/
 								/* MORTALITY and RENOVATION*/
 
+								//ALESSIOC to do
+								/* Mortality based on growth efficiency */
+								growth_efficiency_mortality ( s );
+
 								/* Mortality based on self thinning (3-PG) */
 								//logger(g_log, "Get_Mortality COMMENTATA per bug, REINSERIRE!!!!!!!!!!!!!!!!!\n");
 								//if ( s->management == T ) self_thinning_mortality_3PG (c, height, age, species, years);
 								//if ( s->management == C ) stool_mortality ( c, layer, height, age, species );
 
-								//test 28 Aug 2016
 								/*Mortality based on tree Age (LPJ)*/
 								age_mortality ( a, s);
 

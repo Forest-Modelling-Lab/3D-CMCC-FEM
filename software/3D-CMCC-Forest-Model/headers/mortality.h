@@ -4,6 +4,8 @@
 
 #include "matrix.h"
 
+void growth_efficiency_mortality ( species_t *const s );
+
 void layer_self_pruning_thinning ( cell_t *const );
 
 int self_pruning (cell_t *const c, const int layer );

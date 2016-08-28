@@ -498,6 +498,11 @@ void self_thinning ( cell_t *const c, const int layer )
 
 }
 
+void growth_efficiency_mortality ( species_t *const s )
+{
+
+}
+
 /* Self-thinnig mortality function from 3PG */
 /*-----------------------------------------------------------------------------*/
 /*                                                                             */
