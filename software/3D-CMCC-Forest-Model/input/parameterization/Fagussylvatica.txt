@@ -66,7 +66,7 @@ THINPOWER   2           //Power in self-thinning rule
 MF  0                   //Fraction mean single tree foliage biomass lost per dead tree
 MR  0.2                 //Fraction mean single tree root biomass lost per dead tree
 MS  0.2                 //Fraction mean single tree stem biomass lost per dead tree
-DBHDCMAX    0.18        //Low Density
+DBHDCMAX    0.22 //CHANGED FROM  0.18        //Low Density
 DBHDCMIN    0.14        //High Density from ettore
 SAP_A   0.674           //a value from Kostner for 
 SAP_B   1.992           //b value from Kostner for 
@@ -86,7 +86,7 @@ CRB 0.038               //Chapman_Richards b parameter
 CRC 1.104               //Chapman_Richards c parameter
 HDMAX   1.71            //Height to Base diameter ratio MAX  (Portoghesi)
 HDMIN   0.2             //Height to Base diameter ratio MIN  (Portoghesi)
-DENMAX  0.1             //Maximum density (trees/10000 m^2)
+DENMAX  2.5 //CHANGED FROM 0.1             //Maximum density (trees/10000 m^2)based on DBH = 5 cm and DBHDCMIN = 0.14
 DENMIN  -9999           //Minimum density (trees/10000 m^2) //CUURENTLY NOT USED
 MINPAREST   4.05        //Minimum Monthly PAR (W/m^2 hour) for Establishment for the Dominated Layer B. Smith, I. C. Prentice, and M. T. Sykes 2001 for Boreal/Temperate SHADE TOLLERANT broaldleaved summergreen
 MINRAIN 100             //Minimum annual Rain Precipitation for Establishment S. Sitch 2003

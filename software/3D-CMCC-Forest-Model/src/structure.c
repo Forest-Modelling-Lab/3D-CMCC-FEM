@@ -402,7 +402,7 @@ void potential_max_min_canopy_cover (cell_t *const c)
 					 *For. Sci. 7:36-42
 					 *Lhotka and Loewenstein 2008, Can J For Res
 					 */
-					logger(g_log,"without using DBHDCMAX and DBHDCMIN\n");
+					logger(g_log,"without using DBHDCMAX and DENMIN\n");
 
 					pot_min_crown_area = ((100.0*Pi)/(4*g_settings->sizeCell)) * (9.7344 + (11.48612 *
 							s->value[AVDBH] + (3.345241 * pow(s->value[AVDBH], 2.0))));
@@ -417,7 +417,7 @@ void potential_max_min_canopy_cover (cell_t *const c)
 					logger(g_log, "-recomputed DBHDCMAX = %g \n", s->value[DBHDCMAX]);
 
 					s->value[DENMIN] = 1.0 / pot_min_crown_area;
-					logger(g_log, "-recomputed DENMIN = %g tree/sizecell\n", s->value[DENMIN]);
+					logger(g_log, "-recomputed DENMIN = %g tree/sizecell (%d trees)\n", s->value[DENMIN], s->value[DENMIN] * g_settings->sizeCell);
 				}
 
 				logger(g_log, "DBHDCMAX = %g\n", s->value[DBHDCMAX]);
