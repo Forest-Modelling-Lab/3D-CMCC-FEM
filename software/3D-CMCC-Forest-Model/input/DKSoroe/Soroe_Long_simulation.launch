@@ -7,11 +7,19 @@
 <stringAttribute key="org.eclipse.cdt.launch.launchGroup.1.action" value="NONE"/>
 <stringAttribute key="org.eclipse.cdt.launch.launchGroup.1.enabled" value="true"/>
 <stringAttribute key="org.eclipse.cdt.launch.launchGroup.1.mode" value="run"/>
-<stringAttribute key="org.eclipse.cdt.launch.launchGroup.1.name" value="Soroe_2001_2080"/>
+<stringAttribute key="org.eclipse.cdt.launch.launchGroup.1.name" value="ISIMIP-Soroe-GCM3_hist_rcp6p0_2001_2099(prova)"/>
 <stringAttribute key="org.eclipse.cdt.launch.launchGroup.2.action" value="NONE"/>
 <stringAttribute key="org.eclipse.cdt.launch.launchGroup.2.enabled" value="true"/>
 <stringAttribute key="org.eclipse.cdt.launch.launchGroup.2.mode" value="run"/>
-<stringAttribute key="org.eclipse.cdt.launch.launchGroup.2.name" value="ISIMIP-Soroe-GCM3_hist_rcp2p6_2001_2099(prova)"/>
+<stringAttribute key="org.eclipse.cdt.launch.launchGroup.2.name" value="ISIMIP-Soroe-GCM3_hist_rcp4p5_2001-2099(prova)"/>
+<stringAttribute key="org.eclipse.cdt.launch.launchGroup.3.action" value="NONE"/>
+<stringAttribute key="org.eclipse.cdt.launch.launchGroup.3.enabled" value="true"/>
+<stringAttribute key="org.eclipse.cdt.launch.launchGroup.3.mode" value="run"/>
+<stringAttribute key="org.eclipse.cdt.launch.launchGroup.3.name" value="ISIMIP-Soroe-GCM3_hist_rcp2p6_2001_2099(prova)"/>
+<stringAttribute key="org.eclipse.cdt.launch.launchGroup.4.action" value="NONE"/>
+<stringAttribute key="org.eclipse.cdt.launch.launchGroup.4.enabled" value="true"/>
+<stringAttribute key="org.eclipse.cdt.launch.launchGroup.4.mode" value="run"/>
+<stringAttribute key="org.eclipse.cdt.launch.launchGroup.4.name" value="Soroe_2001_2080"/>
 <listAttribute key="org.eclipse.debug.ui.favoriteGroups">
 <listEntry value="org.eclipse.debug.ui.launchGroup.debug"/>
 <listEntry value="org.eclipse.debug.ui.launchGroup.profile"/>
