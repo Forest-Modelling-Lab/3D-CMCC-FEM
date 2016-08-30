@@ -625,11 +625,6 @@ typedef struct
 
 typedef struct
 {
-	//ALESSIOC DBH TO REMOVE ONCE DBH STRUCT IS ON
-//	age_t *ages;
-//	int ages_count;
-
-	//ALESSIOC DBH
 	dbh_t *dbhs;
 	int dbhs_count;
 

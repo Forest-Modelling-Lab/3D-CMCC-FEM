@@ -1422,7 +1422,7 @@ void forest_summary(const matrix_t* const m, const int cell, const int day, cons
 				}
 			}
 		}
-	}getchar();
+	}
 
 	/*************FOREST INITIALIZATION DATA***********/
 	/* initialise power function */

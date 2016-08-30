@@ -131,7 +131,6 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 						"                              height = %g                              \n"
 						"*****************************************************************************\n", h->value);
 
-				//ALESSIOC CHECK IF STARTS FOR HIGHER
 				/* loop on each dbhs starting from highest to lower */
 				for ( dbh = h->dbhs_count - 1; dbh >= 0; --dbh )
 				{
