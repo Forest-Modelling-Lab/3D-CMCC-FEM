@@ -18,7 +18,7 @@
 extern settings_t* g_settings;
 extern logger_t* g_log;
 
-void maintenance_respiration(cell_t *const c, const int layer, const int height, const int age, const int species, const meteo_daily_t *const meteo_daily)
+void maintenance_respiration(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, const meteo_daily_t *const meteo_daily)
 {
 	double t1;
 	double q10 = 2.0;
@@ -37,7 +37,7 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 	double branch_N;
 
 	species_t *s;
-	s  = &c->heights[height].ages[age].species[species];
+	s  = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 	logger(g_log, "\n**MAINTENANCE_RESPIRATION**\n");
 
@@ -152,10 +152,10 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 	CHECK_CONDITION(s->value[TOTAL_MAINT_RESP], < 0);
 }
 
-void growth_respiration(cell_t *const c, const int layer, const int height, const int age, const int species)
+void growth_respiration(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species)
 {
 	species_t *s;
-	s = &c->heights[height].ages[age].species[species];
+	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 
 	logger(g_log, "\n**GROWTH_RESPIRATION**\n");
@@ -240,18 +240,18 @@ void growth_respiration(cell_t *const c, const int layer, const int height, cons
 	s->value[C_FINEROOT_TO_RESERVE] = 0.;
 }
 
-void autotrophic_respiration(cell_t *const c, const int layer, const int height, const int age, const int species, const meteo_daily_t *const meteo_daily)
+void autotrophic_respiration(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, const meteo_daily_t *const meteo_daily)
 {
 	species_t *s;
-	s = &c->heights[height].ages[age].species[species];
+	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 	if (!string_compare_i(g_settings->Prog_Aut_Resp, "on"))
 	{
 		/* maintenance respiration */
-		maintenance_respiration( c, layer, height, age, species, meteo_daily );
+		maintenance_respiration( c, layer, height, dbh, age, species, meteo_daily );
 
 		/* growth respiration */
-		growth_respiration( c, layer, height, age, species );
+		growth_respiration( c, layer, height, dbh, age, species );
 
 		logger(g_log, "\n**AUTOTROPHIC_RESPIRATION**\n");
 

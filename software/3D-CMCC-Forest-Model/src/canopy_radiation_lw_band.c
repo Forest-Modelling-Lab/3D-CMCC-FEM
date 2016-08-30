@@ -19,7 +19,7 @@
 
 extern logger_t* g_log;
 
-void canopy_radiation_lw_band(cell_t *const c, const int layer, const int height, const int age, const int species, const meteo_daily_t *const meteo_daily)
+void canopy_radiation_lw_band(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, const meteo_daily_t *const meteo_daily)
 {
 	double LW_emis_canopy_frac;
 	//double LW_emis_canopy_frac_sun, LW_emis_canopy_frac_shade;       /* (ratio) fraction of Long Wave radiation emissivity */
@@ -33,7 +33,7 @@ void canopy_radiation_lw_band(cell_t *const c, const int layer, const int height
 	double TsoilK;
 
 	species_t *s;
-	s = &c->heights[height].ages[age].species[species];
+	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 
 	logger(g_log, "\n**LONG WAVE BAND RADIATION ROUTINE**\n");

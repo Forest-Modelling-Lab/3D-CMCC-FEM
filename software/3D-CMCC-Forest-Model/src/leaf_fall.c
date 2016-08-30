@@ -13,7 +13,7 @@ extern settings_t* g_settings;
 extern logger_t* g_log;
 extern logger_t* g_soil_log;
 
-void leaf_fall_deciduous(cell_t *const c, const int height, const int age, const int species)
+void leaf_fall_deciduous(cell_t *const c, const int height, const int dbh, const int age, const int species)
 {
 	static double foliage_to_remove;
 	static double fine_root_to_remove;
@@ -23,7 +23,7 @@ void leaf_fall_deciduous(cell_t *const c, const int height, const int age, const
 	double previousBiomass_lai, newBiomass_lai;
 
 	species_t *s;
-	s = &c->heights[height].ages[age].species[species];
+	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 	logger(g_log, "\n**LEAF FALL DECIDUOUS **\n");
 
@@ -97,13 +97,13 @@ void leaf_fall_deciduous(cell_t *const c, const int height, const int age, const
 	}
 }
 
-void leaf_fall_evergreen (cell_t *const c, const int height, const int age, const int species)
+void leaf_fall_evergreen (cell_t *const c, const int height, const int dbh, const int age, const int species)
 {
 	static double daily_leaf_fineroot_turnover_rate;
 	static double fraction_to_retransl = 0.1; /* fraction of C to retranslocate (see Bossel et al., 2006 and Campioli et al., 2013 */
 
 	species_t *s;
-	s = &c->heights[height].ages[age].species[species];
+	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 	logger(g_log, "\n**LEAF FALL EVERGREEN**\n");
 

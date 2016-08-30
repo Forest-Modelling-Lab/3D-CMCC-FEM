@@ -9,13 +9,14 @@
 
 extern logger_t* g_log;
 
-void dendrometry(cell_t *const c, const int height, const int age, const int species)
+void dendrometry(cell_t *const c, const int height, const int dbh, const int age, const int species)
 {
 	double oldavDBH;
 	double oldTreeHeight;
 	double oldBasalArea;
 
 	height_t *h;
+	dbh_t *d;
 	species_t *s;
 
 	/* this function compute at the temporal scale at which is called:
@@ -26,10 +27,11 @@ void dendrometry(cell_t *const c, const int height, const int age, const int spe
 	 * */
 
 	h = &c->heights[height];
-	s = &c->heights[height].ages[age].species[species];
+	d = &h->dbhs[dbh];
+	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 	/* assign previous month values */
-	oldavDBH = s->value[AVDBH];
+	oldavDBH = d->value;
 	oldTreeHeight = h->value;
 	oldBasalArea = s->value[BASAL_AREA];
 
@@ -44,30 +46,30 @@ void dendrometry(cell_t *const c, const int height, const int age, const int spe
 		/* use generic stemconst stempower values */
 		if (oldavDBH < 9)
 		{
-			s->value[AVDBH] = pow((s->value[AV_STEM_MASS_KgC] * GC_GDM / s->value[STEMCONST]), (1.0 / STEMPOWER_A));
+			d->value = pow((s->value[AV_STEM_MASS_KgC] * GC_GDM / s->value[STEMCONST]), (1.0 / STEMPOWER_A));
 		}
 		else if (oldavDBH > 9 && oldavDBH < 15)
 		{
-			s->value[AVDBH] = pow((s->value[AV_STEM_MASS_KgC] * GC_GDM / s->value[STEMCONST]), (1.0 / STEMPOWER_B));
+			d->value = pow((s->value[AV_STEM_MASS_KgC] * GC_GDM / s->value[STEMCONST]), (1.0 / STEMPOWER_B));
 		}
 		else
 		{
-			s->value[AVDBH] = pow((s->value[AV_STEM_MASS_KgC] * GC_GDM / s->value[STEMCONST]), (1.0 / STEMPOWER_C));
+			d->value = pow((s->value[AV_STEM_MASS_KgC] * GC_GDM / s->value[STEMCONST]), (1.0 / STEMPOWER_C));
 		}
 	}
 	else
 	{
 		/* use site specific stemconst stempower values */
 		logger(g_log, "Using site related stemconst stempower\n");
-		s->value[AVDBH] = pow((s->value[AV_STEM_MASS_KgC] * GC_GDM) / s->value[STEMCONST_P], (1.0 / s->value[STEMPOWER_P]));
+		d->value = pow((s->value[AV_STEM_MASS_KgC] * GC_GDM) / s->value[STEMCONST_P], (1.0 / s->value[STEMPOWER_P]));
 	}
 
 	logger(g_log, "-Average stem mass = %g kgC/tree\n", s->value[AV_STEM_MASS_KgC]);
 	logger(g_log, "-Old AVDBH = %g cm\n", oldavDBH);
-	logger(g_log, "-New Average DBH = %g cm\n", s->value[AVDBH]);
+	logger(g_log, "-New Average DBH = %g cm\n", d->value);
 
 	/* check */
-	CHECK_CONDITION( s->value[AVDBH], < oldavDBH - 1e-6 );
+	CHECK_CONDITION( d->value, < oldavDBH - 1e-6 );
 
 	/*************************************************************************************************************************/
 
@@ -87,7 +89,7 @@ void dendrometry(cell_t *const c, const int height, const int age, const int spe
 
 	logger(g_log, "\n**Tree Height from CC function**\n");
 
-	h->value = 1.3 + s->value[CRA] * pow (1.0 - exp ( - s->value[CRB] * s->value[AVDBH]) , s->value[CRC]);
+	h->value = 1.3 + s->value[CRA] * pow (1.0 - exp ( - s->value[CRB] * d->value) , s->value[CRC]);
 	logger(g_log, "-Tree Height using Chapman-Richard function = %g m\n", h->value);
 
 	if ( h->value > s->value[HMAX] )
@@ -123,11 +125,11 @@ void dendrometry(cell_t *const c, const int height, const int age, const int spe
 
 	logger(g_log, "\n**Basal Area and sapwood-heartwood area**\n");
 
-	s->value[BASAL_AREA] = ((pow((s->value[AVDBH] / 2.0), 2.0)) * Pi);
+	s->value[BASAL_AREA] = ((pow((d->value / 2.0), 2.0)) * Pi);
 	logger(g_log, " BASAL AREA = %g cm^2\n", s->value[BASAL_AREA]);
 	s->value[BASAL_AREA_m2]= s->value[BASAL_AREA] * 0.0001;
 	logger(g_log, " BASAL BASAL_AREA_m2 = %g m^2\n", s->value[BASAL_AREA_m2]);
-	s->value[SAPWOOD_AREA] = s->value[SAP_A] * pow (s->value[AVDBH], s->value[SAP_B]);
+	s->value[SAPWOOD_AREA] = s->value[SAP_A] * pow (d->value, s->value[SAP_B]);
 	logger(g_log, " SAPWOOD_AREA = %g cm^2\n", s->value[SAPWOOD_AREA]);
 	s->value[HEARTWOOD_AREA] = s->value[BASAL_AREA] - s->value[SAPWOOD_AREA];
 	logger(g_log, " HEART_WOOD_AREA = %g cm^2\n", s->value[HEARTWOOD_AREA]);

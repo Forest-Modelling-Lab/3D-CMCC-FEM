@@ -44,35 +44,23 @@ static int fill_cell(cell_t *const c)
 	c->heights[c->heights_count-1].value = g_settings->replanted_height;
 	h = &c->heights[c->heights_count-1];
 
-	/*****************************************************************************/
-	//ALESSIOC DBH
-//	/* alloc memory for dbhs */
-//	if ( ! alloc_struct((void **)&h->dbhs, &h->dbhs_count, sizeof(dbh_t)) )
-//	{
-//		return 0;
-//	}
-//	h->dbhs[h->dbhs_count-1] = dbh;
-//	h->dbhs[h->dbhs_count-1].value = g_settings->replanted_avdbh;
-//	a = &h->dbhs[h->dbhs_count-1];
-//
-//	/* alloc memory for ages */
-//	if ( ! alloc_struct((void **)&d->ages, &d->ages_count, sizeof(age_t)) )
-//	{
-//		return 0;
-//	}
-//	d->ages[d->ages_count-1] = age;
-//	d->ages[h->ages_count-1].value = g_settings->replanted_age;
-//	d = &d->ages[d->ages_count-1];
-	/******************************************************************************/
-
-	/* alloc memory for ages */
-	if ( ! alloc_struct((void **)&h->ages, &h->ages_count, sizeof(age_t)) )
+	/* alloc memory for dbhs */
+	if ( ! alloc_struct((void **)&h->dbhs, &h->dbhs_count, sizeof(dbh_t)) )
 	{
 		return 0;
 	}
-	h->ages[h->ages_count-1] = age;
-	h->ages[h->ages_count-1].value = g_settings->replanted_age;
-	a = &h->ages[h->ages_count-1];
+	h->dbhs[h->dbhs_count-1] = dbh;
+	h->dbhs[h->dbhs_count-1].value = g_settings->replanted_avdbh;
+	d = &h->dbhs[h->dbhs_count-1];
+
+	/* alloc memory for ages */
+	if ( ! alloc_struct((void **)&d->ages, &d->ages_count, sizeof(age_t)) )
+	{
+		return 0;
+	}
+	d->ages[d->ages_count-1] = age;
+	d->ages[d->ages_count-1].value = g_settings->replanted_age;
+	a = &d->ages[d->ages_count-1];
 
 	/* alloc memory for species */
 	if ( ! alloc_struct((void **)&a->species, &a->species_count, sizeof(species_t)) )
@@ -89,7 +77,6 @@ static int fill_cell(cell_t *const c)
 	a->species[a->species_count-1].name = p;
 	a->species[a->species_count-1].counter[N_TREE] = g_settings->replanted_n_tree;
 	a->species[a->species_count-1].counter[N_STUMP] = 0;
-	a->species[a->species_count-1].value[AVDBH] = g_settings->replanted_avdbh;
 	a->species[a->species_count-1].value[LAI] = g_settings->replanted_lai;
 	a->species[a->species_count-1].turnover = NULL; //malloc(a->species_count*sizeof*a->species[a->species_count-1].turnover);
 	//if ( ! a->species[a->species_count-1].turnover ) return 0;
@@ -97,7 +84,7 @@ static int fill_cell(cell_t *const c)
 	return 1;
 }
 
-int add_tree_class (cell_t *const c, const int height, const int age, const int species)
+int add_tree_class (cell_t *const c, const int height, const int dbh, const int age, const int species)
 {
 //	int i;
 //	int y;
@@ -125,7 +112,7 @@ int add_tree_class (cell_t *const c, const int height, const int age, const int 
 	*/
 
 	/* initialise new forest class pools */
-	initialization_forest_C_biomass( c, height, age, species );
+	initialization_forest_C_biomass( c, height, dbh, age, species );
 
 	return 1;
 }

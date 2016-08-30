@@ -306,7 +306,7 @@ void check_soil_water_balance(cell_t *const c, const meteo_daily_t *const meteo_
 
 /******************************************************CLASS LEVEL BALANCE CLOSURE*****************************************************/
 
-void check_class_radiation_balance(cell_t *const c, const int layer, const int height, const int age, const int species)
+void check_class_radiation_balance(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species)
 {
 	double in;
 	double out;
@@ -314,7 +314,7 @@ void check_class_radiation_balance(cell_t *const c, const int layer, const int h
 	double balance;
 
 	species_t *s;
-	s = &c->heights[height].ages[age].species[species];
+	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 	/* DAILY CHECK ON CLASS LEVEL CANOPY POOL-ATMOSPHERE RADIATIVE BALANCE */
 	//fixme: for all the balance doesn't takes into account the amount of light previously removed in Radiation function
@@ -413,7 +413,7 @@ void check_class_radiation_balance(cell_t *const c, const int layer, const int h
 		logger(g_log, "...ok PPFD balance at class level\n");
 	}
 }
-void check_class_carbon_balance(cell_t *const c, const int layer, const int height, const int age, const int species)
+void check_class_carbon_balance(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species)
 {
 	double in;
 	double out;
@@ -421,7 +421,7 @@ void check_class_carbon_balance(cell_t *const c, const int layer, const int heig
 	double balance;
 
 	species_t *s;
-	s = &c->heights[height].ages[age].species[species];
+	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 	/* DAILY CHECK ON CLASS LEVEL CARBON BALANCE */
 	/* check complete tree level carbon balance */
@@ -476,7 +476,7 @@ void check_class_carbon_balance(cell_t *const c, const int layer, const int heig
 	/*******************************************************************************************************************/
 }
 
-void check_class_water_balance(cell_t *const c, const int layer, const int height, const int age, const int species)
+void check_class_water_balance(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species)
 {
 	double in;
 	double out;
@@ -484,7 +484,7 @@ void check_class_water_balance(cell_t *const c, const int layer, const int heigh
 	double balance;
 
 	species_t *s;
-	s = &c->heights[height].ages[age].species[species];
+	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 	/* DAILY CHECK ON CLASS LEVEL CANOPY POOL-ATMOSPHERE WATER BALANCE */
 

@@ -18,7 +18,7 @@
 
 extern logger_t* g_log;
 
-void canopy_temperature(cell_t *const c, const int layer, const int height, const int age, const int species, const meteo_daily_t *const meteo_daily)
+void canopy_temperature(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, const meteo_daily_t *const meteo_daily)
 {
 	double ra;    /* bulk canopy resistance to heat and vapour transport */
 	double rc;    /* canopy surface resistance to vapour transport */
@@ -37,7 +37,7 @@ void canopy_temperature(cell_t *const c, const int layer, const int height, cons
 	double gc_e_wv;
 
 	species_t *s;
-	s = &c->heights[height].ages[age].species[species];
+	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 	/* the function to compute canopy temperature use eq. in Webber et al., 2016
 	 * the resistance parts follows the rationale of BIOME-BGC model 	 */

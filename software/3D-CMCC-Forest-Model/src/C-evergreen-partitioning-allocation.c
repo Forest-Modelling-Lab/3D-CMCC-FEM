@@ -29,7 +29,7 @@ extern int MonthLength [];
 extern int MonthLength_Leap [];
 
 /* Evergreen carbon allocation routine */
-void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer, const int height, const int age, const int species,
+void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species,
 		const meteo_daily_t *const meteo_daily, const int day, const int month, const int year)
 {
 	double s0Ctem;
@@ -56,8 +56,8 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 	species_t *s;
 
 	//h = &c->heights[height];
-	a = &c->heights[height].ages[age];
-	s = &c->heights[height].ages[age].species[species];
+	a = &c->heights[height].dbhs[dbh].ages[age];
+	s = &a->species[species];
 
 	old_s0Ctem = s0Ctem = s->value[S0CTEM];
 	old_r0Ctem = r0Ctem = s->value[R0CTEM];
@@ -277,7 +277,7 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 	//ALESSIOR is that correct?
 	if ( ( IS_LEAP_YEAR( c->years[year].year ) ? (MonthLength_Leap[month] ) : (MonthLength[month] )) == c->doy )
 	{
-		dendrometry ( c, height, age, species );
+		dendrometry ( c, height, dbh, age, species );
 	}
 
 	logger(g_log, "\n-Daily increment in carbon pools-\n");
@@ -296,7 +296,7 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 	logger(g_log, "C_BRANCH_LIVE_WOOD_TO_DEAD_WOOD = %g tC/cell/day\n", s->value[C_BRANCH_LIVE_WOOD_TO_DEAD_WOOD]);
 
 	/* leaf fall */
-	leaf_fall_evergreen(c, height, age, species);
+	leaf_fall_evergreen(c, height, dbh, age, species);
 
 	/* turnover */
 	turnover ( s );

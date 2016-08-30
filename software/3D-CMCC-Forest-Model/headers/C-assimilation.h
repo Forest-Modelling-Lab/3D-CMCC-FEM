@@ -4,6 +4,6 @@
 
 #include "matrix.h"
 
-void carbon_assimilation(cell_t *const c, const int layer, const int height, const int age, const int species);
+void carbon_assimilation(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species);
 
 #endif /* C_ASSIMILATION_H_ */

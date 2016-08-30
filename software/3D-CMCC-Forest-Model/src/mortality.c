@@ -21,6 +21,7 @@ void layer_self_pruning_thinning ( cell_t *const c )
 {
 	int layer;
 	int height;
+	int dbh;
 	int age;
 	int species;
 
@@ -82,7 +83,6 @@ void layer_self_pruning_thinning ( cell_t *const c )
 			/* REcompute numbers of height classes, tree number and density after mortality within each layer */
 			logger(g_log, "REcompute numbers of height classes, tree number and density after mortality within each layer\n\n");
 
-
 			for ( height = c->heights_count -1; height >= 0 ; --height )
 			{
 				if( layer == c->heights[height].height_z )
@@ -90,16 +90,19 @@ void layer_self_pruning_thinning ( cell_t *const c )
 					/* recompute number of height classes */
 					c->t_layers[layer].layer_n_height_class += 1;
 				}
-				for ( age = 0; age < c->heights[height].ages_count ; ++age )
+				for ( dbh = c->heights[height].dbhs_count - 1; dbh >= 0; --dbh)
 				{
-					for ( species = 0; species < c->heights[height].ages[age].species_count; ++species )
+					for ( age = 0; age < c->heights[height].dbhs[dbh].ages_count ; ++age )
 					{
-						s = &c->heights[height].ages[age].species[species];
-
-						if( layer == c->heights[height].height_z )
+						for ( species = 0; species < c->heights[height].dbhs[dbh].ages[age].species_count; ++species )
 						{
-							/* recompute number of trees for each layer */
-							c->t_layers[layer].layer_n_trees += s->counter[N_TREE];
+							s = &c->heights[height].dbhs[dbh].ages[age].species[species];
+
+							if( layer == c->heights[height].height_z )
+							{
+								/* recompute number of trees for each layer */
+								c->t_layers[layer].layer_n_trees += s->counter[N_TREE];
+							}
 						}
 					}
 				}
@@ -135,6 +138,7 @@ void layer_self_pruning_thinning ( cell_t *const c )
 int self_pruning ( cell_t *const c, const int layer )
 {
 	int height;
+	int dbh;
 	int age;
 	int species;
 
@@ -143,6 +147,7 @@ int self_pruning ( cell_t *const c, const int layer )
 
 	tree_layer_t *l;
 	height_t *h;
+	dbh_t *d;
 	age_t *a;
 	species_t *s;
 
@@ -154,7 +159,7 @@ int self_pruning ( cell_t *const c, const int layer )
 
 	logger(g_log, "\n**SELF-PRUNING FUNCTION for layer %d**\n", layer);
 
-	for ( height = c->heights_count - 1; height >= 0; height-- )
+	for ( height = c->heights_count - 1; height >= 0; --height )
 	{
 		h = &c->heights[height];
 
@@ -162,131 +167,139 @@ int self_pruning ( cell_t *const c, const int layer )
 		/* model makes prune before lower height in each later */
 		qsort (c->heights, c->heights_count, sizeof (height_t), sort_by_heights_desc);
 
-		for ( age = 0; age < h->ages_count ; ++age )
+		//ALESSIOC ALESSIOR CHECK THAT THE FOR STARTS WITH THE LOWEST DBH VALUE
+		for ( dbh = h->dbhs_count - 1; dbh >= 0; --dbh)
 		{
-			a = &c->heights[height].ages[age];
+			d = &c->heights[height].dbhs[dbh];
 
-			for ( species = 0; species < a->species_count; ++species )
+			for ( age = 0; age < d->ages_count ; ++age )
 			{
-				s = &c->heights[height].ages[age].species[species];
+				a = &c->heights[height].dbhs[dbh].ages[age];
 
-				logger(g_log, "layer %d; layer cover %g, height %g\n", layer, l->layer_cover * 100, h->value);
-				logger(g_log, "DBHDC effective before pruning = %g\n", s->value[DBHDC_EFF]);
-
-				/* compute possible crown area for above canopy cover dbhdc */
-				old_crown_area = s->value[CROWN_AREA_DBHDC];
-				logger(g_log,"old crown area before pruning = %g m2/tree\n", old_crown_area);
-
-				/* until layer cover not reaches lower values than max_layer_cover or DBDCMIN */
-				while( l->layer_cover > g_settings->max_layer_cover )
+				for ( species = 0; species < a->species_count; ++species )
 				{
-					/* reduce DBHDC_EFF */
-					/* note: 0.00005 is an arbitrary value */
-					s->value[DBHDC_EFF] -= 0.00005;
-					//logger(g_log,"DBHDC effective during while = %g\n", s->value[DBHDC_EFF]);
+					s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
-					/* recompute crown diameter */
-					s->value[CROWN_DIAMETER_DBHDC] = s->value[AVDBH] * s->value[DBHDC_EFF];
-					//logger(g_log, "-Crown Diameter from DBHDC function  = %g m\n", s->value[CROWN_DIAMETER_DBHDC]);
+					logger(g_log, "layer %d; layer cover %g, height %g\n", layer, l->layer_cover * 100, h->value);
+					logger(g_log, "DBHDC effective before pruning = %g\n", s->value[DBHDC_EFF]);
 
-					/* Crown Area using DBH-DC */
-					s->value[CROWN_AREA_DBHDC] = ( Pi / 4) * pow (s->value[CROWN_DIAMETER_DBHDC], 2 );
-					//logger(g_log, "-Crown Area from DBHDC function = %g m^2\n", s->value[CROWN_AREA_DBHDC]);
+					/* compute possible crown area for above canopy cover dbhdc */
+					old_crown_area = s->value[CROWN_AREA_DBHDC];
+					logger(g_log,"old crown area before pruning = %g m2/tree\n", old_crown_area);
 
-					/* Canopy Cover using DBH-DC */
-					s->value[CANOPY_COVER_DBHDC] = s->value[CROWN_AREA_DBHDC] * s->counter[N_TREE] / g_settings->sizeCell;
-					//logger(g_log, "-Canopy cover DBH-DC class level = %g %%\n", s->value[CANOPY_COVER_DBHDC] * 100.0);
-
-					/* recompute layer cover */
-					if( c->t_layers[layer].layer_n_height_class == 1)
+					/* until layer cover not reaches lower values than max_layer_cover or DBDCMIN */
+					while( l->layer_cover > g_settings->max_layer_cover )
 					{
-						l->layer_cover = s->value[CANOPY_COVER_DBHDC];
+						/* reduce DBHDC_EFF */
+						/* note: 0.00005 is an arbitrary value */
+						s->value[DBHDC_EFF] -= 0.00005;
+						//logger(g_log,"DBHDC effective during while = %g\n", s->value[DBHDC_EFF]);
+
+						/* recompute crown diameter */
+						s->value[CROWN_DIAMETER_DBHDC] = d->value * s->value[DBHDC_EFF];
+						//logger(g_log, "-Crown Diameter from DBHDC function  = %g m\n", s->value[CROWN_DIAMETER_DBHDC]);
+
+						/* Crown Area using DBH-DC */
+						s->value[CROWN_AREA_DBHDC] = ( Pi / 4) * pow (s->value[CROWN_DIAMETER_DBHDC], 2 );
+						//logger(g_log, "-Crown Area from DBHDC function = %g m^2\n", s->value[CROWN_AREA_DBHDC]);
+
+						/* Canopy Cover using DBH-DC */
+						s->value[CANOPY_COVER_DBHDC] = s->value[CROWN_AREA_DBHDC] * s->counter[N_TREE] / g_settings->sizeCell;
+						//logger(g_log, "-Canopy cover DBH-DC class level = %g %%\n", s->value[CANOPY_COVER_DBHDC] * 100.0);
+
+						/* recompute layer cover */
+						if( c->t_layers[layer].layer_n_height_class == 1)
+						{
+							l->layer_cover = s->value[CANOPY_COVER_DBHDC];
+						}
+						//fixme is not correct for multilayer
+						else
+						{
+							l->layer_cover += s->value[CANOPY_COVER_DBHDC];
+						}
+						//logger(g_log, "-layer cover cell level = %g \n", l->layer_cover);
 					}
-					//fixme is not correct for multilayer
+					/************************************************************************/
+
+					/* reduce proportionally to the crown area reduction the amount of branch and leaf C pool */
+					/* compute percentage in crown area reduction for self-pruning */
+					red_perc = (s->value[CROWN_AREA_DBHDC] / old_crown_area);
+					logger(g_log, "percentage of reduction in crown area = %g %%\n", (1 - red_perc) * 100 );
+
+					/***************************************************************/
+					/* update branch C pool */
+					//fixme model highly overestimate reduction
+					//because it removes indistinctly coarse branch and fine branch
+					//fixme something should be retranslocated to reserve??
+					//s->value[BRANCH_C] *= red_perc;
+
+					/* update branch N pool */
+					//s->value[BRANCH_N] *= red_perc;
+
+					/***************************************************************/
+					/* update coarse root C pool */
+					//fixme something should be retranslocated to reserve??
+					//s->value[COARSE_ROOT_C] *= red_perc;
+
+					/* update coarse root N pool */
+					//s->value[COARSE_ROOT_N] *= red_perc;
+					;
+
+					/***************************************************************/
+					/* update leaf C pool */
+					//fixme something should be retranslocated to reserve??
+					//s->value[LEAF_C] *= perc;
+
+					/* update leaf N pool */
+					//s->value[LEAF_N] *= perc;
+
+					/***************************************************************/
+					/* self-pruned C biomass to litter */
+					//s->value[LITTER_C] += (s->value[BRANCH_C] * (1 - red_perc)) +
+					//		(s->value[COARSE_ROOT_C] * (1 - red_perc)) +
+					//		(s->value[LEAF_C] * (1 - red_perc));
+
+					/***************************************************************/
+
+					/* summary after pruning */
+					logger(g_log, "-after pruning-\n");
+					logger(g_log, "-branch carbon = %g tC/cell\n", s->value[BRANCH_C]);
+					logger(g_log, "-DBHDC effective = %g\n", s->value[DBHDC_EFF]);
+					logger(g_log, "-DBHDC MINIMUM = %g\n", s->value[DBHDCMIN]);
+					logger(g_log, "-DEN MINIMUM = %g\n", s->value[DENMIN]);
+					logger(g_log, "-Crown Diameter from DBHDC function  = %g m\n", s->value[CROWN_DIAMETER_DBHDC]);
+					logger(g_log, "-Crown Area from DBHDC function = %g m^2\n", s->value[CROWN_AREA_DBHDC]);
+					logger(g_log, "-Canopy cover DBH-DC class level = %g %%\n", s->value[CANOPY_COVER_DBHDC] * 100.0);
+					logger(g_log, "-layer cover cell level = %g\n", l->layer_cover);
+
+					/* check if reduction in dbhdc satisfy max layer cover */
+					if ( l->layer_cover < g_settings->max_layer_cover && s->value[DBHDC_EFF] > s->value[DBHDCMIN] )
+					{
+						//todo to be tested
+						/* self-pruning was enough */
+						logger(g_log, "self-pruning was enough\n");
+						return 1;
+					}
 					else
 					{
-						l->layer_cover += s->value[CANOPY_COVER_DBHDC];
+						//todo to be tested
+						/* self-pruning was not enough */
+						logger(g_log, "self-pruning was not enough\n");
+						return 0;
+
 					}
-					//logger(g_log, "-layer cover cell level = %g \n", l->layer_cover);
-				}
-				/************************************************************************/
-
-				/* reduce proportionally to the crown area reduction the amount of branch and leaf C pool */
-				/* compute percentage in crown area reduction for self-pruning */
-				red_perc = (s->value[CROWN_AREA_DBHDC] / old_crown_area);
-				logger(g_log, "percentage of reduction in crown area = %g %%\n", (1 - red_perc) * 100 );
-
-				/***************************************************************/
-				/* update branch C pool */
-				//fixme model highly overestimate reduction
-				//because it removes indistinctly coarse branch and fine branch
-				//fixme something should be retranslocated to reserve??
-				//s->value[BRANCH_C] *= red_perc;
-
-				/* update branch N pool */
-				//s->value[BRANCH_N] *= red_perc;
-
-				/***************************************************************/
-				/* update coarse root C pool */
-				//fixme something should be retranslocated to reserve??
-				//s->value[COARSE_ROOT_C] *= red_perc;
-
-				/* update coarse root N pool */
-				//s->value[COARSE_ROOT_N] *= red_perc;
-				;
-
-				/***************************************************************/
-				/* update leaf C pool */
-				//fixme something should be retranslocated to reserve??
-				//s->value[LEAF_C] *= perc;
-
-				/* update leaf N pool */
-				//s->value[LEAF_N] *= perc;
-
-				/***************************************************************/
-				/* self-pruned C biomass to litter */
-				//s->value[LITTER_C] += (s->value[BRANCH_C] * (1 - red_perc)) +
-				//		(s->value[COARSE_ROOT_C] * (1 - red_perc)) +
-				//		(s->value[LEAF_C] * (1 - red_perc));
-
-				/***************************************************************/
-
-				/* summary after pruning */
-				logger(g_log, "-after pruning-\n");
-				logger(g_log, "-branch carbon = %g tC/cell\n", s->value[BRANCH_C]);
-				logger(g_log, "-DBHDC effective = %g\n", s->value[DBHDC_EFF]);
-				logger(g_log, "-DBHDC MINIMUM = %g\n", s->value[DBHDCMIN]);
-				logger(g_log, "-DEN MINIMUM = %g\n", s->value[DENMIN]);
-				logger(g_log, "-Crown Diameter from DBHDC function  = %g m\n", s->value[CROWN_DIAMETER_DBHDC]);
-				logger(g_log, "-Crown Area from DBHDC function = %g m^2\n", s->value[CROWN_AREA_DBHDC]);
-				logger(g_log, "-Canopy cover DBH-DC class level = %g %%\n", s->value[CANOPY_COVER_DBHDC] * 100.0);
-				logger(g_log, "-layer cover cell level = %g\n", l->layer_cover);
-
-				/* check if reduction in dbhdc satisfy max layer cover */
-				if ( l->layer_cover < g_settings->max_layer_cover && s->value[DBHDC_EFF] > s->value[DBHDCMIN] )
-				{
-					//todo to be tested
-					/* self-pruning was enough */
-					logger(g_log, "self-pruning was enough\n");
-					return 1;
-				}
-				else
-				{
-					//todo to be tested
-					/* self-pruning was not enough */
-					logger(g_log, "self-pruning was not enough\n");
-					return 0;
 				}
 			}
 		}
 	}
-
+	//ALESSIOC PORCATA
 	return 2;
 }
 
 void self_thinning ( cell_t *const c, const int layer )
 {
 	int height;
+	int dbh;
 	int age;
 	int species;
 
@@ -295,6 +308,7 @@ void self_thinning ( cell_t *const c, const int layer )
 	//int deadstump = 0;
 
 	height_t *h;
+	dbh_t *d;
 	species_t *s;
 
 	/* "First, large plants suppress small plants.
@@ -318,130 +332,135 @@ void self_thinning ( cell_t *const c, const int layer )
 		/* model makes die before lower height in each later */
 		qsort (c->heights, c->heights_count, sizeof (height_t), sort_by_heights_desc);
 
-		for ( age = 0; age < c->heights[height].ages_count ; ++age )
+		//ALESSIOC ALESSIOR CHECK THAT THE FOR STARTS WITH THE LOWEST DBH VALUE
+		for ( dbh = h->dbhs_count - 1; dbh >= 0; --dbh)
 		{
-			for ( species = 0; species < c->heights[height].ages[age].species_count; ++species )
+			for ( age = 0; age < c->heights[height].dbhs[dbh].ages_count ; ++age )
 			{
-				h = &c->heights[height];
-				s = &c->heights[height].ages[age].species[species];
-
-				logger(g_log, "MORTALITY BASED ON HIGH CANOPY COVER height %g species %s dbh %g !!!\n", h->value, s->name, s->value[AVDBH]);
-
-				if (s->management == T)
+				for ( species = 0; species < c->heights[height].dbhs[dbh].ages[age].species_count; ++species )
 				{
-					/* compute average biomass */
-					s->value[AV_STEM_MASS_KgC] = (s->value[STEM_C] / (double)s->counter[N_TREE])*1000.0;
-					s->value[AV_LEAF_MASS_KgC] = (s->value[LEAF_C] / (double)s->counter[N_TREE])*1000.0;
-					s->value[AV_ROOT_MASS_KgC] = (s->value[TOT_ROOT_C] / (double)s->counter[N_TREE])*1000.0;
-					s->value[AV_FINE_ROOT_MASS_KgC] = (s->value[FINE_ROOT_C] / (double)s->counter[N_TREE])*1000.0;
-					s->value[AV_COARSE_ROOT_MASS_KgC] =(s->value[COARSE_ROOT_C] / (double)s->counter[N_TREE])*1000.0;
-					s->value[AV_RESERVE_MASS_KgC] = (s->value[RESERVE_C] / (double)s->counter[N_TREE])*1000.0;
-					s->value[AV_BRANCH_MASS_KgC] = (s->value[BRANCH_C] / (double)s->counter[N_TREE])*1000.0;
-					s->value[AV_LIVE_STEM_MASS_KgC] = (s->value[STEM_LIVE_WOOD_C] / (double)s->counter[N_TREE])*1000.0;
-					s->value[AV_DEAD_STEM_MASS_KgC] = (s->value[STEM_DEAD_WOOD_C] / (double)s->counter[N_TREE])*1000.0;
-					s->value[AV_LIVE_COARSE_ROOT_MASS_KgC] = (s->value[COARSE_ROOT_LIVE_WOOD_C] / (double)s->counter[N_TREE])*1000.0;
-					s->value[AV_DEAD_COARSE_ROOT_MASS_KgC] = (s->value[COARSE_ROOT_DEAD_WOOD_C] / (double)s->counter[N_TREE])*1000.0;
-					s->value[AV_LIVE_BRANCH_MASS_KgC] = (s->value[BRANCH_LIVE_WOOD_C] / (double)s->counter[N_TREE])*1000.0;
-					s->value[AV_DEAD_BRANCH_MASS_KgC] = (s->value[BRANCH_DEAD_WOOD_C] / (double)s->counter[N_TREE])*1000.0;
+					h = &c->heights[height];
+					d = &c->heights[height].dbhs[dbh];
+					s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
-					/* mortality */
-					while (c->t_layers[layer].layer_cover > g_settings->max_layer_cover && s->counter[N_TREE] > 0)
+					logger(g_log, "MORTALITY BASED ON HIGH CANOPY COVER height %g species %s dbh %g !!!\n", h->value, s->name, d->value);
+
+					if (s->management == T)
 					{
-						--s->counter[N_TREE];
-						++deadtree;
+						/* compute average biomass */
+						s->value[AV_STEM_MASS_KgC] = (s->value[STEM_C] / (double)s->counter[N_TREE])*1000.0;
+						s->value[AV_LEAF_MASS_KgC] = (s->value[LEAF_C] / (double)s->counter[N_TREE])*1000.0;
+						s->value[AV_ROOT_MASS_KgC] = (s->value[TOT_ROOT_C] / (double)s->counter[N_TREE])*1000.0;
+						s->value[AV_FINE_ROOT_MASS_KgC] = (s->value[FINE_ROOT_C] / (double)s->counter[N_TREE])*1000.0;
+						s->value[AV_COARSE_ROOT_MASS_KgC] =(s->value[COARSE_ROOT_C] / (double)s->counter[N_TREE])*1000.0;
+						s->value[AV_RESERVE_MASS_KgC] = (s->value[RESERVE_C] / (double)s->counter[N_TREE])*1000.0;
+						s->value[AV_BRANCH_MASS_KgC] = (s->value[BRANCH_C] / (double)s->counter[N_TREE])*1000.0;
+						s->value[AV_LIVE_STEM_MASS_KgC] = (s->value[STEM_LIVE_WOOD_C] / (double)s->counter[N_TREE])*1000.0;
+						s->value[AV_DEAD_STEM_MASS_KgC] = (s->value[STEM_DEAD_WOOD_C] / (double)s->counter[N_TREE])*1000.0;
+						s->value[AV_LIVE_COARSE_ROOT_MASS_KgC] = (s->value[COARSE_ROOT_LIVE_WOOD_C] / (double)s->counter[N_TREE])*1000.0;
+						s->value[AV_DEAD_COARSE_ROOT_MASS_KgC] = (s->value[COARSE_ROOT_DEAD_WOOD_C] / (double)s->counter[N_TREE])*1000.0;
+						s->value[AV_LIVE_BRANCH_MASS_KgC] = (s->value[BRANCH_LIVE_WOOD_C] / (double)s->counter[N_TREE])*1000.0;
+						s->value[AV_DEAD_BRANCH_MASS_KgC] = (s->value[BRANCH_DEAD_WOOD_C] / (double)s->counter[N_TREE])*1000.0;
 
-						/* recompute class level canopy cover */
-						s->value[CANOPY_COVER_DBHDC] -= (s->value[CROWN_AREA_DBHDC] / g_settings->sizeCell);
-
-						/* recompute layer level canopy cover */
-						c->t_layers[layer].layer_cover -= (s->value[CROWN_AREA_DBHDC] / g_settings->sizeCell);
-
-						//fixme to remove once implemented function below
-						CHECK_CONDITION(s->counter[N_TREE], > 0);
-
-						if (s->counter[N_TREE] == 0)
+						/* mortality */
+						while (c->t_layers[layer].layer_cover > g_settings->max_layer_cover && s->counter[N_TREE] > 0)
 						{
-							/* mortality for the higher height class */
-							while (c->t_layers[layer].layer_cover > g_settings->max_layer_cover && c->heights[height + 1].ages[age].species[species].counter[N_TREE] > 0)
+							--s->counter[N_TREE];
+							++deadtree;
+
+							/* recompute class level canopy cover */
+							s->value[CANOPY_COVER_DBHDC] -= (s->value[CROWN_AREA_DBHDC] / g_settings->sizeCell);
+
+							/* recompute layer level canopy cover */
+							c->t_layers[layer].layer_cover -= (s->value[CROWN_AREA_DBHDC] / g_settings->sizeCell);
+
+							//fixme to remove once implemented function below
+							CHECK_CONDITION(s->counter[N_TREE], > 0);
+
+							if (s->counter[N_TREE] == 0)
 							{
-								--c->heights[height + 1].ages[age].species[species].counter[N_TREE];
-								++deadtree;
+								/* mortality for the higher height class */
+								while (c->t_layers[layer].layer_cover > g_settings->max_layer_cover && c->heights[height + 1].dbhs[dbh].ages[age].species[species].counter[N_TREE] > 0)
+								{
+									--c->heights[height + 1].dbhs[dbh].ages[age].species[species].counter[N_TREE];
+									++deadtree;
 
-								//fixme not correct
-								c->heights[height + 1].ages[age].species[species].value[CANOPY_COVER_DBHDC] -=
-										(c->heights[height + 1].ages[age].species[species].value[CROWN_AREA_DBHDC] / g_settings->sizeCell);
+									//fixme not correct
+									c->heights[height + 1].dbhs[dbh].ages[age].species[species].value[CANOPY_COVER_DBHDC] -=
+											(c->heights[height + 1].dbhs[dbh].ages[age].species[species].value[CROWN_AREA_DBHDC] / g_settings->sizeCell);
 
-								/* recompute layer level canopy cover */
-								c->t_layers[layer].layer_cover -=
-										(c->heights[height + 1].ages[age].species[species].value[CROWN_AREA_DBHDC] / g_settings->sizeCell);
+									/* recompute layer level canopy cover */
+									c->t_layers[layer].layer_cover -=
+											(c->heights[height + 1].dbhs[dbh].ages[age].species[species].value[CROWN_AREA_DBHDC] / g_settings->sizeCell);
 
+								}
 							}
+
+							/* check */
+							CHECK_CONDITION(s->counter[N_TREE], <= 0);
+
+
+							/* remove class */
+							//ALESSIOR how remove one class??
+							//if(s->counter[N_TREE] == 0)
+							// remove_one_tree_class ();
+
+							/* update at cell level */
+							c->daily_dead_tree += deadtree;
+							c->monthly_dead_tree += deadtree;
+							c->annual_dead_tree += deadtree;
 						}
 
-						/* check */
-						CHECK_CONDITION(s->counter[N_TREE], <= 0);
+						/* update class biomass */
+						s->value[STEM_C] -= (s->value[AV_STEM_MASS_KgC]/1000.0*deadtree);
+						s->value[LEAF_C] -= (s->value[AV_LEAF_MASS_KgC]/1000.0*deadtree);
+						s->value[FINE_ROOT_C] -= (s->value[AV_FINE_ROOT_MASS_KgC]/1000.0*deadtree);
+						s->value[COARSE_ROOT_C] -= (s->value[AV_COARSE_ROOT_MASS_KgC]/1000.0*deadtree);
+						s->value[RESERVE_C] -= (s->value[AV_RESERVE_MASS_KgC]/1000.0*deadtree);
+						s->value[BRANCH_C] -= (s->value[AV_BRANCH_MASS_KgC]/1000.0*deadtree);
+						s->value[STEM_LIVE_WOOD_C] -= (s->value[AV_LIVE_STEM_MASS_KgC]/1000.0*deadtree);
+						s->value[STEM_DEAD_WOOD_C] -= (s->value[AV_DEAD_STEM_MASS_KgC]/1000.0*deadtree);
+						s->value[COARSE_ROOT_LIVE_WOOD_C] -= (s->value[AV_LIVE_COARSE_ROOT_MASS_KgC]/1000.0*deadtree);
+						s->value[COARSE_ROOT_DEAD_WOOD_C] -= (s->value[AV_DEAD_COARSE_ROOT_MASS_KgC]/1000.0*deadtree);
+						s->value[BRANCH_LIVE_WOOD_C] -= (s->value[AV_LIVE_BRANCH_MASS_KgC]/1000.0*deadtree);
+						s->value[BRANCH_DEAD_WOOD_C] -= (s->value[AV_DEAD_BRANCH_MASS_KgC]/1000.0*deadtree);
 
+						s->value[LITTER_C] += (s->value[AV_LEAF_MASS_KgC]/1000.0*deadtree) +
+								(s->value[AV_FINE_ROOT_MASS_KgC]/1000.0*deadtree) +
+								(s->value[AV_COARSE_ROOT_MASS_KgC]/1000.0*deadtree) +
+								(s->value[AV_STEM_MASS_KgC]/1000.0*deadtree) +
+								(s->value[AV_RESERVE_MASS_KgC]/1000.0*deadtree) +
+								(s->value[AV_BRANCH_MASS_KgC]/1000.0*deadtree);
 
-						/* remove class */
-						//ALESSIOR how remove one class??
-						//if(s->counter[N_TREE] == 0)
-						// remove_one_tree_class ();
-
-						/* update at cell level */
-						c->daily_dead_tree += deadtree;
-						c->monthly_dead_tree += deadtree;
-						c->annual_dead_tree += deadtree;
+						/* compute average biomass */
+						s->value[AV_LEAF_MASS_KgC] = (s->value[LEAF_C] / (double)s->counter[N_TREE])*1000.0;
+						s->value[AV_STEM_MASS_KgC] = (s->value[STEM_C] / (double)s->counter[N_TREE])*1000.0;
+						s->value[AV_ROOT_MASS_KgC] = (s->value[TOT_ROOT_C] / (double)s->counter[N_TREE])*1000.0;
+						s->value[AV_FINE_ROOT_MASS_KgC] = (s->value[FINE_ROOT_C] / (double)s->counter[N_TREE])*1000.0;
+						s->value[AV_COARSE_ROOT_MASS_KgC] =(s->value[COARSE_ROOT_C] / (double)s->counter[N_TREE])*1000.0;
+						s->value[AV_RESERVE_MASS_KgC] = (s->value[RESERVE_C] / (double)s->counter[N_TREE])*1000.0;
+						s->value[AV_BRANCH_MASS_KgC] = (s->value[BRANCH_C] / (double)s->counter[N_TREE])*1000.0;
+						s->value[AV_LIVE_STEM_MASS_KgC] = (s->value[STEM_LIVE_WOOD_C] / (double)s->counter[N_TREE])*1000.0;
+						s->value[AV_DEAD_STEM_MASS_KgC] = (s->value[STEM_DEAD_WOOD_C] / (double)s->counter[N_TREE])*1000.0;
+						s->value[AV_LIVE_COARSE_ROOT_MASS_KgC] = (s->value[COARSE_ROOT_LIVE_WOOD_C] / (double)s->counter[N_TREE])*1000.0;
+						s->value[AV_DEAD_COARSE_ROOT_MASS_KgC] = (s->value[COARSE_ROOT_DEAD_WOOD_C] / (double)s->counter[N_TREE])*1000.0;
+						s->value[AV_LIVE_BRANCH_MASS_KgC] = (s->value[BRANCH_LIVE_WOOD_C] / (double)s->counter[N_TREE])*1000.0;
+						s->value[AV_DEAD_BRANCH_MASS_KgC] = (s->value[BRANCH_DEAD_WOOD_C] / (double)s->counter[N_TREE])*1000.0;
 					}
 
-					/* update class biomass */
-					s->value[STEM_C] -= (s->value[AV_STEM_MASS_KgC]/1000.0*deadtree);
-					s->value[LEAF_C] -= (s->value[AV_LEAF_MASS_KgC]/1000.0*deadtree);
-					s->value[FINE_ROOT_C] -= (s->value[AV_FINE_ROOT_MASS_KgC]/1000.0*deadtree);
-					s->value[COARSE_ROOT_C] -= (s->value[AV_COARSE_ROOT_MASS_KgC]/1000.0*deadtree);
-					s->value[RESERVE_C] -= (s->value[AV_RESERVE_MASS_KgC]/1000.0*deadtree);
-					s->value[BRANCH_C] -= (s->value[AV_BRANCH_MASS_KgC]/1000.0*deadtree);
-					s->value[STEM_LIVE_WOOD_C] -= (s->value[AV_LIVE_STEM_MASS_KgC]/1000.0*deadtree);
-					s->value[STEM_DEAD_WOOD_C] -= (s->value[AV_DEAD_STEM_MASS_KgC]/1000.0*deadtree);
-					s->value[COARSE_ROOT_LIVE_WOOD_C] -= (s->value[AV_LIVE_COARSE_ROOT_MASS_KgC]/1000.0*deadtree);
-					s->value[COARSE_ROOT_DEAD_WOOD_C] -= (s->value[AV_DEAD_COARSE_ROOT_MASS_KgC]/1000.0*deadtree);
-					s->value[BRANCH_LIVE_WOOD_C] -= (s->value[AV_LIVE_BRANCH_MASS_KgC]/1000.0*deadtree);
-					s->value[BRANCH_DEAD_WOOD_C] -= (s->value[AV_DEAD_BRANCH_MASS_KgC]/1000.0*deadtree);
-
-					s->value[LITTER_C] += (s->value[AV_LEAF_MASS_KgC]/1000.0*deadtree) +
-							(s->value[AV_FINE_ROOT_MASS_KgC]/1000.0*deadtree) +
-							(s->value[AV_COARSE_ROOT_MASS_KgC]/1000.0*deadtree) +
-							(s->value[AV_STEM_MASS_KgC]/1000.0*deadtree) +
-							(s->value[AV_RESERVE_MASS_KgC]/1000.0*deadtree) +
-							(s->value[AV_BRANCH_MASS_KgC]/1000.0*deadtree);
-
-					/* compute average biomass */
-					s->value[AV_LEAF_MASS_KgC] = (s->value[LEAF_C] / (double)s->counter[N_TREE])*1000.0;
-					s->value[AV_STEM_MASS_KgC] = (s->value[STEM_C] / (double)s->counter[N_TREE])*1000.0;
-					s->value[AV_ROOT_MASS_KgC] = (s->value[TOT_ROOT_C] / (double)s->counter[N_TREE])*1000.0;
-					s->value[AV_FINE_ROOT_MASS_KgC] = (s->value[FINE_ROOT_C] / (double)s->counter[N_TREE])*1000.0;
-					s->value[AV_COARSE_ROOT_MASS_KgC] =(s->value[COARSE_ROOT_C] / (double)s->counter[N_TREE])*1000.0;
-					s->value[AV_RESERVE_MASS_KgC] = (s->value[RESERVE_C] / (double)s->counter[N_TREE])*1000.0;
-					s->value[AV_BRANCH_MASS_KgC] = (s->value[BRANCH_C] / (double)s->counter[N_TREE])*1000.0;
-					s->value[AV_LIVE_STEM_MASS_KgC] = (s->value[STEM_LIVE_WOOD_C] / (double)s->counter[N_TREE])*1000.0;
-					s->value[AV_DEAD_STEM_MASS_KgC] = (s->value[STEM_DEAD_WOOD_C] / (double)s->counter[N_TREE])*1000.0;
-					s->value[AV_LIVE_COARSE_ROOT_MASS_KgC] = (s->value[COARSE_ROOT_LIVE_WOOD_C] / (double)s->counter[N_TREE])*1000.0;
-					s->value[AV_DEAD_COARSE_ROOT_MASS_KgC] = (s->value[COARSE_ROOT_DEAD_WOOD_C] / (double)s->counter[N_TREE])*1000.0;
-					s->value[AV_LIVE_BRANCH_MASS_KgC] = (s->value[BRANCH_LIVE_WOOD_C] / (double)s->counter[N_TREE])*1000.0;
-					s->value[AV_DEAD_BRANCH_MASS_KgC] = (s->value[BRANCH_DEAD_WOOD_C] / (double)s->counter[N_TREE])*1000.0;
+					logger(g_log, "LEAF_C removed =%g tC\n",(s->value[AV_LEAF_MASS_KgC]/1000.0*deadtree));
+					logger(g_log, "FINE_ROOT_C removed =%g tC\n",(s->value[AV_FINE_ROOT_MASS_KgC]/1000.0*deadtree));
+					logger(g_log, "COARSE_ROOT_C removed =%g tC\n",(s->value[AV_COARSE_ROOT_MASS_KgC]/1000.0*deadtree));
+					logger(g_log, "STEM_C removed =%g tC\n",(s->value[AV_STEM_MASS_KgC]/1000.0*deadtree));
+					logger(g_log, "RESERVE_C removed =%g tC\n",(s->value[AV_RESERVE_MASS_KgC]/1000.0*deadtree));
+					logger(g_log, "BRANCH_C removed =%g tC\n",(s->value[AV_BRANCH_MASS_KgC]/1000.0*deadtree));
+					logger(g_log, "STEM_LIVE_WOOD_C removed =%g tC\n",(s->value[AV_LIVE_STEM_MASS_KgC]/1000.0*deadtree));
+					logger(g_log, "STEM_DEAD_WOOD_C removed =%g tC\n",(s->value[AV_DEAD_STEM_MASS_KgC]/1000.0*deadtree));
+					logger(g_log, "COARSE_ROOT_LIVE_WOOD_C removed =%g tC\n",(s->value[AV_LIVE_COARSE_ROOT_MASS_KgC]/1000.0*deadtree));
+					logger(g_log, "COARSE_ROOT_DEAD_WOOD_C removed =%g tC\n",(s->value[AV_DEAD_COARSE_ROOT_MASS_KgC]/1000.0*deadtree));
+					logger(g_log, "BRANCH_LIVE_WOOD_C removed =%g tC\n",(s->value[AV_LIVE_BRANCH_MASS_KgC]/1000.0*deadtree));
+					logger(g_log, "BRANCH_DEAD_WOOD_C removed =%g tC\n",(s->value[AV_DEAD_BRANCH_MASS_KgC]/1000.0*deadtree));
 				}
-
-				logger(g_log, "LEAF_C removed =%g tC\n",(s->value[AV_LEAF_MASS_KgC]/1000.0*deadtree));
-				logger(g_log, "FINE_ROOT_C removed =%g tC\n",(s->value[AV_FINE_ROOT_MASS_KgC]/1000.0*deadtree));
-				logger(g_log, "COARSE_ROOT_C removed =%g tC\n",(s->value[AV_COARSE_ROOT_MASS_KgC]/1000.0*deadtree));
-				logger(g_log, "STEM_C removed =%g tC\n",(s->value[AV_STEM_MASS_KgC]/1000.0*deadtree));
-				logger(g_log, "RESERVE_C removed =%g tC\n",(s->value[AV_RESERVE_MASS_KgC]/1000.0*deadtree));
-				logger(g_log, "BRANCH_C removed =%g tC\n",(s->value[AV_BRANCH_MASS_KgC]/1000.0*deadtree));
-				logger(g_log, "STEM_LIVE_WOOD_C removed =%g tC\n",(s->value[AV_LIVE_STEM_MASS_KgC]/1000.0*deadtree));
-				logger(g_log, "STEM_DEAD_WOOD_C removed =%g tC\n",(s->value[AV_DEAD_STEM_MASS_KgC]/1000.0*deadtree));
-				logger(g_log, "COARSE_ROOT_LIVE_WOOD_C removed =%g tC\n",(s->value[AV_LIVE_COARSE_ROOT_MASS_KgC]/1000.0*deadtree));
-				logger(g_log, "COARSE_ROOT_DEAD_WOOD_C removed =%g tC\n",(s->value[AV_DEAD_COARSE_ROOT_MASS_KgC]/1000.0*deadtree));
-				logger(g_log, "BRANCH_LIVE_WOOD_C removed =%g tC\n",(s->value[AV_LIVE_BRANCH_MASS_KgC]/1000.0*deadtree));
-				logger(g_log, "BRANCH_DEAD_WOOD_C removed =%g tC\n",(s->value[AV_DEAD_BRANCH_MASS_KgC]/1000.0*deadtree));
 			}
 		}
 	}
@@ -465,16 +484,19 @@ void self_thinning ( cell_t *const c, const int layer )
 			/* recompute number of height classes */
 			c->t_layers[layer].layer_n_height_class += 1;
 		}
-		for ( age = 0; age < c->heights[height].ages_count ; ++age )
+		for ( dbh = c->heights[height].dbhs_count - 1; dbh >= 0; --dbh)
 		{
-			for ( species = 0; species < c->heights[height].ages[age].species_count; ++species )
+			for ( age = 0; age < c->heights[height].dbhs[dbh].ages_count ; ++age )
 			{
-				s = &c->heights[height].ages[age].species[species];
-
-				if( layer == c->heights[height].height_z )
+				for ( species = 0; species < c->heights[height].dbhs[dbh].ages[age].species_count; ++species )
 				{
-					/* recompute number of trees for each layer */
-					c->t_layers[layer].layer_n_trees += s->counter[N_TREE];
+					s = &c->heights[height].dbhs[dbh].ages[age].species[species];
+
+					if( layer == c->heights[height].height_z )
+					{
+						/* recompute number of trees for each layer */
+						c->t_layers[layer].layer_n_trees += s->counter[N_TREE];
+					}
 				}
 			}
 		}

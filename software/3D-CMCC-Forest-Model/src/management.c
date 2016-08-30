@@ -15,14 +15,14 @@
 extern settings_t* g_settings;
 extern logger_t* g_log;
 
-void forest_management (cell_t *const c, const int layer, const int height, const int age, const int species, const int year)
+void forest_management (cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, const int year)
 {
 #if 0
 	static int rotation_counter;
 
 	species_t *s;
 
-	s = &c->heights[height].ages[age].species[species];
+	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 	/* this function handles all other management functions */
 
@@ -58,7 +58,7 @@ void forest_management (cell_t *const c, const int layer, const int height, cons
 #else
 	species_t *s;
 
-	s = &c->heights[height].ages[age].species[species];
+	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 	// this function handles all other management functions
 	if ( ! string_compare_i (g_settings->management, "on") && year )
@@ -67,11 +67,11 @@ void forest_management (cell_t *const c, const int layer, const int height, cons
 		{
 			logger(g_log,"**FOREST MANAGEMENT**\n");
 
-			clearcut_timber_without_request ( c, layer, height, age, species, year );
+			clearcut_timber_without_request ( c, layer, height, dbh, age, species, year );
 
 			if(g_settings->replanted_n_tree != 0.0)
 			{
-				if ( ! add_tree_class( c, height, age, species ) )
+				if ( ! add_tree_class( c, height, dbh, age, species ) )
 				{
 					logger(g_log, "unable to add new height class! (exit)\n");
 					exit(1);
@@ -83,7 +83,7 @@ void forest_management (cell_t *const c, const int layer, const int height, cons
 }
 
 
-void clearcut_timber_upon_request(cell_t *const c, const int layer, const int height, const int age, const int species)
+void clearcut_timber_upon_request(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species)
 {
 	int removed_tree;
 	int layer_to_remove_tree;
@@ -98,7 +98,7 @@ void clearcut_timber_upon_request(cell_t *const c, const int layer, const int he
 	species_t *s;
 
 	l = &c->t_layers[layer];
-	s = &c->heights[height].ages[age].species[species];
+	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 	IndWf = s->value[BIOMASS_FOLIAGE_tDM] / s->counter[N_TREE];
 	IndWs = s->value[BIOMASS_STEM_tDM] / s->counter[N_TREE];
@@ -193,7 +193,7 @@ void clearcut_timber_upon_request(cell_t *const c, const int layer, const int he
 	}
 }
 
-void clearcut_coppice(cell_t *const c, const int layer, const int height, const int age, const int species)
+void clearcut_coppice(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species)
 {
 	int removed_tree;
 	int layer_to_remove_tree;
@@ -208,7 +208,7 @@ void clearcut_coppice(cell_t *const c, const int layer, const int height, const 
 	species_t *s;
 
 	l = &c->t_layers[layer];
-	s = &c->heights[height].ages[age].species[species];
+	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 	IndWf = s->value[BIOMASS_FOLIAGE_tDM] / s->counter[N_TREE];
 	IndWs = s->value[BIOMASS_STEM_tDM] / s->counter[N_TREE];
@@ -386,7 +386,7 @@ void choose_management(species_t *const s, const int years)
 
 
 //fixme usefull??
-void Management (age_t * const a, const int height, const int age, const int species, int years)
+void Management (age_t * const a, const int height, const int dbh, const int age, const int species, int years)
 {
 
 	species_t *s;
@@ -451,7 +451,7 @@ void Management (age_t * const a, const int height, const int age, const int spe
 	s->counter[CUT_TREES] = 0;
 }
 
-void clearcut_timber_without_request (cell_t *const c, const int layer, const int height, const int age, const int species, const int year)
+void clearcut_timber_without_request (cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, const int year)
 {
 	int removed_tree = 0;
 	double IndWf,
@@ -469,7 +469,7 @@ void clearcut_timber_without_request (cell_t *const c, const int layer, const in
 	double stand_basal_area_to_remove;
 
 	species_t *s;
-	s = &c->heights[height].ages[age].species[species];
+	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 	//CLEARCUT FOR TIMBER (Taglio raso)
 	logger(g_log, "CLEARCUT FOR TIMBER FUNCTION \n");
@@ -495,7 +495,7 @@ void clearcut_timber_without_request (cell_t *const c, const int layer, const in
 	s->counter[N_TREE] -= removed_tree;
 	logger(g_log, "Number of trees after management = %d \n", s->counter[N_TREE]);
 
-	//Recompute Biomass
+	/* Recompute Biomass */
 	s->value[LEAF_C] = IndWf * s->counter[N_TREE];
 	s->value[STEM_C] = IndWs * s->counter[N_TREE];
 	s->value[COARSE_ROOT_C] = IndWrc * s->counter[N_TREE];
@@ -510,7 +510,7 @@ void clearcut_timber_without_request (cell_t *const c, const int layer, const in
 			s->value[BRANCH_C],
 			s->value[RESERVE_C]);
 
-	// Total Biomass at the end
+	/* Total Biomass at the end */
 	s->value[TOTAL_W] = s->value[LEAF_C] + s->value[COARSE_ROOT_C] + s->value[FINE_ROOT_C] + s->value[STEM_C] + s->value[BRANCH_C] + s->value[RESERVE_C];
 	logger(g_log, "Total Biomass = %f tC/ha\n", s->value[TOTAL_W]);
 

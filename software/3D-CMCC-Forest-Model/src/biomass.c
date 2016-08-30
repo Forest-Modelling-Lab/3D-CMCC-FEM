@@ -53,7 +53,7 @@ void live_total_wood_age(const age_t *const a, const int species)
 }
 
 
-void annual_tree_increment(cell_t *const c, const int layer, const int height, const int age, const int species)
+void annual_tree_increment(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species)
 {
 	double prev_vol;
 	double single_tree_prev_vol;
@@ -61,8 +61,8 @@ void annual_tree_increment(cell_t *const c, const int layer, const int height, c
 	age_t *a;
 	species_t *s;
 
-	a = &c->heights[height].ages[age];
-	s = &c->heights[height].ages[age].species[species];
+	a = &c->heights[height].dbhs[dbh].ages[age];
+	s = &a->species[species];
 
 	/* in m^3/cell/yr */
 	/* CAI = Volume t1 - Volume t0 */
@@ -107,11 +107,10 @@ void annual_tree_increment(cell_t *const c, const int layer, const int height, c
 
 }
 
-void abg_bgb_biomass(cell_t *const c, const int height, const int age, const int species)
+void abg_bgb_biomass(cell_t *const c, const int height, const int dbh, const int age, const int species)
 {
-
 	species_t *s;
-	s = &c->heights[height].ages[age].species[species];
+	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 	logger(g_log, "**AGB & BGB**\n");
 	logger(g_log, "-for Class\n");

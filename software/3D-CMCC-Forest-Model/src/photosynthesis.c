@@ -11,7 +11,7 @@
 
 extern logger_t* g_log;
 
-void photosynthesis(cell_t *const c, const int layer, const int height, const int age, const int species, const int DaysInMonth)
+void photosynthesis(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, const int DaysInMonth)
 {
 	double Alpha_C;
 	double Epsilon_C;
@@ -21,7 +21,7 @@ void photosynthesis(cell_t *const c, const int layer, const int height, const in
 	double GPPmolC_tot;
 
 	species_t *s;
-	s = &c->heights[height].ages[age].species[species];
+	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 	logger(g_log, "\n**PHOTOSYNTHESIS**\n");
 

@@ -133,7 +133,7 @@ enum {
 		oltretutto l'indice AVDBH viene usato in new_class.c
 	 */
 
-	AVDBH,                      //Average DBH in cm
+	//AVDBH,                      //Average DBH in cm
 	CROWN_RADIUS_SORTIE,        //Crown Radius in m from Sortie Standard
 	CROWN_DIAMETER_SORTIE,      //Crown Diameter in m from Sortie Standard
 	CROWN_AREA_SORTIE,          //Crown Area from Sortie diameter
@@ -601,7 +601,6 @@ typedef struct
 	int species_count;
 } age_t;
 
-//ALESSIOC DBH test 27 aug 2016//
 typedef struct
 {
 	age_t* ages;
@@ -610,11 +609,9 @@ typedef struct
 	int dbh_n_trees;           /* number of trees per dbh class */
 	double dbh_density;        /* density of treed per dbh class */
 
-	int value;
+	double value;
 
 } dbh_t;
-/////////////////////////////
-
 
 typedef struct
 {
@@ -628,10 +625,11 @@ typedef struct
 
 typedef struct
 {
-	age_t *ages;
-	int ages_count;
+	//ALESSIOC DBH TO REMOVE ONCE DBH STRUCT IS ON
+//	age_t *ages;
+//	int ages_count;
 
-	//ALESSIOC
+	//ALESSIOC DBH
 	dbh_t *dbhs;
 	int dbhs_count;
 

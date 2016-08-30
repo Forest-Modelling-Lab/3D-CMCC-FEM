@@ -25,15 +25,17 @@ void initialization_forest_structure(cell_t *const c, const int day, const int m
 	forest_structure ( c, meteo_daily, day, month, year );
 }
 
-void initialization_forest_C_biomass(cell_t *const c, const int height, const int age, const int species)
+void initialization_forest_C_biomass(cell_t *const c, const int height, const int dbh, const int age, const int species)
 {
 	height_t *h;
+	dbh_t *d;
 	age_t *a;
 	species_t *s;
 
 	h = &c->heights[height];
-	a = &c->heights[height].ages[age];
-	s = &c->heights[height].ages[age].species[species];
+	d = &c->heights[height].dbhs[dbh];
+	a = &c->heights[height].dbhs[dbh].ages[age];
+	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 	logger(g_log,"\n*******INITIALIZE FOREST CARBON BIOMASS*******\n");
 	logger(g_log, "\n\n...checking initial biomass data for height %g, age %d, species %s...\n",
@@ -43,32 +45,32 @@ void initialization_forest_C_biomass(cell_t *const c, const int height, const in
 	if (s->value[BIOMASS_STEM_tDM] == 0.0 || s->value[BIOMASS_STEM_tDM] == NO_DATA)
 	{
 		logger(g_log, "\nNo Stem Biomass Data are available for model initialization \n");
-		logger(g_log, "...Generating input Stem Biomass biomass data from DBH = %g cm\n", s->value[AVDBH]);
+		logger(g_log, "...Generating input Stem Biomass biomass data from DBH = %g cm\n", d->value);
 		//compute stem biomass from DBH
 		if (s->value[STEMCONST_P] == NO_DATA && s->value[STEMPOWER_P] == NO_DATA)
 		{
 			//use generic stemconst stempower values
-			logger(g_log, "..computing stem biomass from generic stempower and stemconst DBH = %g cm\n", s->value[AVDBH]);
-			if (s->value[AVDBH] < 9)
+			logger(g_log, "..computing stem biomass from generic stempower and stemconst DBH = %g cm\n", d->value);
+			if (d->value < 9)
 			{
-				s->value[AV_STEM_MASS_KgDM] = s->value[STEMCONST] * (pow (s->value[AVDBH], STEMPOWER_A));
+				s->value[AV_STEM_MASS_KgDM] = s->value[STEMCONST] * (pow (d->value, STEMPOWER_A));
 			}
-			else if (s->value[AVDBH] > 9 && s->value[AVDBH] < 15)
+			else if (d->value > 9 && d->value < 15)
 			{
-				s->value[AV_STEM_MASS_KgDM] = s->value[STEMCONST] * (pow (s->value[AVDBH], STEMPOWER_B));
+				s->value[AV_STEM_MASS_KgDM] = s->value[STEMCONST] * (pow (d->value, STEMPOWER_B));
 			}
 			else
 			{
 				//use site specific stemconst stempower values
 				logger(g_log, "Using site related stemconst stempower\n");
-				s->value[AV_STEM_MASS_KgDM] = s->value[STEMCONST] * (pow (s->value[AVDBH], STEMPOWER_C));
+				s->value[AV_STEM_MASS_KgDM] = s->value[STEMCONST] * (pow (d->value, STEMPOWER_C));
 			}
 		}
 		else
 		{
 			//use site specific stemconst stempower values
-			logger(g_log, "..computing stem biomass from generic stempower and stemconst DBH = %g cm\n", s->value[AVDBH]);
-			s->value[AV_STEM_MASS_KgDM] = s->value[STEMCONST_P] * pow (s->value[AVDBH], s->value[STEMPOWER_P]);
+			logger(g_log, "..computing stem biomass from generic stempower and stemconst DBH = %g cm\n", d->value);
+			s->value[AV_STEM_MASS_KgDM] = s->value[STEMCONST_P] * pow (d->value, s->value[STEMPOWER_P]);
 		}
 		//1000 to convert Kg into tons
 		s->value[BIOMASS_STEM_tDM] = s->value[AV_STEM_MASS_KgDM] * s->counter[N_TREE] / 1000.0;
@@ -147,7 +149,7 @@ void initialization_forest_C_biomass(cell_t *const c, const int height, const in
 
 	/*sapwood calculation*/
 	logger(g_log, "\nSAPWOOD CALCULATION using sapwood cell\n");
-	s->value[BASAL_AREA] = ((pow((s->value[AVDBH] / 2.0), 2.0)) * Pi);
+	s->value[BASAL_AREA] = ((pow((d->value / 2.0), 2.0)) * Pi);
 	logger(g_log, "BASAL AREA = %g m^2\n", s->value[BASAL_AREA]);
 	s->value[BASAL_AREA_m2]= s->value[BASAL_AREA] * 0.0001;
 	logger(g_log, "BASAL BASAL_AREA_m2 = %g m^2\n", s->value[BASAL_AREA_m2]);
@@ -155,7 +157,7 @@ void initialization_forest_C_biomass(cell_t *const c, const int height, const in
 	logger(g_log, "Stand level class basal cell = %g cm^2/class cell\n", s->value[STAND_BASAL_AREA]);
 	s->value[STAND_BASAL_AREA_m2] = s->value[BASAL_AREA_m2] * s->counter[N_TREE];
 	logger(g_log, "Stand level class basal cell = %g cm^2/class cell\n", s->value[STAND_BASAL_AREA]);
-	s->value[SAPWOOD_AREA] = s->value[SAP_A] * pow (s->value[AVDBH], s->value[SAP_B]);
+	s->value[SAPWOOD_AREA] = s->value[SAP_A] * pow (d->value, s->value[SAP_B]);
 	logger(g_log, "SAPWOOD_AREA = %g cm^2\n", s->value[SAPWOOD_AREA]);
 	s->value[HEARTWOOD_AREA] = s->value[BASAL_AREA] -  s->value[SAPWOOD_AREA];
 	logger(g_log, "HEART_WOOD_AREA = %g cm^2\n", s->value[HEARTWOOD_AREA]);
@@ -420,8 +422,9 @@ void initialization_forest_C_biomass(cell_t *const c, const int height, const in
 
 	/* check that all mandatory variables are initialised */
 	CHECK_CONDITION(h->value, == 0);
+	CHECK_CONDITION(d->value, == 0);
 	CHECK_CONDITION(a->value, == 0);
-	CHECK_CONDITION(s->value[AVDBH], == 0);
+
 	/* just for evergreen */
 	if ( s->value[PHENOLOGY] == 1.1 || s->value[PHENOLOGY] == 1.2 )
 	{
@@ -457,10 +460,11 @@ void initialization_forest_C_biomass(cell_t *const c, const int height, const in
 	CHECK_CONDITION(s->value[VOLUME], == 0);
 	CHECK_CONDITION(s->value[TREE_VOLUME], == 0);
 }
-void initialization_forest_N_biomass(cell_t *const c, const int height, const int age, const int species)
+
+void initialization_forest_N_biomass(cell_t *const c, const int height, const int dbh, const int age, const int species)
 {
 	species_t *s;
-	s = &c->heights[height].ages[age].species[species];
+	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 	logger(g_log,"\n*******INITIALIZE FOREST NITROGEN BIOMASS*******\n");
 

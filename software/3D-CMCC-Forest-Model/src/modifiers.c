@@ -16,7 +16,7 @@ extern settings_t* g_settings;
 extern logger_t* g_log;
 extern soil_settings_t *g_soil_settings;
 
-void modifiers(cell_t *const c, const int layer, const int height, const int age, const int species, const meteo_daily_t *const meteo_daily)
+void modifiers(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, const meteo_daily_t *const meteo_daily)
 {
 	double RelAge;
 	/*variables for CO2 modifier computation*/
@@ -39,8 +39,8 @@ void modifiers(cell_t *const c, const int layer, const int height, const int age
 	age_t *a;
 	species_t *s;
 
-	a = &c->heights[height].ages[age];
-	s = &c->heights[height].ages[age].species[species];
+	a = &c->heights[height].dbhs[dbh].ages[age];
+	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 	//test
 	//double vpd_open = 6; //value from pietsch in Pa a(600) are converted in hPa = 6

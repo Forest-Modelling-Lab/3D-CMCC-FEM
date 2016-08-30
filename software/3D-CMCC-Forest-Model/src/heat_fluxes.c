@@ -21,7 +21,7 @@ void Canopy_latent_heat_fluxes (species_t *const s, const meteo_daily_t *const m
 	s->value[YEARLY_CANOPY_LATENT_HEAT] += s->value[CANOPY_LATENT_HEAT];
 }
 
-void Canopy_sensible_heat_fluxes(cell_t *const c, const int layer, const int height, const int age, const int species, const meteo_daily_t *const meteo_daily)
+void Canopy_sensible_heat_fluxes(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, const meteo_daily_t *const meteo_daily)
 {
 	logger(g_log, "\n**CANOPY SENSIBLE HEAT**\n");
 }

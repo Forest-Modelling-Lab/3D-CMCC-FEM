@@ -64,6 +64,7 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 {
 	int layer;
 	int height;
+	int dbh;
 	int age;
 	int species;
 
@@ -88,47 +89,52 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 					/* heading for heights value */
 					logger(g_daily_log,"\t%4s", "HEIGHT");
 
-					for ( age = 0; age < c->heights[height].ages_count ; ++age )
+					for ( dbh = c->heights[height].dbhs_count - 1; dbh >= 0; --dbh )
 					{
-						/* heading for ages */
-						logger(g_daily_log,"\t%7s", "AGE");
+						logger(g_daily_log,"\t%4s", "DBH");
 
-						for ( species = 0; species < c->heights[height].ages[age].species_count; ++species )
+						for ( age = 0; age < c->heights[height].dbhs[dbh].ages_count ; ++age )
 						{
-							/* heading for species name */
-							logger(g_daily_log,"\t%10s", "SPECIES");
+							/* heading for ages */
+							logger(g_daily_log,"\t%7s", "AGE");
 
-							logger(g_daily_log,"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s"
-									"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s",
-									"GPP",
-									"AR",
-									"NPP",
-									"LAI",
-									"AVDBH",
-									"CC",
-									"Ntree",
-									"VEG_D",
-									"CET",
-									"CLE",
-									"dWRes",
-									"dWS",
-									"dWL",
-									"dWFR",
-									"dWCR",
-									"dWBB",
-									"SAR",
-									"LAR",
-									"FAR",
-									"CRAR",
-									"BBAR");
+							for ( species = 0; species < c->heights[height].dbhs[dbh].ages[age].species_count; ++species )
+							{
+								/* heading for species name */
+								logger(g_daily_log,"\t%10s", "SPECIES");
+
+								logger(g_daily_log,"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s"
+										"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s",
+										"GPP",
+										"AR",
+										"NPP",
+										"LAI",
+										"CC",
+										"Ntree",
+										"VEG_D",
+										"CET",
+										"CLE",
+										"dWRes",
+										"dWS",
+										"dWL",
+										"dWFR",
+										"dWCR",
+										"dWBB",
+										"SAR",
+										"LAR",
+										"FAR",
+										"CRAR",
+										"BBAR");
+							}
+							if ( c->heights[height].dbhs[dbh].ages[age].species_count > 1 ) logger(g_daily_log,"\t%10s", "*");
 						}
-						if ( c->heights[height].ages[age].species_count > 1 ) logger(g_daily_log,"\t%10s", "*");
+						if ( c->heights[height].dbhs[dbh].ages_count > 1 ) logger(g_daily_log,"\t%10s", "**");
 					}
-					if ( c->heights[height].ages_count > 1 ) logger(g_daily_log,"\t%10s", "**");
+					if ( c->heights[height].dbhs_count > 1 ) logger(g_daily_log,"\t%10s", "***");
 				}
-				if ( c->t_layers[layer].layer_n_height_class > 1 ) logger(g_daily_log,"\t%10s", "***");
+				if ( c->t_layers[layer].layer_n_height_class > 1 ) logger(g_daily_log,"\t%10s", "****");
 			}
-			if ( c->t_layers_count > 1 ) logger(g_daily_log,"\t%10s", "****");
+			if ( c->t_layers_count > 1 ) logger(g_daily_log,"\t%10s", "*****");
 		}
 		/************************************************************************/
 
@@ -171,52 +177,58 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 				/* print height */
 				logger(g_daily_log,"\t%5.3g", c->heights[height].value);
 
-				for ( age = 0; age < c->heights[height].ages_count ; ++age )
+				for ( dbh = c->heights[height].dbhs_count - 1; dbh >= 0; --dbh )
 				{
-					/* print age */
-					logger(g_daily_log,"\t%7d", c->heights[height].ages[age].value);
+					/* print dbh */
+					logger(g_daily_log,"\t%5.3g", c->heights[height].dbhs[dbh].value);
 
-					for ( species = 0; species < c->heights[height].ages[age].species_count; ++species )
+					for ( age = 0; age < c->heights[height].dbhs[dbh].ages_count ; ++age )
 					{
-						s  = &c->heights[height].ages[age].species[species];
+						/* print age */
+						logger(g_daily_log,"\t%7d", c->heights[height].dbhs[dbh].ages[age].value);
 
-						/* print species name */
-						logger(g_daily_log,"\t%8.3s", c->heights[height].ages[age].species[species].name);
+						for ( species = 0; species < c->heights[height].dbhs[dbh].ages[age].species_count; ++species )
+						{
+							s  = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
-						/* print variables at layer-class level */
-						logger(g_daily_log,"\t%6.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3d \t%3d \t%3.4f \t%3.4f"
-								"\t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f",
-								s->value[DAILY_GPP_gC],
-								s->value[TOTAL_AUT_RESP],
-								s->value[NPP_gC],
-								s->value[LAI],
-								s->value[AVDBH],
-								s->value[CANOPY_COVER_DBHDC],
-								s->counter[N_TREE],
-								s->counter[VEG_DAYS],
-								s->value[CANOPY_EVAPO_TRANSP],
-								s->value[CANOPY_LATENT_HEAT],
-								s->value[C_TO_RESERVE],
-								s->value[C_TO_STEM],
-								s->value[C_TO_LEAF],
-								s->value[C_TO_FINEROOT],
-								s->value[C_TO_COARSEROOT],
-								s->value[C_TO_BRANCH],
-								s->value[STEM_AUT_RESP],
-								s->value[LEAF_AUT_RESP],
-								s->value[FINE_ROOT_AUT_RESP],
-								s->value[COARSE_ROOT_AUT_RESP],
-								s->value[BRANCH_AUT_RESP]);
+							/* print species name */
+							logger(g_daily_log,"\t%8.3s", c->heights[height].dbhs[dbh].ages[age].species[species].name);
+
+							/* print variables at layer-class level */
+							logger(g_daily_log,"\t%6.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3d \t%3d \t%3.4f \t%3.4f"
+									"\t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f",
+									s->value[DAILY_GPP_gC],
+									s->value[TOTAL_AUT_RESP],
+									s->value[NPP_gC],
+									s->value[LAI],
+									s->value[CANOPY_COVER_DBHDC],
+									s->counter[N_TREE],
+									s->counter[VEG_DAYS],
+									s->value[CANOPY_EVAPO_TRANSP],
+									s->value[CANOPY_LATENT_HEAT],
+									s->value[C_TO_RESERVE],
+									s->value[C_TO_STEM],
+									s->value[C_TO_LEAF],
+									s->value[C_TO_FINEROOT],
+									s->value[C_TO_COARSEROOT],
+									s->value[C_TO_BRANCH],
+									s->value[STEM_AUT_RESP],
+									s->value[LEAF_AUT_RESP],
+									s->value[FINE_ROOT_AUT_RESP],
+									s->value[COARSE_ROOT_AUT_RESP],
+									s->value[BRANCH_AUT_RESP]);
+						}
+						if ( c->heights[height].dbhs[dbh].ages[age].species_count > 1 ) logger(g_daily_log,"\t%10s", "*");
 					}
-					if ( c->heights[height].ages[age].species_count > 1 ) logger(g_daily_log,"\t%10s", "*");
+					if ( c->heights[height].dbhs[dbh].ages_count > 1 ) logger(g_daily_log,"\t%10s", "**");
 				}
-				if ( c->heights[height].ages_count > 1 ) logger(g_daily_log,"\t%10s", "**");
+				if ( c->heights[height].dbhs_count > 1 ) logger(g_daily_log,"\t%10s", "***");
 			}
-			if ( c->t_layers[layer].layer_n_height_class > 1 ) logger(g_daily_log,"\t%10s", "***");
+			if ( c->t_layers[layer].layer_n_height_class > 1 ) logger(g_daily_log,"\t%10s", "****");
 		}
 		if ( c->t_layers_count > 1 )
 		{
-			logger(g_daily_log,"\t%10s", "****");
+			logger(g_daily_log,"\t%10s", "*****");
 		}
 	}
 	/************************************************************************/
@@ -263,6 +275,7 @@ void EOM_print_cumulative_balance_cell_level(cell_t *const c, const int month, c
 {
 	int layer;
 	int height;
+	int dbh;
 	int age;
 	int species;
 
@@ -287,30 +300,37 @@ void EOM_print_cumulative_balance_cell_level(cell_t *const c, const int month, c
 					/* heading for heights value */
 					logger(g_monthly_log,"\t%4s", "HEIGHT");
 
-					for ( age = 0; age < c->heights[height].ages_count ; ++age )
+					for ( dbh = c->heights[height].dbhs_count - 1; dbh >= 0; --dbh )
 					{
-						/* heading for ages */
-						logger(g_monthly_log,"\t%7s", "AGE");
+						/* heading for dbhs value */
+						logger(g_monthly_log, "\t%4s", "DBH");
 
-						for ( species = 0; species < c->heights[height].ages[age].species_count; ++species )
+						for ( age = 0; age < c->heights[height].dbhs[dbh].ages_count ; ++age )
 						{
-							/* heading for species name */
-							logger(g_monthly_log,"\t%10s", "SPECIES");
+							/* heading for ages */
+							logger(g_monthly_log,"\t%7s", "AGE");
 
-							logger(g_monthly_log,"\t%4s \t%4s \t%4s \t%4s \t%4s",
-									"GPP",
-									"AR",
-									"NPP",
-									"CET",
-									"CLE");
+							for ( species = 0; species < c->heights[height].dbhs[dbh].ages[age].species_count; ++species )
+							{
+								/* heading for species name */
+								logger(g_monthly_log,"\t%10s", "SPECIES");
+
+								logger(g_monthly_log,"\t%4s \t%4s \t%4s \t%4s \t%4s",
+										"GPP",
+										"AR",
+										"NPP",
+										"CET",
+										"CLE");
+							}
+							if ( c->heights[height].dbhs[dbh].ages[age].species_count > 1 ) logger(g_monthly_log,"\t%10s", "*");
 						}
-						if ( c->heights[height].ages[age].species_count > 1 ) logger(g_monthly_log,"\t%10s", "*");
+						if ( c->heights[height].dbhs[dbh].ages_count > 1 ) logger(g_monthly_log,"\t%10s", "**");
 					}
-					if ( c->heights[height].ages_count > 1 ) logger(g_monthly_log,"\t%10s", "**");
+					if ( c->heights[height].dbhs_count > 1 ) logger(g_monthly_log,"\t%10s", "***");
 				}
-				if ( c->t_layers[layer].layer_n_height_class > 1 ) logger(g_monthly_log,"\t%10s", "***");
+				if ( c->t_layers[layer].layer_n_height_class > 1 ) logger(g_monthly_log,"\t%10s", "****");
 			}
-			if ( c->t_layers_count > 1 ) logger(g_monthly_log,"\t%10s", "****");
+			if ( c->t_layers_count > 1 ) logger(g_monthly_log,"\t%10s", "*****");
 		}
 		/************************************************************************/
 		/* heading variables at cell level only if there's more than one layer */
@@ -351,35 +371,42 @@ void EOM_print_cumulative_balance_cell_level(cell_t *const c, const int month, c
 				/* print height */
 				logger(g_monthly_log,"\t%5.3g", c->heights[height].value);
 
-				for ( age = 0; age < c->heights[height].ages_count ; ++age )
+				for ( dbh = c->heights[height].dbhs_count - 1; dbh >= 0; --dbh )
 				{
 					/* print age */
-					logger(g_monthly_log,"\t%7d", c->heights[height].ages[age].value);
+					logger(g_monthly_log,"\t%5.3g", c->heights[height].dbhs[dbh].value);
 
-					for ( species = 0; species < c->heights[height].ages[age].species_count; ++species )
+					for ( age = 0; age < c->heights[height].dbhs[dbh].ages_count ; ++age )
 					{
-						s  = &c->heights[height].ages[age].species[species];
+						/* print age */
+						logger(g_monthly_log,"\t%7d", c->heights[height].dbhs[dbh].ages[age].value);
 
-						/* print species name */
-						logger(g_monthly_log,"\t%8.3s", c->heights[height].ages[age].species[species].name);
+						for ( species = 0; species < c->heights[height].dbhs[dbh].ages[age].species_count; ++species )
+						{
+							s  = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
-						/* print variables at layer-class level */
-						logger(g_monthly_log,"\t%6.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f ",
-								s->value[MONTHLY_GPP_gC],
-								s->value[MONTHLY_TOTAL_AUT_RESP],
-								s->value[MONTHLY_NPP_gC],
-								s->value[MONTHLY_CANOPY_EVAPO_TRANSP],
-								s->value[MONTHLY_CANOPY_LATENT_HEAT]);
+							/* print species name */
+							logger(g_monthly_log,"\t%8.3s", c->heights[height].dbhs[dbh].ages[age].species[species].name);
+
+							/* print variables at layer-class level */
+							logger(g_monthly_log,"\t%6.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f ",
+									s->value[MONTHLY_GPP_gC],
+									s->value[MONTHLY_TOTAL_AUT_RESP],
+									s->value[MONTHLY_NPP_gC],
+									s->value[MONTHLY_CANOPY_EVAPO_TRANSP],
+									s->value[MONTHLY_CANOPY_LATENT_HEAT]);
+						}
+						if ( c->heights[height].dbhs[dbh].ages[age].species_count > 1 ) logger(g_monthly_log,"\t%10s", "*");
 					}
-					if ( c->heights[height].ages[age].species_count > 1 ) logger(g_monthly_log,"\t%10s", "*");
+					if ( c->heights[height].dbhs[dbh].ages_count > 1 ) logger(g_monthly_log,"\t%10s", "**");
 				}
-				if ( c->heights[height].ages_count > 1 ) logger(g_monthly_log,"\t%10s", "**");
+				if ( c->heights[height].dbhs_count > 1 ) logger(g_monthly_log,"\t%10s", "***");
 			}
-			if ( c->t_layers[layer].layer_n_height_class > 1 ) logger(g_monthly_log,"\t%10s", "***");
+			if ( c->t_layers[layer].layer_n_height_class > 1 ) logger(g_monthly_log,"\t%10s", "****");
 		}
 		if ( c->t_layers_count > 1 )
 		{
-			logger(g_monthly_log,"\t%10s", "****");
+			logger(g_monthly_log,"\t%10s", "*****");
 		}
 	}
 	/************************************************************************/
@@ -427,6 +454,7 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 {
 	int layer;
 	int height;
+	int dbh;
 	int age;
 	int species;
 
@@ -451,56 +479,62 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 					/* heading for heights value */
 					logger(g_annual_log,"\t%4s", "HEIGHT");
 
-					for ( age = 0; age < c->heights[height].ages_count ; ++age )
+					for ( dbh = c->heights[height].dbhs_count - 1; dbh >= 0; --dbh )
 					{
-						/* heading for ages */
-						logger(g_annual_log,"\t%7s", "AGE");
+						/* heading for dbhs value */
+						logger(g_annual_log, "\t%4s", "DBH");
 
-						for ( species = 0; species < c->heights[height].ages[age].species_count; ++species )
+						for ( age = 0; age < c->heights[height].dbhs[dbh].ages_count ; ++age )
 						{
-							/* heading for species name */
-							logger(g_annual_log,"\t%10s", "SPECIES");
+							/* heading for ages */
+							logger(g_annual_log,"\t%7s", "AGE");
 
-							logger(g_annual_log,"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s"
-									"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s",
-									"GPP",
-									"AR",
-									"NPP",
-									"Y(%)",
-									"LAI",
-									"AVDBH",
-									"CC",
-									"DBHDC",
-									"Ntree",
-									"VEG_D",
-									"CET",
-									"CLE",
-									"LTR",
-									"WRes",
-									"WS",
-									"WSL",
-									"WSD",
-									"PWL",
-									"PWFR",
-									"WCR",
-									"WCRL",
-									"WCRD",
-									"WBB",
-									"WBBL",
-									"WBBD",
-									"SAR",
-									"LAR",
-									"FAR",
-									"CRAR",
-									"BBAR");
+							for ( species = 0; species < c->heights[height].dbhs[dbh].ages[age].species_count; ++species )
+							{
+								/* heading for species name */
+								logger(g_annual_log,"\t%10s", "SPECIES");
+
+								logger(g_annual_log,"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s"
+										"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s",
+										"GPP",
+										"AR",
+										"NPP",
+										"Y(%)",
+										"LAI",
+										"CC",
+										"DBHDC",
+										"Ntree",
+										"VEG_D",
+										"CET",
+										"CLE",
+										"LTR",
+										"WRes",
+										"WS",
+										"WSL",
+										"WSD",
+										"PWL",
+										"PWFR",
+										"WCR",
+										"WCRL",
+										"WCRD",
+										"WBB",
+										"WBBL",
+										"WBBD",
+										"SAR",
+										"LAR",
+										"FAR",
+										"CRAR",
+										"BBAR");
+							}
+							if ( c->heights[height].dbhs[dbh].ages[age].species_count > 1 ) logger(g_annual_log,"\t%10s", "*");
 						}
-						if ( c->heights[height].ages[age].species_count > 1 ) logger(g_annual_log,"\t%10s", "*");
+						if ( c->heights[height].dbhs[dbh].ages_count > 1 ) logger(g_annual_log,"\t%10s", "**");
 					}
-					if ( c->heights[height].ages_count > 1 ) logger(g_annual_log,"\t%10s", "**");
+					if ( c->heights[height].dbhs_count > 1 ) logger(g_annual_log,"\t%10s", "***");
 				}
-				if ( c->t_layers[layer].layer_n_height_class > 1 ) logger(g_annual_log,"\t%10s", "***");
+				if ( c->t_layers[layer].layer_n_height_class > 1 ) logger(g_annual_log,"\t%10s", "****");
 			}
-			if ( c->t_layers_count > 1 ) logger(g_annual_log,"\t%10s", "****");
+			if ( c->t_layers_count > 1 ) logger(g_annual_log,"\t%10s", "*****");
 		}
 		/************************************************************************/
 		/* heading variables at cell level only if there's more than one layer */
@@ -543,61 +577,67 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 				/* print height */
 				logger(g_annual_log,"\t%5.3g", c->heights[height].value);
 
-				for ( age = 0; age < c->heights[height].ages_count ; ++age )
+				for ( dbh = c->heights[height].dbhs_count - 1; dbh >= 0; --dbh )
 				{
 					/* print age */
-					logger(g_annual_log,"\t%7d", c->heights[height].ages[age].value);
+					logger(g_annual_log,"\t%5.3g", c->heights[height].dbhs[dbh].value);
 
-					for ( species = 0; species < c->heights[height].ages[age].species_count; ++species )
+					for ( age = 0; age < c->heights[height].dbhs[dbh].ages_count ; ++age )
 					{
-						s  = &c->heights[height].ages[age].species[species];
+						/* print age */
+						logger(g_annual_log,"\t%7d", c->heights[height].dbhs[dbh].ages[age].value);
 
-						/* print species name */
-						logger(g_annual_log,"\t%8.3s", c->heights[height].ages[age].species[species].name);
+						for ( species = 0; species < c->heights[height].dbhs[dbh].ages[age].species_count; ++species )
+						{
+							s  = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
-						/* print variables at layer-class level */
-						logger(g_annual_log,"\t%6.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3d \t%3d \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f"
-								"\t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f",
-								s->value[YEARLY_GPP_gC],
-								s->value[YEARLY_TOTAL_AUT_RESP],
-								s->value[YEARLY_NPP_gC],
-								s->value[YEARLY_TOTAL_AUT_RESP]/s->value[YEARLY_GPP_gC]*100,
-								s->value[PEAK_LAI],
-								s->value[AVDBH],
-								s->value[CANOPY_COVER_DBHDC],
-								s->value[DBHDC_EFF],
-								s->counter[N_TREE],
-								s->counter[YEARLY_VEG_DAYS],
-								s->value[YEARLY_CANOPY_EVAPO_TRANSP],
-								s->value[YEARLY_CANOPY_LATENT_HEAT],
-								s->value[EFF_LIVE_TOTAL_WOOD_FRAC],
-								s->value[RESERVE_C],
-								s->value[STEM_C],
-								s->value[STEM_LIVE_WOOD_C],
-								s->value[STEM_DEAD_WOOD_C],
-								s->value[MAX_LEAF_C],
-								s->value[MAX_FINE_ROOT_C],
-								s->value[COARSE_ROOT_C],
-								s->value[COARSE_ROOT_LIVE_WOOD_C],
-								s->value[COARSE_ROOT_DEAD_WOOD_C],
-								s->value[BRANCH_C],
-								s->value[BRANCH_LIVE_WOOD_C],
-								s->value[BRANCH_DEAD_WOOD_C],
-								s->value[YEARLY_STEM_AUT_RESP],
-								s->value[YEARLY_LEAF_AUT_RESP],
-								s->value[YEARLY_FINE_ROOT_AUT_RESP],
-								s->value[YEARLY_COARSE_ROOT_AUT_RESP],
-								s->value[YEARLY_BRANCH_AUT_RESP]);
+							/* print species name */
+							logger(g_annual_log,"\t%8.3s", c->heights[height].dbhs[dbh].ages[age].species[species].name);
+
+							/* print variables at layer-class level */
+							logger(g_annual_log,"\t%6.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3d \t%3d \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f"
+									"\t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f",
+									s->value[YEARLY_GPP_gC],
+									s->value[YEARLY_TOTAL_AUT_RESP],
+									s->value[YEARLY_NPP_gC],
+									s->value[YEARLY_TOTAL_AUT_RESP]/s->value[YEARLY_GPP_gC]*100,
+									s->value[PEAK_LAI],
+									s->value[CANOPY_COVER_DBHDC],
+									s->value[DBHDC_EFF],
+									s->counter[N_TREE],
+									s->counter[YEARLY_VEG_DAYS],
+									s->value[YEARLY_CANOPY_EVAPO_TRANSP],
+									s->value[YEARLY_CANOPY_LATENT_HEAT],
+									s->value[EFF_LIVE_TOTAL_WOOD_FRAC],
+									s->value[RESERVE_C],
+									s->value[STEM_C],
+									s->value[STEM_LIVE_WOOD_C],
+									s->value[STEM_DEAD_WOOD_C],
+									s->value[MAX_LEAF_C],
+									s->value[MAX_FINE_ROOT_C],
+									s->value[COARSE_ROOT_C],
+									s->value[COARSE_ROOT_LIVE_WOOD_C],
+									s->value[COARSE_ROOT_DEAD_WOOD_C],
+									s->value[BRANCH_C],
+									s->value[BRANCH_LIVE_WOOD_C],
+									s->value[BRANCH_DEAD_WOOD_C],
+									s->value[YEARLY_STEM_AUT_RESP],
+									s->value[YEARLY_LEAF_AUT_RESP],
+									s->value[YEARLY_FINE_ROOT_AUT_RESP],
+									s->value[YEARLY_COARSE_ROOT_AUT_RESP],
+									s->value[YEARLY_BRANCH_AUT_RESP]);
+						}
+						if ( c->heights[height].dbhs[dbh].ages[age].species_count > 1 ) logger(g_annual_log,"\t%10s", "*");
 					}
-					if ( c->heights[height].ages[age].species_count > 1 ) logger(g_annual_log,"\t%10s", "*");
+					if ( c->heights[height].dbhs[dbh].ages_count > 1 ) logger(g_annual_log,"\t%10s", "**");
 				}
-				if ( c->heights[height].ages_count > 1 ) logger(g_annual_log,"\t%10s", "**");
+				if ( c->heights[height].dbhs_count > 1 ) logger(g_annual_log,"\t%10s", "***");
 			}
-			if ( c->t_layers[layer].layer_n_height_class > 1 ) logger(g_annual_log,"\t%10s", "***");
+			if ( c->t_layers[layer].layer_n_height_class > 1 ) logger(g_annual_log,"\t%10s", "****");
 		}
 		if ( c->t_layers_count > 1 )
 		{
-			logger(g_annual_log,"\t%10s", "****");
+			logger(g_annual_log,"\t%10s", "*****");
 		}
 	}
 	/************************************************************************/

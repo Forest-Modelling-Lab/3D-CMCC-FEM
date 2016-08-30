@@ -4,6 +4,6 @@
 
 #include "matrix.h"
 
-void photosynthesis(cell_t *const c, const int layer, const int height, const int age, const int species, const int DaysInMonth);
+void photosynthesis(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, const int DaysInMonth);
 
 #endif /* PHOTOSYNTHESIS_H_ */

@@ -21,7 +21,7 @@ extern int MonthLength [];
 extern int MonthLength_Leap [];
 
 /* Deciduous carbon allocation routine */
-void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer, const int height, const int age, const int species,
+void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species,
 		const meteo_daily_t *const meteo_daily, const int day, const int month, const int year)
 {
 
@@ -40,13 +40,17 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 	/* for check */
 	double npp_to_alloc;
 
+	tree_layer_t *l;
 	height_t *h;
+	dbh_t *d;
 	age_t *a;
 	species_t *s;
 
-	h = c->heights;
-	a = h[height].ages;
-	s = &h->ages[age].species[species];
+	l = &c->t_layers[layer];
+	h = &c->heights[height];
+	d = &h->dbhs[dbh];
+	a = &d->ages[age];
+	s = &a->species[species];
 
 	s0Ctem = s->value[S0CTEM];
 	r0Ctem = s->value[R0CTEM];
@@ -237,7 +241,7 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 		}
 
 		/* leaf fall */
-		leaf_fall_deciduous(c, height, age, species);
+		leaf_fall_deciduous(c, height, dbh, age, species);
 		/* note: these are computed in leaf_fall_deciduous function */
 		//		s->value[C_TO_LEAF] = ;
 		//		s->value[C_TO_FINEROOT] = ;
@@ -293,7 +297,7 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 	/* to avoid "jumps" of dbh it has computed once monthly */
 	if ( ( IS_LEAP_YEAR( c->years[year].year ) ? (MonthLength_Leap[month] ) : (MonthLength[month] )) == c->doy )
 	{
-		dendrometry ( c, height, age, species );
+		dendrometry ( c, height, dbh, age, species );
 	}
 
 	logger(g_log, "\n-Daily increment in carbon pools-\n");

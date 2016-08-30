@@ -682,66 +682,42 @@ static const char *sz_species_values[] = {
 		/*valori relativi alla specie*/
 
 		"LIGHT_TOL",                  //light Tolerance
-
 		"PHENOLOGY",				//PHENOLOGY 0.1 = deciduous broadleaf, 0.2 = deciduous needle leaf, 1.1 = broad leaf evergreen, 1.2 = needle leaf evergreen
-
 		"ALPHA",                      // Canopy quantum efficiency (molC/molPAR)
 		"EPSILONgCMJ",               // Light Use Efficiency  (gC/MJ)(used if ALPHA is not available)
-		//"Y",                          // Assimilate use efficiency-Respiration rate-GPP/NP
-		//"EPSILONgCMJ",                // = ALPHA * GC_MOL / MOLPAR_MJ = gC/MJ
-
 		"K",                          //Extinction coefficient for absorption of PAR by canopy for Quercus cerris L. (A. Cutini, Ann Sci For, 1996)
 		"ALBEDO",
 		"GAMMA_LIGHT",
-
 		"INT_COEFF",                  //Precipitation interception coefficient
-
-		//SPECIFIC LEAF AREA
 		"SLA_AVG",                    //AVERAGE Specific Leaf Area m^2/KgC for sunlit/shaded leaves
 		"SLA_RATIO",                  //(DIM) ratio of shaded to sunlit projected SLA
 		"LAI_RATIO",                  //(DIM) all-sided to projected leaf area ratio
-
-		//FRACTION BRANCH-BARK
 		"FRACBB0",                    //Branch and Bark fraction at age 0 (m^2/kg)
 		"FRACBB1",                    //Branch and Bark fraction for mature stands (m^2/kg)
 		"TBB",                        //Age at which fracBB = (FRACBB0 + FRACBB1 )/ 2
-
-		//MASS DENSITY
 		"RHOMIN",                     //Minimum Basic Density for young Trees
 		"RHOMAX",                     //Maximum Basic Density for young Trees (Ferrara-Nolè)
 		"TRHO",                       //Age at which rho = (RHOMIN + RHOMAX )/2
-
-		//VPD
 		"COEFFCOND",                  //Define stomatal responsee to VPD in m/sec
 		"BLCOND",                     //Canopy Boundary Layer conductance
 		"MAXCOND",                    //Maximum leaf Conductance in m/sec
 		"CUTCOND",                    //cuticular conductance in m/sec
-
-		//AGE for timber
 		"MAXAGE",
 		"RAGE",                       //Relative Age to give fAGE = 0.5
 		"NAGE",                       //Power of relative Age in function for Age
-		//AGE for SHOOTS
 		"MAXAGE_S",
 		"RAGE_S",                       //Relative Age to give fAGE = 0.5
 		"NAGE_S",                       //Power of relative Age in function for Age
-
-
-		//TEMPERATURE
 		"GROWTHTMIN",                 //Minimum temperature for growth
 		"GROWTHTMAX",                 //Maximum temperature for growth
 		"GROWTHTOPT",                 //Optimum temperature for growth
 		"GROWTHSTART",                //Thermic sum  value for starting growth in °C
 		"GROWTHEND",                  //Thermic sum  value for ending growth in °C
 		"MINDAYLENGTH",               //minimum day length for phenology
-
-		//SOIL WATER
 		"SWPOPEN",
 		"SWPCLOSE",
 		"SWCONST",                    //Costant in Soil Water modifier vs Moist Ratio
 		"SWPOWER",                    //Power in Soil Water modifier vs Moist Ratio
-
-		//BIOMASS PARTITIONING CTEM
 		"OMEGA_CTEM",                        //ALLOCATION PARAMETER
 		"S0CTEM",                           //PARAMETER CONTROLLING ALLOCATION TO STEM
 		"R0CTEM",                           //PARAMETER CONTROLLING ALLOCATION TO ROOT
@@ -752,42 +728,26 @@ static const char *sz_species_values[] = {
 		"MIN_R0CTEM",                       //MINIMUM RATE TO ROOT AT THE FIRST YEAR AFTER COPPICING
 		"MAX_S0CTEM",                       //MAXIMUM RATE TO STEM AT THE FIRST YEAR AFTER COPPICING
 		"YEARS_FOR_CONVERSION",        //years from coppicing to consider tree as a timber
-
 		"FRUIT_PERC",
 		"CONES_LIFE_SPAN",
-
-		//BIOME ALLOCATION RATIOS
 		"FINE_ROOT_LEAF",	//allocation new fine root C:new leaf (ratio)
 		"STEM_LEAF",		//allocation new stem C:new leaf (ratio)
 		"COARSE_ROOT_STEM",	//allocation new coarse root C:new stem (ratio)
 		"LIVE_TOTAL_WOOD",	//allocation new live wood C:new total wood C (ratio)
-
-		//BIOME C:N RATIOS
 		"CN_LEAVES",          //CN of leaves (kgC/kgN)
 		"CN_FALLING_LEAVES",  //CN of leaf litter (kgC/kgN)
 		"CN_FINE_ROOTS",      //CN of fine roots (kgC/kgN)
 		"CN_LIVE_WOODS",      //CN of live woods (kgC/kgN)
 		"CN_DEAD_WOODS",      //CN of dead woods (kgC/kgN)
-
-		//per specie caducifoglie LITTERFALL RATE = 1 !!!!!!!!!!!!!!
-		//LITTERFALL
 		"BUD_BURST",					//days of bud burst at the beginning of growing season (only for deciduous)
-		//FOLLOWING BIOME-BGC
 		"LEAF_FALL_FRAC_GROWING",		//proportions of the growing season of leaf fall
-		//ROOT TURNOVER
 		"LEAF_FINEROOT_TURNOVER",             //Average yearly leaves and fine root turnover rate
 		"LIVE_WOOD_TURNOVER",             //Average yearly live wood turnover rate
-
-		//MORTALITY
 		"WSX1000",                    //Max stem mass (kg) per tree at 1000 trees/hectare
 		"THINPOWER",                  //Power in self-thinning rule
 		"MF",                         //Fraction mean single tree foliage biomass lost per dead tree
 		"MR",                         //Fraction mean single tree root biomass lost per dead tree
 		"MS",                         //Fraction mean single tree stem biomass lost per dead tree
-
-		//ALLOMETRIC RELATIONSHIPS
-		//"DBHDC",                      //dbh (cm)- crown diameter (e) ratio  from cm to meter cm-->m
-		//DBHDC = 20/100
 		"DBHDCMAX",                   //Low Density
 		"DBHDCMIN",                   //High Density
 		"SAP_A",                      //a coefficient for sapwood
@@ -801,30 +761,17 @@ static const char *sz_species_values[] = {
 		"b_RPOWER",
 		"CHPOWER",                    //Slope of Asymptotic Crown-Height from Sortie
 		"b_CHPOWER",
-
 		"STEMCONST_P",
 		"STEMPOWER_P",
-
-
-
-		//CHAPMAN-RICHARDS relationships
 		"CRA",
 		"CRB",
 		"CRC",
-
-		//CROWDING COMPETITION FUNCTION
 		"HDMAX",                      //Height to Base diameter ratio MAX
 		"HDMIN",                      //Height to Base diameter ratio MIN
-
-		//DENSITY FUNCTION
 		"DENMAX",                     //Maximum density (trees/10000 m^2)
 		"DENMIN",                     //Minimum density (trees/10000 m^2)
-
-		//ESTABLISHMENT
 		"MINPAREST",                  //Minimum Monthly PAR (W/m^2 hour) for Establishment for the Dominated Layer
 		"MINRAIN",                    //Minimum annual Rain Precipitation for Establishment
-
-		//SEEDS PRODUCTION
 		"ADULT_AGE",
 		"MAXSEED",                    //numero massimo semi prodotti dalla pianta (da TREEMIG)
 		"MASTSEED",                   //ricorrenza anni di pasciona (da TREEMIG)
@@ -833,12 +780,7 @@ static const char *sz_species_values[] = {
 		"GERMCAPACITY",               //Geminability (Lischke H. & Loffler T. J.)
 		"MINTEMP",                    //Minimum temperature for germination in °C
 		"ESTMAX",                     //Potential Establishment rate in the absence of competition
-
-		//SEEDS PRODUCTION FROM LPJ
 		"FRACFRUIT",                  //Fraction of NPP to Fruit Production
-
-
-		//MANAGMENT
 		"ROTATION",
 		"MINAGEMANAG",
 		"MINDBHMANAG",                //Minimum DBH for Management
@@ -853,7 +795,7 @@ static int fill_cell_from_species(age_t* const a, const row_t* const row) {
 	char *p;
 
 	/* check parameter */
-	assert(a && row);
+	assert( a && row );
 
 	p = string_copy(row->species);
 	if ( ! p ) return 0;
@@ -867,10 +809,6 @@ static int fill_cell_from_species(age_t* const a, const row_t* const row) {
 	a->species[a->species_count-1].name = p;
 	a->species[a->species_count-1].counter[N_TREE] = row->n;
 	a->species[a->species_count-1].counter[N_STUMP] = row->stool;
-
-	//ALESSIOc fixme to remove
-	a->species[a->species_count-1].value[AVDBH] = row->avdbh;
-
 	a->species[a->species_count-1].value[BIOMASS_FOLIAGE_tDM] = row->wf;
 	a->species[a->species_count-1].value[BIOMASS_COARSE_ROOT_tDM] = row->wrc;
 	a->species[a->species_count-1].value[BIOMASS_FINE_ROOT_tDM] = row->wrf;
@@ -884,69 +822,54 @@ static int fill_cell_from_species(age_t* const a, const row_t* const row) {
 	return 1;
 }
 
-static int fill_cell_from_ages(height_t* const h, const row_t* const row)
+static int fill_cell_from_ages(dbh_t* const d, const row_t* const row)
 {
 	static age_t age = { 0 };
-	assert ( h && row);
-	if ( !alloc_struct((void **)&h->ages, &h->ages_count, sizeof(age_t)) )
+
+	/* check parameter */
+	assert ( d && row );
+
+	/* alloc memory for dbhs */
+	if ( !alloc_struct((void **)&d->ages, &d->ages_count, sizeof(age_t)) )
 	{
 		return 0;
 	}
-	h->ages[h->ages_count-1] = age;
-	h->ages[h->ages_count-1].value = row->age;
-	return fill_cell_from_species(&h->ages[h->ages_count-1], row);
+	d->ages[d->ages_count-1] = age;
+
+	/* set values */
+	d->ages[d->ages_count-1].value = row->age;
+
+	/* add age */
+	return fill_cell_from_species(&d->ages[d->ages_count-1], row);
 }
-/************************************************************************************/
-//ALESSIOC DBH
-//static int fill_cell_from_ages(dbh_t* const d, const row_t* const row)
-//{
-//	static age_t age = { 0 };
-//
-//	/* check parameter */
-//	assert ( d && row);
-//
-//	/* alloc memory for dbhs */
-//	if ( !alloc_struct((void **)&d->ages, &d->ages_count, sizeof(age_t)) )
-//	{
-//		return 0;
-//	}
-//	d->ages[d->ages_count-1] = age;
-//
-//	/* set values */
-//	d->ages[d->ages_count-1].value = row->age;
-//
-//	/* add age */
-//	return fill_cell_from_species(&d->ages[d->ages_count-1], row);
-//}
-//
-//static int fill_cell_from_dbhs(height_t* const h, const row_t* const row)
-//{
-//	static dbh_t dbh = { 0 };
-//
-//	/* check parameter */
-//	assert ( h  &  row );
-//
-//	/* alloc memory for dbhs */
-//	if ( !alloc_struct((void **)&h->dbhs, &h->dbhs_count, sizeof(dbh_t)) )
-//		{
-//			return 0;
-//		}
-//		h->dbhs[h->dbhs_count-1] = dbh;
-//
-//		/* set values */
-//		h->dbhs[h->dbhs_count-1].value = row->dbh;
-//
-//		/* add dbh */
-//	return fill_cell_from_ages(&h->dbhs[h->dbhs_count-1], row);
-//}
-/***************************************************************************************/
+
+static int fill_cell_from_dbhs(height_t* const h, const row_t* const row)
+{
+	static dbh_t dbh = { 0 };
+
+	/* check parameter */
+	assert( h && row );
+
+	/* alloc memory for dbhs */
+	if ( !alloc_struct((void **)&h->dbhs, &h->dbhs_count, sizeof(dbh_t)) )
+	{
+		return 0;
+	}
+	h->dbhs[h->dbhs_count-1] = dbh;
+
+	/* set values */
+	h->dbhs[h->dbhs_count-1].value = row->avdbh;
+
+	/* add dbh */
+	return fill_cell_from_ages(&h->dbhs[h->dbhs_count-1], row);
+}
 
 static int fill_cell_from_heights(cell_t *const c, const row_t *const row)
 {
 	static height_t height = { 0 };
 
 	/* check parameter */
-	assert(c && row);
+	assert( c && row );
 
 	/* alloc memory for heights */
 	if (!alloc_struct((void **)&c->heights, &c->heights_count, sizeof(height_t)) )
@@ -959,7 +882,7 @@ static int fill_cell_from_heights(cell_t *const c, const row_t *const row)
 	c->heights[c->heights_count-1].value = row->height;
 
 	/* add age */
-	return fill_cell_from_ages(&c->heights[c->heights_count-1], row);
+	return fill_cell_from_dbhs(&c->heights[c->heights_count-1], row);
 }
 
 /****************************************************************************/
@@ -977,7 +900,7 @@ static int fill_cell(matrix_t* const m, row_t* const row)
 	int index;
 	static cell_t cell = { 0 };
 
-	assert(m && row);
+	assert( m && row );
 
 	/*  check position */
 	index = -1;
@@ -1201,6 +1124,7 @@ matrix_t* matrix_create(const char* const filename) {
 	int cell;
 	int species;
 	int age;
+	int dbh;
 	int height;
 	dataset_t *d;
 	matrix_t* m;
@@ -1283,11 +1207,13 @@ matrix_t* matrix_create(const char* const filename) {
 	/* fill with species values */
 	for ( cell = 0; cell < m->cells_count; ++cell ) {
 		for (height = 0; height < m->cells[cell].heights_count; ++height) {
-			for (age = 0;  age < m->cells[cell].heights[height].ages_count; ++age ) {
-				for ( species = 0; species < m->cells[cell].heights[height].ages[age].species_count; ++species ) {
-					if ( ! fill_species_from_file(&m->cells[cell].heights[height].ages[age].species[species]) ) {
-						matrix_free(m);
-						return NULL;
+			for (dbh = 0; dbh < m->cells[cell].heights[height].dbhs_count; ++dbh) {
+				for (age = 0; age < m->cells[cell].heights[height].dbhs[dbh].ages_count; ++age ) {
+					for ( species = 0; species < m->cells[cell].heights[height].dbhs[dbh].ages[age].species_count; ++species ) {
+						if ( ! fill_species_from_file(&m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species]) ) {
+							matrix_free(m);
+							return NULL;
+						}
 					}
 				}
 			}
@@ -1328,7 +1254,7 @@ matrix_t* matrix_create(const char* const filename) {
 			}
 		}
 	}
-	*/
+	 */
 
 	/* compute x and y cells count */
 	if ( ! compute_x_y_cells_count(m) ) {
@@ -1436,7 +1362,7 @@ void soil_summary(const matrix_t* const m, const cell_t* const cell)
 	logger(g_log, "-Soil M0 = %g\n", g_soil_settings->values[SOIL_M0]);
 	logger(g_log, "-Soil SN = %g\n", g_soil_settings->values[SOIL_SN]);
 
-	 /* soil initialization */
+	/* soil initialization */
 	initialization_soil (m->cells);
 
 	logger(g_log, "***************************************************\n\n");
@@ -1446,6 +1372,7 @@ void forest_summary(const matrix_t* const m, const int cell, const int day, cons
 {
 	int species;
 	int age;
+	int dbh;
 	int height;
 
 	assert (m);
@@ -1466,27 +1393,36 @@ void forest_summary(const matrix_t* const m, const int cell, const int day, cons
 	for ( height = 0; height < m->cells[cell].heights_count; height++ )
 	{
 		logger(g_log, "**(%d)\n", height + 1);
-		logger(g_log, "-- height n.%02d is %f m and has %d age classes\n",
-				height + 1,
-				m->cells[cell].heights[height].value,
-				m->cells[cell].heights[height].ages_count);
+		logger(g_log, "-- height n.%02d is %g and has %d dbh classes \n",
+				height + 1, m->cells[cell].heights[height].value,
+				m->cells[cell].heights[height].dbhs_count);
 
-		/* loop on each age */
-		for ( age = 0; age < m->cells[cell].heights[height].ages_count; age++ )
+		/* loop on each dbh */
+		for ( dbh = 0; dbh < m->cells[cell].heights[height].dbhs_count; ++dbh)
 		{
-			logger(g_log, "--- age n.%02d is %d yrs and has %d species\n",
-					age + 1,
-					m->cells[cell].heights[height].ages[age].value,
-					m->cells[cell].heights[height].ages[age].species_count);
+			logger(g_log, "**(%d)\n", dbh + 1);
+			logger(g_log, "--- dbh n.%02d is %g and has %d ages classes\n",
+					dbh + 1, m->cells[cell].heights[height].dbhs[dbh].value,
+					m->cells[cell].heights[height].dbhs[dbh].ages_count);
 
-			/* loop on each species */
-			for ( species = 0; species < m->cells[cell].heights[height].ages[age].species_count; species ++)
+			/* loop on each age */
+			for ( age = 0; age < m->cells[cell].heights[height].dbhs[dbh].ages_count; age++ )
 			{
-				logger(g_log, "--- species is %s\n",
-						m->cells[cell].heights[height].ages[age].species[species].name);
+				logger(g_log, "**(%d)\n", age + 1);
+				logger(g_log, "---- age n.%02d is %d yrs and has %d species\n",
+						age + 1,
+						m->cells[cell].heights[height].dbhs[dbh].ages[age].value,
+						m->cells[cell].heights[height].dbhs[dbh].ages[age].species_count);
+
+				/* loop on each species */
+				for ( species = 0; species < m->cells[cell].heights[height].dbhs[dbh].ages[age].species_count; species ++)
+				{
+					logger(g_log, "----- species is %s\n",
+							m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species].name);
+				}
 			}
 		}
-	}
+	}getchar();
 
 	/*************FOREST INITIALIZATION DATA***********/
 	/* initialise power function */
@@ -1501,81 +1437,84 @@ void forest_summary(const matrix_t* const m, const int cell, const int day, cons
 	/* initialise forest structure */
 	initialization_forest_structure (&m->cells[cell], day, month, year);
 
-	for ( height = 0; height < m->cells[cell].heights_count; height++ )
+	for ( height = 0; height < m->cells[cell].heights_count; ++height )
 	{
-		for ( age = 0; age < m->cells[cell].heights[height].ages_count; age++ )
+		for ( dbh = 0; dbh < m->cells[cell].heights[height].dbhs_count; ++dbh )
 		{
-			for ( species = 0; species < m->cells[cell].heights[height].ages[age].species_count; species ++)
+			for ( age = 0; age < m->cells[cell].heights[height].dbhs[dbh].ages_count; ++age )
 			{
-				/* IF NO BIOMASS INITIALIZATION DATA OR TREE HEIGHTS ARE AVAILABLE FOR STAND
-				 * BUT JUST DENDROMETRIC VARIABLES (i.e. AVDBH, HEIGHT, THESE ARE MANDATORY) */
+				for ( species = 0; species < m->cells[cell].heights[height].dbhs[dbh].ages[age].species_count; ++species )
+				{
+					/* IF NO BIOMASS INITIALIZATION DATA OR TREE HEIGHTS ARE AVAILABLE FOR STAND
+					 * BUT JUST DENDROMETRIC VARIABLES (i.e. AVDBH, HEIGHT, THESE ARE MANDATORY) */
 
-				/* initialise carbon pools */
-				initialization_forest_C_biomass (&m->cells[cell], height, age, species);
+					/* initialise carbon pools */
+					initialization_forest_C_biomass (&m->cells[cell], height, dbh, age, species);
 
-				/* initialise nitrogen pools */
-				initialization_forest_N_biomass (&m->cells[cell], height, age, species);
+					/* initialise nitrogen pools */
+					initialization_forest_N_biomass (&m->cells[cell], height, dbh, age, species);
 
-				/* print class dataset */
-				logger(g_log,
-						"\n\n----- CLASS DATASET-----\n"
-						"----- height = %g m\n"
-						"----- age = %d cm\n"
-						"----- species = %s\n"
-						"----- n = %d trees\n"
-						"----- n stumps = %d stumps\n"
-						"----- avdbh = %g cm\n"
-						"----- lai = %g m2/m2\n"
-						"**carbon pools**\n"
-						"----- leaf = %g tC/ha\n"
-						"----- fine root = %g tC/area\n"
-						"----- coarse root = %g tC/area\n"
-						"----- total root = %g tC/area\n"
-						"----- stem = %g tC/area\n"
-						"----- branch and bark = %g tC/area\n"
-						"----- reserve = %g tC/area\n"
-						"----- stem live = %g tC/area\n"
-						"----- stem dead = %g tC/area\n"
-						"----- coarse root live = %g tC/area\n"
-						"----- coarse root dead = %g tC/area\n"
-						"----- branch live = %g tC/area\n"
-						"----- branch dead = %g tC/area\n"
-						"----- total live = %g tC/area\n"
-						"----- total dead = %g tC/area\n"
-						"**nitrogen pools**\n"
-						"----- leaf = %g tN/area\n"
-						"----- fine root = %g tN/area\n"
-						"----- coarse root = %g tN/area\n"
-						"----- stem = %g tN/area\n"
-						"----- branch and bark = %g tN/area\n"
-						"--------------------------------\n",
-						m->cells[cell].heights[height].value,
-						m->cells[cell].heights[height].ages[age].value,
-						m->cells[cell].heights[height].ages[age].species[species].name,
-						m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE],
-						m->cells[cell].heights[height].ages[age].species[species].counter[N_STUMP],
-						m->cells[cell].heights[height].ages[age].species[species].value[AVDBH],
-						m->cells[cell].heights[height].ages[age].species[species].value[LAI],
-						m->cells[cell].heights[height].ages[age].species[species].value[LEAF_C],
-						m->cells[cell].heights[height].ages[age].species[species].value[FINE_ROOT_C],
-						m->cells[cell].heights[height].ages[age].species[species].value[COARSE_ROOT_C],
-						m->cells[cell].heights[height].ages[age].species[species].value[TOT_ROOT_C],
-						m->cells[cell].heights[height].ages[age].species[species].value[STEM_C],
-						m->cells[cell].heights[height].ages[age].species[species].value[BRANCH_C],
-						m->cells[cell].heights[height].ages[age].species[species].value[RESERVE_C],
-						m->cells[cell].heights[height].ages[age].species[species].value[STEM_LIVE_WOOD_C],
-						m->cells[cell].heights[height].ages[age].species[species].value[STEM_DEAD_WOOD_C],
-						m->cells[cell].heights[height].ages[age].species[species].value[COARSE_ROOT_LIVE_WOOD_C],
-						m->cells[cell].heights[height].ages[age].species[species].value[COARSE_ROOT_DEAD_WOOD_C],
-						m->cells[cell].heights[height].ages[age].species[species].value[BRANCH_LIVE_WOOD_C],
-						m->cells[cell].heights[height].ages[age].species[species].value[BRANCH_DEAD_WOOD_C],
-						m->cells[cell].heights[height].ages[age].species[species].value[LIVE_WOOD_C],
-						m->cells[cell].heights[height].ages[age].species[species].value[DEAD_WOOD_C],
-						m->cells[cell].heights[height].ages[age].species[species].value[LEAF_N],
-						m->cells[cell].heights[height].ages[age].species[species].value[FINE_ROOT_N],
-						m->cells[cell].heights[height].ages[age].species[species].value[COARSE_ROOT_N],
-						m->cells[cell].heights[height].ages[age].species[species].value[STEM_N],
-						m->cells[cell].heights[height].ages[age].species[species].value[BRANCH_N]);
+					/* print class dataset */
+					logger(g_log,
+							"\n\n----- CLASS DATASET-----\n"
+							"----- height = %g m\n"
+							"----- avdbh = %g cm\n"
+							"----- age = %d cm\n"
+							"----- species = %s\n"
+							"----- n = %d trees\n"
+							"----- n stumps = %d stumps\n"
+							"----- lai = %g m2/m2\n"
+							"**carbon pools**\n"
+							"----- leaf = %g tC/ha\n"
+							"----- fine root = %g tC/area\n"
+							"----- coarse root = %g tC/area\n"
+							"----- total root = %g tC/area\n"
+							"----- stem = %g tC/area\n"
+							"----- branch and bark = %g tC/area\n"
+							"----- reserve = %g tC/area\n"
+							"----- stem live = %g tC/area\n"
+							"----- stem dead = %g tC/area\n"
+							"----- coarse root live = %g tC/area\n"
+							"----- coarse root dead = %g tC/area\n"
+							"----- branch live = %g tC/area\n"
+							"----- branch dead = %g tC/area\n"
+							"----- total live = %g tC/area\n"
+							"----- total dead = %g tC/area\n"
+							"**nitrogen pools**\n"
+							"----- leaf = %g tN/area\n"
+							"----- fine root = %g tN/area\n"
+							"----- coarse root = %g tN/area\n"
+							"----- stem = %g tN/area\n"
+							"----- branch and bark = %g tN/area\n"
+							"--------------------------------\n",
+							m->cells[cell].heights[height].value,
+							m->cells[cell].heights[height].dbhs[dbh].value,
+							m->cells[cell].heights[height].dbhs[dbh].ages[age].value,
+							m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species].name,
+							m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species].counter[N_TREE],
+							m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species].counter[N_STUMP],
+							m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species].value[LAI],
+							m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species].value[LEAF_C],
+							m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species].value[FINE_ROOT_C],
+							m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species].value[COARSE_ROOT_C],
+							m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species].value[TOT_ROOT_C],
+							m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species].value[STEM_C],
+							m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species].value[BRANCH_C],
+							m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species].value[RESERVE_C],
+							m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species].value[STEM_LIVE_WOOD_C],
+							m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species].value[STEM_DEAD_WOOD_C],
+							m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species].value[COARSE_ROOT_LIVE_WOOD_C],
+							m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species].value[COARSE_ROOT_DEAD_WOOD_C],
+							m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species].value[BRANCH_LIVE_WOOD_C],
+							m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species].value[BRANCH_DEAD_WOOD_C],
+							m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species].value[LIVE_WOOD_C],
+							m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species].value[DEAD_WOOD_C],
+							m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species].value[LEAF_N],
+							m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species].value[FINE_ROOT_N],
+							m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species].value[COARSE_ROOT_N],
+							m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species].value[STEM_N],
+							m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species].value[BRANCH_N]);
+				}
 			}
 		}
 	}
@@ -1583,47 +1522,55 @@ void forest_summary(const matrix_t* const m, const int cell, const int day, cons
 
 void matrix_free(matrix_t *m)
 {
+	int cell;
+	int height;
+	int dbh;
+	int age;
+	int species;
+	int soil;
+
 	assert(m);
 
 	if ( m )
 	{
 		if ( m->cells_count )
 		{
-			int cell;
 			for ( cell = 0 ; cell < m->cells_count; ++cell )
 			{			
-				int height;
-				int soil;
 				for ( height = 0; height < m->cells[cell].heights_count; ++height )
 				{
 					if ( m->cells[cell].t_layers_count )
 					{
 						free(m->cells[cell].t_layers);
 					}
-
-					if ( m->cells[cell].heights[height].ages_count )
+					if ( m->cells[cell].heights[height].dbhs_count )
 					{
-						int age;
-						for ( age = 0; age < m->cells[cell].heights[height].ages_count; ++age )
+						for ( dbh = 0; dbh < m->cells[cell].heights[height].dbhs_count; ++dbh)
 						{
-							if ( m->cells[cell].heights[height].ages[age].species )
+							if ( m->cells[cell].heights[height].dbhs[dbh].ages_count )
 							{
-								int species;
-								for ( species = 0; species < m->cells[cell].heights[height].ages[age].species_count; ++species )
+								for ( age = 0; age < m->cells[cell].heights[height].dbhs[dbh].ages_count; ++age )
 								{
-									if ( m->cells[cell].heights[height].ages[age].species[species].name )
+									if ( m->cells[cell].heights[height].dbhs[dbh].ages[age].species )
 									{
-										free(m->cells[cell].heights[height].ages[age].species[species].name);
-									}
-									if ( m->cells[cell].heights[height].ages[age].species[species].turnover )
-									{
-										free(m->cells[cell].heights[height].ages[age].species[species].turnover);
+										for ( species = 0; species < m->cells[cell].heights[height].dbhs[dbh].ages[age].species_count; ++species )
+										{
+											if ( m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species].name )
+											{
+												free(m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species].name);
+											}
+											if ( m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species].turnover )
+											{
+												free(m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species].turnover);
+											}
+										}
+										free ( m->cells[cell].heights[height].dbhs[dbh].ages[age].species);
 									}
 								}
-								free ( m->cells[cell].heights[height].ages[age].species);
+								free ( m->cells[cell].heights[height].dbhs[dbh].ages);
 							}
 						}
-						free ( m->cells[cell].heights[height].ages);
+						free ( m->cells[cell].heights[height].dbhs);
 					}
 				}
 

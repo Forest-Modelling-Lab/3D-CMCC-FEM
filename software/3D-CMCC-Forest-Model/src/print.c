@@ -175,16 +175,18 @@ void print_cell_data (cell_t *const c)
 	logger(g_log, "* snow pack = %g cm\n", c->snow_pack);
 
 }
-void print_forest_class_data(cell_t* const c, const int layer, const int height, const int age, const int species)
+void print_forest_class_data(cell_t* const c, const int layer, const int height, const int dbh, const int age, const int species)
 {
 	tree_layer_t *l;
 	height_t *h;
+	dbh_t *d;
 	age_t *a;
 	species_t *s;
 
-	h = &c->heights[height];
 	l = &c->t_layers[layer];
-	a = &h->ages[age];
+	h = &c->heights[height];
+	d = &h->dbhs[dbh];
+	a = &d->ages[age];
 	s = &a->species[species];
 
 	/* print at the beginning of simulation class level data */
@@ -196,9 +198,9 @@ void print_forest_class_data(cell_t* const c, const int layer, const int height,
 	logger(g_log, "* z (height) = %d\n", h->height_z);
 	logger(g_log, "--class level data--\n");
 	logger(g_log, "- Height = %g m\n", h->value);
+	logger(g_log, "- DBH = %g cm\n", d->value);
 	logger(g_log, "- Class Age = %d years \n", a->value);
 	logger(g_log, "- Species = %s\n", s->name);
-	logger(g_log, "- DBH = %g cm\n", s->value[AVDBH]);
 	logger(g_log, "- Number of trees = %d trees \n", s->counter[N_TREE]);
 	logger(g_log, "- Vegetative Days =  %d days\n", s->counter[DAY_VEG_FOR_LEAF_FALL]);
 	logger(g_log, "- LAI = %g \n", s->value[LAI]);

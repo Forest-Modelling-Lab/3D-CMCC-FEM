@@ -19,7 +19,7 @@
 
 extern logger_t* g_log;
 
-void canopy_interception(cell_t *const c, const int layer, const int height, const int age, const int species, const meteo_daily_t *const meteo_daily)
+void canopy_interception(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, const meteo_daily_t *const meteo_daily)
 {
 	static int cell_height_class_counter;
 	static int layer_height_class_counter;
@@ -33,7 +33,7 @@ void canopy_interception(cell_t *const c, const int layer, const int height, con
 	species_t *s;
 
 	l = &c->t_layers[layer];
-	s = &c->heights[height].ages[age].species[species];
+	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 	/* it computes canopy rain interception with the same rationale
 	 * used for canopy radiation absorption */

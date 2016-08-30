@@ -11,10 +11,12 @@ extern logger_t* g_log;
 void allometry_power_function(cell_t *const c)
 {
 	int height;
+	int dbh;
 	int age;
 	int species;
 
 	height_t *h;
+	dbh_t *d;
 	age_t *a;
 	species_t *s;
 
@@ -24,34 +26,39 @@ void allometry_power_function(cell_t *const c)
 	{
 		h = &c->heights[height];
 
-		for ( age = 0; age < h->ages_count; age++ )
+		for ( dbh = 0; dbh < h->dbhs_count; ++dbh )
 		{
-			a = &c->heights[height].ages[age];
+			d =  &h->dbhs[dbh];
 
-			for ( species = 0; species < a->species_count; species ++)
+			for ( age = 0; age < d->ages_count; age++ )
 			{
-				s = &c->heights[height].ages[age].species[species];
+				a = &d->ages[age];
 
-				logger(g_log, "Species = %s\n", s->name);
-
-				logger(g_log, "Age = %d\n", a->value);
-
-				s->value[MASS_DENSITY] = s->value[RHOMAX] + (s->value[RHOMIN] - s->value[RHOMAX]) * exp(-ln2 * (a->value / s->value[TRHO]));
-				logger(g_log, "-Mass Density = %g\n", s->value[MASS_DENSITY]);
-
-				if (s->value[AVDBH] < 9)
+				for ( species = 0; species < a->species_count; species ++)
 				{
-					s->value[STEMCONST] = pow (e, -1.6381);
+					s = &a->species[species];
+
+					logger(g_log, "Species = %s\n", s->name);
+
+					logger(g_log, "Age = %d\n", a->value);
+
+					s->value[MASS_DENSITY] = s->value[RHOMAX] + (s->value[RHOMIN] - s->value[RHOMAX]) * exp(-ln2 * (a->value / s->value[TRHO]));
+					logger(g_log, "-Mass Density = %g\n", s->value[MASS_DENSITY]);
+
+					if ( d->value < 9 )
+					{
+						s->value[STEMCONST] = pow (e, -1.6381);
+					}
+					else if ( d->value > 9 && d->value < 15 )
+					{
+						s->value[STEMCONST] = pow (e, -3.51+1.27* s->value[MASS_DENSITY]);
+					}
+					else
+					{
+						s->value[STEMCONST] = pow (e, -3.51+1.27*s->value[MASS_DENSITY]);
+					}
+					logger(g_log, "-Stem const = %f\n", s->value[STEMCONST]);
 				}
-				else if (s->value[AVDBH]>9 && s->value[AVDBH]<15)
-				{
-					s->value[STEMCONST] = pow (e, -3.51+1.27* s->value[MASS_DENSITY]);
-				}
-				else
-				{
-					s->value[STEMCONST] = pow (e, -3.51+1.27*s->value[MASS_DENSITY]);
-				}
-				logger(g_log, "-Stem const = %f\n", s->value[STEMCONST]);
 			}
 		}
 	}

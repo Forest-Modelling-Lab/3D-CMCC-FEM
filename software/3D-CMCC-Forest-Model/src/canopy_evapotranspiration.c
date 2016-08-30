@@ -20,7 +20,7 @@
 
 extern logger_t* g_log;
 
-void canopy_evapotranspiration(cell_t *const c, const int layer, const int height, const int age, const int species, const meteo_daily_t *const meteo_daily)
+void canopy_evapotranspiration(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, const meteo_daily_t *const meteo_daily)
 {
 	double g_corr;
 	double gl_bl;
@@ -46,7 +46,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 	static int days_with_canopy_wet;
 
 	species_t *s;
-	s = &c->heights[height].ages[age].species[species];
+	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 	daylength_sec = meteo_daily->daylength * 3600.0;
 
@@ -89,7 +89,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 	/********************************************************************************************************/
 
 	/* call canopy interception */
-	canopy_interception( c, layer, height, age, species, meteo_daily );
+	canopy_interception( c, layer, height, dbh, age, species, meteo_daily );
 
 	/********************************************************************************************************/
 	/* temperature and pressure correction factor for conductances */
@@ -391,7 +391,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 	Canopy_latent_heat_fluxes (s, meteo_daily);
 
 	/* compute sensible heat fluxes for canopy */
-	Canopy_sensible_heat_fluxes(c, layer, height, age, species, meteo_daily);
+	Canopy_sensible_heat_fluxes(c, layer, height, dbh, age, species, meteo_daily);
 
 	s->value[MONTHLY_CANOPY_EVAPO_TRANSP] += s->value[CANOPY_EVAPO_TRANSP];
 	s->value[YEARLY_CANOPY_EVAPO_TRANSP] += s->value[CANOPY_EVAPO_TRANSP];

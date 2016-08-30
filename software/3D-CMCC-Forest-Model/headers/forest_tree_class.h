@@ -10,6 +10,6 @@
 
 #include "matrix.h"
 
-int add_tree_class(cell_t *const c, const int height, const int age, const int species);
+int add_tree_class(cell_t *const c, const int height, const int dbh, const int age, const int species);
 
 #endif /* FOREST_TREE_CLASS_H_ */

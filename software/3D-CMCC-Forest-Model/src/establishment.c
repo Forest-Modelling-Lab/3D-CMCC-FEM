@@ -11,7 +11,7 @@ extern settings_t *g_settings;
 extern logger_t* g_log;
 
 /**/
-void Establishment_LPJ (cell_t *const c, const int layer, const int height, const int age, const int species)
+void Establishment_LPJ (cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species)
 {
 
 	//double FProCov;   //LPJ Foliage Projective  Cover for Seed Establishment
@@ -19,7 +19,7 @@ void Establishment_LPJ (cell_t *const c, const int layer, const int height, cons
 	static int Nsapling;
 
 	species_t *s;
-	s = &c->heights[height].ages[age].species[species];
+	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 	logger(g_log, "\n--LPJ ESTABLISHMENT--\n");
 
