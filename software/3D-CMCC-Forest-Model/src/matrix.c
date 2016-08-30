@@ -905,7 +905,7 @@ static int fill_cell_from_heights(cell_t *const c, const row_t *const row)
 	}
 	c->heights[c->heights_count-1] = height;
 
-	// set values
+	/* set values */
 	c->heights[c->heights_count-1].value = row->height;
 
 	// add age

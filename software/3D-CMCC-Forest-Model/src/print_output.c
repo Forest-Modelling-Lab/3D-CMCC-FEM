@@ -251,6 +251,10 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 		{
 			logger(g_daily_log, sz_launched, netcdf_get_version(), get_datetime());
 			write_paths(g_daily_log);
+
+			logger(g_daily_log, "*model setting*\n")
+			logger(g_daily_log, "-CO2 fixed = %s\n", g_settings->CO2_fixed);
+			logger(g_daily_log, "-Management = %s\n", g_settings->management);
 		}
 	}
 }
@@ -411,6 +415,10 @@ void EOM_print_cumulative_balance_cell_level(cell_t *const c, const int month, c
 		{
 			logger(g_monthly_log, sz_launched, netcdf_get_version(), get_datetime());
 			write_paths(g_monthly_log);
+
+			logger(g_monthly_log, "*model setting*\n");
+			logger(g_monthly_log, "-CO2 fixed = %s\n", g_settings->CO2_fixed);
+			logger(g_monthly_log, "-Management = %s\n", g_settings->management);
 		}
 	}
 }
@@ -454,7 +462,7 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 							logger(g_annual_log,"\t%10s", "SPECIES");
 
 							logger(g_annual_log,"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s"
-									"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s",
+									"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s",
 									"GPP",
 									"AR",
 									"NPP",
@@ -467,6 +475,7 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 									"VEG_D",
 									"CET",
 									"CLE",
+									"LTR",
 									"WRes",
 									"WS",
 									"WSL",
@@ -548,7 +557,7 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 
 						/* print variables at layer-class level */
 						logger(g_annual_log,"\t%6.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3d \t%3d \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f"
-								"\t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f",
+								"\t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f",
 								s->value[YEARLY_GPP_gC],
 								s->value[YEARLY_TOTAL_AUT_RESP],
 								s->value[YEARLY_NPP_gC],
@@ -561,6 +570,7 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 								s->counter[YEARLY_VEG_DAYS],
 								s->value[YEARLY_CANOPY_EVAPO_TRANSP],
 								s->value[YEARLY_CANOPY_LATENT_HEAT],
+								s->value[EFF_LIVE_TOTAL_WOOD_FRAC],
 								s->value[RESERVE_C],
 								s->value[STEM_C],
 								s->value[STEM_LIVE_WOOD_C],
@@ -621,6 +631,10 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 	{
 		logger(g_annual_log, sz_launched, netcdf_get_version(), get_datetime());
 		write_paths(g_annual_log);
+
+		logger(g_annual_log, "*model setting*\n");
+		logger(g_annual_log, "-CO2 fixed = %s\n", g_settings->CO2_fixed);
+		logger(g_annual_log, "-Management = %s\n", g_settings->management);
 	}
 }
 
