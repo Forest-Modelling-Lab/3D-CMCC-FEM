@@ -23,9 +23,11 @@ static int fill_cell(cell_t *const c)
 {
 	char* p;
 	height_t* h;
+	dbh_t* d;
 	age_t* a;
 
 	static height_t height = { 0 };
+	static dbh_t dbh = { 0 };
 	static age_t age = { 0 };
 	static species_t species = { 0 };
 
@@ -33,17 +35,37 @@ static int fill_cell(cell_t *const c)
 
 	CHECK_CONDITION(g_settings->replanted_management, != 0);
 	
-	//alloc memory for heights
+	/* alloc memory for heights */
 	if ( ! alloc_struct((void **)&c->heights, &c->heights_count, sizeof(height_t)) )
 	{
 		return 0;
 	}
 	c->heights[c->heights_count-1] = height;
-	//ALESSIOC change height_sapling in replanted_height
 	c->heights[c->heights_count-1].value = g_settings->replanted_height;
-
 	h = &c->heights[c->heights_count-1];
-			
+
+	/*****************************************************************************/
+	//ALESSIOC DBH
+//	/* alloc memory for dbhs */
+//	if ( ! alloc_struct((void **)&h->dbhs, &h->dbhs_count, sizeof(dbh_t)) )
+//	{
+//		return 0;
+//	}
+//	h->dbhs[h->dbhs_count-1] = dbh;
+//	h->dbhs[h->dbhs_count-1].value = g_settings->replanted_avdbh;
+//	a = &h->dbhs[h->dbhs_count-1];
+//
+//	/* alloc memory for ages */
+//	if ( ! alloc_struct((void **)&d->ages, &d->ages_count, sizeof(age_t)) )
+//	{
+//		return 0;
+//	}
+//	d->ages[d->ages_count-1] = age;
+//	d->ages[h->ages_count-1].value = g_settings->replanted_age;
+//	d = &d->ages[d->ages_count-1];
+	/******************************************************************************/
+
+	/* alloc memory for ages */
 	if ( ! alloc_struct((void **)&h->ages, &h->ages_count, sizeof(age_t)) )
 	{
 		return 0;
@@ -52,6 +74,7 @@ static int fill_cell(cell_t *const c)
 	h->ages[h->ages_count-1].value = g_settings->replanted_age;
 	a = &h->ages[h->ages_count-1];
 
+	/* alloc memory for species */
 	if ( ! alloc_struct((void **)&a->species, &a->species_count, sizeof(species_t)) )
 	{
 		return 0;

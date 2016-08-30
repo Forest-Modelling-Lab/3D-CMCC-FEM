@@ -295,7 +295,6 @@ void self_thinning ( cell_t *const c, const int layer )
 	//int deadstump = 0;
 
 	height_t *h;
-	age_t *a;
 	species_t *s;
 
 	/* "First, large plants suppress small plants.
@@ -324,7 +323,6 @@ void self_thinning ( cell_t *const c, const int layer )
 			for ( species = 0; species < c->heights[height].ages[age].species_count; ++species )
 			{
 				h = &c->heights[height];
-				a = &c->heights[height].ages[age];
 				s = &c->heights[height].ages[age].species[species];
 
 				logger(g_log, "MORTALITY BASED ON HIGH CANOPY COVER height %g species %s dbh %g !!!\n", h->value, s->name, s->value[AVDBH]);

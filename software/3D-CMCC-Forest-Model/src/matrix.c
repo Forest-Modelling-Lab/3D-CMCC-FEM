@@ -852,6 +852,7 @@ static int fill_cell_from_species(age_t* const a, const row_t* const row) {
 	static species_t species = { 0 };
 	char *p;
 
+	/* check parameter */
 	assert(a && row);
 
 	p = string_copy(row->species);
@@ -866,7 +867,10 @@ static int fill_cell_from_species(age_t* const a, const row_t* const row) {
 	a->species[a->species_count-1].name = p;
 	a->species[a->species_count-1].counter[N_TREE] = row->n;
 	a->species[a->species_count-1].counter[N_STUMP] = row->stool;
+
+	//ALESSIOc fixme to remove
 	a->species[a->species_count-1].value[AVDBH] = row->avdbh;
+
 	a->species[a->species_count-1].value[BIOMASS_FOLIAGE_tDM] = row->wf;
 	a->species[a->species_count-1].value[BIOMASS_COARSE_ROOT_tDM] = row->wrc;
 	a->species[a->species_count-1].value[BIOMASS_FINE_ROOT_tDM] = row->wrf;
@@ -880,25 +884,71 @@ static int fill_cell_from_species(age_t* const a, const row_t* const row) {
 	return 1;
 }
 
-static int fill_cell_from_ages(height_t* const h, const row_t* const row) {
+static int fill_cell_from_ages(height_t* const h, const row_t* const row)
+{
 	static age_t age = { 0 };
 	assert ( h && row);
-	if ( !alloc_struct((void **)&h->ages, &h->ages_count, sizeof(age_t)) ) {
+	if ( !alloc_struct((void **)&h->ages, &h->ages_count, sizeof(age_t)) )
+	{
 		return 0;
 	}
 	h->ages[h->ages_count-1] = age;
 	h->ages[h->ages_count-1].value = row->age;
 	return fill_cell_from_species(&h->ages[h->ages_count-1], row);
 }
+/************************************************************************************/
+//ALESSIOC DBH
+//static int fill_cell_from_ages(dbh_t* const d, const row_t* const row)
+//{
+//	static age_t age = { 0 };
+//
+//	/* check parameter */
+//	assert ( d && row);
+//
+//	/* alloc memory for dbhs */
+//	if ( !alloc_struct((void **)&d->ages, &d->ages_count, sizeof(age_t)) )
+//	{
+//		return 0;
+//	}
+//	d->ages[d->ages_count-1] = age;
+//
+//	/* set values */
+//	d->ages[d->ages_count-1].value = row->age;
+//
+//	/* add age */
+//	return fill_cell_from_species(&d->ages[d->ages_count-1], row);
+//}
+//
+//static int fill_cell_from_dbhs(height_t* const h, const row_t* const row)
+//{
+//	static dbh_t dbh = { 0 };
+//
+//	/* check parameter */
+//	assert ( h  &  row );
+//
+//	/* alloc memory for dbhs */
+//	if ( !alloc_struct((void **)&h->dbhs, &h->dbhs_count, sizeof(dbh_t)) )
+//		{
+//			return 0;
+//		}
+//		h->dbhs[h->dbhs_count-1] = dbh;
+//
+//		/* set values */
+//		h->dbhs[h->dbhs_count-1].value = row->dbh;
+//
+//		/* add dbh */
+//	return fill_cell_from_ages(&h->dbhs[h->dbhs_count-1], row);
+//}
+/***************************************************************************************/
 
 static int fill_cell_from_heights(cell_t *const c, const row_t *const row)
 {
 	static height_t height = { 0 };
 
-	//check parameter
+	/* check parameter */
 	assert(c && row);
 
-	//alloc memory for heights
+	/* alloc memory for heights */
 	if (!alloc_struct((void **)&c->heights, &c->heights_count, sizeof(height_t)) )
 	{
 		return 0;
@@ -908,7 +958,7 @@ static int fill_cell_from_heights(cell_t *const c, const row_t *const row)
 	/* set values */
 	c->heights[c->heights_count-1].value = row->height;
 
-	// add age
+	/* add age */
 	return fill_cell_from_ages(&c->heights[c->heights_count-1], row);
 }
 

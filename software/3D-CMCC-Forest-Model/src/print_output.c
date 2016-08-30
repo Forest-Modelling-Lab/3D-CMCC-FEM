@@ -252,7 +252,7 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 			logger(g_daily_log, sz_launched, netcdf_get_version(), get_datetime());
 			write_paths(g_daily_log);
 
-			logger(g_daily_log, "*model setting*\n")
+			logger(g_daily_log, "*model setting*\n");
 			logger(g_daily_log, "-CO2 fixed = %s\n", g_settings->CO2_fixed);
 			logger(g_daily_log, "-Management = %s\n", g_settings->management);
 		}
