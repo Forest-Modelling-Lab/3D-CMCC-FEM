@@ -1041,7 +1041,7 @@ int main(int argc, char *argv[]) {
 						//						}
 					}
 
-					//ALESSIOC include here soil computation
+					//ALESSIOC
 					/************************************************************************/
 					/*
 					if ( !Soil_model_daily(matrix, cell, day, month, year) )
@@ -1054,7 +1054,8 @@ int main(int argc, char *argv[]) {
 					}
 					*/
 					/*************************************************************************/
-					//ALESSIOC inncklude here cell compuation
+
+					//ALESSIOC
 					/************************************************************************/
 					/*
 					if ( !Cell_model_daily(matrix, cell, day, month, year) )
