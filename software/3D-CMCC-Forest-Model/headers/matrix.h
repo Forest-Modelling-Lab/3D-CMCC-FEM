@@ -635,14 +635,6 @@ typedef struct
 
 } height_t;
 
-typedef struct
-{
-	// ALLESSIOR:
-	// VC++ 2008 do not allow empty structure
-	// TODO: REMOVE
-	int foo;
-} soil_t;
-
 enum
 {
 	S_LAYER_VALUE_PREVIOUS_AVAILABLE_SOIL_WATER
@@ -666,8 +658,7 @@ enum
 };
 
 typedef struct {
-	soil_t* soils;
-	int soils_count;
+
 	double value[S_LAYER_VALUES_COUNT];
 
 	//ALESSIOC ALESSIOR SERGIOS STUFFS SEE IF REMOVE AND USE ARRAYS
@@ -714,7 +705,7 @@ typedef struct {
 	double waterContent;
 	double CEC;
 	/*********************************************************************************************/
-} soil_layer_t;
+} soil_layer_s;
 
 typedef struct
 {
@@ -724,7 +715,7 @@ typedef struct
 	tree_layer_t* t_layers;
 	int t_layers_count;
 
-	soil_layer_t* s_layers;
+	soil_layer_s* s_layers;
 	int s_layers_count;
 
 	int years_count;

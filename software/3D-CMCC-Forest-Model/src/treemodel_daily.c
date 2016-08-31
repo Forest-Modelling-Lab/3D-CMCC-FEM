@@ -79,7 +79,9 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	meteo_daily = &m->cells[cell].years[year].m[month].d[day];
 
 	/* check parameters */
-	assert(m);
+	assert( m );
+
+	logger (g_log, "*********TREE_MODEL_DAILY*********\n");
 
 	//FIXME move to meteo_t structure
 	/* counter day of the year */
@@ -131,7 +133,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 						"                              height = %g                              \n"
 						"*****************************************************************************\n", h->value);
 
-				/* loop on each dbhs starting from highest to lower */
+				/* loop on each dbh starting from highest to lower */
 				for ( dbh = h->dbhs_count - 1; dbh >= 0; --dbh )
 				{
 					/* assign shortcut */
@@ -348,21 +350,23 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	logger(g_log, "****************END OF HEIGHT CLASS***************\n");
 
 	/*******************************************************************************************************/
+	//ALESSIOC move to Soil_model_daily
 	/* SOIL POOL */
 
 	/* compute snow melt, snow sublimation */
 	snow_melt_subl ( c, meteo_daily );
 
-	/* compute soil respiration */
-	soil_respiration ( c );
-
 	/* compute soil evaporation */
 	soil_evaporation ( c, meteo_daily );
+
+	/* compute soil respiration */
+	soil_respiration ( c );
 
 	/* compute soil water balance */
 	soil_water_balance ( c, meteo_daily );
 
 	/*******************************************************************************************************/
+	//ALESSIOC move to Cell_model_daily
 	/* OVERALL CELL */
 
 	/* compute evapotranspiration */
@@ -378,6 +382,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	water_fluxes ( c, meteo_daily );
 
 	/*******************************************************************************************************/
+	//ALESSIOC move to Cell_model_daily
 	/* CHECK FOR BALANCE CLOSURE */
 
 	/* CHECK FOR RADIATIVE BALANCE CLOSURE */
@@ -391,12 +396,6 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 
 	/*******************************************************************************************************/
 	/*******************************************************************************************************/
-	//todo: soilmodel could stay here or in main.c
-	//here is called at the end of all tree height age and species classes loops
-	//todo: move all soil algorithms into soil_model function
-	//soil_model (&m->cells[cell], yos, years, month, years_of_simulation);
-	//N_avl = (Ka * g_soil->values[SOIL_sN) + pN + (Kb * Yearly_Eco_NPP);
-	//logger(g_log, "Nitrogen available = %f g m^-2\n", N_avl);
 	logger(g_log, "******************END OF CELL*********************\n");
 
 	/* ok */

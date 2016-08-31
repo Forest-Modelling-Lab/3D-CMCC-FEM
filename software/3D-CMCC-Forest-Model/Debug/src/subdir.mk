@@ -22,6 +22,7 @@ C_SRCS += \
 ../src/canopy_radiation_sw_band.c \
 ../src/canopy_sensible_heat.c \
 ../src/canopy_temperature.c \
+../src/cell_model.c \
 ../src/check_balance.c \
 ../src/common.c \
 ../src/crowding-competition.c \
@@ -54,10 +55,10 @@ C_SRCS += \
 ../src/settings.c \
 ../src/snow.c \
 ../src/soil_evaporation.c \
+../src/soil_model.c \
 ../src/soil_respiration.c \
 ../src/soil_settings.c \
 ../src/soil_water_balance.c \
-../src/soilmodel.c \
 ../src/state_var_update.c \
 ../src/structure.c \
 ../src/topo.c \
@@ -88,6 +89,7 @@ OBJS += \
 ./src/canopy_radiation_sw_band.o \
 ./src/canopy_sensible_heat.o \
 ./src/canopy_temperature.o \
+./src/cell_model.o \
 ./src/check_balance.o \
 ./src/common.o \
 ./src/crowding-competition.o \
@@ -120,10 +122,10 @@ OBJS += \
 ./src/settings.o \
 ./src/snow.o \
 ./src/soil_evaporation.o \
+./src/soil_model.o \
 ./src/soil_respiration.o \
 ./src/soil_settings.o \
 ./src/soil_water_balance.o \
-./src/soilmodel.o \
 ./src/state_var_update.o \
 ./src/structure.o \
 ./src/topo.o \
@@ -154,6 +156,7 @@ C_DEPS += \
 ./src/canopy_radiation_sw_band.d \
 ./src/canopy_sensible_heat.d \
 ./src/canopy_temperature.d \
+./src/cell_model.d \
 ./src/check_balance.d \
 ./src/common.d \
 ./src/crowding-competition.d \
@@ -186,10 +189,10 @@ C_DEPS += \
 ./src/settings.d \
 ./src/snow.d \
 ./src/soil_evaporation.d \
+./src/soil_model.d \
 ./src/soil_respiration.d \
 ./src/soil_settings.d \
 ./src/soil_water_balance.d \
-./src/soilmodel.d \
 ./src/state_var_update.d \
 ./src/structure.d \
 ./src/topo.d \
@@ -206,7 +209,7 @@ C_DEPS += \
 src/%.o: ../src/%.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
-	gcc -I"/home/alessio-cmcc/git/3D-CMCC-FEM/software/3D-CMCC-Forest-Model/headers" -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
+	gcc -I"/home/alessio/git/3D-CMCC-FEM/software/3D-CMCC-Forest-Model/headers" -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 

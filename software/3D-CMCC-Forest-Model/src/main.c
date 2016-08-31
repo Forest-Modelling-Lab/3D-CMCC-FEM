@@ -149,7 +149,9 @@ static const char msg_monthly_output_file[]		=	"monthly output file path = %s\n"
 static const char msg_annual_output_file[]		=	"annual output file path = %s\n";
 static const char msg_soil_output_file[]		=	"soil output file path = %s\n";
 static const char msg_ok[]						=	"ok ";
-static const char msg_ok_tree_model[]			=	"ok treemodel";
+static const char msg_ok_tree_model[]			=	"ok tree_model_daily";
+static const char msg_ok_soil_model[]			=	"ok soil_model_daily";
+static const char msg_ok_cell_model[]			=	"ok cell_model_daily";
 static const char msg_usage[]					=	"\nusage:\n"
 		"  3D-CMCC Model -i INPUT_DIR -o OUTPUT_FILENAME -d DATASET_FILENAME -m MET_FILE_LIST -s SITE_FILENAME -c SETTINGS_FILENAME [-h]\n"
 		"  required options:\n"
@@ -992,13 +994,14 @@ int main(int argc, char *argv[]) {
 					/* print daily met data */
 					print_daily_met_data (&matrix->cells[cell], day, month, year);
 
+					/************************************************************************/
 					if ( F == matrix->cells[cell].landuse )
 					{
 						if ( 'f' == g_settings->version )
 						{
 							if ( !Tree_model_daily(matrix, cell, day, month, year) )
 							{
-								logger(g_log, "tree model daily failed.");
+								logger(g_log, "tree model daily failed!!!");
 							}
 							else
 							{
@@ -1037,6 +1040,33 @@ int main(int argc, char *argv[]) {
 						//							//	soil_model (matrix, yos, years, month, years_of_simulation);
 						//						}
 					}
+
+					//ALESSIOC include here soil computation
+					/************************************************************************/
+					/*
+					if ( !Soil_model_daily(matrix, cell, day, month, year) )
+					{
+						logger(g_log, "soil model daily failed!!!");
+					}
+					else
+					{
+						puts(msg_ok_soil_model);
+					}
+					*/
+					/*************************************************************************/
+					//ALESSIOC inncklude here cell compuation
+					/************************************************************************/
+					/*
+					if ( !Cell_model_daily(matrix, cell, day, month, year) )
+					{
+						logger(g_log, "cell model daily failed!!!");
+					}
+					else
+					{
+						puts(msg_ok_cell_model);
+					}
+					*/
+					/*************************************************************************/
 
 					// save values for put in output netcdf
 					if ( output_vars && output_vars->daily_vars_count ) {

@@ -886,13 +886,30 @@ static int fill_cell_from_heights(cell_t *const c, const row_t *const row)
 }
 
 /****************************************************************************/
-//static int fill_cell_from_soils (cell_t *const c, const row_t * const row)
-//{
-//	if ( g_settings )
-//		return g_settings->soil_layer;
-//	else
-//		return 0;
-//}
+//ALESSIOC TO ALESSIOR,  please check if correct (should'mt be)
+static int fill_cell_from_soils (cell_t *const c, const row_t * const row)
+{
+
+	/* check parameter */
+	assert( c && row );
+
+	if ( g_settings )
+	{
+		/* alloc memory for soil layers */
+		if (!alloc_struct((void **)&c->s_layers, &c->s_layers_count, sizeof(soil_layer_s)) )
+		{
+			return 0;
+		}
+		c->s_layers_count = g_settings->soil_layer;
+
+		/* ok */
+		return 1;
+	}
+	else
+	{
+		return 0;
+	}
+}
 /****************************************************************************/
 static int fill_cell(matrix_t* const m, row_t* const row)
 {
@@ -926,6 +943,10 @@ static int fill_cell(matrix_t* const m, row_t* const row)
 		m->cells[index].x = row->x;
 		m->cells[index].y = row->y;
 	}
+
+	/* add soils */
+	//ALESSIOc ASK ALESSIOR
+	fill_cell_from_soils(&m->cells[index], row);
 
 	/* add species */
 	return fill_cell_from_heights(&m->cells[index], row);
@@ -1541,7 +1562,7 @@ void matrix_free(matrix_t *m)
 				{
 					if ( m->cells[cell].t_layers_count )
 					{
-						free(m->cells[cell].t_layers);
+						free( m->cells[cell].t_layers );
 					}
 					if ( m->cells[cell].heights[height].dbhs_count )
 					{
@@ -1557,20 +1578,20 @@ void matrix_free(matrix_t *m)
 										{
 											if ( m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species].name )
 											{
-												free(m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species].name);
+												free( m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species].name );
 											}
 											if ( m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species].turnover )
 											{
-												free(m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species].turnover);
+												free( m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species].turnover );
 											}
 										}
-										free ( m->cells[cell].heights[height].dbhs[dbh].ages[age].species);
+										free ( m->cells[cell].heights[height].dbhs[dbh].ages[age].species );
 									}
 								}
-								free ( m->cells[cell].heights[height].dbhs[dbh].ages);
+								free ( m->cells[cell].heights[height].dbhs[dbh].ages );
 							}
 						}
-						free ( m->cells[cell].heights[height].dbhs);
+						free ( m->cells[cell].heights[height].dbhs );
 					}
 				}
 
@@ -1579,18 +1600,18 @@ void matrix_free(matrix_t *m)
 					free (m->cells[cell].heights);
 				}
 
-				for ( soil = 0; soil < m->cells[cell].s_layers_count; ++soil )
+				for ( soil = 0; soil < m->cells[cell].s_layers_count; ++ soil )
 				{
-					if ( m->cells[cell].s_layers[soil].soils_count )
+					if ( m->cells[cell].s_layers_count )
 					{
-						free(m->cells[cell].s_layers[soil].soils);
+						free ( m->cells[cell].s_layers );
 					}
 				}
 
-				if ( m->cells[cell].s_layers_count )
-				{
-					free (m->cells[cell].s_layers);
-				}
+//				if ( m->cells[cell].s_layers_count )
+//				{
+//					free (m->cells[cell].s_layers);
+//				}
 
 				free (m->cells[cell].years);
 			}
