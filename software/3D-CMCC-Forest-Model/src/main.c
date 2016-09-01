@@ -247,9 +247,24 @@ static int log_start(const char* const sitename) {
 	strcat(buffer, "_");
 	sprintf(buffer_2, "%c", g_settings->version);
 	strcat(buffer, buffer_2);
-	strcat(buffer, "_");
-	sprintf(buffer_2, "%c", g_settings->spatial);
-	strcat(buffer, buffer_2);
+	strcat(buffer, "_CO2_mod_");
+	if ( ! string_compare_i(g_settings->CO2_mod, "on") )
+	{
+		strcat(buffer, "ON");
+	}
+	else
+	{
+		strcat(buffer, "OFF");
+	}
+	strcat(buffer, "_Manag_");
+	if ( ! string_compare_i(g_settings->management, "on") )
+	{
+		strcat(buffer, "ON");
+	}
+	else
+	{
+		strcat(buffer, "OFF");
+	}
 	strcat(buffer, "_");
 	sprintf(buffer_2, "%c", g_settings->time);
 	strcat(buffer, buffer_2);
