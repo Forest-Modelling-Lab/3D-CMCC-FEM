@@ -6,11 +6,11 @@
 
 typedef struct {
 	char version;
-	char spatial;	/* must be 's' or 'u' (spatial or unspatial) */
-	char time;		/* must be 'm' or 'd' (monthly or daily) */
+	char spatial;	                  /* must be 's' or 'u' (spatial or unspatial) */
+	char time;		                  /* must be 'm' or 'd' (monthly or daily) */
 	char symmetric_water_competition; /* must be 'y' or 'n' (y = yes for symmetric competition) */
 
-	char spin_up[4];
+	char CO2_mod[4];
 	char CO2_fixed[4];
 	char Ndep_fixed[4];
 	char management[4];

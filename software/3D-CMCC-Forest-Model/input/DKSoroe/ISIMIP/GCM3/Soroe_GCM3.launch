@@ -19,7 +19,7 @@
 <stringAttribute key="org.eclipse.cdt.launch.launchGroup.4.action" value="NONE"/>
 <stringAttribute key="org.eclipse.cdt.launch.launchGroup.4.enabled" value="true"/>
 <stringAttribute key="org.eclipse.cdt.launch.launchGroup.4.mode" value="run"/>
-<stringAttribute key="org.eclipse.cdt.launch.launchGroup.4.name" value="ISIMIP-Soroe_REPEATED-2001_2099"/>
+<stringAttribute key="org.eclipse.cdt.launch.launchGroup.4.name" value="ISIMIP-Soroe-GCM3-hist-REPEATED-2001-2159"/>
 <listAttribute key="org.eclipse.debug.ui.favoriteGroups">
 <listEntry value="org.eclipse.debug.ui.launchGroup.debug"/>
 <listEntry value="org.eclipse.debug.ui.launchGroup.profile"/>

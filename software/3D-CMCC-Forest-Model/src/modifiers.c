@@ -51,25 +51,33 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	/********************************************************************************************/
 
 	/* CO2 MODIFIER FROM C-FIX */
-	tairK = meteo_daily->tavg + TempAbs;
-
-	if (meteo_daily->tavg >= 15)
+	if (!string_compare_i(g_settings->CO2_mod, "on"))
 	{
-		KmCO2 = A1 * exp(-Ea1/(Rgas*tairK));
+		tairK = meteo_daily->tavg + TempAbs;
+
+		if (meteo_daily->tavg >= 15)
+		{
+			KmCO2 = A1 * exp(-Ea1/(Rgas*tairK));
+		}
+		else
+		{
+			KmCO2 = A2 * exp (-Ea2/(Rgas*tairK));
+		}
+		KO2 = AKO2 * exp (-EaKO2/(Rgas*tairK));
+
+		tau = Atau * exp (-Eatau/(Rgas*(tairK)));
+
+		v1 = (g_settings->co2Conc-(O2CONC/(2*tau)))/(refCO2CONC-(O2CONC/(2*tau)));
+		v2 = (KmCO2*(1+(O2CONC/KO2))+refCO2CONC)/(KmCO2*(1+(O2CONC/KO2))+g_settings->co2Conc);
+
+		s->value[F_CO2] = v1*v2;
+		logger(g_log, "f_CO2 modifier (C-FIX) = %f\n", s->value[F_CO2]);
 	}
 	else
 	{
-		KmCO2 = A2 * exp (-Ea2/(Rgas*tairK));
+		s->value[F_CO2] = 1;
+		logger(g_log, "f_CO2 modifier (C-FIX) = %f\n", s->value[F_CO2]);
 	}
-	KO2 = AKO2 * exp (-EaKO2/(Rgas*tairK));
-
-	tau = Atau * exp (-Eatau/(Rgas*(tairK)));
-
-	v1 = (g_settings->co2Conc-(O2CONC/(2*tau)))/(refCO2CONC-(O2CONC/(2*tau)));
-	v2 = (KmCO2*(1+(O2CONC/KO2))+refCO2CONC)/(KmCO2*(1+(O2CONC/KO2))+g_settings->co2Conc);
-
-	s->value[F_CO2] = v1*v2;
-	logger(g_log, "f_CO2 modifier (C-FIX) = %f\n", s->value[F_CO2]);
 
 	/********************************************************************************************/
 
@@ -78,15 +86,15 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	//FIXME chose which type of light use and differentiate for different layers
 	//following Nolè should be used apar
 	//following Peltioniemi should be used par
-//	if (s->value[GAMMA_LIGHT] != -9999)
-//	{
-//		s->value[F_LIGHT]= 1.0/ ((s->value[GAMMA_LIGHT]* s->value[APAR]) +1.0);
-//	}
-//	else
-//	{
-//		s->value[F_LIGHT]= 1.0;
-//	}
-//	logger(g_log, "FLight (NOT USED)= %f\n", s->value[F_LIGHT]);
+	//	if (s->value[GAMMA_LIGHT] != -9999)
+	//	{
+	//		s->value[F_LIGHT]= 1.0/ ((s->value[GAMMA_LIGHT]* s->value[APAR]) +1.0);
+	//	}
+	//	else
+	//	{
+	//		s->value[F_LIGHT]= 1.0;
+	//	}
+	//	logger(g_log, "FLight (NOT USED)= %f\n", s->value[F_LIGHT]);
 
 	/* LIGHT MODIFIER (BIOME METHOD) */
 	/* following Biome-BGC */
@@ -112,7 +120,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 		{
 			s->value[F_T] = ( ( meteo_daily->tavg - s->value[GROWTHTMIN]) / (s->value[GROWTHTOPT] - s->value[GROWTHTMIN] ) ) *
 					pow ( ( ( s->value[GROWTHTMAX] - meteo_daily->tavg) / (s->value[GROWTHTMAX] - s->value[GROWTHTOPT] ) ),
-					( ( s->value[GROWTHTMAX] - s->value[GROWTHTOPT]) / (s->value[GROWTHTOPT] - s->value[GROWTHTMIN] ) ) );
+							( ( s->value[GROWTHTMAX] - s->value[GROWTHTOPT]) / (s->value[GROWTHTOPT] - s->value[GROWTHTMIN] ) ) );
 		}
 	}
 	else
@@ -126,7 +134,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 		{
 			s->value[F_T] = ( ( meteo_daily->tday - s->value[GROWTHTMIN]) / (s->value[GROWTHTOPT] - s->value[GROWTHTMIN] ) ) *
 					pow ( ( ( s->value[GROWTHTMAX] - meteo_daily->tday) / (s->value[GROWTHTMAX] - s->value[GROWTHTOPT] ) ),
-					( ( s->value[GROWTHTMAX] - s->value[GROWTHTOPT]) / (s->value[GROWTHTOPT] - s->value[GROWTHTMIN] ) ) );
+							( ( s->value[GROWTHTMAX] - s->value[GROWTHTOPT]) / (s->value[GROWTHTOPT] - s->value[GROWTHTMIN] ) ) );
 		}
 	}
 	logger(g_log, "fT = %f\n", s->value[F_T]);
@@ -137,21 +145,21 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 
 	/********************************************************************************************/
 
-//	/*FROST MODIFIER*/
-//	if( meteo_daily->tday < s->value[GROWTHTMIN] )
-//	{
-//		s->value[F_FROST] = 0.0;
-//		logger(g_log, "fFROST - Frost modifier = %f\n", s->value[F_FROST]);
-//	}
-//	else
-//	{
-//		s->value[F_FROST] = 1.0;
-//		logger(g_log, "fFROST - Frost modifier = %f\n", s->value[F_FROST]);
-//	}
-//
-//	/* check */
-//	CHECK_CONDITION(s->value[F_FROST], > 1);
-//	CHECK_CONDITION(s->value[F_FROST], < 0);
+	//	/*FROST MODIFIER*/
+	//	if( meteo_daily->tday < s->value[GROWTHTMIN] )
+	//	{
+	//		s->value[F_FROST] = 0.0;
+	//		logger(g_log, "fFROST - Frost modifier = %f\n", s->value[F_FROST]);
+	//	}
+	//	else
+	//	{
+	//		s->value[F_FROST] = 1.0;
+	//		logger(g_log, "fFROST - Frost modifier = %f\n", s->value[F_FROST]);
+	//	}
+	//
+	//	/* check */
+	//	CHECK_CONDITION(s->value[F_FROST], > 1);
+	//	CHECK_CONDITION(s->value[F_FROST], < 0);
 
 	/********************************************************************************************/
 
@@ -177,12 +185,12 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 
 	//test following biome-bgc it doesn't seems to work properly here (too many higher values for gpp and le
 	/* vapor pressure deficit multiplier, vpd in Pa */
-//	if (meteo_daily->vpd < vpd_open)    /* no vpd effect */
-//		s->value[F_VPD] = 1.0;
-//	else if (meteo_daily->vpd > vpd_close)   /* full vpd effect */
-//		s->value[F_VPD] = 0.0;
-//	else                   /* partial vpd effect */
-//		s->value[F_VPD] = (vpd_close - meteo_daily->vpd) / (vpd_close - vpd_open);
+	//	if (meteo_daily->vpd < vpd_open)    /* no vpd effect */
+	//		s->value[F_VPD] = 1.0;
+	//	else if (meteo_daily->vpd > vpd_close)   /* full vpd effect */
+	//		s->value[F_VPD] = 0.0;
+	//	else                   /* partial vpd effect */
+	//		s->value[F_VPD] = (vpd_close - meteo_daily->vpd) / (vpd_close - vpd_open);
 
 	/* AGE MODIFIER */
 	if ( a->value != 0 )

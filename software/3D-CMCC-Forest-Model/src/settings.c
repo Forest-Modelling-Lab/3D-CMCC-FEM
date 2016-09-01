@@ -66,7 +66,7 @@ settings_t* settings_import(const char *const filename) {
 			break;
 
 			case 4:
-				strncpy(s->spin_up, (const char*)token, 3);
+				strncpy(s->CO2_mod, (const char*)token, 3);
 			break;
 
 			case 5:
