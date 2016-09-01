@@ -389,7 +389,7 @@ static int yos_from_arr(double *const values, const int rows_count, const int co
 			return 0;
 		}
 
-		//case RG_F: //Rg_f - solar_rad -daily average solar radiation
+		/* case RG_F: //Rg_f - solar_rad -daily average solar radiation */
 		yos[*yos_count-1].m[month].d[day].solar_rad = values[VALUE_AT(row,RG_F)];
 		if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].solar_rad) && (!((day == 0) && (1 == *yos_count) && (month == 0))))
 		{
@@ -434,7 +434,7 @@ static int yos_from_arr(double *const values, const int rows_count, const int co
 			previous_solar_rad = yos[*yos_count-1].m[month].d[day].solar_rad;
 		}
 
-		//case TA_F: //Ta_f -  temperature average
+		/* case TA_F: //Ta_f -  temperature average */
 		yos[*yos_count-1].m[month].d[day].tavg = values[VALUE_AT(row,TA_F)];
 		if (IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].tavg) && (!((day == 0) && (*yos_count == 1) && (month == 0))))
 		{
@@ -465,7 +465,7 @@ static int yos_from_arr(double *const values, const int rows_count, const int co
 			previous_tavg = yos[*yos_count-1].m[month].d[day].tavg;
 		}
 
-		//case TMAX: //TMAX -  maximum temperature
+		/* case TMAX: //TMAX -  maximum temperature */
 		yos[*yos_count-1].m[month].d[day].tmax = values[VALUE_AT(row,TMAX)];
 		if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].tmax) && (!((day == 0) && (*yos_count == 1)&& (month == 0))))
 		{
@@ -529,8 +529,7 @@ static int yos_from_arr(double *const values, const int rows_count, const int co
 			previous_tmin = yos[*yos_count-1].m[month].d[day].tmin;
 		}
 
-
-		//case VPD_F: //RH_f - RH
+		/* case VPD_F: //RH_f - RH */
 		yos[*yos_count-1].m[month].d[day].vpd = values[VALUE_AT(row,VPD_F)];
 		if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].vpd) && (!((day == 0) && (*yos_count == 1)&& (month == 0))))
 		{
@@ -566,7 +565,7 @@ static int yos_from_arr(double *const values, const int rows_count, const int co
 		}
 		//logger(g_log, "%d-%s-vpd = %f\n",yos[*yos_count-1].m[month].d[day].n_days, MonthName[month], yos[*yos_count-1].m[month].d[day].vpd);
 
-		//case TS_F: // ts_f   Soil temperature
+		/* case TS_F: // ts_f   Soil temperature */
 		yos[*yos_count-1].m[month].d[day].ts_f = values[VALUE_AT(row,TS_F)];
 		if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].ts_f) && (!((day == 0) && (*yos_count == 1)&& (month == 0))))
 		{
@@ -594,7 +593,7 @@ static int yos_from_arr(double *const values, const int rows_count, const int co
 			previous_ts_f = yos[*yos_count-1].m[month].d[day].ts_f;
 		}
 
-		//case PRECIP:  //Precip - rain
+		/* case PRECIP:  //Precip - rain */
 		yos[*yos_count-1].m[month].d[day].prcp = values[VALUE_AT(row,PRECIP)];
 		if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].prcp) && (!((day == 0) && (*yos_count == 1)&& (month == 0))))
 		{
@@ -630,8 +629,7 @@ static int yos_from_arr(double *const values, const int rows_count, const int co
 			previous_prcp = yos[*yos_count-1].m[month].d[day].prcp;
 		}
 
-		//case SWC: //Soil Water Content (%)
-
+		/* case SWC: //Soil Water Content (%) */
 		yos[*yos_count-1].m[month].d[day].swc = values[VALUE_AT(row,SWC)];
 		/*if ( error_flag )
 		{
