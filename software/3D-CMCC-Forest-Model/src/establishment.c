@@ -11,7 +11,7 @@ extern settings_t *g_settings;
 extern logger_t* g_log;
 
 /**/
-void Establishment_LPJ (cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species)
+void Establishment_LPJ (cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species,const meteo_daily_t *const meteo_daily)
 {
 
 	//double FProCov;   //LPJ Foliage Projective  Cover for Seed Establishment
@@ -44,8 +44,8 @@ void Establishment_LPJ (cell_t *const c, const int layer, const int height, cons
 	   logger(g_log, "Seed Establishment Rate from LPJ = %f saplings/m^2 \n", EstabRate);
 	 */
 
-	EstabRate = (s->value[GERMCAPACITY] * (1 - exp((-5) * (1 - c->par_for_establishment))) * (1 - c->par_for_establishment)) / s->counter[N_TREE];
-	logger(g_log, "Light absorb for establishment = %f \n", c->par_for_establishment);
+	EstabRate = (s->value[GERMCAPACITY] * (1 - exp((-5) * (1 - meteo_daily->par))) * (1 - meteo_daily->par)) / s->counter[N_TREE];
+	logger(g_log, "Light absorb for establishment = %f \n", meteo_daily->par);
 	logger(g_log, "Seed Establishment Rate from LPJ = %f saplings/m^2 \n", EstabRate);
 
 	s->counter[N_TREE_SAP] = (int)(s->counter[N_SEED] * EstabRate);

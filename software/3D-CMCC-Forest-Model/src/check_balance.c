@@ -30,13 +30,13 @@ void check_radiation_balance (cell_t *const c, const meteo_daily_t *const meteo_
 	/* PAR RADIATIVE BALANCE */
 
 	/* sum of sources */
-	in = meteo_daily->par;
+	in = meteo_daily->incoming_par;
 
 	/* sum of sinks */
 	out = c->par_refl + c->par_refl_soil;
 
 	/* sum of current storage */
-	store = c->apar + c->par_for_soil;
+	store = c->apar + c->apar_soil;
 
 	balance = in - out -store;
 
@@ -52,7 +52,7 @@ void check_radiation_balance (cell_t *const c, const meteo_daily_t *const meteo_
 		logger(g_log, "c->par_refl_soil = %g molPAR/m2/day\n",c->par_refl_soil);
 		logger(g_log, "\nstore\n");
 		logger(g_log, "c->apar = %g molPAR/m2/day\n", c->apar);
-		logger(g_log, "c->par_for_soil = %g molPAR/m2/day\n", c->par_for_soil);
+		logger(g_log, "c->par_for_soil = %g molPAR/m2/day\n", c->apar_soil);
 		logger(g_log, "\npar in = %g molPAR/m2/day\n", in);
 		logger(g_log, "par out = %g molPAR/m2/day\n", out);
 		logger(g_log, "par store = %g molPAR/m2/day\n", store);
@@ -70,13 +70,13 @@ void check_radiation_balance (cell_t *const c, const meteo_daily_t *const meteo_
 	/* SHORT WAVE RADIATION RADIATIVE BALANCE */
 
 	/* sum of sources */
-	in = meteo_daily->sw_downward_W;
+	in = meteo_daily->incoming_sw_downward_W;
 
 	/* sum of sinks */
 	out = c->sw_rad_refl + c->sw_rad_for_soil_refl;
 
 	/* sum of current storage */
-	store = c->sw_rad_abs + c->sw_rad_for_soil;
+	store = c->sw_rad_abs + c->sw_rad_abs_soil;
 
 	balance = in - out -store;
 
@@ -92,7 +92,7 @@ void check_radiation_balance (cell_t *const c, const meteo_daily_t *const meteo_
 		logger(g_log, "c->sw_rad_for_soil_refl = %g W/m2\n",c->sw_rad_for_soil_refl);
 		logger(g_log, "\nstore\n");
 		logger(g_log, "c->sw_rad_abs = %g W/m2\n", c->sw_rad_abs);
-		logger(g_log, "c->net_sw_rad_for_soil = %g W/m2\n", c->sw_rad_for_soil);
+		logger(g_log, "c->net_sw_rad_for_soil = %g W/m2\n", c->sw_rad_abs_soil);
 		logger(g_log, "\nradiation in = %g W/m2\n", in);
 		logger(g_log, "radiation out = %g W/m2\n", out);
 		logger(g_log, "net radiation store = %g W/m2\n", store);
@@ -109,13 +109,13 @@ void check_radiation_balance (cell_t *const c, const meteo_daily_t *const meteo_
 
 	/* PPFD RADIATIVE BALANCE */
 	/* sum of sources */
-	in = meteo_daily->ppfd;
+	in = meteo_daily->incoming_ppfd;
 
 	/* sum of sinks */
 	out = c->ppfd_refl + c->ppfd_refl_soil;
 
 	/* sum of current storage */
-	store = c->ppfd_abs + c->ppfd_for_soil;
+	store = c->ppfd_abs + c->ppfd_abs_soil;
 
 	balance = in - out -store;
 
@@ -131,7 +131,7 @@ void check_radiation_balance (cell_t *const c, const meteo_daily_t *const meteo_
 		logger(g_log, "c->ppfd_refl_soil = %g umol/m2/sec\n",c->ppfd_refl_soil);
 		logger(g_log, "\nstore\n");
 		logger(g_log, "c->ppfd_abs = %g umol/m2/sec\n", c->ppfd_abs);
-		logger(g_log, "c->ppfd_for_soil = %g umol/m2/sec\n", c->ppfd_for_soil);
+		logger(g_log, "c->ppfd_for_soil = %g umol/m2/sec\n", c->ppfd_abs_soil);
 		logger(g_log, "\nPPFD in = %g umol/m2/sec\n", in);
 		logger(g_log, "PPFD out = %g umol/m2/sec\n", out);
 		logger(g_log, "PPFD store = %g umol/m2/sec\n", store);

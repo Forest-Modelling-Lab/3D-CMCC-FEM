@@ -32,8 +32,8 @@ void snow_melt_subl(cell_t *const c, meteo_daily_t *meteo_daily)
 	t_melt = t_coeff * meteo_daily->tavg;
 
 	/* canopy transmitted radiation: convert from W/m2 --> KJ/m2/d */
-	//fixme wrong incident radiation used!! it should be at the end of radiation functions
-	incident_rad = (c->sw_rad_for_soil * meteo_daily->daylength * 3600) * snow_abs * 0.001;
+	//fixme should I consider snow albedo??
+	incident_rad = (meteo_daily->sw_downward_W * meteo_daily->daylength * 3600) * snow_abs * 0.001;
 
 	/* temperature and radiation melt from snow pack */
 	if (meteo_daily->tavg > 0.0)

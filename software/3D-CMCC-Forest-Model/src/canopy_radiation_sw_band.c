@@ -17,8 +17,8 @@
 
 extern logger_t* g_log;
 
-void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, const int dbh, const int age, const int species, double Light_abs_frac,
-		double Light_abs_frac_sun, double Light_abs_frac_shade, double Light_refl_par_frac, double Light_refl_sw_rad_canopy_frac)
+void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, const int dbh, const int age, const int species, const meteo_daily_t *const meteo_daily,
+		double Light_abs_frac, double Light_abs_frac_sun, double Light_abs_frac_shade, double Light_refl_par_frac, double Light_refl_sw_rad_canopy_frac)
 {
 	double leaf_cell_cover_eff;       /* effective fraction of leaf cover over the cell (ratio) */
 
@@ -63,10 +63,10 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 	logger(g_log,"\n-PAR-\n");
 
 	/* compute reflected PAR */
-	s->value[PAR_REFL] = c->par * Light_refl_par_frac * leaf_cell_cover_eff;
+	s->value[PAR_REFL] = meteo_daily->par * Light_refl_par_frac * leaf_cell_cover_eff;
 
 	/*assign to class PAR */
-	s->value[PAR] = c->par - s->value[PAR_REFL];
+	s->value[PAR] = meteo_daily->par - s->value[PAR_REFL];
 
 	/* compute absorbed and transmitted PAR for sun and shaded leaves */
 	s->value[APAR_SUN] = s->value[PAR] * Light_abs_frac_sun * leaf_cell_cover_eff;
@@ -78,7 +78,7 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 	s->value[APAR] = s->value[APAR_SUN] + s->value[APAR_SHADE];
 	s->value[TRANSM_PAR] = s->value[TRANSM_PAR_SHADE];
 
-	logger(g_log, "-Par incoming = %g molPAR/m^2/day\n", c->par);
+	logger(g_log, "-Par incoming = %g molPAR/m^2/day\n", meteo_daily->par);
 	logger(g_log, "-Par reflected = %g molPAR/m^2/day\n", s->value[PAR_REFL]);
 	logger(g_log, "-Par less reflected part = %g molPAR/m^2/day\n", s->value[PAR]);
 	logger(g_log, "-Apar sun = %g molPAR/m^2 covered/day\n", s->value[APAR_SUN]);
@@ -98,10 +98,10 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 	logger(g_log,"\n-Short Wave-\n");
 
 	/* compute reflected Short Wave */
-	s->value[SW_RAD_REFL] = c->sw_rad_down_W * Light_refl_sw_rad_canopy_frac * leaf_cell_cover_eff;
+	s->value[SW_RAD_REFL] = meteo_daily->sw_downward_W * Light_refl_sw_rad_canopy_frac * leaf_cell_cover_eff;
 
 	/*assign to class Short Wave Radiation */
-	s->value[SW_RAD] = c->sw_rad_down_W - s->value[SW_RAD_REFL];
+	s->value[SW_RAD] = meteo_daily->sw_downward_W - s->value[SW_RAD_REFL];
 
 	/*compute absorbed and transmitted Short Wave for sun and shaded leaves*/
 	s->value[SW_RAD_ABS_SUN] = s->value[SW_RAD] * Light_abs_frac_sun * leaf_cell_cover_eff;
@@ -113,7 +113,7 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 	s->value[SW_RAD_ABS] = s->value[SW_RAD_ABS_SUN] + s->value[SW_RAD_ABS_SHADE];
 	s->value[SW_RAD_TRANSM] = s->value[SW_RAD_TRANSM_SHADE];
 
-	logger(g_log, "-Short Wave incoming = %gW/m2\n", c->sw_rad_down_W);
+	logger(g_log, "-Short Wave incoming = %gW/m2\n", meteo_daily->sw_downward_W);
 	logger(g_log, "-Short Wave reflected = %gW/m2\n", s->value[SW_RAD_REFL]);
 	logger(g_log, "-Short Wave radiation less reflected part = %g W/m2\n", s->value[SW_RAD]);
 	logger(g_log, "-Absorbed Short Wave radiation sun = %g W/m^2 covered\n", s->value[SW_RAD_ABS_SUN]);
@@ -133,10 +133,10 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 	logger(g_log,"\n-PPFD-\n");
 
 	/* compute reflected PPFD */
-	s->value[PPFD_REFL] = c->ppfd * Light_refl_par_frac * leaf_cell_cover_eff;
+	s->value[PPFD_REFL] = meteo_daily->ppfd * Light_refl_par_frac * leaf_cell_cover_eff;
 
 	/*assign to class PPFD */
-	s->value[PPFD] = c->ppfd - s->value[PPFD_REFL];
+	s->value[PPFD] = meteo_daily->ppfd - s->value[PPFD_REFL];
 
 	/*compute absorbed and transmitted PPFD for sun and shaded leaves*/
 	s->value[PPFD_ABS_SUN] = s->value[PPFD] * Light_abs_frac_sun * leaf_cell_cover_eff;
@@ -148,7 +148,7 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 	s->value[PPFD_ABS] = s->value[PPFD_ABS_SUN] + s->value[PPFD_ABS_SHADE];
 	s->value[PPFD_TRANSM] = s->value[PPFD_TRANSM_SHADE];
 
-	logger(g_log, "-PPFD incoming = %g umol/m2/sec\n", c->ppfd);
+	logger(g_log, "-PPFD incoming = %g umol/m2/sec\n", meteo_daily->ppfd);
 	logger(g_log, "-PPFD reflected = %g umol/m2/sec\n", s->value[PPFD_REFL]);
 	logger(g_log, "-PPFD less reflected part = %g umol/m2/sec\n", s->value[PPFD]);
 	logger(g_log, "-Absorbed ppfd sun = %g umol/m2 covered/sec\n", s->value[PPFD_ABS_SUN]);
@@ -187,7 +187,7 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 	*/
 }
 
-void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, const meteo_daily_t *const meteo_daily)
+void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species,  meteo_daily_t *const meteo_daily)
 {
 	static int cell_height_class_counter;
 	static int layer_height_class_counter;
@@ -195,7 +195,7 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 	double Light_abs_frac, Light_abs_frac_sun, Light_abs_frac_shade;                      /* (ratio) fraction of PAR and Short Wave radiation absorbed */
 	double Light_trasm_frac, Light_trasm_frac_sun, Light_trasm_frac_shade;                /* (ratio) fraction of PAR and Short Wave radiation transmitted */
 	double Light_refl_sw_rad_canopy_frac;                                                 /* (ratio) fraction of Short Wave radiation reflected from the canopy */
-	double Light_refl_sw_rad_soil_frac;                                                   /* (ratio) fraction of Short Wave radiation reflected from the soil */
+
 	double Light_refl_par_frac;                                                           /* (ratio) fraction of PAR reflected from canopy */
 	static double temp_apar;                                                              /* temporary absorbed PAR for layer */
 	static double temp_par_refl;                                                          /* temporary reflected PAR for layer */
@@ -206,8 +206,7 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 
 	double leaf_cell_cover_eff;                                                           /* (ratio) fraction of square meter covered by leaf over the grid cell */
 
-	//fixme move soil albedo into soil.txt file
-	const double soil_albedo = 0.15;                                                      /* (ratio) soil albedo without snow (see MAESPA model) */
+
 
 	tree_layer_t *l;
 	//height_t *h;
@@ -290,10 +289,7 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 	logger(g_log, "Light_refl_sw_rad_canopy_frac = %g %%\n", Light_refl_sw_rad_canopy_frac * 100);
 	logger(g_log, "LightReflec_par = %g %%\n\n", Light_refl_par_frac * 100);
 
-	/* fraction of light reflected by the soil */
-	Light_refl_sw_rad_soil_frac = soil_albedo;
-	logger(g_log, "LightReflec_soil = %g %%\n", Light_refl_sw_rad_soil_frac * 100);
-	logger(g_log, "******************************************************\n");
+
 
 	//fixme set that if gapcover is bigger then 0.5 albedo should be considered also in dominated layer!!!!
 	//fixme following MAESPA (Duursma et al.,) and from Campbell&Norman (2000, p. 259) dominated layers should have just shaded leaves
@@ -313,13 +309,13 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 
 		/* assign meteo variables to cell variables */
 		/* assign incoming PAR */
-		c->par = meteo_daily->par;
+		//c->par = meteo_daily->par;
 
 		/* assign Shortwave Radiation */
-		c->sw_rad_down_W = meteo_daily->sw_downward_W;
+		//c->sw_rad_down_W = meteo_daily->sw_downward_W;
 
 		/* assign incoming PPFD */
-		c->ppfd = meteo_daily->ppfd;
+		//c->ppfd = meteo_daily->ppfd;
 
 	}
 
@@ -331,7 +327,7 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 
 	/*************************************************************************/
 	/* compute reflected, absorbed and transmitted Par, Short Wave radiation and PPFD class level */
-	canopy_sw_band_abs_trans_refl_radiation (c, height, dbh, age, species, Light_abs_frac, Light_abs_frac_sun, Light_abs_frac_shade,
+	canopy_sw_band_abs_trans_refl_radiation (c, height, dbh, age, species, meteo_daily, Light_abs_frac, Light_abs_frac_sun, Light_abs_frac_shade,
 			Light_refl_par_frac, Light_refl_sw_rad_canopy_frac);
 
 	/*************************************************************************/
@@ -369,13 +365,13 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 		logger(g_log,"update radiation values for lower layer\n");
 		/* compute values for lower layer when last height class in layer is processed */
 		/* compute par for lower layer */
-		c->par -= (temp_apar + temp_par_refl);
+		meteo_daily->par -= (temp_apar + temp_par_refl);
 
 		/* compute Short Wave radiation for lower layesr */
-		c->sw_rad_down_W -= (temp_sw_rad_abs + temp_sw_rad_refl);
+		meteo_daily->sw_downward_W -= (temp_sw_rad_abs + temp_sw_rad_refl);
 
 		/* compute ppfd for lower layer */
-		c->ppfd -= (temp_ppfd_abs + temp_ppfd_refl);
+		meteo_daily->ppfd -= (temp_ppfd_abs + temp_ppfd_refl);
 
 		/* reset temporary values when the last height class in layer is processed */
 		temp_apar = 0.0;
@@ -393,36 +389,11 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 	/* when matches the last height class in the cell is processed */
 	if ( c->heights_count == cell_height_class_counter )
 	{
-		logger(g_log,"last height class in cell processed\n");
-
-		logger(g_log,"\n***********************************\n");
-
-		/* compute values for soil layer when last height class in cell is processed */
-		/* remove reflected part */
-		logger(g_log,"incoming light for soil\n");
-		logger(g_log,"incoming PAR for soil = %g molPAR/m^2/day\n", c->par);
-		logger(g_log,"incoming Short Wave radiation = %g W/m2\n", c->sw_rad_down_W);
-		logger(g_log,"incoming PPFD for soil = %g umol/m2/sec\n", c->ppfd);
-		c->par_refl_soil = c->par * Light_refl_sw_rad_soil_frac;
-		c->sw_rad_for_soil_refl = c->sw_rad_down_W * Light_refl_sw_rad_soil_frac;
-		c->ppfd_refl_soil = c->ppfd * Light_refl_sw_rad_soil_frac;
-		logger(g_log,"reflected light from the soil\n");
-		logger(g_log,"par_refl_soil = %g molPAR/m^2/day\n", c->par_refl_soil);
-		logger(g_log,"sw_rad_for_soil_refl = %g W/m2\n", c->sw_rad_for_soil_refl);
-		logger(g_log,"ppfd_refl_soil = %g umol/m2/sec\n", c->ppfd_refl_soil);
-
-
-		/* Par Short Wave radiation and PPFD for the soil during growing season */
-		logger(g_log,"incoming light for soil less reflected part\n");
-		c->par_for_soil = c->par - c->par_refl_soil;
-		c->sw_rad_for_soil = c->sw_rad_down_W - c->sw_rad_for_soil_refl;
-		c->ppfd_for_soil = c->ppfd - c->ppfd_refl_soil;
-		logger(g_log, "PAR for soil = %g molPAR/m^2/day\n", c->par_for_soil);
-		logger(g_log, "Short Wave radiation for soil = %g W/m2\n", c->sw_rad_for_soil);
-		logger(g_log, "PPFD for soil = %g umol/m2/sec\n", c->ppfd_for_soil);
-
 		/* reset counter */
 		cell_height_class_counter = 0;
+		logger(g_log,"last height class in cell processed\n");
+		logger(g_log,"\n***********************************\n");
+
 	}
 	/*****************************************************************************************************************/
 }

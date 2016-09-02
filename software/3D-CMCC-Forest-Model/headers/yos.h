@@ -40,13 +40,16 @@ typedef struct {
 	double psych;                               /* (KPa/°C) daily psychrometric constant */
 	double sw_pot_downward_W;                   /* (W/m2) potential shortwave downward radiation */
 	double sw_downward_MJ;                      /* (MJ/m2/day) daily downward short wave radiation */
+	double incoming_sw_downward_W;              /* (W/m2) incoming daily downward short wave radiation */
 	double sw_downward_W;                       /* (W/m2) daily downward short wave radiation */
 	double lw_downward_MJ;                      /* (MJ/m2/day) daily downward long wave radiation */
 	double atm_lw_downward_W;                   /* (W/m2) daily downward atmopsheric long wave radiation */
 	double lw_net_MJ;                           /* (MJ/m2/day) daily net long wave radiation */
 	double lw_net_W;                            /* (W/m2) daily net long wave radiation */
-	double par;                                 /* (molPAR/m2/day) incoming PAR */
-	double ppfd;                                /* (umol/m2/sec) incoming PPFD */
+	double incoming_par;                        /* (molPAR/m2/day) incoming PAR */
+	double par;                                 /* (molPAR/m2/day) PAR */
+	double incoming_ppfd;                       /* (umol/m2/sec) incoming PPFD */
+	double ppfd;                                /* (umol/m2/sec) PPFD */
 	double emis_atm_clear_sky;                  /* (ratio) atmospheric emissivity with clear sky */
 	double emis_atm;                            /* (ratio) atmospheric emissivity corrected for cloud cover */
 	double cloud_cover_frac;                    /* (ratio) daily cloud cover fraction */
