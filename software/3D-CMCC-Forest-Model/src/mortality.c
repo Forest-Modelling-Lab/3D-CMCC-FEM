@@ -57,14 +57,6 @@ void layer_self_pruning_thinning ( cell_t *const c )
 			/* assign char */
 			mortality = 'y';
 
-			/* reset values for layer (they are recomputed below)*/
-			c->t_layers[layer].layer_n_height_class = 0;
-			c->t_layers[layer].layer_n_trees = 0;
-			c->t_layers[layer].layer_density = 0;
-			/* reset values for cell (they are recomputed below)*/
-			c->cell_n_trees = 0;
-			c->cell_cover = 0;
-
 		}
 		else
 		{
@@ -81,6 +73,12 @@ void layer_self_pruning_thinning ( cell_t *const c )
 		/* check if REcompute numbers of height classes, tree number and density after mortality within each layer */
 		if ( mortality == 'y' )
 		{
+			/* reset to zero */
+			c->t_layers[layer].layer_n_height_class = 0;
+			c->t_layers[layer].layer_n_trees = 0;
+			c->t_layers[layer].layer_density = 0;
+
+
 			/* REcompute numbers of height classes, tree number and density after mortality within each layer */
 			logger(g_log, "REcompute numbers of height classes, tree number and density after mortality within each layer\n\n");
 
@@ -121,14 +119,33 @@ void layer_self_pruning_thinning ( cell_t *const c )
 
 		/**************************************************************************************************/
 		/* Recompute number of total trees and cell cover (cell level) */
-		logger(g_log, "Recompute number of total trees and cell cover (cell level)\n");
 
+		if ( mortality == 'y' )
+		{
+			/* reset values */
+			c->cell_n_trees = 0;
+			c->cell_cover = 0;
 
-		/* compute total number of trees per cell */
-		c->cell_n_trees += c->t_layers[layer].layer_n_trees;
+			logger(g_log, "Recompute number of total trees and cell cover (cell level)\n");
 
-		/* assuming that plants tend to occupy the part of the cell not covered by the others */
-		c->cell_cover += c->t_layers[layer].layer_cover;
+			for ( height = c->heights_count -1; height >= 0 ; --height )
+			{
+				for ( dbh = c->heights[height].dbhs_count - 1; dbh >= 0; --dbh)
+				{
+					for ( age = 0; age < c->heights[height].dbhs[dbh].ages_count ; ++age )
+					{
+						for ( species = 0; species < c->heights[height].dbhs[dbh].ages[age].species_count; ++species )
+						{
+							/* compute total number of trees per cell */
+							c->cell_n_trees += c->t_layers[layer].layer_n_trees;
+
+							/* assuming that plants tend to occupy the part of the cell not covered by the others */
+							c->cell_cover += c->t_layers[layer].layer_cover;
+						}
+					}
+				}
+			}
+		}
 	}
 
 	logger(g_log, "-number of trees = %d cell\n", c->cell_n_trees);
