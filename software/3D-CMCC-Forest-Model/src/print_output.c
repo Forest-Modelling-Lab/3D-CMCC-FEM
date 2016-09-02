@@ -18,6 +18,7 @@ extern logger_t* g_annual_log;
 extern logger_t* g_soil_log;
 //extern char *g_sz_input_file;
 //extern char *g_sz_parameterization_path;
+extern char *g_sz_dataset_file;
 extern char *g_sz_soil_file;
 extern char *g_sz_input_met_file;
 extern char *g_sz_settings_file;
@@ -52,8 +53,7 @@ static void write_paths(logger_t *const _log)
 	assert(_log);
 
 	logger(_log, "\n\nsite: %s\n", get_filename(g_soil_settings->sitename));
-	//ALESSIOC TO ALESSIOR (error in input file passed)
-	logger(_log, "input file = %s\n", get_filename(g_sz_input_met_file));
+	logger(_log, "input file = %s\n", get_filename(g_sz_dataset_file));
 	logger(_log, "soil file = %s\n", get_filename(g_sz_soil_file));
 	logger(_log, "topo file = %s\n", get_filename(g_sz_topo_file));
 	logger(_log, "met file = %s\n", get_filename(g_sz_input_met_file));
