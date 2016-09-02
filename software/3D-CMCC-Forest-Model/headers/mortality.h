@@ -4,9 +4,9 @@
 
 #include "matrix.h"
 
-void daily_growth_efficiency_mortality ( species_t *const s );
+void daily_growth_efficiency_mortality ( cell_t *const c, const int height, const int dbh, const int age, const int species );
 
-void annual_growth_efficiency_mortality ( species_t *const s );
+void annual_growth_efficiency_mortality ( cell_t *const c, const int height, const int dbh, const int age, const int species );
 
 void layer_self_pruning_thinning ( cell_t *const );
 

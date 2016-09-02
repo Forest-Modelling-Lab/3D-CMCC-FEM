@@ -72,7 +72,7 @@ static int species_remove(age_t *a, const int index) {
 	for ( i = 0; i < a->species_count; ++i ) {
 		if ( index == i ) continue;
 		// ALESSIOR: shallow copy
-		a->species[y] = a->species[i];
+		a->species[y++] = a->species[i];
 	}
 	--a->species_count;
 	++a->species_avail;
@@ -94,7 +94,7 @@ static int age_remove(dbh_t *d, const int index) {
 	for ( i = 0; i < d->ages_count; ++i ) {
 		if ( index == i ) continue;
 		// ALESSIOR: shallow copy
-		d->ages[y] = d->ages[i];
+		d->ages[y++] = d->ages[i];
 	}
 	--d->ages_count;
 	++d->ages_avail;
@@ -116,7 +116,7 @@ static int dbh_remove(height_t *h, const int index) {
 	for ( i = 0; i < h->dbhs_count; ++i ) {
 		if ( index == i ) continue;
 		// ALESSIOR: shallow copy
-		h->dbhs[y] = h->dbhs[i];
+		h->dbhs[y++] = h->dbhs[i];
 	}
 	--h->dbhs_count;
 	++h->dbhs_avail;
@@ -138,7 +138,7 @@ static int height_remove(cell_t *c, const int index) {
 	for ( i = 0; i < c->heights_count; ++i ) {
 		if ( index == i ) continue;
 		// ALESSIOR: shallow copy
-		c->heights[y] = c->heights[i];
+		c->heights[y++] = c->heights[i];
 	}
 	--c->heights_count;
 	++c->heights_avail;
@@ -430,6 +430,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 									/* renovation */
 									//renovation ( c, layer, height, dbh, age, species);
 
+									//todo todo todo maybe move within each mortality function (age_mortality and self-thinning)
 									if ( ! tree_class_remove(c, height, dbh, age, species) ) {
 										logger(g_log, "unable to remove tree class");
 										exit(1);

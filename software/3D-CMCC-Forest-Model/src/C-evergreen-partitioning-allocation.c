@@ -253,7 +253,8 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 	}
 
 	/* check for daily growth efficiency mortality */
-	daily_growth_efficiency_mortality ( s );
+	daily_growth_efficiency_mortality ( c, height, dbh, age, species );
+
 
 	/* sum all biomass pools increments */
 	logger(g_log, "C_TO_LEAF = %g tC/cell/day\n", s->value[C_TO_LEAF]);

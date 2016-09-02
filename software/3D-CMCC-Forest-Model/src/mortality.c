@@ -13,6 +13,7 @@
 #include "settings.h"
 #include "logger.h"
 #include "mortality.h"
+#include "treemodel_daily.h"
 
 extern settings_t* g_settings;
 extern logger_t* g_log;
@@ -512,29 +513,45 @@ void self_thinning ( cell_t *const c, const int layer )
 
 }
 
-void daily_growth_efficiency_mortality ( species_t *const s )
+void daily_growth_efficiency_mortality ( cell_t *const c, const int height, const int dbh, const int age, const int species )
 {
 
 	/* this function superimpose mortality  for all tree class when reserves
 	 * go under zero assuming that reserve pool hasn't be refilled during the day
 	 * and make trees class die */
 
-	/* call remove_tree_class */
-	//remove_tree_class ();
+	species_t* s;
+	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
-	//todo it shouldn't be a "check_condition" but should kill tree class without stop the code execution
-	/* check */
-	CHECK_CONDITION(s->value[RESERVE_C], < 0.0);
+	if( s->value[RESERVE_C] < 0 )
+	{
+		/* reset to zero n_trees */
+		s->counter[N_TREE] = 0;
 
+		/* call remove_tree_class */
+		if ( ! tree_class_remove(c, height, dbh, age, species) ) {
+			logger(g_log, "unable to remove tree class");
+			exit(1);
+		}
+	}
 }
 
-void annual_growth_efficiency_mortality ( species_t *const s )
+void annual_growth_efficiency_mortality ( cell_t *const c, const int height, const int dbh, const int age, const int species )
 {
+	species_t* s;
+	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
-	//todo it shouldn't be a "check_condition" but should kill tree class without stop the code execution
-	/* check */
-	CHECK_CONDITION(s->value[RESERVE_C], < 0.0);
+	if( s->value[RESERVE_C] < 0 )
+	{
+		/* reset to zero n_trees */
+		s->counter[N_TREE] = 0;
 
+		/* call remove_tree_class */
+		if ( ! tree_class_remove(c, height, dbh, age, species) ) {
+			logger(g_log, "unable to remove tree class");
+			exit(1);
+		}
+	}
 }
 
 /* Self-thinnig mortality function from 3PG */
@@ -703,6 +720,9 @@ void age_mortality (age_t *const a, species_t *const s)
 
 		s->counter[DEAD_STEMS] = 0;
 	}
+
+
+
 	logger(g_log, "**********************************\n");
 }
 
