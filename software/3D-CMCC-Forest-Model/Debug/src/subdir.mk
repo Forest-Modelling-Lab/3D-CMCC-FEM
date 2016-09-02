@@ -62,6 +62,7 @@ C_SRCS += \
 ../src/state_var_update.c \
 ../src/structure.c \
 ../src/topo.c \
+../src/tree_class_remove.c \
 ../src/treemodel_daily.c \
 ../src/turnover.c \
 ../src/turnover_Marconi.c \
@@ -129,6 +130,7 @@ OBJS += \
 ./src/state_var_update.o \
 ./src/structure.o \
 ./src/topo.o \
+./src/tree_class_remove.o \
 ./src/treemodel_daily.o \
 ./src/turnover.o \
 ./src/turnover_Marconi.o \
@@ -196,6 +198,7 @@ C_DEPS += \
 ./src/state_var_update.d \
 ./src/structure.d \
 ./src/topo.d \
+./src/tree_class_remove.d \
 ./src/treemodel_daily.d \
 ./src/turnover.d \
 ./src/turnover_Marconi.d \
@@ -209,7 +212,7 @@ C_DEPS += \
 src/%.o: ../src/%.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
-	gcc -I"/home/alessio/git/3D-CMCC-FEM/software/3D-CMCC-Forest-Model/headers" -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
+	gcc -I"/home/alessio-cmcc/git/3D-CMCC-FEM/software/3D-CMCC-Forest-Model/headers" -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 

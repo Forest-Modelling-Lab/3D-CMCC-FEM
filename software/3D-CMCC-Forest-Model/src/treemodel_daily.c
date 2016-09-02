@@ -45,6 +45,7 @@
 #include "settings.h"
 #include "forest_tree_class.h"
 #include "treemodel_daily.h"
+#include "tree_class_remove.h"
 
 //extern settings_t* g_settings;
 extern logger_t* g_log;
@@ -58,6 +59,7 @@ extern int DaysInMonth[];
 //extern int MonthLength [];
 //extern int MonthLength_Leap [];
 
+//ALESSIOC TO ALESSIOR PLEASE MOVE INTO tree_class_remove.c
 static int species_remove(age_t *a, const int index) {
 	int i;
 	int y;
@@ -79,7 +81,7 @@ static int species_remove(age_t *a, const int index) {
 
 	return 1;
 }
-
+//ALESSIOC TO ALESSIOR PLEASE MOVE INTO tree_class_remove.c
 static int age_remove(dbh_t *d, const int index) {
 	int i;
 	int y;
@@ -101,7 +103,7 @@ static int age_remove(dbh_t *d, const int index) {
 
 	return 1;
 }
-
+//ALESSIOC TO ALESSIOR PLEASE MOVE INTO tree_class_remove.c
 static int dbh_remove(height_t *h, const int index) {
 	int i;
 	int y;
@@ -123,7 +125,7 @@ static int dbh_remove(height_t *h, const int index) {
 
 	return 1;
 }
-
+//ALESSIOC TO ALESSIOR PLEASE MOVE INTO tree_class_remove.c
 static int height_remove(cell_t *c, const int index) {
 	int i;
 	int y;
@@ -145,15 +147,14 @@ static int height_remove(cell_t *c, const int index) {
 
 	return 1;
 }
-
-
+//ALESSIOC TO ALESSIOR PLEASE MOVE INTO tree_class_remove.c
 int tree_class_remove(cell_t *const c, const int height, const int dbh, const int age, const int species)
 {
 	height_t* h;
 	dbh_t* d;
 	age_t* a;
 	species_t* s;
-	
+
 	assert(c);
 
 	h = &c->heights[height];
@@ -171,7 +172,7 @@ int tree_class_remove(cell_t *const c, const int height, const int dbh, const in
 
 	return 1;
 }
-
+/*****************************************************************************************************************/
 int Tree_model_daily (matrix_t *const m, const int cell, const int day, const int month, const int year)
 {
 	static int layer;
