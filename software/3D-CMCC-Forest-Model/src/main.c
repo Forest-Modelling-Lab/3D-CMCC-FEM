@@ -46,6 +46,8 @@
 #include "fluxes.h"
 #include "print.h"
 #include "utility.h"
+#include "cell_model.h"
+#include "soil_model.h"
 
 /* Last cumulative days in months in non Leap years */
 int MonthLength [] = { 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365};
@@ -1055,10 +1057,9 @@ int main(int argc, char *argv[]) {
 						//							//	soil_model (matrix, yos, years, month, years_of_simulation);
 						//						}
 					}
-
+#if 1
 					//ALESSIOC
 					/************************************************************************/
-					/*
 					if ( !Soil_model_daily(matrix, cell, day, month, year) )
 					{
 						logger(g_log, "soil model daily failed!!!");
@@ -1067,12 +1068,12 @@ int main(int argc, char *argv[]) {
 					{
 						puts(msg_ok_soil_model);
 					}
-					*/
+					
 					/*************************************************************************/
 
 					//ALESSIOC
 					/************************************************************************/
-					/*
+					
 					if ( !Cell_model_daily(matrix, cell, day, month, year) )
 					{
 						logger(g_log, "cell model daily failed!!!");
@@ -1081,7 +1082,7 @@ int main(int argc, char *argv[]) {
 					{
 						puts(msg_ok_cell_model);
 					}
-					*/
+#endif
 					/*************************************************************************/
 
 					// save values for put in output netcdf

@@ -8,6 +8,11 @@
 
 extern const char sz_err_out_of_memory[];
 
+//
+// ALESSIOR: fixme
+// import based on pointer sucks !
+// change it!
+//
 settings_t* settings_import(const char *const filename) {
 #define BUFFER_SIZE	256
 	char buffer[BUFFER_SIZE];
@@ -106,7 +111,7 @@ settings_t* settings_import(const char *const filename) {
 				strncpy(s->replanted_species, (const char*)token, SETTINGS_REPLANTED_SPECIES_MAX_SIZE-1);
 			break;
 
-			// ALESSIOR fix, must use e_management from matrix.h
+			// ALESSIOR todo fix, must use e_management from matrix.h
 			case 21:
 				if ( ('T' == token[0]) || ('t' == token[0]) ) {
 					s->replanted_management = 0;

@@ -881,26 +881,29 @@ static int fill_cell_from_heights(cell_t *const c, const row_t *const row)
 	/* set values */
 	c->heights[c->heights_count-1].value = row->height;
 
-	/* add age */
+	/* add dbh */
 	return fill_cell_from_dbhs(&c->heights[c->heights_count-1], row);
 }
 
 /****************************************************************************/
-//ALESSIOC TO ALESSIOR,  please check if correct (should'mt be)
-static int fill_cell_from_soils (cell_t *const c, const row_t * const row)
+
+static int fill_cell_from_soils(cell_t *const c, const row_t * const row)
 {
+	static soil_layer_s s = { 0 };
 
 	/* check parameter */
 	assert( c && row );
 
 	if ( g_settings )
 	{
-		/* alloc memory for soil layers */
-		if (!alloc_struct((void **)&c->s_layers, &c->s_layers_count, sizeof(soil_layer_s)) )
-		{
-			return 0;
+		int i;
+
+		for ( i = 0; i < g_settings->soil_layer; ++i ) {
+			if ( ! alloc_struct((void **)&c->s_layers, &c->s_layers_count, sizeof(soil_layer_s)) ) {
+				return 0;
+			}
+			c->s_layers[c->s_layers_count-1]  = s;
 		}
-		c->s_layers_count = g_settings->soil_layer;
 
 		/* ok */
 		return 1;
@@ -945,8 +948,9 @@ static int fill_cell(matrix_t* const m, row_t* const row)
 	}
 
 	/* add soils */
-	//ALESSIOc ASK ALESSIOR
-	fill_cell_from_soils(&m->cells[index], row);
+	if ( ! fill_cell_from_soils(&m->cells[index], row) ) {
+		return 0;
+	}
 
 	/* add species */
 	return fill_cell_from_heights(&m->cells[index], row);

@@ -325,6 +325,16 @@ static int yos_from_arr(double *const values, const int rows_count, const int co
 			}
 		}
 
+		/* ALESSIOR: fix rh 'cause can be imported out of range */
+		if ( ! flag[RH_F-3] ) {
+			for ( row = 0; row < rows_count; ++row ) {
+				if ( ! IS_INVALID_VALUE(values[VALUE_AT(row, RH_F)]) ) {
+					if ( values[VALUE_AT(row, RH_F)] < RH_RANGE_MIN ) values[VALUE_AT(row, RH_F)] = RH_RANGE_MIN;
+					else if ( values[VALUE_AT(row, RH_F)] > RH_RANGE_MAX ) values[VALUE_AT(row, RH_F)] = RH_RANGE_MAX;
+				}
+			}
+		}
+
 		/* compute vpd ? or rh ?*/
 		/* please note that we must have TA, so computing is done after computing TA (if needed) */
 		if ( flag[VPD_F-3] ) {
@@ -742,6 +752,9 @@ static int yos_from_arr(double *const values, const int rows_count, const int co
 			// ALESSIOR
 			// TODO: ask ALESSIOC
 		}
+		// ALESSIOR:
+		// fixed inside yos_from_arr, so compute vpd is safe!
+		/*
 		else if(yos[*yos_count-1].m[month].d[day].rh_f < RH_RANGE_MIN || yos[*yos_count-1].m[month].d[day].rh_f > RH_RANGE_MAX)
 		{
 			logger(g_log, "BAD DATA FOR rh = %g in day = %d month = %d year = %d\n", yos[*yos_count-1].m[month].d[day].rh_f, day+1, month+1, year);
@@ -761,6 +774,7 @@ static int yos_from_arr(double *const values, const int rows_count, const int co
 			//fixme
 			//exit(1);
 		}
+		*/
 	}
 	*p_yos = yos;
 	return 1;
@@ -1749,6 +1763,7 @@ static int import_txt(const char *const filename, yos_t** p_yos, int *const yos_
 			}
 
 			values[VALUE_AT(current_row-1, i)] = convert_string_to_float(token2, &error_flag);
+
 			if ( error_flag )
 			{
 				printf("unable to convert value \"%s\" for %s column\n", token2, sz_met_columns[i+no_year_column]);
@@ -1775,6 +1790,42 @@ static int import_txt(const char *const filename, yos_t** p_yos, int *const yos_
 			values[VALUE_AT(i, YEAR)] = year;
 		}
 	}
+
+#ifdef _WIN32
+#ifdef _DEBUG
+	{
+		FILE *f;
+		int i;
+		int row;
+		f = fopen("debug_import_file_txt.csv", "w");
+		if ( ! f ) {
+			puts("unable to create output file!");
+			free(values);
+			return 0;
+		}
+		/* write header */
+		fputs("Year,Month,n_days,", f);
+		for ( i = 0; i < MET_COLUMNS_COUNT; ++i ) {
+			fprintf(f, "%s", sz_met_columns[i]);
+			if ( i < MET_COLUMNS_COUNT-1 ) {
+				fputs(",", f);
+			}
+		}
+		fputs("\n", f);
+			
+		for ( row = 0; row < rows_count; ++row ) {
+			for ( i = 0; i < MET_COLUMNS_COUNT; ++i ) {
+				fprintf(f, "%g", values[VALUE_AT(row,i)]);
+				if ( i < MET_COLUMNS_COUNT-1 ) {
+					fputs(",", f);
+				}
+			}
+			fputs("\n", f);
+		}
+		fclose(f);
+	}
+#endif
+#endif
 
 #if 0
 	/* check if RH is valid ( not all -9999 ) */

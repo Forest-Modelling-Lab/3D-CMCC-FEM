@@ -268,15 +268,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\cell_model.c"
+				>
+			</File>
+			<File
 				RelativePath=".\src\check_balance.c"
 				>
 			</File>
 			<File
 				RelativePath=".\src\common.c"
-				>
-			</File>
-			<File
-				RelativePath=".\src\cropmodel_daily.c"
 				>
 			</File>
 			<File
@@ -297,6 +297,10 @@
 			</File>
 			<File
 				RelativePath=".\src\fluxes.c"
+				>
+			</File>
+			<File
+				RelativePath=".\src\forest_tree_class.c"
 				>
 			</File>
 			<File
@@ -372,10 +376,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\new_forest_tree_class.c"
-				>
-			</File>
-			<File
 				RelativePath=".\src\output.c"
 				>
 			</File>
@@ -416,11 +416,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\soil_dndc.c"
+				RelativePath=".\src\soil_evaporation.c"
 				>
 			</File>
 			<File
-				RelativePath=".\src\soil_evaporation.c"
+				RelativePath=".\src\soil_model.c"
 				>
 			</File>
 			<File
@@ -433,10 +433,6 @@
 			</File>
 			<File
 				RelativePath=".\src\soil_water_balance.c"
-				>
-			</File>
-			<File
-				RelativePath=".\src\soilmodel.c"
 				>
 			</File>
 			<File

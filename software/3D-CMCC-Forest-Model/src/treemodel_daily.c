@@ -350,6 +350,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	logger(g_log, "****************END OF HEIGHT CLASS***************\n");
 
 	/*******************************************************************************************************/
+#if 0
 	//ALESSIOC move to Soil_model_daily
 	/* SOIL POOL */
 
@@ -393,6 +394,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 
 	/* CHECK FOR WATER BALANCE CLOSURE */
 	check_soil_water_balance ( c, meteo_daily );
+#endif
 
 	/*******************************************************************************************************/
 	/*******************************************************************************************************/

@@ -332,15 +332,17 @@ void self_thinning ( cell_t *const c, const int layer )
 		/* model makes die before lower height in each later */
 		qsort (c->heights, c->heights_count, sizeof (height_t), sort_by_heights_desc);
 
+		h = &c->heights[height];
+
 		//ALESSIOC ALESSIOR CHECK THAT THE FOR STARTS WITH THE LOWEST DBH VALUE
 		for ( dbh = h->dbhs_count - 1; dbh >= 0; --dbh)
 		{
-			for ( age = 0; age < c->heights[height].dbhs[dbh].ages_count ; ++age )
+			d = &c->heights[height].dbhs[dbh];
+
+			for ( age = 0; age < d->ages_count ; ++age )
 			{
-				for ( species = 0; species < c->heights[height].dbhs[dbh].ages[age].species_count; ++species )
+				for ( species = 0; species < d->ages[age].species_count; ++species )
 				{
-					h = &c->heights[height];
-					d = &c->heights[height].dbhs[dbh];
 					s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 					logger(g_log, "MORTALITY BASED ON HIGH CANOPY COVER height %g species %s dbh %g !!!\n", h->value, s->name, d->value);
