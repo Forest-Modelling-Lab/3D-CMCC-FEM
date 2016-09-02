@@ -19,7 +19,7 @@
 
 extern logger_t* g_log;
 
-void Soil_model_daily (matrix_t *const m, const int cell, const int day, const int month, const int year)
+int Soil_model_daily (matrix_t *const m, const int cell, const int day, const int month, const int year)
 {
 	int soil_layer;
 	//fixme move soil albedo into soil.txt file
@@ -95,6 +95,9 @@ void Soil_model_daily (matrix_t *const m, const int cell, const int day, const i
 		soil_water_balance ( c, meteo_daily );
 
 	}
+
+	/* ok */
+	return 1;
 
 
 }

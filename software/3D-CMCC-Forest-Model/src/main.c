@@ -1012,7 +1012,7 @@ int main(int argc, char *argv[]) {
 					print_daily_met_data (&matrix->cells[cell], day, month, year);
 
 					/************************************************************************/
-					if ( F == matrix->cells[cell].landuse )
+					if ( F == matrix->cells[cell].landuse && matrix->cells[cell].heights_count != 0 )
 					{
 						if ( 'f' == g_settings->version )
 						{
@@ -1023,8 +1023,6 @@ int main(int argc, char *argv[]) {
 							else
 							{
 								puts(msg_ok_tree_model);
-								/* run for SOIL */
-								//soil_model (matrix, yos, years, month, day, years_of_simulation);
 
 								if (!string_compare_i(g_settings->dndc, "on"))
 								{

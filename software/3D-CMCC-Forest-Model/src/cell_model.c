@@ -21,12 +21,11 @@
 
 extern logger_t* g_log;
 
-void Cell_model_daily (matrix_t *const m, const int cell, const int day, const int month, const int year)
+int Cell_model_daily (matrix_t *const m, const int cell, const int day, const int month, const int year)
 {
 
 	/* shortcuts */
 	cell_t *c;
-	//soil_layer_s *s;
 	meteo_daily_t *meteo_daily;
 
 	/* assign shortcuts */
@@ -36,7 +35,7 @@ void Cell_model_daily (matrix_t *const m, const int cell, const int day, const i
 	/* check parameters */
 	assert(m);
 
-	logger (g_log, "*********CELL_MODEL_DAILY*********\n");
+	logger (g_log, "\n*********CELL_MODEL_DAILY*********\n");
 
 	/* OVERALL CELL */
 
@@ -66,5 +65,8 @@ void Cell_model_daily (matrix_t *const m, const int cell, const int day, const i
 	check_soil_water_balance ( c, meteo_daily );
 
 	/*******************************************************************************************************/
+
+	/* ok */
+	return 1;
 
 }
