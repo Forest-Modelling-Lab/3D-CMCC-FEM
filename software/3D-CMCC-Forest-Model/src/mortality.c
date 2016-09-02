@@ -401,12 +401,6 @@ void self_thinning ( cell_t *const c, const int layer )
 							/* check */
 							CHECK_CONDITION(s->counter[N_TREE], <= 0);
 
-
-							/* remove class */
-							//ALESSIOR how remove one class??
-							//if(s->counter[N_TREE] == 0)
-							// remove_one_tree_class ();
-
 							/* update at cell level */
 							c->daily_dead_tree += deadtree;
 							c->monthly_dead_tree += deadtree;

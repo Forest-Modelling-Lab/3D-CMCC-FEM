@@ -596,15 +596,18 @@ typedef struct {
 typedef struct
 {
 	species_t *species;
+	int species_count;
+	int species_avail;
 
 	int value;
-	int species_count;
+	
 } age_t;
 
 typedef struct
 {
 	age_t* ages;
 	int ages_count;
+	int ages_avail;
 
 	int dbh_n_trees;           /* number of trees per dbh class */
 	double dbh_density;        /* density of treed per dbh class */
@@ -627,6 +630,7 @@ typedef struct
 {
 	dbh_t *dbhs;
 	int dbhs_count;
+	int dbhs_avail;
 
 	double value;
 	int height_z;
@@ -711,12 +715,15 @@ typedef struct
 {
 	height_t* heights;
 	int heights_count;
+	int heights_avail;
 
 	tree_layer_t* t_layers;
 	int t_layers_count;
+	int t_layers_avail;
 
 	soil_layer_s* s_layers;
 	int s_layers_count;
+	int s_layers_avail;
 
 	int years_count;
 	yos_t *years;
@@ -958,6 +965,7 @@ typedef struct
 typedef struct {
 	cell_t *cells;
 	int cells_count;
+	int cells_avail;
 	int x_cells_count;
 	int y_cells_count;
 } matrix_t;

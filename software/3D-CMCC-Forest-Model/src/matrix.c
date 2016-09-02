@@ -800,7 +800,7 @@ static int fill_cell_from_species(age_t* const a, const row_t* const row) {
 	p = string_copy(row->species);
 	if ( ! p ) return 0;
 
-	if ( ! alloc_struct((void **)&a->species, &a->species_count, sizeof(species_t)) ) {
+	if ( ! alloc_struct((void **)&a->species, &a->species_count, &a->species_avail, sizeof(species_t)) ) {
 		return 0;
 	}
 
@@ -830,7 +830,7 @@ static int fill_cell_from_ages(dbh_t* const d, const row_t* const row)
 	assert ( d && row );
 
 	/* alloc memory for dbhs */
-	if ( !alloc_struct((void **)&d->ages, &d->ages_count, sizeof(age_t)) )
+	if ( !alloc_struct((void **)&d->ages, &d->ages_count, &d->ages_avail, sizeof(age_t)) )
 	{
 		return 0;
 	}
@@ -851,7 +851,7 @@ static int fill_cell_from_dbhs(height_t* const h, const row_t* const row)
 	assert( h && row );
 
 	/* alloc memory for dbhs */
-	if ( !alloc_struct((void **)&h->dbhs, &h->dbhs_count, sizeof(dbh_t)) )
+	if ( !alloc_struct((void **)&h->dbhs, &h->dbhs_count, &h->dbhs_avail, sizeof(dbh_t)) )
 	{
 		return 0;
 	}
@@ -872,7 +872,7 @@ static int fill_cell_from_heights(cell_t *const c, const row_t *const row)
 	assert( c && row );
 
 	/* alloc memory for heights */
-	if (!alloc_struct((void **)&c->heights, &c->heights_count, sizeof(height_t)) )
+	if (!alloc_struct((void **)&c->heights, &c->heights_count, &c->heights_avail, sizeof(height_t)) )
 	{
 		return 0;
 	}
@@ -899,7 +899,7 @@ static int fill_cell_from_soils(cell_t *const c, const row_t * const row)
 		int i;
 
 		for ( i = 0; i < g_settings->soil_layer; ++i ) {
-			if ( ! alloc_struct((void **)&c->s_layers, &c->s_layers_count, sizeof(soil_layer_s)) ) {
+			if ( ! alloc_struct((void **)&c->s_layers, &c->s_layers_count, &c->s_layers_avail, sizeof(soil_layer_s)) ) {
 				return 0;
 			}
 			c->s_layers[c->s_layers_count-1]  = s;
@@ -936,7 +936,7 @@ static int fill_cell(matrix_t* const m, row_t* const row)
 	if ( -1 == index )
 	{
 		/* add a new cell */
-		if ( ! alloc_struct((void **)&m->cells, &m->cells_count, sizeof(cell_t)) )
+		if ( ! alloc_struct((void **)&m->cells, &m->cells_count, &m->cells_avail, sizeof(cell_t)) )
 		{
 			return 0;
 		}
@@ -1217,6 +1217,7 @@ matrix_t* matrix_create(const char* const filename) {
 	}
 	m->cells = NULL;
 	m->cells_count = 0;
+	m->cells_avail = 0;
 	m->x_cells_count = 0;
 	m->y_cells_count = 0;
 

@@ -17,45 +17,6 @@ extern logger_t* g_log;
 
 void forest_management (cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, const int year)
 {
-#if 0
-	static int rotation_counter;
-
-	species_t *s;
-
-	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
-
-	/* this function handles all other management functions */
-
-	if ( !string_compare_i (g_settings->management, "on") && !year )
-	{
-		rotation_counter = (int)s->value[ROTATION];
-
-		/* if model is set to ask which management */
-		//choose_management ( s , year);
-	}
-	else if ( ! string_compare_i (g_settings->management, "on") && year > 0 )
-	{
-		if ( year == (int)s->value[ROTATION] )
-		{
-			logger(g_log,"**FOREST MANAGEMENT**\n");
-
-			clearcut_timber_without_request ( c, layer, height, age, species, year );
-
-			/* add multiples */
-			s->value[ROTATION] += rotation_counter;
-
-			if(g_settings->replanted_tree != 0.0)
-			{
-				//ALESSIOC ALESSIOR remove toggles when bug will be fixed!!
-//				if ( ! add_tree_class( c, height, age, species ) )
-//				{
-//					logger(g_log, "unable to add new height class! (exit)\n");
-//					exit(1);
-//				}
-			}
-		}
-	}
-#else
 	species_t *s;
 
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
@@ -79,7 +40,6 @@ void forest_management (cell_t *const c, const int layer, const int height, cons
 			}
 		}
 	}
-#endif
 }
 
 

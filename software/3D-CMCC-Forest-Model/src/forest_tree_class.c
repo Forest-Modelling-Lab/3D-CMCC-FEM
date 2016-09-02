@@ -36,7 +36,7 @@ static int fill_cell(cell_t *const c)
 	CHECK_CONDITION(g_settings->replanted_management, != 0);
 	
 	/* alloc memory for heights */
-	if ( ! alloc_struct((void **)&c->heights, &c->heights_count, sizeof(height_t)) )
+	if ( ! alloc_struct((void **)&c->heights, &c->heights_count, &c->heights_avail, sizeof(height_t)) )
 	{
 		return 0;
 	}
@@ -45,7 +45,7 @@ static int fill_cell(cell_t *const c)
 	h = &c->heights[c->heights_count-1];
 
 	/* alloc memory for dbhs */
-	if ( ! alloc_struct((void **)&h->dbhs, &h->dbhs_count, sizeof(dbh_t)) )
+	if ( ! alloc_struct((void **)&h->dbhs, &h->dbhs_count, &h->dbhs_avail, sizeof(dbh_t)) )
 	{
 		return 0;
 	}
@@ -54,16 +54,16 @@ static int fill_cell(cell_t *const c)
 	d = &h->dbhs[h->dbhs_count-1];
 
 	/* alloc memory for ages */
-	if ( ! alloc_struct((void **)&d->ages, &d->ages_count, sizeof(age_t)) )
+	if ( ! alloc_struct((void **)&d->ages, &d->ages_count, &d->ages_avail, sizeof(age_t)) )
 	{
 		return 0;
 	}
 	d->ages[d->ages_count-1] = age;
-	d->ages[d->ages_count-1].value = g_settings->replanted_age;
+	d->ages[d->ages_count-1].value = (int)g_settings->replanted_age;
 	a = &d->ages[d->ages_count-1];
 
 	/* alloc memory for species */
-	if ( ! alloc_struct((void **)&a->species, &a->species_count, sizeof(species_t)) )
+	if ( ! alloc_struct((void **)&a->species, &a->species_count, &a->species_avail, sizeof(species_t)) )
 	{
 		return 0;
 	}
@@ -75,7 +75,7 @@ static int fill_cell(cell_t *const c)
 	// ALESSIOR fix, must use e_management 
 	a->species[a->species_count-1].management = 0; /* T */
 	a->species[a->species_count-1].name = p;
-	a->species[a->species_count-1].counter[N_TREE] = g_settings->replanted_n_tree;
+	a->species[a->species_count-1].counter[N_TREE] = (int)g_settings->replanted_n_tree;
 	a->species[a->species_count-1].counter[N_STUMP] = 0;
 	a->species[a->species_count-1].value[LAI] = g_settings->replanted_lai;
 	a->species[a->species_count-1].turnover = NULL; //malloc(a->species_count*sizeof*a->species[a->species_count-1].turnover);

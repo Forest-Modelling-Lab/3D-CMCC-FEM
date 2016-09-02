@@ -2,7 +2,7 @@
 #ifndef STRUCTURE_H_
 #define STRUCTURE_H_
 
-int alloc_struct(void** t, int* count, unsigned int size);
+int alloc_struct(void** t, int* count, int* avail, unsigned int size);
 
 void forest_structure (cell_t *const c, const meteo_daily_t *const, const int day, const int month, const int year);
 

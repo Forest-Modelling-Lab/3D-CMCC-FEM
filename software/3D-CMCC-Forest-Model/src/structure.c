@@ -19,15 +19,25 @@ extern logger_t* g_log;
 extern const char sz_err_out_of_memory[];
 
 /* */
-int alloc_struct(void** t, int* count, unsigned int size) {
+int alloc_struct(void** t, int* count, int* avail, unsigned int size) {
 	void *no_leak;
 
-	no_leak = realloc(*t, ++*count*size);
-	if ( ! no_leak ) {
-		--*count;
-		return 0;
+	if ( *avail ) {
+		// ALESSIOR:
+		// AVAIL MUST NOT BE USED !!!
+		// STRUCT ARE SHALLOW COPY !!!
+		logger(g_log, "unable to alloc struct! Use of available memory is NOT allowed\n");
+		exit(1);
+		//--*avail;
+		//++*count;
+	} else {
+		no_leak = realloc(*t, ++*count*size);
+		if ( ! no_leak ) {
+			--*count;
+			return 0;
+		}
+		*t = no_leak;
 	}
-	*t = no_leak;
 	return 1;
 }
 
@@ -38,7 +48,7 @@ int layer_add(cell_t* const c)
 
 	assert(c);
 
-	ret = alloc_struct((void **)&c->t_layers, &c->t_layers_count, sizeof(tree_layer_t));
+	ret = alloc_struct((void **)&c->t_layers, &c->t_layers_count, &c->t_layers_avail, sizeof(tree_layer_t));
 	if ( ret )
 	{
 		c->t_layers[c->t_layers_count-1] = t_layer;
