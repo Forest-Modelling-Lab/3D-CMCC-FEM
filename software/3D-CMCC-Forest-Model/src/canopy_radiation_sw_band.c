@@ -212,7 +212,7 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 	//height_t *h;
 	species_t *s;
 
-	l = &c->t_layers[layer];
+	l = &c->tree_layers[layer];
 	//h = &c->heights[height];
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 

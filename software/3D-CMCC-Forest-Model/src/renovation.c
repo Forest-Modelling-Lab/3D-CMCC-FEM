@@ -23,7 +23,7 @@ void renovation(cell_t *const c, const int layer, const int height, const int db
 	tree_layer_t *l;
 	species_t *s;
 
-	l = &c->t_layers[layer];
+	l = &c->tree_layers[layer];
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 	/* compute light availability for seeds of dominant layer */

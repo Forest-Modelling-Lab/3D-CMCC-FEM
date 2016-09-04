@@ -57,7 +57,7 @@ void clearcut_timber_upon_request(cell_t *const c, const int layer, const int he
 	tree_layer_t *l;
 	species_t *s;
 
-	l = &c->t_layers[layer];
+	l = &c->tree_layers[layer];
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 	IndWf = s->value[BIOMASS_FOLIAGE_tDM] / s->counter[N_TREE];
@@ -74,14 +74,14 @@ void clearcut_timber_upon_request(cell_t *const c, const int layer, const int he
 
 	if ( removed_tree != 0 )
 	{
-		if ( c->t_layers_count > 1 )
+		if ( c->tree_layers_count > 1 )
 		{
-			printf("Layer from which of %d layer(s) remove trees = ?\n", c->t_layers_count);
+			printf("Layer from which of %d layer(s) remove trees = ?\n", c->tree_layers_count);
 
 			scanf ("%d", &layer_to_remove_tree);
 			printf ("layer choiced = %d \n", layer_to_remove_tree);
 
-			if ( layer_to_remove_tree == 0 || layer_to_remove_tree > c->t_layers_count )
+			if ( layer_to_remove_tree == 0 || layer_to_remove_tree > c->tree_layers_count )
 			{
 				puts("NO CHOICED VALUE CAN BE ACCEPTED");
 			}
@@ -167,7 +167,7 @@ void clearcut_coppice(cell_t *const c, const int layer, const int height, const 
 	tree_layer_t *l;
 	species_t *s;
 
-	l = &c->t_layers[layer];
+	l = &c->tree_layers[layer];
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 	IndWf = s->value[BIOMASS_FOLIAGE_tDM] / s->counter[N_TREE];
@@ -179,7 +179,7 @@ void clearcut_coppice(cell_t *const c, const int layer, const int height, const 
 	/* CLEARCUT FOR COPPICE */
 	logger(g_log, "CLEARCUT FOR COPPICE FUNCTION \n");
 	logger(g_log, "Layer modelled z = %d \n", layer);
-	logger(g_log, "Numbers of layers = %d \n", c->t_layers_count);
+	logger(g_log, "Numbers of layers = %d \n", c->tree_layers_count);
 	logger(g_log, "Number of stools = %d \n", s->counter[N_STUMP]);
 
 	printf ("Number of trees removed = ?\n");
@@ -187,14 +187,14 @@ void clearcut_coppice(cell_t *const c, const int layer, const int height, const 
 
 	if ( removed_tree != 0 )
 	{
-		if ( c->t_layers_count > 1 )
+		if ( c->tree_layers_count > 1 )
 		{
-			printf("Layer from which of %d layer(s) remove trees = ?\n", c->t_layers_count);
+			printf("Layer from which of %d layer(s) remove trees = ?\n", c->tree_layers_count);
 
 			scanf ("%d", &layer_to_remove_tree);
 			printf ("layer choiced = %d \n", layer_to_remove_tree);
 
-			if ( layer_to_remove_tree == 0 || layer_to_remove_tree > c->t_layers_count )
+			if ( layer_to_remove_tree == 0 || layer_to_remove_tree > c->tree_layers_count )
 			{
 				puts("NO CHOICED VALUE CAN BE ACCEPTED");
 			}

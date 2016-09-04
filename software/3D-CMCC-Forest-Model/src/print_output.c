@@ -77,7 +77,7 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 	{
 		logger(g_daily_log, "%s \t%2s \t%s", "YEAR", "MONTH", "DAY");
 
-		for ( layer = c->t_layers_count - 1; layer >= 0; --layer )
+		for ( layer = c->tree_layers_count - 1; layer >= 0; --layer )
 		{
 			for ( height = c->heights_count - 1; height >= 0 ; --height )
 			{
@@ -132,9 +132,9 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 					}
 					if ( c->heights[height].dbhs_count > 1 ) logger(g_daily_log,"\t%10s", "***");
 				}
-				if ( c->t_layers[layer].layer_n_height_class > 1 ) logger(g_daily_log,"\t%10s", "****");
+				if ( c->tree_layers[layer].layer_n_height_class > 1 ) logger(g_daily_log,"\t%10s", "****");
 			}
-			if ( c->t_layers_count > 1 ) logger(g_daily_log,"\t%10s", "*****");
+			if ( c->tree_layers_count > 1 ) logger(g_daily_log,"\t%10s", "*****");
 		}
 		/************************************************************************/
 
@@ -165,7 +165,7 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 	logger(g_daily_log, "%d \t%4d \t%4d", c->years[year].year, month + 1, day + 1);
 
 	/* print class level LAI values */
-	for ( layer = c->t_layers_count - 1; layer >= 0; --layer )
+	for ( layer = c->tree_layers_count - 1; layer >= 0; --layer )
 	{
 		for ( height = c->heights_count - 1; height >= 0 ; --height )
 		{
@@ -224,9 +224,9 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 				}
 				if ( c->heights[height].dbhs_count > 1 ) logger(g_daily_log,"\t%10s", "***");
 			}
-			if ( c->t_layers[layer].layer_n_height_class > 1 ) logger(g_daily_log,"\t%10s", "****");
+			if ( c->tree_layers[layer].layer_n_height_class > 1 ) logger(g_daily_log,"\t%10s", "****");
 		}
-		if ( c->t_layers_count > 1 )
+		if ( c->tree_layers_count > 1 )
 		{
 			logger(g_daily_log,"\t%10s", "*****");
 		}
@@ -289,7 +289,7 @@ void EOM_print_cumulative_balance_cell_level(cell_t *const c, const int month, c
 	{
 		logger(g_monthly_log, "%s \t%2s", "YEAR", "MONTH");
 
-		for ( layer = c->t_layers_count - 1; layer >= 0; --layer )
+		for ( layer = c->tree_layers_count - 1; layer >= 0; --layer )
 		{
 			for ( height = c->heights_count - 1; height >= 0 ; --height )
 			{
@@ -329,9 +329,9 @@ void EOM_print_cumulative_balance_cell_level(cell_t *const c, const int month, c
 					}
 					if ( c->heights[height].dbhs_count > 1 ) logger(g_monthly_log,"\t%10s", "***");
 				}
-				if ( c->t_layers[layer].layer_n_height_class > 1 ) logger(g_monthly_log,"\t%10s", "****");
+				if ( c->tree_layers[layer].layer_n_height_class > 1 ) logger(g_monthly_log,"\t%10s", "****");
 			}
-			if ( c->t_layers_count > 1 ) logger(g_monthly_log,"\t%10s", "*****");
+			if ( c->tree_layers_count > 1 ) logger(g_monthly_log,"\t%10s", "*****");
 		}
 		/************************************************************************/
 		/* heading variables at cell level only if there's more than one layer */
@@ -360,7 +360,7 @@ void EOM_print_cumulative_balance_cell_level(cell_t *const c, const int month, c
 	logger ( g_monthly_log, "%d \t%4d", c->years[year].year, month +1 );
 
 	/* print class level values */
-	for ( layer = c->t_layers_count - 1; layer >= 0; --layer )
+	for ( layer = c->tree_layers_count - 1; layer >= 0; --layer )
 	{
 		for ( height = c->heights_count - 1; height >= 0 ; --height )
 		{
@@ -403,9 +403,9 @@ void EOM_print_cumulative_balance_cell_level(cell_t *const c, const int month, c
 				}
 				if ( c->heights[height].dbhs_count > 1 ) logger(g_monthly_log,"\t%10s", "***");
 			}
-			if ( c->t_layers[layer].layer_n_height_class > 1 ) logger(g_monthly_log,"\t%10s", "****");
+			if ( c->tree_layers[layer].layer_n_height_class > 1 ) logger(g_monthly_log,"\t%10s", "****");
 		}
-		if ( c->t_layers_count > 1 )
+		if ( c->tree_layers_count > 1 )
 		{
 			logger(g_monthly_log,"\t%10s", "*****");
 		}
@@ -469,7 +469,7 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 	{
 		logger(g_annual_log, "%s", "YEAR");
 
-		for ( layer = c->t_layers_count - 1; layer >= 0; --layer )
+		for ( layer = c->tree_layers_count - 1; layer >= 0; --layer )
 		{
 			for ( height = c->heights_count - 1; height >= 0 ; --height )
 			{
@@ -534,9 +534,9 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 					}
 					if ( c->heights[height].dbhs_count > 1 ) logger(g_annual_log,"\t%10s", "***");
 				}
-				if ( c->t_layers[layer].layer_n_height_class > 1 ) logger(g_annual_log,"\t%10s", "****");
+				if ( c->tree_layers[layer].layer_n_height_class > 1 ) logger(g_annual_log,"\t%10s", "****");
 			}
-			if ( c->t_layers_count > 1 ) logger(g_annual_log,"\t%10s", "*****");
+			if ( c->tree_layers_count > 1 ) logger(g_annual_log,"\t%10s", "*****");
 		}
 		/************************************************************************/
 		/* heading variables at cell level only if there's more than one layer */
@@ -569,7 +569,7 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 	/* print class level values */
 	if ( c->heights_count )
 	{
-		for ( layer = c->t_layers_count - 1; layer >= 0; --layer )
+		for ( layer = c->tree_layers_count - 1; layer >= 0; --layer )
 		{
 			for ( height = c->heights_count - 1; height >= 0 ; --height )
 			{
@@ -637,9 +637,9 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 					}
 					if ( c->heights[height].dbhs_count > 1 ) logger(g_annual_log,"\t%10s", "***");
 				}
-				if ( c->t_layers[layer].layer_n_height_class > 1 ) logger(g_annual_log,"\t%10s", "****");
+				if ( c->tree_layers[layer].layer_n_height_class > 1 ) logger(g_annual_log,"\t%10s", "****");
 			}
-			if ( c->t_layers_count > 1 )
+			if ( c->tree_layers_count > 1 )
 			{
 				logger(g_annual_log,"\t%10s", "*****");
 			}

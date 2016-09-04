@@ -32,7 +32,7 @@ void canopy_interception(cell_t *const c, const int layer, const int height, con
 	tree_layer_t *l;
 	species_t *s;
 
-	l = &c->t_layers[layer];
+	l = &c->tree_layers[layer];
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 	/* it computes canopy rain interception with the same rationale

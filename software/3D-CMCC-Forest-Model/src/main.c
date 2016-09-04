@@ -798,11 +798,11 @@ int main(int argc, char *argv[]) {
 	}
 	puts(msg_ok);
 
-
 	start_year = -1;
 	logger(g_log, "\n3D-CMCC FEM START....\n\n");
 	for ( cell = 0; cell < matrix->cells_count; ++cell )
 	{
+
 		/* Marconi: the variable i needs to be a for private variable, used to fill the vpsat vector v(365;1) */
 		/* ALESSIOR: i renamed to index_vpsat */
 		int index_vpsat;
@@ -953,6 +953,7 @@ int main(int argc, char *argv[]) {
 
 						/* summary on soil */
 						soil_summary(matrix, matrix->cells);
+
 
 						if( F == matrix->cells[cell].landuse )
 						{

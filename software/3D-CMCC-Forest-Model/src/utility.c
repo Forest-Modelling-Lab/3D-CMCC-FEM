@@ -131,8 +131,13 @@ void reset_annual_cell_variables(cell_t *const c)
 
 	logger(g_log, "...resetting cell level annual variables...\n");
 
+	for ( height = c->heights_count -1 ; height >= 0; --height )
+	{
+		c->heights[height].height_z = 0;
+	}
+
 	/* reset cell level variables */
-	c->t_layers_count = 0;
+	c->tree_layers_count = 0;
 	c->cell_n_trees = 0;
 	c->cell_cover = 0;
 
@@ -162,18 +167,7 @@ void reset_annual_cell_variables(cell_t *const c)
 	//c->dead_tree = 0;
 	c->annual_soil_evapo = 0.;
 
-	for ( height = c->heights_count -1 ; height >= 0; --height )
-	{
-		c->heights[height].height_z = 0;
-	}
 
-	for ( layer = c->t_layers_count - 1; layer >= 0 ; --layer )
-	{
-		c->t_layers[layer].layer_n_height_class = 0;
-		c->t_layers[layer].layer_n_trees = 0;
-		c->t_layers[layer].layer_density = 0.;
-		c->t_layers[layer].layer_cover = 0.;
-	}
 
 }
 void reset_daily_layer_variables(cell_t *const c)
@@ -204,11 +198,11 @@ void reset_annual_layer_variables(cell_t *const c)
 {
 	logger(g_log, "...resetting layer level annual variables...\n");
 
-	if ( c->t_layers_count )
+	if ( c->tree_layers_count )
 	{
-		free(c->t_layers);
-		c->t_layers = NULL;
-		c->t_layers_count = 0;
+		free(c->tree_layers);
+		c->tree_layers = NULL;
+		c->tree_layers_count = 0;
 	}
 }
 

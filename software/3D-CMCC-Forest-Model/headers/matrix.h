@@ -717,12 +717,12 @@ typedef struct
 	int heights_count;
 	int heights_avail;
 
-	tree_layer_t* t_layers;
-	int t_layers_count;
+	tree_layer_t* tree_layers;
+	int tree_layers_count;
 	int t_layers_avail;
 
-	soil_layer_s* s_layers;
-	int s_layers_count;
+	soil_layer_s* soil_layers;
+	int soil_layers_count;
 	int s_layers_avail;
 
 	int years_count;

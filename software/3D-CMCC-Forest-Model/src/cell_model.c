@@ -38,7 +38,7 @@ int Cell_model_daily (matrix_t *const m, const int cell, const int day, const in
 	logger (g_log, "\n*********CELL_MODEL_DAILY*********\n");
 
 	logger(g_log, "-number of tree heights (if present) = %d\n", c->heights_count);
-	logger(g_log, "-number of tree layer (if present) = %d\n", c->t_layers_count);
+	logger(g_log, "-number of tree layer (if present) = %d\n", c->tree_layers_count);
 
 	/* OVERALL CELL */
 

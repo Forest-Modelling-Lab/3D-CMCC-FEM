@@ -898,11 +898,13 @@ static int fill_cell_from_soils(cell_t *const c, const row_t * const row)
 	{
 		int i;
 
-		for ( i = 0; i < g_settings->soil_layer; ++i ) {
-			if ( ! alloc_struct((void **)&c->s_layers, &c->s_layers_count, &c->s_layers_avail, sizeof(soil_layer_s)) ) {
+		for ( i = 0; i < g_settings->number_of_soil_layer; ++i )
+		{
+			if ( ! alloc_struct((void **)&c->soil_layers, &c->soil_layers_count, &c->s_layers_avail, sizeof(soil_layer_s)) )
+			{
 				return 0;
 			}
-			c->s_layers[c->s_layers_count-1]  = s;
+			c->soil_layers[c->soil_layers_count-1] = s;
 		}
 
 		/* ok */
@@ -1227,7 +1229,10 @@ matrix_t* matrix_create(const char* const filename) {
 			matrix_free(m);
 			return NULL;
 		}
+		//ALESSIOR HERE soil_layer_count is still correct
 	}
+	//ALESSIOR HERE NOT
+
 	dataset_free(d);
 
 	/* fill with species values */
@@ -1345,7 +1350,7 @@ void soil_summary(const matrix_t* const m, const cell_t* const cell)
 	/* Soil definition and initialization */
 	logger(g_log, "***************************************************\n\n");
 	logger(g_log, "SOIL DATASET\n");
-	logger(g_log, "-Number of soil layers = %d\n", g_settings->soil_layer);
+	logger(g_log, "-Number of soil layers = %g\n", g_settings->number_of_soil_layer);
 	logger(g_log, "-Soil depth = %g cm\n", g_soil_settings->values[SOIL_DEPTH]);
 	logger(g_log, "-Clay Percentage = %g %%\n", g_soil_settings->values[SOIL_CLAY_PERC]);
 	logger(g_log, "-Silt Percentage = %g %%\n", g_soil_settings->values[SOIL_SILT_PERC]);
@@ -1533,9 +1538,9 @@ void matrix_free(matrix_t *m)
 			{			
 				for ( height = 0; height < m->cells[cell].heights_count; ++height )
 				{
-					if ( m->cells[cell].t_layers_count )
+					if ( m->cells[cell].tree_layers_count )
 					{
-						free( m->cells[cell].t_layers );
+						free( m->cells[cell].tree_layers );
 					}
 					if ( m->cells[cell].heights[height].dbhs_count )
 					{
@@ -1573,19 +1578,13 @@ void matrix_free(matrix_t *m)
 					free (m->cells[cell].heights);
 				}
 
-				for ( soil = 0; soil < m->cells[cell].s_layers_count; ++ soil )
+				for ( soil = 0; soil < m->cells[cell].soil_layers_count; ++ soil )
 				{
-					if ( m->cells[cell].s_layers_count )
+					if ( m->cells[cell].soil_layers_count )
 					{
-						free ( m->cells[cell].s_layers );
+						free ( m->cells[cell].soil_layers );
 					}
 				}
-
-//				if ( m->cells[cell].s_layers_count )
-//				{
-//					free (m->cells[cell].s_layers);
-//				}
-
 				free (m->cells[cell].years);
 			}
 			free (m->cells);

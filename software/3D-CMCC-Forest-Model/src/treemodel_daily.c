@@ -225,10 +225,10 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	qsort ( c->heights, c->heights_count, sizeof (height_t), sort_by_heights_asc );
 
 	/* loop on each cell layers starting from highest to lower */
-	for ( layer = c->t_layers_count -1 ; layer >= 0; --layer )
+	for ( layer = c->tree_layers_count -1 ; layer >= 0; --layer )
 	{
 		/* assign shortcut */
-		l = &m->cells[cell].t_layers[layer];
+		l = &m->cells[cell].tree_layers[layer];
 
 		logger(g_log,"*****************************************************************************\n"
 				"                                layer = %d                                 \n"

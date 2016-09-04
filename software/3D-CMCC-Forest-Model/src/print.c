@@ -170,7 +170,7 @@ void print_cell_data (cell_t *const c)
 	logger(g_log, "cell = \n");
 	logger(g_log, "* x = %d\n", c->x);
 	logger(g_log, "* y = %d\n", c->y);
-	logger(g_log, "* number of layers = %d\n", c->t_layers_count);
+	logger(g_log, "* number of layers = %d\n", c->tree_layers_count);
 	logger(g_log, "* asw = %g mm\n", c->asw);
 	logger(g_log, "* snow pack = %g cm\n", c->snow_pack);
 
@@ -183,7 +183,7 @@ void print_forest_class_data(cell_t* const c, const int layer, const int height,
 	age_t *a;
 	species_t *s;
 
-	l = &c->t_layers[layer];
+	l = &c->tree_layers[layer];
 	h = &c->heights[height];
 	d = &h->dbhs[dbh];
 	a = &d->ages[age];

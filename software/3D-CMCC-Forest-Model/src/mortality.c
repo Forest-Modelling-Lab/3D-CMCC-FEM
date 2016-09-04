@@ -33,10 +33,10 @@ void layer_self_pruning_thinning ( cell_t *const c )
 
 	logger(g_log, "*annual check for self pruning and self thinning (crowding competition)*\n");
 
-	for ( layer = c->t_layers_count -1 ; layer >= 0; --layer )
+	for ( layer = c->tree_layers_count -1 ; layer >= 0; --layer )
 	{
 		/* check if layer exceeds maximum layer coverage */
-		if (c->t_layers[layer].layer_cover >= g_settings->max_layer_cover)
+		if (c->tree_layers[layer].layer_cover >= g_settings->max_layer_cover)
 		{
 			logger(g_log, "-layer cover exceeds max layer cover for layer %d\n", layer);
 
@@ -58,9 +58,9 @@ void layer_self_pruning_thinning ( cell_t *const c )
 			mortality = 'y';
 
 			/* reset values for layer (they are recomputed below)*/
-			c->t_layers[layer].layer_n_height_class = 0;
-			c->t_layers[layer].layer_n_trees = 0;
-			c->t_layers[layer].layer_density = 0;
+			c->tree_layers[layer].layer_n_height_class = 0;
+			c->tree_layers[layer].layer_n_trees = 0;
+			c->tree_layers[layer].layer_density = 0;
 			/* reset values for cell (they are recomputed below)*/
 			c->cell_n_trees = 0;
 			c->cell_cover = 0;
@@ -73,7 +73,7 @@ void layer_self_pruning_thinning ( cell_t *const c )
 			mortality = 'n';
 		}
 		/* check */
-		CHECK_CONDITION(c->t_layers[layer].layer_cover , > g_settings->max_layer_cover);
+		CHECK_CONDITION(c->tree_layers[layer].layer_cover , > g_settings->max_layer_cover);
 
 		logger(g_log, "**************************************\n\n");
 
@@ -89,7 +89,7 @@ void layer_self_pruning_thinning ( cell_t *const c )
 				if( layer == c->heights[height].height_z )
 				{
 					/* recompute number of height classes */
-					c->t_layers[layer].layer_n_height_class += 1;
+					c->tree_layers[layer].layer_n_height_class += 1;
 				}
 				for ( dbh = c->heights[height].dbhs_count - 1; dbh >= 0; --dbh)
 				{
@@ -102,7 +102,7 @@ void layer_self_pruning_thinning ( cell_t *const c )
 							if( layer == c->heights[height].height_z )
 							{
 								/* recompute number of trees for each layer */
-								c->t_layers[layer].layer_n_trees += s->counter[N_TREE];
+								c->tree_layers[layer].layer_n_trees += s->counter[N_TREE];
 							}
 						}
 					}
@@ -110,12 +110,12 @@ void layer_self_pruning_thinning ( cell_t *const c )
 			}
 
 			/*recompute density for each layer */
-			c->t_layers[layer].layer_density = c->t_layers[layer].layer_n_trees / g_settings->sizeCell;
+			c->tree_layers[layer].layer_density = c->tree_layers[layer].layer_n_trees / g_settings->sizeCell;
 
 			logger(g_log, "-layer = %d\n", layer);
-			logger(g_log, "-height class(es) = %d layer \n", c->t_layers[layer].layer_n_height_class);
-			logger(g_log, "-number of trees = %d layer\n", c->t_layers[layer].layer_n_trees);
-			logger(g_log, "-density = %g layer\n", c->t_layers[layer].layer_density);
+			logger(g_log, "-height class(es) = %d layer \n", c->tree_layers[layer].layer_n_height_class);
+			logger(g_log, "-number of trees = %d layer\n", c->tree_layers[layer].layer_n_trees);
+			logger(g_log, "-density = %g layer\n", c->tree_layers[layer].layer_density);
 		}
 		logger(g_log, "**************************************\n\n");
 
@@ -125,10 +125,10 @@ void layer_self_pruning_thinning ( cell_t *const c )
 
 
 		/* compute total number of trees per cell */
-		c->cell_n_trees += c->t_layers[layer].layer_n_trees;
+		c->cell_n_trees += c->tree_layers[layer].layer_n_trees;
 
 		/* assuming that plants tend to occupy the part of the cell not covered by the others */
-		c->cell_cover += c->t_layers[layer].layer_cover;
+		c->cell_cover += c->tree_layers[layer].layer_cover;
 	}
 
 	logger(g_log, "-number of trees = %d cell\n", c->cell_n_trees);
@@ -152,7 +152,7 @@ int self_pruning ( cell_t *const c, const int layer )
 	age_t *a;
 	species_t *s;
 
-	l = &c->t_layers[layer];
+	l = &c->tree_layers[layer];
 
 	/* SELF-PRUNING function */
 	/*it reduces dbhdc values for lower height class up to dbhdcmin otherwise
@@ -209,7 +209,7 @@ int self_pruning ( cell_t *const c, const int layer )
 						//logger(g_log, "-Canopy cover DBH-DC class level = %g %%\n", s->value[CANOPY_COVER_DBHDC] * 100.0);
 
 						/* recompute layer cover */
-						if( c->t_layers[layer].layer_n_height_class == 1)
+						if( c->tree_layers[layer].layer_n_height_class == 1)
 						{
 							l->layer_cover = s->value[CANOPY_COVER_DBHDC];
 						}
@@ -366,7 +366,7 @@ void self_thinning ( cell_t *const c, const int layer )
 						s->value[AV_DEAD_BRANCH_MASS_KgC] = (s->value[BRANCH_DEAD_WOOD_C] / (double)s->counter[N_TREE])*1000.0;
 
 						/* mortality */
-						while (c->t_layers[layer].layer_cover > g_settings->max_layer_cover && s->counter[N_TREE] >= 0)
+						while (c->tree_layers[layer].layer_cover > g_settings->max_layer_cover && s->counter[N_TREE] >= 0)
 						{
 							--s->counter[N_TREE];
 							++deadtree;
@@ -375,7 +375,7 @@ void self_thinning ( cell_t *const c, const int layer )
 							s->value[CANOPY_COVER_DBHDC] -= (s->value[CROWN_AREA_DBHDC] / g_settings->sizeCell);
 
 							/* recompute layer level canopy cover */
-							c->t_layers[layer].layer_cover -= (s->value[CROWN_AREA_DBHDC] / g_settings->sizeCell);
+							c->tree_layers[layer].layer_cover -= (s->value[CROWN_AREA_DBHDC] / g_settings->sizeCell);
 
 							//fixme to remove once implemented function below
 							CHECK_CONDITION(s->counter[N_TREE], > 0);
@@ -390,7 +390,7 @@ void self_thinning ( cell_t *const c, const int layer )
 								}
 
 								/* mortality for the higher height class */
-								while (c->t_layers[layer].layer_cover > g_settings->max_layer_cover && c->heights[height + 1].dbhs[dbh].ages[age].species[species].counter[N_TREE] >= 0)
+								while (c->tree_layers[layer].layer_cover > g_settings->max_layer_cover && c->heights[height + 1].dbhs[dbh].ages[age].species[species].counter[N_TREE] >= 0)
 								{
 									--c->heights[height + 1].dbhs[dbh].ages[age].species[species].counter[N_TREE];
 									++deadtree;
@@ -400,7 +400,7 @@ void self_thinning ( cell_t *const c, const int layer )
 											(c->heights[height + 1].dbhs[dbh].ages[age].species[species].value[CROWN_AREA_DBHDC] / g_settings->sizeCell);
 
 									/* recompute layer level canopy cover */
-									c->t_layers[layer].layer_cover -=
+									c->tree_layers[layer].layer_cover -=
 											(c->heights[height + 1].dbhs[dbh].ages[age].species[species].value[CROWN_AREA_DBHDC] / g_settings->sizeCell);
 
 									/* call remove_tree_class */
@@ -477,9 +477,9 @@ void self_thinning ( cell_t *const c, const int layer )
 	}
 
 	/* reset values for layer (they are recomputed below)*/
-	c->t_layers[layer].layer_n_height_class = 0;
-	c->t_layers[layer].layer_n_trees = 0;
-	c->t_layers[layer].layer_density = 0;
+	c->tree_layers[layer].layer_n_height_class = 0;
+	c->tree_layers[layer].layer_n_trees = 0;
+	c->tree_layers[layer].layer_density = 0;
 	/* reset values for cell (they are recomputed below)*/
 	c->cell_n_trees = 0;
 	c->cell_cover = 0;
@@ -493,7 +493,7 @@ void self_thinning ( cell_t *const c, const int layer )
 		if( layer == c->heights[height].height_z )
 		{
 			/* recompute number of height classes */
-			c->t_layers[layer].layer_n_height_class += 1;
+			c->tree_layers[layer].layer_n_height_class += 1;
 		}
 		for ( dbh = c->heights[height].dbhs_count - 1; dbh >= 0; --dbh)
 		{
@@ -506,7 +506,7 @@ void self_thinning ( cell_t *const c, const int layer )
 					if( layer == c->heights[height].height_z )
 					{
 						/* recompute number of trees for each layer */
-						c->t_layers[layer].layer_n_trees += s->counter[N_TREE];
+						c->tree_layers[layer].layer_n_trees += s->counter[N_TREE];
 					}
 				}
 			}
@@ -514,12 +514,12 @@ void self_thinning ( cell_t *const c, const int layer )
 	}
 
 	/*recompute density for each layer */
-	c->t_layers[layer].layer_density = c->t_layers[layer].layer_n_trees / g_settings->sizeCell;
+	c->tree_layers[layer].layer_density = c->tree_layers[layer].layer_n_trees / g_settings->sizeCell;
 
 	logger(g_log, "-layer = %d\n", layer);
-	logger(g_log, "-height class(es) = %d layer \n", c->t_layers[layer].layer_n_height_class);
-	logger(g_log, "-number of trees = %d layer\n", c->t_layers[layer].layer_n_trees);
-	logger(g_log, "-density = %g layer\n", c->t_layers[layer].layer_density);
+	logger(g_log, "-height class(es) = %d layer \n", c->tree_layers[layer].layer_n_height_class);
+	logger(g_log, "-number of trees = %d layer\n", c->tree_layers[layer].layer_n_trees);
+	logger(g_log, "-density = %g layer\n", c->tree_layers[layer].layer_density);
 	logger(g_log, "-Dead tree(s) = %d\n", deadtree);
 
 	/* reset dead tree */

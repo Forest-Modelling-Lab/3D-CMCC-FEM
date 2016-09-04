@@ -46,7 +46,7 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 	age_t *a;
 	species_t *s;
 
-	l = &c->t_layers[layer];
+	l = &c->tree_layers[layer];
 	h = &c->heights[height];
 	d = &h->dbhs[dbh];
 	a = &d->ages[age];

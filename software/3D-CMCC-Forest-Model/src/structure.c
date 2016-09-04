@@ -48,10 +48,10 @@ int layer_add(cell_t* const c)
 
 	assert(c);
 
-	ret = alloc_struct((void **)&c->t_layers, &c->t_layers_count, &c->t_layers_avail, sizeof(tree_layer_t));
+	ret = alloc_struct((void **)&c->tree_layers, &c->tree_layers_count, &c->t_layers_avail, sizeof(tree_layer_t));
 	if ( ret )
 	{
-		c->t_layers[c->t_layers_count-1] = t_layer;
+		c->tree_layers[c->tree_layers_count-1] = t_layer;
 	}
 
 	return ret;
@@ -99,7 +99,7 @@ int annual_forest_structure(cell_t* const c)
 
 	logger(g_log, "\n***ANNUAL FOREST STRUCTURE***\n");
 
-	assert(! c->t_layers_count);
+	assert(! c->tree_layers_count);
 
 	for ( height = 0; height < c->heights_count; ++height )
 	{
@@ -130,7 +130,7 @@ int annual_forest_structure(cell_t* const c)
 		}
 	}
 	logger(g_log, "*zeta_count %d*\n\n", zeta_count);
-	logger(g_log, "*c->t_layers_count %d*\n\n", c->t_layers_count);
+	logger(g_log, "*c->t_layers_count %d*\n\n", c->tree_layers_count);
 
 	/*****************************************************************************************/
 
@@ -147,30 +147,30 @@ int annual_forest_structure(cell_t* const c)
 	}
 
 	logger(g_log, "-Number of height classes = %d cell\n", c->heights_count);
-	logger(g_log, "-Number of layers = %d cell\n\n", c->t_layers_count);
+	logger(g_log, "-Number of layers = %d cell\n\n", c->tree_layers_count);
 	logger(g_log,"***********************************\n");
 
 	/* check */
-	CHECK_CONDITION(c->t_layers_count, < 1);
-	CHECK_CONDITION(c->t_layers_count, > c->heights_count);
+	CHECK_CONDITION(c->tree_layers_count, < 1);
+	CHECK_CONDITION(c->tree_layers_count, > c->heights_count);
 
 	/*************************************************************************************/
 	/* compute numbers of height classes within each layer */
 	logger(g_log, "*compute numbers of height classes within each layer*\n\n");
 
-	for ( layer = c->t_layers_count - 1; layer >= 0 ; --layer )
+	for ( layer = c->tree_layers_count - 1; layer >= 0 ; --layer )
 	{
 		for ( height = c->heights_count -1; height >= 0 ; --height )
 		{
 			if( layer == c->heights[height].height_z )
 			{
-				++c->t_layers[layer].layer_n_height_class;
+				++c->tree_layers[layer].layer_n_height_class;
 			}
 		}
-		logger(g_log, "-layer %d height class(es) = %d\n", layer, c->t_layers[layer].layer_n_height_class);
+		logger(g_log, "-layer %d height class(es) = %d\n", layer, c->tree_layers[layer].layer_n_height_class);
 
 		/* check */
-		CHECK_CONDITION(c->t_layers[layer].layer_n_height_class, < 0);
+		CHECK_CONDITION(c->tree_layers[layer].layer_n_height_class, < 0);
 	}
 	logger(g_log, "**************************************\n\n");
 
@@ -178,7 +178,7 @@ int annual_forest_structure(cell_t* const c)
 	/* compute numbers of trees within each layer */
 	logger(g_log, "*compute numbers of trees within each layer*\n\n");
 
-	for ( layer = c->t_layers_count - 1; layer >= 0; --layer )
+	for ( layer = c->tree_layers_count - 1; layer >= 0; --layer )
 	{
 		for ( height = 0; height < c->heights_count ; ++height )
 		{
@@ -192,14 +192,14 @@ int annual_forest_structure(cell_t* const c)
 						{
 							if( layer == c->heights[height].height_z )
 							{
-								c->t_layers[layer].layer_n_trees += c->heights[height].dbhs[dbh].ages[age].species[species].counter[N_TREE];
+								c->tree_layers[layer].layer_n_trees += c->heights[height].dbhs[dbh].ages[age].species[species].counter[N_TREE];
 							}
 						}
 					}
 				}
 			}
 		}
-		logger(g_log, "-layer %d number of trees = %d\n", layer, c->t_layers[layer].layer_n_trees);
+		logger(g_log, "-layer %d number of trees = %d\n", layer, c->tree_layers[layer].layer_n_trees);
 	}
 	logger(g_log, "**************************************\n\n");
 
@@ -207,11 +207,11 @@ int annual_forest_structure(cell_t* const c)
 	/* compute density within each layer */
 	logger(g_log, "*compute density within each layer*\n\n");
 
-	for (layer = c->t_layers_count - 1; layer >= 0; layer --)
+	for (layer = c->tree_layers_count - 1; layer >= 0; layer --)
 	{
-		c->t_layers[layer].layer_density = c->t_layers[layer].layer_n_trees / g_settings->sizeCell;
+		c->tree_layers[layer].layer_density = c->tree_layers[layer].layer_n_trees / g_settings->sizeCell;
 
-		logger(g_log, "-layer %d density = %g layer\n", layer, c->t_layers[layer].layer_density);
+		logger(g_log, "-layer %d density = %g layer\n", layer, c->tree_layers[layer].layer_density);
 	}
 	logger(g_log, "**************************************\n\n");
 
@@ -219,7 +219,7 @@ int annual_forest_structure(cell_t* const c)
 	/* compute effective dbh/crown diameter ratio within each class based on layer density (class level) */
 	logger(g_log, "compute effective dbh/crown diameter ratio within each class based on layer density (class level)\n\n");
 
-	for ( layer = c->t_layers_count - 1; layer >= 0; --layer )
+	for ( layer = c->tree_layers_count - 1; layer >= 0; --layer )
 	{
 		logger(g_log, "----------------------------------\n");
 		logger(g_log, "-layer %d ", layer);
@@ -241,7 +241,7 @@ int annual_forest_structure(cell_t* const c)
 							logger(g_log,"-height = %g age = %d species = %s\n", h->value, a->value, s->name);
 
 							s->value[DBHDC_EFF] = ((s->value[DBHDCMIN] - s->value[DBHDCMAX]) / (s->value[DENMAX] - s->value[DENMIN]) *
-									(c->t_layers[layer].layer_density - s->value[DENMIN]) + s->value[DBHDCMAX]);
+									(c->tree_layers[layer].layer_density - s->value[DENMIN]) + s->value[DBHDCMAX]);
 							logger(g_log,"-DENMAX = %g\n", s->value[DENMAX]);
 							logger(g_log,"-DENMIN = %g\n", s->value[DENMIN]);
 							logger(g_log,"-DBHDCMAX = %g\n", s->value[DBHDCMAX]);
@@ -274,7 +274,7 @@ int annual_forest_structure(cell_t* const c)
 	/* compute effective crown diameter and crown area and class cover using DBH-DC */
 	logger(g_log, "*compute effective crown diameter and crown area and class cover using DBH-DC*\n\n");
 
-	for ( layer = c->t_layers_count - 1; layer >= 0; --layer )
+	for ( layer = c->tree_layers_count - 1; layer >= 0; --layer )
 	{
 		logger(g_log, "----------------------------------\n");
 		logger(g_log, "layer %d ", layer);
@@ -320,7 +320,7 @@ int annual_forest_structure(cell_t* const c)
 
 	//todo: control if with a drastic tree number reduction (e.g. management) there's a unrealistic strong variation in DBHDCeffective
 
-	for (layer = c->t_layers_count - 1; layer >= 0; --layer)
+	for (layer = c->tree_layers_count - 1; layer >= 0; --layer)
 	{
 		for ( height = 0; height < c->heights_count ; ++height )
 		{
@@ -333,13 +333,13 @@ int annual_forest_structure(cell_t* const c)
 						for ( species = 0; species < c->heights[height].dbhs[dbh].ages[age].species_count; ++species )
 						{
 							s = &c->heights[height].dbhs[dbh].ages[age].species[species];
-							c->t_layers[layer].layer_cover += s->value[CANOPY_COVER_DBHDC];
+							c->tree_layers[layer].layer_cover += s->value[CANOPY_COVER_DBHDC];
 						}
 					}
 				}
 			}
 		}
-		logger(g_log, "-Canopy cover DBH-DC layer (%d) level = %g %%\n", layer, c->t_layers[layer].layer_cover * 100.0);
+		logger(g_log, "-Canopy cover DBH-DC layer (%d) level = %g %%\n", layer, c->tree_layers[layer].layer_cover * 100.0);
 	}
 	logger(g_log, "**************************************\n");
 
@@ -347,13 +347,13 @@ int annual_forest_structure(cell_t* const c)
 	/* compute daily overall cell cover (cell level) */
 	logger(g_log, "*daily overall cell cover (cell level))*\n");
 
-	for ( layer = c->t_layers_count - 1; layer >= 0; --layer )
+	for ( layer = c->tree_layers_count - 1; layer >= 0; --layer )
 	{
 		/* number of trees per cell */
-		c->cell_n_trees += c->t_layers[layer].layer_n_trees;
+		c->cell_n_trees += c->tree_layers[layer].layer_n_trees;
 
 		/* note: overall cell cover can't exceed its area */
-		c->cell_cover += c->t_layers[layer].layer_cover;
+		c->cell_cover += c->tree_layers[layer].layer_cover;
 
 		if ( c->cell_cover > 1)
 		{
