@@ -45,7 +45,7 @@ int Soil_model_daily (matrix_t *const m, const int cell, const int day, const in
 	logger(g_log,"number of soil layer(s) = %g\n",g_settings->number_of_soil_layer);
 	logger(g_log,"number of soil layer(s) = %d\n",c->soil_layers_count);
 
-	/* soil radiation */
+	/* radiation for soil */
 	logger (g_log, "**SOIL RADIATION**\n");
 
 	/* fraction of light reflected by the soil */
