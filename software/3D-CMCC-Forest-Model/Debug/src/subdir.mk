@@ -51,6 +51,7 @@ C_SRCS += \
 ../src/photosynthesis.c \
 ../src/print.c \
 ../src/print_output.c \
+../src/remove_tree_class.c \
 ../src/renovation.c \
 ../src/settings.c \
 ../src/snow.c \
@@ -62,7 +63,6 @@ C_SRCS += \
 ../src/state_var_update.c \
 ../src/structure.c \
 ../src/topo.c \
-../src/tree_class_remove.c \
 ../src/treemodel_daily.c \
 ../src/turnover.c \
 ../src/turnover_Marconi.c \
@@ -119,6 +119,7 @@ OBJS += \
 ./src/photosynthesis.o \
 ./src/print.o \
 ./src/print_output.o \
+./src/remove_tree_class.o \
 ./src/renovation.o \
 ./src/settings.o \
 ./src/snow.o \
@@ -130,7 +131,6 @@ OBJS += \
 ./src/state_var_update.o \
 ./src/structure.o \
 ./src/topo.o \
-./src/tree_class_remove.o \
 ./src/treemodel_daily.o \
 ./src/turnover.o \
 ./src/turnover_Marconi.o \
@@ -187,6 +187,7 @@ C_DEPS += \
 ./src/photosynthesis.d \
 ./src/print.d \
 ./src/print_output.d \
+./src/remove_tree_class.d \
 ./src/renovation.d \
 ./src/settings.d \
 ./src/snow.d \
@@ -198,7 +199,6 @@ C_DEPS += \
 ./src/state_var_update.d \
 ./src/structure.d \
 ./src/topo.d \
-./src/tree_class_remove.d \
 ./src/treemodel_daily.d \
 ./src/turnover.d \
 ./src/turnover_Marconi.d \

@@ -45,7 +45,7 @@
 #include "settings.h"
 #include "forest_tree_class.h"
 #include "treemodel_daily.h"
-#include "tree_class_remove.h"
+#include "remove_tree_class.h"
 
 //extern settings_t* g_settings;
 extern logger_t* g_log;
@@ -59,7 +59,7 @@ extern int DaysInMonth[];
 //extern int MonthLength [];
 //extern int MonthLength_Leap [];
 
-//ALESSIOC TO ALESSIOR PLEASE MOVE INTO tree_class_remove.c
+//ALESSIOC TO ALESSIOR PLEASE MOVE INTO remove_tree_class.c
 static int species_remove(age_t *a, const int index) {
 	int i;
 	int y;
