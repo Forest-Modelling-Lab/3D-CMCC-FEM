@@ -571,9 +571,15 @@ void annual_growth_efficiency_mortality ( cell_t *const c, const int height, con
 }
 
 /* Age mortality function from LPJ-GUESS */
-void age_mortality (age_t *const a, species_t *const s)
+void age_mortality (cell_t *const c, const int height, const int dbh, const int age, const int species)
 {
 	int dead_trees;
+
+	age_t *a;
+	species_t *s;
+
+	a = &c->heights[height].dbhs[dbh].ages[age];
+	s = &a->species[species];
 
 	/* Age probability function */
 	s->value[AGEMORT] = (-(3 * log (0.001)) / (s->value[MAXAGE])) * pow (((double)a->value /s->value[MAXAGE]), 2);
@@ -611,6 +617,22 @@ void age_mortality (age_t *const a, species_t *const s)
 		logger(g_log, "**NO-MORTALITY based on Tree Age (LPJ)**\n");
 
 		s->counter[DEAD_STEMS] = 0;
+	}
+
+	/* check if dead_trees > s->counter[N_TREE] */
+	if ( s->counter[N_TREE] < 0 )
+	{
+		s->counter[N_TREE] = 0;
+	}
+
+	/* check if remove tree class */
+	if ( s->counter[N_TREE] == 0 )
+	{
+		if ( ! tree_class_remove(c, height, dbh, age, species) )
+		{
+			logger(g_log, "unable to remove tree class");
+			exit(1);
+		}
 	}
 
 
