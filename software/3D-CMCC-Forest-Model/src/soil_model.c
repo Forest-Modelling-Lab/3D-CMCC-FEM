@@ -41,6 +41,7 @@ int Soil_model_daily (matrix_t *const m, const int cell, const int day, const in
 	logger (g_log, "**\n*******SOIL_MODEL_DAILY*********\n");
 
 	/* soil radiation */
+	logger (g_log, "**SOIL RADIATION**\n");
 
 	/* fraction of light reflected by the soil */
 	Light_refl_sw_rad_soil_frac = soil_albedo;
@@ -74,11 +75,13 @@ int Soil_model_daily (matrix_t *const m, const int cell, const int day, const in
 
 	logger (g_log, "number of soil layers = %d\n", c->s_layers_count);
 
+	//ALESSIOC-ALESSIOR still bugs in imported value for soil layer number
 	/* loop on each cell layers starting from highest to lower */
 	for ( soil_layer = c->s_layers_count -1 ; soil_layer >= 0; -- soil_layer )
 	{
 		logger (g_log, "soil_layer = %d\n", soil_layer);
 
+		//ALESSIOC-ALESSIOR fixme to avoid errors due to worrong value of s_layer_count I putted in first layer
 		if ( soil_layer == c->s_layers_count -1)
 		{
 			/* compute snow melt, snow sublimation */
@@ -86,14 +89,13 @@ int Soil_model_daily (matrix_t *const m, const int cell, const int day, const in
 
 			/* compute soil evaporation */
 			soil_evaporation ( c, meteo_daily );
+
+			/* compute soil respiration */
+			soil_respiration ( c );
+
+			/* compute soil water balance */
+			soil_water_balance ( c, meteo_daily );
 		}
-
-		/* compute soil respiration */
-		soil_respiration ( c );
-
-		/* compute soil water balance */
-		soil_water_balance ( c, meteo_daily );
-
 	}
 
 	/* ok */

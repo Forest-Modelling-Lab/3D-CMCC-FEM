@@ -16,7 +16,7 @@ extern logger_t* g_log;
 
 void snow_melt_subl(cell_t *const c, meteo_daily_t *meteo_daily)
 {
-	//FOLLOWING BIOME APPROACH
+	/* FOLLOWING BIOME APPROACH */
 	/* temperature and radiation snowmelt,
 		from Joseph Coughlan PhD thesis, 1991 */
 
@@ -52,13 +52,14 @@ void snow_melt_subl(cell_t *const c, meteo_daily_t *meteo_daily)
 				/*all snow pack melts*/
 				c->snow_melt = c->snow_pack;
 				logger(g_log, "ALL Snow melt!!\n");
-				logger(g_log, "snow melt %f\n", c->snow_melt);
 			}
 			else
 			{
 				/*snow pack melts partially*/
+
 				logger(g_log, "a fraction of Snow melts!!\n");
 			}
+			logger(g_log, "snow melt %f\n", c->snow_melt);
 		}
 		else
 		{

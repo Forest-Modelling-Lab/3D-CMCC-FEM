@@ -79,6 +79,8 @@ int annual_forest_structure(cell_t* const c)
 	int age;
 	int species;
 
+	int zeta_count = 0;
+
 	height_t *h;
 	dbh_t *d;
 	age_t *a;
@@ -99,39 +101,51 @@ int annual_forest_structure(cell_t* const c)
 
 	assert(! c->t_layers_count);
 
-	c->t_layers_count = 0;
-	c->cell_n_trees = 0;
-	c->cell_cover = 0;
+	for ( height = 0; height < c->heights_count; ++height )
+	{
+		assert( ! c->heights[height].height_z );
+	}
 
 	/* add 1 layer by default */
 	if ( ! layer_add(c) ) return 0;
 
 	/* compute number of annual layers */
-	logger(g_log, "*compute height_z*\n\n");
-	logger(g_log, "*compute number of annual forest layers*\n\n");	
+	/* note: it starts from the lowest height values up to the highest */
+
+	logger(g_log, "*compute height_z*\n");
+
+	qsort(c->heights, c->heights_count, sizeof(height_t), sort_by_heights_asc);
+
+	/* compute zeta counter */
+	for ( height = 0; height < c->heights_count; ++height )
 	{
-		int count = 0;		
+		logger(g_log, "*value %g*\n\n", c->heights[height].value);
 
-		qsort(c->heights, c->heights_count, sizeof(height_t), sort_by_heights_desc);
-		for ( height = 0; height < c->heights_count - 1; ++height ) {
-			assert(! c->heights[height].height_z);
-			if ( (c->heights[height].value - c->heights[height+1].value) > g_settings->tree_layer_limit ) {
-				c->heights[height].height_z = 1;
-				++count;
+		if ( (c->heights[height+1].value - c->heights[height].value) > g_settings->tree_layer_limit )
+		{
+			++zeta_count;
 
-				/* if there's more than one layer create and alloc memory for a new one */
-				if ( ! layer_add(c) ) return 0;
-			}
-		}
-
-		qsort(c->heights, c->heights_count, sizeof(height_t), sort_by_heights_desc);
-
-		for ( height = 0; height < c->heights_count - 1; ++height ) {
-			if ( c->heights[height].height_z ) {
-				c->heights[height].height_z = count--;
-			}
+			/* compute layer number and alloc memory for each one */
+			if ( ! layer_add(c) ) return 0;
 		}
 	}
+	logger(g_log, "*zeta_count %d*\n\n", zeta_count);
+	logger(g_log, "*c->t_layers_count %d*\n\n", c->t_layers_count);
+
+	/*****************************************************************************************/
+
+	/* assign zeta for each height class */
+
+	for ( height = c->heights_count -1 ; height >= 0; --height )
+	{
+		if ( (c->heights[height].value - c->heights[height-1].value) > g_settings->tree_layer_limit )
+		{
+			c->heights[height].height_z = zeta_count;
+			--zeta_count;
+		}
+		logger(g_log, "*value %g z = %d*\n\n", c->heights[height].value, c->heights[height].height_z);
+	}
+
 	logger(g_log, "-Number of height classes = %d cell\n", c->heights_count);
 	logger(g_log, "-Number of layers = %d cell\n\n", c->t_layers_count);
 	logger(g_log,"***********************************\n");

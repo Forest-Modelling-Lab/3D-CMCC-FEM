@@ -19,7 +19,7 @@ TREE_LAYER_LIMIT "1.5"  //define differences among tree heights in meters classe
 SOIL_LAYER "1"  //define soil layer/s to consider
 
 //LIMIT FOR 'GET_LAYER_COVER_MORTALITY'
-MIN_LAYER_COVER "0.0001"
+MIN_LAYER_COVER "0.0001"    //not used, to remove
 MAX_LAYER_COVER "1"
 
 //NATURAL/HUMAN (management)REGENERATION CLASS BIOMASS VALUES

@@ -126,9 +126,16 @@ void reset_monthly_cell_variables(cell_t *const c)
 
 void reset_annual_cell_variables(cell_t *const c)
 {
+	int height;
+	int layer;
+
 	logger(g_log, "...resetting cell level annual variables...\n");
 
 	/* reset cell level variables */
+	c->t_layers_count = 0;
+	c->cell_n_trees = 0;
+	c->cell_cover = 0;
+
 	c->doy = 0.;
 
 	c->annual_gpp = 0.;
@@ -155,6 +162,20 @@ void reset_annual_cell_variables(cell_t *const c)
 	//c->dead_tree = 0;
 	c->annual_soil_evapo = 0.;
 
+	for ( height = c->heights_count -1 ; height >= 0; --height )
+	{
+		c->heights[height].height_z = 0;
+	}
+	//ALESSIOC TO ALESSIOR
+	/*
+	for ( layer = c->t_layers_count; layer >= 0 ; --layer )
+	{
+		c->t_layers[layer].layer_n_height_class = 0;
+		c->t_layers[layer].layer_n_trees = 0;
+		c->t_layers[layer].layer_density = 0.;
+		c->t_layers[layer].layer_cover = 0.;
+	}
+	*/
 }
 void reset_daily_layer_variables(cell_t *const c)
 {

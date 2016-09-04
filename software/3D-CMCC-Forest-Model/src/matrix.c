@@ -1246,42 +1246,6 @@ matrix_t* matrix_create(const char* const filename) {
 		}
 	}
 
-	/* add layer, set z, add layer */
-	/*
-	{
-		int count = 0;
-		for ( cell = 0; cell < m->cells_count; ++cell ) {
-			if ( ! layer_add(&m->cells[cell]) )
-			{
-				matrix_free(m);
-				return NULL;
-			}
-			qsort(m->cells[cell].heights, m->cells[cell].heights_count, sizeof(height_t), sort_by_heights_desc);
-			for ( height = 0; height < m->cells[cell].heights_count - 1; ++height ) {
-				assert(! m->cells[cell].heights[height].height_z);
-				if ( (m->cells[cell].heights[height].value - m->cells[cell].heights[height+1].value) > g_settings->tree_layer_limit ) {
-					m->cells[cell].heights[height].height_z = 1;
-					++count;
-
-					if ( ! layer_add(&m->cells[cell]) )
-					{
-						matrix_free(m);
-						return NULL;
-					}
-				}
-			}
-		}
-		for ( cell = 0; cell < m->cells_count; ++cell ) {
-			qsort(m->cells[cell].heights, m->cells[cell].heights_count, sizeof(height_t), sort_by_heights_desc);
-			for ( height = 0; height < m->cells[cell].heights_count - 1; ++height ) {
-				if ( m->cells[cell].heights[height].height_z ) {
-					m->cells[cell].heights[height].height_z = count--;
-				}
-			}
-		}
-	}
-	 */
-
 	/* compute x and y cells count */
 	if ( ! compute_x_y_cells_count(m) ) {
 		matrix_free(m);
