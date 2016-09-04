@@ -35,7 +35,6 @@ void canopy_radiation_lw_band(cell_t *const c, const int layer, const int height
 	species_t *s;
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
-
 	logger(g_log, "\n**LONG WAVE BAND RADIATION ROUTINE**\n");
 
 	logger(g_log, "-ATMOSPHERE DOWNWARD LONGWAVE RADIATION = %g  (W/m2)\n", meteo_daily->atm_lw_downward_W);

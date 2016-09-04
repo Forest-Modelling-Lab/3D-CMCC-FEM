@@ -7,8 +7,8 @@
 #include "settings.h"
 #include "logger.h"
 
-extern settings_t* g_settings;
-extern logger_t* g_log;
+//extern settings_t* g_settings;
+//extern logger_t* g_log;
 
 
 
