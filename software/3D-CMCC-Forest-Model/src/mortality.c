@@ -366,7 +366,7 @@ void self_thinning ( cell_t *const c, const int layer )
 						s->value[AV_DEAD_BRANCH_MASS_KgC] = (s->value[BRANCH_DEAD_WOOD_C] / (double)s->counter[N_TREE])*1000.0;
 
 						/* mortality */
-						while (c->t_layers[layer].layer_cover > g_settings->max_layer_cover && s->counter[N_TREE] > 0)
+						while (c->t_layers[layer].layer_cover > g_settings->max_layer_cover && s->counter[N_TREE] >= 0)
 						{
 							--s->counter[N_TREE];
 							++deadtree;
@@ -382,8 +382,15 @@ void self_thinning ( cell_t *const c, const int layer )
 
 							if (s->counter[N_TREE] == 0)
 							{
+								/* call remove_tree_class */
+								if ( ! tree_class_remove(c, height, dbh, age, species) )
+								{
+									logger(g_log, "unable to remove tree class");
+									exit(1);
+								}
+
 								/* mortality for the higher height class */
-								while (c->t_layers[layer].layer_cover > g_settings->max_layer_cover && c->heights[height + 1].dbhs[dbh].ages[age].species[species].counter[N_TREE] > 0)
+								while (c->t_layers[layer].layer_cover > g_settings->max_layer_cover && c->heights[height + 1].dbhs[dbh].ages[age].species[species].counter[N_TREE] >= 0)
 								{
 									--c->heights[height + 1].dbhs[dbh].ages[age].species[species].counter[N_TREE];
 									++deadtree;
@@ -395,6 +402,13 @@ void self_thinning ( cell_t *const c, const int layer )
 									/* recompute layer level canopy cover */
 									c->t_layers[layer].layer_cover -=
 											(c->heights[height + 1].dbhs[dbh].ages[age].species[species].value[CROWN_AREA_DBHDC] / g_settings->sizeCell);
+
+									/* call remove_tree_class */
+									if ( ! tree_class_remove(c, height, dbh, age, species) )
+									{
+										logger(g_log, "unable to remove tree class");
+										exit(1);
+									}
 
 								}
 							}
@@ -529,7 +543,8 @@ void daily_growth_efficiency_mortality ( cell_t *const c, const int height, cons
 		s->counter[N_TREE] = 0;
 
 		/* call remove_tree_class */
-		if ( ! tree_class_remove(c, height, dbh, age, species) ) {
+		if ( ! tree_class_remove(c, height, dbh, age, species) )
+		{
 			logger(g_log, "unable to remove tree class");
 			exit(1);
 		}
@@ -547,7 +562,8 @@ void annual_growth_efficiency_mortality ( cell_t *const c, const int height, con
 		s->counter[N_TREE] = 0;
 
 		/* call remove_tree_class */
-		if ( ! tree_class_remove(c, height, dbh, age, species) ) {
+		if ( ! tree_class_remove(c, height, dbh, age, species) )
+		{
 			logger(g_log, "unable to remove tree class");
 			exit(1);
 		}

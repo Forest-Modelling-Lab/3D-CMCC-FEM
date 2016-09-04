@@ -10,7 +10,7 @@
 
 #include "matrix.h"
 
-int tree_class_remove(cell_t *const c, const int height, const int dbh, const int age, const int species);
+//int tree_class_remove(cell_t *const c, const int height, const int dbh, const int age, const int species);
 
 
 #endif /* TREE_CLASS_REMOVE_H_ */

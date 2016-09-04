@@ -471,57 +471,6 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	}
 	logger(g_log, "****************END OF HEIGHT CLASS***************\n");
 
-	/*******************************************************************************************************/
-#if 0
-	//ALESSIOC move to Soil_model_daily
-	/* SOIL POOL */
-
-	/* compute snow melt, snow sublimation */
-	snow_melt_subl ( c, meteo_daily );
-
-	/* compute soil evaporation */
-	soil_evaporation ( c, meteo_daily );
-
-	/* compute soil respiration */
-	soil_respiration ( c );
-
-	/* compute soil water balance */
-	soil_water_balance ( c, meteo_daily );
-
-	/*******************************************************************************************************/
-	//ALESSIOC move to Cell_model_daily
-	/* OVERALL CELL */
-
-	/* compute evapotranspiration */
-	evapotranspiration ( c );
-
-	/* compute latent heat fluxes */
-	latent_heat_flux ( c, meteo_daily );
-
-	/* compute sensible heat fluxes */
-	sensible_heat_flux ( c, meteo_daily );
-
-	/* compute water fluxes */
-	water_fluxes ( c, meteo_daily );
-
-	/*******************************************************************************************************/
-	//ALESSIOC move to Cell_model_daily
-	/* CHECK FOR BALANCE CLOSURE */
-
-	/* CHECK FOR RADIATIVE BALANCE CLOSURE */
-	check_radiation_balance ( c, meteo_daily );
-
-	/* CHECK FOR CARBON BALANCE CLOSURE */
-	check_carbon_balance ( c );
-
-	/* CHECK FOR WATER BALANCE CLOSURE */
-	check_soil_water_balance ( c, meteo_daily );
-#endif
-
-	/*******************************************************************************************************/
-	/*******************************************************************************************************/
-	logger(g_log, "******************END OF CELL*********************\n");
-
 	/* ok */
 	return 1;
 }

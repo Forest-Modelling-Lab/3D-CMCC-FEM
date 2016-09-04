@@ -1040,7 +1040,7 @@ int main(int argc, char *argv[]) {
 						}
 						else
 						{
-							//run for BGC version
+							/* run for BGC version */
 						}
 					}
 					else
@@ -1055,7 +1055,6 @@ int main(int argc, char *argv[]) {
 						//							//	soil_model (matrix, yos, years, month, years_of_simulation);
 						//						}
 					}
-#if 1
 					//ALESSIOC
 					/************************************************************************/
 					if ( !Soil_model_daily(matrix, cell, day, month, year) )
@@ -1080,7 +1079,6 @@ int main(int argc, char *argv[]) {
 					{
 						puts(msg_ok_cell_model);
 					}
-#endif
 					/*************************************************************************/
 
 					// save values for put in output netcdf
