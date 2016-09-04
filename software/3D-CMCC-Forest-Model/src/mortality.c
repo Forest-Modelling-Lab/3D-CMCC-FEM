@@ -327,7 +327,7 @@ void self_thinning ( cell_t *const c, const int layer )
 
 	logger(g_log, "\n\n*****SELF THINNING MORTALITY for layer %d*****\n", layer);
 
-	for ( height = c->heights_count - 1; height >= 0; height-- )
+	for ( height = c->heights_count - 1; height >= 0; --height )
 	{
 		/* first of all sort by descending height */
 		/* model makes die before lower height in each later */

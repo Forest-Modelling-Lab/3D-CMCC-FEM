@@ -69,7 +69,7 @@ void carbon_pool_fraction(cell_t *c)
 	age_t *a;
 	species_t *s;
 
-	for ( height = 0; height < c->heights_count; height++ )
+	for ( height = 0; height < c->heights_count; ++height )
 	{
 		h = &c->heights[height];
 
@@ -77,11 +77,11 @@ void carbon_pool_fraction(cell_t *c)
 		{
 			d = &c->heights[height].dbhs[dbh];
 
-			for ( age = 0; age < d->ages_count; age++ )
+			for ( age = 0; age < d->ages_count; ++age )
 			{
 				a = &c->heights[height].dbhs[dbh].ages[age];
 
-				for ( species = 0; species < a->species_count; species ++)
+				for ( species = 0; species < a->species_count; ++species )
 				{
 					s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 

@@ -22,7 +22,7 @@ void allometry_power_function(cell_t *const c)
 
 	logger(g_log,"\nAllometry Power Function\n");
 
-	for ( height = 0; height < c->heights_count; height++ )
+	for ( height = 0; height < c->heights_count; ++height )
 	{
 		h = &c->heights[height];
 
@@ -30,11 +30,11 @@ void allometry_power_function(cell_t *const c)
 		{
 			d =  &h->dbhs[dbh];
 
-			for ( age = 0; age < d->ages_count; age++ )
+			for ( age = 0; age < d->ages_count; ++age )
 			{
 				a = &d->ages[age];
 
-				for ( species = 0; species < a->species_count; species ++)
+				for ( species = 0; species < a->species_count; ++species )
 				{
 					s = &a->species[species];
 

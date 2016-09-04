@@ -1232,11 +1232,15 @@ matrix_t* matrix_create(const char* const filename) {
 
 	/* fill with species values */
 	for ( cell = 0; cell < m->cells_count; ++cell ) {
-		for (height = 0; height < m->cells[cell].heights_count; ++height) {
-			for (dbh = 0; dbh < m->cells[cell].heights[height].dbhs_count; ++dbh) {
+		for (height = 0; height < m->cells[cell].heights_count; ++height)
+		{
+			for (dbh = 0; dbh < m->cells[cell].heights[height].dbhs_count; ++dbh)
+			{
 				for (age = 0; age < m->cells[cell].heights[height].dbhs[dbh].ages_count; ++age ) {
-					for ( species = 0; species < m->cells[cell].heights[height].dbhs[dbh].ages[age].species_count; ++species ) {
-						if ( ! fill_species_from_file(&m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species]) ) {
+					for ( species = 0; species < m->cells[cell].heights[height].dbhs[dbh].ages[age].species_count; ++species )
+					{
+						if ( ! fill_species_from_file(&m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species]) )
+						{
 							matrix_free(m);
 							return NULL;
 						}
@@ -1380,7 +1384,7 @@ void forest_summary(const matrix_t* const m, const int cell, const int day, cons
 			m->cells[cell].heights_count);
 
 	/* loop on each height */
-	for ( height = 0; height < m->cells[cell].heights_count; height++ )
+	for ( height = 0; height < m->cells[cell].heights_count; ++height )
 	{
 		logger(g_log, "**(%d)\n", height + 1);
 		logger(g_log, "-- height n.%02d is %g and has %d dbh classes \n",
@@ -1396,7 +1400,7 @@ void forest_summary(const matrix_t* const m, const int cell, const int day, cons
 					m->cells[cell].heights[height].dbhs[dbh].ages_count);
 
 			/* loop on each age */
-			for ( age = 0; age < m->cells[cell].heights[height].dbhs[dbh].ages_count; age++ )
+			for ( age = 0; age < m->cells[cell].heights[height].dbhs[dbh].ages_count; ++age )
 			{
 				logger(g_log, "**(%d)\n", age + 1);
 				logger(g_log, "---- age n.%02d is %d yrs and has %d species\n",
@@ -1405,7 +1409,7 @@ void forest_summary(const matrix_t* const m, const int cell, const int day, cons
 						m->cells[cell].heights[height].dbhs[dbh].ages[age].species_count);
 
 				/* loop on each species */
-				for ( species = 0; species < m->cells[cell].heights[height].dbhs[dbh].ages[age].species_count; species ++)
+				for ( species = 0; species < m->cells[cell].heights[height].dbhs[dbh].ages[age].species_count; ++species )
 				{
 					logger(g_log, "----- species is %s\n",
 							m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species].name);
