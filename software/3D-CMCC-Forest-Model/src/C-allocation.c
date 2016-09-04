@@ -61,22 +61,34 @@ void carbon_allocation(species_t *const s)
 	logger(g_log, "Litter Biomass (Wlitter)= %g tC/area\n", s->value[LITTER_C]);
 
 	/* live-dead wood biomass */
+	//test
+	/*
 	s->value[STEM_LIVE_WOOD_C] += (s->value[C_TO_STEM] * s->value[LIVE_TOTAL_WOOD_FRAC]);
 	s->value[STEM_LIVE_WOOD_C] -= s->value[C_STEM_LIVEWOOD_TO_DEADWOOD];
+	*/
+	s->value[STEM_LIVE_WOOD_C] = s->value[STEM_C] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
 	logger(g_log, "Live Stem Biomass (Wsl) = %g tC/area\n", s->value[STEM_LIVE_WOOD_C]);
 
 	s->value[STEM_DEAD_WOOD_C] = s->value[STEM_C] - s->value[STEM_LIVE_WOOD_C];
 	logger(g_log, "Dead Stem Biomass (Wsd) = %g tC/area\n", s->value[STEM_DEAD_WOOD_C]);
 
+	//test
+	/*
 	s->value[COARSE_ROOT_LIVE_WOOD_C] += (s->value[C_TO_COARSEROOT] * s->value[LIVE_TOTAL_WOOD_FRAC]);
 	s->value[COARSE_ROOT_LIVE_WOOD_C] -= s->value[C_COARSEROOT_LIVE_WOOD_TO_DEADWOOD];
+	*/
+	s->value[COARSE_ROOT_LIVE_WOOD_C] = s->value[COARSE_ROOT_C] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
 	logger(g_log, "Live Coarse Biomass (Wcrl) = %g tC/area\n", s->value[COARSE_ROOT_LIVE_WOOD_C]);
 
 	s->value[COARSE_ROOT_DEAD_WOOD_C] = s->value[COARSE_ROOT_C] - s->value[COARSE_ROOT_LIVE_WOOD_C];
 	logger(g_log, "Dead Coarse Biomass (Wcrd) = %g tC/area\n", s->value[COARSE_ROOT_DEAD_WOOD_C]);
 
+	//test
+	/*
 	s->value[BRANCH_LIVE_WOOD_C] += (s->value[C_TO_BRANCH] * s->value[LIVE_TOTAL_WOOD_FRAC]);
 	s->value[BRANCH_LIVE_WOOD_C] -= s->value[C_BRANCH_LIVE_WOOD_TO_DEAD_WOOD];
+	*/
+	s->value[BRANCH_LIVE_WOOD_C] = s->value[BRANCH_C]* s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
 	logger(g_log, "Live Stem Branch Biomass (Wbbl) = %g tC/area\n", s->value[BRANCH_LIVE_WOOD_C]);
 
 	s->value[BRANCH_DEAD_WOOD_C] = s->value[BRANCH_C] - s->value[BRANCH_LIVE_WOOD_C];

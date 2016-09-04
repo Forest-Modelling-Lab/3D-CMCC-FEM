@@ -24,6 +24,7 @@ void turnover(species_t *const s)
 	/*following BIOME_BGC turnover occurs only during growing season */
 	if ( s->counter[VEG_UNVEG] == 1 )
 	{
+		//test useless if allocation.c uses * s->value[EFF_LIVE_TOTAL_WOOD_FRAC] to compute live wood
 		/* daily stem turnover live to dead wood*/
 		logger(g_log, "\n****Stem turnover****\n");
 
