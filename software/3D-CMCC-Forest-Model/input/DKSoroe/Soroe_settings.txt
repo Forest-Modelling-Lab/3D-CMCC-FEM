@@ -2,8 +2,8 @@ VERSION "f"     //Must be 'f' for FEM version or 'b', for BGC version for FOREST
 SPATIAL "u"     //Must be 's' or 'u', spatial or unspatial
 TIME "d"        //Must be 'm' or 'd', monthly or daily
 SYMMETRIC_WATER_COMPETITION "y"	//Must be 'y' or 'n',for symmetric or asymmetric water competition
-CO2_mod "off"    //Must be  'on' or 'off'
-CO2_fixed "on"   //Must be 'on' or 'off'
+CO2_mod "on"    //Must be  'on' or 'off'
+CO2_fixed "off"   //Must be 'on' or 'off'
 Ndep_fixed "on"   //Must be 'on' or 'off'
 management "off"   //Must be 'on' or 'off'
 Progn_Aut_Resp "on" //Prognostic autotrophic respiration, Must be 'on' or 'off', if "off" Y values are used

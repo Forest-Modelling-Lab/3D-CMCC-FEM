@@ -111,8 +111,8 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 	/* apply all multipliers to the maximum stomatal conductance */
 	/* differently from BIOME we use F_T that takes into account not only minimum temperature effects */
 	/* differently from BIOME we use also F_AGE */
-	m_final_sun = s->value[F_LIGHT_SUN] * s->value[F_SW] /** s->value[F_CO2]*/ * s->value[F_T] * s->value[F_VPD] * s->value[F_AGE];
-	m_final_shade = s->value[F_LIGHT_SHADE] * s->value[F_SW] /** s->value[F_CO2]*/ * s->value[F_T] * s->value[F_VPD] * s->value[F_AGE];
+	m_final_sun = s->value[F_LIGHT_SUN] * s->value[F_SW] * s->value[F_CO2] * s->value[F_T] * s->value[F_VPD] * s->value[F_AGE];
+	m_final_shade = s->value[F_LIGHT_SHADE] * s->value[F_SW] * s->value[F_CO2] * s->value[F_T] * s->value[F_VPD] * s->value[F_AGE];
 
 	if (m_final_sun < 0.00000001) m_final_sun = 0.00000001;
 	if (m_final_shade < 0.00000001) m_final_shade = 0.00000001;

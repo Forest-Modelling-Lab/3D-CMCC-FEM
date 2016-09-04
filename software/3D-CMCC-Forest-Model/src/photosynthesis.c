@@ -29,7 +29,6 @@ void photosynthesis(cell_t *const c, const int layer, const int height, const in
 
 	//note: photosynthesis in controlled by transpiration through the F_VPD modifier that also controls transpiration */
 
-	//test without F_CO2
 	if (s->value[ALPHA] != NO_DATA)
 	{
 		/* compute effective light use efficiency */
