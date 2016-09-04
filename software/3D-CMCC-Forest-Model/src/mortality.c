@@ -14,6 +14,7 @@
 #include "logger.h"
 #include "mortality.h"
 #include "treemodel_daily.h"
+#include "remove_tree_class.h"
 
 extern settings_t* g_settings;
 extern logger_t* g_log;
