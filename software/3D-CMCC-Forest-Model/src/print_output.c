@@ -684,7 +684,7 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 
 		logger(g_annual_log, "*model setting*\n");
 		logger(g_annual_log, "*CO2_mod = %s\n", g_settings->CO2_mod);
-		logger(g_annual_log, "*fixed = %s\n", g_settings->CO2_fixed);
+		logger(g_annual_log, "*CO2_fixed = %s\n", g_settings->CO2_fixed);
 		logger(g_annual_log, "*Management = %s\n", g_settings->management);
 	}
 }

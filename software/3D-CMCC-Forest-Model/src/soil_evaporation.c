@@ -187,6 +187,7 @@ void Soil_evaporation_old(cell_t *const c, const meteo_daily_t *const meteo_dail
 		logger(g_log, "Soil moisture = %g %\n", c->soil_moist_ratio );
 
 		/*following Gerten et al., 2004 soil evaporation occurs at the simulated cell not covered by vegetation (e.g. 1-cc)*/
+		//note: it shouldn't takes into account CC
 		if( cc >= 1 )
 		{
 			cc = 1;
