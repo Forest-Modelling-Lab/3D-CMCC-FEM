@@ -21,8 +21,8 @@ extern logger_t* g_log;
 void maintenance_respiration(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, const meteo_daily_t *const meteo_daily)
 {
 	double t1;
-	double q10 = 2.0;
-	double mrpern = 0.218;     /* linear N relationship with MR being kgC/kgN/day, 0.218 from Ryan 1991, 0.1584 Campioli et al., 2013 and from Dufrene et al 2005 */
+	double q10 = 2.0;          /* 2.2 from Schwalm & Ek, 2004; Kimball et al., 1997 */
+	double mrpern = 0.218;     /* inear N relationship with MR being kgC/kgN/day, 0.218 from Ryan 1991, 0.1584 Campioli et al., 2013 and from Dufrene et al 2005 */
 	double exponent_tday;
 	double exponent_tnight;
 	double exponent_tavg;
