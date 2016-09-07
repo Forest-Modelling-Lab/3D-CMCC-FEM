@@ -33,7 +33,7 @@ we can let our user community know when there are updates. We will appreciate yo
 Referencing 3D-CMCC-FEM:
 If you use 3D-CMCC-FEM in your research, we request that you include the following acknowledgement in the relevant
 manuscripts:
-"3D-CMCC-FEM, Version 4 was provided by Alessio Collalti, euroMediterranean Center for Climate Changes (CMCC) and University of Tuscia Viterbo,"
+"3D-CMCC-FEM, Version 5.x.x was provided by Alessio Collalti, euroMediterranean Center for Climate Changes (CMCC) and University of Tuscia Viterbo,"
 Please also reference the following citation as the most recent and complete description of the current model version:
 
 "A process-based model to simulate growth and dynamics in forests with complex structure: evaluation and use of 3D-CMCC Forest Ecosystem Model
@@ -50,7 +50,7 @@ If you have made any significant modifications to the code, please mention them 
 This User’s Guide is the only documentation released with 3D-CMCC-FEM. The code itself contains extensive internal
 documentation, and users with specific questions about the algorithms used to estimate particular processes should read
 the comments in the appropriate source code files. The file treemodel.c contains references to all the core science routines,
-and is a good starting point for this kind of inquiry. The files matrix.c and types.h define the data structures that are used to
+and is a good starting point for this kind of inquiry. The files matrix.c defines the data structures that are used to
 pass information between the process modules, and includes both a short text description and the units for each internal
 variable. If you have questions about the code, appropriate model applications, possible programming errors, etc.,
 please read this entire guide first, then feel free to contact:
@@ -62,7 +62,8 @@ CODE CHARACTERISTIC
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 3D-CMCC-FEM is primarily developed on UNIX-Linux, Ubuntu 1x.x with Eclipse IDE Platforms and is compiled using GNU GCC 4.7.2
 
-IMPORTANT: BE SURE TO EXECUTE 3D-CMCC FEM ON A LINUX MACHINE WITH ARCHITECTURE X86_64 (64 bit)
+IMPORTANT: BE SURE TO EXECUTE 3D-CMCC FEM ON A LINUX MACHINE WITH ARCHITECTURE X86_64 (64 bit), otherwise you firstly need to
+rebuild code to obtain the object files needed for runs.
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Usage
@@ -96,8 +97,8 @@ the model runs daily starting from the row 0,0 -> 0,n and then starts to process
 SETTING MODEL:
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 The file "settings.txt" permits to set the model run, choosing:
--its cell resolution and other parameters to run the model.
-
+-its cell resolution 
+-other parameters to run the model.
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -105,7 +106,7 @@ The file "settings.txt" permits to set the model run, choosing:
 INPUT FILES: OVERVIEW
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 INITIALIZATION DATA
-The first required input file is called the "input.txt". It provides general information about the stand site conditions.
+The first required input file is called the "input.txt". It provides information about the stand conditions.
 Example for a cell resolution of 10x10 meters cell X = 0, Y = 0:
 
 x,y,Age,Species,Management,N,Stool,AvDBH,Height,Wf,Wrc,Wrf,Ws,Wres,Lai, Perc
@@ -132,29 +133,31 @@ The text file must be created following this logic architecture
 ---- Stool = number of stool per area (only if Management is setted to C)
 ---- AvDBH = average diameter at breast height in cm for that class
 ---- Height = tree height in meters for that class
----- Wf = foliage biomass in tDM per area for that class (only for Evergreen)
+---- Wf = foliage biomass in tDM per area for that class (mandatory only for evergreen if Lai = 0)
 ---- Wrc = coarse root biomass in tDM per area for that class
 ---- Wrf = fine root biomass in tDM per area for that class (it can be setted with 0)
 ---- Ws = stem biomass in tDM per area for that class (which comprises branch and bark fraction)
 ---- Wres = non structural carbon in tDM per area for that class
----- Lai = leaf area index (m^2m^-2), mandatory only for evergreen
+---- Lai = leaf area index (m^2m^-2), (mandatory only for evergreen if Wf = 0)
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 METEOROLOGICAL DATA
 The second required input file is the meteorological data file named using the year of simulation (optionally), 
 (e.g. "2007_2010.txt") containing the daily meteorological data information for that years.
-Years of simulation depends on the number of the met data file passed as argument. But it can be used also a multi-year file in which have to be included as a first
-column the value of the year. Some met data are mandatory: temperature, precipitation, humidity, radiation, and number of days of the month at the simulation site.
+Years of simulation depends on the number years included in the met file. 
+Some met data are mandatory: temperature, precipitation, humidity, radiation, and number of days of the month at the simulation site.
 Others are optional: Soil Temperature (Ts) and Soil Water Content (SWC).
 If the model runs in "spatial version" daily or monthly LAI values are mandatory otherwise they are not considered in processes.
 
 Each variable must be separated by one tab character.
 
+Model considers leap years, so 29th of February ahs to be included
+
 example for year 2007-200x in daily/unspatial version
 
-Year    Month   n_days  Rg_f    Ta_f    Tmax    Tmin    VPD_f   Ts_f    Precip  SWC     LAI 
-2007    1       1       5.1     -9999   13.1    7.1     0.2     7.8     1       -9999   0
-2007    1       2       6.1     -9999   10.4    5.8     0.2     6.3     0.2     0.27    0
+Year	Month	n_days	Rg_f	Ta_f	Tmax	Tmin	VPD_f	Ts_f	Precip	SWC	LAI 
+2007	1       1       5.1     -9999   13.1    7.1     0.2     7.8     1       -9999   0
+2007	1       2       6.1     -9999   10.4    5.8     0.2     6.3     0.2     0.27    0
 2007    1       3       6.1     -9999   9.9     3.1     0.2     3.3     0       0.39    0
 2007    1       4       6.1     -9999   10      1.9     0.2     0.5     0       0.2     0
 ...
@@ -169,8 +172,8 @@ if you don't have optional data set value as -9999
 -Tmin = Daily Minimum temperature (°C)
 -VPD_f or RH_f = Daily Vapour Pressure Deficit (mbar-hPa) or Relative humidity (%)
 -Ts_f = Daily Soil temperature (°C)
--Precip = Cumulated daily precipitation (mm day/month^-1)
--SWC = Soil water content (mm day/month^-1)
+-Precip = Cumulated daily precipitation (mm day^-1)
+-SWC = Soil water content (mm day^-1)
 -LAI = Leaf area Index (m^2 m^-2) (Only in spatial version)
 -WS_f = Windspeed (m/sec)
 
@@ -189,9 +192,9 @@ Comments are allowed in the parameter file. Comments can appear almost anywhere,
 '//', at the end of the line. Example parameter files are provided. Parameter definition and its value must be separated by one tab character.
 
 example:
-ALPHA   0.055		//   // Canopy quantum efficiency (molC/molPAR)0.75
-EPSILONgCPAR   0 // Light Use Efficiency  (gC/molPAR)(used if ALPHA is not available) 
-K	0.60		//0.54 Extinction coefficient for absorption of PAR by canopy 
+ALPHA          0.055	 // Canopy quantum efficiency (molC/molPAR)
+EPSILONgCPAR   0         // Light Use Efficiency  (gC/molPAR)(used if ALPHA is not available) 
+K	           0.60		 // Extinction coefficient for absorption of PAR by canopy 
 .....
 .....
 
@@ -206,6 +209,16 @@ Comments are allowed in the parameter file. Comments can appear almost anywhere,
 In general, the format of parameters file is one parameter per line, with the parameter name being enclosed in double quotes, with a 
 tab character seperating the parameter name and its value.
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+TOPO PARAMETRIZATION
+The fifth required input file is "topo.txt". It contains information about topography of the test site.
+
+Comments are allowed in the parameter file. Comments can appear almost anywhere, must begin with two forward slash characters 
+'//', at the end of the line. Example parameter files are provided.
+
+In general, the format of parameters file is one parameter per line, with the parameter name being enclosed in double quotes, with a 
+tab character seperating the parameter name and its value.
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 
 IMPORTANT: If any required parameter is left unset by all files an error will be written and the program terminates.
 
@@ -216,14 +229,13 @@ For each simulation the Model creates or rewrites into the output folder a file 
 In this folder 4 other subfolders based on time scale should created.
 These files contain every result for debug (if necessary) daily, monthly and annual simulations.
 It is also useful to check which model functions have been used. 
-These results can be obtained at stand level or for each type of class level (layer, age or diametric class)
+These results can be obtained at stand level or for each type of class level (layer, dbh, age or species class)
 On Unix like platforms, if you need to extrapolate a variable it is advised to use the "grep" tool.
 E.g. open a terminal into the output folder and for the variable NPP type:
 "cat output.txt | grep 'Stand NPP' " if you want to see grep output into terminal;
 "cat output.txt | grep 'Stand NPP' > NPP.txt" if you want to redirect grep output into an NPP file inside the output folder
 IMPORTANT: be sure to use the correct declaration of the output as grep parameter.
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
 
 -ECLIPSE-
 
@@ -263,7 +275,6 @@ FOR COLOR THEMES HERE http://eclipse-color-theme.github.com/update
 
 FOR NETCDF FILE YOU NEED TO ADD LIBRARIES within eclipse THROUGH:
 Project->Properties->C/C++ Build->Settings->Cross G++ Linker->Libraries-> in Libraries (-l) add "netcdf"->OK
-
 
 to prevent error from netcdf.h, open terminal: 
 $ sudo apt-get install netcdf-bin
