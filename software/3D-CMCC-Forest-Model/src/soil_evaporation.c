@@ -71,7 +71,7 @@ void soil_evaporation(cell_t *const c, const meteo_daily_t *const meteo_daily)
 			logger(g_log,"rain to soil > pot soil evapo\n");
 
 			/* reset days-since-rain parameter */
-			c->days_since_rain = 0.0;
+			c->days_since_rain = 0;
 
 			/* soil evaporation proceeds at potential rate */
 			c->daily_soil_evapo = 0.6 * pot_soil_evap;

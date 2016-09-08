@@ -15,7 +15,7 @@ void reset_daily_cell_variables(cell_t *const c)
 	logger(g_log, "...resetting cell level daily variables...\n");
 
 	c->cell_cover = 0.;
-	c->cell_n_trees = 0.;
+	c->cell_n_trees = 0;
 
 	/* reset daily radiative variables */
 	//c->par = 0.;
@@ -95,7 +95,7 @@ void reset_monthly_cell_variables(cell_t *const c)
 	logger(g_log, "...resetting cell level monthly variables...\n");
 
 	/* it must be resetted also monthly since monthly changes */
-	c->cell_n_trees = 0.;
+	c->cell_n_trees = 0;
 
 	/*reset cell level variables*/
 	c->monthly_gpp = 0.;
@@ -127,7 +127,6 @@ void reset_monthly_cell_variables(cell_t *const c)
 void reset_annual_cell_variables(cell_t *const c)
 {
 	int height;
-	int layer;
 
 	logger(g_log, "...resetting cell level annual variables...\n");
 
@@ -141,7 +140,7 @@ void reset_annual_cell_variables(cell_t *const c)
 	c->cell_n_trees = 0;
 	c->cell_cover = 0;
 
-	c->doy = 0.;
+	c->doy = 0;
 
 	c->annual_gpp = 0.;
 	c->annual_npp_gC = 0.;

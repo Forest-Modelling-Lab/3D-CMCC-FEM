@@ -88,6 +88,7 @@ char 	*g_sz_program_path = NULL
 		, *g_sz_soil_output_filename = NULL
 
 		, *g_sz_settings_file =	NULL
+		, *g_sz_co2_conc_file = NULL
 		, *g_sz_output_vars_file = NULL
 		;
 
@@ -145,6 +146,7 @@ static const char msg_soil_file[]				=	"soil file = %s\n";
 static const char msg_topo_file[]				=	"topo file = %s\n";
 static const char msg_met_path[]				=	"met path = %s\n";
 static const char msg_settings_path[]			=	"settings path = %s\n";
+static const char msg_co2_conc_file[]			=	"co2 conc file path = %s\n";
 static const char msg_debug_output_file[]		=	"debug output file path = %s\n";
 static const char msg_daily_output_file[]		=	"daily output file path = %s\n";
 static const char msg_monthly_output_file[]		=	"monthly output file path = %s\n";
@@ -177,7 +179,8 @@ static const char msg_usage[]					=	"\nusage:\n"
 		"    -s soil filename stored into input directory (i.e.: -s soil.txt or soil.nc)\n"
 		"    -t topo filename stored into input directory (i.e.: -t topo.txt or topo.nc)\n"
 		"    -c settings filename stored into input directory (i.e.: -c settings.txt)\n"
-		"    -r output vars list\t(i.e.: -r output_vars.lst)\n"
+		"    -k co2 concentration file (i.e.: -k co2_conc.txt)\n"
+		"    -r output vars list (i.e.: -r output_vars.lst)\n"
 		"  optional options:\n"
 		"    -h print this help\n"
 		;
@@ -193,6 +196,7 @@ static const char err_unable_to_register_atexit[] = "unable to register clean-up
 
 static void clean_up(void) {
 	if ( g_sz_output_vars_file ) free(g_sz_output_vars_file);
+	if ( g_sz_co2_conc_file ) free(g_sz_co2_conc_file);
 	if ( g_sz_settings_file ) free(g_sz_settings_file);
 	if ( g_sz_debug_output_filename ) free(g_sz_debug_output_filename);
 	if ( g_sz_daily_output_filename ) free(g_sz_daily_output_filename);
@@ -314,10 +318,12 @@ static int log_start(const char* const sitename) {
 	strcat(buffer, ".txt");
 
 	/* absolute path ? */
-	g_log = logger_new("%s%s", g_sz_debug_output_filename, buffer);
-	if ( ! g_log ) {
-		puts("Unable to create log!");
-		return 0;
+	if ( g_sz_debug_output_filename ) {
+		g_log = logger_new("%s%s", g_sz_debug_output_filename, buffer);
+		if ( ! g_log ) {
+			puts("Unable to create log!");
+			return 0;
+		}
 	}
 
 	g_daily_log = logger_new("%s%s", g_sz_daily_output_filename, buffer);
@@ -351,15 +357,20 @@ static int log_start(const char* const sitename) {
 	logger(g_log, sz_launched, netcdf_get_version(), get_datetime());
 
 	/* show paths */
-	if ( g_sz_input_path )
-		logger(g_log,"\nFILE PATHS\n");
-	logger(g_log, msg_input_path, g_sz_input_path);
+	logger(g_log,"\nFILE PATHS\n");
+	if ( g_sz_input_path )		
+		logger(g_log, msg_input_path, g_sz_input_path);
 	logger(g_log, msg_parameterization_path, g_sz_parameterization_path);
 	logger(g_log, msg_soil_file, g_sz_soil_file);
 	logger(g_log, msg_topo_file, g_sz_topo_file);
 	logger(g_log, msg_met_path, g_sz_input_met_file);
+
+	if ( g_sz_co2_conc_file ) 
+		logger(g_log, msg_co2_conc_file, g_sz_co2_conc_file);
+
 	logger(g_log, msg_settings_path, g_sz_settings_file);
-	logger(g_log, msg_debug_output_file, g_sz_debug_output_filename);
+	if ( g_sz_debug_output_filename ) 
+		logger(g_log, msg_debug_output_file, g_sz_debug_output_filename);
 	logger(g_log, msg_daily_output_file, g_sz_daily_output_filename);
 	logger(g_log, msg_monthly_output_file, g_sz_monthly_output_filename);
 	logger(g_log, msg_annual_output_file, g_sz_yearly_output_filename);
@@ -443,170 +454,182 @@ static int parse_args(int argc, char *argv[]) {
 		}
 
 		switch ( argv[i][1] ) {
-		case 'i': /* folder where input files are stored */
-			if ( ! argv[i+1] ) {
-				puts("input path not specified!");
-				goto err;
-			}
-			g_sz_input_path = path_copy(argv[i+1]);
-			if ( ! g_sz_input_path ) {
-				puts(sz_err_out_of_memory);
-				goto err;
-			}
+			case 'i': /* folder where input files are stored */
+				if ( ! argv[i+1] ) {
+					puts("input path not specified!");
+					goto err;
+				}
+				g_sz_input_path = path_copy(argv[i+1]);
+				if ( ! g_sz_input_path ) {
+					puts(sz_err_out_of_memory);
+					goto err;
+				}
 			break;
 
-		case 'p': /* folder where parameterization files are stored */
-			if ( ! argv[i+1] ) {
-				puts("parameterization path not specified!");
-				goto err;
-			}
-			g_sz_parameterization_path = path_copy(argv[i+1]);
-			if ( ! g_sz_parameterization_path ) {
-				puts(sz_err_out_of_memory);
-				goto err;
-			}
+			case 'p': /* folder where parameterization files are stored */
+				if ( ! argv[i+1] ) {
+					puts("parameterization path not specified!");
+					goto err;
+				}
+				g_sz_parameterization_path = path_copy(argv[i+1]);
+				if ( ! g_sz_parameterization_path ) {
+					puts(sz_err_out_of_memory);
+					goto err;
+				}
 			break;
 
-		case 'o': /* debug file path */
-			if ( ! argv[i+1] ) {
-				puts("debug file path not specified!");
-				goto err;
-			}
-			g_sz_debug_output_filename = string_copy(argv[i+1]);
-			if ( ! g_sz_debug_output_filename ) {
-				puts(sz_err_out_of_memory);
-				goto err;
-			}
+			case 'o': /* debug file path */
+				if ( ! argv[i+1] ) {
+					puts("debug file path not specified!");
+					goto err;
+				}
+				g_sz_debug_output_filename = string_copy(argv[i+1]);
+				if ( ! g_sz_debug_output_filename ) {
+					puts(sz_err_out_of_memory);
+					goto err;
+				}
 			break;
 
-		case 'b': /* daily file path */
-			if ( ! argv[i+1] ) {
-				puts("daily file not specified!");
-				goto err;
-			}
-			g_sz_daily_output_filename = string_copy(argv[i+1]);
-			if( ! g_sz_daily_output_filename ) {
-				puts(sz_err_out_of_memory);
-				goto err;
-			}
+			case 'b': /* daily file path */
+				if ( ! argv[i+1] ) {
+					puts("daily file not specified!");
+					goto err;
+				}
+				g_sz_daily_output_filename = string_copy(argv[i+1]);
+				if( ! g_sz_daily_output_filename ) {
+					puts(sz_err_out_of_memory);
+					goto err;
+				}
 			break;
 
-		case 'f': /* monthly file path */
-			if ( ! argv[i+1] ) {
-				puts("monthly file not specified!");
-				goto err;
-			}
-			g_sz_monthly_output_filename = string_copy(argv[i+1]);
-			if( ! g_sz_monthly_output_filename ) {
-				puts(sz_err_out_of_memory);
-				goto err;
-			}
+			case 'f': /* monthly file path */
+				if ( ! argv[i+1] ) {
+					puts("monthly file not specified!");
+					goto err;
+				}
+				g_sz_monthly_output_filename = string_copy(argv[i+1]);
+				if( ! g_sz_monthly_output_filename ) {
+					puts(sz_err_out_of_memory);
+					goto err;
+				}
 			break;
 
-		case 'e': /* yearly file path */
-			if ( ! argv[i+1] ) {
-				puts("annual file not specified!");
-				goto err;
-			}
-			g_sz_yearly_output_filename = string_copy(argv[i+1]);
-			if( ! g_sz_yearly_output_filename ) {
-				puts(sz_err_out_of_memory);
-				goto err;
-			}
+			case 'e': /* yearly file path */
+				if ( ! argv[i+1] ) {
+					puts("annual file not specified!");
+					goto err;
+				}
+				g_sz_yearly_output_filename = string_copy(argv[i+1]);
+				if( ! g_sz_yearly_output_filename ) {
+					puts(sz_err_out_of_memory);
+					goto err;
+				}
 			break;
 
-		case 'n': /* soil file path */
-			if ( ! argv[i+1] ) {
-				puts("soil file not specified!");
-				goto err;
-			}
-			g_sz_soil_output_filename = string_copy(argv[i+1]);
-			if( ! g_sz_soil_output_filename ) {
-				puts(sz_err_out_of_memory);
-				goto err;
-			}
+			case 'n': /* soil file path */
+				if ( ! argv[i+1] ) {
+					puts("soil file not specified!");
+					goto err;
+				}
+				g_sz_soil_output_filename = string_copy(argv[i+1]);
+				if( ! g_sz_soil_output_filename ) {
+					puts(sz_err_out_of_memory);
+					goto err;
+				}
 			break;
 
-		case 'd': /* dataset file path */
-			if ( ! argv[i+1] ) {
-				puts("dataset file not specified!");
-				goto err;
-			}
-			g_sz_dataset_file = string_copy(argv[i+1]);
-			if( ! g_sz_dataset_file ) {
-				puts(sz_err_out_of_memory);
-				goto err;
-			}
+			case 'd': /* dataset file path */
+				if ( ! argv[i+1] ) {
+					puts("dataset file not specified!");
+					goto err;
+				}
+				g_sz_dataset_file = string_copy(argv[i+1]);
+				if( ! g_sz_dataset_file ) {
+					puts(sz_err_out_of_memory);
+					goto err;
+				}
 			break;
 
-		case 'm': /* met filename */
-			if ( ! argv[i+1] ) {
-				puts("met file not specified!");
-				goto err;
-			}
-			g_sz_input_met_file = string_copy(argv[i+1]);
-			if ( ! g_sz_input_met_file ) {
-				puts(sz_err_out_of_memory);
-				goto err;
-			}
+			case 'm': /* met filename */
+				if ( ! argv[i+1] ) {
+					puts("met file not specified!");
+					goto err;
+				}
+				g_sz_input_met_file = string_copy(argv[i+1]);
+				if ( ! g_sz_input_met_file ) {
+					puts(sz_err_out_of_memory);
+					goto err;
+				}
 			break;
 
-		case 's': /*soil file */
-			if ( ! argv[i+1] ) {
-				puts("soil file not specified!");
-				goto err;
-			}
-			g_sz_soil_file = string_copy(argv[i+1]);
-			if ( ! g_sz_soil_file ) {
-				puts(sz_err_out_of_memory);
-				goto err;
-			}
+			case 's': /*soil file */
+				if ( ! argv[i+1] ) {
+					puts("soil file not specified!");
+					goto err;
+				}
+				g_sz_soil_file = string_copy(argv[i+1]);
+				if ( ! g_sz_soil_file ) {
+					puts(sz_err_out_of_memory);
+					goto err;
+				}
 			break;
 
-		case 't': /* topo file */
-			if ( ! argv[i+1] ) {
-				puts("topo file not specified!");
-				goto err;
-			}
-			g_sz_topo_file = string_copy(argv[i+1]);
-			if( ! g_sz_topo_file ) {
-				puts(sz_err_out_of_memory);
-				goto err;
-			}
+			case 't': /* topo file */
+				if ( ! argv[i+1] ) {
+					puts("topo file not specified!");
+					goto err;
+				}
+				g_sz_topo_file = string_copy(argv[i+1]);
+				if( ! g_sz_topo_file ) {
+					puts(sz_err_out_of_memory);
+					goto err;
+				}
+				break;
+
+			case 'c': /* settings file */
+				if ( ! argv[i+1] ) {
+					puts("settings file not specified!");
+					goto err;
+				}
+				g_sz_settings_file = string_copy(argv[i+1]);
+				if( ! g_sz_settings_file ) {
+					puts(sz_err_out_of_memory);
+					goto err;
+				}
 			break;
 
-		case 'c': /* settings file */
-			if ( ! argv[i+1] ) {
-				puts("settings file not specified!");
-				goto err;
-			}
-			g_sz_settings_file = string_copy(argv[i+1]);
-			if( ! g_sz_settings_file ) {
-				puts(sz_err_out_of_memory);
-				goto err;
-			}
+			case 'k': /* settings file */
+				if ( ! argv[i+1] ) {
+					puts("co2 conc file not specified!");
+					goto err;
+				}
+				g_sz_co2_conc_file = string_copy(argv[i+1]);
+				if( ! g_sz_co2_conc_file ) {
+					puts(sz_err_out_of_memory);
+					goto err;
+				}
 			break;
 
-		case 'r': /* output filename */
-			if ( ! argv[i+1] ) {
-				puts("output path not specified!");
-				goto err;
-			}
-			g_sz_output_vars_file = string_copy(argv[i+1]);
-			if( ! g_sz_output_vars_file ) {
-				puts(sz_err_out_of_memory);
-				goto err;
-			}
+			case 'r': /* output filename */
+				if ( ! argv[i+1] ) {
+					puts("output path not specified!");
+					goto err;
+				}
+				g_sz_output_vars_file = string_copy(argv[i+1]);
+				if( ! g_sz_output_vars_file ) {
+					puts(sz_err_out_of_memory);
+					goto err;
+				}
 			break;
 
-		case 'h': /* show help */
-			goto err_show_usage;
+			case 'h': /* show help */
+				goto err_show_usage;
 			break;
 
-		default:
-			printf("invalid option (%s)!\n", argv[i]);
-			goto err_show_usage;
-		}
+			default:
+				printf("invalid option (%s)!\n", argv[i]);
+				goto err_show_usage;
+			}
 	}
 
 	/* check that each mandatory parameter has been used */
@@ -625,10 +648,12 @@ static int parse_args(int argc, char *argv[]) {
 		goto err_show_usage;
 	}
 
+	/*
 	if ( ! g_sz_debug_output_filename ) {
 		puts("output filename option is missing!");
 		goto err_show_usage;
 	}
+	*/
 
 	if ( ! g_sz_monthly_output_filename ) {
 		puts("monthly output filename option is missing!");
@@ -1310,7 +1335,7 @@ int main(int argc, char *argv[]) {
 	if ( matrix ) matrix_free(matrix);
 
 	free(g_sz_input_met_file); g_sz_input_met_file = NULL;
-	free(g_sz_debug_output_filename); g_sz_debug_output_filename = NULL;
+	if ( g_sz_debug_output_filename) { free(g_sz_debug_output_filename); g_sz_debug_output_filename = NULL; }
 	free(g_sz_daily_output_filename); g_sz_daily_output_filename = NULL;
 	free(g_sz_monthly_output_filename); g_sz_monthly_output_filename = NULL;
 	free(g_sz_yearly_output_filename); g_sz_yearly_output_filename = NULL;

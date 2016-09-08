@@ -64,6 +64,8 @@ extern logger_t* g_log;
 extern settings_t* g_settings;
 extern const char sz_err_out_of_memory[];
 extern char *g_sz_program_path;
+extern char *g_sz_input_path;
+extern char *g_sz_co2_conc_file;
 
 /* do not change this order */
 static const char *sz_met_columns[MET_COLUMNS_COUNT+2] = {
@@ -94,11 +96,56 @@ static void timestamp_split(const double value, int *const YYYY, int *const MM, 
 	*DD = (int)value - (*YYYY*10000) - (*MM*100);
 }
 
+static double get_co2_conc(const int year, int*const err) {
+	char buf[256];
+	int _year;
+	int flag;
+	double co2_conc;
+	FILE *f;
+
+	assert(err);
+
+	flag = 0;
+	co2_conc = 0.;
+	f = NULL;
+
+	*err = 0;
+
+	if ( ! g_sz_co2_conc_file ) { *err = 1; goto quit; }
+
+	if ( g_sz_input_path ) {
+		int len = strlen(g_sz_input_path);
+		int _flag = (('/' == g_sz_input_path[len-1]) || ('\\' == g_sz_input_path[len-1]));
+		sprintf(buf, "%s%s%s", g_sz_input_path, _flag ? "" : FOLDER_DELIMITER, g_sz_co2_conc_file);
+		f = fopen(buf, "r");
+	} else {
+		f = fopen(g_sz_co2_conc_file, "r");
+	}
+	
+	if ( ! f )  { *err = 1; goto quit; }
+	while ( fgets(buf, 256, f) ) {
+		if ( 2 == sscanf(buf, "%d\t%lf", &_year, &co2_conc) ) {
+			if ( year == _year ) {
+				flag = 1;
+				break;
+			}
+		}
+	}
+
+	if ( ! flag ) *err = 1;
+
+quit:
+	if ( f )fclose(f);
+
+	return co2_conc;
+}
+
 static void yos_clear(yos_t *const yos) {
 	if ( yos ) {
 		int i;
 		int y;
 		yos->year = 0;
+		yos->co2_conc = INVALID_VALUE;
 		for ( i = 0; i < YOS_MONTHS_COUNT; ++i ) {
 			for ( y = 0; y < YOS_DAYS_COUNT; ++y ) {
 				yos->m[i].d[y].n_days = INVALID_VALUE;
@@ -1943,6 +1990,26 @@ yos_t* yos_import(const char *const file, int *const yos_count, const int x, con
 	}
 	free(temp);
 
+	// import co2 conc
+	if ( ! string_compare_i(g_settings->CO2_mod, "on") && ! string_compare_i(g_settings->CO2_fixed, "off") ) {
+		int err;
+
+		if ( ! g_sz_co2_conc_file ) {
+			logger(g_log, "co2 concentration file not specified!");
+			free(yos);
+			return NULL;
+		}
+
+		for ( i = 0; i < *yos_count; ++i ) {
+			yos[i].co2_conc = get_co2_conc(yos[i].year, &err);
+			if ( err ) {
+				logger(g_log, "unable to get co2 concentration for year %d\n", yos[i].year);
+				free(yos);
+				return NULL;
+			}
+		}
+	}
+
 	if ( *yos_count > 1 ) {
 		qsort(yos, *yos_count, sizeof*yos, sort_by_years);
 	}
@@ -1963,7 +2030,7 @@ yos_t* yos_import(const char *const file, int *const yos_count, const int x, con
 				free(yos);
 				return NULL;
 			}
-			fputs("year,month,day,n_days,solar_rad,tavg,tmax,tmin,tday,tnight,vpd,ts_f"
+			fputs("year,month,day,co2_conc,n_days,solar_rad,tavg,tmax,tmin,tday,tnight,vpd,ts_f"
 					",rain,swc,ndvi_lai,daylength,thermic_sum"
 					",rho_air,tsoil,et,windspeed\n", f);
 
@@ -1973,10 +2040,11 @@ yos_t* yos_import(const char *const file, int *const yos_count, const int x, con
 					{
 						break;
 					}
-					fprintf(f, "%d,%d,%d,%d,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g\n"
+					fprintf(f, "%d,%d,%d,%g,%d,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g\n"
 							, yos[i].year
 							, month+1
 							, z+1
+							, yos[i].co2_conc
 							, yos[i].m[month].d[z].n_days
 							, yos[i].m[month].d[z].solar_rad
 							, yos[i].m[month].d[z].tavg

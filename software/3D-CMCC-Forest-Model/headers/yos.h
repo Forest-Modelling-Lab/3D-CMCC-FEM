@@ -34,7 +34,9 @@ typedef struct {
 	double lh_fus;                              /* (KJ/Kg) daily latent heat of fusion snow */
 	double lh_sub;                              /* (KJ/Kg) daily latent heat of sublimation snow */
 	double air_pressure;                        /* (Pa) daily air pressure */
-	double co2_conc;                            /* (ppmv) daily CO2 concentration */
+	// ALESSIOR this is an annual value not daily
+	// moved into yos struct
+	//double co2_conc;                            /* (ppmv) daily CO2 concentration */
 	double es;                                  /* (KPa) daily weighted mean saturation vapour pressure at the air temperature */
 	double ea;                                  /* (KPa) daily actual vapour pressure derived from relative humidity data */
 	double psych;                               /* (KPa/°C) daily psychrometric constant */
@@ -62,6 +64,7 @@ typedef struct {
 
 typedef struct {
 	int year;
+	double co2_conc;	// (ppmv) annual CO2 concentration
 	meteo_t m[YOS_MONTHS_COUNT];
 } yos_t; /* just for clarification YOS stand for Year Of Simulation ! */
 
