@@ -947,13 +947,13 @@ static int fill_cell(matrix_t* const m, row_t* const row)
 		m->cells[index].landuse = row->landuse;
 		m->cells[index].x = row->x;
 		m->cells[index].y = row->y;
-	}
 
-	/* add soils */
-	if ( ! fill_cell_from_soils(&m->cells[index], row) ) {
-		return 0;
+		/* add soils */
+		if ( ! fill_cell_from_soils(&m->cells[index], row) ) {
+			return 0;
+		}
 	}
-
+	
 	/* add species */
 	return fill_cell_from_heights(&m->cells[index], row);
 }
@@ -1229,9 +1229,7 @@ matrix_t* matrix_create(const char* const filename) {
 			matrix_free(m);
 			return NULL;
 		}
-		//ALESSIOR HERE soil_layer_count is still correct
 	}
-	//ALESSIOR HERE NOT
 
 	dataset_free(d);
 

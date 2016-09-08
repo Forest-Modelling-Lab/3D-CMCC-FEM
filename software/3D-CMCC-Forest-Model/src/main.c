@@ -779,7 +779,7 @@ int main(int argc, char *argv[]) {
 	} else {
 		matrix = matrix_create(g_sz_dataset_file);
 	}
-	free(g_sz_dataset_file); g_sz_dataset_file = NULL;
+	//free(g_sz_dataset_file); g_sz_dataset_file = NULL;
 	if ( ! matrix ) goto err;
 	puts(msg_ok);
 

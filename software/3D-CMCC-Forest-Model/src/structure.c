@@ -117,10 +117,12 @@ int annual_forest_structure(cell_t* const c)
 	qsort(c->heights, c->heights_count, sizeof(height_t), sort_by_heights_asc);
 
 	/* compute zeta counter */
-	for ( height = 0; height < c->heights_count; ++height )
+	for ( height = 0; height < c->heights_count-1; ++height )
 	{
 		logger(g_log, "*value %g*\n\n", c->heights[height].value);
 
+		// ALESSIOR TO ALESSIOC...this give error
+		// on +1 YOU MUST remove -1 from count!
 		if ( (c->heights[height+1].value - c->heights[height].value) > g_settings->tree_layer_limit )
 		{
 			++zeta_count;

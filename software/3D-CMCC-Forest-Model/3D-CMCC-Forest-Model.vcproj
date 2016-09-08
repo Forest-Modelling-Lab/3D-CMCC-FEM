@@ -404,6 +404,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\remove_tree_class.c"
+				>
+			</File>
+			<File
 				RelativePath=".\src\renovation.c"
 				>
 			</File>
