@@ -38,7 +38,7 @@ void soil_evaporation(cell_t *const c, const meteo_daily_t *const meteo_daily)
 	logger(g_log, "\n**SOIL EVAPORATION**\n");
 
 	/* soil evaporation if snowpack = 0 */
-	if (c->snow_pack == 0.0)
+	if ( ! c->snow_pack )
 	{
 		/* new bare-soil evaporation routine */
 		/* first calculate potential evaporation, assuming the resistance
@@ -112,7 +112,7 @@ void soil_evaporation(cell_t *const c, const meteo_daily_t *const meteo_daily)
 	}
 	else
 	{
-		c->daily_soil_evapo = 0.0;
+		c->daily_soil_evapo = c->snow_subl;
 		//todo get functions from snow_melt_subl snow subl (evaporated) or melt (that goes to soil pool) for canopy intercepted snow
 	}
 
@@ -132,7 +132,7 @@ void soil_evaporation(cell_t *const c, const meteo_daily_t *const meteo_daily)
 
 	//test 9 May 2016 following Maes & Steppe 2012 as in JULES model (Best et al., GMD)
 	/* soil sensible heat flux */
-	if(c->snow_pack == 0)
+	if( ! c->snow_pack )
 	{
 		//test 11 May 2016 following Webber et al., 2016 as in JULES model (Best et al., GMD)
 		/* soil sensible heat flux */

@@ -25,8 +25,9 @@ extern settings_t* g_settings;
 int Soil_model_daily (matrix_t *const m, const int cell, const int day, const int month, const int year)
 {
 	int soil_layer;
-	//fixme move soil albedo into soil.txt file
+	//fixme move soil and snow albedo into soil.txt file
 	const double soil_albedo = 0.15;                                                      /* (ratio) soil albedo without snow (see MAESPA model) */
+	const double snow_albedo = 0.65;                                                      /* (ratio) snow albedo as an average between freshly fallen snow and 0.4 for melting snow */
 	double Light_refl_sw_rad_soil_frac;                                                   /* (ratio) fraction of Short Wave radiation reflected from the soil */
 
 	/* shortcuts */
@@ -43,15 +44,25 @@ int Soil_model_daily (matrix_t *const m, const int cell, const int day, const in
 
 	logger (g_log, "**\n*******SOIL_MODEL_DAILY*********\n");
 	logger (g_log, "number of soil layers = %d\n", c->soil_layers_count);
-	logger (g_log, "number of soil layers from setting = %g\n", g_settings->number_of_soil_layer);getchar();
+	logger (g_log, "number of soil layers from setting = %g\n", g_settings->number_of_soil_layer);
 
 	CHECK_CONDITION( c->soil_layers_count, != g_settings->number_of_soil_layer );
 
 	/* radiation for soil */
 	logger (g_log, "**SOIL RADIATION**\n");
 
-	/* fraction of light reflected by the soil */
-	Light_refl_sw_rad_soil_frac = soil_albedo;
+	/* fraction of light reflected */
+
+	if ( !c->snow_pack )
+	{
+		/* fraction of light reflected by the soil */
+		Light_refl_sw_rad_soil_frac = soil_albedo;
+	}
+	else
+	{
+		/* fraction of light reflected by the snow */
+		Light_refl_sw_rad_soil_frac = snow_albedo;
+	}
 	logger(g_log, "LightReflec_soil = %g %%\n", Light_refl_sw_rad_soil_frac * 100);
 	logger(g_log, "******************************************************\n");
 
@@ -61,6 +72,7 @@ int Soil_model_daily (matrix_t *const m, const int cell, const int day, const in
 	logger(g_log,"incoming PAR for soil = %g molPAR/m^2/day\n", meteo_daily->par);
 	logger(g_log,"incoming Short Wave radiation = %g W/m2\n", meteo_daily->sw_downward_W);
 	logger(g_log,"incoming PPFD for soil = %g umol/m2/sec\n", meteo_daily->ppfd);
+
 	c->par_refl_soil = meteo_daily->par * Light_refl_sw_rad_soil_frac;
 	c->sw_rad_for_soil_refl = meteo_daily->sw_downward_W * Light_refl_sw_rad_soil_frac;
 	c->ppfd_refl_soil = meteo_daily->ppfd * Light_refl_sw_rad_soil_frac;
@@ -93,6 +105,7 @@ int Soil_model_daily (matrix_t *const m, const int cell, const int day, const in
 
 			/* compute soil evaporation */
 			soil_evaporation ( c, meteo_daily );
+
 		}
 
 		/* compute soil respiration (not yet implemented) */
