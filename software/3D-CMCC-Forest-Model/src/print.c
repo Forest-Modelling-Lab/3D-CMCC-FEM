@@ -165,12 +165,13 @@ void print_daily_met_data(cell_t *c, const int day, const int month, const int y
 
 void print_cell_data (cell_t *const c)
 {
-	/* print at the beginning of simulation stand data */
+	/* print at the beginning stand data */
 	logger(g_log, "******************************************************\n\n");
 	logger(g_log, "cell = \n");
 	logger(g_log, "* x = %d\n", c->x);
 	logger(g_log, "* y = %d\n", c->y);
 	logger(g_log, "* number of layers = %d\n", c->tree_layers_count);
+	logger(g_log, "* number of height class = %d\n", c->heights_count);
 	logger(g_log, "* asw = %g mm\n", c->asw);
 	logger(g_log, "* snow pack = %g cm\n", c->snow_pack);
 
