@@ -114,6 +114,7 @@ int annual_forest_structure(cell_t* const c)
 
 	logger(g_log, "*compute height_z*\n");
 
+	/* note: it must starts from the lowest tree height class */
 	qsort(c->heights, c->heights_count, sizeof(height_t), sort_by_heights_asc);
 
 	/* compute zeta counter */
@@ -137,13 +138,16 @@ int annual_forest_structure(cell_t* const c)
 	/*****************************************************************************************/
 
 	/* assign zeta for each height class */
-
 	for ( height = c->heights_count -1 ; height >= 0; --height )
 	{
 		if ( (c->heights[height].value - c->heights[height-1].value) > g_settings->tree_layer_limit )
 		{
 			c->heights[height].height_z = zeta_count;
 			--zeta_count;
+		}
+		else
+		{
+			c->heights[height].height_z = zeta_count;
 		}
 		logger(g_log, "*value %g z = %d*\n\n", c->heights[height].value, c->heights[height].height_z);
 	}
