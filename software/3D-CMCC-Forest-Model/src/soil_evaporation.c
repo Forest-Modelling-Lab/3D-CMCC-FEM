@@ -56,7 +56,7 @@ void soil_evaporation(cell_t *const c, const meteo_daily_t *const meteo_daily)
 
 		/* assign net radiation as local variable */
 		//fixme it should net rad
-		net_rad = meteo_daily->sw_downward_W;
+		net_rad = c->sw_rad_abs_soil;
 		logger(g_log, "net sw rad for soil = %g W/m2\n", meteo_daily->sw_downward_W);
 
 		/* calculate pot_evap in kg/m2/s */
