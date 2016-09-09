@@ -103,25 +103,10 @@ settings_t* settings_import(const char *const filename) {
 					fclose(f);
 					return 0;
 				}
+				// ALESSIOC fill me
 				*p_field *= *p_field;
 				p_field++;
 			break;
-
-			////////////////
-			//ALESSIOC TO ALESSIOR
-			case 16:
-				*p_field = convert_string_to_float(token, &err);
-				if ( err ) {
-					printf("unable to convert sizeCell: %s\n", p);
-					free(s);
-					fclose(f);
-					return 0;
-				}
-				*p_field *= *p_field;
-				p_field++;
-			break;
-			/////////////////
-
 
 			case 20:
 				strncpy(s->replanted_species, (const char*)token, SETTINGS_REPLANTED_SPECIES_MAX_SIZE-1);

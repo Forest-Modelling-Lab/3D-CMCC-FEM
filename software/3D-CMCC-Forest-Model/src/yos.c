@@ -172,7 +172,6 @@ static void yos_clear(yos_t *const yos) {
 				yos->m[i].d[y].lh_fus = INVALID_VALUE;
 				yos->m[i].d[y].lh_sub = INVALID_VALUE;
 				yos->m[i].d[y].air_pressure = INVALID_VALUE;
-				//yos->m[i].d[y].co2_conc = INVALID_VALUE;
 			}
 		}
 	}
@@ -1990,22 +1989,28 @@ yos_t* yos_import(const char *const file, int *const yos_count, const int x, con
 	}
 	free(temp);
 
-	// import co2 conc
-	if ( ! string_compare_i(g_settings->CO2_mod, "on") && ! string_compare_i(g_settings->CO2_fixed, "off") ) {
-		int err;
+	/* import co2 conc */
+	if ( ! string_compare_i(g_settings->CO2_mod, "on") ) {
+		if ( ! string_compare_i(g_settings->CO2_fixed, "off") ) {
+			int err;
 
-		if ( ! g_sz_co2_conc_file ) {
-			logger(g_log, "co2 concentration file not specified!");
-			free(yos);
-			return NULL;
-		}
-
-		for ( i = 0; i < *yos_count; ++i ) {
-			yos[i].co2_conc = get_co2_conc(yos[i].year, &err);
-			if ( err ) {
-				logger(g_log, "unable to get co2 concentration for year %d\n", yos[i].year);
+			if ( ! g_sz_co2_conc_file ) {
+				logger(g_log, "co2 concentration file not specified!");
 				free(yos);
 				return NULL;
+			}
+
+			for ( i = 0; i < *yos_count; ++i ) {
+				yos[i].co2_conc = get_co2_conc(yos[i].year, &err);
+				if ( err ) {
+					logger(g_log, "unable to get co2 concentration for year %d\n", yos[i].year);
+					free(yos);
+					return NULL;
+				}
+			}
+		} else {
+			for ( i = 0; i < *yos_count; ++i ) {
+				yos[i].co2_conc = g_settings->co2Conc;
 			}
 		}
 	}
