@@ -18,25 +18,29 @@ void reset_daily_cell_variables(cell_t *const c)
 	c->cell_n_trees = 0;
 
 	/* reset daily radiative variables */
-	//c->par = 0.;
 	c->apar = 0.;
+	c->apar_soil = 0.;
+	c->apar_snow = 0.;
 	c->par_transm = 0.;
 	c->par_refl = 0.;
-	//c->par_for_soil = 0.;
 	c->par_refl_soil = 0.;
+	c->par_refl_snow = 0.;
 
-	//c->sw_rad_down_W = 0.;
 	c->sw_rad_refl = 0.;
 	c->sw_rad_for_soil_refl = 0.;
+	c->sw_rad_for_snow_refl = 0.;
 	c->sw_rad_abs = 0.;
+	c->sw_rad_abs_soil = 0.;
+	c->sw_rad_abs_snow = 0.;
 	c->sw_rad_transm = 0.;
-	//c->sw_rad_for_soil = 0.;
 
 	c->ppfd_abs = 0.;
+	c->ppfd_abs_soil = 0.;
+	c->ppfd_abs_snow = 0.;
 	c->ppfd_transm = 0.;
 	c->ppfd_refl = 0.;
-	//c->ppfd_for_soil = 0.;
 	c->ppfd_refl_soil = 0.;
+	c->ppfd_refl_snow = 0.;
 
 	c->canopy_temp_k = 0.;
 

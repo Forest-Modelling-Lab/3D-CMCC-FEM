@@ -774,8 +774,10 @@ typedef struct
 	double short_wave_radiation_upward_W;               /* Upward short wave radiation flux (W/m2) */
 	double sw_rad_refl;                                 /* Short Wave radiation reflected (W/m2) */
 	double sw_rad_for_soil_refl;                        /* Short Wave radiation reflected from soil level (W/m2) */
+	double sw_rad_for_snow_refl;                        /* Short Wave radiation reflected from snow level (W/m2) */
 	double sw_rad_abs;                                  /* Short Wave radiation absorbed tree level (W/m2) */
 	double sw_rad_abs_soil;                             /* Short Wave radiation absorbed soil level (W/m2) */
+	double sw_rad_abs_snow;                             /* Short Wave radiation absorbed snow level (W/m2) */
 	double sw_rad_transm;                               /* Short Wave radiation transmitted (W/m2) */
 
 	/* long wave radiation */
@@ -793,16 +795,20 @@ typedef struct
 	/* PAR radiation */
 	double apar;                                        /* cumulated absorbed PAR at tree level (molPAR/m2/day) */
 	double apar_soil;                                   /* cumulated absorbed PAR at soil level (molPAR/m2/day) */
+	double apar_snow;                                   /* cumulated absorbed PAR at snow level (molPAR/m2/day) */
 	double par_transm;                                  /* cumulated transmitted PAR at cell level (molPAR/m2/day) */
 	double par_refl;                                    /* cumulated reflected PAR at cell level (molPAR/m2/day) */
 	double par_refl_soil;                               /* reflected PAR by the soil (molPAR/m2/day) */
+	double par_refl_snow;                               /* reflected PAR by the snow (molPAR/m2/day) */
 
 	/* PPFD radiation */
 	double ppfd_abs;                                    /* Absorbed Photosynthetic photon flux density tree level (umol/m2/sec) */
-	double ppfd_abs_soil;                                    /* Absorbed Photosynthetic photon flux density soil level (umol/m2/sec) */
+	double ppfd_abs_soil;                               /* Absorbed Photosynthetic photon flux density soil level (umol/m2/sec) */
+	double ppfd_abs_snow;                               /* Absorbed Photosynthetic photon flux density snow level (umol/m2/sec) */
 	double ppfd_transm;                                 /* Transmitted Photosynthetic photon flux density (umol/m2/sec) */
 	double ppfd_refl;                                   /* Reflected Photosynthetic photon flux density (umol/m2/sec) */
 	double ppfd_refl_soil;                              /* PPFD reflected by the soil (umol/m2/day) */
+	double ppfd_refl_snow;                              /* PPFD reflected by the snow (umol/m2/day) */
 
 	double canopy_temp;                                 /* daily canopy temperature (°C) */
 	double canopy_temp_k;                               /* daily canopy temperature (K) */

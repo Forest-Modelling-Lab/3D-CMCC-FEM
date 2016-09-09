@@ -29,6 +29,7 @@ int Soil_model_daily (matrix_t *const m, const int cell, const int day, const in
 	const double soil_albedo = 0.15;                                                      /* (ratio) soil albedo without snow (see MAESPA model) */
 	const double snow_albedo = 0.65;                                                      /* (ratio) snow albedo as an average between freshly fallen snow and 0.4 for melting snow */
 	double Light_refl_sw_rad_soil_frac;                                                   /* (ratio) fraction of Short Wave radiation reflected from the soil */
+	double Light_refl_sw_rad_snow_frac;                                                   /* (ratio) fraction of Short Wave radiation reflected from the snow */
 
 	/* shortcuts */
 	cell_t *c;
@@ -61,7 +62,7 @@ int Soil_model_daily (matrix_t *const m, const int cell, const int day, const in
 	else
 	{
 		/* fraction of light reflected by the snow */
-		Light_refl_sw_rad_soil_frac = snow_albedo;
+		Light_refl_sw_rad_snow_frac = snow_albedo;
 	}
 	logger(g_log, "LightReflec_soil = %g %%\n", Light_refl_sw_rad_soil_frac * 100);
 	logger(g_log, "******************************************************\n");
@@ -73,13 +74,26 @@ int Soil_model_daily (matrix_t *const m, const int cell, const int day, const in
 	logger(g_log,"incoming Short Wave radiation = %g W/m2\n", meteo_daily->sw_downward_W);
 	logger(g_log,"incoming PPFD for soil = %g umol/m2/sec\n", meteo_daily->ppfd);
 
-	c->par_refl_soil = meteo_daily->par * Light_refl_sw_rad_soil_frac;
-	c->sw_rad_for_soil_refl = meteo_daily->sw_downward_W * Light_refl_sw_rad_soil_frac;
-	c->ppfd_refl_soil = meteo_daily->ppfd * Light_refl_sw_rad_soil_frac;
-	logger(g_log,"reflected light from the soil\n");
-	logger(g_log,"par_refl_soil = %g molPAR/m^2/day\n", c->par_refl_soil);
-	logger(g_log,"sw_rad_for_soil_refl = %g W/m2\n", c->sw_rad_for_soil_refl);
-	logger(g_log,"ppfd_refl_soil = %g umol/m2/sec\n", c->ppfd_refl_soil);
+	if ( ! c->snow_pack )
+	{
+		c->par_refl_soil = meteo_daily->par * Light_refl_sw_rad_soil_frac;
+		c->sw_rad_for_soil_refl = meteo_daily->sw_downward_W * Light_refl_sw_rad_soil_frac;
+		c->ppfd_refl_soil = meteo_daily->ppfd * Light_refl_sw_rad_soil_frac;
+		logger(g_log,"reflected light from the soil\n");
+		logger(g_log,"par_refl_soil = %g molPAR/m^2/day\n", c->par_refl_soil);
+		logger(g_log,"sw_rad_for_soil_refl = %g W/m2\n", c->sw_rad_for_soil_refl);
+		logger(g_log,"ppfd_refl_soil = %g umol/m2/sec\n", c->ppfd_refl_soil);
+	}
+	else
+	{
+		c->par_refl_snow = meteo_daily->par * Light_refl_sw_rad_snow_frac;
+		c->sw_rad_for_snow_refl = meteo_daily->sw_downward_W * Light_refl_sw_rad_snow_frac;
+		c->ppfd_refl_snow = meteo_daily->ppfd * Light_refl_sw_rad_snow_frac;
+		logger(g_log,"reflected light from the snow\n");
+		logger(g_log,"par_refl_snow = %g molPAR/m^2/day\n", c->par_refl_snow);
+		logger(g_log,"sw_rad_for_snow_refl = %g W/m2\n", c->sw_rad_for_snow_refl);
+		logger(g_log,"ppfd_refl_snow = %g umol/m2/sec\n", c->ppfd_refl_snow);
+	}
 
 	/* Par Short Wave radiation and PPFD for the soil */
 	logger(g_log, "*incoming light for soil less reflected part*\n");
@@ -87,10 +101,20 @@ int Soil_model_daily (matrix_t *const m, const int cell, const int day, const in
 	logger(g_log, "Short Wave radiation for soil = %g W/m2\n", meteo_daily->sw_downward_W);
 	logger(g_log, "PPFD for soil = %g umol/m2/sec\n", meteo_daily->ppfd);
 
-	/* compute absorbed part from soil */
-	c->apar_soil = meteo_daily->par - c->par_refl_soil;
-	c->sw_rad_abs_soil = meteo_daily->sw_downward_W - c->sw_rad_for_soil_refl;
-	c->ppfd_abs_soil = meteo_daily->ppfd - c->ppfd_refl_soil;
+	if ( ! c->snow_pack )
+	{
+		/* compute absorbed part from soil */
+		c->apar_soil = meteo_daily->par - c->par_refl_soil;
+		c->sw_rad_abs_soil = meteo_daily->sw_downward_W - c->sw_rad_for_soil_refl;
+		c->ppfd_abs_soil = meteo_daily->ppfd - c->ppfd_refl_soil;
+	}
+	else
+	{
+		/* compute absorbed part from snow */
+		c->apar_snow = meteo_daily->par - c->par_refl_snow;
+		c->sw_rad_abs_snow = meteo_daily->sw_downward_W - c->sw_rad_for_snow_refl;
+		c->ppfd_abs_snow = meteo_daily->ppfd - c->ppfd_refl_snow;
+	}
 
 	/* loop on each cell layers starting from highest to lower */
 	for ( soil_layer = c->soil_layers_count -1 ; soil_layer >= 0; -- soil_layer )
@@ -100,11 +124,16 @@ int Soil_model_daily (matrix_t *const m, const int cell, const int day, const in
 		/* run on only for the highest soil layer */
 		if ( soil_layer == c->soil_layers_count -1)
 		{
-			/* compute snow melt, snow sublimation */
-			snow_melt_subl ( c, meteo_daily );
-
-			/* compute soil evaporation */
-			soil_evaporation ( c, meteo_daily );
+			if ( c->snow_pack )
+			{
+				/* compute snow melt, snow sublimation */
+				snow_melt_subl ( c, meteo_daily );
+			}
+			else
+			{
+				/* compute soil evaporation */
+				soil_evaporation ( c, meteo_daily );
+			}
 
 		}
 

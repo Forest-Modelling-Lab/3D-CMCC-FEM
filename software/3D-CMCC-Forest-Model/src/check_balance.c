@@ -33,10 +33,10 @@ void check_radiation_balance (cell_t *const c, const meteo_daily_t *const meteo_
 	in = meteo_daily->incoming_par;
 
 	/* sum of sinks */
-	out = c->par_refl + c->par_refl_soil;
+	out = c->par_refl + c->par_refl_soil + c->par_refl_snow;;
 
 	/* sum of current storage */
-	store = c->apar + c->apar_soil;
+	store = c->apar + c->apar_soil + c->apar_snow ;
 
 	balance = in - out -store;
 
@@ -50,9 +50,11 @@ void check_radiation_balance (cell_t *const c, const meteo_daily_t *const meteo_
 		logger(g_log, "\nout\n");
 		logger(g_log, "c->par_refl = %g molPAR/m2/day\n",c->par_refl);
 		logger(g_log, "c->par_refl_soil = %g molPAR/m2/day\n",c->par_refl_soil);
+		logger(g_log, "c->par_refl_snow = %g molPAR/m2/day\n",c->par_refl_snow);
 		logger(g_log, "\nstore\n");
 		logger(g_log, "c->apar = %g molPAR/m2/day\n", c->apar);
 		logger(g_log, "c->par_for_soil = %g molPAR/m2/day\n", c->apar_soil);
+		logger(g_log, "c->par_for_snow = %g molPAR/m2/day\n", c->apar_snow);
 		logger(g_log, "\npar in = %g molPAR/m2/day\n", in);
 		logger(g_log, "par out = %g molPAR/m2/day\n", out);
 		logger(g_log, "par store = %g molPAR/m2/day\n", store);
@@ -73,10 +75,10 @@ void check_radiation_balance (cell_t *const c, const meteo_daily_t *const meteo_
 	in = meteo_daily->incoming_sw_downward_W;
 
 	/* sum of sinks */
-	out = c->sw_rad_refl + c->sw_rad_for_soil_refl;
+	out = c->sw_rad_refl + c->sw_rad_for_soil_refl + c->sw_rad_for_snow_refl;
 
 	/* sum of current storage */
-	store = c->sw_rad_abs + c->sw_rad_abs_soil;
+	store = c->sw_rad_abs + c->sw_rad_abs_soil + c->sw_rad_abs_snow;
 
 	balance = in - out -store;
 
@@ -112,10 +114,10 @@ void check_radiation_balance (cell_t *const c, const meteo_daily_t *const meteo_
 	in = meteo_daily->incoming_ppfd;
 
 	/* sum of sinks */
-	out = c->ppfd_refl + c->ppfd_refl_soil;
+	out = c->ppfd_refl + c->ppfd_refl_soil + c->ppfd_refl_snow;
 
 	/* sum of current storage */
-	store = c->ppfd_abs + c->ppfd_abs_soil;
+	store = c->ppfd_abs + c->ppfd_abs_soil + c->ppfd_abs_snow;
 
 	balance = in - out -store;
 
