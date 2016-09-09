@@ -10,6 +10,7 @@
 #include <math.h>
 #include <assert.h>
 #include "matrix.h"
+#include "common.h"
 #include "constants.h"
 #include "logger.h"
 #include "snow.h"
@@ -41,9 +42,10 @@ int Soil_model_daily (matrix_t *const m, const int cell, const int day, const in
 	assert(m);
 
 	logger (g_log, "**\n*******SOIL_MODEL_DAILY*********\n");
+	logger (g_log, "number of soil layers = %d\n", c->soil_layers_count);
+	logger (g_log, "number of soil layers from setting = %g\n", g_settings->number_of_soil_layer);getchar();
 
-	logger(g_log,"number of soil layer(s) = %g\n",g_settings->number_of_soil_layer);
-	logger(g_log,"number of soil layer(s) = %d\n",c->soil_layers_count);
+	CHECK_CONDITION( c->soil_layers_count, != g_settings->number_of_soil_layer );
 
 	/* radiation for soil */
 	logger (g_log, "**SOIL RADIATION**\n");
@@ -78,16 +80,12 @@ int Soil_model_daily (matrix_t *const m, const int cell, const int day, const in
 	c->sw_rad_abs_soil = meteo_daily->sw_downward_W - c->sw_rad_for_soil_refl;
 	c->ppfd_abs_soil = meteo_daily->ppfd - c->ppfd_refl_soil;
 
-	logger (g_log, "number of soil layers = %d\n", c->soil_layers_count);
-
 	/* loop on each cell layers starting from highest to lower */
-
-	//ALESSIOC-ALESSIOR bugs in imported value for soil layer number (check if tree layer > 1 )
-	//for ( soil_layer = c->soil_layers_count -1 ; soil_layer >= 0; -- soil_layer )
-	for ( soil_layer = g_settings->number_of_soil_layer -1 ; soil_layer >= 0; -- soil_layer )
+	for ( soil_layer = c->soil_layers_count -1 ; soil_layer >= 0; -- soil_layer )
 	{
 		logger (g_log, "soil_layer = %d\n", soil_layer);
 
+		/* run on only for the highest soil layer */
 		if ( soil_layer == c->soil_layers_count -1)
 		{
 			/* compute snow melt, snow sublimation */
@@ -97,7 +95,7 @@ int Soil_model_daily (matrix_t *const m, const int cell, const int day, const in
 			soil_evaporation ( c, meteo_daily );
 		}
 
-		/* compute soil respiration */
+		/* compute soil respiration (not yet implemented) */
 		soil_respiration ( c );
 
 		/* compute soil water balance */

@@ -22,12 +22,13 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 {
 	double t1;
 	double q10 = 2.0;          /* 2.2 from Schwalm & Ek, 2004; Kimball et al., 1997 */
-	double mrpern = 0.218;     /* inear N relationship with MR being kgC/kgN/day, 0.218 from Ryan 1991, 0.1584 Campioli et al., 2013 and from Dufrene et al 2005 */
+	double mrpern = 0.218;     /* linear N relationship with MR being kgC/kgN/day, 0.218 from Ryan 1991, 0.1584 Campioli et al., 2013 and from Dufrene et al 2005 */
+	double Q10_temp = 20.0;    /* t_base temperature for respiration, 15°C for Damesin et al., 2001 */
 	double exponent_tday;
 	double exponent_tnight;
 	double exponent_tavg;
 	double exponent_tsoil;
-	double Q10_temp = 20.0;    /* t_base temperature for respiration, 15°C for Damesin et al., 2001 */
+
 
 	/* nitrogen pools in gN/m2 */
 	double leaf_N;
