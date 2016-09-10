@@ -11,15 +11,14 @@
 #include "matrix.h"
 #include "common.h"
 
-extern settings_t* g_settings;
 extern soil_settings_t *g_soil_settings;
 extern topo_t *g_topo;
 extern logger_t* g_log;
 
 void Sat_vapour_pressure(cell_t *const c, const int day, const int month, const int year)
 {
-	double e0max;                                    //saturation vapour pressure at the maximum air temperature (KPa)
-	double e0min;                                    //saturation vapour pressure at the minimum air temperature (KPa)
+	double e0max;                                    /* saturation vapour pressure at the maximum air temperature (KPa) */
+	double e0min;                                    /* saturation vapour pressure at the minimum air temperature (KPa) */
 	const double A = 17.27;
 	const double Tstroke = 36;
 	double TmaxK;
@@ -575,33 +574,6 @@ void Soil_temperature(meteo_t* met, const int day, const int month) {
 void Dew_temperature(meteo_t *const met, const int day, const int month) {
 	/* dew point temperature based on Allen et al., 1998; Bosen, 1958; Murray, 1967 */
 	met[month].d[day].tdew = (116.91 + 237.3 * log(met[month].d[day].ea))/(16.78 - log(met[month].d[day].ea));
-}
-
-// ALESSIOR TO ALESSIOC
-// CHECK THIS
-void Annual_CO2_concentration (meteo_t *met, const int day, const int month, const int year) {
-	/*
-	static double previous_co2_conc;
-
-	// recompute co2 concentration at the beginning of each year
-	if( ! string_compare_i(g_settings->CO2_fixed, "off") && !day && !month)
-	{
-		// assign first year value from site.txt
-		if(!year)
-		{
-			met[month].d[day].co2_conc = g_settings->co2Conc;
-			previous_co2_conc = met[month].d[day].co2_conc;
-		}
-		else
-		{
-			// then for other years increment each beginning of year
-			met[month].d[day].co2_conc = previous_co2_conc + (previous_co2_conc * g_settings->co2_incr);
-			previous_co2_conc = met[month].d[day].co2_conc;
-			logger(g_log, "CO2 annual increment = %f ppmv\n", met[month].d[day].co2_conc * g_settings->co2_incr);
-			logger(g_log, "CO2 concentration  = %f ppmv\n", met[month].d[day].co2_conc);
-		}
-	}
-	*/
 }
 
 void Annual_met_values(cell_t *const c, const int day, const int month, const int year) {

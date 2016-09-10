@@ -179,7 +179,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							}
 							/***************************************************************/
 							/* print at the beginning of simulation forest class data */
-							print_forest_class_data ( c, layer, height, dbh, age, species );
+							print_daily_forest_class_data ( c, layer, height, dbh, age, species );
 
 							/* compute species-specific phenological phase */
 							phenology ( c, layer, height, dbh, age, species, meteo_daily, month);
@@ -319,7 +319,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 								annual_tree_increment ( c, layer, height, dbh, age, species );
 
 								/* print at the end of simulation class level data */
-								print_forest_class_data ( c, layer, height, dbh, age, species );
+								print_daily_forest_class_data ( c, layer, height, dbh, age, species );
 
 								/************************************************************************************************************************************/
 								/* management blocks */

@@ -363,7 +363,7 @@ int annual_forest_structure(cell_t* const c)
 	for ( layer = c->tree_layers_count - 1; layer >= 0; --layer )
 	{
 		/* number of trees per cell */
-		c->cell_n_trees += c->tree_layers[layer].layer_n_trees;
+		//c->cell_n_trees += c->tree_layers[layer].layer_n_trees;
 
 		/* note: overall cell cover can't exceed its area */
 		c->cell_cover += c->tree_layers[layer].layer_cover;
@@ -534,7 +534,6 @@ void prephenology (cell_t *const c, const meteo_daily_t *const meteo_daily, cons
 						}
 						else
 						{
-							//check for case 0 of allocation
 							if (meteo_daily->daylength <= s->value[MINDAYLENGTH] && month >= 6 && c->north == 0 )
 							{
 								s->counter[LEAF_FALL_COUNTER] += 1;

@@ -471,8 +471,8 @@ void self_thinning ( cell_t *const c, const int layer )
 	c->tree_layers[layer].layer_n_trees = 0;
 	c->tree_layers[layer].layer_density = 0;
 	/* reset values for cell (they are recomputed below)*/
-	c->cell_n_trees = 0;
-	c->cell_cover = 0;
+	//c->cell_n_trees = 0;
+	//c->cell_cover = 0;
 
 	/* REcompute numbers of height classes, tree number and density after mortality within each layer */
 	logger(g_log, "REcompute numbers of height classes, tree number and density after mortality within each layer\n\n");

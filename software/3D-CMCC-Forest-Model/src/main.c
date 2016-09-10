@@ -1007,17 +1007,11 @@ int main(int argc, char *argv[]) {
 					Dew_temperature(matrix->cells[cell].years[year].m, day, month);
 					Radiation(&matrix->cells[cell], day, month, year);
 					Check_prcp(&matrix->cells[cell], day, month, year);
-					//Annual_met_values(&matrix->cells[cell], day, month, year);
-					Annual_CO2_concentration(matrix->cells[cell].years[year].m, day, month, year);
 
 					if ( F == matrix->cells[cell].landuse )
 					{
 						/* compute annually the days for the growing season before any other process */
 						Veg_Days (&matrix->cells[cell], day, month, year);
-
-						//Marconi 18/06: function used to calculate VPsat from Tsoil following Hashimoto et al., 2011
-						get_vpsat(&matrix->cells[cell], day, month, year, index_vpsat);
-						++index_vpsat;
 					}
 					else
 					{
@@ -1038,18 +1032,19 @@ int main(int argc, char *argv[]) {
 					print_daily_met_data (&matrix->cells[cell], day, month, year);
 
 					/* print cell data */
-					print_cell_data ( &matrix->cells[cell] );
+					print_daily_cell_data ( &matrix->cells[cell] );
 
 					/************************************************************************/
 					if ( F == matrix->cells[cell].landuse && matrix->cells[cell].heights_count != 0 )
 					{
 						/* print  forest cell data */
-						print_forest_cell_data ( &matrix->cells[cell] );
+						print_daily_forest_data ( &matrix->cells[cell] );
 
 						if ( 'f' == g_settings->version )
 						{
-							//if ( matrix->cells[cell].cell_n_trees > 0 )
-							//{
+							//fixme
+//							if ( matrix->cells[cell].cell_n_trees > 0 )
+//							{
 								if ( !Tree_model_daily( matrix, cell, day, month, year ) )
 								{
 									logger(g_log, "tree model daily failed!!!");
@@ -1070,7 +1065,7 @@ int main(int argc, char *argv[]) {
 									}
 									get_net_ecosystem_exchange(&matrix->cells[cell]);
 								}
-							//}
+//							}
 						}
 						else
 						{
