@@ -169,12 +169,11 @@ int self_pruning ( cell_t *const c, const int layer )
 		/* model makes prune before lower height in each later */
 		qsort (c->heights, c->heights_count, sizeof (height_t), sort_by_heights_desc);
 
-		//ALESSIOC ALESSIOR CHECK THAT THE FOR STARTS WITH THE LOWEST DBH VALUE
 		for ( dbh = h->dbhs_count - 1; dbh >= 0; --dbh)
 		{
 			d = &c->heights[height].dbhs[dbh];
 
-			for ( age = 0; age < d->ages_count ; ++age )
+			for ( age = 0; age < d->ages_count; ++age )
 			{
 				a = &c->heights[height].dbhs[dbh].ages[age];
 
@@ -190,10 +189,13 @@ int self_pruning ( cell_t *const c, const int layer )
 					logger(g_log,"old crown area before pruning = %g m2/tree\n", old_crown_area);
 
 					/* until layer cover not reaches lower values than max_layer_cover or DBDCMIN */
-					while( l->layer_cover > g_settings->max_layer_cover )
+					while( l->layer_cover > g_settings->max_layer_cover && s->value[DBHDC_EFF] > s->value[DBHDCMIN]  )
 					{
+						/* remove current class canopy cover from layer canopy cover */
+						l->layer_cover -= s->value[CANOPY_COVER_DBHDC];
+
 						/* reduce DBHDC_EFF */
-						/* note: 0.00005 is an arbitrary value */
+						/* note: 0.005 is an arbitrary value */
 						s->value[DBHDC_EFF] -= 0.00005;
 						//logger(g_log,"DBHDC effective during while = %g\n", s->value[DBHDC_EFF]);
 
@@ -210,15 +212,9 @@ int self_pruning ( cell_t *const c, const int layer )
 						//logger(g_log, "-Canopy cover DBH-DC class level = %g %%\n", s->value[CANOPY_COVER_DBHDC] * 100.0);
 
 						/* recompute layer cover */
-						if( c->tree_layers[layer].layer_n_height_class == 1)
-						{
-							l->layer_cover = s->value[CANOPY_COVER_DBHDC];
-						}
-						//fixme is not correct for multilayer
-						else
-						{
-							l->layer_cover += s->value[CANOPY_COVER_DBHDC];
-						}
+						//fixme is it correct for multilayer ???
+						//test
+						l->layer_cover += s->value[CANOPY_COVER_DBHDC];
 						//logger(g_log, "-layer cover cell level = %g \n", l->layer_cover);
 					}
 					/************************************************************************/
@@ -226,7 +222,7 @@ int self_pruning ( cell_t *const c, const int layer )
 					/* reduce proportionally to the crown area reduction the amount of branch and leaf C pool */
 					/* compute percentage in crown area reduction for self-pruning */
 					red_perc = (s->value[CROWN_AREA_DBHDC] / old_crown_area);
-					logger(g_log, "percentage of reduction in crown area = %g %%\n", (1 - red_perc) * 100 );
+					//logger(g_log, "percentage of reduction in crown area = %g %%\n", (1 - red_perc) * 100 );
 
 					/***************************************************************/
 					/* update branch C pool */
@@ -245,7 +241,6 @@ int self_pruning ( cell_t *const c, const int layer )
 
 					/* update coarse root N pool */
 					//s->value[COARSE_ROOT_N] *= red_perc;
-					;
 
 					/***************************************************************/
 					/* update leaf C pool */
@@ -262,20 +257,15 @@ int self_pruning ( cell_t *const c, const int layer )
 					//		(s->value[LEAF_C] * (1 - red_perc));
 
 					/***************************************************************/
-
 					/* summary after pruning */
 					logger(g_log, "-after pruning-\n");
-					logger(g_log, "-branch carbon = %g tC/cell\n", s->value[BRANCH_C]);
 					logger(g_log, "-DBHDC effective = %g\n", s->value[DBHDC_EFF]);
-					logger(g_log, "-DBHDC MINIMUM = %g\n", s->value[DBHDCMIN]);
-					logger(g_log, "-DEN MINIMUM = %g\n", s->value[DENMIN]);
 					logger(g_log, "-Crown Diameter from DBHDC function  = %g m\n", s->value[CROWN_DIAMETER_DBHDC]);
-					logger(g_log, "-Crown Area from DBHDC function = %g m^2\n", s->value[CROWN_AREA_DBHDC]);
 					logger(g_log, "-Canopy cover DBH-DC class level = %g %%\n", s->value[CANOPY_COVER_DBHDC] * 100.0);
 					logger(g_log, "-layer cover cell level = %g\n", l->layer_cover);
 
 					/* check if reduction in dbhdc satisfy max layer cover */
-					if ( l->layer_cover < g_settings->max_layer_cover && s->value[DBHDC_EFF] > s->value[DBHDCMIN] )
+					if ( l->layer_cover < g_settings->max_layer_cover )
 					{
 						//todo to be tested
 						/* self-pruning was enough */
@@ -285,10 +275,9 @@ int self_pruning ( cell_t *const c, const int layer )
 					else
 					{
 						//todo to be tested
-						/* self-pruning was not enough */
+						/* self-pruning was not enough then makes some tree dies */
 						logger(g_log, "self-pruning was not enough\n");
 						return 0;
-
 					}
 				}
 			}
@@ -530,10 +519,9 @@ void self_thinning ( cell_t *const c, const int layer )
 
 void daily_growth_efficiency_mortality ( cell_t *const c, const int height, const int dbh, const int age, const int species )
 {
-
-	/* this function superimpose mortality  for all tree class when reserves
+	/* this function superimpose mortality for all trees in class when reserves
 	 * go under zero assuming that reserve pool hasn't be refilled during the day
-	 * and make trees class die */
+	 * and make the tree class die */
 
 	species_t* s;
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
@@ -554,6 +542,10 @@ void daily_growth_efficiency_mortality ( cell_t *const c, const int height, cons
 
 void annual_growth_efficiency_mortality ( cell_t *const c, const int height, const int dbh, const int age, const int species )
 {
+	/* this function superimpose mortality for all trees in class when reserves
+	 * go under zero assuming that reserve pool hasn't be refilled during the year
+	 * and make the tree class die */
+
 	species_t* s;
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 

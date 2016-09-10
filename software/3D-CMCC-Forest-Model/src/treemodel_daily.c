@@ -302,8 +302,8 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 								/* MORTALITY and RENOVATION*/
 
 								/* Mortality based on growth efficiency */
-								/* note: it currently works on a daily scale */
-								//annual_growth_efficiency_mortality ( s );
+								/* note: it currently works on a daily scale (not more) */
+								annual_growth_efficiency_mortality ( c, height, dbh, age, species );
 
 								/* Mortality */
 								//if ( s->management == C ) stool_mortality ( c, layer, height, age, species );
