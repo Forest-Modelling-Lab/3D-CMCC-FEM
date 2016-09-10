@@ -357,7 +357,7 @@ static int log_start(const char* const sitename) {
 	logger(g_log, sz_launched, netcdf_get_version(), get_datetime());
 
 	/* show paths */
-	logger(g_log,"\nFILE PATHS\n");
+	logger(g_log,"\nFILE NAMES AND PATHS\n");
 	if ( g_sz_input_path )		
 		logger(g_log, msg_input_path, g_sz_input_path);
 	logger(g_log, msg_parameterization_path, g_sz_parameterization_path);

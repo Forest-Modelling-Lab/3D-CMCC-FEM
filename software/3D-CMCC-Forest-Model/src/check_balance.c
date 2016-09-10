@@ -46,7 +46,7 @@ void check_radiation_balance (cell_t *const c, const meteo_daily_t *const meteo_
 	{
 		logger(g_log, "DOY = %d\n", c->doy);
 		logger(g_log, "\nin\n");
-		logger(g_log, "incoming par = %g molPAR/m2/day\n", meteo_daily->par);
+		logger(g_log, "incoming par = %g molPAR/m2/day\n", meteo_daily->incoming_par);
 		logger(g_log, "\nout\n");
 		logger(g_log, "c->par_refl = %g molPAR/m2/day\n",c->par_refl);
 		logger(g_log, "c->par_refl_soil = %g molPAR/m2/day\n",c->par_refl_soil);
@@ -88,7 +88,7 @@ void check_radiation_balance (cell_t *const c, const meteo_daily_t *const meteo_
 	{
 		logger(g_log, "DOY = %d\n", c->doy);
 		logger(g_log, "\nin\n");
-		logger(g_log, "incoming radiation = %g W/m2\n", meteo_daily->sw_downward_W);
+		logger(g_log, "incoming radiation = %g W/m2\n", meteo_daily->incoming_sw_downward_W);
 		logger(g_log, "\nout\n");
 		logger(g_log, "c->sw_rad_refl = %g W/m2\n",c->sw_rad_refl);
 		logger(g_log, "c->sw_rad_for_soil_refl = %g W/m2\n",c->sw_rad_for_soil_refl);
@@ -127,7 +127,7 @@ void check_radiation_balance (cell_t *const c, const meteo_daily_t *const meteo_
 	{
 		logger(g_log, "DOY = %d\n", c->doy);
 		logger(g_log, "\nin\n");
-		logger(g_log, "incoming PPFD = %g umol/m2/sec\n", meteo_daily->sw_downward_W * RAD2PAR * EPAR);
+		logger(g_log, "incoming PPFD = %g umol/m2/sec\n", meteo_daily->incoming_ppfd);
 		logger(g_log, "\nout\n");
 		logger(g_log, "c->ppfd_refl = %g umol/m2/sec\n",c->ppfd_refl);
 		logger(g_log, "c->ppfd_refl_soil = %g umol/m2/sec\n",c->ppfd_refl_soil);

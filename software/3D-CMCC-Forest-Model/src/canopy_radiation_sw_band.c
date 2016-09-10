@@ -287,43 +287,18 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 	logger(g_log, "Light_refl_sw_rad_canopy_frac = %g %%\n", Light_refl_sw_rad_canopy_frac * 100);
 	logger(g_log, "LightReflec_par = %g %%\n\n", Light_refl_par_frac * 100);
 
-
-	logger(g_log, "layer_height_class_counter = %d\n", layer_height_class_counter);
-	logger(g_log, "cell_height_class_counter = %d\n\n", cell_height_class_counter);
-
 	//fixme set that if gapcover is bigger then 0.5 albedo should be considered also in dominated layer!!!!
 	//fixme following MAESPA (Duursma et al.,) and from Campbell&Norman (2000, p. 259) dominated layers should have just shaded leaves
 
 	/* RADIATION */
 	/*****************************************************************************************************************/
-	/* first height class in the cell is processed */
-	if( !layer_height_class_counter && !cell_height_class_counter )
-	{
-		/* reset temporary values when the first height class in layer is processed */
-		temp_apar = 0.0;
-		temp_par_refl = 0.0;
-		temp_sw_rad_abs = 0.0;
-		temp_sw_rad_refl = 0.0;
-		temp_ppfd_abs = 0.0;
-		temp_ppfd_refl = 0.0;
-
-		/* assign meteo variables to cell variables */
-		/* assign incoming PAR */
-		//c->par = meteo_daily->par;
-
-		/* assign Shortwave Radiation */
-		//c->sw_rad_down_W = meteo_daily->sw_downward_W;
-
-		/* assign incoming PPFD */
-		//c->ppfd = meteo_daily->ppfd;
-
-	}
-
-	/*****************************************************************************************************************/
 	/* shared functions among all class/layers */
 	/* counters */
 	layer_height_class_counter ++;
 	cell_height_class_counter++;
+
+	logger(g_log, "layer_height_class_counter = %d\n", layer_height_class_counter);
+	logger(g_log, "cell_height_class_counter = %d\n\n", cell_height_class_counter);
 
 	/*************************************************************************/
 	/* compute reflected, absorbed and transmitted Par, Short Wave radiation and PPFD class level */
@@ -394,12 +369,20 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 	/* when matches the last height class in the cell is processed */
 	if ( c->heights_count == cell_height_class_counter )
 	{
-		/* reset counter */
+		/* reset counter and temporary variables */
 		cell_height_class_counter = 0;
+
+		temp_apar = 0.;
+		temp_par_refl = 0.;
+		temp_sw_rad_abs = 0.;
+		temp_sw_rad_refl = 0.;
+		temp_ppfd_abs = 0.;
+		temp_ppfd_refl = 0.;
+
 		logger(g_log, "last height class in cell processed\n");
 		logger(g_log, "Radiation for soil\n");
 		logger(g_log, "PAR = %g molPAR/m2/day\n", meteo_daily->par);
-		logger(g_log, "Short Wave = %g W/m2\n\n", meteo_daily->sw_downward_W);
+		logger(g_log, "Short Wave = %g W/m2\n", meteo_daily->sw_downward_W);
 		logger(g_log, "PPFD = %g umol/m2/sec\n", meteo_daily->ppfd);
 		logger(g_log,"\n***********************************\n");
 	}

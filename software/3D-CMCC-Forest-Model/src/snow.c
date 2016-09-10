@@ -7,6 +7,7 @@
 /* includes */
 #include <stdio.h>
 #include <stdlib.h>
+#include <assert.h>
 #include "math.h"
 #include "snow.h"
 #include "constants.h"
@@ -25,6 +26,7 @@ void snow_melt_subl(cell_t *const c, meteo_daily_t *meteo_daily)
 	double incident_rad;                      /* incident radiation(kJ/m2/d) */
 	double t_melt, r_melt, r_sub;
 
+	assert ( c );
 
 	logger(g_log, "**SNOW POOL**\n");
 
