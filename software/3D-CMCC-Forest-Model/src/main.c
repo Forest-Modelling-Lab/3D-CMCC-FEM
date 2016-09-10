@@ -454,182 +454,182 @@ static int parse_args(int argc, char *argv[]) {
 		}
 
 		switch ( argv[i][1] ) {
-			case 'i': /* folder where input files are stored */
-				if ( ! argv[i+1] ) {
-					puts("input path not specified!");
-					goto err;
-				}
-				g_sz_input_path = path_copy(argv[i+1]);
-				if ( ! g_sz_input_path ) {
-					puts(sz_err_out_of_memory);
-					goto err;
-				}
-			break;
-
-			case 'p': /* folder where parameterization files are stored */
-				if ( ! argv[i+1] ) {
-					puts("parameterization path not specified!");
-					goto err;
-				}
-				g_sz_parameterization_path = path_copy(argv[i+1]);
-				if ( ! g_sz_parameterization_path ) {
-					puts(sz_err_out_of_memory);
-					goto err;
-				}
-			break;
-
-			case 'o': /* debug file path */
-				if ( ! argv[i+1] ) {
-					puts("debug file path not specified!");
-					goto err;
-				}
-				g_sz_debug_output_filename = string_copy(argv[i+1]);
-				if ( ! g_sz_debug_output_filename ) {
-					puts(sz_err_out_of_memory);
-					goto err;
-				}
-			break;
-
-			case 'b': /* daily file path */
-				if ( ! argv[i+1] ) {
-					puts("daily file not specified!");
-					goto err;
-				}
-				g_sz_daily_output_filename = string_copy(argv[i+1]);
-				if( ! g_sz_daily_output_filename ) {
-					puts(sz_err_out_of_memory);
-					goto err;
-				}
-			break;
-
-			case 'f': /* monthly file path */
-				if ( ! argv[i+1] ) {
-					puts("monthly file not specified!");
-					goto err;
-				}
-				g_sz_monthly_output_filename = string_copy(argv[i+1]);
-				if( ! g_sz_monthly_output_filename ) {
-					puts(sz_err_out_of_memory);
-					goto err;
-				}
-			break;
-
-			case 'e': /* yearly file path */
-				if ( ! argv[i+1] ) {
-					puts("annual file not specified!");
-					goto err;
-				}
-				g_sz_yearly_output_filename = string_copy(argv[i+1]);
-				if( ! g_sz_yearly_output_filename ) {
-					puts(sz_err_out_of_memory);
-					goto err;
-				}
-			break;
-
-			case 'n': /* soil file path */
-				if ( ! argv[i+1] ) {
-					puts("soil file not specified!");
-					goto err;
-				}
-				g_sz_soil_output_filename = string_copy(argv[i+1]);
-				if( ! g_sz_soil_output_filename ) {
-					puts(sz_err_out_of_memory);
-					goto err;
-				}
-			break;
-
-			case 'd': /* dataset file path */
-				if ( ! argv[i+1] ) {
-					puts("dataset file not specified!");
-					goto err;
-				}
-				g_sz_dataset_file = string_copy(argv[i+1]);
-				if( ! g_sz_dataset_file ) {
-					puts(sz_err_out_of_memory);
-					goto err;
-				}
-			break;
-
-			case 'm': /* met filename */
-				if ( ! argv[i+1] ) {
-					puts("met file not specified!");
-					goto err;
-				}
-				g_sz_input_met_file = string_copy(argv[i+1]);
-				if ( ! g_sz_input_met_file ) {
-					puts(sz_err_out_of_memory);
-					goto err;
-				}
-			break;
-
-			case 's': /*soil file */
-				if ( ! argv[i+1] ) {
-					puts("soil file not specified!");
-					goto err;
-				}
-				g_sz_soil_file = string_copy(argv[i+1]);
-				if ( ! g_sz_soil_file ) {
-					puts(sz_err_out_of_memory);
-					goto err;
-				}
-			break;
-
-			case 't': /* topo file */
-				if ( ! argv[i+1] ) {
-					puts("topo file not specified!");
-					goto err;
-				}
-				g_sz_topo_file = string_copy(argv[i+1]);
-				if( ! g_sz_topo_file ) {
-					puts(sz_err_out_of_memory);
-					goto err;
-				}
-				break;
-
-			case 'c': /* settings file */
-				if ( ! argv[i+1] ) {
-					puts("settings file not specified!");
-					goto err;
-				}
-				g_sz_settings_file = string_copy(argv[i+1]);
-				if( ! g_sz_settings_file ) {
-					puts(sz_err_out_of_memory);
-					goto err;
-				}
-			break;
-
-			case 'k': /* settings file */
-				if ( ! argv[i+1] ) {
-					puts("co2 conc file not specified!");
-					goto err;
-				}
-				g_sz_co2_conc_file = string_copy(argv[i+1]);
-				if( ! g_sz_co2_conc_file ) {
-					puts(sz_err_out_of_memory);
-					goto err;
-				}
-			break;
-
-			case 'r': /* output filename */
-				if ( ! argv[i+1] ) {
-					puts("output path not specified!");
-					goto err;
-				}
-				g_sz_output_vars_file = string_copy(argv[i+1]);
-				if( ! g_sz_output_vars_file ) {
-					puts(sz_err_out_of_memory);
-					goto err;
-				}
-			break;
-
-			case 'h': /* show help */
-				goto err_show_usage;
-			break;
-
-			default:
-				printf("invalid option (%s)!\n", argv[i]);
-				goto err_show_usage;
+		case 'i': /* folder where input files are stored */
+			if ( ! argv[i+1] ) {
+				puts("input path not specified!");
+				goto err;
 			}
+			g_sz_input_path = path_copy(argv[i+1]);
+			if ( ! g_sz_input_path ) {
+				puts(sz_err_out_of_memory);
+				goto err;
+			}
+			break;
+
+		case 'p': /* folder where parameterization files are stored */
+			if ( ! argv[i+1] ) {
+				puts("parameterization path not specified!");
+				goto err;
+			}
+			g_sz_parameterization_path = path_copy(argv[i+1]);
+			if ( ! g_sz_parameterization_path ) {
+				puts(sz_err_out_of_memory);
+				goto err;
+			}
+			break;
+
+		case 'o': /* debug file path */
+			if ( ! argv[i+1] ) {
+				puts("debug file path not specified!");
+				goto err;
+			}
+			g_sz_debug_output_filename = string_copy(argv[i+1]);
+			if ( ! g_sz_debug_output_filename ) {
+				puts(sz_err_out_of_memory);
+				goto err;
+			}
+			break;
+
+		case 'b': /* daily file path */
+			if ( ! argv[i+1] ) {
+				puts("daily file not specified!");
+				goto err;
+			}
+			g_sz_daily_output_filename = string_copy(argv[i+1]);
+			if( ! g_sz_daily_output_filename ) {
+				puts(sz_err_out_of_memory);
+				goto err;
+			}
+			break;
+
+		case 'f': /* monthly file path */
+			if ( ! argv[i+1] ) {
+				puts("monthly file not specified!");
+				goto err;
+			}
+			g_sz_monthly_output_filename = string_copy(argv[i+1]);
+			if( ! g_sz_monthly_output_filename ) {
+				puts(sz_err_out_of_memory);
+				goto err;
+			}
+			break;
+
+		case 'e': /* yearly file path */
+			if ( ! argv[i+1] ) {
+				puts("annual file not specified!");
+				goto err;
+			}
+			g_sz_yearly_output_filename = string_copy(argv[i+1]);
+			if( ! g_sz_yearly_output_filename ) {
+				puts(sz_err_out_of_memory);
+				goto err;
+			}
+			break;
+
+		case 'n': /* soil file path */
+			if ( ! argv[i+1] ) {
+				puts("soil file not specified!");
+				goto err;
+			}
+			g_sz_soil_output_filename = string_copy(argv[i+1]);
+			if( ! g_sz_soil_output_filename ) {
+				puts(sz_err_out_of_memory);
+				goto err;
+			}
+			break;
+
+		case 'd': /* dataset file path */
+			if ( ! argv[i+1] ) {
+				puts("dataset file not specified!");
+				goto err;
+			}
+			g_sz_dataset_file = string_copy(argv[i+1]);
+			if( ! g_sz_dataset_file ) {
+				puts(sz_err_out_of_memory);
+				goto err;
+			}
+			break;
+
+		case 'm': /* met filename */
+			if ( ! argv[i+1] ) {
+				puts("met file not specified!");
+				goto err;
+			}
+			g_sz_input_met_file = string_copy(argv[i+1]);
+			if ( ! g_sz_input_met_file ) {
+				puts(sz_err_out_of_memory);
+				goto err;
+			}
+			break;
+
+		case 's': /*soil file */
+			if ( ! argv[i+1] ) {
+				puts("soil file not specified!");
+				goto err;
+			}
+			g_sz_soil_file = string_copy(argv[i+1]);
+			if ( ! g_sz_soil_file ) {
+				puts(sz_err_out_of_memory);
+				goto err;
+			}
+			break;
+
+		case 't': /* topo file */
+			if ( ! argv[i+1] ) {
+				puts("topo file not specified!");
+				goto err;
+			}
+			g_sz_topo_file = string_copy(argv[i+1]);
+			if( ! g_sz_topo_file ) {
+				puts(sz_err_out_of_memory);
+				goto err;
+			}
+			break;
+
+		case 'c': /* settings file */
+			if ( ! argv[i+1] ) {
+				puts("settings file not specified!");
+				goto err;
+			}
+			g_sz_settings_file = string_copy(argv[i+1]);
+			if( ! g_sz_settings_file ) {
+				puts(sz_err_out_of_memory);
+				goto err;
+			}
+			break;
+
+		case 'k': /* settings file */
+			if ( ! argv[i+1] ) {
+				puts("co2 conc file not specified!");
+				goto err;
+			}
+			g_sz_co2_conc_file = string_copy(argv[i+1]);
+			if( ! g_sz_co2_conc_file ) {
+				puts(sz_err_out_of_memory);
+				goto err;
+			}
+			break;
+
+		case 'r': /* output filename */
+			if ( ! argv[i+1] ) {
+				puts("output path not specified!");
+				goto err;
+			}
+			g_sz_output_vars_file = string_copy(argv[i+1]);
+			if( ! g_sz_output_vars_file ) {
+				puts(sz_err_out_of_memory);
+				goto err;
+			}
+			break;
+
+		case 'h': /* show help */
+			goto err_show_usage;
+			break;
+
+		default:
+			printf("invalid option (%s)!\n", argv[i]);
+			goto err_show_usage;
+		}
 	}
 
 	/* check that each mandatory parameter has been used */
@@ -653,7 +653,7 @@ static int parse_args(int argc, char *argv[]) {
 		puts("output filename option is missing!");
 		goto err_show_usage;
 	}
-	*/
+	 */
 
 	if ( ! g_sz_monthly_output_filename ) {
 		puts("monthly output filename option is missing!");
@@ -697,7 +697,7 @@ static int parse_args(int argc, char *argv[]) {
 
 	return 1;
 
-err_show_usage:
+	err_show_usage:
 	show_usage();
 
 	err:
@@ -716,9 +716,9 @@ int main(int argc, char *argv[]) {
 	int start_year;
 	matrix_t* matrix;
 	output_t* output_vars;
-	
+
 	//_CrtSetBreakAlloc(109);
-	
+
 	/* initialize */
 	matrix = NULL;
 	output_vars = NULL;
@@ -1037,32 +1037,40 @@ int main(int argc, char *argv[]) {
 					/* print daily met data */
 					print_daily_met_data (&matrix->cells[cell], day, month, year);
 
+					/* print cell data */
+					print_cell_data ( &matrix->cells[cell] );
+
 					/************************************************************************/
 					if ( F == matrix->cells[cell].landuse && matrix->cells[cell].heights_count != 0 )
 					{
+						/* print  forest cell data */
+						print_forest_cell_data ( &matrix->cells[cell] );
+
 						if ( 'f' == g_settings->version )
 						{
-							if ( !Tree_model_daily(matrix, cell, day, month, year) )
-							{
-								logger(g_log, "tree model daily failed!!!");
-							}
-							else
-							{
-								puts(msg_ok_tree_model);
-
-								if (!string_compare_i(g_settings->dndc, "on"))
+							//if ( matrix->cells[cell].cell_n_trees > 0 )
+							//{
+								if ( !Tree_model_daily( matrix, cell, day, month, year ) )
 								{
-									logger(g_log, "RUNNING DNDC.....\n");
-									//TODO SERGIO
-									//soil_dndc_sgm (matrix, cell, year, month, day, years_of_simulation);
-									//soil_dndc......................................
+									logger(g_log, "tree model daily failed!!!");
 								}
 								else
 								{
-									//logger(g_log, "No soil simulation!!!\n");
+									puts( msg_ok_tree_model );
+
+									if (!string_compare_i ( g_settings->dndc, "on" ) )
+									{
+										logger(g_log, "RUNNING DNDC.....\n");
+										//soil_dndc_sgm (matrix, cell, year, month, day, years_of_simulation);
+										//soil_dndc......................................
+									}
+									else
+									{
+										//logger(g_log, "No soil simulation!!!\n");
+									}
+									get_net_ecosystem_exchange(&matrix->cells[cell]);
 								}
-								get_net_ecosystem_exchange(&matrix->cells[cell]);
-							}
+							//}
 						}
 						else
 						{
@@ -1071,15 +1079,16 @@ int main(int argc, char *argv[]) {
 					}
 					else
 					{
-						//						if ( ! crop_model_D(matrix, cell, year, month, day, years_of_simulation) ) {
-						//							logger(g_log, "crop model failed.");
-						//						}
-						//						else
-						//						{
-						//							puts(msg_ok);
-						//							//look if put it here or move before tree_model at the beginning of each month simulation
-						//							//	soil_model (matrix, yos, years, month, years_of_simulation);
-						//						}
+						//if ( ! crop_model_D(matrix, cell, year, month, day, years_of_simulation) )
+						//{
+						//	logger(g_log, "crop model failed.");
+						//}
+						//else
+						//{
+						//	puts(msg_ok);
+						//	//look if put it here or move before tree_model at the beginning of each month simulation
+						//	/	soil_model (matrix, yos, years, month, years_of_simulation);
+						//}
 					}
 					//ALESSIOC
 					/************************************************************************/
@@ -1091,12 +1100,12 @@ int main(int argc, char *argv[]) {
 					{
 						puts(msg_ok_soil_model);
 					}
-					
+
 					/*************************************************************************/
 
 					//ALESSIOC
 					/************************************************************************/
-					
+
 					if ( !Cell_model_daily(matrix, cell, day, month, year) )
 					{
 						logger(g_log, "cell model daily failed!!!");

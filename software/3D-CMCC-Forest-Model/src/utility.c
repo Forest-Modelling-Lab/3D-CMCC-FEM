@@ -98,9 +98,6 @@ void reset_monthly_cell_variables(cell_t *const c)
 {
 	logger(g_log, "...resetting cell level monthly variables...\n");
 
-	/* it must be resetted also monthly since monthly changes */
-	c->cell_n_trees = 0;
-
 	/*reset cell level variables*/
 	c->monthly_gpp = 0.;
 	c->monthly_npp_gC = 0.;
@@ -141,11 +138,8 @@ void reset_annual_cell_variables(cell_t *const c)
 
 	/* reset cell level variables */
 	c->tree_layers_count = 0;
-	c->cell_n_trees = 0;
 	c->cell_cover = 0;
-
 	c->doy = 0;
-
 	c->annual_gpp = 0.;
 	c->annual_npp_gC = 0.;
 	c->annual_npp_tDM = 0.;

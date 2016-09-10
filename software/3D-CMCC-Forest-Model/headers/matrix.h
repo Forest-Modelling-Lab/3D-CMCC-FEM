@@ -733,9 +733,6 @@ typedef struct
 	int x;                                              /* cell index within the matrix */
 	int y;                                              /* cell index within the matrix */
 
-	/* forest structure variables */
-	int annual_tree_layer_number;                       /* annual number of tree layer within the cell */
-
 	/* general variables */
 	double abscission_daylength;                        /* day length for starting abscission (not used) */
 	double av_yearly_daylength;                         /* average yearly daylength for renovation function */
@@ -755,14 +752,12 @@ typedef struct
 
 	/*forest structure variables*/	
 	int Veg_Counter;                                    /* number of class in vegetative period  in the cell */
-	int top_layer;                                      /* index for dominant layer */
-	int saplings_counter;                               /* number of class as sapling */
 	double cell_cover;                                  /* canopy cover (ratio) */
 	int cell_n_trees;                                   /* number of trees */
-
 	int daily_dead_tree;                                /* daily number of dead tree */
-	double monthly_dead_tree;                           /* monthly number of dead tree */
-	double annual_dead_tree ;                           /* annual number of dead tree */
+	int monthly_dead_tree;                              /* monthly number of dead tree */
+	int annual_dead_tree ;                              /* annual number of dead tree */
+	int saplings_counter;                               /* number of class as sapling */
 	double basal_area;                                  /* cumulated basal area at cell level */
 	double agb;                                         /* current above ground biomass at cell level (tC/cell) */
 	double bgb;                                         /* current below ground biomass at cell level (tC/cell) */

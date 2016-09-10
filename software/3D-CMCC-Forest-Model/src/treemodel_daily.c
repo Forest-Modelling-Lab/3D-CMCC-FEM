@@ -84,18 +84,15 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	/* check parameters */
 	assert( m );
 
-	logger (g_log, "*********TREE_MODEL_DAILY*********\n");
+	logger (g_log, "\n*********TREE_MODEL_DAILY*********\n");
 
 	//FIXME move to meteo_t structure
 	/* counter day of the year */
 	if( !day && !month )c->doy = 1;
 	else ++c->doy;
 	/* counter day of simulation */
-	if(!day && !month && !year)c->dos = 1;
+	if( !day && !month && !year )c->dos = 1;
 	else ++c->dos;
-
-	/* print cell data */
-	print_cell_data ( c );
 
 	/* forest structure */
 	if ( ! day && ! month && year )

@@ -66,7 +66,7 @@ void forest_structure (cell_t *const c, const meteo_daily_t *const meteo_daily, 
 			puts(sz_err_out_of_memory);
 			exit(1);
 		}
-
+		/* forest annual self_pruning */
 		layer_self_pruning_thinning ( c );
 	}
 }
@@ -106,30 +106,37 @@ int annual_forest_structure(cell_t* const c)
 		assert( ! c->heights[height].height_z );
 	}
 
-	/* add 1 layer by default */
-	if ( ! layer_add(c) ) return 0;
+	/*********************************************************************************************************/
 
 	/* compute number of annual layers */
 	/* note: it starts from the lowest height values up to the highest */
+
+	/* add 1 layer by default */
+	if ( ! layer_add(c) ) return 0;
 
 	logger(g_log, "*compute height_z*\n");
 
 	/* note: it must starts from the lowest tree height class */
 	qsort(c->heights, c->heights_count, sizeof(height_t), sort_by_heights_asc);
 
+	logger(g_log, "*compute height_z*\n");
+
 	/* compute zeta counter */
-	for ( height = 0; height < c->heights_count-1; ++height )
+	if (c->heights_count > 1)
 	{
-		logger(g_log, "*value %g*\n\n", c->heights[height].value);
-
-		// ALESSIOR TO ALESSIOC...this give error
-		// on +1 YOU MUST remove -1 from count!
-		if ( (c->heights[height+1].value - c->heights[height].value) > g_settings->tree_layer_limit )
+		for ( height = 0; height < c->heights_count-1; ++height )
 		{
-			++zeta_count;
+			logger(g_log, "*value %g*\n\n", c->heights[height].value);
 
-			/* compute layer number and alloc memory for each one */
-			if ( ! layer_add(c) ) return 0;
+			// ALESSIOR TO ALESSIOC...this give error
+			// on +1 YOU MUST remove -1 from count!
+			if ( (c->heights[height+1].value - c->heights[height].value) > g_settings->tree_layer_limit )
+			{
+				++zeta_count;
+
+				/* compute layer number and alloc memory for each one */
+				if ( ! layer_add(c) ) return 0;
+			}
 		}
 	}
 	logger(g_log, "*zeta_count %d*\n\n", zeta_count);
