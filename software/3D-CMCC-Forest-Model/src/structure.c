@@ -67,6 +67,8 @@ void daily_forest_structure (cell_t *const c)
 
 	logger(g_log, "\n***DAILY FOREST STRUCTURE***\n");
 
+	//ALESSIOC TO ALESSIOR VERY PORCATA
+
 	for ( height = 0; height < c->heights_count ; ++height )
 	{
 		for ( dbh = 0; dbh < c->heights[height].dbhs_count; ++dbh )
@@ -77,11 +79,32 @@ void daily_forest_structure (cell_t *const c)
 				{
 					c->cell_n_trees += c->heights[height].dbhs[dbh].ages[age].species[species].counter[N_TREE];
 
+					if (c->heights[height].dbhs[dbh].ages[age].species_count > 1)
+					{
+						if ( (!string_compare_i(c->heights[height].dbhs[dbh].ages[age].species[species].name,
+								c->heights[height].dbhs[dbh].ages[age].species[species+1].name)))
+						++ c->cell_species_count;
+					}
+					else
+					{
+						c->cell_species_count = 1;
+					}
 				}
+				++ c->cell_ages_count;
 			}
+			++ c->cell_dbhs_count;
 		}
+		c->cell_heights_count = c->heights_count;
 	}
-	logger(g_log, "* number of trees = %d per cell\n", c->cell_n_trees);
+	logger(g_log, "* cell_n_trees = %d per cell\n", c->cell_n_trees);
+	logger(g_log, "* cell_heights_count = %d per cell\n",c->cell_heights_count);
+	logger(g_log, "* cell_dbhs_count = %d per cell\n",c->cell_dbhs_count);
+	logger(g_log, "* cell_ages_count = %d per cell\n",c->cell_ages_count);
+	logger(g_log, "* cell_species_count = %d per cell\n",c->cell_species_count);
+
+
+
+	getchar();
 }
 
 void forest_structure (cell_t *const c, const meteo_daily_t *const meteo_daily, const int day, const int month, const int year)
