@@ -170,6 +170,7 @@ void print_daily_cell_data (cell_t *const c)
 	logger(g_log, "cell = \n");
 	logger(g_log, "* x = %d\n", c->x);
 	logger(g_log, "* y = %d\n", c->y);
+	logger(g_log, "* landuse = %s\n", c->landuse ? "F":"Z");
 	logger(g_log, "* asw = %g mm\n", c->asw);
 	logger(g_log, "* swc = %g %%\n", c->swc);
 	logger(g_log, "* snow pack = %g cm\n", c->snow_pack);
@@ -177,11 +178,42 @@ void print_daily_cell_data (cell_t *const c)
 
 void print_daily_forest_data (cell_t *const c)
 {
+//	int layer;
+//	int height;
+//	int dbh;
+//	int age;
+//	int species;
+
 	/* print at the beginning stand data */
 	logger(g_log, "**************DAILY FOREST CELL DATA**************\n\n");
+
+//	for ( height = c->heights_count -1 ; height >= 0; --height )
+//	{
+//		c->cell_heights_count = c->heights_count;
+//
+//		for ( dbh = c->heights[height].dbhs_count - 1; dbh >= 0; --dbh )
+//		{
+//			c->cell_dbhs_count ++;
+//
+//			for ( age = c->heights[height].dbhs[dbh].ages_count - 1 ; age >= 0 ; --age )
+//			{
+//				c->cell_ages_count ++;
+//
+//				for ( species = 0; species < c->heights[height].dbhs[dbh].ages[age].species_count; ++species )
+//				{
+//					c->cell_species_count = c->heights[height].dbhs[dbh].ages[age].species_count;
+//				}
+//			}
+//		}
+//	}
+
 	logger(g_log, "* number of trees = %d\n", c->cell_n_trees);
-	logger(g_log, "* number of layers = %d\n", c->tree_layers_count);
-	logger(g_log, "* number of height class = %d\n", c->heights_count);
+	logger(g_log, "* number of height class = %d\n", c->cell_heights_count);
+//	logger(g_log, "* number of dbh = %d\n", c->cell_dbhs_count);
+//	logger(g_log, "* number of age class = %d\n", c->cell_ages_count);
+//	logger(g_log, "* number of species class = %d\n", c->cell_species_count);
+
+	getchar();
 
 }
 void print_daily_forest_class_data(cell_t* const c, const int layer, const int height, const int dbh, const int age, const int species)

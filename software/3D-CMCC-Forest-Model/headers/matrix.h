@@ -728,6 +728,14 @@ typedef struct
 	int years_count;
 	yos_t *years;
 
+
+	/* overall cell counter */
+	int cell_tree_layers_count;
+	int cell_heights_count;
+	int cell_dbhs_count;
+	int cell_ages_count;
+	int cell_species_count;
+
 	e_landuse landuse;                                  /* LandUse type */
 
 	int x;                                              /* cell index within the matrix */

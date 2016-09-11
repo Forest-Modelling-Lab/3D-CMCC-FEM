@@ -1037,9 +1037,6 @@ int main(int argc, char *argv[]) {
 					/************************************************************************/
 					if ( F == matrix->cells[cell].landuse && matrix->cells[cell].heights_count != 0 )
 					{
-						/* print  forest cell data */
-						print_daily_forest_data ( &matrix->cells[cell] );
-
 						if ( 'f' == g_settings->version )
 						{
 							//fixme
