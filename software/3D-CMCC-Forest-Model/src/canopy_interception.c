@@ -52,7 +52,6 @@ void canopy_interception(cell_t *const c, const int layer, const int height, con
 	if( !layer_height_class_counter && !cell_height_class_counter )
 	{
 		/* reset temporary values when the first height class in layer is processed */
-		//fixme alessioc it could be resetted at the end instead at the beginning see sw radiation
 		temp_int_rain = 0.0;
 		temp_int_snow = 0.0;
 
@@ -119,9 +118,11 @@ void canopy_interception(cell_t *const c, const int layer, const int height, con
 		logger(g_log,"update rain/snow interception values for lower layer\n");
 
 		/* compute interceptable rain for lower layers */
+		c->daily_c_rain_int += s->value[CANOPY_INT];
 		c->rain -= temp_int_rain;
 
 		/* compute interceptable snow for lower layers */
+		c->daily_c_snow_int += s->value[CANOPY_INT_SNOW];
 		c->snow -= temp_int_snow;
 
 		/* reset temporary values when the last height class in layer is processed */
@@ -133,26 +134,18 @@ void canopy_interception(cell_t *const c, const int layer, const int height, con
 	}
 
 	/**********************************************************************************************************/
-
 	/* when matches the last height class in the cell is processed */
+	//fixme fixme fixme fixme fixme sometimes it doesn't go in  caused by the a jump in "cell_height_class_counter"
+	//as it is now is used just for print data but it should be fixed
 	if ( c->heights_count == cell_height_class_counter )
 	{
-		logger(g_log,"last height class in cell processed\n");
-
 		logger(g_log,"\n***********************************\n");
-
-		/* assign values for soil */
-		c->rain_to_soil = c->rain;
-		c->snow_to_soil = c->snow;
-		logger(g_log, "rain to soil = %g mm\n", c->rain_to_soil);
-		logger(g_log, "snow to soil = %g cm\n", c->snow_to_soil);
+		logger(g_log,"last height class in cell processed\n");
+		logger(g_log, "rain to soil = %g mm\n", c->rain);
+		logger(g_log, "snow to soil = %g cm\n", c->snow);
 
 		/* reset counter */
 		cell_height_class_counter = 0;
 	}
-
-	/* update at cell level */
-	c->daily_c_rain_int += s->value[CANOPY_INT];
-	c->daily_c_snow_int += s->value[CANOPY_INT_SNOW];
-
+	/*****************************************************************************************************************/
 }

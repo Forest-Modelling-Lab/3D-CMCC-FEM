@@ -66,7 +66,7 @@ void soil_evaporation(cell_t *const c, const meteo_daily_t *const meteo_daily)
 		/* covert to daily total kg/m2 */
 		pot_soil_evap *= (meteo_daily->daylength * 3600.0);
 
-		if ( c->rain_to_soil >= pot_soil_evap )
+		if ( c->rain >= pot_soil_evap )
 		{
 			logger(g_log,"rain to soil > pot soil evapo\n");
 
@@ -99,11 +99,11 @@ void soil_evaporation(cell_t *const c, const meteo_daily_t *const meteo_daily)
 			are smaller than dry-day evap, there will be more evaporation than
 			rainfall. In this case the drying curve counter is advanced. */
 
-			if ( c->rain_to_soil >c->daily_soil_evapo )
+			if ( c->rain >c->daily_soil_evapo )
 			{
 				logger(g_log,"rain to soil > daily_soil_evapo \n");
 
-				c->daily_soil_evapo = c->rain_to_soil;
+				c->daily_soil_evapo = c->rain;
 
 				--c->days_since_rain;
 				logger(g_log, "days_since_rain = %d \n", c->days_since_rain);
@@ -115,8 +115,6 @@ void soil_evaporation(cell_t *const c, const meteo_daily_t *const meteo_daily)
 		c->daily_soil_evapo = c->snow_subl;
 		//todo get functions from snow_melt_subl snow subl (evaporated) or melt (that goes to soil pool) for canopy intercepted snow
 	}
-
-	//TODO TODO TODO add snow sublimation to soil evaporation!!!!!!!!!!!!!
 
 	logger(g_log, "day(s) since rain = %g day(s)\n", c->days_since_rain);
 	logger(g_log, "Daily Soil Evaporation = %g mm/m2/day\n", c->daily_soil_evapo);

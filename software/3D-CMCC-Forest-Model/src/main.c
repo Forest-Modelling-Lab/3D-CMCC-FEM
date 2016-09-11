@@ -1169,7 +1169,7 @@ int main(int argc, char *argv[]) {
 					//					{
 					//						Get_EOD_soil_balance_cell_level (&matrix->cells[cell], year, month, day);
 					//					}
-					logger(g_log, "****************END OF DAY (%d)*******************\n", day + 1 );
+					logger(g_log, "****************END OF DAY (%d)*******************\n\n\n", day + 1 );
 				}
 
 				/* save values for put in output netcdf */

@@ -16,6 +16,7 @@ void reset_daily_cell_variables(cell_t *const c)
 
 	c->cell_cover = 0.;
 	c->cell_n_trees = 0;
+	c->cell_heights_count = 0;
 
 	/* reset daily radiative variables */
 	c->apar = 0.;

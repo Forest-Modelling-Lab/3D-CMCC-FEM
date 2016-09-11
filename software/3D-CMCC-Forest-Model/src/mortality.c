@@ -62,8 +62,8 @@ void layer_self_pruning_thinning ( cell_t *const c )
 			c->tree_layers[layer].layer_n_height_class = 0;
 			c->tree_layers[layer].layer_n_trees = 0;
 			c->tree_layers[layer].layer_density = 0;
+
 			/* reset values for cell (they are recomputed below)*/
-			c->cell_n_trees = 0;
 			c->cell_cover = 0;
 
 		}
@@ -121,18 +121,13 @@ void layer_self_pruning_thinning ( cell_t *const c )
 		logger(g_log, "**************************************\n\n");
 
 		/**************************************************************************************************/
-		/* Recompute number of total trees and cell cover (cell level) */
-		logger(g_log, "Recompute number of total trees and cell cover (cell level)\n");
-
-
-		/* compute total number of trees per cell */
-		c->cell_n_trees += c->tree_layers[layer].layer_n_trees;
+		/* Recompute cell cover (cell level) */
+		logger(g_log, "Recompute cell cover (cell level)\n");
 
 		/* assuming that plants tend to occupy the part of the cell not covered by the others */
 		c->cell_cover += c->tree_layers[layer].layer_cover;
 	}
 
-	logger(g_log, "-number of trees = %d cell\n", c->cell_n_trees);
 	logger(g_log, "-cell cover = %g cell\n", c->cell_cover);
 	logger(g_log, "**************************************\n\n");
 }
@@ -356,21 +351,20 @@ void self_thinning ( cell_t *const c, const int layer )
 						s->value[AV_DEAD_BRANCH_MASS_KgC] = (s->value[BRANCH_DEAD_WOOD_C] / (double)s->counter[N_TREE])*1000.0;
 
 						/* mortality */
-						while (c->tree_layers[layer].layer_cover > g_settings->max_layer_cover && s->counter[N_TREE] >= 0)
+						while ( c->tree_layers[layer].layer_cover > g_settings->max_layer_cover )
 						{
 							--s->counter[N_TREE];
 							++deadtree;
 
-							/* recompute class level canopy cover */
-							s->value[CANOPY_COVER_DBHDC] -= (s->value[CROWN_AREA_DBHDC] / g_settings->sizeCell);
+							if ( s->counter[N_TREE] > 0 )
+							{
+								/* recompute class level canopy cover */
+								s->value[CANOPY_COVER_DBHDC] -= (s->value[CROWN_AREA_DBHDC] / g_settings->sizeCell);
 
-							/* recompute layer level canopy cover */
-							c->tree_layers[layer].layer_cover -= (s->value[CROWN_AREA_DBHDC] / g_settings->sizeCell);
-
-							//fixme to remove once implemented function below
-							CHECK_CONDITION(s->counter[N_TREE], > 0);
-
-							if (s->counter[N_TREE] == 0)
+								/* recompute layer level canopy cover */
+								c->tree_layers[layer].layer_cover -= (s->value[CROWN_AREA_DBHDC] / g_settings->sizeCell);
+							}
+							else
 							{
 								/* call remove_tree_class */
 								if ( ! tree_class_remove(c, height, dbh, age, species) )
@@ -470,9 +464,6 @@ void self_thinning ( cell_t *const c, const int layer )
 	c->tree_layers[layer].layer_n_height_class = 0;
 	c->tree_layers[layer].layer_n_trees = 0;
 	c->tree_layers[layer].layer_density = 0;
-	/* reset values for cell (they are recomputed below)*/
-	//c->cell_n_trees = 0;
-	//c->cell_cover = 0;
 
 	/* REcompute numbers of height classes, tree number and density after mortality within each layer */
 	logger(g_log, "REcompute numbers of height classes, tree number and density after mortality within each layer\n\n");

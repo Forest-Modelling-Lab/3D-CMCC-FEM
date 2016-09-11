@@ -292,13 +292,25 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 
 	/* RADIATION */
 	/*****************************************************************************************************************/
+	/* first height class in the cell is processed */
+	if( !layer_height_class_counter && !cell_height_class_counter )
+	{
+		/* reset temporary values when the first height class in layer is processed */
+		temp_apar = 0.0;
+		temp_par_refl = 0.0;
+		temp_sw_rad_abs = 0.0;
+		temp_sw_rad_refl = 0.0;
+		temp_ppfd_abs = 0.0;
+		temp_ppfd_refl = 0.0;
+	}
+	/*****************************************************************************************************************/
+
 	/* shared functions among all class/layers */
 	/* counters */
-	layer_height_class_counter ++;
-	cell_height_class_counter++;
+	++layer_height_class_counter;
+	++cell_height_class_counter;
 
 	logger(g_log, "layer_height_class_counter = %d\n", layer_height_class_counter);
-	logger(g_log, "cell_height_class_counter = %d\n\n", cell_height_class_counter);
 
 	/*************************************************************************/
 	/* compute reflected, absorbed and transmitted Par, Short Wave radiation and PPFD class level */
@@ -336,7 +348,8 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 	/* when matches the last height class in the layer is processed */
 	if ( l->layer_n_height_class == layer_height_class_counter )
 	{
-		logger(g_log,"\nlast height class in layer processed\n");
+		logger(g_log,"\n************************************\n");
+		logger(g_log,"last height class in layer processed\n");
 		logger(g_log,"update radiation values for lower layer\n");
 		/* compute values for lower layer when last height class in layer is processed */
 		/* compute par for lower layer */
@@ -350,7 +363,7 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 
 		logger(g_log, "Radiation for lower layers\n");
 		logger(g_log, "PAR = %g molPAR/m2/day\n", meteo_daily->par);
-		logger(g_log, "Short Wave = %g W/m2\n\n", meteo_daily->sw_downward_W);
+		logger(g_log, "Short Wave = %g W/m2\n", meteo_daily->sw_downward_W);
 		logger(g_log, "PPFD = %g umol/m2/sec\n", meteo_daily->ppfd);
 
 		/* reset temporary values when the last height class in layer is processed */
@@ -367,18 +380,11 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 
 	/*************************************************************************/
 	/* when matches the last height class in the cell is processed */
+	//fixme fixme fixme fixme fixme sometimes it doesn't go in  caused by the a jump in "cell_height_class_counter"
+	//as it is now is used just for print data but it should be fixed
 	if ( c->heights_count == cell_height_class_counter )
 	{
-		/* reset counter and temporary variables */
-		cell_height_class_counter = 0;
-
-		temp_apar = 0.;
-		temp_par_refl = 0.;
-		temp_sw_rad_abs = 0.;
-		temp_sw_rad_refl = 0.;
-		temp_ppfd_abs = 0.;
-		temp_ppfd_refl = 0.;
-
+		logger(g_log,"\n************************************\n");
 		logger(g_log, "last height class in cell processed\n");
 		logger(g_log, "Radiation for soil\n");
 		logger(g_log, "PAR = %g molPAR/m2/day\n", meteo_daily->par);

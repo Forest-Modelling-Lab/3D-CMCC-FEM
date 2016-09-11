@@ -1442,9 +1442,6 @@ void forest_summary(const matrix_t* const m, const int cell, const int day, cons
 			{
 				for ( species = 0; species < m->cells[cell].heights[height].dbhs[dbh].ages[age].species_count; ++species )
 				{
-					/* compute number of trees in overall cell */
-					m->cells[cell].cell_n_trees += m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species].counter[N_TREE];
-
 					/* IF NO BIOMASS INITIALIZATION DATA OR TREE HEIGHTS ARE AVAILABLE FOR STAND
 					 * BUT JUST DENDROMETRIC VARIABLES (i.e. AVDBH, HEIGHT, THESE ARE MANDATORY) */
 					/* initialise carbon pools */

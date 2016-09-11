@@ -94,11 +94,15 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	if( !day && !month && !year )c->dos = 1;
 	else ++c->dos;
 
+	//fixme porcata
 	/* forest structure */
 	if ( ! day && ! month && year )
 	{
 		forest_structure ( c, meteo_daily, day, month, year );
 	}
+
+	/* forest structure */
+	daily_forest_structure ( c );
 
 	/* print  forest cell data */
 	print_daily_forest_data ( c );
@@ -128,6 +132,9 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 		{
 			/* assign shortcut */
 			h = &m->cells[cell].heights[height];
+
+			//ALESSIOC FIXME PORCATA
+			c->cell_heights_count ++;
 
 			/* check if tree height class matches with corresponding cell layer */
 			if( h->height_z == l->layer_z )

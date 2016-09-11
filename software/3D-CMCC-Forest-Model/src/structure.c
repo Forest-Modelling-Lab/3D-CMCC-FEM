@@ -57,12 +57,40 @@ int layer_add(cell_t* const c)
 	return ret;
 }
 
+void daily_forest_structure (cell_t *const c)
+{
+	int height;
+	int dbh;
+	int age;
+	int species;
+
+
+	logger(g_log, "\n***DAILY FOREST STRUCTURE***\n");
+
+	for ( height = 0; height < c->heights_count ; ++height )
+	{
+		for ( dbh = 0; dbh < c->heights[height].dbhs_count; ++dbh )
+		{
+			for ( age = 0; age < c->heights[height].dbhs[dbh].ages_count ; ++age )
+			{
+				for ( species = 0; species < c->heights[height].dbhs[dbh].ages[age].species_count; ++species )
+				{
+					c->cell_n_trees += c->heights[height].dbhs[dbh].ages[age].species[species].counter[N_TREE];
+
+				}
+			}
+		}
+	}
+	logger(g_log, "* number of trees = %d per cell\n", c->cell_n_trees);
+}
+
 void forest_structure (cell_t *const c, const meteo_daily_t *const meteo_daily, const int day, const int month, const int year)
 {
 	logger(g_log, "day %d month %d\n", day, month);
 	if ( ! day && ! month )
 	{
-		if ( ! annual_forest_structure ( c ) ) {
+		if ( ! annual_forest_structure ( c ) )
+		{
 			puts(sz_err_out_of_memory);
 			exit(1);
 		}
@@ -159,8 +187,8 @@ int annual_forest_structure(cell_t* const c)
 		logger(g_log, "*value %g z = %d*\n\n", c->heights[height].value, c->heights[height].height_z);
 	}
 
-	logger(g_log, "-Number of height classes = %d cell\n", c->heights_count);
-	logger(g_log, "-Number of layers = %d cell\n\n", c->tree_layers_count);
+	logger(g_log, "-Number of height classes = %d per cell\n", c->heights_count);
+	logger(g_log, "-Number of layers = %d per cell\n\n", c->tree_layers_count);
 	logger(g_log,"***********************************\n");
 
 	/* check */
@@ -362,9 +390,6 @@ int annual_forest_structure(cell_t* const c)
 
 	for ( layer = c->tree_layers_count - 1; layer >= 0; --layer )
 	{
-		/* number of trees per cell */
-		//c->cell_n_trees += c->tree_layers[layer].layer_n_trees;
-
 		/* note: overall cell cover can't exceed its area */
 		c->cell_cover += c->tree_layers[layer].layer_cover;
 
