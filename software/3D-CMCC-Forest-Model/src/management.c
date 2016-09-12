@@ -30,7 +30,7 @@ void forest_management (cell_t *const c, const int layer, const int height, cons
 
 			clearcut_timber_without_request ( c, layer, height, dbh, age, species, year );
 
-			if(g_settings->replanted_n_tree != 0.0)
+			if( g_settings->replanted_n_tree )
 			{
 				if ( ! add_tree_class( c, height, dbh, age, species ) )
 				{
@@ -447,11 +447,15 @@ void clearcut_timber_without_request (cell_t *const c, const int layer, const in
 	IndWbblive = s->value[BRANCH_LIVE_WOOD_C] / s->counter[N_TREE];
 	IndWbbdead = s->value[BRANCH_DEAD_WOOD_C] / s->counter[N_TREE];
 
+	/* compute basal area to remove */
 	stand_basal_area_to_remove = g_settings->removing_basal_area * s->value[STAND_BASAL_AREA];
 	logger(g_log, "basal area to remove = %f\n", stand_basal_area_to_remove);
+
+	/* compute integer number of trees to remove */
 	removed_tree = ROUND(stand_basal_area_to_remove / s->value[BASAL_AREA]);
 	logger(g_log, "removed trees = %d\n", removed_tree);
 
+	/* remove trees */
 	s->counter[N_TREE] -= removed_tree;
 	logger(g_log, "Number of trees after management = %d \n", s->counter[N_TREE]);
 
@@ -462,6 +466,13 @@ void clearcut_timber_without_request (cell_t *const c, const int layer, const in
 	s->value[FINE_ROOT_C] = IndWrf * s->counter[N_TREE];
 	s->value[BRANCH_C] = IndWbb * s->counter[N_TREE];
 	s->value[RESERVE_C] = IndWres * s->counter[N_TREE];
+	s->value[STEM_LIVE_WOOD_C] = IndWslive * s->counter[N_TREE];
+	s->value[STEM_DEAD_WOOD_C] = IndWsdead * s->counter[N_TREE];
+	s->value[COARSE_ROOT_LIVE_WOOD_C] = IndWrclive * s->counter[N_TREE];
+	s->value[COARSE_ROOT_DEAD_WOOD_C] = IndWrcdead * s->counter[N_TREE];
+	s->value[BRANCH_LIVE_WOOD_C] = IndWbblive * s->counter[N_TREE];
+	s->value[BRANCH_DEAD_WOOD_C] = IndWbbdead * s->counter[N_TREE];
+
 	logger(g_log, "Biomass after management:\nWf = %f\nWs = %f\nWrf = %f\nWrc = %f\nWrBB = %f\n Wres = %f\n",
 			s->value[LEAF_C],
 			s->value[STEM_C],

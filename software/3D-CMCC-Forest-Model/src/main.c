@@ -827,11 +827,6 @@ int main(int argc, char *argv[]) {
 	logger(g_log, "\n3D-CMCC FEM START....\n\n");
 	for ( cell = 0; cell < matrix->cells_count; ++cell )
 	{
-
-		/* Marconi: the variable i needs to be a for private variable, used to fill the vpsat vector v(365;1) */
-		/* ALESSIOR: i renamed to index_vpsat */
-		int index_vpsat;
-
 		logger(g_log, "Processing met data files for cell at %d,%d...\n", matrix->cells[cell].x, matrix->cells[cell].y);
 		logger(g_log, "input_met_path = %s\n", g_sz_input_met_file);
 
@@ -954,7 +949,6 @@ int main(int argc, char *argv[]) {
 			/* for handling leap years */
 			int days_per_month;
 
-			index_vpsat = 0;
 			for ( month = 0; month < MONTHS_COUNT; ++month )
 			{
 				days_per_month = DaysInMonth[month];
@@ -1039,7 +1033,7 @@ int main(int argc, char *argv[]) {
 					{
 						if ( 'f' == g_settings->version )
 						{
-							//fixme
+							//fixme code must stops when trees = 0
 //							if ( matrix->cells[cell].cell_n_trees > 0 )
 //							{
 								if ( !Tree_model_daily( matrix, cell, day, month, year ) )
@@ -1263,7 +1257,6 @@ int main(int argc, char *argv[]) {
 			logger(g_log, "****************END OF YEAR (%d)*******************\n", matrix->cells[cell].years[year].year );
 		}
 
-		index_vpsat = matrix->cells[cell].years[0].year;
 		free(matrix->cells[cell].years);
 		matrix->cells[cell].years = NULL; /* required */
 	}

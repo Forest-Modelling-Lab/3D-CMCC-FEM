@@ -57,6 +57,7 @@ C_SRCS += \
 ../src/snow.c \
 ../src/soil_evaporation.c \
 ../src/soil_model.c \
+../src/soil_radiation_sw_band.c \
 ../src/soil_respiration.c \
 ../src/soil_settings.c \
 ../src/soil_water_balance.c \
@@ -125,6 +126,7 @@ OBJS += \
 ./src/snow.o \
 ./src/soil_evaporation.o \
 ./src/soil_model.o \
+./src/soil_radiation_sw_band.o \
 ./src/soil_respiration.o \
 ./src/soil_settings.o \
 ./src/soil_water_balance.o \
@@ -193,6 +195,7 @@ C_DEPS += \
 ./src/snow.d \
 ./src/soil_evaporation.d \
 ./src/soil_model.d \
+./src/soil_radiation_sw_band.d \
 ./src/soil_respiration.d \
 ./src/soil_settings.d \
 ./src/soil_water_balance.d \
