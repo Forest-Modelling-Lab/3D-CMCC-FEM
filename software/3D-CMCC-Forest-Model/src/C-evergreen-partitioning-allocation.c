@@ -37,7 +37,7 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 	double omegaCtem;
 	double pS_CTEM;
 	double pR_CTEM;
-	double pF_CTEM;
+	double pL_CTEM;
 
 	//double reductor;           //instead soil water the routine take into account the minimum between F_VPD and F_SW and F_NUTR
 
@@ -76,13 +76,19 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 
 	/* partitioning block using CTEM approach (Arora and Boer 2005) */
 	logger(g_log, "*Partitioning ratios*\n");
-	pR_CTEM = (r0Ctem + (omegaCtem * (1.0 - s->value[F_SW]))) / (1.0 + (omegaCtem * ( 2.0 - Light_trasm - s->value[F_SW])));
-	logger(g_log, "Roots CTEM ratio layer = %g %%\n", pR_CTEM * 100);
-	pS_CTEM = (s0Ctem + (omegaCtem * (1.0 - Light_trasm))) / (1.0 + (omegaCtem * ( 2.0 - Light_trasm - s->value[F_SW])));
+
+	/* roots */
+	pR_CTEM = (r0Ctem + (omegaCtem * ( 1.0 - s->value[F_SW]))) / (1.0 + (omegaCtem * (2.0 - Light_trasm - s->value[F_SW])));
+	logger(g_log, "Roots CTEM ratio = %g %%\n", pR_CTEM * 100);
+
+	/* stem */
+	pS_CTEM = (s0Ctem + (omegaCtem * ( 1.0 - Light_trasm))) / (1.0 + ( omegaCtem * (2.0 - Light_trasm - s->value[F_SW])));
 	logger(g_log, "Stem CTEM ratio = %g %%\n", pS_CTEM * 100);
-	pF_CTEM = (1.0 - pS_CTEM - pR_CTEM);
-	logger(g_log, "Reserve CTEM ratio = %g %%\n", pF_CTEM * 100);
-	CHECK_CONDITION( fabs ( pR_CTEM + pS_CTEM + pF_CTEM ), > 1 + 1e-4 );
+
+	/* reserve and leaves */
+	pL_CTEM = (1.0 - pS_CTEM - pR_CTEM);
+	logger(g_log, "Reserve CTEM ratio = %g %%\n", pL_CTEM * 100);
+	CHECK_CONDITION( fabs ( pR_CTEM + pS_CTEM + pL_CTEM ), > 1 + 1e-4 );
 
 	if ( !s->management )
 	{
@@ -217,7 +223,7 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 				s->value[C_TO_LEAF] = 0.0;
 				s->value[C_TO_COARSEROOT] = npp_to_alloc * pR_CTEM;
 				s->value[C_TO_FINEROOT] = 0.0;
-				s->value[C_TO_RESERVE] = (npp_to_alloc * pF_CTEM);
+				s->value[C_TO_RESERVE] = (npp_to_alloc * pL_CTEM);
 				s->value[C_TO_TOT_STEM] = npp_to_alloc * pS_CTEM;
 				s->value[C_TO_STEM] = (npp_to_alloc* pS_CTEM) * (1.0 - s->value[FRACBB]);
 				s->value[C_TO_BRANCH] = (npp_to_alloc * pS_CTEM) * s->value[FRACBB];

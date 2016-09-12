@@ -28,9 +28,9 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 	double s0Ctem;
 	double r0Ctem;
 	double omegaCtem;
-	double pS_CTEM = 0.0;
-	double pR_CTEM = 0.0;
-	double pF_CTEM = 0.0;
+	double pS_CTEM;
+	double pR_CTEM;
+	double pL_CTEM;
 	double Light_trasm;
 	double Perc_fine;
 	static double reserve_for_foliage_budburst;
@@ -40,13 +40,11 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 	/* for check */
 	double npp_to_alloc;
 
-	tree_layer_t *l;
 	height_t *h;
 	dbh_t *d;
 	age_t *a;
 	species_t *s;
 
-	l = &c->tree_layers[layer];
 	h = &c->heights[height];
 	d = &h->dbhs[dbh];
 	a = &d->ages[age];
@@ -67,13 +65,19 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 
 	/* partitioning block using CTEM approach (Arora and Boer 2005) */
 	logger(g_log, "*Partitioning ratios*\n");
+
+	/* roots */
 	pR_CTEM = (r0Ctem + (omegaCtem * ( 1.0 - s->value[F_SW]))) / (1.0 + (omegaCtem * (2.0 - Light_trasm - s->value[F_SW])));
 	logger(g_log, "Roots CTEM ratio = %g %%\n", pR_CTEM * 100);
+
+	/* stem */
 	pS_CTEM = (s0Ctem + (omegaCtem * ( 1.0 - Light_trasm))) / (1.0 + ( omegaCtem * (2.0 - Light_trasm - s->value[F_SW])));
 	logger(g_log, "Stem CTEM ratio = %g %%\n", pS_CTEM * 100);
-	pF_CTEM = (1.0 - pS_CTEM - pR_CTEM);
-	logger(g_log, "Reserve CTEM ratio = %g %%\n", pF_CTEM * 100);
-	CHECK_CONDITION( fabs ( pR_CTEM + pS_CTEM + pF_CTEM ), > 1 + 1e-4 );
+
+	/* reserve and leaves */
+	pL_CTEM = (1.0 - pS_CTEM - pR_CTEM);
+	logger(g_log, "Reserve CTEM ratio = %g %%\n", pL_CTEM * 100);
+	CHECK_CONDITION( fabs ( pR_CTEM + pS_CTEM + pL_CTEM ), > 1 + 1e-4 );
 
 	//fixme to check it, values are too high for fine root
 	/* fine root vs. coarse root ratio */
@@ -175,7 +179,7 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 				logger(g_log, "allocating into the three pools Ws(Ws+Wbb)+Wr(Wrc)+Wreserve\n");
 
 				/* allocating into c pools */
-				s->value[C_TO_RESERVE] = npp_to_alloc * pF_CTEM;
+				s->value[C_TO_RESERVE] = npp_to_alloc * pL_CTEM;
 				s->value[C_TO_FINEROOT] = 0.0;
 				s->value[C_TO_COARSEROOT] = s->value[NPP_tC] * pR_CTEM;
 				s->value[C_TO_STEM] = (s->value[NPP_tC] * pS_CTEM) * (1.0 - s->value[FRACBB]);
