@@ -46,7 +46,7 @@ KAPPA   1.6             //ALLOCATION PARAMETER DIMENSIONLESS
 MIN_R0CTEM  0.1         //MINIMUM RATE TO ROOT AT THE FIRST YEAR AFTER COPPICING
 MAX_S0CTEM  0.55        //MAXIMUM RATE TO STEM AT THE FIRST YEAR AFTER COPPICING
 YEARS_FOR_CONVERSION 30 //years from coppicing to consider tree as a timber
-FRUIT_PERC  0           //fraction of NPP allocated for reproduction (0 for broadleaf)
+FRUIT_PERC  0.05        //fraction of annual NPP allocated for reproduction see Fernandez-Martinez et al., 2016
 CONES_LIFE_SPAN 0       //Life span for cones (yr)
 FINE_ROOT_LEAF  0.545   //allocation new fine root C:new leaf (ratio) 1.4 see Mollicone et al 2002, 0.545 see Pietsch et al 2005
 STEM_LEAF   3.8         //allocation new stem C:new leaf (ratio) 3.8 pietsch - 1 see Mollicone et al 2002

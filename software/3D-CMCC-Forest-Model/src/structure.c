@@ -101,10 +101,6 @@ void daily_forest_structure (cell_t *const c)
 	logger(g_log, "* cell_dbhs_count = %d per cell\n",c->cell_dbhs_count);
 	logger(g_log, "* cell_ages_count = %d per cell\n",c->cell_ages_count);
 	logger(g_log, "* cell_species_count = %d per cell\n",c->cell_species_count);
-
-
-
-	getchar();
 }
 
 void forest_structure (cell_t *const c, const meteo_daily_t *const meteo_daily, const int day, const int month, const int year)

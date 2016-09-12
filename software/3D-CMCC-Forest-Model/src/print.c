@@ -187,6 +187,7 @@ void print_daily_forest_data (cell_t *const c)
 	//logger(g_log, "* number of dbh = %d\n", c->cell_dbhs_count);
 	//logger(g_log, "* number of age class = %d\n", c->cell_ages_count);
 	//logger(g_log, "* number of species class = %d\n", c->cell_species_count);
+	logger(g_log, "**************************************************\n\n");
 
 
 }
