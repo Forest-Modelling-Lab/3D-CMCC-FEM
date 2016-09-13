@@ -30,7 +30,6 @@ GROWTHTMIN  0           //Minimum temperature for growth 5  Rasse et al 2001 0 f
 GROWTHTMAX  35          //Maximum temperature for growth 40 from Williams 1996 35 from calibration
 GROWTHTOPT  20          //Optimum temperature for growth 19.4 Rasse et al 2001, 20 from Lyr & Garbe, 1994
 GROWTHSTART 100         //(5 °C)average temperature or (GDD) thermic sum for starting growth in °C 130 ettore with t base = 5°C
-GROWTHEND   5           //average temperature for ending growth in °C
 MINDAYLENGTH    12      //minimum day length for fagus from ettore, 12 through satellite images
 SWPOPEN -0.34           //for Fagus sylvatica -0.6 Mollicone et al., 2002
 SWPCLOSE    -1.7        //For Fagus sylvatica -2.3 Mollicone et al., 2002
@@ -40,9 +39,6 @@ OMEGA_CTEM  0.8         //ALLOCATION PARAMETER control the sensitivity of alloca
 S0CTEM  0.30    //0.1             //PARAMETER CONTROLLING ALLOCATION TO STEM/MINIMUM RATIO TO C TO STEM
 R0CTEM  0.25    //0.45            //PARAMETER CONTROLLING ALLOCATION TO ROOT/MINIMUM RATIO TO C TO ROOTS
 F0CTEM  0.45    //0.35            //PARAMETER CONTROLLING ALLOCATION TO FOLIAGE
-RES0CTEM    0.22        //PARAMETER CONTROLLING ALLOCATION TO RESERVE (not used)
-EPSILON_CTEM    40      //ALLOCATION PARAMETER IN (Kgcm^2)^-0.6 (NOT USED)
-KAPPA   1.6             //ALLOCATION PARAMETER DIMENSIONLESS (NOT USED)
 MIN_R0CTEM  0.1         //MINIMUM RATE TO ROOT AT THE FIRST YEAR AFTER COPPICING
 MAX_S0CTEM  0.55        //MAXIMUM RATE TO STEM AT THE FIRST YEAR AFTER COPPICING
 YEARS_FOR_CONVERSION 30 //years from coppicing to consider tree as a timber
@@ -61,11 +57,6 @@ BUD_BURST   15          //days of bud burst at the beginning of growing season (
 LEAF_FALL_FRAC_GROWING  0.2     //proportions of the growing season of leaf fall from Pietsch et al., 2005
 LEAF_FINEROOT_TURNOVER  1   //Average yearly fine root turnover rate Rasse et al 2001
 LIVE_WOOD_TURNOVER  0.7 //Annual yearly live wood turnover rate 
-WSX1000 550             //Max stem mass (kg) per tree at 1000 trees/hectare
-THINPOWER   2           //Power in self-thinning rule
-MF  0                   //Fraction mean single tree foliage biomass lost per dead tree
-MR  0.2                 //Fraction mean single tree root biomass lost per dead tree
-MS  0.2                 //Fraction mean single tree stem biomass lost per dead tree
 DBHDCMAX    0.22 //CHANGED FROM  0.18        //Low Density
 DBHDCMIN    0.14        //High Density from ettore
 SAP_A   0.674           //a value from Kostner for 

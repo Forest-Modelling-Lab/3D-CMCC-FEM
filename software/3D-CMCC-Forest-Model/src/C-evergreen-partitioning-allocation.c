@@ -90,39 +90,6 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 	logger(g_log, "Reserve CTEM ratio = %g %%\n", pL_CTEM * 100);
 	CHECK_CONDITION( fabs ( pR_CTEM + pS_CTEM + pL_CTEM ), > 1 + 1e-4 );
 
-	if ( !s->management )
-	{
-		//logger(g_log, "Management type = TIMBER\n");
-	}
-	else
-	{
-		logger(g_log, "min r0 ctem = %g\n",s->value[MIN_R0CTEM] );
-		logger(g_log, "max s0 ctem = %g\n",s->value[MAX_S0CTEM] );
-		logger(g_log, "years for conversion = %g\n",s->value[YEARS_FOR_CONVERSION]);
-
-		//considering a LINEAR increment
-		//allocation ratio to roots
-		r0Ctem -= s->value[MIN_R0CTEM];
-		r0Ctem_increment = r0Ctem / s->value[YEARS_FOR_CONVERSION];
-		r0Ctem = s->value[MIN_R0CTEM] + (r0Ctem_increment * s->value[F_AGE]);
-		logger(g_log, "new r0_CTEM = %g \n", r0Ctem);
-
-		if (r0Ctem > old_r0Ctem || r0Ctem < s->value[MIN_R0CTEM])
-		{
-			logger(g_log, "ERROR IN r0Ctem !!! \n");
-		}
-
-		//considering a LINEAR decrement
-		//allocation ratio to stem + bb
-		s0Ctem = s->value[MAX_S0CTEM] - s0Ctem;
-		s0Ctem_increment = s0Ctem / s->value[YEARS_FOR_CONVERSION];
-		s0Ctem = s->value[MAX_S0CTEM] - (s0Ctem_increment * s->value[F_AGE]);
-		logger(g_log, "new s0_CTEM = %g \n", s0Ctem);
-
-		if (s0Ctem > s->value[MAX_S0CTEM] || s0Ctem < old_s0Ctem)logger(g_log, "ERROR IN s0Ctem !!! \n");
-
-	}
-
 	logger(g_log, "\nCarbon allocation for evergreen\n");
 	logger(g_log, "PHENOLOGICAL PHASE = %d\n", s->phenology_phase);
 	logger(g_log, "LAI = %f \n", s->value[LAI]);

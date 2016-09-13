@@ -139,22 +139,26 @@ void average_tree_biomass(species_t *const s)
 }
 
 
-//not used
-//void Tree_Branch_Bark (species_t *s, age_t *a, int heigth, int age, int species)
-//{
-//
-//	if (s->value[FRACBB0] == 0)
-//	{
-//		logger(g_log, "I don't have FRACBB0 = FRACBB1 \n");
-//		s->value[FRACBB0] = s->value[FRACBB1];
-//		logger(g_log, "FRACBB0 = %g\n", s->value[FRACBB0]);
-//	}
-//	else
-//	{
-//		s->value[FRACBB] = s->value[FRACBB1] + (s->value[FRACBB0]- s->value[FRACBB1])* exp(-ln2 * (a->value / s->value[TBB]));
-//	}
-//
-//}
+void tree_branch_and_bark (cell_t *const c, const int height, const int dbh, const int age, const int species)
+{
+	age_t *a;
+	species_t *s;
+
+	a = &c->heights[height].dbhs[dbh].ages[age];
+	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
+
+	if (s->value[FRACBB0] == 0)
+	{
+		logger(g_log, "I don't have FRACBB0 = FRACBB1 \n");
+		s->value[FRACBB0] = s->value[FRACBB1];
+		logger(g_log, "FRACBB0 = %g\n", s->value[FRACBB0]);
+	}
+	else
+	{
+		s->value[FRACBB] = s->value[FRACBB1] + (s->value[FRACBB0]- s->value[FRACBB1])* exp(-ln2 * (a->value / s->value[TBB]));
+	}
+
+}
 
 //not used
 //void Biomass_increment_BOY (cell_t *const c, species_t *const s, int height, int age, int years)

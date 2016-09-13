@@ -325,6 +325,9 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 								/* above ground-below ground biomass */
 								abg_bgb_biomass ( c, height, dbh, age, species );
 
+								/* annual branch and bark fraction */
+								tree_branch_and_bark ( c, height, dbh, age, species );
+
 								/* annual volume, MAI and CAI */
 								annual_tree_increment ( c, layer, height, dbh, age, species );
 

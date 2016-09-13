@@ -45,7 +45,6 @@ void Print_parameters(species_t *const s, const int species_count, const int day
 					"GROWTHTMAX = %f \n"
 					"GROWTHTOPT = %f \n"
 					"GROWTHSTART = %f \n"
-					"GROWTHEND = %f \n"
 					"STEMCONST = %f \n"
 					"STEMPOWER_A = %f \n"
 					"STEMPOWER_B = %f \n"
@@ -70,7 +69,6 @@ void Print_parameters(species_t *const s, const int species_count, const int day
 					s->value[GROWTHTMAX],
 					s->value[GROWTHTOPT],
 					s->value[GROWTHSTART],
-					s->value[GROWTHEND],
 					s->value[STEMCONST],
 					STEMPOWER_A,
 					STEMPOWER_B,

@@ -712,7 +712,6 @@ static const char *sz_species_values[] = {
 		"GROWTHTMAX",                 //Maximum temperature for growth
 		"GROWTHTOPT",                 //Optimum temperature for growth
 		"GROWTHSTART",                //Thermic sum  value for starting growth in °C
-		"GROWTHEND",                  //Thermic sum  value for ending growth in °C
 		"MINDAYLENGTH",               //minimum day length for phenology
 		"SWPOPEN",
 		"SWPCLOSE",
@@ -722,9 +721,6 @@ static const char *sz_species_values[] = {
 		"S0CTEM",                           //PARAMETER CONTROLLING ALLOCATION TO STEM
 		"R0CTEM",                           //PARAMETER CONTROLLING ALLOCATION TO ROOT
 		"F0CTEM",                           //PARAMETER CONTROLLING ALLOCATION TO FOLIAGE
-		"RES0CTEM",                         //PARAMETER CONTROLLING ALLOCATION TO RESERVE
-		"EPSILON_CTEM",                          //ALLOCATION PARAMETER IN (Kgcm^2)^-0.6
-		"KAPPA",                            //ALLOCATION PARAMETER DIMENSIONLESS
 		"MIN_R0CTEM",                       //MINIMUM RATE TO ROOT AT THE FIRST YEAR AFTER COPPICING
 		"MAX_S0CTEM",                       //MAXIMUM RATE TO STEM AT THE FIRST YEAR AFTER COPPICING
 		"YEARS_FOR_CONVERSION",        //years from coppicing to consider tree as a timber
@@ -743,11 +739,6 @@ static const char *sz_species_values[] = {
 		"LEAF_FALL_FRAC_GROWING",		//proportions of the growing season of leaf fall
 		"LEAF_FINEROOT_TURNOVER",             //Average yearly leaves and fine root turnover rate
 		"LIVE_WOOD_TURNOVER",             //Average yearly live wood turnover rate
-		"WSX1000",                    //Max stem mass (kg) per tree at 1000 trees/hectare
-		"THINPOWER",                  //Power in self-thinning rule
-		"MF",                         //Fraction mean single tree foliage biomass lost per dead tree
-		"MR",                         //Fraction mean single tree root biomass lost per dead tree
-		"MS",                         //Fraction mean single tree stem biomass lost per dead tree
 		"DBHDCMAX",                   //Low Density
 		"DBHDCMIN",                   //High Density
 		"SAP_A",                      //a coefficient for sapwood

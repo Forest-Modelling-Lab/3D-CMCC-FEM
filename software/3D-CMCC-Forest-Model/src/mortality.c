@@ -637,110 +637,110 @@ void age_mortality (cell_t *const c, const int height, const int dbh, const int 
 /*which has been superceded by the following ..                                */
 /*                                                                             */
 /*-----------------------------------------------------------------------------*/
-
-void self_thinning_mortality_3PG (species_t *const s, int years)
-{
-
-	int i;
-	double fN, dfN;
-	double dN, n, x1, x2;
-
-
-	s->value[WS_MAX] = s->value[WSX1000] * pow ( ( 1000 / (double) s->counter[N_TREE] ), s->value[THINPOWER] );
-
-	//ALESSIOC ??????????????
-	//modifified version for 1Km^2 spatial resolution
-	s->value[WS_MAX] = s->value[WSX1000];
-
-	if ( s->value[AV_STEM_MASS_KgDM] > s->value[WS_MAX])
-	{
-		logger(g_log, "*Self-thinnig mortality (3-PG)*\n");
-		logger(g_log, "Average Stem Mass > WSMax\n");
-		logger(g_log, "WS MAX = %g kgC/tree\n", s->value[WS_MAX]);
-		logger(g_log, "Average Stem Mass = %g kgC stem/tree\n", s->value[AV_STEM_MASS_KgDM]);
-		logger(g_log, "Tree Number before Mortality Function = %d\n", s->counter[N_TREE]);
-
-		n = (double)s->counter[N_TREE] / 1000;
-		logger(g_log, "n = %g\n", n);
-
-		x1 = 1000 * s->value[MS] * s->value[STEM_C] / (double)s->counter[N_TREE];
-		logger(g_log, "x1 = %g\n", x1);
-		i = 0;
-		while ( 1 )
-		{
-			i = i + 1;
-			logger(g_log, "i = %d\n", i);
-			x2 = s->value[WSX1000] * pow (n, (1 - s->value[THINPOWER]));
-			logger(g_log, "X2 = %g\n", x2);
-			fN = x2 - x1 * n - (1 - s->value[MS]) * s->value[STEM_C];
-			logger(g_log, "fN = %g\n", fN);
-			dfN = (1 - s->value[THINPOWER]) * x2 / n - x1;
-			logger(g_log, "dfN = %g\n", dfN);
-			dN = -fN / dfN;
-			logger(g_log, "dN = %g\n", dN);
-			n = n + dN;
-			logger(g_log, "n = %g\n", n);
-			if ((fabs(dN) <= eps) || (i >= 5))
-				break;
-		}
-
-		s->counter[DEAD_STEMS] = (int)(s->counter[N_TREE] - 1000 * n);
-		logger(g_log, "Dead Tree In Mortality Function = %d trees \n", s->counter[DEAD_STEMS]);
-
-		//SERGIO CONTROL: if DEAD_STEMS < 0 set it to its minimum plausible value; that is 0
-		if (s->counter[DEAD_STEMS] < 0)
-		{
-			s->counter[DEAD_STEMS]	 = 0;
-		}
-		//control
-		if (s->counter[DEAD_STEMS] > s->counter[N_TREE])
-		{
-			logger(g_log, "ERROR Number of Dead Trees > N Trees\n");
-			logger(g_log, "Dead Trees = %d\n", s->counter[DEAD_STEMS]);
-			logger(g_log, "Live Trees = %d\n", s->counter[N_TREE]);
-		}
-		else
-		{
-			s->counter[N_TREE] = s->counter[N_TREE] - s->counter[DEAD_STEMS];
-			logger(g_log, "Number of Trees  after mortality = %d trees\n", s->counter[N_TREE]);
-			s->value[BIOMASS_FOLIAGE_tDM] = s->value[BIOMASS_FOLIAGE_tDM] - s->value[MF] * s->counter[DEAD_STEMS] * (s->value[BIOMASS_FOLIAGE_tDM] / s->counter[N_TREE]);
-			s->value[BIOMASS_ROOTS_TOT_tDM] = s->value[BIOMASS_ROOTS_TOT_tDM] - s->value[MR] * s->counter[DEAD_STEMS] * (s->value[BIOMASS_ROOTS_TOT_tDM] / s->counter[N_TREE]);
-			s->value[BIOMASS_STEM_tDM] = s->value[BIOMASS_STEM_tDM] - s->value[MS] * s->counter[DEAD_STEMS] * (s->value[BIOMASS_STEM_tDM] / s->counter[N_TREE]);
-			logger(g_log, "Wf after dead = %g tDM/ha\n", s->value[BIOMASS_FOLIAGE_tDM]);
-			logger(g_log, "Wr after dead = %g tDM/ha\n", s->value[BIOMASS_ROOTS_TOT_tDM]);
-			logger(g_log, "Ws after dead = %g tDM/ha\n", s->value[BIOMASS_STEM_tDM]);
-		}
-
-
-
-		//----------------Number of trees after mortality---------------------
-
-
-
-
-		//--------------------------------------------------------------------
-
-		//deselected algorithm for 1Km^2 spatial resolution
-		//s->value[WS_MAX] = s->value[WSX1000] * pow((1000 / (double)s->counter[N_TREE]), s->value[THINPOWER]);
-
-		//modifified version for 1Km^2 spatial resolution
-		s->value[WS_MAX] = s->value[WSX1000];
-
-		logger(g_log, "wSmax = %g KgDM/tree\n", s->value[WS_MAX]);
-		s->value[AV_STEM_MASS_KgDM] = s->value[BIOMASS_STEM_tDM] * 1000.0 / (double)s->counter[N_TREE];
-		logger(g_log, "AvStemMass after dead = %g Kg/tree\n", s->value[AV_STEM_MASS_KgDM]);
-	}
-	else
-	{
-		logger(g_log, "NO MORTALITY based SELF-THINNING RULE\n");
-		logger(g_log, "Average Stem Mass < WSMax\n");
-	}
-
-	logger(g_log, "**********************************\n");
-
-
-
-}
+/* NOT USED */
+//void self_thinning_mortality_3PG (species_t *const s, int years)
+//{
+//
+//	int i;
+//	double fN, dfN;
+//	double dN, n, x1, x2;
+//
+//
+//	s->value[WS_MAX] = s->value[WSX1000] * pow ( ( 1000 / (double) s->counter[N_TREE] ), s->value[THINPOWER] );
+//
+//	//ALESSIOC ??????????????
+//	//modifified version for 1Km^2 spatial resolution
+//	s->value[WS_MAX] = s->value[WSX1000];
+//
+//	if ( s->value[AV_STEM_MASS_KgDM] > s->value[WS_MAX])
+//	{
+//		logger(g_log, "*Self-thinnig mortality (3-PG)*\n");
+//		logger(g_log, "Average Stem Mass > WSMax\n");
+//		logger(g_log, "WS MAX = %g kgC/tree\n", s->value[WS_MAX]);
+//		logger(g_log, "Average Stem Mass = %g kgC stem/tree\n", s->value[AV_STEM_MASS_KgDM]);
+//		logger(g_log, "Tree Number before Mortality Function = %d\n", s->counter[N_TREE]);
+//
+//		n = (double)s->counter[N_TREE] / 1000;
+//		logger(g_log, "n = %g\n", n);
+//
+//		x1 = 1000 * s->value[MS] * s->value[STEM_C] / (double)s->counter[N_TREE];
+//		logger(g_log, "x1 = %g\n", x1);
+//		i = 0;
+//		while ( 1 )
+//		{
+//			i = i + 1;
+//			logger(g_log, "i = %d\n", i);
+//			x2 = s->value[WSX1000] * pow (n, (1 - s->value[THINPOWER]));
+//			logger(g_log, "X2 = %g\n", x2);
+//			fN = x2 - x1 * n - (1 - s->value[MS]) * s->value[STEM_C];
+//			logger(g_log, "fN = %g\n", fN);
+//			dfN = (1 - s->value[THINPOWER]) * x2 / n - x1;
+//			logger(g_log, "dfN = %g\n", dfN);
+//			dN = -fN / dfN;
+//			logger(g_log, "dN = %g\n", dN);
+//			n = n + dN;
+//			logger(g_log, "n = %g\n", n);
+//			if ((fabs(dN) <= eps) || (i >= 5))
+//				break;
+//		}
+//
+//		s->counter[DEAD_STEMS] = (int)(s->counter[N_TREE] - 1000 * n);
+//		logger(g_log, "Dead Tree In Mortality Function = %d trees \n", s->counter[DEAD_STEMS]);
+//
+//		//SERGIO CONTROL: if DEAD_STEMS < 0 set it to its minimum plausible value; that is 0
+//		if (s->counter[DEAD_STEMS] < 0)
+//		{
+//			s->counter[DEAD_STEMS]	 = 0;
+//		}
+//		//control
+//		if (s->counter[DEAD_STEMS] > s->counter[N_TREE])
+//		{
+//			logger(g_log, "ERROR Number of Dead Trees > N Trees\n");
+//			logger(g_log, "Dead Trees = %d\n", s->counter[DEAD_STEMS]);
+//			logger(g_log, "Live Trees = %d\n", s->counter[N_TREE]);
+//		}
+//		else
+//		{
+//			s->counter[N_TREE] = s->counter[N_TREE] - s->counter[DEAD_STEMS];
+//			logger(g_log, "Number of Trees  after mortality = %d trees\n", s->counter[N_TREE]);
+//			s->value[BIOMASS_FOLIAGE_tDM] = s->value[BIOMASS_FOLIAGE_tDM] - s->value[MF] * s->counter[DEAD_STEMS] * (s->value[BIOMASS_FOLIAGE_tDM] / s->counter[N_TREE]);
+//			s->value[BIOMASS_ROOTS_TOT_tDM] = s->value[BIOMASS_ROOTS_TOT_tDM] - s->value[MR] * s->counter[DEAD_STEMS] * (s->value[BIOMASS_ROOTS_TOT_tDM] / s->counter[N_TREE]);
+//			s->value[BIOMASS_STEM_tDM] = s->value[BIOMASS_STEM_tDM] - s->value[MS] * s->counter[DEAD_STEMS] * (s->value[BIOMASS_STEM_tDM] / s->counter[N_TREE]);
+//			logger(g_log, "Wf after dead = %g tDM/ha\n", s->value[BIOMASS_FOLIAGE_tDM]);
+//			logger(g_log, "Wr after dead = %g tDM/ha\n", s->value[BIOMASS_ROOTS_TOT_tDM]);
+//			logger(g_log, "Ws after dead = %g tDM/ha\n", s->value[BIOMASS_STEM_tDM]);
+//		}
+//
+//
+//
+//		//----------------Number of trees after mortality---------------------
+//
+//
+//
+//
+//		//--------------------------------------------------------------------
+//
+//		//deselected algorithm for 1Km^2 spatial resolution
+//		//s->value[WS_MAX] = s->value[WSX1000] * pow((1000 / (double)s->counter[N_TREE]), s->value[THINPOWER]);
+//
+//		//modifified version for 1Km^2 spatial resolution
+//		s->value[WS_MAX] = s->value[WSX1000];
+//
+//		logger(g_log, "wSmax = %g KgDM/tree\n", s->value[WS_MAX]);
+//		s->value[AV_STEM_MASS_KgDM] = s->value[BIOMASS_STEM_tDM] * 1000.0 / (double)s->counter[N_TREE];
+//		logger(g_log, "AvStemMass after dead = %g Kg/tree\n", s->value[AV_STEM_MASS_KgDM]);
+//	}
+//	else
+//	{
+//		logger(g_log, "NO MORTALITY based SELF-THINNING RULE\n");
+//		logger(g_log, "Average Stem Mass < WSMax\n");
+//	}
+//
+//	logger(g_log, "**********************************\n");
+//
+//
+//
+//}
 
 void update_biomass_after_mortality ()
 {

@@ -79,7 +79,6 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 	logger(g_log, "Reserve CTEM ratio = %g %%\n", pL_CTEM * 100);
 	CHECK_CONDITION( fabs ( pR_CTEM + pS_CTEM + pL_CTEM ), > 1 + 1e-4 );
 
-	//fixme to check it, values are too high for fine root
 	/* fine root vs. coarse root ratio */
 	s->value[FR_CR] = (s->value[FINE_ROOT_LEAF] / s->value[COARSE_ROOT_STEM]) * (1.0 / s->value[STEM_LEAF]);
 	logger(g_log, "Fine/Coarse root ratio = %g\n", s->value[FR_CR] );
