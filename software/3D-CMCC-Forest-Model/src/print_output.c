@@ -135,7 +135,7 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 										"dWBB",
 										"SAR",
 										"LAR",
-										"FAR",
+										"FRAR",
 										"CRAR",
 										"BBAR");
 							}
@@ -550,7 +550,7 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 										"WBBD",
 										"SAR",
 										"LAR",
-										"FAR",
+										"FRAR",
 										"CRAR",
 										"BBAR");
 							}

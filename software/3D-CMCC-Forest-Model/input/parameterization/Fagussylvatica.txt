@@ -10,7 +10,7 @@ INT_COEFF  0.034        //precip interception coefficient 0.3 for Tatarinov et a
 SLA_AVG 48              //Average Specific Leaf Area m^2/KgC sunlit leaves for Fagus s. 27.8 to 48 from Pietsch 2005, 35 for Tatarinov et al., 2006
 SLA_RATIO   2           //(DIM) ratio of shaded to sunlit projected SLA  for F. sylvatyica from Mollicone et al., 2002 , 2.0 from Pietsch 2005
 LAI_RATIO   2           //(DIM) all-sided to projected leaf area ratio for F. sylvatyica from Mollicone et al., 2002 , 2.0 from Pietsch 2005
-FRACBB0 0.40            //Branch and Bark fraction at age 0
+FRACBB0 0.20            //Branch and Bark fraction at age 0
 FRACBB1 0.125           //Branch and Bark fraction for mature stands (from Damesin et al., 2003)
 TBB 20                  //Age at which fracBB = (FRACBB0 + FRACBB1 )/ 2
 RHOMIN  0.64            //Minimum Basic Density for young Trees t/m^3 0.72 Bouriaud et al., 2004, 0.64 ettore
