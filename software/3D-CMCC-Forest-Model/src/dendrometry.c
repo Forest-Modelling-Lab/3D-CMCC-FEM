@@ -168,14 +168,14 @@ void annual_minimum_reserve (species_t *const s)
 	/* compute total sapwood biomass */
 	/* note: since SAP_WRES is parameterized for DryMatter it must be converted into DryMatter */
 	s->value[WTOT_sap_tDM] = s->value[TOT_SAPWOOD_C] * GC_GDM;
-	logger(g_log, "--WTOT_sap_tDM = %f tDM/cell \n", s->value[WTOT_sap_tDM]);
+	logger(g_log, "--WTOT_sap_tDM = %f tDM/class \n", s->value[WTOT_sap_tDM]);
 
 	/* compute minimum annual reserve */
 	s->value[MIN_RESERVE_C]= s->value[WTOT_sap_tDM] * s->value[SAP_WRES];
-	logger(g_log, "--MINIMUM Reserve Biomass = %g t res/cell \n", s->value[RESERVE_C]);
+	logger(g_log, "--MINIMUM Reserve Biomass = %g t res/class \n", s->value[RESERVE_C]);
 
 	s->value[AV_MIN_RESERVE_KgC] = s->value[MIN_RESERVE_C] *1000.0 /s->counter[N_TREE];
-	logger(g_log, "--Average MINIMUM Reserve Biomass = %g Kgres/tree \n", s->value[RESERVE_C]);
+	logger(g_log, "--Average MINIMUM Reserve Biomass = %g Kgres/class tree \n", s->value[RESERVE_C]);
 }
 
 

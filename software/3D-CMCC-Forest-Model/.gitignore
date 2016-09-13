@@ -9,6 +9,7 @@
 /Debug
 /Debug/src
 /Release
+/output
 
 # ignore eclipse settings file
 /.settings
