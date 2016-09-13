@@ -59,9 +59,9 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 	a = &c->heights[height].dbhs[dbh].ages[age];
 	s = &a->species[species];
 
-	old_s0Ctem = s0Ctem = s->value[S0CTEM];
-	old_r0Ctem = r0Ctem = s->value[R0CTEM];
-	omegaCtem = s->value[OMEGA_CTEM];
+	s0Ctem = s->value[S0CTEM];        /* parameter controlling allocatio to stem (minimum ratio to stem pool */
+	r0Ctem = s->value[R0CTEM];        /* parameter controlling allocatio to roots (minimum ratio to root pools */
+	omegaCtem = s->value[OMEGA_CTEM]; /* controls the sensitivity of allocation to changes in water and light availability */
 
 	Light_trasm = exp(- s->value[K] * s->value[LAI]);
 
