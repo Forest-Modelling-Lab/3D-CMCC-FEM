@@ -91,7 +91,8 @@ MINTEMP 20              //Minimum temperature for germination in °C
 ESTMAX  0.24            //Potential Establishment rate in the absence of competition
 FRACFRUIT   0.05        //Fraction of NPP to Fruit Production
 ROTATION    140         //Forest Rotation for harvesting see Schuetz 2006; Mund et al., 2004; Hein and Dhote 2006; Cescatti and Piutti 1998
-THINNING     15         //Thinning regime
+THINNING     15         //Thinning (years)
+THINNING_REGIME    0    //Thinning regime (0 = above, 1 = below)
 MINAGEMANAG 80          //Minimum age for Managment (Q. cerris)
 MINDBHMANAG 27          //Minimum DBH for Managment
 AV_SHOOT    10          //average number of shoot after cut

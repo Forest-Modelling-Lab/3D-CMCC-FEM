@@ -1,19 +1,21 @@
 for ISIMIP simulations 2001-2099 in Soroe we used:
 
--input stand data coming from Andrea Ibrom dataset making an 
- weighted average of 7 dbh-height classes into one single dbh-height weighted average class for 2001
- data are stored in "Stand_data_andreas_Ibrom.xlsx" file 
- FILE NAME: "Soroe_stand_2001_ISIMIP.txt" (unique for all simulations)
+-input stand data coming from Andreas Ibrom dataset making an 
+ weighted average of 7 dbh-height classes into one single dbh-height weighted average class for 1950 and 2001
+ data are stored in "Stand_data_andreas_Ibrom.xlsx" file:
+ FILE NAME: "Soroe_stand_1950_ISIMIP.txt" (unique for all simulations starting from 1950)
+ FILE NAME: "Soroe_stand_2001_ISIMIP.txt" (unique for all simulations starting from 2001)
  
--input soil data coming from data used in Collalti et al., 2016 (no data are available from ISIMIP package..), each soil file is the same of others,
+-input soil data coming from data used in Collalti et al., 2016, each soil data are the same of all soil files,
  except for "sitename" variable that is different and is used ONLY for file signatures in output files
  FILE NAME: "Soroe_soil_x.x_ISIMIP.txt"
 
 -input metdata for all GCMs and all RCPs comes from elaboration of Monia Santini 
  FILE NAME: "GCMx_hist_rcpxpx_2001_2099.txt"
 
--input model settings is all the same for all simulation and come from Soroe_settings.txt file
- FILE NAME: "Soroe_settings_ISIMIP.txt" (unique for all simulations)
+-input model settings is all the same for all simulation but is different for management on and off 
+ FILE NAME: "Soroe_settings_ISIMIP.txt" (unique for all simulations with no management)
+ ILE NAME: "Soroe_settings_ISIMIP_Manag_on.txt" (unique for all simulations with management)
 
 -input topo is one for all simulation
  FILE NAME: "Soroe_topo_ISIMIP.txt" (unique for all simulations)
@@ -23,7 +25,7 @@ for ISIMIP simulations 2001-2099 in Soroe we used:
  
  and example of launch:
  
- -i input/DKSoroe
+-i input/DKSoroe
 -p input/parameterization
 -o output/debug_output/debug_output
 -b output/daily_output/daily_output

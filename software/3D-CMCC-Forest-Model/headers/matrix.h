@@ -152,10 +152,10 @@ enum {
 	SAPWOOD_PERC,
 	HEARTWOOD_AREA,
 	HEARTWOOD_PERC,
-	BASAL_AREA,                 //Basal Area (cm^2/area tree)
-	STAND_BASAL_AREA,
-	BASAL_AREA_m2,              //Basal Area (cm^2/area tree)
-	STAND_BASAL_AREA_m2,
+	BASAL_AREA,                 /* Individual Basal Area (cm2/area tree) */
+	BASAL_AREA_m2,              /* Individual Basal Area (m2/area tree) */
+	STAND_BASAL_AREA,           /* Class Basal Area of overall class (cm2/area tree class) */
+	STAND_BASAL_AREA_m2,        /* Class Basal Area of overall class (m2/area tree class) */
 	CROWN_HEIGHT,               //Crown Height (m)
 	MASS_DENSITY,               //mass density
 	VOLUME,                     //Stem Volume

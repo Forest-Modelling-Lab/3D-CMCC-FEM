@@ -10,10 +10,13 @@
 #include <math.h>
 #include <assert.h>
 #include "constants.h"
+#include "settings.h"
 #include "common.h"
 #include "forest_tree_class.h"
 #include "treemodel_daily.h"
 #include "remove_tree_class.h"
+
+extern settings_t* g_settings;
 
 static int species_remove(age_t *a, const int index) {
 	int i;
@@ -117,13 +120,16 @@ int tree_class_remove(cell_t *const c, const int height, const int dbh, const in
 	a = &d->ages[age];
 	s = &a->species[species];
 
-	if ( ! s->counter[N_TREE] )
+	/* remove class if N_TREE < 0 or if called by harvesting fucntion */
+	if ( ! s->counter[N_TREE] || ( ! string_compare_i ( g_settings->management, "on" ) ) )
 	{
 		if ( ! species_remove(a, species) )	return 0;
 		if ( ! age_remove(d, age) )			return 0;
 		if ( ! dbh_remove(h, dbh) )			return 0;
 		if ( ! height_remove(c, height) )	return 0;
 	}
+
+
 
 	return 1;
 }
