@@ -629,12 +629,12 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 					logger(g_annual_log,"\t%6d", layer);
 
 					/* print height */
-					logger(g_annual_log,"\t%5.3g", c->heights[height].value);
+					logger(g_annual_log,"\t%5.5g", c->heights[height].value);
 
 					for ( dbh = c->heights[height].dbhs_count - 1; dbh >= 0; --dbh )
 					{
 						/* print age */
-						logger(g_annual_log,"\t%5.3g", c->heights[height].dbhs[dbh].value);
+						logger(g_annual_log,"\t%5.5g", c->heights[height].dbhs[dbh].value);
 
 						for ( age = 0; age < c->heights[height].dbhs[dbh].ages_count ; ++age )
 						{
