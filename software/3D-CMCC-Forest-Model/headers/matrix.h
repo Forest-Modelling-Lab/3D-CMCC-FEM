@@ -111,9 +111,11 @@ enum {
 	MINTEMP,                    //Minimum temperature for germination in �C
 	ESTMAX,                     //Potential Establishment rate in the absence of competition
 	FRACFRUIT,                  //Fraction of NPP to Fruit Production
-	ROTATION,
-	MINAGEMANAG,                //Minimum age for Managment
-	MINDBHMANAG,                //Minimum DBH for Managment
+	ROTATION,                   /* rotation for final harvest (based on tree age) */
+	THINNING,                   /* thinning (based on year simulation) */
+	THINNING_REGIME,            /* thinning regime (0 = above, 1 = below) */
+	MINAGEMANAG,                //Minimum age for Management
+	MINDBHMANAG,                //Minimum DBH for Management
 	AV_SHOOT,                   //Average number of shoots produced after coppicing
 
 	/* ALESSIOR:
@@ -590,6 +592,9 @@ typedef struct
 	int species_count;
 	int species_avail;
 
+	/* for logger */
+	int initial_species_count;
+
 	int value;
 	
 } age_t;
@@ -599,6 +604,9 @@ typedef struct
 	age_t* ages;
 	int ages_count;
 	int ages_avail;
+
+	/* for logger */
+	int initial_ages_count;
 
 	int dbh_n_trees;           /* number of trees per dbh class */
 	double dbh_density;        /* density of treed per dbh class */
@@ -622,6 +630,9 @@ typedef struct
 	dbh_t *dbhs;
 	int dbhs_count;
 	int dbhs_avail;
+
+	/* for logger */
+	int initial_dbhs_count;
 
 	double value;
 	int height_z;
@@ -718,6 +729,10 @@ typedef struct
 
 	int years_count;
 	yos_t *years;
+
+	/* for logger */
+	int initial_tree_layers_count;
+	int initial_heights_count;
 
 
 	/* overall cell counter */

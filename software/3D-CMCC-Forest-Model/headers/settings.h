@@ -22,6 +22,8 @@ typedef struct {
 	char replanted_species[SETTINGS_REPLANTED_SPECIES_MAX_SIZE]; /* species name of replanted species */
 	// ALESSIOR: use e_management from matrix.h not char
 	char replanted_management;
+
+
 	/* DO NOT MODIFY BELOW, PLEASE INSERT STUFF IN SPACE ABOVE */
 
 	double sizeCell;
@@ -32,17 +34,19 @@ typedef struct {
 
 	double init_frac_maxasw; /* minimum fraction of available soil water at the beginning of simulation */
 
+	/* layer settings */
 	double tree_layer_limit;
 	double number_of_soil_layer;
 	double min_layer_cover;
 	double max_layer_cover;
 
 	/* management / renovation (human or natural) input */
-	double removing_basal_area;          /* percentage of basal area to remove per sizecell (mandatory) */
+	//ALESSIOC TO ALESSIOR move remainig_basal_area to species.txt
+	double remainig_basal_area;          /* percentage of basal area to remove per sizecell (mandatory) */
 	double replanted_n_tree;             /* number of replanted trees per sizecell (mandatory) */
 	double replanted_age;                /* age of replanted trees (mandatory) */
 	double replanted_avdbh;              /* average dbh of replanted trees (mandatory) */
-	double replanted_lai;                /* LAI of replanted trees (mandatory) */
+	double replanted_lai;                /* LAI of replanted trees (mandatory for evergreen) */
 	double replanted_height;             /* height of replanted trees (mandatory) */
 	/* biomass */
 	double replanted_ws;                 /* stem biomass of replanted trees (probably no need to be used) (optional)*/

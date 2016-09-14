@@ -50,13 +50,14 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 	a = &d->ages[age];
 	s = &a->species[species];
 
-	s0Ctem = s->value[S0CTEM];        /* parameter controlling allocatio to stem (minimum ratio to stem pool */
-	r0Ctem = s->value[R0CTEM];        /* parameter controlling allocatio to roots (minimum ratio to root pools */
+	s0Ctem = s->value[S0CTEM];        /* parameter controlling allocation to stem (minimum ratio to stem pool */
+	r0Ctem = s->value[R0CTEM];        /* parameter controlling allocation to roots (minimum ratio to root pools */
 	omegaCtem = s->value[OMEGA_CTEM]; /* controls the sensitivity of allocation to changes in water and light availability */
 
+	//fixme it should takes into account above layers
 	Light_trasm = exp(- s->value[K] * s->value[LAI]);
 
-	/* note: in Biome a constant proportion (50%) (Growth:storage parameter) of NPP that goes to the cpools is allocated
+	/* note: in Biome a constant proportion (50%) (Growth:storage parameter) of NPP that goes to the c-pools is allocated
 	 * to each storage_pool, i.e. each carbon pools receive just a part of NPP (50%) the remaining remain as storage
 	 * and used to maintain trees when NPP is < 0 */
 

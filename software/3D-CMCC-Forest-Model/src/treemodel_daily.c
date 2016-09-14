@@ -286,25 +286,6 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							{
 								logger(g_log, "*****END OF YEAR %d ******\n", c->years[year].year);
 
-								/*FRUIT ALLOCATION*/
-								/*
-
-								//FRUIT ESTABLISHMENT
-								if (Yearly_Rain > s->value[MINRAIN])
-								{
-								//decidere se passare numero di semi da LPJ o dall'Equazione Logistica
-								Establishment_LPJ ( &m->cells[cell],layer, height, dbh, age, species);
-								logger(g_log, "Saplings Number from LPJ = %d\n", s->counter[N_TREE_SAP]);
-								}
-								else
-								{
-								logger(g_log, "Yearly Rain = %f\n", Yearly_Rain);
-								logger(g_log, "Minimum Rain for Establishment = %f\n", s->value[MINRAIN]);
-								logger(g_log, "NOT ENOUGH RAIN FOR ESTABLISHMENT\n");
-								}
-								}
-								 */
-
 								/************************************************************************************************************************************/
 								/* MORTALITY and RENOVATION*/
 

@@ -90,7 +90,9 @@ GERMCAPACITY    0.70   //Geminability (Lischke H. & Loffler T. J.)
 MINTEMP 20             //Minimum temperature for germination in °C
 ESTMAX  0.24           //Potential Establishment rate in the absence of competition
 FRACFRUIT   0.05       //Fraction of NPP to Fruit Production
-ROTATION    100        //Forest Rotation for Managment (Q. cerris)
+ROTATION    120         //Forest Rotation for harvesting 
+THINNING     15         //Thinning regime
+THINNING_REGIME    0    //Thinning regime (0 = above, 1 = below)
 MINAGEMANAG 80         //Minimum age for Managment (Q. cerris)
 MINDBHMANAG 27         //Minimum DBH for Managment
 AV_SHOOT    10         //average number of shoot after cut

@@ -59,10 +59,11 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 	a = &c->heights[height].dbhs[dbh].ages[age];
 	s = &a->species[species];
 
-	s0Ctem = s->value[S0CTEM];        /* parameter controlling allocatio to stem (minimum ratio to stem pool */
-	r0Ctem = s->value[R0CTEM];        /* parameter controlling allocatio to roots (minimum ratio to root pools */
+	s0Ctem = s->value[S0CTEM];        /* parameter controlling allocation to stem (minimum ratio to stem pool */
+	r0Ctem = s->value[R0CTEM];        /* parameter controlling allocation to roots (minimum ratio to root pools */
 	omegaCtem = s->value[OMEGA_CTEM]; /* controls the sensitivity of allocation to changes in water and light availability */
 
+	//fixme it should takes into account above layers
 	Light_trasm = exp(- s->value[K] * s->value[LAI]);
 
 	/* Marconi: here the allocation of biomass reserve is divided in fineroot and leaves following the

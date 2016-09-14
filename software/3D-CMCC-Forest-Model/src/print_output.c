@@ -490,6 +490,30 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 
 	species_t *s;
 
+	/* test */
+	//note it can be used only if no other classes are added!!
+	/*
+	if ( !year)
+	{
+		c->initial_tree_layers_count = c->tree_layers_count;
+		c->initial_heights_count = c->heights_count;
+
+		for ( height = c->heights_count - 1; height >= 0 ; --height )
+		{
+			c->heights[height].initial_dbhs_count = c->heights[height].dbhs_count;
+			for ( dbh = c->heights[height].dbhs_count - 1; dbh >= 0; --dbh )
+			{
+				c->heights[height].dbhs[dbh].initial_ages_count = c->heights[height].dbhs[dbh].ages_count;
+
+				for ( age = 0; age < c->heights[height].dbhs[dbh].ages_count ; ++age )
+				{
+					c->heights[height].dbhs[dbh].ages[age].initial_species_count = c->heights[height].dbhs[dbh].ages[age].species_count;
+				}
+			}
+		}
+	}
+	*/
+
 	/* heading */
 	if ( !year )
 	{

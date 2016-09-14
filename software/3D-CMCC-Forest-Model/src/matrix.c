@@ -772,7 +772,9 @@ static const char *sz_species_values[] = {
 		"MINTEMP",                    //Minimum temperature for germination in °C
 		"ESTMAX",                     //Potential Establishment rate in the absence of competition
 		"FRACFRUIT",                  //Fraction of NPP to Fruit Production
-		"ROTATION",
+		"ROTATION",                   /* rotation for final harvest (based on tree age) */
+		"THINNING",                   /* thinning regime (based on year simulation) */
+		"THINNING_REGIME",            /* thinning regime (0 = above, 1 = below) */
 		"MINAGEMANAG",
 		"MINDBHMANAG",                //Minimum DBH for Management
 		"AV_SHOOT",                   //Average number of shoots produced after coppicing

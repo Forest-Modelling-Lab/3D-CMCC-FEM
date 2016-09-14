@@ -140,7 +140,9 @@ FRACFRUIT   -9999    //Fraction of NPP to Fruit Production
 
 
 //MANAGMENT
-ROTATION    -9999     //Forest Rotation for Managment 
+ROTATION    140         //Forest Rotation for harvesting see Schuetz 2006; Mund et al., 2004; Hein and Dhote 2006; Cescatti and Piutti 1998
+THINNING     15         //Thinning regime
+THINNING_REGIME    0    //Thinning regime (0 = above, 1 = below)
 MINAGEMANAG -9999      //Minimum age for Managment 
 MINDBHMANAG -9999      //Minimum DBH for Managment
 AV_SHOOT    -9999      //average number of shoot after cut
