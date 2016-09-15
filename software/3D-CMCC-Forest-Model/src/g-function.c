@@ -104,33 +104,6 @@ void Abscission_DayLength (cell_t *c)
 	//logger(g_log, "Abscission day length = %f hrs\n", c->abscission_daylength);
 }
 
-void tree_period(cell_t* const c, const int layer, const int height, const int dbh, const int age, const int species)
-{
-	age_t *a;
-	species_t *s;
-
-	a = &c->heights[height].dbhs[dbh].ages[age];
-	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
-	/* Set Tree period */
-	/* 0 = adult tree */
-	/* 1 = young tree */
-
-	if ( a->value > s->value[ADULT_AGE])
-	{
-		s->period = 0;
-
-		if (!c->saplings_counter)
-		{
-			c->saplings_counter -= 1;
-		}
-	}
-	else
-	{
-		s->period = 1;
-	}
-}
-
-
 void Veg_Days(cell_t *const c, const int day, const int month, const int year)
 {
 	int height;

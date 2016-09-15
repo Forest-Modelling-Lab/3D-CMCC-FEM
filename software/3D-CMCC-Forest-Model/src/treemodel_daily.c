@@ -194,9 +194,6 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							/* compute species-specific phenological phase */
 							phenology ( c, layer, height, dbh, age, species, meteo_daily, month);
 
-							/* check for adult or sapling age */
-							tree_period ( c, layer, height, dbh, age, species);
-
 							logger(g_log, "--PHYSIOLOGICAL PROCESSES LAYER %d --\n", l->layer_z);
 
 							if ( s->counter[VEG_UNVEG] == 1 )

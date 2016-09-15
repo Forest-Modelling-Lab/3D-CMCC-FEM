@@ -180,9 +180,11 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 				if( ( s->value[PHENOLOGY] == 1.2 ) && ( a->value > s->value[SEXAGE] ) )
 				{
 					/* NPP for reproduction */
+					/*
 					s->value[C_TO_FRUIT] = npp_to_alloc * s->value[FRUIT_PERC];
 					npp_to_alloc -= s->value[C_TO_FRUIT];
 					logger(g_log, "including Biomass increment into cones = %g tC/area\n", s->value[C_TO_FRUIT]);
+					*/
 				}
 				else
 				{
