@@ -123,7 +123,7 @@ int add_tree_class (cell_t *const c)
 
 	//ALESSIOC FIXME
 	/* initialize variables for DBHDC function */
-	//potential_max_min_canopy_cover ( c );getchar();
+	potential_max_min_canopy_cover ( c );
 
 	//ALESSIOC FIXME
 	/* initialize carbon pool fraction */
