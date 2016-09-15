@@ -26,7 +26,7 @@ void initialization_forest_structure(cell_t *const c, const int day, const int m
 	forest_structure ( c, meteo_daily, day, month, year );
 }
 
-void initialization_forest_C_biomass(cell_t *const c, const int height, const int dbh, const int age, const int species)
+void initialization_forest_class_C_biomass(cell_t *const c, const int height, const int dbh, const int age, const int species)
 {
 	height_t *h;
 	dbh_t *d;
@@ -463,7 +463,7 @@ void initialization_forest_C_biomass(cell_t *const c, const int height, const in
 	CHECK_CONDITION(s->value[TREE_VOLUME], == 0);
 }
 
-void initialization_forest_N_biomass(cell_t *const c, const int height, const int dbh, const int age, const int species)
+void initialization_forest_class_N_biomass(cell_t *const c, const int height, const int dbh, const int age, const int species)
 {
 	species_t *s;
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];

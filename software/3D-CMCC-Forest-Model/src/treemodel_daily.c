@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <assert.h>
+#include <new_forest_tree_class.h>
 #include "constants.h"
 #include "common.h"
 #include "print_output.h"
@@ -43,7 +44,6 @@
 #include "soil_water_balance.h"
 #include "leaf_fall.h"
 #include "settings.h"
-#include "forest_tree_class.h"
 #include "treemodel_daily.h"
 #include "remove_tree_class.h"
 #include "regeneration.h"
@@ -95,12 +95,12 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	if( !day && !month && !year )c->dos = 1;
 	else ++c->dos;
 
-	//fixme porcata
 	/* forest structure */
 	if ( ! day && ! month && year )
 	{
 		forest_structure ( c, meteo_daily, day, month, year );
 	}
+	//if (year == 112)getchar();
 
 	/* forest structure */
 	daily_forest_structure ( c );

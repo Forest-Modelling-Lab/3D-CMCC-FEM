@@ -32,21 +32,16 @@ extern int MonthLength_Leap [];
 void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species,
 		const meteo_daily_t *const meteo_daily, const int day, const int month, const int year)
 {
-	double s0Ctem;
-	double r0Ctem;
-	double omegaCtem;
-	double pS_CTEM;
-	double pR_CTEM;
-	double pL_CTEM;
+	double s0;
+	double r0;
+	double omega;
+	double pS;
+	double pR;
+	double pL;
 
 	//double reductor;           //instead soil water the routine take into account the minimum between F_VPD and F_SW and F_NUTR
 
 	double Light_trasm;
-
-	double r0Ctem_increment;
-	double old_r0Ctem;
-	double s0Ctem_increment;
-	double old_s0Ctem;
 
 	/* for check */
 	double npp_to_alloc;
@@ -59,9 +54,9 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 	a = &c->heights[height].dbhs[dbh].ages[age];
 	s = &a->species[species];
 
-	s0Ctem = s->value[S0CTEM];        /* parameter controlling allocation to stem (minimum ratio to stem pool */
-	r0Ctem = s->value[R0CTEM];        /* parameter controlling allocation to roots (minimum ratio to root pools */
-	omegaCtem = s->value[OMEGA_CTEM]; /* controls the sensitivity of allocation to changes in water and light availability */
+	s0 = s->value[S0CTEM];        /* parameter controlling allocation to stem (minimum ratio to stem pool) */
+	r0 = s->value[R0CTEM];        /* parameter controlling allocation to roots (minimum ratio to root pools) */
+	omega = s->value[OMEGA_CTEM]; /* controls the sensitivity of allocation to changes in water and light availability */
 
 	//fixme it should takes into account above layers
 	Light_trasm = exp(- s->value[K] * s->value[LAI]);
@@ -75,21 +70,21 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 	logger(g_log, "\n**C-PARTITIONING-ALLOCATION**\n");
 	logger(g_log, "Carbon partitioning for evergreen\n");
 
-	/* partitioning block using CTEM approach (Arora and Boer 2005) */
+	/* partitioning block using approach of Potter et al., 1993, Schwalm & Ek, 2004; Arora and Boer 2005 */
 	logger(g_log, "*Partitioning ratios*\n");
 
 	/* roots */
-	pR_CTEM = (r0Ctem + (omegaCtem * ( 1.0 - s->value[F_SW]))) / (1.0 + (omegaCtem * (2.0 - Light_trasm - s->value[F_SW])));
-	logger(g_log, "Roots CTEM ratio = %g %%\n", pR_CTEM * 100);
+	pR = (r0 + (omega * ( 1.0 - s->value[F_SW]))) / (1.0 + (omega * (2.0 - Light_trasm - s->value[F_SW])));
+	logger(g_log, "Roots CTEM ratio = %g %%\n", pR * 100);
 
 	/* stem */
-	pS_CTEM = (s0Ctem + (omegaCtem * ( 1.0 - Light_trasm))) / (1.0 + ( omegaCtem * (2.0 - Light_trasm - s->value[F_SW])));
-	logger(g_log, "Stem CTEM ratio = %g %%\n", pS_CTEM * 100);
+	pS = (s0 + (omega * ( 1.0 - Light_trasm))) / (1.0 + ( omega * (2.0 - Light_trasm - s->value[F_SW])));
+	logger(g_log, "Stem CTEM ratio = %g %%\n", pS * 100);
 
 	/* reserve and leaves */
-	pL_CTEM = (1.0 - pS_CTEM - pR_CTEM);
-	logger(g_log, "Reserve CTEM ratio = %g %%\n", pL_CTEM * 100);
-	CHECK_CONDITION( fabs ( pR_CTEM + pS_CTEM + pL_CTEM ), > 1 + 1e-4 );
+	pL = (1.0 - pS - pR);
+	logger(g_log, "Reserve CTEM ratio = %g %%\n", pL * 100);
+	CHECK_CONDITION( fabs ( pR + pS + pL ), > 1 + 1e-4 );
 
 	logger(g_log, "\nCarbon allocation for evergreen\n");
 	logger(g_log, "PHENOLOGICAL PHASE = %d\n", s->phenology_phase);
@@ -191,12 +186,12 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 					s->value[C_TO_FRUIT] = 0.0;
 				}
 				s->value[C_TO_LEAF] = 0.0;
-				s->value[C_TO_COARSEROOT] = npp_to_alloc * pR_CTEM;
+				s->value[C_TO_COARSEROOT] = npp_to_alloc * pR;
 				s->value[C_TO_FINEROOT] = 0.0;
-				s->value[C_TO_RESERVE] = (npp_to_alloc * pL_CTEM);
-				s->value[C_TO_TOT_STEM] = npp_to_alloc * pS_CTEM;
-				s->value[C_TO_STEM] = (npp_to_alloc* pS_CTEM) * (1.0 - s->value[FRACBB]);
-				s->value[C_TO_BRANCH] = (npp_to_alloc * pS_CTEM) * s->value[FRACBB];
+				s->value[C_TO_RESERVE] = (npp_to_alloc * pL);
+				s->value[C_TO_TOT_STEM] = npp_to_alloc * pS;
+				s->value[C_TO_STEM] = (npp_to_alloc* pS) * (1.0 - s->value[FRACBB]);
+				s->value[C_TO_BRANCH] = (npp_to_alloc * pS) * s->value[FRACBB];
 			}
 			/* it needs */
 			else

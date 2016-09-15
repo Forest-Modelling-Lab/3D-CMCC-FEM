@@ -456,6 +456,7 @@ void potential_max_min_canopy_cover (cell_t *const c)
 					if (s->value[DBHDCMAX] != -9999 && s->value[DENMIN] != -9999)
 					{
 						logger(g_log,"using DBHDCMAX and DBHDCMIN\n");
+
 						/* case low density */
 						logger(g_log, "-in case of low density\n");
 
@@ -491,7 +492,6 @@ void potential_max_min_canopy_cover (cell_t *const c)
 					else
 					{
 						/* compute maximum crown area */
-						//	//TODO CHECK IF USE IT
 						/*for references and variables see "Forest Mensuration" book 4th edition
 						 *B. Husch, T.W. Beers, J.A. Kershaw Jr.
 						 *edited by John Wiley & Sons, Inc
@@ -501,19 +501,19 @@ void potential_max_min_canopy_cover (cell_t *const c)
 						 */
 						logger(g_log,"without using DBHDCMAX and DENMIN\n");
 
-						pot_min_crown_area = ((100.0*Pi)/(4*g_settings->sizeCell)) * (9.7344 + (11.48612 *
+						pot_max_crown_area = ((100.0*Pi)/(4*g_settings->sizeCell)) * (9.7344 + (11.48612 *
 								d->value + (3.345241 * pow(d->value, 2.0))));
-						logger(g_log, "potential_minimum_crown_area = %g m^2\n", pot_min_crown_area);
+						logger(g_log, "pot_max_crown_area = %g m^2\n", pot_max_crown_area);
 
-						pot_min_crown_diameter = 2.0 * sqrt(pot_min_crown_area/Pi);
-						logger(g_log, "potential_minimum_crown_diameter= %g m\n", pot_min_crown_diameter);
+						pot_max_crown_diameter = 2.0 * sqrt(pot_max_crown_area/Pi);
+						logger(g_log, "pot_max_crown_diameter = %g m\n", pot_max_crown_diameter);
 
 						/* recompute DBHDCMAX and DENMIN from MCA */
 						/*17 Oct 2013*/
-						s->value[DBHDCMAX] = pot_min_crown_diameter / d->value;
+						s->value[DBHDCMAX] = pot_max_crown_diameter / d->value;
 						logger(g_log, "-recomputed DBHDCMAX = %g \n", s->value[DBHDCMAX]);
 
-						s->value[DENMIN] = 1.0 / pot_min_crown_area;
+						s->value[DENMIN] = 1.0 / pot_max_crown_diameter;
 						logger(g_log, "-recomputed DENMIN = %g tree/sizecell (%d trees)\n", s->value[DENMIN], s->value[DENMIN] * g_settings->sizeCell);
 					}
 

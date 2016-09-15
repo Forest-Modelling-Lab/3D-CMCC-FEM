@@ -95,15 +95,6 @@ void carbon_pool_fraction(cell_t *c)
 	}
 }
 
-void Abscission_DayLength (cell_t *c)
-{
-	/*to compute day length for stopping growth*/
-	//from Schwalm and Ek, 2004
-	//but it considers a value independently from species
-	c->abscission_daylength = (39132 + (pow (1.088, (g_soil_settings->values[SOIL_LAT] + 60.753))))/(60*60);
-	//logger(g_log, "Abscission day length = %f hrs\n", c->abscission_daylength);
-}
-
 void Veg_Days(cell_t *const c, const int day, const int month, const int year)
 {
 	int height;
@@ -210,4 +201,13 @@ void Veg_Days(cell_t *const c, const int day, const int month, const int year)
 }
 
 
+/* not used */
+void Abscission_DayLength (cell_t *c)
+{
+	/*to compute day length for stopping growth*/
+	//from Schwalm and Ek, 2004
+	//but it considers a value independently from species
+	c->abscission_daylength = (39132 + (pow (1.088, (g_soil_settings->values[SOIL_LAT] + 60.753))))/(60*60);
+	//logger(g_log, "Abscission day length = %f hrs\n", c->abscission_daylength);
+}
 

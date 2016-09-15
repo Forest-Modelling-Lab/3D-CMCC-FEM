@@ -1413,13 +1413,13 @@ void forest_summary(const matrix_t* const m, const int cell, const int day, cons
 	}
 
 	/*************FOREST INITIALIZATION DATA***********/
-	/* initialise power function */
+	/* initialize power function */
 	allometry_power_function (&m->cells[cell]);
 
-	/* initialise variables for DBHDC function */
+	/* initialize variables for DBHDC function */
 	potential_max_min_canopy_cover ( &m->cells[cell]);
 
-	/* initialise carbon pool fraction */
+	/* initialize carbon pool fraction */
 	carbon_pool_fraction (&m->cells[cell]);
 
 	/* initialise forest structure */
@@ -1436,10 +1436,10 @@ void forest_summary(const matrix_t* const m, const int cell, const int day, cons
 					/* IF NO BIOMASS INITIALIZATION DATA OR TREE HEIGHTS ARE AVAILABLE FOR STAND
 					 * BUT JUST DENDROMETRIC VARIABLES (i.e. AVDBH, HEIGHT, THESE ARE MANDATORY) */
 					/* initialise carbon pools */
-					initialization_forest_C_biomass (&m->cells[cell], height, dbh, age, species);
+					initialization_forest_class_C_biomass (&m->cells[cell], height, dbh, age, species);
 
 					/* initialise nitrogen pools */
-					initialization_forest_N_biomass (&m->cells[cell], height, dbh, age, species);
+					initialization_forest_class_N_biomass (&m->cells[cell], height, dbh, age, species);
 
 					/* print class dataset */
 					logger(g_log,

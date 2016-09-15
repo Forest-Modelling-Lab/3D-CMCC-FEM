@@ -6,6 +6,7 @@
 #include <string.h>
 #include <math.h>
 #include <assert.h>
+#include <new_forest_tree_class.h>
 #include "matrix.h"
 #include "management.h"
 #include "constants.h"
@@ -14,8 +15,9 @@
 #include "logger.h"
 #include "initialization.h"
 #include "structure.h"
-#include "forest_tree_class.h"
 #include "biomass.h"
+#include "allometry.h"
+#include "g-function.h"
 
 extern settings_t* g_settings;
 extern logger_t* g_log;
@@ -115,8 +117,20 @@ int add_tree_class (cell_t *const c)
 		return 0;
 	}
 
+	//ALESSIOC FIXME
+	/* initialize power function */
+	allometry_power_function ( c );
+
+	//ALESSIOC FIXME
+	/* initialize variables for DBHDC function */
+	//potential_max_min_canopy_cover ( c );getchar();
+
+	//ALESSIOC FIXME
+	/* initialize carbon pool fraction */
+	//carbon_pool_fraction ( c );
+
 	/* initialize new forest class pools */
-	initialization_forest_C_biomass( c, c->heights_count-1, 0, 0, 0 );
+	initialization_forest_class_C_biomass( c, c->heights_count-1, 0, 0, 0 );
 
 	return 1;
 }

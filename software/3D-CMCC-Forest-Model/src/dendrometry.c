@@ -17,9 +17,11 @@ void dendrometry(cell_t *const c, const int height, const int dbh, const int age
 
 	height_t *h;
 	dbh_t *d;
+	age_t *a;
 	species_t *s;
 
 	/* this function compute at the temporal scale at which is called:
+	 * -mass density
 	 * -average dbh
 	 * -tree height
 	 * -basal area
@@ -28,6 +30,7 @@ void dendrometry(cell_t *const c, const int height, const int dbh, const int age
 
 	h = &c->heights[height];
 	d = &h->dbhs[dbh];
+	a = &c->heights[height].dbhs[dbh].ages[age];
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 	/* assign previous month values */
@@ -37,10 +40,15 @@ void dendrometry(cell_t *const c, const int height, const int dbh, const int age
 
 	logger(g_log, "\n**DENDROMETRY**\n");
 
+	logger(g_log, "\n**Mass density**\n");
+
+	/* compute annual mass density */
+	s->value[MASS_DENSITY] = s->value[RHOMAX] + (s->value[RHOMIN] - s->value[RHOMAX]) * exp(-ln2 * (a->value / s->value[TRHO]));
+	logger(g_log, "-Mass Density = %g\n", s->value[MASS_DENSITY]);
+
 	logger(g_log, "\n**Average DBH**\n");
 
 	/* compute tree AVDBH */
-
 	if (s->value[STEMCONST_P] == NO_DATA && s->value[STEMPOWER_P] == NO_DATA)
 	{
 		/* use generic stemconst stempower values */
