@@ -15,6 +15,7 @@
 #include "initialization.h"
 #include "structure.h"
 #include "forest_tree_class.h"
+#include "biomass.h"
 
 extern settings_t* g_settings;
 extern logger_t* g_log;
@@ -114,7 +115,7 @@ int add_tree_class (cell_t *const c)
 		return 0;
 	}
 
-	/* initialise new forest class pools */
+	/* initialize new forest class pools */
 	initialization_forest_C_biomass( c, c->heights_count-1, 0, 0, 0 );
 
 	return 1;

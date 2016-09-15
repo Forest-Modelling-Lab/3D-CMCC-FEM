@@ -12,6 +12,6 @@ void tree_branch_and_bark (cell_t *const c, const int height, const int dbh, con
 
 void abg_bgb_biomass (cell_t *const c, const int height, const int dbh, const int age, const int species);
 
-void annual_tree_increment(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species);
+void annual_tree_increment(cell_t *const c, const int height, const int dbh, const int age, const int species, const int year);
 
 #endif /* BIOMASS_H */

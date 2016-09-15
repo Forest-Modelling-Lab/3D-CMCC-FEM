@@ -288,7 +288,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 								/* MORTALITY and RENOVATION*/
 
 								/* Mortality based on growth efficiency */
-								/* note: it currently works on a daily scale (not more) */
+								/* note: it currently works on a annual scale (no more daily) */
 								annual_growth_efficiency_mortality ( c, height, dbh, age, species );
 
 								/* Mortality */
@@ -308,7 +308,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 								tree_branch_and_bark ( c, height, dbh, age, species );
 
 								/* annual volume, MAI and CAI */
-								annual_tree_increment ( c, layer, height, dbh, age, species );
+								annual_tree_increment ( c, height, dbh, age, species, year );
 
 								/* print at the end of simulation class level data */
 								print_daily_forest_class_data ( c, layer, height, dbh, age, species );
