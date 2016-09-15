@@ -559,23 +559,7 @@ enum {
 	COUNTERS
 };
 
-//SERGIO
 typedef struct {
-	double fineroot[MAXTURNTIME];
-	double leaves[MAXTURNTIME];
-	double coarseRoots[MAXTURNTIME];
-	double branch[MAXTURNTIME];
-	double stem[MAXTURNTIME];
-
-	int FINERTOVER;
-	int COARSERTOVER;
-	int STEMTOVER;
-	int BRANCHTOVER;
-} turnover_t;
-
-typedef struct {
-
-	turnover_t* turnover;
 	e_management management;
 
 	char *name;
@@ -987,5 +971,5 @@ void topo_summary(const matrix_t* const m);
 void soil_summary(const matrix_t* const m, const cell_t* const cell);
 void forest_summary(const matrix_t* const m, const int cell, const int day, const int month, const int year);
 int layer_add(cell_t* const c);
-
+int fill_species_from_file(species_t *const s);
 #endif /* MATRIX_H_ */

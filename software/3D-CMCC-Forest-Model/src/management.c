@@ -43,7 +43,7 @@ void forest_management (cell_t *const c, const int layer, const int height, cons
 			/* replanting tree class */
 			if( g_settings->replanted_n_tree )
 			{
-				if ( ! add_tree_class( c, height, dbh, age, species ) )
+				if ( ! add_tree_class( c ) )
 				{
 					logger(g_log, "unable to add new height class! (exit)\n");
 					exit(1);
@@ -175,7 +175,6 @@ void harvesting (cell_t *const c, const int layer, const int height, const int d
 
 	/* remove completely all trees */
 	tree_class_remove (c, height, dbh, age, species );
-
 }
 
 /*****************************************************************************************************************************************/

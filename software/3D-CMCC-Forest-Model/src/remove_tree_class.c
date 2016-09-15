@@ -18,86 +18,73 @@
 
 extern settings_t* g_settings;
 
-static int species_remove(age_t *a, const int index) {
-	int i;
-	int y;
+static void species_free(species_t* s) {
+	assert(s);
+
+	if ( s->name ) {
+		free(s->name);
+		s->name = NULL;
+	}
+}
+
+static void age_free(age_t* a) {
+	int species;
 
 	assert(a);
 
-	if ( index > a->species_count ) {
-		return 0;
+	for ( species = 0; species < a->species_count; ++species ) {
+		species_free(&a->species[species]);
 	}
-
-	y = 0;
-	for ( i = 0; i < a->species_count; ++i ) {
-		if ( index == i ) continue;
-		// ALESSIOR: shallow copy
-		a->species[y++] = a->species[i];
-	}
-	--a->species_count;
-	++a->species_avail;
-
-	return 1;
+	free(a->species);
+	a->species = NULL;
 }
 
-static int age_remove(dbh_t *d, const int index) {
-	int i;
-	int y;
+static void dbh_free(dbh_t* d) {
+	int age;
+	int species;
 
 	assert(d);
 
-	if ( index > d->ages_count ) {
-		return 0;
+	for ( age = 0; age < d->ages_count; ++age ) {
+		for ( species = 0; species < d->ages[age].species_count; ++species ) {
+			if ( d->ages[age].species[species].name ) {
+				free(d->ages[age].species[species].name);
+			}
+		}
+		free(d->ages[age].species);
 	}
-
-	y = 0;
-	for ( i = 0; i < d->ages_count; ++i ) {
-		if ( index == i ) continue;
-		// ALESSIOR: shallow copy
-		d->ages[y++] = d->ages[i];
-	}
-	--d->ages_count;
-	++d->ages_avail;
-
-	return 1;
+	free(d->ages);
+	d->ages = NULL;
 }
 
-static int dbh_remove(height_t *h, const int index) {
-	int i;
-	int y;
+static void height_free(height_t* h) {
+	int dbh;
 
 	assert(h);
 
-	if ( index > h->dbhs_count ) {
-		return 0;
+	for ( dbh = 0; dbh < h->dbhs_count; ++dbh ) {
+		dbh_free(&h->dbhs[dbh]);
 	}
-
-	y = 0;
-	for ( i = 0; i < h->dbhs_count; ++i ) {
-		if ( index == i ) continue;
-		// ALESSIOR: shallow copy
-		h->dbhs[y++] = h->dbhs[i];
-	}
-	--h->dbhs_count;
-	++h->dbhs_avail;
-
-	return 1;
+	free(h->dbhs);
+	h->dbhs = NULL;
 }
 
-static int height_remove(cell_t *c, const int index) {
+static int height_remove(cell_t *c, const int height) {
 	int i;
 	int y;
 
 	assert(c);
 
-	if ( index > c->heights_count ) {
+	if ( height > c->heights_count ) {
 		return 0;
 	}
 
 	y = 0;
 	for ( i = 0; i < c->heights_count; ++i ) {
-		if ( index == i ) continue;
-		// ALESSIOR: shallow copy
+		if ( height == i ) {
+			height_free(&c->heights[i]);
+			continue;
+		}
 		c->heights[y++] = c->heights[i];
 	}
 	--c->heights_count;
@@ -106,31 +93,170 @@ static int height_remove(cell_t *c, const int index) {
 	return 1;
 }
 
-int tree_class_remove(cell_t *const c, const int height, const int dbh, const int age, const int species)
-{
-	height_t* h;
-	dbh_t* d;
-	age_t* a;
-	species_t* s;
+static int dbh_remove(cell_t *c, const int height, const int dbh) {
+	int i;
+	int y;
 
 	assert(c);
 
-	h = &c->heights[height];
-	d = &h->dbhs[dbh];
-	a = &d->ages[age];
-	s = &a->species[species];
-
-	/* remove class if N_TREE < 0 or if called by harvesting fucntion */
-	if ( ! s->counter[N_TREE] || ( ! string_compare_i ( g_settings->management, "on" ) ) )
-	{
-		if ( ! species_remove(a, species) )	return 0;
-		if ( ! age_remove(d, age) )			return 0;
-		if ( ! dbh_remove(h, dbh) )			return 0;
-		if ( ! height_remove(c, height) )	return 0;
+	if ( height > c->heights_count ) {
+		return 0;
 	}
 
+	if ( dbh > c->heights[height].dbhs_count ) {
+		return 0;
+	}
 
+	y = 0;
+	for ( i = 0; i < c->heights[height].dbhs_count; ++i ) {
+		if ( dbh == i ) {
+			dbh_free(&c->heights[height].dbhs[i]);
+			continue;
+		}
+		c->heights[height].dbhs[y++] = c->heights[height].dbhs[i];
+	}
+	--c->heights[height].dbhs_count;
+	++c->heights[height].dbhs_avail;
 
 	return 1;
 }
 
+static int age_remove(cell_t *c, const int height, const int dbh, const int age) {
+	int i;
+	int y;
+
+	assert(c);
+
+	if ( height > c->heights_count ) {
+		return 0;
+	}
+
+	if ( dbh > c->heights[height].dbhs_count ) {
+		return 0;
+	}
+
+	if ( age > c->heights[height].dbhs[dbh].ages_count ) {
+		return 0;
+	}
+
+	y = 0;
+	for ( i = 0; i < c->heights[height].dbhs[dbh].ages_count; ++i ) {
+		if ( age == i ) {
+			age_free(&c->heights[height].dbhs[dbh].ages[i]);
+			continue;
+		}
+		c->heights[height].dbhs[dbh].ages[y++] = c->heights[height].dbhs[dbh].ages[i];
+	}
+	--c->heights[height].dbhs[dbh].ages_count;
+	++c->heights[height].dbhs[dbh].ages_avail;
+
+	return 1;
+}
+
+static int species_remove(cell_t *c, const int height, const int dbh, const int age, const int species) {
+	int i;
+	int y;
+
+	assert(c);
+
+	if ( height > c->heights_count ) {
+		return 0;
+	}
+
+	if ( dbh > c->heights[height].dbhs_count ) {
+		return 0;
+	}
+
+	if ( age > c->heights[height].dbhs[dbh].ages_count ) {
+		return 0;
+	}
+
+	if ( species > c->heights[height].dbhs[dbh].ages[age].species_count ) {
+		return 0;
+	}
+
+	y = 0;
+	for ( i = 0; i < c->heights[height].dbhs[dbh].ages[age].species_count; ++i ) {
+		if ( species == i ) {
+			species_free(&c->heights[height].dbhs[dbh].ages[age].species[i]);
+			continue;
+		}
+		c->heights[height].dbhs[dbh].ages[age].species[y++] = c->heights[height].dbhs[dbh].ages[age].species[i];
+	}
+	--c->heights[height].dbhs[dbh].ages[age].species_count;
+	++c->heights[height].dbhs[dbh].ages[age].species_avail;
+
+	return 1;
+}
+
+static int tree_class_remove_height(cell_t *const c, const int height)
+{
+	assert(c);
+
+	return height_remove(c, height);
+}
+
+static int tree_class_remove_dbh(cell_t *const c, const int height, const int dbh)
+{
+	assert(c);
+
+	return dbh_remove(c, height, dbh);
+}
+
+static int tree_class_remove_age(cell_t *const c, const int height, const int dbh, const int age)
+{
+	assert(c);
+
+	return age_remove(c, height, dbh, age);
+}
+
+static int tree_class_remove_species(cell_t *const c, const int height, const int dbh, const int age, const int species)
+{
+	assert(c);
+
+	return species_remove(c, height, dbh, age, species);
+}
+
+int tree_class_remove(cell_t *const c, const int height, const int dbh, const int age, const int species)
+{
+	assert(c);
+
+	if ( height > c->heights_count ) return 0;
+	if ( dbh > c->heights[height].dbhs_count ) return 0;
+	if ( age > c->heights[height].dbhs[dbh].ages_count ) return 0;
+	if ( species > c->heights[height].dbhs[dbh].ages[age].species_count ) return 0;
+
+	/* remove class if N_TREE < 0 or if called by harvesting function */
+	if ( ! c->heights[height].dbhs[dbh].ages[age].species[species].counter[N_TREE]
+			|| ( ! string_compare_i ( g_settings->management, "on" ) ) ) {	
+
+		if ( ! species_remove(c, height, dbh, age, species) ) return 0;
+
+		if ( 1 == c->heights[height].dbhs[dbh].ages_count ) {
+			if ( c->heights[height].dbhs[dbh].ages[0].species_count <= 1 ) {
+				if ( ! age_remove(c, height, dbh, 0) ) return 0;
+			}
+		}
+
+		if ( 1 == c->heights[height].dbhs_count ) {
+			if ( ! c->heights[height].dbhs[0].ages_count
+				|| ( (1 == c->heights[height].dbhs[0].ages_count)
+					&& (c->heights[height].dbhs[0].ages[0].species_count <= 1) ) )
+			{
+					if ( ! dbh_remove(c, height, 0) ) return 0;
+				}
+		}
+
+		if ( 1 == c->heights_count ) {
+			if ( ! c->heights[0].dbhs_count 
+				|| ( (1 == c->heights[0].dbhs_count) 
+					&& (c->heights[0].dbhs[0].ages_count <= 1)
+					&& (c->heights[0].dbhs[0].ages[0].species_count <= 1) )
+				) {
+					if ( ! height_remove(c, 0) ) return 0;
+			}
+		}
+	}
+
+	return 1;
+}

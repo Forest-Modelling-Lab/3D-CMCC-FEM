@@ -23,13 +23,8 @@ int alloc_struct(void** t, int* count, int* avail, unsigned int size) {
 	void *no_leak;
 
 	if ( *avail ) {
-		// ALESSIOR:
-		// AVAIL MUST NOT BE USED !!!
-		// STRUCT ARE SHALLOW COPY !!!
-		logger(g_log, "unable to alloc struct! Use of available memory is NOT allowed\n");
-		exit(1);
-		//--*avail;
-		//++*count;
+		--*avail;
+		++*count;
 	} else {
 		no_leak = realloc(*t, ++*count*size);
 		if ( ! no_leak ) {

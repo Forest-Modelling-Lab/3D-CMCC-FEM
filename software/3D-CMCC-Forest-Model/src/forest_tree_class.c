@@ -78,13 +78,11 @@ static int fill_cell(cell_t *const c)
 	a->species[a->species_count-1].counter[N_TREE] = (int)g_settings->replanted_n_tree;
 	a->species[a->species_count-1].counter[N_STUMP] = 0;
 	a->species[a->species_count-1].value[LAI] = g_settings->replanted_lai;
-	a->species[a->species_count-1].turnover = NULL; //malloc(a->species_count*sizeof*a->species[a->species_count-1].turnover);
-	//if ( ! a->species[a->species_count-1].turnover ) return 0;
 
 	return 1;
 }
 
-int add_tree_class (cell_t *const c, const int height, const int dbh, const int age, const int species)
+int add_tree_class (cell_t *const c)
 {
 //	int i;
 //	int y;
@@ -111,8 +109,13 @@ int add_tree_class (cell_t *const c, const int height, const int dbh, const int 
 	logger(g_log, "**n tree %d of %s\n", s->counter[N_TREE], s->name);
 	*/
 
+	/* fill with species values */
+	if ( ! fill_species_from_file(&c->heights[c->heights_count-1].dbhs[0].ages[0].species[0]) ) {
+		return 0;
+	}
+
 	/* initialise new forest class pools */
-	initialization_forest_C_biomass( c, height, dbh, age, species );
+	initialization_forest_C_biomass( c, c->heights_count-1, 0, 0, 0 );
 
 	return 1;
 }

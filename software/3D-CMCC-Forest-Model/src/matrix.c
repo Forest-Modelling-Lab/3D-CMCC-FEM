@@ -809,8 +809,6 @@ static int fill_cell_from_species(age_t* const a, const row_t* const row) {
 	a->species[a->species_count-1].value[BIOMASS_BRANCH_tDM] = row->wbb;
 	a->species[a->species_count-1].value[RESERVE_tDM] = row->wres;
 	a->species[a->species_count-1].value[LAI] = row->lai;
-	a->species[a->species_count-1].turnover = malloc(a->species_count*sizeof*a->species[a->species_count-1].turnover);
-	if ( ! a->species[a->species_count-1].turnover ) return 0;
 
 	return 1;
 }
@@ -951,7 +949,7 @@ static int fill_cell(matrix_t* const m, row_t* const row)
 	return fill_cell_from_heights(&m->cells[index], row);
 }
 
-static int fill_species_from_file(species_t *const s) {
+int fill_species_from_file(species_t *const s) {
 #define BUFFER_SIZE	256
 	char *p;
 	char *token;
@@ -1547,10 +1545,6 @@ void matrix_free(matrix_t *m)
 											if ( m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species].name )
 											{
 												free( m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species].name );
-											}
-											if ( m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species].turnover )
-											{
-												free( m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species].turnover );
 											}
 										}
 										free ( m->cells[cell].heights[height].dbhs[dbh].ages[age].species );

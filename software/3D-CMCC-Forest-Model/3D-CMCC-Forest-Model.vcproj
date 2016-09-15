@@ -404,11 +404,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\remove_tree_class.c"
+				RelativePath=".\src\regeneration.c"
 				>
 			</File>
 			<File
-				RelativePath=".\src\renovation.c"
+				RelativePath=".\src\remove_tree_class.c"
 				>
 			</File>
 			<File
@@ -425,6 +425,10 @@
 			</File>
 			<File
 				RelativePath=".\src\soil_model.c"
+				>
+			</File>
+			<File
+				RelativePath=".\src\soil_radiation_sw_band.c"
 				>
 			</File>
 			<File

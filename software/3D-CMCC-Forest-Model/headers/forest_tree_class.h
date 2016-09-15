@@ -10,7 +10,7 @@
 
 #include "matrix.h"
 
-int add_tree_class(cell_t *const c, const int height, const int dbh, const int age, const int species);
+int add_tree_class(cell_t *const c);
 
 //static int fill_cell(cell_t *const c);
 

@@ -20,8 +20,8 @@ void soil_radiation_sw_band ( cell_t *const c, meteo_daily_t *meteo_daily )
 	//fixme move soil and snow albedo into soil.txt file
 	const double soil_albedo = 0.15;                                                      /* (ratio) soil albedo without snow (see MAESPA model) */
 	const double snow_albedo = 0.65;                                                      /* (ratio) snow albedo as an average between freshly fallen snow and 0.4 for melting snow */
-	double Light_refl_sw_rad_soil_frac;                                                   /* (ratio) fraction of Short Wave radiation reflected from the soil */
-	double Light_refl_sw_rad_snow_frac;                                                   /* (ratio) fraction of Short Wave radiation reflected from the snow */
+	double Light_refl_sw_rad_soil_frac = 0.;                                                   /* (ratio) fraction of Short Wave radiation reflected from the soil */
+	double Light_refl_sw_rad_snow_frac = 0.;                                                   /* (ratio) fraction of Short Wave radiation reflected from the snow */
 
 	/* check parameters */
 	assert ( c );
@@ -42,6 +42,7 @@ void soil_radiation_sw_band ( cell_t *const c, meteo_daily_t *meteo_daily )
 		Light_refl_sw_rad_snow_frac = snow_albedo;
 	}
 	logger(g_log, "LightReflec_soil = %g %%\n", Light_refl_sw_rad_soil_frac * 100);
+	logger(g_log, "LightReflec_snow = %g %%\n", Light_refl_sw_rad_snow_frac * 100);
 	logger(g_log, "******************************************************\n");
 
 	/* compute values for soil layer when last height class in cell is processed */

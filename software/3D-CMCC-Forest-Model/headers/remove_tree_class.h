@@ -12,5 +12,4 @@
 
 int tree_class_remove(cell_t *const c, const int height, const int dbh, const int age, const int species);
 
-
 #endif /* REMOVE_TREE_CLASS_H_ */

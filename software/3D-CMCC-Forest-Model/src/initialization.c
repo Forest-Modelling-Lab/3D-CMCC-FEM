@@ -9,6 +9,7 @@
 #include "logger.h"
 #include "common.h"
 #include "structure.h"
+#include "biomass.h"
 
 extern settings_t *g_settings;
 extern logger_t* g_log;
@@ -322,9 +323,10 @@ void initialization_forest_C_biomass(cell_t *const c, const int height, const in
 	/* assuming LIVE_DEAD WOOD RATIO AS IN BIOME */
 	logger(g_log, "\n*******************************\n");
 	/*FOR STEM*/
+	live_total_wood_age(a, species);
 	logger(g_log, "Total Stem Biomass = %g tC cell\n", s->value[STEM_C]);
-	s->value[BIOMASS_STEM_LIVE_WOOD_tDM]= s->value[BIOMASS_STEM_tDM] * (s->value[LIVE_TOTAL_WOOD_FRAC]);
-	s->value[STEM_LIVE_WOOD_C]= s->value[STEM_C] * (s->value[LIVE_TOTAL_WOOD_FRAC]);
+	s->value[BIOMASS_STEM_LIVE_WOOD_tDM]= s->value[BIOMASS_STEM_tDM] * (s->value[EFF_LIVE_TOTAL_WOOD_FRAC]);
+	s->value[STEM_LIVE_WOOD_C]= s->value[STEM_C] * (s->value[EFF_LIVE_TOTAL_WOOD_FRAC]);
 	logger(g_log, "-Live Stem Biomass = %g tC cell\n", s->value[STEM_LIVE_WOOD_C]);
 	s->value[BIOMASS_STEM_DEAD_WOOD_tDM]= s->value[BIOMASS_STEM_tDM] -s->value[BIOMASS_STEM_LIVE_WOOD_tDM];
 	s->value[STEM_DEAD_WOOD_C]= s->value[STEM_C] -s->value[STEM_LIVE_WOOD_C];
@@ -340,8 +342,8 @@ void initialization_forest_C_biomass(cell_t *const c, const int height, const in
 
 	/*FOR COARSE ROOT*/
 	logger(g_log, "Total Root Biomass = %g tC cell\n", s->value[TOT_ROOT_C]);
-	s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD_tDM]= s->value[BIOMASS_COARSE_ROOT_tDM] * (s->value[LIVE_TOTAL_WOOD_FRAC]);
-	s->value[COARSE_ROOT_LIVE_WOOD_C]= s->value[COARSE_ROOT_C] * (s->value[LIVE_TOTAL_WOOD_FRAC]);
+	s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD_tDM]= s->value[BIOMASS_COARSE_ROOT_tDM] * (s->value[EFF_LIVE_TOTAL_WOOD_FRAC]);
+	s->value[COARSE_ROOT_LIVE_WOOD_C]= s->value[COARSE_ROOT_C] * (s->value[EFF_LIVE_TOTAL_WOOD_FRAC]);
 	logger(g_log, "-Live Coarse Root Biomass = %g tC cell\n", s->value[COARSE_ROOT_LIVE_WOOD_C]);
 	s->value[BIOMASS_COARSE_ROOT_DEAD_WOOD_tDM]= s->value[BIOMASS_COARSE_ROOT_tDM] -s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD_tDM];
 	s->value[COARSE_ROOT_DEAD_WOOD_C]= s->value[COARSE_ROOT_C] -s->value[COARSE_ROOT_LIVE_WOOD_C];
@@ -357,8 +359,8 @@ void initialization_forest_C_biomass(cell_t *const c, const int height, const in
 
 	/*FOR BRANCH*/
 	logger(g_log, "Total BB Branch = %g tC/cell\n", s->value[BRANCH_C]);
-	s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD_tDM]= s->value[BIOMASS_BRANCH_tDM] * (s->value[LIVE_TOTAL_WOOD_FRAC]);
-	s->value[BRANCH_LIVE_WOOD_C]= s->value[BRANCH_C] * (s->value[LIVE_TOTAL_WOOD_FRAC]);
+	s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD_tDM]= s->value[BIOMASS_BRANCH_tDM] * (s->value[EFF_LIVE_TOTAL_WOOD_FRAC]);
+	s->value[BRANCH_LIVE_WOOD_C]= s->value[BRANCH_C] * (s->value[EFF_LIVE_TOTAL_WOOD_FRAC]);
 	logger(g_log, "-Live Stem Branch Biomass = %g tC cell\n", s->value[BRANCH_LIVE_WOOD_C]);
 	s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD_tDM]= s->value[BIOMASS_BRANCH_tDM] -s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD_tDM];
 	s->value[BRANCH_DEAD_WOOD_C]= s->value[BRANCH_C] -s->value[BRANCH_LIVE_WOOD_C];
