@@ -78,7 +78,7 @@ void daily_forest_structure (cell_t *const c)
 					{
 						if ( (!string_compare_i(c->heights[height].dbhs[dbh].ages[age].species[species].name,
 								c->heights[height].dbhs[dbh].ages[age].species[species+1].name)))
-						++ c->cell_species_count;
+							++ c->cell_species_count;
 					}
 					else
 					{
@@ -277,7 +277,6 @@ int annual_forest_structure(cell_t* const c)
 	for ( layer = c->tree_layers_count - 1; layer >= 0; --layer )
 	{
 		logger(g_log, "----------------------------------\n");
-		logger(g_log, "-layer %d ", layer);
 
 		for ( height = 0; height < c->heights_count ; ++height )
 		{
@@ -290,10 +289,11 @@ int annual_forest_structure(cell_t* const c)
 						for ( species = 0; species < c->heights[height].dbhs[dbh].ages[age].species_count; ++species )
 						{
 							h = &c->heights[height];
+							d = &c->heights[height].dbhs[dbh];
 							a = &c->heights[height].dbhs[dbh].ages[age];
 							s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
-							logger(g_log,"-height = %g age = %d species = %s\n", h->value, a->value, s->name);
+							logger(g_log,"-layer = %d layer density = %g height = %g dbh = %g age = %d species = %s\n", layer,c->tree_layers[layer].layer_density, h->value, d->value, a->value, s->name);
 
 							s->value[DBHDC_EFF] = ((s->value[DBHDCMIN] - s->value[DBHDCMAX]) / (s->value[DENMAX] - s->value[DENMIN]) *
 									(c->tree_layers[layer].layer_density - s->value[DENMIN]) + s->value[DBHDCMAX]);
@@ -419,6 +419,84 @@ int annual_forest_structure(cell_t* const c)
 	return 1;
 }
 /*************************************************************************************************************************/
+
+void potential_max_min_density ( cell_t *const c )
+{
+
+	int height;
+	int dbh;
+	int age;
+	int species;
+
+	double low_dbh = 2;       /* minimum dbh (cm) */
+	double high_dbh = 100;    /* maximum dbh (cm) */
+
+	double min_crown_radius;  /* minimum crown radius (m) */
+	double min_crown_diameter;
+	double min_crown_area;
+
+	double max_crown_radius;
+	double max_crown_diameter;
+	double max_crown_area;
+
+	double trees_number;
+
+	height_t *h;
+	dbh_t *d;
+	age_t *a;
+	species_t *s;
+
+	for ( height = 0; height < c->heights_count; ++height )
+	{
+		h = &c->heights[height];
+
+		for ( dbh = 0; dbh < h->dbhs_count; ++dbh )
+		{
+			d = &c->heights[height].dbhs[dbh];
+
+			for ( age = 0; age < d->ages_count; ++age )
+			{
+				a = &c->heights[height].dbhs[dbh].ages[age];
+
+				for ( species = 0; species < a->species_count; ++species )
+				{
+					s = &c->heights[height].dbhs[dbh].ages[age].species[species];
+
+					/* compute maximum density */
+
+					/* compute minimum crown radius for maximum possible density */
+					/* note using minimum dbh with DBHDC_MIN */
+					min_crown_diameter = low_dbh * s->value[DBHDCMIN];
+
+					min_crown_radius = min_crown_diameter / 2.;
+
+					min_crown_area = pow(min_crown_radius, 2)* Pi;
+
+					trees_number = g_settings->sizeCell / min_crown_area;
+
+					s->value[DENMAX] = trees_number / g_settings->sizeCell;
+					logger (g_log, "DENMAX = %g\n", s->value[DENMAX]);
+
+					/* compute maximum density */
+
+					/* compute minimum crown radius for maximum possible density */
+					/* note using minimum dbh with DBHDC_MIN */
+					max_crown_diameter = high_dbh * s->value[DBHDCMAX];
+
+					max_crown_radius = max_crown_diameter / 2.;
+
+					max_crown_area = pow(max_crown_radius, 2)* Pi;
+
+					trees_number = g_settings->sizeCell / max_crown_area;
+
+					s->value[DENMIN] = trees_number / g_settings->sizeCell;
+					logger (g_log, "DENMIN = %g\n", s->value[DENMIN]);
+				}
+			}
+		}
+	}
+}
+/***************************************************************************************************/
 void potential_max_min_canopy_cover (cell_t *const c)
 {
 	int height;

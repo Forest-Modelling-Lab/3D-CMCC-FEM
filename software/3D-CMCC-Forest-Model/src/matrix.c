@@ -1417,7 +1417,11 @@ void forest_summary(const matrix_t* const m, const int cell, const int day, cons
 	allometry_power_function (&m->cells[cell]);
 
 	/* initialize variables for DBHDC function */
-	potential_max_min_canopy_cover ( &m->cells[cell]);
+	//test fixme see if usefull
+	//potential_max_min_canopy_cover ( &m->cells[cell]);
+
+	/* compute potential maximum and minimum density for DBHDC function */
+	potential_max_min_density (&m->cells[cell]);
 
 	/* initialize carbon pool fraction */
 	carbon_pool_fraction (&m->cells[cell]);
@@ -1433,6 +1437,7 @@ void forest_summary(const matrix_t* const m, const int cell, const int day, cons
 			{
 				for ( species = 0; species < m->cells[cell].heights[height].dbhs[dbh].ages[age].species_count; ++species )
 				{
+
 					/* IF NO BIOMASS INITIALIZATION DATA OR TREE HEIGHTS ARE AVAILABLE FOR STAND
 					 * BUT JUST DENDROMETRIC VARIABLES (i.e. AVDBH, HEIGHT, THESE ARE MANDATORY) */
 					/* initialise carbon pools */

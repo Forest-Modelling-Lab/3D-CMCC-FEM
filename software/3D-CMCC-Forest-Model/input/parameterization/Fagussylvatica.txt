@@ -77,8 +77,8 @@ CRB 0.038               //Chapman_Richards b parameter
 CRC 1.104               //Chapman_Richards c parameter
 HDMAX   1.71            //Height to Base diameter ratio MAX  (Portoghesi)
 HDMIN   0.2             //Height to Base diameter ratio MIN  (Portoghesi)
-DENMAX  2.5 //CHANGED FROM 0.1             //Maximum density (trees/10000 m^2)based on DBH = 5 cm and DBHDCMIN = 0.14
-DENMIN  -9999 //0.04 //-9999    //Minimum density (trees/10000 m^2) based on DBH = 150 cm and DBHDCMIN = 0.22
+DENMAX  0 //16.2 //2.5 //CHANGED FROM 0.1             //Maximum density (trees/10000 m^2)based on DBH = 2 cm and DBHDCMIN = 0.14
+DENMIN  0 //0.08 //-9999    //Minimum density (trees/10000 m^2) based on DBH = 150 cm and DBHDCMIN = 0.22
 MINPAREST   4.05        //Minimum Monthly PAR (W/m^2 hour) (NOT USED) for Establishment for the Dominated Layer B. Smith, I. C. Prentice, and M. T. Sykes 2001 for Boreal/Temperate SHADE TOLLERANT broaldleaved summergreen
 MINRAIN 100             //Minimum annual Rain Precipitation for Establishment S. Sitch 2003(NOT USED)
 ADULT_AGE   5           //age at which consider tree as an adult tree

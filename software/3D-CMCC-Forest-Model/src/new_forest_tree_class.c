@@ -117,20 +117,20 @@ int add_tree_class (cell_t *const c)
 		return 0;
 	}
 
-	//ALESSIOC FIXME
 	/* initialize power function */
 	allometry_power_function ( c );
 
-	//ALESSIOC FIXME
 	/* initialize variables for DBHDC function */
-	potential_max_min_canopy_cover ( c );
+	potential_max_min_density ( c  );
 
-	//ALESSIOC FIXME
 	/* initialize carbon pool fraction */
-	//carbon_pool_fraction ( c );
+	carbon_pool_fraction ( c );
 
 	/* initialize new forest class pools */
 	initialization_forest_class_C_biomass( c, c->heights_count-1, 0, 0, 0 );
+
+	/* initialise nitrogen pools */
+	initialization_forest_class_N_biomass ( c, c->heights_count-1, 0, 0, 0 );
 
 	return 1;
 }

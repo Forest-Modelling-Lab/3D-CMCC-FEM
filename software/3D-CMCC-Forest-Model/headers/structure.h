@@ -12,7 +12,9 @@ void monthly_forest_structure ( cell_t* const c, const int day, const int month,
 
 int annual_forest_structure( cell_t *const );
 
-void potential_max_min_canopy_cover (cell_t *const c);
+//void potential_max_min_canopy_cover (cell_t *const c);
+
+void potential_max_min_density ( cell_t *const c );
 
 void prephenology (cell_t *const, const meteo_daily_t *const, const int, const int);
 
