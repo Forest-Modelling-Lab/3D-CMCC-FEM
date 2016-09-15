@@ -46,6 +46,7 @@
 #include "forest_tree_class.h"
 #include "treemodel_daily.h"
 #include "remove_tree_class.h"
+#include "regeneration.h"
 
 //extern settings_t* g_settings;
 extern logger_t* g_log;

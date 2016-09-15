@@ -51,8 +51,8 @@ C_SRCS += \
 ../src/photosynthesis.c \
 ../src/print.c \
 ../src/print_output.c \
+../src/regeneration.c \
 ../src/remove_tree_class.c \
-../src/renovation.c \
 ../src/settings.c \
 ../src/snow.c \
 ../src/soil_evaporation.c \
@@ -120,8 +120,8 @@ OBJS += \
 ./src/photosynthesis.o \
 ./src/print.o \
 ./src/print_output.o \
+./src/regeneration.o \
 ./src/remove_tree_class.o \
-./src/renovation.o \
 ./src/settings.o \
 ./src/snow.o \
 ./src/soil_evaporation.o \
@@ -189,8 +189,8 @@ C_DEPS += \
 ./src/photosynthesis.d \
 ./src/print.d \
 ./src/print_output.d \
+./src/regeneration.d \
 ./src/remove_tree_class.d \
-./src/renovation.d \
 ./src/settings.d \
 ./src/snow.d \
 ./src/soil_evaporation.d \
