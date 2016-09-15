@@ -749,8 +749,8 @@ typedef struct
 
 	/* general variables */
 	double abscission_daylength;                        /* day length for starting abscission (not used) */
-	double av_yearly_daylength;                         /* average yearly daylength for renovation function */
-	double av_yearly_par_soil;                          /* average yearly par for soil for renovation function */
+	double av_yearly_daylength;                         /* average yearly daylength for regeneration function */
+	double av_yearly_par_soil;                          /* average yearly par for soil for regeneration function */
 	int north;                                          /* northern hemisphere north = 0, south hemisphere south = 1 */
 
 	/* annual met values */

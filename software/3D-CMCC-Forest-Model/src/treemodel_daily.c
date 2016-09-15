@@ -296,8 +296,8 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 								/*Mortality based on tree Age (LPJ)*/
 								age_mortality ( c, height, dbh, age, species);
 
-								/* renovation */
-								//renovation ( c, layer, height, dbh, age, species);
+								/* regeneration */
+								//regeneration ( c, layer, height, dbh, age, species);
 
 								/************************************************************************************************************************************/
 								/* above ground-below ground biomass */

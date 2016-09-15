@@ -40,7 +40,7 @@ typedef struct {
 	double min_layer_cover;
 	double max_layer_cover;
 
-	/* management / renovation (human or natural) input */
+	/* management / regeneration (human or natural) input */
 	//ALESSIOC TO ALESSIOR move remainig_basal_area to species.txt
 	double remainig_basal_area;          /* percentage of basal area to remove per sizecell (mandatory) */
 	double replanted_n_tree;             /* number of replanted trees per sizecell (mandatory) */
@@ -55,7 +55,7 @@ typedef struct {
 	double replanted_wl;                 /* leaf biomass of replanted trees (probably no need to be used) (optional) */
 	double replanted_wbb;                /* branch biomass of replanted trees (probably no need to be used) (optional) */
 
-	/* renovation */
+	/* regeneration */
 	//ALESSIOC include data for sapling (avdbh, height, number of saplings etc )
 	double light_estab_very_tolerant;
 	double light_estab_tolerant;
