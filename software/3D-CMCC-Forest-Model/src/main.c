@@ -714,6 +714,8 @@ int main(int argc, char *argv[]) {
 	int prog_ret;
 	int flag;
 	int start_year;
+	double start_timer;
+	double end_timer;
 	matrix_t* matrix;
 	output_t* output_vars;
 
@@ -723,6 +725,10 @@ int main(int argc, char *argv[]) {
 	matrix = NULL;
 	output_vars = NULL;
 	prog_ret = 1;
+
+	/* start timer */
+	timer_init();
+	start_timer = timer_get();
 
 	/* get program path */
 	g_sz_program_path = get_current_path();
@@ -1316,7 +1322,7 @@ int main(int argc, char *argv[]) {
 	/* ok ! */
 	prog_ret = 0;
 
-	err:
+err:
 	/* close logger */
 	logger_close(g_soil_log); g_soil_log = NULL;
 	logger_close(g_annual_log); g_annual_log = NULL;
@@ -1339,6 +1345,9 @@ int main(int argc, char *argv[]) {
 	/* this should be freed before */
 	free(g_sz_topo_file); g_sz_topo_file = NULL;
 	free(g_sz_soil_file); g_sz_soil_file = NULL;
+
+	end_timer = timer_get();
+	printf("%.2f secs elapsed\n", end_timer - start_timer);
 
 	return prog_ret;
 }

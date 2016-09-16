@@ -52,5 +52,7 @@ int file_get_rows_count(const char* const filename);
 unsigned int file_load_in_memory(const char* const filename, char** result);
 int path_create(const char *const path);
 char* get_datetime(void);
+void timer_init(void);
+double timer_get(void);
 
 #endif /* COMMON_H */

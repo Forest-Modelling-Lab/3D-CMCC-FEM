@@ -19,6 +19,7 @@
 #include <windows.h>
 static WIN32_FIND_DATA wfd;
 static HANDLE handle;
+static double g_timer_period;
 #elif defined (linux) || defined (_linux) || defined (__linux__)
 #include <unistd.h>
 #include <dirent.h>
@@ -328,4 +329,57 @@ char* get_datetime(void) {
 	);
 		
 	return buf;
+}
+
+#if defined(LOVE_LINUX)
+static inline double getTimeOfDay()
+{
+	timeval t;
+	gettimeofday(&t, NULL);
+	return (double) t.tv_sec + (double) t.tv_usec / 1000000.0;
+}
+#endif
+
+#if defined (_WIN32)
+static double get_timer_period(void) {
+	LARGE_INTEGER temp;
+	if ( QueryPerformanceFrequency(&temp) != 0 && temp.QuadPart != 0 ) {
+		return 1.0 / (double) temp.QuadPart;
+	}
+	return 0;
+}
+#endif
+
+void timer_init(void) {
+#if defined (_WIN32)
+	g_timer_period = get_timer_period();
+#endif
+}
+
+double timer_get(void)
+{
+#if defined (linux) || defined (_linux) || defined (__linux__)
+	double mt;
+	// Check for POSIX timers and monotonic clocks. If not supported, use the gettimeofday fallback.
+#if _POSIX_TIMERS > 0 && defined(_POSIX_MONOTONIC_CLOCK) \
+&& (defined(CLOCK_MONOTONIC_RAW) || defined(CLOCK_MONOTONIC))
+	timespec t;
+#ifdef CLOCK_MONOTONIC_RAW
+	clockid_t clk_id = CLOCK_MONOTONIC_RAW;
+#else
+	clockid_t clk_id = CLOCK_MONOTONIC;
+#endif
+	if (clock_gettime(clk_id, &t) == 0)
+		mt = (double) t.tv_sec + (double) t.tv_nsec / 1000000000.0;
+	else
+#endif
+		mt = getTimeOfDay();
+	return mt;
+#elif defined _WIN32
+	LARGE_INTEGER microTime;
+	QueryPerformanceCounter(&microTime);
+	return (double)microTime.QuadPart * g_timer_period;
+#else
+	return 0.;
+#endif
 }
