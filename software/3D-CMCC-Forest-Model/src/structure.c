@@ -271,6 +271,8 @@ int annual_forest_structure(cell_t* const c)
 	logger(g_log, "**************************************\n\n");
 
 	/*************************************************************************************/
+
+	//ALESSIOC FIXME MOVE TO CANOPY COVER.C
 	/* compute effective dbh/crown diameter ratio within each class based on layer density (class level) */
 	logger(g_log, "compute effective dbh/crown diameter ratio within each class based on layer density (class level)\n\n");
 
@@ -326,6 +328,7 @@ int annual_forest_structure(cell_t* const c)
 	logger(g_log, "**************************************\n\n");
 
 	/*************************************************************************************/
+	//ALESSIOC FIXME MOVE TO CANOPY COVER.C
 	/* compute effective crown diameter and crown area and class cover using DBH-DC */
 	logger(g_log, "*compute effective crown diameter and crown area and class cover using DBH-DC*\n\n");
 
