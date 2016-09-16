@@ -6,7 +6,10 @@ for ISIMIP simulations 2001-2099 in Soroe we used:
  FILE NAME: "Soroe_stand_1950_ISIMIP.txt" (unique for all simulations starting from 1950)
  FILE NAME: "Soroe_stand_2001_ISIMIP.txt" (unique for all simulations starting from 2001)
  
--input soil data coming from data used in Collalti et al., 2016, each soil data are the same of all soil files,
+-input soil data coming from database data SOIL.csv and psot processed in Soil_TEXTURE.xlsx file 
+ soil texture is a weighted average of texutres for each soil horizon
+ (soil depth is that used in Collalti et al., 2016, coming from Dalsgaard et al., 2011 for unconsistency of those in database)
+ each soil data are the same of all soil files,
  except for "sitename" variable that is different and is used ONLY for file signatures in output files
  FILE NAME: "Soroe_soil_x.x_ISIMIP.txt"
 
