@@ -42,7 +42,7 @@ void check_radiation_balance (cell_t *const c, const meteo_daily_t *const meteo_
 
 	logger(g_log, "\nCELL RADIATIVE BALANCE (PAR)\n");
 
-	if ( fabs( balance ) > 1e-8 )
+	if ( fabs( balance ) > eps )
 	{
 		logger(g_log, "DOY = %d\n", c->doy);
 		logger(g_log, "\nin\n");
@@ -84,7 +84,7 @@ void check_radiation_balance (cell_t *const c, const meteo_daily_t *const meteo_
 
 	logger(g_log, "\nCELL RADIATIVE BALANCE (Short Wave Radiation)\n");
 
-	if ( fabs( balance ) > 1e-8 )
+	if ( fabs( balance ) > eps )
 	{
 		logger(g_log, "DOY = %d\n", c->doy);
 		logger(g_log, "\nin\n");
@@ -123,7 +123,7 @@ void check_radiation_balance (cell_t *const c, const meteo_daily_t *const meteo_
 
 	logger(g_log, "\nCELL RADIATIVE BALANCE (PPFD)\n");
 
-	if ( fabs( balance ) > 1e-8 )
+	if ( fabs( balance ) > eps )
 	{
 		logger(g_log, "DOY = %d\n", c->doy);
 		logger(g_log, "\nin\n");
@@ -176,7 +176,7 @@ void check_carbon_balance(cell_t *const c)
 
 	logger(g_log, "\nCELL CARBON POOL BALANCE\n");
 
-	if ( fabs( balance ) > 1e-8 )
+	if ( fabs( balance ) > eps )
 	{
 		logger(g_log, "DOY = %d\n", c->doy);
 		logger(g_log, "\nin\n");
@@ -235,7 +235,7 @@ void check_soil_water_balance(cell_t *const c, const meteo_daily_t *const meteo_
 	logger(g_log, "\nCELL SOIL POOL WATER BALANCE\n");
 
 	/* check for soil water pool water balance */
-	if ( fabs( balance ) > 1e-8 )
+	if ( fabs( balance ) > eps )
 	{
 		logger(g_log, "DOY = %d\n", c->doy);
 		logger(g_log, "\nin\n");
@@ -282,7 +282,7 @@ void check_soil_water_balance(cell_t *const c, const meteo_daily_t *const meteo_
 	logger(g_log, "\nCELL SNOW POOL WATER BALANCE\n");
 
 	/* check for soil water pool water balance */
-	if ( fabs( balance ) > 1e-8 )
+	if ( fabs( balance ) > eps )
 	{
 		logger(g_log, "DOY = %d\n", c->doy);
 		logger(g_log, "\nin\n");
@@ -337,7 +337,7 @@ void check_class_radiation_balance(cell_t *const c, const int layer, const int h
 	logger(g_log, "\nCLASS LEVEL PAR BALANCE\n");
 
 	/* check for PAR balance closure*/
-	if ( fabs( balance ) > 1e-8 )
+	if ( fabs( balance ) > eps )
 	{
 		logger(g_log, "DOY = %d\n", c->doy);
 		logger(g_log, "PAR in = %g\n", in);
@@ -369,7 +369,7 @@ void check_class_radiation_balance(cell_t *const c, const int layer, const int h
 	logger(g_log, "\nCLASS LEVEL Short Wave BALANCE\n");
 
 	/* check for NET_RAD balance closure*/
-	if ( fabs( balance ) > 1e-8 )
+	if ( fabs( balance ) > eps )
 	{
 		logger(g_log, "DOY = %d\n", c->doy);
 		logger(g_log, "NET_SW_RAD in = %g\n", in);
@@ -400,7 +400,7 @@ void check_class_radiation_balance(cell_t *const c, const int layer, const int h
 	logger(g_log, "\nCLASS LEVEL PPFD BALANCE\n");
 
 	/* check for PPFD balance closure*/
-	if ( fabs( balance ) > 1e-8 )
+	if ( fabs( balance ) > eps )
 	{
 		logger(g_log, "DOY = %d\n", c->doy);
 		logger(g_log, "PPFD in = %g\n", in);
@@ -450,7 +450,7 @@ void check_class_carbon_balance(cell_t *const c, const int layer, const int heig
 	logger(g_log, "\nCLASS LEVEL CARBON BALANCE\n");
 
 	/* check for carbon balance closure */
-	if ( fabs( balance ) > 1e-8 )
+	if ( fabs( balance ) > eps )
 	{
 		logger(g_log, "DOY = %d\n", c->doy);
 		logger(g_log, "\nin = %g gC/m2\n", in);
@@ -504,7 +504,7 @@ void check_class_water_balance(cell_t *const c, const int layer, const int heigh
 
 	logger(g_log, "\nCLASS LEVEL WATER BALANCE\n");
 
-	if ( fabs( balance ) > 1e-8 )
+	if ( fabs( balance ) > eps )
 	{
 		logger(g_log, "DOY = %d\n", c->doy);
 		logger(g_log, "canopy water in = %g\n", in);

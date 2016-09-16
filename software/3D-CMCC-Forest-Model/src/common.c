@@ -26,6 +26,7 @@ static double g_timer_period;
 #include <sys/param.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/time.h>
 #endif
 
 /* external error strings */
@@ -331,10 +332,10 @@ char* get_datetime(void) {
 	return buf;
 }
 
-#if defined(LOVE_LINUX)
+#if defined (linux) || defined (_linux) || defined (__linux__)
 static inline double getTimeOfDay()
 {
-	timeval t;
+	struct timeval t;
 	gettimeofday(&t, NULL);
 	return (double) t.tv_sec + (double) t.tv_usec / 1000000.0;
 }
@@ -363,7 +364,7 @@ double timer_get(void)
 	// Check for POSIX timers and monotonic clocks. If not supported, use the gettimeofday fallback.
 #if _POSIX_TIMERS > 0 && defined(_POSIX_MONOTONIC_CLOCK) \
 && (defined(CLOCK_MONOTONIC_RAW) || defined(CLOCK_MONOTONIC))
-	timespec t;
+	struct timespec t;
 #ifdef CLOCK_MONOTONIC_RAW
 	clockid_t clk_id = CLOCK_MONOTONIC_RAW;
 #else

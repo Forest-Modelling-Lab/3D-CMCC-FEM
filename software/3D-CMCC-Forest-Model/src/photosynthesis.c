@@ -70,7 +70,7 @@ void photosynthesis(cell_t *const c, const int layer, const int height, const in
 
 	/* check */
 	CHECK_CONDITION( GPPmolC, < 0 );
-	CHECK_CONDITION( fabs ( GPPmolC - GPPmolC_tot ), > 1e-4 );
+	CHECK_CONDITION( fabs ( GPPmolC - GPPmolC_tot ), > eps );
 
 	/* Daily GPP in gC/m2/day */
 	/* molC/m2/day --> gC/m2/day */

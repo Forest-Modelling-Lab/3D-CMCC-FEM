@@ -61,7 +61,7 @@ enum {
 #define EMSOIL                  0.95      /* Emissivity of thermal radiation by soil (see MAESPA) */
 #define Pi               3.141592654      /* Pi greek */
 #define ln2              0.693147181      /* logarithm constant */
-#define eps                   0.0001
+#define eps                 0.000001      /* differences in comparison */
 #define e                 2.71828183      /* nepero/eulero constant */
 #define GRPERC                   0.3      /* (DIM) percentage of growth resp per unit of C grown see BIOME, 0.25 for LPJ */
 #define refCO2CONC               281      /* ppmv reference co2 concentration see Veroustraete 1994, 2002 */

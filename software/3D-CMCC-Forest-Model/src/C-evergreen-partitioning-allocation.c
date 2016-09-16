@@ -84,7 +84,7 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 	/* reserve and leaves */
 	pL = (1.0 - pS - pR);
 	logger(g_log, "Reserve CTEM ratio = %g %%\n", pL * 100);
-	CHECK_CONDITION( fabs ( pR + pS + pL ), > 1 + 1e-4 );
+	CHECK_CONDITION( fabs ( pR + pS + pL ), > 1 + eps );
 
 	logger(g_log, "\nCarbon allocation for evergreen\n");
 	logger(g_log, "PHENOLOGICAL PHASE = %d\n", s->phenology_phase);

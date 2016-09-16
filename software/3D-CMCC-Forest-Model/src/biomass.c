@@ -103,7 +103,7 @@ void annual_tree_increment(cell_t *const c, const int height, const int dbh, con
 		logger(g_log, "MAI-Mean Annual Increment = %g m^3/cell/yr \n", s->value[MAI]);
 
 		/* check */
-		CHECK_CONDITION(s->value[TREE_VOLUME], < single_tree_prev_vol - 1e-6);
+		CHECK_CONDITION(s->value[TREE_VOLUME], < single_tree_prev_vol - eps);
 	}
 }
 
@@ -236,7 +236,7 @@ void tree_branch_and_bark (cell_t *const c, const int height, const int dbh, con
 //
 //	/* check for closure */
 //
-//	CHECK_CONDITION(fabs((s->value[STEM_SAPWOOD_C] + s->value[STEM_HEARTWOOD_C])-s->value[STEM_C]),>1e-4);
-//	CHECK_CONDITION(fabs((s->value[COARSE_ROOT_SAPWOOD_C] + s->value[COARSE_ROOT_HEARTWOOD_C])-s->value[COARSE_ROOT_C]),>1e-4);
-//	CHECK_CONDITION(fabs((s->value[BRANCH_SAPWOOD_C] + s->value[BRANCH_HEARTWOOD_C])-s->value[BRANCH_C]),>1e-4);
+//	CHECK_CONDITION(fabs((s->value[STEM_SAPWOOD_C] + s->value[STEM_HEARTWOOD_C])-s->value[STEM_C]),>eps);
+//	CHECK_CONDITION(fabs((s->value[COARSE_ROOT_SAPWOOD_C] + s->value[COARSE_ROOT_HEARTWOOD_C])-s->value[COARSE_ROOT_C]),>eps);
+//	CHECK_CONDITION(fabs((s->value[BRANCH_SAPWOOD_C] + s->value[BRANCH_HEARTWOOD_C])-s->value[BRANCH_C]),>eps);
 //}

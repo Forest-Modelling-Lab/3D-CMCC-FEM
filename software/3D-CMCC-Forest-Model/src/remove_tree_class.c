@@ -189,34 +189,6 @@ static int species_remove(cell_t *c, const int height, const int dbh, const int 
 	return 1;
 }
 
-static int tree_class_remove_height(cell_t *const c, const int height)
-{
-	assert(c);
-
-	return height_remove(c, height);
-}
-
-static int tree_class_remove_dbh(cell_t *const c, const int height, const int dbh)
-{
-	assert(c);
-
-	return dbh_remove(c, height, dbh);
-}
-
-static int tree_class_remove_age(cell_t *const c, const int height, const int dbh, const int age)
-{
-	assert(c);
-
-	return age_remove(c, height, dbh, age);
-}
-
-static int tree_class_remove_species(cell_t *const c, const int height, const int dbh, const int age, const int species)
-{
-	assert(c);
-
-	return species_remove(c, height, dbh, age, species);
-}
-
 int tree_class_remove(cell_t *const c, const int height, const int dbh, const int age, const int species)
 {
 	assert(c);

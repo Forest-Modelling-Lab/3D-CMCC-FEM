@@ -91,7 +91,7 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 	/* check */
 	CHECK_CONDITION(s->value[APAR], < 0.);
 	CHECK_CONDITION(s->value[TRANSM_PAR], < 0.);
-	CHECK_CONDITION(fabs((s->value[APAR] + s->value[TRANSM_PAR])-s->value[PAR]),>1e-4);
+	CHECK_CONDITION(fabs((s->value[APAR] + s->value[TRANSM_PAR])-s->value[PAR]),>eps);
 
 	/***********************************************************************************************/
 	/* Short Wave computation (W/m2 covered) */
@@ -126,7 +126,7 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 	/* check */
 	CHECK_CONDITION(s->value[SW_RAD_ABS], < 0.);
 	CHECK_CONDITION(s->value[SW_RAD_TRANSM], < 0.);
-	CHECK_CONDITION(fabs((s->value[SW_RAD_ABS] + s->value[SW_RAD_TRANSM])-s->value[SW_RAD]),>1e-4);
+	CHECK_CONDITION(fabs((s->value[SW_RAD_ABS] + s->value[SW_RAD_TRANSM])-s->value[SW_RAD]),>eps);
 
 	/***********************************************************************************************/
 	/* PPFD computation (umol/m2 covered/sec) */
@@ -162,7 +162,7 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 	/* check */
 	CHECK_CONDITION(s->value[PPFD_ABS], < 0.);
 	CHECK_CONDITION(s->value[PPFD_TRANSM], < 0.);
-	CHECK_CONDITION(fabs((s->value[PPFD_ABS] + s->value[PPFD_TRANSM])-s->value[PPFD]),>1e-4);
+	CHECK_CONDITION(fabs((s->value[PPFD_ABS] + s->value[PPFD_TRANSM])-s->value[PPFD]),>eps);
 
 	/***********************************************************************************************/
 
