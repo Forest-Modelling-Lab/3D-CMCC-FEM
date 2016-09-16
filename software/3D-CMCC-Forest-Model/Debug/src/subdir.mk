@@ -30,7 +30,6 @@ C_SRCS += \
 ../src/establishment.c \
 ../src/evapotranspiration.c \
 ../src/fluxes.c \
-../src/forest_tree_class.c \
 ../src/g-function.c \
 ../src/heat_fluxes.c \
 ../src/initialization.c \
@@ -45,6 +44,7 @@ C_SRCS += \
 ../src/mortality.c \
 ../src/mpfit.c \
 ../src/nc.c \
+../src/new_forest_tree_class.c \
 ../src/output.c \
 ../src/peak_lai.c \
 ../src/phenology.c \
@@ -99,7 +99,6 @@ OBJS += \
 ./src/establishment.o \
 ./src/evapotranspiration.o \
 ./src/fluxes.o \
-./src/forest_tree_class.o \
 ./src/g-function.o \
 ./src/heat_fluxes.o \
 ./src/initialization.o \
@@ -114,6 +113,7 @@ OBJS += \
 ./src/mortality.o \
 ./src/mpfit.o \
 ./src/nc.o \
+./src/new_forest_tree_class.o \
 ./src/output.o \
 ./src/peak_lai.o \
 ./src/phenology.o \
@@ -168,7 +168,6 @@ C_DEPS += \
 ./src/establishment.d \
 ./src/evapotranspiration.d \
 ./src/fluxes.d \
-./src/forest_tree_class.d \
 ./src/g-function.d \
 ./src/heat_fluxes.d \
 ./src/initialization.d \
@@ -183,6 +182,7 @@ C_DEPS += \
 ./src/mortality.d \
 ./src/mpfit.d \
 ./src/nc.d \
+./src/new_forest_tree_class.d \
 ./src/output.d \
 ./src/peak_lai.d \
 ./src/phenology.d \

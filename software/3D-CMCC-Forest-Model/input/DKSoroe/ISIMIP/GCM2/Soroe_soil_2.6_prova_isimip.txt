@@ -2,9 +2,9 @@ SITENAME "ISIMIP-Soroe_GCM2-rcp-2.6" //Site Name
 LAT "55.29" //Site Latitude negative for south hemisphere
 LONG "11.38" //Site Longitude 
 
-CLAY_PERC "20"	//PERCENTAGE OF CLAY (< 0,002 mm) according to USDA
-SILT_PERC "40"	//PERCENTAGE OF SILT (0,002 - 0,05 mm) according to USDA
-SAND_PERC "40"	//PERCENTAGE OF SAND (0,05 - 2 mm) according to USDA
+CLAY_PERC "15.33"	//PERCENTAGE OF CLAY (< 0,002 mm) according to USDA (values taken from ISIMIP DATABASE)
+SILT_PERC "21.59"	//PERCENTAGE OF SILT (0,002 - 0,05 mm) according to USDA (values taken from ISIMIP DATABASE)
+SAND_PERC "63.08"	//PERCENTAGE OF SAND (0,05 - 2 mm) according to USDA (values taken from ISIMIP DATABASE)
 SOIL_DEPTH "150" //SOIL DEPTH (cm) Dalsgaard et al., 2011
 
 //SITE NUTRITION
