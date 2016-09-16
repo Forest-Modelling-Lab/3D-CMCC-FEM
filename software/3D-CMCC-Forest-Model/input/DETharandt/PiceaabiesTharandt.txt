@@ -124,15 +124,7 @@ CRC 5.5289  //for Picea abies from Pommerening et al., 2011 ????
 //CROWDING COMPETITION FUNCTION
 HDMAX   0.95             //Height to Base diameter ratio MAX  for Picea abies Seidl et al., 2012
 HDMIN   0.47             //Height to Base diameter ratio MIN  for Picea abies Seidl et al., 2012
-//DENSITY FUNCTION
-DENMAX  -9999             //Maximum density (trees/10000 m^2)
-DENMIN  -9999           //Minimum density (trees/10000 m^2) //CUURENTLY NOT USED
-//ESTABLISHMENT
-MINPAREST   4.05    //Minimum Monthly PAR (W/m^2 hour) for Establishment for the Dominated Layer
-                                        //B. Smith, I. C. Prentice, and M. T. Sykes 2001 for Boreal/Temperate SHADE TOLLERANT
-                                        //broaldleaved summergreen
-MINRAIN 100             //Minimum annual Rain Precipitation for Establishment
-                                        //S. Sitch 2003
+
 //SEEDS PRODUCTION
 ADULT_AGE   5   //age at which consider tree as an adult tree
 MAXSEED 20000           //numero massimo semi prodotti dalla pianta (da TREEMIG) FOR Quercus sp

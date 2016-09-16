@@ -117,15 +117,7 @@ CRC ?
 //CROWDING COMPETITION FUNCTION
 HDMAX   ?             //Height to Base diameter ratio MAX  
 HDMIN   ?             //Height to Base diameter ratio MIN  
-//DENSITY FUNCTION
-DENMAX  ?             //Maximum density (trees/10000 m^2)
-DENMIN  ?           //Minimum density (trees/10000 m^2) //CUURENTLY NOT USED
-//ESTABLISHMENT
-MINPAREST   -9999    //Minimum Monthly PAR (W/m^2 hour) for Establishment for the Dominated Layer
-                                        //B. Smith, I. C. Prentice, and M. T. Sykes 2001 for Boreal/Temperate SHADE TOLLERANT
-                                        //broaldleaved summergreen
-MINRAIN -9999             //Minimum annual Rain Precipitation for Establishment
-                                        //S. Sitch 2003
+
 //SEEDS PRODUCTION
 ADULT_AGE   -9999   //age at which consider tree as an adult tree
 MAXSEED -9999           //numero massimo semi prodotti dalla pianta (da TREEMIG) 

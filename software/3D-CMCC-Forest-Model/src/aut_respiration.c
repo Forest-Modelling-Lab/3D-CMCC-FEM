@@ -155,8 +155,8 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 
 void growth_respiration(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species)
 {
-	double min_grperc = 0.25;  /* minimum fraction of growth respiration at maximum age */
-	double max_grperc = 0.35;  /* minimum fraction of growth respiration at maximum age */
+	double min_grperc = 0.25;  /* minimum fraction of growth respiration at maximum age see Ryan et al., */
+	double max_grperc = 0.35;  /* minimum fraction of growth respiration at maximum age see Ryan et al., */
 	double eff_grperc;         /* effective growth respiration fraction */
 
 	int min_age;               /* minimum age for max growth respiration fraction */
@@ -175,7 +175,7 @@ void growth_respiration(cell_t *const c, const int layer, const int height, cons
 
 	/*******************************************************************************************************/
 	/* age-dependant growth respiration percentage */
-	/* see Waring and Running, "Forest Ecosystem - Analysis at Multiple Scales" */
+	/* see Waring and Running 1998, "Forest Ecosystem - Analysis at Multiple Scales" */
 	eff_grperc = (min_grperc - max_grperc) / (max_age - min_age) * (a->value - min_age) + max_grperc;
 	if( a->value > s->value[MAXAGE]) eff_grperc = min_grperc;
 

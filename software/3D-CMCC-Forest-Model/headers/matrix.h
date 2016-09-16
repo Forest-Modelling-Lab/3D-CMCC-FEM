@@ -98,10 +98,6 @@ enum {
 	CRC,
 	HDMAX,                      //Height to Base diameter ratio MAX
 	HDMIN,                      //Height to Base diameter ratio MIN
-	DENMAX,                     //Maximum density (trees/10000 m^2)
-	DENMIN,                     //Minimum density (trees/10000 m^2)
-	MINPAREST,                  //Minimum Monthly PAR (W/m^2 hour) for Establishment for the Dominated Layer
-	MINRAIN,                    //Minimum annual Rain Precipitation for Establishment
 	ADULT_AGE,
 	MAXSEED,                    //max numbers of seed per tree (from TREEMIG)
 	MASTSEED,                   //ricorrenza anni di pasciona (da TREEMIG)
@@ -137,6 +133,8 @@ enum {
 	CROWN_DIAMETER_LPJ,         //Crown Diameter in m from LPJ
 	CANOPY_COVER_LPJ,           //Canopy Cover % of pixel covered from LPJ
 	DBHDC_EFF,                  //Crown Diameter from DBH in function of density
+	DENMAX,                     /* maximum stand density (trees/cell) for DBHDC function */
+	DENMIN,                     /* minimum stand density (trees/cell) for DBHDC function */
 	PREVIOUS_DBHDC_EFF,         //previous dbhdc value
 	CROWN_DIAMETER_DBHDC,       //Crown Diameter in m from DBHDC function
 	CROWN_AREA_DBHDC,           //Crown Area in m^2 from DBHDC function

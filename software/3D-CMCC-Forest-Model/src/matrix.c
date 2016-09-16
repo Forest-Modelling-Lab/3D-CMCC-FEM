@@ -759,10 +759,6 @@ static const char *sz_species_values[] = {
 		"CRC",
 		"HDMAX",                      //Height to Base diameter ratio MAX
 		"HDMIN",                      //Height to Base diameter ratio MIN
-		"DENMAX",                     //Maximum density (trees/10000 m^2)
-		"DENMIN",                     //Minimum density (trees/10000 m^2)
-		"MINPAREST",                  //Minimum Monthly PAR (W/m^2 hour) for Establishment for the Dominated Layer
-		"MINRAIN",                    //Minimum annual Rain Precipitation for Establishment
 		"ADULT_AGE",
 		"MAXSEED",                    //numero massimo semi prodotti dalla pianta (da TREEMIG)
 		"MASTSEED",                   //ricorrenza anni di pasciona (da TREEMIG)
@@ -1415,13 +1411,6 @@ void forest_summary(const matrix_t* const m, const int cell, const int day, cons
 	/*************FOREST INITIALIZATION DATA***********/
 	/* initialize power function */
 	allometry_power_function (&m->cells[cell]);
-
-	/* initialize variables for DBHDC function */
-	//test fixme see if usefull
-	//potential_max_min_canopy_cover ( &m->cells[cell]);
-
-	/* compute potential maximum and minimum density for DBHDC function */
-	potential_max_min_density (&m->cells[cell]);
 
 	/* initialize carbon pool fraction */
 	carbon_pool_fraction (&m->cells[cell]);

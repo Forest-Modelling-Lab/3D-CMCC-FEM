@@ -77,10 +77,6 @@ CRB 0.0658             //for Picea abies from Pommerening et al., 2011 ????
 CRC 5.5289             //for Picea abies from Pommerening et al., 2011 ????
 HDMAX   0.95           //Height to Base diameter ratio MAX  for Picea abies Seidl et al., 2012
 HDMIN   0.47           //Height to Base diameter ratio MIN  for Picea abies Seidl et al., 2012
-DENMAX  0.4            //Maximum density (trees/10000 m^2)
-DENMIN  0.01           //Minimum density (trees/10000 m^2) //CUURENTLY NOT USED
-MINPAREST   4.05       //Minimum Monthly PAR (W/m^2 hour) for Establishment for the Dominated Layer 0. Smith, I. C. Prentice, and M. T. Sykes 2001 for Boreal/Temperate SHADE TOLLERANT
-MINRAIN 100            //Minimum annual Rain Precipitation for Establishment
 ADULT_AGE   5          //age at which consider tree as an adult tree
 MAXSEED 20000          //numero massimo semi prodotti dalla pianta (da TREEMIG) FOR Quercus sp
 MASTSEED    5          //ricorrenza anni di pasciona (da TREEMIG) FOR Quercus sp (Bernetti)

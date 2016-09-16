@@ -243,6 +243,7 @@ void initialization_forest_class_C_biomass(cell_t *const c, const int height, co
 				//fixme it should takes into account effective cell coverage
 				/* convert to tons of C and to cell cell */
 				/* note: it uses canopy cover because computed from LAI */
+				//fixme it could be that canopy cover isn't initialized!!!!
 				s->value[LEAF_C] = s->value[LEAF_C] / 1000.0 * (s->value[CANOPY_COVER_DBHDC] * g_settings->sizeCell);
 				logger(g_log, "--Leaf carbon = %g tC/cell size\n", s->value[LEAF_C]);
 

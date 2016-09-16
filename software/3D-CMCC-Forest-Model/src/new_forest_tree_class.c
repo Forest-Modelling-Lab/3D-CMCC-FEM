@@ -120,9 +120,6 @@ int add_tree_class (cell_t *const c)
 	/* initialize power function */
 	allometry_power_function ( c );
 
-	/* initialize variables for DBHDC function */
-	potential_max_min_density ( c  );
-
 	/* initialize carbon pool fraction */
 	carbon_pool_fraction ( c );
 

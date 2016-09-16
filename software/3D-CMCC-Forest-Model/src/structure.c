@@ -295,6 +295,9 @@ int annual_forest_structure(cell_t* const c)
 							a = &c->heights[height].dbhs[dbh].ages[age];
 							s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
+							/* compute potential maximum and minimum density for DBHDC function */
+							potential_max_min_density ( c );
+
 							logger(g_log,"-layer = %d layer density = %g height = %g dbh = %g age = %d species = %s\n", layer,c->tree_layers[layer].layer_density, h->value, d->value, a->value, s->name);
 
 							s->value[DBHDC_EFF] = ((s->value[DBHDCMIN] - s->value[DBHDCMAX]) / (s->value[DENMAX] - s->value[DENMIN]) *
