@@ -300,10 +300,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\forest_tree_class.c"
-				>
-			</File>
-			<File
 				RelativePath=".\src\G-Function.c"
 				>
 			</File>
@@ -373,6 +369,10 @@
 			</File>
 			<File
 				RelativePath=".\src\nc.c"
+				>
+			</File>
+			<File
+				RelativePath=".\src\new_forest_tree_class.c"
 				>
 			</File>
 			<File

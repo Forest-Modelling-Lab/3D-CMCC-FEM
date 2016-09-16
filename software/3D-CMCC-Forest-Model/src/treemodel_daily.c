@@ -317,6 +317,13 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 								/* management blocks */
 								forest_management (c, layer, height, dbh, age, species, year);
 
+								/* update pointers */
+								l = &c->tree_layers[layer];
+								h = &c->heights[height];
+								d = &h->dbhs[dbh];
+								a = &d->ages[age];
+								s = &a->species[species];
+								
 								/************************************************************************************************************************************/
 							}
 						}
