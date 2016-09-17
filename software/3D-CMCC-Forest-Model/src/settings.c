@@ -111,13 +111,13 @@ settings_t* settings_import(const char *const filename) {
 			*p_field *= *p_field;
 			p_field++;
 			break;
-			/*19*/
+
 		case 21:
 			strncpy(s->replanted_species, (const char*)token, SETTINGS_REPLANTED_SPECIES_MAX_SIZE-1);
 			break;
 
 			// ALESSIOR todo fix, must use e_management from matrix.h
-			/*20*/
+
 		case 22:
 			if ( ('T' == token[0]) || ('t' == token[0]) ) {
 				s->replanted_management = 0;
