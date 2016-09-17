@@ -29,13 +29,25 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 	double exponent_tavg;
 	double exponent_tsoil;
 
-
 	/* nitrogen pools in gN/m2 */
 	double leaf_N;
 	double fine_root_N;
 	double coarse_root_N;
 	double stem_N;
 	double branch_N;
+
+
+	//FIXME TO INCLUDE???
+//	if ( ! string_compare_i(g_settings->q10_fixed, "on") )
+//	{
+//
+//		q10 = 2.0;
+//	}
+//	else
+//	{
+//		/* see Smith and Dukes, 2013, GCB */
+//		q10 = 3.22 - 0.046 * meteo_daily->tavg;
+//	}
 
 	species_t *s;
 	s  = &c->heights[height].dbhs[dbh].ages[age].species[species];
