@@ -21,7 +21,7 @@ settings_t* settings_import(const char *const filename) {
 	settings_t* s;
 	FILE *f;
 	double *p_field;
-	
+
 	f = fopen(filename, "r");
 	if ( ! f ) {
 		printf("unable to open %s\n", filename);
@@ -54,88 +54,92 @@ settings_t* settings_import(const char *const filename) {
 		token = string_tokenizer(NULL, "\"", &p);
 
 		switch ( i++ ) {
-			case 0:
-				s->version = *token;
+		case 0:
+			s->version = *token;
 			break;
 
-			case 1:
-				s->spatial = *token;
+		case 1:
+			s->spatial = *token;
 			break;
 
-			case 2:
-				s->time = *token;
+		case 2:
+			s->time = *token;
 			break;
 
-			case 3:
-				s->symmetric_water_competition = *token;
+		case 3:
+			s->symmetric_water_competition = *token;
 			break;
 
-			case 4:
-				strncpy(s->CO2_mod, (const char*)token, 3);
+		case 4:
+			strncpy(s->CO2_mod, (const char*)token, 3);
 			break;
 
-			case 5:
-				strncpy(s->CO2_fixed, (const char*)token, 3);
+		case 5:
+			strncpy(s->CO2_fixed, (const char*)token, 3);
 			break;
 
-			case 6:
-				strncpy(s->Ndep_fixed, (const char*)token, 3);
+		case 6:
+			strncpy(s->Ndep_fixed, (const char*)token, 3);
 			break;
 
-			case 7:
-				strncpy(s->management, (const char*)token, 3);
+		case 7:
+			strncpy(s->Q10_fixed, (const char*)token, 3);
 			break;
 
-			case 8:
-				strncpy(s->Prog_Aut_Resp, (const char*)token, 3);
+		case 8:
+			strncpy(s->management, (const char*)token, 3);
 			break;
 
-			case 9:
-				strncpy(s->dndc, (const char*)token, 3);
+		case 9:
+			strncpy(s->Prog_Aut_Resp, (const char*)token, 3);
 			break;
 
-			 /* sizeCell */
-			case 10:
-				*p_field = convert_string_to_float(token, &err);
-				if ( err ) {
-					printf("unable to convert sizeCell: %s\n", p);
-					free(s);
-					fclose(f);
-					return 0;
-				}
-				// ALESSIOC fill me
-				*p_field *= *p_field;
-				p_field++;
+		case 10:
+			strncpy(s->dndc, (const char*)token, 3);
 			break;
-				/*19*/
-			case 20:
-				strncpy(s->replanted_species, (const char*)token, SETTINGS_REPLANTED_SPECIES_MAX_SIZE-1);
+
+			/* sizeCell */
+		case 11:
+			*p_field = convert_string_to_float(token, &err);
+			if ( err ) {
+				printf("unable to convert sizeCell: %s\n", p);
+				free(s);
+				fclose(f);
+				return 0;
+			}
+			// ALESSIOC fill me
+			*p_field *= *p_field;
+			p_field++;
+			break;
+			/*19*/
+		case 21:
+			strncpy(s->replanted_species, (const char*)token, SETTINGS_REPLANTED_SPECIES_MAX_SIZE-1);
 			break;
 
 			// ALESSIOR todo fix, must use e_management from matrix.h
 			/*20*/
-			case 21:
-				if ( ('T' == token[0]) || ('t' == token[0]) ) {
-					s->replanted_management = 0;
-				} else if ( ('C' == token[0]) || ('c' == token[0]) ) {
-					s->replanted_management = 1;
-				} else {
-					printf("bad management specified in settings: %s\n", token);
-					free(s);
-					fclose(f);
-					return 0;
-				}
+		case 22:
+			if ( ('T' == token[0]) || ('t' == token[0]) ) {
+				s->replanted_management = 0;
+			} else if ( ('C' == token[0]) || ('c' == token[0]) ) {
+				s->replanted_management = 1;
+			} else {
+				printf("bad management specified in settings: %s\n", token);
+				free(s);
+				fclose(f);
+				return 0;
+			}
 			break;
 
-			default:
-				*p_field = convert_string_to_float(token, &err);
-				if ( err ) {
-					printf("unable to convert value: %s\n", p);
-					free(s);
-					fclose(f);
-					return 0;
-				}
-				p_field++;
+		default:
+			*p_field = convert_string_to_float(token, &err);
+			if ( err ) {
+				printf("unable to convert value: %s\n", p);
+				free(s);
+				fclose(f);
+				return 0;
+			}
+			p_field++;
 		}					
 	}
 

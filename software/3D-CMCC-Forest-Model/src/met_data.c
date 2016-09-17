@@ -531,9 +531,16 @@ void Soil_temperature(meteo_t* met, const int day, const int month) {
 	 */
 
 
-	if (day < 11.0 && !month)
+	if ( day < 11.0 && !month )
 	{
-		met[month_temp].d[day_temp].tsoil = met[month].d[day].ts_f;
+		if ( met[month].d[day].ts_f != NO_DATA )
+		{
+			met[month_temp].d[day_temp].tsoil = met[month].d[day].ts_f;
+		}
+		else
+		{
+			met[month_temp].d[day_temp].tsoil = met[month_temp].d[day_temp].tavg;
+		}
 	}
 	else
 	{

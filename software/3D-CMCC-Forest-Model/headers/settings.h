@@ -16,6 +16,7 @@ typedef struct {
 	char CO2_mod[4];
 	char CO2_fixed[4];
 	char Ndep_fixed[4];
+	char Q10_fixed[4];
 	char management[4];
 	char Prog_Aut_Resp[4]; /* Prognostic autotrophic respiration */
 	char dndc[4];

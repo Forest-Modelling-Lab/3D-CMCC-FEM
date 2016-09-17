@@ -5,6 +5,7 @@ SYMMETRIC_WATER_COMPETITION "n"	//Must be 'y' or 'n',for symmetric or asymmetric
 CO2_mod "off"	//Must be  'on' or 'off'
 CO2_fixed "on"   //Must be 'on' or 'off'
 Ndep_fixed "on"   //Must be 'on' or 'off'
+Q10_fixed "on"   //Q10 temperature acclimatation Must be 'on' or 'off'
 management "off"   //Must be 'on' or 'off'
 Progn_Aut_Resp "on" //Prognostic autotrophic respiration, Must be 'on' or 'off', if "off" Y values are used
 DNDC "off" //Must be  'on' or 'off'
