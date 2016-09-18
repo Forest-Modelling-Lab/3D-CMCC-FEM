@@ -25,29 +25,27 @@ void forest_management (cell_t *const c, const int layer, const int height, cons
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 	/* this function handles all other management functions */
-	if ( ! string_compare_i (g_settings->management, "on") && year )
+
+	/* if year of simulation matches with thinning and class age doesn't matches with rotation age */
+	if ( ( ! ( ( year+1 ) % (int)s->value[THINNING] ) ) && ( a->value != s->value[ROTATION] ) )
 	{
-		/* if year of simulation matches with thinning and class age doesn't matches with rotation age */
-		if ( ( ! ( ( year+1 ) % (int)s->value[THINNING] ) ) && ( a->value != s->value[ROTATION] ) )
-		{
-			logger(g_log,"**FOREST MANAGEMENT**\n");
+		logger(g_log,"**FOREST MANAGEMENT**\n");
 
-			thinning ( c, layer, height, dbh, age, species, year );
-		}
-		/* if class age matches with harvesting */
-		if ( a->value == s->value[ROTATION] )
-		{
-			/* remove tree class */
-			harvesting ( c, layer, height, dbh, age, species );
+		thinning ( c, layer, height, dbh, age, species, year );
+	}
+	/* if class age matches with harvesting */
+	if ( a->value == s->value[ROTATION] )
+	{
+		/* remove tree class */
+		harvesting ( c, layer, height, dbh, age, species );
 
-			/* replanting tree class */
-			if( g_settings->replanted_n_tree )
+		/* replanting tree class */
+		if( g_settings->replanted_n_tree )
+		{
+			if ( ! add_tree_class_for_replanting( c ) )
 			{
-				if ( ! add_tree_class_for_replanting( c ) )
-				{
-					logger(g_log, "unable to add new height class! (exit)\n");
-					exit(1);
-				}
+				logger(g_log, "unable to add new height class! (exit)\n");
+				exit(1);
 			}
 		}
 	}

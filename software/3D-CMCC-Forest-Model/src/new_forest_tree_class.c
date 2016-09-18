@@ -87,14 +87,14 @@ static int fill_cell_for_replanting(cell_t *const c)
 
 int add_tree_class_for_replanting (cell_t *const c)
 {
-	logger(g_log, "**ADD NEW TREE CLASS**\n");
+	logger(g_log, "**ADD NEW TREE CLASS (REPLANTATION)**\n");
 
 	/* it is used only with "human" regeneration */
 	logger(g_log, "Human management\n");
 
 	if ( ! fill_cell_for_replanting(c) ) return 0;
 
-	/* fill with species values */
+	/* fill with species values from parameterization file */
 	if ( ! fill_species_from_file(&c->heights[c->heights_count-1].dbhs[0].ages[0].species[0]) )
 	{
 		return 0;
@@ -203,18 +203,19 @@ static int fill_cell_for_regeneration(cell_t *const c, const char* saplings_name
 
 int add_tree_class_for_regeneration (cell_t *const c, const char *saplings_name, const int saplings_number, const double phenology)
 {
-	logger(g_log, "**ADD NEW TREE CLASS**\n");
+	logger(g_log, "**ADD NEW TREE CLASS (REGENERATION)**\n");
 
 	/* it is used only with "human" regeneration */
-	logger(g_log, "Human management\n");
+	logger(g_log, "Regeneration\n");
 
 	if ( ! fill_cell_for_regeneration( c, saplings_name, saplings_number, phenology ) ) return 0;
 
-	/* fill with species values */
+	/* fill with species values from parameterization file */
 	if ( ! fill_species_from_file(&c->heights[c->heights_count-1].dbhs[0].ages[0].species[0]) )
 	{
 		return 0;
 	}
+	getchar();
 
 	/* initialize power function */
 	allometry_power_function ( c );

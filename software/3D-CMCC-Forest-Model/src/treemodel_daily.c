@@ -48,7 +48,7 @@
 #include "remove_tree_class.h"
 #include "regeneration.h"
 
-//extern settings_t* g_settings;
+extern settings_t* g_settings;
 extern logger_t* g_log;
 
 //extern const char *szMonth[MONTHS_COUNT];
@@ -297,9 +297,6 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 								/*Mortality based on tree Age (LPJ)*/
 								age_mortality ( c, height, dbh, age, species);
 
-								/* regeneration */
-								//regeneration ( c, layer, height, dbh, age, species);
-
 								/************************************************************************************************************************************/
 								/* above ground-below ground biomass */
 								abg_bgb_biomass ( c, height, dbh, age, species );
@@ -314,8 +311,16 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 								print_daily_forest_class_data ( c, layer, height, dbh, age, species );
 
 								/************************************************************************************************************************************/
-								/* management blocks */
-								forest_management (c, layer, height, dbh, age, species, year);
+								if ( ( ! string_compare_i(g_settings->regeneration, "on")) && ( a->value > s->value[SEXAGE] ) )
+								{
+									/* regeneration */
+									regeneration ( c, height, dbh, age, species);
+								}
+								if ( ! string_compare_i (g_settings->management, "on") && year )
+								{
+									/* management blocks */
+									forest_management (c, layer, height, dbh, age, species, year);
+								}
 
 								/* update pointers */
 								l = &c->tree_layers[layer];
@@ -323,7 +328,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 								d = &h->dbhs[dbh];
 								a = &d->ages[age];
 								s = &a->species[species];
-								
+
 								/************************************************************************************************************************************/
 							}
 						}

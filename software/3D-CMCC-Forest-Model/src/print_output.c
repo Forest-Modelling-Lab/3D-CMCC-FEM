@@ -294,6 +294,7 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 			logger(g_daily_log, "-CO2_mod = %s\n", g_settings->CO2_mod);
 			logger(g_daily_log, "-CO2 fixed = %s\n", g_settings->CO2_fixed);
 			logger(g_daily_log, "-Q10 fixed = %s\n", g_settings->Q10_fixed);
+			logger(g_daily_log, "-regeneration = %s\n", g_settings->regeneration);
 			logger(g_daily_log, "-Management = %s\n", g_settings->management);
 		}
 	}
@@ -475,6 +476,7 @@ void EOM_print_cumulative_balance_cell_level(cell_t *const c, const int month, c
 			logger(g_monthly_log, "-CO2_mod = %s\n", g_settings->CO2_mod);
 			logger(g_monthly_log, "-CO2 fixed = %s\n", g_settings->CO2_fixed);
 			logger(g_monthly_log, "-Q10 fixed = %s\n", g_settings->Q10_fixed);
+			logger(g_monthly_log, "-regeneration = %s\n", g_settings->regeneration);
 			logger(g_monthly_log, "-Management = %s\n", g_settings->management);
 		}
 	}
@@ -734,10 +736,11 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 		logger(g_annual_log, sz_launched, netcdf_get_version(), get_datetime());
 		write_paths(g_annual_log);
 
-		logger(g_annual_log, "*model setting*\n");
+		logger(g_annual_log, "\n*model setting*\n");
 		logger(g_annual_log, "*CO2_mod = %s\n", g_settings->CO2_mod);
 		logger(g_annual_log, "*CO2_fixed = %s\n", g_settings->CO2_fixed);
 		logger(g_annual_log, "*Q10 fixed = %s\n", g_settings->Q10_fixed);
+		logger(g_annual_log, "*regeneration = %s\n", g_settings->regeneration);
 		logger(g_annual_log, "*Management = %s\n", g_settings->management);
 	}
 }

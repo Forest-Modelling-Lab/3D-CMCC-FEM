@@ -32,6 +32,9 @@ void regeneration (cell_t *const c, const int height, const int dbh, const int a
 	seeds_number = s->value[FRUIT_C] / s->value[WEIGHTSEED];
 	logger(g_log, "number of seeds = %d\n", seeds_number);
 
+	/* reset annually fruit pool */
+	s->value[FRUIT_C] = 0.;
+
 	/* compute number of saplings based on germination capacity */
 	saplings_number = seeds_number * s->value[GERMCAPACITY];
 	logger(g_log, "number of saplings = %d\n", saplings_number);
