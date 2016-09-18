@@ -18,21 +18,25 @@
 
 extern logger_t* g_log;
 
-void seeds_germination ( const int species )
-{
-
-
-}
-
 void regeneration (cell_t *const c, const int height, const int dbh, const int age, const int species)
 {
+	int seeds_number;
+	int saplings_number;
 
 	species_t *s;
-
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
-	//seeds_germination ( s );
+	logger(g_log, "\n**REGENERATION**\n");
 
+	/* compute number of seeds */
+	seeds_number = s->value[FRUIT_C] / s->value[WEIGHTSEED];
+	logger(g_log, "number of seeds = %d\n", seeds_number);
+
+	/* compute number of saplings based on germination capacity */
+	saplings_number = seeds_number * s->value[GERMCAPACITY];
+	logger(g_log, "number of saplings = %d\n", saplings_number);
+
+	add_tree_class_for_regeneration ( c, &s->name, saplings_number, s->value[PHENOLOGY] );
 
 }
 

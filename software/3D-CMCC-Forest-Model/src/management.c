@@ -43,7 +43,7 @@ void forest_management (cell_t *const c, const int layer, const int height, cons
 			/* replanting tree class */
 			if( g_settings->replanted_n_tree )
 			{
-				if ( ! add_tree_class( c ) )
+				if ( ! add_tree_class_for_replanting( c ) )
 				{
 					logger(g_log, "unable to add new height class! (exit)\n");
 					exit(1);

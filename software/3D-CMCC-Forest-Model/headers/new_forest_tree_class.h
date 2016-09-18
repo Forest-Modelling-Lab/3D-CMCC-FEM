@@ -10,7 +10,9 @@
 
 #include "matrix.h"
 
-int add_tree_class(cell_t *const c);
+int add_tree_class_for_replanting (cell_t *const c);
+
+int add_tree_class_for_regeneration (cell_t *const c, const char*, const int, const double);
 
 //static int fill_cell(cell_t *const c);
 

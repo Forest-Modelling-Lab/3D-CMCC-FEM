@@ -87,19 +87,23 @@ settings_t* settings_import(const char *const filename) {
 			break;
 
 		case 8:
-			strncpy(s->management, (const char*)token, 3);
+			strncpy(s->regeneration, (const char*)token, 3);
 			break;
 
 		case 9:
-			strncpy(s->Prog_Aut_Resp, (const char*)token, 3);
+			strncpy(s->management, (const char*)token, 3);
 			break;
 
 		case 10:
+			strncpy(s->Prog_Aut_Resp, (const char*)token, 3);
+			break;
+
+		case 11:
 			strncpy(s->dndc, (const char*)token, 3);
 			break;
 
 			/* sizeCell */
-		case 11:
+		case 12:
 			*p_field = convert_string_to_float(token, &err);
 			if ( err ) {
 				printf("unable to convert sizeCell: %s\n", p);
@@ -112,13 +116,13 @@ settings_t* settings_import(const char *const filename) {
 			p_field++;
 			break;
 
-		case 21:
+		case 22:
 			strncpy(s->replanted_species, (const char*)token, SETTINGS_REPLANTED_SPECIES_MAX_SIZE-1);
 			break;
 
 			// ALESSIOR todo fix, must use e_management from matrix.h
 
-		case 22:
+		case 23:
 			if ( ('T' == token[0]) || ('t' == token[0]) ) {
 				s->replanted_management = 0;
 			} else if ( ('C' == token[0]) || ('c' == token[0]) ) {

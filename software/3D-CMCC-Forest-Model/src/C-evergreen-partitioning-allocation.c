@@ -171,15 +171,13 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 			{
 				logger(g_log, "Allocating only into Coarse root, Reserve, Stem and Branch pools (positive NPP)\n");
 
-				/* reproduction ONLY for needle leaf */
-				if( ( s->value[PHENOLOGY] == 1.2 ) && ( a->value > s->value[SEXAGE] ) )
+				/* reproduction */
+				if ( ( ! string_compare_i(g_settings->regeneration, "on")) && ( a->value > s->value[SEXAGE] ) )
 				{
-					/* NPP for reproduction */
-					/*
+					logger(g_log, "allocating into fruit pool\n");
+
 					s->value[C_TO_FRUIT] = npp_to_alloc * s->value[FRUIT_PERC];
 					npp_to_alloc -= s->value[C_TO_FRUIT];
-					logger(g_log, "including Biomass increment into cones = %g tC/area\n", s->value[C_TO_FRUIT]);
-					*/
 				}
 				else
 				{

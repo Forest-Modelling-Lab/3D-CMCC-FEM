@@ -228,16 +228,14 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 
 		if (npp_to_alloc > 0.0 && s->value[RESERVE_C] >= s->value[MIN_RESERVE_C])
 		{
-			/* reproduction only for needle leaf */
-			/*
-			if ( ( s->value[PHENOLOGY] ? 0.1 : 0.2 ) && ( a->value > s->value[SEXAGE] ) )
+			/* reproduction */
+			if ( ( ! string_compare_i(g_settings->regeneration, "on")) && ( a->value > s->value[SEXAGE] ) )
 			{
 				logger(g_log, "allocating into fruit pool\n");
 
 				s->value[C_TO_FRUIT] = npp_to_alloc * s->value[FRUIT_PERC];
 				npp_to_alloc -= s->value[C_TO_FRUIT];
 			}
-			*/
 		}
 		else
 		{
