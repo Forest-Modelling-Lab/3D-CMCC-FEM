@@ -343,6 +343,7 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 	s->value[DEL_Y_WRES] += s->value[C_TO_RESERVE];
 	s->value[DEL_Y_WR] += s->value[C_TO_ROOT];
 	s->value[DEL_Y_BB] += s->value[C_TO_BRANCH];
+	s->value[DEL_Y_FRUIT] += s->value[C_TO_FRUIT];
 
 	/* update cell level carbon biomass in gC/m2/day */
 	c->daily_leaf_carbon += s->value[C_TO_LEAF] * 1000000.0 / g_settings->sizeCell ;
@@ -353,6 +354,7 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 	c->daily_reserve_carbon += s->value[C_TO_RESERVE] * 1000000.0 / g_settings->sizeCell ;
 	c->daily_root_carbon += s->value[C_TO_ROOT] * 1000000.0 / g_settings->sizeCell ;
 	c->daily_litter_carbon += s->value[C_TO_LITTER] * 1000000.0 / g_settings->sizeCell ;
+	c->daily_fruit_carbon += s->value[C_TO_FRUIT] * 1000000.0 / g_settings->sizeCell ;
 
 	/* update cell level carbon biomass in tC/cell/day */
 	c->daily_leaf_carbon_tC += s->value[C_TO_LEAF];
@@ -363,6 +365,7 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 	c->daily_reserve_carbon_tC += s->value[C_TO_RESERVE];
 	c->daily_root_carbon_tC += s->value[C_TO_ROOT];
 	c->daily_litter_carbon_tC += s->value[C_TO_LITTER];
+	c->daily_fruit_carbon_tC += s->value[C_TO_FRUIT];
 
 	logger(g_log, "******************************\n");
 }

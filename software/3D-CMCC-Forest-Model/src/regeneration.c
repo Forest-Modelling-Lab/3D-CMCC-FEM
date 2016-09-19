@@ -15,8 +15,10 @@
 #include "common.h"
 #include "settings.h"
 #include "regeneration.h"
+#include "new_forest_tree_class.h"
 
 extern logger_t* g_log;
+extern settings_t* g_settings;
 
 void regeneration (cell_t *const c, const int height, const int dbh, const int age, const int species)
 {
@@ -39,7 +41,14 @@ void regeneration (cell_t *const c, const int height, const int dbh, const int a
 	saplings_number = seeds_number * s->value[GERMCAPACITY];
 	logger(g_log, "number of saplings = %d\n", saplings_number);
 
-	add_tree_class_for_regeneration ( c, &s->name, saplings_number, s->value[PHENOLOGY] );
+	/* assign values */
+	//ALESSIOC TO ALESSIOR PORCATA
+	g_settings->regeneration_n_tree = saplings_number;
+
+	//g_settings->regeneration_name = string_copy(s->name);
+
+
+	//add_tree_class_for_regeneration ( c, &s->name);
 
 }
 

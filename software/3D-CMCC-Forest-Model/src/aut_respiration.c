@@ -193,8 +193,11 @@ void growth_respiration(cell_t *const c, const int layer, const int height, cons
 	logger(g_log, "\n**GROWTH_RESPIRATION**\n");
 
 	/*******************************************************************************************************/
-	/* age-dependant growth respiration percentage */
-	/* see Waring and Running 1998, "Forest Ecosystem - Analysis at Multiple Scales" */
+	/* age-dependant growth respiration fraction */
+	/* see Waring and Running 1998, "Forest Ecosystem - Analysis at Multiple Scales"
+	 * see Ryan 1991, Ecological Applications
+	 * see Ryan 1991, Tree Physiology*/
+
 	eff_grperc = (min_grperc - max_grperc) / (max_age - min_age) * (a->value - min_age) + max_grperc;
 	if( a->value > s->value[MAXAGE]) eff_grperc = min_grperc;
 

@@ -439,6 +439,7 @@ enum {
 	DEL_Y_WCR,
 	DEL_Y_WRES,                    //Yearly cumulated reserve biomass increment
 	DEL_Y_BB,
+	DEL_Y_FRUIT,
 
 	//converted biome fraction for allocation
 	FINE_ROOT_LEAF_FRAC,

@@ -204,7 +204,7 @@ void print_daily_forest_class_data(cell_t* const c, const int layer, const int h
 	s = &a->species[species];
 
 	/* print at the beginning of simulation class level data */
-	logger(g_log, "******************************************************\n\n");
+	logger(g_log, "**************DAILY FOREST CLASS DATASET***********\n\n");
 	logger(g_log, "cell = \n");
 	logger(g_log, "* x = %d\n", c->x);
 	logger(g_log, "* y = %d\n", c->y);
@@ -237,7 +237,52 @@ void print_daily_forest_class_data(cell_t* const c, const int layer, const int h
 	logger(g_log, "+ stem dead = %g tC/area\n", s->value[STEM_DEAD_WOOD_C]);
 	logger(g_log, "+ coarse dead = %g tC/area\n", s->value[COARSE_ROOT_DEAD_WOOD_C]);
 	logger(g_log, "+ branch dead = %g tC/area\n", s->value[BRANCH_DEAD_WOOD_C]);
+	logger(g_log, "+ fruit = %g tC/area\n", s->value[FRUIT_C]);
 
 }
 
+void print_new_daily_forest_class_data (cell_t* const c, const int height, const int dbh, const int age, const int species)
+{
+	height_t *h;
+	dbh_t *d;
+	age_t *a;
+	species_t *s;
+
+	h = &c->heights[height];
+	d = &h->dbhs[dbh];
+	a = &d->ages[age];
+	s = &a->species[species];
+
+	/* print at the beginning of simulation class level data */
+	logger(g_log, "******************************************************\n\n");
+	logger(g_log, "cell = \n");
+	logger(g_log, "* x = %d\n", c->x);
+	logger(g_log, "* y = %d\n", c->y);
+	logger(g_log, "--class level data--\n");
+	logger(g_log, "- Height = %g m\n", h->value);
+	logger(g_log, "- DBH = %g cm\n", d->value);
+	logger(g_log, "- Class Age = %d years \n", a->value);
+	logger(g_log, "- Species = %s\n", s->name);
+	logger(g_log, "- Number of trees = %d trees \n", s->counter[N_TREE]);
+	logger(g_log, "- LAI = %g \n", s->value[LAI]);
+	logger(g_log, "- Crown Diameter = %g \n",  s->value[CROWN_DIAMETER_DBHDC]);
+	logger(g_log, "- Canopy Cover = %g \n", s->value[CANOPY_COVER_DBHDC]);
+	logger(g_log, "- Phenology type = %g\n", s->value[PHENOLOGY]);
+	logger(g_log, "- Management type = %s\n", s->management ? "C" : "T");
+	logger(g_log, "++Carbon pools in tC++\n");
+	logger(g_log, "+ leaf = %g tC/area\n", s->value[LEAF_C]);
+	logger(g_log, "+ stem = %g tC/area\n", s->value[STEM_C]);
+	logger(g_log, "+ branch and bark = %g tC/area\n", s->value[BRANCH_C]);
+	logger(g_log, "+ coarse root = %g tC/area\n", s->value[COARSE_ROOT_C]);
+	logger(g_log, "+ fine root = %g tC/area\n", s->value[FINE_ROOT_C]);
+	logger(g_log, "+ total stem + branch  = %g tC/area\n", s->value[TOT_STEM_C]);
+	logger(g_log, "+ total root = %g tC/area\n", s->value[TOT_ROOT_C]);
+	logger(g_log, "+ reserve = %g tC/area\n", s->value[RESERVE_C]);
+	logger(g_log, "+ stem live = %g tC/area\n", s->value[STEM_LIVE_WOOD_C]);
+	logger(g_log, "+ coarse live = %g tC/area\n", s->value[COARSE_ROOT_LIVE_WOOD_C]);
+	logger(g_log, "+ branch live = %g tC/area\n", s->value[BRANCH_LIVE_WOOD_C]);
+	logger(g_log, "+ stem dead = %g tC/area\n", s->value[STEM_DEAD_WOOD_C]);
+	logger(g_log, "+ coarse dead = %g tC/area\n", s->value[COARSE_ROOT_DEAD_WOOD_C]);
+	logger(g_log, "+ branch dead = %g tC/area\n", s->value[BRANCH_DEAD_WOOD_C]);
+}
 

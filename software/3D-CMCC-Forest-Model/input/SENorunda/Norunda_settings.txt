@@ -39,17 +39,16 @@ REPLANTED_WFR "0"           // (tDM/ha) fine root biomass of replanted trees (op
 REPLANTED_WL "0"            // (tDM/ha) leaf biomass of replanted trees (optional for evergreen if LAI!= 0, otherwise useless)
 REPLANTED_WBB "0"           // (tDM/ha) branch biomass of replanted trees (optional)
 
-//MINIMUM PAR AT FOREST FLOOR FOR ESTABLISHMENT (W/m^2)
-LIGHT_ESTAB_VERY_TOLERANT "0.3"
-LIGHT_ESTAB_TOLERANT "1.0"
-LIGHT_ESTAB_INTERMEDIATE "2.0"
-LIGHT_ESTAB_INTOLERANT "3.0"
-
-//CONTROL LAI IN SPATIAL VERSION
-MAXLAI "6"
-DEFAULTLAI "6"
-
-//YEAR IN WHICH CHANGE SETTINGS FROM SPATIAL TO UNSPATIAL
-SWITCHTOUNSPATIAL "2010"
+//REGENERATION (optional)
+REGENERATION_N_TREE "-9999"           //NOT USED 
+REGENERATION_AGE "1"
+REGENERATION_AVDBH "0.1"
+REGENERATION_LAI "0.0"
+REGENERATION_HEIGHT "1.2"
+REGENERATION_WS "0"                   // (tDM/ha) stem biomass of regeneration trees (optional)
+REGENERATION_WCR "0"                  // (tDM/ha) coarse root biomass of regeneration trees (optional)
+REGENERATION_WFR "0"                  // (tDM/ha) fine root biomass of regeneration trees (optional)
+REGENERATION_WL "0"                   // (tDM/ha) leaf biomass of regeneration trees (optional for evergreen if LAI!= 0, otherwise useless)
+REGENERATION_WBB "0"                  // (tDM/ha) branch biomass of regeneration trees (optional)
 
 

@@ -724,6 +724,7 @@ static int yos_from_arr(double *const values, const int rows_count, const int co
 		//logger(g_log, "%d-%s-swc= %f\n",yos[*yos_count-1].m[month].d[day].n_days, MonthName[month], yos[*yos_count-1].m[month].d[day].swc);
 		//break;
 		//case NDVI_LAI: //Get LAI in spatial version
+		//todo to remove
 		if ( 's' == g_settings->spatial )
 		{
 			yos[*yos_count-1].m[month].d[day].ndvi_lai = values[VALUE_AT(row,NDVI_LAI)];
@@ -747,28 +748,6 @@ static int yos_from_arr(double *const values, const int rows_count, const int co
 				else
 				{
 					previous_ndvi_lai = yos[*yos_count-1].m[month].d[day].ndvi_lai;
-				}
-				//control lai data in spatial version if value is higher than MAXLAI
-				if(yos[*yos_count-1].m[month].d[day].ndvi_lai > g_settings->maxlai)
-				{
-					//logger(g_log, "********* INVALID DATA LAI > MAXLAI in year %d month %s!!!!\n", yos[*yos_count-1].year, MonthName[month] );
-					//logger(g_log, "Getting previous day values.. !!\n");
-					yos[*yos_count-1].m[month].d[day].ndvi_lai = yos[*yos_count-2].m[month].d[day].ndvi_lai;
-					//logger(g_log, "..value of the previous day = %f\n", yos[*yos_count-1].m[month].d[day].ndvi_lai);
-				}
-			}
-			//for the first year if LAI is an invalid value set LAI to a default value DEFAULTLAI
-			else
-			{
-				if(yos[*yos_count-1].m[month].d[day].ndvi_lai > g_settings->maxlai)
-				{
-					//todo RISOLVERE QUESTO PROBLEMA PER NON AVERE UN DEFUALT LAI!!!!!!!!!!!!!
-					//
-					//
-					//
-					//logger(g_log, "**********First Year without a valid LAI value set to default value LAI\n");
-					yos[*yos_count-1].m[month].d[day].ndvi_lai = g_settings->defaultlai;
-					//logger(g_log, "**DEFAULT LAI VALUE SET TO %d\n", g_settings->defaultlai);
 				}
 			}
 		}

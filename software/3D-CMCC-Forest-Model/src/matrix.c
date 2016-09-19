@@ -1434,67 +1434,6 @@ void forest_summary(const matrix_t* const m, const int cell, const int day, cons
 
 					/* initialise nitrogen pools */
 					initialization_forest_class_N_biomass (&m->cells[cell], height, dbh, age, species);
-
-					/* print class dataset */
-					logger(g_log,
-							"\n\n----- CLASS DATASET-----\n"
-							"----- height = %g m\n"
-							"----- avdbh = %g cm\n"
-							"----- age = %d cm\n"
-							"----- species = %s\n"
-							"----- n = %d trees\n"
-							"----- n stumps = %d stumps\n"
-							"----- lai = %g m2/m2\n"
-							"**carbon pools**\n"
-							"----- leaf = %g tC/ha\n"
-							"----- fine root = %g tC/area\n"
-							"----- coarse root = %g tC/area\n"
-							"----- total root = %g tC/area\n"
-							"----- stem = %g tC/area\n"
-							"----- branch and bark = %g tC/area\n"
-							"----- reserve = %g tC/area\n"
-							"----- stem live = %g tC/area\n"
-							"----- stem dead = %g tC/area\n"
-							"----- coarse root live = %g tC/area\n"
-							"----- coarse root dead = %g tC/area\n"
-							"----- branch live = %g tC/area\n"
-							"----- branch dead = %g tC/area\n"
-							"----- total live = %g tC/area\n"
-							"----- total dead = %g tC/area\n"
-							"**nitrogen pools**\n"
-							"----- leaf = %g tN/area\n"
-							"----- fine root = %g tN/area\n"
-							"----- coarse root = %g tN/area\n"
-							"----- stem = %g tN/area\n"
-							"----- branch and bark = %g tN/area\n"
-							"--------------------------------\n",
-							m->cells[cell].heights[height].value,
-							m->cells[cell].heights[height].dbhs[dbh].value,
-							m->cells[cell].heights[height].dbhs[dbh].ages[age].value,
-							m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species].name,
-							m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species].counter[N_TREE],
-							m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species].counter[N_STUMP],
-							m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species].value[LAI],
-							m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species].value[LEAF_C],
-							m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species].value[FINE_ROOT_C],
-							m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species].value[COARSE_ROOT_C],
-							m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species].value[TOT_ROOT_C],
-							m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species].value[STEM_C],
-							m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species].value[BRANCH_C],
-							m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species].value[RESERVE_C],
-							m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species].value[STEM_LIVE_WOOD_C],
-							m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species].value[STEM_DEAD_WOOD_C],
-							m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species].value[COARSE_ROOT_LIVE_WOOD_C],
-							m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species].value[COARSE_ROOT_DEAD_WOOD_C],
-							m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species].value[BRANCH_LIVE_WOOD_C],
-							m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species].value[BRANCH_DEAD_WOOD_C],
-							m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species].value[LIVE_WOOD_C],
-							m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species].value[DEAD_WOOD_C],
-							m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species].value[LEAF_N],
-							m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species].value[FINE_ROOT_N],
-							m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species].value[COARSE_ROOT_N],
-							m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species].value[STEM_N],
-							m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species].value[BRANCH_N]);
 				}
 			}
 		}

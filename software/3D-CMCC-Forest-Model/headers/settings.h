@@ -23,6 +23,7 @@ typedef struct {
 	char dndc[4];
 	char replanted_species[SETTINGS_REPLANTED_SPECIES_MAX_SIZE]; /* species name of replanted species */
 	// ALESSIOR: use e_management from matrix.h not char
+	// ALESSIOC to ALESSIOR: useless variables to remove!!!
 	char replanted_management;
 
 
@@ -42,7 +43,7 @@ typedef struct {
 	double min_layer_cover;
 	double max_layer_cover;
 
-	/* management / regeneration (human or natural) input */
+	/* replanted input (Management options)*/
 	//ALESSIOC TO ALESSIOR move remainig_basal_area to species.txt
 	double remainig_basal_area;          /* percentage of basal area to remove per sizecell (mandatory) */
 	double replanted_n_tree;             /* number of replanted trees per sizecell (mandatory) */
@@ -57,17 +58,19 @@ typedef struct {
 	double replanted_wl;                 /* leaf biomass of replanted trees (probably no need to be used) (optional) */
 	double replanted_wbb;                /* branch biomass of replanted trees (probably no need to be used) (optional) */
 
-	/* regeneration */
-	//ALESSIOC include data for sapling (avdbh, height, number of saplings etc )
-	double light_estab_very_tolerant;
-	double light_estab_tolerant;
-	double light_estab_intermediate;
-	double light_estab_intolerant;
+	/* regeneration input (Regeneration options)*/
+	double regeneration_n_tree;
+	double regeneration_age;             /* age of regeneration (1 year) */
+	double regeneration_avdbh;           /* dbh for regeneration */
+	double regeneration_lai;             /* regeneration LAI (mandatory for evergreen) */
+	double regeneration_height;          /* regeneration height */
+	/* biomass */
+	double regeneration_ws;              /* stem biomass of regeneration trees (probably no need to be used) (optional)*/
+	double regeneration_wcr;             /* coarse root of regeneration trees (probably no need to be used) (optional) */
+	double regeneration_wfr;             /* fine root biomass of regeneration trees (probably no need to be used) (optional) */
+	double regeneration_wl;              /* leaf biomass of regeneration trees (probably no need to be used) (optional) */
+	double regeneration_wbb;             /* branch biomass of regeneration trees (probably no need to be used) (optional) */
 
-	/* control check */
-	double maxlai;
-	double defaultlai;
-	double switchtounspatial;
 } settings_t;
 
 settings_t* settings_import(const char *const filename);
