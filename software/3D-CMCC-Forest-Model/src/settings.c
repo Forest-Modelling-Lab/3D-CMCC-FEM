@@ -128,7 +128,26 @@ settings_t* settings_import(const char *const filename) {
 			} else if ( ('C' == token[0]) || ('c' == token[0]) ) {
 				s->replanted_management = 1;
 			} else {
-				printf("bad management specified in settings: %s\n", token);
+				printf("bad management habitus specified in settings: %s\n", token);
+				free(s);
+				fclose(f);
+				return 0;
+			}
+			break;
+
+		case 34:
+			strncpy(s->regeneration_species, (const char*)token, SETTINGS_REGENERATION_SPECIES_MAX_SIZE-1);
+			break;
+
+			// ALESSIOR todo fix, must use e_management from matrix.h
+
+		case 35:
+			if ( ('T' == token[0]) || ('t' == token[0]) ) {
+				s->regeneration_management = 0;
+			} else if ( ('C' == token[0]) || ('c' == token[0]) ) {
+				s->regeneration_management = 1;
+			} else {
+				printf("bad regeneration habitus specified in settings: %s\n", token);
 				free(s);
 				fclose(f);
 				return 0;

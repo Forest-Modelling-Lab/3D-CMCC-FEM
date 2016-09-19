@@ -3,6 +3,7 @@
 #define SETTINGS_H_
 
 #define SETTINGS_REPLANTED_SPECIES_MAX_SIZE		(32+1)
+#define SETTINGS_REGENERATION_SPECIES_MAX_SIZE		(32+1)
 
 typedef struct {
 	char version;
@@ -22,9 +23,10 @@ typedef struct {
 	char Prog_Aut_Resp[4]; /* Prognostic autotrophic respiration */
 	char dndc[4];
 	char replanted_species[SETTINGS_REPLANTED_SPECIES_MAX_SIZE]; /* species name of replanted species */
+	char regeneration_species[SETTINGS_REGENERATION_SPECIES_MAX_SIZE]; /* species name of regeneration species */
 	// ALESSIOR: use e_management from matrix.h not char
-	// ALESSIOC to ALESSIOR: useless variables to remove!!!
-	char replanted_management;
+	char replanted_management;    /*this is a mandatory variables that each class has to have AND DETERMINES HABITUS OF PLANT*/
+	char regeneration_management;    /*this is a mandatory variables that each class has to have AND DETERMINES HABITUS OF PLANT*/
 
 
 	/* DO NOT MODIFY BELOW, PLEASE INSERT STUFF IN SPACE ABOVE */
@@ -45,7 +47,7 @@ typedef struct {
 
 	/* replanted input (Management options)*/
 	//ALESSIOC TO ALESSIOR move remainig_basal_area to species.txt
-	double remainig_basal_area;          /* percentage of basal area to remove per sizecell (mandatory) */
+	double remaining_basal_area;          /* percentage of basal area to remove per sizecell (mandatory) */
 	double replanted_n_tree;             /* number of replanted trees per sizecell (mandatory) */
 	double replanted_age;                /* age of replanted trees (mandatory) */
 	double replanted_avdbh;              /* average dbh of replanted trees (mandatory) */

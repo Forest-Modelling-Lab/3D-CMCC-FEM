@@ -36,8 +36,6 @@ static int fill_cell_for_replanting(cell_t *const c)
 	static species_t species = { 0 };
 
 	assert(c);
-
-	CHECK_CONDITION(g_settings->replanted_management, != 0);
 	
 	/* alloc memory for heights */
 	if ( ! alloc_struct((void **)&c->heights, &c->heights_count, &c->heights_avail, sizeof(height_t)) )
@@ -122,7 +120,7 @@ int add_tree_class_for_replanting (cell_t *const c)
 
 /************************************************************************************************************/
 
-static int fill_cell_for_regeneration(cell_t *const c, const char* saplings_name)
+static int fill_cell_for_regeneration( cell_t *const c )
 {
 	char* p;
 
@@ -137,8 +135,6 @@ static int fill_cell_for_regeneration(cell_t *const c, const char* saplings_name
 
 
 	assert(c);
-
-	CHECK_CONDITION(g_settings->regeneration_n_tree, != 0);
 
 	logger(g_log, "\n**Fill cell from regeneration**\n");
 
@@ -176,7 +172,7 @@ static int fill_cell_for_regeneration(cell_t *const c, const char* saplings_name
 		return 0;
 	}
 
-	p = string_copy(saplings_name);
+	p = string_copy(g_settings->regeneration_species);
 	if ( ! p ) return 0;
 
 	a->species[a->species_count-1] = species;
@@ -197,13 +193,13 @@ static int fill_cell_for_regeneration(cell_t *const c, const char* saplings_name
 	return 1;
 }
 
-int add_tree_class_for_regeneration (cell_t *const c, const char *saplings_name)
+int add_tree_class_for_regeneration ( cell_t *const c )
 {
 	logger(g_log, "**ADD NEW TREE CLASS (REGENERATION)**\n");
 
 
 	/* it is used only with natural regeneration */
-	if ( ! fill_cell_for_regeneration( c, saplings_name) ) return 0;
+	if ( ! fill_cell_for_regeneration( c ) ) return 0;getchar();
 
 	/* fill with species values from parameterization file */
 	if ( ! fill_species_from_file(&c->heights[c->heights_count-1].dbhs[0].ages[0].species[0]) )

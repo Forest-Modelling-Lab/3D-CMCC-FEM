@@ -22,6 +22,7 @@ extern settings_t* g_settings;
 
 void regeneration (cell_t *const c, const int height, const int dbh, const int age, const int species)
 {
+	double fruit_gDM;
 	int seeds_number;
 	int saplings_number;
 
@@ -31,7 +32,12 @@ void regeneration (cell_t *const c, const int height, const int dbh, const int a
 	logger(g_log, "\n**REGENERATION**\n");
 
 	/* compute number of seeds */
-	seeds_number = s->value[FRUIT_C] / s->value[WEIGHTSEED];
+	/*convert fruit pool from tC to gDM */
+	fruit_gDM = s->value[FRUIT_C] * 1000000 * GC_GDM;
+	logger(g_log, "fruit_gDM = %g gDM\n", fruit_gDM);
+
+	seeds_number = fruit_gDM / s->value[WEIGHTSEED];
+	logger(g_log, "fruit biomass= %g tC\n", s->value[FRUIT_C]);
 	logger(g_log, "number of seeds = %d\n", seeds_number);
 
 	/* reset annually fruit pool */
@@ -45,11 +51,18 @@ void regeneration (cell_t *const c, const int height, const int dbh, const int a
 	//ALESSIOC TO ALESSIOR PORCATA
 	g_settings->regeneration_n_tree = saplings_number;
 
-	//g_settings->regeneration_name = string_copy(s->name);
+	/* it gets name of species that produces seeds */
+	//g_settings->regeneration_species = string_copy(s->name);
 
-
-	//add_tree_class_for_regeneration ( c, &s->name);
-
+	/* replanting tree class */
+	if( g_settings->regeneration_n_tree )
+	{
+		if ( ! add_tree_class_for_regeneration( c ) )
+		{
+			logger(g_log, "unable to add new regeneration class! (exit)\n");
+			exit(1);
+		}
+	}
 }
 
 
