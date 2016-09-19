@@ -23,7 +23,7 @@ REMAINING_BASAL_AREA "70"             // % percentage of basal area to leave per
 REPLANTED_SPECIES "Fagussylvatica"    // species name of replanted trees (mandatory)
 REPLANTED_MANAGEMENT "T"              // (T) management of replated trees (should be only T)(mandatory)
 REPLANTED_TREE "10000"                // number of replanted trees (mandatory)
-REPLANTED_AGE "5"                     // (yr) age of replanted trees (mandatory)
+REPLANTED_AGE "1"                     // (yr) age of replanted trees (mandatory)
 REPLANTED_AVDBH "2"                   // (cm) average dbh of replanted trees (mandatory)
 REPLANTED_LAI "1"                     // (m2/m2) lai for replanted trees (mandatory for evergreen, useless for deciduous)
 REPLANTED_HEIGHT "1"                  // (m) height of replanted trees (mandatory)
