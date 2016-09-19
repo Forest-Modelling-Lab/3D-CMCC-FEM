@@ -39,13 +39,13 @@ REPLANTED_WCR "0"           // (tDM/ha) coarse root biomass of replanted trees (
 REPLANTED_WFR "0"           // (tDM/ha) fine root biomass of replanted trees (optional)
 REPLANTED_WL "0"            // (tDM/ha) leaf biomass of replanted trees (optional for evergreen if LAI!= 0, otherwise useless)
 REPLANTED_WBB "0"           // (tDM/ha) branch biomass of replanted trees (optional)
-
-//REGENERATION (optional)
-REGENERATION_N_TREE "-9999"           //NOT USED 
-REGENERATION_AGE "1"
-REGENERATION_AVDBH "0.1"
-REGENERATION_LAI "0.0"
-REGENERATION_HEIGHT "1.2"
+REGENERATION_SPECIES "none"          // NOT USED it comes from species that produces seeds
+REGENERATION_MANAGEMENT "T"           // (T) management of replated trees (should be only T)(mandatory)
+REGENERATION_N_TREE "-9999"           // number of replanted trees (mandatory) (NOT USED)
+REGENERATION_AGE "1"                  // (yr) age of regeneration trees (mandatory) (SHOULD BE ALWAYS 1)
+REGENERATION_AVDBH "0.1"              // (cm) average dbh of regeneration trees (mandatory)
+REGENERATION_LAI "0.0"                // (m2/m2) lai for regeneration trees (mandatory for evergreen, useless for deciduous)
+REGENERATION_HEIGHT "1.2"             // (m) height of replanted trees (mandatory) 
 REGENERATION_WS "0"                   // (tDM/ha) stem biomass of regeneration trees (optional)
 REGENERATION_WCR "0"                  // (tDM/ha) coarse root biomass of regeneration trees (optional)
 REGENERATION_WFR "0"                  // (tDM/ha) fine root biomass of regeneration trees (optional)
