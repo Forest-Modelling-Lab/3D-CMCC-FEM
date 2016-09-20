@@ -2,10 +2,10 @@
 <launchConfiguration type="org.eclipse.cdt.launch.applicationLaunchType">
 <intAttribute key="org.eclipse.cdt.launch.ATTR_BUILD_BEFORE_LAUNCH_ATTR" value="2"/>
 <stringAttribute key="org.eclipse.cdt.launch.COREFILE_PATH" value=""/>
-<stringAttribute key="org.eclipse.cdt.launch.PROGRAM_ARGUMENTS" value="-i input/DKSoroe&#10;-p input/parameterization&#10;-o output/debug_output/debug_output&#10;-b output/daily_output/daily_output&#10;-e output/annual_output/annual_output&#10;-f output/monthly_output/monthly_output&#10;-d  ISIMIP/Soroe_stand_1960_ISIMIP.txt&#10;-m ISIMIP/GCM5/GCM5_hist_rcp8p5_1960_2099.txt&#10;-s ISIMIP/GCM5/Soroe_soil_8.5_ISIMIP.txt&#10;-t ISIMIP/Soroe_topo_ISIMIP.txt&#10;-c ISIMIP/Soroe_settings_ISIMIP_Manag_on_CO2_off.txt&#10;-n output/soil_output/soil_output"/>
+<stringAttribute key="org.eclipse.cdt.launch.PROGRAM_ARGUMENTS" value="-i input/DKSoroe&#10;-p input/parameterization&#10;-o output/debug_output/debug_output&#10;-b output/daily_output/daily_output&#10;-e output/annual_output/annual_output&#10;-f output/monthly_output/monthly_output&#10;-d  ISIMIP/Soroe_stand_1960_ISIMIP.txt&#10;-m ISIMIP/GCM4/GCM4_hist_rcp6p0_1960_2099.txt&#10;-s ISIMIP/GCM4/Soroe_soil_6.0_ISIMIP.txt&#10;-t ISIMIP/Soroe_topo_ISIMIP.txt&#10;-c ISIMIP/Soroe_settings_ISIMIP_Manag_off_CO2_off.txt&#10;-n output/soil_output/soil_output"/>
 <stringAttribute key="org.eclipse.cdt.launch.PROGRAM_NAME" value="Debug/3D_CMCC_Forest_Model"/>
 <stringAttribute key="org.eclipse.cdt.launch.PROJECT_ATTR" value="3D_CMCC_Forest_Model"/>
-<booleanAttribute key="org.eclipse.cdt.launch.PROJECT_BUILD_CONFIG_AUTO_ATTR" value="true"/>
+<booleanAttribute key="org.eclipse.cdt.launch.PROJECT_BUILD_CONFIG_AUTO_ATTR" value="false"/>
 <stringAttribute key="org.eclipse.cdt.launch.PROJECT_BUILD_CONFIG_ID_ATTR" value="cdt.managedbuild.config.gnu.cross.exe.debug.2020075168"/>
 <booleanAttribute key="org.eclipse.cdt.launch.use_terminal" value="true"/>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
