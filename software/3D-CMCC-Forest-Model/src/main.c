@@ -253,10 +253,14 @@ static int log_start(const char* const sitename) {
 	strcat(buffer, "_");
 	sprintf(buffer_2, "%c", g_settings->version);
 	strcat(buffer, buffer_2);
-	strcat(buffer, "_CO2_mod_");
-	if ( ! string_compare_i(g_settings->CO2_mod, "on") )
+	strcat(buffer, "_CO2_fixed_");
+	if ( ! string_compare_i(g_settings->CO2_fixed, "on") )
 	{
 		strcat(buffer, "ON");
+	}
+	else if ( ! string_compare_i(g_settings->CO2_fixed, "var") )
+	{
+		strcat(buffer, "VAR");
 	}
 	else
 	{

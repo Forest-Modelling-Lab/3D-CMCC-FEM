@@ -1,10 +1,10 @@
-for ISIMIP simulations 2001-2099 in Soroe we used:
+for ISIMIP simulations 19xx-2099 in Soroe we used:
 
 -input stand data coming from Andreas Ibrom dataset making an 
- weighted average of 7 dbh-height classes into one single dbh-height weighted average class for 1950 and 2001
+ weighted average of 7 dbh-height classes into one single dbh-height weighted average class for 1960 and 2001
  data are stored in "Stand_data_andreas_Ibrom.xlsx" file:
- FILE NAME: "Soroe_stand_1950_ISIMIP.txt" (unique for all simulations starting from 1950)
- FILE NAME: "Soroe_stand_2001_ISIMIP.txt" (unique for all simulations starting from 2001)
+ FILE NAME: "Soroe_stand_1960_ISIMIP.txt" (unique for all simulations starting from 1960)
+ choice of use 1960 instead 1950 is due to asynchrony between how model managesmanagement and what prescribed by the protocol
  
 -input soil data coming from database data SOIL.csv and psot processed in Soil_TEXTURE.xlsx file 
  soil texture is a weighted average of texutres for each soil horizon
@@ -26,6 +26,13 @@ for ISIMIP simulations 2001-2099 in Soroe we used:
 -parameterization file for Fagussylvatica is stored in parameterization folder 
  FILE NAME: "Fagussylvatica.txt"(unique for all simulations)
  
+-input CO2 file:
+ *for simulations when CO2 is fixed (CO2_fixed "on") we use the same co2 input file for all GCMs and all rcps :"CO2_hist_rcps_1950_2000.txt"
+ these simulation use a transient CO2 concentration up to year 2000, after that CO2 is equal for all years (file has been made getting the 
+ transient CO2 files and changing values after year 2000 using the value of year 2000
+ *for simulations when CO2 in NOT fixed (CO2_fixed "off") we use different CO2 file based ONLY on rcps used
+ NOTE: reference value for F_CO2 = 1 is:  CO2CONC "368.865"  //CO2 concentration refers to 2000 as ISIMIP PROTOCOL
+ 
  and example of launch:
  
 -i input/DKSoroe
@@ -40,3 +47,4 @@ for ISIMIP simulations 2001-2099 in Soroe we used:
 -t ISIMIP/Soroe_topo_ISIMIP.txt
 -c ISIMIP/Soroe_settings_ISIMIP.txt
 -n output/soil_output/soil_output
+-k ISIMIP/CO2/CO2_rcp6p6_1950_2099.txt

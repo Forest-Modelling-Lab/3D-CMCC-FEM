@@ -65,21 +65,10 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 
 		tau = Atau * exp (-Eatau/(Rgas*(tairK)));
 
-		/* when CO2_fixed is "on" it gets a fixed [CO2] from settings file */
-		if (!string_compare_i(g_settings->CO2_fixed, "on"))
-		{
-			v1 = (g_settings->co2Conc-(O2CONC/(2*tau)))/(refCO2CONC-(O2CONC/(2*tau)));
-			v2 = (KmCO2*(1+(O2CONC/KO2))+refCO2CONC)/(KmCO2*(1+(O2CONC/KO2))+g_settings->co2Conc);
-			logger(g_log, "annual [CO2] fixed = %f\n", g_settings->co2Conc);
-		}
-		/* when CO2_fixed is "off" it gets a variable [CO2] from external file */
-		if (!string_compare_i(g_settings->CO2_fixed, "off"))
-		{
+		v1 = (meteo_annual->co2Conc -(O2CONC/(2*tau)))/(refCO2CONC-(O2CONC/(2*tau)));
+		v2 = (KmCO2*(1+(O2CONC/KO2))+refCO2CONC)/(KmCO2*(1+(O2CONC/KO2))+meteo_annual->co2Conc);
+		logger(g_log, "annual [CO2] variable = %f\n", meteo_annual->co2Conc);
 
-			v1 = (meteo_annual->co2Conc -(O2CONC/(2*tau)))/(refCO2CONC-(O2CONC/(2*tau)));
-			v2 = (KmCO2*(1+(O2CONC/KO2))+refCO2CONC)/(KmCO2*(1+(O2CONC/KO2))+meteo_annual->co2Conc);
-			logger(g_log, "annual [CO2] variable = %f\n", meteo_annual->co2Conc);
-		}
 		/* compute F_CO2 modifier */
 		s->value[F_CO2] = v1*v2;
 	}

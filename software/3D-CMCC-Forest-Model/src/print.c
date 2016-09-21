@@ -156,14 +156,7 @@ void print_daily_met_data(cell_t *c, const int day, const int month, const int y
 			doy
 	);
 
-	if (!string_compare_i(g_settings->CO2_fixed, "on"))
-	{
-		logger(g_log,"-co2 concentration (fixed) = %g ppmv\n", g_settings->co2Conc);
-	}
-	else
-	{
-		logger(g_log,"-co2 concentration (variable) = %g ppmv\n", annual_met->co2Conc);
-	}
+	logger(g_log,"-co2 concentration (variable) = %g ppmv\n", annual_met->co2Conc);
 
 
 	if (g_settings->spatial == 's')

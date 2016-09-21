@@ -1970,7 +1970,9 @@ yos_t* yos_import(const char *const file, int *const yos_count, const int x, con
 
 	/* import co2 conc */
 	if ( ! string_compare_i(g_settings->CO2_mod, "on") ) {
-		if ( ! string_compare_i(g_settings->CO2_fixed, "off") ) {
+		if ( ! string_compare_i(g_settings->CO2_fixed, "off") ||
+				! string_compare_i(g_settings->CO2_fixed, "var") )
+		{
 			int err;
 
 			if ( ! g_sz_co2_conc_file ) {
@@ -1987,7 +1989,8 @@ yos_t* yos_import(const char *const file, int *const yos_count, const int x, con
 					return NULL;
 				}
 			}
-		} else {
+		}
+		else {
 			for ( i = 0; i < *yos_count; ++i ) {
 				yos[i].co2Conc = g_settings->co2Conc;
 			}
