@@ -48,12 +48,9 @@ void layer_self_pruning_thinning ( cell_t *const c )
 			{
 				/* also self-thinning is necessary */
 				/* SELF-THINNING */
+				/* note: exceeds in coverage over 100% is confirmed by Husch et al., Forest Mensuration book pg, 184 */
 				self_thinning ( c, layer );
 			}
-
-			//test if test above is ok remove
-			/* SELF-THINNING */
-			//self_thinning (c, layer);
 
 			/* assign char */
 			mortality = 'y';

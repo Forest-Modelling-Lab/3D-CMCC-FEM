@@ -6,6 +6,7 @@
  */
 #include <math.h>
 #include <assert.h>
+#include "common.h"
 #include "print.h"
 #include "constants.h"
 #include "settings.h"
@@ -83,7 +84,9 @@ void print_daily_met_data(cell_t *c, const int day, const int month, const int y
 	static int doy;
 
 	meteo_t *met;
+	yos_t *annual_met;
 	met = c->years[year].m;
+	annual_met = &c->years[year];
 
 	if (!day && !month)
 	{
@@ -122,7 +125,6 @@ void print_daily_met_data(cell_t *c, const int day, const int month, const int y
 			"-es = %g KPa\n"
 			"-ea = %g KPa\n"
 			"-air psych = %g KPa\n"
-			"-co2 concentration = %g ppmv\n"
 			"-DOY = %d\n",
 			met[month].d[day].solar_rad,
 			met[month].d[day].par,
@@ -151,9 +153,19 @@ void print_daily_met_data(cell_t *c, const int day, const int month, const int y
 			met[month].d[day].es,
 			met[month].d[day].ea,
 			met[month].d[day].psych,
-			g_settings->co2Conc,
 			doy
 	);
+
+	if (!string_compare_i(g_settings->CO2_fixed, "on"))
+	{
+		logger(g_log,"-co2 concentration (fixed) = %g ppmv\n", g_settings->co2Conc);
+	}
+	else
+	{
+		logger(g_log,"-co2 concentration (variable) = %g ppmv\n", annual_met->co2Conc);
+	}
+
+
 	if (g_settings->spatial == 's')
 	{
 		logger(g_log, "-lai from NDVI = %f \n", met[month].d[day].ndvi_lai);

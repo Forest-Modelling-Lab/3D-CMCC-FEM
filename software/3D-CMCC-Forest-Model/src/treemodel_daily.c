@@ -77,10 +77,12 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	age_t *a;
 	species_t *s;
 	meteo_daily_t *meteo_daily;
+	yos_t *meteo_annual;
 
 	/* assign shortcuts */
 	c = &m->cells[cell];
 	meteo_daily = &m->cells[cell].years[year].m[month].d[day];
+	meteo_annual = &m->cells[cell].years[year];
 
 	/* check parameters */
 	assert( m );
@@ -232,7 +234,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							canopy_temperature( c, layer, height, dbh, age, species, meteo_daily );
 
 							/* daily modifier */
-							modifiers( c, layer, height, dbh, age, species, meteo_daily);
+							modifiers( c, layer, height, dbh, age, species, meteo_daily, meteo_annual);
 
 							/* canopy water fluxes */
 							canopy_evapotranspiration( c, layer, height, dbh, age, species, meteo_daily );

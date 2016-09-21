@@ -145,7 +145,7 @@ static void yos_clear(yos_t *const yos) {
 		int i;
 		int y;
 		yos->year = 0;
-		yos->co2_conc = INVALID_VALUE;
+		yos->co2Conc = INVALID_VALUE;
 		for ( i = 0; i < YOS_MONTHS_COUNT; ++i ) {
 			for ( y = 0; y < YOS_DAYS_COUNT; ++y ) {
 				yos->m[i].d[y].n_days = INVALID_VALUE;
@@ -1980,7 +1980,7 @@ yos_t* yos_import(const char *const file, int *const yos_count, const int x, con
 			}
 
 			for ( i = 0; i < *yos_count; ++i ) {
-				yos[i].co2_conc = get_co2_conc(yos[i].year, &err);
+				yos[i].co2Conc = get_co2_conc(yos[i].year, &err);
 				if ( err ) {
 					logger(g_log, "unable to get co2 concentration for year %d\n", yos[i].year);
 					free(yos);
@@ -1989,7 +1989,7 @@ yos_t* yos_import(const char *const file, int *const yos_count, const int x, con
 			}
 		} else {
 			for ( i = 0; i < *yos_count; ++i ) {
-				yos[i].co2_conc = g_settings->co2Conc;
+				yos[i].co2Conc = g_settings->co2Conc;
 			}
 		}
 	}

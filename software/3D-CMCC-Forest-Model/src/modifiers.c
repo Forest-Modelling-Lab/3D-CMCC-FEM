@@ -16,7 +16,8 @@ extern settings_t* g_settings;
 extern logger_t* g_log;
 extern soil_settings_t *g_soil_settings;
 
-void modifiers(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, const meteo_daily_t *const meteo_daily)
+void modifiers(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, const meteo_daily_t *const meteo_daily,
+		const yos_t *const meteo_annual)
 {
 	double RelAge;
 	/*variables for CO2 modifier computation*/
@@ -42,15 +43,12 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	a = &c->heights[height].dbhs[dbh].ages[age];
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
-	//test
-	//double vpd_open = 6; //value from pietsch in Pa a(600) are converted in hPa = 6
-	//double vpd_close = 12; // 12 in taken from Priwitzer et al., 2014 30 from Pietsch in Pa (3000) are converted in hPa = 30
-
 	logger(g_log, "\n**DAILY_MODIFIERS**\n");
 
 	/********************************************************************************************/
 
-	/* CO2 MODIFIER FROM C-FIX */
+	/* CO2 MODIFIER from: Veroustraete et al., 2002, Remote Sensing of Environment */
+	//fixme it can be removed case of on and off for CO2 modifier and leave always as "on"
 	if (!string_compare_i(g_settings->CO2_mod, "on"))
 	{
 		tairK = meteo_daily->tavg + TempAbs;
@@ -67,17 +65,29 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 
 		tau = Atau * exp (-Eatau/(Rgas*(tairK)));
 
-		v1 = (g_settings->co2Conc-(O2CONC/(2*tau)))/(refCO2CONC-(O2CONC/(2*tau)));
-		v2 = (KmCO2*(1+(O2CONC/KO2))+refCO2CONC)/(KmCO2*(1+(O2CONC/KO2))+g_settings->co2Conc);
+		/* when CO2_fixed is "on" it gets a fixed [CO2] from settings file */
+		if (!string_compare_i(g_settings->CO2_fixed, "on"))
+		{
+			v1 = (g_settings->co2Conc-(O2CONC/(2*tau)))/(refCO2CONC-(O2CONC/(2*tau)));
+			v2 = (KmCO2*(1+(O2CONC/KO2))+refCO2CONC)/(KmCO2*(1+(O2CONC/KO2))+g_settings->co2Conc);
+			logger(g_log, "annual [CO2] fixed = %f\n", g_settings->co2Conc);
+		}
+		/* when CO2_fixed is "off" it gets a variable [CO2] from external file */
+		if (!string_compare_i(g_settings->CO2_fixed, "off"))
+		{
 
+			v1 = (meteo_annual->co2Conc -(O2CONC/(2*tau)))/(refCO2CONC-(O2CONC/(2*tau)));
+			v2 = (KmCO2*(1+(O2CONC/KO2))+refCO2CONC)/(KmCO2*(1+(O2CONC/KO2))+meteo_annual->co2Conc);
+			logger(g_log, "annual [CO2] variable = %f\n", meteo_annual->co2Conc);
+		}
+		/* compute F_CO2 modifier */
 		s->value[F_CO2] = v1*v2;
-		logger(g_log, "f_CO2 modifier (C-FIX) = %f\n", s->value[F_CO2]);
 	}
 	else
 	{
 		s->value[F_CO2] = 1;
-		logger(g_log, "f_CO2 modifier (C-FIX) = %f\n", s->value[F_CO2]);
 	}
+	logger(g_log, "f_CO2 modifier = %f\n", s->value[F_CO2]);
 
 	/********************************************************************************************/
 
@@ -142,24 +152,6 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	/* check */
 	CHECK_CONDITION(s->value[F_T], > 1);
 	CHECK_CONDITION(s->value[F_T], < 0);
-
-	/********************************************************************************************/
-
-	//	/*FROST MODIFIER*/
-	//	if( meteo_daily->tday < s->value[GROWTHTMIN] )
-	//	{
-	//		s->value[F_FROST] = 0.0;
-	//		logger(g_log, "fFROST - Frost modifier = %f\n", s->value[F_FROST]);
-	//	}
-	//	else
-	//	{
-	//		s->value[F_FROST] = 1.0;
-	//		logger(g_log, "fFROST - Frost modifier = %f\n", s->value[F_FROST]);
-	//	}
-	//
-	//	/* check */
-	//	CHECK_CONDITION(s->value[F_FROST], > 1);
-	//	CHECK_CONDITION(s->value[F_FROST], < 0);
 
 	/********************************************************************************************/
 
