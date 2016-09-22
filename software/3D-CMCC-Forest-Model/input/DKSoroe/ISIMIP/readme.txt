@@ -18,7 +18,7 @@ for ISIMIP simulations 19xx-2099 in Soroe we used:
 
 -input model settings is all the same for all simulation but is different for management on and off 
  FILE NAME: "Soroe_settings_ISIMIP.txt" (unique for all simulations with no management)
- ILE NAME: "Soroe_settings_ISIMIP_Manag_on.txt" (unique for all simulations with management)
+ FILE NAME: "Soroe_settings_ISIMIP_Manag_on.txt" (unique for all simulations with management)
 
 -input topo is one for all simulation
  FILE NAME: "Soroe_topo_ISIMIP.txt" (unique for all simulations)
