@@ -18,7 +18,7 @@
 #define TA_RANGE_MAX        50
 #define TMAX_RANGE_MIN     -20
 #define TMAX_RANGE_MAX      50
-#define TMIN_RANGE_MIN     -20
+#define TMIN_RANGE_MIN     -50
 #define TMIN_RANGE_MAX      50
 #define VPD_RANGE_MIN        0
 #define VPD_RANGE_MAX      150
@@ -1137,7 +1137,7 @@ static int import_lst(const char *const filename, yos_t** p_yos, int *const yos_
 	/* open lst file */
 	f = fopen(filename, "r");
 	if ( ! f ) {
-		logger(g_log, "unable to open met data file !\n");
+		logger(g_log, "unable to open met data file, problem in open list file !\n");
 		return 0;
 	}
 
@@ -1635,7 +1635,7 @@ static int import_txt(const char *const filename, yos_t** p_yos, int *const yos_
 	// get rows count
 	rows_count = file_get_rows_count(filename);
 	if ( rows_count <= 0 ) {
-		logger(g_log, "unable to open met data file !\n");
+		logger(g_log, "unable to open met data file, problems in rows !\n");
 		return 0;
 	}
 
@@ -1658,7 +1658,7 @@ static int import_txt(const char *const filename, yos_t** p_yos, int *const yos_
 	f = fopen(filename, "r");
 	if ( !f )
 	{
-		logger(g_log, "unable to open met data file !\n");
+		logger(g_log, "unable to open met data file, problems in filename !\n");
 		free(values);
 		return 0;
 	}
