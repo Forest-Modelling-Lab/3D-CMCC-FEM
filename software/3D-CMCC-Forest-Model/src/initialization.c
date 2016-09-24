@@ -426,7 +426,8 @@ void initialization_forest_class_C_biomass(cell_t *const c, const int height, co
 	/* check that all mandatory variables are initialised */
 	CHECK_CONDITION(h->value, == 0);
 	CHECK_CONDITION(d->value, == 0);
-	CHECK_CONDITION(a->value, == 0);
+	/* note: ISIMIP special case */
+	//CHECK_CONDITION(a->value, == 0);
 
 	/* just for evergreen */
 	if ( s->value[PHENOLOGY] == 1.1 || s->value[PHENOLOGY] == 1.2 )

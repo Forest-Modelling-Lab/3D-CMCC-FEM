@@ -15,6 +15,8 @@ void allometry_power_function(cell_t *const c)
 	int age;
 	int species;
 
+	int mod_age;
+
 	height_t *h;
 	dbh_t *d;
 	age_t *a;
@@ -42,7 +44,18 @@ void allometry_power_function(cell_t *const c)
 
 					logger(g_log, "Age = %d\n", a->value);
 
-					s->value[MASS_DENSITY] = s->value[RHOMAX] + (s->value[RHOMIN] - s->value[RHOMAX]) * exp(-ln2 * (a->value / s->value[TRHO]));
+					/* note: ISIMIP special case */
+					if (a->value == 0)
+					{
+						mod_age = 1;
+					}
+					else
+					{
+						mod_age = a->value
+					}
+					logger(g_log, "Age (used in function) = %d\n", mod_age);
+
+					s->value[MASS_DENSITY] = s->value[RHOMAX] + (s->value[RHOMIN] - s->value[RHOMAX]) * exp(-ln2 * (mod_age / s->value[TRHO]));
 					logger(g_log, "-Mass Density = %g\n", s->value[MASS_DENSITY]);
 
 					if ( d->value < 9 )
