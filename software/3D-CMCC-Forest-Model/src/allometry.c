@@ -51,7 +51,7 @@ void allometry_power_function(cell_t *const c)
 					}
 					else
 					{
-						mod_age = a->value
+						mod_age = a->value;
 					}
 					logger(g_log, "Age (used in function) = %d\n", mod_age);
 

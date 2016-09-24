@@ -34,6 +34,10 @@ for ISIMIP simulations 19xx-2099 in Soroe we used:
  NOTE: reference value for F_CO2 = 1 is:  CO2CONC "368.865"  //CO2 concentration refers to 2000 as ISIMIP PROTOCOL
  *for simulation with Historical climate dataset (experiments 1a) over 2005 data (to 2012) has been filled with values coming from CO2_rcps files
  
+ CLIMATE (1a) experiment: in this case model initialization refers to stand data of 1996 from Andrea Ibrom file, to reason of model behaviour variable
+ "THINNING" in Fagussylvatica.txt has been setted to 10 (instead 15) for consistency with ohter simulations where thinning happens in 2005 (otherwise should
+ be happened in 2010 in this case)
+ 
  and example of launch:
  
 -i input/DKSoroe
