@@ -174,6 +174,10 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	//		s->value[F_VPD] = (vpd_close - meteo_daily->vpd) / (vpd_close - vpd_open);
 
 	/* AGE MODIFIER */
+	/* note: in some ways it reflects the Hydraulic Limitation Hypothesis (HLH) of Yoder et al., (1994)
+	 * that asserts that increasing tree height and branch length (and then age), xylem path and length
+	 * and thus hydraulic resistance increases (see also Grote et al., 2016) */
+
 	if ( a->value != 0 )
 	{
 		if ( s->management == T )
