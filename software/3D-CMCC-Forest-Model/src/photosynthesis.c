@@ -11,7 +11,7 @@
 
 extern logger_t* g_log;
 
-void photosynthesis(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, const int DaysInMonth)
+void photosynthesis(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, const int DaysInMonth, const yos_t *const meteo_annual)
 {
 	double Alpha_C;
 	double Epsilon_C;
@@ -49,6 +49,18 @@ void photosynthesis(cell_t *const c, const int layer, const int height, const in
 		/* gC/MJ/m2/day --> molC/molPAR/m2/day */
 		Alpha_C = Epsilon_C / (MOLPAR_MJ * GC_MOL);
 		logger(g_log, "Alpha C = %g molC/molPAR/m2/day\n", Alpha_C);
+	}
+
+	/* check if current Alpha exceeds (saturates) maximum Alpha */
+	/*(canopy saturation at 600 ppmv see Medlyn, 1996;  Medlyn et al., 2011) */
+	if (Alpha_C > s->value[ALPHA])
+	{
+		logger(g_log, "Alpha C = %g molC/molPAR/m2/day\n", Alpha_C);
+		logger(g_log, "ALPHA = %g molC/molPAR/m2/day\n", s->value[ALPHA]);
+		logger(g_log, "co2 conc = %g ppmv\n", meteo_annual->co2Conc);
+
+		/* set Alpha C to s->value[ALPHA] */
+		Alpha_C = s->value[ALPHA];
 	}
 
 	//test 12 May 2016 test
