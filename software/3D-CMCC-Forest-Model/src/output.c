@@ -458,7 +458,6 @@ static int output_write_txt(const output_t* const vars, const char *const path, 
 	int vars_count;
 	int row;
 	int rows_count;
-	FILE *f;
 
 	if ( OUTPUT_TYPE_DAILY == type ) vars_count = vars->daily_vars_count;
 	else if ( OUTPUT_TYPE_MONTHLY == type ) vars_count = vars->monthly_vars_count;
@@ -552,9 +551,10 @@ static int output_write_txt(const output_t* const vars, const char *const path, 
 				}
 			}
 		}
+
+		fclose(f);
 	}
 
-	fclose(f);
 	return 1;
 }
 

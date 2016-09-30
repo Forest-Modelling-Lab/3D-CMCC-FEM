@@ -51,6 +51,8 @@ static int import_txt(topo_t *const t, const char *const filename, const int x, 
 		}
 	}
 
+	fclose(f);
+
 	/* are all value imported ? */
 	/*return ( i == TOPO_VARS_COUNT ) ? 0 : 2;*/
 	return 1;

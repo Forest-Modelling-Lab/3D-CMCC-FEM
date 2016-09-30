@@ -44,7 +44,7 @@ void logger(logger_t *p, const char *text, ...) {
 	vsnprintf(buffer, LOGGER_BUFFER_SIZE, text, va);
 	va_end(va);
 
-	if ( ! p || (p && p->std_output) ) {
+	if ( p && p->std_output ) {
 		fputs(buffer, stdout);
 	}
 

@@ -29,8 +29,18 @@ void nitrogen_stock(species_t *const s)
 	//test CURRENTLY NOT USED
 	/* as in BIOME-BGC nitrogen content in falling leaves is lower */
 	/* deciduous */
-	if((s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.1) && s->counter[LEAF_FALL_COUNTER] == 1)
+	/* ALESSIOR: COMPLIMENTONI! */
+	if((s->value[PHENOLOGY] == 0.1 /*|| s->value[PHENOLOGY] == 0.1*/) && s->counter[LEAF_FALL_COUNTER] == 1)
 	{
+
+		/* ALESSIOR: COMPLIMENTONI AGAIN!
+
+			SAME CONDITIONAL STUFF
+		
+		*/
+
+
+
 		/* outside leaf fall*/
 		if(!s->counter[LEAF_FALL_COUNTER])
 		{

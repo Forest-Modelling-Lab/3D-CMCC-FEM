@@ -49,6 +49,10 @@
 #include "cell_model.h"
 #include "soil_model.h"
 
+#if defined _WIN32
+#include "commit_hash.h"
+#endif
+
 /* Last cumulative days in months in non Leap years */
 int MonthLength [] = { 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365};
 
@@ -93,6 +97,7 @@ char 	*g_sz_program_path = NULL
 		;
 
 static int years_of_simulation;	// default is none
+static int g_disable_stdout;
 
 /* strings */
 const char sz_launched[] = "\n"PROGRAM_NAME"\n"
@@ -105,6 +110,9 @@ static const char banner[] = "\n"PROGRAM_NAME"\n"
 		"by Alessio Collalti [alessio.collalti@cmcc.it, a.collalti@unitus.it]\n"
 		"compiled using "COMPILER" on "__DATE__" at "__TIME__"\n"
 		"using NetCDF %s\n"
+#if defined _WIN32
+		"last commit hash: "COMMIT_HASH"\n"
+#endif
 		"(use -h parameter for more information)\n\n";
 
 static char copyright[] =
@@ -137,8 +145,7 @@ static char copyright[] =
 		"-Collalti et al., 2014 Ecological Modelling,\n"
 		"-Collalti et al., 2016 Geoscientific Model Development\n"
 		"--------------------------------------------------------------------------------\n"
-		;
-
+;
 
 static const char msg_input_path[]				=	"input path = %s\n";
 static const char msg_parameterization_path[]	=	"parameterization path = %s\n";
@@ -181,6 +188,7 @@ static const char msg_usage[]					=	"\nusage:\n"
 		"    -c settings filename stored into input directory (i.e.: -c settings.txt)\n"
 		"    -k co2 concentration file (i.e.: -k co2_conc.txt)\n"
 		"    -r output vars list (i.e.: -r output_vars.lst)\n"
+		"    -x disable screen output"
 		"  optional options:\n"
 		"    -h print this help\n"
 		;
@@ -356,7 +364,7 @@ static int log_start(const char* const sitename) {
 
 	logger_disable_std(g_log);
 	logger(g_log, copyright);
-	logger_enable_std(g_log);
+	if ( ! g_disable_stdout ) logger_enable_std(g_log);
 
 	logger(g_log, sz_launched, netcdf_get_version(), get_datetime());
 
@@ -625,6 +633,10 @@ static int parse_args(int argc, char *argv[]) {
 				goto err;
 			}
 			break;
+
+		case 'x': /* disable stdout */
+			g_disable_stdout = 1;
+		break;
 
 		case 'h': /* show help */
 			goto err_show_usage;

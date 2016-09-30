@@ -26,6 +26,8 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
+				Description="Get commit hash"
+				CommandLine="git log -n 1 --pretty=&quot;format:#define COMMIT_HASH \&quot;%%H\&quot;&quot; &gt; $(ProjectDir)src\commit_hash.h"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -101,6 +103,8 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
+				Description="Get commit hash"
+				CommandLine="git log -n 1 --pretty=&quot;format:#define COMMIT_HASH \&quot;%%H\&quot;&quot; &gt; $(ProjectDir)src\commit_hash.h"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
