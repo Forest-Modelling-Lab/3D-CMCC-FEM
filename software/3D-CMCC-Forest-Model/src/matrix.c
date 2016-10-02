@@ -1294,14 +1294,6 @@ void simulation_summary (const matrix_t* const m)
 		logger(g_log, "Model spatial = un-spatial \n");
 	}
 	logger(g_log, "Temporal scale = daily \n");
-	if (g_settings->symmetric_water_competition == 'y')
-	{
-		//Log ("Symmetric water competition\n");
-	}
-	else
-	{
-		//Log ("Asymmetric water competition\n");
-	}
 }
 
 void site_summary(const matrix_t* const m)

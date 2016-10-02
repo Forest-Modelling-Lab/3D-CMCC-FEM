@@ -9,11 +9,11 @@ typedef struct {
 	char version;
 	char spatial;	                  /* must be 's' or 'u' (spatial or unspatial) */
 	char time;		                  /* must be 'm' or 'd' (monthly or daily) */
-	char symmetric_water_competition; /* must be 'y' or 'n' (y = yes for symmetric competition) */
 
 	// ALESSIOR TODO 
 	// REPLACE CHAR FOR ON and OFF
 	// WITH 1 and 0
+	char screen_output[4];
 	char CO2_mod[4];
 	char CO2_fixed[4];
 	char Ndep_fixed[4];

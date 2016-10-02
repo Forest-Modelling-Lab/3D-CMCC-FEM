@@ -67,7 +67,7 @@ settings_t* settings_import(const char *const filename) {
 			break;
 
 		case 3:
-			s->symmetric_water_competition = *token;
+			strncpy(s->screen_output, (const char*)token, 3);
 			break;
 
 		case 4:

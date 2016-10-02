@@ -1,13 +1,5 @@
 /* main.c */
-/*
 
-	TODO:
-
-	-SIMULAZIONI DA bareground
-	-RENDERE DINAMICO IL TREE_LAYER_LIMIT (all'aumentare del dbh aumenta il TREE_LAYER_LIMIT) see Montgomery & Chazdon, 2001)
-	-VERSION FEM AND BGC
-	-RIMETTERE PER L'ACQUA COMPETIZIONE SIMMETRICA
- */
 #include <stdio.h>
 #include <stddef.h>
 #include <stdlib.h>
@@ -169,17 +161,17 @@ static const char msg_usage[]					=	"\nusage:\n"
 #ifdef _WIN32
 		"    -i input directory (i.e.: -i c:\\input\\directory\\)\n"
 		"    -p parameterization directory (i.e.: -i c:\\parameterization\\directory\\)\n"
-		"    -o output filename (i.e.: -o c:\\output\\CMCC.log)\n"
-		"    -b daily output filename (i.e.: -o c:\\output\\daily_CMCC.log)\n"
-		"    -f monthly output filename (i.e.: -o c:\\output\\monthly_CMCC.log)\n"
-		"    -e annual output filename (i.e.: -o c:\\output\\annual_CMCC.log)\n"
+		"    -o output filename (i.e.: -o c:\\output\\3D-CMCC-FEM.log)\n"
+		"    -b daily output filename (i.e.: -o c:\\output\\daily_3D-CMCC-FEM.log)\n"
+		"    -f monthly output filename (i.e.: -o c:\\output\\monthly_3D-CMCC-FEM.log)\n"
+		"    -e annual output filename (i.e.: -o c:\\output\\annual_3D-CMCC-FEM.log)\n"
 #else
 		"    -i input directory (i.e.: -i path/to/input/directory/)\n"
 		"    -p parameterization directory (i.e.: -i path/to/parameterization/directory/)\n"
-		"    -o output filename (i.e.: -o /path/to/CMCC.log)\n"
-		"    -b daily output filename (i.e.: -o /path/to/CMCC.log)\n"
-		"    -f monthly output filename (i.e.: -o /path/to/CMCC.log)\n"
-		"    -e annual output filename (i.e.: -o /path/to/CMCC.log)\n"
+		"    -o output filename (i.e.: -o /path/to/3D-CMCC-FEM.log)\n"
+		"    -b daily output filename (i.e.: -o /path/to/3D-CMCC-FEM.log)\n"
+		"    -f monthly output filename (i.e.: -o /path/to/3D-CMCC-FEM.log)\n"
+		"    -e annual output filename (i.e.: -o /path/to/3D-CMCC-FEM.log)\n"
 #endif
 		"    -d dataset filename stored into input directory (i.e.: -d input.txt)\n"
 		"    -m met filename list stored into input directory (i.e.: -m 1999.txt,2003.txt,2009.txt)\n"
@@ -188,8 +180,6 @@ static const char msg_usage[]					=	"\nusage:\n"
 		"    -c settings filename stored into input directory (i.e.: -c settings.txt)\n"
 		"    -k co2 concentration file (i.e.: -k co2_conc.txt)\n"
 		"    -r output vars list (i.e.: -r output_vars.lst)\n"
-		"    -x disable screen output"
-		"  optional options:\n"
 		"    -h print this help\n"
 		;
 
@@ -242,7 +232,8 @@ static void show_usage(void) {
 	puts(msg_usage);
 }
 
-static int log_start(const char* const sitename) {
+static int log_start(const char* const sitename)
+{
 	struct tm* data;
 	time_t rawtime;
 	char buffer[128]; /* should be enough */
@@ -362,9 +353,16 @@ static int log_start(const char* const sitename) {
 		return 0;
 	}
 
-	logger_disable_std(g_log);
+	/* enabled screen output by default */
+	logger_enable_std(g_log);
+
 	logger(g_log, copyright);
-	if ( ! g_disable_stdout ) logger_enable_std(g_log);
+
+	/* disable screen output when "off" */
+	if ( ! string_compare_i(g_settings->screen_output, "off") )
+	{
+		logger_disable_std(g_log);
+	}
 
 	logger(g_log, sz_launched, netcdf_get_version(), get_datetime());
 
@@ -443,8 +441,10 @@ char* path_copy(const char *const s) {
 /*
 	parse and check passed args
  */
-static int parse_args(int argc, char *argv[]) {
+static int parse_args(int argc, char *argv[])
+{
 	int i;
+
 
 	g_sz_input_path = NULL;
 	g_sz_parameterization_path = NULL;
@@ -508,6 +508,7 @@ static int parse_args(int argc, char *argv[]) {
 				goto err;
 			}
 			g_sz_daily_output_filename = string_copy(argv[i+1]);
+
 			if( ! g_sz_daily_output_filename ) {
 				puts(sz_err_out_of_memory);
 				goto err;
@@ -633,10 +634,6 @@ static int parse_args(int argc, char *argv[]) {
 				goto err;
 			}
 			break;
-
-		case 'x': /* disable stdout */
-			g_disable_stdout = 1;
-		break;
 
 		case 'h': /* show help */
 			goto err_show_usage;
@@ -994,7 +991,6 @@ int main(int argc, char *argv[]) {
 
 						/* summary on soil */
 						soil_summary(matrix, matrix->cells);
-
 
 						if( F == matrix->cells[cell].landuse )
 						{

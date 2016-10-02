@@ -1,7 +1,7 @@
 VERSION "f"     //Must be 'f' for FEM version or 'b', for BGC version for FOREST LANDUSE
 SPATIAL "u"     //Must be 's' or 'u', spatial or unspatial
 TIME "d"        //Must be 'm' or 'd', monthly or daily
-SYMMETRIC_WATER_COMPETITION "y"	//Must be 'y' or 'n',for symmetric or asymmetric water competition
+SCREEN_OUTPUT "off"	//Must be  'on' or 'off'
 CO2_mod "off"    //Must be  'on' or 'off'
 CO2_fixed "on"   //Must be 'on' or 'off'
 Ndep_fixed "on"   //Must be 'on' or 'off'
