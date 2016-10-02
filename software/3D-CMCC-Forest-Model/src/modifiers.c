@@ -21,21 +21,19 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 {
 	double RelAge;
 	/*variables for CO2 modifier computation*/
-	double KmCO2;	                                   /* affinity coefficients temperature dependent according to Arrhenius relationship */
-	double Ea1 = 59400.0; //KJ mol^-1
+	double KmCO2;	                       /* affinity coefficients temperature dependent according to Arrhenius relationship */
+	double Ea1 = 59400.0;                  /* KJ mol^-1 */
 	double A1 = 2.419 * pow(10,13);
-	double Ea2 = 109600.0;	//KJ mol^-1
+	double Ea2 = 109600.0;	               /* KJ mol^-1 */
 	double A2 = 1.976 * pow(10,22);
-	double KO2;	//Inhibition constant for 02
-	double EaKO2 = 13913.5;	//KJ mol^-1
+	double KO2;	                           /* Inhibition constant for 02 */
+	double EaKO2 = 13913.5;                /* KJ mol^-1 */
 	double AKO2 = 8240;
-	double tau;	// CO2/O2  specifity ratio
+	double tau;	                           /* CO2/O2 specifity ratio */
 	double Eatau = -42896.9;
 	double Atau = 7.87 * pow(10,-5);
 	double tairK;
 	double v1, v2;
-
-	static int counter_water_stress;
 
 	age_t *a;
 	species_t *s;
@@ -48,7 +46,6 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	/********************************************************************************************/
 
 	/* CO2 MODIFIER from: Veroustraete et al., 2002, Remote Sensing of Environment */
-	//fixme it can be removed case of on and off for CO2 modifier and leave always as "on"
 	if (!string_compare_i(g_settings->CO2_mod, "on"))
 	{
 		tairK = meteo_daily->tavg + TempAbs;
@@ -67,7 +64,6 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 
 		v1 = (meteo_annual->co2Conc -(O2CONC/(2*tau)))/(refCO2CONC-(O2CONC/(2*tau)));
 		v2 = (KmCO2*(1+(O2CONC/KO2))+refCO2CONC)/(KmCO2*(1+(O2CONC/KO2))+meteo_annual->co2Conc);
-		logger(g_log, "annual [CO2] variable = %f\n", meteo_annual->co2Conc);
 
 		/* compute F_CO2 modifier */
 		s->value[F_CO2] = v1*v2;
@@ -76,11 +72,12 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	{
 		s->value[F_CO2] = 1;
 	}
+	logger(g_log, "annual [CO2] = %f ppmv\n", meteo_annual->co2Conc);
 	logger(g_log, "f_CO2 modifier = %f\n", s->value[F_CO2]);
 
 	/********************************************************************************************/
 
-	/* LIGHT MODIFIER */
+	/* LIGHT MODIFIER (NOT USED) */
 	/* (Following Makela et al , 2008, Peltioniemi_etal_2012) */
 	//FIXME chose which type of light use and differentiate for different layers
 	//following Nolè should be used apar
@@ -98,9 +95,11 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	/* LIGHT MODIFIER (BIOME METHOD) */
 	/* following Biome-BGC */
 	/* photosynthetic photon flux density conductance control */
+
 	/* for sun leaves */
 	s->value[F_LIGHT_SUN] = s->value[PPFD_ABS_SUN] /(PPFD50 + s->value[PPFD_ABS_SUN]);
 	logger(g_log, "f_LIGHT_SUN (BIOME) = %f \n", s->value[F_LIGHT_SUN]);
+
 	/* for shaded leaves */
 	s->value[F_LIGHT_SHADE] = s->value[PPFD_ABS_SHADE] /(PPFD50 + s->value[PPFD_ABS_SHADE]);
 	logger(g_log, "f_LIGHT_SHADE (BIOME) = %f \n", s->value[F_LIGHT_SHADE]);
@@ -250,15 +249,14 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	if (c->psi > s->value[SWPOPEN])
 	{
 		logger(g_log, "no water stress\n");
-		counter_water_stress = 0;
+
 		s->value[F_PSI] = 1.0;
 	}
 	/* full water stress */
 	else if (c->psi <= s->value[SWPCLOSE])
 	{
 		logger(g_log, "complete water stress\n");
-		//change for multiple class
-		counter_water_stress += 1;
+
 		//s->value[F_PSI] = 0.0;
 		logger(g_log, "Water stress\n");
 		logger(g_log, "F_PSI = %f\n", s->value[F_PSI]);
@@ -274,7 +272,6 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	else
 	{
 		logger(g_log, "partial water stress\n");
-		counter_water_stress = 0;
 		s->value[F_PSI] = (s->value[SWPCLOSE] - c->psi)/(s->value[SWPCLOSE] - s->value[SWPOPEN]);
 
 		//test
