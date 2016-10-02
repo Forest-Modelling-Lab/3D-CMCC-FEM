@@ -29,18 +29,8 @@ void nitrogen_stock(species_t *const s)
 	//test CURRENTLY NOT USED
 	/* as in BIOME-BGC nitrogen content in falling leaves is lower */
 	/* deciduous */
-	/* ALESSIOR: COMPLIMENTONI! */
-	if((s->value[PHENOLOGY] == 0.1 /*|| s->value[PHENOLOGY] == 0.1*/) && s->counter[LEAF_FALL_COUNTER] == 1)
+	if((s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2) && s->counter[LEAF_FALL_COUNTER] == 1)
 	{
-
-		/* ALESSIOR: COMPLIMENTONI AGAIN!
-
-			SAME CONDITIONAL STUFF
-		
-		*/
-
-
-
 		/* outside leaf fall*/
 		if(!s->counter[LEAF_FALL_COUNTER])
 		{
@@ -50,14 +40,20 @@ void nitrogen_stock(species_t *const s)
 		/* during leaf fall */
 		else
 		{
-			s->value[LEAF_N] = (s->value[LEAF_C] * 1000000.0 /g_settings->sizeCell) / s->value[CN_FALLING_LEAVES];
+			//ALESSIOC todo todo todo considering a reduction in leaf nitrogen for falling leaves
+			//currently I don't know how to tell to the model the amount of falling leaves
+			//should be something like that using "LEAF_FALLING_C"
+			//s->value[LEAF_N] = (s->value[LEAF_FALLING_C] * 1000000.0 /g_settings->sizeCell) / s->value[CN_FALLING_LEAVES];
 			logger(g_log, "Leaf falling nitrogen content = %f gN/m2\n", s->value[LEAF_N]);
 		}
 	}
-	/* evergreen */ //ALESSIOC todo todo todo considering a reduction in leaf nitrogen for falling leaves
+	/* evergreen */
 	else
 	{
-
+		//ALESSIOC todo todo todo considering a reduction in leaf nitrogen for falling leaves
+		//currently I don't know how to tell to the model the amount of falling leaves
+		//should be something like that using "LEAF_FALLING_C"
+		//s->value[LEAF_N] = (s->value[LEAF_FALLING_C] * 1000000.0 /g_settings->sizeCell) / s->value[CN_FALLING_LEAVES];
 	}
 
 	s->value[LEAF_N] = s->value[LEAF_C] / s->value[CN_LEAVES];

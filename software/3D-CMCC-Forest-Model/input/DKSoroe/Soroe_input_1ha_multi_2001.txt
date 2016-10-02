@@ -1,8 +1,0 @@
-x,y,Landuse,Age,Species,Management,N,Stool,AvDBH,Height,Wf,Wrc,Wrf,Ws,Wbb,Wres,Lai
-0,0,F,80,Fagussylvatica,T,30,0,7.29,8,0,0,0,0,0,0,0
-0,0,F,80,Fagussylvatica,T,63,0,10.07,11,0,0,0,0,0,0,0
-0,0,F,80,Fagussylvatica,T,28,0,18.05,17,0,0,0,0,0,0,0
-0,0,F,80,Fagussylvatica,T,64,0,27.78,22,0,0,0,0,0,0,0
-0,0,F,80,Fagussylvatica,T,115,0,36.13,26,0,0,0,0,0,0,0
-0,0,F,80,Fagussylvatica,T,25,0,43.57,27,0,0,0,0,0,0,0
-0,0,F,80,Fagussylvatica,T,4,0,48.08,29,0,0,0,0,0,0,0

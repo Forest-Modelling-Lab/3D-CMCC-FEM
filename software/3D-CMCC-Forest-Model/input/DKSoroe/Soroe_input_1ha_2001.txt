@@ -1,2 +1,0 @@
-x,y,Landuse,Age,Species,Management,N,Stool,AvDBH,Height,Wf,Wrc,Wrf,Ws,Wbb,Wres,Lai
-0,0,F,80,Fagussylvatica,T,300,0,36.13,25,0,0,0,0,0,0,0
