@@ -137,7 +137,7 @@ static char copyright[] =
 		"-Collalti et al., 2014 Ecological Modelling,\n"
 		"-Collalti et al., 2016 Geoscientific Model Development\n"
 		"--------------------------------------------------------------------------------\n"
-;
+		;
 
 static const char msg_input_path[]				=	"input path = %s\n";
 static const char msg_parameterization_path[]	=	"parameterization path = %s\n";
@@ -290,7 +290,8 @@ static int log_start(const char* const sitename)
 	sprintf(buffer_2, "%d", data->tm_mday);
 	strcat(buffer, buffer_2);
 
-	if ( ! string_compare_i(g_settings->dndc, "on") ) {
+	if ( ! string_compare_i(g_settings->dndc, "on") )
+	{
 		strcat(buffer, "_");
 		strcat(buffer, "DNDC");
 	}
@@ -727,6 +728,7 @@ int main(int argc, char *argv[]) {
 	int prog_ret;
 	int flag;
 	int start_year;
+	double timer;
 	double start_timer;
 	double end_timer;
 	matrix_t* matrix;
@@ -1027,7 +1029,7 @@ int main(int argc, char *argv[]) {
 					}
 					else
 					{
-						/* include other land use */
+						/* include other land use ???? */
 					}
 				}
 			}
@@ -1051,30 +1053,26 @@ int main(int argc, char *argv[]) {
 					{
 						if ( 'f' == g_settings->version )
 						{
-							//fixme code must stops when trees = 0
-//							if ( matrix->cells[cell].cell_n_trees > 0 )
-//							{
-								if ( !Tree_model_daily( matrix, cell, day, month, year ) )
+							if ( !Tree_model_daily( matrix, cell, day, month, year ) )
+							{
+								logger(g_log, "tree model daily failed!!!");
+							}
+							else
+							{
+								puts( msg_ok_tree_model );
+
+								if (!string_compare_i ( g_settings->dndc, "on" ) )
 								{
-									logger(g_log, "tree model daily failed!!!");
+									logger(g_log, "RUNNING DNDC.....\n");
+									//soil_dndc_sgm (matrix, cell, year, month, day, years_of_simulation);
+									//soil_dndc......................................
 								}
 								else
 								{
-									puts( msg_ok_tree_model );
-
-									if (!string_compare_i ( g_settings->dndc, "on" ) )
-									{
-										logger(g_log, "RUNNING DNDC.....\n");
-										//soil_dndc_sgm (matrix, cell, year, month, day, years_of_simulation);
-										//soil_dndc......................................
-									}
-									else
-									{
-										//logger(g_log, "No soil simulation!!!\n");
-									}
-									get_net_ecosystem_exchange(&matrix->cells[cell]);
+									//logger(g_log, "No soil simulation!!!\n");
 								}
-//							}
+								get_net_ecosystem_exchange(&matrix->cells[cell]);
+							}
 						}
 						else
 						{
@@ -1334,7 +1332,7 @@ int main(int argc, char *argv[]) {
 	/* ok ! */
 	prog_ret = 0;
 
-err:
+	err:
 	/* close logger */
 	logger_close(g_soil_log); g_soil_log = NULL;
 	logger_close(g_annual_log); g_annual_log = NULL;
@@ -1359,7 +1357,8 @@ err:
 	free(g_sz_soil_file); g_sz_soil_file = NULL;
 
 	end_timer = timer_get();
-	printf("%.2f secs elapsed\n", end_timer - start_timer);
+	timer = end_timer - start_timer;
+	printf("%.2f secs %.2f mins %.2f hours elapsed\n", timer, timer / 60.0, timer / 3600.0);
 
 	return prog_ret;
 }
