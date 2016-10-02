@@ -1356,6 +1356,7 @@ int main(int argc, char *argv[]) {
 	free(g_sz_topo_file); g_sz_topo_file = NULL;
 	free(g_sz_soil_file); g_sz_soil_file = NULL;
 
+	/* timer */
 	end_timer = timer_get();
 	timer = end_timer - start_timer;
 	printf("%.2f secs %.2f mins %.2f hours elapsed\n", timer, timer / 60.0, timer / 3600.0);
