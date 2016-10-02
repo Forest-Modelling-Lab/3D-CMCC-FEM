@@ -1092,8 +1092,8 @@ int main(int argc, char *argv[]) {
 						//	/	soil_model (matrix, yos, years, month, years_of_simulation);
 						//}
 					}
-					//ALESSIOC
 					/************************************************************************/
+					/* run for soil model */
 					if ( !Soil_model_daily(matrix, cell, day, month, year) )
 					{
 						logger(g_log, "soil model daily failed!!!");
@@ -1102,12 +1102,8 @@ int main(int argc, char *argv[]) {
 					{
 						puts(msg_ok_soil_model);
 					}
-
-					/*************************************************************************/
-
-					//ALESSIOC
 					/************************************************************************/
-
+					/* run for cell model */
 					if ( !Cell_model_daily(matrix, cell, day, month, year) )
 					{
 						logger(g_log, "cell model daily failed!!!");
