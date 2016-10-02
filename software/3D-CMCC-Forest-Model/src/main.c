@@ -490,7 +490,7 @@ static int parse_args(int argc, char *argv[])
 			}
 			break;
 
-		case 'o': /* debug file path */
+		case 'o': /* debug output file path */
 			if ( ! argv[i+1] ) {
 				puts("debug file path not specified!");
 				goto err;
@@ -502,7 +502,7 @@ static int parse_args(int argc, char *argv[])
 			}
 			break;
 
-		case 'b': /* daily file path */
+		case 'b': /* daily output file path */
 			if ( ! argv[i+1] ) {
 				puts("daily file not specified!");
 				goto err;
@@ -515,7 +515,7 @@ static int parse_args(int argc, char *argv[])
 			}
 			break;
 
-		case 'f': /* monthly file path */
+		case 'f': /* monthly output file path */
 			if ( ! argv[i+1] ) {
 				puts("monthly file not specified!");
 				goto err;
@@ -527,7 +527,7 @@ static int parse_args(int argc, char *argv[])
 			}
 			break;
 
-		case 'e': /* yearly file path */
+		case 'e': /* yearly output file path */
 			if ( ! argv[i+1] ) {
 				puts("annual file not specified!");
 				goto err;
@@ -539,7 +539,7 @@ static int parse_args(int argc, char *argv[])
 			}
 			break;
 
-		case 'n': /* soil file path */
+		case 'n': /* soil output file path */
 			if ( ! argv[i+1] ) {
 				puts("soil file not specified!");
 				goto err;
@@ -611,7 +611,7 @@ static int parse_args(int argc, char *argv[])
 			}
 			break;
 
-		case 'k': /* settings file */
+		case 'k': /* co2 file */
 			if ( ! argv[i+1] ) {
 				puts("co2 conc file not specified!");
 				goto err;
@@ -763,7 +763,7 @@ int main(int argc, char *argv[]) {
 	/* show banner */
 	printf(banner, netcdf_get_version());
 
-	/* parse args */
+	/* parse arguments */
 	printf("parsing arguments...");
 	if ( ! parse_args(argc, argv) ) {
 		return 1;
