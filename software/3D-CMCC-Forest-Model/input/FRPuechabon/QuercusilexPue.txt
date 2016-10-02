@@ -122,18 +122,11 @@ CRC 1.104
 HDMAX   1.71             //Height to Base diameter ratio MAX  (Portoghesi)
 HDMIN   0.2             //Height to Base diameter ratio MIN  (Portoghesi)
 
-//SEEDS PRODUCTION
-ADULT_AGE   5   //age at which consider tree as an adult tree
 MAXSEED 20000           //numero massimo semi prodotti dalla pianta (da TREEMIG) 
 MASTSEED    5       //ricorrenza anni di pasciona (da TREEMIG) 
 WEIGHTSEED  7       //peso frutto in g FOR Quercus sp (Bernetti)
 SEXAGE  30              //Age at Sexual Maturity FOR Quercus sp (per Bernetti 75)
 GERMCAPACITY    0.70    //Geminability (Lischke H. & Loffler T. J.)
-MINTEMP 20              //Minimum temperature for germination in °C
-ESTMAX  0.24            //Potential Establishment rate in the absence of competition
-//SEEDS PRODUCTION FROM LPJ
-FRACFRUIT   0.05    //Fraction of NPP to Fruit Production
-
 
 //MANAGMENT
 ROTATION    100     //Forest Rotation for Managment (Q. cerris)

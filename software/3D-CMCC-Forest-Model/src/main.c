@@ -89,7 +89,6 @@ char 	*g_sz_program_path = NULL
 		;
 
 static int years_of_simulation;	// default is none
-static int g_disable_stdout;
 
 /* strings */
 const char sz_launched[] = "\n"PROGRAM_NAME"\n"

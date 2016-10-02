@@ -125,17 +125,11 @@ CRC 5.5289  //for Picea abies from Pommerening et al., 2011 ????
 HDMAX   0.95             //Height to Base diameter ratio MAX  for Picea abies Seidl et al., 2012
 HDMIN   0.47             //Height to Base diameter ratio MIN  for Picea abies Seidl et al., 2012
 
-//SEEDS PRODUCTION
-ADULT_AGE   5   //age at which consider tree as an adult tree
 MAXSEED 20000           //numero massimo semi prodotti dalla pianta (da TREEMIG) FOR Quercus sp
 MASTSEED    5       //ricorrenza anni di pasciona (da TREEMIG) FOR Quercus sp (Bernetti)
 WEIGHTSEED  7       //peso frutto in g FOR Quercus sp (Bernetti)
 SEXAGE  30              //Age at Sexual Maturity FOR Quercus sp (per Bernetti 75)
 GERMCAPACITY    0.70    //Geminability (Lischke H. & Loffler T. J.)
-MINTEMP 20              //Minimum temperature for germination in °C
-ESTMAX  0.24            //Potential Establishment rate in the absence of competition
-//SEEDS PRODUCTION FROM LPJ
-FRACFRUIT   0.05    //Fraction of NPP to Fruit Production
 
 
 //MANAGMENT

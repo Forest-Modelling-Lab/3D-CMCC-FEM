@@ -124,17 +124,11 @@ CRC 0.99  //for P. sylvestris from Rupsys et al., 2010
 HDMAX   1.47             //Height to Base diameter ratio MAX  for P. sylvestris Vorspernik et al 2010, For Ecol Manag average value between 1.56 and 1.38 see also Tahvanainem and Forss, 2008 (2.03)
 HDMIN   0.47             //Height to Base diameter ratio MIN  for P. sylvestris Vorspernik et al 2010, For Ecol Manag average value between 0.4 and 0.543 see also Tahvanainem and Forss, 2008  (4.0)
 
-//SEEDS PRODUCTION
-ADULT_AGE   5   //age at which consider tree as an adult tree
 MAXSEED 20000           //numero massimo semi prodotti dalla pianta (da TREEMIG) FOR Quercus sp
 MASTSEED    5       //ricorrenza anni di pasciona (da TREEMIG) FOR Quercus sp (Bernetti)
 WEIGHTSEED  7       //peso frutto in g FOR Quercus sp (Bernetti)
 SEXAGE  30              //Age at Sexual Maturity FOR Quercus sp (per Bernetti 75)
 GERMCAPACITY    0.70    //Geminability (Lischke H. & Loffler T. J.)
-MINTEMP 20              //Minimum temperature for germination in °C
-ESTMAX  0.24            //Potential Establishment rate in the absence of competition
-//SEEDS PRODUCTION FROM LPJ
-FRACFRUIT   0.05    //Fraction of NPP to Fruit Production
 
 
 //MANAGMENT

@@ -118,18 +118,11 @@ CRC ?
 HDMAX   ?             //Height to Base diameter ratio MAX  
 HDMIN   ?             //Height to Base diameter ratio MIN  
 
-//SEEDS PRODUCTION
-ADULT_AGE   -9999   //age at which consider tree as an adult tree
 MAXSEED -9999           //numero massimo semi prodotti dalla pianta (da TREEMIG) 
 MASTSEED    -9999       //ricorrenza anni di pasciona (da TREEMIG) 
 WEIGHTSEED  -9999       //peso frutto in g 
 SEXAGE  -9999              //Age at Sexual Maturity 
 GERMCAPACITY    -9999    //Geminability
-MINTEMP -9999              //Minimum temperature for germination in °C
-ESTMAX  -9999            //Potential Establishment rate in the absence of competition
-//SEEDS PRODUCTION FROM LPJ
-FRACFRUIT   -9999    //Fraction of NPP to Fruit Production
-
 
 //MANAGMENT
 ROTATION    140         //Forest Rotation for harvesting see Schuetz 2006; Mund et al., 2004; Hein and Dhote 2006; Cescatti and Piutti 1998

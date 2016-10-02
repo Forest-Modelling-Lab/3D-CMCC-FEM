@@ -677,103 +677,101 @@ static dataset_t* dataset_import_txt(const char* const filename) {
 
 /* ------- end dataset stuff ------- */
 
-/* NON CAMBIARE IL LORO ORDINE */
-static const char *sz_species_values[] = {
-		/*valori relativi alla specie*/
 
-		"LIGHT_TOL",                  //light Tolerance
-		"PHENOLOGY",				//PHENOLOGY 0.1 = deciduous broadleaf, 0.2 = deciduous needle leaf, 1.1 = broad leaf evergreen, 1.2 = needle leaf evergreen
-		"ALPHA",                      // Canopy quantum efficiency (molC/molPAR)
-		"EPSILONgCMJ",               // Light Use Efficiency  (gC/MJ)(used if ALPHA is not available)
-		"K",                          //Extinction coefficient for absorption of PAR by canopy for Quercus cerris L. (A. Cutini, Ann Sci For, 1996)
-		"ALBEDO",
-		"GAMMA_LIGHT",
-		"INT_COEFF",                  //Precipitation interception coefficient
-		"SLA_AVG",                    //AVERAGE Specific Leaf Area m^2/KgC for sunlit/shaded leaves
-		"SLA_RATIO",                  //(DIM) ratio of shaded to sunlit projected SLA
-		"LAI_RATIO",                  //(DIM) all-sided to projected leaf area ratio
-		"FRACBB0",                    //Branch and Bark fraction at age 0 (m^2/kg)
-		"FRACBB1",                    //Branch and Bark fraction for mature stands (m^2/kg)
-		"TBB",                        //Age at which fracBB = (FRACBB0 + FRACBB1 )/ 2
-		"RHOMIN",                     //Minimum Basic Density for young Trees
-		"RHOMAX",                     //Maximum Basic Density for young Trees (Ferrara-Nolè)
-		"TRHO",                       //Age at which rho = (RHOMIN + RHOMAX )/2
-		"COEFFCOND",                  //Define stomatal responsee to VPD in m/sec
-		"BLCOND",                     //Canopy Boundary Layer conductance
-		"MAXCOND",                    //Maximum leaf Conductance in m/sec
-		"CUTCOND",                    //cuticular conductance in m/sec
-		"MAXAGE",
-		"RAGE",                       //Relative Age to give fAGE = 0.5
-		"NAGE",                       //Power of relative Age in function for Age
-		"MAXAGE_S",
-		"RAGE_S",                       //Relative Age to give fAGE = 0.5
-		"NAGE_S",                       //Power of relative Age in function for Age
-		"GROWTHTMIN",                 //Minimum temperature for growth
-		"GROWTHTMAX",                 //Maximum temperature for growth
-		"GROWTHTOPT",                 //Optimum temperature for growth
-		"GROWTHSTART",                //Thermic sum  value for starting growth in °C
-		"MINDAYLENGTH",               //minimum day length for phenology
-		"SWPOPEN",
-		"SWPCLOSE",
-		"SWCONST",                    //Costant in Soil Water modifier vs Moist Ratio
-		"SWPOWER",                    //Power in Soil Water modifier vs Moist Ratio
-		"OMEGA_CTEM",                        //ALLOCATION PARAMETER
-		"S0CTEM",                           //PARAMETER CONTROLLING ALLOCATION TO STEM
-		"R0CTEM",                           //PARAMETER CONTROLLING ALLOCATION TO ROOT
-		"F0CTEM",                           //PARAMETER CONTROLLING ALLOCATION TO FOLIAGE
-		"MIN_R0CTEM",                       //MINIMUM RATE TO ROOT AT THE FIRST YEAR AFTER COPPICING
-		"MAX_S0CTEM",                       //MAXIMUM RATE TO STEM AT THE FIRST YEAR AFTER COPPICING
-		"YEARS_FOR_CONVERSION",        //years from coppicing to consider tree as a timber
-		"FRUIT_PERC",
-		"CONES_LIFE_SPAN",
-		"FINE_ROOT_LEAF",	//allocation new fine root C:new leaf (ratio)
-		"STEM_LEAF",		//allocation new stem C:new leaf (ratio)
-		"COARSE_ROOT_STEM",	//allocation new coarse root C:new stem (ratio)
-		"LIVE_TOTAL_WOOD",	//allocation new live wood C:new total wood C (ratio)
-		"CN_LEAVES",          //CN of leaves (kgC/kgN)
-		"CN_FALLING_LEAVES",  //CN of leaf litter (kgC/kgN)
-		"CN_FINE_ROOTS",      //CN of fine roots (kgC/kgN)
-		"CN_LIVE_WOODS",      //CN of live woods (kgC/kgN)
-		"CN_DEAD_WOODS",      //CN of dead woods (kgC/kgN)
-		"BUD_BURST",					//days of bud burst at the beginning of growing season (only for deciduous)
-		"LEAF_FALL_FRAC_GROWING",		//proportions of the growing season of leaf fall
-		"LEAF_FINEROOT_TURNOVER",             //Average yearly leaves and fine root turnover rate
-		"LIVE_WOOD_TURNOVER",             //Average yearly live wood turnover rate
-		"DBHDCMAX",                   //Low Density
-		"DBHDCMIN",                   //High Density
-		"SAP_A",                      //a coefficient for sapwood
-		"SAP_B",                      //b coefficient for sapwood
-		"SAP_LEAF",                   //sapwood_max leaf area ratio in pipe model
-		"SAP_WRES",					  //Sapwood-Reserve biomass ratio used if no Wres data are available
-		"HMAX",                       //Max Height in m
-		"DMAX",                       //Max Diameter in cm
-		"HPOWER",                     //Slope of Asymptotic Height from Sortie
-		"RPOWER",                     //Slope of Asymptotic Crown-Radius from Sortie
+static const char *sz_species_values[] =
+{
+		/* SPECIES-SPECIFIC ECO-PHYSIOLOGICAL PARAMETER VALUES */
+		/* NOTE: DON'T CHANGE THEIR ORDER!! */
+
+		"LIGHT_TOL",                  /* Light Tolerance */
+		"PHENOLOGY",                  /* PHENOLOGY 0.1 = deciduous broadleaf, 0.2 = deciduous needle leaf, 1.1 = broad leaf evergreen, 1.2 = needle leaf evergreen*/
+		"ALPHA",                      /* Canopy quantum efficiency (molC/molPAR) */
+		"EPSILONgCMJ",                /* Light Use Efficiency  (gC/MJ)(used if ALPHA is not available) */
+		"K",                          /* Extinction coefficient for absorption of PAR by canopy */
+		"ALBEDO",                     /* Canopy albedo */
+		"GAMMA_LIGHT",                /* Value for Light modifier */
+		"INT_COEFF",                  /* Precipitation interception coefficient */
+		"SLA_AVG",                    /* AVERAGE Specific Leaf Area m^2/KgC for sunlit/shaded leaves */
+		"SLA_RATIO",                  /* (DIM) ratio of shaded to sunlit projected SLA */
+		"LAI_RATIO",                  /* (DIM) all-sided to projected leaf area ratio */
+		"FRACBB0",                    /* Branch and Bark fraction at age 0 (m^2/kg) */
+		"FRACBB1",                    /* Branch and Bark fraction for mature stands (m^2/kg) */
+		"TBB",                        /* Age at which fracBB = (FRACBB0 + FRACBB1 )/ 2 */
+		"RHOMIN",                     /* Minimum Basic Density for young Trees */
+		"RHOMAX",                     /* Maximum Basic Density for young Trees */
+		"TRHO",                       /* Age at which rho = (RHOMIN + RHOMAX )/2 */
+		"COEFFCOND",                  /* Define stomatal responsee to VPD in m/sec */
+		"BLCOND",                     /* Canopy Boundary Layer conductance */
+		"MAXCOND",                    /* Maximum leaf Conductance in m/sec */
+		"CUTCOND",                    /* Cuticular conductance in m/sec */
+		"MAXAGE",                     /* Maximum tree age */
+		"RAGE",                       /* Relative Age to give fAGE = 0.5 */
+		"NAGE",                       /* Power of relative Age in function for Age */
+		"MAXAGE_S",                   /* Maximum age for coppice */
+		"RAGE_S",                     /* Relative Age to give fAGE = 0.5 */
+		"NAGE_S",                     /* Power of relative Age in function for Age */
+		"GROWTHTMIN",                 /* Minimum temperature for growth */
+		"GROWTHTMAX",                 /* Maximum temperature for growth */
+		"GROWTHTOPT",                 /* Optimum temperature for growth */
+		"GROWTHSTART",                /* Thermic sum  value for starting growth in °C */
+		"MINDAYLENGTH",               /* Minimum day length for phenology */
+		"SWPOPEN",                    /* Soil water potential open */
+		"SWPCLOSE",                   /* Soil water potential close */
+		"SWCONST",                    /* Costant in Soil Water modifier vs Moist Ratio */
+		"SWPOWER",                    /* Power in Soil Water modifier vs Moist Ratio */
+		"OMEGA_CTEM",                 /* ALLOCATION PARAMETER */
+		"S0CTEM",                     /* PARAMETER CONTROLLING ALLOCATION TO STEM */
+		"R0CTEM",                     /* PARAMETER CONTROLLING ALLOCATION TO ROOT */
+		"F0CTEM",                     /* PARAMETER CONTROLLING ALLOCATION TO FOLIAGE */
+		"MIN_R0CTEM",                 /* MINIMUM RATE TO ROOT AT THE FIRST YEAR AFTER COPPICING */
+		"MAX_S0CTEM",                 /* MAXIMUM RATE TO STEM AT THE FIRST YEAR AFTER COPPICING */
+		"YEARS_FOR_CONVERSION",       /* years from coppicing to consider tree as a timber */
+		"FRUIT_PERC",                 /* percentage of npp to fruit */
+		"CONES_LIFE_SPAN",            /* cone life span */
+		"FINE_ROOT_LEAF",             /* allocation new fine root C:new leaf (ratio) */
+		"STEM_LEAF",                  /* allocation new stem C:new leaf (ratio) */
+		"COARSE_ROOT_STEM",           /* allocation new coarse root C:new stem (ratio) */
+		"LIVE_TOTAL_WOOD",            /* allocation new live wood C:new total wood C (ratio) */
+		"CN_LEAVES",                  /* CN of leaves (kgC/kgN) */
+		"CN_FALLING_LEAVES",          /* CN of leaf litter (kgC/kgN) */
+		"CN_FINE_ROOTS",              /* CN of fine roots (kgC/kgN) */
+		"CN_LIVE_WOODS",              /* CN of live woods (kgC/kgN) */
+		"CN_DEAD_WOODS",              /* CN of dead woods (kgC/kgN) */
+		"BUD_BURST",                  /* days of bud burst at the beginning of growing season (only for deciduous) */
+		"LEAF_FALL_FRAC_GROWING",     /* proportions of the growing season of leaf fall */
+		"LEAF_FINEROOT_TURNOVER",     /* Average yearly leaves and fine root turnover rate */
+		"LIVE_WOOD_TURNOVER",         /* Average yearly live wood turnover rate */
+		"DBHDCMAX",                   /* Low Density */
+		"DBHDCMIN",                   /* High Density */
+		"SAP_A",                      /* a coefficient for sapwood */
+		"SAP_B",                      /* b coefficient for sapwood */
+		"SAP_LEAF",                   /* sapwood_max leaf area ratio in pipe model */
+		"SAP_WRES",                   /* Sapwood-Reserve biomass ratio used if no Wres data are available */
+		"HMAX",                       /* Max Height in m */
+		"DMAX",                       /* Max Diameter in cm */
+		"HPOWER",                     /* Slope of Asymptotic Height from Sortie */
+		"RPOWER",                     /* Slope of Asymptotic Crown-Radius from Sortie */
 		"b_RPOWER",
-		"CHPOWER",                    //Slope of Asymptotic Crown-Height from Sortie
-		"b_CHPOWER",
+		"CHPOWER",                    /* Slope of Asymptotic Crown-Height from Sortie */
+		"b_CHPOWER",                  /* parameter for Sortie function */
 		"STEMCONST_P",
 		"STEMPOWER_P",
-		"CRA",
-		"CRB",
-		"CRC",
-		"HDMAX",                      //Height to Base diameter ratio MAX
-		"HDMIN",                      //Height to Base diameter ratio MIN
-		"ADULT_AGE",
-		"MAXSEED",                    //numero massimo semi prodotti dalla pianta (da TREEMIG)
-		"MASTSEED",                   //ricorrenza anni di pasciona (da TREEMIG)
-		"WEIGHTSEED",                 //peso frutto in g
-		"SEXAGE",
-		"GERMCAPACITY",               //Geminability (Lischke H. & Loffler T. J.)
-		"MINTEMP",                    //Minimum temperature for germination in °C
-		"ESTMAX",                     //Potential Establishment rate in the absence of competition
-		"FRACFRUIT",                  //Fraction of NPP to Fruit Production
+		"CRA",                        /* Chapman-Richards maximum height */
+		"CRB",                        /* Chapman_Richards b parameter */
+		"CRC",                        /* Chapman_Richards c parameter */
+		"HDMAX",                      /* Height to Base diameter ratio MAX */
+		"HDMIN",                      /* Height to Base diameter ratio MIN */
+		"MAXSEED",                    /* numero massimo semi prodotti dalla pianta (da TREEMIG) */
+		"MASTSEED",                   /* ricorrenza anni di pasciona (da TREEMIG) */
+		"WEIGHTSEED",                 /* fruit wiight in g */
+		"SEXAGE",                     /* Age for sexual maturity */
+		"GERMCAPACITY",               /* Geminability */
 		"ROTATION",                   /* rotation for final harvest (based on tree age) */
 		"THINNING",                   /* thinning regime (based on year simulation) */
 		"THINNING_REGIME",            /* thinning regime (0 = above, 1 = below) */
-		"MINAGEMANAG",
-		"MINDBHMANAG",                //Minimum DBH for Management
-		"AV_SHOOT",                   //Average number of shoots produced after coppicing
+		"MINAGEMANAG",                /* Minimum age for Management */
+		"MINDBHMANAG",                /* Minimum DBH for Management */
+		"AV_SHOOT",                   /* Average number of shoots produced after coppicing */
 };
 
 /* error strings */

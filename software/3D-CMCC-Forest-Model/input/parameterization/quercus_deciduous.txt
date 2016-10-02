@@ -123,18 +123,11 @@ CRC 1.074     // 1.074 value deducted from fitting Yuste 2005 values with Chapma
 HDMAX   2.5             //Height to Base diameter ratio MAX  for Q. robur 2.5 from Bellio and Pividori, 2009
 HDMIN   0.4             //Height to Base diameter ratio MIN  for Q. robur 0.4 from Bellio and Pividori, 2009
 
-//SEEDS PRODUCTION
-ADULT_AGE   5   //age at which consider tree as an adult tree
 MAXSEED 20000           //numero massimo semi prodotti dalla pianta (da TREEMIG) FOR Quercus sp
 MASTSEED    5       //ricorrenza anni di pasciona (da TREEMIG) FOR Quercus sp (Bernetti)
 WEIGHTSEED  7       //peso frutto in g FOR Quercus sp (Bernetti)
 SEXAGE  30              //Age at Sexual Maturity FOR Quercus sp (per Bernetti 75)
 GERMCAPACITY    0.70    //Geminability (Lischke H. & Loffler T. J.)
-MINTEMP 20              //Minimum temperature for germination in °C
-ESTMAX  0.24            //Potential Establishment rate in the absence of competition
-//SEEDS PRODUCTION FROM LPJ
-FRACFRUIT   0.05    //Fraction of NPP to Fruit Production
-
 
 //MANAGMENT
 ROTATION    200         //Forest Rotation for harvesting 
