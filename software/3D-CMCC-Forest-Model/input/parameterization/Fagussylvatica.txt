@@ -31,8 +31,8 @@ GROWTHTMAX  35          //Maximum temperature for growth 40 from Williams 1996 3
 GROWTHTOPT  20          //Optimum temperature for growth 19.4 Rasse et al 2001, 20 from Lyr & Garbe, 1994
 GROWTHSTART 100         //(5 °C)average temperature or (GDD) thermic sum for starting growth in °C 130 ettore with t base = 5°C
 MINDAYLENGTH    12      //minimum day length for fagus from ettore, 12 through satellite images
-SWPOPEN -0.34           //for Fagus sylvatica -0.6 Mollicone et al., 2002
-SWPCLOSE    -1.7        //For Fagus sylvatica -2.3 Mollicone et al., 2002
+SWPOPEN -0.34           //Leaf water potential: start of reduction for Fagus sylvatica -0.6 Mollicone et al., 2002
+SWPCLOSE    -1.7        //Leaf water potential: complete reduction for Fagus sylvatica -2.3 Mollicone et al., 2002
 SWCONST 1 //1           //Constant in Soil Water modifier vs Moist Ratio
 SWPOWER 5 //5           //Power in Soil Water modifier vs Moist Ratio
 OMEGA_CTEM  0.8         //ALLOCATION PARAMETER control the sensitivity of allocation to changes in water and light availability
@@ -82,9 +82,9 @@ MASTSEED    5           //ricorrenza anni di pasciona (da TREEMIG) (NOT USED)
 WEIGHTSEED  7           //peso frutto in g FOR Quercus sp (Bernetti) 3.5 from Williams 1996 
 SEXAGE  30              //Age at Sexual Maturity FOR Quercus sp (per Bernetti 75)
 GERMCAPACITY    0.70    //Geminability (Lischke H. & Loffler T. J.) 0.286 from Williams 1996 
-ROTATION    140         //Forest Rotation for harvesting see Schuetz 2006; Mund et al., 2004; Hein and Dhote 2006; Cescatti and Piutti 1998
-THINNING     15         //Thinning (years)
-THINNING_REGIME    0    //Thinning regime (0 = above, 1 = below)
+ROTATION    140         //Forest Rotation for harvesting for Q. robur from ISIMIP protocol see Schuetz 2006; Mund et al., 2004; Hein and Dhote 2006; Cescatti and Piutti 1998
+THINNING     15         //Thinning (years) for Q. robur from ISIMIP protocol
+THINNING_REGIME    0    //Thinning regime (0 = above, 1 = below) for Q. robur from ISIMIP protocol
 MINAGEMANAG -9999       //Minimum age for Managment 
 MINDBHMANAG -9999       //Minimum DBH for Managment
 AV_SHOOT    -9999       //average number of shoot after cut
