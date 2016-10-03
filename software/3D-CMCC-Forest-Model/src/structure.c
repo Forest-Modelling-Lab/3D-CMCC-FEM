@@ -123,6 +123,11 @@ int annual_forest_structure(cell_t* const c)
 
 	int zeta_count = 0;
 
+	double temp_crown_area;
+	double temp_crown_radius;
+	double temp_crown_diameter;
+
+
 	height_t *h;
 	dbh_t *d;
 	age_t *a;
@@ -297,10 +302,12 @@ int annual_forest_structure(cell_t* const c)
 
 							logger(g_log,"-layer = %d layer density = %g height = %g dbh = %g age = %d species = %s\n", layer,c->tree_layers[layer].layer_density, h->value, d->value, a->value, s->name);
 
+							/************************************************************************************************************************/
+							/* note: 04 Oct 2016 still USEFULL ?????*/
 							/* compute potential maximum and minimum density for DBHDC function */
-							potential_max_min_density ( c );
-
+							//potential_max_min_density ( c );
 							/* compute effective dbh/crown diameter */
+							/*
 							s->value[DBHDC_EFF] = ((s->value[DBHDCMIN] - s->value[DBHDCMAX]) / (s->value[DENMAX] - s->value[DENMIN]) *
 									(c->tree_layers[layer].layer_density - s->value[DENMIN]) + s->value[DBHDCMAX]);
 							logger(g_log,"-DENMAX = %g\n", s->value[DENMAX]);
@@ -308,20 +315,43 @@ int annual_forest_structure(cell_t* const c)
 							logger(g_log,"-DBHDCMAX = %g\n", s->value[DBHDCMAX]);
 							logger(g_log,"-DBHDCMIN = %g\n", s->value[DBHDCMIN]);
 							logger(g_log,"-DBHDC effective = %g\n", s->value[DBHDC_EFF]);
+							*/
+
+							/************************************************************************************************************************/
+							/* note: 04 Oct 2016 */
+							/* compute potential maximum and minimum density for DBHDC function */
+							/* new DBHDC function */
+							/* this function in mainly based on the assumptions that trees tend to occupy */
+							/* all space they can, if they cannot then fixed values constrain their crown */
+
+							temp_crown_area = g_settings->sizeCell / (c->tree_layers[layer].layer_density * g_settings->sizeCell);
+
+							temp_crown_radius = sqrt(temp_crown_area / Pi);
+
+							temp_crown_diameter = temp_crown_radius * 2.;
+
+							s->value[DBHDC_EFF] = temp_crown_diameter / d->value;
+							logger(g_log,"-DBHDC effective = %g\n", s->value[DBHDC_EFF]);
+							logger(g_log,"-DBHDCMAX = %g\n", s->value[DBHDCMAX]);
+							logger(g_log,"-DBHDCMIN = %g\n", s->value[DBHDCMIN]);
+
+							/************************************************************************************************************************/
 
 							/* check */
 							if (s->value[DBHDC_EFF] > s->value[DBHDCMAX])
 							{
-								logger(g_log,"-DBHDC effective > DBHDCMAX\n");
+								logger(g_log,"-DBHDC effective (%g) > DBHDCMAX (%g) \n", s->value[DBHDC_EFF] , s->value[DBHDCMAX]);
 								s->value[DBHDC_EFF] = s->value[DBHDCMAX];
 								logger(g_log,"-DBHDC effective = %g\n", s->value[DBHDC_EFF]);
 							}
 							if (s->value[DBHDC_EFF] < s->value[DBHDCMIN])
 							{
-								logger(g_log,"-DBHDC effective = %g\n", s->value[DBHDC_EFF]);
+								logger(g_log,"-DBHDC effective (%g) > DBHDCMIN (%g) \n", s->value[DBHDC_EFF] , s->value[DBHDCMIN]);
 								logger(g_log,"-DBHDC effective < DBHDCMIN\n");
 								s->value[DBHDC_EFF] = s->value[DBHDCMIN];
 								logger(g_log,"-DBHDC effective = %g\n", s->value[DBHDC_EFF]);
+
+								//fixme then should start self pruning or thinning
 							}
 						}
 					}
@@ -402,7 +432,7 @@ int annual_forest_structure(cell_t* const c)
 		}
 		if( !layer )
 		{
-			logger(g_log, "-Canopy cover DBH-DC layer (%d) level = %g %%\n", layer, c->tree_layers[layer].layer_cover * 100.0);
+			logger(g_log, "-Canopy cover DBH-DC layer (%d) level = %g%%\n", layer, c->tree_layers[layer].layer_cover * 100.0);
 		}
 		/* check */
 		CHECK_CONDITION(c->tree_layers[layer].layer_cover, > g_settings->max_layer_cover);
@@ -449,7 +479,6 @@ void potential_max_min_density ( cell_t *const c )
 	double max_crown_radius;
 	double max_crown_diameter;
 	double max_crown_area;
-
 	double trees_number;
 
 	height_t *h;
