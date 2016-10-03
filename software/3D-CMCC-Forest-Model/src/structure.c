@@ -295,11 +295,12 @@ int annual_forest_structure(cell_t* const c)
 							a = &c->heights[height].dbhs[dbh].ages[age];
 							s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
+							logger(g_log,"-layer = %d layer density = %g height = %g dbh = %g age = %d species = %s\n", layer,c->tree_layers[layer].layer_density, h->value, d->value, a->value, s->name);
+
 							/* compute potential maximum and minimum density for DBHDC function */
 							potential_max_min_density ( c );
 
-							logger(g_log,"-layer = %d layer density = %g height = %g dbh = %g age = %d species = %s\n", layer,c->tree_layers[layer].layer_density, h->value, d->value, a->value, s->name);
-
+							/* compute effective dbh/crown diameter */
 							s->value[DBHDC_EFF] = ((s->value[DBHDCMIN] - s->value[DBHDCMAX]) / (s->value[DENMAX] - s->value[DENMIN]) *
 									(c->tree_layers[layer].layer_density - s->value[DENMIN]) + s->value[DBHDCMAX]);
 							logger(g_log,"-DENMAX = %g\n", s->value[DENMAX]);
@@ -338,7 +339,6 @@ int annual_forest_structure(cell_t* const c)
 	for ( layer = c->tree_layers_count - 1; layer >= 0; --layer )
 	{
 		logger(g_log, "----------------------------------\n");
-		logger(g_log, "layer %d ", layer);
 
 		for ( height = 0; height < c->heights_count ; ++height )
 		{
@@ -355,7 +355,7 @@ int annual_forest_structure(cell_t* const c)
 							a = &c->heights[height].dbhs[dbh].ages[age];
 							s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
-							logger(g_log,"-height = %g age = %d species = %s\n", h->value, a->value, s->name);
+							logger(g_log,"*layer = %d -height = %g age = %d species = %s\n", layer, h->value, a->value, s->name);
 
 							s->value[CROWN_DIAMETER_DBHDC] = d->value * s->value[DBHDC_EFF];
 							logger(g_log, "-Crown Diameter from DBHDC function  = %g m\n", s->value[CROWN_DIAMETER_DBHDC]);
@@ -400,7 +400,12 @@ int annual_forest_structure(cell_t* const c)
 				}
 			}
 		}
-		logger(g_log, "-Canopy cover DBH-DC layer (%d) level = %g %%\n", layer, c->tree_layers[layer].layer_cover * 100.0);
+		if( !layer )
+		{
+			logger(g_log, "-Canopy cover DBH-DC layer (%d) level = %g %%\n", layer, c->tree_layers[layer].layer_cover * 100.0);
+		}
+		/* check */
+		CHECK_CONDITION(c->tree_layers[layer].layer_cover, > g_settings->max_layer_cover);
 	}
 	logger(g_log, "**************************************\n");
 
@@ -481,7 +486,6 @@ void potential_max_min_density ( cell_t *const c )
 					trees_number = g_settings->sizeCell / min_crown_area;
 
 					s->value[DENMAX] = trees_number / g_settings->sizeCell;
-					logger (g_log, "DENMAX = %g\n", s->value[DENMAX]);
 
 					/* compute maximum density */
 
@@ -496,7 +500,6 @@ void potential_max_min_density ( cell_t *const c )
 					trees_number = g_settings->sizeCell / max_crown_area;
 
 					s->value[DENMIN] = trees_number / g_settings->sizeCell;
-					logger (g_log, "DENMIN = %g\n", s->value[DENMIN]);
 				}
 			}
 		}

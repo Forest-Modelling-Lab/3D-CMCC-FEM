@@ -57,8 +57,8 @@ BUD_BURST   30                //days of bud burst at the beginning of growing se
 LEAF_FALL_FRAC_GROWING	0.3   //proportions of the growing season of leaf fall Q. robur from Pietsch et al 2005
 LEAF_FINEROOT_TURNOVER	1     //Average yearly fine root turnover rate Q. robur from Pietsch et al 2005
 LIVE_WOOD_TURNOVER	0.7       //Annual yearly live wood turnover rate  Q. robur from Pietsch et al 2005
-DBHDCMAX	0.26              //Low Density 0.26 for Q. robur from Bellio and Pividori, 2009 //CUURENTLY NOT USED
-DBHDCMIN	0.1               //High Density 0.20 for Q. robur from Bellio and Pividori, 2009
+DBHDCMAX	0.22              //Low Density 0.26 for Q. robur from Bellio and Pividori, 2009 //CUURENTLY NOT USED
+DBHDCMIN	0.14              //High Density 0.20 for Q. robur from Bellio and Pividori, 2009
 SAP_A	0.043                 //a value from Kostner for Q. petreae in cm
 SAP_B	2.384                 //b value from Kostner for Q. petreae in cm
 SAP_LEAF	9700              //9700-9400 as in Kostner et al., sapwood_max leaf area ratio in pipe model  for 4000 Q. robur from Hickler et al 2012

@@ -57,8 +57,8 @@ BUD_BURST   0                 //days of bud burst at the beginning of growing se
 LEAF_FALL_FRAC_GROWING  0     //proportions of the growing season of leaf fall 
 LEAF_FINEROOT_TURNOVER  0.195 //Average YEARLY leaves and fine root turnover rate for Picea abies from Pietsch et al., 2005, 0.11 for Picea abies Seidl et al., 2012
 LIVE_WOOD_TURNOVER  0.7       //Annual yearly live wood turnover rate for Picea abies from Pietsch et al., 2005
-DBHDCMAX  0.20                //Low Density for Picea abies 0.255 Seidl et al., 2012, 0.18 from Kalliovirta and Tokola 2005, 0.34 from Grote 2001
-DBHDCMIN  0.14                //High Density for P. sylvestris from Ameztegui et al., 2012 0.14, 0.015 from Kalliovirta and Tokola 2005, 0.2 from Grote 2001
+DBHDCMAX  0.18                //Low Density for Picea abies 0.255 Seidl et al., 2012, 0.18 from Kalliovirta and Tokola 2005, 0.34 from Grote 2001
+DBHDCMIN  0.12                //High Density for P. sylvestris from Ameztegui et al., 2012 0.14, 0.015 from Kalliovirta and Tokola 2005, 0.2 from Grote 2001
 SAP_A   3.119                 //a value for Picea abies 0.0851 deducted from  p.c. Kostner and Clausnitzer et al., 2011 CHECK IT!!!!!!!!!
 SAP_B   1.4544                //b value for Picea abies 1.684 deducted from p.c. Kostner and Clausnitzer et al., 2011
 SAP_LEAF    2600              //sapwood_max leaf area ratio in pipe model for Picea abies varying from 2600 to 4800 from Kostner et al., Tree Phys 2002 CHECK IT!!!!!!!!!

@@ -1,5 +1,5 @@
 x,y,Landuse,Age,Species,Management,N,Stool,AvDBH,Height,Wf,Wrc,Wrf,Ws,Wbb,Wres,Lai
-0,0,F,49,Piceaabies,T,502,0,27.10,25,0,0,0,0,0,0,0
+0,0,F,49,Piceaabies,T,502,0,27.10,25,0,0,0,0,0,0,5
 0,0,F,49,Fagussylvatica,T,292,0,21.96,24,0,0,0,0,0,0,0
 0,0,F,49,Quercusrobur,T,10,0,23.66,25,0,0,0,0,0,0,0
-0,0,F,49,Pinussylvestris,T,12,0,28.133,26,0,0,0,0,0,0,0
+0,0,F,49,Pinussylvestris,T,12,0,28.133,26,0,0,0,0,0,0,5
