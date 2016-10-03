@@ -4,7 +4,7 @@ PHENOLOGY   1.2               //PHENOLOGY 0.1 = deciduous broadleaf, 0.2 = decid
 ALPHA   0.050                 //Canopy quantum efficiency (molC/molPAR) converted from 1.8 gCMJ for Picea abies 0.065 Seidl et al., 2005, 
 EPSILONgCMJ 1.05              //Light Use Efficiency (gC/molPAR)(used if ALPHA is not available)  
 K   0.54                      //Extinction coefficient for absorption of PAR by canopy for Picea abies from Pietsch et al., 2005,  0.54 from MOllicone
-ALBEDO  0.095                 //averaged for P. sylvestris from Breuer et al., 2003
+ALBEDO  0.095                 //averaged for P.abies from Breuer et al., 2003
 GAMMA_LIGHT 0.031             //Light parameter for light modifier 0.031 see Bagnara et al., 
 INT_COEFF  0.036              //precip interception coefficient for Picea abies (see Pietsch)
 SLA_AVG 10.2                  //Average Specific Leaf Area m^2/KgC sunlit/shaded leaves for Picea abies (see Pietsch)
@@ -77,14 +77,14 @@ CRB 0.03271                   //for Picea abies (0.0658)from Pommerening et al.,
 CRC 2                         //for Picea abies (5.5289)from Pommerening et al., 2011, Deleuze and Houllier 1995
 HDMAX   0.95                  //Height to Base diameter ratio MAX  for Picea abies Seidl et al., 2012
 HDMIN   0.47                  //Height to Base diameter ratio MIN  for Picea abies Seidl et al., 2012
-MAXSEED 20000                 //numero massimo semi prodotti dalla pianta (da TREEMIG) FOR Quercus sp
+MAXSEED -9999       //TO BE CHECKED           //numero massimo semi prodotti dalla pianta
 MASTSEED    5                 //ricorrenza anni di pasciona (da TREEMIG) FOR Quercus sp (Bernetti)
-WEIGHTSEED  7                 //peso frutto in g FOR Quercus sp (Bernetti)
+WEIGHTSEED  7                 //peso frutto in g 
 SEXAGE  30                    //Age at Sexual Maturity FOR Quercus sp (per Bernetti 75)
 GERMCAPACITY    0.70          //Geminability (Lischke H. & Loffler T. J.)
-ROTATION    120         //Forest Rotation for harvesting 
-THINNING     15         //Thinning regime
-THINNING_REGIME    0    //Thinning regime (0 = above, 1 = below)
-MINAGEMANAG 80                //Minimum age for Managment (Q. cerris)
-MINDBHMANAG 27                //Minimum DBH for Managment
-AV_SHOOT    10                //average number of shoot after cut
+ROTATION    120               //Forest Rotation for harvesting for P. abies ISIMIP protocol
+THINNING     15               //Thinning regime for P. abies ISIMIP protocol
+THINNING_REGIME    1          //Thinning regime (0 = above, 1 = below) for P. abies ISIMIP protocol
+MINAGEMANAG -9999             //Minimum age for Managment
+MINDBHMANAG -9999             //Minimum DBH for Managment
+AV_SHOOT    -9999             //average number of shoot after cut
