@@ -835,6 +835,7 @@ int main(int argc, char *argv[]) {
 		goto err;
 	}
 	puts(msg_ok);
+
 	printf("topo allocation...");
 	g_topo = topo_new();
 	if ( ! g_topo ) {

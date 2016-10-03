@@ -1,0 +1,1 @@
+ELEV "490" //Elevation in meters from http://kroof.wzw.tum.de/index.php?id=18&L=1
