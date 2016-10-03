@@ -371,7 +371,8 @@ void self_thinning ( cell_t *const c, const int layer )
 								}
 
 								/* mortality for the higher height class */
-								while (c->tree_layers[layer].layer_cover > g_settings->max_layer_cover && c->heights[height + 1].dbhs[dbh].ages[age].species[species].counter[N_TREE] >= 0)
+								while (c->tree_layers[layer].layer_cover > g_settings->max_layer_cover &&
+										c->heights[height + 1].dbhs[dbh].ages[age].species[species].counter[N_TREE] >= 0)
 								{
 									--c->heights[height + 1].dbhs[dbh].ages[age].species[species].counter[N_TREE];
 									++deadtree;
@@ -457,7 +458,7 @@ void self_thinning ( cell_t *const c, const int layer )
 		}
 	}
 
-	/* reset values for layer (they are recomputed below)*/
+	/* reset values for layer (they are recomputed below) */
 	c->tree_layers[layer].layer_n_height_class = 0;
 	c->tree_layers[layer].layer_n_trees = 0;
 	c->tree_layers[layer].layer_density = 0;

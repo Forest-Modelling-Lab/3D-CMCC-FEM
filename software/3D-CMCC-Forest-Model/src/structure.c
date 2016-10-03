@@ -108,8 +108,9 @@ void forest_structure (cell_t *const c, const meteo_daily_t *const meteo_daily, 
 			puts(sz_err_out_of_memory);
 			exit(1);
 		}
+		/* note: 04 Oct 2016 */
 		/* forest annual self_pruning */
-		layer_self_pruning_thinning ( c );
+		//layer_self_pruning_thinning ( c );
 	}
 }
 /*************************************************************************************************************************/
@@ -324,7 +325,7 @@ int annual_forest_structure(cell_t* const c)
 							/* this function in mainly based on the assumptions that trees tend to occupy */
 							/* all space they can, if they cannot then fixed values constrain their crown */
 
-							temp_crown_area = g_settings->sizeCell / (c->tree_layers[layer].layer_density * g_settings->sizeCell);
+							temp_crown_area = (g_settings->sizeCell * g_settings->max_layer_cover) / (c->tree_layers[layer].layer_density * g_settings->sizeCell);
 
 							temp_crown_radius = sqrt(temp_crown_area / Pi);
 
@@ -346,12 +347,16 @@ int annual_forest_structure(cell_t* const c)
 							}
 							if (s->value[DBHDC_EFF] < s->value[DBHDCMIN])
 							{
-								logger(g_log,"-DBHDC effective (%g) > DBHDCMIN (%g) \n", s->value[DBHDC_EFF] , s->value[DBHDCMIN]);
-								logger(g_log,"-DBHDC effective < DBHDCMIN\n");
-								s->value[DBHDC_EFF] = s->value[DBHDCMIN];
-								logger(g_log,"-DBHDC effective = %g\n", s->value[DBHDC_EFF]);
-
 								//fixme then should start self pruning or thinning
+//								logger(g_log,"-DBHDC effective (%g) > DBHDCMIN (%g) \n", s->value[DBHDC_EFF] , s->value[DBHDCMIN]);
+//								logger(g_log,"-DBHDC effective < DBHDCMIN\n");
+//								s->value[DBHDC_EFF] = s->value[DBHDCMIN];
+//								logger(g_log,"-DBHDC effective = %g\n", s->value[DBHDC_EFF]);
+
+								/* note: 04 Oct 2016 */
+								self_thinning (c, layer);
+
+
 							}
 						}
 					}
@@ -434,8 +439,6 @@ int annual_forest_structure(cell_t* const c)
 		{
 			logger(g_log, "-Canopy cover DBH-DC layer (%d) level = %g%%\n", layer, c->tree_layers[layer].layer_cover * 100.0);
 		}
-		/* check */
-		CHECK_CONDITION(c->tree_layers[layer].layer_cover, > g_settings->max_layer_cover);
 	}
 	logger(g_log, "**************************************\n");
 
