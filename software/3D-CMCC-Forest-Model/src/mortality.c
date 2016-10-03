@@ -181,7 +181,7 @@ int self_pruning ( cell_t *const c, const int layer )
 					logger(g_log,"old crown area before pruning = %g m2/tree\n", old_crown_area);
 
 					/* until layer cover not reaches lower values than max_layer_cover or DBDCMIN */
-					while( l->layer_cover > g_settings->max_layer_cover && s->value[DBHDC_EFF] > s->value[DBHDCMIN]  )
+					while( l->layer_cover > g_settings->max_layer_cover && s->value[DBHDC_EFF] > s->value[DBHDCMIN] )
 					{
 						/* remove current class canopy cover from layer canopy cover */
 						l->layer_cover -= s->value[CANOPY_COVER_DBHDC];

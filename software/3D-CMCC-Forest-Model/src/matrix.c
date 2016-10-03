@@ -1405,7 +1405,7 @@ void forest_summary(const matrix_t* const m, const int cell, const int day, cons
 	/* initialize carbon pool fraction */
 	carbon_pool_fraction (&m->cells[cell]);
 
-	/* initialise forest structure */
+	/* initialize forest structure */
 	initialization_forest_structure (&m->cells[cell], day, month, year);
 
 	for ( height = 0; height < m->cells[cell].heights_count; ++height )
