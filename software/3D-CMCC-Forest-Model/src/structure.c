@@ -487,10 +487,10 @@ void potential_max_min_density ( cell_t *const c )
 
 					s->value[DENMAX] = trees_number / g_settings->sizeCell;
 
-					/* compute maximum density */
+					/* compute minimum density */
 
-					/* compute minimum crown radius for maximum possible density */
-					/* note using minimum dbh with DBHDC_MIN */
+					/* compute maximum crown radius for minimum possible density */
+					/* note using maximum dbh with DBHDC_MAX */
 					max_crown_diameter = high_dbh * s->value[DBHDCMAX];
 
 					max_crown_radius = max_crown_diameter / 2.;
