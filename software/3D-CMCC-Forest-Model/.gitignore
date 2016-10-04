@@ -1,6 +1,7 @@
-# ignore every files .o or .d
+# ignore every files .o or .d or .mk
 *.o
 *.d
+*.mk
 
 # ignore temporary files
 *~
