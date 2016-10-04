@@ -424,7 +424,6 @@ void reset_annual_class_variables(cell_t *const c)
 					s->counter[LEAF_FALL_COUNTER] = 0;
 					s->counter[VEG_DAYS] = 0;
 					s->counter[YEARLY_VEG_DAYS] = 0;
-					s->value[YEARLY_PHYS_MOD] = 0;
 
 					s->value[YEARLY_GPP_gC] = 0;
 					s->value[YEARLY_NPP_gC] = 0;
@@ -442,12 +441,6 @@ void reset_annual_class_variables(cell_t *const c)
 
 					s->counter[DEAD_STEMS] = 0;
 					s->counter[N_TREE_SAP] = 0;
-
-					//INITIALIZE AVERAGE YEARLY MODIFIERS
-					s->value[AVERAGE_F_VPD]  = 0.;
-					s->value[AVERAGE_F_T]  = 0.;
-					s->value[AVERAGE_F_SW]  = 0.;
-					s->value[F_AGE]  = 0.;
 
 					s->value[DEL_Y_WS] = 0.;
 					s->value[DEL_Y_WF] = 0.;

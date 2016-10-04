@@ -200,12 +200,6 @@ enum {
 	F_PSI,                      /*SOIL WATER modifier using PSI, see Biome*/
 	F_CO2,                      /*CO2 fert effect*/
 	PHYS_MOD,                   /*Physmod*/
-	YEARLY_PHYS_MOD,
-	AVERAGE_PHYS_MOD,
-	AVERAGE_F_VPD,
-	AVERAGE_F_NUTR,
-	AVERAGE_F_T,
-	AVERAGE_F_SW,
 
 	/*water variables*/
 	CANOPY_CONDUCTANCE,
@@ -386,6 +380,7 @@ enum {
 	AV_DEAD_BRANCH_MASS_KgDM,
 	CLASS_AGB,
 	CLASS_BGB,
+
 	/*converted biome fraction for turnover*/
 	LIVE_TOTAL_WOOD_TURNOVER_FRAC,
 	MAX_BIOMASS_BUDBURST_tDM,
@@ -494,16 +489,6 @@ enum {
 	/*LPJ MORTALITY FUNCTION*/
 	AGEMORT,                      /*Age probability mortality function*/
 
-	/*NATURAL REGENERATION INDIVIDUAL BIOMASS VALUES FOR SAPLING PASSING TO ADULT*/
-	AVDBH_SAPLING,
-	LAI_SAPLING,
-	TREE_HEIGHT_SAPLING,
-	LEAF_C_SAPLING,
-	COARSE_ROOT_C_SAPLING,
-	FINE_ROOT_C_SAPLING,
-	STEM_C_SAPLING,
-	PERC,
-
 	VALUES
 };
 
@@ -513,7 +498,6 @@ enum {
 	N_STUMP,                     /* Number of stumps for coppice per class */
 	N_SEED,                      /* Seeds number per class */
 	DEAD_STEMS,                  /* Dead Trees per class */
-	CUT_TREES,                   /* Cut trees for Management per class */
 	N_TREE_SAP,                  /* Numbers of Saplings per class */
 	VEG_UNVEG,                   /* vegetative-un vegetative period per class */
 	VEG_DAYS,                    /* day of vegetative period for class if != 0 is in veg period */
