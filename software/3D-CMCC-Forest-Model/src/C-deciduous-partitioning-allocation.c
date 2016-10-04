@@ -81,9 +81,9 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 	CHECK_CONDITION( fabs ( pR + pS + pL ), > 1 + eps );
 
 	/* fine root vs. coarse root ratio */
-	s->value[FR_CR] = (s->value[FINE_ROOT_LEAF] / s->value[COARSE_ROOT_STEM]) * (1.0 / s->value[STEM_LEAF]);
-	logger(g_log, "Fine/Coarse root ratio = %g\n", s->value[FR_CR] );
-	Perc_fine = s->value[FR_CR] / (s->value[FR_CR] + 1.0);
+	s->value[FINE_COARSE_ROOT] = (s->value[FINE_ROOT_LEAF] / s->value[COARSE_ROOT_STEM]) * (1.0 / s->value[STEM_LEAF]);
+	logger(g_log, "Fine/Coarse root ratio = %g\n", s->value[FINE_COARSE_ROOT] );
+	Perc_fine = s->value[FINE_COARSE_ROOT] / (s->value[FINE_COARSE_ROOT] + 1.0);
 	logger(g_log, "Percentage of fine root against total root = %g %%\n", Perc_fine * 100 );
 
 

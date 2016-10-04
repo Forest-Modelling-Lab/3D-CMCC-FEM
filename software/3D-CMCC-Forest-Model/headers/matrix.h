@@ -112,30 +112,12 @@ enum {
 		oltretutto l'indice AVDBH viene usato in new_class.c
 	 */
 
-	//AVDBH,                      //Average DBH in cm
-	CROWN_RADIUS_SORTIE,        //Crown Radius in m from Sortie Standard
-	CROWN_DIAMETER_SORTIE,      //Crown Diameter in m from Sortie Standard
-	CROWN_AREA_SORTIE,          //Crown Area from Sortie diameter
-	CROWN_HEIGHT_SORTIE,        //Crown Height in m from Sortie Standard
-	TREE_HEIGHT_SORTIE,         //Tree Height in m from Sortie function
-	TREE_HEIGHT_LPJ,            //Tree Height in m from LPJ
-	CROWN_AREA_LPJ,             //Crown Area in m^2 from LPJ
-	CROWN_DIAMETER_LPJ,         //Crown Diameter in m from LPJ
-	CANOPY_COVER_LPJ,           //Canopy Cover % of pixel covered from LPJ
-	DBHDC_EFF,                  //Crown Diameter from DBH in function of density
-	DENMAX,                     /* maximum stand density (trees/cell) for DBHDC function */
-	DENMIN,                     /* minimum stand density (trees/cell) for DBHDC function */
-	PREVIOUS_DBHDC_EFF,         //previous dbhdc value
-	CROWN_DIAMETER_DBHDC,       //Crown Diameter in m from DBHDC function
-	CROWN_AREA_DBHDC,           //Crown Area in m^2 from DBHDC function
-	CANOPY_COVER_DBHDC,         //Canopy Cover % of pixel covered from DBHDC function
-	CANOPY_COVER_P,             //Canopy Cover from Portoghesi Function % of pixel covered
-	FREE_CANOPY_COVER_P,
-	TREE_HEIGHT_CR,             //Tree Height in m from CHAPMAN-RICHARDS FUNCTION
-	HD_EFF,                     //Effective HD ratio to give to Crowding Competition Function
-	CC_TREE_HEIGHT,             //Tree Height in m from Crowding Competition Function in m
-	CC_AVDBH,                   //Average DBH from Crowding Competition Function in cm
-	DENSITY,                    //Numbers of Tree per m^2
+	DBHDC_EFF,                  /*Crown Diameter from DBH in function of density*/
+	DENMAX,                     /*maximum stand density (trees/cell) for DBHDC function */
+	DENMIN,                     /*minimum stand density (trees/cell) for DBHDC function */
+	CROWN_DIAMETER_DBHDC,       /*Crown Diameter in m from DBHDC function*/
+	CROWN_AREA_DBHDC,           /*Crown Area in m^2 from DBHDC function*/
+	CANOPY_COVER_DBHDC,         /*Canopy Cover % of pixel covered from DBHDC function*/
 	SAPWOOD_AREA,
 	SAPWOOD_PERC,
 	HEARTWOOD_AREA,
@@ -144,81 +126,80 @@ enum {
 	BASAL_AREA_m2,              /* Individual Basal Area (m2/area tree) */
 	STAND_BASAL_AREA,           /* Class Basal Area of overall class (cm2/area tree class) */
 	STAND_BASAL_AREA_m2,        /* Class Basal Area of overall class (m2/area tree class) */
-	CROWN_HEIGHT,               //Crown Height (m)
-	MASS_DENSITY,               //mass density
-	VOLUME,                     //Stem Volume
-	TREE_VOLUME,                //Single Tree Volume (m^3/area)
-	CAI,                        //Current Annual Increment
-	MAI,                        //Mean Annual Volume Increment (m^3/area year)
+	MASS_DENSITY,               /*mass density*/
+	VOLUME,                     /*Stem Volume*/
+	TREE_VOLUME,                /*Single Tree Volume (m^3/area)*/
+	CAI,                        /*Current Annual Increment*/
+	MAI,                        /*Mean Annual Volume Increment (m^3/area year)*/
 	STEMCONST,
 
 	/* PAR */
-	PAR,                        //Photosynthetically Active Radiation molPAR/m^2/day
-	PAR_REFL,                   //Reflected Photosynthetically Active Radiation molPAR/m^2/day OVERALL CANOPY
-	APAR,                       //Absorbed Physiological Active Radiation molPAR/m^2/day
-	APAR_SUN,                   //Absorbed Physiological Active Radiation molPAR/m^2/day for sun leaves
-	APAR_SHADE,                 //Absorbed Physiological Active Radiation molPAR/m^2/day for shaded leaves
-	TRANSM_PAR,                 //Transmitted Photosynthetically Active Radiation molPAR/m^2/day
-	TRANSM_PAR_SUN,             //Transmitted Photosynthetically Active Radiation molPAR/m^2/day from sun leaves
-	TRANSM_PAR_SHADE,           //Transmitted Photosynthetically Active Radiation molPAR/m^2/day from shaded leaves
+	PAR,                        /*Photosynthetically Active Radiation molPAR/m^2/day*/
+	PAR_REFL,                   /*Reflected Photosynthetically Active Radiation molPAR/m^2/day OVERALL CANOPY*/
+	APAR,                       /*Absorbed Physiological Active Radiation molPAR/m^2/day*/
+	APAR_SUN,                   /*Absorbed Physiological Active Radiation molPAR/m^2/day for sun leaves*/
+	APAR_SHADE,                 /*Absorbed Physiological Active Radiation molPAR/m^2/day for shaded leaves*/
+	TRANSM_PAR,                 /*Transmitted Photosynthetically Active Radiation molPAR/m^2/day*/
+	TRANSM_PAR_SUN,             /*Transmitted Photosynthetically Active Radiation molPAR/m^2/day from sun leaves*/
+	TRANSM_PAR_SHADE,           /*Transmitted Photosynthetically Active Radiation molPAR/m^2/day from shaded leaves*/
 
 	/* short wave */
-	SW_RAD,                     //Short Wave Radiation in W/m2
-	SW_RAD_REFL,                //Reflected Short Wave Radiation W/m2 OVERALL CANOPY
-	SW_RAD_ABS,                 //Absorbed Net Short Wave radiation in W/m2
-	SW_RAD_ABS_SUN,             //Absorbed Net Short Wave Radiation W/m2 for sun leaves
-	SW_RAD_ABS_SHADE,           //Absorbed Net Short Wave Radiation W/m2 for shaded leaves
-	SW_RAD_TRANSM,              //Transmitted Net Short Wave Radiation W/m2
-	SW_RAD_TRANSM_SUN,          //Transmitted Net Short Wave Radiation W/m2 for sun leaves
-	SW_RAD_TRANSM_SHADE,        //Transmitted Net Short Wave Radiation W/m2 for shaded leaves
+	SW_RAD,                     /*Short Wave Radiation in W/m2*/
+	SW_RAD_REFL,                /*Reflected Short Wave Radiation W/m2 OVERALL CANOPY*/
+	SW_RAD_ABS,                 /*Absorbed Net Short Wave radiation in W/m2*/
+	SW_RAD_ABS_SUN,             /*Absorbed Net Short Wave Radiation W/m2 for sun leaves*/
+	SW_RAD_ABS_SHADE,           /*Absorbed Net Short Wave Radiation W/m2 for shaded leaves*/
+	SW_RAD_TRANSM,              /*Transmitted Net Short Wave Radiation W/m2*/
+	SW_RAD_TRANSM_SUN,          /*Transmitted Net Short Wave Radiation W/m2 for sun leaves*/
+	SW_RAD_TRANSM_SHADE,        /*Transmitted Net Short Wave Radiation W/m2 for shaded leaves*/
 
 	/* long wave */
-	NET_LW_RAD,                 //Long Wave Radiation in W/m2
-	LW_RAD_REFL,                //Reflected Long Wave Radiation W/m2 OVERALL CANOPY
-	LW_RAD_EMIT,                //Emitted Long Wave radiation in W/m2
-	LW_RAD_EMIT_SUN,            //Emitted Long Wave Radiation W/m2 for sun leaves
-	LW_RAD_EMIT_SHADE,          //Emitted Long Wave Radiation W/m2 for shaded leaves
-	LW_RAD_ABS,                 //Absorbed Long Wave radiation in W/m2
-	LW_RAD_ABS_SUN,             //Absorbed Long Wave Radiation W/m2 for sun leaves
-	LW_RAD_ABS_SHADE,           //Absorbed Long Wave Radiation W/m2 for shaded leaves
-	LW_RAD_TRANSM,              //Transmitted Long Wave Radiation W/m2
-	LW_RAD_TRANSM_SUN,          //Transmitted Long Wave Radiation W/m2 for sun leaves
-	LW_RAD_TRANSM_SHADE,        //Transmitted Long Wave Radiation W/m2 for shaded leaves
+	NET_LW_RAD,                 /*Long Wave Radiation in W/m2*/
+	LW_RAD_REFL,                /*Reflected Long Wave Radiation W/m2 OVERALL CANOPY*/
+	LW_RAD_EMIT,                /*Emitted Long Wave radiation in W/m2*/
+	LW_RAD_EMIT_SUN,            /*Emitted Long Wave Radiation W/m2 for sun leaves*/
+	LW_RAD_EMIT_SHADE,          /*Emitted Long Wave Radiation W/m2 for shaded leaves*/
+	LW_RAD_ABS,                 /*Absorbed Long Wave radiation in W/m2*/
+	LW_RAD_ABS_SUN,             /*Absorbed Long Wave Radiation W/m2 for sun leaves*/
+	LW_RAD_ABS_SHADE,           /*Absorbed Long Wave Radiation W/m2 for shaded leaves*/
+	LW_RAD_TRANSM,              /*Transmitted Long Wave Radiation W/m2*/
+	LW_RAD_TRANSM_SUN,          /*Transmitted Long Wave Radiation W/m2 for sun leaves*/
+	LW_RAD_TRANSM_SHADE,        /*Transmitted Long Wave Radiation W/m2 for shaded leaves*/
 
 	/* net radiation */
-	NET_RAD,                    //Short Wave Radiation in W/m2
-	RAD_REFL,                   //Reflected Radiation W/m2 OVERALL CANOPY
-	NET_RAD_ABS,                //Absorbed Net radiation in W/m2
-	NET_RAD_ABS_SUN,            //Absorbed Net Radiation W/m2 for sun leaves
-	NET_RAD_ABS_SHADE,          //Absorbed Net Radiation W/m2 for shaded leaves
-	NET_RAD_TRANSM,             //Transmitted Net Radiation W/m2
-	NET_RAD_TRANSM_SUN,         //Transmitted Net Radiation W/m2 for sun leaves
-	NET_TRANSM_SHADE,           //Transmitted Net Radiation W/m2 for shaded leaves
+	NET_RAD,                    /*Short Wave Radiation in W/m2*/
+	RAD_REFL,                   /*Reflected Radiation W/m2 OVERALL CANOPY*/
+	NET_RAD_ABS,                /*Absorbed Net radiation in W/m2*/
+	NET_RAD_ABS_SUN,            /*Absorbed Net Radiation W/m2 for sun leaves*/
+	NET_RAD_ABS_SHADE,          /*Absorbed Net Radiation W/m2 for shaded leaves*/
+	NET_RAD_TRANSM,             /*Transmitted Net Radiation W/m2*/
+	NET_RAD_TRANSM_SUN,         /*Transmitted Net Radiation W/m2 for sun leaves*/
+	NET_TRANSM_SHADE,           /*Transmitted Net Radiation W/m2 for shaded leaves*/
 
 	/* PPFD */
-	PPFD,                       //Photosynthetic Photon Flux Density umol/m2/sec
-	PPFD_REFL,                  //Transmitted Photosynthetic Photon Flux Density umol/m2/sec OVERALL CANOPY
-	PPFD_ABS,                   //Absorbed Photosynthetic Photon Flux Density umol/m2/sec
-	PPFD_ABS_SUN,               //Absorbed Photosynthetic Photon Flux Density umol/m2/sec for sun leaves
-	PPFD_ABS_SHADE,             //Absorbed Photosynthetic Photon Flux Density umol/m2/sec for shaded leaves
-	PPFD_TRANSM,                //Transmitted Photosynthetic Photon Flux Density umol/m2/sec
-	PPFD_TRANSM_SUN,            //Transmitted Photosynthetic Photon Flux Density umol/m2/sec  from sun leaves
-	PPFD_TRANSM_SHADE,          //Transmitted Photosynthetic Photon Flux Density umol/m2/sec  from shaded leaves
+	PPFD,                       /*Photosynthetic Photon Flux Density umol/m2/sec*/
+	PPFD_REFL,                  /*Transmitted Photosynthetic Photon Flux Density umol/m2/sec OVERALL CANOPY*/
+	PPFD_ABS,                   /*Absorbed Photosynthetic Photon Flux Density umol/m2/sec*/
+	PPFD_ABS_SUN,               /*Absorbed Photosynthetic Photon Flux Density umol/m2/sec for sun leaves*/
+	PPFD_ABS_SHADE,             /*Absorbed Photosynthetic Photon Flux Density umol/m2/sec for shaded leaves*/
+	PPFD_TRANSM,                /*Transmitted Photosynthetic Photon Flux Density umol/m2/sec*/
+	PPFD_TRANSM_SUN,            /*Transmitted Photosynthetic Photon Flux Density umol/m2/sec from sun leaves*/
+	PPFD_TRANSM_SHADE,          /*Transmitted Photosynthetic Photon Flux Density umol/m2/sec  from shaded leaves*/
 
 	/*modifiers variables*/
-	F_VPD,                      //VPD modifier
-	F_LIGHT,                    //LIGHT modifier
-	F_LIGHT_SUN,                //LIGHT modifier for Sun leaves
-	F_LIGHT_SHADE,              //LIGHT modifier for Shaded leaves
-	F_AGE,                      //AGE modifier
-	F_NUTR,                     //SOIL NUTRIENT Modifier
-	F_T,                        //TEMPERATURE modifier
-	F_FROST,                    //FROST modifer
-	F_SW,                       //SOIL WATER modifier
-	F_DROUGHT,                  //SOIL DROUGHT modifier (see Duursma et al., 2008)
-	F_PSI,                      //SOIL WATER modifier using PSI, see Biome
-	F_CO2,                      //CO2 fert effect
-	PHYS_MOD,                   //Physmod
+	F_VPD,                      /*VPD modifier*/
+	F_LIGHT,                    /*LIGHT modifier*/
+	F_LIGHT_SUN,                /*LIGHT modifier for Sun leaves*/
+	F_LIGHT_SHADE,              /*LIGHT modifier for Shaded leaves*/
+	F_AGE,                      /*AGE modifier*/
+	F_NUTR,                     /*SOIL NUTRIENT Modifier*/
+	F_T,                        /*TEMPERATURE modifier*/
+	F_FROST,                    /*FROST modifier*/
+	F_SW,                       /*SOIL WATER modifier*/
+	F_DROUGHT,                  /*SOIL DROUGHT modifier (see Duursma et al., 2008)*/
+	F_PSI,                      /*SOIL WATER modifier using PSI, see Biome*/
+	F_CO2,                      /*CO2 fert effect*/
+	PHYS_MOD,                   /*Physmod*/
 	YEARLY_PHYS_MOD,
 	AVERAGE_PHYS_MOD,
 	AVERAGE_F_VPD,
@@ -228,19 +209,19 @@ enum {
 
 	/*water variables*/
 	CANOPY_CONDUCTANCE,
-	CANOPY_BLCOND,              //Canopy Boundary Layer conductance (m s-1)
-	FRAC_DAYTIME_TRANSP,        //fraction of daytime for transpiration (and photosynthesis)
+	CANOPY_BLCOND,              /*Canopy Boundary Layer conductance (m s-1)*/
+	FRAC_DAYTIME_TRANSP,        /*fraction of daytime for transpiration (and photosynthesis)*/
 	CANOPY_INT,
 	CANOPY_EVAPO,
-	CANOPY_WET,                 //it should'nt be reset every day
+	CANOPY_WET,                 /*it should'nt be reset every day*/
 	CANOPY_TRANSP,
 	CANOPY_EVAPO_TRANSP,
 	CANOPY_INT_SNOW,
-	CANOPY_WATER,               //it should'nt be reset every day
-	OLD_CANOPY_WATER,           //it should'nt be reset every day
-	CANOPY_SNOW,                //it should'nt be reset every day
-	OLD_CANOPY_SNOW,            //it should'nt be reset every day
-	CANOPY_FRAC_DAY_TRANSP,     //Fraction of daily canopy transpiration (DIM)
+	CANOPY_WATER,               /*it should'nt be reset every day*/
+	OLD_CANOPY_WATER,           /*it should'nt be reset every day*/
+	CANOPY_SNOW,                /*it should'nt be reset every day*/
+	OLD_CANOPY_SNOW,            /*it should'nt be reset every day*/
+	CANOPY_FRAC_DAY_TRANSP,     /*Fraction of daily canopy transpiration (DIM)*/
 	CANOPY_LATENT_HEAT,
 	CANOPY_SENSIBLE_HEAT,
 
@@ -250,21 +231,21 @@ enum {
 	YEARLY_CANOPY_LATENT_HEAT,
 
 	/*LAI*/
-	LAI,                        //LAI (m^2/m2)
+	LAI,                        /*LAI (m^2/m2)*/
 	LAI_SUN,
 	LAI_SHADE,
-	MAX_LAI,                    //lai at the very first day of senescence: parameter of the sigmoid function
-	PEAK_LAI,                   //PEAK LAI
+	MAX_LAI,                    /*lai at the very first day of senescence: parameter of the sigmoid function*/
+	PEAK_LAI,                   /*PEAK LAI*/
 	LEAF_TEMP_K,
 	CANOPY_TEMP_K,
 	CANOPY_TEMP_K_OLD,
 
 	/*carbon variables*/
 	C_FLUX,
-	DAILY_GPP_gC,               //Daily Gross Primary Production gC/m^2 day
-	MONTHLY_GPP_gC,             //Class Monthly Gross Primary Production gC/m^2 month
-	YEARLY_GPP_gC,              //Yearly GPP
-	NPP_gC,                     //Net Primary Production in grams of C
+	DAILY_GPP_gC,               /*Daily Gross Primary Production gC/m^2 day*/
+	MONTHLY_GPP_gC,             /*Class Monthly Gross Primary Production gC/m^2 month*/
+	YEARLY_GPP_gC,              /*Yearly GPP*/
+	NPP_gC,                     /*Net Primary Production in grams of C*/
 	MONTHLY_NPP_gC,
 	YEARLY_NPP_gC,
 	NPP_tC,
@@ -350,8 +331,8 @@ enum {
 	AV_DEAD_WOOD_MASS_KgC,
 	AV_TOT_WOOD_MASS_KgC,
 
-	//CTEM CARBON
-	//carbon biomass increment
+	/*CTEM CARBON*/
+	/*carbon biomass increment*/
 	DEL_ROOTS_TOT,
 	DEL_STEMS,
 	DEL_FOLIAGE,
@@ -363,16 +344,16 @@ enum {
 	DEL_ROOTS_COARSE,
 	DAILY_DEL_LITTER,
 
-	//total cell carbon biomass pools in MgDM
+	/*total cell carbon biomass pools in MgDM*/
 	BIOMASS_FOLIAGE_tDM,
 	BIOMASS_ROOTS_TOT_tDM,
 	BIOMASS_COARSE_ROOT_tDM,
 	BIOMASS_FINE_ROOT_tDM,
 	BIOMASS_STEM_tDM,
 	BIOMASS_BRANCH_tDM,
-	BIOMASS_TOT_STEM_tDM, //STEM + BRANCH AND BARK
+	BIOMASS_TOT_STEM_tDM,                  /*STEM + BRANCH AND BARK*/
 	RESERVE_tDM,
-	BIOMASS_FRUIT_tDM,   //only for coniferous
+	BIOMASS_FRUIT_tDM,
 	BIOMASS_LIVE_WOOD_tDM,
 	BIOMASS_DEAD_WOOD_tDM,
 	BIOMASS_STEM_LIVE_WOOD_tDM,
@@ -405,7 +386,7 @@ enum {
 	AV_DEAD_BRANCH_MASS_KgDM,
 	CLASS_AGB,
 	CLASS_BGB,
-	//converted biome fraction for turnover
+	/*converted biome fraction for turnover*/
 	LIVE_TOTAL_WOOD_TURNOVER_FRAC,
 	MAX_BIOMASS_BUDBURST_tDM,
 	MAX_BIOMASS_FOLIAGE_tDM,
@@ -417,37 +398,36 @@ enum {
 	WBB_sap_tDM,
 	WBB_heart_tDM,
 	WTOT_sap_tDM,
-	//Branch and bark fraction --- currently the model doesn't accumulate it!!!!!!!
-	W_SEED,                        //Seed Biomass
-	DEL_TOTAL_W,                   //Total Biomass Increment
+	W_SEED,                        /*Seed Biomass*/
+	DEL_TOTAL_W,                   /*Total Biomass Increment*/
 	TOTAL_W,
 	DEL_Y_WTS,
-	DEL_Y_WS,                      //Yearly cumulated stem biomass increment
-	DEL_Y_WF,                      //Yearly cumulated foliage biomass increment
-	DEL_Y_WR,                      //Yearly cumulated root biomass increment
+	DEL_Y_WS,                      /*Yearly cumulated stem biomass increment*/
+	DEL_Y_WF,                      /*Yearly cumulated foliage biomass increment*/
+	DEL_Y_WR,                      /*Yearly cumulated root biomass increment*/
 	DEL_Y_WFR,
 	DEL_Y_WCR,
-	DEL_Y_WRES,                    //Yearly cumulated reserve biomass increment
+	DEL_Y_WRES,                    /*Yearly cumulated reserve biomass increment*/
 	DEL_Y_BB,
 	DEL_Y_FRUIT,
 
-	//converted biome fraction for allocation
+	/*converted biome fraction for allocation*/
 	FINE_ROOT_LEAF_FRAC,
 	STEM_LEAF_FRAC,
 	COARSE_ROOT_STEM_FRAC,
 	LIVE_TOTAL_WOOD_FRAC,
-	//FINE/COARSE RATIO
-	FR_CR,                         //FINE-COARSE ROOT RATIO
+	/*FINE/COARSE RATIO*/
+	FINE_COARSE_ROOT,                         /*FINE-COARSE ROOT RATIO*/
 	FRACBB,
 
-	//MONTHLY PHENOLOGY
+	/*MONTHLY PHENOLOGY*/
 	FRAC_MONTH_FOLIAGE_REMOVE,
 	MONTH_FRAC_FOLIAGE_REMOVE,
-	//DAILY PHENOLOGY
-	FRAC_DAY_FOLIAGE_REMOVE,      //number of leaf fall days/tot number of veg days
+	/*DAILY PHENOLOGY*/
+	FRAC_DAY_FOLIAGE_REMOVE,      /*number of leaf fall days/tot number of veg days*/
 	FOLIAGE_REDUCTION_RATE,
 	DAILY_FOLIAGE_BIOMASS_TO_REMOVE,
-	//Marconi
+	/*Marconi*/
 	DAILY_FINEROOT_BIOMASS_TO_REMOVE,
 	DAILY_LEAVES_BIOMASS_TO_REMOVE,
 	OLD_BIOMASS_ROOTS_COARSE,
@@ -509,12 +489,12 @@ enum {
 	STEM_N,
 	BRANCH_N,
 
-	//3PG MORTALITY FUNCTION
-	WS_MAX,                       //Maximum stem mass per tree at 1000 trees/ha
-	//LPJ MORTALITY FUNCTION
-	AGEMORT,                      //Age probability mortality function
+	/*3PG MORTALITY FUNCTION*/
+	WS_MAX,                       /*Maximum stem mass per tree at 1000 trees/ha*/
+	/*LPJ MORTALITY FUNCTION*/
+	AGEMORT,                      /*Age probability mortality function*/
 
-	//NATURAL REGENERATION INDIVIDUAL BIOMASS VALUES FOR SAPLING PASSING TO ADULT
+	/*NATURAL REGENERATION INDIVIDUAL BIOMASS VALUES FOR SAPLING PASSING TO ADULT*/
 	AVDBH_SAPLING,
 	LAI_SAPLING,
 	TREE_HEIGHT_SAPLING,
