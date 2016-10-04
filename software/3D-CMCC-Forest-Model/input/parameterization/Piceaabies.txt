@@ -63,13 +63,6 @@ SAP_A   3.119                 //a value for Picea abies 0.0851 deducted from  p.
 SAP_B   1.4544                //b value for Picea abies 1.684 deducted from p.c. Kostner and Clausnitzer et al., 2011
 SAP_LEAF    2600              //sapwood_max leaf area ratio in pipe model for Picea abies varying from 2600 to 4800 from Kostner et al., Tree Phys 2002 CHECK IT!!!!!!!!!
 SAP_WRES    0.05              //Sapwood-Reserve biomass ratio used if no Wres data are available 0.11 for deciduous 0.05 for evergreen see Schwalm and Ek, 2004 Ecological Modelling
-HMAX    56                    //Max Height in m for Picea abies Seidl et al., 2012
-DMAX    155                   //Max Stem Diameter in cm for P. sylvestris from Lischke et al, user_guide 
-HPOWER  0.034                 //Slope of Asymptotic Height for P. sylvestris from Ametzegui et al., 2012
-RPOWER  0.214                 //Slope of Asymptotic Crown-Radius from Sortie for P. sylvestris from Ametzegui et al., 2012
-b_RPOWER  0.708               //for P. sylvestris from Ametzegui et al., 2012
-CHPOWER 1.143                 //Slope of Asymptotic Crown-Height from Sortie for P. sylvestris from Ametzegui et al., 2012
-b_CHPOWER 0.796               //for P. sylvestris from Ametzegui et al., 2012
 STEMCONST_P 0.292             //0.06552  E. Cienciala et al., 2006 For P. sylvestrisM; from Yuste et al 2005 0.1227, 0.084 from xiao and Ceulemans
 STEMPOWER_P 2.0087            //2.50626 E. Cienciala et al., 2006 For P. sylvestris; from Yuste et al 2005 2.3272, 1.985 from xiao and Ceulemans
 CRA 56                        //for Picea abies Seidl et al., 2012

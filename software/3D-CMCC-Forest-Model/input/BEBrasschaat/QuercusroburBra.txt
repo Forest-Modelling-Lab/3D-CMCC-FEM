@@ -100,15 +100,6 @@ SAP_B   2.384         //b value from Kostner for Q. petreae in cm
 SAP_LEAF    9700          //9700-9400 as in Kostner et al., sapwood_max leaf area ratio in pipe model  for 4000 Q. robur from Hickler et al 2012
 SAP_WRES    0.11           //Sapwood-Reserve biomass ratio used if no Wres data are available 
                             //0.11 for deciduous 0.05 for evergreen  see Schwalm and Ek, 2004 Ecological Modelling
-HMAX    52              //Max Height in m for Q. robur from Lischke et al, user_guide
-DMAX    320              //Max Stem Diameter in cm for Q. robur from Lischke et al, user_guide
-
-//not used just for comparison
-HPOWER  0.042           //Slope of Asymptotic Height from Sortie for Quercus rubra
-RPOWER  0.119           //Slope of Asymptotic Crown-Radius from Sortie for Quercus rubra
-b_RPOWER    0                   //NOT FOUND
-CHPOWER 0.413           //Slope of Asymptotic Crown-Height from Sortie for Quercus rubra
-b_CHPOWER   0           //NOT FOUND
 
 //POWER FUNCTION to compute individual stem mass from DBH
 STEMCONST_P 0.0654   //For Q. robur from Yuste et al 2005

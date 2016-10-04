@@ -101,15 +101,6 @@ SAP_B   0.4943 //b value for Larix d. deducted from Kolcun dissertation
 SAP_LEAF    1500          //sapwood_max leaf area ratio in pipe model for P. sylvestris from Hickler et al 2012 (1000 see also Law et al., 2001 for P. ponderosa)
 SAP_WRES    0.05           //Sapwood-Reserve biomass ratio used if no Wres data are available 
                             //0.11 for deciduous 0.05 for evergreen  see Schwalm and Ek, 2004 Ecological Modelling
-HMAX    45              //  //Max Height in m  
-DMAX    155              //Max Stem Diameter in cm for P. sylvestris from Lischke et al, user_guide 
-
-//not used just for comparison
-HPOWER  0.034           //Slope of Asymptotic Height for P. sylvestris from Ametzegui et al., 2012
-RPOWER  0.214           //Slope of Asymptotic Crown-Radius from Sortie for P. sylvestris from Ametzegui et al., 2012
-b_RPOWER  0.708             //for P. sylvestris from Ametzegui et al., 2012
-CHPOWER 1.143           //Slope of Asymptotic Crown-Height from Sortie for P. sylvestris from Ametzegui et al., 2012
-b_CHPOWER 0.796             //for P. sylvestris from Ametzegui et al., 2012
 
 //POWER FUNCTION to compute individual stem mass from DBH
 STEMCONST_P 0.248313    //for Larix decidua from Gower et al 1993

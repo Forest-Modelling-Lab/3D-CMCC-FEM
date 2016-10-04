@@ -98,13 +98,6 @@ SAP_B   ?         //b value
 SAP_LEAF    ?          //sapwood_max leaf area ratio in pipe model  
 SAP_WRES    ?           //Sapwood-Reserve biomass ratio used if no Wres data are available 
                             //0.11 for deciduous 0.05 for evergreen  see Schwalm and Ek, 2004 Ecological Modelling
-HMAX    ?              //35  //Max Height in m 
-DMAX    ?              //Max Stem Diameter in cm 
-HPOWER  ?           //Slope of Asymptotic Height 
-RPOWER  ?           //Slope of Asymptotic Crown-Radius 
-b_RPOWER    -9999           //NOT USED
-CHPOWER -9999           //Slope of Asymptotic Crown-Height 
-b_CHPOWER   -9999           //NOT USED
 
 //POWER FUNCTION to compute individual stem mass from DBH
 STEMCONST_P ?   //

@@ -683,7 +683,7 @@ static const char *sz_species_values[] =
 		/* SPECIES-SPECIFIC ECO-PHYSIOLOGICAL PARAMETER VALUES */
 		/* NOTE: DON'T CHANGE THEIR ORDER!! */
 
-		"LIGHT_TOL",                  /* Light Tolerance */
+		"LIGHT_TOL",                  /* Light Tolerance 4 = very shade intolerant (cc = 90%), 3 = shade intolerant (cc = 100%), 2 = shade tolerant (cc = 110%), 1 = very shade tolerant (cc = 120%)*/
 		"PHENOLOGY",                  /* PHENOLOGY 0.1 = deciduous broadleaf, 0.2 = deciduous needle leaf, 1.1 = broad leaf evergreen, 1.2 = needle leaf evergreen*/
 		"ALPHA",                      /* Canopy quantum efficiency (molC/molPAR) */
 		"EPSILONgCMJ",                /* Light Use Efficiency  (gC/MJ)(used if ALPHA is not available) */
@@ -747,13 +747,6 @@ static const char *sz_species_values[] =
 		"SAP_B",                      /* b coefficient for sapwood */
 		"SAP_LEAF",                   /* sapwood_max leaf area ratio in pipe model */
 		"SAP_WRES",                   /* Sapwood-Reserve biomass ratio used if no Wres data are available */
-		"HMAX",                       /* Max Height in m */
-		"DMAX",                       /* Max Diameter in cm */
-		"HPOWER",                     /* Slope of Asymptotic Height from Sortie */
-		"RPOWER",                     /* Slope of Asymptotic Crown-Radius from Sortie */
-		"b_RPOWER",
-		"CHPOWER",                    /* Slope of Asymptotic Crown-Height from Sortie */
-		"b_CHPOWER",                  /* parameter for Sortie function */
 		"STEMCONST_P",
 		"STEMPOWER_P",
 		"CRA",                        /* Chapman-Richards maximum height */

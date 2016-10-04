@@ -126,6 +126,7 @@ void self_thinning_mortality ( cell_t *const c, const int layer )
 					for ( light_tol = s->value[LIGHT_TOL]; light_tol > 0; --light_tol)
 					{
 						//fixme self thinning mortality should follows this rationale
+						//fixme it shouldn't work properly in this way
 					}
 
 					logger(g_log, "MORTALITY BASED ON HIGH CANOPY COVER height %g species %s dbh %g !!!\n", h->value, s->name, d->value);

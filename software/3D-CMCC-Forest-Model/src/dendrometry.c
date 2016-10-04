@@ -88,8 +88,8 @@ void dendrometry(cell_t *const c, const int height, const int dbh, const int age
 	 * CRA, CRB, CRC are species-specific regression coefficients
 	 *-CRA coefficient is the asymptotic maximum height this coefficient represents the theoretic maximum height obtainable
 	 * for a given stand or plot, this parameter could be used to represent maximum tree height.
-	 * By modifying equation so that CRA changes	as a function of stand age, site index, dominant height,
-	 * or stand density, equation can be generalised to be more applicable to a wider range of	sites and stand ages,
+	 * By modifying equation so that CRA changes as a function of stand age, site index, dominant height,
+	 * or stand density, equation can be generalized to be more applicable to a wider range of	sites and stand ages,
 	 * or more regionally applied
 	 *-CRB represents exponential decay parameter
 	 *-CRC represents shape parameters
@@ -100,26 +100,8 @@ void dendrometry(cell_t *const c, const int height, const int dbh, const int age
 	h->value = 1.3 + s->value[CRA] * pow (1.0 - exp ( - s->value[CRB] * d->value) , s->value[CRC]);
 	logger(g_log, "-Tree Height using Chapman-Richard function = %g m\n", h->value);
 
-	if ( h->value > s->value[HMAX] )
-	{
-		logger(g_log, "Chapaman-Richards function for tree height exceeds HMAX\n");
-		h->value = s->value[HMAX];
-	}
-	/*Tree Height using SORTIE */
-	/*
-	if (s->value[AVDBH]> 10)
-	{
-		//logger(g_log, "SORTIE FUNC DBH > 10 cm\n");
-		//it is essentially a chapman-richards equation!!
-		s->value[TREE_HEIGHT_SORTIE] = (1.35 +(s->value[HMAX] - 1.35) * ( 1.0 - exp ( - s->value[HPOWER] * s->value[AVDBH] )));
-		logger(g_log, "-Tree Height using Sortie function > 10 cm = %g m\n", s->value[TREE_HEIGHT_SORTIE]);
-	}
-	else
-	{
-		//logger(g_log, "SORTIE FUNC DBH < 10 cm\n");
-
-		s->value[TREE_HEIGHT_SORTIE] = 0.1 + 30 *( 1.0 - exp ( - 0.03 * s->value[AVDBH] ));
-	 */
+	/* check */
+	CHECK_CONDITION (h->value, > s->value[CRA])
 
 	logger(g_log, "-Old Tree Height = %g m\n", oldTreeHeight);
 	logger(g_log, "-New Tree Height = %g m\n", h->value);

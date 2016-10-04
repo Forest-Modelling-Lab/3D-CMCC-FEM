@@ -103,14 +103,6 @@ SAP_B   1.992         //b value from Kostner for Q. petreae in cm
 SAP_LEAF    2600          //sapwood_max leaf area ratio in pipe model  for Q petreae    
 SAP_WRES    0.05           //Sapwood-Reserve biomass ratio used if no Wres data are available 
                             //0.11 for deciduous 0.05 for evergreen  see Schwalm and Ek, 2004 Ecological Modelling
-HMAX    30              //35  //Max Height in m 
-DMAX    100              //Max Stem Diameter in cm 
-HPOWER  0.0353           //Slope of Asymptotic Height 
-RPOWER  0.152           //Slope of Asymptotic Crown-Radius 
-b_RPOWER    0           //NOT FOUND
-CHPOWER 0.664           //Slope of Asymptotic Crown-Height 
-b_CHPOWER   0           //NOT FOUND
-
 //POWER FUNCTION to compute individual stem mass from DBH
 STEMCONST_P -9999   //
 STEMPOWER_P -9999   //

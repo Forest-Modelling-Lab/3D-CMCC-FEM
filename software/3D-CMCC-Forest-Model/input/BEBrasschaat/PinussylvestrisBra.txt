@@ -108,15 +108,7 @@ SAP_LEAF    1500          //sapwood_max leaf area ratio in pipe model for P. syl
                             //VARIABLE VALUES FROM 1300 TO 1800 for P. sylvestris from Brasschaat site see Verbeek et al 2007
 SAP_WRES    0.05           //Sapwood-Reserve biomass ratio used if no Wres data are available 
                             //0.11 for deciduous 0.05 for evergreen  see Schwalm and Ek, 2004 Ecological Modelling
-HMAX    22.6              //  //Max Height in m for for P. sylvestris from Ametzegui et al., 2012, 
-DMAX    155              //Max Stem Diameter in cm for P. sylvestris from Lischke et al, user_guide 
 
-//not used just for comparison
-HPOWER  0.034           //Slope of Asymptotic Height for P. sylvestris from Ametzegui et al., 2012
-RPOWER  0.214           //Slope of Asymptotic Crown-Radius from Sortie for P. sylvestris from Ametzegui et al., 2012
-b_RPOWER  0.708             //for P. sylvestris from Ametzegui et al., 2012
-CHPOWER 1.143           //Slope of Asymptotic Crown-Height from Sortie for P. sylvestris from Ametzegui et al., 2012
-b_CHPOWER 0.796             //for P. sylvestris from Ametzegui et al., 2012
 
 //POWER FUNCTION to compute individual stem mass from DBH
 STEMCONST_P 0.1227    //0.06552  E. Cienciala et al., 2006 For P. sylvestrisM; from Yuste et al 2005 0.1227, 0.084 from xiao and Ceulemans
