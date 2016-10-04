@@ -57,6 +57,7 @@ int sort_by_heights_desc(const void * a, const void * b)
 	}
 }
 
+
 void carbon_pool_fraction(cell_t *c)
 {
 	int height;

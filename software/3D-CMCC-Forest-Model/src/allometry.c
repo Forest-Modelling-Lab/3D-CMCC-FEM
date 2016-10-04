@@ -77,6 +77,7 @@ void allometry_power_function(cell_t *const c)
 	}
 }
 
+
 ////not used
 //void Get_allometry (species_t* const s, age_t* const a, int years)
 //{

@@ -8,14 +8,10 @@ void daily_growth_efficiency_mortality ( cell_t *const c, const int height, cons
 
 void annual_growth_efficiency_mortality ( cell_t *const c, const int height, const int dbh, const int age, const int species );
 
-void layer_self_pruning_thinning ( cell_t *const );
+void self_pruning (cell_t *const c, const int layer );
 
-int self_pruning (cell_t *const c, const int layer );
-
-void self_thinning (cell_t *const c, const int layer );
+void self_thinning_mortality (cell_t *const c, const int layer );
 
 void age_mortality (cell_t *const c, const int height, const int dbh, const int age, const int species);
-
-void Stool_mortality(cell_t *const, const int, const int, const int, const int);
 
 #endif /* MORTALITY_H_ */

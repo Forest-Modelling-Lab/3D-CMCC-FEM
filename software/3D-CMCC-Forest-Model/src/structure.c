@@ -124,6 +124,7 @@ int annual_forest_structure(cell_t* const c)
 
 	int zeta_count = 0;
 
+	double prev_dbhdc_eff;
 	double temp_crown_area;
 	double temp_crown_radius;
 	double temp_crown_diameter;
@@ -325,6 +326,9 @@ int annual_forest_structure(cell_t* const c)
 							/* this function in mainly based on the assumptions that trees tend to occupy */
 							/* all space they can, if they cannot then fixed values constrain their crown */
 
+							/* assign to temporary variable previous dbhdc_eff */
+							prev_dbhdc_eff = s->value[DBHDC_EFF];
+
 							temp_crown_area = (g_settings->sizeCell * g_settings->max_layer_cover) / (c->tree_layers[layer].layer_density * g_settings->sizeCell);
 
 							temp_crown_radius = sqrt(temp_crown_area / Pi);
@@ -338,6 +342,14 @@ int annual_forest_structure(cell_t* const c)
 
 							/************************************************************************************************************************/
 
+							/* check for self-pruning */
+							if ( prev_dbhdc_eff > s->value[DBHDC_EFF] )
+							{
+								/* note: 04 Oct 2016 */
+								/* call of this function in due to the assumption if current crown area decreases is due to self pruning */
+								self_pruning (c, layer);
+							}
+
 							/* check */
 							if (s->value[DBHDC_EFF] > s->value[DBHDCMAX])
 							{
@@ -347,16 +359,9 @@ int annual_forest_structure(cell_t* const c)
 							}
 							if (s->value[DBHDC_EFF] < s->value[DBHDCMIN])
 							{
-								//fixme then should start self pruning or thinning
-//								logger(g_log,"-DBHDC effective (%g) > DBHDCMIN (%g) \n", s->value[DBHDC_EFF] , s->value[DBHDCMIN]);
-//								logger(g_log,"-DBHDC effective < DBHDCMIN\n");
-//								s->value[DBHDC_EFF] = s->value[DBHDCMIN];
-//								logger(g_log,"-DBHDC effective = %g\n", s->value[DBHDC_EFF]);
-
 								/* note: 04 Oct 2016 */
-								self_thinning (c, layer);
-
-
+								/* call of this function in due to the assumption that canopy cannot decrease its area below DBHDCMIN */
+								self_thinning_mortality (c, layer);
 							}
 						}
 					}
@@ -438,6 +443,21 @@ int annual_forest_structure(cell_t* const c)
 		if( !layer )
 		{
 			logger(g_log, "-Canopy cover DBH-DC layer (%d) level = %g%%\n", layer, c->tree_layers[layer].layer_cover * 100.0);
+		}
+	}
+	logger(g_log, "**************************************\n");
+
+	/*************************************************************************************/
+	/* check if layer cover exceeds maximum layer cover */
+	logger(g_log, "*check if layer cover exceeds maximum layer cover*\n\n");
+
+	for (layer = c->tree_layers_count - 1; layer >= 0; --layer)
+	{
+		if ( c->tree_layers[layer].layer_cover > g_settings->max_layer_cover )
+		{
+			/* note: 04 Oct 2016 */
+			/* call of this function in due to the assumption that overall layer canopy cover cannot exceeds its maximum */
+			self_thinning_mortality (c, layer);
 		}
 	}
 	logger(g_log, "**************************************\n");
