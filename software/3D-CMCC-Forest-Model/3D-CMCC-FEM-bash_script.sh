@@ -2,11 +2,14 @@
 # Developed by Alessio Collalti (alessio.collalti@cmcc.it)
 # starting date: 5 October 2016
 
+
 CMCC="3D_CMCC_Forest_Model"
 VERSION="v.5.2.2"
 PROJECT="ISIMIP"
 
+echo "**************************************"
 echo "$CMCC $VERSION script for $PROJECT run"
+echo "**************************************"
 
 #input paths
 SITE_PATH=input/
@@ -24,6 +27,17 @@ model_release_run="3D_CMCC_Forest_Model"
 site[0]=Soroe
 site[1]=Kroof
 site[2]=Peitz
+
+#declare climate
+CLIMATE[0]=Historical
+CLIMATE[1]=Scenario
+
+#declare historical
+HYSTs[0]=CLIMATE
+HYSTs[1]=PRINCETON
+HYSTs[2]=WATCH
+HYSTs[3]=GSWP3
+HYSTs[4]=WATCH-WFDEI
 
 #declare GCMs
 GCMs[0]=GCM1
@@ -64,7 +78,7 @@ echo "site to simulate '$site_name'"
 
 match=no
 
-#check if readed site merge with available sites
+#check if red site merge with available sites
 for (( i = 0 ; i <= 2 ; ++i )) ; do
 
      if [ "$site_name" == "${site[$i]}" ] ; then
@@ -79,63 +93,130 @@ exit
 fi
 
 #########################################################################################################
-#log available GCMs
-echo 'available GCMs:'
-for (( i = 0 ; i <= 4 ; ++i )) ; do
-      echo -"${GCMs[i]}"
+#log available CLIMATE
+echo 'available CLIMATE:'
+for (( i = 0 ; i <= 1 ; ++i )) ; do
+      echo -"${CLIMATE[i]}"
 done
 
-echo "which GCMs do you want to use for '$site_name' (case sensitive)?"
+echo "which CLIMATE do you want to use for '$site_name' (case sensitive)?"
 
-#ask which GCM to use
-read GCM
+#ask which CLIMATE to use
+read Climate
 
-echo "GCM to use '$GCM'"
+echo "CLIMATE to use '$Climate'"
 
 match=no
 
-#check if readed GCM merge with available GCMs
-for (( i = 0 ; i <= 4 ; ++i )) ; do
+#check if red GCM merge with available CLIMATE
+for (( i = 0 ; i <= 1 ; ++i )) ; do
 
-     if [ "$GCM" == "${GCMs[$i]}" ] ; then
-      match=yes     
-     fi
-done
-
-#exit if none GCM merge with GCM list
-if [ "$match" == "no" ] ; then
-      echo $GCM "doesn't match with GCMs list exit program!"
-exit
-fi
-
-#########################################################################################################
-#log available RCPs
-echo 'available RCPs:'
-for (( i = 0 ; i <= 3 ; ++i )) ; do
-      echo -"${RCPs[i]}"
-done
-
-echo "which RCPs do you want to use for '$site_name' and '$GCM' (case sensitive)?"
-
-#ask which RCP to use
-read RCP
-
-echo "RCP to use '$RCP'"
-
-match=no
-
-#check if readed GCM merge with available GCMs
-for (( i = 0 ; i <= 3 ; ++i )) ; do
-
-     if [ "$RCP" == "${RCPs[$i]}" ] ; then
+     if [ "$Climate" == "${CLIMATE[$i]}" ] ; then
       match=yes      
      fi
 done
 
 #exit if none RCP name merge with RCP list
 if [ "$match" == "no" ] ; then
-      echo $RCP "doesn't match with RCPs list exit program!"
+      echo $Climate "doesn't match with CLIMATE list exit program!"
 exit
+fi
+
+#assign value to case depending on climate
+if [ "$Climate" == "Historical" ] ; then
+		case=0
+else
+		case=1
+fi
+
+#########################################################################################################
+if [ "$case" == 0 ] ; then
+		#log available Historical
+		echo 'available Historical:'
+		for (( i = 0 ; i <= 4 ; ++i )) ; do
+				echo -"${HYSTs[i]}"
+		done
+
+		echo "which Historical do you want to use for '$site_name' (case sensitive)?"
+
+		#ask which HYSTs to use
+		read Hist
+
+		echo "Historical to use '$Hist'"
+
+		match=no
+
+		#check if red Hist merge with available HYSTs
+		for (( i = 0 ; i <= 4 ; ++i )) ; do
+
+			  if [ "$Hist" == "${HYSTs[$i]}" ] ; then
+				match=yes     
+			  fi
+		done
+
+		#exit if none Hist merge with HYSTs list
+		if [ "$match" == "no" ] ; then
+				echo $Hist "doesn't match with Historical list exit program!"
+		exit
+		fi
+else
+		#log available GCMs
+		echo 'available GCMs:'
+		for (( i = 0 ; i <= 4 ; ++i )) ; do
+				echo -"${GCMs[i]}"
+		done
+
+		echo "which GCMs do you want to use for '$site_name' (case sensitive)?"
+
+		#ask which GCM to use
+		read GCM
+
+		echo "GCM to use '$GCM'"
+
+		match=no
+
+		#check if red GCM merge with available GCMs
+		for (( i = 0 ; i <= 4 ; ++i )) ; do
+
+			  if [ "$GCM" == "${GCMs[$i]}" ] ; then
+				match=yes     
+			  fi
+		done
+
+		#exit if none GCM merge with GCM list
+		if [ "$match" == "no" ] ; then
+				echo $GCM "doesn't match with GCMs list exit program!"
+		exit
+		fi
+
+		#log available RCPs
+		echo 'available RCPs:'
+		for (( i = 0 ; i <= 3 ; ++i )) ; do
+				echo -"${RCPs[i]}"
+		done
+
+		echo "which RCPs do you want to use for '$site_name' and '$GCM' (case sensitive)?"
+
+		#ask which RCP to use
+		read RCP
+
+		echo "RCPs to use '$RCP'"
+
+		match=no
+
+		#check if red GCM merge with available GCMs
+		for (( i = 0 ; i <= 3 ; ++i )) ; do
+
+			  if [ "$RCP" == "${RCPs[$i]}" ] ; then
+				match=yes      
+			  fi
+		done
+
+		#exit if none RCP name merge with RCP list
+		if [ "$match" == "no" ] ; then
+				echo $RCP "doesn't match with RCPs list exit program!"
+		exit
+		fi
 fi
 
 #########################################################################################################
@@ -154,7 +235,7 @@ echo "Management is '$Management'"
 
 match=no
 
-#check if readed GCM merge with available GCMs
+#check if red GCM merge with available GCMs
 for (( i = 0 ; i <= 1 ; ++i )) ; do
 
      if [ "$Management" == "${Man[$i]}" ] ; then
@@ -184,7 +265,7 @@ echo "CO2 enrichment is '$CO2enrich'"
 
 match=no
 
-#check if readed GCM merge with available GCMs
+#check if red GCM merge with available GCMs
 for (( i = 0 ; i <= 1 ; ++i )) ; do
 
      if [ "$CO2enrich" == "${CO2[$i]}" ] ; then
@@ -194,23 +275,27 @@ done
 
 #exit if none RCP name merge with RCP list
 if [ "$match" == "no" ] ; then
-      echo $CO2enrich "doesn't match with CO2enrichment possibilities list exit program!"
+      echo $CO2enrich "doesn't match with CO2 enrichment possibilities list exit program!"
 exit
 fi
 
 #########################################################################################################
 
+if [ "$case" == 0 ] ; then
+		MET_PATH=ISIMIP/Historical/"$Hist"_1960-2001.txt
+		SOIL_PATH=ISIMIP/Historical/"$site_name"_soil_"$Hist"_ISIMIP.txt
+		CO2_PATH=ISIMIP/CO2/CO2_historical_1901_2012.txt
+else
+		MET_PATH=ISIMIP/"$GCM"/"$GCM"_hist_"$RCP"_1960_2099.txt
+		SOIL_PATH=ISIMIP/"$GCM"/"$site_name"_soil_"$RCP"_ISIMIP.txt
+		CO2_PATH=ISIMIP/CO2/CO2_"$RCP"_1950_2099.txt
+fi
+
 #add site name to current paths
 SITE_PATH=input/$site_name
 OUTPUT_PATH=output/$site_name
-
 STAND_PATH=ISIMIP/"$site_name"_stand_1960_ISIMIP.txt
-SOIL_PATH=ISIMIP/"$GCM"/"$site_name"_soil_8.5_ISIMIP.txt
 TOPO_PATH=ISIMIP/"$site_name"_topo_ISIMIP.txt
-
-#met path
-MET_PATH=ISIMIP/"$GCM"/"$GCM"_hist_"$RCP"_1960_2099.txt
-CO2_PATH=ISIMIP/CO2/CO2_"$RCP"_1950_2099.txt
 
 #setting path
 SETTING_PATH=ISIMIP/"$site_name"_settings_ISIMIP_Manag-"$Management"_CO2-"$CO2enrich".txt
@@ -234,20 +319,19 @@ cd ..
 #log argumets paths
 echo "*****************************"
 echo "$CMCC $VERSION-$PROJECT arguments"
-echo $SITE_PATH
-echo $PARAMETERIZATION_PATH
-echo $STAND_PATH
-echo $SOIL_PATH
-echo $TOPO_PATH
-echo $MET_PATH
-echo $CO2_PATH
-echo $SETTING_PATH
-echo $OUTPUT_PATH
-echo $DEBUG_OUTPUT
-echo $DAILY_OUTPUT
-echo $MONTHLY_OUTPUT
-echo $ANNUAL_OUTPUT
-echo $SOIL_OUTPUT
+echo -i $SITE_PATH
+echo -p $PARAMETERIZATION_PATH
+echo -d $STAND_PATH
+echo -s $SOIL_PATH
+echo -t $TOPO_PATH
+echo -m $MET_PATH
+echo -k $CO2_PATH
+echo -c $SETTING_PATH
+echo -o $DEBUG_OUTPUT
+echo -b $DAILY_OUTPUT
+echo -f $MONTHLY_OUTPUT
+echo -e $ANNUAL_OUTPUT
+echo -n $SOIL_OUTPUT
 echo "*****************************"
 
 #add paths and arguments to executable
