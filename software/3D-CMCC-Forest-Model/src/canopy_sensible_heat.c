@@ -15,7 +15,7 @@
 #include "matrix.h"
 
 
-//extern logger_t* g_log;
+//extern logger_t* g_debug_log;
 
 void canopy_sensible_heat (cell_t *const c, const int layer, const int height, const int age, const int species, const meteo_daily_t *const meteo_daily)
 {

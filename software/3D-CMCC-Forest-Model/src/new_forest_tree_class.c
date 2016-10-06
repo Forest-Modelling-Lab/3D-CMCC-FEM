@@ -21,7 +21,7 @@
 #include "print.h"
 
 extern settings_t* g_settings;
-extern logger_t* g_log;
+extern logger_t* g_debug_log;
 
 static int fill_cell_for_replanting(cell_t *const c)
 {
@@ -86,10 +86,10 @@ static int fill_cell_for_replanting(cell_t *const c)
 
 int add_tree_class_for_replanting (cell_t *const c)
 {
-	logger(g_log, "**ADD NEW TREE CLASS (REPLANTATION)**\n");
+	logger(g_debug_log, "**ADD NEW TREE CLASS (REPLANTATION)**\n");
 
 	/* it is used only with "human" regeneration */
-	logger(g_log, "Human management\n");
+	logger(g_debug_log, "Human management\n");
 
 	if ( ! fill_cell_for_replanting(c) ) return 0;
 
@@ -136,7 +136,7 @@ static int fill_cell_for_regeneration( cell_t *const c )
 
 	assert(c);
 
-	logger(g_log, "\n**Fill cell from regeneration**\n");
+	logger(g_debug_log, "\n**Fill cell from regeneration**\n");
 
 
 	/* alloc memory for heights */
@@ -163,7 +163,7 @@ static int fill_cell_for_regeneration( cell_t *const c )
 		return 0;
 	}
 	d->ages[d->ages_count-1] = age;
-	d->ages[d->ages_count-1].value = g_settings->regeneration_age;
+	d->ages[d->ages_count-1].value = (int)g_settings->regeneration_age;
 	a = &d->ages[d->ages_count-1];
 
 	/* alloc memory for species */
@@ -179,15 +179,15 @@ static int fill_cell_for_regeneration( cell_t *const c )
 	// ALESSIOR fix, must use e_management
 	a->species[a->species_count-1].management = 0; /* T */
 	a->species[a->species_count-1].name = p;
-	a->species[a->species_count-1].counter[N_TREE] = g_settings->regeneration_n_tree;
+	a->species[a->species_count-1].counter[N_TREE] = (int)g_settings->regeneration_n_tree;
 	a->species[a->species_count-1].counter[N_STUMP] = 0;
 	a->species[a->species_count-1].value[LAI] = g_settings->regeneration_lai;
-	logger(g_log, "-height = %f\n", c->heights[c->heights_count-1].value);
-	logger(g_log, "-dbh = %f\n", h->dbhs[h->dbhs_count-1].value);
-	logger(g_log, "-age = %d\n", d->ages[d->ages_count-1].value);
-	logger(g_log, "-name = %s\n", a->species[a->species_count-1].name);
-	logger(g_log, "-N-tree = %d\n", a->species[a->species_count-1].counter[N_TREE]);
-	logger(g_log, "-lai = %f\n", a->species[a->species_count-1].value[LAI]);
+	logger(g_debug_log, "-height = %f\n", c->heights[c->heights_count-1].value);
+	logger(g_debug_log, "-dbh = %f\n", h->dbhs[h->dbhs_count-1].value);
+	logger(g_debug_log, "-age = %d\n", d->ages[d->ages_count-1].value);
+	logger(g_debug_log, "-name = %s\n", a->species[a->species_count-1].name);
+	logger(g_debug_log, "-N-tree = %d\n", a->species[a->species_count-1].counter[N_TREE]);
+	logger(g_debug_log, "-lai = %f\n", a->species[a->species_count-1].value[LAI]);
 
 
 	return 1;
@@ -195,7 +195,7 @@ static int fill_cell_for_regeneration( cell_t *const c )
 
 int add_tree_class_for_regeneration ( cell_t *const c )
 {
-	logger(g_log, "**ADD NEW TREE CLASS (REGENERATION)**\n");
+	logger(g_debug_log, "**ADD NEW TREE CLASS (REGENERATION)**\n");
 
 
 	/* it is used only with natural regeneration */

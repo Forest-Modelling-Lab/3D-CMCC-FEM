@@ -262,7 +262,7 @@ int path_create(const char *const path) {
 
 	p = strchr(path, '\\');
 	p2 = strchr(path, '/');
-	if ( ! p || (p > p2) ) {
+	if ( ! p || (p2 > p) ) {
 		p = p2;
 	}
 	if ( ! p ) p = p2;
@@ -281,7 +281,7 @@ int path_create(const char *const path) {
 		p3 = strchr(p, '\\');
 		p2 = strchr(p, '/');
 		p = p3;
-		if ( ! p || (p > p2) ) {
+		if ( ! p || (p2 > p) ) {
 			p = p2;
 		}
 	}
@@ -314,7 +314,7 @@ int path_create(const char *const path) {
 	return 1;
 }
 
-char* get_datetime(void) {
+const char* datetime_current(void) {
 	static char buf[22+1];
 	time_t t;
 	struct tm tm;

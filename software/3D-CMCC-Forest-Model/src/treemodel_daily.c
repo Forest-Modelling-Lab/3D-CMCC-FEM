@@ -49,7 +49,7 @@
 #include "regeneration.h"
 
 extern settings_t* g_settings;
-extern logger_t* g_log;
+extern logger_t* g_debug_log;
 
 //extern const char *szMonth[MONTHS_COUNT];
 
@@ -87,7 +87,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	/* check parameters */
 	assert( m );
 
-	logger (g_log, "\n*********TREE_MODEL_DAILY*********\n");
+	logger (g_debug_log, "\n*********TREE_MODEL_DAILY*********\n");
 
 	//FIXME move to meteo_t structure
 	/* counter day of the year */
@@ -124,7 +124,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 		/* assign shortcut */
 		l = &m->cells[cell].tree_layers[layer];
 
-		logger(g_log,"*****************************************************************************\n"
+		logger(g_debug_log,"*****************************************************************************\n"
 				"                                layer = %d                                 \n"
 				"*****************************************************************************\n",layer);
 
@@ -142,7 +142,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 			/* check if tree height class matches with corresponding cell layer */
 			if( h->height_z == l->layer_z )
 			{
-				logger(g_log,"*****************************************************************************\n"
+				logger(g_debug_log,"*****************************************************************************\n"
 						"                              height = %g                              \n"
 						"*****************************************************************************\n", h->value);
 
@@ -152,7 +152,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 					/* assign shortcut */
 					d = &h->dbhs[dbh];
 
-					logger(g_log,"*****************************************************************************\n"
+					logger(g_debug_log,"*****************************************************************************\n"
 							"                              dbh = %g                              \n"
 							"*****************************************************************************\n", d->value);
 
@@ -162,7 +162,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 						/* assign shortcut */
 						a = &m->cells[cell].heights[height].dbhs[dbh].ages[age];
 
-						logger(g_log,"*****************************************************************************\n"
+						logger(g_debug_log,"*****************************************************************************\n"
 								"                                  age = %d                                 \n"
 								"*****************************************************************************\n", a->value);
 
@@ -175,7 +175,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							/* assign shortcut */
 							s = &m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species];
 
-							logger(g_log,"*****************************************************************************\n"
+							logger(g_debug_log,"*****************************************************************************\n"
 									"*                              species = %s                         *\n"
 									"*****************************************************************************\n", s->name);
 
@@ -197,25 +197,25 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							/* compute species-specific phenological phase */
 							phenology ( c, layer, height, dbh, age, species, meteo_daily, month);
 
-							logger(g_log, "--PHYSIOLOGICAL PROCESSES LAYER %d --\n", l->layer_z);
+							logger(g_debug_log, "--PHYSIOLOGICAL PROCESSES LAYER %d --\n", l->layer_z);
 
 							if ( s->counter[VEG_UNVEG] == 1 )
 							{
-								logger(g_log, "\n\n*****VEGETATIVE PERIOD FOR %s SPECIES*****\n", s->name );
+								logger(g_debug_log, "\n\n*****VEGETATIVE PERIOD FOR %s SPECIES*****\n", s->name );
 
 								/* increment vegetative days counter */
 								++s->counter[VEG_DAYS];
-								logger(g_log, "VEG_DAYS = %d \n", s->counter[VEG_DAYS]);
+								logger(g_debug_log, "VEG_DAYS = %d \n", s->counter[VEG_DAYS]);
 
 								++s->counter[YEARLY_VEG_DAYS];
 							}
 							else
 							{
-								logger(g_log, "\n\n*****UN-VEGETATIVE PERIOD FOR %s SPECIES*****\n", s->name );
+								logger(g_debug_log, "\n\n*****UN-VEGETATIVE PERIOD FOR %s SPECIES*****\n", s->name );
 
 								/* increment vegetative days counter */
 								s->counter[VEG_DAYS] = 0;
-								logger(g_log, "VEG_DAYS = %d \n", s->counter[VEG_DAYS]);
+								logger(g_debug_log, "VEG_DAYS = %d \n", s->counter[VEG_DAYS]);
 
 								s->counter[YEARLY_VEG_DAYS] += 0;
 							}
@@ -268,7 +268,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 
 							/****************************************************************************************************************************************/
 							/* check for balance closure at the class level */
-							logger(g_log, "\n**CLASS LEVEL BALANCE**\n");
+							logger(g_debug_log, "\n**CLASS LEVEL BALANCE**\n");
 
 							/* check for radiative balance closure */
 							check_class_radiation_balance ( c, layer, height, dbh, age, species );
@@ -284,7 +284,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							/* last day of the year */
 							if ( c->doy == ( IS_LEAP_YEAR( c->years[year].year ) ? 366 : 365) )
 							{
-								logger(g_log, "*****END OF YEAR %d ******\n", c->years[year].year);
+								logger(g_debug_log, "*****END OF YEAR %d ******\n", c->years[year].year);
 
 								/************************************************************************************************************************************/
 								/* MORTALITY and RENOVATION*/
@@ -313,12 +313,12 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 								print_daily_forest_class_data ( c, layer, height, dbh, age, species );
 
 								/************************************************************************************************************************************/
-								if ( ( ! string_compare_i(g_settings->regeneration, "on")) && ( a->value > s->value[SEXAGE] ) )
+								if ( g_settings->regeneration && ( a->value > s->value[SEXAGE] ) )
 								{
 									/* regeneration */
 									regeneration ( c, height, dbh, age, species);
 								}
-								if ( ! string_compare_i (g_settings->management, "on") && year )
+								if ( g_settings->management && year )
 								{
 									/* management blocks */
 									forest_management (c, layer, height, dbh, age, species, year);
@@ -334,16 +334,16 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 								/************************************************************************************************************************************/
 							}
 						}
-						logger(g_log, "****************END OF SPECIES CLASS***************\n");
+						logger(g_debug_log, "****************END OF SPECIES CLASS***************\n");
 					}
-					logger(g_log, "****************END OF AGES CLASS***************\n");
+					logger(g_debug_log, "****************END OF AGES CLASS***************\n");
 				}
-				logger(g_log, "****************END OF DBH CLASS***************\n");
+				logger(g_debug_log, "****************END OF DBH CLASS***************\n");
 			}
 		}
-		logger(g_log, "****************END OF HEIGHT CLASS***************\n");
+		logger(g_debug_log, "****************END OF HEIGHT CLASS***************\n");
 	}
-	logger(g_log, "****************END OF LAYER CLASS***************\n");
+	logger(g_debug_log, "****************END OF LAYER CLASS***************\n");
 
 	/* ok */
 	return 1;

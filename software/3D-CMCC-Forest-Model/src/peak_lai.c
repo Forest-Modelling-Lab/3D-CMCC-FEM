@@ -11,21 +11,21 @@
 #include "logger.h"
 
 extern settings_t* g_settings;
-extern logger_t* g_log;
+extern logger_t* g_debug_log;
 
 void peak_lai(species_t *const s, const int day, const int month, const int years)
 {
 
-	logger(g_log, "\n**PEAK LAI**\n");
+	logger(g_debug_log, "\n**PEAK LAI**\n");
 
 	s->value[PEAK_LAI] = ((s->value[SAPWOOD_AREA] / 10000) * s->value[SAP_LEAF]) / s->value[CROWN_AREA_DBHDC];
-	logger(g_log, "year %d PEAK LAI from Kostner = %f m2/m2\n",years, s->value[PEAK_LAI]);
+	logger(g_debug_log, "year %d PEAK LAI from Kostner = %f m2/m2\n",years, s->value[PEAK_LAI]);
 
 	s->value[MAX_LEAF_C] = (s->value[PEAK_LAI] / s->value[SLA_AVG]) /1000.0 * (s->value[CANOPY_COVER_DBHDC] * g_settings->sizeCell);
-	logger(g_log, "MAX_LEAF_C (sun and shaded)= %f tC/area \n", s->value[MAX_LEAF_C]);
+	logger(g_debug_log, "MAX_LEAF_C (sun and shaded)= %f tC/area \n", s->value[MAX_LEAF_C]);
 
 	s->value[MAX_FINE_ROOT_C] =s->value[MAX_LEAF_C] * (1.0 - s->value[FINE_ROOT_LEAF_FRAC]);
-	logger(g_log, "MAX_FINE_ROOT_C = %f tC/area \n", s->value[MAX_LEAF_C]);
+	logger(g_debug_log, "MAX_FINE_ROOT_C = %f tC/area \n", s->value[MAX_LEAF_C]);
 
 	/***************************************************************************************************************/
 	/* note: special case for evergreen */
@@ -35,21 +35,21 @@ void peak_lai(species_t *const s, const int day, const int month, const int year
 		if ((s->value[LAI] > s->value[PEAK_LAI]) || (s->value[LEAF_C] > s->value[MAX_LEAF_C]))
 		{
 			s->value[LAI] = s->value[PEAK_LAI];
-			logger(g_log, "Initial LAI > PEAK LAI, recompute it\n");
-			logger(g_log, "recomputed LAI = %f\n", s->value[LAI]);
+			logger(g_debug_log, "Initial LAI > PEAK LAI, recompute it\n");
+			logger(g_debug_log, "recomputed LAI = %f\n", s->value[LAI]);
 
 			/*then recompute leaf biomass*/
 			s->value[LEAF_C] = s->value[MAX_LEAF_C];
-			logger(g_log, "recomputed leaf mass = %f tC\n", s->value[MAX_LEAF_C]);
+			logger(g_debug_log, "recomputed leaf mass = %f tC\n", s->value[MAX_LEAF_C]);
 		}
 	}
 	/*
 	//used in LEAFFALL MARCONI function
 	s->value[MAX_FINE_ROOT_C] = s->value[MAX_LEAF_C] * s->value[FINE_ROOT_LEAF_FRAC];
 	s->value[MAX_BUD_BURST_C] = s->value[MAX_LEAF_C] + s->value[MAX_FINE_ROOT_C];
-	logger(g_log, "MAX_BIOMASS_FOLIAGE = %f tC/cell\n", s->value[MAX_LEAF_C]);
-	logger(g_log, "MAX_BIOMASS_FINE_ROOTS = %f tC/cell\n", s->value[MAX_FINE_ROOT_C]);
-	logger(g_log, "MAX_BUD_BURST_C = %f tC/cell\n", s->value[MAX_BUD_BURST_C]);
+	logger(g_debug_log, "MAX_BIOMASS_FOLIAGE = %f tC/cell\n", s->value[MAX_LEAF_C]);
+	logger(g_debug_log, "MAX_BIOMASS_FINE_ROOTS = %f tC/cell\n", s->value[MAX_FINE_ROOT_C]);
+	logger(g_debug_log, "MAX_BUD_BURST_C = %f tC/cell\n", s->value[MAX_BUD_BURST_C]);
 
 	//used in LEAFFALL MARCONI function
 	s->value[MAX_BIOMASS_FINE_ROOTS_tDM] = s->value[MAX_BIOMASS_FOLIAGE_tDM] * s->value[FINE_ROOT_LEAF_FRAC];

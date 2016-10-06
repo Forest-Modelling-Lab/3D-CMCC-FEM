@@ -6,7 +6,7 @@
 #include "constants.h"
 #include "logger.h"
 
-extern logger_t* g_log;
+extern logger_t* g_debug_log;
 
 void allometry_power_function(cell_t *const c)
 {
@@ -22,7 +22,7 @@ void allometry_power_function(cell_t *const c)
 	age_t *a;
 	species_t *s;
 
-	logger(g_log,"\nAllometry Power Function\n");
+	logger(g_debug_log,"\nAllometry Power Function\n");
 
 	for ( height = 0; height < c->heights_count; ++height )
 	{
@@ -40,9 +40,9 @@ void allometry_power_function(cell_t *const c)
 				{
 					s = &a->species[species];
 
-					logger(g_log, "Species = %s\n", s->name);
+					logger(g_debug_log, "Species = %s\n", s->name);
 
-					logger(g_log, "Age = %d\n", a->value);
+					logger(g_debug_log, "Age = %d\n", a->value);
 
 					/* note: ISIMIP special case */
 					if (a->value == 0)
@@ -53,10 +53,10 @@ void allometry_power_function(cell_t *const c)
 					{
 						mod_age = a->value;
 					}
-					logger(g_log, "Age (used in function) = %d\n", mod_age);
+					logger(g_debug_log, "Age (used in function) = %d\n", mod_age);
 
 					s->value[MASS_DENSITY] = s->value[RHOMAX] + (s->value[RHOMIN] - s->value[RHOMAX]) * exp(-ln2 * (mod_age / s->value[TRHO]));
-					logger(g_log, "-Mass Density = %g\n", s->value[MASS_DENSITY]);
+					logger(g_debug_log, "-Mass Density = %g\n", s->value[MASS_DENSITY]);
 
 					if ( d->value < 9 )
 					{
@@ -70,7 +70,7 @@ void allometry_power_function(cell_t *const c)
 					{
 						s->value[STEMCONST] = pow (e, -3.51+1.27*s->value[MASS_DENSITY]);
 					}
-					logger(g_log, "-Stem const = %f\n", s->value[STEMCONST]);
+					logger(g_debug_log, "-Stem const = %f\n", s->value[STEMCONST]);
 				}
 			}
 		}

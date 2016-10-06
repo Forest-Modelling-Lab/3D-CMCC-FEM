@@ -8,7 +8,7 @@
 #include "output.h"
 #include "netcdf.h"
 
-extern logger_t* g_log;
+extern logger_t* g_debug_log;
 extern const char sz_err_out_of_memory[];
 
 /*
@@ -317,7 +317,7 @@ static int output_write_nc(const output_t* const vars, const char *const path, c
 	else if ( 1 == type ) time_rows = malloc(years_count*12*sizeof*time_rows);
 	else if ( 2 == type ) time_rows = malloc(years_count*sizeof*time_rows);
 	if ( ! time_rows ) {
-		logger(g_log, sz_err_out_of_memory);
+		logger(g_debug_log, sz_err_out_of_memory);
 		return 0;
 	}
 
@@ -430,7 +430,7 @@ static int output_write_nc(const output_t* const vars, const char *const path, c
 	return 1;
 
 quit:
-	logger(g_log, "unable to create output netcdf file %s: %s", sz_buffer, nc_strerror(ret));
+	logger(g_debug_log, "unable to create output netcdf file %s: %s", sz_buffer, nc_strerror(ret));
 	free(time_rows);
 	nc_close(id_file);
 
@@ -490,7 +490,7 @@ static int output_write_txt(const output_t* const vars, const char *const path, 
 		f = fopen(sz_buffer, "w");
 		if ( ! f )
 		{
-			logger(g_log, "unable to create output file: %s", sz_buffer);
+			logger(g_debug_log, "unable to create output file: %s", sz_buffer);
 			return 0;
 		}
 

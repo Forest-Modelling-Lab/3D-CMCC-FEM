@@ -41,9 +41,11 @@
 #include "cell_model.h"
 #include "soil_model.h"
 
+/*
 #if defined _WIN32
 #include "commit_hash.h"
 #endif
+*/
 
 /* Last cumulative days in months in non Leap years */
 int MonthLength [] = { 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365};
@@ -59,7 +61,7 @@ const char *szMonth[MONTHS_COUNT] = { "JANUARY", "FEBRUARY", "MARCH", "APRIL", "
 
 /* global vars */
 /* DO NOT REMOVE INITIALIZATION TO NULL, IT IS REQUIRED !! */
-logger_t* g_log = NULL;
+logger_t* g_debug_log = NULL;
 logger_t* g_daily_log = NULL;
 logger_t* g_monthly_log = NULL;
 logger_t* g_annual_log = NULL;
@@ -72,21 +74,15 @@ settings_t* g_settings = NULL;
 char 	*g_sz_program_path = NULL
 		, *g_sz_parameterization_path = NULL
 		, *g_sz_input_path = NULL
+		, *g_sz_output_path = NULL
 		, *g_sz_dataset_file = NULL
 		, *g_sz_input_met_file = NULL
 		, *g_sz_soil_file = NULL
 		, *g_sz_topo_file = NULL
-
-		, *g_sz_debug_output_filename = NULL
-		, *g_sz_daily_output_filename =	NULL
-		, *g_sz_monthly_output_filename = NULL
-		, *g_sz_yearly_output_filename = NULL
-		, *g_sz_soil_output_filename = NULL
-
 		, *g_sz_settings_file =	NULL
 		, *g_sz_co2_conc_file = NULL
 		, *g_sz_output_vars_file = NULL
-		;
+;
 
 static int years_of_simulation;	// default is none
 
@@ -98,36 +94,34 @@ const char sz_launched[] = "\n"PROGRAM_NAME"\n"
 		"--------------------------------------------------------------------------------\n";
 
 static const char banner[] = "\n"PROGRAM_NAME"\n"
-		"by Alessio Collalti [alessio.collalti@cmcc.it, a.collalti@unitus.it]\n"
 		"compiled using "COMPILER" on "__DATE__" at "__TIME__"\n"
 		"using NetCDF %s\n"
+/*
 #if defined _WIN32
-		"last commit hash: "COMMIT_HASH"\n"
+		"previous commit hash: "COMMIT_HASH"\n"
 #endif
-		"(use -h parameter for more information)\n\n";
-
-static char copyright[] =
-		"\n"
-		"The 3D-CMCC Forest Ecosystem Model (v.5.2.2) has been developed by:\n"
+*/
+		"(use -h parameter for more information)\n\n"
+		"The "PROGRAM_NAME" has been developed by:\n"
 		"Alessio Collalti [alessio.collalti@cmcc.it, a.collalti@unitus.it],\n"
-		"Alessio Ribeca,\n"
+		"Alessio Ribeca [alessio.ribeca@cmcc.it]\n"
 		"Sergio Marconi [sergio.marconi@cmcc.it]\n"
 		"Monia Santini [monia.santini@cmcc.it]\n"
 		"euroMediterranean Center on Climate Changes (CMCC),\n"
 		"IAFES division,\n"
 		"Viale Trieste 120, 01100 - Viterbo, Italy,\n"
 		"and \n"
-		"University of Tuscia ,\n"
+		"Tuscia University (UNITUS),\n"
 		"Department for innovation in biological, agro-food and forest systems (DIBAF),\n"
 		"Forest Ecology Lab\n"
 		"\n"
 		"Programmers: Alessio Collalti - Alessio Ribeca - Sergio Marconi - Monia Santini\n"
 		"\n"
-		"\"DISCLAIMER\"\n\n"
-		"CMCC and University of Tuscia\n"
+		"\"DISCLAIMER\"\n"
+		"CMCC and UNITUS\n"
 		"accepts no responsibility for the use of the 3D_CMCC FEM in\n"
 		"the form supplied or as subsequently modified by third parties.\n"
-		"CMCC and University of Tuscia disclaims liability for all losses,\n"
+		"CMCC and UNITUS disclaims liability for all losses,\n"
 		"damages and costs incurred by any person as a result of relying on this software.\n"
 		"Use of this software assumes agreement to this condition of use.\n"
 		"Removal of this statement violates the spirit in which 3D-CMCC FEM,\n"
@@ -135,9 +129,7 @@ static char copyright[] =
 		"for more information see:\n"
 		"-Collalti et al., 2014 Ecological Modelling,\n"
 		"-Collalti et al., 2016 Geoscientific Model Development\n"
-		"--------------------------------------------------------------------------------\n"
-		;
-
+		"--------------------------------------------------------------------------------\n";
 static const char msg_input_path[]				=	"input path = %s\n";
 static const char msg_parameterization_path[]	=	"parameterization path = %s\n";
 static const char msg_soil_file[]				=	"soil file = %s\n";
@@ -155,22 +147,16 @@ static const char msg_ok_tree_model[]			=	"ok tree_model_daily";
 static const char msg_ok_soil_model[]			=	"ok soil_model_daily";
 static const char msg_ok_cell_model[]			=	"ok cell_model_daily";
 static const char msg_usage[]					=	"\nusage:\n"
-		"  3D-CMCC Model -i INPUT_DIR -o OUTPUT_FILENAME -d DATASET_FILENAME -m MET_FILE_LIST -s SITE_FILENAME -c SETTINGS_FILENAME [-h]\n"
+		"  3D-CMCC-Forest-Model -i INPUT_DIR -d DATASET_FILENAME -m MET_FILE_LIST -s SITE_FILENAME -c SETTINGS_FILENAME [-o OUTPUT_FILENAME] [-h]\n"
 		"  required options:\n"
 #ifdef _WIN32
-		"    -i input directory (i.e.: -i c:\\input\\directory\\)\n"
+		"    -i input path (i.e.: -i c:\\input\\directory\\)\n"
+		"    -o output path (i.e.: -o c:\\output\\directory\\)\n"
 		"    -p parameterization directory (i.e.: -i c:\\parameterization\\directory\\)\n"
-		"    -o output filename (i.e.: -o c:\\output\\3D-CMCC-FEM.log)\n"
-		"    -b daily output filename (i.e.: -o c:\\output\\daily_3D-CMCC-FEM.log)\n"
-		"    -f monthly output filename (i.e.: -o c:\\output\\monthly_3D-CMCC-FEM.log)\n"
-		"    -e annual output filename (i.e.: -o c:\\output\\annual_3D-CMCC-FEM.log)\n"
 #else
-		"    -i input directory (i.e.: -i path/to/input/directory/)\n"
+		"    -i input directory (i.e.: -i path/to/input/folder/)\n"
+		"    -o output directory (i.e.: -i path/to/output/folder/)\n"
 		"    -p parameterization directory (i.e.: -i path/to/parameterization/directory/)\n"
-		"    -o output filename (i.e.: -o /path/to/3D-CMCC-FEM.log)\n"
-		"    -b daily output filename (i.e.: -o /path/to/3D-CMCC-FEM.log)\n"
-		"    -f monthly output filename (i.e.: -o /path/to/3D-CMCC-FEM.log)\n"
-		"    -e annual output filename (i.e.: -o /path/to/3D-CMCC-FEM.log)\n"
 #endif
 		"    -d dataset filename stored into input directory (i.e.: -d input.txt)\n"
 		"    -m met filename list stored into input directory (i.e.: -m 1999.txt,2003.txt,2009.txt)\n"
@@ -180,7 +166,7 @@ static const char msg_usage[]					=	"\nusage:\n"
 		"    -k co2 concentration file (i.e.: -k co2_conc.txt)\n"
 		"    -r output vars list (i.e.: -r output_vars.lst)\n"
 		"    -h print this help\n"
-		;
+;
 
 /* error messages */
 extern const char sz_err_out_of_memory[];
@@ -191,16 +177,20 @@ static const char err_unable_get_current_path[] = "unable to retrieve current pa
 static const char err_unable_to_register_atexit[] = "unable to register clean-up routine.\n";
 
 
-static void clean_up(void) {
+static void clean_up(void)
+{
 	if ( g_sz_output_vars_file ) free(g_sz_output_vars_file);
 	if ( g_sz_co2_conc_file ) free(g_sz_co2_conc_file);
 	if ( g_sz_settings_file ) free(g_sz_settings_file);
+	/*
 	if ( g_sz_debug_output_filename ) free(g_sz_debug_output_filename);
 	if ( g_sz_daily_output_filename ) free(g_sz_daily_output_filename);
 	if ( g_sz_monthly_output_filename ) free(g_sz_monthly_output_filename);
 	if ( g_sz_yearly_output_filename ) free(g_sz_yearly_output_filename);
 	if ( g_sz_soil_output_filename ) free(g_sz_soil_output_filename);
+	*/
 	if ( g_sz_parameterization_path ) free(g_sz_parameterization_path);
+	if ( g_sz_output_path ) free(g_sz_output_path);
 	if ( g_sz_input_path ) free(g_sz_input_path);
 	if ( g_topo ) free(g_topo);
 	if ( g_sz_topo_file ) free(g_sz_topo_file);
@@ -227,75 +217,89 @@ static void clean_up(void) {
 #endif
 }
 
-static void show_usage(void) {
+static void show_usage(void)
+{
 	puts(msg_usage);
 }
 
 static int log_start(const char* const sitename)
 {
-	struct tm* data;
-	time_t rawtime;
-	char buffer[128]; /* should be enough */
-	char buffer_2[32];
+	char *p;
+	char buffer[128];	/* should be enough */
+	char date[32];		/* should be enough */
+	int len;
+	struct tm* ptm;
+	time_t t;
+						
+	/* get current date */
+	time(&t);
+	ptm = gmtime(&t);
+	sprintf(date, "%04d_%s_%02d"
+				, ptm->tm_year+1900
+				, szMonth[ptm->tm_mon]
+				, ptm->tm_mday
+	);
 
-	time(&rawtime);
-	data = gmtime(&rawtime);
+	/* build log filename */
 
-	sprintf(buffer, "_%s", PROGRAM_VERSION);
+	/* program version */
+	len = sprintf(buffer, "_%s", PROGRAM_VERSION);
 
+	/* sitename */
 	if ( sitename && sitename[0] ) {
-		strcat(buffer, "_");
-		strcat(buffer, sitename);
+		len += sprintf(buffer+len, "_%s", sitename);
 	}
 
-	strcat(buffer, "_");
-	sprintf(buffer_2, "%c", g_settings->version);
-	strcat(buffer, buffer_2);
-	strcat(buffer, "_CO2_fixed_");
-	if ( ! string_compare_i(g_settings->CO2_fixed, "on") )
-	{
-		strcat(buffer, "ON");
+	/* setting version */
+	len += sprintf(buffer+len, "_%c", g_settings->version);
+
+	/* co2_fixed */
+	switch ( g_settings->CO2_fixed ) {
+		case CO2_FIXED_OFF:
+			p = "OFF";
+		break;
+
+		case CO2_FIXED_ON:
+			p = "ON";
+		break;
+
+		case CO2_FIXED_VAR:
+			p = "VAR";
+		break;
+
+		default:
+			puts("bad CO2_fixed value in settings file!\n");
+		return 0;
 	}
-	else if ( ! string_compare_i(g_settings->CO2_fixed, "var") )
+	len += sprintf(buffer+len, "_CO2_fixed_%s", p);
+
+	/* management */
+	if ( g_settings->management )
 	{
-		strcat(buffer, "VAR");
+		p = "ON";
 	}
 	else
 	{
-		strcat(buffer, "OFF");
+		p = "OFF";
 	}
-	strcat(buffer, "_Manag_");
-	if ( ! string_compare_i(g_settings->management, "on") )
-	{
-		strcat(buffer, "ON");
-	}
-	else
-	{
-		strcat(buffer, "OFF");
-	}
-	strcat(buffer, "_");
-	sprintf(buffer_2, "%c", g_settings->time);
-	strcat(buffer, buffer_2);
-	strcat(buffer, "_");
-	sprintf(buffer_2, "%d", (int)g_settings->sizeCell);
-	strcat(buffer, buffer_2);
-	strcat(buffer, "_");
-	sprintf(buffer_2, "%d", data->tm_year+1900);
-	strcat(buffer, buffer_2);
-	strcat(buffer, "_");
-	sprintf(buffer_2, "%s", szMonth[data->tm_mon]);
-	strcat(buffer, buffer_2);
-	strcat(buffer, "_");
-	sprintf(buffer_2, "%d", data->tm_mday);
-	strcat(buffer, buffer_2);
+	len += sprintf(buffer+len, "_Manag_%s", p);
 
-	if ( ! string_compare_i(g_settings->dndc, "on") )
+	/* time */
+	len += sprintf(buffer+len, "_%c", g_settings->time);
+
+	/* sizeCell */
+	len += sprintf(buffer+len, "_%d", (int)g_settings->sizeCell);
+
+	/* date */
+	len += sprintf(buffer+len, "_%s", date);
+
+	/* dndc */
+	if ( g_settings->dndc )
 	{
-		strcat(buffer, "_");
-		strcat(buffer, "DNDC");
+		len += sprintf(buffer+len, "_DNDC");
 	}
 
-	/* add suffix for type files */
+	/* files type */
 	{
 		char *p;
 		char *ext;
@@ -315,76 +319,92 @@ static int log_start(const char* const sitename)
 			puts("bad met file!\n");
 			return 0;
 		}
-		strcat(buffer, ext);
+		len += sprintf(buffer+len, "%s", ext);
 	}
+	len += sprintf(buffer+len, ".txt");
 
-	strcat(buffer, ".txt");
+	/* create log files */
+	{
+		int i;
+		int flag;
+		int log_flag[5];
+		char* log_name[5] = {	"debug"
+								, "daily"
+								, "monthly"
+								, "annual"
+								, "soil"
+		};
 
-	/* absolute path ? */
-	if ( g_sz_debug_output_filename ) {
-		g_log = logger_new("%s%s", g_sz_debug_output_filename, buffer);
-		if ( ! g_log ) {
-			puts("Unable to create log!");
-			return 0;
+		logger_t** logs[5] = {
+								&g_debug_log
+								, &g_daily_log
+								, &g_monthly_log
+								, &g_annual_log
+								, &g_soil_log
+		};
+	
+		log_flag[0] = g_settings->debug_output;
+		log_flag[1] = g_settings->daily_output;
+		log_flag[2] = g_settings->monthly_output;
+		log_flag[3] = g_settings->yearly_output;
+		log_flag[4] = g_settings->soil_output;
+
+		flag = 0;
+		if ( g_sz_output_path ) {
+			int len = strlen(g_sz_output_path);
+			flag = (('/' == g_sz_output_path[len-1]) || ('\\' == g_sz_output_path[len-1]));
+		}
+
+		for ( i = 0 ; i < 5; ++i ) {
+			if ( log_flag[i] ) {
+				*logs[i] = logger_new("%s%s%s_output%s%s_output_%s%s%s%s"
+											, g_sz_output_path ? g_sz_output_path : ""
+											, flag ? "" : FOLDER_DELIMITER
+											, log_name[i]
+											, FOLDER_DELIMITER
+											, log_name[i]
+											, date
+											, FOLDER_DELIMITER
+											, log_name[i]
+											, buffer
+				);
+				if ( ! *logs[i] ) {
+					printf("Unable to create %s log!\n\n",log_name[i]);
+					return 0;
+				}
+			}
 		}
 	}
 
-	g_daily_log = logger_new("%s%s", g_sz_daily_output_filename, buffer);
-	if ( ! g_daily_log ) {
-		puts("Unable to create daily log!");
-		return 0;
-	}
-
-	g_monthly_log = logger_new("%s%s", g_sz_monthly_output_filename, buffer);
-	if ( ! g_monthly_log ) {
-		puts("Unable to create monthly log!");
-		return 0;
-	}
-
-	g_annual_log = logger_new("%s%s", g_sz_yearly_output_filename, buffer);
-	if ( ! g_annual_log ) {
-		puts("Unable to create annual log!");
-		return 0;
-	}
-
-	g_soil_log = logger_new("%s%s", g_sz_soil_output_filename, buffer);
-	if ( ! g_soil_log ) {
-		puts("Unable to create soil log!");
-		return 0;
-	}
-
-	/* enabled screen output by default */
-	logger_enable_std(g_log);
-
-	logger(g_log, copyright);
-
 	/* disable screen output when "off" */
-	if ( ! string_compare_i(g_settings->screen_output, "off") )
-	{
-		logger_disable_std(g_log);
+	if ( ! g_settings->screen_output ) { 
+		logger_disable_std(g_debug_log);
 	}
 
-	logger(g_log, sz_launched, netcdf_get_version(), get_datetime());
+	logger(g_debug_log, sz_launched, netcdf_get_version(), datetime_current());
 
 	/* show paths */
-	logger(g_log,"\nFILE NAMES AND PATHS\n");
+	logger(g_debug_log,"\nFILE NAMES AND PATHS\n");
 	if ( g_sz_input_path )		
-		logger(g_log, msg_input_path, g_sz_input_path);
-	logger(g_log, msg_parameterization_path, g_sz_parameterization_path);
-	logger(g_log, msg_soil_file, g_sz_soil_file);
-	logger(g_log, msg_topo_file, g_sz_topo_file);
-	logger(g_log, msg_met_path, g_sz_input_met_file);
+		logger(g_debug_log, msg_input_path, g_sz_input_path);
+	logger(g_debug_log, msg_parameterization_path, g_sz_parameterization_path);
+	logger(g_debug_log, msg_soil_file, g_sz_soil_file);
+	logger(g_debug_log, msg_topo_file, g_sz_topo_file);
+	logger(g_debug_log, msg_met_path, g_sz_input_met_file);
 
 	if ( g_sz_co2_conc_file ) 
-		logger(g_log, msg_co2_conc_file, g_sz_co2_conc_file);
+		logger(g_debug_log, msg_co2_conc_file, g_sz_co2_conc_file);
 
-	logger(g_log, msg_settings_path, g_sz_settings_file);
+	logger(g_debug_log, msg_settings_path, g_sz_settings_file);
+	// ALESSIOR TODO
+	/*
 	if ( g_sz_debug_output_filename ) 
-		logger(g_log, msg_debug_output_file, g_sz_debug_output_filename);
-	logger(g_log, msg_daily_output_file, g_sz_daily_output_filename);
-	logger(g_log, msg_monthly_output_file, g_sz_monthly_output_filename);
-	logger(g_log, msg_annual_output_file, g_sz_yearly_output_filename);
-	logger(g_log, msg_soil_output_file, g_sz_soil_output_filename);
+		logger(g_debug_log, msg_debug_output_file, g_sz_debug_output_filename);
+	logger(g_debug_log, msg_daily_output_file, g_sz_daily_output_filename);
+	logger(g_debug_log, msg_monthly_output_file, g_sz_monthly_output_filename);
+	logger(g_debug_log, msg_annual_output_file, g_sz_yearly_output_filename);
+	logger(g_debug_log, msg_soil_output_file, g_sz_soil_output_filename);
+	*/
 
 	return 1;
 }
@@ -445,14 +465,8 @@ static int parse_args(int argc, char *argv[])
 {
 	int i;
 
-
 	g_sz_input_path = NULL;
 	g_sz_parameterization_path = NULL;
-	g_sz_debug_output_filename = NULL;
-	g_sz_daily_output_filename = NULL;
-	g_sz_monthly_output_filename = NULL;
-	g_sz_yearly_output_filename = NULL;
-	g_sz_soil_output_filename = NULL;
 	g_sz_dataset_file = NULL;
 	g_sz_input_met_file = NULL;
 	g_sz_soil_file = NULL;
@@ -466,182 +480,133 @@ static int parse_args(int argc, char *argv[])
 		}
 
 		switch ( argv[i][1] ) {
-		case 'i': /* folder where input files are stored */
-			if ( ! argv[i+1] ) {
-				puts("input path not specified!");
-				goto err;
-			}
-			g_sz_input_path = path_copy(argv[i+1]);
-			if ( ! g_sz_input_path ) {
-				puts(sz_err_out_of_memory);
-				goto err;
-			}
+			case 'i': /* folder where input files are stored */
+				if ( ! argv[i+1] ) {
+					puts("input path not specified!");
+					goto err;
+				}
+				g_sz_input_path = path_copy(argv[i+1]);
+				if ( ! g_sz_input_path ) {
+					puts(sz_err_out_of_memory);
+					goto err;
+				}
 			break;
 
-		case 'p': /* folder where parameterization files are stored */
-			if ( ! argv[i+1] ) {
-				puts("parameterization path not specified!");
-				goto err;
-			}
-			g_sz_parameterization_path = path_copy(argv[i+1]);
-			if ( ! g_sz_parameterization_path ) {
-				puts(sz_err_out_of_memory);
-				goto err;
-			}
+			case 'p': /* folder where parameterization files are stored */
+				if ( ! argv[i+1] ) {
+					puts("parameterization path not specified!");
+					goto err;
+				}
+				g_sz_parameterization_path = path_copy(argv[i+1]);
+				if ( ! g_sz_parameterization_path ) {
+					puts(sz_err_out_of_memory);
+					goto err;
+				}
 			break;
 
-		case 'o': /* debug output file path */
-			if ( ! argv[i+1] ) {
-				puts("debug file path not specified!");
-				goto err;
-			}
-			g_sz_debug_output_filename = string_copy(argv[i+1]);
-			if ( ! g_sz_debug_output_filename ) {
-				puts(sz_err_out_of_memory);
-				goto err;
-			}
+			case 'o': /* output folder*/
+				if ( ! argv[i+1] ) {
+					puts("output folder not specified");
+					goto err;
+				}
+				g_sz_output_path = string_copy(argv[i+1]);
+				if ( ! g_sz_output_path ) {
+					puts(sz_err_out_of_memory);
+					goto err;
+				}
 			break;
 
-		case 'b': /* daily output file path */
-			if ( ! argv[i+1] ) {
-				puts("daily file not specified!");
-				goto err;
-			}
-			g_sz_daily_output_filename = string_copy(argv[i+1]);
+			case 'd': /* dataset file path */
+				if ( ! argv[i+1] ) {
+					puts("dataset file not specified!");
+					goto err;
+				}
+				g_sz_dataset_file = string_copy(argv[i+1]);
+				if( ! g_sz_dataset_file ) {
+					puts(sz_err_out_of_memory);
+					goto err;
+				}
+				break;
 
-			if( ! g_sz_daily_output_filename ) {
-				puts(sz_err_out_of_memory);
-				goto err;
-			}
-			break;
+			case 'm': /* met filename */
+				if ( ! argv[i+1] ) {
+					puts("met file not specified!");
+					goto err;
+				}
+				g_sz_input_met_file = string_copy(argv[i+1]);
+				if ( ! g_sz_input_met_file ) {
+					puts(sz_err_out_of_memory);
+					goto err;
+				}
+				break;
 
-		case 'f': /* monthly output file path */
-			if ( ! argv[i+1] ) {
-				puts("monthly file not specified!");
-				goto err;
-			}
-			g_sz_monthly_output_filename = string_copy(argv[i+1]);
-			if( ! g_sz_monthly_output_filename ) {
-				puts(sz_err_out_of_memory);
-				goto err;
-			}
-			break;
+			case 's': /*soil file */
+				if ( ! argv[i+1] ) {
+					puts("soil file not specified!");
+					goto err;
+				}
+				g_sz_soil_file = string_copy(argv[i+1]);
+				if ( ! g_sz_soil_file ) {
+					puts(sz_err_out_of_memory);
+					goto err;
+				}
+				break;
 
-		case 'e': /* yearly output file path */
-			if ( ! argv[i+1] ) {
-				puts("annual file not specified!");
-				goto err;
-			}
-			g_sz_yearly_output_filename = string_copy(argv[i+1]);
-			if( ! g_sz_yearly_output_filename ) {
-				puts(sz_err_out_of_memory);
-				goto err;
-			}
-			break;
+			case 't': /* topo file */
+				if ( ! argv[i+1] ) {
+					puts("topo file not specified!");
+					goto err;
+				}
+				g_sz_topo_file = string_copy(argv[i+1]);
+				if( ! g_sz_topo_file ) {
+					puts(sz_err_out_of_memory);
+					goto err;
+				}
+				break;
 
-		case 'n': /* soil output file path */
-			if ( ! argv[i+1] ) {
-				puts("soil file not specified!");
-				goto err;
-			}
-			g_sz_soil_output_filename = string_copy(argv[i+1]);
-			if( ! g_sz_soil_output_filename ) {
-				puts(sz_err_out_of_memory);
-				goto err;
-			}
-			break;
+			case 'c': /* settings file */
+				if ( ! argv[i+1] ) {
+					puts("settings file not specified!");
+					goto err;
+				}
+				g_sz_settings_file = string_copy(argv[i+1]);
+				if( ! g_sz_settings_file ) {
+					puts(sz_err_out_of_memory);
+					goto err;
+				}
+				break;
 
-		case 'd': /* dataset file path */
-			if ( ! argv[i+1] ) {
-				puts("dataset file not specified!");
-				goto err;
-			}
-			g_sz_dataset_file = string_copy(argv[i+1]);
-			if( ! g_sz_dataset_file ) {
-				puts(sz_err_out_of_memory);
-				goto err;
-			}
-			break;
+			case 'k': /* co2 file */
+				if ( ! argv[i+1] ) {
+					puts("co2 conc file not specified!");
+					goto err;
+				}
+				g_sz_co2_conc_file = string_copy(argv[i+1]);
+				if( ! g_sz_co2_conc_file ) {
+					puts(sz_err_out_of_memory);
+					goto err;
+				}
+				break;
 
-		case 'm': /* met filename */
-			if ( ! argv[i+1] ) {
-				puts("met file not specified!");
-				goto err;
-			}
-			g_sz_input_met_file = string_copy(argv[i+1]);
-			if ( ! g_sz_input_met_file ) {
-				puts(sz_err_out_of_memory);
-				goto err;
-			}
-			break;
+			case 'r': /* output filename */
+				if ( ! argv[i+1] ) {
+					puts("output path not specified!");
+					goto err;
+				}
+				g_sz_output_vars_file = string_copy(argv[i+1]);
+				if( ! g_sz_output_vars_file ) {
+					puts(sz_err_out_of_memory);
+					goto err;
+				}
+				break;
 
-		case 's': /*soil file */
-			if ( ! argv[i+1] ) {
-				puts("soil file not specified!");
-				goto err;
-			}
-			g_sz_soil_file = string_copy(argv[i+1]);
-			if ( ! g_sz_soil_file ) {
-				puts(sz_err_out_of_memory);
-				goto err;
-			}
-			break;
+			case 'h': /* show help */
+				goto err_show_usage;
+				break;
 
-		case 't': /* topo file */
-			if ( ! argv[i+1] ) {
-				puts("topo file not specified!");
-				goto err;
-			}
-			g_sz_topo_file = string_copy(argv[i+1]);
-			if( ! g_sz_topo_file ) {
-				puts(sz_err_out_of_memory);
-				goto err;
-			}
-			break;
-
-		case 'c': /* settings file */
-			if ( ! argv[i+1] ) {
-				puts("settings file not specified!");
-				goto err;
-			}
-			g_sz_settings_file = string_copy(argv[i+1]);
-			if( ! g_sz_settings_file ) {
-				puts(sz_err_out_of_memory);
-				goto err;
-			}
-			break;
-
-		case 'k': /* co2 file */
-			if ( ! argv[i+1] ) {
-				puts("co2 conc file not specified!");
-				goto err;
-			}
-			g_sz_co2_conc_file = string_copy(argv[i+1]);
-			if( ! g_sz_co2_conc_file ) {
-				puts(sz_err_out_of_memory);
-				goto err;
-			}
-			break;
-
-		case 'r': /* output filename */
-			if ( ! argv[i+1] ) {
-				puts("output path not specified!");
-				goto err;
-			}
-			g_sz_output_vars_file = string_copy(argv[i+1]);
-			if( ! g_sz_output_vars_file ) {
-				puts(sz_err_out_of_memory);
-				goto err;
-			}
-			break;
-
-		case 'h': /* show help */
-			goto err_show_usage;
-			break;
-
-		default:
-			printf("invalid option (%s)!\n", argv[i]);
-			goto err_show_usage;
+			default:
+				printf("invalid option (%s)!\n", argv[i]);
+				goto err_show_usage;
 		}
 	}
 
@@ -666,7 +631,6 @@ static int parse_args(int argc, char *argv[])
 		puts("output filename option is missing!");
 		goto err_show_usage;
 	}
-	 */
 
 	if ( ! g_sz_monthly_output_filename ) {
 		puts("monthly output filename option is missing!");
@@ -682,6 +646,7 @@ static int parse_args(int argc, char *argv[])
 		puts("soil output filename option is missing!");
 		goto err_show_usage;
 	}
+	*/
 
 	if ( ! g_sz_dataset_file ) {
 		puts("dataset filename not specified!");
@@ -758,7 +723,7 @@ int main(int argc, char *argv[]) {
 	}
 
 	/* show copyright */
-	puts(copyright);
+	//puts(copyright);
 
 	/* show banner */
 	printf(banner, netcdf_get_version());
@@ -770,7 +735,7 @@ int main(int argc, char *argv[]) {
 	}
 	puts(msg_ok);
 
-	/* some check for fix import path */
+	/* fix g_sz_input_path ? */
 	flag = 0;
 	if ( g_sz_input_path ) {
 		int len = strlen(g_sz_input_path);
@@ -831,7 +796,7 @@ int main(int argc, char *argv[]) {
 	printf("soil allocation...");
 	g_soil_settings = soil_settings_new();
 	if ( ! g_soil_settings ) {
-		logger(g_log, sz_err_out_of_memory);
+		logger(g_debug_log, sz_err_out_of_memory);
 		goto err;
 	}
 	puts(msg_ok);
@@ -839,20 +804,20 @@ int main(int argc, char *argv[]) {
 	printf("topo allocation...");
 	g_topo = topo_new();
 	if ( ! g_topo ) {
-		logger(g_log, sz_err_out_of_memory);
+		logger(g_debug_log, sz_err_out_of_memory);
 		goto err;
 	}
 	puts(msg_ok);
 
 	start_year = -1;
-	logger(g_log, "\n3D-CMCC FEM START....\n\n");
+	logger(g_debug_log, "\n3D-CMCC FEM START....\n\n");
 	for ( cell = 0; cell < matrix->cells_count; ++cell )
 	{
-		logger(g_log, "Processing met data files for cell at %d,%d...\n", matrix->cells[cell].x, matrix->cells[cell].y);
-		logger(g_log, "input_met_path = %s\n", g_sz_input_met_file);
+		logger(g_debug_log, "Processing met data files for cell at %d,%d...\n", matrix->cells[cell].x, matrix->cells[cell].y);
+		logger(g_debug_log, "input_met_path = %s\n", g_sz_input_met_file);
 
 		/* import soil values */
-		logger(g_log, "importing soil settings...");
+		logger(g_debug_log, "importing soil settings...");
 		if ( g_sz_input_path ) {
 			strcpy(temp, g_sz_input_path);
 			if ( ! flag ) strcat(temp, FOLDER_DELIMITER);
@@ -864,7 +829,7 @@ int main(int argc, char *argv[]) {
 		if ( ! ret ) {
 			goto err;
 		}
-		logger(g_log, "ok\n");
+		logger(g_debug_log, "ok\n");
 
 		/* only for first cell */
 		if ( 0 == cell ) {
@@ -877,12 +842,12 @@ int main(int argc, char *argv[]) {
 				IS_INVALID_VALUE(g_soil_settings->values[SOIL_CLAY_PERC])||
 				IS_INVALID_VALUE(g_soil_settings->values[SOIL_SILT_PERC])||
 				IS_INVALID_VALUE(g_soil_settings->values[SOIL_DEPTH]) ) {
-			logger(g_log, "NO SOIL DATA AVAILABLE\n");
+			logger(g_debug_log, "NO SOIL DATA AVAILABLE\n");
 			goto err;
 		}
 
 		/* import topo values */
-		logger(g_log, "importing topo settings...");
+		logger(g_debug_log, "importing topo settings...");
 		if ( g_sz_input_path ) {
 			strcpy(temp, g_sz_input_path);
 			if ( ! flag ) strcat(temp, FOLDER_DELIMITER);
@@ -894,7 +859,7 @@ int main(int argc, char *argv[]) {
 		if ( ! ret ) {
 			goto err;
 		}
-		logger(g_log, "ok\n");
+		logger(g_debug_log, "ok\n");
 
 		/* check hemisphere */
 		if ( g_soil_settings->values[SOIL_LAT] > 0 ) {
@@ -903,7 +868,7 @@ int main(int argc, char *argv[]) {
 			matrix->cells[cell].north = 1;
 		}
 
-		logger(g_log, "importing met data...");
+		logger(g_debug_log, "importing met data...");
 		if ( g_sz_input_path ) {
 			strcpy(temp, g_sz_input_path);
 			if ( ! flag ) strcat(temp, FOLDER_DELIMITER);
@@ -913,7 +878,7 @@ int main(int argc, char *argv[]) {
 			matrix->cells[cell].years = yos_import(g_sz_input_met_file, &years_of_simulation, matrix->cells[cell].x, matrix->cells[cell].y);
 		}
 		if ( ! matrix->cells[cell].years ) goto err;
-		logger(g_log, "ok\n");
+		logger(g_debug_log, "ok\n");
 
 		/* get start year */
 		if ( -1 == start_year ) {
@@ -926,7 +891,7 @@ int main(int argc, char *argv[]) {
 			int rows_count = matrix->cells_count*years_of_simulation*366*output_vars->daily_vars_count;
 			output_vars->daily_vars_value = malloc(rows_count*sizeof*output_vars->daily_vars_value);
 			if ( ! output_vars->daily_vars_value ) {
-				logger(g_log, sz_err_out_of_memory);
+				logger(g_debug_log, sz_err_out_of_memory);
 				goto err;
 			}
 			for ( ii = 0; ii < rows_count; ++ii ) {
@@ -940,7 +905,7 @@ int main(int argc, char *argv[]) {
 			int rows_count = matrix->cells_count*years_of_simulation*12*output_vars->monthly_vars_count;
 			output_vars->monthly_vars_value = malloc(rows_count*sizeof*output_vars->monthly_vars_value);
 			if ( ! output_vars->monthly_vars_value ) {
-				logger(g_log, sz_err_out_of_memory);
+				logger(g_debug_log, sz_err_out_of_memory);
 				goto err;
 			}
 			for ( ii = 0; ii < rows_count; ++ii ) {
@@ -954,7 +919,7 @@ int main(int argc, char *argv[]) {
 			int rows_count = matrix->cells_count*years_of_simulation*output_vars->yearly_vars_count;
 			output_vars->yearly_vars_value = malloc(rows_count*sizeof*output_vars->yearly_vars_value);
 			if ( ! output_vars->yearly_vars_value ) {
-				logger(g_log, sz_err_out_of_memory);
+				logger(g_debug_log, sz_err_out_of_memory);
 				goto err;
 			}
 			for ( ii = 0; ii < rows_count; ++ii ) {
@@ -962,8 +927,8 @@ int main(int argc, char *argv[]) {
 			}
 		}
 
-		logger(g_log, "Total years_of_simulation = %d\n", years_of_simulation);
-		logger(g_log, "***************************************************\n\n");
+		logger(g_debug_log, "Total years_of_simulation = %d\n", years_of_simulation);
+		logger(g_debug_log, "***************************************************\n\n");
 
 		for ( year = 0; year < years_of_simulation; ++year )
 		{
@@ -1055,21 +1020,21 @@ int main(int argc, char *argv[]) {
 						{
 							if ( !Tree_model_daily( matrix, cell, day, month, year ) )
 							{
-								logger(g_log, "tree model daily failed!!!");
+								logger(g_debug_log, "tree model daily failed!!!");
 							}
 							else
 							{
 								puts( msg_ok_tree_model );
 
-								if (!string_compare_i ( g_settings->dndc, "on" ) )
+								if ( g_settings->dndc )
 								{
-									logger(g_log, "RUNNING DNDC.....\n");
+									logger(g_debug_log, "RUNNING DNDC.....\n");
 									//soil_dndc_sgm (matrix, cell, year, month, day, years_of_simulation);
 									//soil_dndc......................................
 								}
 								else
 								{
-									//logger(g_log, "No soil simulation!!!\n");
+									//logger(g_debug_log, "No soil simulation!!!\n");
 								}
 								get_net_ecosystem_exchange(&matrix->cells[cell]);
 							}
@@ -1083,7 +1048,7 @@ int main(int argc, char *argv[]) {
 					{
 						//if ( ! crop_model_D(matrix, cell, year, month, day, years_of_simulation) )
 						//{
-						//	logger(g_log, "crop model failed.");
+						//	logger(g_debug_log, "crop model failed.");
 						//}
 						//else
 						//{
@@ -1096,7 +1061,7 @@ int main(int argc, char *argv[]) {
 					/* run for soil model */
 					if ( !Soil_model_daily(matrix, cell, day, month, year) )
 					{
-						logger(g_log, "soil model daily failed!!!");
+						logger(g_debug_log, "soil model daily failed!!!");
 					}
 					else
 					{
@@ -1106,7 +1071,7 @@ int main(int argc, char *argv[]) {
 					/* run for cell model */
 					if ( !Cell_model_daily(matrix, cell, day, month, year) )
 					{
-						logger(g_log, "cell model daily failed!!!");
+						logger(g_debug_log, "cell model daily failed!!!");
 					}
 					else
 					{
@@ -1175,7 +1140,7 @@ int main(int argc, char *argv[]) {
 					//					{
 					//						Get_EOD_soil_balance_cell_level (&matrix->cells[cell], year, month, day);
 					//					}
-					logger(g_log, "****************END OF DAY (%d)*******************\n\n\n", day + 1 );
+					logger(g_debug_log, "****************END OF DAY (%d)*******************\n\n\n", day + 1 );
 				}
 
 				/* save values for put in output netcdf */
@@ -1221,7 +1186,7 @@ int main(int argc, char *argv[]) {
 					reset_monthly_layer_variables ( &matrix->cells[cell] );
 					reset_monthly_cell_variables  ( &matrix->cells[cell] );
 				}
-				logger(g_log, "****************END OF MONTH (%d)*******************\n\n", month + 1 );
+				logger(g_debug_log, "****************END OF MONTH (%d)*******************\n\n", month + 1 );
 			}
 
 			// save values for put in output netcdf
@@ -1266,24 +1231,26 @@ int main(int argc, char *argv[]) {
 				reset_annual_layer_variables ( &matrix->cells[cell] );
 				reset_annual_cell_variables  ( &matrix->cells[cell] );
 			}
-			logger(g_log, "****************END OF YEAR (%d)*******************\n", matrix->cells[cell].years[year].year );
+			logger(g_debug_log, "****************END OF YEAR (%d)*******************\n", matrix->cells[cell].years[year].year );
 		}
 
 		free(matrix->cells[cell].years);
 		matrix->cells[cell].years = NULL; /* required */
 	}
 
+	// ALESSIOR TODO
 	/* NETCDF output */
+	/*
 	if ( output_vars && output_vars->daily_vars_value ) {
 		char *path = get_path(g_sz_daily_output_filename);
 		if ( ! path && g_sz_daily_output_filename  ) {
-			logger(g_log, sz_err_out_of_memory);
+			logger(g_debug_log, sz_err_out_of_memory);
 			goto err;
 		}
 		ret = output_write(output_vars, path, start_year, years_of_simulation, matrix->x_cells_count, matrix->y_cells_count, 0);
 		free(path);
 		if ( ! ret ) {
-			logger(g_log, sz_err_out_of_memory);
+			logger(g_debug_log, sz_err_out_of_memory);
 			goto err;
 		}
 		free(output_vars->daily_vars_value);
@@ -1293,13 +1260,13 @@ int main(int argc, char *argv[]) {
 	if ( output_vars && output_vars->monthly_vars_value ) {
 		char *path = get_path(g_sz_monthly_output_filename);
 		if ( ! path && g_sz_monthly_output_filename ) {
-			logger(g_log, sz_err_out_of_memory);
+			logger(g_debug_log, sz_err_out_of_memory);
 			goto err;
 		}
 		ret = output_write(output_vars, path, start_year, years_of_simulation, matrix->x_cells_count, matrix->y_cells_count, 1);
 		free(path);
 		if ( ! ret ) {
-			logger(g_log, sz_err_out_of_memory);
+			logger(g_debug_log, sz_err_out_of_memory);
 			goto err;
 		}
 		free(output_vars->monthly_vars_value);
@@ -1309,18 +1276,19 @@ int main(int argc, char *argv[]) {
 	if ( output_vars && output_vars->yearly_vars_value ) {
 		char *path = get_path(g_sz_yearly_output_filename);
 		if ( ! path && g_sz_yearly_output_filename) {
-			logger(g_log, sz_err_out_of_memory);
+			logger(g_debug_log, sz_err_out_of_memory);
 			goto err;
 		}
 		ret = output_write(output_vars, path, start_year, years_of_simulation, matrix->x_cells_count, matrix->y_cells_count, 2);
 		free(path);
 		if ( ! ret ) {
-			logger(g_log, sz_err_out_of_memory);
+			logger(g_debug_log, sz_err_out_of_memory);
 			goto err;
 		}
 		free(output_vars->yearly_vars_value);
 		output_vars->yearly_vars_value = NULL;
 	}
+	*/
 
 	/* free memory */
 	matrix_free(matrix); matrix = NULL;
@@ -1334,18 +1302,20 @@ int main(int argc, char *argv[]) {
 	logger_close(g_annual_log); g_annual_log = NULL;
 	logger_close(g_monthly_log); g_monthly_log = NULL;
 	logger_close(g_daily_log); g_daily_log = NULL;
-	logger_close(g_log); g_log = NULL;
+	logger_close(g_debug_log); g_debug_log = NULL;
 
 	/* free memory */
 	if ( output_vars ) output_free(output_vars);
 	if ( matrix ) matrix_free(matrix);
 
 	free(g_sz_input_met_file); g_sz_input_met_file = NULL;
+	/*
 	if ( g_sz_debug_output_filename) { free(g_sz_debug_output_filename); g_sz_debug_output_filename = NULL; }
 	free(g_sz_daily_output_filename); g_sz_daily_output_filename = NULL;
 	free(g_sz_monthly_output_filename); g_sz_monthly_output_filename = NULL;
 	free(g_sz_yearly_output_filename); g_sz_yearly_output_filename = NULL;
 	free(g_sz_soil_output_filename); g_sz_soil_output_filename = NULL;
+	*/
 	free(g_sz_settings_file); g_sz_settings_file = NULL;
 
 	/* this should be freed before */

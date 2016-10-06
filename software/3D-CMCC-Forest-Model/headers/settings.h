@@ -2,7 +2,9 @@
 #ifndef SETTINGS_H_
 #define SETTINGS_H_
 
-#define SETTINGS_REPLANTED_SPECIES_MAX_SIZE		(32+1)
+enum { CO2_FIXED_OFF = 0, CO2_FIXED_ON, CO2_FIXED_VAR };
+
+#define SETTINGS_REPLANTED_SPECIES_MAX_SIZE			(32+1)
 #define SETTINGS_REGENERATION_SPECIES_MAX_SIZE		(32+1)
 
 typedef struct {
@@ -10,18 +12,20 @@ typedef struct {
 	char spatial;	                  /* must be 's' or 'u' (spatial or unspatial) */
 	char time;		                  /* must be 'm' or 'd' (monthly or daily) */
 
-	// ALESSIOR TODO 
-	// REPLACE CHAR FOR ON and OFF
-	// WITH 1 and 0
-	char screen_output[4];
-	char CO2_mod[4];
-	char CO2_fixed[4];
-	char Ndep_fixed[4];
-	char Q10_fixed[4];
-	char regeneration[4];
-	char management[4];
-	char Prog_Aut_Resp[4]; /* Prognostic autotrophic respiration */
-	char dndc[4];
+	char screen_output;
+	char debug_output;
+	char daily_output;
+	char monthly_output;
+	char yearly_output;
+	char soil_output;
+	char CO2_mod;
+	char CO2_fixed;
+	char Ndep_fixed;
+	char Q10_fixed;
+	char regeneration;
+	char management;
+	char Prog_Aut_Resp; /* Prognostic autotrophic respiration */
+	char dndc;
 	char replanted_species[SETTINGS_REPLANTED_SPECIES_MAX_SIZE]; /* species name of replanted species */
 	char regeneration_species[SETTINGS_REGENERATION_SPECIES_MAX_SIZE]; /* species name of regeneration species */
 	// ALESSIOR: use e_management from matrix.h not char

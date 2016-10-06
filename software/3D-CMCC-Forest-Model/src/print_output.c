@@ -60,6 +60,19 @@ static void write_paths(logger_t *const _log)
 	logger(_log, "settings file = %s\n", get_filename(g_sz_settings_file));
 }
 
+static print_model_settings(logger_t*const log)
+{
+	assert(log);
+
+	logger(log, "*model settings*\n");
+	logger(log, "-CO2_mod = %s\n", g_settings->CO2_mod ? "on" : "off");
+	logger(log, "-CO2 fixed = %s\n"
+					, (CO2_FIXED_VAR == g_settings->CO2_fixed) ? "var" : (CO2_FIXED_ON == g_settings->CO2_fixed) ? "on" : "off");
+	logger(log, "-Q10 fixed = %s\n", g_settings->Q10_fixed ? "on" : "off");
+	logger(log, "-regeneration = %s\n", g_settings->regeneration ? "on" : "off");
+	logger(log, "-Management = %s\n", g_settings->management ? "on" : "off");
+}
+
 void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, const int month, const int year, const int years_of_simulation )
 {
 	int layer;
@@ -287,15 +300,9 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 
 		if ( years_counter ==  years_of_simulation)
 		{
-			logger(g_daily_log, sz_launched, netcdf_get_version(), get_datetime());
+			logger(g_daily_log, sz_launched, netcdf_get_version(), datetime_current());
 			write_paths(g_daily_log);
-
-			logger(g_daily_log, "*model setting*\n");
-			logger(g_daily_log, "-CO2_mod = %s\n", g_settings->CO2_mod);
-			logger(g_daily_log, "-CO2 fixed = %s\n", g_settings->CO2_fixed);
-			logger(g_daily_log, "-Q10 fixed = %s\n", g_settings->Q10_fixed);
-			logger(g_daily_log, "-regeneration = %s\n", g_settings->regeneration);
-			logger(g_daily_log, "-Management = %s\n", g_settings->management);
+			print_model_settings(g_daily_log);
 		}
 	}
 }
@@ -469,15 +476,9 @@ void EOM_print_cumulative_balance_cell_level(cell_t *const c, const int month, c
 
 		if ( years_counter ==  years_of_simulation)
 		{
-			logger(g_monthly_log, sz_launched, netcdf_get_version(), get_datetime());
+			logger(g_monthly_log, sz_launched, netcdf_get_version(), datetime_current());
 			write_paths(g_monthly_log);
-
-			logger(g_monthly_log, "*model setting*\n");
-			logger(g_monthly_log, "-CO2_mod = %s\n", g_settings->CO2_mod);
-			logger(g_monthly_log, "-CO2 fixed = %s\n", g_settings->CO2_fixed);
-			logger(g_monthly_log, "-Q10 fixed = %s\n", g_settings->Q10_fixed);
-			logger(g_monthly_log, "-regeneration = %s\n", g_settings->regeneration);
-			logger(g_monthly_log, "-Management = %s\n", g_settings->management);
+			print_model_settings(g_monthly_log);
 		}
 	}
 }
@@ -733,15 +734,9 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 
 	if ( years_counter ==  years_of_simulation)
 	{
-		logger(g_annual_log, sz_launched, netcdf_get_version(), get_datetime());
+		logger(g_annual_log, sz_launched, netcdf_get_version(), datetime_current());
 		write_paths(g_annual_log);
-
-		logger(g_annual_log, "\n*model setting*\n");
-		logger(g_annual_log, "*CO2_mod = %s\n", g_settings->CO2_mod);
-		logger(g_annual_log, "*CO2_fixed = %s\n", g_settings->CO2_fixed);
-		logger(g_annual_log, "*Q10 fixed = %s\n", g_settings->Q10_fixed);
-		logger(g_annual_log, "*regeneration = %s\n", g_settings->regeneration);
-		logger(g_annual_log, "*Management = %s\n", g_settings->management);
+		print_model_settings(g_annual_log);
 	}
 }
 
@@ -749,7 +744,7 @@ void Get_EOD_soil_balance_cell_level(cell_t *const c, const int year, const int 
 {
 	if( !day && !month && !year )
 	{
-		if (!string_compare_i(g_settings->dndc, "on"))
+		if ( g_settings->dndc )
 		{
 			logger(g_soil_log, "RUNNING DNDC.....\n");
 		}
@@ -758,7 +753,7 @@ void Get_EOD_soil_balance_cell_level(cell_t *const c, const int year, const int 
 			logger(g_soil_log, "No soil simulation!!!\n");
 		}
 	}
-	if (!string_compare_i(g_settings->dndc, "on"))
+	if ( g_settings->dndc )
 	{
 		//fixme to complete
 	}

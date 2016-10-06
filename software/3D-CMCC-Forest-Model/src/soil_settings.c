@@ -9,7 +9,7 @@
 #include "netcdf.h"
 #include "logger.h"
 
-extern logger_t* g_log;
+extern logger_t* g_debug_log;
 
 extern char *g_sz_program_path;
 
@@ -66,6 +66,7 @@ static int import_txt(soil_settings_t *const s, const char *const filename, cons
 
 	f = fopen(filename, "r");
 	if ( ! f ) {
+		logger(g_debug_log, "unable to open\n\n", filename);
 		return 0;
 	}
 
@@ -148,13 +149,13 @@ static int import_nc(soil_settings_t *const s, const char *const filename, const
 	if ( ret != NC_NOERR ) goto quit;
 
 	if ( ! dims_count || ! vars_count ) {
-		logger(g_log, "bad nc file! %d dimensions and %d vars\n\n", dims_count, vars_count);
+		logger(g_debug_log, "bad nc file! %d dimensions and %d vars\n\n", dims_count, vars_count);
 		goto quit_no_nc_err;
 	}
 
 	/* dims_count can be only 2 and ids only x and y */
 	if ( 2 != dims_count ) {
-		logger(g_log, "bad dimension size. It should be 2 not %d\n", dims_count);
+		logger(g_debug_log, "bad dimension size. It should be 2 not %d\n", dims_count);
 		goto quit_no_nc_err;
 	}
 
@@ -171,7 +172,7 @@ static int import_nc(soil_settings_t *const s, const char *const filename, const
 		for ( y = 0; y < DIMS_COUNT; ++y ) {
 			if ( ! string_compare_i(sz_dims[y], name) ) {
 				if ( dims_size[y] != -1 ) {
-					logger(g_log, "dimension %s already found!\n", sz_dims[y]);
+					logger(g_debug_log, "dimension %s already found!\n", sz_dims[y]);
 					goto quit_no_nc_err;
 				}
 				dims_size[y] = size;
@@ -184,20 +185,20 @@ static int import_nc(soil_settings_t *const s, const char *const filename, const
 	/* check if we have all dimensions */
 	for ( i = 0; i < DIMS_COUNT; ++i ) {
 		if ( -1 == dims_size[i] ) {
-			logger(g_log, "dimension %s not found!\n", sz_dims[i]);
+			logger(g_debug_log, "dimension %s not found!\n", sz_dims[i]);
 			goto quit_no_nc_err;
 		}
 	}
 
 	/* check if x_cell is >= x_dim */
 	if ( x_cell >= dims_size[X_DIM] ) {
-		logger(g_log, "x_cell >= x_dim: %d,%d\n", x_cell, dims_size[X_DIM]);
+		logger(g_debug_log, "x_cell >= x_dim: %d,%d\n", x_cell, dims_size[X_DIM]);
 		goto quit_no_nc_err;
 	}
 
 	/* check if y_cell is >= y_dim */
 	if ( y_cell >= dims_size[Y_DIM] ) {
-		logger(g_log, "y_cell >= y_dim: %d,%d\n", y_cell, dims_size[Y_DIM]);
+		logger(g_debug_log, "y_cell >= y_dim: %d,%d\n", y_cell, dims_size[Y_DIM]);
 		goto quit_no_nc_err;
 	}
 
@@ -219,12 +220,12 @@ static int import_nc(soil_settings_t *const s, const char *const filename, const
 			if ( ! string_compare_i(name, sz_vars[y]) ) {
 				/* check if we already have imported that var */
 				if ( vars[y] ) {
-					logger(g_log, "var %s already imported\n", sz_vars[y]);
+					logger(g_debug_log, "var %s already imported\n", sz_vars[y]);
 					goto quit_no_nc_err;
 				}
 				/* n_dims can be only 2 and ids only x and y */
 				if ( 2 != n_dims ) {
-					logger(g_log, "bad %s dimension size. It should be 2 not %d\n", sz_vars[y], n_dims);
+					logger(g_debug_log, "bad %s dimension size. It should be 2 not %d\n", sz_vars[y], n_dims);
 					goto quit_no_nc_err;
 				}
 				/* get values */
@@ -237,7 +238,7 @@ static int import_nc(soil_settings_t *const s, const char *const filename, const
 					if ( ret != NC_NOERR ) goto quit;
 				} else {
 					/* type format not supported! */
-					logger(g_log, "type format in %s for %s column not supported\n\n", buffer, sz_vars[y]);
+					logger(g_debug_log, "type format in %s for %s column not supported\n\n", buffer, sz_vars[y]);
 					goto quit_no_nc_err;
 				}
 				vars[y] = 1;
@@ -249,7 +250,7 @@ static int import_nc(soil_settings_t *const s, const char *const filename, const
 	return 1;
 
 quit:
-	logger(g_log, nc_strerror(ret));
+	logger(g_debug_log, nc_strerror(ret));
 quit_no_nc_err:
 	nc_close(id_file);
 	return 0;
@@ -288,7 +289,7 @@ int soil_settings_import(soil_settings_t *const s, const char *const filename, c
 #include "netcdf.h"
 #include "logger.h"
 
-extern logger_t* g_log;
+extern logger_t* g_debug_log;
 
 extern char *g_sz_program_path;
 extern char sz_err_out_of_memory[];
@@ -338,23 +339,23 @@ static soil_settings_t* import_txt(const char *const filename) {
 
 	s = alloc_struct();
 	if ( ! s ) {
-		logger(g_log, sz_err_out_of_memory);
+		logger(g_debug_log, sz_err_out_of_memory);
 		goto err;
 	}
 
 	f = fopen(filename, "r");
 	if ( ! f ) {
-		logger(g_log, "unable to open file\n\n");
+		logger(g_debug_log, "unable to open file\n\n");
 		goto err;
 	}
 
 	/* check header */
 	if ( ! fgets(buffer, SOIL_BUFFER_SIZE, f) ) {
-		logger(g_log, "unable to get header\n\n");
+		logger(g_debug_log, "unable to get header\n\n");
 		goto err;
 	}
 	if ( string_compare_i(buffer, sz_header) ) {
-		logger(g_log, "invalid header found. valid header is %s\n\n", sz_header);
+		logger(g_debug_log, "invalid header found. valid header is %s\n\n", sz_header);
 		goto err;
 	}
 
@@ -369,25 +370,25 @@ static soil_settings_t* import_txt(const char *const filename) {
 
 		for ( column = 0, token = string_tokenizer(buffer, delimiter, &p); token; token = string_tokenizer(NULL, delimiter, &p), ++column ) {
 			if ( column >= SOIL_VARS_COUNT ) {
-				logger(g_log, "too many values found at row %d\n\n", rows_count+1);
+				logger(g_debug_log, "too many values found at row %d\n\n", rows_count+1);
 				goto err;
 			}
 
 			values[column] = convert_string_to_float(token, &err);
 			if ( err ) {
-				logger(g_log, "unable to convert value at row %d, column %d: %s\n\n", rows_count+1, column+1, token);
+				logger(g_debug_log, "unable to convert value at row %d, column %d: %s\n\n", rows_count+1, column+1, token);
 				goto err;
 			}
 		}
 
 		if ( column == SOIL_VARS_COUNT ) {
-			logger(g_log, "imported %d instead of %d at row %d\n\n", column, SOIL_VARS_COUNT, rows_count+1);
+			logger(g_debug_log, "imported %d instead of %d at row %d\n\n", column, SOIL_VARS_COUNT, rows_count+1);
 			goto err;
 		}
 
 		values_no_leak = realloc(s->values, (s->count+1)*sizeof*values_no_leak);
 		if ( ! values_no_leak ) {
-			logger(g_log, "out of memory\n\n");
+			logger(g_debug_log, "out of memory\n\n");
 			goto err;
 		}
 		s->values = values_no_leak;
@@ -461,13 +462,13 @@ static soil_settings_t* import_nc(const char *const filename) {
 	if ( ret != NC_NOERR ) goto quit;
 
 	if ( ! dims_count || ! vars_count ) {
-		logger(g_log, "bad nc file! %d dimensions and %d vars\n\n", dims_count, vars_count);
+		logger(g_debug_log, "bad nc file! %d dimensions and %d vars\n\n", dims_count, vars_count);
 		goto quit_no_nc_err;
 	}
 
 	/* dims_count can be only 2 and ids only x and y */
 	if ( 2 != dims_count ) {
-		logger(g_log, "bad dimension size. It should be 2 not %d\n", dims_count);
+		logger(g_debug_log, "bad dimension size. It should be 2 not %d\n", dims_count);
 		goto quit_no_nc_err;
 	}
 
@@ -484,7 +485,7 @@ static soil_settings_t* import_nc(const char *const filename) {
 		for ( y = 0; y < DIMS_COUNT; ++y ) {
 			if ( ! string_compare_i(sz_dims[y], name) ) {
 				if ( dims_size[y] != -1 ) {
-					logger(g_log, "dimension %s already found!\n", sz_dims[y]);
+					logger(g_debug_log, "dimension %s already found!\n", sz_dims[y]);
 					goto quit_no_nc_err;
 				}
 				dims_size[y] = size;
@@ -497,7 +498,7 @@ static soil_settings_t* import_nc(const char *const filename) {
 	/* check if we have all dimensions */
 	for ( i = 0; i < DIMS_COUNT; ++i ) {
 		if ( -1 == dims_size[i] ) {
-			logger(g_log, "dimension %s not found!\n", sz_dims[i]);
+			logger(g_debug_log, "dimension %s not found!\n", sz_dims[i]);
 			goto quit_no_nc_err;
 		}
 	}
@@ -505,25 +506,25 @@ static soil_settings_t* import_nc(const char *const filename) {
 	/* alloc memory */
 	s = alloc_struct();
 	if ( ! s  ) {
-		logger(g_log, sz_err_out_of_memory);
+		logger(g_debug_log, sz_err_out_of_memory);
 		goto quit_no_nc_err;
 	}
 	s->count = dims_size[X_DIM]*dims_size[Y_DIM];
 	s->values = malloc(s->count*sizeof*s->values);
 	if ( ! s->values ) {
-		logger(g_log, sz_err_out_of_memory);
+		logger(g_debug_log, sz_err_out_of_memory);
 		goto quit_no_nc_err;
 	}
 
 	values = malloc(s->count*sizeof*values);
 	if ( ! values ) {
-		logger(g_log, sz_err_out_of_memory);
+		logger(g_debug_log, sz_err_out_of_memory);
 		goto quit_no_nc_err;
 	}
 
 	values_f = malloc(s->count*sizeof*values);
 	if ( ! values_f ) {
-		logger(g_log, sz_err_out_of_memory);
+		logger(g_debug_log, sz_err_out_of_memory);
 		goto quit_no_nc_err;
 	}
 
@@ -535,12 +536,12 @@ static soil_settings_t* import_nc(const char *const filename) {
 			if ( ! string_compare_i(name, sz_vars[y]) ) {
 				/* check if we already have imported that var */
 				if ( vars[y] ) {
-					logger(g_log, "var %s already imported\n", sz_vars[y]);
+					logger(g_debug_log, "var %s already imported\n", sz_vars[y]);
 					goto quit_no_nc_err;
 				}
 				/* n_dims can be only 2 and ids only x and y */
 				if ( 2 != n_dims ) {
-					logger(g_log, "bad %s dimension size. It should be 2 not %d\n", sz_vars[y], n_dims);
+					logger(g_debug_log, "bad %s dimension size. It should be 2 not %d\n", sz_vars[y], n_dims);
 					goto quit_no_nc_err;
 				}
 				/* get values */
@@ -558,7 +559,7 @@ static soil_settings_t* import_nc(const char *const filename) {
 					}
 				} else {
 					/* type format not supported! */
-					logger(g_log, "type format in %s for %s column not supported\n\n", buffer, sz_vars[y]);
+					logger(g_debug_log, "type format in %s for %s column not supported\n\n", buffer, sz_vars[y]);
 					goto quit_no_nc_err;
 				}
 				vars[y] = 1;
@@ -574,7 +575,7 @@ static soil_settings_t* import_nc(const char *const filename) {
 	return s;
 
 quit:
-	logger(g_log, nc_strerror(ret));
+	logger(g_debug_log, nc_strerror(ret));
 quit_no_nc_err:
 	nc_close(id_file);
 	if ( values_f ) free(values_f);

@@ -18,7 +18,7 @@
 #include "regeneration.h"
 #include "new_forest_tree_class.h"
 
-extern logger_t* g_log;
+extern logger_t* g_debug_log;
 extern settings_t* g_settings;
 
 void regeneration (cell_t *const c, const int height, const int dbh, const int age, const int species)
@@ -30,25 +30,25 @@ void regeneration (cell_t *const c, const int height, const int dbh, const int a
 	species_t *s;
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
-	logger(g_log, "\n**REGENERATION**\n");
+	logger(g_debug_log, "\n**REGENERATION**\n");
 
 	/* compute number of seeds */
 	/*convert fruit pool from tC to gDM */
 	fruit_gDM = s->value[FRUIT_C] * 1000000 * GC_GDM;
-	logger(g_log, "fruit_gDM = %g gDM\n", fruit_gDM);
+	logger(g_debug_log, "fruit_gDM = %g gDM\n", fruit_gDM);
 
-	seeds_number = fruit_gDM / s->value[WEIGHTSEED];
-	logger(g_log, "fruit biomass= %g tC\n", s->value[FRUIT_C]);
-	logger(g_log, "number of seeds = %d\n", seeds_number);
+	seeds_number = (int)(fruit_gDM / s->value[WEIGHTSEED]);
+	logger(g_debug_log, "fruit biomass= %g tC\n", s->value[FRUIT_C]);
+	logger(g_debug_log, "number of seeds = %d\n", seeds_number);
 
 	/* reset annually fruit pool */
 	s->value[FRUIT_C] = 0.;
 
 	/* compute number of saplings based on germination capacity */
-	saplings_number = seeds_number * s->value[GERMCAPACITY];
-	logger(g_log, "number of saplings = %d\n", saplings_number);
+	saplings_number = (int)(seeds_number * s->value[GERMCAPACITY]);
+	logger(g_debug_log, "number of saplings = %d\n", saplings_number);
 
-	logger(g_log, "name = %s\n", s->name);
+	logger(g_debug_log, "name = %s\n", s->name);
 
 	/* assign values */
 	//ALESSIOC ALESSIOR FIXME PORCATA
@@ -63,7 +63,7 @@ void regeneration (cell_t *const c, const int height, const int dbh, const int a
 	{
 		if ( ! add_tree_class_for_regeneration( c ) )
 		{
-			logger(g_log, "unable to add new regeneration class! (exit)\n");
+			logger(g_debug_log, "unable to add new regeneration class! (exit)\n");
 			exit(1);
 		}
 	}

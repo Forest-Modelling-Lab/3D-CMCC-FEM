@@ -26,7 +26,7 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-				Description="Get commit hash"
+				Description="Get previous commit hash (unused)"
 				CommandLine="git log -n 1 --pretty=&quot;format:#define COMMIT_HASH \&quot;%%H\&quot;&quot; &gt; $(ProjectDir)src\commit_hash.h"
 			/>
 			<Tool
@@ -103,7 +103,7 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-				Description="Get commit hash"
+				Description="Get previous commit hash (unused)"
 				CommandLine="git log -n 1 --pretty=&quot;format:#define COMMIT_HASH \&quot;%%H\&quot;&quot; &gt; $(ProjectDir)src\commit_hash.h"
 			/>
 			<Tool
@@ -236,10 +236,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\canopy_cover.c"
-				>
-			</File>
-			<File
 				RelativePath=".\src\canopy_evapotranspiration.c"
 				>
 			</File>
@@ -281,10 +277,6 @@
 			</File>
 			<File
 				RelativePath=".\src\common.c"
-				>
-			</File>
-			<File
-				RelativePath=".\src\crowding-competition.c"
 				>
 			</File>
 			<File

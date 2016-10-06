@@ -17,7 +17,7 @@
 #include "canopy_temperature.h"
 #include "canopy_radiation_lw_band.h"
 
-extern logger_t* g_log;
+extern logger_t* g_debug_log;
 
 void canopy_radiation_lw_band(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, const meteo_daily_t *const meteo_daily)
 {
@@ -35,9 +35,9 @@ void canopy_radiation_lw_band(cell_t *const c, const int layer, const int height
 	species_t *s;
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
-	logger(g_log, "\n**LONG WAVE BAND RADIATION ROUTINE**\n");
+	logger(g_debug_log, "\n**LONG WAVE BAND RADIATION ROUTINE**\n");
 
-	logger(g_log, "-ATMOSPHERE DOWNWARD LONGWAVE RADIATION = %g  (W/m2)\n", meteo_daily->atm_lw_downward_W);
+	logger(g_debug_log, "-ATMOSPHERE DOWNWARD LONGWAVE RADIATION = %g  (W/m2)\n", meteo_daily->atm_lw_downward_W);
 
 	TsoilK = meteo_daily->tsoil + TempAbs;
 
@@ -49,7 +49,7 @@ void canopy_radiation_lw_band(cell_t *const c, const int layer, const int height
 
 	/* check for the special case in which is allowed to have more 100% of grid cell covered */
 	if(leaf_cell_cover_eff > 1.0) leaf_cell_cover_eff = 1.0;
-	logger(g_log, "single height class canopy cover = %g %%\n", leaf_cell_cover_eff*100.0);
+	logger(g_debug_log, "single height class canopy cover = %g %%\n", leaf_cell_cover_eff*100.0);
 
 	/***********************************************************************************************************/
 
@@ -57,21 +57,21 @@ void canopy_radiation_lw_band(cell_t *const c, const int layer, const int height
 	/* fraction of long wave emissivity  by the canopy CLM 4.5 (eq. 4.20)  */
 	/* for Dai et al., 2004 it represents also the absorbed */
 	LW_emis_canopy_frac = (1. - exp(- s->value[LAI]));
-	logger(g_log, "LW_emis_canopy_frac = %g %%\n", LW_emis_canopy_frac);
+	logger(g_debug_log, "LW_emis_canopy_frac = %g %%\n", LW_emis_canopy_frac);
 
 	/* fraction of long wave emissivity  by the canopy (see Gouttevin et al., 2015) */
 	LW_abs_canopy_frac = (1. - exp(- s->value[LAI] * s->value[K]));
-	logger(g_log, "LW_emis_canopy_frac = %g %%\n", LW_emis_canopy_frac);
+	logger(g_debug_log, "LW_emis_canopy_frac = %g %%\n", LW_emis_canopy_frac);
 
 	/* fraction of long wave transmissivity  by the canopy */
 	LW_transm_canopy_frac = (1. - LW_emis_canopy_frac);
-	logger(g_log, "LW_transm_canopy_frac = %g %%\n", LW_transm_canopy_frac);
+	logger(g_debug_log, "LW_transm_canopy_frac = %g %%\n", LW_transm_canopy_frac);
 	/***********************************************************************************************************/
 
 	/* compute canopy upward and net long wave radiation */
 	/* upward long wave fluxes to atmosphere */
 	s->value[LW_RAD_EMIT] = (LW_emis_canopy_frac * SBC_W * pow(s->value[CANOPY_TEMP_K], 4.)) * leaf_cell_cover_eff;
-	logger(g_log, "canopy emitted long wave fluxes to atmosphere = %g (W/m2)\n", s->value[LW_RAD_EMIT]);
+	logger(g_debug_log, "canopy emitted long wave fluxes to atmosphere = %g (W/m2)\n", s->value[LW_RAD_EMIT]);
 
 	/* soil long wave emitted (general formula) */
 	c->soil_long_wave_emitted = EMSOIL * SBC_W * pow(TsoilK, 4.);
@@ -84,7 +84,7 @@ void canopy_radiation_lw_band(cell_t *const c, const int layer, const int height
 			s->value[LW_RAD_EMIT] -
 			(LW_emis_canopy_frac * c->soil_long_wave_emitted) -
 			(LW_emis_canopy_frac * ((1. + (1. - EMSOIL) * (1 - LW_emis_canopy_frac)) * meteo_daily->atm_lw_downward_W));
-	logger(g_log, "net canopy long wave fluxes (CLM 4.5) = %g (W/m2)\n", s->value[NET_LW_RAD]);
+	logger(g_debug_log, "net canopy long wave fluxes (CLM 4.5) = %g (W/m2)\n", s->value[NET_LW_RAD]);
 
 	/* compute canopy downward long wave radiation (below the canopy) CLM 4.5 (eq. 4.16) */
 	//fixme CLM uses for TcanopyK_old Tn+1
@@ -93,21 +93,21 @@ void canopy_radiation_lw_band(cell_t *const c, const int layer, const int height
 			s->value[LW_RAD_EMIT]  + (4. * LW_emis_canopy_frac * SBC_W * pow (s->value[CANOPY_TEMP_K], 3.) *
 			(s->value[CANOPY_TEMP_K_OLD] - s->value[CANOPY_TEMP_K])) * leaf_cell_cover_eff) +
 			(meteo_daily->atm_lw_downward_W * (1. - leaf_cell_cover_eff));
-	logger(g_log, "long wave fluxes below the canopy (CLM 4.5) = %g (W/m2)\n", s->value[LW_RAD_TRANSM]);
+	logger(g_debug_log, "long wave fluxes below the canopy (CLM 4.5) = %g (W/m2)\n", s->value[LW_RAD_TRANSM]);
 
 	/* compute soil net long wave radiation CLM 4.5 (eq. 4.17) */
 	c->net_lw_rad_for_soil = c->soil_long_wave_emitted - (EMSOIL * s->value[LW_RAD_TRANSM]) - (EMSOIL * meteo_daily->atm_lw_downward_W);
-	logger(g_log, "net soil long wave fluxes (CLM 4.5) = %g (W/m2)\n", c->net_lw_rad_for_soil);
+	logger(g_debug_log, "net soil long wave fluxes (CLM 4.5) = %g (W/m2)\n", c->net_lw_rad_for_soil);
 
 	/***********************************************************************************************************/
 
 	/* following Gouttevin et al., 2015 (including emissivity for leaf and soil)*/
 //	/*original version*/
 //	s->value[LW_RAD_ABS] = LW_abs_canopy_frac * (meteo_daily->atm_lw_downward_W + lw_soil_emit - (2. * s->value[LW_RAD_EMIT]));
-//	//logger(g_log, "abs canopy long wave fluxes (Gouttevin)= %g (W/m2)\n", s->value[LW_RAD_ABS]);
+//	//logger(g_debug_log, "abs canopy long wave fluxes (Gouttevin)= %g (W/m2)\n", s->value[LW_RAD_ABS]);
 //	/*modified version*/
 //	s->value[LW_RAD_ABS] = LW_abs_canopy_frac *(meteo_daily->atm_lw_downward_W + lw_soil_emit - (2. * s->value[LW_RAD_EMIT])) * leaf_cell_cover_eff;
-//	logger(g_log, "abs canopy long wave fluxes (Gouttevin-modified)= %g (W/m2)\n", s->value[LW_RAD_ABS]);
+//	logger(g_debug_log, "abs canopy long wave fluxes (Gouttevin-modified)= %g (W/m2)\n", s->value[LW_RAD_ABS]);
 
 
 	/* from CLM 4.5 */
@@ -133,68 +133,68 @@ void canopy_radiation_lw_band(cell_t *const c, const int layer, const int height
 //	/*** atmospheric long wave ***/
 //	/* atmospheric long wave radiation transmitted through the canopy */
 //	lw_atm_trasm_canopy_to_soil = meteo_daily->atm_lw_downward_W * LW_transm_canopy_frac;
-//	logger(g_log, "lw_atm_trasm_canopy_to_soil = %g (W/m2)\n", lw_atm_trasm_canopy_to_soil);
+//	logger(g_debug_log, "lw_atm_trasm_canopy_to_soil = %g (W/m2)\n", lw_atm_trasm_canopy_to_soil);
 //
 //	/* taking into account canopy coverage */
 //	lw_atm_temp = (lw_atm_trasm_canopy_to_soil * leaf_cell_cover_eff) + (meteo_daily->atm_lw_downward_W * (1. - leaf_cell_cover_eff));
-//	logger(g_log, "lw_atm_temp = %g (W/m2)\n", lw_atm_temp);
+//	logger(g_debug_log, "lw_atm_temp = %g (W/m2)\n", lw_atm_temp);
 //
 //	/* atmospheric long wave radiation transmitted through the canopy and reflected by the soil */
 //	lw_atm_trasm_canopy_to_soil_reflected_soil = lw_atm_temp * (1. - EMSOIL);
-//	logger(g_log, "lw_atm_trasm_canopy_to_soil_reflected_soil = %g (W/m2)\n", lw_atm_trasm_canopy_to_soil_reflected_soil);
+//	logger(g_debug_log, "lw_atm_trasm_canopy_to_soil_reflected_soil = %g (W/m2)\n", lw_atm_trasm_canopy_to_soil_reflected_soil);
 //
 //	/* atmospheric long wave radiation transmitted through the canopy and reflected by the soil and transmitted through the canopy to atmosphere */
 //	lw_atm_trasm_canopy_to_soil_reflected_soil_transm_canopy_to_atm = (lw_atm_trasm_canopy_to_soil_reflected_soil * LW_transm_canopy_frac * leaf_cell_cover_eff) +
 //			((lw_atm_trasm_canopy_to_soil_reflected_soil) * (1. - leaf_cell_cover_eff));
-//	logger(g_log, "lw_atm_trasm_canopy_to_soil_reflected_soil_transm_canopy_to_atm = %g (W/m2)\n", lw_atm_trasm_canopy_to_soil_reflected_soil_transm_canopy_to_atm);
+//	logger(g_debug_log, "lw_atm_trasm_canopy_to_soil_reflected_soil_transm_canopy_to_atm = %g (W/m2)\n", lw_atm_trasm_canopy_to_soil_reflected_soil_transm_canopy_to_atm);
 //
 //	/*** canopy  long wave ***/
 //	/* canopy long wave emitted to atmosphere */
 //	lw_canopy_emit_to_atm = (LW_emis_canopy_frac * SBC_W * pow(s->value[CANOPY_TEMP_K], 4.) * leaf_cell_cover_eff);
-//	logger(g_log, "lw_canopy_emit_to_atm = %g (W/m2)\n", lw_canopy_emit_to_atm);
+//	logger(g_debug_log, "lw_canopy_emit_to_atm = %g (W/m2)\n", lw_canopy_emit_to_atm);
 //
 //	/* canopy long wave radiation emitted to soil */
 //	lw_canopy_emit_to_soil = (LW_emis_canopy_frac * SBC_W * pow(s->value[CANOPY_TEMP_K], 4.) * leaf_cell_cover_eff);
-//	logger(g_log, "lw_canopy_emit_to_soil = %g (W/m2)\n", lw_canopy_emit_to_soil);
+//	logger(g_debug_log, "lw_canopy_emit_to_soil = %g (W/m2)\n", lw_canopy_emit_to_soil);
 //
 //	/* canopy long wave radiation emitted by the canopy and reflected by the soil */
 //	lw_canopy_emit_to_soil_reflected_to_soil = lw_canopy_emit_to_soil * (1. - EMSOIL);
-//	logger(g_log, "lw_canopy_emit_to_soil_reflected_to_soil = %g (W/m2)\n", lw_canopy_emit_to_soil_reflected_to_soil);
+//	logger(g_debug_log, "lw_canopy_emit_to_soil_reflected_to_soil = %g (W/m2)\n", lw_canopy_emit_to_soil_reflected_to_soil);
 //
 //	/* canopy long wave radiation emitted by the canopy and reflected by the soil transmitted through the canopy to the atmosphere */
 //	lw_canopy_emit_to_soil_reflected_to_soil_transm_canopy_to_atm = (lw_canopy_emit_to_soil_reflected_to_soil * LW_emis_canopy_frac * leaf_cell_cover_eff) +
 //			((lw_canopy_emit_to_soil_reflected_to_soil ) * (1. - leaf_cell_cover_eff));
-//	logger(g_log, "lw_canopy_emit_to_soil_reflected_to_soil_transm_canopy_to_atm = %g (W/m2)\n", lw_canopy_emit_to_soil_reflected_to_soil_transm_canopy_to_atm);
+//	logger(g_debug_log, "lw_canopy_emit_to_soil_reflected_to_soil_transm_canopy_to_atm = %g (W/m2)\n", lw_canopy_emit_to_soil_reflected_to_soil_transm_canopy_to_atm);
 //
 //	/* increase/decrease long wave emitted by the canopy due to an increment/decrement in canopy temperature to atmosphere */
 //	//fixme CLM uses for TcanopyK_old Tn+1
 //	lw_canopy_emit_to_atm_delta =  4. * LW_emis_canopy_frac * SBC_W * pow(s->value[CANOPY_TEMP_K_OLD], 3) * (s->value[CANOPY_TEMP_K_OLD] - s->value[CANOPY_TEMP_K]) * leaf_cell_cover_eff;
-//	logger(g_log, "lw_canopy_emit_to_atm_delta = %g (W/m2)\n", lw_canopy_emit_to_atm_delta);
+//	logger(g_debug_log, "lw_canopy_emit_to_atm_delta = %g (W/m2)\n", lw_canopy_emit_to_atm_delta);
 //
 //	/* canopy increase/decrease long wave emitted due to an increment/decrement in canopy temperature to soil */
 //	lw_canopy_emit_to_soil_delta =  (4. * LW_emis_canopy_frac * SBC_W * pow(s->value[CANOPY_TEMP_K_OLD], 3) * (s->value[CANOPY_TEMP_K_OLD] - s->value[CANOPY_TEMP_K])) * leaf_cell_cover_eff;
-//	logger(g_log, "lw_canopy_emit_to_soil_delta = %g (W/m2)\n", lw_canopy_emit_to_soil_delta);
+//	logger(g_debug_log, "lw_canopy_emit_to_soil_delta = %g (W/m2)\n", lw_canopy_emit_to_soil_delta);
 //
 //	/* canopy increase/decrease long wave emitted due to an increment/decrement in canopy temperature to soil and reflect by the soil */
 //	lw_canopy_emit_to_soil_delta_refl_soil =  lw_canopy_emit_to_soil_delta * ( 1. - EMSOIL);
-//	logger(g_log, "lw_canopy_emit_to_soil_delta_refl_soil = %g (W/m2)\n", lw_canopy_emit_to_soil_delta_refl_soil);
+//	logger(g_debug_log, "lw_canopy_emit_to_soil_delta_refl_soil = %g (W/m2)\n", lw_canopy_emit_to_soil_delta_refl_soil);
 //
 //	/* canopy increase/decrease long wave emitted due to an increment/decrement in canopy temperature to soil and reflect by the soil transmitted though the canopy to atmosphere */
 //	lw_canopy_emit_to_soil_delta_refl_soil_transm_canopy_to_atm = (lw_canopy_emit_to_soil_delta_refl_soil * LW_emis_canopy_frac * leaf_cell_cover_eff) +
 //			((lw_canopy_emit_to_soil_delta_refl_soil ) * (1. - leaf_cell_cover_eff));
-//	logger(g_log, "lw_canopy_emit_to_soil_delta_refl_soil_transm_canopy_to_atm = %g (W/m2)\n", lw_canopy_emit_to_soil_delta_refl_soil_transm_canopy_to_atm);
+//	logger(g_debug_log, "lw_canopy_emit_to_soil_delta_refl_soil_transm_canopy_to_atm = %g (W/m2)\n", lw_canopy_emit_to_soil_delta_refl_soil_transm_canopy_to_atm);
 //
 //	/* soil long wave emitted to canopy (or in absence of canopy to atmosphere)*/
 //	lw_soil_emit_to_canopy = EMSOIL * SBC_W * pow(TsoilK, 4.);
-//	logger(g_log, "lw_soil_emit_to_canopy = %g (W/m2)\n", lw_soil_emit_to_canopy);
+//	logger(g_debug_log, "lw_soil_emit_to_canopy = %g (W/m2)\n", lw_soil_emit_to_canopy);
 //
 //	/* soil long wave emitted to canopy and (if present) transmitted to the atmosphere */
 //	lw_soil_emit_to_canopy_trasm_canopy_to_atm = (lw_soil_emit_to_canopy * LW_emis_canopy_frac * leaf_cell_cover_eff) +
 //			((lw_soil_emit_to_canopy ) * (1. - leaf_cell_cover_eff));
-//	logger(g_log, "lw_soil_emit_to_canopy_trasm_canopy_to_atm = %g (W/m2)\n", lw_soil_emit_to_canopy_trasm_canopy_to_atm);
+//	logger(g_debug_log, "lw_soil_emit_to_canopy_trasm_canopy_to_atm = %g (W/m2)\n", lw_soil_emit_to_canopy_trasm_canopy_to_atm);
 //
 //	/* total long wave upward to atmosphere */
-//	logger(g_log, "**single upward component**\n"
+//	logger(g_debug_log, "**single upward component**\n"
 //			"lw_atm_trasm_canopy_to_soil_reflected_soil_transm_canopy_to_atm = %g (W/m2)\n"
 //			"lw_canopy_emit_to_atm = %g\n"
 //			"lw_canopy_emit_to_soil_reflected_to_soil_transm_canopy_to_atm = %g\n"
@@ -215,10 +215,10 @@ void canopy_radiation_lw_band(cell_t *const c, const int layer, const int height
 //	/*4*/		lw_canopy_emit_to_atm_delta +
 //	/*5*/		lw_canopy_emit_to_soil_delta_refl_soil_transm_canopy_to_atm +
 //	/*6*/		lw_soil_emit_to_canopy_trasm_canopy_to_atm;
-//	logger(g_log, "lw_total_upward_to_atm = %g (W/m2)\n", lw_total_upward_to_atm);
+//	logger(g_debug_log, "lw_total_upward_to_atm = %g (W/m2)\n", lw_total_upward_to_atm);
 //
 //	net_lw_canopy = meteo_daily->atm_lw_downward_W - lw_total_upward_to_atm;
-//	logger(g_log, "net_lw_canopy = %g (W/m2)\n", net_lw_canopy);
+//	logger(g_debug_log, "net_lw_canopy = %g (W/m2)\n", net_lw_canopy);
 
 }
 

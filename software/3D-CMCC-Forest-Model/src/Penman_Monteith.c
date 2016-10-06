@@ -12,7 +12,7 @@
 #include "constants.h"
 #include "logger.h"
 
-extern logger_t* g_log;
+extern logger_t* g_debug_log;
 
 double Penman_Monteith(const meteo_daily_t *const meteo_daily, const double rh, const double rv, const double net_rad)
 {
@@ -50,7 +50,7 @@ double Penman_Monteith(const meteo_daily_t *const meteo_daily, const double rh, 
     */
 
 	/* Penman-Monteith function */
-	logger(g_log, "---Penman-Monteith function---\n");
+	logger(g_debug_log, "---Penman-Monteith function---\n");
 
 	/* convert tday Celsius in Kelvin */
 	tairK = meteo_daily->tday + TempAbs;
@@ -84,7 +84,7 @@ double Penman_Monteith(const meteo_daily_t *const meteo_daily, const double rh, 
 	//deleted to avoid dew fall formation
 	//if (evap_or_transp < 0.0) evap_or_transp = 0.0;
 
-	logger(g_log, "Penmon evap_or_transp = %g mm/m2/sec\n", evap_or_transp);
+	logger(g_debug_log, "Penmon evap_or_transp = %g mm/m2/sec\n", evap_or_transp);
 
 	return(evap_or_transp);
 }

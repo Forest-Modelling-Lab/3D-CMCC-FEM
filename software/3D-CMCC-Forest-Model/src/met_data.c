@@ -13,7 +13,7 @@
 
 extern soil_settings_t *g_soil_settings;
 extern topo_t *g_topo;
-extern logger_t* g_log;
+extern logger_t* g_debug_log;
 
 void Sat_vapour_pressure(cell_t *const c, const int day, const int month, const int year)
 {
@@ -231,25 +231,25 @@ void Radiation (cell_t *const c, const int day, const int month, const int year)
 
 	/* compute downward Short-Wave radiation */
 	met[month].d[day].sw_downward_MJ = met[month].d[day].solar_rad;
-	//logger(g_log, "Short_wave_radiation (downward) = %g MJ/m^2 day\n", met[month].d[day].sw_downward_MJ);
+	//logger(g_debug_log, "Short_wave_radiation (downward) = %g MJ/m^2 day\n", met[month].d[day].sw_downward_MJ);
 
 	/* convert into W/m2 */
 	met[month].d[day].incoming_sw_downward_W = met[month].d[day].sw_downward_MJ * MJ_TO_W;
 	met[month].d[day].sw_downward_W = met[month].d[day].incoming_sw_downward_W ;
-	//logger(g_log, "Short wave radiation (downward) = %g W/m2\n", met[month].d[day].sw_downward_W);
+	//logger(g_debug_log, "Short wave radiation (downward) = %g W/m2\n", met[month].d[day].sw_downward_W);
 
 	met[month].d[day].sw_pot_downward_W = compute_potential_rad(g_soil_settings->values[SOIL_LAT], g_soil_settings->values[SOIL_LON], day);
-	//logger(g_log, "sw_pot_downward_W = %g W/m2\n", met[month].d[day].sw_pot_downward_W);
+	//logger(g_debug_log, "sw_pot_downward_W = %g W/m2\n", met[month].d[day].sw_pot_downward_W);
 
 	/* convert incoming Short-Wave flux in PAR from MJ/m2/day to molPAR/m2/day (Biome-BGC method) */
 	met[month].d[day].incoming_par = (met[month].d[day].sw_downward_MJ * RAD2PAR * EPAR);
 	met[month].d[day].par = met[month].d[day].incoming_par;
-	//logger(g_log, "Par = %g molPAR/m^2 day\n", met[month].d[day].par);
+	//logger(g_debug_log, "Par = %g molPAR/m^2 day\n", met[month].d[day].par);
 
 	/* convert incoming Short-Wave flux in PPFD from W/m2 to umol/m2/sec (Biome-BGC method) */
 	met[month].d[day].incoming_ppfd = met[month].d[day].sw_downward_W * RAD2PAR * EPAR;
 	met[month].d[day].ppfd = met[month].d[day].incoming_ppfd;
-	//logger(g_log, "PPFD = %g umolPPFD/m2/sec\n", met[month].d[day].ppfd);
+	//logger(g_debug_log, "PPFD = %g umolPPFD/m2/sec\n", met[month].d[day].ppfd);
 
 	/***************************************************************************************************************************************/
 
@@ -267,11 +267,11 @@ void Radiation (cell_t *const c, const int day, const int month, const int year)
 		/* following Allen et al., 1998 */
 		/* it represents the outgoing part of long wave radiation */
 		met[month].d[day].lw_net_MJ = SBC_MJ * (pow(((TmaxK + TminK)/2.0),4))*(0.34-0.14*(sqrt(met[month].d[day].ea)))*met[month].d[day].cloud_cover_frac;
-		//logger(g_log, "Net Long wave radiation (Allen)= %g MJ/m^2 day\n", met[month].d[day].lw_net_MJ);
+		//logger(g_debug_log, "Net Long wave radiation (Allen)= %g MJ/m^2 day\n", met[month].d[day].lw_net_MJ);
 
 		/* convert into W/m2 */
 		met[month].d[day].lw_net_W = met[month].d[day].lw_net_MJ * MJ_TO_W;
-		//logger(g_log, "Net Long wave radiation (Allen)= %g W/m2\n", met[month].d[day].lw_net_W);
+		//logger(g_debug_log, "Net Long wave radiation (Allen)= %g W/m2\n", met[month].d[day].lw_net_W);
 		/*****************************************************************************************/
 	}
 	else
@@ -279,17 +279,17 @@ void Radiation (cell_t *const c, const int day, const int month, const int year)
 		//todo check it Prentice says "net upward long-wave flux"
 		/* following Prentice et al., 1993 */
 		met[month].d[day].lw_net_W = (b+(1.0-b)*met[month].d[day].ni)*(a - met[month].d[day].tavg);
-		//logger(g_log, "Net Long wave radiation (Prentice)= %g W/m2\n", met[month].d[day].lw_net_W);
+		//logger(g_debug_log, "Net Long wave radiation (Prentice)= %g W/m2\n", met[month].d[day].lw_net_W);
 
 		/* convert into MJ/m^2 day */
 		met[month].d[day].lw_net_MJ = met[month].d[day].lw_net_W * W_TO_MJ;
-		//logger(g_log, "Net Long wave radiation (Prentice)= %g MJ/m^2 day\n", met[month].d[day].lw_net_MJ);
+		//logger(g_debug_log, "Net Long wave radiation (Prentice)= %g MJ/m^2 day\n", met[month].d[day].lw_net_MJ);
 		/*****************************************************************************************/
 	}
 
 	/* net radiation based on 3-PG method */
-	//logger(g_log, "Net radiation using Qa and Qb = %g W/m2\n", QA + QB * (met[month].d[day].solar_rad * pow (10.0, 6)/86400.0));
-	//logger(g_log, "Net radiation (3-PG method) = %g W/m2\n", c->net_radiation);
+	//logger(g_debug_log, "Net radiation using Qa and Qb = %g W/m2\n", QA + QB * (met[month].d[day].solar_rad * pow (10.0, 6)/86400.0));
+	//logger(g_debug_log, "Net radiation (3-PG method) = %g W/m2\n", c->net_radiation);
 	/***************************************************************************************************************************************/
 
 
@@ -350,11 +350,11 @@ void Day_Length(cell_t *c, const int day, const int month, const int year)
 	//	adjust_latitude = g_topo->values[TOPO_ELEV] / 125.0;
 	//	ampl = (exp (7.42 + (0.045 * (g_soil_settings->values[SOIL_LAT]+adjust_latitude)))) / 3600;
 	//	met[month].d[day].daylength = ampl * (sin ((doy - 79) * 0.01721)) + 12;
-	//logger(g_log, "with altitude = %f\n", met[month].d[day].daylength);
+	//logger(g_debug_log, "with altitude = %f\n", met[month].d[day].daylength);
 
 	ampl = (exp (7.42 + (0.045 * g_soil_settings->values[SOIL_LAT]))) / 3600;
 	met[month].d[day].daylength = ampl * (sin ((doy - 79) * 0.01721)) + 12;
-	//logger(g_log, "without altitude = %f\n", met[month].d[day].daylength);
+	//logger(g_debug_log, "without altitude = %f\n", met[month].d[day].daylength);
 
 	/* compute fraction of daytime */
 	met[month].d[day].ni = met[month].d[day].daylength/24.0;
@@ -367,7 +367,7 @@ void Avg_temperature(meteo_t *met, const int day, const int month)
 	if ( NO_DATA == met[month].d[day].tavg ) {
 		if ( (NO_DATA == met[month].d[day].tmax) && (NO_DATA == met[month].d[day].tmin) )
 		{
-			logger(g_log, "NO DATA FOR TEMPERATURE!\n");
+			logger(g_debug_log, "NO DATA FOR TEMPERATURE!\n");
 		} else {
 			met[month].d[day].tavg =  (0.606 * met[month].d[day].tmax) + (0.394 * met[month].d[day].tmin);
 		}
@@ -389,7 +389,7 @@ void Daylight_avg_temperature(meteo_t *const met, const int day, const int month
 		met[month].d[day].tday = 0.45 * (met[month].d[day].tmax - met[month].d[day].tavg) + met[month].d[day].tavg;
 	} else {
 		met[month].d[day].tday = NO_DATA;
-		logger(g_log, "NO TMAX and TMIN can't compute TDAY!!! \n");
+		logger(g_debug_log, "NO TMAX and TMIN can't compute TDAY!!! \n");
 	}
 }
 
@@ -405,7 +405,7 @@ void Nightime_avg_temperature(meteo_t *met, const int day, const int month)
 	else
 	{
 		met[month].d[day].tnight = NO_DATA;
-		logger(g_log, "NO TMAX and TMIN can't compute TNIGHT!!! \n");
+		logger(g_debug_log, "NO TMAX and TMIN can't compute TNIGHT!!! \n");
 	}
 }
 
@@ -427,7 +427,7 @@ void Thermic_sum (meteo_t *met, const int day, const int month) {
 			previous_thermic_sum = 0;
 		}
 		if (met[month].d[day].tavg == NO_DATA)
-			logger(g_log, "tavg NO_DATA!!\n");
+			logger(g_debug_log, "tavg NO_DATA!!\n");
 	}
 	else
 	{
@@ -443,7 +443,7 @@ void Thermic_sum (meteo_t *met, const int day, const int month) {
 			//Log ("day = %d month = %d somma termica %f\n",day+1, month+1,  met[month].d[day].thermic_sum);
 		}
 		if (met[month].d[day].tavg == NO_DATA)
-			logger(g_log, "tavg NO_DATA!!\n");
+			logger(g_debug_log, "tavg NO_DATA!!\n");
 	}
 }
 
@@ -463,7 +463,7 @@ void Air_pressure(meteo_t *met, const int day, const int month)
 	t1 = 1.0 - (LR_STD * g_topo->values[TOPO_ELEV])/T_STD;
 	t2 = G_STD / (LR_STD * (Rgas / MA));
 	met[month].d[day].air_pressure = P_STD * pow (t1, t2);
-	//logger(g_log, "Air pressure = %f Pa\n", met[month].d[day].air_pressure);
+	//logger(g_debug_log, "Air pressure = %f Pa\n", met[month].d[day].air_pressure);
 }
 
 
@@ -621,16 +621,16 @@ void Annual_met_values(cell_t *const c, const int day, const int month, const in
 		c->annual_solar_rad /= 365;
 		//c->annual_precip = 365;
 		c->annual_vpd /= 365;
-		logger(g_log, "**ANNUAL MET VALUES day = %d month = %d year = %d**\n", day+1, month+1, year+1);
-		logger(g_log, "-Annual average tavg = %f C°\n", c->annual_tavg);
-		logger(g_log, "-Annual average tmax = %f C°\n", c->annual_tmax);
-		logger(g_log, "-Annual average tmin = %f C°\n", c->annual_tmin);
-		logger(g_log, "-Annual average tday = %f C°\n", c->annual_tday);
-		logger(g_log, "-Annual average tnight = %f C°\n", c->annual_tnight);
-		logger(g_log, "-Annual average tsoil = %f C°\n", c->annual_tsoil);
-		logger(g_log, "-Annual average solar rad = %f MJ/m2/day\n", c->annual_solar_rad);
-		logger(g_log, "-Annual average prcp = %f mm/m2/day\n", c->annual_precip);
-		logger(g_log, "-Annual average vpd = %f hPa/day \n", c->annual_vpd);
+		logger(g_debug_log, "**ANNUAL MET VALUES day = %d month = %d year = %d**\n", day+1, month+1, year+1);
+		logger(g_debug_log, "-Annual average tavg = %f C°\n", c->annual_tavg);
+		logger(g_debug_log, "-Annual average tmax = %f C°\n", c->annual_tmax);
+		logger(g_debug_log, "-Annual average tmin = %f C°\n", c->annual_tmin);
+		logger(g_debug_log, "-Annual average tday = %f C°\n", c->annual_tday);
+		logger(g_debug_log, "-Annual average tnight = %f C°\n", c->annual_tnight);
+		logger(g_debug_log, "-Annual average tsoil = %f C°\n", c->annual_tsoil);
+		logger(g_debug_log, "-Annual average solar rad = %f MJ/m2/day\n", c->annual_solar_rad);
+		logger(g_debug_log, "-Annual average prcp = %f mm/m2/day\n", c->annual_precip);
+		logger(g_debug_log, "-Annual average vpd = %f hPa/day \n", c->annual_vpd);
 	}
 
 }

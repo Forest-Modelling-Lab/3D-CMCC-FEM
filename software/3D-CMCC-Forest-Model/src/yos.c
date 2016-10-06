@@ -60,7 +60,7 @@ static const char *sz_month_names[YOS_MONTHS_COUNT] = {
 		, "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"
 };
 
-extern logger_t* g_log;
+extern logger_t* g_debug_log;
 extern settings_t* g_settings;
 extern const char sz_err_out_of_memory[];
 extern char *g_sz_program_path;
@@ -326,7 +326,7 @@ static int yos_from_arr(double *const values, const int rows_count, const int co
 		/* remove date, month and year from columns count */
 		flag = malloc((columns_count-3)*sizeof*flag);
 		if ( ! flag ) {
-			logger(g_log, sz_err_out_of_memory);
+			logger(g_debug_log, sz_err_out_of_memory);
 			free(yos);
 			return 0;
 		}
@@ -348,14 +348,14 @@ static int yos_from_arr(double *const values, const int rows_count, const int co
 
 		/* check for missing vars */
 		if ( flag[VPD_F-3] && flag[RH_F-3] ) {
-			logger(g_log, "VPD and RH columns are missing!\n");
+			logger(g_debug_log, "VPD and RH columns are missing!\n");
 			free(flag);
 			free(yos);
 			return 0;
 		}
 
 		if ( flag[TA_F-3] && flag[TMIN-3] && flag[TMAX-3] ) {
-			logger(g_log, "TA, TMIN and TMAX columns are missing!\n");
+			logger(g_debug_log, "TA, TMIN and TMAX columns are missing!\n");
 			free(flag);
 			free(yos);
 			return 0;
@@ -396,7 +396,7 @@ static int yos_from_arr(double *const values, const int rows_count, const int co
 		year = (int)values[VALUE_AT(row, YEAR)];
 		if ( ! year ) {
 			puts("year cannot be zero!\n");
-			logger(g_log, "year cannot be zero!\n");
+			logger(g_debug_log, "year cannot be zero!\n");
 			free(yos);
 			return 0;
 		}
@@ -404,7 +404,7 @@ static int yos_from_arr(double *const values, const int rows_count, const int co
 		month = (int)values[VALUE_AT(row, MONTH)];
 		if ( month < 1 || month > YOS_MONTHS_COUNT ) {
 			printf("bad month for year %d\n\n", year);
-			logger(g_log, "bad month for year %d\n\n", year);
+			logger(g_debug_log, "bad month for year %d\n\n", year);
 			free(yos);
 			return 0;
 
@@ -414,7 +414,7 @@ static int yos_from_arr(double *const values, const int rows_count, const int co
 		day = (int)values[VALUE_AT(row, DAY)];
 		if ( (day <= 0) || day > days_per_month[month] + (((1 == month) && IS_LEAP_YEAR(year)) ? 1 :0 ) ) {
 			printf("bad day for %s %d\n\n", sz_month_names[month], year);
-			logger(g_log, "bad day for %s %d\n\n", sz_month_names[month], year);
+			logger(g_debug_log, "bad day for %s %d\n\n", sz_month_names[month], year);
 			free(yos);
 			return 0;
 		}
@@ -440,7 +440,7 @@ static int yos_from_arr(double *const values, const int rows_count, const int co
 		yos[*yos_count-1].m[month].d[day].n_days = day+1;
 		if (yos[*yos_count-1].m[month].d[day].n_days > YOS_DAYS_COUNT)
 		{
-			logger(g_log, "ERROR IN N_DAYS DATA!!\n");
+			logger(g_debug_log, "ERROR IN N_DAYS DATA!!\n");
 			free(yos);
 			return 0;
 		}
@@ -452,9 +452,9 @@ static int yos_from_arr(double *const values, const int rows_count, const int co
 
 			//the model gets the value of the day before
 			//Log ("* SOLAR RAD -NO DATA in year %d month %s, day %d!!!!\n", yos[*yos_count-1].year, MonthName[month], day);
-			//logger(g_log, "Getting previous day values.. !!\n");
+			//logger(g_debug_log, "Getting previous day values.. !!\n");
 			yos[*yos_count-1].m[month].d[day].solar_rad = previous_solar_rad;
-			//logger(g_log, "..value of the previous day = %f\n", yos[*yos_count-1].m[month].d[day].solar_rad);
+			//logger(g_debug_log, "..value of the previous day = %f\n", yos[*yos_count-1].m[month].d[day].solar_rad);
 			if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].solar_rad))
 			{
 				//Log ("********* SOLAR RAD -NO DATA- in previous day!!!!\n" );
@@ -482,7 +482,7 @@ static int yos_from_arr(double *const values, const int rows_count, const int co
 		/* check if values are outside ranges */
 		else if(yos[*yos_count-1].m[month].d[day].solar_rad < RG_RANGE_MIN || yos[*yos_count-1].m[month].d[day].solar_rad > RG_RANGE_MAX)
 		{
-			logger(g_log, "BAD DATA FOR RG = %f in day = %d month = %d year = %d\n", yos[*yos_count-1].m[month].d[day].solar_rad, day+1, month+1, year);
+			logger(g_debug_log, "BAD DATA FOR RG = %f in day = %d month = %d year = %d\n", yos[*yos_count-1].m[month].d[day].solar_rad, day+1, month+1, year);
 			exit(1);
 		}
 		else
@@ -513,7 +513,7 @@ static int yos_from_arr(double *const values, const int rows_count, const int co
 		/* check if values are outside ranges */
 		else if(yos[*yos_count-1].m[month].d[day].tavg < TA_RANGE_MIN || yos[*yos_count-1].m[month].d[day].tavg > TA_RANGE_MAX)
 		{
-			logger(g_log, "BAD DATA FOR Tavg = %f in day = %d month = %d year = %d\n", yos[*yos_count-1].m[month].d[day].tavg, day+1, month+1, year);
+			logger(g_debug_log, "BAD DATA FOR Tavg = %f in day = %d month = %d year = %d\n", yos[*yos_count-1].m[month].d[day].tavg, day+1, month+1, year);
 			exit(1);
 		}
 		else
@@ -527,9 +527,9 @@ static int yos_from_arr(double *const values, const int rows_count, const int co
 		{
 			//the model gets the value of the day before
 			//Log ("* TMAX -NO DATA in year %d month %s, day %d!!!!\n", yos[*yos_count-1].year, MonthName[month], day);
-			//logger(g_log, "Getting previous day values.. !!\n");
+			//logger(g_debug_log, "Getting previous day values.. !!\n");
 			yos[*yos_count-1].m[month].d[day].tmax = yos[*yos_count-1].m[month].d[day].tavg;
-			//logger(g_log, "..using tavg = %f\n", yos[*yos_count-1].m[month].d[day].tavg);
+			//logger(g_debug_log, "..using tavg = %f\n", yos[*yos_count-1].m[month].d[day].tavg);
 			if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].tmax))
 			{
 				//the model gets the value of the year before
@@ -545,7 +545,7 @@ static int yos_from_arr(double *const values, const int rows_count, const int co
 		/* check if values are outside ranges */
 		else if(yos[*yos_count-1].m[month].d[day].tmax < TMAX_RANGE_MIN || yos[*yos_count-1].m[month].d[day].tmax > TMAX_RANGE_MAX)
 		{
-			logger(g_log, "BAD DATA FOR Tmax = %f in day = %d month = %d year = %d\n", yos[*yos_count-1].m[month].d[day].tmax, day+1, month+1, year);
+			logger(g_debug_log, "BAD DATA FOR Tmax = %f in day = %d month = %d year = %d\n", yos[*yos_count-1].m[month].d[day].tmax, day+1, month+1, year);
 			exit(1);
 		}
 		else
@@ -559,9 +559,9 @@ static int yos_from_arr(double *const values, const int rows_count, const int co
 		{
 			//the model gets the value of the day before
 			//Log ("* TMIN -NO DATA in year %d month %s, day %d!!!!\n", yos[*yos_count-1].year, MonthName[month], day);
-			//logger(g_log, "Getting previous day values.. !!\n");
+			//logger(g_debug_log, "Getting previous day values.. !!\n");
 			yos[*yos_count-1].m[month].d[day].tmin = yos[*yos_count-1].m[month].d[day].tavg;
-			//logger(g_log, "..using tavg = %f\n", yos[*yos_count-1].m[month].d[day].tavg);
+			//logger(g_debug_log, "..using tavg = %f\n", yos[*yos_count-1].m[month].d[day].tavg);
 			if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].tmin))
 			{
 				//the model gets the value of the year before
@@ -577,7 +577,7 @@ static int yos_from_arr(double *const values, const int rows_count, const int co
 		/* check if values are outside ranges */
 		else if(yos[*yos_count-1].m[month].d[day].tmin < TMIN_RANGE_MIN || yos[*yos_count-1].m[month].d[day].tmin > TMIN_RANGE_MAX)
 		{
-			logger(g_log, "BAD DATA FOR Tmin = %f in day = %d month = %d year = %d\n", yos[*yos_count-1].m[month].d[day].tmin, day+1, month+1, year);
+			logger(g_debug_log, "BAD DATA FOR Tmin = %f in day = %d month = %d year = %d\n", yos[*yos_count-1].m[month].d[day].tmin, day+1, month+1, year);
 			exit(1);
 		}
 		else
@@ -591,9 +591,9 @@ static int yos_from_arr(double *const values, const int rows_count, const int co
 		{
 			//the model gets the value of the day before
 			//Log ("* VPD -NO DATA in year %d month %s, day %d!!!!\n", yos[*yos_count-1].year, MonthName[month], day);
-			//logger(g_log, "Getting previous day values.. !!\n");
+			//logger(g_debug_log, "Getting previous day values.. !!\n");
 			yos[*yos_count-1].m[month].d[day].vpd = previous_vpd;
-			//logger(g_log, "..value of the previous day = %f\n", yos[*yos_count-1].m[month].d[day].vpd);
+			//logger(g_debug_log, "..value of the previous day = %f\n", yos[*yos_count-1].m[month].d[day].vpd);
 			if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].vpd))
 			{
 				//Log ("********* VPD -NO DATA- in previous year!!!!\n" );
@@ -612,14 +612,14 @@ static int yos_from_arr(double *const values, const int rows_count, const int co
 		/* check if values are outside ranges */
 		else if(yos[*yos_count-1].m[month].d[day].vpd < VPD_RANGE_MIN || yos[*yos_count-1].m[month].d[day].vpd > VPD_RANGE_MAX)
 		{
-			logger(g_log, "BAD DATA FOR vpd = %f in day = %d month = %d year = %d\n", yos[*yos_count-1].m[month].d[day].vpd, day+1, month+1, year);
+			logger(g_debug_log, "BAD DATA FOR vpd = %f in day = %d month = %d year = %d\n", yos[*yos_count-1].m[month].d[day].vpd, day+1, month+1, year);
 			exit(1);
 		}
 		else
 		{
 			previous_vpd = yos[*yos_count-1].m[month].d[day].vpd;
 		}
-		//logger(g_log, "%d-%s-vpd = %f\n",yos[*yos_count-1].m[month].d[day].n_days, MonthName[month], yos[*yos_count-1].m[month].d[day].vpd);
+		//logger(g_debug_log, "%d-%s-vpd = %f\n",yos[*yos_count-1].m[month].d[day].n_days, MonthName[month], yos[*yos_count-1].m[month].d[day].vpd);
 
 		/* case TS_F: // ts_f   Soil temperature */
 		yos[*yos_count-1].m[month].d[day].ts_f = values[VALUE_AT(row,TS_F)];
@@ -655,29 +655,29 @@ static int yos_from_arr(double *const values, const int rows_count, const int co
 		{
 			//the model gets the value of the day before
 			//Log ("* PRECIPITATION -NO DATA in year %d month %s, day %d!!!!\n", yos[*yos_count-1].year, MonthName[month], day+1);
-			//logger(g_log, "Getting previous day values.. !!\n");
+			//logger(g_debug_log, "Getting previous day values.. !!\n");
 			yos[*yos_count-1].m[month].d[day].prcp = previous_prcp;
-			//logger(g_log, "..value of the previous day = %f\n", yos[*yos_count-1].m[month].d[day].prcp);
+			//logger(g_debug_log, "..value of the previous day = %f\n", yos[*yos_count-1].m[month].d[day].prcp);
 			if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].prcp))
 			{
-				logger(g_log, "********* PRECIPITATION -NO DATA- in previous year!!!!\n" );
+				logger(g_debug_log, "********* PRECIPITATION -NO DATA- in previous year!!!!\n" );
 
 				//the model gets the value of the year before
 				yos[*yos_count-1].m[month].d[day].prcp = yos[*yos_count-2].m[month].d[day].prcp;
 
 				if (IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].prcp))
 				{
-					logger(g_log, "********* RAIN -NO DATA- in previous year!!!!\n" );
+					logger(g_debug_log, "********* RAIN -NO DATA- in previous year!!!!\n" );
 					yos[*yos_count-1].m[month].d[day].prcp = NO_DATA;
 				}
 
 			}
-			//logger(g_log, "precipitation of previous year = %f mm\n", yos[*yos_count-1].m[month].rain);
+			//logger(g_debug_log, "precipitation of previous year = %f mm\n", yos[*yos_count-1].m[month].rain);
 		}
 		/* check if values are outside ranges */
 		else if(yos[*yos_count-1].m[month].d[day].prcp < PRECIP_RANGE_MIN || yos[*yos_count-1].m[month].d[day].prcp > PRECIP_RANGE_MAX)
 		{
-			logger(g_log, "BAD DATA FOR prcp = %f in day = %d month = %d year = %d\n", yos[*yos_count-1].m[month].d[day].prcp, day+1, month+1, year);
+			logger(g_debug_log, "BAD DATA FOR prcp = %f in day = %d month = %d year = %d\n", yos[*yos_count-1].m[month].d[day].prcp, day+1, month+1, year);
 			exit(1);
 		}
 		else
@@ -690,7 +690,7 @@ static int yos_from_arr(double *const values, const int rows_count, const int co
 		/*if ( error_flag )
 		{
 			printf("unable to convert value \"%s\" at column %d for %s day %d\n", token2, column+1, MonthName[month], day);
-			logger(g_log, "unable to convert value \"%s\" at column %d for %s day %d\n", token2, column+1, MonthName[month], day);
+			logger(g_debug_log, "unable to convert value \"%s\" at column %d for %s day %d\n", token2, column+1, MonthName[month], day);
 			free(yos);
 			fclose(f);
 			return 0;
@@ -699,7 +699,7 @@ static int yos_from_arr(double *const values, const int rows_count, const int co
 		{
 			//the model gets the value of the day before
 			//Log ("********* SWC -NO DATA in year %s month %s!!!!\n", year, MonthName[month] );
-			//logger(g_log, "Getting previous years values !!\n");
+			//logger(g_debug_log, "Getting previous years values !!\n");
 			yos[*yos_count-1].m[month].d[day].swc = previous_swc;
 			/*
 			if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].swc))
@@ -721,7 +721,7 @@ static int yos_from_arr(double *const values, const int rows_count, const int co
 			previous_swc = yos[*yos_count-1].m[month].d[day].swc;
 		}
 
-		//logger(g_log, "%d-%s-swc= %f\n",yos[*yos_count-1].m[month].d[day].n_days, MonthName[month], yos[*yos_count-1].m[month].d[day].swc);
+		//logger(g_debug_log, "%d-%s-swc= %f\n",yos[*yos_count-1].m[month].d[day].n_days, MonthName[month], yos[*yos_count-1].m[month].d[day].swc);
 		//break;
 		//case NDVI_LAI: //Get LAI in spatial version
 		//todo to remove
@@ -737,7 +737,7 @@ static int yos_from_arr(double *const values, const int rows_count, const int co
 				{
 					//the model gets the value of the day before
 					//Log ("********* LAI -NO DATA in year %d month %s, day %d!!!!\n", yos[*yos_count-1].year, MonthName[month], day+1 );
-					//logger(g_log, "Getting previous years values !!\n");
+					//logger(g_debug_log, "Getting previous years values !!\n");
 					yos[*yos_count-1].m[month].d[day].ndvi_lai = previous_ndvi_lai;
 					if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].ndvi_lai))
 					{
@@ -759,7 +759,7 @@ static int yos_from_arr(double *const values, const int rows_count, const int co
 			//the model gets the value of the day before
 			//Log ("* ET -NO DATA in year %s month %s, day %d!!!!\n", year, MonthName[month], day);
 		}
-		//logger(g_log, "%d-%s-tavg = %f\n",yos[*yos_count-1].m[month].d[day].n_days, MonthName[month], yos[*yos_count-1].m[month].d[day].tavg);
+		//logger(g_debug_log, "%d-%s-tavg = %f\n",yos[*yos_count-1].m[month].d[day].n_days, MonthName[month], yos[*yos_count-1].m[month].d[day].tavg);
 
 		//case WS_F: //windspeed
 		yos[*yos_count-1].m[month].d[day].windspeed = values[VALUE_AT(row,WS_F)];
@@ -768,7 +768,7 @@ static int yos_from_arr(double *const values, const int rows_count, const int co
 			//the model gets the value of the day before
 			//Log ("* windspeed -NO DATA in year %s month %s, day %d!!!!\n", yos[*yos_count-1].year, MonthName[month], day);
 		}
-		//logger(g_log, "%d-%s-tavg = %f\n",yos[*yos_count-1].m[month].d[day].n_days, MonthName[month], yos[*yos_count-1].m[month].d[day].tavg);
+		//logger(g_debug_log, "%d-%s-tavg = %f\n",yos[*yos_count-1].m[month].d[day].n_days, MonthName[month], yos[*yos_count-1].m[month].d[day].tavg);
 
 		// RH_f
 		yos[*yos_count-1].m[month].d[day].rh_f = values[VALUE_AT(row,RH_F)];
@@ -782,17 +782,17 @@ static int yos_from_arr(double *const values, const int rows_count, const int co
 		/*
 		else if(yos[*yos_count-1].m[month].d[day].rh_f < RH_RANGE_MIN || yos[*yos_count-1].m[month].d[day].rh_f > RH_RANGE_MAX)
 		{
-			logger(g_log, "BAD DATA FOR rh = %g in day = %d month = %d year = %d\n", yos[*yos_count-1].m[month].d[day].rh_f, day+1, month+1, year);
+			logger(g_debug_log, "BAD DATA FOR rh = %g in day = %d month = %d year = %d\n", yos[*yos_count-1].m[month].d[day].rh_f, day+1, month+1, year);
 
 			//fixme
 			if(yos[*yos_count-1].m[month].d[day].rh_f < RH_RANGE_MIN)
 			{
-				logger(g_log, "WARNING!!!!! forced RH to 0%%\a\n");
+				logger(g_debug_log, "WARNING!!!!! forced RH to 0%%\a\n");
 				yos[*yos_count-1].m[month].d[day].rh_f = 0.0;
 			}
 			if(yos[*yos_count-1].m[month].d[day].rh_f > RH_RANGE_MAX)
 			{
-				logger(g_log, "WARNING!!!!! forced RH to 100%%\a\n");
+				logger(g_debug_log, "WARNING!!!!! forced RH to 100%%\a\n");
 				yos[*yos_count-1].m[month].d[day].rh_f = 100.0;
 			}
 
@@ -931,7 +931,7 @@ static int import_nc(const char* const filename, yos_t** pyos, int* const yos_co
 			if ( ! string_compare_i(name, sz_met_columns[y]) ) {
 				/* check if we've already get that var */
 				if ( columns[y] ) {
-					logger(g_log, "column %s already imported!", name);
+					logger(g_debug_log, "column %s already imported!", name);
 					free(values);
 					free(i_values);
 					nc_close(id_file);
@@ -951,7 +951,7 @@ static int import_nc(const char* const filename, yos_t** pyos, int* const yos_co
 					}
 				} else {
 					/* type format not supported! */
-					logger(g_log, "type format for %s column not supported", name);
+					logger(g_debug_log, "type format for %s column not supported", name);
 					free(values);
 					free(i_values);
 					nc_close(id_file);
@@ -968,13 +968,13 @@ static int import_nc(const char* const filename, yos_t** pyos, int* const yos_co
 	/* check if we've all needed vars */
 	for ( i = 0; i < MET_COLUMNS_COUNT; ++i ) {
 		if ( ((VPD_F == i) && (-1 == columns[RH_F])) || ((RH_F == i) && (-1 == columns[VPD_F])) ) {
-			logger(g_log, "met columns %s and %s are missing!\n\n", sz_met_columns[VPD_F], sz_met_columns[RH_F]);
+			logger(g_debug_log, "met columns %s and %s are missing!\n\n", sz_met_columns[VPD_F], sz_met_columns[RH_F]);
 			free(values);
 			free(i_values);
 			nc_close(id_file);
 			return 0;
 		} else if ( -1 == columns[i] ) {
-			logger(g_log, "met column %s not found.\n\n", sz_met_columns[i]);
+			logger(g_debug_log, "met column %s not found.\n\n", sz_met_columns[i]);
 			free(values);
 			free(i_values);
 			nc_close(id_file);
@@ -1137,7 +1137,7 @@ static int import_lst(const char *const filename, yos_t** p_yos, int *const yos_
 	/* open lst file */
 	f = fopen(filename, "r");
 	if ( ! f ) {
-		logger(g_log, "unable to open met data file, problem in open list file !\n");
+		logger(g_debug_log, "unable to open met data file, problem in open list file !\n");
 		return 0;
 	}
 
@@ -1179,7 +1179,7 @@ static int import_lst(const char *const filename, yos_t** p_yos, int *const yos_
 		if ( ret != NC_NOERR ) goto quit;
 
 		if ( ! dims_count || ! vars_count ) {
-			logger(g_log, "bad nc file! %d dimensions and %d vars\n\n", dims_count, vars_count);
+			logger(g_debug_log, "bad nc file! %d dimensions and %d vars\n\n", dims_count, vars_count);
 			goto quit_no_nc_err;
 		}
 
@@ -1196,7 +1196,7 @@ static int import_lst(const char *const filename, yos_t** p_yos, int *const yos_
 			for ( y = 0; y < DIMS_COUNT; ++y ) {
 				if ( ! string_compare_i(sz_dims[y], name) ) {
 					if ( dims_size[y] != -1 ) {
-						logger(g_log, "dimension %s already found!\n", sz_dims[y]);
+						logger(g_debug_log, "dimension %s already found!\n", sz_dims[y]);
 						goto quit_no_nc_err;
 					}
 					dims_size[y] = size;
@@ -1210,7 +1210,7 @@ static int import_lst(const char *const filename, yos_t** p_yos, int *const yos_
 		for ( i = 0; i < DIMS_COUNT; ++i ) {
 			/* height_2m can be missing */
 			if ( (-1 == dims_size[i]) && (i != HEIGHT_DIM) ) {
-				logger(g_log, "dimension %s not found!\n", sz_dims[i]);
+				logger(g_debug_log, "dimension %s not found!\n", sz_dims[i]);
 				goto quit_no_nc_err;
 			}
 		}
@@ -1230,13 +1230,13 @@ static int import_lst(const char *const filename, yos_t** p_yos, int *const yos_
 
 		/* check if y_cell is >= y_dim */
 		if ( y_cell >= dims_size[Y_DIM] ) {
-			logger(g_log, "y_cell >= y_dim: %d,%d\n", y_cell, dims_size[Y_DIM]);
+			logger(g_debug_log, "y_cell >= y_dim: %d,%d\n", y_cell, dims_size[Y_DIM]);
 			goto quit_no_nc_err;
 		}
 
 		/* if we have height, it cannot be > 1 */
 		if ( dims_size[HEIGHT_DIM] > 1 ) {
-			logger(g_log, "height_2m cannot be > 1 : (%d)\n", dims_size[HEIGHT_DIM]);
+			logger(g_debug_log, "height_2m cannot be > 1 : (%d)\n", dims_size[HEIGHT_DIM]);
 			goto quit_no_nc_err;
 		}
 
@@ -1270,7 +1270,7 @@ static int import_lst(const char *const filename, yos_t** p_yos, int *const yos_
 			}
 		} else {
 			if ( rows_count != dims_size[TIME_DIM] ) {
-				logger(g_log, "rows count inside %s should be %d not %d\n\n", buffer, rows_count, dims_size[TIME_DIM]);
+				logger(g_debug_log, "rows count inside %s should be %d not %d\n\n", buffer, rows_count, dims_size[TIME_DIM]);
 				goto quit_no_nc_err;
 			}
 		}
@@ -1286,7 +1286,7 @@ static int import_lst(const char *const filename, yos_t** p_yos, int *const yos_
 			if ( ! string_compare_i(name, sz_lat) ) {
 				/* n_dims can be only 2 and ids only x and y */
 				if ( 2 != n_dims ) {
-					logger(g_log, "bad %s dimension size. It should be 2 not %d\n", sz_lat, n_dims);
+					logger(g_debug_log, "bad %s dimension size. It should be 2 not %d\n", sz_lat, n_dims);
 					goto quit_no_nc_err;
 				}
 				/* who cames first ? x or y ? */
@@ -1305,7 +1305,7 @@ static int import_lst(const char *const filename, yos_t** p_yos, int *const yos_
 			} else if ( ! string_compare_i(name, sz_lon) ) {
 				/* n_dims can be only 2 and ids only x and y */
 				if ( 2 != n_dims ) {
-					logger(g_log, "bad %s dimension size. It should be 2 not %d\n", sz_lon, n_dims);
+					logger(g_debug_log, "bad %s dimension size. It should be 2 not %d\n", sz_lon, n_dims);
 					goto quit_no_nc_err;
 				}
 				/* who cames first ? x or y ? */
@@ -1324,7 +1324,7 @@ static int import_lst(const char *const filename, yos_t** p_yos, int *const yos_
 			} else if ( ! string_compare_i(name, sz_time) ) {
 				if ( ! date_imported ) {
 					if ( type != NC_DOUBLE ) {
-						logger(g_log, "type format in %s for time column not supported\n\n", buffer);
+						logger(g_debug_log, "type format in %s for time column not supported\n\n", buffer);
 						goto quit_no_nc_err;
 					}
 					ret = nc_get_var_double(id_file, i, &values[COLUMN_AT(YEAR)]);
@@ -1349,7 +1349,7 @@ static int import_lst(const char *const filename, yos_t** p_yos, int *const yos_
 					if ( ! string_compare_i(name, sz_vars[y]) ) {
 						/* check if we already have imported that var */
 						if ( vars[y] ) {
-							logger(g_log, "var %s already imported\n", sz_vars[y]);
+							logger(g_debug_log, "var %s already imported\n", sz_vars[y]);
 							goto quit_no_nc_err;
 						}
 						/* ALESSIOR...do a clean up here...too much code! */
@@ -1419,7 +1419,7 @@ static int import_lst(const char *const filename, yos_t** p_yos, int *const yos_
 							if ( ret != NC_NOERR ) goto quit;
 						} else {
 							/* type format not supported! */
-							logger(g_log, "type format in %s for %s column not supported\n\n", buffer, sz_vars[y]);
+							logger(g_debug_log, "type format in %s for %s column not supported\n\n", buffer, sz_vars[y]);
 							goto quit_no_nc_err;
 						}
 						vars[y] = 1;
@@ -1430,7 +1430,7 @@ static int import_lst(const char *const filename, yos_t** p_yos, int *const yos_
 			}
 		}
 		if ( ! flag ) {
-			logger(g_log, "var not found inside %s\n\n", buffer);
+			logger(g_debug_log, "var not found inside %s\n\n", buffer);
 			goto quit_no_nc_err;
 		}
 		nc_close(id_file);
@@ -1443,7 +1443,7 @@ static int import_lst(const char *const filename, yos_t** p_yos, int *const yos_
 	/* check for TA, TMIN && TMAX */
 	if ( ! vars[TA_F-3] ) {
 		if ( ! vars[VPD_F-3] && ! vars[VPD_F-3] ) {
-			logger(g_log, "VPD and RH columns are missing!\n\n");
+			logger(g_debug_log, "VPD and RH columns are missing!\n\n");
 			free(values);
 			return 0;
 		}
@@ -1455,7 +1455,7 @@ static int import_lst(const char *const filename, yos_t** p_yos, int *const yos_
 			case VPD_F-3:
 			case RH_F-3:
 			if ( ! vars[VPD_F-3] && ! vars[RH_F-3] ) {
-				logger(g_log, "VPD and RH columns are missing!\n\n");
+				logger(g_debug_log, "VPD and RH columns are missing!\n\n");
 				free(values);
 				return 0;
 			}
@@ -1463,7 +1463,7 @@ static int import_lst(const char *const filename, yos_t** p_yos, int *const yos_
 
 			case TA_F-3:
 			if ( ! vars[i] && ! vars[TMIN-3] && ! vars[TMAX-3] ) {
-				logger(g_log, "TA, TMIN and TMAX columns are missing!\n\n");
+				logger(g_debug_log, "TA, TMIN and TMAX columns are missing!\n\n");
 				free(values);
 				return 0;
 			}
@@ -1472,7 +1472,7 @@ static int import_lst(const char *const filename, yos_t** p_yos, int *const yos_
 			case TMIN-3:
 			case TMAX-3:
 			if ( ! vars[i] && ! vars[TA_F-3]) {
-				logger(g_log, "%s is missing!\n\n", sz_vars[i]);
+				logger(g_debug_log, "%s is missing!\n\n", sz_vars[i]);
 				free(values);
 				return 0;
 			}
@@ -1480,7 +1480,7 @@ static int import_lst(const char *const filename, yos_t** p_yos, int *const yos_
 
 			default:
 				if ( ! vars[i] ) {
-					logger(g_log, "met columns %s is missing!\n\n", sz_vars[i]);
+					logger(g_debug_log, "met columns %s is missing!\n\n", sz_vars[i]);
 					free(values);
 					return 0;
 				}
@@ -1514,7 +1514,7 @@ static int import_lst(const char *const filename, yos_t** p_yos, int *const yos_
 	}
 
 	if ( ! vars[RH_F-3] && ! vars[VPD_F-3] ) {
-		logger(g_log, "rh and vpd not found!");
+		logger(g_debug_log, "rh and vpd not found!");
 		free(values);
 		return 0;
 	}
@@ -1596,7 +1596,7 @@ static int import_lst(const char *const filename, yos_t** p_yos, int *const yos_
 	return i;
 
 quit:
-	logger(g_log, nc_strerror(ret));
+	logger(g_debug_log, nc_strerror(ret));
 quit_no_nc_err:
 	nc_close(id_file);
 	if ( f_values ) free(f_values);
@@ -1635,7 +1635,7 @@ static int import_txt(const char *const filename, yos_t** p_yos, int *const yos_
 	// get rows count
 	rows_count = file_get_rows_count(filename);
 	if ( rows_count <= 0 ) {
-		logger(g_log, "unable to open met data file, problems in rows !\n");
+		logger(g_debug_log, "unable to open met data file, problems in rows !\n");
 		return 0;
 	}
 
@@ -1645,7 +1645,7 @@ static int import_txt(const char *const filename, yos_t** p_yos, int *const yos_
 	// alloc memory for values
 	values = malloc(rows_count*MET_COLUMNS_COUNT*sizeof*values);
 	if ( ! values ) {
-		logger(g_log, sz_err_out_of_memory);
+		logger(g_debug_log, sz_err_out_of_memory);
 		return 0;
 	}
 
@@ -1658,7 +1658,7 @@ static int import_txt(const char *const filename, yos_t** p_yos, int *const yos_
 	f = fopen(filename, "r");
 	if ( !f )
 	{
-		logger(g_log, "unable to open met data file, problems in filename !\n");
+		logger(g_debug_log, "unable to open met data file, problems in filename !\n");
 		free(values);
 		return 0;
 	}
@@ -1666,7 +1666,7 @@ static int import_txt(const char *const filename, yos_t** p_yos, int *const yos_
 	// get header
 	if ( ! fgets(buffer, BUFFER_SIZE, f) )
 	{
-		logger(g_log, "empty met data file ?\n");
+		logger(g_debug_log, "empty met data file ?\n");
 		free(values);
 		fclose(f);
 		return 0;
@@ -1689,7 +1689,7 @@ static int import_txt(const char *const filename, yos_t** p_yos, int *const yos_
 				if  ( -1 != columns[i] )
 				{
 					printf("met column %s already assigned.\n\n", token2);
-					logger(g_log, "met column %s already assigned.\n\n", token2);
+					logger(g_debug_log, "met column %s already assigned.\n\n", token2);
 					free(values);
 					fclose(f);
 					return 0;
@@ -1767,7 +1767,7 @@ static int import_txt(const char *const filename, yos_t** p_yos, int *const yos_
 		}
 		if ( ++current_row > rows_count ) {
 			puts("too many rows found!");
-			logger(g_log, "too many rows found!");
+			logger(g_debug_log, "too many rows found!");
 			free(values);
 			fclose(f);
 			return 0;
@@ -1792,7 +1792,7 @@ static int import_txt(const char *const filename, yos_t** p_yos, int *const yos_
 			if ( error_flag )
 			{
 				printf("unable to convert value \"%s\" for %s column\n", token2, sz_met_columns[i+no_year_column]);
-				logger(g_log, "unable to convert value \"%s\" for %s column\n", token2, sz_met_columns[i+no_year_column]);
+				logger(g_debug_log, "unable to convert value \"%s\" for %s column\n", token2, sz_met_columns[i+no_year_column]);
 				free(values);
 				fclose(f);
 				return 0;
@@ -1804,7 +1804,7 @@ static int import_txt(const char *const filename, yos_t** p_yos, int *const yos_
 
 	if ( rows_count != current_row ) {
 		printf("rows count should be %d not %d\n", rows_count, current_row);
-		logger(g_log, "rows count should be %d not %d\n", rows_count, current_row);
+		logger(g_debug_log, "rows count should be %d not %d\n", rows_count, current_row);
 		free(values);
 		return 0;
 	}
@@ -1881,7 +1881,7 @@ static int import_txt(const char *const filename, yos_t** p_yos, int *const yos_
 
 	if ( (-1 == columns[RH_F]) 
 			&& (-1 == columns[VPD_F]) ) {
-		logger(g_log, "rh and vpd not found!");
+		logger(g_debug_log, "rh and vpd not found!");
 		free(values);
 		return 0;
 	}
@@ -1921,7 +1921,7 @@ yos_t* yos_import(const char *const file, int *const yos_count, const int x, con
 
 	temp = string_copy(file);
 	if ( ! temp ) {
-		logger(g_log, sz_err_out_of_memory);
+		logger(g_debug_log, sz_err_out_of_memory);
 		return NULL;
 	}
 
@@ -1969,14 +1969,13 @@ yos_t* yos_import(const char *const file, int *const yos_count, const int x, con
 	free(temp);
 
 	/* import co2 conc */
-	if ( ! string_compare_i(g_settings->CO2_mod, "on") ) {
-		if ( ! string_compare_i(g_settings->CO2_fixed, "off") ||
-				! string_compare_i(g_settings->CO2_fixed, "var") )
+	if ( g_settings->CO2_mod ) {
+		if ( (CO2_FIXED_OFF == g_settings->CO2_fixed) || (CO2_FIXED_VAR == g_settings->CO2_fixed) )
 		{
 			int err;
 
 			if ( ! g_sz_co2_conc_file ) {
-				logger(g_log, "co2 concentration file not specified!");
+				logger(g_debug_log, "co2 concentration file not specified!");
 				free(yos);
 				return NULL;
 			}
@@ -1984,7 +1983,7 @@ yos_t* yos_import(const char *const file, int *const yos_count, const int x, con
 			for ( i = 0; i < *yos_count; ++i ) {
 				yos[i].co2Conc = get_co2_conc(yos[i].year, &err);
 				if ( err ) {
-					logger(g_log, "unable to get co2 concentration for year %d\n", yos[i].year);
+					logger(g_debug_log, "unable to get co2 concentration for year %d\n", yos[i].year);
 					free(yos);
 					return NULL;
 				}

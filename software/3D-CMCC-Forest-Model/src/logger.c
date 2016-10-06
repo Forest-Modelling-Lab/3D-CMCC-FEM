@@ -9,12 +9,11 @@
 
 
 logger_t* logger_new(const char* const path, ...) {
-#define BUFFER_SIZE	256
+#define BUFFER_SIZE	1024
 	char buffer[BUFFER_SIZE];
 
 	va_list va;
 	logger_t* p;
-
 
 	va_start(va, path);
 	vsnprintf(buffer, BUFFER_SIZE, path, va);

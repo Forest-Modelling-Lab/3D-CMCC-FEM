@@ -15,7 +15,7 @@ F * phenology.c
 #include "constants.h"
 #include "logger.h"
 
-extern logger_t* g_log;
+extern logger_t* g_debug_log;
 extern soil_settings_t *g_soil_settings;
 
 
@@ -25,8 +25,8 @@ void phenology(cell_t *const c, const int layer, const int height, const int dbh
 	species_t *s;
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
-	logger(g_log, "\n--DAILY PHENOLOGY for SPECIES %s phenology = %.1f--\n", s->name, s->value[PHENOLOGY]);
-	logger(g_log, "-LAI = %g\n-PEAK_LAI = %g\n", s->value[LAI], s->value[PEAK_LAI]);
+	logger(g_debug_log, "\n--DAILY PHENOLOGY for SPECIES %s phenology = %.1f--\n", s->name, s->value[PHENOLOGY]);
+	logger(g_debug_log, "-LAI = %g\n-PEAK_LAI = %g\n", s->value[LAI], s->value[PEAK_LAI]);
 
 	/*for deciduous*/
 	if (s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2)
@@ -101,12 +101,12 @@ void phenology(cell_t *const c, const int layer, const int height, const int dbh
 			s->phenology_phase = 2;
 		}
 	}
-	logger(g_log, "phenology phase = %d\n", s->phenology_phase);
+	logger(g_debug_log, "phenology phase = %d\n", s->phenology_phase);
 }
 
 //void Phenology_phase (species_t *const s, const meteo_t* const met, const int year, const int month, const int day)
 //{
-//	logger(g_log, "--GET_DAILY PHENOLOGY for SPECIES %s phenology = %.1f--\n", s->name, s->value[PHENOLOGY]);
+//	logger(g_debug_log, "--GET_DAILY PHENOLOGY for SPECIES %s phenology = %.1f--\n", s->name, s->value[PHENOLOGY]);
 //
 //	/*for deciduous*/
 //	if (s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2)
@@ -125,8 +125,8 @@ void phenology(cell_t *const c, const int layer, const int height, const int dbh
 //				//Maximum Growth
 //				else if (s->value[LAI] > (s->value[PEAK_LAI] * 0.5)	&& s->value[LAI] < s->value[PEAK_LAI])
 //				{
-//					logger(g_log, "LAI = %f\n", s->value[LAI]);
-//					logger(g_log, "PEAK LAI = %f\n", s->value[PEAK_LAI]);
+//					logger(g_debug_log, "LAI = %f\n", s->value[LAI]);
+//					logger(g_debug_log, "PEAK LAI = %f\n", s->value[PEAK_LAI]);
 //					s->phenology_phase = 2;
 //				}
 //				//Full growing season
@@ -201,7 +201,7 @@ void phenology(cell_t *const c, const int layer, const int height, const int dbh
 //		}
 //	}
 //
-//	logger(g_log, "phenology phase = %d\n", s->phenology_phase);
+//	logger(g_debug_log, "phenology phase = %d\n", s->phenology_phase);
 //}
 
 

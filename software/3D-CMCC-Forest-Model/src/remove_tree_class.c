@@ -200,7 +200,7 @@ int tree_class_remove(cell_t *const c, const int height, const int dbh, const in
 
 	/* remove class if N_TREE < 0 or if called by harvesting function */
 	if ( ! c->heights[height].dbhs[dbh].ages[age].species[species].counter[N_TREE]
-			|| ( ! string_compare_i ( g_settings->management, "on" ) ) ) {	
+			|| g_settings->management ) {
 
 		if ( ! species_remove(c, height, dbh, age, species) ) return 0;
 

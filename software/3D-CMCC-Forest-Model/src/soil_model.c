@@ -20,7 +20,7 @@
 #include "soil_water_balance.h"
 #include "settings.h"
 
-extern logger_t* g_log;
+extern logger_t* g_debug_log;
 extern settings_t* g_settings;
 
 int Soil_model_daily (matrix_t *const m, const int cell, const int day, const int month, const int year)
@@ -39,15 +39,15 @@ int Soil_model_daily (matrix_t *const m, const int cell, const int day, const in
 	/* check parameters */
 	assert(m);
 
-	logger (g_log, "**\n*******SOIL_MODEL_DAILY*********\n");
-	logger (g_log, "number of soil layers = %d\n", c->soil_layers_count);
+	logger (g_debug_log, "**\n*******SOIL_MODEL_DAILY*********\n");
+	logger (g_debug_log, "number of soil layers = %d\n", c->soil_layers_count);
 
 	CHECK_CONDITION( c->soil_layers_count, != g_settings->number_of_soil_layer );
 
 	/* loop on each cell layers starting from highest to lower */
 	for ( soil_layer = c->soil_layers_count -1 ; soil_layer >= 0; -- soil_layer )
 	{
-		logger (g_log, "soil_layer = %d\n", soil_layer);
+		logger (g_debug_log, "soil_layer = %d\n", soil_layer);
 
 		/* run on only for the highest soil layer */
 		if ( soil_layer == c->soil_layers_count -1)

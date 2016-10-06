@@ -16,7 +16,7 @@
 #include "canopy_radiation_lw_band.h"
 #include "canopy_temperature.h"
 
-extern logger_t* g_log;
+extern logger_t* g_debug_log;
 
 void canopy_temperature(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, const meteo_daily_t *const meteo_daily)
 {
@@ -99,7 +99,7 @@ void canopy_temperature(cell_t *const c, const int layer, const int height, cons
 		s->value[CANOPY_TEMP_K] = TairK;
 
 		/* assign previous day canopy temperature to local variable for long wave computation */
-		logger(g_log, "difference Tavg Tcanopy temperature = %g (K)\n",TairK - s->value[CANOPY_TEMP_K]);
+		logger(g_debug_log, "difference Tavg Tcanopy temperature = %g (K)\n",TairK - s->value[CANOPY_TEMP_K]);
 	}
 	else if (s->counter[VEG_DAYS] > 1)
 	{
@@ -113,7 +113,7 @@ void canopy_temperature(cell_t *const c, const int layer, const int height, cons
 
 		/* assign previous day canopy temperature to local variable for long wave computation */
 		s->value[CANOPY_TEMP_K_OLD] = s->value[CANOPY_TEMP_K];
-		logger(g_log, "difference Tavg Tcanopy temperature = %g (K)\n",TairK - s->value[CANOPY_TEMP_K]);
+		logger(g_debug_log, "difference Tavg Tcanopy temperature = %g (K)\n",TairK - s->value[CANOPY_TEMP_K]);
 	}
 	else
 	{
@@ -122,7 +122,7 @@ void canopy_temperature(cell_t *const c, const int layer, const int height, cons
 
 	//fixme it hasn't sense at cell level just to print
 	c->canopy_temp = s->value[CANOPY_TEMP_K] - TempAbs;
-	logger(g_log, "canopy_temp = %g (K)\n",c->canopy_temp);
+	logger(g_debug_log, "canopy_temp = %g (K)\n",c->canopy_temp);
 	c->canopy_temp_k = s->value[CANOPY_TEMP_K];
 	c->canopy_temp_diff = c->canopy_temp_k - TairK;
 

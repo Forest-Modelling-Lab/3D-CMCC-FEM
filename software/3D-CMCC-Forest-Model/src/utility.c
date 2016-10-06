@@ -8,11 +8,11 @@
 #include "constants.h"
 #include "logger.h"
 
-extern logger_t* g_log;
+extern logger_t* g_debug_log;
 
 void reset_daily_cell_variables(cell_t *const c)
 {
-	logger(g_log, "...resetting cell level daily variables...\n");
+	logger(g_debug_log, "...resetting cell level daily variables...\n");
 
 	c->cell_cover = 0.;
 	c->cell_n_trees = 0;
@@ -97,7 +97,7 @@ void reset_daily_cell_variables(cell_t *const c)
 
 void reset_monthly_cell_variables(cell_t *const c)
 {
-	logger(g_log, "...resetting cell level monthly variables...\n");
+	logger(g_debug_log, "...resetting cell level monthly variables...\n");
 
 	/*reset cell level variables*/
 	c->monthly_gpp = 0.;
@@ -130,7 +130,7 @@ void reset_annual_cell_variables(cell_t *const c)
 {
 	int height;
 
-	logger(g_log, "...resetting cell level annual variables...\n");
+	logger(g_debug_log, "...resetting cell level annual variables...\n");
 
 	for ( height = c->heights_count -1 ; height >= 0; --height )
 	{
@@ -174,7 +174,7 @@ void reset_daily_layer_variables(cell_t *const c)
 
 	tree_layer_t *l;
 
-	logger(g_log, "...resetting layer level daily variables...\n");
+	logger(g_debug_log, "...resetting layer level daily variables...\n");
 
 	for ( layer = c->t_layers_count -1 ; layer >= 0; --layer )
 	{
@@ -185,7 +185,7 @@ void reset_monthly_layer_variables(cell_t *const c)
 {
 	//	int layer;
 
-	logger(g_log, "...resetting layer level monthly variables...\n");
+	logger(g_debug_log, "...resetting layer level monthly variables...\n");
 
 	//	for ( layer = c->t_layers_count -1 ; layer >= 0; --layer )
 	//	{
@@ -194,7 +194,7 @@ void reset_monthly_layer_variables(cell_t *const c)
 }
 void reset_annual_layer_variables(cell_t *const c)
 {
-	logger(g_log, "...resetting layer level annual variables...\n");
+	logger(g_debug_log, "...resetting layer level annual variables...\n");
 
 	if ( c->tree_layers_count )
 	{
@@ -216,7 +216,7 @@ void reset_daily_class_variables(cell_t *const c)
 	age_t *a;
 	species_t *s;
 
-	logger(g_log, "\n...resetting class level daily variables...\n");
+	logger(g_debug_log, "\n...resetting class level daily variables...\n");
 
 	/* height class level */
 	for ( height = c->heights_count - 1; height >= 0; height--)
@@ -341,7 +341,7 @@ void reset_monthly_class_variables(cell_t *const c)
 	age_t *a;
 	species_t *s;
 
-	logger(g_log, "\n...resetting class level monthly variables...\n");
+	logger(g_debug_log, "\n...resetting class level monthly variables...\n");
 
 	/* height class level */
 	for ( height = c->heights_count - 1; height >= 0; height-- )
@@ -395,7 +395,7 @@ void reset_annual_class_variables(cell_t *const c)
 	age_t *a;
 	species_t *s;
 
-	logger(g_log, "\n...resetting class level annual variables...\n");
+	logger(g_debug_log, "\n...resetting class level annual variables...\n");
 
 	/* height class level */
 	for ( height = c->heights_count - 1; height >= 0; height-- )

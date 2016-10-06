@@ -23,7 +23,7 @@
 #include "mortality.h"
 
 extern settings_t* g_settings;
-extern logger_t* g_log;
+extern logger_t* g_debug_log;
 
 extern int MonthLength [];
 extern int MonthLength_Leap [];
@@ -67,29 +67,29 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 	* the former in which carbon is allocated in fineroot and foliage, the latter in
 	* every pool except foliage*/
 
-	logger(g_log, "\n**C-PARTITIONING-ALLOCATION**\n");
-	logger(g_log, "Carbon partitioning for evergreen\n");
+	logger(g_debug_log, "\n**C-PARTITIONING-ALLOCATION**\n");
+	logger(g_debug_log, "Carbon partitioning for evergreen\n");
 
 	/* partitioning block using approach of Potter et al., 1993, Schwalm & Ek, 2004; Arora and Boer 2005 */
-	logger(g_log, "*Partitioning ratios*\n");
+	logger(g_debug_log, "*Partitioning ratios*\n");
 
 	/* roots */
 	pR = (r0 + (omega * ( 1.0 - s->value[F_SW]))) / (1.0 + (omega * (2.0 - Light_trasm - s->value[F_SW])));
-	logger(g_log, "Roots CTEM ratio = %g %%\n", pR * 100);
+	logger(g_debug_log, "Roots CTEM ratio = %g %%\n", pR * 100);
 
 	/* stem */
 	pS = (s0 + (omega * ( 1.0 - Light_trasm))) / (1.0 + ( omega * (2.0 - Light_trasm - s->value[F_SW])));
-	logger(g_log, "Stem CTEM ratio = %g %%\n", pS * 100);
+	logger(g_debug_log, "Stem CTEM ratio = %g %%\n", pS * 100);
 
 	/* reserve and leaves */
 	pL = (1.0 - pS - pR);
-	logger(g_log, "Reserve CTEM ratio = %g %%\n", pL * 100);
+	logger(g_debug_log, "Reserve CTEM ratio = %g %%\n", pL * 100);
 	CHECK_CONDITION( fabs ( pR + pS + pL ), > 1 + eps );
 
-	logger(g_log, "\nCarbon allocation for evergreen\n");
-	logger(g_log, "PHENOLOGICAL PHASE = %d\n", s->phenology_phase);
-	logger(g_log, "LAI = %f \n", s->value[LAI]);
-	logger(g_log, "PEAK LAI = %f \n", s->value[PEAK_LAI]);
+	logger(g_debug_log, "\nCarbon allocation for evergreen\n");
+	logger(g_debug_log, "PHENOLOGICAL PHASE = %d\n", s->phenology_phase);
+	logger(g_debug_log, "LAI = %f \n", s->value[LAI]);
+	logger(g_debug_log, "PEAK LAI = %f \n", s->value[PEAK_LAI]);
 
 	/* assign NPP to local variable */
 	npp_to_alloc = s->value[NPP_tC];
@@ -122,7 +122,7 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 			/* it doesn't need */
 			if(s->value[RESERVE_C] >= s->value[MIN_RESERVE_C])
 			{
-				logger(g_log, "Allocating only into foliage and fine root pools (positive NPP)\n");
+				logger(g_debug_log, "Allocating only into foliage and fine root pools (positive NPP)\n");
 				s->value[C_TO_LEAF] = npp_to_alloc * (1.0 - s->value[FINE_ROOT_LEAF_FRAC]);
 				s->value[C_TO_FINEROOT] = npp_to_alloc - s->value[C_TO_LEAF];
 				s->value[C_TO_RESERVE] = 0.0;
@@ -130,7 +130,7 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 			/* it needs */
 			else if (s->value[RESERVE_C] < s->value[MIN_RESERVE_C])
 			{
-				logger(g_log, "Allocating only into reserve pool (low reserves, positive NPP)\n");
+				logger(g_debug_log, "Allocating only into reserve pool (low reserves, positive NPP)\n");
 				s->value[C_TO_LEAF] = 0.0;
 				s->value[C_TO_FINEROOT] = 0.0;
 				s->value[C_TO_RESERVE] = npp_to_alloc;
@@ -144,7 +144,7 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 		}
 		else
 		{
-			logger(g_log, "Consuming reserve pool (negative NPP)\n");
+			logger(g_debug_log, "Consuming reserve pool (negative NPP)\n");
 			s->value[C_TO_LEAF] = 0.0;
 			s->value[C_TO_FINEROOT] = 0.0;
 			s->value[C_TO_RESERVE] = npp_to_alloc;
@@ -169,12 +169,12 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 			/* it doesn't need */
 			if(s->value[RESERVE_C] >= s->value[MIN_RESERVE_C])
 			{
-				logger(g_log, "Allocating only into Coarse root, Reserve, Stem and Branch pools (positive NPP)\n");
+				logger(g_debug_log, "Allocating only into Coarse root, Reserve, Stem and Branch pools (positive NPP)\n");
 
 				/* reproduction */
-				if ( ( ! string_compare_i(g_settings->regeneration, "on")) && ( a->value > s->value[SEXAGE] ) )
+				if ( g_settings->regeneration && ( a->value > s->value[SEXAGE] ) )
 				{
-					logger(g_log, "allocating into fruit pool\n");
+					logger(g_debug_log, "allocating into fruit pool\n");
 
 					s->value[C_TO_FRUIT] = npp_to_alloc * s->value[FRUIT_PERC];
 					npp_to_alloc -= s->value[C_TO_FRUIT];
@@ -194,7 +194,7 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 			/* it needs */
 			else
 			{
-				logger(g_log, "Allocating only into reserve pool (low reserves, positive NPP)\n");
+				logger(g_debug_log, "Allocating only into reserve pool (low reserves, positive NPP)\n");
 				s->value[C_TO_RESERVE] = npp_to_alloc;
 				s->value[C_TO_FINEROOT] = 0.0;
 				s->value[C_TO_COARSEROOT] = 0.0;
@@ -207,7 +207,7 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 		}
 		else
 		{
-			logger(g_log, "Consuming reserve pool (negative NPP)\n");
+			logger(g_debug_log, "Consuming reserve pool (negative NPP)\n");
 			s->value[C_TO_RESERVE] = npp_to_alloc;
 			s->value[C_TO_FINEROOT] = 0.0;
 			s->value[C_TO_COARSEROOT] = 0.0;
@@ -227,13 +227,13 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 
 
 	/* sum all biomass pools increments */
-	logger(g_log, "C_TO_LEAF = %g tC/cell/day\n", s->value[C_TO_LEAF]);
-	logger(g_log, "C_TO_FINEROOT = %g tC/cell/day\n", s->value[C_TO_FINEROOT]);
-	logger(g_log, "C_TO_COARSEROOT = %g tC/cell/day\n", s->value[C_TO_COARSEROOT]);
-	logger(g_log, "C_TO_STEM = %g tC/cell/day\n", s->value[C_TO_STEM]);
-	logger(g_log, "C_TO_RESERVE = %g tC/cell/day\n", s->value[C_TO_RESERVE]);
-	logger(g_log, "C_TO_BRANCH = %g tC/cell/day\n", s->value[C_TO_BRANCH]);
-	logger(g_log, "C_TO_FRUIT = %g tC/cell/day\n", s->value[C_TO_FRUIT]);
+	logger(g_debug_log, "C_TO_LEAF = %g tC/cell/day\n", s->value[C_TO_LEAF]);
+	logger(g_debug_log, "C_TO_FINEROOT = %g tC/cell/day\n", s->value[C_TO_FINEROOT]);
+	logger(g_debug_log, "C_TO_COARSEROOT = %g tC/cell/day\n", s->value[C_TO_COARSEROOT]);
+	logger(g_debug_log, "C_TO_STEM = %g tC/cell/day\n", s->value[C_TO_STEM]);
+	logger(g_debug_log, "C_TO_RESERVE = %g tC/cell/day\n", s->value[C_TO_RESERVE]);
+	logger(g_debug_log, "C_TO_BRANCH = %g tC/cell/day\n", s->value[C_TO_BRANCH]);
+	logger(g_debug_log, "C_TO_FRUIT = %g tC/cell/day\n", s->value[C_TO_FRUIT]);
 
 	/* update live_total wood fraction based on age */
 	live_total_wood_age (a, species);
@@ -251,20 +251,20 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 		dendrometry ( c, height, dbh, age, species );
 	}
 
-	logger(g_log, "\n-Daily increment in carbon pools-\n");
-	logger(g_log, "C_TO_LEAF = %g tC/cell/day\n", s->value[C_TO_LEAF]);
-	logger(g_log, "C_TO_FINEROOT = %g tC/cell/day\n", s->value[C_TO_FINEROOT]);
-	logger(g_log, "C_TO_COARSEROOT = %g tC/cell/day\n", s->value[C_TO_COARSEROOT]);
-	logger(g_log, "C_TO_STEM = %g tC/cell/day\n", s->value[C_TO_STEM]);
-	logger(g_log, "C_TO_RESERVE = %g tC/cell/day\n", s->value[C_TO_RESERVE]);
-	logger(g_log, "C_TO_BRANCH = %g tC/cell/day\n", s->value[C_TO_BRANCH]);
-	logger(g_log, "C_TO_FRUIT = %g tC/cell/day\n", s->value[C_TO_FRUIT]);
-	logger(g_log, "C_TO_LITTER = %g tC/cell/day\n", s->value[C_TO_LITTER]);
-	logger(g_log, "C_LEAF_TO_RESERVE = %g tC/cell/day\n", s->value[C_LEAF_TO_RESERVE]);
-	logger(g_log, "C_FINEROOT_TO_RESERVE = %g tC/cell/day\n", s->value[C_FINEROOT_TO_RESERVE]);
-	logger(g_log, "C_STEM_LIVEWOOD_TO_DEADWOOD = %g tC/cell/day\n", s->value[C_STEM_LIVEWOOD_TO_DEADWOOD]);
-	logger(g_log, "C_COARSEROOT_LIVE_WOOD_TO_DEADWOOD = %g tC/cell/day\n", s->value[C_COARSEROOT_LIVE_WOOD_TO_DEADWOOD]);
-	logger(g_log, "C_BRANCH_LIVE_WOOD_TO_DEAD_WOOD = %g tC/cell/day\n", s->value[C_BRANCH_LIVE_WOOD_TO_DEAD_WOOD]);
+	logger(g_debug_log, "\n-Daily increment in carbon pools-\n");
+	logger(g_debug_log, "C_TO_LEAF = %g tC/cell/day\n", s->value[C_TO_LEAF]);
+	logger(g_debug_log, "C_TO_FINEROOT = %g tC/cell/day\n", s->value[C_TO_FINEROOT]);
+	logger(g_debug_log, "C_TO_COARSEROOT = %g tC/cell/day\n", s->value[C_TO_COARSEROOT]);
+	logger(g_debug_log, "C_TO_STEM = %g tC/cell/day\n", s->value[C_TO_STEM]);
+	logger(g_debug_log, "C_TO_RESERVE = %g tC/cell/day\n", s->value[C_TO_RESERVE]);
+	logger(g_debug_log, "C_TO_BRANCH = %g tC/cell/day\n", s->value[C_TO_BRANCH]);
+	logger(g_debug_log, "C_TO_FRUIT = %g tC/cell/day\n", s->value[C_TO_FRUIT]);
+	logger(g_debug_log, "C_TO_LITTER = %g tC/cell/day\n", s->value[C_TO_LITTER]);
+	logger(g_debug_log, "C_LEAF_TO_RESERVE = %g tC/cell/day\n", s->value[C_LEAF_TO_RESERVE]);
+	logger(g_debug_log, "C_FINEROOT_TO_RESERVE = %g tC/cell/day\n", s->value[C_FINEROOT_TO_RESERVE]);
+	logger(g_debug_log, "C_STEM_LIVEWOOD_TO_DEADWOOD = %g tC/cell/day\n", s->value[C_STEM_LIVEWOOD_TO_DEADWOOD]);
+	logger(g_debug_log, "C_COARSEROOT_LIVE_WOOD_TO_DEADWOOD = %g tC/cell/day\n", s->value[C_COARSEROOT_LIVE_WOOD_TO_DEADWOOD]);
+	logger(g_debug_log, "C_BRANCH_LIVE_WOOD_TO_DEAD_WOOD = %g tC/cell/day\n", s->value[C_BRANCH_LIVE_WOOD_TO_DEAD_WOOD]);
 
 	/* leaf fall */
 	leaf_fall_evergreen(c, height, dbh, age, species);
@@ -275,15 +275,15 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 	/* update Leaf Area Index */
 	daily_lai ( s );
 
-	logger(g_log, "\n-Daily increment in carbon pools (after leaf fall and turnover)-\n");
-	logger(g_log, "C_TO_LEAF = %g tC/cell/day\n", s->value[C_TO_LEAF]);
-	logger(g_log, "C_TO_FINEROOT = %g tC/cell/day\n", s->value[C_TO_FINEROOT]);
-	logger(g_log, "C_TO_COARSEROOT = %g tC/cell/day\n", s->value[C_TO_COARSEROOT]);
-	logger(g_log, "C_TO_STEM = %g tC/cell/day\n", s->value[C_TO_STEM]);
-	logger(g_log, "C_TO_RESERVE = %g tC/cell/day\n", s->value[C_TO_RESERVE]);
-	logger(g_log, "C_TO_BRANCH = %g tC/cell/day\n", s->value[C_TO_BRANCH]);
-	logger(g_log, "C_TO_FRUIT = %g tC/cell/day\n", s->value[C_TO_FRUIT]);
-	logger(g_log, "C_TO_LITTER = %g tC/cell/day\n", s->value[C_TO_LITTER]);
+	logger(g_debug_log, "\n-Daily increment in carbon pools (after leaf fall and turnover)-\n");
+	logger(g_debug_log, "C_TO_LEAF = %g tC/cell/day\n", s->value[C_TO_LEAF]);
+	logger(g_debug_log, "C_TO_FINEROOT = %g tC/cell/day\n", s->value[C_TO_FINEROOT]);
+	logger(g_debug_log, "C_TO_COARSEROOT = %g tC/cell/day\n", s->value[C_TO_COARSEROOT]);
+	logger(g_debug_log, "C_TO_STEM = %g tC/cell/day\n", s->value[C_TO_STEM]);
+	logger(g_debug_log, "C_TO_RESERVE = %g tC/cell/day\n", s->value[C_TO_RESERVE]);
+	logger(g_debug_log, "C_TO_BRANCH = %g tC/cell/day\n", s->value[C_TO_BRANCH]);
+	logger(g_debug_log, "C_TO_FRUIT = %g tC/cell/day\n", s->value[C_TO_FRUIT]);
+	logger(g_debug_log, "C_TO_LITTER = %g tC/cell/day\n", s->value[C_TO_LITTER]);
 
 	/* update class level annual carbon biomass increment in tC/cell/year */
 	s->value[DEL_Y_WTS] += s->value[C_TO_TOT_STEM];
@@ -318,7 +318,7 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 	c->daily_litter_carbon_tC += s->value[C_TO_LITTER];
 	c->daily_fruit_carbon_tC += s->value[C_TO_FRUIT];
 
-	logger(g_log, "******************************\n");
+	logger(g_debug_log, "******************************\n");
 }
 
 /**/

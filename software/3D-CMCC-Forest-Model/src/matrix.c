@@ -17,7 +17,7 @@
 #include "structure.h"
 #include "netcdf.h"
 
-extern logger_t* g_log;
+extern logger_t* g_debug_log;
 extern settings_t* g_settings;
 extern soil_settings_t *g_soil_settings;
 extern topo_t *g_topo;
@@ -202,12 +202,12 @@ static dataset_t* dataset_import_nc(const char* const filename, int* const px_ce
 	if ( ret != NC_NOERR ) goto quit;
 
 	if ( ! dims_count || ! vars_count ) {
-		logger(g_log, "bad nc file! %d dimensions and %d vars\n\n", dims_count, vars_count);
+		logger(g_debug_log, "bad nc file! %d dimensions and %d vars\n\n", dims_count, vars_count);
 		goto quit_no_nc_err;
 	}
 
 	if ( DIMS_COUNT != dims_count ) {
-		logger(g_log, "bad dimension size. It should be %d not %d\n", DIMS_COUNT, dims_count);
+		logger(g_debug_log, "bad dimension size. It should be %d not %d\n", DIMS_COUNT, dims_count);
 		goto quit_no_nc_err;
 	}
 
@@ -224,7 +224,7 @@ static dataset_t* dataset_import_nc(const char* const filename, int* const px_ce
 		for ( y = 0; y < DIMS_COUNT; ++y ) {
 			if ( ! string_compare_i(sz_dims[y], name) ) {
 				if ( dims_size[y] != -1 ) {
-					logger(g_log, "dimension %s already found!\n", sz_dims[y]);
+					logger(g_debug_log, "dimension %s already found!\n", sz_dims[y]);
 					goto quit_no_nc_err;
 				}
 				dims_size[y] = size;
@@ -237,7 +237,7 @@ static dataset_t* dataset_import_nc(const char* const filename, int* const px_ce
 	/* check if we have all dimensions */
 	for ( i = 0; i < DIMS_COUNT; ++i ) {
 		if ( -1 == dims_size[i] ) {
-			logger(g_log, "dimension %s not found!\n", sz_dims[i]);
+			logger(g_debug_log, "dimension %s not found!\n", sz_dims[i]);
 			goto quit_no_nc_err;
 		}
 	}
@@ -248,13 +248,13 @@ static dataset_t* dataset_import_nc(const char* const filename, int* const px_ce
 
 	d = malloc(sizeof*d);
 	if ( ! d ) {
-		logger(g_log, "%s\n", sz_err_out_of_memory);
+		logger(g_debug_log, "%s\n", sz_err_out_of_memory);
 		goto quit_no_nc_err;
 	}
 	d->rows_count = dims_size[X_DIM]*dims_size[Y_DIM];
 	d->rows = malloc(d->rows_count*sizeof*d->rows);
 	if ( ! d->rows ) {
-		logger(g_log, "%s\n", sz_err_out_of_memory);
+		logger(g_debug_log, "%s\n", sz_err_out_of_memory);
 		free(d);
 		goto quit_no_nc_err;
 	}
@@ -284,11 +284,11 @@ static dataset_t* dataset_import_nc(const char* const filename, int* const px_ce
 						int flag_value;
 						/* check if we already have imported that var */
 						if ( vars[y] ) {
-							logger(g_log, "var %s already imported\n", sz_vars[y]);
+							logger(g_debug_log, "var %s already imported\n", sz_vars[y]);
 							goto quit_no_nc_err;
 						}
 						if ( DIMS_COUNT != n_dims ) {
-							logger(g_log, "bad %s dimension size. It should be 2 not %d\n", sz_vars[y], n_dims);
+							logger(g_debug_log, "bad %s dimension size. It should be 2 not %d\n", sz_vars[y], n_dims);
 							goto quit_no_nc_err;
 						}
 						/* get values */
@@ -302,7 +302,7 @@ static dataset_t* dataset_import_nc(const char* const filename, int* const px_ce
 							if ( ret != NC_NOERR ) goto quit;
 						} else {
 							/* type format not supported! */
-							logger(g_log, "type format in %s for %s column not supported\n\n", buffer, sz_vars[y]);
+							logger(g_debug_log, "type format in %s for %s column not supported\n\n", buffer, sz_vars[y]);
 							goto quit_no_nc_err;
 						}
 						if ( flag_value ) {
@@ -330,7 +330,7 @@ static dataset_t* dataset_import_nc(const char* const filename, int* const px_ce
 							sprintf(temp, "%s%s", g_sz_parameterization_path, sz_species);
 							d->rows[index].species = species_get(temp, (int)value);
 							if ( ! d->rows[index].species ) {
-								logger(g_log, "unable to get species from %s\n", temp);
+								logger(g_debug_log, "unable to get species from %s\n", temp);
 								goto quit_no_nc_err;
 							}
 						}
@@ -400,7 +400,7 @@ static dataset_t* dataset_import_nc(const char* const filename, int* const px_ce
 	return d;
 
 	quit:
-	logger(g_log, nc_strerror(ret));
+	logger(g_debug_log, nc_strerror(ret));
 	quit_no_nc_err:
 	if ( d ) dataset_free(d);
 	nc_close(id_file);
@@ -1264,27 +1264,27 @@ void simulation_summary (const matrix_t* const m)
 
 	assert(m);
 
-	logger(g_log, "RUN COMPSET\n");
+	logger(g_debug_log, "RUN COMPSET\n");
 
-	logger(g_log, "Cell resolution = %d x %d = %g m^2\n", resol, resol, g_settings->sizeCell);
+	logger(g_debug_log, "Cell resolution = %d x %d = %g m^2\n", resol, resol, g_settings->sizeCell);
 	if (g_settings->version == 'f')
 	{
-		logger(g_log, "Model version = FEM \n");
+		logger(g_debug_log, "Model version = FEM \n");
 	}
 	else
 	{
-		logger(g_log, "Model version = BGC \n");
+		logger(g_debug_log, "Model version = BGC \n");
 	}
 
 	if (g_settings->spatial == 's')
 	{
-		logger(g_log, "Model spatial = spatial \n");
+		logger(g_debug_log, "Model spatial = spatial \n");
 	}
 	else
 	{
-		logger(g_log, "Model spatial = un-spatial \n");
+		logger(g_debug_log, "Model spatial = un-spatial \n");
 	}
-	logger(g_log, "Temporal scale = daily \n");
+	logger(g_debug_log, "Temporal scale = daily \n");
 }
 
 void site_summary(const matrix_t* const m)
@@ -1292,13 +1292,13 @@ void site_summary(const matrix_t* const m)
 	assert(m);
 
 	/* Site definition */
-	logger(g_log, "***************************************************\n\n");
-	logger(g_log, "SITE DATASET\n");
-	logger(g_log, "Site Name = %s\n", g_soil_settings->sitename);
-	logger(g_log, "Latitude = %f° \n", g_soil_settings->values[SOIL_LAT]);
-	logger(g_log, "Longitude = %f° \n", g_soil_settings->values[SOIL_LON]);
-	if (g_soil_settings->values[SOIL_LAT] > 0) logger(g_log, "North hemisphere\n");
-	else logger(g_log, "South hemisphere\n");
+	logger(g_debug_log, "***************************************************\n\n");
+	logger(g_debug_log, "SITE DATASET\n");
+	logger(g_debug_log, "Site Name = %s\n", g_soil_settings->sitename);
+	logger(g_debug_log, "Latitude = %f° \n", g_soil_settings->values[SOIL_LAT]);
+	logger(g_debug_log, "Longitude = %f° \n", g_soil_settings->values[SOIL_LON]);
+	if (g_soil_settings->values[SOIL_LAT] > 0) logger(g_debug_log, "North hemisphere\n");
+	else logger(g_debug_log, "South hemisphere\n");
 }
 
 void topo_summary(const matrix_t* const m)
@@ -1306,9 +1306,9 @@ void topo_summary(const matrix_t* const m)
 	assert(m);
 
 	/* Topography definition */
-	logger(g_log, "***************************************************\n\n");
-	logger(g_log, "TOPOGRAPHY DATASET\n");
-	logger(g_log, "Elevation = %g m\n", g_topo->values[TOPO_ELEV]);
+	logger(g_debug_log, "***************************************************\n\n");
+	logger(g_debug_log, "TOPOGRAPHY DATASET\n");
+	logger(g_debug_log, "Elevation = %g m\n", g_topo->values[TOPO_ELEV]);
 }
 
 void soil_summary(const matrix_t* const m, const cell_t* const cell)
@@ -1316,23 +1316,23 @@ void soil_summary(const matrix_t* const m, const cell_t* const cell)
 	assert(m);
 
 	/* Soil definition and initialization */
-	logger(g_log, "***************************************************\n\n");
-	logger(g_log, "SOIL DATASET\n");
-	logger(g_log, "-Number of soil layers = %g\n", g_settings->number_of_soil_layer);
-	logger(g_log, "-Soil depth = %g cm\n", g_soil_settings->values[SOIL_DEPTH]);
-	logger(g_log, "-Clay Percentage = %g %%\n", g_soil_settings->values[SOIL_CLAY_PERC]);
-	logger(g_log, "-Silt Percentage = %g %%\n", g_soil_settings->values[SOIL_SILT_PERC]);
-	logger(g_log, "-Sand Percentage = %g %%\n", g_soil_settings->values[SOIL_SAND_PERC]);
-	logger(g_log, "-Soil FR = %g\n", g_soil_settings->values[SOIL_FR]);
-	logger(g_log, "-Soil FN0 = %g\n", g_soil_settings->values[SOIL_FN0]);
-	logger(g_log, "-Soil FNN = %g\n", g_soil_settings->values[SOIL_FNN]);
-	logger(g_log, "-Soil M0 = %g\n", g_soil_settings->values[SOIL_M0]);
-	logger(g_log, "-Soil SN = %g\n", g_soil_settings->values[SOIL_SN]);
+	logger(g_debug_log, "***************************************************\n\n");
+	logger(g_debug_log, "SOIL DATASET\n");
+	logger(g_debug_log, "-Number of soil layers = %g\n", g_settings->number_of_soil_layer);
+	logger(g_debug_log, "-Soil depth = %g cm\n", g_soil_settings->values[SOIL_DEPTH]);
+	logger(g_debug_log, "-Clay Percentage = %g %%\n", g_soil_settings->values[SOIL_CLAY_PERC]);
+	logger(g_debug_log, "-Silt Percentage = %g %%\n", g_soil_settings->values[SOIL_SILT_PERC]);
+	logger(g_debug_log, "-Sand Percentage = %g %%\n", g_soil_settings->values[SOIL_SAND_PERC]);
+	logger(g_debug_log, "-Soil FR = %g\n", g_soil_settings->values[SOIL_FR]);
+	logger(g_debug_log, "-Soil FN0 = %g\n", g_soil_settings->values[SOIL_FN0]);
+	logger(g_debug_log, "-Soil FNN = %g\n", g_soil_settings->values[SOIL_FNN]);
+	logger(g_debug_log, "-Soil M0 = %g\n", g_soil_settings->values[SOIL_M0]);
+	logger(g_debug_log, "-Soil SN = %g\n", g_soil_settings->values[SOIL_SN]);
 
 	/* soil initialization */
 	initialization_soil (m->cells);
 
-	logger(g_log, "***************************************************\n\n");
+	logger(g_debug_log, "***************************************************\n\n");
 }
 
 void forest_summary(const matrix_t* const m, const int cell, const int day, const int month, const int year)
@@ -1344,13 +1344,13 @@ void forest_summary(const matrix_t* const m, const int cell, const int day, cons
 
 	assert (m);
 
-	logger(g_log, "***************************************************\n");
-	logger(g_log, "****FOREST CHARACTERISTICS for cell (%d, %d)****\n", m->cells[cell].x, m->cells[cell].y);
-	logger(g_log, "FOREST DATASET\n");
+	logger(g_debug_log, "***************************************************\n");
+	logger(g_debug_log, "****FOREST CHARACTERISTICS for cell (%d, %d)****\n", m->cells[cell].x, m->cells[cell].y);
+	logger(g_debug_log, "FOREST DATASET\n");
 
-	logger(g_log, "matrix has %d cell%s\n", m->cells_count, (m->cells_count > 1 ? "s" : ""));
+	logger(g_debug_log, "matrix has %d cell%s\n", m->cells_count, (m->cells_count > 1 ? "s" : ""));
 
-	logger(g_log, "- cell n.%02d is at %d, %d and has %d height classes\n",
+	logger(g_debug_log, "- cell n.%02d is at %d, %d and has %d height classes\n",
 			cell+1,
 			m->cells[cell].x,
 			m->cells[cell].y,
@@ -1359,24 +1359,24 @@ void forest_summary(const matrix_t* const m, const int cell, const int day, cons
 	/* loop on each height */
 	for ( height = 0; height < m->cells[cell].heights_count; ++height )
 	{
-		logger(g_log, "**(%d)\n", height + 1);
-		logger(g_log, "-- height n.%02d is %g and has %d dbh classes \n",
+		logger(g_debug_log, "**(%d)\n", height + 1);
+		logger(g_debug_log, "-- height n.%02d is %g and has %d dbh classes \n",
 				height + 1, m->cells[cell].heights[height].value,
 				m->cells[cell].heights[height].dbhs_count);
 
 		/* loop on each dbh */
 		for ( dbh = 0; dbh < m->cells[cell].heights[height].dbhs_count; ++dbh)
 		{
-			logger(g_log, "**(%d)\n", dbh + 1);
-			logger(g_log, "--- dbh n.%02d is %g and has %d ages classes\n",
+			logger(g_debug_log, "**(%d)\n", dbh + 1);
+			logger(g_debug_log, "--- dbh n.%02d is %g and has %d ages classes\n",
 					dbh + 1, m->cells[cell].heights[height].dbhs[dbh].value,
 					m->cells[cell].heights[height].dbhs[dbh].ages_count);
 
 			/* loop on each age */
 			for ( age = 0; age < m->cells[cell].heights[height].dbhs[dbh].ages_count; ++age )
 			{
-				logger(g_log, "**(%d)\n", age + 1);
-				logger(g_log, "---- age n.%02d is %d yrs and has %d species\n",
+				logger(g_debug_log, "**(%d)\n", age + 1);
+				logger(g_debug_log, "---- age n.%02d is %d yrs and has %d species\n",
 						age + 1,
 						m->cells[cell].heights[height].dbhs[dbh].ages[age].value,
 						m->cells[cell].heights[height].dbhs[dbh].ages[age].species_count);
@@ -1384,7 +1384,7 @@ void forest_summary(const matrix_t* const m, const int cell, const int day, cons
 				/* loop on each species */
 				for ( species = 0; species < m->cells[cell].heights[height].dbhs[dbh].ages[age].species_count; ++species )
 				{
-					logger(g_log, "----- species is %s\n",
+					logger(g_debug_log, "----- species is %s\n",
 							m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species].name);
 				}
 			}

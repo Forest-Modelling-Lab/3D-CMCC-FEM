@@ -10,7 +10,7 @@
 #include "matrix.h"
 
 extern settings_t *g_settings;
-extern logger_t* g_log;
+extern logger_t* g_debug_log;
 extern soil_settings_t *g_soil_settings;
 
 int sort_by_years(const void *a, const void *b)
@@ -155,7 +155,7 @@ void Veg_Days(cell_t *const c, const int day, const int month, const int year)
 									s->counter[DAY_VEG_FOR_LEAF_FALL]);
 							s->counter[DAY_FRAC_FINE_ROOT_REMOVE] = (int) (s->value[LEAF_FALL_FRAC_GROWING] *
 									s->counter[DAY_VEG_FOR_LEAF_FALL]);
-							logger(g_log, "Day frac foliage remove = %d\n", s->counter[DAY_FRAC_FOLIAGE_REMOVE] );
+							logger(g_debug_log, "Day frac foliage remove = %d\n", s->counter[DAY_FRAC_FOLIAGE_REMOVE] );
 							//add leaf fall days
 							if (s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2)
 							{
@@ -163,7 +163,7 @@ void Veg_Days(cell_t *const c, const int day, const int month, const int year)
 										s->value[LEAF_FALL_FRAC_GROWING]);
 
 							}
-							logger(g_log, "-species %s annual vegetative days = %d \n", s->name, s->counter[DAY_VEG_FOR_LEAF_FALL]);
+							logger(g_debug_log, "-species %s annual vegetative days = %d \n", s->name, s->counter[DAY_VEG_FOR_LEAF_FALL]);
 						}
 					}
 					else
@@ -192,7 +192,7 @@ void Veg_Days(cell_t *const c, const int day, const int month, const int year)
 						}
 						if (day == 30 && month == DECEMBER)
 						{
-							logger(g_log, "----- TOTAL VEGETATIVE DAYS = %d \n\n", s->counter[DAY_VEG_FOR_LEAF_FALL]);
+							logger(g_debug_log, "----- TOTAL VEGETATIVE DAYS = %d \n\n", s->counter[DAY_VEG_FOR_LEAF_FALL]);
 						}
 					}
 				}
@@ -209,6 +209,6 @@ void Abscission_DayLength (cell_t *c)
 	//from Schwalm and Ek, 2004
 	//but it considers a value independently from species
 	c->abscission_daylength = (39132 + (pow (1.088, (g_soil_settings->values[SOIL_LAT] + 60.753))))/(60*60);
-	//logger(g_log, "Abscission day length = %f hrs\n", c->abscission_daylength);
+	//logger(g_debug_log, "Abscission day length = %f hrs\n", c->abscission_daylength);
 }
 

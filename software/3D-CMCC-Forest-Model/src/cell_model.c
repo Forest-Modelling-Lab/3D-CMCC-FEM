@@ -19,7 +19,7 @@
 #include "fluxes.h"
 #include "check_balance.h"
 
-extern logger_t* g_log;
+extern logger_t* g_debug_log;
 
 int Cell_model_daily (matrix_t *const m, const int cell, const int day, const int month, const int year)
 {
@@ -35,10 +35,10 @@ int Cell_model_daily (matrix_t *const m, const int cell, const int day, const in
 	/* check parameters */
 	assert(m);
 
-	logger (g_log, "\n*********CELL_MODEL_DAILY*********\n");
+	logger (g_debug_log, "\n*********CELL_MODEL_DAILY*********\n");
 
-	logger(g_log, "-number of tree heights (if present) = %d\n", c->heights_count);
-	logger(g_log, "-number of tree layer (if present) = %d\n", c->tree_layers_count);
+	logger(g_debug_log, "-number of tree heights (if present) = %d\n", c->heights_count);
+	logger(g_debug_log, "-number of tree layer (if present) = %d\n", c->tree_layers_count);
 
 	/* OVERALL CELL */
 
