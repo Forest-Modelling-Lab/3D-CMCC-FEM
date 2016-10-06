@@ -104,11 +104,11 @@ fi
 
 #search in debug folder debug executable
 if [ "$run" == "${model_run[0]}" ] ; then
-	echo ok
 	
-	cd "$run"
+	#find folder at first............
 	
-	locate $executable
+	
+	
 fi
 exit 
 
