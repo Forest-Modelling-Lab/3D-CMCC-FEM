@@ -106,13 +106,40 @@ fi
 if [ "$run" == "${model_run[0]}" ] ; then
 	
 	#find folder at first............
-	
-	
-	
+	if [ -d "Debug" ] ; then
+		
+		echo "Debug folder exists"
+		
+		if [ -x "$executable" ] ; then
+			echo "$executable executable exists"
+			cd ..
+		else
+			echo "$executable executable doesn't exist"
+			exit
+		fi	
+	else
+		echo "Debug folder doens't exist"
+		exit
+	fi
+#search in release folder debug executable
+else	
+		#find folder at first............
+	if [ -d "Release" ] ; then
+		
+		echo "Release folder exists"
+		
+		if [ -x "$executable" ] ; then
+			echo "$executable executable exists"
+			c..
+		else
+			echo "$executable executable doesn't exist"
+			exit
+		fi	
+	else
+		echo "Release folder doens't exist"
+		exit
+	fi
 fi
-exit 
-
-
 
 #########################################################################################################
 #log available sites
