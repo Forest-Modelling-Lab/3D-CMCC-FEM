@@ -25,48 +25,48 @@ model_run[0]=Debug
 model_run[1]=Release
 
 #declare sites
-site[0]=All
-site[1]=Soroe
-site[2]=Kroof
-site[3]=Peitz
+SITEs[0]=Soroe
+SITEs[1]=Kroof
+SITEs[2]=Peitz
+SITEs[3]=All
 
 #declare climate
-CLIMATE[0]=All
-CLIMATE[1]=Historical
-CLIMATE[2]=Scenario
+CLIMATEs[0]=Historical
+CLIMATEs[1]=Scenario
+CLIMATEs[2]=All
 
 #declare historical
-HYSTs[0]=All
-HYSTs[1]=CLIMATE
-HYSTs[2]=PRINCETON
-HYSTs[3]=WATCH
-HYSTs[4]=GSWP3
-HYSTs[5]=WATCH-WFDEI
+HYSTs[0]=CLIMATE
+HYSTs[1]=PRINCETON
+HYSTs[2]=WATCH
+HYSTs[3]=GSWP3
+HYSTs[4]=WATCH-WFDEI
+HYSTs[5]=All
 
 #declare GCMs
-GCMs[0]=All
-GCMs[1]=GCM1
-GCMs[2]=GCM2
-GCMs[3]=GCM3
-GCMs[4]=GCM4
-GCMs[5]=GCM5
+GCMs[0]=GCM1
+GCMs[1]=GCM2
+GCMs[2]=GCM3
+GCMs[3]=GCM4
+GCMs[4]=GCM5
+GCMs[5]=All
 
 #declare RCPs
-RCPs[0]=All
-RCPs[1]=rcp8p5
-RCPs[2]=rcp6p0
-RCPs[3]=rcp4p5
-RCPs[4]=rcp2p6
+RCPs[0]=rcp8p5
+RCPs[1]=rcp6p0
+RCPs[2]=rcp4p5
+RCPs[3]=rcp2p6
+RCPs[4]=All
 
 #declare Management
-Man[0]=All
-Man[1]=on
-Man[2]=off
+MANs[0]=on
+MANs[1]=off
+MANs[2]=All
 
 #declare CO2 enrichment
-CO2[0]=All
-CO2[1]=on
-CO2[2]=off
+CO2s[0]=on
+CO2s[1]=off
+CO2s[2]=All
 
 #current data
 today=`date +%Y-%m-%d`
@@ -107,12 +107,16 @@ if [ "$run" == "${model_run[0]}" ] ; then
 	
 	#find folder at first............
 	if [ -d "Debug" ] ; then
+
+		cd Debug
 		
-		echo "Debug folder exists"
-		
+		#check if executable exists
 		if [ -x "$executable" ] ; then
-			echo "$executable executable exists"
+			
+			folder_run=Debug
+			
 			cd ..
+			
 		else
 			echo "$executable executable doesn't exist"
 			exit
@@ -123,14 +127,17 @@ if [ "$run" == "${model_run[0]}" ] ; then
 	fi
 #search in release folder debug executable
 else	
-		#find folder at first............
+	#find folder at first............
 	if [ -d "Release" ] ; then
 		
-		echo "Release folder exists"
+		cd Release
 		
+		#check if executable exists
 		if [ -x "$executable" ] ; then
-			echo "$executable executable exists"
-			c..
+			
+			folder_run=Release
+			
+			cd..
 		else
 			echo "$executable executable doesn't exist"
 			exit
@@ -144,281 +151,345 @@ fi
 #########################################################################################################
 #log available sites
 echo 'available sites:'
-for (( i = 0 ; i < ${#site[@]} ; ++i )) ; do
-      echo -"${site[i]}"
+for (( i = 0 ; i < ${#SITEs[@]} ; ++i )) ; do
+      echo -"${SITEs[i]}"
 done
 
 echo "which site do you want to simulate?"
 
 #ask which site use
-read site_name
+read site
 
-echo "site to simulate '$site_name'"
+echo "site to simulate '$site'"
 
 match=no
 
 #check if red site merge with available sites
-for (( i = 0 ; i <= ${#site[@]} ; ++i )) ; do
+for (( i = 0 ; i <= ${#SITEs[@]} ; ++i )) ; do
 
-    if [ "${site_name,,}" = "${site[$i],,}" ] ; then
+    if [ "${site,,}" = "${SITEs[$i],,}" ] ; then
     	match=yes
-		site_name=${site[$i]}
+	site=${SITEs[$i]}
      fi
 done
 
 #exit if none site name merge with site list
 if [ "$match" == "no" ] ; then
-      echo $site_name "doesn't match with sites list exit program!"
+      echo $site "doesn't match with sites list exit program!"
 exit
 fi
 
-#check for available simulation years
+#for counter
+if [ "$site" == 'All' ] ; then
+	sites_counter=${#SITEs[@]} 
+else
+	sites_counter=1
+fi
 
 
 #########################################################################################################
-#log available CLIMATE
-echo 'available CLIMATE:'
-for (( i = 0 ; i < ${#CLIMATE[@]} ; ++i )) ; do
-      echo -"${CLIMATE[i]}"
+#log available CLIMATEs
+echo 'available CLIMATEs:'
+for (( i = 0 ; i < ${#CLIMATEs[@]} ; ++i )) ; do
+      echo -"${CLIMATEs[i]}"
 done
 
-echo "which CLIMATE do you want to use for '$site_name'?"
+echo "which CLIMATEs do you want to use for '$site'?"
 
-#ask which CLIMATE to use
-read Climate
+#ask which CLIMATEs to use
+read climate
 
-echo "CLIMATE to use '$Climate'"
+echo "CLIMATEs to use '$climate'"
 
 match=no
 
-#check if red GCM merge with available CLIMATE
-for (( i = 0 ; i < ${#CLIMATE[@]}  ; ++i )) ; do
+#check if red climate merge with available CLIMATEs
+for (( i = 0 ; i < ${#CLIMATEs[@]}  ; ++i )) ; do
 
-	if [ "${Climate,,}" == "${CLIMATE[$i],,}" ] ; then
+	if [ "${climate,,}" == "${CLIMATEs[$i],,}" ] ; then
 	match=yes     
-	Climate=${CLIMATE[$i]} 
+	climate=${CLIMATEs[$i]} 
 	fi
 done
 
-#exit if none RCP name merge with RCP list
+#exit if none climate name merge with CLIMATEs list
 if [ "$match" == "no" ] ; then
-      echo $Climate "doesn't match with CLIMATE list exit program!"
+      echo $climate "doesn't match with CLIMATEs list exit program!"
 exit
 fi
 
-#########################################################################################################
-#All climates
-if [ "$Climate" == "${CLIMATE[0]}" ] ; then
-	echo 'All climate'
-	exit
+#for counter
+if [ "$climate" == 'All' ] ; then
+	clim_counter=${#CLIMATEs[@]} 
+else
+	clim_counter=1
 fi
+#########################################################################################################
+#IT CURRENTLY RUNS ONLY FOR SCENARIOS AND FOR ALL GCMs AND ALL RCPs
 
 #Historical
-if [ "$Climate" == "${CLIMATE[1]}" ] ; then
+if [ "$climate" == "${CLIMATEs[0]}" ] ; then
 	
-		#log available Historical
-		echo 'available Historical:'
-		for (( i = 0 ; i < ${#HYSTs[@]} ; ++i )) ; do
-				echo -"${HYSTs[i]}"
+	#log available Historical
+	echo 'available Historical:'
+	for (( i = 0 ; i < ${#HYSTs[@]} ; ++i )) ; do
+		echo -"${HYSTs[i]}"
 		done
 
-		echo "which Historical do you want to use for '$site_name'?"
+	echo "which Historical do you want to use for '$site'?"
 
-		#ask which HYSTs to use
-		read Hist
+	#ask which HYSTs to use
+	read Hist
 
-		echo "Historical to use '$Hist'"
+	echo "Historical to use '$Hist'"
 
-		match=no
+	match=no
 
-		#check if red Hist merge with available HYSTs
-		for (( i = 0 ; i < ${#HYSTs[@]} ; ++i )) ; do
+	#check if red Hist merge with available HYSTs
+	for (( i = 0 ; i < ${#HYSTs[@]} ; ++i )) ; do
 
-			  if [ "${Hist,,}" == "${HYSTs[$i],,}" ] ; then
-				match=yes  
-				Hist=${HISTs[$i]}   
-			  fi
-		done
-
-		#exit if none Hist merge with HYSTs list
-		if [ "$match" == "no" ] ; then
-				echo $Hist "doesn't match with Historical list exit program!"
-		exit
+		if [ "${Hist,,}" == "${HYSTs[$i],,}" ] ; then
+		match=yes  
+		Hist=${HISTs[$i]}   
 		fi
+		done
+
+	#exit if none Hist merge with HYSTs list
+	if [ "$match" == "no" ] ; then
+		echo $Hist "doesn't match with Historical list exit program!"
+	exit
+	fi
+	
+	#for counter
+	if [ "$Hist" == 'All' ] ; then
+		hist_counter=${#HYSTs[@]} 
+	else
+		hist_counter=1
+	fi
 fi
+
+#****************************************************************************
+
 #Scenario
-if [ "$Climate" == "${CLIMATE[2]}" ] ; then
-		#log available GCMs
-		echo 'available GCMs:'
-		for (( i = 0 ; i < ${#GCMs[@]} ; ++i )) ; do
-				echo -"${GCMs[i]}"
-		done
+if [ "$climate" == "${CLIMATEs[1]}" ] ; then
+	
+	#log available GCMs
+	echo 'available GCMs:'
+	for (( i = 0 ; i < ${#GCMs[@]} ; ++i )) ; do
+			echo -"${GCMs[i]}"
+	done
 
-		echo "which GCMs do you want to use for '$site_name'?"
+	echo "which GCMs do you want to use for '$site'?"
+	
+	#ask which GCM to use
+	read gcm
+	
+	echo "gcm to use '$gcm'"
+	
+	match=no
+	
+	#check if red gcm merge with available GCMs
+	for (( i = 0 ; i < ${#GCMs[@]} ; ++i )) ; do
 
-		#ask which GCM to use
-		read GCM
-
-		echo "GCM to use '$GCM'"
-
-		match=no
-
-		#check if red GCM merge with available GCMs
-		for (( i = 0 ; i < ${#GCMs[@]} ; ++i )) ; do
-
-			  if [ "${GCM,,}" == "${GCMs[$i],,}" ] ; then
-				match=yes
-				GCM=${GCMs[$i]}
-			  fi
-		done
-
-		#exit if none GCM merge with GCMs list
-		if [ "$match" == "no" ] ; then
-				echo $GCM "doesn't match with GCMs list exit program!"
-		exit
+		if [ "${gcm,,}" == "${GCMs[$i],,}" ] ; then
+		match=yes
+		gcm=${GCMs[$i]}
 		fi
+	done
 
-		#log available RCPs
-		echo 'available RCPs:'
-		for (( i = 0 ; i < ${#RCPs[@]} ; ++i )) ; do
-				echo -"${RCPs[i]}"
-		done
-
-		echo "which RCPs do you want to use for '$site_name' and '$GCM'?"
-
-		#ask which RCP to use
-		read RCP
-
-		echo "RCPs to use '$RCP'"
-
-		match=no
-
-		#check if red GCM merge with available GCMs
-		for (( i = 0 ; i < ${#RCPs[@]} ; ++i )) ; do
-
-			  if [ "${RCP,,}" == "${RCPs[$i],,}" ] ; then
-				match=yes
-				RCP=${RCPs[$i]}
-			  fi
-		done
-
-		#exit if none RCP name merge with RCP list
-		if [ "$match" == "no" ] ; then
-				echo $RCP "doesn't match with RCPs list exit program!"
+		#exit if none gcm merge with GCMs list
+	if [ "$match" == "no" ] ; then
+		echo $gcm "doesn't match with GCMs list exit program!"
 		exit
+	fi
+	
+	#for counter
+	if [ "$gcm" == 'All' ] ; then
+		gcm_counter=${#GCMs[@]} 
+	else
+		gcm_counter=1
+	fi
+	
+	#*****************************************************************
+
+	#log available RCPs
+	echo 'available RCPs:'
+	for (( i = 0 ; i < ${#RCPs[@]} ; ++i )) ; do
+			echo -"${RCPs[i]}"
+	done
+
+	echo "which RCPs do you want to use for '$site' and '$gcm'?"
+
+	#ask which rcp to use
+	read rcp
+
+	echo "RCPs to use '$rcp'"
+
+	match=no
+
+	#check if red rcp merge with available RCPs
+	for (( i = 0 ; i < ${#RCPs[@]} ; ++i )) ; do
+
+		if [ "${rcp,,}" == "${RCPs[$i],,}" ] ; then
+		match=yes
+		rcp=${RCPs[$i]}
 		fi
+	done
+
+		#exit if none rcp name merge with RCPs list
+	if [ "$match" == "no" ] ; then
+			echo $rcp "doesn't match with RCPs list exit program!"
+	exit
+	fi
+	
+	#for counter
+	if [ "$rcp" == 'All' ] ; then
+		rcp_counter=${#RCPs[@]} 
+	else
+		rcp_counter=1
+	fi
 fi
 
 #########################################################################################################
+
 #log available Management
-echo 'Management on or off?:'
-for (( i = 0 ; i < ${#Man[@]} ; ++i )) ; do
-      echo -"${Man[i]}"
+echo 'available management'
+for (( i = 0 ; i < ${#MANs[@]} ; ++i )) ; do
+      echo -"${MANs[i]}"
 done
 
-echo "Management on or off for '$site_name' and '$GCM' and '$RCP'?"
+echo "Management on or off for '$site' and '$gcm' and '$rcp'?"
 
 #ask if use management
-read Management
+read management
 
-echo "Management is '$Management'"
+echo "Management is '$management'"
 
 match=no
 
 #check if red management options merge with available management
-for (( i = 0 ; i < ${#Man[@]} ; ++i )) ; do
+for (( i = 0 ; i < ${#MANs[@]} ; ++i )) ; do
 
-     if [ "${Management,,}" == "${Man[$i],,}" ] ; then
-      match=yes
-    Management=${Man[$i]}
-     fi
+	if [ "${management,,}" == "${MANs[$i],,}" ] ; then
+	match=yes
+	management=${MANs[$i]}
+	fi
 done
 
 #exit if none management options merge with management list
 if [ "$match" == "no" ] ; then
-      echo $Man "doesn't match with Management possibilities list exit program!"
+      echo $management "doesn't match with Management possibilities list exit program!"
 exit
+fi
+
+#for counter
+if [ "$management" == 'All' ] ; then
+	man_counter=${#RCPs[@]} 
+else
+	man_counter=1
 fi
 
 #########################################################################################################
 #log available CO2
 echo 'CO2 enrichment on or off?:'
-for (( i = 0 ; i < ${#CO2[@]} ; ++i )) ; do
-      echo -"${CO2[i]}"
+for (( i = 0 ; i < ${#CO2s[@]} ; ++i )) ; do
+      echo -"${CO2s[i]}"
 done
 
-echo "CO2 enrichment on or off for '$site_name' and '$GCM' and '$RCP' and Management '$Management'?"
+echo "CO2 enrichment on or off for '$site' and '$gcm' and '$rcp' and Management '$management'?"
 
 #ask if use CO2 enrichment
-read CO2enrich
+read co2
 
-echo "CO2 enrichment is '$CO2enrich'"
+echo "CO2 enrichment is '$co2'"
 
 match=no
 
 #check if red CO2 options merge with available CO2 list 
-for (( i = 0 ; i < ${#CO2[@]} ; ++i )) ; do
+for (( i = 0 ; i < ${#CO2s[@]} ; ++i )) ; do
 
-     if [ "${CO2enrich,,}" == "${CO2[$i],,}" ] ; then
-      match=yes      
-    CO2enrich=${CO2[$i]}
-     fi
+	if [ "${co2,,}" == "${CO2s[$i],,}" ] ; then
+	match=yes      
+	co2=${CO2[$i]}
+	fi
 done
 
 #exit if none CO2 options merge with CO2 list
 if [ "$match" == "no" ] ; then
-      echo $CO2enrich "doesn't match with CO2 enrichment possibilities list exit program!"
+      echo $co2 "doesn't match with CO2 enrichment possibilities list exit program!"
 exit
+fi
+
+#for counter
+if [ "$co2" == 'All' ] ; then
+	co2_counter=${#CO2s[@]} 
+else
+	co2_counter=1
 fi
 
 #########################################################################################################
 #to complete
-if [ "$Climate" == "${CLIMATE[1]}"] ; then
-		MET_PATH=ISIMIP/Historical/"$Hist"_1960-2001.txt
-		SOIL_PATH=ISIMIP/Historical/"$site_name"_soil_"$Hist"_ISIMIP.txt
-		CO2_PATH=ISIMIP/CO2/CO2_historical_1901_2012.txt
-fi
-if [ "$Climate" == "${CLIMATE[2]}"] ; then
-		MET_PATH=ISIMIP/"$GCM"/"$GCM"_hist_"$RCP"_1960_2099.txt
-		SOIL_PATH=ISIMIP/"$GCM"/"$site_name"_soil_"$RCP"_ISIMIP.txt
-		CO2_PATH=ISIMIP/CO2/CO2_"$RCP"_1950_2099.txt
-fi
+#if [ "$climate" == "${CLIMATEs[1]}"] ; then
+		#MET_PATH=ISIMIP/Historical/"$hist"_1960-2001.txt
+		#SOIL_PATH=ISIMIP/Historical/"$site"_soil_"$hist"_ISIMIP.txt
+		#CO2_PATH=ISIMIP/CO2/CO2_historical_1901_2012.txt
+#fi
+#if [ "$climate" == "${CLIMATEs[2]}"] ; then
+		#MET_PATH=ISIMIP/"$gcm"/"$gcm"_hist_"$rcp"_1960_2099.txt
+		#SOIL_PATH=ISIMIP/"$gcm"/"$site"_soil_"$rcp"_ISIMIP.txt
+		#CO2_PATH=ISIMIP/CO2/CO2_"$rcp"_1950_2099.txt
+#fi
 
-#add site name to current paths
-SITE_PATH=input/$site_name
-OUTPUT_PATH=output/$site_name
-STAND_PATH=ISIMIP/"$site_name"_stand_1960_ISIMIP.txt
-TOPO_PATH=ISIMIP/"$site_name"_topo_ISIMIP.txt
+for (( i = 0 ; i < $site_counter; ++i )) ; do
+for (( i = 0 ; i < $clim_counter ; ++i )) ; do
+for (( i = 0 ; i < $gcm_counter ; ++i )) ; do
+for (( i = 0 ; i < $rcp_counter ; ++i )) ; do
+for (( i = 0 ; i < $man_counter ; ++i )) ; do
+for (( i = 0 ; i < $co2_counter ; ++i )) ; do
+	
+	#add site name to current paths
+	SITE_PATH=input/$site
+	OUTPUT_PATH=output/$site
+	=ISIMIP/"$site"_stand_1960_ISIMIP.txt
+	TOPO_PATH=ISIMIP/"$site"_topo_ISIMIP.txt
 
-#setting path
-SETTING_PATH=ISIMIP/"$site_name"_settings_ISIMIP_Manag-"$Management"_CO2-"$CO2enrich".txt
+	#add management and co2 to setting path
+	SETTING_PATH=ISIMIP/"$site"_settings_ISIMIP_Manag-"$management"_CO2-"$co2".txt
 
+	#add gcm and rcp to meteo co2 and soil path
+	MET_PATH=ISIMIP/"$gcm"/"$gcm"_hist_"$rcp"_1960_2099.txt
+	SOIL_PATH=ISIMIP/"$gcm"/"$site"_soil_"$rcp"_ISIMIP.txt
+	CO2_PATH=ISIMIP/CO2/CO2_"$rcp"_1950_2099.txt
 
-#log input folder path
-echo "path $site_name input data for $PROJECT project: $SITE_PATH"
+	#goes to executable folder
+	cd $folder_run
 
-#go to debug folder to execute debug run for site
-cd Debug
+	cp 3D_CMCC_Forest_Model ../
 
-cp 3D_CMCC_Forest_Model ../
+	cd ..
 
-cd ..
+	#log arguments paths
+	echo "*****************************"
+	echo "$CMCC $VERSION-$PROJECT arguments"
+	echo -i $SITE_PATH
+	echo -p $PARAMETERIZATION_PATH
+	echo -d $STAND_PATH
+	echo -s $SOIL_PATH
+	echo -t $TOPO_PATH
+	echo -m $MET_PATH
+	echo -k $CO2_PATH
+	echo -c $SETTING_PATH
+	echo "*****************************"
 
-#log arguments paths
-echo "*****************************"
-echo "$CMCC $VERSION-$PROJECT arguments"
-echo -i $SITE_PATH
-echo -p $PARAMETERIZATION_PATH
-echo -d $STAND_PATH
-echo -s $SOIL_PATH
-echo -t $TOPO_PATH
-echo -m $MET_PATH
-echo -k $CO2_PATH
-echo -c $SETTING_PATH
-echo "*****************************"
+	#add paths and arguments to executable and run
+	./3D_CMCC_Forest_Model -i $SITE_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH 
+done
+done
+done
+done
+done
+done
 
-#add paths and arguments to executable
-./3D_CMCC_Forest_Model -i $SITE_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH 
 
 #delete copied executable from current directory
 rm 3D_CMCC_Forest_Model
