@@ -11,6 +11,8 @@ echo "**************************************"
 echo "$CMCC $VERSION script for $PROJECT run"
 echo "**************************************"
 
+executable="3D_CMCC_Forest_Model"
+
 #input paths
 SITE_PATH=input/
 PARAMETERIZATION_PATH=input/parameterization
@@ -19,8 +21,8 @@ PARAMETERIZATION_PATH=input/parameterization
 export OUTPUT_PATH=output/
 
 #run execution
-model_debug_run="3D_CMCC_Forest_Model"
-model_release_run="3D_CMCC_Forest_Model"
+model_run[0]=Debug
+model_run[1]=Release
 
 #declare sites
 site[0]=All
@@ -68,6 +70,49 @@ CO2[2]=off
 
 #current data
 today=`date +%Y-%m-%d`
+
+########################################################################################################
+#Debug or Release run
+echo 'available model run'
+for (( i = 0 ; i < ${#model_run[@]} ; ++i )) ; do
+      echo -"${model_run[i]}"
+done
+
+echo "which model version do you want to use?"
+
+#ask which run use	
+read run
+
+echo "model run '$run'"
+
+match=no
+
+#check if red run merge with available runs
+for (( i = 0 ; i <= ${#model_run[@]} ; ++i )) ; do
+
+    if [ "${run,,}" = "${model_run[$i],,}" ] ; then
+    	match=yes
+		run=${model_run[$i]}
+     fi
+done
+
+#exit if none run merge with run list
+if [ "$match" == "no" ] ; then
+      echo $run "doesn't match with sites list exit program!"
+exit
+fi
+
+#search in debug folder debug executable
+if [ "$run" == "${model_run[0]}" ] ; then
+	echo ok
+	
+	cd "$run"
+	
+	locate $executable
+fi
+exit 
+
+
 
 #########################################################################################################
 #log available sites
@@ -321,11 +366,6 @@ TOPO_PATH=ISIMIP/"$site_name"_topo_ISIMIP.txt
 #setting path
 SETTING_PATH=ISIMIP/"$site_name"_settings_ISIMIP_Manag-"$Management"_CO2-"$CO2enrich".txt
 
-DEBUG_OUTPUT=$OUTPUT_PATH/debug_output_"$today"/debug_output
-DAILY_OUTPUT=$OUTPUT_PATH/daily_output_"$today"/daily_output
-MONTHLY_OUTPUT=$OUTPUT_PATH/monthly_output_"$today"/monthly_output
-ANNUAL_OUTPUT=$OUTPUT_PATH/annual_output_"$today"/annual_output
-SOIL_OUTPUT=$OUTPUT_PATH/soil_output_$today/soil_output
 
 #log input folder path
 echo "path $site_name input data for $PROJECT project: $SITE_PATH"
@@ -348,15 +388,10 @@ echo -t $TOPO_PATH
 echo -m $MET_PATH
 echo -k $CO2_PATH
 echo -c $SETTING_PATH
-echo -o $DEBUG_OUTPUT
-echo -b $DAILY_OUTPUT
-echo -f $MONTHLY_OUTPUT
-echo -e $ANNUAL_OUTPUT
-echo -n $SOIL_OUTPUT
 echo "*****************************"
 
 #add paths and arguments to executable
-./3D_CMCC_Forest_Model -i $SITE_PATH -p $PARAMETERIZATION_PATH -o $DEBUG_OUTPUT -b $DAILY_OUTPUT -e $ANNUAL_OUTPUT -f $MONTHLY_OUTPUT -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH -n $SOIL_OUTPUT
+./3D_CMCC_Forest_Model -i $SITE_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH 
 
 #delete copied executable from current directory
 rm 3D_CMCC_Forest_Model
