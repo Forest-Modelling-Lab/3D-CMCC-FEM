@@ -262,7 +262,7 @@ int path_create(const char *const path) {
 
 	p = strchr(path, '\\');
 	p2 = strchr(path, '/');
-	if ( ! p || (p2 > p) ) {
+	if ( ! p || (p2 && (p2 < p)) ) {
 		p = p2;
 	}
 	if ( ! p ) p = p2;
@@ -281,7 +281,7 @@ int path_create(const char *const path) {
 		p3 = strchr(p, '\\');
 		p2 = strchr(p, '/');
 		p = p3;
-		if ( ! p || (p2 > p) ) {
+		if ( ! p || (p2 && (p2 < p)) ) {
 			p = p2;
 		}
 	}

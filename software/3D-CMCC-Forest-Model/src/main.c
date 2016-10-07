@@ -396,11 +396,11 @@ static int log_start(const char* const sitename)
 		logger(g_debug_log, msg_co2_conc_file, g_sz_co2_conc_file);
 
 	logger(g_debug_log, msg_settings_path, g_sz_settings_file);
-	logger(g_debug_log, msg_debug_output_file, g_debug_log->filename);
-	if ( g_debug_log && g_daily_log ) logger(g_debug_log, msg_daily_output_file, g_daily_log->filename);
-	if ( g_debug_log && g_monthly_log ) logger(g_debug_log, msg_monthly_output_file, g_monthly_log->filename);
-	if ( g_debug_log && g_annual_log ) logger(g_debug_log, msg_annual_output_file, g_annual_log->filename);
-	if ( g_debug_log && g_soil_log ) logger(g_debug_log, msg_soil_output_file, g_soil_log->filename);
+	if ( g_debug_log )						logger(g_debug_log, msg_debug_output_file, g_debug_log->filename);
+	if ( g_debug_log && g_daily_log )		logger(g_debug_log, msg_daily_output_file, g_daily_log->filename);
+	if ( g_debug_log && g_monthly_log )		logger(g_debug_log, msg_monthly_output_file, g_monthly_log->filename);
+	if ( g_debug_log && g_annual_log )		logger(g_debug_log, msg_annual_output_file, g_annual_log->filename);
+	if ( g_debug_log && g_soil_log )		logger(g_debug_log, msg_soil_output_file, g_soil_log->filename);
 
 	return 1;
 }
