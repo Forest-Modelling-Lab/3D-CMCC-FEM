@@ -311,6 +311,7 @@ to make the model work under eclipse4.3 using git you shall follow this guide
     5.7) try if everything has gone allright; if that's so, drag the icon on the unity bar
 
 HOW TO CREATE A NEW BRANCH IN GIT
+
 The 3D-CMCC-FEM-DNDC/RothC project is currently hosted by the repo http://dev.cmcc.it. It is developed under the GIT version control system and password protected. 
 Please ask Alessio Collalti for access to the source code.
 Git allows you to create a local branch which can be committed and pushed to the repository. To do that follow the following steps:
@@ -318,6 +319,10 @@ Git allows you to create a local branch which can be committed and pushed to the
 2) after importing the git project right click on the project folder, go to "team", then to "switch to" and finally click on "new branch"
 3) name the new branch and then check it out as a new local branch
 4) after that make a modify and commit and push; you should be able to commit that on the repo without any problem; otherwise contact us
+
+HOW TO WORK ON ECLIPSE FOR BASH SCRIPTS
+
+To work in Bash Shell scripts within the ECLISPE IDE you need to install ShellED eclipse package through the web
 
 If you encounter issues with the code, or if you have suggestions on how it could be improved, we’d love to hear from
 you. Also, please send us copies of any manuscripts or reports that include the use of 3D-CMCC-FEM, especially if you
