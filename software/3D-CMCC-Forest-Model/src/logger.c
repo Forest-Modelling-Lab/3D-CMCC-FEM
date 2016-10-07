@@ -26,6 +26,11 @@ logger_t* logger_new(const char* const path, ...) {
 	p = malloc(sizeof*p);
 
 	if ( ! p ) return NULL;
+	p->filename = string_copy(buffer);
+	if ( ! p->filename ) {
+		free(p);
+		return NULL;
+	}
 	p->file_output = 1;
 	p->std_output = 1;
 
@@ -59,6 +64,9 @@ void logger(logger_t *p, const char *text, ...) {
 
 void logger_close(logger_t* p) {
 	if ( p ) {
+		if ( p->filename ) {
+			free(p->filename);
+		}
 		if ( p->f ) {
 			fclose(p->f);
 		}

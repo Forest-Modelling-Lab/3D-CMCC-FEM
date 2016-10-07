@@ -6,6 +6,7 @@
 
 typedef struct {
 	FILE *f;
+	char *filename;
 	int file_output;
 	int std_output;
 } logger_t;

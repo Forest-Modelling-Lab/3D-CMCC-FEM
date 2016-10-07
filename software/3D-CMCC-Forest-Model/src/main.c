@@ -396,15 +396,11 @@ static int log_start(const char* const sitename)
 		logger(g_debug_log, msg_co2_conc_file, g_sz_co2_conc_file);
 
 	logger(g_debug_log, msg_settings_path, g_sz_settings_file);
-	// ALESSIOR TODO
-	/*
-	if ( g_sz_debug_output_filename ) 
-		logger(g_debug_log, msg_debug_output_file, g_sz_debug_output_filename);
-	logger(g_debug_log, msg_daily_output_file, g_sz_daily_output_filename);
-	logger(g_debug_log, msg_monthly_output_file, g_sz_monthly_output_filename);
-	logger(g_debug_log, msg_annual_output_file, g_sz_yearly_output_filename);
-	logger(g_debug_log, msg_soil_output_file, g_sz_soil_output_filename);
-	*/
+	logger(g_debug_log, msg_debug_output_file, g_debug_log->filename);
+	if ( g_debug_log && g_daily_log ) logger(g_debug_log, msg_daily_output_file, g_daily_log->filename);
+	if ( g_debug_log && g_monthly_log ) logger(g_debug_log, msg_monthly_output_file, g_monthly_log->filename);
+	if ( g_debug_log && g_annual_log ) logger(g_debug_log, msg_annual_output_file, g_annual_log->filename);
+	if ( g_debug_log && g_soil_log ) logger(g_debug_log, msg_soil_output_file, g_soil_log->filename);
 
 	return 1;
 }
@@ -466,6 +462,7 @@ static int parse_args(int argc, char *argv[])
 	int i;
 
 	g_sz_input_path = NULL;
+	g_sz_output_path = NULL;
 	g_sz_parameterization_path = NULL;
 	g_sz_dataset_file = NULL;
 	g_sz_input_met_file = NULL;
@@ -621,32 +618,19 @@ static int parse_args(int argc, char *argv[])
 	}
 	 */
 
+	/* output path specified ? */
+	if ( ! g_sz_output_path ) {
+		g_sz_output_path = string_copy("output");
+		if ( ! g_sz_output_path ) {
+			puts(sz_err_out_of_memory);
+			goto err;
+		}
+	}
+
 	if ( ! g_sz_parameterization_path ) {
 		puts("parameterization path not specified!");
 		goto err_show_usage;
 	}
-
-	/*
-	if ( ! g_sz_debug_output_filename ) {
-		puts("output filename option is missing!");
-		goto err_show_usage;
-	}
-
-	if ( ! g_sz_monthly_output_filename ) {
-		puts("monthly output filename option is missing!");
-		goto err_show_usage;
-	}
-
-	if ( ! g_sz_yearly_output_filename ) {
-		puts("annual output filename option is missing!");
-		goto err_show_usage;
-	}
-
-	if ( ! g_sz_soil_output_filename ) {
-		puts("soil output filename option is missing!");
-		goto err_show_usage;
-	}
-	*/
 
 	if ( ! g_sz_dataset_file ) {
 		puts("dataset filename not specified!");
@@ -675,10 +659,10 @@ static int parse_args(int argc, char *argv[])
 
 	return 1;
 
-	err_show_usage:
+err_show_usage:
 	show_usage();
 
-	err:
+err:
 	return 0;
 }
 
@@ -1238,17 +1222,17 @@ int main(int argc, char *argv[]) {
 		matrix->cells[cell].years = NULL; /* required */
 	}
 
-	// ALESSIOR TODO
 	/* NETCDF output */
-	/*
 	if ( output_vars && output_vars->daily_vars_value ) {
+		/*
 		char *path = get_path(g_sz_daily_output_filename);
 		if ( ! path && g_sz_daily_output_filename  ) {
 			logger(g_debug_log, sz_err_out_of_memory);
 			goto err;
 		}
-		ret = output_write(output_vars, path, start_year, years_of_simulation, matrix->x_cells_count, matrix->y_cells_count, 0);
-		free(path);
+		*/
+		ret = output_write(output_vars, g_sz_output_path, start_year, years_of_simulation, matrix->x_cells_count, matrix->y_cells_count, 0);
+		//free(path);
 		if ( ! ret ) {
 			logger(g_debug_log, sz_err_out_of_memory);
 			goto err;
@@ -1258,13 +1242,15 @@ int main(int argc, char *argv[]) {
 	}
 
 	if ( output_vars && output_vars->monthly_vars_value ) {
+		/*
 		char *path = get_path(g_sz_monthly_output_filename);
 		if ( ! path && g_sz_monthly_output_filename ) {
 			logger(g_debug_log, sz_err_out_of_memory);
 			goto err;
 		}
-		ret = output_write(output_vars, path, start_year, years_of_simulation, matrix->x_cells_count, matrix->y_cells_count, 1);
-		free(path);
+		*/
+		ret = output_write(output_vars, g_sz_output_path, start_year, years_of_simulation, matrix->x_cells_count, matrix->y_cells_count, 1);
+		//free(path);
 		if ( ! ret ) {
 			logger(g_debug_log, sz_err_out_of_memory);
 			goto err;
@@ -1274,13 +1260,15 @@ int main(int argc, char *argv[]) {
 	}
 
 	if ( output_vars && output_vars->yearly_vars_value ) {
+		/*
 		char *path = get_path(g_sz_yearly_output_filename);
 		if ( ! path && g_sz_yearly_output_filename) {
 			logger(g_debug_log, sz_err_out_of_memory);
 			goto err;
 		}
-		ret = output_write(output_vars, path, start_year, years_of_simulation, matrix->x_cells_count, matrix->y_cells_count, 2);
-		free(path);
+		*/
+		ret = output_write(output_vars, g_sz_output_path, start_year, years_of_simulation, matrix->x_cells_count, matrix->y_cells_count, 2);
+		//free(path);
 		if ( ! ret ) {
 			logger(g_debug_log, sz_err_out_of_memory);
 			goto err;
@@ -1288,7 +1276,6 @@ int main(int argc, char *argv[]) {
 		free(output_vars->yearly_vars_value);
 		output_vars->yearly_vars_value = NULL;
 	}
-	*/
 
 	/* free memory */
 	matrix_free(matrix); matrix = NULL;
@@ -1296,7 +1283,7 @@ int main(int argc, char *argv[]) {
 	/* ok ! */
 	prog_ret = 0;
 
-	err:
+err:
 	/* close logger */
 	logger_close(g_soil_log); g_soil_log = NULL;
 	logger_close(g_annual_log); g_annual_log = NULL;
@@ -1309,13 +1296,6 @@ int main(int argc, char *argv[]) {
 	if ( matrix ) matrix_free(matrix);
 
 	free(g_sz_input_met_file); g_sz_input_met_file = NULL;
-	/*
-	if ( g_sz_debug_output_filename) { free(g_sz_debug_output_filename); g_sz_debug_output_filename = NULL; }
-	free(g_sz_daily_output_filename); g_sz_daily_output_filename = NULL;
-	free(g_sz_monthly_output_filename); g_sz_monthly_output_filename = NULL;
-	free(g_sz_yearly_output_filename); g_sz_yearly_output_filename = NULL;
-	free(g_sz_soil_output_filename); g_sz_soil_output_filename = NULL;
-	*/
 	free(g_sz_settings_file); g_sz_settings_file = NULL;
 
 	/* this should be freed before */
