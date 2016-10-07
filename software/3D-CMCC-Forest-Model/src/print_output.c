@@ -50,7 +50,7 @@ static const char* get_filename(const char *const s)
 
 static void write_paths(logger_t *const _log)
 {
-	assert(_log);
+	//assert(_log);
 
 	logger(_log, "\n\nsite: %s\n", get_filename(g_soil_settings->sitename));
 	logger(_log, "input file = %s\n", get_filename(g_sz_dataset_file));
@@ -62,7 +62,7 @@ static void write_paths(logger_t *const _log)
 
 static print_model_settings(logger_t*const log)
 {
-	assert(log);
+	//assert(log);
 
 	logger(log, "*model settings*\n");
 	logger(log, "-CO2_mod = %s\n", g_settings->CO2_mod ? "on" : "off");
@@ -84,6 +84,9 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 	static int years_counter;
 
 	species_t *s;
+
+	/* return if daily logging is off*/
+	if ( ! g_daily_log ) return;
 
 	/* heading */
 	if ( !day && !month && !year )
@@ -319,6 +322,9 @@ void EOM_print_cumulative_balance_cell_level(cell_t *const c, const int month, c
 
 	species_t *s;
 
+	/* return if monthly logging is off*/
+	if ( ! g_monthly_log ) return;
+
 	/* heading */
 	if ( !month && !year )
 	{
@@ -494,6 +500,9 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 	static int years_counter;
 
 	species_t *s;
+
+	/* return if annual logging is off*/
+	if ( ! g_annual_log ) return;
 
 	/* test */
 	//note it can be used only if no other classes are added!!
