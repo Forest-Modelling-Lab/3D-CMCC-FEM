@@ -437,7 +437,7 @@ for (( a = 0 ; a < $site_counter ; ++a )) ; do
 						cd ..
 					
 						#add paths and arguments to executable and run
-						#./3D_CMCC_Forest_Model -i $SITE_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH -o $OUTPUT_PATH
+						./3D_CMCC_Forest_Model -i $SITE_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH -o $OUTPUT_PATH
 						
 						#log arguments paths
 						echo "*****************************"
