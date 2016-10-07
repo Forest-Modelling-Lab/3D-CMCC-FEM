@@ -65,7 +65,7 @@ SAP_LEAF    2100        //leaf area/sapwood max ratio in pipe model  185 from Wi
 SAP_WRES    0.05        //Sapwood-Reserve biomass ratio gTNC/100gDM 0.043 in January for fagus see Barbaroux 2002 0.11 for deciduous 0.05 for evergreen  see Schwalm and Ek, 2004 Ecological Modelling
 STEMCONST_P 0.2837      //from ettore
 STEMPOWER_P 2.134       //from ettore
-CRA 34.597              //Chapman-Richards maximum height
+CRA 35                  //Chapman-Richards maximum height
 CRB 0.038               //Chapman_Richards b parameter
 CRC 1.104               //Chapman_Richards c parameter
 HDMAX   1.71            //Height to Base diameter ratio MAX  (Portoghesi)

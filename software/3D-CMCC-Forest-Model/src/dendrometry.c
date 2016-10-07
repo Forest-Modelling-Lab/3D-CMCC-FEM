@@ -97,17 +97,23 @@ void dendrometry(cell_t *const c, const int height, const int dbh, const int age
 
 	logger(g_debug_log, "\n**Tree Height from CC function**\n");
 
+
 	h->value = 1.3 + s->value[CRA] * pow (1.0 - exp ( - s->value[CRB] * d->value) , s->value[CRC]);
+
+	if ( h->value > s->value[CRA] )
+	{
+		h->value = s->value[CRA];
+	}
 	logger(g_debug_log, "-Tree Height using Chapman-Richard function = %g m\n", h->value);
 
 	/* check */
-	CHECK_CONDITION (h->value, > s->value[CRA])
+	CHECK_CONDITION (h->value, > s->value[CRA] + eps )
 
 	logger(g_debug_log, "-Old Tree Height = %g m\n", oldTreeHeight);
 	logger(g_debug_log, "-New Tree Height = %g m\n", h->value);
 
 	/* check */
-	CHECK_CONDITION( h->value, < oldTreeHeight - eps);
+	CHECK_CONDITION( h->value, < oldTreeHeight - eps );
 
 	/*************************************************************************************************************************/
 

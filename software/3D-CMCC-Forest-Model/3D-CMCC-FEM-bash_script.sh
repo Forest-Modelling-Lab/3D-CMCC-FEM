@@ -400,61 +400,121 @@ fi
 #########################################################################################################
 
 echo 'running for' "$site"
-						
-for (( b = 0 ; b < $clim_counter ; ++b )) ; do
-	for (( c = 0 ; c < $gcm_counter ; ++c )) ; do
-		for (( d = 0 ; d < $rcp_counter ; ++d )) ; do
-			for (( e = 0 ; e < $man_counter ; ++e )) ; do
-				for (( f = 0 ; f < $co2_counter ; ++f )) ; do
 
-				echo 'running for' "$climate"
-				echo 'running for' "${GCMs[$c]}"
-				echo 'running for' "${RCPs[$d]}"
-				echo 'running with management =' "${MANs[$e]}" 
-				echo 'running with co2 =' "${CO2s[$f]}"
+function single_run {
+	
+	echo "single run"
+	echo 'running for' "$climate"
+	echo 'running for' "$gcm"
+	echo 'running for' "$rcp"
+	echo 'running with management =' "$management" 
+	echo 'running with co2 =' "$co2"
+	
+	#add site name to current paths
+	SITE_PATH=input/"$site"
+	OUTPUT_PATH=output/"$site"
+	STAND_PATH=ISIMIP/"$site"_stand_"$year"_"$PROJECT".txt
+	TOPO_PATH=ISIMIP/"$site"_topo_"$PROJECT".txt
+
+	#add management and co2 to setting path
+	SETTING_PATH=ISIMIP/"$site"_settings_"$PROJECT"_Manag-"$management"_CO2-"$co2".txt
+
+	#add gcm and rcp to meteo co2 and soil path
+	MET_PATH=ISIMIP/"$gcm"/"$gcm"_hist_"$rcp"_"$year"_2099.txt
+	SOIL_PATH=ISIMIP/"$gcm"/"$site"_soil_"$rcp"_"$PROJECT".txt
+	CO2_PATH=ISIMIP/CO2/CO2_"$rcp"_1950_2099.txt
+
+	#goes to executable folder
+	cd $folder_run
+
+	cp 3D_CMCC_Forest_Model ../
+
+	cd ..
+
+	#add paths and arguments to executable and run
+	#./3D_CMCC_Forest_Model -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH 
+	
+	#log arguments paths
+	echo "*****************************"
+	echo "$CMCC $VERSION-$PROJECT arguments"
+	echo "-i" $SITE_PATH
+	echo "-p" $PARAMETERIZATION_PATH
+	echo "-d" $STAND_PATH
+	echo "-s" $SOIL_PATH
+	echo "-t" $TOPO_PATH
+	echo "-m" $MET_PATH
+	echo "-k" $CO2_PATH
+	echo "-c" $SETTING_PATH
+	echo "-o" $OUTPUT_PATH
+	echo "*****************************"
+}
+
+function multi_run {									
+	for (( b = 0 ; b < $clim_counter ; ++b )) ; do
+		for (( c = 0 ; c < $gcm_counter ; ++c )) ; do
+			for (( d = 0 ; d < $rcp_counter ; ++d )) ; do
+				for (( e = 0 ; e < $man_counter ; ++e )) ; do
+					for (( f = 0 ; f < $co2_counter ; ++f )) ; do
+	
+					echo "multi run"
+					echo 'running for' "$climate"
+					echo 'running for' "${GCMs[$c]}"
+					echo 'running for' "${RCPs[$d]}"
+					echo 'running with management =' "${MANs[$e]}" 
+					echo 'running with co2 =' "${CO2s[$f]}"
+					
+					#add site name to current paths
+					SITE_PATH=input/"$site"
+					OUTPUT_PATH=output/"$site"
+					STAND_PATH=ISIMIP/"$site"_stand_"$year"_"$PROJECT".txt
+					TOPO_PATH=ISIMIP/"$site"_topo_"$PROJECT".txt
 				
-				#add site name to current paths
-				SITE_PATH=input/"$site"
-				OUTPUT_PATH=output/"$site"
-				STAND_PATH=ISIMIP/"$site"_stand_"$year"_"$PROJECT".txt
-				TOPO_PATH=ISIMIP/"$site"_topo_"$PROJECT".txt
-			
-				#add management and co2 to setting path
-				SETTING_PATH=ISIMIP/"$site"_settings_"$PROJECT"_Manag-"${MANs[$e]}"_CO2-"${CO2s[$f]}".txt
-			
-				#add gcm and rcp to meteo co2 and soil path
-				MET_PATH=ISIMIP/"${GCMs[$c]}"/"${GCMs[$c]}"_hist_"${RCPs[$d]}"_"$year"_2099.txt
-				SOIL_PATH=ISIMIP/"${GCMs[$c]}"/"$site"_soil_"${RCPs[$d]}"_"$PROJECT".txt
-				CO2_PATH=ISIMIP/CO2/CO2_"${RCPs[$d]}"_1950_2099.txt
-			
-				#goes to executable folder
-				cd $folder_run
-			
-				cp 3D_CMCC_Forest_Model ../
-			
-				cd ..
-			
-				#add paths and arguments to executable and run
-				#./3D_CMCC_Forest_Model -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH 
+					#add management and co2 to setting path
+					SETTING_PATH=ISIMIP/"$site"_settings_"$PROJECT"_Manag-"${MANs[$e]}"_CO2-"${CO2s[$f]}".txt
 				
-				#log arguments paths
-				echo "*****************************"
-				echo "$CMCC $VERSION-$PROJECT arguments"
-				echo "-i" $SITE_PATH
-				echo "-p" $PARAMETERIZATION_PATH
-				echo "-d" $STAND_PATH
-				echo "-s" $SOIL_PATH
-				echo "-t" $TOPO_PATH
-				echo "-m" $MET_PATH
-				echo "-k" $CO2_PATH
-				echo "-c" $SETTING_PATH
-				echo "-o" $OUTPUT_PATH
-				echo "*****************************"
-done
-done
-done
-done
-done
+					#add gcm and rcp to meteo co2 and soil path
+					MET_PATH=ISIMIP/"${GCMs[$c]}"/"${GCMs[$c]}"_hist_"${RCPs[$d]}"_"$year"_2099.txt
+					SOIL_PATH=ISIMIP/"${GCMs[$c]}"/"$site"_soil_"${RCPs[$d]}"_"$PROJECT".txt
+					CO2_PATH=ISIMIP/CO2/CO2_"${RCPs[$d]}"_1950_2099.txt
+				
+					#goes to executable folder
+					cd $folder_run
+				
+					cp 3D_CMCC_Forest_Model ../
+				
+					cd ..
+				
+					#add paths and arguments to executable and run
+					./3D_CMCC_Forest_Model -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH 
+					
+					#log arguments paths
+					echo "*****************************"
+					echo "$CMCC $VERSION-$PROJECT arguments"
+					echo "-i" $SITE_PATH
+					echo "-p" $PARAMETERIZATION_PATH
+					echo "-d" $STAND_PATH
+					echo "-s" $SOIL_PATH
+					echo "-t" $TOPO_PATH
+					echo "-m" $MET_PATH
+					echo "-k" $CO2_PATH
+					echo "-c" $SETTING_PATH
+					echo "-o" $OUTPUT_PATH
+					echo "*****************************"
+					done
+				done
+			done
+		done
+	done
+}
+
+if [ "$gcm_counter" == 1 ] && [ "$rcp_counter" == 1 ] && [ "$man_counter" == 1 ] && [ "$co2_counter" == 1 ] ; then
+	#launch single run
+	single_run
+else
+	#launch multi run
+	multi_run
+fi
+
 
 #delete copied executable from current directory
 echo "...removing executable from project directory"
