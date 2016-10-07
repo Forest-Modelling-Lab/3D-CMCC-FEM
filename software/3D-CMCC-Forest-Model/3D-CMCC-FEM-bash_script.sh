@@ -25,7 +25,7 @@ export OUTPUT_PATH=output/
 model_run=(Debug Release)
 
 #declare sites
-SITEs=(Soroe Kroof Peitz All)
+SITEs=(Soroe Kroof Peitz)
 
 #declare climate
 CLIMATEs=(Historical Scenario All)
@@ -149,19 +149,30 @@ while :
 	echo "'$site' doesn't match with site list. please rewrite it."
 done
 
+#########################################################################################################
+#log available Input data
+#assign for a single site a starting year
 
-#for counter
-if [ "$site" == 'All' ] ; then
-	site_counter=${#SITEs[@]} 
-else
-	site_counter=1
-fi
+cd input 
+	
+echo "$site"
+
+cd "$site"/"ISIMIP" && ls | grep "stand"
+
+echo "which is the starting year for "$site" to simulate?"
+	
+read year
+
+echo "starting year for '$site' = '$year'"
+
+#back to main directory
+cd ../../..
 
 #########################################################################################################
 #log available CLIMATEs
 echo 'available CLIMATEs:'
 for (( i = 0 ; i < ${#CLIMATEs[@]} ; ++i )) ; do
-      echo -"${CLIMATEs[i]}"
+	echo -"${CLIMATEs[i]}"
 done
 
 echo "which CLIMATEs do you want to use for '$site'?"
@@ -187,6 +198,7 @@ done
 #for counter
 if [ "$climate" == 'All' ] ; then
 	clim_counter=${#CLIMATEs[@]} 
+	let "clim_counter-=1"
 else
 	clim_counter=1
 fi
@@ -225,6 +237,7 @@ if [ "$climate" == "${CLIMATEs[0]}" ] ; then
 	#for counter
 	if [ "$Hist" == 'All' ] ; then
 		hist_counter=${#HYSTs[@]} 
+		let "hist_counter-=1"
 	else
 		hist_counter=1
 	fi
@@ -320,7 +333,9 @@ echo "Management on or off for '$site' and '$gcm' and '$rcp'?"
 	match=no
 	while :
 	do
+		
 	read management
+	
 	for (( i = 0 ; i <= ${#MANs[@]} ; ++i )) ; do
 		if [ "${management,,}" = "${MANs[$i],,}" ] ; then
 			match=yes
@@ -356,7 +371,9 @@ echo "CO2 enrichment on or off for '$site' and '$gcm' and '$rcp' and Management 
 	match=no
 	while :
 	do
+		
 	read co2
+	
 	for (( i = 0 ; i <= ${#CO2s[@]} ; ++i )) ; do
 		if [ "${co2,,}" = "${CO2s[$i],,}" ] ; then
 			match=yes
@@ -379,80 +396,60 @@ else
 fi
 
 #########################################################################################################
-#to complete
-#if [ "$climate" == "${CLIMATEs[1]}"] ; then
-		#MET_PATH=ISIMIP/Historical/"$hist"_1960-2001.txt
-		#SOIL_PATH=ISIMIP/Historical/"$site"_soil_"$hist"_ISIMIP.txt
-		#CO2_PATH=ISIMIP/CO2/CO2_historical_1901_2012.txt
-#fi
-#if [ "$climate" == "${CLIMATEs[2]}"] ; then
-		#MET_PATH=ISIMIP/"$gcm"/"$gcm"_hist_"$rcp"_1960_2099.txt
-		#SOIL_PATH=ISIMIP/"$gcm"/"$site"_soil_"$rcp"_ISIMIP.txt
-		#CO2_PATH=ISIMIP/CO2/CO2_"$rcp"_1950_2099.txt
-#fi
+#########################################################################################################
+#########################################################################################################
 
-for (( a = 0 ; a < $site_counter ; ++a )) ; do
-	site=${SITEs[$a]}
-	echo 'running for' "$site" 'site_counter' "$site_counter"
+echo 'running for' "$site"
 						
-	for (( b = 0 ; b < $clim_counter ; ++b )) ; do
-		climate=${CLIMATEs[$i]}
-		echo 'running for' "$climate" 'clim_counter' "$clim_counter"
+for (( b = 0 ; b < $clim_counter ; ++b )) ; do
+	for (( c = 0 ; c < $gcm_counter ; ++c )) ; do
+		for (( d = 0 ; d < $rcp_counter ; ++d )) ; do
+			for (( e = 0 ; e < $man_counter ; ++e )) ; do
+				for (( f = 0 ; f < $co2_counter ; ++f )) ; do
 
-		for (( c = 0 ; c < $gcm_counter ; ++c )) ; do
-			gcm=${GCMs[$c]}
-			echo 'running for' "$gcm" 'gcm_counter' "$gcm_counter"
-						
-			for (( d = 0 ; d < $rcp_counter ; ++d )) ; do
-				rcp=${RCPs[$d]}
-				echo 'running for' "$rcp"'rcp_counter' "$rcp_counter"
-						
-				for (( e = 0 ; e < $man_counter ; ++e )) ; do
-						management=${MANs[$e]}
-						echo 'running with management =' "$management"
-						
-					for (( f = 0 ; f < $co2_counter ; ++f )) ; do
-						co2=${CO2s[$f]}
-						echo 'running with co2 =' "$co2"
-						
-						#add site name to current paths
-						SITE_PATH=input/$site
-						OUTPUT_PATH=output/$site
-						STAND_PATH=ISIMIP/"$site"_stand_1960_ISIMIP.txt
-						TOPO_PATH=ISIMIP/"$site"_topo_ISIMIP.txt
-					
-						#add management and co2 to setting path
-						SETTING_PATH=ISIMIP/"$site"_settings_ISIMIP_Manag-"$management"_CO2-"$co2".txt
-					
-						#add gcm and rcp to meteo co2 and soil path
-						MET_PATH=ISIMIP/"$gcm"/"$gcm"_hist_"$rcp"_1960_2099.txt
-						SOIL_PATH=ISIMIP/"$gcm"/"$site"_soil_"$rcp"_ISIMIP.txt
-						CO2_PATH=ISIMIP/CO2/CO2_"$rcp"_1950_2099.txt
-					
-						#goes to executable folder
-						cd $folder_run
-					
-						cp 3D_CMCC_Forest_Model ../
-					
-						cd ..
-					
-						#add paths and arguments to executable and run
-						./3D_CMCC_Forest_Model -i $SITE_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH -o $OUTPUT_PATH
-						
-						#log arguments paths
-						echo "*****************************"
-						echo "$CMCC $VERSION-$PROJECT arguments"
-						echo "-i" $SITE_PATH
-						echo "-p" $PARAMETERIZATION_PATH
-						echo "-d" $STAND_PATH
-						echo "-s" $SOIL_PATH
-						echo "-t" $TOPO_PATH
-						echo "-m" $MET_PATH
-						echo "-k" $CO2_PATH
-						echo "-c" $SETTING_PATH
-						echo "-o" $OUTPUT_PATH
-						echo "*****************************"
-done
+				echo 'running for' "$climate"
+				echo 'running for' "${GCMs[$c]}"
+				echo 'running for' "${RCPs[$d]}"
+				echo 'running with management =' "${MANs[$e]}" 
+				echo 'running with co2 =' "${CO2s[$f]}"
+				
+				#add site name to current paths
+				SITE_PATH=input/"$site"
+				OUTPUT_PATH=output/"$site"
+				STAND_PATH=ISIMIP/"$site"_stand_"$year"_"$PROJECT".txt
+				TOPO_PATH=ISIMIP/"$site"_topo_"$PROJECT".txt
+			
+				#add management and co2 to setting path
+				SETTING_PATH=ISIMIP/"$site"_settings_"$PROJECT"_Manag-"${MANs[$e]}"_CO2-"${CO2s[$f]}".txt
+			
+				#add gcm and rcp to meteo co2 and soil path
+				MET_PATH=ISIMIP/"${GCMs[$c]}"/"${GCMs[$c]}"_hist_"${RCPs[$d]}"_"$year"_2099.txt
+				SOIL_PATH=ISIMIP/"${GCMs[$c]}"/"$site"_soil_"${RCPs[$d]}"_"$PROJECT".txt
+				CO2_PATH=ISIMIP/CO2/CO2_"${RCPs[$d]}"_1950_2099.txt
+			
+				#goes to executable folder
+				cd $folder_run
+			
+				cp 3D_CMCC_Forest_Model ../
+			
+				cd ..
+			
+				#add paths and arguments to executable and run
+				#./3D_CMCC_Forest_Model -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH 
+				
+				#log arguments paths
+				echo "*****************************"
+				echo "$CMCC $VERSION-$PROJECT arguments"
+				echo "-i" $SITE_PATH
+				echo "-p" $PARAMETERIZATION_PATH
+				echo "-d" $STAND_PATH
+				echo "-s" $SOIL_PATH
+				echo "-t" $TOPO_PATH
+				echo "-m" $MET_PATH
+				echo "-k" $CO2_PATH
+				echo "-c" $SETTING_PATH
+				echo "-o" $OUTPUT_PATH
+				echo "*****************************"
 done
 done
 done
