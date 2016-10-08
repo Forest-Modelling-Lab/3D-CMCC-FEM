@@ -399,6 +399,10 @@ fi
 #########################################################################################################
 #########################################################################################################
 
+# compute elapsed time
+START=`date +%s%N`
+
+
 echo 'running for' "$site"
 
 function single_run {
@@ -432,7 +436,7 @@ function single_run {
 	cd ..
 
 	#add paths and arguments to executable and run
-	#./3D_CMCC_Forest_Model -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH 
+	./3D_CMCC_Forest_Model -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH 
 	
 	#log arguments paths
 	echo "*****************************"
@@ -515,10 +519,15 @@ else
 	multi_run
 fi
 
-
 #delete copied executable from current directory
 echo "...removing executable from project directory"
 rm 3D_CMCC_Forest_Model
+
+#log elapsed time
+END=`date +%s%N`
+ELAPSED=`echo "scale=2; ($END - $START) / 1000000000" | bc`
+
+echo "elapsed time in bash script = $ELAPSED secs"
 
 echo "script finished!"
 
