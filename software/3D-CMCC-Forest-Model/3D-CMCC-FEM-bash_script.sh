@@ -1,16 +1,19 @@
 #!/bin/bash
-# Developed by Alessio Collalti (alessio.collalti@cmcc.it)
-# corcazzo...modified by Alessio Ribeca (alessio.ribeca@cmcc.it)
+# Developed by:
+# Alessio Collalti (alessio.collalti@cmcc.it)
+# Alessio Ribeca (alessio.ribeca@cmcc.it)
 # starting date: 5 October 2016
+
+#note: it currently works for just one case or all
 
 
 CMCC="3D_CMCC_Forest_Model"
 VERSION="v.5.2.2"
 PROJECT="ISIMIP"
 
-echo "**************************************"
-echo "$CMCC $VERSION script for $PROJECT run"
-echo "**************************************"
+echo "*******************************************************"
+echo "* $CMCC $VERSION script for $PROJECT runs *"
+echo "*******************************************************"
 
 executable="3D_CMCC_Forest_Model"
 
@@ -436,7 +439,7 @@ function single_run {
 	cd ..
 
 	#add paths and arguments to executable and run
-	./3D_CMCC_Forest_Model -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH 
+	./$executable -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH 
 	
 	#log arguments paths
 	echo "*****************************"
@@ -489,7 +492,7 @@ function multi_run {
 					cd ..
 				
 					#add paths and arguments to executable and run
-					./3D_CMCC_Forest_Model -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH 
+					./$executable -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH 
 					
 					#log arguments paths
 					echo "*****************************"
