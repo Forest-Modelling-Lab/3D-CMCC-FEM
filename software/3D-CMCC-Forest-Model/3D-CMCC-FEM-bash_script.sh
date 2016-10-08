@@ -160,7 +160,7 @@ cd input
 	
 echo "$site"
 
-cd "$site"/"ISIMIP" && ls | grep "stand"
+cd "$site"/"ISIMIP" && ls *.txt | grep "stand"
 
 echo "which is the starting year for "$site" to simulate?"
 	
