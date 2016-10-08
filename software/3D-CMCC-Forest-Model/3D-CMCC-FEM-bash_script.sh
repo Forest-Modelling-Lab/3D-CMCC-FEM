@@ -7,7 +7,7 @@
 #note: it currently works for just one case or all
 
 
-CMCC="3D_CMCC_Forest_Model"
+CMCC="3D-CMCC-CNR FEM"
 VERSION="v.5.2.2"
 PROJECT="ISIMIP"
 
@@ -55,7 +55,7 @@ today=`date +%Y-%m-%d`
 #Debug or Release run
 echo 'available model run'
 for (( i = 0 ; i < ${#model_run[@]} ; ++i )) ; do
-      echo -"${model_run[i]}"
+	echo -"${model_run[i]}"
 done
 
 echo "which model version do you want to use?"
@@ -95,11 +95,11 @@ if [ "$run" == "${model_run[0]}" ] ; then
 			cd ..
 			
 		else
-			echo "$executable executable doesn't exist"
+			echo "$executable executable doesn't exist (exit)"
 			exit
 		fi	
 	else
-		echo "Debug folder doens't exist"
+		echo "Debug folder doesn't exist (exit)"
 		exit
 	fi
 #search in release folder debug executable
@@ -116,20 +116,29 @@ else
 			
 			cd..
 		else
-			echo "$executable executable doesn't exist"
+			echo "$executable executable doesn't exist (exit)"
 			exit
 		fi	
 	else
-		echo "Release folder doens't exist"
+		echo "Release folder doesn't exist (exit)"
 		exit
 	fi
 fi
+
+#go to executable directory
+cd $folder_run
+
+#copy to previous directory executable
+cp $executable ../
+
+#back to previous directory
+cd ..
 
 #########################################################################################################
 #log available sites
 echo 'available sites:'
 for (( i = 0 ; i < ${#SITEs[@]} ; ++i )) ; do
-      echo -"${SITEs[i]}"
+	echo -"${SITEs[i]}"
 done
 
 echo "which site do you want to simulate?"
@@ -158,9 +167,12 @@ done
 
 cd input 
 	
-echo "$site"
+echo "$site available stand initialization year(s):"
 
-cd "$site"/"ISIMIP" && ls *.txt | grep "stand"
+cd "$site"/"ISIMIP"
+
+#find among *.txt file occurrence for "stand" and "year"
+find *.txt | ( grep "stand" | sed -e s/[^0-9]//g )
 
 echo "which is the starting year for "$site" to simulate?"
 	
@@ -327,7 +339,7 @@ fi
 #log available Management
 echo 'available management'
 for (( i = 0 ; i < ${#MANs[@]} ; ++i )) ; do
-      echo -"${MANs[i]}"
+	echo -"${MANs[i]}"
 done
 
 echo "Management on or off for '$site' and '$gcm' and '$rcp'?"
@@ -431,19 +443,12 @@ function single_run {
 	SOIL_PATH=ISIMIP/"$gcm"/"$site"_soil_"$rcp"_"$PROJECT".txt
 	CO2_PATH=ISIMIP/CO2/CO2_"$rcp"_1950_2099.txt
 
-	#goes to executable folder
-	cd $folder_run
-
-	cp 3D_CMCC_Forest_Model ../
-
-	cd ..
-
 	#add paths and arguments to executable and run
 	./$executable -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH 
 	
 	#log arguments paths
 	echo "*****************************"
-	echo "$CMCC $VERSION-$PROJECT arguments"
+	echo "$CMCC $VERSION-$PROJECT arguments:"
 	echo "-i" $SITE_PATH
 	echo "-p" $PARAMETERIZATION_PATH
 	echo "-d" $STAND_PATH
@@ -484,19 +489,12 @@ function multi_run {
 					SOIL_PATH=ISIMIP/"${GCMs[$c]}"/"$site"_soil_"${RCPs[$d]}"_"$PROJECT".txt
 					CO2_PATH=ISIMIP/CO2/CO2_"${RCPs[$d]}"_1950_2099.txt
 				
-					#goes to executable folder
-					cd $folder_run
-				
-					cp 3D_CMCC_Forest_Model ../
-				
-					cd ..
-				
 					#add paths and arguments to executable and run
 					./$executable -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH 
 					
 					#log arguments paths
 					echo "*****************************"
-					echo "$CMCC $VERSION-$PROJECT arguments"
+					echo "$CMCC $VERSION-$PROJECT arguments:"
 					echo "-i" $SITE_PATH
 					echo "-p" $PARAMETERIZATION_PATH
 					echo "-d" $STAND_PATH
@@ -524,7 +522,7 @@ fi
 
 #delete copied executable from current directory
 echo "...removing executable from project directory"
-rm 3D_CMCC_Forest_Model
+rm $executable
 
 #log elapsed time
 END=`date +%s%N`
