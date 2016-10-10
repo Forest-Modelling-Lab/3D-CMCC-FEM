@@ -66,8 +66,8 @@ SAP_WRES    0.05              //Sapwood-Reserve biomass ratio used if no Wres da
 STEMCONST_P 0.292             //0.06552  E. Cienciala et al., 2006 For P. sylvestrisM; from Yuste et al 2005 0.1227, 0.084 from xiao and Ceulemans
 STEMPOWER_P 2.0087            //2.50626 E. Cienciala et al., 2006 For P. sylvestris; from Yuste et al 2005 2.3272, 1.985 from xiao and Ceulemans
 CRA 56                        //for Picea abies Seidl et al., 2012
-CRB 0.03271                   //for Picea abies (0.0658)from Pommerening et al., 2011, Deleuze and Houllier 1995
-CRC 2                         //for Picea abies (5.5289)from Pommerening et al., 2011, Deleuze and Houllier 1995
+CRB 0.0658 //0.03271                   //for Picea abies (0.0658)from Pommerening et al., 2011, Deleuze and Houllier 1995
+CRC 5.5289 //2                         //for Picea abies (5.5289)from Pommerening et al., 2011, Deleuze and Houllier 1995
 HDMAX   0.95                  //Height to Base diameter ratio MAX  for Picea abies Seidl et al., 2012
 HDMIN   0.47                  //Height to Base diameter ratio MIN  for Picea abies Seidl et al., 2012
 MAXSEED -9999       //TO BE CHECKED           //numero massimo semi prodotti dalla pianta
