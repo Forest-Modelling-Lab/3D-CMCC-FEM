@@ -177,15 +177,15 @@ cd input
 	
 echo "$site available stand initialization year(s):"
 
-	#check if is an ISIMIP project
-if [ -x "$PROJECT" ] ; then
+cd "$site"
 
-	cd "$site"/"ISIMIP"
-else
-	cd "$site"
+#check if is an ISIMIP project
+if [ -d "$PROJECT" ] ; then
+
+	cd "$PROJECT"
 fi
 
-#find among *.txt file occurrence for "stand" and "year"
+#find among *.txt files occurrence for "stand" and "year"
 find *.txt | ( grep "stand" | sed -e s/[^0-9]//g )
 
 echo "which is the starting year for "$site" to simulate?"
@@ -195,14 +195,16 @@ read year
 echo "starting year for '$site' = '$year'"
 
 #check if is an ISIMIP project
-if [ -x "$PROJECT" ] ; then
+#if [ -d "$PROJECT" ] ; then
 	
 	#back to main directory
-	cd ../../..
-else
-	cd ../..
-fi
+	#cd ../../..
+	#echo cazzo
+#else
+	#cd ../..
+#fi
 
+cd ../../..
 
 #########################################################################################################
 #log available CLIMATEs
@@ -438,8 +440,8 @@ fi
 # compute elapsed time
 START=`date +%s%N`
 
-
 echo 'running for' "$site"
+
 
 function single_run {
 	
