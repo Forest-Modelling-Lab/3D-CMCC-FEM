@@ -135,8 +135,16 @@ cp $executable ../
 cd ..
 
 #########################################################################################################
+#list of available folder sites
+cd input
+
+#list
+ls -d *
+
+cd ..
+#########################################################################################################
 #log available sites
-echo 'available sites:'
+echo 'available sites to be simulated:'
 for (( i = 0 ; i < ${#SITEs[@]} ; ++i )) ; do
 	echo -"${SITEs[i]}"
 done
@@ -169,7 +177,13 @@ cd input
 	
 echo "$site available stand initialization year(s):"
 
-cd "$site"/"ISIMIP"
+	#check if is an ISIMIP project
+if [ -x "$PROJECT" ] ; then
+
+	cd "$site"/"ISIMIP"
+else
+	cd "$site"
+fi
 
 #find among *.txt file occurrence for "stand" and "year"
 find *.txt | ( grep "stand" | sed -e s/[^0-9]//g )
@@ -180,8 +194,15 @@ read year
 
 echo "starting year for '$site' = '$year'"
 
-#back to main directory
-cd ../../..
+#check if is an ISIMIP project
+if [ -x "$PROJECT" ] ; then
+	
+	#back to main directory
+	cd ../../..
+else
+	cd ../..
+fi
+
 
 #########################################################################################################
 #log available CLIMATEs
