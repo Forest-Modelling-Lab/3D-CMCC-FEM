@@ -14,7 +14,6 @@ C_SRCS += \
 ../src/allometry.c \
 ../src/aut_respiration.c \
 ../src/biomass.c \
-../src/canopy_cover.c \
 ../src/canopy_evapotranspiration.c \
 ../src/canopy_interception.c \
 ../src/canopy_net_radiation.c \
@@ -25,7 +24,6 @@ C_SRCS += \
 ../src/cell_model.c \
 ../src/check_balance.c \
 ../src/common.c \
-../src/crowding-competition.c \
 ../src/dendrometry.c \
 ../src/establishment.c \
 ../src/evapotranspiration.c \
@@ -83,7 +81,6 @@ OBJS += \
 ./src/allometry.o \
 ./src/aut_respiration.o \
 ./src/biomass.o \
-./src/canopy_cover.o \
 ./src/canopy_evapotranspiration.o \
 ./src/canopy_interception.o \
 ./src/canopy_net_radiation.o \
@@ -94,7 +91,6 @@ OBJS += \
 ./src/cell_model.o \
 ./src/check_balance.o \
 ./src/common.o \
-./src/crowding-competition.o \
 ./src/dendrometry.o \
 ./src/establishment.o \
 ./src/evapotranspiration.o \
@@ -152,7 +148,6 @@ C_DEPS += \
 ./src/allometry.d \
 ./src/aut_respiration.d \
 ./src/biomass.d \
-./src/canopy_cover.d \
 ./src/canopy_evapotranspiration.d \
 ./src/canopy_interception.d \
 ./src/canopy_net_radiation.d \
@@ -163,7 +158,6 @@ C_DEPS += \
 ./src/cell_model.d \
 ./src/check_balance.d \
 ./src/common.d \
-./src/crowding-competition.d \
 ./src/dendrometry.d \
 ./src/establishment.d \
 ./src/evapotranspiration.d \
