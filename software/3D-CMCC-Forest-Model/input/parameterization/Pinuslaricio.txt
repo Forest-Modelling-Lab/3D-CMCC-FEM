@@ -30,17 +30,17 @@ GROWTHTMIN                    //Minimum temperature for growth
 GROWTHTMAX                    //Maximum temperature for growth 
 GROWTHTOPT                    //Optimum temperature for growth 
 GROWTHSTART                   //average temperature for starting growth in °C 
-MINDAYLENGTH    0             //minimum day length for deciduous
+MINDAYLENGTH    -9999         //minimum day length for deciduous
 SWPOPEN                       //Soil water potential open
 SWPCLOSE                      //Soil water potential close
-SWCONST                       //Costant in Soil Water modifier vs Moist Ratio (NOT USED)
-SWPOWER                       //Power in Soil Water modifier vs Moist Ratio (NOT USED)
+SWCONST     -9999             //Costant in Soil Water modifier vs Moist Ratio (NOT USED)
+SWPOWER     -9999             //Power in Soil Water modifier vs Moist Ratio (NOT USED)
 OMEGA_CTEM                    //ALLOCATION PARAMETER control the sensitivity of allocation to changes in water and light availability 
 S0CTEM                        //PARAMETER CONTROLLING ALLOCATION TO STEM/MINIMUM RATIO TO C TO STEM 
 R0CTEM                        //PARAMETER CONTROLLING ALLOCATION TO ROOT/MINIMUM RATIO TO C TO ROOTS 
 F0CTEM                        //PARAMETER CONTROLLING ALLOCATION TO FOLIAGE/MINIMUM RATIO TO C TO STEM
-MIN_R0CTEM                    //MINIMUM RATE TO ROOT AT THE FIRST YEAR AFTER COPPICING (NOT USED)
-MAX_S0CTEM                    //MAXIMUM RATE TO STEM AT THE FIRST YEAR AFTER COPPICING (NOT USED)
+MIN_R0CTEM        -9999       //MINIMUM RATE TO ROOT AT THE FIRST YEAR AFTER COPPICING (NOT USED)
+MAX_S0CTEM        -9999       //MAXIMUM RATE TO STEM AT THE FIRST YEAR AFTER COPPICING (NOT USED)
 YEARS_FOR_CONVERSION  -9999   //years from coppicing to consider tree as a timber (NOT USED)
 FRUIT_PERC                    //fraction of NPP allocated for reproduction 
 CONES_LIFE_SPAN               //Life span for cones (yrs)
@@ -75,9 +75,9 @@ MASTSEED                      //ricorrenza anni di pasciona
 WEIGHTSEED                    //peso frutto in g 
 SEXAGE                        //Age at Sexual Maturity 
 GERMCAPACITY                  //Geminability 
-ROTATION                      //Forest Rotation for harvesting (NOT USED)
-THINNING                      //Thinning regime (NOT USED)
-THINNING_REGIME               //Thinning regime (0 = above, 1 = below) (NOT USED)
+ROTATION                      //Forest Rotation for harvesting 
+THINNING                      //Thinning regime
+THINNING_REGIME               //Thinning regime (0 = above, 1 = below) 
 MINAGEMANAG -9999             //Minimum age for Managment (NOT USED)
 MINDBHMANAG -9999             //Minimum DBH for Managment (NOT USED)
 AV_SHOOT    -9999             //average number of shoot after cut (NOT USED)
