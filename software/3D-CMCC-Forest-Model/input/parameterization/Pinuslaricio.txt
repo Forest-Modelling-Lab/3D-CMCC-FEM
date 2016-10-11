@@ -1,5 +1,5 @@
 ﻿//Pinus laricio parameterization file
-LIGHT_TOL                     //4 = very shade intolerant 3 = shade intolerant 2 = shade tolerant 1 = very shade tolerant
+LIGHT_TOL        4            //4 = very shade intolerant 3 = shade intolerant 2 = shade tolerant 1 = very shade tolerant
 PHENOLOGY                     //PHENOLOGY 0.1 = deciduous broadleaf, 0.2 = deciduous needle leaf, 1.1 = broad leaf evergreen, 1.2 = needle leaf evergreen 
 ALPHA                         //Canopy quantum efficiency (molC/molPAR) 
 EPSILONgCMJ                   //Light Use Efficiency (gC/molPAR)(used if ALPHA is not available)  
