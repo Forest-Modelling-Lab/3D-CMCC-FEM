@@ -1,0 +1,83 @@
+﻿//Pinus laricio parameterization file
+LIGHT_TOL                     //4 = very shade intolerant 3 = shade intolerant 2 = shade tolerant 1 = very shade tolerant
+PHENOLOGY                     //PHENOLOGY 0.1 = deciduous broadleaf, 0.2 = deciduous needle leaf, 1.1 = broad leaf evergreen, 1.2 = needle leaf evergreen 
+ALPHA                         //Canopy quantum efficiency (molC/molPAR) 
+EPSILONgCMJ                   //Light Use Efficiency (gC/molPAR)(used if ALPHA is not available)  
+K                             //Extinction coefficient for absorption of PAR by canopy 
+ALBEDO                        //canopy albedo
+GAMMA_LIGHT -9999             //Light parameter for light modifier(NOT USED)
+INT_COEFF                     //precip interception coefficient 
+SLA_AVG                       //Average Specific Leaf Area m^2/KgC sunlit/shaded leaves
+SLA_RATIO                     //(DIM) ratio of shaded to sunlit projected SLA 
+LAI_RATIO                     //(DIM) all-sided to projected leaf area ratio for
+FRACBB0                       //Branch and Bark fraction at age 0 
+FRACBB1                       //Branch and Bark fraction for mature stands 
+TBB                           //Age at which fracBB = (FRACBB0 + FRACBB1 )/ 2
+RHOMIN                        //Minimum Basic Density for young Trees t/m^3 
+RHOMAX                        //Maximum Basic Density for young Trees t/m^3
+TRHO                          //Age at which rho = (RHOMIN + RHOMAX )/2
+COEFFCOND                     //Define stomatal responsee to VPD in mbar
+BLCOND                        //Canopy Boundary Layer conductance 
+MAXCOND                       //Maximum Stomatal Conductance in m/sec 
+CUTCOND                       //Cuticul conductance in m/sec 
+MAXAGE                        //Determines rate of "physiological decline" of forest 
+RAGE                          //Relative Age to give fAGE = 0.5 
+NAGE                          //Power of relative Age in function 
+MAXAGE_S    -9999             //Determines rate of "physiological decline" of forest 
+RAGE_S  -9999                 //Relative Age to give fAGE = 0.5
+NAGE_S  -9999                 //Power of relative Age in function for Age
+GROWTHTMIN                    //Minimum temperature for growth 
+GROWTHTMAX                    //Maximum temperature for growth 
+GROWTHTOPT                    //Optimum temperature for growth 
+GROWTHSTART                   //average temperature for starting growth in °C 
+MINDAYLENGTH    0             //minimum day length for deciduous
+SWPOPEN                       //Soil water potential open
+SWPCLOSE                      //Soil water potential close
+SWCONST                       //Costant in Soil Water modifier vs Moist Ratio (NOT USED)
+SWPOWER                       //Power in Soil Water modifier vs Moist Ratio (NOT USED)
+OMEGA_CTEM                    //ALLOCATION PARAMETER control the sensitivity of allocation to changes in water and light availability 
+S0CTEM                        //PARAMETER CONTROLLING ALLOCATION TO STEM/MINIMUM RATIO TO C TO STEM 
+R0CTEM                        //PARAMETER CONTROLLING ALLOCATION TO ROOT/MINIMUM RATIO TO C TO ROOTS 
+F0CTEM                        //PARAMETER CONTROLLING ALLOCATION TO FOLIAGE/MINIMUM RATIO TO C TO STEM
+MIN_R0CTEM                    //MINIMUM RATE TO ROOT AT THE FIRST YEAR AFTER COPPICING (NOT USED)
+MAX_S0CTEM                    //MAXIMUM RATE TO STEM AT THE FIRST YEAR AFTER COPPICING (NOT USED)
+YEARS_FOR_CONVERSION  -9999   //years from coppicing to consider tree as a timber (NOT USED)
+FRUIT_PERC                    //fraction of NPP allocated for reproduction 
+CONES_LIFE_SPAN               //Life span for cones (yrs)
+FINE_ROOT_LEAF                //allocation new fine root C:new leaf (ratio) 
+STEM_LEAF                     //allocation new stem C:new leaf (ratio) 
+COARSE_ROOT_STEM              //allocation new coarse root C:new stem (ratio)
+LIVE_TOTAL_WOOD               //new live C:new total wood (ratio) 
+CN_LEAVES                     //CN of leaves (kgC/kgN) 
+CN_FALLING_LEAVES             //CN of leaf litter (kgC/kgN) 
+CN_FINE_ROOTS                 //CN of fine roots (kgC/kgN)
+CN_LIVE_WOODS                 //CN of live woods (kgC/kgN)
+CN_DEAD_WOODS                 //CN of dead woods (kgC/kgN)
+BUD_BURST                     //days of bud burst at the beginning of growing season (only for deciduous)
+LEAF_FALL_FRAC_GROWING        //proportions of the growing season of leaf fall 
+LEAF_FINEROOT_TURNOVER        //Average YEARLY leaves and fine root turnover rate 
+LIVE_WOOD_TURNOVER            //Annual yearly live wood turnover rate 
+DBHDCMAX                      //maximum dbh crown diameter relationship when minimum density
+DBHDCMIN                      //minimum dbh crown diameter relationship when maximum density
+SAP_A                         //a coefficient for sapwood
+SAP_B                         //b coefficient for sapwood
+SAP_LEAF                      //sapwood_max leaf area ratio in pipe model 
+SAP_WRES                      //Sapwood-Reserve biomass ratio used if no Wres data are available 0.11 for deciduous 0.05 for evergreen
+STEMCONST_P                   //constant in the stem mass vs. diameter relationship
+STEMPOWER_P                   //power in the stem mass vs. diameter relationship
+CRA                           //Chapman-Richards maximum height
+CRB                           //Chapman_Richards b parameter
+CRC                           //Chapman_Richards c parameter
+HDMAX                         //Height to Base diameter ratio MAX
+HDMIN                         //Height to Base diameter ratio MIN
+MAXSEED                       //numero massimo semi prodotti dalla pianta
+MASTSEED                      //ricorrenza anni di pasciona
+WEIGHTSEED                    //peso frutto in g 
+SEXAGE                        //Age at Sexual Maturity 
+GERMCAPACITY                  //Geminability 
+ROTATION                      //Forest Rotation for harvesting (NOT USED)
+THINNING                      //Thinning regime (NOT USED)
+THINNING_REGIME               //Thinning regime (0 = above, 1 = below) (NOT USED)
+MINAGEMANAG -9999             //Minimum age for Managment (NOT USED)
+MINDBHMANAG -9999             //Minimum DBH for Managment (NOT USED)
+AV_SHOOT    -9999             //average number of shoot after cut (NOT USED)

@@ -183,10 +183,16 @@ cd "$site"
 if [ -d "$PROJECT" ] ; then
 
 	cd "$PROJECT"
-fi
+	
+	#find among *.txt files occurrence for "stand" and "year"
+	find *.txt | ( grep "stand" | sed -e s/[^0-9]//g )
+	cd ../../..
 
-#find among *.txt files occurrence for "stand" and "year"
-find *.txt | ( grep "stand" | sed -e s/[^0-9]//g )
+else
+	#find among *.txt files occurrence for "stand" and "year"
+	find *.txt | ( grep "stand" | sed -e s/[^0-9]//g )
+	cd ../..
+fi
 
 echo "which is the starting year for "$site" to simulate?"
 	
@@ -194,17 +200,6 @@ read year
 
 echo "starting year for '$site' = '$year'"
 
-#check if is an ISIMIP project
-#if [ -d "$PROJECT" ] ; then
-	
-	#back to main directory
-	#cd ../../..
-	#echo cazzo
-#else
-	#cd ../..
-#fi
-
-cd ../../..
 
 #########################################################################################################
 #log available CLIMATEs

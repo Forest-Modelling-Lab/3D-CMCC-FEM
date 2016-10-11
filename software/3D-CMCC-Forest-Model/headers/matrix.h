@@ -79,14 +79,14 @@ enum {
 	LEAF_FALL_FRAC_GROWING,     /* proportions of the growing season of leaf fall */
 	LEAF_FINEROOT_TURNOVER,     /* Average yearly leaves and fine root turnover rate */
 	LIVE_WOOD_TURNOVER,         /* Average yearly live wood turnover rate */
-	DBHDCMAX,                   /* Low Density */
-	DBHDCMIN,                   /* High Density */
+	DBHDCMAX,                   /* maximum dbh crown diameter relationship when minimum density */
+	DBHDCMIN,                   /* minimum dbh crown diameter relationship when maximum density */
 	SAP_A,                      /* a coefficient for sapwood */
 	SAP_B,                      /* b coefficient for sapwood */
 	SAP_LEAF,                   /* sapwood_max leaf area ratio in pipe model */
 	SAP_WRES,                   /* Sapwood-Reserve biomass ratio used if no Wres data are available */
-	STEMCONST_P,
-	STEMPOWER_P,
+	STEMCONST_P,                /* constant in the stem mass vs. diameter relationship */
+	STEMPOWER_P,                /* power in the stem mass vs. diameter relationship */
 	CRA,                        /* Chapman-Richards maximum height */
 	CRB,                        /* Chapman_Richards b parameter */
 	CRC,                        /* Chapman_Richards c parameter */
