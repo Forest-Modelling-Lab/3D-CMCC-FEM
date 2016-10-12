@@ -7,7 +7,7 @@ K   0.54                      //Extinction coefficient for absorption of PAR by 
 ALBEDO  0.095                 //averaged for P.abies from Breuer et al., 2003
 GAMMA_LIGHT 0.031             //Light parameter for light modifier 0.031 see Bagnara et al., 
 INT_COEFF  0.036              //precip interception coefficient for Picea abies (see Pietsch)
-SLA_AVG 10.2                  //Average Specific Leaf Area m^2/KgC sunlit/shaded leaves for Picea abies (see Pietsch)
+SLA_AVG 10.2                  //Average Specific Leaf Area m^2/KgC sunlit/shaded leaves for Picea abies (see Pietsch), (5.9) see Johansson, T. 1999
 SLA_RATIO   2                 //(DIM) ratio of shaded to sunlit projected SLA for Picea abies (see Pietsch)
 LAI_RATIO   2.6               //(DIM) all-sided to projected leaf area ratio from Mollicone et al., 2002
 FRACBB0 0.30                  //Branch and Bark fraction at age 0 for P. sylvestris, from Xenakis et al., 2008, 0.29 deducted for P. sylvestris from Yuste et al., 2005, 0.29 from Lehtonen et al., 2004 For Eco Manag, 0.71 from xiao and Ceulemans
@@ -65,9 +65,9 @@ SAP_LEAF    2600              //sapwood_max leaf area ratio in pipe model for Pi
 SAP_WRES    0.05              //Sapwood-Reserve biomass ratio used if no Wres data are available 0.11 for deciduous 0.05 for evergreen see Schwalm and Ek, 2004 Ecological Modelling
 STEMCONST_P 0.292             //0.06552  E. Cienciala et al., 2006 For P. sylvestrisM; from Yuste et al 2005 0.1227, 0.084 from xiao and Ceulemans
 STEMPOWER_P 2.0087            //2.50626 E. Cienciala et al., 2006 For P. sylvestris; from Yuste et al 2005 2.3272, 1.985 from xiao and Ceulemans
-CRA 56                        //for Picea abies Seidl et al., 2012
-CRB 0.0658 //0.03271                   //for Picea abies (0.0658)from Pommerening et al., 2011, Deleuze and Houllier 1995
-CRC 5.5289 //2                         //for Picea abies (5.5289)from Pommerening et al., 2011, Deleuze and Houllier 1995
+CRA 56                        //for Picea abies Seidl et al., 2012, 
+CRB 0.0658                    //for Picea abies (0.0658)from Pommerening et al., 2011, 
+CRC 5.5289                    //for Picea abies (5.5289)from Pommerening et al., 2011,
 HDMAX   0.95                  //Height to Base diameter ratio MAX  for Picea abies Seidl et al., 2012
 HDMIN   0.47                  //Height to Base diameter ratio MIN  for Picea abies Seidl et al., 2012
 MAXSEED -9999       //TO BE CHECKED           //numero massimo semi prodotti dalla pianta
