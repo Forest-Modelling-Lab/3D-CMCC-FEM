@@ -7,15 +7,23 @@
 #note: it currently works for just one case or all
 
 
-CMCC="3D-CMCC-CNR FEM"
+MODEL="3D-CMCC-CNR FEM"
 VERSION="v.5.2.2"
 PROJECT="ISIMIP"
 
 echo "*******************************************************"
-echo "* $CMCC $VERSION script for $PROJECT runs *"
+echo "* $MODEL $VERSION script for $PROJECT runs *"
 echo "*******************************************************"
 
 executable="3D_CMCC_Forest_Model"
+
+if [[ "$OSTYPE" == "linux-gnu" ]]; then
+	#if linux type
+	launch="./"
+elif [[ "$OSTYPE" == "cygwin" ]]; then
+	#if cygwin type
+	launch="bash -o igncr"
+fi
 
 #input paths
 SITE_PATH=input/
@@ -187,8 +195,8 @@ if [ -d "$PROJECT" ] ; then
 	#find among *.txt files occurrence for "stand" and "year"
 	find *.txt | ( grep "stand" | sed -e s/[^0-9]//g )
 	cd ../../..
-
 else
+	
 	#find among *.txt files occurrence for "stand" and "year"
 	find *.txt | ( grep "stand" | sed -e s/[^0-9]//g )
 	cd ../..
@@ -462,11 +470,11 @@ function single_run {
 	CO2_PATH=ISIMIP/CO2/CO2_"$rcp"_1950_2099.txt
 
 	#add paths and arguments to executable and run
-	./$executable -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH 
+	$launch$executable -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH 
 	
 	#log arguments paths
 	echo "*****************************"
-	echo "$CMCC $VERSION-$PROJECT arguments:"
+	echo "$MODEL $VERSION-$PROJECT arguments:"
 	echo "-i" $SITE_PATH
 	echo "-p" $PARAMETERIZATION_PATH
 	echo "-d" $STAND_PATH
@@ -508,11 +516,11 @@ function multi_run {
 					CO2_PATH=ISIMIP/CO2/CO2_"${RCPs[$d]}"_1950_2099.txt
 				
 					#add paths and arguments to executable and run
-					./$executable -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH 
+					$launch$executable -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH 
 					
 					#log arguments paths
 					echo "*****************************"
-					echo "$CMCC $VERSION-$PROJECT arguments:"
+					echo "$MODEL $VERSION-$PROJECT arguments:"
 					echo "-i" $SITE_PATH
 					echo "-p" $PARAMETERIZATION_PATH
 					echo "-d" $STAND_PATH
