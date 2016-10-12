@@ -93,6 +93,7 @@ void dendrometry(cell_t *const c, const int height, const int dbh, const int age
 	 * or more regionally applied
 	 *-CRB represents exponential decay parameter
 	 *-CRC represents shape parameters
+	 * for references see also: M. Sharma, J. Parton, Forest Ecology and Management 249 (2007) 187–198
 	 */
 
 	logger(g_debug_log, "\n**Tree Height from CC function**\n");
