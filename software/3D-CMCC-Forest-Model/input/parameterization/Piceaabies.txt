@@ -13,8 +13,8 @@ LAI_RATIO   2.6               //(DIM) all-sided to projected leaf area ratio fro
 FRACBB0 0.30                  //Branch and Bark fraction at age 0 for P. sylvestris, from Xenakis et al., 2008, 0.29 deducted for P. sylvestris from Yuste et al., 2005, 0.29 from Lehtonen et al., 2004 For Eco Manag, 0.71 from xiao and Ceulemans
 FRACBB1 0.1                   //Branch and Bark fraction for mature stands for P. sylvestris, from Xenakis et al., 2008, 0.29 deducted for P. sylvestris from Yuste et al., 2005, 0.29 from Lehtonen et al., 2004 For Eco Manag, 0.18 from Jenssen et al 1999, 0.77 from xiao and Ceulemans
 TBB 10                        //Age at which fracBB = (FRACBB0 + FRACBB1 )/ 2 for P. sylvestris, from Xenakis et al., 2008
-RHOMIN  0.43                  //Minimum Basic Density for young Trees t/m^3 for Picea abies Seidl et al., 2012
-RHOMAX  0.43                  //Maximum Basic Density for young Trees t/m^3 for Picea abies Seidl et al., 2012
+RHOMIN  0.43                  //Minimum Basic Density for young Trees t/m^3 for Picea abies Seidl et al., 2012, 0.19 Bossel 1996
+RHOMAX  0.43                  //Maximum Basic Density for young Trees t/m^3 for Picea abies Seidl et al., 20120, 0.19 Bossel 1996
 TRHO    4                     //Age at which rho = (RHOMIN + RHOMAX )/2
 COEFFCOND   0.06              //Define stomatal responsee to VPD in mbar for Picea abies
 BLCOND  0.009                 //Canopy Boundary Layer conductance  for Picea abies 
@@ -26,13 +26,13 @@ NAGE    4                     //Power of relative Age in function for Age for Pi
 MAXAGE_S    -9999             //Determines rate of "physiological decline" of forest 
 RAGE_S  0.75                  //Relative Age to give fAGE = 0.5
 NAGE_S  4                     //Power of relative Age in function for Age
-GROWTHTMIN  0                 //Minimum temperature for growth 0 for Picea abies from p.c. Seidl, 
+GROWTHTMIN  0                 //Minimum temperature for growth 0 for Picea abies from p.c. Seidl, -4 from Bossel 1996
 GROWTHTMAX  30                //Maximum temperature for growth 35 for Picea abies from p.c. Seidl 
-GROWTHTOPT  15                //Optimum temperature for growth 17.5 for Picea abies from p.c. Seidl 
+GROWTHTOPT  15                //Optimum temperature for growth 17.5 for Picea abies from p.c. Seidl, 18 from Bossel 1996
 GROWTHSTART 200               //average temperature for starting growth in °C 
 MINDAYLENGTH    0             //minimum day length for deciduous
-SWPOPEN -0.5                  //in KPa for P. sylvestris from Pietsch et al 2005
-SWPCLOSE    -2.5              //in KPa  for P. sylvestris from Pietsch et al 2005
+SWPOPEN -0.5                  //in KPa for P. abies from Pietsch et al 2005
+SWPCLOSE    -2.5              //in KPa for P. abies from Pietsch et al 2005
 SWCONST 1                     //Costant in Soil Water modifier vs Moist Ratio
 SWPOWER 5                     //Power in Soil Water modifier vs Moist Ratio
 OMEGA_CTEM  0.5               //ALLOCATION PARAMETER control the sensitivity of allocation to changes in water and light availability for Needlleleaf deciduous from Arora et al 2005
