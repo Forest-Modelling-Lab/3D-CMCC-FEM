@@ -63,6 +63,7 @@ enum {
 #define ln2              0.693147181      /* logarithm constant */
 #define eps                     1e-6      /* differences in comparison */
 #define e                 2.71828183      /* nepero/eulero constant */
+#define DBH_ref                  1.3      /* reference DBH value */
 #define GRPERC                   0.3      /* (DIM) percentage of growth resp per unit of C grown see BIOME, 0.25 for LPJ */
 #define refCO2CONC               380 /*281 */     /* ppmv reference co2 concentration see Veroustraete 1994, 2002 */
 #define O2CONC                  20.9      /* % of O2 concentration see Verstraeten 1994, 2002 */
