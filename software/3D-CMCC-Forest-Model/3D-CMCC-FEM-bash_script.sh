@@ -11,9 +11,9 @@ MODEL="3D-CMCC-CNR FEM"
 VERSION="v.5.2.2"
 PROJECT="ISIMIP"
 
-echo "*******************************************************"
-echo "* $MODEL $VERSION script for $PROJECT runs *"
-echo "*******************************************************"
+echo "***************************************************************"
+echo "* $MODEL $VERSION script for $PROJECT runs in "$OSTYPE" *"
+echo "***************************************************************"
 
 executable="3D_CMCC_Forest_Model"
 
@@ -208,7 +208,6 @@ read year
 
 echo "starting year for '$site' = '$year'"
 
-
 #########################################################################################################
 #log available CLIMATEs
 echo 'available CLIMATEs:'
@@ -295,8 +294,8 @@ if [ "$climate" == "${CLIMATEs[1]}" ] ; then
 			echo -"${GCMs[i]}"
 	done
 
-	echo "which GCMs do you want to use for '$site'?"		
-		
+	echo "which GCMs do you want to use for '$site'?"
+				
 	#ask which GCMs use
 	match=no
 	while :
@@ -487,7 +486,7 @@ function single_run {
 	echo "*****************************"
 }
 
-function multi_run {									
+function multi_run {
 	for (( b = 0 ; b < $clim_counter ; ++b )) ; do
 		for (( c = 0 ; c < $gcm_counter ; ++c )) ; do
 			for (( d = 0 ; d < $rcp_counter ; ++d )) ; do
@@ -516,7 +515,7 @@ function multi_run {
 					CO2_PATH=ISIMIP/CO2/CO2_"${RCPs[$d]}"_1950_2099.txt
 				
 					#add paths and arguments to executable and run
-					$launch$executable -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH 
+					#$launch$executable -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH 
 					
 					#log arguments paths
 					echo "*****************************"
@@ -551,10 +550,12 @@ echo "...removing executable from project directory"
 rm $executable
 
 #log elapsed time
+
+if [[ "$OSTYPE" == "linux-gnu" ]]; then
 END=`date +%s%N`
 ELAPSED=`echo "scale=2; ($END - $START) / 1000000000" | bc`
-
 echo "elapsed time in bash script = $ELAPSED secs"
+fi
 
 echo "script finished!"
 
