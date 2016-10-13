@@ -84,7 +84,6 @@ void dendrometry(cell_t *const c, const int height, const int dbh, const int age
 	/* compute tree Height */
 	/* using Chapman_Richards Function */
 	/*
-	 * the terms 1.3 in C-R Function is breast height (1.3 m)
 	 * CRA, CRB, CRC are species-specific regression coefficients
 	 *-CRA coefficient is the asymptotic maximum height this coefficient represents the theoretic maximum height obtainable
 	 * for a given stand or plot, this parameter could be used to represent maximum tree height.
@@ -98,8 +97,9 @@ void dendrometry(cell_t *const c, const int height, const int dbh, const int age
 
 	logger(g_debug_log, "\n**Tree Height from CC function**\n");
 
-
-	h->value = 1.3 + s->value[CRA] * pow (1.0 - exp ( - s->value[CRB] * d->value) , s->value[CRC]);
+	/* Chapman-Richards functions */
+	//note: this shouldn't be applied to saplings that are lower than 1.3 meter
+	h->value = DBH_ref + s->value[CRA] * pow (1.0 - exp ( - s->value[CRB] * d->value) , s->value[CRC]);
 
 	if ( h->value > s->value[CRA] )
 	{
