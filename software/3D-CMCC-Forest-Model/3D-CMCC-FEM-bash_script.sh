@@ -83,7 +83,7 @@ while :
 	echo "'$run' doesn't match with model run list. please rewrite it."
 done
 
-#for *nix
+#for unix
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
 	#search in debug folder debug executable
 	if [ "$run" == "${model_run[0]}" ] ; then
@@ -188,10 +188,13 @@ cd ..
 cd input
 
 #list
-ls -d *
+#ls -d *
+
+#assign all available site folders to site array
+SITEs=(ls -d *)
 
 cd ..
-#########################################################################################################
+
 #log available sites
 echo 'available sites to be simulated:'
 for (( i = 0 ; i < ${#SITEs[@]} ; ++i )) ; do
@@ -201,6 +204,7 @@ done
 #ask which site use
 echo "which site do you want to simulate?"
 match=no
+
 while :
 	do
 	read site
@@ -248,7 +252,6 @@ for (( i = 0 ; i < ${#YEARs[@]} ; ++i )) ; do
 	echo -"${YEARs[i]}"
 done
 
-#########################################################################################################
 #log available year data
 #ask which year use
 match=no
