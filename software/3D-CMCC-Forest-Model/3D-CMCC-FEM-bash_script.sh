@@ -15,13 +15,11 @@ echo "***************************************************************"
 echo "* $MODEL $VERSION script for $PROJECT runs in "$OSTYPE" *"
 echo "***************************************************************"
 
-
+launch="./"
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
 	executable="3D_CMCC_Forest_Model"
-	launch="./"
 elif [[ "$OSTYPE" == "cygwin" ]]; then
 	executable="3D-CMCC-Forest-Model"
-	launch="bash -o igncr"
 fi
 
 #input paths
@@ -168,6 +166,19 @@ cd $folder_run
 
 #copy to previous directory executable
 cp $executable ../
+
+#copy netcdf dll
+#only for windows build
+if [[ "$OSTYPE" == "cygwin" ]]; then
+	netcdf_dll="netcdf.dll"
+	#check if dll exists
+	if [ -x "$netcdf_dll" ] ; then		
+		cp $netcdf_dll ../
+	else
+		echo "$netcdf_dll doesn't exist (exit)"
+		exit
+	fi
+fi
 
 #back to previous directory
 cd ..
@@ -519,9 +530,9 @@ function single_run {
 	MET_PATH=ISIMIP/"$gcm"/"$gcm"_hist_"$rcp"_"$year"_2099.txt
 	SOIL_PATH=ISIMIP/"$gcm"/"$site"_soil_"$rcp"_"$PROJECT".txt
 	CO2_PATH=ISIMIP/CO2/CO2_"$rcp"_1950_2099.txt
-
+	
 	#add paths and arguments to executable and run
-	$launch$executable -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH 
+	$launch$executable" -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH"
 	
 	#log arguments paths
 	echo "*****************************"
@@ -557,7 +568,7 @@ function multi_run {
 					echo 'running for' "$rcp"
 					echo 'running with management =' "$management" 
 					echo 'running with co2 =' "$co2"
-					
+										
 					#add site name to current paths
 					SITE_PATH=input/"$site"
 					OUTPUT_PATH=output/"$site"
@@ -571,9 +582,9 @@ function multi_run {
 					MET_PATH=ISIMIP/"$gcm"/"$gcm"_hist_"$rcp"_"$year"_2099.txt
 					SOIL_PATH=ISIMIP/"$gcm"/"$site"_soil_"$rcp"_"$PROJECT".txt
 					CO2_PATH=ISIMIP/CO2/CO2_"$rcp"_1950_2099.txt
-				
+									
 					#add paths and arguments to executable and run
-					#$launch$executable -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH 
+					$launch$executable" -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH"
 					
 					#log arguments paths
 					echo "*****************************"
@@ -606,6 +617,13 @@ fi
 #delete copied executable from current directory
 echo "...removing executable from project directory"
 rm $executable
+
+#remove netcdf dll
+#only for windows build
+if [[ "$OSTYPE" == "cygwin" ]]; then
+	echo "...removing netcdf dll from project directory"
+	rm -f $netcdf_dll
+fi
 
 #log elapsed time
 #if [[ "$OSTYPE" == "linux-gnu" ]]; then
