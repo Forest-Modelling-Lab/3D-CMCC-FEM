@@ -191,7 +191,7 @@ cd input
 #ls -d *
 
 #assign all available site folders to site array
-SITEs=(ls -d *)
+SITEs=(*)
 
 cd ..
 
