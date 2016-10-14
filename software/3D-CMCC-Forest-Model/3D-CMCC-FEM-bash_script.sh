@@ -545,11 +545,11 @@ function multi_run {
 				for (( e = 0 ; e < $man_counter ; ++e )) ; do
 					for (( f = 0 ; f < $co2_counter ; ++f )) ; do
 					
-					if (( $clim_counter > 1 )) ; then climate=climate[$b]; fi
-					if (( $gcm_counter > 1 )) ; then gcm=GCMs[$c]; fi
-					if (( $rcp_counter > 1)) ; then rcp=RCPs[$d]; fi				
-					if (( $man_counter > 1 )) ; then management=MANs[$e]; fi
-					if (( $co2_counter > 1 )) ; then co2=CO2s[$f]; fi
+					if (( $clim_counter > 1 )) ; then climate=${CLIMATEs[$b]}; fi
+					if (( $gcm_counter > 1 )) ; then gcm=${GCMs[$c]}; fi
+					if (( $rcp_counter > 1)) ; then rcp=${RCPs[$d]}; fi				
+					if (( $man_counter > 1 )) ; then management=${MANs[$e]}; fi
+					if (( $co2_counter > 1 )) ; then co2=${CO2s[$f]}; fi
 					
 					echo "multi run"
 					echo 'running for' "$climate"
