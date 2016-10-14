@@ -13,8 +13,8 @@ LAI_RATIO   2.6               //(DIM) all-sided to projected leaf area ratio fro
 FRACBB0 0.30                  //Branch and Bark fraction at age 0 for P. sylvestris, from Xenakis et al., 2008, 0.29 deducted for P. sylvestris from Yuste et al., 2005, 0.29 from Lehtonen et al., 2004 For Eco Manag, 0.71 from xiao and Ceulemans
 FRACBB1 0.1                   //Branch and Bark fraction for mature stands for P. sylvestris, from Xenakis et al., 2008, 0.29 deducted for P. sylvestris from Yuste et al., 2005, 0.29 from Lehtonen et al., 2004 For Eco Manag, 0.18 from Jenssen et al 1999, 0.77 from xiao and Ceulemans
 TBB 10                        //Age at which fracBB = (FRACBB0 + FRACBB1 )/ 2 for P. sylvestris, from Xenakis et al., 2008
-RHOMIN  0.43                  //Minimum Basic Density for young Trees t/m^3 for Picea abies Seidl et al., 2012, 0.19 Bossel 1996
-RHOMAX  0.43                  //Maximum Basic Density for young Trees t/m^3 for Picea abies Seidl et al., 20120, 0.19 Bossel 1996
+RHOMIN  0.43                  //Minimum Basic Density for young Trees t/m^3 for Picea abies Seidl et al., 2012, 0.45 Pilli et al., 2006
+RHOMAX  0.43                  //Maximum Basic Density for young Trees t/m^3 for Picea abies Seidl et al., 20120, 0.45 Pilli et al., 2006
 TRHO    4                     //Age at which rho = (RHOMIN + RHOMAX )/2
 COEFFCOND   0.06              //Define stomatal responsee to VPD in mbar for Picea abies
 BLCOND  0.009                 //Canopy Boundary Layer conductance  for Picea abies 
@@ -57,14 +57,14 @@ BUD_BURST   0                 //days of bud burst at the beginning of growing se
 LEAF_FALL_FRAC_GROWING  0     //proportions of the growing season of leaf fall 
 LEAF_FINEROOT_TURNOVER  0.195 //Average YEARLY leaves and fine root turnover rate for Picea abies from Pietsch et al., 2005, 0.11 for Picea abies Seidl et al., 2012
 LIVE_WOOD_TURNOVER  0.7       //Annual yearly live wood turnover rate for Picea abies from Pietsch et al., 2005
-DBHDCMAX  0.18                //Low Density for Picea abies 0.255 Seidl et al., 2012, 0.18 from Kalliovirta and Tokola 2005, 0.34 from Grote 2001
+DBHDCMAX  0.18                //Low Density for Picea abies 0.255 Seidl et al., 2012, 0.18 from Kalliovirta and Tokola 2005, 0.34 from Grote 2001, 0.25 Bossel 1996
 DBHDCMIN  0.12                //High Density for P. sylvestris from Ameztegui et al., 2012 0.14, 0.015 from Kalliovirta and Tokola 2005, 0.2 from Grote 2001
 SAP_A   3.119                 //a value for Picea abies 0.0851 deducted from  p.c. Kostner and Clausnitzer et al., 2011 CHECK IT!!!!!!!!!
 SAP_B   1.4544                //b value for Picea abies 1.684 deducted from p.c. Kostner and Clausnitzer et al., 2011
 SAP_LEAF    2600              //sapwood_max leaf area ratio in pipe model for Picea abies varying from 2600 to 4800 from Kostner et al., Tree Phys 2002 CHECK IT!!!!!!!!!
 SAP_WRES    0.05              //Sapwood-Reserve biomass ratio used if no Wres data are available 0.11 for deciduous 0.05 for evergreen see Schwalm and Ek, 2004 Ecological Modelling
-STEMCONST_P 0.292             //0.06552  E. Cienciala et al., 2006 For P. sylvestrisM; from Yuste et al 2005 0.1227, 0.084 from xiao and Ceulemans
-STEMPOWER_P 2.0087            //2.50626 E. Cienciala et al., 2006 For P. sylvestris; from Yuste et al 2005 2.3272, 1.985 from xiao and Ceulemans
+STEMCONST_P 0.01227 //0.292             //0.06552  E. Cienciala et al., 2006 For P. sylvestris; from Yuste et al 2005 0.1227, 0.084 from xiao and Ceulemans
+STEMPOWER_P 2.3272  //2.0087            //2.50626 E. Cienciala et al., 2006 For P. sylvestris; from Yuste et al 2005 2.3272, 1.985 from xiao and Ceulemans
 CRA 56                        //for Picea abies Seidl et al., 2012, 
 CRB 0.0658                    //for Picea abies (0.0658)from Pommerening et al., 2011, 
 CRC 5.5289                    //for Picea abies (5.5289)from Pommerening et al., 2011,
