@@ -507,7 +507,6 @@ START=`date +%s%N`
 
 echo 'running for' "$site"
 
-
 function single_run {
 	
 	echo "single run"
@@ -532,7 +531,7 @@ function single_run {
 	CO2_PATH=ISIMIP/CO2/CO2_"$rcp"_1950_2099.txt
 	
 	#add paths and arguments to executable and run
-	$launch$executable" -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH"
+	$launch$executable -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH
 	
 	#log arguments paths
 	echo "*****************************"
@@ -584,7 +583,7 @@ function multi_run {
 					CO2_PATH=ISIMIP/CO2/CO2_"$rcp"_1950_2099.txt
 									
 					#add paths and arguments to executable and run
-					$launch$executable" -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH"
+					$launch$executable -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH
 					
 					#log arguments paths
 					echo "*****************************"
