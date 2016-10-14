@@ -780,7 +780,7 @@ int main(int argc, char *argv[]) {
 	printf("soil allocation...");
 	g_soil_settings = soil_settings_new();
 	if ( ! g_soil_settings ) {
-		logger(g_debug_log, sz_err_out_of_memory);
+		puts(sz_err_out_of_memory);
 		goto err;
 	}
 	puts(msg_ok);
@@ -788,7 +788,7 @@ int main(int argc, char *argv[]) {
 	printf("topo allocation...");
 	g_topo = topo_new();
 	if ( ! g_topo ) {
-		logger(g_debug_log, sz_err_out_of_memory);
+		puts(sz_err_out_of_memory);
 		goto err;
 	}
 	puts(msg_ok);
@@ -826,7 +826,7 @@ int main(int argc, char *argv[]) {
 				IS_INVALID_VALUE(g_soil_settings->values[SOIL_CLAY_PERC])||
 				IS_INVALID_VALUE(g_soil_settings->values[SOIL_SILT_PERC])||
 				IS_INVALID_VALUE(g_soil_settings->values[SOIL_DEPTH]) ) {
-			logger(g_debug_log, "NO SOIL DATA AVAILABLE\n");
+			puts("NO SOIL DATA AVAILABLE");
 			goto err;
 		}
 

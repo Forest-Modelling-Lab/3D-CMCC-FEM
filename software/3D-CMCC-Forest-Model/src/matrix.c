@@ -1242,10 +1242,10 @@ matrix_t* matrix_create(const char* const filename) {
 		if (	(x_cells_count != m->x_cells_count)
 				|| (y_cells_count != m->y_cells_count) ) {
 			printf("dimensions differs between nc and check: x(%d,%d), y(%d,%d)\n"
-					, x_cells_count
-					, m->x_cells_count
-					, y_cells_count
-					, m->y_cells_count
+						, x_cells_count
+						, m->x_cells_count
+						, y_cells_count
+						, m->y_cells_count
 			);
 			matrix_free(m);
 			m = NULL;

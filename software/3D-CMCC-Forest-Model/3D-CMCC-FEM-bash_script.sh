@@ -15,13 +15,12 @@ echo "***************************************************************"
 echo "* $MODEL $VERSION script for $PROJECT runs in "$OSTYPE" *"
 echo "***************************************************************"
 
-executable="3D_CMCC_Forest_Model"
 
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
-	#if linux type
+	executable="3D_CMCC_Forest_Model"
 	launch="./"
 elif [[ "$OSTYPE" == "cygwin" ]]; then
-	#if cygwin type
+	executable="3D-CMCC-Forest-Model"
 	launch="bash -o igncr"
 fi
 
@@ -86,49 +85,80 @@ while :
 	echo "'$run' doesn't match with model run list. please rewrite it."
 done
 
-
-#search in debug folder debug executable
-if [ "$run" == "${model_run[0]}" ] ; then
+#for *nix
+if [[ "$OSTYPE" == "linux-gnu" ]]; then
+	#search in debug folder debug executable
+	if [ "$run" == "${model_run[0]}" ] ; then
 	
-	#find folder at first............
-	if [ -d "Debug" ] ; then
+		#find folder at first............
+		if [ -d "Debug" ] ; then
 
-		cd Debug
+			cd Debug
 		
-		#check if executable exists
-		if [ -x "$executable" ] ; then
+			#check if executable exists
+			if [ -x "$executable" ] ; then
 			
-			folder_run=Debug
-			
-			cd ..
-			
+				folder_run=Debug
+				
+				cd ..
+				
+			else
+				echo "$executable executable doesn't exist (exit)"
+				exit
+			fi	
 		else
-			echo "$executable executable doesn't exist (exit)"
+			echo "Debug folder doesn't exist (exit)"
 			exit
-		fi	
-	else
-		echo "Debug folder doesn't exist (exit)"
-		exit
+		fi
+	#search in release folder debug executable
+	else	
+		#find folder at first............
+		if [ -d "Release" ] ; then
+			
+			cd Release
+			
+			#check if executable exists
+			if [ -x "$executable" ] ; then
+				
+				folder_run=Release
+				
+				cd..
+			else
+				echo "$executable executable doesn't exist (exit)"
+				exit
+			fi	
+		else
+			echo "Release folder doesn't exist (exit)"
+			exit
+		fi
 	fi
-#search in release folder debug executable
-else	
-	#find folder at first............
-	if [ -d "Release" ] ; then
+# for windows
+elif [[ "$OSTYPE" == "cygwin" ]]; then
+	folder_run=bin
+	
+	#windows stuff
+	if [ "$run" == "${model_run[0]}" ] ; then
+		suffix="_debug.exe" # very lame
 		
-		cd Release
-		
+	else
+		suffix=".exe" # very lame
+	fi
+	executable="$executable$suffix"
+	
+	#check bin folder
+	if [ -d $folder_run ] ; then
+
+		cd $folder_run
+	
 		#check if executable exists
-		if [ -x "$executable" ] ; then
-			
-			folder_run=Release
-			
-			cd..
+		if [ -x "$executable" ] ; then		
+			cd ..
 		else
-			echo "$executable executable doesn't exist (exit)"
+			echo "$executable doesn't exist (exit)"
 			exit
 		fi	
 	else
-		echo "Release folder doesn't exist (exit)"
+		echo "Executable folder doesn't exist (exit)"
 		exit
 	fi
 fi
@@ -157,9 +187,8 @@ for (( i = 0 ; i < ${#SITEs[@]} ; ++i )) ; do
 	echo -"${SITEs[i]}"
 done
 
-echo "which site do you want to simulate?"
-	
 #ask which site use
+echo "which site do you want to simulate?"
 match=no
 while :
 	do
@@ -193,19 +222,42 @@ if [ -d "$PROJECT" ] ; then
 	cd "$PROJECT"
 	
 	#find among *.txt files occurrence for "stand" and "year"
-	find *.txt | ( grep "stand" | sed -e s/[^0-9]//g )
+	#and put in array
+	YEARs=($(find *.txt | ( grep "stand" | sed -e s/[^0-9]//g )))
 	cd ../../..
 else
 	
 	#find among *.txt files occurrence for "stand" and "year"
-	find *.txt | ( grep "stand" | sed -e s/[^0-9]//g )
+	#and put in array
+	YEARs=($(find *.txt | ( grep "stand" | sed -e s/[^0-9]//g )))
 	cd ../..
 fi
 
-echo "which is the starting year for "$site" to simulate?"
-	
-read year
+for (( i = 0 ; i < ${#YEARs[@]} ; ++i )) ; do
+	echo -"${YEARs[i]}"
+done
 
+#########################################################################################################
+#log available year data
+#ask which year use
+match=no
+echo "which is the starting year for "$site" to simulate?"
+while :
+	do
+	read year
+	for (( i = 0 ; i < ${#YEARs[@]} ; ++i )) ; do
+		if [ "${year,,}" = "${YEARs[$i],,}" ] ; then
+			match=yes
+			year=${YEARs[$i]}
+		fi
+	done
+	if [ "$match" == "yes" ] ; then
+		break;
+	fi
+	
+	echo "'$year' doesn't match with year list. please rewrite it."
+done
+	
 echo "starting year for '$site' = '$year'"
 
 #########################################################################################################
@@ -492,13 +544,19 @@ function multi_run {
 			for (( d = 0 ; d < $rcp_counter ; ++d )) ; do
 				for (( e = 0 ; e < $man_counter ; ++e )) ; do
 					for (( f = 0 ; f < $co2_counter ; ++f )) ; do
-	
+					
+					if (( $clim_counter > 1 )) ; then climate=climate[$b]; fi
+					if (( $gcm_counter > 1 )) ; then gcm=GCMs[$c]; fi
+					if (( $rcp_counter > 1)) ; then rcp=RCPs[$d]; fi				
+					if (( $man_counter > 1 )) ; then management=MANs[$e]; fi
+					if (( $co2_counter > 1 )) ; then co2=CO2s[$f]; fi
+					
 					echo "multi run"
 					echo 'running for' "$climate"
-					echo 'running for' "${GCMs[$c]}"
-					echo 'running for' "${RCPs[$d]}"
-					echo 'running with management =' "${MANs[$e]}" 
-					echo 'running with co2 =' "${CO2s[$f]}"
+					echo 'running for' "$gcm"
+					echo 'running for' "$rcp"
+					echo 'running with management =' "$management" 
+					echo 'running with co2 =' "$co2"
 					
 					#add site name to current paths
 					SITE_PATH=input/"$site"
@@ -507,12 +565,12 @@ function multi_run {
 					TOPO_PATH=ISIMIP/"$site"_topo_"$PROJECT".txt
 				
 					#add management and co2 to setting path
-					SETTING_PATH=ISIMIP/"$site"_settings_"$PROJECT"_Manag-"${MANs[$e]}"_CO2-"${CO2s[$f]}".txt
+					SETTING_PATH=ISIMIP/"$site"_settings_"$PROJECT"_Manag-"$management"_CO2-"$co2".txt
 				
 					#add gcm and rcp to meteo co2 and soil path
-					MET_PATH=ISIMIP/"${GCMs[$c]}"/"${GCMs[$c]}"_hist_"${RCPs[$d]}"_"$year"_2099.txt
-					SOIL_PATH=ISIMIP/"${GCMs[$c]}"/"$site"_soil_"${RCPs[$d]}"_"$PROJECT".txt
-					CO2_PATH=ISIMIP/CO2/CO2_"${RCPs[$d]}"_1950_2099.txt
+					MET_PATH=ISIMIP/"$gcm"/"$gcm"_hist_"$rcp"_"$year"_2099.txt
+					SOIL_PATH=ISIMIP/"$gcm"/"$site"_soil_"$rcp"_"$PROJECT".txt
+					CO2_PATH=ISIMIP/CO2/CO2_"$rcp"_1950_2099.txt
 				
 					#add paths and arguments to executable and run
 					#$launch$executable -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH 
@@ -550,12 +608,11 @@ echo "...removing executable from project directory"
 rm $executable
 
 #log elapsed time
-
-if [[ "$OSTYPE" == "linux-gnu" ]]; then
+#if [[ "$OSTYPE" == "linux-gnu" ]]; then
 END=`date +%s%N`
 ELAPSED=`echo "scale=2; ($END - $START) / 1000000000" | bc`
 echo "elapsed time in bash script = $ELAPSED secs"
-fi
+#fi
 
 echo "script finished!"
 
