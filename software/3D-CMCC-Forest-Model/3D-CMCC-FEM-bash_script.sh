@@ -4,9 +4,6 @@
 # Alessio Ribeca (alessio.ribeca@cmcc.it)
 # starting date: 5 October 2016
 
-#note: it currently works for just one case or all
-
-
 MODEL="3D-CMCC-CNR FEM"
 VERSION="v.5.2.2"
 PROJECT="ISIMIP"
@@ -167,8 +164,7 @@ cd $folder_run
 #copy to previous directory executable
 cp $executable ../
 
-#copy netcdf dll
-#only for windows build
+#copy netcdf dll (only for windows build)
 if [[ "$OSTYPE" == "cygwin" ]]; then
 	netcdf_dll="netcdf.dll"
 	#check if dll exists
@@ -236,14 +232,19 @@ if [ -d "$PROJECT" ] ; then
 
 	cd "$PROJECT"
 	
-	#find among *.txt files occurrence for "stand" and "year"
-	#and put in array
+	#find among *.txt files occurrence for "stand" and "year" and put in array
 	YEARs=($(find *.txt | ( grep "stand" | sed -e s/[^0-9]//g )))
 	cd ../../..
-else
+elif [ -d stand ] ; then
 	
-	#find among *.txt files occurrence for "stand" and "year"
-	#and put in array
+	cd stand
+	
+	#find among *.txt files occurrence for "stand" and "year" and put in array
+	YEARs=($(find *.txt | ( grep "stand" | sed -e s/[^0-9]//g )))
+	cd ../../..
+	
+else	
+	#find among *.txt files occurrence for "stand" and "year" and put in array
 	YEARs=($(find *.txt | ( grep "stand" | sed -e s/[^0-9]//g )))
 	cd ../..
 fi
@@ -252,8 +253,7 @@ for (( i = 0 ; i < ${#YEARs[@]} ; ++i )) ; do
 	echo -"${YEARs[i]}"
 done
 
-#log available year data
-#ask which year use
+#log available year data ask which year to use
 match=no
 echo "which is the starting year for "$site" to simulate?"
 while :
@@ -276,6 +276,12 @@ echo "starting year for '$site' = '$year'"
 
 #########################################################################################################
 #log available CLIMATEs
+
+
+#if [ -d "$PROJECT" ] ; then
+
+
+
 echo 'available CLIMATEs:'
 for (( i = 0 ; i < ${#CLIMATEs[@]} ; ++i )) ; do
 	echo -"${CLIMATEs[i]}"
@@ -309,7 +315,6 @@ else
 	clim_counter=1
 fi
 #########################################################################################################
-#IT CURRENTLY RUNS ONLY FOR SCENARIOS AND FOR ALL GCMs AND ALL RCPs
 
 #Historical
 if [ "$climate" == "${CLIMATEs[0]}" ] ; then
