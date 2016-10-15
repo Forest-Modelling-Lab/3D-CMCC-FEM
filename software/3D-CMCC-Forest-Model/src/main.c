@@ -45,7 +45,7 @@
 #if defined _WIN32
 #include "commit_hash.h"
 #endif
-*/
+ */
 
 /* Last cumulative days in months in non Leap years */
 int MonthLength [] = { 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365};
@@ -82,7 +82,7 @@ char 	*g_sz_program_path = NULL
 		, *g_sz_settings_file =	NULL
 		, *g_sz_co2_conc_file = NULL
 		, *g_sz_output_vars_file = NULL
-;
+		;
 
 static int years_of_simulation;	// default is none
 
@@ -96,11 +96,11 @@ const char sz_launched[] = "\n"PROGRAM_NAME"\n"
 static const char banner[] = "\n"PROGRAM_NAME"\n"
 		"compiled using "COMPILER" on "__DATE__" at "__TIME__"\n"
 		"using NetCDF %s\n"
-/*
+		/*
 #if defined _WIN32
 		"previous commit hash: "COMMIT_HASH"\n"
 #endif
-*/
+		 */
 		"(use -h parameter for more information)\n\n"
 		"The "PROGRAM_NAME" has been developed by:\n"
 		"Alessio Collalti [alessio.collalti@cmcc.it, a.collalti@unitus.it],\n"
@@ -166,7 +166,7 @@ static const char msg_usage[]					=	"\nusage:\n"
 		"    -k co2 concentration file (i.e.: -k co2_conc.txt)\n"
 		"    -r output vars list (i.e.: -r output_vars.lst)\n"
 		"    -h print this help\n"
-;
+		;
 
 /* error messages */
 extern const char sz_err_out_of_memory[];
@@ -188,7 +188,7 @@ static void clean_up(void)
 	if ( g_sz_monthly_output_filename ) free(g_sz_monthly_output_filename);
 	if ( g_sz_yearly_output_filename ) free(g_sz_yearly_output_filename);
 	if ( g_sz_soil_output_filename ) free(g_sz_soil_output_filename);
-	*/
+	 */
 	if ( g_sz_parameterization_path ) free(g_sz_parameterization_path);
 	if ( g_sz_output_path ) free(g_sz_output_path);
 	if ( g_sz_input_path ) free(g_sz_input_path);
@@ -230,14 +230,14 @@ static int log_start(const char* const sitename)
 	int len;
 	struct tm* ptm;
 	time_t t;
-						
+
 	/* get current date */
 	time(&t);
 	ptm = gmtime(&t);
 	sprintf(date, "%04d_%s_%02d"
-				, ptm->tm_year+1900
-				, szMonth[ptm->tm_mon]
-				, ptm->tm_mday
+			, ptm->tm_year+1900
+			, szMonth[ptm->tm_mon]
+			          , ptm->tm_mday
 	);
 
 	/* build log filename */
@@ -255,20 +255,20 @@ static int log_start(const char* const sitename)
 
 	/* co2_fixed */
 	switch ( g_settings->CO2_fixed ) {
-		case CO2_FIXED_OFF:
-			p = "OFF";
+	case CO2_FIXED_OFF:
+		p = "OFF";
 		break;
 
-		case CO2_FIXED_ON:
-			p = "ON";
+	case CO2_FIXED_ON:
+		p = "ON";
 		break;
 
-		case CO2_FIXED_VAR:
-			p = "VAR";
+	case CO2_FIXED_VAR:
+		p = "VAR";
 		break;
 
-		default:
-			puts("bad CO2_fixed value in settings file!\n");
+	default:
+		puts("bad CO2_fixed value in settings file!\n");
 		return 0;
 	}
 	len += sprintf(buffer+len, "_CO2_fixed_%s", p);
@@ -329,20 +329,20 @@ static int log_start(const char* const sitename)
 		int flag;
 		int log_flag[5];
 		char* log_name[5] = {	"debug"
-								, "daily"
-								, "monthly"
-								, "annual"
-								, "soil"
+				, "daily"
+				, "monthly"
+				, "annual"
+				, "soil"
 		};
 
 		logger_t** logs[5] = {
-								&g_debug_log
-								, &g_daily_log
-								, &g_monthly_log
-								, &g_annual_log
-								, &g_soil_log
+				&g_debug_log
+				, &g_daily_log
+				, &g_monthly_log
+				, &g_annual_log
+				, &g_soil_log
 		};
-	
+
 		log_flag[0] = g_settings->debug_output;
 		log_flag[1] = g_settings->daily_output;
 		log_flag[2] = g_settings->monthly_output;
@@ -358,15 +358,15 @@ static int log_start(const char* const sitename)
 		for ( i = 0 ; i < 5; ++i ) {
 			if ( log_flag[i] ) {
 				*logs[i] = logger_new("%s%s%s_output%s%s_output_%s%s%s%s"
-											, g_sz_output_path ? g_sz_output_path : ""
-											, flag ? "" : FOLDER_DELIMITER
-											, log_name[i]
-											, FOLDER_DELIMITER
-											, log_name[i]
-											, date
-											, FOLDER_DELIMITER
-											, log_name[i]
-											, buffer
+						, g_sz_output_path ? g_sz_output_path : ""
+								, flag ? "" : FOLDER_DELIMITER
+										, log_name[i]
+										           , FOLDER_DELIMITER
+										           , log_name[i]
+										                      , date
+										                      , FOLDER_DELIMITER
+										                      , log_name[i]
+										                                 , buffer
 				);
 				if ( ! *logs[i] ) {
 					printf("Unable to create %s log!\n\n",log_name[i]);
@@ -477,133 +477,133 @@ static int parse_args(int argc, char *argv[])
 		}
 
 		switch ( argv[i][1] ) {
-			case 'i': /* folder where input files are stored */
-				if ( ! argv[i+1] ) {
-					puts("input path not specified!");
-					goto err;
-				}
-				g_sz_input_path = path_copy(argv[i+1]);
-				if ( ! g_sz_input_path ) {
-					puts(sz_err_out_of_memory);
-					goto err;
-				}
+		case 'i': /* folder where input files are stored */
+			if ( ! argv[i+1] ) {
+				puts("input path not specified!");
+				goto err;
+			}
+			g_sz_input_path = path_copy(argv[i+1]);
+			if ( ! g_sz_input_path ) {
+				puts(sz_err_out_of_memory);
+				goto err;
+			}
 			break;
 
-			case 'p': /* folder where parameterization files are stored */
-				if ( ! argv[i+1] ) {
-					puts("parameterization path not specified!");
-					goto err;
-				}
-				g_sz_parameterization_path = path_copy(argv[i+1]);
-				if ( ! g_sz_parameterization_path ) {
-					puts(sz_err_out_of_memory);
-					goto err;
-				}
+		case 'p': /* folder where parameterization files are stored */
+			if ( ! argv[i+1] ) {
+				puts("parameterization path not specified!");
+				goto err;
+			}
+			g_sz_parameterization_path = path_copy(argv[i+1]);
+			if ( ! g_sz_parameterization_path ) {
+				puts(sz_err_out_of_memory);
+				goto err;
+			}
 			break;
 
-			case 'o': /* output folder*/
-				if ( ! argv[i+1] ) {
-					puts("output folder not specified");
-					goto err;
-				}
-				g_sz_output_path = string_copy(argv[i+1]);
-				if ( ! g_sz_output_path ) {
-					puts(sz_err_out_of_memory);
-					goto err;
-				}
+		case 'o': /* output folder*/
+			if ( ! argv[i+1] ) {
+				puts("output folder not specified");
+				goto err;
+			}
+			g_sz_output_path = string_copy(argv[i+1]);
+			if ( ! g_sz_output_path ) {
+				puts(sz_err_out_of_memory);
+				goto err;
+			}
 			break;
 
-			case 'd': /* dataset file path */
-				if ( ! argv[i+1] ) {
-					puts("dataset file not specified!");
-					goto err;
-				}
-				g_sz_dataset_file = string_copy(argv[i+1]);
-				if( ! g_sz_dataset_file ) {
-					puts(sz_err_out_of_memory);
-					goto err;
-				}
-				break;
+		case 'd': /* dataset file path */
+			if ( ! argv[i+1] ) {
+				puts("dataset file not specified!");
+				goto err;
+			}
+			g_sz_dataset_file = string_copy(argv[i+1]);
+			if( ! g_sz_dataset_file ) {
+				puts(sz_err_out_of_memory);
+				goto err;
+			}
+			break;
 
-			case 'm': /* met filename */
-				if ( ! argv[i+1] ) {
-					puts("met file not specified!");
-					goto err;
-				}
-				g_sz_input_met_file = string_copy(argv[i+1]);
-				if ( ! g_sz_input_met_file ) {
-					puts(sz_err_out_of_memory);
-					goto err;
-				}
-				break;
+		case 'm': /* met filename */
+			if ( ! argv[i+1] ) {
+				puts("met file not specified!");
+				goto err;
+			}
+			g_sz_input_met_file = string_copy(argv[i+1]);
+			if ( ! g_sz_input_met_file ) {
+				puts(sz_err_out_of_memory);
+				goto err;
+			}
+			break;
 
-			case 's': /*soil file */
-				if ( ! argv[i+1] ) {
-					puts("soil file not specified!");
-					goto err;
-				}
-				g_sz_soil_file = string_copy(argv[i+1]);
-				if ( ! g_sz_soil_file ) {
-					puts(sz_err_out_of_memory);
-					goto err;
-				}
-				break;
+		case 's': /*soil file */
+			if ( ! argv[i+1] ) {
+				puts("soil file not specified!");
+				goto err;
+			}
+			g_sz_soil_file = string_copy(argv[i+1]);
+			if ( ! g_sz_soil_file ) {
+				puts(sz_err_out_of_memory);
+				goto err;
+			}
+			break;
 
-			case 't': /* topo file */
-				if ( ! argv[i+1] ) {
-					puts("topo file not specified!");
-					goto err;
-				}
-				g_sz_topo_file = string_copy(argv[i+1]);
-				if( ! g_sz_topo_file ) {
-					puts(sz_err_out_of_memory);
-					goto err;
-				}
-				break;
+		case 't': /* topo file */
+			if ( ! argv[i+1] ) {
+				puts("topo file not specified!");
+				goto err;
+			}
+			g_sz_topo_file = string_copy(argv[i+1]);
+			if( ! g_sz_topo_file ) {
+				puts(sz_err_out_of_memory);
+				goto err;
+			}
+			break;
 
-			case 'c': /* settings file */
-				if ( ! argv[i+1] ) {
-					puts("settings file not specified!");
-					goto err;
-				}
-				g_sz_settings_file = string_copy(argv[i+1]);
-				if( ! g_sz_settings_file ) {
-					puts(sz_err_out_of_memory);
-					goto err;
-				}
-				break;
+		case 'c': /* settings file */
+			if ( ! argv[i+1] ) {
+				puts("settings file not specified!");
+				goto err;
+			}
+			g_sz_settings_file = string_copy(argv[i+1]);
+			if( ! g_sz_settings_file ) {
+				puts(sz_err_out_of_memory);
+				goto err;
+			}
+			break;
 
-			case 'k': /* co2 file */
-				if ( ! argv[i+1] ) {
-					puts("co2 conc file not specified!");
-					goto err;
-				}
-				g_sz_co2_conc_file = string_copy(argv[i+1]);
-				if( ! g_sz_co2_conc_file ) {
-					puts(sz_err_out_of_memory);
-					goto err;
-				}
-				break;
+		case 'k': /* co2 file */
+			if ( ! argv[i+1] ) {
+				puts("co2 conc file not specified!");
+				goto err;
+			}
+			g_sz_co2_conc_file = string_copy(argv[i+1]);
+			if( ! g_sz_co2_conc_file ) {
+				puts(sz_err_out_of_memory);
+				goto err;
+			}
+			break;
 
-			case 'r': /* output filename */
-				if ( ! argv[i+1] ) {
-					puts("output path not specified!");
-					goto err;
-				}
-				g_sz_output_vars_file = string_copy(argv[i+1]);
-				if( ! g_sz_output_vars_file ) {
-					puts(sz_err_out_of_memory);
-					goto err;
-				}
-				break;
+		case 'r': /* output filename */
+			if ( ! argv[i+1] ) {
+				puts("output path not specified!");
+				goto err;
+			}
+			g_sz_output_vars_file = string_copy(argv[i+1]);
+			if( ! g_sz_output_vars_file ) {
+				puts(sz_err_out_of_memory);
+				goto err;
+			}
+			break;
 
-			case 'h': /* show help */
-				goto err_show_usage;
-				break;
+		case 'h': /* show help */
+			goto err_show_usage;
+			break;
 
-			default:
-				printf("invalid option (%s)!\n", argv[i]);
-				goto err_show_usage;
+		default:
+			printf("invalid option (%s)!\n", argv[i]);
+			goto err_show_usage;
 		}
 	}
 
@@ -659,10 +659,10 @@ static int parse_args(int argc, char *argv[])
 
 	return 1;
 
-err_show_usage:
+	err_show_usage:
 	show_usage();
 
-err:
+	err:
 	return 0;
 }
 
@@ -1230,7 +1230,7 @@ int main(int argc, char *argv[]) {
 			logger(g_debug_log, sz_err_out_of_memory);
 			goto err;
 		}
-		*/
+		 */
 		ret = output_write(output_vars, g_sz_output_path, start_year, years_of_simulation, matrix->x_cells_count, matrix->y_cells_count, 0);
 		//free(path);
 		if ( ! ret ) {
@@ -1248,7 +1248,7 @@ int main(int argc, char *argv[]) {
 			logger(g_debug_log, sz_err_out_of_memory);
 			goto err;
 		}
-		*/
+		 */
 		ret = output_write(output_vars, g_sz_output_path, start_year, years_of_simulation, matrix->x_cells_count, matrix->y_cells_count, 1);
 		//free(path);
 		if ( ! ret ) {
@@ -1266,7 +1266,7 @@ int main(int argc, char *argv[]) {
 			logger(g_debug_log, sz_err_out_of_memory);
 			goto err;
 		}
-		*/
+		 */
 		ret = output_write(output_vars, g_sz_output_path, start_year, years_of_simulation, matrix->x_cells_count, matrix->y_cells_count, 2);
 		//free(path);
 		if ( ! ret ) {
@@ -1283,7 +1283,7 @@ int main(int argc, char *argv[]) {
 	/* ok ! */
 	prog_ret = 0;
 
-err:
+	err:
 	/* close logger */
 	logger_close(g_soil_log); g_soil_log = NULL;
 	logger_close(g_annual_log); g_annual_log = NULL;
