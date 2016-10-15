@@ -72,7 +72,7 @@ mandatory files to run model.
  >within /input/site_name you need to create:
  
  *****************************************************************************************************************************
- [a] create in: /input/"stand" folder
+ [a] create in: /input/"sitename"/"stand folder (e.g. /input/Soroe/stand)
  
  -STAND INPUT DATA that refers to forest stand data at initial condition (see model user's guide)
   signature of stand file needs to be in this way:
@@ -80,32 +80,32 @@ mandatory files to run model.
   FILE NAME: "sitename"_"stand"_"year at which stand status refers" (e.g. Soroe_stand_2003.txt)
  
  *****************************************************************************************************************************
- [b] create in: /input/"meteo" folder
+ [b] create in: /input/"sitename"/"meteo" folder (e.g. /input/Soroe/meteo)
 
  -METEO INPUT DATA: that refers to meteo dataset used in simulation (the first year is the year in which model srats to simulate
   so be carefull that stand data matches with meteo data". For data to be included in and units see model user's guide
   
-  FILE NAME: "sitename"_"meteo"_"first_year"_"last_year" (e.g. Soroe_meteo_2003_2014.txt)
+  FILE NAME: "sitename"_"meteo"_"first_year" (e.g. Soroe_meteo_2003.txt)
   
  *****************************************************************************************************************************
- [a] put in: /input/"stand" folder
+ [a] put in: /input/"sitename"/"stand folder (e.g. /input/Soroe/stand)
   
  -SOIL INPUT DATA: that refers to stand soil datased used in simulation
  
   FILE NAME: "sitename"_"soil" (e.g. Soroe_soil.txt)
  
  *****************************************************************************************************************************
- [a] put in: /input/"stand" folder
+ [a] put in: /input/"sitename"/"stand folder (e.g. /input/Soroe/stand)
  
  -TOPO INPUT DATA: that refers to stand topographic datased used in simulation
  
   FILE NAME: "sitename"_"topo" (e.g. Soroe_topo.txt)
   
  *****************************************************************************************************************************
-  
+ [c] put in: /input/"sitename" (e.g. /input/Soroe)
  -MODEL SETTINGS: that refers to model settings used in simulation
  
-  FILE NAME: "sitename"_"settings" (e.g. Soroe_topo.txt)
+  FILE NAME: "sitename"_"settings" (e.g. Soroe_settings.txt)
   
  *****************************************************************************************************************************
  
