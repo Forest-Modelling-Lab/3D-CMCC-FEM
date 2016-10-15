@@ -2,7 +2,7 @@
 # Developed by:
 # Alessio Collalti (alessio.collalti@cmcc.it)
 # Alessio Ribeca (alessio.ribeca@cmcc.it)
-# starting date: 5 October 2016
+# starting date: 14 October 2016
 
 MODEL="3D-CMCC-CNR FEM"
 VERSION="v.5.2.2"
@@ -202,9 +202,9 @@ echo "$site available stand initialization year(s):"
 
 cd "$site"
 
-if [ -d "$meteo" ] ; then
+if [ -d stand ] ; then
 
-	cd "$meteo"
+	cd stand
 	
 	#find among *.txt files occurrence for "stand" and "year" and put in array
 	YEARs=($(find *.txt | ( grep "stand" | sed -e s/[^0-9]//g )))
@@ -218,6 +218,8 @@ fi
 for (( i = 0 ; i < ${#YEARs[@]} ; ++i )) ; do
 	echo -"${YEARs[i]}"
 done
+
+exit
 
 #log available year data ask which year to use
 match=no
@@ -267,7 +269,7 @@ function single_run {
 	SETTING_PATH="$site"_settings.txt
 
 	#add gcm and rcp to meteo co2 and soil path
-	MET_PATH=meteo/"$site"_"$year_i"_"$year_e".txt
+	MET_PATH=meteo/"$site"_"$year".txt
 	SOIL_PATH=stand/"$site"_soil.txt
 	
 	#add paths and arguments to executable and run
