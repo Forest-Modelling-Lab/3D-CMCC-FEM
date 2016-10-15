@@ -202,48 +202,93 @@ echo "$site available stand initialization year(s):"
 
 cd "$site"
 
+# stand data 
 if [ -d stand ] ; then
 
 	cd stand
 	
 	#find among *.txt files occurrence for "stand" and "year" and put in array
-	YEARs=($(find *.txt | ( grep "stand" | sed -e s/[^0-9]//g )))
-	cd ../../..
+	STAND_YEARs=($(find *.txt | ( grep "stand" | sed -e s/[^0-9]//g )))
+	cd ..
 else	
 	#find among *.txt files occurrence for "stand" and "year" and put in array
-	YEARs=($(find *.txt | ( grep "stand" | sed -e s/[^0-9]//g )))
-	cd ../..
+	STAND_YEARs=($(find *.txt | ( grep "stand" | sed -e s/[^0-9]//g )))
 fi
 
-for (( i = 0 ; i < ${#YEARs[@]} ; ++i )) ; do
-	echo -"${YEARs[i]}"
+for (( i = 0 ; i < ${#STAND_YEARs[@]} ; ++i )) ; do
+	echo -"${STAND_YEARs[i]}"
 done
-
-exit
 
 #log available year data ask which year to use
 match=no
 echo "which is the starting year for "$site" to simulate?"
 while :
 	do
-	read year
-	for (( i = 0 ; i < ${#YEARs[@]} ; ++i )) ; do
-		if [ "${year,,}" = "${YEARs[$i],,}" ] ; then
+	read stand_year
+	for (( i = 0 ; i < ${#STAND_YEARs[@]} ; ++i )) ; do
+		if [ "${stand_year,,}" = "${STAND_YEARs[$i],,}" ] ; then
 			match=yes
-			year=${YEARs[$i]}
+			stand_year=${STAND_YEARs[$i]}
 		fi
 	done
 	if [ "$match" == "yes" ] ; then
 		break;
 	fi
 	
-	echo "'$year' doesn't match with year list. please rewrite it."
+	echo "$stand_year doesn't match with year list. please rewrite it."
 done
 	
-echo "starting year for '$site' = '$year'"
+echo "starting year for $site = $stand_year"
 
+###################################################################################
 
+#meteo data
+cd meteo
 
+echo "$site available meteo data:"
+
+if [ -d meteo ] ; then
+
+	cd meteo
+	
+	#find among *.txt files occurrence for "stand" and "year" and put in array
+	METEO_YEARs=($(find *.txt | ( grep "meteo" | sed -e s/[^0-9]//g )))
+	cd ..
+else	
+	#find among *.txt files occurrence for "stand" and "year" and put in array
+	METEO_YEARs=($(find *.txt | ( grep "meteo" | sed -e s/[^0-9]//g )))
+fi
+
+for (( i = 0 ; i < ${#METEO_YEARs[@]} ; ++i )) ; do
+	echo -"${METEO_YEARs[i]}"
+done
+
+#log available meteo year data ask which year to use
+match=no
+echo "which is the starting meteo year for "$site" to simulate?"
+while :
+	do
+	read meteo_year
+	for (( i = 0 ; i < ${#METEO_YEARs[@]} ; ++i )) ; do
+		if [ "${meteo_year,,}" = "${METEO_YEARs[$i],,}" ] ; then
+			match=yes
+			meteo_year=${METEO_YEARs[$i]}
+		fi
+	done
+	if [ "$match" == "yes" ] ; then
+		break;
+	fi
+	
+	echo "$meteo_year doesn't match with meteo year list. please rewrite it."
+done
+	
+echo "starting year for $site init year $stand_year = $meteo_year"
+
+#check if stand year matches with meteo data
+if [ $stand_year != $meteo_year ] ; then
+	echo "$stand_year doesn't match with $meteo_year (exit)"
+	exit
+fi
 
 #########################################################################################################
 #########################################################################################################
@@ -252,7 +297,10 @@ echo "starting year for '$site' = '$year'"
 # compute elapsed time
 START=`date +%s%N`
 
-echo 'running for' "$site"
+#backforward to correct dir
+cd ../../..
+
+echo "running for $site"
 
 function single_run {
 	
@@ -262,14 +310,14 @@ function single_run {
 	#add site name to current paths
 	SITE_PATH=input/"$site"
 	OUTPUT_PATH=output/"$site"
-	STAND_PATH=stand/"$site"_stand.txt
+	STAND_PATH=stand/"$site"_stand_"$stand_year".txt
 	TOPO_PATH=stand/"$site"_topo.txt
 
 	#add setting path
 	SETTING_PATH="$site"_settings.txt
 
 	#add gcm and rcp to meteo co2 and soil path
-	MET_PATH=meteo/"$site"_"$year".txt
+	MET_PATH=meteo/"$site"_meteo_"$meteo_year".txt
 	SOIL_PATH=stand/"$site"_soil.txt
 	
 	#add paths and arguments to executable and run
@@ -291,7 +339,6 @@ function single_run {
 
 #launch single run
 single_run
-
 
 #delete copied executable from current directory
 echo "...removing executable from project directory"
