@@ -102,25 +102,25 @@ void dendrometry(cell_t *const c, const int layer, const int height, const int d
 	current_hdf = h->value / dbh_m;
 	logger(g_debug_log, "height/diameter factor = %g\n", current_hdf);
 
-	//fixme in this way it doesn't take into account dominated with low density layer
+	//fixme fixme fixme in this way it doesn't take into account dominated with low density layer
 	//should use "min (fraction of light_trasm, current_ccf);"
 
 	/* compute effective H/D ratio */
-	/* case 1 */
+	/* case 1, no competition */
 	if ( current_ccf < s->value[LIGHT_TOL] && current_hdf >= s->value[HD_MIN] )
 	{
 		logger(g_debug_log, "case1\n");
 
 		s->value[HD_EFF] = s->value[HD_MIN];
 	}
-	/* case 2 */
+	/* case 2, high competition */
 	else if ( current_ccf >= s->value[LIGHT_TOL] && current_hdf <= s->value[HD_MAX] )
 	{
 		logger(g_debug_log, "case2\n");
 
 		s->value[HD_EFF] = s->value[HD_MAX];
 	}
-	/* case 3 */
+	/* case 3, high competition low age */
 	else if ( current_ccf >= s->value[LIGHT_TOL] && current_hdf <= s->value[HD_MAX] && a->value < ( 0.5 * s->value[MAXAGE] ) )
 	{
 		logger(g_debug_log, "case3\n");
@@ -142,7 +142,7 @@ void dendrometry(cell_t *const c, const int layer, const int height, const int d
 		s->value[HD_EFF] = 0.5 * s->value[HD_MIN];
 	}
 	/* case 6 */
-	else if ( a->value > ( 0.7 * s->value[MAXAGE] ) )
+	else if ( a->value > ( 0.75 * s->value[MAXAGE] ) )
 	{
 		logger(g_debug_log, "case6\n");
 
@@ -188,6 +188,8 @@ void dendrometry(cell_t *const c, const int layer, const int height, const int d
 
 	/* check */
 	CHECK_CONDITION( h->value, < oldTreeHeight - eps );
+	//fixme once change CRA with HMAX
+	CHECK_CONDITION( h->value, < s->value[CRA] - eps );
 
 	/*************************************************************************************************************************/
 
