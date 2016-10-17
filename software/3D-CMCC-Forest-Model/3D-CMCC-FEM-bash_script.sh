@@ -321,7 +321,7 @@ function single_run {
 	SOIL_PATH=stand/"$site"_soil.txt
 	
 	#add paths and arguments to executable and run
-	$launch$executable -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH 
+	#$launch$executable -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH 
 	
 	#log arguments paths
 	echo "*****************************"

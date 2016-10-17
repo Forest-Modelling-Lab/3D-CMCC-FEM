@@ -6,14 +6,31 @@
 #include "common.h"
 #include "constants.h"
 #include "logger.h"
+#include "settings.h"
 
 extern logger_t* g_debug_log;
+extern settings_t* g_settings;
 
-void dendrometry(cell_t *const c, const int height, const int dbh, const int age, const int species)
+void dendrometry(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species)
 {
 	double oldavDBH;
 	double oldTreeHeight;
 	double oldBasalArea;
+
+	double pot_max_crown_diam;         /* potential maximum crown diameter */
+	double pot_max_crown_area;         /* potential maximum crown area */
+	double current_ccf;                /* crown competition factor */
+	double current_hdf;                /* height-diameter competition factor */
+	double delta_C_stem;               /* stem C increment (in tC) */
+	double delta_dbh;                  /* dbh increment (in cm) */
+	double delta_dbh_m;                /* dbh increment (in m) */
+	double delta_height;               /* height increment (in m) */
+	double dbh_m;                      /* dbh in meter */
+
+	//fixme to include in species.txt
+	double tree_form_factor = 0.4;     /* tree form factor (0.4 Bossel et al., 1996) */
+
+
 
 	height_t *h;
 	dbh_t *d;
@@ -46,35 +63,133 @@ void dendrometry(cell_t *const c, const int height, const int dbh, const int age
 	s->value[MASS_DENSITY] = s->value[RHOMAX] + (s->value[RHOMIN] - s->value[RHOMAX]) * exp(-ln2 * (a->value / s->value[TRHO]));
 	logger(g_debug_log, "-Mass Density = %g\n", s->value[MASS_DENSITY]);
 
+
+	/*************************************************************************************************************************/
+	/*************************************************************************************************************************/
+	/* crown competition factor following:
+	 - Bossel 1996 Ecological Modelling 90, 187-227
+	 - Pent et al., 2002, Ecological Modelling 153, 109-130
+	*/
+
+	logger(g_debug_log, "*Physically based height diameter approach*\n");
+
+	/* dbh cm --> m */
+	dbh_m = a->value / 100.;
+
+	/* compute potential maximum crown area */
+	pot_max_crown_diam = d->value * s->value[DBHDCMAX];
+	pot_max_crown_area = ( Pi / 4) * pow (pot_max_crown_diam, 2. );
+
+	/* current crown competition factor (current_ccf) */
+	current_ccf = (pot_max_crown_area * c->tree_layers[layer].layer_n_trees )/ (g_settings->sizeCell * g_settings->max_layer_cover);
+	logger(g_debug_log, "crown_competition factor = %g\n", current_ccf);
+
+	/* current height diameter factor (current_ccf) */
+	current_hdf = h->value / dbh_m;
+	logger(g_debug_log, "height/diameter factor = %g\n", current_hdf);
+
+	//fixme change 1 with max layer cover if species specific
+	/* compute effective H/D ratio */
+	/* case 1 */
+	if ( current_ccf < 1. && current_hdf >= s->value[HDMIN] )
+	{
+		logger(g_debug_log, "case1\n");
+
+		s->value[HD_EFF] = s->value[HDMIN];
+	}
+	/* case 2 */
+	else if ( current_ccf >= 1. && current_hdf <= s->value[HDMAX] )
+	{
+		logger(g_debug_log, "case2\n");
+
+		s->value[HD_EFF] = s->value[HDMAX];
+	}
+	/* case 3 */
+	else if ( current_ccf >= 1. && current_hdf <= s->value[HDMAX] && a->value < ( 0.5 * s->value[MAXAGE] ) )
+	{
+		logger(g_debug_log, "case3\n");
+
+		s->value[HD_EFF] = s->value[HDMIN];
+	}
+	/* case 4 */
+	else if ( current_hdf < s->value[HDMIN] )
+	{
+		logger(g_debug_log, "case4\n");
+
+		s->value[HD_EFF] = s->value[HDMAX];
+	}
+	/* case 5 */
+	else if ( current_hdf > s->value[HDMAX] )
+	{
+		logger(g_debug_log, "case5\n");
+
+		s->value[HD_EFF] = 0.5 * s->value[HDMIN];
+	}
+	/* case 6 */
+	else if ( a->value > ( 0.7 * s->value[MAXAGE] ) )
+	{
+		logger(g_debug_log, "case6\n");
+
+		s->value[HD_EFF] = 0.;
+	}
+	logger(g_debug_log, "Effective H/D ratio = %g\n", s->value[HD_EFF]);
+
+	/* compute individual delta carbon stem and tC --> kgDM / tree */
+	delta_C_stem = (s->value[C_TO_STEM] / s->counter[N_TREE]) * GC_GDM * 1000.;
+	logger(g_debug_log, "delta_carbon stem = %g tC/month tree \n", delta_C_stem);
+
+	/* compute diameter increment (in m) */
+	delta_dbh_m = ( 4. * delta_C_stem) / ( Pi * tree_form_factor * pow( ( dbh_m ), 2. ) * ( ( 2. * current_hdf ) + s->value[HD_EFF] ) );
+	/* convert m --> cm */
+	delta_dbh = delta_dbh_m * 100.;
+	logger(g_debug_log, "delta_dbh = %g cm \n", delta_dbh);
+
+	/* compute tree height increment (in m) */
+	delta_height = delta_dbh_m * s->value[HD_EFF];
+	logger(g_debug_log, "delta_height = %g cm \n", delta_height);
+
+
+	/*************************************************************************************************************************/
+	/*************************************************************************************************************************/
+
+
 	logger(g_debug_log, "\n**Average DBH**\n");
 
 	/* compute tree AVDBH */
-	if (s->value[STEMCONST_P] == NO_DATA && s->value[STEMPOWER_P] == NO_DATA)
-	{
-		/* use generic stemconst stempower values */
-		if (oldavDBH < 9)
-		{
-			d->value = pow((s->value[AV_STEM_MASS_KgC] * GC_GDM / s->value[STEMCONST]), (1.0 / STEMPOWER_A));
-		}
-		else if (oldavDBH > 9 && oldavDBH < 15)
-		{
-			d->value = pow((s->value[AV_STEM_MASS_KgC] * GC_GDM / s->value[STEMCONST]), (1.0 / STEMPOWER_B));
-		}
-		else
-		{
-			d->value = pow((s->value[AV_STEM_MASS_KgC] * GC_GDM / s->value[STEMCONST]), (1.0 / STEMPOWER_C));
-		}
-	}
-	else
-	{
-		/* use site specific stemconst stempower values */
-		logger(g_debug_log, "Using site related stemconst stempower\n");
-		d->value = pow((s->value[AV_STEM_MASS_KgC] * GC_GDM) / s->value[STEMCONST_P], (1.0 / s->value[STEMPOWER_P]));
-	}
+//	if (s->value[STEMCONST_P] == NO_DATA && s->value[STEMPOWER_P] == NO_DATA)
+//	{
+//		/* use generic stemconst stempower values */
+//		if (oldavDBH < 9)
+//		{
+//			d->value = pow((s->value[AV_STEM_MASS_KgC] * GC_GDM / s->value[STEMCONST]), (1.0 / STEMPOWER_A));
+//		}
+//		else if (oldavDBH > 9 && oldavDBH < 15)
+//		{
+//			d->value = pow((s->value[AV_STEM_MASS_KgC] * GC_GDM / s->value[STEMCONST]), (1.0 / STEMPOWER_B));
+//		}
+//		else
+//		{
+//			d->value = pow((s->value[AV_STEM_MASS_KgC] * GC_GDM / s->value[STEMCONST]), (1.0 / STEMPOWER_C));
+//		}
+//	}
+//	else
+//	{
+//		/* use site specific stemconst stempower values */
+//		logger(g_debug_log, "Using site related stemconst stempower\n");
+//		d->value = pow((s->value[AV_STEM_MASS_KgC] * GC_GDM) / s->value[STEMCONST_P], (1.0 / s->value[STEMPOWER_P]));
+//	}
+
+	// test
+	/* following Peng et al., 2002 */
+	d->value += delta_dbh;
+
+
+	logger(g_debug_log, "-prova = %g cm\n", d->value - oldavDBH);
 
 	logger(g_debug_log, "-Average stem mass = %g kgC/tree\n", s->value[AV_STEM_MASS_KgC]);
 	logger(g_debug_log, "-Old AVDBH = %g cm\n", oldavDBH);
 	logger(g_debug_log, "-New Average DBH = %g cm\n", d->value);
+
 
 	/* check */
 	CHECK_CONDITION( d->value, < oldavDBH - eps );
@@ -95,29 +210,39 @@ void dendrometry(cell_t *const c, const int height, const int dbh, const int age
 	 * for references see also: M. Sharma, J. Parton, Forest Ecology and Management 249 (2007) 187–198
 	 */
 
-	logger(g_debug_log, "\n**Tree Height from CC function**\n");
+	logger(g_debug_log, "\n**Average Tree Height**\n");
 
 	/* Chapman-Richards functions */
-	//note: this shouldn't be applied to saplings that are lower than 1.3 meter
-	h->value = DBH_ref + s->value[CRA] * pow (1.0 - exp ( - s->value[CRB] * d->value) , s->value[CRC]);
+//	//note: this shouldn't be applied to saplings that are lower than 1.3 meter
+//	h->value = DBH_ref + s->value[CRA] * pow (1.0 - exp ( - s->value[CRB] * d->value) , s->value[CRC]);
+//
+//	if ( h->value > s->value[CRA] )
+//	{
+//		h->value = s->value[CRA];
+//	}
+//	logger(g_debug_log, "-Tree Height using Chapman-Richard function = %g m\n", h->value);
+//
+//	/* check */
+//	CHECK_CONDITION (h->value, > s->value[CRA] + eps )
+//
+//	logger(g_debug_log, "-Old Tree Height = %g m\n", oldTreeHeight);
+//	logger(g_debug_log, "-New Tree Height = %g m\n", h->value);
 
-	if ( h->value > s->value[CRA] )
-	{
-		h->value = s->value[CRA];
-	}
-	logger(g_debug_log, "-Tree Height using Chapman-Richard function = %g m\n", h->value);
+	/* Weibull function */
+	/* for references see also: R. Pilli et al. / Forest Ecology and Management 237 (2006) 583–593 */
+	/*
+	 h->value = DBH_ref + s->value[WA] *(1.0 - exp ( - s->value[WB] * d->value * s->value[WC]);
+	*/
 
-	/* check */
-	CHECK_CONDITION (h->value, > s->value[CRA] + eps )
+
+	// test
+	/* following Peng et al., 2002 */
+	h->value += delta_height;
+
+	logger(g_debug_log, "-prova = %g cm\n", h->value - oldTreeHeight);
 
 	logger(g_debug_log, "-Old Tree Height = %g m\n", oldTreeHeight);
 	logger(g_debug_log, "-New Tree Height = %g m\n", h->value);
-
-	/* Weibull function */
-	/* for references see also: R. Pilli et al. / Forest Ecology and Management 237 (2006) 583–593
-	/*
-	 h->value = DBH_ref + s->value[WA] *(1.0 - exp ( - s->value[WB] * d->value * s->value[WC]);
-	 */
 
 
 	/* check */

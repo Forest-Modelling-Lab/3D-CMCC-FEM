@@ -7,13 +7,13 @@
 *~
 
 # ignore these directories  
-/Debug/
-/Release/
-/output/
+/Debug
+/Release
+/output
 
 # ignore eclipse settings file
-/.settings/
-/.metadata/
+/.settings
+/.metadata
 
 # ignore all .txt files in output folders
 /output/debug_output/*.txt

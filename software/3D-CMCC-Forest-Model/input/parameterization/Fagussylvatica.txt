@@ -1,7 +1,7 @@
 //Fagus_sylvatica
 LIGHT_TOL   3           //4 = very shade intolerant (cc = 90%), 3 = shade intolerant (cc = 100%), 2 = shade tolerant (cc = 110%), 1 = very shade tolerant (cc = 120%)
 PHENOLOGY   0.1         //PHENOLOGY 0.1 = deciduous broadleaf, 0.2 = deciduous needle leaf, 1.1 = broad leaf evergreen, 1.2 = needle leaf evergreen 
-ALPHA   0.055           // Canopy quantum efficiency (molC/molPAR) 0.055 Vitale et al., 2012, 0.05 from Williams 1996 
+ALPHA   0.055           // Canopy quantum efficiency (molC/molPAR) (0.055) Vitale et al., 2012, (0.05) from Williams 199, (0.056) Rotzer et al., 2010
 EPSILONgCMJ 0           // Light Use Efficiency  (gC/MJ)(used if ALPHA is not available) 
 K   0.60                //0.54 Extinction coefficient for absorption of PAR by canopy 0.71 for F. sylvatica Vitale et al., 2012, 0.5 from Williams 1996, 0.65
 ALBEDO  0.2             //Albedo
@@ -68,8 +68,8 @@ STEMPOWER_P 2.134       //from ettore
 CRA 35                  //Chapman-Richards maximum height
 CRB 0.038               //Chapman_Richards b parameter
 CRC 1.104               //Chapman_Richards c parameter
-HDMAX   1.71            //Height to Base diameter ratio MAX  (Portoghesi)
-HDMIN   0.2             //Height to Base diameter ratio MIN  (Portoghesi)
+HDMAX   130             //Height (m) to dbh (m) ratio MAX for F. sylvatica Seidl et al., 2012
+HDMIN   55              //Height (m) to dbh (m) ratio MIN for F. sylvatica Seidl et al., 2012
 MAXSEED 20000           //numero massimo semi prodotti dalla pianta (da TREEMIG) (NOT USED)
 MASTSEED    5           //ricorrenza anni di pasciona (da TREEMIG) (NOT USED)
 WEIGHTSEED  7           //peso frutto in g FOR Quercus sp (Bernetti) 3.5 from Williams 1996 
