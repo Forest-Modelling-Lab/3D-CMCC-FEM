@@ -16,6 +16,7 @@ TBB 10                 //Age at which fracBB = (FRACBB0 + FRACBB1 )/ 2 for P. sy
 RHOMIN  0.43           //Minimum Basic Density for young Trees t/m^3 for Picea abies Seidl et al., 2012+
 RHOMAX  0.43           //Maximum Basic Density for young Trees t/m^3 for Picea abies Seidl et al., 2012
 TRHO    4              //Age at which rho = (RHOMIN + RHOMAX )/2
+FORM_FACTOR 0.423      //Form factor Seidl et al., 2012
 COEFFCOND   0.06       //Define stomatal responsee to VPD in mbar for Picea abies Seidl et al., 2012
 BLCOND  0.009          //Canopy Boundary Layer conductance  for Picea abies Seidl et al., 2012
 MAXCOND 0.0015         //Maximum Stomatal Conductance in m/sec for Breuer et al.,

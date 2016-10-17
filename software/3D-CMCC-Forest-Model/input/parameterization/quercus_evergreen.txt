@@ -27,7 +27,7 @@ TBB 20              //Age at which fracBB = (FRACBB0 + FRACBB1 )/ 2
 RHOMIN  0.4             //Minimum Basic Density for young Trees t/m^3 (Federici et al., 2008), 0.96 (Pilli et al., 2006)
 RHOMAX  0.72             //Maximum Basic Density for young Trees 
 TRHO    4               //Age at which rho = (RHOMIN + RHOMAX )/2
-
+FORM_FACTOR 0.454       //Form factor Seidl et al., 2012 for Q.robur
 //VPD
 COEFFCOND   0.06    //0.05 castel Define stomatal responsee to VPD in mbar see Pietsch et al., 2005
 BLCOND  0.01            //Canopy Boundary Layer conductance see Pietsch et al., 2005, Mollicone et al

@@ -13,9 +13,10 @@ LAI_RATIO   2.6               //(DIM) all-sided to projected leaf area ratio for
 FRACBB0 0.30                  //Branch and Bark fraction at age 0 for P. sylvestris, from Xenakis et al., 2008, 0.29 deducted for P. sylvestris from Yuste et al., 2005, 0.29 from Lehtonen et al., 2004 For Eco Manag, 0.71 from xiao and Ceulemans
 FRACBB1 0.1                   //Branch and Bark fraction for mature stands for P. sylvestris, from Xenakis et al., 2008, 0.29 deducted for P. sylvestris from Yuste et al., 2005, 0.29 from Lehtonen et al., 2004 For Eco Manag, 0.18 from Jenssen et al 1999, 0.77 from xiao and Ceulemans
 TBB 10                        //Age at which fracBB = (FRACBB0 + FRACBB1 )/ 2 for P. sylvestris, from Xenakis et al., 2008
-RHOMIN  0.47                  //Minimum Basic Density for young Trees t/m^3 for P. sylvestris Landsberg et al., 2005
-RHOMAX  0.47                  //Maximum Basic Density for young Trees t/m^3 for P. sylvestris Landsberg et al., 2005
+RHOMIN  0.47                  //Minimum Basic Density for young Trees t/m^3 for P. sylvestris Landsberg et al., 2005, 0.47 Seidl et al., 2012
+RHOMAX  0.47                  //Maximum Basic Density for young Trees t/m^3 for P. sylvestris Landsberg et al., 2005, 0.47 Seidl et al., 2012
 TRHO    4                     //Age at which rho = (RHOMIN + RHOMAX )/2
+FORM_FACTOR 0.435             //Form factor Seidl et al., 2012
 COEFFCOND   0.05              //Define stomatal responsee to VPD in mbar for P. sylvestris Landsberg et al., 2005
 BLCOND  0.009                 //Canopy Boundary Layer conductance for P. sylvestris from Pietsch 
 MAXCOND 0.001                 //Maximum Stomatal Conductance in m/sec for P. sylvestris from Pietsch

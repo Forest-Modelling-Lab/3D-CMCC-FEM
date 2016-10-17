@@ -155,7 +155,7 @@ void dendrometry(cell_t *const c, const int layer, const int height, const int d
 	logger(g_debug_log, "delta_carbon stem = %g tC/month tree \n", delta_C_stem);
 
 	/* compute diameter increment (in m) */
-	delta_dbh_m = ( 4. * delta_C_stem) / ( Pi * tree_form_factor * pow( ( dbh_m ), 2. ) * ( ( 2. * current_hdf ) + s->value[HD_EFF] ) );
+	delta_dbh_m = ( 4. * delta_C_stem) / ( Pi * s->value[FORM_FACTOR] * pow( ( dbh_m ), 2. ) * ( ( 2. * current_hdf ) + s->value[HD_EFF] ) );
 	/* convert m --> cm */
 	delta_dbh = delta_dbh_m * 100.;
 	logger(g_debug_log, "delta_dbh = %g cm \n", delta_dbh);
@@ -163,7 +163,6 @@ void dendrometry(cell_t *const c, const int layer, const int height, const int d
 	/* compute tree height increment (in m) */
 	delta_height = delta_dbh_m * s->value[HD_EFF];
 	logger(g_debug_log, "delta_height = %g cm \n", delta_height);
-
 
 	/*************************************************************************************************************************/
 	/*************************************************************************************************************************/
@@ -174,7 +173,6 @@ void dendrometry(cell_t *const c, const int layer, const int height, const int d
 	d->value += delta_dbh;
 	logger(g_debug_log, "-Old AVDBH = %g cm\n", oldavDBH);
 	logger(g_debug_log, "-New Average DBH = %g cm\n", d->value);
-
 
 	/* check */
 	CHECK_CONDITION( d->value, < oldavDBH - eps );
@@ -187,7 +185,6 @@ void dendrometry(cell_t *const c, const int layer, const int height, const int d
 	h->value += delta_height;
 	logger(g_debug_log, "-Old Tree Height = %g m\n", oldTreeHeight);
 	logger(g_debug_log, "-New Tree Height = %g m\n", h->value);
-
 
 	/* check */
 	CHECK_CONDITION( h->value, < oldTreeHeight - eps );

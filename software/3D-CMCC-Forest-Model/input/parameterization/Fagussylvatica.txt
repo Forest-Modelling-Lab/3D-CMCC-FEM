@@ -13,9 +13,10 @@ LAI_RATIO   2           //(DIM) all-sided to projected leaf area ratio for F. sy
 FRACBB0 0.20            //Branch and Bark fraction at age 0
 FRACBB1 0.125           //Branch and Bark fraction for mature stands (from Damesin et al., 2003)
 TBB 20                  //Age at which fracBB = (FRACBB0 + FRACBB1 )/ 2
-RHOMIN  0.64            //Minimum Basic Density for young Trees t/m^3 0.72 Bouriaud et al., 2004, 0.64 ettore
-RHOMAX  0.64            //Maximum Basic Density for young Trees  0.79 Bouriaud et al., 2004, 0.64 ettore
+RHOMIN  0.64            //Minimum Basic Density for young Trees t/m^3 0.72 Bouriaud et al., 2004, 0.64 ettore, 0.68 Seidl et al., 2012
+RHOMAX  0.64            //Maximum Basic Density for young Trees t/m^3 0.79 Bouriaud et al., 2004, 0.64 ettore, 0.68 Seidl et al., 2012
 TRHO    4               //Age at which rho = (RHOMIN + RHOMAX )/2
+FORM_FACTOR 0.433       //Form factor Seidl et al., 2012
 COEFFCOND   0.06        //Define stomatal responsee to VPD in mbar see Pietsch et al., 2005
 BLCOND  0.01            //Canopy Boundary Layer conductance see 0.01 for stomatal Pietsch et al., 2005
 MAXCOND 0.006           //Maximum Stomatal Conductance in m/sec 0,005 for Tatarinov et al., 2006, 0.006 Pietsch

@@ -16,6 +16,7 @@ TBB                           //Age at which fracBB = (FRACBB0 + FRACBB1 )/ 2
 RHOMIN                        //Minimum Basic Density for young Trees t/m^3 
 RHOMAX                        //Maximum Basic Density for young Trees t/m^3
 TRHO                          //Age at which rho = (RHOMIN + RHOMAX )/2
+FORM_FACTOR                   //Form factor Seidl et al., 2012
 COEFFCOND                     //Define stomatal responsee to VPD in mbar
 BLCOND                        //Canopy Boundary Layer conductance 
 MAXCOND                       //Maximum Stomatal Conductance in m/sec 

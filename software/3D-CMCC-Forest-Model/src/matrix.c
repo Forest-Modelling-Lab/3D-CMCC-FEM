@@ -700,6 +700,7 @@ static const char *sz_species_values[] =
 		"RHOMIN",                     /* Minimum Basic Density for young Trees */
 		"RHOMAX",                     /* Maximum Basic Density for young Trees */
 		"TRHO",                       /* Age at which rho = (RHOMIN + RHOMAX )/2 */
+		"FORM_FACTOR",                /* Tree form factor (adim) */
 		"COEFFCOND",                  /* Define stomatal responsee to VPD in m/sec */
 		"BLCOND",                     /* Canopy Boundary Layer conductance */
 		"MAXCOND",                    /* Maximum leaf Conductance in m/sec */
