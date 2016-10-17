@@ -114,9 +114,10 @@ STEMPOWER_P 2.134   //from ettore
 CRA 34.597
 CRB 0.038
 CRC 1.104
-//CROWDING COMPETITION FUNCTION
-HDMAX   1.71             //Height to Base diameter ratio MAX  (Portoghesi)
-HDMIN   0.2             //Height to Base diameter ratio MIN  (Portoghesi)
+HDMAX_A 323.6           //A parameter for Height (m) to Base diameter (m) ratio MAX Seidl et al., 2012
+HDMAX_B -0.368          //B parameter for Height (m) to Base diameter (m) ratio MAX Seidl et al., 2012
+HDMIN_A 100.9           //A parameter for Height (m) to Base diameter (m) ratio MIN Seidl et al., 2012
+HDMIN_B -0.243          //B parameter for Height (m) to Base diameter (m) ratio MIN Seidl et al., 2012
 
 MAXSEED 20000           //numero massimo semi prodotti dalla pianta (da TREEMIG) 
 MASTSEED    5       //ricorrenza anni di pasciona (da TREEMIG) 

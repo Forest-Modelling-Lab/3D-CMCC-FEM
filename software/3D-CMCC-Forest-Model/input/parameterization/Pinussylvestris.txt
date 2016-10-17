@@ -68,8 +68,10 @@ STEMPOWER_P 2.0087            //2.50626 E. Cienciala et al., 2006 For P. sylvest
 CRA 40                        //for P. sylvestris 32 from Rupsys et al., 2010
 CRB 0.04                      //for P. sylvestris from Rupsys et al., 2010
 CRC 0.99                      //for P. sylvestris from Rupsys et al., 2010
-HDMAX   98                    //Height (m) to dbh (m) ratio MAX for P. sylvestris Seidl et al., 2012
-HDMIN   55                    //Height (m) to dbh (m) ratio MIN  for P. sylvestris Seidl et al., 2012
+HDMAX_A 148.1                 //A parameter for Height (m) to Base diameter (m) ratio MAX Seidl et al., 2012
+HDMAX_B -0.165                //B parameter for Height (m) to Base diameter (m) ratio MAX Seidl et al., 2012
+HDMIN_A 76.3                  //A parameter for Height (m) to Base diameter (m) ratio MIN Seidl et al., 2012
+HDMIN_B -0.129                //B parameter for Height (m) to Base diameter (m) ratio MIN Seidl et al., 2012
 MAXSEED 20000       //TO BE CHECKED           //numero massimo semi prodotti dalla pianta
 MASTSEED    5       //TO BE CHECKED           //ricorrenza anni di pasciona
 WEIGHTSEED  7       //TO BE CHECKED           //peso frutto in g 

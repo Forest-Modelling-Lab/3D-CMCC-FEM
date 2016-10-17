@@ -90,8 +90,10 @@ enum {
 	CRA,                        /* Chapman-Richards maximum height */
 	CRB,                        /* Chapman_Richards b parameter */
 	CRC,                        /* Chapman_Richards c parameter */
-	HDMAX,                      /* Height to Base diameter ratio MAX */
-	HDMIN,                      /* Height to Base diameter ratio MIN */
+	HDMAX_A,                    /* A parameter for Height (m) to Base diameter (m) ratio MAX */
+	HDMAX_B,                    /* B parameter for Height (m) to Base diameter (m) ratio MAX */
+	HDMIN_A,                    /* A parameter for Height (m) to Base diameter (m) ratio MIN */
+	HDMIN_B,                    /* B parameter for Height (m) to Base diameter (m) ratio MIN */
 	MAXSEED,                    /* numero massimo semi prodotti dalla pianta (da TREEMIG) */
 	MASTSEED,                   /* ricorrenza anni di pasciona (da TREEMIG) */
 	WEIGHTSEED,                 /* fruit wiight in g */
@@ -119,6 +121,8 @@ enum {
 	CROWN_AREA_DBHDC,           /* Crown Area in m^2 from DBHDC function*/
 	CANOPY_COVER_DBHDC,         /* Canopy Cover % of pixel covered from DBHDC function*/
 	HD_EFF,                     /* Effective Height/Diameter ratio */
+	HD_MAX,                     /* Height (m) to Base diameter (m) ratio MAX */
+	HD_MIN,                     /* Height (m) to Base diameter (m) ratio MIN */
 	SAPWOOD_AREA,
 	SAPWOOD_PERC,
 	HEARTWOOD_AREA,

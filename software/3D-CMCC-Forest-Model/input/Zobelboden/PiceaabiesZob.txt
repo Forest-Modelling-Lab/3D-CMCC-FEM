@@ -112,10 +112,10 @@ STEMPOWER_P 2.0087    //2.50626 E. Cienciala et al., 2006 For P. sylvestris; fro
 CRA 56    //for Picea abies Seidl et al., 2012
 CRB 0.0658  //for Picea abies from Pommerening et al., 2011 ????
 CRC 5.5289  //for Picea abies from Pommerening et al., 2011 ????
-
-//CROWDING COMPETITION FUNCTION
-HDMAX   0.95             //Height to Base diameter ratio MAX  for Picea abies Seidl et al., 2012
-HDMIN   0.47             //Height to Base diameter ratio MIN  for Picea abies Seidl et al., 2012
+HDMAX_A 196.3                 //A parameter for Height (m) to Base diameter (m) ratio MAX Seidl et al., 2012
+HDMAX_B -0.240                //B parameter for Height (m) to Base diameter (m) ratio MAX Seidl et al., 2012
+HDMIN_A 84.8                  //A parameter for Height (m) to Base diameter (m) ratio MIN Seidl et al., 2012
+HDMIN_B -0.194                //B parameter for Height (m) to Base diameter (m) ratio MIN Seidl et al., 2012
 
 MAXSEED 20000           //numero massimo semi prodotti dalla pianta (da TREEMIG) FOR Quercus sp
 MASTSEED    5       //ricorrenza anni di pasciona (da TREEMIG) FOR Quercus sp (Bernetti)

@@ -107,9 +107,10 @@ STEMPOWER_P ?   //
 CRA ?
 CRB ?
 CRC ?
-//CROWDING COMPETITION FUNCTION
-HDMAX   ?             //Height to Base diameter ratio MAX  
-HDMIN   ?             //Height to Base diameter ratio MIN  
+HDMAX_A ?           //A parameter for Height (m) to Base diameter (m) ratio MAX Seidl et al., 2012
+HDMAX_B ?          //B parameter for Height (m) to Base diameter (m) ratio MAX Seidl et al., 2012
+HDMIN_A ?           //A parameter for Height (m) to Base diameter (m) ratio MIN Seidl et al., 2012
+HDMIN_B ?          //B parameter for Height (m) to Base diameter (m) ratio MIN Seidl et al., 2012
 
 MAXSEED -9999           //numero massimo semi prodotti dalla pianta (da TREEMIG) 
 MASTSEED    -9999       //ricorrenza anni di pasciona (da TREEMIG) 

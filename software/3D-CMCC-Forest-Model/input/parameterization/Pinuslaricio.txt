@@ -68,8 +68,10 @@ STEMPOWER_P                   //power in the stem mass vs. diameter relationship
 CRA                           //Chapman-Richards maximum height
 CRB                           //Chapman_Richards b parameter
 CRC                           //Chapman_Richards c parameter
-HDMAX                         //Height to Base diameter ratio MAX
-HDMIN                         //Height to Base diameter ratio MIN
+HDMAX_A ?                     //A parameter for Height (m) to Base diameter (m) ratio MAX Seidl et al., 2012
+HDMAX_B ?                     //B parameter for Height (m) to Base diameter (m) ratio MAX Seidl et al., 2012
+HDMIN_A ?                     //A parameter for Height (m) to Base diameter (m) ratio MIN Seidl et al., 2012
+HDMIN_B ?                     //B parameter for Height (m) to Base diameter (m) ratio MIN Seidl et al., 2012
 MAXSEED                       //numero massimo semi prodotti dalla pianta
 MASTSEED                      //ricorrenza anni di pasciona
 WEIGHTSEED                    //peso frutto in g 

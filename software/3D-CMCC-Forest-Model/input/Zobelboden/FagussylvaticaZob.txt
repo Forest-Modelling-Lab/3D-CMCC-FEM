@@ -113,9 +113,7 @@ STEMPOWER_P 2.134   //from ettore
 CRA	34.597
 CRB	0.038
 CRC	1.104
-//CROWDING COMPETITION FUNCTION
-HDMAX	1.71             //Height to Base diameter ratio MAX  (Portoghesi)
-HDMIN	0.2             //Height to Base diameter ratio MIN  (Portoghesi)
+Fagussylvatica.txt
 
 //SEEDS PRODUCTION
 
