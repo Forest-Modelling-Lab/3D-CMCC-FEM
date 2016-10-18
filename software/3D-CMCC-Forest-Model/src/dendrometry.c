@@ -21,16 +21,11 @@ void dendrometry(cell_t *const c, const int layer, const int height, const int d
 	double pot_max_crown_area;         /* potential maximum crown area */
 	double current_ccf;                /* crown competition factor */
 	double current_hdf;                /* height-diameter competition factor */
-	double delta_C_stem;               /* stem C increment (in tC) */
+	double delta_C_stem;               /* stem C increment (in kgC/tree) */
 	double delta_dbh;                  /* dbh increment (in cm) */
 	double delta_dbh_m;                /* dbh increment (in m) */
 	double delta_height;               /* height increment (in m) */
 	double dbh_m;                      /* dbh in meter */
-
-	//fixme to include in species.txt
-	double tree_form_factor = 0.4;     /* tree form factor (0.4 Bossel et al., 1996) */
-
-
 
 	height_t *h;
 	dbh_t *d;
@@ -39,8 +34,8 @@ void dendrometry(cell_t *const c, const int layer, const int height, const int d
 
 	/* this function compute at the temporal scale at which is called:
 	 * -mass density
-	 * -average dbh
-	 * -tree height
+	 * -delta dbh
+	 * -delta tree height
 	 * -basal area
 	 * -recompute fractions of live and dead wood
 	 * */
@@ -66,8 +61,7 @@ void dendrometry(cell_t *const c, const int layer, const int height, const int d
 
 	/*************************************************************************************************************************/
 	/*************************************************************************************************************************/
-	/* crown competition factor following:
-	 - Bossel 1996 Ecological Modelling 90, 187-227
+	/* - Bossel 1996 Ecological Modelling 90, 187-227
 	 - Peng et al., 2002, Ecological Modelling 153, 109-130
 	 - Seidl et al., 2012, Ecological Modelling 231, 87-100
 	*/
@@ -150,6 +144,7 @@ void dendrometry(cell_t *const c, const int layer, const int height, const int d
 	}
 	logger(g_debug_log, "Effective H/D ratio = %g\n", s->value[HD_EFF]);
 
+
 	/* compute individual delta carbon stem and tC --> kgDM / tree */
 	delta_C_stem = (s->value[C_TO_STEM] / s->counter[N_TREE]) * GC_GDM * 1000.;
 	logger(g_debug_log, "delta_carbon stem = %g tC/month tree \n", delta_C_stem);
@@ -189,7 +184,7 @@ void dendrometry(cell_t *const c, const int layer, const int height, const int d
 	/* check */
 	CHECK_CONDITION( h->value, < oldTreeHeight - eps );
 	//fixme once change CRA with HMAX
-	CHECK_CONDITION( h->value, < s->value[CRA] - eps );
+	CHECK_CONDITION( h->value, > s->value[CRA] - eps );
 
 	/*************************************************************************************************************************/
 

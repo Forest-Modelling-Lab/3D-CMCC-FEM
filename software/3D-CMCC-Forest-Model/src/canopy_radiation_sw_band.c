@@ -287,6 +287,7 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 	logger(g_debug_log, "Light_refl_sw_rad_canopy_frac = %g %%\n", Light_refl_sw_rad_canopy_frac * 100);
 	logger(g_debug_log, "LightReflec_par = %g %%\n\n", Light_refl_par_frac * 100);
 
+
 	//fixme set that if gapcover is bigger then 0.5 albedo should be considered also in dominated layer!!!!
 	//fixme following MAESPA (Duursma et al.,) and from Campbell&Norman (2000, p. 259) dominated layers should have just shaded leaves
 

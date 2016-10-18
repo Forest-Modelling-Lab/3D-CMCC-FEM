@@ -60,17 +60,17 @@ static void write_paths(logger_t *const _log)
 	logger(_log, "settings file = %s\n", get_filename(g_sz_settings_file));
 }
 
-static print_model_settings(logger_t*const log)
+static void print_model_settings(logger_t*const log)
 {
 	//assert(log);
 
 	logger(log, "*model settings*\n");
-	logger(log, "-CO2_mod = %s\n", g_settings->CO2_mod ? "on" : "off");
-	logger(log, "-CO2 fixed = %s\n"
+	logger(log, "CO2_mod = %s\n", g_settings->CO2_mod ? "on" : "off");
+	logger(log, "CO2 fixed = %s\n"
 					, (CO2_FIXED_VAR == g_settings->CO2_fixed) ? "var" : (CO2_FIXED_ON == g_settings->CO2_fixed) ? "on" : "off");
-	logger(log, "-Q10 fixed = %s\n", g_settings->Q10_fixed ? "on" : "off");
-	logger(log, "-regeneration = %s\n", g_settings->regeneration ? "on" : "off");
-	logger(log, "-Management = %s\n", g_settings->management ? "on" : "off");
+	logger(log, "Q10 fixed = %s\n", g_settings->Q10_fixed ? "on" : "off");
+	logger(log, "regeneration = %s\n", g_settings->regeneration ? "on" : "off");
+	logger(log, "Management = %s\n", g_settings->management ? "on" : "off");
 }
 
 void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, const int month, const int year, const int years_of_simulation )
@@ -561,7 +561,7 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 								logger(g_annual_log,"\t%10s", "SPECIES");
 
 								logger(g_annual_log,"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s"
-										"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s",
+										"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s",
 										"GPP",
 										"AR",
 										"NPP",
@@ -569,6 +569,7 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 										"LAI",
 										"CC",
 										"DBHDC",
+										"HD",
 										"Ntree",
 										"VEG_D",
 										"CET",
@@ -663,7 +664,7 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 								logger(g_annual_log,"\t%8.3s", c->heights[height].dbhs[dbh].ages[age].species[species].name);
 
 								/* print variables at layer-class level */
-								logger(g_annual_log,"\t%6.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3d \t%3d \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f"
+								logger(g_annual_log,"\t%6.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3d \t%3d \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f"
 										"\t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f",
 										s->value[YEARLY_GPP_gC],
 										s->value[YEARLY_TOTAL_AUT_RESP],
@@ -672,6 +673,7 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 										s->value[PEAK_LAI],
 										s->value[CANOPY_COVER_DBHDC],
 										s->value[DBHDC_EFF],
+										s->value[HD_EFF],
 										s->counter[N_TREE],
 										s->counter[YEARLY_VEG_DAYS],
 										s->value[YEARLY_CANOPY_EVAPO_TRANSP],
