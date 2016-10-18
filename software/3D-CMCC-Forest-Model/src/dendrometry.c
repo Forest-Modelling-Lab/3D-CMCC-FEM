@@ -11,7 +11,7 @@
 extern logger_t* g_debug_log;
 extern settings_t* g_settings;
 
-void dendrometry(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species)
+void dendrometry(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, const meteo_daily_t *const meteo_daily)
 {
 	double oldavDBH;
 	double oldTreeHeight;
@@ -19,13 +19,18 @@ void dendrometry(cell_t *const c, const int layer, const int height, const int d
 
 	double pot_max_crown_diam;         /* potential maximum crown diameter */
 	double pot_max_crown_area;         /* potential maximum crown area */
+	double pot_apar;                   /* potential absorbed par */
+	double pot_light_abs;              /* potential light absorption */
 	double current_ccf;                /* crown competition factor */
 	double current_hdf;                /* height-diameter competition factor */
+	double current_lcf;                /* current light competition factor */
 	double delta_C_stem;               /* stem C increment (in kgC/tree) */
 	double delta_dbh;                  /* dbh increment (in cm) */
 	double delta_dbh_m;                /* dbh increment (in m) */
 	double delta_height;               /* height increment (in m) */
 	double dbh_m;                      /* dbh in meter */
+	double hd_factor;                  /* HD factor based on minimum between light and crow competition */
+
 
 	height_t *h;
 	dbh_t *d;
@@ -87,61 +92,79 @@ void dendrometry(cell_t *const c, const int layer, const int height, const int d
 	/* compute potential maximum crown area */
 	pot_max_crown_diam = d->value * s->value[DBHDCMAX];
 	pot_max_crown_area = ( Pi / 4) * pow (pot_max_crown_diam, 2. );
+	logger(g_debug_log, "pot_max_crown_area = %g\n", pot_max_crown_area);
+	logger(g_debug_log, "current_crown_area = %g\n", s->value[CROWN_AREA_DBHDC]);
 
 	/* current crown competition factor (current_ccf) */
-	current_ccf = (pot_max_crown_area * c->tree_layers[layer].layer_n_trees )/ (g_settings->sizeCell * g_settings->max_layer_cover);
+	pot_apar = meteo_daily->incoming_par * (1. - (exp(- s->value[K] * s->value[LAI])));
+	logger(g_debug_log, "pot_apar = %g\n", pot_apar);
+
+	/* current crown competition factor (current_ccf) */
+	current_ccf = s->value[CROWN_AREA_DBHDC] / pot_max_crown_area;
 	logger(g_debug_log, "crown_competition factor = %g\n", current_ccf);
+
+	/* current light competition factor */
+	current_lcf = pot_apar / meteo_daily->incoming_par;
+	logger(g_debug_log, "light_competition factor = %g\n", current_lcf);
 
 	/* current height diameter factor (current_ccf) */
 	current_hdf = h->value / dbh_m;
 	logger(g_debug_log, "height/diameter factor = %g\n", current_hdf);
 
-	//fixme fixme fixme in this way it doesn't take into account dominated with low density layer
-	//should use "min (fraction of light_trasm, current_ccf);"
 
-	/* compute effective H/D ratio */
-	/* case 1, no competition */
-	if ( current_ccf < s->value[LIGHT_TOL] && current_hdf >= s->value[HD_MIN] )
-	{
-		logger(g_debug_log, "case1\n");
+	/* Peng et al., 2002 method */
+//	/* compute effective H/D ratio */
+//	/* case 1, no competition */
+//	if ( current_ccf < s->value[LIGHT_TOL] && current_hdf >= s->value[HD_MIN] )
+//	{
+//		logger(g_debug_log, "case1\n");
+//
+//		s->value[HD_EFF] = s->value[HD_MIN];
+//	}
+//	/* case 2, high competition */
+//	else if ( current_ccf >= s->value[LIGHT_TOL] && current_hdf <= s->value[HD_MAX] )
+//	{
+//		logger(g_debug_log, "case2\n");
+//
+//		s->value[HD_EFF] = s->value[HD_MAX];
+//	}
+//	/* case 3, high competition low age */
+//	else if ( current_ccf >= s->value[LIGHT_TOL] && current_hdf <= s->value[HD_MAX] && a->value < ( 0.5 * s->value[MAXAGE] ) )
+//	{
+//		logger(g_debug_log, "case3\n");
+//
+//		s->value[HD_EFF] = s->value[HD_MIN];
+//	}
+//	/* case 4 */
+//	else if ( current_hdf < s->value[HD_MIN] )
+//	{
+//		logger(g_debug_log, "case4\n");
+//
+//		s->value[HD_EFF] = s->value[HD_MAX];
+//	}
+//	/* case 5 */
+//	else if ( current_hdf > s->value[HD_MAX] )
+//	{
+//		logger(g_debug_log, "case5\n");
+//
+//		s->value[HD_EFF] = 0.5 * s->value[HD_MIN];
+//	}
+//	/* case 6 */
+//	else if ( a->value > ( 0.75 * s->value[MAXAGE] ) )
+//	{
+//		logger(g_debug_log, "case6\n");
+//
+//		s->value[HD_EFF] = 0.;
+//	}
+//	logger(g_debug_log, "Effective H/D ratio = %g\n", s->value[HD_EFF]);
 
-		s->value[HD_EFF] = s->value[HD_MIN];
-	}
-	/* case 2, high competition */
-	else if ( current_ccf >= s->value[LIGHT_TOL] && current_hdf <= s->value[HD_MAX] )
-	{
-		logger(g_debug_log, "case2\n");
+	/* partially inspired to Seidl et al., 2012 method */
+	/* HD factor based on minimum between light and crow competition */
+	hd_factor = MIN (current_ccf, current_lcf);
+	logger(g_debug_log, "minimum factor = %g\n", hd_factor);
 
-		s->value[HD_EFF] = s->value[HD_MAX];
-	}
-	/* case 3, high competition low age */
-	else if ( current_ccf >= s->value[LIGHT_TOL] && current_hdf <= s->value[HD_MAX] && a->value < ( 0.5 * s->value[MAXAGE] ) )
-	{
-		logger(g_debug_log, "case3\n");
-
-		s->value[HD_EFF] = s->value[HD_MIN];
-	}
-	/* case 4 */
-	else if ( current_hdf < s->value[HD_MIN] )
-	{
-		logger(g_debug_log, "case4\n");
-
-		s->value[HD_EFF] = s->value[HD_MAX];
-	}
-	/* case 5 */
-	else if ( current_hdf > s->value[HD_MAX] )
-	{
-		logger(g_debug_log, "case5\n");
-
-		s->value[HD_EFF] = 0.5 * s->value[HD_MIN];
-	}
-	/* case 6 */
-	else if ( a->value > ( 0.75 * s->value[MAXAGE] ) )
-	{
-		logger(g_debug_log, "case6\n");
-
-		s->value[HD_EFF] = 0.;
-	}
+	/* HD effective using Seidl et al., 2012 */
+	s->value[HD_EFF] = (s->value[HD_MAX] * (1. - hd_factor)) + (s->value[HD_MIN] * hd_factor);
 	logger(g_debug_log, "Effective H/D ratio = %g\n", s->value[HD_EFF]);
 
 
@@ -158,6 +181,12 @@ void dendrometry(cell_t *const c, const int layer, const int height, const int d
 	/* compute tree height increment (in m) */
 	delta_height = delta_dbh_m * s->value[HD_EFF];
 	logger(g_debug_log, "delta_height = %g cm \n", delta_height);
+
+
+	/* check */
+	CHECK_CONDITION( s->value[HD_EFF], < s->value[HD_MIN]);
+	CHECK_CONDITION( s->value[HD_EFF], > s->value[HD_MAX]);
+
 
 	/*************************************************************************************************************************/
 	/*************************************************************************************************************************/
@@ -184,7 +213,7 @@ void dendrometry(cell_t *const c, const int layer, const int height, const int d
 	/* check */
 	CHECK_CONDITION( h->value, < oldTreeHeight - eps );
 	//fixme once change CRA with HMAX
-	CHECK_CONDITION( h->value, > s->value[CRA] - eps );
+	//CHECK_CONDITION( h->value, > s->value[CRA] - eps );
 
 	/*************************************************************************************************************************/
 
