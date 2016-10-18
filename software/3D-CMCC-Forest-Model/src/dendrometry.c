@@ -20,7 +20,6 @@ void dendrometry(cell_t *const c, const int layer, const int height, const int d
 	double pot_max_crown_diam;         /* potential maximum crown diameter */
 	double pot_max_crown_area;         /* potential maximum crown area */
 	double pot_apar;                   /* potential absorbed par */
-	double pot_light_abs;              /* potential light absorption */
 	double current_ccf;                /* crown competition factor */
 	double current_hdf;                /* height-diameter competition factor */
 	double current_lcf;                /* current light competition factor */
@@ -31,6 +30,7 @@ void dendrometry(cell_t *const c, const int layer, const int height, const int d
 	double dbh_m;                      /* dbh in meter */
 	double hd_factor;                  /* HD factor based on minimum between light and crow competition */
 
+	double slope;
 
 	height_t *h;
 	dbh_t *d;
@@ -95,12 +95,16 @@ void dendrometry(cell_t *const c, const int layer, const int height, const int d
 	logger(g_debug_log, "pot_max_crown_area = %g\n", pot_max_crown_area);
 	logger(g_debug_log, "current_crown_area = %g\n", s->value[CROWN_AREA_DBHDC]);
 
+
 	/* current crown competition factor (current_ccf) */
 	pot_apar = meteo_daily->incoming_par * (1. - (exp(- s->value[K] * s->value[LAI])));
 	logger(g_debug_log, "pot_apar = %g\n", pot_apar);
 
 	/* current crown competition factor (current_ccf) */
-	current_ccf = s->value[CROWN_AREA_DBHDC] / pot_max_crown_area;
+//	current_ccf = s->value[CROWN_AREA_DBHDC] / pot_max_crown_area;
+//	logger(g_debug_log, "crown_competition factor = %g\n", current_ccf);
+	slope = s->value[DBHDCMAX]- s->value[DBHDCMIN];
+	current_ccf = (s->value[DBHDC_EFF] - s->value[DBHDCMIN])/slope;
 	logger(g_debug_log, "crown_competition factor = %g\n", current_ccf);
 
 	/* current light competition factor */
@@ -110,53 +114,6 @@ void dendrometry(cell_t *const c, const int layer, const int height, const int d
 	/* current height diameter factor (current_ccf) */
 	current_hdf = h->value / dbh_m;
 	logger(g_debug_log, "height/diameter factor = %g\n", current_hdf);
-
-
-	/* Peng et al., 2002 method */
-//	/* compute effective H/D ratio */
-//	/* case 1, no competition */
-//	if ( current_ccf < s->value[LIGHT_TOL] && current_hdf >= s->value[HD_MIN] )
-//	{
-//		logger(g_debug_log, "case1\n");
-//
-//		s->value[HD_EFF] = s->value[HD_MIN];
-//	}
-//	/* case 2, high competition */
-//	else if ( current_ccf >= s->value[LIGHT_TOL] && current_hdf <= s->value[HD_MAX] )
-//	{
-//		logger(g_debug_log, "case2\n");
-//
-//		s->value[HD_EFF] = s->value[HD_MAX];
-//	}
-//	/* case 3, high competition low age */
-//	else if ( current_ccf >= s->value[LIGHT_TOL] && current_hdf <= s->value[HD_MAX] && a->value < ( 0.5 * s->value[MAXAGE] ) )
-//	{
-//		logger(g_debug_log, "case3\n");
-//
-//		s->value[HD_EFF] = s->value[HD_MIN];
-//	}
-//	/* case 4 */
-//	else if ( current_hdf < s->value[HD_MIN] )
-//	{
-//		logger(g_debug_log, "case4\n");
-//
-//		s->value[HD_EFF] = s->value[HD_MAX];
-//	}
-//	/* case 5 */
-//	else if ( current_hdf > s->value[HD_MAX] )
-//	{
-//		logger(g_debug_log, "case5\n");
-//
-//		s->value[HD_EFF] = 0.5 * s->value[HD_MIN];
-//	}
-//	/* case 6 */
-//	else if ( a->value > ( 0.75 * s->value[MAXAGE] ) )
-//	{
-//		logger(g_debug_log, "case6\n");
-//
-//		s->value[HD_EFF] = 0.;
-//	}
-//	logger(g_debug_log, "Effective H/D ratio = %g\n", s->value[HD_EFF]);
 
 	/* partially inspired to Seidl et al., 2012 method */
 	/* HD factor based on minimum between light and crow competition */
@@ -169,7 +126,8 @@ void dendrometry(cell_t *const c, const int layer, const int height, const int d
 
 
 	/* compute individual delta carbon stem and tC --> kgDM / tree */
-	delta_C_stem = (s->value[C_TO_STEM] / s->counter[N_TREE]) * GC_GDM * 1000.;
+	//note not clear why Bossel didn't use dry matter
+	delta_C_stem = (s->value[C_TO_STEM] / s->counter[N_TREE]) /** GC_GDM */ * 1000.;
 	logger(g_debug_log, "delta_carbon stem = %g tC/month tree \n", delta_C_stem);
 
 	/* compute diameter increment (in m) */

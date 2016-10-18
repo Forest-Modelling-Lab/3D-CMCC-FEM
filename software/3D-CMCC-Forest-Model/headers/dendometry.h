@@ -4,6 +4,8 @@
 
 #include "matrix.h"
 
+void dendrometry_old(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species);
+
 void dendrometry(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, const meteo_daily_t *const meteo_daily);
 
 void annual_minimum_reserve (species_t *const s);

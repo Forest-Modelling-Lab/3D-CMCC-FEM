@@ -302,6 +302,7 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 	{
 		if ( s->value[C_TO_STEM] > 0.)
 		{
+			//dendrometry_old ( c, layer, height, dbh, age, species);
 			dendrometry ( c, layer, height, dbh, age, species, meteo_daily );
 		}
 	}

@@ -361,7 +361,12 @@ int annual_forest_structure(cell_t* const c)
 							{
 								/* note: 04 Oct 2016 */
 								/* call of this function in due to the assumption that canopy cannot decrease its area below DBHDCMIN */
-								self_thinning_mortality (c, layer);
+//								self_thinning_mortality (c, layer);
+//
+//								/* note : 18 ott 2016 */
+								logger(g_debug_log,"-DBHDC effective (%g) > DBHDCMIN (%g) \n", s->value[DBHDC_EFF] , s->value[DBHDCMIN]);
+								s->value[DBHDC_EFF] = s->value[DBHDCMIN];
+								logger(g_debug_log,"-DBHDC effective = %g\n", s->value[DBHDC_EFF]);
 							}
 						}
 					}
