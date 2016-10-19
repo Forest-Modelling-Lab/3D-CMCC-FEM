@@ -104,16 +104,6 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	{
 		annual_forest_structure ( c );
 	}
-	/* monthly forest structure */
-	if ( ( IS_LEAP_YEAR( c->years[year].year ) ? (MonthLength_Leap[month] ) : (MonthLength[month] )) == c->doy )
-	{
-		if ( ! monthly_forest_structure ( c ) )
-		{
-			puts(sz_err_out_of_memory);
-			exit(1);
-		}
-	}
-
 
 	/* print  forest cell data */
 	print_daily_forest_data ( c );

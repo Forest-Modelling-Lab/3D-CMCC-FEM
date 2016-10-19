@@ -123,11 +123,11 @@ void self_thinning_mortality ( cell_t *const c, const int layer )
 
 					/* sort by species-specific light tolerance (from the most light demanding to the lowest */
 					//test
-					for ( light_tol = (int)s->value[LIGHT_TOL]; light_tol > 0; --light_tol)
-					{
+					//for ( light_tol = (int)s->value[LIGHT_TOL]; light_tol > 0; --light_tol)
+					//{
 						//fixme self thinning mortality should follows this rationale
 						//fixme it shouldn't work properly in this way
-					}
+					//}
 
 					logger(g_debug_log, "MORTALITY BASED ON HIGH CANOPY COVER height %g species %s dbh %g !!!\n", h->value, s->name, d->value);
 
@@ -140,6 +140,7 @@ void self_thinning_mortality ( cell_t *const c, const int layer )
 						/* remove one tree per run */
 						--s->counter[N_TREE];
 						++deadtree;
+						printf("dead tree =%d\n", deadtree);
 
 						if ( s->counter[N_TREE] > 0 )
 						{

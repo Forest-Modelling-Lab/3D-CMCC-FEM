@@ -18,16 +18,20 @@ extern logger_t* g_debug_log;
 
 void forest_management (cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, const int year)
 {
+	static int years_for_thinning;
 	age_t *a;
 	species_t *s;
 
 	a = &c->heights[height].dbhs[dbh].ages[age];
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
+	++years_for_thinning;
+
 	/* this function handles all other management functions */
 
-	/* if year of simulation matches with thinning and class age doesn't matches with rotation age */
-	if ( ( ! ( ( year+1 ) % (int)s->value[THINNING] ) ) && ( a->value != s->value[ROTATION] ) )
+	/* if year of simulation matches with thinning and class age doesn't match with rotation age */
+	/* note: it assumes that model simulation start the year after last thinning */
+	if ( ( ! ( ( years_for_thinning ) % (int)s->value[THINNING] ) ) && ( a->value != s->value[ROTATION] ) )
 	{
 		logger(g_debug_log,"**FOREST MANAGEMENT**\n");
 
@@ -38,6 +42,9 @@ void forest_management (cell_t *const c, const int layer, const int height, cons
 	{
 		/* remove tree class */
 		harvesting ( c, layer, height, dbh, age, species );
+
+		/* reset years_for_thinning */
+		years_for_thinning = 0;
 
 		/* replanting tree class */
 		if( g_settings->replanted_n_tree )

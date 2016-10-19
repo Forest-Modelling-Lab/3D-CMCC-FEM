@@ -162,7 +162,7 @@ void dendrometry(cell_t *const c, const int layer, const int height, const int d
 
 
 	/* compute individual delta carbon stem and tC --> kgDM / tree */
-	//note not clear why Bossel didn't use dry matter
+	//note not clear why Bossel didn't use dry matter and uses tC
 	delta_C_stem = (s->value[C_TO_STEM] / s->counter[N_TREE]) /** GC_GDM */ * 1000.;
 	logger(g_debug_log, "delta_carbon stem = %g tC/month tree \n", delta_C_stem);
 
