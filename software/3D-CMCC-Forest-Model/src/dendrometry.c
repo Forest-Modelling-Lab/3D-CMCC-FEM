@@ -9,7 +9,7 @@
 #include "settings.h"
 
 extern logger_t* g_debug_log;
-extern settings_t* g_settings;
+//extern settings_t* g_settings;
 
 void dendrometry(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, const meteo_daily_t *const meteo_daily)
 {
@@ -17,9 +17,14 @@ void dendrometry(cell_t *const c, const int layer, const int height, const int d
 	double oldTreeHeight;
 	double oldBasalArea;
 
-	double pot_max_crown_diam;         /* potential maximum crown diameter */
-	double pot_max_crown_area;         /* potential maximum crown area */
+//	double pot_max_crown_diam;         /* potential maximum crown diameter */
+//	double pot_max_crown_area;         /* potential maximum crown area */
+	double pot_par;                    /* potential absorbable incoming par */
 	double pot_apar;                   /* potential absorbed par */
+	double pot_apar_sun;               /* potential absorbed par sun */
+	double pot_apar_shade;             /* potential absorbed par shade */
+	double leaf_cell_cover_eff;
+	double Light_refl_par_frac;
 	double current_ccf;                /* crown competition factor */
 	double current_hdf;                /* height-diameter competition factor */
 	double current_lcf;                /* current light competition factor */
@@ -89,16 +94,46 @@ void dendrometry(cell_t *const c, const int layer, const int height, const int d
 	/* dbh cm --> m */
 	dbh_m = a->value / 100.;
 
-	/* compute potential maximum crown area */
-	pot_max_crown_diam = d->value * s->value[DBHDCMAX];
-	pot_max_crown_area = ( Pi / 4) * pow (pot_max_crown_diam, 2. );
-	logger(g_debug_log, "pot_max_crown_area = %g\n", pot_max_crown_area);
-	logger(g_debug_log, "current_crown_area = %g\n", s->value[CROWN_AREA_DBHDC]);
+//	/* compute potential maximum crown area */
+//	pot_max_crown_diam = d->value * s->value[DBHDCMAX];
+//	pot_max_crown_area = ( Pi / 4) * pow (pot_max_crown_diam, 2. );
+//	logger(g_debug_log, "pot_max_crown_area = %g\n", pot_max_crown_area);
+//	logger(g_debug_log, "current_crown_area = %g\n", s->value[CROWN_AREA_DBHDC]);
+	/*******************************************************************************************/
 
+	/* compute effective canopy cover */
+	/* special case when LAI = < 1.0 */
+	if(s->value[LAI] < 1.0) leaf_cell_cover_eff = s->value[LAI] * s->value[CANOPY_COVER_DBHDC];
+	else leaf_cell_cover_eff = s->value[CANOPY_COVER_DBHDC];
 
-	/* current crown competition factor (current_ccf) */
-	pot_apar = meteo_daily->incoming_par * (1. - (exp(- s->value[K] * s->value[LAI])));
-	logger(g_debug_log, "pot_apar = %g\n", pot_apar);
+	/* check for the special case in which is allowed to have more 100% of grid cell covered */
+	if(leaf_cell_cover_eff > 1.0) leaf_cell_cover_eff = 1.0;
+
+	if( s->value[LAI] >= 1.0 )
+	{
+		Light_refl_par_frac = s->value[ALBEDO]/3.0;
+	}
+	else if ( !s->value[LAI])
+	{
+		Light_refl_par_frac = 0.0;
+	}
+	else
+	{
+		Light_refl_par_frac = (s->value[ALBEDO]/3.0) * s->value[LAI];
+	}
+
+	/* compute potential absorbable incoming par less reflected */
+	pot_par = meteo_daily->incoming_par - (meteo_daily->incoming_par * Light_refl_par_frac * leaf_cell_cover_eff);
+	/* compute potential absorbed incoming par */
+	pot_apar_sun = pot_par * (1. - (exp(- s->value[K] * s->value[LAI_SUN]))) * leaf_cell_cover_eff ;
+	pot_apar_shade = (pot_par - pot_apar_sun) * (1. - (exp(- s->value[K] * s->value[LAI_SHADE]))) * leaf_cell_cover_eff;
+	pot_apar = pot_apar_sun + pot_apar_shade;
+
+	/* current light competition factor */
+	current_lcf = s->value[APAR] / pot_apar;
+	logger(g_debug_log, "light_competition factor = %g %%\n", current_lcf);
+
+	/*******************************************************************************************/
 
 	/* current crown competition factor (current_ccf) */
 //	current_ccf = s->value[CROWN_AREA_DBHDC] / pot_max_crown_area;
@@ -107,9 +142,8 @@ void dendrometry(cell_t *const c, const int layer, const int height, const int d
 	current_ccf = (s->value[DBHDC_EFF] - s->value[DBHDCMIN])/slope;
 	logger(g_debug_log, "crown_competition factor = %g\n", current_ccf);
 
-	/* current light competition factor */
-	current_lcf = pot_apar / meteo_daily->incoming_par;
-	logger(g_debug_log, "light_competition factor = %g\n", current_lcf);
+
+	/*******************************************************************************************/
 
 	/* current height diameter factor (current_ccf) */
 	current_hdf = h->value / dbh_m;
@@ -119,6 +153,8 @@ void dendrometry(cell_t *const c, const int layer, const int height, const int d
 	/* HD factor based on minimum between light and crow competition */
 	hd_factor = MIN (current_ccf, current_lcf);
 	logger(g_debug_log, "minimum factor = %g\n", hd_factor);
+
+	/*******************************************************************************************/
 
 	/* HD effective using Seidl et al., 2012 */
 	s->value[HD_EFF] = (s->value[HD_MAX] * (1. - hd_factor)) + (s->value[HD_MIN] * hd_factor);
@@ -139,7 +175,6 @@ void dendrometry(cell_t *const c, const int layer, const int height, const int d
 	/* compute tree height increment (in m) */
 	delta_height = delta_dbh_m * s->value[HD_EFF];
 	logger(g_debug_log, "delta_height = %g cm \n", delta_height);
-
 
 	/* check */
 	CHECK_CONDITION( s->value[HD_EFF], < s->value[HD_MIN]);
