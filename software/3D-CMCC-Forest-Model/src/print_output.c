@@ -67,7 +67,7 @@ static void print_model_settings(logger_t*const log)
 	logger(log, "*model settings*\n");
 	logger(log, "CO2_mod = %s\n", g_settings->CO2_mod ? "on" : "off");
 	logger(log, "CO2 fixed = %s\n"
-					, (CO2_FIXED_VAR == g_settings->CO2_fixed) ? "var" : (CO2_FIXED_ON == g_settings->CO2_fixed) ? "on" : "off");
+			, (CO2_FIXED_VAR == g_settings->CO2_fixed) ? "var" : (CO2_FIXED_ON == g_settings->CO2_fixed) ? "on" : "off");
 	logger(log, "Q10 fixed = %s\n", g_settings->Q10_fixed ? "on" : "off");
 	logger(log, "regeneration = %s\n", g_settings->regeneration ? "on" : "off");
 	logger(log, "Management = %s\n", g_settings->management ? "on" : "off");
@@ -357,12 +357,31 @@ void EOM_print_cumulative_balance_cell_level(cell_t *const c, const int month, c
 								/* heading for species name */
 								logger(g_monthly_log,"\t%10s", "SPECIES");
 
-								logger(g_monthly_log,"\t%4s \t%4s \t%4s \t%4s \t%4s",
+								logger(g_monthly_log,"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s"
+										"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s",
 										"GPP",
 										"AR",
 										"NPP",
 										"CET",
-										"CLE");
+										"CLE",
+										"CC",
+										"DBHDC",
+										"HD_EFF",
+										"HDMAX",
+										"HDMIN",
+										"N_TREE",
+										"WRes",
+										"WS",
+										"WSL",
+										"WSD",
+										"PWL",
+										"PWFR",
+										"WCR",
+										"WCRL",
+										"WCRD",
+										"WBB",
+										"WBBL",
+										"WBBD");
 							}
 							if ( c->heights[height].dbhs[dbh].ages[age].species_count > 1 ) logger(g_monthly_log,"\t%10s", "*");
 						}
@@ -431,12 +450,31 @@ void EOM_print_cumulative_balance_cell_level(cell_t *const c, const int month, c
 							logger(g_monthly_log,"\t%8.3s", c->heights[height].dbhs[dbh].ages[age].species[species].name);
 
 							/* print variables at layer-class level */
-							logger(g_monthly_log,"\t%6.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f ",
+							logger(g_monthly_log,"\t%6.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3d "
+									"\t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f",
 									s->value[MONTHLY_GPP_gC],
 									s->value[MONTHLY_TOTAL_AUT_RESP],
 									s->value[MONTHLY_NPP_gC],
 									s->value[MONTHLY_CANOPY_EVAPO_TRANSP],
-									s->value[MONTHLY_CANOPY_LATENT_HEAT]);
+									s->value[MONTHLY_CANOPY_LATENT_HEAT],
+									s->value[CANOPY_COVER_DBHDC],
+									s->value[DBHDC_EFF],
+									s->value[HD_EFF],
+									s->value[HD_MAX],
+									s->value[HD_MIN],
+									s->counter[N_TREE],
+									s->value[RESERVE_C],
+									s->value[STEM_C],
+									s->value[STEM_LIVE_WOOD_C],
+									s->value[STEM_DEAD_WOOD_C],
+									s->value[MAX_LEAF_C],
+									s->value[MAX_FINE_ROOT_C],
+									s->value[COARSE_ROOT_C],
+									s->value[COARSE_ROOT_LIVE_WOOD_C],
+									s->value[COARSE_ROOT_DEAD_WOOD_C],
+									s->value[BRANCH_C],
+									s->value[BRANCH_LIVE_WOOD_C],
+									s->value[BRANCH_DEAD_WOOD_C]);
 						}
 						if ( c->heights[height].dbhs[dbh].ages[age].species_count > 1 ) logger(g_monthly_log,"\t%10s", "*");
 					}
@@ -526,7 +564,7 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 			}
 		}
 	}
-	*/
+	 */
 
 	/* heading */
 	if ( !year )
