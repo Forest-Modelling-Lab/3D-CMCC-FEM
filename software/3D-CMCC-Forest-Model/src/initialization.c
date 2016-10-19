@@ -15,15 +15,29 @@ extern settings_t *g_settings;
 extern logger_t* g_debug_log;
 extern soil_settings_t *g_soil_settings;
 
+extern const char sz_err_out_of_memory[];
+
 void initialization_forest_structure(cell_t *const c, const int day, const int month, const int year)
 {
-	meteo_daily_t *meteo_daily;
-
-	/* assign shortcuts */
-	meteo_daily = &c->years[year].m[month].d[day];
+	/* note: this function from here are called just for initialization */
 
 	logger(g_debug_log,"\n*******INITIALIZE FOREST STRUCTURE*******\n");
-	forest_structure ( c, meteo_daily, day, month, year );
+
+	if ( ! day && ! month && ! year)
+	{
+		/* annual forest structure */
+		if ( ! annual_forest_structure ( c ) )
+		{
+			puts(sz_err_out_of_memory);
+			exit(1);
+		}
+		/* monthly forest structure */
+		if ( ! monthly_forest_structure ( c ) )
+		{
+			puts(sz_err_out_of_memory);
+			exit(1);
+		}
+	}
 }
 
 void initialization_forest_class_C_biomass(cell_t *const c, const int height, const int dbh, const int age, const int species)

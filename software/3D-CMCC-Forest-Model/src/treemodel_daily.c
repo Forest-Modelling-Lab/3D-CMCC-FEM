@@ -51,14 +51,16 @@
 extern settings_t* g_settings;
 extern logger_t* g_debug_log;
 
+extern const char sz_err_out_of_memory[];
+
 //extern const char *szMonth[MONTHS_COUNT];
 
 /* Days in Months */
 extern int DaysInMonth[];
 
 /* Last cumulative days in months */
-//extern int MonthLength [];
-//extern int MonthLength_Leap [];
+extern int MonthLength [];
+extern int MonthLength_Leap [];
 
 /*****************************************************************************************************************/
 int Tree_model_daily (matrix_t *const m, const int cell, const int day, const int month, const int year)
@@ -97,15 +99,21 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	if( !day && !month && !year )c->dos = 1;
 	else ++c->dos;
 
-	/* forest structure */
+	/* annual forest structure */
 	if ( ! day && ! month && year )
 	{
-		forest_structure ( c, meteo_daily, day, month, year );
+		annual_forest_structure ( c );
 	}
-	//if (year == 112)getchar();
+	/* monthly forest structure */
+	if ( ( IS_LEAP_YEAR( c->years[year].year ) ? (MonthLength_Leap[month] ) : (MonthLength[month] )) == c->doy )
+	{
+		if ( ! monthly_forest_structure ( c ) )
+		{
+			puts(sz_err_out_of_memory);
+			exit(1);
+		}
+	}
 
-	/* forest structure */
-	daily_forest_structure ( c );
 
 	/* print  forest cell data */
 	print_daily_forest_data ( c );

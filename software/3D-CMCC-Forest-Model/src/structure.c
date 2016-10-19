@@ -15,8 +15,8 @@
 
 extern settings_t* g_settings;
 extern logger_t* g_debug_log;
-
-extern const char sz_err_out_of_memory[];
+//extern int MonthLength [];
+//extern int MonthLength_Leap [];
 
 /* */
 int alloc_struct(void** t, int* count, int* avail, unsigned int size) {
@@ -51,68 +51,6 @@ int layer_add(cell_t* const c)
 
 	return ret;
 }
-
-void daily_forest_structure (cell_t *const c)
-{
-	int height;
-	int dbh;
-	int age;
-	int species;
-
-
-	logger(g_debug_log, "\n***DAILY FOREST STRUCTURE***\n");
-
-	//ALESSIOC TO ALESSIOR VERY PORCATA
-
-	for ( height = 0; height < c->heights_count ; ++height )
-	{
-		for ( dbh = 0; dbh < c->heights[height].dbhs_count; ++dbh )
-		{
-			for ( age = 0; age < c->heights[height].dbhs[dbh].ages_count ; ++age )
-			{
-				for ( species = 0; species < c->heights[height].dbhs[dbh].ages[age].species_count; ++species )
-				{
-					c->cell_n_trees += c->heights[height].dbhs[dbh].ages[age].species[species].counter[N_TREE];
-
-					if (c->heights[height].dbhs[dbh].ages[age].species_count > 1)
-					{
-						if ( (!string_compare_i(c->heights[height].dbhs[dbh].ages[age].species[species].name,
-								c->heights[height].dbhs[dbh].ages[age].species[species+1].name)))
-							++ c->cell_species_count;
-					}
-					else
-					{
-						c->cell_species_count = 1;
-					}
-				}
-				++ c->cell_ages_count;
-			}
-			++ c->cell_dbhs_count;
-		}
-		c->cell_heights_count = c->heights_count;
-	}
-	logger(g_debug_log, "* cell_n_trees = %d per cell\n", c->cell_n_trees);
-	logger(g_debug_log, "* cell_heights_count = %d per cell\n",c->cell_heights_count);
-	logger(g_debug_log, "* cell_dbhs_count = %d per cell\n",c->cell_dbhs_count);
-	logger(g_debug_log, "* cell_ages_count = %d per cell\n",c->cell_ages_count);
-	logger(g_debug_log, "* cell_species_count = %d per cell\n",c->cell_species_count);
-}
-
-void forest_structure (cell_t *const c, const meteo_daily_t *const meteo_daily, const int day, const int month, const int year)
-{
-	logger(g_debug_log, "day %d month %d\n", day, month);
-	if ( ! day && ! month )
-	{
-		if ( ! annual_forest_structure ( c ) )
-		{
-			puts(sz_err_out_of_memory);
-			exit(1);
-		}
-		/* note: 04 Oct 2016 */
-		/* forest annual self_pruning */
-		//layer_self_pruning_thinning ( c );
-	}
-}
 /*************************************************************************************************************************/
 int annual_forest_structure(cell_t* const c)
 {
@@ -121,14 +59,10 @@ int annual_forest_structure(cell_t* const c)
 	int dbh;
 	int age;
 	int species;
-
 	int zeta_count = 0;
-
-	double prev_dbhdc_eff;
 	double temp_crown_area;
 	double temp_crown_radius;
 	double temp_crown_diameter;
-
 
 	height_t *h;
 	dbh_t *d;
@@ -148,7 +82,7 @@ int annual_forest_structure(cell_t* const c)
 
 	logger(g_debug_log, "\n***ANNUAL FOREST STRUCTURE***\n");
 
-	assert(! c->tree_layers_count);
+	assert( ! c->tree_layers_count);
 
 	for ( height = 0; height < c->heights_count; ++height )
 	{
@@ -317,7 +251,7 @@ int annual_forest_structure(cell_t* const c)
 							logger(g_debug_log,"-DBHDCMAX = %g\n", s->value[DBHDCMAX]);
 							logger(g_debug_log,"-DBHDCMIN = %g\n", s->value[DBHDCMIN]);
 							logger(g_debug_log,"-DBHDC effective = %g\n", s->value[DBHDC_EFF]);
-							*/
+							 */
 
 							/************************************************************************************************************************/
 							/* note: 04 Oct 2016 */
@@ -325,9 +259,6 @@ int annual_forest_structure(cell_t* const c)
 							/* new DBHDC function */
 							/* this function in mainly based on the assumptions that trees tend to occupy */
 							/* all space they can, if they cannot then fixed values constrain their crown */
-
-							/* assign to temporary variable previous dbhdc_eff */
-							prev_dbhdc_eff = s->value[DBHDC_EFF];
 
 							temp_crown_area = (g_settings->sizeCell * g_settings->max_layer_cover) / (c->tree_layers[layer].layer_density * g_settings->sizeCell);
 
@@ -341,15 +272,6 @@ int annual_forest_structure(cell_t* const c)
 							logger(g_debug_log,"-DBHDCMIN = %g\n", s->value[DBHDCMIN]);
 
 							/************************************************************************************************************************/
-
-							/* check for self-pruning */
-							if ( prev_dbhdc_eff > s->value[DBHDC_EFF] )
-							{
-								/* note: 04 Oct 2016 */
-								/* call of this function in due to the assumption if current crown area decreases is due to self pruning */
-								self_pruning (c, layer);
-							}
-
 							/* check */
 							if (s->value[DBHDC_EFF] > s->value[DBHDCMAX])
 							{
@@ -359,11 +281,6 @@ int annual_forest_structure(cell_t* const c)
 							}
 							if (s->value[DBHDC_EFF] < s->value[DBHDCMIN])
 							{
-								/* note: 04 Oct 2016 */
-								/* call of this function in due to the assumption that canopy cannot decrease its area below DBHDCMIN */
-//								self_thinning_mortality (c, layer);
-//
-//								/* note : 18 ott 2016 */
 								logger(g_debug_log,"-DBHDC effective (%g) > DBHDCMIN (%g) \n", s->value[DBHDC_EFF] , s->value[DBHDCMIN]);
 								s->value[DBHDC_EFF] = s->value[DBHDCMIN];
 								logger(g_debug_log,"-DBHDC effective = %g\n", s->value[DBHDC_EFF]);
@@ -461,7 +378,10 @@ int annual_forest_structure(cell_t* const c)
 		if ( c->tree_layers[layer].layer_cover > g_settings->max_layer_cover )
 		{
 			/* note: 04 Oct 2016 */
-			/* call of this function in due to the assumption that overall layer canopy cover cannot exceeds its maximum */
+			/* call of this function in due to the assumption that:
+			  -overall layer canopy cover cannot exceeds its maximum
+			  -DBHDC_EFF cannot be < DBHDCMIN
+			 */
 			self_thinning_mortality (c, layer);
 		}
 	}
@@ -488,80 +408,162 @@ int annual_forest_structure(cell_t* const c)
 	return 1;
 }
 /*************************************************************************************************************************/
-
-void potential_max_min_density ( cell_t *const c )
+int monthly_forest_structure (cell_t* const c)
 {
+	/*	int layer;
+	int height;
+	int dbh;
+	int age;
+	int species;
+	int zeta_count = 0;
+	double temp_crown_area;
+	double temp_crown_radius;
+	double temp_crown_diameter;
 
+	height_t *h;
+	dbh_t *d;
+	age_t *a;
+	species_t *s;*/
+
+	/* this function compute annually:
+	 * -the number of forest layers comparing the tree height values of all tree height classes
+	 * -layer density
+	 * -DBHDC_EFF based on overall layer cover
+	 * -crown diameter
+	 * -crown area
+	 * -class cover
+	 * -layer cover
+	 * -cell cover
+	 * */
+
+	logger(g_debug_log, "\n***MONTHLY FOREST STRUCTURE***\n");
+
+	return 1;
+}
+
+
+int daily_forest_structure (cell_t *const c)
+{
 	int height;
 	int dbh;
 	int age;
 	int species;
 
-	double low_dbh = 2;       /* minimum dbh (cm) */
-	double high_dbh = 100;    /* maximum dbh (cm) */
 
-	double min_crown_radius;  /* minimum crown radius (m) */
-	double min_crown_diameter;
-	double min_crown_area;
+	logger(g_debug_log, "\n***DAILY FOREST STRUCTURE***\n");
 
-	double max_crown_radius;
-	double max_crown_diameter;
-	double max_crown_area;
-	double trees_number;
+	//ALESSIOC TO ALESSIOR VERY PORCATA
 
-	height_t *h;
-	dbh_t *d;
-	age_t *a;
-	species_t *s;
-
-	for ( height = 0; height < c->heights_count; ++height )
+	for ( height = 0; height < c->heights_count ; ++height )
 	{
-		h = &c->heights[height];
-
-		for ( dbh = 0; dbh < h->dbhs_count; ++dbh )
+		for ( dbh = 0; dbh < c->heights[height].dbhs_count; ++dbh )
 		{
-			d = &c->heights[height].dbhs[dbh];
-
-			for ( age = 0; age < d->ages_count; ++age )
+			for ( age = 0; age < c->heights[height].dbhs[dbh].ages_count ; ++age )
 			{
-				a = &c->heights[height].dbhs[dbh].ages[age];
-
-				for ( species = 0; species < a->species_count; ++species )
+				for ( species = 0; species < c->heights[height].dbhs[dbh].ages[age].species_count; ++species )
 				{
-					s = &c->heights[height].dbhs[dbh].ages[age].species[species];
+					c->cell_n_trees += c->heights[height].dbhs[dbh].ages[age].species[species].counter[N_TREE];
 
-					/* compute maximum density */
-
-					/* compute minimum crown radius for maximum possible density */
-					/* note using minimum dbh with DBHDC_MIN */
-					min_crown_diameter = low_dbh * s->value[DBHDCMIN];
-
-					min_crown_radius = min_crown_diameter / 2.;
-
-					min_crown_area = pow(min_crown_radius, 2)* Pi;
-
-					trees_number = g_settings->sizeCell / min_crown_area;
-
-					s->value[DENMAX] = trees_number / g_settings->sizeCell;
-
-					/* compute minimum density */
-
-					/* compute maximum crown radius for minimum possible density */
-					/* note using maximum dbh with DBHDC_MAX */
-					max_crown_diameter = high_dbh * s->value[DBHDCMAX];
-
-					max_crown_radius = max_crown_diameter / 2.;
-
-					max_crown_area = pow(max_crown_radius, 2)* Pi;
-
-					trees_number = g_settings->sizeCell / max_crown_area;
-
-					s->value[DENMIN] = trees_number / g_settings->sizeCell;
+					if (c->heights[height].dbhs[dbh].ages[age].species_count > 1)
+					{
+						if ( (!string_compare_i(c->heights[height].dbhs[dbh].ages[age].species[species].name,
+								c->heights[height].dbhs[dbh].ages[age].species[species+1].name)))
+							++ c->cell_species_count;
+					}
+					else
+					{
+						c->cell_species_count = 1;
+					}
 				}
+				++ c->cell_ages_count;
 			}
+			++ c->cell_dbhs_count;
 		}
+		c->cell_heights_count = c->heights_count;
 	}
+	logger(g_debug_log, "* cell_n_trees = %d per cell\n", c->cell_n_trees);
+	logger(g_debug_log, "* cell_heights_count = %d per cell\n",c->cell_heights_count);
+	logger(g_debug_log, "* cell_dbhs_count = %d per cell\n",c->cell_dbhs_count);
+	logger(g_debug_log, "* cell_ages_count = %d per cell\n",c->cell_ages_count);
+	logger(g_debug_log, "* cell_species_count = %d per cell\n",c->cell_species_count);
+
+	return 1;
 }
+
+/*note: not used */
+//void potential_max_min_density ( cell_t *const c )
+//{
+//
+//	int height;
+//	int dbh;
+//	int age;
+//	int species;
+//
+//	double low_dbh = 2;       /* minimum dbh (cm) */
+//	double high_dbh = 100;    /* maximum dbh (cm) */
+//
+//	double min_crown_radius;  /* minimum crown radius (m) */
+//	double min_crown_diameter;
+//	double min_crown_area;
+//
+//	double max_crown_radius;
+//	double max_crown_diameter;
+//	double max_crown_area;
+//	double trees_number;
+//
+//	height_t *h;
+//	dbh_t *d;
+//	age_t *a;
+//	species_t *s;
+//
+//	for ( height = 0; height < c->heights_count; ++height )
+//	{
+//		h = &c->heights[height];
+//
+//		for ( dbh = 0; dbh < h->dbhs_count; ++dbh )
+//		{
+//			d = &c->heights[height].dbhs[dbh];
+//
+//			for ( age = 0; age < d->ages_count; ++age )
+//			{
+//				a = &c->heights[height].dbhs[dbh].ages[age];
+//
+//				for ( species = 0; species < a->species_count; ++species )
+//				{
+//					s = &c->heights[height].dbhs[dbh].ages[age].species[species];
+//
+//					/* compute maximum density */
+//
+//					/* compute minimum crown radius for maximum possible density */
+//					/* note using minimum dbh with DBHDC_MIN */
+//					min_crown_diameter = low_dbh * s->value[DBHDCMIN];
+//
+//					min_crown_radius = min_crown_diameter / 2.;
+//
+//					min_crown_area = pow(min_crown_radius, 2)* Pi;
+//
+//					trees_number = g_settings->sizeCell / min_crown_area;
+//
+//					s->value[DENMAX] = trees_number / g_settings->sizeCell;
+//
+//					/* compute minimum density */
+//
+//					/* compute maximum crown radius for minimum possible density */
+//					/* note using maximum dbh with DBHDC_MAX */
+//					max_crown_diameter = high_dbh * s->value[DBHDCMAX];
+//
+//					max_crown_radius = max_crown_diameter / 2.;
+//
+//					max_crown_area = pow(max_crown_radius, 2)* Pi;
+//
+//					trees_number = g_settings->sizeCell / max_crown_area;
+//
+//					s->value[DENMIN] = trees_number / g_settings->sizeCell;
+//				}
+//			}
+//		}
+//	}
+//}
 /***************************************************************************************************/
 //
 //void potential_max_min_canopy_cover (cell_t *const c)
