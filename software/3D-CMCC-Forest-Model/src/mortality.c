@@ -153,6 +153,7 @@ void self_thinning_mortality ( cell_t *const c, const int layer )
 						else
 						{
 							/* call remove_tree_class */
+							logger(g_debug_log, "completely removed lower class, starting to remove from higher..\n");
 							if ( ! tree_class_remove(c, height, dbh, age, species) )
 							{
 								logger(g_debug_log, "unable to remove tree class");

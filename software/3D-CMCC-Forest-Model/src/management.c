@@ -19,6 +19,7 @@ extern logger_t* g_debug_log;
 void forest_management (cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, const int year)
 {
 	static int years_for_thinning;
+
 	age_t *a;
 	species_t *s;
 

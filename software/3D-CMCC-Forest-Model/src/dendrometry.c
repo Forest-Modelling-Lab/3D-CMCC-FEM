@@ -66,7 +66,7 @@ void dendrometry(cell_t *const c, const int layer, const int height, const int d
 
 	/* compute annual mass density */
 	s->value[MASS_DENSITY] = s->value[RHOMAX] + (s->value[RHOMIN] - s->value[RHOMAX]) * exp(-ln2 * (a->value / s->value[TRHO]));
-	logger(g_debug_log, "-Mass Density = %g\n", s->value[MASS_DENSITY]);
+	logger(g_debug_log, "-Mass Density = %g t/m^3\n", s->value[MASS_DENSITY]);
 
 
 	/*************************************************************************************************************************/
@@ -166,21 +166,21 @@ void dendrometry(cell_t *const c, const int layer, const int height, const int d
 	delta_C_stem = (s->value[C_TO_STEM] / s->counter[N_TREE]) /** GC_GDM */ * 1000.;
 	logger(g_debug_log, "delta_carbon stem = %g tC/month tree \n", delta_C_stem);
 
-	/* compute diameter increment (in m) */
+	/* compute diameter increment (in m) Peng et al., 2002*/
 	delta_dbh_m = ( 4. * delta_C_stem) / ( Pi * s->value[FORM_FACTOR] * pow( ( dbh_m ), 2. ) * ( ( 2. * current_hdf ) + s->value[HD_EFF] ) );
 	/* convert m --> cm */
 	delta_dbh = delta_dbh_m * 100.;
-	logger(g_debug_log, "delta_dbh = %g cm \n", delta_dbh);
+	logger(g_debug_log, "delta_dbh (Peng) = %g cm \n", delta_dbh);
 
 	/* compute tree height increment (in m) */
 	delta_height = delta_dbh_m * s->value[HD_EFF];
 	logger(g_debug_log, "delta_height = %g cm \n", delta_height);
 
+	/************************************************************************/
+
 	/* check */
 	CHECK_CONDITION( s->value[HD_EFF], < s->value[HD_MIN]);
 	CHECK_CONDITION( s->value[HD_EFF], > s->value[HD_MAX]);
-
-
 	/*************************************************************************************************************************/
 	/*************************************************************************************************************************/
 
