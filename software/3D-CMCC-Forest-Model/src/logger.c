@@ -6,7 +6,9 @@
 #include <assert.h>
 #include "common.h"
 #include "logger.h"
+#include "settings.h"
 
+extern settings_t* g_settings;
 
 logger_t* logger_new(const char* const path, ...) {
 #define BUFFER_SIZE	1024
@@ -52,7 +54,7 @@ void logger(logger_t *p, const char *text, ...) {
 	vsnprintf(buffer, LOGGER_BUFFER_SIZE, text, va);
 	va_end(va);
 
-	if ( p && p->std_output ) {
+	if ( (p && p->std_output) || (g_settings && g_settings->screen_output) ) {
 		fputs(buffer, stdout);
 	}
 
