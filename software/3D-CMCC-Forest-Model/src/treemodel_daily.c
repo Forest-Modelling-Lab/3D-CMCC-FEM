@@ -51,7 +51,7 @@
 extern settings_t* g_settings;
 extern logger_t* g_debug_log;
 
-extern const char sz_err_out_of_memory[];
+//extern const char sz_err_out_of_memory[];
 
 //extern const char *szMonth[MONTHS_COUNT];
 
@@ -59,8 +59,8 @@ extern const char sz_err_out_of_memory[];
 extern int DaysInMonth[];
 
 /* Last cumulative days in months */
-extern int MonthLength [];
-extern int MonthLength_Leap [];
+// int MonthLength [];
+//extern int MonthLength_Leap [];
 
 /*****************************************************************************************************************/
 int Tree_model_daily (matrix_t *const m, const int cell, const int day, const int month, const int year)

@@ -790,6 +790,7 @@ int main(int argc, char *argv[]) {
 		puts(msg_ok);
 	}
 
+	//ALESSIOR ma lo hai lasciato cosi e committato??
 	// remove
 	g_settings->screen_output = 1;
 	g_start_year = 2000;
@@ -1000,10 +1001,10 @@ int main(int argc, char *argv[]) {
 			/* for handling leap years */
 			int days_per_month;
 
-			if ( year > g_end_year ) {
+			if ( year > g_end_year )
+			{
 				break;
 			}
-
 			for ( month = 0; month < MONTHS_COUNT; ++month )
 			{
 				days_per_month = DaysInMonth[month];
@@ -1014,7 +1015,8 @@ int main(int argc, char *argv[]) {
 
 				for ( day = 0; day < days_per_month; ++day )
 				{
-					if( !day && !month && !year)
+					//ALESSIOC TO ALESSIOR I'VE MODIFIED HERE, SURE THERE'S NOTHING ELSE LOST TO MODIFY??????
+					if( !day && !month && year == start_year_index /* ! year */ )
 					{
 						/* general summary on model simulation */
 						simulation_summary(matrix);
@@ -1095,17 +1097,17 @@ int main(int argc, char *argv[]) {
 							{
 								puts( msg_ok_tree_model );
 
-								if ( g_settings->dndc )
-								{
-									logger(g_debug_log, "RUNNING DNDC.....\n");
-									//soil_dndc_sgm (matrix, cell, year, month, day, years_of_simulation);
-									//soil_dndc......................................
-								}
-								else
-								{
-									//logger(g_debug_log, "No soil simulation!!!\n");
-								}
-								get_net_ecosystem_exchange(&matrix->cells[cell]);
+								//if ( g_settings->dndc )
+								//{
+								//	logger(g_debug_log, "RUNNING DNDC.....\n");
+								//	soil_dndc_sgm (matrix, cell, year, month, day, years_of_simulation);
+								//	soil_dndc......................................
+								//}
+								//else
+								//{
+								//	logger(g_debug_log, "No soil simulation!!!\n");
+								//}
+								//get_net_ecosystem_exchange(&matrix->cells[cell]);
 							}
 						}
 						else
@@ -1123,7 +1125,7 @@ int main(int argc, char *argv[]) {
 						//{
 						//	puts(msg_ok);
 						//	//look if put it here or move before tree_model at the beginning of each month simulation
-						//	/	soil_model (matrix, yos, years, month, years_of_simulation);
+						//	soil_model (matrix, yos, years, month, years_of_simulation);
 						//}
 					}
 					/************************************************************************/

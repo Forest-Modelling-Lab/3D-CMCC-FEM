@@ -74,9 +74,10 @@ void annual_tree_increment(cell_t *const c, const int height, const int dbh, con
 	{
 		logger(g_debug_log, "***CAI & MAI***\n");
 
-		/* compute effective mass density */
-		s->value[MASS_DENSITY] = s->value[RHOMAX] + (s->value[RHOMIN] - s->value[RHOMAX]) * exp(-ln2 * (a->value / s->value[TRHO]));
-		logger(g_debug_log, "-Mass Density = %g\n", s->value[MASS_DENSITY]);
+//		/* compute effective mass density */
+//		useless here it is computed monthly in dendrometry
+//		s->value[MASS_DENSITY] = s->value[RHOMAX] + (s->value[RHOMIN] - s->value[RHOMAX]) * exp(-ln2 * (a->value / s->value[TRHO]));
+//		logger(g_debug_log, "-Mass Density = %g\n", s->value[MASS_DENSITY]);
 
 		/* STAND VOLUME-(STEM VOLUME) */
 		/* assign previous volume to temporary variables */
