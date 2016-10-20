@@ -301,12 +301,12 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 	//test new dendro
 	if ( s->value[C_TO_STEM] > 0.)
 	{
-		dendrometry ( c, layer, height, dbh, age, species, meteo_daily );
+		//dendrometry ( c, layer, height, dbh, age, species, meteo_daily );
 	}
 	/* to avoid "jumps" of dbh it has computed once monthly */
 	if ( ( IS_LEAP_YEAR( c->years[year].year ) ? (MonthLength_Leap[month] ) : (MonthLength[month] )) == c->doy )
 	{
-		//dendrometry_old ( c, layer, height, dbh, age, species);
+		dendrometry_old ( c, layer, height, dbh, age, species);
 	}
 
 	logger(g_debug_log, "\n-Daily increment in carbon pools-\n");

@@ -166,8 +166,8 @@ void dendrometry(cell_t *const c, const int layer, const int height, const int d
 	delta_C_stem = (s->value[C_TO_STEM] / s->counter[N_TREE]) /** GC_GDM */ * 1000.;
 	logger(g_debug_log, "delta_carbon stem = %g tC/month tree \n", delta_C_stem);
 
-	/* compute diameter increment (in m) Peng et al., 2002*/
-	delta_dbh_m = ( 4. * delta_C_stem) / ( Pi * s->value[FORM_FACTOR] * pow( ( dbh_m ), 2. ) * ( ( 2. * current_hdf ) + s->value[HD_EFF] ) );
+	/* compute diameter increment (in m) Peng et al., 2002 */
+	delta_dbh_m = ( 4. * delta_C_stem) / ( Pi * /* (s->value[MASS_DENSITY] * 1000) *  */s->value[FORM_FACTOR] * pow( ( dbh_m ), 2. ) * ( ( 2. * current_hdf ) + s->value[HD_EFF] ) );
 	/* convert m --> cm */
 	delta_dbh = delta_dbh_m * 100.;
 	logger(g_debug_log, "delta_dbh (Peng) = %g cm \n", delta_dbh);
