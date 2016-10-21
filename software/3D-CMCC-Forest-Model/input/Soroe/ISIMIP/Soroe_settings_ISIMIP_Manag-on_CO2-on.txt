@@ -2,7 +2,7 @@ VERSION f                      //Must be 'f' for FEM version or 'b', for BGC ver
 SPATIAL u                      //Must be 's' or 'u', spatial or unspatial
 TIME d                         //Must be 'm' or 'd', monthly or daily
 SCREEN_OUTPUT on              //Must be 'on' or 'off'
-DEBUG_OUTPUT on                //Must be 'on' or 'off'
+DEBUG_OUTPUT off                //Must be 'on' or 'off'
 DAILY_OUTPUT on                //Must be 'on' or 'off'
 MONTHLY_OUTPUT on              //Must be 'on' or 'off'
 ANNUAL_OUTPUT on               //Must be 'on' or 'off'

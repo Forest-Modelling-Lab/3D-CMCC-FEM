@@ -645,47 +645,47 @@ static dataset_t* dataset_import_txt(const char* const filename) {
 
 							case AVDBH_COLUMN:
 								//dataset->rows[dataset->rows_count-1].avdbh = value;
-								row.avdbh = (int)value;
+								row.avdbh = value;
 							break;
 
 							case HEIGHT_COLUMN:
 								//dataset->rows[dataset->rows_count-1].height = value;
-								row.height = (int)value;
+								row.height = value;
 							break;
 
 							case WF_COLUMN:
 								//dataset->rows[dataset->rows_count-1].wf = value;
-								row.wf = (int)value;
+								row.wf = value;
 							break;
 
 							case WRC_COLUMN:
 								//dataset->rows[dataset->rows_count-1].wrc = value;
-								row.wrc = (int)value;
+								row.wrc = value;
 							break;
 
 							case WRF_COLUMN:
 								//dataset->rows[dataset->rows_count-1].wrf = value;
-								row.wrf = (int)value;
+								row.wrf = value;
 							break;
 
 							case WS_COLUMN:
 								//dataset->rows[dataset->rows_count-1].ws = value;
-								row.ws = (int)value;
+								row.ws = value;
 							break;
 
 							case WBB_COLUMN:
 								//dataset->rows[dataset->rows_count-1].wbb = value;
-								row.wbb = (int)value;
+								row.wbb = value;
 							break;
 
 							case WRES_COLUMN:
 								//dataset->rows[dataset->rows_count-1].wres = value;
-								row.wres = (int)value;
+								row.wres = value;
 							break;
 
 							case LAI_COLUMN:
 								//dataset->rows[dataset->rows_count-1].lai = value;
-								row.lai = (int)value;
+								row.lai = value;
 							break;
 
 							default:

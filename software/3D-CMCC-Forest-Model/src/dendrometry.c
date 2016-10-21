@@ -9,9 +9,8 @@
 #include "settings.h"
 
 extern logger_t* g_debug_log;
-//extern settings_t* g_settings;
 
-void dendrometry(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, const meteo_daily_t *const meteo_daily)
+void dendrometry ( cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, const meteo_daily_t *const meteo_daily )
 {
 	double oldavDBH;
 	double oldTreeHeight;
@@ -20,6 +19,9 @@ void dendrometry(cell_t *const c, const int layer, const int height, const int d
 	double old_stem_mass_from_volume;
 	double new_stem_mass_from_volume;
 	double res_stem_mass_from_volume;
+	double old_stem_volume;
+	double new_stem_volume;
+	double res_stem_volume;
 
 
 	double pot_par;                    /* potential absorbable incoming par */
@@ -31,12 +33,12 @@ void dendrometry(cell_t *const c, const int layer, const int height, const int d
 	double current_ccf;                /* crown competition factor */
 	double current_hdf;                /* height-diameter competition factor */
 	double current_lcf;                /* current light competition factor */
-	double delta_C_stem;               /* stem C increment (in kgC/tree) */
-	double delta_dbh;                  /* dbh increment (in cm) */
-	double delta_dbh_m;                /* dbh increment (in m) */
-	double delta_height;               /* height increment (in m) */
-	double dbh_m;                      /* dbh in meter */
-	double hd_factor;                  /* HD factor based on minimum between light and crow competition */
+	double delta_stem;                 /* stem increment (kgDM/tree) */
+	double delta_dbh;                  /* dbh increment (cm) */
+	double delta_dbh_m;                /* dbh increment (m) */
+	double delta_height;               /* height increment (m) */
+	double dbh_m;                      /* dbh (m) */
+	double hd_factor;                  /* HD factor based on minimum between light and crown competition */
 
 	double slope;
 	double phi;
@@ -46,12 +48,17 @@ void dendrometry(cell_t *const c, const int layer, const int height, const int d
 	age_t *a;
 	species_t *s;
 
-	/* this function compute at the temporal scale at which is called:
+	/* this function compute at the temporal scale at which is called
+	 * globally:
 	 * -mass density
 	 * -delta dbh
 	 * -delta tree height
 	 * -basal area
+	 * -sapwood and heartwood
 	 * -recompute fractions of live and dead wood
+	 * locally:
+	 * -mass density in kg
+	 * -volume
 	 * */
 
 	h = &c->heights[height];
@@ -70,13 +77,12 @@ void dendrometry(cell_t *const c, const int layer, const int height, const int d
 
 	logger(g_debug_log, "\n**Mass density**\n");
 
-	/* compute annual mass density */
+	/* compute annual mass density tDM/m3 */
 	s->value[MASS_DENSITY] = s->value[RHOMAX] + (s->value[RHOMIN] - s->value[RHOMAX]) * exp(-ln2 * (a->value / s->value[TRHO]));
-	logger(g_debug_log, "-Mass Density = %g (tDM/m3)\n", s->value[MASS_DENSITY]);
+	logger(g_debug_log, "-Mass Density = %g tDM/m3\n", s->value[MASS_DENSITY]);
 
-	/* convert to tDM-->kgDM */
+	/* convert to tDM-->kgDM m3 */
 	mass_density_kg = s->value[MASS_DENSITY] * 1000.;
-	logger(g_debug_log, "-Mass Density = %g (Kg/m3)\n", mass_density_kg);
 
 	/*************************************************************************************************************************/
 	/*
@@ -93,9 +99,20 @@ void dendrometry(cell_t *const c, const int layer, const int height, const int d
 	/* convert dbh cm --> m as in Bossel et al., 1996; Peng et al., 2002; Seidl et al., 2012 */
 	dbh_m = a->value / 100.;
 
-	/* old stem mass from volume */
-	old_stem_mass_from_volume = pow(dbh_m,2.)*h->value*phi;
+	/*******************************************************************************************/
+
+	logger(g_debug_log, "Ind old stem mass = %g kgDM/tree\n", (s->value[STEM_C] * GC_GDM * 1000.)/s->counter[N_TREE]);
+	logger(g_debug_log, "Ind old stem volume = %g m3/tree\n", ((s->value[STEM_C] * GC_GDM)/s->counter[N_TREE])/s->value[MASS_DENSITY]);
+
+	/* old stem mass from volume (cylinder) */
+	old_stem_mass_from_volume = pow(dbh_m,2.) * h->value * phi;
 	logger(g_debug_log, "Ind old stem mass from volume = %g kgDM/tree\n", old_stem_mass_from_volume);
+
+	/* old stem volume (cylinder) */
+	old_stem_volume = s->value[FORM_FACTOR] * pow(d->value,2.) * h->value * 0.0001;
+	logger(g_debug_log, "Ind stem volume = %g m3/tree\n", old_stem_volume);
+
+	/*******************************************************************************************/
 
 	/* compute dbh related HDMAX and HDMIN following Seidl et al., 2012 */
 	/* compute HD_MAX */
@@ -104,7 +121,21 @@ void dendrometry(cell_t *const c, const int layer, const int height, const int d
 	/*compute HD_MIN */
 	s->value[HD_MIN] = s->value[HDMIN_A] * pow(d->value, s->value[HDMIN_B]);
 	logger(g_debug_log, "HD_MIN = %g \n", s->value[HD_MIN]);
-	/************************************************************************/
+
+	/*******************************************************************************************/
+
+	/* current height diameter factor (current_ccf) following Seidl et al., 2012 (eq.1b) */
+	current_hdf = s->value[STEMCONST_P]*pow(d->value, s->value[STEMPOWER_P]);
+	logger(g_debug_log, "height/diameter factor (Seidl method) = %g\n", current_hdf);
+
+	/* current height diameter factor (current_ccf) */
+	//fixme????
+	//current_hdf = h->value / dbh_m;
+	//logger(g_debug_log, "height/diameter factor = %g\n", current_hdf);
+
+	/*******************************************************************************************/
+
+	/* compute current light competition factor */
 
 	/* compute effective canopy cover */
 	/* special case when LAI = < 1.0 */
@@ -118,7 +149,7 @@ void dendrometry(cell_t *const c, const int layer, const int height, const int d
 	{
 		Light_refl_par_frac = s->value[ALBEDO]/3.0;
 	}
-	else if ( !s->value[LAI])
+	else if ( ! s->value[LAI] )
 	{
 		Light_refl_par_frac = 0.0;
 	}
@@ -129,6 +160,7 @@ void dendrometry(cell_t *const c, const int layer, const int height, const int d
 
 	/* compute potential absorbable incoming par less reflected */
 	pot_par = meteo_daily->incoming_par - (meteo_daily->incoming_par * Light_refl_par_frac * leaf_cell_cover_eff);
+
 	/* compute potential absorbed incoming par */
 	pot_apar_sun = pot_par * (1. - (exp(- s->value[K] * s->value[LAI_SUN]))) * leaf_cell_cover_eff ;
 	pot_apar_shade = (pot_par - pot_apar_sun) * (1. - (exp(- s->value[K] * s->value[LAI_SHADE]))) * leaf_cell_cover_eff;
@@ -136,7 +168,7 @@ void dendrometry(cell_t *const c, const int layer, const int height, const int d
 
 	/* current light competition factor */
 	current_lcf = s->value[APAR] / pot_apar;
-	logger(g_debug_log, "light_competition factor = %g %%\n", current_lcf);
+	logger(g_debug_log, "light_competition factor = %g\n", current_lcf);
 
 	/*******************************************************************************************/
 
@@ -145,21 +177,16 @@ void dendrometry(cell_t *const c, const int layer, const int height, const int d
 	current_ccf = (s->value[DBHDC_EFF] - s->value[DBHDCMIN])/slope;
 	logger(g_debug_log, "crown_competition factor = %g\n", current_ccf);
 
-
 	/*******************************************************************************************/
 
-	/* current height diameter factor (current_ccf) */
-	current_hdf = h->value / dbh_m;
-	logger(g_debug_log, "height/diameter factor = %g\n", current_hdf);
-
 	/* partially inspired to Seidl et al., 2012 method */
-	/* HD factor based on minimum between light and crow competition */
+	/* HD factor based on minimum value between light and crown competition */
 	hd_factor = MIN (current_ccf, current_lcf);
 	logger(g_debug_log, "minimum factor = %g\n", hd_factor);
 
 	/*******************************************************************************************/
 
-	/* HD effective using Seidl et al., 2012 */
+	/* compute HD effective using a partially inspired to Seidl et al., 2012 */
 	s->value[HD_EFF] = (s->value[HD_MAX] * (1. - hd_factor)) + (s->value[HD_MIN] * hd_factor);
 	logger(g_debug_log, "Effective H/D ratio = %g\n", s->value[HD_EFF]);
 
@@ -169,39 +196,35 @@ void dendrometry(cell_t *const c, const int layer, const int height, const int d
 
 	/*******************************************************************************************/
 
-	/* compute individual delta carbon stem and tDM --> kg / tree */
+	/* convert individual delta C stem and tDM/sizeCell --> kgDM/ tree */
 	//note not clear why Bossel didn't use dry matter and uses tC
-	delta_C_stem = (s->value[C_TO_STEM] * GC_GDM * 1000. ) / s->counter[N_TREE];
-	logger(g_debug_log, "delta_carbon stem = %g tC/month tree \n", delta_C_stem);
+	delta_stem = (s->value[C_TO_STEM] * GC_GDM * 1000. ) / s->counter[N_TREE];
+	logger(g_debug_log, "delta_carbon stem = %g KgDM/month/tree \n", delta_stem);
 
-	/* compute diameter increment (in m) Peng et al., 2002 (note: Peng not used Mass density)*/
-	delta_dbh_m = ( 4. * delta_C_stem) / ( Pi * s->value[FORM_FACTOR] * pow( ( dbh_m ), 2. ) * ( ( 2. * current_hdf ) + s->value[HD_EFF] ) );
-	logger(g_debug_log, "delta_dbh (Peng) = %g m \n", delta_dbh_m);
+	/* compute individual dbh and height increment */
 
-	/* compute diameter increment (in m) Seidl et al., 2012 */
-	delta_dbh_m = delta_C_stem / (phi * pow(dbh_m,2.) * ( ( 2. * current_hdf ) + s->value[HD_EFF]) );
-	logger(g_debug_log, "delta_dbh (Seidl) = %g m \n", delta_dbh_m);
+	/* compute diameter increment (in m) Peng et al., 2002; Seidl et al., 2012 */
+	delta_dbh_m = delta_stem / (phi * pow(dbh_m,2.) * ( ( 2. * current_hdf ) + s->value[HD_EFF]) );
+	logger(g_debug_log, "delta_dbh = %g m \n", delta_dbh_m);
 
-	/* convert m --> cm */
+	/* convert dbh from m --> cm */
 	delta_dbh = delta_dbh_m * 100.;
 	logger(g_debug_log, "delta_dbh = %g cm \n", delta_dbh);
 
-	/* compute tree height increment (in m) */
+	/* compute tree height increment (in m) Peng et al., 2002; Seidl et al., 2012 */
 	delta_height = delta_dbh_m * s->value[HD_EFF];
-	logger(g_debug_log, "delta_height = %g cm \n", delta_height);
-
-	//note see Seidl tree.c for residuals!!
+	logger(g_debug_log, "delta_height = %g m \n", delta_height);
 
 	/*******************************************************************************************/
 
 	logger(g_debug_log, "\n**Average DBH**\n");
 
-	/* compute tree AVDBH */
+	/* compute tree dbh */
 	d->value += delta_dbh;
 	logger(g_debug_log, "-Old AVDBH = %g cm\n", oldavDBH);
 	logger(g_debug_log, "-New Average DBH = %g cm\n", d->value);
 
-	/* convert dbh cm --> m as in Bossel et al., 1996; Peng et al., 2002; Seidl et al., 2012 */
+	/* convert dbh cm --> m as in Bossel 1996; Peng et al., 2002; Seidl et al., 2012 */
 	dbh_m = a->value / 100.;
 
 	/* check */
@@ -211,7 +234,7 @@ void dendrometry(cell_t *const c, const int layer, const int height, const int d
 
 	logger(g_debug_log, "\n**Average Tree Height**\n");
 
-	/* compute tree Height */
+	/* compute tree height */
 	h->value += delta_height;
 	logger(g_debug_log, "-Old Tree Height = %g m\n", oldTreeHeight);
 	logger(g_debug_log, "-New Tree Height = %g m\n", h->value);
@@ -231,6 +254,19 @@ void dendrometry(cell_t *const c, const int layer, const int height, const int d
 	res_stem_mass_from_volume = new_stem_mass_from_volume - old_stem_mass_from_volume;
 	logger(g_debug_log, "Ind residual stem mass from volume = %g kgDM/tree\n", res_stem_mass_from_volume);
 
+	/* check */
+	CHECK_CONDITION( res_stem_mass_from_volume, < 0. );
+
+	/* new stem volume */
+	new_stem_volume = s->value[FORM_FACTOR] * pow(dbh_m,2.) * h->value;
+	logger(g_debug_log, "Ind new stem volume = %g m3/tree\n", new_stem_volume);
+
+	/* check for differences in volume */
+	res_stem_volume = new_stem_volume - old_stem_volume;
+	logger(g_debug_log, "Ind residual stem volume = %g m3/tree\n", res_stem_volume);
+
+	/* check */
+	CHECK_CONDITION( res_stem_volume, < 0. );getchar();
 
 	/*************************************************************************************************************************/
 
@@ -296,8 +332,6 @@ void dendrometry_old(cell_t *const c, const int layer, const int height, const i
 	double oldavDBH;
 	double oldTreeHeight;
 	double oldBasalArea;
-
-
 
 	height_t *h;
 	dbh_t *d;
@@ -401,7 +435,7 @@ void dendrometry_old(cell_t *const c, const int layer, const int height, const i
 	logger(g_debug_log, "-New Tree Height = %g m\n", h->value);
 
 	/* Weibull function */
-	/* for references see also: R. Pilli et al. / Forest Ecology and Management 237 (2006) 583–593 */
+	/* for references see also: R. Pilli et al. Forest Ecology and Management 237 (2006) 583–593 */
 	/*
 	 h->value = DBH_ref + s->value[WA] *(1.0 - exp ( - s->value[WB] * d->value * s->value[WC]);
 	*/

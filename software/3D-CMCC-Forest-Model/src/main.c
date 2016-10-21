@@ -409,29 +409,6 @@ static int log_start(const char* const sitename)
 }
 
 /*
-	ALESSIOR
-	simply remove all after last / or \
-	NOT GUARANTEED THAT IS A REAL PATH ;)
- */
-static char* get_path(const char *const s) {
-	char *p;
-	char *bs;
-	char *temp;
-
-	temp = string_copy(s);
-	if ( ! temp ) return NULL;
-
-	p = strrchr(temp, '/');
-	if ( p ) ++p;
-	bs = strrchr(temp, '\\');
-	if ( bs ) ++bs;
-	if ( bs > p ) p = bs;
-	if ( p ) *p = '\0';
-
-	return temp;
-}
-
-/*
 	copy path and add a / at end if missing
  */
 
@@ -1276,13 +1253,6 @@ int main(int argc, char *argv[]) {
 
 	/* NETCDF output */
 	if ( output_vars && output_vars->daily_vars_value ) {
-		/*
-		char *path = get_path(g_sz_daily_output_filename);
-		if ( ! path && g_sz_daily_output_filename  ) {
-			logger(g_debug_log, sz_err_out_of_memory);
-			goto err;
-		}
-		 */
 		ret = output_write(output_vars, g_sz_output_path, g_settings->year_start, years_of_simulation, matrix->x_cells_count, matrix->y_cells_count, 0);
 		//free(path);
 		if ( ! ret ) {
@@ -1294,13 +1264,6 @@ int main(int argc, char *argv[]) {
 	}
 
 	if ( output_vars && output_vars->monthly_vars_value ) {
-		/*
-		char *path = get_path(g_sz_monthly_output_filename);
-		if ( ! path && g_sz_monthly_output_filename ) {
-			logger(g_debug_log, sz_err_out_of_memory);
-			goto err;
-		}
-		 */
 		ret = output_write(output_vars, g_sz_output_path, g_settings->year_start, years_of_simulation, matrix->x_cells_count, matrix->y_cells_count, 1);
 		//free(path);
 		if ( ! ret ) {
@@ -1312,13 +1275,6 @@ int main(int argc, char *argv[]) {
 	}
 
 	if ( output_vars && output_vars->yearly_vars_value ) {
-		/*
-		char *path = get_path(g_sz_yearly_output_filename);
-		if ( ! path && g_sz_yearly_output_filename) {
-			logger(g_debug_log, sz_err_out_of_memory);
-			goto err;
-		}
-		 */
 		ret = output_write(output_vars, g_sz_output_path, g_settings->year_start, years_of_simulation, matrix->x_cells_count, matrix->y_cells_count, 2);
 		//free(path);
 		if ( ! ret ) {

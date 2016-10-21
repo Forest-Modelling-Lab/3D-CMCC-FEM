@@ -66,7 +66,7 @@ static int import_txt(soil_settings_t *const s, const char *const filename, cons
 
 	f = fopen(filename, "r");
 	if ( ! f ) {
-		printf("unable to open\n\n", filename);
+		printf("unable to open %s\n", filename);
 		return 0;
 	}
 
