@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 #include <assert.h>
 
 enum {
@@ -15,6 +16,8 @@ enum {
 	, SETTINGS_DAILY_OUTPUT
 	, SETTINGS_MONTHLY_OUTPUT
 	, SETTINGS_YEARLY_OUTPUT
+	, SETTINGS_YEAR_START
+	, SETTINGS_YEAR_END
 	, SETTINGS_SOIL_OUTPUT
 	, SETTINGS_CO2_MOD
 	, SETTINGS_CO2_FIXED
@@ -58,6 +61,8 @@ enum {
 	, SETTINGS_REGENERATION_WFR
 	, SETTINGS_REGENERATION_WL
 	, SETTINGS_REGENERATION_WBB
+
+	, SETTINGS_COUNT
 };
 
 extern const char sz_err_out_of_memory[];
@@ -76,6 +81,8 @@ settings_t* settings_import(const char *const filename) {
 	FILE *f;
 	double *p_field;
 
+	const char delimiter[] = " /\"\t\r\n";
+
 	f = fopen(filename, "r");
 	if ( ! f ) {
 		printf("unable to open %s\n", filename);
@@ -91,25 +98,33 @@ settings_t* settings_import(const char *const filename) {
 	/* all settings values defaults to 0 ( off ) */
 	memset(s, 0, sizeof*s);
 
-	/* screen output is enabled by default */
-	s->screen_output = 1;
-
+	// get pointer for first double value
 	p_field = &s->sizeCell;
 
 	i = 0;
 	while ( fgets(buffer, BUFFER_SIZE, f) ) {
 		char *p;
+		char *p2;
 		char *token;
 
+		/* remove initial spaces (if any) */
+		p2 = buffer;
+		while ( isspace(*p2) ) ++p2;
+
 		/* skip empty lines and comments */
-		if (	('\r' == buffer[0])
-				|| ('\n' == buffer[0])
-				|| ('/' == buffer[0]) ) {
+		if (	('\r' == p2[0])
+				|| ('\n' == p2[0])
+				|| ('/' == p2[0]) ) {
 			continue;
 		}
 
-		token = string_tokenizer(buffer, " \"", &p);
-		token = string_tokenizer(NULL, "\"", &p);
+		/* get setting name */
+		token = string_tokenizer(p2, delimiter, &p);
+
+		/* get value */
+		token = string_tokenizer(NULL, delimiter, &p);
+
+		if ( ! token ) continue;
 
 		switch ( i++ ) {
 			case SETTINGS_VERSION:
@@ -125,8 +140,8 @@ settings_t* settings_import(const char *const filename) {
 			break;
 
 			case SETTINGS_SCREEN_OUTPUT:
-				if ( ! string_compare_i(token, "off") ) {
-					s->screen_output = 0;
+				if ( ! string_compare_i(token, "on") ) {
+					s->screen_output = 1;
 				}
 			break;
 
@@ -151,6 +166,26 @@ settings_t* settings_import(const char *const filename) {
 			case SETTINGS_YEARLY_OUTPUT:
 				if ( ! string_compare_i(token, "on") ) {
 					s->yearly_output = 1;
+				}
+			break;
+
+			case SETTINGS_YEAR_START:
+				s->year_start = convert_string_to_int(token, &err);
+				if ( err ) {
+					printf("unable to convert start year: %s\n", p);
+					free(s);
+					fclose(f);
+					return 0;
+				}
+			break;
+
+			case SETTINGS_YEAR_END:
+				s->year_end = convert_string_to_int(token, &err);
+				if ( err ) {
+					printf("unable to convert end year: %s\n", p);
+					free(s);
+					fclose(f);
+					return 0;
 				}
 			break;
 
@@ -260,6 +295,12 @@ settings_t* settings_import(const char *const filename) {
 			break;
 
 			default:
+				if ( i > SETTINGS_COUNT ) {
+					puts("too many values!");
+					free(s);
+					fclose(f);
+					return 0;
+				}
 				*p_field = convert_string_to_float(token, &err);
 				if ( err ) {
 					printf("unable to convert value: %s\n", p);

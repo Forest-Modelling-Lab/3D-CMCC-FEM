@@ -84,9 +84,10 @@ char 	*g_sz_program_path = NULL
 		, *g_sz_output_vars_file = NULL
 		;
 
+int g_year_start_index;
+
 static int years_of_simulation;	// default is none
-static int g_start_year = -1;
-static int g_end_year = -1;
+
 
 /* strings */
 const char sz_launched[] = "\n"PROGRAM_NAME"\n"
@@ -167,8 +168,6 @@ static const char msg_usage[]					=	"\nusage:\n"
 		"    -c settings filename stored into input directory (i.e.: -c settings.txt)\n"
 		"    -k co2 concentration file (i.e.: -k co2_conc.txt)\n"
 		"    -r output vars list (i.e.: -r output_vars.lst)\n"
-		"    -a start year\n"
-		"    -b end year (inclusive)\n"
 		"    -h print this help\n"
 		;
 
@@ -464,7 +463,6 @@ char* path_copy(const char *const s) {
 static int parse_args(int argc, char *argv[])
 {
 	int i;
-	int bad_conv;
 
 	g_sz_input_path = NULL;
 	g_sz_output_path = NULL;
@@ -602,30 +600,6 @@ static int parse_args(int argc, char *argv[])
 			}
 		break;
 
-		case 'a': /* start year */
-			if ( ! argv[i+1] ) {
-				puts("start year not specified!");
-				goto err;
-			}
-			g_start_year = convert_string_to_int(argv[i+1], &bad_conv);
-			if ( bad_conv ) {
-				printf("bad start year specified: %s\n", argv[i+1]);
-				goto err;
-			}
-		break;
-
-		case 'b': /* end year */
-			if ( ! argv[i+1] ) {
-				puts("end year not specified!");
-				goto err;
-			}
-			g_end_year = convert_string_to_int(argv[i+1], &bad_conv);
-			if ( bad_conv ) {
-				printf("bad end year specified: %s\n", argv[i+1]);
-				goto err;
-			}
-		break;
-
 		case 'h': /* show help */
 			goto err_show_usage;
 			break;
@@ -704,14 +678,13 @@ int main(int argc, char *argv[]) {
 	int cell;
 	int prog_ret;
 	int flag;
-	int start_year_index;
 	double timer;
 	double start_timer;
 	double end_timer;
 	matrix_t* matrix;
 	output_t* output_vars;
 
-	//_CrtSetBreakAlloc(109);
+	//_CrtSetBreakAlloc(89);
 
 	/* initialize */
 	matrix = NULL;
@@ -819,7 +792,8 @@ int main(int argc, char *argv[]) {
 	}
 	puts(msg_ok);
 
-	start_year_index = -1;
+	g_year_start_index = -1;
+	
 	logger(g_debug_log, "\n3D-CMCC FEM START....\n\n");
 	for ( cell = 0; cell < matrix->cells_count; ++cell )
 	{
@@ -891,59 +865,56 @@ int main(int argc, char *argv[]) {
 		logger(g_debug_log, "ok\n");
 
 		/* set start year index */
-		if ( -1 == start_year_index ) {
-			/* set start year */
-			if ( -1 == g_start_year ) {
-				start_year_index = 0;
-				g_start_year = matrix->cells[0].years[0].year;
-			} else {
-				int i;
+		if ( -1 == g_year_start_index ) {
+			int i;
+			int ii;
 
-				for ( i = 0; i < years_of_simulation; ++i ) {
-					if ( g_start_year == matrix->cells[0].years[i].year ) {
-						start_year_index = i;
-						break;
-					}
+			for ( i = 0; i < years_of_simulation; ++i ) {
+				if ( g_settings->year_start == matrix->cells[0].years[i].year ) {
+					g_year_start_index = i;
+					break;
 				}
-				if ( -1 == start_year_index ) {
-					logger(g_debug_log, "start year (%d) not found. range is %d-%d\n"
-													, g_start_year
-													, matrix->cells[0].years[0].year
-													, matrix->cells[0].years[years_of_simulation-1].year
-					);
-					goto err;
-				}
+			}
+			if ( -1 == g_year_start_index ) {
+				logger(g_debug_log, "start year (%d) not found. range is %d-%d\n"
+												, g_settings->year_start
+												, matrix->cells[0].years[0].year
+												, matrix->cells[0].years[years_of_simulation-1].year
+				);
+				goto err;
 			}
 
 			/* set end year (adjusting years_of_simulation) */
-			if ( -1 != g_end_year ) {
-				int i;
-				int ii = -1;
-
-				for ( i = 0; i < years_of_simulation; ++i ) {
-					if ( g_end_year == matrix->cells[0].years[i].year ) {
-						if ( start_year_index > i ) {
-							logger(g_debug_log, "start year (%d) cannot be > end year (%d)\n"
-													, g_start_year
-													, g_end_year
-							);
-							goto err;
-						}
-						ii = i;
-						break;
+			ii = -1;
+			for ( i = 0; i < years_of_simulation; ++i ) {
+				if ( g_settings->year_end == matrix->cells[0].years[i].year ) {
+					if ( g_year_start_index > i ) {
+						logger(g_debug_log, "start year (%d) cannot be > end year (%d)\n"
+												, g_settings->year_start
+												, g_settings->year_end
+						);
+						goto err;
 					}
+					ii = i;
+					break;
 				}
-				if ( -1 == ii ) {
-					logger(g_debug_log, "end year (%d) not found. range is %d-%d\n"
-													, g_end_year
-													, matrix->cells[0].years[0].year
-													, matrix->cells[0].years[years_of_simulation-1].year
-					);
-					goto err;
-				}
-				g_end_year = ii;
 			}
+			if ( -1 == ii ) {
+				logger(g_debug_log, "end year (%d) not found. range is %d-%d\n"
+												, g_settings->year_end
+												, matrix->cells[0].years[0].year
+												, matrix->cells[0].years[years_of_simulation-1].year
+				);
+				goto err;
+			}
+			/* i is year_end_index */
+			i = ii + 1;
+
+			years_of_simulation = i - g_year_start_index;
 		}
+
+		/* move pointer for year */
+		matrix->cells[cell].years += g_year_start_index;
 
 		/* alloc memory for daily output netcdf vars (if any) */
 		if ( output_vars && output_vars->daily_vars_count && ! output_vars->daily_vars_value ) {
@@ -990,15 +961,11 @@ int main(int argc, char *argv[]) {
 		logger(g_debug_log, "Total years_of_simulation = %d\n", years_of_simulation);
 		logger(g_debug_log, "***************************************************\n\n");
 
-		for ( year = start_year_index; year < years_of_simulation; ++year )
+		for ( year = 0; year < years_of_simulation; ++year )
 		{
 			/* for handling leap years */
 			int days_per_month;
 
-			if ( year > g_end_year )
-			{
-				break;
-			}
 			for ( month = 0; month < MONTHS_COUNT; ++month )
 			{
 				days_per_month = DaysInMonth[month];
@@ -1010,7 +977,7 @@ int main(int argc, char *argv[]) {
 				for ( day = 0; day < days_per_month; ++day )
 				{
 					//ALESSIOC TO ALESSIOR I'VE MODIFIED HERE, SURE THERE'S NOTHING ELSE LOST TO MODIFY??????
-					if( !day && !month && year == start_year_index /* ! year */ )
+					if( !day && !month && ! year )
 					{
 						/* general summary on model simulation */
 						simulation_summary(matrix);
@@ -1299,7 +1266,11 @@ int main(int argc, char *argv[]) {
 			logger(g_debug_log, "****************END OF YEAR (%d)*******************\n", matrix->cells[cell].years[year].year );
 		}
 
-		free(matrix->cells[cell].years);
+		if ( g_year_start_index != -1 ) {
+			free(matrix->cells[cell].years-g_year_start_index);
+		} else {
+			free(matrix->cells[cell].years);
+		}
 		matrix->cells[cell].years = NULL; /* required */
 	}
 
@@ -1312,7 +1283,7 @@ int main(int argc, char *argv[]) {
 			goto err;
 		}
 		 */
-		ret = output_write(output_vars, g_sz_output_path, g_start_year, years_of_simulation, matrix->x_cells_count, matrix->y_cells_count, 0);
+		ret = output_write(output_vars, g_sz_output_path, g_settings->year_start, years_of_simulation, matrix->x_cells_count, matrix->y_cells_count, 0);
 		//free(path);
 		if ( ! ret ) {
 			logger(g_debug_log, sz_err_out_of_memory);
@@ -1330,7 +1301,7 @@ int main(int argc, char *argv[]) {
 			goto err;
 		}
 		 */
-		ret = output_write(output_vars, g_sz_output_path, g_start_year, years_of_simulation, matrix->x_cells_count, matrix->y_cells_count, 1);
+		ret = output_write(output_vars, g_sz_output_path, g_settings->year_start, years_of_simulation, matrix->x_cells_count, matrix->y_cells_count, 1);
 		//free(path);
 		if ( ! ret ) {
 			logger(g_debug_log, sz_err_out_of_memory);
@@ -1348,7 +1319,7 @@ int main(int argc, char *argv[]) {
 			goto err;
 		}
 		 */
-		ret = output_write(output_vars, g_sz_output_path, g_start_year, years_of_simulation, matrix->x_cells_count, matrix->y_cells_count, 2);
+		ret = output_write(output_vars, g_sz_output_path, g_settings->year_start, years_of_simulation, matrix->x_cells_count, matrix->y_cells_count, 2);
 		//free(path);
 		if ( ! ret ) {
 			logger(g_debug_log, sz_err_out_of_memory);
@@ -1386,7 +1357,7 @@ int main(int argc, char *argv[]) {
 	/* timer */
 	end_timer = timer_get();
 	timer = end_timer - start_timer;
-	printf("%.2f secs %.2f mins %.2f hours elapsed\n", timer, timer / 60.0, timer / 3600.0);
+	printf("%.2f secs / %.2f mins / %.2f hours elapsed\n", timer, timer / 60.0, timer / 3600.0);
 
 	return prog_ret;
 }

@@ -17,6 +17,8 @@ typedef struct {
 	char daily_output;
 	char monthly_output;
 	char yearly_output;
+	int year_start;
+	int year_end;
 	char soil_output;
 	char CO2_mod;
 	char CO2_fixed;

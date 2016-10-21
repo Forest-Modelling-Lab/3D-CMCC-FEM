@@ -78,8 +78,6 @@ void self_thinning_mortality ( cell_t *const c, const int layer )
 	int age;
 	int species;
 
-	int light_tol;
-
 	int deadtree = 0;
 	//int oldNstump;
 	//int deadstump = 0;

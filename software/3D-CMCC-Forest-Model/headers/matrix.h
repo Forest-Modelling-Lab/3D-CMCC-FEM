@@ -686,6 +686,8 @@ typedef struct
 
 	e_landuse landuse;                                  /* LandUse type */
 
+	int year_stand;
+
 	int x;                                              /* cell index within the matrix */
 	int y;                                              /* cell index within the matrix */
 

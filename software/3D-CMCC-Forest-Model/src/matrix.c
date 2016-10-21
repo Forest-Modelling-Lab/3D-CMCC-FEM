@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 #include <math.h>
 #include <assert.h>
 #include "soil_settings.h"
@@ -22,12 +23,13 @@ extern settings_t* g_settings;
 extern soil_settings_t *g_soil_settings;
 extern topo_t *g_topo;
 extern char *g_sz_program_path;
-//extern char *g_sz_input_path;
 extern char *g_sz_parameterization_path;
+extern int g_year_start_index;
 
 /* ---------- dataset stuff ---------- */
 enum {
-	X_COLUMN
+	YEAR_COLUMN
+	, X_COLUMN
 	, Y_COLUMN
 	, LANDUSE_COLUMN
 	, AGE_COLUMN
@@ -49,6 +51,7 @@ enum {
 };
 
 typedef struct {
+	int year_stand;
 	int x;
 	int y;
 	e_landuse landuse;
@@ -74,7 +77,8 @@ typedef struct {
 } dataset_t;
 
 static const char* sz_vars[COLUMNS_COUNT] = {
-		"X"
+		"YEAR"
+		, "X"
 		, "Y"
 		, "LANDUSE"
 		, "AGE"
@@ -95,8 +99,7 @@ static const char* sz_vars[COLUMNS_COUNT] = {
 
 static const char sz_species[] = "species_code.txt";
 
-static const char header_delimiter[] = ", \r\n";
-static const char dataset_delimiter[] = ",\r\n";
+static const char delimiter[] = " ,/\r\n";
 
 static const char err_redundancy[] = "redundancy: var \"%s\" already founded at column %d.\n";
 static const char err_unable_find_column[] = "unable to find column for \"%s\" var.\n";
@@ -411,14 +414,17 @@ static dataset_t* dataset_import_txt(const char* const filename) {
 #define BUFFER_SIZE	1024
 	int i = 0;
 	int y = 0;
+	int rows_count;
 	char buffer[BUFFER_SIZE];
 	char *token;
 	char *p;
+	char *p2;
 	int error;
 	FILE *f;
 	int *columns;
 	double value;
 	row_t* rows_no_leak;
+	row_t row;
 	dataset_t* dataset;
 	int assigned;
 
@@ -432,11 +438,20 @@ static dataset_t* dataset_import_txt(const char* const filename) {
 		return NULL;
 	}
 
-	if ( ! fgets(buffer, BUFFER_SIZE, f) ) {
-		puts(err_empty_file);
-		fclose(f);
-		return 0;
-	}
+	/* get header ( skip comments ) */
+	do {
+		if ( ! fgets(buffer, BUFFER_SIZE, f) ) {
+			puts(err_empty_file);
+			fclose(f);
+			return 0;
+		}
+
+		/* remove initial spaces (if any) */
+		p2 = buffer;
+		while ( isspace(*p2) ) ++p2;
+
+		/* skip empty lines and comments */
+	} while ( ('\r' == p2[0]) || ('\n' == p2[0]) || ('/' == p2[0]) );
 
 	columns = malloc(COLUMNS_COUNT*sizeof*columns);
 	if ( ! columns ) {
@@ -449,7 +464,7 @@ static dataset_t* dataset_import_txt(const char* const filename) {
 		columns[i] = -1;
 	}
 
-	for ( y = 0, token = string_tokenizer(buffer, header_delimiter, &p); token; token = string_tokenizer(NULL, header_delimiter, &p), ++y ) {
+	for ( y = 0, token = string_tokenizer(p2, delimiter, &p); token; token = string_tokenizer(NULL, delimiter, &p), ++y ) {
 		for ( i = 0; i < COLUMNS_COUNT; i++ ) {
 			if ( 0 == string_compare_i(token, sz_vars[i]) ) {
 				/* check for duplicated columns */
@@ -487,35 +502,32 @@ static dataset_t* dataset_import_txt(const char* const filename) {
 	dataset->rows_count = 0;
 
 	/* get data */
+	rows_count = 0;
 	while ( fgets(buffer, BUFFER_SIZE, f) ) {
-		/* remove carriage return and newline */
-		for ( i = 0; buffer[i]; ++i ) {
-			if ( ('\n' == buffer[i]) || ('\r' == buffer[i]) ) {
+		/* remove initial spaces (if any) */
+		p = buffer;
+		while ( isspace(*p) ) ++p;
+
+		/* remove comment, carriage return and newline */
+		for ( i = 0; p[i]; ++i ) {
+			if ( ('/' == p[i]) || ('\n' == p[i]) || ('\r' == p[i]) ) {
 				buffer[i] = '\0';
 				break;
 			}
 		}
+
+		++rows_count;
+
 		/* skip empty lines */
-		if ( '\0' == buffer[0] ) {
+		if ( '\0' == p[0] ) {
 			continue;
 		}
-		/* alloc memory */
-		rows_no_leak = realloc(dataset->rows, (dataset->rows_count+1)*sizeof*rows_no_leak);
-		if ( !rows_no_leak ) {
-			puts(sz_err_out_of_memory);
-			free(columns);
-			dataset_free(dataset);
-			fclose(f);
-			return NULL;
-		}
-
-		/* assign pointer */
-		dataset->rows = rows_no_leak;
-		dataset->rows[dataset->rows_count++].species = NULL;
 
 		/* get data */
 		assigned = 0;
-		for ( token = string_tokenizer(buffer, dataset_delimiter, &p), y = 0; token; token = string_tokenizer(NULL, dataset_delimiter, &p), ++y ) {
+		p2 = p;
+		row.species = NULL;
+		for ( token = string_tokenizer(p2, delimiter, &p), y = 0; token; token = string_tokenizer(NULL, delimiter, &p), ++y ) {
 			/* put value at specified columns */
 			for ( i = 0; i < COLUMNS_COUNT; i++ ) {
 				if ( y == columns[i] ) {
@@ -525,7 +537,8 @@ static dataset_t* dataset_import_txt(const char* const filename) {
 					if ( i == LANDUSE_COLUMN ) {
 						/* check landuse length */
 						if ( 1 != strlen(token) ) {
-							printf(err_bad_landuse_length, dataset->rows_count);
+							printf(err_bad_landuse_length, rows_count);
+							free(row.species);
 							free(columns);
 							dataset_free(dataset);
 							fclose(f);
@@ -533,19 +546,24 @@ static dataset_t* dataset_import_txt(const char* const filename) {
 						}
 						/* check landuse */
 						if ( ('F' == token[0]) || ('f' == token[0]) ) {
-							dataset->rows[dataset->rows_count-1].landuse = F ;
+							row.landuse = F;
+							//dataset->rows[dataset->rows_count-1].landuse = F ;
 						} else if ( ('Z' == token[0]) || ('z' == token[0]) ) {
-							dataset->rows[dataset->rows_count-1].landuse = Z;
+							row.landuse = Z;
+							//dataset->rows[dataset->rows_count-1].landuse = Z;
 						} else {
-							printf(err_bad_landuse, token[0], dataset->rows_count);
+							printf(err_bad_landuse, token[0], rows_count);
+							free(row.species);
 							free(columns);
 							dataset_free(dataset);
 							fclose(f);
 							return NULL;
 						}
 					} else if ( SPECIES_COLUMN == i ) {
-						dataset->rows[dataset->rows_count-1].species = string_copy(token);
-						if ( ! dataset->rows[dataset->rows_count-1].species ) {
+						row.species = string_copy(token);
+						//dataset->rows[dataset->rows_count-1].species = string_copy(token);
+						//if ( ! dataset->rows[dataset->rows_count-1].species ) {
+						if ( ! row.species ) {
 							puts(sz_err_out_of_memory);
 							free(columns);
 							dataset_free(dataset);
@@ -555,7 +573,8 @@ static dataset_t* dataset_import_txt(const char* const filename) {
 					} else if ( MANAGEMENT_COLUMN == i ) {
 						/* check management length */
 						if ( 1 != strlen(token) ) {
-							printf(err_bad_management_length, dataset->rows_count);
+							printf(err_bad_management_length, rows_count);
+							free(row.species);
 							free(columns);
 							dataset_free(dataset);
 							fclose(f);
@@ -563,11 +582,14 @@ static dataset_t* dataset_import_txt(const char* const filename) {
 						}
 						/* check management */
 						if ( ('T' == token[0]) || ('t' == token[0]) ) {
-							dataset->rows[dataset->rows_count-1].management = T;
+							//dataset->rows[dataset->rows_count-1].management = T;
+							row.management = T;
 						} else if ( ('C' == token[0]) || ('c' == token[0]) ) {
-							dataset->rows[dataset->rows_count-1].management = C;
+							//dataset->rows[dataset->rows_count-1].management = C;
+							row.management = C;
 						} else {
-							printf(err_bad_management, token[0], dataset->rows_count);
+							printf(err_bad_management, token[0], rows_count);
+							free(row.species);
 							free(columns);
 							dataset_free(dataset);
 							fclose(f);
@@ -576,7 +598,8 @@ static dataset_t* dataset_import_txt(const char* const filename) {
 					} else {
 						value = convert_string_to_float(token, &error);
 						if ( error ) {
-							printf(err_conversion, token, dataset->rows_count, y+1);
+							printf(err_conversion, token, rows_count, y+1);
+							free(row.species);
 							free(columns);
 							dataset_free(dataset);
 							fclose(f);
@@ -590,68 +613,88 @@ static dataset_t* dataset_import_txt(const char* const filename) {
 
 						/* assign value */
 						switch ( i ) {
-						case X_COLUMN:
-							dataset->rows[dataset->rows_count-1].x = (int)value;
+							case YEAR_COLUMN:
+								//dataset->rows[dataset->rows_count-1].year_stand = (int)value;
+								row.year_stand = (int)value;
 							break;
 
-						case Y_COLUMN:
-							dataset->rows[dataset->rows_count-1].y = (int)value;
+							case X_COLUMN:
+								//dataset->rows[dataset->rows_count-1].x = (int)value;
+								row.x = (int)value;
 							break;
 
-						case AGE_COLUMN:
-							dataset->rows[dataset->rows_count-1].age = (int)value;
+							case Y_COLUMN:
+								//dataset->rows[dataset->rows_count-1].y = (int)value;
+								row.y = (int)value;
 							break;
 
-						case N_COLUMN:
-							dataset->rows[dataset->rows_count-1].n = (int)value;
+							case AGE_COLUMN:
+								//dataset->rows[dataset->rows_count-1].age = (int)value;
+								row.age = (int)value;
 							break;
 
-						case STOOL_COLUMN:
-							dataset->rows[dataset->rows_count-1].stool = (int)value;
+							case N_COLUMN:
+								//dataset->rows[dataset->rows_count-1].n = (int)value;
+								row.n = (int)value;
 							break;
 
-						case AVDBH_COLUMN:
-							dataset->rows[dataset->rows_count-1].avdbh = value;
+							case STOOL_COLUMN:
+								//dataset->rows[dataset->rows_count-1].stool = (int)value;
+								row.stool = (int)value;
 							break;
 
-						case HEIGHT_COLUMN:
-							dataset->rows[dataset->rows_count-1].height = value;
+							case AVDBH_COLUMN:
+								//dataset->rows[dataset->rows_count-1].avdbh = value;
+								row.avdbh = (int)value;
 							break;
 
-						case WF_COLUMN:
-							dataset->rows[dataset->rows_count-1].wf = value;
+							case HEIGHT_COLUMN:
+								//dataset->rows[dataset->rows_count-1].height = value;
+								row.height = (int)value;
 							break;
 
-						case WRC_COLUMN:
-							dataset->rows[dataset->rows_count-1].wrc = value;
+							case WF_COLUMN:
+								//dataset->rows[dataset->rows_count-1].wf = value;
+								row.wf = (int)value;
 							break;
 
-						case WRF_COLUMN:
-							dataset->rows[dataset->rows_count-1].wrf = value;
+							case WRC_COLUMN:
+								//dataset->rows[dataset->rows_count-1].wrc = value;
+								row.wrc = (int)value;
 							break;
 
-						case WS_COLUMN:
-							dataset->rows[dataset->rows_count-1].ws = value;
+							case WRF_COLUMN:
+								//dataset->rows[dataset->rows_count-1].wrf = value;
+								row.wrf = (int)value;
 							break;
 
-						case WBB_COLUMN:
-							dataset->rows[dataset->rows_count-1].wbb = value;
+							case WS_COLUMN:
+								//dataset->rows[dataset->rows_count-1].ws = value;
+								row.ws = (int)value;
 							break;
 
-						case WRES_COLUMN:
-							dataset->rows[dataset->rows_count-1].wres = value;
+							case WBB_COLUMN:
+								//dataset->rows[dataset->rows_count-1].wbb = value;
+								row.wbb = (int)value;
 							break;
 
-						case LAI_COLUMN:
-							dataset->rows[dataset->rows_count-1].lai = value;
+							case WRES_COLUMN:
+								//dataset->rows[dataset->rows_count-1].wres = value;
+								row.wres = (int)value;
 							break;
 
-						default:
-							printf(err_too_many_column, dataset->rows_count);
-							free(columns);
-							dataset_free(dataset);
-							fclose(f);
-							return NULL;
+							case LAI_COLUMN:
+								//dataset->rows[dataset->rows_count-1].lai = value;
+								row.lai = (int)value;
+							break;
+
+							default:
+								printf(err_too_many_column, rows_count);
+								free(row.species);
+								free(columns);
+								dataset_free(dataset);
+								fclose(f);
+								return NULL;
 						}
 					}
 					/* skip to next token */
@@ -663,14 +706,43 @@ static dataset_t* dataset_import_txt(const char* const filename) {
 		/* check columns */
 		if ( assigned != COLUMNS_COUNT ) {
 			puts("not all values has been imported!");
+			free(row.species);
 			free(columns);
 			dataset_free(dataset);
 			fclose(f);
 			return NULL;
 		}
+
+		/* check for year */
+		if ( row.year_stand == g_settings->year_start ) {
+			/* alloc memory */
+			rows_no_leak = realloc(dataset->rows, (dataset->rows_count+1)*sizeof*rows_no_leak);
+			if ( ! rows_no_leak ) {
+				puts(sz_err_out_of_memory);
+				free(row.species);
+				free(columns);
+				dataset_free(dataset);
+				fclose(f);
+				return NULL;
+			}
+
+			/* assign pointer */
+			dataset->rows = rows_no_leak;
+			dataset->rows[dataset->rows_count++] = row;
+		} else {
+			free(row.species);
+			row.species = NULL;
+		}
 	}
 	free(columns);
 	fclose(f);
+
+	/* how many rows we have ? */
+	if ( ! dataset->rows_count ) {
+		dataset_free(dataset);
+		dataset = NULL;
+	}
+
 	return dataset;
 #undef BUFFER_SIZE
 }
@@ -1166,9 +1238,10 @@ matrix_t* matrix_create(const char* const filename) {
 		f = fopen("debug_input.txt", "w");
 		if ( f ) {
 			int i;
-			fputs("x,y,landuse,age,species,management,n,stool,avdbg,height,wf,wrc,wrf,ws,wbb,wres,lai\n", f);
+			fputs("year,x,y,landuse,age,species,management,n,stool,avdbg,height,wf,wrc,wrf,ws,wbb,wres,lai\n", f);
 			for ( i = 0; i < d->rows_count; ++i ) {
-				fprintf(f, "%d,%d,%c,%d,%s,%c,%d,%d,%g,%g,%g,%g,%g,%g,%g,%g,%g\n"
+				fprintf(f, "%d,%d,%d,%c,%d,%s,%c,%d,%d,%g,%g,%g,%g,%g,%g,%g,%g,%g\n"
+						, d->rows[i].year_stand
 						, d->rows[i].x
 						, d->rows[i].y
 						, (F == d->rows[i].landuse) ? 'F' : 'Z'
@@ -1488,7 +1561,11 @@ void matrix_free(matrix_t *m)
 						free ( m->cells[cell].soil_layers );
 					}
 				}
-				free (m->cells[cell].years);
+				if ( g_year_start_index != -1 ) {
+					free (m->cells[cell].years-g_year_start_index);
+				} else {
+					free (m->cells[cell].years);
+				}
 			}
 			free (m->cells);
 		}
