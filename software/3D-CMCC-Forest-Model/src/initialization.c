@@ -53,14 +53,38 @@ void initialization_forest_class_C_biomass(cell_t *const c, const int height, co
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 	logger(g_debug_log,"\n*******INITIALIZE FOREST CARBON BIOMASS*******\n");
-	logger(g_debug_log, "\n\n...checking initial biomass data for height %g, age %d, species %s...\n",
-			h->value, a->value, s->name);
+	logger(g_debug_log, "\n\n...checking initial biomass data for height %g, age %d, species %s...\n", h->value, a->value, s->name);
+
+	/* compute mass density */
+	s->value[MASS_DENSITY] = s->value[RHOMAX] + (s->value[RHOMIN] - s->value[RHOMAX]) * exp(-ln2 * (a->value / s->value[TRHO]));
+	logger(g_debug_log, "-Mass Density = %g tDM/m3\n", s->value[MASS_DENSITY]);
+
+	/* compute single tree volume */
+	s->value[TREE_VOLUME] = (Pi * s->value[FORM_FACTOR] * pow((d->value/100.),2.) * h->value)/4.;
+	logger(g_debug_log, "-Single tree volume = %g m3/tree\n", s->value[TREE_VOLUME]);
+
+	/* compute class volume */
+	s->value[VOLUME] = s->value[TREE_VOLUME] * s->counter[N_TREE];
+	logger(g_debug_log, "-Class volume = %g m3/sizeCell\n", s->value[VOLUME]);
 
 	/*check for initial biomass*/
 	if (s->value[BIOMASS_STEM_tDM] == 0.0 || s->value[BIOMASS_STEM_tDM] == NO_DATA)
 	{
+//		logger(g_debug_log, "\nNo Stem Biomass Data are available for model initialization \n");
+//		logger(g_debug_log, "...Generating input Stem Biomass biomass\n");
+//
+//		/* compute class stem biomass */
+//		s->value[BIOMASS_STEM_tDM] = s->value[VOLUME] * s->value[MASS_DENSITY];
+//		logger(g_debug_log, "-Class stem mass = %g tDM/sizeCell\n", s->value[VOLUME]);
+//
+//		/* compute individual stem biomass */
+//		s->value[AV_STEM_MASS_KgDM] = (s->value[BIOMASS_STEM_tDM] * 1000.) / s->counter[N_TREE];
+//		logger(g_debug_log, "-Single tree stem mass = %g KgDM/tree\n", s->value[AV_STEM_MASS_KgDM]);
+
+
 		logger(g_debug_log, "\nNo Stem Biomass Data are available for model initialization \n");
 		logger(g_debug_log, "...Generating input Stem Biomass biomass data from DBH = %g cm\n", d->value);
+
 		//compute stem biomass from DBH
 		if (s->value[STEMCONST_P] == NO_DATA && s->value[STEMPOWER_P] == NO_DATA)
 		{
@@ -81,16 +105,19 @@ void initialization_forest_class_C_biomass(cell_t *const c, const int height, co
 				s->value[AV_STEM_MASS_KgDM] = s->value[STEMCONST] * (pow (d->value, STEMPOWER_C));
 			}
 		}
+
 		else
 		{
 			//use site specific stemconst stempower values
 			logger(g_debug_log, "..computing stem biomass from generic stempower and stemconst DBH = %g cm\n", d->value);
 			s->value[AV_STEM_MASS_KgDM] = s->value[STEMCONST_P] * pow (d->value, s->value[STEMPOWER_P]);
+			logger(g_debug_log, "Single tree stem mass = %g KgDM/tree\n", s->value[AV_STEM_MASS_KgDM]);
 		}
 		//1000 to convert Kg into tons
 		s->value[BIOMASS_STEM_tDM] = s->value[AV_STEM_MASS_KgDM] * s->counter[N_TREE] / 1000.0;
+
 		s->value[STEM_C] = s->value[BIOMASS_STEM_tDM] / GC_GDM;
-		logger(g_debug_log, "-Class stem Biomass initialization data from DBH = %g tC/cell\n", s->value[STEM_C]);
+		logger(g_debug_log, "-Class stem Biomass initialization (measured)= %g tC/cell\n", s->value[STEM_C]);
 	}
 	else
 	{
@@ -98,10 +125,10 @@ void initialization_forest_class_C_biomass(cell_t *const c, const int height, co
 		logger(g_debug_log, "---Stem Biomass from init file = %g tDM/cell\n", s->value[BIOMASS_STEM_tDM]);
 		s->value[STEM_C] = s->value[BIOMASS_STEM_tDM]/GC_GDM;
 		logger(g_debug_log, "---Stem Biomass from init file = %g tC/cell\n", s->value[STEM_C]);
-		s->value[AV_STEM_MASS_KgDM] = s->value[BIOMASS_STEM_tDM]* 1000.0 / s->counter[N_TREE];
+		s->value[AV_STEM_MASS_KgDM] = s->value[BIOMASS_STEM_tDM] * 1000. / s->counter[N_TREE];
 	}
 	s->value[AV_STEM_MASS_KgC] = s->value[STEM_C]* 1000.0 / s->counter[N_TREE];
-	logger(g_debug_log, "-Individual stem biomass = %g KgC\n", s->value[AV_STEM_MASS_KgC]);
+	logger(g_debug_log, "-Individual stem biomass (measured)= %g KgC/tree\n", s->value[AV_STEM_MASS_KgC]);
 
 	if (s->value[BIOMASS_BRANCH_tDM] == 0.0 || s->value[BIOMASS_BRANCH_tDM] == NO_DATA)
 	{

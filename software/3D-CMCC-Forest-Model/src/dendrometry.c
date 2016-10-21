@@ -77,7 +77,7 @@ void dendrometry ( cell_t *const c, const int layer, const int height, const int
 
 	logger(g_debug_log, "\n**Mass density**\n");
 
-	/* compute annual mass density tDM/m3 */
+	/* compute mass density tDM/m3 */
 	s->value[MASS_DENSITY] = s->value[RHOMAX] + (s->value[RHOMIN] - s->value[RHOMAX]) * exp(-ln2 * (a->value / s->value[TRHO]));
 	logger(g_debug_log, "-Mass Density = %g tDM/m3\n", s->value[MASS_DENSITY]);
 
@@ -255,7 +255,7 @@ void dendrometry ( cell_t *const c, const int layer, const int height, const int
 	logger(g_debug_log, "Ind residual stem mass from volume = %g kgDM/tree\n", res_stem_mass_from_volume);
 
 	/* check */
-	CHECK_CONDITION( res_stem_mass_from_volume, < 0. );
+	//CHECK_CONDITION( res_stem_mass_from_volume, < 0. );
 
 	/* new stem volume */
 	new_stem_volume = s->value[FORM_FACTOR] * pow(dbh_m,2.) * h->value;
@@ -266,7 +266,7 @@ void dendrometry ( cell_t *const c, const int layer, const int height, const int
 	logger(g_debug_log, "Ind residual stem volume = %g m3/tree\n", res_stem_volume);
 
 	/* check */
-	CHECK_CONDITION( res_stem_volume, < 0. );getchar();
+	//CHECK_CONDITION( res_stem_volume, < 0. );
 
 	/*************************************************************************************************************************/
 
@@ -360,12 +360,26 @@ void dendrometry_old(cell_t *const c, const int layer, const int height, const i
 
 	logger(g_debug_log, "\n**Mass density**\n");
 
-	/* compute annual mass density */
-	s->value[MASS_DENSITY] = s->value[RHOMAX] + (s->value[RHOMIN] - s->value[RHOMAX]) * exp(-ln2 * (a->value / s->value[TRHO]));
-	logger(g_debug_log, "-Mass Density = %g (tDM/m3)\n", s->value[MASS_DENSITY]);
+//	/* compute annual mass density */
+//	s->value[MASS_DENSITY] = s->value[RHOMAX] + ( s->value[RHOMIN] - s->value[RHOMAX] ) * exp(-ln2 * ( a->value / s->value[TRHO] ));
+//	logger(g_debug_log, "-Mass Density = %g (tDM/m3)\n", s->value[MASS_DENSITY]);
+//
+//	logger(g_debug_log, "\n**Volume**\n");
+//
+//	/* compute single tree volume */
+//	s->value[TREE_VOLUME] = (Pi * s->value[FORM_FACTOR] * pow( (d->value / 100. ), 2. ) * h->value ) / 4.;
+//	logger(g_debug_log, "-Single tree volume = %g m3/tree\n", s->value[TREE_VOLUME]);
+//
+//	/* compute class volume */
+//	s->value[VOLUME] = s->value[TREE_VOLUME] * s->counter[N_TREE];
+//	logger(g_debug_log, "-Class volume = %g m3/sizeCell\n", s->value[VOLUME]);
+//
+//	logger(g_debug_log, "\n**Average DBH**\n");
+//
+//	/* compute dbh */
+//	d->value = sqrt( ( 4. * s->value[TREE_VOLUME] ) / ( Pi * s->value[FORM_FACTOR] * h->value ) ) * 100.;
+//	logger(g_debug_log, "-New Average DBH = %g cm\n", d->value);
 
-
-	logger(g_debug_log, "\n**Average DBH**\n");
 
 	/* compute tree AVDBH */
 	if (s->value[STEMCONST_P] == NO_DATA && s->value[STEMPOWER_P] == NO_DATA)
@@ -390,9 +404,6 @@ void dendrometry_old(cell_t *const c, const int layer, const int height, const i
 		logger(g_debug_log, "Using site related stemconst stempower\n");
 		d->value = pow((s->value[AV_STEM_MASS_KgC] * GC_GDM) / s->value[STEMCONST_P], (1.0 / s->value[STEMPOWER_P]));
 	}
-
-
-	logger(g_debug_log, "-Average stem mass = %g kgC/tree\n", s->value[AV_STEM_MASS_KgC]);
 	logger(g_debug_log, "-Old AVDBH = %g cm\n", oldavDBH);
 	logger(g_debug_log, "-New Average DBH = %g cm\n", d->value);
 
