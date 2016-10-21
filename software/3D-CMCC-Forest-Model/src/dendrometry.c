@@ -93,7 +93,7 @@ void dendrometry ( cell_t *const c, const int layer, const int height, const int
 
 	logger(g_debug_log, "*Physically based height diameter approach*\n");
 
-	/* compute phi */
+	/* compute phi (kg) */
 	phi = (mass_density_kg * s->value[FORM_FACTOR] * Pi ) / 4.;
 
 	/* convert dbh cm --> m as in Bossel et al., 1996; Peng et al., 2002; Seidl et al., 2012 */
@@ -101,16 +101,16 @@ void dendrometry ( cell_t *const c, const int layer, const int height, const int
 
 	/*******************************************************************************************/
 
-	logger(g_debug_log, "Ind old stem mass = %g kgDM/tree\n", (s->value[STEM_C] * GC_GDM * 1000.)/s->counter[N_TREE]);
-	logger(g_debug_log, "Ind old stem volume = %g m3/tree\n", ((s->value[STEM_C] * GC_GDM)/s->counter[N_TREE])/s->value[MASS_DENSITY]);
-
-	/* old stem mass from volume (cylinder) */
-	old_stem_mass_from_volume = pow(dbh_m,2.) * h->value * phi;
-	logger(g_debug_log, "Ind old stem mass from volume = %g kgDM/tree\n", old_stem_mass_from_volume);
-
-	/* old stem volume (cylinder) */
-	old_stem_volume = s->value[FORM_FACTOR] * pow(d->value,2.) * h->value * 0.0001;
-	logger(g_debug_log, "Ind stem volume = %g m3/tree\n", old_stem_volume);
+//	logger(g_debug_log, "Ind old stem mass = %g kgDM/tree\n", (s->value[STEM_C] * GC_GDM * 1000.)/s->counter[N_TREE]);
+//	logger(g_debug_log, "Ind old stem volume = %g m3/tree\n", ((s->value[STEM_C] * GC_GDM)/s->counter[N_TREE])/s->value[MASS_DENSITY]);
+//
+//	/* old stem mass from volume (cylinder) */
+//	old_stem_mass_from_volume = pow(dbh_m,2.) * h->value * phi;
+//	logger(g_debug_log, "Ind old stem mass from volume = %g kgDM/tree\n", old_stem_mass_from_volume);
+//
+//	/* old stem volume (cylinder) */
+//	old_stem_volume = s->value[FORM_FACTOR] * pow(d->value,2.) * h->value * 0.0001;
+//	logger(g_debug_log, "Ind stem volume = %g m3/tree\n", old_stem_volume);
 
 	/*******************************************************************************************/
 
@@ -125,7 +125,7 @@ void dendrometry ( cell_t *const c, const int layer, const int height, const int
 	/*******************************************************************************************/
 
 	/* current height diameter factor (current_ccf) following Seidl et al., 2012 (eq.1b) */
-	current_hdf = s->value[STEMCONST_P]*pow(d->value, s->value[STEMPOWER_P]);
+	current_hdf = s->value[STEMCONST_P]*pow(dbh_m, s->value[STEMPOWER_P]);
 	logger(g_debug_log, "height/diameter factor (Seidl method) = %g\n", current_hdf);
 
 	/* current height diameter factor (current_ccf) */
@@ -357,29 +357,6 @@ void dendrometry_old(cell_t *const c, const int layer, const int height, const i
 	oldBasalArea = s->value[BASAL_AREA];
 
 	logger(g_debug_log, "\n**DENDROMETRY**\n");
-
-	logger(g_debug_log, "\n**Mass density**\n");
-
-//	/* compute annual mass density */
-//	s->value[MASS_DENSITY] = s->value[RHOMAX] + ( s->value[RHOMIN] - s->value[RHOMAX] ) * exp(-ln2 * ( a->value / s->value[TRHO] ));
-//	logger(g_debug_log, "-Mass Density = %g (tDM/m3)\n", s->value[MASS_DENSITY]);
-//
-//	logger(g_debug_log, "\n**Volume**\n");
-//
-//	/* compute single tree volume */
-//	s->value[TREE_VOLUME] = (Pi * s->value[FORM_FACTOR] * pow( (d->value / 100. ), 2. ) * h->value ) / 4.;
-//	logger(g_debug_log, "-Single tree volume = %g m3/tree\n", s->value[TREE_VOLUME]);
-//
-//	/* compute class volume */
-//	s->value[VOLUME] = s->value[TREE_VOLUME] * s->counter[N_TREE];
-//	logger(g_debug_log, "-Class volume = %g m3/sizeCell\n", s->value[VOLUME]);
-//
-//	logger(g_debug_log, "\n**Average DBH**\n");
-//
-//	/* compute dbh */
-//	d->value = sqrt( ( 4. * s->value[TREE_VOLUME] ) / ( Pi * s->value[FORM_FACTOR] * h->value ) ) * 100.;
-//	logger(g_debug_log, "-New Average DBH = %g cm\n", d->value);
-
 
 	/* compute tree AVDBH */
 	if (s->value[STEMCONST_P] == NO_DATA && s->value[STEMPOWER_P] == NO_DATA)
