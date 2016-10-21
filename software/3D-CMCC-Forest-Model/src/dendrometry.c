@@ -17,6 +17,9 @@ void dendrometry(cell_t *const c, const int layer, const int height, const int d
 	double oldTreeHeight;
 	double oldBasalArea;
 	double mass_density_kg;
+	double old_stem_mass_from_volume;
+	double new_stem_mass_from_volume;
+	double res_stem_mass_from_volume;
 
 
 	double pot_par;                    /* potential absorbable incoming par */
@@ -69,11 +72,11 @@ void dendrometry(cell_t *const c, const int layer, const int height, const int d
 
 	/* compute annual mass density */
 	s->value[MASS_DENSITY] = s->value[RHOMAX] + (s->value[RHOMIN] - s->value[RHOMAX]) * exp(-ln2 * (a->value / s->value[TRHO]));
-	logger(g_debug_log, "-Mass Density = %g t/m^3\n", s->value[MASS_DENSITY]);
+	logger(g_debug_log, "-Mass Density = %g (tDM/m3)\n", s->value[MASS_DENSITY]);
 
 	/* convert to tDM-->kgDM */
 	mass_density_kg = s->value[MASS_DENSITY] * 1000.;
-	logger(g_debug_log, "-Mass Density = %g Kg/m^3\n", mass_density_kg);
+	logger(g_debug_log, "-Mass Density = %g (Kg/m3)\n", mass_density_kg);
 
 	/*************************************************************************************************************************/
 	/*
@@ -87,6 +90,13 @@ void dendrometry(cell_t *const c, const int layer, const int height, const int d
 	/* compute phi */
 	phi = (mass_density_kg * s->value[FORM_FACTOR] * Pi ) / 4.;
 
+	/* convert dbh cm --> m as in Bossel et al., 1996; Peng et al., 2002; Seidl et al., 2012 */
+	dbh_m = a->value / 100.;
+
+	/* old stem mass from volume */
+	old_stem_mass_from_volume = pow(dbh_m,2.)*h->value*phi;
+	logger(g_debug_log, "Ind old stem mass from volume = %g kgDM/tree\n", old_stem_mass_from_volume);
+
 	/* compute dbh related HDMAX and HDMIN following Seidl et al., 2012 */
 	/* compute HD_MAX */
 	s->value[HD_MAX] = s->value[HDMAX_A] * pow(d->value, s->value[HDMAX_B]);
@@ -95,11 +105,6 @@ void dendrometry(cell_t *const c, const int layer, const int height, const int d
 	s->value[HD_MIN] = s->value[HDMIN_A] * pow(d->value, s->value[HDMIN_B]);
 	logger(g_debug_log, "HD_MIN = %g \n", s->value[HD_MIN]);
 	/************************************************************************/
-
-	/* convert dbh cm --> m as in Bossel et al., 1996; Peng et al., 2002; Seidl et al., 2012 */
-	dbh_m = a->value / 100.;
-
-	/*******************************************************************************************/
 
 	/* compute effective canopy cover */
 	/* special case when LAI = < 1.0 */
@@ -196,6 +201,9 @@ void dendrometry(cell_t *const c, const int layer, const int height, const int d
 	logger(g_debug_log, "-Old AVDBH = %g cm\n", oldavDBH);
 	logger(g_debug_log, "-New Average DBH = %g cm\n", d->value);
 
+	/* convert dbh cm --> m as in Bossel et al., 1996; Peng et al., 2002; Seidl et al., 2012 */
+	dbh_m = a->value / 100.;
+
 	/* check */
 	CHECK_CONDITION( d->value, < oldavDBH - eps );
 
@@ -212,6 +220,18 @@ void dendrometry(cell_t *const c, const int layer, const int height, const int d
 	CHECK_CONDITION( h->value, < oldTreeHeight - eps );
 	//fixme once change CRA with HMAX
 	//CHECK_CONDITION( h->value, > s->value[CRA] - eps );
+
+	/*******************************************************************************************/
+
+	/* new stem mass from volume */
+	new_stem_mass_from_volume = po(dbh_m,2.) * h->value * phi;
+	logger(g_debug_log, "Ind new stem mass from volume = %g kgDM/tree\n", new_stem_mass_from_volume);
+
+	/* check for differences in stem from volume */
+	res_stem_mass_from_volume = new_stem_mass_from_volume - old_stem_mass_from_volume;
+	logger(g_debug_log, "Ind residual stem mass from volume = %g kgDM/tree\n", res_stem_mass_from_volume);
+
+
 	/*************************************************************************************************************************/
 
 	/* compute Basal Area and sapwood-heartwood area */
@@ -308,7 +328,7 @@ void dendrometry_old(cell_t *const c, const int layer, const int height, const i
 
 	/* compute annual mass density */
 	s->value[MASS_DENSITY] = s->value[RHOMAX] + (s->value[RHOMIN] - s->value[RHOMAX]) * exp(-ln2 * (a->value / s->value[TRHO]));
-	logger(g_debug_log, "-Mass Density = %g\n", s->value[MASS_DENSITY]);
+	logger(g_debug_log, "-Mass Density = %g (tDM/m3)\n", s->value[MASS_DENSITY]);
 
 
 	logger(g_debug_log, "\n**Average DBH**\n");

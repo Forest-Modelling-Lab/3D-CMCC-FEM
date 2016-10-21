@@ -35,8 +35,8 @@ enum {
 	FRACBB0,                    /* Branch and Bark fraction at age 0 (m^2/kg) */
 	FRACBB1,                    /* Branch and Bark fraction for mature stands (m^2/kg) */
 	TBB,                        /* Age at which fracBB = (FRACBB0 + FRACBB1 )/ 2 */
-	RHOMIN,                     /* Minimum Basic Density for young Trees */
-	RHOMAX,                     /* Maximum Basic Density for young Trees */
+	RHOMIN,                     /* Minimum Basic Density for young Trees (tDM/m3) */
+	RHOMAX,                     /* Maximum Basic Density for young Trees (tDM/m3) */
 	TRHO,                       /* Age at which rho = (RHOMIN + RHOMAX )/2 */
 	FORM_FACTOR,                /* Tree form factor (adim) */
 	COEFFCOND,                  /* Define stomatal responsee to VPD in m/sec */

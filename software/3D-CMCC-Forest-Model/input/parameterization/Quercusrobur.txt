@@ -13,8 +13,8 @@ LAI_RATIO   2                 //(DIM) all-sided to projected leaf area ratio for
 FRACBB0	0.1                   //Branch and Bark fraction at age 0 for Q. robur from Yuste et al., 2005,  0.27 from Balboa et al ppt
 FRACBB1	0.36                  //Branch and Bark fraction for mature stands for Q. robur from Yuste et al., 2005 and Balboa et al ppt
 TBB	20                        //Age at which fracBB = (FRACBB0 + FRACBB1 )/ 2
-RHOMIN	0.50                  //Minimum Basic Density for young Trees t/m^3 for Q. robur from Knapic et al., 2007
-RHOMAX	0.66                  //Maximum Basic Density for young Trees for Q. robur from Knapic et al., 2007
+RHOMIN	0.50                  //Minimum Basic Density for young Trees t/m^3 for Q. robur from Knapic et al., 2007, 0.65 Seidl et al., 2012
+RHOMAX	0.66                  //Maximum Basic Density for young Trees t/m^3 for Q. robur from Knapic et al., 2007, 0.65 Seidl et al., 2012
 TRHO	4                     //Age at which rho = (RHOMIN + RHOMAX )/2
 FORM_FACTOR 0.454             //Form factor Seidl et al., 2012
 COEFFCOND	0.05              //Define stomatal responsee to VPD in mbar for Q. robur from Pietsch et al.
@@ -64,8 +64,8 @@ SAP_A	0.043                 //a value from Kostner for Q. petreae in cm
 SAP_B	2.384                 //b value from Kostner for Q. petreae in cm
 SAP_LEAF	9700              //9700-9400 as in Kostner et al., sapwood_max leaf area ratio in pipe model  for 4000 Q. robur from Hickler et al 2012
 SAP_WRES	0.11              //Sapwood-Reserve biomass ratio used if no Wres data are available 0.11 for deciduous 0.05 for evergreen  see Schwalm and Ek, 2004 Ecological Modelling
-STEMCONST_P 0.0654            //For Q. robur from Yuste et al 2005
-STEMPOWER_P 2.5753            //For Q. robur from Yuste et al 2005
+STEMCONST_P 0.0654            //a parameter for allometric equation for Q. robur from Yuste et al 2005, 0.6 from Seidl et al., 2012
+STEMPOWER_P 2.5753            //b parameter for allometric equation for Q. robur from Yuste et al 2005, 2.25 from Seidl et al., 2012
 CRA	52                        // 21 value deducted from fitting Yuste 2005 with chapman_richards : previously used 52 //for Q. robur 14.5 from PhD thesis Bellio ??????????? seems to be quite low
 CRB	0.096                     // 0.05985 value deducted from fitting Yuste 2005 values with Chapman-Richards //0.096 for Q. robur from PhD thesis Bellio
 CRC	1.272                     // 1.074 value deducted from fitting Yuste 2005 values with Chapman-Richards //1.272 for Q. robur from PhD thesis Bellio
