@@ -224,7 +224,7 @@ void dendrometry(cell_t *const c, const int layer, const int height, const int d
 	/*******************************************************************************************/
 
 	/* new stem mass from volume */
-	new_stem_mass_from_volume = po(dbh_m,2.) * h->value * phi;
+	new_stem_mass_from_volume = pow(dbh_m,2.) * h->value * phi;
 	logger(g_debug_log, "Ind new stem mass from volume = %g kgDM/tree\n", new_stem_mass_from_volume);
 
 	/* check for differences in stem from volume */

@@ -790,12 +790,6 @@ int main(int argc, char *argv[]) {
 		puts(msg_ok);
 	}
 
-	//ALESSIOR ma lo hai lasciato cosi e committato??
-	// remove
-	g_settings->screen_output = 1;
-	g_start_year = 2000;
-	g_end_year = 2010;
-
 	printf("build matrix using %s...", g_sz_dataset_file);
 	if ( g_sz_input_path ) {
 		strcpy(temp, g_sz_input_path);
