@@ -49,7 +49,6 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 	/* special case when LAI = < 1.0 */
 	if(s->value[LAI] < 1.0) leaf_cell_cover_eff = s->value[LAI] * s->value[CANOPY_COVER_DBHDC];
 	else leaf_cell_cover_eff = s->value[CANOPY_COVER_DBHDC];
-
 	/* check for the special case in which is allowed to have more 100% of grid cell covered */
 	if(leaf_cell_cover_eff > 1.0) leaf_cell_cover_eff = 1.0;
 	logger(g_debug_log, "single height class canopy cover = %g %%\n", leaf_cell_cover_eff*100.0);
@@ -69,7 +68,7 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 	s->value[PAR] = meteo_daily->par - s->value[PAR_REFL];
 
 	/* compute absorbed and transmitted PAR for sun and shaded leaves */
-	s->value[APAR_SUN] = s->value[PAR] * Light_abs_frac_sun * leaf_cell_cover_eff;
+	s->value[APAR_SUN] = s->value[PAR] * Light_abs_frac_sun  * leaf_cell_cover_eff;
 	s->value[TRANSM_PAR_SUN] = s->value[PAR] - s->value[APAR_SUN];
 	s->value[APAR_SHADE] = s->value[TRANSM_PAR_SUN] * Light_abs_frac_shade * leaf_cell_cover_eff;
 	s->value[TRANSM_PAR_SHADE] = s->value[TRANSM_PAR_SUN] - s->value[APAR_SHADE];
@@ -98,13 +97,13 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 	logger(g_debug_log,"\n-Short Wave-\n");
 
 	/* compute reflected Short Wave */
-	s->value[SW_RAD_REFL] = meteo_daily->sw_downward_W * Light_refl_sw_rad_canopy_frac * leaf_cell_cover_eff;
+	s->value[SW_RAD_REFL] = meteo_daily->sw_downward_W * Light_refl_sw_rad_canopy_frac  * leaf_cell_cover_eff ;
 
 	/*assign to class Short Wave Radiation */
 	s->value[SW_RAD] = meteo_daily->sw_downward_W - s->value[SW_RAD_REFL];
 
 	/*compute absorbed and transmitted Short Wave for sun and shaded leaves*/
-	s->value[SW_RAD_ABS_SUN] = s->value[SW_RAD] * Light_abs_frac_sun * leaf_cell_cover_eff;
+	s->value[SW_RAD_ABS_SUN] = s->value[SW_RAD] * Light_abs_frac_sun /* * leaf_cell_cover_eff*/;
 	s->value[SW_RAD_TRANSM_SUN] = s->value[SW_RAD] - s->value[SW_RAD_ABS_SUN];
 	s->value[SW_RAD_ABS_SHADE] = s->value[SW_RAD_TRANSM_SUN] * Light_abs_frac_shade * leaf_cell_cover_eff;
 	s->value[SW_RAD_TRANSM_SHADE] = s->value[SW_RAD_TRANSM_SUN] - s->value[SW_RAD_ABS_SHADE];
@@ -141,7 +140,7 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 	/*compute absorbed and transmitted PPFD for sun and shaded leaves*/
 	s->value[PPFD_ABS_SUN] = s->value[PPFD] * Light_abs_frac_sun * leaf_cell_cover_eff;
 	s->value[PPFD_TRANSM_SUN] = s->value[PPFD] - s->value[PPFD_ABS_SUN];
-	s->value[PPFD_ABS_SHADE] = s->value[PPFD_TRANSM_SUN] * Light_abs_frac_shade* leaf_cell_cover_eff;
+	s->value[PPFD_ABS_SHADE] = s->value[PPFD_TRANSM_SUN] * Light_abs_frac_shade * leaf_cell_cover_eff;
 	s->value[PPFD_TRANSM_SHADE] = s->value[PPFD_TRANSM_SUN] - s->value[PPFD_ABS_SHADE];
 
 	/* overall canopy */
@@ -204,7 +203,7 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 	static double temp_ppfd_abs;                                                          /* temporary absorbed PPFD for layer */
 	static double temp_ppfd_refl;                                                         /* temporary reflected PPFD for layer */
 
-	double leaf_cell_cover_eff;                                                           /* (ratio) fraction of square meter covered by leaf over the grid cell */
+	//double leaf_cell_cover_eff;                                                           /* (ratio) fraction of square meter covered by leaf over the grid cell */
 
 	tree_layer_t *l;
 	//height_t *h;
@@ -221,12 +220,12 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 
 	/* compute effective canopy cover */
 	/* special case when LAI = < 1.0 */
-	if( s->value[LAI] < 1.0 ) leaf_cell_cover_eff = s->value[LAI] * s->value[CANOPY_COVER_DBHDC];
-	else leaf_cell_cover_eff = s->value[CANOPY_COVER_DBHDC];
-
-	/* check for the special case in which is allowed to have more 100% of grid cell covered */
-	if( leaf_cell_cover_eff > 1.0 ) leaf_cell_cover_eff = 1.0;
-	logger(g_debug_log, "single height class canopy cover = %g %%\n", leaf_cell_cover_eff*100.0);
+//	if( s->value[LAI] < 1.0 ) leaf_cell_cover_eff = s->value[LAI] * s->value[CANOPY_COVER_DBHDC];
+//	else leaf_cell_cover_eff = s->value[CANOPY_COVER_DBHDC];
+//
+//	/* check for the special case in which is allowed to have more 100% of grid cell covered */
+//	if( leaf_cell_cover_eff > 1.0 ) leaf_cell_cover_eff = 1.0;
+//	logger(g_debug_log, "single height class canopy cover = %g %%\n", leaf_cell_cover_eff*100.0);
 
 	/***********************************************************************************************************/
 

@@ -41,7 +41,6 @@ void canopy_radiation_lw_band(cell_t *const c, const int layer, const int height
 
 	TsoilK = meteo_daily->tsoil + TempAbs;
 
-
 	/* compute effective canopy cover */
 	/* special case when LAI = < 1.0 */
 	if(s->value[LAI] < 1.0) leaf_cell_cover_eff = s->value[LAI] * s->value[CANOPY_COVER_DBHDC];

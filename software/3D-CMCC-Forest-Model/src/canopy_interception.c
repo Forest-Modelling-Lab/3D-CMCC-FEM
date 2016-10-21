@@ -38,6 +38,7 @@ void canopy_interception(cell_t *const c, const int layer, const int height, con
 	/* it computes canopy rain interception with the same rationale
 	 * used for canopy radiation absorption */
 
+	//note: it is still used cause rainfall is considered always vertical from zenith angle
 	/* compute effective canopy cover */
 	/* special case when LAI = < 1.0 */
 	if( s->value[LAI] < 1.0 ) leaf_cell_cover_eff = s->value[LAI] * s->value[CANOPY_COVER_DBHDC];

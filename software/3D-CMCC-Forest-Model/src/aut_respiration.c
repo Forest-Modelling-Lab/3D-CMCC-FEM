@@ -250,12 +250,6 @@ void growth_respiration(cell_t *const c, const int layer, const int height, cons
 	logger(g_debug_log, "daily branch growth respiration = %g gC/m2/day\n", s->value[BRANCH_GROWTH_RESP]);
 	logger(g_debug_log, "daily total growth respiration = %g gC/m2/day\n", s->value[TOTAL_GROWTH_RESP]);
 
-
-	/* it converts value of GPP gC/m2/day in gC/m2 area covered/day */
-	///test 6 July 2016 removing
-	//s->value[TOTAL_GROWTH_RESP] *= leaf_cell_cover_eff;
-	//logger(g_debug_log, "TOTAL growth respiration = %g gC/m2 area covered/day\n", s->value[TOTAL_GROWTH_RESP]);
-
 	c->daily_leaf_growth_resp += s->value[LEAF_GROWTH_RESP];
 	c->daily_stem_growth_resp += s->value[STEM_GROWTH_RESP];
 	c->daily_fine_root_growth_resp += s->value[FINE_ROOT_GROWTH_RESP];

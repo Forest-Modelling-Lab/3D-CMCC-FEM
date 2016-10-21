@@ -28,7 +28,7 @@ void dendrometry ( cell_t *const c, const int layer, const int height, const int
 	double pot_apar;                   /* potential absorbed par */
 	double pot_apar_sun;               /* potential absorbed par sun */
 	double pot_apar_shade;             /* potential absorbed par shade */
-	double leaf_cell_cover_eff;
+	//double leaf_cell_cover_eff;
 	double Light_refl_par_frac;
 	double current_ccf;                /* crown competition factor */
 	double current_hdf;                /* height-diameter competition factor */
@@ -139,11 +139,15 @@ void dendrometry ( cell_t *const c, const int layer, const int height, const int
 
 	/* compute effective canopy cover */
 	/* special case when LAI = < 1.0 */
+	/*
 	if(s->value[LAI] < 1.0) leaf_cell_cover_eff = s->value[LAI] * s->value[CANOPY_COVER_DBHDC];
 	else leaf_cell_cover_eff = s->value[CANOPY_COVER_DBHDC];
-
+	*/
 	/* check for the special case in which is allowed to have more 100% of grid cell covered */
+	/*
 	if(leaf_cell_cover_eff > 1.0) leaf_cell_cover_eff = 1.0;
+	logger(g_debug_log, "single height class canopy cover = %g %%\n", leaf_cell_cover_eff*100.0);
+	*/
 
 	if( s->value[LAI] >= 1.0 )
 	{
@@ -159,16 +163,20 @@ void dendrometry ( cell_t *const c, const int layer, const int height, const int
 	}
 
 	/* compute potential absorbable incoming par less reflected */
-	pot_par = meteo_daily->incoming_par - (meteo_daily->incoming_par * Light_refl_par_frac * leaf_cell_cover_eff);
+	pot_par = meteo_daily->incoming_par - (meteo_daily->incoming_par * Light_refl_par_frac /* * leaf_cell_cover_eff */);
 
 	/* compute potential absorbed incoming par */
-	pot_apar_sun = pot_par * (1. - (exp(- s->value[K] * s->value[LAI_SUN]))) * leaf_cell_cover_eff ;
-	pot_apar_shade = (pot_par - pot_apar_sun) * (1. - (exp(- s->value[K] * s->value[LAI_SHADE]))) * leaf_cell_cover_eff;
+	pot_apar_sun = pot_par * (1. - (exp(- s->value[K] * s->value[LAI_SUN]))) /* * leaf_cell_cover_eff*/ ;
+	pot_apar_shade = (pot_par - pot_apar_sun) * (1. - (exp(- s->value[K] * s->value[LAI_SHADE]))) /* * leaf_cell_cover_eff*/;
 	pot_apar = pot_apar_sun + pot_apar_shade;
 
 	/* current light competition factor */
 	current_lcf = s->value[APAR] / pot_apar;
 	logger(g_debug_log, "light_competition factor = %g\n", current_lcf);
+
+	/*check */
+	CHECK_CONDITION(current_lcf, > 1);
+	CHECK_CONDITION(current_lcf, < 0);
 
 	/*******************************************************************************************/
 
@@ -176,6 +184,10 @@ void dendrometry ( cell_t *const c, const int layer, const int height, const int
 	slope = s->value[DBHDCMAX]- s->value[DBHDCMIN];
 	current_ccf = (s->value[DBHDC_EFF] - s->value[DBHDCMIN])/slope;
 	logger(g_debug_log, "crown_competition factor = %g\n", current_ccf);
+
+	/*check */
+	CHECK_CONDITION(current_ccf, > 1);
+	CHECK_CONDITION(current_ccf, < 0);
 
 	/*******************************************************************************************/
 
