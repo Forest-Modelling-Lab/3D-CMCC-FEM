@@ -340,10 +340,21 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 	logger(g_debug_log, "C_TO_FRUIT = %g tC/cell/day\n", s->value[C_TO_FRUIT]);
 	logger(g_debug_log, "C_TO_LITTER = %g tC/cell/day\n", s->value[C_TO_LITTER]);
 
-	/* update class level annual carbon biomass increment in tC/cell/year */
+	/* update class level month carbon biomass increment in tC/month/cell */
+	s->value[DEL_M_WTS] += s->value[C_TO_TOT_STEM];
+	s->value[DEL_M_WS] += s->value[C_TO_STEM];
+	s->value[DEL_M_WL] += s->value[C_TO_LEAF];
+	s->value[DEL_M_WFR] += s->value[C_TO_FINEROOT];
+	s->value[DEL_M_WCR] += s->value[C_TO_COARSEROOT];
+	s->value[DEL_M_WRES] += s->value[C_TO_RESERVE];
+	s->value[DEL_M_WR] += s->value[C_TO_ROOT];
+	s->value[DEL_M_BB] += s->value[C_TO_BRANCH];
+	s->value[DEL_M_FRUIT] += s->value[C_TO_FRUIT];
+
+	/* update class level annual carbon biomass increment in tC/year/cell */
 	s->value[DEL_Y_WTS] += s->value[C_TO_TOT_STEM];
 	s->value[DEL_Y_WS] += s->value[C_TO_STEM];
-	s->value[DEL_Y_WF] += s->value[C_TO_LEAF];
+	s->value[DEL_Y_WL] += s->value[C_TO_LEAF];
 	s->value[DEL_Y_WFR] += s->value[C_TO_FINEROOT];
 	s->value[DEL_Y_WCR] += s->value[C_TO_COARSEROOT];
 	s->value[DEL_Y_WRES] += s->value[C_TO_RESERVE];

@@ -376,6 +376,16 @@ void reset_monthly_class_variables(cell_t *const c)
 					s->value[MONTHLY_TOTAL_AUT_RESP] = 0.;
 					s->value[MONTHLY_CANOPY_EVAPO_TRANSP] = 0.;
 					s->value[MONTHLY_CANOPY_LATENT_HEAT] = 0.;
+
+					s->value[DEL_M_WTS] = 0.;
+					s->value[DEL_M_WS] = 0.;
+					s->value[DEL_M_WL] = 0.;
+					s->value[DEL_M_WFR] = 0.;
+					s->value[DEL_M_WCR] = 0.;
+					s->value[DEL_M_WRES] = 0.;
+					s->value[DEL_M_WR] = 0.;
+					s->value[DEL_M_BB] = 0.;
+					s->value[DEL_M_FRUIT] = 0.;
 				}
 			}
 		}
@@ -442,13 +452,15 @@ void reset_annual_class_variables(cell_t *const c)
 					s->counter[DEAD_STEMS] = 0;
 					s->counter[N_TREE_SAP] = 0;
 
+					s->value[DEL_Y_WTS] = 0.;
 					s->value[DEL_Y_WS] = 0.;
-					s->value[DEL_Y_WF] = 0.;
+					s->value[DEL_Y_WL] = 0.;
 					s->value[DEL_Y_WFR] = 0.;
 					s->value[DEL_Y_WCR] = 0.;
 					s->value[DEL_Y_WRES] = 0.;
 					s->value[DEL_Y_WR] = 0.;
 					s->value[DEL_Y_BB] = 0.;
+					s->value[DEL_Y_FRUIT] = 0.;
 					s->value[OLD_BIOMASS_ROOTS_COARSE] = s->value[BIOMASS_COARSE_ROOT_tDM];
 					s->value[OLD_BIOMASS_FINE_ROOT_tDM] = s->value[BIOMASS_FINE_ROOT_tDM];
 					s->value[OLD_BIOMASS_STEM] = s->value[BIOMASS_STEM_tDM];

@@ -400,17 +400,26 @@ enum {
 	WBB_heart_tDM,
 	WTOT_sap_tDM,
 	W_SEED,                        /* Seed Biomass*/
-	DEL_TOTAL_W,                   /* Total Biomass Increment*/
+	DEL_TOTAL_W,                   /* Total Biomass Increment */
 	TOTAL_W,
-	DEL_Y_WTS,
-	DEL_Y_WS,                      /* Yearly cumulated stem biomass increment*/
-	DEL_Y_WF,                      /* Yearly cumulated foliage biomass increment*/
-	DEL_Y_WR,                      /* Yearly cumulated root biomass increment*/
-	DEL_Y_WFR,
-	DEL_Y_WCR,
-	DEL_Y_WRES,                    /* Yearly cumulated reserve biomass increment*/
-	DEL_Y_BB,
-	DEL_Y_FRUIT,
+	DEL_M_WTS,                     /* Monthly cumulated total stem biomass increment (tC/month/sizeCell) */
+	DEL_M_WS,                      /* Monthly cumulated stem biomass increment (tC/month/sizeCell) */
+	DEL_M_WL,                      /* Monthly cumulated leaf biomass increment (tC/month/sizeCell) */
+	DEL_M_WR,                      /* Monthly cumulated root biomass increment (tC/month/sizeCell) */
+	DEL_M_WFR,                     /* Monthly cumulated fine root biomass increment (tC/month/sizeCell) */
+	DEL_M_WCR,                     /* Monthly cumulated fine root biomass increment (tC/month/sizeCell) */
+	DEL_M_WRES,                    /* Monthly cumulated reserve biomass increment (tC/month/sizeCell) */
+	DEL_M_BB,                      /* Monthly cumulated branch and bark biomass increment (tC/month/sizeCell) */
+	DEL_M_FRUIT,                   /* Monthly cumulated fruit biomass increment (tC/month/sizeCell) */
+	DEL_Y_WTS,                     /* Yearly cumulated total stem biomass increment (tC/year/sizeCell) */
+	DEL_Y_WS,                      /* Yearly cumulated stem biomass increment (tC/year/sizeCell) */
+	DEL_Y_WL,                      /* Yearly cumulated leaf biomass increment (tC/year/sizeCell) */
+	DEL_Y_WR,                      /* Yearly cumulated root biomass increment (tC/year/sizeCell) */
+	DEL_Y_WFR,                     /* Yearly cumulated fine root biomass increment (tC/year/sizeCell)*/
+	DEL_Y_WCR,                     /* Yearly cumulated fine root biomass increment (tC/year/sizeCell)*/
+	DEL_Y_WRES,                    /* Yearly cumulated reserve biomass increment (tC/year/sizeCell) */
+	DEL_Y_BB,                      /* Yearly cumulated branch and bark biomass increment (tC/year/sizeCell) */
+	DEL_Y_FRUIT,                   /* Yearly cumulated fruit biomass increment (tC/year/sizeCell) */
 
 	/*converted biome fraction for allocation*/
 	FINE_ROOT_LEAF_FRAC,

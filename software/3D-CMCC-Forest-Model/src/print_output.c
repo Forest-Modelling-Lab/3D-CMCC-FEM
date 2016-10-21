@@ -357,8 +357,8 @@ void EOM_print_cumulative_balance_cell_level(cell_t *const c, const int month, c
 								/* heading for species name */
 								logger(g_monthly_log,"\t%10s", "SPECIES");
 
-								logger(g_monthly_log,"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s"
-										"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s",
+								logger(g_monthly_log,"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s"
+										"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s\t%4s \t%4s \t%4s \t%4s",
 										"GPP",
 										"AR",
 										"NPP",
@@ -370,6 +370,13 @@ void EOM_print_cumulative_balance_cell_level(cell_t *const c, const int month, c
 										"HDMAX",
 										"HDMIN",
 										"N_TREE",
+										"DEL_M_WS",
+										"DEL_M_WL",
+										"DEL_M_WFR",
+										"DEL_M_WCR",
+										"DEL_M_WRES",
+										"DEL_M_BB",
+										"DEL_M_FRUIT",
 										"WRes",
 										"WS",
 										"WSL",
@@ -450,8 +457,8 @@ void EOM_print_cumulative_balance_cell_level(cell_t *const c, const int month, c
 							logger(g_monthly_log,"\t%8.3s", c->heights[height].dbhs[dbh].ages[age].species[species].name);
 
 							/* print variables at layer-class level */
-							logger(g_monthly_log,"\t%6.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3d "
-									"\t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f",
+							logger(g_monthly_log,"\t%6.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3d \t%3.4f \t%3.4f \t%3.4f \t%3.4f"
+									"\t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f",
 									s->value[MONTHLY_GPP_gC],
 									s->value[MONTHLY_TOTAL_AUT_RESP],
 									s->value[MONTHLY_NPP_gC],
@@ -463,6 +470,13 @@ void EOM_print_cumulative_balance_cell_level(cell_t *const c, const int month, c
 									s->value[HD_MAX],
 									s->value[HD_MIN],
 									s->counter[N_TREE],
+									s->value[DEL_M_WS] ,
+									s->value[DEL_M_WL] ,
+									s->value[DEL_M_WFR] ,
+									s->value[DEL_M_WCR] ,
+									s->value[DEL_M_WRES] ,
+									s->value[DEL_M_BB] ,
+									s->value[DEL_M_FRUIT] ,
 									s->value[RESERVE_C],
 									s->value[STEM_C],
 									s->value[STEM_LIVE_WOOD_C],

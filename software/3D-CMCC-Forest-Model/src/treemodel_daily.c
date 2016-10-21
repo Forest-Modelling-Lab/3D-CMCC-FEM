@@ -59,8 +59,8 @@ extern logger_t* g_debug_log;
 extern int DaysInMonth[];
 
 /* Last cumulative days in months */
-// int MonthLength [];
-//extern int MonthLength_Leap [];
+extern int MonthLength [];
+extern int MonthLength_Leap [];
 
 /*****************************************************************************************************************/
 int Tree_model_daily (matrix_t *const m, const int cell, const int day, const int month, const int year)
@@ -265,6 +265,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							nitrogen_stock( s );
 
 							/****************************************************************************************************************************************/
+
 							/* check for balance closure at the class level */
 							logger(g_debug_log, "\n**CLASS LEVEL BALANCE**\n");
 
@@ -276,6 +277,14 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 
 							/* check for water balance closure */
 							check_class_water_balance ( c, layer, height, dbh, age, species );
+
+							/****************************************************************************************************************************************/
+							/* END OF MONTH */
+							/* last day of the month */
+							if ( ( IS_LEAP_YEAR( c->years[year].year ) ? (MonthLength_Leap[month] ) : (MonthLength[month] )) == c->doy )
+							{
+								//dendrometry ( c, layer, height, dbh, age, species, meteo_daily );
+							}
 
 							/****************************************************************************************************************************************/
 							/* END OF YEAR */
