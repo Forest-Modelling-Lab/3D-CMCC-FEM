@@ -324,7 +324,9 @@ static int log_start(const char* const sitename)
 		}
 		len += sprintf(buffer+len, "%s", ext);
 	}
-	len += sprintf(buffer+len, ".txt");
+
+	/* extension */
+	sprintf(buffer+len, ".txt");
 
 	/* create log files */
 	{
@@ -360,16 +362,15 @@ static int log_start(const char* const sitename)
 
 		for ( i = 0 ; i < 5; ++i ) {
 			if ( log_flag[i] ) {
-				*logs[i] = logger_new("%s%s%s_output%s%s_output_%s%s%s%s"
+				*logs[i] = logger_new("%s%soutput_%s%s%s%s%s%s"
 						, g_sz_output_path ? g_sz_output_path : ""
 								, flag ? "" : FOLDER_DELIMITER
-										, log_name[i]
-										           , FOLDER_DELIMITER
-										           , log_name[i]
-										                      , date
-										                      , FOLDER_DELIMITER
-										                      , log_name[i]
-										                                 , buffer
+								, date
+								, FOLDER_DELIMITER
+								, log_name[i]
+								, FOLDER_DELIMITER
+								, log_name[i]
+								, buffer
 				);
 				if ( ! *logs[i] ) {
 					printf("Unable to create %s log!\n\n",log_name[i]);
