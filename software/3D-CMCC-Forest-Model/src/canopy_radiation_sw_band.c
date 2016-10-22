@@ -203,7 +203,7 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 	static double temp_ppfd_abs;                                                          /* temporary absorbed PPFD for layer */
 	static double temp_ppfd_refl;                                                         /* temporary reflected PPFD for layer */
 
-	//double leaf_cell_cover_eff;                                                           /* (ratio) fraction of square meter covered by leaf over the grid cell */
+	double leaf_cell_cover_eff;                                                           /* (ratio) fraction of square meter covered by leaf over the grid cell */
 
 	tree_layer_t *l;
 	//height_t *h;
@@ -220,26 +220,39 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 
 	/* compute effective canopy cover */
 	/* special case when LAI = < 1.0 */
-//	if( s->value[LAI] < 1.0 ) leaf_cell_cover_eff = s->value[LAI] * s->value[CANOPY_COVER_DBHDC];
-//	else leaf_cell_cover_eff = s->value[CANOPY_COVER_DBHDC];
-//
-//	/* check for the special case in which is allowed to have more 100% of grid cell covered */
-//	if( leaf_cell_cover_eff > 1.0 ) leaf_cell_cover_eff = 1.0;
-//	logger(g_debug_log, "single height class canopy cover = %g %%\n", leaf_cell_cover_eff*100.0);
+	if( s->value[LAI] < 1.0 ) leaf_cell_cover_eff = s->value[LAI] * s->value[CANOPY_COVER_DBHDC];
+	else leaf_cell_cover_eff = s->value[CANOPY_COVER_DBHDC];
+
+	/* check for the special case in which is allowed to have more 100% of grid cell covered */
+	if( leaf_cell_cover_eff > 1.0 ) leaf_cell_cover_eff = 1.0;
+	logger(g_debug_log, "single height class canopy cover = %g %%\n", leaf_cell_cover_eff*100.0);
 
 	/***********************************************************************************************************/
 
 	/* SHORT WAVE RADIATION FRACTIONS */
 	/* compute fractions of light intercepted, transmitted and reflected from the canopy */
 	/* fraction of light transmitted through the canopy */
-	Light_trasm_frac = (exp(- s->value[K] * s->value[LAI])); //not used
-	Light_trasm_frac_sun = (exp(- s->value[K] * s->value[LAI_SUN]));
-	Light_trasm_frac_shade = (exp(- s->value[K] * s->value[LAI_SHADE]));
+	/* note: 21 October 2016, following Duursma and Makela, "LIGHT INTERCEPTION OF NON-HOMOGENEOUS CANOPIES"
+	* TREE PHYSIOLOGY VOLUME 27, 2007; exp(- s->value[K] * (s->value[LAI]/leaf_cell_cover_eff))
+	* we currently use approach for homogeneous canopies that improves representation we canopy is not closed
+	*/
+	if ( s->value[LAI] )
+	{
+		Light_trasm_frac = exp(- s->value[K] * (s->value[LAI]/leaf_cell_cover_eff));
+		Light_trasm_frac_sun = exp(- s->value[K] * (s->value[LAI_SUN]/leaf_cell_cover_eff));
+		Light_trasm_frac_shade = exp(- s->value[K] * (s->value[LAI_SHADE]/leaf_cell_cover_eff));
+	}
+	else
+	{
+		Light_trasm_frac = 1.;
+		Light_trasm_frac_sun = 1.;
+		Light_trasm_frac_shade = 1.;
+	}
 
 	/* fraction of light absorbed by the canopy */
-	Light_abs_frac = 1.0 - Light_trasm_frac; //not used
-	Light_abs_frac_sun = 1.0 - Light_trasm_frac_sun;
-	Light_abs_frac_shade = 1.0 - Light_trasm_frac_shade;
+	Light_abs_frac = 1. - Light_trasm_frac; //not used
+	Light_abs_frac_sun = 1. - Light_trasm_frac_sun;
+	Light_abs_frac_shade = 1. - Light_trasm_frac_shade;
 
 	/* fraction of light reflected by the canopy */
 	/* for Short Wave radiation and PAR */
