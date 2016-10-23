@@ -238,12 +238,6 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 	/* update live_total wood fraction based on age */
 	live_total_wood_age (a, species);
 
-	//test new dendro
-	if ( s->value[C_TO_STEM] > 0.)
-	{
-		//dendrometry ( c, layer, height, dbh, age, species, meteo_daily );
-	}
-
 	/* allocate daily carbon */
 	carbon_allocation ( s );
 
@@ -253,8 +247,11 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 	/* to avoid "jumps" of dbh it has computed once monthly */
 	if ( ( IS_LEAP_YEAR( c->years[year].year ) ? (MonthLength_Leap[month] ) : (MonthLength[month] )) == c->doy )
 	{
+		/* old */
 		dendrometry_old ( c, layer, height, dbh, age, species);
 	}
+
+	//dendrometry ( c, layer, height, dbh, age, species, meteo_daily, month, year );
 
 	logger(g_debug_log, "\n-Daily increment in carbon pools-\n");
 	logger(g_debug_log, "C_TO_LEAF = %g tC/cell/day\n", s->value[C_TO_LEAF]);
