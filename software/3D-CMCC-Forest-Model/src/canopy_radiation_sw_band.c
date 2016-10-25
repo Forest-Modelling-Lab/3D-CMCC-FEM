@@ -234,6 +234,7 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 	/* fraction of light transmitted through the canopy */
 	/* note: 21 October 2016, following Duursma and Makela, "LIGHT INTERCEPTION OF NON-HOMOGENEOUS CANOPIES"
 	* TREE PHYSIOLOGY VOLUME 27, 2007; exp(- s->value[K] * (s->value[LAI]/leaf_cell_cover_eff))
+	* and Forrester et al, Forest Ecosystems,2014
 	* we currently use approach for homogeneous canopies that improves representation we canopy is not closed
 	*/
 	if ( s->value[LAI] )

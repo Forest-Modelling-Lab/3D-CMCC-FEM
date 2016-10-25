@@ -38,7 +38,7 @@ enum {
 	RHOMIN,                     /* Minimum Basic Density for young Trees (tDM/m3) */
 	RHOMAX,                     /* Maximum Basic Density for young Trees (tDM/m3) */
 	TRHO,                       /* Age at which rho = (RHOMIN + RHOMAX )/2 */
-	FORM_FACTOR,                /* Tree form factor (adim) */
+	FORM_FACTOR,                /* Stem form factor (adim) */
 	COEFFCOND,                  /* Define stomatal responsee to VPD in m/sec */
 	BLCOND,                     /* Canopy Boundary Layer conductance */
 	MAXCOND,                    /* Maximum leaf Conductance in m/sec */
@@ -95,6 +95,7 @@ enum {
 	HDMAX_B,                    /* B parameter for Height (m) to Base diameter (m) ratio MAX */
 	HDMIN_A,                    /* A parameter for Height (m) to Base diameter (m) ratio MIN */
 	HDMIN_B,                    /* B parameter for Height (m) to Base diameter (m) ratio MIN */
+	CROWN_FORM_FACTOR,          /* Crown form factor (0 = cylinder, 1 = cone, 2 = sphere, 3 = ellipsoid) */
 	MAXSEED,                    /* numero massimo semi prodotti dalla pianta (da TREEMIG) */
 	MASTSEED,                   /* ricorrenza anni di pasciona (da TREEMIG) */
 	WEIGHTSEED,                 /* fruit wiight in g */
@@ -118,17 +119,19 @@ enum {
 	DBHDC_EFF,                  /* Crown Projected Diameter from DBH in function of density*/
 	DENMAX,                     /* maximum stand density (trees/cell) */
 	DENMIN,                     /* minimum stand density (trees/cell) */
+	CROWN_RADIUS,               /* Crown Projected Radius in m */
 	CROWN_DIAMETER,             /* Crown Projected Diameter in m */
+	CROWN_HEIGHT,               /* Crown height in m */
 	CROWN_AREA,                 /* Crown Projected Area in m^2 */
 	CANOPY_COVER,               /* Canopy Projected Cover % of pixel covered */
 	CROWN_SURFACE_AREA,         /* Crown Surface Area in m^2 */
 	HD_EFF,                     /* Effective Height/Diameter ratio */
 	HD_MAX,                     /* Height (m) to Base diameter (m) ratio MAX */
 	HD_MIN,                     /* Height (m) to Base diameter (m) ratio MIN */
-	SAPWOOD_AREA,
-	SAPWOOD_PERC,
-	HEARTWOOD_AREA,
-	HEARTWOOD_PERC,
+	SAPWOOD_AREA,               /* tree sapwood area cm^2*/
+	SAPWOOD_PERC,               /* sapwood area to toal stem area */
+	HEARTWOOD_AREA,             /* tree heartwood area cm^2*/
+	HEARTWOOD_PERC,             /* heartwood area to toal stem area */
 	BASAL_AREA,                 /* Individual Basal Area (cm2/area tree) */
 	BASAL_AREA_m2,              /* Individual Basal Area (m2/area tree) */
 	STAND_BASAL_AREA,           /* Class Basal Area of overall class (cm2/area tree class) */
@@ -205,41 +208,41 @@ enum {
 	F_SW,                       /* SOIL WATER modifier*/
 	F_DROUGHT,                  /* SOIL DROUGHT modifier (see Duursma et al., 2008)*/
 	F_PSI,                      /* SOIL WATER modifier using PSI, see Biome*/
-	F_CO2,                      /* CO2 fert effect*/
-	PHYS_MOD,                   /* Physmod*/
+	F_CO2,                      /* CO2 soil fertilization effect effect*/
+	PHYS_MOD,                   /* physiological modifier */
 
 	/*water variables*/
 	CANOPY_CONDUCTANCE,
 	CANOPY_BLCOND,              /* Canopy Boundary Layer conductance (m s-1)*/
 	FRAC_DAYTIME_TRANSP,        /* fraction of daytime for transpiration (and photosynthesis)*/
-	CANOPY_INT,
-	CANOPY_EVAPO,
+	CANOPY_INT,                 /* canopy interception of rainfall mm day-1 */
+	CANOPY_EVAPO,               /* canopy evaporation mm day-1 */
 	CANOPY_WET,                 /* it should'nt be reset every day*/
-	CANOPY_TRANSP,
-	CANOPY_EVAPO_TRANSP,
-	CANOPY_INT_SNOW,
+	CANOPY_TRANSP,              /* canopy transpiration mm day -1 */
+	CANOPY_EVAPO_TRANSP,        /* canopy evapotranspiration mm day-1 */
+	CANOPY_INT_SNOW,            /* canopy interception of snow mm day-1 */
 	CANOPY_WATER,               /* it should'nt be reset every day*/
 	OLD_CANOPY_WATER,           /* it should'nt be reset every day*/
 	CANOPY_SNOW,                /* it should'nt be reset every day*/
 	OLD_CANOPY_SNOW,            /* it should'nt be reset every day*/
 	CANOPY_FRAC_DAY_TRANSP,     /* Fraction of daily canopy transpiration (DIM)*/
-	CANOPY_LATENT_HEAT,
-	CANOPY_SENSIBLE_HEAT,
+	CANOPY_LATENT_HEAT,         /* canopy latent heat W m-2 */
+	CANOPY_SENSIBLE_HEAT,       /* canopy sensible heat W m-2 */
 
-	MONTHLY_CANOPY_EVAPO_TRANSP,
-	YEARLY_CANOPY_EVAPO_TRANSP,
-	MONTHLY_CANOPY_LATENT_HEAT,
-	YEARLY_CANOPY_LATENT_HEAT,
+	MONTHLY_CANOPY_EVAPO_TRANSP,/* monthly canopy evapotranspiration mm month-1 */
+	YEARLY_CANOPY_EVAPO_TRANSP, /* annual canopy evapotranspiration mm month-1 */
+	MONTHLY_CANOPY_LATENT_HEAT, /* monthly canopy latent heat W m-2 */
+	YEARLY_CANOPY_LATENT_HEAT,  /* annual canopy latent heat W m-2 */
 
 	/*LAI*/
-	LAI,                        /* LAI (m^2/m2)*/
-	LAI_SUN,
-	LAI_SHADE,
+	LAI,                        /* LAI (m^2/m2) */
+	LAI_SUN,                    /* LAI for sun leaves (m^2/m2) */
+	LAI_SHADE,                  /* LAI for shaded leaves (m^2/m2) */
 	MAX_LAI,                    /* LAI at the very first day of senescence: parameter of the sigmoid function*/
-	PEAK_LAI,                   /* PEAK LAI*/
-	LEAF_TEMP_K,
-	CANOPY_TEMP_K,
-	CANOPY_TEMP_K_OLD,
+	PEAK_LAI,                   /* Peak LAI*/
+	LEAF_TEMP_K,                /* leaf temperature (K) */
+	CANOPY_TEMP_K,              /* canopy temperature (K) */
+	CANOPY_TEMP_K_OLD,          /* previous time canopy temperature (K) */
 
 	/*carbon variables*/
 	C_FLUX,

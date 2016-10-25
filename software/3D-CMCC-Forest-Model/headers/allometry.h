@@ -6,4 +6,6 @@
 
 void allometry_power_function(cell_t *const c);
 
+void crown_surface_area (cell_t *const c);
+
 #endif /* ALLOMETRY_H_ */

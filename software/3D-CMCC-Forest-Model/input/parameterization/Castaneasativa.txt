@@ -113,7 +113,7 @@ HDMAX_A 323.6           //A parameter for Height (m) to Base diameter (m) ratio 
 HDMAX_B -0.368          //B parameter for Height (m) to Base diameter (m) ratio MAX Seidl et al., 2012 for F. sylvatica
 HDMIN_A 100.9           //A parameter for Height (m) to Base diameter (m) ratio MIN Seidl et al., 2012 for F. sylvatica
 HDMIN_B -0.243          //B parameter for Height (m) to Base diameter (m) ratio MIN Seidl et al., 2012 for F. sylvatica
-
+CROWN_FORM_FACTOR 0     // Crown form factor (0 = cylinder, 1 = cone, 2 = sphere)
 MAXSEED	20000           //numero massimo semi prodotti dalla pianta (da TREEMIG) 
 MASTSEED	5       //ricorrenza anni di pasciona (da TREEMIG) 
 WEIGHTSEED	7       //peso frutto in g FOR Quercus sp (Bernetti)

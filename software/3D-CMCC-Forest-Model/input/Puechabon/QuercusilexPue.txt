@@ -114,7 +114,7 @@ HDMAX_A 240.5           //A parameter for Height (m) to Base diameter (m) ratio 
 HDMAX_B -0.324          //B parameter for Height (m) to Base diameter (m) ratio MAX Seidl et al., 2012 for Q. robur
 HDMIN_A 127.2           //A parameter for Height (m) to Base diameter (m) ratio MIN Seidl et al., 2012 for Q. robur
 HDMIN_B -0.357          //B parameter for Height (m) to Base diameter (m) ratio MIN Seidl et al., 2012 for Q. robur
-
+CROWN_FORM_FACTOR 0     // Crown form factor (0 = cylinder, 1 = cone, 2 = sphere)
 MAXSEED 20000           //numero massimo semi prodotti dalla pianta (da TREEMIG) 
 MASTSEED    5       //ricorrenza anni di pasciona (da TREEMIG) 
 WEIGHTSEED  7       //peso frutto in g FOR Quercus sp (Bernetti)

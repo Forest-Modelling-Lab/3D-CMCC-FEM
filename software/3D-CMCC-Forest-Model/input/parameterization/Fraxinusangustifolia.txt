@@ -111,7 +111,7 @@ HDMAX_A ?           //A parameter for Height (m) to Base diameter (m) ratio MAX 
 HDMAX_B ?          //B parameter for Height (m) to Base diameter (m) ratio MAX Seidl et al., 2012
 HDMIN_A ?           //A parameter for Height (m) to Base diameter (m) ratio MIN Seidl et al., 2012
 HDMIN_B ?          //B parameter for Height (m) to Base diameter (m) ratio MIN Seidl et al., 2012
-
+CROWN_FORM_FACTOR 0     // Crown form factor (0 = cylinder, 1 = cone, 2 = sphere)
 MAXSEED -9999           //numero massimo semi prodotti dalla pianta (da TREEMIG) 
 MASTSEED    -9999       //ricorrenza anni di pasciona (da TREEMIG) 
 WEIGHTSEED  -9999       //peso frutto in g 

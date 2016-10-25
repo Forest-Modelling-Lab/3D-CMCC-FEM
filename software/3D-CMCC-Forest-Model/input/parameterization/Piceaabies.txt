@@ -73,6 +73,7 @@ HDMAX_A 196.3                 //A parameter for Height (m) to Base diameter (m) 
 HDMAX_B -0.240                //B parameter for Height (m) to Base diameter (m) ratio MAX Seidl et al., 2012
 HDMIN_A 84.8                  //A parameter for Height (m) to Base diameter (m) ratio MIN Seidl et al., 2012
 HDMIN_B -0.194                //B parameter for Height (m) to Base diameter (m) ratio MIN Seidl et al., 2012
+CROWN_FORM_FACTOR 1     // Crown form factor (0 = cylinder, 1 = cone, 2 = sphere)
 MAXSEED -9999       //TO BE CHECKED           //numero massimo semi prodotti dalla pianta
 MASTSEED    5                 //ricorrenza anni di pasciona (da TREEMIG) FOR Quercus sp (Bernetti)
 WEIGHTSEED  7                 //peso frutto in g 

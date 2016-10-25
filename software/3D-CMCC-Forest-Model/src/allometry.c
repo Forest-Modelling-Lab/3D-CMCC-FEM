@@ -77,3 +77,63 @@ void allometry_power_function(cell_t *const c)
 	}
 }
 
+void crown_surface_area (cell_t *const c)
+{
+
+	int height;
+	int dbh;
+	int age;
+	int species;
+
+	int crown_form_factor;
+
+	height_t *h;
+	dbh_t *d;
+	age_t *a;
+	species_t *s;
+
+	logger(g_debug_log,"\nCrown surface area\n");
+
+	for ( height = 0; height < c->heights_count; ++height )
+	{
+		h = &c->heights[height];
+
+		for ( dbh = 0; dbh < h->dbhs_count; ++dbh )
+		{
+			d =  &h->dbhs[dbh];
+
+			for ( age = 0; age < d->ages_count; ++age )
+			{
+				a = &d->ages[age];
+
+				for ( species = 0; species < a->species_count; ++species )
+				{
+					s = &a->species[species];
+
+					/* cast s->value[CROWN_FORM_FACTOR] to integer */
+					crown_form_factor = (int)s->value[CROWN_FORM_FACTOR];
+
+					switch (crown_form_factor)
+					{
+
+					case 0: /* cylinder */
+						break;
+
+					case 1: /* cone */
+						break;
+
+					case 2: /* sphere */
+						s->value[CROWN_SURFACE_AREA] = pow(s->value[CROWN_RADIUS], 2.) * 4. * Pi;
+						break;
+					case 3: /* ellipsoid */
+						break;
+					}
+				}
+			}
+		}
+	}
+
+
+
+}
+

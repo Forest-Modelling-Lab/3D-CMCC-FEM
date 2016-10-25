@@ -259,6 +259,7 @@ int annual_forest_structure(cell_t* const c)
 							/* new DBHDC function */
 							/* this function in mainly based on the assumptions that trees tend to occupy */
 							/* all space they can, if they cannot then fixed values constrain their crown */
+							/* see also: Lhotka and Loewenstein, 1997; Lhotka and Loewenstein, 2008 */
 
 							temp_crown_area = (g_settings->sizeCell * g_settings->max_layer_cover) / (c->tree_layers[layer].layer_density * g_settings->sizeCell);
 
@@ -319,14 +320,19 @@ int annual_forest_structure(cell_t* const c)
 
 							logger(g_debug_log,"*layer = %d -height = %g age = %d species = %s\n", layer, h->value, a->value, s->name);
 
+							/* Crown Projected Diameter using DBH-DC */
 							s->value[CROWN_DIAMETER] = d->value * s->value[DBHDC_EFF];
 							logger(g_debug_log, "-Crown Diameter from DBHDC function  = %g m\n", s->value[CROWN_DIAMETER]);
 
-							/* Crown Area using DBH-DC */
+							/* Crown Projected Radius using DBH-DC */
+							s->value[CROWN_RADIUS] = s->value[CROWN_DIAMETER] / 2.;
+							logger(g_debug_log, "-Crown Radius from DBHDC function  = %g m\n", s->value[CROWN_RADIUS]);
+
+							/* Crown Projected Area using DBH-DC */
 							s->value[CROWN_AREA] = ( Pi / 4) * pow (s->value[CROWN_DIAMETER], 2 );
 							logger(g_debug_log, "-Crown Area from DBHDC function = %g m^2\n", s->value[CROWN_AREA]);
 
-							/* Canopy Cover using DBH-DC */
+							/* Canopy Projected Cover using DBH-DC */
 							s->value[CANOPY_COVER] = s->value[CROWN_AREA] * s->counter[N_TREE] / g_settings->sizeCell;
 							logger(g_debug_log, "Canopy cover DBH-DC class level = %g %%\n", s->value[CANOPY_COVER] * 100.0);
 						}
