@@ -424,7 +424,7 @@ void dendrometry_old(cell_t *const c, const int layer, const int height, const i
 
 	/*************************************************************************************************************************/
 
-	/* compute tree Height */
+	/* compute Tree Height */
 	/* using Chapman_Richards Function */
 	/*
 	 * CRA, CRB, CRC are species-specific regression coefficients
@@ -464,7 +464,6 @@ void dendrometry_old(cell_t *const c, const int layer, const int height, const i
 
 	logger(g_debug_log, "-Old Tree Height = %g m\n", oldTreeHeight);
 	logger(g_debug_log, "-New Tree Height = %g m\n", h->value);
-
 
 	/* check */
 	CHECK_CONDITION( h->value, < oldTreeHeight - eps );

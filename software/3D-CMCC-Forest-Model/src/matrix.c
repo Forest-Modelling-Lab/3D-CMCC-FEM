@@ -829,6 +829,9 @@ static const char *sz_species_values[] =
 		"HDMAX_B",                    /* B parameter for Height (m) to Base diameter (m) ratio MAX */
 		"HDMIN_A",                    /* A parameter for Height (m) to Base diameter (m) ratio MIN */
 		"HDMIN_B",                    /* B parameter for Height (m) to Base diameter (m) ratio MIN */
+		"CROWN_FORM_FACTOR",          /* Crown form factor (0 = cylinder, 1 = cone, 2 = sphere, 3 = ellipsoid) */
+		"CROWN_A",                    /* Crown a parameter */
+		"CROWN_B",                    /* Crown b parameter */
 		"MAXSEED",                    /* numero massimo semi prodotti dalla pianta (da TREEMIG) */
 		"MASTSEED",                   /* ricorrenza anni di pasciona (da TREEMIG) */
 		"WEIGHTSEED",                 /* fruit wiight in g */

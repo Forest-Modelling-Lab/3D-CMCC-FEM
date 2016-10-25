@@ -96,6 +96,8 @@ enum {
 	HDMIN_A,                    /* A parameter for Height (m) to Base diameter (m) ratio MIN */
 	HDMIN_B,                    /* B parameter for Height (m) to Base diameter (m) ratio MIN */
 	CROWN_FORM_FACTOR,          /* Crown form factor (0 = cylinder, 1 = cone, 2 = sphere, 3 = ellipsoid) */
+	CROWN_A,                    /* Crown a parameter */
+	CROWN_B,                    /* Crown b parameter */
 	MAXSEED,                    /* numero massimo semi prodotti dalla pianta (da TREEMIG) */
 	MASTSEED,                   /* ricorrenza anni di pasciona (da TREEMIG) */
 	WEIGHTSEED,                 /* fruit wiight in g */
@@ -124,7 +126,7 @@ enum {
 	CROWN_HEIGHT,               /* Crown height in m */
 	CROWN_AREA,                 /* Crown Projected Area in m^2 */
 	CANOPY_COVER,               /* Canopy Projected Cover % of pixel covered */
-	CROWN_SURFACE_AREA,         /* Crown Surface Area in m^2 */
+	CROWN_SURFACE_AREA,         /* Crown Surface Area in m^2 (considered as the area that can intercepts light) */
 	HD_EFF,                     /* Effective Height/Diameter ratio */
 	HD_MAX,                     /* Height (m) to Base diameter (m) ratio MAX */
 	HD_MIN,                     /* Height (m) to Base diameter (m) ratio MIN */
@@ -196,7 +198,7 @@ enum {
 	PPFD_TRANSM_SUN,            /* Transmitted Photosynthetic Photon Flux Density umol/m2/sec from sun leaves*/
 	PPFD_TRANSM_SHADE,          /* Transmitted Photosynthetic Photon Flux Density umol/m2/sec  from shaded leaves*/
 
-	/*modifiers variables*/
+	/* modifiers */
 	F_VPD,                      /* VPD modifier*/
 	F_LIGHT,                    /* LIGHT modifier*/
 	F_LIGHT_SUN,                /* LIGHT modifier for Sun leaves*/
@@ -211,7 +213,7 @@ enum {
 	F_CO2,                      /* CO2 soil fertilization effect effect*/
 	PHYS_MOD,                   /* physiological modifier */
 
-	/*water variables*/
+	/* water */
 	CANOPY_CONDUCTANCE,
 	CANOPY_BLCOND,              /* Canopy Boundary Layer conductance (m s-1)*/
 	FRAC_DAYTIME_TRANSP,        /* fraction of daytime for transpiration (and photosynthesis)*/
@@ -234,17 +236,18 @@ enum {
 	MONTHLY_CANOPY_LATENT_HEAT, /* monthly canopy latent heat W m-2 */
 	YEARLY_CANOPY_LATENT_HEAT,  /* annual canopy latent heat W m-2 */
 
-	/*LAI*/
+	/* LAI */
 	LAI,                        /* LAI (m^2/m2) */
 	LAI_SUN,                    /* LAI for sun leaves (m^2/m2) */
 	LAI_SHADE,                  /* LAI for shaded leaves (m^2/m2) */
 	MAX_LAI,                    /* LAI at the very first day of senescence: parameter of the sigmoid function*/
 	PEAK_LAI,                   /* Peak LAI*/
+	LAD,                        /* Leaf Area Density (m^2/m2) */
 	LEAF_TEMP_K,                /* leaf temperature (K) */
 	CANOPY_TEMP_K,              /* canopy temperature (K) */
 	CANOPY_TEMP_K_OLD,          /* previous time canopy temperature (K) */
 
-	/*carbon variables*/
+	/* carbon variable s*/
 	C_FLUX,
 	DAILY_GPP_gC,               /* Daily Gross Primary Production gC/m^2 day*/
 	MONTHLY_GPP_gC,             /* Class Monthly Gross Primary Production gC/m^2 month*/

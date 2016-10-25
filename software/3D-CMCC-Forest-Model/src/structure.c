@@ -12,6 +12,7 @@
 #include "mortality.h"
 #include "structure.h"
 #include "g-function.h"
+#include "allometry.h"
 
 extern settings_t* g_settings;
 extern logger_t* g_debug_log;
@@ -302,45 +303,8 @@ int annual_forest_structure(cell_t* const c)
 	for ( layer = c->tree_layers_count - 1; layer >= 0; --layer )
 	{
 		logger(g_debug_log, "----------------------------------\n");
+		crown_allometry ( c );
 
-		for ( height = 0; height < c->heights_count ; ++height )
-		{
-			if( layer == c->heights[height].height_z )
-			{
-				for ( dbh = 0; dbh < c->heights[height].dbhs_count; ++dbh )
-				{
-					for ( age = 0; age < c->heights[height].dbhs[dbh].ages_count ; ++age )
-					{
-						for ( species = 0; species < c->heights[height].dbhs[dbh].ages[age].species_count; ++species )
-						{
-							h = &c->heights[height];
-							d = &c->heights[height].dbhs[dbh];
-							a = &c->heights[height].dbhs[dbh].ages[age];
-							s = &c->heights[height].dbhs[dbh].ages[age].species[species];
-
-							logger(g_debug_log,"*layer = %d -height = %g age = %d species = %s\n", layer, h->value, a->value, s->name);
-
-							/* Crown allometry */
-							/* Crown Projected Diameter using DBH-DC */
-							s->value[CROWN_DIAMETER] = d->value * s->value[DBHDC_EFF];
-							logger(g_debug_log, "-Crown Diameter from DBHDC function  = %g m\n", s->value[CROWN_DIAMETER]);
-
-							/* Crown Projected Radius using DBH-DC */
-							s->value[CROWN_RADIUS] = s->value[CROWN_DIAMETER] / 2.;
-							logger(g_debug_log, "-Crown Radius from DBHDC function  = %g m\n", s->value[CROWN_RADIUS]);
-
-							/* Crown Projected Area using DBH-DC */
-							s->value[CROWN_AREA] = ( Pi / 4) * pow (s->value[CROWN_DIAMETER], 2 );
-							logger(g_debug_log, "-Crown Area from DBHDC function = %g m^2\n", s->value[CROWN_AREA]);
-
-							/* Canopy Projected Cover using DBH-DC */
-							s->value[CANOPY_COVER] = s->value[CROWN_AREA] * s->counter[N_TREE] / g_settings->sizeCell;
-							logger(g_debug_log, "Canopy cover DBH-DC class level = %g %%\n", s->value[CANOPY_COVER] * 100.0);
-						}
-					}
-				}
-			}
-		}
 	}
 	logger(g_debug_log, "**************************************\n\n");
 

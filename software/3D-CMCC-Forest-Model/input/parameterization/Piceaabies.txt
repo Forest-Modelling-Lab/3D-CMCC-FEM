@@ -13,8 +13,8 @@ LAI_RATIO   2.6               //(DIM) all-sided to projected leaf area ratio fro
 FRACBB0 0.30                  //Branch and Bark fraction at age 0 for P. sylvestris, from Xenakis et al., 2008, 0.29 deducted for P. sylvestris from Yuste et al., 2005, 0.29 from Lehtonen et al., 2004 For Eco Manag, 0.71 from xiao and Ceulemans
 FRACBB1 0.1                   //Branch and Bark fraction for mature stands for P. sylvestris, from Xenakis et al., 2008, 0.29 deducted for P. sylvestris from Yuste et al., 2005, 0.29 from Lehtonen et al., 2004 For Eco Manag, 0.18 from Jenssen et al 1999, 0.77 from xiao and Ceulemans
 TBB 10                        //Age at which fracBB = (FRACBB0 + FRACBB1 )/ 2 for P. sylvestris, from Xenakis et al., 2008
-RHOMIN  0.43                  //Minimum Basic Density for young Trees t/m^3 for Picea abies Seidl et al., 2012, 0.45 Pilli et al., 2006
-RHOMAX  0.43                  //Maximum Basic Density for young Trees t/m^3 for Picea abies Seidl et al., 20120, 0.45 Pilli et al., 2006
+RHOMIN  0.425                 //Minimum Basic Density for young Trees t/m^3 for Picea abies Kantola and Makela 2006, 0.43 Seidl et al., 2012, 0.45 Pilli et al., 2006
+RHOMAX  0.374                 //Maximum Basic Density for old Trees t/m^3 for Picea abies Kantola and Makela 2006, 0.43 Seidl et al., 20120, 0.45 Pilli et al., 2006
 TRHO    4                     //Age at which rho = (RHOMIN + RHOMAX )/2
 FORM_FACTOR 0.423             //Form factor Seidl et al., 2012
 COEFFCOND   0.06              //Define stomatal responsee to VPD in mbar for Picea abies
@@ -73,7 +73,9 @@ HDMAX_A 196.3                 //A parameter for Height (m) to Base diameter (m) 
 HDMAX_B -0.240                //B parameter for Height (m) to Base diameter (m) ratio MAX Seidl et al., 2012
 HDMIN_A 84.8                  //A parameter for Height (m) to Base diameter (m) ratio MIN Seidl et al., 2012
 HDMIN_B -0.194                //B parameter for Height (m) to Base diameter (m) ratio MIN Seidl et al., 2012
-CROWN_FORM_FACTOR 1     // Crown form factor (0 = cylinder, 1 = cone, 2 = sphere)
+CROWN_FORM_FACTOR 1           //Crown form factor (0 = cylinder, 1 = cone, 2 = sphere)
+CROWN_A    0.47               //Crown relationship with tree height for Picea Abies deducted from Kantola and Makela 2006
+CROWN_B     1                 //Crown exponential with tree height (Fixed to 1 as in Sorie-ND)
 MAXSEED -9999       //TO BE CHECKED           //numero massimo semi prodotti dalla pianta
 MASTSEED    5                 //ricorrenza anni di pasciona (da TREEMIG) FOR Quercus sp (Bernetti)
 WEIGHTSEED  7                 //peso frutto in g 

@@ -2,12 +2,12 @@ VERSION f                      //Must be 'f' for FEM version or 'b', for BGC ver
 SPATIAL u                      //Must be 's' or 'u', spatial or unspatial
 TIME d                         //Must be 'm' or 'd', monthly or daily
 SCREEN_OUTPUT off              //Must be 'on' or 'off'
-DEBUG_OUTPUT off                //Must be 'on' or 'off'
+DEBUG_OUTPUT off               //Must be 'on' or 'off'
 DAILY_OUTPUT on                //Must be 'on' or 'off'
 MONTHLY_OUTPUT on              //Must be 'on' or 'off'
 ANNUAL_OUTPUT on               //Must be 'on' or 'off'
-YEAR_START 1960
-YEAR_END 2099
+YEAR_START 1960                //Starting year simulation
+YEAR_END 2099                  //Ending year simulation
 SOIL_OUTPUT off                //Must be 'on' or 'off'
 CO2_mod on                     //Must be 'on' or 'off'
 CO2_fixed off                  //Must be 'on' (with a fixed value thorugh the years) or 'off' (get from file) or var (variable up to a year)
@@ -19,7 +19,7 @@ Progn_Aut_Resp on              //Prognostic autotrophic respiration, Must be 'on
 DNDC off                       //Must be  'on' or 'off'
 SIZECELL 100                   //Its value must be within 10 and 100 (unity measure is meter: 10 = 10x10 = 100m^2) 
 Y 0.48                         //Fixed_Aut_Resp_rate Assimilate use efficiency-Respiration rate-GPP/NPP
-CO2CONC 368.865                    //CO2 concentration refers to 2000 as ISIMIP PROTOCOL
+CO2CONC 368.865                //CO2 concentration refers to 2000 as ISIMIP PROTOCOL
 CO2_INCR 0.01                  //1% increment
 INIT_FRAC_MAXASW 1             //0.1 Minimum fraction of asw based on maxasw (wilting point) (unchanged)
 TREE_LAYER_LIMIT 3             //define differences among tree heights in meters classes to define number of layers in unspatial version
