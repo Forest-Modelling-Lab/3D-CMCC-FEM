@@ -320,6 +320,7 @@ int annual_forest_structure(cell_t* const c)
 
 							logger(g_debug_log,"*layer = %d -height = %g age = %d species = %s\n", layer, h->value, a->value, s->name);
 
+							/* Crown allometry */
 							/* Crown Projected Diameter using DBH-DC */
 							s->value[CROWN_DIAMETER] = d->value * s->value[DBHDC_EFF];
 							logger(g_debug_log, "-Crown Diameter from DBHDC function  = %g m\n", s->value[CROWN_DIAMETER]);
