@@ -115,12 +115,13 @@ enum {
 		oltretutto l'indice AVDBH viene usato in new_class.c
 	 */
 
-	DBHDC_EFF,                  /* Crown Diameter from DBH in function of density*/
-	DENMAX,                     /* maximum stand density (trees/cell) for DBHDC function */
-	DENMIN,                     /* minimum stand density (trees/cell) for DBHDC function */
-	CROWN_DIAMETER_DBHDC,       /* Crown Diameter in m from DBHDC function*/
-	CROWN_AREA_DBHDC,           /* Crown Area in m^2 from DBHDC function*/
-	CANOPY_COVER_DBHDC,         /* Canopy Cover % of pixel covered from DBHDC function*/
+	DBHDC_EFF,                  /* Crown Projected Diameter from DBH in function of density*/
+	DENMAX,                     /* maximum stand density (trees/cell) */
+	DENMIN,                     /* minimum stand density (trees/cell) */
+	CROWN_DIAMETER,             /* Crown Projected Diameter in m */
+	CROWN_AREA,                 /* Crown Projected Area in m^2 */
+	CANOPY_COVER,               /* Canopy Projected Cover % of pixel covered */
+	CROWN_SURFACE_AREA,         /* Crown Surface Area in m^2 */
 	HD_EFF,                     /* Effective Height/Diameter ratio */
 	HD_MAX,                     /* Height (m) to Base diameter (m) ratio MAX */
 	HD_MIN,                     /* Height (m) to Base diameter (m) ratio MIN */

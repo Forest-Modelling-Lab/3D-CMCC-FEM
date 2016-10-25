@@ -9,8 +9,8 @@
 #include "settings.h"
 
 extern logger_t* g_debug_log;
-extern int MonthLength [];
-extern int MonthLength_Leap [];
+//extern int MonthLength [];
+//extern int MonthLength_Leap [];
 
 void dendrometry ( cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, const meteo_daily_t *const meteo_daily, const int month, const int year )
 {
@@ -18,13 +18,6 @@ void dendrometry ( cell_t *const c, const int layer, const int height, const int
 	double oldTreeHeight;
 	double oldBasalArea;
 	double mass_density_kg;
-	double old_stem_mass_from_volume;
-	double new_stem_mass_from_volume;
-	double res_stem_mass_from_volume;
-	double old_stem_volume;
-	double new_stem_volume;
-	double res_stem_volume;
-
 
 	double pot_par;                    /* potential absorbable incoming par */
 	double pot_apar;                   /* potential absorbed par */
@@ -148,8 +141,8 @@ void dendrometry ( cell_t *const c, const int layer, const int height, const int
 	/* compute effective canopy cover */
 	/* special case when LAI = < 1.0 */
 
-	if(s->value[LAI] < 1.0) leaf_cell_cover_eff = s->value[LAI] * s->value[CANOPY_COVER_DBHDC];
-	else leaf_cell_cover_eff = s->value[CANOPY_COVER_DBHDC];
+	if(s->value[LAI] < 1.0) leaf_cell_cover_eff = s->value[LAI] * s->value[CANOPY_COVER];
+	else leaf_cell_cover_eff = s->value[CANOPY_COVER];
 
 	/* check for the special case in which is allowed to have more 100% of grid cell covered */
 

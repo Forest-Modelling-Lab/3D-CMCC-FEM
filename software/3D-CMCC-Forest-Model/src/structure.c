@@ -319,16 +319,16 @@ int annual_forest_structure(cell_t* const c)
 
 							logger(g_debug_log,"*layer = %d -height = %g age = %d species = %s\n", layer, h->value, a->value, s->name);
 
-							s->value[CROWN_DIAMETER_DBHDC] = d->value * s->value[DBHDC_EFF];
-							logger(g_debug_log, "-Crown Diameter from DBHDC function  = %g m\n", s->value[CROWN_DIAMETER_DBHDC]);
+							s->value[CROWN_DIAMETER] = d->value * s->value[DBHDC_EFF];
+							logger(g_debug_log, "-Crown Diameter from DBHDC function  = %g m\n", s->value[CROWN_DIAMETER]);
 
 							/* Crown Area using DBH-DC */
-							s->value[CROWN_AREA_DBHDC] = ( Pi / 4) * pow (s->value[CROWN_DIAMETER_DBHDC], 2 );
-							logger(g_debug_log, "-Crown Area from DBHDC function = %g m^2\n", s->value[CROWN_AREA_DBHDC]);
+							s->value[CROWN_AREA] = ( Pi / 4) * pow (s->value[CROWN_DIAMETER], 2 );
+							logger(g_debug_log, "-Crown Area from DBHDC function = %g m^2\n", s->value[CROWN_AREA]);
 
 							/* Canopy Cover using DBH-DC */
-							s->value[CANOPY_COVER_DBHDC] = s->value[CROWN_AREA_DBHDC] * s->counter[N_TREE] / g_settings->sizeCell;
-							logger(g_debug_log, "Canopy cover DBH-DC class level = %g %%\n", s->value[CANOPY_COVER_DBHDC] * 100.0);
+							s->value[CANOPY_COVER] = s->value[CROWN_AREA] * s->counter[N_TREE] / g_settings->sizeCell;
+							logger(g_debug_log, "Canopy cover DBH-DC class level = %g %%\n", s->value[CANOPY_COVER] * 100.0);
 						}
 					}
 				}
@@ -356,7 +356,7 @@ int annual_forest_structure(cell_t* const c)
 						for ( species = 0; species < c->heights[height].dbhs[dbh].ages[age].species_count; ++species )
 						{
 							s = &c->heights[height].dbhs[dbh].ages[age].species[species];
-							c->tree_layers[layer].layer_cover += s->value[CANOPY_COVER_DBHDC];
+							c->tree_layers[layer].layer_cover += s->value[CANOPY_COVER];
 						}
 					}
 				}

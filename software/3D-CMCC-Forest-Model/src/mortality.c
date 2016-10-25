@@ -143,10 +143,10 @@ void self_thinning_mortality ( cell_t *const c, const int layer )
 						if ( s->counter[N_TREE] > 0 )
 						{
 							/* recompute class level canopy cover */
-							s->value[CANOPY_COVER_DBHDC] -= (s->value[CROWN_AREA_DBHDC] / g_settings->sizeCell);
+							s->value[CANOPY_COVER] -= (s->value[CROWN_AREA] / g_settings->sizeCell);
 
 							/* recompute layer level canopy cover */
-							c->tree_layers[layer].layer_cover -= (s->value[CROWN_AREA_DBHDC] / g_settings->sizeCell);
+							c->tree_layers[layer].layer_cover -= (s->value[CROWN_AREA] / g_settings->sizeCell);
 						}
 						else
 						{
@@ -166,12 +166,12 @@ void self_thinning_mortality ( cell_t *const c, const int layer )
 								++deadtree;
 
 								//fixme not correct
-								c->heights[height + 1].dbhs[dbh].ages[age].species[species].value[CANOPY_COVER_DBHDC] -=
-										(c->heights[height + 1].dbhs[dbh].ages[age].species[species].value[CROWN_AREA_DBHDC] / g_settings->sizeCell);
+								c->heights[height + 1].dbhs[dbh].ages[age].species[species].value[CANOPY_COVER] -=
+										(c->heights[height + 1].dbhs[dbh].ages[age].species[species].value[CROWN_AREA] / g_settings->sizeCell);
 
 								/* recompute layer level canopy cover */
 								c->tree_layers[layer].layer_cover -=
-										(c->heights[height + 1].dbhs[dbh].ages[age].species[species].value[CROWN_AREA_DBHDC] / g_settings->sizeCell);
+										(c->heights[height + 1].dbhs[dbh].ages[age].species[species].value[CROWN_AREA] / g_settings->sizeCell);
 
 								/* call remove_tree_class */
 								if ( ! tree_class_remove(c, height, dbh, age, species) )

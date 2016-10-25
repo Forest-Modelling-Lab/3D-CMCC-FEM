@@ -75,8 +75,8 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 	/*********************************************************************************************************/
 	/* compute effective canopy cover */
 	/* special case when LAI = < 1.0 */
-	if(s->value[LAI] < 1.0) leaf_cell_cover_eff = s->value[LAI] * s->value[CANOPY_COVER_DBHDC];
-	else leaf_cell_cover_eff = s->value[CANOPY_COVER_DBHDC];
+	if(s->value[LAI] < 1.0) leaf_cell_cover_eff = s->value[LAI] * s->value[CANOPY_COVER];
+	else leaf_cell_cover_eff = s->value[CANOPY_COVER];
 
 	/* check for the special case in which is allowed to have more 100% of grid cell covered */
 	if(leaf_cell_cover_eff > 1.0) leaf_cell_cover_eff = 1.0;
