@@ -52,7 +52,7 @@ void photosynthesis(cell_t *const c, const int layer, const int height, const in
 	}
 
 	/* check if current Alpha exceeds (saturates) maximum Alpha */
-	/*(canopy saturation at 600 ppmv see Medlyn, 1996;  Medlyn et al., 2011) */
+	/* (canopy saturation at 600 ppmv see Medlyn, 1996;  Medlyn et al., 2011) */
 	if (Alpha_C > s->value[ALPHA])
 	{
 		logger(g_debug_log, "Alpha C = %g molC/molPAR/m2/day\n", Alpha_C);

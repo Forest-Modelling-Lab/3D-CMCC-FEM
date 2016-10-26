@@ -100,8 +100,8 @@ void crown_allometry (cell_t *const c, const int height, const int dbh, const in
 	/* (ORIGINAL) Canopy Projected Cover (integrated all over all viewing angles) */
 	/* following Cauchy's theorems Duursma et al., 2012) */
 	/* note: this is valid ONLY for hemispherical crown shape */
-	s->value[CANOPY_SURFACE_AREA] = s->value[CROWN_SURFACE_AREA] * (1./4.) * s->counter[N_TREE] / g_settings->sizeCell;
-	logger(g_debug_log, "-Canopy Surface Area (all viewing angles, Duursma method) = %g %%\n", s->value[CANOPY_SURFACE_AREA] * 100.0);
+	//s->value[CANOPY_SURFACE_COVER] = s->value[CROWN_SURFACE_AREA] * (1./4.) * s->counter[N_TREE] / g_settings->sizeCell;
+	//logger(g_debug_log, "-Canopy Surface Area (all viewing angles, Duursma method) = %g %%\n", s->value[CANOPY_SURFACE_COVER] * 100.0);
 
 	/* (MODIFIED) formulation based on canopy cover */
 	/* note: this is valid ONLY for cylinder shape crowns */
@@ -115,12 +115,12 @@ void crown_allometry (cell_t *const c, const int height, const int dbh, const in
 	double lateral_area = ((s->value[CROWN_DIAMETER] * Pi * s->value[CROWN_HEIGHT]) / 2.) * (1. - eff_canopy_cover);
 
 	/* Canopy cover able to absorb light (integrated all over all viewing angles) */
-	s->value[CANOPY_SURFACE_AREA] = ((s->value[CROWN_AREA] + lateral_area) * s->counter[N_TREE]) / g_settings->sizeCell ;
-	logger(g_debug_log, "-Canopy Surface Area (all viewing angles, my method) = %g %%\n", s->value[CANOPY_SURFACE_AREA] * 100.);
+	s->value[CANOPY_SURFACE_COVER] = ((s->value[CROWN_AREA] + lateral_area) * s->counter[N_TREE]) / g_settings->sizeCell ;
+	logger(g_debug_log, "-Canopy Surface Cover (all viewing angles, my method) = %g %%\n", s->value[CANOPY_SURFACE_COVER] * 100.);
 
 	/* check */
-	CHECK_CONDITION(eff_canopy_cover, < 0. - eps);
-	CHECK_CONDITION(eff_canopy_cover, > 1. + eps);
+	//CHECK_CONDITION(eff_canopy_cover, < 0. - eps);
+	//CHECK_CONDITION(eff_canopy_cover, > 1. + eps);
 
 }
 

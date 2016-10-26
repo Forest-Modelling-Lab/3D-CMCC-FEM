@@ -129,7 +129,7 @@ enum {
 	CROWN_VOLUME      ,         /* Crown Volume in m^3 */
 	CROWN_DENSITY,              /* Crown density m-1 */
 	CANOPY_COVER,               /* Canopy Projected Cover % of pixel covered (at zenith angle) */
-	CANOPY_SURFACE_AREA,        /* Canopy Projected Cover (integrated all over all viewing angles) */
+	CANOPY_SURFACE_COVER,       /* Canopy Projected Cover (integrated all over all viewing angles) */
 	HD_EFF,                     /* Effective Height/Diameter ratio */
 	HD_MAX,                     /* Height (m) to Base diameter (m) ratio MAX */
 	HD_MIN,                     /* Height (m) to Base diameter (m) ratio MIN */

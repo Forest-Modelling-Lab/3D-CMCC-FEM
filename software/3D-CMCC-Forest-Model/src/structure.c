@@ -398,18 +398,12 @@ int annual_forest_structure(cell_t* const c)
 									c->tree_layers[layer].layer_cover += s->value[CANOPY_COVER];
 
 									/* check if self-pruning was enough */
-									if ( c->tree_layers[layer].layer_cover > g_settings->max_layer_cover &&  s->value[DBHDC_EFF] <= s->value[DBHDCMIN] )
+									if ( c->tree_layers[layer].layer_cover > g_settings->max_layer_cover && s->value[DBHDC_EFF] <= s->value[DBHDCMIN] )
 									{
 										/* self-pruning was not enough */
-										self_thinning_mortality (c, layer);
+										self_thinning_mortality (c, layer);getchar();
 									}
 								}
-//								/* check if self-pruning was enough */
-//								if ( c->tree_layers[layer].layer_cover > g_settings->max_layer_cover &&  s->value[DBHDC_EFF] <= s->value[DBHDCMIN] )
-//								{
-//									/* self-pruning was not enough */
-//									self_thinning_mortality (c, layer);
-//								}
 							}
 						}
 					}
