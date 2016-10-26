@@ -22,7 +22,6 @@ CO2_INCR "0.01"                  //1% increment
 INIT_FRAC_MAXASW "1"             //0.1 Minimum fraction of asw based on maxasw (wilting point) (unchanged)
 TREE_LAYER_LIMIT "5"             //define differences among tree heights in meters classes to define number of layers in unspatial version
 SOIL_LAYER "1"                   //define soil layer/s to consider
-MIN_LAYER_COVER "0.0001"
 MAX_LAYER_COVER "1"
 REMAINING_BASAL_AREA "70"             // % percentage of basal area to leave per class
 REPLANTED_SPECIES "Piceaabies"        // species name of replanted trees (mandatory)

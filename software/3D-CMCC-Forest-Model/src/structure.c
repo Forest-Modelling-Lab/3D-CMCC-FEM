@@ -303,7 +303,7 @@ int annual_forest_structure(cell_t* const c)
 	for ( layer = c->tree_layers_count - 1; layer >= 0; --layer )
 	{
 		logger(g_debug_log, "----------------------------------\n");
-		crown_allometry ( c );
+		crown_allometry ( height, dbh, age, species );
 
 	}
 	logger(g_debug_log, "**************************************\n\n");
@@ -353,7 +353,16 @@ int annual_forest_structure(cell_t* const c)
 			  -overall layer canopy cover cannot exceeds its maximum
 			  -DBHDC_EFF cannot be < DBHDCMIN
 			 */
-			self_thinning_mortality (c, layer);
+			if ( s->value[DBHDC_EFF] > s->value[DBHDCMIN] && c->tree_layers[layer].layer_cover > g_settings->max_layer_cover)
+			{
+				//fixme
+				/* reduce DBHDC_EFF and recompute layer cover */
+				//while s->value[DBHDC_EFF] > s->value[DBHDCMIN]
+			}
+			if (c->tree_layers[layer].layer_cover > g_settings->max_layer_cover)
+			{
+				self_thinning_mortality (c, layer);
+			}
 		}
 	}
 	logger(g_debug_log, "**************************************\n");

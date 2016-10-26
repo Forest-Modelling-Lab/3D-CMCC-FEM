@@ -125,8 +125,12 @@ enum {
 	CROWN_DIAMETER,             /* Crown Projected Diameter in m */
 	CROWN_HEIGHT,               /* Crown height in m */
 	CROWN_AREA,                 /* Crown Projected Area in m^2 */
-	CANOPY_COVER,               /* Canopy Projected Cover % of pixel covered */
+	CROWN_HEIGHT,               /* Crown height in m */
 	CROWN_SURFACE_AREA,         /* Crown Surface Area in m^2 (considered as the area that can intercepts light) */
+	CROWN_VOLUME      ,         /* Crown Volume in m^3 */
+	CROWN_DENSITY,              /* Crown density m-1 */
+	CANOPY_COVER,               /* Canopy Projected Cover % of pixel covered (at zenith angle) */
+	CANOPY_SURFACE_AREA,        /* Canopy Projected Cover (integrated all over all viewing angles) */
 	HD_EFF,                     /* Effective Height/Diameter ratio */
 	HD_MAX,                     /* Height (m) to Base diameter (m) ratio MAX */
 	HD_MIN,                     /* Height (m) to Base diameter (m) ratio MIN */
@@ -242,6 +246,7 @@ enum {
 	LAI_SHADE,                  /* LAI for shaded leaves (m^2/m2) */
 	MAX_LAI,                    /* LAI at the very first day of senescence: parameter of the sigmoid function*/
 	PEAK_LAI,                   /* Peak LAI*/
+	ALL_LAI,
 	LAD,                        /* Leaf Area Density (m^2/m2) */
 	LEAF_TEMP_K,                /* leaf temperature (K) */
 	CANOPY_TEMP_K,              /* canopy temperature (K) */

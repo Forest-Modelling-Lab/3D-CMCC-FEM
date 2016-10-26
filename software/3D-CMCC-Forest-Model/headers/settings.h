@@ -48,7 +48,6 @@ typedef struct {
 	/* layer settings */
 	double tree_layer_limit;
 	double number_of_soil_layer;
-	double min_layer_cover;
 	double max_layer_cover;
 
 	/* replanted input (Management options)*/

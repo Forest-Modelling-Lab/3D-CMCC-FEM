@@ -74,7 +74,7 @@ HDMAX_B ?                     //B parameter for Height (m) to Base diameter (m) 
 HDMIN_A ?                     //A parameter for Height (m) to Base diameter (m) ratio MIN Seidl et al., 2012
 HDMIN_B ?                     //B parameter for Height (m) to Base diameter (m) ratio MIN Seidl et al., 2012
 CROWN_FORM_FACTOR 1     // Crown form factor (0 = cylinder, 1 = cone, 2 = sphere)
-CROWN_A    0.4               //Crown relationship with tree height for Pinus sylvestris from Rautianinen and Stember 2006
+CROWN_A    0.43               //Crown relationship with tree height for Pinus sylvestris from Rautianinen and Stember 2006
 CROWN_B     1                 //Crown exponential with tree height (Fixed to 1 as in Sorie-ND)
 MAXSEED                       //numero massimo semi prodotti dalla pianta
 MASTSEED                      //ricorrenza anni di pasciona
