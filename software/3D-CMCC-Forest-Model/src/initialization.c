@@ -309,7 +309,7 @@ void initialization_forest_class_C_biomass(cell_t *const c, const int height, co
 			logger(g_debug_log, "\nNo LAI Data are available for model initialization \n");
 			logger(g_debug_log, "...Generating input LAI data from Leaf Biomass\n");
 
-			logger(g_debug_log, "CANOPY_COVER_DBHDC = %g\n", s->value[CANOPY_COVER]);
+			logger(g_debug_log, "CANOPY_COVER = %g\n", s->value[CANOPY_COVER]);
 
 			/* Calculate projected LAI for tot and for sunlit and shaded canopy portions*/
 			s->value[LAI] = ((s->value[LEAF_C] * 1000.0) * s->value[SLA_AVG])/(s->value[CANOPY_COVER] * g_settings->sizeCell);
