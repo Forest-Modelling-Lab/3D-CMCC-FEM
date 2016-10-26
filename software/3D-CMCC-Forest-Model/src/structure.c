@@ -296,19 +296,34 @@ int annual_forest_structure(cell_t* const c)
 	logger(g_debug_log, "**************************************\n\n");
 
 	/*************************************************************************************/
-	//ALESSIOC FIXME MOVE TO CANOPY COVER.C
-	/* compute effective crown diameter and crown area and class cover using DBH-DC */
-	logger(g_debug_log, "*compute effective crown diameter and crown area and class cover using DBH-DC*\n\n");
+
+	/* Compute Crown and Canopy allometry */
+	logger(g_debug_log, "*Compute Crown and Canopy allometry*\n\n");
 
 	for ( layer = c->tree_layers_count - 1; layer >= 0; --layer )
 	{
-		logger(g_debug_log, "----------------------------------\n");
-		crown_allometry ( height, dbh, age, species );
-
+		for ( height = 0; height < c->heights_count ; ++height )
+		{
+			if( layer == c->heights[height].height_z )
+			{
+				for ( dbh = 0; dbh < c->heights[height].dbhs_count; ++dbh )
+				{
+					for ( age = 0; age < c->heights[height].dbhs[dbh].ages_count ; ++age )
+					{
+						for ( species = 0; species < c->heights[height].dbhs[dbh].ages[age].species_count; ++species )
+						{
+							logger(g_debug_log, "----------------------------------\n");
+							crown_allometry ( c, height, dbh, age, species );
+						}
+					}
+				}
+			}
+		}
 	}
 	logger(g_debug_log, "**************************************\n\n");
 
 	/*************************************************************************************/
+
 	/* compute layer canopy cover within each layer (layer level) */
 	logger(g_debug_log, "*compute layer canopy cover within each layer (layer level)*\n\n");
 
@@ -341,6 +356,7 @@ int annual_forest_structure(cell_t* const c)
 	logger(g_debug_log, "**************************************\n");
 
 	/*************************************************************************************/
+
 	/* check if layer cover exceeds maximum layer cover */
 	logger(g_debug_log, "*check if layer cover exceeds maximum layer cover*\n\n");
 
@@ -349,22 +365,53 @@ int annual_forest_structure(cell_t* const c)
 		if ( c->tree_layers[layer].layer_cover > g_settings->max_layer_cover )
 		{
 			/* note: 04 Oct 2016 */
-			/* call of this function in due to the assumption that:
+			/* call of this function is due to the assumption that:
 			  -overall layer canopy cover cannot exceeds its maximum
 			  -DBHDC_EFF cannot be < DBHDCMIN
-			 */
-			if ( s->value[DBHDC_EFF] > s->value[DBHDCMIN] && c->tree_layers[layer].layer_cover > g_settings->max_layer_cover)
+			*/
+
+			/* start to reduce DBHDC_EFF from the lowest height class */
+			qsort (c->heights, c->heights_count, sizeof (height_t), sort_by_heights_desc);
+
+			for ( height = 0; height < c->heights_count ; ++height )
 			{
-				//fixme
-				/* reduce DBHDC_EFF and recompute layer cover */
-				//while s->value[DBHDC_EFF] > s->value[DBHDCMIN]
-			}
-			if (c->tree_layers[layer].layer_cover > g_settings->max_layer_cover)
-			{
-				self_thinning_mortality (c, layer);
+				if( layer == c->heights[height].height_z )
+				{
+					for ( dbh = 0; dbh < c->heights[height].dbhs_count; ++dbh )
+					{
+						for ( age = 0; age < c->heights[height].dbhs[dbh].ages_count ; ++age )
+						{
+							for ( species = 0; species < c->heights[height].dbhs[dbh].ages[age].species_count; ++species )
+							{
+								while ( c->tree_layers[layer].layer_cover > g_settings->max_layer_cover &&  s->value[DBHDC_EFF] > s->value[DBHDCMIN] )
+								{
+									/* reduce DBHDC_EFF */
+									s->value[DBHDC_EFF] -= 0.001;
+
+									/* remove current class cover for layer cover */
+									c->tree_layers[layer].layer_cover -= s->value[CANOPY_COVER];
+
+									/* recall crown allometry */
+									crown_allometry ( c, height, dbh, age, species );
+
+									/* recompute layer cover with current DBHDC_EFF */
+									c->tree_layers[layer].layer_cover += s->value[CANOPY_COVER];
+
+								}
+								/* check if self-pruning was enough */
+								if ( c->tree_layers[layer].layer_cover > g_settings->max_layer_cover &&  s->value[DBHDC_EFF] <= s->value[DBHDCMIN] )
+								{
+									/* self-pruning was not enough */
+									self_thinning_mortality (c, layer);
+								}
+							}
+						}
+					}
+				}
 			}
 		}
 	}
+	logger(g_debug_log, "**************************************\n");
 	logger(g_debug_log, "**************************************\n");
 
 	/*************************************************************************************/
