@@ -252,6 +252,40 @@ int file_get_rows_count(const char* const filename) {
 	return rows_count;
 }
 
+/*
+static int file_op(const char* const src, const char* const dest, const char* const op) {
+	int ret;
+	FILE* s;
+	FILE* d;
+	
+	ret = 0;
+	s = NULL;
+	d = NULL;
+	
+    s = fopen(src,"r");
+	if ( ! s ) goto quit;
+	
+	d = fopen(dest, op);
+	if ( ! d ) goto quit;
+	
+    while ( 1 ) {
+        int c = fgetc(s);
+		if ( EOF == c ) break;
+		fputc(c, d);
+    }
+	ret = 1;
+	
+quit:
+    if ( d ) fclose(d);
+	if ( s ) fclose(s);
+    return ret;
+}
+
+int file_copy(const char* const src, const char* const dest) {
+    return file_op(src, dest, "w");
+}
+*/
+
 int file_copy(const char* const filename, const char* const path) {
 	char *p;
 	char *p2;
@@ -274,19 +308,46 @@ int file_copy(const char* const filename, const char* const path) {
 	} else {
 		i = 0;
 	}
-#ifdef _WIN32
+
 	sprintf(buffer, "%s%s%s", path
 							, i ? "" : FOLDER_DELIMITER
 							, p
 	);
+
+	if ( ! path_create(buffer) ) {
+		return 0;
+	}
+
+#ifdef _WIN32
 	return (int)CopyFile(filename, buffer, FALSE);
 #else
-	sprintf(buffer, "cp %s %s%s%s", path
-									, i ? "" : FOLDER_DELIMITER
-									, filename 
-	);
-	i = system(buffer);
-	return i ? 0 : 1;
+	{
+		int ret;
+		FILE* s;
+		FILE* d;
+		
+		ret = 0;
+		s = NULL;
+		d = NULL;
+		
+		s = fopen(filename, "r");
+		if ( ! s ) goto quit;
+		
+		d = fopen(buffer, "w");
+		if ( ! d ) goto quit;
+		
+		while ( 1 ) {
+			int c = fgetc(s);
+			if ( EOF == c ) break;
+			fputc(c, d);
+		}
+		ret = 1;
+		
+	quit:
+		if ( d ) fclose(d);
+		if ( s ) fclose(s);
+		return ret;
+	}
 #endif
 }
 
