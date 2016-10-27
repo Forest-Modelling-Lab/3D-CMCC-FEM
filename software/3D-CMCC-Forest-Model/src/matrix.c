@@ -740,6 +740,7 @@ static dataset_t* dataset_import_txt(const char* const filename) {
 
 	/* how many rows we have ? */
 	if ( ! dataset->rows_count ) {
+		printf("starting year %d not found!!", g_settings->year_start);
 		dataset_free(dataset);
 		dataset = NULL;
 	}

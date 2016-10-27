@@ -427,7 +427,8 @@ void dendrometry_old(cell_t *const c, const int layer, const int height, const i
 
 	logger(g_debug_log, "\n**Average Tree Height**\n");
 
-	/* Chapman-Richards functions */
+	/* Chapman-Richards function */
+	/* for references see also: R. Pilli et al. Forest Ecology and Management 237 (2006) 583–593 */
 	//note: this shouldn't be applied to saplings that are lower than 1.3 meter
 	h->value = DBH_ref + s->value[CRA] * pow (1.0 - exp ( - s->value[CRB] * d->value) , s->value[CRC]);
 
@@ -446,7 +447,7 @@ void dendrometry_old(cell_t *const c, const int layer, const int height, const i
 	/* Weibull function */
 	/* for references see also: R. Pilli et al. Forest Ecology and Management 237 (2006) 583–593 */
 	/*
-	 h->value = DBH_ref + s->value[WA] *(1.0 - exp ( - s->value[WB] * d->value * s->value[WC]);
+	 h->value = DBH_ref + s->value[WA] *(1.0 - exp ( - s->value[WB] * d->value * s->value[WC]));
 	 */
 
 	logger(g_debug_log, "-Old Tree Height = %g m\n", oldTreeHeight);

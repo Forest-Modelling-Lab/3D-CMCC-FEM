@@ -1,22 +1,22 @@
 VERSION f                           //Must be 'f' for FEM version or 'b', for BGC version for FOREST LANDUSE
 SPATIAL u                           //Must be 's' or 'u', spatial or unspatial
 TIME d                              //Must be 'm' or 'd', monthly or daily
-SCREEN_OUTPUT off	                //Must be  'on' or 'off'
+SCREEN_OUTPUT off                   //Must be  'on' or 'off'
 DEBUG_OUTPUT off                    //Must be 'on' or 'off'
 DAILY_OUTPUT on                     //Must be 'on' or 'off'
 MONTHLY_OUTPUT on                   //Must be 'on' or 'off'
 ANNUAL_OUTPUT on                    //Must be 'on' or 'off'
 YEAR_START 1960                     //Starting year simulation
-YEAR_END 2099                       //Ending year simulation
+YEAR_END 2001                       //Ending year simulation
 SOIL_OUTPUT off                     //Must be 'on' or 'off'
 CO2_mod on                          //Must be 'on' or 'off'
-CO2_fixed off                       //Must be 'on' (with a fixed value thorugh the years) or 'off' (get from file) or var (variable up to a year)
+CO2_fixed var                       //Must be 'on' (with a fixed value thorugh the years) or 'off' (get from file) or var (variable up to a year)
 Ndep_fixed on                       //Must be 'on' or 'off'
 Q10_fixed on                        //Q10 temperature acclimatation Must be 'on' or 'off'
 regeneration off                    //Must be 'on' or 'off'
 management off                      //Must be 'on' or 'off'
 Progn_Aut_Resp on                   //Prognostic autotrophic respiration, Must be 'on' or 'off', if off Y values are used
-DNDC off                            //Must be 'on' or 'off'
+DNDC off                            //Must be  'on' or 'off'
 SIZECELL 100                        //Its value must be within 10 and 100 (unity measure is meter: 10 = 10x10 = 100m^2) 
 Y 0.48                              //Fixed_Aut_Resp_rate Assimilate use efficiency-Respiration rate-GPP/NPP
 CO2CONC 368.865                     //CO2 concentration refers to 2000 as ISIMIP PROTOCOL

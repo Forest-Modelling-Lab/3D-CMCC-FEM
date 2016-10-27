@@ -119,13 +119,14 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 								logger(g_daily_log,"\t%10s", "SPECIES");
 
 								logger(g_daily_log,"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s"
-										"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s"
+										"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s"
 										"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s",
 										"GPP",
 										"AR",
 										"NPP",
 										"LAI",
-										"CC",
+										"CC_P",
+										"CC_E",
 										"Ntree",
 										"VEG_D",
 										"CET",
@@ -223,14 +224,15 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 							logger(g_daily_log,"\t%8.3s", c->heights[height].dbhs[dbh].ages[age].species[species].name);
 
 							/* print variables at layer-class level */
-							logger(g_daily_log,"\t%6.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3d \t%3d \t%3.4f \t%3.4f \t%3.4f"
+							logger(g_daily_log,"\t%6.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3d \t%3d \t%3.4f \t%3.4f \t%3.4f"
 									"\t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f"
 									"\t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f",
 									s->value[DAILY_GPP_gC],
 									s->value[TOTAL_AUT_RESP],
 									s->value[NPP_gC],
 									s->value[LAI_PROJ],
-									s->value[CANOPY_COVER_PROJ],
+									s->value[DAILY_CANOPY_COVER_PROJ],
+									s->value[DAILY_CANOPY_COVER_EXP],
 									s->counter[N_TREE],
 									s->counter[VEG_DAYS],
 									s->value[CANOPY_EVAPO_TRANSP],
@@ -803,6 +805,12 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 		if (g_annual_log) g_annual_log->std_output = 1;
 		logger(g_annual_log, sz_launched, netcdf_get_version(), datetime_current());
 		write_paths(g_annual_log);
+		if (g_annual_log)
+		{
+			const char* p;
+			p = file_get_name_only(g_annual_log->filename);
+			logger(g_annual_log, "output file = %s\n", p);
+		}
 		print_model_settings(g_annual_log);
 	}
 }

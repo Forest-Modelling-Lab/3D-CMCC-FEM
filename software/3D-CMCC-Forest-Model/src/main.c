@@ -145,9 +145,6 @@ static const char msg_monthly_output_file[]		=	"monthly output file path = %s\n"
 static const char msg_annual_output_file[]		=	"annual output file path = %s\n";
 static const char msg_soil_output_file[]		=	"soil output file path = %s\n";
 static const char msg_ok[]						=	"ok ";
-static const char msg_ok_tree_model[]			=	"ok tree_model_daily";
-static const char msg_ok_soil_model[]			=	"ok soil_model_daily";
-static const char msg_ok_cell_model[]			=	"ok cell_model_daily";
 static const char msg_usage[]					=	"\nusage:\n"
 		"  3D-CMCC-Forest-Model -i INPUT_DIR -d DATASET_FILENAME -m MET_FILE_LIST -s SITE_FILENAME -c SETTINGS_FILENAME [-o OUTPUT_FILENAME] [-h]\n"
 		"  required options:\n"

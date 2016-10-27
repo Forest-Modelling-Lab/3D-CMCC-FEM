@@ -252,39 +252,6 @@ int file_get_rows_count(const char* const filename) {
 	return rows_count;
 }
 
-/*
-static int file_op(const char* const src, const char* const dest, const char* const op) {
-	int ret;
-	FILE* s;
-	FILE* d;
-	
-	ret = 0;
-	s = NULL;
-	d = NULL;
-	
-    s = fopen(src,"r");
-	if ( ! s ) goto quit;
-	
-	d = fopen(dest, op);
-	if ( ! d ) goto quit;
-	
-    while ( 1 ) {
-        int c = fgetc(s);
-		if ( EOF == c ) break;
-		fputc(c, d);
-    }
-	ret = 1;
-	
-quit:
-    if ( d ) fclose(d);
-	if ( s ) fclose(s);
-    return ret;
-}
-
-int file_copy(const char* const src, const char* const dest) {
-    return file_op(src, dest, "w");
-}
-*/
 
 int file_copy(const char* const filename, const char* const path) {
 	char *p;
@@ -482,4 +449,22 @@ double timer_get(void)
 #else
 	return 0.;
 #endif
+}
+
+const char* file_get_name_only(const char* const filename) {
+	const char *p;
+	const char *p2;
+
+	assert(filename);
+
+	p = strrchr(filename, '\\');
+	p2 = strrchr(filename, '/');
+	if ( ! p || (p2 && (p2 < p)) ) {
+		p = p2;
+	}
+	if ( ! p ) p = p2;
+	if ( p ) ++p;
+	if ( ! p ) p = filename;
+
+	return p;
 }

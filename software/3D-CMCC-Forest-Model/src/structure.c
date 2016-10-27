@@ -488,10 +488,8 @@ int daily_forest_structure (cell_t *const c)
 							if( s->value[LAI_PROJ] < 1.0 ) s->value[DAILY_CANOPY_COVER_PROJ] = s->value[LAI_PROJ] * s->value[CANOPY_COVER_PROJ];
 							else s->value[DAILY_CANOPY_COVER_PROJ] = s->value[CANOPY_COVER_PROJ];
 
-							/* check for the special case in which is allowed to have more 100% of projected grid cell covered */
-							//FIXME??
-							if( s->value[DAILY_CANOPY_COVER_PROJ] > 1.0 ) s->value[DAILY_CANOPY_COVER_PROJ] = 1.0;
-
+							/* canopy cannot absorb more than 100% of incoming flux (e.g. rain) */
+							if( s->value[DAILY_CANOPY_COVER_PROJ] > 1. ) s->value[DAILY_CANOPY_COVER_PROJ] = 1.;
 							logger(g_debug_log, "%s height class canopy projected cover = %g %%\n", s->name, s->value[DAILY_CANOPY_COVER_PROJ]*100.0);
 
 							/*****************************************************************************************/
@@ -501,10 +499,8 @@ int daily_forest_structure (cell_t *const c)
 							if( s->value[LAI_PROJ] < 1.0 ) s->value[DAILY_CANOPY_COVER_EXP] = s->value[LAI_PROJ] * s->value[CANOPY_COVER_EXP];
 							else s->value[DAILY_CANOPY_COVER_EXP] = s->value[CANOPY_COVER_EXP];
 
-							/* check for the special case in which is allowed to have more 100% of exposed grid cell covered */
-							//FIXME??
-							if( s->value[DAILY_CANOPY_COVER_EXP] > 1.0 ) s->value[DAILY_CANOPY_COVER_EXP] = 1.0;
-
+							/* canopy cannot absorb more than 100% of incoming flux (e.g. light) */
+							if( s->value[DAILY_CANOPY_COVER_EXP] > 1. ) s->value[DAILY_CANOPY_COVER_EXP] = 1.;
 							logger(g_debug_log, "%s height class canopy exposed cover = %g %%\n", s->name, s->value[CANOPY_COVER_EXP]*100.0);
 
 						}
@@ -512,7 +508,6 @@ int daily_forest_structure (cell_t *const c)
 				}
 			}
 		}
-
 	}
 	return 1;
 }

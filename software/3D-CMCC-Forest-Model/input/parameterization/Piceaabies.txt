@@ -66,9 +66,9 @@ SAP_LEAF    2600              //sapwood_max leaf area ratio in pipe model for Pi
 SAP_WRES    0.05              //Sapwood-Reserve biomass ratio used if no Wres data are available 0.11 for deciduous 0.05 for evergreen see Schwalm and Ek, 2004 Ecological Modelling
 STEMCONST_P 0.95              //a parameter for allometric equation for P. abies from Siedl et al., 2012
 STEMPOWER_P 4.00              //b parameter for allometric equation for P. abies from Siedl et al., 2012
-CRA 56                        //for Picea abies Seidl et al., 2012, 
-CRB 0.0658                    //for Picea abies (0.0658)from Pommerening et al., 2011, 
-CRC 5.5289                    //for Picea abies (5.5289)from Pommerening et al., 2011,
+CRA 56                        //for Picea abies Seidl et al., 2012, 26.98 Daminani 1980, 33.0246 Wirth (Pilli et al., 2016)
+CRB 0.0658                    //for Picea abies (0.0658)from Pommerening et al., 2011, 0.0497 Daminani 1980, 0.06459 Wirth (Pilli et al., 2016)
+CRC 5.5289                    //for Picea abies (5.5289)from Pommerening et al., 2011, 1.03766 Daminani 1980, 1.78454 Wirth (Pilli et al., 2016)
 HDMAX_A 196.3                 //A parameter for Height (m) to Base diameter (m) ratio MAX Seidl et al., 2012
 HDMAX_B -0.240                //B parameter for Height (m) to Base diameter (m) ratio MAX Seidl et al., 2012
 HDMIN_A 84.8                  //A parameter for Height (m) to Base diameter (m) ratio MIN Seidl et al., 2012

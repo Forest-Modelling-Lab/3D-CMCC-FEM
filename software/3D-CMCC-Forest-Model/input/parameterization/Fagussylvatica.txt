@@ -66,9 +66,9 @@ SAP_LEAF    2100        //leaf area/sapwood max ratio in pipe model  185 from Wi
 SAP_WRES    0.05        //Sapwood-Reserve biomass ratio gTNC/100gDM 0.043 in January for fagus see Barbaroux 2002 0.11 for deciduous 0.05 for evergreen  see Schwalm and Ek, 2004 Ecological Modelling
 STEMCONST_P 0.2837      //a parameter for F. sylvatica for allometric equation from ettore, 0.70 Seidl et al., 2012
 STEMPOWER_P 2.134       //b parameter for F. sylvatica for allometric equation from ettore, 3.00 Seidl et al., 2012
-CRA 35                  //Chapman-Richards Maximum height H_MAX (48) for f. sylvatica Seidl et al., 2012
-CRB 0.038               //Chapman_Richards b parameter
-CRC 1.104               //Chapman_Richards c parameter
+CRA 35                  //Chapman-Richards Maximum height H_MAX (48) for f. sylvatica Seidl et al., 2012 , 30.6323 for F. sylvatica Pilli et al., 2016
+CRB 0.038               //Chapman_Richards b parameter, 0.04343 for F. sylvatica Pilli et al., 2016
+CRC 1.104               //Chapman_Richards c parameter, 1.17241 for F. sylvatica Pilli et al., 2016
 HDMAX_A 323.6           //A parameter for Height (m) to Base diameter (m) ratio MAX Seidl et al., 2012
 HDMAX_B -0.368          //B parameter for Height (m) to Base diameter (m) ratio MAX Seidl et al., 2012
 HDMIN_A 100.9           //A parameter for Height (m) to Base diameter (m) ratio MIN Seidl et al., 2012

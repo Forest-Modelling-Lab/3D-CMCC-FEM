@@ -3,7 +3,7 @@ for ISIMIP simulations 19xx-2099 in Soroe we used:
 -input stand data coming from Andreas Ibrom dataset making an 
  weighted average of 7 dbh-height classes into one single dbh-height weighted average class for 1960 and 2001
  data are stored in "Stand_data_andreas_Ibrom.xlsx" file:
- FILE NAME: "Soroe_stand_1960_ISIMIP.txt" (unique for all simulations starting from 1960)
+ FILE NAME: "Soroe_stand_ISIMIP.txt" (unique for all simulations starting from 1960)
  choice of use 1960 instead 1950 is due to asynchrony between how model managesmanagement and what prescribed by the protocol
  
 -input soil data coming from database data SOIL.csv and psot processed in Soil_TEXTURE.xlsx file 

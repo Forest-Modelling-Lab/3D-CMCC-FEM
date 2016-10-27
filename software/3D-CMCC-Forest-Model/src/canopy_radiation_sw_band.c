@@ -34,9 +34,9 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 	* apar_shade = apar- apar_sun;
 	*
 	* in 3D-CMCC FEM:
-	* apar_sun = par * (1 - (exp(- K * LAI_GROUND_SUN)));
+	* apar_sun = par * (1 - (exp(- K * LAI_SUN_EXP)));
 	* par_transm_sun  = par - apar_sun;
-	* apar_shade = par_transm_sun * (1 - (exp(- K * LAI_GROUND_SHADE)));
+	* apar_shade = par_transm_sun * (1 - (exp(- K * LAI_SHADE_EXP)));
 	* apar = apar_sun + apar_shade;
 	*
 	* then it consider that an amount of sunlit leaf are not completely outside the canopy

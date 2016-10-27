@@ -106,9 +106,9 @@ STEMCONST_P 0.248313    //for Larix decidua from Gower et al 1993
 STEMPOWER_P 2.111     //for Larix decidua from Gower et al 1993
 
 //CHAPMAN-RICHARDS relationships to compute Height from DBH
-CRA 32    //for P. sylvestris from Rupsys et al., 2010
-CRB 0.04  //for P. sylvestris from Rupsys et al., 2010
-CRC 0.99  //for P. sylvestris from Rupsys et al., 2010
+CRA 28.809    //for L. decidua Colleselli 1973 (Pilli et al., 2016)
+CRB 0.0277  //for L. decidua Colleselli 1973 (Pilli et al., 2016)
+CRC 1.02185 //for L. decidua Colleselli 1973 (Pilli et al., 2016)
 
 //CROWDING COMPETITION FUNCTION
 HDMAX_A ?           //A parameter for Height (m) to Base diameter (m) ratio MAX Seidl et al., 2012

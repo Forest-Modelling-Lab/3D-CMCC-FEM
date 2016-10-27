@@ -26,11 +26,11 @@ void daily_lai (species_t *const s)
 	logger(g_debug_log, "Leaf Biomass = %g KgC/cell\n", leaf_c);
 	logger(g_debug_log, "CANOPY_COVER_PROJ = %g %%\n", s->value[CANOPY_COVER_PROJ]);
 
-	/* compute total projected LAI */
+	/* compute total LAI for Projected Area */
 	s->value[LAI_PROJ] = (leaf_c * s->value[SLA_AVG])/(s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell);
 	logger(g_debug_log, "LAI_PROJ = %f m2/m-2\n", s->value[LAI_PROJ]);
 
-	/* compute projected LAI for sunlit and shaded canopy portions */
+	/* compute LAI for sunlit and shaded Projected Area */
 	s->value[LAI_SUN_PROJ] = 1.0 - exp(-s->value[LAI_PROJ]);
 	s->value[LAI_SHADE_PROJ] = s->value[LAI_PROJ] - s->value[LAI_SUN_PROJ];
 	logger(g_debug_log, "LAI_SUN_PROJ = %g m2/m-2\n", s->value[LAI_SUN_PROJ]);
@@ -38,24 +38,34 @@ void daily_lai (species_t *const s)
 
 	/**************************************************************************************************/
 
-	/* compute LAI for Ground Area */
-	/* Jackson & Palmer, 1979, 1981, 1983; Cannell and Grace 1993, Duursma and Makela 2006 */
+	/* compute LAI for Exposed Area */
 
-	logger(g_debug_log, "single height class canopy cover = %g %%\n", s->value[CANOPY_COVER_PROJ]*100.0);
+	/* note: is partially based on: Jackson & Palmer, 1979, 1981, 1983; Cannell and Grace 1993, Duursma and Makela 2006 */
+	//s->value[LAI_EXP] = s->value[LAI_PROJ] / s->value[CANOPY_COVER_PROJ];
+	//s->value[LAI_SUN_EXP] = s->value[LAI_SUN_PROJ] / s->value[CANOPY_COVER_PROJ];
+	//s->value[LAI_SHADE_EXP] = s->value[LAI_SHADE_PROJ] / s->value[CANOPY_COVER_PROJ];
 
-	/* compute total LAI for Ground Area */
-	s->value[LAI_EXP] = s->value[LAI_PROJ] / s->value[CANOPY_COVER_PROJ];
+	/* differently from above we don't divide for ground area but we multiply for fraction of exposed area */
+
+	logger(g_debug_log, "single height class canopy cover projected = %g %%\n", s->value[CANOPY_COVER_PROJ]*100.0);
+	logger(g_debug_log, "single height class canopy cover exposed = %g %%\n", s->value[CANOPY_COVER_EXP]*100.0);
+
+	/* compute total LAI for Exposed Area */
+
+	s->value[LAI_EXP] = s->value[LAI_PROJ] * s->value[CANOPY_COVER_EXP];
 	logger(g_debug_log, "LAI_EXP = %f m-2\n", s->value[LAI_EXP]);
 
-	/* compute LAI for sunlit and shaded canopy portions for Ground Area */
-	s->value[LAI_SUN_EXP] = s->value[LAI_SUN_PROJ] / s->value[CANOPY_COVER_PROJ];
-	s->value[LAI_SHADE_EXP] = s->value[LAI_SHADE_PROJ] / s->value[CANOPY_COVER_PROJ];
+	/* compute LAI for sunlit and shaded canopy portions for Exposed Area */
+
+	s->value[LAI_SUN_EXP] = s->value[LAI_SUN_PROJ] * s->value[CANOPY_COVER_EXP];
+	s->value[LAI_SHADE_EXP] = s->value[LAI_SHADE_PROJ] * s->value[CANOPY_COVER_EXP];
 	logger(g_debug_log, "LAI_SUN_EXP = %g m2 m-2\n", s->value[LAI_SUN_EXP]);
 	logger(g_debug_log, "LAI_SHADE_EXP = %g m2 m-2\n", s->value[LAI_SHADE_EXP]);
 
 	/**************************************************************************************************/
 
 	/* compute all-sided LAI */
+
 	s->value[ALL_LAI_PROJ] = s->value[LAI_PROJ] * s->value[CANOPY_COVER_PROJ];
 	logger(g_debug_log, "ALL_LAI_PROJ = %g m2\n", s->value[ALL_LAI_PROJ]);
 	logger(g_debug_log,"*****************************\n");
