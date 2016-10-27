@@ -333,6 +333,7 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 
 	/* update Leaf Area Index */
 	daily_lai ( s );
+	//if(month == 7)getchar();
 
 	logger(g_debug_log, "\n-Daily increment in carbon pools (after turnover)-\n");
 	logger(g_debug_log, "C_TO_LEAF = %g tC/cell/day\n", s->value[C_TO_LEAF]);

@@ -429,6 +429,10 @@ static int log_start(const char* const sz_date, const char* const sitename)
 	if ( g_debug_log && g_annual_log )		logger(g_debug_log, msg_annual_output_file, g_annual_log->filename);
 	if ( g_debug_log && g_soil_log )		logger(g_debug_log, msg_soil_output_file, g_soil_log->filename);
 
+	if ( g_daily_log ) g_daily_log->std_output = 0;
+	if ( g_monthly_log ) g_monthly_log->std_output = 0;
+	if ( g_annual_log ) g_annual_log->std_output = 0;
+
 	return 1;
 }
 
@@ -1078,7 +1082,7 @@ int main(int argc, char *argv[]) {
 							}
 							else
 							{
-								puts( msg_ok_tree_model );
+								printf("ok tree_model (%d-%d-%d)\n", day+1, month+1, year+g_settings->year_start);
 
 								//if ( g_settings->dndc )
 								//{
@@ -1119,7 +1123,7 @@ int main(int argc, char *argv[]) {
 					}
 					else
 					{
-						puts(msg_ok_soil_model);
+						printf("ok soil_model (%d-%d-%d)\n", day+1, month+1, year+g_settings->year_start);
 					}
 					/************************************************************************/
 					/* run for cell model */
@@ -1129,7 +1133,7 @@ int main(int argc, char *argv[]) {
 					}
 					else
 					{
-						puts(msg_ok_cell_model);
+						printf("ok cell_model (%d-%d-%d)\n", day+1, month+1, year+g_settings->year_start);
 					}
 					/*************************************************************************/
 

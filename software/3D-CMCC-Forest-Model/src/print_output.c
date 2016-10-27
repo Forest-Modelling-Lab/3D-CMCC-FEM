@@ -800,6 +800,7 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 
 	if ( years_counter ==  years_of_simulation)
 	{
+		if (g_annual_log) g_annual_log->std_output = 1;
 		logger(g_annual_log, sz_launched, netcdf_get_version(), datetime_current());
 		write_paths(g_annual_log);
 		print_model_settings(g_annual_log);
