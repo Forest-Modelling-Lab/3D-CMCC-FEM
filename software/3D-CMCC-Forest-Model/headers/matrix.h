@@ -124,16 +124,18 @@ enum {
 	CROWN_RADIUS,               /* Crown Projected Radius in m */
 	CROWN_DIAMETER,             /* Crown Projected Diameter in m */
 	CROWN_HEIGHT,               /* Crown height in m */
-	CROWN_AREA,                 /* Crown Projected Area in m^2 */
-	CROWN_SURFACE_AREA,         /* Crown Surface Area in m^2 (considered as the area that can intercepts light) */
-	CROWN_VOLUME      ,         /* Crown Volume in m^3 */
+	CROWN_AREA_PROJ,            /* Crown Projected Area in m2 (at zenith angle) */
+	CROWN_AREA_EXP,             /* Crown Exposed Area in m2 (considered as the area that can intercepts light) */
+	CROWN_VOLUME      ,         /* Crown Volume in m3 */
 	CROWN_DENSITY,              /* Crown density m-1 */
-	CANOPY_COVER,               /* Canopy Projected Cover % of pixel covered (at zenith angle) */
-	CANOPY_SURFACE_COVER,       /* Canopy Projected Cover (integrated all over all viewing angles) */
+	CANOPY_COVER_PROJ,          /* Canopy Projected Cover % of pixel covered (at zenith angle) */
+	CANOPY_COVER_EXP,           /* Canopy Exposed Cover % of pixel exposed (integrated all over all viewing angles) */
+	DAILY_CANOPY_COVER_PROJ,    /* Daily Canopy Projected Cover % of pixel covered (at zenith angle) */
+	DAILY_CANOPY_COVER_EXP,     /* Daily Canopy Exposed Cover % of pixel exposed (integrated all over all viewing angles) */
 	HD_EFF,                     /* Effective Height/Diameter ratio */
 	HD_MAX,                     /* Height (m) to Base diameter (m) ratio MAX */
 	HD_MIN,                     /* Height (m) to Base diameter (m) ratio MIN */
-	SAPWOOD_AREA,               /* tree sapwood area cm^2*/
+	SAPWOOD_AREA,               /* tree sapwood area cm2*/
 	SAPWOOD_PERC,               /* sapwood area to toal stem area */
 	HEARTWOOD_AREA,             /* tree heartwood area cm^2*/
 	HEARTWOOD_PERC,             /* heartwood area to toal stem area */
@@ -143,9 +145,9 @@ enum {
 	STAND_BASAL_AREA_m2,        /* Class Basal Area of overall class (m2/area tree class) */
 	MASS_DENSITY,               /* mass density (t/m3)*/
 	VOLUME,                     /* Stem Volume*/
-	TREE_VOLUME,                /* Single Tree Volume (m^3/area)*/
+	TREE_VOLUME,                /* Single Tree Volume (m3/area)*/
 	CAI,                        /* Current Annual Increment*/
-	MAI,                        /* Mean Annual Volume Increment (m^3/area year)*/
+	MAI,                        /* Mean Annual Volume Increment (m3/area year)*/
 	STEMCONST,
 
 	/* PAR */
@@ -240,12 +242,12 @@ enum {
 	YEARLY_CANOPY_LATENT_HEAT,  /* annual canopy latent heat W m-2 */
 
 	/* LAI */
-	LAI,                        /* LAI (m^2/m2) */
-	LAI_SUN,                    /* LAI for sun leaves (m2 m-2) */
-	LAI_SHADE,                  /* LAI for shaded leaves (m2 m-2) */
-	LAI_GROUND,                 /* LAI for Ground Area covered (m-2) */
-	LAI_GROUND_SUN,             /* LAI for sun leaves for Ground Area covered (m-2) */
-	LAI_GROUND_SHADE,           /* LAI for shaded leaves for Ground Area covered (m-2) */
+	LAI,                        /* LAI for Projected Area covered (at zenith angle)(m^2/m2) */
+	LAI_SUN,                    /* LAI for sun leaves for Projected Area covered (at zenith angle) (m2 m-2) */
+	LAI_SHADE,                  /* LAI for shaded leaves for Projected Area covered (at zenith angle) (m2 m-2) */
+	LAI_GROUND,                 /* LAI for Ground Area covered for Ground Area covered (all over all viewing angles) (m-2) */
+	LAI_GROUND_SUN,             /* LAI for sun leaves for Ground Area covered (all over all viewing angles) (m-2) */
+	LAI_GROUND_SHADE,           /* LAI for shaded leaves for Ground Area covered (all over all viewing angles) (m-2) */
 	MAX_LAI,                    /* LAI at the very first day of senescence: parameter of the sigmoid function (m2 m-2) */
 	PEAK_LAI,                   /* Peak LAI (m2 m-2) */
 	ALL_LAI,

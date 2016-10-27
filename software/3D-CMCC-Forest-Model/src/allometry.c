@@ -40,8 +40,8 @@ void crown_allometry (cell_t *const c, const int height, const int dbh, const in
 	logger(g_debug_log, "-Crown Projected Radius = %g m\n", s->value[CROWN_RADIUS]);
 
 	/* Crown Projected Area using DBH-DC (at zenith angle) */
-	s->value[CROWN_AREA] = ( Pi / 4) * pow (s->value[CROWN_DIAMETER], 2 );
-	logger(g_debug_log, "-Crown Projected Area = %g m2\n", s->value[CROWN_AREA]);
+	s->value[CROWN_AREA_PROJ] = ( Pi / 4) * pow (s->value[CROWN_DIAMETER], 2 );
+	logger(g_debug_log, "-Crown Projected Area = %g m2\n", s->value[CROWN_AREA_PROJ]);
 
 	/* Crown Height */
 	/* it mainly follows SORTIE-ND approach in the form of x = a*tree height^c */
@@ -60,34 +60,34 @@ void crown_allometry (cell_t *const c, const int height, const int dbh, const in
 	{
 	case 0: /* cylinder */
 		logger(g_debug_log, "-Crown form factor = cylinder\n");
-		s->value[CROWN_SURFACE_AREA] = (2. * s->value[CROWN_AREA]) + ((s->value[CROWN_DIAMETER] * Pi) * s->value[CROWN_HEIGHT]);
-		s->value[CROWN_VOLUME] = (s->value[CROWN_AREA] * s->value[CROWN_HEIGHT]) / 3.;
+		s->value[CROWN_AREA_EXP] = (2. * s->value[CROWN_AREA_PROJ]) + ((s->value[CROWN_DIAMETER] * Pi) * s->value[CROWN_HEIGHT]);
+		s->value[CROWN_VOLUME] = (s->value[CROWN_AREA_PROJ] * s->value[CROWN_HEIGHT]) / 3.;
 		break;
 
 	case 1: /* cone */
 		logger(g_debug_log, "-Crown form factor = cone\n");
-		s->value[CROWN_SURFACE_AREA] = Pi * s->value[CROWN_RADIUS] * sqrt(pow(s->value[CROWN_RADIUS],2.) + pow(s->value[CROWN_HEIGHT],2.)) + s->value[CROWN_AREA];
-		s->value[CROWN_VOLUME] = (s->value[CROWN_AREA] * s->value[CROWN_HEIGHT])/3.;
+		s->value[CROWN_AREA_EXP] = Pi * s->value[CROWN_RADIUS] * sqrt(pow(s->value[CROWN_RADIUS],2.) + pow(s->value[CROWN_HEIGHT],2.)) + s->value[CROWN_AREA_PROJ];
+		s->value[CROWN_VOLUME] = (s->value[CROWN_AREA_PROJ] * s->value[CROWN_HEIGHT])/3.;
 		break;
 
 	case 2: /* sphere */
 		logger(g_debug_log, "-Crown form factor = sphere\n");
-		s->value[CROWN_SURFACE_AREA] = s->value[CROWN_AREA] * 4.;
+		s->value[CROWN_AREA_EXP] = s->value[CROWN_AREA_PROJ] * 4.;
 		s->value[CROWN_VOLUME] = 4. / 3. * Pi * pow (s->value[CROWN_RADIUS],3.);
 		break;
 
 	case 3: /* ellipsoid (bi-axial) */
 		logger(g_debug_log, "-Crown form factor = ellipsoid\n");
-		s->value[CROWN_SURFACE_AREA] = 2. * Pi * (s->value[CROWN_RADIUS] * s->value[CROWN_HEIGHT]);
+		s->value[CROWN_AREA_EXP] = 2. * Pi * (s->value[CROWN_RADIUS] * s->value[CROWN_HEIGHT]);
 		s->value[CROWN_VOLUME] = 4. / 3. * Pi * pow (s->value[CROWN_RADIUS],2.) * s->value[CROWN_HEIGHT];
 		break;
 	}
-	logger(g_debug_log, "-Crown Surface Area = %g m2\n", s->value[CROWN_SURFACE_AREA]);
+	logger(g_debug_log, "-Crown Surface Area = %g m2\n", s->value[CROWN_AREA_EXP]);
 	logger(g_debug_log, "-Crown Volume = %g m3\n", s->value[CROWN_VOLUME]);
 
 	/* Crown density (NOT USED) */
 	/* following Duursma et al., 2012 */
-	s->value[CROWN_DENSITY] = (s->value[ALL_LAI] / s->counter[N_TREE]) / s->value[CROWN_SURFACE_AREA];
+	s->value[CROWN_DENSITY] = (s->value[ALL_LAI] / s->counter[N_TREE]) / s->value[CROWN_AREA_EXP];
 	logger(g_debug_log, "-Crown Density = %g 1/m-1\n", s->value[CROWN_DENSITY]);
 
 	/*** Canopy allometry ***/
@@ -95,8 +95,8 @@ void crown_allometry (cell_t *const c, const int height, const int dbh, const in
 	logger(g_debug_log,"\n*CANOPY ALLOMETRY*\n");
 
 	/* Canopy Projected Cover using DBH-DC (at zenith angle) */
-	s->value[CANOPY_COVER] = s->value[CROWN_AREA] * s->counter[N_TREE] / g_settings->sizeCell;
-	logger(g_debug_log, "-Canopy Projected Cover (at zenith angle) = %g %%\n", s->value[CANOPY_COVER] * 100.0);
+	s->value[CANOPY_COVER_PROJ] = s->value[CROWN_AREA_PROJ] * s->counter[N_TREE] / g_settings->sizeCell;
+	logger(g_debug_log, "-Canopy Projected Cover (at zenith angle) = %g %%\n", s->value[CANOPY_COVER_PROJ] * 100.0);
 
 	/* (ORIGINAL) Canopy Projected Cover (integrated all over all viewing angles) */
 	/* following Cauchy's theorems Duursma et al., 2012) */
@@ -108,7 +108,7 @@ void crown_allometry (cell_t *const c, const int height, const int dbh, const in
 	/* note: this is valid ONLY for cylinder shape crowns */
 
 	/* Normalizing CANOPY_COVER and max_layer_cover (0-1) */
-	eff_canopy_cover = s->value[CANOPY_COVER] / g_settings->max_layer_cover;
+	eff_canopy_cover = s->value[CANOPY_COVER_PROJ] / g_settings->max_layer_cover;
 	logger(g_debug_log, "-eff_canopy_cover = %.4g %%\n", eff_canopy_cover * 100.);
 
 	/* it considers crown projected area (at zenith angles) plus half of lateral area of a cylinder */
@@ -116,8 +116,8 @@ void crown_allometry (cell_t *const c, const int height, const int dbh, const in
 	lateral_area = ((s->value[CROWN_DIAMETER] * Pi * s->value[CROWN_HEIGHT]) / 2.) * (1. - eff_canopy_cover);
 
 	/* Canopy cover able to absorb light (integrated all over all viewing angles) */
-	s->value[CANOPY_SURFACE_COVER] = ((s->value[CROWN_AREA] + lateral_area) * s->counter[N_TREE]) / g_settings->sizeCell ;
-	logger(g_debug_log, "-Canopy Surface Cover (all viewing angles, my method) = %g %%\n", s->value[CANOPY_SURFACE_COVER] * 100.);
+	s->value[CANOPY_COVER_EXP] = ((s->value[CROWN_AREA_PROJ] + lateral_area) * s->counter[N_TREE]) / g_settings->sizeCell ;
+	logger(g_debug_log, "-Canopy Cover Exposed (all viewing angles, my method) = %g %%\n", s->value[CANOPY_COVER_EXP] * 100.);
 
 	/* check */
 	//CHECK_CONDITION(eff_canopy_cover, < 0. - eps);

@@ -63,9 +63,9 @@ void leaf_fall_deciduous(cell_t *const c, const int height, const int dbh, const
 		/* check */
 		CHECK_CONDITION(previousLai, < currentLai);
 
-		previousBiomass_lai = previousLai * (s->value[CANOPY_COVER] * g_settings->sizeCell) / (s->value[SLA_AVG] * 1000.0);
+		previousBiomass_lai = previousLai * (s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell) / (s->value[SLA_AVG] * 1000.0);
 
-		newBiomass_lai = (currentLai * (s->value[CANOPY_COVER] * g_settings->sizeCell) / (s->value[SLA_AVG] * 1000.0));
+		newBiomass_lai = (currentLai * (s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell) / (s->value[SLA_AVG] * 1000.0));
 		foliage_to_remove = previousBiomass_lai - newBiomass_lai;
 		logger(g_debug_log, "foliage_to_remove = %f\n", foliage_to_remove);
 

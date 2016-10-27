@@ -27,7 +27,7 @@ void canopy_interception(cell_t *const c, const int layer, const int height, con
 	static double temp_int_rain;
 	static double temp_int_snow;
 
-	double leaf_cell_cover_eff;
+//	double leaf_cell_cover_eff;
 
 	tree_layer_t *l;
 	species_t *s;
@@ -35,17 +35,15 @@ void canopy_interception(cell_t *const c, const int layer, const int height, con
 	l = &c->tree_layers[layer];
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
-	/* it computes canopy rain interception with the same rationale
-	 * used for canopy radiation absorption */
-
-	//note: it is still used cause rainfall is considered always vertical from zenith angle
-	/* compute effective canopy cover */
-	/* special case when LAI = < 1.0 */
-	if( s->value[LAI] < 1.0 ) leaf_cell_cover_eff = s->value[LAI] * s->value[CANOPY_COVER];
-	else leaf_cell_cover_eff = s->value[CANOPY_COVER];
-
-	/* check for the special case in which is allowed to have more 100% of grid cell covered */
-	if( leaf_cell_cover_eff > 1.0 ) leaf_cell_cover_eff = 1.0;
+	/* it computes canopy rain interception with a slightly different rationale used for canopy radiation absorption */
+	/* note: it is still used cause rainfall is considered always vertical from zenith angle */
+//	/* compute effective canopy cover */
+//	/* special case when LAI = < 1.0 */
+//	if( s->value[LAI] < 1.0 ) leaf_cell_cover_eff = s->value[LAI] * s->value[CANOPY_COVER_PROJ];
+//	else leaf_cell_cover_eff = s->value[CANOPY_COVER_PROJ];
+//
+//	/* check for the special case in which is allowed to have more 100% of grid cell covered */
+//	if( leaf_cell_cover_eff > 1.0 ) leaf_cell_cover_eff = 1.0;
 
 	logger(g_debug_log, "\n*CANOPY INTERCEPTION*\n");
 
@@ -58,7 +56,7 @@ void canopy_interception(cell_t *const c, const int layer, const int height, con
 
 		/* assign meteo variables to cell variables */
 		/* assign incoming rain */
-		//fixme alessioc it could use the same rationale of sw radiation usinf meteo_daily
+		//fixme alessioc it could use the same rationale of sw radiation using meteo_daily
 		c->rain = meteo_daily->rain;
 
 		/* assign incoming snow */
@@ -80,7 +78,7 @@ void canopy_interception(cell_t *const c, const int layer, const int height, con
 		{
 			logger(g_debug_log, "rain = %g mm/m2/day\n", meteo_daily->rain);
 
-			s->value[CANOPY_INT] = s->value[INT_COEFF] * meteo_daily->rain * (1.0 - exp(-0.5 * s->value[LAI])) * leaf_cell_cover_eff;
+			s->value[CANOPY_INT] = s->value[INT_COEFF] * meteo_daily->rain * (1.0 - exp(-0.5 * s->value[LAI])) * /*leaf_cell_cover_eff*/ s->value[DAILY_CANOPY_COVER_PROJ];
 			logger(g_debug_log, "CANOPY_INT = %g mm/m2/day\n", s->value[CANOPY_INT]);
 
 			s->value[CANOPY_WATER] = s->value[CANOPY_INT];
@@ -97,7 +95,7 @@ void canopy_interception(cell_t *const c, const int layer, const int height, con
 
 			Int_max_snow = 4.4 * s->value[LAI];
 			s->value[CANOPY_INT_SNOW] = s->value[CANOPY_SNOW] + 0.7 * ( Int_max_snow - s->value[CANOPY_SNOW] ) *
-				(1 - exp( - ( meteo_daily->snow /Int_max_snow ) ) ) * leaf_cell_cover_eff;
+				(1 - exp( - ( meteo_daily->snow /Int_max_snow ) ) ) * /*leaf_cell_cover_eff*/ s->value[DAILY_CANOPY_COVER_PROJ];
 
 			//fixme for now assuming no snow interception
 			s->value[CANOPY_INT_SNOW] = 0.0;

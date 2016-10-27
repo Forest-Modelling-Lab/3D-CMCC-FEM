@@ -42,7 +42,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 	//double evapo, evapo_sun, evapo_shade;
 	double transp, transp_sun, transp_shade;
 
-	double leaf_cell_cover_eff;                                            /* fraction of square meter covered by leaf over the grid cell */
+//	double leaf_cell_cover_eff;                                            /* fraction of square meter covered by leaf over the grid cell */
 	static int days_with_canopy_wet;
 
 	species_t *s;
@@ -72,16 +72,16 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 		if ( s->value[CANOPY_SNOW] >= 0 ) s->value[OLD_CANOPY_SNOW]= s->value[CANOPY_SNOW];
 	}
 
-	/*********************************************************************************************************/
-	/* compute exposed canopy cover */
-	/* special case when LAI = < 1.0 */
-	/* note: 26 Ottobre 2016 */
-	if(s->value[LAI] < 1.0) leaf_cell_cover_eff = s->value[LAI] * s->value[CANOPY_SURFACE_COVER];
-	else leaf_cell_cover_eff = s->value[CANOPY_SURFACE_COVER];
-
-	/* check for the special case in which is allowed to have more 100% of grid cell covered */
-	if(leaf_cell_cover_eff > 1.0) leaf_cell_cover_eff = 1.0;
-	logger(g_debug_log, "single height class canopy cover = %g %%\n", leaf_cell_cover_eff*100.0);
+//	/*********************************************************************************************************/
+//	/* compute exposed canopy cover */
+//	/* special case when LAI = < 1.0 */
+//	/* note: 26 October 2016 */
+//	if(s->value[LAI] < 1.0) leaf_cell_cover_eff = s->value[LAI] * s->value[CANOPY_COVER_EXP];
+//	else leaf_cell_cover_eff = s->value[CANOPY_COVER_EXP];
+//
+//	/* check for the special case in which is allowed to have more 100% of grid cell covered */
+//	if(leaf_cell_cover_eff > 1.0) leaf_cell_cover_eff = 1.0;
+//	logger(g_debug_log, "single height class canopy cover = %g %%\n", leaf_cell_cover_eff*100.0);
 
 	/********************************************************************************************************/
 
@@ -292,7 +292,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 				s->value[CANOPY_TRANSP] = transp;
 
 				/* considering effective coverage of cell */
-				s->value[CANOPY_TRANSP] *= leaf_cell_cover_eff;
+				s->value[CANOPY_TRANSP] *= /*leaf_cell_cover_eff*/s->value[DAILY_CANOPY_COVER_EXP];
 				s->value[CANOPY_EVAPO_TRANSP] = s->value[CANOPY_EVAPO] + s->value[CANOPY_TRANSP];
 
 			}
@@ -368,7 +368,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 			s->value[CANOPY_TRANSP] = transp;
 
 			/* considering effective coverage of cell and convert to daily amount */
-			s->value[CANOPY_TRANSP] *= leaf_cell_cover_eff;
+			s->value[CANOPY_TRANSP] *= /*leaf_cell_cover_eff*/s->value[DAILY_CANOPY_COVER_EXP];
 			s->value[CANOPY_EVAPO_TRANSP] = s->value[CANOPY_EVAPO] + s->value[CANOPY_TRANSP];
 		}
 	}

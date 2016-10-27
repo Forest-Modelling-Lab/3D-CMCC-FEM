@@ -342,7 +342,7 @@ int annual_forest_structure(cell_t* const c)
 						for ( species = 0; species < c->heights[height].dbhs[dbh].ages[age].species_count; ++species )
 						{
 							s = &c->heights[height].dbhs[dbh].ages[age].species[species];
-							c->tree_layers[layer].layer_cover += s->value[CANOPY_COVER];
+							c->tree_layers[layer].layer_cover += s->value[CANOPY_COVER_PROJ];
 						}
 					}
 				}
@@ -368,7 +368,7 @@ int annual_forest_structure(cell_t* const c)
 			/* call of this function is due to the assumption that:
 			  -overall layer canopy cover cannot exceeds its maximum
 			  -DBHDC_EFF cannot be < DBHDCMIN
-			*/
+			 */
 
 			/* start to reduce DBHDC_EFF from the lowest height class */
 			qsort (c->heights, c->heights_count, sizeof (height_t), sort_by_heights_desc);
@@ -389,13 +389,13 @@ int annual_forest_structure(cell_t* const c)
 									s->value[DBHDC_EFF] -= 0.001;
 
 									/* remove current class cover for layer cover */
-									c->tree_layers[layer].layer_cover -= s->value[CANOPY_COVER];
+									c->tree_layers[layer].layer_cover -= s->value[CANOPY_COVER_PROJ];
 
 									/* recall crown allometry */
 									crown_allometry ( c, height, dbh, age, species );
 
 									/* recompute layer cover with current DBHDC_EFF */
-									c->tree_layers[layer].layer_cover += s->value[CANOPY_COVER];
+									c->tree_layers[layer].layer_cover += s->value[CANOPY_COVER_PROJ];
 
 									/* check if self-pruning was enough */
 									if ( c->tree_layers[layer].layer_cover > g_settings->max_layer_cover && s->value[DBHDC_EFF] <= s->value[DBHDCMIN] )
@@ -437,31 +437,6 @@ int annual_forest_structure(cell_t* const c)
 /*************************************************************************************************************************/
 int monthly_forest_structure (cell_t* const c)
 {
-	/*	int layer;
-	int height;
-	int dbh;
-	int age;
-	int species;
-	int zeta_count = 0;
-	double temp_crown_area;
-	double temp_crown_radius;
-	double temp_crown_diameter;
-
-	height_t *h;
-	dbh_t *d;
-	age_t *a;
-	species_t *s;*/
-
-	/* this function compute annually:
-	 * -the number of forest layers comparing the tree height values of all tree height classes
-	 * -layer density
-	 * -DBHDC_EFF based on overall layer cover
-	 * -crown diameter
-	 * -crown area
-	 * -class cover
-	 * -layer cover
-	 * -cell cover
-	 * */
 
 	logger(g_debug_log, "\n***MONTHLY FOREST STRUCTURE***\n");
 
@@ -471,49 +446,74 @@ int monthly_forest_structure (cell_t* const c)
 
 int daily_forest_structure (cell_t *const c)
 {
+	int layer;
 	int height;
 	int dbh;
 	int age;
 	int species;
 
 
+	species_t *s;
+
+	/* This function computes at class level and at daily scale :
+	 * -Canopy Cover Projected (based on daily LAI)
+	 * -Canopy Cover Exposed (based on daily LAI)
+	 * (being LAI variables at daily scale Canopy Cover must be updated)
+	 * note: this function is only useful for 0 < LAI < 1
+	 */
+
+	//fixme currently model considers CANOPY_COVER_EXP != CANOPY_COVER_PROJ only for dominant!!
+
 	logger(g_debug_log, "\n***DAILY FOREST STRUCTURE***\n");
 
-	//ALESSIOC TO ALESSIOR VERY PORCATA
-
-	for ( height = 0; height < c->heights_count ; ++height )
+	for (layer = c->tree_layers_count - 1; layer >= 0; --layer)
 	{
-		for ( dbh = 0; dbh < c->heights[height].dbhs_count; ++dbh )
+		/* if dominant */
+		if( layer == c->tree_layers_count - 1 )
 		{
-			for ( age = 0; age < c->heights[height].dbhs[dbh].ages_count ; ++age )
+			for ( height = 0; height < c->heights_count ; ++height )
 			{
-				for ( species = 0; species < c->heights[height].dbhs[dbh].ages[age].species_count; ++species )
+				for ( dbh = 0; dbh < c->heights[height].dbhs_count; ++dbh )
 				{
-					c->cell_n_trees += c->heights[height].dbhs[dbh].ages[age].species[species].counter[N_TREE];
+					for ( age = 0; age < c->heights[height].dbhs[dbh].ages_count ; ++age )
+					{
+						for ( species = 0; species < c->heights[height].dbhs[dbh].ages[age].species_count; ++species )
+						{
+							s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
-					if (c->heights[height].dbhs[dbh].ages[age].species_count > 1)
-					{
-						if ( (!string_compare_i(c->heights[height].dbhs[dbh].ages[age].species[species].name,
-								c->heights[height].dbhs[dbh].ages[age].species[species+1].name)))
-							++ c->cell_species_count;
-					}
-					else
-					{
-						c->cell_species_count = 1;
+							/*****************************************************************************************/
+
+							/* compute daily canopy projected cover */
+							/* special case when LAI = < 1.0 */
+							if( s->value[LAI] < 1.0 ) s->value[DAILY_CANOPY_COVER_PROJ] = s->value[LAI] * s->value[CANOPY_COVER_PROJ];
+							else s->value[DAILY_CANOPY_COVER_PROJ] = s->value[CANOPY_COVER_PROJ];
+
+							/* check for the special case in which is allowed to have more 100% of projected grid cell covered */
+							//FIXME??
+							if( s->value[DAILY_CANOPY_COVER_PROJ] > 1.0 ) s->value[DAILY_CANOPY_COVER_PROJ] = 1.0;
+
+							logger(g_debug_log, "%s height class canopy projected cover = %g %%\n", s->name, s->value[DAILY_CANOPY_COVER_PROJ]*100.0);
+
+							/*****************************************************************************************/
+
+							/* compute daily canopy exposed cover */
+							/* special case when LAI = < 1.0 */
+							if( s->value[LAI] < 1.0 ) s->value[DAILY_CANOPY_COVER_EXP] = s->value[LAI] * s->value[CANOPY_COVER_EXP];
+							else s->value[DAILY_CANOPY_COVER_EXP] = s->value[CANOPY_COVER_EXP];
+
+							/* check for the special case in which is allowed to have more 100% of exposed grid cell covered */
+							//FIXME??
+							if( s->value[DAILY_CANOPY_COVER_EXP] > 1.0 ) s->value[DAILY_CANOPY_COVER_EXP] = 1.0;
+
+							logger(g_debug_log, "%s height class canopy exposed cover = %g %%\n", s->name, s->value[CANOPY_COVER_EXP]*100.0);
+
+						}
 					}
 				}
-				++ c->cell_ages_count;
 			}
-			++ c->cell_dbhs_count;
 		}
-		c->cell_heights_count = c->heights_count;
-	}
-	logger(g_debug_log, "* cell_n_trees = %d per cell\n", c->cell_n_trees);
-	logger(g_debug_log, "* cell_heights_count = %d per cell\n",c->cell_heights_count);
-	logger(g_debug_log, "* cell_dbhs_count = %d per cell\n",c->cell_dbhs_count);
-	logger(g_debug_log, "* cell_ages_count = %d per cell\n",c->cell_ages_count);
-	logger(g_debug_log, "* cell_species_count = %d per cell\n",c->cell_species_count);
 
+	}
 	return 1;
 }
 

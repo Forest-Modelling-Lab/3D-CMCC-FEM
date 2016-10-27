@@ -23,7 +23,6 @@ void dendrometry ( cell_t *const c, const int layer, const int height, const int
 	double pot_apar;                   /* potential absorbed par */
 	double pot_apar_sun;               /* potential absorbed par sun */
 	double pot_apar_shade;             /* potential absorbed par shade */
-	double leaf_cell_cover_eff;
 	double Light_refl_par_frac;
 	double current_ccf;                /* crown competition factor */
 	double current_hdf;                /* height-diameter competition factor */
@@ -138,17 +137,6 @@ void dendrometry ( cell_t *const c, const int layer, const int height, const int
 
 	/* compute current light competition factor */
 
-	/* compute exposed canopy cover */
-	/* special case when LAI = < 1.0 */
-	/* note: 26 Ottobre 2016 */
-	if(s->value[LAI] < 1.0) leaf_cell_cover_eff = s->value[LAI] * s->value[CANOPY_SURFACE_COVER];
-	else leaf_cell_cover_eff = s->value[CANOPY_SURFACE_COVER];
-
-	/* check for the special case in which is allowed to have more 100% of grid cell covered */
-	if(leaf_cell_cover_eff > 1.0) leaf_cell_cover_eff = 1.0;
-	logger(g_debug_log, "single height class canopy cover = %g %%\n", leaf_cell_cover_eff*100.0);
-
-
 	if( s->value[LAI] >= 1.0 )
 	{
 		Light_refl_par_frac = s->value[ALBEDO]/3.0;
@@ -159,17 +147,17 @@ void dendrometry ( cell_t *const c, const int layer, const int height, const int
 	}
 	else
 	{
-		Light_refl_par_frac = (s->value[ALBEDO]/3.0) * s->value[LAI];
+		Light_refl_par_frac = (s->value[ALBEDO]/3.0) * s->value[LAI_GROUND];
 	}
 
 	if ( s->value[LAI] > 0.)
 	{
 		/* compute potential absorbable incoming par less reflected */
-		pot_par = meteo_daily->incoming_par - (meteo_daily->incoming_par * Light_refl_par_frac  * leaf_cell_cover_eff);
+		pot_par = meteo_daily->incoming_par - (meteo_daily->incoming_par * Light_refl_par_frac * s->value[DAILY_CANOPY_COVER_EXP]);
 
 		/* compute potential absorbed incoming par */
-		pot_apar_sun = pot_par * (1. - (exp(- s->value[K] * s->value[LAI_GROUND_SUN]))) * leaf_cell_cover_eff;
-		pot_apar_shade = (pot_par - pot_apar_sun) * (1. - (exp(- s->value[K] * s->value[LAI_GROUND_SHADE]))) * leaf_cell_cover_eff;
+		pot_apar_sun = pot_par * (1. - (exp(- s->value[K] * s->value[LAI_GROUND_SUN]))) * s->value[DAILY_CANOPY_COVER_EXP];
+		pot_apar_shade = (pot_par - pot_apar_sun) * (1. - (exp(- s->value[K] * s->value[LAI_GROUND_SHADE]))) * s->value[DAILY_CANOPY_COVER_EXP];
 		pot_apar = pot_apar_sun + pot_apar_shade;
 
 		/* current light competition factor */

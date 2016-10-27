@@ -105,7 +105,10 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 		annual_forest_structure ( c );
 	}
 
-	/* print  forest cell data */
+	/* daily forest structure*/
+	daily_forest_structure ( c );
+
+	/* print forest cell data */
 	print_daily_forest_data ( c );
 
 	/* prephenology */
