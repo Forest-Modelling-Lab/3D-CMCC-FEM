@@ -42,7 +42,7 @@ void daily_lai (species_t *const s)
 	/* compute LAI for Ground Area */
 
 	/* compute "exposed canopy cover" */
-	/* Jackson & Palmer, 1979, 1981; Cannel and Grace 1993, Duursma and Makela 2006 */
+	/* Jackson & Palmer, 1979, 1981, 1983; Cannell and Grace 1993, Duursma and Makela 2006 */
 
 	/* special case when LAI = < 1.0 */
 	/* note: 26 Ottobre 2016 */
@@ -65,7 +65,7 @@ void daily_lai (species_t *const s)
 
 	/**************************************************************************************************/
 
-	/* Calculate all-sided LAI */
+	/* compute all-sided LAI */
 	s->value[ALL_LAI] = s->value[LAI] * (s->value[CANOPY_COVER] * g_settings->sizeCell);
 	logger(g_debug_log, "ALL LAI = %g m2\n", s->value[ALL_LAI]);
 	logger(g_debug_log,"*****************************\n");

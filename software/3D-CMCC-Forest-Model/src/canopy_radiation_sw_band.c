@@ -289,10 +289,10 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 	}
 	else
 	{
-		Light_refl_sw_rad_canopy_frac = s->value[ALBEDO] * s->value[LAI];
-		//		LightReflec_net_rad_sun = s->value[ALBEDO]* s->value[LAI_SUN];
+		Light_refl_sw_rad_canopy_frac = s->value[ALBEDO] * s->value[LAI_GROUND];
+		//		LightReflec_net_rad_sun = s->value[ALBEDO] * s->value[LAI_SUN];
 		//		LightReflec_net_rad_shade = s->value[ALBEDO] * * s->value[LAI_SHADE];
-		Light_refl_par_frac = (s->value[ALBEDO]/3.0) * s->value[LAI];
+		Light_refl_par_frac = (s->value[ALBEDO]/3.0) * s->value[LAI_GROUND];
 		//		LightReflec_par_sun =  (s->value[ALBEDO]/3.0) * s->value[LAI_SUN];
 		//		LightReflec_par_shade =  (s->value[ALBEDO]/3.0) * s->value[LAI_SHADE];
 	}

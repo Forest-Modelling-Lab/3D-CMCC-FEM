@@ -159,7 +159,7 @@ void dendrometry ( cell_t *const c, const int layer, const int height, const int
 	}
 	else
 	{
-		Light_refl_par_frac = (s->value[ALBEDO]/3.0) * s->value[LAI];
+		Light_refl_par_frac = (s->value[ALBEDO]/3.0) * s->value[LAI_GROUND];
 	}
 
 	if ( s->value[LAI] > 0.)
