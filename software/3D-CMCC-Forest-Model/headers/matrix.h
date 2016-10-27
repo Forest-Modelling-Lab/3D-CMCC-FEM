@@ -241,12 +241,15 @@ enum {
 
 	/* LAI */
 	LAI,                        /* LAI (m^2/m2) */
-	LAI_SUN,                    /* LAI for sun leaves (m^2/m2) */
-	LAI_SHADE,                  /* LAI for shaded leaves (m^2/m2) */
-	MAX_LAI,                    /* LAI at the very first day of senescence: parameter of the sigmoid function*/
-	PEAK_LAI,                   /* Peak LAI*/
+	LAI_SUN,                    /* LAI for sun leaves (m2 m-2) */
+	LAI_SHADE,                  /* LAI for shaded leaves (m2 m-2) */
+	LAI_GROUND,                 /* LAI for Ground Area covered (m-2) */
+	LAI_GROUND_SUN,             /* LAI for sun leaves for Ground Area covered (m-2) */
+	LAI_GROUND_SHADE,           /* LAI for shaded leaves for Ground Area covered (m-2) */
+	MAX_LAI,                    /* LAI at the very first day of senescence: parameter of the sigmoid function (m2 m-2) */
+	PEAK_LAI,                   /* Peak LAI (m2 m-2) */
 	ALL_LAI,
-	LAD,                        /* Leaf Area Density (m^2/m2) */
+	LAD,                        /* Leaf Area Density (m2/m2) */
 	LEAF_TEMP_K,                /* leaf temperature (K) */
 	CANOPY_TEMP_K,              /* canopy temperature (K) */
 	CANOPY_TEMP_K_OLD,          /* previous time canopy temperature (K) */

@@ -207,7 +207,7 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 	static double temp_ppfd_abs;                                                          /* temporary absorbed PPFD for layer */
 	static double temp_ppfd_refl;                                                         /* temporary reflected PPFD for layer */
 
-	double leaf_cell_cover_eff;                                                           /* (ratio) fraction of square meter covered by leaf over the grid cell */
+//	double leaf_cell_cover_eff;                                                           /* (ratio) fraction of square meter covered by leaf over the grid cell */
 
 	tree_layer_t *l;
 	//height_t *h;
@@ -224,15 +224,15 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 
 	/***********************************************************************************************************/
 
-	/* compute exposed canopy cover */
-	/* special case when LAI = < 1.0 */
-	/* note: 26 Ottobre 2016 */
-	if(s->value[LAI] < 1.0) leaf_cell_cover_eff = s->value[LAI] * s->value[CANOPY_SURFACE_COVER];
-	else leaf_cell_cover_eff = s->value[CANOPY_SURFACE_COVER];
-
-	/* check for the special case in which is allowed to have more 100% of grid cell covered */
-	if( leaf_cell_cover_eff > 1.0 ) leaf_cell_cover_eff = 1.0;
-	logger(g_debug_log, "single height class canopy cover = %g %%\n", leaf_cell_cover_eff*100.0);
+//	/* compute exposed canopy cover */
+//	/* special case when LAI = < 1.0 */
+//	/* note: 26 Ottobre 2016 */
+//	if(s->value[LAI] < 1.0) leaf_cell_cover_eff = s->value[LAI] * s->value[CANOPY_SURFACE_COVER];
+//	else leaf_cell_cover_eff = s->value[CANOPY_SURFACE_COVER];
+//
+//	/* check for the special case in which is allowed to have more 100% of grid cell covered */
+//	if( leaf_cell_cover_eff > 1.0 ) leaf_cell_cover_eff = 1.0;
+//	logger(g_debug_log, "single height class canopy cover = %g %%\n", leaf_cell_cover_eff*100.0);
 
 	/***********************************************************************************************************/
 
@@ -246,9 +246,9 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 	*/
 	if ( s->value[LAI] )
 	{
-		Light_trasm_frac = exp(- s->value[K] * (s->value[LAI]/leaf_cell_cover_eff));
-		Light_trasm_frac_sun = exp(- s->value[K] * (s->value[LAI_SUN]/leaf_cell_cover_eff));
-		Light_trasm_frac_shade = exp(- s->value[K] * (s->value[LAI_SHADE]/leaf_cell_cover_eff));
+		Light_trasm_frac = exp(- s->value[K] * s->value[LAI_GROUND]);
+		Light_trasm_frac_sun = exp(- s->value[K] * s->value[LAI_GROUND_SUN]);
+		Light_trasm_frac_shade = exp(- s->value[K] * s->value[LAI_GROUND_SHADE]);
 	}
 	else
 	{

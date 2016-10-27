@@ -168,8 +168,8 @@ void dendrometry ( cell_t *const c, const int layer, const int height, const int
 		pot_par = meteo_daily->incoming_par - (meteo_daily->incoming_par * Light_refl_par_frac  * leaf_cell_cover_eff);
 
 		/* compute potential absorbed incoming par */
-		pot_apar_sun = pot_par * (1. - (exp(- s->value[K] * (s->value[LAI_SUN]/leaf_cell_cover_eff)))) * leaf_cell_cover_eff;
-		pot_apar_shade = (pot_par - pot_apar_sun) * (1. - (exp(- s->value[K] * (s->value[LAI_SHADE]/leaf_cell_cover_eff)))) * leaf_cell_cover_eff;
+		pot_apar_sun = pot_par * (1. - (exp(- s->value[K] * s->value[LAI_GROUND_SUN]))) * leaf_cell_cover_eff;
+		pot_apar_shade = (pot_par - pot_apar_sun) * (1. - (exp(- s->value[K] * s->value[LAI_GROUND_SHADE]))) * leaf_cell_cover_eff;
 		pot_apar = pot_apar_sun + pot_apar_shade;
 
 		/* current light competition factor */
