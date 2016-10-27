@@ -26,7 +26,7 @@ void phenology(cell_t *const c, const int layer, const int height, const int dbh
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 	logger(g_debug_log, "\n--DAILY PHENOLOGY for SPECIES %s phenology = %.1f--\n", s->name, s->value[PHENOLOGY]);
-	logger(g_debug_log, "-LAI = %g\n-PEAK_LAI = %g\n", s->value[LAI], s->value[PEAK_LAI]);
+	logger(g_debug_log, "-LAI_PROJ = %g\n-PEAK_LAI_PROJ = %g\n", s->value[LAI_PROJ], s->value[PEAK_LAI_PROJ]);
 
 	/*for deciduous*/
 	if (s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2)
@@ -38,7 +38,7 @@ void phenology(cell_t *const c, const int layer, const int height, const int dbh
 			if (s->counter[VEG_DAYS] <= ((int)s->value[BUD_BURST]))
 			{
 				/* Maximum growth */
-				if (s->value[LAI] < s->value[PEAK_LAI])
+				if (s->value[LAI_PROJ] < s->value[PEAK_LAI_PROJ])
 				{
 					s->phenology_phase = 1;
 				}
@@ -89,7 +89,7 @@ void phenology(cell_t *const c, const int layer, const int height, const int dbh
 		/* Beginning of a "growing season" */
 		/* Maximum growth */
 		// old if ( meteo_daily->thermic_sum >= s->value[GROWTHSTART] && s->value[LAI] < s->value[PEAK_LAI] )
-		if ( s->value[LAI] < s->value[PEAK_LAI] &&
+		if ( s->value[LAI_PROJ] < s->value[PEAK_LAI_PROJ] &&
 				( ( g_soil_settings->values[SOIL_LAT] > 0 && month < 5 ) ||
 				( g_soil_settings->values[SOIL_LAT] < 0 && month > 11 ) ) )
 		{

@@ -58,11 +58,11 @@ void canopy_radiation_lw_band(cell_t *const c, const int layer, const int height
 	/* LONG WAVE RADIATION FRACTIONS */
 	/* fraction of long wave emissivity  by the canopy CLM 4.5 (eq. 4.20)  */
 	/* for Dai et al., 2004 it represents also the absorbed */
-	LW_emis_canopy_frac = (1. - exp(- s->value[LAI]));
+	LW_emis_canopy_frac = (1. - exp(- s->value[LAI_PROJ]));
 	logger(g_debug_log, "LW_emis_canopy_frac = %g %%\n", LW_emis_canopy_frac);
 
 	/* fraction of long wave emissivity  by the canopy (see Gouttevin et al., 2015) */
-	LW_abs_canopy_frac = (1. - exp(- s->value[LAI] * s->value[K]));
+	LW_abs_canopy_frac = (1. - exp(- s->value[LAI_PROJ] * s->value[K]));
 	logger(g_debug_log, "LW_emis_canopy_frac = %g %%\n", LW_emis_canopy_frac);
 
 	/* fraction of long wave transmissivity  by the canopy */

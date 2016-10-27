@@ -485,7 +485,7 @@ int daily_forest_structure (cell_t *const c)
 
 							/* compute daily canopy projected cover */
 							/* special case when LAI = < 1.0 */
-							if( s->value[LAI] < 1.0 ) s->value[DAILY_CANOPY_COVER_PROJ] = s->value[LAI] * s->value[CANOPY_COVER_PROJ];
+							if( s->value[LAI_PROJ] < 1.0 ) s->value[DAILY_CANOPY_COVER_PROJ] = s->value[LAI_PROJ] * s->value[CANOPY_COVER_PROJ];
 							else s->value[DAILY_CANOPY_COVER_PROJ] = s->value[CANOPY_COVER_PROJ];
 
 							/* check for the special case in which is allowed to have more 100% of projected grid cell covered */
@@ -498,7 +498,7 @@ int daily_forest_structure (cell_t *const c)
 
 							/* compute daily canopy exposed cover */
 							/* special case when LAI = < 1.0 */
-							if( s->value[LAI] < 1.0 ) s->value[DAILY_CANOPY_COVER_EXP] = s->value[LAI] * s->value[CANOPY_COVER_EXP];
+							if( s->value[LAI_PROJ] < 1.0 ) s->value[DAILY_CANOPY_COVER_EXP] = s->value[LAI_PROJ] * s->value[CANOPY_COVER_EXP];
 							else s->value[DAILY_CANOPY_COVER_EXP] = s->value[CANOPY_COVER_EXP];
 
 							/* check for the special case in which is allowed to have more 100% of exposed grid cell covered */

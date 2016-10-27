@@ -55,7 +55,7 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 	omega = s->value[OMEGA_CTEM]; /* controls the sensitivity of allocation to changes in water and light availability */
 
 	//fixme it should takes into account above layers
-	Light_trasm = exp(- s->value[K] * s->value[LAI]);
+	Light_trasm = exp(- s->value[K] * s->value[LAI_PROJ]);
 
 	/* note: in Biome a constant proportion (50%) (Growth:storage parameter) of NPP that goes to the c-pools is allocated
 	 * to each storage_pool, i.e. each carbon pools receive just a part of NPP (50%) the remaining remain as storage
@@ -108,8 +108,8 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 
 	logger(g_debug_log, "\nCarbon allocation for deciduous\n");
 	logger(g_debug_log, "PHENOLOGICAL PHASE = %d\n", s->phenology_phase);
-	logger(g_debug_log, "LAI = %g \n", s->value[LAI]);
-	logger(g_debug_log, "PEAK LAI = %g \n", s->value[PEAK_LAI]);
+	logger(g_debug_log, "LAI PROJ = %g \n", s->value[LAI_PROJ]);
+	logger(g_debug_log, "PEAK_LAI_PROJ = %g \n", s->value[PEAK_LAI_PROJ]);
 
 	/* assign NPP to local variable */
 	npp_to_alloc = s->value[NPP_tC];
@@ -123,7 +123,7 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 	case 1:
 		logger(g_debug_log, "\n*BUDBURST*\n");
 		logger(g_debug_log, "Bud burst phase using both reserve pools and npp\n");
-		logger(g_debug_log, "LAI = %g \n", s->value[LAI]);
+		logger(g_debug_log, "LAI_PROJ = %g \n", s->value[LAI_PROJ]);
 		logger(g_debug_log, "Allocating only into foliage and fine root\n");
 		logger(g_debug_log, "Tot biomass reserve = %g\n", s->value[RESERVE_C]);
 		logger(g_debug_log, "++Remaining days for bud burst = %d\n", s->counter[BUD_BURST_COUNTER]);

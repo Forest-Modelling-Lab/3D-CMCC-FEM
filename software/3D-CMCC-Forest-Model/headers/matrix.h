@@ -242,15 +242,15 @@ enum {
 	YEARLY_CANOPY_LATENT_HEAT,  /* annual canopy latent heat W m-2 */
 
 	/* LAI */
-	LAI,                        /* LAI for Projected Area covered (at zenith angle)(m^2/m2) */
-	LAI_SUN,                    /* LAI for sun leaves for Projected Area covered (at zenith angle) (m2 m-2) */
-	LAI_SHADE,                  /* LAI for shaded leaves for Projected Area covered (at zenith angle) (m2 m-2) */
-	LAI_GROUND,                 /* LAI for Ground Area covered for Ground Area covered (all over all viewing angles) (m-2) */
-	LAI_GROUND_SUN,             /* LAI for sun leaves for Ground Area covered (all over all viewing angles) (m-2) */
-	LAI_GROUND_SHADE,           /* LAI for shaded leaves for Ground Area covered (all over all viewing angles) (m-2) */
-	MAX_LAI,                    /* LAI at the very first day of senescence: parameter of the sigmoid function (m2 m-2) */
-	PEAK_LAI,                   /* Peak LAI (m2 m-2) */
-	ALL_LAI,
+	LAI_PROJ,                   /* LAI for Projected Area covered (at zenith angle)(m^2/m2) */
+	LAI_SUN_PROJ,               /* LAI for sun leaves for Projected Area covered (at zenith angle) (m2 m-2) */
+	LAI_SHADE_PROJ,             /* LAI for shaded leaves for Projected Area covered (at zenith angle) (m2 m-2) */
+	MAX_LAI_PROJ,               /* LAI Projected at the very first day of senescence: parameter of the sigmoid function (m2 m-2) */
+	PEAK_LAI_PROJ,              /* Peak Projected LAI (m2 m-2) */
+	ALL_LAI_PROJ,               /* All side Projected LAI (m2) */
+	LAI_EXP,                    /* LAI for Exposed Area covered (all over all viewing angles) (m2 m-2) */
+	LAI_SUN_EXP,                /* LAI for sun leaves for Exposed Area covered (all over all viewing angles) (m2 m-2) */
+	LAI_SHADE_EXP,              /* LAI for shaded leaves for Exposed Area covered (all over all viewing angles) (m2 m-2) */
 	LAD,                        /* Leaf Area Density (m2/m2) */
 	LEAF_TEMP_K,                /* leaf temperature (K) */
 	CANOPY_TEMP_K,              /* canopy temperature (K) */

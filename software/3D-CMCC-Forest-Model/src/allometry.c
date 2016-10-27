@@ -87,7 +87,7 @@ void crown_allometry (cell_t *const c, const int height, const int dbh, const in
 
 	/* Crown density (NOT USED) */
 	/* following Duursma et al., 2012 */
-	s->value[CROWN_DENSITY] = (s->value[ALL_LAI] / s->counter[N_TREE]) / s->value[CROWN_AREA_EXP];
+	s->value[CROWN_DENSITY] = (s->value[ALL_LAI_PROJ] / s->counter[N_TREE]) / s->value[CROWN_AREA_EXP];
 	logger(g_debug_log, "-Crown Density = %g 1/m-1\n", s->value[CROWN_DENSITY]);
 
 	/*** Canopy allometry ***/

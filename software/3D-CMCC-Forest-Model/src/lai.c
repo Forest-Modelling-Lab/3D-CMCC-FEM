@@ -27,14 +27,14 @@ void daily_lai (species_t *const s)
 	logger(g_debug_log, "CANOPY_COVER_PROJ = %g %%\n", s->value[CANOPY_COVER_PROJ]);
 
 	/* compute total projected LAI */
-	s->value[LAI] = (leaf_c * s->value[SLA_AVG])/(s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell);
-	logger(g_debug_log, "LAI = %f m2/m-2\n", s->value[LAI]);
+	s->value[LAI_PROJ] = (leaf_c * s->value[SLA_AVG])/(s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell);
+	logger(g_debug_log, "LAI_PROJ = %f m2/m-2\n", s->value[LAI_PROJ]);
 
 	/* compute projected LAI for sunlit and shaded canopy portions */
-	s->value[LAI_SUN] = 1.0 - exp(-s->value[LAI]);
-	s->value[LAI_SHADE] = s->value[LAI] - s->value[LAI_SUN];
-	logger(g_debug_log, "LAI SUN = %g m2/m-2\n", s->value[LAI_SUN]);
-	logger(g_debug_log, "LAI SHADE = %g m2/m-2\n", s->value[LAI_SHADE]);
+	s->value[LAI_SUN_PROJ] = 1.0 - exp(-s->value[LAI_PROJ]);
+	s->value[LAI_SHADE_PROJ] = s->value[LAI_PROJ] - s->value[LAI_SUN_PROJ];
+	logger(g_debug_log, "LAI_SUN_PROJ = %g m2/m-2\n", s->value[LAI_SUN_PROJ]);
+	logger(g_debug_log, "LAI_SHADE_PROJ = %g m2/m-2\n", s->value[LAI_SHADE_PROJ]);
 
 	/**************************************************************************************************/
 
@@ -44,27 +44,27 @@ void daily_lai (species_t *const s)
 	logger(g_debug_log, "single height class canopy cover = %g %%\n", s->value[CANOPY_COVER_PROJ]*100.0);
 
 	/* compute total LAI for Ground Area */
-	s->value[LAI_GROUND] = s->value[LAI] / s->value[CANOPY_COVER_PROJ];
-	logger(g_debug_log, "LAI_GROUND = %f m-2\n", s->value[LAI_GROUND]);
+	s->value[LAI_EXP] = s->value[LAI_PROJ] / s->value[CANOPY_COVER_PROJ];
+	logger(g_debug_log, "LAI_EXP = %f m-2\n", s->value[LAI_EXP]);
 
 	/* compute LAI for sunlit and shaded canopy portions for Ground Area */
-	s->value[LAI_GROUND_SUN] = s->value[LAI_SUN] / s->value[CANOPY_COVER_PROJ];
-	s->value[LAI_GROUND_SHADE] = s->value[LAI_SHADE] / s->value[CANOPY_COVER_PROJ];
-	logger(g_debug_log, "LAI_GROUND_SUN = %g m-2\n", s->value[LAI_GROUND_SUN]);
-	logger(g_debug_log, "LAI_GROUND_SHADE = %g m-2\n", s->value[LAI_GROUND_SHADE]);
+	s->value[LAI_SUN_EXP] = s->value[LAI_SUN_PROJ] / s->value[CANOPY_COVER_PROJ];
+	s->value[LAI_SHADE_EXP] = s->value[LAI_SHADE_PROJ] / s->value[CANOPY_COVER_PROJ];
+	logger(g_debug_log, "LAI_SUN_EXP = %g m2 m-2\n", s->value[LAI_SUN_EXP]);
+	logger(g_debug_log, "LAI_SHADE_EXP = %g m2 m-2\n", s->value[LAI_SHADE_EXP]);
 
 	/**************************************************************************************************/
 
 	/* compute all-sided LAI */
-	s->value[ALL_LAI] = s->value[LAI] * s->value[CANOPY_COVER_PROJ];
-	logger(g_debug_log, "ALL LAI = %g m2\n", s->value[ALL_LAI]);
+	s->value[ALL_LAI_PROJ] = s->value[LAI_PROJ] * s->value[CANOPY_COVER_PROJ];
+	logger(g_debug_log, "ALL_LAI_PROJ = %g m2\n", s->value[ALL_LAI_PROJ]);
 	logger(g_debug_log,"*****************************\n");
 
-	CHECK_CONDITION(s->value[LAI], < 0.0);
-	CHECK_CONDITION(s->value[LAI_SUN], < 0.0);
-	CHECK_CONDITION(s->value[LAI_SHADE], < 0.0);
-	CHECK_CONDITION(s->value[ALL_LAI], < 0.0);
-	CHECK_CONDITION(fabs((s->value[LAI_SUN] + s->value[LAI_SHADE]) - s->value[LAI]), > eps );
+	CHECK_CONDITION(s->value[LAI_PROJ], < 0.0);
+	CHECK_CONDITION(s->value[LAI_SUN_PROJ], < 0.0);
+	CHECK_CONDITION(s->value[LAI_SHADE_PROJ], < 0.0);
+	CHECK_CONDITION(s->value[ALL_LAI_PROJ], < 0.0);
+	CHECK_CONDITION(fabs((s->value[LAI_SUN_PROJ] + s->value[LAI_SHADE_PROJ]) - s->value[LAI_PROJ]), > eps );
 }
 
 

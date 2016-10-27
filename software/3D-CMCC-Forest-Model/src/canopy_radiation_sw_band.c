@@ -217,11 +217,11 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 	* and Forrester et al, Forest Ecosystems,2014
 	* we currently use approach for homogeneous canopies that improves representation when canopy is not closed
 	*/
-	if ( s->value[LAI] )
+	if ( s->value[LAI_EXP] )
 	{
-		Light_trasm_frac = exp(- s->value[K] * s->value[LAI_GROUND]);
-		Light_trasm_frac_sun = exp(- s->value[K] * s->value[LAI_GROUND_SUN]);
-		Light_trasm_frac_shade = exp(- s->value[K] * s->value[LAI_GROUND_SHADE]);
+		Light_trasm_frac = exp(- s->value[K] * s->value[LAI_EXP]);
+		Light_trasm_frac_sun = exp(- s->value[K] * s->value[LAI_SUN_EXP]);
+		Light_trasm_frac_shade = exp(- s->value[K] * s->value[LAI_SHADE_EXP]);
 	}
 	else
 	{
@@ -241,7 +241,7 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 	calculated similarly to sw except that albedo is 1/3 for PAR because less
 	PAR is reflected than sw_radiation (Jones 1992)*/
 
-	if( s->value[LAI] >= 1.0 )
+	if( s->value[LAI_PROJ] >= 1.0 )
 	{
 		Light_refl_sw_rad_canopy_frac = s->value[ALBEDO];
 		//		LightReflec_net_rad_sun = s->value[ALBEDO];
@@ -250,7 +250,7 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 		//		LightReflec_par_sun = s->value[ALBEDO]/3.0;
 		//		LightReflec_par_shade = s->value[ALBEDO]/3.0;
 	}
-	else if ( !s->value[LAI])
+	else if ( !s->value[LAI_PROJ])
 	{
 		Light_refl_sw_rad_canopy_frac = 0.0;
 		//		LightReflec_net_rad_sun = 0.0;
@@ -262,10 +262,10 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 	}
 	else
 	{
-		Light_refl_sw_rad_canopy_frac = s->value[ALBEDO] * s->value[LAI_GROUND];
+		Light_refl_sw_rad_canopy_frac = s->value[ALBEDO] * s->value[LAI_EXP];
 		//		LightReflec_net_rad_sun = s->value[ALBEDO] * s->value[LAI_SUN];
 		//		LightReflec_net_rad_shade = s->value[ALBEDO] * * s->value[LAI_SHADE];
-		Light_refl_par_frac = (s->value[ALBEDO]/3.0) * s->value[LAI_GROUND];
+		Light_refl_par_frac = (s->value[ALBEDO]/3.0) * s->value[LAI_EXP];
 		//		LightReflec_par_sun =  (s->value[ALBEDO]/3.0) * s->value[LAI_SUN];
 		//		LightReflec_par_shade =  (s->value[ALBEDO]/3.0) * s->value[LAI_SHADE];
 	}

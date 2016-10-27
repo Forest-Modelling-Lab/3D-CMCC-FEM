@@ -59,7 +59,7 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 	omega = s->value[OMEGA_CTEM]; /* controls the sensitivity of allocation to changes in water and light availability */
 
 	//fixme it should takes into account above layers
-	Light_trasm = exp(- s->value[K] * s->value[LAI]);
+	Light_trasm = exp(- s->value[K] * s->value[LAI_PROJ]);
 
 	/* Marconi: here the allocation of biomass reserve is divided in fineroot and leaves following the
 	* allocation ratio parameter between them. That because
@@ -88,8 +88,8 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 
 	logger(g_debug_log, "\nCarbon allocation for evergreen\n");
 	logger(g_debug_log, "PHENOLOGICAL PHASE = %d\n", s->phenology_phase);
-	logger(g_debug_log, "LAI = %f \n", s->value[LAI]);
-	logger(g_debug_log, "PEAK LAI = %f \n", s->value[PEAK_LAI]);
+	logger(g_debug_log, "LAI_PROJ", s->value[LAI_PROJ]);
+	logger(g_debug_log, "PEAK_LAI_PROJ = %f \n", s->value[PEAK_LAI_PROJ]);
 
 	/* assign NPP to local variable */
 	npp_to_alloc = s->value[NPP_tC];

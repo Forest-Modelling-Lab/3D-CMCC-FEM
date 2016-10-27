@@ -19,11 +19,11 @@ void peak_lai(species_t *const s, const int day, const int month, const int year
 	logger(g_debug_log, "\n**PEAK LAI**\n");
 
 	/* compute peak lai */
-	s->value[PEAK_LAI] = ((s->value[SAPWOOD_AREA] / 10000) * s->value[SAP_LEAF]) / s->value[CROWN_AREA_PROJ];
-	logger(g_debug_log, "year %d PEAK LAI from Kostner = %f m2/m2\n",years, s->value[PEAK_LAI]);
+	s->value[PEAK_LAI_PROJ] = ((s->value[SAPWOOD_AREA] / 10000) * s->value[SAP_LEAF]) / s->value[CROWN_AREA_PROJ];
+	logger(g_debug_log, "year %d PEAK_LAI_PROJ from Kostner = %f m2/m2\n",years, s->value[PEAK_LAI_PROJ]);
 
 	/* compute max leaf carbon at peak lai */
-	s->value[MAX_LEAF_C] = (s->value[PEAK_LAI] / s->value[SLA_AVG]) /1000.0 * (s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell);
+	s->value[MAX_LEAF_C] = (s->value[PEAK_LAI_PROJ] / s->value[SLA_AVG]) /1000.0 * (s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell);
 	logger(g_debug_log, "MAX_LEAF_C (sun and shaded)= %f tC/area \n", s->value[MAX_LEAF_C]);
 
 	s->value[MAX_FINE_ROOT_C] =s->value[MAX_LEAF_C] * (1.0 - s->value[FINE_ROOT_LEAF_FRAC]);
@@ -34,11 +34,11 @@ void peak_lai(species_t *const s, const int day, const int month, const int year
 
 	if ((s->value[PHENOLOGY] == 1.1 || s->value[PHENOLOGY] == 1.2) && ( !day && !month && !years ))
 	{
-		if ((s->value[LAI] > s->value[PEAK_LAI]) || (s->value[LEAF_C] > s->value[MAX_LEAF_C]))
+		if ((s->value[LAI_PROJ] > s->value[PEAK_LAI_PROJ]) || (s->value[LEAF_C] > s->value[MAX_LEAF_C]))
 		{
-			s->value[LAI] = s->value[PEAK_LAI];
+			s->value[LAI_PROJ] = s->value[PEAK_LAI_PROJ];
 			logger(g_debug_log, "Initial LAI > PEAK LAI, recompute it\n");
-			logger(g_debug_log, "recomputed LAI = %f\n", s->value[LAI]);
+			logger(g_debug_log, "recomputed LAI_PROJ = %f\n", s->value[LAI_PROJ]);
 
 			/*then recompute leaf biomass*/
 			s->value[LEAF_C] = s->value[MAX_LEAF_C];

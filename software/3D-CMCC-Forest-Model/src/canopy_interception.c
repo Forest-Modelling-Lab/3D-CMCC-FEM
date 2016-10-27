@@ -37,13 +37,6 @@ void canopy_interception(cell_t *const c, const int layer, const int height, con
 
 	/* it computes canopy rain interception with a slightly different rationale used for canopy radiation absorption */
 	/* note: it is still used cause rainfall is considered always vertical from zenith angle */
-//	/* compute effective canopy cover */
-//	/* special case when LAI = < 1.0 */
-//	if( s->value[LAI] < 1.0 ) leaf_cell_cover_eff = s->value[LAI] * s->value[CANOPY_COVER_PROJ];
-//	else leaf_cell_cover_eff = s->value[CANOPY_COVER_PROJ];
-//
-//	/* check for the special case in which is allowed to have more 100% of grid cell covered */
-//	if( leaf_cell_cover_eff > 1.0 ) leaf_cell_cover_eff = 1.0;
 
 	logger(g_debug_log, "\n*CANOPY INTERCEPTION*\n");
 
@@ -71,14 +64,14 @@ void canopy_interception(cell_t *const c, const int layer, const int height, con
 	/*************************************************************************/
 	/* shared functions among all class/layers */
 	/* compute interception for dry canopy (Lawrence et al., 2006) */
-	if( meteo_daily->prcp > 0.0 && s->value[LAI] > 0.0 && s->value[CANOPY_WATER] == 0.0 )
+	if( meteo_daily->prcp > 0.0 && s->value[LAI_PROJ] > 0.0 && s->value[CANOPY_WATER] == 0.0 )
 	{
 		/* for rain */
 		if( meteo_daily->rain != 0.0 )
 		{
 			logger(g_debug_log, "rain = %g mm/m2/day\n", meteo_daily->rain);
 
-			s->value[CANOPY_INT] = s->value[INT_COEFF] * meteo_daily->rain * (1.0 - exp(-0.5 * s->value[LAI])) * /*leaf_cell_cover_eff*/ s->value[DAILY_CANOPY_COVER_PROJ];
+			s->value[CANOPY_INT] = s->value[INT_COEFF] * meteo_daily->rain * (1.0 - exp(-0.5 * s->value[LAI_PROJ])) * s->value[DAILY_CANOPY_COVER_PROJ];
 			logger(g_debug_log, "CANOPY_INT = %g mm/m2/day\n", s->value[CANOPY_INT]);
 
 			s->value[CANOPY_WATER] = s->value[CANOPY_INT];
@@ -93,9 +86,9 @@ void canopy_interception(cell_t *const c, const int layer, const int height, con
 
 			logger(g_debug_log, "snow = %g mm/m2/day\n", meteo_daily->snow);
 
-			Int_max_snow = 4.4 * s->value[LAI];
+			Int_max_snow = 4.4 * s->value[LAI_PROJ];
 			s->value[CANOPY_INT_SNOW] = s->value[CANOPY_SNOW] + 0.7 * ( Int_max_snow - s->value[CANOPY_SNOW] ) *
-				(1 - exp( - ( meteo_daily->snow /Int_max_snow ) ) ) * /*leaf_cell_cover_eff*/ s->value[DAILY_CANOPY_COVER_PROJ];
+				(1 - exp( - ( meteo_daily->snow /Int_max_snow ) ) ) * s->value[DAILY_CANOPY_COVER_PROJ];
 
 			//fixme for now assuming no snow interception
 			s->value[CANOPY_INT_SNOW] = 0.0;

@@ -79,7 +79,7 @@ static int fill_cell_for_replanting(cell_t *const c)
 	a->species[a->species_count-1].name = p;
 	a->species[a->species_count-1].counter[N_TREE] = (int)g_settings->replanted_n_tree;
 	a->species[a->species_count-1].counter[N_STUMP] = 0;
-	a->species[a->species_count-1].value[LAI] = g_settings->replanted_lai;
+	a->species[a->species_count-1].value[LAI_PROJ] = g_settings->replanted_lai;
 
 	return 1;
 }
@@ -181,13 +181,13 @@ static int fill_cell_for_regeneration( cell_t *const c )
 	a->species[a->species_count-1].name = p;
 	a->species[a->species_count-1].counter[N_TREE] = (int)g_settings->regeneration_n_tree;
 	a->species[a->species_count-1].counter[N_STUMP] = 0;
-	a->species[a->species_count-1].value[LAI] = g_settings->regeneration_lai;
+	a->species[a->species_count-1].value[LAI_PROJ] = g_settings->regeneration_lai;
 	logger(g_debug_log, "-height = %f\n", c->heights[c->heights_count-1].value);
 	logger(g_debug_log, "-dbh = %f\n", h->dbhs[h->dbhs_count-1].value);
 	logger(g_debug_log, "-age = %d\n", d->ages[d->ages_count-1].value);
 	logger(g_debug_log, "-name = %s\n", a->species[a->species_count-1].name);
 	logger(g_debug_log, "-N-tree = %d\n", a->species[a->species_count-1].counter[N_TREE]);
-	logger(g_debug_log, "-lai = %f\n", a->species[a->species_count-1].value[LAI]);
+	logger(g_debug_log, "-lai = %f\n", a->species[a->species_count-1].value[LAI_PROJ]);
 
 
 	return 1;

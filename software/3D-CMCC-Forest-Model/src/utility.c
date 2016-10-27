@@ -427,7 +427,7 @@ void reset_annual_class_variables(cell_t *const c)
 				{
 					s = &a->species[species];
 
-					s->value[PEAK_LAI] = 0.;
+					s->value[PEAK_LAI_PROJ] = 0.;
 					s->value[MAX_LEAF_C] = 0.;
 
 					/*reset cumulative values*/

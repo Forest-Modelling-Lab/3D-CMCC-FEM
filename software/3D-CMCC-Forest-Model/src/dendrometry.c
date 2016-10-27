@@ -137,27 +137,27 @@ void dendrometry ( cell_t *const c, const int layer, const int height, const int
 
 	/* compute current light competition factor */
 
-	if( s->value[LAI] >= 1.0 )
+	if( s->value[LAI_PROJ] >= 1.0 )
 	{
 		Light_refl_par_frac = s->value[ALBEDO]/3.0;
 	}
-	else if ( ! s->value[LAI] )
+	else if ( ! s->value[LAI_PROJ] )
 	{
 		Light_refl_par_frac = 0.0;
 	}
 	else
 	{
-		Light_refl_par_frac = (s->value[ALBEDO]/3.0) * s->value[LAI_GROUND];
+		Light_refl_par_frac = (s->value[ALBEDO]/3.0) * s->value[LAI_EXP];
 	}
 
-	if ( s->value[LAI] > 0.)
+	if ( s->value[LAI_PROJ] > 0.)
 	{
 		/* compute potential absorbable incoming par less reflected */
 		pot_par = meteo_daily->incoming_par - (meteo_daily->incoming_par * Light_refl_par_frac * s->value[DAILY_CANOPY_COVER_EXP]);
 
 		/* compute potential absorbed incoming par */
-		pot_apar_sun = pot_par * (1. - (exp(- s->value[K] * s->value[LAI_GROUND_SUN]))) * s->value[DAILY_CANOPY_COVER_EXP];
-		pot_apar_shade = (pot_par - pot_apar_sun) * (1. - (exp(- s->value[K] * s->value[LAI_GROUND_SHADE]))) * s->value[DAILY_CANOPY_COVER_EXP];
+		pot_apar_sun = pot_par * (1. - (exp(- s->value[K] * s->value[LAI_SUN_EXP]))) * s->value[DAILY_CANOPY_COVER_EXP];
+		pot_apar_shade = (pot_par - pot_apar_sun) * (1. - (exp(- s->value[K] * s->value[LAI_SHADE_EXP]))) * s->value[DAILY_CANOPY_COVER_EXP];
 		pot_apar = pot_apar_sun + pot_apar_shade;
 
 		/* current light competition factor */

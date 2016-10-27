@@ -874,7 +874,7 @@ static int fill_cell_from_species(age_t* const a, const row_t* const row) {
 	a->species[a->species_count-1].value[BIOMASS_STEM_tDM] = row->ws;
 	a->species[a->species_count-1].value[BIOMASS_BRANCH_tDM] = row->wbb;
 	a->species[a->species_count-1].value[RESERVE_tDM] = row->wres;
-	a->species[a->species_count-1].value[LAI] = row->lai;
+	a->species[a->species_count-1].value[LAI_PROJ] = row->lai;
 
 	return 1;
 }

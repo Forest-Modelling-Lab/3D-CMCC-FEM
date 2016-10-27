@@ -38,7 +38,7 @@ void leaf_fall_deciduous(cell_t *const c, const int height, const int dbh, const
 
 		/* note: due to reduction during vegetative period for reduction in canopy cover MAX_LAI != PEAK_LAI */
 		/* assign LAI values at the beginning of the sigmoid shape */
-		s->value[MAX_LAI] = s->value[LAI];
+		s->value[MAX_LAI_PROJ] = s->value[LAI_PROJ];
 		senescenceDayOne = c->doy;
 	}
 
@@ -51,10 +51,10 @@ void leaf_fall_deciduous(cell_t *const c, const int height, const int dbh, const
 		s->value[C_FINEROOT_TO_RESERVE]= (s->value[FINE_ROOT_C] * fraction_to_retransl) /s->counter[DAY_FRAC_FOLIAGE_REMOVE];
 		logger(g_debug_log, "RETRANSL_C_FINEROOT_TO_RESERVE = %f\n", s->value[C_FINEROOT_TO_RESERVE]);
 
-		previousLai = s->value[LAI];
+		previousLai = s->value[LAI_PROJ];
 
 		/* sigmoid shape drives LAI reduction during leaf fall */
-		currentLai = MAX(0,s->value[MAX_LAI] / (1 + exp(-(s->counter[DAY_FRAC_FOLIAGE_REMOVE]/2.0 + senescenceDayOne -
+		currentLai = MAX(0,s->value[MAX_LAI_PROJ] / (1 + exp(-(s->counter[DAY_FRAC_FOLIAGE_REMOVE]/2.0 + senescenceDayOne -
 				c->doy)/(s->counter[DAY_FRAC_FOLIAGE_REMOVE] / (log(9.0 * s->counter[DAY_FRAC_FOLIAGE_REMOVE]/2.0 + senescenceDayOne) -
 						log(.11111111111))))));
 		logger(g_debug_log, "previousLai = %f\n", previousLai);

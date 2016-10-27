@@ -75,7 +75,7 @@ void canopy_temperature(cell_t *const c, const int layer, const int height, cons
 	gl_sh = gl_bl;
 
 	/* Canopy conductance to sensible heat */
-	gc_sh = gl_sh * s->value[LAI];
+	gc_sh = gl_sh * s->value[LAI_PROJ];
 
 	/* Canopy resistance to sensible heat */
 	ra = 1./gc_sh;
@@ -84,7 +84,7 @@ void canopy_temperature(cell_t *const c, const int layer, const int height, cons
 	gl_e_wv = gl_bl;
 
 	/* Canopy conductance to evaporated water vapor */
-	gc_e_wv = gl_e_wv * s->value[LAI];
+	gc_e_wv = gl_e_wv * s->value[LAI_PROJ];
 
 	/* Canopy resistance to vapour transport */
 	rc = 1./gc_e_wv;
