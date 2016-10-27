@@ -20,8 +20,6 @@ extern logger_t* g_debug_log;
 void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, const int dbh, const int age, const int species, const meteo_daily_t *const meteo_daily,
 		double Light_abs_frac, double Light_abs_frac_sun, double Light_abs_frac_shade, double Light_refl_par_frac, double Light_refl_sw_rad_canopy_frac)
 {
-	double leaf_cell_cover_eff;       /* effective fraction of leaf cover over the cell (ratio) */
-
 	species_t *s;
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
@@ -36,9 +34,9 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 	* apar_shade = apar- apar_sun;
 	*
 	* in 3D-CMCC FEM:
-	* apar_sun = par * (1 - (exp(- K * LAI_SUN)));
+	* apar_sun = par * (1 - (exp(- K * LAI_GROUND_SUN)));
 	* par_transm_sun  = par - apar_sun;
-	* apar_shade = par_transm_sun * (1 - (exp(- K * LAI_SHADE)));
+	* apar_shade = par_transm_sun * (1 - (exp(- K * LAI_GROUND_SHADE)));
 	* apar = apar_sun + apar_shade;
 	*
 	* then it consider that an amount of sunlit leaf are not completely outside the canopy
@@ -47,17 +45,6 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 
 	/***********************************************************************************************/
 
-	/* compute exposed canopy cover */
-	/* special case when LAI = < 1.0 */
-	/* note: 26 Ottobre 2016 */
-	if(s->value[LAI] < 1.0) leaf_cell_cover_eff = s->value[LAI] * s->value[CANOPY_SURFACE_COVER];
-	else leaf_cell_cover_eff = s->value[CANOPY_SURFACE_COVER];
-
-	/* check for the special case in which is allowed to have more 100% of grid cell covered */
-	if(leaf_cell_cover_eff > 1.0) leaf_cell_cover_eff = 1.0;
-	logger(g_debug_log, "single height class canopy cover = %g %%\n", leaf_cell_cover_eff*100.0);
-
-	/***********************************************************************************************/
 	/* light reflection, absorption and transmission */
 	logger(g_debug_log,"\n*Light reflection, absorption and transmission*\n");
 
@@ -66,15 +53,15 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 	logger(g_debug_log,"\n-PAR-\n");
 
 	/* compute reflected PAR */
-	s->value[PAR_REFL] = meteo_daily->par * Light_refl_par_frac * leaf_cell_cover_eff;
+	s->value[PAR_REFL] = meteo_daily->par * Light_refl_par_frac * s->value[DAILY_CANOPY_COVER_EXP];
 
 	/*assign to class PAR */
 	s->value[PAR] = meteo_daily->par - s->value[PAR_REFL];
 
 	/* compute absorbed and transmitted PAR for sun and shaded leaves */
-	s->value[APAR_SUN] = s->value[PAR] * Light_abs_frac_sun  * leaf_cell_cover_eff;
+	s->value[APAR_SUN] = s->value[PAR] * Light_abs_frac_sun * s->value[DAILY_CANOPY_COVER_EXP];
 	s->value[TRANSM_PAR_SUN] = s->value[PAR] - s->value[APAR_SUN];
-	s->value[APAR_SHADE] = s->value[TRANSM_PAR_SUN] * Light_abs_frac_shade * leaf_cell_cover_eff;
+	s->value[APAR_SHADE] = s->value[TRANSM_PAR_SUN] * Light_abs_frac_shade * s->value[DAILY_CANOPY_COVER_EXP];
 	s->value[TRANSM_PAR_SHADE] = s->value[TRANSM_PAR_SUN] - s->value[APAR_SHADE];
 
 	/* overall canopy */
@@ -101,7 +88,7 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 	logger(g_debug_log,"\n-Short Wave-\n");
 
 	/* compute reflected Short Wave */
-	s->value[SW_RAD_REFL] = meteo_daily->sw_downward_W * Light_refl_sw_rad_canopy_frac  * leaf_cell_cover_eff ;
+	s->value[SW_RAD_REFL] = meteo_daily->sw_downward_W * Light_refl_sw_rad_canopy_frac * s->value[DAILY_CANOPY_COVER_EXP] ;
 
 	/*assign to class Short Wave Radiation */
 	s->value[SW_RAD] = meteo_daily->sw_downward_W - s->value[SW_RAD_REFL];
@@ -109,7 +96,7 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 	/*compute absorbed and transmitted Short Wave for sun and shaded leaves*/
 	s->value[SW_RAD_ABS_SUN] = s->value[SW_RAD] * Light_abs_frac_sun /* * leaf_cell_cover_eff*/;
 	s->value[SW_RAD_TRANSM_SUN] = s->value[SW_RAD] - s->value[SW_RAD_ABS_SUN];
-	s->value[SW_RAD_ABS_SHADE] = s->value[SW_RAD_TRANSM_SUN] * Light_abs_frac_shade * leaf_cell_cover_eff;
+	s->value[SW_RAD_ABS_SHADE] = s->value[SW_RAD_TRANSM_SUN] * Light_abs_frac_shade * s->value[DAILY_CANOPY_COVER_EXP];
 	s->value[SW_RAD_TRANSM_SHADE] = s->value[SW_RAD_TRANSM_SUN] - s->value[SW_RAD_ABS_SHADE];
 
 	/* overall canopy */
@@ -136,15 +123,15 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 	logger(g_debug_log,"\n-PPFD-\n");
 
 	/* compute reflected PPFD */
-	s->value[PPFD_REFL] = meteo_daily->ppfd * Light_refl_par_frac * leaf_cell_cover_eff;
+	s->value[PPFD_REFL] = meteo_daily->ppfd * Light_refl_par_frac * s->value[DAILY_CANOPY_COVER_EXP];
 
 	/*assign to class PPFD */
 	s->value[PPFD] = meteo_daily->ppfd - s->value[PPFD_REFL];
 
 	/*compute absorbed and transmitted PPFD for sun and shaded leaves*/
-	s->value[PPFD_ABS_SUN] = s->value[PPFD] * Light_abs_frac_sun * leaf_cell_cover_eff;
+	s->value[PPFD_ABS_SUN] = s->value[PPFD] * Light_abs_frac_sun * s->value[DAILY_CANOPY_COVER_EXP];
 	s->value[PPFD_TRANSM_SUN] = s->value[PPFD] - s->value[PPFD_ABS_SUN];
-	s->value[PPFD_ABS_SHADE] = s->value[PPFD_TRANSM_SUN] * Light_abs_frac_shade * leaf_cell_cover_eff;
+	s->value[PPFD_ABS_SHADE] = s->value[PPFD_TRANSM_SUN] * Light_abs_frac_shade * s->value[DAILY_CANOPY_COVER_EXP];
 	s->value[PPFD_TRANSM_SHADE] = s->value[PPFD_TRANSM_SUN] - s->value[PPFD_ABS_SHADE];
 
 	/* overall canopy */
@@ -207,8 +194,6 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 	static double temp_ppfd_abs;                                                          /* temporary absorbed PPFD for layer */
 	static double temp_ppfd_refl;                                                         /* temporary reflected PPFD for layer */
 
-//	double leaf_cell_cover_eff;                                                           /* (ratio) fraction of square meter covered by leaf over the grid cell */
-
 	tree_layer_t *l;
 	//height_t *h;
 	species_t *s;
@@ -224,25 +209,13 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 
 	/***********************************************************************************************************/
 
-//	/* compute exposed canopy cover */
-//	/* special case when LAI = < 1.0 */
-//	/* note: 26 Ottobre 2016 */
-//	if(s->value[LAI] < 1.0) leaf_cell_cover_eff = s->value[LAI] * s->value[CANOPY_SURFACE_COVER];
-//	else leaf_cell_cover_eff = s->value[CANOPY_SURFACE_COVER];
-//
-//	/* check for the special case in which is allowed to have more 100% of grid cell covered */
-//	if( leaf_cell_cover_eff > 1.0 ) leaf_cell_cover_eff = 1.0;
-//	logger(g_debug_log, "single height class canopy cover = %g %%\n", leaf_cell_cover_eff*100.0);
-
-	/***********************************************************************************************************/
-
 	/* SHORT WAVE RADIATION FRACTIONS */
 	/* compute fractions of light intercepted, transmitted and reflected from the canopy */
 	/* fraction of light transmitted through the canopy */
 	/* note: 21 October 2016, following Duursma and Makela, "LIGHT INTERCEPTION OF NON-HOMOGENEOUS CANOPIES"
 	* TREE PHYSIOLOGY VOLUME 27, 2007; exp(- s->value[K] * (s->value[LAI]/leaf_cell_cover_eff))
 	* and Forrester et al, Forest Ecosystems,2014
-	* we currently use approach for homogeneous canopies that improves representation we canopy is not closed
+	* we currently use approach for homogeneous canopies that improves representation when canopy is not closed
 	*/
 	if ( s->value[LAI] )
 	{
@@ -309,7 +282,7 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 
 
 	//fixme set that if gapcover is bigger then 0.5 albedo should be considered also in dominated layer!!!!
-	//fixme following MAESPA (Duursma et al.,) and from Campbell&Norman (2000, p. 259) dominated layers should have just shaded leaves
+	//fixme following MAESPA (Duursma et al.,) and from Campbell & Norman (2000, p. 259) dominated layers should have just shaded leaves
 
 	/* RADIATION */
 	/*****************************************************************************************************************/

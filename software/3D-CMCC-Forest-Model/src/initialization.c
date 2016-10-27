@@ -285,7 +285,7 @@ void initialization_forest_class_C_biomass(cell_t *const c, const int height, co
 				/* convert to tons of C and to cell cell */
 				/* note: it uses canopy cover because computed from LAI */
 				//fixme it could be that canopy cover isn't initialized!!!!
-				s->value[LEAF_C] = s->value[LEAF_C] / 1000.0 * (s->value[CANOPY_COVER] * g_settings->sizeCell);
+				s->value[LEAF_C] = s->value[LEAF_C] / 1000.0 * (s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell);
 				logger(g_debug_log, "--Leaf carbon = %g tC/cell size\n", s->value[LEAF_C]);
 
 				/* Calculate projected LAI for sunlit and shaded canopy portions */
@@ -309,10 +309,10 @@ void initialization_forest_class_C_biomass(cell_t *const c, const int height, co
 			logger(g_debug_log, "\nNo LAI Data are available for model initialization \n");
 			logger(g_debug_log, "...Generating input LAI data from Leaf Biomass\n");
 
-			logger(g_debug_log, "CANOPY_COVER = %g\n", s->value[CANOPY_COVER]);
+			logger(g_debug_log, "CANOPY_COVER_PROJ = %g\n", s->value[CANOPY_COVER_PROJ]);
 
 			/* Calculate projected LAI for tot and for sunlit and shaded canopy portions*/
-			s->value[LAI] = ((s->value[LEAF_C] * 1000.0) * s->value[SLA_AVG])/(s->value[CANOPY_COVER] * g_settings->sizeCell);
+			s->value[LAI] = ((s->value[LEAF_C] * 1000.0) * s->value[SLA_AVG])/(s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell);
 			s->value[LAI_SUN] = 1.0 - exp(-s->value[LAI]);
 			s->value[LAI_SHADE] = s->value[LAI] - s->value[LAI_SUN];
 
