@@ -37,7 +37,7 @@
 #define STR(a)		#a
 #define CHECK_CONDITION(x,c) {																																\
 		if ( (x)c )		{																																	\
-			printf("\nerror: condition (%s %s) is true, value of %s is %g in %s on line %d\n", XSTR(x), XSTR(c), XSTR(x), (double)(x),  __FILE__, __LINE__);	\
+			logger_error(NULL,"\nerror: condition (%s %s) is true, value of %s is %g in %s on line %d\n", XSTR(x), XSTR(c), XSTR(x), (double)(x),  __FILE__, __LINE__);	\
 			exit(1);																																		\
 		}																																					\
 }
@@ -50,6 +50,7 @@ char* string_tokenizer(char *string, const char *delimiters, char **p);
 char* get_current_path(void);
 int file_get_rows_count(const char* const filename);
 unsigned int file_load_in_memory(const char* const filename, char** result);
+int file_copy(const char* const filename, const char* const path);
 int path_create(const char *const path);
 const char* datetime_current(void);
 void timer_init(void);

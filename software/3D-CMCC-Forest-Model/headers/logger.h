@@ -17,6 +17,7 @@ logger_t* logger_new(const char* const text, ...);
 #define logger_enable_std(p)	{if((p))(p)->std_output=1;}
 #define logger_disable_std(p)	{if((p))(p)->std_output=0;}
 void logger(logger_t *p, const char *text, ...);
+void logger_error(logger_t *p, const char *text, ...);
 void logger_close(logger_t* p);
 
 #endif /* LOGGER_H_ */

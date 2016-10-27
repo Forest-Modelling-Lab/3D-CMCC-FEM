@@ -15,6 +15,7 @@ void crown_allometry (cell_t *const c, const int height, const int dbh, const in
 {
 	int crown_form_factor;
 	double eff_canopy_cover;
+	double lateral_area;
 
 	height_t *h;
 	dbh_t *d;
@@ -112,7 +113,7 @@ void crown_allometry (cell_t *const c, const int height, const int dbh, const in
 
 	/* it considers crown projected area (at zenith angles) plus half of lateral area of a cylinder */
 	/* when canopy tends to closure the later part of the crown area that absorbs light tends to be reduced */
-	double lateral_area = ((s->value[CROWN_DIAMETER] * Pi * s->value[CROWN_HEIGHT]) / 2.) * (1. - eff_canopy_cover);
+	lateral_area = ((s->value[CROWN_DIAMETER] * Pi * s->value[CROWN_HEIGHT]) / 2.) * (1. - eff_canopy_cover);
 
 	/* Canopy cover able to absorb light (integrated all over all viewing angles) */
 	s->value[CANOPY_SURFACE_COVER] = ((s->value[CROWN_AREA] + lateral_area) * s->counter[N_TREE]) / g_settings->sizeCell ;

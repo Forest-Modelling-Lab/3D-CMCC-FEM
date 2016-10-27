@@ -24,6 +24,7 @@ extern soil_settings_t *g_soil_settings;
 extern topo_t *g_topo;
 extern char *g_sz_program_path;
 extern char *g_sz_parameterization_path;
+extern char g_sz_parameterization_output_path[];
 extern int g_year_start_index;
 
 /* ---------- dataset stuff ---------- */
@@ -1014,6 +1015,10 @@ static int fill_cell(matrix_t* const m, row_t* const row)
 	return fill_cell_from_heights(&m->cells[index], row);
 }
 
+static int species_copy_file(const char* const path, const char* const filename) {
+	return file_copy(filename, path);
+}
+
 int fill_species_from_file(species_t *const s) {
 #define BUFFER_SIZE	256
 	char *p;
@@ -1115,6 +1120,12 @@ int fill_species_from_file(species_t *const s) {
 	}
 	free(species_flags);
 	fclose(f);
+
+	/* copy file */
+	if ( ! species_copy_file(g_sz_parameterization_output_path, filename) ) {
+		printf("error: unable to copy species to %s\n", g_sz_parameterization_output_path);
+		return 0;
+	}
 
 	return 1;
 #undef BUFFER_SIZE

@@ -8,8 +8,6 @@
 #include "logger.h"
 #include "settings.h"
 
-extern settings_t* g_settings;
-
 logger_t* logger_new(const char* const path, ...) {
 #define BUFFER_SIZE	1024
 	char buffer[BUFFER_SIZE];
@@ -54,9 +52,26 @@ void logger(logger_t *p, const char *text, ...) {
 	vsnprintf(buffer, LOGGER_BUFFER_SIZE, text, va);
 	va_end(va);
 
-	if ( (p && p->std_output) || (g_settings && g_settings->screen_output) ) {
+	if ( p && p->std_output ) {
 		fputs(buffer, stdout);
 	}
+
+	if ( p && p->file_output && p->f ) {
+		fputs(buffer, p->f);
+	}
+#undef LOGGER_BUFFER_SIZE
+}
+
+void logger_error(logger_t *p, const char *text, ...) {
+#define LOGGER_BUFFER_SIZE	4096
+	char buffer[LOGGER_BUFFER_SIZE];
+	va_list va;
+
+	va_start(va, text);
+	vsnprintf(buffer, LOGGER_BUFFER_SIZE, text, va);
+	va_end(va);
+
+	fputs(buffer, stdout);
 
 	if ( p && p->file_output && p->f ) {
 		fputs(buffer, p->f);

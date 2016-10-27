@@ -85,10 +85,9 @@ char 	*g_sz_program_path = NULL
 		;
 
 int g_year_start_index;
+char g_sz_parameterization_output_path[256];
 
 static int years_of_simulation;	// default is none
-
-
 /* strings */
 const char sz_launched[] = "\n"PROGRAM_NAME"\n"
 		"compiled using "COMPILER" on "__DATE__" at "__TIME__"\n"
@@ -225,7 +224,31 @@ static void show_usage(void)
 	puts(msg_usage);
 }
 
-static int log_start(const char* const sitename)
+static int parameterization_output_create(const char* const sz_date) {
+	int i;
+
+	assert(sz_date);
+
+	i = strlen(g_sz_output_path);
+	if ( ('/' == g_sz_output_path[i-1]) || ('\\' == g_sz_output_path[i-1]) ) {
+		i = 1;
+	} else {
+		i = 0;
+	}
+	
+	/* create parameterization folder */
+	sprintf(g_sz_parameterization_output_path, "%s%soutput_%s%sparameterization%s"
+												, g_sz_output_path
+												, i ? "" : FOLDER_DELIMITER
+												, sz_date
+												, FOLDER_DELIMITER
+												, FOLDER_DELIMITER
+	);
+
+	return path_create(g_sz_parameterization_output_path);
+}
+
+static int log_start(const char* const sz_date, const char* const sitename)
 {
 	char *p;
 	char buffer[128];	/* should be enough */
@@ -258,23 +281,23 @@ static int log_start(const char* const sitename)
 
 	/* co2_fixed */
 	switch ( g_settings->CO2_fixed ) {
-	case CO2_FIXED_OFF:
-		p = "OFF";
-		break;
+		case CO2_FIXED_OFF:
+			p = "OFF";
+			break;
 
-	case CO2_FIXED_ON:
-		p = "ON";
-		break;
+		case CO2_FIXED_ON:
+			p = "ON";
+			break;
 
-	case CO2_FIXED_VAR:
-		p = "VAR";
-		break;
+		case CO2_FIXED_VAR:
+			p = "VAR";
+			break;
 
-	default:
-		puts("bad CO2_fixed value in settings file!\n");
-		return 0;
+		default:
+			puts("bad CO2_fixed value in settings file!\n");
+			return 0;
 	}
-	len += sprintf(buffer+len, "_CO2_fixed_%s", p);
+	len += sprintf(buffer+len, "_CO2_%s", p);
 
 	/* management */
 	if ( g_settings->management )
@@ -328,7 +351,7 @@ static int log_start(const char* const sitename)
 	/* extension */
 	sprintf(buffer+len, ".txt");
 
-	/* create log files */
+	/* create log files and parameterization folder */
 	{
 		int i;
 		int flag;
@@ -363,14 +386,14 @@ static int log_start(const char* const sitename)
 		for ( i = 0 ; i < 5; ++i ) {
 			if ( log_flag[i] ) {
 				*logs[i] = logger_new("%s%soutput_%s%s%s%s%s%s"
-						, g_sz_output_path ? g_sz_output_path : ""
-								, flag ? "" : FOLDER_DELIMITER
-								, date
-								, FOLDER_DELIMITER
-								, log_name[i]
-								, FOLDER_DELIMITER
-								, log_name[i]
-								, buffer
+										, g_sz_output_path
+										, flag ? "" : FOLDER_DELIMITER
+										, date
+										, FOLDER_DELIMITER
+										, log_name[i]
+										, FOLDER_DELIMITER
+										, log_name[i]
+										, buffer
 				);
 				if ( ! *logs[i] ) {
 					printf("Unable to create %s log!\n\n",log_name[i]);
@@ -379,7 +402,7 @@ static int log_start(const char* const sitename)
 			}
 		}
 	}
-
+		
 	/* disable screen output when "off" */
 	if ( ! g_settings->screen_output ) { 
 		logger_disable_std(g_debug_log);
@@ -648,6 +671,7 @@ static int parse_args(int argc, char *argv[])
 }
 
 int main(int argc, char *argv[]) {
+	char sz_date[32]; // should be enough
 	char temp[256];
 	int ret;
 	int year;
@@ -672,6 +696,21 @@ int main(int argc, char *argv[]) {
 	/* start timer */
 	timer_init();
 	start_timer = timer_get();
+
+	/* get current date */
+	{
+		struct tm* ptm;
+		time_t t;
+
+		/* get current date */
+		time(&t);
+		ptm = gmtime(&t);
+		sprintf(sz_date, "%04d_%s_%02d"
+					, ptm->tm_year+1900
+					, szMonth[ptm->tm_mon]
+					, ptm->tm_mday
+		);
+	}
 
 	/* get program path */
 	g_sz_program_path = get_current_path();
@@ -701,6 +740,11 @@ int main(int argc, char *argv[]) {
 	if ( g_sz_input_path ) {
 		int len = strlen(g_sz_input_path);
 		flag = (('/' == g_sz_input_path[len-1]) || ('\\' == g_sz_input_path[len-1]));
+	}
+
+	if ( ! parameterization_output_create(sz_date) ) {
+		puts("Unable to create parameterization output path\n");
+		return 0;
 	}
 
 	/* import output vars file ? */
@@ -779,7 +823,7 @@ int main(int argc, char *argv[]) {
 		logger(g_debug_log, "input_met_path = %s\n", g_sz_input_met_file);
 
 		/* import soil values */
-		logger(g_debug_log, "importing soil settings...");
+		logger_error(g_debug_log, "importing soil settings...");
 		if ( g_sz_input_path ) {
 			strcpy(temp, g_sz_input_path);
 			if ( ! flag ) strcat(temp, FOLDER_DELIMITER);
@@ -791,11 +835,11 @@ int main(int argc, char *argv[]) {
 		if ( ! ret ) {
 			goto err;
 		}
-		logger(g_debug_log, "ok\n");
+		logger_error(g_debug_log, "ok\n");
 
 		/* only for first cell */
 		if ( 0 == cell ) {
-			if ( ! log_start(g_soil_settings->sitename) ) {
+			if ( ! log_start(sz_date, g_soil_settings->sitename) ) {
 				goto err;
 			}
 		}
@@ -804,12 +848,12 @@ int main(int argc, char *argv[]) {
 				IS_INVALID_VALUE(g_soil_settings->values[SOIL_CLAY_PERC])||
 				IS_INVALID_VALUE(g_soil_settings->values[SOIL_SILT_PERC])||
 				IS_INVALID_VALUE(g_soil_settings->values[SOIL_DEPTH]) ) {
-			puts("NO SOIL DATA AVAILABLE");
+			logger_error(g_debug_log, "NO SOIL DATA AVAILABLE");
 			goto err;
 		}
 
 		/* import topo values */
-		logger(g_debug_log, "importing topo settings...");
+		logger_error(g_debug_log, "importing topo settings...");
 		if ( g_sz_input_path ) {
 			strcpy(temp, g_sz_input_path);
 			if ( ! flag ) strcat(temp, FOLDER_DELIMITER);
@@ -821,7 +865,7 @@ int main(int argc, char *argv[]) {
 		if ( ! ret ) {
 			goto err;
 		}
-		logger(g_debug_log, "ok\n");
+		logger_error(g_debug_log, "ok\n");
 
 		/* check hemisphere */
 		if ( g_soil_settings->values[SOIL_LAT] > 0 ) {
@@ -830,7 +874,7 @@ int main(int argc, char *argv[]) {
 			matrix->cells[cell].north = 1;
 		}
 
-		logger(g_debug_log, "importing met data...");
+		logger_error(g_debug_log, "importing met data...");
 		if ( g_sz_input_path ) {
 			strcpy(temp, g_sz_input_path);
 			if ( ! flag ) strcat(temp, FOLDER_DELIMITER);
@@ -840,7 +884,7 @@ int main(int argc, char *argv[]) {
 			matrix->cells[cell].years = yos_import(g_sz_input_met_file, &years_of_simulation, matrix->cells[cell].x, matrix->cells[cell].y);
 		}
 		if ( ! matrix->cells[cell].years ) goto err;
-		logger(g_debug_log, "ok\n");
+		logger_error(g_debug_log, "ok\n");
 
 		/* set start year index */
 		if ( -1 == g_year_start_index ) {
@@ -854,7 +898,7 @@ int main(int argc, char *argv[]) {
 				}
 			}
 			if ( -1 == g_year_start_index ) {
-				logger(g_debug_log, "start year (%d) not found. range is %d-%d\n"
+				logger_error(g_debug_log, "start year (%d) not found. range is %d-%d\n"
 												, g_settings->year_start
 												, matrix->cells[0].years[0].year
 												, matrix->cells[0].years[years_of_simulation-1].year
@@ -867,7 +911,7 @@ int main(int argc, char *argv[]) {
 			for ( i = 0; i < years_of_simulation; ++i ) {
 				if ( g_settings->year_end == matrix->cells[0].years[i].year ) {
 					if ( g_year_start_index > i ) {
-						logger(g_debug_log, "start year (%d) cannot be > end year (%d)\n"
+						logger_error(g_debug_log, "start year (%d) cannot be > end year (%d)\n"
 												, g_settings->year_start
 												, g_settings->year_end
 						);
@@ -878,7 +922,7 @@ int main(int argc, char *argv[]) {
 				}
 			}
 			if ( -1 == ii ) {
-				logger(g_debug_log, "end year (%d) not found. range is %d-%d\n"
+				logger_error(g_debug_log, "end year (%d) not found. range is %d-%d\n"
 												, g_settings->year_end
 												, matrix->cells[0].years[0].year
 												, matrix->cells[0].years[years_of_simulation-1].year
@@ -900,7 +944,7 @@ int main(int argc, char *argv[]) {
 			int rows_count = matrix->cells_count*years_of_simulation*366*output_vars->daily_vars_count;
 			output_vars->daily_vars_value = malloc(rows_count*sizeof*output_vars->daily_vars_value);
 			if ( ! output_vars->daily_vars_value ) {
-				logger(g_debug_log, sz_err_out_of_memory);
+				logger_error(g_debug_log, sz_err_out_of_memory);
 				goto err;
 			}
 			for ( ii = 0; ii < rows_count; ++ii ) {
@@ -914,7 +958,7 @@ int main(int argc, char *argv[]) {
 			int rows_count = matrix->cells_count*years_of_simulation*12*output_vars->monthly_vars_count;
 			output_vars->monthly_vars_value = malloc(rows_count*sizeof*output_vars->monthly_vars_value);
 			if ( ! output_vars->monthly_vars_value ) {
-				logger(g_debug_log, sz_err_out_of_memory);
+				logger_error(g_debug_log, sz_err_out_of_memory);
 				goto err;
 			}
 			for ( ii = 0; ii < rows_count; ++ii ) {
@@ -928,7 +972,7 @@ int main(int argc, char *argv[]) {
 			int rows_count = matrix->cells_count*years_of_simulation*output_vars->yearly_vars_count;
 			output_vars->yearly_vars_value = malloc(rows_count*sizeof*output_vars->yearly_vars_value);
 			if ( ! output_vars->yearly_vars_value ) {
-				logger(g_debug_log, sz_err_out_of_memory);
+				logger_error(g_debug_log, sz_err_out_of_memory);
 				goto err;
 			}
 			for ( ii = 0; ii < rows_count; ++ii ) {
@@ -1071,7 +1115,7 @@ int main(int argc, char *argv[]) {
 					/* run for soil model */
 					if ( !Soil_model_daily(matrix, cell, day, month, year) )
 					{
-						logger(g_debug_log, "soil model daily failed!!!");
+						logger_error(g_debug_log, "soil model daily failed!!!");
 					}
 					else
 					{
@@ -1081,7 +1125,7 @@ int main(int argc, char *argv[]) {
 					/* run for cell model */
 					if ( !Cell_model_daily(matrix, cell, day, month, year) )
 					{
-						logger(g_debug_log, "cell model daily failed!!!");
+						logger_error(g_debug_log, "cell model daily failed!!!");
 					}
 					else
 					{
@@ -1314,7 +1358,7 @@ int main(int argc, char *argv[]) {
 	/* timer */
 	end_timer = timer_get();
 	timer = end_timer - start_timer;
-	printf("%.2f secs / %.2f mins / %.2f hours elapsed\n", timer, timer / 60.0, timer / 3600.0);
+	logger_error(g_debug_log, "%.2f secs / %.2f mins / %.2f hours elapsed\n", timer, timer / 60.0, timer / 3600.0);
 
 	return prog_ret;
 }

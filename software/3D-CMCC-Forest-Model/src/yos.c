@@ -326,8 +326,7 @@ static int yos_from_arr(double *const values, const int rows_count, const int co
 		/* remove date, month and year from columns count */
 		flag = malloc((columns_count-3)*sizeof*flag);
 		if ( ! flag ) {
-			//logger(g_debug_log, sz_err_out_of_memory);
-			puts(sz_err_out_of_memory);
+			logger_error(g_debug_log, sz_err_out_of_memory);
 			free(yos);
 			return 0;
 		}
@@ -349,16 +348,14 @@ static int yos_from_arr(double *const values, const int rows_count, const int co
 
 		/* check for missing vars */
 		if ( flag[VPD_F-3] && flag[RH_F-3] ) {
-			//logger(g_debug_log, "VPD and RH columns are missing!\n");
-			puts("VPD and RH columns are missing!");
+			logger_error(g_debug_log, "VPD and RH columns are missing!\n");
 			free(flag);
 			free(yos);
 			return 0;
 		}
 
 		if ( flag[TA_F-3] && flag[TMIN-3] && flag[TMAX-3] ) {
-			//logger(g_debug_log, "TA, TMIN and TMAX columns are missing!\n");
-			puts("TA, TMIN and TMAX columns are missing!");
+			logger_error(g_debug_log, "TA, TMIN and TMAX columns are missing!\n");
 			free(flag);
 			free(yos);
 			return 0;
@@ -398,8 +395,7 @@ static int yos_from_arr(double *const values, const int rows_count, const int co
 	for ( row = 0; row < rows_count; ++row ) {
 		year = (int)values[VALUE_AT(row, YEAR)];
 		if ( ! year ) {
-			puts("year cannot be zero!");
-			///logger(g_debug_log, "year cannot be zero!\n");
+			logger_error(g_debug_log, "year cannot be zero!\n");
 			free(yos);
 			return 0;
 		}
@@ -427,7 +423,7 @@ static int yos_from_arr(double *const values, const int rows_count, const int co
 			yos_no_leak = realloc(yos, (*yos_count+1)*sizeof*yos_no_leak);
 			if ( ! yos_no_leak )
 			{
-				puts(sz_err_out_of_memory);
+				logger_error(g_debug_log, sz_err_out_of_memory);
 				free(yos);
 				return 0;
 			}
@@ -443,8 +439,7 @@ static int yos_from_arr(double *const values, const int rows_count, const int co
 		yos[*yos_count-1].m[month].d[day].n_days = day+1;
 		if (yos[*yos_count-1].m[month].d[day].n_days > YOS_DAYS_COUNT)
 		{
-			//logger(g_debug_log, "ERROR IN N_DAYS DATA!!\n");
-			puts("ERROR IN N_DAYS DATA!!");
+			logger_error(g_debug_log, "ERROR IN N_DAYS DATA!!\n");
 			free(yos);
 			return 0;
 		}
@@ -896,7 +891,7 @@ static int import_nc(const char* const filename, yos_t** pyos, int* const yos_co
 	/* check if we have all dimensions */
 	for ( i = 0; i < DIMS_COUNT; ++i ) {
 		if ( -1 == dims_size[i] ) {
-			printf("dimension %s not found!\n", sz_dims[i]);
+			logger_error(g_debug_log, "dimension %s not found!\n", sz_dims[i]);
 			nc_close(id_file);
 			return 0;
 		}
@@ -904,7 +899,7 @@ static int import_nc(const char* const filename, yos_t** pyos, int* const yos_co
 
 	/* check x and y */
 	if( (dims_size[X_DIM] != 1) || (dims_size[Y_DIM] != 1) ) {
-		puts("x and y must be 1!");
+		logger_error(g_debug_log, "x and y must be 1!");
 		nc_close(id_file);
 		return 0;
 	}
@@ -912,7 +907,7 @@ static int import_nc(const char* const filename, yos_t** pyos, int* const yos_co
 	/* alloc memory for int values */
 	i_values = malloc(dims_size[ROWS_DIM]*sizeof*values);
 	if ( ! i_values ) {
-		puts(sz_err_out_of_memory);
+		logger_error(g_debug_log, sz_err_out_of_memory);
 		nc_close(id_file);
 		return 0;
 	}
@@ -921,7 +916,7 @@ static int import_nc(const char* const filename, yos_t** pyos, int* const yos_co
 	/* please note that we alloc double for year,month,day too */
 	values = malloc(dims_size[ROWS_DIM]*MET_COLUMNS_COUNT*sizeof*values);
 	if ( ! values ) {
-		puts(sz_err_out_of_memory);
+		logger_error(g_debug_log, sz_err_out_of_memory);
 		free(i_values);
 		nc_close(id_file);
 		return 0;
@@ -1064,7 +1059,7 @@ static int import_nc(const char* const filename, yos_t** pyos, int* const yos_co
 	free(values);
 	free(i_values);
 	if ( ret ) {
-		puts(nc_strerror(ret));
+		logger_error(g_debug_log, nc_strerror(ret));
 		ret = 1;
 	}
 	return ! ret;
@@ -1149,8 +1144,7 @@ static int import_lst(const char *const filename, yos_t** p_yos, int *const yos_
 	/* open lst file */
 	f = fopen(filename, "r");
 	if ( ! f ) {
-		//logger(g_debug_log, "unable to open met data file, problem in open list file !\n");
-		puts("unable to open met data file, problem in open list file !");
+		logger_error(g_debug_log, "unable to open met data file, problem in open list file !\n");
 		return 0;
 	}
 
@@ -1264,7 +1258,7 @@ static int import_lst(const char *const filename, yos_t** p_yos, int *const yos_
 			/* alloc memory for double values */
 			values = malloc(rows_count*MET_COLUMNS_COUNT*sizeof*values);
 			if ( ! values ) {
-				puts(sz_err_out_of_memory);
+				logger_error(g_debug_log, sz_err_out_of_memory);
 				nc_close(id_file);
 				fclose(f);
 				return 0;
@@ -1276,7 +1270,7 @@ static int import_lst(const char *const filename, yos_t** p_yos, int *const yos_
 			/* alloc memory for float values */
 			f_values = malloc(rows_count*sizeof*f_values);
 			if ( ! f_values ) {
-				puts(sz_err_out_of_memory);
+				logger_error(g_debug_log, sz_err_out_of_memory);
 				nc_close(id_file);
 				fclose(f);
 				free(values);
@@ -1585,7 +1579,7 @@ static int import_lst(const char *const filename, yos_t** p_yos, int *const yos_
 		sprintf(buffer, "debug_file_%g_%g_%d_%d.txt", lat, lon, x_cell, y_cell);
 		f = fopen(buffer, "w");
 		if ( ! f ) {
-			puts("unable to create output file!");
+			logger_error(g_debug_log, "unable to create output file!");
 			free(values);
 			return 0;
 		}
@@ -1621,8 +1615,7 @@ static int import_lst(const char *const filename, yos_t** p_yos, int *const yos_
 	return i;
 
 quit:
-	//logger(g_debug_log, nc_strerror(ret));
-	puts(nc_strerror(ret));
+	logger_error(g_debug_log, nc_strerror(ret));
 quit_no_nc_err:
 	nc_close(id_file);
 	if ( f_values ) free(f_values);
@@ -1661,8 +1654,7 @@ static int import_txt(const char *const filename, yos_t** p_yos, int *const yos_
 	// get rows count
 	rows_count = file_get_rows_count(filename);
 	if ( rows_count <= 0 ) {
-		//logger(g_debug_log, "unable to open met data file, problems in rows !\n");
-		puts("unable to open met data file, problems in rows !");
+		logger_error(g_debug_log, "unable to open met data file, problems in rows !\n");
 		return 0;
 	}
 
@@ -1672,7 +1664,7 @@ static int import_txt(const char *const filename, yos_t** p_yos, int *const yos_
 	// alloc memory for values
 	values = malloc(rows_count*MET_COLUMNS_COUNT*sizeof*values);
 	if ( ! values ) {
-		puts(sz_err_out_of_memory);
+		logger_error(g_debug_log, sz_err_out_of_memory);
 		return 0;
 	}
 
@@ -1685,8 +1677,7 @@ static int import_txt(const char *const filename, yos_t** p_yos, int *const yos_
 	f = fopen(filename, "r");
 	if ( !f )
 	{
-		//logger(g_debug_log, "unable to open met data file, problems in filename !\n");
-		puts("unable to open met data file, problems in filename !");
+		logger_error(g_debug_log, "unable to open met data file, problems in filename !\n");
 		free(values);
 		return 0;
 	}
@@ -1694,8 +1685,7 @@ static int import_txt(const char *const filename, yos_t** p_yos, int *const yos_
 	// get header
 	if ( ! fgets(buffer, BUFFER_SIZE, f) )
 	{
-		//logger(g_debug_log, "empty met data file ?\n");
-		puts("empty met data file ?");
+		logger_error(g_debug_log, "empty met data file ?\n");
 		free(values);
 		fclose(f);
 		return 0;
@@ -1769,7 +1759,7 @@ static int import_txt(const char *const filename, yos_t** p_yos, int *const yos_
 
 	if ( (! no_year_column && (YEAR != columns[YEAR])) || (MONTH-no_year_column != columns[MONTH]) || (DAY-no_year_column != columns[DAY]) )
 	{
-		puts("date must be on first columns!\n\n");
+		logger_error(g_debug_log, "date must be on first columns!\n\n");
 		free(values);
 		fclose(f);
 		return 0;
@@ -1795,8 +1785,7 @@ static int import_txt(const char *const filename, yos_t** p_yos, int *const yos_
 			continue;
 		}
 		if ( ++current_row > rows_count ) {
-			puts("too many rows found!");
-			//logger(g_debug_log, "too many rows found!");
+			logger_error(g_debug_log, "too many rows found!");
 			free(values);
 			fclose(f);
 			return 0;
@@ -1853,7 +1842,7 @@ static int import_txt(const char *const filename, yos_t** p_yos, int *const yos_
 		int row;
 		f = fopen("debug_import_file_txt.csv", "w");
 		if ( ! f ) {
-			puts("unable to create output file!");
+			logger_error(g_debug_log, "unable to create output file!");
 			free(values);
 			return 0;
 		}
@@ -1950,8 +1939,7 @@ yos_t* yos_import(const char *const file, int *const yos_count, const int x, con
 
 	temp = string_copy(file);
 	if ( ! temp ) {
-		//logger(g_debug_log, sz_err_out_of_memory);
-		puts(sz_err_out_of_memory);
+		logger_error(g_debug_log, sz_err_out_of_memory);
 		return NULL;
 	}
 
@@ -2005,8 +1993,7 @@ yos_t* yos_import(const char *const file, int *const yos_count, const int x, con
 			int err;
 
 			if ( ! g_sz_co2_conc_file ) {
-				//logger(g_debug_log, "co2 concentration file not specified!");
-				puts("co2 concentration file not specified!");
+				logger_error(g_debug_log, "co2 concentration file not specified!");
 				free(yos);
 				return NULL;
 			}
@@ -2014,8 +2001,7 @@ yos_t* yos_import(const char *const file, int *const yos_count, const int x, con
 			for ( i = 0; i < *yos_count; ++i ) {
 				yos[i].co2Conc = get_co2_conc(yos[i].year, &err);
 				if ( err ) {
-					//logger(g_debug_log, "unable to get co2 concentration for year %d\n", yos[i].year);
-					printf("unable to get co2 concentration for year %d\n", yos[i].year);
+					logger_error(g_debug_log, "unable to get co2 concentration for year %d\n", yos[i].year);
 					free(yos);
 					return NULL;
 				}

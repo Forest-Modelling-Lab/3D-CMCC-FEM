@@ -252,6 +252,44 @@ int file_get_rows_count(const char* const filename) {
 	return rows_count;
 }
 
+int file_copy(const char* const filename, const char* const path) {
+	char *p;
+	char *p2;
+	int i;
+	char buffer[256];
+
+	assert(filename && path);
+
+	p = strrchr(filename, '\\');
+	p2 = strrchr(filename, '/');
+	if ( ! p || (p2 && (p2 < p)) ) {
+		p = p2;
+	}
+	if ( ! p ) p = p2;
+	if ( p ) ++p;
+
+	i = strlen(path);
+	if ( ('/' == path[i-1]) || ('\\' == path[i-1]) ) {
+		i = 1;
+	} else {
+		i = 0;
+	}
+#ifdef _WIN32
+	sprintf(buffer, "%s%s%s", path
+							, i ? "" : FOLDER_DELIMITER
+							, p
+	);
+	return (int)CopyFile(filename, buffer, FALSE);
+#else
+	sprintf(buffer, "cp %s %s%s%s", path
+									, i ? "" : FOLDER_DELIMITER
+									, filename 
+	);
+	i = system(buffer);
+	return i ? 0 : 1;
+#endif
+}
+
 int path_create(const char *const path) {
 #ifdef _WIN32
 	char folder[MAX_PATH] = { 0 };
