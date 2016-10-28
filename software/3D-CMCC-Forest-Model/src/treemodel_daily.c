@@ -95,6 +95,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	/* counter day of the year */
 	if( !day && !month )c->doy = 1;
 	else ++c->doy;
+
 	/* counter day of simulation */
 	if( !day && !month && !year )c->dos = 1;
 	else ++c->dos;
@@ -294,7 +295,8 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							/* last day of the year */
 							if ( c->doy == ( IS_LEAP_YEAR( c->years[year].year ) ? 366 : 365) )
 							{
-								logger(g_debug_log, "*****END OF YEAR %d ******\n", c->years[year].year);
+								logger(g_debug_log, "*****END OF YEAR %d %d %d******\n", c->years[year].year);
+
 
 								/************************************************************************************************************************************/
 								/* MORTALITY and RENOVATION*/
