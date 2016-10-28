@@ -452,7 +452,7 @@ int daily_forest_structure (cell_t *const c)
 	int age;
 	int species;
 
-	int layer_height_class_counter;
+	int layer_height_class_counter = 0.;
 
 	tree_layer_t *l;
 	height_t *h;
@@ -510,14 +510,14 @@ int daily_forest_structure (cell_t *const c)
 	}
 
 	/*****************************************************************************/
-//FIXME TO BE IMPLEMENTED ON DAY...
-//	/* compute TREE HEIGHT VERTICAL MODIFIER */
+	//FIXME TO BE CHECKED
+	/* compute TREE HEIGHT VERTICAL MODIFIER */
 //	for (layer = c->tree_layers_count - 1; layer >= 0; --layer)
 //	{
 //		l = &c->tree_layers[layer];
 //
 //		/* only if more than one layer is present */
-//		if ( c->tree_layers_count > 1. )
+//		if ( c->tree_layers_count > 0. )
 //		{
 //			/* following Wallace et al., 1991, Cannell and Grace 1993 */
 //			/* note: it considers differences in average values of tree height among all over the layers */
@@ -536,7 +536,7 @@ int daily_forest_structure (cell_t *const c)
 //		{
 //			/* no vertical competition */
 //			l->layer_tree_height_modifier = 1.;
-//			logger(g_debug_log, "\n-Layer %d light vertical modifier = %g\n", layer, l->layer_tree_height_modifier);
+//			logger(g_debug_log, "\n-Layer %d light vertical modifier = %g\n", layer, l->layer_tree_height_modifier);getchar();
 //		}
 //	}
 
@@ -582,6 +582,9 @@ int daily_forest_structure (cell_t *const c)
 							if( s->value[LAI_PROJ] < 1.0 ) s->value[DAILY_CANOPY_COVER_EXP] = s->value[LAI_PROJ] * s->value[CANOPY_COVER_EXP];
 							else s->value[DAILY_CANOPY_COVER_EXP] = s->value[CANOPY_COVER_EXP];
 
+							/* integrate with layer TREE HEIGHT MODIFIER */
+							//s->value[DAILY_CANOPY_COVER_EXP] *=
+
 							/* canopy cannot absorb more than 100% of incoming flux (e.g. light) */
 							if( s->value[DAILY_CANOPY_COVER_EXP] > 1. ) s->value[DAILY_CANOPY_COVER_EXP] = 1.;
 							logger(g_debug_log, "%s height class canopy exposed cover = %g %%\n", s->name, s->value[CANOPY_COVER_EXP]*100.0);
@@ -598,6 +601,9 @@ int daily_forest_structure (cell_t *const c)
 							/* special case when LAI = < 1.0 (e.g, beginning of growing season) */
 							if( s->value[LAI_PROJ] < 1.0 ) s->value[DAILY_CANOPY_COVER_EXP] = s->value[LAI_PROJ] * s->value[CANOPY_COVER_EXP];
 							else s->value[DAILY_CANOPY_COVER_EXP] = s->value[CANOPY_COVER_EXP];
+
+							/* integrate with layer TREE HEIGHT MODIFIER */
+							//s->value[DAILY_CANOPY_COVER_EXP] *=
 
 							/* canopy cannot absorb more than 100% of incoming flux (e.g. light) */
 							if( s->value[DAILY_CANOPY_COVER_EXP] > 1. ) s->value[DAILY_CANOPY_COVER_EXP] = 1.;
