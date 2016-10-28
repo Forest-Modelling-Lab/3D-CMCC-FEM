@@ -16,8 +16,6 @@ extern logger_t* g_daily_log;
 extern logger_t* g_monthly_log;
 extern logger_t* g_annual_log;
 extern logger_t* g_soil_log;
-//extern char *g_sz_input_file;
-//extern char *g_sz_parameterization_path;
 extern char *g_sz_dataset_file;
 extern char *g_sz_soil_file;
 extern char *g_sz_input_met_file;
@@ -306,6 +304,12 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 		{
 			logger(g_daily_log, sz_launched, netcdf_get_version(), datetime_current());
 			write_paths(g_daily_log);
+			if ( g_daily_log )
+			{
+				const char* p;
+				p = file_get_name_only(g_daily_log->filename);
+				logger(g_daily_log, "output file = %s\n", p);
+			}
 			print_model_settings(g_daily_log);
 		}
 	}
@@ -537,6 +541,12 @@ void EOM_print_cumulative_balance_cell_level(cell_t *const c, const int month, c
 		{
 			logger(g_monthly_log, sz_launched, netcdf_get_version(), datetime_current());
 			write_paths(g_monthly_log);
+			if ( g_monthly_log )
+			{
+				const char* p;
+				p = file_get_name_only(g_monthly_log->filename);
+				logger(g_monthly_log, "output file = %s\n", p);
+			}
 			print_model_settings(g_monthly_log);
 		}
 	}

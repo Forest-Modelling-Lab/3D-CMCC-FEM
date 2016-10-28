@@ -409,8 +409,10 @@ static int log_start(const char* const sz_date, const char* const sitename)
 
 	/* show paths */
 	logger(g_debug_log,"\nFILE NAMES AND PATHS\n");
-	if ( g_sz_input_path )		
+	if ( g_sz_input_path )
+	{
 		logger(g_debug_log, msg_input_path, g_sz_input_path);
+	}
 	logger(g_debug_log, msg_parameterization_path, g_sz_parameterization_path);
 	logger(g_debug_log, msg_soil_file, g_sz_soil_file);
 	logger(g_debug_log, msg_topo_file, g_sz_topo_file);
@@ -459,11 +461,35 @@ char* path_copy(const char *const s) {
 	return NULL;
 }
 
+char* concatenate_path(char* s1, char* s2) {
+	char *p;
+	int i;
+	int ii;
+	int flag;
+
+	assert(s1 && s2);
+
+	i = strlen(s1);
+	flag = ! (('\\' == s1[i-1]) || ('/' == s1[i-1]));
+	ii = strlen(s2);
+
+	i += flag + ii + 1;
+
+	p = malloc(i*sizeof*p);
+	if ( p ) {
+		sprintf(p, "%s%s%s", s1
+							, flag ? FOLDER_DELIMITER : ""
+							, s2);
+	}
+	return p;
+}
+
 /*
 	parse and check passed args
  */
 static int parse_args(int argc, char *argv[])
 {
+	char* p;
 	int i;
 
 	g_sz_input_path = NULL;
@@ -640,31 +666,87 @@ static int parse_args(int argc, char *argv[])
 	if ( ! g_sz_dataset_file ) {
 		puts("dataset filename not specified!");
 		goto err_show_usage;
+	} else if ( g_sz_input_path ) {
+		p = concatenate_path(g_sz_input_path, g_sz_dataset_file); 
+		if ( ! p )
+		{
+			puts(sz_err_out_of_memory);
+			goto err;
+		}
+		free(g_sz_dataset_file);
+		g_sz_dataset_file = p;
 	}
 
 	if ( ! g_sz_input_met_file ) {
 		puts("met file list is missing!");
 		goto err_show_usage;
+	}  else if ( g_sz_input_path ) {
+		p = concatenate_path(g_sz_input_path, g_sz_input_met_file); 
+		if ( ! p )
+		{
+			puts(sz_err_out_of_memory);
+			goto err;
+		}
+		free(g_sz_input_met_file);
+		g_sz_input_met_file = p;
 	}
 
 	if ( ! g_sz_soil_file ) {
 		puts("soil filename not specified!");
 		goto err_show_usage;
+	} else if ( g_sz_input_path ) {
+		p = concatenate_path(g_sz_input_path, g_sz_soil_file); 
+		if ( ! p )
+		{
+			puts(sz_err_out_of_memory);
+			goto err;
+		}
+		free(g_sz_soil_file);
+		g_sz_soil_file = p;
 	}
 
 	if ( ! g_sz_topo_file ) {
 		puts("topo filename option is missing!");
 		goto err_show_usage;
+	 } else if ( g_sz_input_path ) {
+		p = concatenate_path(g_sz_input_path, g_sz_topo_file); 
+		if ( ! p )
+		{
+			puts(sz_err_out_of_memory);
+			goto err;
+		}
+		free(g_sz_topo_file);
+		g_sz_topo_file = p;
 	}
 
 	if ( ! g_sz_settings_file ) {
 		puts("settings filename option is missing!");
 		goto err_show_usage;
+	} else if ( g_sz_input_path ) {
+		p = concatenate_path(g_sz_input_path, g_sz_settings_file); 
+		if ( ! p )
+		{
+			puts(sz_err_out_of_memory);
+			goto err;
+		}
+		free(g_sz_settings_file);
+		g_sz_settings_file = p;
+	}
+
+	if ( g_sz_output_vars_file ) {
+		p = concatenate_path(g_sz_input_path, g_sz_output_vars_file); 
+		if ( ! p )
+		{
+			puts(sz_err_out_of_memory);
+			goto err;
+		}
+		free(g_sz_output_vars_file);
+		g_sz_output_vars_file = p;
 	}
 
 	return 1;
 
-	err_show_usage:
+err_show_usage:
 	show_usage();
 
 	err:
@@ -673,14 +755,12 @@ static int parse_args(int argc, char *argv[])
 
 int main(int argc, char *argv[]) {
 	char sz_date[32]; // should be enough
-	char temp[256];
 	int ret;
 	int year;
 	int month;
 	int day;
 	int cell;
 	int prog_ret;
-	int flag;
 	double timer;
 	double start_timer;
 	double end_timer;
@@ -736,13 +816,6 @@ int main(int argc, char *argv[]) {
 	}
 	puts(msg_ok);
 
-	/* fix g_sz_input_path ? */
-	flag = 0;
-	if ( g_sz_input_path ) {
-		int len = strlen(g_sz_input_path);
-		flag = (('/' == g_sz_input_path[len-1]) || ('\\' == g_sz_input_path[len-1]));
-	}
-
 	if ( ! parameterization_output_create(sz_date) ) {
 		puts("Unable to create parameterization output path\n");
 		return 0;
@@ -751,14 +824,7 @@ int main(int argc, char *argv[]) {
 	/* import output vars file ? */
 	if ( g_sz_output_vars_file ) {
 		printf("import output file...");
-		if ( g_sz_input_path ) {
-			strcpy(temp, g_sz_input_path);
-			if ( ! flag ) strcat(temp, FOLDER_DELIMITER);
-			strcat(temp, g_sz_output_vars_file);
-			output_vars = output_import(temp);
-		} else {
-			output_vars = output_import(g_sz_output_vars_file);
-		}
+		output_vars = output_import(g_sz_output_vars_file);
 		free(g_sz_output_vars_file);
 		g_sz_output_vars_file = NULL;
 		if ( ! output_vars ) {
@@ -768,15 +834,9 @@ int main(int argc, char *argv[]) {
 	}
 
 	printf("import settings file %s...", g_sz_settings_file);
-	if ( g_sz_input_path ) {
-		strcpy(temp, g_sz_input_path);
-		if ( ! flag ) strcat(temp, FOLDER_DELIMITER);
-		strcat(temp, g_sz_settings_file);
-		g_settings = settings_import(temp);
-	} else {
-		g_settings = settings_import(g_sz_settings_file);
-	}
-	if ( ! g_settings ) {
+	g_settings = settings_import(g_sz_settings_file);
+	if ( ! g_settings )
+	{
 		goto err;
 	}
 	if ( g_settings->time != 'd' ) {
@@ -787,14 +847,7 @@ int main(int argc, char *argv[]) {
 	}
 
 	printf("build matrix using %s...", g_sz_dataset_file);
-	if ( g_sz_input_path ) {
-		strcpy(temp, g_sz_input_path);
-		if ( ! flag ) strcat(temp, FOLDER_DELIMITER);
-		strcat(temp, g_sz_dataset_file);
-		matrix = matrix_create(temp);
-	} else {
-		matrix = matrix_create(g_sz_dataset_file);
-	}
+	matrix = matrix_create(g_sz_dataset_file);
 	//free(g_sz_dataset_file); g_sz_dataset_file = NULL;
 	if ( ! matrix ) goto err;
 	puts(msg_ok);
@@ -825,15 +878,9 @@ int main(int argc, char *argv[]) {
 
 		/* import soil values */
 		logger_error(g_debug_log, "importing soil settings...");
-		if ( g_sz_input_path ) {
-			strcpy(temp, g_sz_input_path);
-			if ( ! flag ) strcat(temp, FOLDER_DELIMITER);
-			strcat(temp, g_sz_soil_file);
-			ret = soil_settings_import(g_soil_settings, temp, matrix->cells[cell].x, matrix->cells[cell].y);
-		} else {
-			ret = soil_settings_import(g_soil_settings, g_sz_soil_file, matrix->cells[cell].x, matrix->cells[cell].y);
-		}
-		if ( ! ret ) {
+		ret = soil_settings_import(g_soil_settings, g_sz_soil_file, matrix->cells[cell].x, matrix->cells[cell].y);
+		if ( ! ret )
+		{
 			goto err;
 		}
 		logger_error(g_debug_log, "ok\n");
@@ -855,15 +902,9 @@ int main(int argc, char *argv[]) {
 
 		/* import topo values */
 		logger_error(g_debug_log, "importing topo settings...");
-		if ( g_sz_input_path ) {
-			strcpy(temp, g_sz_input_path);
-			if ( ! flag ) strcat(temp, FOLDER_DELIMITER);
-			strcat(temp, g_sz_topo_file);
-			ret = topo_import(g_topo, temp, matrix->cells[cell].x, matrix->cells[cell].y);
-		} else {
-			ret = topo_import(g_topo, g_sz_topo_file, matrix->cells[cell].x, matrix->cells[cell].y);
-		}
-		if ( ! ret ) {
+		ret = topo_import(g_topo, g_sz_topo_file, matrix->cells[cell].x, matrix->cells[cell].y);
+		if ( ! ret )
+		{
 			goto err;
 		}
 		logger_error(g_debug_log, "ok\n");
@@ -876,14 +917,7 @@ int main(int argc, char *argv[]) {
 		}
 
 		logger_error(g_debug_log, "importing met data...");
-		if ( g_sz_input_path ) {
-			strcpy(temp, g_sz_input_path);
-			if ( ! flag ) strcat(temp, FOLDER_DELIMITER);
-			strcat(temp, g_sz_input_met_file);
-			matrix->cells[cell].years = yos_import(temp, &years_of_simulation, matrix->cells[cell].x, matrix->cells[cell].y);
-		} else {
-			matrix->cells[cell].years = yos_import(g_sz_input_met_file, &years_of_simulation, matrix->cells[cell].x, matrix->cells[cell].y);
-		}
+		matrix->cells[cell].years = yos_import(g_sz_input_met_file, &years_of_simulation, matrix->cells[cell].x, matrix->cells[cell].y);
 		if ( ! matrix->cells[cell].years ) goto err;
 		logger_error(g_debug_log, "ok\n");
 

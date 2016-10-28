@@ -459,10 +459,9 @@ const char* file_get_name_only(const char* const filename) {
 
 	p = strrchr(filename, '\\');
 	p2 = strrchr(filename, '/');
-	if ( ! p || (p2 && (p2 < p)) ) {
+	if ( ! p || (p2 && (p2 > p)) ) {
 		p = p2;
 	}
-	if ( ! p ) p = p2;
 	if ( p ) ++p;
 	if ( ! p ) p = filename;
 
