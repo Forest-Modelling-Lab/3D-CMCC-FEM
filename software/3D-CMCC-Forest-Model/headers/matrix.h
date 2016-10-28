@@ -479,7 +479,7 @@ enum {
 	DAY_FRAC_FOLIAGE_REMOVE,            /* days of leaf fall per class */
 	DAY_FRAC_FINE_ROOT_REMOVE,          /* days of "fine root fall" per class */
 	DAY_VEG_FOR_LEAF_FALL,              /* days for leaf fall */
-	LEAF_FALL_COUNTER                   /* counter for leaf fall*/,
+	LEAF_FALL_COUNTER,                  /* counter for leaf fall */
 
 	COUNTERS
 };
@@ -487,46 +487,45 @@ enum {
 typedef struct {
 	e_management management;
 
-	char *name;
-	int period;                         /* period = 0 for adult tree ; 1 for very young tree */
-	double value[VALUES];
+	char *name;                         /** species name **/
+	int phenology_phase;                /* species-specific phenological phase */
 	int counter[COUNTERS];
-	int phenology_phase;
+	double value[VALUES];
 
 } species_t;
 
 typedef struct
 {
 	species_t *species;
-	int species_count;
+	int species_count;                  /* number of different species */
 	int species_avail;
 
 	/* for logger */
 	int initial_species_count;
 
-	int value;
+	int value;                          /** age value (year) **/
 
 } age_t;
 
 typedef struct
 {
 	age_t* ages;
-	int ages_count;
+	int ages_count;                     /* number of different cohorts (ages) */
 	int ages_avail;
 
 	/* for logger */
 	int initial_ages_count;
 
 	int dbh_n_trees;                    /* number of trees per dbh class */
-	double dbh_density;                 /* density of treed per dbh class */
+	double dbh_density;                 /* density of trees per dbh class */
 
-	double value;
+	double value;                       /** dbh value (cm) **/
 
 } dbh_t;
 
 typedef struct
 {
-	int layer_z;
+	int layer_z;                        //fixme remove
 	int layer_n_height_class;           /* number of height class per layer */
 	int layer_n_trees;                  /* number of trees per layer */
 	double layer_density;               /* tree density per layer (n_tree/sizecell) */
@@ -539,16 +538,16 @@ typedef struct
 typedef struct
 {
 	dbh_t *dbhs;
-	int dbhs_count;
+	int dbhs_count;                     /* number of different dbh classes */
 	int dbhs_avail;
 
 	/* for logger */
 	int initial_dbhs_count;
-
-	double value;
 	int height_z;
 	double height_density;              /* tree density per height class (n_tree/sizecell) */
 	double height_cover;                /* height class cover per height class (n_tree/sizecell) */
+
+	double value;                       /** height value (m) **/
 
 } height_t;
 
@@ -626,14 +625,17 @@ typedef struct {
 
 typedef struct
 {
+	/* tree height struct */
 	height_t* heights;
 	int heights_count;
 	int heights_avail;
 
+	/* tree layer struct */
 	tree_layer_t* tree_layers;
 	int tree_layers_count;
 	int t_layers_avail;
 
+	/* soil layer struct */
 	soil_layer_s* soil_layers;
 	int soil_layers_count;
 	int s_layers_avail;
@@ -655,7 +657,7 @@ typedef struct
 
 	e_landuse landuse;                                  /* LandUse type */
 
-	int year_stand;
+	int year_stand;                                     /* input stand.txt row stand year */
 
 	int x;                                              /* cell index within the matrix */
 	int y;                                              /* cell index within the matrix */
@@ -837,8 +839,6 @@ typedef struct
 	double daily_latent_heat_flux, monthly_latent_heat_flux, annual_latent_heat_flux;/* daily, monthly and annual latent heat flux at cell level (W/m2) */
 	double daily_c_sensible_heat_flux;                                               /* current daily canopy sensible heat flux (W/m2) */
 	double daily_sensible_heat_flux, monthly_sensible_heat_flux, annual_sensible_heat_flux;/* daily, monthly and annual sensible heat flux at cell level (W/m2) */
-
-	double annual_peak_lai[10];
 
 	/**************************************************************************************************
 	 * 	SOIL PART; DEVELOPMENT OF DAILY SOIL CARBON NITROGEN AND PHOSPHORUS BALANCE
