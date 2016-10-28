@@ -214,7 +214,6 @@ int annual_forest_structure(cell_t* const c)
 
 	/*************************************************************************************/
 
-	//ALESSIOC FIXME MOVE TO CANOPY COVER.C
 	/* compute effective dbh/crown diameter ratio within each class based on layer density (class level) */
 	logger(g_debug_log, "compute effective dbh/crown diameter ratio within each class based on layer density (class level)\n\n");
 
@@ -452,7 +451,7 @@ int daily_forest_structure (cell_t *const c)
 	int age;
 	int species;
 
-	int layer_height_class_counter = 0.;
+	int layer_height_class_counter;
 
 	tree_layer_t *l;
 	height_t *h;
@@ -476,69 +475,61 @@ int daily_forest_structure (cell_t *const c)
 	for (layer = c->tree_layers_count - 1; layer >= 0; --layer)
 	{
 		l = &c->tree_layers[layer];
+		l->layer_avg_tree_height = 0.;
+		layer_height_class_counter = 0;
 
 		for ( height = 0; height < c->heights_count ; ++height )
 		{
-			h = &c->heights[height];
-
-			for ( dbh = 0; dbh < c->heights[height].dbhs_count; ++dbh )
+			if ( layer == c->heights[height].height_z )
 			{
-				for ( age = 0; age < c->heights[height].dbhs[dbh].ages_count ; ++age )
-				{
-					for ( species = 0; species < c->heights[height].dbhs[dbh].ages[age].species_count; ++species )
-					{
-						/* cumulate class height values */
-						l->layer_avg_tree_height +=  h->value;
+				h = &c->heights[height];
+				/* cumulate class height values */
+				l->layer_avg_tree_height += h->value;
 
-						/* increment counter */
-						++layer_height_class_counter;
-
-						/* when matches the last height class in the layer is processed */
-						if ( l->layer_n_height_class == layer_height_class_counter )
-						{
-							/* compute TREE HEIGHT MODIFIER when last tree height class in layer is processed */
-							l->layer_avg_tree_height /= l->layer_n_height_class;
-
-							/* reset counter */
-							layer_height_class_counter = 0;
-						}
-					}
-				}
+				/* increment counter */
+				++layer_height_class_counter;
 			}
 		}
+
+		/* to avoid division by zero */
+		if ( layer_height_class_counter > 0 )
+		{
+			/* compute mean */
+			l->layer_avg_tree_height /= l->layer_n_height_class;
+		}
+
 		logger(g_debug_log, "\n-Layer %d avg tree height = %g\n", layer, l->layer_tree_height_modifier);
 	}
 
 	/*****************************************************************************/
-	//FIXME TO BE CHECKED
 	/* compute TREE HEIGHT VERTICAL MODIFIER */
-//	for (layer = c->tree_layers_count - 1; layer >= 0; --layer)
-//	{
-//		l = &c->tree_layers[layer];
-//
-//		/* only if more than one layer is present */
-//		if ( c->tree_layers_count > 0. )
-//		{
-//			/* following Wallace et al., 1991, Cannell and Grace 1993 */
-//			/* note: it considers differences in average values of tree height among all over the layers */
-//
-//			/* upper layer */
-//			l->layer_tree_height_modifier = 0.5 * ( 1. + pow ( 2. , ( - c->tree_layers[layer].layer_avg_tree_height / c->tree_layers[layer-1].layer_avg_tree_height ) ) -
-//							( pow ( 2. , ( - c->tree_layers[layer-1].layer_avg_tree_height / c->tree_layers[layer].layer_avg_tree_height ) ) ) );
-//			logger(g_debug_log, "\n-Layer %d light vertical modifier = %g\n", layer, l->layer_tree_height_modifier);
-//
-//			/* lower layer */
-//			c->tree_layers[layer-1].layer_tree_height_modifier = 1 - l->layer_tree_height_modifier;
-//			logger(g_debug_log, "\n-Layer %d light vertical modifier = %g\n", layer - 1, c->tree_layers[layer-1].layer_tree_height_modifier);
-//
-//		}
-//		else
-//		{
-//			/* no vertical competition */
-//			l->layer_tree_height_modifier = 1.;
-//			logger(g_debug_log, "\n-Layer %d light vertical modifier = %g\n", layer, l->layer_tree_height_modifier);getchar();
-//		}
-//	}
+	for (layer = c->tree_layers_count - 1; layer >= 0; --layer)
+	{
+		l = &c->tree_layers[layer];
+
+		/* only if more than one layer is present */
+		if ( c->tree_layers_count > 1 )
+		{
+			/* following Wallace et al., 1991, Cannell and Grace 1993 */
+			/* note: it considers differences in average values of tree height among all over the layers */
+
+			/* upper layer */
+			l->layer_tree_height_modifier = 0.5 * ( 1. + pow ( 2. , ( - c->tree_layers[layer].layer_avg_tree_height / c->tree_layers[layer-1].layer_avg_tree_height ) ) -
+							( pow ( 2. , ( - c->tree_layers[layer-1].layer_avg_tree_height / c->tree_layers[layer].layer_avg_tree_height ) ) ) );
+			logger(g_debug_log, "\n-Layer %d light vertical modifier = %g\n", layer, l->layer_tree_height_modifier);
+
+			/* lower layer */
+			c->tree_layers[layer-1].layer_tree_height_modifier = 1. - l->layer_tree_height_modifier;
+			logger(g_debug_log, "\n-Layer %d light vertical modifier = %g\n", layer - 1, c->tree_layers[layer-1].layer_tree_height_modifier);
+
+		}
+		else
+		{
+			/* no vertical competition */
+			l->layer_tree_height_modifier = 1.;
+			logger(g_debug_log, "\n-Layer %d light vertical modifier = %g\n", layer, l->layer_tree_height_modifier);
+		}
+	}
 
 	/******************************COMPUTE HORIZONTAL COMPETITION******************************/
 
@@ -547,6 +538,8 @@ int daily_forest_structure (cell_t *const c)
 	/* compute fraction of class cover (exposed and projected) */
 	for (layer = c->tree_layers_count - 1; layer >= 0; --layer)
 	{
+		l = &c->tree_layers[layer];
+
 		for ( height = 0; height < c->heights_count ; ++height )
 		{
 			h = &c->heights[height];
@@ -572,45 +565,22 @@ int daily_forest_structure (cell_t *const c)
 
 						/*****************************************************************************************/
 
-						/* if dominant */
-						if( layer == c->tree_layers_count - 1 )
+						/* compute daily canopy exposed cover */
+						/* special case when LAI = < 1.0 (e.g, beginning of growing season) */
+						if( s->value[LAI_PROJ] < 1.0 ) s->value[DAILY_CANOPY_COVER_EXP] = s->value[LAI_PROJ] * s->value[CANOPY_COVER_EXP];
+						else s->value[DAILY_CANOPY_COVER_EXP] = s->value[CANOPY_COVER_EXP];
+
+						/* integrate with layer TREE HEIGHT MODIFIER */
+						if ( layer == c->heights[height].height_z )
 						{
-							/****************************************DOMINANT****************************************/
-
-							/* compute daily canopy exposed cover */
-							/* special case when LAI = < 1.0 (e.g, beginning of growing season) */
-							if( s->value[LAI_PROJ] < 1.0 ) s->value[DAILY_CANOPY_COVER_EXP] = s->value[LAI_PROJ] * s->value[CANOPY_COVER_EXP];
-							else s->value[DAILY_CANOPY_COVER_EXP] = s->value[CANOPY_COVER_EXP];
-
-							/* integrate with layer TREE HEIGHT MODIFIER */
-							//s->value[DAILY_CANOPY_COVER_EXP] *=
-
-							/* canopy cannot absorb more than 100% of incoming flux (e.g. light) */
-							if( s->value[DAILY_CANOPY_COVER_EXP] > 1. ) s->value[DAILY_CANOPY_COVER_EXP] = 1.;
-							logger(g_debug_log, "%s height class canopy exposed cover = %g %%\n", s->name, s->value[CANOPY_COVER_EXP]*100.0);
-
-							/*****************************************************************************************/
-
+							s->value[DAILY_CANOPY_COVER_EXP] *= l->layer_tree_height_modifier ;
 						}
-						/* for dominated layers */
-						else
-						{
-							/****************************************DOMINATED***************************************/
 
-							/* compute daily canopy exposed cover */
-							/* special case when LAI = < 1.0 (e.g, beginning of growing season) */
-							if( s->value[LAI_PROJ] < 1.0 ) s->value[DAILY_CANOPY_COVER_EXP] = s->value[LAI_PROJ] * s->value[CANOPY_COVER_EXP];
-							else s->value[DAILY_CANOPY_COVER_EXP] = s->value[CANOPY_COVER_EXP];
+						/* canopy cannot absorb more than 100% of incoming flux (e.g. light) */
+						if( s->value[DAILY_CANOPY_COVER_EXP] > 1. ) s->value[DAILY_CANOPY_COVER_EXP] = 1.;
+						logger(g_debug_log, "%s height class canopy exposed cover = %g %%\n", s->name, s->value[CANOPY_COVER_EXP]*100.0);
 
-							/* integrate with layer TREE HEIGHT MODIFIER */
-							//s->value[DAILY_CANOPY_COVER_EXP] *=
-
-							/* canopy cannot absorb more than 100% of incoming flux (e.g. light) */
-							if( s->value[DAILY_CANOPY_COVER_EXP] > 1. ) s->value[DAILY_CANOPY_COVER_EXP] = 1.;
-							logger(g_debug_log, "%s height class canopy exposed cover = %g %%\n", s->name, s->value[CANOPY_COVER_EXP]*100.0);
-
-							/*****************************************************************************************/
-						}
+						/*****************************************************************************************/
 					}
 				}
 			}
