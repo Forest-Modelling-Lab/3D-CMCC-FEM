@@ -159,8 +159,8 @@ void thinning (cell_t *const c, const int layer, const int height, const int dbh
 			s->value[RESERVE_C]);
 
 	/* Total class biomass at the end */
-	s->value[TOTAL_W] = s->value[LEAF_C] + s->value[COARSE_ROOT_C] + s->value[FINE_ROOT_C] + s->value[STEM_C] + s->value[BRANCH_C] + s->value[RESERVE_C];
-	logger(g_debug_log, "Total Biomass = %f tC/ha\n", s->value[TOTAL_W]);
+	s->value[TOTAL_C] = s->value[LEAF_C] + s->value[COARSE_ROOT_C] + s->value[FINE_ROOT_C] + s->value[STEM_C] + s->value[BRANCH_C] + s->value[RESERVE_C];
+	logger(g_debug_log, "Total Biomass = %f tC/ha\n", s->value[TOTAL_C]);
 
 	/* update stand trees */
 	c->cell_n_trees -= trees_to_remove;

@@ -45,20 +45,4 @@ void peak_lai(species_t *const s, const int day, const int month, const int year
 			logger(g_debug_log, "recomputed leaf mass = %f tC\n", s->value[MAX_LEAF_C]);
 		}
 	}
-	/*
-	//used in LEAFFALL MARCONI function
-	s->value[MAX_FINE_ROOT_C] = s->value[MAX_LEAF_C] * s->value[FINE_ROOT_LEAF_FRAC];
-	s->value[MAX_BUD_BURST_C] = s->value[MAX_LEAF_C] + s->value[MAX_FINE_ROOT_C];
-	logger(g_debug_log, "MAX_BIOMASS_FOLIAGE = %f tC/cell\n", s->value[MAX_LEAF_C]);
-	logger(g_debug_log, "MAX_BIOMASS_FINE_ROOTS = %f tC/cell\n", s->value[MAX_FINE_ROOT_C]);
-	logger(g_debug_log, "MAX_BUD_BURST_C = %f tC/cell\n", s->value[MAX_BUD_BURST_C]);
-
-	//used in LEAFFALL MARCONI function
-	s->value[MAX_BIOMASS_FINE_ROOTS_tDM] = s->value[MAX_BIOMASS_FOLIAGE_tDM] * s->value[FINE_ROOT_LEAF_FRAC];
-	s->value[MAX_BIOMASS_BUDBURST_tDM] = s->value[MAX_BIOMASS_FOLIAGE_tDM] + s->value[MAX_BIOMASS_FINE_ROOTS_tDM];
-	*/
-
-	/* check for reserve need for budburst (deciduous)*/
-	//if (s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2) CHECK_CONDITION(s->value[RESERVE_C], < s->value[MAX_LEAF_C]);
-
 }

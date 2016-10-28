@@ -325,8 +325,6 @@ void initialization_forest_class_C_biomass(cell_t *const c, const int height, co
 			logger(g_debug_log, "Ok LAI..\n");
 		}
 	}
-	/* for leaf balance */
-	s->value[OLD_LEAF_C] = s->value[LEAF_C];
 
 	s->value[AV_LEAF_MASS_KgC] = s->value[LEAF_C] *1000.0 /s->counter[N_TREE];
 	logger(g_debug_log, "-Individual foliage biomass = %g KgC\n", s->value[AV_LEAF_MASS_KgC]);

@@ -253,7 +253,7 @@ void dendrometry ( cell_t *const c, const int layer, const int height, const int
 
 		/* following Peng et al., 2002*/
 		s->value[HD_EFF] /= 100.;
-		delta_stem = s->value[DEL_Y_WS] * GC_GDM;
+		delta_stem = s->value[Y_C_TO_STEM] * GC_GDM;
 		logger(g_debug_log, "-Annual stem increment = %g tC/year\n", delta_stem);
 
 		delta_dbh = (4.*delta_stem)/(Pi*s->value[FORM_FACTOR]*s->value[MASS_DENSITY]*pow(d->value,2.)*((2*(h->value/d->value)+s->value[HD_EFF])));

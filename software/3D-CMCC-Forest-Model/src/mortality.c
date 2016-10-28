@@ -794,24 +794,24 @@ void Greff_Mortality (species_t *const s)
 	static double mortgreff;
 	static int GreffDeadTrees;
 
-	logger(g_debug_log, "**MORTALITY based on Growth Efficiency (LPJ)**\n");
-
-	greff = (s->value[DEL_TOTAL_W] / (s->value[BIOMASS_FOLIAGE_tDM] * s->value[SLA_AVG]));
-	//logger(g_log, "greff from LPJ = %g\n", greff);
-	//logger(g_log, "DEL_TOTAL_W = %g\n", s->value[DEL_TOTAL_W]);
-	//logger(g_log, "WF= %g\n", s->value[BIOMASS_FOLIAGE]);
-
-	mortgreff = kmort1 / (1 + kmort2 * greff);
-	//logger(g_log, "rate mort for greff from LPJ = %g\n", mortgreff);
-
-	GreffDeadTrees = (int)(mortgreff * s->counter[N_TREE]);
-
-	logger(g_debug_log, "Dead trees for greff = %d\n", GreffDeadTrees);
-
-	logger(g_debug_log, "Number of trees before greff mortality = %d trees/ha\n", s->counter[N_TREE]);
-
-	s->counter[N_TREE] -= GreffDeadTrees;
-	logger(g_debug_log, "Number of trees less greff mortality = %d trees/ha\n", s->counter[N_TREE]);
+//	logger(g_debug_log, "**MORTALITY based on Growth Efficiency (LPJ)**\n");
+//
+//	greff = (s->value[DEL_TOTAL_W] / (s->value[BIOMASS_FOLIAGE_tDM] * s->value[SLA_AVG]));
+//	//logger(g_log, "greff from LPJ = %g\n", greff);
+//	//logger(g_log, "DEL_TOTAL_W = %g\n", s->value[DEL_TOTAL_W]);
+//	//logger(g_log, "WF= %g\n", s->value[BIOMASS_FOLIAGE]);
+//
+//	mortgreff = kmort1 / (1 + kmort2 * greff);
+//	//logger(g_log, "rate mort for greff from LPJ = %g\n", mortgreff);
+//
+//	GreffDeadTrees = (int)(mortgreff * s->counter[N_TREE]);
+//
+//	logger(g_debug_log, "Dead trees for greff = %d\n", GreffDeadTrees);
+//
+//	logger(g_debug_log, "Number of trees before greff mortality = %d trees/ha\n", s->counter[N_TREE]);
+//
+//	s->counter[N_TREE] -= GreffDeadTrees;
+//	logger(g_debug_log, "Number of trees less greff mortality = %d trees/ha\n", s->counter[N_TREE]);
 
 }
 
