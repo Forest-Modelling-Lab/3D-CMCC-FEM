@@ -170,16 +170,19 @@ void reset_annual_cell_variables(cell_t *const c)
 }
 void reset_daily_layer_variables(cell_t *const c)
 {
-	/*int layer;
+	int layer;
 
 	tree_layer_t *l;
 
 	logger(g_debug_log, "...resetting layer level daily variables...\n");
 
-	for ( layer = c->t_layers_count -1 ; layer >= 0; --layer )
+	for ( layer = c->tree_layers_count -1 ; layer >= 0; --layer )
 	{
+		l = &c->tree_layers[layer];
 
-	}*/
+		l->layer_avg_tree_height = 0.;
+		l->layer_tree_height_modifier = 0.;
+	}
 }
 void reset_monthly_layer_variables(cell_t *const c)
 {
@@ -277,7 +280,6 @@ void reset_daily_class_variables(cell_t *const c)
 					s->value[F_CO2] = 0.;
 					s->value[F_LIGHT] = 0.;
 					s->value[F_T] = 0.;
-					s->value[F_FROST] = 0.;
 					s->value[F_VPD] = 0.;
 					s->value[F_AGE] = 0.;
 					s->value[F_NUTR] = 0.;

@@ -204,19 +204,19 @@ enum {
 	PPFD_TRANSM_SHADE,          /* Transmitted Photosynthetic Photon Flux Density umol/m2/sec  from shaded leaves*/
 
 	/* modifiers */
-	F_VPD,                      /* VPD modifier*/
-	F_LIGHT,                    /* LIGHT modifier*/
-	F_LIGHT_SUN,                /* LIGHT modifier for Sun leaves*/
-	F_LIGHT_SHADE,              /* LIGHT modifier for Shaded leaves*/
-	F_AGE,                      /* AGE modifier*/
-	F_NUTR,                     /* SOIL NUTRIENT Modifier*/
-	F_T,                        /* TEMPERATURE modifier*/
-	F_FROST,                    /* FROST modifier*/
-	F_SW,                       /* SOIL WATER modifier*/
-	F_DROUGHT,                  /* SOIL DROUGHT modifier (see Duursma et al., 2008)*/
-	F_PSI,                      /* SOIL WATER modifier using PSI, see Biome*/
-	F_CO2,                      /* CO2 soil fertilization effect effect*/
-	PHYS_MOD,                   /* physiological modifier */
+	F_VPD,                      /* VPD modifier */
+	F_LIGHT,                    /* LIGHT modifier */
+	F_LIGHT_SUN,                /* LIGHT modifier for Sun leaves */
+	F_LIGHT_SHADE,              /* LIGHT modifier for Shaded leaves */
+	F_AGE,                      /* AGE modifier */
+	F_NUTR,                     /* SOIL NUTRIENT Modifier */
+	F_T,                        /* TEMPERATURE modifier */
+	F_SW,                       /* SOIL WATER modifier */
+	F_DROUGHT,                  /* SOIL DROUGHT modifier (see Duursma et al., 2008) */
+	F_PSI,                      /* SOIL WATER modifier using PSI, see Biome */
+	F_CO2,                      /* CO2 soil fertilization effect */
+	F_HEIGHT,                   /* TREE HEIGHT modifier (see Wallace et al., 1991; Cannell & Grace 1993) */
+	PHYS_MOD,                   /* PHYSIOLOGICAL modifier */
 
 	/* water */
 	CANOPY_CONDUCTANCE,
@@ -575,8 +575,8 @@ typedef struct
 	/* for logger */
 	int initial_ages_count;
 
-	int dbh_n_trees;           /* number of trees per dbh class */
-	double dbh_density;        /* density of treed per dbh class */
+	int dbh_n_trees;                     /* number of trees per dbh class */
+	double dbh_density;                  /* density of treed per dbh class */
 
 	double value;
 
@@ -585,10 +585,12 @@ typedef struct
 typedef struct
 {
 	int layer_z;
-	int layer_n_height_class;  /* number of height class per layer */
-	int layer_n_trees;         /* number of trees per layer */
-	double layer_density;      /* tree density per layer (n_tree/sizecell) */
-	double layer_cover;        /* layer canopy cover per layer */
+	int layer_n_height_class;           /* number of height class per layer */
+	int layer_n_trees;                  /* number of trees per layer */
+	double layer_density;               /* tree density per layer (n_tree/sizecell) */
+	double layer_cover;                 /* layer canopy cover per layer */
+	double layer_avg_tree_height;       /* average tree layer height */
+	double layer_tree_height_modifier;  /* layer level tree height modifier */
 
 } tree_layer_t;
 
@@ -603,8 +605,8 @@ typedef struct
 
 	double value;
 	int height_z;
-	double height_density;      /* tree density per height class (n_tree/sizecell) */
-	double height_cover;        /* height class cover per height class (n_tree/sizecell) */
+	double height_density;              /* tree density per height class (n_tree/sizecell) */
+	double height_cover;                /* height class cover per height class (n_tree/sizecell) */
 
 } height_t;
 
