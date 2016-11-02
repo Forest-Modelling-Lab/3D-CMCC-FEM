@@ -116,9 +116,9 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 								/* heading for species name */
 								logger(g_daily_log,"\t%10s", "SPECIES");
 
-								logger(g_daily_log,"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s"
-										"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s"
-										"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s",
+								logger(g_daily_log,"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s"
+										"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s"
+										"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s",
 										"GPP",
 										"AR",
 										"NPP",
@@ -127,8 +127,13 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 										"CC_E",
 										"Ntree",
 										"VEG_D",
-										"CET",
-										"CLE",
+										"C_INT",
+										"C_WAT",
+										"C_EVA",
+										"C_TRA",
+										"C_ET",
+										"C_LE",
+										"S_EVA",
 										"WRes",
 										"WS",
 										"WSL",
@@ -222,9 +227,9 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 							logger(g_daily_log,"\t%8.3s", c->heights[height].dbhs[dbh].ages[age].species[species].name);
 
 							/* print variables at layer-class level */
-							logger(g_daily_log,"\t%6.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3d \t%3d \t%3.4f \t%3.4f \t%3.4f"
-									"\t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f"
-									"\t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f",
+							logger(g_daily_log,"\t%6.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3d \t%3d \t%3.4f \t%3.4f \t%3.4f \t%3.4f"
+									"\t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f"
+									"\t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f",
 									s->value[DAILY_GPP_gC],
 									s->value[TOTAL_AUT_RESP],
 									s->value[NPP_gC],
@@ -233,8 +238,13 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 									s->value[DAILY_CANOPY_COVER_EXP],
 									s->counter[N_TREE],
 									s->counter[VEG_DAYS],
+									s->value[CANOPY_INT],
+									s->value[CANOPY_WATER],
+									s->value[CANOPY_EVAPO],
+									s->value[CANOPY_TRANSP],
 									s->value[CANOPY_EVAPO_TRANSP],
 									s->value[CANOPY_LATENT_HEAT],
+									c->daily_soil_evapo,
 									s->value[RESERVE_C],
 									s->value[STEM_C],
 									s->value[STEM_LIVE_WOOD_C],

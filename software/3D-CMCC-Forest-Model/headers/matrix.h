@@ -809,7 +809,7 @@ typedef struct
 	double rain;
 	double snow;
 	int days_since_rain;                                                             /* consecutive days without rain */
-	double rain_intercepted;                                                         /* current amount of intercted rain (mm/m2) */
+	double rain_intercepted;                                                         /* current amount of intercepted rain (mm/m2) */
 	double vapour_to_atmosphere;                                                     /* current water flux water to atmosphere (mm/m2) */
 	double snow_pack;                                                                /* current amount of snow (Kg/m2) */
 	double snow_melt;                                                                /* current amount of melted snow (mm/m2) */

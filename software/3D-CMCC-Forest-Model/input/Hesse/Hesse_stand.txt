@@ -1,0 +1,4 @@
+Year,x,y,Landuse,Age,Species,Management,N,Stool,AvDBH,Height,Wf,Wrc,Wrf,Ws,Wbb,Wres,Lai
+1996,0,0,F,30,Fagussylvatica,T,3480,0,7.6,13,0,15.2,0,64.5,11.4,0,0
+1997,0,0,F,31,Fagussylvatica,T,3480,0,10,14,0,16.3,3.762,73.82,10.38,3.2,0
+2001,0,0,F,35,Fagussylvatica,T,3348,0,8.19,13,0,0,0,0,0,0,0
