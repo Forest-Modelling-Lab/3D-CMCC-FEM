@@ -52,7 +52,7 @@ void forest_management (cell_t *const c, const int layer, const int height, cons
 		{
 			if ( ! add_tree_class_for_replanting( c ) )
 			{
-				logger(g_debug_log, "unable to add new replanted class! (exit)\n");
+				logger_error(g_debug_log, "unable to add new replanted class! (exit)\n");
 				exit(1);
 			}
 		}

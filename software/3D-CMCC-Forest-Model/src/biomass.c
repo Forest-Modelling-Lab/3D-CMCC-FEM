@@ -62,6 +62,8 @@ void annual_tree_increment(cell_t *const c, const int height, const int dbh, con
 	species_t *s;
 
 	a = &c->heights[height].dbhs[dbh].ages[age];
+	// ALESSIOR
+	//if ( ! a ) return;
 	s = &a->species[species];
 
 	/* in m^3/cell/yr */
@@ -111,6 +113,15 @@ void annual_tree_increment(cell_t *const c, const int height, const int dbh, con
 void abg_bgb_biomass(cell_t *const c, const int height, const int dbh, const int age, const int species)
 {
 	species_t *s;
+
+	// ALESSIOR
+	/*
+	if ( ! c->heights ) return;
+	if ( ! c->heights[height].dbhs ) return;
+	if ( ! c->heights[height].dbhs[dbh].ages ) return;
+	if ( ! c->heights[height].dbhs[dbh].ages[age].species ) return;
+	*/
+
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 	logger(g_debug_log, "**AGB & BGB**\n");
@@ -146,6 +157,8 @@ void tree_branch_and_bark (cell_t *const c, const int height, const int dbh, con
 	species_t *s;
 
 	a = &c->heights[height].dbhs[dbh].ages[age];
+	// ALESSIOR
+	//if ( !a ) return;
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 	if (s->value[FRACBB0] == 0)

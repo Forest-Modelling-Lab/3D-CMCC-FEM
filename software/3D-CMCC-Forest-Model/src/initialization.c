@@ -271,7 +271,7 @@ void initialization_forest_class_C_biomass(cell_t *const c, const int height, co
 			/* check */
 			if(!s->value[LAI_PROJ])
 			{
-				logger(g_debug_log,"No Leaf Biomass nor LAI values from initialization file (exit)!!!!\n");
+				logger_error(g_debug_log,"No Leaf Biomass nor LAI values from initialization file (exit)!!!!\n");
 				exit(1);
 			}
 			/* otherwise use LAI */

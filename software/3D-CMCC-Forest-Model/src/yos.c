@@ -481,8 +481,7 @@ static int yos_from_arr(double *const values, const int rows_count, const int co
 		/* check if values are outside ranges */
 		else if(yos[*yos_count-1].m[month].d[day].solar_rad < RG_RANGE_MIN || yos[*yos_count-1].m[month].d[day].solar_rad > RG_RANGE_MAX)
 		{
-			//logger(g_debug_log, "BAD DATA FOR RG = %f in day = %d month = %d year = %d\n", yos[*yos_count-1].m[month].d[day].solar_rad, day+1, month+1, year);
-			printf("BAD DATA FOR RG = %f in day = %d month = %d year = %d\n", yos[*yos_count-1].m[month].d[day].solar_rad, day+1, month+1, year);
+			logger_error(g_debug_log,"BAD DATA FOR RG = %f in day = %d month = %d year = %d\n", yos[*yos_count-1].m[month].d[day].solar_rad, day+1, month+1, year);
 			exit(1);
 		}
 		else
@@ -513,8 +512,7 @@ static int yos_from_arr(double *const values, const int rows_count, const int co
 		/* check if values are outside ranges */
 		else if(yos[*yos_count-1].m[month].d[day].tavg < TA_RANGE_MIN || yos[*yos_count-1].m[month].d[day].tavg > TA_RANGE_MAX)
 		{
-			//logger(g_debug_log, "BAD DATA FOR Tavg = %f in day = %d month = %d year = %d\n", yos[*yos_count-1].m[month].d[day].tavg, day+1, month+1, year);
-			printf("BAD DATA FOR Tavg = %f in day = %d month = %d year = %d\n", yos[*yos_count-1].m[month].d[day].tavg, day+1, month+1, year);
+			logger_error(g_debug_log, "BAD DATA FOR Tavg = %f in day = %d month = %d year = %d\n", yos[*yos_count-1].m[month].d[day].tavg, day+1, month+1, year);
 			exit(1);
 		}
 		else
@@ -546,8 +544,7 @@ static int yos_from_arr(double *const values, const int rows_count, const int co
 		/* check if values are outside ranges */
 		else if(yos[*yos_count-1].m[month].d[day].tmax < TMAX_RANGE_MIN || yos[*yos_count-1].m[month].d[day].tmax > TMAX_RANGE_MAX)
 		{
-			//logger(g_debug_log, "BAD DATA FOR Tmax = %f in day = %d month = %d year = %d\n", yos[*yos_count-1].m[month].d[day].tmax, day+1, month+1, year);
-			printf("BAD DATA FOR Tmax = %f in day = %d month = %d year = %d\n", yos[*yos_count-1].m[month].d[day].tmax, day+1, month+1, year);
+			logger_error(g_debug_log, "BAD DATA FOR Tmax = %f in day = %d month = %d year = %d\n", yos[*yos_count-1].m[month].d[day].tmax, day+1, month+1, year);
 			exit(1);
 		}
 		else
@@ -579,8 +576,7 @@ static int yos_from_arr(double *const values, const int rows_count, const int co
 		/* check if values are outside ranges */
 		else if(yos[*yos_count-1].m[month].d[day].tmin < TMIN_RANGE_MIN || yos[*yos_count-1].m[month].d[day].tmin > TMIN_RANGE_MAX)
 		{
-			//logger(g_debug_log, "BAD DATA FOR Tmin = %f in day = %d month = %d year = %d\n", yos[*yos_count-1].m[month].d[day].tmin, day+1, month+1, year);
-			printf("BAD DATA FOR Tmin = %f in day = %d month = %d year = %d\n", yos[*yos_count-1].m[month].d[day].tmin, day+1, month+1, year);
+			logger_error(g_debug_log, "BAD DATA FOR Tmin = %f in day = %d month = %d year = %d\n", yos[*yos_count-1].m[month].d[day].tmin, day+1, month+1, year);
 			exit(1);
 		}
 		else
@@ -615,8 +611,7 @@ static int yos_from_arr(double *const values, const int rows_count, const int co
 		/* check if values are outside ranges */
 		else if(yos[*yos_count-1].m[month].d[day].vpd < VPD_RANGE_MIN || yos[*yos_count-1].m[month].d[day].vpd > VPD_RANGE_MAX)
 		{
-			//logger(g_debug_log, "BAD DATA FOR vpd = %f in day = %d month = %d year = %d\n", yos[*yos_count-1].m[month].d[day].vpd, day+1, month+1, year);
-			printf("BAD DATA FOR vpd = %f in day = %d month = %d year = %d\n", yos[*yos_count-1].m[month].d[day].vpd, day+1, month+1, year);
+			logger_error(g_debug_log, "BAD DATA FOR vpd = %f in day = %d month = %d year = %d\n", yos[*yos_count-1].m[month].d[day].vpd, day+1, month+1, year);
 			exit(1);
 		}
 		else
@@ -681,8 +676,7 @@ static int yos_from_arr(double *const values, const int rows_count, const int co
 		/* check if values are outside ranges */
 		else if(yos[*yos_count-1].m[month].d[day].prcp < PRECIP_RANGE_MIN || yos[*yos_count-1].m[month].d[day].prcp > PRECIP_RANGE_MAX)
 		{
-			//logger(g_debug_log, "BAD DATA FOR prcp = %f in day = %d month = %d year = %d\n", yos[*yos_count-1].m[month].d[day].prcp, day+1, month+1, year);
-			printf("BAD DATA FOR prcp = %f in day = %d month = %d year = %d\n", yos[*yos_count-1].m[month].d[day].prcp, day+1, month+1, year);
+			logger_error(g_debug_log, "BAD DATA FOR prcp = %f in day = %d month = %d year = %d\n", yos[*yos_count-1].m[month].d[day].prcp, day+1, month+1, year);
 			exit(1);
 		}
 		else

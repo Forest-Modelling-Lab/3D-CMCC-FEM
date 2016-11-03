@@ -206,6 +206,8 @@ void print_daily_forest_class_data(cell_t* const c, const int layer, const int h
 	h = &c->heights[height];
 	d = &h->dbhs[dbh];
 	a = &d->ages[age];
+	// ALESSIOR
+	//if ( ! a ) return;
 	s = &a->species[species];
 
 	/* print at the beginning of simulation class level data */

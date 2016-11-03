@@ -28,6 +28,9 @@ void regeneration (cell_t *const c, const int height, const int dbh, const int a
 	int saplings_number;
 
 	species_t *s;
+
+	// ALESSIOR
+	//if ( ! c->heights[height].dbhs[dbh].ages ) return;
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 	logger(g_debug_log, "\n**REGENERATION**\n");
@@ -63,7 +66,7 @@ void regeneration (cell_t *const c, const int height, const int dbh, const int a
 	{
 		if ( ! add_tree_class_for_regeneration( c ) )
 		{
-			logger(g_debug_log, "unable to add new regeneration class! (exit)\n");
+			logger_error(g_debug_log, "unable to add new regeneration class! (exit)\n");
 			exit(1);
 		}
 	}

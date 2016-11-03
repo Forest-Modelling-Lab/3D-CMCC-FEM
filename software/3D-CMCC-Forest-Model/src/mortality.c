@@ -103,7 +103,7 @@ void self_thinning_mortality ( cell_t *const c, const int layer )
 							logger(g_debug_log, "completely removed lower class, starting to remove from higher..\n");
 							if ( ! tree_class_remove(c, height, dbh, age, species) )
 							{
-								logger(g_debug_log, "unable to remove tree class");
+								logger_error(g_debug_log, "unable to remove tree class");
 								exit(1);
 							}
 
@@ -125,7 +125,7 @@ void self_thinning_mortality ( cell_t *const c, const int layer )
 								/* call remove_tree_class */
 								if ( ! tree_class_remove(c, height, dbh, age, species) )
 								{
-									logger(g_debug_log, "unable to remove tree class");
+									logger_error(g_debug_log, "unable to remove tree class");
 									exit(1);
 								}
 
@@ -248,7 +248,7 @@ void daily_growth_efficiency_mortality ( cell_t *const c, const int height, cons
 		/* call remove_tree_class */
 		if ( ! tree_class_remove(c, height, dbh, age, species) )
 		{
-			logger(g_debug_log, "unable to remove tree class");
+			logger_error(g_debug_log, "unable to remove tree class");
 			exit(1);
 		}
 	}
@@ -271,7 +271,7 @@ void annual_growth_efficiency_mortality ( cell_t *const c, const int height, con
 		/* call remove_tree_class */
 		if ( ! tree_class_remove(c, height, dbh, age, species) )
 		{
-			logger(g_debug_log, "unable to remove tree class");
+			logger_error(g_debug_log, "unable to remove tree class");
 			exit(1);
 		}
 	}
@@ -286,6 +286,8 @@ void age_mortality (cell_t *const c, const int height, const int dbh, const int 
 	species_t *s;
 
 	a = &c->heights[height].dbhs[dbh].ages[age];
+	// ALESSIOR
+	//if ( ! a ) return;
 	s = &a->species[species];
 
 	/* Age probability function */
@@ -337,7 +339,7 @@ void age_mortality (cell_t *const c, const int height, const int dbh, const int 
 	{
 		if ( ! tree_class_remove(c, height, dbh, age, species) )
 		{
-			logger(g_debug_log, "unable to remove tree class");
+			logger_error(g_debug_log, "unable to remove tree class");
 			exit(1);
 		}
 	}

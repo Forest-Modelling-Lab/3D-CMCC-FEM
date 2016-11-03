@@ -846,6 +846,9 @@ int main(int argc, char *argv[]) {
 		puts(msg_ok);
 	}
 
+	// DA RIMUOVERE
+	//g_settings->regeneration = 1;
+
 	printf("build matrix using %s...", g_sz_dataset_file);
 	matrix = matrix_create(g_sz_dataset_file);
 	//free(g_sz_dataset_file); g_sz_dataset_file = NULL;
