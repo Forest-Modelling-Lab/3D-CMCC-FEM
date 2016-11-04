@@ -198,6 +198,7 @@ int tree_class_remove(cell_t *const c, const int height, const int dbh, const in
 	if ( age > c->heights[height].dbhs[dbh].ages_count ) return 0;
 	if ( species > c->heights[height].dbhs[dbh].ages[age].species_count ) return 0;
 
+#if 0
 	/* remove class if N_TREE < 0 or if called by harvesting function */
 	if ( ! c->heights[height].dbhs[dbh].ages[age].species[species].counter[N_TREE]
 			|| g_settings->management ) {
@@ -229,6 +230,36 @@ int tree_class_remove(cell_t *const c, const int height, const int dbh, const in
 			}
 		}
 	}
+#else
+	/* remove class if N_TREE < 0 or if called by harvesting function */
+	if ( ! c->heights[height].dbhs[dbh].ages[age].species[species].counter[N_TREE]
+			|| g_settings->management ) {
 
+		if ( ! species_remove(c, height, dbh, age, species) ) return 0;
+
+		if ( 1 == c->heights[height].dbhs[dbh].ages_count ) {
+			if ( c->heights[height].dbhs[dbh].ages[age].species_count <= 1 ) {
+				if ( ! age_remove(c, height, dbh, age) ) return 0;
+			}
+		}
+
+		if ( 1 == c->heights[height].dbhs_count ) {
+			if ( ! c->heights[height].dbhs[dbh].ages_count
+				|| ( (1 == c->heights[height].dbhs[dbh].ages_count)
+					&& (c->heights[height].dbhs[dbh].ages[age].species_count <= 1) ) )
+			{
+					if ( ! dbh_remove(c, height, dbh) ) return 0;
+				}
+		}
+
+		if ( ! c->heights[height].dbhs_count 
+			|| ( (1 == c->heights[height].dbhs_count) 
+				&& (c->heights[height].dbhs[dbh].ages_count <= 1)
+				&& (c->heights[height].dbhs[dbh].ages[age].species_count <= 1) )
+			) {
+				if ( ! height_remove(c, height) ) return 0;
+		}
+	}
+#endif
 	return 1;
 }

@@ -254,7 +254,7 @@ void daily_growth_efficiency_mortality ( cell_t *const c, const int height, cons
 	}
 }
 
-void annual_growth_efficiency_mortality ( cell_t *const c, const int height, const int dbh, const int age, const int species )
+int annual_growth_efficiency_mortality ( cell_t *const c, const int height, const int dbh, const int age, const int species )
 {
 	/* this function superimpose mortality for all trees in class when reserves
 	 * go under zero assuming that reserve pool hasn't be refilled during the year
@@ -274,7 +274,9 @@ void annual_growth_efficiency_mortality ( cell_t *const c, const int height, con
 			logger_error(g_debug_log, "unable to remove tree class");
 			exit(1);
 		}
+		return 1;
 	}
+	return 0;
 }
 
 /* Age mortality function from LPJ-GUESS */

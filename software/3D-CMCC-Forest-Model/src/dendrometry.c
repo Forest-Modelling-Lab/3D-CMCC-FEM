@@ -29,7 +29,6 @@ void dendrometry ( cell_t *const c, const int layer, const int height, const int
 	double current_lcf;                /* current light competition factor */
 	double delta_stem;                 /* stem increment (kgDM/tree) */
 	double delta_dbh;                  /* dbh increment (cm) */
-	double delta_dbh_m;                /* dbh increment (m) */
 	double delta_height;               /* height increment (m) */
 	double dbh_m;                      /* dbh (m) */
 	double hd_factor;                  /* HD factor based on minimum between light and crown competition */
@@ -217,9 +216,9 @@ void dendrometry ( cell_t *const c, const int layer, const int height, const int
 
 		/* reset values */
 		annual_lcf = 0.;
-		counter_annual_lcf = 0.;
+		counter_annual_lcf = 0;
 		annual_ccf = 0.;
-		counter_annual_ccf = 0.;
+		counter_annual_ccf = 0;
 
 		/*******************************************************************************************/
 

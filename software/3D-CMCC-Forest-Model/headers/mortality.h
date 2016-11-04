@@ -6,7 +6,7 @@
 
 void daily_growth_efficiency_mortality ( cell_t *const c, const int height, const int dbh, const int age, const int species );
 
-void annual_growth_efficiency_mortality ( cell_t *const c, const int height, const int dbh, const int age, const int species );
+int annual_growth_efficiency_mortality ( cell_t *const c, const int height, const int dbh, const int age, const int species );
 
 void self_pruning (cell_t *const c, const int layer );
 

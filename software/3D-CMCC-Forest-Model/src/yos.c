@@ -318,6 +318,28 @@ static int yos_from_arr(double *const values, const int rows_count, const int co
 	current_year = -1;
 	yos = *p_yos;
 
+	
+	/* check if dataset is complete */
+	{
+		int i;
+		int start_year;
+		int end_year;
+		int total_rows_count;
+
+		start_year = (int)values[VALUE_AT(0, YEAR)];
+		end_year = (int)values[VALUE_AT(rows_count-1, YEAR)];
+
+		total_rows_count = 0;
+		for ( i = start_year; i <= end_year; ++i ) {
+			total_rows_count += IS_LEAP_YEAR(i) ? 366 : 365;
+		}
+
+		if ( total_rows_count != rows_count ) {
+			logger_error(g_debug_log, "rows count should be %d not %d\n", total_rows_count, rows_count);
+			return 0;
+		}
+	}
+
 	/* check imported values */
 	{
 		int row;
@@ -327,7 +349,7 @@ static int yos_from_arr(double *const values, const int rows_count, const int co
 		flag = malloc((columns_count-3)*sizeof*flag);
 		if ( ! flag ) {
 			logger_error(g_debug_log, sz_err_out_of_memory);
-			free(yos);
+			//free(yos);
 			return 0;
 		}
 
@@ -350,14 +372,14 @@ static int yos_from_arr(double *const values, const int rows_count, const int co
 		if ( flag[VPD_F-3] && flag[RH_F-3] ) {
 			logger_error(g_debug_log, "VPD and RH columns are missing!\n");
 			free(flag);
-			free(yos);
+			//free(yos);
 			return 0;
 		}
 
 		if ( flag[TA_F-3] && flag[TMIN-3] && flag[TMAX-3] ) {
 			logger_error(g_debug_log, "TA, TMIN and TMAX columns are missing!\n");
 			free(flag);
-			free(yos);
+			//free(yos);
 			return 0;
 		}
 
@@ -396,15 +418,14 @@ static int yos_from_arr(double *const values, const int rows_count, const int co
 		year = (int)values[VALUE_AT(row, YEAR)];
 		if ( ! year ) {
 			logger_error(g_debug_log, "year cannot be zero!\n");
-			free(yos);
+			//free(yos);
 			return 0;
 		}
 
 		month = (int)values[VALUE_AT(row, MONTH)];
 		if ( month < 1 || month > YOS_MONTHS_COUNT ) {
-			printf("bad month for year %d\n", year);
-			//logger(g_debug_log, "bad month for year %d\n\n", year);
-			free(yos);
+			logger_error(g_debug_log, "bad month for year %d\n\n", year);
+			//free(yos);
 			return 0;
 
 		}
@@ -412,9 +433,8 @@ static int yos_from_arr(double *const values, const int rows_count, const int co
 
 		day = (int)values[VALUE_AT(row, DAY)];
 		if ( (day <= 0) || day > days_per_month[month] + (((1 == month) && IS_LEAP_YEAR(year)) ? 1 :0 ) ) {
-			printf("bad day for %s %d\n", sz_month_names[month], year);
-			//logger(g_debug_log, "bad day for %s %d\n\n", sz_month_names[month], year);
-			free(yos);
+			logger_error(g_debug_log, "bad day for %s %d\n\n", sz_month_names[month], year);
+			//free(yos);
 			return 0;
 		}
 		--day;
@@ -424,7 +444,7 @@ static int yos_from_arr(double *const values, const int rows_count, const int co
 			if ( ! yos_no_leak )
 			{
 				logger_error(g_debug_log, sz_err_out_of_memory);
-				free(yos);
+				//free(yos);
 				return 0;
 			}
 			yos = yos_no_leak;
@@ -440,7 +460,7 @@ static int yos_from_arr(double *const values, const int rows_count, const int co
 		if (yos[*yos_count-1].m[month].d[day].n_days > YOS_DAYS_COUNT)
 		{
 			logger_error(g_debug_log, "ERROR IN N_DAYS DATA!!\n");
-			free(yos);
+			//free(yos);
 			return 0;
 		}
 
@@ -1701,8 +1721,7 @@ static int import_txt(const char *const filename, yos_t** p_yos, int *const yos_
 			{
 				if  ( -1 != columns[i] )
 				{
-					printf("met column %s already assigned.\n\n", token2);
-					//logger(g_debug_log, "met column %s already assigned.\n\n", token2);
+					logger_error(g_debug_log, "met column %s already assigned.\n\n", token2);
 					free(values);
 					fclose(f);
 					return 0;
@@ -1744,7 +1763,7 @@ static int import_txt(const char *const filename, yos_t** p_yos, int *const yos_
 			else if ( ((VPD_F == i) && (-1 != columns[RH_F])) || ((RH_F == i) && (-1 != columns[VPD_F])) ) {
 				continue;
 			}
-			printf("met column %s not found.\n\n", sz_met_columns[i]);
+			logger_error(g_debug_log, "met column %s not found.\n\n", sz_met_columns[i]);
 			free(values);
 			fclose(f);
 			return 0;
@@ -1789,7 +1808,7 @@ static int import_txt(const char *const filename, yos_t** p_yos, int *const yos_
 		for ( column = no_year_column, token2 = string_tokenizer(buffer, met_delimiter, &p); token2; token2 = string_tokenizer(NULL, met_delimiter, &p), ++column )
 		{
 			if ( column >= MET_COLUMNS_COUNT ) {
-				printf("too many columns at row %d\n", current_row+1);
+				logger_error(g_debug_log, "too many columns at row %d\n", current_row+1);
 				free(values);
 				fclose(f);
 				return 0;
@@ -1803,8 +1822,7 @@ static int import_txt(const char *const filename, yos_t** p_yos, int *const yos_
 
 			if ( error_flag )
 			{
-				printf("unable to convert value \"%s\" for %s column\n", token2, sz_met_columns[i+no_year_column]);
-				//logger(g_debug_log, "unable to convert value \"%s\" for %s column\n", token2, sz_met_columns[i+no_year_column]);
+				logger_error(g_debug_log, "unable to convert value \"%s\" for %s column\n", token2, sz_met_columns[i+no_year_column]);
 				free(values);
 				fclose(f);
 				return 0;
@@ -1815,8 +1833,7 @@ static int import_txt(const char *const filename, yos_t** p_yos, int *const yos_
 	fclose(f);
 
 	if ( rows_count != current_row ) {
-		printf("rows count should be %d not %d\n", rows_count, current_row);
-		//logger(g_debug_log, "rows count should be %d not %d\n", rows_count, current_row);
+		logger_error(g_debug_log, "rows count should be %d not %d\n", rows_count, current_row);
 		free(values);
 		return 0;
 	}
