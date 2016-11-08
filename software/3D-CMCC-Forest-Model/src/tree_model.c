@@ -273,6 +273,9 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							/* nitrogen */
 							nitrogen_stock( s );
 
+							/* water use efficiency */
+							water_use_efficiency ( c, height, dbh, age, species, day, month, year );
+
 							/****************************************************************************************************************************************/
 
 							/* check for balance closure at the class level */

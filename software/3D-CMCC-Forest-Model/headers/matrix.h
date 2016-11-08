@@ -230,10 +230,17 @@ enum {
 	CANOPY_LATENT_HEAT,                 /* canopy latent heat W m-2 */
 	CANOPY_SENSIBLE_HEAT,               /* canopy sensible heat W m-2 */
 
+	MONTHLY_CANOPY_TRANSP,              /* monthly canopy transpiration mm month-1 */
 	MONTHLY_CANOPY_EVAPO_TRANSP,        /* monthly canopy evapotranspiration mm month-1 */
-	YEARLY_CANOPY_EVAPO_TRANSP,         /* annual canopy evapotranspiration mm month-1 */
+	YEARLY_CANOPY_TRANSP,               /* annual canopy transpiration mm year-1 */
+	YEARLY_CANOPY_EVAPO_TRANSP,         /* annual canopy evapotranspiration mm year-1 */
 	MONTHLY_CANOPY_LATENT_HEAT,         /* monthly canopy latent heat W m-2 */
 	YEARLY_CANOPY_LATENT_HEAT,          /* annual canopy latent heat W m-2 */
+
+	/* water use efficiency */
+	WUE,                                /* daily Water Use Efficiency */
+	M_WUE,                              /* monthly Water Use Efficiency */
+	Y_WUE,                              /* annual Water Use Efficiency */
 
 	/* LAI */
 	LAI_PROJ,                           /* LAI for Projected Area covered (at zenith angle)(m^2/m2) */
