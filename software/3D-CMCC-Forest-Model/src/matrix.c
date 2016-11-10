@@ -855,27 +855,33 @@ static int fill_cell_from_species(age_t* const a, const row_t* const row) {
 	char *p;
 
 	/* check parameter */
-	assert( a && row );
+	assert( a );
 
-	p = string_copy(row->species);
-	if ( ! p ) return 0;
+	p = NULL;
+	if ( row )
+	{
+		p = string_copy(row->species);
+		if ( ! p ) return 0;
+	}
 
-	if ( ! alloc_struct((void **)&a->species, &a->species_count, &a->species_avail, sizeof(species_t)) ) {
+	if ( ! alloc_struct((void **)&a->species, &a->species_count, &a->species_avail, sizeof(species_t)) )
+	{
+		free(p);
 		return 0;
 	}
 
 	a->species[a->species_count-1] = species;
-	a->species[a->species_count-1].management = row->management;
+	a->species[a->species_count-1].management = row ? row->management : T;
 	a->species[a->species_count-1].name = p;
-	a->species[a->species_count-1].counter[N_TREE] = row->n;
-	a->species[a->species_count-1].counter[N_STUMP] = row->stool;
-	a->species[a->species_count-1].value[BIOMASS_FOLIAGE_tDM] = row->wf;
-	a->species[a->species_count-1].value[BIOMASS_COARSE_ROOT_tDM] = row->wrc;
-	a->species[a->species_count-1].value[BIOMASS_FINE_ROOT_tDM] = row->wrf;
-	a->species[a->species_count-1].value[BIOMASS_STEM_tDM] = row->ws;
-	a->species[a->species_count-1].value[BIOMASS_BRANCH_tDM] = row->wbb;
-	a->species[a->species_count-1].value[RESERVE_tDM] = row->wres;
-	a->species[a->species_count-1].value[LAI_PROJ] = row->lai;
+	a->species[a->species_count-1].counter[N_TREE] = row ? row->n : 0;
+	a->species[a->species_count-1].counter[N_STUMP] = row ? row->stool : 0;
+	a->species[a->species_count-1].value[BIOMASS_FOLIAGE_tDM] = row ? row->wf : INVALID_VALUE;
+	a->species[a->species_count-1].value[BIOMASS_COARSE_ROOT_tDM] = row ? row->wrc : INVALID_VALUE;
+	a->species[a->species_count-1].value[BIOMASS_FINE_ROOT_tDM] = row ? row->wrf : INVALID_VALUE;
+	a->species[a->species_count-1].value[BIOMASS_STEM_tDM] = row ? row->ws : INVALID_VALUE;
+	a->species[a->species_count-1].value[BIOMASS_BRANCH_tDM] = row ? row->wbb : INVALID_VALUE;
+	a->species[a->species_count-1].value[RESERVE_tDM] = row ? row->wres : INVALID_VALUE;
+	a->species[a->species_count-1].value[LAI_PROJ] = row ? row->lai : INVALID_VALUE;
 
 	return 1;
 }
@@ -885,7 +891,7 @@ static int fill_cell_from_ages(dbh_t* const d, const row_t* const row)
 	static age_t age = { 0 };
 
 	/* check parameter */
-	assert ( d && row );
+	assert ( d );
 
 	/* alloc memory for dbhs */
 	if ( !alloc_struct((void **)&d->ages, &d->ages_count, &d->ages_avail, sizeof(age_t)) )
@@ -895,7 +901,7 @@ static int fill_cell_from_ages(dbh_t* const d, const row_t* const row)
 	d->ages[d->ages_count-1] = age;
 
 	/* set values */
-	d->ages[d->ages_count-1].value = row->age;
+	d->ages[d->ages_count-1].value = row ? row->age : INVALID_VALUE;
 
 	/* add age */
 	return fill_cell_from_species(&d->ages[d->ages_count-1], row);
@@ -906,7 +912,7 @@ static int fill_cell_from_dbhs(height_t* const h, const row_t* const row)
 	static dbh_t dbh = { 0 };
 
 	/* check parameter */
-	assert( h && row );
+	assert( h );
 
 	/* alloc memory for dbhs */
 	if ( !alloc_struct((void **)&h->dbhs, &h->dbhs_count, &h->dbhs_avail, sizeof(dbh_t)) )
@@ -916,7 +922,7 @@ static int fill_cell_from_dbhs(height_t* const h, const row_t* const row)
 	h->dbhs[h->dbhs_count-1] = dbh;
 
 	/* set values */
-	h->dbhs[h->dbhs_count-1].value = row->avdbh;
+	h->dbhs[h->dbhs_count-1].value = row ? row->avdbh : INVALID_VALUE;
 
 	/* add dbh */
 	return fill_cell_from_ages(&h->dbhs[h->dbhs_count-1], row);
@@ -927,7 +933,7 @@ static int fill_cell_from_heights(cell_t *const c, const row_t *const row)
 	static height_t height = { 0 };
 
 	/* check parameter */
-	assert( c && row );
+	assert( c );
 
 	/* alloc memory for heights */
 	if (!alloc_struct((void **)&c->heights, &c->heights_count, &c->heights_avail, sizeof(height_t)) )
@@ -937,7 +943,7 @@ static int fill_cell_from_heights(cell_t *const c, const row_t *const row)
 	c->heights[c->heights_count-1] = height;
 
 	/* set values */
-	c->heights[c->heights_count-1].value = row->height;
+	c->heights[c->heights_count-1].value = row ? row->height : INVALID_VALUE;
 
 	/* add dbh */
 	return fill_cell_from_dbhs(&c->heights[c->heights_count-1], row);
@@ -945,12 +951,12 @@ static int fill_cell_from_heights(cell_t *const c, const row_t *const row)
 
 /****************************************************************************/
 
-static int fill_cell_from_soils(cell_t *const c, const row_t * const row)
+static int fill_cell_from_soils(cell_t *const c)
 {
 	static soil_layer_s s = { 0 };
 
 	/* check parameter */
-	assert( c && row );
+	assert( c);
 
 	if ( g_settings )
 	{
@@ -1007,7 +1013,7 @@ static int fill_cell(matrix_t* const m, row_t* const row)
 		m->cells[index].y = row->y;
 
 		/* add soils */
-		if ( ! fill_cell_from_soils(&m->cells[index], row) ) {
+		if ( ! fill_cell_from_soils(&m->cells[index]) ) {
 			return 0;
 		}
 	}
@@ -1037,6 +1043,8 @@ int fill_species_from_file(species_t *const s) {
 	int *species_flags;
 
 	assert(s);
+
+	if ( ! s->name ) return 0;
 
 	species_count = SIZE_OF_ARRAY(sz_species_values);
 	species_flags = malloc(sizeof*species_flags*species_count);
@@ -1226,60 +1234,63 @@ matrix_t* matrix_create(const char* const filename) {
 	int x_cells_count;
 	int y_cells_count;
 
-	assert(filename);
-
+	d = NULL;
 	x_cells_count = 0;
 	y_cells_count = 0;
-	/* import txt or nc ? */
+
+	if ( filename )
 	{
-		char *p;
-		p = strrchr(filename, '.');
-		if ( p ) {
-			++p;
-			if ( ! string_compare_i(p, "nc") || ! string_compare_i(p, "nc4") ) {
-				d = dataset_import_nc(filename, &x_cells_count, &y_cells_count);
+		/* import txt or nc ? */
+		{
+			char *p;
+			p = strrchr(filename, '.');
+			if ( p ) {
+				++p;
+				if ( ! string_compare_i(p, "nc") || ! string_compare_i(p, "nc4") ) {
+					d = dataset_import_nc(filename, &x_cells_count, &y_cells_count);
+				} else {
+					d = dataset_import_txt(filename);
+				}
 			} else {
-				d = dataset_import_txt(filename);
+				printf("bad filename!");
+				return NULL;
 			}
-		} else {
-			printf("bad filename!");
-			return NULL;
 		}
-	}
-	if ( ! d ) return NULL;
-#ifdef _DEBUG
-	{
-		FILE *f;
-		f = fopen("debug_input.txt", "w");
-		if ( f ) {
-			int i;
-			fputs("year,x,y,landuse,age,species,management,n,stool,avdbg,height,wf,wrc,wrf,ws,wbb,wres,lai\n", f);
-			for ( i = 0; i < d->rows_count; ++i ) {
-				fprintf(f, "%d,%d,%d,%c,%d,%s,%c,%d,%d,%g,%g,%g,%g,%g,%g,%g,%g,%g\n"
-						, d->rows[i].year_stand
-						, d->rows[i].x
-						, d->rows[i].y
-						, (F == d->rows[i].landuse) ? 'F' : 'Z'
-								, d->rows[i].age
-								, d->rows[i].species
-								, (T == d->rows[i].management) ? 'T' : 'C'
-										, d->rows[i].n
-										, d->rows[i].stool
-										, d->rows[i].avdbh
-										, d->rows[i].height
-										, d->rows[i].wf
-										, d->rows[i].wrc
-										, d->rows[i].wrf
-										, d->rows[i].ws
-										, d->rows[i].wbb
-										, d->rows[i].wres
-										, d->rows[i].lai
-				);
+		if ( ! d ) return NULL;
+	#ifdef _DEBUG
+		{
+			FILE *f;
+			f = fopen("debug_input.txt", "w");
+			if ( f ) {
+				int i;
+				fputs("year,x,y,landuse,age,species,management,n,stool,avdbg,height,wf,wrc,wrf,ws,wbb,wres,lai\n", f);
+				for ( i = 0; i < d->rows_count; ++i ) {
+					fprintf(f, "%d,%d,%d,%c,%d,%s,%c,%d,%d,%g,%g,%g,%g,%g,%g,%g,%g,%g\n"
+							, d->rows[i].year_stand
+							, d->rows[i].x
+							, d->rows[i].y
+							, (F == d->rows[i].landuse) ? 'F' : 'Z'
+									, d->rows[i].age
+									, d->rows[i].species
+									, (T == d->rows[i].management) ? 'T' : 'C'
+											, d->rows[i].n
+											, d->rows[i].stool
+											, d->rows[i].avdbh
+											, d->rows[i].height
+											, d->rows[i].wf
+											, d->rows[i].wrc
+											, d->rows[i].wrf
+											, d->rows[i].ws
+											, d->rows[i].wbb
+											, d->rows[i].wres
+											, d->rows[i].lai
+					);
+				}
+				fclose(f);
 			}
-			fclose(f);
 		}
+	#endif
 	}
-#endif
 
 	m = malloc(sizeof*m);
 	if ( ! m ) {
@@ -1292,16 +1303,43 @@ matrix_t* matrix_create(const char* const filename) {
 	m->x_cells_count = 0;
 	m->y_cells_count = 0;
 
-	for ( row = 0; row < d->rows_count; ++row ) {
-		if ( ! fill_cell(m, &d->rows[row]) ) {
-			dataset_free(d);
-			matrix_free(m);
-			return NULL;
+	if ( d ) {
+		for ( row = 0; row < d->rows_count; ++row ) {
+			if ( ! fill_cell(m, &d->rows[row]) ) {
+				dataset_free(d);
+				matrix_free(m);
+				return NULL;
+			}
 		}
+		dataset_free(d);
+		d = NULL;
+	} else {
+		static cell_t cell = { 0 };
+
+		// add an empty cell
+		if ( ! alloc_struct((void **)&m->cells, &m->cells_count, &m->cells_avail, sizeof(cell_t)) )
+		{
+			return 0;
+		}
+		row = m->cells_count-1;
+		m->cells[row] = cell;
+		m->cells[row].landuse = F;
+		m->cells[row].x = 0;
+		m->cells[row].y = 0;
+
+		if ( ! fill_cell_from_soils(&m->cells[row]) )
+		{
+			return 0;
+		}
+
+		if ( ! fill_cell_from_heights(&m->cells[row], NULL) )
+		{
+			return 0;
+		}
+		x_cells_count = 1;
+		y_cells_count = 1;
 	}
-
-	dataset_free(d);
-
+	
 	/* fill with species values */
 	for ( cell = 0; cell < m->cells_count; ++cell ) {
 		for (height = 0; height < m->cells[cell].heights_count; ++height)
@@ -1313,8 +1351,10 @@ matrix_t* matrix_create(const char* const filename) {
 					{
 						if ( ! fill_species_from_file(&m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species]) )
 						{
-							matrix_free(m);
-							return NULL;
+							if ( filename ) {
+								matrix_free(m);
+								return NULL;
+							}
 						}
 					}
 				}
@@ -1329,18 +1369,16 @@ matrix_t* matrix_create(const char* const filename) {
 	}
 
 	/* check against nc dimension */
-	if ( x_cells_count ) {
-		if (	(x_cells_count != m->x_cells_count)
-				|| (y_cells_count != m->y_cells_count) ) {
-			printf("dimensions differs between nc and check: x(%d,%d), y(%d,%d)\n"
-						, x_cells_count
-						, m->x_cells_count
-						, y_cells_count
-						, m->y_cells_count
-			);
-			matrix_free(m);
-			m = NULL;
-		}
+	if (	(x_cells_count != m->x_cells_count)
+			|| (y_cells_count != m->y_cells_count) ) {
+		printf("dimensions differs between nc and check: x(%d,%d), y(%d,%d)\n"
+					, x_cells_count
+					, m->x_cells_count
+					, y_cells_count
+					, m->y_cells_count
+		);
+		matrix_free(m);
+		m = NULL;
 	}
 
 	return m;

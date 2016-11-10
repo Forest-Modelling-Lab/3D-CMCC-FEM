@@ -664,8 +664,8 @@ static int parse_args(int argc, char *argv[])
 	}
 
 	if ( ! g_sz_dataset_file ) {
-		puts("dataset filename not specified!");
-		goto err_show_usage;
+		//puts("dataset filename not specified!");
+		//goto err_show_usage;
 	} else if ( g_sz_input_path ) {
 		p = concatenate_path(g_sz_input_path, g_sz_dataset_file); 
 		if ( ! p )
@@ -845,8 +845,9 @@ int main(int argc, char *argv[]) {
 	} else {
 		puts(msg_ok);
 	}
+	if ( g_sz_dataset_file )
+		printf("build matrix using %s...", g_sz_dataset_file);
 
-	printf("build matrix using %s...", g_sz_dataset_file);
 	matrix = matrix_create(g_sz_dataset_file);
 	//free(g_sz_dataset_file); g_sz_dataset_file = NULL;
 	if ( ! matrix ) goto err;
@@ -871,6 +872,8 @@ int main(int argc, char *argv[]) {
 	g_year_start_index = -1;
 	
 	logger(g_debug_log, "\n3D-CMCC FEM START....\n\n");
+
+	
 	for ( cell = 0; cell < matrix->cells_count; ++cell )
 	{
 		logger(g_debug_log, "Processing met data files for cell at %d,%d...\n", matrix->cells[cell].x, matrix->cells[cell].y);
@@ -1207,13 +1210,13 @@ int main(int argc, char *argv[]) {
 						 */
 						output_push_values(output_vars
 								, &matrix->cells[cell]
-								                 , month
-								                 , day
-								                 , year
-								                 , years_of_simulation
-								                 , matrix->x_cells_count
-								                 , matrix->y_cells_count
-								                 , OUTPUT_TYPE_DAILY
+												 , month
+												 , day
+												 , year
+												 , years_of_simulation
+												 , matrix->x_cells_count
+												 , matrix->y_cells_count
+												 , OUTPUT_TYPE_DAILY
 						);
 					}
 					/******************************************************************************/
@@ -1255,13 +1258,13 @@ int main(int argc, char *argv[]) {
 					 */
 					output_push_values(output_vars
 							, &matrix->cells[cell]
-							                 , month
-							                 , day
-							                 , year
-							                 , years_of_simulation
-							                 , matrix->x_cells_count
-							                 , matrix->y_cells_count
-							                 , OUTPUT_TYPE_MONTHLY
+											 , month
+											 , day
+											 , year
+											 , years_of_simulation
+											 , matrix->x_cells_count
+											 , matrix->y_cells_count
+											 , OUTPUT_TYPE_MONTHLY
 					);
 				}
 				/******************************************************************************/
@@ -1300,13 +1303,13 @@ int main(int argc, char *argv[]) {
 				 */
 				output_push_values(output_vars
 						, &matrix->cells[cell]
-						                 , month
-						                 , day
-						                 , year
-						                 , years_of_simulation
-						                 , matrix->x_cells_count
-						                 , matrix->y_cells_count
-						                 , OUTPUT_TYPE_YEARLY
+										 , month
+										 , day
+										 , year
+										 , years_of_simulation
+										 , matrix->x_cells_count
+										 , matrix->y_cells_count
+										 , OUTPUT_TYPE_YEARLY
 				);
 			}
 			/******************************************************************************/
@@ -1322,6 +1325,8 @@ int main(int argc, char *argv[]) {
 			}
 			logger(g_debug_log, "****************END OF YEAR (%d)*******************\n", matrix->cells[cell].years[year].year );
 		}
+		
+		if ( ! matrix->cells_count ) break;
 
 		if ( g_year_start_index != -1 ) {
 			free(matrix->cells[cell].years-g_year_start_index);

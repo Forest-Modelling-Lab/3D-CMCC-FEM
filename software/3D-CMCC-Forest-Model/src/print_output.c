@@ -51,7 +51,8 @@ static void write_paths(logger_t *const _log)
 	//assert(_log);
 
 	logger(_log, "\n\nsite: %s\n", get_filename(g_soil_settings->sitename));
-	logger(_log, "input file = %s\n", get_filename(g_sz_dataset_file));
+	if ( g_sz_dataset_file )
+		logger(_log, "input file = %s\n", get_filename(g_sz_dataset_file));
 	logger(_log, "soil file = %s\n", get_filename(g_sz_soil_file));
 	logger(_log, "topo file = %s\n", get_filename(g_sz_topo_file));
 	logger(_log, "met file = %s\n", get_filename(g_sz_input_met_file));
