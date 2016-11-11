@@ -27,10 +27,10 @@ for ISIMIP simulations 19xx-2099 in Soroe we used:
  FILE NAME: "Fagussylvatica.txt"(unique for all simulations)
  
 -input CO2 file:
- *for simulations when CO2 is fixed (CO2_fixed "on") we use the same co2 input file for all GCMs and all rcps :"CO2_hist_rcps_1950_2000.txt"
+ *for simulations when CO2 is fixed (CO2_trans "off") we use the same co2 input file for all GCMs and all rcps :"CO2_hist_rcps_1950_2000.txt"
  these simulation use a transient CO2 concentration up to year 2000, after that CO2 is equal for all years (file has been made getting the 
  transient CO2 files and changing values after year 2000 using the value of year 2000
- *for simulations when CO2 in NOT fixed (CO2_fixed "off") we use different CO2 file based ONLY on rcps used
+ *for simulations when CO2 in NOT fixed (CO2_trans "on") we use different CO2 file based ONLY on rcps used
  NOTE: reference value for F_CO2 = 1 is:  CO2CONC "368.865"  //CO2 concentration refers to 2000 as ISIMIP PROTOCOL
  *for simulation with Historical climate dataset (experiments 1a) over 2005 data (to 2012) has been filled with values coming from CO2_rcps files
  

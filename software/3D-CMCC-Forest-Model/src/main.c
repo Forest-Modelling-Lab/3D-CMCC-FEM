@@ -274,24 +274,24 @@ static int log_start(const char* const sz_date, const char* const sitename)
 	}
 
 	/* setting version */
-	len += sprintf(buffer+len, "_%c", g_settings->version);
+	//len += sprintf(buffer+len, "_%c", g_settings->version);
 
-	/* co2_fixed */
-	switch ( g_settings->CO2_fixed ) {
-		case CO2_FIXED_OFF:
-			p = "OFF";
-			break;
-
-		case CO2_FIXED_ON:
+	/* co2_transient */
+	switch ( g_settings->CO2_trans ) {
+		case CO2_TRANS_ON:
 			p = "ON";
 			break;
 
-		case CO2_FIXED_VAR:
+		case CO2_TRANS_OFF:
+			p = "OFF";
+			break;
+
+		case CO2_TRANS_VAR:
 			p = "VAR";
 			break;
 
 		default:
-			puts("bad CO2_fixed value in settings file!\n");
+			puts("bad CO2_trans value in settings file!\n");
 			return 0;
 	}
 	len += sprintf(buffer+len, "_CO2_%s", p);

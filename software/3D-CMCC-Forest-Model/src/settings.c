@@ -20,7 +20,7 @@ enum {
 	, SETTINGS_YEAR_END
 	, SETTINGS_SOIL_OUTPUT
 	, SETTINGS_CO2_MOD
-	, SETTINGS_CO2_FIXED
+	, SETTINGS_CO2_TRANS
 	, SETTINGS_NDEP_FIXED
 	, SETTINGS_Q10_FIXED
 	, SETTINGS_REGENERATION
@@ -200,11 +200,11 @@ settings_t* settings_import(const char *const filename) {
 				}
 			break;
 
-			case SETTINGS_CO2_FIXED:
+			case SETTINGS_CO2_TRANS:
 				if ( ! string_compare_i(token, "on") ) {
-					s->CO2_fixed = CO2_FIXED_ON;
+					s->CO2_trans = CO2_TRANS_ON;
 				} else if ( ! string_compare_i(token, "var") ) {
-					s->CO2_fixed = CO2_FIXED_VAR;
+					s->CO2_trans = CO2_TRANS_VAR;
 				}
 			break;
 

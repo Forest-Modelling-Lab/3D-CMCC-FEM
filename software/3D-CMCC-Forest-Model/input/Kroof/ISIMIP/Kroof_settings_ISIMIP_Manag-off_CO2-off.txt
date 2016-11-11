@@ -8,7 +8,7 @@ MONTHLY_OUTPUT "on"              //Must be 'on' or 'off'
 ANNUAL_OUTPUT "on"               //Must be 'on' or 'off'
 SOIL_OUTPUT "off"                //Must be 'on' or 'off'
 CO2_mod "on"                      //Must be  'on' or 'off'
-CO2_fixed "var"                   //Must be 'on' (with a fixed value thorugh the years) or 'off' (get from file) or "var" (variable up to a year)
+CO2_trans var                        //Must be 'on' or 'off'
 Ndep_fixed "on"                   //Must be 'on' or 'off'
 Q10_fixed "on"                    //Q10 temperature acclimatation Must be 'on' or 'off'
 regeneration "off"                //Must be 'on' or 'off'

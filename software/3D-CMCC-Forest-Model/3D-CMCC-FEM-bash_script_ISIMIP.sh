@@ -45,7 +45,7 @@ HYSTs=(CLIMATE PRINCETON WATCH GSWP3 WATCH-WFDEI All)
 GCMs=(GCM1 GCM2 GCM3 GCM4 GCM5 All)
 
 #declare RCPs
-RCPs=(rcp8p5 rcp6p0 rcp4p5 rcp2p6 All)
+RCPs=( 8.5 6.0 4.5 2.6 All)
 
 #declare Management
 MANs=(on off All)
@@ -435,6 +435,12 @@ if [ "$climate" == "${CLIMATEs[1]}" ] ; then
 	echo "'$rcp' doesn't match with RCPs list. please rewrite it."
 	done
 	
+	if   [ "$rcp" == "8.5" ]; then rcp=rcp8p5
+	elif [ "$rcp" == "6.0" ]; then rcp=rcp6p0
+	elif [ "$rcp" == "4.5" ]; then rcp=rcp4p5
+	elif [ "$rcp" == "2.6" ]; then rcp=rcp2p6
+	fi
+			
 	#for counter
 	if [ "$rcp" == 'All' ] ; then
 		rcp_counter=${#RCPs[@]} 
@@ -532,50 +538,6 @@ echo 'running for' "$site"
 
 cd ../../..
 
-
-function single_run_isimip {
-	
-	echo "single run"
-	echo 'running for' "$climate"
-	echo 'running for' "$gcm"
-	echo 'running for' "$rcp"
-	echo 'running with management =' "$management" 
-	echo 'running with co2 =' "$co2"
-	
-
-	
-	#add site name to current paths
-	SITE_PATH=input/"$site"
-	OUTPUT_PATH=output/"$site"
-	STAND_PATH="$project"/"$site"_stand_"$PROJECT".txt
-	TOPO_PATH="$project"/"$site"_topo_"$PROJECT".txt
-
-	#add management and co2 to setting path
-	SETTING_PATH="$project"/"$site"_settings_"$PROJECT"_Manag-"$management"_CO2-"$co2".txt
-
-	#add gcm and rcp to meteo co2 and soil path
-	MET_PATH="$project"/"$gcm"/"$gcm"_hist_"$rcp"_1960_2099.txt
-	SOIL_PATH="$project"/"$gcm"/"$site"_soil_"$rcp"_"$PROJECT".txt
-	CO2_PATH="$project"/CO2/CO2_"$rcp"_1950_2099.txt
-	
-	#add paths and arguments to executable and run
-	$launch$executable -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH
-	
-	#log arguments paths
-	echo "*****************************"
-	echo "$MODEL $VERSION-$PROJECT arguments:"
-	echo "-i" $SITE_PATH
-	echo "-p" $PARAMETERIZATION_PATH
-	echo "-d" $STAND_PATH
-	echo "-s" $SOIL_PATH
-	echo "-t" $TOPO_PATH
-	echo "-m" $MET_PATH
-	echo "-k" $CO2_PATH
-	echo "-c" $SETTING_PATH
-	echo "-o" $OUTPUT_PATH
-	echo "*****************************"
-}
-
 function multi_run_isimip {
 	for (( b = 0 ; b < $clim_counter ; ++b )) ; do
 		for (( c = 0 ; c < $gcm_counter ; ++c )) ; do
@@ -634,13 +596,10 @@ function multi_run_isimip {
 	done
 }
 
-if [ "$gcm_counter" == 1 ] && [ "$rcp_counter" == 1 ] && [ "$man_counter" == 1 ] && [ "$co2_counter" == 1 ] ; then
-	#launch single run
-	single_run_isimip
-else
-	#launch multi run
-	multi_run_isimip
-fi
+
+#launch multi run
+multi_run_isimip
+
 
 
 #delete copied executable from current directory

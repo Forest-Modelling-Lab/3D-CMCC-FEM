@@ -65,7 +65,7 @@ static void print_model_settings(logger_t*const log)
 
 	logger(log, "*model settings*\n");
 	logger(log, "CO2_mod = %s\n", g_settings->CO2_mod ? "on" : "off");
-	logger(log, "CO2 fixed = %s\n", (CO2_FIXED_VAR == g_settings->CO2_fixed) ? "var" : (CO2_FIXED_ON == g_settings->CO2_fixed) ? "on" : "off");
+	logger(log, "CO2 fixed = %s\n", (CO2_TRANS_VAR == g_settings->CO2_trans) ? "var" : (CO2_TRANS_ON == g_settings->CO2_trans) ? "on" : "off");
 	logger(log, "Q10 fixed = %s\n", g_settings->Q10_fixed ? "on" : "off");
 	logger(log, "regeneration = %s\n", g_settings->regeneration ? "on" : "off");
 	logger(log, "Management = %s\n", g_settings->management ? "on" : "off");

@@ -792,11 +792,11 @@ void update_biomass_after_mortality ()
 //from LPJ Growth efficiency mortality
 void Greff_Mortality (species_t *const s)
 {
-	static double greff;
-	static double kmort1 = 0.02; //modified from original version
-	static double kmort2 = 0.3;
-	static double mortgreff;
-	static int GreffDeadTrees;
+//	static double greff;
+//	static double kmort1 = 0.02; //modified from original version
+//	static double kmort2 = 0.3;
+//	static double mortgreff;
+//	static int GreffDeadTrees;
 
 //	logger(g_debug_log, "**MORTALITY based on Growth Efficiency (LPJ)**\n");
 //

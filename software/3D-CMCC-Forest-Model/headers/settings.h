@@ -2,7 +2,7 @@
 #ifndef SETTINGS_H_
 #define SETTINGS_H_
 
-enum { CO2_FIXED_OFF = 0, CO2_FIXED_ON, CO2_FIXED_VAR };
+enum { CO2_TRANS_ON = 0, CO2_TRANS_OFF, CO2_TRANS_VAR };
 
 #define SETTINGS_REPLANTED_SPECIES_MAX_SIZE			(32+1)
 #define SETTINGS_REGENERATION_SPECIES_MAX_SIZE		(32+1)
@@ -21,12 +21,12 @@ typedef struct {
 	int year_end;
 	char soil_output;
 	char CO2_mod;
-	char CO2_fixed;
+	char CO2_trans;               /* CO2 transient */
 	char Ndep_fixed;
 	char Q10_fixed;
 	char regeneration;
 	char management;
-	char Prog_Aut_Resp; /* Prognostic autotrophic respiration */
+	char Prog_Aut_Resp;           /* Prognostic autotrophic respiration */
 	char dndc;
 	char replanted_species[SETTINGS_REPLANTED_SPECIES_MAX_SIZE]; /* species name of replanted species */
 	char regeneration_species[SETTINGS_REGENERATION_SPECIES_MAX_SIZE]; /* species name of regeneration species */

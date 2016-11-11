@@ -1999,7 +1999,7 @@ yos_t* yos_import(const char *const file, int *const yos_count, const int x, con
 
 	/* import co2 conc */
 	if ( g_settings->CO2_mod ) {
-		if ( (CO2_FIXED_OFF == g_settings->CO2_fixed) || (CO2_FIXED_VAR == g_settings->CO2_fixed) )
+		if ( (CO2_TRANS_ON == g_settings->CO2_trans) || (CO2_TRANS_VAR == g_settings->CO2_trans) )
 		{
 			int err;
 
