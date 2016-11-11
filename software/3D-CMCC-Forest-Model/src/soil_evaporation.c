@@ -42,15 +42,20 @@ void soil_evaporation(cell_t *const c, const meteo_daily_t *const meteo_daily)
 	{
 		/* new bare-soil evaporation routine */
 		/* first calculate potential evaporation, assuming the resistance
-		for vapour transport is equal to the resistance for sensible heat
-		transport. That is, no additional resistance for vapour transport to
+		for vapor transport is equal to the resistance for sensible heat
+		transport. That is, no additional resistance for vapor transport to
 		the soil surface. This represents evaporation from a wet surface with
 		a specified aerodynamic resistance (= boundary layer resistance).
-		The aerodynamic resistance is for now set as a constant, and is
+		*/
+
+		/*
+		note: The aerodynamic resistance is for now set as a constant, and is
 		taken from observations over bare soil in tiger-bush in south-west
-		Niger: rbl = 107 s m-1 (Wallace and Holwill, 1997). */
+		Niger: rbl = 107 s m-1 (Wallace and Holwill, 1997).
+		*/
 
 		rbl = 107.0 * rcorr;
+
 		rv = rbl;
 		rh = rbl;
 
