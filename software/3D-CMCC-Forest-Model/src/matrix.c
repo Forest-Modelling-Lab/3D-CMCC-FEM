@@ -1369,6 +1369,7 @@ matrix_t* matrix_create(const char* const filename) {
 	}
 
 	/* check against nc dimension */
+	if ( x_cells_count ) {
 	if (	(x_cells_count != m->x_cells_count)
 			|| (y_cells_count != m->y_cells_count) ) {
 		printf("dimensions differs between nc and check: x(%d,%d), y(%d,%d)\n"
@@ -1379,6 +1380,7 @@ matrix_t* matrix_create(const char* const filename) {
 		);
 		matrix_free(m);
 		m = NULL;
+	}
 	}
 
 	return m;
