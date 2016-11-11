@@ -58,8 +58,7 @@ double Penman_Monteith(const meteo_daily_t *const meteo_daily, const double rh, 
 	/* calculate resistance to radiative heat transfer through air, rr */
 	rr = meteo_daily->rho_air * CP / (4.0 * SBC_W * (pow(tairK, 3)));
 
-	/* calculate combined resistance to convective and radiative heat transfer,
-	    parallel resistances : rhr = (rh * rr) / (rh + rr) */
+	/* calculate combined resistance to convective and radiative heat transfer, parallel resistances : rhr = (rh * rr) / (rh + rr) */
 	rhr = (rh * rr) / (rh + rr);
 
 	/* calculate temperature offsets for slope estimate */

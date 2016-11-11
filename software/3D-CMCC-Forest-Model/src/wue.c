@@ -29,21 +29,41 @@ void water_use_efficiency( cell_t *const c, const int height, const int dbh, con
 	 */
 	/* note: differently from the authors above we use canopy transpiration for computation of WUE */
 
+//	/* daily WUE */
+//	s->value[WUE] = s->value[DAILY_GPP_gC] / s->value[CANOPY_TRANSP];
+//
+//	/* monthly WUE */
+//	/* last day of the month */
+//	if ( ( IS_LEAP_YEAR( c->years[year].year ) ? (MonthLength_Leap[month] ) : (MonthLength[month] )) == c->doy )
+//	{
+//		s->value[M_WUE] = s->value[MONTHLY_GPP_gC] / s->value[MONTHLY_CANOPY_TRANSP];
+//	}
+//
+//	/* annual WUE */
+//	/* last day of the year */
+//	if ( c->doy == ( IS_LEAP_YEAR( c->years[year].year ) ? 366 : 365) )
+//	{
+//		s->value[Y_WUE] = s->value[YEARLY_GPP_gC] / s->value[YEARLY_CANOPY_TRANSP];
+//	}
+//
+//	/* daily WUE */
+//	s->value[WUE] = s->value[DAILY_GPP_gC] / s->value[CANOPY_TRANSP];
+
 	/* daily WUE */
-	s->value[WUE] = s->value[DAILY_GPP_gC] / s->value[CANOPY_TRANSP];
+	s->value[WUE] = s->value[DAILY_GPP_gC] / s->value[CANOPY_EVAPO_TRANSP];
 
 	/* monthly WUE */
 	/* last day of the month */
 	if ( ( IS_LEAP_YEAR( c->years[year].year ) ? (MonthLength_Leap[month] ) : (MonthLength[month] )) == c->doy )
 	{
-		s->value[M_WUE] = s->value[MONTHLY_GPP_gC] / s->value[MONTHLY_CANOPY_TRANSP];
+		s->value[M_WUE] = s->value[MONTHLY_GPP_gC] / s->value[MONTHLY_CANOPY_EVAPO_TRANSP];
 	}
 
 	/* annual WUE */
 	/* last day of the year */
 	if ( c->doy == ( IS_LEAP_YEAR( c->years[year].year ) ? 366 : 365) )
 	{
-		s->value[Y_WUE] = s->value[YEARLY_GPP_gC] / s->value[YEARLY_CANOPY_TRANSP];
+		s->value[Y_WUE] = s->value[YEARLY_GPP_gC] / s->value[YEARLY_CANOPY_EVAPO_TRANSP];
 	}
 
 }

@@ -39,11 +39,18 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 	double evap_daylength_sec;
 	double transp_daylength_sec;
 	double evapo;
-	//double evapo, evapo_sun, evapo_shade;
 	double transp, transp_sun, transp_shade;
-
-//	double leaf_cell_cover_eff;                                            /* fraction of square meter covered by leaf over the grid cell */
+	double rough;                                                          /* roughness length */
 	static int days_with_canopy_wet;
+
+	double plane;                                                          /* zero place displacement */
+
+	//fixme add to settings.txt data */
+	double zero;                                                           /* height measurement of wind speed (m) */
+
+
+	height_t *h;
+	h = &c->heights[height];
 
 	species_t *s;
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
@@ -72,17 +79,6 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 		if ( s->value[CANOPY_SNOW] >= 0 ) s->value[OLD_CANOPY_SNOW]= s->value[CANOPY_SNOW];
 	}
 
-//	/*********************************************************************************************************/
-//	/* compute exposed canopy cover */
-//	/* special case when LAI = < 1.0 */
-//	/* note: 26 October 2016 */
-//	if(s->value[LAI] < 1.0) leaf_cell_cover_eff = s->value[LAI] * s->value[CANOPY_COVER_EXP];
-//	else leaf_cell_cover_eff = s->value[CANOPY_COVER_EXP];
-//
-//	/* check for the special case in which is allowed to have more 100% of grid cell covered */
-//	if(leaf_cell_cover_eff > 1.0) leaf_cell_cover_eff = 1.0;
-//	logger(g_debug_log, "single height class canopy cover = %g %%\n", leaf_cell_cover_eff*100.0);
-
 	/********************************************************************************************************/
 
 	logger(g_debug_log, "\n**CANOPY EVAPO-TRANSPIRATION**\n");
@@ -99,8 +95,26 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 	/* calculate leaf- and canopy-level conductances to water vapor and
 		sensible heat fluxes */
 
-	/* leaf boundary-layer conductance */
+	/* leaf aerodynamic-boundary-layer conductance */
 	gl_bl = s->value[BLCOND] * g_corr;
+
+#if 0
+	/**************************************************************************/
+	/* aerodynamic boundary layer conductance corrected for wind speed */
+	/* following Shi et al., 2008 Journal of Biophysical Research */
+	if ( meteo_daily->windspeed != NO_DATA)
+	{
+		/* compute roughness length (m) */
+		rough = 0.032 * h->value;
+
+		/* compute zero plane displacement (m) */
+		plane = 0.88 * h->value;
+
+		/* aerodynamic boundary layer conductance */
+		gl_bl = pow ( KARM , 2.) / pow ( log ( ( zero - plane) / rough ) , 2. );
+	}
+	/**************************************************************************/
+#endif
 
 	/* canopy boundary layer conductance */
 	s->value[CANOPY_BLCOND] = gl_bl * s->value[LAI_PROJ];
