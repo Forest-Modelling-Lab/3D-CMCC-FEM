@@ -614,88 +614,88 @@ static dataset_t* dataset_import_txt(const char* const filename) {
 
 						/* assign value */
 						switch ( i ) {
-							case YEAR_COLUMN:
-								//dataset->rows[dataset->rows_count-1].year_stand = (int)value;
-								row.year_stand = (int)value;
+						case YEAR_COLUMN:
+							//dataset->rows[dataset->rows_count-1].year_stand = (int)value;
+							row.year_stand = (int)value;
 							break;
 
-							case X_COLUMN:
-								//dataset->rows[dataset->rows_count-1].x = (int)value;
-								row.x = (int)value;
+						case X_COLUMN:
+							//dataset->rows[dataset->rows_count-1].x = (int)value;
+							row.x = (int)value;
 							break;
 
-							case Y_COLUMN:
-								//dataset->rows[dataset->rows_count-1].y = (int)value;
-								row.y = (int)value;
+						case Y_COLUMN:
+							//dataset->rows[dataset->rows_count-1].y = (int)value;
+							row.y = (int)value;
 							break;
 
-							case AGE_COLUMN:
-								//dataset->rows[dataset->rows_count-1].age = (int)value;
-								row.age = (int)value;
+						case AGE_COLUMN:
+							//dataset->rows[dataset->rows_count-1].age = (int)value;
+							row.age = (int)value;
 							break;
 
-							case N_COLUMN:
-								//dataset->rows[dataset->rows_count-1].n = (int)value;
-								row.n = (int)value;
+						case N_COLUMN:
+							//dataset->rows[dataset->rows_count-1].n = (int)value;
+							row.n = (int)value;
 							break;
 
-							case STOOL_COLUMN:
-								//dataset->rows[dataset->rows_count-1].stool = (int)value;
-								row.stool = (int)value;
+						case STOOL_COLUMN:
+							//dataset->rows[dataset->rows_count-1].stool = (int)value;
+							row.stool = (int)value;
 							break;
 
-							case AVDBH_COLUMN:
-								//dataset->rows[dataset->rows_count-1].avdbh = value;
-								row.avdbh = value;
+						case AVDBH_COLUMN:
+							//dataset->rows[dataset->rows_count-1].avdbh = value;
+							row.avdbh = value;
 							break;
 
-							case HEIGHT_COLUMN:
-								//dataset->rows[dataset->rows_count-1].height = value;
-								row.height = value;
+						case HEIGHT_COLUMN:
+							//dataset->rows[dataset->rows_count-1].height = value;
+							row.height = value;
 							break;
 
-							case WF_COLUMN:
-								//dataset->rows[dataset->rows_count-1].wf = value;
-								row.wf = value;
+						case WF_COLUMN:
+							//dataset->rows[dataset->rows_count-1].wf = value;
+							row.wf = value;
 							break;
 
-							case WRC_COLUMN:
-								//dataset->rows[dataset->rows_count-1].wrc = value;
-								row.wrc = value;
+						case WRC_COLUMN:
+							//dataset->rows[dataset->rows_count-1].wrc = value;
+							row.wrc = value;
 							break;
 
-							case WRF_COLUMN:
-								//dataset->rows[dataset->rows_count-1].wrf = value;
-								row.wrf = value;
+						case WRF_COLUMN:
+							//dataset->rows[dataset->rows_count-1].wrf = value;
+							row.wrf = value;
 							break;
 
-							case WS_COLUMN:
-								//dataset->rows[dataset->rows_count-1].ws = value;
-								row.ws = value;
+						case WS_COLUMN:
+							//dataset->rows[dataset->rows_count-1].ws = value;
+							row.ws = value;
 							break;
 
-							case WBB_COLUMN:
-								//dataset->rows[dataset->rows_count-1].wbb = value;
-								row.wbb = value;
+						case WBB_COLUMN:
+							//dataset->rows[dataset->rows_count-1].wbb = value;
+							row.wbb = value;
 							break;
 
-							case WRES_COLUMN:
-								//dataset->rows[dataset->rows_count-1].wres = value;
-								row.wres = value;
+						case WRES_COLUMN:
+							//dataset->rows[dataset->rows_count-1].wres = value;
+							row.wres = value;
 							break;
 
-							case LAI_COLUMN:
-								//dataset->rows[dataset->rows_count-1].lai = value;
-								row.lai = value;
+						case LAI_COLUMN:
+							//dataset->rows[dataset->rows_count-1].lai = value;
+							row.lai = value;
 							break;
 
-							default:
-								printf(err_too_many_column, rows_count);
-								free(row.species);
-								free(columns);
-								dataset_free(dataset);
-								fclose(f);
-								return NULL;
+						default:
+							printf(err_too_many_column, rows_count);
+							free(row.species);
+							free(columns);
+							dataset_free(dataset);
+							fclose(f);
+							return NULL;
 						}
 					}
 					/* skip to next token */
@@ -1017,7 +1017,7 @@ static int fill_cell(matrix_t* const m, row_t* const row)
 			return 0;
 		}
 	}
-	
+
 	/* add species */
 	return fill_cell_from_heights(&m->cells[index], row);
 }
@@ -1257,7 +1257,7 @@ matrix_t* matrix_create(const char* const filename) {
 			}
 		}
 		if ( ! d ) return NULL;
-	#ifdef _DEBUG
+#ifdef _DEBUG
 		{
 			FILE *f;
 			f = fopen("debug_input.txt", "w");
@@ -1289,7 +1289,7 @@ matrix_t* matrix_create(const char* const filename) {
 				fclose(f);
 			}
 		}
-	#endif
+#endif
 	}
 
 	m = malloc(sizeof*m);
@@ -1339,7 +1339,7 @@ matrix_t* matrix_create(const char* const filename) {
 		x_cells_count = 1;
 		y_cells_count = 1;
 	}
-	
+
 	/* fill with species values */
 	for ( cell = 0; cell < m->cells_count; ++cell ) {
 		for (height = 0; height < m->cells[cell].heights_count; ++height)
@@ -1369,16 +1369,18 @@ matrix_t* matrix_create(const char* const filename) {
 	}
 
 	/* check against nc dimension */
-	if (	(x_cells_count != m->x_cells_count)
-			|| (y_cells_count != m->y_cells_count) ) {
-		printf("dimensions differs between nc and check: x(%d,%d), y(%d,%d)\n"
+	if ( x_cells_count ) {
+		if (	(x_cells_count != m->x_cells_count)
+				|| (y_cells_count != m->y_cells_count) ) {
+			printf("dimensions differs between nc and check: x(%d,%d), y(%d,%d)\n"
 					, x_cells_count
 					, m->x_cells_count
 					, y_cells_count
 					, m->y_cells_count
-		);
-		matrix_free(m);
-		m = NULL;
+			);
+			matrix_free(m);
+			m = NULL;
+		}
 	}
 
 	return m;
