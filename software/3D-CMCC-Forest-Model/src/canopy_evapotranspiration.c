@@ -102,6 +102,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 	/**************************************************************************/
 	/* aerodynamic boundary layer conductance corrected for wind speed */
 	/* following Shi et al., 2008 Journal of Biophysical Research */
+
 	if ( meteo_daily->windspeed != NO_DATA)
 	{
 		/* compute roughness length (m) */
