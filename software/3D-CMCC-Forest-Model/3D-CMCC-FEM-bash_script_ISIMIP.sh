@@ -45,7 +45,7 @@ HYSTs=(CLIMATE PRINCETON WATCH GSWP3 WATCH-WFDEI All)
 GCMs=(GCM1 GCM2 GCM3 GCM4 GCM5 All)
 
 #declare RCPs
-RCPs=( 8.5 6.0 4.5 2.6 All)
+RCPs=( rcp8p5 rcp6p0 rcp4p5 rcp2p6 All)
 
 #declare Management
 MANs=(on off All)
@@ -434,12 +434,6 @@ if [ "$climate" == "${CLIMATEs[1]}" ] ; then
 	
 	echo "'$rcp' doesn't match with RCPs list. please rewrite it."
 	done
-	
-	if   [ "$rcp" == "8.5" ]; then rcp=rcp8p5
-	elif [ "$rcp" == "6.0" ]; then rcp=rcp6p0
-	elif [ "$rcp" == "4.5" ]; then rcp=rcp4p5
-	elif [ "$rcp" == "2.6" ]; then rcp=rcp2p6
-	fi
 			
 	#for counter
 	if [ "$rcp" == 'All' ] ; then

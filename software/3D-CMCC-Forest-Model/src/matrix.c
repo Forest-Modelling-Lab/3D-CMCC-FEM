@@ -1616,10 +1616,12 @@ void matrix_free(matrix_t *m)
 						free ( m->cells[cell].soil_layers );
 					}
 				}
-				if ( g_year_start_index != -1 ) {
-					free (m->cells[cell].years-g_year_start_index);
-				} else {
-					free (m->cells[cell].years);
+				if (m->cells[cell].years){
+					if ( g_year_start_index != -1 ) {
+						free (m->cells[cell].years-g_year_start_index);
+					} else {
+						free (m->cells[cell].years);
+					}
 				}
 			}
 			free (m->cells);
