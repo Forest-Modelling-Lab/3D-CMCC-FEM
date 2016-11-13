@@ -273,6 +273,12 @@ static int log_start(const char* const sz_date, const char* const sitename)
 		len += sprintf(buffer+len, "_%s", sitename);
 	}
 
+	/* start simulation */
+	len += sprintf(buffer+len, "_(%d", g_settings->year_start);
+
+	/* end simulation */
+	len += sprintf(buffer+len, "-%d)", g_settings->year_end);
+
 	/* setting version */
 	//len += sprintf(buffer+len, "_%c", g_settings->version);
 
