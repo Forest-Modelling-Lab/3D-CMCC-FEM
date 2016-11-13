@@ -522,7 +522,11 @@ function multi_run_isimip {
 					TOPO_PATH="$project"/"$site"_topo_"$PROJECT".txt
 				
 					#add management and co2 to setting path
-					SETTING_PATH="$project"/"$site"_settings_"$PROJECT"_Manag-"$management"_CO2-"$co2".txt
+					if [ "$gcm" == 'GCM1' ] || [ "$gcm" == 'GCM2' ] || [ "$gcm" == 'GCM3' ] || [ "$gcm" == 'GCM4' ] || [ "$gcm" == 'GCM5' ] || [ "$gcm" == 'All' ] ; then 
+						SETTING_PATH="$project"/"$site"_settings_"$PROJECT"_Manag-"$management"_CO2-"$co2".txt
+					else
+						SETTING_PATH="$project"/"$site"_settings_CO2_modifier_off_Manag-"$management".txt
+					fi
 				
 					#add gcm and rcp to meteo co2 and soil path
 					MET_PATH="$project"/"$gcm"/"$gcm"_hist_"$rcp"_1960_2099.txt
