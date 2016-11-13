@@ -187,7 +187,7 @@ cd ..
 cd input
 
 #assign all available site folders to site array
-SITEs=(*)
+#SITEs=(*)
 
 cd ..
 
