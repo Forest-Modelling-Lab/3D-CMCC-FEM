@@ -6,10 +6,10 @@
 
 MODEL="3D-CMCC-CNR FEM"
 VERSION="v.5.2.2"
-PROJECT="PAPER"
+PROJECT="ISIMIP"
 
 echo "***************************************************************"
-echo "* $MODEL $VERSION script for $PROJECT runs in "$OSTYPE" *"
+echo "* $MODEL $VERSION script for PAPER runs in "$OSTYPE" *"
 echo "***************************************************************"
 
 launch="./"
