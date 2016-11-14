@@ -402,7 +402,7 @@ if [ "$climate" == "${CLIMATEs[1]}" ] ; then
 			rcp_counter=1
 		fi
 	else
-		rcp='none'
+		rcp='reap'
 		echo $rcp
 	fi
 fi
@@ -529,7 +529,7 @@ function multi_run_isimip {
 					fi
 				
 					#add gcm and rcp to meteo co2 and soil path
-					MET_PATH="$project"/"$gcm"/"$gcm"_hist_"$rcp"_1960_2099.txt
+					MET_PATH="$project"/"$gcm"/"$gcm"_"$rcp".txt
 					SOIL_PATH="$project"/"$gcm"/"$site"_soil_"$rcp"_"$PROJECT".txt
 					CO2_PATH="$project"/CO2/CO2_"$rcp"_1950_2099.txt
 									
