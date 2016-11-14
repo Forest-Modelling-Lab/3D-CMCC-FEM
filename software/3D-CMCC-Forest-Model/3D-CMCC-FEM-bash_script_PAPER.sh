@@ -42,7 +42,7 @@ CLIMATEs=(Historical Scenario All)
 HYSTs=(CLIMATE PRINCETON WATCH GSWP3 WATCH-WFDEI All)
 
 #declare GCMs or Repeated
-GCMs=(Reap1 Reap2 Reap3 Reap4 Reap4 GCM1 GCM2 GCM3 GCM4 GCM5 All)
+GCMs=(Reap1 Reap2 Reap3 Reap4 Reap5 GCM1 GCM2 GCM3 GCM4 GCM5 All)
 
 #declare RCPs
 RCPs=( rcp8p5 rcp6p0 rcp4p5 rcp2p6 All)
@@ -403,6 +403,7 @@ if [ "$climate" == "${CLIMATEs[1]}" ] ; then
 		fi
 	else
 		rcp='reap'
+		rcp_counter=1
 		echo $rcp
 	fi
 fi
@@ -445,42 +446,43 @@ else
 	man_counter=1
 fi
 
-	#########################################################################################################
-
+#########################################################################################################
+if [ "$gcm" == 'GCM1' ] || [ "$gcm" == 'GCM2' ] || [ "$gcm" == 'GCM3' ] || [ "$gcm" == 'GCM4' ] || [ "$gcm" == 'GCM5' ] || [ "$gcm" == 'All' ] ; then 
 	#log available CO2
-echo 'CO2 enrichment on or off?:'
-for (( i = 0 ; i < ${#CO2s[@]} ; ++i )) ; do
-	echo -"${CO2s[i]}"
-done
-
-echo "CO2 enrichment on or off for '$site' and '$gcm' and '$rcp' and Management '$management'?"
-
+	echo 'CO2 enrichment on or off?:'
+	for (( i = 0 ; i < ${#CO2s[@]} ; ++i )) ; do
+		echo -"${CO2s[i]}"
+	done
+	
+	echo "CO2 enrichment on or off for '$site' and '$gcm' and '$rcp' and Management '$management'?"
+	
 	#ask which co2 use
-	match=no
-	while :
-	do
+		match=no
+		while :
+		do
+			
+		read co2
 		
-	read co2
-	
-	for (( i = 0 ; i <= ${#CO2s[@]} ; ++i )) ; do
-		if [ "${co2,,}" = "${CO2s[$i],,}" ] ; then
-			match=yes
-			co2=${CO2s[$i]}
+		for (( i = 0 ; i <= ${#CO2s[@]} ; ++i )) ; do
+			if [ "${co2,,}" = "${CO2s[$i],,}" ] ; then
+				match=yes
+				co2=${CO2s[$i]}
+			fi
+		done
+		if [ "$match" == "yes" ] ; then
+			break;
 		fi
-	done
-	if [ "$match" == "yes" ] ; then
-		break;
-	fi
-	
-	echo "'$co2' doesn't match with CO2s list. please rewrite it."
-	done
+		
+		echo "'$co2' doesn't match with CO2s list. please rewrite it."
+		done
 
 	#for counter
-if [ "$co2" == 'All' ] ; then
-	co2_counter=${#CO2s[@]} 
-	let "co2_counter-=1"
-else
-	co2_counter=1
+	if [ "$co2" == 'All' ] ; then
+		co2_counter=${#CO2s[@]} 
+		let "co2_counter-=1"
+	else
+		co2_counter=1
+	fi
 fi
 
 
@@ -495,7 +497,7 @@ echo 'running for' "$site"
 
 cd ../../..
 
-function multi_run_isimip {
+function GCM_run {
 	for (( b = 0 ; b < $clim_counter ; ++b )) ; do
 		for (( c = 0 ; c < $gcm_counter ; ++c )) ; do
 			for (( d = 0 ; d < $rcp_counter ; ++d )) ; do
@@ -520,13 +522,8 @@ function multi_run_isimip {
 					OUTPUT_PATH=output/"$site"
 					STAND_PATH="$project"/"$site"_stand_"$PROJECT".txt
 					TOPO_PATH="$project"/"$site"_topo_"$PROJECT".txt
-				
-					#add management and co2 to setting path
-					if [ "$gcm" == 'GCM1' ] || [ "$gcm" == 'GCM2' ] || [ "$gcm" == 'GCM3' ] || [ "$gcm" == 'GCM4' ] || [ "$gcm" == 'GCM5' ] || [ "$gcm" == 'All' ] ; then 
-						SETTING_PATH="$project"/"$site"_settings_"$PROJECT"_Manag-"$management"_CO2-"$co2".txt
-					else
-						SETTING_PATH="$project"/"$site"_settings_CO2_modifier_off_Manag-"$management".txt
-					fi
+
+					SETTING_PATH="$project"/"$site"_settings_"$PROJECT"_Manag-"$management"_CO2-"$co2".txt
 				
 					#add gcm and rcp to meteo co2 and soil path
 					MET_PATH="$project"/"$gcm"/"$gcm"_"$rcp".txt
@@ -539,7 +536,7 @@ function multi_run_isimip {
 					#log arguments paths
 					echo "*****************************"
 					echo "$launch$executable -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH"
-					echo "$MODEL $VERSION-$PROJECT arguments:"
+					echo "$MODEL $VERSION-$project arguments:"
 					echo "-i" $SITE_PATH
 					echo "-p" $PARAMETERIZATION_PATH
 					echo "-d" $STAND_PATH
@@ -557,11 +554,69 @@ function multi_run_isimip {
 	done
 }
 
+function Reap_run {
+	for (( g = 0 ; g < $clim_counter ; ++g )) ; do
+		for (( h = 0 ; h < $gcm_counter ; ++h )) ; do
+			for (( i = 0 ; i < $rcp_counter ; ++i )) ; do
+				for (( l = 0 ; l < $man_counter ; ++l )) ; do
 
-#launch multi run
-multi_run_isimip
+					
+					if (( $clim_counter > 1 )) ; then climate=${CLIMATEs[$g]}; fi
+					if (( $gcm_counter > 1 )) ; then gcm=${GCMs[$h]}; fi
+					if (( $rcp_counter > 1 )) ; then rcp=${RCPs[$i]}; fi				
+					if (( $man_counter > 1 )) ; then management=${MANs[$l]}; fi
+					
+					echo "multi run"
+					echo 'running for' "$climate"
+					echo 'running for' "$gcm"
+					echo 'running for' "$rcp"
+					echo 'running with management =' "$management" 
+										
+					#add site name to current paths
+					SITE_PATH=input/"$site"
+					OUTPUT_PATH=output/"$site"
+					STAND_PATH="$project"/"$site"_stand_"$PROJECT".txt
+					TOPO_PATH="$project"/"$site"_topo_"$PROJECT".txt
+
+					SETTING_PATH="$project"/"$site"_settings_CO2_modifier_off_Manag-"$management".txt
+				
+					#add gcm and rcp to meteo co2 and soil path
+					MET_PATH="$project"/"$gcm"/"$gcm"_"$rcp".txt
+					SOIL_PATH="$project"/"$gcm"/"$site"_soil_"$gcm"_"$PROJECT".txt
+
+									
+					#add paths and arguments to executable and run
+					$launch$executable -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH
+					
+					#log arguments paths
+					echo "*****************************"
+					echo "$launch$executable -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH "
+					echo "$MODEL $VERSION-$project arguments:"
+					echo "-i" $SITE_PATH
+					echo "-p" $PARAMETERIZATION_PATH
+					echo "-d" $STAND_PATH
+					echo "-s" $SOIL_PATH
+					echo "-t" $TOPO_PATH
+					echo "-m" $MET_PATH
+					echo "-c" $SETTING_PATH
+					echo "-o" $OUTPUT_PATH
+					echo "*****************************"
+				done
+			done
+		done
+	done
+}
 
 
+#launch GCM run
+if [ "$gcm" == 'GCM1' ] || [ "$gcm" == 'GCM2' ] || [ "$gcm" == 'GCM3' ] || [ "$gcm" == 'GCM4' ] || [ "$gcm" == 'GCM5' ]; then 
+	GCM_run
+elif [ "$gcm" == 'All' ]; then 
+	GCM_run
+	Reap_run
+else
+	Reap_run
+fi
 
 #delete copied executable from current directory
 echo "...removing executable from project directory"
