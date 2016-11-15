@@ -147,6 +147,8 @@ enum {
 
 	/* PAR */
 	PAR,                                /* Photosynthetically Active Radiation molPAR/m^2/day */
+	PAR_SUN,                            /* Photosynthetically Active Radiation molPAR/m^2/day for sun leaves */
+	PAR_SHADE,                          /* Photosynthetically Active Radiation molPAR/m^2/day for shaded leaves */
 	PAR_REFL,                           /* Reflected Photosynthetically Active Radiation molPAR/m^2/day OVERALL CANOPY */
 	APAR,                               /* Absorbed Photosynthetically Active Radiation molPAR/m^2/day */
 	APAR_SUN,                           /* Absorbed Photosynthetically Active Radiation molPAR/m^2/day for sun leaves */
@@ -157,6 +159,8 @@ enum {
 
 	/* short wave */
 	SW_RAD,                             /* Short Wave Radiation in W/m2 */
+	SW_RAD_SUN,                         /* Short Wave Radiation in W/m2 for sun leaves */
+	SW_RAD_SHADE,                       /* Short Wave Radiation in W/m2 for shaded leaves */
 	SW_RAD_REFL,                        /* Reflected Short Wave Radiation W/m2 OVERALL CANOPY */
 	SW_RAD_ABS,                         /* Absorbed Net Short Wave radiation in W/m2 */
 	SW_RAD_ABS_SUN,                     /* Absorbed Net Short Wave Radiation W/m2 for sun leaves */
@@ -190,6 +194,8 @@ enum {
 
 	/* PPFD */
 	PPFD,                               /* Photosynthetic Photon Flux Density umol/m2/sec */
+	PPFD_SUN,                           /* Photosynthetic Photon Flux Density umol/m2/sec for sun leaves*/
+	PPFD_SHADE,                         /* Photosynthetic Photon Flux Density umol/m2/sec fir shaded leaves */
 	PPFD_REFL,                          /* Transmitted Photosynthetic Photon Flux Density umol/m2/sec */
 	PPFD_ABS,                           /* Absorbed Photosynthetic Photon Flux Density umol/m2/sec */
 	PPFD_ABS_SUN,                       /* Absorbed Photosynthetic Photon Flux Density umol/m2/sec for sun leaves */

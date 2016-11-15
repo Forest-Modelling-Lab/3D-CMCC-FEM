@@ -583,14 +583,16 @@ function Reap_run {
 					#add gcm and rcp to meteo co2 and soil path
 					MET_PATH="$project"/"$gcm"/"$gcm"_"$rcp".txt
 					SOIL_PATH="$project"/"$gcm"/"$site"_soil_"$gcm"_"$PROJECT".txt
+					
+					CO2_PATH="$project"/CO2/CO2_fixed_2000_1996-2099.txt
 
 									
 					#add paths and arguments to executable and run
-					$launch$executable -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH
+					$launch$executable -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH
 					
 					#log arguments paths
 					echo "*****************************"
-					echo "$launch$executable -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH "
+					echo "$launch$executable -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH"
 					echo "$MODEL $VERSION-$project arguments:"
 					echo "-i" $SITE_PATH
 					echo "-p" $PARAMETERIZATION_PATH
@@ -598,6 +600,7 @@ function Reap_run {
 					echo "-s" $SOIL_PATH
 					echo "-t" $TOPO_PATH
 					echo "-m" $MET_PATH
+					echo "-k" $CO2_PATH
 					echo "-c" $SETTING_PATH
 					echo "-o" $OUTPUT_PATH
 					echo "*****************************"

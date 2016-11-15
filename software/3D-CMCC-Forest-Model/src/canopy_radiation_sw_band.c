@@ -59,8 +59,10 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 	s->value[PAR] = meteo_daily->par - s->value[PAR_REFL];
 
 	/* compute absorbed and transmitted PAR for sun and shaded leaves */
-	s->value[APAR_SUN] = s->value[PAR] * Light_abs_frac_sun * s->value[DAILY_CANOPY_COVER_EXP];
+	s->value[PAR_SUN]= s->value[PAR];
+	s->value[APAR_SUN] = s->value[PAR_SUN] * Light_abs_frac_sun * s->value[DAILY_CANOPY_COVER_EXP];
 	s->value[TRANSM_PAR_SUN] = s->value[PAR] - s->value[APAR_SUN];
+	s->value[PAR_SHADE]= s->value[TRANSM_PAR_SUN];
 	s->value[APAR_SHADE] = s->value[TRANSM_PAR_SUN] * Light_abs_frac_shade * s->value[DAILY_CANOPY_COVER_EXP];
 	s->value[TRANSM_PAR_SHADE] = s->value[TRANSM_PAR_SUN] - s->value[APAR_SHADE];
 

@@ -81,7 +81,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	/* (Following Makela et al , 2008, Peltioniemi_etal_2012) */
 	//FIXME chose which type of light use and differentiate for different layers
 	//following Nolè should be used apar
-	//following Peltioniemi should be used par
+	//following Peltionemi should be used par
 	//	if (s->value[GAMMA_LIGHT] != -9999)
 	//	{
 	//		s->value[F_LIGHT]= 1.0/ ((s->value[GAMMA_LIGHT]* s->value[APAR]) +1.0);
