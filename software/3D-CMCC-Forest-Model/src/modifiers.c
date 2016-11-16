@@ -45,7 +45,10 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 
 	/********************************************************************************************/
 
-	/* CO2 MODIFIER from: Veroustraete et al., 2002, Remote Sensing of Environment */
+	/* CO2 MODIFIER FOR ASSIMILATION */
+	/* fertilization effect with rising CO2 from: Veroustraete 1994,
+	 * Veroustraete et al., 2002, Remote Sensing of Environment
+	*/
 	if ( g_settings->CO2_mod )
 	{
 		tairK = meteo_daily->tavg + TempAbs;
@@ -73,9 +76,20 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 		s->value[F_CO2] = 1;
 	}
 	logger(g_debug_log, "annual [CO2] = %f ppmv\n", meteo_annual->co2Conc);
-	logger(g_debug_log, "f_CO2 modifier = %f\n", s->value[F_CO2]);
+	logger(g_debug_log, "f_CO2 modifier for assimilation = %f\n", s->value[F_CO2]);
 
 	/********************************************************************************************/
+
+	/* CO2 MODIFIER FOR TRANSPIRATION  */
+	/* limitation effects on maximum stomatal conductance from Hidy et al., 2016 GMDD
+	 * Frank et al., 2013 New Phytologist
+	*/
+
+	s->value[F_CO2_TR] = 39.43 * pow(meteo_annual->co2Conc, -0.64);
+	logger(g_debug_log, "f_CO2 modifier for assimilation = %f\n", s->value[F_CO2]);
+
+	/********************************************************************************************/
+
 
 	/* LIGHT MODIFIER (NOT USED) */
 	/* (Following Makela et al , 2008, Peltioniemi_etal_2012) */

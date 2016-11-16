@@ -40,19 +40,18 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 	double transp_daylength_sec;
 	double evapo;
 	double transp, transp_sun, transp_shade;
-	double rough;                                                          /* roughness length */
+	//double rough;                                                          /* roughness length */
 	static int days_with_canopy_wet;
 
-	double plane;                                                          /* zero place displacement */
+	//double plane;                                                          /* zero place displacement */
 
 	//fixme add to settings.txt data */
-	double zero;                                                           /* height measurement of wind speed (m) */
+	//double zero;                                                           /* height measurement of wind speed (m) */
 
 
 	height_t *h;
-	h = &c->heights[height];
-
 	species_t *s;
+	h = &c->heights[height];
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 	daylength_sec = meteo_daily->daylength * 3600.0;
@@ -126,15 +125,23 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 	/* apply all multipliers to the maximum stomatal conductance */
 	/* differently from BIOME we use F_T that takes into account not only minimum temperature effects */
 	/* differently from BIOME we use also F_AGE */
+
 	m_final_sun = s->value[F_LIGHT_SUN] * s->value[F_SW] * s->value[F_CO2] * s->value[F_T] * s->value[F_VPD] * s->value[F_AGE];
 	m_final_shade = s->value[F_LIGHT_SHADE] * s->value[F_SW] * s->value[F_CO2] * s->value[F_T] * s->value[F_VPD] * s->value[F_AGE];
 
 	if (m_final_sun < 0.00000001) m_final_sun = 0.00000001;
 	if (m_final_shade < 0.00000001) m_final_shade = 0.00000001;
 
-	/* folllowing Jarvis 1997 approach */
+	/* following Jarvis 1997 approach */
 	gl_s_sun = s->value[MAXCOND] * m_final_sun * g_corr;
 	gl_s_shade = s->value[MAXCOND] * m_final_shade * g_corr;
+
+#if 0
+	//note: not working, decreasing MAXCOND increases TRANSP
+	/* following Jarvis 1997 + Frank et al., 2013 + Hidy et al., 2016 GMDD */
+	gl_s_sun = (s->value[F_CO2_TR] / 0.9116 * s->value[MAXCOND]) * m_final_sun * g_corr;
+	gl_s_shade = (s->value[F_CO2_TR] / 0.9116 * s->value[MAXCOND]) * m_final_sun * g_corr;
+#endif
 
 	/* calculate leaf-and canopy-level conductances to water vapor and
 		sensible heat fluxes, to be used in Penman-Monteith calculations of
@@ -166,7 +173,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 	subtract that time from the daylength to get the effective daylength for
 	transpiration. */
 
-	/* note: as in Campbell and Norman, Environmental Biophysiscs,
+	/* note: as in Campbell and Norman, Environmental Biophysics,
 	model should use Absorbed Radiation (instead just incident) but
 	composed of Short and Long wave radiation */
 
@@ -316,7 +323,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 		{
 			//todo get functions from snow_melt_subl snow subl(evaporated) or melt (that goes to soil pool) for canopy intercepted snow
 		}
-		/* if canopy is dry */
+		/** if canopy is dry **/
 		else
 		{
 			/* no canopy evaporation occurs */

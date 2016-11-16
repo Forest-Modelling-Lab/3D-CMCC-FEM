@@ -215,7 +215,8 @@ enum {
 	F_SW,                               /* SOIL WATER modifier */
 	F_DROUGHT,                          /* SOIL DROUGHT modifier (see Duursma et al., 2008) */
 	F_PSI,                              /* SOIL WATER modifier using PSI, see Biome */
-	F_CO2,                              /* CO2 soil fertilization effect */
+	F_CO2,                              /* CO2 fertilization effect (for assimilation) */
+	F_CO2_TR,                           /* CO2 reduction effect (for stomatal conductance) */
 	PHYS_MOD,                           /* PHYSIOLOGICAL modifier */
 
 	/* water */

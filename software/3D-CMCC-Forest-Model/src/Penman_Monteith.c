@@ -31,7 +31,7 @@ double Penman_Monteith(const meteo_daily_t *const meteo_daily, const double rh, 
     tday                    (deg C)       air temperature
     air_pressure            (Pa)          air pressure
     vpd                     (Pa)          vapor pressure deficit
-    net_rad                 (W/m2)        incident radient flux density
+    net_rad                 (W/m2)        incident radiant flux density
     rv                      (s/m)         resistance to water vapor flux
     rh                      (s/m)         resistance to sensible heat flux
     air_rho                 (kg/m3)       density of air
@@ -73,8 +73,9 @@ double Penman_Monteith(const meteo_daily_t *const meteo_daily, const double rh, 
 	delta = (pvs1-pvs2) / (t1-t2);
 
 	/* latent heat fluxes of evaporation or transpiration W/m2 */
-	evap_or_transp = ((delta * net_rad) + (meteo_daily->rho_air * CP * (meteo_daily->vpd / 100.0) / rhr)) /
-			(((meteo_daily->air_pressure * CP * rv) / (meteo_daily->lh_vap * EPS * rhr)) + delta);
+	evap_or_transp = ( ( delta * net_rad ) + ( meteo_daily->rho_air * CP * ( meteo_daily->vpd / 100.0 ) / rhr ) ) /
+			( ( ( meteo_daily->air_pressure * CP * rv ) / ( meteo_daily->lh_vap * EPS * rhr ) ) + delta );
+	logger(g_debug_log, "evap_or_transp = %g mm/m2/day\n", evap_or_transp);
 
 	/* evaporation or transpiration is converted into kg-mm/m2/sec */
 	evap_or_transp /= meteo_daily->lh_vap;
