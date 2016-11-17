@@ -39,7 +39,7 @@ CLIMATEs=(Historical Scenario All)
 GCMs=(GCM1 GCM2 GCM3 GCM4 GCM5 All)
 
 #declare RCPs
-RCPs=( rcp8p5 rcp6p0 rcp4p5 rcp2p6 rcp0p0 All)
+RCPs=( rcp0p0 rcp2p6 rcp4p5 rcp6p0 rcp8p5 All)
 
 #declare Management
 MANs=(on off All)

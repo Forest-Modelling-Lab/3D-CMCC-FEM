@@ -1,4 +1,4 @@
-SITENAME "PAPER-Soroe_Reap5" //Site Name
+SITENAME "PAPER-Soroe_GCM5-rcp-0.0" //Site Name
 LAT "55.29" //Site Latitude negative for south hemisphere
 LONG "11.38" //Site Longitude 
 
