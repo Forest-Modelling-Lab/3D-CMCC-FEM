@@ -1675,14 +1675,14 @@ static int import_txt(const char *const filename, yos_t** p_yos, int *const yos_
 	// get rows count
 	rows_count = file_get_rows_count(filename);
 	if ( rows_count <= 0 ) {
-		logger_error(g_debug_log, "unable to open met data file, problems in rows !\n");
+		logger_error(g_debug_log, "file doesn't exist!\n");
 		return 0;
 	}
 
 	// remove header
 	--rows_count;
 
-	// alloc memory for values
+	// allocate memory for values
 	values = malloc(rows_count*MET_COLUMNS_COUNT*sizeof*values);
 	if ( ! values ) {
 		logger_error(g_debug_log, sz_err_out_of_memory);

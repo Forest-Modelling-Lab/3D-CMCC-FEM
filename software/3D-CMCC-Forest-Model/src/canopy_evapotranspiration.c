@@ -132,15 +132,14 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 	if (m_final_sun < 0.00000001) m_final_sun = 0.00000001;
 	if (m_final_shade < 0.00000001) m_final_shade = 0.00000001;
 
-	/* following Jarvis 1997 approach */
-	gl_s_sun = s->value[MAXCOND] * m_final_sun * g_corr;
-	gl_s_shade = s->value[MAXCOND] * m_final_shade * g_corr;
+	/* following Jarvis 1997 approach (not more used) */
+	//gl_s_sun = s->value[MAXCOND] * m_final_sun * g_corr;
+	//gl_s_shade = s->value[MAXCOND] * m_final_shade * g_corr;
 
-#if 1
 	/* following Jarvis 1997 + Frank et al., 2013 + Hidy et al., 2016 GMDD */
 	gl_s_sun = (s->value[F_CO2_TR] / 0.9116 * s->value[MAXCOND]) * m_final_sun * g_corr;
 	gl_s_shade = (s->value[F_CO2_TR] / 0.9116 * s->value[MAXCOND]) * m_final_sun * g_corr;
-#endif
+
 
 	/* calculate leaf-and canopy-level conductances to water vapor and
 		sensible heat fluxes, to be used in Penman-Monteith calculations of

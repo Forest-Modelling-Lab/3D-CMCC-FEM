@@ -65,15 +65,15 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 
 		tau = Atau * exp (-Eatau/(Rgas*(tairK)));
 
-		v1 = (meteo_annual->co2Conc -(O2CONC/(2*tau)))/(refCO2CONC-(O2CONC/(2*tau)));
-		v2 = (KmCO2*(1+(O2CONC/KO2))+refCO2CONC)/(KmCO2*(1+(O2CONC/KO2))+meteo_annual->co2Conc);
+		v1 = (meteo_annual->co2Conc -(O2CONC/(2*tau)))/(g_settings->co2Conc-(O2CONC/(2*tau)));
+		v2 = (KmCO2*(1+(O2CONC/KO2))+g_settings->co2Conc)/(KmCO2*(1+(O2CONC/KO2))+meteo_annual->co2Conc);
 
 		/* compute F_CO2 modifier */
 		s->value[F_CO2] = v1*v2;
 	}
 	else
 	{
-		s->value[F_CO2] = 1;
+		s->value[F_CO2] = 1.;
 	}
 	logger(g_debug_log, "annual [CO2] = %f ppmv\n", meteo_annual->co2Conc);
 	logger(g_debug_log, "f_CO2 modifier for assimilation = %f\n", s->value[F_CO2]);
@@ -84,8 +84,14 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	/* limitation effects on maximum stomatal conductance from Hidy et al., 2016 GMDD
 	 * Frank et al., 2013 New Phytologist
 	*/
-
-	s->value[F_CO2_TR] = 39.43 * pow(meteo_annual->co2Conc, -0.64);
+	if ( g_settings->CO2_mod && (CO2_TRANS_OFF == g_settings->CO2_trans) )
+	{
+		s->value[F_CO2_TR] = 39.43 * pow(meteo_annual->co2Conc, -0.64);
+	}
+	else
+	{
+		s->value[F_CO2_TR] = 1.;
+	}
 	logger(g_debug_log, "f_CO2 modifier for assimilation = %f\n", s->value[F_CO2]);
 
 	/********************************************************************************************/
