@@ -111,7 +111,14 @@ static double get_co2_conc(const int year, int*const err) {
 
 	*err = 0;
 
-	if ( ! g_sz_co2_conc_file ) { *err = 1; goto quit; }
+	if ( ! g_sz_co2_conc_file ) {
+		if ( CO2_TRANS_OFF == g_settings->CO2_trans ) {
+			return g_settings->co2Conc;
+		} else {
+			*err = 1; 
+			goto quit;
+		}
+	}
 
 	if ( g_sz_input_path ) {
 		int len = strlen(g_sz_input_path);

@@ -49,7 +49,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	/* fertilization effect with rising CO2 from: Veroustraete 1994,
 	 * Veroustraete et al., 2002, Remote Sensing of Environment
 	*/
-	if ( g_settings->CO2_mod )
+	if ( g_settings->CO2_mod && (CO2_TRANS_OFF == g_settings->CO2_trans) )
 	{
 		tairK = meteo_daily->tavg + TempAbs;
 
