@@ -137,7 +137,6 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 	gl_s_shade = s->value[MAXCOND] * m_final_shade * g_corr;
 
 #if 0
-	//note: not working, decreasing MAXCOND increases TRANSP
 	/* following Jarvis 1997 + Frank et al., 2013 + Hidy et al., 2016 GMDD */
 	gl_s_sun = (s->value[F_CO2_TR] / 0.9116 * s->value[MAXCOND]) * m_final_sun * g_corr;
 	gl_s_shade = (s->value[F_CO2_TR] / 0.9116 * s->value[MAXCOND]) * m_final_sun * g_corr;
