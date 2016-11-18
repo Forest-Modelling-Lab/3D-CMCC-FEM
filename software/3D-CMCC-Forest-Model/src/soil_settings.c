@@ -10,11 +10,16 @@
 #include "logger.h"
 
 extern logger_t* g_debug_log;
+extern char *g_sz_input_path;
 
-extern char *g_sz_program_path;
+static const char err_bad_landuse_length[] =" bad landuse length at row %d, landuse must be 1 character.\n";
+static const char err_bad_landuse[] ="bad landuse %c at row %d\n";
 
-static const char *sz_vars[SOIL_VARS_COUNT] = {
-	"LAT"
+static const char *sz_vars[SOIL_VARS_COUNT] =
+{
+	"X"
+	, "Y"
+	, "LAT"
 	, "LON"
 	, "CLAY_PERC"
 	, "SILT_PERC"
@@ -29,7 +34,7 @@ static const char *sz_vars[SOIL_VARS_COUNT] = {
 	, "NO3"
 	, "NH4"
 	, "HYDRAULIC_CONDUCTIVITY"
-	, "SOC"
+	, "INSOC"
 	, "LIT_FRACT"
 	, "HUMA_FRACT"
 	, "HUMU_FRACT"
@@ -44,108 +49,250 @@ static const char *sz_vars[SOIL_VARS_COUNT] = {
 	, "DC_LITTER"
 	, "DC_HUMADS"
 	, "DC_HUMUS"
+	, "LANDUSE"
 };
 
-static void reset(soil_settings_t* const s) {
-	int i;
-	assert(s);
-	s->sitename[0] = '\0';
-	for ( i = 0; i < SOIL_VARS_COUNT; ++i ) {
-		s->values[i] = INVALID_VALUE;
-	}
-}
-
-static int import_txt(soil_settings_t *const s, const char *const filename, const int x, const int y) {
+soil_settings_t* import_txt(const char *const filename, int* const p_settings_count) {
 #define SOIL_BUFFER_SIZE 1024
+	char* p;
+	char* token;
 	char buffer[SOIL_BUFFER_SIZE];
 	int i;
-	double *p_float;
+	int columns[SOIL_VARS_COUNT];
 	FILE *f;
+	soil_settings_t *ps;
+	soil_settings_t s;
+	soil_settings_t *ps_no_leak;
 
-	assert(s && filename);
+	const char delimiters[] = ",\r\n";
 
+	assert(filename && p_settings_count);
+
+	/* reset stuff */
+	ps = NULL; /* required! for realloc stuff */
+	*p_settings_count = 0;
+
+	/* open file */
 	f = fopen(filename, "r");
 	if ( ! f ) {
 		logger_error(g_debug_log, "unable to open %s\n", filename);
 		return 0;
 	}
 
-	i = 0;
-	p_float = s->values;	
-	while ( fgets(buffer, SOIL_BUFFER_SIZE, f) ) {
-		/* skip empty line */
-		if ( ('\n' == buffer[0]) || ('/' == buffer[0]) ) {
-			continue;
-		} else {
-			char *p = strtok(buffer, " \"");
-			p = strtok(NULL, "\"");
-			switch ( i++ ) {
-				case 0:
-					strcpy(s->sitename, p);
-				break;
+	/* get header */
+	if ( ! fgets(buffer, SOIL_BUFFER_SIZE, f) )
+	{
+		logger_error(g_debug_log, "header not found in %s\n", filename);
+		return NULL;
+	}
 
-				default:
-					*p_float = atof(p);
-					p_float++;
-				break;
+	/* reset columns */
+	for ( i = 0; i < SOIL_VARS_COUNT; i++ )
+	{
+		columns[i] = -1;
+	}
+
+	/* parse header */
+	for ( i = 0, token = string_tokenizer(buffer, delimiters, &p); token; token = string_tokenizer(NULL, delimiters, &p), ++i )
+	{
+		int y;
+		for ( y = 0; y < SOIL_VARS_COUNT; ++y )
+		{
+			if ( ! string_compare_i(token, sz_vars[y]) )
+			{
+				/* check if column is not already assigned */
+				if ( columns[i] != -1 )
+				{
+					logger_error(g_debug_log, "%s already assigned at column %d in %s\n", sz_vars[y], columns[y], filename);
+					fclose(f);
+					return NULL;
+				}
+				columns[i] = y;
 			}
 		}
 	}
 
+	/* check missing columns */
+	for ( i = 0; i < SOIL_VARS_COUNT; ++i )
+	{
+		if ( -1 == columns[i] )
+		{
+			logger_error(g_debug_log, "columm %s not found in %s\n", sz_vars[i], filename);
+			fclose(f);
+			return NULL;
+		}
+	}
+
+	/* import values */
+	while ( fgets(buffer, SOIL_BUFFER_SIZE, f) ) {
+		int y; /* keep track of imported values */
+
+		/* skip empty rows */
+		if ( ('\r' == buffer[0]) || ('\n' == buffer[0]) )
+		{
+			continue;
+		}
+
+		/* parse values */
+		y = 0;
+		for ( i = 0, token = string_tokenizer(buffer, delimiters, &p); token; token = string_tokenizer(NULL, delimiters, &p), ++i )
+		{
+			int err;
+			double value;
+
+			// check landuse
+			if ( SOIL_LANDUSE == columns[i] ) {
+				/* check landuse length */
+				if ( 1 != strlen(token) ) {
+					printf(err_bad_landuse_length, *p_settings_count + 1);
+					if ( ps ) free(ps);
+					fclose(f);
+					return NULL;
+				}
+				/* check landuse */
+				if ( ('F' == token[0]) || ('f' == token[0]) ) {
+					s.landuse = LANDUSE_F;
+					//dataset->rows[dataset->rows_count-1].landuse = F ;
+				} else if ( ('Z' == token[0]) || ('z' == token[0]) ) {
+					s.landuse = LANDUSE_Z;
+					//dataset->rows[dataset->rows_count-1].landuse = Z;
+				} else {
+					printf(err_bad_landuse, token[0], *p_settings_count + 1);
+					if ( ps ) free(ps);
+					fclose(f);
+					return NULL;
+				}
+			} else {
+				value = convert_string_to_float(token, &err);
+				if ( err )
+				{
+					if ( columns[SOIL_LANDUSE] != i) {
+						logger_error(g_debug_log, "unable to convert '%s' at columm %d in %s\n", token, y+1, filename);
+						if ( ps ) free(ps);
+						fclose(f);
+						return NULL;
+					}
+				}
+				s.values[columns[i]] = value;
+			}
+
+			if ( ++y > SOIL_VARS_COUNT )
+			{
+				logger_error(g_debug_log, "too many columns in %s\n", filename);
+				if ( ps ) free(ps);
+				fclose(f);
+				return 0;
+			}
+		}
+
+		/* check imported stuff */
+		if ( y != SOIL_VARS_COUNT )
+		{
+			logger_error(g_debug_log, "imported values for row %d in %s should be %d not %d\n"
+									, *p_settings_count + 1
+									, filename
+									, SOIL_VARS_COUNT
+									, y
+			);
+			if ( ps ) free(ps);
+			fclose(f);
+			return 0;
+		}
+
+		/* check for X and Y */
+		for ( y = 0; y < *p_settings_count; ++y )
+		{
+			if ( ((int)ps[y].values[SOIL_X] == (int)s.values[SOIL_X])
+					&& ((int)ps[y].values[SOIL_Y] == (int)s.values[SOIL_Y]) )
+			{
+				logger_error(g_debug_log, "duplicated settings for %d,%d cell in\n"
+																		, (int)ps[y].values[SOIL_X]
+																		, (int)ps[y].values[SOIL_Y]
+																		, filename
+				);
+				if ( ps ) free(ps);
+				fclose(f);
+				return 0;
+			}
+		}
+
+		/* alloc new row */
+		ps_no_leak = realloc(ps, (*p_settings_count+1)*sizeof*ps_no_leak);
+		if ( ! ps_no_leak )
+		{
+			logger_error(g_debug_log, "out of memory during import of %s\n", filename);
+			if ( ps ) free(ps);
+			fclose(f);
+			return 0;
+		}
+		ps = ps_no_leak;
+		ps[*p_settings_count].landuse = s.landuse;
+		for ( y = 0; y < SOIL_VARS_COUNT-1; ++y ) // -1 remove landuse
+		{
+			ps[*p_settings_count].values[y] = s.values[y];
+		}
+		
+		++*p_settings_count;
+	}
 	fclose(f);
 
-	/* are all value imported ? */
-	/*return ( i == SOIL_VALUES_COUNT ) ? 0 : 2;*/
-	return 1;
+	if (  ! *p_settings_count )
+	{
+		logger_error(g_debug_log, "no values found in %s\n", filename);
+		return NULL;
+	}
+
+	return ps;
 #undef SOIL_BUFFER_SIZE
 }
 
-static int import_nc(soil_settings_t *const s, const char *const filename, const int x_cell, const int y_cell) {
+static soil_settings_t* import_nc(const char *const sz_filename, int*const p_settings_count) {
 	enum {
 		X_DIM = 0
 		, Y_DIM
 		, DIMS_COUNT
 	};
 
-	char buffer[256];
-	char sz_nc_filename[256];
-	int i;
-	int vars[SOIL_VARS_COUNT];
-	float value;
-	int dims_size[DIMS_COUNT];
-	int x_id;
-	const char *sz_dims[DIMS_COUNT] = { "x", "y" };
-
-	int y;
-	int id_file;
-	int ret;
-	int dims_count;	/* dimensions */
-	int vars_count;
-	int atts_count;	/* attributes */
-	int unl_count;	/* unlimited dimensions */
 	char name[NC_MAX_NAME+1];
-	nc_type type;
-	size_t size;
+	int i;
+	int x;
+	int y;
+	int z;
+	int id_file;
+	int dims_count;
+	int vars_count;
+	int dims_size[2];
+	int x_id;
+	int ret;
 	int n_dims;
 	int ids[NC_MAX_VAR_DIMS];
+	int vars[SOIL_VARS_COUNT];
+	size_t size;
+		
+	soil_settings_t *ps;
+	soil_settings_t *ps_no_leak;
+
+	nc_type type;
 
 	size_t start[DIMS_COUNT] = { 0, 0 };
 	size_t count[DIMS_COUNT] = { 1, 1 };
 
+	const char *sz_dims[DIMS_COUNT] = { "x", "y" };
+
+	assert(sz_filename && p_settings_count);
+
+	/* reset stuff */
+	ps = NULL; /* required! for realloc stuff */
+	*p_settings_count = 0;
+		
 	for ( i = 0; i < SOIL_VARS_COUNT; i++ ) {
 		vars[i] = 0;
 	}
 
-	sz_nc_filename[0] = '\0';
-	if ( filename[1] != ':' ) {
-		strncpy(sz_nc_filename, g_sz_program_path, 256);
-	}
-	strcat(sz_nc_filename, filename);
-
-	ret = nc_open(sz_nc_filename, NC_NOWRITE, &id_file);
+	ret = nc_open(sz_filename, NC_NOWRITE, &id_file);
 	if ( ret != NC_NOERR ) goto quit;
 
-	ret = nc_inq(id_file, &dims_count, &vars_count, &atts_count, &unl_count);
+	ret = nc_inq(id_file, &dims_count, &vars_count, NULL, NULL);
 	if ( ret != NC_NOERR ) goto quit;
 
 	if ( ! dims_count || ! vars_count ) {
@@ -160,9 +307,8 @@ static int import_nc(soil_settings_t *const s, const char *const filename, const
 	}
 
 	/* reset */
-	for ( i = 0; i < DIMS_COUNT; ++i ) {
-		dims_size[i] = -1;
-	}
+	dims_size[X_DIM] = -1;
+	dims_size[Y_DIM] = -1;
 
 	/* get dimensions */
 	x_id = 0;
@@ -190,419 +336,112 @@ static int import_nc(soil_settings_t *const s, const char *const filename, const
 		}
 	}
 
-	/* check if x_cell is >= x_dim */
-	if ( x_cell >= dims_size[X_DIM] ) {
-		logger_error(g_debug_log, "x_cell >= x_dim: %d,%d\n", x_cell, dims_size[X_DIM]);
-		goto quit_no_nc_err;
-	}
-
-	/* check if y_cell is >= y_dim */
-	if ( y_cell >= dims_size[Y_DIM] ) {
-		logger_error(g_debug_log, "y_cell >= y_dim: %d,%d\n", y_cell, dims_size[Y_DIM]);
-		goto quit_no_nc_err;
-	}
-
 	/* get vars */
-	for ( i = 0; i < vars_count; ++i ) {
-		ret = nc_inq_var(id_file, i, name, &type, &n_dims, ids, NULL);
-		if ( ret != NC_NOERR ) goto quit;
-		/* who cames first ? x or y ? */
-		if ( x_id == ids[0] ) {
-			/* x first */
-			start[0] = x_cell;
-			start[1] = y_cell;			
-		} else {
-			/* y first */
-			start[0] = y_cell;
-			start[1] = x_cell;
-		}
-		for ( y = 0; y  < SOIL_VARS_COUNT; ++y ) {
-			if ( ! string_compare_i(name, sz_vars[y]) ) {
-				/* check if we already have imported that var */
-				if ( vars[y] ) {
-					logger_error(g_debug_log, "var %s already imported\n", sz_vars[y]);
-					goto quit_no_nc_err;
-				}
-				/* n_dims can be only 2 and ids only x and y */
-				if ( 2 != n_dims ) {
-					logger_error(g_debug_log, "bad %s dimension size. It should be 2 not %d\n", sz_vars[y], n_dims);
-					goto quit_no_nc_err;
-				}
-				/* get values */
-				if ( NC_FLOAT == type ) {
-					ret = nc_get_vara_float(id_file, i, start, count, &value);
-					if ( ret != NC_NOERR ) goto quit;
-					s->values[y] = value;
-				} else if ( NC_DOUBLE == type ) {
-					ret = nc_get_vara_double(id_file, i, start, count, &s->values[y]);
-					if ( ret != NC_NOERR ) goto quit;
-				} else {
-					/* type format not supported! */
-					logger_error(g_debug_log, "type format in %s for %s column not supported\n\n", buffer, sz_vars[y]);
-					goto quit_no_nc_err;
-				}
-				vars[y] = 1;
-				break;
+	for ( x = 0; x < dims_size[X_DIM]; x++ ) {
+		for ( y = 0; y < dims_size[Y_DIM]; y++ ) {
+			int assigned;
+
+			/* alloc new row */
+			ps_no_leak = realloc(ps, (*p_settings_count+1)*sizeof*ps_no_leak);
+			if ( ! ps_no_leak )
+			{
+				logger_error(g_debug_log, "out of memory during import of %s\n", sz_filename);
+				if ( ps ) free(ps);
+				return 0;
 			}
+			ps = ps_no_leak;
+
+			assigned = 0;
+			for ( i = 0; i < vars_count; ++i ) {
+				ret = nc_inq_var(id_file, i, name, &type, &n_dims, ids, NULL);
+				if ( ret != NC_NOERR ) goto quit;
+				/* who cames first ? x or y ? */
+				if ( x_id == ids[0] ) {
+					/* x first */
+					start[0] = x;
+					start[1] = y;			
+				} else {
+					/* y first */
+					start[0] = y;
+					start[1] = x;
+				}
+
+				for ( z = 0; z  < SOIL_VARS_COUNT; ++z ) {
+					float f;
+					double d;
+
+					if ( ! string_compare_i(name, sz_vars[z]) ) {
+						/* check if we already have imported that var */
+						if ( vars[z] ) {
+							logger_error(g_debug_log, "var %s already imported\n", sz_vars[z]);
+							goto quit_no_nc_err;
+						}
+						/* n_dims can be only 2 and ids only x and y */
+						if ( 2 != n_dims ) {
+							logger_error(g_debug_log, "bad %s dimension size. It should be 2 not %d\n", sz_vars[z], n_dims);
+							goto quit_no_nc_err;
+						}
+						/* get values */
+						if ( NC_FLOAT == type ) {
+							ret = nc_get_vara_float(id_file, i, start, count, &f);
+							if ( ret != NC_NOERR ) goto quit;
+							if ( z == SOIL_LANDUSE ) {
+								ps[*p_settings_count].landuse = f;
+							} else {
+								ps[*p_settings_count].values[z] = f;
+							}
+							++assigned;
+						} else if ( NC_DOUBLE == type ) {
+							ret = nc_get_vara_double(id_file, i, start, count, &d);
+							if ( ret != NC_NOERR ) goto quit;
+							if ( z == SOIL_LANDUSE ) {
+								ps[*p_settings_count].landuse = d;
+							} else {
+								ps[*p_settings_count].values[z] = d;
+							}
+							++assigned;
+						} else {
+							/* type format not supported! */
+							logger_error(g_debug_log, "type format in %s for %s column not supported\n\n", sz_filename, sz_vars[z]);
+							goto quit_no_nc_err;
+						}
+						vars[z] = 1;
+						break;
+					}
+				}
+			}
+
+			if ( assigned != SOIL_VARS_COUNT ) {
+				// TODO
+				// write err
+			}
+
+			++*p_settings_count;
 		}
 	}
+	
 	nc_close(id_file);
-	return 1;
+	return ps;
 
 quit:
 	logger(g_debug_log, nc_strerror(ret));
 quit_no_nc_err:
+	if ( ps ) free(ps);
 	nc_close(id_file);
-	return 0;
-}
-
-soil_settings_t* soil_settings_new(void) {
-	soil_settings_t* s = malloc(sizeof*s);
-	if ( s ) reset(s);
-	return s;
-}
-
-int soil_settings_import(soil_settings_t *const s, const char *const filename, const int x, const int y) {
-	char *p;
-	assert(s);
-	reset(s);
-	p = strrchr(filename, '.');
-	if ( p ) {
-		++p;
-		if ( ! string_compare_i(p, "nc") || ! string_compare_i(p, "nc4") ) {
-			return import_nc(s, filename, x, y);
-		}
-	}
-	return import_txt(s, filename, x, y);
-}
-
-// STUFF FROM 5.2.3 to be merged
-#if 0
-/* soil_settings.c */
-#include "soil_settings.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <assert.h>
-#include "matrix.h"
-#include "common.h"
-#include "netcdf.h"
-#include "logger.h"
-
-extern logger_t* g_debug_log;
-
-extern char *g_sz_program_path;
-extern char sz_err_out_of_memory[];
-
-static const char sz_header[] = "x,y,clay_perc,silt_perc,sand_perc,soil_depth,fr,fn0,fnn,m0,sn";
-
-static const char *sz_vars[SOIL_VARS_COUNT] = {
-	"CLAY_PERC"
-	, "SILT_PERC"
-	, "SAND_PERC"
-	, "SOIL_DEPTH"
-	, "FR"
-	, "FN0"
-	, "FNN"
-	, "M0"
-	, "SN"
-};
-
-static soil_settings_t* alloc_struct(void) {
-	soil_settings_t* s = malloc(sizeof*s);
-	if ( s ) {
-		s->values = NULL;
-		s->count = 0;
-	}
-	return s;
-}
-
-static soil_settings_t* import_txt(const char *const filename) {
-#define SOIL_BUFFER_SIZE 1024
-	char* token;
-	char* p;
-	char buffer[SOIL_BUFFER_SIZE];
-	int i;
-	int column;
-	int err;
-	int rows_count;
-	double values[SOIL_VARS_COUNT];
-	double (*values_no_leak)[SOIL_VARS_COUNT];
-	FILE *f;
-	soil_settings_t* s;
-
-	const char delimiter[] = ",\r\n";
-
-	assert(filename);
-
-	f = NULL;
-
-	s = alloc_struct();
-	if ( ! s ) {
-		logger(g_debug_log, sz_err_out_of_memory);
-		goto err;
-	}
-
-	f = fopen(filename, "r");
-	if ( ! f ) {
-		logger(g_debug_log, "unable to open file\n\n");
-		goto err;
-	}
-
-	/* check header */
-	if ( ! fgets(buffer, SOIL_BUFFER_SIZE, f) ) {
-		logger(g_debug_log, "unable to get header\n\n");
-		goto err;
-	}
-	if ( string_compare_i(buffer, sz_header) ) {
-		logger(g_debug_log, "invalid header found. valid header is %s\n\n", sz_header);
-		goto err;
-	}
-
-	rows_count = -1;
-	while ( fgets(buffer, SOIL_BUFFER_SIZE, f) ) {
-		++rows_count;
-
-		/* skip empty line */
-		if ( ! buffer[0] ) {
-			continue;
-		}
-
-		for ( column = 0, token = string_tokenizer(buffer, delimiter, &p); token; token = string_tokenizer(NULL, delimiter, &p), ++column ) {
-			if ( column >= SOIL_VARS_COUNT ) {
-				logger(g_debug_log, "too many values found at row %d\n\n", rows_count+1);
-				goto err;
-			}
-
-			values[column] = convert_string_to_float(token, &err);
-			if ( err ) {
-				logger(g_debug_log, "unable to convert value at row %d, column %d: %s\n\n", rows_count+1, column+1, token);
-				goto err;
-			}
-		}
-
-		if ( column == SOIL_VARS_COUNT ) {
-			logger(g_debug_log, "imported %d instead of %d at row %d\n\n", column, SOIL_VARS_COUNT, rows_count+1);
-			goto err;
-		}
-
-		values_no_leak = realloc(s->values, (s->count+1)*sizeof*values_no_leak);
-		if ( ! values_no_leak ) {
-			logger(g_debug_log, "out of memory\n\n");
-			goto err;
-		}
-		s->values = values_no_leak;
-		for ( i = 0; i < SOIL_VARS_COUNT; ++i ) {
-			s->values[s->count][i] = values[i];
-		}
-		++s->count;
-	}
-
-	fclose(f);
-
-	return s;
-
-err:
-	if ( f ) fclose(f);
-	if ( s ) soil_settings_free(s);
-	return NULL;
-
-#undef SOIL_BUFFER_SIZE
-}
-
-static soil_settings_t* import_nc(const char *const filename) {
-	enum {
-		X_DIM = 0
-		, Y_DIM
-		, DIMS_COUNT
-	};
-
-	char buffer[256];
-	char sz_nc_filename[256];
-	int i;
-	int vars[SOIL_VARS_COUNT];
-	int dims_size[DIMS_COUNT];
-	int x_id;
-	const char *sz_dims[DIMS_COUNT] = { "x", "y" };
-
-	int y;
-	int z;
-	int id_file;
-	int ret;
-	int dims_count;	/* dimensions */
-	int vars_count;
-	int atts_count;	/* attributes */
-	int unl_count;	/* unlimited dimensions */
-	char name[NC_MAX_NAME+1];
-	nc_type type;
-	size_t size;
-	int n_dims;
-	int ids[NC_MAX_VAR_DIMS];
-	soil_settings_t* s;
-	double *values;
-	float *values_f;
-
-	values = NULL;
-	values_f = NULL;
-
-	for ( i = 0; i < SOIL_VARS_COUNT; i++ ) {
-		vars[i] = 0;
-	}
-
-	sz_nc_filename[0] = '\0';
-	if ( filename[1] != ':' ) {
-		strncpy(sz_nc_filename, g_sz_program_path, 256);
-	}
-	strcat(sz_nc_filename, filename);
-
-	ret = nc_open(sz_nc_filename, NC_NOWRITE, &id_file);
-	if ( ret != NC_NOERR ) goto quit;
-
-	ret = nc_inq(id_file, &dims_count, &vars_count, &atts_count, &unl_count);
-	if ( ret != NC_NOERR ) goto quit;
-
-	if ( ! dims_count || ! vars_count ) {
-		logger(g_debug_log, "bad nc file! %d dimensions and %d vars\n\n", dims_count, vars_count);
-		goto quit_no_nc_err;
-	}
-
-	/* dims_count can be only 2 and ids only x and y */
-	if ( 2 != dims_count ) {
-		logger(g_debug_log, "bad dimension size. It should be 2 not %d\n", dims_count);
-		goto quit_no_nc_err;
-	}
-
-	/* reset */
-	for ( i = 0; i < DIMS_COUNT; ++i ) {
-		dims_size[i] = -1;
-	}
-
-	/* get dimensions */
-	x_id = 0;
-	for ( i = 0; i < dims_count; ++i ) {
-		ret = nc_inq_dim(id_file, i, name, &size);
-		if ( ret != NC_NOERR ) goto quit;
-		for ( y = 0; y < DIMS_COUNT; ++y ) {
-			if ( ! string_compare_i(sz_dims[y], name) ) {
-				if ( dims_size[y] != -1 ) {
-					logger(g_debug_log, "dimension %s already found!\n", sz_dims[y]);
-					goto quit_no_nc_err;
-				}
-				dims_size[y] = size;
-				if ( X_DIM == y ) x_id = i;
-				break;			
-			}
-		}
-	}
-
-	/* check if we have all dimensions */
-	for ( i = 0; i < DIMS_COUNT; ++i ) {
-		if ( -1 == dims_size[i] ) {
-			logger(g_debug_log, "dimension %s not found!\n", sz_dims[i]);
-			goto quit_no_nc_err;
-		}
-	}
-
-	/* alloc memory */
-	s = alloc_struct();
-	if ( ! s  ) {
-		logger(g_debug_log, sz_err_out_of_memory);
-		goto quit_no_nc_err;
-	}
-	s->count = dims_size[X_DIM]*dims_size[Y_DIM];
-	s->values = malloc(s->count*sizeof*s->values);
-	if ( ! s->values ) {
-		logger(g_debug_log, sz_err_out_of_memory);
-		goto quit_no_nc_err;
-	}
-
-	values = malloc(s->count*sizeof*values);
-	if ( ! values ) {
-		logger(g_debug_log, sz_err_out_of_memory);
-		goto quit_no_nc_err;
-	}
-
-	values_f = malloc(s->count*sizeof*values);
-	if ( ! values_f ) {
-		logger(g_debug_log, sz_err_out_of_memory);
-		goto quit_no_nc_err;
-	}
-
-	/* get vars */
-	for ( i = 0; i < vars_count; ++i ) {
-		ret = nc_inq_var(id_file, i, name, &type, &n_dims, ids, NULL);
-		if ( ret != NC_NOERR ) goto quit;
-		for ( y = 0; y  < SOIL_VARS_COUNT; ++y ) {
-			if ( ! string_compare_i(name, sz_vars[y]) ) {
-				/* check if we already have imported that var */
-				if ( vars[y] ) {
-					logger(g_debug_log, "var %s already imported\n", sz_vars[y]);
-					goto quit_no_nc_err;
-				}
-				/* n_dims can be only 2 and ids only x and y */
-				if ( 2 != n_dims ) {
-					logger(g_debug_log, "bad %s dimension size. It should be 2 not %d\n", sz_vars[y], n_dims);
-					goto quit_no_nc_err;
-				}
-				/* get values */
-				if ( NC_FLOAT == type ) {
-					ret = nc_get_var_float(id_file, i, values_f);
-					if ( ret != NC_NOERR ) goto quit;
-					for  ( z = 0; z < s->count; ++z ) {
-						s->values[z][y] = (double)values_f[z];
-					}
-				} else if ( NC_DOUBLE == type ) {
-					ret = nc_get_var_double(id_file, i,values);
-					if ( ret != NC_NOERR ) goto quit;
-					for  ( z = 0; z < s->count; ++z ) {
-						s->values[z][y] = values[z];
-					}
-				} else {
-					/* type format not supported! */
-					logger(g_debug_log, "type format in %s for %s column not supported\n\n", buffer, sz_vars[y]);
-					goto quit_no_nc_err;
-				}
-				vars[y] = 1;
-				break;
-			}
-		}
-	}
-	nc_close(id_file);
-
-	// ALESSIOR
-	// TODO ADD X and Y
-
-	return s;
-
-quit:
-	logger(g_debug_log, nc_strerror(ret));
-quit_no_nc_err:
-	nc_close(id_file);
-	if ( values_f ) free(values_f);
-	if ( values ) free(values);
-	if ( s ) soil_settings_free(s);
 	return NULL;
 }
 
-soil_settings_t* soil_settings_import(const char *const filename) {
+soil_settings_t* soil_settings_import(const char *const filename, int*const soil_settings_count) {
 	char *p;
+
+	assert(filename && soil_settings_count);
 
 	p = strrchr(filename, '.');
 	if ( p ) {
 		++p;
 		if ( ! string_compare_i(p, "nc") || ! string_compare_i(p, "nc4") ) {
-			return import_nc(filename);
+			return import_nc(filename, soil_settings_count);
 		}
 	}
-	return import_txt(filename);
+	return import_txt(filename, soil_settings_count);
 }
-
-void soil_settings_free(soil_settings_t *const s) {
-	assert(s);
-
-	if ( s->values ) {
-		free(s->values);
-	}
-	free(s);
-}
-#endif

@@ -71,8 +71,7 @@ topo_t* g_topo = NULL;
 settings_t* g_settings = NULL;
 
 /* DO NOT REMOVE INITIALIZATION TO NULL, IT IS REQUIRED !! */
-char 	*g_sz_program_path = NULL
-		, *g_sz_parameterization_path = NULL
+char	*g_sz_parameterization_path = NULL
 		, *g_sz_input_path = NULL
 		, *g_sz_output_path = NULL
 		, *g_sz_dataset_file = NULL
@@ -191,14 +190,13 @@ static void clean_up(void)
 	if ( g_sz_parameterization_path ) free(g_sz_parameterization_path);
 	if ( g_sz_output_path ) free(g_sz_output_path);
 	if ( g_sz_input_path ) free(g_sz_input_path);
-	if ( g_topo ) free(g_topo);
+	//if ( g_topo ) free(g_topo);
 	if ( g_sz_topo_file ) free(g_sz_topo_file);
-	if ( g_soil_settings ) free(g_soil_settings);
+	//if ( g_soil_settings ) free(g_soil_settings);
 	if ( g_sz_soil_file ) free(g_sz_soil_file);
 	if ( g_settings ) free(g_settings);
 	if ( g_sz_input_met_file ) free(g_sz_input_met_file);
 	if ( g_sz_dataset_file ) free(g_sz_dataset_file);
-	if ( g_sz_program_path ) free(g_sz_program_path);
 
 #ifdef _WIN32
 #ifdef _DEBUG
@@ -639,16 +637,7 @@ static int parse_args(int argc, char *argv[])
 	}
 
 	/* check that each mandatory parameter has been used */
-	/*
-	if ( ! g_sz_input_path ) {
-		g_sz_input_path = string_copy(g_sz_program_path);
-		if ( ! g_sz_input_path ) {
-			puts(sz_err_out_of_memory);
-			goto err;
-		}
-	}
-	 */
-
+	
 	/* output path specified ? */
 	if ( ! g_sz_output_path ) {
 		g_sz_output_path = string_copy("output");
@@ -663,10 +652,7 @@ static int parse_args(int argc, char *argv[])
 		goto err_show_usage;
 	}
 
-	if ( ! g_sz_dataset_file ) {
-		//puts("dataset filename not specified!");
-		//goto err_show_usage;
-	} else if ( g_sz_input_path ) {
+	if ( g_sz_dataset_file && g_sz_input_path ) {
 		p = concatenate_path(g_sz_input_path, g_sz_dataset_file); 
 		if ( ! p )
 		{
@@ -761,17 +747,23 @@ int main(int argc, char *argv[]) {
 	int day;
 	int cell;
 	int prog_ret;
+	int soil_settings_count;
+	int topos_count;
 	double timer;
 	double start_timer;
 	double end_timer;
 	matrix_t* matrix;
 	output_t* output_vars;
+	soil_settings_t* s;
+	topo_t* t;
 
 	//_CrtSetBreakAlloc(89);
 
 	/* initialize */
 	matrix = NULL;
 	output_vars = NULL;
+	t = NULL;
+	s = NULL;
 	prog_ret = 1;
 
 	/* start timer */
@@ -787,17 +779,10 @@ int main(int argc, char *argv[]) {
 		time(&t);
 		ptm = gmtime(&t);
 		sprintf(sz_date, "%04d_%s_%02d"
-					, ptm->tm_year+1900
+					, ptm->tm_year + 1900
 					, szMonth[ptm->tm_mon]
 					, ptm->tm_mday
 		);
-	}
-
-	/* get program path */
-	g_sz_program_path = get_current_path();
-	if ( ! g_sz_program_path ) {
-		puts(err_unable_get_current_path);
-		return 1;
 	}
 
 	/* register atexit */
@@ -845,72 +830,101 @@ int main(int argc, char *argv[]) {
 	} else {
 		puts(msg_ok);
 	}
+	
+	printf("soil import...");
+	s = soil_settings_import(g_sz_soil_file, &soil_settings_count);
+	if ( ! s ) {
+		goto err;
+	}
+	puts(msg_ok);
+
+	printf("topo import...");
+	t = topo_import(g_sz_topo_file, &topos_count);
+	if ( ! t ) {
+		goto err;
+	}
+	puts(msg_ok);
+
+	printf("build matrix");
 	if ( g_sz_dataset_file )
-		printf("build matrix using %s...", g_sz_dataset_file);
-
-	matrix = matrix_create(g_sz_dataset_file);
-	//free(g_sz_dataset_file); g_sz_dataset_file = NULL;
+		 printf("using %s...", g_sz_dataset_file);
+	else
+		printf("...");
+	matrix = matrix_create(s, soil_settings_count, g_sz_dataset_file);
 	if ( ! matrix ) goto err;
-	puts(msg_ok);
-
-	printf("soil allocation...");
-	g_soil_settings = soil_settings_new();
-	if ( ! g_soil_settings ) {
-		puts(sz_err_out_of_memory);
-		goto err;
-	}
-	puts(msg_ok);
-
-	printf("topo allocation...");
-	g_topo = topo_new();
-	if ( ! g_topo ) {
-		puts(sz_err_out_of_memory);
-		goto err;
-	}
 	puts(msg_ok);
 
 	g_year_start_index = -1;
 	
 	logger(g_debug_log, "\n3D-CMCC FEM START....\n\n");
-
 	
 	for ( cell = 0; cell < matrix->cells_count; ++cell )
 	{
 		logger(g_debug_log, "Processing met data files for cell at %d,%d...\n", matrix->cells[cell].x, matrix->cells[cell].y);
 		logger(g_debug_log, "input_met_path = %s\n", g_sz_input_met_file);
 
-		/* import soil values */
-		logger_error(g_debug_log, "importing soil settings...");
-		ret = soil_settings_import(g_soil_settings, g_sz_soil_file, matrix->cells[cell].x, matrix->cells[cell].y);
-		if ( ! ret )
+		/* set g_soil_settings and g_topo */
 		{
-			goto err;
+			int i;
+			int index = -1;
+
+			/* soil settings */
+			for ( i = 0; i < soil_settings_count; ++i )
+			{
+				if ( (matrix->cells[cell].x == (int)s[i].values[SOIL_X])
+						&& (matrix->cells[cell].y == (int)s[i].values[SOIL_Y]) )
+				{
+					index = i;
+					break;
+				}
+			}
+
+			if ( -1 == index )
+			{
+				logger_error(g_debug_log, "no soil settings found for cell at %d,%d\n"
+												, matrix->cells[cell].x
+												, matrix->cells[cell].y
+				);
+				continue;
+			}
+			g_soil_settings = &s[index];
+
+			/* topo */
+			for ( i = 0; i < topos_count; ++i )
+			{
+				if ( (matrix->cells[cell].x == (int)t[i].values[TOPO_X])
+						&& (matrix->cells[cell].y == (int)t[i].values[TOPO_Y]) )
+				{
+					index = i;
+					break;
+				}
+			}
+
+			if ( -1 == index )
+			{
+				logger_error(g_debug_log, "no topo settings found for cell at %d,%d\n"
+												, matrix->cells[cell].x
+												, matrix->cells[cell].y
+				);
+				continue;
+			}
+			g_topo = &t[index];
 		}
-		logger_error(g_debug_log, "ok\n");
 
 		/* only for first cell */
 		if ( 0 == cell ) {
-			if ( ! log_start(sz_date, g_soil_settings->sitename) ) {
+			if ( ! log_start(sz_date, g_settings->sitename) ) {
 				goto err;
 			}
 		}
 
-		if (	IS_INVALID_VALUE(g_soil_settings->values[SOIL_SAND_PERC])||
-				IS_INVALID_VALUE(g_soil_settings->values[SOIL_CLAY_PERC])||
-				IS_INVALID_VALUE(g_soil_settings->values[SOIL_SILT_PERC])||
-				IS_INVALID_VALUE(g_soil_settings->values[SOIL_DEPTH]) ) {
+		if (	IS_INVALID_VALUE(g_soil_settings->values[SOIL_SAND_PERC])
+				|| IS_INVALID_VALUE(g_soil_settings->values[SOIL_CLAY_PERC])
+				|| IS_INVALID_VALUE(g_soil_settings->values[SOIL_SILT_PERC])
+				|| IS_INVALID_VALUE(g_soil_settings->values[SOIL_DEPTH]) ) {
 			logger_error(g_debug_log, "NO SOIL DATA AVAILABLE");
 			goto err;
 		}
-
-		/* import topo values */
-		logger_error(g_debug_log, "importing topo settings...");
-		ret = topo_import(g_topo, g_sz_topo_file, matrix->cells[cell].x, matrix->cells[cell].y);
-		if ( ! ret )
-		{
-			goto err;
-		}
-		logger_error(g_debug_log, "ok\n");
 
 		/* check hemisphere */
 		if ( g_soil_settings->values[SOIL_LAT] > 0 ) {
@@ -1051,7 +1065,7 @@ int main(int argc, char *argv[]) {
 						/* summary on soil */
 						soil_summary(matrix, matrix->cells);
 
-						if( F == matrix->cells[cell].landuse )
+						if( LANDUSE_F == g_soil_settings->landuse )
 						{
 							/* note: this happens just the first day of simulation */
 							/* forest summary */
@@ -1079,7 +1093,7 @@ int main(int argc, char *argv[]) {
 					Radiation(&matrix->cells[cell], day, month, year);
 					Check_prcp(&matrix->cells[cell], day, month, year);
 
-					if ( F == matrix->cells[cell].landuse )
+					if ( LANDUSE_F == g_soil_settings->landuse )
 					{
 						/* compute annually the days for the growing season before any other process */
 						Veg_Days (&matrix->cells[cell], day, month, year);
@@ -1106,49 +1120,53 @@ int main(int argc, char *argv[]) {
 					print_daily_cell_data ( &matrix->cells[cell] );
 
 					/************************************************************************/
-					if ( F == matrix->cells[cell].landuse && matrix->cells[cell].heights_count != 0 )
+					if ( g_sz_dataset_file )
 					{
-						if ( 'f' == g_settings->version )
+						if ( (LANDUSE_F == g_soil_settings->landuse) && (matrix->cells[cell].heights_count != 0) )
 						{
-							if ( !Tree_model_daily( matrix, cell, day, month, year ) )
+							if ( 'f' == g_settings->version )
 							{
-								logger(g_debug_log, "tree model daily failed!!!");
+								if ( !Tree_model_daily( matrix, cell, day, month, year ) )
+								{
+									logger(g_debug_log, "tree model daily failed!!!");
+								}
+								else
+								{
+									printf("ok tree_model (%02d-%02d-%d)\n", day+1, month+1, year+g_settings->year_start);
+
+									//if ( g_settings->dndc )
+									//{
+									//	logger(g_debug_log, "RUNNING DNDC.....\n");
+									//	soil_dndc_sgm (matrix, cell, year, month, day, years_of_simulation);
+									//	soil_dndc......................................
+									//}
+									//else
+									//{
+									//	logger(g_debug_log, "No soil simulation!!!\n");
+									//}
+									//get_net_ecosystem_exchange(&matrix->cells[cell]);
+								}
 							}
 							else
 							{
-								printf("ok tree_model (%02d-%02d-%d)\n", day+1, month+1, year+g_settings->year_start);
-
-								//if ( g_settings->dndc )
-								//{
-								//	logger(g_debug_log, "RUNNING DNDC.....\n");
-								//	soil_dndc_sgm (matrix, cell, year, month, day, years_of_simulation);
-								//	soil_dndc......................................
-								//}
-								//else
-								//{
-								//	logger(g_debug_log, "No soil simulation!!!\n");
-								//}
-								//get_net_ecosystem_exchange(&matrix->cells[cell]);
+								/* run for BGC version */
 							}
 						}
 						else
 						{
-							/* run for BGC version */
+							//if ( ! crop_model_D(matrix, cell, year, month, day, years_of_simulation) )
+							//{
+							//	logger(g_debug_log, "crop model failed.");
+							//}
+							//else
+							//{
+							//	puts(msg_ok);
+							//	//look if put it here or move before tree_model at the beginning of each month simulation
+							//	soil_model (matrix, yos, years, month, years_of_simulation);
+							//}
 						}
 					}
-					else
-					{
-						//if ( ! crop_model_D(matrix, cell, year, month, day, years_of_simulation) )
-						//{
-						//	logger(g_debug_log, "crop model failed.");
-						//}
-						//else
-						//{
-						//	puts(msg_ok);
-						//	//look if put it here or move before tree_model at the beginning of each month simulation
-						//	soil_model (matrix, yos, years, month, years_of_simulation);
-						//}
-					}
+
 					/************************************************************************/
 					/* run for soil model */
 					if ( !Soil_model_daily(matrix, cell, day, month, year) )
@@ -1385,6 +1403,8 @@ int main(int argc, char *argv[]) {
 	logger_close(g_debug_log); g_debug_log = NULL;
 
 	/* free memory */
+	if ( t ) free(t);
+	if ( s ) free(s);
 	if ( output_vars ) output_free(output_vars);
 	if ( matrix ) matrix_free(matrix);
 

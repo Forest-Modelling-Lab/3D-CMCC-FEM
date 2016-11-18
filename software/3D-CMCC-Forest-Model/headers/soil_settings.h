@@ -2,8 +2,15 @@
 #ifndef SOIL_H_
 #define SOIL_H_
 
+typedef enum {
+	LANDUSE_F		/* forest */
+	, LANDUSE_Z		/* crop */
+} e_landuse;
+
 enum {
-	SOIL_LAT = 0
+	SOIL_X = 0
+	, SOIL_Y
+	, SOIL_LAT
 	, SOIL_LON
 	, SOIL_CLAY_PERC
 	, SOIL_SILT_PERC
@@ -33,18 +40,17 @@ enum {
 	, SOIL_DC_LITTER
 	, SOIL_DC_HUMADS
 	, SOIL_DC_HUMUS
+	, SOIL_LANDUSE
 
 	, SOIL_VARS_COUNT
 };
 
 typedef struct {
-	//todo this should be used only in txt simulations (is it still necessary due to the signature of output files ?)
-	char sitename[1024];
-	double values[SOIL_VARS_COUNT];
+	e_landuse landuse;
+	double values[SOIL_VARS_COUNT-1]; // -1 for landuse
 	//todo lat long and elev should be taken from met netcdf files (but for .txt files??)
 } soil_settings_t;
 
-soil_settings_t* soil_settings_new(void);
-int soil_settings_import(soil_settings_t *const s, const char *const filename, const int x, const int y);
+soil_settings_t* soil_settings_import(const char *const filename, int*const soil_settings_count);
 
 #endif /* SOIL_H_ */

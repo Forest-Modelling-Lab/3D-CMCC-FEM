@@ -2,16 +2,20 @@
 #ifndef TOPO_H_
 #define TOPO_H_
 
-enum {
-	TOPO_ELEV = 0
+enum
+{
+	TOPO_X = 0
+	, TOPO_Y
+	, TOPO_ELEV
+
 	, TOPO_VARS_COUNT
 };
 
-typedef struct {
+typedef struct
+{
 	float values[TOPO_VARS_COUNT];
 } topo_t;
 
-topo_t *topo_new(void);
-int topo_import(topo_t *const t, const char *const filename, const int x, const int y);
+topo_t* topo_import(const char *const filename, int*const topos_count);
 
 #endif /* TOPO_H_ */

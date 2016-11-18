@@ -3,13 +3,9 @@
 #define MATRIX_H_
 
 #include "yos.h"
+#include "soil_settings.h"
 
 #define MAXTURNTIME 5000
-
-typedef enum {
-	F		/* forest */
-	, Z		/* crop */
-} e_landuse;
 
 typedef enum {
 	T		/* timber */ //fixme change with H (high forest)
@@ -662,8 +658,6 @@ typedef struct
 	int cell_ages_count;
 	int cell_species_count;
 
-	e_landuse landuse;                                  /* LandUse type */
-
 	int year_stand;                                     /* input stand.txt row stand year */
 
 	int x;                                              /* cell index within the matrix */
@@ -899,7 +893,7 @@ typedef struct {
 	int y_cells_count;
 } matrix_t;
 
-matrix_t* matrix_create(const char* const filename);
+matrix_t* matrix_create(const soil_settings_t*const s, const int count, const char* const filename);
 void matrix_free(matrix_t *m);
 void simulation_summary(const matrix_t* const m);
 void site_summary(const matrix_t* const m);

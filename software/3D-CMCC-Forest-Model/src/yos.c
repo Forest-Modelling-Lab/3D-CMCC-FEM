@@ -63,7 +63,6 @@ static const char *sz_month_names[YOS_MONTHS_COUNT] = {
 extern logger_t* g_debug_log;
 extern settings_t* g_settings;
 extern const char sz_err_out_of_memory[];
-extern char *g_sz_program_path;
 extern char *g_sz_input_path;
 extern char *g_sz_co2_conc_file;
 
@@ -1165,7 +1164,7 @@ static int import_lst(const char *const filename, yos_t** p_yos, int *const yos_
 	/* get filename path */
 	sz_path[0] = '\0';
 	if ( filename[1] != ':' ) {
-		strncpy(sz_path, g_sz_program_path, 256);
+		strncpy(sz_path, g_sz_input_path, 256);
 	}
 	/* check for buffer overflow */
 	strcat(sz_path, filename);
@@ -1668,7 +1667,7 @@ static int import_txt(const char *const filename, yos_t** p_yos, int *const yos_
 	// get rows count
 	rows_count = file_get_rows_count(filename);
 	if ( rows_count <= 0 ) {
-		logger_error(g_debug_log, "unable to open met data file, problems in rows !\n");
+		logger_error(g_debug_log, "file doesn't exist!\n");
 		return 0;
 	}
 

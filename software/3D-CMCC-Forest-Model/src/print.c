@@ -13,6 +13,7 @@
 #include "logger.h"
 
 extern settings_t* g_settings;
+extern soil_settings_t* g_soil_settings;
 extern logger_t* g_debug_log;
 
 void Print_parameters(species_t *const s, const int species_count, const int day, const int month, const int years)
@@ -173,7 +174,7 @@ void print_daily_cell_data (cell_t *const c)
 	logger(g_debug_log, "cell = \n");
 	logger(g_debug_log, "* x = %d\n", c->x);
 	logger(g_debug_log, "* y = %d\n", c->y);
-	logger(g_debug_log, "* landuse = %s\n", c->landuse ? "F":"Z");
+	logger(g_debug_log, "* landuse = %c\n", (LANDUSE_F == g_soil_settings->landuse) ? 'F' : 'Z');
 	logger(g_debug_log, "* asw = %g mm\n", c->asw);
 	logger(g_debug_log, "* swc = %g %%\n", c->swc);
 	logger(g_debug_log, "* snow pack = %g cm\n", c->snow_pack);

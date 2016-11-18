@@ -4,10 +4,12 @@
 
 enum { CO2_FIXED_OFF = 0, CO2_FIXED_ON, CO2_FIXED_VAR };
 
+#define SETTINGS_SITENAME_MAX_SIZE					(255+1)
 #define SETTINGS_REPLANTED_SPECIES_MAX_SIZE			(32+1)
 #define SETTINGS_REGENERATION_SPECIES_MAX_SIZE		(32+1)
 
 typedef struct {
+	char sitename[SETTINGS_SITENAME_MAX_SIZE];
 	char version;
 	char spatial;	                  /* must be 's' or 'u' (spatial or unspatial) */
 	char time;		                  /* must be 'm' or 'd' (monthly or daily) */

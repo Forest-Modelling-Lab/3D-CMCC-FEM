@@ -50,9 +50,9 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 
 
 	height_t *h;
-	h = &c->heights[height];
-
 	species_t *s;
+
+	h = &c->heights[height];
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 	daylength_sec = meteo_daily->daylength * 3600.0;

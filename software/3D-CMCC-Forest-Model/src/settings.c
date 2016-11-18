@@ -8,7 +8,8 @@
 #include <assert.h>
 
 enum {
-	SETTINGS_VERSION
+	SETTINGS_SITENAME = 0
+	, SETTINGS_VERSION
 	, SETTINGS_SPATIAL
 	, SETTINGS_TIME
 	, SETTINGS_SCREEN_OUTPUT
@@ -126,6 +127,10 @@ settings_t* settings_import(const char *const filename) {
 		if ( ! token ) continue;
 
 		switch ( i++ ) {
+			case SETTINGS_SITENAME:
+				strncpy(s->sitename, token, SETTINGS_SITENAME_MAX_SIZE-1);
+			break;
+
 			case SETTINGS_VERSION:
 				s->version = *token;
 			break;

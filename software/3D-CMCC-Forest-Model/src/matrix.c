@@ -5,7 +5,6 @@
 #include <ctype.h>
 #include <math.h>
 #include <assert.h>
-#include "soil_settings.h"
 #include "allometry.h"
 #include "topo.h"
 #include "matrix.h"
@@ -17,12 +16,12 @@
 #include "initialization.h"
 #include "structure.h"
 #include "netcdf.h"
-
+	
 extern logger_t* g_debug_log;
 extern settings_t* g_settings;
 extern soil_settings_t *g_soil_settings;
 extern topo_t *g_topo;
-extern char *g_sz_program_path;
+extern char *g_sz_input_path;
 extern char *g_sz_parameterization_path;
 extern char g_sz_parameterization_output_path[];
 extern int g_year_start_index;
@@ -32,7 +31,6 @@ enum {
 	YEAR_COLUMN
 	, X_COLUMN
 	, Y_COLUMN
-	, LANDUSE_COLUMN
 	, AGE_COLUMN
 	, SPECIES_COLUMN
 	, MANAGEMENT_COLUMN
@@ -55,7 +53,6 @@ typedef struct {
 	int year_stand;
 	int x;
 	int y;
-	e_landuse landuse;
 	int age;
 	char *species;
 	e_management management;
@@ -81,7 +78,6 @@ static const char* sz_vars[COLUMNS_COUNT] = {
 		"YEAR"
 		, "X"
 		, "Y"
-		, "LANDUSE"
 		, "AGE"
 		, "SPECIES"
 		, "MANAGEMENT"
@@ -105,8 +101,6 @@ static const char delimiter[] = " ,/\r\n";
 static const char err_redundancy[] = "redundancy: var \"%s\" already founded at column %d.\n";
 static const char err_unable_find_column[] = "unable to find column for \"%s\" var.\n";
 static const char err_conversion[] = "error during conversion of \"%s\" value at row %d, column %d.\n";
-static const char err_bad_landuse_length[] =" bad landuse length at row %d, landuse must be 1 character.\n";
-static const char err_bad_landuse[] ="bad landuse %c at row %d\n";
 static const char err_bad_management_length[] =" bad management length at row %d, management must be 1 character.\n";
 static const char err_bad_management[] = "bad management %c at row %d\n";
 static const char err_too_many_column[] = "too many columns at row %d\n";
@@ -196,7 +190,7 @@ static dataset_t* dataset_import_nc(const char* const filename, int* const px_ce
 	d = NULL;
 	sz_nc_filename[0] = '\0';
 	if ( filename[1] != ':' ) {
-		strncpy(sz_nc_filename, g_sz_program_path, 256);
+		strncpy(sz_nc_filename, g_sz_input_path, 256);
 	}
 	strcat(sz_nc_filename, filename);
 	ret = nc_open(sz_nc_filename, NC_NOWRITE, &id_file);
@@ -317,14 +311,6 @@ static dataset_t* dataset_import_nc(const char* const filename, int* const px_ce
 						d->rows[index].x = _x;
 						d->rows[index].y = _y;
 						switch ( y ) {
-						case LANDUSE_COLUMN:
-							if ( 0 == (int)value ) {
-								d->rows[index].landuse = F;
-							} else {
-								d->rows[index].landuse = Z;
-							}
-							break;
-
 						case AGE_COLUMN:
 							d->rows[index].age = (int)value;
 							break;
@@ -512,7 +498,7 @@ static dataset_t* dataset_import_txt(const char* const filename) {
 		/* remove comment, carriage return and newline */
 		for ( i = 0; p[i]; ++i ) {
 			if ( ('/' == p[i]) || ('\n' == p[i]) || ('\r' == p[i]) ) {
-				buffer[i] = '\0';
+				p[i] = '\0';
 				break;
 			}
 		}
@@ -534,33 +520,7 @@ static dataset_t* dataset_import_txt(const char* const filename) {
 				if ( y == columns[i] ) {
 					/* assigned */
 					++assigned;
-					/* check columns */
-					if ( i == LANDUSE_COLUMN ) {
-						/* check landuse length */
-						if ( 1 != strlen(token) ) {
-							printf(err_bad_landuse_length, rows_count);
-							free(row.species);
-							free(columns);
-							dataset_free(dataset);
-							fclose(f);
-							return NULL;
-						}
-						/* check landuse */
-						if ( ('F' == token[0]) || ('f' == token[0]) ) {
-							row.landuse = F;
-							//dataset->rows[dataset->rows_count-1].landuse = F ;
-						} else if ( ('Z' == token[0]) || ('z' == token[0]) ) {
-							row.landuse = Z;
-							//dataset->rows[dataset->rows_count-1].landuse = Z;
-						} else {
-							printf(err_bad_landuse, token[0], rows_count);
-							free(row.species);
-							free(columns);
-							dataset_free(dataset);
-							fclose(f);
-							return NULL;
-						}
-					} else if ( SPECIES_COLUMN == i ) {
+					if ( SPECIES_COLUMN == i ) {
 						row.species = string_copy(token);
 						//dataset->rows[dataset->rows_count-1].species = string_copy(token);
 						//if ( ! dataset->rows[dataset->rows_count-1].species ) {
@@ -979,48 +939,6 @@ static int fill_cell_from_soils(cell_t *const c)
 		return 0;
 	}
 }
-/****************************************************************************/
-static int fill_cell(matrix_t* const m, row_t* const row)
-{
-	int i;
-	int index;
-	static cell_t cell = { 0 };
-
-	assert( m && row );
-
-	/*  check position */
-	index = -1;
-	for ( i = 0; i < m->cells_count; ++i )
-	{
-		if ( (row->x == m->cells[i].x) && (row->y == m->cells[i].y) )
-		{
-			index = i;
-			break;
-		}
-	}
-
-	if ( -1 == index )
-	{
-		/* add a new cell */
-		if ( ! alloc_struct((void **)&m->cells, &m->cells_count, &m->cells_avail, sizeof(cell_t)) )
-		{
-			return 0;
-		}
-		index = m->cells_count-1;
-		m->cells[index] = cell;
-		m->cells[index].landuse = row->landuse;
-		m->cells[index].x = row->x;
-		m->cells[index].y = row->y;
-
-		/* add soils */
-		if ( ! fill_cell_from_soils(&m->cells[index]) ) {
-			return 0;
-		}
-	}
-	
-	/* add species */
-	return fill_cell_from_heights(&m->cells[index], row);
-}
 
 static int species_copy_file(const char* const path, const char* const filename) {
 	return file_copy(filename, path);
@@ -1222,7 +1140,8 @@ static int compute_x_y_cells_count(matrix_t* const m) {
 	return ret;
 }
 
-matrix_t* matrix_create(const char* const filename) {
+matrix_t* matrix_create(const soil_settings_t*const s, const int count, const char* const filename) {
+	int i;
 	int row;
 	int cell;
 	int species;
@@ -1234,9 +1153,46 @@ matrix_t* matrix_create(const char* const filename) {
 	int x_cells_count;
 	int y_cells_count;
 
+	assert(s);
+
 	d = NULL;
 	x_cells_count = 0;
 	y_cells_count = 0;
+
+	/* alloc memory for matrix */
+	m = malloc(sizeof*m);
+	if ( ! m ) {
+		dataset_free(d);
+		return NULL;
+	}
+	m->cells = NULL;
+	m->cells_count = 0;
+	m->cells_avail = 0;
+	m->x_cells_count = 0;
+	m->y_cells_count = 0;
+
+	/* add cells by soils */
+	for ( i = 0; i < count; i++ ) {
+		if ( ! alloc_struct((void**)&m->cells, &m->cells_count, &m->cells_avail, sizeof(cell_t)) ) {
+			logger_error(g_debug_log, sz_err_out_of_memory);
+			matrix_free(m);
+			return NULL;
+		}
+		row = m->cells_count-1;
+		memset(&m->cells[row], 0, sizeof(cell_t));
+		m->cells[row].x = (int)s[i].values[SOIL_X];
+		m->cells[row].y = (int)s[i].values[SOIL_Y];
+
+		if ( ! fill_cell_from_soils(&m->cells[row]) ) {
+			logger_error(g_debug_log, sz_err_out_of_memory);
+			matrix_free(m);
+			return NULL;
+		}
+		/*
+		x_cells_count = 1;
+		y_cells_count = 1;
+		*/
+	}
 
 	if ( filename )
 	{
@@ -1253,6 +1209,7 @@ matrix_t* matrix_create(const char* const filename) {
 				}
 			} else {
 				printf("bad filename!");
+				matrix_free(m);
 				return NULL;
 			}
 		}
@@ -1263,27 +1220,26 @@ matrix_t* matrix_create(const char* const filename) {
 			f = fopen("debug_input.txt", "w");
 			if ( f ) {
 				int i;
-				fputs("year,x,y,landuse,age,species,management,n,stool,avdbg,height,wf,wrc,wrf,ws,wbb,wres,lai\n", f);
+				fputs("year,x,y,age,species,management,n,stool,avdbg,height,wf,wrc,wrf,ws,wbb,wres,lai\n", f);
 				for ( i = 0; i < d->rows_count; ++i ) {
-					fprintf(f, "%d,%d,%d,%c,%d,%s,%c,%d,%d,%g,%g,%g,%g,%g,%g,%g,%g,%g\n"
-							, d->rows[i].year_stand
-							, d->rows[i].x
-							, d->rows[i].y
-							, (F == d->rows[i].landuse) ? 'F' : 'Z'
-									, d->rows[i].age
-									, d->rows[i].species
-									, (T == d->rows[i].management) ? 'T' : 'C'
-											, d->rows[i].n
-											, d->rows[i].stool
-											, d->rows[i].avdbh
-											, d->rows[i].height
-											, d->rows[i].wf
-											, d->rows[i].wrc
-											, d->rows[i].wrf
-											, d->rows[i].ws
-											, d->rows[i].wbb
-											, d->rows[i].wres
-											, d->rows[i].lai
+					fprintf(f, "%d,%d,%d,%d,%s,%c,%d,%d,%g,%g,%g,%g,%g,%g,%g,%g,%g\n"
+																, d->rows[i].year_stand
+																, d->rows[i].x
+																, d->rows[i].y
+																, d->rows[i].age
+																, d->rows[i].species
+																, (T == d->rows[i].management) ? 'T' : 'C'
+																, d->rows[i].n
+																, d->rows[i].stool
+																, d->rows[i].avdbh
+																, d->rows[i].height
+																, d->rows[i].wf
+																, d->rows[i].wrc
+																, d->rows[i].wrf
+																, d->rows[i].ws
+																, d->rows[i].wbb
+																, d->rows[i].wres
+																, d->rows[i].lai
 					);
 				}
 				fclose(f);
@@ -1292,66 +1248,85 @@ matrix_t* matrix_create(const char* const filename) {
 	#endif
 	}
 
-	m = malloc(sizeof*m);
-	if ( ! m ) {
-		dataset_free(d);
-		return NULL;
-	}
-	m->cells = NULL;
-	m->cells_count = 0;
-	m->cells_avail = 0;
-	m->x_cells_count = 0;
-	m->y_cells_count = 0;
-
 	if ( d ) {
+		int flag;
+
 		for ( row = 0; row < d->rows_count; ++row ) {
-			if ( ! fill_cell(m, &d->rows[row]) ) {
+			/* check against x and y */
+			flag = 0;
+			for ( i = 0; i < m->cells_count; ++i ) {
+				if ( (d->rows[row].x == m->cells[i].x)
+					&& (d->rows[row].y == m->cells[i].y) ) {
+						
+					if ( ! fill_cell_from_heights(&m->cells[i], &d->rows[row]) ) {
+						matrix_free(m);
+						return NULL;
+					}
+					flag = 1;
+					break;
+				}
+			}
+			if ( ! flag ) {
+				printf("stand values for cell at %d,%d skipped. (not found in soil settings).\n"
+									, d->rows[row].x
+									, d->rows[row].y
+				);
+			}
+
+			/*
+			if ( ! fill_cell(m, &d->rows[row]) )
+			{
 				dataset_free(d);
 				matrix_free(m);
 				return NULL;
 			}
+			*/
 		}
 		dataset_free(d);
 		d = NULL;
-	} else {
-		static cell_t cell = { 0 };
-
-		// add an empty cell
-		if ( ! alloc_struct((void **)&m->cells, &m->cells_count, &m->cells_avail, sizeof(cell_t)) )
-		{
-			return 0;
-		}
-		row = m->cells_count-1;
-		m->cells[row] = cell;
-		m->cells[row].landuse = F;
-		m->cells[row].x = 0;
-		m->cells[row].y = 0;
-
-		if ( ! fill_cell_from_soils(&m->cells[row]) )
-		{
-			return 0;
-		}
-
-		if ( ! fill_cell_from_heights(&m->cells[row], NULL) )
-		{
-			return 0;
-		}
-		x_cells_count = 1;
-		y_cells_count = 1;
 	}
-	
+	//} else {
+	//	static cell_t cell = { 0 };
+
+	//	// add an empty cell
+	//	if ( ! alloc_struct((void**)&m->cells, &m->cells_count, &m->cells_avail, sizeof(cell_t)) )
+	//	{
+	//		return 0;
+	//	}
+	//	row = m->cells_count-1;
+	//	m->cells[row] = cell;
+	//	m->cells[row].landuse = F;
+	//	m->cells[row].x = 0;
+	//	m->cells[row].y = 0;
+
+	//	if ( ! fill_cell_from_soils(&m->cells[row]) )
+	//	{
+	//		return 0;
+	//	}
+
+	//	if ( ! fill_cell_from_heights(&m->cells[row], NULL) )
+	//	{
+	//		return 0;
+	//	}
+	//	x_cells_count = 1;
+	//	y_cells_count = 1;
+	//}
+	//
 	/* fill with species values */
-	for ( cell = 0; cell < m->cells_count; ++cell ) {
+	for ( cell = 0; cell < m->cells_count; ++cell )
+	{
 		for (height = 0; height < m->cells[cell].heights_count; ++height)
 		{
 			for (dbh = 0; dbh < m->cells[cell].heights[height].dbhs_count; ++dbh)
 			{
-				for (age = 0; age < m->cells[cell].heights[height].dbhs[dbh].ages_count; ++age ) {
+				for (age = 0; age < m->cells[cell].heights[height].dbhs[dbh].ages_count; ++age )
+				{
 					for ( species = 0; species < m->cells[cell].heights[height].dbhs[dbh].ages[age].species_count; ++species )
 					{
 						if ( ! fill_species_from_file(&m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species]) )
 						{
-							if ( filename ) {
+							if ( filename )
+							{
 								matrix_free(m);
 								return NULL;
 							}
@@ -1363,25 +1338,27 @@ matrix_t* matrix_create(const char* const filename) {
 	}
 
 	/* compute x and y cells count */
-	if ( ! compute_x_y_cells_count(m) ) {
+	if ( ! compute_x_y_cells_count(m) )
+	{
 		matrix_free(m);
 		m = NULL;
 	}
 
-	/* check against nc dimension */
-	if ( x_cells_count ) {
-	if (	(x_cells_count != m->x_cells_count)
-			|| (y_cells_count != m->y_cells_count) ) {
-		printf("dimensions differs between nc and check: x(%d,%d), y(%d,%d)\n"
-					, x_cells_count
-					, m->x_cells_count
-					, y_cells_count
-					, m->y_cells_count
-		);
-		matrix_free(m);
-		m = NULL;
-	}
-	}
+	///* check against nc dimension */
+	//if ( x_cells_count ) {
+	//	if (	(x_cells_count != m->x_cells_count)
+	//			|| (y_cells_count != m->y_cells_count) )
+	//	{
+	//		printf("dimensions differs between nc and check: x(%d,%d), y(%d,%d)\n"
+	//					, x_cells_count
+	//					, m->x_cells_count
+	//					, y_cells_count
+	//					, m->y_cells_count
+	//		);
+	//		matrix_free(m);
+	//		m = NULL;
+	//	}
+	//}
 
 	return m;
 }
@@ -1425,7 +1402,7 @@ void site_summary(const matrix_t* const m)
 	/* Site definition */
 	logger(g_debug_log, "***************************************************\n\n");
 	logger(g_debug_log, "SITE DATASET\n");
-	logger(g_debug_log, "Site Name = %s\n", g_soil_settings->sitename);
+	logger(g_debug_log, "Site Name = %s\n", g_settings->sitename);
 	logger(g_debug_log, "Latitude = %f° \n", g_soil_settings->values[SOIL_LAT]);
 	logger(g_debug_log, "Longitude = %f° \n", g_soil_settings->values[SOIL_LON]);
 	if (g_soil_settings->values[SOIL_LAT] > 0) logger(g_debug_log, "North hemisphere\n");
@@ -1616,10 +1593,12 @@ void matrix_free(matrix_t *m)
 						free ( m->cells[cell].soil_layers );
 					}
 				}
-				if ( g_year_start_index != -1 ) {
-					free (m->cells[cell].years-g_year_start_index);
-				} else {
-					free (m->cells[cell].years);
+				if ( m->cells[cell].years ) {
+					if ( g_year_start_index != -1 ) {
+						free (m->cells[cell].years-g_year_start_index);
+					} else {
+						free (m->cells[cell].years);
+					}
 				}
 			}
 			free (m->cells);

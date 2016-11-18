@@ -1,3 +1,3 @@
-Year,x,y,Landuse,Age,Species,Management,N,Stool,AvDBH,Height,Wf,Wrc,Wrf,Ws,Wbb,Wres,Lai
-1997,0,0,F,100,Fagussylvatica,T,900,0,20.27415,18.5,0,0,0,0,0,0,0 //tree height was 19.84
-2007,0,0,F,110,FagussylvaticaColl,T,825,0,24.85,21.42826,0,73.754033,0,228.139,42.39244,10.4265,0
+Year,x,y,Age,Species,Management,N,Stool,AvDBH,Height,Wf,Wrc,Wrf,Ws,Wbb,Wres,Lai
+1997,0,0,100,Fagussylvatica,T,900,0,20.27415,18.5,0,0,0,0,0,0,0 //tree height was 19.84
+2007,0,0,110,FagussylvaticaColl,T,825,0,24.85,21.42826,0,73.754033,0,228.139,42.39244,10.4265,0

@@ -11,103 +11,231 @@
 
 extern logger_t* g_debug_log;
 
-extern char *g_sz_program_path;
+extern char *g_sz_input_path;
 
-static void reset(topo_t* const t) {
-	int i;
-	assert(t);
-	for ( i = 0; i < TOPO_VARS_COUNT; ++i ) {
-		t->values[i] = INVALID_VALUE;
-	}
-}
+static const char *sz_vars[TOPO_VARS_COUNT] =
+{
+	"X"
+	, "Y"
+	, "ELEV"
+};
 
-static int import_txt(topo_t *const t, const char *const filename, const int x, const int y) {
+topo_t* import_topo_txt(const char *const filename, int* const p_topos_count) {
 #define TOPO_BUFFER_SIZE 1024
+	char* p;
+	char* token;
 	char buffer[TOPO_BUFFER_SIZE];
 	int i;
-	float *p_float;
+	int columns[TOPO_VARS_COUNT];
 	FILE *f;
+	topo_t *pt;
+	topo_t t;
+	topo_t *pt_no_leak;
 
-	assert(t && filename);
+	const char delimiters[] = ",\r\n";
 
+	assert(filename && p_topos_count);
+
+	/* reset stuff */
+	pt = NULL; /* required! for realloc stuff */
+	*p_topos_count = 0;
+
+	/* open file */
 	f = fopen(filename, "r");
-	if ( ! f ) {	
-		logger_error(g_debug_log, "unable to open %s\n\n", filename);
+	if ( ! f ) {
+		logger_error(g_debug_log, "unable to open %s\n", filename);
 		return 0;
 	}
 
-	i = 0;
-	p_float = t->values;	
-	while ( fgets(buffer, TOPO_BUFFER_SIZE, f) ) {
-		/* skip empty line */
-		if ( ('\n' == buffer[0]) || ('/' == buffer[0]) ) {
-			continue;
-		} else {
-			char *p = strtok(buffer, " \"");
-			p = strtok(NULL, "\"");
+	/* get header */
+	if ( ! fgets(buffer, TOPO_BUFFER_SIZE, f) )
+	{
+		logger_error(g_debug_log, "header not found in %s\n", filename);
+		return 0;
+	}
 
-			*p_float = (float)atof(p);
-			p_float++;
-			i++;
+	/* reset columns */
+	for ( i = 0; i < TOPO_VARS_COUNT; i++ )
+	{
+		columns[i] = -1;
+	}
+
+	/* parse header */
+	for ( i = 0, token = string_tokenizer(buffer, delimiters, &p); token; token = string_tokenizer(NULL, delimiters, &p), ++i )
+	{
+		int y;
+		for ( y = 0; y < TOPO_VARS_COUNT; ++y )
+		{
+			if ( ! string_compare_i(token, sz_vars[y]) )
+			{
+				/* check if column is not already assigned */
+				if ( columns[y] != -1 )
+				{
+					logger_error(g_debug_log, "%s already assigned at column %d in %s\n", sz_vars[y], columns[y], filename);
+					fclose(f);
+					return 0;
+				}
+				columns[y] = i;
+			}
 		}
 	}
 
+	/* check missing columns */
+	for ( i = 0; i < TOPO_VARS_COUNT; i++ )
+	{
+		if ( -1 == columns[i] )
+		{
+			logger_error(g_debug_log, "columm %s not found in %s\n", sz_vars[i], filename);
+			fclose(f);
+			return 0;
+		}
+	}
+
+	/* import values */
+	while ( fgets(buffer, TOPO_BUFFER_SIZE, f) ) {
+		int y; /* keep track of imported values */
+
+		/* skip empty rows */
+		if ( ('\r' == buffer[0]) || ('\n' == buffer[0]) )
+		{
+			continue;
+		}
+
+		/* parse values */
+		y = 0;
+		for ( i = 0, token = string_tokenizer(buffer, delimiters, &p); token; token = string_tokenizer(NULL, delimiters, &p), ++i )
+		{
+			int err;
+			float value;
+
+			value = (float)convert_string_to_float(token, &err);
+			if ( err )
+			{
+				logger_error(g_debug_log, "unable to convert '%s' at columm %d in %s\n", token, y+1, filename);
+				if ( pt ) free(pt);
+				fclose(f);
+				return 0;
+			}
+
+			if ( ++y > TOPO_VARS_COUNT )
+			{
+				logger_error(g_debug_log, "too many columns in %s\n", filename);
+				if ( pt ) free(pt);
+				fclose(f);
+				return 0;
+			}
+			
+			t.values[columns[i]] = value;
+		}
+
+		/* check imported stuff */
+		if ( y != TOPO_VARS_COUNT )
+		{
+			logger_error(g_debug_log, "imported values for row %d in %s should be %d not %d\n"
+																	, *p_topos_count + 1
+																	, filename
+																	, TOPO_VARS_COUNT
+																	, y
+			);
+			if ( pt ) free(pt);
+			fclose(f);
+			return 0;
+		}
+
+		/* check for X and Y */
+		for ( y = 0; y < *p_topos_count; ++y )
+		{
+			if ( ((int)pt[y].values[TOPO_X] == (int)t.values[TOPO_X])
+					&& ((int)pt[y].values[TOPO_Y] == (int)t.values[TOPO_Y]) )
+			{
+				logger_error(g_debug_log, "duplicated settings for %d,%d cell in\n"
+																		, (int)pt[y].values[TOPO_X]
+																		, (int)pt[y].values[TOPO_Y]
+																		, filename
+				);
+				if ( pt ) free(pt);
+				fclose(f);
+				return 0;
+			}
+		}
+
+		/* alloc new row */
+		pt_no_leak = realloc(pt, (*p_topos_count+1)*sizeof*pt_no_leak);
+		if ( ! pt_no_leak )
+		{
+			logger_error(g_debug_log, "out of memory during import of %s\n", filename);
+			if ( pt ) free(pt);
+			fclose(f);
+			return 0;
+		}
+		pt = pt_no_leak;
+		for ( y = 0; y < TOPO_VARS_COUNT; ++y )
+		{
+			pt[*p_topos_count].values[y] = t.values[y];
+		}
+		
+		++*p_topos_count;
+	}
 	fclose(f);
 
-	/* are all value imported ? */
-	/*return ( i == TOPO_VARS_COUNT ) ? 0 : 2;*/
-	return 1;
+	if (  ! *p_topos_count )
+	{
+		logger_error(g_debug_log, "no values found in %s\n", filename);
+		return NULL;
+	}
+
+	return pt;
 #undef TOPO_BUFFER_SIZE
 }
 
-static int import_nc(topo_t *const t, const char *const filename, const int x_cell, const int y_cell) {
+static topo_t* import_nc(const char *const sz_filename, int*const p_topo_count) {
 	enum {
 		X_DIM = 0
 		, Y_DIM
-		//, TIME_DIM
 		, DIMS_COUNT
 	};
 
-	char buffer[256];
-	char sz_nc_filename[256];
-	int i;
-	int vars[TOPO_VARS_COUNT];
-	double value;
-	int dims_size[DIMS_COUNT];
-	int x_id;
-	const char *sz_dims[DIMS_COUNT] = { "x", "y" };
-	const char *sz_vars[TOPO_VARS_COUNT] = { "ELEV" };
-
-	int y;
-	int id_file;
-	int ret;
-	int dims_count;	/* dimensions */
-	int vars_count;
-	int atts_count;	/* attributes */
-	int unl_count;	/* unlimited dimensions */
 	char name[NC_MAX_NAME+1];
-	nc_type type;
-	size_t size;
+	int i;
+	int x;
+	int y;
+	int z;
+	int id_file;
+	int dims_count;
+	int vars_count;
+	int dims_size[2];
+	int x_id;
+	//int y_id;
+	int ret;
 	int n_dims;
 	int ids[NC_MAX_VAR_DIMS];
+	int vars[SOIL_VARS_COUNT];
+	size_t size;
+		
+	topo_t *ps;
+	topo_t *ps_no_leak;
+
+	nc_type type;
 
 	size_t start[DIMS_COUNT] = { 0, 0 };
 	size_t count[DIMS_COUNT] = { 1, 1 };
 
+	const char *sz_dims[DIMS_COUNT] = { "x", "y" };
+
+	assert(sz_filename && p_topo_count);
+
+	/* reset stuff */
+	ps = NULL; /* required! for realloc stuff */
+	*p_topo_count = 0;
+		
 	for ( i = 0; i < TOPO_VARS_COUNT; i++ ) {
 		vars[i] = 0;
 	}
 
-	sz_nc_filename[0] = '\0';
-	if ( filename[1] != ':' ) {
-		strncpy(sz_nc_filename, g_sz_program_path, 256);
-	}
-	strcat(sz_nc_filename, filename);
-
-	ret = nc_open(sz_nc_filename, NC_NOWRITE, &id_file);
+	ret = nc_open(sz_filename, NC_NOWRITE, &id_file);
 	if ( ret != NC_NOERR ) goto quit;
 
-	ret = nc_inq(id_file, &dims_count, &vars_count, &atts_count, &unl_count);
+	ret = nc_inq(id_file, &dims_count, &vars_count, NULL, NULL);
 	if ( ret != NC_NOERR ) goto quit;
 
 	if ( ! dims_count || ! vars_count ) {
@@ -122,9 +250,8 @@ static int import_nc(topo_t *const t, const char *const filename, const int x_ce
 	}
 
 	/* reset */
-	for ( i = 0; i < DIMS_COUNT; ++i ) {
-		dims_size[i] = -1;
-	}
+	dims_size[X_DIM] = -1;
+	dims_size[Y_DIM] = -1;
 
 	/* get dimensions */
 	x_id = 0;
@@ -134,7 +261,7 @@ static int import_nc(topo_t *const t, const char *const filename, const int x_ce
 		for ( y = 0; y < DIMS_COUNT; ++y ) {
 			if ( ! string_compare_i(sz_dims[y], name) ) {
 				if ( dims_size[y] != -1 ) {
-					logger(g_debug_log, "dimension %s already found!\n", sz_dims[y]);
+					logger_error(g_debug_log, "dimension %s already found!\n", sz_dims[y]);
 					goto quit_no_nc_err;
 				}
 				dims_size[y] = size;
@@ -152,89 +279,103 @@ static int import_nc(topo_t *const t, const char *const filename, const int x_ce
 		}
 	}
 
-	/* check if x_cell is >= x_dim */
-	if ( x_cell >= dims_size[X_DIM] ) {
-		logger_error(g_debug_log, "x_cell >= x_dim: %d,%d\n", x_cell, dims_size[X_DIM]);
-		goto quit_no_nc_err;
-	}
-
-	/* check if y_cell is >= y_dim */
-	if ( y_cell >= dims_size[Y_DIM] ) {
-		logger_error(g_debug_log, "y_cell >= y_dim: %d,%d\n", y_cell, dims_size[Y_DIM]);
-		goto quit_no_nc_err;
-	}
-
 	/* get vars */
-	for ( i = 0; i < vars_count; ++i ) {
-		ret = nc_inq_var(id_file, i, name, &type, &n_dims, ids, NULL);
-		if ( ret != NC_NOERR ) goto quit;
-		/* who cames first ? x or y ? */
-		if ( x_id == ids[0] ) {
-			/* x first */
-			start[0] = x_cell;
-			start[1] = y_cell;			
-		} else {
-			/* y first */
-			start[0] = y_cell;
-			start[1] = x_cell;
-		}
-		for ( y = 0; y  < TOPO_VARS_COUNT; ++y ) {
-			if ( ! string_compare_i(name, sz_vars[y]) ) {
-				/* check if we already have imported that var */
-				if ( vars[y] ) {
-					logger_error(g_debug_log, "var %s already imported\n", sz_vars[y]);
-					goto quit_no_nc_err;
-				}
-				/* n_dims can be only 2 and ids only x and y */
-				if ( 2 != n_dims ) {
-					logger_error(g_debug_log, "bad %s dimension size. It should be 2 not %d\n", sz_vars[y], n_dims);
-					goto quit_no_nc_err;
-				}
-				/* get values */
-				if ( NC_FLOAT == type ) {
-					ret = nc_get_vara_float(id_file, i, start, count, &t->values[y]);
-					if ( ret != NC_NOERR ) goto quit;
-				} else if ( NC_DOUBLE == type ) {
-					ret = nc_get_vara_double(id_file, i, start, count, &value);
-					if ( ret != NC_NOERR ) goto quit;
-					t->values[y] = (float)value;
-				} else {
-					/* type format not supported! */
-					logger_error(g_debug_log, "type format in %s for %s column not supported\n\n", buffer, sz_vars[y]);
-					goto quit_no_nc_err;
-				}
-				vars[y] = 1;
-				break;
+	for ( x = 0; x < dims_size[X_DIM]; x++ ) {
+		for ( y = 0; y < dims_size[Y_DIM]; y++ ) {
+			int assigned;
+
+			/* alloc new row */
+			ps_no_leak = realloc(ps, (*p_topo_count+1)*sizeof*ps_no_leak);
+			if ( ! ps_no_leak )
+			{
+				logger_error(g_debug_log, "out of memory during import of %s\n", sz_filename);
+				if ( ps ) free(ps);
+				return 0;
 			}
+			ps = ps_no_leak;
+
+			assigned = 0;
+			for ( i = 0; i < vars_count; ++i ) {
+				ret = nc_inq_var(id_file, i, name, &type, &n_dims, ids, NULL);
+				if ( ret != NC_NOERR ) goto quit;
+				/* who cames first ? x or y ? */
+				if ( x_id == ids[0] ) {
+					/* x first */
+					start[0] = x;
+					start[1] = y;			
+				} else {
+					/* y first */
+					start[0] = y;
+					start[1] = x;
+				}
+
+				for ( z = 0; z  < TOPO_VARS_COUNT; ++z ) {
+					float f;
+					double d;
+
+					if ( ! string_compare_i(name, sz_vars[z]) ) {
+						/* check if we already have imported that var */
+						if ( vars[z] ) {
+							logger_error(g_debug_log, "var %s already imported\n", sz_vars[z]);
+							goto quit_no_nc_err;
+						}
+						/* n_dims can be only 2 and ids only x and y */
+						if ( 2 != n_dims ) {
+							logger_error(g_debug_log, "bad %s dimension size. It should be 2 not %d\n", sz_vars[z], n_dims);
+							goto quit_no_nc_err;
+						}
+						/* get values */
+						if ( NC_FLOAT == type ) {
+							ret = nc_get_vara_float(id_file, i, start, count, &f);
+							if ( ret != NC_NOERR ) goto quit;
+							ps[*p_topo_count].values[z] = f;
+						} else if ( NC_DOUBLE == type ) {
+							ret = nc_get_vara_double(id_file, i, start, count, &d);
+							if ( ret != NC_NOERR ) goto quit;
+							ps[*p_topo_count].values[z] = (float)d;
+						} else {
+							/* type format not supported! */
+							logger_error(g_debug_log, "type format in %s for %s column not supported\n\n", sz_filename, sz_vars[z]);
+							goto quit_no_nc_err;
+						}
+						vars[z] = 1;
+						break;
+					}
+				}
+			}
+
+			if ( assigned != TOPO_VARS_COUNT ) {
+				// TODO
+				// write err
+			}
+
+			++*p_topo_count;
 		}
 	}
+	
 	nc_close(id_file);
-	return 1;
+	return ps;
 
 quit:
 	logger(g_debug_log, nc_strerror(ret));
 quit_no_nc_err:
+	if ( ps ) free(ps);
 	nc_close(id_file);
-	return 0;
+	return NULL;
 }
 
-topo_t *topo_new(void) {
-	topo_t* t = malloc(sizeof*t);
-	if ( t ) reset(t);
-	return t;
-}
-
-
-int topo_import(topo_t *const t, const char *const filename, const int x, const int y) {
+topo_t* topo_import(const char *const filename, int*const topos_count)
+{
 	char *p;
-	assert(t);
-	reset(t);
+
+	assert(filename && topos_count);
+
 	p = strrchr(filename, '.');
 	if ( p ) {
 		++p;
 		if ( ! string_compare_i(p, "nc") || ! string_compare_i(p, "nc4") ) {
-			return import_nc(t, filename, x, y);
+			return import_nc(filename, topos_count);
 		}
 	}
-	return import_txt(t, filename, x, y);
+	return import_topo_txt(filename, topos_count);
 }
