@@ -164,6 +164,8 @@ enum {
 	SW_RAD_SUN,                         /* Short Wave Radiation in W/m2 for sun leaves */
 	SW_RAD_SHADE,                       /* Short Wave Radiation in W/m2 for shaded leaves */
 	SW_RAD_REFL,                        /* Reflected Short Wave Radiation W/m2 OVERALL CANOPY */
+	SW_RAD_REFL_SUN,                    /* Reflected Short Wave Radiation W/m2 for sun leaves */
+	SW_RAD_REFL_SHADE,                  /* Reflected Short Wave Radiation W/m2 for shaded leaves */
 	SW_RAD_ABS,                         /* Absorbed Net Short Wave radiation in W/m2 */
 	SW_RAD_ABS_SUN,                     /* Absorbed Net Short Wave Radiation W/m2 for sun leaves */
 	SW_RAD_ABS_SHADE,                   /* Absorbed Net Short Wave Radiation W/m2 for shaded leaves */
