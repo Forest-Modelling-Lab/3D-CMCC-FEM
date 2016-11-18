@@ -21,6 +21,7 @@ extern char *g_sz_soil_file;
 extern char *g_sz_input_met_file;
 extern char *g_sz_settings_file;
 extern char *g_sz_topo_file;
+extern char *g_sz_co2_conc_file;
 
 extern const char sz_launched[];
 
@@ -52,11 +53,13 @@ static void write_paths(logger_t *const _log)
 
 	logger(_log, "\n\nsite: %s\n", get_filename(g_soil_settings->sitename));
 	if ( g_sz_dataset_file )
-		logger(_log, "input file = %s\n", get_filename(g_sz_dataset_file));
+	logger(_log, "input file = %s\n", get_filename(g_sz_dataset_file));
 	logger(_log, "soil file = %s\n", get_filename(g_sz_soil_file));
 	logger(_log, "topo file = %s\n", get_filename(g_sz_topo_file));
 	logger(_log, "met file = %s\n", get_filename(g_sz_input_met_file));
 	logger(_log, "settings file = %s\n", get_filename(g_sz_settings_file));
+	if ( g_settings->CO2_trans )
+	logger(_log, "CO2 file = %s\n", get_filename(g_sz_co2_conc_file));
 }
 
 static void print_model_settings(logger_t*const log)

@@ -128,7 +128,7 @@ static double get_co2_conc(const int year, int*const err) {
 	} else {
 		f = fopen(g_sz_co2_conc_file, "r");
 	}
-	
+
 	if ( ! f ) { *err = 1; goto quit; }
 	while ( fgets(buf, 256, f) ) {
 		if ( 2 == sscanf(buf, "%d\t%lf", &_year, &co2_conc) ) {
@@ -141,7 +141,7 @@ static double get_co2_conc(const int year, int*const err) {
 
 	if ( ! flag ) *err = 1;
 
-quit:
+	quit:
 	if ( f )fclose(f);
 
 	return co2_conc;
@@ -325,7 +325,7 @@ static int yos_from_arr(double *const values, const int rows_count, const int co
 	current_year = -1;
 	yos = *p_yos;
 
-	
+
 	/* check if dataset is complete */
 	{
 		int i;
@@ -394,8 +394,8 @@ static int yos_from_arr(double *const values, const int rows_count, const int co
 		if ( flag[TA_F-3] ) {
 			for ( row = 0; row < rows_count; ++row ) {
 				if ( ! IS_INVALID_VALUE(values[VALUE_AT(row, TMAX)])
-					&& ! IS_INVALID_VALUE(values[VALUE_AT(row, TMIN)]) ) {
-						values[VALUE_AT(row, TA_F)] = (0.606 * values[VALUE_AT(row, TMAX)]) + (0.394 * values[VALUE_AT(row, TMIN)]);
+						&& ! IS_INVALID_VALUE(values[VALUE_AT(row, TMIN)]) ) {
+					values[VALUE_AT(row, TA_F)] = (0.606 * values[VALUE_AT(row, TMAX)]) + (0.394 * values[VALUE_AT(row, TMIN)]);
 				}
 			}
 		}
@@ -825,7 +825,7 @@ static int yos_from_arr(double *const values, const int rows_count, const int co
 			//fixme
 			//exit(1);
 		}
-		*/
+		 */
 	}
 	*p_yos = yos;
 	return 1;
@@ -1049,20 +1049,20 @@ static int import_nc(const char* const filename, yos_t** pyos, int* const yos_co
 						, values[VALUE_AT(0,0,row,WS)]
 					 */
 					(int)values[VALUE_AT(row,YEAR)]
-					, (int)values[VALUE_AT(row,MONTH)]
-					, (int)values[VALUE_AT(row,DAY)]
-					, values[VALUE_AT(row,RG_F)]
-					, values[VALUE_AT(row,TA_F)]
-					, values[VALUE_AT(row,TMAX)]
-					, values[VALUE_AT(row,TMIN)]
-					, values[VALUE_AT(row,VPD_F)]
-					, values[VALUE_AT(row,TS_F)]
-					, values[VALUE_AT(row,PRECIP)]
-					, values[VALUE_AT(row,SWC)]
-					, values[VALUE_AT(row,NDVI_LAI)]
-					, values[VALUE_AT(row,ET)]
-					/* ALESSIOC */
-					, values[VALUE_AT(row,WS_F)]
+								, (int)values[VALUE_AT(row,MONTH)]
+											  , (int)values[VALUE_AT(row,DAY)]
+															, values[VALUE_AT(row,RG_F)]
+																	 , values[VALUE_AT(row,TA_F)]
+																			  , values[VALUE_AT(row,TMAX)]
+																					   , values[VALUE_AT(row,TMIN)]
+																								, values[VALUE_AT(row,VPD_F)]
+																										 , values[VALUE_AT(row,TS_F)]
+																												  , values[VALUE_AT(row,PRECIP)]
+																														   , values[VALUE_AT(row,SWC)]
+																																	, values[VALUE_AT(row,NDVI_LAI)]
+																																			 , values[VALUE_AT(row,ET)]
+																																					  /* ALESSIOC */
+																																					  , values[VALUE_AT(row,WS_F)]
 			);
 		}
 		fclose(f);
@@ -1123,17 +1123,17 @@ static int import_lst(const char *const filename, yos_t** p_yos, int *const yos_
 	const char *sz_time = "time";
 	const char *sz_dims[DIMS_COUNT] = { "x", "y", "time", "height_2m" }; /* DO NOT CHANGE THIS ORDER...please see above */
 	const char *sz_vars[VARS_COUNT] = { "RADS"
-										, "T_2M"
-										, "TMAX_2M"
-										, "TMIN_2M"
-										, "VPD"
-										, "TSOIL"
-										, "TOT_PREC"
-										, "SWC"
-										, "LAI"
-										, "ET"
-										, "WS_F"
-										, "RH"
+			, "T_2M"
+			, "TMAX_2M"
+			, "TMIN_2M"
+			, "VPD"
+			, "TSOIL"
+			, "TOT_PREC"
+			, "SWC"
+			, "LAI"
+			, "ET"
+			, "WS_F"
+			, "RH"
 	};
 
 	int y;
@@ -1257,7 +1257,7 @@ static int import_lst(const char *const filename, yos_t** p_yos, int *const yos_
 			x_cells_count = dims_size[X_DIM];
 			y_cells_count = dims_size[Y_DIM];
 		}
-		*/
+		 */
 
 		/* check if y_cell is >= y_dim */
 		if ( y_cell >= dims_size[Y_DIM] ) {
@@ -1492,38 +1492,38 @@ static int import_lst(const char *const filename, yos_t** p_yos, int *const yos_
 	/* check for missing vars */
 	for ( i = 0; i < VARS_COUNT; ++i ) {
 		switch ( i ) {
-			case VPD_F-3:
-			case RH_F-3:
-			if ( ! vars[VPD_F-3] && ! vars[RH_F-3] ) {
-				logger(g_debug_log, "VPD and RH columns are missing!\n\n");
+		case VPD_F-3:
+		case RH_F-3:
+		if ( ! vars[VPD_F-3] && ! vars[RH_F-3] ) {
+			logger(g_debug_log, "VPD and RH columns are missing!\n\n");
+			free(values);
+			return 0;
+		}
+		break;
+
+		case TA_F-3:
+		if ( ! vars[i] && ! vars[TMIN-3] && ! vars[TMAX-3] ) {
+			logger(g_debug_log, "TA, TMIN and TMAX columns are missing!\n\n");
+			free(values);
+			return 0;
+		}
+		break;
+
+		case TMIN-3:
+		case TMAX-3:
+		if ( ! vars[i] && ! vars[TA_F-3]) {
+			logger(g_debug_log, "%s is missing!\n\n", sz_vars[i]);
+			free(values);
+			return 0;
+		}
+		break;
+
+		default:
+			if ( ! vars[i] ) {
+				logger(g_debug_log, "met columns %s is missing!\n\n", sz_vars[i]);
 				free(values);
 				return 0;
 			}
-			break;
-
-			case TA_F-3:
-			if ( ! vars[i] && ! vars[TMIN-3] && ! vars[TMAX-3] ) {
-				logger(g_debug_log, "TA, TMIN and TMAX columns are missing!\n\n");
-				free(values);
-				return 0;
-			}
-			break;
-
-			case TMIN-3:
-			case TMAX-3:
-			if ( ! vars[i] && ! vars[TA_F-3]) {
-				logger(g_debug_log, "%s is missing!\n\n", sz_vars[i]);
-				free(values);
-				return 0;
-			}
-			break;
-
-			default:
-				if ( ! vars[i] ) {
-					logger(g_debug_log, "met columns %s is missing!\n\n", sz_vars[i]);
-					free(values);
-					return 0;
-				}
 		}
 	}
 
@@ -1611,18 +1611,18 @@ static int import_lst(const char *const filename, yos_t** p_yos, int *const yos_
 					, lat
 					, lon
 					,(int)values[VALUE_AT(row,DAY)]
-					, (int)values[VALUE_AT(row,MONTH)]
-					, (int)values[VALUE_AT(row,YEAR)]
-					, values[VALUE_AT(row,ET)]
-					, values[VALUE_AT(row,NDVI_LAI)]
-					, values[VALUE_AT(row,RG_F)]
-					, values[VALUE_AT(row,SWC)]
-					, values[VALUE_AT(row,TMAX)]
-					, values[VALUE_AT(row,TMIN)]
-					, values[VALUE_AT(row,PRECIP)]
-					, values[VALUE_AT(row,TS_F)]
-					, values[VALUE_AT(row,VPD_F)]
-					, values[VALUE_AT(row,WS_F)]
+								 , (int)values[VALUE_AT(row,MONTH)]
+											   , (int)values[VALUE_AT(row,YEAR)]
+															 , values[VALUE_AT(row,ET)]
+																	  , values[VALUE_AT(row,NDVI_LAI)]
+																			   , values[VALUE_AT(row,RG_F)]
+																						, values[VALUE_AT(row,SWC)]
+																								 , values[VALUE_AT(row,TMAX)]
+																										  , values[VALUE_AT(row,TMIN)]
+																												   , values[VALUE_AT(row,PRECIP)]
+																															, values[VALUE_AT(row,TS_F)]
+																																	 , values[VALUE_AT(row,VPD_F)]
+																																			  , values[VALUE_AT(row,WS_F)]
 
 			);
 		}
@@ -1635,9 +1635,9 @@ static int import_lst(const char *const filename, yos_t** p_yos, int *const yos_
 	free(values);
 	return i;
 
-quit:
+	quit:
 	logger_error(g_debug_log, nc_strerror(ret));
-quit_no_nc_err:
+	quit_no_nc_err:
 	nc_close(id_file);
 	if ( f_values ) free(f_values);
 	if ( values ) free(values);
@@ -1873,7 +1873,7 @@ static int import_txt(const char *const filename, yos_t** p_yos, int *const yos_
 			}
 		}
 		fputs("\n", f);
-			
+
 		for ( row = 0; row < rows_count; ++row ) {
 			for ( i = 0; i < MET_COLUMNS_COUNT; ++i ) {
 				fprintf(f, "%g", values[VALUE_AT(row,i)]);
@@ -2017,7 +2017,15 @@ yos_t* yos_import(const char *const file, int *const yos_count, const int x, con
 			}
 
 			for ( i = 0; i < *yos_count; ++i ) {
+
 				yos[i].co2Conc = get_co2_conc(yos[i].year, &err);
+
+				if ( CO2_TRANS_VAR == g_settings->CO2_trans ) {
+					if ( yos[i].year >= g_settings->year_start_co2_fixed ) {
+						yos[i].co2Conc = yos[i-1].co2Conc;
+					}
+				}
+
 				if ( err ) {
 					logger_error(g_debug_log, "co2 concentration not found!!\n");
 					free(yos);
