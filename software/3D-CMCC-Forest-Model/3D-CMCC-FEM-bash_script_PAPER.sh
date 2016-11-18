@@ -330,43 +330,43 @@ else
 fi
 
 #########################################################################################################
-if [ "$gcm" == 'GCM1' ] || [ "$gcm" == 'GCM2' ] || [ "$gcm" == 'GCM3' ] || [ "$gcm" == 'GCM4' ] || [ "$gcm" == 'GCM5' ] || [ "$gcm" == 'All' ] ; then 
-	#log available CO2
-	echo 'CO2 enrichment on or off?:'
-	for (( i = 0 ; i < ${#CO2s[@]} ; ++i )) ; do
-		echo -"${CO2s[i]}"
-	done
-	
-	echo "CO2 enrichment on or off for '$site' and '$gcm' and '$rcp' and Management '$management'?"
-	
+
+#log available CO2
+echo 'CO2 enrichment on or off?:'
+for (( i = 0 ; i < ${#CO2s[@]} ; ++i )) ; do
+	echo -"${CO2s[i]}"
+done
+
+echo "CO2 enrichment on or off for '$site' and '$gcm' and '$rcp' and Management '$management'?"
+
 	#ask which co2 use
-		match=no
-		while :
-		do
-			
-		read co2
+	match=no
+	while :
+	do
 		
-		for (( i = 0 ; i <= ${#CO2s[@]} ; ++i )) ; do
-			if [ "${co2,,}" = "${CO2s[$i],,}" ] ; then
-				match=yes
-				co2=${CO2s[$i]}
-			fi
-		done
-		if [ "$match" == "yes" ] ; then
-			break;
+	read co2
+	
+	for (( i = 0 ; i <= ${#CO2s[@]} ; ++i )) ; do
+		if [ "${co2,,}" = "${CO2s[$i],,}" ] ; then
+			match=yes
+			co2=${CO2s[$i]}
 		fi
-		
-		echo "'$co2' doesn't match with CO2s list. please rewrite it."
+	done
+	if [ "$match" == "yes" ] ; then
+		break;
+	fi
+	
+	echo "'$co2' doesn't match with CO2s list. please rewrite it."
 		done
 
 	#for counter
-	if [ "$co2" == 'All' ] ; then
-		co2_counter=${#CO2s[@]} 
-		let "co2_counter-=1"
-	else
-		co2_counter=1
-	fi
+if [ "$co2" == 'All' ] ; then
+	co2_counter=${#CO2s[@]} 
+	let "co2_counter-=1"
+else
+	co2_counter=1
 fi
+
 
 
 #########################################################################################################
@@ -450,10 +450,11 @@ fi
 #log elapsed time
 #if [[ "$OSTYPE" == "linux-gnu" ]]; then
 END=`date +%s%N`
-ELAPSED=`echo "scale=2; ($END - $START) / 1000000000" | bc`
-ELAPSED_min=($ELAPSED/60)
-ELAPSED_hou=($ELAPSED/3600)
-echo "elapsed time in bash script = $ELAPSED secs, $ELAPSED_min min, $ELAPSED_hou hours"
+ELAPSED=`echo "scale=4; ($END - $START) / 1000000000" | bc`
+ELAPSED_min=`echo "scale=4; $ELAPSED / 60" | bc`
+ELAPSED_hou=`echo "scale=4; $ELAPSED / 3600" | bc`
+echo "elapsed time in bash script:" $ELAPSED "secs" $ELAPSED_min "min" $ELAPSED_hou "hours"
+
 #fi
 
 echo "script finished!"
