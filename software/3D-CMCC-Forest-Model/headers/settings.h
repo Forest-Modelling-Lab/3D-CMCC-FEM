@@ -22,6 +22,7 @@ typedef struct {
 	char soil_output;
 	char CO2_mod;
 	char CO2_trans;                   /* CO2 transient */
+	int year_start_co2_fixed;         /* for CO2_trans = var, year at which CO2 is fixed */
 	char Ndep_fixed;
 	char Q10_fixed;
 	char regeneration;

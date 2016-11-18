@@ -10,7 +10,8 @@ YEAR_START 1997                 //Starting year simulation
 YEAR_END 2014                   //Ending year simulation
 SOIL_OUTPUT off               //Must be 'on' or 'off'
 CO2_mod on                    //Must be  'on' or 'off'
-CO2_trans off                   //Must be 'on' or 'off'
+CO2_trans off                 //Must be 'on' or 'off'
+YEAR_START_CO2_FIXED 2000     //When Co2_trans = var, year at which fix [CO2]
 Ndep_fixed on                 //Must be 'on' or 'off'
 Q10_fixed on                  //Q10 temperature acclimatation Must be 'on' or 'off'
 regeneration off              //Must be 'on' or 'off'

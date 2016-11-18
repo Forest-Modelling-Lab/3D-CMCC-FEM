@@ -21,6 +21,7 @@ enum {
 	, SETTINGS_SOIL_OUTPUT
 	, SETTINGS_CO2_MOD
 	, SETTINGS_CO2_TRANS
+	, SETTINGS_YEAR_START_CO2_FIXED
 	, SETTINGS_NDEP_FIXED
 	, SETTINGS_Q10_FIXED
 	, SETTINGS_REGENERATION
@@ -206,6 +207,16 @@ settings_t* settings_import(const char *const filename) {
 					s->CO2_trans = CO2_TRANS_ON;
 				} else if ( ! string_compare_i(token, "var") ) {
 					s->CO2_trans = CO2_TRANS_VAR;
+				}
+			break;
+
+			case SETTINGS_YEAR_START_CO2_FIXED:
+				s->year_start_co2_fixed = convert_string_to_int(token, &err);
+				if ( err ) {
+					printf("unable to convert start year management: %s\n", p);
+					free(s);
+					fclose(f);
+					return 0;
 				}
 			break;
 
