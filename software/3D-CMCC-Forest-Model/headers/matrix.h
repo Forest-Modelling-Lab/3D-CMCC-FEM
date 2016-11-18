@@ -150,6 +150,8 @@ enum {
 	PAR_SUN,                            /* Photosynthetically Active Radiation molPAR/m^2/day for sun leaves */
 	PAR_SHADE,                          /* Photosynthetically Active Radiation molPAR/m^2/day for shaded leaves */
 	PAR_REFL,                           /* Reflected Photosynthetically Active Radiation molPAR/m^2/day OVERALL CANOPY */
+	PAR_REFL_SUN,                       /* Reflected Photosynthetically Active Radiation molPAR/m^2/day for sun leaves */
+	PAR_REFL_SHADE,                     /* Reflected Photosynthetically Active Radiation molPAR/m^2/day for shaded leaves */
 	APAR,                               /* Absorbed Photosynthetically Active Radiation molPAR/m^2/day */
 	APAR_SUN,                           /* Absorbed Photosynthetically Active Radiation molPAR/m^2/day for sun leaves */
 	APAR_SHADE,                         /* Absorbed Photosynthetically Active Radiation molPAR/m^2/day for shaded leaves */
@@ -194,9 +196,11 @@ enum {
 
 	/* PPFD */
 	PPFD,                               /* Photosynthetic Photon Flux Density umol/m2/sec */
-	PPFD_SUN,                           /* Photosynthetic Photon Flux Density umol/m2/sec for sun leaves*/
-	PPFD_SHADE,                         /* Photosynthetic Photon Flux Density umol/m2/sec fir shaded leaves */
-	PPFD_REFL,                          /* Transmitted Photosynthetic Photon Flux Density umol/m2/sec */
+	PPFD_SUN,                           /* Photosynthetic Photon Flux Density umol/m2/sec for sun leaves */
+	PPFD_SHADE,                         /* Photosynthetic Photon Flux Density umol/m2/sec f0r shaded leaves */
+	PPFD_REFL,                          /* Transmitted Photosynthetic Photon Flux Density umol/m2/sec OVERALL CANOPY */
+	PPFD_REFL_SUN,                      /* Transmitted Photosynthetic Photon Flux Density umol/m2/sec for sun leaves */
+	PPFD_REFL_SHADE,                    /* Transmitted Photosynthetic Photon Flux Density umol/m2/sec for shaded leaves */
 	PPFD_ABS,                           /* Absorbed Photosynthetic Photon Flux Density umol/m2/sec */
 	PPFD_ABS_SUN,                       /* Absorbed Photosynthetic Photon Flux Density umol/m2/sec for sun leaves */
 	PPFD_ABS_SHADE,                     /* Absorbed Photosynthetic Photon Flux Density umol/m2/sec for shaded leaves */
