@@ -67,6 +67,10 @@ static void print_model_settings(logger_t*const log)
 	logger(log, "Q10 fixed = %s\n", g_settings->Q10_fixed ? "on" : "off");
 	logger(log, "regeneration = %s\n", g_settings->regeneration ? "on" : "off");
 	logger(log, "Management = %s\n", g_settings->management ? "on" : "off");
+	if ( g_settings->management )
+	{
+		logger(log, "Year Start Management = %d\n", g_settings->year_start_management);
+	}
 }
 
 void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, const int month, const int year, const int years_of_simulation )

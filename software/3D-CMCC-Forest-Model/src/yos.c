@@ -129,7 +129,7 @@ static double get_co2_conc(const int year, int*const err) {
 		f = fopen(g_sz_co2_conc_file, "r");
 	}
 	
-	if ( ! f )  { *err = 1; goto quit; }
+	if ( ! f ) { *err = 1; goto quit; }
 	while ( fgets(buf, 256, f) ) {
 		if ( 2 == sscanf(buf, "%d\t%lf", &_year, &co2_conc) ) {
 			if ( year == _year ) {
@@ -2019,7 +2019,7 @@ yos_t* yos_import(const char *const file, int *const yos_count, const int x, con
 			for ( i = 0; i < *yos_count; ++i ) {
 				yos[i].co2Conc = get_co2_conc(yos[i].year, &err);
 				if ( err ) {
-					logger_error(g_debug_log, "unable to get co2 concentration for year %d\n", yos[i].year);
+					logger_error(g_debug_log, "co2 concentration not found!!\n");
 					free(yos);
 					return NULL;
 				}

@@ -21,12 +21,13 @@ typedef struct {
 	int year_end;
 	char soil_output;
 	char CO2_mod;
-	char CO2_trans;               /* CO2 transient */
+	char CO2_trans;                   /* CO2 transient */
 	char Ndep_fixed;
 	char Q10_fixed;
 	char regeneration;
 	char management;
-	char Prog_Aut_Resp;           /* Prognostic autotrophic respiration */
+	int year_start_management;        /* start year management */
+	char Prog_Aut_Resp;               /* Prognostic autotrophic respiration */
 	char dndc;
 	char replanted_species[SETTINGS_REPLANTED_SPECIES_MAX_SIZE]; /* species name of replanted species */
 	char regeneration_species[SETTINGS_REGENERATION_SPECIES_MAX_SIZE]; /* species name of regeneration species */

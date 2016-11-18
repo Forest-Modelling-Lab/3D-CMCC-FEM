@@ -335,7 +335,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 										/* regeneration */
 										regeneration ( c, height, dbh, age, species);
 									}
-									if ( g_settings->management && year )
+									if ( g_settings->management )
 									{
 										/* management blocks */
 										forest_management (c, layer, height, dbh, age, species, year);

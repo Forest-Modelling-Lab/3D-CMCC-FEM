@@ -434,55 +434,6 @@ function GCM_run {
 	done
 }
 
-function Reap_run {
-		for (( h = 0 ; h < $gcm_counter ; ++h )) ; do
-				for (( l = 0 ; l < $man_counter ; ++l )) ; do
-
-
-				if (( $gcm_counter > 1 )) ; then gcm=${GCMs[$h]}; fi
-			if (( $rcp_counter > 1 )) ; then rcp=${RCPs[$i]}; fi				
-			if (( $man_counter > 1 )) ; then management=${MANs[$l]}; fi
-			
-			echo "multi reap"
-			echo 'running for' "$gcm"
-			echo 'running for' "$rcp"
-			echo 'running with management =' "$management" 
-								
-			#add site name to current paths
-			SITE_PATH=input/"$site"
-			OUTPUT_PATH=output/"$site"
-			STAND_PATH="$project"/"$site"_stand_"$PROJECT".txt
-			TOPO_PATH="$project"/"$site"_topo_"$PROJECT".txt
-
-				SETTING_PATH="$project"/"$site"_settings_CO2_modifier_off_Manag-"$management".txt
-		
-			#add gcm and rcp to meteo co2 and soil path
-			MET_PATH="$project"/"$gcm"/"$gcm"_reap.txt
-			SOIL_PATH="$project"/"$gcm"/"$site"_soil_"$gcm"_"$PROJECT".txt
-
-									
-					#add paths and arguments to executable and run
-			$launch$executable -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH 
-			
-			#log arguments paths
-			echo "*****************************"
-			echo "$launch$executable -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH "
-			echo "$MODEL $VERSION-$project arguments:"
-			echo "-i" $SITE_PATH
-			echo "-p" $PARAMETERIZATION_PATH
-			echo "-d" $STAND_PATH
-			echo "-s" $SOIL_PATH
-			echo "-t" $TOPO_PATH
-			echo "-m" $MET_PATH
-			echo "-c" $SETTING_PATH
-			echo "-o" $OUTPUT_PATH
-			echo "*****************************"
-		done
-	done
-
-}
-
-
 GCM_run
 
 #delete copied executable from current directory
@@ -500,7 +451,9 @@ fi
 #if [[ "$OSTYPE" == "linux-gnu" ]]; then
 END=`date +%s%N`
 ELAPSED=`echo "scale=2; ($END - $START) / 1000000000" | bc`
-echo "elapsed time in bash script = $ELAPSED secs"
+ELAPSED_min=($ELAPSED/60)
+ELAPSED_hou=($ELAPSED/3600)
+echo "elapsed time in bash script = $ELAPSED secs, $ELAPSED_min min, $ELAPSED_hou hours"
 #fi
 
 echo "script finished!"

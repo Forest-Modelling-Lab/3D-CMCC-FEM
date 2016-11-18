@@ -26,21 +26,52 @@ void forest_management (cell_t *const c, const int layer, const int height, cons
 	a = &c->heights[height].dbhs[dbh].ages[age];
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
-	++years_for_thinning;
+	logger(g_debug_log,"**FOREST MANAGEMENT**\n");
 
 	/* this function handles all other management functions */
 
+	/* check at the beginning of simulation */
+	if( !year )
+	{
+		CHECK_CONDITION( c->years[year].year, > g_settings->year_start_management );
+	}
+
+
+	/** THINNING **/
+	if ( ( c->years[year].year == g_settings->year_start_management ) || ( s->value[THINNING] == years_for_thinning ) )
+	{
+		logger(g_debug_log,"**THINNING**\n");
+
+		thinning ( c, layer, height, dbh, age, species, year );
+
+		/* reset counter */
+		years_for_thinning = 0;
+	}
+	/* increment counter */
+	++years_for_thinning;
+
+	/* check */
+	CHECK_CONDITION( years_for_thinning, > s->value[ROTATION] );
+
+
+	/** THINNING **/
 	/* if year of simulation matches with thinning and class age doesn't match with rotation age */
 	/* note: it assumes that model simulation start the year after last thinning */
+	/*
 	if ( ( ! ( ( years_for_thinning ) % (int)s->value[THINNING] ) ) && ( a->value != s->value[ROTATION] ) )
 	{
 		logger(g_debug_log,"**FOREST MANAGEMENT**\n");
 
 		thinning ( c, layer, height, dbh, age, species, year );
 	}
+	*/
+
+	/** HARVESTING **/
 	/* if class age matches with harvesting */
 	if ( a->value == s->value[ROTATION] )
 	{
+		logger(g_debug_log,"**HARVESTING**\n");
+
 		/* remove tree class */
 		harvesting ( c, layer, height, dbh, age, species );
 

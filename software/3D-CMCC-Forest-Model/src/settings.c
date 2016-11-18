@@ -25,6 +25,7 @@ enum {
 	, SETTINGS_Q10_FIXED
 	, SETTINGS_REGENERATION
 	, SETTINGS_MANAGEMENT
+	, SETTINGS_YEAR_START_MANAGEMENT
 	, SETTINGS_PROGN_AUT_RESP
 	, SETTINGS_DNDC
 	, SETTINGS_SIZECELL
@@ -229,6 +230,16 @@ settings_t* settings_import(const char *const filename) {
 			case SETTINGS_MANAGEMENT:
 				if ( ! string_compare_i(token, "on") ) {
 					s->management = 1;
+				}
+			break;
+
+			case SETTINGS_YEAR_START_MANAGEMENT:
+				s->year_start_management = convert_string_to_int(token, &err);
+				if ( err ) {
+					printf("unable to convert start year management: %s\n", p);
+					free(s);
+					fclose(f);
+					return 0;
 				}
 			break;
 

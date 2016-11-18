@@ -49,7 +49,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	/* fertilization effect with rising CO2 from: Veroustraete 1994,
 	 * Veroustraete et al., 2002, Remote Sensing of Environment
 	*/
-	if ( g_settings->CO2_mod && (CO2_TRANS_OFF == g_settings->CO2_trans) )
+	if ( g_settings->CO2_mod )
 	{
 		tairK = meteo_daily->tavg + TempAbs;
 
@@ -84,7 +84,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	/* limitation effects on maximum stomatal conductance from Hidy et al., 2016 GMDD
 	 * Frank et al., 2013 New Phytologist
 	*/
-	if ( g_settings->CO2_mod && (CO2_TRANS_OFF == g_settings->CO2_trans) )
+	if ( g_settings->CO2_mod )
 	{
 		s->value[F_CO2_TR] = 39.43 * pow(meteo_annual->co2Conc, -0.64);
 	}
