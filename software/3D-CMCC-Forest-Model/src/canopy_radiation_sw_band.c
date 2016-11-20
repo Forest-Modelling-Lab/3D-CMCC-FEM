@@ -15,6 +15,8 @@
 #include "topo.h"
 #include "canopy_radiation_sw_band.h"
 
+#define TEST
+
 
 extern logger_t* g_debug_log;
 
@@ -55,7 +57,7 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 	logger(g_debug_log,"\n-PAR-\n");
 
 	//test 18 november 2016
-#if 1
+#ifdef TEST
 	/** sun leaves **/
 
 	s->value[PAR] = meteo_daily->par;
@@ -144,7 +146,7 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 	logger(g_debug_log,"\n-Short Wave-\n");
 
 	//test 18 november 2016
-#if 1
+#ifdef TEST
 	/** sun leaves **/
 
 	s->value[SW_RAD] = meteo_daily->sw_downward_W;
@@ -230,7 +232,7 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 	logger(g_debug_log,"\n-PPFD-\n");
 
 	//test 18 november 2016
-#if 1
+#ifdef TEST
 	/** sun leaves **/
 
 	s->value[PPFD] = meteo_daily->ppfd;
@@ -362,7 +364,7 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 	l = &c->tree_layers[layer];
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
-	//following Ritchie et al., 1998 and Hydi et al., (submitted)
+	//following Ritchie et al., 1998 and Hydi et al.,2016
 	//double actual_albedo;
 
 	logger(g_debug_log, "\n**SHORT WAVE BAND RADIATION**\n");
@@ -401,6 +403,29 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 	calculated similarly to sw except that albedo is 1/3 for PAR because less
 	PAR is reflected than sw_radiation (Jones 1992)*/
 
+#ifdef TEST
+	//test 18 november 2016
+	//it seems to have much more sense
+	if( s->value[LAI_EXP] >= 1.0 )
+	{
+		Light_refl_sw_frac = s->value[ALBEDO];
+		Light_refl_sw_frac_sun = s->value[ALBEDO] * ( 1 - exp ( - s->value[K] * s->value[LAI_SUN_EXP]));
+		Light_refl_sw_frac_shade = s->value[ALBEDO] * ( 1 - exp ( - s->value[K] * s->value[LAI_SHADE_EXP]));
+		Light_refl_par_frac = s->value[ALBEDO]/3.0;
+		Light_refl_par_frac_sun = (s->value[ALBEDO]/3.0) * ( 1 - exp ( - s->value[K] * s->value[LAI_SUN_EXP] ) );
+		Light_refl_par_frac_shade = s->value[ALBEDO]/3.0 * ( 1 - exp ( - s->value[K] * s->value[LAI_SHADE_EXP] ) );
+	}
+	else
+	{
+		Light_refl_sw_frac = 0.0;
+		Light_refl_sw_frac_sun = 0.0;
+		Light_refl_sw_frac_shade = 0.0;
+		Light_refl_par_frac = 0.0;
+		Light_refl_par_frac_sun = 0.0;
+		Light_refl_par_frac_shade = 0.0;
+	}
+#else
+
 	//test change with;
 	//if( s->value[LAI_EXP] >= 1.0 )
 	if( s->value[LAI_PROJ] >= 1.0 )
@@ -422,7 +447,6 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 		Light_refl_par_frac = 0.0;
 		Light_refl_par_frac_sun = 0.0;
 		Light_refl_par_frac_shade = 0.0;
-
 	}
 	else
 	{
@@ -433,6 +457,7 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 		Light_refl_par_frac_sun = (s->value[ALBEDO]/3.0) * ( 1 - exp ( - s->value[K] * s->value[LAI_SUN_EXP] ) );
 		Light_refl_par_frac_shade =  (s->value[ALBEDO]/3.0) * ( 1 - exp ( - s->value[K] * s->value[LAI_SHADE_EXP] ) );
 	}
+#endif
 
 	logger(g_debug_log, "*Fractions of light absorbed, transmitted and reflected*\n\n");
 	logger(g_debug_log, "Light_abs_frac_sun = %g %%\n", Light_abs_frac_sun * 100);
