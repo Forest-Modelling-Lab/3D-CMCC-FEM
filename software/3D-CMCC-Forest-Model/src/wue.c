@@ -28,10 +28,10 @@ void water_use_efficiency( cell_t *const c, const int height, const int dbh, con
 	 * Beer et al., 2009;
 	 * Zhang et al., 2016 Agricultural and Forest Meteorology
 	 * if considering Transpiration:
+	 * Farquhar et al., 1989
 	 * De Kauwe et al., 2013 GCB
 	 */
-	/* note: differently from the authors above we use canopy transpiration for computation of WUE */
-
+#if 1
 	/* daily WUE */
 	if( s->value[DAILY_GPP_gC] > 0 && s->value[CANOPY_EVAPO_TRANSP] > 0.0 )
 	{
@@ -41,7 +41,6 @@ void water_use_efficiency( cell_t *const c, const int height, const int dbh, con
 	{
 		s->value[WUE] = 0.0;
 	}
-
 	/* monthly WUE */
 	/* last day of the month */
 	if ( ( IS_LEAP_YEAR( c->years[year].year ) ? (MonthLength_Leap[month] ) : (MonthLength[month] )) == c->doy )
@@ -55,7 +54,6 @@ void water_use_efficiency( cell_t *const c, const int height, const int dbh, con
 			s->value[M_WUE] = 0.0;
 		}
 	}
-
 	/* annual WUE */
 	/* last day of the year */
 	if ( c->doy == ( IS_LEAP_YEAR( c->years[year].year ) ? 366 : 365) )
@@ -69,46 +67,44 @@ void water_use_efficiency( cell_t *const c, const int height, const int dbh, con
 			s->value[Y_WUE] = 0.0;
 		}
 	}
+#else
+	/* daily WUE */
+	if( s->value[DAILY_GPP_gC] > 0 && s->value[CANOPY_EVAPO_TRANSP] > 0.0 )
+	{
+		s->value[WUE] = s->value[DAILY_GPP_gC] / s->value[CANOPY_EVAPO_TRANSP];
+	}
+	else
+	{
+		s->value[WUE] = 0.0;
+	}
 
-	/**************************************************************************************************************/
+	/* monthly WUE */
+	/* last day of the month */
+	if ( ( IS_LEAP_YEAR( c->years[year].year ) ? (MonthLength_Leap[month] ) : (MonthLength[month] )) == c->doy )
+	{
+		if( s->value[MONTHLY_GPP_gC] > 0 && s->value[MONTHLY_CANOPY_EVAPO_TRANSP] > 0.0 )
+		{
+			s->value[M_WUE] = s->value[MONTHLY_GPP_gC] / s->value[MONTHLY_CANOPY_EVAPO_TRANSP];
+		}
+		else
+		{
+			s->value[M_WUE] = 0.0;
+		}
+	}
 
-
-//	/* daily WUE */
-//	if( s->value[DAILY_GPP_gC] > 0 && s->value[CANOPY_EVAPO_TRANSP] > 0.0 )
-//	{
-//		s->value[WUE] = s->value[DAILY_GPP_gC] / s->value[CANOPY_EVAPO_TRANSP];
-//	}
-//	else
-//	{
-//		s->value[WUE] = 0.0;
-//	}
-//
-//	/* monthly WUE */
-//	/* last day of the month */
-//	if ( ( IS_LEAP_YEAR( c->years[year].year ) ? (MonthLength_Leap[month] ) : (MonthLength[month] )) == c->doy )
-//	{
-//		if( s->value[MONTHLY_GPP_gC] > 0 && s->value[MONTHLY_CANOPY_EVAPO_TRANSP] > 0.0 )
-//		{
-//			s->value[M_WUE] = s->value[MONTHLY_GPP_gC] / s->value[MONTHLY_CANOPY_EVAPO_TRANSP];
-//		}
-//		else
-//		{
-//			s->value[M_WUE] = 0.0;
-//		}
-//	}
-//
-//	/* annual WUE */
-//	/* last day of the year */
-//	if ( c->doy == ( IS_LEAP_YEAR( c->years[year].year ) ? 366 : 365) )
-//	{
-//		if( s->value[YEARLY_GPP_gC] > 0 && s->value[YEARLY_CANOPY_EVAPO_TRANSP] > 0.0 )
-//		{
-//			s->value[Y_WUE] = s->value[YEARLY_GPP_gC] / s->value[YEARLY_CANOPY_EVAPO_TRANSP];
-//		}
-//		else
-//		{
-//			s->value[Y_WUE] = 0.0;
-//		}
-//	}
+	/* annual WUE */
+	/* last day of the year */
+	if ( c->doy == ( IS_LEAP_YEAR( c->years[year].year ) ? 366 : 365) )
+	{
+		if( s->value[YEARLY_GPP_gC] > 0 && s->value[YEARLY_CANOPY_EVAPO_TRANSP] > 0.0 )
+		{
+			s->value[Y_WUE] = s->value[YEARLY_GPP_gC] / s->value[YEARLY_CANOPY_EVAPO_TRANSP];
+		}
+		else
+		{
+			s->value[Y_WUE] = 0.0;
+		}
+	}
+#endif
 
 }

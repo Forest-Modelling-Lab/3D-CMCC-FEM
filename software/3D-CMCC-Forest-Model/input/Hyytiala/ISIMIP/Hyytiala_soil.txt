@@ -1,4 +1,4 @@
-SITENAME "Hyytiala - Finland" //Site Name
+SITENAME "Hyytiala" //Site Name
 
 LAT "61.84" //Site Latitude negative for south hemisphere
 LONG "24.29" //Site Longitude 

@@ -1,5 +1,5 @@
 /*
- * maintenance_respiration.c
+ * autotrophic_respiration.c
  *
  *  Created on: 25/set/2013
  *      Author: alessio
@@ -24,11 +24,9 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 	double Q10_temp = 20.0;    /* t_base temperature for respiration, 15°C for Damesin et al., 2001 */
 	double t1;
 
-	//double q10;                /* 2.2 from Schwalm & Ek, 2004; Kimball et al., 1997 */
-
+	double q10_tavg = 2.0;     /* fractional change in rate with a T 10 °C increase in temperature  2.2 from Schwalm & Ek, 2004; Kimball et al., 1997 */
 	double q10_tday;
 	double q10_tnight;
-	double q10_tavg;
 	double q10_tsoil;
 
 	double exponent_tday;
@@ -51,14 +49,17 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 	//test 18 sept 2016
 	if ( g_settings->Q10_fixed )
 	{
-		q10_tavg = 2.0; /* 2.2 from Schwalm & Ek, 2004; Kimball et al., 1997 */
 		q10_tday = q10_tavg;
 		q10_tnight = q10_tavg;
 		q10_tsoil  = q10_tavg;
 	}
 	else
 	{
-		/* see Smith and Dukes, 2013, GCB */
+		/* if used recompute q10_tavg based on:
+		 * McGuire et al., 1992, Global Biogeochemical Cycles
+		 * Tjoelker et al., 2001, Global Change Biology
+		 * Smith and Dukes, 2013, Global Change Biology
+		 * */
 		q10_tavg = 3.22 - 0.046 * meteo_daily->tavg;
 		q10_tday =  3.22 - 0.046 * meteo_daily->tday;
 		q10_tnight =  3.22 - 0.046 * meteo_daily->tnight;
