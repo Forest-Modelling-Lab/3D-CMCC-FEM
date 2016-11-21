@@ -6,7 +6,7 @@ DEBUG_OUTPUT off                    //Must be 'on' or 'off'
 DAILY_OUTPUT on                     //Must be 'on' or 'off'
 MONTHLY_OUTPUT on                   //Must be 'on' or 'off'
 ANNUAL_OUTPUT on                    //Must be 'on' or 'off'
-YEAR_START 1960                     //Starting year simulation
+YEAR_START 1950                     //Starting year simulation
 YEAR_END 2012                       //Ending year simulation
 SOIL_OUTPUT off                     //Must be 'on' or 'off'
 CO2_mod on                          //Must be 'on' or 'off'
@@ -16,7 +16,7 @@ Ndep_fixed on                       //Must be 'on' or 'off'
 Q10_fixed on                        //Q10 temperature acclimatation Must be 'on' or 'off'
 regeneration off                    //Must be 'on' or 'off'
 management on                       //Must be 'on' or 'off'
-YEAR_START_MANAGEMENT 1964          //First year of management
+YEAR_START_MANAGEMENT 1960          //First year of management
 Progn_Aut_Resp on                   //Prognostic autotrophic respiration, Must be 'on' or 'off', if off Y values are used
 DNDC off                            //Must be 'on' or 'off'
 SIZECELL 100                        //Its value must be within 10 and 100 (unity measure is meter: 10 = 10x10 = 100m^2) 

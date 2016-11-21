@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.cdt.launch.applicationLaunchType">
+<intAttribute key="org.eclipse.cdt.launch.ATTR_BUILD_BEFORE_LAUNCH_ATTR" value="2"/>
+<stringAttribute key="org.eclipse.cdt.launch.COREFILE_PATH" value=""/>
+<stringAttribute key="org.eclipse.cdt.launch.PROGRAM_ARGUMENTS" value="-i input/Soroe&#10;-p input/parameterization&#10;-o output/Soroe&#10;-d  ISIMIP/Soroe_stand_1960_ISIMIP.txt&#10;-m ISIMIP/GCM2/GCM2_hist_rcp2p6_1960_2099.txt&#10;-s ISIMIP/GCM2/Soroe_soil_rcp2p6_ISIMIP.txt&#10;-t ISIMIP/Soroe_topo_ISIMIP.txt&#10;-c ISIMIP/Soroe_settings_ISIMIP_Manag-off_CO2-on.txt&#10;-k ISIMIP/CO2/CO2_rcp2p6_1950_2099.txt"/>
+<stringAttribute key="org.eclipse.cdt.launch.PROGRAM_NAME" value="Debug/3D_CMCC_Forest_Model"/>
+<stringAttribute key="org.eclipse.cdt.launch.PROJECT_ATTR" value="3D_CMCC_Forest_Model"/>
+<booleanAttribute key="org.eclipse.cdt.launch.PROJECT_BUILD_CONFIG_AUTO_ATTR" value="true"/>
+<stringAttribute key="org.eclipse.cdt.launch.PROJECT_BUILD_CONFIG_ID_ATTR" value="cdt.managedbuild.config.gnu.cross.exe.debug.2020075168"/>
+<booleanAttribute key="org.eclipse.cdt.launch.use_terminal" value="true"/>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+<listEntry value="/3D_CMCC_Forest_Model"/>
+</listAttribute>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+<listEntry value="4"/>
+</listAttribute>
+<listAttribute key="org.eclipse.debug.ui.favoriteGroups">
+<listEntry value="org.eclipse.debug.ui.launchGroup.debug"/>
+<listEntry value="org.eclipse.debug.ui.launchGroup.profile"/>
+<listEntry value="org.eclipse.debug.ui.launchGroup.run"/>
+</listAttribute>
+<stringAttribute key="process_factory_id" value="org.eclipse.cdt.dsf.gdb.GdbProcessFactory"/>
+</launchConfiguration>

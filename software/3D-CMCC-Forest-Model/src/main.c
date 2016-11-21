@@ -175,6 +175,25 @@ const char err_window_size_too_big[] = "window size too big.";
 static const char err_unable_get_current_path[] = "unable to retrieve current path.\n";
 static const char err_unable_to_register_atexit[] = "unable to register clean-up routine.\n";
 
+static const char* get_filename(const char *const s)
+{
+	const char *p;
+	const char *p2;
+
+	p = NULL;
+
+	if ( s ) {
+		p = strrchr(s, '/');
+		if ( p ) ++p;
+		p2 = strrchr(s, '\\');
+		if ( p2 ) ++p2;
+		if ( p2 > p ) p = p2;
+		if ( ! p ) p = s;
+	}
+
+	return p;
+}
+
 
 static void clean_up(void)
 {
@@ -272,6 +291,9 @@ static int log_start(const char* const sz_date, const char* const sitename)
 	if ( sitename && sitename[0] ) {
 		len += sprintf(buffer+len, "_%s", sitename);
 	}
+
+	/* climate file used */
+	len += sprintf(buffer+len, "_%s", get_filename(g_sz_input_met_file));
 
 	/* start simulation */
 	len += sprintf(buffer+len, "_(%d", g_settings->year_start);

@@ -408,7 +408,7 @@ function GCM_run {
 			
 				#add gcm and rcp to meteo co2 and soil path
 				MET_PATH=PAPER/"$gcm"/"$gcm"_"$rcp".txt
-				SOIL_PATH=PAPER/"$gcm"/"$site"_soil_"$rcp"_ISIMIP.txt
+				SOIL_PATH=PAPER/"$site"_soil_ISIMIP.txt
 				CO2_PATH=PAPER/CO2/CO2_"$rcp"_1950_2099.txt
 								
 				#add paths and arguments to executable and run
