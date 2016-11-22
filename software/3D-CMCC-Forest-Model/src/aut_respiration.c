@@ -1,5 +1,5 @@
 /*
- * autotrophic_respiration.c
+- * autotrophic_respiration.c
  *
  *  Created on: 25/set/2013
  *      Author: alessio

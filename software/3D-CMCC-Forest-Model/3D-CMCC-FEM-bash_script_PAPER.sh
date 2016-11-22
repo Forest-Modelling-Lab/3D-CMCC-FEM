@@ -30,7 +30,7 @@ export OUTPUT_PATH=output/
 model_run=(Debug Release)
 
 #declare sites
-SITEs=(Soroe Kroof Peitz)
+SITEs=(Soroe Hyytiala Kroof Peitz)
 
 #declare climate
 CLIMATEs=(Historical Scenario All)
