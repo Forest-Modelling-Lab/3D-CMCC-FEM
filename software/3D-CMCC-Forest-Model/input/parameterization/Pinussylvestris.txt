@@ -84,6 +84,7 @@ GERMCAPACITY    0.70          //Geminability (Lischke H. & Loffler T. J.)
 ROTATION    140               //Forest Rotation for harvesting for P. sylvestris ISIMIP protocol
 THINNING     15               //Thinning regime for P. sylvestris ISIMIP protocol for P. sylvestris ISIMIP protocol
 THINNING_REGIME    1          //Thinning regime (0 = above, 1 = below) for P. sylvestris ISIMIP protocol
+THINNING_INTENSITY  20         //Thinning intensity (% of Basal Area/N-tree to remove) for P. sylvestris ISIMIP protocol
 MINAGEMANAG -9999             //Minimum age for Managment
 MINDBHMANAG -9999             //Minimum DBH for Managment
 AV_SHOOT    -9999             //average number of shoot after cut

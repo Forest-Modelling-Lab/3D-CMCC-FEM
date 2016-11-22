@@ -102,10 +102,11 @@ enum {
 	MASTSEED,                            /* Musting year (see TREEMIG) */
 	WEIGHTSEED,                          /* single fruit weight in g */
 	SEXAGE,                              /* Age for sexual maturity */
-	GERMCAPACITY,                        /* Geminability rate */
+	GERMCAPACITY,                        /* Germinability rate */
 	ROTATION,                            /* rotation for final harvest (based on tree age) */
 	THINNING,                            /* thinning regime (based on year simulation) */
 	THINNING_REGIME,                     /* thinning regime (0 = above, 1 = below) */
+	THINNING_INTENSITY,                  /* thinning intensity (% of Basal Area/N-tree to remove) */
 	MINAGEMANAG,                         /* Minimum age for Management */
 	MINDBHMANAG,                         /* Minimum DBH for Management */
 	AV_SHOOT,                            /* Average number of shoots produced after coppicing */

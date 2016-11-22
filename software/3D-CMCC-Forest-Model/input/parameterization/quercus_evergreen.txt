@@ -129,6 +129,7 @@ GERMCAPACITY    0.70    //Geminability (Lischke H. & Loffler T. J.)
 ROTATION    120         //Forest Rotation for harvesting 
 THINNING     15         //Thinning regime
 THINNING_REGIME    0    //Thinning regime (0 = above, 1 = below)
+THINNING_INTENSITY  0         //Thinning intensity (% of Basal Area/N-tree to remove) 
 MINAGEMANAG 80      //Minimum age for Managment (Q. cerris)
 MINDBHMANAG 27      //Minimum DBH for Managment
 AV_SHOOT    10      //average number of shoot after cut

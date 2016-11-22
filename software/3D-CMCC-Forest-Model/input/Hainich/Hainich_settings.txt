@@ -27,7 +27,6 @@ INIT_FRAC_MAXASW "1"            //0.1 Minimum fraction of asw based on maxasw (w
 TREE_LAYER_LIMIT "3"            //define differences among tree heights in meters classes to define number of layers in unspatial version
 SOIL_LAYER "1"                  //define soil layer/s to consider
 MAX_LAYER_COVER "1.2"
-REMAINING_BASAL_AREA "0"        //% percentage of basal area to leave per class
 REPLANTED_SPECIES "none"        //species name of replanted trees (mandatory)
 REPLANTED_MANAGEMENT "T"        //(T) management of replated trees (should be only T)(mandatory)
 REPLANTED_TREE "0"              //number of replanted trees (mandatory)

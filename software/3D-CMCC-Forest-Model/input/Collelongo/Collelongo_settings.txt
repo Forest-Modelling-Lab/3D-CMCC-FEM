@@ -1,7 +1,7 @@
 VERSION f                     //Must be 'f' for FEM version or 'b', for BGC version for FOREST LANDUSE
 SPATIAL u                     //Must be 's' or 'u', spatial or unspatial
 TIME d                        //Must be 'm' or 'd', monthly or daily
-SCREEN_OUTPUT off             //Must be  'on' or 'off'
+SCREEN_OUTPUT on             //Must be  'on' or 'off'
 DEBUG_OUTPUT off              //Must be 'on' or 'off'
 DAILY_OUTPUT on               //Must be 'on' or 'off'
 MONTHLY_OUTPUT on             //Must be 'on' or 'off'
@@ -27,7 +27,6 @@ INIT_FRAC_MAXASW 1            //0.1 Minimum fraction of asw based on maxasw (wil
 TREE_LAYER_LIMIT 3            //define differences among tree heights in meters classes to define number of layers in unspatial version
 SOIL_LAYER 1                  //define soil layer/s to consider
 MAX_LAYER_COVER 1.2
-REMAINING_BASAL_AREA 0        //% percentage of basal area to leave per class
 REPLANTED_SPECIES none        //species name of replanted trees (mandatory)
 REPLANTED_MANAGEMENT T        //(T) management of replated trees (should be only T)(mandatory)
 REPLANTED_TREE 0              //number of replanted trees (mandatory)

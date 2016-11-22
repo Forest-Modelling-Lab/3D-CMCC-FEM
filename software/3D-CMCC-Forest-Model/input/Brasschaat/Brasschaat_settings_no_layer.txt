@@ -26,7 +26,6 @@ MIN_FRAC_MAXASW "0.1" //Minimum fraction of asw based on maxasw (wilting point)
 TREE_LAYER_LIMIT "10"  //define differences among tree heights in meters classes to define number of layers in unspatial version
 SOIL_LAYER "0"	//define soil layer/s to consider
 MAX_LAYER_COVER "1"
-REMAINING_BASAL_AREA "0"     // % percentage of basal area to leave per class
 REPLANTED_SPECIES "none"    //species name of replanted trees (mandatory)
 REPLANTED_MANAGEMENT "T"    // (T) management of replated trees (should be only T)(mandatory)
 REPLANTED_TREE "0"          //number of replanted trees (mandatory)

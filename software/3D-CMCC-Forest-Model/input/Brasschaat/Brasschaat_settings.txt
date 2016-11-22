@@ -32,7 +32,6 @@ MAX_LAYER_COVER "1"
 
 //NATURAL/HUMAN (management)REGENERATION CLASS BIOMASS VALUES
 //MANAGMENT (optional)
-REMAINING_BASAL_AREA "0"     // % percentage of basal area to leave per class
 REPLANTED_SPECIES "none"    //species name of replanted trees (mandatory)
 REPLANTED_MANAGEMENT "T"    // (T) management of replated trees (should be only T)(mandatory)
 REPLANTED_TREE "0"          //number of replanted trees (mandatory)

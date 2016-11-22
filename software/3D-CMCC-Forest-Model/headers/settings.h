@@ -53,8 +53,6 @@ typedef struct {
 	double max_layer_cover;
 
 	/* replanted input (Management options)*/
-	//ALESSIOC TO ALESSIOR move remainig_basal_area to species.txt
-	double remaining_basal_area;          /* percentage of basal area to remove per sizecell (mandatory) */
 	double replanted_n_tree;             /* number of replanted trees per sizecell (mandatory) */
 	double replanted_age;                /* age of replanted trees (mandatory) */
 	double replanted_avdbh;              /* average dbh of replanted trees (mandatory) */
