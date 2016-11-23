@@ -12,6 +12,8 @@ void Thermic_sum (meteo_t *met, const int day, const int month);
 void Air_pressure(meteo_t *met, const int day, const int month);
 void Air_density (meteo_t *met, const int day, const int month);
 void Soil_temperature(meteo_t* met, const int day, const int month);
+void five_day_tavg(meteo_t* met, const int day, const int month);
+void five_day_tsoil(meteo_t* met, const int day, const int month);
 void Day_Length(cell_t *c, const int day, const int month, const int year);
 void Latent_heat(meteo_t *met, const int day, const int month);
 void Psychrometric(meteo_t *met, const int day, const int month);

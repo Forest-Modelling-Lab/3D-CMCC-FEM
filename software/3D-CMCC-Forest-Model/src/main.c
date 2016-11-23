@@ -1096,6 +1096,8 @@ int main(int argc, char *argv[]) {
 					Daylight_avg_temperature(matrix->cells[cell].years[year].m, day, month);
 					Nightime_avg_temperature(matrix->cells[cell].years[year].m, day, month);
 					Soil_temperature(matrix->cells[cell].years[year].m, day, month);
+					five_day_tavg(matrix->cells[cell].years[year].m, day, month);
+					five_day_tsoil(matrix->cells[cell].years[year].m, day, month);
 					Thermic_sum(matrix->cells[cell].years[year].m, day, month);
 					Air_density(matrix->cells[cell].years[year].m, day, month);
 					Day_Length(&matrix->cells[cell], day, month, year);
