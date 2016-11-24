@@ -209,7 +209,6 @@ static topo_t* import_nc(const char *const sz_filename, int*const p_topo_count) 
 	int ret;
 	int n_dims;
 	int ids[NC_MAX_VAR_DIMS];
-	int vars[SOIL_VARS_COUNT];
 	size_t size;
 		
 	topo_t *ps;
@@ -227,10 +226,6 @@ static topo_t* import_nc(const char *const sz_filename, int*const p_topo_count) 
 	/* reset stuff */
 	ps = NULL; /* required! for realloc stuff */
 	*p_topo_count = 0;
-		
-	for ( i = 0; i < TOPO_VARS_COUNT; i++ ) {
-		vars[i] = 0;
-	}
 
 	ret = nc_open(sz_filename, NC_NOWRITE, &id_file);
 	if ( ret != NC_NOERR ) goto quit;
@@ -240,6 +235,11 @@ static topo_t* import_nc(const char *const sz_filename, int*const p_topo_count) 
 
 	if ( ! dims_count || ! vars_count ) {
 		logger_error(g_debug_log, "bad nc file! %d dimensions and %d vars\n\n", dims_count, vars_count);
+		goto quit_no_nc_err;
+	}
+
+	if ( vars_count < TOPO_VARS_COUNT ) {
+		logger_error(g_debug_log, "bad nc file! %d vars but expected %d\n\n", vars_count, TOPO_VARS_COUNT);
 		goto quit_no_nc_err;
 	}
 
@@ -279,6 +279,26 @@ static topo_t* import_nc(const char *const sz_filename, int*const p_topo_count) 
 		}
 	}
 
+	/* check if we have all columns */
+	{
+		int vars[TOPO_VARS_COUNT] = { 0 };
+		for ( i = 0; i < vars_count; ++i ) {
+			ret = nc_inq_var(id_file, i, name, &type, &n_dims, ids, NULL);
+			for ( z = 0; z  < TOPO_VARS_COUNT; ++z ) {
+				if ( ! string_compare_i(name, sz_vars[z]) ) {
+					vars[z] = 1;
+					break;
+				}
+			}
+		}
+		for ( i = 0; i < TOPO_VARS_COUNT; ++i ) {
+			if ( ! vars[i] ) {
+				logger_error(g_debug_log, "%s column not found!\n", sz_vars[i]);
+				goto quit_no_nc_err;
+			}
+		}
+	}
+
 	/* get vars */
 	for ( x = 0; x < dims_size[X_DIM]; x++ ) {
 		for ( y = 0; y < dims_size[Y_DIM]; y++ ) {
@@ -314,11 +334,6 @@ static topo_t* import_nc(const char *const sz_filename, int*const p_topo_count) 
 					double d;
 
 					if ( ! string_compare_i(name, sz_vars[z]) ) {
-						/* check if we already have imported that var */
-						if ( vars[z] ) {
-							logger_error(g_debug_log, "var %s already imported\n", sz_vars[z]);
-							goto quit_no_nc_err;
-						}
 						/* n_dims can be only 2 and ids only x and y */
 						if ( 2 != n_dims ) {
 							logger_error(g_debug_log, "bad %s dimension size. It should be 2 not %d\n", sz_vars[z], n_dims);
@@ -329,24 +344,25 @@ static topo_t* import_nc(const char *const sz_filename, int*const p_topo_count) 
 							ret = nc_get_vara_float(id_file, i, start, count, &f);
 							if ( ret != NC_NOERR ) goto quit;
 							ps[*p_topo_count].values[z] = f;
+							++assigned;
 						} else if ( NC_DOUBLE == type ) {
 							ret = nc_get_vara_double(id_file, i, start, count, &d);
 							if ( ret != NC_NOERR ) goto quit;
 							ps[*p_topo_count].values[z] = (float)d;
+							++assigned;
 						} else {
 							/* type format not supported! */
 							logger_error(g_debug_log, "type format in %s for %s column not supported\n\n", sz_filename, sz_vars[z]);
 							goto quit_no_nc_err;
 						}
-						vars[z] = 1;
 						break;
 					}
 				}
 			}
 
 			if ( assigned != TOPO_VARS_COUNT ) {
-				// TODO
-				// write err
+				logger_error(g_debug_log, "imported %s columns instead of %d\n\n", assigned, TOPO_VARS_COUNT);
+				goto quit_no_nc_err;
 			}
 
 			++*p_topo_count;
