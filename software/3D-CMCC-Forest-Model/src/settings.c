@@ -177,7 +177,7 @@ settings_t* settings_import(const char *const filename) {
 			case SETTINGS_YEAR_START:
 				s->year_start = convert_string_to_int(token, &err);
 				if ( err ) {
-					printf("unable to convert start year: %s\n", p);
+					printf("unable to convert start year: %s\n", token);
 					free(s);
 					fclose(f);
 					return 0;
@@ -187,7 +187,7 @@ settings_t* settings_import(const char *const filename) {
 			case SETTINGS_YEAR_END:
 				s->year_end = convert_string_to_int(token, &err);
 				if ( err ) {
-					printf("unable to convert end year: %s\n", p);
+					printf("unable to convert end year: %s\n", token);
 					free(s);
 					fclose(f);
 					return 0;
@@ -217,7 +217,7 @@ settings_t* settings_import(const char *const filename) {
 			case SETTINGS_YEAR_START_CO2_FIXED:
 				s->year_start_co2_fixed = convert_string_to_int(token, &err);
 				if ( err ) {
-					printf("unable to convert start year management: %s\n", p);
+					printf("unable to convert start year management: %s\n", token);
 					free(s);
 					fclose(f);
 					return 0;
@@ -251,7 +251,7 @@ settings_t* settings_import(const char *const filename) {
 			case SETTINGS_YEAR_START_MANAGEMENT:
 				s->year_start_management = convert_string_to_int(token, &err);
 				if ( err ) {
-					printf("unable to convert start year management: %s\n", p);
+					printf("unable to convert start year management: %s\n", token);
 					free(s);
 					fclose(f);
 					return 0;
@@ -273,7 +273,7 @@ settings_t* settings_import(const char *const filename) {
 			case SETTINGS_SIZECELL:
 				*p_field = convert_string_to_float(token, &err);
 				if ( err ) {
-					printf("unable to convert sizeCell: %s\n", p);
+					printf("unable to convert sizeCell: %s\n", token);
 					free(s);
 					fclose(f);
 					return 0;

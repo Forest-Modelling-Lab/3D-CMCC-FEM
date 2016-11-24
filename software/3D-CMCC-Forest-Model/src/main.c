@@ -171,7 +171,7 @@ extern const char sz_err_out_of_memory[];
 const char err_unable_open_file[] = "unable to open file.";
 const char err_empty_file[] = "empty file ?";
 const char err_window_size_too_big[] = "window size too big.";
-static const char err_unable_get_current_path[] = "unable to retrieve current path.\n";
+//static const char err_unable_get_current_path[] = "unable to retrieve current path.\n";
 static const char err_unable_to_register_atexit[] = "unable to register clean-up routine.\n";
 
 static const char* get_filename(const char *const s)
@@ -408,9 +408,10 @@ static int log_start(const char* const sz_date, const char* const sitename)
 
 		for ( i = 0 ; i < 5; ++i ) {
 			if ( log_flag[i] ) {
-				*logs[i] = logger_new("%s%soutput_%s%s%s%s%s%s"
+				*logs[i] = logger_new("%s%soutput_%s_%s%s%s%s%s%s"
 										, g_sz_output_path
 										, flag ? "" : FOLDER_DELIMITER
+										, PROGRAM_VERSION
 										, date
 										, FOLDER_DELIMITER
 										, log_name[i]
