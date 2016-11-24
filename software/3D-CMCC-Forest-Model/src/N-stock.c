@@ -15,7 +15,7 @@
 #include "settings.h"
 #include "logger.h"
 
-extern settings_t* g_settings;
+//extern settings_t* g_settings;
 extern logger_t* g_debug_log;
 
 void nitrogen_stock(species_t *const s)
@@ -28,6 +28,7 @@ void nitrogen_stock(species_t *const s)
 
 	//test CURRENTLY NOT USED
 	/* as in BIOME-BGC nitrogen content in falling leaves is lower */
+#if 0
 	/* deciduous */
 	if((s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2) && s->counter[LEAF_FALL_COUNTER] == 1)
 	{
@@ -55,6 +56,7 @@ void nitrogen_stock(species_t *const s)
 		//should be something like that using "LEAF_FALLING_C"
 		//s->value[LEAF_N] = (s->value[LEAF_FALLING_C] * 1000000.0 /g_settings->sizeCell) / s->value[CN_FALLING_LEAVES];
 	}
+#endif
 
 	s->value[LEAF_N] = s->value[LEAF_C] / s->value[CN_LEAVES];
 	logger(g_debug_log, "Leaf nitrogen content = %g tN/area\n", s->value[LEAF_N]);

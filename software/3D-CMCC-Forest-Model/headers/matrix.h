@@ -280,7 +280,7 @@ enum {
 	YEARLY_NPP_tC,                      /* Yearly Net Primary Production tC/sizeCell day */
 
 	/* biomass */
-	/* carbon to carbon pools in gC/m2/day */
+	/* carbon to carbon pools */
 	C_TO_LEAF,                          /* Daily Net Primary Production to Leaf pool (tC/sizeCell day) */
 	C_TO_ROOT,                          /* Daily Net Primary Production to Root pool (tC/sizeCell day) */
 	C_TO_FINEROOT,                      /* Daily Net Primary Production to Fine root pool (tC/sizeCell day) */
@@ -467,6 +467,45 @@ enum {
 	YEARLY_COARSE_ROOT_AUT_RESP,        /* Annual Coarse root autotrophic respiration (gC/m2/year) */
 	YEARLY_BRANCH_AUT_RESP,             /* Annual Branch autotrophic respiration (gC/m2/year) */
 	YEARLY_TOTAL_AUT_RESP,              /* Annual Total autotrophic respiration (gC/m2/year) */
+
+
+	/* nitrogen to nitrogen pools */
+	N_TO_LEAF,                          /* Daily Net Primary Production to Leaf pool (tN/sizeCell day) */
+	N_TO_ROOT,                          /* Daily Net Primary Production to Root pool (tN/sizeCell day) */
+	N_TO_FINEROOT,                      /* Daily Net Primary Production to Fine root pool (tN/sizeCell day) */
+	N_TO_COARSEROOT,                    /* Daily Net Primary Production to Coarse root pool (tN/sizeCell day) */
+	N_TO_TOT_STEM,                      /* Daily Net Primary Production to Stem and Branch pool (tN/sizeCell day) */
+	N_TO_STEM,                          /* Daily Net Primary Production to Stem pool (tN/sizeCell day) */
+	N_TO_BRANCH,                        /* Daily Net Primary Production to Branch pool (tN/sizeCell day) */
+	N_TO_RESERVE,                       /* Daily Net Primary Production to Reserve pool (tN/sizeCell day) */
+	N_TO_FRUIT,                         /* Daily Net Primary Production to Fruit pool (tN/sizeCell day) */
+	N_TO_LITTER,                        /* Daily Net Primary Production to Litter pool (tN/sizeCell day) */
+	N_LEAF_TO_RESERVE,                  /* Daily retranslocated C from Leaf pool to Reserve (tN/sizeCell day) */
+	N_FINEROOT_TO_RESERVE,              /* Daily retranslocated C from Fine root pool to Reserve (tN/sizeCell day) */
+	N_LEAF_TO_LITTER,                   /* Daily tN from Leaf pool to Litter (tN/sizeCell day) */
+	N_FINE_ROOT_TO_LITTER,              /* Daily tN from Fine root pool to Litter (tN/sizeCell day) */
+	N_FRUIT_TO_LITTER,                  /* Daily tN from Fruit pool to Litter (tN/sizeCell day) */
+	N_STEM_LIVEWOOD_TO_DEADWOOD,        /* Daily tN from Stem live wood pool to Stem dead wood (tN/sizeCell day) */
+	N_COARSEROOT_LIVE_WOOD_TO_DEADWOOD, /* Daily tN from Coarse live wood pool to Coarse dead wood (tN/sizeCell day) */
+	N_BRANCH_LIVE_WOOD_TO_DEAD_WOOD,    /* Daily tN from Branch live wood pool to Branch dead wood (tN/sizeCell day) */
+	M_N_TO_TOT_STEM,                    /* Monthly cumulated Net Primary Production to total stem biomass  (tN/month/sizeCell) */
+	M_N_TO_STEM,                        /* Monthly cumulated Net Primary Production to stem biomass (tN/month/sizeCell) */
+	M_N_TO_LEAF,                        /* Monthly cumulated Net Primary Production to leaf biomass (tN/month/sizeCell) */
+	M_N_TO_ROOT,                        /* Monthly cumulated Net Primary Production to root biomass (tN/month/sizeCell) */
+	M_N_TO_FINEROOT,                    /* Monthly cumulated Net Primary Production to fine root biomass (tN/month/sizeCell) */
+	M_N_TO_COARSEROOT,                  /* Monthly cumulated Net Primary Production to coarse root biomass (tN/month/sizeCell) */
+	M_N_TO_RESERVE,                     /* Monthly cumulated Net Primary Production to reserve biomass (tN/month/sizeCell) */
+	M_N_TO_BRANCH,                      /* Monthly cumulated Net Primary Production to branch and bark biomass (tN/month/sizeCell) */
+	M_N_TO_FRUIT,                       /* Monthly cumulated Net Primary Production to fruit biomass (tN/month/sizeCell) */
+	Y_N_TO_TOT_STEM,                    /* Yearly cumulated Net Primary Production to total stem biomass (tN/year/sizeCell) */
+	Y_N_TO_STEM,                        /* Yearly cumulated Net Primary Production to stem biomass (tN/year/sizeCell) */
+	Y_N_TO_LEAF,                        /* Yearly cumulated Net Primary Production to leaf biomass (tN/year/sizeCell) */
+	Y_N_TO_ROOT,                        /* Yearly cumulated Net Primary Production to root biomass (tN/year/sizeCell) */
+	Y_N_TO_FINEROOT,                    /* Yearly cumulated Net Primary Production to fine root biomass (tN/year/sizeCell)*/
+	Y_N_TO_COARSEROOT,                  /* Yearly cumulated Net Primary Production to fine root biomass (tN/year/sizeCell)*/
+	Y_N_TO_RESERVE,                     /* Yearly cumulated Net Primary Production to reserve biomass (tN/year/sizeCell) */
+	Y_N_TO_BRANCH,                      /* Yearly cumulated Net Primary Production to branch and bark biomass (tN/year/sizeCell) */
+	Y_N_TO_FRUIT,                       /* Yearly cumulated Net Primary Production to fruit biomass (tN/year/sizeCell) */
 
 	/* nitrogen pools (tN/area) */
 	LEAF_N,                             /* Current Leaf nitrogen pool tN/sizeCell */

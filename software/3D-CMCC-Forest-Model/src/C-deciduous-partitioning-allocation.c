@@ -1,4 +1,5 @@
 /* includes */
+#include <CN-allocation.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -12,7 +13,6 @@
 #include "dendometry.h"
 #include "turnover.h"
 #include "lai.h"
-#include "C-allocation.h"
 #include "mortality.h"
 
 extern settings_t* g_settings;
@@ -299,6 +299,9 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 
 	/* allocate daily carbon */
 	carbon_allocation ( s );
+
+	/* allocate daily nitrogen */
+	//nitrogen_allocation ( s );
 
 	/* compute single tree biomass pools */
 	average_tree_biomass ( s );
