@@ -26,21 +26,52 @@ void forest_management (cell_t *const c, const int layer, const int height, cons
 	a = &c->heights[height].dbhs[dbh].ages[age];
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
-	++years_for_thinning;
+	logger(g_debug_log,"**FOREST MANAGEMENT**\n");
 
 	/* this function handles all other management functions */
 
+	/* check at the beginning of simulation */
+	if( !year )
+	{
+		CHECK_CONDITION( c->years[year].year, > g_settings->year_start_management );
+	}
+
+
+	/** THINNING **/
+	if ( ( c->years[year].year == g_settings->year_start_management ) || ( s->value[THINNING] == years_for_thinning ) )
+	{
+		logger(g_debug_log,"**THINNING**\n");
+
+		thinning ( c, layer, height, dbh, age, species, year );
+
+		/* reset counter */
+		years_for_thinning = 0;
+	}
+	/* increment counter */
+	++years_for_thinning;
+
+	/* check */
+	CHECK_CONDITION( years_for_thinning, > s->value[ROTATION] );
+
+
+	/** THINNING **/
 	/* if year of simulation matches with thinning and class age doesn't match with rotation age */
 	/* note: it assumes that model simulation start the year after last thinning */
+	/*
 	if ( ( ! ( ( years_for_thinning ) % (int)s->value[THINNING] ) ) && ( a->value != s->value[ROTATION] ) )
 	{
 		logger(g_debug_log,"**FOREST MANAGEMENT**\n");
 
 		thinning ( c, layer, height, dbh, age, species, year );
 	}
+	*/
+
+	/** HARVESTING **/
 	/* if class age matches with harvesting */
 	if ( a->value == s->value[ROTATION] )
 	{
+		logger(g_debug_log,"**HARVESTING**\n");
+
 		/* remove tree class */
 		harvesting ( c, layer, height, dbh, age, species );
 
@@ -103,15 +134,15 @@ void thinning (cell_t *const c, const int layer, const int height, const int dbh
 	logger(g_debug_log, "trees before thinning = %d trees/cell\n", s->counter[N_TREE]);
 
 	/* compute basal area to remain */
-	stand_basal_area_to_remain = (g_settings->remaining_basal_area / 100.0 ) * s->value[STAND_BASAL_AREA_m2];
+	stand_basal_area_to_remain = (1.0 - (s->value[THINNING_INTENSITY] / 100.0 ) ) * s->value[STAND_BASAL_AREA_m2];
 	logger(g_debug_log, "basal area to remain = %f m2/class\n", stand_basal_area_to_remain);
 
 	/* compute basal area to remove */
-	stand_basal_area_to_remove = (1.0 - (g_settings->remaining_basal_area / 100.0)) * s->value[STAND_BASAL_AREA_m2];
+	stand_basal_area_to_remove = (s->value[THINNING_INTENSITY] / 100.0) * s->value[STAND_BASAL_AREA_m2];
 	logger(g_debug_log, "basal area to remove = %f\n", stand_basal_area_to_remove);
 
 	/* compute integer number of trees to remove */
-	trees_to_remove = ROUND((1.0 - (g_settings->remaining_basal_area / 100.0)) * s->counter[N_TREE]);
+	trees_to_remove = ROUND((s->value[THINNING_INTENSITY] / 100.0) * s->counter[N_TREE]);
 	logger(g_debug_log, "trees_to_remove = %d\n", trees_to_remove);
 
 

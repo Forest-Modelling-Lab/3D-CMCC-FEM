@@ -32,6 +32,9 @@ model_run=(Debug Release)
 #declare sites
 SITEs=(Soroe Kroof Peitz)
 
+#declare project
+PROJECTs=(ISIMIP NO_ISIMIP PAPER)
+
 #declare climate
 CLIMATEs=(Historical Scenario All)
 
@@ -42,7 +45,7 @@ HYSTs=(CLIMATE PRINCETON WATCH GSWP3 WATCH-WFDEI All)
 GCMs=(GCM1 GCM2 GCM3 GCM4 GCM5 All)
 
 #declare RCPs
-RCPs=(rcp8p5 rcp6p0 rcp4p5 rcp2p6 All)
+RCPs=( rcp8p5 rcp6p0 rcp4p5 rcp2p6 All)
 
 #declare Management
 MANs=(on off All)
@@ -215,53 +218,80 @@ while :
 done
 
 #########################################################################################################
-#log available Input data
-#assign for a single site a starting year
-
 cd input 
-	
-echo "$site available stand initialization year(s):"
-
 cd "$site"
 
-#check if is an ISIMIP project
-if [ -d "$PROJECT" ] ; then
+#ask which project use
+echo "which project do you want to simulate?"
+match=no
 
-	cd "$PROJECT"
-	
-	#find among *.txt files occurrence for "stand" and "year" and put in array
-	YEARs=($(find *.txt | ( grep "stand" | sed -e s/[^0-9]//g )))
-	cd ../../..
-else	
-	#find among *.txt files occurrence for "stand" and "year" and put in array
-	YEARs=($(find *.txt | ( grep "stand" | sed -e s/[^0-9]//g )))
-	cd ../..
-fi
-
-for (( i = 0 ; i < ${#YEARs[@]} ; ++i )) ; do
-	echo -"${YEARs[i]}"
+#log available projects
+echo 'available sites to be simulated:'
+for (( i = 0 ; i < ${#PROJECTs[@]} ; ++i )) ; do
+	echo -"${PROJECTs[i]}"
 done
 
-#log available year data ask which year to use
-match=no
-echo "which is the starting year for "$site" to simulate?"
+
 while :
 	do
-	read year
-	for (( i = 0 ; i < ${#YEARs[@]} ; ++i )) ; do
-		if [ "${year,,}" = "${YEARs[$i],,}" ] ; then
+	read project
+	for (( i = 0 ; i <= ${#PROJECTs[@]} ; ++i )) ; do
+		if [ "${project,,}" = "${PROJECTs[$i],,}" ] ; then
 			match=yes
-			year=${YEARs[$i]}
+			project=${PROJECTs[$i]}
 		fi
 	done
 	if [ "$match" == "yes" ] ; then
 		break;
 	fi
 	
-	echo "'$year' doesn't match with year list. please rewrite it."
+	echo "'$project' doesn't match with site list. please rewrite it."
 done
+
+cd "$project"
+
+#log available Input data
+#assign for a single site a starting year	
+#echo "$site available stand initialization year(s):"
+
+#check if is an ISIMIP project
+#if [ -d "$PROJECT" ] ; then
+#
+	#	cd "$PROJECT"
+	#	
+	#find among *.txt files occurrence for "stand" and "year" and put in array
+	#YEARs=($(find *.txt | ( grep "stand" | sed -e s/[^0-9]//g )))
+	#cd ../../..
+#else	
+	#find among *.txt files occurrence for "stand" and "year" and put in array
+	#	YEARs=($(find *.txt | ( grep "stand" | sed -e s/[^0-9]//g )))
+	#cd ../..
+#fi
+#
+#for (( i = 0 ; i < ${#YEARs[@]} ; ++i )) ; do
+	#	echo -"${YEARs[i]}"
+#done
+
+#log available year data ask which year to use
+#match=no
+#echo "which is the starting year for "$site" to simulate?"
+#while :
+	#	do
+	#read year
+	#for (( i = 0 ; i < ${#YEARs[@]} ; ++i )) ; do
+		#	if [ "${year,,}" = "${YEARs[$i],,}" ] ; then
+			#	match=yes
+			#year=${YEARs[$i]}
+		#fi
+	#done
+	#if [ "$match" == "yes" ] ; then
+		#	break;
+	#fi
 	
-echo "starting year for '$site' = '$year'"
+	#echo "'$year' doesn't match with year list. please rewrite it."
+#done
+	
+#echo "starting year for '$site' = '$year'"
 
 #########################################################################################################
 #log available CLIMATEs
@@ -404,7 +434,7 @@ if [ "$climate" == "${CLIMATEs[1]}" ] ; then
 	
 	echo "'$rcp' doesn't match with RCPs list. please rewrite it."
 	done
-	
+			
 	#for counter
 	if [ "$rcp" == 'All' ] ; then
 		rcp_counter=${#RCPs[@]} 
@@ -500,46 +530,7 @@ START=`date +%s%N`
 
 echo 'running for' "$site"
 
-function single_run_isimip {
-	
-	echo "single run"
-	echo 'running for' "$climate"
-	echo 'running for' "$gcm"
-	echo 'running for' "$rcp"
-	echo 'running with management =' "$management" 
-	echo 'running with co2 =' "$co2"
-	
-	#add site name to current paths
-	SITE_PATH=input/"$site"
-	OUTPUT_PATH=output/"$site"
-	STAND_PATH=ISIMIP/"$site"_stand_"$year"_"$PROJECT".txt
-	TOPO_PATH=ISIMIP/"$site"_topo_"$PROJECT".txt
-
-	#add management and co2 to setting path
-	SETTING_PATH=ISIMIP/"$site"_settings_"$PROJECT"_Manag-"$management"_CO2-"$co2".txt
-
-	#add gcm and rcp to meteo co2 and soil path
-	MET_PATH=ISIMIP/"$gcm"/"$gcm"_hist_"$rcp"_"$year"_2099.txt
-	SOIL_PATH=ISIMIP/"$gcm"/"$site"_soil_"$rcp"_"$PROJECT".txt
-	CO2_PATH=ISIMIP/CO2/CO2_"$rcp"_1950_2099.txt
-	
-	#add paths and arguments to executable and run
-	$launch$executable -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH
-	
-	#log arguments paths
-	echo "*****************************"
-	echo "$MODEL $VERSION-$PROJECT arguments:"
-	echo "-i" $SITE_PATH
-	echo "-p" $PARAMETERIZATION_PATH
-	echo "-d" $STAND_PATH
-	echo "-s" $SOIL_PATH
-	echo "-t" $TOPO_PATH
-	echo "-m" $MET_PATH
-	echo "-k" $CO2_PATH
-	echo "-c" $SETTING_PATH
-	echo "-o" $OUTPUT_PATH
-	echo "*****************************"
-}
+cd ../../..
 
 function multi_run_isimip {
 	for (( b = 0 ; b < $clim_counter ; ++b )) ; do
@@ -564,22 +555,23 @@ function multi_run_isimip {
 					#add site name to current paths
 					SITE_PATH=input/"$site"
 					OUTPUT_PATH=output/"$site"
-					STAND_PATH=ISIMIP/"$site"_stand_"$year"_"$PROJECT".txt
-					TOPO_PATH=ISIMIP/"$site"_topo_"$PROJECT".txt
+					STAND_PATH="$project"/"$site"_stand_"$PROJECT".txt
+					TOPO_PATH="$project"/"$site"_topo_"$PROJECT".txt
 				
 					#add management and co2 to setting path
-					SETTING_PATH=ISIMIP/"$site"_settings_"$PROJECT"_Manag-"$management"_CO2-"$co2".txt
+					SETTING_PATH="$project"/"$site"_settings_"$PROJECT"_Manag-"$management"_CO2-"$co2".txt
 				
 					#add gcm and rcp to meteo co2 and soil path
-					MET_PATH=ISIMIP/"$gcm"/"$gcm"_hist_"$rcp"_"$year"_2099.txt
-					SOIL_PATH=ISIMIP/"$gcm"/"$site"_soil_"$rcp"_"$PROJECT".txt
-					CO2_PATH=ISIMIP/CO2/CO2_"$rcp"_1950_2099.txt
+					MET_PATH="$project"/"$gcm"/"$gcm"_hist_"$rcp"_1960_2099.txt
+					SOIL_PATH="$project"/"$gcm"/"$site"_soil_"$rcp"_"$PROJECT".txt
+					CO2_PATH="$project"/CO2/CO2_"$rcp"_1950_2099.txt
 									
 					#add paths and arguments to executable and run
 					$launch$executable -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH
 					
 					#log arguments paths
 					echo "*****************************"
+					echo "$launch$executable -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH"
 					echo "$MODEL $VERSION-$PROJECT arguments:"
 					echo "-i" $SITE_PATH
 					echo "-p" $PARAMETERIZATION_PATH
@@ -598,13 +590,10 @@ function multi_run_isimip {
 	done
 }
 
-if [ "$gcm_counter" == 1 ] && [ "$rcp_counter" == 1 ] && [ "$man_counter" == 1 ] && [ "$co2_counter" == 1 ] ; then
-	#launch single run
-	single_run_isimip
-else
-	#launch multi run
-	multi_run_isimip
-fi
+
+#launch multi run
+multi_run_isimip
+
 
 
 #delete copied executable from current directory

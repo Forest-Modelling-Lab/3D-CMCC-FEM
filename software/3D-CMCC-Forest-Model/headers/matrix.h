@@ -102,6 +102,7 @@ enum {
 	ROTATION,                            /* rotation for final harvest (based on tree age) */
 	THINNING,                            /* thinning regime (based on year simulation) */
 	THINNING_REGIME,                     /* thinning regime (0 = above, 1 = below) */
+	THINNING_INTENSITY,                  /* thinning intensity (% of Basal Area/N-tree to remove) */
 	MINAGEMANAG,                         /* Minimum age for Management */
 	MINDBHMANAG,                         /* Minimum DBH for Management */
 	AV_SHOOT,                            /* Average number of shoots produced after coppicing */
@@ -143,7 +144,11 @@ enum {
 
 	/* PAR */
 	PAR,                                /* Photosynthetically Active Radiation molPAR/m^2/day */
+	PAR_SUN,                            /* Photosynthetically Active Radiation molPAR/m^2/day for sun leaves */
+	PAR_SHADE,                          /* Photosynthetically Active Radiation molPAR/m^2/day for shaded leaves */
 	PAR_REFL,                           /* Reflected Photosynthetically Active Radiation molPAR/m^2/day OVERALL CANOPY */
+	PAR_REFL_SUN,                       /* Reflected Photosynthetically Active Radiation molPAR/m^2/day for sun leaves */
+	PAR_REFL_SHADE,                     /* Reflected Photosynthetically Active Radiation molPAR/m^2/day for shaded leaves */
 	APAR,                               /* Absorbed Photosynthetically Active Radiation molPAR/m^2/day */
 	APAR_SUN,                           /* Absorbed Photosynthetically Active Radiation molPAR/m^2/day for sun leaves */
 	APAR_SHADE,                         /* Absorbed Photosynthetically Active Radiation molPAR/m^2/day for shaded leaves */
@@ -153,7 +158,11 @@ enum {
 
 	/* short wave */
 	SW_RAD,                             /* Short Wave Radiation in W/m2 */
+	SW_RAD_SUN,                         /* Short Wave Radiation in W/m2 for sun leaves */
+	SW_RAD_SHADE,                       /* Short Wave Radiation in W/m2 for shaded leaves */
 	SW_RAD_REFL,                        /* Reflected Short Wave Radiation W/m2 OVERALL CANOPY */
+	SW_RAD_REFL_SUN,                    /* Reflected Short Wave Radiation W/m2 for sun leaves */
+	SW_RAD_REFL_SHADE,                  /* Reflected Short Wave Radiation W/m2 for shaded leaves */
 	SW_RAD_ABS,                         /* Absorbed Net Short Wave radiation in W/m2 */
 	SW_RAD_ABS_SUN,                     /* Absorbed Net Short Wave Radiation W/m2 for sun leaves */
 	SW_RAD_ABS_SHADE,                   /* Absorbed Net Short Wave Radiation W/m2 for shaded leaves */
@@ -186,7 +195,11 @@ enum {
 
 	/* PPFD */
 	PPFD,                               /* Photosynthetic Photon Flux Density umol/m2/sec */
+	PPFD_SUN,                           /* Photosynthetic Photon Flux Density umol/m2/sec for sun leaves */
+	PPFD_SHADE,                         /* Photosynthetic Photon Flux Density umol/m2/sec f0r shaded leaves */
 	PPFD_REFL,                          /* Transmitted Photosynthetic Photon Flux Density umol/m2/sec */
+	PPFD_REFL_SUN,                      /* Transmitted Photosynthetic Photon Flux Density umol/m2/sec for sun leaves */
+	PPFD_REFL_SHADE,                    /* Transmitted Photosynthetic Photon Flux Density umol/m2/sec for shaded leaves */
 	PPFD_ABS,                           /* Absorbed Photosynthetic Photon Flux Density umol/m2/sec */
 	PPFD_ABS_SUN,                       /* Absorbed Photosynthetic Photon Flux Density umol/m2/sec for sun leaves */
 	PPFD_ABS_SHADE,                     /* Absorbed Photosynthetic Photon Flux Density umol/m2/sec for shaded leaves */
@@ -206,6 +219,7 @@ enum {
 	F_DROUGHT,                          /* SOIL DROUGHT modifier (see Duursma et al., 2008) */
 	F_PSI,                              /* SOIL WATER modifier using PSI, see Biome */
 	F_CO2,                              /* CO2 soil fertilization effect */
+	F_CO2_TR,                           /* CO2 reduction effect (for stomatal conductance) */
 	PHYS_MOD,                           /* PHYSIOLOGICAL modifier */
 
 	/* water */

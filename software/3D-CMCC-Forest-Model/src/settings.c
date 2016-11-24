@@ -21,11 +21,13 @@ enum {
 	, SETTINGS_YEAR_END
 	, SETTINGS_SOIL_OUTPUT
 	, SETTINGS_CO2_MOD
-	, SETTINGS_CO2_FIXED
+	, SETTINGS_CO2_TRANS
+	, SETTINGS_YEAR_START_CO2_FIXED
 	, SETTINGS_NDEP_FIXED
 	, SETTINGS_Q10_FIXED
 	, SETTINGS_REGENERATION
 	, SETTINGS_MANAGEMENT
+	, SETTINGS_YEAR_START_MANAGEMENT
 	, SETTINGS_PROGN_AUT_RESP
 	, SETTINGS_DNDC
 	, SETTINGS_SIZECELL
@@ -36,7 +38,6 @@ enum {
 	, SETTINGS_TREE_LAYER_LIMIT
 	, SETTINGS_SOIL_LAYER
 	, SETTINGS_MAX_LAYER_COVER
-	, SETTINGS_REMAINING_BASAL_AREA
 	, SETTINGS_REPLANTED_SPECIES
 	, SETTINGS_REPLANTED_MANAGEMENT
 	, SETTINGS_REPLANTED_TREE
@@ -205,11 +206,21 @@ settings_t* settings_import(const char *const filename) {
 				}
 			break;
 
-			case SETTINGS_CO2_FIXED:
+			case SETTINGS_CO2_TRANS:
 				if ( ! string_compare_i(token, "on") ) {
-					s->CO2_fixed = CO2_FIXED_ON;
+					s->CO2_trans = CO2_TRANS_ON;
 				} else if ( ! string_compare_i(token, "var") ) {
-					s->CO2_fixed = CO2_FIXED_VAR;
+					s->CO2_trans = CO2_TRANS_VAR;
+				}
+			break;
+
+			case SETTINGS_YEAR_START_CO2_FIXED:
+				s->year_start_co2_fixed = convert_string_to_int(token, &err);
+				if ( err ) {
+					printf("unable to convert start year management: %s\n", p);
+					free(s);
+					fclose(f);
+					return 0;
 				}
 			break;
 
@@ -234,6 +245,16 @@ settings_t* settings_import(const char *const filename) {
 			case SETTINGS_MANAGEMENT:
 				if ( ! string_compare_i(token, "on") ) {
 					s->management = 1;
+				}
+			break;
+
+			case SETTINGS_YEAR_START_MANAGEMENT:
+				s->year_start_management = convert_string_to_int(token, &err);
+				if ( err ) {
+					printf("unable to convert start year management: %s\n", p);
+					free(s);
+					fclose(f);
+					return 0;
 				}
 			break;
 

@@ -327,7 +327,7 @@ void check_class_radiation_balance(cell_t *const c, const int layer, const int h
 	in = s->value[PAR];
 
 	/* sum of sinks */
-	out = /*s->value[PAR_REFL] + */ s->value[TRANSM_PAR];
+	out = s->value[PAR_REFL] + s->value[TRANSM_PAR];
 
 	/* sum of current storage */
 	store = s->value[APAR_SUN] + s->value[APAR_SHADE];
@@ -345,7 +345,7 @@ void check_class_radiation_balance(cell_t *const c, const int layer, const int h
 		logger(g_debug_log, "PAR out = %g\n", out);
 		logger(g_debug_log, "PAR store = %g\n", store);
 		logger(g_debug_log, "PAR balance = %g\n", balance);
-		logger(g_debug_log, "...FATAL ERROR AT CELL LEVEL PAR balance (exit)\n");
+		logger(g_debug_log, "...FATAL ERROR AT CLASS LEVEL PAR balance (exit)\n");
 		CHECK_CONDITION(fabs(balance), > eps);
 	}
 	else
@@ -359,7 +359,7 @@ void check_class_radiation_balance(cell_t *const c, const int layer, const int h
 
 	/* sum of sinks */
 	/* it must take into account the overall transmitted NET_RAD (reflected is yet computed for net radiation) */
-	out = s->value[SW_RAD_TRANSM];
+	out = s->value[SW_RAD_REFL] + s->value[SW_RAD_TRANSM];
 
 	/* sum of current storage */
 	store = s->value[SW_RAD_ABS_SUN] + s->value[SW_RAD_ABS_SHADE];
@@ -377,7 +377,7 @@ void check_class_radiation_balance(cell_t *const c, const int layer, const int h
 		logger(g_debug_log, "NET_RAD out = %g\n", out);
 		logger(g_debug_log, "NET_RAD store = %g\n", store);
 		logger(g_debug_log, "NET_RAD balance = %g\n", balance);
-		logger(g_debug_log, "...FATAL ERROR AT CELL LEVEL NET_RAD balance (exit)\n");
+		logger(g_debug_log, "...FATAL ERROR AT CLASS LEVEL NET_RAD balance (exit)\n");
 		CHECK_CONDITION(fabs(balance), > eps);
 	}
 	else
@@ -390,7 +390,7 @@ void check_class_radiation_balance(cell_t *const c, const int layer, const int h
 	in = s->value[PPFD];
 
 	/* sum of sinks */
-	out = /* s->value[PPFD_REFL] + */ s->value[PPFD_TRANSM];
+	out = s->value[PPFD_REFL] +  s->value[PPFD_TRANSM];
 
 	/* sum of current storage */
 	store = s->value[PPFD_ABS_SUN] + s->value[PPFD_ABS_SHADE];
@@ -408,7 +408,7 @@ void check_class_radiation_balance(cell_t *const c, const int layer, const int h
 		logger(g_debug_log, "PPFD out = %g\n", out);
 		logger(g_debug_log, "PPFD store = %g\n", store);
 		logger(g_debug_log, "PPFD balance = %g\n", balance);
-		logger(g_debug_log, "...FATAL ERROR AT CELL LEVEL PPFD balance (exit)\n");
+		logger(g_debug_log, "...FATAL ERROR AT CLASS LEVEL PPFD balance (exit)\n");
 		CHECK_CONDITION(fabs(balance), > eps);
 	}
 	else

@@ -2,7 +2,7 @@
 #ifndef SETTINGS_H_
 #define SETTINGS_H_
 
-enum { CO2_FIXED_OFF = 0, CO2_FIXED_ON, CO2_FIXED_VAR };
+enum { CO2_TRANS_OFF = 0, CO2_TRANS_ON, CO2_TRANS_VAR };
 
 #define SETTINGS_SITENAME_MAX_SIZE					(255+1)
 #define SETTINGS_REPLANTED_SPECIES_MAX_SIZE			(32+1)
@@ -23,12 +23,14 @@ typedef struct {
 	int year_end;
 	char soil_output;
 	char CO2_mod;
-	char CO2_fixed;
+	char CO2_trans;                   /* CO2 transient */
+	int year_start_co2_fixed;         /* for CO2_trans = var, year at which CO2 is fixed */
 	char Ndep_fixed;
 	char Q10_fixed;
 	char regeneration;
 	char management;
-	char Prog_Aut_Resp; /* Prognostic autotrophic respiration */
+	int year_start_management;        /* start year management */
+	char Prog_Aut_Resp;               /* Prognostic autotrophic respiration */
 	char dndc;
 	char replanted_species[SETTINGS_REPLANTED_SPECIES_MAX_SIZE]; /* species name of replanted species */
 	char regeneration_species[SETTINGS_REGENERATION_SPECIES_MAX_SIZE]; /* species name of regeneration species */
@@ -53,8 +55,6 @@ typedef struct {
 	double max_layer_cover;
 
 	/* replanted input (Management options)*/
-	//ALESSIOC TO ALESSIOR move remainig_basal_area to species.txt
-	double remaining_basal_area;          /* percentage of basal area to remove per sizecell (mandatory) */
 	double replanted_n_tree;             /* number of replanted trees per sizecell (mandatory) */
 	double replanted_age;                /* age of replanted trees (mandatory) */
 	double replanted_avdbh;              /* average dbh of replanted trees (mandatory) */

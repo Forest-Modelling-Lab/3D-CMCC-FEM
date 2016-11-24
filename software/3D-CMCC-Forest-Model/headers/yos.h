@@ -34,6 +34,8 @@ typedef struct {
 	double lh_fus;                              /* (KJ/Kg) daily latent heat of fusion snow */
 	double lh_sub;                              /* (KJ/Kg) daily latent heat of sublimation snow */
 	double air_pressure;                        /* (Pa) daily air pressure */
+	double five_day_tavg;                       /* (°C) five day weighted avg tavg */
+	double five_day_tsoil;                      /* (°C) five day weighted avg tsoil */
 	// ALESSIOR this is an annual value not daily
 	// moved into yos struct
 	//double co2_conc;                            /* (ppmv) daily CO2 concentration */

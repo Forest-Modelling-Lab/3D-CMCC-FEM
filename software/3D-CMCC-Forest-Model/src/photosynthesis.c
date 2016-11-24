@@ -20,6 +20,13 @@ void photosynthesis(cell_t *const c, const int layer, const int height, const in
 	double GPPmolC_shaded;
 	double GPPmolC_tot;
 
+	double Lue;
+	double Lue_max;
+	double Lue_sun;
+	double Lue_sun_max;
+	double Lue_shade;
+	double Lue_shade_max;
+
 	species_t *s;
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
@@ -65,16 +72,49 @@ void photosynthesis(cell_t *const c, const int layer, const int height, const in
 
 	//test 12 May 2016 test
 	//GPP depends on canopy wet (no photosynthesis occurs if canopy is wet)
+	Lue = s->value[APAR] * Alpha_C;
+	Lue_sun = s->value[APAR_SUN] * Alpha_C;
+	Lue_shade = s->value[APAR_SHADE] * Alpha_C;
+
+	//fraction depend on partial canopy wet
+	Lue_max = s->value[PAR] * Alpha_C;
+	Lue_sun_max = s->value[PAR_SUN] * Alpha_C;
+	Lue_shade_max = s->value[PAR_SHADE] * Alpha_C;
+
+	//Alpha_C *= s->value[CANOPY_FRAC_DAY_TRANSP];
+	if (Lue > Lue_max)
+	{
+		/* current Lue cannot exceed Lue max */
+		Lue = Lue_max;
+	}
+	if (Lue_sun > Lue_sun_max)
+	{
+		/* current Lue cannot exceed Lue max */
+		Lue_sun = Lue_shade_max;
+	}
+	if (Lue_shade > Lue_shade_max)
+	{
+		/* current Lue cannot exceed Lue max */
+		Lue_shade = Lue_shade_max;
+	}
+
+	/* GPP */
+	/* Daily GPP in molC/m^2/day */
 	//fraction depend on partial canopy wet
 	//Alpha_C *= s->value[CANOPY_FRAC_DAY_TRANSP];
 
 	/* GPP */
 	/* Daily GPP in molC/m^2/day */
+	/*
 	GPPmolC = s->value[APAR] * Alpha_C;
 	GPPmolC_sun = s->value[APAR_SUN]* Alpha_C;
 	GPPmolC_shaded = s->value[APAR_SHADE]* Alpha_C;
 	GPPmolC_tot = GPPmolC_sun + GPPmolC_shaded;
-	logger(g_debug_log, "Apar for GPP = %g molPAR/m2/day\n", s->value[APAR]);
+	*/
+	GPPmolC = Lue;
+	GPPmolC_sun = Lue_sun;
+	GPPmolC_shaded = Lue_shade;
+	GPPmolC_tot = GPPmolC_sun + GPPmolC_shaded;
 	logger(g_debug_log, "GPPmolC = %g molC/m^2/day\n", GPPmolC);
 	logger(g_debug_log, "GPPmolC_sun = %g molC/m^2/day\n", GPPmolC_sun);
 	logger(g_debug_log, "GPPmolC_shade = %g molC/m^2/day\n", GPPmolC_shaded);

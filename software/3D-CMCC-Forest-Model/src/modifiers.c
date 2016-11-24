@@ -45,7 +45,10 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 
 	/********************************************************************************************/
 
-	/* CO2 MODIFIER from: Veroustraete et al., 2002, Remote Sensing of Environment */
+	/* CO2 MODIFIER FOR ASSIMILATION */
+	/* fertilization effect with rising CO2 from: Veroustraete 1994,
+	 * Veroustraete et al., 2002, Remote Sensing of Environment
+	*/
 	if ( g_settings->CO2_mod )
 	{
 		tairK = meteo_daily->tavg + TempAbs;
@@ -62,26 +65,43 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 
 		tau = Atau * exp (-Eatau/(Rgas*(tairK)));
 
-		v1 = (meteo_annual->co2Conc -(O2CONC/(2*tau)))/(refCO2CONC-(O2CONC/(2*tau)));
-		v2 = (KmCO2*(1+(O2CONC/KO2))+refCO2CONC)/(KmCO2*(1+(O2CONC/KO2))+meteo_annual->co2Conc);
+		v1 = (meteo_annual->co2Conc -(O2CONC/(2*tau)))/(g_settings->co2Conc-(O2CONC/(2*tau)));
+		v2 = (KmCO2*(1+(O2CONC/KO2))+g_settings->co2Conc)/(KmCO2*(1+(O2CONC/KO2))+meteo_annual->co2Conc);
 
 		/* compute F_CO2 modifier */
 		s->value[F_CO2] = v1*v2;
 	}
 	else
 	{
-		s->value[F_CO2] = 1;
+		s->value[F_CO2] = 1.;
 	}
 	logger(g_debug_log, "annual [CO2] = %f ppmv\n", meteo_annual->co2Conc);
-	logger(g_debug_log, "f_CO2 modifier = %f\n", s->value[F_CO2]);
+	logger(g_debug_log, "f_CO2 modifier for assimilation = %f\n", s->value[F_CO2]);
 
 	/********************************************************************************************/
+
+	/* CO2 MODIFIER FOR TRANSPIRATION  */
+	/* limitation effects on maximum stomatal conductance from Hidy et al., 2016 GMDD
+	 * Frank et al., 2013 New Phytologist
+	*/
+	if ( g_settings->CO2_mod )
+	{
+		s->value[F_CO2_TR] = 39.43 * pow(meteo_annual->co2Conc, -0.64);
+	}
+	else
+	{
+		s->value[F_CO2_TR] = 1.;
+	}
+	logger(g_debug_log, "f_CO2 modifier for assimilation = %f\n", s->value[F_CO2]);
+
+	/********************************************************************************************/
+
 
 	/* LIGHT MODIFIER (NOT USED) */
 	/* (Following Makela et al , 2008, Peltioniemi_etal_2012) */
 	//FIXME chose which type of light use and differentiate for different layers
 	//following Nolè should be used apar
-	//following Peltioniemi should be used par
+	//following Peltionemi should be used par
 	//	if (s->value[GAMMA_LIGHT] != -9999)
 	//	{
 	//		s->value[F_LIGHT]= 1.0/ ((s->value[GAMMA_LIGHT]* s->value[APAR]) +1.0);

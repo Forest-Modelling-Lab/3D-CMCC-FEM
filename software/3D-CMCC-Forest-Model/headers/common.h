@@ -2,8 +2,8 @@
 #ifndef COMMON_H
 #define COMMON_H
 
-#define PROGRAM_VERSION	"5.2.2"
-#define PROGRAM_NAME "3D-CMCC Forest Ecosystem Model v."PROGRAM_VERSION""
+#define PROGRAM_VERSION	"5.3.1"
+#define PROGRAM_NAME "3D-CMCC-CNR Forest Ecosystem Model v."PROGRAM_VERSION""
 
 #ifdef _WIN32
 #define FOLDER_DELIMITER	"\\"

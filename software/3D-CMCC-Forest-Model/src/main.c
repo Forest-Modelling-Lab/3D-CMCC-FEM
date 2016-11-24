@@ -106,7 +106,7 @@ static const char banner[] = "\n"PROGRAM_NAME"\n"
 		"The "PROGRAM_NAME" has been developed by:\n"
 		"Alessio Collalti [alessio.collalti@cmcc.it, a.collalti@unitus.it],\n"
 		"Alessio Ribeca [alessio.ribeca@cmcc.it]\n"
-		"Sergio Marconi [sergio.marconi@cmcc.it]\n"
+		"Carlo Trotta [trottacarlo@unitus.it]"
 		"Monia Santini [monia.santini@cmcc.it]\n"
 		"euroMediterranean Center on Climate Changes (CMCC),\n"
 		"IAFES division,\n"
@@ -116,7 +116,7 @@ static const char banner[] = "\n"PROGRAM_NAME"\n"
 		"Department for innovation in biological, agro-food and forest systems (DIBAF),\n"
 		"Forest Ecology Lab\n"
 		"\n"
-		"Programmers: Alessio Collalti - Alessio Ribeca - Sergio Marconi - Monia Santini\n"
+		"Programmers: Alessio Collalti - Alessio Ribeca - Carlo Trotta - Monia Santini\n"
 		"\n"
 		"\"DISCLAIMER\"\n"
 		"CMCC and UNITUS\n"
@@ -173,6 +173,25 @@ const char err_empty_file[] = "empty file ?";
 const char err_window_size_too_big[] = "window size too big.";
 static const char err_unable_get_current_path[] = "unable to retrieve current path.\n";
 static const char err_unable_to_register_atexit[] = "unable to register clean-up routine.\n";
+
+static const char* get_filename(const char *const s)
+{
+	const char *p;
+	const char *p2;
+
+	p = NULL;
+
+	if ( s ) {
+		p = strrchr(s, '/');
+		if ( p ) ++p;
+		p2 = strrchr(s, '\\');
+		if ( p2 ) ++p2;
+		if ( p2 > p ) p = p2;
+		if ( ! p ) p = s;
+	}
+
+	return p;
+}
 
 
 static void clean_up(void)
@@ -272,24 +291,33 @@ static int log_start(const char* const sz_date, const char* const sitename)
 	}
 
 	/* setting version */
-	len += sprintf(buffer+len, "_%c", g_settings->version);
+	len += sprintf(buffer+len, "_%s", get_filename(g_sz_input_met_file));
 
 	/* co2_fixed */
-	switch ( g_settings->CO2_fixed ) {
-		case CO2_FIXED_OFF:
-			p = "OFF";
-			break;
+	len += sprintf(buffer+len, "_(%d", g_settings->year_start);
 
-		case CO2_FIXED_ON:
+	/* end simulation */
+	len += sprintf(buffer+len, "-%d)", g_settings->year_end);
+
+	/* setting version */
+	//len += sprintf(buffer+len, "_%c", g_settings->version);
+
+	/* co2_transient */
+	switch ( g_settings->CO2_trans ) {
+		case CO2_TRANS_ON:
 			p = "ON";
 			break;
 
-		case CO2_FIXED_VAR:
+		case CO2_TRANS_OFF:
+			p = "OFF";
+			break;
+
+		case CO2_TRANS_VAR:
 			p = "VAR";
 			break;
 
 		default:
-			puts("bad CO2_fixed value in settings file!\n");
+			puts("bad CO2_trans value in settings file!\n");
 			return 0;
 	}
 	len += sprintf(buffer+len, "_CO2_%s", p);

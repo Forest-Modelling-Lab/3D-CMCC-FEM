@@ -66,7 +66,7 @@ enum {
 #define e                 2.71828183      /* nepero/eulero constant */
 #define DBH_ref                  1.3      /* reference DBH value */
 #define GRPERC                   0.3      /* (DIM) percentage of growth resp per unit of C grown see BIOME, 0.25 for LPJ */
-#define refCO2CONC               380 /*281 */     /* ppmv reference co2 concentration see Veroustraete 1994, 2002 */
+//#define refCO2CONC             368.86     /* ppmv reference co2 concentration at year 2000 */
 #define O2CONC                  20.9      /* % of O2 concentration see Verstraeten 1994, 2002 */
 #define STEMPOWER_A	            2.08      /* Power in the Stem Mass v. diameter relationship for DBH < 9 cm */
 #define STEMPOWER_B	            2.64      /* Power in the Stem Mass v. diameter relationship for 9 < DBH < 15 cm */

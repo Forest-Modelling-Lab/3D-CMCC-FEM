@@ -84,6 +84,7 @@ GERMCAPACITY	0.70          //Geminability (Lischke H. & Loffler T. J.)
 ROTATION    200               //Forest Rotation for harvesting for Q. robur from ISIMIP protocol
 THINNING     15               //Thinning regime for Q. robur from ISIMIP protocol
 THINNING_REGIME    0          //Thinning regime (0 = above, 1 = below) for Q. robur from ISIMIP protocol
+THINNING_INTENSITY  15        //Thinning intensity (% of Basal Area/N-tree to remove) for Q. robur/pubescens
 MINAGEMANAG	80                //Minimum age for Managment (Q. cerris)
 MINDBHMANAG	27                //Minimum DBH for Managment
 AV_SHOOT	10                //average number of shoot after cut

@@ -1,5 +1,5 @@
 /*
- * maintenance_respiration.c
+- * autotrophic_respiration.c
  *
  *  Created on: 25/set/2013
  *      Author: alessio
@@ -20,15 +20,12 @@ extern logger_t* g_debug_log;
 
 void maintenance_respiration(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, const meteo_daily_t *const meteo_daily)
 {
-	double mrpern = 0.218;     /* linear N relationship with MR being kgC/kgN/day, 0.218 from Ryan 1991, 0.1584 Campioli et al., 2013 and from Dufrene et al 2005 */
+	double MR_ref = 0.218;     /* Reference MR respiration linear N relationship with MR being kgC/kgN/day, 0.218 from Ryan 1991, 0.1584 Campioli et al., 2013 and from Dufrene et al 2005 */
 	double Q10_temp = 20.0;    /* t_base temperature for respiration, 15°C for Damesin et al., 2001 */
-	double t1;
 
-	//double q10;                /* 2.2 from Schwalm & Ek, 2004; Kimball et al., 1997 */
-
+	double q10_tavg = 2.0;     /* fractional change in rate with a T 10 °C increase in temperature  2.2 from Schwalm & Ek, 2004; Kimball et al., 1997 */
 	double q10_tday;
 	double q10_tnight;
-	double q10_tavg;
 	double q10_tsoil;
 
 	double exponent_tday;
@@ -48,21 +45,51 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 
 	logger(g_debug_log, "\n**MAINTENANCE_RESPIRATION**\n");
 
-	//test 18 sept 2016
+	/** maintenance respiration routine **/
+
+	/* Uses reference values at 20 deg C and an empirical relationship between
+	tissue N content and respiration rate given in:
+
+	Ryan, M.G., 1991. Effects of climate change on plant respiration.
+	Ecological Applications, 1(2):157-167.
+
+	Uses the same value of Q_10 (2.0) for all compartments, leaf, stem,
+	coarse and fine roots.
+
+	From Ryan's figures and regressions equations, the maintenance respiration
+	in kgC/day per kg of tissue N is:
+	MR_ref = 0.218 (kgC/kgN/d)
+	 */
+
+	//totest using weighted average Temperature of the current days and the four days before
+
 	if ( g_settings->Q10_fixed )
 	{
-		q10_tavg = 2.0; /* 2.2 from Schwalm & Ek, 2004; Kimball et al., 1997 */
 		q10_tday = q10_tavg;
 		q10_tnight = q10_tavg;
 		q10_tsoil  = q10_tavg;
 	}
 	else
 	{
-		/* see Smith and Dukes, 2013, GCB */
-		q10_tavg = 3.22 - 0.046 * meteo_daily->tavg;
+		/* if used recompute q10_tavg based on:
+		 * McGuire et al., 1992, Global Biogeochemical Cycles
+		 * Tjoelker et al., 2001, Global Change Biology
+		 * Smith and Dukes, 2013, Global Change Biology
+		 * */
+
 		q10_tday =  3.22 - 0.046 * meteo_daily->tday;
 		q10_tnight =  3.22 - 0.046 * meteo_daily->tnight;
+
+		//note: for stem, branch, fine and coarse root we used the 5 days weighted average
+#if 1
+		q10_tavg = 3.22 - 0.046 * meteo_daily->tavg;
+
 		q10_tsoil  =  3.22 - 0.046 * meteo_daily->tsoil;
+#else
+		q10_tavg = 3.22 - 0.046 * meteo_daily->five_day_tavg;
+
+		q10_tsoil  =  3.22 - 0.046 * meteo_daily->five_day_tsoil;
+#endif
 	}
 
 	/* Nitrogen content tN/area --> gN/m2 */
@@ -79,40 +106,34 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 	/* exponent for night time temperature */
 	exponent_tnight = (meteo_daily->tnight - Q10_temp) / 10.0;
 
+	/*******************************************************************************************************************/
+	//note: for stem, branch, fine and coarse root we used the 5 days weighted average
+#if 1
 	/* exponent for daily average temperature */
 	exponent_tavg = (meteo_daily->tavg - Q10_temp) / 10.0;
 
 	/* exponent for soil temperature */
 	exponent_tsoil = (meteo_daily->tsoil - Q10_temp) / 10.0;
+#else
+	/* exponent for daily average temperature */
+	exponent_tavg = (meteo_daily->five_day_tavg - Q10_temp) / 10.0;
 
-	/* maintenance respiration routine */
+	/* exponent for soil temperature */
+	exponent_tsoil = (meteo_daily->five_day_tsoil - Q10_temp) / 10.0;
+#endif
 
-	/* Uses reference values at 20 deg C and an empirical relationship between
-	tissue N content and respiration rate given in:
-
-	Ryan, M.G., 1991. Effects of climate change on plant respiration.
-	Ecological Applications, 1(2):157-167.
-
-	Uses the same value of Q_10 (2.0) for all compartments, leaf, stem,
-	coarse and fine roots.
-
-	From Ryan's figures and regressions equations, the maintenance respiration
-	in kgC/day per kg of tissue N is:
-	mrpern = 0.218 (kgC/kgN/d)
-	 */
 
 	/* note: values are computed in gC/m2/day */
 
 	/*******************************************************************************************************************/
 	/* Leaf maintenance respiration is calculated separately for day and night */
-	t1 = leaf_N * mrpern;
 
 	/* day time leaf maintenance respiration */
-	s->value[DAILY_LEAF_MAINT_RESP] = (t1 * pow(q10_tday, exponent_tday) * (meteo_daily->daylength/24.0));
+	s->value[DAILY_LEAF_MAINT_RESP] = ( leaf_N * MR_ref * pow(q10_tday, exponent_tday) * (meteo_daily->daylength/24.0));
 	logger(g_debug_log, "daily leaf maintenance respiration = %g gC/m2/day\n", s->value[DAILY_LEAF_MAINT_RESP]);
 
 	/* night time leaf maintenance respiration */
-	s->value[NIGHTLY_LEAF_MAINT_RESP] = (t1 * pow(q10_tnight, exponent_tnight) * (1.0 - (meteo_daily->daylength/24.0)));
+	s->value[NIGHTLY_LEAF_MAINT_RESP] = ( leaf_N * MR_ref * pow(q10_tnight, exponent_tnight) * (1.0 - (meteo_daily->daylength/24.0)));
 	logger(g_debug_log, "nightly leaf maintenance respiration = %g gC/m2/day\n", s->value[NIGHTLY_LEAF_MAINT_RESP]);
 
 	/* total (all day) leaf maintenance respiration */
@@ -121,31 +142,26 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 
 	/*******************************************************************************************************************/
 	/* fine roots maintenance respiration */
-	t1 = fine_root_N * mrpern;
 
-	s->value[FINE_ROOT_MAINT_RESP] = t1 * pow(q10_tsoil, exponent_tsoil);
+	s->value[FINE_ROOT_MAINT_RESP] = fine_root_N * MR_ref * pow(q10_tsoil, exponent_tsoil);
 	logger(g_debug_log, "daily fine root maintenance respiration = %g gC/m2/day\n", s->value[FINE_ROOT_MAINT_RESP]);
 
 	/*******************************************************************************************************************/
 	/* live stem maintenance respiration */
-	t1 = stem_N * mrpern;
 
-	s->value[STEM_MAINT_RESP] = t1 * pow(q10_tavg, exponent_tavg);
+	s->value[STEM_MAINT_RESP] = stem_N * MR_ref * pow(q10_tavg, exponent_tavg);
 	logger(g_debug_log, "daily stem maintenance respiration = %g gC/m2/day\n", s->value[STEM_MAINT_RESP]);
 
 	/*******************************************************************************************************************/
 	/* live branch maintenance respiration */
-	t1 = branch_N * mrpern;
 
-	s->value[BRANCH_MAINT_RESP] = t1 * pow(q10_tavg, exponent_tavg);
+	s->value[BRANCH_MAINT_RESP] = branch_N * MR_ref * pow(q10_tavg, exponent_tavg);
 	logger(g_debug_log, "daily branch maintenance respiration = %g gC/m2/day\n", s->value[BRANCH_MAINT_RESP]);
 
 	/*******************************************************************************************************************/
 	/* live coarse root maintenance respiration */
-	t1 = coarse_root_N * mrpern;
 
-	/* live coarse root maintenance respiration */
-	s->value[COARSE_ROOT_MAINT_RESP] = t1 * pow(q10_tsoil, exponent_tsoil);
+	s->value[COARSE_ROOT_MAINT_RESP] = coarse_root_N * MR_ref * pow(q10_tsoil, exponent_tsoil);
 	logger(g_debug_log, "daily coarse root maintenance respiration = %g gC/m2/day\n", s->value[COARSE_ROOT_MAINT_RESP]);
 
 	/*******************************************************************************************************************/

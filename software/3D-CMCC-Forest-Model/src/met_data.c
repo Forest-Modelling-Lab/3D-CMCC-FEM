@@ -499,6 +499,7 @@ void Soil_temperature(meteo_t* met, const int day, const int month) {
 	double avg = 0;
 	int i;
 	int day_temp = day;
+	int day_avg = 11;
 	int month_temp = month;
 	int weight;
 	int incr_weight;
@@ -531,7 +532,7 @@ void Soil_temperature(meteo_t* met, const int day, const int month) {
 	 */
 
 
-	if ( day < 11.0 && !month )
+	if ( day < day_avg && !month )
 	{
 		if ( met[month].d[day].ts_f != NO_DATA )
 		{
@@ -544,14 +545,14 @@ void Soil_temperature(meteo_t* met, const int day, const int month) {
 	}
 	else
 	{
-		for (i=0; i <11; i++)
+		for (i=0; i <day_avg; i++)
 		{
-			weight = 11-i;
+			weight = day_avg-i;
 
 			if (!i) incr_weight = 1;
 			else incr_weight += i;
 
-			if (day > 10.0)
+			if (day > day_avg-1)
 			{
 				avg += (met[month_temp].d[day_temp].tavg * weight);
 				day_temp--;
@@ -571,13 +572,108 @@ void Soil_temperature(meteo_t* met, const int day, const int month) {
 				}
 			}
 		}
-		//avg = avg / 77;
-		//test 11 July 2016
 		avg = avg / (double)incr_weight;
 		met[month].d[day].tsoil = avg;
 
 	}
 }
+
+void five_day_tavg (meteo_t* met, const int day, const int month) {
+	double avg = 0;
+	int i;
+	int day_temp = day;
+	int day_avg = 5;
+	int month_temp = month;
+	int weight;
+	int incr_weight;
+	const int days_per_month[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+
+	if ( day < day_avg && !month )
+	{
+		met[month_temp].d[day_temp].five_day_tavg = met[month_temp].d[day_temp].tavg;
+	}
+	else
+	{
+		for (i=0; i <day_avg; i++)
+		{
+			weight = day_avg-i;
+
+			if (!i) incr_weight = 1;
+			else incr_weight += i;
+
+			if (day > day_avg-1)
+			{
+				avg += (met[month_temp].d[day_temp].tavg * weight);
+				day_temp--;
+			}
+			else
+			{
+				if(day_temp == 0)
+				{
+					avg += (met[month_temp].d[day_temp].tavg * weight);
+					month_temp--;
+					day_temp = days_per_month[month_temp] - 1;
+				}
+				else
+				{
+					avg += (met[month_temp].d[day_temp].tavg * weight);
+					day_temp--;
+				}
+			}
+		}
+		avg = avg / (double)incr_weight;
+		met[month].d[day].five_day_tavg = avg;
+	}
+}
+
+void five_day_tsoil (meteo_t* met, const int day, const int month) {
+	double avg = 0;
+	int i;
+	int day_temp = day;
+	int day_avg = 5;
+	int month_temp = month;
+	int weight;
+	int incr_weight;
+	const int days_per_month[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+
+	if ( day < day_avg && !month )
+	{
+		met[month_temp].d[day_temp].five_day_tsoil = met[month_temp].d[day_temp].tsoil;
+	}
+	else
+	{
+		for (i=0; i <day_avg; i++)
+		{
+			weight = day_avg-i;
+
+			if (!i) incr_weight = 1;
+			else incr_weight += i;
+
+			if (day > day_avg-1)
+			{
+				avg += (met[month_temp].d[day_temp].tsoil * weight);
+				day_temp--;
+			}
+			else
+			{
+				if(day_temp == 0)
+				{
+					avg += (met[month_temp].d[day_temp].tsoil * weight);
+					month_temp--;
+					day_temp = days_per_month[month_temp] - 1;
+				}
+				else
+				{
+					avg += (met[month_temp].d[day_temp].tsoil * weight);
+					day_temp--;
+				}
+			}
+		}
+		avg = avg / (double)incr_weight;
+		met[month].d[day].five_day_tsoil = avg;
+	}
+}
+
 void Dew_temperature(meteo_t *const met, const int day, const int month) {
 	/* dew point temperature based on Allen et al., 1998; Bosen, 1958; Murray, 1967 */
 	met[month].d[day].tdew = (116.91 + 237.3 * log(met[month].d[day].ea))/(16.78 - log(met[month].d[day].ea));

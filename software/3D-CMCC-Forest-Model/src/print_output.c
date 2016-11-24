@@ -21,6 +21,7 @@ extern char *g_sz_soil_file;
 extern char *g_sz_input_met_file;
 extern char *g_sz_settings_file;
 extern char *g_sz_topo_file;
+extern char *g_sz_co2_conc_file;
 
 extern const char sz_launched[];
 
@@ -57,6 +58,8 @@ static void write_paths(logger_t *const _log)
 	logger(_log, "topo file = %s\n", get_filename(g_sz_topo_file));
 	logger(_log, "met file = %s\n", get_filename(g_sz_input_met_file));
 	logger(_log, "settings file = %s\n", get_filename(g_sz_settings_file));
+	if ( g_settings->CO2_trans )
+	logger(_log, "CO2 file = %s\n", get_filename(g_sz_co2_conc_file));
 }
 
 static void print_model_settings(logger_t*const log)
@@ -65,10 +68,22 @@ static void print_model_settings(logger_t*const log)
 
 	logger(log, "*model settings*\n");
 	logger(log, "CO2_mod = %s\n", g_settings->CO2_mod ? "on" : "off");
-	logger(log, "CO2 fixed = %s\n", (CO2_FIXED_VAR == g_settings->CO2_fixed) ? "var" : (CO2_FIXED_ON == g_settings->CO2_fixed) ? "on" : "off");
+	logger(log, "CO2 trans = %s\n", (CO2_TRANS_VAR == g_settings->CO2_trans) ? "var" : (CO2_TRANS_ON == g_settings->CO2_trans) ? "on" : "off");
+	if ( !g_settings->CO2_trans )
+	{
+		logger(log, "fixed co2 concentration = %g ppmv\n", g_settings->co2Conc);
+	}
+	else if ( 2 == g_settings->CO2_trans )
+	{
+		logger(log, "year %d at which co2 concentration is fixed at value = %g ppmv\n", g_settings->year_start_co2_fixed, g_settings->co2Conc);
+	}
 	logger(log, "Q10 fixed = %s\n", g_settings->Q10_fixed ? "on" : "off");
 	logger(log, "regeneration = %s\n", g_settings->regeneration ? "on" : "off");
 	logger(log, "Management = %s\n", g_settings->management ? "on" : "off");
+	if ( g_settings->management )
+	{
+		logger(log, "Year Start Management = %d\n", g_settings->year_start_management);
+	}
 }
 
 void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, const int month, const int year, const int years_of_simulation )

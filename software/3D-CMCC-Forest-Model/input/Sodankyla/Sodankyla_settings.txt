@@ -8,11 +8,13 @@ MONTHLY_OUTPUT "on"              //Must be 'on' or 'off'
 ANNUAL_OUTPUT "on"               //Must be 'on' or 'off'
 SOIL_OUTPUT "off"                //Must be 'on' or 'off'
 CO2_mod "off"    //Must be  'on' or 'off'
-CO2_fixed "on"   //Must be 'on' or 'off'
+CO2_trans off                        //Must be 'on' or 'off'
+YEAR_START_CO2_FIXED 2000     //When Co2_trans = var, year at which fix [CO2]
 Ndep_fixed "on"   //Must be 'on' or 'off'
 Q10_fixed "on"   //Q10 temperature acclimatation Must be 'on' or 'off'
 regeneration "off"                //Must be 'on' or 'off'
 management "off"   //Must be 'on' or 'off'
+YEAR_START_MANAGEMENT 1964          //First year of management
 Progn_Aut_Resp "on" //Prognostic autotrophic respiration, Must be 'on' or 'off', if "off" Y values are used
 DNDC "on" //Must be  'on' or 'off'
 SIZECELL "100"  //Its value must be within 10 and 100 (unity measure is "meter": 10 = 10x10 = 100m^2) 
@@ -28,7 +30,6 @@ MAX_LAYER_COVER "1"
 
 //NATURAL/HUMAN (management)REGENERATION CLASS BIOMASS VALUES
 //MANAGMENT (optional)
-REMAINING_BASAL_AREA "0"     // % percentage of basal area to leave per class
 REPLANTED_SPECIES "none"    //species name of replanted trees (mandatory)
 REPLANTED_MANAGEMENT "T"    // (T) management of replated trees (should be only T)(mandatory)
 REPLANTED_TREE "0"          //number of replanted trees (mandatory)
