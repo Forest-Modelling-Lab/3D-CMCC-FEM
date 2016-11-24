@@ -33,7 +33,7 @@ GROWTHTOPT  20          //Optimum temperature for growth 19.4 Rasse et al 2001, 
 GROWTHSTART 100         //(5 °C)average temperature or (GDD) thermic sum for starting growth in °C 130 ettore with t base = 5°C
 MINDAYLENGTH    12      //minimum day length for fagus from ettore, 12 through satellite images
 SWPOPEN -0.34           //Leaf water potential: start of reduction for Fagus sylvatica -0.6 Mollicone et al., 2002
-SWPCLOSE    -1.7        //Leaf water potential: complete reduction for Fagus sylvatica -2.3 Mollicone et al., 2002
+SWPCLOSE    -1.7        //Leaf water potential: complete reduction for Fagus sylvatica -2.3 Mollicone et al., 2002, -2.2 Tatarinov et al., 2006
 SWCONST 1 //1           //Constant in Soil Water modifier vs Moist Ratio
 SWPOWER 5 //5           //Power in Soil Water modifier vs Moist Ratio
 OMEGA_CTEM  0.8         //ALLOCATION PARAMETER control the sensitivity of allocation to changes in water and light availability
@@ -48,11 +48,11 @@ CONES_LIFE_SPAN 0       //Life span for cones (yr)
 FINE_ROOT_LEAF  0.545   //allocation new fine root C:new leaf (ratio) 1.4 see Mollicone et al 2002, 0.545 see Pietsch et al 2005
 STEM_LEAF   3.8         //allocation new stem C:new leaf (ratio) 3.8 pietsch - 1 see Mollicone et al 2002
 COARSE_ROOT_STEM  0.115 //allocation new coarse root C:new stem (ratio) 0.36 see Mollicone et al 2002
-LIVE_TOTAL_WOOD 0.10 //0.05    //0.10  Bond Lamberty for dbl  //0.154   //new live C:new total wood (ratio) 0.15 for deciduous P. Thornton pers. comm. (about 13%), 0.154 from Pietsch et al., 2015 20% Proportion of living cells in trunks for F. sylvatica from Dufrene et al., 2005, 20.6% Ceschia etal 2002
-CN_LEAVES   27 //CHANGED FROM 26.9        //CN of leaves (kgC/kgN) 27 for Tatarinov et al., 2006 20.3 for F. sylvatica from Mollicone et al., 2002, 19.52 ettore, 18.6 Campioli, 19.67 Guidolotti
+LIVE_TOTAL_WOOD 0.10    //0.05    //0.10  Bond Lamberty for dbl  //0.154   //new live C:new total wood (ratio) 0.15 for deciduous P. Thornton pers. comm. (about 13%), 0.154 from Pietsch et al., 2015 20% Proportion of living cells in trunks for F. sylvatica from Dufrene et al., 2005, 20.6% Ceschia etal 2002
+CN_LEAVES   27          //CN of leaves (kgC/kgN) 27 for Tatarinov et al., 2006 20.3 for F. sylvatica from Mollicone et al., 2002, 19.52 ettore, 18.6 Campioli, 19.67 Guidolotti
 CN_FALLING_LEAVES   44  //CN of leaf litter (kgC/kgN) 38 for F. sylvatica from Mollicone et al., 2002, 
-CN_FINE_ROOTS   70 //CHANGED FROM 47.6    //CN of fine roots (kgC/kgN) 70 for Tatarinov et al., 2006 112 for F. sylvatica from Mollicone et al., 2002, 38.28 ettore, 9., 45 Campioli
-CN_LIVE_WOODS   70 //CHANGED FROM 50      //CN of live woods (kgC/kgN) 70 for Tatarinov et al., 2006 48.2 for F. sylvatica from Mollicone et 92,5 for dbl Bond Lamberty 2006
+CN_FINE_ROOTS   70      //CHANGED FROM 47.6    //CN of fine roots (kgC/kgN) 72 for Tatarinov et al., 2006 112 for F. sylvatica from Mollicone et al., 2002, 38.28 ettore, 9., 45 Campioli
+CN_LIVE_WOODS   70      //CHANGED FROM 50      //CN of live woods (kgC/kgN) 70 for Tatarinov et al., 2006 48.2 for F. sylvatica from Mollicone et 92,5 for dbl Bond Lamberty 2006
 CN_DEAD_WOODS   550     //CN of dead woods (kgC/kgN)  for F. sylvatica from Pietsch et al., 2005 112 ettore
 BUD_BURST   15          //days of bud burst at the beginning of growing season (only for deciduous)
 LEAF_FALL_FRAC_GROWING  0.2     //proportions of the growing season of leaf fall from Pietsch et al., 2005
