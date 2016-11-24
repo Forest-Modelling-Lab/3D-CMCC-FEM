@@ -1,1 +1,2 @@
-ELEV "445" //Elevation in meters
+X,Y,ELEV
+0,0,445
