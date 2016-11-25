@@ -67,6 +67,7 @@ typedef struct {
 typedef struct {
 	int year;
 	double co2Conc;	// (ppmv) annual CO2 concentration
+	double Ndep;	// nitrogen deposition
 	meteo_t m[YOS_MONTHS_COUNT];
 } yos_t; /* just for clarification YOS stand for Year Of Simulation ! */
 

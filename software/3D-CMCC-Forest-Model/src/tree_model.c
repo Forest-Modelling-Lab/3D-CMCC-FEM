@@ -32,6 +32,7 @@
 #include "canopy_net_radiation.h"
 #include "canopy_temperature.h"
 #include "modifiers.h"
+#include "n-stock.h"
 #include "canopy_evapotranspiration.h"
 #include "photosynthesis.h"
 #include "aut_respiration.h"

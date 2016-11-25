@@ -230,7 +230,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 
 	/********************************************************************************************/
 
-	/*SOIL NUTRIENT MODIFIER*/
+	/* SOIL NUTRIENT MODIFIER */
 	s->value[F_NUTR] = 1.0 - ( 1.0- g_soil_settings->values[SOIL_FN0]) * pow ((1.0 - g_soil_settings->values[SOIL_FR]), g_soil_settings->values[SOIL_FNN]);
 	logger(g_debug_log, "fNutr = %f\n", s->value[F_NUTR]);
 
@@ -241,12 +241,21 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	//test 25 nov 2016
 	//test move FN0, FNN to species.txt
 #if 0
+	/* SOIL NUTRIENT */
+
 	/* compute fertility rate based on N available and N demand */
 	s->values[FR] = c->soil_N / s->value[NPP_gN];
+
+	/* check */
+	if ( s->values[FR] > 1.) s->values[FR] = 1.;
 
 	/*SOIL NUTRIENT MODIFIER*/
 	s->value[F_NUTR] = 1.0 - ( 1.0- g_soil_settings->values[SOIL_FN0]) * pow ((1.0 - g_soil_settings->values[SOIL_FR]), g_soil_settings->values[SOIL_FNN]);
 	logger(g_debug_log, "fNutr = %f\n", s->value[F_NUTR]);
+
+	/* check */
+	CHECK_CONDITION(s->value[F_NUTR], > 1);
+	CHECK_CONDITION(s->value[F_NUTR], < 0);
 #endif
 	/********************************************************************************************/
 

@@ -328,7 +328,7 @@ settings_t* settings_import(const char *const filename) {
 				}
 				*p_field = convert_string_to_float(token, &err);
 				if ( err ) {
-					printf("unable to convert value: %s\n", p);
+					printf("unable to convert value: %s\n", token);
 					free(s);
 					fclose(f);
 					return 0;

@@ -41,12 +41,6 @@
 #include "cell_model.h"
 #include "soil_model.h"
 
-/*
-#if defined _WIN32
-#include "commit_hash.h"
-#endif
- */
-
 /* Last cumulative days in months in non Leap years */
 int MonthLength [] = { 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365};
 
@@ -79,6 +73,7 @@ char	*g_sz_parameterization_path = NULL
 		, *g_sz_soil_file = NULL
 		, *g_sz_topo_file = NULL
 		, *g_sz_settings_file =	NULL
+		, *g_sz_ndep_file = NULL
 		, *g_sz_co2_conc_file = NULL
 		, *g_sz_output_vars_file = NULL
 		;
@@ -138,6 +133,7 @@ static const char msg_topo_file[]				=	"topo file = %s\n";
 static const char msg_met_path[]				=	"met path = %s\n";
 static const char msg_settings_path[]			=	"settings path = %s\n";
 static const char msg_co2_conc_file[]			=	"co2 conc file path = %s\n";
+static const char msg_ndep_file[]				=	"ndep file path = %s\n";
 static const char msg_debug_output_file[]		=	"debug output file path = %s\n";
 static const char msg_daily_output_file[]		=	"daily output file path = %s\n";
 static const char msg_monthly_output_file[]		=	"monthly output file path = %s\n";
@@ -162,6 +158,7 @@ static const char msg_usage[]					=	"\nusage:\n"
 		"    -t topo filename stored into input directory (i.e.: -t topo.txt or topo.nc)\n"
 		"    -c settings filename stored into input directory (i.e.: -c settings.txt)\n"
 		"    -k co2 concentration file (i.e.: -k co2_conc.txt)\n"
+		"    -n ndep file (i.e.: -n ndep.txt)\n"
 		"    -r output vars list (i.e.: -r output_vars.lst)\n"
 		"    -h print this help\n"
 		;
@@ -197,6 +194,7 @@ static const char* get_filename(const char *const s)
 static void clean_up(void)
 {
 	if ( g_sz_output_vars_file ) free(g_sz_output_vars_file);
+	if ( g_sz_ndep_file ) free(g_sz_ndep_file);
 	if ( g_sz_co2_conc_file ) free(g_sz_co2_conc_file);
 	if ( g_sz_settings_file ) free(g_sz_settings_file);
 	/*
@@ -448,6 +446,9 @@ static int log_start(const char* const sz_date, const char* const sitename)
 	if ( g_sz_co2_conc_file ) 
 		logger(g_debug_log, msg_co2_conc_file, g_sz_co2_conc_file);
 
+	if ( g_sz_ndep_file ) 
+		logger(g_debug_log, msg_ndep_file, g_sz_ndep_file);
+
 	logger(g_debug_log, msg_settings_path, g_sz_settings_file);
 	if ( g_debug_log )						logger(g_debug_log, msg_debug_output_file, g_debug_log->filename);
 	if ( g_debug_log && g_daily_log )		logger(g_debug_log, msg_daily_output_file, g_daily_log->filename);
@@ -638,6 +639,18 @@ static int parse_args(int argc, char *argv[])
 			}
 			g_sz_co2_conc_file = string_copy(argv[i+1]);
 			if( ! g_sz_co2_conc_file ) {
+				puts(sz_err_out_of_memory);
+				goto err;
+			}
+			break;
+
+		case 'n': /* ndep file */
+			if ( ! argv[i+1] ) {
+				puts("ndep file not specified!");
+				goto err;
+			}
+			g_sz_ndep_file = string_copy(argv[i+1]);
+			if( ! g_sz_ndep_file ) {
 				puts(sz_err_out_of_memory);
 				goto err;
 			}
@@ -858,6 +871,11 @@ int main(int argc, char *argv[]) {
 		goto err;
 	} else {
 		puts(msg_ok);
+	}
+
+	if ( ! g_settings->Ndep_fixed && ! g_sz_ndep_file ) {
+		puts("ndep file not specified for ndep_fixed off");
+		goto err;
 	}
 	
 	printf("soil import...");

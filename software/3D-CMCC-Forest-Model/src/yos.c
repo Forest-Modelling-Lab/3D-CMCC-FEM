@@ -65,6 +65,7 @@ extern settings_t* g_settings;
 extern const char sz_err_out_of_memory[];
 extern char *g_sz_input_path;
 extern char *g_sz_co2_conc_file;
+extern char *g_sz_ndep_file;
 
 /* do not change this order */
 static const char *sz_met_columns[MET_COLUMNS_COUNT+2] = {
@@ -137,6 +138,50 @@ quit:
 	if ( f )fclose(f);
 
 	return co2_conc;
+}
+
+static double get_ndep(const int year, int*const err) {
+	char buf[256];
+	int _year;
+	int flag;
+	double ndep;
+	FILE *f;
+
+	assert(err);
+
+	flag = 0;
+	ndep = 0.;
+	f = NULL;
+
+	*err = 0;
+
+	if ( ! g_sz_ndep_file ) { *err = 1; goto quit; }
+
+	if ( g_sz_input_path ) {
+		int len = strlen(g_sz_input_path);
+		int _flag = (('/' == g_sz_input_path[len-1]) || ('\\' == g_sz_input_path[len-1]));
+		sprintf(buf, "%s%s%s", g_sz_input_path, _flag ? "" : FOLDER_DELIMITER, g_sz_co2_conc_file);
+		f = fopen(buf, "r");
+	} else {
+		f = fopen(g_sz_ndep_file, "r");
+	}
+	
+	if ( ! f )  { *err = 1; goto quit; }
+	while ( fgets(buf, 256, f) ) {
+		if ( 2 == sscanf(buf, "%d\t%lf", &_year, &ndep) ) {
+			if ( year == _year ) {
+				flag = 1;
+				break;
+			}
+		}
+	}
+
+	if ( ! flag ) *err = 1;
+
+quit:
+	if ( f )fclose(f);
+
+	return ndep;
 }
 
 static void yos_clear(yos_t *const yos) {
@@ -2029,6 +2074,25 @@ yos_t* yos_import(const char *const file, int *const yos_count, const int x, con
 			for ( i = 0; i < *yos_count; ++i ) {
 				yos[i].co2Conc = g_settings->co2Conc;
 			}
+		}
+	}
+
+	/* import ndep ? */
+	if ( ! g_settings->Ndep_fixed )
+	{
+		int err;
+
+		for ( i = 0; i < *yos_count; ++i ) {
+			yos[i].Ndep = get_ndep(yos[i].year, &err);
+			if ( err ) {
+				logger_error(g_debug_log, "Ndep not found on file %s!!\n", g_sz_ndep_file);
+				free(yos);
+				return NULL;
+			}
+		}
+	} else {
+		for ( i = 0; i < *yos_count; ++i ) {
+			yos[i].Ndep = 0.;
 		}
 	}
 
