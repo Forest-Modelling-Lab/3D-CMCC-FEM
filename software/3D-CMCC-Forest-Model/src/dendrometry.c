@@ -343,7 +343,7 @@ void annual_minimum_reserve (species_t *const s)
 	s->value[MIN_RESERVE_C]= s->value[WTOT_sap_tDM] * s->value[SAP_WRES];
 	logger(g_debug_log, "--MINIMUM Reserve Biomass = %g t res/class \n", s->value[RESERVE_C]);
 
-	s->value[AV_MIN_RESERVE_KgC] = s->value[MIN_RESERVE_C] *1000.0 /s->counter[N_TREE];
+	s->value[AV_MIN_RESERVE_KgC] = s->value[MIN_RESERVE_C] * 1000.0 /s->counter[N_TREE];
 	logger(g_debug_log, "--Average MINIMUM Reserve Biomass = %g Kgres/class tree \n", s->value[RESERVE_C]);
 }
 

@@ -249,9 +249,10 @@ static int parameterization_output_create(const char* const sz_date) {
 	}
 	
 	/* create parameterization folder */
-	sprintf(g_sz_parameterization_output_path, "%s%soutput_%s%sparameterization%s"
+	sprintf(g_sz_parameterization_output_path, "%s%soutput_%s_%s%sparameterization%s"
 												, g_sz_output_path
 												, i ? "" : FOLDER_DELIMITER
+												, PROGRAM_VERSION
 												, sz_date
 												, FOLDER_DELIMITER
 												, FOLDER_DELIMITER

@@ -126,6 +126,7 @@ void leaf_fall_evergreen (cell_t *const c, const int height, const int dbh, cons
 	/* compute daily amount of C to re-translocate before remove leaf and fine root */
 	s->value[C_LEAF_TO_RESERVE] = s->value[C_LEAF_TO_LITTER] * fraction_to_retransl;
 	logger(g_debug_log, "RETRANSL_C_LEAF_TO_RESERVE = %g tC/cell/day\n", s->value[C_LEAF_TO_RESERVE]);
+
 	s->value[C_FINEROOT_TO_RESERVE] = s->value[C_FINE_ROOT_TO_LITTER] * fraction_to_retransl;
 	logger(g_debug_log, "RETRANSL_C_FINEROOT_TO_RESERVE = %g tC/cell/day\n", s->value[C_FINEROOT_TO_RESERVE]);
 
@@ -139,6 +140,9 @@ void leaf_fall_evergreen (cell_t *const c, const int height, const int dbh, cons
 	/**/
 	s->value[C_TO_LEAF] -= s->value[C_LEAF_TO_LITTER];
 	s->value[C_TO_FINEROOT] -= s->value[C_FINE_ROOT_TO_LITTER];
+
+	s->value[LEAF_C] -= s->value[C_LEAF_TO_LITTER];
+	s->value[FINE_ROOT_C] -= s->value[C_FINE_ROOT_TO_LITTER];
 
 	/* considering that both leaf and fine root contribute to the litter pool */
 	s->value[C_TO_LITTER] = (s->value[C_LEAF_TO_LITTER] + s->value[C_FINE_ROOT_TO_LITTER]);

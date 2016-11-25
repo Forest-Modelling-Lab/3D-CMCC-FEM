@@ -384,6 +384,7 @@ int annual_forest_structure(cell_t* const c)
 							{
 								while ( c->tree_layers[layer].layer_cover > g_settings->max_layer_cover &&  s->value[DBHDC_EFF] > s->value[DBHDCMIN] )
 								{
+
 									/* reduce DBHDC_EFF */
 									s->value[DBHDC_EFF] -= 0.001;
 
@@ -400,7 +401,7 @@ int annual_forest_structure(cell_t* const c)
 									if ( c->tree_layers[layer].layer_cover > g_settings->max_layer_cover && s->value[DBHDC_EFF] <= s->value[DBHDCMIN] )
 									{
 										/* self-pruning was not enough */
-										self_thinning_mortality (c, layer);getchar();
+										self_thinning_mortality (c, layer);
 									}
 								}
 							}
@@ -441,7 +442,6 @@ int monthly_forest_structure (cell_t* const c)
 
 	return 1;
 }
-
 
 int daily_forest_structure (cell_t *const c)
 {
@@ -588,6 +588,86 @@ int daily_forest_structure (cell_t *const c)
 	}
 	return 1;
 }
+
+void prephenology (cell_t *const c, const meteo_daily_t *const meteo_daily, const int day, const int month)
+{
+	int height;
+	int dbh;
+	int age;
+	int species;
+
+	species_t *s;
+
+	/* it computes the vegetative state for each species class,
+	 * the number of days of leaf fall and
+	 * the rate for leaves reduction (for deciduous species) */
+
+	/*VEG_UNVEG = 1 for veg period, = 0 for Un-Veg period*/
+
+
+	logger(g_debug_log, "*prephenology*\n");
+	for (height = c->heights_count - 1; height >= 0; height-- )
+	{
+		for ( dbh = 0; dbh < c->heights[height].dbhs_count; ++dbh)
+		{
+			for (age = c->heights[height].dbhs[dbh].ages_count - 1 ; age >= 0 ; age-- )
+			{
+				for (species = 0; species < c->heights[height].dbhs[dbh].ages[age].species_count; species++)
+				{
+					s = &c->heights[height].dbhs[dbh].ages[age].species[species];
+
+					/* FOR DECIDUOUS */
+					if (s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2)
+					{
+						/* compute days for leaf fall based on the annual number of veg days */
+						s->counter[DAY_FRAC_FOLIAGE_REMOVE] = (int)(s->value[LEAF_FALL_FRAC_GROWING] * s->counter[DAY_VEG_FOR_LEAF_FALL]);
+						logger(g_debug_log, "-days of leaf fall for %s = %d day\n", c->heights[height].dbhs[dbh].ages[age].species[species].name, s->counter[DAY_FRAC_FOLIAGE_REMOVE]);
+
+						//currently model can simulate only forests in boreal hemisphere
+						if ((meteo_daily->thermic_sum >= s->value[GROWTHSTART] && month <= 6) ||
+								(meteo_daily->daylength >= s->value[MINDAYLENGTH] && month >= 6 && c->north == 0))
+						{
+							s->counter[VEG_UNVEG] = 1;
+							logger(g_debug_log, "-%s is in veg period\n", s->name);
+						}
+						else
+						{
+							if (meteo_daily->daylength <= s->value[MINDAYLENGTH] && month >= 6 && c->north == 0 )
+							{
+								s->counter[LEAF_FALL_COUNTER] += 1;
+
+								if(s->counter[LEAF_FALL_COUNTER]  <= (int)s->counter[DAY_FRAC_FOLIAGE_REMOVE])
+								{
+									/*days of leaf fall*/
+									s->counter[VEG_UNVEG] = 1;
+								}
+								else
+								{
+									/*outside days of leaf fall*/
+									s->counter[VEG_UNVEG] = 0;
+								}
+
+							}
+							else
+							{
+								s->counter[VEG_UNVEG] = 0;
+								logger(g_debug_log, "-%s is in un-veg period\n", s->name);
+							}
+						}
+					}
+					/* FOR EVERGREEN */
+					else
+					{
+						s->counter[VEG_UNVEG] = 1;
+						logger(g_debug_log, "-%s is in veg period\n", s->name);
+					}
+				}
+			}
+		}
+	}
+	logger(g_debug_log, "**************************************\n");
+}
+
 
 /*note: not used */
 //void potential_max_min_density ( cell_t *const c )
@@ -775,83 +855,4 @@ int daily_forest_structure (cell_t *const c)
 //		}
 //	}
 //}
-
-void prephenology (cell_t *const c, const meteo_daily_t *const meteo_daily, const int day, const int month)
-{
-	int height;
-	int dbh;
-	int age;
-	int species;
-
-	species_t *s;
-
-	/* it computes the vegetative state for each species class,
-	 * the number of days of leaf fall and
-	 * the rate for leaves reduction (for deciduous species) */
-
-	/*VEG_UNVEG = 1 for veg period, = 0 for Un-Veg period*/
-
-
-	logger(g_debug_log, "*prephenology*\n");
-	for (height = c->heights_count - 1; height >= 0; height-- )
-	{
-		for ( dbh = 0; dbh < c->heights[height].dbhs_count; ++dbh)
-		{
-			for (age = c->heights[height].dbhs[dbh].ages_count - 1 ; age >= 0 ; age-- )
-			{
-				for (species = 0; species < c->heights[height].dbhs[dbh].ages[age].species_count; species++)
-				{
-					s = &c->heights[height].dbhs[dbh].ages[age].species[species];
-
-					/* FOR DECIDUOUS */
-					if (s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2)
-					{
-						/* compute days for leaf fall based on the annual number of veg days */
-						s->counter[DAY_FRAC_FOLIAGE_REMOVE] = (int)(s->value[LEAF_FALL_FRAC_GROWING] * s->counter[DAY_VEG_FOR_LEAF_FALL]);
-						logger(g_debug_log, "-days of leaf fall for %s = %d day\n", c->heights[height].dbhs[dbh].ages[age].species[species].name, s->counter[DAY_FRAC_FOLIAGE_REMOVE]);
-
-						//currently model can simulate only forests in boreal hemisphere
-						if ((meteo_daily->thermic_sum >= s->value[GROWTHSTART] && month <= 6) ||
-								(meteo_daily->daylength >= s->value[MINDAYLENGTH] && month >= 6 && c->north == 0))
-						{
-							s->counter[VEG_UNVEG] = 1;
-							logger(g_debug_log, "-%s is in veg period\n", s->name);
-						}
-						else
-						{
-							if (meteo_daily->daylength <= s->value[MINDAYLENGTH] && month >= 6 && c->north == 0 )
-							{
-								s->counter[LEAF_FALL_COUNTER] += 1;
-
-								if(s->counter[LEAF_FALL_COUNTER]  <= (int)s->counter[DAY_FRAC_FOLIAGE_REMOVE])
-								{
-									/*days of leaf fall*/
-									s->counter[VEG_UNVEG] = 1;
-								}
-								else
-								{
-									/*outside days of leaf fall*/
-									s->counter[VEG_UNVEG] = 0;
-								}
-
-							}
-							else
-							{
-								s->counter[VEG_UNVEG] = 0;
-								logger(g_debug_log, "-%s is in un-veg period\n", s->name);
-							}
-						}
-					}
-					/* FOR EVERGREEN */
-					else
-					{
-						s->counter[VEG_UNVEG] = 1;
-						logger(g_debug_log, "-%s is in veg period\n", s->name);
-					}
-				}
-			}
-		}
-	}
-	logger(g_debug_log, "**************************************\n");
-}
 

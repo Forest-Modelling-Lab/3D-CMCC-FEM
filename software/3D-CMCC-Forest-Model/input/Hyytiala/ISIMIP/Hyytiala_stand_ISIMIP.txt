@@ -1,2 +1,2 @@
 Year,x,y,Landuse,Age,Species,Management,N,Stool,AvDBH,Height,Wf,Wrc,Wrf,Ws,Wbb,Wres,Lai
-1996,0,0,F,34,Pinussylvestris,T,2500,0,10.56,13,0,0,0,0,0,0,5 //references: Vesala 1996, Vesala et al.; 1998, Kramer et al., 2002 
+1996,0,0,F,34,Pinussylvestris,T,2500,0,10.56,6.5,0,0,0,0,0,0,5 //references: Vesala 1996, Vesala et al.; 1998, Kramer et al., 2002 

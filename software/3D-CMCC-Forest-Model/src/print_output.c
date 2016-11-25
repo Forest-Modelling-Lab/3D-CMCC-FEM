@@ -11,7 +11,7 @@
 #include "nc.h"
 
 extern settings_t* g_settings;
-extern soil_settings_t* g_soil_settings;
+//extern soil_settings_t* g_soil_settings;
 extern logger_t* g_daily_log;
 extern logger_t* g_monthly_log;
 extern logger_t* g_annual_log;
