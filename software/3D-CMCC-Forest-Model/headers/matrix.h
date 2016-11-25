@@ -279,6 +279,14 @@ enum {
 	MONTHLY_NPP_tC,                     /* Monthly Net Primary Production tC/sizeCell day */
 	YEARLY_NPP_tC,                      /* Yearly Net Primary Production tC/sizeCell day */
 
+	/* nitrogen variable */
+	NPP_gN,                             /* Daily Net Primary Production demand gN/m^2 day */
+	MONTHLY_NPP_gN,                     /* Monthly Net Primary Production demand gN/m^2 day */
+	YEARLY_NPP_gN,                      /* Yearly Net Primary Production demand gN/m^2 day */
+	NPP_tN,                             /* Daily Net Primary Production demand tNC/sizeCell day */
+	MONTHLY_NPP_tN,                     /* Monthly Net Primary Production demand tN/sizeCell day */
+	YEARLY_NPP_tN,                      /* Yearly Net Primary Production demand tN/sizeCell day */
+
 	/* biomass */
 	/* carbon to carbon pools */
 	C_TO_LEAF,                          /* Daily Net Primary Production to Leaf pool (tC/sizeCell day) */

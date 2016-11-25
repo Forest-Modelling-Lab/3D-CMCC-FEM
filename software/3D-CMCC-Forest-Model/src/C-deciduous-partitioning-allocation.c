@@ -279,23 +279,8 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 	//note: since forest structure works on annual scale it must be turned off
 	//daily_growth_efficiency_mortality ( c, height, dbh, age, species );
 
-	/* sum all biomass pools increments */
-	logger(g_debug_log, "C_TO_LEAF = %g tC/cell/day\n", s->value[C_TO_LEAF]);
-	logger(g_debug_log, "C_TO_FINEROOT = %g tC/cell/day\n", s->value[C_TO_FINEROOT]);
-	logger(g_debug_log, "C_TO_COARSEROOT = %g tC/cell/day\n", s->value[C_TO_COARSEROOT]);
-	logger(g_debug_log, "C_TO_STEM = %g tC/cell/day\n", s->value[C_TO_STEM]);
-	logger(g_debug_log, "C_TO_RESERVE = %g tC/cell/day\n", s->value[C_TO_RESERVE]);
-	logger(g_debug_log, "C_TO_BRANCH = %g tC/cell/day\n", s->value[C_TO_BRANCH]);
-	logger(g_debug_log, "C_TO_FRUIT = %g tC/cell/day\n", s->value[C_TO_FRUIT]);
-
 	/* update live_total wood fraction based on age */
 	live_total_wood_age (a, species);
-
-	//test new dendro
-	if ( s->value[C_TO_STEM] > 0.)
-	{
-		//dendrometry ( c, layer, height, dbh, age, species, meteo_daily );
-	}
 
 	/* allocate daily carbon */
 	carbon_allocation ( s );
@@ -312,9 +297,9 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 		/* old */
 		dendrometry_old ( c, layer, height, dbh, age, species);
 	}
-
-	//dendrometry ( c, layer, height, dbh, age, species, meteo_daily, month, year );
-
+#if 0
+	dendrometry ( c, layer, height, dbh, age, species, meteo_daily, month, year );
+#endif
 
 	logger(g_debug_log, "\n-Daily increment in carbon pools-\n");
 	logger(g_debug_log, "C_TO_LEAF = %g tC/cell/day\n", s->value[C_TO_LEAF]);
@@ -336,7 +321,6 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 
 	/* update Leaf Area Index */
 	daily_lai ( s );
-	//if(month == 7)getchar();
 
 	logger(g_debug_log, "\n-Daily increment in carbon pools (after turnover)-\n");
 	logger(g_debug_log, "C_TO_LEAF = %g tC/cell/day\n", s->value[C_TO_LEAF]);

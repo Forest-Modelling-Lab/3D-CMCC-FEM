@@ -10,6 +10,7 @@
 #include <math.h>
 #include <assert.h>
 #include <new_forest_tree_class.h>
+#include <N-assimilation.h>
 #include "constants.h"
 #include "common.h"
 #include "print_output.h"
@@ -31,7 +32,6 @@
 #include "canopy_net_radiation.h"
 #include "canopy_temperature.h"
 #include "modifiers.h"
-#include "n-stock.h"
 #include "canopy_evapotranspiration.h"
 #include "photosynthesis.h"
 #include "aut_respiration.h"
@@ -270,8 +270,8 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 								daily_C_evergreen_partitioning_allocation( c, layer, height, dbh, age, species, meteo_daily, day, month, year );
 							}
 
-							/* nitrogen */
-							nitrogen_stock( s );
+							/* N assimilation */
+							nitrogen_assimilation( s );
 
 							/* water use efficiency */
 							water_use_efficiency ( c, height, dbh, age, species, day, month, year );

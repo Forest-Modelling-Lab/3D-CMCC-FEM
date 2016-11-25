@@ -185,12 +185,14 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 
 	//test following biome-bgc it doesn't seems to work properly here (too many higher values for gpp and le
 	/* vapor pressure deficit multiplier, vpd in Pa */
-	//	if (meteo_daily->vpd < vpd_open)    /* no vpd effect */
-	//		s->value[F_VPD] = 1.0;
-	//	else if (meteo_daily->vpd > vpd_close)   /* full vpd effect */
-	//		s->value[F_VPD] = 0.0;
-	//	else                   /* partial vpd effect */
-	//		s->value[F_VPD] = (vpd_close - meteo_daily->vpd) / (vpd_close - vpd_open);
+#if 0
+	if (meteo_daily->vpd < vpd_open)    /* no vpd effect */
+		s->value[F_VPD] = 1.0;
+	else if (meteo_daily->vpd > vpd_close)   /* full vpd effect */
+		s->value[F_VPD] = 0.0;
+	else                   /* partial vpd effect */
+		s->value[F_VPD] = (vpd_close - meteo_daily->vpd) / (vpd_close - vpd_open);
+#endif
 
 	/* AGE MODIFIER */
 	/* note: in some ways it reflects the Hydraulic Limitation Hypothesis (HLH) of Yoder et al., (1994)
@@ -240,7 +242,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 
 	/*SOIL WATER MODIFIER (3-PG METHOD)*/
 	//fixme include "dAdjMod" from 3-PG code
-	c->soil_moist_ratio = c->asw/c->max_asw_fc;
+	c->soil_moist_ratio = c->asw / c->max_asw_fc;
 	s->value[F_SW] = 1.0 / (1.0 + pow(((1.0 - c->soil_moist_ratio) / s->value[SWCONST]), s->value[SWPOWER]));
 	logger(g_debug_log, "fSW (3-PG)= %f\n", s->value[F_SW]);
 

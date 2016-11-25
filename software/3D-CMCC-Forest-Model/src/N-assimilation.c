@@ -1,5 +1,5 @@
 /*
- * N-stock.c
+ * N-assimilation.c
  *
  *  Created on: 28/ott/2013
  *      Author: alessio
@@ -10,25 +10,24 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "n-stock.h"
+#include <N-assimilation.h>
 #include "constants.h"
 #include "settings.h"
 #include "logger.h"
 
-//extern settings_t* g_settings;
 extern logger_t* g_debug_log;
 
-void nitrogen_stock(species_t *const s)
+void nitrogen_assimilation(species_t *const s)
 {
 	logger(g_debug_log, "\n**NITROGEN STOCK**\n");
 
 	/* BIOME-BGC METHOD */
 
-	/* computing Nitrogen pools from tons C/ha to gC/m^2 and then to gN */
+	/* computing Nitrogen pools from tons C/ha to gC/m^2 */
 
-	//test CURRENTLY NOT USED
-	/* as in BIOME-BGC nitrogen content in falling leaves is lower */
 #if 0
+	/* as in BIOME-BGC nitrogen content in falling leaves is lower */
+
 	/* deciduous */
 	if((s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2) && s->counter[LEAF_FALL_COUNTER] == 1)
 	{
