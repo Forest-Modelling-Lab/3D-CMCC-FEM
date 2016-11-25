@@ -1,0 +1,79 @@
+\hypertarget{daily__allocation_8c}{}\section{c\+:/\+R\+E\+P\+O/biomebgc-\/4.2/src/bgclib/daily\+\_\+allocation.c File Reference}
+\label{daily__allocation_8c}\index{c\+:/\+R\+E\+P\+O/biomebgc-\/4.\+2/src/bgclib/daily\+\_\+allocation.\+c@{c\+:/\+R\+E\+P\+O/biomebgc-\/4.\+2/src/bgclib/daily\+\_\+allocation.\+c}}
+{\ttfamily \#include \char`\"{}bgc.\+h\char`\"{}}\newline
+Include dependency graph for daily\+\_\+allocation.\+c\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=220pt]{daily__allocation_8c__incl}
+\end{center}
+\end{figure}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{daily__allocation_8c_aea9c7b118244ce7b3ee8a566854ad3d8}{D\+A\+Y\+S\+N\+D\+E\+P\+L\+OY}~365.\+0
+\item 
+\#define \hyperlink{daily__allocation_8c_adb2b35cde4b81275d96f50e4dc6714f5}{D\+A\+Y\+S\+C\+R\+E\+C\+O\+V\+ER}~365.\+0
+\item 
+\#define \hyperlink{daily__allocation_8c_a4c8a08fb632dd0b90b193f4f679a3f3f}{B\+U\+L\+K\+\_\+\+D\+E\+N\+I\+T\+R\+I\+F\+\_\+\+P\+R\+O\+P\+O\+R\+T\+I\+ON}~0.\+5
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{daily__allocation_8c_a78494a491616be3574480363952f005f}{daily\+\_\+allocation} (cflux\+\_\+struct $\ast$cf, cstate\+\_\+struct $\ast$cs, nflux\+\_\+struct $\ast$nf, nstate\+\_\+struct $\ast$ns, epconst\+\_\+struct $\ast$epc, epvar\+\_\+struct $\ast$epv, ntemp\+\_\+struct $\ast$nt, double naddfrac, int mode)
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\hypertarget{daily__allocation_8c_a4c8a08fb632dd0b90b193f4f679a3f3f}{}\label{daily__allocation_8c_a4c8a08fb632dd0b90b193f4f679a3f3f} 
+\index{daily\+\_\+allocation.\+c@{daily\+\_\+allocation.\+c}!B\+U\+L\+K\+\_\+\+D\+E\+N\+I\+T\+R\+I\+F\+\_\+\+P\+R\+O\+P\+O\+R\+T\+I\+ON@{B\+U\+L\+K\+\_\+\+D\+E\+N\+I\+T\+R\+I\+F\+\_\+\+P\+R\+O\+P\+O\+R\+T\+I\+ON}}
+\index{B\+U\+L\+K\+\_\+\+D\+E\+N\+I\+T\+R\+I\+F\+\_\+\+P\+R\+O\+P\+O\+R\+T\+I\+ON@{B\+U\+L\+K\+\_\+\+D\+E\+N\+I\+T\+R\+I\+F\+\_\+\+P\+R\+O\+P\+O\+R\+T\+I\+ON}!daily\+\_\+allocation.\+c@{daily\+\_\+allocation.\+c}}
+\subsubsection{\texorpdfstring{B\+U\+L\+K\+\_\+\+D\+E\+N\+I\+T\+R\+I\+F\+\_\+\+P\+R\+O\+P\+O\+R\+T\+I\+ON}{BULK\_DENITRIF\_PROPORTION}}
+{\footnotesize\ttfamily \#define B\+U\+L\+K\+\_\+\+D\+E\+N\+I\+T\+R\+I\+F\+\_\+\+P\+R\+O\+P\+O\+R\+T\+I\+ON~0.\+5}
+
+
+
+Definition at line \hyperlink{daily__allocation_8c_source_l00028}{28} of file \hyperlink{daily__allocation_8c_source}{daily\+\_\+allocation.\+c}.
+
+\hypertarget{daily__allocation_8c_adb2b35cde4b81275d96f50e4dc6714f5}{}\label{daily__allocation_8c_adb2b35cde4b81275d96f50e4dc6714f5} 
+\index{daily\+\_\+allocation.\+c@{daily\+\_\+allocation.\+c}!D\+A\+Y\+S\+C\+R\+E\+C\+O\+V\+ER@{D\+A\+Y\+S\+C\+R\+E\+C\+O\+V\+ER}}
+\index{D\+A\+Y\+S\+C\+R\+E\+C\+O\+V\+ER@{D\+A\+Y\+S\+C\+R\+E\+C\+O\+V\+ER}!daily\+\_\+allocation.\+c@{daily\+\_\+allocation.\+c}}
+\subsubsection{\texorpdfstring{D\+A\+Y\+S\+C\+R\+E\+C\+O\+V\+ER}{DAYSCRECOVER}}
+{\footnotesize\ttfamily \#define D\+A\+Y\+S\+C\+R\+E\+C\+O\+V\+ER~365.\+0}
+
+
+
+Definition at line \hyperlink{daily__allocation_8c_source_l00027}{27} of file \hyperlink{daily__allocation_8c_source}{daily\+\_\+allocation.\+c}.
+
+\hypertarget{daily__allocation_8c_aea9c7b118244ce7b3ee8a566854ad3d8}{}\label{daily__allocation_8c_aea9c7b118244ce7b3ee8a566854ad3d8} 
+\index{daily\+\_\+allocation.\+c@{daily\+\_\+allocation.\+c}!D\+A\+Y\+S\+N\+D\+E\+P\+L\+OY@{D\+A\+Y\+S\+N\+D\+E\+P\+L\+OY}}
+\index{D\+A\+Y\+S\+N\+D\+E\+P\+L\+OY@{D\+A\+Y\+S\+N\+D\+E\+P\+L\+OY}!daily\+\_\+allocation.\+c@{daily\+\_\+allocation.\+c}}
+\subsubsection{\texorpdfstring{D\+A\+Y\+S\+N\+D\+E\+P\+L\+OY}{DAYSNDEPLOY}}
+{\footnotesize\ttfamily \#define D\+A\+Y\+S\+N\+D\+E\+P\+L\+OY~365.\+0}
+
+
+
+Definition at line \hyperlink{daily__allocation_8c_source_l00026}{26} of file \hyperlink{daily__allocation_8c_source}{daily\+\_\+allocation.\+c}.
+
+
+
+\subsection{Function Documentation}
+\hypertarget{daily__allocation_8c_a78494a491616be3574480363952f005f}{}\label{daily__allocation_8c_a78494a491616be3574480363952f005f} 
+\index{daily\+\_\+allocation.\+c@{daily\+\_\+allocation.\+c}!daily\+\_\+allocation@{daily\+\_\+allocation}}
+\index{daily\+\_\+allocation@{daily\+\_\+allocation}!daily\+\_\+allocation.\+c@{daily\+\_\+allocation.\+c}}
+\subsubsection{\texorpdfstring{daily\+\_\+allocation()}{daily\_allocation()}}
+{\footnotesize\ttfamily int daily\+\_\+allocation (\begin{DoxyParamCaption}\item[{cflux\+\_\+struct $\ast$}]{cf,  }\item[{cstate\+\_\+struct $\ast$}]{cs,  }\item[{nflux\+\_\+struct $\ast$}]{nf,  }\item[{nstate\+\_\+struct $\ast$}]{ns,  }\item[{epconst\+\_\+struct $\ast$}]{epc,  }\item[{epvar\+\_\+struct $\ast$}]{epv,  }\item[{ntemp\+\_\+struct $\ast$}]{nt,  }\item[{double}]{naddfrac,  }\item[{int}]{mode }\end{DoxyParamCaption})}
+
+
+
+Definition at line \hyperlink{daily__allocation_8c_source_l00030}{30} of file \hyperlink{daily__allocation_8c_source}{daily\+\_\+allocation.\+c}.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=231pt]{daily__allocation_8c_a78494a491616be3574480363952f005f_icgraph}
+\end{center}
+\end{figure}

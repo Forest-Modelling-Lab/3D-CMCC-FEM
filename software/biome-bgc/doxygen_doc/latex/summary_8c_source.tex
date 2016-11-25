@@ -1,0 +1,131 @@
+\hypertarget{summary_8c_source}{}\section{summary.\+c}
+\label{summary_8c_source}\index{c\+:/\+R\+E\+P\+O/biomebgc-\/4.\+2/src/bgclib/summary.\+c@{c\+:/\+R\+E\+P\+O/biomebgc-\/4.\+2/src/bgclib/summary.\+c}}
+
+\begin{DoxyCode}
+00001 \textcolor{comment}{/* }
+00002 \textcolor{comment}{summary.c}
+00003 \textcolor{comment}{summary variables for potential output}
+00004 \textcolor{comment}{}
+00005 \textcolor{comment}{*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*}
+00006 \textcolor{comment}{Biome-BGC version 4.2 (final release)}
+00007 \textcolor{comment}{See copyright.txt for Copyright information}
+00008 \textcolor{comment}{*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*}
+00009 \textcolor{comment}{*/}
+00010 
+00011 \textcolor{preprocessor}{#include "bgc.h"}
+00012 
+\hypertarget{summary_8c_source_l00013}{}\hyperlink{summary_8c_a063a448b14734e59d301b2639c5b107a}{00013} \textcolor{keywordtype}{int} \hyperlink{summary_8c_a063a448b14734e59d301b2639c5b107a}{csummary}(cflux\_struct* cf, cstate\_struct* cs, summary\_struct* summary)
+00014 \{
+00015     \textcolor{keywordtype}{int} ok=1;
+00016     \textcolor{keywordtype}{double} gpp,mr,gr,hr,fire;
+00017     \textcolor{keywordtype}{double} npp,nep,nee;
+00018     
+00019     \textcolor{comment}{/* calculate daily NPP, positive for net growth */}
+00020     \textcolor{comment}{/* NPP = Gross PSN - Maintenance Resp - Growth Resp */}
+00021     gpp = cf->psnsun\_to\_cpool + cf->psnshade\_to\_cpool;
+00022     mr = cf->leaf\_day\_mr + cf->leaf\_night\_mr + cf->froot\_mr + 
+00023         cf->livestem\_mr + cf->livecroot\_mr;
+00024     gr = cf->cpool\_leaf\_gr + cf->cpool\_leaf\_storage\_gr + cf->transfer\_leaf\_gr +
+00025         cf->cpool\_froot\_gr + cf->cpool\_froot\_storage\_gr + cf->transfer\_froot\_gr + 
+00026         cf->cpool\_livestem\_gr + cf->cpool\_livestem\_storage\_gr + cf->transfer\_livestem\_gr +
+00027         cf->cpool\_deadstem\_gr + cf->cpool\_deadstem\_storage\_gr + cf->transfer\_deadstem\_gr + 
+00028         cf->cpool\_livecroot\_gr + cf->cpool\_livecroot\_storage\_gr + cf->transfer\_livecroot\_gr + 
+00029         cf->cpool\_deadcroot\_gr + cf->cpool\_deadcroot\_storage\_gr + cf->transfer\_deadcroot\_gr;
+00030     npp = gpp - mr - gr;
+00031     
+00032     \textcolor{comment}{/* calculate daily NEP, positive for net sink */}
+00033     \textcolor{comment}{/* NEP = NPP - Autotrophic Resp */}
+00034     hr = cf->litr1\_hr + cf->litr2\_hr + cf->litr4\_hr + cf->soil1\_hr +
+00035         cf->soil2\_hr + cf->soil3\_hr + cf->soil4\_hr;
+00036     nep = npp - hr;
+00037     
+00038     \textcolor{comment}{/* calculate daily NEE, positive for net sink */}
+00039     \textcolor{comment}{/* NEE = NEP - fire losses */}
+00040     fire = cf->m\_leafc\_to\_fire + cf->m\_frootc\_to\_fire + cf->m\_leafc\_storage\_to\_fire +
+00041         cf->m\_frootc\_storage\_to\_fire + cf->m\_livestemc\_storage\_to\_fire + 
+00042         cf->m\_deadstemc\_storage\_to\_fire + cf->m\_livecrootc\_storage\_to\_fire +
+00043         cf->m\_deadcrootc\_storage\_to\_fire + cf->m\_leafc\_transfer\_to\_fire +
+00044         cf->m\_frootc\_transfer\_to\_fire +  cf->m\_livestemc\_transfer\_to\_fire + 
+00045         cf->m\_deadstemc\_transfer\_to\_fire + cf->m\_livecrootc\_transfer\_to\_fire +
+00046         cf->m\_deadcrootc\_transfer\_to\_fire + cf->m\_livestemc\_to\_fire +
+00047         cf->m\_deadstemc\_to\_fire + cf->m\_livecrootc\_to\_fire + cf->m\_deadcrootc\_to\_fire +
+00048         cf->m\_gresp\_storage\_to\_fire + cf->m\_gresp\_transfer\_to\_fire + cf->m\_litr1c\_to\_fire +
+00049         cf->m\_litr2c\_to\_fire + cf->m\_litr3c\_to\_fire + cf->m\_litr4c\_to\_fire +
+00050         cf->m\_cwdc\_to\_fire;
+00051     nee = nep - fire;
+00052     
+00053     summary->daily\_npp = npp;
+00054     summary->daily\_nep = nep;
+00055     summary->daily\_nee = nee;
+00056     summary->daily\_gpp = gpp;
+00057     summary->daily\_mr = mr;
+00058     summary->daily\_gr = gr;
+00059     summary->daily\_hr = hr;
+00060     summary->daily\_fire = fire;
+00061     summary->cum\_npp += npp;
+00062     summary->cum\_nep += nep;
+00063     summary->cum\_nee += nee;
+00064     summary->cum\_gpp += gpp;
+00065     summary->cum\_mr += mr;
+00066     summary->cum\_gr += gr;
+00067     summary->cum\_hr += hr;
+00068     summary->cum\_fire += fire;
+00069     
+00070     \textcolor{comment}{/* other flux summary variables */}
+00071     summary->daily\_litfallc = cf->m\_leafc\_to\_litr1c + cf->m\_leafc\_to\_litr2c + 
+00072         cf->m\_leafc\_to\_litr3c + cf->m\_leafc\_to\_litr4c + cf->m\_frootc\_to\_litr1c +
+00073         cf->m\_frootc\_to\_litr2c + cf->m\_frootc\_to\_litr3c + cf->m\_frootc\_to\_litr4c +
+00074         cf->m\_leafc\_storage\_to\_litr1c + cf->m\_frootc\_storage\_to\_litr1c +
+00075         cf->m\_livestemc\_storage\_to\_litr1c + cf->m\_deadstemc\_storage\_to\_litr1c +
+00076         cf->m\_livecrootc\_storage\_to\_litr1c + cf->m\_deadcrootc\_storage\_to\_litr1c +
+00077         cf->m\_leafc\_transfer\_to\_litr1c + cf->m\_frootc\_transfer\_to\_litr1c +
+00078         cf->m\_livestemc\_transfer\_to\_litr1c + cf->m\_deadstemc\_transfer\_to\_litr1c +
+00079         cf->m\_livecrootc\_transfer\_to\_litr1c + cf->m\_deadcrootc\_transfer\_to\_litr1c +
+00080         cf->m\_livestemc\_to\_cwdc + cf->m\_deadstemc\_to\_cwdc + 
+00081         cf->m\_livecrootc\_to\_cwdc + cf->m\_deadcrootc\_to\_cwdc +
+00082         cf->m\_gresp\_storage\_to\_litr1c + cf->m\_gresp\_transfer\_to\_litr1c +
+00083         cf->leafc\_to\_litr1c + cf->leafc\_to\_litr2c + cf->leafc\_to\_litr3c + 
+00084         cf->leafc\_to\_litr4c + cf->frootc\_to\_litr1c + cf->frootc\_to\_litr2c +
+00085         cf->frootc\_to\_litr3c + cf->frootc\_to\_litr4c;
+00086         
+00087     \textcolor{comment}{/* summarize carbon stocks */}
+00088     summary->vegc = cs->leafc + cs->leafc\_storage + cs->leafc\_transfer + 
+00089         cs->frootc + cs->frootc\_storage + cs->frootc\_transfer +
+00090         cs->livestemc + cs->livestemc\_storage + cs->livestemc\_transfer +
+00091         cs->deadstemc + cs->deadstemc\_storage + cs->deadstemc\_transfer +
+00092         cs->livecrootc + cs->livecrootc\_storage + cs->livecrootc\_transfer +
+00093         cs->deadcrootc + cs->deadcrootc\_storage + cs->deadcrootc\_transfer +
+00094         cs->gresp\_storage + cs->gresp\_transfer + cs->cpool;
+00095     summary->litrc = cs->cwdc + cs->litr1c + cs->litr2c + cs->litr3c + 
+00096         cs->litr4c;
+00097     summary->soilc = cs->soil1c + cs->soil2c + cs->soil3c + cs->soil4c;
+00098     summary->totalc = summary->vegc + summary->litrc + summary->soilc;
+00099     
+00100     
+00101     \textcolor{keywordflow}{return}(!ok);
+00102 \}
+00103 
+\hypertarget{summary_8c_source_l00104}{}\hyperlink{summary_8c_a6f21695898e69d2e04041da9158e38fa}{00104} \textcolor{keywordtype}{int} \hyperlink{summary_8c_a6f21695898e69d2e04041da9158e38fa}{wsummary}(wstate\_struct *ws,wflux\_struct* wf, summary\_struct* summary)
+00105 \{
+00106     \textcolor{comment}{/* Water state summary variables}
+00107 \textcolor{comment}{        Purpose: calculates ET from individual flux variables.  Assigns daily outflow to summary struct.}
+00108 \textcolor{comment}{        Added: WMJ, 26 Oct 04         */}
+00109         \textcolor{keywordtype}{double} et = 0.0,evap = 0.0,trans = 0.0;
+00110 
+00111         \textcolor{keywordtype}{int} ok=1;
+00112 
+00113         et = wf->canopyw\_evap + wf->soilw\_evap + wf->soilw\_trans + wf->snoww\_subl;
+00114 
+00115         evap = wf->canopyw\_evap + wf->soilw\_evap + wf->snoww\_subl;
+00116         trans = wf->soilw\_trans;
+00117 
+00118         summary->daily\_et = et;
+00119         summary->daily\_evap = evap;
+00120         summary->daily\_trans = trans;
+00121         summary->daily\_soilw = ws->soilw;
+00122         summary->daily\_snoww = ws->snoww;
+00123         summary->daily\_outflow = wf->soilw\_outflow;
+00124 
+00125         \textcolor{keywordflow}{return}(!ok);
+00126 \}
+\end{DoxyCode}

@@ -1,0 +1,358 @@
+\hypertarget{canopy__et_8c_source}{}\section{canopy\+\_\+et.\+c}
+\label{canopy__et_8c_source}\index{c\+:/\+R\+E\+P\+O/biomebgc-\/4.\+2/src/bgclib/canopy\+\_\+et.\+c@{c\+:/\+R\+E\+P\+O/biomebgc-\/4.\+2/src/bgclib/canopy\+\_\+et.\+c}}
+
+\begin{DoxyCode}
+00001 \textcolor{comment}{/* }
+00002 \textcolor{comment}{canopy\_et.c}
+00003 \textcolor{comment}{A single-function treatment of canopy evaporation and transpiration}
+00004 \textcolor{comment}{fluxes.  }
+00005 \textcolor{comment}{}
+00006 \textcolor{comment}{*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*}
+00007 \textcolor{comment}{Biome-BGC version 4.2 (final release)}
+00008 \textcolor{comment}{See copyright.txt for Copyright information}
+00009 \textcolor{comment}{*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*}
+00010 \textcolor{comment}{*/}
+00011 
+00012 \textcolor{preprocessor}{#include "bgc.h"}
+00013 
+\hypertarget{canopy__et_8c_source_l00014}{}\hyperlink{canopy__et_8c_a5882089955eaa9ed13e938c6eb383b11}{00014} \textcolor{keywordtype}{int} \hyperlink{canopy__et_8c_a5882089955eaa9ed13e938c6eb383b11}{canopy\_et}(\textcolor{keyword}{const} metvar\_struct* metv, \textcolor{keyword}{const} epconst\_struct* epc, 
+00015 epvar\_struct* epv, wflux\_struct* wf, \textcolor{keywordtype}{int} verbose)
+00016 \{
+00017     \textcolor{keywordtype}{int} ok=1;
+00018     \textcolor{keywordtype}{double} gl\_bl, gl\_c, gl\_s\_sun, gl\_s\_shade;
+00019     \textcolor{keywordtype}{double} gl\_e\_wv, gl\_t\_wv\_sun, gl\_t\_wv\_shade, gl\_sh;
+00020     \textcolor{keywordtype}{double} gc\_e\_wv, gc\_sh;
+00021     \textcolor{keywordtype}{double} tday;
+00022     \textcolor{keywordtype}{double} tmin;
+00023     \textcolor{keywordtype}{double} dayl;
+00024     \textcolor{keywordtype}{double} vpd,vpd\_open,vpd\_close;
+00025     \textcolor{keywordtype}{double} psi,psi\_open,psi\_close;
+00026     \textcolor{keywordtype}{double} m\_ppfd\_sun, m\_ppfd\_shade;
+00027     \textcolor{keywordtype}{double} m\_tmin, m\_psi, m\_co2, m\_vpd, m\_final\_sun, m\_final\_shade;
+00028     \textcolor{keywordtype}{double} proj\_lai;
+00029     \textcolor{keywordtype}{double} canopy\_w;
+00030     \textcolor{keywordtype}{double} gcorr;
+00031     
+00032     \textcolor{keywordtype}{double} e, cwe, t, trans, trans\_sun, trans\_shade, e\_dayl,t\_dayl; 
+00033     pmet\_struct pmet\_in;
+00034 
+00035     \textcolor{comment}{/* assign variables that are used more than once */}
+00036     tday =      metv->tday;
+00037     tmin =      metv->tmin;
+00038     vpd =       metv->vpd;
+00039     dayl =      metv->dayl;
+00040     psi =       epv->psi;
+00041     proj\_lai =  epv->proj\_lai;
+00042     canopy\_w =  wf->prcp\_to\_canopyw;
+00043     psi\_open =  epc->psi\_open;
+00044     psi\_close = epc->psi\_close;
+00045     vpd\_open =  epc->vpd\_open;
+00046     vpd\_close = epc->vpd\_close;
+00047 
+00048     \textcolor{comment}{/* temperature and pressure correction factor for conductances */}
+00049     gcorr = pow((metv->tday+273.15)/293.15, 1.75) * 101300/metv->pa;
+00050     
+00051     \textcolor{comment}{/* calculate leaf- and canopy-level conductances to water vapor and}
+00052 \textcolor{comment}{    sensible heat fluxes */}
+00053     
+00054     \textcolor{comment}{/* leaf boundary-layer conductance */}
+00055     gl\_bl = epc->gl\_bl * gcorr;
+00056     
+00057     \textcolor{comment}{/* leaf cuticular conductance */}
+00058     gl\_c = epc->gl\_c * gcorr;
+00059     
+00060     \textcolor{comment}{/* leaf stomatal conductance: first generate multipliers, then apply them}
+00061 \textcolor{comment}{    to maximum stomatal conductance */}
+00062     \textcolor{comment}{/* calculate stomatal conductance radiation multiplier: }
+00063 \textcolor{comment}{    *** NOTE CHANGE FROM BIOME-BGC CODE ***}
+00064 \textcolor{comment}{    The original Biome-BGC formulation follows the arguments in }
+00065 \textcolor{comment}{    Rastetter, E.B., A.W. King, B.J. Cosby, G.M. Hornberger, }
+00066 \textcolor{comment}{       R.V. O'Neill, and J.E. Hobbie, 1992. Aggregating fine-scale }
+00067 \textcolor{comment}{       ecological knowledge to model coarser-scale attributes of }
+00068 \textcolor{comment}{       ecosystems. Ecological Applications, 2:55-70.}
+00069 \textcolor{comment}{}
+00070 \textcolor{comment}{    gmult->max = (gsmax/(k*lai))*log((gsmax+rad)/(gsmax+(rad*exp(-k*lai))))}
+00071 \textcolor{comment}{}
+00072 \textcolor{comment}{    I'm using a much simplified form, which doesn't change relative shape}
+00073 \textcolor{comment}{    as gsmax changes. See Korner, 1995.}
+00074 \textcolor{comment}{    */}
+00075     \textcolor{comment}{/* photosynthetic photon flux density conductance control */}
+00076     m\_ppfd\_sun = metv->ppfd\_per\_plaisun/(PPFD50 + metv->ppfd\_per\_plaisun);
+00077     m\_ppfd\_shade = metv->ppfd\_per\_plaishade/(PPFD50 + metv->ppfd\_per\_plaishade);
+00078 
+00079     \textcolor{comment}{/* soil-leaf water potential multiplier */}
+00080     \textcolor{keywordflow}{if} (psi > psi\_open)    \textcolor{comment}{/* no water stress */}
+00081         m\_psi = 1.0;        
+00082     \textcolor{keywordflow}{else}
+00083     \textcolor{keywordflow}{if} (psi <= psi\_close)   \textcolor{comment}{/* full water stress */}
+00084     \{
+00085         m\_psi = 0.0;      
+00086     \}
+00087     \textcolor{keywordflow}{else}                   \textcolor{comment}{/* partial water stress */}
+00088         m\_psi = (psi\_close - psi) / (psi\_close - psi\_open);
+00089 
+00090     \textcolor{comment}{/* CO2 multiplier */}
+00091     m\_co2 = 1.0;
+00092 
+00093     \textcolor{comment}{/* freezing night minimum temperature multiplier */}
+00094     \textcolor{keywordflow}{if} (tmin > 0.0)        \textcolor{comment}{/* no effect */}
+00095         m\_tmin = 1.0;
+00096     \textcolor{keywordflow}{else}
+00097     \textcolor{keywordflow}{if} (tmin < -8.0)       \textcolor{comment}{/* full tmin effect */}
+00098         m\_tmin = 0.0;
+00099     \textcolor{keywordflow}{else}                   \textcolor{comment}{/* partial reduction (0.0 to -8.0 C) */}
+00100         m\_tmin = 1.0 + (0.125 * tmin);
+00101     
+00102     \textcolor{comment}{/* vapor pressure deficit multiplier, vpd in Pa */}
+00103     \textcolor{keywordflow}{if} (vpd < vpd\_open)    \textcolor{comment}{/* no vpd effect */}
+00104         m\_vpd = 1.0;
+00105     \textcolor{keywordflow}{else}
+00106     \textcolor{keywordflow}{if} (vpd > vpd\_close)   \textcolor{comment}{/* full vpd effect */}
+00107         m\_vpd = 0.0;
+00108     \textcolor{keywordflow}{else}                   \textcolor{comment}{/* partial vpd effect */}
+00109         m\_vpd = (vpd\_close - vpd) / (vpd\_close - vpd\_open);
+00110 
+00111     \textcolor{comment}{/* apply all multipliers to the maximum stomatal conductance */}
+00112     m\_final\_sun = m\_ppfd\_sun * m\_psi * m\_co2 * m\_tmin * m\_vpd;
+00113     \textcolor{keywordflow}{if} (m\_final\_sun < 0.00000001) m\_final\_sun = 0.00000001;
+00114     m\_final\_shade = m\_ppfd\_shade * m\_psi * m\_co2 * m\_tmin * m\_vpd;
+00115     \textcolor{keywordflow}{if} (m\_final\_shade < 0.00000001) m\_final\_shade = 0.00000001;
+00116     gl\_s\_sun = epc->gl\_smax * m\_final\_sun * gcorr;
+00117     gl\_s\_shade = epc->gl\_smax * m\_final\_shade * gcorr;
+00118     
+00119     \textcolor{comment}{/* calculate leaf-and canopy-level conductances to water vapor and}
+00120 \textcolor{comment}{    sensible heat fluxes, to be used in Penman-Monteith calculations of}
+00121 \textcolor{comment}{    canopy evaporation and canopy transpiration. */}
+00122     
+00123     \textcolor{comment}{/* Leaf conductance to evaporated water vapor, per unit projected LAI */}
+00124     gl\_e\_wv = gl\_bl;
+00125         
+00126     \textcolor{comment}{/* Leaf conductance to transpired water vapor, per unit projected}
+00127 \textcolor{comment}{    LAI.  This formula is derived from stomatal and cuticular conductances}
+00128 \textcolor{comment}{    in parallel with each other, and both in series with leaf boundary }
+00129 \textcolor{comment}{    layer conductance. */}
+00130     gl\_t\_wv\_sun = (gl\_bl * (gl\_s\_sun + gl\_c)) / (gl\_bl + gl\_s\_sun + gl\_c);
+00131     gl\_t\_wv\_shade = (gl\_bl * (gl\_s\_shade + gl\_c)) / (gl\_bl + gl\_s\_shade + gl\_c);
+00132 
+00133     \textcolor{comment}{/* Leaf conductance to sensible heat, per unit all-sided LAI */}
+00134     gl\_sh = gl\_bl;
+00135     
+00136     \textcolor{comment}{/* Canopy conductance to evaporated water vapor */}
+00137     gc\_e\_wv = gl\_e\_wv * proj\_lai;
+00138     
+00139     \textcolor{comment}{/* Canopy conductane to sensible heat */}
+00140     gc\_sh = gl\_sh * proj\_lai;
+00141     
+00142     cwe = trans = 0.0;
+00143     
+00144     \textcolor{comment}{/* Assign values in pmet\_in that don't change */}
+00145     pmet\_in.ta = tday;
+00146     pmet\_in.pa = metv->pa;
+00147     pmet\_in.vpd = vpd;
+00148     
+00149     \textcolor{comment}{/* Canopy evaporation, if any water was intercepted */}
+00150     \textcolor{comment}{/* Calculate Penman-Monteith evaporation, given the canopy conductances to}
+00151 \textcolor{comment}{    evaporated water and sensible heat.  Calculate the time required to }
+00152 \textcolor{comment}{    evaporate all the canopy water at the daily average conditions, and }
+00153 \textcolor{comment}{    subtract that time from the daylength to get the effective daylength for}
+00154 \textcolor{comment}{    transpiration. */}
+00155     \textcolor{keywordflow}{if} (canopy\_w)
+00156     \{
+00157         \textcolor{comment}{/* assign appropriate resistance and radiation for pmet\_in */}
+00158         pmet\_in.rv = 1.0/gc\_e\_wv;
+00159         pmet\_in.rh = 1.0/gc\_sh;
+00160         pmet\_in.irad = metv->swabs;
+00161         
+00162         \textcolor{comment}{/* call penman-monteith function, returns e in kg/m2/s */}
+00163         \textcolor{keywordflow}{if} (\hyperlink{canopy__et_8c_a5c8d396ed94c7e0f3f4c80dd3ecd046c}{penmon}(&pmet\_in, 0, &e))
+00164         \{
+00165             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Error: penmon() for canopy evap... \(\backslash\)n"});
+00166             ok=0;
+00167         \}
+00168         
+00169         \textcolor{comment}{/* calculate the time required to evaporate all the canopy water */}
+00170         e\_dayl = canopy\_w/e;
+00171         
+00172         \textcolor{keywordflow}{if} (e\_dayl > dayl)  
+00173         \{
+00174             \textcolor{comment}{/* day not long enough to evap. all int. water */}
+00175             trans = 0.0;    \textcolor{comment}{/* no time left for transpiration */}
+00176             cwe = e * dayl;   \textcolor{comment}{/* daylength limits canopy evaporation */}
+00177         \}
+00178         \textcolor{keywordflow}{else}                
+00179         \{
+00180             \textcolor{comment}{/* all intercepted water evaporated */}
+00181             cwe = canopy\_w;
+00182             
+00183             \textcolor{comment}{/* adjust daylength for transpiration */}
+00184             t\_dayl = dayl - e\_dayl;
+00185              
+00186             \textcolor{comment}{/* calculate transpiration using adjusted daylength */}
+00187             \textcolor{comment}{/* first for sunlit canopy fraction */}
+00188             pmet\_in.rv = 1.0/gl\_t\_wv\_sun;
+00189             pmet\_in.rh = 1.0/gl\_sh;
+00190             pmet\_in.irad = metv->swabs\_per\_plaisun;
+00191             \textcolor{keywordflow}{if} (\hyperlink{canopy__et_8c_a5c8d396ed94c7e0f3f4c80dd3ecd046c}{penmon}(&pmet\_in, 0, &t))
+00192             \{
+00193                 \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Error: penmon() for adjusted transpiration... \(\backslash\)n"});
+00194                 ok=0;
+00195             \}
+00196             trans\_sun = t * t\_dayl * epv->plaisun;
+00197             
+00198             \textcolor{comment}{/* next for shaded canopy fraction */}
+00199             pmet\_in.rv = 1.0/gl\_t\_wv\_shade;
+00200             pmet\_in.rh = 1.0/gl\_sh;
+00201             pmet\_in.irad = metv->swabs\_per\_plaishade;
+00202             \textcolor{keywordflow}{if} (\hyperlink{canopy__et_8c_a5c8d396ed94c7e0f3f4c80dd3ecd046c}{penmon}(&pmet\_in, 0, &t))
+00203             \{
+00204                 \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Error: penmon() for adjusted transpiration... \(\backslash\)n"});
+00205                 ok=0;
+00206             \}
+00207             trans\_shade = t * t\_dayl * epv->plaishade;
+00208             trans = trans\_sun + trans\_shade;
+00209         \}
+00210     \}    \textcolor{comment}{/* end if canopy\_water */}
+00211     
+00212     \textcolor{keywordflow}{else} \textcolor{comment}{/* no canopy water, transpiration with unadjusted daylength */}
+00213     \{
+00214         \textcolor{comment}{/* first for sunlit canopy fraction */}
+00215         pmet\_in.rv = 1.0/gl\_t\_wv\_sun;
+00216         pmet\_in.rh = 1.0/gl\_sh;
+00217         pmet\_in.irad = metv->swabs\_per\_plaisun;
+00218         \textcolor{keywordflow}{if} (\hyperlink{canopy__et_8c_a5c8d396ed94c7e0f3f4c80dd3ecd046c}{penmon}(&pmet\_in, 0, &t))
+00219         \{
+00220             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Error: penmon() for adjusted transpiration... \(\backslash\)n"});
+00221             ok=0;
+00222         \}
+00223         trans\_sun = t * dayl * epv->plaisun;
+00224         
+00225         \textcolor{comment}{/* next for shaded canopy fraction */}
+00226         pmet\_in.rv = 1.0/gl\_t\_wv\_shade;
+00227         pmet\_in.rh = 1.0/gl\_sh;
+00228         pmet\_in.irad = metv->swabs\_per\_plaishade;
+00229         \textcolor{keywordflow}{if} (\hyperlink{canopy__et_8c_a5c8d396ed94c7e0f3f4c80dd3ecd046c}{penmon}(&pmet\_in, 0, &t))
+00230         \{
+00231             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Error: penmon() for adjusted transpiration... \(\backslash\)n"});
+00232             ok=0;
+00233         \}
+00234         trans\_shade = t * dayl * epv->plaishade;
+00235         trans = trans\_sun + trans\_shade;
+00236     \}
+00237         
+00238     \textcolor{comment}{/* assign water fluxes, all excess not evaporated goes}
+00239 \textcolor{comment}{    to soil water compartment */}
+00240     wf->canopyw\_evap = cwe;
+00241     wf->canopyw\_to\_soilw = canopy\_w - cwe;
+00242     wf->soilw\_trans = trans;
+00243     
+00244     \textcolor{comment}{/* assign leaf-level conductance to transpired water vapor, }
+00245 \textcolor{comment}{    for use in calculating co2 conductance for farq\_psn() */}
+00246     epv->gl\_t\_wv\_sun = gl\_t\_wv\_sun; 
+00247     epv->gl\_t\_wv\_shade = gl\_t\_wv\_shade;
+00248     
+00249     \textcolor{comment}{/* assign verbose output variables if requested */}
+00250     \textcolor{keywordflow}{if} (verbose)
+00251     \{
+00252         epv->m\_ppfd\_sun  = m\_ppfd\_sun;
+00253         epv->m\_ppfd\_shade  = m\_ppfd\_shade;
+00254         epv->m\_psi   = m\_psi;
+00255         epv->m\_co2   = m\_co2;
+00256         epv->m\_tmin  = m\_tmin;
+00257         epv->m\_vpd   = m\_vpd;
+00258         epv->m\_final\_sun = m\_final\_sun;
+00259         epv->m\_final\_shade = m\_final\_shade;
+00260         epv->gl\_bl   = gl\_bl;
+00261         epv->gl\_c    = gl\_c;
+00262         epv->gl\_s\_sun   = gl\_s\_sun;
+00263         epv->gl\_s\_shade = gl\_s\_shade;
+00264         epv->gl\_e\_wv = gl\_e\_wv;
+00265         epv->gl\_sh   = gl\_sh;
+00266         epv->gc\_e\_wv = gc\_e\_wv;
+00267         epv->gc\_sh   = gc\_sh;
+00268     \}
+00269     
+00270     \textcolor{keywordflow}{return} (!ok);
+00271 \}
+00272 
+\hypertarget{canopy__et_8c_source_l00273}{}\hyperlink{canopy__et_8c_a5c8d396ed94c7e0f3f4c80dd3ecd046c}{00273} \textcolor{keywordtype}{int} \hyperlink{canopy__et_8c_a5c8d396ed94c7e0f3f4c80dd3ecd046c}{penmon}(\textcolor{keyword}{const} pmet\_struct* in, \textcolor{keywordtype}{int} out\_flag,   \textcolor{keywordtype}{double}* et)
+00274 \{
+00275     \textcolor{comment}{/*}
+00276 \textcolor{comment}{    Combination equation for determining evaporation and transpiration. }
+00277 \textcolor{comment}{    }
+00278 \textcolor{comment}{    For output in units of (kg/m2/s)  out\_flag = 0}
+00279 \textcolor{comment}{    For output in units of (W/m2)     out\_flag = 1}
+00280 \textcolor{comment}{   }
+00281 \textcolor{comment}{    INPUTS:}
+00282 \textcolor{comment}{    in->ta     (deg C)   air temperature}
+00283 \textcolor{comment}{    in->pa     (Pa)      air pressure}
+00284 \textcolor{comment}{    in->vpd    (Pa)      vapor pressure deficit}
+00285 \textcolor{comment}{    in->irad   (W/m2)    incident radient flux density}
+00286 \textcolor{comment}{    in->rv     (s/m)     resistance to water vapor flux}
+00287 \textcolor{comment}{    in->rh     (s/m)     resistance to sensible heat flux}
+00288 \textcolor{comment}{}
+00289 \textcolor{comment}{    INTERNAL VARIABLES:}
+00290 \textcolor{comment}{    rho    (kg/m3)       density of air}
+00291 \textcolor{comment}{    CP     (J/kg/degC)   specific heat of air}
+00292 \textcolor{comment}{    lhvap  (J/kg)        latent heat of vaporization of water}
+00293 \textcolor{comment}{    s      (Pa/degC)     slope of saturation vapor pressure vs T curve}
+00294 \textcolor{comment}{}
+00295 \textcolor{comment}{    OUTPUT:}
+00296 \textcolor{comment}{    et     (kg/m2/s)     water vapor mass flux density  (flag=0)}
+00297 \textcolor{comment}{    et     (W/m2)        latent heat flux density       (flag=1)}
+00298 \textcolor{comment}{    */}
+00299 
+00300     \textcolor{keywordtype}{int} ok=1;
+00301     \textcolor{keywordtype}{double} ta;
+00302     \textcolor{keywordtype}{double} rho,lhvap,s;
+00303     \textcolor{keywordtype}{double} t1,t2,pvs1,pvs2,e,tk;
+00304     \textcolor{keywordtype}{double} rr,rh,rhr,rv;
+00305     \textcolor{keywordtype}{double} dt = 0.2;     \textcolor{comment}{/* set the temperature offset for slope calculation */}
+00306    
+00307     \textcolor{comment}{/* assign ta (Celsius) and tk (Kelvins) */}
+00308     ta = in->ta;
+00309     tk = ta + 273.15;
+00310         
+00311     \textcolor{comment}{/* calculate density of air (rho) as a function of air temperature */}
+00312     rho = 1.292 - (0.00428 * ta);
+00313     
+00314     \textcolor{comment}{/* calculate resistance to radiative heat transfer through air, rr */}
+00315     rr = rho * CP / (4.0 * SBC * (tk*tk*tk));
+00316     
+00317     \textcolor{comment}{/* resistance to convective heat transfer */}
+00318     rh = in->rh;
+00319     
+00320     \textcolor{comment}{/* resistance to latent heat transfer */}
+00321     rv = in->rv;
+00322     
+00323     \textcolor{comment}{/* calculate combined resistance to convective and radiative heat transfer,}
+00324 \textcolor{comment}{    parallel resistances : rhr = (rh * rr) / (rh + rr) */}
+00325     rhr = (rh * rr) / (rh + rr);
+00326 
+00327     \textcolor{comment}{/* calculate latent heat of vaporization as a function of ta */}
+00328     lhvap = 2.5023e6 - 2430.54 * ta;
+00329 
+00330     \textcolor{comment}{/* calculate temperature offsets for slope estimate */}
+00331     t1 = ta+dt;
+00332     t2 = ta-dt;
+00333     
+00334     \textcolor{comment}{/* calculate saturation vapor pressures at t1 and t2 */}
+00335     pvs1 = 610.7 * exp(17.38 * t1 / (239.0 + t1));
+00336     pvs2 = 610.7 * exp(17.38 * t2 / (239.0 + t2));
+00337 
+00338     \textcolor{comment}{/* calculate slope of pvs vs. T curve, at ta */}
+00339     s = (pvs1-pvs2) / (t1-t2);
+00340     
+00341     \textcolor{comment}{/* calculate evaporation, in W/m^2  */}
+00342     e = ( ( s * in->irad ) + ( rho * CP * in->vpd / rhr ) ) /
+00343         ( ( ( in->pa * CP * rv ) / ( lhvap * EPS * rhr ) ) + s );
+00344     
+00345     \textcolor{comment}{/* return either W/m^2 or kg/m^2/s, depending on out\_flag */}    
+00346     \textcolor{keywordflow}{if} (out\_flag)
+00347         *et = e;
+00348     
+00349     \textcolor{keywordflow}{if} (!out\_flag)
+00350         *et = e / lhvap;
+00351     
+00352     \textcolor{keywordflow}{return} (!ok);
+00353 \}
+\end{DoxyCode}

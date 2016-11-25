@@ -1,0 +1,54 @@
+\hypertarget{growth__resp_8c_source}{}\section{growth\+\_\+resp.\+c}
+\label{growth__resp_8c_source}\index{c\+:/\+R\+E\+P\+O/biomebgc-\/4.\+2/src/bgclib/growth\+\_\+resp.\+c@{c\+:/\+R\+E\+P\+O/biomebgc-\/4.\+2/src/bgclib/growth\+\_\+resp.\+c}}
+
+\begin{DoxyCode}
+00001 \textcolor{comment}{/* }
+00002 \textcolor{comment}{growth\_resp.c}
+00003 \textcolor{comment}{daily growth respiration rates}
+00004 \textcolor{comment}{}
+00005 \textcolor{comment}{*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*}
+00006 \textcolor{comment}{Biome-BGC version 4.2 (final release)}
+00007 \textcolor{comment}{See copyright.txt for Copyright information}
+00008 \textcolor{comment}{*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*}
+00009 \textcolor{comment}{*/}
+00010 
+00011 \textcolor{preprocessor}{#include "bgc.h"}
+00012 
+\hypertarget{growth__resp_8c_source_l00013}{}\hyperlink{growth__resp_8c_a85d965990cd0096b29def19816e47e62}{00013} \textcolor{keywordtype}{int} \hyperlink{growth__resp_8c_a85d965990cd0096b29def19816e47e62}{growth\_resp}(epconst\_struct* epc, cflux\_struct* cf)
+00014 \{
+00015     \textcolor{keywordtype}{int} ok=1;
+00016     \textcolor{keywordtype}{double} g1;   \textcolor{comment}{/* RATIO   C respired for growth : C grown  */} 
+00017     \textcolor{keywordtype}{double} g2;   \textcolor{comment}{/* proportion of growth resp to release at fixation */}
+00018 
+00019     g1 = GRPERC;
+00020     g2 = GRPNOW;
+00021     
+00022     \textcolor{comment}{/* leaf and fine root growth respiration for both trees and grass */}    
+00023     cf->cpool\_leaf\_gr     = cf->cpool\_to\_leafc * g1;
+00024     cf->cpool\_froot\_gr    = cf->cpool\_to\_frootc * g1;
+00025     cf->cpool\_leaf\_storage\_gr  = cf->cpool\_to\_leafc\_storage * g1 * g2;
+00026     cf->cpool\_froot\_storage\_gr = cf->cpool\_to\_frootc\_storage * g1 * g2; 
+00027     cf->transfer\_leaf\_gr  = cf->leafc\_transfer\_to\_leafc * g1 * (1.0-g2);
+00028     cf->transfer\_froot\_gr = cf->frootc\_transfer\_to\_frootc * g1 * (1.0-g2);
+00029     
+00030     \textcolor{comment}{/* woody tissue growth respiration only for trees */}
+00031     \textcolor{keywordflow}{if} (epc->woody)
+00032     \{
+00033         cf->cpool\_livestem\_gr     = cf->cpool\_to\_livestemc * g1;
+00034         cf->cpool\_deadstem\_gr     = cf->cpool\_to\_deadstemc * g1;
+00035         cf->cpool\_livecroot\_gr    = cf->cpool\_to\_livecrootc * g1;
+00036         cf->cpool\_deadcroot\_gr    = cf->cpool\_to\_deadcrootc * g1;
+00037         cf->cpool\_livestem\_storage\_gr  = cf->cpool\_to\_livestemc\_storage * g1 * g2;
+00038         cf->cpool\_deadstem\_storage\_gr  = cf->cpool\_to\_deadstemc\_storage * g1 * g2;
+00039         cf->cpool\_livecroot\_storage\_gr = cf->cpool\_to\_livecrootc\_storage * g1 * g2;
+00040         cf->cpool\_deadcroot\_storage\_gr = cf->cpool\_to\_deadcrootc\_storage * g1 * g2;
+00041         cf->transfer\_livestem\_gr  = cf->livestemc\_transfer\_to\_livestemc * g1 * (1.0-g2);
+00042         cf->transfer\_deadstem\_gr  = cf->deadstemc\_transfer\_to\_deadstemc * g1 * (1.0-g2);
+00043         cf->transfer\_livecroot\_gr = cf->livecrootc\_transfer\_to\_livecrootc * g1 * (1.0-g2);
+00044         cf->transfer\_deadcroot\_gr = cf->deadcrootc\_transfer\_to\_deadcrootc * g1 * (1.0-g2);
+00045     \}
+00046     
+00047     \textcolor{keywordflow}{return} (!ok);
+00048 \}
+00049 
+\end{DoxyCode}

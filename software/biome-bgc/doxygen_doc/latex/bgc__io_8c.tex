@@ -1,0 +1,147 @@
+\hypertarget{bgc__io_8c}{}\section{c\+:/\+R\+E\+P\+O/biomebgc-\/4.2/src/bgclib/bgc\+\_\+io.c File Reference}
+\label{bgc__io_8c}\index{c\+:/\+R\+E\+P\+O/biomebgc-\/4.\+2/src/bgclib/bgc\+\_\+io.\+c@{c\+:/\+R\+E\+P\+O/biomebgc-\/4.\+2/src/bgclib/bgc\+\_\+io.\+c}}
+{\ttfamily \#include \char`\"{}bgc.\+h\char`\"{}}\newline
+Include dependency graph for bgc\+\_\+io.\+c\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=197pt]{bgc__io_8c__incl}
+\end{center}
+\end{figure}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{bgc__io_8c_a45fe30c0d757941d37c6b09858307458}{bgc\+\_\+logfile\+\_\+setup} (char $\ast$logfile)
+\item 
+int \hyperlink{bgc__io_8c_a368b68b05ba7af113b2fbd032c124b0e}{bgc\+\_\+logfile\+\_\+finish} (void)
+\item 
+void \hyperlink{bgc__io_8c_adcf0cce6fdd3c3d3531f826bede8bb66}{bgc\+\_\+print\+\_\+usage} (void)
+\item 
+signed char \hyperlink{bgc__io_8c_a7e5b7887ea15ba8d15033332d71ccc98}{bgc\+\_\+verbosity\+\_\+decode} (char $\ast$keyword)
+\item 
+int \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\+\_\+printf} (signed char verbosity, const char $\ast$format,...)
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+signed char \hyperlink{bgc__io_8c_ac2c427ea256a1e3e279e5d21d2017f04}{bgc\+\_\+verbosity} = B\+V\+\_\+\+D\+E\+T\+A\+IL
+\item 
+F\+I\+LE $\ast$ \hyperlink{bgc__io_8c_a176fee5c0e3671a626cd8ec7d1cc1be8}{bgc\+\_\+logfile} = N\+U\+LL
+\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\hypertarget{bgc__io_8c_a368b68b05ba7af113b2fbd032c124b0e}{}\label{bgc__io_8c_a368b68b05ba7af113b2fbd032c124b0e} 
+\index{bgc\+\_\+io.\+c@{bgc\+\_\+io.\+c}!bgc\+\_\+logfile\+\_\+finish@{bgc\+\_\+logfile\+\_\+finish}}
+\index{bgc\+\_\+logfile\+\_\+finish@{bgc\+\_\+logfile\+\_\+finish}!bgc\+\_\+io.\+c@{bgc\+\_\+io.\+c}}
+\subsubsection{\texorpdfstring{bgc\+\_\+logfile\+\_\+finish()}{bgc\_logfile\_finish()}}
+{\footnotesize\ttfamily int bgc\+\_\+logfile\+\_\+finish (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Definition at line \hyperlink{bgc__io_8c_source_l00031}{31} of file \hyperlink{bgc__io_8c_source}{bgc\+\_\+io.\+c}.
+
+\hypertarget{bgc__io_8c_a45fe30c0d757941d37c6b09858307458}{}\label{bgc__io_8c_a45fe30c0d757941d37c6b09858307458} 
+\index{bgc\+\_\+io.\+c@{bgc\+\_\+io.\+c}!bgc\+\_\+logfile\+\_\+setup@{bgc\+\_\+logfile\+\_\+setup}}
+\index{bgc\+\_\+logfile\+\_\+setup@{bgc\+\_\+logfile\+\_\+setup}!bgc\+\_\+io.\+c@{bgc\+\_\+io.\+c}}
+\subsubsection{\texorpdfstring{bgc\+\_\+logfile\+\_\+setup()}{bgc\_logfile\_setup()}}
+{\footnotesize\ttfamily int bgc\+\_\+logfile\+\_\+setup (\begin{DoxyParamCaption}\item[{char $\ast$}]{logfile }\end{DoxyParamCaption})}
+
+
+
+Definition at line \hyperlink{bgc__io_8c_source_l00016}{16} of file \hyperlink{bgc__io_8c_source}{bgc\+\_\+io.\+c}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{bgc__io_8c_a45fe30c0d757941d37c6b09858307458_cgraph}
+\end{center}
+\end{figure}
+\hypertarget{bgc__io_8c_adcf0cce6fdd3c3d3531f826bede8bb66}{}\label{bgc__io_8c_adcf0cce6fdd3c3d3531f826bede8bb66} 
+\index{bgc\+\_\+io.\+c@{bgc\+\_\+io.\+c}!bgc\+\_\+print\+\_\+usage@{bgc\+\_\+print\+\_\+usage}}
+\index{bgc\+\_\+print\+\_\+usage@{bgc\+\_\+print\+\_\+usage}!bgc\+\_\+io.\+c@{bgc\+\_\+io.\+c}}
+\subsubsection{\texorpdfstring{bgc\+\_\+print\+\_\+usage()}{bgc\_print\_usage()}}
+{\footnotesize\ttfamily void bgc\+\_\+print\+\_\+usage (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Definition at line \hyperlink{bgc__io_8c_source_l00042}{42} of file \hyperlink{bgc__io_8c_source}{bgc\+\_\+io.\+c}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=263pt]{bgc__io_8c_adcf0cce6fdd3c3d3531f826bede8bb66_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=317pt]{bgc__io_8c_adcf0cce6fdd3c3d3531f826bede8bb66_icgraph}
+\end{center}
+\end{figure}
+\hypertarget{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{}\label{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d} 
+\index{bgc\+\_\+io.\+c@{bgc\+\_\+io.\+c}!bgc\+\_\+printf@{bgc\+\_\+printf}}
+\index{bgc\+\_\+printf@{bgc\+\_\+printf}!bgc\+\_\+io.\+c@{bgc\+\_\+io.\+c}}
+\subsubsection{\texorpdfstring{bgc\+\_\+printf()}{bgc\_printf()}}
+{\footnotesize\ttfamily int bgc\+\_\+printf (\begin{DoxyParamCaption}\item[{signed char}]{verbosity,  }\item[{const char $\ast$}]{format,  }\item[{}]{... }\end{DoxyParamCaption})}
+
+
+
+Definition at line \hyperlink{bgc__io_8c_source_l00130}{130} of file \hyperlink{bgc__io_8c_source}{bgc\+\_\+io.\+c}.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d_icgraph}
+\end{center}
+\end{figure}
+\hypertarget{bgc__io_8c_a7e5b7887ea15ba8d15033332d71ccc98}{}\label{bgc__io_8c_a7e5b7887ea15ba8d15033332d71ccc98} 
+\index{bgc\+\_\+io.\+c@{bgc\+\_\+io.\+c}!bgc\+\_\+verbosity\+\_\+decode@{bgc\+\_\+verbosity\+\_\+decode}}
+\index{bgc\+\_\+verbosity\+\_\+decode@{bgc\+\_\+verbosity\+\_\+decode}!bgc\+\_\+io.\+c@{bgc\+\_\+io.\+c}}
+\subsubsection{\texorpdfstring{bgc\+\_\+verbosity\+\_\+decode()}{bgc\_verbosity\_decode()}}
+{\footnotesize\ttfamily signed char bgc\+\_\+verbosity\+\_\+decode (\begin{DoxyParamCaption}\item[{char $\ast$}]{keyword }\end{DoxyParamCaption})}
+
+
+
+Definition at line \hyperlink{bgc__io_8c_source_l00065}{65} of file \hyperlink{bgc__io_8c_source}{bgc\+\_\+io.\+c}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{bgc__io_8c_a7e5b7887ea15ba8d15033332d71ccc98_cgraph}
+\end{center}
+\end{figure}
+
+
+\subsection{Variable Documentation}
+\hypertarget{bgc__io_8c_a176fee5c0e3671a626cd8ec7d1cc1be8}{}\label{bgc__io_8c_a176fee5c0e3671a626cd8ec7d1cc1be8} 
+\index{bgc\+\_\+io.\+c@{bgc\+\_\+io.\+c}!bgc\+\_\+logfile@{bgc\+\_\+logfile}}
+\index{bgc\+\_\+logfile@{bgc\+\_\+logfile}!bgc\+\_\+io.\+c@{bgc\+\_\+io.\+c}}
+\subsubsection{\texorpdfstring{bgc\+\_\+logfile}{bgc\_logfile}}
+{\footnotesize\ttfamily F\+I\+LE$\ast$ bgc\+\_\+logfile = N\+U\+LL}
+
+
+
+Definition at line \hyperlink{bgc__io_8c_source_l00014}{14} of file \hyperlink{bgc__io_8c_source}{bgc\+\_\+io.\+c}.
+
+\hypertarget{bgc__io_8c_ac2c427ea256a1e3e279e5d21d2017f04}{}\label{bgc__io_8c_ac2c427ea256a1e3e279e5d21d2017f04} 
+\index{bgc\+\_\+io.\+c@{bgc\+\_\+io.\+c}!bgc\+\_\+verbosity@{bgc\+\_\+verbosity}}
+\index{bgc\+\_\+verbosity@{bgc\+\_\+verbosity}!bgc\+\_\+io.\+c@{bgc\+\_\+io.\+c}}
+\subsubsection{\texorpdfstring{bgc\+\_\+verbosity}{bgc\_verbosity}}
+{\footnotesize\ttfamily signed char bgc\+\_\+verbosity = B\+V\+\_\+\+D\+E\+T\+A\+IL}
+
+
+
+Definition at line \hyperlink{bgc__io_8c_source_l00013}{13} of file \hyperlink{bgc__io_8c_source}{bgc\+\_\+io.\+c}.
+

@@ -1,0 +1,185 @@
+\hypertarget{radtrans_8c_source}{}\section{radtrans.\+c}
+\label{radtrans_8c_source}\index{c\+:/\+R\+E\+P\+O/biomebgc-\/4.\+2/src/bgclib/radtrans.\+c@{c\+:/\+R\+E\+P\+O/biomebgc-\/4.\+2/src/bgclib/radtrans.\+c}}
+
+\begin{DoxyCode}
+00001 \textcolor{comment}{/* }
+00002 \textcolor{comment}{radtrans.c}
+00003 \textcolor{comment}{calculate leaf area index, sun and shade fractions, and specific}
+00004 \textcolor{comment}{leaf area for sun and shade canopy fractions, then calculate}
+00005 \textcolor{comment}{canopy radiation interception and transmission }
+00006 \textcolor{comment}{}
+00007 \textcolor{comment}{*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*}
+00008 \textcolor{comment}{Biome-BGC version 4.2 (final release)}
+00009 \textcolor{comment}{See copyright.txt for Copyright information}
+00010 \textcolor{comment}{*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*}
+00011 \textcolor{comment}{*/}
+00012 
+00013 \textcolor{preprocessor}{#include "bgc.h"}
+00014 
+\hypertarget{radtrans_8c_source_l00015}{}\hyperlink{radtrans_8c_a323e7fe52f825be6dfa95a158a812db4}{00015} \textcolor{keywordtype}{int} \hyperlink{radtrans_8c_a323e7fe52f825be6dfa95a158a812db4}{radtrans}(\textcolor{keyword}{const} cstate\_struct* cs, \textcolor{keyword}{const} epconst\_struct* epc, 
+00016 metvar\_struct* metv, epvar\_struct* epv, \textcolor{keywordtype}{double} albedo)
+00017 \{
+00018     \textcolor{comment}{/* calculate the projected leaf area and SLA for sun and shade fractions}
+00019 \textcolor{comment}{    and the canopy transmission and absorption of shortwave radiation}
+00020 \textcolor{comment}{    based on the Beer's Law assumption of radiation attenuation as a }
+00021 \textcolor{comment}{    function of projected LAI.}
+00022 \textcolor{comment}{    */}
+00023 
+00024     \textcolor{keywordtype}{int} ok=1;
+00025     \textcolor{keywordtype}{double} proj\_lai;
+00026     \textcolor{keywordtype}{double} albedo\_sw, albedo\_par;
+00027     \textcolor{keywordtype}{double} sw,par;
+00028     \textcolor{keywordtype}{double} swabs, swtrans;
+00029     \textcolor{keywordtype}{double} parabs;
+00030     \textcolor{keywordtype}{double} k;
+00031     \textcolor{keywordtype}{double} k\_sw, k\_par;
+00032     \textcolor{keywordtype}{double} swabs\_plaisun, swabs\_plaishade;
+00033     \textcolor{keywordtype}{double} swabs\_per\_plaisun, swabs\_per\_plaishade;
+00034     \textcolor{keywordtype}{double} parabs\_plaisun, parabs\_plaishade;
+00035     \textcolor{keywordtype}{double} parabs\_per\_plaisun, parabs\_per\_plaishade;
+00036     
+00037     \textcolor{comment}{/* The following equations estimate the albedo and extinction }
+00038 \textcolor{comment}{    coefficients for the shortwave and PAR spectra from the values given for the}
+00039 \textcolor{comment}{    entire shortwave range (from Jones, H.G., 1992. Plants and Microclimate,}
+00040 \textcolor{comment}{    2nd Edition. Cambridge University Press. pp. 30-38.) These conversions}
+00041 \textcolor{comment}{    are approximated from the information given in Jones.}
+00042 \textcolor{comment}{    */}
+00043     
+00044     \textcolor{keywordflow}{if} (cs->leafc > 0.0)
+00045     \{
+00046         \textcolor{comment}{/* Calculate whole-canopy projected and all-sided LAI */}
+00047         epv->proj\_lai = cs->leafc * epc->avg\_proj\_sla;
+00048         epv->all\_lai = epv->proj\_lai * epc->lai\_ratio;
+00049         
+00050         \textcolor{comment}{/* Calculate projected LAI for sunlit and shaded canopy portions */}
+00051         epv->plaisun = 1.0 - exp(-epv->proj\_lai);
+00052         epv->plaishade = epv->proj\_lai - epv->plaisun;
+00053         \textcolor{keywordflow}{if} (epv->plaishade < 0.0)
+00054         \{
+00055             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"FATAL ERROR: Negative plaishade\(\backslash\)n"});
+00056             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"LAI of shaded canopy = %lf\(\backslash\)n"},epv->plaishade);
+00057             ok=0;
+00058         \}
+00059         
+00060         \textcolor{comment}{/* calculate the projected specific leaf area for sunlit and }
+00061 \textcolor{comment}{        shaded canopy fractions */}
+00062         epv->sun\_proj\_sla = (epv->plaisun + (epv->plaishade/epc->sla\_ratio)) /
+00063             cs->leafc;
+00064         epv->shade\_proj\_sla = epv->sun\_proj\_sla * epc->sla\_ratio;
+00065     \}
+00066     \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} (cs->leafc == 0.0)
+00067     \{
+00068         epv->all\_lai = 0.0;
+00069         epv->proj\_lai = 0.0;
+00070         epv->plaisun = 0.0;
+00071         epv->plaishade = 0.0;
+00072         epv->sun\_proj\_sla = 0.0;
+00073         epv->shade\_proj\_sla = 0.0;
+00074     \}
+00075     \textcolor{keywordflow}{else}
+00076     \{
+00077         \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"FATAL ERROR: Negative leaf carbon pool\(\backslash\)n"});
+00078         \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"leafc = %.7e\(\backslash\)n"},cs->leafc);
+00079         ok=0;
+00080     \}
+00081     
+00082     k = epc->ext\_coef;
+00083     proj\_lai = epv->proj\_lai;
+00084     
+00085     \textcolor{comment}{/* calculate total shortwave absorbed */}
+00086     k\_sw = k;
+00087     albedo\_sw = albedo;
+00088 
+00089     \textcolor{comment}{/* FIXED 02/05/04 */}
+00090     \textcolor{keywordflow}{if}( metv->swavgfd < 0.0 )
+00091         metv->swavgfd = 0.0;
+00092 
+00093     sw = metv->swavgfd * (1.0 - albedo\_sw);
+00094     swabs = sw * (1.0 - exp(-k\_sw*proj\_lai));
+00095     swtrans = sw - swabs;
+00096     
+00097     \textcolor{comment}{/* calculate PAR absorbed */}
+00098     k\_par = k * 1.0;
+00099     albedo\_par = albedo/3.0;
+00100 
+00101     \textcolor{comment}{/* FIXED 02/05/04 */}
+00102     \textcolor{keywordflow}{if}( metv->par < 0.0 )
+00103         metv->par = 0.0;
+00104 
+00105     par = metv->par * (1.0 - albedo\_par);
+00106     parabs = par * (1.0 - exp(-k\_par*proj\_lai));
+00107     
+00108     \textcolor{comment}{/* calculate the total shortwave absorbed by the sunlit and}
+00109 \textcolor{comment}{    shaded canopy fractions */}
+00110     swabs\_plaisun = k\_sw * sw * epv->plaisun;
+00111     swabs\_plaishade = swabs - swabs\_plaisun;
+00112 
+00113     \textcolor{comment}{/* FIXED 02/05/04 */}
+00114     \textcolor{keywordflow}{if}( swabs\_plaishade  < 0.0 )
+00115     \{
+00116         swabs\_plaisun = swabs;
+00117         swabs\_plaishade  = 0;
+00118     \}
+00119     
+00120     \textcolor{keywordflow}{if} (swabs\_plaishade < 0.0) \textcolor{comment}{/* AAN: Is this block even necesary? */}
+00121     \{
+00122         \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"FATAL ERROR: negative swabs\_plaishade (%lf)\(\backslash\)n"},swabs\_plaishade);
+00123         ok=0;
+00124     \}
+00125 
+00126     \textcolor{comment}{/* convert this to the shortwave absorbed per unit LAI in the sunlit and }
+00127 \textcolor{comment}{    shaded canopy fractions */}
+00128     \textcolor{keywordflow}{if} (proj\_lai > 0.0)
+00129     \{
+00130         swabs\_per\_plaisun = swabs\_plaisun/epv->plaisun;
+00131         swabs\_per\_plaishade = swabs\_plaishade/epv->plaishade;
+00132     \}
+00133     \textcolor{keywordflow}{else}
+00134     \{
+00135         swabs\_per\_plaisun = swabs\_per\_plaishade = 0.0;
+00136     \}
+00137 
+00138     \textcolor{comment}{/* calculate the total PAR absorbed by the sunlit and}
+00139 \textcolor{comment}{    shaded canopy fractions */}
+00140     parabs\_plaisun = k\_par * par * epv->plaisun;
+00141     parabs\_plaishade = parabs - parabs\_plaisun;
+00142 
+00143     \textcolor{comment}{/* FIXED 02/05/04 */}
+00144     \textcolor{keywordflow}{if} (parabs\_plaishade < 0.0)
+00145     \{
+00146         parabs\_plaisun = parabs;
+00147         parabs\_plaishade = 0.0;
+00148     \}
+00149     
+00150     \textcolor{keywordflow}{if} (parabs\_plaishade < 0.0) \textcolor{comment}{/* AAN: again, not necesary. */}
+00151     \{
+00152         \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"FATAL ERROR: negative parabs\_plaishade (%lf)\(\backslash\)n"},parabs\_plaishade);
+00153         ok=0;
+00154     \}
+00155 
+00156     \textcolor{comment}{/* convert this to the PAR absorbed per unit LAI in the sunlit and }
+00157 \textcolor{comment}{    shaded canopy fractions */}
+00158     \textcolor{keywordflow}{if} (proj\_lai > 0.0)
+00159     \{
+00160         parabs\_per\_plaisun = parabs\_plaisun/epv->plaisun;
+00161         parabs\_per\_plaishade = parabs\_plaishade/epv->plaishade;
+00162     \}
+00163     \textcolor{keywordflow}{else}
+00164     \{
+00165         parabs\_per\_plaisun = parabs\_per\_plaishade = 0.0;
+00166     \}
+00167 
+00168     \textcolor{comment}{/* assign structure values */}
+00169     metv->swabs = swabs;
+00170     metv->swtrans = swtrans;
+00171     metv->swabs\_per\_plaisun = swabs\_per\_plaisun;
+00172     metv->swabs\_per\_plaishade = swabs\_per\_plaishade;
+00173     \textcolor{comment}{/* calculate PPFD: assumes an average energy for PAR photon (EPAR, umol/J)}
+00174 \textcolor{comment}{    unit conversion: W/m2 --> umol/m2/s. */}
+00175     metv->ppfd\_per\_plaisun = parabs\_per\_plaisun * EPAR;
+00176     metv->ppfd\_per\_plaishade = parabs\_per\_plaishade * EPAR;
+00177     metv->parabs = parabs;
+00178     
+00179     \textcolor{keywordflow}{return} (!ok);
+00180 \}
+\end{DoxyCode}

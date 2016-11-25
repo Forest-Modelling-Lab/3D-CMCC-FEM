@@ -1,0 +1,162 @@
+\hypertarget{check__balance_8c_source}{}\section{check\+\_\+balance.\+c}
+\label{check__balance_8c_source}\index{c\+:/\+R\+E\+P\+O/biomebgc-\/4.\+2/src/bgclib/check\+\_\+balance.\+c@{c\+:/\+R\+E\+P\+O/biomebgc-\/4.\+2/src/bgclib/check\+\_\+balance.\+c}}
+
+\begin{DoxyCode}
+00001 \textcolor{comment}{/* }
+00002 \textcolor{comment}{check\_balance.c}
+00003 \textcolor{comment}{daily test of mass balance (water, carbon, and nitrogen state variables)}
+00004 \textcolor{comment}{}
+00005 \textcolor{comment}{*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*}
+00006 \textcolor{comment}{Biome-BGC version 4.2 (final release)}
+00007 \textcolor{comment}{See copyright.txt for Copyright information}
+00008 \textcolor{comment}{*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*}
+00009 \textcolor{comment}{*/}
+00010 
+00011 \textcolor{preprocessor}{#include "bgc.h"}
+00012 
+\hypertarget{check__balance_8c_source_l00013}{}\hyperlink{check__balance_8c_a7c3407e1cb5eb1e58ac2ac744a6156d6}{00013} \textcolor{keywordtype}{int} \hyperlink{check__balance_8c_a7c3407e1cb5eb1e58ac2ac744a6156d6}{check\_water\_balance}(wstate\_struct* ws, \textcolor{keywordtype}{int} first\_balance)
+00014 \{
+00015     \textcolor{keywordtype}{int} ok=1;
+00016     \textcolor{keyword}{static} \textcolor{keywordtype}{double} old\_balance;
+00017     \textcolor{keywordtype}{double} in, out, store, balance;
+00018     
+00019     \textcolor{comment}{/* DAILY CHECK ON WATER BALANCE */}
+00020     
+00021     \textcolor{comment}{/* sum of sources */}
+00022     in = ws->prcp\_src;
+00023     
+00024     \textcolor{comment}{/* sum of sinks */}
+00025     out = ws->outflow\_snk + ws->soilevap\_snk + ws->snowsubl\_snk + 
+00026         ws->canopyevap\_snk + ws->trans\_snk;
+00027         
+00028     \textcolor{comment}{/* sum of current storage */}
+00029     store = ws->soilw + ws->snoww + ws->canopyw;
+00030     
+00031     \textcolor{comment}{/* calculate current balance */}
+00032     balance = in - out - store;
+00033      
+00034     \textcolor{keywordflow}{if} (!first\_balance)
+00035     \{
+00036         \textcolor{keywordflow}{if} (fabs(old\_balance - balance) > 1e-4)
+00037         \{
+00038             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"FATAL ERRROR: Water balance error:\(\backslash\)n"});
+00039             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Balance from previous day = %lf\(\backslash\)n"},old\_balance);
+00040             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Balance from current day  = %lf\(\backslash\)n"},balance);
+00041             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Difference (previous - current) = %lf\(\backslash\)n"},old\_balance-balance);
+00042             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Components of current balance:\(\backslash\)n"});
+00043             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Sources (summed over entire run)  = %lf\(\backslash\)n"},in);
+00044             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Sinks   (summed over entire run)  = %lf\(\backslash\)n"},out);
+00045             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Storage (current state variables) = %lf\(\backslash\)n"},store);
+00046             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Exiting...\(\backslash\)n"});
+00047             ok=0;
+00048         \}
+00049     \}
+00050     old\_balance = balance;
+00051     
+00052     \textcolor{keywordflow}{return} (!ok);
+00053 \}
+00054 
+\hypertarget{check__balance_8c_source_l00055}{}\hyperlink{check__balance_8c_adf0fd12860935512d2a5f628e87c1171}{00055} \textcolor{keywordtype}{int} \hyperlink{check__balance_8c_adf0fd12860935512d2a5f628e87c1171}{check\_carbon\_balance}(cstate\_struct* cs, \textcolor{keywordtype}{int} first\_balance)
+00056 \{
+00057     \textcolor{keywordtype}{int} ok=1;
+00058     \textcolor{keyword}{static} \textcolor{keywordtype}{double} old\_balance;
+00059     \textcolor{keywordtype}{double} in, out, store, balance;
+00060     
+00061     \textcolor{comment}{/* DAILY CHECK ON CARBON BALANCE */}
+00062     
+00063     \textcolor{comment}{/* sum of sources */}
+00064     in = cs->psnsun\_src + cs->psnshade\_src;
+00065     
+00066     \textcolor{comment}{/* sum of sinks */}
+00067     out = cs->leaf\_mr\_snk + cs->leaf\_gr\_snk + cs->froot\_mr\_snk + 
+00068         cs->froot\_gr\_snk + cs->livestem\_mr\_snk + cs->livestem\_gr\_snk + 
+00069         cs->deadstem\_gr\_snk + cs->livecroot\_mr\_snk + cs->livecroot\_gr\_snk + 
+00070         cs->deadcroot\_gr\_snk + cs->litr1\_hr\_snk + cs->litr2\_hr\_snk + 
+00071         cs->litr4\_hr\_snk + cs->soil1\_hr\_snk + cs->soil2\_hr\_snk + 
+00072         cs->soil3\_hr\_snk + cs->soil4\_hr\_snk + cs->fire\_snk; 
+00073         
+00074     \textcolor{comment}{/* sum of current storage */}
+00075     store = cs->leafc + cs->leafc\_storage + cs->leafc\_transfer +
+00076         cs->frootc + cs->frootc\_storage + cs->frootc\_transfer + 
+00077         cs->livestemc + cs->livestemc\_storage + cs->livestemc\_transfer + 
+00078         cs->deadstemc + cs->deadstemc\_storage + cs->deadstemc\_transfer +
+00079         cs->livecrootc + cs->livecrootc\_storage + cs->livecrootc\_transfer + 
+00080         cs->deadcrootc + cs->deadcrootc\_storage + cs->deadcrootc\_transfer + 
+00081         cs->gresp\_storage + cs->gresp\_transfer + cs->cwdc + cs->litr1c +
+00082         cs->litr2c + cs->litr3c + cs->litr4c + cs->soil1c + cs->soil2c +
+00083         cs->soil3c + cs->soil4c + cs->cpool;
+00084     
+00085     \textcolor{comment}{/* calculate current balance */}
+00086     balance = in - out - store;
+00087      
+00088     \textcolor{keywordflow}{if} (!first\_balance)
+00089     \{
+00090         \textcolor{keywordflow}{if} (fabs(old\_balance - balance) > 1e-8)
+00091         \{
+00092             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"FATAL ERRROR: carbon balance error:\(\backslash\)n"});
+00093             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Balance from previous day = %lf\(\backslash\)n"},old\_balance);
+00094             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Balance from current day  = %lf\(\backslash\)n"},balance);
+00095             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Difference (previous - current) = %lf\(\backslash\)n"},old\_balance-balance);
+00096             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Components of current balance:\(\backslash\)n"});
+00097             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Sources (summed over entire run)  = %lf\(\backslash\)n"},in);
+00098             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Sinks   (summed over entire run)  = %lf\(\backslash\)n"},out);
+00099             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Storage (current state variables) = %lf\(\backslash\)n"},store);
+00100             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Exiting...\(\backslash\)n"});
+00101             ok=0;
+00102         \}
+00103     \}
+00104     old\_balance = balance;
+00105 
+00106     \textcolor{keywordflow}{return} (!ok);
+00107 \}       
+00108 
+\hypertarget{check__balance_8c_source_l00109}{}\hyperlink{check__balance_8c_a72e7148d8dcce5a86380cf56d81f0955}{00109} \textcolor{keywordtype}{int} \hyperlink{check__balance_8c_a72e7148d8dcce5a86380cf56d81f0955}{check\_nitrogen\_balance}(nstate\_struct* ns, \textcolor{keywordtype}{int} first\_balance)
+00110 \{
+00111     \textcolor{keywordtype}{int} ok=1;
+00112     \textcolor{keywordtype}{double} in,out,store,balance;
+00113     \textcolor{keyword}{static} \textcolor{keywordtype}{double} old\_balance = 0.0;
+00114 
+00115     \textcolor{comment}{/* DAILY CHECK ON NITROGEN BALANCE */}
+00116     
+00117     \textcolor{comment}{/* sum of sources */}
+00118     in = ns->nfix\_src + ns->ndep\_src;
+00119     
+00120     \textcolor{comment}{/* sum of sinks */}
+00121     out = ns->nleached\_snk + ns->nvol\_snk + ns->fire\_snk;
+00122         
+00123     \textcolor{comment}{/* sum of current storage */}
+00124     store = ns->leafn + ns->leafn\_storage + ns->leafn\_transfer +
+00125         ns->frootn + ns->frootn\_storage + ns->frootn\_transfer + 
+00126         ns->livestemn + ns->livestemn\_storage + ns->livestemn\_transfer + 
+00127         ns->deadstemn + ns->deadstemn\_storage + ns->deadstemn\_transfer + 
+00128         ns->livecrootn + ns->livecrootn\_storage + ns->livecrootn\_transfer + 
+00129         ns->deadcrootn + ns->deadcrootn\_storage + ns->deadcrootn\_transfer + 
+00130         ns->cwdn + ns->litr1n + ns->litr2n + ns->litr3n + ns->litr4n +
+00131         ns->soil1n + ns->soil2n + ns->soil3n + ns->soil4n +
+00132         ns->sminn + ns->npool + ns->retransn;
+00133     
+00134     \textcolor{comment}{/* calculate current balance */}
+00135     balance = in - out - store;
+00136      
+00137     \textcolor{keywordflow}{if} (!first\_balance)
+00138     \{
+00139         \textcolor{keywordflow}{if} (fabs(old\_balance - balance) > 1e-8)
+00140         \{
+00141             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"FATAL ERRROR: nitrogen balance error:\(\backslash\)n"});
+00142             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Balance from previous day = %lf\(\backslash\)n"},old\_balance);
+00143             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Balance from current day  = %lf\(\backslash\)n"},balance);
+00144             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Difference (previous - current) = %lf\(\backslash\)n"},old\_balance-balance);
+00145             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Components of current balance:\(\backslash\)n"});
+00146             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Sources (summed over entire run)  = %lf\(\backslash\)n"},in);
+00147             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Sinks   (summed over entire run)  = %lf\(\backslash\)n"},out);
+00148             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Storage (current state variables) = %lf\(\backslash\)n"},store);
+00149             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Exiting...\(\backslash\)n"});
+00150             ok=0;
+00151         \}
+00152     \}
+00153     old\_balance = balance;
+00154     
+00155     \textcolor{keywordflow}{return} (!ok);
+00156 \}
+00157 
+\end{DoxyCode}

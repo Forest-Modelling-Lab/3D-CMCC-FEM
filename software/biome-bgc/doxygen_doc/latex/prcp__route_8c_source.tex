@@ -1,0 +1,63 @@
+\hypertarget{prcp__route_8c_source}{}\section{prcp\+\_\+route.\+c}
+\label{prcp__route_8c_source}\index{c\+:/\+R\+E\+P\+O/biomebgc-\/4.\+2/src/bgclib/prcp\+\_\+route.\+c@{c\+:/\+R\+E\+P\+O/biomebgc-\/4.\+2/src/bgclib/prcp\+\_\+route.\+c}}
+
+\begin{DoxyCode}
+00001 \textcolor{comment}{/* }
+00002 \textcolor{comment}{prcp\_route.c}
+00003 \textcolor{comment}{routing of daily precipitation to canopy, soil, snowpack}
+00004 \textcolor{comment}{}
+00005 \textcolor{comment}{*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*}
+00006 \textcolor{comment}{Biome-BGC version 4.2 (final release)}
+00007 \textcolor{comment}{See copyright.txt for Copyright information}
+00008 \textcolor{comment}{*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*}
+00009 \textcolor{comment}{*/}
+00010 
+00011 \textcolor{preprocessor}{#include "bgc.h"}
+00012 
+\hypertarget{prcp__route_8c_source_l00013}{}\hyperlink{prcp__route_8c_a5215fb55bf012e8cc6bb76df6ef10f08}{00013} \textcolor{keywordtype}{int} \hyperlink{prcp__route_8c_a5215fb55bf012e8cc6bb76df6ef10f08}{prcp\_route}(\textcolor{keyword}{const} metvar\_struct* metv, \textcolor{keywordtype}{double} precip\_int\_coef,
+00014 \textcolor{keywordtype}{double} all\_lai, wflux\_struct* wf) 
+00015 \{
+00016     \textcolor{comment}{/* Precipitation routing, as either rain or snow.  Rain can be}
+00017 \textcolor{comment}{    intercepted on the canopy, and amount in excess of interception is}
+00018 \textcolor{comment}{    routed to the soil.  The intercepted volume is saved in a temporary}
+00019 \textcolor{comment}{    variable that is later passed to the canopy evaporation routine,}
+00020 \textcolor{comment}{    but there is no day-to-day storage of water on the canopy: any that is}
+00021 \textcolor{comment}{    not evaporated in one day is routed to the soil in canopy\_et().}
+00022 \textcolor{comment}{    }
+00023 \textcolor{comment}{    There is no canopy interception of snow.}
+00024 \textcolor{comment}{    */}
+00025     
+00026     \textcolor{keywordtype}{int} ok=1;
+00027     \textcolor{keywordtype}{double} max\_int;
+00028     \textcolor{keywordtype}{double} prcp, through;
+00029 
+00030     prcp = metv->prcp;
+00031 
+00032     \textcolor{comment}{/* maximum daily canopy interception }
+00033 \textcolor{comment}{    (kg intercepted/kg rain/unit all-sided LAI/day) */}
+00034     max\_int = precip\_int\_coef * prcp * all\_lai;
+00035 
+00036     \textcolor{comment}{/* rain vs. snow, and canopy interception */}
+00037     \textcolor{keywordflow}{if} (metv->tavg > 0.0)             \textcolor{comment}{/* rain */}
+00038     \{
+00039         \textcolor{keywordflow}{if} (prcp <= max\_int)          \textcolor{comment}{/* all intercepted */}
+00040         \{
+00041             wf->prcp\_to\_canopyw = prcp; 
+00042             through = 0.0;
+00043         \}
+00044         \textcolor{keywordflow}{else}                          \textcolor{comment}{/* canopy limits interception */}
+00045         \{
+00046             wf->prcp\_to\_canopyw = max\_int;
+00047             through = prcp - max\_int;
+00048         \}
+00049         
+00050         wf->prcp\_to\_soilw = through;  \textcolor{comment}{/* throughfall to soil water */}
+00051     \}
+00052     \textcolor{keywordflow}{else}                              \textcolor{comment}{/* snow */}
+00053     \{
+00054         wf->prcp\_to\_snoww = prcp;     \textcolor{comment}{/* no interception */}
+00055     \}
+00056     
+00057     \textcolor{keywordflow}{return}(!ok);
+00058 \}
+\end{DoxyCode}

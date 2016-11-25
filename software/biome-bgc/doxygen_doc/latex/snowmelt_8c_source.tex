@@ -1,0 +1,58 @@
+\hypertarget{snowmelt_8c_source}{}\section{snowmelt.\+c}
+\label{snowmelt_8c_source}\index{c\+:/\+R\+E\+P\+O/biomebgc-\/4.\+2/src/bgclib/snowmelt.\+c@{c\+:/\+R\+E\+P\+O/biomebgc-\/4.\+2/src/bgclib/snowmelt.\+c}}
+
+\begin{DoxyCode}
+00001 \textcolor{comment}{/* }
+00002 \textcolor{comment}{snowmelt.c}
+00003 \textcolor{comment}{daily snowmelt and sublimation}
+00004 \textcolor{comment}{}
+00005 \textcolor{comment}{*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*}
+00006 \textcolor{comment}{Biome-BGC version 4.2 (final release)}
+00007 \textcolor{comment}{See copyright.txt for Copyright information}
+00008 \textcolor{comment}{*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*}
+00009 \textcolor{comment}{*/}
+00010 
+00011 \textcolor{preprocessor}{#include "bgc.h"}
+00012 
+\hypertarget{snowmelt_8c_source_l00013}{}\hyperlink{snowmelt_8c_a15e5894893f03411741f82c914d50516}{00013} \textcolor{keywordtype}{int} \hyperlink{snowmelt_8c_a15e5894893f03411741f82c914d50516}{snowmelt}(\textcolor{keyword}{const} metvar\_struct* metv, wflux\_struct* wf, \textcolor{keywordtype}{double} snoww)
+00014 \{
+00015     \textcolor{comment}{/* temperature and radiation snowmelt, }
+00016 \textcolor{comment}{    from Joseph Coughlan PhD thesis, 1991 */}
+00017 
+00018     \textcolor{keywordtype}{int} ok=1;
+00019     \textcolor{keyword}{static} \textcolor{keywordtype}{double} sn\_abs = 0.6;    \textcolor{comment}{/* absorptivity of snow */}
+00020     \textcolor{keyword}{static} \textcolor{keywordtype}{double} lh\_fus = 335.0;  \textcolor{comment}{/* (kJ/kg) latent heat of fusion */}
+00021     \textcolor{keyword}{static} \textcolor{keywordtype}{double} lh\_sub = 2845.0; \textcolor{comment}{/* (kJ/kg) latent heal of sublimation */}
+00022     \textcolor{keyword}{static} \textcolor{keywordtype}{double} tcoef  = 0.65;   \textcolor{comment}{/* (kg/m2/deg C/d) temp. snowmelt coef */}
+00023     \textcolor{keywordtype}{double} rn;                     \textcolor{comment}{/* (kJ/m2/d) incident radiation */}
+00024     \textcolor{keywordtype}{double} melt, tmelt, rmelt, rsub;
+00025 
+00026     \textcolor{comment}{/* canopy transmitted radiation: convert from W/m2 --> KJ/m2/d */}   
+00027     rn = metv->swtrans * metv->dayl * sn\_abs * 0.001;
+00028     tmelt = rmelt = rsub = 0.0;
+00029     
+00030     \textcolor{keywordflow}{if} (metv->tavg > 0.0)  \textcolor{comment}{/* temperature and radiaiton melt from snowpack */}
+00031 
+00032     \{
+00033         tmelt = tcoef * metv->tavg;
+00034         rmelt = rn / lh\_fus;
+00035         melt = tmelt+rmelt;
+00036     
+00037         \textcolor{keywordflow}{if} (melt > snoww)
+00038             melt = snoww;
+00039     
+00040         wf->snoww\_to\_soilw = melt;
+00041     \}
+00042     \textcolor{keywordflow}{else}  \textcolor{comment}{/* sublimation from snowpack */}
+00043     \{
+00044         rsub = rn / lh\_sub;
+00045     
+00046         \textcolor{keywordflow}{if} (rsub > snoww)
+00047             rsub = snoww;
+00048     
+00049         wf->snoww\_subl = rsub;
+00050     \}   
+00051     
+00052     \textcolor{keywordflow}{return} (!ok);
+00053 \}
+\end{DoxyCode}

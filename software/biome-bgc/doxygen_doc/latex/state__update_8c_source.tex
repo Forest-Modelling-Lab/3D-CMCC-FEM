@@ -1,0 +1,607 @@
+\hypertarget{state__update_8c_source}{}\section{state\+\_\+update.\+c}
+\label{state__update_8c_source}\index{c\+:/\+R\+E\+P\+O/biomebgc-\/4.\+2/src/bgclib/state\+\_\+update.\+c@{c\+:/\+R\+E\+P\+O/biomebgc-\/4.\+2/src/bgclib/state\+\_\+update.\+c}}
+
+\begin{DoxyCode}
+00001 \textcolor{comment}{/*}
+00002 \textcolor{comment}{state\_update.c}
+00003 \textcolor{comment}{Resolve the fluxes in bgc() daily loop to update state variables}
+00004 \textcolor{comment}{}
+00005 \textcolor{comment}{*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*}
+00006 \textcolor{comment}{Biome-BGC version 4.2 (final release)}
+00007 \textcolor{comment}{See copyright.txt for Copyright information}
+00008 \textcolor{comment}{*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*}
+00009 \textcolor{comment}{*/}
+00010 
+00011 \textcolor{preprocessor}{#include "bgc.h"}
+00012 
+00013 
+\hypertarget{state__update_8c_source_l00014}{}\hyperlink{state__update_8c_a7107f4defb131263ebb760ecf8423ab6}{00014} \textcolor{keywordtype}{int} \hyperlink{state__update_8c_a7107f4defb131263ebb760ecf8423ab6}{daily\_water\_state\_update}(wflux\_struct* wf, wstate\_struct* ws)
+00015 \{
+00016     \textcolor{comment}{/* daily update of the water state variables */}
+00017      
+00018     \textcolor{keywordtype}{int} ok=1;
+00019     
+00020     \textcolor{comment}{/* precipitation fluxes */}
+00021     ws->canopyw        += wf->prcp\_to\_canopyw;
+00022     ws->prcp\_src       += wf->prcp\_to\_canopyw;
+00023     ws->soilw          += wf->prcp\_to\_soilw;
+00024     ws->prcp\_src       += wf->prcp\_to\_soilw;
+00025     ws->snoww          += wf->prcp\_to\_snoww;
+00026     ws->prcp\_src       += wf->prcp\_to\_snoww;
+00027     
+00028     \textcolor{comment}{/* snowmelt fluxes */}
+00029     ws->soilw          += wf->snoww\_to\_soilw;
+00030     ws->snoww          -= wf->snoww\_to\_soilw;
+00031     ws->snowsubl\_snk   += wf->snoww\_subl;
+00032     ws->snoww          -= wf->snoww\_subl;
+00033     
+00034     \textcolor{comment}{/* bare soil evaporation */}
+00035     ws->soilevap\_snk   += wf->soilw\_evap;
+00036     ws->soilw          -= wf->soilw\_evap;
+00037     
+00038     \textcolor{comment}{/* canopy intercepted water fluxes */}
+00039     ws->canopyevap\_snk += wf->canopyw\_evap;
+00040     ws->canopyw        -= wf->canopyw\_evap;
+00041     ws->soilw          += wf->canopyw\_to\_soilw;
+00042     ws->canopyw        -= wf->canopyw\_to\_soilw;
+00043     
+00044     \textcolor{comment}{/* transpiration */}
+00045     ws->trans\_snk      += wf->soilw\_trans;
+00046     ws->soilw          -= wf->soilw\_trans;
+00047     
+00048     \textcolor{comment}{/* outflow */}
+00049     ws->outflow\_snk    += wf->soilw\_outflow;
+00050     ws->soilw          -= wf->soilw\_outflow;
+00051     
+00052     \textcolor{comment}{/* the following special case prevents evaporation under very}
+00053 \textcolor{comment}{    dry conditions from causing a negative soilwater content */}
+00054     \textcolor{keywordflow}{if} (ws->soilw < 0.0)        \textcolor{comment}{/* negative soilwater */}
+00055     \{
+00056         \textcolor{comment}{/* add back the evaporation and transpiration fluxes, and}
+00057 \textcolor{comment}{        set these fluxes to 0.0 */}
+00058         ws->soilw        += wf->soilw\_evap;
+00059         ws->soilevap\_snk -= wf->soilw\_evap;
+00060         ws->soilw        += wf->soilw\_trans;
+00061         ws->trans\_snk    -= wf->soilw\_trans;
+00062         wf->soilw\_evap = 0.0;
+00063         wf->soilw\_trans = 0.0;
+00064         
+00065         \textcolor{comment}{/* test again for negative soilwater...should never be true */}
+00066         \textcolor{keywordflow}{if} (ws->soilw < 0.0) 
+00067         \{
+00068             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Fatal negative soilwater error\(\backslash\)n"});
+00069             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"soilwater = %e\(\backslash\)n"},ws->soilw);
+00070             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"most likely a problem with reading the met data input file...\(\backslash\)n
+      "});
+00071             ok=0;
+00072         \}
+00073     \}
+00074     
+00075     \textcolor{keywordflow}{return} (!ok);
+00076 \}
+00077 
+\hypertarget{state__update_8c_source_l00078}{}\hyperlink{state__update_8c_ab0adc8a68a22b97c1eba81f5da03d555}{00078} \textcolor{keywordtype}{int} \hyperlink{state__update_8c_ab0adc8a68a22b97c1eba81f5da03d555}{daily\_carbon\_state\_update}(cflux\_struct* cf, cstate\_struct* cs,
+00079 \textcolor{keywordtype}{int} alloc, \textcolor{keywordtype}{int} woody, \textcolor{keywordtype}{int} evergreen)
+00080 \{
+00081     \textcolor{comment}{/* daily update of the carbon state variables */}
+00082     
+00083     \textcolor{keywordtype}{int} ok=1;
+00084     
+00085     \textcolor{comment}{/* C state variables are updated below in the order of the relevant}
+00086 \textcolor{comment}{    fluxes in the daily model loop */}
+00087     
+00088     \textcolor{comment}{/* NOTE: Mortality fluxes are all accounted for in a separate routine, }
+00089 \textcolor{comment}{    which is to be called after this routine.  This is a special case}
+00090 \textcolor{comment}{    where the updating of state variables is order-sensitive, since }
+00091 \textcolor{comment}{    otherwise the complications of possibly having mortality fluxes drive }
+00092 \textcolor{comment}{    the pools negative would create big, unnecessary headaches. */}
+00093     
+00094     \textcolor{comment}{/* Phenology fluxes */}
+00095     \textcolor{comment}{/* leaf and fine root transfer growth */}
+00096     cs->leafc            += cf->leafc\_transfer\_to\_leafc;
+00097     cs->leafc\_transfer   -= cf->leafc\_transfer\_to\_leafc;
+00098     cs->frootc           += cf->frootc\_transfer\_to\_frootc;
+00099     cs->frootc\_transfer  -= cf->frootc\_transfer\_to\_frootc;
+00100     \textcolor{keywordflow}{if} (woody)
+00101     \{
+00102         \textcolor{comment}{/* Stem and coarse root transfer growth */}
+00103         cs->livestemc             += cf->livestemc\_transfer\_to\_livestemc;
+00104         cs->livestemc\_transfer    -= cf->livestemc\_transfer\_to\_livestemc;
+00105         cs->deadstemc             += cf->deadstemc\_transfer\_to\_deadstemc;
+00106         cs->deadstemc\_transfer    -= cf->deadstemc\_transfer\_to\_deadstemc;
+00107         cs->livecrootc            += cf->livecrootc\_transfer\_to\_livecrootc;
+00108         cs->livecrootc\_transfer   -= cf->livecrootc\_transfer\_to\_livecrootc;
+00109         cs->deadcrootc            += cf->deadcrootc\_transfer\_to\_deadcrootc;
+00110         cs->deadcrootc\_transfer   -= cf->deadcrootc\_transfer\_to\_deadcrootc;
+00111     \}
+00112     \textcolor{comment}{/* Leaf and fine root litterfall */}
+00113     cs->litr1c     += cf->leafc\_to\_litr1c;
+00114     cs->leafc      -= cf->leafc\_to\_litr1c;
+00115     cs->litr2c     += cf->leafc\_to\_litr2c;
+00116     cs->leafc      -= cf->leafc\_to\_litr2c;
+00117     cs->litr3c     += cf->leafc\_to\_litr3c;
+00118     cs->leafc      -= cf->leafc\_to\_litr3c;
+00119     cs->litr4c     += cf->leafc\_to\_litr4c;
+00120     cs->leafc      -= cf->leafc\_to\_litr4c;
+00121     cs->litr1c     += cf->frootc\_to\_litr1c;
+00122     cs->frootc     -= cf->frootc\_to\_litr1c;
+00123     cs->litr2c     += cf->frootc\_to\_litr2c;
+00124     cs->frootc     -= cf->frootc\_to\_litr2c;
+00125     cs->litr3c     += cf->frootc\_to\_litr3c;
+00126     cs->frootc     -= cf->frootc\_to\_litr3c;
+00127     cs->litr4c     += cf->frootc\_to\_litr4c;
+00128     cs->frootc     -= cf->frootc\_to\_litr4c;
+00129     \textcolor{comment}{/* livewood turnover fluxes */}
+00130     \textcolor{keywordflow}{if} (woody)
+00131     \{
+00132         cs->deadstemc  += cf->livestemc\_to\_deadstemc;
+00133         cs->livestemc  -= cf->livestemc\_to\_deadstemc;
+00134         cs->deadcrootc += cf->livecrootc\_to\_deadcrootc;
+00135         cs->livecrootc -= cf->livecrootc\_to\_deadcrootc;
+00136     \}
+00137     
+00138     \textcolor{comment}{/* Maintenance respiration fluxes */}
+00139     cs->leaf\_mr\_snk  += cf->leaf\_day\_mr;
+00140     cs->cpool        -= cf->leaf\_day\_mr;
+00141     cs->leaf\_mr\_snk  += cf->leaf\_night\_mr;
+00142     cs->cpool        -= cf->leaf\_night\_mr;
+00143     cs->froot\_mr\_snk += cf->froot\_mr;
+00144     cs->cpool        -= cf->froot\_mr;
+00145     \textcolor{keywordflow}{if} (woody)
+00146     \{
+00147         cs->livestem\_mr\_snk  += cf->livestem\_mr;
+00148         cs->cpool            -= cf->livestem\_mr;
+00149         cs->livecroot\_mr\_snk += cf->livecroot\_mr;
+00150         cs->cpool            -= cf->livecroot\_mr;
+00151     \}
+00152     
+00153     \textcolor{comment}{/* Photosynthesis fluxes */}
+00154     cs->cpool        += cf->psnsun\_to\_cpool;
+00155     cs->psnsun\_src   += cf->psnsun\_to\_cpool;
+00156     cs->cpool        += cf->psnshade\_to\_cpool;
+00157     cs->psnshade\_src += cf->psnshade\_to\_cpool;
+00158     
+00159     \textcolor{comment}{/* Litter decomposition fluxes */}
+00160     \textcolor{comment}{/* Fluxes out of coarse woody debris into litter pools */}
+00161     cs->litr2c       += cf->cwdc\_to\_litr2c;
+00162     cs->cwdc         -= cf->cwdc\_to\_litr2c;
+00163     cs->litr3c       += cf->cwdc\_to\_litr3c;
+00164     cs->cwdc         -= cf->cwdc\_to\_litr3c;
+00165     cs->litr4c       += cf->cwdc\_to\_litr4c;
+00166     cs->cwdc         -= cf->cwdc\_to\_litr4c;
+00167     \textcolor{comment}{/* Fluxes out of labile litter pool */}
+00168     cs->litr1\_hr\_snk += cf->litr1\_hr;
+00169     cs->litr1c       -= cf->litr1\_hr;
+00170     cs->soil1c       += cf->litr1c\_to\_soil1c;
+00171     cs->litr1c       -= cf->litr1c\_to\_soil1c;
+00172     \textcolor{comment}{/* Fluxes out of cellulose litter pool */}
+00173     cs->litr2\_hr\_snk += cf->litr2\_hr;
+00174     cs->litr2c       -= cf->litr2\_hr;
+00175     cs->soil2c       += cf->litr2c\_to\_soil2c;
+00176     cs->litr2c       -= cf->litr2c\_to\_soil2c;
+00177     \textcolor{comment}{/* Fluxes from shielded to unshielded cellulose pools */}
+00178     cs->litr2c       += cf->litr3c\_to\_litr2c;
+00179     cs->litr3c       -= cf->litr3c\_to\_litr2c;
+00180     \textcolor{comment}{/* Fluxes out of lignin litter pool */}
+00181     cs->litr4\_hr\_snk += cf->litr4\_hr;
+00182     cs->litr4c       -= cf->litr4\_hr;
+00183     cs->soil3c       += cf->litr4c\_to\_soil3c;
+00184     cs->litr4c       -= cf->litr4c\_to\_soil3c;
+00185     \textcolor{comment}{/* Fluxes out of fast soil pool */}
+00186     cs->soil1\_hr\_snk += cf->soil1\_hr;
+00187     cs->soil1c       -= cf->soil1\_hr;
+00188     cs->soil2c       += cf->soil1c\_to\_soil2c;
+00189     cs->soil1c       -= cf->soil1c\_to\_soil2c;
+00190     \textcolor{comment}{/* Fluxes out of medium soil pool */}
+00191     cs->soil2\_hr\_snk += cf->soil2\_hr;
+00192     cs->soil2c       -= cf->soil2\_hr;
+00193     cs->soil3c       += cf->soil2c\_to\_soil3c;
+00194     cs->soil2c       -= cf->soil2c\_to\_soil3c;
+00195     \textcolor{comment}{/* Fluxes out of slow soil pool */}
+00196     cs->soil3\_hr\_snk += cf->soil3\_hr;
+00197     cs->soil3c       -= cf->soil3\_hr;
+00198     cs->soil4c       += cf->soil3c\_to\_soil4c;
+00199     cs->soil3c       -= cf->soil3c\_to\_soil4c;
+00200     \textcolor{comment}{/* Fluxes out of recalcitrant SOM pool */}
+00201     cs->soil4\_hr\_snk += cf->soil4\_hr;
+00202     cs->soil4c       -= cf->soil4\_hr;
+00203     
+00204     \textcolor{comment}{/* Daily allocation fluxes */}
+00205     \textcolor{comment}{/* daily leaf allocation fluxes */}
+00206     cs->leafc          += cf->cpool\_to\_leafc;
+00207     cs->cpool          -= cf->cpool\_to\_leafc;
+00208     cs->leafc\_storage  += cf->cpool\_to\_leafc\_storage;
+00209     cs->cpool          -= cf->cpool\_to\_leafc\_storage;
+00210     \textcolor{comment}{/* Daily fine root allocation fluxes */}
+00211     cs->frootc         += cf->cpool\_to\_frootc;
+00212     cs->cpool          -= cf->cpool\_to\_frootc;
+00213     cs->frootc\_storage += cf->cpool\_to\_frootc\_storage;
+00214     cs->cpool          -= cf->cpool\_to\_frootc\_storage;
+00215     \textcolor{keywordflow}{if} (woody)
+00216     \{
+00217         \textcolor{comment}{/* Daily live stem wood allocation fluxes */}
+00218         cs->livestemc          += cf->cpool\_to\_livestemc;
+00219         cs->cpool              -= cf->cpool\_to\_livestemc;
+00220         cs->livestemc\_storage  += cf->cpool\_to\_livestemc\_storage;
+00221         cs->cpool              -= cf->cpool\_to\_livestemc\_storage;
+00222         \textcolor{comment}{/* Daily dead stem wood allocation fluxes */}
+00223         cs->deadstemc          += cf->cpool\_to\_deadstemc;
+00224         cs->cpool              -= cf->cpool\_to\_deadstemc;
+00225         cs->deadstemc\_storage  += cf->cpool\_to\_deadstemc\_storage;
+00226         cs->cpool              -= cf->cpool\_to\_deadstemc\_storage;
+00227         \textcolor{comment}{/* Daily live coarse root wood allocation fluxes */}
+00228         cs->livecrootc         += cf->cpool\_to\_livecrootc;
+00229         cs->cpool              -= cf->cpool\_to\_livecrootc;
+00230         cs->livecrootc\_storage += cf->cpool\_to\_livecrootc\_storage;
+00231         cs->cpool              -= cf->cpool\_to\_livecrootc\_storage;
+00232         \textcolor{comment}{/* Daily dead coarse root wood allocation fluxes */}
+00233         cs->deadcrootc         += cf->cpool\_to\_deadcrootc;
+00234         cs->cpool              -= cf->cpool\_to\_deadcrootc;
+00235         cs->deadcrootc\_storage += cf->cpool\_to\_deadcrootc\_storage;
+00236         cs->cpool              -= cf->cpool\_to\_deadcrootc\_storage;
+00237     \}
+00238     \textcolor{comment}{/* Daily allocation for transfer growth respiration */}
+00239     cs->gresp\_storage  += cf->cpool\_to\_gresp\_storage;
+00240     cs->cpool          -= cf->cpool\_to\_gresp\_storage;
+00241     
+00242     \textcolor{comment}{/* Daily growth respiration fluxes */}
+00243     \textcolor{comment}{/* Leaf growth respiration */}
+00244     cs->leaf\_gr\_snk     += cf->cpool\_leaf\_gr;
+00245     cs->cpool           -= cf->cpool\_leaf\_gr;
+00246     cs->leaf\_gr\_snk     += cf->cpool\_leaf\_storage\_gr;
+00247     cs->cpool           -= cf->cpool\_leaf\_storage\_gr;
+00248     cs->leaf\_gr\_snk     += cf->transfer\_leaf\_gr;
+00249     cs->gresp\_transfer  -= cf->transfer\_leaf\_gr;
+00250     \textcolor{comment}{/* Fine root growth respiration */}
+00251     cs->froot\_gr\_snk    += cf->cpool\_froot\_gr;
+00252     cs->cpool           -= cf->cpool\_froot\_gr;
+00253     cs->froot\_gr\_snk    += cf->cpool\_froot\_storage\_gr;
+00254     cs->cpool           -= cf->cpool\_froot\_storage\_gr;
+00255     cs->froot\_gr\_snk    += cf->transfer\_froot\_gr;
+00256     cs->gresp\_transfer  -= cf->transfer\_froot\_gr;
+00257     \textcolor{keywordflow}{if} (woody)
+00258     \{
+00259         \textcolor{comment}{/* Live stem growth respiration */} 
+00260         cs->livestem\_gr\_snk  += cf->cpool\_livestem\_gr;
+00261         cs->cpool            -= cf->cpool\_livestem\_gr;
+00262         cs->livestem\_gr\_snk  += cf->cpool\_livestem\_storage\_gr;
+00263         cs->cpool            -= cf->cpool\_livestem\_storage\_gr;
+00264         cs->livestem\_gr\_snk  += cf->transfer\_livestem\_gr;
+00265         cs->gresp\_transfer   -= cf->transfer\_livestem\_gr;
+00266         \textcolor{comment}{/* Dead stem growth respiration */} 
+00267         cs->deadstem\_gr\_snk  += cf->cpool\_deadstem\_gr;
+00268         cs->cpool            -= cf->cpool\_deadstem\_gr;
+00269         cs->deadstem\_gr\_snk  += cf->cpool\_deadstem\_storage\_gr;
+00270         cs->cpool            -= cf->cpool\_deadstem\_storage\_gr;
+00271         cs->deadstem\_gr\_snk  += cf->transfer\_deadstem\_gr;
+00272         cs->gresp\_transfer   -= cf->transfer\_deadstem\_gr;
+00273         \textcolor{comment}{/* Live coarse root growth respiration */} 
+00274         cs->livecroot\_gr\_snk += cf->cpool\_livecroot\_gr;
+00275         cs->cpool            -= cf->cpool\_livecroot\_gr;
+00276         cs->livecroot\_gr\_snk += cf->cpool\_livecroot\_storage\_gr;
+00277         cs->cpool            -= cf->cpool\_livecroot\_storage\_gr;
+00278         cs->livecroot\_gr\_snk += cf->transfer\_livecroot\_gr;
+00279         cs->gresp\_transfer   -= cf->transfer\_livecroot\_gr;
+00280         \textcolor{comment}{/* Dead coarse root growth respiration */} 
+00281         cs->deadcroot\_gr\_snk += cf->cpool\_deadcroot\_gr;
+00282         cs->cpool            -= cf->cpool\_deadcroot\_gr;
+00283         cs->deadcroot\_gr\_snk += cf->cpool\_deadcroot\_storage\_gr;
+00284         cs->cpool            -= cf->cpool\_deadcroot\_storage\_gr;
+00285         cs->deadcroot\_gr\_snk += cf->transfer\_deadcroot\_gr;
+00286         cs->gresp\_transfer   -= cf->transfer\_deadcroot\_gr;
+00287     \}
+00288     
+00289     \textcolor{comment}{/* Annual allocation fluxes, one day per year */}
+00290     \textcolor{keywordflow}{if} (alloc)
+00291     \{
+00292         \textcolor{comment}{/* Move storage material into transfer compartments on the annual}
+00293 \textcolor{comment}{        allocation day. This is a special case, where a flux is assessed in}
+00294 \textcolor{comment}{        the state\_variable update routine.  This is required to have the}
+00295 \textcolor{comment}{        allocation of excess C and N show up as new growth in the next growing}
+00296 \textcolor{comment}{        season, instead of two growing seasons from now. */}
+00297         cf->leafc\_storage\_to\_leafc\_transfer = cs->leafc\_storage;
+00298         cf->frootc\_storage\_to\_frootc\_transfer = cs->frootc\_storage;
+00299         cf->gresp\_storage\_to\_gresp\_transfer = cs->gresp\_storage;
+00300         \textcolor{keywordflow}{if} (woody)
+00301         \{
+00302             cf->livestemc\_storage\_to\_livestemc\_transfer = cs->livestemc\_storage;
+00303             cf->deadstemc\_storage\_to\_deadstemc\_transfer = cs->deadstemc\_storage;
+00304             cf->livecrootc\_storage\_to\_livecrootc\_transfer = cs->livecrootc\_storage;
+00305             cf->deadcrootc\_storage\_to\_deadcrootc\_transfer = cs->deadcrootc\_storage;
+00306         \}
+00307         \textcolor{comment}{/* update states variables */}
+00308         cs->leafc\_transfer    += cf->leafc\_storage\_to\_leafc\_transfer;
+00309         cs->leafc\_storage     -= cf->leafc\_storage\_to\_leafc\_transfer;
+00310         cs->frootc\_transfer   += cf->frootc\_storage\_to\_frootc\_transfer;
+00311         cs->frootc\_storage    -= cf->frootc\_storage\_to\_frootc\_transfer;
+00312         cs->gresp\_transfer    += cf->gresp\_storage\_to\_gresp\_transfer;
+00313         cs->gresp\_storage     -= cf->gresp\_storage\_to\_gresp\_transfer;
+00314         \textcolor{keywordflow}{if} (woody)
+00315         \{
+00316             cs->livestemc\_transfer  += cf->livestemc\_storage\_to\_livestemc\_transfer;
+00317             cs->livestemc\_storage   -= cf->livestemc\_storage\_to\_livestemc\_transfer;
+00318             cs->deadstemc\_transfer  += cf->deadstemc\_storage\_to\_deadstemc\_transfer;
+00319             cs->deadstemc\_storage   -= cf->deadstemc\_storage\_to\_deadstemc\_transfer;
+00320             cs->livecrootc\_transfer += cf->livecrootc\_storage\_to\_livecrootc\_transfer;
+00321             cs->livecrootc\_storage  -= cf->livecrootc\_storage\_to\_livecrootc\_transfer;
+00322             cs->deadcrootc\_transfer += cf->deadcrootc\_storage\_to\_deadcrootc\_transfer;
+00323             cs->deadcrootc\_storage  -= cf->deadcrootc\_storage\_to\_deadcrootc\_transfer;
+00324         \}
+00325         
+00326         \textcolor{comment}{/* for deciduous system, force leafc and frootc to exactly 0.0 on the}
+00327 \textcolor{comment}{        last day */}
+00328         \textcolor{keywordflow}{if} (!evergreen)
+00329         \{
+00330             \textcolor{keywordflow}{if} (cs->leafc < 1e-10) cs->leafc = 0.0;
+00331             \textcolor{keywordflow}{if} (cs->frootc < 1e-10) cs->frootc = 0.0;
+00332         \}
+00333     \} \textcolor{comment}{/* end if allocation day */}
+00334     
+00335     \textcolor{keywordflow}{return} (!ok);
+00336 \}       
+00337 
+\hypertarget{state__update_8c_source_l00338}{}\hyperlink{state__update_8c_aac44819d8b0419079683705a5a220e7a}{00338} \textcolor{keywordtype}{int} \hyperlink{state__update_8c_aac44819d8b0419079683705a5a220e7a}{daily\_nitrogen\_state\_update}(nflux\_struct* nf, nstate\_struct* ns,
+00339 \textcolor{keywordtype}{int} alloc, \textcolor{keywordtype}{int} woody, \textcolor{keywordtype}{int} evergreen)
+00340 \{
+00341     \textcolor{keywordtype}{int} ok=1;
+00342     
+00343     \textcolor{comment}{/* N state variables are updated below in the order of the relevant}
+00344 \textcolor{comment}{    fluxes in the daily model loop */}
+00345     
+00346     \textcolor{comment}{/* NOTE: Mortality fluxes are all accounted for in a separate routine, }
+00347 \textcolor{comment}{    which is to be called after this routine.  This is a special case}
+00348 \textcolor{comment}{    where the updating of state variables is order-sensitive, since }
+00349 \textcolor{comment}{    otherwise the complications of possibly having mortality fluxes drive }
+00350 \textcolor{comment}{    the pools negative would create big, unnecessary headaches. */}
+00351     
+00352     \textcolor{comment}{/* Phenology fluxes */}
+00353     \textcolor{comment}{/* Leaf and fine root transfer growth */}
+00354     ns->leafn           += nf->leafn\_transfer\_to\_leafn;
+00355     ns->leafn\_transfer  -= nf->leafn\_transfer\_to\_leafn;
+00356     ns->frootn          += nf->frootn\_transfer\_to\_frootn;
+00357     ns->frootn\_transfer -= nf->frootn\_transfer\_to\_frootn;
+00358     \textcolor{keywordflow}{if} (woody)
+00359     \{
+00360         \textcolor{comment}{/* Stem and coarse root transfer growth */}
+00361         ns->livestemn           += nf->livestemn\_transfer\_to\_livestemn;
+00362         ns->livestemn\_transfer  -= nf->livestemn\_transfer\_to\_livestemn;
+00363         ns->deadstemn           += nf->deadstemn\_transfer\_to\_deadstemn;
+00364         ns->deadstemn\_transfer  -= nf->deadstemn\_transfer\_to\_deadstemn;
+00365         ns->livecrootn          += nf->livecrootn\_transfer\_to\_livecrootn;
+00366         ns->livecrootn\_transfer -= nf->livecrootn\_transfer\_to\_livecrootn;
+00367         ns->deadcrootn          += nf->deadcrootn\_transfer\_to\_deadcrootn;
+00368         ns->deadcrootn\_transfer -= nf->deadcrootn\_transfer\_to\_deadcrootn;
+00369     \}
+00370     \textcolor{comment}{/* Leaf and fine root litterfall */}
+00371     ns->litr1n     += nf->leafn\_to\_litr1n;
+00372     ns->leafn      -= nf->leafn\_to\_litr1n;
+00373     ns->litr2n     += nf->leafn\_to\_litr2n;
+00374     ns->leafn      -= nf->leafn\_to\_litr2n;
+00375     ns->litr3n     += nf->leafn\_to\_litr3n;
+00376     ns->leafn      -= nf->leafn\_to\_litr3n;
+00377     ns->litr4n     += nf->leafn\_to\_litr4n;
+00378     ns->leafn      -= nf->leafn\_to\_litr4n;
+00379     ns->retransn   += nf->leafn\_to\_retransn;   \textcolor{comment}{/* N retranslocation */}
+00380     ns->leafn      -= nf->leafn\_to\_retransn;
+00381     ns->litr1n     += nf->frootn\_to\_litr1n;
+00382     ns->frootn     -= nf->frootn\_to\_litr1n;
+00383     ns->litr2n     += nf->frootn\_to\_litr2n;
+00384     ns->frootn     -= nf->frootn\_to\_litr2n;
+00385     ns->litr3n     += nf->frootn\_to\_litr3n;
+00386     ns->frootn     -= nf->frootn\_to\_litr3n;
+00387     ns->litr4n     += nf->frootn\_to\_litr4n;
+00388     ns->frootn     -= nf->frootn\_to\_litr4n;
+00389     \textcolor{comment}{/* live wood turnover to dead wood */}
+00390     ns->deadstemn  += nf->livestemn\_to\_deadstemn;
+00391     ns->livestemn  -= nf->livestemn\_to\_deadstemn;
+00392     ns->retransn   += nf->livestemn\_to\_retransn;   \textcolor{comment}{/* N retranslocation */}
+00393     ns->livestemn  -= nf->livestemn\_to\_retransn;
+00394     ns->deadcrootn += nf->livecrootn\_to\_deadcrootn;
+00395     ns->livecrootn -= nf->livecrootn\_to\_deadcrootn;
+00396     ns->retransn   += nf->livecrootn\_to\_retransn;   \textcolor{comment}{/* N retranslocation */}
+00397     ns->livecrootn -= nf->livecrootn\_to\_retransn;
+00398 
+00399     \textcolor{comment}{/* Nitrogen deposition */}
+00400     ns->sminn      += nf->ndep\_to\_sminn;
+00401     ns->ndep\_src   += nf->ndep\_to\_sminn;
+00402     ns->sminn      += nf->nfix\_to\_sminn;
+00403     ns->nfix\_src   += nf->nfix\_to\_sminn;
+00404     
+00405     \textcolor{comment}{/* Litter and soil decomposition fluxes */}
+00406     \textcolor{comment}{/* Fluxes out of coarse woody debris into litter pools */}
+00407     ns->litr2n     += nf->cwdn\_to\_litr2n;
+00408     ns->cwdn       -= nf->cwdn\_to\_litr2n;
+00409     ns->litr3n     += nf->cwdn\_to\_litr3n;
+00410     ns->cwdn       -= nf->cwdn\_to\_litr3n;
+00411     ns->litr4n     += nf->cwdn\_to\_litr4n;
+00412     ns->cwdn       -= nf->cwdn\_to\_litr4n;
+00413     \textcolor{comment}{/* N fluxes for immobilization and mineralization */}
+00414     ns->soil1n     += nf->litr1n\_to\_soil1n;
+00415     ns->litr1n     -= nf->litr1n\_to\_soil1n;
+00416     \textcolor{keywordflow}{if} (nf->sminn\_to\_soil1n\_l1 < 0.0)
+00417     \{
+00418         nf->sminn\_to\_nvol\_l1s1 = -DENITRIF\_PROPORTION * nf->sminn\_to\_soil1n\_l1;
+00419     \}
+00420     \textcolor{keywordflow}{else}
+00421     \{
+00422         nf->sminn\_to\_nvol\_l1s1 = 0.0;
+00423     \}
+00424     ns->soil1n     += nf->sminn\_to\_soil1n\_l1;
+00425     ns->sminn      -= nf->sminn\_to\_soil1n\_l1;
+00426     ns->nvol\_snk   += nf->sminn\_to\_nvol\_l1s1;
+00427     ns->sminn      -= nf->sminn\_to\_nvol\_l1s1;
+00428     
+00429     ns->soil2n     += nf->litr2n\_to\_soil2n;
+00430     ns->litr2n     -= nf->litr2n\_to\_soil2n;
+00431     \textcolor{keywordflow}{if} (nf->sminn\_to\_soil2n\_l2 < 0.0)
+00432     \{
+00433         nf->sminn\_to\_nvol\_l2s2 = -DENITRIF\_PROPORTION * nf->sminn\_to\_soil2n\_l2;
+00434     \}
+00435     \textcolor{keywordflow}{else}
+00436     \{
+00437         nf->sminn\_to\_nvol\_l2s2 = 0.0;
+00438     \}
+00439     ns->soil2n     += nf->sminn\_to\_soil2n\_l2;
+00440     ns->sminn      -= nf->sminn\_to\_soil2n\_l2;
+00441     ns->nvol\_snk   += nf->sminn\_to\_nvol\_l2s2;
+00442     ns->sminn      -= nf->sminn\_to\_nvol\_l2s2;
+00443     
+00444     ns->litr2n     += nf->litr3n\_to\_litr2n;
+00445     ns->litr3n     -= nf->litr3n\_to\_litr2n;
+00446     
+00447     ns->soil3n     += nf->litr4n\_to\_soil3n;
+00448     ns->litr4n     -= nf->litr4n\_to\_soil3n;
+00449     \textcolor{keywordflow}{if} (nf->sminn\_to\_soil3n\_l4 < 0.0)
+00450     \{
+00451         nf->sminn\_to\_nvol\_l4s3 = -DENITRIF\_PROPORTION * nf->sminn\_to\_soil3n\_l4;
+00452     \}
+00453     \textcolor{keywordflow}{else}
+00454     \{
+00455         nf->sminn\_to\_nvol\_l4s3 = 0.0;
+00456     \}
+00457     ns->soil3n     += nf->sminn\_to\_soil3n\_l4;
+00458     ns->sminn      -= nf->sminn\_to\_soil3n\_l4;
+00459     ns->nvol\_snk   += nf->sminn\_to\_nvol\_l4s3;
+00460     ns->sminn      -= nf->sminn\_to\_nvol\_l4s3;
+00461     
+00462     ns->soil2n     += nf->soil1n\_to\_soil2n;
+00463     ns->soil1n     -= nf->soil1n\_to\_soil2n;
+00464     \textcolor{keywordflow}{if} (nf->sminn\_to\_soil2n\_s1 < 0.0)
+00465     \{
+00466         nf->sminn\_to\_nvol\_s1s2 = -DENITRIF\_PROPORTION * nf->sminn\_to\_soil2n\_s1;
+00467     \}
+00468     \textcolor{keywordflow}{else}
+00469     \{
+00470         nf->sminn\_to\_nvol\_s1s2 = 0.0;
+00471     \}
+00472     ns->soil2n     += nf->sminn\_to\_soil2n\_s1;
+00473     ns->sminn      -= nf->sminn\_to\_soil2n\_s1;
+00474     ns->nvol\_snk   += nf->sminn\_to\_nvol\_s1s2;
+00475     ns->sminn      -= nf->sminn\_to\_nvol\_s1s2;
+00476     
+00477     ns->soil3n     += nf->soil2n\_to\_soil3n;
+00478     ns->soil2n     -= nf->soil2n\_to\_soil3n;
+00479     \textcolor{keywordflow}{if} (nf->sminn\_to\_soil3n\_s2 < 0.0)
+00480     \{
+00481         nf->sminn\_to\_nvol\_s2s3 = -DENITRIF\_PROPORTION * nf->sminn\_to\_soil3n\_s2;
+00482     \}
+00483     \textcolor{keywordflow}{else}
+00484     \{
+00485         nf->sminn\_to\_nvol\_s2s3 = 0.0;
+00486     \}
+00487     ns->soil3n     += nf->sminn\_to\_soil3n\_s2;
+00488     ns->sminn      -= nf->sminn\_to\_soil3n\_s2;
+00489     ns->nvol\_snk   += nf->sminn\_to\_nvol\_s2s3;
+00490     ns->sminn      -= nf->sminn\_to\_nvol\_s2s3;
+00491     
+00492     ns->soil4n     += nf->soil3n\_to\_soil4n;
+00493     ns->soil3n     -= nf->soil3n\_to\_soil4n;
+00494     \textcolor{keywordflow}{if} (nf->sminn\_to\_soil4n\_s3 < 0.0)
+00495     \{
+00496         nf->sminn\_to\_nvol\_s3s4 = -DENITRIF\_PROPORTION * nf->sminn\_to\_soil4n\_s3;
+00497     \}
+00498     \textcolor{keywordflow}{else}
+00499     \{
+00500         nf->sminn\_to\_nvol\_s3s4 = 0.0;
+00501     \}
+00502     ns->soil4n     += nf->sminn\_to\_soil4n\_s3;
+00503     ns->sminn      -= nf->sminn\_to\_soil4n\_s3;
+00504     ns->nvol\_snk   += nf->sminn\_to\_nvol\_s3s4;
+00505     ns->sminn      -= nf->sminn\_to\_nvol\_s3s4;
+00506     
+00507     nf->sminn\_to\_nvol\_s4 = DENITRIF\_PROPORTION * nf->soil4n\_to\_sminn;
+00508     ns->sminn      += nf->soil4n\_to\_sminn;
+00509     ns->soil4n     -= nf->soil4n\_to\_sminn;
+00510     ns->nvol\_snk   += nf->sminn\_to\_nvol\_s4;
+00511     ns->sminn      -= nf->sminn\_to\_nvol\_s4;
+00512 
+00513     \textcolor{comment}{/* Bulk denitrification of soil mineral N */}
+00514     ns->sminn      -= nf->sminn\_to\_denitrif;
+00515     ns->nvol\_snk   += nf->sminn\_to\_denitrif;
+00516     
+00517     \textcolor{comment}{/* Plant allocation flux, from N retrans pool and soil mineral N pool */}
+00518     ns->npool      += nf->retransn\_to\_npool;
+00519     ns->retransn   -= nf->retransn\_to\_npool;
+00520     ns->npool      += nf->sminn\_to\_npool;
+00521     ns->sminn      -= nf->sminn\_to\_npool;
+00522         
+00523     \textcolor{comment}{/* Daily allocation fluxes */}
+00524     \textcolor{comment}{/* Daily leaf allocation fluxes */}
+00525     ns->leafn          += nf->npool\_to\_leafn;
+00526     ns->npool          -= nf->npool\_to\_leafn;
+00527     ns->leafn\_storage  += nf->npool\_to\_leafn\_storage;
+00528     ns->npool          -= nf->npool\_to\_leafn\_storage;
+00529     \textcolor{comment}{/* Daily fine root allocation fluxes */}
+00530     ns->frootn         += nf->npool\_to\_frootn;
+00531     ns->npool          -= nf->npool\_to\_frootn;
+00532     ns->frootn\_storage += nf->npool\_to\_frootn\_storage;
+00533     ns->npool          -= nf->npool\_to\_frootn\_storage;
+00534     \textcolor{keywordflow}{if} (woody)
+00535     \{
+00536         \textcolor{comment}{/* Daily live stem allocation fluxes */}
+00537         ns->livestemn          += nf->npool\_to\_livestemn;
+00538         ns->npool              -= nf->npool\_to\_livestemn;
+00539         ns->livestemn\_storage  += nf->npool\_to\_livestemn\_storage;
+00540         ns->npool              -= nf->npool\_to\_livestemn\_storage;
+00541         \textcolor{comment}{/* Daily dead stem allocation fluxes */}
+00542         ns->deadstemn          += nf->npool\_to\_deadstemn;
+00543         ns->npool              -= nf->npool\_to\_deadstemn;
+00544         ns->deadstemn\_storage  += nf->npool\_to\_deadstemn\_storage;
+00545         ns->npool              -= nf->npool\_to\_deadstemn\_storage;
+00546         \textcolor{comment}{/* Daily live coarse root allocation fluxes */}
+00547         ns->livecrootn         += nf->npool\_to\_livecrootn;
+00548         ns->npool              -= nf->npool\_to\_livecrootn;
+00549         ns->livecrootn\_storage += nf->npool\_to\_livecrootn\_storage;
+00550         ns->npool              -= nf->npool\_to\_livecrootn\_storage;
+00551         \textcolor{comment}{/* Daily dead coarse root allocation fluxes */}
+00552         ns->deadcrootn         += nf->npool\_to\_deadcrootn;
+00553         ns->npool              -= nf->npool\_to\_deadcrootn;
+00554         ns->deadcrootn\_storage += nf->npool\_to\_deadcrootn\_storage;
+00555         ns->npool              -= nf->npool\_to\_deadcrootn\_storage;
+00556     \}
+00557     
+00558     \textcolor{comment}{/* Annual allocation fluxes, one day per year */}
+00559     \textcolor{keywordflow}{if} (alloc)
+00560     \{
+00561         \textcolor{comment}{/* Move storage material into transfer compartments on the annual}
+00562 \textcolor{comment}{        allocation day. This is a special case, where a flux is assessed in}
+00563 \textcolor{comment}{        the state\_variable update routine.  This is required to have the}
+00564 \textcolor{comment}{        allocation of excess C and N show up as new growth in the next growing}
+00565 \textcolor{comment}{        season, instead of two growing seasons from now. */}
+00566         nf->leafn\_storage\_to\_leafn\_transfer = ns->leafn\_storage;
+00567         nf->frootn\_storage\_to\_frootn\_transfer = ns->frootn\_storage;
+00568         \textcolor{keywordflow}{if} (woody)
+00569         \{
+00570             nf->livestemn\_storage\_to\_livestemn\_transfer = ns->livestemn\_storage;
+00571             nf->deadstemn\_storage\_to\_deadstemn\_transfer = ns->deadstemn\_storage;
+00572             nf->livecrootn\_storage\_to\_livecrootn\_transfer = ns->livecrootn\_storage;
+00573             nf->deadcrootn\_storage\_to\_deadcrootn\_transfer = ns->deadcrootn\_storage;
+00574         \}
+00575         \textcolor{comment}{/* update states variables */}
+00576         ns->leafn\_transfer    += nf->leafn\_storage\_to\_leafn\_transfer;
+00577         ns->leafn\_storage     -= nf->leafn\_storage\_to\_leafn\_transfer;
+00578         ns->frootn\_transfer   += nf->frootn\_storage\_to\_frootn\_transfer;
+00579         ns->frootn\_storage    -= nf->frootn\_storage\_to\_frootn\_transfer;
+00580         \textcolor{keywordflow}{if} (woody)
+00581         \{
+00582             ns->livestemn\_transfer  += nf->livestemn\_storage\_to\_livestemn\_transfer;
+00583             ns->livestemn\_storage   -= nf->livestemn\_storage\_to\_livestemn\_transfer;
+00584             ns->deadstemn\_transfer  += nf->deadstemn\_storage\_to\_deadstemn\_transfer;
+00585             ns->deadstemn\_storage   -= nf->deadstemn\_storage\_to\_deadstemn\_transfer;
+00586             ns->livecrootn\_transfer += nf->livecrootn\_storage\_to\_livecrootn\_transfer;
+00587             ns->livecrootn\_storage  -= nf->livecrootn\_storage\_to\_livecrootn\_transfer;
+00588             ns->deadcrootn\_transfer += nf->deadcrootn\_storage\_to\_deadcrootn\_transfer;
+00589             ns->deadcrootn\_storage  -= nf->deadcrootn\_storage\_to\_deadcrootn\_transfer;
+00590         \}
+00591         \textcolor{comment}{/* for deciduous system, force leafn and frootn to exactly 0.0 on the}
+00592 \textcolor{comment}{        last day */}
+00593         \textcolor{keywordflow}{if} (!evergreen)
+00594         \{
+00595             \textcolor{keywordflow}{if} (ns->leafn < 1e-10) ns->leafn = 0.0;
+00596             \textcolor{keywordflow}{if} (ns->frootn < 1e-10) ns->frootn = 0.0;
+00597         \}
+00598     \} \textcolor{comment}{/* end if annual allocation day */} 
+00599     
+00600     \textcolor{keywordflow}{return} (!ok);
+00601 \}
+\end{DoxyCode}

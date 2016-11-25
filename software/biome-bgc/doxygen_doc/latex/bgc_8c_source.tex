@@ -1,0 +1,1201 @@
+\hypertarget{bgc_8c_source}{}\section{bgc.\+c}
+\label{bgc_8c_source}\index{c\+:/\+R\+E\+P\+O/biomebgc-\/4.\+2/src/bgclib/bgc.\+c@{c\+:/\+R\+E\+P\+O/biomebgc-\/4.\+2/src/bgclib/bgc.\+c}}
+
+\begin{DoxyCode}
+00001 \textcolor{comment}{/*}
+00002 \textcolor{comment}{bgc.c}
+00003 \textcolor{comment}{Core BGC model logic}
+00004 \textcolor{comment}{}
+00005 \textcolor{comment}{Includes in-line output handling routines that write to daily and annual}
+00006 \textcolor{comment}{output files. This is the only library module that has external}
+00007 \textcolor{comment}{I/O connections, and so it is the only module that includes bgc\_io.h.}
+00008 \textcolor{comment}{}
+00009 \textcolor{comment}{*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*}
+00010 \textcolor{comment}{Biome-BGC version 4.2 (final release)}
+00011 \textcolor{comment}{See copyright.txt for Copyright information}
+00012 \textcolor{comment}{}
+00013 \textcolor{comment}{Revisions since 4.1.2}
+00014 \textcolor{comment}{    Merged spinup\_bgc.c with bgc.c to eliminate}
+00015 \textcolor{comment}{    code duplication}
+00016 \textcolor{comment}{*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*}
+00017 \textcolor{comment}{*/}
+00018 
+00019 \textcolor{preprocessor}{#include "bgc.h"}
+00020 
+00021 \textcolor{comment}{/* These DEBUG defines are now depricated. Please use }
+00022 \textcolor{comment}{   bgc\_printf(BV\_DIAG,...) instead. The only place where }
+00023 \textcolor{comment}{     a DEBUG define is still used is inside bgc\_printf(). */}
+00024 
+00025 \textcolor{comment}{/* #define DEBUG */}
+00026 \textcolor{comment}{/* #define DEBUG\_SPINUP set this to see the spinup details on-screen */}
+00027 
+00028 \textcolor{comment}{/*  SANE = Do 'Pan-Arctic' style summary. INSANE is traditional style }
+00029 \textcolor{comment}{        summary. See the '-p' cli flag in USAGE.TXT */}
+\hypertarget{bgc_8c_source_l00030}{}\hyperlink{bgc_8c_ad321968d4dfc678d949b512629eefe6f}{00030} \textcolor{keywordtype}{signed} \textcolor{keywordtype}{char} \hyperlink{bgc_8c_ad321968d4dfc678d949b512629eefe6f}{summary\_sanity} = INSANE ;
+00031 
+\hypertarget{bgc_8c_source_l00032}{}\hyperlink{bgc_8c_aba68add8caf5b5d83c76c893d50f6626}{00032} \textcolor{keywordtype}{int} \hyperlink{bgc_8c_aba68add8caf5b5d83c76c893d50f6626}{bgc}(bgcin\_struct* bgcin, bgcout\_struct* bgcout, \textcolor{keywordtype}{int} mode)
+00033 \{
+00034     \textcolor{keyword}{extern} \textcolor{keywordtype}{signed} \textcolor{keywordtype}{char} \hyperlink{bgc_8c_ad321968d4dfc678d949b512629eefe6f}{summary\_sanity};
+00035     \textcolor{comment}{/* variable declarations */}
+00036     \textcolor{keywordtype}{int} ok=1;
+00037 
+00038     \textcolor{comment}{/* iofiles and program control variables */}
+00039     control\_struct     ctrl;
+00040 
+00041     \textcolor{comment}{/* meteorological variables */}
+00042     metarr\_struct      metarr;
+00043     metvar\_struct      metv;
+00044     co2control\_struct  co2;
+00045     ramp\_ndep\_struct ramp\_ndep;
+00046     
+00047     \textcolor{comment}{/* state and flux variables for water, carbon, and nitrogen */}
+00048     wstate\_struct      ws;
+00049     wflux\_struct       wf, zero\_wf;
+00050     cinit\_struct       cinit;
+00051     cstate\_struct      cs;
+00052     cflux\_struct       cf, zero\_cf;
+00053     nstate\_struct      ns;
+00054     nflux\_struct       nf, zero\_nf;
+00055 
+00056     \textcolor{comment}{/* primary ecophysiological variables */}
+00057     epvar\_struct       epv;
+00058 
+00059     \textcolor{comment}{/* site physical constants */}
+00060     siteconst\_struct   sitec;
+00061 
+00062     \textcolor{comment}{/* phenological data */}
+00063     phenarray\_struct   phenarr;
+00064     phenology\_struct   phen;
+00065 
+00066     \textcolor{comment}{/* ecophysiological constants */}
+00067     epconst\_struct     epc;
+00068 
+00069     \textcolor{comment}{/* photosynthesis constructs */}
+00070     psn\_struct         psn\_sun, psn\_shade;
+00071 
+00072     \textcolor{comment}{/* temporary nitrogen variables for decomposition and allocation */}
+00073     ntemp\_struct       nt;
+00074     
+00075     \textcolor{comment}{/* summary variable structure */}
+00076     summary\_struct     summary;
+00077     
+00078     \textcolor{comment}{/* output mapping (array of pointers to double) */}
+00079     \textcolor{keywordtype}{double} **output\_map;
+00080     
+00081     \textcolor{comment}{/* local storage for daily and annual output variables */}
+00082     \textcolor{keywordtype}{float} *dayarr, *monavgarr, *annavgarr, *annarr;
+00083 
+00084     \textcolor{comment}{/* miscelaneous variables for program control in main */}
+00085     \textcolor{keywordtype}{int} simyr, yday, metyr, metday;
+00086     \textcolor{keywordtype}{int} first\_balance;
+00087     \textcolor{keywordtype}{int} annual\_alloc;
+00088     \textcolor{keywordtype}{int} outv;
+00089     \textcolor{keywordtype}{int} i, nmetdays;
+00090     \textcolor{keywordtype}{double} tair\_avg, tdiff;
+00091     \textcolor{keywordtype}{int} dayout;
+00092 
+00093     \textcolor{comment}{/* mode == MODE\_MODEL only */}
+00094     \textcolor{keywordtype}{double} daily\_ndep, daily\_nfix, ndep\_scalar, ndep\_diff, ndep;
+00095     \textcolor{keywordtype}{int} ind\_simyr;
+00096     
+00097     \textcolor{comment}{/* variables used for monthly average output */}
+00098     \textcolor{keywordtype}{int} curmonth;
+00099     \textcolor{keywordtype}{int} mondays[12] = \{31,28,31,30,31,30,31,31,30,31,30,31\};
+00100     \textcolor{keywordtype}{int} endday[12] = \{30,58,89,119,150,180,211,242,272,303,333,364\};
+00101     \textcolor{keywordtype}{float} monmaxlai = 0.0,annmaxlai = 0.0,monmaxsnoww = 0.0;
+00102     \textcolor{keywordtype}{float} eomsnoww = 0.0,eomsoilw = 0.0;
+00103 
+00104     \textcolor{keywordtype}{int} tmpyears;
+00105 
+00106     \textcolor{comment}{/* mode == MODE\_SPINUP only */}
+00107     \textcolor{comment}{/* spinup control */}
+00108     \textcolor{keywordtype}{int} ntimesmet, nblock;
+00109     \textcolor{keywordtype}{int} steady1, steady2, rising, metcycle = 0, spinyears;
+00110     \textcolor{keywordtype}{double} tally1 = 0.0, tally1b = 0.0, tally2 = 0.0, tally2b = 0.0, t1 = 0.0;
+00111     \textcolor{keywordtype}{double} naddfrac;
+00112     
+00113     \textcolor{comment}{/* mode == MODE\_MODEL only */}
+00114     \textcolor{comment}{/* simple annual variables for text output */}
+00115     \textcolor{keywordtype}{double} annmaxplai,annet,annoutflow,annnpp,annnbp, annprcp,anntavg;
+00116 
+00117     \textcolor{keywordflow}{if} (mode != MODE\_SPINUP && mode != MODE\_MODEL)
+00118     \{
+00119         \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Error: Unknown MODE given when calling bgc()\(\backslash\)n"});
+00120         ok=0;
+00121     \}
+00122     
+00123     \textcolor{comment}{/* copy the input structures into local structures */}
+00124     ws = bgcin->ws;
+00125     cinit = bgcin->cinit;
+00126     cs = bgcin->cs;
+00127     ns = bgcin->ns;
+00128     sitec = bgcin->sitec;
+00129     epc = bgcin->epc;
+00130     \textcolor{comment}{/* note that the following three structures have dynamic memory elements,}
+00131 \textcolor{comment}{    and so the notion of copying the input structure to a local structure}
+00132 \textcolor{comment}{    value-by-value is not the same as above. In this case, the array pointers}
+00133 \textcolor{comment}{    are being copied, so the local members use the same memory that was}
+00134 \textcolor{comment}{    allocated in the calling function. Note also that bgc() does not modify}
+00135 \textcolor{comment}{    the contents of these structures. */}
+00136     ctrl = bgcin->ctrl;
+00137     metarr = bgcin->metarr;
+00138     co2 = bgcin->co2;
+00139     \textcolor{keywordflow}{if} (mode == MODE\_MODEL)
+00140     \{
+00141         ramp\_ndep = bgcin->ramp\_ndep;
+00142     \}
+00143     
+00144     \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_DIAG, \textcolor{stringliteral}{"done copy input\(\backslash\)n"});
+00145 
+00146     \textcolor{comment}{/* local variable that signals the need for daily output array */}
+00147     dayout = (ctrl.dodaily || ctrl.domonavg || ctrl.doannavg);
+00148 
+00149     \textcolor{comment}{/* allocate memory for local output arrays */}
+00150     \textcolor{keywordflow}{if} (ok && dayout && !(dayarr = (\textcolor{keywordtype}{float}*) malloc(ctrl.ndayout * \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{float}))))
+00151     \{
+00152         \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Error allocating for local daily output array in bgc()\(\backslash\)n"});
+00153         ok=0;
+00154     \}
+00155     \textcolor{keywordflow}{if} (ok && ctrl.domonavg && !(monavgarr = (\textcolor{keywordtype}{float}*) malloc(ctrl.ndayout * \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{float}))))
+00156     \{
+00157         \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Error allocating for monthly average output array in bgc()\(\backslash\)n"});
+00158         ok=0;
+00159     \}
+00160     \textcolor{keywordflow}{if} (ok && ctrl.doannavg && !(annavgarr = (\textcolor{keywordtype}{float}*) malloc(ctrl.ndayout * \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{float}))))
+00161     \{
+00162         \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Error allocating for annual average output array in bgc()\(\backslash\)n"});
+00163         ok=0;
+00164     \}
+00165     \textcolor{keywordflow}{if} (ok && ctrl.doannual && !(annarr = (\textcolor{keywordtype}{float}*) malloc(ctrl.nannout * \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{float}))))
+00166     \{
+00167         \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Error allocating for local annual output array in bgc()\(\backslash\)n"});
+00168         ok=0;
+00169     \}
+00170     \textcolor{comment}{/* allocate space for the output map pointers */}
+00171     \textcolor{keywordflow}{if} (ok && !(output\_map = (\textcolor{keywordtype}{double}**) malloc(NMAP * \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{double}*))))
+00172     \{
+00173         \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Error allocating for output map in output\_map\_init()\(\backslash\)n"});
+00174         ok=0;
+00175     \}
+00176     
+00177     \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_DIAG, \textcolor{stringliteral}{"done allocate out arrays\(\backslash\)n"});
+00178     
+00179     \textcolor{comment}{/* initialize monavg and annavg to 0.0 */}
+00180     \textcolor{keywordflow}{if} (ctrl.domonavg)
+00181     \{
+00182         \textcolor{keywordflow}{for} (outv=0 ; outv<ctrl.ndayout ; outv++)
+00183         \{
+00184             monavgarr[outv] = 0.0;
+00185         \}
+00186     \}
+00187     \textcolor{keywordflow}{if} (ctrl.doannavg)
+00188     \{
+00189         \textcolor{keywordflow}{for} (outv=0 ; outv<ctrl.ndayout ; outv++)
+00190         \{
+00191             annavgarr[outv] = 0.0;
+00192         \}
+00193     \}
+00194 
+00195     \textcolor{comment}{/* initialize the output mapping array */}
+00196     \textcolor{keywordflow}{if} (ok && \hyperlink{output__map__init_8c_aecdfe7c08babe362b34e23a5488eae09}{output\_map\_init}(output\_map,&metv,&ws,&wf,&cs,&cf,&ns,&nf,&phen,
+00197         &epv,&psn\_sun,&psn\_shade,&summary))
+00198     \{
+00199         \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Error in call to output\_map\_init() from bgc()\(\backslash\)n"});
+00200         ok=0;
+00201     \}
+00202     
+00203     \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_DIAG, \textcolor{stringliteral}{"done initialize outmap\(\backslash\)n"});
+00204     
+00205     \textcolor{comment}{/* make zero-flux structures for use inside annual and daily loops */}
+00206     \textcolor{keywordflow}{if} (ok && \hyperlink{make__zero__flux__struct_8c_a22aa2b538ae817627f4d4eae85cb3993}{make\_zero\_flux\_struct}(&zero\_wf, &zero\_cf, &zero\_nf))
+00207     \{
+00208         \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Error in call to make\_zero\_flux\_struct() from bgc()\(\backslash\)n"});
+00209         ok=0;
+00210     \}
+00211 
+00212     \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_DIAG, \textcolor{stringliteral}{"done make\_zero\_flux\(\backslash\)n"});
+00213     
+00214     \textcolor{comment}{/* atmospheric pressure (Pa) as a function of elevation (m) */}
+00215     \textcolor{keywordflow}{if} (ok && \hyperlink{atm__pres_8c_a30d2b9ec7344a16b2cd045cfe92995e2}{atm\_pres}(sitec.elev, &metv.pa))
+00216     \{
+00217         \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Error in atm\_pres() from bgc()\(\backslash\)n"});
+00218         ok=0;
+00219     \}
+00220     
+00221     \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_DIAG, \textcolor{stringliteral}{"done atm\_pres\(\backslash\)n"});
+00222     
+00223     \textcolor{comment}{/* determine phenological signals */}
+00224     \textcolor{keywordflow}{if} (ok && \hyperlink{prephenology_8c_a268168ddb0923733bcc36138cda1b94b}{prephenology}(&ctrl, &epc, &sitec, &metarr, &phenarr))
+00225     \{
+00226         \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Error in call to prephenology(), from bgc()\(\backslash\)n"});
+00227         ok=0;
+00228     \}
+00229     
+00230     \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_DIAG, \textcolor{stringliteral}{"done prephenology\(\backslash\)n"});
+00231     
+00232     \textcolor{comment}{/* calculate the annual average air temperature for use in soil }
+00233 \textcolor{comment}{    temperature corrections. This code added 9 February 1999, in}
+00234 \textcolor{comment}{    conjunction with soil temperature testing done with Mike White. */}
+00235     tair\_avg = 0.0;
+00236     nmetdays = ctrl.metyears * 365;
+00237     \textcolor{keywordflow}{for} (i=0 ; i<nmetdays ; i++)
+00238     \{
+00239         tair\_avg += metarr.tavg[i];
+00240     \}
+00241     tair\_avg /= (double)nmetdays;
+00242     
+00243     \textcolor{comment}{/* if this simulation is using a restart file for its initial}
+00244 \textcolor{comment}{    conditions, then copy restart info into structures */}
+00245     \textcolor{keywordflow}{if} (ok && ctrl.read\_restart)
+00246     \{
+00247         \textcolor{keywordflow}{if} (ok && \hyperlink{restart__io_8c_abbb2b2cf473fe2e7b5c1ac5f0790734d}{restart\_input}(&ctrl, &ws, &cs, &ns, &epv, &metyr,
+00248             &(bgcin->restart\_input)))
+00249         \{
+00250             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Error in call to restart\_input() from bgc()\(\backslash\)n"});
+00251             ok=0;
+00252         \}
+00253         
+00254         \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_DIAG, \textcolor{stringliteral}{"done restart\_input\(\backslash\)n"});
+00255     
+00256     \}
+00257     \textcolor{keywordflow}{else}
+00258     \textcolor{comment}{/* no restart file, user supplies initial conditions */}
+00259     \{
+00260         \textcolor{comment}{/* initialize leaf C and N pools depending on phenology signals for}
+00261 \textcolor{comment}{        the first metday */}
+00262         \textcolor{keywordflow}{if} (ok && \hyperlink{firstday_8c_abb6c5cdd7fcae478726423f980f8a3b6}{firstday}(&epc, &cinit, &epv, &phenarr, &cs, &ns))
+00263         \{
+00264             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Error in call to firstday(), from bgc()\(\backslash\)n"});
+00265             ok=0;
+00266         \}
+00267         
+00268         \textcolor{comment}{/* initial value for metyr */}
+00269         metyr = 0;
+00270         
+00271         \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_DIAG, \textcolor{stringliteral}{"done firstday\(\backslash\)n"});
+00272     \}
+00273 
+00274     \textcolor{comment}{/* zero water, carbon, and nitrogen source and sink variables */}
+00275     \textcolor{keywordflow}{if} (ok && \hyperlink{zero__srcsnk_8c_ad1fe85d82246f51079a60a61cf591a9c}{zero\_srcsnk}(&cs,&ns,&ws,&summary))
+00276     \{
+00277         \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Error in call to zero\_srcsnk(), from bgc()\(\backslash\)n"});
+00278         ok=0;
+00279     \}
+00280 
+00281     \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_DIAG, \textcolor{stringliteral}{"done zero\_srcsnk\(\backslash\)n"});
+00282     
+00283     \textcolor{comment}{/* initialize the indicator for first day of current simulation, so}
+00284 \textcolor{comment}{    that the checks for mass balance can have two days for comparison */}
+00285     first\_balance = 1;
+00286 
+00287     \textcolor{comment}{/* mode == MODE\_SPINUP only*/}
+00288     \textcolor{keywordflow}{if} (mode == MODE\_SPINUP)
+00289     \{
+00290         \textcolor{comment}{/* for simulations with fewer than 50 metyears, find the multiple of}
+00291 \textcolor{comment}{        metyears that gets close to 100, use this as the block size in}
+00292 \textcolor{comment}{        spinup control */}
+00293         \textcolor{keywordflow}{if} (ctrl.metyears < 50)
+00294         \{
+00295             ntimesmet = 100 / ctrl.metyears;
+00296             nblock = ctrl.metyears * ntimesmet;
+00297         \}
+00298         \textcolor{keywordflow}{else}
+00299         \{
+00300             nblock = ctrl.metyears;
+00301         \}
+00302 
+00303         \textcolor{comment}{/* initialize spinup control variables */}
+00304         spinyears = 0;
+00305       metcycle = 0;
+00306       steady1 = 0;
+00307       steady2 = 0;
+00308       rising = 1;
+00309     \}
+00310 
+00311     \textcolor{keywordflow}{if} (mode == MODE\_MODEL)
+00312     \{
+00313         tmpyears = ctrl.simyears;
+00314     \}
+00315     \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} (mode == MODE\_SPINUP)
+00316     \{
+00317         tmpyears = nblock;
+00318     \}
+00319     
+00320     \textcolor{comment}{/* do loop for spinup. will only execute once for MODE\_MODEL */}
+00321     \textcolor{keywordflow}{do}
+00322     \{
+00323     
+00324     \textcolor{comment}{/* begin the annual model loop */}
+00325     \textcolor{keywordflow}{for} (simyr=0 ; ok && simyr<tmpyears ; simyr++)
+00326     \{
+00327         \textcolor{keywordflow}{if} (mode == MODE\_MODEL)
+00328         \{
+00329             \textcolor{comment}{/* reset the simple annual output variables for text output */}
+00330             annmaxlai = 0.0;
+00331             annet = 0.0;
+00332             annoutflow = 0.0;
+00333             annnpp = 0.0;
+00334             annnbp = 0.0;
+00335             annprcp = 0.0;
+00336             anntavg = 0.0;
+00337         \}
+00338         
+00339         \textcolor{comment}{/* set current month to 0 (january) at the beginning of each year */}
+00340         curmonth = 0;
+00341 
+00342         \textcolor{keywordflow}{if} (mode == MODE\_SPINUP)
+00343         \{
+00344             \textcolor{comment}{/* calculate scaling for N additions (decreasing with}
+00345 \textcolor{comment}{            time since the beginning of metcycle = 0 block */}
+00346             naddfrac = 1.0 - ((double)simyr/(\textcolor{keywordtype}{double})nblock);
+00347 
+00348             \textcolor{keywordflow}{if} (metcycle == 0)
+00349             \{
+00350                 tally1 = 0.0;
+00351                 tally1b = 0.0;
+00352                 tally2 = 0.0;
+00353                 tally2b = 0.0;
+00354             \}
+00355         \}
+00356         
+00357         \textcolor{comment}{/* test whether metyr needs to be reset */}
+00358         \textcolor{keywordflow}{if} (metyr == ctrl.metyears)
+00359         \{
+00360             \textcolor{keywordflow}{if} (mode == MODE\_MODEL)
+00361             \{
+00362                 \textcolor{keywordflow}{if} (ctrl.onscreen) \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_DETAIL, \textcolor{stringliteral}{"Resetting met data for cyclic input\(\backslash\)n"})
+      ;
+00363             \}
+00364             \textcolor{keywordflow}{if} (mode == MODE\_SPINUP)
+00365             \{
+00366                 \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_DIAG, \textcolor{stringliteral}{"Resetting met data for cyclic input\(\backslash\)n"});
+00367             \}
+00368             metyr = 0;
+00369         \}
+00370 
+00371         \textcolor{keywordflow}{if} (mode == MODE\_MODEL)
+00372         \{
+00373             \textcolor{comment}{/* output to screen to indicate start of simulation year */}
+00374             \textcolor{keywordflow}{if} (ctrl.onscreen) \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_DETAIL, \textcolor{stringliteral}{"Year: %6d\(\backslash\)n"},ctrl.simstartyear+simyr);
+00375         \}
+00376         \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} (mode == MODE\_SPINUP)
+00377         \{
+00378             \textcolor{comment}{/* output to screen to indicate start of simulation year */}
+00379             \textcolor{keywordflow}{if} (ctrl.onscreen) \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_DETAIL, \textcolor{stringliteral}{"Year: %6d\(\backslash\)n"},spinyears);
+00380         \}
+00381 
+00382         \textcolor{comment}{/* set the max lai variable, for annual diagnostic output */}
+00383         epv.ytd\_maxplai = 0.0;
+00384         
+00385         \textcolor{keywordflow}{if} (mode == MODE\_MODEL)
+00386         \{
+00387             \textcolor{comment}{/* atmospheric CO2 and Ndep handling */}
+00388             \textcolor{keywordflow}{if} (!(co2.varco2))
+00389             \{
+00390                 \textcolor{comment}{/* constant CO2, constant Ndep */}
+00391                 metv.co2 = co2.co2ppm;
+00392                 daily\_ndep = sitec.ndep/365.0;
+00393                 daily\_nfix = sitec.nfix/365.0;
+00394             \}
+00395             \textcolor{keywordflow}{else} 
+00396             \{
+00397                 \textcolor{comment}{/* when varco2 = 1, use file for co2 */}
+00398                 \textcolor{keywordflow}{if} (co2.varco2 == 1) metv.co2 = \hyperlink{get__co2_8c_a90d651e65fc157ce30c88de9906e3af2}{get\_co2}(&co2,(ctrl.simstartyear+simyr));
+00399                 \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_DIAG,\textcolor{stringliteral}{"CO2 val: %lf Year: %i\(\backslash\)n"},metv.co2,(ctrl.simstartyear+simyr));
+00400                 \textcolor{keywordflow}{if}(metv.co2 < -999)
+00401                 \{
+00402                     \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR,\textcolor{stringliteral}{"Error finding CO2 value for year: %i\(\backslash\)n"},(ctrl.
+      simstartyear+simyr));
+00403                     \textcolor{keywordflow}{return}(EXIT\_FAILURE);
+00404                 \}
+00405 
+00406                 \textcolor{comment}{/* when varco2 = 2, use the constant CO2 value, but vary Ndep */}
+00407                 \textcolor{keywordflow}{if} (co2.varco2 == 2) metv.co2 = co2.co2ppm;
+00408                 
+00409                 \textcolor{keywordflow}{if} (ramp\_ndep.doramp && !bgcin->ndepctrl.varndep)
+00410                 \{
+00411                     \textcolor{comment}{/* increasing CO2, ramped Ndep */}
+00412                     ind\_simyr = ramp\_ndep.ind\_year - ctrl.simstartyear;
+00413                     ndep\_scalar = (ramp\_ndep.ind\_ndep - ramp\_ndep.preind\_ndep) / 
+00414                         (co2.co2ppm\_array[ind\_simyr]-co2.co2ppm\_array[0]);
+00415                     ndep\_diff = (co2.co2ppm\_array[simyr] - co2.co2ppm\_array[0]) * 
+00416                         ndep\_scalar;
+00417                     ndep = ramp\_ndep.preind\_ndep + ndep\_diff;
+00418                     \textcolor{comment}{/* don't allow the industrial ndep levels to be less than}
+00419 \textcolor{comment}{                    the preindustrial levels */}
+00420                     \textcolor{keywordflow}{if} (ndep < ramp\_ndep.preind\_ndep) ndep = ramp\_ndep.preind\_ndep;
+00421                     daily\_ndep = ndep/365.0;
+00422                     daily\_nfix = sitec.nfix/365.0;
+00423                 \}
+00424                 \textcolor{keywordflow}{else}
+00425                 \{
+00426                     \textcolor{comment}{/* increasing CO2, constant Ndep */}
+00427                     daily\_ndep = sitec.ndep/365.0;
+00428                     daily\_nfix = sitec.nfix/365.0;
+00429                     
+00430                 \}
+00431             \}
+00432             \textcolor{keywordflow}{if}(bgcin->ndepctrl.varndep && mode == MODE\_MODEL)
+00433             \{
+00434 
+00435                 daily\_ndep = \hyperlink{get__ndep_8c_aca9b864bbce6d9c79e047c688ecdaf86}{get\_ndep}(&bgcin->ndepctrl,(ctrl.simstartyear + simyr));
+00436                 \textcolor{keywordflow}{if}(daily\_ndep < -999)
+00437                 \{
+00438                     \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Error finding NDEP for year: %i\(\backslash\)n"},(ctrl.simstartyear+
+      simyr));
+00439                     \textcolor{keywordflow}{return}(EXIT\_FAILURE);
+00440                 \}
+00441                 \textcolor{keywordflow}{else}
+00442                 \{
+00443                     \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_DIAG, \textcolor{stringliteral}{"Using annual NDEP value: %lf\(\backslash\)n"},daily\_ndep);             
+00444                     daily\_ndep /= 365.0;    
+00445                 \}
+00446             \}
+00447         \}
+00448         \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} (mode == MODE\_SPINUP)
+00449         \{
+00450             \textcolor{comment}{/* atmospheric concentration of CO2 (ppm) */}
+00451             \textcolor{comment}{/* Always assign a fixed CO2 value for spinups */}
+00452             metv.co2 = co2.co2ppm;
+00453 
+00454             \textcolor{comment}{/*if (!(co2.varco2)) }
+00455 \textcolor{comment}{            else metv.co2 = co2.co2ppm\_array[simyr]; */}
+00456         \}
+00457 
+00458         \textcolor{comment}{/* begin the daily model loop */}
+00459         \textcolor{keywordflow}{for} (yday=0 ; ok && yday<365 ; yday++)
+00460         \{
+00461             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_DIAG, \textcolor{stringliteral}{"year %d\(\backslash\)tyday %d\(\backslash\)n"},simyr,yday);
+00462             
+00463             \textcolor{comment}{/* Test for very low state variable values and force them}
+00464 \textcolor{comment}{            to 0.0 to avoid rounding and floating point overflow errors */}
+00465             \textcolor{keywordflow}{if} (ok && \hyperlink{precision__control_8c_a20e713bc8669fc41d516c218ef848e01}{precision\_control}(&ws, &cs, &ns))
+00466             \{
+00467                 \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Error in call to precision\_control() from bgc()\(\backslash\)n"});
+00468                 ok=0;
+00469             \} 
+00470             
+00471             \textcolor{comment}{/* set the day index for meteorological and phenological arrays */}
+00472             metday = metyr*365 + yday;
+00473             
+00474             \textcolor{comment}{/* zero all the daily flux variables */}
+00475             wf = zero\_wf;
+00476             cf = zero\_cf;
+00477             nf = zero\_nf;
+00478 
+00479             \textcolor{comment}{/* daily meteorological variables from metarrays */}
+00480             \textcolor{keywordflow}{if} (ok && \hyperlink{daymet_8c_a6bd13f3e81d358675fd203d695b05630}{daymet}(&metarr, &metv, metday))
+00481             \{
+00482                 \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Error in daymet() from bgc()\(\backslash\)n"});
+00483                 ok=0;
+00484             \}
+00485             
+00486             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_DIAG, \textcolor{stringliteral}{"%d\(\backslash\)t%d\(\backslash\)tdone daymet\(\backslash\)n"},simyr,yday);
+00487     
+00488             \textcolor{comment}{/* soil temperature correction using difference from}
+00489 \textcolor{comment}{            annual average tair */}
+00490             tdiff = tair\_avg - metv.tsoil;
+00491             \textcolor{keywordflow}{if} (ws.snoww)
+00492             \{
+00493                 metv.tsoil += 0.83 * tdiff;
+00494             \}
+00495             \textcolor{keywordflow}{else}
+00496             \{
+00497                 metv.tsoil += 0.2 * tdiff;
+00498             \}
+00499             
+00500             \textcolor{comment}{/* daily phenological variables from phenarrays */}
+00501             \textcolor{keywordflow}{if} (ok && \hyperlink{dayphen_8c_a4fcbddc6285418ad6002546daa70c853}{dayphen}(&phenarr, &phen, metday))
+00502             \{
+00503                 \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Error in dayphen() from bgc()\(\backslash\)n"});
+00504                 ok=0;
+00505             \}
+00506             
+00507             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_DIAG, \textcolor{stringliteral}{"%d\(\backslash\)t%d\(\backslash\)tdone dayphen\(\backslash\)n"},simyr,yday);
+00508     
+00509             \textcolor{comment}{/* test for the annual allocation day */}
+00510             \textcolor{keywordflow}{if} (phen.remdays\_litfall == 1) annual\_alloc = 1;
+00511             \textcolor{keywordflow}{else} annual\_alloc = 0;
+00512             
+00513             \textcolor{comment}{/* phenology fluxes */}
+00514             \textcolor{keywordflow}{if} (ok && \hyperlink{phenology_8c_a4db88c2b8b0b2fd1265efd4ba86acd8f}{phenology}(&epc, &phen, &epv, &cs, &cf, &ns, &nf))
+00515             \{
+00516                 \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Error in phenology() from bgc()\(\backslash\)n"});
+00517                 ok=0;
+00518             \}
+00519             
+00520             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_DIAG, \textcolor{stringliteral}{"%d\(\backslash\)t%d\(\backslash\)tdone phenology\(\backslash\)n"},simyr,yday);
+00521     
+00522             \textcolor{comment}{/* calculate leaf area index, sun and shade fractions, and specific}
+00523 \textcolor{comment}{            leaf area for sun and shade canopy fractions, then calculate}
+00524 \textcolor{comment}{            canopy radiation interception and transmission */}
+00525             \textcolor{keywordflow}{if} (ok && \hyperlink{radtrans_8c_a323e7fe52f825be6dfa95a158a812db4}{radtrans}(&cs, &epc, &metv, &epv, sitec.sw\_alb))
+00526             \{
+00527                 \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Error in radtrans() from bgc()\(\backslash\)n"});
+00528                 ok=0;
+00529             \}
+00530             
+00531             \textcolor{comment}{/* update the ann max LAI for annual diagnostic output */}
+00532             \textcolor{keywordflow}{if} (epv.proj\_lai > epv.ytd\_maxplai) epv.ytd\_maxplai = epv.proj\_lai;
+00533             
+00534             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_DIAG, \textcolor{stringliteral}{"%d\(\backslash\)t%d\(\backslash\)tdone radtrans\(\backslash\)n"},simyr,yday);
+00535             
+00536             \textcolor{comment}{/* precip routing (when there is precip) */}
+00537             \textcolor{keywordflow}{if} (ok && metv.prcp && \hyperlink{prcp__route_8c_a5215fb55bf012e8cc6bb76df6ef10f08}{prcp\_route}(&metv, epc.int\_coef, epv.all\_lai,
+00538                 &wf))
+00539             \{
+00540                 \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Error in prcp\_route() from bgc()\(\backslash\)n"});
+00541                 ok=0;
+00542             \}
+00543             
+00544             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_DIAG, \textcolor{stringliteral}{"%d\(\backslash\)t%d\(\backslash\)tdone prcp\_route\(\backslash\)n"},simyr,yday);
+00545 
+00546             \textcolor{comment}{/* snowmelt (when there is a snowpack) */}
+00547             \textcolor{keywordflow}{if} (ok && ws.snoww && \hyperlink{snowmelt_8c_a15e5894893f03411741f82c914d50516}{snowmelt}(&metv, &wf, ws.snoww))
+00548             \{
+00549                 \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Error in snowmelt() from bgc()\(\backslash\)n"});
+00550                 ok=0;
+00551             \}
+00552             
+00553             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_DIAG, \textcolor{stringliteral}{"%d\(\backslash\)t%d\(\backslash\)tdone snowmelt\(\backslash\)n"},simyr,yday);
+00554 
+00555             \textcolor{comment}{/* bare-soil evaporation (when there is no snowpack) */}
+00556             \textcolor{keywordflow}{if} (ok && !ws.snoww && \hyperlink{baresoil__evap_8c_a9fcd7d8f180b7c75bebbd7f3c544218e}{baresoil\_evap}(&metv, &wf, &epv.dsr))
+00557             \{
+00558                 \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Error in baresoil\_evap() from bgc()\(\backslash\)n"});
+00559                 ok=0;
+00560             \}
+00561 
+00562             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_DIAG, \textcolor{stringliteral}{"%d\(\backslash\)t%d\(\backslash\)tdone bare\_soil evap\(\backslash\)n"},simyr,yday);
+00563 
+00564             \textcolor{comment}{/* soil water potential */}
+00565             \textcolor{keywordflow}{if} (ok && \hyperlink{soilpsi_8c_a16f73418658201a227e8ad4bf8e575ab}{soilpsi}(&sitec, ws.soilw, &epv.psi, &epv.vwc))
+00566             \{
+00567                 \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Error in soilpsi() from bgc()\(\backslash\)n"});
+00568                 ok=0;
+00569             \}
+00570             
+00571             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_DIAG, \textcolor{stringliteral}{"%d\(\backslash\)t%d\(\backslash\)tdone soilpsi\(\backslash\)n"},simyr,yday);
+00572 
+00573             \textcolor{comment}{/* daily maintenance respiration */}
+00574             \textcolor{keywordflow}{if} (ok && \hyperlink{maint__resp_8c_a246899df0f64edd56b2b0ab3cc4f377d}{maint\_resp}(&cs, &ns, &epc, &metv, &cf, &epv))
+00575             \{
+00576                 \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Error in m\_resp() from bgc()\(\backslash\)n"});
+00577                 ok=0;
+00578             \}
+00579 
+00580             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_DIAG, \textcolor{stringliteral}{"%d\(\backslash\)t%d\(\backslash\)tdone maint resp\(\backslash\)n"},simyr,yday);
+00581 
+00582             \textcolor{comment}{/* begin canopy bio-physical process simulation */}
+00583             \textcolor{comment}{/* do canopy ET calculations whenever there is leaf area}
+00584 \textcolor{comment}{            displayed, since there may be intercepted water on the }
+00585 \textcolor{comment}{            canopy that needs to be dealt with */}
+00586             \textcolor{keywordflow}{if} (ok && cs.leafc && metv.dayl)
+00587             \{
+00588                 \textcolor{comment}{/* conductance and evapo-transpiration */}
+00589                 \textcolor{keywordflow}{if} (ok && \hyperlink{canopy__et_8c_a5882089955eaa9ed13e938c6eb383b11}{canopy\_et}(&metv, &epc, &epv, &wf, 1))
+00590                 \{
+00591                     \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Error in canopy\_et() from bgc()\(\backslash\)n"});
+00592                     ok=0;
+00593                 \}
+00594                 
+00595                 \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_DIAG, \textcolor{stringliteral}{"%d\(\backslash\)t%d\(\backslash\)tdone canopy\_et\(\backslash\)n"},simyr,yday);
+00596 
+00597             \}
+00598             \textcolor{comment}{/* do photosynthesis only when it is part of the current}
+00599 \textcolor{comment}{            growth season, as defined by the remdays\_curgrowth flag.  This}
+00600 \textcolor{comment}{            keeps the occurrence of new growth consistent with the treatment}
+00601 \textcolor{comment}{            of litterfall and allocation */}
+00602             \textcolor{keywordflow}{if} (ok && cs.leafc && phen.remdays\_curgrowth && metv.dayl)
+00603             \{
+00604                 \textcolor{keywordflow}{if} (ok && \hyperlink{photosynthesis_8c_adba4d3b53331ea3e9e08cd7d0fcec8d4}{total\_photosynthesis}(&metv, &epc, &epv, &cf, &psn\_sun, &
+      psn\_shade))
+00605                 \{
+00606                     \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Error in total\_photosynthesis() from bgc()\(\backslash\)n"});
+00607                     ok=0;
+00608                 \}
+00609                 
+00610             \} \textcolor{comment}{/* end of photosynthesis calculations */}
+00611             \textcolor{keywordflow}{else}
+00612             \{
+00613                 epv.assim\_sun = epv.assim\_shade = 0.0;
+00614             \}
+00615 
+00616             \textcolor{keywordflow}{if} (mode == MODE\_MODEL)
+00617             \{
+00618                 \textcolor{comment}{/* nitrogen deposition and fixation */}
+00619                 nf.ndep\_to\_sminn = daily\_ndep;
+00620                 nf.nfix\_to\_sminn = daily\_nfix;
+00621             \}
+00622             \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} (mode == MODE\_SPINUP)
+00623             \{
+00624                 \textcolor{comment}{/* nitrogen deposition and fixation */}
+00625                 nf.ndep\_to\_sminn = sitec.ndep/365.0;
+00626                 nf.nfix\_to\_sminn = sitec.nfix/365.0;
+00627             \}
+00628 
+00629             \textcolor{comment}{/* calculate outflow */}
+00630             \textcolor{keywordflow}{if} (ok && \hyperlink{outflow_8c_a7114cdaa68100f134ada9732a625c6a9}{outflow}(&sitec, &ws, &wf))
+00631             \{
+00632                 \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Error in outflow() from bgc.c\(\backslash\)n"});
+00633                 ok=0;
+00634             \}
+00635             
+00636             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_DIAG, \textcolor{stringliteral}{"%d\(\backslash\)t%d\(\backslash\)tdone outflow\(\backslash\)n"},simyr,yday);
+00637 
+00638             \textcolor{comment}{/* daily litter and soil decomp and nitrogen fluxes */}
+00639             \textcolor{keywordflow}{if} (ok && \hyperlink{decomp_8c_a5ce50023ade7c1dfcca146c06f3ba9da}{decomp}(metv.tsoil,&epc,&epv,&sitec,&cs,&cf,&ns,&nf,&nt))
+00640             \{
+00641                 \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Error in decomp() from bgc.c\(\backslash\)n"});
+00642                 ok=0;
+00643             \}
+00644             
+00645             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_DIAG, \textcolor{stringliteral}{"%d\(\backslash\)t%d\(\backslash\)tdone decomp\(\backslash\)n"},simyr,yday);
+00646 
+00647             \textcolor{comment}{/* Daily allocation gets called whether or not this is a}
+00648 \textcolor{comment}{            current growth day, because the competition between decomp}
+00649 \textcolor{comment}{            immobilization fluxes and plant growth N demand is resolved}
+00650 \textcolor{comment}{            here.  On days with no growth, no allocation occurs, but}
+00651 \textcolor{comment}{            immobilization fluxes are updated normally */}
+00652             \textcolor{keywordflow}{if} (mode == MODE\_MODEL)
+00653             \{
+00654                 \textcolor{keywordflow}{if} (ok && \hyperlink{daily__allocation_8c_a78494a491616be3574480363952f005f}{daily\_allocation}(&cf,&cs,&nf,&ns,&epc,&epv,&nt,1.0,MODE\_MODEL))
+00655                 \{
+00656                     \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Error in daily\_allocation() from bgc.c\(\backslash\)n"});
+00657                     ok=0;
+00658                 \}
+00659             \}
+00660             \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} (mode == MODE\_SPINUP)
+00661             \{
+00662                 \textcolor{comment}{/* spinup control */}
+00663                 \textcolor{comment}{/* in the rising limb, use the spinup allocation code}
+00664 \textcolor{comment}{                that supplements N supply */}
+00665                 \textcolor{keywordflow}{if} (!steady1 && rising && metcycle == 0)
+00666                 \{
+00667                     \textcolor{keywordflow}{if} (ok && \hyperlink{daily__allocation_8c_a78494a491616be3574480363952f005f}{daily\_allocation}(&cf,&cs,&nf,&ns,&epc,&epv,&nt,naddfrac,
+      MODE\_SPINUP))
+00668                     \{
+00669                         \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Error in daily\_allocation() from bgc.c\(\backslash\)n"});
+00670                         ok=0;
+00671                     \}
+00672                 \}
+00673                 \textcolor{keywordflow}{else}
+00674                 \{
+00675                     \textcolor{keywordflow}{if} (ok && \hyperlink{daily__allocation_8c_a78494a491616be3574480363952f005f}{daily\_allocation}(&cf,&cs,&nf,&ns,&epc,&epv,&nt,1.0,MODE\_MODEL
+      ))
+00676                     \{
+00677                         \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Error in daily\_allocation() from bgc.c\(\backslash\)n"});
+00678                         ok=0;
+00679                     \}
+00680                 \}
+00681             \}
+00682             
+00683             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_DIAG, \textcolor{stringliteral}{"%d\(\backslash\)t%d\(\backslash\)tdone daily\_allocation\(\backslash\)n"},simyr,yday);
+00684 
+00685             \textcolor{comment}{/* reassess the annual turnover rates for livewood --> deadwood,}
+00686 \textcolor{comment}{            and for evergreen leaf and fine root litterfall. This happens}
+00687 \textcolor{comment}{            once each year, on the annual\_alloc day (the last litterfall day) */}
+00688             \textcolor{keywordflow}{if} (ok && annual\_alloc)
+00689             \{
+00690                 \textcolor{keywordflow}{if} (ok && \hyperlink{annual__rates_8c_a31da74671128c782a97dbd8952ded454}{annual\_rates}(&epc,&epv))
+00691                 \{
+00692                     \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Error in annual\_rates() from bgc()\(\backslash\)n"});
+00693                     ok=0;
+00694                 \}
+00695                 
+00696                 \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_DIAG, \textcolor{stringliteral}{"%d\(\backslash\)t%d\(\backslash\)tdone annual rates\(\backslash\)n"},simyr,yday);
+00697             \} 
+00698 
+00699 
+00700             \textcolor{comment}{/* daily growth respiration */}
+00701             \textcolor{keywordflow}{if} (ok && \hyperlink{growth__resp_8c_a85d965990cd0096b29def19816e47e62}{growth\_resp}(&epc, &cf))
+00702             \{
+00703                 \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Error in daily\_growth\_resp() from bgc.c\(\backslash\)n"});
+00704                 ok=0;
+00705             \}
+00706             
+00707             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_DIAG, \textcolor{stringliteral}{"%d\(\backslash\)t%d\(\backslash\)tdone growth\_resp\(\backslash\)n"},simyr,yday);
+00708 
+00709             \textcolor{comment}{/* daily update of the water state variables */}
+00710             \textcolor{keywordflow}{if} (ok && \hyperlink{state__update_8c_a7107f4defb131263ebb760ecf8423ab6}{daily\_water\_state\_update}(&wf, &ws))
+00711             \{
+00712                 \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Error in daily\_water\_state\_update() from bgc()\(\backslash\)n"});
+00713                 ok=0;
+00714             \}
+00715             
+00716             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_DIAG, \textcolor{stringliteral}{"%d\(\backslash\)t%d\(\backslash\)tdone water state update\(\backslash\)n"},simyr,yday);
+00717 
+00718             \textcolor{comment}{/* daily update of carbon state variables */}
+00719             \textcolor{keywordflow}{if} (ok && \hyperlink{state__update_8c_ab0adc8a68a22b97c1eba81f5da03d555}{daily\_carbon\_state\_update}(&cf, &cs, annual\_alloc,
+00720                 epc.woody, epc.evergreen))
+00721             \{
+00722                 \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Error in daily\_carbon\_state\_update() from bgc()\(\backslash\)n"});
+00723                 ok=0;
+00724             \}
+00725 
+00726             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_DIAG, \textcolor{stringliteral}{"%d\(\backslash\)t%d\(\backslash\)tdone carbon state update\(\backslash\)n"},simyr,yday);
+00727 
+00728             \textcolor{comment}{/* daily update of nitrogen state variables */}
+00729             \textcolor{keywordflow}{if} (ok && \hyperlink{state__update_8c_aac44819d8b0419079683705a5a220e7a}{daily\_nitrogen\_state\_update}(&nf, &ns, annual\_alloc,
+00730                 epc.woody, epc.evergreen))
+00731             \{
+00732                 \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Error in daily\_nitrogen\_state\_update() from bgc()\(\backslash\)n"});
+00733                 ok=0;
+00734             \}
+00735             
+00736             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_DIAG, \textcolor{stringliteral}{"%d\(\backslash\)t%d\(\backslash\)tdone nitrogen state update\(\backslash\)n"},simyr,yday);
+00737 
+00738             \textcolor{comment}{/* calculate N leaching loss.  This is a special state variable}
+00739 \textcolor{comment}{            update routine, done after the other fluxes and states are}
+00740 \textcolor{comment}{            reconciled in order to avoid negative sminn under heavy leaching}
+00741 \textcolor{comment}{            potential */}
+00742             \textcolor{keywordflow}{if} (ok && \hyperlink{nleaching_8c_ad81692b3f3f9e1a81bb29c1d0ce6bd3d}{nleaching}(&ns, &nf, &ws, &wf))
+00743             \{
+00744                 \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Error in nleaching() from bgc()\(\backslash\)n"});
+00745                 ok=0;
+00746             \}
+00747             
+00748             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_DIAG, \textcolor{stringliteral}{"%d\(\backslash\)t%d\(\backslash\)tdone nitrogen leaching\(\backslash\)n"},simyr,yday);
+00749 
+00750             \textcolor{comment}{/* calculate daily mortality fluxes and update state variables */}
+00751             \textcolor{comment}{/* this is done last, with a special state update procedure, to}
+00752 \textcolor{comment}{            insure that pools don't go negative due to mortality fluxes}
+00753 \textcolor{comment}{            conflicting with other proportional fluxes */}
+00754             \textcolor{keywordflow}{if} (ok && \hyperlink{mortality_8c_ada5c305af17e64ee9f82e82235340734}{mortality}(&epc,&cs,&cf,&ns,&nf))
+00755             \{
+00756                 \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Error in mortality() from bgc()\(\backslash\)n"});
+00757                 ok=0;
+00758             \}
+00759             
+00760             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_DIAG, \textcolor{stringliteral}{"%d\(\backslash\)t%d\(\backslash\)tdone mortality\(\backslash\)n"},simyr,yday);
+00761 
+00762             \textcolor{comment}{/* test for water balance */}
+00763             \textcolor{keywordflow}{if} (ok && \hyperlink{check__balance_8c_a7c3407e1cb5eb1e58ac2ac744a6156d6}{check\_water\_balance}(&ws, first\_balance))
+00764             \{
+00765                 \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Error in check\_water\_balance() from bgc()\(\backslash\)n"});
+00766                 \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"%d\(\backslash\)n"},metday);
+00767                 ok=0;
+00768             \}
+00769             
+00770             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_DIAG, \textcolor{stringliteral}{"%d\(\backslash\)t%d\(\backslash\)tdone water balance\(\backslash\)n"},simyr,yday);
+00771 
+00772             \textcolor{comment}{/* test for carbon balance */}
+00773             \textcolor{keywordflow}{if} (ok && \hyperlink{check__balance_8c_adf0fd12860935512d2a5f628e87c1171}{check\_carbon\_balance}(&cs, first\_balance))
+00774             \{
+00775                 \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Error in check\_carbon\_balance() from bgc()\(\backslash\)n"});
+00776                 \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"%d\(\backslash\)n"},metday);
+00777                 ok=0;
+00778             \}
+00779             
+00780             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_DIAG, \textcolor{stringliteral}{"%d\(\backslash\)t%d\(\backslash\)tdone carbon balance\(\backslash\)n"},simyr,yday);
+00781 
+00782             \textcolor{comment}{/* test for nitrogen balance */}
+00783             \textcolor{keywordflow}{if} (ok && \hyperlink{check__balance_8c_a72e7148d8dcce5a86380cf56d81f0955}{check\_nitrogen\_balance}(&ns, first\_balance))
+00784             \{
+00785                 \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Error in check\_nitrogen\_balance() from bgc()\(\backslash\)n"});
+00786                 \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"%d\(\backslash\)n"},metday);
+00787                 ok=0;
+00788             \}
+00789             
+00790             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_DIAG, \textcolor{stringliteral}{"%d\(\backslash\)t%d\(\backslash\)tdone nitrogen balance\(\backslash\)n"},simyr,yday);
+00791 
+00792             \textcolor{comment}{/* calculate carbon summary variables */}
+00793             \textcolor{keywordflow}{if} (ok && \hyperlink{summary_8c_a063a448b14734e59d301b2639c5b107a}{csummary}(&cf, &cs, &summary))
+00794             \{
+00795                 \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Error in csummary() from bgc()\(\backslash\)n"});
+00796                 ok=0;
+00797             \} 
+00798             
+00799             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_DIAG, \textcolor{stringliteral}{"%d\(\backslash\)t%d\(\backslash\)tdone carbon summary\(\backslash\)n"},simyr,yday);
+00800 
+00801             \textcolor{comment}{/* calculate water summary variables */}
+00802             \textcolor{keywordflow}{if} (ok && \hyperlink{summary_8c_a6f21695898e69d2e04041da9158e38fa}{wsummary}(&ws,&wf,&summary))
+00803             \{
+00804                 printf(\textcolor{stringliteral}{"Error in wsummary() from bgc()\(\backslash\)n"});
+00805                 ok=0;
+00806             \}
+00807 
+00808             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_DIAG, \textcolor{stringliteral}{"%d\(\backslash\)t%d\(\backslash\)tdone water summary\(\backslash\)n"}, simyr,yday);
+00809 
+00810             \textcolor{comment}{/* DAILY OUTPUT HANDLING */}
+00811             \textcolor{comment}{/* fill the daily output array if daily output is requested,}
+00812 \textcolor{comment}{            or if the monthly or annual average of daily output variables}
+00813 \textcolor{comment}{            have been requested */}
+00814             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_DIAG, \textcolor{stringliteral}{"Number of daily outputs: %d\(\backslash\)n"}, ctrl.ndayout);
+00815             \textcolor{keywordflow}{if} (ok && dayout)
+00816             \{
+00817                 \textcolor{comment}{/* fill the daily output array */}
+00818                 \textcolor{keywordflow}{for} (outv=0 ; outv<ctrl.ndayout ; outv++)
+00819                 \{
+00820                     \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_DIAG, \textcolor{stringliteral}{"Outv: %d, "}, outv);
+00821                     \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_DIAG, \textcolor{stringliteral}{"DayCode: %d, "}, ctrl.daycodes[outv]);
+00822                     \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_DIAG, \textcolor{stringliteral}{"Output: %f\(\backslash\)n"}, *output\_map[ctrl.daycodes[outv]]);
+00823                     dayarr[outv] = (float) *output\_map[ctrl.daycodes[outv]];
+00824                 \}
+00825             \}
+00826             \textcolor{comment}{/* only write daily outputs if requested */}
+00827             \textcolor{keywordflow}{if} (ok && ctrl.dodaily)
+00828             \{
+00829                 \textcolor{comment}{/* write the daily output array to daily output file */}
+00830                 \textcolor{keywordflow}{if} (fwrite(dayarr, \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{float}), ctrl.ndayout, bgcout->dayout.ptr)
+00831                     != (size\_t)ctrl.ndayout)
+00832                 \{
+00833                     \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Error writing to %s: simyear = %d, simday = %d\(\backslash\)n"},
+00834                         bgcout->dayout.name,simyr,yday);
+00835                     ok=0;
+00836                 \}
+00837                 
+00838                 \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_DIAG, \textcolor{stringliteral}{"%d\(\backslash\)t%d\(\backslash\)tdone daily output\(\backslash\)n"},simyr,yday);
+00839                 \textcolor{keywordflow}{if}(ok && bgcout->bgc\_ascii)
+00840                 \{   
+00841                 
+00842                     \hyperlink{output__ascii_8c_a2d026e2a6b7b7727a322ea7e0d43bec7}{output\_ascii}(dayarr,ctrl.ndayout,bgcout->dayoutascii.ptr);
+00843                 
+00844                 \}
+00845                 
+00846             \}
+00847             \textcolor{comment}{/*******************/}
+00848             \textcolor{comment}{/* MONTHLY OUTPUTS */}
+00849             \textcolor{comment}{/*******************/}
+00850             
+00851             \textcolor{comment}{/* MONTHLY AVERAGE OF DAILY OUTPUT VARIABLES */}
+00852             \textcolor{keywordflow}{if} (ctrl.domonavg)
+00853             \{
+00854                 \textcolor{comment}{/* update the monthly average array */}
+00855                 \textcolor{keywordflow}{for} (outv=0 ; outv<ctrl.ndayout ; outv++)
+00856                 \{
+00857                     monavgarr[outv] += dayarr[outv];
+00858 
+00859                     \textcolor{keywordflow}{switch} (ctrl.daycodes[outv])
+00860                     \{
+00861                         \textcolor{comment}{/* Leaf area index */}
+00862                         \textcolor{keywordflow}{case} 545:   
+00863                             \textcolor{keywordflow}{if}(dayarr[outv] > monmaxlai) monmaxlai = dayarr[outv]; 
+00864                             \textcolor{keywordflow}{break};
+00865                     \}
+00866                 \}
+00867                 
+00868                 \textcolor{comment}{/* if this is the last day of the current month, output... */}
+00869                 \textcolor{keywordflow}{if} (yday == endday[curmonth])
+00870                 \{
+00871                     \textcolor{comment}{/* finish the averages */}
+00872                     \textcolor{keywordflow}{for} (outv=0 ; outv<ctrl.ndayout ; outv++)
+00873                     \{
+00874                         \textcolor{keywordflow}{if} (summary\_sanity == SANE)
+00875                         \{
+00876                             \textcolor{keywordflow}{switch} (ctrl.daycodes[outv])
+00877                             \{
+00878                                 \textcolor{comment}{/* Leaf area index */}
+00879                                 \textcolor{comment}{/* Maximum monthly */}
+00880                                 \textcolor{keywordflow}{case} 545:
+00881                                     monavgarr[outv] = monmaxlai; 
+00882                                     \textcolor{keywordflow}{break};
+00883                                 \textcolor{comment}{/* Snow water */}
+00884                                 \textcolor{keywordflow}{case} 21:
+00885                                     monavgarr[outv] = dayarr[outv] - eomsnoww; 
+00886                                     eomsnoww = dayarr[outv]; 
+00887                                     \textcolor{keywordflow}{break};
+00888                                 \textcolor{comment}{/* Soil water content */}
+00889                                 \textcolor{keywordflow}{case} 20:
+00890                                     monavgarr[outv] = dayarr[outv] - eomsoilw;
+00891                                     eomsoilw = dayarr[outv];
+00892                                     \textcolor{keywordflow}{break};
+00893                                 \textcolor{keywordflow}{default}:
+00894                                     monavgarr[outv] /= (float)mondays[curmonth];
+00895                                     \textcolor{keywordflow}{break};
+00896                             \}
+00897                         \}
+00898                         \textcolor{keywordflow}{else} 
+00899                         \{
+00900                             monavgarr[outv] /= (float)mondays[curmonth];
+00901                         \}
+00902                     \}
+00903                     
+00904                     \textcolor{comment}{/* write to file */}
+00905                     \textcolor{keywordflow}{if} (fwrite(monavgarr, \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{float}), ctrl.ndayout, bgcout->monavgout.ptr)
+00906                         != (\textcolor{keywordtype}{size\_t})ctrl.ndayout)
+00907                     \{
+00908                         \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Error writing to %s: simyear = %d, simday = %d\(\backslash\)n"},
+00909                             bgcout->monavgout.name,simyr,yday);
+00910                         ok=0;
+00911                     \}
+00912                     
+00913                     \textcolor{keywordflow}{if}(ok && bgcout->bgc\_ascii)
+00914                     \{
+00915                         \hyperlink{output__ascii_8c_a2d026e2a6b7b7727a322ea7e0d43bec7}{output\_ascii}(monavgarr,ctrl.ndayout, bgcout->monoutascii.ptr);
+00916                         
+00917                     \}
+00918                     
+00919                     \textcolor{comment}{/* reset monthly average variables for next month */}
+00920                     \textcolor{keywordflow}{for} (outv=0 ; outv<ctrl.ndayout ; outv++)
+00921                     \{
+00922                         monavgarr[outv] = 0.0;
+00923                         monmaxlai = 0.0;
+00924                         monmaxsnoww = 0.0;
+00925                     \}
+00926                     
+00927                     \textcolor{comment}{/* increment current month counter */}
+00928                     curmonth++;
+00929                     
+00930                     \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_DIAG, \textcolor{stringliteral}{"%d\(\backslash\)t%d\(\backslash\)tdone monavg output\(\backslash\)n"},simyr,yday);
+00931                 
+00932                 \}
+00933             \}
+00934             
+00935             \textcolor{comment}{/* ANNUAL AVERAGE OF DAILY OUTPUT VARIABLES */}
+00936             \textcolor{keywordflow}{if} (ctrl.doannavg)
+00937             \{
+00938                 \textcolor{comment}{/* update the annual average array */}
+00939                 \textcolor{keywordflow}{for} (outv=0 ; outv<ctrl.ndayout ; outv++)
+00940                 \{
+00941                     annavgarr[outv] += dayarr[outv];
+00942                     \textcolor{keywordflow}{switch} (ctrl.daycodes[outv])
+00943                     \{
+00944                         \textcolor{comment}{/* Leaf area index */}
+00945                         \textcolor{keywordflow}{case} 545:
+00946                             \textcolor{keywordflow}{if}(dayarr[outv] > annmaxplai) annmaxplai = dayarr[outv];
+00947                             \textcolor{keywordflow}{break};
+00948                     \}
+00949                 \}
+00950                 
+00951                 \textcolor{comment}{/* if this is the last day of the year, output... */}
+00952                 \textcolor{keywordflow}{if} (yday == 364)
+00953                 \{
+00954                     \textcolor{comment}{/* finish averages */}
+00955                     \textcolor{keywordflow}{for} (outv=0 ; outv<ctrl.ndayout ; outv++)
+00956                     \{
+00957                         \textcolor{keywordflow}{if} (summary\_sanity == SANE)
+00958                         \{
+00959                             \textcolor{keywordflow}{switch} (ctrl.daycodes[outv])
+00960                             \{
+00961                                 \textcolor{comment}{/* Leaf area index*/} 
+00962                                 \textcolor{keywordflow}{case} 545:
+00963                                     annavgarr[outv] = (float)annmaxplai;
+00964                                     \textcolor{keywordflow}{break};
+00965                                 \textcolor{keywordflow}{default}: 
+00966                                     annavgarr[outv] /= 365.0;
+00967                                     \textcolor{keywordflow}{break};
+00968                             \}
+00969                         \}
+00970                         \textcolor{keywordflow}{else}
+00971                         \{
+00972                             annavgarr[outv] /= 365.0;
+00973                         \}
+00974                     \}
+00975                     
+00976                     \textcolor{comment}{/* write to file */}
+00977                     \textcolor{keywordflow}{if} (fwrite(annavgarr, \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{float}), ctrl.ndayout, bgcout->annavgout.ptr)
+00978                         != (size\_t)ctrl.ndayout)
+00979                     \{
+00980                         \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Error writing to %s: simyear = %d, simday = %d\(\backslash\)n"},
+00981                             bgcout->annavgout.name,simyr,yday);
+00982                         ok=0;
+00983                     \}
+00984                     
+00985                     \textcolor{comment}{/* reset annual average variables for next month */}
+00986                     \textcolor{keywordflow}{for} (outv=0 ; outv<ctrl.ndayout ; outv++)
+00987                     \{
+00988                         annavgarr[outv] = 0.0;
+00989                         annmaxplai = 0.0;
+00990                     \}
+00991                     
+00992                     \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_DIAG, \textcolor{stringliteral}{"%d\(\backslash\)t%d\(\backslash\)tdone annavg output\(\backslash\)n"},simyr,yday);
+00993                 
+00994                 \}
+00995             \}
+00996             
+00997             \textcolor{keywordflow}{if} (mode == MODE\_MODEL)
+00998             \{
+00999                 \textcolor{comment}{/* very simple annual summary variables for text file output */}
+01000                 \textcolor{keywordflow}{if} (epv.proj\_lai > (\textcolor{keywordtype}{double})annmaxlai) annmaxlai = (float)epv.proj\_lai;
+01001                 annet += wf.canopyw\_evap + wf.snoww\_subl + wf.soilw\_evap +
+01002                     wf.soilw\_trans;
+01003                 annoutflow += wf.soilw\_outflow;
+01004                 annnpp += summary.daily\_npp * 1000.0;
+01005                 annnbp += summary.daily\_nee * 1000.0;
+01006                 annprcp += metv.prcp;
+01007                 anntavg += metv.tavg/365.0;
+01008             \}
+01009             \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} (mode == MODE\_SPINUP)
+01010             \{
+01011                 \textcolor{comment}{/* spinup control */}
+01012                 \textcolor{comment}{/* keep a tally of total soil C during successive}
+01013 \textcolor{comment}{                met cycles for comparison */}
+01014                 \textcolor{keywordflow}{if} (metcycle == 1)
+01015                 \{
+01016                     tally1 += summary.soilc;
+01017                     tally1b += summary.totalc;
+01018                 \}
+01019                 \textcolor{keywordflow}{if} (metcycle == 2)
+01020                 \{
+01021                     tally2 += summary.soilc;
+01022                     tally2b += summary.totalc;
+01023                 \}
+01024             \}
+01025             
+01026             \textcolor{comment}{/* at the end of first day of simulation, turn off the }
+01027 \textcolor{comment}{            first\_balance switch */}
+01028             \textcolor{keywordflow}{if} (first\_balance) first\_balance = 0;
+01029 
+01030         \}   \textcolor{comment}{/* end of daily model loop */}
+01031         
+01032         \textcolor{comment}{/* ANNUAL OUTPUT HANDLING */}
+01033         \textcolor{comment}{/* only write annual outputs if requested */}
+01034         \textcolor{keywordflow}{if} (ok && ctrl.doannual)
+01035         \{
+01036             \textcolor{comment}{/* fill the annual output array */}
+01037             \textcolor{keywordflow}{for} (outv=0 ; outv<ctrl.nannout ; outv++)
+01038             \{
+01039                 annarr[outv] = (float) *output\_map[ctrl.anncodes[outv]];
+01040             \}
+01041             \textcolor{comment}{/* write the annual output array to annual output file */}
+01042             \textcolor{keywordflow}{if} (fwrite(annarr, \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{float}), ctrl.nannout, bgcout->annout.ptr)
+01043                 != (\textcolor{keywordtype}{size\_t})ctrl.nannout)
+01044             \{
+01045                 \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Error writing to %s: simyear = %d, simday = %d\(\backslash\)n"},
+01046                     bgcout->annout.name,simyr,yday);
+01047                 ok=0;
+01048             \}
+01049             
+01050             \textcolor{keywordflow}{if}(ok && bgcout->bgc\_ascii)
+01051             \{
+01052             
+01053                 \hyperlink{output__ascii_8c_a2d026e2a6b7b7727a322ea7e0d43bec7}{output\_ascii}(annarr,ctrl.nannout,bgcout->annoutascii.ptr);
+01054                 
+01055             \}
+01056             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_DIAG, \textcolor{stringliteral}{"%d\(\backslash\)t%d\(\backslash\)tdone annual output\(\backslash\)n"},simyr,yday);
+01057         \}
+01058         
+01059         \textcolor{keywordflow}{if} (mode == MODE\_MODEL && bgcout->bgc\_ascii)
+01060         \{
+01061             \textcolor{comment}{/* write the simple annual text output */}
+01062             fprintf(bgcout->anntext.ptr,\textcolor{stringliteral}{"%6d%10.1f%10.1f%10.1f%10.1f%10.1f%10.1f%10.1f\(\backslash\)n"},
+01063                 ctrl.simstartyear+simyr,annprcp,anntavg,annmaxlai,annet,annoutflow,annnpp,annnbp);
+01064         \}
+01065             
+01066         metyr++;
+01067 
+01068         \textcolor{keywordflow}{if} (mode == MODE\_SPINUP)
+01069         \{
+01070             \textcolor{comment}{/* spinup control */}
+01071             spinyears++;
+01072         \}
+01073 
+01074     \}   \textcolor{comment}{/* end of annual model loop */}
+01075 
+01076     \textcolor{keywordflow}{if} (mode == MODE\_SPINUP)
+01077     \{
+01078         \textcolor{comment}{/* spinup control */}
+01079         \textcolor{comment}{/* if this is the third pass through metcycle, do comparison */}
+01080         \textcolor{comment}{/* first block is during the rising phase */}
+01081         \textcolor{keywordflow}{if} (!steady1 && metcycle == 2)
+01082         \{
+01083             \textcolor{comment}{/* convert tally1 and tally2 to average daily soilc */}
+01084             tally1 /= (double)nblock * 365.0;
+01085             tally2 /= (double)nblock * 365.0;
+01086             rising = (tally2 > tally1);
+01087             t1 = (tally2-tally1)/(\textcolor{keywordtype}{double})nblock;
+01088             steady1 = (fabs(t1) < SPINUP\_TOLERANCE);
+01089 
+01090             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_DIAG, \textcolor{stringliteral}{"spinyears = %d rising = %d steady1 = %d\(\backslash\)n"},spinyears,
+01091                 rising,steady1);
+01092             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_DIAG, \textcolor{stringliteral}{"metcycle = %d tally1 = %lf tally2 = %lf pdif = %lf\(\backslash\)n\(\backslash\)n"},
+01093                 metcycle,tally1,tally2,t1);
+01094             \textcolor{keywordflow}{if} (steady1) \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_DIAG, \textcolor{stringliteral}{"SWITCH\(\backslash\)n\(\backslash\)n"});
+01095 
+01096             metcycle = 0;
+01097         \}
+01098         \textcolor{comment}{/* second block is after supplemental N turned off */}
+01099         \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} (steady1 && metcycle == 2)
+01100         \{
+01101             \textcolor{comment}{/* convert tally1 and tally2 to average daily soilc */}
+01102             tally1 /= (double)nblock * 365.0;
+01103             tally2 /= (double)nblock * 365.0;
+01104             t1 = (tally2-tally1)/(\textcolor{keywordtype}{double})nblock;
+01105             steady2 = (fabs(t1) < SPINUP\_TOLERANCE);
+01106 
+01107             \textcolor{comment}{/* if rising above critical rate, back to steady1=0 */}
+01108             \textcolor{keywordflow}{if} (t1 > SPINUP\_TOLERANCE)
+01109             \{
+01110                 \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_DIAG, \textcolor{stringliteral}{"\(\backslash\)nSWITCH BACK\(\backslash\)n"});
+01111 
+01112                 steady1 = 0;
+01113                 rising = 1;
+01114             \}
+01115 
+01116             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_DIAG, \textcolor{stringliteral}{"spinyears = %d rising = %d steady2 = %d\(\backslash\)n"},spinyears,
+01117                 rising,steady2);
+01118             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_DIAG, \textcolor{stringliteral}{"metcycle = %d tally1 = %lf tally2 = %lf pdif = %lf\(\backslash\)n\(\backslash\)n"},
+01119                 metcycle,tally1,tally2,t1);
+01120 
+01121             metcycle = 0;
+01122         \}
+01123         \textcolor{keywordflow}{else}
+01124         \{
+01125             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_DIAG, \textcolor{stringliteral}{"spinyears = %d rising = %d steady1 = %d\(\backslash\)n"},spinyears,
+01126                 rising,steady1);
+01127             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_DIAG, \textcolor{stringliteral}{"metcycle = %d tally1 = %lf tally2 = %lf pdif = %lf\(\backslash\)n"},
+01128                 metcycle,tally1,tally2,t1);
+01129 
+01130             metcycle++;
+01131         \}
+01132     \}
+01133 
+01134     \textcolor{comment}{/* end of do block, test for steady state */}
+01135     \} \textcolor{keywordflow}{while} (mode == MODE\_SPINUP && (!(steady1 && steady2) && (spinyears < ctrl.maxspinyears ||
+01136         metcycle != 0)) );
+01137 
+01138     \textcolor{comment}{/* mode == MODE\_SPINUP only */}
+01139     \textcolor{keywordflow}{if} (mode == MODE\_SPINUP)
+01140     \{
+01141         \textcolor{comment}{/* save some information on the end status of spinup */}
+01142         tally1b /= (double)nblock * 365.0;
+01143         tally2b /= (double)nblock * 365.0;
+01144         bgcout->spinup\_resid\_trend = (tally2b-tally1b)/(\textcolor{keywordtype}{double})nblock;
+01145         bgcout->spinup\_years = spinyears;
+01146     \}
+01147     
+01148     \textcolor{comment}{/* RESTART OUTPUT HANDLING */}
+01149     \textcolor{comment}{/* if write\_restart flag is set, copy data to the output restart struct */}
+01150     \textcolor{comment}{/* Removed 'write\_restart' restriction to ensure that restart data are */}
+01151     \textcolor{comment}{/* available for spin and go operation.  WMJ 3/16/2005 */}
+01152     \textcolor{keywordflow}{if} (ok)
+01153     \{
+01154         \textcolor{keywordflow}{if} (\hyperlink{restart__io_8c_a87ed6bc3ef6e9be39f3f0363ee89fbc3}{restart\_output}(&ctrl, &ws, &cs, &ns, &epv, metyr, 
+01155             &(bgcout->restart\_output)))
+01156         \{
+01157             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Error in call to restart\_output() from bgc()\(\backslash\)n"});
+01158             ok=0;
+01159         \}
+01160         
+01161         \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_DIAG, \textcolor{stringliteral}{"%d\(\backslash\)t%d\(\backslash\)tdone restart output\(\backslash\)n"},simyr,yday);
+01162     \}
+01163 
+01164     \textcolor{comment}{/* free phenology memory */}
+01165     \textcolor{keywordflow}{if} (ok && \hyperlink{prephenology_8c_a4a74c56387917d8811f0ea4e0a59424e}{free\_phenmem}(&phenarr))
+01166     \{
+01167         \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Error in free\_phenmem() from bgc()\(\backslash\)n"});
+01168         ok=0;
+01169     \}
+01170 
+01171     \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_DIAG, \textcolor{stringliteral}{"%d\(\backslash\)t%d\(\backslash\)tdone free phenmem\(\backslash\)n"},simyr,yday);
+01172     
+01173     \textcolor{comment}{/* free memory for local output arrays */}
+01174     
+01175     \textcolor{keywordflow}{if} (dayout) free(dayarr);
+01176     \textcolor{keywordflow}{if} (ctrl.domonavg) free(monavgarr);
+01177     \textcolor{keywordflow}{if} (ctrl.doannavg) free(annavgarr);
+01178     \textcolor{keywordflow}{if} (ctrl.doannual) free(annarr);
+01179     free(output\_map);
+01180     
+01181     \textcolor{comment}{/* print timing info if error */}
+01182     \textcolor{keywordflow}{if} (!ok)
+01183     \{
+01184         \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"ERROR at year %d\(\backslash\)n"},simyr-1);
+01185         \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"ERROR at yday %d\(\backslash\)n"},yday-1);
+01186     \}
+01187     
+01188     \textcolor{comment}{/* return error status */}   
+01189     \textcolor{keywordflow}{return} (!ok);
+01190 \}
+\end{DoxyCode}

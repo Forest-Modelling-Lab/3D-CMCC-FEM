@@ -1,0 +1,85 @@
+\hypertarget{state__update_8c}{}\section{c\+:/\+R\+E\+P\+O/biomebgc-\/4.2/src/bgclib/state\+\_\+update.c File Reference}
+\label{state__update_8c}\index{c\+:/\+R\+E\+P\+O/biomebgc-\/4.\+2/src/bgclib/state\+\_\+update.\+c@{c\+:/\+R\+E\+P\+O/biomebgc-\/4.\+2/src/bgclib/state\+\_\+update.\+c}}
+{\ttfamily \#include \char`\"{}bgc.\+h\char`\"{}}\newline
+Include dependency graph for state\+\_\+update.\+c\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=209pt]{state__update_8c__incl}
+\end{center}
+\end{figure}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{state__update_8c_a7107f4defb131263ebb760ecf8423ab6}{daily\+\_\+water\+\_\+state\+\_\+update} (wflux\+\_\+struct $\ast$wf, wstate\+\_\+struct $\ast$ws)
+\item 
+int \hyperlink{state__update_8c_ab0adc8a68a22b97c1eba81f5da03d555}{daily\+\_\+carbon\+\_\+state\+\_\+update} (cflux\+\_\+struct $\ast$cf, cstate\+\_\+struct $\ast$cs, int alloc, int woody, int evergreen)
+\item 
+int \hyperlink{state__update_8c_aac44819d8b0419079683705a5a220e7a}{daily\+\_\+nitrogen\+\_\+state\+\_\+update} (nflux\+\_\+struct $\ast$nf, nstate\+\_\+struct $\ast$ns, int alloc, int woody, int evergreen)
+\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\hypertarget{state__update_8c_ab0adc8a68a22b97c1eba81f5da03d555}{}\label{state__update_8c_ab0adc8a68a22b97c1eba81f5da03d555} 
+\index{state\+\_\+update.\+c@{state\+\_\+update.\+c}!daily\+\_\+carbon\+\_\+state\+\_\+update@{daily\+\_\+carbon\+\_\+state\+\_\+update}}
+\index{daily\+\_\+carbon\+\_\+state\+\_\+update@{daily\+\_\+carbon\+\_\+state\+\_\+update}!state\+\_\+update.\+c@{state\+\_\+update.\+c}}
+\subsubsection{\texorpdfstring{daily\+\_\+carbon\+\_\+state\+\_\+update()}{daily\_carbon\_state\_update()}}
+{\footnotesize\ttfamily int daily\+\_\+carbon\+\_\+state\+\_\+update (\begin{DoxyParamCaption}\item[{cflux\+\_\+struct $\ast$}]{cf,  }\item[{cstate\+\_\+struct $\ast$}]{cs,  }\item[{int}]{alloc,  }\item[{int}]{woody,  }\item[{int}]{evergreen }\end{DoxyParamCaption})}
+
+
+
+Definition at line \hyperlink{state__update_8c_source_l00078}{78} of file \hyperlink{state__update_8c_source}{state\+\_\+update.\+c}.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=246pt]{state__update_8c_ab0adc8a68a22b97c1eba81f5da03d555_icgraph}
+\end{center}
+\end{figure}
+\hypertarget{state__update_8c_aac44819d8b0419079683705a5a220e7a}{}\label{state__update_8c_aac44819d8b0419079683705a5a220e7a} 
+\index{state\+\_\+update.\+c@{state\+\_\+update.\+c}!daily\+\_\+nitrogen\+\_\+state\+\_\+update@{daily\+\_\+nitrogen\+\_\+state\+\_\+update}}
+\index{daily\+\_\+nitrogen\+\_\+state\+\_\+update@{daily\+\_\+nitrogen\+\_\+state\+\_\+update}!state\+\_\+update.\+c@{state\+\_\+update.\+c}}
+\subsubsection{\texorpdfstring{daily\+\_\+nitrogen\+\_\+state\+\_\+update()}{daily\_nitrogen\_state\_update()}}
+{\footnotesize\ttfamily int daily\+\_\+nitrogen\+\_\+state\+\_\+update (\begin{DoxyParamCaption}\item[{nflux\+\_\+struct $\ast$}]{nf,  }\item[{nstate\+\_\+struct $\ast$}]{ns,  }\item[{int}]{alloc,  }\item[{int}]{woody,  }\item[{int}]{evergreen }\end{DoxyParamCaption})}
+
+
+
+Definition at line \hyperlink{state__update_8c_source_l00338}{338} of file \hyperlink{state__update_8c_source}{state\+\_\+update.\+c}.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=252pt]{state__update_8c_aac44819d8b0419079683705a5a220e7a_icgraph}
+\end{center}
+\end{figure}
+\hypertarget{state__update_8c_a7107f4defb131263ebb760ecf8423ab6}{}\label{state__update_8c_a7107f4defb131263ebb760ecf8423ab6} 
+\index{state\+\_\+update.\+c@{state\+\_\+update.\+c}!daily\+\_\+water\+\_\+state\+\_\+update@{daily\+\_\+water\+\_\+state\+\_\+update}}
+\index{daily\+\_\+water\+\_\+state\+\_\+update@{daily\+\_\+water\+\_\+state\+\_\+update}!state\+\_\+update.\+c@{state\+\_\+update.\+c}}
+\subsubsection{\texorpdfstring{daily\+\_\+water\+\_\+state\+\_\+update()}{daily\_water\_state\_update()}}
+{\footnotesize\ttfamily int daily\+\_\+water\+\_\+state\+\_\+update (\begin{DoxyParamCaption}\item[{wflux\+\_\+struct $\ast$}]{wf,  }\item[{wstate\+\_\+struct $\ast$}]{ws }\end{DoxyParamCaption})}
+
+
+
+Definition at line \hyperlink{state__update_8c_source_l00014}{14} of file \hyperlink{state__update_8c_source}{state\+\_\+update.\+c}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=302pt]{state__update_8c_a7107f4defb131263ebb760ecf8423ab6_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=275pt]{state__update_8c_a7107f4defb131263ebb760ecf8423ab6_icgraph}
+\end{center}
+\end{figure}

@@ -1,0 +1,169 @@
+\hypertarget{smooth_8c_source}{}\section{smooth.\+c}
+\label{smooth_8c_source}\index{c\+:/\+R\+E\+P\+O/biomebgc-\/4.\+2/src/bgclib/smooth.\+c@{c\+:/\+R\+E\+P\+O/biomebgc-\/4.\+2/src/bgclib/smooth.\+c}}
+
+\begin{DoxyCode}
+00001 \textcolor{comment}{/* }
+00002 \textcolor{comment}{smooth.c}
+00003 \textcolor{comment}{functions that perform smoothing on vectors}
+00004 \textcolor{comment}{}
+00005 \textcolor{comment}{*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*}
+00006 \textcolor{comment}{Biome-BGC version 4.2 (final release)}
+00007 \textcolor{comment}{See copyright.txt for Copyright information}
+00008 \textcolor{comment}{*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*}
+00009 \textcolor{comment}{*/}
+00010 
+00011 \textcolor{preprocessor}{#include "bgc.h"}
+00012 
+\hypertarget{smooth_8c_source_l00013}{}\hyperlink{smooth_8c_aff23c6bbf7cc127320af48545ed13432}{00013} \textcolor{keywordtype}{int} \hyperlink{smooth_8c_aff23c6bbf7cc127320af48545ed13432}{run\_avg}(\textcolor{keyword}{const} \textcolor{keywordtype}{double} *input, \textcolor{keywordtype}{double} *output, \textcolor{keywordtype}{int} n, \textcolor{keywordtype}{int} w, \textcolor{keywordtype}{int} w\_flag)
+00014 \{
+00015     \textcolor{comment}{/* calculates running averages}
+00016 \textcolor{comment}{    n = length of input and output arrays}
+00017 \textcolor{comment}{    w = width of averaging window}
+00018 \textcolor{comment}{    w\_flag : 1=linearly weighted window, 0=constant weighted window}
+00019 \textcolor{comment}{    */}
+00020 
+00021     \textcolor{keyword}{register} \textcolor{keywordtype}{int} i,j;
+00022     \textcolor{keywordtype}{int} ok = 1;
+00023     \textcolor{keywordtype}{int} *wt;
+00024     \textcolor{keywordtype}{double} total, sum;
+00025 
+00026     \textcolor{keywordflow}{if} (w>n)
+00027     \{
+00028         \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Error: averaging window longer than input array\(\backslash\)n"});
+00029         ok=0;
+00030     \}
+00031 
+00032     \textcolor{keywordflow}{if} (ok && (!(wt = (\textcolor{keywordtype}{int}*) malloc(w * \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{int})))))
+00033     \{
+00034         \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Allocation error in boxcar\_smooth... Exiting\(\backslash\)n"});
+00035         ok=0;
+00036     \}
+00037 
+00038     \textcolor{keywordflow}{if} (ok)
+00039     \{
+00040         \textcolor{keywordflow}{if} (w\_flag)
+00041             \textcolor{keywordflow}{for} (i=0 ; i<w ; i++)
+00042                 wt[i] = i+1;
+00043         \textcolor{keywordflow}{else}
+00044             \textcolor{keywordflow}{for} (i=0 ; i<w ; i++)
+00045                 wt[i] = 1;
+00046 
+00047         \textcolor{keywordflow}{for} (i=0 ; i<n ; i++)
+00048         \{
+00049             total = 0.0;
+00050             sum = 0.0;
+00051             \textcolor{keywordflow}{if} (i<(w-1))
+00052             \{
+00053                 \textcolor{keywordflow}{for} (j=w-i-1 ; j<w ; j++)
+00054                 \{
+00055                     total += (double)wt[j] * input[i-w+j+1];
+00056                     sum += (double)wt[j];
+00057                 \}
+00058             \}
+00059             \textcolor{keywordflow}{else}
+00060             \{
+00061                 \textcolor{keywordflow}{for} (j=0 ; j<w ; j++)
+00062                 \{
+00063                     total += (double)wt[j] * input[i-w+j+1];
+00064                     sum += (double)wt[j];
+00065                 \}
+00066             \}
+00067             output[i] = total/sum;
+00068             
+00069         \} \textcolor{comment}{/* end for i=nelements */}
+00070         
+00071         free(wt);
+00072     \}
+00073     \textcolor{keywordflow}{return} (!ok);
+00074 \}
+00075 
+00076 \textcolor{comment}{/* boxcar\_smooth() performs a windowed smoothing on the input array, returns}
+00077 \textcolor{comment}{result in output array. Both arrays must be doubles. n=array length,}
+00078 \textcolor{comment}{w = windowing width, w\_flag (0=flat boxcar, 1=ramped boxcar, e.g. [1 2 3 2 1])}
+00079 \textcolor{comment}{*/}
+00080 
+\hypertarget{smooth_8c_source_l00081}{}\hyperlink{smooth_8c_ac9c8750166146d2aa5f25c38e3451e9f}{00081} \textcolor{keywordtype}{int} \hyperlink{smooth_8c_ac9c8750166146d2aa5f25c38e3451e9f}{boxcar\_smooth}(\textcolor{keywordtype}{double}* input, \textcolor{keywordtype}{double}* output, \textcolor{keywordtype}{int} n, \textcolor{keywordtype}{int} w, \textcolor{keywordtype}{int} w\_flag)
+00082 \{
+00083     \textcolor{keywordtype}{int} ok=1;
+00084     \textcolor{keywordtype}{int} tail,i,j;
+00085     \textcolor{keywordtype}{int}* wt;
+00086     \textcolor{keywordtype}{double} total,sum;
+00087 
+00088     \textcolor{keywordflow}{if} (ok && (w > n/2))
+00089     \{
+00090         \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Boxcar window longer than 1/2 array length...\(\backslash\)n"});
+00091         \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Resize window and try again\(\backslash\)n"});
+00092         ok=0;
+00093     \}
+00094 
+00095     \textcolor{comment}{/* establish the lengths of the boxcar tails */}
+00096     \textcolor{keywordflow}{if} (ok)
+00097     \{
+00098         \textcolor{keywordflow}{if} (!(w % 2))
+00099             w += 1;
+00100         tail = w/2;
+00101     \}
+00102     
+00103     \textcolor{keywordflow}{if} (ok && (!(wt = (\textcolor{keywordtype}{int}*) malloc(w * \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{int})))))
+00104     \{
+00105         \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Allocation error in boxcar\_smooth... Exiting\(\backslash\)n"});
+00106         ok=0;
+00107     \}
+00108     
+00109     \textcolor{comment}{/* when w\_flag != 0, use linear ramp to weight tails, }
+00110 \textcolor{comment}{    otherwise use constant weight */}
+00111     \textcolor{keywordflow}{if} (ok)
+00112     \{
+00113         \textcolor{keywordflow}{if} (w\_flag)
+00114         \{
+00115             \textcolor{keywordflow}{for} (i=0 ; i<tail ; i++)
+00116                 wt[i] = i+1;
+00117             \textcolor{keywordflow}{for} (i=0 ; i<= tail ; i++)
+00118                 wt[i+tail] = tail + 1 - i;
+00119         \}
+00120         \textcolor{keywordflow}{else}
+00121             \textcolor{keywordflow}{for} (i=0 ; i<w ; i++)
+00122                 wt[i] = 1;
+00123 
+00124        
+00125         \textcolor{keywordflow}{for} (i=0 ; i<n ; i++)
+00126         \{
+00127             total = 0.0;
+00128             sum = 0.0;
+00129             \textcolor{keywordflow}{if} (i < tail)
+00130             \{
+00131                 \textcolor{keywordflow}{for} (j=tail - i ; j<w ; j++)
+00132                 \{
+00133                     total += input[i+j-tail] * wt[j];
+00134                     sum += (double) wt[j];
+00135                 \}
+00136             \}
+00137             \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} ((i >= tail) && (i < n-tail))
+00138             \{
+00139                 \textcolor{keywordflow}{for} (j=0 ; j<w ; j++)
+00140                 \{
+00141                     total += input[i+j-tail] * wt[j];
+00142                     sum += (double) wt[j];
+00143                 \}
+00144             \}
+00145             \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} (i >= n-tail)
+00146             \{
+00147                 \textcolor{keywordflow}{for} (j=0 ; j<tail+n-i ; j++)
+00148                 \{
+00149                     total += input[i+j-tail] * wt[j];
+00150                     sum += (double) wt[j];
+00151                 \}
+00152             \}
+00153             output[i] = total/sum;
+00154             
+00155         \} \textcolor{comment}{/* end for i=nelements */}
+00156         
+00157         free(wt);
+00158         
+00159     \} \textcolor{comment}{/* end if ok */}
+00160     
+00161     \textcolor{keywordflow}{return} (!ok);
+00162 \}   
+00163 
+00164 
+\end{DoxyCode}

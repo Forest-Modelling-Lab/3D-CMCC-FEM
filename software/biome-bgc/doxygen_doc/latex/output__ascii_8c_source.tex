@@ -1,0 +1,24 @@
+\hypertarget{output__ascii_8c_source}{}\section{output\+\_\+ascii.\+c}
+\label{output__ascii_8c_source}\index{c\+:/\+R\+E\+P\+O/biomebgc-\/4.\+2/src/bgclib/output\+\_\+ascii.\+c@{c\+:/\+R\+E\+P\+O/biomebgc-\/4.\+2/src/bgclib/output\+\_\+ascii.\+c}}
+
+\begin{DoxyCode}
+00001 \textcolor{comment}{/* ASCII output function for Biome-BGC      */}
+00002 \textcolor{comment}{/* Written by: Matt Jolly           */}
+00003 \textcolor{comment}{/* Dev. Date : 15 Feb 2005          */}
+00004 \textcolor{comment}{/* Rev. Date :                  */}
+00005 \textcolor{comment}{/* Purpose: take a set of binary inputs and write them as ascii outputs */}
+00006 
+00012 \textcolor{preprocessor}{#include "bgc.h"}
+00013 
+\hypertarget{output__ascii_8c_source_l00014}{}\hyperlink{output__ascii_8c_a2d026e2a6b7b7727a322ea7e0d43bec7}{00014} \textcolor{keywordtype}{int} \hyperlink{output__ascii_8c_a2d026e2a6b7b7727a322ea7e0d43bec7}{output\_ascii}(\textcolor{keywordtype}{float} arr[],\textcolor{keywordtype}{int} nvars,  FILE *ptr)
+00015 \{
+00016     \textcolor{keywordtype}{int} i = 0;
+00017     
+00018     \textcolor{keywordflow}{for}(i = 0;i < nvars;i++)\{ fprintf(ptr,\textcolor{stringliteral}{"%10.8f\(\backslash\)t"},arr[i]);\}
+00019     fprintf(ptr,\textcolor{stringliteral}{"\(\backslash\)n"});
+00020     
+00021     \textcolor{keywordflow}{return}(EXIT\_SUCCESS);
+00022 
+00023 \}
+00024     
+\end{DoxyCode}

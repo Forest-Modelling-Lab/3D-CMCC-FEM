@@ -1,0 +1,29 @@
+\hypertarget{get__co2_8c_source}{}\section{get\+\_\+co2.\+c}
+\label{get__co2_8c_source}\index{c\+:/\+R\+E\+P\+O/biomebgc-\/4.\+2/src/bgclib/get\+\_\+co2.\+c@{c\+:/\+R\+E\+P\+O/biomebgc-\/4.\+2/src/bgclib/get\+\_\+co2.\+c}}
+
+\begin{DoxyCode}
+00001 \textcolor{comment}{/* }
+00002 \textcolor{comment}{get\_co2.c}
+00003 \textcolor{comment}{retrieve the appropriate CO2 concentration for the current simulation year}
+00004 \textcolor{comment}{}
+00005 \textcolor{comment}{*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*}
+00006 \textcolor{comment}{Biome-BGC version 4.2 (final release)}
+00007 \textcolor{comment}{See copyright.txt for Copyright information}
+00008 \textcolor{comment}{*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*}
+00009 \textcolor{comment}{*/}
+00010 
+00011 \textcolor{preprocessor}{#include "bgc.h"}
+00012 
+\hypertarget{get__co2_8c_source_l00013}{}\hyperlink{get__co2_8c_a90d651e65fc157ce30c88de9906e3af2}{00013} \textcolor{keywordtype}{double} \hyperlink{get__co2_8c_a90d651e65fc157ce30c88de9906e3af2}{get\_co2}(co2control\_struct * co2,\textcolor{keywordtype}{int} simyr)
+00014 \{
+00015     \textcolor{keywordtype}{int} i;
+00016     \textcolor{keywordflow}{for}(i = 0;i < co2->co2vals;i++)
+00017     \{
+00018         \textcolor{keywordflow}{if}(co2->co2year\_array[i] == simyr)
+00019         \{
+00020             \textcolor{keywordflow}{return} (co2->co2ppm\_array[i]);
+00021         \}
+00022     \}
+00023     \textcolor{keywordflow}{return}(-999.9);
+00024 \}
+\end{DoxyCode}

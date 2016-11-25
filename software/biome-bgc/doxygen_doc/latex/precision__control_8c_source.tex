@@ -1,0 +1,167 @@
+\hypertarget{precision__control_8c_source}{}\section{precision\+\_\+control.\+c}
+\label{precision__control_8c_source}\index{c\+:/\+R\+E\+P\+O/biomebgc-\/4.\+2/src/bgclib/precision\+\_\+control.\+c@{c\+:/\+R\+E\+P\+O/biomebgc-\/4.\+2/src/bgclib/precision\+\_\+control.\+c}}
+
+\begin{DoxyCode}
+00001 \textcolor{comment}{/* }
+00002 \textcolor{comment}{precision\_control.c}
+00003 \textcolor{comment}{Detects very low values in state variable structures, and forces them to}
+00004 \textcolor{comment}{0.0, in order to avoid rounding and overflow errors.}
+00005 \textcolor{comment}{}
+00006 \textcolor{comment}{*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*}
+00007 \textcolor{comment}{Biome-BGC version 4.2 (final release)}
+00008 \textcolor{comment}{See copyright.txt for Copyright information}
+00009 \textcolor{comment}{*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*}
+00010 \textcolor{comment}{*/}
+00011 
+00012 \textcolor{preprocessor}{#include "bgc.h"}
+00013 
+\hypertarget{precision__control_8c_source_l00014}{}\hyperlink{precision__control_8c_a20e713bc8669fc41d516c218ef848e01}{00014} \textcolor{keywordtype}{int} \hyperlink{precision__control_8c_a20e713bc8669fc41d516c218ef848e01}{precision\_control}(wstate\_struct* ws, cstate\_struct* cs, nstate\_struct* ns)
+00015 \{
+00016     \textcolor{keywordtype}{int} ok = 1;
+00017     
+00018     \textcolor{comment}{/* CARBON AND NITROGEN STATE VARIABLES */}
+00019     \textcolor{comment}{/* force very low leaf C to 0.0, to avoid roundoff}
+00020 \textcolor{comment}{    error in canopy radiation routines. Send excess to litter 1.}
+00021 \textcolor{comment}{    Fine root C and N follow leaf C and N. This control is triggered}
+00022 \textcolor{comment}{    at a higher value than the others because leafc is used in exp()}
+00023 \textcolor{comment}{    in radtrans, and so can cause rounding error at larger values. */}
+00024     \textcolor{keywordflow}{if} (cs->leafc < 1e-7)
+00025     \{
+00026         cs->litr1c += cs->leafc;
+00027         ns->litr1n += ns->leafn;
+00028         cs->leafc = 0.0;
+00029         ns->leafn = 0.0;
+00030         cs->litr1c += cs->frootc;
+00031         ns->litr1n += ns->frootn;
+00032         cs->frootc = 0.0;
+00033         ns->frootn = 0.0;
+00034     \}
+00035 
+00036     \textcolor{comment}{/* tests for other plant pools. Excess goes to litter 1 */}
+00037     \textcolor{keywordflow}{if} (cs->livestemc < CRIT\_PREC)
+00038     \{
+00039         cs->litr1c += cs->livestemc;
+00040         ns->litr1n += ns->livestemn;
+00041         cs->livestemc = 0.0;
+00042         ns->livestemn = 0.0;
+00043     \}
+00044     \textcolor{keywordflow}{if} (cs->deadstemc < CRIT\_PREC)
+00045     \{
+00046         cs->litr1c += cs->deadstemc;
+00047         ns->litr1n += ns->deadstemn;
+00048         cs->deadstemc = 0.0;
+00049         ns->deadstemn = 0.0;
+00050     \}
+00051     \textcolor{keywordflow}{if} (cs->livecrootc < CRIT\_PREC)
+00052     \{
+00053         cs->litr1c += cs->livecrootc;
+00054         ns->litr1n += ns->livecrootn;
+00055         cs->livecrootc = 0.0;
+00056         ns->livecrootn = 0.0;
+00057     \}
+00058     \textcolor{keywordflow}{if} (cs->deadcrootc < CRIT\_PREC)
+00059     \{
+00060         cs->litr1c += cs->deadcrootc;
+00061         ns->litr1n += ns->deadcrootn;
+00062         cs->deadcrootc = 0.0;
+00063         ns->deadcrootn = 0.0;
+00064     \}
+00065     \textcolor{keywordflow}{if} (cs->cwdc < CRIT\_PREC)
+00066     \{
+00067         cs->litr1c += cs->cwdc;
+00068         ns->litr1n += ns->cwdn;
+00069         cs->cwdc = 0.0;
+00070         ns->cwdn = 0.0;
+00071     \}
+00072     
+00073     \textcolor{comment}{/* test for litter and soil poils. Excess goes to hr sink (C)}
+00074 \textcolor{comment}{    or volatilized sink (N) */}
+00075     \textcolor{keywordflow}{if} (cs->litr1c < CRIT\_PREC)
+00076     \{
+00077         cs->litr1\_hr\_snk += cs->litr1c;
+00078         ns->nvol\_snk += ns->litr1n;
+00079         cs->litr1c = 0.0;
+00080         ns->litr1n = 0.0;
+00081     \}
+00082     \textcolor{keywordflow}{if} (cs->litr2c < CRIT\_PREC)
+00083     \{
+00084         cs->litr2\_hr\_snk += cs->litr2c;
+00085         ns->nvol\_snk += ns->litr2n;
+00086         cs->litr2c = 0.0;
+00087         ns->litr2n = 0.0;
+00088     \}
+00089     \textcolor{keywordflow}{if} (cs->litr3c < CRIT\_PREC)
+00090     \{
+00091         cs->litr4\_hr\_snk += cs->litr3c; \textcolor{comment}{/* NO LITR3C HR SINK */}
+00092         ns->nvol\_snk += ns->litr3n;
+00093         cs->litr3c = 0.0;
+00094         ns->litr3n = 0.0;
+00095     \}
+00096     \textcolor{keywordflow}{if} (cs->litr4c < CRIT\_PREC)
+00097     \{
+00098         cs->litr4\_hr\_snk += cs->litr4c;
+00099         ns->nvol\_snk += ns->litr4n;
+00100         cs->litr4c = 0.0;
+00101         ns->litr4n = 0.0;
+00102     \}
+00103     \textcolor{keywordflow}{if} (cs->soil1c < CRIT\_PREC)
+00104     \{
+00105         cs->soil1\_hr\_snk += cs->soil1c;
+00106         ns->nvol\_snk += ns->soil1n;
+00107         cs->soil1c = 0.0;
+00108         ns->soil1n = 0.0;
+00109     \}
+00110     \textcolor{keywordflow}{if} (cs->soil2c < CRIT\_PREC)
+00111     \{
+00112         cs->soil2\_hr\_snk += cs->soil2c;
+00113         ns->nvol\_snk += ns->soil2n;
+00114         cs->soil2c = 0.0;
+00115         ns->soil2n = 0.0;
+00116     \}
+00117     \textcolor{keywordflow}{if} (cs->soil3c < CRIT\_PREC)
+00118     \{
+00119         cs->soil3\_hr\_snk += cs->soil3c;
+00120         ns->nvol\_snk += ns->soil3n;
+00121         cs->soil3c = 0.0;
+00122         ns->soil3n = 0.0;
+00123     \}
+00124     \textcolor{keywordflow}{if} (cs->soil4c < CRIT\_PREC)
+00125     \{
+00126         cs->soil4\_hr\_snk += cs->soil4c;
+00127         ns->nvol\_snk += ns->soil4n;
+00128         cs->soil4c = 0.0;
+00129         ns->soil4n = 0.0;
+00130     \}
+00131     
+00132     \textcolor{comment}{/* additional tests for soil mineral N and retranslocated N */}
+00133     \textcolor{keywordflow}{if} (ns->sminn < CRIT\_PREC)
+00134     \{
+00135         ns->nvol\_snk += ns->sminn;
+00136         ns->sminn = 0.0;
+00137     \}
+00138     \textcolor{keywordflow}{if} (ns->retransn < CRIT\_PREC)
+00139     \{
+00140         ns->litr1n += ns->retransn;
+00141         ns->retransn = 0.0;
+00142     \}
+00143     
+00144     \textcolor{comment}{/* WATER STATE VARIABLES */}
+00145     \textcolor{keywordflow}{if} (ws->soilw < CRIT\_PREC)
+00146     \{
+00147         ws->soilevap\_snk += ws->soilw;
+00148         ws->soilw = 0.0;
+00149     \}
+00150     \textcolor{keywordflow}{if} (ws->snoww < CRIT\_PREC)
+00151     \{
+00152         ws->snowsubl\_snk += ws->snoww;
+00153         ws->snoww = 0.0;
+00154     \}
+00155     \textcolor{keywordflow}{if} (ws->canopyw < CRIT\_PREC)
+00156     \{
+00157         ws->canopyevap\_snk += ws->canopyw;
+00158         ws->canopyw = 0.0;
+00159     \}
+00160     
+00161     \textcolor{keywordflow}{return}(!ok);
+00162 \}   
+\end{DoxyCode}

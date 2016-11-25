@@ -204,14 +204,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\C-allocation.c"
-				>
-			</File>
-			<File
-				RelativePath=".\headers\C-allocation.h"
-				>
-			</File>
-			<File
 				RelativePath=".\src\C-assimilation.c"
 				>
 			</File>
@@ -273,6 +265,10 @@
 			</File>
 			<File
 				RelativePath=".\src\check_balance.c"
+				>
+			</File>
+			<File
+				RelativePath=".\src\CN-allocation.c"
 				>
 			</File>
 			<File
@@ -356,11 +352,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\mpfit.c"
-				>
-			</File>
-			<File
-				RelativePath=".\src\N-stock.c"
+				RelativePath=".\src\N-assimilation.c"
 				>
 			</File>
 			<File
@@ -413,6 +405,10 @@
 			</File>
 			<File
 				RelativePath=".\src\snow.c"
+				>
+			</File>
+			<File
+				RelativePath=".\src\soil_decomp.c"
 				>
 			</File>
 			<File

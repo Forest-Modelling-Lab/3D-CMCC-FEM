@@ -1,0 +1,43 @@
+\hypertarget{nleaching_8c_source}{}\section{nleaching.\+c}
+\label{nleaching_8c_source}\index{c\+:/\+R\+E\+P\+O/biomebgc-\/4.\+2/src/bgclib/nleaching.\+c@{c\+:/\+R\+E\+P\+O/biomebgc-\/4.\+2/src/bgclib/nleaching.\+c}}
+
+\begin{DoxyCode}
+00001 \textcolor{comment}{/* }
+00002 \textcolor{comment}{nleaching.c}
+00003 \textcolor{comment}{daily nitrogen leaching to groundwater}
+00004 \textcolor{comment}{}
+00005 \textcolor{comment}{*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*}
+00006 \textcolor{comment}{Biome-BGC version 4.2 (final release)}
+00007 \textcolor{comment}{See copyright.txt for Copyright information}
+00008 \textcolor{comment}{*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*}
+00009 \textcolor{comment}{*/}
+00010 
+00011 \textcolor{preprocessor}{#include "bgc.h"}
+00012 
+\hypertarget{nleaching_8c_source_l00013}{}\hyperlink{nleaching_8c_ad81692b3f3f9e1a81bb29c1d0ce6bd3d}{00013} \textcolor{keywordtype}{int} \hyperlink{nleaching_8c_ad81692b3f3f9e1a81bb29c1d0ce6bd3d}{nleaching}(nstate\_struct* ns, nflux\_struct* nf, wstate\_struct* ws, 
+00014 wflux\_struct* wf)
+00015 \{
+00016     \textcolor{keywordtype}{int} ok=1;
+00017     \textcolor{keywordtype}{double} soilwater\_nconc;
+00018     
+00019     \textcolor{comment}{/* N leaching flux is calculated after all the other nfluxes are reconciled}
+00020 \textcolor{comment}{    to avoid the possibility of removing more N than is there. This follows}
+00021 \textcolor{comment}{    the implicit logic of precedence for soil mineral N resources:}
+00022 \textcolor{comment}{    1) microbial processes and plant uptake (competing)}
+00023 \textcolor{comment}{    2) leaching}
+00024 \textcolor{comment}{    }
+00025 \textcolor{comment}{    leaching happens when there is outflow, as a function of the}
+00026 \textcolor{comment}{    presumed proportion of the soil mineral N pool which is soluble}
+00027 \textcolor{comment}{    (nitrates), the soil water content, and the outflow */}
+00028     \textcolor{keywordflow}{if} (wf->soilw\_outflow)
+00029     \{
+00030         soilwater\_nconc = MOBILEN\_PROPORTION * ns->sminn/ws->soilw;
+00031         nf->sminn\_leached = soilwater\_nconc * wf->soilw\_outflow;
+00032         \textcolor{comment}{/* update state variables */}
+00033         ns->nleached\_snk += nf->sminn\_leached;
+00034         ns->sminn        -= nf->sminn\_leached;
+00035     \}
+00036     \textcolor{keywordflow}{return} (!ok);
+00037 \}
+00038 
+\end{DoxyCode}

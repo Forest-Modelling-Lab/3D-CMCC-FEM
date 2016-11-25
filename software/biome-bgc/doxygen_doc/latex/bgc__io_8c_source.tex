@@ -1,0 +1,187 @@
+\hypertarget{bgc__io_8c_source}{}\section{bgc\+\_\+io.\+c}
+\label{bgc__io_8c_source}\index{c\+:/\+R\+E\+P\+O/biomebgc-\/4.\+2/src/bgclib/bgc\+\_\+io.\+c@{c\+:/\+R\+E\+P\+O/biomebgc-\/4.\+2/src/bgclib/bgc\+\_\+io.\+c}}
+
+\begin{DoxyCode}
+00001 \textcolor{comment}{/*}
+00002 \textcolor{comment}{ *}
+00003 \textcolor{comment}{ *  bgc\_io.c created 20041013 by Andrew Neuschwander}
+00004 \textcolor{comment}{ *  Some basic I/O Functionality for the bgclib}
+00005 \textcolor{comment}{ *}
+00006 \textcolor{comment}{ *  Biome-BGC version 4.2 (final release)}
+00007 \textcolor{comment}{ *  See copyright.txt for Copyright information}
+00008 \textcolor{comment}{ *}
+00009 \textcolor{comment}{ */}
+00010 
+00011 \textcolor{preprocessor}{#include "bgc.h"}
+00012 
+\hypertarget{bgc__io_8c_source_l00013}{}\hyperlink{bgc__io_8c_ac2c427ea256a1e3e279e5d21d2017f04}{00013} \textcolor{keywordtype}{signed} \textcolor{keywordtype}{char} \hyperlink{bgc__io_8c_ac2c427ea256a1e3e279e5d21d2017f04}{bgc\_verbosity} = BV\_DETAIL;
+\hypertarget{bgc__io_8c_source_l00014}{}\hyperlink{bgc__io_8c_a176fee5c0e3671a626cd8ec7d1cc1be8}{00014} FILE *\hyperlink{bgc__io_8c_a176fee5c0e3671a626cd8ec7d1cc1be8}{bgc\_logfile} = NULL;
+00015 
+\hypertarget{bgc__io_8c_source_l00016}{}\hyperlink{bgc__io_8c_a45fe30c0d757941d37c6b09858307458}{00016} \textcolor{keywordtype}{int} \hyperlink{bgc__io_8c_a45fe30c0d757941d37c6b09858307458}{bgc\_logfile\_setup}(\textcolor{keywordtype}{char} *logfile)
+00017 \{
+00018     \textcolor{keyword}{extern} FILE* \hyperlink{bgc__io_8c_a176fee5c0e3671a626cd8ec7d1cc1be8}{bgc\_logfile};
+00019     
+00020     bgc\_logfile = fopen(logfile, \textcolor{stringliteral}{"w"});
+00021 
+00022     \textcolor{keywordflow}{if} (bgc\_logfile == NULL)
+00023     \{
+00024         \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Couldn't Open logfile for writing: '%s' (Error: %s)\(\backslash\)n"}, logfile, 
+      strerror(errno));
+00025         \hyperlink{bgc__io_8c_adcf0cce6fdd3c3d3531f826bede8bb66}{bgc\_print\_usage}();
+00026         exit(EXIT\_FAILURE);
+00027     \}
+00028     \textcolor{keywordflow}{return} 1;
+00029 \}
+00030 
+\hypertarget{bgc__io_8c_source_l00031}{}\hyperlink{bgc__io_8c_a368b68b05ba7af113b2fbd032c124b0e}{00031} \textcolor{keywordtype}{int} \hyperlink{bgc__io_8c_a368b68b05ba7af113b2fbd032c124b0e}{bgc\_logfile\_finish}(\textcolor{keywordtype}{void})
+00032 \{
+00033     \textcolor{keyword}{extern} FILE *\hyperlink{bgc__io_8c_a176fee5c0e3671a626cd8ec7d1cc1be8}{bgc\_logfile};
+00034     \textcolor{keywordflow}{if} (bgc\_logfile != NULL)
+00035     \{
+00036         fflush(bgc\_logfile);
+00037         fclose(bgc\_logfile);
+00038     \}
+00039     \textcolor{keywordflow}{return} 1;
+00040 \}
+00041 
+\hypertarget{bgc__io_8c_source_l00042}{}\hyperlink{bgc__io_8c_adcf0cce6fdd3c3d3531f826bede8bb66}{00042} \textcolor{keywordtype}{void} \hyperlink{bgc__io_8c_adcf0cce6fdd3c3d3531f826bede8bb66}{bgc\_print\_usage}(\textcolor{keywordtype}{void})
+00043 \{
+00044     \textcolor{keyword}{extern} \textcolor{keywordtype}{char} *argv\_zero;
+00045 
+00046     \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"\(\backslash\)nusage: %s \{-l <logfile>\} \{-s | -v [0..4]\} \{-p\} \{-V\} \{-a\} \{-u | -g |
+       -m\} <ini file>\(\backslash\)n\(\backslash\)n"}, argv\_zero);
+00047     \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"       -l <logfile> send output to logfile, overwrite old logfile\(\backslash\)n"}); 
+00048     \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"       -V print version number and build information and exit\(\backslash\)n"});
+00049     \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"       -p do alternate calculation for summary outputs (see USAGE.TXT)
+      \(\backslash\)n"});
+00050     \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"       -a output ascii formated data\(\backslash\)n"});
+00051     \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"       -s run in silent mode, no standard out or error\(\backslash\)n"});
+00052     \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"       -v [0..4] set the verbosity level \(\backslash\)n"});
+00053     \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"           0 ERROR - only report errors \(\backslash\)n"});
+00054     \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"           1 WARN - also report warnings\(\backslash\)n"});
+00055     \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"           2 PROGRESS - also report basic progress information\(\backslash\)n"});
+00056     \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"           3 DETAIL - also report progress details (default level)\(\backslash\)n"});
+00057     \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"           4 DIAG - also print internal diagnostics\(\backslash\)n"});
+00058     \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"       -u Run in spin-up mode (over ride ini setting).\(\backslash\)n"});
+00059     \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"       -g Run in spin 'n go mode: do spinup and model in one run\(\backslash\)n"});
+00060     \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"       -m Run in model mode (over ride ini setting).\(\backslash\)n"});
+00061     \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"       -n <ndepfile> use an external nitrogen deposition file.\(\backslash\)n"});
+00062 
+00063 \}
+00064 
+\hypertarget{bgc__io_8c_source_l00065}{}\hyperlink{bgc__io_8c_a7e5b7887ea15ba8d15033332d71ccc98}{00065} \textcolor{keywordtype}{signed} \textcolor{keywordtype}{char} \hyperlink{bgc__io_8c_a7e5b7887ea15ba8d15033332d71ccc98}{bgc\_verbosity\_decode}(\textcolor{keywordtype}{char} *keyword)
+00066 \{
+00067     \textcolor{keywordtype}{signed} \textcolor{keywordtype}{char} verbosity = BV\_ERROR;
+00068     \textcolor{keywordtype}{int} i; 
+00069     \textcolor{keywordflow}{if} (isdigit((\textcolor{keywordtype}{char})(keyword[0])))
+00070     \{
+00071         verbosity = (\textcolor{keywordtype}{signed} char)atoi(keyword);
+00072         \textcolor{keywordflow}{if} (verbosity <= BV\_SILENT)
+00073         \{
+00074             \textcolor{keywordflow}{return} BV\_SILENT;
+00075         \}
+00076         \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} (verbosity >= BV\_DIAG)
+00077         \{
+00078             \textcolor{keywordflow}{return} BV\_DIAG;
+00079         \}
+00080         \textcolor{keywordflow}{else}
+00081         \{
+00082             \textcolor{keywordflow}{return} verbosity;
+00083         \}
+00084     \}
+00085     \textcolor{keywordflow}{else}
+00086     \{
+00087         \textcolor{comment}{/*  Conversion to Upper case allows to use strncmp() instead of strncasecmp }
+00088 \textcolor{comment}{                strncasecmp() is in strings.h from BSD and isn't available on win32 */}
+00089         \textcolor{keywordflow}{for}(i=0; i<4 && i<(int)strlen(keyword); i++)
+00090         \{
+00091             keyword[i] = toupper(keyword[i]);
+00092         \}
+00093         
+00094         \textcolor{keywordflow}{if} (strncmp(\textcolor{stringliteral}{"SILENT"}, keyword, 4) == 0)
+00095         \{
+00096             \textcolor{keywordflow}{return} BV\_SILENT;
+00097         \}
+00098         \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} (strncmp(\textcolor{stringliteral}{"ERROR"}, keyword, 4) == 0)
+00099         \{
+00100             \textcolor{keywordflow}{return} BV\_ERROR;
+00101         \}
+00102         \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} (strncmp(\textcolor{stringliteral}{"WARN"}, keyword, 4) == 0)
+00103         \{
+00104             \textcolor{keywordflow}{return} BV\_WARN;
+00105         \}
+00106         \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} (strncmp(\textcolor{stringliteral}{"PROGRESS"}, keyword, 4) == 0)
+00107         \{
+00108             \textcolor{keywordflow}{return} BV\_PROGRESS;
+00109         \}
+00110         \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} (strncmp(\textcolor{stringliteral}{"DETAIL"}, keyword, 4) == 0)
+00111         \{
+00112             \textcolor{keywordflow}{return} BV\_DETAIL;
+00113         \}
+00114         \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} (strncmp(\textcolor{stringliteral}{"DIAG"}, keyword, 4) == 0)
+00115         \{
+00116             \textcolor{keywordflow}{return} BV\_DIAG;
+00117         \}
+00118         \textcolor{keywordflow}{else}
+00119         \{
+00120             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Unknown Verbosity Keyword: %s\(\backslash\)n"}, keyword);
+00121             \hyperlink{bgc__io_8c_adcf0cce6fdd3c3d3531f826bede8bb66}{bgc\_print\_usage}();
+00122             exit(EXIT\_FAILURE);
+00123         \}
+00124     \}
+00125 \}
+00126 
+00127 \textcolor{preprocessor}{#ifdef \_\_USE\_ISOC99}
+00128 \textcolor{keywordtype}{int} \_bgc\_printf(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *file, \textcolor{keywordtype}{int} line, \textcolor{keywordtype}{signed} \textcolor{keywordtype}{char} verbosity, \textcolor{keyword}{const} \textcolor{keywordtype}{char} *format, ...)
+00129 \textcolor{preprocessor}{#else}
+\hypertarget{bgc__io_8c_source_l00130}{}\hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{00130} \textcolor{keywordtype}{int} \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(\textcolor{keywordtype}{signed} \textcolor{keywordtype}{char} verbosity, \textcolor{keyword}{const} \textcolor{keywordtype}{char} *format, ...)
+00131 \textcolor{preprocessor}{#endif}
+00132 \{
+00133     \textcolor{keyword}{extern} FILE *\hyperlink{bgc__io_8c_a176fee5c0e3671a626cd8ec7d1cc1be8}{bgc\_logfile};
+00134     \textcolor{keyword}{extern} \textcolor{keywordtype}{signed} \textcolor{keywordtype}{char} \hyperlink{bgc__io_8c_ac2c427ea256a1e3e279e5d21d2017f04}{bgc\_verbosity};
+00135     va\_list ap; \textcolor{comment}{/* For variadic argument processing see 'man 3 vfprintf' for details */}
+00136     \textcolor{keywordtype}{int} printed = 0;
+00137 
+00138 \textcolor{preprocessor}{#ifdef DEBUG}
+00139     \textcolor{comment}{/* needed to debug the verbosity settings */}
+00140     printf(\textcolor{stringliteral}{"Function Verbosity: %d\(\backslash\)nRequested Verbosity: %d\(\backslash\)n"}, verbosity, bgc\_verbosity);
+00141     fflush(stdout);
+00142 \textcolor{preprocessor}{#endif}
+00143 
+00144     \textcolor{keywordflow}{if} (bgc\_verbosity <= BV\_SILENT || bgc\_verbosity < verbosity)
+00145     \{
+00146         \textcolor{keywordflow}{return} 0;
+00147     \}
+00148 
+00149     va\_start(ap, format);
+00150     
+00151     \textcolor{keywordflow}{if} (bgc\_logfile != NULL)
+00152     \{
+00153 \textcolor{preprocessor}{#ifdef \_\_USE\_ISOC99}
+00154         \textcolor{keywordflow}{if} (bgc\_verbosity == BV\_DIAG)
+00155             fprintf(bgc\_logfile, \textcolor{stringliteral}{"In %s at line %i: "}, file, line);
+00156 \textcolor{preprocessor}{#endif}
+00157         printed = vfprintf(bgc\_logfile, format, ap);
+00158         fflush(bgc\_logfile);
+00159 
+00160     \}
+00161     \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} (verbosity <= BV\_WARN)
+00162     \{
+00163         printed = vfprintf(stderr, format, ap);
+00164         fflush(stderr);
+00165     \}
+00166     \textcolor{keywordflow}{else}
+00167     \{
+00168 \textcolor{preprocessor}{#ifdef \_\_USE\_ISOC99}
+00169         \textcolor{keywordflow}{if} (bgc\_verbosity == BV\_DIAG)
+00170             fprintf(stdout, \textcolor{stringliteral}{"In %s at line %i: "}, file, line);
+00171 \textcolor{preprocessor}{#endif}
+00172 
+00173         printed = vfprintf(stdout, format, ap);
+00174         fflush(stdout);
+00175     \}
+00176 
+00177     va\_end(ap);
+00178     \textcolor{keywordflow}{return} printed;
+00179 \}
+\end{DoxyCode}

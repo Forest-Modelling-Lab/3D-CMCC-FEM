@@ -1,0 +1,115 @@
+\hypertarget{maint__resp_8c_source}{}\section{maint\+\_\+resp.\+c}
+\label{maint__resp_8c_source}\index{c\+:/\+R\+E\+P\+O/biomebgc-\/4.\+2/src/bgclib/maint\+\_\+resp.\+c@{c\+:/\+R\+E\+P\+O/biomebgc-\/4.\+2/src/bgclib/maint\+\_\+resp.\+c}}
+
+\begin{DoxyCode}
+00001 \textcolor{comment}{/* }
+00002 \textcolor{comment}{maint\_resp.c}
+00003 \textcolor{comment}{daily maintenance respiration}
+00004 \textcolor{comment}{}
+00005 \textcolor{comment}{*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*}
+00006 \textcolor{comment}{Biome-BGC version 4.2 (final release)}
+00007 \textcolor{comment}{See copyright.txt for Copyright information}
+00008 \textcolor{comment}{*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*}
+00009 \textcolor{comment}{*/}
+00010 
+00011 \textcolor{preprocessor}{#include "bgc.h"}
+00012 
+\hypertarget{maint__resp_8c_source_l00013}{}\hyperlink{maint__resp_8c_a246899df0f64edd56b2b0ab3cc4f377d}{00013} \textcolor{keywordtype}{int} \hyperlink{maint__resp_8c_a246899df0f64edd56b2b0ab3cc4f377d}{maint\_resp}(\textcolor{keyword}{const} cstate\_struct* cs, \textcolor{keyword}{const} nstate\_struct* ns,
+00014 \textcolor{keyword}{const} epconst\_struct* epc, \textcolor{keyword}{const} metvar\_struct* metv, cflux\_struct* cf,
+00015 epvar\_struct* epv)
+00016 \{
+00017     \textcolor{comment}{/*}
+00018 \textcolor{comment}{    maintenance respiration routine}
+00019 \textcolor{comment}{    Uses reference values at 20 deg C and an empirical relationship between}
+00020 \textcolor{comment}{    tissue N content and respiration rate given in:}
+00021 \textcolor{comment}{}
+00022 \textcolor{comment}{    Ryan, M.G., 1991. Effects of climate change on plant respiration.}
+00023 \textcolor{comment}{    Ecological Applications, 1(2):157-167.}
+00024 \textcolor{comment}{    }
+00025 \textcolor{comment}{    Uses the same value of Q\_10 (2.0) for all compartments, leaf, stem, }
+00026 \textcolor{comment}{    coarse and fine roots.}
+00027 \textcolor{comment}{    }
+00028 \textcolor{comment}{    From Ryan's figures and regressions equations, the maintenance respiration}
+00029 \textcolor{comment}{    in kgC/day per kg of tissue N is:}
+00030 \textcolor{comment}{    mrpern = 0.218 (kgC/kgN/d)}
+00031 \textcolor{comment}{    }
+00032 \textcolor{comment}{    Leaf maintenance respiration is calculated separately for day and}
+00033 \textcolor{comment}{    night, since the PSN routine needs the daylight value.}
+00034 \textcolor{comment}{    }
+00035 \textcolor{comment}{    Leaf and fine root respiration are dependent on phenology.}
+00036 \textcolor{comment}{    */}
+00037     
+00038     \textcolor{keywordtype}{int} ok=1;
+00039     \textcolor{keywordtype}{double} t1;
+00040     \textcolor{keywordtype}{double} q10 = 2.0;
+00041     \textcolor{keywordtype}{double} mrpern = 0.218;
+00042     \textcolor{keywordtype}{double} exponent;
+00043     \textcolor{keywordtype}{double} n\_area\_sun, n\_area\_shade, dlmr\_area\_sun, dlmr\_area\_shade;
+00044     
+00045     \textcolor{comment}{/* leaf day and night maintenance respiration when leaves on */}
+00046     \textcolor{keywordflow}{if} (cs->leafc)
+00047     \{
+00048         t1 = ns->leafn * mrpern;
+00049         
+00050         \textcolor{comment}{/* leaf, day */}
+00051         exponent = (metv->tday - 20.0) / 10.0;
+00052         cf->leaf\_day\_mr = t1 * pow(q10, exponent) * metv->dayl / 86400.0;
+00053 
+00054         \textcolor{comment}{/* for day respiration, also determine rates of maintenance respiration}
+00055 \textcolor{comment}{        per unit of projected leaf area in the sunlit and shaded portions of}
+00056 \textcolor{comment}{        the canopy, for use in the photosynthesis routine */}
+00057         \textcolor{comment}{/* first, calculate the mass of N per unit of projected leaf area}
+00058 \textcolor{comment}{        in each canopy fraction (kg N/m2 projected area) */}
+00059         n\_area\_sun   = 1.0/(epv->sun\_proj\_sla * epc->leaf\_cn);
+00060         n\_area\_shade = 1.0/(epv->shade\_proj\_sla * epc->leaf\_cn);
+00061         \textcolor{comment}{/* convert to respiration flux in kg C/m2 projected area/day, and}
+00062 \textcolor{comment}{        correct for temperature */}
+00063         dlmr\_area\_sun   = n\_area\_sun * mrpern * pow(q10, exponent);
+00064         dlmr\_area\_shade = n\_area\_shade * mrpern * pow(q10, exponent);
+00065         \textcolor{comment}{/* finally, convert from mass to molar units, and from a daily rate to }
+00066 \textcolor{comment}{        a rate per second */}
+00067         epv->dlmr\_area\_sun = dlmr\_area\_sun/(86400.0 * 12.011e-9);
+00068         epv->dlmr\_area\_shade = dlmr\_area\_shade/(86400.0 * 12.011e-9);
+00069         
+00070         \textcolor{comment}{/* leaf, night */}
+00071         exponent = (metv->tnight - 20.0) / 10.0;
+00072         cf->leaf\_night\_mr = t1 * pow(q10, exponent) * 
+00073             (86400.0 - metv->dayl) / 86400.0;
+00074     \}
+00075     \textcolor{keywordflow}{else} \textcolor{comment}{/* no leaves on */}
+00076     \{
+00077         cf->leaf\_day\_mr = 0.0;
+00078         epv->dlmr\_area\_sun = 0.0;
+00079         epv->dlmr\_area\_shade = 0.0;
+00080         cf->leaf\_night\_mr = 0.0;
+00081     \}
+00082 
+00083     \textcolor{comment}{/* fine root maintenance respiration when fine roots on */}
+00084     \textcolor{comment}{/* ammended to consider only the specified n concentration,}
+00085 \textcolor{comment}{    to avoid excessive MR with n-loading to fine roots */}
+00086     \textcolor{keywordflow}{if} (cs->frootc)
+00087     \{
+00088         exponent = (metv->tsoil - 20.0) / 10.0;
+00089         t1 = pow(q10, exponent);
+00090         cf->froot\_mr = ns->frootn * mrpern * t1;
+00091     \}
+00092     \textcolor{keywordflow}{else} \textcolor{comment}{/* no fine roots on */}
+00093         cf->froot\_mr = 0.0;
+00094 
+00095     \textcolor{comment}{/* TREE-specific fluxes */}
+00096     \textcolor{keywordflow}{if} (epc->woody)
+00097     \{
+00098         \textcolor{comment}{/* live stem maintenance respiration */}
+00099         exponent = (metv->tavg - 20.0) / 10.0;
+00100         t1 = pow(q10, exponent);
+00101         cf->livestem\_mr = ns->livestemn * mrpern * t1;
+00102 
+00103         \textcolor{comment}{/* live coarse root maintenance respiration */}
+00104         exponent = (metv->tsoil - 20.0) / 10.0;
+00105         t1 = pow(q10, exponent);
+00106         cf->livecroot\_mr = ns->livecrootn * mrpern * t1;
+00107     \}
+00108     
+00109     \textcolor{keywordflow}{return} (!ok);
+00110 \}
+\end{DoxyCode}

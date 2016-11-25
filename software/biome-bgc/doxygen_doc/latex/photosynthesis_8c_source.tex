@@ -1,0 +1,278 @@
+\hypertarget{photosynthesis_8c_source}{}\section{photosynthesis.\+c}
+\label{photosynthesis_8c_source}\index{c\+:/\+R\+E\+P\+O/biomebgc-\/4.\+2/src/bgclib/photosynthesis.\+c@{c\+:/\+R\+E\+P\+O/biomebgc-\/4.\+2/src/bgclib/photosynthesis.\+c}}
+
+\begin{DoxyCode}
+00001 \textcolor{comment}{/*}
+00002 \textcolor{comment}{photosynthesis.c}
+00003 \textcolor{comment}{C3/C4 photosynthesis model}
+00004 \textcolor{comment}{}
+00005 \textcolor{comment}{*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*}
+00006 \textcolor{comment}{Biome-BGC version 4.2 (final release)}
+00007 \textcolor{comment}{See copyright.txt for Copyright information}
+00008 \textcolor{comment}{*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*}
+00009 \textcolor{comment}{*/}
+00010 
+00011 \textcolor{preprocessor}{#include "bgc.h"}
+00012 
+\hypertarget{photosynthesis_8c_source_l00013}{}\hyperlink{photosynthesis_8c_adba4d3b53331ea3e9e08cd7d0fcec8d4}{00013} \textcolor{keywordtype}{int} \hyperlink{photosynthesis_8c_adba4d3b53331ea3e9e08cd7d0fcec8d4}{total\_photosynthesis}(\textcolor{keyword}{const} metvar\_struct* metv, \textcolor{keyword}{const} epconst\_struct* epc, 
+00014             epvar\_struct* epv, cflux\_struct* cf, psn\_struct *psn\_sun, psn\_struct *psn\_shade)
+00015 \{
+00016     \textcolor{comment}{/* This function is a wrapper and replacement for the photosynthesis code which used}
+00017 \textcolor{comment}{        to be in the central bgc.c code.  At Mott Jolly's request, all of the science code}
+00018 \textcolor{comment}{        is being moved into funtions. */}
+00019     \textcolor{keywordtype}{int} ok=1;
+00020     \textcolor{comment}{/* psn\_struct psn\_sun, psn\_shade; */}
+00021 
+00022     \textcolor{comment}{/* SUNLIT canopy fraction photosynthesis */}
+00023   \textcolor{comment}{/* set the input variables */}
+00024     psn\_sun->c3 = epc->c3\_flag;
+00025     psn\_sun->co2 = metv->co2;
+00026     psn\_sun->pa = metv->pa;
+00027     psn\_sun->t = metv->tday;
+00028     psn\_sun->lnc = 1.0 / (epv->sun\_proj\_sla * epc->leaf\_cn);
+00029     psn\_sun->flnr = epc->flnr;
+00030     psn\_sun->ppfd = metv->ppfd\_per\_plaisun;
+00031     \textcolor{comment}{/* convert conductance from m/s --> umol/m2/s/Pa, and correct}
+00032 \textcolor{comment}{    for CO2 vs. water vapor */}
+00033     psn\_sun->g = epv->gl\_t\_wv\_sun * 1e6/(1.6*R*(metv->tday+273.15));
+00034     psn\_sun->dlmr = epv->dlmr\_area\_sun;
+00035     \textcolor{keywordflow}{if} (ok && \hyperlink{photosynthesis_8c_a7694972f8a6aaea60ca6d5506d705060}{photosynthesis}(psn\_sun))
+00036     \{
+00037         \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Error in photosynthesis() from bgc()\(\backslash\)n"});
+00038         ok=0;
+00039     \}
+00040 
+00041     \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_DIAG, \textcolor{stringliteral}{"\(\backslash\)t\(\backslash\)tdone sun psn\(\backslash\)n"});
+00042 
+00043     epv->assim\_sun = psn\_sun->A;
+00044 
+00045     \textcolor{comment}{/* for the final flux assignment, the assimilation output}
+00046 \textcolor{comment}{        needs to have the maintenance respiration rate added, this}
+00047 \textcolor{comment}{        sum multiplied by the projected leaf area in the relevant canopy}
+00048 \textcolor{comment}{        fraction, and this total converted from umol/m2/s -> kgC/m2/d */}
+00049     cf->psnsun\_to\_cpool = (epv->assim\_sun + epv->dlmr\_area\_sun) *
+00050         epv->plaisun * metv->dayl * 12.011e-9;
+00051 
+00052     \textcolor{comment}{/* SHADED canopy fraction photosynthesis */}
+00053     psn\_shade->c3 = epc->c3\_flag;
+00054     psn\_shade->co2 = metv->co2;
+00055     psn\_shade->pa = metv->pa;
+00056     psn\_shade->t = metv->tday;
+00057     psn\_shade->lnc = 1.0 / (epv->shade\_proj\_sla * epc->leaf\_cn);
+00058     psn\_shade->flnr = epc->flnr;
+00059     psn\_shade->ppfd = metv->ppfd\_per\_plaishade;
+00060     \textcolor{comment}{/* convert conductance from m/s --> umol/m2/s/Pa, and correct}
+00061 \textcolor{comment}{    for CO2 vs. water vapor */}
+00062     psn\_shade->g = epv->gl\_t\_wv\_shade * 1e6/(1.6*R*(metv->tday+273.15));
+00063     psn\_shade->dlmr = epv->dlmr\_area\_shade;
+00064     \textcolor{keywordflow}{if} (ok && \hyperlink{photosynthesis_8c_a7694972f8a6aaea60ca6d5506d705060}{photosynthesis}(psn\_shade))
+00065     \{
+00066         \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Error in photosynthesis() from bgc()\(\backslash\)n"});
+00067         ok=0;
+00068     \}
+00069 
+00070     \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_DIAG, \textcolor{stringliteral}{"\(\backslash\)t\(\backslash\)tdone shade\_psn\(\backslash\)n"});
+00071 
+00072     epv->assim\_shade = psn\_shade->A;
+00073 
+00074     \textcolor{comment}{/* for the final flux assignment, the assimilation output}
+00075 \textcolor{comment}{        needs to have the maintenance respiration rate added, this}
+00076 \textcolor{comment}{        sum multiplied by the projected leaf area in the relevant canopy}
+00077 \textcolor{comment}{        fraction, and this total converted from umol/m2/s -> kgC/m2/d */}
+00078     cf->psnshade\_to\_cpool = (epv->assim\_shade + epv->dlmr\_area\_shade) *
+00079         epv->plaishade * metv->dayl * 12.011e-9;
+00080     return (!ok);
+00081 \}
+00082 
+00083 
+\hypertarget{photosynthesis_8c_source_l00084}{}\hyperlink{photosynthesis_8c_a7694972f8a6aaea60ca6d5506d705060}{00084} \textcolor{keywordtype}{int} \hyperlink{photosynthesis_8c_a7694972f8a6aaea60ca6d5506d705060}{photosynthesis}(psn\_struct* psn)
+00085 \{
+00086     \textcolor{comment}{/*}
+00087 \textcolor{comment}{    The following variables are assumed to be defined in the psn struct}
+00088 \textcolor{comment}{    at the time of the function call:}
+00089 \textcolor{comment}{    c3         (flag) set to 1 for C3 model, 0 for C4 model}
+00090 \textcolor{comment}{    pa         (Pa) atmospheric pressure }
+00091 \textcolor{comment}{    co2        (ppm) atmospheric [CO2] }
+00092 \textcolor{comment}{    t          (deg C) air temperature}
+00093 \textcolor{comment}{    lnc        (kg Nleaf/m2) leaf N concentration, per unit projected LAI }
+00094 \textcolor{comment}{    flnr       (kg NRub/kg Nleaf) fraction of leaf N in Rubisco}
+00095 \textcolor{comment}{    ppfd       (umol photons/m2/s) PAR flux density, per unit projected LAI}
+00096 \textcolor{comment}{    g          (umol CO2/m2/s/Pa) leaf-scale conductance to CO2, proj area basis}
+00097 \textcolor{comment}{    dlmr       (umol CO2/m2/s) day leaf maint resp, on projected leaf area basis}
+00098 \textcolor{comment}{    }
+00099 \textcolor{comment}{    The following variables in psn struct are defined upon function return:}
+00100 \textcolor{comment}{    Ci         (Pa) intercellular [CO2]}
+00101 \textcolor{comment}{    Ca         (Pa) atmospheric [CO2]}
+00102 \textcolor{comment}{    O2         (Pa) atmospheric [O2]}
+00103 \textcolor{comment}{    gamma      (Pa) CO2 compensation point, in the absence of maint resp.}
+00104 \textcolor{comment}{    Kc         (Pa) MM constant for carboxylation}
+00105 \textcolor{comment}{    Ko         (Pa) MM constant for oxygenation}
+00106 \textcolor{comment}{    Vmax       (umol CO2/m2/s) max rate of carboxylation}
+00107 \textcolor{comment}{    Jmax       (umol electrons/m2/s) max rate electron transport}
+00108 \textcolor{comment}{    J          (umol RuBP/m2/s) rate of RuBP regeneration}
+00109 \textcolor{comment}{    Av         (umol CO2/m2/s) carboxylation limited assimilation}
+00110 \textcolor{comment}{    Aj         (umol CO2/m2/s) RuBP regen limited assimilation}
+00111 \textcolor{comment}{    A          (umol CO2/m2/s) final assimilation rate}
+00112 \textcolor{comment}{    */}
+00113     
+00114     \textcolor{comment}{/* the weight proportion of Rubisco to its nitrogen content, fnr, is }
+00115 \textcolor{comment}{    calculated from the relative proportions of the basic amino acids }
+00116 \textcolor{comment}{    that make up the enzyme, as listed in the Handbook of Biochemistry, }
+00117 \textcolor{comment}{    Proteins, Vol III, p. 510, which references:}
+00118 \textcolor{comment}{    Kuehn and McFadden, Biochemistry, 8:2403, 1969 */}
+00119     \textcolor{keyword}{static} \textcolor{keywordtype}{double} fnr = 7.16;   \textcolor{comment}{/* kg Rub/kg NRub */}
+00120     
+00121     \textcolor{comment}{/* the following enzyme kinetic constants are from: }
+00122 \textcolor{comment}{    Woodrow, I.E., and J.A. Berry, 1980. Enzymatic regulation of photosynthetic}
+00123 \textcolor{comment}{    CO2 fixation in C3 plants. Ann. Rev. Plant Physiol. Plant Mol. Biol.,}
+00124 \textcolor{comment}{    39:533-594.}
+00125 \textcolor{comment}{    Note that these values are given in the units used in the paper, and that}
+00126 \textcolor{comment}{    they are converted to units appropriate to the rest of this function before}
+00127 \textcolor{comment}{    they are used. */}
+00128     \textcolor{comment}{/* I've changed the values for Kc and Ko from the Woodrow and Berry}
+00129 \textcolor{comment}{    reference, and am now using the values from De Pury and Farquhar,}
+00130 \textcolor{comment}{    1997. Simple scaling of photosynthesis from leaves to canopies}
+00131 \textcolor{comment}{    without the errors of big-leaf models. Plant, Cell and Env. 20: 537-557. }
+00132 \textcolor{comment}{    All other parameters, including the q10's for Kc and Ko are the same}
+00133 \textcolor{comment}{    as in Woodrow and Berry. */}
+00134     \textcolor{keyword}{static} \textcolor{keywordtype}{double} Kc25 = 404.0;   \textcolor{comment}{/* (ubar) MM const carboxylase, 25 deg C */} 
+00135     \textcolor{keyword}{static} \textcolor{keywordtype}{double} q10Kc = 2.1;    \textcolor{comment}{/* (DIM) Q\_10 for Kc */}
+00136     \textcolor{keyword}{static} \textcolor{keywordtype}{double} Ko25 = 248.0;   \textcolor{comment}{/* (mbar) MM const oxygenase, 25 deg C */}
+00137     \textcolor{keyword}{static} \textcolor{keywordtype}{double} q10Ko = 1.2;    \textcolor{comment}{/* (DIM) Q\_10 for Ko */}
+00138     \textcolor{keyword}{static} \textcolor{keywordtype}{double} act25 = 3.6;    \textcolor{comment}{/* (umol/mgRubisco/min) Rubisco activity */}
+00139     \textcolor{keyword}{static} \textcolor{keywordtype}{double} q10act = 2.4;   \textcolor{comment}{/* (DIM) Q\_10 for Rubisco activity */}
+00140     \textcolor{keyword}{static} \textcolor{keywordtype}{double} pabs = 0.85;    \textcolor{comment}{/* (DIM) fPAR effectively absorbed by PSII */}
+00141     
+00142     \textcolor{comment}{/* local variables */}
+00143     \textcolor{keywordtype}{int} ok=1;   
+00144     \textcolor{keywordtype}{double} t;      \textcolor{comment}{/* (deg C) temperature */}
+00145     \textcolor{keywordtype}{double} tk;     \textcolor{comment}{/* (K) absolute temperature */}
+00146     \textcolor{keywordtype}{double} Kc;     \textcolor{comment}{/* (Pa) MM constant for carboxylase reaction */}
+00147     \textcolor{keywordtype}{double} Ko;     \textcolor{comment}{/* (Pa) MM constant for oxygenase reaction */}
+00148     \textcolor{keywordtype}{double} act;    \textcolor{comment}{/* (umol CO2/kgRubisco/s) Rubisco activity */}
+00149     \textcolor{keywordtype}{double} Jmax;   \textcolor{comment}{/* (umol/m2/s) max rate electron transport */}
+00150     \textcolor{keywordtype}{double} ppe;    \textcolor{comment}{/* (mol/mol) photons absorbed by PSII per e- transported */}
+00151     \textcolor{keywordtype}{double} Vmax, J, gamma, Ca, Rd, O2, g;
+00152     \textcolor{keywordtype}{double} a,b,c,det;
+00153     \textcolor{keywordtype}{double} Av,Aj, A;
+00154 
+00155     
+00156     \textcolor{comment}{/* begin by assigning local variables */}
+00157     g = psn->g;
+00158     t = psn->t;
+00159     tk = t + 273.15;
+00160     Rd = psn->dlmr;
+00161     
+00162     \textcolor{comment}{/* convert atmospheric CO2 from ppm --> Pa */}
+00163     Ca = psn->co2 * psn->pa / 1e6;
+00164     
+00165     \textcolor{comment}{/* set parameters for C3 vs C4 model */}
+00166     \textcolor{keywordflow}{if} (psn->c3)
+00167     \{
+00168         ppe = 2.6;
+00169     \}
+00170     \textcolor{keywordflow}{else} \textcolor{comment}{/* C4 */}
+00171     \{
+00172         ppe = 3.5;
+00173         Ca *= 10.0;
+00174     \}
+00175     psn->Ca = Ca;       
+00176     
+00177     \textcolor{comment}{/* calculate atmospheric O2 in Pa, assumes 21% O2 by volume */}
+00178     psn->O2 = O2 = 0.21 * psn->pa;
+00179     
+00180     \textcolor{comment}{/* correct kinetic constants for temperature, and do unit conversions */}
+00181     Ko = Ko25 * pow(q10Ko, (t-25.0)/10.0);
+00182     psn->Ko = Ko = Ko * 100.0;   \textcolor{comment}{/* mbar --> Pa */}
+00183     \textcolor{keywordflow}{if} (t > 15.0)
+00184     \{
+00185         Kc = Kc25 * pow(q10Kc, (t-25.0)/10.0);
+00186         act = act25 * pow(q10act, (t-25.0)/10.0);
+00187     \}
+00188     \textcolor{keywordflow}{else}
+00189     \{
+00190         Kc = Kc25 * pow(1.8*q10Kc, (t-15.0)/10.0) / q10Kc;
+00191         act = act25 * pow(1.8*q10act, (t-15.0)/10.0) / q10act;
+00192     \}
+00193     psn->Kc = Kc = Kc * 0.10;   \textcolor{comment}{/* ubar --> Pa */}
+00194     act = act * 1e6 / 60.0;     \textcolor{comment}{/* umol/mg/min --> umol/kg/s */}
+00195     
+00196     \textcolor{comment}{/* calculate gamma (Pa), assumes Vomax/Vcmax = 0.21 */}
+00197     psn->gamma = gamma = 0.5 * 0.21 * Kc * psn->O2 / Ko;
+00198      
+00199     \textcolor{comment}{/* calculate Vmax from leaf nitrogen data and Rubisco activity */}
+00200     
+00201     \textcolor{comment}{/* kg Nleaf   kg NRub    kg Rub      umol            umol }
+00202 \textcolor{comment}{       -------- X -------  X ------- X ---------   =   --------}
+00203 \textcolor{comment}{          m2      kg Nleaf   kg NRub   kg RUB * s       m2 * s       }
+00204 \textcolor{comment}{       }
+00205 \textcolor{comment}{         (lnc)  X  (flnr)  X  (fnr)  X   (act)     =    (Vmax)}
+00206 \textcolor{comment}{    */}
+00207     psn->Vmax = Vmax = psn->lnc * psn->flnr * fnr * act;
+00208     
+00209     \textcolor{comment}{/* calculate Jmax = f(Vmax), reference:}
+00210 \textcolor{comment}{    Wullschleger, S.D., 1993.  Biochemical limitations to carbon assimilation}
+00211 \textcolor{comment}{        in C3 plants - A retrospective analysis of the A/Ci curves from}
+00212 \textcolor{comment}{        109 species. Journal of Experimental Botany, 44:907-920.}
+00213 \textcolor{comment}{    */}
+00214     psn->Jmax = Jmax = 2.1*Vmax;
+00215     
+00216     \textcolor{comment}{/* calculate J = f(Jmax, ppfd), reference:}
+00217 \textcolor{comment}{    de Pury and Farquhar 1997}
+00218 \textcolor{comment}{    Plant Cell and Env.}
+00219 \textcolor{comment}{    */}
+00220     a = 0.7;
+00221     b = -Jmax - (psn->ppfd*pabs/ppe);
+00222     c = Jmax * psn->ppfd*pabs/ppe;
+00223     psn->J = J = (-b - sqrt(b*b - 4.0*a*c))/(2.0*a);
+00224     
+00225     \textcolor{comment}{/* solve for Av and Aj using the quadratic equation, substitution for Ci}
+00226 \textcolor{comment}{    from A = g(Ca-Ci) into the equations from Farquhar and von Caemmerer:}
+00227 \textcolor{comment}{         }
+00228 \textcolor{comment}{           Vmax (Ci - gamma)}
+00229 \textcolor{comment}{    Av =  -------------------   -   Rd}
+00230 \textcolor{comment}{          Ci + Kc (1 + O2/Ko)}
+00231 \textcolor{comment}{    }
+00232 \textcolor{comment}{    }
+00233 \textcolor{comment}{             J (Ci - gamma)}
+00234 \textcolor{comment}{    Aj  =  -------------------  -   Rd}
+00235 \textcolor{comment}{           4.5 Ci + 10.5 gamma  }
+00236 \textcolor{comment}{    */}
+00237 
+00238     \textcolor{comment}{/* quadratic solution for Av */}    
+00239     a = -1.0/g;
+00240     b = Ca + (Vmax - Rd)/g + Kc*(1.0 + O2/Ko);
+00241     c = Vmax*(gamma - Ca) + Rd*(Ca + Kc*(1.0 + O2/Ko));
+00242     
+00243     \textcolor{keywordflow}{if} ((det = b*b - 4.0*a*c) < 0.0)
+00244     \{
+00245         \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"negative root error in psn routine\(\backslash\)n"});
+00246         ok=0;
+00247     \}
+00248     
+00249     psn->Av = Av = (-b + sqrt(det)) / (2.0*a);
+00250     
+00251     \textcolor{comment}{/* quadratic solution for Aj */}
+00252     a = -4.5/g;    
+00253     b = 4.5*Ca + 10.5*gamma + J/g - 4.5*Rd/g;
+00254     c = J*(gamma - Ca) + Rd*(4.5*Ca + 10.5*gamma);
+00255         
+00256     \textcolor{keywordflow}{if} ((det = b*b - 4.0*a*c) < 0.0)
+00257     \{
+00258         \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"negative root error in psn routine\(\backslash\)n"});
+00259         ok=0;
+00260     \}
+00261     
+00262     psn->Aj = Aj = (-b + sqrt(det)) / (2.0*a);
+00263     
+00264     \textcolor{comment}{/* estimate A as the minimum of (Av,Aj) */}
+00265     \textcolor{keywordflow}{if} (Av < Aj) A = Av; 
+00266     \textcolor{keywordflow}{else}         A = Aj;
+00267     psn->A = A;
+00268     \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_DIAG, \textcolor{stringliteral}{"psn->A: %f, A: %f\(\backslash\)n"}, psn->A, A);
+00269     psn->Ci = Ca - (A/g);
+00270     
+00271     \textcolor{keywordflow}{return} (!ok);
+00272 \}   
+00273 
+\end{DoxyCode}

@@ -1,0 +1,72 @@
+\hypertarget{zero__srcsnk_8c_source}{}\section{zero\+\_\+srcsnk.\+c}
+\label{zero__srcsnk_8c_source}\index{c\+:/\+R\+E\+P\+O/biomebgc-\/4.\+2/src/bgclib/zero\+\_\+srcsnk.\+c@{c\+:/\+R\+E\+P\+O/biomebgc-\/4.\+2/src/bgclib/zero\+\_\+srcsnk.\+c}}
+
+\begin{DoxyCode}
+00001 \textcolor{comment}{/* }
+00002 \textcolor{comment}{zero\_srcsnk.c}
+00003 \textcolor{comment}{fill the source and sink variables with 0.0 at the start of the simulation}
+00004 \textcolor{comment}{}
+00005 \textcolor{comment}{*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*}
+00006 \textcolor{comment}{Biome-BGC version 4.2 (final release)}
+00007 \textcolor{comment}{See copyright.txt for Copyright information}
+00008 \textcolor{comment}{*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*}
+00009 \textcolor{comment}{*/}
+00010 
+00011 \textcolor{preprocessor}{#include "bgc.h"}
+00012 
+00013 \textcolor{comment}{/* zero the source and sink state variables */}
+\hypertarget{zero__srcsnk_8c_source_l00014}{}\hyperlink{zero__srcsnk_8c_ad1fe85d82246f51079a60a61cf591a9c}{00014} \textcolor{keywordtype}{int} \hyperlink{zero__srcsnk_8c_ad1fe85d82246f51079a60a61cf591a9c}{zero\_srcsnk}(cstate\_struct* cs, nstate\_struct* ns, wstate\_struct* ws,
+00015     summary\_struct* summary)
+00016 \{
+00017     \textcolor{keywordtype}{int} ok=1;
+00018     
+00019     \textcolor{comment}{/* zero the water sources and sinks  */}
+00020     ws->prcp\_src = 0.0;
+00021     ws->outflow\_snk = 0.0;
+00022     ws->soilevap\_snk = 0.0;
+00023     ws->snowsubl\_snk = 0.0;
+00024     ws->canopyevap\_snk = 0.0;
+00025     ws->trans\_snk = 0.0;
+00026 
+00027     \textcolor{comment}{/* zero the carbon sources and sinks */}
+00028     cs->psnsun\_src = 0.0;
+00029     cs->psnshade\_src = 0.0;
+00030     cs->leaf\_mr\_snk = 0.0;
+00031     cs->leaf\_gr\_snk = 0.0;
+00032     cs->froot\_mr\_snk = 0.0;
+00033     cs->froot\_gr\_snk = 0.0;
+00034     cs->livestem\_mr\_snk = 0.0;
+00035     cs->livestem\_gr\_snk = 0.0;
+00036     cs->deadstem\_gr\_snk = 0.0;
+00037     cs->livecroot\_mr\_snk = 0.0;
+00038     cs->livecroot\_gr\_snk = 0.0;
+00039     cs->deadcroot\_gr\_snk = 0.0;
+00040     cs->litr1\_hr\_snk = 0.0;
+00041     cs->litr2\_hr\_snk = 0.0;
+00042     cs->litr4\_hr\_snk = 0.0;
+00043     cs->soil1\_hr\_snk = 0.0;
+00044     cs->soil2\_hr\_snk = 0.0;
+00045     cs->soil3\_hr\_snk = 0.0;
+00046     cs->soil4\_hr\_snk = 0.0;
+00047     cs->fire\_snk = 0.0;
+00048     
+00049     \textcolor{comment}{/* zero the nitrogen sources and sinks */}
+00050     ns->nfix\_src = 0.0;
+00051     ns->ndep\_src = 0.0;
+00052     ns->nleached\_snk = 0.0;
+00053     ns->nvol\_snk = 0.0;
+00054     ns->fire\_snk = 0.0;
+00055     
+00056     \textcolor{comment}{/* zero the summary variables */}
+00057     summary->cum\_npp = 0.0;
+00058     summary->cum\_nep = 0.0;
+00059     summary->cum\_nee = 0.0;
+00060     summary->cum\_gpp = 0.0;
+00061     summary->cum\_mr = 0.0;
+00062     summary->cum\_gr = 0.0;
+00063     summary->cum\_hr = 0.0;
+00064     summary->cum\_fire = 0.0;
+00065     
+00066     \textcolor{keywordflow}{return} (!ok);
+00067 \}
+\end{DoxyCode}

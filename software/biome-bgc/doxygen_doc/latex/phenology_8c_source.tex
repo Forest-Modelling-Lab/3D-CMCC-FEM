@@ -1,0 +1,301 @@
+\hypertarget{phenology_8c_source}{}\section{phenology.\+c}
+\label{phenology_8c_source}\index{c\+:/\+R\+E\+P\+O/biomebgc-\/4.\+2/src/bgclib/phenology.\+c@{c\+:/\+R\+E\+P\+O/biomebgc-\/4.\+2/src/bgclib/phenology.\+c}}
+
+\begin{DoxyCode}
+00001 \textcolor{comment}{/* }
+00002 \textcolor{comment}{phenology.c}
+00003 \textcolor{comment}{daily phenology fluxes}
+00004 \textcolor{comment}{}
+00005 \textcolor{comment}{*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*}
+00006 \textcolor{comment}{Biome-BGC version 4.2 (final release)}
+00007 \textcolor{comment}{See copyright.txt for Copyright information}
+00008 \textcolor{comment}{*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*}
+00009 \textcolor{comment}{*/}
+00010 
+00011 \textcolor{preprocessor}{#include "bgc.h"}
+00012 
+\hypertarget{phenology_8c_source_l00013}{}\hyperlink{phenology_8c_a4db88c2b8b0b2fd1265efd4ba86acd8f}{00013} \textcolor{keywordtype}{int} \hyperlink{phenology_8c_a4db88c2b8b0b2fd1265efd4ba86acd8f}{phenology}(\textcolor{keyword}{const} epconst\_struct* epc, \textcolor{keyword}{const} phenology\_struct* phen,
+00014 epvar\_struct* epv, cstate\_struct* cs, cflux\_struct* cf, nstate\_struct* ns,
+00015 nflux\_struct* nf)
+00016 \{
+00017     \textcolor{keywordtype}{int} ok=1;
+00018     \textcolor{keywordtype}{double} ndays;
+00019     \textcolor{keywordtype}{double} leaflitfallc, frootlitfallc;
+00020     \textcolor{keywordtype}{double} livestemtovrc, livestemtovrn;
+00021     \textcolor{keywordtype}{double} livecroottovrc, livecroottovrn;
+00022     \textcolor{keywordtype}{double} drate;
+00023     
+00024     \textcolor{comment}{/* phenological control for EVERGREENS */}
+00025     \textcolor{keywordflow}{if} (epc->evergreen)
+00026     \{
+00027         \textcolor{comment}{/* transfer growth fluxes */}
+00028         \textcolor{comment}{/* check for days left in transfer growth period */}
+00029         \textcolor{comment}{/* AAN - yes, this is an assignment */}
+00030         \textcolor{keywordflow}{if} ((ndays = phen->remdays\_transfer))
+00031         \{
+00032             \textcolor{comment}{/* calculate rates required to empty each transfer}
+00033 \textcolor{comment}{            compartment by the end of transfer period, at approximately a}
+00034 \textcolor{comment}{            constant rate of transfer */}
+00035             cf->leafc\_transfer\_to\_leafc = cs->leafc\_transfer / ndays;
+00036             nf->leafn\_transfer\_to\_leafn = ns->leafn\_transfer / ndays;
+00037             cf->frootc\_transfer\_to\_frootc = cs->frootc\_transfer / ndays;
+00038             nf->frootn\_transfer\_to\_frootn = ns->frootn\_transfer / ndays;
+00039             \textcolor{keywordflow}{if} (epc->woody)
+00040             \{
+00041                 cf->livestemc\_transfer\_to\_livestemc = cs->livestemc\_transfer / ndays;
+00042                 nf->livestemn\_transfer\_to\_livestemn = ns->livestemn\_transfer / ndays;
+00043                 cf->deadstemc\_transfer\_to\_deadstemc = cs->deadstemc\_transfer / ndays;
+00044                 nf->deadstemn\_transfer\_to\_deadstemn = ns->deadstemn\_transfer / ndays;
+00045                 cf->livecrootc\_transfer\_to\_livecrootc = cs->livecrootc\_transfer / ndays;
+00046                 nf->livecrootn\_transfer\_to\_livecrootn = ns->livecrootn\_transfer / ndays;
+00047                 cf->deadcrootc\_transfer\_to\_deadcrootc = cs->deadcrootc\_transfer / ndays;
+00048                 nf->deadcrootn\_transfer\_to\_deadcrootn = ns->deadcrootn\_transfer / ndays;
+00049             \}
+00050         \}
+00051 
+00052         \textcolor{comment}{/* litterfall happens everyday, at a rate determined each year}
+00053 \textcolor{comment}{        on the annual allocation day.  To prevent litterfall from driving}
+00054 \textcolor{comment}{        pools negative in the case of a very high mortality, fluxes are}
+00055 \textcolor{comment}{        checked and set to zero when the pools get too small. */}
+00056 
+00057         \textcolor{comment}{/* leaf litterfall */}
+00058         leaflitfallc = epv->day\_leafc\_litfall\_increment;
+00059         \textcolor{keywordflow}{if} (leaflitfallc > cs->leafc) leaflitfallc = cs->leafc;
+00060         \textcolor{keywordflow}{if} (ok && \hyperlink{phenology_8c_a6400c77226b2dd734e44323a5a2c9d64}{leaf\_litfall}(epc,leaflitfallc,cf,nf))
+00061         \{
+00062             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Error in call to leaf\_litfall() from phenology()\(\backslash\)n"});
+00063             ok=0;
+00064         \}
+00065 
+00066         \textcolor{comment}{/* fine root litterfall */}
+00067         frootlitfallc = epv->day\_frootc\_litfall\_increment;
+00068         \textcolor{keywordflow}{if} (frootlitfallc > cs->frootc) frootlitfallc = cs->frootc;
+00069         \textcolor{keywordflow}{if} (ok && \hyperlink{phenology_8c_ac9d84f39b7db5a7498a0ac0f9edffd1f}{froot\_litfall}(epc,frootlitfallc,cf,nf))
+00070         \{
+00071             \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Error in call to froot\_litfall() from phenology()\(\backslash\)n"});
+00072             ok=0;
+00073         \}
+00074         
+00075         \textcolor{comment}{/* turnover of live wood to dead wood also happens every day, at a}
+00076 \textcolor{comment}{        rate determined once each year, using the annual maximum livewoody}
+00077 \textcolor{comment}{        compartment masses and the specified livewood turnover rate */}
+00078         \textcolor{keywordflow}{if} (epc->woody)
+00079         \{
+00080             \textcolor{comment}{/* turnover from live stem wood to dead stem wood */}
+00081             livestemtovrc = epv->day\_livestemc\_turnover\_increment;
+00082             livestemtovrn = livestemtovrc / epc->livewood\_cn;
+00083             \textcolor{keywordflow}{if} (livestemtovrc > cs->livestemc) livestemtovrc = cs->livestemc;
+00084             \textcolor{keywordflow}{if} (livestemtovrn > ns->livestemn) livestemtovrn = ns->livestemn;
+00085             \textcolor{keywordflow}{if} (livestemtovrc && livestemtovrn)
+00086             \{
+00087                 cf->livestemc\_to\_deadstemc = livestemtovrc;
+00088                 nf->livestemn\_to\_deadstemn = livestemtovrc / epc->deadwood\_cn;
+00089                 nf->livestemn\_to\_retransn = livestemtovrn - nf->livestemn\_to\_deadstemn;
+00090             \}
+00091 
+00092             \textcolor{comment}{/* turnover from live coarse root wood to dead coarse root wood */}
+00093             livecroottovrc = epv->day\_livecrootc\_turnover\_increment;
+00094             livecroottovrn = livecroottovrc / epc->livewood\_cn;
+00095             \textcolor{keywordflow}{if} (livecroottovrc > cs->livecrootc) livecroottovrc = cs->livecrootc;
+00096             \textcolor{keywordflow}{if} (livecroottovrn > ns->livecrootn) livecroottovrn = ns->livecrootn;
+00097             \textcolor{keywordflow}{if} (livecroottovrc && livecroottovrn)
+00098             \{
+00099                 cf->livecrootc\_to\_deadcrootc = livecroottovrc;
+00100                 nf->livecrootn\_to\_deadcrootn = livecroottovrc / epc->deadwood\_cn;
+00101                 nf->livecrootn\_to\_retransn = livecroottovrn - nf->livecrootn\_to\_deadcrootn;
+00102             \}
+00103         \}
+00104         
+00105     \} \textcolor{comment}{/* end if evergreen */}
+00106     \textcolor{keywordflow}{else}
+00107     \{
+00108         \textcolor{comment}{/* deciduous */}
+00109         \textcolor{comment}{/* transfer growth fluxes */}
+00110         \textcolor{comment}{/* check for days left in transfer growth period */}
+00111         \textcolor{comment}{/* AAN - yes, this is an assignment */}
+00112         \textcolor{keywordflow}{if} ((ndays = phen->remdays\_transfer))
+00113         \{
+00114             \textcolor{comment}{/* transfer rate is defined to be a linearly decreasing}
+00115 \textcolor{comment}{            function that reaches zero on the last day of the transfer}
+00116 \textcolor{comment}{            period */}
+00117             cf->leafc\_transfer\_to\_leafc = 2.0*cs->leafc\_transfer / ndays;
+00118             nf->leafn\_transfer\_to\_leafn = 2.0*ns->leafn\_transfer / ndays;
+00119             cf->frootc\_transfer\_to\_frootc = 2.0*cs->frootc\_transfer / ndays;
+00120             nf->frootn\_transfer\_to\_frootn = 2.0*ns->frootn\_transfer / ndays;
+00121             \textcolor{keywordflow}{if} (epc->woody)
+00122             \{
+00123                 cf->livestemc\_transfer\_to\_livestemc = 2.0*cs->livestemc\_transfer / ndays;
+00124                 nf->livestemn\_transfer\_to\_livestemn = 2.0*ns->livestemn\_transfer / ndays;
+00125                 cf->deadstemc\_transfer\_to\_deadstemc = 2.0*cs->deadstemc\_transfer / ndays;
+00126                 nf->deadstemn\_transfer\_to\_deadstemn = 2.0*ns->deadstemn\_transfer / ndays;
+00127                 cf->livecrootc\_transfer\_to\_livecrootc = 2.0*cs->livecrootc\_transfer / ndays;
+00128                 nf->livecrootn\_transfer\_to\_livecrootn = 2.0*ns->livecrootn\_transfer / ndays;
+00129                 cf->deadcrootc\_transfer\_to\_deadcrootc = 2.0*cs->deadcrootc\_transfer / ndays;
+00130                 nf->deadcrootn\_transfer\_to\_deadcrootn = 2.0*ns->deadcrootn\_transfer / ndays;
+00131             \}
+00132         \}
+00133         
+00134         \textcolor{comment}{/* litterfall */}
+00135         \textcolor{comment}{/* defined such that all live material is removed by the end of the}
+00136 \textcolor{comment}{        litterfall period, with a linearly ramping removal rate. assumes that}
+00137 \textcolor{comment}{        the initial rate on the first day of litterfall is 0.0. */}
+00138         \textcolor{comment}{/* AAN - yes, this is an assignment */}
+00139         \textcolor{keywordflow}{if} ((ndays = phen->remdays\_litfall))
+00140         \{
+00141             \textcolor{keywordflow}{if} (ndays == 1.0)
+00142             \{
+00143                 \textcolor{comment}{/* last day of litterfall, special case to gaurantee}
+00144 \textcolor{comment}{                that pools go to 0.0 */}
+00145                 leaflitfallc = cs->leafc;
+00146                 frootlitfallc = cs->frootc;
+00147             \}
+00148             \textcolor{keywordflow}{else}
+00149             \{
+00150                 \textcolor{comment}{/* otherwise, assess litterfall }
+00151 \textcolor{comment}{                rates as described above */}
+00152                 leaflitfallc = epv->day\_leafc\_litfall\_increment;
+00153                 drate = 2.0*(cs->leafc - leaflitfallc*ndays)/(ndays*ndays);
+00154                 epv->day\_leafc\_litfall\_increment += drate;
+00155                 frootlitfallc = epv->day\_frootc\_litfall\_increment;
+00156                 drate = 2.0*(cs->frootc - frootlitfallc*ndays)/(ndays*ndays);
+00157                 epv->day\_frootc\_litfall\_increment += drate;
+00158             \}
+00159             \textcolor{comment}{/* leaf litterfall */}
+00160             \textcolor{keywordflow}{if} (leaflitfallc > cs->leafc) leaflitfallc = cs->leafc;
+00161             \textcolor{keywordflow}{if} (ok && leaflitfallc && \hyperlink{phenology_8c_a6400c77226b2dd734e44323a5a2c9d64}{leaf\_litfall}(epc,leaflitfallc,cf,nf))
+00162             \{
+00163                 \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Error in call to leaf\_litfall() from phenology()\(\backslash\)n"});
+00164                 ok=0;
+00165             \}
+00166             \textcolor{comment}{/* fine root litterfall */}
+00167             \textcolor{keywordflow}{if} (frootlitfallc > cs->frootc) frootlitfallc = cs->frootc;
+00168             \textcolor{keywordflow}{if} (ok && frootlitfallc && \hyperlink{phenology_8c_ac9d84f39b7db5a7498a0ac0f9edffd1f}{froot\_litfall}(epc,frootlitfallc,cf,nf))
+00169             \{
+00170                 \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Error in call to froot\_litfall() from phenology()\(\backslash\)n"});
+00171                 ok=0;
+00172             \}
+00173         \} \textcolor{comment}{/* end if deciduous litterfall day */}
+00174         
+00175         \textcolor{comment}{/* turnover of livewood to deadwood happens each day, just as for}
+00176 \textcolor{comment}{        evergreen types, at a rate determined from the annual maximum}
+00177 \textcolor{comment}{        livewood mass and the specified turnover rate */}
+00178         \textcolor{keywordflow}{if} (epc->woody)
+00179         \{
+00180             \textcolor{comment}{/* turnover from live stem wood to dead stem wood */}
+00181             livestemtovrc = epv->day\_livestemc\_turnover\_increment;
+00182             livestemtovrn = livestemtovrc / epc->livewood\_cn;
+00183             \textcolor{keywordflow}{if} (livestemtovrc > cs->livestemc) livestemtovrc = cs->livestemc;
+00184             \textcolor{keywordflow}{if} (livestemtovrn > ns->livestemn) livestemtovrn = ns->livestemn;
+00185             \textcolor{keywordflow}{if} (livestemtovrc && livestemtovrn)
+00186             \{
+00187                 cf->livestemc\_to\_deadstemc = livestemtovrc;
+00188                 nf->livestemn\_to\_deadstemn = livestemtovrc / epc->deadwood\_cn;
+00189                 nf->livestemn\_to\_retransn = livestemtovrn - nf->livestemn\_to\_deadstemn;
+00190             \}
+00191 
+00192             \textcolor{comment}{/* turnover from live coarse root wood to dead coarse root wood */}
+00193             livecroottovrc = epv->day\_livecrootc\_turnover\_increment;
+00194             livecroottovrn = livecroottovrc / epc->livewood\_cn;
+00195             \textcolor{keywordflow}{if} (livecroottovrc > cs->livecrootc) livecroottovrc = cs->livecrootc;
+00196             \textcolor{keywordflow}{if} (livecroottovrn > ns->livecrootn) livecroottovrn = ns->livecrootn;
+00197             \textcolor{keywordflow}{if} (livecroottovrc && livecroottovrn)
+00198             \{
+00199                 cf->livecrootc\_to\_deadcrootc = livecroottovrc;
+00200                 nf->livecrootn\_to\_deadcrootn = livecroottovrc / epc->deadwood\_cn;
+00201                 nf->livecrootn\_to\_retransn = livecroottovrn - nf->livecrootn\_to\_deadcrootn;
+00202             \}
+00203         \}
+00204         
+00205     \} \textcolor{comment}{/* end if deciduous */}
+00206     
+00207     \textcolor{comment}{/* for woody types, find annual maximum value for live stemc and live crootc}
+00208 \textcolor{comment}{    calculation of livewood turnover rates */}
+00209     \textcolor{keywordflow}{if} (epc->woody)
+00210     \{
+00211         \textcolor{keywordflow}{if} (epv->annmax\_livestemc < cs->livestemc) epv->annmax\_livestemc = cs->livestemc;
+00212         \textcolor{keywordflow}{if} (epv->annmax\_livecrootc < cs->livecrootc) epv->annmax\_livecrootc = cs->livecrootc;
+00213     \}   
+00214     
+00215     \textcolor{comment}{/* for all types, find annual maximum leafc */}
+00216     \textcolor{keywordflow}{if} (epv->annmax\_leafc < cs->leafc) epv->annmax\_leafc = cs->leafc;
+00217     \textcolor{keywordflow}{if} (epv->annmax\_frootc < cs->frootc) epv->annmax\_frootc = cs->frootc;
+00218     
+00219     \textcolor{keywordflow}{return} (!ok);
+00220 \}
+00221 
+\hypertarget{phenology_8c_source_l00222}{}\hyperlink{phenology_8c_a6400c77226b2dd734e44323a5a2c9d64}{00222} \textcolor{keywordtype}{int} \hyperlink{phenology_8c_a6400c77226b2dd734e44323a5a2c9d64}{leaf\_litfall}(\textcolor{keyword}{const} epconst\_struct* epc, \textcolor{keywordtype}{double} litfallc,
+00223 cflux\_struct* cf, nflux\_struct* nf)
+00224 \{
+00225     \textcolor{keywordtype}{int} ok=1;
+00226     \textcolor{keywordtype}{double} c1,c2,c3,c4;
+00227     \textcolor{keywordtype}{double} n1,n2,n3,n4;
+00228     \textcolor{keywordtype}{double} nretrans;
+00229     \textcolor{keywordtype}{double} avg\_cn;
+00230     \textcolor{keywordtype}{double} litfalln;
+00231     
+00232     avg\_cn = epc->leaf\_cn;
+00233     litfalln = litfallc / epc->leaflitr\_cn;
+00234     
+00235     c1 = litfallc * epc->leaflitr\_flab;
+00236     n1 = litfalln * epc->leaflitr\_flab;
+00237     c2 = litfallc * epc->leaflitr\_fucel;
+00238     n2 = litfalln * epc->leaflitr\_fucel; 
+00239     c3 = litfallc * epc->leaflitr\_fscel;
+00240     n3 = litfalln * epc->leaflitr\_fscel; 
+00241     c4 = litfallc * epc->leaflitr\_flig;
+00242     n4 = litfalln * epc->leaflitr\_flig; 
+00243     nretrans = (litfallc/avg\_cn) - (litfalln);
+00244     
+00245     \textcolor{keywordflow}{if} (ok)
+00246     \{
+00247         \textcolor{comment}{/* set fluxes in daily flux structure */}
+00248         cf->leafc\_to\_litr1c = c1;
+00249         cf->leafc\_to\_litr2c = c2;
+00250         cf->leafc\_to\_litr3c = c3;
+00251         cf->leafc\_to\_litr4c = c4;
+00252         nf->leafn\_to\_litr1n = n1;
+00253         nf->leafn\_to\_litr2n = n2;
+00254         nf->leafn\_to\_litr3n = n3;
+00255         nf->leafn\_to\_litr4n = n4;
+00256         nf->leafn\_to\_retransn = nretrans;
+00257     \}
+00258     
+00259     \textcolor{keywordflow}{return} (!ok);
+00260 \}
+00261 
+\hypertarget{phenology_8c_source_l00262}{}\hyperlink{phenology_8c_ac9d84f39b7db5a7498a0ac0f9edffd1f}{00262} \textcolor{keywordtype}{int} \hyperlink{phenology_8c_ac9d84f39b7db5a7498a0ac0f9edffd1f}{froot\_litfall}(\textcolor{keyword}{const} epconst\_struct* epc, \textcolor{keywordtype}{double} litfallc, 
+00263 cflux\_struct* cf, nflux\_struct* nf)
+00264 \{
+00265     \textcolor{keywordtype}{int} ok=1;
+00266     \textcolor{keywordtype}{double} c1,c2,c3,c4;
+00267     \textcolor{keywordtype}{double} n1,n2,n3,n4;
+00268     \textcolor{keywordtype}{double} avg\_cn;
+00269     
+00270     avg\_cn = epc->froot\_cn;
+00271     
+00272     c1 = litfallc * epc->frootlitr\_flab;
+00273     n1 = c1 / avg\_cn;
+00274     c2 = litfallc * epc->frootlitr\_fucel;
+00275     n2 = c2 / avg\_cn;
+00276     c3 = litfallc * epc->frootlitr\_fscel;
+00277     n3 = c3 / avg\_cn;
+00278     c4 = litfallc * epc->frootlitr\_flig;
+00279     n4 = c4 / avg\_cn;
+00280     
+00281     \textcolor{keywordflow}{if} (ok)
+00282     \{
+00283         \textcolor{comment}{/* set fluxes in daily flux structure */}
+00284         cf->frootc\_to\_litr1c = c1;
+00285         cf->frootc\_to\_litr2c = c2;
+00286         cf->frootc\_to\_litr3c = c3;
+00287         cf->frootc\_to\_litr4c = c4;
+00288         nf->frootn\_to\_litr1n = n1;
+00289         nf->frootn\_to\_litr2n = n2;
+00290         nf->frootn\_to\_litr3n = n3;
+00291         nf->frootn\_to\_litr4n = n4;
+00292     \}
+00293     
+00294     \textcolor{keywordflow}{return} (!ok);
+00295 \}
+00296 
+\end{DoxyCode}

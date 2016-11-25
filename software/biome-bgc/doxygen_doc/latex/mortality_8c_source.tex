@@ -1,0 +1,440 @@
+\hypertarget{mortality_8c_source}{}\section{mortality.\+c}
+\label{mortality_8c_source}\index{c\+:/\+R\+E\+P\+O/biomebgc-\/4.\+2/src/bgclib/mortality.\+c@{c\+:/\+R\+E\+P\+O/biomebgc-\/4.\+2/src/bgclib/mortality.\+c}}
+
+\begin{DoxyCode}
+00001 \textcolor{comment}{/* }
+00002 \textcolor{comment}{mortality.c}
+00003 \textcolor{comment}{daily mortality fluxes}
+00004 \textcolor{comment}{}
+00005 \textcolor{comment}{*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*}
+00006 \textcolor{comment}{Biome-BGC version 4.2 (final release)}
+00007 \textcolor{comment}{See copyright.txt for Copyright information}
+00008 \textcolor{comment}{*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*}
+00009 \textcolor{comment}{*/}
+00010 
+00011 \textcolor{preprocessor}{#include "bgc.h"}
+00012 
+\hypertarget{mortality_8c_source_l00013}{}\hyperlink{mortality_8c_ada5c305af17e64ee9f82e82235340734}{00013} \textcolor{keywordtype}{int} \hyperlink{mortality_8c_ada5c305af17e64ee9f82e82235340734}{mortality}(\textcolor{keyword}{const} epconst\_struct* epc, cstate\_struct* cs, cflux\_struct* cf,
+00014 nstate\_struct* ns, nflux\_struct* nf)
+00015 \{
+00016     \textcolor{keywordtype}{int} ok=1;
+00017     \textcolor{keywordtype}{double} mort;
+00018     \textcolor{comment}{/* dead stem combustion proportion */}
+00019     \textcolor{keywordtype}{double} dscp = 0.2;
+00020 
+00021     \textcolor{comment}{/******************************************************************/}
+00022     \textcolor{comment}{/* Non-fire mortality: these fluxes all enter litter or CWD pools */}
+00023     \textcolor{comment}{/******************************************************************/}
+00024     mort = epc->daily\_mortality\_turnover;
+00025     
+00026     \textcolor{comment}{/* daily carbon fluxes due to mortality */}
+00027     \textcolor{comment}{/* mortality fluxes out of leaf and fine root pools */}
+00028     cf->m\_leafc\_to\_litr1c = mort * cs->leafc * epc->leaflitr\_flab;       
+00029     cf->m\_leafc\_to\_litr2c = mort * cs->leafc * epc->leaflitr\_fucel;
+00030     cf->m\_leafc\_to\_litr3c = mort * cs->leafc * epc->leaflitr\_fscel;      
+00031     cf->m\_leafc\_to\_litr4c = mort * cs->leafc * epc->leaflitr\_flig;       
+00032     cf->m\_frootc\_to\_litr1c = mort * cs->frootc * epc->frootlitr\_flab;    
+00033     cf->m\_frootc\_to\_litr2c = mort * cs->frootc * epc->frootlitr\_fucel;
+00034     cf->m\_frootc\_to\_litr3c = mort * cs->frootc * epc->frootlitr\_fscel;   
+00035     cf->m\_frootc\_to\_litr4c = mort * cs->frootc * epc->frootlitr\_flig;
+00036     
+00037     \textcolor{comment}{/* mortality fluxes out of storage and transfer pools */}
+00038     cf->m\_leafc\_storage\_to\_litr1c  = mort * cs->leafc\_storage;
+00039     cf->m\_frootc\_storage\_to\_litr1c  = mort * cs->frootc\_storage;
+00040     cf->m\_livestemc\_storage\_to\_litr1c  = mort * cs->livestemc\_storage;
+00041     cf->m\_deadstemc\_storage\_to\_litr1c  = mort * cs->deadstemc\_storage;
+00042     cf->m\_livecrootc\_storage\_to\_litr1c  = mort * cs->livecrootc\_storage;
+00043     cf->m\_deadcrootc\_storage\_to\_litr1c  = mort * cs->deadcrootc\_storage;
+00044     cf->m\_leafc\_transfer\_to\_litr1c = mort * cs->leafc\_transfer;
+00045     cf->m\_frootc\_transfer\_to\_litr1c = mort * cs->frootc\_transfer;
+00046     cf->m\_livestemc\_transfer\_to\_litr1c = mort * cs->livestemc\_transfer;
+00047     cf->m\_deadstemc\_transfer\_to\_litr1c = mort * cs->deadstemc\_transfer;
+00048     cf->m\_livecrootc\_transfer\_to\_litr1c = mort * cs->livecrootc\_transfer;
+00049     cf->m\_deadcrootc\_transfer\_to\_litr1c = mort * cs->deadcrootc\_transfer;
+00050     cf->m\_gresp\_storage\_to\_litr1c = mort * cs->gresp\_storage;
+00051     cf->m\_gresp\_transfer\_to\_litr1c = mort * cs->gresp\_transfer;
+00052 
+00053     \textcolor{comment}{/* TREE-specific carbon fluxes */}
+00054     \textcolor{keywordflow}{if} (epc->woody)
+00055     \{
+00056         cf->m\_livestemc\_to\_cwdc = mort * cs->livestemc;  
+00057         cf->m\_deadstemc\_to\_cwdc = (mort + (1.0-dscp)*epc->daily\_fire\_turnover) * cs->deadstemc;  
+00058         cf->m\_livecrootc\_to\_cwdc = mort * cs->livecrootc;   
+00059         cf->m\_deadcrootc\_to\_cwdc = (mort + (1.0-dscp)*epc->daily\_fire\_turnover) * cs->deadcrootc; 
+00060     \}
+00061     
+00062     \textcolor{comment}{/* daily nitrogen fluxes due to mortality */}
+00063     \textcolor{comment}{/* mortality fluxes out of leaf and fine root pools */}
+00064     nf->m\_leafn\_to\_litr1n = cf->m\_leafc\_to\_litr1c / epc->leaf\_cn;   
+00065     nf->m\_leafn\_to\_litr2n = cf->m\_leafc\_to\_litr2c / epc->leaf\_cn;   
+00066     nf->m\_leafn\_to\_litr3n = cf->m\_leafc\_to\_litr3c / epc->leaf\_cn;   
+00067     nf->m\_leafn\_to\_litr4n = cf->m\_leafc\_to\_litr4c / epc->leaf\_cn;   
+00068     nf->m\_frootn\_to\_litr1n = cf->m\_frootc\_to\_litr1c / epc->froot\_cn;    
+00069     nf->m\_frootn\_to\_litr2n = cf->m\_frootc\_to\_litr2c / epc->froot\_cn;    
+00070     nf->m\_frootn\_to\_litr3n = cf->m\_frootc\_to\_litr3c / epc->froot\_cn;    
+00071     nf->m\_frootn\_to\_litr4n = cf->m\_frootc\_to\_litr4c / epc->froot\_cn;    
+00072     
+00073     \textcolor{comment}{/* mortality fluxes out of storage and transfer */}
+00074     nf->m\_leafn\_storage\_to\_litr1n  = mort * ns->leafn\_storage;
+00075     nf->m\_frootn\_storage\_to\_litr1n  = mort * ns->frootn\_storage;
+00076     nf->m\_livestemn\_storage\_to\_litr1n  = mort * ns->livestemn\_storage;
+00077     nf->m\_deadstemn\_storage\_to\_litr1n  = mort * ns->deadstemn\_storage;
+00078     nf->m\_livecrootn\_storage\_to\_litr1n  = mort * ns->livecrootn\_storage;
+00079     nf->m\_deadcrootn\_storage\_to\_litr1n  = mort * ns->deadcrootn\_storage;
+00080     nf->m\_leafn\_transfer\_to\_litr1n = mort * ns->leafn\_transfer;
+00081     nf->m\_frootn\_transfer\_to\_litr1n = mort * ns->frootn\_transfer;
+00082     nf->m\_livestemn\_transfer\_to\_litr1n = mort * ns->livestemn\_transfer;
+00083     nf->m\_deadstemn\_transfer\_to\_litr1n = mort * ns->deadstemn\_transfer;
+00084     nf->m\_livecrootn\_transfer\_to\_litr1n = mort * ns->livecrootn\_transfer;
+00085     nf->m\_deadcrootn\_transfer\_to\_litr1n = mort * ns->deadcrootn\_transfer;
+00086     nf->m\_retransn\_to\_litr1n = mort * ns->retransn;
+00087     
+00088     \textcolor{comment}{/* woody-specific nitrogen fluxes */}
+00089     \textcolor{keywordflow}{if} (epc->woody)
+00090     \{
+00091         nf->m\_livestemn\_to\_cwdn = cf->m\_livestemc\_to\_cwdc / epc->deadwood\_cn;   
+00092         nf->m\_livestemn\_to\_litr1n = (mort * ns->livestemn) - nf->m\_livestemn\_to\_cwdn;
+00093         nf->m\_deadstemn\_to\_cwdn = cf->m\_deadstemc\_to\_cwdc / epc->deadwood\_cn;   
+00094         nf->m\_livecrootn\_to\_cwdn = cf->m\_livecrootc\_to\_cwdc / epc->deadwood\_cn;  
+00095         nf->m\_livecrootn\_to\_litr1n = (mort * ns->livecrootn) - nf->m\_livecrootn\_to\_cwdn;
+00096         nf->m\_deadcrootn\_to\_cwdn = cf->m\_deadcrootc\_to\_cwdc / epc->deadwood\_cn;  
+00097     \}
+00098     
+00099     \textcolor{comment}{/* update state variables */}
+00100     \textcolor{comment}{/* this is the only place other than daily\_state\_update() routines where}
+00101 \textcolor{comment}{    state variables get changed.  Mortality is taken care of last and }
+00102 \textcolor{comment}{    given special treatment for state update so that it doesn't interfere}
+00103 \textcolor{comment}{    with the other fluxes that are based on proportions of state variables,}
+00104 \textcolor{comment}{    especially the phenological fluxes */}
+00105     \textcolor{comment}{/* CARBON mortality state variable update */}    
+00106     \textcolor{comment}{/*   Leaf mortality */}
+00107     cs->litr1c         += cf->m\_leafc\_to\_litr1c;
+00108     cs->leafc          -= cf->m\_leafc\_to\_litr1c;
+00109     cs->litr2c         += cf->m\_leafc\_to\_litr2c;
+00110     cs->leafc          -= cf->m\_leafc\_to\_litr2c;
+00111     cs->litr3c         += cf->m\_leafc\_to\_litr3c;
+00112     cs->leafc          -= cf->m\_leafc\_to\_litr3c;
+00113     cs->litr4c         += cf->m\_leafc\_to\_litr4c;
+00114     cs->leafc          -= cf->m\_leafc\_to\_litr4c;
+00115     \textcolor{comment}{/*   Fine root mortality */}
+00116     cs->litr1c         += cf->m\_frootc\_to\_litr1c;
+00117     cs->frootc         -= cf->m\_frootc\_to\_litr1c;
+00118     cs->litr2c         += cf->m\_frootc\_to\_litr2c;
+00119     cs->frootc         -= cf->m\_frootc\_to\_litr2c;
+00120     cs->litr3c         += cf->m\_frootc\_to\_litr3c;
+00121     cs->frootc         -= cf->m\_frootc\_to\_litr3c;
+00122     cs->litr4c         += cf->m\_frootc\_to\_litr4c;
+00123     cs->frootc         -= cf->m\_frootc\_to\_litr4c;
+00124     \textcolor{comment}{/*   Storage and transfer mortality */}
+00125     cs->litr1c              += cf->m\_leafc\_storage\_to\_litr1c;
+00126     cs->leafc\_storage       -= cf->m\_leafc\_storage\_to\_litr1c;
+00127     cs->litr1c              += cf->m\_frootc\_storage\_to\_litr1c;
+00128     cs->frootc\_storage      -= cf->m\_frootc\_storage\_to\_litr1c;
+00129     cs->litr1c              += cf->m\_livestemc\_storage\_to\_litr1c;
+00130     cs->livestemc\_storage   -= cf->m\_livestemc\_storage\_to\_litr1c;
+00131     cs->litr1c              += cf->m\_deadstemc\_storage\_to\_litr1c;
+00132     cs->deadstemc\_storage   -= cf->m\_deadstemc\_storage\_to\_litr1c;
+00133     cs->litr1c              += cf->m\_livecrootc\_storage\_to\_litr1c;
+00134     cs->livecrootc\_storage  -= cf->m\_livecrootc\_storage\_to\_litr1c;
+00135     cs->litr1c              += cf->m\_deadcrootc\_storage\_to\_litr1c;
+00136     cs->deadcrootc\_storage  -= cf->m\_deadcrootc\_storage\_to\_litr1c;
+00137     cs->litr1c              += cf->m\_leafc\_transfer\_to\_litr1c;
+00138     cs->leafc\_transfer      -= cf->m\_leafc\_transfer\_to\_litr1c;
+00139     cs->litr1c              += cf->m\_frootc\_transfer\_to\_litr1c;
+00140     cs->frootc\_transfer     -= cf->m\_frootc\_transfer\_to\_litr1c;
+00141     cs->litr1c              += cf->m\_livestemc\_transfer\_to\_litr1c;
+00142     cs->livestemc\_transfer  -= cf->m\_livestemc\_transfer\_to\_litr1c;
+00143     cs->litr1c              += cf->m\_deadstemc\_transfer\_to\_litr1c;
+00144     cs->deadstemc\_transfer  -= cf->m\_deadstemc\_transfer\_to\_litr1c;
+00145     cs->litr1c              += cf->m\_livecrootc\_transfer\_to\_litr1c;
+00146     cs->livecrootc\_transfer -= cf->m\_livecrootc\_transfer\_to\_litr1c;
+00147     cs->litr1c              += cf->m\_deadcrootc\_transfer\_to\_litr1c;
+00148     cs->deadcrootc\_transfer -= cf->m\_deadcrootc\_transfer\_to\_litr1c;
+00149     cs->litr1c              += cf->m\_gresp\_storage\_to\_litr1c;
+00150     cs->gresp\_storage       -= cf->m\_gresp\_storage\_to\_litr1c;
+00151     cs->litr1c              += cf->m\_gresp\_transfer\_to\_litr1c;
+00152     cs->gresp\_transfer      -= cf->m\_gresp\_transfer\_to\_litr1c;
+00153     \textcolor{keywordflow}{if} (epc->woody)
+00154     \{
+00155         \textcolor{comment}{/*    Stem wood mortality */}
+00156         cs->cwdc       += cf->m\_livestemc\_to\_cwdc;
+00157         cs->livestemc  -= cf->m\_livestemc\_to\_cwdc;
+00158         cs->cwdc       += cf->m\_deadstemc\_to\_cwdc;
+00159         cs->deadstemc  -= cf->m\_deadstemc\_to\_cwdc;
+00160         \textcolor{comment}{/* STEP 1e  Coarse root wood mortality */}
+00161         cs->cwdc       += cf->m\_livecrootc\_to\_cwdc;
+00162         cs->livecrootc -= cf->m\_livecrootc\_to\_cwdc;
+00163         cs->cwdc       += cf->m\_deadcrootc\_to\_cwdc;
+00164         cs->deadcrootc -= cf->m\_deadcrootc\_to\_cwdc;
+00165     \}
+00166     \textcolor{comment}{/* NITROGEN mortality state variable update */}
+00167     \textcolor{comment}{/*    Leaf mortality */}
+00168     ns->litr1n         += nf->m\_leafn\_to\_litr1n;
+00169     ns->leafn          -= nf->m\_leafn\_to\_litr1n;
+00170     ns->litr2n         += nf->m\_leafn\_to\_litr2n;
+00171     ns->leafn          -= nf->m\_leafn\_to\_litr2n;
+00172     ns->litr3n         += nf->m\_leafn\_to\_litr3n;
+00173     ns->leafn          -= nf->m\_leafn\_to\_litr3n;
+00174     ns->litr4n         += nf->m\_leafn\_to\_litr4n;
+00175     ns->leafn          -= nf->m\_leafn\_to\_litr4n;
+00176     \textcolor{comment}{/*    Fine root mortality */}
+00177     ns->litr1n         += nf->m\_frootn\_to\_litr1n;
+00178     ns->frootn         -= nf->m\_frootn\_to\_litr1n;
+00179     ns->litr2n         += nf->m\_frootn\_to\_litr2n;
+00180     ns->frootn         -= nf->m\_frootn\_to\_litr2n;
+00181     ns->litr3n         += nf->m\_frootn\_to\_litr3n;
+00182     ns->frootn         -= nf->m\_frootn\_to\_litr3n;
+00183     ns->litr4n         += nf->m\_frootn\_to\_litr4n;
+00184     ns->frootn         -= nf->m\_frootn\_to\_litr4n;
+00185     \textcolor{comment}{/*    Storage, transfer, excess, and npool mortality */}
+00186     ns->litr1n              += nf->m\_leafn\_storage\_to\_litr1n;
+00187     ns->leafn\_storage       -= nf->m\_leafn\_storage\_to\_litr1n;
+00188     ns->litr1n              += nf->m\_frootn\_storage\_to\_litr1n;
+00189     ns->frootn\_storage      -= nf->m\_frootn\_storage\_to\_litr1n;
+00190     ns->litr1n              += nf->m\_livestemn\_storage\_to\_litr1n;
+00191     ns->livestemn\_storage   -= nf->m\_livestemn\_storage\_to\_litr1n;
+00192     ns->litr1n              += nf->m\_deadstemn\_storage\_to\_litr1n;
+00193     ns->deadstemn\_storage   -= nf->m\_deadstemn\_storage\_to\_litr1n;
+00194     ns->litr1n              += nf->m\_livecrootn\_storage\_to\_litr1n;
+00195     ns->livecrootn\_storage  -= nf->m\_livecrootn\_storage\_to\_litr1n;
+00196     ns->litr1n              += nf->m\_deadcrootn\_storage\_to\_litr1n;
+00197     ns->deadcrootn\_storage  -= nf->m\_deadcrootn\_storage\_to\_litr1n;
+00198     ns->litr1n              += nf->m\_leafn\_transfer\_to\_litr1n;
+00199     ns->leafn\_transfer      -= nf->m\_leafn\_transfer\_to\_litr1n;
+00200     ns->litr1n              += nf->m\_frootn\_transfer\_to\_litr1n;
+00201     ns->frootn\_transfer     -= nf->m\_frootn\_transfer\_to\_litr1n;
+00202     ns->litr1n              += nf->m\_livestemn\_transfer\_to\_litr1n;
+00203     ns->livestemn\_transfer  -= nf->m\_livestemn\_transfer\_to\_litr1n;
+00204     ns->litr1n              += nf->m\_deadstemn\_transfer\_to\_litr1n;
+00205     ns->deadstemn\_transfer  -= nf->m\_deadstemn\_transfer\_to\_litr1n;
+00206     ns->litr1n              += nf->m\_livecrootn\_transfer\_to\_litr1n;
+00207     ns->livecrootn\_transfer -= nf->m\_livecrootn\_transfer\_to\_litr1n;
+00208     ns->litr1n              += nf->m\_deadcrootn\_transfer\_to\_litr1n;
+00209     ns->deadcrootn\_transfer -= nf->m\_deadcrootn\_transfer\_to\_litr1n;
+00210     ns->litr1n              += nf->m\_retransn\_to\_litr1n;
+00211     ns->retransn            -= nf->m\_retransn\_to\_litr1n;
+00212     \textcolor{keywordflow}{if} (epc->woody)
+00213     \{
+00214         \textcolor{comment}{/*    Stem wood mortality */}
+00215         ns->litr1n     += nf->m\_livestemn\_to\_litr1n;
+00216         ns->livestemn  -= nf->m\_livestemn\_to\_litr1n;
+00217         ns->cwdn       += nf->m\_livestemn\_to\_cwdn;
+00218         ns->livestemn  -= nf->m\_livestemn\_to\_cwdn;
+00219         ns->cwdn       += nf->m\_deadstemn\_to\_cwdn;
+00220         ns->deadstemn  -= nf->m\_deadstemn\_to\_cwdn;
+00221         ns->litr1n     += nf->m\_livecrootn\_to\_litr1n;
+00222         ns->livecrootn -= nf->m\_livecrootn\_to\_litr1n;
+00223         ns->cwdn       += nf->m\_livecrootn\_to\_cwdn;
+00224         ns->livecrootn -= nf->m\_livecrootn\_to\_cwdn;
+00225         ns->cwdn       += nf->m\_deadcrootn\_to\_cwdn;
+00226         ns->deadcrootn -= nf->m\_deadcrootn\_to\_cwdn;
+00227     \}
+00228     
+00229     \textcolor{comment}{/************************************************************/}
+00230     \textcolor{comment}{/* Fire mortality: these fluxes all enter atmospheric sinks */}
+00231     \textcolor{comment}{/************************************************************/}
+00232     mort = epc->daily\_fire\_turnover;
+00233     
+00234     \textcolor{comment}{/* daily carbon fluxes due to mortality */}
+00235     \textcolor{comment}{/* mortality fluxes out of leaf and fine root pools */}
+00236     cf->m\_leafc\_to\_fire = mort * cs->leafc;      
+00237     cf->m\_frootc\_to\_fire = mort * cs->frootc;
+00238     
+00239     \textcolor{comment}{/* mortality fluxes out of storage and transfer pools */}
+00240     cf->m\_leafc\_storage\_to\_fire  = mort * cs->leafc\_storage;
+00241     cf->m\_frootc\_storage\_to\_fire  = mort * cs->frootc\_storage;
+00242     cf->m\_livestemc\_storage\_to\_fire  = mort * cs->livestemc\_storage;
+00243     cf->m\_deadstemc\_storage\_to\_fire  = mort * cs->deadstemc\_storage;
+00244     cf->m\_livecrootc\_storage\_to\_fire  = mort * cs->livecrootc\_storage;
+00245     cf->m\_deadcrootc\_storage\_to\_fire  = mort * cs->deadcrootc\_storage;
+00246     cf->m\_leafc\_transfer\_to\_fire = mort * cs->leafc\_transfer;
+00247     cf->m\_frootc\_transfer\_to\_fire = mort * cs->frootc\_transfer;
+00248     cf->m\_livestemc\_transfer\_to\_fire = mort * cs->livestemc\_transfer;
+00249     cf->m\_deadstemc\_transfer\_to\_fire = mort * cs->deadstemc\_transfer;
+00250     cf->m\_livecrootc\_transfer\_to\_fire = mort * cs->livecrootc\_transfer;
+00251     cf->m\_deadcrootc\_transfer\_to\_fire = mort * cs->deadcrootc\_transfer;
+00252     cf->m\_gresp\_storage\_to\_fire = mort * cs->gresp\_storage;
+00253     cf->m\_gresp\_transfer\_to\_fire = mort * cs->gresp\_transfer;
+00254 
+00255     \textcolor{comment}{/* TREE-specific carbon fluxes */}
+00256     \textcolor{keywordflow}{if} (epc->woody)
+00257     \{
+00258         cf->m\_livestemc\_to\_fire = mort * cs->livestemc;  
+00259         cf->m\_deadstemc\_to\_fire = dscp * mort * cs->deadstemc;   
+00260         cf->m\_livecrootc\_to\_fire = mort * cs->livecrootc;   
+00261         cf->m\_deadcrootc\_to\_fire = dscp * mort * cs->deadcrootc; 
+00262     \}
+00263     
+00264     \textcolor{comment}{/* litter and CWD fire fluxes */}
+00265     cf->m\_litr1c\_to\_fire = mort * cs->litr1c;
+00266     cf->m\_litr2c\_to\_fire = mort * cs->litr2c;
+00267     cf->m\_litr3c\_to\_fire = mort * cs->litr3c;
+00268     cf->m\_litr4c\_to\_fire = mort * cs->litr4c;
+00269     cf->m\_cwdc\_to\_fire =   0.30 * mort * cs->cwdc;
+00270     
+00271     
+00272     \textcolor{comment}{/* daily nitrogen fluxes due to mortality */}
+00273     \textcolor{comment}{/* mortality fluxes out of leaf and fine root pools */}
+00274     nf->m\_leafn\_to\_fire = cf->m\_leafc\_to\_fire / epc->leaf\_cn;   
+00275     nf->m\_frootn\_to\_fire = cf->m\_frootc\_to\_fire / epc->froot\_cn;    
+00276     
+00277     \textcolor{comment}{/* mortality fluxes out of storage and transfer */}
+00278     nf->m\_leafn\_storage\_to\_fire  = mort * ns->leafn\_storage;
+00279     nf->m\_frootn\_storage\_to\_fire  = mort * ns->frootn\_storage;
+00280     nf->m\_livestemn\_storage\_to\_fire  = mort * ns->livestemn\_storage;
+00281     nf->m\_deadstemn\_storage\_to\_fire  = mort * ns->deadstemn\_storage;
+00282     nf->m\_livecrootn\_storage\_to\_fire  = mort * ns->livecrootn\_storage;
+00283     nf->m\_deadcrootn\_storage\_to\_fire  = mort * ns->deadcrootn\_storage;
+00284     nf->m\_leafn\_transfer\_to\_fire = mort * ns->leafn\_transfer;
+00285     nf->m\_frootn\_transfer\_to\_fire = mort * ns->frootn\_transfer;
+00286     nf->m\_livestemn\_transfer\_to\_fire = mort * ns->livestemn\_transfer;
+00287     nf->m\_deadstemn\_transfer\_to\_fire = mort * ns->deadstemn\_transfer;
+00288     nf->m\_livecrootn\_transfer\_to\_fire = mort * ns->livecrootn\_transfer;
+00289     nf->m\_deadcrootn\_transfer\_to\_fire = mort * ns->deadcrootn\_transfer;
+00290     nf->m\_retransn\_to\_fire = mort * ns->retransn;
+00291     
+00292     \textcolor{comment}{/* woody-specific nitrogen fluxes */}
+00293     \textcolor{keywordflow}{if} (epc->woody)
+00294     \{
+00295         nf->m\_livestemn\_to\_fire = mort * ns->livestemn; 
+00296         nf->m\_deadstemn\_to\_fire = dscp * mort * ns->deadstemn;
+00297         nf->m\_livecrootn\_to\_fire =  mort * ns->livecrootn;
+00298         nf->m\_deadcrootn\_to\_fire =  dscp * mort * ns->deadcrootn;
+00299     \}
+00300     
+00301     \textcolor{comment}{/* litter and CWD fire fluxes */}
+00302     nf->m\_litr1n\_to\_fire = mort * ns->litr1n;
+00303     nf->m\_litr2n\_to\_fire = mort * ns->litr2n;
+00304     nf->m\_litr3n\_to\_fire = mort * ns->litr3n;
+00305     nf->m\_litr4n\_to\_fire = mort * ns->litr4n;
+00306     nf->m\_cwdn\_to\_fire =   0.30 * mort * ns->cwdn;
+00307     
+00308     \textcolor{comment}{/* update state variables for fire fluxes */}
+00309     \textcolor{comment}{/* this is the only place other than daily\_state\_update() routines where}
+00310 \textcolor{comment}{    state variables get changed.  Mortality is taken care of last and }
+00311 \textcolor{comment}{    given special treatment for state update so that it doesn't interfere}
+00312 \textcolor{comment}{    with the other fluxes that are based on proportions of state variables,}
+00313 \textcolor{comment}{    especially the phenological fluxes */}
+00314     \textcolor{comment}{/* CARBON mortality state variable update */}    
+00315     \textcolor{comment}{/*   Leaf mortality */}
+00316     cs->fire\_snk       += cf->m\_leafc\_to\_fire;
+00317     cs->leafc          -= cf->m\_leafc\_to\_fire;
+00318     \textcolor{comment}{/*   Fine root mortality */}
+00319     cs->fire\_snk       += cf->m\_frootc\_to\_fire;
+00320     cs->frootc         -= cf->m\_frootc\_to\_fire;
+00321     \textcolor{comment}{/*   Storage and transfer mortality */}
+00322     cs->fire\_snk            += cf->m\_leafc\_storage\_to\_fire;
+00323     cs->leafc\_storage       -= cf->m\_leafc\_storage\_to\_fire;
+00324     cs->fire\_snk            += cf->m\_frootc\_storage\_to\_fire;
+00325     cs->frootc\_storage      -= cf->m\_frootc\_storage\_to\_fire;
+00326     cs->fire\_snk            += cf->m\_livestemc\_storage\_to\_fire;
+00327     cs->livestemc\_storage   -= cf->m\_livestemc\_storage\_to\_fire;
+00328     cs->fire\_snk            += cf->m\_deadstemc\_storage\_to\_fire;
+00329     cs->deadstemc\_storage   -= cf->m\_deadstemc\_storage\_to\_fire;
+00330     cs->fire\_snk            += cf->m\_livecrootc\_storage\_to\_fire;
+00331     cs->livecrootc\_storage  -= cf->m\_livecrootc\_storage\_to\_fire;
+00332     cs->fire\_snk            += cf->m\_deadcrootc\_storage\_to\_fire;
+00333     cs->deadcrootc\_storage  -= cf->m\_deadcrootc\_storage\_to\_fire;
+00334     cs->fire\_snk            += cf->m\_leafc\_transfer\_to\_fire;
+00335     cs->leafc\_transfer      -= cf->m\_leafc\_transfer\_to\_fire;
+00336     cs->fire\_snk            += cf->m\_frootc\_transfer\_to\_fire;
+00337     cs->frootc\_transfer     -= cf->m\_frootc\_transfer\_to\_fire;
+00338     cs->fire\_snk            += cf->m\_livestemc\_transfer\_to\_fire;
+00339     cs->livestemc\_transfer  -= cf->m\_livestemc\_transfer\_to\_fire;
+00340     cs->fire\_snk            += cf->m\_deadstemc\_transfer\_to\_fire;
+00341     cs->deadstemc\_transfer  -= cf->m\_deadstemc\_transfer\_to\_fire;
+00342     cs->fire\_snk            += cf->m\_livecrootc\_transfer\_to\_fire;
+00343     cs->livecrootc\_transfer -= cf->m\_livecrootc\_transfer\_to\_fire;
+00344     cs->fire\_snk            += cf->m\_deadcrootc\_transfer\_to\_fire;
+00345     cs->deadcrootc\_transfer -= cf->m\_deadcrootc\_transfer\_to\_fire;
+00346     cs->fire\_snk            += cf->m\_gresp\_storage\_to\_fire;
+00347     cs->gresp\_storage       -= cf->m\_gresp\_storage\_to\_fire;
+00348     cs->fire\_snk            += cf->m\_gresp\_transfer\_to\_fire;
+00349     cs->gresp\_transfer      -= cf->m\_gresp\_transfer\_to\_fire;
+00350     \textcolor{keywordflow}{if} (epc->woody)
+00351     \{
+00352         \textcolor{comment}{/*    Stem wood mortality */}
+00353         cs->fire\_snk   += cf->m\_livestemc\_to\_fire;
+00354         cs->livestemc  -= cf->m\_livestemc\_to\_fire;
+00355         cs->fire\_snk   += cf->m\_deadstemc\_to\_fire;
+00356         cs->deadstemc  -= cf->m\_deadstemc\_to\_fire;
+00357         \textcolor{comment}{/* STEP 1e  Coarse root wood mortality */}
+00358         cs->fire\_snk   += cf->m\_livecrootc\_to\_fire;
+00359         cs->livecrootc -= cf->m\_livecrootc\_to\_fire;
+00360         cs->fire\_snk   += cf->m\_deadcrootc\_to\_fire;
+00361         cs->deadcrootc -= cf->m\_deadcrootc\_to\_fire;
+00362     \}
+00363     \textcolor{comment}{/* litter and CWD carbon state updates */}
+00364     cs->fire\_snk += cf->m\_litr1c\_to\_fire;
+00365     cs->litr1c   -= cf->m\_litr1c\_to\_fire;
+00366     cs->fire\_snk += cf->m\_litr2c\_to\_fire;
+00367     cs->litr2c   -= cf->m\_litr2c\_to\_fire;
+00368     cs->fire\_snk += cf->m\_litr3c\_to\_fire;
+00369     cs->litr3c   -= cf->m\_litr3c\_to\_fire;
+00370     cs->fire\_snk += cf->m\_litr4c\_to\_fire;
+00371     cs->litr4c   -= cf->m\_litr4c\_to\_fire;
+00372     cs->fire\_snk += cf->m\_cwdc\_to\_fire;
+00373     cs->cwdc     -= cf->m\_cwdc\_to\_fire;
+00374     
+00375     \textcolor{comment}{/* NITROGEN mortality state variable update */}
+00376     \textcolor{comment}{/*    Leaf mortality */}
+00377     ns->fire\_snk       += nf->m\_leafn\_to\_fire;
+00378     ns->leafn          -= nf->m\_leafn\_to\_fire;
+00379     \textcolor{comment}{/*    Fine root mortality */}
+00380     ns->fire\_snk       += nf->m\_frootn\_to\_fire;
+00381     ns->frootn         -= nf->m\_frootn\_to\_fire;
+00382     \textcolor{comment}{/*    Storage, transfer, excess, and npool mortality */}
+00383     ns->fire\_snk            += nf->m\_leafn\_storage\_to\_fire;
+00384     ns->leafn\_storage       -= nf->m\_leafn\_storage\_to\_fire;
+00385     ns->fire\_snk            += nf->m\_frootn\_storage\_to\_fire;
+00386     ns->frootn\_storage      -= nf->m\_frootn\_storage\_to\_fire;
+00387     ns->fire\_snk            += nf->m\_livestemn\_storage\_to\_fire;
+00388     ns->livestemn\_storage   -= nf->m\_livestemn\_storage\_to\_fire;
+00389     ns->fire\_snk            += nf->m\_deadstemn\_storage\_to\_fire;
+00390     ns->deadstemn\_storage   -= nf->m\_deadstemn\_storage\_to\_fire;
+00391     ns->fire\_snk            += nf->m\_livecrootn\_storage\_to\_fire;
+00392     ns->livecrootn\_storage  -= nf->m\_livecrootn\_storage\_to\_fire;
+00393     ns->fire\_snk            += nf->m\_deadcrootn\_storage\_to\_fire;
+00394     ns->deadcrootn\_storage  -= nf->m\_deadcrootn\_storage\_to\_fire;
+00395     ns->fire\_snk            += nf->m\_leafn\_transfer\_to\_fire;
+00396     ns->leafn\_transfer      -= nf->m\_leafn\_transfer\_to\_fire;
+00397     ns->fire\_snk            += nf->m\_frootn\_transfer\_to\_fire;
+00398     ns->frootn\_transfer     -= nf->m\_frootn\_transfer\_to\_fire;
+00399     ns->fire\_snk            += nf->m\_livestemn\_transfer\_to\_fire;
+00400     ns->livestemn\_transfer  -= nf->m\_livestemn\_transfer\_to\_fire;
+00401     ns->fire\_snk            += nf->m\_deadstemn\_transfer\_to\_fire;
+00402     ns->deadstemn\_transfer  -= nf->m\_deadstemn\_transfer\_to\_fire;
+00403     ns->fire\_snk            += nf->m\_livecrootn\_transfer\_to\_fire;
+00404     ns->livecrootn\_transfer -= nf->m\_livecrootn\_transfer\_to\_fire;
+00405     ns->fire\_snk            += nf->m\_deadcrootn\_transfer\_to\_fire;
+00406     ns->deadcrootn\_transfer -= nf->m\_deadcrootn\_transfer\_to\_fire;
+00407     ns->fire\_snk            += nf->m\_retransn\_to\_fire;
+00408     ns->retransn            -= nf->m\_retransn\_to\_fire;
+00409     \textcolor{keywordflow}{if} (epc->woody)
+00410     \{
+00411         \textcolor{comment}{/*    Stem wood mortality */}
+00412         ns->fire\_snk   += nf->m\_livestemn\_to\_fire;
+00413         ns->livestemn  -= nf->m\_livestemn\_to\_fire;
+00414         ns->fire\_snk   += nf->m\_deadstemn\_to\_fire;
+00415         ns->deadstemn  -= nf->m\_deadstemn\_to\_fire;
+00416         ns->fire\_snk   += nf->m\_livecrootn\_to\_fire;
+00417         ns->livecrootn -= nf->m\_livecrootn\_to\_fire;
+00418         ns->fire\_snk   += nf->m\_deadcrootn\_to\_fire;
+00419         ns->deadcrootn -= nf->m\_deadcrootn\_to\_fire;
+00420     \}
+00421     \textcolor{comment}{/* litter and CWD nitrogen state updates */}
+00422     ns->fire\_snk += nf->m\_litr1n\_to\_fire;
+00423     ns->litr1n   -= nf->m\_litr1n\_to\_fire;
+00424     ns->fire\_snk += nf->m\_litr2n\_to\_fire;
+00425     ns->litr2n   -= nf->m\_litr2n\_to\_fire;
+00426     ns->fire\_snk += nf->m\_litr3n\_to\_fire;
+00427     ns->litr3n   -= nf->m\_litr3n\_to\_fire;
+00428     ns->fire\_snk += nf->m\_litr4n\_to\_fire;
+00429     ns->litr4n   -= nf->m\_litr4n\_to\_fire;
+00430     ns->fire\_snk += nf->m\_cwdn\_to\_fire;
+00431     ns->cwdn     -= nf->m\_cwdn\_to\_fire;
+00432     
+00433     \textcolor{keywordflow}{return} (!ok);
+00434 \}
+00435 
+\end{DoxyCode}

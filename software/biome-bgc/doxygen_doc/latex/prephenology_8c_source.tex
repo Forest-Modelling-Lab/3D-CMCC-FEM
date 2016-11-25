@@ -1,0 +1,893 @@
+\hypertarget{prephenology_8c_source}{}\section{prephenology.\+c}
+\label{prephenology_8c_source}\index{c\+:/\+R\+E\+P\+O/biomebgc-\/4.\+2/src/bgclib/prephenology.\+c@{c\+:/\+R\+E\+P\+O/biomebgc-\/4.\+2/src/bgclib/prephenology.\+c}}
+
+\begin{DoxyCode}
+00001 \textcolor{comment}{/*}
+00002 \textcolor{comment}{prephenology.c}
+00003 \textcolor{comment}{Initialize phenology arrays, called prior to annual loop in bgc()}
+00004 \textcolor{comment}{}
+00005 \textcolor{comment}{*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*}
+00006 \textcolor{comment}{Biome-BGC version 4.2 (final release)}
+00007 \textcolor{comment}{See copyright.txt for Copyright information}
+00008 \textcolor{comment}{*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*}
+00009 \textcolor{comment}{*/}
+00010 
+00011 \textcolor{preprocessor}{#include "bgc.h"}
+00012 
+\hypertarget{prephenology_8c_source_l00013}{}\hyperlink{prephenology_8c_a268168ddb0923733bcc36138cda1b94b}{00013} \textcolor{keywordtype}{int} \hyperlink{prephenology_8c_a268168ddb0923733bcc36138cda1b94b}{prephenology}(\textcolor{keyword}{const} control\_struct* ctrl, \textcolor{keyword}{const} epconst\_struct* epc, 
+00014 \textcolor{keyword}{const} siteconst\_struct* sitec, \textcolor{keyword}{const} metarr\_struct* metarr,
+00015 phenarray\_struct* phen)
+00016 \{
+00017     \textcolor{keywordtype}{int} ok=1;
+00018     \textcolor{keywordtype}{int} model,woody,evergreen,south;
+00019     \textcolor{keywordtype}{double} t1;
+00020     \textcolor{keywordtype}{char} round[80];
+00021     \textcolor{keywordtype}{int} i,pday,ndays,py;
+00022     \textcolor{keywordtype}{int} nyears,phenyears;
+00023     \textcolor{keywordtype}{int} ngrowthdays,ntransferdays,nlitfalldays;
+00024     \textcolor{keywordtype}{int} onday,offday;
+00025     \textcolor{keywordtype}{int} counter;
+00026     \textcolor{keywordtype}{int} remdays\_curgrowth[365];
+00027     \textcolor{keywordtype}{int} remdays\_transfer[365];
+00028     \textcolor{keywordtype}{int} predays\_transfer[365];
+00029     \textcolor{keywordtype}{int} remdays\_litfall[365];
+00030     \textcolor{keywordtype}{int} predays\_litfall[365];
+00031     \textcolor{comment}{/* phenology model variables */}
+00032     \textcolor{keywordtype}{int} *onday\_arr, *offday\_arr;
+00033     \textcolor{keywordtype}{int} fall\_tavg\_count;
+00034     \textcolor{keywordtype}{int} onset\_day, offset\_day;
+00035     \textcolor{keywordtype}{double} mean\_tavg,fall\_tavg;
+00036     \textcolor{keywordtype}{double} phensoilt,phendayl;
+00037     \textcolor{keywordtype}{double} onset\_critsum, sum\_soilt;
+00038     \textcolor{keywordtype}{double} critdayl = 39300.0; \textcolor{comment}{/* seconds */}
+00039     \textcolor{comment}{/* grass model parameters */}
+00040     \textcolor{keywordtype}{double} ann\_prcp;
+00041     \textcolor{keywordtype}{double} sum\_prcp, phenprcp;
+00042     \textcolor{keywordtype}{double} grass\_stsumcrit;
+00043     \textcolor{keywordtype}{double} grass\_prcpcrit;
+00044     \textcolor{keywordtype}{double} grass\_stsummax = 1380.0;
+00045     \textcolor{keywordtype}{double} grass\_stsummid = 900.0;
+00046     \textcolor{keywordtype}{double} grass\_stsummin = 418.0;
+00047     \textcolor{keywordtype}{double} grass\_a = 32.9;
+00048     \textcolor{keywordtype}{double} grass\_k = 0.15;
+00049     \textcolor{keywordtype}{double} grass\_tmid = 9.0;
+00050     \textcolor{keywordtype}{double} grass\_prcpyear[365];
+00051     \textcolor{keywordtype}{double} grass\_prcpprevcrit = 1.14;
+00052     \textcolor{keywordtype}{double} grass\_prcpprev;
+00053     \textcolor{keywordtype}{double} grass\_prcpnextcrit = 0.97;
+00054     \textcolor{keywordtype}{double} grass\_prcpnext;
+00055     \textcolor{keywordtype}{double} grass\_tmaxyear[365];
+00056     \textcolor{keywordtype}{double} grass\_tminyear[365];
+00057     \textcolor{keywordtype}{double} grass\_3daytmin[365];
+00058     \textcolor{keywordtype}{int} psum\_startday, psum\_stopday;
+00059     \textcolor{keywordtype}{double} tmax\_ann, tmax, new\_tmax;
+00060     \textcolor{keywordtype}{double} tmin\_annavg;
+00061 
+00062     \textcolor{comment}{/* allocate space for phenology arrays */}
+00063     nyears = ctrl->metyears;
+00064     ndays = 365 * nyears;
+00065     \textcolor{keywordflow}{if} (ok && !(phen->remdays\_curgrowth = (\textcolor{keywordtype}{int}*) malloc(ndays*\textcolor{keyword}{sizeof}(\textcolor{keywordtype}{int}))))
+00066     \{
+00067         \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Error allocating for phen->curgrowth, prephenology()\(\backslash\)n"});
+00068         ok=0;
+00069     \}
+00070     \textcolor{keywordflow}{if} (ok && !(phen->remdays\_transfer = (\textcolor{keywordtype}{int}*) malloc(ndays*\textcolor{keyword}{sizeof}(\textcolor{keywordtype}{int}))))
+00071     \{
+00072         \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Error allocating for phen->remdays\_transfer, prephenology()\(\backslash\)n"});
+00073         ok=0;
+00074     \}
+00075     \textcolor{keywordflow}{if} (ok && !(phen->remdays\_litfall = (\textcolor{keywordtype}{int}*) malloc(ndays*\textcolor{keyword}{sizeof}(\textcolor{keywordtype}{int}))))
+00076     \{
+00077         \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Error allocating for phen->remdays\_litfall, prephenology()\(\backslash\)n"});
+00078         ok=0;
+00079     \}
+00080     \textcolor{keywordflow}{if} (ok && !(phen->predays\_transfer = (\textcolor{keywordtype}{int}*) malloc(ndays*\textcolor{keyword}{sizeof}(\textcolor{keywordtype}{int}))))
+00081     \{
+00082         \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Error allocating for phen->predays\_transfer, prephenology()\(\backslash\)n"});
+00083         ok=0;
+00084     \}
+00085     \textcolor{keywordflow}{if} (ok && !(phen->predays\_litfall = (\textcolor{keywordtype}{int}*) malloc(ndays*\textcolor{keyword}{sizeof}(\textcolor{keywordtype}{int}))))
+00086     \{
+00087         \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Error allocating for phen->predays\_litfall, prephenology()\(\backslash\)n"});
+00088         ok=0;
+00089     \}
+00090     \textcolor{keywordflow}{if} (ok && !(onday\_arr = (\textcolor{keywordtype}{int}*) malloc((nyears+1) * \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{int}))))
+00091     \{
+00092         \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Error allocating for onday\_arr, prephenology()\(\backslash\)n"});
+00093         ok=0;
+00094     \}
+00095     \textcolor{keywordflow}{if} (ok && !(offday\_arr = (\textcolor{keywordtype}{int}*) malloc((nyears+1) * \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{int}))))
+00096     \{
+00097         \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Error allocating for offday\_arr, prephenology()\(\backslash\)n"});
+00098         ok=0;
+00099     \}
+00100     
+00101     \textcolor{comment}{/* set some local flags to control the phenology model behavior */}
+00102     \textcolor{comment}{/* model=1 --> use phenology model   model=0 --> user specified phenology */}
+00103     \textcolor{comment}{/* woody=1 --> woody veg type        woody=0 --> non-woody veg type */}
+00104     \textcolor{comment}{/* evergreen=1 --> evergreen type    evergreen=0 --> deciduous type */}
+00105     \textcolor{comment}{/* south=1 --> southern hemisphere   south=0 --> northern hemisphere */}
+00106     model = epc->phenology\_flag;
+00107     woody = epc->woody;
+00108     evergreen = epc->evergreen;
+00109     south = (sitec->lat < 0.0);
+00110         
+00111     \textcolor{comment}{/* for southern hemisphere sites, use an extra phenology year */}
+00112     \textcolor{keywordflow}{if} (south) phenyears = nyears+1;
+00113     \textcolor{keywordflow}{else} phenyears = nyears;
+00114     
+00115     \textcolor{comment}{/* define the phenology signals for cases in which the phenology signals}
+00116 \textcolor{comment}{    are constant between years */}
+00117     \textcolor{keywordflow}{if} (evergreen || !model)
+00118     \{
+00119         \textcolor{comment}{/* zero the 365-day phen arrays */}
+00120         \textcolor{keywordflow}{for} (pday=0 ; pday<365 ; pday++)
+00121         \{
+00122             remdays\_curgrowth[pday] = 0;
+00123             remdays\_transfer[pday] = 0;
+00124             predays\_transfer[pday] = 0;
+00125             remdays\_litfall[pday] = 0;
+00126             predays\_litfall[pday] = 0;
+00127         \}
+00128         
+00129         \textcolor{comment}{/* user defined on and off days (base zero) */}
+00130         onday = epc->onday;
+00131         offday = epc->offday;
+00132         \textcolor{keywordflow}{if} (!model && onday == -1 && offday == -1)
+00133         \{
+00134             \textcolor{comment}{/* this is the special signal to repress all vegetation}
+00135 \textcolor{comment}{            growth, for simulations of bare ground */}
+00136             \textcolor{keywordflow}{for} (pday=0 ; pday<365 ; pday++)
+00137             \{
+00138                 remdays\_curgrowth[pday] = 0;
+00139                 remdays\_transfer[pday] = 0;
+00140                 predays\_transfer[pday] = 0;
+00141                 remdays\_litfall[pday] = 0;
+00142                 predays\_litfall[pday] = 0;
+00143             \}
+00144         \} \textcolor{comment}{/* end if special no-growth signal */}
+00145         \textcolor{keywordflow}{else}
+00146         \{
+00147             \textcolor{comment}{/* normal growth */}
+00148 
+00149             \textcolor{keywordflow}{if} (!model && !evergreen)
+00150             \{
+00151                 \textcolor{comment}{/* user-specified dates for onset and offset, but this}
+00152 \textcolor{comment}{                gets overridden for evergreen types, so this case is only}
+00153 \textcolor{comment}{                for USER-SPECIFIED DECIDUOUS (either woody or non-woody) */}
+00154                 \textcolor{comment}{/* IMPORTANT NOTE:  the user specified yeardays for onset}
+00155 \textcolor{comment}{                and offset are in relation to a phenological definition for}
+00156 \textcolor{comment}{                a year, instead of the calendar year. In the Northern hemisphere,}
+00157 \textcolor{comment}{                this is the same as the calendar year, but in the southern}
+00158 \textcolor{comment}{                hemisphere, the phenological yeardays are defined to start on}
+00159 \textcolor{comment}{                July 2 (N. Hem yearday 182, using base-zero).  This lets a}
+00160 \textcolor{comment}{                user shift from N. Hem site to S. Hem site without having to}
+00161 \textcolor{comment}{                change phenological yeardays in the ini file */}
+00162                 \textcolor{comment}{/* force onset and offset to be at least one day apart */}
+00163                 \textcolor{keywordflow}{if} (onday == offday)
+00164                 \{
+00165                     \textcolor{keywordflow}{if} (onday > 0) onday--;
+00166                     \textcolor{keywordflow}{else} offday++;
+00167                 \}
+00168                 ngrowthdays = offday - onday;
+00169                 \textcolor{comment}{/* define the length of the transfer and litfall periods */}
+00170                 \textcolor{comment}{/* calculate number of transfer days and number of litfall days}
+00171 \textcolor{comment}{                as proportions of number of growth days, as specified by user.}
+00172 \textcolor{comment}{                Round and truncate to force these values between 1 and }
+00173 \textcolor{comment}{                ngrowthdays */}
+00174                 t1 = epc->transfer\_pdays * (double)ngrowthdays;
+00175                 sprintf(round,\textcolor{stringliteral}{"%.0f"},t1);
+00176                 ntransferdays = atoi(round);
+00177                 \textcolor{keywordflow}{if} (ntransferdays < 1) ntransferdays = 1;
+00178                 \textcolor{keywordflow}{if} (ntransferdays > ngrowthdays) ntransferdays = ngrowthdays;
+00179                 t1 = epc->litfall\_pdays * (double)ngrowthdays;
+00180                 sprintf(round,\textcolor{stringliteral}{"%.0f"},t1);
+00181                 nlitfalldays = atoi(round);
+00182                 \textcolor{keywordflow}{if} (nlitfalldays < 1) nlitfalldays = 1;
+00183                 \textcolor{keywordflow}{if} (nlitfalldays > ngrowthdays) nlitfalldays = ngrowthdays;
+00184                 \textcolor{keywordflow}{for} (pday=0 ; pday<onday ; pday++)
+00185                 \{
+00186                     remdays\_curgrowth[pday] = 0;
+00187                     remdays\_transfer[pday] = 0;
+00188                     remdays\_litfall[pday] = 0;
+00189                     predays\_transfer[pday] = 0;
+00190                     predays\_litfall[pday] = 0;
+00191                 \}
+00192                 counter = ngrowthdays;
+00193                 \textcolor{keywordflow}{for} (pday=onday ; pday<offday ; pday++)
+00194                 \{
+00195                     remdays\_curgrowth[pday] = counter;
+00196                     counter--;
+00197                 \}
+00198                 \textcolor{keywordflow}{for} (pday=offday ; pday<365 ; pday++)
+00199                 \{
+00200                     remdays\_curgrowth[pday] = 0;
+00201                 \}
+00202                 counter = ntransferdays;
+00203                 \textcolor{keywordflow}{for} (pday=onday ; pday<onday+ntransferdays ; pday++)
+00204                 \{
+00205                     remdays\_transfer[pday] = counter;
+00206                     predays\_transfer[pday] = ntransferdays - counter;
+00207                     counter--;
+00208                 \}
+00209                 \textcolor{keywordflow}{for} (pday=onday+ntransferdays ; pday<=offday ; pday++)
+00210                 \{
+00211                     remdays\_transfer[pday] = 0;
+00212                     predays\_transfer[pday] = ntransferdays;
+00213                 \}
+00214                 \textcolor{keywordflow}{for} (pday=offday+1 ; pday<365 ; pday++)
+00215                 \{
+00216                     remdays\_transfer[pday] = 0;
+00217                     predays\_transfer[pday] = 0;
+00218                 \}
+00219                 \textcolor{keywordflow}{for} (pday=onday ; pday<offday-nlitfalldays+1 ; pday++)
+00220                 \{
+00221                     remdays\_litfall[pday] = 0;
+00222                     predays\_litfall[pday] = 0;
+00223                 \}
+00224                 counter = nlitfalldays;
+00225                 \textcolor{keywordflow}{for} (pday=offday-nlitfalldays+1 ; pday<=offday ; pday++)
+00226                 \{
+00227                     remdays\_litfall[pday] = counter;
+00228                     predays\_litfall[pday] = nlitfalldays - counter;
+00229                     counter--;
+00230                 \}
+00231                 \textcolor{keywordflow}{for} (pday=offday+1 ; pday<365 ; pday++)
+00232                 \{
+00233                     remdays\_litfall[pday] = 0;
+00234                     predays\_litfall[pday] = 0;
+00235                 \}
+00236             \} \textcolor{comment}{/* end if user-specified and deciduous */}
+00237 
+00238             \textcolor{keywordflow}{if} (evergreen)
+00239             \{   
+00240                 \textcolor{comment}{/* specifying evergreen overrides any user input phenology data,}
+00241 \textcolor{comment}{                and triggers a very simple treatment of the transfer, litterfall,}
+00242 \textcolor{comment}{                and current growth signals.  Treatment is the same for woody and}
+00243 \textcolor{comment}{                non-woody types, and the same for model or user-input phenology */}
+00244                 \textcolor{comment}{/* fill the local phenyear control arrays */}
+00245                 \textcolor{keywordflow}{for} (pday=0 ; pday<365 ; pday++)
+00246                 \{
+00247                     remdays\_curgrowth[pday] = 365-pday;
+00248                     remdays\_transfer[pday] = 365-pday;
+00249                     remdays\_litfall[pday] = 365-pday;
+00250                     predays\_transfer[pday] = pday;
+00251                     predays\_litfall[pday] = pday;
+00252                 \} 
+00253             \} \textcolor{comment}{/* end if evergreen */}
+00254         \} \textcolor{comment}{/* end else normal growth */}
+00255 
+00256         \textcolor{comment}{/* now copy this year multiple times to the permanent phenology struct}
+00257 \textcolor{comment}{        arrays, with tests for southern hemisphere. */}
+00258         \textcolor{keywordflow}{for} (py=0 ; py<phenyears ; py++)
+00259         \{
+00260             \textcolor{keywordflow}{if} (south)
+00261             \{
+00262                 \textcolor{keywordflow}{if} (py==0)
+00263                 \{
+00264                     \textcolor{comment}{/* only copy the second half of this phenological}
+00265 \textcolor{comment}{                    year to the permanent phenology array */}
+00266                     \textcolor{keywordflow}{for} (pday=182 ; pday<365 ; pday++)
+00267                     \{
+00268                         phen->remdays\_curgrowth[pday-182] = remdays\_curgrowth[pday];
+00269                         phen->remdays\_transfer[pday-182] = remdays\_transfer[pday];
+00270                         phen->remdays\_litfall[pday-182] = remdays\_litfall[pday];
+00271                         phen->predays\_transfer[pday-182] = predays\_transfer[pday];
+00272                         phen->predays\_litfall[pday-182] = predays\_litfall[pday];
+00273                     \}
+00274                 \}
+00275                 \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} (py==phenyears-1)
+00276                 \{
+00277                     \textcolor{comment}{/* only copy the first half of this phenological}
+00278 \textcolor{comment}{                    year to the permanent phenology array */}
+00279                     \textcolor{keywordflow}{for} (pday=0 ; pday<182 ; pday++)
+00280                     \{
+00281                         phen->remdays\_curgrowth[py*365-182+pday] = remdays\_curgrowth[pday];
+00282                         phen->remdays\_transfer[py*365-182+pday] = remdays\_transfer[pday];
+00283                         phen->remdays\_litfall[py*365-182+pday] = remdays\_litfall[pday];
+00284                         phen->predays\_transfer[py*365-182+pday] = predays\_transfer[pday];
+00285                         phen->predays\_litfall[py*365-182+pday] = predays\_litfall[pday];
+00286                     \}
+00287                 \}
+00288                 \textcolor{keywordflow}{else}
+00289                 \{
+00290                     \textcolor{keywordflow}{for} (pday=0 ; pday<365 ; pday++)
+00291                     \{
+00292                         phen->remdays\_curgrowth[py*365-182+pday] = remdays\_curgrowth[pday];
+00293                         phen->remdays\_transfer[py*365-182+pday] = remdays\_transfer[pday];
+00294                         phen->remdays\_litfall[py*365-182+pday] = remdays\_litfall[pday];
+00295                         phen->predays\_transfer[py*365-182+pday] = predays\_transfer[pday];
+00296                         phen->predays\_litfall[py*365-182+pday] = predays\_litfall[pday];
+00297                     \}
+00298                 \}
+00299             \} \textcolor{comment}{/* end if south */}
+00300             \textcolor{keywordflow}{else}
+00301             \{
+00302                 \textcolor{comment}{/* north */}
+00303                 \textcolor{keywordflow}{for} (pday=0 ; pday<365 ; pday++)
+00304                 \{
+00305                     phen->remdays\_curgrowth[py*365+pday] = remdays\_curgrowth[pday];
+00306                     phen->remdays\_transfer[py*365+pday] = remdays\_transfer[pday];
+00307                     phen->remdays\_litfall[py*365+pday] = remdays\_litfall[pday];
+00308                     phen->predays\_transfer[py*365+pday] = predays\_transfer[pday];
+00309                     phen->predays\_litfall[py*365+pday] = predays\_litfall[pday];
+00310                 \}
+00311             \} \textcolor{comment}{/* end if north */}
+00312         \} \textcolor{comment}{/* end py loop */}
+00313     \} \textcolor{comment}{/* end if constant phenological signals */}
+00314     \textcolor{keywordflow}{else}
+00315     \{
+00316         \textcolor{comment}{/* Cases that have variable phenological signals between years */}
+00317         \textcolor{comment}{/* Use the phenology model described in White et al., 1997 */}
+00318         \textcolor{comment}{/* the two cases that make it to this block are:}
+00319 \textcolor{comment}{        model, deciduous, woody   and}
+00320 \textcolor{comment}{        model, deciduous, non-woody (grass), which are the two cases}
+00321 \textcolor{comment}{        handled by the White et al. paper */}
+00322         \textcolor{keywordflow}{if} (woody)
+00323         \{
+00324             \textcolor{comment}{/* use DECIDUOUS TREE PHENOLOGY MODEL */}
+00325             \textcolor{comment}{/* loop through the entire tavg timeseries to calculate long-term}
+00326 \textcolor{comment}{            average tavg */}
+00327             mean\_tavg = 0.0;
+00328             \textcolor{keywordflow}{for} (i=0 ; i<ndays ; i++)
+00329             \{
+00330                 mean\_tavg += metarr->tavg[i];
+00331             \}
+00332             mean\_tavg /= (double)ndays;
+00333             \textcolor{comment}{/* tree onset equation from Mike White, Aug. 1997 */}
+00334             onset\_critsum = exp(4.795 + 0.129*mean\_tavg);
+00335             
+00336             \textcolor{comment}{/* now go through the phenological years and generate expansion}
+00337 \textcolor{comment}{            and litterfall arrays. Some complications for Southern}
+00338 \textcolor{comment}{            hemisphere sites... */}
+00339             \textcolor{comment}{/* calculate fall\_tavg, the mean tavg from phenyday 244-304 */}
+00340             fall\_tavg = 0.0;
+00341             fall\_tavg\_count = 0;
+00342             \textcolor{keywordflow}{for} (py=0 ; py<phenyears ; py++)
+00343             \{
+00344                 \textcolor{keywordflow}{for} (pday=244 ; pday<305 ; pday++)
+00345                 \{
+00346                     \textcolor{keywordflow}{if} (south)
+00347                     \{
+00348                         \textcolor{keywordflow}{if} (py==phenyears-1 && pday>181)
+00349                         \{
+00350                             \textcolor{comment}{/* use the beginning of the last year to fill the}
+00351 \textcolor{comment}{                            end of the last phenological year */}
+00352                             phensoilt = metarr->tavg\_ra[ndays-547+pday];
+00353                         \}
+00354                         \textcolor{keywordflow}{else}
+00355                         \{
+00356                             phensoilt = metarr->tavg\_ra[py*365-182+pday];
+00357                         \}
+00358                     \}
+00359                     \textcolor{keywordflow}{else} \textcolor{comment}{/* north */}
+00360                     \{
+00361                         phensoilt = metarr->tavg\_ra[py*365+pday];
+00362                     \}
+00363                     
+00364                     fall\_tavg += phensoilt;
+00365                     fall\_tavg\_count++;
+00366                     
+00367                 \} \textcolor{comment}{/* end pday loop */}
+00368             \} \textcolor{comment}{/* end py loop */}
+00369             fall\_tavg /= (double)fall\_tavg\_count;
+00370             
+00371             \textcolor{comment}{/* loop through phenyears again, fill onset and offset arrays */}
+00372             \textcolor{keywordflow}{for} (py=0 ; py<phenyears ; py++)
+00373             \{
+00374                 sum\_soilt = 0.0;
+00375                 onset\_day = offset\_day = -1;
+00376                 \textcolor{keywordflow}{for} (pday=0 ; pday<365 ; pday++)
+00377                 \{
+00378                     \textcolor{keywordflow}{if} (south)
+00379                     \{
+00380                         \textcolor{keywordflow}{if} (py==0 && pday<182)
+00381                         \{
+00382                             \textcolor{comment}{/* use the end of the first year to fill the }
+00383 \textcolor{comment}{                            beginning of a southern hemisphere phenological}
+00384 \textcolor{comment}{                            year */}
+00385                             phensoilt = metarr->tavg\_ra[183+pday];
+00386                             phendayl = metarr->dayl[183+pday];
+00387                         \}
+00388                         \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} (py==phenyears-1 && pday>181)
+00389                         \{
+00390                             \textcolor{comment}{/* use the beginning of the last year to fill the}
+00391 \textcolor{comment}{                            end of the last phenological year */}
+00392                             phensoilt = metarr->tavg\_ra[ndays-547+pday];
+00393                             phendayl = metarr->dayl[ndays-547+pday];
+00394                         \}
+00395                         \textcolor{keywordflow}{else}
+00396                         \{
+00397                             phensoilt = metarr->tavg\_ra[py*365-182+pday];
+00398                             phendayl = metarr->dayl[py*365-182+pday];
+00399                         \}
+00400                     \}
+00401                     \textcolor{keywordflow}{else} \textcolor{comment}{/* north */}
+00402                     \{
+00403                         phensoilt = metarr->tavg\_ra[py*365+pday];
+00404                         phendayl = metarr->dayl[py*365+pday];
+00405                     \}
+00406                     
+00407                     \textcolor{comment}{/* tree onset test */}
+00408                     \textcolor{keywordflow}{if} (onset\_day == -1)
+00409                     \{
+00410                         \textcolor{keywordflow}{if} (phensoilt > 0.0) sum\_soilt += phensoilt;
+00411                         \textcolor{keywordflow}{if} (sum\_soilt >= onset\_critsum) onset\_day = pday;
+00412                     \}
+00413                     
+00414                     \textcolor{comment}{/* tree offset test */}
+00415                     \textcolor{keywordflow}{if} (onset\_day != -1 && offset\_day == -1)
+00416                     \{
+00417                         \textcolor{keywordflow}{if} ((pday>182) && 
+00418                         (((phendayl<=critdayl) && (phensoilt<=fall\_tavg)) ||
+00419                         (phensoilt<=2.0))) offset\_day = pday;
+00420                     \}
+00421                     
+00422                 \} \textcolor{comment}{/* end pday loop */}
+00423                 
+00424                 \textcolor{comment}{/* now do some exception handling for this year's phenology */}
+00425                 \textcolor{keywordflow}{if} (onset\_day != -1)
+00426                 \{
+00427                     \textcolor{comment}{/* leaves are turned on sometime this year */}
+00428                     \textcolor{comment}{/* subtract 15 days from onset day to approximate the}
+00429 \textcolor{comment}{                    start of the new growth period, instead of the middle of}
+00430 \textcolor{comment}{                    the new growth period, as is used in the White et al. ms. */}
+00431                     \textcolor{keywordflow}{if} (onset\_day >= 15)
+00432                     \{
+00433                         onset\_day -= 15;
+00434                     \}
+00435                     \textcolor{keywordflow}{else} onset\_day = 0;
+00436 
+00437                     \textcolor{comment}{/* if leaves never got turned off, force off on last day */}
+00438                     \textcolor{keywordflow}{if} (offset\_day == -1) offset\_day = 364;
+00439                     \textcolor{comment}{/* add 15 days to offset day to approximate the}
+00440 \textcolor{comment}{                    end of the litterfall period, instead of the middle}
+00441 \textcolor{comment}{                    as in the White et al. ms. */}
+00442                     \textcolor{keywordflow}{if} (offset\_day <= 349)
+00443                     \{
+00444                         offset\_day += 15;
+00445                     \}
+00446                     \textcolor{keywordflow}{else} offset\_day = 364;
+00447                     
+00448                     \textcolor{comment}{/* force onset and offset to be at least one day apart */}
+00449                     \textcolor{keywordflow}{if} (onset\_day == offset\_day)
+00450                     \{
+00451                         \textcolor{keywordflow}{if} (onset\_day > 0) onset\_day--;
+00452                         \textcolor{keywordflow}{else} offset\_day++;
+00453                     \}
+00454                 \}
+00455                 \textcolor{keywordflow}{else}
+00456                 \{
+00457                     \textcolor{comment}{/* leaves never got turned on, this is a non-growth}
+00458 \textcolor{comment}{                    year.  This probably indicates a problem with the}
+00459 \textcolor{comment}{                    phenology model */}
+00460                     onset\_day = -1;
+00461                     offset\_day = -1;
+00462                 \}
+00463 
+00464                 \textcolor{comment}{/* save these onset and offset days and go to the next}
+00465 \textcolor{comment}{                phenological year */}
+00466                 onday\_arr[py] = onset\_day;
+00467                 offday\_arr[py] = offset\_day;
+00468                 
+00469             \} \textcolor{comment}{/* end phenyears loop for filling onset and offset arrays */}
+00470         \} \textcolor{comment}{/* end if woody (tree phenology model) */}
+00471         \textcolor{keywordflow}{else}
+00472         \{
+00473             \textcolor{comment}{/* non-woody, use the GRASS PHENOLOGY MODEL to calculate the}
+00474 \textcolor{comment}{            array of onset and offset days */}
+00475             \textcolor{comment}{/* loop through the entire tavg timeseries to calculate long-term}
+00476 \textcolor{comment}{            average tavg and long-term average annual total precip */}
+00477             mean\_tavg = 0.0;
+00478             ann\_prcp = 0.0;
+00479             \textcolor{keywordflow}{for} (i=0 ; i<ndays ; i++)
+00480             \{
+00481                 mean\_tavg += metarr->tavg[i];
+00482                 ann\_prcp += metarr->prcp[i];
+00483             \}
+00484             mean\_tavg /= (double)ndays;
+00485             ann\_prcp /= (double)ndays / 365.0;
+00486             
+00487             \textcolor{comment}{/* grass onset equation from White et al., 1997, with parameter}
+00488 \textcolor{comment}{            values specified by Mike White, Aug. 1997 */}
+00489             t1 = exp(grass\_a * (mean\_tavg - grass\_tmid));
+00490             grass\_stsumcrit = ((grass\_stsummax - grass\_stsummin)* 0.5 *
+00491                 ((t1-1)/(t1+1))) + grass\_stsummid;
+00492             grass\_prcpcrit = ann\_prcp * grass\_k;
+00493             
+00494             \textcolor{comment}{/* now go through the phenological years and generate onset}
+00495 \textcolor{comment}{            and offset days */}
+00496             
+00497             \textcolor{comment}{/* calculate the long-term average annual high temperature}
+00498 \textcolor{comment}{            for use in grass offset prediction */}
+00499             tmax\_ann = 0.0;
+00500             tmin\_annavg = 0.0;
+00501             \textcolor{keywordflow}{for} (py=0 ; py<phenyears ; py++)
+00502             \{
+00503                 new\_tmax = -1000.0;
+00504                 \textcolor{keywordflow}{for} (pday=0 ; pday<365 ; pday++)
+00505                 \{
+00506                     \textcolor{keywordflow}{if} (south)
+00507                     \{
+00508                         \textcolor{keywordflow}{if} (py==0 && pday<182)
+00509                         \{
+00510                             \textcolor{comment}{/* use the end of the first year to fill the }
+00511 \textcolor{comment}{                            beginning of a southern hemisphere phenological}
+00512 \textcolor{comment}{                            year */}
+00513                             tmax = metarr->tmax[183+pday];
+00514                             tmin\_annavg += metarr->tmin[183+pday];
+00515                         \}
+00516                         \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} (py==phenyears-1 && pday>181)
+00517                         \{
+00518                             \textcolor{comment}{/* use the beginning of the last year to fill the}
+00519 \textcolor{comment}{                            end of the last phenological year */}
+00520                             tmax = metarr->tmax[ndays-547+pday];
+00521                             tmin\_annavg += metarr->tmin[ndays-547+pday];
+00522                         \}
+00523                         \textcolor{keywordflow}{else}
+00524                         \{
+00525                             tmax = metarr->tmax[py*365-182+pday];
+00526                             tmin\_annavg += metarr->tmin[py*365-182+pday];
+00527                         \}
+00528                     \}
+00529                     \textcolor{keywordflow}{else} \textcolor{comment}{/* north */}
+00530                     \{
+00531                         tmax = metarr->tmax[py*365+pday];
+00532                         tmin\_annavg += metarr->tmin[py*365+pday];
+00533                     \}
+00534                     
+00535                     \textcolor{keywordflow}{if} (tmax > new\_tmax) new\_tmax = tmax;
+00536                     
+00537                 \} \textcolor{comment}{/* end pday loop */}
+00538                 
+00539                 tmax\_ann += new\_tmax;
+00540             \} \textcolor{comment}{/* end py loop */}
+00541             tmax\_ann /= (double) phenyears;
+00542             \textcolor{comment}{/* 92% of tmax\_ann is the threshold used in grass offset below */}
+00543             tmax\_ann *= 0.92;
+00544             tmin\_annavg /= (double) phenyears * 365.0;
+00545             
+00546             \textcolor{comment}{/* loop through phenyears again, fill onset and offset arrays */}
+00547             \textcolor{keywordflow}{for} (py=0 ; py<phenyears ; py++)
+00548             \{
+00549                 sum\_soilt = 0.0;
+00550                 sum\_prcp = 0.0;
+00551                 onset\_day = offset\_day = -1;
+00552                 \textcolor{keywordflow}{for} (pday=0 ; pday<365 ; pday++)
+00553                 \{
+00554                     \textcolor{keywordflow}{if} (south)
+00555                     \{
+00556                         \textcolor{keywordflow}{if} (py==0 && pday<182)
+00557                         \{
+00558                             \textcolor{comment}{/* use the end of the first year to fill the }
+00559 \textcolor{comment}{                            beginning of a southern hemisphere phenological}
+00560 \textcolor{comment}{                            year */}
+00561                             phensoilt = metarr->tavg\_ra[183+pday];
+00562                             phenprcp = metarr->prcp[183+pday];
+00563                             grass\_prcpyear[pday] = phenprcp;
+00564                             grass\_tminyear[pday] = metarr->tmin[183+pday];
+00565                             grass\_tmaxyear[pday] = metarr->tmax[183+pday];
+00566                         \}
+00567                         \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} (py==phenyears-1 && pday>181)
+00568                         \{
+00569                             \textcolor{comment}{/* use the beginning of the last year to fill the}
+00570 \textcolor{comment}{                            end of the last phenological year */}
+00571                             phensoilt = metarr->tavg\_ra[ndays-547+pday];
+00572                             phenprcp = metarr->prcp[ndays-547+pday];
+00573                             grass\_prcpyear[pday] = phenprcp;
+00574                             grass\_tminyear[pday] = metarr->tmin[ndays-547+pday];
+00575                             grass\_tmaxyear[pday] = metarr->tmax[ndays-547+pday];
+00576                         \}
+00577                         \textcolor{keywordflow}{else}
+00578                         \{
+00579                             phensoilt = metarr->tavg\_ra[py*365-182+pday];
+00580                             phenprcp = metarr->prcp[py*365-182+pday];
+00581                             grass\_prcpyear[pday] = phenprcp;
+00582                             grass\_tminyear[pday] = metarr->tmin[py*365-182+pday];
+00583                             grass\_tmaxyear[pday] = metarr->tmax[py*365-182+pday];
+00584                         \}
+00585                     \}
+00586                     \textcolor{keywordflow}{else} \textcolor{comment}{/* north */}
+00587                     \{
+00588                         phensoilt = metarr->tavg\_ra[py*365+pday];
+00589                         phenprcp = metarr->prcp[py*365+pday];
+00590                         grass\_prcpyear[pday] = phenprcp;
+00591                         grass\_tminyear[pday] = metarr->tmin[py*365+pday];
+00592                         grass\_tmaxyear[pday] = metarr->tmax[py*365+pday];
+00593                     \}
+00594                     
+00595                     \textcolor{comment}{/* grass onset test */}
+00596                     \textcolor{keywordflow}{if} (onset\_day == -1)
+00597                     \{
+00598                         \textcolor{keywordflow}{if} (phensoilt > 0.0) sum\_soilt += phensoilt;
+00599                         sum\_prcp += phenprcp;
+00600                         \textcolor{keywordflow}{if} (sum\_soilt >= grass\_stsumcrit &&
+00601                             sum\_prcp >= grass\_prcpcrit) onset\_day = pday;
+00602                     \}
+00603                     
+00604                 \} \textcolor{comment}{/* end pday loop */}
+00605                 
+00606                 \textcolor{comment}{/* do averaging operations on grass\_prcpyear and grass\_tminyear,}
+00607 \textcolor{comment}{                and do tests for offset day. Offset due to hot & dry can't}
+00608 \textcolor{comment}{                happen within one month after the onset day, and offset due}
+00609 \textcolor{comment}{                to cold can't happen before midyear (yearday 182) */}
+00610                 \textcolor{keywordflow}{if} (onset\_day != -1)
+00611                 \{
+00612                     \textcolor{comment}{/* calculate three-day boxcar average of tmin */}
+00613                     \textcolor{keywordflow}{if} (\hyperlink{smooth_8c_ac9c8750166146d2aa5f25c38e3451e9f}{boxcar\_smooth}(grass\_tminyear, grass\_3daytmin, 365,3,0))
+00614                     \{
+00615                         \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"Error in prephenology() call to boxcar()\(\backslash\)n"});
+00616                         ok=0;
+00617                     \}
+00618                     
+00619                     \textcolor{keywordflow}{for} (pday=onset\_day+30 ; pday<365 ; pday++)
+00620                     \{
+00621                         \textcolor{comment}{/* calculate the previous 31-day prcp total */}
+00622                         psum\_startday = pday - 30;
+00623                         grass\_prcpprev = 0.0;
+00624                         \textcolor{keywordflow}{for} (i=psum\_startday ; i<=pday ; i++)
+00625                         \{
+00626                             grass\_prcpprev += grass\_prcpyear[i];
+00627                         \}
+00628 
+00629                         \textcolor{comment}{/* calculate the next 7-day prcp total */}
+00630                         \textcolor{keywordflow}{if} (pday > 358) psum\_stopday = 364;
+00631                         \textcolor{keywordflow}{else} psum\_stopday = pday + 6;
+00632                         grass\_prcpnext = 0.0;
+00633                         \textcolor{keywordflow}{for} (i=pday ; i<=psum\_stopday ; i++)
+00634                         \{
+00635                             grass\_prcpnext += grass\_prcpyear[i];
+00636                         \}
+00637                         
+00638                         \textcolor{comment}{/* test for hot and dry conditions */}
+00639                         \textcolor{keywordflow}{if} (offset\_day == -1)
+00640                         \{
+00641                             \textcolor{keywordflow}{if} (grass\_prcpprev < grass\_prcpprevcrit && 
+00642                                 grass\_prcpnext < grass\_prcpnextcrit &&
+00643                                 grass\_tmaxyear[pday] > tmax\_ann)
+00644                                 offset\_day = pday;
+00645                         \}
+00646                         
+00647                         \textcolor{comment}{/* test for cold offset condition */}
+00648                         \textcolor{keywordflow}{if} (offset\_day == -1)
+00649                         \{
+00650                             \textcolor{keywordflow}{if} (pday > 182 &&
+00651                                 grass\_3daytmin[pday] <= tmin\_annavg)
+00652                                 offset\_day = pday;
+00653                         \}
+00654                         
+00655                     \} \textcolor{comment}{/* end of pdays loop for grass offset testing */}
+00656                 \} \textcolor{comment}{/* end of if onset\_day != -1 block */}
+00657                     
+00658                 \textcolor{comment}{/* now do some exception handling for this year's phenology */}
+00659                 \textcolor{keywordflow}{if} (onset\_day != -1)
+00660                 \{
+00661                     \textcolor{comment}{/* leaves are turned on sometime this year */}
+00662                     \textcolor{comment}{/* subtract 15 days from onset day to approximate the}
+00663 \textcolor{comment}{                    start of the new growth period, instead of the middle of}
+00664 \textcolor{comment}{                    the new growth period, as is used in the White et al. ms. */}
+00665                     \textcolor{keywordflow}{if} (onset\_day >= 15)
+00666                     \{
+00667                         onset\_day -= 15;
+00668                     \}
+00669                     \textcolor{keywordflow}{else} onset\_day = 0;
+00670 
+00671                     \textcolor{comment}{/* if leaves never got turned off, force off on last day */}
+00672                     \textcolor{keywordflow}{if} (offset\_day == -1) offset\_day = 364;
+00673 
+00674                     \textcolor{comment}{/* force onset and offset to be at least one day apart */}
+00675                     \textcolor{keywordflow}{if} (onset\_day == offset\_day)
+00676                     \{
+00677                         \textcolor{keywordflow}{if} (onset\_day > 0) onset\_day--;
+00678                         \textcolor{keywordflow}{else} offset\_day++;
+00679                     \}
+00680                 \}
+00681                 \textcolor{keywordflow}{else}
+00682                 \{
+00683                     \textcolor{comment}{/* leaves never got turned on, this is a non-growth}
+00684 \textcolor{comment}{                    year.  This probably indicates a problem with the}
+00685 \textcolor{comment}{                    phenology model */}
+00686                     onset\_day = -1;
+00687                     offset\_day = -1;
+00688                 \}
+00689                 
+00690                 \textcolor{comment}{/* save these onset and offset days and go to the next}
+00691 \textcolor{comment}{                phenological year */}
+00692                 onday\_arr[py] = onset\_day;
+00693                 offday\_arr[py] = offset\_day;
+00694                 
+00695             \} \textcolor{comment}{/* end phenyears loop for filling onset and offset arrays */}
+00696         \} \textcolor{comment}{/* end else !woody (grass phenology model) */}
+00697         
+00698         \textcolor{comment}{/* now the onset and offset days are established for each phenyear,}
+00699 \textcolor{comment}{        either by the deciduous tree or the grass model.  Next loop through}
+00700 \textcolor{comment}{        phenyears filling the phenology signal arrays and copying them to }
+00701 \textcolor{comment}{        the permanent phen struct arrays */}
+00702         \textcolor{keywordflow}{for} (py=0 ; py<phenyears ; py++)
+00703         \{
+00704             \textcolor{comment}{/* zero the 365-day phen arrays */}
+00705             \textcolor{keywordflow}{for} (pday=0 ; pday<365 ; pday++)
+00706             \{
+00707                 remdays\_curgrowth[pday] = 0;
+00708                 remdays\_transfer[pday] = 0;
+00709                 predays\_transfer[pday] = 0;
+00710                 remdays\_litfall[pday] = 0;
+00711                 predays\_litfall[pday] = 0;
+00712             \}
+00713             
+00714             onday = onday\_arr[py];
+00715             offday = offday\_arr[py];
+00716             
+00717             \textcolor{keywordflow}{if} (onday == -1 && offday == -1)
+00718             \{
+00719                 \textcolor{comment}{/* this is the special signal to repress all vegetation}
+00720 \textcolor{comment}{                growth */}
+00721                 \textcolor{keywordflow}{for} (pday=0 ; pday<365 ; pday++)
+00722                 \{
+00723                     remdays\_curgrowth[pday] = 0;
+00724                     remdays\_transfer[pday] = 0;
+00725                     predays\_transfer[pday] = 0;
+00726                     remdays\_litfall[pday] = 0;
+00727                     predays\_litfall[pday] = 0;
+00728                 \}
+00729             \} \textcolor{comment}{/* end if special no-growth signal */}
+00730             \textcolor{keywordflow}{else}
+00731             \{
+00732                 \textcolor{comment}{/* normal growth year */}
+00733                 ngrowthdays = offday - onday;
+00734                 \textcolor{keywordflow}{if} (ngrowthdays < 1)
+00735                 \{
+00736                     \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"FATAL ERROR: ngrowthdays < 1\(\backslash\)n"});
+00737                     \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"ngrowthdays = %d\(\backslash\)n"},ngrowthdays);
+00738                     \hyperlink{bgc__io_8c_af287cce6e2aede1ce337de9319e80d0d}{bgc\_printf}(BV\_ERROR, \textcolor{stringliteral}{"onday = %d\(\backslash\)toffday = %d\(\backslash\)tphenyear = %d\(\backslash\)n"},
+00739                     onday,offday,py);
+00740                     ok=0;
+00741                 \}
+00742                 \textcolor{comment}{/* define the length of the transfer and litfall periods */}
+00743                 \textcolor{comment}{/* calculate number of transfer days and number of litfall days}
+00744 \textcolor{comment}{                as proportions of number of growth days, as specified by user.}
+00745 \textcolor{comment}{                Round and truncate to force these values between 1 and }
+00746 \textcolor{comment}{                ngrowthdays */}
+00747                 t1 = epc->transfer\_pdays * (double)ngrowthdays;
+00748                 sprintf(round,\textcolor{stringliteral}{"%.0f"},t1);
+00749                 ntransferdays = atoi(round);
+00750                 \textcolor{keywordflow}{if} (ntransferdays < 1) ntransferdays = 1;
+00751                 \textcolor{keywordflow}{if} (ntransferdays > ngrowthdays) ntransferdays = ngrowthdays;
+00752                 t1 = epc->litfall\_pdays * (double)ngrowthdays;
+00753                 sprintf(round,\textcolor{stringliteral}{"%.0f"},t1);
+00754                 nlitfalldays = atoi(round);
+00755                 \textcolor{keywordflow}{if} (nlitfalldays < 1) nlitfalldays = 1;
+00756                 \textcolor{keywordflow}{if} (nlitfalldays > ngrowthdays) nlitfalldays = ngrowthdays;
+00757                 
+00758                 \textcolor{keywordflow}{for} (pday=0 ; pday<onday ; pday++)
+00759                 \{
+00760                     remdays\_curgrowth[pday] = 0;
+00761                     remdays\_transfer[pday] = 0;
+00762                     remdays\_litfall[pday] = 0;
+00763                     predays\_transfer[pday] = 0;
+00764                     predays\_litfall[pday] = 0;
+00765                 \}
+00766                 counter = ngrowthdays;
+00767                 \textcolor{keywordflow}{for} (pday=onday ; pday<offday ; pday++)
+00768                 \{
+00769                     remdays\_curgrowth[pday] = counter;
+00770                     counter--;
+00771                 \}
+00772                 \textcolor{keywordflow}{for} (pday=offday ; pday<365 ; pday++)
+00773                 \{
+00774                     remdays\_curgrowth[pday] = 0;
+00775                 \}
+00776                 counter = ntransferdays;
+00777                 \textcolor{keywordflow}{for} (pday=onday ; pday<onday+ntransferdays ; pday++)
+00778                 \{
+00779                     remdays\_transfer[pday] = counter;
+00780                     predays\_transfer[pday] = ntransferdays - counter;
+00781                     counter--;
+00782                 \}
+00783                 \textcolor{keywordflow}{for} (pday=onday+ntransferdays ; pday<=offday ; pday++)
+00784                 \{
+00785                     remdays\_transfer[pday] = 0;
+00786                     predays\_transfer[pday] = ntransferdays;
+00787                 \}
+00788                 \textcolor{keywordflow}{for} (pday=offday+1 ; pday<365 ; pday++)
+00789                 \{
+00790                     remdays\_transfer[pday] = 0;
+00791                     predays\_transfer[pday] = 0;
+00792                 \}
+00793                 \textcolor{keywordflow}{for} (pday=onday ; pday<offday-nlitfalldays+1 ; pday++)
+00794                 \{
+00795                     remdays\_litfall[pday] = 0;
+00796                     predays\_litfall[pday] = 0;
+00797                 \}
+00798                 counter = nlitfalldays;
+00799                 \textcolor{keywordflow}{for} (pday=offday-nlitfalldays+1 ; pday<=offday ; pday++)
+00800                 \{
+00801                     remdays\_litfall[pday] = counter;
+00802                     predays\_litfall[pday] = nlitfalldays - counter;
+00803                     counter--;
+00804                 \}
+00805                 \textcolor{keywordflow}{for} (pday=offday+1 ; pday<365 ; pday++)
+00806                 \{
+00807                     remdays\_litfall[pday] = 0;
+00808                     predays\_litfall[pday] = 0;
+00809                 \}
+00810             \} \textcolor{comment}{/* end else normal growth year */}
+00811             
+00812             \textcolor{comment}{/* now put the signals for this phenological year into the}
+00813 \textcolor{comment}{            right place in the permanent phen struct arrays */} 
+00814             \textcolor{keywordflow}{if} (south)
+00815             \{
+00816                 \textcolor{keywordflow}{if} (py==0)
+00817                 \{
+00818                     \textcolor{comment}{/* only copy the second half of this phenological}
+00819 \textcolor{comment}{                    year to the permanent phenology array */}
+00820                     \textcolor{keywordflow}{for} (pday=182 ; pday<365 ; pday++)
+00821                     \{
+00822                         phen->remdays\_curgrowth[pday-182] = remdays\_curgrowth[pday];
+00823                         phen->remdays\_transfer[pday-182] = remdays\_transfer[pday];
+00824                         phen->remdays\_litfall[pday-182] = remdays\_litfall[pday];
+00825                         phen->predays\_transfer[pday-182] = predays\_transfer[pday];
+00826                         phen->predays\_litfall[pday-182] = predays\_litfall[pday];
+00827                     \}
+00828                 \}
+00829                 \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} (py==phenyears-1)
+00830                 \{
+00831                     \textcolor{comment}{/* only copy the first half of this phenological}
+00832 \textcolor{comment}{                    year to the permanent phenology array */}
+00833                     \textcolor{keywordflow}{for} (pday=0 ; pday<182 ; pday++)
+00834                     \{
+00835                         phen->remdays\_curgrowth[py*365-182+pday] = remdays\_curgrowth[pday];
+00836                         phen->remdays\_transfer[py*365-182+pday] = remdays\_transfer[pday];
+00837                         phen->remdays\_litfall[py*365-182+pday] = remdays\_litfall[pday];
+00838                         phen->predays\_transfer[py*365-182+pday] = predays\_transfer[pday];
+00839                         phen->predays\_litfall[py*365-182+pday] = predays\_litfall[pday];
+00840                     \}
+00841                 \}
+00842                 \textcolor{keywordflow}{else}
+00843                 \{
+00844                     \textcolor{keywordflow}{for} (pday=0 ; pday<365 ; pday++)
+00845                     \{
+00846                         phen->remdays\_curgrowth[py*365-182+pday] = remdays\_curgrowth[pday];
+00847                         phen->remdays\_transfer[py*365-182+pday] = remdays\_transfer[pday];
+00848                         phen->remdays\_litfall[py*365-182+pday] = remdays\_litfall[pday];
+00849                         phen->predays\_transfer[py*365-182+pday] = predays\_transfer[pday];
+00850                         phen->predays\_litfall[py*365-182+pday] = predays\_litfall[pday];
+00851                     \}
+00852                 \}
+00853             \} \textcolor{comment}{/* end if south */}
+00854             \textcolor{keywordflow}{else}
+00855             \{
+00856                 \textcolor{comment}{/* north */}
+00857                 \textcolor{keywordflow}{for} (pday=0 ; pday<365 ; pday++)
+00858                 \{
+00859                     phen->remdays\_curgrowth[py*365+pday] = remdays\_curgrowth[pday];
+00860                     phen->remdays\_transfer[py*365+pday] = remdays\_transfer[pday];
+00861                     phen->remdays\_litfall[py*365+pday] = remdays\_litfall[pday];
+00862                     phen->predays\_transfer[py*365+pday] = predays\_transfer[pday];
+00863                     phen->predays\_litfall[py*365+pday] = predays\_litfall[pday];
+00864                 \}
+00865             \} \textcolor{comment}{/* end if north */}
+00866         \} \textcolor{comment}{/* end phenyears loop for filling permanent arrays */}
+00867     \} \textcolor{comment}{/* end else phenology model block */}
+00868                 
+00869     \textcolor{comment}{/* free the local array memory */}
+00870     free(onday\_arr);
+00871     free(offday\_arr);
+00872     
+00873     \textcolor{keywordflow}{return} (!ok);
+00874 \}
+00875 
+\hypertarget{prephenology_8c_source_l00876}{}\hyperlink{prephenology_8c_a4a74c56387917d8811f0ea4e0a59424e}{00876} \textcolor{keywordtype}{int} \hyperlink{prephenology_8c_a4a74c56387917d8811f0ea4e0a59424e}{free\_phenmem}(phenarray\_struct* phen)
+00877 \{
+00878     \textcolor{keywordtype}{int} ok=1;
+00879     
+00880     \textcolor{comment}{/* free memory in phenology arrays */}
+00881     free(phen->remdays\_curgrowth);
+00882     free(phen->remdays\_transfer);
+00883     free(phen->remdays\_litfall);
+00884     free(phen->predays\_transfer);
+00885     free(phen->predays\_litfall);
+00886     
+00887     \textcolor{keywordflow}{return} (!ok);
+00888 \}
+\end{DoxyCode}

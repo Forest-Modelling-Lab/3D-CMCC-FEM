@@ -1,0 +1,29 @@
+\hypertarget{get__ndep_8c_source}{}\section{get\+\_\+ndep.\+c}
+\label{get__ndep_8c_source}\index{c\+:/\+R\+E\+P\+O/biomebgc-\/4.\+2/src/bgclib/get\+\_\+ndep.\+c@{c\+:/\+R\+E\+P\+O/biomebgc-\/4.\+2/src/bgclib/get\+\_\+ndep.\+c}}
+
+\begin{DoxyCode}
+00001 \textcolor{comment}{/* }
+00002 \textcolor{comment}{get\_ndep.c}
+00003 \textcolor{comment}{retrieve the appropriate nitrogen deposition value for the current simulation year}
+00004 \textcolor{comment}{}
+00005 \textcolor{comment}{*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*}
+00006 \textcolor{comment}{Biome-BGC version 4.2 (final release)}
+00007 \textcolor{comment}{See copyright.txt for Copyright information}
+00008 \textcolor{comment}{*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*}
+00009 \textcolor{comment}{*/}
+00010 
+00011 \textcolor{preprocessor}{#include "bgc.h"}
+00012 
+\hypertarget{get__ndep_8c_source_l00013}{}\hyperlink{get__ndep_8c_aca9b864bbce6d9c79e047c688ecdaf86}{00013} \textcolor{keywordtype}{double} \hyperlink{get__ndep_8c_aca9b864bbce6d9c79e047c688ecdaf86}{get\_ndep}(ndepcontrol\_struct * ndepctrl,\textcolor{keywordtype}{int} simyr)
+00014 \{
+00015     \textcolor{keywordtype}{int} i;
+00016     \textcolor{keywordflow}{for}(i = 0;i < ndepctrl->ndepvals;i++)
+00017     \{
+00018         \textcolor{keywordflow}{if}(ndepctrl->ndepyear\_array[i] == simyr)
+00019         \{
+00020             \textcolor{keywordflow}{return} (ndepctrl->ndep\_array[i]);
+00021         \}
+00022     \}
+00023     \textcolor{keywordflow}{return}(-999.9);
+00024 \}
+\end{DoxyCode}

@@ -1,0 +1,35 @@
+\hypertarget{atm__pres_8c_source}{}\section{atm\+\_\+pres.\+c}
+\label{atm__pres_8c_source}\index{c\+:/\+R\+E\+P\+O/biomebgc-\/4.\+2/src/bgclib/atm\+\_\+pres.\+c@{c\+:/\+R\+E\+P\+O/biomebgc-\/4.\+2/src/bgclib/atm\+\_\+pres.\+c}}
+
+\begin{DoxyCode}
+00001 \textcolor{comment}{/* }
+00002 \textcolor{comment}{atm\_pres.c}
+00003 \textcolor{comment}{estimate atmospheric pressure as a function of elevation}
+00004 \textcolor{comment}{}
+00005 \textcolor{comment}{*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*}
+00006 \textcolor{comment}{Biome-BGC version 4.2 (final release)}
+00007 \textcolor{comment}{See copyright.txt for Copyright information}
+00008 \textcolor{comment}{*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*}
+00009 \textcolor{comment}{*/}
+00010 
+00011 \textcolor{preprocessor}{#include "bgc.h"}
+00012 
+\hypertarget{atm__pres_8c_source_l00013}{}\hyperlink{atm__pres_8c_a30d2b9ec7344a16b2cd045cfe92995e2}{00013} \textcolor{keywordtype}{int} \hyperlink{atm__pres_8c_a30d2b9ec7344a16b2cd045cfe92995e2}{atm\_pres}(\textcolor{keywordtype}{double} elev, \textcolor{keywordtype}{double}* pa)
+00014 \{
+00015     \textcolor{comment}{/* daily atmospheric pressure (Pa) as a function of elevation (m) */}
+00016     \textcolor{comment}{/* From the discussion on atmospheric statics in:}
+00017 \textcolor{comment}{    Iribane, J.V., and W.L. Godson, 1981. Atmospheric Thermodynamics, 2nd}
+00018 \textcolor{comment}{        Edition. D. Reidel Publishing Company, Dordrecht, The Netherlands.}
+00019 \textcolor{comment}{        (p. 168)}
+00020 \textcolor{comment}{    */}
+00021     
+00022     \textcolor{keywordtype}{int} ok=1;
+00023     \textcolor{keywordtype}{double} t1,t2;
+00024     
+00025     t1 = 1.0 - (LR\_STD * elev)/T\_STD;
+00026     t2 = G\_STD / (LR\_STD * (R / MA));
+00027     *pa = P\_STD * pow(t1,t2);
+00028     
+00029     \textcolor{keywordflow}{return}(!ok);
+00030 \}
+\end{DoxyCode}

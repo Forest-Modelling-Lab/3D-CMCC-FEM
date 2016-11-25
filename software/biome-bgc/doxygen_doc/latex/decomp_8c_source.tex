@@ -1,0 +1,255 @@
+\hypertarget{decomp_8c_source}{}\section{decomp.\+c}
+\label{decomp_8c_source}\index{c\+:/\+R\+E\+P\+O/biomebgc-\/4.\+2/src/bgclib/decomp.\+c@{c\+:/\+R\+E\+P\+O/biomebgc-\/4.\+2/src/bgclib/decomp.\+c}}
+
+\begin{DoxyCode}
+00001 \textcolor{comment}{/* }
+00002 \textcolor{comment}{decomp.c}
+00003 \textcolor{comment}{daily decomposition fluxes}
+00004 \textcolor{comment}{Note that final immobilization fluxes are not reconciled until the}
+00005 \textcolor{comment}{end of the daily allocation function, in order to allow competition}
+00006 \textcolor{comment}{between microbes and plants for available N.}
+00007 \textcolor{comment}{}
+00008 \textcolor{comment}{*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*}
+00009 \textcolor{comment}{Biome-BGC version 4.2 (final release)}
+00010 \textcolor{comment}{See copyright.txt for Copyright information}
+00011 \textcolor{comment}{*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*}
+00012 \textcolor{comment}{*/}
+00013 
+00014 \textcolor{preprocessor}{#include "bgc.h"}
+00015 
+\hypertarget{decomp_8c_source_l00016}{}\hyperlink{decomp_8c_a5ce50023ade7c1dfcca146c06f3ba9da}{00016} \textcolor{keywordtype}{int} \hyperlink{decomp_8c_a5ce50023ade7c1dfcca146c06f3ba9da}{decomp}(\textcolor{keywordtype}{double} tsoil, \textcolor{keyword}{const} epconst\_struct* epc, epvar\_struct* epv, 
+00017 \textcolor{keyword}{const} siteconst\_struct* sitec, cstate\_struct* cs, cflux\_struct* cf,
+00018 nstate\_struct* ns, nflux\_struct* nf, ntemp\_struct* nt)
+00019 \{
+00020     \textcolor{keywordtype}{int} ok=1;
+00021     \textcolor{keywordtype}{double} rate\_scalar, t\_scalar, w\_scalar;
+00022     \textcolor{keywordtype}{double} tk;
+00023     \textcolor{keywordtype}{double} minpsi, maxpsi;
+00024     \textcolor{keywordtype}{double} rfl1s1, rfl2s2,rfl4s3,rfs1s2,rfs2s3,rfs3s4;
+00025     \textcolor{keywordtype}{double} kl1\_base,kl2\_base,kl4\_base,ks1\_base,ks2\_base,ks3\_base,ks4\_base,kfrag\_base;
+00026     \textcolor{keywordtype}{double} kl1,kl2,kl4,ks1,ks2,ks3,ks4,kfrag;
+00027     \textcolor{keywordtype}{double} cn\_l1,cn\_l2,cn\_l4,cn\_s1,cn\_s2,cn\_s3,cn\_s4;
+00028     \textcolor{keywordtype}{double} cwdc\_loss;
+00029     \textcolor{keywordtype}{double} plitr1c\_loss, plitr2c\_loss, plitr4c\_loss;
+00030     \textcolor{keywordtype}{double} psoil1c\_loss, psoil2c\_loss, psoil3c\_loss, psoil4c\_loss;
+00031     \textcolor{keywordtype}{double} pmnf\_l1s1,pmnf\_l2s2,pmnf\_l4s3,pmnf\_s1s2,pmnf\_s2s3,pmnf\_s3s4,pmnf\_s4;
+00032     \textcolor{keywordtype}{double} potential\_immob,mineralized;
+00033     \textcolor{keywordtype}{int} nlimit;
+00034     \textcolor{keywordtype}{double} ratio;
+00035     
+00036     \textcolor{comment}{/* calculate the rate constant scalar for soil temperature,}
+00037 \textcolor{comment}{    assuming that the base rate constants are assigned for non-moisture}
+00038 \textcolor{comment}{    limiting conditions at 25 C. The function used here is taken from}
+00039 \textcolor{comment}{    Lloyd, J., and J.A. Taylor, 1994. On the temperature dependence of }
+00040 \textcolor{comment}{    soil respiration. Functional Ecology, 8:315-323.}
+00041 \textcolor{comment}{    This equation is a modification of their eqn. 11, changing the base}
+00042 \textcolor{comment}{    temperature from 10 C to 25 C, since most of the microcosm studies}
+00043 \textcolor{comment}{    used to get the base decomp rates were controlled at 25 C. */}
+00044     \textcolor{keywordflow}{if} (tsoil < -10.0)
+00045     \{
+00046         \textcolor{comment}{/* no decomp processes for tsoil < -10.0 C */}
+00047         t\_scalar = 0.0;
+00048     \}
+00049     \textcolor{keywordflow}{else}
+00050     \{
+00051         tk = tsoil + 273.15;
+00052         t\_scalar = exp(308.56*((1.0/71.02)-(1.0/(tk-227.13))));
+00053     \}
+00054     
+00055     \textcolor{comment}{/* calculate the rate constant scalar for soil water content.}
+00056 \textcolor{comment}{    Uses the log relationship with water potential given in}
+00057 \textcolor{comment}{    Andren, O., and K. Paustian, 1987. Barley straw decomposition in the field:}
+00058 \textcolor{comment}{    a comparison of models. Ecology, 68(5):1190-1200.}
+00059 \textcolor{comment}{    and supported by data in}
+00060 \textcolor{comment}{    Orchard, V.A., and F.J. Cook, 1983. Relationship between soil respiration}
+00061 \textcolor{comment}{    and soil moisture. Soil Biol. Biochem., 15(4):447-453.}
+00062 \textcolor{comment}{    */}
+00063     \textcolor{comment}{/* set the maximum and minimum values for water potential limits (MPa) */}
+00064     minpsi = -10.0;
+00065     maxpsi = sitec->psi\_sat;
+00066     \textcolor{keywordflow}{if} (epv->psi < minpsi)
+00067     \{
+00068         \textcolor{comment}{/* no decomp below the minimum soil water potential */}
+00069         w\_scalar = 0.0;
+00070     \}
+00071     \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} (epv->psi > maxpsi)
+00072     \{
+00073         \textcolor{comment}{/* this shouldn't ever happen, but just in case... */}
+00074         w\_scalar = 1.0;
+00075     \}
+00076     \textcolor{keywordflow}{else}
+00077     \{
+00078         w\_scalar = log(minpsi/epv->psi)/log(minpsi/maxpsi);
+00079     \}
+00080     
+00081     \textcolor{comment}{/* calculate the final rate scalar as the product of the temperature and}
+00082 \textcolor{comment}{    water scalars */}
+00083     rate\_scalar = w\_scalar * t\_scalar;
+00084     
+00085     \textcolor{comment}{/* assign output variables */}
+00086     epv->t\_scalar = t\_scalar;
+00087     epv->w\_scalar = w\_scalar;
+00088     epv->rate\_scalar = rate\_scalar;
+00089     
+00090     \textcolor{comment}{/* calculate compartment C:N ratios */}
+00091     \textcolor{keywordflow}{if} (ns->litr1n > 0.0) cn\_l1 = cs->litr1c/ns->litr1n;
+00092     \textcolor{keywordflow}{if} (ns->litr2n > 0.0) cn\_l2 = cs->litr2c/ns->litr2n;
+00093     \textcolor{keywordflow}{if} (ns->litr4n > 0.0) cn\_l4 = cs->litr4c/ns->litr4n;
+00094     cn\_s1 = SOIL1\_CN;
+00095     cn\_s2 = SOIL2\_CN;
+00096     cn\_s3 = SOIL3\_CN;
+00097     cn\_s4 = SOIL4\_CN;
+00098     
+00099     \textcolor{comment}{/* respiration fractions for fluxes between compartments */}
+00100     rfl1s1 = RFL1S1;
+00101     rfl2s2 = RFL2S2;
+00102     rfl4s3 = RFL4S3;
+00103     rfs1s2 = RFS1S2;
+00104     rfs2s3 = RFS2S3;
+00105     rfs3s4 = RFS3S4;
+00106     
+00107     \textcolor{comment}{/* calculate the corrected rate constants from the rate scalar and their}
+00108 \textcolor{comment}{    base values. All rate constants are (1/day) */}
+00109     kl1\_base = KL1\_BASE;    \textcolor{comment}{/* labile litter pool */}
+00110     kl2\_base = KL2\_BASE;    \textcolor{comment}{/* cellulose litter pool */}
+00111     kl4\_base = KL4\_BASE;    \textcolor{comment}{/* lignin litter pool */}
+00112     ks1\_base = KS1\_BASE;    \textcolor{comment}{/* fast microbial recycling pool */}
+00113     ks2\_base = KS2\_BASE;    \textcolor{comment}{/* medium microbial recycling pool */}
+00114     ks3\_base = KS3\_BASE;    \textcolor{comment}{/* slow microbial recycling pool */}
+00115     ks4\_base = KS4\_BASE;    \textcolor{comment}{/* recalcitrant SOM (humus) pool */}
+00116     kfrag\_base = KFRAG\_BASE; \textcolor{comment}{/* physical fragmentation of coarse woody debris */}
+00117     kl1 = kl1\_base * rate\_scalar;
+00118     kl2 = kl2\_base * rate\_scalar;
+00119     kl4 = kl4\_base * rate\_scalar;
+00120     ks1 = ks1\_base * rate\_scalar;
+00121     ks2 = ks2\_base * rate\_scalar;
+00122     ks3 = ks3\_base * rate\_scalar;
+00123     ks4 = ks4\_base * rate\_scalar;
+00124     kfrag = kfrag\_base * rate\_scalar;
+00125     
+00126     \textcolor{comment}{/* woody vegetation type fluxes */}
+00127     \textcolor{keywordflow}{if} (epc->woody)
+00128     \{
+00129         \textcolor{comment}{/* calculate the flux from CWD to litter lignin and cellulose}
+00130 \textcolor{comment}{        compartments, due to physical fragmentation */}
+00131         cwdc\_loss = kfrag * cs->cwdc;
+00132         cf->cwdc\_to\_litr2c = cwdc\_loss * epc->deadwood\_fucel;
+00133         cf->cwdc\_to\_litr3c = cwdc\_loss * epc->deadwood\_fscel;
+00134         cf->cwdc\_to\_litr4c = cwdc\_loss * epc->deadwood\_flig;
+00135         nf->cwdn\_to\_litr2n = cf->cwdc\_to\_litr2c/epc->deadwood\_cn;
+00136         nf->cwdn\_to\_litr3n = cf->cwdc\_to\_litr3c/epc->deadwood\_cn;
+00137         nf->cwdn\_to\_litr4n = cf->cwdc\_to\_litr4c/epc->deadwood\_cn;
+00138     \}
+00139     
+00140     \textcolor{comment}{/* initialize the potential loss and mineral N flux variables */}
+00141     plitr1c\_loss = plitr2c\_loss = plitr4c\_loss = 0.0;
+00142     psoil1c\_loss = psoil2c\_loss = psoil3c\_loss = psoil4c\_loss = 0.0;
+00143     pmnf\_l1s1 = pmnf\_l2s2 = pmnf\_l4s3 = 0.0;
+00144     pmnf\_s1s2 = pmnf\_s2s3 = pmnf\_s3s4 = pmnf\_s4 = 0.0;
+00145     
+00146     \textcolor{comment}{/* calculate the non-nitrogen limited fluxes between litter and}
+00147 \textcolor{comment}{    soil compartments. These will be ammended for N limitation if it turns}
+00148 \textcolor{comment}{    out the potential gross immobilization is greater than potential gross}
+00149 \textcolor{comment}{    mineralization. */}
+00150     \textcolor{comment}{/* 1. labile litter to fast microbial recycling pool */}
+00151     \textcolor{keywordflow}{if} (cs->litr1c > 0.0)
+00152     \{
+00153         plitr1c\_loss = kl1 * cs->litr1c;
+00154         \textcolor{keywordflow}{if} (ns->litr1n > 0.0) ratio = cn\_s1/cn\_l1;
+00155         \textcolor{keywordflow}{else} ratio = 0.0;
+00156         pmnf\_l1s1 = (plitr1c\_loss * (1.0 - rfl1s1 - (ratio)))/cn\_s1;
+00157     \}
+00158     
+00159     \textcolor{comment}{/* 2. cellulose litter to medium microbial recycling pool */}
+00160     \textcolor{keywordflow}{if} (cs->litr2c > 0.0)
+00161     \{
+00162         plitr2c\_loss = kl2 * cs->litr2c;
+00163         \textcolor{keywordflow}{if} (ns->litr2n > 0.0) ratio = cn\_s2/cn\_l2;
+00164         \textcolor{keywordflow}{else} ratio = 0.0;
+00165         pmnf\_l2s2 = (plitr2c\_loss * (1.0 - rfl2s2 - (ratio)))/cn\_s2;
+00166     \}
+00167     
+00168     \textcolor{comment}{/* 3. lignin litter to slow microbial recycling pool */}
+00169     \textcolor{keywordflow}{if} (cs->litr4c > 0.0)
+00170     \{
+00171         plitr4c\_loss = kl4 * cs->litr4c;
+00172         \textcolor{keywordflow}{if} (ns->litr4n > 0.0) ratio = cn\_s3/cn\_l4;
+00173         \textcolor{keywordflow}{else} ratio = 0.0;
+00174         pmnf\_l4s3 = (plitr4c\_loss * (1.0 - rfl4s3 - (ratio)))/cn\_s3;
+00175     \}
+00176     
+00177     \textcolor{comment}{/* 4. fast microbial recycling pool to medium microbial recycling pool */}
+00178     \textcolor{keywordflow}{if} (cs->soil1c > 0.0)
+00179     \{
+00180         psoil1c\_loss = ks1 * cs->soil1c;
+00181         pmnf\_s1s2 = (psoil1c\_loss * (1.0 - rfs1s2 - (cn\_s2/cn\_s1)))/cn\_s2;
+00182     \}
+00183     
+00184     \textcolor{comment}{/* 5. medium microbial recycling pool to slow microbial recycling pool */}
+00185     \textcolor{keywordflow}{if} (cs->soil2c > 0.0)
+00186     \{
+00187         psoil2c\_loss = ks2 * cs->soil2c;
+00188         pmnf\_s2s3 = (psoil2c\_loss * (1.0 - rfs2s3 - (cn\_s3/cn\_s2)))/cn\_s3;
+00189     \}
+00190     
+00191     \textcolor{comment}{/* 6. slow microbial recycling pool to recalcitrant SOM pool */}
+00192     \textcolor{keywordflow}{if} (cs->soil3c > 0.0)
+00193     \{
+00194         psoil3c\_loss = ks3 * cs->soil3c;
+00195         pmnf\_s3s4 = (psoil3c\_loss * (1.0 - rfs3s4 - (cn\_s4/cn\_s3)))/cn\_s4;
+00196     \}
+00197     
+00198     \textcolor{comment}{/* 7. mineralization of recalcitrant SOM */}
+00199     \textcolor{keywordflow}{if} (cs->soil4c > 0.0)
+00200     \{
+00201         psoil4c\_loss = ks4 * cs->soil4c;
+00202         pmnf\_s4 = -psoil4c\_loss/cn\_s4;
+00203     \}
+00204     
+00205     \textcolor{comment}{/* determine if there is sufficient mineral N to support potential}
+00206 \textcolor{comment}{    immobilization. Immobilization fluxes are positive, mineralization fluxes}
+00207 \textcolor{comment}{    are negative */}
+00208     nlimit = 0;
+00209     potential\_immob = 0.0;
+00210     mineralized = 0.0;
+00211     \textcolor{keywordflow}{if} (pmnf\_l1s1 > 0.0) potential\_immob += pmnf\_l1s1;
+00212     \textcolor{keywordflow}{else} mineralized += -pmnf\_l1s1;
+00213     \textcolor{keywordflow}{if} (pmnf\_l2s2 > 0.0) potential\_immob += pmnf\_l2s2;
+00214     \textcolor{keywordflow}{else} mineralized += -pmnf\_l2s2;
+00215     \textcolor{keywordflow}{if} (pmnf\_l4s3 > 0.0) potential\_immob += pmnf\_l4s3;
+00216     \textcolor{keywordflow}{else} mineralized += -pmnf\_l4s3;
+00217     \textcolor{keywordflow}{if} (pmnf\_s1s2 > 0.0) potential\_immob += pmnf\_s1s2;
+00218     \textcolor{keywordflow}{else} mineralized += -pmnf\_s1s2;
+00219     \textcolor{keywordflow}{if} (pmnf\_s2s3 > 0.0) potential\_immob += pmnf\_s2s3;
+00220     \textcolor{keywordflow}{else} mineralized += -pmnf\_s2s3;
+00221     \textcolor{keywordflow}{if} (pmnf\_s3s4 > 0.0) potential\_immob += pmnf\_s3s4;
+00222     \textcolor{keywordflow}{else} mineralized += -pmnf\_s3s4;
+00223     mineralized += -pmnf\_s4;
+00224     
+00225     \textcolor{comment}{/* save the potential fluxes until plant demand has been assessed,}
+00226 \textcolor{comment}{    to allow competition between immobilization fluxes and plant growth}
+00227 \textcolor{comment}{    demands */}
+00228     nt->mineralized = mineralized;
+00229     nt->potential\_immob = potential\_immob;
+00230     nt->plitr1c\_loss = plitr1c\_loss;
+00231     nt->pmnf\_l1s1 = pmnf\_l1s1;
+00232     nt->plitr2c\_loss = plitr2c\_loss;
+00233     nt->pmnf\_l2s2 = pmnf\_l2s2;
+00234     nt->plitr4c\_loss = plitr4c\_loss;
+00235     nt->pmnf\_l4s3 = pmnf\_l4s3;
+00236     nt->psoil1c\_loss = psoil1c\_loss;
+00237     nt->pmnf\_s1s2 = pmnf\_s1s2;
+00238     nt->psoil2c\_loss = psoil2c\_loss;
+00239     nt->pmnf\_s2s3 = pmnf\_s2s3;
+00240     nt->psoil3c\_loss = psoil3c\_loss;
+00241     nt->pmnf\_s3s4 = pmnf\_s3s4;
+00242     nt->psoil4c\_loss = psoil4c\_loss;
+00243     nt->kl4 = kl4;
+00244     
+00245     \textcolor{comment}{/* store the day's gross mineralization */}
+00246     epv->daily\_gross\_nmin = mineralized ;
+00247     
+00248     \textcolor{keywordflow}{return} (!ok);
+00249 \}
+00250 
+\end{DoxyCode}

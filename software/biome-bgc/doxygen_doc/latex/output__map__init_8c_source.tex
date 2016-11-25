@@ -1,0 +1,556 @@
+\hypertarget{output__map__init_8c_source}{}\section{output\+\_\+map\+\_\+init.\+c}
+\label{output__map__init_8c_source}\index{c\+:/\+R\+E\+P\+O/biomebgc-\/4.\+2/src/bgclib/output\+\_\+map\+\_\+init.\+c@{c\+:/\+R\+E\+P\+O/biomebgc-\/4.\+2/src/bgclib/output\+\_\+map\+\_\+init.\+c}}
+
+\begin{DoxyCode}
+00001 \textcolor{comment}{/*}
+00002 \textcolor{comment}{output\_map.c}
+00003 \textcolor{comment}{defines an array of pointers to doubles that map to all the intermediate}
+00004 \textcolor{comment}{variables in bgc}
+00005 \textcolor{comment}{}
+00006 \textcolor{comment}{*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*}
+00007 \textcolor{comment}{Biome-BGC version 4.2 (final release)}
+00008 \textcolor{comment}{See copyright.txt for Copyright information}
+00009 \textcolor{comment}{}
+00010 \textcolor{comment}{Revisions from version 4.1.1:}
+00011 \textcolor{comment}{Added cpool\_*\_storage\_gr fluxes to the cf block.}
+00012 \textcolor{comment}{Added fpi to the epv block}
+00013 \textcolor{comment}{*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*}
+00014 \textcolor{comment}{*/}
+00015 
+00016 \textcolor{preprocessor}{#include "bgc.h"}
+00017 
+\hypertarget{output__map__init_8c_source_l00018}{}\hyperlink{output__map__init_8c_aecdfe7c08babe362b34e23a5488eae09}{00018} \textcolor{keywordtype}{int} \hyperlink{output__map__init_8c_aecdfe7c08babe362b34e23a5488eae09}{output\_map\_init}(\textcolor{keywordtype}{double}** output\_map, metvar\_struct* metv, wstate\_struct* ws,
+00019 wflux\_struct* wf, cstate\_struct* cs, cflux\_struct* cf, nstate\_struct* ns,
+00020 nflux\_struct* nf, phenology\_struct* phen, epvar\_struct* epv,
+00021 psn\_struct* psn\_sun, psn\_struct* psn\_shade, summary\_struct* summary)
+00022 \{
+00023     \textcolor{keywordtype}{int} ok=1;
+00024     \textcolor{keywordtype}{int} i;
+00025     
+00026     \textcolor{keywordflow}{for} (i=0 ; ok && i<NMAP ; i++)
+00027     \{
+00028         output\_map[i] = NULL;
+00029     \}
+00030     
+00031     \textcolor{keywordflow}{if} (ok)
+00032     \{
+00033         \textcolor{comment}{/* daily meteorological variables */}
+00034         output\_map[0] = &metv->prcp;
+00035         output\_map[1] = &metv->tmax;
+00036         output\_map[2] = &metv->tmin;
+00037         output\_map[3] = &metv->tavg;
+00038         output\_map[4] = &metv->tday;
+00039         output\_map[5] = &metv->tnight;
+00040         output\_map[6] = &metv->tsoil;
+00041         output\_map[7] = &metv->vpd;
+00042         output\_map[8] = &metv->swavgfd;
+00043         output\_map[9] = &metv->swabs;
+00044         output\_map[10] = &metv->swtrans;
+00045         output\_map[11] = &metv->swabs\_per\_plaisun;
+00046         output\_map[12] = &metv->swabs\_per\_plaishade;
+00047         output\_map[13] = &metv->ppfd\_per\_plaisun;
+00048         output\_map[14] = &metv->ppfd\_per\_plaishade;
+00049         output\_map[15] = &metv->par;
+00050         output\_map[16] = &metv->parabs;
+00051         output\_map[17] = &metv->pa;
+00052         output\_map[18] = &metv->co2;
+00053         output\_map[19] = &metv->dayl;
+00054         
+00055         \textcolor{comment}{/* water state variables */}
+00056         output\_map[20] = &ws->soilw;
+00057         output\_map[21] = &ws->snoww;
+00058         output\_map[22] = &ws->canopyw;
+00059         output\_map[23] = &ws->prcp\_src;
+00060         output\_map[24] = &ws->outflow\_snk;
+00061         output\_map[25] = &ws->soilevap\_snk;
+00062         output\_map[26] = &ws->snowsubl\_snk;
+00063         output\_map[27] = &ws->canopyevap\_snk;
+00064         output\_map[28] = &ws->trans\_snk;
+00065         
+00066         \textcolor{comment}{/* water flux variables */}
+00067         output\_map[35] = &wf->prcp\_to\_canopyw;
+00068         output\_map[36] = &wf->prcp\_to\_soilw;
+00069         output\_map[37] = &wf->prcp\_to\_snoww;
+00070         output\_map[38] = &wf->canopyw\_evap;
+00071         output\_map[39] = &wf->canopyw\_to\_soilw;
+00072         output\_map[40] = &wf->snoww\_subl;
+00073         output\_map[41] = &wf->snoww\_to\_soilw;
+00074         output\_map[42] = &wf->soilw\_evap;
+00075         output\_map[43] = &wf->soilw\_trans;
+00076         output\_map[44] = &wf->soilw\_outflow;
+00077         
+00078         \textcolor{comment}{/* carbon state variables */}
+00079         output\_map[50] = &cs->leafc;
+00080         output\_map[51] = &cs->leafc\_storage;
+00081         output\_map[52] = &cs->leafc\_transfer;
+00082         output\_map[53] = &cs->frootc;
+00083         output\_map[54] = &cs->frootc\_storage;
+00084         output\_map[55] = &cs->frootc\_transfer;
+00085         output\_map[56] = &cs->livestemc;
+00086         output\_map[57] = &cs->livestemc\_storage;
+00087         output\_map[58] = &cs->livestemc\_transfer;
+00088         output\_map[59] = &cs->deadstemc;
+00089         output\_map[60] = &cs->deadstemc\_storage;
+00090         output\_map[61] = &cs->deadstemc\_transfer;
+00091         output\_map[62] = &cs->livecrootc;
+00092         output\_map[63] = &cs->livecrootc\_storage;
+00093         output\_map[64] = &cs->livecrootc\_transfer;
+00094         output\_map[65] = &cs->deadcrootc;
+00095         output\_map[66] = &cs->deadcrootc\_storage;
+00096         output\_map[67] = &cs->deadcrootc\_transfer;
+00097         output\_map[68] = &cs->gresp\_storage;
+00098         output\_map[69] = &cs->gresp\_transfer;
+00099         output\_map[70] = &cs->cwdc;
+00100         output\_map[71] = &cs->litr1c;
+00101         output\_map[72] = &cs->litr2c;
+00102         output\_map[73] = &cs->litr3c;
+00103         output\_map[74] = &cs->litr4c;
+00104         output\_map[75] = &cs->soil1c;
+00105         output\_map[76] = &cs->soil2c;
+00106         output\_map[77] = &cs->soil3c;
+00107         output\_map[78] = &cs->soil4c;
+00108         output\_map[79] = &cs->cpool;
+00109         output\_map[80] = &cs->psnsun\_src;
+00110         output\_map[81] = &cs->psnshade\_src;
+00111         output\_map[82] = &cs->leaf\_mr\_snk;
+00112         output\_map[83] = &cs->leaf\_gr\_snk;
+00113         output\_map[84] = &cs->froot\_mr\_snk;
+00114         output\_map[85] = &cs->froot\_gr\_snk;
+00115         output\_map[86] = &cs->livestem\_mr\_snk;
+00116         output\_map[87] = &cs->livestem\_gr\_snk;
+00117         output\_map[88] = &cs->deadstem\_gr\_snk;
+00118         output\_map[89] = &cs->livecroot\_mr\_snk;
+00119         output\_map[90] = &cs->livecroot\_gr\_snk;
+00120         output\_map[91] = &cs->deadcroot\_gr\_snk;
+00121         output\_map[92] = &cs->litr1\_hr\_snk;
+00122         output\_map[93] = &cs->litr2\_hr\_snk;
+00123         output\_map[94] = &cs->litr4\_hr\_snk;
+00124         output\_map[95] = &cs->soil1\_hr\_snk;
+00125         output\_map[96] = &cs->soil2\_hr\_snk;
+00126         output\_map[97] = &cs->soil3\_hr\_snk;
+00127         output\_map[98] = &cs->soil4\_hr\_snk;
+00128         output\_map[99] = &cs->fire\_snk;
+00129         
+00130         \textcolor{comment}{/* carbon flux variables */}
+00131         output\_map[120] = &cf->m\_leafc\_to\_litr1c;
+00132         output\_map[121] = &cf->m\_leafc\_to\_litr2c;
+00133         output\_map[122] = &cf->m\_leafc\_to\_litr3c;
+00134         output\_map[123] = &cf->m\_leafc\_to\_litr4c;
+00135         output\_map[124] = &cf->m\_frootc\_to\_litr1c;
+00136         output\_map[125] = &cf->m\_frootc\_to\_litr2c;
+00137         output\_map[126] = &cf->m\_frootc\_to\_litr3c;
+00138         output\_map[127] = &cf->m\_frootc\_to\_litr4c;
+00139         output\_map[128] = &cf->m\_leafc\_storage\_to\_litr1c;
+00140         output\_map[129] = &cf->m\_frootc\_storage\_to\_litr1c;
+00141         output\_map[130] = &cf->m\_livestemc\_storage\_to\_litr1c;
+00142         output\_map[131] = &cf->m\_deadstemc\_storage\_to\_litr1c;
+00143         output\_map[132] = &cf->m\_livecrootc\_storage\_to\_litr1c;
+00144         output\_map[133] = &cf->m\_deadcrootc\_storage\_to\_litr1c;
+00145         output\_map[134] = &cf->m\_leafc\_transfer\_to\_litr1c;
+00146         output\_map[135] = &cf->m\_frootc\_transfer\_to\_litr1c;
+00147         output\_map[136] = &cf->m\_livestemc\_transfer\_to\_litr1c;
+00148         output\_map[137] = &cf->m\_deadstemc\_transfer\_to\_litr1c;
+00149         output\_map[138] = &cf->m\_livecrootc\_transfer\_to\_litr1c;
+00150         output\_map[139] = &cf->m\_deadcrootc\_transfer\_to\_litr1c;
+00151         output\_map[140] = &cf->m\_livestemc\_to\_cwdc;
+00152         output\_map[141] = &cf->m\_deadstemc\_to\_cwdc;
+00153         output\_map[142] = &cf->m\_livecrootc\_to\_cwdc;
+00154         output\_map[143] = &cf->m\_deadcrootc\_to\_cwdc;
+00155         output\_map[144] = &cf->m\_gresp\_storage\_to\_litr1c;
+00156         output\_map[145] = &cf->m\_gresp\_transfer\_to\_litr1c;
+00157         output\_map[146] = &cf->m\_leafc\_to\_fire;
+00158         output\_map[147] = &cf->m\_frootc\_to\_fire;
+00159         output\_map[148] = &cf->m\_leafc\_storage\_to\_fire;
+00160         output\_map[149] = &cf->m\_frootc\_storage\_to\_fire;
+00161         output\_map[150] = &cf->m\_livestemc\_storage\_to\_fire;
+00162         output\_map[151] = &cf->m\_deadstemc\_storage\_to\_fire;
+00163         output\_map[152] = &cf->m\_livecrootc\_storage\_to\_fire;
+00164         output\_map[153] = &cf->m\_deadcrootc\_storage\_to\_fire;
+00165         output\_map[154] = &cf->m\_leafc\_transfer\_to\_fire;
+00166         output\_map[155] = &cf->m\_frootc\_transfer\_to\_fire;
+00167         output\_map[156] = &cf->m\_livestemc\_transfer\_to\_fire;
+00168         output\_map[157] = &cf->m\_deadstemc\_transfer\_to\_fire;
+00169         output\_map[158] = &cf->m\_livecrootc\_transfer\_to\_fire;
+00170         output\_map[159] = &cf->m\_deadcrootc\_transfer\_to\_fire;
+00171         output\_map[160] = &cf->m\_livestemc\_to\_fire;
+00172         output\_map[161] = &cf->m\_deadstemc\_to\_fire;
+00173         output\_map[162] = &cf->m\_livecrootc\_to\_fire;
+00174         output\_map[163] = &cf->m\_deadcrootc\_to\_fire;
+00175         output\_map[164] = &cf->m\_gresp\_storage\_to\_fire;
+00176         output\_map[165] = &cf->m\_gresp\_transfer\_to\_fire;
+00177         output\_map[166] = &cf->m\_litr1c\_to\_fire;
+00178         output\_map[167] = &cf->m\_litr2c\_to\_fire;
+00179         output\_map[168] = &cf->m\_litr3c\_to\_fire;
+00180         output\_map[169] = &cf->m\_litr4c\_to\_fire;
+00181         output\_map[170] = &cf->m\_cwdc\_to\_fire;
+00182         output\_map[171] = &cf->leafc\_transfer\_to\_leafc;
+00183         output\_map[172] = &cf->frootc\_transfer\_to\_frootc;
+00184         output\_map[173] = &cf->livestemc\_transfer\_to\_livestemc;
+00185         output\_map[174] = &cf->deadstemc\_transfer\_to\_deadstemc;
+00186         output\_map[175] = &cf->livecrootc\_transfer\_to\_livecrootc;
+00187         output\_map[176] = &cf->deadcrootc\_transfer\_to\_deadcrootc;
+00188         output\_map[177] = &cf->leafc\_to\_litr1c;
+00189         output\_map[178] = &cf->leafc\_to\_litr2c;
+00190         output\_map[179] = &cf->leafc\_to\_litr3c;
+00191         output\_map[180] = &cf->leafc\_to\_litr4c;
+00192         output\_map[181] = &cf->frootc\_to\_litr1c;
+00193         output\_map[182] = &cf->frootc\_to\_litr2c;
+00194         output\_map[183] = &cf->frootc\_to\_litr3c;
+00195         output\_map[184] = &cf->frootc\_to\_litr4c;
+00196         output\_map[185] = &cf->leaf\_day\_mr;
+00197         output\_map[186] = &cf->leaf\_night\_mr;
+00198         output\_map[187] = &cf->froot\_mr;
+00199         output\_map[188] = &cf->livestem\_mr;
+00200         output\_map[189] = &cf->livecroot\_mr;
+00201         output\_map[190] = &cf->psnsun\_to\_cpool;
+00202         output\_map[191] = &cf->psnshade\_to\_cpool;
+00203         output\_map[192] = &cf->cwdc\_to\_litr2c;
+00204         output\_map[193] = &cf->cwdc\_to\_litr3c;
+00205         output\_map[194] = &cf->cwdc\_to\_litr4c;
+00206         output\_map[195] = &cf->litr1\_hr;
+00207         output\_map[196] = &cf->litr1c\_to\_soil1c;
+00208         output\_map[197] = &cf->litr2\_hr;
+00209         output\_map[198] = &cf->litr2c\_to\_soil2c;
+00210         output\_map[199] = &cf->litr3c\_to\_litr2c;
+00211         output\_map[200] = &cf->litr4\_hr;
+00212         output\_map[201] = &cf->litr4c\_to\_soil3c;
+00213         output\_map[202] = &cf->soil1\_hr;
+00214         output\_map[203] = &cf->soil1c\_to\_soil2c;
+00215         output\_map[204] = &cf->soil2\_hr;
+00216         output\_map[205] = &cf->soil2c\_to\_soil3c;
+00217         output\_map[206] = &cf->soil3\_hr;
+00218         output\_map[207] = &cf->soil3c\_to\_soil4c;
+00219         output\_map[208] = &cf->soil4\_hr;
+00220         output\_map[209] = &cf->cpool\_to\_leafc;
+00221         output\_map[210] = &cf->cpool\_to\_leafc\_storage;
+00222         output\_map[211] = &cf->cpool\_to\_frootc;
+00223         output\_map[212] = &cf->cpool\_to\_frootc\_storage;
+00224         output\_map[213] = &cf->cpool\_to\_livestemc;
+00225         output\_map[214] = &cf->cpool\_to\_livestemc\_storage;
+00226         output\_map[215] = &cf->cpool\_to\_deadstemc;
+00227         output\_map[216] = &cf->cpool\_to\_deadstemc\_storage;
+00228         output\_map[217] = &cf->cpool\_to\_livecrootc;
+00229         output\_map[218] = &cf->cpool\_to\_livecrootc\_storage;
+00230         output\_map[219] = &cf->cpool\_to\_deadcrootc;
+00231         output\_map[220] = &cf->cpool\_to\_deadcrootc\_storage;
+00232         output\_map[221] = &cf->cpool\_to\_gresp\_storage;
+00233         output\_map[222] = &cf->cpool\_leaf\_gr;
+00234         output\_map[223] = &cf->transfer\_leaf\_gr;
+00235         output\_map[224] = &cf->cpool\_froot\_gr;
+00236         output\_map[225] = &cf->transfer\_froot\_gr;
+00237         output\_map[226] = &cf->cpool\_livestem\_gr;
+00238         output\_map[227] = &cf->transfer\_livestem\_gr;
+00239         output\_map[228] = &cf->cpool\_deadstem\_gr;
+00240         output\_map[229] = &cf->transfer\_deadstem\_gr;
+00241         output\_map[230] = &cf->cpool\_livecroot\_gr;
+00242         output\_map[231] = &cf->transfer\_livecroot\_gr;
+00243         output\_map[232] = &cf->cpool\_deadcroot\_gr;
+00244         output\_map[233] = &cf->transfer\_deadcroot\_gr;
+00245         output\_map[234] = &cf->leafc\_storage\_to\_leafc\_transfer;
+00246         output\_map[235] = &cf->frootc\_storage\_to\_frootc\_transfer;
+00247         output\_map[236] = &cf->livestemc\_storage\_to\_livestemc\_transfer;
+00248         output\_map[237] = &cf->deadstemc\_storage\_to\_deadstemc\_transfer;
+00249         output\_map[238] = &cf->livecrootc\_storage\_to\_livecrootc\_transfer;
+00250         output\_map[239] = &cf->deadcrootc\_storage\_to\_deadcrootc\_transfer;
+00251         output\_map[240] = &cf->gresp\_storage\_to\_gresp\_transfer;
+00252         output\_map[241] = &cf->livestemc\_to\_deadstemc;
+00253         output\_map[242] = &cf->livecrootc\_to\_deadcrootc;
+00254         output\_map[243] = &cf->cpool\_leaf\_storage\_gr;
+00255         output\_map[244] = &cf->cpool\_froot\_storage\_gr;
+00256         output\_map[245] = &cf->cpool\_livestem\_storage\_gr;
+00257         output\_map[246] = &cf->cpool\_deadstem\_storage\_gr;
+00258         output\_map[247] = &cf->cpool\_livecroot\_storage\_gr;
+00259         output\_map[248] = &cf->cpool\_deadcroot\_storage\_gr;
+00260         
+00261         \textcolor{comment}{/* nitrogen state variables */}
+00262         output\_map[280] = &ns->leafn;
+00263         output\_map[281] = &ns->leafn\_storage;
+00264         output\_map[282] = &ns->leafn\_transfer;
+00265         output\_map[283] = &ns->frootn;
+00266         output\_map[284] = &ns->frootn\_storage;
+00267         output\_map[285] = &ns->frootn\_transfer;
+00268         output\_map[286] = &ns->livestemn;
+00269         output\_map[287] = &ns->livestemn\_storage;
+00270         output\_map[288] = &ns->livestemn\_transfer;
+00271         output\_map[289] = &ns->deadstemn;
+00272         output\_map[290] = &ns->deadstemn\_storage;
+00273         output\_map[291] = &ns->deadstemn\_transfer;
+00274         output\_map[292] = &ns->livecrootn;
+00275         output\_map[293] = &ns->livecrootn\_storage;
+00276         output\_map[294] = &ns->livecrootn\_transfer;
+00277         output\_map[295] = &ns->deadcrootn;
+00278         output\_map[296] = &ns->deadcrootn\_storage;
+00279         output\_map[297] = &ns->deadcrootn\_transfer;
+00280         output\_map[298] = &ns->cwdn;
+00281         output\_map[299] = &ns->litr1n;
+00282         output\_map[300] = &ns->litr2n;
+00283         output\_map[301] = &ns->litr3n;
+00284         output\_map[302] = &ns->litr4n;
+00285         output\_map[303] = &ns->soil1n;
+00286         output\_map[304] = &ns->soil2n;
+00287         output\_map[305] = &ns->soil3n;
+00288         output\_map[306] = &ns->soil4n;
+00289         output\_map[307] = &ns->sminn;
+00290         output\_map[308] = &ns->retransn;
+00291         output\_map[309] = &ns->npool;
+00292         output\_map[310] = &ns->nfix\_src;
+00293         output\_map[311] = &ns->ndep\_src;
+00294         output\_map[312] = &ns->nleached\_snk;
+00295         output\_map[313] = &ns->nvol\_snk;
+00296         output\_map[314] = &ns->fire\_snk;
+00297         
+00298         \textcolor{comment}{/* nitrogen flux variables */}
+00299         output\_map[340] = &nf->m\_leafn\_to\_litr1n;
+00300         output\_map[341] = &nf->m\_leafn\_to\_litr2n;
+00301         output\_map[342] = &nf->m\_leafn\_to\_litr3n;
+00302         output\_map[343] = &nf->m\_leafn\_to\_litr4n;
+00303         output\_map[344] = &nf->m\_frootn\_to\_litr1n;
+00304         output\_map[345] = &nf->m\_frootn\_to\_litr2n;
+00305         output\_map[346] = &nf->m\_frootn\_to\_litr3n;
+00306         output\_map[347] = &nf->m\_frootn\_to\_litr4n;
+00307         output\_map[348] = &nf->m\_leafn\_storage\_to\_litr1n;
+00308         output\_map[349] = &nf->m\_frootn\_storage\_to\_litr1n;
+00309         output\_map[350] = &nf->m\_livestemn\_storage\_to\_litr1n;
+00310         output\_map[351] = &nf->m\_deadstemn\_storage\_to\_litr1n;
+00311         output\_map[352] = &nf->m\_livecrootn\_storage\_to\_litr1n;
+00312         output\_map[353] = &nf->m\_deadcrootn\_storage\_to\_litr1n;
+00313         output\_map[354] = &nf->m\_leafn\_transfer\_to\_litr1n;
+00314         output\_map[355] = &nf->m\_frootn\_transfer\_to\_litr1n;
+00315         output\_map[356] = &nf->m\_livestemn\_transfer\_to\_litr1n;
+00316         output\_map[357] = &nf->m\_deadstemn\_transfer\_to\_litr1n;
+00317         output\_map[358] = &nf->m\_livecrootn\_transfer\_to\_litr1n;
+00318         output\_map[359] = &nf->m\_deadcrootn\_transfer\_to\_litr1n;
+00319         output\_map[360] = &nf->m\_livestemn\_to\_litr1n;
+00320         output\_map[361] = &nf->m\_livestemn\_to\_cwdn;
+00321         output\_map[362] = &nf->m\_deadstemn\_to\_cwdn;
+00322         output\_map[363] = &nf->m\_livecrootn\_to\_litr1n;
+00323         output\_map[364] = &nf->m\_livecrootn\_to\_cwdn;
+00324         output\_map[365] = &nf->m\_deadcrootn\_to\_cwdn;
+00325         output\_map[366] = &nf->m\_retransn\_to\_litr1n;
+00326         output\_map[367] = &nf->m\_leafn\_to\_fire;
+00327         output\_map[368] = &nf->m\_frootn\_to\_fire;
+00328         output\_map[369] = &nf->m\_leafn\_storage\_to\_fire;
+00329         output\_map[370] = &nf->m\_frootn\_storage\_to\_fire;
+00330         output\_map[371] = &nf->m\_livestemn\_storage\_to\_fire;
+00331         output\_map[372] = &nf->m\_deadstemn\_storage\_to\_fire;
+00332         output\_map[373] = &nf->m\_livecrootn\_storage\_to\_fire;
+00333         output\_map[374] = &nf->m\_deadcrootn\_storage\_to\_fire;
+00334         output\_map[375] = &nf->m\_leafn\_transfer\_to\_fire;
+00335         output\_map[376] = &nf->m\_frootn\_transfer\_to\_fire;
+00336         output\_map[377] = &nf->m\_livestemn\_transfer\_to\_fire;
+00337         output\_map[378] = &nf->m\_deadstemn\_transfer\_to\_fire;
+00338         output\_map[379] = &nf->m\_livecrootn\_transfer\_to\_fire;
+00339         output\_map[380] = &nf->m\_deadcrootn\_transfer\_to\_fire;
+00340         output\_map[381] = &nf->m\_livestemn\_to\_fire;
+00341         output\_map[382] = &nf->m\_deadstemn\_to\_fire;
+00342         output\_map[383] = &nf->m\_livecrootn\_to\_fire;
+00343         output\_map[384] = &nf->m\_deadcrootn\_to\_fire;
+00344         output\_map[385] = &nf->m\_retransn\_to\_fire;
+00345         output\_map[386] = &nf->m\_litr1n\_to\_fire;
+00346         output\_map[387] = &nf->m\_litr2n\_to\_fire;
+00347         output\_map[388] = &nf->m\_litr3n\_to\_fire;
+00348         output\_map[389] = &nf->m\_litr4n\_to\_fire;
+00349         output\_map[390] = &nf->m\_cwdn\_to\_fire;
+00350         output\_map[391] = &nf->leafn\_transfer\_to\_leafn;
+00351         output\_map[392] = &nf->frootn\_transfer\_to\_frootn;
+00352         output\_map[393] = &nf->livestemn\_transfer\_to\_livestemn;
+00353         output\_map[394] = &nf->deadstemn\_transfer\_to\_deadstemn;
+00354         output\_map[395] = &nf->livecrootn\_transfer\_to\_livecrootn;
+00355         output\_map[396] = &nf->deadcrootn\_transfer\_to\_deadcrootn;
+00356         output\_map[397] = &nf->leafn\_to\_litr1n;
+00357         output\_map[398] = &nf->leafn\_to\_litr2n;
+00358         output\_map[399] = &nf->leafn\_to\_litr3n;
+00359         output\_map[400] = &nf->leafn\_to\_litr4n;
+00360         output\_map[401] = &nf->leafn\_to\_retransn;
+00361         output\_map[402] = &nf->frootn\_to\_litr1n;
+00362         output\_map[403] = &nf->frootn\_to\_litr2n;
+00363         output\_map[404] = &nf->frootn\_to\_litr3n;
+00364         output\_map[405] = &nf->frootn\_to\_litr4n;
+00365         output\_map[406] = &nf->ndep\_to\_sminn;
+00366         output\_map[407] = &nf->nfix\_to\_sminn;
+00367         output\_map[408] = &nf->cwdn\_to\_litr2n;
+00368         output\_map[409] = &nf->cwdn\_to\_litr3n;
+00369         output\_map[410] = &nf->cwdn\_to\_litr4n;
+00370         output\_map[411] = &nf->litr1n\_to\_soil1n;
+00371         output\_map[412] = &nf->sminn\_to\_soil1n\_l1;
+00372         output\_map[413] = &nf->litr2n\_to\_soil2n;
+00373         output\_map[414] = &nf->sminn\_to\_soil2n\_l2;
+00374         output\_map[415] = &nf->litr3n\_to\_litr2n;
+00375         output\_map[416] = &nf->litr4n\_to\_soil3n;
+00376         output\_map[417] = &nf->sminn\_to\_soil3n\_l4;
+00377         output\_map[418] = &nf->soil1n\_to\_soil2n;
+00378         output\_map[419] = &nf->sminn\_to\_soil2n\_s1;
+00379         output\_map[420] = &nf->soil2n\_to\_soil3n;
+00380         output\_map[421] = &nf->sminn\_to\_soil3n\_s2;
+00381         output\_map[422] = &nf->soil3n\_to\_soil4n;
+00382         output\_map[423] = &nf->sminn\_to\_soil4n\_s3;
+00383         output\_map[424] = &nf->soil4n\_to\_sminn;
+00384         output\_map[425] = &nf->sminn\_to\_nvol\_l1s1;
+00385         output\_map[426] = &nf->sminn\_to\_nvol\_l2s2;
+00386         output\_map[427] = &nf->sminn\_to\_nvol\_l4s3;
+00387         output\_map[428] = &nf->sminn\_to\_nvol\_s1s2;
+00388         output\_map[429] = &nf->sminn\_to\_nvol\_s2s3;
+00389         output\_map[430] = &nf->sminn\_to\_nvol\_s3s4;
+00390         output\_map[431] = &nf->sminn\_to\_nvol\_s4;
+00391         output\_map[432] = &nf->sminn\_leached;
+00392         output\_map[433] = &nf->retransn\_to\_npool;
+00393         output\_map[434] = &nf->sminn\_to\_npool;
+00394         output\_map[435] = &nf->npool\_to\_leafn;
+00395         output\_map[436] = &nf->npool\_to\_leafn\_storage;
+00396         output\_map[437] = &nf->npool\_to\_frootn;
+00397         output\_map[438] = &nf->npool\_to\_frootn\_storage;
+00398         output\_map[439] = &nf->npool\_to\_livestemn;
+00399         output\_map[440] = &nf->npool\_to\_livestemn\_storage;
+00400         output\_map[441] = &nf->npool\_to\_deadstemn;
+00401         output\_map[442] = &nf->npool\_to\_deadstemn\_storage;
+00402         output\_map[443] = &nf->npool\_to\_livecrootn;
+00403         output\_map[444] = &nf->npool\_to\_livecrootn\_storage;
+00404         output\_map[445] = &nf->npool\_to\_deadcrootn;
+00405         output\_map[446] = &nf->npool\_to\_deadcrootn\_storage;
+00406         output\_map[447] = &nf->leafn\_storage\_to\_leafn\_transfer;
+00407         output\_map[448] = &nf->frootn\_storage\_to\_frootn\_transfer;
+00408         output\_map[449] = &nf->livestemn\_storage\_to\_livestemn\_transfer;
+00409         output\_map[450] = &nf->deadstemn\_storage\_to\_deadstemn\_transfer;
+00410         output\_map[451] = &nf->livecrootn\_storage\_to\_livecrootn\_transfer;
+00411         output\_map[452] = &nf->deadcrootn\_storage\_to\_deadcrootn\_transfer;
+00412         output\_map[453] = &nf->livestemn\_to\_deadstemn;
+00413         output\_map[454] = &nf->livestemn\_to\_retransn;
+00414         output\_map[455] = &nf->livecrootn\_to\_deadcrootn;
+00415         output\_map[456] = &nf->livecrootn\_to\_retransn;
+00416         
+00417         \textcolor{comment}{/* phenological variables */}
+00418         output\_map[480] = &phen->remdays\_curgrowth;
+00419         output\_map[481] = &phen->remdays\_transfer;
+00420         output\_map[482] = &phen->remdays\_litfall;
+00421         output\_map[483] = &phen->predays\_transfer;
+00422         output\_map[484] = &phen->predays\_litfall;
+00423         
+00424         \textcolor{comment}{/* ecophysiological variables */}
+00425         output\_map[500] = &epv->day\_leafc\_litfall\_increment;
+00426         output\_map[501] = &epv->day\_frootc\_litfall\_increment;
+00427         output\_map[502] = &epv->day\_livestemc\_turnover\_increment;
+00428         output\_map[503] = &epv->day\_livecrootc\_turnover\_increment;
+00429         output\_map[504] = &epv->annmax\_leafc;
+00430         output\_map[505] = &epv->annmax\_frootc;
+00431         output\_map[506] = &epv->annmax\_livestemc;
+00432         output\_map[507] = &epv->annmax\_livecrootc;
+00433         output\_map[508] = &epv->dsr;
+00434         output\_map[509] = &epv->proj\_lai;
+00435         output\_map[510] = &epv->all\_lai;
+00436         output\_map[511] = &epv->plaisun;
+00437         output\_map[512] = &epv->plaishade;
+00438         output\_map[513] = &epv->sun\_proj\_sla;
+00439         output\_map[514] = &epv->shade\_proj\_sla;
+00440         output\_map[515] = &epv->psi;
+00441         output\_map[516] = &epv->vwc;
+00442         output\_map[517] = &epv->dlmr\_area\_sun;
+00443         output\_map[518] = &epv->dlmr\_area\_shade;
+00444         output\_map[519] = &epv->gl\_t\_wv\_sun;
+00445         output\_map[520] = &epv->gl\_t\_wv\_shade;
+00446         output\_map[521] = &epv->assim\_sun;
+00447         output\_map[522] = &epv->assim\_shade;
+00448         output\_map[523] = &epv->t\_scalar;
+00449         output\_map[524] = &epv->w\_scalar;
+00450         output\_map[525] = &epv->rate\_scalar;
+00451         output\_map[526] = &epv->daily\_gross\_nmin;
+00452         output\_map[527] = &epv->daily\_gross\_nimmob;
+00453         output\_map[528] = &epv->daily\_net\_nmin;
+00454         output\_map[529] = &epv->m\_tmin;
+00455         output\_map[530] = &epv->m\_psi;
+00456         output\_map[531] = &epv->m\_co2;
+00457         output\_map[532] = &epv->m\_ppfd\_sun;
+00458         output\_map[533] = &epv->m\_ppfd\_shade;
+00459         output\_map[534] = &epv->m\_vpd;
+00460         output\_map[535] = &epv->m\_final\_sun;
+00461         output\_map[536] = &epv->m\_final\_shade;
+00462         output\_map[537] = &epv->gl\_bl;
+00463         output\_map[538] = &epv->gl\_c;
+00464         output\_map[539] = &epv->gl\_s\_sun;
+00465         output\_map[540] = &epv->gl\_s\_shade;
+00466         output\_map[541] = &epv->gl\_e\_wv;
+00467         output\_map[542] = &epv->gl\_sh;
+00468         output\_map[543] = &epv->gc\_e\_wv;
+00469         output\_map[544] = &epv->gc\_sh;
+00470         output\_map[545] = &epv->ytd\_maxplai;
+00471         output\_map[546] = &epv->fpi;
+00472                 
+00473         \textcolor{comment}{/* photosynthesis variables */}
+00474         \textcolor{comment}{/* sunlit canopy fraction */}
+00475         output\_map[560] = &psn\_sun->pa;
+00476         output\_map[561] = &psn\_sun->co2;
+00477         output\_map[562] = &psn\_sun->t;
+00478         output\_map[563] = &psn\_sun->lnc;
+00479         output\_map[564] = &psn\_sun->flnr;
+00480         output\_map[565] = &psn\_sun->ppfd;
+00481         output\_map[566] = &psn\_sun->g;
+00482         output\_map[567] = &psn\_sun->dlmr;
+00483         output\_map[568] = &psn\_sun->Ci;
+00484         output\_map[569] = &psn\_sun->O2;
+00485         output\_map[570] = &psn\_sun->Ca;
+00486         output\_map[571] = &psn\_sun->gamma;
+00487         output\_map[572] = &psn\_sun->Kc;
+00488         output\_map[573] = &psn\_sun->Ko;
+00489         output\_map[574] = &psn\_sun->Vmax;
+00490         output\_map[575] = &psn\_sun->Jmax;
+00491         output\_map[576] = &psn\_sun->J;
+00492         output\_map[577] = &psn\_sun->Av;
+00493         output\_map[578] = &psn\_sun->Aj;
+00494         output\_map[579] = &psn\_sun->A;
+00495         
+00496         \textcolor{comment}{/* photosynthesis variables */}
+00497         \textcolor{comment}{/* shaded canopy fraction */}
+00498         output\_map[590] = &psn\_shade->pa;
+00499         output\_map[591] = &psn\_shade->co2;
+00500         output\_map[592] = &psn\_shade->t;
+00501         output\_map[593] = &psn\_shade->lnc;
+00502         output\_map[594] = &psn\_shade->flnr;
+00503         output\_map[595] = &psn\_shade->ppfd;
+00504         output\_map[596] = &psn\_shade->g;
+00505         output\_map[597] = &psn\_shade->dlmr;
+00506         output\_map[598] = &psn\_shade->Ci;
+00507         output\_map[599] = &psn\_shade->O2;
+00508         output\_map[600] = &psn\_shade->Ca;
+00509         output\_map[601] = &psn\_shade->gamma;
+00510         output\_map[602] = &psn\_shade->Kc;
+00511         output\_map[603] = &psn\_shade->Ko;
+00512         output\_map[604] = &psn\_shade->Vmax;
+00513         output\_map[605] = &psn\_shade->Jmax;
+00514         output\_map[606] = &psn\_shade->J;
+00515         output\_map[607] = &psn\_shade->Av;
+00516         output\_map[608] = &psn\_shade->Aj;
+00517         output\_map[609] = &psn\_shade->A;
+00518         
+00519         \textcolor{comment}{/* carbon budget summary output variables */}
+00520         output\_map[620] = &summary->daily\_npp;
+00521         output\_map[621] = &summary->daily\_nep;
+00522         output\_map[622] = &summary->daily\_nee;
+00523         output\_map[623] = &summary->daily\_gpp;
+00524         output\_map[624] = &summary->daily\_mr;
+00525         output\_map[625] = &summary->daily\_gr;
+00526         output\_map[626] = &summary->daily\_hr;
+00527         output\_map[627] = &summary->daily\_fire;
+00528         output\_map[628] = &summary->cum\_npp;
+00529         output\_map[629] = &summary->cum\_nep;
+00530         output\_map[630] = &summary->cum\_nee;
+00531         output\_map[631] = &summary->cum\_gpp;
+00532         output\_map[632] = &summary->cum\_mr;
+00533         output\_map[633] = &summary->cum\_gr;
+00534         output\_map[634] = &summary->cum\_hr;
+00535         output\_map[635] = &summary->cum\_fire;
+00536         output\_map[636] = &summary->vegc;
+00537         output\_map[637] = &summary->litrc;
+00538         output\_map[638] = &summary->soilc;
+00539         output\_map[639] = &summary->totalc;
+00540         output\_map[640] = &summary->daily\_litfallc;
+00541         output\_map[641] = &summary->daily\_et;
+00542         output\_map[642] = &summary->daily\_outflow;
+00543         output\_map[643] = &summary->daily\_evap;
+00544         output\_map[644] = &summary->daily\_trans;
+00545         output\_map[645] = &summary->daily\_soilw;
+00546         output\_map[646] = &summary->daily\_snoww;
+00547     \}
+00548     
+00549     \textcolor{keywordflow}{return} (!ok);
+00550 \}
+00551         
+\end{DoxyCode}

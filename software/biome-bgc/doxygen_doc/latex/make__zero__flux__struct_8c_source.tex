@@ -1,0 +1,287 @@
+\hypertarget{make__zero__flux__struct_8c_source}{}\section{make\+\_\+zero\+\_\+flux\+\_\+struct.\+c}
+\label{make__zero__flux__struct_8c_source}\index{c\+:/\+R\+E\+P\+O/biomebgc-\/4.\+2/src/bgclib/make\+\_\+zero\+\_\+flux\+\_\+struct.\+c@{c\+:/\+R\+E\+P\+O/biomebgc-\/4.\+2/src/bgclib/make\+\_\+zero\+\_\+flux\+\_\+struct.\+c}}
+
+\begin{DoxyCode}
+00001 \textcolor{comment}{/* }
+00002 \textcolor{comment}{make\_zero\_flux\_struct.c}
+00003 \textcolor{comment}{create structures initialized with zero for forcing fluxes to zero}
+00004 \textcolor{comment}{between simulation days}
+00005 \textcolor{comment}{}
+00006 \textcolor{comment}{*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*}
+00007 \textcolor{comment}{Biome-BGC version 4.2 (final release)}
+00008 \textcolor{comment}{See copyright.txt for Copyright information}
+00009 \textcolor{comment}{*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*}
+00010 \textcolor{comment}{*/}
+00011 
+00012 \textcolor{preprocessor}{#include "bgc.h"}
+00013 
+\hypertarget{make__zero__flux__struct_8c_source_l00014}{}\hyperlink{make__zero__flux__struct_8c_a22aa2b538ae817627f4d4eae85cb3993}{00014} \textcolor{keywordtype}{int} \hyperlink{make__zero__flux__struct_8c_a22aa2b538ae817627f4d4eae85cb3993}{make\_zero\_flux\_struct}(wflux\_struct* wf, cflux\_struct* cf,
+00015 nflux\_struct* nf)
+00016 \{
+00017     \textcolor{keywordtype}{int} ok=1;
+00018     \textcolor{comment}{/* daily water fluxes */}
+00019     wf->prcp\_to\_canopyw = 0.0;
+00020     wf->prcp\_to\_soilw = 0.0;
+00021     wf->prcp\_to\_snoww = 0.0;
+00022     wf->canopyw\_evap = 0.0;
+00023     wf->canopyw\_to\_soilw = 0.0;
+00024     wf->snoww\_subl = 0.0;
+00025     wf->snoww\_to\_soilw = 0.0;
+00026     wf->soilw\_evap = 0.0;
+00027     wf->soilw\_trans = 0.0;
+00028     wf->soilw\_outflow = 0.0;
+00029     
+00030     \textcolor{comment}{/* daily carbon fluxes */}
+00031     cf->m\_leafc\_to\_litr1c = 0.0;
+00032     cf->m\_leafc\_to\_litr2c = 0.0;
+00033     cf->m\_leafc\_to\_litr3c = 0.0;
+00034     cf->m\_leafc\_to\_litr4c = 0.0;
+00035     cf->m\_frootc\_to\_litr1c = 0.0;
+00036     cf->m\_frootc\_to\_litr2c = 0.0;
+00037     cf->m\_frootc\_to\_litr3c = 0.0;
+00038     cf->m\_frootc\_to\_litr4c = 0.0;
+00039     cf->m\_leafc\_storage\_to\_litr1c = 0.0;
+00040     cf->m\_frootc\_storage\_to\_litr1c = 0.0;
+00041     cf->m\_livestemc\_storage\_to\_litr1c = 0.0;
+00042     cf->m\_deadstemc\_storage\_to\_litr1c = 0.0;
+00043     cf->m\_livecrootc\_storage\_to\_litr1c = 0.0;
+00044     cf->m\_deadcrootc\_storage\_to\_litr1c = 0.0;
+00045     cf->m\_leafc\_transfer\_to\_litr1c = 0.0;
+00046     cf->m\_frootc\_transfer\_to\_litr1c = 0.0;
+00047     cf->m\_livestemc\_transfer\_to\_litr1c = 0.0;
+00048     cf->m\_deadstemc\_transfer\_to\_litr1c = 0.0;
+00049     cf->m\_livecrootc\_transfer\_to\_litr1c = 0.0;
+00050     cf->m\_deadcrootc\_transfer\_to\_litr1c = 0.0;
+00051     cf->m\_livestemc\_to\_cwdc = 0.0;
+00052     cf->m\_deadstemc\_to\_cwdc = 0.0;
+00053     cf->m\_livecrootc\_to\_cwdc = 0.0;
+00054     cf->m\_deadcrootc\_to\_cwdc = 0.0;
+00055     cf->m\_gresp\_storage\_to\_litr1c = 0.0;
+00056     cf->m\_gresp\_transfer\_to\_litr1c = 0.0;
+00057     cf->m\_leafc\_to\_fire = 0.0;
+00058     cf->m\_frootc\_to\_fire = 0.0;
+00059     cf->m\_leafc\_storage\_to\_fire = 0.0;
+00060     cf->m\_frootc\_storage\_to\_fire = 0.0;
+00061     cf->m\_livestemc\_storage\_to\_fire = 0.0;
+00062     cf->m\_deadstemc\_storage\_to\_fire = 0.0;
+00063     cf->m\_livecrootc\_storage\_to\_fire = 0.0;
+00064     cf->m\_deadcrootc\_storage\_to\_fire = 0.0;
+00065     cf->m\_leafc\_transfer\_to\_fire = 0.0;
+00066     cf->m\_frootc\_transfer\_to\_fire = 0.0;
+00067     cf->m\_livestemc\_transfer\_to\_fire = 0.0;
+00068     cf->m\_deadstemc\_transfer\_to\_fire = 0.0;
+00069     cf->m\_livecrootc\_transfer\_to\_fire = 0.0;
+00070     cf->m\_deadcrootc\_transfer\_to\_fire = 0.0;
+00071     cf->m\_livestemc\_to\_fire = 0.0;
+00072     cf->m\_deadstemc\_to\_fire = 0.0;
+00073     cf->m\_livecrootc\_to\_fire = 0.0;
+00074     cf->m\_deadcrootc\_to\_fire = 0.0;
+00075     cf->m\_gresp\_storage\_to\_fire = 0.0;
+00076     cf->m\_gresp\_transfer\_to\_fire = 0.0;
+00077     cf->m\_litr1c\_to\_fire = 0.0;
+00078     cf->m\_litr2c\_to\_fire = 0.0;
+00079     cf->m\_litr3c\_to\_fire = 0.0;
+00080     cf->m\_litr4c\_to\_fire = 0.0;
+00081     cf->m\_cwdc\_to\_fire = 0.0;
+00082     cf->leafc\_transfer\_to\_leafc = 0.0;
+00083     cf->frootc\_transfer\_to\_frootc = 0.0;
+00084     cf->livestemc\_transfer\_to\_livestemc = 0.0;
+00085     cf->deadstemc\_transfer\_to\_deadstemc = 0.0;
+00086     cf->livecrootc\_transfer\_to\_livecrootc = 0.0;
+00087     cf->deadcrootc\_transfer\_to\_deadcrootc = 0.0;
+00088     cf->leafc\_to\_litr1c = 0.0;
+00089     cf->leafc\_to\_litr2c = 0.0;
+00090     cf->leafc\_to\_litr3c = 0.0;
+00091     cf->leafc\_to\_litr4c = 0.0;
+00092     cf->frootc\_to\_litr1c = 0.0;
+00093     cf->frootc\_to\_litr2c = 0.0;
+00094     cf->frootc\_to\_litr3c = 0.0;
+00095     cf->frootc\_to\_litr4c = 0.0;
+00096     cf->leaf\_day\_mr = 0.0;
+00097     cf->leaf\_night\_mr = 0.0;
+00098     cf->froot\_mr = 0.0;
+00099     cf->livestem\_mr = 0.0;
+00100     cf->livecroot\_mr = 0.0;
+00101     cf->psnsun\_to\_cpool = 0.0;
+00102     cf->psnshade\_to\_cpool = 0.0;
+00103     cf->cwdc\_to\_litr2c = 0.0;
+00104     cf->cwdc\_to\_litr3c = 0.0;
+00105     cf->cwdc\_to\_litr4c = 0.0;
+00106     cf->litr1\_hr = 0.0;
+00107     cf->litr1c\_to\_soil1c = 0.0;
+00108     cf->litr2\_hr = 0.0;
+00109     cf->litr2c\_to\_soil2c = 0.0;
+00110     cf->litr3c\_to\_litr2c = 0.0;
+00111     cf->litr4\_hr = 0.0;
+00112     cf->litr4c\_to\_soil3c = 0.0;
+00113     cf->soil1\_hr = 0.0;
+00114     cf->soil1c\_to\_soil2c = 0.0;
+00115     cf->soil2\_hr = 0.0;
+00116     cf->soil2c\_to\_soil3c = 0.0;
+00117     cf->soil3\_hr = 0.0;
+00118     cf->soil3c\_to\_soil4c = 0.0;
+00119     cf->soil4\_hr = 0.0;
+00120     cf->cpool\_to\_leafc = 0.0;
+00121     cf->cpool\_to\_leafc\_storage = 0.0;
+00122     cf->cpool\_to\_frootc = 0.0;
+00123     cf->cpool\_to\_frootc\_storage = 0.0;
+00124     cf->cpool\_to\_livestemc = 0.0;
+00125     cf->cpool\_to\_livestemc\_storage = 0.0;
+00126     cf->cpool\_to\_deadstemc = 0.0;
+00127     cf->cpool\_to\_deadstemc\_storage = 0.0;
+00128     cf->cpool\_to\_livecrootc = 0.0;
+00129     cf->cpool\_to\_livecrootc\_storage = 0.0;
+00130     cf->cpool\_to\_deadcrootc = 0.0;
+00131     cf->cpool\_to\_deadcrootc\_storage = 0.0;
+00132     cf->cpool\_to\_gresp\_storage = 0.0;
+00133     cf->cpool\_leaf\_gr = 0.0;
+00134     cf->cpool\_leaf\_storage\_gr = 0.0;
+00135     cf->transfer\_leaf\_gr = 0.0;
+00136     cf->cpool\_froot\_gr = 0.0;
+00137     cf->cpool\_froot\_storage\_gr = 0.0;
+00138     cf->transfer\_froot\_gr = 0.0;
+00139     cf->cpool\_livestem\_gr = 0.0;
+00140     cf->cpool\_livestem\_storage\_gr = 0.0;
+00141     cf->transfer\_livestem\_gr = 0.0;
+00142     cf->cpool\_deadstem\_gr = 0.0;
+00143     cf->cpool\_deadstem\_storage\_gr = 0.0;
+00144     cf->transfer\_deadstem\_gr = 0.0;
+00145     cf->cpool\_livecroot\_gr = 0.0;
+00146     cf->cpool\_livecroot\_storage\_gr = 0.0;
+00147     cf->transfer\_livecroot\_gr = 0.0;
+00148     cf->cpool\_deadcroot\_gr = 0.0;
+00149     cf->cpool\_deadcroot\_storage\_gr = 0.0;
+00150     cf->transfer\_deadcroot\_gr = 0.0;
+00151     cf->leafc\_storage\_to\_leafc\_transfer = 0.0;
+00152     cf->frootc\_storage\_to\_frootc\_transfer = 0.0;
+00153     cf->livestemc\_storage\_to\_livestemc\_transfer = 0.0;
+00154     cf->deadstemc\_storage\_to\_deadstemc\_transfer = 0.0;
+00155     cf->livecrootc\_storage\_to\_livecrootc\_transfer = 0.0;
+00156     cf->deadcrootc\_storage\_to\_deadcrootc\_transfer = 0.0;
+00157     cf->gresp\_storage\_to\_gresp\_transfer = 0.0;
+00158     cf->livestemc\_to\_deadstemc = 0.0;
+00159     cf->livecrootc\_to\_deadcrootc = 0.0;
+00160                 
+00161     \textcolor{comment}{/* daily nitrogen fluxes */}
+00162     nf->m\_leafn\_to\_litr1n = 0.0;
+00163     nf->m\_leafn\_to\_litr2n = 0.0;
+00164     nf->m\_leafn\_to\_litr3n = 0.0;
+00165     nf->m\_leafn\_to\_litr4n = 0.0;
+00166     nf->m\_frootn\_to\_litr1n = 0.0;
+00167     nf->m\_frootn\_to\_litr2n = 0.0;
+00168     nf->m\_frootn\_to\_litr3n = 0.0;
+00169     nf->m\_frootn\_to\_litr4n = 0.0;
+00170     nf->m\_leafn\_storage\_to\_litr1n = 0.0;
+00171     nf->m\_frootn\_storage\_to\_litr1n = 0.0;
+00172     nf->m\_livestemn\_storage\_to\_litr1n = 0.0;
+00173     nf->m\_deadstemn\_storage\_to\_litr1n = 0.0;
+00174     nf->m\_livecrootn\_storage\_to\_litr1n = 0.0;
+00175     nf->m\_deadcrootn\_storage\_to\_litr1n = 0.0;
+00176     nf->m\_leafn\_transfer\_to\_litr1n = 0.0;
+00177     nf->m\_frootn\_transfer\_to\_litr1n = 0.0;
+00178     nf->m\_livestemn\_transfer\_to\_litr1n = 0.0;
+00179     nf->m\_deadstemn\_transfer\_to\_litr1n = 0.0;
+00180     nf->m\_livecrootn\_transfer\_to\_litr1n = 0.0;
+00181     nf->m\_deadcrootn\_transfer\_to\_litr1n = 0.0;
+00182     nf->m\_livestemn\_to\_litr1n = 0.0;
+00183     nf->m\_livestemn\_to\_cwdn = 0.0;
+00184     nf->m\_deadstemn\_to\_cwdn = 0.0;
+00185     nf->m\_livecrootn\_to\_litr1n = 0.0;
+00186     nf->m\_livecrootn\_to\_cwdn = 0.0;
+00187     nf->m\_deadcrootn\_to\_cwdn = 0.0;
+00188     nf->m\_retransn\_to\_litr1n = 0.0;
+00189     nf->m\_leafn\_to\_fire = 0.0;
+00190     nf->m\_frootn\_to\_fire = 0.0;
+00191     nf->m\_leafn\_storage\_to\_fire = 0.0;
+00192     nf->m\_frootn\_storage\_to\_fire = 0.0;
+00193     nf->m\_livestemn\_storage\_to\_fire = 0.0;
+00194     nf->m\_deadstemn\_storage\_to\_fire = 0.0;
+00195     nf->m\_livecrootn\_storage\_to\_fire = 0.0;
+00196     nf->m\_deadcrootn\_storage\_to\_fire = 0.0;
+00197     nf->m\_leafn\_transfer\_to\_fire = 0.0;
+00198     nf->m\_frootn\_transfer\_to\_fire = 0.0;
+00199     nf->m\_livestemn\_transfer\_to\_fire = 0.0;
+00200     nf->m\_deadstemn\_transfer\_to\_fire = 0.0;
+00201     nf->m\_livecrootn\_transfer\_to\_fire = 0.0;
+00202     nf->m\_deadcrootn\_transfer\_to\_fire = 0.0;
+00203     nf->m\_livestemn\_to\_fire = 0.0;
+00204     nf->m\_deadstemn\_to\_fire = 0.0;
+00205     nf->m\_livecrootn\_to\_fire = 0.0;
+00206     nf->m\_deadcrootn\_to\_fire = 0.0;
+00207     nf->m\_retransn\_to\_fire = 0.0;
+00208     nf->m\_litr1n\_to\_fire = 0.0;
+00209     nf->m\_litr2n\_to\_fire = 0.0;
+00210     nf->m\_litr3n\_to\_fire = 0.0;
+00211     nf->m\_litr4n\_to\_fire = 0.0;
+00212     nf->m\_cwdn\_to\_fire = 0.0;
+00213     nf->leafn\_transfer\_to\_leafn = 0.0;
+00214     nf->frootn\_transfer\_to\_frootn = 0.0;
+00215     nf->livestemn\_transfer\_to\_livestemn = 0.0;
+00216     nf->deadstemn\_transfer\_to\_deadstemn = 0.0;
+00217     nf->livecrootn\_transfer\_to\_livecrootn = 0.0;
+00218     nf->deadcrootn\_transfer\_to\_deadcrootn = 0.0;
+00219     nf->leafn\_to\_litr1n = 0.0;
+00220     nf->leafn\_to\_litr2n = 0.0;
+00221     nf->leafn\_to\_litr3n = 0.0;
+00222     nf->leafn\_to\_litr4n = 0.0;
+00223     nf->leafn\_to\_retransn = 0.0;
+00224     nf->frootn\_to\_litr1n = 0.0;
+00225     nf->frootn\_to\_litr2n = 0.0;
+00226     nf->frootn\_to\_litr3n = 0.0;
+00227     nf->frootn\_to\_litr4n = 0.0;
+00228     nf->ndep\_to\_sminn = 0.0; 
+00229     nf->nfix\_to\_sminn = 0.0; 
+00230     nf->cwdn\_to\_litr2n = 0.0;
+00231     nf->cwdn\_to\_litr3n = 0.0;
+00232     nf->cwdn\_to\_litr4n = 0.0;
+00233     nf->litr1n\_to\_soil1n = 0.0;
+00234     nf->sminn\_to\_soil1n\_l1 = 0.0;
+00235     nf->litr2n\_to\_soil2n = 0.0;
+00236     nf->sminn\_to\_soil2n\_l2 = 0.0;
+00237     nf->litr3n\_to\_litr2n = 0.0;
+00238     nf->litr4n\_to\_soil3n = 0.0;
+00239     nf->sminn\_to\_soil3n\_l4 = 0.0;
+00240     nf->soil1n\_to\_soil2n = 0.0;
+00241     nf->sminn\_to\_soil2n\_s1 = 0.0;
+00242     nf->soil2n\_to\_soil3n = 0.0;
+00243     nf->sminn\_to\_soil3n\_s2 = 0.0;
+00244     nf->soil3n\_to\_soil4n = 0.0;
+00245     nf->sminn\_to\_soil4n\_s3 = 0.0;
+00246     nf->soil4n\_to\_sminn = 0.0;
+00247     nf->sminn\_to\_nvol\_l1s1 = 0.0;
+00248     nf->sminn\_to\_nvol\_l2s2 = 0.0;
+00249     nf->sminn\_to\_nvol\_l4s3 = 0.0;
+00250     nf->sminn\_to\_nvol\_s1s2 = 0.0;
+00251     nf->sminn\_to\_nvol\_s2s3 = 0.0;
+00252     nf->sminn\_to\_nvol\_s3s4 = 0.0;
+00253     nf->sminn\_to\_nvol\_s4 = 0.0;
+00254     nf->sminn\_to\_denitrif = 0.0;
+00255     nf->sminn\_leached = 0.0; 
+00256     nf->retransn\_to\_npool = 0.0;  
+00257     nf->sminn\_to\_npool = 0.0;
+00258     nf->npool\_to\_leafn = 0.0;
+00259     nf->npool\_to\_leafn\_storage = 0.0;
+00260     nf->npool\_to\_frootn = 0.0;
+00261     nf->npool\_to\_frootn\_storage = 0.0;
+00262     nf->npool\_to\_livestemn = 0.0;
+00263     nf->npool\_to\_livestemn\_storage = 0.0;
+00264     nf->npool\_to\_deadstemn = 0.0;
+00265     nf->npool\_to\_deadstemn\_storage = 0.0;
+00266     nf->npool\_to\_livecrootn = 0.0;
+00267     nf->npool\_to\_livecrootn\_storage = 0.0;
+00268     nf->npool\_to\_deadcrootn = 0.0;
+00269     nf->npool\_to\_deadcrootn\_storage = 0.0;
+00270     nf->leafn\_storage\_to\_leafn\_transfer = 0.0;
+00271     nf->frootn\_storage\_to\_frootn\_transfer = 0.0;
+00272     nf->livestemn\_storage\_to\_livestemn\_transfer = 0.0;
+00273     nf->deadstemn\_storage\_to\_deadstemn\_transfer = 0.0;
+00274     nf->livecrootn\_storage\_to\_livecrootn\_transfer = 0.0;
+00275     nf->deadcrootn\_storage\_to\_deadcrootn\_transfer = 0.0;
+00276     nf->livestemn\_to\_deadstemn = 0.0;
+00277     nf->livestemn\_to\_retransn = 0.0;
+00278     nf->livecrootn\_to\_deadcrootn = 0.0;
+00279     nf->livecrootn\_to\_retransn = 0.0;
+00280     
+00281     \textcolor{keywordflow}{return} (!ok);
+00282 \}
+\end{DoxyCode}

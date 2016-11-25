@@ -1,0 +1,469 @@
+\hypertarget{daily__allocation_8c_source}{}\section{daily\+\_\+allocation.\+c}
+\label{daily__allocation_8c_source}\index{c\+:/\+R\+E\+P\+O/biomebgc-\/4.\+2/src/bgclib/daily\+\_\+allocation.\+c@{c\+:/\+R\+E\+P\+O/biomebgc-\/4.\+2/src/bgclib/daily\+\_\+allocation.\+c}}
+
+\begin{DoxyCode}
+00001 \textcolor{comment}{/* }
+00002 \textcolor{comment}{daily\_allocation.c}
+00003 \textcolor{comment}{daily allocation of carbon and nitrogen, as well as the final reconciliation}
+00004 \textcolor{comment}{of N immobilization by microbes (see decomp.c)}
+00005 \textcolor{comment}{}
+00006 \textcolor{comment}{*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*}
+00007 \textcolor{comment}{Biome-BGC version 4.2 (final release)}
+00008 \textcolor{comment}{See copyright.txt for Copyright information}
+00009 \textcolor{comment}{}
+00010 \textcolor{comment}{Revisions from version 4.1.2:}
+00011 \textcolor{comment}{    Merged spinup\_daily\_allocation.c with daily\_allocation.c to eliminate }
+00012 \textcolor{comment}{    code redundency.}
+00013 \textcolor{comment}{}
+00014 \textcolor{comment}{Revisions from version 4.1.1:}
+00015 \textcolor{comment}{    daily\_allocation.c:}
+00016 \textcolor{comment}{    heterotrophic respiration fractions now coming from bgc\_conbstants.h}
+00017 \textcolor{comment}{}
+00018 \textcolor{comment}{    spinup\_daily\_allocation.c:}
+00019 \textcolor{comment}{    Using the same treatment of DAYSNDEPLOY, DAYSCRECOVER, and BULK\_DENITRIF\_PROPORTION}
+00020 \textcolor{comment}{    as in the non-spinup code.  This had been left out of the previous code version.}
+00021 \textcolor{comment}{    Changes the time it takes to reach steady state, but not the steady state conditions.}
+00022 \textcolor{comment}{*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*}
+00023 \textcolor{comment}{*/}
+00024 
+00025 \textcolor{preprocessor}{#include "bgc.h"}
+\hypertarget{daily__allocation_8c_source_l00026}{}\hyperlink{daily__allocation_8c_aea9c7b118244ce7b3ee8a566854ad3d8}{00026} \textcolor{preprocessor}{#define DAYSNDEPLOY 365.0}
+\hypertarget{daily__allocation_8c_source_l00027}{}\hyperlink{daily__allocation_8c_adb2b35cde4b81275d96f50e4dc6714f5}{00027} \textcolor{preprocessor}{#define DAYSCRECOVER 365.0}
+\hypertarget{daily__allocation_8c_source_l00028}{}\hyperlink{daily__allocation_8c_a4c8a08fb632dd0b90b193f4f679a3f3f}{00028} \textcolor{preprocessor}{#define BULK\_DENITRIF\_PROPORTION 0.5}
+00029 
+\hypertarget{daily__allocation_8c_source_l00030}{}\hyperlink{daily__allocation_8c_a78494a491616be3574480363952f005f}{00030} \textcolor{keywordtype}{int} \hyperlink{daily__allocation_8c_a78494a491616be3574480363952f005f}{daily\_allocation}(cflux\_struct* cf, cstate\_struct* cs,
+00031 nflux\_struct* nf, nstate\_struct* ns, epconst\_struct* epc, epvar\_struct* epv,
+00032 ntemp\_struct* nt, \textcolor{keywordtype}{double} naddfrac, \textcolor{keywordtype}{int} mode) \textcolor{comment}{/* mode is MODE\_SPINUP or MODE\_MODEL */}
+00033 \{
+00034     \textcolor{keywordtype}{int} ok=1;
+00035     \textcolor{keywordtype}{double} day\_gpp;     \textcolor{comment}{/* daily gross production */}
+00036     \textcolor{keywordtype}{double} day\_mresp;   \textcolor{comment}{/* daily total maintenance respiration */}
+00037     \textcolor{keywordtype}{double} avail\_c;     \textcolor{comment}{/* total C available for new production */}
+00038     \textcolor{keywordtype}{double} f1;          \textcolor{comment}{/* RATIO   new fine root C : new leaf C     */}
+00039     \textcolor{keywordtype}{double} f2;          \textcolor{comment}{/* RATIO   new coarse root C : new stem C   */}
+00040     \textcolor{keywordtype}{double} f3;          \textcolor{comment}{/* RATIO   new stem C : new leaf C          */}
+00041     \textcolor{keywordtype}{double} f4;          \textcolor{comment}{/* RATIO   new live wood C : new wood C     */}
+00042     \textcolor{keywordtype}{double} g1;          \textcolor{comment}{/* RATIO   C respired for growth : C grown  */} 
+00043     \textcolor{keywordtype}{double} g2;          \textcolor{comment}{/* proportion of growth resp to release at fixation */}
+00044     \textcolor{keywordtype}{double} cnl;         \textcolor{comment}{/* RATIO   leaf C:N      */}
+00045     \textcolor{keywordtype}{double} cnfr;        \textcolor{comment}{/* RATIO   fine root C:N */}
+00046     \textcolor{keywordtype}{double} cnlw;        \textcolor{comment}{/* RATIO   live wood C:N */}
+00047     \textcolor{keywordtype}{double} cndw;        \textcolor{comment}{/* RATIO   dead wood C:N */}
+00048     \textcolor{keywordtype}{double} nlc;         \textcolor{comment}{/* actual new leaf C, minimum of C and N limits   */}      
+00049     \textcolor{keywordtype}{double} pnow;        \textcolor{comment}{/* proportion of growth displayed on current day */} 
+00050     \textcolor{keywordtype}{double} gresp\_storage;  
+00051     \textcolor{keywordtype}{int} woody;
+00052     \textcolor{keywordtype}{double} c\_allometry, n\_allometry;
+00053     \textcolor{keywordtype}{double} plant\_ndemand, sum\_ndemand;
+00054     \textcolor{keywordtype}{double} actual\_immob;
+00055     \textcolor{keywordtype}{double} plant\_nalloc, plant\_calloc;
+00056     \textcolor{keywordtype}{double} fpi=0.0;
+00057     \textcolor{keywordtype}{double} plant\_remaining\_ndemand;
+00058     \textcolor{keywordtype}{double} excess\_c;
+00059     \textcolor{keywordtype}{int} nlimit;
+00060     \textcolor{keywordtype}{double} cn\_l1,cn\_l2,cn\_l4,cn\_s1,cn\_s2,cn\_s3,cn\_s4;
+00061     \textcolor{keywordtype}{double} rfl1s1, rfl2s2, rfl4s3, rfs1s2, rfs2s3, rfs3s4;
+00062     \textcolor{keywordtype}{double} daily\_net\_nmin;
+00063     \textcolor{keywordtype}{double} avail\_retransn;
+00064     \textcolor{keywordtype}{double} cpool\_recovery;
+00065     \textcolor{keywordtype}{double} excessn;
+00066     \textcolor{keywordtype}{double} dif; \textcolor{comment}{/* for mode == MODE\_SPINUP*/}
+00067     
+00068     woody = epc->woody;
+00069     
+00070     \textcolor{comment}{/* Assess the carbon availability on the basis of this day's}
+00071 \textcolor{comment}{    gross production and maintenance respiration costs */}
+00072     day\_gpp = cf->psnsun\_to\_cpool + cf->psnshade\_to\_cpool;
+00073     \textcolor{keywordflow}{if} (woody)
+00074     \{
+00075         day\_mresp = cf->leaf\_day\_mr + cf->leaf\_night\_mr + cf->froot\_mr + 
+00076             cf->livestem\_mr + cf->livecroot\_mr;
+00077     \}
+00078     \textcolor{keywordflow}{else}
+00079     \{
+00080         day\_mresp = cf->leaf\_day\_mr + cf->leaf\_night\_mr + cf->froot\_mr;
+00081     \}
+00082     avail\_c = day\_gpp - day\_mresp;
+00083     
+00084     \textcolor{comment}{/* no allocation when the daily C balance is negative */}
+00085     \textcolor{keywordflow}{if} (avail\_c < 0.0) avail\_c = 0.0;
+00086 
+00087     \textcolor{comment}{/* test for cpool deficit */}
+00088     \textcolor{keywordflow}{if} (cs->cpool < 0.0)
+00089     \{
+00090         \textcolor{comment}{/* running a deficit in cpool, so the first priority}
+00091 \textcolor{comment}{        is to let some of today's available C accumulate in cpool.  The actual}
+00092 \textcolor{comment}{        accumulation in the cpool is resolved in day\_carbon\_state(). */}
+00093         \textcolor{comment}{/* first determine how much of the deficit should be recovered today */}
+00094         cpool\_recovery = -cs->cpool/\hyperlink{daily__allocation_8c_adb2b35cde4b81275d96f50e4dc6714f5}{DAYSCRECOVER};
+00095         \textcolor{keywordflow}{if} (cpool\_recovery < avail\_c)
+00096         \{
+00097             \textcolor{comment}{/* potential recovery of cpool deficit is less than the available}
+00098 \textcolor{comment}{            carbon for the day, so aleviate cpool deficit}
+00099 \textcolor{comment}{            and use the rest of the available carbon for }
+00100 \textcolor{comment}{            new growth and storage. Remember that fluxes in}
+00101 \textcolor{comment}{            and out of the cpool are reconciled at the end}
+00102 \textcolor{comment}{            of the daily loop, so for now, just keep track}
+00103 \textcolor{comment}{            of the amount of daily GPP-MR that is not needed}
+00104 \textcolor{comment}{            to restore a negative cpool. */}
+00105             avail\_c -= cpool\_recovery; 
+00106         \}
+00107         \textcolor{keywordflow}{else}
+00108         \{
+00109             \textcolor{comment}{/* cpool deficit is >= available C, so all of the}
+00110 \textcolor{comment}{            daily GPP, if any, is used to alleviate negative cpool */}
+00111             avail\_c = 0.0;
+00112         \}
+00113     \} \textcolor{comment}{/* end if negative cpool */}
+00114     
+00115     \textcolor{comment}{/* assign local values for the allocation control parameters */}
+00116     f1 = epc->alloc\_frootc\_leafc;
+00117     f2 = epc->alloc\_crootc\_stemc;
+00118     f3 = epc->alloc\_newstemc\_newleafc;
+00119     f4 = epc->alloc\_newlivewoodc\_newwoodc;
+00120     g1 = GRPERC;
+00121     g2 = GRPNOW;
+00122     cnl = epc->leaf\_cn;
+00123     cnfr = epc->froot\_cn;
+00124     cnlw = epc->livewood\_cn;
+00125     cndw = epc->deadwood\_cn;
+00126     pnow = epc->alloc\_prop\_curgrowth;
+00127     
+00128     \textcolor{comment}{/* given the available C, use constant allometric relationships to}
+00129 \textcolor{comment}{    determine how much N is required to meet this potential growth}
+00130 \textcolor{comment}{    demand */}
+00131     \textcolor{keywordflow}{if} (woody)
+00132     \{
+00133         c\_allometry = ((1.0+g1)*(1.0 + f1 + f3*(1.0+f2)));
+00134         n\_allometry = (1.0/cnl + f1/cnfr + (f3*f4*(1.0+f2))/cnlw + 
+00135             (f3*(1.0-f4)*(1.0+f2))/cndw);
+00136     \}
+00137     \textcolor{keywordflow}{else}
+00138     \{
+00139         c\_allometry = (1.0 + g1 + f1 + f1*g1);
+00140         n\_allometry = (1.0/cnl + f1/cnfr);
+00141     \}
+00142     plant\_ndemand = avail\_c * (n\_allometry / c\_allometry);
+00143     
+00144     \textcolor{comment}{/* now compare the combined decomposition immobilization and plant}
+00145 \textcolor{comment}{    growth N demands against the available soil mineral N pool. */}
+00146     avail\_retransn = ns->retransn/\hyperlink{daily__allocation_8c_aea9c7b118244ce7b3ee8a566854ad3d8}{DAYSNDEPLOY};
+00147     sum\_ndemand = plant\_ndemand + nt->potential\_immob;
+00148 
+00149     \textcolor{comment}{/* spinup control: add N to sminn to meet demand */}
+00150     \textcolor{comment}{/* naddfrac scales N additions from 1.0 to 0.0 */}
+00151     \textcolor{keywordflow}{if} (mode == MODE\_SPINUP)
+00152     \{
+00153         \textcolor{keywordflow}{if} (sum\_ndemand > ns->sminn)
+00154         \{
+00155             dif = sum\_ndemand - ns->sminn;
+00156             ns->sminn += dif * naddfrac;
+00157             ns->ndep\_src += dif * naddfrac;
+00158         \}
+00159     \}
+00160 
+00161     \textcolor{keywordflow}{if} (sum\_ndemand <= ns->sminn)
+00162     \{
+00163         \textcolor{comment}{/* N availability is not limiting immobilization or plant}
+00164 \textcolor{comment}{        uptake, and both can proceed at their potential rates */}
+00165         actual\_immob = nt->potential\_immob;
+00166         nlimit = 0;
+00167         
+00168         \textcolor{comment}{/* Determine the split between retranslocation N and soil mineral}
+00169 \textcolor{comment}{        N to meet the plant demand */}
+00170         
+00171         \textcolor{keywordflow}{if} (plant\_ndemand > avail\_retransn)
+00172         \{
+00173             nf->retransn\_to\_npool = avail\_retransn;
+00174         \}
+00175         \textcolor{keywordflow}{else}
+00176         \{
+00177             nf->retransn\_to\_npool = plant\_ndemand;
+00178         \}
+00179         \textcolor{comment}{/*}
+00180 \textcolor{comment}{        nf->retransn\_to\_npool = avail\_retransn;}
+00181 \textcolor{comment}{        */}
+00182         \textcolor{comment}{/* old code}
+00183 \textcolor{comment}{        sum\_plant\_nsupply = avail\_retransn + ns->sminn;}
+00184 \textcolor{comment}{        if (sum\_plant\_nsupply)}
+00185 \textcolor{comment}{        \{}
+00186 \textcolor{comment}{            nf->retransn\_to\_npool = plant\_ndemand *}
+00187 \textcolor{comment}{                (ns->retransn/sum\_plant\_nsupply);}
+00188 \textcolor{comment}{        \}}
+00189 \textcolor{comment}{        else}
+00190 \textcolor{comment}{        \{}
+00191 \textcolor{comment}{            nf->retransn\_to\_npool = 0.0;}
+00192 \textcolor{comment}{        \}}
+00193 \textcolor{comment}{        */}
+00194         nf->sminn\_to\_npool = plant\_ndemand - nf->retransn\_to\_npool;
+00195         \textcolor{keywordflow}{if} (mode == MODE\_MODEL)
+00196         \{
+00197             plant\_nalloc = nf->retransn\_to\_npool + nf->sminn\_to\_npool;
+00198         \}
+00199         plant\_calloc = avail\_c;
+00200 
+00201         \textcolor{comment}{/* under conditions of excess N, some proportion of excess N is}
+00202 \textcolor{comment}{        assumed to be lost to denitrification, in addition to the constant}
+00203 \textcolor{comment}{        proportion lost in the decomposition pathways. */}
+00204         excessn = ns->sminn - sum\_ndemand;
+00205         nf->sminn\_to\_denitrif = excessn * \hyperlink{daily__allocation_8c_a4c8a08fb632dd0b90b193f4f679a3f3f}{BULK\_DENITRIF\_PROPORTION};
+00206     \}
+00207     \textcolor{keywordflow}{else}
+00208     \{
+00209         \textcolor{comment}{/* N availability can not satisfy the sum of immobiliation and}
+00210 \textcolor{comment}{        plant growth demands, so these two demands compete for available}
+00211 \textcolor{comment}{        soil mineral N */}
+00212         nlimit = 1;
+00213         \textcolor{keywordflow}{if} (sum\_ndemand)
+00214         \{
+00215             actual\_immob = ns->sminn * (nt->potential\_immob/sum\_ndemand);
+00216         \}
+00217         \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} (mode == MODE\_SPINUP)
+00218         \{
+00219             actual\_immob = 0.0;
+00220         \}
+00221         \textcolor{keywordflow}{if} (nt->potential\_immob)
+00222         \{
+00223             fpi = actual\_immob/nt->potential\_immob;
+00224         \}
+00225         \textcolor{keywordflow}{else}
+00226         \{
+00227             fpi = 0.0;
+00228         \}
+00229         nf->sminn\_to\_npool = ns->sminn - actual\_immob;
+00230         plant\_remaining\_ndemand = plant\_ndemand - nf->sminn\_to\_npool;
+00231         \textcolor{comment}{/* the demand not satisfied by uptake from soil mineral N is}
+00232 \textcolor{comment}{        now sought from the retranslocated N pool */}
+00233         \textcolor{keywordflow}{if} (plant\_remaining\_ndemand <= avail\_retransn)
+00234         \{
+00235             \textcolor{comment}{/* there is enough N available from retranslocation pool to}
+00236 \textcolor{comment}{            satisfy the remaining plant N demand */}
+00237             nf->retransn\_to\_npool = plant\_remaining\_ndemand;
+00238             plant\_calloc = avail\_c;
+00239         \}
+00240         \textcolor{keywordflow}{else}
+00241         \{
+00242             \textcolor{comment}{/* there is not enough available retranslocation N to satisfy the}
+00243 \textcolor{comment}{            entire demand. In this case, the remaining unsatisfied N demand}
+00244 \textcolor{comment}{            is translated back to a C excess, which is deducted proportionally}
+00245 \textcolor{comment}{            from the sun and shade photosynthesis source terms */}
+00246             nf->retransn\_to\_npool = avail\_retransn;
+00247             plant\_nalloc = nf->retransn\_to\_npool + nf->sminn\_to\_npool;
+00248             plant\_calloc = plant\_nalloc * (c\_allometry / n\_allometry);
+00249             excess\_c = avail\_c - plant\_calloc;
+00250             cf->psnsun\_to\_cpool -= excess\_c * (cf->psnsun\_to\_cpool/day\_gpp);
+00251             cf->psnshade\_to\_cpool -= excess\_c * (cf->psnshade\_to\_cpool/day\_gpp);
+00252         \}
+00253     \}
+00254     
+00255     \textcolor{comment}{/* calculate the amount of new leaf C dictated by these allocation}
+00256 \textcolor{comment}{    decisions, and figure the daily fluxes of C and N to current}
+00257 \textcolor{comment}{    growth and storage pools */}
+00258     \textcolor{comment}{/* pnow is the proportion of this day's growth that is displayed now,}
+00259 \textcolor{comment}{    the remainder going into storage for display next year through the}
+00260 \textcolor{comment}{    transfer pools */}
+00261     nlc = plant\_calloc / c\_allometry;
+00262     \textcolor{comment}{/* daily C fluxes out of cpool and into new growth or storage */}
+00263     cf->cpool\_to\_leafc              = nlc * pnow;
+00264     cf->cpool\_to\_leafc\_storage      = nlc * (1.0-pnow);
+00265     cf->cpool\_to\_frootc             = nlc * f1 * pnow;
+00266     cf->cpool\_to\_frootc\_storage     = nlc * f1 * (1.0-pnow);
+00267     \textcolor{keywordflow}{if} (woody)
+00268     \{
+00269         cf->cpool\_to\_livestemc          = nlc * f3 * f4 * pnow;
+00270         cf->cpool\_to\_livestemc\_storage  = nlc * f3 * f4 * (1.0-pnow);
+00271         cf->cpool\_to\_deadstemc          = nlc * f3 * (1.0-f4) * pnow;
+00272         cf->cpool\_to\_deadstemc\_storage  = nlc * f3 * (1.0-f4) * (1.0-pnow);
+00273         cf->cpool\_to\_livecrootc         = nlc * f2 * f3 * f4 * pnow;
+00274         cf->cpool\_to\_livecrootc\_storage = nlc * f2 * f3 * f4 * (1.0-pnow);
+00275         cf->cpool\_to\_deadcrootc         = nlc * f2 * f3 * (1.0-f4) * pnow;
+00276         cf->cpool\_to\_deadcrootc\_storage = nlc * f2 * f3 * (1.0-f4) * (1.0-pnow);
+00277     \}
+00278     \textcolor{comment}{/* daily N fluxes out of npool and into new growth or storage */}
+00279     nf->npool\_to\_leafn              = (nlc / cnl) * pnow;
+00280     nf->npool\_to\_leafn\_storage      = (nlc / cnl) * (1.0-pnow);
+00281     nf->npool\_to\_frootn             = (nlc * f1 / cnfr) * pnow;
+00282     nf->npool\_to\_frootn\_storage     = (nlc * f1 / cnfr) * (1.0-pnow);
+00283     \textcolor{keywordflow}{if} (woody)
+00284     \{
+00285         nf->npool\_to\_livestemn          = (nlc * f3 * f4 / cnlw) * pnow;
+00286         nf->npool\_to\_livestemn\_storage  = (nlc * f3 * f4 / cnlw) * (1.0-pnow);
+00287         nf->npool\_to\_deadstemn          = (nlc * f3 * (1.0-f4) / cndw) * pnow;
+00288         nf->npool\_to\_deadstemn\_storage  = (nlc * f3 * (1.0-f4) / cndw) * (1.0-pnow);
+00289         nf->npool\_to\_livecrootn         = (nlc * f2 * f3 * f4 / cnlw) * pnow;
+00290         nf->npool\_to\_livecrootn\_storage = (nlc * f2 * f3 * f4 / cnlw) * (1.0-pnow);
+00291         nf->npool\_to\_deadcrootn         = (nlc * f2 * f3 * (1.0-f4) / cndw) * pnow;
+00292         nf->npool\_to\_deadcrootn\_storage = (nlc * f2 * f3 * (1.0-f4) / cndw) * (1.0-pnow);
+00293     \}
+00294     
+00295     \textcolor{comment}{/* calculate the amount of carbon that needs to go into growth}
+00296 \textcolor{comment}{    respiration storage to satisfy all of the storage growth demands. }
+00297 \textcolor{comment}{    Note that in version 4.1, this function has been changed to }
+00298 \textcolor{comment}{    allow for the fraction of growth respiration that is released at the}
+00299 \textcolor{comment}{    time of fixation, versus the remaining fraction that is stored for}
+00300 \textcolor{comment}{    release at the time of display. Note that all the growth respiration}
+00301 \textcolor{comment}{    fluxes that get released on a given day are calculated in growth\_resp(),}
+00302 \textcolor{comment}{    but that the storage of C for growth resp during display of transferred}
+00303 \textcolor{comment}{    growth is assigned here. */}
+00304     \textcolor{keywordflow}{if} (woody)
+00305     \{
+00306         gresp\_storage = (cf->cpool\_to\_leafc\_storage + cf->cpool\_to\_frootc\_storage
+00307             + cf->cpool\_to\_livestemc\_storage + cf->cpool\_to\_deadstemc\_storage
+00308             + cf->cpool\_to\_livecrootc\_storage + cf->cpool\_to\_deadcrootc\_storage)
+00309             * g1 * (1.0-g2);
+00310     \}
+00311     \textcolor{keywordflow}{else}
+00312     \{
+00313         gresp\_storage = (cf->cpool\_to\_leafc\_storage + cf->cpool\_to\_frootc\_storage)
+00314             * g1 * (1.0-g2);
+00315     \}
+00316     cf->cpool\_to\_gresp\_storage = gresp\_storage; 
+00317 
+00318     \textcolor{comment}{/* now use the N limitation information to assess the final decomposition}
+00319 \textcolor{comment}{    fluxes. Mineralizing fluxes (pmnf* < 0.0) occur at the potential rate}
+00320 \textcolor{comment}{    regardless of the competing N demands between microbial processes and}
+00321 \textcolor{comment}{    plant uptake, but immobilizing fluxes are reduced when soil mineral}
+00322 \textcolor{comment}{    N is limiting */}
+00323     \textcolor{comment}{/* calculate litter and soil compartment C:N ratios */}
+00324     \textcolor{keywordflow}{if} (ns->litr1n > 0.0) cn\_l1 = cs->litr1c/ns->litr1n;
+00325     \textcolor{keywordflow}{if} (ns->litr2n > 0.0) cn\_l2 = cs->litr2c/ns->litr2n;
+00326     \textcolor{keywordflow}{if} (ns->litr4n > 0.0) cn\_l4 = cs->litr4c/ns->litr4n;
+00327     cn\_s1 = SOIL1\_CN;
+00328     cn\_s2 = SOIL2\_CN;
+00329     cn\_s3 = SOIL3\_CN;
+00330     cn\_s4 = SOIL4\_CN;
+00331     \textcolor{comment}{/* respiration fractions for fluxes between compartments */}
+00332     rfl1s1 = RFL1S1;
+00333     rfl2s2 = RFL2S2;
+00334     rfl4s3 = RFL4S3;
+00335     rfs1s2 = RFS1S2;
+00336     rfs2s3 = RFS2S3;
+00337     rfs3s4 = RFS3S4;
+00338     
+00339     daily\_net\_nmin = 0.0;
+00340     \textcolor{comment}{/* labile litter fluxes */}
+00341     \textcolor{keywordflow}{if} (cs->litr1c > 0.0)
+00342     \{
+00343         \textcolor{keywordflow}{if} (nlimit && nt->pmnf\_l1s1 > 0.0)
+00344         \{
+00345             nt->plitr1c\_loss *= fpi;
+00346             nt->pmnf\_l1s1 *= fpi;
+00347         \}
+00348         cf->litr1\_hr = rfl1s1 * nt->plitr1c\_loss;
+00349         cf->litr1c\_to\_soil1c = (1.0 - rfl1s1) * nt->plitr1c\_loss;
+00350         if (ns->litr1n > 0.0) nf->litr1n\_to\_soil1n = nt->plitr1c\_loss / cn\_l1;
+00351         \textcolor{keywordflow}{else} nf->litr1n\_to\_soil1n = 0.0;
+00352         nf->sminn\_to\_soil1n\_l1 = nt->pmnf\_l1s1;
+00353         daily\_net\_nmin -= nt->pmnf\_l1s1;
+00354     \}
+00355 
+00356     \textcolor{comment}{/* cellulose litter fluxes */}
+00357     \textcolor{keywordflow}{if} (cs->litr2c > 0.0)
+00358     \{
+00359         \textcolor{keywordflow}{if} (nlimit && nt->pmnf\_l2s2 > 0.0)
+00360         \{
+00361             nt->plitr2c\_loss *= fpi;
+00362             nt->pmnf\_l2s2 *= fpi;
+00363         \}
+00364         cf->litr2\_hr = rfl2s2 * nt->plitr2c\_loss;
+00365         cf->litr2c\_to\_soil2c = (1.0 - rfl2s2) * nt->plitr2c\_loss;
+00366         if (ns->litr2n > 0.0) nf->litr2n\_to\_soil2n = nt->plitr2c\_loss / cn\_l2;
+00367         \textcolor{keywordflow}{else} nf->litr2n\_to\_soil2n = 0.0;
+00368         nf->sminn\_to\_soil2n\_l2 = nt->pmnf\_l2s2;
+00369         daily\_net\_nmin -= nt->pmnf\_l2s2;
+00370     \}
+00371 
+00372     \textcolor{comment}{/* release of shielded cellulose litter, tied to the decay rate of}
+00373 \textcolor{comment}{    lignin litter */}
+00374     \textcolor{keywordflow}{if} (cs->litr3c > 0.0)
+00375     \{
+00376         \textcolor{keywordflow}{if} (nlimit && nt->pmnf\_l4s3 > 0.0)
+00377         \{
+00378             cf->litr3c\_to\_litr2c = nt->kl4 * cs->litr3c * fpi;
+00379             nf->litr3n\_to\_litr2n = nt->kl4 * ns->litr3n * fpi;
+00380         \}
+00381         \textcolor{keywordflow}{else}
+00382         \{
+00383             cf->litr3c\_to\_litr2c = nt->kl4 * cs->litr3c;
+00384             nf->litr3n\_to\_litr2n = nt->kl4 * ns->litr3n;
+00385         \}
+00386     \}
+00387 
+00388     \textcolor{comment}{/* lignin litter fluxes */}
+00389     \textcolor{keywordflow}{if} (cs->litr4c > 0.0)
+00390     \{
+00391         \textcolor{keywordflow}{if} (nlimit && nt->pmnf\_l4s3 > 0.0)
+00392         \{
+00393             nt->plitr4c\_loss *= fpi;
+00394             nt->pmnf\_l4s3 *= fpi;
+00395         \}
+00396         cf->litr4\_hr = rfl4s3 * nt->plitr4c\_loss;
+00397         cf->litr4c\_to\_soil3c = (1.0 - rfl4s3) * nt->plitr4c\_loss;
+00398         if (ns->litr4n > 0.0) nf->litr4n\_to\_soil3n = nt->plitr4c\_loss / cn\_l4;
+00399         \textcolor{keywordflow}{else} nf->litr4n\_to\_soil3n = 0.0;
+00400         nf->sminn\_to\_soil3n\_l4 = nt->pmnf\_l4s3;
+00401         daily\_net\_nmin -= nt->pmnf\_l4s3;
+00402     \}
+00403     
+00404     \textcolor{comment}{/* fast microbial recycling pool */}
+00405     \textcolor{keywordflow}{if} (cs->soil1c > 0.0)
+00406     \{
+00407         \textcolor{keywordflow}{if} (nlimit && nt->pmnf\_s1s2 > 0.0)
+00408         \{
+00409             nt->psoil1c\_loss *= fpi;
+00410             nt->pmnf\_s1s2 *= fpi;
+00411         \}
+00412         cf->soil1\_hr = rfs1s2 * nt->psoil1c\_loss;
+00413         cf->soil1c\_to\_soil2c = (1.0 - rfs1s2) * nt->psoil1c\_loss;
+00414         nf->soil1n\_to\_soil2n = nt->psoil1c\_loss / cn\_s1;
+00415         nf->sminn\_to\_soil2n\_s1 = nt->pmnf\_s1s2;
+00416         daily\_net\_nmin -= nt->pmnf\_s1s2;
+00417     \}
+00418     
+00419     \textcolor{comment}{/* medium microbial recycling pool */}
+00420     \textcolor{keywordflow}{if} (cs->soil2c > 0.0)
+00421     \{
+00422         \textcolor{keywordflow}{if} (nlimit && nt->pmnf\_s2s3 > 0.0)
+00423         \{
+00424             nt->psoil2c\_loss *= fpi;
+00425             nt->pmnf\_s2s3 *= fpi;
+00426         \}
+00427         cf->soil2\_hr = rfs2s3 * nt->psoil2c\_loss;
+00428         cf->soil2c\_to\_soil3c = (1.0 - rfs2s3) * nt->psoil2c\_loss;
+00429         nf->soil2n\_to\_soil3n = nt->psoil2c\_loss / cn\_s2;
+00430         nf->sminn\_to\_soil3n\_s2 = nt->pmnf\_s2s3;
+00431         daily\_net\_nmin -= nt->pmnf\_s2s3;
+00432     \}
+00433 
+00434     \textcolor{comment}{/* slow microbial recycling pool */}
+00435     \textcolor{keywordflow}{if} (cs->soil3c > 0.0)
+00436     \{
+00437         \textcolor{keywordflow}{if} (nlimit && nt->pmnf\_s3s4 > 0.0)
+00438         \{
+00439             nt->psoil3c\_loss *= fpi;
+00440             nt->pmnf\_s3s4 *= fpi;
+00441         \}
+00442         cf->soil3\_hr = rfs3s4 * nt->psoil3c\_loss;
+00443         cf->soil3c\_to\_soil4c = (1.0 - rfs3s4) * nt->psoil3c\_loss;
+00444         nf->soil3n\_to\_soil4n = nt->psoil3c\_loss / cn\_s3;
+00445         nf->sminn\_to\_soil4n\_s3 = nt->pmnf\_s3s4;
+00446         daily\_net\_nmin -= nt->pmnf\_s3s4;
+00447     \}
+00448     
+00449     \textcolor{comment}{/* recalcitrant SOM pool (rf = 1.0, always mineralizing) */}
+00450     \textcolor{keywordflow}{if} (cs->soil4c > 0.0)
+00451     \{
+00452         cf->soil4\_hr = nt->psoil4c\_loss;
+00453         nf->soil4n\_to\_sminn = nt->psoil4c\_loss / cn\_s4;
+00454         daily\_net\_nmin += nf->soil4n\_to\_sminn;
+00455     \}
+00456     
+00457     \textcolor{comment}{/* store the day's net N mineralization */}
+00458     epv->daily\_net\_nmin = daily\_net\_nmin;
+00459     epv->daily\_gross\_nimmob = actual\_immob;
+00460     epv->fpi = fpi;
+00461     
+00462     \textcolor{keywordflow}{return} (!ok);
+00463 \}
+00464 
+\end{DoxyCode}

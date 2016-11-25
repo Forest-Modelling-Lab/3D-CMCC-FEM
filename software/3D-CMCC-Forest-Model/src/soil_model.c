@@ -18,6 +18,8 @@
 #include "soil_evaporation.h"
 #include "soil_respiration.h"
 #include "soil_water_balance.h"
+#include "soil_decomp.h"
+#include "soil_nitrogen_balance.h"
 #include "settings.h"
 
 extern logger_t* g_debug_log;
@@ -68,11 +70,17 @@ int Soil_model_daily (matrix_t *const m, const int cell, const int day, const in
 
 		}
 
-		/* compute soil respiration (not yet implemented) */
-		soil_respiration ( c );
+		/* compute soil nitrogen decomposition */
+		//soil_nitrogen_decomp(c, meteo_daily);
 
 		/* compute soil water balance */
 		soil_water_balance ( c, meteo_daily );
+
+		/* compute soil nitrogen balance */
+		//soil_nitrogen_balance();
+
+		/* compute soil respiration (not yet implemented) */
+		soil_respiration ( c );
 	}
 
 	/* ok */

@@ -1,0 +1,101 @@
+\hypertarget{baresoil__evap_8c_source}{}\section{baresoil\+\_\+evap.\+c}
+\label{baresoil__evap_8c_source}\index{c\+:/\+R\+E\+P\+O/biomebgc-\/4.\+2/src/bgclib/baresoil\+\_\+evap.\+c@{c\+:/\+R\+E\+P\+O/biomebgc-\/4.\+2/src/bgclib/baresoil\+\_\+evap.\+c}}
+
+\begin{DoxyCode}
+00001 \textcolor{comment}{/* }
+00002 \textcolor{comment}{baresoil\_evap.c}
+00003 \textcolor{comment}{daily bare soil evaporation}
+00004 \textcolor{comment}{}
+00005 \textcolor{comment}{*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*}
+00006 \textcolor{comment}{Biome-BGC version 4.2 (final release)}
+00007 \textcolor{comment}{See copyright.txt for Copyright information}
+00008 \textcolor{comment}{*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*}
+00009 \textcolor{comment}{*/}
+00010 
+00011 \textcolor{preprocessor}{#include "bgc.h"}
+00012 
+\hypertarget{baresoil__evap_8c_source_l00013}{}\hyperlink{baresoil__evap_8c_a9fcd7d8f180b7c75bebbd7f3c544218e}{00013} \textcolor{keywordtype}{int} \hyperlink{baresoil__evap_8c_a9fcd7d8f180b7c75bebbd7f3c544218e}{baresoil\_evap}(\textcolor{keyword}{const} metvar\_struct* metv, wflux\_struct* wf, \textcolor{keywordtype}{double}* dsr\_ptr)
+00014 \{
+00015     \textcolor{keywordtype}{int} ok=1;
+00016     \textcolor{keywordtype}{double} dsr;              \textcolor{comment}{/* number of days since rain */}
+00017     \textcolor{keywordtype}{double} rbl;              \textcolor{comment}{/* (m/s) boundary layer resistance */}
+00018     \textcolor{keywordtype}{double} pot\_evap;         \textcolor{comment}{/* (kg/m2/s) potential evaporation (daytime) */}
+00019     \textcolor{keywordtype}{double} evap;             \textcolor{comment}{/* (kg/m2/s) actual evaporation (daytime) */}
+00020     pmet\_struct pmet\_in;     \textcolor{comment}{/* input structure for penmon function */}
+00021     \textcolor{keywordtype}{double} rcorr;            \textcolor{comment}{/* correction factor for temp and pressure */}
+00022     \textcolor{keywordtype}{double} ratio;            \textcolor{comment}{/* actual/potential evaporation for dry day */}
+00023 
+00024     \textcolor{comment}{/* assign days since rain */}
+00025     dsr = *dsr\_ptr;
+00026     
+00027     \textcolor{comment}{/* correct conductances for temperature and pressure based on Jones (1992)}
+00028 \textcolor{comment}{    with standard conditions assumed to be 20 deg C, 101300 Pa */}
+00029     rcorr = 1.0/(pow((metv->tday+273.15)/293.15, 1.75) * 101300/metv->pa);
+00030 
+00031     \textcolor{comment}{/* new bare-soil evaporation routine */}
+00032     \textcolor{comment}{/* first calculate potential evaporation, assuming the resistance}
+00033 \textcolor{comment}{    for vapor transport is equal to the resistance for sensible heat}
+00034 \textcolor{comment}{    transport.  That is, no additional resistance for vapor transport to}
+00035 \textcolor{comment}{    the soil surface. This represents evaporation from a wet surface with}
+00036 \textcolor{comment}{    a specified aerodynamic resistance (= boundary layer resistance).}
+00037 \textcolor{comment}{    The aerodynamic resistance is for now set as a constant, and is}
+00038 \textcolor{comment}{    taken from observations over bare soil in tiger-bush in south-west}
+00039 \textcolor{comment}{    Niger: rbl = 107 s m-1 (Wallace and Holwill, 1997). */}
+00040     rbl = 107.0 * rcorr;
+00041     
+00042     \textcolor{comment}{/* fill the pmet\_in structure */}
+00043     pmet\_in.ta = metv->tday;
+00044     pmet\_in.pa = metv->pa;
+00045     pmet\_in.vpd = metv->vpd;
+00046     pmet\_in.irad = metv->swtrans;
+00047     pmet\_in.rv = rbl;
+00048     pmet\_in.rh = rbl;
+00049 
+00050     \textcolor{comment}{/* calculate pot\_evap in kg/m2/s */}
+00051     \hyperlink{canopy__et_8c_a5c8d396ed94c7e0f3f4c80dd3ecd046c}{penmon}(&pmet\_in, 0, &pot\_evap);
+00052 
+00053     \textcolor{comment}{/* convert to daily total kg/m2 */}
+00054     pot\_evap *= metv->dayl;
+00055     
+00056     \textcolor{comment}{/* consider only the precipitation flux reaching the soil */}
+00057     \textcolor{comment}{/* check for precipitation >= potential evaporation */}
+00058     \textcolor{keywordflow}{if} (wf->prcp\_to\_soilw >= pot\_evap)
+00059     \{
+00060         \textcolor{comment}{/* reset days-since-rain parameter */}
+00061         dsr = 0.0;
+00062         
+00063         \textcolor{comment}{/* soil evaporation proceeds at potential rate */}
+00064         evap = 0.6 * pot\_evap;
+00065     \}
+00066     \textcolor{keywordflow}{else}
+00067     \{
+00068         \textcolor{comment}{/* increment the days since rain */}
+00069         dsr += 1.0;
+00070         
+00071         \textcolor{comment}{/* calculate the realized proportion of potential evaporation}
+00072 \textcolor{comment}{        as a function of the days since rain */}
+00073         ratio = 0.3/pow(dsr,2.0);
+00074         
+00075         \textcolor{comment}{/* calculate evaporation for dry days */}
+00076         evap = ratio * pot\_evap;
+00077         
+00078         \textcolor{comment}{/* for rain events that are smaller than required to reset dsr}
+00079 \textcolor{comment}{        counter, but larger than dry-day evaporation, all rain is evaporated.}
+00080 \textcolor{comment}{        In this case, do not advance the drying curve counter.}
+00081 \textcolor{comment}{        For rain events that are too small to trigger dsr reset, and which}
+00082 \textcolor{comment}{        are smaller than dry-day evap, there will be more evaporation than}
+00083 \textcolor{comment}{        rainfall.  In this case the drying curve counter is advanced. */}
+00084         \textcolor{keywordflow}{if} (wf->prcp\_to\_soilw > evap)
+00085         \{
+00086             evap = wf->prcp\_to\_soilw;
+00087             dsr -= 1.0;
+00088         \}
+00089     \}
+00090 
+00091     wf->soilw\_evap = evap;
+00092     *dsr\_ptr = dsr;
+00093     
+00094     \textcolor{keywordflow}{return}(!ok);
+00095 \}
+00096 
+\end{DoxyCode}

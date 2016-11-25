@@ -1,0 +1,48 @@
+\hypertarget{annual__rates_8c_source}{}\section{annual\+\_\+rates.\+c}
+\label{annual__rates_8c_source}\index{c\+:/\+R\+E\+P\+O/biomebgc-\/4.\+2/src/bgclib/annual\+\_\+rates.\+c@{c\+:/\+R\+E\+P\+O/biomebgc-\/4.\+2/src/bgclib/annual\+\_\+rates.\+c}}
+
+\begin{DoxyCode}
+00001 \textcolor{comment}{/*}
+00002 \textcolor{comment}{annual\_rates.c}
+00003 \textcolor{comment}{Functions called annually from bgc()}
+00004 \textcolor{comment}{}
+00005 \textcolor{comment}{*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*}
+00006 \textcolor{comment}{Biome-BGC version 4.2 (final release)}
+00007 \textcolor{comment}{See copyright.txt for Copyright information}
+00008 \textcolor{comment}{*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*}
+00009 \textcolor{comment}{*/}
+00010 
+00011 \textcolor{preprocessor}{#include "bgc.h"}
+00012 
+\hypertarget{annual__rates_8c_source_l00013}{}\hyperlink{annual__rates_8c_a31da74671128c782a97dbd8952ded454}{00013} \textcolor{keywordtype}{int} \hyperlink{annual__rates_8c_a31da74671128c782a97dbd8952ded454}{annual\_rates}(\textcolor{keyword}{const} epconst\_struct* epc, epvar\_struct* epv)
+00014 \{
+00015     \textcolor{keywordtype}{int} ok=1;
+00016     
+00017     \textcolor{keywordflow}{if} (epc->evergreen)
+00018     \{
+00019         \textcolor{comment}{/* leaf and fineroot litterfall rates */}
+00020         epv->day\_leafc\_litfall\_increment = epv->annmax\_leafc * epc->leaf\_turnover / 365.0;
+00021         epv->day\_frootc\_litfall\_increment = epv->annmax\_frootc * epc->froot\_turnover / 365.0;
+00022         epv->annmax\_leafc = 0.0;
+00023         epv->annmax\_frootc = 0.0;
+00024     \}
+00025     \textcolor{keywordflow}{else}
+00026     \{
+00027         \textcolor{comment}{/* deciduous: reset the litterfall rates to 0.0 for the start of the}
+00028 \textcolor{comment}{        next litterfall season */}
+00029         epv->day\_leafc\_litfall\_increment = 0.0;
+00030         epv->day\_frootc\_litfall\_increment = 0.0;
+00031     \}
+00032     
+00033     \textcolor{keywordflow}{if} (epc->woody)
+00034     \{
+00035         \textcolor{comment}{/* live wood turnover rates */}
+00036         epv->day\_livestemc\_turnover\_increment = epv->annmax\_livestemc * epc->livewood\_turnover / 365.0;
+00037         epv->day\_livecrootc\_turnover\_increment = epv->annmax\_livecrootc * epc->livewood\_turnover / 365.0;
+00038         epv->annmax\_livestemc = 0.0;
+00039         epv->annmax\_livecrootc = 0.0;
+00040     \}
+00041     
+00042     \textcolor{keywordflow}{return} (!ok);
+00043 \}
+\end{DoxyCode}

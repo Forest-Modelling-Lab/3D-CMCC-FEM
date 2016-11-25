@@ -1,0 +1,18 @@
+<map id="bgc_printf" name="bgc_printf">
+<area shape="rect" id="node2" href="$bgc_8c.html#aba68add8caf5b5d83c76c893d50f6626" title="bgc" alt="" coords="560,413,603,439"/>
+<area shape="rect" id="node3" href="$bgc__io_8c.html#a45fe30c0d757941d37c6b09858307458" title="bgc_logfile_setup" alt="" coords="369,97,492,123"/>
+<area shape="rect" id="node4" href="$bgc__io_8c.html#adcf0cce6fdd3c3d3531f826bede8bb66" title="bgc_print_usage" alt="" coords="158,134,275,161"/>
+<area shape="rect" id="node5" href="$bgc__io_8c.html#a7e5b7887ea15ba8d15033332d71ccc98" title="bgc_verbosity_decode" alt="" coords="355,173,506,199"/>
+<area shape="rect" id="node6" href="$canopy__et_8c.html#a5882089955eaa9ed13e938c6eb383b11" title="canopy_et" alt="" coords="389,235,472,262"/>
+<area shape="rect" id="node7" href="$check__balance_8c.html#a7c3407e1cb5eb1e58ac2ac744a6156d6" title="check_water_balance" alt="" coords="357,286,504,313"/>
+<area shape="rect" id="node8" href="$check__balance_8c.html#adf0fd12860935512d2a5f628e87c1171" title="check_carbon_balance" alt="" coords="353,337,508,363"/>
+<area shape="rect" id="node9" href="$check__balance_8c.html#a72e7148d8dcce5a86380cf56d81f0955" title="check_nitrogen_balance" alt="" coords="349,387,512,414"/>
+<area shape="rect" id="node10" href="$phenology_8c.html#a4db88c2b8b0b2fd1265efd4ba86acd8f" title="phenology" alt="" coords="176,438,257,465"/>
+<area shape="rect" id="node11" href="$photosynthesis_8c.html#adba4d3b53331ea3e9e08cd7d0fcec8d4" title="total_photosynthesis" alt="" coords="359,489,502,515"/>
+<area shape="rect" id="node12" href="$photosynthesis_8c.html#a7694972f8a6aaea60ca6d5506d705060" title="photosynthesis" alt="" coords="161,539,272,566"/>
+<area shape="rect" id="node13" href="$prephenology_8c.html#a268168ddb0923733bcc36138cda1b94b" title="prephenology" alt="" coords="381,641,480,667"/>
+<area shape="rect" id="node14" href="$radtrans_8c.html#a323e7fe52f825be6dfa95a158a812db4" title="radtrans" alt="" coords="182,590,251,617"/>
+<area shape="rect" id="node15" href="$smooth_8c.html#aff23c6bbf7cc127320af48545ed13432" title="run_avg" alt="" coords="183,691,250,718"/>
+<area shape="rect" id="node16" href="$smooth_8c.html#ac9c8750166146d2aa5f25c38e3451e9f" title="boxcar_smooth" alt="" coords="161,742,272,769"/>
+<area shape="rect" id="node17" href="$state__update_8c.html#a7107f4defb131263ebb760ecf8423ab6" title="daily_water_state_update" alt="" coords="132,793,301,819"/>
+</map>

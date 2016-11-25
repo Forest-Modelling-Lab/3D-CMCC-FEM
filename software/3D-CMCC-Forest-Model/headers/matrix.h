@@ -685,6 +685,7 @@ typedef struct {
 	double initialOrganicC;
 	double waterContent;
 	double CEC;
+
 	/*********************************************************************************************/
 } soil_layer_s;
 
@@ -943,6 +944,13 @@ typedef struct
 	//todo to be removed used just to evaluate total biomass fluctuations in the several different compartments
 	double leafBiomass, stemBiomass, fineRootBiomass, coarseRootBiomass,stemBranchBiomass;
 	double vpSat[365], maxVpSat;
+
+	double litr1n;
+	double litr2n;
+	double litr4n;
+	double litr1c;
+	double litr2c;
+	double litr4c;
 
 	/*
 		those variables are referred to cell, they must be same for each layers

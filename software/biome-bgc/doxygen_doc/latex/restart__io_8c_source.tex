@@ -1,0 +1,192 @@
+\hypertarget{restart__io_8c_source}{}\section{restart\+\_\+io.\+c}
+\label{restart__io_8c_source}\index{c\+:/\+R\+E\+P\+O/biomebgc-\/4.\+2/src/bgclib/restart\+\_\+io.\+c@{c\+:/\+R\+E\+P\+O/biomebgc-\/4.\+2/src/bgclib/restart\+\_\+io.\+c}}
+
+\begin{DoxyCode}
+00001 \textcolor{comment}{/*}
+00002 \textcolor{comment}{restart\_io.c}
+00003 \textcolor{comment}{functions called to copy restart info between restart structure and}
+00004 \textcolor{comment}{active structures}
+00005 \textcolor{comment}{}
+00006 \textcolor{comment}{*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*}
+00007 \textcolor{comment}{Biome-BGC version 4.2 (final release)}
+00008 \textcolor{comment}{See copyright.txt for Copyright information}
+00009 \textcolor{comment}{*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*}
+00010 \textcolor{comment}{*/}
+00011 
+00012 \textcolor{preprocessor}{#include "bgc.h"}
+00013 
+\hypertarget{restart__io_8c_source_l00014}{}\hyperlink{restart__io_8c_abbb2b2cf473fe2e7b5c1ac5f0790734d}{00014} \textcolor{keywordtype}{int} \hyperlink{restart__io_8c_abbb2b2cf473fe2e7b5c1ac5f0790734d}{restart\_input}(control\_struct* ctrl, wstate\_struct* ws, cstate\_struct* cs,
+00015     nstate\_struct* ns, epvar\_struct* epv, \textcolor{keywordtype}{int}* metyr, 
+00016     restart\_data\_struct* restart)
+00017 \{
+00018     \textcolor{keywordtype}{int} ok=1;
+00019     
+00020     ws->soilw                             = restart->soilw;
+00021     ws->snoww                             = restart->snoww;
+00022     ws->canopyw                           = restart->canopyw;
+00023 
+00024     cs->leafc                             = restart->leafc;
+00025     cs->leafc\_storage                     = restart->leafc\_storage;
+00026     cs->leafc\_transfer                    = restart->leafc\_transfer;
+00027     cs->frootc                            = restart->frootc;
+00028     cs->frootc\_storage                    = restart->frootc\_storage;
+00029     cs->frootc\_transfer                   = restart->frootc\_transfer;
+00030     cs->livestemc                         = restart->livestemc;
+00031     cs->livestemc\_storage                 = restart->livestemc\_storage;
+00032     cs->livestemc\_transfer                = restart->livestemc\_transfer;
+00033     cs->deadstemc                         = restart->deadstemc;
+00034     cs->deadstemc\_storage                 = restart->deadstemc\_storage;
+00035     cs->deadstemc\_transfer                = restart->deadstemc\_transfer;
+00036     cs->livecrootc                        = restart->livecrootc;
+00037     cs->livecrootc\_storage                = restart->livecrootc\_storage;
+00038     cs->livecrootc\_transfer               = restart->livecrootc\_transfer;
+00039     cs->deadcrootc                        = restart->deadcrootc;
+00040     cs->deadcrootc\_storage                = restart->deadcrootc\_storage;
+00041     cs->deadcrootc\_transfer               = restart->deadcrootc\_transfer;
+00042     cs->gresp\_storage                     = restart->gresp\_storage;
+00043     cs->gresp\_transfer                    = restart->gresp\_transfer;
+00044     cs->cwdc                              = restart->cwdc;
+00045     cs->litr1c                            = restart->litr1c;
+00046     cs->litr2c                            = restart->litr2c;
+00047     cs->litr3c                            = restart->litr3c;
+00048     cs->litr4c                            = restart->litr4c;
+00049     cs->soil1c                            = restart->soil1c;
+00050     cs->soil2c                            = restart->soil2c;
+00051     cs->soil3c                            = restart->soil3c;
+00052     cs->soil4c                            = restart->soil4c;
+00053     cs->cpool                             = restart->cpool;
+00054     
+00055     ns->leafn                             = restart->leafn;
+00056     ns->leafn\_storage                     = restart->leafn\_storage;
+00057     ns->leafn\_transfer                    = restart->leafn\_transfer;
+00058     ns->frootn                            = restart->frootn;
+00059     ns->frootn\_storage                    = restart->frootn\_storage;
+00060     ns->frootn\_transfer                   = restart->frootn\_transfer;
+00061     ns->livestemn                         = restart->livestemn;
+00062     ns->livestemn\_storage                 = restart->livestemn\_storage;
+00063     ns->livestemn\_transfer                = restart->livestemn\_transfer;
+00064     ns->deadstemn                         = restart->deadstemn;
+00065     ns->deadstemn\_storage                 = restart->deadstemn\_storage;
+00066     ns->deadstemn\_transfer                = restart->deadstemn\_transfer;
+00067     ns->livecrootn                        = restart->livecrootn;
+00068     ns->livecrootn\_storage                = restart->livecrootn\_storage;
+00069     ns->livecrootn\_transfer               = restart->livecrootn\_transfer;
+00070     ns->deadcrootn                        = restart->deadcrootn;
+00071     ns->deadcrootn\_storage                = restart->deadcrootn\_storage;
+00072     ns->deadcrootn\_transfer               = restart->deadcrootn\_transfer;
+00073     ns->cwdn                              = restart->cwdn;
+00074     ns->litr1n                            = restart->litr1n;
+00075     ns->litr2n                            = restart->litr2n;
+00076     ns->litr3n                            = restart->litr3n;
+00077     ns->litr4n                            = restart->litr4n;
+00078     ns->soil1n                            = restart->soil1n;
+00079     ns->soil2n                            = restart->soil2n;
+00080     ns->soil3n                            = restart->soil3n;
+00081     ns->soil4n                            = restart->soil4n;
+00082     ns->sminn                             = restart->sminn;
+00083     ns->retransn                          = restart->retransn;
+00084     ns->npool                             = restart->npool;
+00085     
+00086     epv->day\_leafc\_litfall\_increment      = restart->day\_leafc\_litfall\_increment;
+00087     epv->day\_frootc\_litfall\_increment     = restart->day\_frootc\_litfall\_increment;
+00088     epv->day\_livestemc\_turnover\_increment = restart->day\_livestemc\_turnover\_increment;
+00089     epv->day\_livecrootc\_turnover\_increment= restart->day\_livecrootc\_turnover\_increment;
+00090     epv->annmax\_leafc                     = restart->annmax\_leafc;
+00091     epv->annmax\_frootc                    = restart->annmax\_frootc;
+00092     epv->annmax\_livestemc                 = restart->annmax\_livestemc;
+00093     epv->annmax\_livecrootc                = restart->annmax\_livecrootc;
+00094     epv->dsr                              = restart->dsr;
+00095     
+00096     \textcolor{keywordflow}{if} (ctrl->keep\_metyr) *metyr          = restart->metyr; 
+00097     \textcolor{keywordflow}{else}                  *metyr          = 0;
+00098     
+00099     \textcolor{keywordflow}{return}(!ok);
+00100 \}
+00101 
+\hypertarget{restart__io_8c_source_l00102}{}\hyperlink{restart__io_8c_a87ed6bc3ef6e9be39f3f0363ee89fbc3}{00102} \textcolor{keywordtype}{int} \hyperlink{restart__io_8c_a87ed6bc3ef6e9be39f3f0363ee89fbc3}{restart\_output}(control\_struct* ctrl, wstate\_struct* ws,cstate\_struct* cs,
+00103     nstate\_struct* ns, epvar\_struct* epv, \textcolor{keywordtype}{int} metyr,
+00104     restart\_data\_struct* restart)
+00105 \{
+00106     \textcolor{keywordtype}{int} ok=1;
+00107     
+00108     restart->soilw                            = ws->soilw;
+00109     restart->snoww                            = ws->snoww;
+00110     restart->canopyw                          = ws->canopyw;
+00111 
+00112     restart->leafc                            = cs->leafc;
+00113     restart->leafc\_storage                    = cs->leafc\_storage;
+00114     restart->leafc\_transfer                   = cs->leafc\_transfer;
+00115     restart->frootc                           = cs->frootc;
+00116     restart->frootc\_storage                   = cs->frootc\_storage;
+00117     restart->frootc\_transfer                  = cs->frootc\_transfer;
+00118     restart->livestemc                        = cs->livestemc;
+00119     restart->livestemc\_storage                = cs->livestemc\_storage;
+00120     restart->livestemc\_transfer               = cs->livestemc\_transfer;
+00121     restart->deadstemc                        = cs->deadstemc;
+00122     restart->deadstemc\_storage                = cs->deadstemc\_storage;
+00123     restart->deadstemc\_transfer               = cs->deadstemc\_transfer;
+00124     restart->livecrootc                       = cs->livecrootc;
+00125     restart->livecrootc\_storage               = cs->livecrootc\_storage;
+00126     restart->livecrootc\_transfer              = cs->livecrootc\_transfer;
+00127     restart->deadcrootc                       = cs->deadcrootc;
+00128     restart->deadcrootc\_storage               = cs->deadcrootc\_storage;
+00129     restart->deadcrootc\_transfer              = cs->deadcrootc\_transfer;
+00130     restart->gresp\_storage                    = cs->gresp\_storage;
+00131     restart->gresp\_transfer                   = cs->gresp\_transfer;
+00132     restart->cwdc                             = cs->cwdc;
+00133     restart->litr1c                           = cs->litr1c;
+00134     restart->litr2c                           = cs->litr2c;
+00135     restart->litr3c                           = cs->litr3c;
+00136     restart->litr4c                           = cs->litr4c;
+00137     restart->soil1c                           = cs->soil1c;
+00138     restart->soil2c                           = cs->soil2c;
+00139     restart->soil3c                           = cs->soil3c;
+00140     restart->soil4c                           = cs->soil4c;
+00141     restart->cpool                            = cs->cpool;
+00142 
+00143     restart->leafn                            = ns->leafn;
+00144     restart->leafn\_storage                    = ns->leafn\_storage;
+00145     restart->leafn\_transfer                   = ns->leafn\_transfer;
+00146     restart->frootn                           = ns->frootn;
+00147     restart->frootn\_storage                   = ns->frootn\_storage;
+00148     restart->frootn\_transfer                  = ns->frootn\_transfer;
+00149     restart->livestemn                        = ns->livestemn;
+00150     restart->livestemn\_storage                = ns->livestemn\_storage;
+00151     restart->livestemn\_transfer               = ns->livestemn\_transfer;
+00152     restart->deadstemn                        = ns->deadstemn;
+00153     restart->deadstemn\_storage                = ns->deadstemn\_storage;
+00154     restart->deadstemn\_transfer               = ns->deadstemn\_transfer;
+00155     restart->livecrootn                       = ns->livecrootn;
+00156     restart->livecrootn\_storage               = ns->livecrootn\_storage;
+00157     restart->livecrootn\_transfer              = ns->livecrootn\_transfer;
+00158     restart->deadcrootn                       = ns->deadcrootn;
+00159     restart->deadcrootn\_storage               = ns->deadcrootn\_storage;
+00160     restart->deadcrootn\_transfer              = ns->deadcrootn\_transfer;
+00161     restart->cwdn                             = ns->cwdn;
+00162     restart->litr1n                           = ns->litr1n;
+00163     restart->litr2n                           = ns->litr2n;
+00164     restart->litr3n                           = ns->litr3n;
+00165     restart->litr4n                           = ns->litr4n;
+00166     restart->soil1n                           = ns->soil1n;
+00167     restart->soil2n                           = ns->soil2n;
+00168     restart->soil3n                           = ns->soil3n;
+00169     restart->soil4n                           = ns->soil4n;
+00170     restart->sminn                            = ns->sminn;
+00171     restart->retransn                         = ns->retransn;
+00172     restart->npool                            = ns->npool;
+00173 
+00174     restart->day\_leafc\_litfall\_increment      = epv->day\_leafc\_litfall\_increment;
+00175     restart->day\_frootc\_litfall\_increment     = epv->day\_frootc\_litfall\_increment;
+00176     restart->day\_livestemc\_turnover\_increment = epv->day\_livestemc\_turnover\_increment;
+00177     restart->day\_livecrootc\_turnover\_increment= epv->day\_livecrootc\_turnover\_increment;
+00178     restart->annmax\_leafc                     = epv->annmax\_leafc;
+00179     restart->annmax\_frootc                    = epv->annmax\_frootc;
+00180     restart->annmax\_livestemc                 = epv->annmax\_livestemc;
+00181     restart->annmax\_livecrootc                = epv->annmax\_livecrootc;
+00182     restart->dsr                              = epv->dsr;
+00183 
+00184     restart->metyr                            = metyr;
+00185     
+00186     \textcolor{keywordflow}{return}(!ok);
+00187 \}
+\end{DoxyCode}

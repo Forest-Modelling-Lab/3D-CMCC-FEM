@@ -1,0 +1,197 @@
+\hypertarget{firstday_8c_source}{}\section{firstday.\+c}
+\label{firstday_8c_source}\index{c\+:/\+R\+E\+P\+O/biomebgc-\/4.\+2/src/bgclib/firstday.\+c@{c\+:/\+R\+E\+P\+O/biomebgc-\/4.\+2/src/bgclib/firstday.\+c}}
+
+\begin{DoxyCode}
+00001 \textcolor{comment}{/* }
+00002 \textcolor{comment}{firstday.c}
+00003 \textcolor{comment}{Initializes the state variables for the first day of a simulation that}
+00004 \textcolor{comment}{is not using a restart file.}
+00005 \textcolor{comment}{}
+00006 \textcolor{comment}{*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*}
+00007 \textcolor{comment}{Biome-BGC version 4.2 (final release)}
+00008 \textcolor{comment}{See copyright.txt for Copyright information}
+00009 \textcolor{comment}{*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*}
+00010 \textcolor{comment}{*/}
+00011 
+00012 \textcolor{preprocessor}{#include "bgc.h"}
+00013 
+\hypertarget{firstday_8c_source_l00014}{}\hyperlink{firstday_8c_abb6c5cdd7fcae478726423f980f8a3b6}{00014} \textcolor{keywordtype}{int} \hyperlink{firstday_8c_abb6c5cdd7fcae478726423f980f8a3b6}{firstday}(\textcolor{keyword}{const} epconst\_struct* epc, \textcolor{keyword}{const} cinit\_struct* cinit,
+00015 epvar\_struct* epv, phenarray\_struct* phen, cstate\_struct* cs, nstate\_struct* ns)
+00016 \{
+00017     \textcolor{keywordtype}{int} ok=1;
+00018     \textcolor{keywordtype}{int} woody;
+00019     \textcolor{keywordtype}{int} predays,remdays;
+00020     \textcolor{keywordtype}{double} max\_leafc,max\_frootc;
+00021     \textcolor{keywordtype}{double} max\_stemc,new\_stemc;
+00022     \textcolor{keywordtype}{double} prop\_transfer,transfer;
+00023     \textcolor{keywordtype}{double} prop\_litfall;
+00024     
+00025     \textcolor{comment}{/* initialize the c and n storage state variables */}
+00026     cs->leafc\_storage = 0.0;
+00027     cs->frootc\_storage = 0.0;
+00028     cs->livestemc\_storage = 0.0;
+00029     cs->deadstemc\_storage = 0.0;
+00030     cs->livecrootc\_storage = 0.0;
+00031     cs->deadcrootc\_storage = 0.0;
+00032     cs->gresp\_storage = 0.0;
+00033     cs->cpool = 0.0;
+00034     ns->leafn\_storage = 0.0;
+00035     ns->frootn\_storage = 0.0;
+00036     ns->livestemn\_storage = 0.0;
+00037     ns->deadstemn\_storage = 0.0;
+00038     ns->livecrootn\_storage = 0.0;
+00039     ns->deadcrootn\_storage = 0.0;
+00040     ns->retransn = 0.0;
+00041     ns->npool = 0.0;
+00042     
+00043     \textcolor{comment}{/* initialize days-since-rain counter */}
+00044     epv->dsr = 0.0;
+00045     
+00046     woody = epc->woody;
+00047     \textcolor{comment}{/* establish the initial partitioning between displayed growth}
+00048 \textcolor{comment}{    and growth ready for transfer */}
+00049     max\_leafc = cinit->max\_leafc;
+00050     cs->leafc\_transfer = max\_leafc * epc->leaf\_turnover;
+00051     cs->leafc = max\_leafc - cs->leafc\_transfer;
+00052     max\_frootc = max\_leafc * epc->alloc\_frootc\_leafc;
+00053     cs->frootc\_transfer = cinit->max\_leafc * epc->alloc\_frootc\_leafc * 
+00054         epc->froot\_turnover;
+00055     cs->frootc = max\_frootc - cs->frootc\_transfer;
+00056     \textcolor{keywordflow}{if} (epc->woody)
+00057     \{
+00058         max\_stemc = cinit->max\_stemc;
+00059         new\_stemc = cs->leafc\_transfer * epc->alloc\_newstemc\_newleafc;
+00060         cs->livestemc\_transfer = new\_stemc * epc->alloc\_newlivewoodc\_newwoodc;
+00061         cs->livestemc = cs->livestemc\_transfer / epc->livewood\_turnover;
+00062         cs->deadstemc\_transfer = new\_stemc - cs->livestemc\_transfer;
+00063         cs->deadstemc = max\_stemc - cs->livestemc\_transfer - cs->livestemc - 
+00064             cs->deadstemc\_transfer;
+00065         \textcolor{keywordflow}{if} (cs->deadstemc < 0.0) cs->deadstemc = 0.0;
+00066         cs->livecrootc\_transfer = cs->livestemc\_transfer * epc->alloc\_crootc\_stemc;
+00067         cs->livecrootc = cs->livestemc * epc->alloc\_crootc\_stemc;
+00068         cs->deadcrootc\_transfer = cs->deadstemc\_transfer * epc->alloc\_crootc\_stemc;
+00069         cs->deadcrootc = cs->deadstemc * epc->alloc\_crootc\_stemc;
+00070     \} 
+00071     
+00072     \textcolor{comment}{/* calculate initial leaf and froot nitrogen pools from carbon pools and}
+00073 \textcolor{comment}{    user-specified initial C:N for each component */}
+00074     ns->leafn\_transfer = cs->leafc\_transfer / epc->leaf\_cn;
+00075     ns->leafn = cs->leafc / epc->leaf\_cn;
+00076     ns->frootn\_transfer = cs->frootc\_transfer / epc->froot\_cn;
+00077     ns->frootn = cs->frootc / epc->froot\_cn;
+00078     \textcolor{keywordflow}{if} (epc->woody)
+00079     \{
+00080         ns->livestemn\_transfer = cs->livestemc\_transfer / epc->livewood\_cn;
+00081         ns->livestemn = cs->livestemc / epc->livewood\_cn;
+00082         ns->deadstemn\_transfer = cs->deadstemc\_transfer / epc->deadwood\_cn;
+00083         ns->deadstemn = cs->deadstemc / epc->deadwood\_cn;
+00084         ns->livecrootn\_transfer = cs->livecrootc\_transfer / epc->livewood\_cn;
+00085         ns->livecrootn = cs->livecrootc / epc->livewood\_cn;
+00086         ns->deadcrootn\_transfer = cs->deadcrootc\_transfer / epc->deadwood\_cn;
+00087         ns->deadcrootn = cs->deadcrootc / epc->deadwood\_cn;
+00088     \}
+00089     
+00090     \textcolor{comment}{/* use then penology array information to determine, for the first}
+00091 \textcolor{comment}{    day of simulation, how many days of transfer and litterfall have}
+00092 \textcolor{comment}{    already occurred for this year */}
+00093     predays = phen->predays\_transfer[0];
+00094     remdays = phen->remdays\_transfer[0];
+00095     \textcolor{keywordflow}{if} (predays > 0)
+00096     \{
+00097         prop\_transfer = (double)predays/(\textcolor{keywordtype}{double})(predays+remdays);
+00098         \textcolor{comment}{/* perform these transfers */}
+00099         transfer = prop\_transfer * cs->leafc\_transfer;
+00100         cs->leafc          += transfer;
+00101         cs->leafc\_transfer -= transfer;
+00102         transfer = prop\_transfer * ns->leafn\_transfer;
+00103         ns->leafn          += transfer;
+00104         ns->leafn\_transfer -= transfer;
+00105         transfer = prop\_transfer * cs->frootc\_transfer;
+00106         cs->frootc          += transfer;
+00107         cs->frootc\_transfer -= transfer;
+00108         transfer = prop\_transfer * ns->frootn\_transfer;
+00109         ns->frootn          += transfer;
+00110         ns->frootn\_transfer -= transfer;
+00111         \textcolor{keywordflow}{if} (woody)
+00112         \{
+00113             transfer = prop\_transfer * cs->livestemc\_transfer;
+00114             cs->livestemc          += transfer;
+00115             cs->livestemc\_transfer -= transfer;
+00116             transfer = prop\_transfer * ns->livestemn\_transfer;
+00117             ns->livestemn          += transfer;
+00118             ns->livestemn\_transfer -= transfer;
+00119             transfer = prop\_transfer * cs->deadstemc\_transfer;
+00120             cs->deadstemc          += transfer;
+00121             cs->deadstemc\_transfer -= transfer;
+00122             transfer = prop\_transfer * ns->deadstemn\_transfer;
+00123             ns->deadstemn          += transfer;
+00124             ns->deadstemn\_transfer -= transfer;
+00125             transfer = prop\_transfer * cs->livecrootc\_transfer;
+00126             cs->livecrootc          += transfer;
+00127             cs->livecrootc\_transfer -= transfer;
+00128             transfer = prop\_transfer * ns->livecrootn\_transfer;
+00129             ns->livecrootn          += transfer;
+00130             ns->livecrootn\_transfer -= transfer;
+00131             transfer = prop\_transfer * cs->deadcrootc\_transfer;
+00132             cs->deadcrootc          += transfer;
+00133             cs->deadcrootc\_transfer -= transfer;
+00134             transfer = prop\_transfer * ns->deadcrootn\_transfer;
+00135             ns->deadcrootn          += transfer;
+00136             ns->deadcrootn\_transfer -= transfer;
+00137         \}
+00138         
+00139         \textcolor{comment}{/* only test for litterfall if there has already been some}
+00140 \textcolor{comment}{        transfer growth this year */}
+00141         predays = phen->predays\_litfall[0];
+00142         remdays = phen->remdays\_litfall[0];
+00143         \textcolor{keywordflow}{if} (predays > 0)
+00144         \{
+00145             \textcolor{comment}{/* some litterfall has already occurred. in this case, just}
+00146 \textcolor{comment}{            remove material from the displayed compartments, and don't}
+00147 \textcolor{comment}{            bother with the transfer to litter compartments */}
+00148             prop\_litfall = (double)predays/(\textcolor{keywordtype}{double})(predays+remdays);
+00149             cs->leafc  -= prop\_litfall * cs->leafc * epc->leaf\_turnover;
+00150             cs->frootc -= prop\_litfall * cs->frootc * epc->froot\_turnover;
+00151         \}
+00152     \} \textcolor{comment}{/* end if transfer */}
+00153 
+00154     \textcolor{comment}{/* add the growth respiration requirement for the first year's}
+00155 \textcolor{comment}{    leaf and fine root growth from transfer pools to the }
+00156 \textcolor{comment}{    gresp\_transfer pool */}
+00157     cs->gresp\_transfer = 0.0;
+00158     cs->gresp\_transfer += (cs->leafc\_transfer + cs->frootc\_transfer) * GRPERC;
+00159     \textcolor{keywordflow}{if} (woody)
+00160     \{
+00161         cs->gresp\_transfer += (cs->livestemc\_transfer + cs->deadstemc\_transfer +
+00162             cs->livecrootc\_transfer + cs->deadcrootc\_transfer) * GRPERC;
+00163     \}
+00164     
+00165     \textcolor{comment}{/* set the initial rates of litterfall and live wood turnover */}
+00166     \textcolor{keywordflow}{if} (epc->evergreen)
+00167     \{
+00168         \textcolor{comment}{/* leaf and fineroot litterfall rates */}
+00169         epv->day\_leafc\_litfall\_increment = max\_leafc * epc->leaf\_turnover / 365.0;
+00170         epv->day\_frootc\_litfall\_increment = max\_frootc * epc->froot\_turnover / 365.0;
+00171     \}
+00172     \textcolor{keywordflow}{else}
+00173     \{
+00174         \textcolor{comment}{/* deciduous: reset the litterfall rates to 0.0 for the start of the}
+00175 \textcolor{comment}{        next litterfall season */}
+00176         epv->day\_leafc\_litfall\_increment = 0.0;
+00177         epv->day\_frootc\_litfall\_increment = 0.0;
+00178     \}
+00179     \textcolor{comment}{/* all types can use annmax leafc and frootc */}
+00180     epv->annmax\_leafc = 0.0;
+00181     epv->annmax\_frootc = 0.0;
+00182     
+00183     \textcolor{keywordflow}{if} (epc->woody)
+00184     \{
+00185         \textcolor{comment}{/* live wood turnover rates */}
+00186         epv->day\_livestemc\_turnover\_increment = cs->livestemc * epc->livewood\_turnover / 365.0;
+00187         epv->day\_livecrootc\_turnover\_increment = cs->livecrootc * epc->livewood\_turnover / 365.0;
+00188         epv->annmax\_livestemc = 0.0;
+00189         epv->annmax\_livecrootc = 0.0;
+00190     \}
+00191     \textcolor{keywordflow}{return} (!ok);
+00192 \}
+\end{DoxyCode}

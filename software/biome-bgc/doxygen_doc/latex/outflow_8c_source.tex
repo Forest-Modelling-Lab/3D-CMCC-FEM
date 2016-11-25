@@ -1,0 +1,42 @@
+\hypertarget{outflow_8c_source}{}\section{outflow.\+c}
+\label{outflow_8c_source}\index{c\+:/\+R\+E\+P\+O/biomebgc-\/4.\+2/src/bgclib/outflow.\+c@{c\+:/\+R\+E\+P\+O/biomebgc-\/4.\+2/src/bgclib/outflow.\+c}}
+
+\begin{DoxyCode}
+00001 \textcolor{comment}{/* }
+00002 \textcolor{comment}{outflow.c}
+00003 \textcolor{comment}{daily hydrologic outflow}
+00004 \textcolor{comment}{}
+00005 \textcolor{comment}{*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*}
+00006 \textcolor{comment}{Biome-BGC version 4.2 (final release)}
+00007 \textcolor{comment}{See copyright.txt for Copyright information}
+00008 \textcolor{comment}{*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*}
+00009 \textcolor{comment}{*/}
+00010 
+00011 \textcolor{preprocessor}{#include "bgc.h"}
+00012 
+\hypertarget{outflow_8c_source_l00013}{}\hyperlink{outflow_8c_a7114cdaa68100f134ada9732a625c6a9}{00013} \textcolor{keywordtype}{int} \hyperlink{outflow_8c_a7114cdaa68100f134ada9732a625c6a9}{outflow}(\textcolor{keyword}{const} siteconst\_struct* sitec, \textcolor{keyword}{const} wstate\_struct* ws,
+00014 wflux\_struct* wf)
+00015 \{
+00016     \textcolor{comment}{/* calculates the outflow flux from the difference between soilwater}
+00017 \textcolor{comment}{    and maximum soilwater */}
+00018     \textcolor{keywordtype}{int} ok=1;
+00019     \textcolor{comment}{/* water in excess of saturation to outflow */}
+00020     \textcolor{keywordflow}{if} (ws->soilw > sitec->soilw\_sat)  
+00021     \{
+00022         wf->soilw\_outflow = ws->soilw - sitec->soilw\_sat;
+00023     \}
+00024     \textcolor{comment}{/* slow drainage from saturation to field capacity */}
+00025     \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} (ws->soilw > sitec->soilw\_fc)
+00026     \{
+00027         wf->soilw\_outflow = 0.5 * (ws->soilw - sitec->soilw\_fc);
+00028     \}
+00029     \textcolor{comment}{/* otherwise, no outflow */}
+00030     \textcolor{keywordflow}{else}
+00031     \{
+00032         wf->soilw\_outflow = 0.0;
+00033     \}
+00034 
+00035     \textcolor{keywordflow}{return}(!ok);
+00036 \}
+00037 
+\end{DoxyCode}
