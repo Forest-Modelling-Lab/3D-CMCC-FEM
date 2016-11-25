@@ -213,6 +213,7 @@ enum {
 	F_LIGHT_SUN,                        /* LIGHT modifier for Sun leaves */
 	F_LIGHT_SHADE,                      /* LIGHT modifier for Shaded leaves */
 	F_AGE,                              /* AGE modifier */
+	FR,                                 /* Nitrogen fertility rate */
 	F_NUTR,                             /* SOIL NUTRIENT Modifier */
 	F_T,                                /* TEMPERATURE modifier */
 	F_SW,                               /* SOIL WATER modifier */
@@ -853,20 +854,23 @@ typedef struct
 	double sat_hydr_conduct;                                              /* saturated hydraulic conductivity (mm/m2) */
 	double bulk_density;                                                  /* soil bulk density (g/cm3) */
 
+	/* soil */
+	//ALESSIOR TO MOVE INTO SOIL LAYER STRUCTURE
 	double asw;                                                           /* current available soil water (mm/volume) */
 	double old_asw;                                                       /* old available soil water (mm/volume) */
 	double max_asw_fc;                                                    /* max available soil water at field capacity mmKgH2O/m3*/
 	double max_asw_sat;                                                   /* max available soil water at field capacity mmKgH2O/m3*/
 	double psi;                                                           /* water potential of soil and leaves (MPa) */
 	double soil_moist_ratio;                                              /* soil moisture ratio */
-	double vwc;                                                           /* volumetric water content (mm/m2) */
-	double vwc_fc;                                                        /* volumetric water content at field capacity (mm/m2) */
-	double vwc_sat;                                                       /* volumetric water content at saturation (mm/m2) */
+	double vwc;                                                           /* soil volumetric water content (mm/m2) */
+	double vwc_fc;                                                        /* soil volumetric water content at field capacity (mm/m2) */
+	double vwc_sat;                                                       /* soil volumetric water content at saturation (mm/m2) */
 	double psi_sat;                                                       /* soil matric potential (MPa) */
 	double soil_b;                                                        /* slope of log(psi) vs log(rwc) (DIM) */
 	double soilw_fc;                                                      /* soil water at field capacity (kgH2O/m2) */
 	double soilw_sat;                                                     /* soil water at saturation (kgH2O/m2) */
-	double swc;
+	double swc;                                                           /* soil Water content (kgH2O/m2) */
+	double soil_N;                                                        /* soil Nitrogen content (gN/m2) */
 
 	double rain;
 	double snow;
