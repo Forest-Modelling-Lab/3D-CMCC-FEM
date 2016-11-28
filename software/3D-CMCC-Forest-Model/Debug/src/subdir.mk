@@ -4,12 +4,12 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
-../src/C-allocation.c \
 ../src/C-assimilation.c \
 ../src/C-deciduous-partitioning-allocation.c \
 ../src/C-evergreen-partitioning-allocation.c \
 ../src/C-fruit-partitioning-allocation.c \
-../src/N-stock.c \
+../src/CN-allocation.c \
+../src/N-assimilation.c \
 ../src/Penman_Monteith.c \
 ../src/allometry.c \
 ../src/aut_respiration.c \
@@ -40,7 +40,6 @@ C_SRCS += \
 ../src/met_data.c \
 ../src/modifiers.c \
 ../src/mortality.c \
-../src/mpfit.c \
 ../src/nc.c \
 ../src/new_forest_tree_class.c \
 ../src/output.c \
@@ -53,8 +52,10 @@ C_SRCS += \
 ../src/remove_tree_class.c \
 ../src/settings.c \
 ../src/snow.c \
+../src/soil_decomp.c \
 ../src/soil_evaporation.c \
 ../src/soil_model.c \
+../src/soil_nitrogen_balance.c \
 ../src/soil_radiation_sw_band.c \
 ../src/soil_respiration.c \
 ../src/soil_settings.c \
@@ -71,12 +72,12 @@ C_SRCS += \
 ../src/yos.c 
 
 OBJS += \
-./src/C-allocation.o \
 ./src/C-assimilation.o \
 ./src/C-deciduous-partitioning-allocation.o \
 ./src/C-evergreen-partitioning-allocation.o \
 ./src/C-fruit-partitioning-allocation.o \
-./src/N-stock.o \
+./src/CN-allocation.o \
+./src/N-assimilation.o \
 ./src/Penman_Monteith.o \
 ./src/allometry.o \
 ./src/aut_respiration.o \
@@ -107,7 +108,6 @@ OBJS += \
 ./src/met_data.o \
 ./src/modifiers.o \
 ./src/mortality.o \
-./src/mpfit.o \
 ./src/nc.o \
 ./src/new_forest_tree_class.o \
 ./src/output.o \
@@ -120,8 +120,10 @@ OBJS += \
 ./src/remove_tree_class.o \
 ./src/settings.o \
 ./src/snow.o \
+./src/soil_decomp.o \
 ./src/soil_evaporation.o \
 ./src/soil_model.o \
+./src/soil_nitrogen_balance.o \
 ./src/soil_radiation_sw_band.o \
 ./src/soil_respiration.o \
 ./src/soil_settings.o \
@@ -138,12 +140,12 @@ OBJS += \
 ./src/yos.o 
 
 C_DEPS += \
-./src/C-allocation.d \
 ./src/C-assimilation.d \
 ./src/C-deciduous-partitioning-allocation.d \
 ./src/C-evergreen-partitioning-allocation.d \
 ./src/C-fruit-partitioning-allocation.d \
-./src/N-stock.d \
+./src/CN-allocation.d \
+./src/N-assimilation.d \
 ./src/Penman_Monteith.d \
 ./src/allometry.d \
 ./src/aut_respiration.d \
@@ -174,7 +176,6 @@ C_DEPS += \
 ./src/met_data.d \
 ./src/modifiers.d \
 ./src/mortality.d \
-./src/mpfit.d \
 ./src/nc.d \
 ./src/new_forest_tree_class.d \
 ./src/output.d \
@@ -187,8 +188,10 @@ C_DEPS += \
 ./src/remove_tree_class.d \
 ./src/settings.d \
 ./src/snow.d \
+./src/soil_decomp.d \
 ./src/soil_evaporation.d \
 ./src/soil_model.d \
+./src/soil_nitrogen_balance.d \
 ./src/soil_radiation_sw_band.d \
 ./src/soil_respiration.d \
 ./src/soil_settings.d \

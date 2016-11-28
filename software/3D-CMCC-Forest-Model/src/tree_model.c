@@ -198,8 +198,6 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 								/* compute annual Maximum LAI */
 								peak_lai( s, day, month, year );
 
-								/* compute annual amount of CN leaf falling (for evergreen) */
-								CN_leaf_falling ( c, height, dbh, age, species );
 							}
 							/***************************************************************/
 							/* print at the beginning of simulation forest class data */

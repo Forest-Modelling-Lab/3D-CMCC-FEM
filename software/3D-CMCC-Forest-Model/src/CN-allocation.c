@@ -38,7 +38,7 @@ void carbon_allocation(species_t *const s)
 	logger(g_debug_log, "C_TO_FRUIT = %g tC/cell/day\n", s->value[C_TO_FRUIT]);
 
 	//fixme
-	s->value[LEAF_C] += s->value[C_TO_LEAF];
+	s->value[LEAF_C] += ( s->value[C_TO_LEAF] + s->value[LEAF_FALLING_C] );
 	//s->value[LEAF_C] -= s->value[C_LEAF_TO_LITTER];
 	logger(g_debug_log, "Leaf Biomass (Wl) = %g tC/Cell\n", s->value[LEAF_C]);
 

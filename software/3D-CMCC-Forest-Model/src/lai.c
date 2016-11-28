@@ -23,8 +23,9 @@ void daily_lai (species_t *const s)
 
 	logger(g_debug_log, "\n**LEAF AREA INDEX**\n");
 
+
 	/* convert tC/cell to KgC/m^2 */
-	leaf_c = s->value[LEAF_C] * 1000.0 ;
+	leaf_c = ( s->value[LEAF_C] + s->value[LEAF_FALLING_C] ) * 1000.0 ;
 	logger(g_debug_log, "Leaf Biomass = %g KgC/cell\n", leaf_c);
 	logger(g_debug_log, "CANOPY_COVER_PROJ = %g %%\n", s->value[CANOPY_COVER_PROJ]);
 
