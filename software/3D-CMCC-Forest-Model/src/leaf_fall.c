@@ -115,7 +115,7 @@ void leaf_fall_evergreen (cell_t *const c, const int height, const int dbh, cons
 	logger(g_debug_log, "Fine root pool before turnover = %g tC/cell\n", s->value[FINE_ROOT_C]);
 
 	/* compute daily amount of leaf and fine root to remove */
-	s->value[C_LEAF_TO_LITTER] = (s->value[LEAF_C] * daily_leaf_fineroot_turnover_rate);
+	s->value[C_LEAF_TO_LITTER] = (s->value[LEAF_FALLING_C] * daily_leaf_fineroot_turnover_rate);
 	logger(g_debug_log, "Daily leaf turnover = %g tC/cell/day\n", s->value[C_LEAF_TO_LITTER]);
 
 	s->value[C_FINE_ROOT_TO_LITTER] = (s->value[FINE_ROOT_C] * daily_leaf_fineroot_turnover_rate);
@@ -141,12 +141,41 @@ void leaf_fall_evergreen (cell_t *const c, const int height, const int dbh, cons
 	s->value[C_TO_LEAF] -= s->value[C_LEAF_TO_LITTER];
 	s->value[C_TO_FINEROOT] -= s->value[C_FINE_ROOT_TO_LITTER];
 
-	s->value[LEAF_C] -= s->value[C_LEAF_TO_LITTER];
+	s->value[LEAF_FALLING_C] -= s->value[C_LEAF_TO_LITTER];
 	s->value[FINE_ROOT_C] -= s->value[C_FINE_ROOT_TO_LITTER];
 
 	/* considering that both leaf and fine root contribute to the litter pool */
 	s->value[C_TO_LITTER] = (s->value[C_LEAF_TO_LITTER] + s->value[C_FINE_ROOT_TO_LITTER]);
 	logger(g_debug_log, "biomass to litter after retranslocation = %g tC/cell/day\n", s->value[C_TO_LITTER]);
+
+}
+
+void CN_leaf_falling (cell_t *const c, const int height, const int dbh, const int age, const int species)
+{
+	static double daily_leaf_fineroot_turnover_rate;
+
+	species_t *s;
+	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
+
+	/* compute rates */
+	/* compute leaf and fine root turnover rate (ratio) */
+	daily_leaf_fineroot_turnover_rate = s->value[LEAF_FINEROOT_TURNOVER];
+	logger(g_debug_log, "Daily leaf fine root turnover rate = %g (ratio)\n", daily_leaf_fineroot_turnover_rate);
+
+	if ( s->value[PHENOLOGY] == 1.1 || s->value[PHENOLOGY] == 1.2 )
+	{
+		/* compute leaf falling Carbon biomass pool */
+		s->value[LEAF_FALLING_C] = s->value[LEAF_C] * daily_leaf_fineroot_turnover_rate;
+		logger(g_debug_log, "LEAF_FALLING_C = %g tC/cell/day\n", s->value[LEAF_FALLING_C]);
+
+		/* update biomass leaf pool */
+		s->value[LEAF_C] -= s->value[LEAF_FALLING_C];
+ 	}
+	else
+	{
+		s->value[LEAF_FALLING_C] = 0.;
+	}
+
 
 }
 

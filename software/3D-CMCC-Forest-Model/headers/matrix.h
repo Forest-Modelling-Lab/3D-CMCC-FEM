@@ -329,6 +329,7 @@ enum {
 
 	/* carbon biomass pools in tons of tC/sizeCell */
 	LEAF_C,                             /* Current Leaf carbon pool tC/sizeCell */
+	LEAF_FALLING_C,                     /* Current Leaf falling carbon pool tC/sizeCell */
 	MAX_LEAF_C,                         /* Maximum Current Leaf carbon pool tC/sizeCell */
 	TOT_ROOT_C,                         /* Current Total Coarse carbon pool tC/sizeCell */
 	COARSE_ROOT_C,                      /* Current Coarse root carbon pool tC/sizeCell */
@@ -518,7 +519,7 @@ enum {
 
 	/* nitrogen pools (tN/area) */
 	LEAF_N,                             /* Current Leaf nitrogen pool tN/sizeCell */
-	LEAF_FALL_N,                        /* Current Leaf falling nitrogen pool tN/sizeCell */
+	LEAF_FALLING_N,                     /* Current Leaf falling nitrogen pool tN/sizeCell */
 	FINE_ROOT_N,                        /* Current Fine root nitrogen pool tN/sizeCell */
 	COARSE_ROOT_N,                      /* Current Coarse root nitrogen pool tN/sizeCell */
 	STEM_N,                             /* Current Stem nitrogen pool tN/sizeCell */
