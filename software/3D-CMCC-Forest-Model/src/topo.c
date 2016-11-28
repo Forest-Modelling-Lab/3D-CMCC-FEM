@@ -43,7 +43,7 @@ topo_t* import_topo_txt(const char *const filename, int* const p_topos_count) {
 	/* open file */
 	f = fopen(filename, "r");
 	if ( ! f ) {
-		logger_error(g_debug_log, "unable to open %s\n", filename);
+		logger_error(g_debug_log, "unable to open, file doesn't exist? %s\n", filename);
 		return 0;
 	}
 
