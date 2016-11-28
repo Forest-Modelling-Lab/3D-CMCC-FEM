@@ -334,6 +334,7 @@ enum {
 	TOT_ROOT_C,                         /* Current Total Coarse carbon pool tC/sizeCell */
 	COARSE_ROOT_C,                      /* Current Coarse root carbon pool tC/sizeCell */
 	FINE_ROOT_C,                        /* Current Fine root carbon pool tC/sizeCell */
+	FINE_ROOT_TURNOVER_C,               /* Current Fine root turnover tC/sizeCell */
 	MAX_FINE_ROOT_C,                    /* Maximum Current Fine root carbon pool tC/sizeCell */
 	MAX_BUD_BURST_C,                    /* Maximum Current Leaf carbon pool for BudBurst tC/sizeCell */
 	STEM_C,                             /* Current Stem carbon pool tC/sizeCell */

@@ -228,6 +228,9 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 	/* update live_total wood fraction based on age */
 	live_total_wood_age (a, species);
 
+	/* leaf fall */
+	//leaf_fall_evergreen(c, height, dbh, age, species);
+
 	/* allocate daily carbon */
 	carbon_allocation ( s );
 

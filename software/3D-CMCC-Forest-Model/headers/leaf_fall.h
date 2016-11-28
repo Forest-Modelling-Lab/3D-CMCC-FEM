@@ -8,6 +8,4 @@ void leaf_fall_deciduous(cell_t *const c, const int height, const int dbh, const
 
 void leaf_fall_evergreen(cell_t *const c, const int height, const int dbh, const int age, const int species);
 
-void CN_leaf_falling(cell_t *const c, const int height, const int dbh, const int age, const int species);
-
 #endif /* LEAF_FALL_H_ */

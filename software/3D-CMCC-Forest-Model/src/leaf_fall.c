@@ -43,14 +43,6 @@ void leaf_fall_deciduous ( cell_t *const c, const int height, const int dbh, con
 		/* assign LAI values at the beginning of the sigmoid shape */
 		s->value[MAX_LAI_PROJ] = s->value[LAI_PROJ];
 		senescenceDayOne = c->doy;
-
-#if 0
-		/* move all C biomass to falling leaves pool */
-		s->value[LEAF_FALLING_C] = s->value[LEAF_C];
-
-		/* reset leaf C biomass pool */
-		s->value[LEAF_C] = 0.;
-#endif
 	}
 
 	if(s->counter[LEAF_FALL_COUNTER] < s->counter[DAY_FRAC_FOLIAGE_REMOVE])
@@ -120,7 +112,8 @@ void leaf_fall_deciduous ( cell_t *const c, const int height, const int dbh, con
 
 void leaf_fall_evergreen ( cell_t *const c, const int height, const int dbh, const int age, const int species )
 {
-	static double daily_leaf_fineroot_turnover_rate;
+	double yearly_leaf_fall_falling_C;
+	double yearly_fine_root_turnover_C;
 	static double fraction_to_retransl = 0.1; /* fraction of C to retranslocate (see Bossel et al., 2006 and Campioli et al., 2013 */
 
 	species_t *s;
@@ -128,21 +121,39 @@ void leaf_fall_evergreen ( cell_t *const c, const int height, const int dbh, con
 
 	logger(g_debug_log, "\n**LEAF FALL EVERGREEN**\n");
 
-	/* compute rates */
-	/* compute leaf and fine root turnover rate (ratio) */
-	daily_leaf_fineroot_turnover_rate = s->value[LEAF_FINEROOT_TURNOVER]/(int)s->counter[DAY_VEG_FOR_LEAF_FALL];
 
 	if ( c->doy == 1 )
 	{
-		/* compute annual amount of CN leaf falling (for evergreen) */
-		CN_leaf_falling ( c, height, dbh, age, species );
+		/* compute annual leaf turnover */
+		yearly_leaf_fall_falling_C = s->value[LEAF_C] * s->value[LEAF_FINEROOT_TURNOVER];
+		logger(g_debug_log, "Annual leaf turnover = %g tC/cell/year\n", yearly_leaf_fall_falling_C);
+
+		/* daily leaf fall */
+		s->value[LEAF_FALLING_C] = yearly_leaf_fall_falling_C / (int)s->counter[DAY_VEG_FOR_LEAF_FALL];
+		logger(g_debug_log, "Daily leaf turnover = %g tC/cell/year\n", s->value[LEAF_FALLING_C]);
+
+		/* compute fine root turnover */
+		yearly_fine_root_turnover_C = s->value[FINE_ROOT_C] * s->value[LEAF_FINEROOT_TURNOVER];
+		logger(g_debug_log, "Annual fine root turnover = %g tC/cell/year\n", yearly_fine_root_turnover_C);
+
+		/* daily fine root turnover */
+		s->value[FINE_ROOT_TURNOVER_C] = yearly_fine_root_turnover_C / (int)s->counter[DAY_VEG_FOR_LEAF_FALL];
+		logger(g_debug_log, "Daily fine root turnover = %g tC/cell/year\n", s->value[FINE_ROOT_TURNOVER_C]);
 	}
 
+	/* update biomass leaf pool */
+	s->value[LEAF_C] -= s->value[LEAF_FALLING_C];
+	logger(g_debug_log, "LEAF_C = %f tC/cell/day\n", s->value[LEAF_C]);
+
 	/* compute daily amount of leaf and fine root to remove */
-	s->value[C_LEAF_TO_LITTER] = (s->value[LEAF_FALLING_C] * daily_leaf_fineroot_turnover_rate);
+	s->value[C_LEAF_TO_LITTER] = s->value[LEAF_FALLING_C] ;
 	logger(g_debug_log, "Daily leaf turnover = %g tC/cell/day\n", s->value[C_LEAF_TO_LITTER]);
 
-	s->value[C_FINE_ROOT_TO_LITTER] = (s->value[FINE_ROOT_C] * daily_leaf_fineroot_turnover_rate);
+	/* update biomass fine root pool */
+	s->value[FINE_ROOT_C] -= s->value[FINE_ROOT_TURNOVER_C];
+	logger(g_debug_log, "FINE_ROOT_C = %g tC/cell/day\n", s->value[FINE_ROOT_C]);
+
+	s->value[C_FINE_ROOT_TO_LITTER] = s->value[FINE_ROOT_TURNOVER_C];
 	logger(g_debug_log, "Daily fine root turnover = %g tC/cell/day\n", s->value[C_FINE_ROOT_TO_LITTER]);
 
 	logger(g_debug_log, "Daily biomass turnover to litter before retranslocation = %g tC/cell/day\n", s->value[C_LEAF_TO_LITTER] + s->value[C_FINE_ROOT_TO_LITTER]);
@@ -165,33 +176,9 @@ void leaf_fall_evergreen ( cell_t *const c, const int height, const int dbh, con
 	s->value[C_TO_LEAF] -= s->value[C_LEAF_TO_LITTER];
 	s->value[C_TO_FINEROOT] -= s->value[C_FINE_ROOT_TO_LITTER];
 
-	s->value[LEAF_FALLING_C] -= s->value[C_LEAF_TO_LITTER];
-	s->value[FINE_ROOT_C] -= s->value[C_FINE_ROOT_TO_LITTER];
-
 	/* considering that both leaf and fine root contribute to the litter pool */
 	s->value[C_TO_LITTER] = (s->value[C_LEAF_TO_LITTER] + s->value[C_FINE_ROOT_TO_LITTER]);
 	logger(g_debug_log, "biomass to litter after retranslocation = %g tC/cell/day\n", s->value[C_TO_LITTER]);
-
-}
-
-void CN_leaf_falling ( cell_t *const c, const int height, const int dbh, const int age, const int species )
-{
-	static double daily_leaf_fineroot_turnover_rate;
-
-	species_t *s;
-	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
-
-	/* compute rates */
-	/* compute leaf and fine root turnover rate (ratio) */
-	daily_leaf_fineroot_turnover_rate = s->value[LEAF_FINEROOT_TURNOVER];
-	logger(g_debug_log, "Daily leaf fine root turnover rate = %g (ratio)\n", daily_leaf_fineroot_turnover_rate);
-
-	/* compute leaf falling Carbon biomass pool */
-	s->value[LEAF_FALLING_C] = s->value[LEAF_C] * daily_leaf_fineroot_turnover_rate;
-	logger(g_debug_log, "LEAF_FALLING_C = %g tC/cell/day\n", s->value[LEAF_FALLING_C]);
-
-	/* update biomass leaf pool */
-	s->value[LEAF_C] -= s->value[LEAF_FALLING_C];
 
 }
 
