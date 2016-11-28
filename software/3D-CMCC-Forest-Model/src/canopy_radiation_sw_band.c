@@ -314,6 +314,8 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 	CHECK_CONDITION(fabs((s->value[PPFD_ABS] + s->value[PPFD_TRANSM])-s->value[PPFD]),>eps);
 #endif
 
+	s->value[YEARLY_APAR] += s->value[APAR];
+
 	/***********************************************************************************************/
 
 	/* it follows rationale of BIOME-BGC to obtain m2 instead m2/m2 */

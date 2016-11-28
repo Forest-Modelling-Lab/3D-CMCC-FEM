@@ -441,6 +441,8 @@ void reset_annual_class_variables(cell_t *const c)
 					s->value[YEARLY_NPP_gC] = 0;
 					s->value[YEARLY_NPP_tC] = 0;
 
+					s->value[YEARLY_APAR] = 0.;
+
 					s->value[YEARLY_LEAF_AUT_RESP] = 0.;
 					s->value[YEARLY_FINE_ROOT_AUT_RESP] = 0.;
 					s->value[YEARLY_STEM_AUT_RESP] = 0.;

@@ -156,6 +156,8 @@ enum {
 	TRANSM_PAR_SUN,                     /* Transmitted Photosynthetically Active Radiation molPAR/m^2/day from sun leaves */
 	TRANSM_PAR_SHADE,                   /* Transmitted Photosynthetically Active Radiation molPAR/m^2/day from shaded leaves */
 
+	YEARLY_APAR,
+
 	/* short wave */
 	SW_RAD,                             /* Short Wave Radiation in W/m2 */
 	SW_RAD_SUN,                         /* Short Wave Radiation in W/m2 for sun leaves */

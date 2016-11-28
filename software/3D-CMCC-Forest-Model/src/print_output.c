@@ -659,7 +659,7 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 										"AR",
 										"NPP",
 										"Y(%)",
-										"LAI",
+										"PeakLAI",
 										"CC",
 										"DBHDC",
 										"HD",
