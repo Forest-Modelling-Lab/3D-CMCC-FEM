@@ -16,7 +16,7 @@
 extern settings_t* g_settings;
 extern logger_t* g_debug_log;
 
-void forest_management (cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, const int year)
+void forest_management (cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, const int day, const int month, const int year)
 {
 	static int years_for_thinning;
 
@@ -33,9 +33,9 @@ void forest_management (cell_t *const c, const int layer, const int height, cons
 	/* check at the beginning of simulation */
 	if( !year )
 	{
-		CHECK_CONDITION( c->years[year].year, > g_settings->year_start_management );
+		CHECK_CONDITION ( c->years[year].year, > g_settings->year_start_management );
+		CHECK_CONDITION ( (g_settings->year_start_management - g_settings->year_start), > s->value[THINNING] );
 	}
-
 
 	/** THINNING **/
 	if ( ( c->years[year].year == g_settings->year_start_management ) || ( s->value[THINNING] == years_for_thinning ) )
@@ -54,18 +54,6 @@ void forest_management (cell_t *const c, const int layer, const int height, cons
 	CHECK_CONDITION( years_for_thinning, > s->value[ROTATION] );
 
 
-	/** THINNING **/
-	/* if year of simulation matches with thinning and class age doesn't match with rotation age */
-	/* note: it assumes that model simulation start the year after last thinning */
-	/*
-	if ( ( ! ( ( years_for_thinning ) % (int)s->value[THINNING] ) ) && ( a->value != s->value[ROTATION] ) )
-	{
-		logger(g_debug_log,"**FOREST MANAGEMENT**\n");
-
-		thinning ( c, layer, height, dbh, age, species, year );
-	}
-	*/
-
 	/** HARVESTING **/
 	/* if class age matches with harvesting */
 	if ( a->value == s->value[ROTATION] )
@@ -81,7 +69,7 @@ void forest_management (cell_t *const c, const int layer, const int height, cons
 		/* replanting tree class */
 		if( g_settings->replanted_n_tree )
 		{
-			if ( ! add_tree_class_for_replanting( c ) )
+			if ( ! add_tree_class_for_replanting( c , day, month, year ) )
 			{
 				logger_error(g_debug_log, "unable to add new replanted class! (exit)\n");
 				exit(1);

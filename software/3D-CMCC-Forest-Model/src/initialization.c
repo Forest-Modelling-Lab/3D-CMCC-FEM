@@ -356,8 +356,8 @@ void initialization_forest_class_C_biomass(cell_t *const c, const int height, co
 	logger(g_debug_log, "---Total Root Biomass = %g tC cell\n", s->value[TOT_ROOT_C]);
 	s->value[AV_ROOT_MASS_KgDM] = s->value[BIOMASS_ROOTS_TOT_tDM] * 1000.0 /s->counter[N_TREE];
 	s->value[AV_ROOT_MASS_KgC] = s->value[TOT_ROOT_C] * 1000.0 /s->counter[N_TREE];
-	CHECK_CONDITION(fabs((s->value[TOT_ROOT_C])-(s->value[COARSE_ROOT_C] + s->value[FINE_ROOT_C])), >eps);
-	CHECK_CONDITION(fabs((s->value[AV_ROOT_MASS_KgC])-(s->value[AV_COARSE_ROOT_MASS_KgC] + s->value[AV_FINE_ROOT_MASS_KgC])), >eps);
+	CHECK_CONDITION(fabs((s->value[TOT_ROOT_C])-(s->value[COARSE_ROOT_C] + s->value[FINE_ROOT_C])), > eps);
+	CHECK_CONDITION(fabs((s->value[AV_ROOT_MASS_KgC])-(s->value[AV_COARSE_ROOT_MASS_KgC] + s->value[AV_FINE_ROOT_MASS_KgC])), > eps);
 
 	/*COMPUTE BIOMASS LIVE WOOD*/
 	/* assuming LIVE_DEAD WOOD RATIO AS IN BIOME */
@@ -471,11 +471,11 @@ void initialization_forest_class_C_biomass(cell_t *const c, const int height, co
 	/* just for evergreen */
 	if ( s->value[PHENOLOGY] == 1.1 || s->value[PHENOLOGY] == 1.2 )
 	{
-		CHECK_CONDITION(s->value[FINE_ROOT_C], == 0);
-		CHECK_CONDITION(s->value[LEAF_C], == 0);
-		CHECK_CONDITION(s->value[LAI_PROJ], == 0);
-		CHECK_CONDITION(s->value[LAI_SUN_PROJ], == 0);
-		CHECK_CONDITION(s->value[LAI_SHADE_PROJ], == 0);
+		CHECK_CONDITION(s->value[FINE_ROOT_C], <= 0);
+		CHECK_CONDITION(s->value[LEAF_C], <= 0);
+		CHECK_CONDITION(s->value[LAI_PROJ], <= 0);
+		CHECK_CONDITION(s->value[LAI_SUN_PROJ], <= 0);
+		CHECK_CONDITION(s->value[LAI_SHADE_PROJ], <= 0);
 	}
 	CHECK_CONDITION(s->value[STEM_C], == 0);
 	CHECK_CONDITION(s->value[BRANCH_C], == 0);

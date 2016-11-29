@@ -340,7 +340,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 									if ( g_settings->management )
 									{
 										/* management blocks */
-										forest_management (c, layer, height, dbh, age, species, year);
+										forest_management (c, layer, height, dbh, age, species, day, month, year);
 									}
 
 									/* update pointers */

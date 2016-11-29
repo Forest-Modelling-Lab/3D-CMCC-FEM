@@ -84,7 +84,7 @@ static int fill_cell_for_replanting(cell_t *const c)
 	return 1;
 }
 
-int add_tree_class_for_replanting (cell_t *const c)
+int add_tree_class_for_replanting (cell_t *const c, const int day, const int month, const int year )
 {
 	logger(g_debug_log, "**ADD NEW TREE CLASS (REPLANTATION)**\n");
 
@@ -104,6 +104,9 @@ int add_tree_class_for_replanting (cell_t *const c)
 
 	/* initialize carbon pool fraction */
 	carbon_pool_fraction ( c );
+
+	/* initialize forest structure */
+	initialization_forest_structure (c , day, month, year);
 
 	/* initialize new forest class pools */
 	initialization_forest_class_C_biomass( c, c->heights_count-1, 0, 0, 0 );

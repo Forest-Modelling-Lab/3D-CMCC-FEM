@@ -438,7 +438,7 @@ int annual_forest_structure(cell_t* const c)
 int monthly_forest_structure (cell_t* const c)
 {
 
-	logger(g_debug_log, "\n***MONTHLY FOREST STRUCTURE***\n");
+	//logger(g_debug_log, "\n***MONTHLY FOREST STRUCTURE***\n");
 
 	return 1;
 }

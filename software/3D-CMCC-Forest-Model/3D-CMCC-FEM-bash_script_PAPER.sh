@@ -30,10 +30,7 @@ export OUTPUT_PATH=output/
 model_run=(Debug Release)
 
 #declare sites
-SITEs=(Soroe Hyytiala Kroof Peitz)
-
-#declare climate
-CLIMATEs=(Historical Scenario All)
+SITEs=(Soroe Hyytiala)
 
 #declare GCMs or Repeated
 GCMs=(GCM1 GCM2 GCM3 GCM4 GCM5 All)
