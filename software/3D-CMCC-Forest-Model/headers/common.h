@@ -37,7 +37,7 @@
 #define STR(a)		#a
 #define CHECK_CONDITION(x,c) {																																\
 		if ( (x)c )		{																																	\
-			logger_error(NULL,"\nerror: condition (%s %s) is true, value of %s is %g in %s on line %d\n", XSTR(x), XSTR(c), XSTR(x), (double)(x),  __FILE__, __LINE__);	\
+			logger_error(NULL,"\nerror: condition (%s %s) is true, value of %s is %g in %s on line %d\n", XSTR(x), XSTR(c), XSTR(x), (double)(x), __FILE__, __LINE__);	\
 			exit(1);																																		\
 		}																																					\
 }

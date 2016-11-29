@@ -119,7 +119,7 @@ void leaf_fall_evergreen ( cell_t *const c, const int height, const int dbh, con
 	species_t *s;
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
-	logger(g_debug_log, "\n**LEAF FALL EVERGREEN**\n");
+	logger(g_debug_log, "\n**LEAF FALL (turnover) EVERGREEN**\n");
 
 
 	if ( c->doy == 1 )

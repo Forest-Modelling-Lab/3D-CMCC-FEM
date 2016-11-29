@@ -111,6 +111,8 @@ void crown_allometry (cell_t *const c, const int height, const int dbh, const in
 	eff_canopy_cover = s->value[CANOPY_COVER_PROJ] / g_settings->max_layer_cover;
 	logger(g_debug_log, "-eff_canopy_cover = %.4g %%\n", eff_canopy_cover * 100.);
 
+	if ( eff_canopy_cover > 1. ) eff_canopy_cover = 1.;
+
 	/* it considers crown projected area (at zenith angles) plus half of lateral area of a cylinder */
 	/* when canopy tends to closure the later part of the crown area that absorbs light tends to be reduced */
 	lateral_area = ((s->value[CROWN_DIAMETER] * Pi * s->value[CROWN_HEIGHT]) / 2.) * (1. - eff_canopy_cover);
@@ -118,11 +120,6 @@ void crown_allometry (cell_t *const c, const int height, const int dbh, const in
 	/* Canopy cover able to absorb light (integrated all over all viewing angles) */
 	s->value[CANOPY_COVER_EXP] = ((s->value[CROWN_AREA_PROJ] + lateral_area) * s->counter[N_TREE]) / g_settings->sizeCell ;
 	logger(g_debug_log, "-Canopy Cover Exposed (all viewing angles, my method) = %g %%\n", s->value[CANOPY_COVER_EXP] * 100.);
-
-	/* check */
-	//CHECK_CONDITION(eff_canopy_cover, < 0. - eps);
-	//CHECK_CONDITION(eff_canopy_cover, > 1. + eps);
-
 }
 
 void allometry_power_function(cell_t *const c)

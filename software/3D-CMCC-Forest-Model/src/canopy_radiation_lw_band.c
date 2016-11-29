@@ -55,6 +55,9 @@ void canopy_radiation_lw_band(cell_t *const c, const int layer, const int height
 
 	/***********************************************************************************************************/
 
+
+	//FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME CHECK FOR CORRECT CANOPY COVER!!!!!!!!!!!!!!!!!!!!!!
+
 	/* LONG WAVE RADIATION FRACTIONS */
 	/* fraction of long wave emissivity  by the canopy CLM 4.5 (eq. 4.20)  */
 	/* for Dai et al., 2004 it represents also the absorbed */

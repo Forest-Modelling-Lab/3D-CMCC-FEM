@@ -88,8 +88,8 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 
 	logger(g_debug_log, "\nCarbon allocation for evergreen\n");
 	logger(g_debug_log, "PHENOLOGICAL PHASE = %d\n", s->phenology_phase);
-	logger(g_debug_log, "LAI_PROJ", s->value[LAI_PROJ]);
-	logger(g_debug_log, "PEAK_LAI_PROJ = %f \n", s->value[PEAK_LAI_PROJ]);
+	logger(g_debug_log, "LAI_PROJ = %g\n", s->value[LAI_PROJ]);
+	logger(g_debug_log, "PEAK_LAI_PROJ = %g \n", s->value[PEAK_LAI_PROJ]);
 
 	/* assign NPP to local variable */
 	npp_to_alloc = s->value[NPP_tC];

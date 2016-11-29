@@ -515,7 +515,7 @@ int daily_forest_structure (cell_t *const c)
 
 			/* upper layer */
 			l->layer_tree_height_modifier = 0.5 * ( 1. + pow ( 2. , ( - c->tree_layers[layer].layer_avg_tree_height / c->tree_layers[layer-1].layer_avg_tree_height ) ) -
-							( pow ( 2. , ( - c->tree_layers[layer-1].layer_avg_tree_height / c->tree_layers[layer].layer_avg_tree_height ) ) ) );
+					( pow ( 2. , ( - c->tree_layers[layer-1].layer_avg_tree_height / c->tree_layers[layer].layer_avg_tree_height ) ) ) );
 			logger(g_debug_log, "\n-Layer %d light vertical modifier = %g\n", layer, l->layer_tree_height_modifier);
 
 			/* lower layer */
@@ -555,20 +555,30 @@ int daily_forest_structure (cell_t *const c)
 						/*****************************************************************************************/
 
 						/* compute daily canopy projected cover */
-						/* special case when LAI = < 1.0 (e.g, beginning of growing season) */
-						if( s->value[LAI_PROJ] < 1.0 ) s->value[DAILY_CANOPY_COVER_PROJ] = s->value[LAI_PROJ] * s->value[CANOPY_COVER_PROJ];
-						else s->value[DAILY_CANOPY_COVER_PROJ] = s->value[CANOPY_COVER_PROJ];
+						s->value[DAILY_CANOPY_COVER_PROJ] = s->value[CANOPY_COVER_PROJ];
+
 
 						/* canopy cannot absorb more than 100% of incoming flux (e.g. rain) */
-						if( s->value[DAILY_CANOPY_COVER_PROJ] > 1. ) s->value[DAILY_CANOPY_COVER_PROJ] = 1.;
+						if( s->value[DAILY_CANOPY_COVER_PROJ] > 1. )
+						{
+							s->value[DAILY_CANOPY_COVER_PROJ] = 1.;
+						}
 						logger(g_debug_log, "%s height class canopy projected cover = %g %%\n", s->name, s->value[DAILY_CANOPY_COVER_PROJ]*100.0);
 
 						/*****************************************************************************************/
 
 						/* compute daily canopy exposed cover */
-						/* special case when LAI = < 1.0 (e.g, beginning of growing season) */
-						if( s->value[LAI_PROJ] < 1.0 ) s->value[DAILY_CANOPY_COVER_EXP] = s->value[LAI_PROJ] * s->value[CANOPY_COVER_EXP];
-						else s->value[DAILY_CANOPY_COVER_EXP] = s->value[CANOPY_COVER_EXP];
+						s->value[DAILY_CANOPY_COVER_EXP] = s->value[CANOPY_COVER_EXP];
+
+						/* canopy cannot absorb more than 100% of incoming flux (e.g. rain) */
+						if( s->value[DAILY_CANOPY_COVER_EXP] > 1. )
+						{
+							s->value[DAILY_CANOPY_COVER_EXP] = 1.;
+						}
+						logger(g_debug_log, "%s height class canopy exposed cover = %g %%\n", s->name, s->value[DAILY_CANOPY_COVER_EXP]*100.0);
+
+
+						/*****************************************************************************************/
 
 						/* integrate with layer TREE HEIGHT MODIFIER */
 						if ( layer == c->heights[height].height_z )
@@ -577,7 +587,10 @@ int daily_forest_structure (cell_t *const c)
 						}
 
 						/* canopy cannot absorb more than 100% of incoming flux (e.g. light) */
-						if( s->value[DAILY_CANOPY_COVER_EXP] > 1. ) s->value[DAILY_CANOPY_COVER_EXP] = 1.;
+						if( s->value[DAILY_CANOPY_COVER_EXP] > 1. )
+						{
+							s->value[DAILY_CANOPY_COVER_EXP] = 1.;
+						}
 						logger(g_debug_log, "%s height class canopy exposed cover = %g %%\n", s->name, s->value[CANOPY_COVER_EXP]*100.0);
 
 						/*****************************************************************************************/

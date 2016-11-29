@@ -134,7 +134,8 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 
 								logger(g_daily_log,"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s"
 										"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s"
-										"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s",
+										"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s "
+										"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s",
 										"GPP",
 										"AR",
 										"NPP",
@@ -173,7 +174,14 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 										"LAR",
 										"FRAR",
 										"CRAR",
-										"BBAR");
+										"BBAR",
+										"FCO2",
+										"FCO2_TR",
+										"FAGE",
+										"FT",
+										"FVPD",
+										"FN",
+										"FSW");
 							}
 							if ( c->heights[height].dbhs[dbh].ages[age].species_count > 1 ) logger(g_daily_log,"\t%10s", "*");
 						}
@@ -246,7 +254,8 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 							/* print variables at layer-class level */
 							logger(g_daily_log,"\t%6.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3d \t%3d \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f"
 									"\t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f"
-									"\t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f",
+									"\t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f"
+									"\t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f",
 									s->value[DAILY_GPP_gC],
 									s->value[TOTAL_AUT_RESP],
 									s->value[NPP_gC],
@@ -285,7 +294,14 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 									s->value[LEAF_AUT_RESP],
 									s->value[FINE_ROOT_AUT_RESP],
 									s->value[COARSE_ROOT_AUT_RESP],
-									s->value[BRANCH_AUT_RESP]);
+									s->value[BRANCH_AUT_RESP],
+									s->value[F_CO2],
+									s->value[F_CO2_TR],
+									s->value[F_AGE],
+									s->value[F_T],
+									s->value[F_VPD],
+									s->value[F_NUTR],
+									s->value[F_SW]);
 						}
 						if ( c->heights[height].dbhs[dbh].ages[age].species_count > 1 ) logger(g_daily_log,"\t%10s", "*");
 					}

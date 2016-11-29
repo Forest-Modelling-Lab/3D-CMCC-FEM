@@ -89,8 +89,7 @@ void phenology(cell_t *const c, const int layer, const int height, const int dbh
 		/* Beginning of a "growing season" */
 		/* Maximum growth */
 		// old if ( meteo_daily->thermic_sum >= s->value[GROWTHSTART] && s->value[LAI] < s->value[PEAK_LAI] )
-		if ( s->value[LAI_PROJ] < s->value[PEAK_LAI_PROJ] &&
-				( ( g_soil_settings->values[SOIL_LAT] > 0 && month < 5 ) ||
+		if ( s->value[LAI_PROJ] < s->value[PEAK_LAI_PROJ] && ( ( g_soil_settings->values[SOIL_LAT] > 0 && month < 5 ) ||
 				( g_soil_settings->values[SOIL_LAT] < 0 && month > 11 ) ) )
 		{
 			s->phenology_phase = 1;
