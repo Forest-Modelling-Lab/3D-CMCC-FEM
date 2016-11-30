@@ -91,10 +91,10 @@ int add_tree_class_for_replanting (cell_t *const c, const int day, const int mon
 	/* it is used only with "human" regeneration */
 	logger(g_debug_log, "Human management\n");
 
-	if ( ! fill_cell_for_replanting(c) ) return 0;
+	if ( ! fill_cell_for_replanting ( c ) ) return 0;
 
 	/* fill with species values from parameterization file */
-	if ( ! fill_species_from_file(&c->heights[c->heights_count-1].dbhs[0].ages[0].species[0]) )
+	if ( ! fill_species_from_file ( &c->heights[c->heights_count-1].dbhs[0].ages[0].species[0]) )
 	{
 		return 0;
 	}
@@ -111,7 +111,7 @@ int add_tree_class_for_replanting (cell_t *const c, const int day, const int mon
 	/* initialize new forest class pools */
 	initialization_forest_class_C_biomass( c, c->heights_count-1, 0, 0, 0 );
 
-	/* initialise nitrogen pools */
+	/* initialize nitrogen pools */
 	initialization_forest_class_N_biomass ( c, c->heights_count-1, 0, 0, 0 );
 
 	/* print new forest class dataset */

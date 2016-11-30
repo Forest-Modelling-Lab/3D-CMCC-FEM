@@ -6,6 +6,7 @@
 #include <math.h>
 #include <math.h>
 #include <new_forest_tree_class.h>
+#include "g-function.h"
 #include "management.h"
 #include "constants.h"
 #include "settings.h"
@@ -16,71 +17,122 @@
 extern settings_t* g_settings;
 extern logger_t* g_debug_log;
 
-void forest_management (cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, const int day, const int month, const int year)
+int forest_management (cell_t *const c, /*const int layer, const int height, const int dbh, const int age, const int species, */ const int day, const int month, const int year)
 {
+	//int layer;
+	int height;
+	int dbh;
+	int age;
+	int species;
+
 	static int years_for_thinning;
 
+	height_t *h;
+	dbh_t *d;
 	age_t *a;
 	species_t *s;
 
-	a = &c->heights[height].dbhs[dbh].ages[age];
-	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
+	/* sort class in ascending way by heights */
+	qsort ( c->heights, c->heights_count, sizeof (height_t), sort_by_heights_asc );
 
-	logger(g_debug_log,"**FOREST MANAGEMENT**\n");
-
-	/* this function handles all other management functions */
-
-	/* check at the beginning of simulation */
-	if( !year )
-	{
-		CHECK_CONDITION ( c->years[year].year, > g_settings->year_start_management );
-		CHECK_CONDITION ( (g_settings->year_start_management - g_settings->year_start), > s->value[THINNING] );
-	}
-
-	/** THINNING **/
-	if ( ( c->years[year].year == g_settings->year_start_management ) || ( s->value[THINNING] == years_for_thinning ) )
-	{
-		logger(g_debug_log,"**THINNING**\n");
-
-		thinning ( c, layer, height, dbh, age, species, year );
-
-		/* reset counter */
-		years_for_thinning = 0;
-	}
-	/* increment counter */
-	++years_for_thinning;
-
-	/* check */
-	CHECK_CONDITION( years_for_thinning, > s->value[ROTATION] );
-
-
-	/** HARVESTING **/
-	/* if class age matches with harvesting */
-	if ( a->value == s->value[ROTATION] )
-	{
-		logger(g_debug_log,"**HARVESTING**\n");
-
-		/* remove tree class */
-		harvesting ( c, layer, height, dbh, age, species );
-
-		/* reset years_for_thinning */
-		years_for_thinning = 0;
-
-		/* replanting tree class */
-		if( g_settings->replanted_n_tree )
+//fixme to include once THINNING_REGIME is included
+//	for ( layer = c->tree_layers_count - 1 ; layer >= 0; --layer )
+//	{
+		/* loop on each heights starting from highest to lower */
+		for ( height = c->heights_count -1 ; height >= 0; --height )
 		{
-			if ( ! add_tree_class_for_replanting( c , day, month, year ) )
+			/* assign shortcut */
+			h = &c->heights[height];
+
+			/* loop on each dbh starting from highest to lower */
+			for ( dbh = h->dbhs_count - 1; dbh >= 0; --dbh )
 			{
-				logger_error(g_debug_log, "unable to add new replanted class! (exit)\n");
-				exit(1);
+				/* assign shortcut */
+				d = &h->dbhs[dbh];
+
+				/* loop on each age class */
+				for ( age = d->ages_count - 1 ; age >= 0 ; --age )
+				{
+					/* assign shortcut */
+					a = &h->dbhs[dbh].ages[age];
+
+					/* loop on each species class */
+					for ( species = 0; species < a->species_count; ++species )
+					{
+						/* assign shortcut */
+						s = &a->species[species];
+
+						/* this function handles all other management functions */
+
+						/* check at the beginning of simulation */
+						if( !year )
+						{
+							CHECK_CONDITION ( c->years[year].year, > g_settings->year_start_management );
+							CHECK_CONDITION ( (g_settings->year_start_management - g_settings->year_start), > s->value[THINNING] );
+						}
+
+
+						/***** THINNING *****/
+						//note : +1 since it works at the 1st of January of the subsequent year
+						if ( ( c->years[year].year == g_settings->year_start_management + 1 ) || ( s->value[THINNING] == years_for_thinning + 1 ) )
+						{
+							logger(g_debug_log,"**FOREST MANAGEMENT**\n");
+							logger(g_debug_log,"**THINNING**\n");
+
+							thinning ( c, height, dbh, age, species, year );
+
+							/* reset counter */
+							years_for_thinning = 0;
+							return 0;
+						}
+
+						/* increment counter */
+						++years_for_thinning;
+
+						/* check */
+						CHECK_CONDITION( years_for_thinning, > s->value[ROTATION] );
+
+						/***** HARVESTING *****/
+						/* if class age matches with harvesting */
+						//note : +1 since it works at the 1st of January of the subsequent year
+
+						if ( ( a->value + 1 ) == s->value[ROTATION] )
+						{
+							logger(g_debug_log,"**FOREST MANAGEMENT**\n");
+							logger(g_debug_log,"**HARVESTING**\n");
+
+							/* remove tree class */
+							harvesting ( c, height, dbh, age, species );
+
+							/* reset years_for_thinning */
+							years_for_thinning = 0;
+
+							/* re-planting tree class */
+							if( g_settings->replanted_n_tree )
+							{
+								if ( ! add_tree_class_for_replanting( c , day, month, year ) )
+								{
+									logger_error(g_debug_log, "unable to add new replanted class! (exit)\n");
+									exit(1);
+								}
+							}
+							return 1;
+						}
+						else
+						{
+							return 0;
+						}
+					}
+				}
 			}
 		}
-	}
+		return 0;
+//	}
 }
 
 /*****************************************************************************************************************************************/
 
-void thinning (cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, const int year)
+void thinning (cell_t *const c, const int height, const int dbh, const int age, const int species, const int year)
 {
 	int trees_to_remove = 0;
 
@@ -192,7 +244,7 @@ void thinning (cell_t *const c, const int layer, const int height, const int dbh
 
 /*****************************************************************************************************************************************/
 
-void harvesting (cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species)
+void harvesting (cell_t *const c, const int height, const int dbh, const int age, const int species)
 {
 	/* at the moment it considers a complete harvesting for all classes (if considered) */
 	logger(g_debug_log, "\n\n\n\n\n** Management options: Harvesting ** \n\n\n\n\n");

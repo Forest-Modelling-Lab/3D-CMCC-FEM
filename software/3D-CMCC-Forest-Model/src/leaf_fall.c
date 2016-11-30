@@ -121,6 +121,7 @@ void leaf_fall_evergreen ( cell_t *const c, const int height, const int dbh, con
 
 	logger(g_debug_log, "\n**LEAF FALL (turnover) EVERGREEN**\n");
 
+	/************************************************************************************************************/
 
 	if ( c->doy == 1 )
 	{
@@ -129,7 +130,7 @@ void leaf_fall_evergreen ( cell_t *const c, const int height, const int dbh, con
 		logger(g_debug_log, "Annual leaf turnover = %g tC/cell/year\n", yearly_leaf_fall_falling_C);
 
 		/* daily leaf fall */
-		s->value[LEAF_FALLING_C] = yearly_leaf_fall_falling_C / (int)s->counter[DAY_VEG_FOR_LEAF_FALL];
+		s->value[LEAF_FALLING_C] = yearly_leaf_fall_falling_C / 365;
 		logger(g_debug_log, "Daily leaf turnover = %g tC/cell/year\n", s->value[LEAF_FALLING_C]);
 
 		/* compute fine root turnover */
@@ -137,9 +138,11 @@ void leaf_fall_evergreen ( cell_t *const c, const int height, const int dbh, con
 		logger(g_debug_log, "Annual fine root turnover = %g tC/cell/year\n", yearly_fine_root_turnover_C);
 
 		/* daily fine root turnover */
-		s->value[FINE_ROOT_TURNOVER_C] = yearly_fine_root_turnover_C / (int)s->counter[DAY_VEG_FOR_LEAF_FALL];
+		s->value[FINE_ROOT_TURNOVER_C] = yearly_fine_root_turnover_C / 365;
 		logger(g_debug_log, "Daily fine root turnover = %g tC/cell/year\n", s->value[FINE_ROOT_TURNOVER_C]);
 	}
+
+	/*************************************************************************************************************/
 
 	/* update biomass leaf pool */
 	s->value[LEAF_C] -= s->value[LEAF_FALLING_C];

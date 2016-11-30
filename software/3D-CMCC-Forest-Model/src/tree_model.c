@@ -76,6 +76,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	int dbh;
 	static int age;
 	static int species;
+	int management;
 
 	/* shortcuts */
 	cell_t *c;
@@ -106,8 +107,19 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	if( !day && !month && !year )c->dos = 1;
 	else ++c->dos;
 
+
+	/****************************************************************************/
+
+	if ( g_settings->management && ( ! day && ! month ) )
+	{
+		/* management blocks */
+		management = forest_management ( c, /*layer, height, dbh, age, species, */ day, month, year );
+	}
+
+	/****************************************************************************/
+
 	/* annual forest structure */
-	if ( ! day && ! month && year )
+	if ( ( ! day && ! month && year ) && ( ! management ) )
 	{
 		annual_forest_structure ( c );
 	}
@@ -337,11 +349,13 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 										/* regeneration */
 										regeneration ( c, height, dbh, age, species);
 									}
+#if 0
 									if ( g_settings->management )
 									{
 										/* management blocks */
 										forest_management (c, layer, height, dbh, age, species, day, month, year);
 									}
+#endif
 
 									/* update pointers */
 									l = &c->tree_layers[layer];

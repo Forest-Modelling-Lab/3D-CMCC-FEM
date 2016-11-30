@@ -10,6 +10,7 @@
 #include "common.h"
 #include "structure.h"
 #include "biomass.h"
+#include "lai.h"
 
 extern settings_t *g_settings;
 extern logger_t* g_debug_log;
@@ -23,21 +24,21 @@ void initialization_forest_structure(cell_t *const c, const int day, const int m
 
 	logger(g_debug_log,"\n*******INITIALIZE FOREST STRUCTURE*******\n");
 
-	if ( ! day && ! month && ! year)
-	{
+//	if ( ! day && ! month && ! year)
+//	{
 		/* annual forest structure */
 		if ( ! annual_forest_structure ( c ) )
 		{
 			puts(sz_err_out_of_memory);
 			exit(1);
 		}
-		/* monthly forest structure */
-		if ( ! monthly_forest_structure ( c ) )
-		{
-			puts(sz_err_out_of_memory);
-			exit(1);
-		}
-	}
+//		/* monthly forest structure */
+//		if ( ! monthly_forest_structure ( c ) )
+//		{
+//			puts(sz_err_out_of_memory);
+//			exit(1);
+//		}
+//	}
 }
 
 void initialization_forest_class_C_biomass(cell_t *const c, const int height, const int dbh, const int age, const int species)
@@ -52,7 +53,7 @@ void initialization_forest_class_C_biomass(cell_t *const c, const int height, co
 	a = &c->heights[height].dbhs[dbh].ages[age];
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
-	logger(g_debug_log,"\n*******INITIALIZE FOREST CARBON BIOMASS*******\n");
+	logger(g_debug_log,"\n*******INITIALIZE FOREST CARBON POOLS*******\n");
 	logger(g_debug_log, "\n\n...checking initial biomass data for height %g, age %d, species %s...\n", h->value, a->value, s->name);
 
 	/* compute mass density */
@@ -70,17 +71,6 @@ void initialization_forest_class_C_biomass(cell_t *const c, const int height, co
 	/*check for initial biomass*/
 	if (s->value[BIOMASS_STEM_tDM] == 0.0 || s->value[BIOMASS_STEM_tDM] == NO_DATA)
 	{
-//		logger(g_debug_log, "\nNo Stem Biomass Data are available for model initialization \n");
-//		logger(g_debug_log, "...Generating input Stem Biomass biomass\n");
-//
-//		/* compute class stem biomass */
-//		s->value[BIOMASS_STEM_tDM] = s->value[VOLUME] * s->value[MASS_DENSITY];
-//		logger(g_debug_log, "-Class stem mass = %g tDM/sizeCell\n", s->value[VOLUME]);
-//
-//		/* compute individual stem biomass */
-//		s->value[AV_STEM_MASS_KgDM] = (s->value[BIOMASS_STEM_tDM] * 1000.) / s->counter[N_TREE];
-//		logger(g_debug_log, "-Single tree stem mass = %g KgDM/tree\n", s->value[AV_STEM_MASS_KgDM]);
-
 
 		logger(g_debug_log, "\nNo Stem Biomass Data are available for model initialization \n");
 		logger(g_debug_log, "...Generating input Stem Biomass biomass data from DBH = %g cm\n", d->value);
@@ -230,6 +220,7 @@ void initialization_forest_class_C_biomass(cell_t *const c, const int height, co
 
 		/* IMPORTANT! reserve computation if not in initialized is computed from DryMatter */
 		s->value[RESERVE_tDM] = s->value[WTOT_sap_tDM] * s->value[SAP_WRES];
+
 		//fixme how it does??
 		s->value[RESERVE_C]= s->value[WTOT_sap_tDM] * s->value[SAP_WRES];
 
@@ -269,7 +260,7 @@ void initialization_forest_class_C_biomass(cell_t *const c, const int height, co
 			logger(g_debug_log, "...Generating input Leaf Biomass data from LAI\n");
 
 			/* check */
-			if(!s->value[LAI_PROJ])
+			if( ! s->value[LAI_PROJ] )
 			{
 				logger_error(g_debug_log,"No Leaf Biomass nor LAI values from initialization file (exit)!!!!\n");
 				exit(1);
@@ -293,6 +284,16 @@ void initialization_forest_class_C_biomass(cell_t *const c, const int height, co
 				s->value[LAI_SHADE_PROJ] = s->value[LAI_PROJ] - s->value[LAI_SUN_PROJ];
 				logger(g_debug_log, "LAI_SUN_PROJ = %g\n", s->value[LAI_SUN_PROJ]);
 				logger(g_debug_log, "LAI_SHADE_PROJ = %g\n", s->value[LAI_SHADE_PROJ]);
+
+				/* compute total LAI for Exposed Area */
+				s->value[LAI_EXP] = s->value[LAI_PROJ] * (1 + s->value[CANOPY_COVER_EXP]);
+				logger(g_debug_log, "LAI_EXP = %f m-2\n", s->value[LAI_EXP]);
+
+				/* compute LAI for sunlit and shaded canopy portions for Exposed Area */
+				s->value[LAI_SUN_EXP] = s->value[LAI_SUN_PROJ] * (1 + s->value[CANOPY_COVER_EXP]);
+				s->value[LAI_SHADE_EXP] = s->value[LAI_SHADE_PROJ] * (1 + s->value[CANOPY_COVER_EXP]);
+				logger(g_debug_log, "LAI_SUN_EXP = %g m2 m-2\n", s->value[LAI_SUN_EXP]);
+				logger(g_debug_log, "LAI_SHADE_EXP = %g m2 m-2\n", s->value[LAI_SHADE_EXP]);
 			}
 		}
 	}
@@ -359,9 +360,11 @@ void initialization_forest_class_C_biomass(cell_t *const c, const int height, co
 	CHECK_CONDITION(fabs((s->value[TOT_ROOT_C])-(s->value[COARSE_ROOT_C] + s->value[FINE_ROOT_C])), > eps);
 	CHECK_CONDITION(fabs((s->value[AV_ROOT_MASS_KgC])-(s->value[AV_COARSE_ROOT_MASS_KgC] + s->value[AV_FINE_ROOT_MASS_KgC])), > eps);
 
-	/*COMPUTE BIOMASS LIVE WOOD*/
+	/***** COMPUTE LIVE BIOMASS *****/
+
 	/* assuming LIVE_DEAD WOOD RATIO AS IN BIOME */
 	logger(g_debug_log, "\n*******************************\n");
+
 	/*FOR STEM*/
 	live_total_wood_age(a, species);
 	logger(g_debug_log, "Total Stem Biomass = %g tC cell\n", s->value[STEM_C]);
@@ -509,7 +512,7 @@ void initialization_forest_class_N_biomass(cell_t *const c, const int height, co
 	species_t *s;
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
-	logger(g_debug_log,"\n*******INITIALIZE FOREST NITROGEN BIOMASS*******\n");
+	logger(g_debug_log,"\n*******INITIALIZE FOREST NITROGEN POOLS*******\n");
 
 	s->value[LEAF_N] = s->value[LEAF_C] / s->value[CN_LEAVES];
 	logger(g_debug_log, "----Leaf nitrogen content = %g tN/cell\n", s->value[LEAF_N]);

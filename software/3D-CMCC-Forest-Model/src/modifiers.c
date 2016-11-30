@@ -76,7 +76,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 		s->value[F_CO2] = 1.;
 	}
 	logger(g_debug_log, "annual [CO2] = %f ppmv\n", meteo_annual->co2Conc);
-	logger(g_debug_log, "f_CO2 modifier for assimilation = %f\n", s->value[F_CO2]);
+	logger(g_debug_log, "f_CO2 modifier for assimilation = %g\n", s->value[F_CO2]);
 
 	/********************************************************************************************/
 
@@ -92,7 +92,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	{
 		s->value[F_CO2_TR] = 1.;
 	}
-	logger(g_debug_log, "f_CO2 modifier for assimilation = %f\n", s->value[F_CO2]);
+	logger(g_debug_log, "f_CO2 modifier for transpiration = %g\n", s->value[F_CO2_TR]);
 
 	/********************************************************************************************/
 

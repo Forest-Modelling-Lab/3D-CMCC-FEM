@@ -83,7 +83,7 @@ int annual_forest_structure(cell_t* const c)
 
 	logger(g_debug_log, "\n***ANNUAL FOREST STRUCTURE***\n");
 
-	assert( ! c->tree_layers_count);
+	assert( ! c->tree_layers_count );
 
 	for ( height = 0; height < c->heights_count; ++height )
 	{
@@ -575,10 +575,6 @@ int daily_forest_structure (cell_t *const c)
 						{
 							s->value[DAILY_CANOPY_COVER_EXP] = 1.;
 						}
-						logger(g_debug_log, "%s height class canopy exposed cover = %g %%\n", s->name, s->value[DAILY_CANOPY_COVER_EXP]*100.0);
-
-
-						/*****************************************************************************************/
 
 						/* integrate with layer TREE HEIGHT MODIFIER */
 						if ( layer == c->heights[height].height_z )
