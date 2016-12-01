@@ -106,7 +106,7 @@ void annual_tree_increment(cell_t *const c, const int height, const int dbh, con
 		logger(g_debug_log, "MAI-Mean Annual Increment = %g m^3/cell/yr \n", s->value[MAI]);
 
 		/* check */
-		CHECK_CONDITION(s->value[TREE_VOLUME], < single_tree_prev_vol - eps);
+		CHECK_CONDITION(s->value[TREE_VOLUME], <, single_tree_prev_vol - eps);
 	}
 }
 

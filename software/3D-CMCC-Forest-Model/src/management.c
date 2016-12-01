@@ -67,8 +67,8 @@ int forest_management (cell_t *const c, /*const int layer, const int height, con
 						/* check at the beginning of simulation */
 						if( !year )
 						{
-							CHECK_CONDITION ( c->years[year].year, > g_settings->year_start_management );
-							CHECK_CONDITION ( (g_settings->year_start_management - g_settings->year_start), > s->value[THINNING] );
+							CHECK_CONDITION ( c->years[year].year, >, g_settings->year_start_management );
+							CHECK_CONDITION ( (g_settings->year_start_management - g_settings->year_start), >, s->value[THINNING] );
 						}
 
 
@@ -90,7 +90,7 @@ int forest_management (cell_t *const c, /*const int layer, const int height, con
 						++years_for_thinning;
 
 						/* check */
-						CHECK_CONDITION( years_for_thinning, > s->value[ROTATION] );
+						CHECK_CONDITION( years_for_thinning, >, s->value[ROTATION] );
 
 						/***** HARVESTING *****/
 						/* if class age matches with harvesting */
@@ -205,7 +205,7 @@ void thinning (cell_t *const c, const int height, const int dbh, const int age, 
 	logger(g_debug_log, "Number of trees after management = %d trees/cell\n", s->counter[N_TREE]);
 
 	/* check */
-	CHECK_CONDITION(s->counter[N_TREE], < 0);
+	CHECK_CONDITION(s->counter[N_TREE], <, 0);
 
 	/* recompute Biomass after removing trees */
 	s->value[LEAF_C] = IndWl * s->counter[N_TREE];

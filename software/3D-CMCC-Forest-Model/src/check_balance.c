@@ -61,7 +61,7 @@ void check_radiation_balance (cell_t *const c, const meteo_daily_t *const meteo_
 		logger(g_debug_log, "par store = %g molPAR/m2/day\n", store);
 		logger(g_debug_log, "par balance = %g molPAR/m2/day\n",balance);
 		logger(g_debug_log, "...FATAL ERROR IN PAR radiative balance (exit)\n");
-		CHECK_CONDITION(fabs(balance), > eps);
+		CHECK_CONDITION(fabs(balance), >, eps);
 	}
 	else
 	{
@@ -101,7 +101,7 @@ void check_radiation_balance (cell_t *const c, const meteo_daily_t *const meteo_
 		logger(g_debug_log, "net radiation store = %g W/m2\n", store);
 		logger(g_debug_log, "radiation balance = %g W/m2\n",balance);
 		logger(g_debug_log, "...FATAL ERROR IN Short Wave Radiation radiative balance (exit)\n");
-		CHECK_CONDITION(fabs(balance), > eps);
+		CHECK_CONDITION(fabs(balance), >, eps);
 	}
 	else
 	{
@@ -140,7 +140,7 @@ void check_radiation_balance (cell_t *const c, const meteo_daily_t *const meteo_
 		logger(g_debug_log, "PPFD store = %g umol/m2/sec\n", store);
 		logger(g_debug_log, "PPFD balance = %g umol/m2/sec\n",balance);
 		logger(g_debug_log, "...FATAL ERROR IN PPFD radiative balance (exit)\n");
-		CHECK_CONDITION(fabs(balance), > eps);
+		CHECK_CONDITION(fabs(balance), >, eps);
 	}
 	else
 	{
@@ -199,7 +199,7 @@ void check_carbon_balance(cell_t *const c)
 		logger(g_debug_log, "carbon_balance = %g gC/m2/day\n",balance);
 		logger(g_debug_log, "...FATAL ERROR IN carbon balance (exit)\n");
 		logger(g_debug_log, "DOY = %d\n", c->doy);
-		CHECK_CONDITION(fabs(balance), > eps);
+		CHECK_CONDITION(fabs(balance), >, eps);
 	}
 	else
 	{
@@ -257,7 +257,7 @@ void check_soil_water_balance(cell_t *const c, const meteo_daily_t *const meteo_
 		logger(g_debug_log, "soil water store = %g\n", store);
 		logger(g_debug_log, "soil water balance = %g\n", balance);
 		logger(g_debug_log, "...FATAL ERROR IN soil water balance (exit)\n");
-		CHECK_CONDITION(fabs(balance), > eps);
+		CHECK_CONDITION(fabs(balance), >, eps);
 	}
 	else
 	{
@@ -298,7 +298,7 @@ void check_soil_water_balance(cell_t *const c, const meteo_daily_t *const meteo_
 		logger(g_debug_log, "soil water store = %g\n", store);
 		logger(g_debug_log, "soil water balance = %g\n", balance);
 		logger(g_debug_log, "...FATAL ERROR IN snow water balance (exit)\n");
-		CHECK_CONDITION(fabs(balance), > eps);
+		CHECK_CONDITION(fabs(balance), >, eps);
 	}
 	else
 	{
@@ -346,7 +346,7 @@ void check_class_radiation_balance(cell_t *const c, const int layer, const int h
 		logger(g_debug_log, "PAR store = %g\n", store);
 		logger(g_debug_log, "PAR balance = %g\n", balance);
 		logger(g_debug_log, "...FATAL ERROR AT CLASS LEVEL PAR balance (exit)\n");
-		CHECK_CONDITION(fabs(balance), > eps);
+		CHECK_CONDITION(fabs(balance), >, eps);
 	}
 	else
 	{
@@ -378,7 +378,7 @@ void check_class_radiation_balance(cell_t *const c, const int layer, const int h
 		logger(g_debug_log, "NET_RAD store = %g\n", store);
 		logger(g_debug_log, "NET_RAD balance = %g\n", balance);
 		logger(g_debug_log, "...FATAL ERROR AT CLASS LEVEL NET_RAD balance (exit)\n");
-		CHECK_CONDITION(fabs(balance), > eps);
+		CHECK_CONDITION(fabs(balance), >, eps);
 	}
 	else
 	{
@@ -409,7 +409,7 @@ void check_class_radiation_balance(cell_t *const c, const int layer, const int h
 		logger(g_debug_log, "PPFD store = %g\n", store);
 		logger(g_debug_log, "PPFD balance = %g\n", balance);
 		logger(g_debug_log, "...FATAL ERROR AT CLASS LEVEL PPFD balance (exit)\n");
-		CHECK_CONDITION(fabs(balance), > eps);
+		CHECK_CONDITION(fabs(balance), >, eps);
 	}
 	else
 	{
@@ -470,7 +470,7 @@ void check_class_carbon_balance(cell_t *const c, const int layer, const int heig
 		logger(g_debug_log, "C_TO_FRUIT = %g gC/m2\n", s->value[C_TO_FRUIT]* 1000000.0 / g_settings->sizeCell);
 		logger(g_debug_log, "\nbalance = %g gC/m2\n", balance);
 		logger(g_debug_log, "...FATAL ERROR AT CLASS LEVEL carbon balance (exit)\n");
-		CHECK_CONDITION(fabs(balance), > eps);
+		CHECK_CONDITION(fabs(balance), >, eps);
 	}
 	else
 	{
@@ -513,7 +513,7 @@ void check_class_water_balance(cell_t *const c, const int layer, const int heigh
 		logger(g_debug_log, "canopy water store = %g\n", store);
 		logger(g_debug_log, "canopy water balance = %g\n", balance);
 		logger(g_debug_log, "...FATAL ERROR AT CELL LEVEL canopy water balance (exit)\n");
-		CHECK_CONDITION(fabs(balance), > eps);
+		CHECK_CONDITION(fabs(balance), >, eps);
 	}
 	else
 	{

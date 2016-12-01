@@ -68,7 +68,7 @@ void leaf_fall_deciduous ( cell_t *const c, const int height, const int dbh, con
 		logger(g_debug_log, "currentLai = %f\n", currentLai);
 
 		/* check */
-		CHECK_CONDITION(previousLai, < currentLai);
+		CHECK_CONDITION(previousLai, <, currentLai);
 
 		previousBiomass_lai = previousLai * (s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell) / (s->value[SLA_AVG] * 1000.0);
 

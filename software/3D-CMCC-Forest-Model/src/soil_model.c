@@ -44,7 +44,7 @@ int Soil_model_daily (matrix_t *const m, const int cell, const int day, const in
 	logger (g_debug_log, "**\n*******SOIL_MODEL_DAILY*********\n");
 	logger (g_debug_log, "number of soil layers = %d\n", c->soil_layers_count);
 
-	CHECK_CONDITION( c->soil_layers_count, != g_settings->number_of_soil_layer );
+	CHECK_CONDITION( c->soil_layers_count, !=, g_settings->number_of_soil_layer );
 
 	/* loop on each cell layers starting from highest to lower */
 	for ( soil_layer = c->soil_layers_count -1 ; soil_layer >= 0; -- soil_layer )

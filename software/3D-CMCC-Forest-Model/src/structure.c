@@ -148,8 +148,8 @@ int annual_forest_structure(cell_t* const c)
 	logger(g_debug_log,"***********************************\n");
 
 	/* check */
-	CHECK_CONDITION(c->tree_layers_count, < 1);
-	CHECK_CONDITION(c->tree_layers_count, > c->heights_count);
+	CHECK_CONDITION(c->tree_layers_count, <, 1);
+	CHECK_CONDITION(c->tree_layers_count, >, c->heights_count);
 
 	/*************************************************************************************/
 	/* compute numbers of height classes within each layer */
@@ -167,7 +167,7 @@ int annual_forest_structure(cell_t* const c)
 		logger(g_debug_log, "-layer %d height class(es) = %d\n", layer, c->tree_layers[layer].layer_n_height_class);
 
 		/* check */
-		CHECK_CONDITION(c->tree_layers[layer].layer_n_height_class, < 0);
+		CHECK_CONDITION(c->tree_layers[layer].layer_n_height_class, <, 0);
 	}
 	logger(g_debug_log, "**************************************\n\n");
 
@@ -819,9 +819,9 @@ void prephenology (cell_t *const c, const meteo_daily_t *const meteo_daily, cons
 //						logger(g_debug_log, "potential density with dbhdcmin (low density) = %g (%g tree)\n", s->value[DENMIN], s->value[DENMIN] * g_settings->sizeCell);
 //
 //						/* check */
-//						CHECK_CONDITION(pot_max_crown_diameter, < pot_min_crown_diameter);
-//						CHECK_CONDITION(pot_max_crown_area, < pot_min_crown_area);
-//						CHECK_CONDITION(pot_max_density, < pot_min_density);
+//						CHECK_CONDITION(pot_max_crown_diameter, <, pot_min_crown_diameter);
+//						CHECK_CONDITION(pot_max_crown_area, <, pot_min_crown_area);
+//						CHECK_CONDITION(pot_max_density, <, pot_min_density);
 //					}
 //					/* in case no values from parameterization files are given */
 //					else
@@ -857,8 +857,8 @@ void prephenology (cell_t *const c, const meteo_daily_t *const meteo_daily, cons
 //					logger(g_debug_log, "DENMAX = %g\n", s->value[DENMAX]);
 //					logger(g_debug_log, "DENMIN = %g\n", s->value[DENMIN]);
 //
-//					CHECK_CONDITION(s->value[DENMAX], < s->value[DENMIN]);
-//					CHECK_CONDITION(s->value[DBHDCMAX], < s->value[DBHDCMIN]);
+//					CHECK_CONDITION(s->value[DENMAX], <, s->value[DENMIN]);
+//					CHECK_CONDITION(s->value[DBHDCMAX], <, s->value[DBHDCMIN]);
 //				}
 //			}
 //		}

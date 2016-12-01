@@ -158,8 +158,8 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	logger(g_debug_log, "fT = %f\n", s->value[F_T]);
 
 	/* check */
-	CHECK_CONDITION(s->value[F_T], > 1);
-	CHECK_CONDITION(s->value[F_T], < 0);
+	CHECK_CONDITION(s->value[F_T], >, 1);
+	CHECK_CONDITION(s->value[F_T], <, 0);
 
 	/********************************************************************************************/
 
@@ -178,8 +178,8 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	logger(g_debug_log, "fVPD = %f\n", s->value[F_VPD]);
 
 	/* check */
-	CHECK_CONDITION(s->value[F_VPD], > 1);
-	CHECK_CONDITION(s->value[F_VPD], < 0);
+	CHECK_CONDITION(s->value[F_VPD], >, 1);
+	CHECK_CONDITION(s->value[F_VPD], <, 0);
 
 	/********************************************************************************************/
 
@@ -225,8 +225,8 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	}
 
 	/* check */
-	CHECK_CONDITION(s->value[F_AGE], > 1);
-	CHECK_CONDITION(s->value[F_AGE], < 0);
+	CHECK_CONDITION(s->value[F_AGE], >, 1);
+	CHECK_CONDITION(s->value[F_AGE], <, 0);
 
 	/********************************************************************************************/
 
@@ -235,8 +235,8 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	logger(g_debug_log, "fNutr = %f\n", s->value[F_NUTR]);
 
 	/* check */
-	CHECK_CONDITION(s->value[F_NUTR], > 1);
-	CHECK_CONDITION(s->value[F_NUTR], < 0);
+	CHECK_CONDITION(s->value[F_NUTR], >, 1);
+	CHECK_CONDITION(s->value[F_NUTR], <, 0);
 
 	//test 25 nov 2016
 	//test move FN0, FNN to species.txt
@@ -254,8 +254,8 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	logger(g_debug_log, "fNutr = %f\n", s->value[F_NUTR]);
 
 	/* check */
-	CHECK_CONDITION(s->value[F_NUTR], > 1);
-	CHECK_CONDITION(s->value[F_NUTR], < 0);
+	CHECK_CONDITION(s->value[F_NUTR], >, 1);
+	CHECK_CONDITION(s->value[F_NUTR], <, 0);
 #endif
 	/********************************************************************************************/
 
@@ -306,7 +306,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 		/* see: Clark et al., 2011 for JULES model impose 0.2 */
 		s->value[F_PSI] = 0.3;
 		logger(g_debug_log, "F_PSI = %f\n", s->value[F_PSI]);
-		//CHECK_CONDITION(counter_water_stress, > 31);
+		//CHECK_CONDITION(counter_water_stress, >, 31);
 
 	}
 	/* partial water stress */
@@ -324,8 +324,8 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	logger(g_debug_log, "F_PSI-F_SW (BIOME)= %f\n", s->value[F_PSI]);
 
 	/* check */
-	CHECK_CONDITION(s->value[F_SW], > 1);
-	CHECK_CONDITION(s->value[F_SW], < 0);
+	CHECK_CONDITION(s->value[F_SW], >, 1);
+	CHECK_CONDITION(s->value[F_SW], <, 0);
 
 	/********************************************************************************************/
 
@@ -342,8 +342,8 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	}
 
 	/* check */
-	CHECK_CONDITION(s->value[PHYS_MOD], > 1);
-	CHECK_CONDITION(s->value[PHYS_MOD], < 0);
+	CHECK_CONDITION(s->value[PHYS_MOD], >, 1);
+	CHECK_CONDITION(s->value[PHYS_MOD], <, 0);
 
 	/********************************************************************************************/
 

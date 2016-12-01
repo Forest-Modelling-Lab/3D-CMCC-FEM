@@ -164,8 +164,8 @@ void dendrometry ( cell_t *const c, const int layer, const int height, const int
 		logger(g_debug_log, "light_competition factor = %g\n", current_lcf);
 
 		/*check */
-		CHECK_CONDITION(current_lcf, > 1);
-		CHECK_CONDITION(current_lcf, < 0);
+		CHECK_CONDITION(current_lcf, >, 1);
+		CHECK_CONDITION(current_lcf, <, 0);
 
 		/* cumulate annual light competition factor */
 		annual_lcf += current_lcf;
@@ -179,8 +179,8 @@ void dendrometry ( cell_t *const c, const int layer, const int height, const int
 		logger(g_debug_log, "crown_competition factor = %g\n", current_ccf);
 
 		/*check */
-		CHECK_CONDITION(current_ccf, > 1);
-		CHECK_CONDITION(current_ccf, < 0);
+		CHECK_CONDITION(current_ccf, >, 1);
+		CHECK_CONDITION(current_ccf, <, 0);
 
 		/* cumulate annual crown competition factor */
 		annual_ccf += current_ccf;
@@ -197,15 +197,15 @@ void dendrometry ( cell_t *const c, const int layer, const int height, const int
 		annual_lcf /= (double)counter_annual_lcf;
 
 		/* check */
-		CHECK_CONDITION(annual_lcf, > 1);
-		CHECK_CONDITION(annual_lcf, < 0);
+		CHECK_CONDITION(annual_lcf, >, 1);
+		CHECK_CONDITION(annual_lcf, <, 0);
 
 		/* compute average annual crown competition factor */
 		annual_ccf /= (double)counter_annual_ccf;
 
 		/* check */
-		CHECK_CONDITION(annual_ccf, > 1);
-		CHECK_CONDITION(annual_ccf, < 0);
+		CHECK_CONDITION(annual_ccf, >, 1);
+		CHECK_CONDITION(annual_ccf, <, 0);
 
 		/*******************************************************************************************/
 
@@ -227,8 +227,8 @@ void dendrometry ( cell_t *const c, const int layer, const int height, const int
 		logger(g_debug_log, "Effective H/D ratio = %g\n", s->value[HD_EFF]);
 
 		/* check */
-		CHECK_CONDITION( s->value[HD_EFF], < s->value[HD_MIN]);
-		CHECK_CONDITION( s->value[HD_EFF], > s->value[HD_MAX]);
+		CHECK_CONDITION( s->value[HD_EFF], <, s->value[HD_MIN]);
+		CHECK_CONDITION( s->value[HD_EFF], >, s->value[HD_MAX]);
 
 		/*******************************************************************************************/
 
@@ -272,7 +272,7 @@ void dendrometry ( cell_t *const c, const int layer, const int height, const int
 		dbh_m = a->value / 100.;
 
 		/* check */
-		CHECK_CONDITION( d->value, < oldavDBH - eps );
+		CHECK_CONDITION( d->value, <, oldavDBH - eps );
 
 		/*******************************************************************************************/
 
@@ -284,7 +284,7 @@ void dendrometry ( cell_t *const c, const int layer, const int height, const int
 		logger(g_debug_log, "-New Tree Height = %g m\n", h->value);
 
 		/* check */
-		CHECK_CONDITION( h->value, < oldTreeHeight - eps );
+		CHECK_CONDITION( h->value, <, oldTreeHeight - eps );
 		//fixme once change CRA with HMAX
 		//CHECK_CONDITION( h->value, > s->value[CRA] - eps );
 
@@ -321,7 +321,7 @@ void dendrometry ( cell_t *const c, const int layer, const int height, const int
 		logger(g_debug_log, "-New Basal Area = %g cm^2\n", s->value[BASAL_AREA]);
 
 		/* check */
-		CHECK_CONDITION( s->value[BASAL_AREA], < oldBasalArea - eps );
+		CHECK_CONDITION( s->value[BASAL_AREA], <, oldBasalArea - eps );
 	}
 }
 void annual_minimum_reserve (species_t *const s)
@@ -406,7 +406,7 @@ void dendrometry_old(cell_t *const c, const int layer, const int height, const i
 
 
 	/* check */
-	CHECK_CONDITION( d->value, < oldavDBH - eps );
+	CHECK_CONDITION( d->value, <, oldavDBH - eps );
 
 	/*************************************************************************************************************************/
 
@@ -438,7 +438,7 @@ void dendrometry_old(cell_t *const c, const int layer, const int height, const i
 	logger(g_debug_log, "-Tree Height using Chapman-Richard function = %g m\n", h->value);
 
 	/* check */
-	CHECK_CONDITION (h->value, > s->value[CRA] + eps )
+	CHECK_CONDITION (h->value, >, s->value[CRA] + eps )
 
 	logger(g_debug_log, "-Old Tree Height = %g m\n", oldTreeHeight);
 	logger(g_debug_log, "-New Tree Height = %g m\n", h->value);
@@ -453,7 +453,7 @@ void dendrometry_old(cell_t *const c, const int layer, const int height, const i
 	logger(g_debug_log, "-New Tree Height = %g m\n", h->value);
 
 	/* check */
-	CHECK_CONDITION( h->value, < oldTreeHeight - eps );
+	CHECK_CONDITION( h->value, <, oldTreeHeight - eps );
 
 	/*************************************************************************************************************************/
 
@@ -488,6 +488,6 @@ void dendrometry_old(cell_t *const c, const int layer, const int height, const i
 	logger(g_debug_log, "-New Basal Area = %g cm^2\n", s->value[BASAL_AREA]);
 
 	/* check */
-	CHECK_CONDITION( s->value[BASAL_AREA], < oldBasalArea - eps );
+	CHECK_CONDITION( s->value[BASAL_AREA], <, oldBasalArea - eps );
 
 }

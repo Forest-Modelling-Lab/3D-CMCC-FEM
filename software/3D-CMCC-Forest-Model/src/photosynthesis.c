@@ -121,8 +121,8 @@ void photosynthesis(cell_t *const c, const int layer, const int height, const in
 	logger(g_debug_log, "GPPmolC_tot = %g molC/m^2/day\n", GPPmolC_tot);
 
 	/* check */
-	CHECK_CONDITION( GPPmolC, < 0 );
-	CHECK_CONDITION( fabs ( GPPmolC - GPPmolC_tot ), > eps );
+	CHECK_CONDITION( GPPmolC, <, 0 );
+	CHECK_CONDITION( fabs ( GPPmolC - GPPmolC_tot ), >, eps );
 
 	/* Daily GPP in gC/m2/day */
 	/* molC/m2/day --> gC/m2/day */

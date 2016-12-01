@@ -35,11 +35,20 @@
 
 #define XSTR(a)		STR(a)
 #define STR(a)		#a
-#define CHECK_CONDITION(x,c) {																																\
-		if ( (x)c )		{																																	\
-			logger_error(NULL,"\nerror: condition (%s %s) is true, value of %s is %g in %s on line %d\n", XSTR(x), XSTR(c), XSTR(x), (double)(x), __FILE__, __LINE__);	\
-			exit(1);																																		\
-		}																																					\
+#define CHECK_CONDITION(x,c,y) {																					\
+		if ( (x)c(y) )		{																						\
+			logger_error(NULL,"\nerror: condition (%s %s %s) is true, value of %s is %g, value of %s is %g in %s on line %d\n"			\
+							, XSTR(x)																				\
+							, XSTR(c)																				\
+							, XSTR(y)																				\
+							, XSTR(x)																				\
+							, (double)(x)																			\
+							, XSTR(y)																				\
+							, (double)(y)																			\
+							, __FILE__																				\
+							, __LINE__);																			\
+			exit(1);																								\
+		}																											\
 }
 
 #define convert_string_to_int(s, err) ((int)convert_string_to_float((s),(err)))

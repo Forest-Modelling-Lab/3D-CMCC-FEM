@@ -76,7 +76,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	int dbh;
 	static int age;
 	static int species;
-	int management;
+	int management = 0;
 
 	/* shortcuts */
 	cell_t *c;

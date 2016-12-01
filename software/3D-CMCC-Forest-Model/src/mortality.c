@@ -133,7 +133,7 @@ void self_thinning_mortality ( cell_t *const c, const int layer )
 						}
 
 						/* check */
-						CHECK_CONDITION(s->counter[N_TREE], <= 0);
+						CHECK_CONDITION(s->counter[N_TREE], <=, 0);
 
 						/* update at cell level */
 						c->daily_dead_tree += deadtree;
@@ -454,7 +454,7 @@ void self_pruning ( cell_t *const c, const int layer )
 //			mortality = 'n';
 //		}
 //		/* check */
-//		CHECK_CONDITION(c->tree_layers[layer].layer_cover , > g_settings->max_layer_cover);
+//		CHECK_CONDITION(c->tree_layers[layer].layer_cover , >, g_settings->max_layer_cover);
 //
 //		logger(g_log, "**************************************\n\n");
 //

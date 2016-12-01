@@ -76,7 +76,7 @@ void canopy_interception(cell_t *const c, const int layer, const int height, con
 
 			s->value[CANOPY_WATER] = s->value[CANOPY_INT];
 
-			CHECK_CONDITION(s->value[CANOPY_INT], > meteo_daily->rain);
+			CHECK_CONDITION(s->value[CANOPY_INT], >, meteo_daily->rain);
 		}
 		/* for snow */
 		else

@@ -316,8 +316,8 @@ static void compute_rh(double *const values, const int rows_count, const int col
 			value = rel_hum;
 			//printf("rel_hum = %g %%\n", rel_hum);
 
-			CHECK_CONDITION(rel_hum, < RH_RANGE_MIN);
-			CHECK_CONDITION(rel_hum, > RH_RANGE_MAX);
+			CHECK_CONDITION(rel_hum, <, RH_RANGE_MIN);
+			CHECK_CONDITION(rel_hum, >, RH_RANGE_MAX);
 
 			/* convert NaN to invalid value */
 			if ( value != value ) {

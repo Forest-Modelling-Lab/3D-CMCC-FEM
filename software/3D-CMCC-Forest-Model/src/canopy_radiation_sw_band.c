@@ -67,8 +67,8 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 	s->value[TRANSM_PAR_SUN] = s->value[PAR_SUN] - s->value[APAR_SUN];
 
 	/* check PAR balance for sun leaves */
-	CHECK_CONDITION ( fabs ( ( s->value[PAR_SUN] - s->value[TRANSM_PAR_SUN] ) - s->value[APAR_SUN] ), > eps );
-	CHECK_CONDITION ( fabs ( ( s->value[PAR] - s->value[TRANSM_PAR_SUN] ) - ( s->value[PAR_REFL_SUN] + s->value[APAR_SUN] ) ), > eps );
+	CHECK_CONDITION ( fabs ( ( s->value[PAR_SUN] - s->value[TRANSM_PAR_SUN] ) - s->value[APAR_SUN] ), >, eps );
+	CHECK_CONDITION ( fabs ( ( s->value[PAR] - s->value[TRANSM_PAR_SUN] ) - ( s->value[PAR_REFL_SUN] + s->value[APAR_SUN] ) ), >, eps );
 
 	/** shaded leaves **/
 
@@ -78,8 +78,8 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 	s->value[TRANSM_PAR_SHADE] = s->value[PAR_SHADE] - s->value[APAR_SHADE];
 
 	/* check PAR balance for shaded leaves */
-	CHECK_CONDITION ( fabs ( ( s->value[PAR_SHADE] - s->value[TRANSM_PAR_SHADE] ) - s->value[APAR_SHADE] ), > eps );
-	CHECK_CONDITION ( fabs ( ( s->value[TRANSM_PAR_SUN] - s->value[TRANSM_PAR_SHADE] ) - ( s->value[PAR_REFL_SHADE] + s->value[APAR_SHADE] ) ), > eps );
+	CHECK_CONDITION ( fabs ( ( s->value[PAR_SHADE] - s->value[TRANSM_PAR_SHADE] ) - s->value[APAR_SHADE] ), >, eps );
+	CHECK_CONDITION ( fabs ( ( s->value[TRANSM_PAR_SUN] - s->value[TRANSM_PAR_SHADE] ) - ( s->value[PAR_REFL_SHADE] + s->value[APAR_SHADE] ) ), >, eps );
 
 	/** overall canopy **/
 
@@ -100,10 +100,10 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 	logger(g_debug_log, "-Transmitted Par total = %g molPAR/m^2 covered/day\n", s->value[TRANSM_PAR]);
 
 	/* check */
-	CHECK_CONDITION(s->value[APAR], < 0.);
-	CHECK_CONDITION(s->value[APAR] + s->value[TRANSM_PAR], < 0.);
-	CHECK_CONDITION(s->value[TRANSM_PAR], < 0.);
-	CHECK_CONDITION(fabs((s->value[APAR] + s->value[TRANSM_PAR] + s->value[PAR_REFL] )-s->value[PAR]), > eps);
+	CHECK_CONDITION(s->value[APAR], <, 0.);
+	CHECK_CONDITION(s->value[APAR] + s->value[TRANSM_PAR], <, 0.);
+	CHECK_CONDITION(s->value[TRANSM_PAR], <, 0.);
+	CHECK_CONDITION(fabs((s->value[APAR] + s->value[TRANSM_PAR] + s->value[PAR_REFL] )-s->value[PAR]), >, eps);
 #else
 	//test 18 november 2016
 	/* compute reflected PAR */
@@ -136,9 +136,9 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 
 
 	/* check */
-	CHECK_CONDITION(s->value[APAR], < 0.);
-	CHECK_CONDITION(s->value[TRANSM_PAR], < 0.);
-	CHECK_CONDITION(fabs((s->value[APAR] + s->value[TRANSM_PAR])-s->value[PAR]),>eps);
+	CHECK_CONDITION(s->value[APAR], <, 0.);
+	CHECK_CONDITION(s->value[TRANSM_PAR], <, 0.);
+	CHECK_CONDITION(fabs((s->value[APAR] + s->value[TRANSM_PAR])-s->value[PAR]),>,eps);
 #endif
 
 	/***********************************************************************************************/
@@ -156,8 +156,8 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 	s->value[SW_RAD_TRANSM_SUN] = s->value[SW_RAD_SUN] - s->value[SW_RAD_ABS_SUN];
 
 	/* check Short Wave balance for sun leaves */
-	CHECK_CONDITION ( fabs ( ( s->value[SW_RAD_SUN] - s->value[SW_RAD_TRANSM_SUN] ) - s->value[SW_RAD_ABS_SUN] ), > eps );
-	CHECK_CONDITION ( fabs ( ( s->value[SW_RAD] - s->value[SW_RAD_TRANSM_SUN] ) - ( s->value[SW_RAD_REFL_SUN] + s->value[SW_RAD_ABS_SUN] ) ), > eps );
+	CHECK_CONDITION ( fabs ( ( s->value[SW_RAD_SUN] - s->value[SW_RAD_TRANSM_SUN] ) - s->value[SW_RAD_ABS_SUN] ), >, eps );
+	CHECK_CONDITION ( fabs ( ( s->value[SW_RAD] - s->value[SW_RAD_TRANSM_SUN] ) - ( s->value[SW_RAD_REFL_SUN] + s->value[SW_RAD_ABS_SUN] ) ), >, eps );
 
 	/** shaded leaves **/
 
@@ -167,8 +167,8 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 	s->value[SW_RAD_TRANSM_SHADE] = s->value[SW_RAD_SHADE] - s->value[SW_RAD_ABS_SHADE];
 
 	/* check Short Wave balance for shaded leaves */
-	CHECK_CONDITION ( fabs ( ( s->value[SW_RAD_SHADE] - s->value[SW_RAD_TRANSM_SHADE] ) - s->value[SW_RAD_ABS_SHADE] ), > eps );
-	CHECK_CONDITION ( fabs ( ( s->value[SW_RAD_TRANSM_SUN] - s->value[SW_RAD_TRANSM_SHADE] ) - ( s->value[SW_RAD_REFL_SHADE] + s->value[SW_RAD_ABS_SHADE] ) ), > eps );
+	CHECK_CONDITION ( fabs ( ( s->value[SW_RAD_SHADE] - s->value[SW_RAD_TRANSM_SHADE] ) - s->value[SW_RAD_ABS_SHADE] ), >, eps );
+	CHECK_CONDITION ( fabs ( ( s->value[SW_RAD_TRANSM_SUN] - s->value[SW_RAD_TRANSM_SHADE] ) - ( s->value[SW_RAD_REFL_SHADE] + s->value[SW_RAD_ABS_SHADE] ) ), >, eps );
 
 	/** overall canopy **/
 
@@ -189,10 +189,10 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 	logger(g_debug_log, "-Transmitted Short Wave total = %g W/m2\n", s->value[SW_RAD_TRANSM]);
 
 	/* check */
-	CHECK_CONDITION(s->value[SW_RAD_ABS], < 0.);
-	CHECK_CONDITION(s->value[SW_RAD_ABS] + s->value[SW_RAD_TRANSM], < 0.);
-	CHECK_CONDITION(s->value[SW_RAD_TRANSM], < 0.);
-	CHECK_CONDITION(fabs((s->value[SW_RAD_ABS] + s->value[SW_RAD_TRANSM] + s->value[SW_RAD_REFL] )-s->value[SW_RAD]), > eps);
+	CHECK_CONDITION(s->value[SW_RAD_ABS], <, 0.);
+	CHECK_CONDITION(s->value[SW_RAD_ABS] + s->value[SW_RAD_TRANSM], <, 0.);
+	CHECK_CONDITION(s->value[SW_RAD_TRANSM], <, 0.);
+	CHECK_CONDITION(fabs((s->value[SW_RAD_ABS] + s->value[SW_RAD_TRANSM] + s->value[SW_RAD_REFL] )-s->value[SW_RAD]), >, eps);
 #else
 
 	/* compute reflected Short Wave */
@@ -222,9 +222,9 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 	logger(g_debug_log, "-Transmitted total = %g W/m^2 covered\n", s->value[SW_RAD_TRANSM]);
 
 	/* check */
-	CHECK_CONDITION(s->value[SW_RAD_ABS], < 0.);
-	CHECK_CONDITION(s->value[SW_RAD_TRANSM], < 0.);
-	CHECK_CONDITION(fabs((s->value[SW_RAD_ABS] + s->value[SW_RAD_TRANSM])-s->value[SW_RAD]),>eps);
+	CHECK_CONDITION(s->value[SW_RAD_ABS], <, 0.);
+	CHECK_CONDITION(s->value[SW_RAD_TRANSM], <, 0.);
+	CHECK_CONDITION(fabs((s->value[SW_RAD_ABS] + s->value[SW_RAD_TRANSM])-s->value[SW_RAD]),>,eps);
 #endif
 
 	/***********************************************************************************************/
@@ -242,8 +242,8 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 	s->value[PPFD_TRANSM_SUN] = s->value[PPFD_SUN] - s->value[PPFD_ABS_SUN];
 
 	/* check PPFD balance for sun leaves */
-	CHECK_CONDITION ( fabs ( ( s->value[PPFD_SUN] - s->value[PPFD_TRANSM_SUN] ) - s->value[PPFD_ABS_SUN] ), > eps );
-	CHECK_CONDITION ( fabs ( ( s->value[PPFD] - s->value[PPFD_TRANSM_SUN] ) - ( s->value[PPFD_REFL_SUN] + s->value[PPFD_ABS_SUN] ) ), > eps );
+	CHECK_CONDITION ( fabs ( ( s->value[PPFD_SUN] - s->value[PPFD_TRANSM_SUN] ) - s->value[PPFD_ABS_SUN] ), >, eps );
+	CHECK_CONDITION ( fabs ( ( s->value[PPFD] - s->value[PPFD_TRANSM_SUN] ) - ( s->value[PPFD_REFL_SUN] + s->value[PPFD_ABS_SUN] ) ), >, eps );
 
 	/** shaded leaves **/
 
@@ -253,8 +253,8 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 	s->value[PPFD_TRANSM_SHADE] = s->value[PPFD_SHADE] - s->value[PPFD_ABS_SHADE];
 
 	/* check PPFD balance for shaded leaves */
-	CHECK_CONDITION ( fabs ( ( s->value[PPFD_SHADE] - s->value[PPFD_TRANSM_SHADE] ) - s->value[PPFD_ABS_SHADE] ), > eps );
-	CHECK_CONDITION ( fabs ( ( s->value[PPFD_TRANSM_SUN] - s->value[PPFD_TRANSM_SHADE] ) - ( s->value[PPFD_REFL_SHADE] + s->value[PPFD_ABS_SHADE] ) ), > eps );
+	CHECK_CONDITION ( fabs ( ( s->value[PPFD_SHADE] - s->value[PPFD_TRANSM_SHADE] ) - s->value[PPFD_ABS_SHADE] ), >, eps );
+	CHECK_CONDITION ( fabs ( ( s->value[PPFD_TRANSM_SUN] - s->value[PPFD_TRANSM_SHADE] ) - ( s->value[PPFD_REFL_SHADE] + s->value[PPFD_ABS_SHADE] ) ), >, eps );
 
 	/** overall canopy **/
 
@@ -275,10 +275,10 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 	logger(g_debug_log, "-Transmitted PPFD total = %g umol/m2/sec\n", s->value[PPFD_TRANSM]);
 
 	/* check */
-	CHECK_CONDITION(s->value[PPFD_ABS], < 0.);
-	CHECK_CONDITION(s->value[PPFD_ABS_SUN] + s->value[PPFD_TRANSM], < 0.);
-	CHECK_CONDITION(s->value[PPFD_TRANSM], < 0.);
-	CHECK_CONDITION(fabs((s->value[PPFD_ABS] + s->value[PPFD_TRANSM] + s->value[PPFD_REFL] )-s->value[PPFD]), > eps);
+	CHECK_CONDITION(s->value[PPFD_ABS], <, 0.);
+	CHECK_CONDITION(s->value[PPFD_ABS_SUN] + s->value[PPFD_TRANSM], <, 0.);
+	CHECK_CONDITION(s->value[PPFD_TRANSM], <, 0.);
+	CHECK_CONDITION(fabs((s->value[PPFD_ABS] + s->value[PPFD_TRANSM] + s->value[PPFD_REFL] )-s->value[PPFD]), >, eps);
 #else
 
 	/* compute reflected PPFD */
@@ -309,9 +309,9 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 	logger(g_debug_log, "***********************************\n");
 
 	/* check */
-	CHECK_CONDITION(s->value[PPFD_ABS], < 0.);
-	CHECK_CONDITION(s->value[PPFD_TRANSM], < 0.);
-	CHECK_CONDITION(fabs((s->value[PPFD_ABS] + s->value[PPFD_TRANSM])-s->value[PPFD]),>eps);
+	CHECK_CONDITION(s->value[PPFD_ABS], <, 0.);
+	CHECK_CONDITION(s->value[PPFD_TRANSM], <, 0.);
+	CHECK_CONDITION(fabs((s->value[PPFD_ABS] + s->value[PPFD_TRANSM])-s->value[PPFD]),>,eps);
 #endif
 
 	s->value[YEARLY_APAR] += s->value[APAR];

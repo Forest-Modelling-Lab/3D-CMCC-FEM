@@ -109,7 +109,7 @@ void turnover(species_t *const s)
 //		logger(g_debug_log, "Total stem = %g tC/cell\n", s->value[STEM_C]);
 //		logger(g_debug_log, "difference in stem = %g tC/cell\n", (s->value[STEM_LIVE_WOOD_C] + s->value[STEM_DEAD_WOOD_C]) - s->value[STEM_C]);
 //		//ALESSIOR
-//		CHECK_CONDITION(fabs((s->value[STEM_LIVE_WOOD_C] + s->value[STEM_DEAD_WOOD_C]) - s->value[STEM_C]), >eps)
+//		CHECK_CONDITION(fabs((s->value[STEM_LIVE_WOOD_C] + s->value[STEM_DEAD_WOOD_C]) - s->value[STEM_C]), >,eps)
 //
 //		/* annual coarse root turnover live to dead wood */
 //		logger(g_debug_log, "****Coarse root turnover****\n");
@@ -131,7 +131,7 @@ void turnover(species_t *const s)
 //		logger(g_debug_log, "Total coarse = %g tC/cell\n", s->value[COARSE_ROOT_C]);
 //		logger(g_debug_log, "difference in coarse root = %g tC/cell\n", (s->value[COARSE_ROOT_LIVE_WOOD_C] + s->value[COARSE_ROOT_DEAD_WOOD_C]) - s->value[COARSE_ROOT_C]);
 //		//ALESSIOR
-//		CHECK_CONDITION(fabs((s->value[COARSE_ROOT_LIVE_WOOD_C] + s->value[COARSE_ROOT_DEAD_WOOD_C]) - s->value[COARSE_ROOT_C]), >eps)
+//		CHECK_CONDITION(fabs((s->value[COARSE_ROOT_LIVE_WOOD_C] + s->value[COARSE_ROOT_DEAD_WOOD_C]) - s->value[COARSE_ROOT_C]), >,eps)
 //
 //
 //		/* annual branch turnover live to dead wood */
@@ -154,7 +154,7 @@ void turnover(species_t *const s)
 //		logger(g_debug_log, "Total branch = %g tC/cell\n", s->value[BRANCH_C]);
 //		logger(g_debug_log, "difference in branch = %g tC/cell\n", (s->value[BRANCH_LIVE_WOOD_C] + s->value[BRANCH_DEAD_WOOD_C]) - s->value[BRANCH_C]);
 //
-//		CHECK_CONDITION(fabs((s->value[BRANCH_LIVE_WOOD_C] + s->value[BRANCH_DEAD_WOOD_C]) - s->value[BRANCH_C]), >eps);
+//		CHECK_CONDITION(fabs((s->value[BRANCH_LIVE_WOOD_C] + s->value[BRANCH_DEAD_WOOD_C]) - s->value[BRANCH_C]), >,eps);
 //	}
 //	/* daily fruit turnover */
 //	if(s->value[PHENOLOGY] == 1.2 && s->value[FRUIT_C] != 0.0)
