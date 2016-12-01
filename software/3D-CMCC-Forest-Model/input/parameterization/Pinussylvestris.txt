@@ -3,7 +3,7 @@ LIGHT_TOL   3                 //4 = very shade intolerant 3 = shade intolerant 2
 PHENOLOGY   1.2               //PHENOLOGY 0.1 = deciduous broadleaf, 0.2 = deciduous needle leaf, 1.1 = broad leaf evergreen, 1.2 = needle leaf evergreen 
 ALPHA   0.055                 //Canopy quantum efficiency (molC/molPAR) for P. sylvestris Landsberg et al., 2005
 EPSILONgCMJ -9999             //Light Use Efficiency (gC/molPAR)(used if ALPHA is not available)  
-K   0.6                       //Extinction coefficient for absorption of PAR by canopy for P. sylvestris Landsberg et al., 2005 or 0.51 from Pietsch
+K   0.51                       //Extinction coefficient for absorption of PAR by canopy for P. sylvestris Landsberg et al., 2005 or 0.51 from Pietsch
 ALBEDO  0.093                 //averaged for P. sylvestris from Breuer et al., 2003
 GAMMA_LIGHT -9999             //Light parameter for light modifier
 INT_COEFF  0.051              //precip interception coefficient for P. sylvestris from Pietsch
@@ -21,7 +21,7 @@ COEFFCOND   0.05              //Define stomatal responsee to VPD in mbar for P. 
 BLCOND  0.009                 //Canopy Boundary Layer conductance for P. sylvestris from Pietsch 
 MAXCOND 0.001                 //Maximum Stomatal Conductance in m/sec for P. sylvestris from Pietsch
 CUTCOND 0.00001               //Cuticul conductance in m/sec for P. sylvestris from Pietsch
-MAXAGE  300 //500                   //Determines rate of "physiological decline" of forest for P. sylvestris Landsberg et al., 2005
+MAXAGE  200 //300 //500       //Determines rate of "physiological decline" of forest 500 for P. sylvestris Landsberg et al., 2005
 RAGE    0.95                  //Relative Age to give fAGE = 0.5 for P. sylvestris Landsberg et al., 2005
 NAGE    4                     //Power of relative Age in function for P. sylvestris Landsberg et al., 2005
 MAXAGE_S    -9999             //Determines rate of "physiological decline" of forest 
@@ -36,12 +36,12 @@ SWPOPEN -0.5                  //in KPa for P. sylvestris from Pietsch et al 2005
 SWPCLOSE    -2.2              //in KPa for P. sylvestris from Pietsch et al 2005
 SWCONST 0.7                   //Costant in Soil Water modifier vs Moist Ratio for P. sylvestris Landsberg et al., 2005
 SWPOWER 9                     //Power in Soil Water modifier vs Moist Ratio for P. sylvestris Landsberg et al., 2005
-OMEGA_CTEM  0.5    //TO BE CHECKED           //ALLOCATION PARAMETER control the sensitivity of allocation to changes in water and light availability for Needlleleaf deciduous from Arora et al 2005
-S0CTEM  0.45 //0.05       //TO BE CHECKED           //PARAMETER CONTROLLING ALLOCATION TO STEM/MINIMUM RATIO TO C TO STEM for Needleleaf deciduous from Arora et al 2005
-R0CTEM  0.25 //0.89       //TO BE CHECKED           //PARAMETER CONTROLLING ALLOCATION TO ROOT/MINIMUM RATIO TO C TO ROOTS for Needleleaf deciduous from Arora et al 2005 
-F0CTEM  0.30 //0.06       //TO BE CHECKED           //PARAMETER CONTROLLING ALLOCATION TO FOLIAGE/MINIMUM RATIO TO C TO STEM for Needleleaf deciduous from Arora et al 2005
-MIN_R0CTEM  0.1    //TO BE CHECKED           //MINIMUM RATE TO ROOT AT THE FIRST YEAR AFTER COPPICING
-MAX_S0CTEM  0.55   //TO BE CHECKED           //MAXIMUM RATE TO STEM AT THE FIRST YEAR AFTER COPPICING
+OMEGA_CTEM  0.5               //ALLOCATION PARAMETER control the sensitivity of allocation to changes in water and light availability for Needlleleaf deciduous from Arora et al 2005
+S0CTEM  0.45 //0.05           //PARAMETER CONTROLLING ALLOCATION TO STEM/MINIMUM RATIO TO C TO STEM for Needleleaf deciduous from Arora et al 2005
+R0CTEM  0.25 //0.89           //PARAMETER CONTROLLING ALLOCATION TO ROOT/MINIMUM RATIO TO C TO ROOTS for Needleleaf deciduous from Arora et al 2005 
+F0CTEM  0.30 //0.06           //PARAMETER CONTROLLING ALLOCATION TO FOLIAGE/MINIMUM RATIO TO C TO STEM for Needleleaf deciduous from Arora et al 2005
+MIN_R0CTEM  0.1               //MINIMUM RATE TO ROOT AT THE FIRST YEAR AFTER COPPICING
+MAX_S0CTEM  0.55              //MAXIMUM RATE TO STEM AT THE FIRST YEAR AFTER COPPICING
 YEARS_FOR_CONVERSION  -9999      //years from coppicing to consider tree as a timber
 FRUIT_PERC  0.15              //fraction of NPP allocated for reproduction for P. sylvestris 0.15 from Xiao et al., 2003, 0.2 from Yuste et al., 2005, 
 CONES_LIFE_SPAN 3             //Life span for cones (yrs)
@@ -58,7 +58,7 @@ BUD_BURST   0                 //days of bud burst at the beginning of growing se
 LEAF_FALL_FRAC_GROWING  0     //proportions of the growing season of leaf fall 
 LEAF_FINEROOT_TURNOVER  0.18  //Average YEARLY leaves and fine root turnover rate for P. sylvestris 0.18 from Pietsch, 0.39 Tatarinov
 LIVE_WOOD_TURNOVER  0.7       //Annual yearly live wood turnover rate for P. sylvestris from Pietsch
-DBHDCMAX  0.24                //Low Density for Picea abies from Rautianen and Stenberg 2005,  0.255 Seidl et al., 2012, 0.18 from Kalliovirta and Tokola 2005, 0.34 from Grote 2001
+DBHDCMAX  0.20                //Low Density for Picea abies from Rautianen and Stenberg 2005,  0.255 Seidl et al., 2012, 0.18 from Kalliovirta and Tokola 2005, 0.34 from Grote 2001
 DBHDCMIN  0.14                //High Density for P. sylvestris from Ameztegui et al., 2012 0.14, 0.15 from Kalliovirta and Tokola 2005
 SAP_A   3.119                 //TO BE CHECKED           //a value for Picea abies deducted from  p.c. Kostner and Clausnitzer et al., 2011 CHECK IT!!!!!!!!!
 SAP_B   1.4544                //TO BE CHECKED           //b value for Picea abies deducted from p.c. Kostner and Clausnitzer et al., 2011

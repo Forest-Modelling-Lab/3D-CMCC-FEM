@@ -384,10 +384,10 @@ function GCM_run {
 					for (( f = 0 ; f < $co2_counter ; ++f )) ; do
 					
 					if (( $site_counter > 1 )) ; then site=${SITEs[$b]}; fi
-					if (( $gcm_counter > 1 )) ; then gcm=${GCMs[$c]}; fi
-					if (( $rcp_counter > 1)) ; then rcp=${RCPs[$d]}; fi
-					if (( $man_counter > 1 )) ; then management=${MANs[$e]}; fi
-					if (( $co2_counter > 1 )) ; then co2=${CO2s[$f]}; fi
+					if (( $gcm_counter  > 1 )) ; then gcm=${GCMs[$c]}; fi
+					if (( $rcp_counter  > 1 )) ; then rcp=${RCPs[$d]}; fi
+					if (( $man_counter  > 1 )) ; then management=${MANs[$e]}; fi
+					if (( $co2_counter  > 1 )) ; then co2=${CO2s[$f]}; fi
 					
 					echo "multi run"
 					echo 'running for' "$site"
@@ -411,7 +411,7 @@ function GCM_run {
 					CO2_PATH=PAPER/CO2/CO2_"$rcp"_1950_2099.txt
 									
 					#add paths and arguments to executable and run
-					$launch$executable -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH
+					$launch$executable -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH #&
 					
 					#log arguments paths
 					echo "*****************************"
