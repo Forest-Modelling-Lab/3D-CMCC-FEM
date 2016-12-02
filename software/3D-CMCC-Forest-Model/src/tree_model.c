@@ -121,7 +121,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	/* annual forest structure */
 	if ( ( ! day && ! month && year ) && ( ! management ) )
 	{
-		annual_forest_structure ( c );
+		annual_forest_structure ( c, year );
 	}
 
 	/* daily forest structure*/

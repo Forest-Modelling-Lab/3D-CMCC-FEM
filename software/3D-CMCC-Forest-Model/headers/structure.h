@@ -8,7 +8,7 @@ int daily_forest_structure ( cell_t *const c );
 
 int monthly_forest_structure ( cell_t* const c );
 
-int annual_forest_structure( cell_t *const );
+int annual_forest_structure( cell_t *const, const int );
 
 //void potential_max_min_canopy_cover (cell_t *const c);
 

@@ -55,7 +55,7 @@ int Cell_model_daily (matrix_t *const m, const int cell, const int day, const in
 	water_fluxes ( c, meteo_daily );
 
 	/*******************************************************************************************************/
-	//ALESSIOC move to Cell_model_daily
+
 	/* CHECK FOR BALANCE CLOSURE */
 
 	/* CHECK FOR RADIATIVE BALANCE CLOSURE */

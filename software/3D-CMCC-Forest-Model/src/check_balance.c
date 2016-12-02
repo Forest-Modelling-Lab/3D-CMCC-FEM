@@ -227,8 +227,7 @@ void check_soil_water_balance(cell_t *const c, const meteo_daily_t *const meteo_
 	out = c->daily_c_transp + c->daily_c_rain_int + c->daily_soil_evapo + c->out_flow;
 
 	/* sum of current storage in soil */
-	//fixme check for daily_c_water_store
-	store = (c->asw - c->old_asw) /* + (c->daily_c_water_stored - c->old_daily_c_water_stored) */;
+	store = (c->asw - c->old_asw);
 
 	/* check soil pool water balance */
 	balance = in - out - store;

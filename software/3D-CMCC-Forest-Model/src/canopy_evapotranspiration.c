@@ -40,13 +40,8 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 	double transp_daylength_sec;
 	double evapo;
 	double transp, transp_sun, transp_shade;
-	//double rough;                                                          /* roughness length */
 	static int days_with_canopy_wet;
 
-	//double plane;                                                          /* zero place displacement */
-
-	//fixme add to settings.txt data */
-	//double zero;                                                           /* height measurement of wind speed (m) */
 
 
 	height_t *h;
@@ -103,6 +98,10 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 	/* following Shi et al., 2008 Journal of Biophysical Research */
 	if ( meteo_daily->windspeed != NO_DATA)
 	{
+		double zero = 20;    /* height measurement of wind speed (m) */ //fixme add to settings.txt data
+		double rough;        /* roughness length */
+		double plane;        /* zero place displacement */
+
 		/* compute roughness length (m) */
 		rough = 0.032 * h->value;
 
@@ -272,9 +271,6 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 				rv = 1.0/gl_t_wv_sun;
 
 				/* note: Net Rad is Short wave flux */
-				//fixme why??????????
-				//FIXME FIXME FIXME FIXME
-				//net_rad = s->value[SW_RAD_ABS_SUN] /*/ (1.0 - exp(- s->value[LAI_PROJ]))*/;
 				net_rad = s->value[SW_RAD_ABS_SUN] / (1.0 - exp(- s->value[LAI_PROJ]));
 				logger(g_debug_log, "sw rad for evaporation (LAI sun) = %g W/m2\n", net_rad);
 
@@ -293,9 +289,6 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 				rv = 1.0/gl_t_wv_shade;
 
 				/* note: Net Rad is Short wave flux */
-				//fixme why??????????
-				//FIXME FIXME FIXME FIXME
-				//net_rad = s->value[SW_RAD_ABS_SHADE] /*/ (s->value[LAI_PROJ] - s->value[LAI_SUN_PROJ])*/;
 				net_rad = s->value[SW_RAD_ABS_SHADE] / (s->value[LAI_PROJ] - s->value[LAI_SUN_PROJ]);
 				logger(g_debug_log, "sw rad for evaporation (LAI shade) = %g W/m2\n", net_rad);
 

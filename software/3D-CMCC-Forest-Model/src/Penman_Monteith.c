@@ -13,11 +13,8 @@
 #include "logger.h"
 
 extern logger_t* g_debug_log;
-//FIXME FIXME FIXME FIXME
-/** correct way **/
+
 double Penman_Monteith(const meteo_daily_t *const meteo_daily, const double rv, const double rh, const double net_rad)
-/** uncorrect way **/
-//double Penman_Monteith(const meteo_daily_t *const meteo_daily, const double rh, const double rv, const double net_rad)
 {
 	double tairK;               /* daytime air temperature (K) */
 	double vpdPa;              /* vapor pressure deficit in Pa */

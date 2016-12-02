@@ -53,7 +53,7 @@ int layer_add(cell_t* const c)
 	return ret;
 }
 /*************************************************************************************************************************/
-int annual_forest_structure(cell_t* const c)
+int annual_forest_structure(cell_t* const c, const int year)
 {
 	int layer;
 	int height;
@@ -64,6 +64,8 @@ int annual_forest_structure(cell_t* const c)
 	double temp_crown_area;
 	double temp_crown_radius;
 	double temp_crown_diameter;
+	double previous_dbhdc_eff;
+	double max_dbhdc_incr = 0.05;                   /* fraction of maximum dbhdc increment */
 
 	height_t *h;
 	dbh_t *d;
@@ -261,6 +263,9 @@ int annual_forest_structure(cell_t* const c)
 							/* all space they can, if they cannot then fixed values constrain their crown */
 							/* see also: Lhotka and Loewenstein, 1997; Lhotka and Loewenstein, 2008 */
 
+							/* previous dbhdc eff */
+							previous_dbhdc_eff = s->value[DBHDC_EFF];
+
 							temp_crown_area = (g_settings->sizeCell * g_settings->max_layer_cover) / (c->tree_layers[layer].layer_density * g_settings->sizeCell);
 
 							temp_crown_radius = sqrt(temp_crown_area / Pi);
@@ -269,8 +274,16 @@ int annual_forest_structure(cell_t* const c)
 
 							s->value[DBHDC_EFF] = temp_crown_diameter / d->value;
 							logger(g_debug_log,"-DBHDC effective = %g\n", s->value[DBHDC_EFF]);
-							logger(g_debug_log,"-DBHDCMAX = %g\n", s->value[DBHDCMAX]);
-							logger(g_debug_log,"-DBHDCMIN = %g\n", s->value[DBHDCMIN]);
+
+							/* check if current dbhdc_eff grows to much (case when there's thinning) */
+							/* this is checked to avoid unrealistic crown area increment */
+
+							//note max_dbhdc_incr corresponds to an arbitrary increment of n value
+							if ( ( year ) && ( s->value[DBHDC_EFF] > ( previous_dbhdc_eff + (previous_dbhdc_eff * max_dbhdc_incr ) ) ) )
+							{
+								s->value[DBHDC_EFF] = previous_dbhdc_eff + ( previous_dbhdc_eff * max_dbhdc_incr );
+							}
+
 
 							/************************************************************************************************************************/
 							/* check */

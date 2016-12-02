@@ -27,7 +27,7 @@ void initialization_forest_structure(cell_t *const c, const int day, const int m
 //	if ( ! day && ! month && ! year)
 //	{
 		/* annual forest structure */
-		if ( ! annual_forest_structure ( c ) )
+		if ( ! annual_forest_structure ( c, year ) )
 		{
 			puts(sz_err_out_of_memory);
 			exit(1);

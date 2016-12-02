@@ -1098,7 +1098,6 @@ int main(int argc, char *argv[]) {
 
 				for ( day = 0; day < days_per_month; ++day )
 				{
-					//ALESSIOC TO ALESSIOR I'VE MODIFIED HERE, SURE THERE'S NOTHING ELSE LOST TO MODIFY??????
 					if( !day && !month && ! year )
 					{
 						/* general summary on model simulation */

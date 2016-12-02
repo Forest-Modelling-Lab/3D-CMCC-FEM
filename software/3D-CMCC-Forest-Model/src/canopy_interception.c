@@ -49,7 +49,6 @@ void canopy_interception(cell_t *const c, const int layer, const int height, con
 
 		/* assign meteo variables to cell variables */
 		/* assign incoming rain */
-		//fixme alessioc it could use the same rationale of sw radiation using meteo_daily
 		c->rain = meteo_daily->rain;
 
 		/* assign incoming snow */
