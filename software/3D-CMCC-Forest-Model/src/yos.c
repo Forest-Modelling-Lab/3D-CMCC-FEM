@@ -420,8 +420,8 @@ static int yos_from_arr(double *const values, const int rows_count, const int co
 			return 0;
 		}
 
-		if ( flag[TA_F-3] && flag[TMIN-3] && flag[TMAX-3] ) {
-			logger_error(g_debug_log, "TA, TMIN and TMAX columns are missing!\n");
+		if ( flag[TMIN-3] && flag[TMAX-3] ) {
+			logger_error(g_debug_log, "TMIN and TMAX columns are missing!\n");
 			free(flag);
 			//free(yos);
 			return 0;
@@ -437,7 +437,7 @@ static int yos_from_arr(double *const values, const int rows_count, const int co
 			}
 		}
 
-		/* ALESSIOR: fix rh 'cause can be imported out of range */
+		/* rh out of range */
 		if ( ! flag[RH_F-3] ) {
 			for ( row = 0; row < rows_count; ++row ) {
 				if ( ! IS_INVALID_VALUE(values[VALUE_AT(row, RH_F)]) ) {
@@ -835,34 +835,6 @@ static int yos_from_arr(double *const values, const int rows_count, const int co
 
 		// RH_f
 		yos[*yos_count-1].m[month].d[day].rh_f = values[VALUE_AT(row,RH_F)];
-		if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].rh_f) && (!((day == 0) && (*yos_count == 1)&& (month == 0))))
-		{
-			// ALESSIOR
-			// TODO: ask ALESSIOC
-		}
-		// ALESSIOR:
-		// fixed inside yos_from_arr, so compute vpd is safe!
-		/*
-		else if(yos[*yos_count-1].m[month].d[day].rh_f < RH_RANGE_MIN || yos[*yos_count-1].m[month].d[day].rh_f > RH_RANGE_MAX)
-		{
-			logger(g_debug_log, "BAD DATA FOR rh = %g in day = %d month = %d year = %d\n", yos[*yos_count-1].m[month].d[day].rh_f, day+1, month+1, year);
-
-			//fixme
-			if(yos[*yos_count-1].m[month].d[day].rh_f < RH_RANGE_MIN)
-			{
-				logger(g_debug_log, "WARNING!!!!! forced RH to 0%%\a\n");
-				yos[*yos_count-1].m[month].d[day].rh_f = 0.0;
-			}
-			if(yos[*yos_count-1].m[month].d[day].rh_f > RH_RANGE_MAX)
-			{
-				logger(g_debug_log, "WARNING!!!!! forced RH to 100%%\a\n");
-				yos[*yos_count-1].m[month].d[day].rh_f = 100.0;
-			}
-
-			//fixme
-			//exit(1);
-		}
-		*/
 	}
 	*p_yos = yos;
 	return 1;

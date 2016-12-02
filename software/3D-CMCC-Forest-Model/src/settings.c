@@ -68,11 +68,6 @@ enum {
 
 extern const char sz_err_out_of_memory[];
 
-//
-// ALESSIOR: fixme
-// import based on pointer sucks !
-// change it!
-//
 settings_t* settings_import(const char *const filename) {
 #define BUFFER_SIZE	256
 	char buffer[BUFFER_SIZE];
@@ -80,7 +75,6 @@ settings_t* settings_import(const char *const filename) {
 	int err;
 	settings_t* s;
 	FILE *f;
-	double *p_field;
 
 	const char delimiter[] = " /\"\t\r\n";
 
@@ -99,14 +93,12 @@ settings_t* settings_import(const char *const filename) {
 	/* all settings values defaults to 0 ( off ) */
 	memset(s, 0, sizeof*s);
 
-	// get pointer for first double value
-	p_field = &s->sizeCell;
-
 	i = 0;
 	while ( fgets(buffer, BUFFER_SIZE, f) ) {
 		char *p;
 		char *p2;
 		char *token;
+		double value;
 
 		/* remove initial spaces (if any) */
 		p2 = buffer;
@@ -127,7 +119,7 @@ settings_t* settings_import(const char *const filename) {
 
 		if ( ! token ) continue;
 
-		switch ( i++ ) {
+		switch ( i ) {
 			case SETTINGS_SITENAME:
 				strncpy(s->sitename, token, SETTINGS_SITENAME_MAX_SIZE-1);
 			break;
@@ -174,26 +166,6 @@ settings_t* settings_import(const char *const filename) {
 				}
 			break;
 
-			case SETTINGS_YEAR_START:
-				s->year_start = convert_string_to_int(token, &err);
-				if ( err ) {
-					printf("unable to convert start year: %s\n", token);
-					free(s);
-					fclose(f);
-					return 0;
-				}
-			break;
-
-			case SETTINGS_YEAR_END:
-				s->year_end = convert_string_to_int(token, &err);
-				if ( err ) {
-					printf("unable to convert end year: %s\n", token);
-					free(s);
-					fclose(f);
-					return 0;
-				}
-			break;
-
 			case SETTINGS_SOIL_OUTPUT:
 				if ( ! string_compare_i(token, "on") ) {
 					s->soil_output = 1;
@@ -211,16 +183,6 @@ settings_t* settings_import(const char *const filename) {
 					s->CO2_trans = CO2_TRANS_ON;
 				} else if ( ! string_compare_i(token, "var") ) {
 					s->CO2_trans = CO2_TRANS_VAR;
-				}
-			break;
-
-			case SETTINGS_YEAR_START_CO2_FIXED:
-				s->year_start_co2_fixed = convert_string_to_int(token, &err);
-				if ( err ) {
-					printf("unable to convert start year management: %s\n", token);
-					free(s);
-					fclose(f);
-					return 0;
 				}
 			break;
 
@@ -248,16 +210,6 @@ settings_t* settings_import(const char *const filename) {
 				}
 			break;
 
-			case SETTINGS_YEAR_START_MANAGEMENT:
-				s->year_start_management = convert_string_to_int(token, &err);
-				if ( err ) {
-					printf("unable to convert start year management: %s\n", token);
-					free(s);
-					fclose(f);
-					return 0;
-				}
-			break;
-
 			case SETTINGS_PROGN_AUT_RESP:
 				if ( ! string_compare_i(token, "on") ) {
 					s->Prog_Aut_Resp = 1;
@@ -269,19 +221,6 @@ settings_t* settings_import(const char *const filename) {
 					s->dndc = 1;
 				}
 			break;
-
-			case SETTINGS_SIZECELL:
-				*p_field = convert_string_to_float(token, &err);
-				if ( err ) {
-					printf("unable to convert sizeCell: %s\n", token);
-					free(s);
-					fclose(f);
-					return 0;
-				}
-				// ALESSIOC fill me
-				*p_field *= *p_field;
-				p_field++;
-				break;
 
 			case SETTINGS_REPLANTED_SPECIES:
 				strncpy(s->replanted_species, (const char*)token, SETTINGS_REPLANTED_SPECIES_MAX_SIZE-1);
@@ -320,21 +259,152 @@ settings_t* settings_import(const char *const filename) {
 			break;
 
 			default:
-				if ( i > SETTINGS_COUNT ) {
-					puts("too many values!");
-					free(s);
-					fclose(f);
-					return 0;
-				}
-				*p_field = convert_string_to_float(token, &err);
+				value = convert_string_to_float(token, &err);
 				if ( err ) {
 					printf("unable to convert value: %s\n", token);
 					free(s);
 					fclose(f);
 					return 0;
 				}
-				p_field++;
-		}					
+				switch ( i ) {
+					case SETTINGS_YEAR_START:
+						s->year_start = (int)value;
+					break;
+
+					case SETTINGS_YEAR_END:
+						s->year_end = (int)value;
+					break;
+
+					case SETTINGS_YEAR_START_CO2_FIXED:
+						s->year_start_co2_fixed = (int)value;
+					break;
+
+					case SETTINGS_YEAR_START_MANAGEMENT:
+						s->year_start_management = (int)value;
+					break;
+
+					case SETTINGS_SIZECELL:
+						s->sizeCell = value;
+						// ALESSIOC fill me
+						s->sizeCell *= s->sizeCell;
+					break;
+					
+					case SETTINGS_Y:
+						s->Fixed_Aut_Resp_rate = value;
+					break;
+
+					case SETTINGS_CO2CONC:
+						s->co2Conc = value;
+					break;
+
+					case SETTINGS_CO2_INCR:
+						s->co2_incr = value;
+					break;
+
+					case SETTINGS_INIT_FRAC_MAXASW:
+						s->init_frac_maxasw = value;
+					break;
+
+					case SETTINGS_TREE_LAYER_LIMIT:
+						s->tree_layer_limit = value;
+					break;
+
+					case SETTINGS_SOIL_LAYER:
+						s->number_of_soil_layer = value;
+					break;
+
+					case SETTINGS_MAX_LAYER_COVER:
+						s->max_layer_cover = value;
+					break;
+
+					case SETTINGS_REPLANTED_TREE:
+						s->replanted_n_tree = value;
+					break;
+
+					case SETTINGS_REPLANTED_AGE:
+						s->replanted_age = value;
+					break;
+
+					case SETTINGS_REPLANTED_AVDBH:
+						s->regeneration_avdbh = value;
+					break;
+
+					case SETTINGS_REPLANTED_LAI:
+						s->replanted_lai = value;
+					break;
+
+					case SETTINGS_REPLANTED_HEIGHT:
+						s->replanted_height = value;
+					break;
+
+					case SETTINGS_REPLANTED_WS:
+						s->replanted_ws = value;
+					break;
+
+					case SETTINGS_REPLANTED_WCR:
+						s->replanted_wcr = value;
+					break;
+
+					case SETTINGS_REPLANTED_WFR:
+						s->replanted_wfr = value;
+					break;
+
+					case SETTINGS_REPLANTED_WL:
+						s->replanted_wl = value;
+					break;
+
+					case SETTINGS_REPLANTED_WBB:
+						s->replanted_wbb = value;
+					break;
+
+					case SETTINGS_REGENERATION_N_TREE:
+						s->regeneration_n_tree = value;
+					break;
+
+					case SETTINGS_REGENERATION_AGE:
+						s->regeneration_age = value;
+					break;
+
+					case SETTINGS_REGENERATION_AVDBH:
+						s->regeneration_avdbh = value;
+					break;
+
+					case SETTINGS_REGENERATION_LAI:
+						s->regeneration_lai = value;
+					break;
+
+					case SETTINGS_REGENERATION_HEIGHT:
+						s->regeneration_height = value;
+					break;
+
+					case SETTINGS_REGENERATION_WS:
+						s->regeneration_ws = value;
+					break;
+
+					case SETTINGS_REGENERATION_WCR:
+						s->regeneration_wcr = value;
+					break;
+
+					case SETTINGS_REGENERATION_WFR:
+						s->regeneration_wfr = value;
+					break;
+
+					case SETTINGS_REGENERATION_WL:
+						s->regeneration_wl = value;
+					break;
+
+					case SETTINGS_REGENERATION_WBB:
+						s->regeneration_wbb = value;
+					break;
+
+					default:
+						puts("too many values!");
+						free(s);
+						fclose(f);
+						return 0;
+				}
+		}
+		++i;
 	}
 
 	fclose(f);
