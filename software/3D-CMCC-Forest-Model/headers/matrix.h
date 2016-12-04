@@ -331,11 +331,13 @@ enum {
 
 	/* carbon biomass pools in tons of tC/sizeCell */
 	LEAF_C,                             /* Current Leaf carbon pool tC/sizeCell */
+	FIRST_DAY_LEAF_C,                   /* First day Leaf carbon pool tC/sizeCell */
 	LEAF_FALLING_C,                     /* Current Leaf falling carbon pool tC/sizeCell */
 	MAX_LEAF_C,                         /* Maximum Current Leaf carbon pool tC/sizeCell */
 	TOT_ROOT_C,                         /* Current Total Coarse carbon pool tC/sizeCell */
 	COARSE_ROOT_C,                      /* Current Coarse root carbon pool tC/sizeCell */
 	FINE_ROOT_C,                        /* Current Fine root carbon pool tC/sizeCell */
+	FIRST_DAY_FINE_ROOT_C,              /* First day Fine root carbon pool tC/sizeCell */
 	FINE_ROOT_TURNOVER_C,               /* Current Fine root turnover tC/sizeCell */
 	MAX_FINE_ROOT_C,                    /* Maximum Current Fine root carbon pool tC/sizeCell */
 	MAX_BUD_BURST_C,                    /* Maximum Current Leaf carbon pool for BudBurst tC/sizeCell */

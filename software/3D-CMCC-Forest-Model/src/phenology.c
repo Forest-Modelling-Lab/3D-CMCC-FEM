@@ -16,9 +16,66 @@ F * phenology.c
 #include "logger.h"
 
 extern logger_t* g_debug_log;
-extern soil_settings_t *g_soil_settings;
+//extern soil_settings_t *g_soil_settings;
 
+void phenology(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, const meteo_daily_t *const meteo_daily, const int month)
+{
 
+	species_t *s;
+	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
+
+	logger(g_debug_log, "\n--DAILY PHENOLOGY for SPECIES %s phenology = %.1f--\n", s->name, s->value[PHENOLOGY]);
+	logger(g_debug_log, "-LAI_PROJ = %g\n-PEAK_LAI_PROJ = %g\n", s->value[LAI_PROJ], s->value[PEAK_LAI_PROJ]);
+
+	/* note: one single function for both deciduous and evergreen */
+	/* note: VEG_UNVEG is only for deciduous */
+	if (s->counter[VEG_UNVEG] == 1 )
+	{
+		/* Beginning of growing season */
+		/* BUDBURST PHASE */
+		if (s->counter[VEG_DAYS] <= ((int)s->value[BUD_BURST]))
+		{
+			/* Maximum growth */
+			if (s->value[LAI_PROJ] < s->value[PEAK_LAI_PROJ])
+			{
+				s->phenology_phase = 1;
+			}
+			/* Normal Growth */
+			else
+			{
+				s->phenology_phase = 2;
+			}
+		}
+		else
+		{
+			/* Normal growth */
+			if (month+1 <= 6)
+			{
+				s->phenology_phase = 2;
+			}
+			else
+			{
+				/* Normal growth */
+				if (meteo_daily->daylength > s->value[MINDAYLENGTH])
+				{
+					s->phenology_phase = 2;
+				}
+				else
+				{
+					/* Leaf fall */
+					s->phenology_phase = 3;
+				}
+			}
+		}
+	}
+	else
+	{
+		/* Un-vegetative period or for evergreen with low assimilation */
+		s->phenology_phase = 0;
+	}
+}
+
+#if 0
 void phenology(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, const meteo_daily_t *const meteo_daily, const int month)
 {
 
@@ -102,6 +159,8 @@ void phenology(cell_t *const c, const int layer, const int height, const int dbh
 	}
 	logger(g_debug_log, "phenology phase = %d\n", s->phenology_phase);
 }
+
+#endif
 
 //void Phenology_phase (species_t *const s, const meteo_t* const met, const int year, const int month, const int day)
 //{

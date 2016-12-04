@@ -241,6 +241,8 @@ void reset_daily_class_variables(cell_t *const c)
 				{
 					s = &a->species[species];
 
+					s->counter[VEG_UNVEG] = 0.;
+
 					/* reset daily radiative variables */
 					s->value[PAR] = 0.;
 					s->value[APAR] = 0.;

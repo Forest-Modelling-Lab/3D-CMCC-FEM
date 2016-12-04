@@ -33,6 +33,9 @@ void peak_lai(species_t *const s, const int day, const int month, const int year
 	/***************************************************************************************************************/
 	/* note: special case for evergreen */
 
+	s->value[FIRST_DAY_LEAF_C] = s->value[LEAF_C];
+	s->value[FIRST_DAY_FINE_ROOT_C] = s->value[FINE_ROOT_C];
+
 	if ((s->value[PHENOLOGY] == 1.1 || s->value[PHENOLOGY] == 1.2) && ( !day && !month && !years ))
 	{
 		if ((s->value[LAI_PROJ] > s->value[PEAK_LAI_PROJ]) || (s->value[LEAF_C] > s->value[MAX_LEAF_C]))

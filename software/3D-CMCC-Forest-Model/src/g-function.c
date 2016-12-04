@@ -9,7 +9,7 @@
 #include "logger.h"
 #include "matrix.h"
 
-extern settings_t *g_settings;
+//extern settings_t *g_settings;
 extern logger_t* g_debug_log;
 extern soil_settings_t *g_soil_settings;
 
@@ -120,80 +120,29 @@ void Veg_Days(cell_t *const c, const int day, const int month, const int year)
 				{
 					s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
-					if ( g_settings->spatial == 'u' )
+					/* reset 'annual day_veg_for_litterfall_rate'*/
+					if ( ! day && ! month )
 					{
-						if ( s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2 )
-						{
-							/* reset 'annual day_veg_for_litterfall_rate'*/
-							if (day == 0 && month == JANUARY)
-							{
-								s->counter[DAY_VEG_FOR_LEAF_FALL] = 0;
-							}
-							//the same approach must be used in "Get_daily_vegetative_period" func
-
-							if ((met[month].d[day].thermic_sum >= s->value[GROWTHSTART] && month <= 6)
-									|| (met[month].d[day].daylength >= s->value[MINDAYLENGTH] && month >= 6))
-							{
-								s->counter[DAY_VEG_FOR_LEAF_FALL] += 1;
-							}
-						}
-						else
-						{
-							if ( IS_LEAP_YEAR( c->years[year].year ) )
-							{
-								s->counter[DAY_VEG_FOR_LEAF_FALL] = 366;
-							}
-							else
-							{
-								s->counter[DAY_VEG_FOR_LEAF_FALL] = 365;
-							}
-						}
-						/* compute last year day the number of days for leaf fall */
-						if (day == 30 && month == DECEMBER)
-						{
-							s->counter[DAY_FRAC_FOLIAGE_REMOVE] =  (int) (s->value[LEAF_FALL_FRAC_GROWING] *
-									s->counter[DAY_VEG_FOR_LEAF_FALL]);
-							s->counter[DAY_FRAC_FINE_ROOT_REMOVE] = (int) (s->value[LEAF_FALL_FRAC_GROWING] *
-									s->counter[DAY_VEG_FOR_LEAF_FALL]);
-							logger(g_debug_log, "Day frac foliage remove = %d\n", s->counter[DAY_FRAC_FOLIAGE_REMOVE] );
-							//add leaf fall days
-							if (s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2)
-							{
-								s->counter[DAY_VEG_FOR_LEAF_FALL] += (int)(s->counter[DAY_VEG_FOR_LEAF_FALL] *
-										s->value[LEAF_FALL_FRAC_GROWING]);
-
-							}
-							logger(g_debug_log, "-species %s annual vegetative days = %d \n", s->name, s->counter[DAY_VEG_FOR_LEAF_FALL]);
-						}
+						s->counter[DAY_VEG_FOR_LEAF_FALL] = 0;
 					}
-					else
+
+					if ((met[month].d[day].thermic_sum >= s->value[GROWTHSTART] && month <= 6)
+							|| (met[month].d[day].daylength >= s->value[MINDAYLENGTH] && month >= 6))
 					{
-						if (!month)
-						{
-							s->counter[DAY_VEG_FOR_LEAF_FALL] = 0;
-						}
-						if (s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2)
-						{
-							if (met[month].d[day].ndvi_lai >= 0.5)
-							{
-								s->counter[DAY_VEG_FOR_LEAF_FALL] +=1;
-							}
-						}
-						else
-						{
-							if ( IS_LEAP_YEAR( c->years[year].year ) )
-							{
-								s->counter[DAY_VEG_FOR_LEAF_FALL] = 366;
-							}
-							else
-							{
-								s->counter[DAY_VEG_FOR_LEAF_FALL] = 365;
-							}
-						}
-						if (day == 30 && month == DECEMBER)
-						{
-							logger(g_debug_log, "----- TOTAL VEGETATIVE DAYS = %d \n\n", s->counter[DAY_VEG_FOR_LEAF_FALL]);
-						}
+						s->counter[DAY_VEG_FOR_LEAF_FALL] += 1;
+					}
+
+					/* compute last year day the number of days for leaf fall */
+					if (day == 30 && month == DECEMBER)
+					{
+						s->counter[DAY_FRAC_FOLIAGE_REMOVE] = (int) (s->value[LEAF_FALL_FRAC_GROWING] *
+								s->counter[DAY_VEG_FOR_LEAF_FALL]);
+						s->counter[DAY_FRAC_FINE_ROOT_REMOVE] = (int) (s->value[LEAF_FALL_FRAC_GROWING] *
+								s->counter[DAY_VEG_FOR_LEAF_FALL]);
+						logger(g_debug_log, "Day frac foliage remove = %d\n", s->counter[DAY_FRAC_FOLIAGE_REMOVE] );
+
+						s->counter[DAY_VEG_FOR_LEAF_FALL] += (int)(s->counter[DAY_VEG_FOR_LEAF_FALL] * s->value[LEAF_FALL_FRAC_GROWING]);
+						logger(g_debug_log, "-species %s annual vegetative days = %d \n", s->name, s->counter[DAY_VEG_FOR_LEAF_FALL]);
 					}
 				}
 			}

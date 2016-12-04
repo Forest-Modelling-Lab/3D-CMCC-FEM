@@ -137,12 +137,6 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 
 		/*following Campioli et al., 2008, Maillard et al., 1994, Barbaroux et al., 2003*/
 
-		//test check it it seem that doesn't work!!
-		//SERGIO
-		//frac_to_foliage_fineroot = (s->value[RESERVE]) / s->counter[BUD_BURST_COUNTER];
-		//parameter = 2.0 / pow(s->value[BUD_BURST],2.0);
-		//frac_to_foliage_fineroot = (s->value[RESERVE]) * parameter * (s->value[BUD_BURST]+1.0 - s->counter[BUD_BURST_COUNTER]);
-		//logger(g_debug_log, "fraction of reserve for foliage and fine root = %g\n", frac_to_foliage_fineroot);
 
 		reserve_for_foliage_budburst = s->value[MAX_LEAF_C] / (s->value[BUD_BURST]+1.0);
 		logger(g_debug_log, "daily amount of reserve for foliage budburst %g = tC/cell/day\n", reserve_for_foliage_budburst);
