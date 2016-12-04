@@ -42,6 +42,8 @@ void leaf_fall_deciduous ( cell_t *const c, const int height, const int dbh, con
 
 		/* assign LAI values at the beginning of the sigmoid shape */
 		s->value[MAX_LAI_PROJ] = s->value[LAI_PROJ];
+
+		//fixme it MUST be moved in struct
 		senescenceDayOne = c->doy;
 	}
 
