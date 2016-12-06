@@ -14,6 +14,4 @@ int annual_forest_structure( cell_t *const, const int );
 
 void potential_max_min_density ( cell_t *const c );
 
-void prephenology (cell_t *const, const meteo_daily_t *const, const int, const int);
-
 #endif /* STRUCTURE_H_ */
