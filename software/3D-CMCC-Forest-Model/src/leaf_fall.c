@@ -18,7 +18,6 @@ void leaf_fall_deciduous ( cell_t *const c, const int height, const int dbh, con
 	static double foliage_to_remove;
 	static double fine_root_to_remove;
 	static double fraction_to_retransl = 0.1; /* fraction of C to re-translocate (see Bossell et al., 2006 and Campioli et al., 2013 */
-	static int senescenceDayOne;
 	double previousLai, currentLai;
 	double previousBiomass_lai, newBiomass_lai;
 
@@ -43,8 +42,8 @@ void leaf_fall_deciduous ( cell_t *const c, const int height, const int dbh, con
 		/* assign LAI values at the beginning of the sigmoid shape */
 		s->value[MAX_LAI_PROJ] = s->value[LAI_PROJ];
 
-		//fixme it MUST be moved in struct
-		senescenceDayOne = c->doy;
+		/* assign senescence doy */
+		s->counter[SENESCENCE_DAY_ONE] = c->doy;
 	}
 
 	if(s->counter[LEAF_FALL_COUNTER] < s->counter[DAY_FRAC_FOLIAGE_REMOVE])
@@ -63,8 +62,8 @@ void leaf_fall_deciduous ( cell_t *const c, const int height, const int dbh, con
 		previousLai = s->value[LAI_PROJ];
 
 		/* sigmoid shape drives LAI reduction during leaf fall */
-		currentLai = MAX(0,s->value[MAX_LAI_PROJ] / (1 + exp(-(s->counter[DAY_FRAC_FOLIAGE_REMOVE]/2.0 + senescenceDayOne -
-				c->doy)/(s->counter[DAY_FRAC_FOLIAGE_REMOVE] / (log(9.0 * s->counter[DAY_FRAC_FOLIAGE_REMOVE]/2.0 + senescenceDayOne) -
+		currentLai = MAX(0,s->value[MAX_LAI_PROJ] / (1 + exp(-(s->counter[DAY_FRAC_FOLIAGE_REMOVE]/2.0 + s->counter[SENESCENCE_DAY_ONE] -
+				c->doy)/(s->counter[DAY_FRAC_FOLIAGE_REMOVE] / (log(9.0 * s->counter[DAY_FRAC_FOLIAGE_REMOVE]/2.0 + s->counter[SENESCENCE_DAY_ONE]) -
 						log(.11111111111))))));
 		logger(g_debug_log, "previousLai = %f\n", previousLai);
 		logger(g_debug_log, "currentLai = %f\n", currentLai);

@@ -549,6 +549,7 @@ enum {
 	DAY_FRAC_FINE_ROOT_REMOVE,          /* days of "fine root fall" per class */
 	DAY_VEG_FOR_LEAF_FALL,              /* days for leaf fall */
 	LEAF_FALL_COUNTER,                  /* counter for leaf fall */
+	SENESCENCE_DAY_ONE,                 /* doy at first day of the senescence */
 
 	COUNTERS
 };
