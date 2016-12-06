@@ -45,50 +45,40 @@ void prephenology (cell_t *const c, const meteo_daily_t *const meteo_daily, cons
 				{
 					s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
-					/* FOR DECIDUOUS */
-					if (s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2)
-					{
-						/* compute days for leaf fall based on the annual number of veg days */
-						s->counter[DAY_FRAC_FOLIAGE_REMOVE] = (int)(s->value[LEAF_FALL_FRAC_GROWING] * s->counter[DAY_VEG_FOR_LEAF_FALL]);
-						logger(g_debug_log, "-days of leaf fall for %s = %d day\n", c->heights[height].dbhs[dbh].ages[age].species[species].name, s->counter[DAY_FRAC_FOLIAGE_REMOVE]);
+					/* compute days for leaf fall based on the annual number of veg days */
+					s->counter[DAY_FRAC_FOLIAGE_REMOVE] = (int)(s->value[LEAF_FALL_FRAC_GROWING] * s->counter[DAY_VEG_FOR_LEAF_FALL]);
+					logger(g_debug_log, "-days of leaf fall for %s = %d day\n", c->heights[height].dbhs[dbh].ages[age].species[species].name, s->counter[DAY_FRAC_FOLIAGE_REMOVE]);
 
-						//currently model can simulate only forests in boreal hemisphere
-						if ((meteo_daily->thermic_sum >= s->value[GROWTHSTART] && month <= 6) ||
-								(meteo_daily->daylength >= s->value[MINDAYLENGTH] && month >= 6 && c->north == 0))
-						{
-							s->counter[VEG_UNVEG] = 1;
-							logger(g_debug_log, "-%s is in veg period\n", s->name);
-						}
-						else
-						{
-							if (meteo_daily->daylength <= s->value[MINDAYLENGTH] && month >= 6 && c->north == 0 )
-							{
-								s->counter[LEAF_FALL_COUNTER] += 1;
-
-								if(s->counter[LEAF_FALL_COUNTER]  <= (int)s->counter[DAY_FRAC_FOLIAGE_REMOVE])
-								{
-									/*days of leaf fall*/
-									s->counter[VEG_UNVEG] = 1;
-								}
-								else
-								{
-									/*outside days of leaf fall*/
-									s->counter[VEG_UNVEG] = 0;
-								}
-
-							}
-							else
-							{
-								s->counter[VEG_UNVEG] = 0;
-								logger(g_debug_log, "-%s is in un-veg period\n", s->name);
-							}
-						}
-					}
-					/* FOR EVERGREEN */
-					else
+					//currently model can simulate only forests in boreal hemisphere
+					if ((meteo_daily->thermic_sum >= s->value[GROWTHSTART] && month <= 6) ||
+							(meteo_daily->daylength >= s->value[MINDAYLENGTH] && month >= 6 && ! c->north ) )
 					{
 						s->counter[VEG_UNVEG] = 1;
 						logger(g_debug_log, "-%s is in veg period\n", s->name);
+					}
+					else
+					{
+						if (meteo_daily->daylength <= s->value[MINDAYLENGTH] && month >= 6 && ! c->north )
+						{
+							s->counter[LEAF_FALL_COUNTER] += 1;
+
+							if(s->counter[LEAF_FALL_COUNTER]  <= (int)s->counter[DAY_FRAC_FOLIAGE_REMOVE])
+							{
+								/*days of leaf fall*/
+								s->counter[VEG_UNVEG] = 1;
+							}
+							else
+							{
+								/*outside days of leaf fall*/
+								s->counter[VEG_UNVEG] = 0;
+							}
+
+						}
+						else
+						{
+							s->counter[VEG_UNVEG] = 0;
+							logger(g_debug_log, "-%s is in un-veg period\n", s->name);
+						}
 					}
 				}
 			}
