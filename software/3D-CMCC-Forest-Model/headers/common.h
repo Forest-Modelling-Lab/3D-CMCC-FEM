@@ -70,7 +70,7 @@ extern logger_t* g_annual_log;
 				logger(g_daily_log, buf);			\
 				g_daily_log->std_output = std;		\
 				g_daily_log->file_output = out;		\
-				write_paths(g_daily_log);			\
+				print_model_paths(g_daily_log);		\
 				print_model_settings(g_daily_log);	\
 			}										\
 			if ( g_monthly_log ) {					\
@@ -81,7 +81,7 @@ extern logger_t* g_annual_log;
 				logger(g_monthly_log, buf);			\
 				g_monthly_log->std_output = std;	\
 				g_monthly_log->file_output = out;	\
-				write_paths(g_monthly_log);			\
+				print_model_paths(g_monthly_log);	\
 				print_model_settings(g_monthly_log);\
 			}										\
 			if ( g_annual_log ) {					\
@@ -92,7 +92,7 @@ extern logger_t* g_annual_log;
 				logger(g_annual_log, buf);			\
 				g_annual_log->std_output = std;		\
 				g_annual_log->file_output = out;	\
-				write_paths(g_annual_log);			\
+				print_model_paths(g_annual_log);	\
 				print_model_settings(g_annual_log);	\
 			}										\
 			exit(1);								\

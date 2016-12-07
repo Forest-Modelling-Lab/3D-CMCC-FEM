@@ -1,4 +1,4 @@
-/*partitionign_allocation.c*/
+/* C-fruit-partitioning-allocation.c */
 
 /* includes */
 #include <stdio.h>
@@ -14,102 +14,7 @@
 #include "dendometry.h"
 #include "biomass.h"
 
-
-/**/
-
-void M_Fruit_Allocation_LPJ (cell_t *const c, const int layer, const int height, const int age, const int species, const meteo_daily_t *const meteo_daily, double Yearly_Rain)
-{
-	//static double WseedTree;    //fruit biomass per Tree
-	//static int NseedTree;      //Number of fruits per Tree
-
-	//static double FProCov;   //LPJ Foliage Projective  Cover for Seed Establishment
-	//static double LightAbsorb;
-	//static double EstabRate;   //Seed establishment rate Under Dominant Canopy
-	//static int Nsapling;      //Number of saplings Under and Outside Dominant Canopy
-
-//	species_t *s;
-//	s = &c->t_layers[layer].heights[height].ages[age].species[species];
-
-
-	//Log("**SEEDS-ALLOCATION**\n");
-
-	//Log("\n--LPJ FRUIT ALLOCATION--\n");
-
-
-
-
-
-	//il 10% lo do ai frutti
-	//fraction of total NPP to Fruit compart
-	//biomass to seeds
-	//s->value[W_SEED] = s->value[YEARLY_NPP_tDM] * s->value[FRACFRUIT];
-	//Log("Costant Fraction Rate of Annual NPP for Fruit Production using LPJ = %f %%\n", s->value[FRACFRUIT] * 100);
-	//Log("Annual NPP to Seeds Biomass Compart = %f tDM/area/year\n", s->value[W_SEED]);
-
-
-	//WseedTree = s->value[W_SEED] / s->counter[N_TREE];
-
-
-
-	//Log("Annual Biomass for Seeds Compart for Tree  = %f in tDM/tree/year\n", WseedTree);
-	//Log("Annual Biomass for Seeds Compart for Tree  = %f in Kg/tree/year\n", WseedTree * 1000);
-	//Number of seeds from tDM to grammes
-	//s->counter[N_SEED] = (s->value[W_SEED] * 1000000)/ s->value[WEIGHTSEED];
-	//Log("Annual Number of seeds using LPJ  = %d seeds/area/year\n", s->counter[N_SEED]);
-	/*
-	   Log("NSEED %f\n", s->counter[N_SEED]);
-	   Log("NTREE %f\n", s->counter[N_TREE]);
-	   NseedTree = s->counter[N_SEED] / s->counter[N_TREE];
-	 */
-	//Log("Annual Number of Seeds Produced for Tree using LPJ = %d seeds/area/year\n", s->counter[N_SEED]);
-	//Log("Annual Number of Seeds Produced for Tree using LPJ = %d seeds/tree/year\n", NseedTree);
-
-	/*
-	   Log("Intrinsic Germinability Rate = %f %% \n", s->value[GERMCAPACITY] * 100);
-
-
-	   if (Yearly_Rain > s->value[MINRAIN])
-	   {
-
-	   Log("Annual Number of seeds using LPJ  = %d seeds/area/year\n", s->counter[N_SEED]);
-
-	//da ricontrollare per vedere quale Lai prende di quale layer e semmai non utilizzare il FProCov
-
-
-
-
-
-	LightAbsorb = 1 -  (exp(- s->value[K] * s->value[LAI]));
-
-	Log("Light Absorb in Dominant Canopy = %f \n", LightAbsorb);
-	FProCov = canopy_cover_dominant * LightAbsorb;
-	Log("Canopy Cover in  Dominant layer with DBHDC function = %f \n", canopy_cover_dominant);
-
-	Log("LPJ Fractional Projective Cover FPC = %f \n", FProCov);
-
-
-	EstabRate = s->value[GERMCAPACITY] * (1 - exp((-5) * (1 - FProCov))) * (1 - FProCov);
-	Log("Seed Establishment Rate from LPJ = %f saplings/m^2 \n", EstabRate);
-
-	Nsapling = s->counter[N_SEED] * EstabRate ;
-	Log("Annual Number of Saplings per hectare using LPJ = %d Saplings/year hectare\n", Nsapling);
-	Log("Annual Number of Saplings using LPJ = %f Saplings/year m^2\n", (double) Nsapling / SIZECELL );
-	Log("Percentage of seeds survived using LPJ = %f %% seeds/year hectare\n", ((double)Nsapling * 100)/(double)s->counter[N_SEED] );
-	//Log("------THE MODEL STILL DOESN'T TAKE INTO ACCOUNT THE PRESENTS OF SUBDOMINANTS SPECIES!!!!------\n");
-	}
-	else
-	{
-	Log("Not enough Rain for Seeds Establishment!!!!\n");
-	}
-
-	//s->value[YEARLY_NPP] = s->value[YEARLY_NPP] - s->value[W_SEED];
-	//Log("Annual NPP  less Seeds Biomass using LPJ = %f tDM/area/year\n", s->value[YEARLY_NPP]);
-	 */
-
-}
-
-
-/**/
+#if 0
 int M_Fruit_Allocation_Logistic_Equation(age_t *const a, const int species)
 {
 	/*USING A LOGISTIC EQUATION*/
@@ -140,8 +45,9 @@ int M_Fruit_Allocation_Logistic_Equation(age_t *const a, const int species)
 
 	return NumberSeed;
 }
+#endif
 /**/
-
+#if 0
 int M_Fruit_Allocation_TREEMIG (age_t *const a, const int species)
 {
 	static int NumberSeed;
@@ -169,6 +75,6 @@ int M_Fruit_Allocation_TREEMIG (age_t *const a, const int species)
 	return NumberSeed;
 
 }
-
+#endif
 
 

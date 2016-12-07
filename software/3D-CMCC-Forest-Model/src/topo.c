@@ -11,8 +11,6 @@
 
 extern logger_t* g_debug_log;
 
-extern char *g_sz_input_path;
-
 static const char *sz_vars[TOPO_VARS_COUNT] =
 {
 	"X"

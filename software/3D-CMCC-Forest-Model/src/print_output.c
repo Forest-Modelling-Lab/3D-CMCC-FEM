@@ -15,7 +15,6 @@ extern settings_t* g_settings;
 extern logger_t* g_daily_log;
 extern logger_t* g_monthly_log;
 extern logger_t* g_annual_log;
-extern logger_t* g_soil_log;
 extern char *g_sz_dataset_file;
 extern char *g_sz_soil_file;
 extern char *g_sz_input_met_file;
@@ -47,7 +46,7 @@ static const char* get_filename(const char *const s)
 	return p;
 }
 
-void write_paths(logger_t *const _log)
+void print_model_paths(logger_t *const _log)
 {
 	//assert(_log);
 
@@ -347,7 +346,7 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 		if ( years_counter ==  years_of_simulation)
 		{
 			logger(g_daily_log, sz_launched, netcdf_get_version(), datetime_current());
-			write_paths(g_daily_log);
+			print_model_paths(g_daily_log);
 			if ( g_daily_log )
 			{
 				const char* p;
@@ -586,7 +585,7 @@ void EOM_print_cumulative_balance_cell_level(cell_t *const c, const int month, c
 		if ( years_counter ==  years_of_simulation)
 		{
 			logger(g_monthly_log, sz_launched, netcdf_get_version(), datetime_current());
-			write_paths(g_monthly_log);
+			print_model_paths(g_monthly_log);
 			if ( g_monthly_log )
 			{
 				const char* p;
@@ -862,7 +861,7 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 	{
 		if (g_annual_log) g_annual_log->std_output = 1;
 		logger(g_annual_log, sz_launched, netcdf_get_version(), datetime_current());
-		write_paths(g_annual_log);
+		print_model_paths(g_annual_log);
 		if (g_annual_log)
 		{
 			const char* p;
@@ -873,21 +872,3 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 	}
 }
 
-void EOD_print_cumulative_soil_balance_cell_level(cell_t *const c, const int year, const int month, const int day)
-{
-	if( !day && !month && !year )
-	{
-		if ( g_settings->dndc )
-		{
-			logger(g_soil_log, "RUNNING DNDC.....\n");
-		}
-		else
-		{
-			logger(g_soil_log, "No soil simulation!!!\n");
-		}
-	}
-	if ( g_settings->dndc )
-	{
-		//fixme to complete
-	}
-}

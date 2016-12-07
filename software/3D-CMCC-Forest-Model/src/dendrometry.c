@@ -355,7 +355,6 @@ void dendrometry_old(cell_t *const c, const int layer, const int height, const i
 
 	height_t *h;
 	dbh_t *d;
-	age_t *a;
 	species_t *s;
 
 	/* this function compute at the temporal scale at which is called:
@@ -368,7 +367,6 @@ void dendrometry_old(cell_t *const c, const int layer, const int height, const i
 
 	h = &c->heights[height];
 	d = &h->dbhs[dbh];
-	a = &c->heights[height].dbhs[dbh].ages[age];
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 	/* assign previous month values */

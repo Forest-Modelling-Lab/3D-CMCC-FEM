@@ -10,7 +10,6 @@
 #include "logger.h"
 
 extern logger_t* g_debug_log;
-extern char *g_sz_input_path;
 
 static const char err_bad_landuse_length[] =" bad landuse length at row %d, landuse must be 1 character.\n";
 static const char err_bad_landuse[] ="bad landuse %c at row %d\n";

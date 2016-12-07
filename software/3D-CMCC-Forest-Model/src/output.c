@@ -177,14 +177,14 @@ static int get_daily_row_from_date(const int yyyy, const int mm, const int dd) {
 
 static void daily_push_values(const output_t* const o, const cell_t* const c, const int year, const int month, const int day, const int year_index, const int years_count, const int x_cells_count, const int y_cells_count) {
 /*
-	la memoria è stata allocata come C*R*Y*X
+	la memoria ï¿½ stata allocata come C*R*Y*X
 
 	C = colonne ( variabili )
 	R = righe ( anni di elaborazione * 366 )
 	Y = numero y celle
 	X = numero x celle
 
-	quindi il valore [v1][v2][v3][v4] è indicizzato a
+	quindi il valore [v1][v2][v3][v4] ï¿½ indicizzato a
 
 	[v1 * n1 * n2 *n3 + v2 * n2 * n3 + v3 * n3 + v4]
 
@@ -437,6 +437,7 @@ quit:
 	return 0;
 }
 
+#if 0
 static int output_write_txt(const output_t* const vars, const char *const path, const int year_start, const int years_count, const int x_cells_count, const int y_cells_count, const e_output_types type) {
 /*
 	la memoria e' stata allocata come C*R*Y*X
@@ -557,6 +558,7 @@ static int output_write_txt(const output_t* const vars, const char *const path, 
 
 	return 1;
 }
+#endif
 
 /* path must terminate with a backslash! */
 int output_write(const output_t* const vars, const char *const path, const int year_start, const int years_count, const int x_cells_count, const int y_cells_count, const e_output_types type) {
