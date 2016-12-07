@@ -37,33 +37,66 @@
 #define STR(a)		#a
 
 #include "logger.h"
+#include "print_output.h"
 
 extern logger_t* g_daily_log;
 extern logger_t* g_monthly_log;
 extern logger_t* g_annual_log;
-extern logger_t* g_soil_log;
+//extern logger_t* g_soil_log;
 
 
-#define CHECK_CONDITION(x,c,y) {																							\
-		if ( (x)c(y) )		{																								\
-			char buf[256];																									\
+#define CHECK_CONDITION(x,c,y) {					\
+		if ( (x)c(y) ) { 							\
+			char buf[256]; 							\
+			int std;								\
+			int out;								\
 			sprintf(buf, "\nerror: condition (%s %s %s) is true, value of %s is %g, value of %s is %g in %s on line %d\n"	\
-							, XSTR(x)																						\
-							, XSTR(c)																						\
-							, XSTR(y)																						\
-							, XSTR(x)																						\
-							, (double)(x)																					\
-							, XSTR(y)																						\
-							, (double)(y)																					\
-							, __FILE__																						\
-							, __LINE__																						\
-			);																												\
-			logger_error(NULL, buf);																						\
-			if ( g_daily_log ) logger_error(g_daily_log, buf);															\
-			if ( g_monthly_log ) logger_error(g_monthly_log, buf);															\
-			if ( g_annual_log ) logger_error(g_annual_log, buf);															\
-			exit(1);																										\
-		}																													\
+							, XSTR(x)				\
+							, XSTR(c)				\
+							, XSTR(y)				\
+							, XSTR(x)				\
+							, (double)(x)			\
+							, XSTR(y)				\
+							, (double)(y)			\
+							, __FILE__				\
+							, __LINE__				\
+			);										\
+			logger_error(NULL, buf);				\
+			if ( g_daily_log ) {					\
+				std = g_daily_log->std_output;		\
+				out = g_daily_log->file_output;		\
+				g_daily_log->std_output = 0;		\
+				g_daily_log->file_output = 1;		\
+				logger(g_daily_log, buf);			\
+				g_daily_log->std_output = std;		\
+				g_daily_log->file_output = out;		\
+				write_paths(g_daily_log);			\
+				print_model_settings(g_daily_log);	\
+			}										\
+			if ( g_monthly_log ) {					\
+				std = g_monthly_log->std_output;	\
+				out = g_monthly_log->file_output;	\
+				g_monthly_log->std_output = 0;		\
+				g_monthly_log->file_output = 1;		\
+				logger(g_monthly_log, buf);			\
+				g_monthly_log->std_output = std;	\
+				g_monthly_log->file_output = out;	\
+				write_paths(g_monthly_log);			\
+				print_model_settings(g_monthly_log);\
+			}										\
+			if ( g_annual_log ) {					\
+				std = g_annual_log->std_output;		\
+				out = g_annual_log->file_output;	\
+				g_annual_log->std_output = 0;		\
+				g_annual_log->file_output = 1;		\
+				logger(g_annual_log, buf);			\
+				g_annual_log->std_output = std;		\
+				g_annual_log->file_output = out;	\
+				write_paths(g_annual_log);			\
+				print_model_settings(g_annual_log);	\
+			}										\
+			exit(1);								\
+		}											\
 }
 
 #define convert_string_to_int(s, err) ((int)convert_string_to_float((s),(err)))

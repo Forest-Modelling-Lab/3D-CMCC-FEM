@@ -47,7 +47,7 @@ static const char* get_filename(const char *const s)
 	return p;
 }
 
-static void write_paths(logger_t *const _log)
+void write_paths(logger_t *const _log)
 {
 	//assert(_log);
 
@@ -62,7 +62,7 @@ static void write_paths(logger_t *const _log)
 	logger(_log, "CO2 file = %s\n", get_filename(g_sz_co2_conc_file));
 }
 
-static void print_model_settings(logger_t*const log)
+void print_model_settings(logger_t*const log)
 {
 	//assert(log);
 
@@ -873,7 +873,7 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 	}
 }
 
-void Get_EOD_soil_balance_cell_level(cell_t *const c, const int year, const int month, const int day)
+void EOD_print_cumulative_soil_balance_cell_level(cell_t *const c, const int year, const int month, const int day)
 {
 	if( !day && !month && !year )
 	{
