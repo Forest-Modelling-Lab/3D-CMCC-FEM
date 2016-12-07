@@ -326,7 +326,7 @@ settings_t* settings_import(const char *const filename) {
 					break;
 
 					case SETTINGS_REPLANTED_AVDBH:
-						s->regeneration_avdbh = value;
+						s->replanted_avdbh = value;
 					break;
 
 					case SETTINGS_REPLANTED_LAI:

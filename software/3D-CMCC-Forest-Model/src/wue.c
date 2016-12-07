@@ -33,9 +33,9 @@ void water_use_efficiency( cell_t *const c, const int height, const int dbh, con
 	 */
 #if 1
 	/* daily WUE */
-	if( s->value[DAILY_GPP_gC] > 0 && s->value[CANOPY_EVAPO_TRANSP] > 0.0 )
+	if( s->value[NPP_gC] > 0 && s->value[CANOPY_EVAPO_TRANSP] > 0.0 )
 	{
-		s->value[WUE] = s->value[DAILY_GPP_gC] / s->value[CANOPY_TRANSP];
+		s->value[WUE] = s->value[NPP_gC] / s->value[CANOPY_TRANSP];
 	}
 	else
 	{
@@ -45,9 +45,9 @@ void water_use_efficiency( cell_t *const c, const int height, const int dbh, con
 	/* last day of the month */
 	if ( ( IS_LEAP_YEAR ( c->years[year].year ) ? ( MonthLength_Leap[month] ) : ( MonthLength[month] ) ) == c->doy )
 	{
-		if( s->value[MONTHLY_GPP_gC] > 0 && s->value[MONTHLY_CANOPY_EVAPO_TRANSP] > 0.0 )
+		if( s->value[MONTHLY_NPP_gC] > 0 && s->value[MONTHLY_CANOPY_EVAPO_TRANSP] > 0.0 )
 		{
-			s->value[M_WUE] = s->value[MONTHLY_GPP_gC] / s->value[MONTHLY_CANOPY_TRANSP];
+			s->value[M_WUE] = s->value[MONTHLY_NPP_gC] / s->value[MONTHLY_CANOPY_TRANSP];
 		}
 		else
 		{
@@ -58,9 +58,9 @@ void water_use_efficiency( cell_t *const c, const int height, const int dbh, con
 	/* last day of the year */
 	if ( c->doy == ( IS_LEAP_YEAR( c->years[year].year ) ? 366 : 365) )
 	{
-		if( s->value[YEARLY_GPP_gC] > 0 && s->value[YEARLY_CANOPY_EVAPO_TRANSP] > 0.0 )
+		if( s->value[YEARLY_NPP_gC] > 0 && s->value[YEARLY_CANOPY_EVAPO_TRANSP] > 0.0 )
 		{
-			s->value[Y_WUE] = s->value[YEARLY_GPP_gC] / s->value[YEARLY_CANOPY_TRANSP];
+			s->value[Y_WUE] = s->value[YEARLY_NPP_gC] / s->value[YEARLY_CANOPY_TRANSP];
 		}
 		else
 		{

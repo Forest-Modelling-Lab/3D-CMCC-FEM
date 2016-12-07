@@ -107,6 +107,12 @@ int forest_management (cell_t *const c, /*const int layer, const int height, con
 							/* reset years_for_thinning */
 							years_for_thinning = 0;
 
+							/* check that all mandatory variables are filled */
+							CHECK_CONDITION (g_settings->replanted_n_tree, <, 0);
+							CHECK_CONDITION (g_settings->replanted_height, <, 1.3);
+							CHECK_CONDITION (g_settings->replanted_avdbh, <, 0);
+							CHECK_CONDITION (g_settings->replanted_age, <, 0);
+
 							/* re-planting tree class */
 							if( g_settings->replanted_n_tree )
 							{
