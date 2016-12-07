@@ -35,20 +35,35 @@
 
 #define XSTR(a)		STR(a)
 #define STR(a)		#a
-#define CHECK_CONDITION(x,c,y) {																					\
-		if ( (x)c(y) )		{																						\
-			logger_error(NULL,"\nerror: condition (%s %s %s) is true, value of %s is %g, value of %s is %g in %s on line %d\n"			\
-							, XSTR(x)																				\
-							, XSTR(c)																				\
-							, XSTR(y)																				\
-							, XSTR(x)																				\
-							, (double)(x)																			\
-							, XSTR(y)																				\
-							, (double)(y)																			\
-							, __FILE__																				\
-							, __LINE__);																			\
-			exit(1);																								\
-		}																											\
+
+#include "logger.h"
+
+extern logger_t* g_daily_log;
+extern logger_t* g_monthly_log;
+extern logger_t* g_annual_log;
+extern logger_t* g_soil_log;
+
+
+#define CHECK_CONDITION(x,c,y) {																							\
+		if ( (x)c(y) )		{																								\
+			char buf[256];																									\
+			sprintf(buf, "\nerror: condition (%s %s %s) is true, value of %s is %g, value of %s is %g in %s on line %d\n"	\
+							, XSTR(x)																						\
+							, XSTR(c)																						\
+							, XSTR(y)																						\
+							, XSTR(x)																						\
+							, (double)(x)																					\
+							, XSTR(y)																						\
+							, (double)(y)																					\
+							, __FILE__																						\
+							, __LINE__																						\
+			);																												\
+			logger_error(NULL, buf);																						\
+			if ( g_daily_log ) logger_error(g_daily_log, buf);															\
+			if ( g_monthly_log ) logger_error(g_monthly_log, buf);															\
+			if ( g_annual_log ) logger_error(g_annual_log, buf);															\
+			exit(1);																										\
+		}																													\
 }
 
 #define convert_string_to_int(s, err) ((int)convert_string_to_float((s),(err)))
