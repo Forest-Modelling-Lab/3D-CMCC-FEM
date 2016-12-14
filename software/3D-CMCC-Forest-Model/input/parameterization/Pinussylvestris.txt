@@ -18,9 +18,9 @@ RHOMAX  0.47                  //Maximum Basic Density for young Trees t/m^3 for 
 TRHO    4                     //Age at which rho = (RHOMIN + RHOMAX )/2
 FORM_FACTOR 0.435             //Form factor Seidl et al., 2012
 COEFFCOND   0.05              //Define stomatal responsee to VPD in mbar for P. sylvestris Landsberg et al., 2005
-BLCOND  0.009                 //Canopy Boundary Layer conductance for P. sylvestris from Pietsch 
-MAXCOND 0.001                 //Maximum Stomatal Conductance in m/sec for P. sylvestris from Pietsch
-CUTCOND 0.00001               //Cuticul conductance in m/sec for P. sylvestris from Pietsch
+BLCOND  0.009                 //Canopy Boundary Layer conductance for P. sylvestris 0.009 from Pietsch, 0.01 for Tatarinov
+MAXCOND 0.0025                 //Maximum Stomatal Conductance in m/sec for P. sylvestris 0.001 from Pietsch, 0.0025 for Tatarinov
+CUTCOND 0.00006               //Cuticul conductance in m/sec for P. sylvestris 0.00001 from Pietsch  0,00006 for Tatarinov
 MAXAGE  200 //300 //500       //Determines rate of "physiological decline" of forest 500 for P. sylvestris Landsberg et al., 2005
 RAGE    0.95                  //Relative Age to give fAGE = 0.5 for P. sylvestris Landsberg et al., 2005
 NAGE    4                     //Power of relative Age in function for P. sylvestris Landsberg et al., 2005
