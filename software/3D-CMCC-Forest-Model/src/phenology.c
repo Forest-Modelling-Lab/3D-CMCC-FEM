@@ -18,7 +18,7 @@ F * phenology.c
 extern logger_t* g_debug_log;
 extern soil_settings_t *g_soil_settings;
 
-void prephenology (cell_t *const c, const meteo_daily_t *const meteo_daily, const int day, const int month)
+void prephenology (cell_t *const c, const meteo_daily_t *const meteo_daily, const int day, const int month, const int year)
 {
 	int height;
 	int dbh;
@@ -45,14 +45,14 @@ void prephenology (cell_t *const c, const meteo_daily_t *const meteo_daily, cons
 				{
 					s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
-					/* FOR DECIDUOUS */
+					/** FOR DECIDUOUS **/
 					if (s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2)
 					{
 						/* compute days for leaf fall based on the annual number of veg days */
 						s->counter[DAY_FRAC_FOLIAGE_REMOVE] = (int)(s->value[LEAF_FALL_FRAC_GROWING] * s->counter[DAY_VEG_FOR_LEAF_FALL]);
 						logger(g_debug_log, "-days of leaf fall for %s = %d day\n", c->heights[height].dbhs[dbh].ages[age].species[species].name, s->counter[DAY_FRAC_FOLIAGE_REMOVE]);
 
-						//currently model can simulate only forests in boreal hemisphere
+						//note: currently model can simulate only forests in boreal hemisphere
 						if ((meteo_daily->thermic_sum >= s->value[GROWTHSTART] && month <= 6) ||
 								(meteo_daily->daylength >= s->value[MINDAYLENGTH] && month >= 6 && c->north == 0))
 						{
@@ -65,7 +65,7 @@ void prephenology (cell_t *const c, const meteo_daily_t *const meteo_daily, cons
 							{
 								s->counter[LEAF_FALL_COUNTER] += 1;
 
-								if(s->counter[LEAF_FALL_COUNTER]  <= (int)s->counter[DAY_FRAC_FOLIAGE_REMOVE])
+								if(s->counter[LEAF_FALL_COUNTER] <= (int)s->counter[DAY_FRAC_FOLIAGE_REMOVE])
 								{
 									/*days of leaf fall*/
 									s->counter[VEG_UNVEG] = 1;
@@ -83,6 +83,7 @@ void prephenology (cell_t *const c, const meteo_daily_t *const meteo_daily, cons
 								logger(g_debug_log, "-%s is in un-veg period\n", s->name);
 							}
 						}
+
 					}
 					/* FOR EVERGREEN */
 					else
@@ -97,7 +98,7 @@ void prephenology (cell_t *const c, const meteo_daily_t *const meteo_daily, cons
 	logger(g_debug_log, "**************************************\n");
 }
 
-void phenology(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, const meteo_daily_t *const meteo_daily, const int month)
+void phenology(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, const meteo_daily_t *const meteo_daily, const int day, const int month, const int year)
 {
 
 	species_t *s;
@@ -135,9 +136,9 @@ void phenology(cell_t *const c, const int layer, const int height, const int dbh
 				}
 				else
 				{
-					/* Normal growth */
 					if (meteo_daily->daylength > s->value[MINDAYLENGTH])
 					{
+						/* Normal growth */
 						s->phenology_phase = 2;
 					}
 					else

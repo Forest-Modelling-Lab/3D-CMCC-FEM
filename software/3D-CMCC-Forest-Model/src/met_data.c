@@ -409,7 +409,7 @@ void Nightime_avg_temperature(meteo_t *met, const int day, const int month)
 	}
 }
 
-void Thermic_sum (meteo_t *met, const int day, const int month) {
+void Thermic_sum (meteo_t *met, const int day, const int month, const int year) {
 	static double previous_thermic_sum;
 
 	if (!day && !month)
@@ -435,12 +435,10 @@ void Thermic_sum (meteo_t *met, const int day, const int month) {
 		{
 			met[month].d[day].thermic_sum = previous_thermic_sum + (met[month].d[day].tavg - GDD_BASIS);
 			previous_thermic_sum = met[month].d[day].thermic_sum;
-			//Log ("day = %d month = %d somma termica %f\n",day+1, month+1,  met[month].d[day].thermic_sum);
 		}
 		else
 		{
 			met[month].d[day].thermic_sum = previous_thermic_sum;
-			//Log ("day = %d month = %d somma termica %f\n",day+1, month+1,  met[month].d[day].thermic_sum);
 		}
 		if (met[month].d[day].tavg == NO_DATA)
 			logger(g_debug_log, "tavg NO_DATA!!\n");

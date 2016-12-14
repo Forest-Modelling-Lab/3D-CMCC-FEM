@@ -1129,7 +1129,7 @@ int main(int argc, char *argv[]) {
 					Daylight_avg_temperature(matrix->cells[cell].years[year].m, day, month);
 					Nightime_avg_temperature(matrix->cells[cell].years[year].m, day, month);
 					Soil_temperature(matrix->cells[cell].years[year].m, day, month);
-					Thermic_sum(matrix->cells[cell].years[year].m, day, month);
+					Thermic_sum(matrix->cells[cell].years[year].m, day, month, year);
 					Air_density(matrix->cells[cell].years[year].m, day, month);
 					Day_Length(&matrix->cells[cell], day, month, year);
 					Latent_heat(matrix->cells[cell].years[year].m, day, month);
@@ -1180,18 +1180,6 @@ int main(int argc, char *argv[]) {
 								else
 								{
 									printf("ok tree_model (%02d-%02d-%d)\n", day+1, month+1, year+g_settings->year_start);
-
-									//if ( g_settings->dndc )
-									//{
-									//	logger(g_debug_log, "RUNNING DNDC.....\n");
-									//	soil_dndc_sgm (matrix, cell, year, month, day, years_of_simulation);
-									//	soil_dndc......................................
-									//}
-									//else
-									//{
-									//	logger(g_debug_log, "No soil simulation!!!\n");
-									//}
-									//get_net_ecosystem_exchange(&matrix->cells[cell]);
 								}
 							}
 							else

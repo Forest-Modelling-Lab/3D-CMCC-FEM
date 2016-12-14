@@ -131,7 +131,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	print_daily_forest_data ( c );
 
 	/* prephenology */
-	prephenology ( c, meteo_daily, day, month );
+	prephenology ( c, meteo_daily, day, month, year );
 
 	/***********************************************************************************************/
 
@@ -216,7 +216,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							print_daily_forest_class_data ( c, layer, height, dbh, age, species );
 
 							/* compute species-specific phenological phase */
-							phenology ( c, layer, height, dbh, age, species, meteo_daily, month);
+							phenology ( c, layer, height, dbh, age, species, meteo_daily, day, month, year);
 
 							logger(g_debug_log, "--PHYSIOLOGICAL PROCESSES LAYER %d --\n", l->layer_z);
 
@@ -239,6 +239,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 								logger(g_debug_log, "VEG_DAYS = %d \n", s->counter[VEG_DAYS]);
 
 								s->counter[YEARLY_VEG_DAYS] += 0;
+
 							}
 
 							/* radiation */

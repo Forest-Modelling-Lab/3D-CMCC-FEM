@@ -36,7 +36,7 @@ static int fill_cell_for_replanting(cell_t *const c)
 	static species_t species = { 0 };
 
 	assert(c);
-	
+
 	/* alloc memory for heights */
 	if ( ! alloc_struct((void **)&c->heights, &c->heights_count, &c->heights_avail, sizeof(height_t)) )
 	{
@@ -86,6 +86,11 @@ static int fill_cell_for_replanting(cell_t *const c)
 
 int add_tree_class_for_replanting (cell_t *const c, const int day, const int month, const int year )
 {
+
+	int day_temp;
+	int month_temp;
+	int DaysInMonth [] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+
 	logger(g_debug_log, "**ADD NEW TREE CLASS (REPLANTATION)**\n");
 
 	/* it is used only with "human" regeneration */
@@ -97,6 +102,25 @@ int add_tree_class_for_replanting (cell_t *const c, const int day, const int mon
 	if ( ! fill_species_from_file ( &c->heights[c->heights_count-1].dbhs[0].ages[0].species[0]) )
 	{
 		return 0;
+	}
+
+	/* check for veg days */
+	for (month_temp = 0; month_temp < 12; ++month_temp)
+	{
+		/* for handling leap years */
+		int days_per_month;
+
+		days_per_month = DaysInMonth[month_temp];
+		if ( (FEBRUARY == month_temp) && IS_LEAP_YEAR(c->years[year].year) )
+		{
+			++days_per_month;
+		}
+
+		for ( day_temp = 0; day_temp < days_per_month; ++day_temp )
+		{
+			/* compute annually the days for the growing season before any other process */
+			Veg_Days ( c , day_temp, month_temp, year );
+		}
 	}
 
 	/* initialize power function */

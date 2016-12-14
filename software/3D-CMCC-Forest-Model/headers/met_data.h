@@ -8,7 +8,7 @@ void Radiation (cell_t *const c, const int day, const int month, const int year)
 void Avg_temperature(meteo_t *met, const int day, const int month);
 void Daylight_avg_temperature(meteo_t *met, const int day, const int month);
 void Nightime_avg_temperature(meteo_t *met, const int day, const int month);
-void Thermic_sum (meteo_t *met, const int day, const int month);
+void Thermic_sum (meteo_t *met, const int day, const int month, const int year);
 void Air_pressure(meteo_t *met, const int day, const int month);
 void Air_density (meteo_t *met, const int day, const int month);
 void Soil_temperature(meteo_t* met, const int day, const int month);
