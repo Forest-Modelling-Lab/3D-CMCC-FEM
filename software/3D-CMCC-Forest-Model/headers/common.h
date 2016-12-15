@@ -37,12 +37,20 @@
 #define STR(a)		#a
 
 #include "logger.h"
-#include "print_output.h"
+
+// ALESSIOR:
+// cannot include header 'cause "print_output.h" include "matrix.h"
+// that define CAI that is already defined by windows SDK
+//#include "print_output.h"
+void print_model_paths(logger_t *const _log);
+void print_model_settings(logger_t*const log);
 
 extern logger_t* g_daily_log;
 extern logger_t* g_monthly_log;
 extern logger_t* g_annual_log;
 //extern logger_t* g_soil_log;
+
+
 
 
 #define CHECK_CONDITION(x,c,y) {					\
