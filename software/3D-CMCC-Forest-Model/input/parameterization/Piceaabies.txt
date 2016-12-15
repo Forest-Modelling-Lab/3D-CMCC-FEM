@@ -6,7 +6,7 @@ EPSILONgCMJ 1.05              //Light Use Efficiency (gC/molPAR)(used if ALPHA i
 K   0.54                      //Extinction coefficient for absorption of PAR by canopy for Picea abies from Pietsch et al., 2005,  0.54 from MOllicone
 ALBEDO  0.095                 //averaged for P.abies from Breuer et al., 2003
 GAMMA_LIGHT 0.031             //Light parameter for light modifier 0.031 see Bagnara et al., 
-INT_COEFF  0.036              //precip interception coefficient for Picea abies (see Pietsch)
+INT_COEFF  0.0.3              //precip interception coefficient for Picea abies (see Tatarinov)
 SLA_AVG 10.2                  //Average Specific Leaf Area m^2/KgC sunlit/shaded leaves for Picea abies (see Pietsch), (5.9) see Johansson, T. 1999
 SLA_RATIO   2                 //(DIM) ratio of shaded to sunlit projected SLA for Picea abies (see Pietsch)
 LAI_RATIO   2.6               //(DIM) all-sided to projected leaf area ratio from Mollicone et al., 2002

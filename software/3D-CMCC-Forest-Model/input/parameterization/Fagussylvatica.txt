@@ -6,7 +6,7 @@ EPSILONgCMJ 0           // Light Use Efficiency  (gC/MJ)(used if ALPHA is not av
 K   0.60                //0.54 Extinction coefficient for absorption of PAR by canopy 0.71 for F. sylvatica Vitale et al., 2012, 0.5 from Williams 1996, 0.65
 ALBEDO  0.2             //Albedo
 GAMMA_LIGHT 0.01        //Light parameter for light modifier
-INT_COEFF  0.034        //precip interception coefficient 0.3 for Tatarinov et al., 2006
+INT_COEFF  0.034 //0.3 //0.034        //precip interception coefficient for F. sylvatica fom Tatarinov
 SLA_AVG 48              //Average Specific Leaf Area m^2/KgC sunlit leaves for Fagus s. 27.8 to 48 from Pietsch 2005, 35 for Tatarinov et al., 2006
 SLA_RATIO   2           //(DIM) ratio of shaded to sunlit projected SLA  for F. sylvatyica from Mollicone et al., 2002 , 2.0 from Pietsch 2005
 LAI_RATIO   2           //(DIM) all-sided to projected leaf area ratio for F. sylvatyica from Mollicone et al., 2002 , 2.0 from Pietsch 2005

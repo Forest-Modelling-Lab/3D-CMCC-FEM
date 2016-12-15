@@ -6,7 +6,7 @@ EPSILONgCMJ -9999           //Light Use Efficiency  (gC/MJ)(used if ALPHA is not
 K   0.72                    //Extinction coefficient for absorption of PAR by canopy  (0.65 Rambal et al., 1996, 0.72 Hoff et al., 2002), 0.69 for Q. ilex Vitale et al., 2012 
 ALBEDO  0.12                //albedo 0.12 (Hoff et al., 2002)
 GAMMA_LIGHT 0.039           //Light parameter for light modifier 0.039 see Bagnara et al., (0.0427 value Nolè PC)
-INT_COEFF  0.041            //precip interception coefficient for DNF from Pietsch et al., 
+INT_COEFF  0.3              //precip interception coefficient for DNF from Tatarinov et al., 
 SLA_AVG 10.47               //Average Specific Leaf Area m^2/KgC sunlit/shaded leaves from Mollicone
 SLA_RATIO   2               //(DIM) ratio of shaded to sunlit projected SLA  for Q. ilex from Mollicone et al., 2002 Chiesi et al., 2007 
 LAI_RATIO   2               //(DIM) all-sided to projected leaf area ratio               

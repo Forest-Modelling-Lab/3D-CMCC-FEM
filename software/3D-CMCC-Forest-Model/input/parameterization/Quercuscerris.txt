@@ -11,7 +11,7 @@ K	0.60		//0.54 Extinction coefficient for absorption of PAR by canopy (for Q. ce
 ALBEDO	0.2   
 GAMMA_LIGHT -9999   //Light parameter for light modifier
 
-INT_COEFF  0.038    //precip interception coefficient
+INT_COEFF  0.3    //precip interception coefficient from Tatarinov
 
 //SPECIFIC LEAF AREA 
 SLA_AVG 30                 //Average Specific Leaf Area m^2/KgC sunlit leaves from Mollicone  

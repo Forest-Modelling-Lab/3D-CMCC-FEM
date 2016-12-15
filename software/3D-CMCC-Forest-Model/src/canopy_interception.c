@@ -27,8 +27,6 @@ void canopy_interception(cell_t *const c, const int layer, const int height, con
 	static double temp_int_rain;
 	static double temp_int_snow;
 
-//	double leaf_cell_cover_eff;
-
 	tree_layer_t *l;
 	species_t *s;
 
@@ -75,6 +73,9 @@ void canopy_interception(cell_t *const c, const int layer, const int height, con
 
 			s->value[CANOPY_WATER] = s->value[CANOPY_INT];
 
+			/* no snow interception when rain */
+			s->value[CANOPY_INT_SNOW] = 0.0;
+
 			CHECK_CONDITION(s->value[CANOPY_INT], >, meteo_daily->rain);
 		}
 		/* for snow */
@@ -88,6 +89,9 @@ void canopy_interception(cell_t *const c, const int layer, const int height, con
 			Int_max_snow = 4.4 * s->value[LAI_PROJ];
 			s->value[CANOPY_INT_SNOW] = s->value[CANOPY_SNOW] + 0.7 * ( Int_max_snow - s->value[CANOPY_SNOW] ) *
 				(1 - exp( - ( meteo_daily->snow /Int_max_snow ) ) ) * s->value[DAILY_CANOPY_COVER_PROJ];
+
+			/* no rain interception when snow */
+			s->value[CANOPY_INT] = 0.;
 
 			//fixme for now assuming no snow interception
 			s->value[CANOPY_INT_SNOW] = 0.0;
@@ -126,8 +130,6 @@ void canopy_interception(cell_t *const c, const int layer, const int height, con
 
 	/**********************************************************************************************************/
 	/* when matches the last height class in the cell is processed */
-	//fixme fixme fixme fixme fixme sometimes it doesn't go in  caused by the a jump in "cell_height_class_counter"
-	//as it is now is used just for print data but it should be fixed
 	if ( c->heights_count == cell_height_class_counter )
 	{
 		logger(g_debug_log,"\n***********************************\n");
@@ -139,4 +141,8 @@ void canopy_interception(cell_t *const c, const int layer, const int height, con
 		cell_height_class_counter = 0;
 	}
 	/*****************************************************************************************************************/
+
+	/* cumulate */
+	s->value[MONTHLY_CANOPY_INT] += (s->value[CANOPY_INT] + s->value[CANOPY_INT_SNOW]);
+	s->value[YEARLY_CANOPY_INT] += (s->value[CANOPY_INT] + s->value[CANOPY_INT_SNOW]);
 }

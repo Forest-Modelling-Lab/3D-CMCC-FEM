@@ -365,29 +365,29 @@ void reset_monthly_class_variables(cell_t *const c)
 				{
 					s = &a->species[species];
 
-					s->value[MONTHLY_GPP_gC] = 0;
-					s->value[MONTHLY_TOTAL_AUT_RESP] = 0.;
-					s->value[MONTHLY_NPP_gC] = 0.;
-					s->value[MONTHLY_CANOPY_LATENT_HEAT] = 0.;
-					s->value[MONTHLY_LEAF_AUT_RESP] = 0.;
-					s->value[MONTHLY_FINE_ROOT_AUT_RESP] = 0.;
-					s->value[MONTHLY_STEM_AUT_RESP] = 0.;
+					s->value[MONTHLY_GPP_gC] =               0;
+					s->value[MONTHLY_TOTAL_AUT_RESP] =       0.;
+					s->value[MONTHLY_NPP_gC] =               0.;
+					s->value[MONTHLY_CANOPY_LATENT_HEAT] =   0.;
+					s->value[MONTHLY_LEAF_AUT_RESP] =        0.;
+					s->value[MONTHLY_FINE_ROOT_AUT_RESP] =   0.;
+					s->value[MONTHLY_STEM_AUT_RESP] =        0.;
 					s->value[MONTHLY_COARSE_ROOT_AUT_RESP] = 0.;
-					s->value[MONTHLY_BRANCH_AUT_RESP] = 0.;
-					s->value[MONTHLY_TOTAL_AUT_RESP] = 0.;
-					s->value[MONTHLY_CANOPY_TRANSP] = 0.;
-					s->value[MONTHLY_CANOPY_EVAPO_TRANSP] = 0.;
-					s->value[MONTHLY_CANOPY_LATENT_HEAT] = 0.;
-
-					s->value[M_C_TO_TOT_STEM] = 0.;
-					s->value[M_C_TO_STEM] = 0.;
-					s->value[M_C_TO_LEAF] = 0.;
-					s->value[M_C_TO_FINEROOT] = 0.;
-					s->value[M_C_TO_COARSEROOT] = 0.;
-					s->value[M_C_TO_RESERVE] = 0.;
-					s->value[M_C_TO_ROOT] = 0.;
-					s->value[M_C_TO_BRANCH] = 0.;
-					s->value[M_C_TO_FRUIT] = 0.;
+					s->value[MONTHLY_BRANCH_AUT_RESP] =      0.;
+					s->value[MONTHLY_TOTAL_AUT_RESP] =       0.;
+					s->value[MONTHLY_CANOPY_TRANSP] =        0.;
+					s->value[MONTHLY_CANOPY_INT] =           0.;
+					s->value[MONTHLY_CANOPY_EVAPO_TRANSP] =  0.;
+					s->value[MONTHLY_CANOPY_LATENT_HEAT] =   0.;
+					s->value[M_C_TO_TOT_STEM] =              0.;
+					s->value[M_C_TO_STEM] =                  0.;
+					s->value[M_C_TO_LEAF] =                  0.;
+					s->value[M_C_TO_FINEROOT] =              0.;
+					s->value[M_C_TO_COARSEROOT] =            0.;
+					s->value[M_C_TO_RESERVE] =               0.;
+					s->value[M_C_TO_ROOT] =                  0.;
+					s->value[M_C_TO_BRANCH] =                0.;
+					s->value[M_C_TO_FRUIT] =                 0.;
 				}
 			}
 		}
@@ -429,43 +429,37 @@ void reset_annual_class_variables(cell_t *const c)
 				{
 					s = &a->species[species];
 
-					s->value[PEAK_LAI_PROJ] = 0.;
-					s->value[MAX_LEAF_C] = 0.;
-
+					s->value[PEAK_LAI_PROJ] =               0.;
+					s->value[MAX_LEAF_C] =                  0.;
 					/*reset cumulative values*/
-					s->counter[LEAF_FALL_COUNTER] = 0;
-					s->counter[VEG_DAYS] = 0;
-					s->counter[YEARLY_VEG_DAYS] = 0;
-
-					s->value[YEARLY_GPP_gC] = 0;
-					s->value[YEARLY_NPP_gC] = 0;
-					s->value[YEARLY_NPP_tC] = 0;
-
-					s->value[YEARLY_APAR] = 0.;
-
-					s->value[YEARLY_LEAF_AUT_RESP] = 0.;
-					s->value[YEARLY_FINE_ROOT_AUT_RESP] = 0.;
-					s->value[YEARLY_STEM_AUT_RESP] = 0.;
+					s->counter[LEAF_FALL_COUNTER] =         0;
+					s->counter[VEG_DAYS] =                  0;
+					s->counter[YEARLY_VEG_DAYS] =           0;
+					s->value[YEARLY_GPP_gC] =               0;
+					s->value[YEARLY_NPP_gC] =               0.;
+					s->value[YEARLY_NPP_tC] =               0.;
+					s->value[YEARLY_APAR] =                 0.;
+					s->value[YEARLY_LEAF_AUT_RESP] =        0.;
+					s->value[YEARLY_FINE_ROOT_AUT_RESP] =   0.;
+					s->value[YEARLY_STEM_AUT_RESP] =        0.;
 					s->value[YEARLY_COARSE_ROOT_AUT_RESP] = 0.;
-					s->value[YEARLY_BRANCH_AUT_RESP] = 0.;
-					s->value[YEARLY_TOTAL_AUT_RESP] = 0.;
-
-					s->value[YEARLY_CANOPY_TRANSP] = 0.;
-					s->value[YEARLY_CANOPY_EVAPO_TRANSP] = 0.;
-					s->value[YEARLY_CANOPY_LATENT_HEAT] = 0.;
-
-					s->counter[DEAD_STEMS] = 0;
-					s->counter[N_TREE_SAP] = 0;
-
-					s->value[Y_C_TO_TOT_STEM] = 0.;
-					s->value[Y_C_TO_STEM] = 0.;
-					s->value[Y_C_TO_LEAF] = 0.;
-					s->value[Y_C_TO_FINEROOT] = 0.;
-					s->value[Y_C_TO_COARSEROOT] = 0.;
-					s->value[Y_C_TO_RESERVE] = 0.;
-					s->value[Y_C_TO_ROOT] = 0.;
-					s->value[Y_C_TO_BRANCH] = 0.;
-					s->value[Y_C_TO_FRUIT] = 0.;
+					s->value[YEARLY_BRANCH_AUT_RESP] =      0.;
+					s->value[YEARLY_TOTAL_AUT_RESP] =       0.;
+					s->value[YEARLY_CANOPY_TRANSP] =        0.;
+					s->value[YEARLY_CANOPY_INT] =           0.;
+					s->value[YEARLY_CANOPY_EVAPO_TRANSP] =  0.;
+					s->value[YEARLY_CANOPY_LATENT_HEAT] =   0.;
+					s->value[Y_C_TO_TOT_STEM] =             0.;
+					s->value[Y_C_TO_STEM] =                 0.;
+					s->value[Y_C_TO_LEAF] =                 0.;
+					s->value[Y_C_TO_FINEROOT] =             0.;
+					s->value[Y_C_TO_COARSEROOT] =           0.;
+					s->value[Y_C_TO_RESERVE] =              0.;
+					s->value[Y_C_TO_ROOT] =                 0.;
+					s->value[Y_C_TO_BRANCH] =               0.;
+					s->value[Y_C_TO_FRUIT] =                0.;
+					s->counter[DEAD_STEMS] =                0;
+					s->counter[N_TREE_SAP] =                0;
 				}
 			}
 		}

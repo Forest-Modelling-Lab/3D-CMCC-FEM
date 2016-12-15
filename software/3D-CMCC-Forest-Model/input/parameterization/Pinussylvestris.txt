@@ -3,10 +3,10 @@ LIGHT_TOL   3                 //4 = very shade intolerant 3 = shade intolerant 2
 PHENOLOGY   1.2               //PHENOLOGY 0.1 = deciduous broadleaf, 0.2 = deciduous needle leaf, 1.1 = broad leaf evergreen, 1.2 = needle leaf evergreen 
 ALPHA   0.0455 //0.055        //Canopy quantum efficiency (molC/molPAR) for P. sylvestris Landsberg et al., 2005
 EPSILONgCMJ -9999             //Light Use Efficiency (gC/molPAR)(used if ALPHA is not available)  
-K   0.51                       //Extinction coefficient for absorption of PAR by canopy for P. sylvestris Landsberg et al., 2005 or 0.51 from Pietsch
+K   0.495                     //Extinction coefficient for absorption of PAR by canopy for P. sylvestris Landsberg et al., 2005 or 0.51 from Pietsch, 0.495 Tatarinov
 ALBEDO  0.093                 //averaged for P. sylvestris from Breuer et al., 2003
 GAMMA_LIGHT -9999             //Light parameter for light modifier
-INT_COEFF  0.051              //precip interception coefficient for P. sylvestris from Pietsch
+INT_COEFF  0.3 //0.051              //precip interception coefficient for P. sylvestris from Pietsch
 SLA_AVG 13.0                  //Average Specific Leaf Area m^2/KgC sunlit/shaded leaves for P. sylvestris 13.0 from Pietsch 9.5 Tatarinov, 5.50 Mencuccini and Bonosi 2001
 SLA_RATIO   2                 //(DIM) ratio of shaded to sunlit projected SLA for P. sylvestris from Pietsch
 LAI_RATIO   2.6               //(DIM) all-sided to projected leaf area ratio for P. sylvestris from Pietsch
@@ -54,7 +54,7 @@ CN_FALLING_LEAVES   132       //CN of leaf litter (kgC/kgN) for P. sylvestris fr
 CN_FINE_ROOTS   49.0          //CN of fine roots (kgC/kgN) for P. sylvestris 38 from Pietsch 49 from Tatarinov
 CN_LIVE_WOODS   58.0          //CN of live woods (kgC/kgN)for P. sylvestris 50 from Pietsch 58 tatarinov
 CN_DEAD_WOODS   1400          //CN of dead woods (kgC/kgN) for P. sylvestris 1400 from Pietsch 730 from tatarinov
-BUD_BURST   0                 //days of bud burst at the beginning of growing season (only for deciduous)
+BUD_BURST 0.3                 //days of bud burst at the beginning of growing season for P. sylvestris from Tatarinov
 LEAF_FALL_FRAC_GROWING  0     //proportions of the growing season of leaf fall 
 LEAF_FINEROOT_TURNOVER  0.18  //Average YEARLY leaves and fine root turnover rate for P. sylvestris 0.18 from Pietsch, 0.39 Tatarinov
 LIVE_WOOD_TURNOVER  0.7       //Annual yearly live wood turnover rate for P. sylvestris from Pietsch

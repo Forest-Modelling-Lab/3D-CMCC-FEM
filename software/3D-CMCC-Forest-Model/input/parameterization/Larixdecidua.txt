@@ -11,7 +11,7 @@ K   0.51        //Extinction coefficient for absorption of PAR by canopy for Lar
 ALBEDO  0.095 //averaged for P. sylvestris from Breuer et al., 2003
 GAMMA_LIGHT 0.031   //Light parameter for light modifier 0.031 see Bagnara et al., 
 
-INT_COEFF  0.041    //precip interception coefficient
+INT_COEFF  0.3    //precip interception coefficient
 //SPECIFIC LEAF AREA 
 SLA_AVG 22.0                 //Average Specific Leaf Area m^2/KgC sunlit leaves from Mollicone  
 SLA_RATIO   2    //(DIM) ratio of shaded to sunlit projected SLA for Larix d. see Piestch etal 2005

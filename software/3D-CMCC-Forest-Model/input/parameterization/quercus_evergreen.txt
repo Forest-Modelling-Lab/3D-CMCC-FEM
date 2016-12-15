@@ -12,7 +12,7 @@ ALBEDO  0.12    //0.12 (Hoff et al., 2002)
 GAMMA_LIGHT 0.039   //Light parameter for light modifier 0.039 see Bagnara et al., (0.0427 value Nolè PC)
 
 
-INT_COEFF  0.05    //precip interception coefficient
+INT_COEFF  0.3    //precip interception coefficient from Tatarinov
 
 //SPECIFIC LEAF AREA 
 SLA_AVG 10.47                 //Average Specific Leaf Area m^2/KgC sunlit/shaded leaves from Mollicone
