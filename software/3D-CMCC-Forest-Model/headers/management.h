@@ -10,7 +10,7 @@
 
 #include "matrix.h"
 
-int forest_management (cell_t *const c, /* const int layer, const int height, const int dbh, const int age, const int species, */ const int day, const int month, const int year);
+int forest_management (cell_t *const c, const int day, const int month, const int year);
 
 void choose_management(species_t *const s, const int years);
 

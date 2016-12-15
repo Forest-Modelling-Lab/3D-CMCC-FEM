@@ -168,13 +168,16 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 
 	/*******************************************************************************************************************/
 	/* COMPUTE TOTAL MAINTENANCE RESPIRATION */
-	s->value[TOTAL_MAINT_RESP]= s->value[TOT_DAY_LEAF_MAINT_RESP]+
+	s->value[TOTAL_MAINT_RESP] = s->value[TOT_DAY_LEAF_MAINT_RESP]+
 			s->value[FINE_ROOT_MAINT_RESP]+
 			s->value[STEM_MAINT_RESP]+
 			s->value[COARSE_ROOT_MAINT_RESP]+
 			s->value[BRANCH_MAINT_RESP];
 	logger(g_debug_log, "daily total maintenance respiration = %g gC/m2/day\n", s->value[TOTAL_MAINT_RESP]);
 
+	/* cumulate */
+	s->value[MONTHLY_TOTAL_MAINT_RESP] += s->value[TOTAL_MAINT_RESP];
+	s->value[YEARLY_TOTAL_MAINT_RESP] += s->value[TOTAL_MAINT_RESP];
 
 	/*******************************************************************************************************************/
 	/* it converts value of GPP gC/m2/day in gC/m2 area covered/day */
@@ -260,6 +263,10 @@ void growth_respiration(cell_t *const c, const int layer, const int height, cons
 			s->value[STEM_GROWTH_RESP] +
 			s->value[COARSE_ROOT_GROWTH_RESP] +
 			s->value[BRANCH_GROWTH_RESP];
+
+	/* cumulate */
+	s->value[MONTHLY_TOTAL_GROWTH_RESP] += s->value[TOTAL_GROWTH_RESP];
+	s->value[YEARLY_TOTAL_GROWTH_RESP] += s->value[TOTAL_GROWTH_RESP];
 
 	logger(g_debug_log, "daily leaf growth respiration = %g gC/m2/day\n", s->value[LEAF_GROWTH_RESP]);
 	logger(g_debug_log, "daily fine root growth respiration = %g gC/m2/day\n", s->value[FINE_ROOT_GROWTH_RESP]);

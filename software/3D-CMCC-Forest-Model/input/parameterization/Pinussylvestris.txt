@@ -1,7 +1,7 @@
 ﻿//Picea abies parameterization file
 LIGHT_TOL   3                 //4 = very shade intolerant 3 = shade intolerant 2 = shade tolerant 1 = very shade tolerant
 PHENOLOGY   1.2               //PHENOLOGY 0.1 = deciduous broadleaf, 0.2 = deciduous needle leaf, 1.1 = broad leaf evergreen, 1.2 = needle leaf evergreen 
-ALPHA   0.0455 //0.055        //Canopy quantum efficiency (molC/molPAR) for P. sylvestris Landsberg et al., 2005
+ALPHA   0.0455 //0.055        //Canopy quantum efficiency (molC/molPAR) for P. sylvestris Landsberg et al., 2005, 0.0545 Makela et al., 2006
 EPSILONgCMJ -9999             //Light Use Efficiency (gC/molPAR)(used if ALPHA is not available)  
 K   0.495                     //Extinction coefficient for absorption of PAR by canopy for P. sylvestris Landsberg et al., 2005 or 0.51 from Pietsch, 0.495 Tatarinov
 ALBEDO  0.093                 //averaged for P. sylvestris from Breuer et al., 2003
@@ -19,15 +19,15 @@ TRHO    4                     //Age at which rho = (RHOMIN + RHOMAX )/2
 FORM_FACTOR 0.435             //Form factor Seidl et al., 2012
 COEFFCOND   0.05              //Define stomatal responsee to VPD in mbar for P. sylvestris Landsberg et al., 2005
 BLCOND  0.009                 //Canopy Boundary Layer conductance for P. sylvestris 0.009 from Pietsch, 0.01 for Tatarinov
-MAXCOND 0.0025                 //Maximum Stomatal Conductance in m/sec for P. sylvestris 0.001 from Pietsch, 0.0025 for Tatarinov
-CUTCOND 0.00006               //Cuticul conductance in m/sec for P. sylvestris 0.00001 from Pietsch  0,00006 for Tatarinov
+MAXCOND 0.0025                 //Maximum Stomatal Conductance in m/sec for P. sylvestris 0.001 from Pietsch, 0.0025 for Tatarinov, 0.005 Makela et al., 2006
+CUTCOND 0.00006               //Cuticul conductance in m/sec for P. sylvestris 0.00001 from Pietsch  0,00006 for Tatarinov, 0.000075 Makela et al., 2006
 MAXAGE  200 //300 //500       //Determines rate of "physiological decline" of forest 500 for P. sylvestris Landsberg et al., 2005
 RAGE    0.95                  //Relative Age to give fAGE = 0.5 for P. sylvestris Landsberg et al., 2005
 NAGE    4                     //Power of relative Age in function for P. sylvestris Landsberg et al., 2005
 MAXAGE_S    -9999             //Determines rate of "physiological decline" of forest 
 RAGE_S  -9999                 //Relative Age to give fAGE = 0.5
 NAGE_S  -9999                 //Power of relative Age in function for Age
-GROWTHTMIN  -2                //Minimum temperature for growth for P. sylvestris Landsberg et al., 2005
+GROWTHTMIN  -2                //Minimum temperature for growth for P. sylvestris Landsberg et al., 2005, -5.93 Makela et al., 2006
 GROWTHTMAX  25                //Maximum temperature for growth for P. sylvestris Landsberg et al., 2005
 GROWTHTOPT  15                //Optimum temperature for growth for P. sylvestris Landsberg et al., 2005
 GROWTHSTART 200               //average temperature for starting growth in °C 

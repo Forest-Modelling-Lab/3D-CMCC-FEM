@@ -78,9 +78,6 @@ void self_thinning_mortality ( cell_t *const c, const int layer )
 
 					logger(g_debug_log, "MORTALITY BASED ON HIGH CANOPY COVER height %g species %s dbh %g !!!\n", h->value, s->name, d->value);
 
-					/* compute average biomass */
-					average_tree_biomass ( s );
-
 					/* mortality */
 					while ( c->tree_layers[layer].layer_cover > g_settings->max_layer_cover )
 					{
@@ -141,43 +138,9 @@ void self_thinning_mortality ( cell_t *const c, const int layer )
 						c->annual_dead_tree += deadtree;
 					}
 
-					/* update class biomass */
-					s->value[STEM_C] -= (s->value[AV_STEM_MASS_KgC]/1000.0*deadtree);
-					s->value[LEAF_C] -= (s->value[AV_LEAF_MASS_KgC]/1000.0*deadtree);
-					s->value[FINE_ROOT_C] -= (s->value[AV_FINE_ROOT_MASS_KgC]/1000.0*deadtree);
-					s->value[COARSE_ROOT_C] -= (s->value[AV_COARSE_ROOT_MASS_KgC]/1000.0*deadtree);
-					s->value[RESERVE_C] -= (s->value[AV_RESERVE_MASS_KgC]/1000.0*deadtree);
-					s->value[BRANCH_C] -= (s->value[AV_BRANCH_MASS_KgC]/1000.0*deadtree);
-					s->value[STEM_LIVE_WOOD_C] -= (s->value[AV_LIVE_STEM_MASS_KgC]/1000.0*deadtree);
-					s->value[STEM_DEAD_WOOD_C] -= (s->value[AV_DEAD_STEM_MASS_KgC]/1000.0*deadtree);
-					s->value[COARSE_ROOT_LIVE_WOOD_C] -= (s->value[AV_LIVE_COARSE_ROOT_MASS_KgC]/1000.0*deadtree);
-					s->value[COARSE_ROOT_DEAD_WOOD_C] -= (s->value[AV_DEAD_COARSE_ROOT_MASS_KgC]/1000.0*deadtree);
-					s->value[BRANCH_LIVE_WOOD_C] -= (s->value[AV_LIVE_BRANCH_MASS_KgC]/1000.0*deadtree);
-					s->value[BRANCH_DEAD_WOOD_C] -= (s->value[AV_DEAD_BRANCH_MASS_KgC]/1000.0*deadtree);
+					/* remove dead C and N biomass */
+					tree_biomass_remove ( s, deadtree );
 
-					s->value[LITTER_C] += (s->value[AV_LEAF_MASS_KgC]/1000.0*deadtree) +
-							(s->value[AV_FINE_ROOT_MASS_KgC]/1000.0*deadtree) +
-							(s->value[AV_COARSE_ROOT_MASS_KgC]/1000.0*deadtree) +
-							(s->value[AV_STEM_MASS_KgC]/1000.0*deadtree) +
-							(s->value[AV_RESERVE_MASS_KgC]/1000.0*deadtree) +
-							(s->value[AV_BRANCH_MASS_KgC]/1000.0*deadtree);
-
-					/* update average biomass */
-					average_tree_biomass ( s );
-
-					/* log removed carbon for mortality */
-					logger(g_debug_log, "LEAF_C removed =%g tC\n",(s->value[AV_LEAF_MASS_KgC]/1000.0*deadtree));
-					logger(g_debug_log, "FINE_ROOT_C removed =%g tC\n",(s->value[AV_FINE_ROOT_MASS_KgC]/1000.0*deadtree));
-					logger(g_debug_log, "COARSE_ROOT_C removed =%g tC\n",(s->value[AV_COARSE_ROOT_MASS_KgC]/1000.0*deadtree));
-					logger(g_debug_log, "STEM_C removed =%g tC\n",(s->value[AV_STEM_MASS_KgC]/1000.0*deadtree));
-					logger(g_debug_log, "RESERVE_C removed =%g tC\n",(s->value[AV_RESERVE_MASS_KgC]/1000.0*deadtree));
-					logger(g_debug_log, "BRANCH_C removed =%g tC\n",(s->value[AV_BRANCH_MASS_KgC]/1000.0*deadtree));
-					logger(g_debug_log, "STEM_LIVE_WOOD_C removed =%g tC\n",(s->value[AV_LIVE_STEM_MASS_KgC]/1000.0*deadtree));
-					logger(g_debug_log, "STEM_DEAD_WOOD_C removed =%g tC\n",(s->value[AV_DEAD_STEM_MASS_KgC]/1000.0*deadtree));
-					logger(g_debug_log, "COARSE_ROOT_LIVE_WOOD_C removed =%g tC\n",(s->value[AV_LIVE_COARSE_ROOT_MASS_KgC]/1000.0*deadtree));
-					logger(g_debug_log, "COARSE_ROOT_DEAD_WOOD_C removed =%g tC\n",(s->value[AV_DEAD_COARSE_ROOT_MASS_KgC]/1000.0*deadtree));
-					logger(g_debug_log, "BRANCH_LIVE_WOOD_C removed =%g tC\n",(s->value[AV_LIVE_BRANCH_MASS_KgC]/1000.0*deadtree));
-					logger(g_debug_log, "BRANCH_DEAD_WOOD_C removed =%g tC\n",(s->value[AV_DEAD_BRANCH_MASS_KgC]/1000.0*deadtree));
 				}
 			}
 		}
@@ -307,20 +270,18 @@ void age_mortality (cell_t *const c, const int height, const int dbh, const int 
 		dead_trees = (int)(s->counter[N_TREE] * s->value[AGEMORT]);
 		logger(g_debug_log, "dead trees = %d\n", dead_trees);
 
-		/* update biomass pools */
-		s->value[LEAF_C] -= ( ( s->value[LEAF_C] / (double)s->counter[N_TREE] ) * dead_trees );
-		s->value[STEM_C] -= ( ( s->value[STEM_C] / (double)s->counter[N_TREE] ) * dead_trees );
-		s->value[COARSE_ROOT_C] -= ( ( s->value[COARSE_ROOT_C] / (double)s->counter[N_TREE] ) * dead_trees );
-		s->value[FINE_ROOT_C] -= ( ( s->value[FINE_ROOT_C] / (double)s->counter[N_TREE] ) * dead_trees );
-		s->value[BRANCH_C] -= ( ( s->value[BRANCH_C] / (double)s->counter[N_TREE] ) * dead_trees );
-		//FIXME UPDATE ALSO LIVE AND DEAD POOLS
+		/* update C and N biomass */
+		tree_biomass_remove (s, dead_trees);
 
 		/* update current number of trees */
 		s->counter[N_TREE] -= dead_trees;
 		logger(g_debug_log, "Number of Trees after age mortality = %d trees\n", s->counter[N_TREE]);
 
+
 		/* assign to global variable */
 		s->counter[DEAD_STEMS] = dead_trees;
+
+
 
 	}
 	else
@@ -333,20 +294,12 @@ void age_mortality (cell_t *const c, const int height, const int dbh, const int 
 	/* check if dead_trees > s->counter[N_TREE] */
 	if ( s->counter[N_TREE] < 0 )
 	{
-		s->counter[N_TREE] = 0;
-	}
-
-	/* check if remove tree class */
-	if ( s->counter[N_TREE] == 0 )
-	{
 		if ( ! tree_class_remove(c, height, dbh, age, species) )
 		{
 			logger_error(g_debug_log, "unable to remove tree class");
 			exit(1);
 		}
 	}
-
-
 
 	logger(g_debug_log, "**********************************\n");
 }

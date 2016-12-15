@@ -446,14 +446,16 @@ enum {
 	FRACBB,                             /* Fraction branch and bark to stem */
 
 	/* Maintenance respiration */
-	DAILY_LEAF_MAINT_RESP,              /* Daytime leaf autotrophic respiration (gC/m2/day) */
-	NIGHTLY_LEAF_MAINT_RESP,            /* Night time leaf autotrophic respiration (gC/m2/day) */
-	TOT_DAY_LEAF_MAINT_RESP,            /* Leaf autotrophic respiration (gC/m2/day) */
-	FINE_ROOT_MAINT_RESP,               /* Fine root autotrophic respiration (gC/m2/day) */
-	STEM_MAINT_RESP,                    /* Stem autotrophic respiration (gC/m2/day) */
-	COARSE_ROOT_MAINT_RESP,             /* Coarse root autotrophic respiration (gC/m2/day) */
-	BRANCH_MAINT_RESP,                  /* Branch autotrophic respiration (gC/m2/day) */
-	TOTAL_MAINT_RESP,                   /* Total autotrophic respiration (gC/m2/day) */
+	DAILY_LEAF_MAINT_RESP,              /* Daytime leaf maintenance respiration (gC/m2/day) */
+	NIGHTLY_LEAF_MAINT_RESP,            /* Night time leaf maintenance respiration (gC/m2/day) */
+	TOT_DAY_LEAF_MAINT_RESP,            /* Leaf maintenance respiration (gC/m2/day) */
+	FINE_ROOT_MAINT_RESP,               /* Fine root maintenance respiration (gC/m2/day) */
+	STEM_MAINT_RESP,                    /* Stem maintenance respiration (gC/m2/day) */
+	COARSE_ROOT_MAINT_RESP,             /* Coarse root maintenance respiration (gC/m2/day) */
+	BRANCH_MAINT_RESP,                  /* Branch maintenance respiration (gC/m2/day) */
+	TOTAL_MAINT_RESP,                   /* Total maintenance respiration (gC/m2/day) */
+	MONTHLY_TOTAL_MAINT_RESP,           /* Monthly Total maintenance respiration (gC/m2/month) */
+	YEARLY_TOTAL_MAINT_RESP,            /* Yearly Total maintenance respiration (gC/m2/year) */
 
 	/* Growth respiration */
 	LEAF_GROWTH_RESP,                   /* Leaf growth respiration (gC/m2/day) */
@@ -462,6 +464,8 @@ enum {
 	BRANCH_GROWTH_RESP,                 /* Branch growth respiration (gC/m2/day) */
 	COARSE_ROOT_GROWTH_RESP,            /* Coarse root growth respiration (gC/m2/day) */
 	TOTAL_GROWTH_RESP,                  /* Total growth respiration (gC/m2/day) */
+	MONTHLY_TOTAL_GROWTH_RESP,          /* Monthly Total growth respiration (gC/m2/month) */
+	YEARLY_TOTAL_GROWTH_RESP,           /* Yearly Total growth respiration (gC/m2/year) */
 
 	/* Autotrophic respiration */
 	LEAF_AUT_RESP,                      /* Leaf autotrophic respiration (gC/m2/day) */
@@ -529,6 +533,16 @@ enum {
 	COARSE_ROOT_N,                      /* Current Coarse root nitrogen pool tN/sizeCell */
 	STEM_N,                             /* Current Stem nitrogen pool tN/sizeCell */
 	BRANCH_N,                           /* Current Branch nitrogen pool tN/sizeCell */
+
+	/* per tree in kgN */
+	AV_LEAF_MASS_kgN,                   /* Average Leaf carbon pool kgN/tree */
+	AV_STEM_MASS_kgN,                   /* Average Stem carbon pool kgN/tree */
+	AV_TOT_STEM_MASS_kgN,               /* Average Stem + Branch carbon pool kgN/tree */
+	AV_ROOT_MASS_kgN,                   /* Average Total root carbon pool kgN/tree */
+	AV_FINE_ROOT_MASS_kgN,              /* Average Fine root carbon pool kgN/tree */
+	AV_COARSE_ROOT_MASS_kgN,            /* Average Coarse carbon pool kgN/tree */
+	AV_BRANCH_MASS_kgN,                 /* Average Branch carbon pool kgN/tree */
+
 
 	/* LPJ MORTALITY FUNCTION */
 	AGEMORT,                            /* Age probability mortality function */
@@ -626,29 +640,29 @@ typedef struct
 
 enum
 {
-	S_LAYER_VALUE_PREVIOUS_AVAILABLE_SOIL_WATER
-	, S_LAYER_VALUE_WATER_BALANCE
-	, S_LAYER_VALUE_OLD_WATER_BALANCE
-	, S_LAYER_VALUE_SOIL_MOIST_RATIO
-	, S_LAYER_VALUE_AV_SOIL_MOIST_RATIO
-	, S_LAYER_VALUE_SWC//VOLUMETRIC SOIL WATER CONTENT (%VOL)
-	, S_LAYER_VALUE_PSI_SAT//SOIL SATURATED MATRIC POTENTIAL
-	, S_LAYER_VALUE_VWC
-	, S_LAYER_VALUE_VWC_FC
-	, S_LAYER_VALUE_VWC_SAT//SOIL SATURATED VOLUMETRIC WATER CONTENT
-	, S_LAYER_VALUE_SOIL_B //SOIL MOISTURE PARAMETER
-	, S_LAYER_VALUE_SOILW_SAT //(KGH2O/M2) SOILWATER AT SATURATION
-	, S_LAYER_VALUE_SOILW_FC //(KGH2O/M2) SOILWATER AT FIELD CAPACITY
-	, S_LAYER_VALUE_DAILY_SOIL_EVAPORATION_WATT
-	, S_LAYER_VALUE_DAILY_SOIL_LATENT_HEAT_FLUX
-	, S_LAYER_VALUE_DAILY_SOIL_SENSIBLE_HEAT_FLUX
+	SOIL_CARBON,                    /* SOIL CARBON (gC/m2 soil) */
+	PREVIOUS_ASW,
+	WATER_BALANCE,
+	OLD_WATER_BALANCE,
+	MOIST_RATIO,
+	VSWC,                           /* VOLUMETRIC SOIL WATER CONTENT (%VOL) */
+	PSI_SAT,                        /* SOIL SATURATED MATRIC POTENTIAL */
+	VWC,
+	VWC_FC,                         /* SOIL FIELD CAPACITY VOLUMETRIC WATER CONTENT */
+	VWC_SAT,                        /* SOIL SATURATED VOLUMETRIC WATER CONTENT */
+	SOIL_B,                         /* SOIL MOISTURE PARAMETER */
+	SOIL_W_SAT,                     /* (KGH2O/M2) SOILWATER AT SATURATION */
+	SOIL_W_FC,                      /* (KGH2O/M2) SOILWATER AT FIELD CAPACITY */
+	DAILYSOILEVAPORATIONWATT,
+	DAILYSOILLATENTHEATFLUX,
+	DAILYSOILSENSIBLEHEATFLUX,
 
-	, S_LAYER_VALUES_COUNT
+	SOIL_COUNT
 };
 
 typedef struct {
 
-	double value[S_LAYER_VALUES_COUNT];
+	double value[SOIL_COUNT];
 
 	//ALESSIOC ALESSIOR SERGIOS STUFFS SEE IF REMOVE AND USE ARRAYS
 	/**************************************************************************************************

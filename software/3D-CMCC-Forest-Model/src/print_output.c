@@ -134,8 +134,10 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 								logger(g_daily_log,"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s"
 										"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s"
 										"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s "
-										"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s",
+										"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s",
 										"GPP",
+										"GR",
+										"MR",
 										"AR",
 										"NPP",
 										"LAI",
@@ -254,8 +256,10 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 							logger(g_daily_log,"\t%6.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3d \t%3d \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f"
 									"\t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f"
 									"\t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f"
-									"\t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f",
+									"\t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f",
 									s->value[DAILY_GPP_gC],
+									s->value[TOTAL_GROWTH_RESP],
+									s->value[TOTAL_MAINT_RESP],
 									s->value[TOTAL_AUT_RESP],
 									s->value[NPP_gC],
 									s->value[LAI_PROJ],
@@ -668,9 +672,11 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 								/* heading for species name */
 								logger(g_annual_log,"\t%10s", "SPECIES");
 
-								logger(g_annual_log,"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s"
+								logger(g_annual_log,"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s"
 										"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s",
 										"GPP",
+										"GR",
+										"MR",
 										"AR",
 										"NPP",
 										"Y(%)",
@@ -777,9 +783,11 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 								logger(g_annual_log,"\t%8.3s", c->heights[height].dbhs[dbh].ages[age].species[species].name);
 
 								/* print variables at layer-class level */
-								logger(g_annual_log,"\t%6.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3d \t%3d \t%3d \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f"
+								logger(g_annual_log,"\t%6.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3d \t%3d \t%3d \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f"
 										"\t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f",
 										s->value[YEARLY_GPP_gC],
+										s->value[YEARLY_TOTAL_GROWTH_RESP],
+										s->value[YEARLY_TOTAL_MAINT_RESP],
 										s->value[YEARLY_TOTAL_AUT_RESP],
 										s->value[YEARLY_NPP_gC],
 										s->value[YEARLY_TOTAL_AUT_RESP]/s->value[YEARLY_GPP_gC]*100,

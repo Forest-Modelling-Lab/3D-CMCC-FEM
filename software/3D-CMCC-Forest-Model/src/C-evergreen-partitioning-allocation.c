@@ -238,7 +238,7 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 	//nitrogen_allocation ( s );
 
 	/* compute single tree biomass pools */
-	average_tree_biomass (s);
+	average_tree_pools (s);
 
 	/* to avoid "jumps" of dbh it has computed once monthly */
 	if ( ( IS_LEAP_YEAR( c->years[year].year ) ? (MonthLength_Leap[month] ) : (MonthLength[month] )) == c->doy )

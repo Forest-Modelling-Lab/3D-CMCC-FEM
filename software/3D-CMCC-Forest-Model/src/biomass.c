@@ -76,10 +76,10 @@ void annual_tree_increment(cell_t *const c, const int height, const int dbh, con
 	{
 		logger(g_debug_log, "***CAI & MAI***\n");
 
-//		/* compute effective mass density */
-//		useless here it is computed monthly in dendrometry
-//		s->value[MASS_DENSITY] = s->value[RHOMAX] + (s->value[RHOMIN] - s->value[RHOMAX]) * exp(-ln2 * (a->value / s->value[TRHO]));
-//		logger(g_debug_log, "-Mass Density = %g\n", s->value[MASS_DENSITY]);
+		//		/* compute effective mass density */
+		//		useless here it is computed monthly in dendrometry
+		//		s->value[MASS_DENSITY] = s->value[RHOMAX] + (s->value[RHOMIN] - s->value[RHOMAX]) * exp(-ln2 * (a->value / s->value[TRHO]));
+		//		logger(g_debug_log, "-Mass Density = %g\n", s->value[MASS_DENSITY]);
 
 		/* STAND VOLUME-(STEM VOLUME) */
 		/* assign previous volume to temporary variables */
@@ -120,7 +120,7 @@ void abg_bgb_biomass(cell_t *const c, const int height, const int dbh, const int
 	if ( ! c->heights[height].dbhs ) return;
 	if ( ! c->heights[height].dbhs[dbh].ages ) return;
 	if ( ! c->heights[height].dbhs[dbh].ages[age].species ) return;
-	*/
+	 */
 
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
@@ -132,9 +132,9 @@ void abg_bgb_biomass(cell_t *const c, const int height, const int dbh, const int
 	logger(g_debug_log, "Yearly Class BGB = %g tC/cell year\n", s->value[CLASS_BGB]);
 }
 
-void average_tree_biomass(species_t *const s)
+void average_tree_pools(species_t *const s)
 {
-	/* compute tree average biomass */
+	/* compute tree average C biomass */
 	s->value[AV_LEAF_MASS_KgC] = (s->value[LEAF_C]/(double)s->counter[N_TREE])*1000.0;
 	s->value[AV_STEM_MASS_KgC] = (s->value[STEM_C]/(double)s->counter[N_TREE])*1000.0;
 	s->value[AV_ROOT_MASS_KgC] = (s->value[TOT_ROOT_C]/(double)s->counter[N_TREE])*1000.0;
@@ -148,6 +148,14 @@ void average_tree_biomass(species_t *const s)
 	s->value[AV_DEAD_COARSE_ROOT_MASS_KgC] = (s->value[COARSE_ROOT_DEAD_WOOD_C]/(double)s->counter[N_TREE])*1000.0;
 	s->value[AV_LIVE_BRANCH_MASS_KgC] = (s->value[BRANCH_LIVE_WOOD_C]/(double)s->counter[N_TREE])*1000.0;
 	s->value[AV_DEAD_BRANCH_MASS_KgC] = (s->value[BRANCH_DEAD_WOOD_C]/(double)s->counter[N_TREE])*1000.0;
+
+	/* compute tree average N biomass */
+	s->value[AV_LEAF_MASS_kgN] = (s->value[LEAF_N]/(double)s->counter[N_TREE])*1000.0;
+	s->value[AV_STEM_MASS_kgN] = (s->value[STEM_N]/(double)s->counter[N_TREE])*1000.0;
+	s->value[AV_FINE_ROOT_MASS_kgN] = (s->value[FINE_ROOT_N]/(double)s->counter[N_TREE])*1000.0;
+	s->value[AV_COARSE_ROOT_MASS_kgN] =(s->value[COARSE_ROOT_N]/(double)s->counter[N_TREE])*1000.0;
+	s->value[AV_BRANCH_MASS_kgN] = (s->value[BRANCH_N]/(double)s->counter[N_TREE])*1000.0;
+
 }
 
 
@@ -174,83 +182,42 @@ void tree_branch_and_bark (cell_t *const c, const int height, const int dbh, con
 
 }
 
-//not used
-//void Biomass_increment_BOY (cell_t *const c, species_t *const s, int height, int age, int years)
-//{
-//	double oldBasalArea;
-//
-//	logger(g_debug_log, "BIOMASS_INCREMENT_Beginning of Year\n");
-//
-//	//compute Basal Area
-//	if (years == 0)
-//	{
-//		logger(g_debug_log, "avdbh = %g\n",s->value[AVDBH] );
-//		/* compute basal cell in cm^2 */
-//		s->value[BASAL_AREA] = ((pow((s->value[AVDBH] / 2), 2)) * Pi);
-//		s->value[STAND_BASAL_AREA] = s->value[BASAL_AREA] * s->counter[N_TREE];
-//	}
-//	else
-//	{
-//		oldBasalArea = s->value[BASAL_AREA];
-//		s->value[BASAL_AREA] = (((pow((s->value[AVDBH] / 2), 2)) * Pi) / 10000);
-//		s->value[STAND_BASAL_AREA] = s->value[BASAL_AREA] * s->counter[N_TREE];
-//		logger(g_debug_log, "old basal cell = %g \n", oldBasalArea);
-//		logger(g_debug_log, " Basal Area Increment= %g m^2/tree \n", s->value[BASAL_AREA] - oldBasalArea);
-//		logger(g_debug_log, " Basal Area Increment= %g cm^2/tree \n", (s->value[BASAL_AREA] - oldBasalArea) * 10000);
-//
-//	}
-//
-//	s->value[BASAL_AREA_m2]= s->value[BASAL_AREA] * 0.0001;
-//	logger(g_debug_log, " BASAL BASAL_AREA_m2 = %g m^2\n", s->value[BASAL_AREA_m2]);
-//
-//	s->value[STAND_BASAL_AREA] = s->value[BASAL_AREA] * s->counter[N_TREE];
-//	logger(g_debug_log, " Stand level class basal cell = %g cm^2/class cell\n", s->value[STAND_BASAL_AREA]);
-//	s->value[STAND_BASAL_AREA_m2] = s->value[BASAL_AREA_m2] * s->counter[N_TREE];
-//	logger(g_debug_log, " Stand level class basal cell = %g cm^2/class cell\n", s->value[STAND_BASAL_AREA]);
-//
-//	logger(g_debug_log, "Basal Area for this layer = %g cm^2/tree\n", s->value[BASAL_AREA]*10000);
-//	logger(g_debug_log, "Stand Basal Area for this layer = %g m^2/cell\n", s->value[STAND_BASAL_AREA]);
-//
-//	/* sapwood cell */
-//	/* see Kostner et al in Biogeochemistry of Forested Catchments in
-//	 * a Changing Environment, Matzner, Springer for Q. petraea */
-//	s->value[SAPWOOD_AREA] = s->value[SAP_A] * pow (s->value[AVDBH], s->value[SAP_B]);
-//
-//	logger(g_debug_log, "sapwood cell from Kostner = %g cm^2\n", s->value[SAPWOOD_AREA]);
-//	s->value[HEARTWOOD_AREA] = (s->value[BASAL_AREA] * 10000) - s->value[SAPWOOD_AREA];
-//	logger(g_debug_log, "heartwood from Wang et al 2010 = %g cm^2\n", s->value[HEARTWOOD_AREA]);
-//
-//	s->value[SAPWOOD_PERC] = (s->value[SAPWOOD_AREA] / 10000) / s->value[BASAL_AREA];
-//	logger(g_debug_log, "Sapwood/Basal Area = %g \n", s->value[SAPWOOD_PERC] );
-//	logger(g_debug_log, "Sapwood/Basal Area = %g %%\n",s->value[SAPWOOD_PERC] * 100);
-//
-//	//compute sap wood pools and heart wood pool in Carbon
-//	s->value[STEM_SAPWOOD_C] =  s->value[STEM_C] * s->value[SAPWOOD_PERC];
-//	logger(g_debug_log, "Sapwood stem biomass = %g tC/cell \n", s->value[STEM_SAPWOOD_C]);
-//	s->value[STEM_HEARTWOOD_C] = s->value[STEM_C] - s->value[STEM_SAPWOOD_C];
-//	logger(g_debug_log, "Heartwood stem biomass = %g tC/cell \n", s->value[STEM_HEARTWOOD_C]);
-//	s->value[COARSE_ROOT_SAPWOOD_C] =  (s->value[COARSE_ROOT_C] * s->value[SAPWOOD_PERC]);
-//	logger(g_debug_log, "Sapwood coarse root biomass = %g tC class cell \n", s->value[COARSE_ROOT_SAPWOOD_C]);
-//	s->value[COARSE_ROOT_HEARTWOOD_C] = s->value[COARSE_ROOT_C] - s->value[COARSE_ROOT_SAPWOOD_C];
-//	logger(g_debug_log, "Heartwood coarse root biomass = %g tC/cell \n", s->value[COARSE_ROOT_HEARTWOOD_C]);
-//	s->value[BRANCH_SAPWOOD_C] =  (s->value[BRANCH_C] * s->value[SAPWOOD_PERC]);
-//	logger(g_debug_log, "Sapwood branch biomass = %g tC class cell \n", s->value[BRANCH_SAPWOOD_C]);
-//	s->value[BRANCH_HEARTWOOD_C] = s->value[BRANCH_C] - s->value[BRANCH_SAPWOOD_C];
-//	logger(g_debug_log, "Heartwood branch biomass = %g tC/cell \n", s->value[BRANCH_HEARTWOOD_C]);
-//
-//	/*COMPUTE BIOMASS LIVE WOOD*/
-//	s->value[LIVE_WOOD_C] = s->value[STEM_LIVE_WOOD_C]+
-//			s->value[COARSE_ROOT_LIVE_WOOD_C]+
-//			s->value[BRANCH_LIVE_WOOD_C];
-//	logger(g_debug_log, "Live biomass = %g tC/cell\n", s->value[LIVE_WOOD_C]);
-//	s->value[DEAD_WOOD_C] = s->value[STEM_DEAD_WOOD_C]+
-//			s->value[COARSE_ROOT_DEAD_WOOD_C]+
-//			s->value[BRANCH_DEAD_WOOD_C];
-//	logger(g_debug_log, "Dead biomass = %g tC/cell\n", s->value[DEAD_WOOD_C]);
-//
-//	/* check for closure */
-//
-//	CHECK_CONDITION(fabs((s->value[STEM_SAPWOOD_C] + s->value[STEM_HEARTWOOD_C])-s->value[STEM_C]),>eps);
-//	CHECK_CONDITION(fabs((s->value[COARSE_ROOT_SAPWOOD_C] + s->value[COARSE_ROOT_HEARTWOOD_C])-s->value[COARSE_ROOT_C]),>eps);
-//	CHECK_CONDITION(fabs((s->value[BRANCH_SAPWOOD_C] + s->value[BRANCH_HEARTWOOD_C])-s->value[BRANCH_C]),>eps);
-//}
+void tree_biomass_remove (species_t *const s, const int tree_remove)
+{
+	average_tree_pools ( s );
+
+	/* update class C and N */
+	s->value[STEM_C] -= (s->value[AV_STEM_MASS_KgC]/1000.0*tree_remove);
+	s->value[LEAF_C] -= (s->value[AV_LEAF_MASS_KgC]/1000.0*tree_remove);
+	s->value[FINE_ROOT_C] -= (s->value[AV_FINE_ROOT_MASS_KgC]/1000.0*tree_remove);
+	s->value[COARSE_ROOT_C] -= (s->value[AV_COARSE_ROOT_MASS_KgC]/1000.0*tree_remove);
+	s->value[RESERVE_C] -= (s->value[AV_RESERVE_MASS_KgC]/1000.0*tree_remove);
+	s->value[BRANCH_C] -= (s->value[AV_BRANCH_MASS_KgC]/1000.0*tree_remove);
+	s->value[STEM_LIVE_WOOD_C] -= (s->value[AV_LIVE_STEM_MASS_KgC]/1000.0*tree_remove);
+	s->value[STEM_DEAD_WOOD_C] -= (s->value[AV_DEAD_STEM_MASS_KgC]/1000.0*tree_remove);
+	s->value[COARSE_ROOT_LIVE_WOOD_C] -= (s->value[AV_LIVE_COARSE_ROOT_MASS_KgC]/1000.0*tree_remove);
+	s->value[COARSE_ROOT_DEAD_WOOD_C] -= (s->value[AV_DEAD_COARSE_ROOT_MASS_KgC]/1000.0*tree_remove);
+	s->value[BRANCH_LIVE_WOOD_C] -= (s->value[AV_LIVE_BRANCH_MASS_KgC]/1000.0*tree_remove);
+	s->value[BRANCH_DEAD_WOOD_C] -= (s->value[AV_DEAD_BRANCH_MASS_KgC]/1000.0*tree_remove);
+
+	s->value[STEM_N] -= (s->value[AV_STEM_MASS_kgN]/1000.0*tree_remove);
+	s->value[LEAF_N] -= (s->value[AV_LEAF_MASS_kgN]/1000.0*tree_remove);
+	s->value[FINE_ROOT_N] -= (s->value[AV_FINE_ROOT_MASS_kgN]/1000.0*tree_remove);
+	s->value[COARSE_ROOT_N] -= (s->value[AV_COARSE_ROOT_MASS_kgN]/1000.0*tree_remove);
+	s->value[BRANCH_N] -= (s->value[AV_BRANCH_MASS_kgN]/1000.0*tree_remove);
+
+	s->value[C_TO_LITTER] += (s->value[AV_LEAF_MASS_KgC]/1000.0*tree_remove) +
+			(s->value[AV_FINE_ROOT_MASS_KgC]/1000.0*tree_remove) +
+			(s->value[AV_COARSE_ROOT_MASS_KgC]/1000.0*tree_remove) +
+			(s->value[AV_STEM_MASS_KgC]/1000.0*tree_remove) +
+			(s->value[AV_RESERVE_MASS_KgC]/1000.0*tree_remove) +
+			(s->value[AV_BRANCH_MASS_KgC]/1000.0*tree_remove);
+
+	s->value[N_TO_LITTER] += (s->value[AV_LEAF_MASS_kgN]/1000.0*tree_remove) +
+			(s->value[AV_FINE_ROOT_MASS_kgN]/1000.0*tree_remove) +
+			(s->value[AV_COARSE_ROOT_MASS_kgN]/1000.0*tree_remove) +
+			(s->value[AV_STEM_MASS_kgN]/1000.0*tree_remove) +
+			(s->value[AV_BRANCH_MASS_kgN]/1000.0*tree_remove);
+
+
+}
