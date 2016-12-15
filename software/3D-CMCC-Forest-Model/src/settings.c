@@ -6,6 +6,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <assert.h>
+#include "matrix.h"
 
 enum {
 	SETTINGS_SITENAME = 0
@@ -226,12 +227,11 @@ settings_t* settings_import(const char *const filename) {
 				strncpy(s->replanted_species, (const char*)token, SETTINGS_REPLANTED_SPECIES_MAX_SIZE-1);
 			break;
 
-			// ALESSIOR todo fix, should use e_management from matrix.h
 			case SETTINGS_REPLANTED_MANAGEMENT:
 				if ( ('T' == token[0]) || ('t' == token[0]) ) {
-					s->replanted_management = 0;
+					s->replanted_management = T;
 				} else if ( ('C' == token[0]) || ('c' == token[0]) ) {
-					s->replanted_management = 1;
+					s->replanted_management = C;
 				} else {
 					printf("bad management habitus specified in settings: %s\n", token);
 					free(s);
@@ -244,12 +244,11 @@ settings_t* settings_import(const char *const filename) {
 				strncpy(s->regeneration_species, (const char*)token, SETTINGS_REGENERATION_SPECIES_MAX_SIZE-1);
 			break;
 
-			// ALESSIOR todo fix, should use e_management from matrix.h
 			case SETTINGS_REGENERATION_MANAGEMENT:
 				if ( ('T' == token[0]) || ('t' == token[0]) ) {
-					s->regeneration_management = 0;
+					s->regeneration_management = T;
 				} else if ( ('C' == token[0]) || ('c' == token[0]) ) {
-					s->regeneration_management = 1;
+					s->regeneration_management = C;
 				} else {
 					printf("bad regeneration habitus specified in settings: %s\n", token);
 					free(s);

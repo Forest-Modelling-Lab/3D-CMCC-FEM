@@ -545,6 +545,7 @@ enum {
 	N_TREE_SAP,                         /* Numbers of Saplings per class */
 	VEG_UNVEG,                          /* vegetative-un vegetative period per class */
 	VEG_DAYS,                           /* day of vegetative period for class if != 0 is in veg period */
+	FIRST_VEG_DAYS,						/* first annual day of veg period */
 	YEARLY_VEG_DAYS,                    /* annual number of vegetative days */
 	BUD_BURST_COUNTER,                  /* days of budburst per class */
 	DAY_FRAC_FOLIAGE_REMOVE,            /* days of leaf fall per class */

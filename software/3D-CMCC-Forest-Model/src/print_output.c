@@ -669,7 +669,7 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 								logger(g_annual_log,"\t%10s", "SPECIES");
 
 								logger(g_annual_log,"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s"
-										"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s",
+										"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s",
 										"GPP",
 										"AR",
 										"NPP",
@@ -682,6 +682,7 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 										"HDMIN",
 										"Ntree",
 										"VEG_D",
+										"VEG_FIRST",
 										"CTRANSP",
 										"CINT",
 										"CLE",
@@ -776,7 +777,7 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 								logger(g_annual_log,"\t%8.3s", c->heights[height].dbhs[dbh].ages[age].species[species].name);
 
 								/* print variables at layer-class level */
-								logger(g_annual_log,"\t%6.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3d \t%3d \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f"
+								logger(g_annual_log,"\t%6.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3d \t%3d \t%3d \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f"
 										"\t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f",
 										s->value[YEARLY_GPP_gC],
 										s->value[YEARLY_TOTAL_AUT_RESP],
@@ -790,6 +791,7 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 										s->value[HD_MIN],
 										s->counter[N_TREE],
 										s->counter[YEARLY_VEG_DAYS],
+										s->counter[FIRST_VEG_DAYS],
 										s->value[YEARLY_CANOPY_TRANSP],
 										s->value[YEARLY_CANOPY_INT],
 										s->value[YEARLY_CANOPY_LATENT_HEAT],

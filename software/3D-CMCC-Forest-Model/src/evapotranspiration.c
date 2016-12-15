@@ -19,7 +19,6 @@ void evapotranspiration(cell_t* const c)
 	/*compute water to atmosphere*/
 	c->vapour_to_atmosphere = c->daily_et;
 	logger(g_debug_log, "vapour to atmosphere = %f \n", c->vapour_to_atmosphere);
-
 }
 
 

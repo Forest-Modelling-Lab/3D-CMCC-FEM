@@ -74,8 +74,7 @@ static int fill_cell_for_replanting(cell_t *const c)
 	if ( ! p ) return 0;
 
 	a->species[a->species_count-1] = species;
-	// ALESSIOR fix, must use e_management 
-	a->species[a->species_count-1].management = 0; /* T */
+	a->species[a->species_count-1].management = T;
 	a->species[a->species_count-1].name = p;
 	a->species[a->species_count-1].counter[N_TREE] = (int)g_settings->replanted_n_tree;
 	a->species[a->species_count-1].counter[N_STUMP] = 0;
@@ -203,8 +202,7 @@ static int fill_cell_for_regeneration( cell_t *const c )
 	if ( ! p ) return 0;
 
 	a->species[a->species_count-1] = species;
-	// ALESSIOR fix, must use e_management
-	a->species[a->species_count-1].management = 0; /* T */
+	a->species[a->species_count-1].management = T;
 	a->species[a->species_count-1].name = p;
 	a->species[a->species_count-1].counter[N_TREE] = (int)g_settings->regeneration_n_tree;
 	a->species[a->species_count-1].counter[N_STUMP] = 0;

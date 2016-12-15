@@ -57,6 +57,13 @@ void prephenology (cell_t *const c, const meteo_daily_t *const meteo_daily, cons
 								(meteo_daily->daylength >= s->value[MINDAYLENGTH] && month >= 6 && c->north == 0))
 						{
 							s->counter[VEG_UNVEG] = 1;
+
+							/* set first veg days */
+							if ( ! s->counter[FIRST_VEG_DAYS] )
+							{
+								s->counter[FIRST_VEG_DAYS] = c->doy;
+							}
+
 							logger(g_debug_log, "-%s is in veg period\n", s->name);
 						}
 						else
