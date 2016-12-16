@@ -222,10 +222,13 @@ int main(int argc, char *argv[]) {
 	input1 = argv[1];
 	input2 = argv[2];
 
+	//ALESSIOR NOT WORKING ON ECLIPSE
+	/*
 	if ( ! _stricmp(input1, input2) ) {
 		puts("error: same input to compare!");
 		return 1;
 	}
+	*/
 
 	input1_type = get_type(input1);
 	input2_type = get_type(input2);
