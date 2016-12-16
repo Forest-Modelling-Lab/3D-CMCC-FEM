@@ -43,6 +43,19 @@ char* get_type_string(e_type type) {
 	return "unknown";
 }
 
+int string_compare_i(const char *str1, const char *str2) {
+	register signed char __res;
+
+	while ( 1 ) {
+		if ( (__res = toupper( *str1 ) - toupper( *str2++ )) != 0 || !*str1++ ) {
+			break;
+		}
+	}
+
+	/* returns an integer greater than, equal to, or less than zero */
+	return __res;
+}
+
 unsigned int file_load_in_memory(const char* const filename, char** result) {
 	unsigned int size;
 	FILE *f;
@@ -223,12 +236,12 @@ int main(int argc, char *argv[]) {
 	input2 = argv[2];
 
 	//ALESSIOR NOT WORKING ON ECLIPSE
-	/*
-	if ( ! _stricmp(input1, input2) ) {
+
+	if ( ! string_compare_i(input1, input2) ) {
 		puts("error: same input to compare!");
 		return 1;
 	}
-	*/
+
 
 	input1_type = get_type(input1);
 	input2_type = get_type(input2);
