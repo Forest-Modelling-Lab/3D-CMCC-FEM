@@ -1,3 +1,5 @@
+// main.c
+// written by A. Ribeca on December 16, 2016
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -197,7 +199,6 @@ quit:
 	closedir(dir);
 	return 1;
 }
-
 
 int main(int argc, char *argv[]) {
 	char *input1;
