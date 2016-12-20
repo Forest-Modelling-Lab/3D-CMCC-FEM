@@ -134,7 +134,7 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 								logger(g_daily_log,"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s"
 										"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s"
 										"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s "
-										"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s",
+										"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s",
 										"GPP",
 										"GR",
 										"MR",
@@ -155,14 +155,17 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 										"WUE",
 										"WRes",
 										"WS",
+										"WSsap",
 										"WSL",
 										"WSD",
 										"WL",
 										"WFR",
 										"WCR",
+										"WCRsap",
 										"WCRL",
 										"WCRD",
 										"WBB",
+										"WBBsap",
 										"WBBL",
 										"WBBD",
 										"dWRes",
@@ -256,7 +259,7 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 							logger(g_daily_log,"\t%6.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3d \t%3d \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f"
 									"\t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f"
 									"\t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f"
-									"\t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f",
+									"\t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f",
 									s->value[DAILY_GPP_gC],
 									s->value[TOTAL_GROWTH_RESP],
 									s->value[TOTAL_MAINT_RESP],
@@ -277,14 +280,17 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 									s->value[WUE],
 									s->value[RESERVE_C],
 									s->value[STEM_C],
+									s->value[STEM_SAPWOOD_C],
 									s->value[STEM_LIVE_WOOD_C],
 									s->value[STEM_DEAD_WOOD_C],
 									s->value[LEAF_C],
 									s->value[FINE_ROOT_C],
 									s->value[COARSE_ROOT_C],
+									s->value[COARSE_ROOT_SAPWOOD_C],
 									s->value[COARSE_ROOT_LIVE_WOOD_C],
 									s->value[COARSE_ROOT_DEAD_WOOD_C],
 									s->value[BRANCH_C],
+									s->value[BRANCH_SAPWOOD_C],
 									s->value[BRANCH_LIVE_WOOD_C],
 									s->value[BRANCH_DEAD_WOOD_C],
 									s->value[C_TO_RESERVE],

@@ -298,6 +298,8 @@ void dendrometry ( cell_t *const c, const int layer, const int height, const int
 		logger(g_debug_log, " BASAL AREA = %g cm^2\n", s->value[BASAL_AREA]);
 		s->value[BASAL_AREA_m2]= s->value[BASAL_AREA] * 0.0001;
 		logger(g_debug_log, " BASAL BASAL_AREA_m2 = %g m^2\n", s->value[BASAL_AREA_m2]);
+#if 1
+		//test_new
 		s->value[SAPWOOD_AREA] = s->value[SAP_A] * pow (d->value, s->value[SAP_B]);
 		logger(g_debug_log, " SAPWOOD_AREA = %g cm^2\n", s->value[SAPWOOD_AREA]);
 		s->value[HEARTWOOD_AREA] = s->value[BASAL_AREA] - s->value[SAPWOOD_AREA];
@@ -310,6 +312,7 @@ void dendrometry ( cell_t *const c, const int layer, const int height, const int
 		logger(g_debug_log, " Sapwood coarse root biomass = %g tC class cell \n", s->value[COARSE_ROOT_SAPWOOD_C]);
 		s->value[BRANCH_SAPWOOD_C] = (s->value[BRANCH_C] * s->value[SAPWOOD_PERC]);
 		logger(g_debug_log, " Sapwood branch and bark biomass = %g tC class cell \n", s->value[BRANCH_SAPWOOD_C]);
+#endif
 		s->value[TOT_SAPWOOD_C] = s->value[STEM_SAPWOOD_C] + s->value[COARSE_ROOT_SAPWOOD_C] + s->value[BRANCH_SAPWOOD_C];
 		logger(g_debug_log, " Total Sapwood biomass = %g tc class cell \n", s->value[TOT_SAPWOOD_C]);
 		s->value[STAND_BASAL_AREA] = s->value[BASAL_AREA] * s->counter[N_TREE];
@@ -463,6 +466,8 @@ void dendrometry_old(cell_t *const c, const int layer, const int height, const i
 	logger(g_debug_log, " BASAL AREA = %g cm^2\n", s->value[BASAL_AREA]);
 	s->value[BASAL_AREA_m2]= s->value[BASAL_AREA] * 0.0001;
 	logger(g_debug_log, " BASAL BASAL_AREA_m2 = %g m^2\n", s->value[BASAL_AREA_m2]);
+#if 1
+	//test_new
 	s->value[SAPWOOD_AREA] = s->value[SAP_A] * pow (d->value, s->value[SAP_B]);
 	logger(g_debug_log, " SAPWOOD_AREA = %g cm^2\n", s->value[SAPWOOD_AREA]);
 	s->value[HEARTWOOD_AREA] = s->value[BASAL_AREA] - s->value[SAPWOOD_AREA];
@@ -475,6 +480,7 @@ void dendrometry_old(cell_t *const c, const int layer, const int height, const i
 	logger(g_debug_log, " Sapwood coarse root biomass = %g tC class cell \n", s->value[COARSE_ROOT_SAPWOOD_C]);
 	s->value[BRANCH_SAPWOOD_C] = (s->value[BRANCH_C] * s->value[SAPWOOD_PERC]);
 	logger(g_debug_log, " Sapwood branch and bark biomass = %g tC class cell \n", s->value[BRANCH_SAPWOOD_C]);
+#endif
 	s->value[TOT_SAPWOOD_C] = s->value[STEM_SAPWOOD_C] + s->value[COARSE_ROOT_SAPWOOD_C] + s->value[BRANCH_SAPWOOD_C];
 	logger(g_debug_log, " Total Sapwood biomass = %g tc class cell \n", s->value[TOT_SAPWOOD_C]);
 	s->value[STAND_BASAL_AREA] = s->value[BASAL_AREA] * s->counter[N_TREE];

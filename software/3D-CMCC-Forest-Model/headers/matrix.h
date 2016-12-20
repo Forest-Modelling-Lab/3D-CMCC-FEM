@@ -321,6 +321,9 @@ enum {
 	M_C_TO_RESERVE,                     /* Monthly cumulated Net Primary Production to reserve biomass (tC/month/sizeCell) */
 	M_C_TO_BRANCH,                      /* Monthly cumulated Net Primary Production to branch and bark biomass (tC/month/sizeCell) */
 	M_C_TO_FRUIT,                       /* Monthly cumulated Net Primary Production to fruit biomass (tC/month/sizeCell) */
+	M_C_TO_STEM_SAPWOOD,                /* Monthly cumulated Net Primary Production to stem sapwood biomass (tC/month/sizeCell) */
+	M_C_TO_COARSE_ROOT_SAPWOOD,         /* Monthly cumulated Net Primary Production to coarse root biomass (tC/month/sizeCell) */
+	M_C_TO_BRANCH_SAPWOOD,              /* Monthly cumulated Net Primary Production to branch sapwood biomass (tC/month/sizeCell) */
 	Y_C_TO_TOT_STEM,                    /* Yearly cumulated Net Primary Production to total stem biomass (tC/year/sizeCell) */
 	Y_C_TO_STEM,                        /* Yearly cumulated Net Primary Production to stem biomass (tC/year/sizeCell) */
 	Y_C_TO_LEAF,                        /* Yearly cumulated Net Primary Production to leaf biomass (tC/year/sizeCell) */
@@ -330,6 +333,9 @@ enum {
 	Y_C_TO_RESERVE,                     /* Yearly cumulated Net Primary Production to reserve biomass (tC/year/sizeCell) */
 	Y_C_TO_BRANCH,                      /* Yearly cumulated Net Primary Production to branch and bark biomass (tC/year/sizeCell) */
 	Y_C_TO_FRUIT,                       /* Yearly cumulated Net Primary Production to fruit biomass (tC/year/sizeCell) */
+	Y_C_TO_STEM_SAPWOOD,                /* Yearly cumulated Net Primary Production to stem sapwood biomass (tC/year/sizeCell) */
+	Y_C_TO_COARSE_ROOT_SAPWOOD,         /* Yearly cumulated Net Primary Production to coarse root biomass (tC/year/sizeCell) */
+	Y_C_TO_BRANCH_SAPWOOD,              /* Yearly cumulated Net Primary Production to branch sapwood biomass (tC/year/sizeCell) */
 
 	/* carbon biomass pools in tons of tC/sizeCell */
 	LEAF_C,                             /* Current Leaf carbon pool tC/sizeCell */
@@ -364,8 +370,9 @@ enum {
 	COARSE_ROOT_HEARTWOOD_C,            /* Current Coarse root heartwood carbon pool tC/sizeCell */
 	BRANCH_SAPWOOD_C,                   /* Current Branch sapwood carbon pool tC/sizeCell */
 	BRANCH_HEARTWOOD_C,                 /* Current Branch heartwood carbon pool tC/sizeCell */
-	TOT_SAPWOOD_C,                      /* Current Toatl sapwood carbon pool tC/sizeCell */
+	TOT_SAPWOOD_C,                      /* Current total sapwood carbon pool tC/sizeCell */
 	EFF_LIVE_TOTAL_WOOD_FRAC,           /* Age-related fraction of Live biomass per Total biomass */
+	DAILY_LIVE_WOOD_TURNOVER,           /* Daily live wood turnover rate */
 
 	/* per tree in KgC */
 	AV_LEAF_MASS_KgC,                   /* Average Leaf carbon pool kgC/tree */

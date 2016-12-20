@@ -23,7 +23,7 @@ void nitrogen_assimilation(species_t *const s)
 
 	/* BIOME-BGC METHOD */
 
-	/* computing Nitrogen pools from tons C/ha to gC/m^2 */
+	/* computing Nitrogen pools from tonsC/ha to gC/m-2 */
 
 	s->value[LEAF_N] = s->value[LEAF_C] / s->value[CN_LEAVES];
 	logger(g_debug_log, "Leaf nitrogen content = %g tN/area\n", s->value[LEAF_N]);
