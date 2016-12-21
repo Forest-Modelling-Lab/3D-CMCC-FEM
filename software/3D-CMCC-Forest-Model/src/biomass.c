@@ -43,6 +43,8 @@ void live_total_wood_age(const age_t *const a, const int species)
 
 	//fixme values should be included in species.txt
 	min_live_total_ratio = 0.03; /* for max_age = 160 */
+
+
 	logger(g_debug_log, "min_live_total_ratio = %g\n", min_live_total_ratio);
 
 	t1 = max_live_total_ratio - min_live_total_ratio;
