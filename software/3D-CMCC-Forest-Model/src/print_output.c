@@ -136,9 +136,9 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 										"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s "
 										"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s",
 										"GPP",
-										"GR",
-										"MR",
-										"AR",
+										"RG",
+										"RM",
+										"RA",
 										"NPP",
 										"LAI",
 										"CC_P",
@@ -214,9 +214,10 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 			logger(g_daily_log,"\t%10s", "*****");
 		}
 		/* heading variables only at cell level */
-		logger(g_daily_log,"\t%10s \t%10s \t%10s",
+		logger(g_daily_log,"\t%10s \t%10s \t%10s \t%10s",
 				"et",
 				"le",
+				"snow_pack",
 				"asw\n");
 
 	}
@@ -342,9 +343,10 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 		logger(g_daily_log,"\t%10s", "*****");
 	}
 	/* printing variables only at cell level */
-	logger(g_daily_log, "\t%3.2f \t%3.2f \t%3.2f\n",
+	logger(g_daily_log, "\t%3.4f \t%3.4f \t%3.4f \t%3.4f\n",
 			c->daily_et,
 			c->daily_latent_heat_flux,
+			c->snow_pack,
 			c->asw);
 
 	/************************************************************************/
@@ -418,7 +420,7 @@ void EOM_print_cumulative_balance_cell_level(cell_t *const c, const int month, c
 								logger(g_monthly_log,"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s"
 										"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s\t%4s \t%4s \t%4s \t%4s",
 										"GPP",
-										"AR",
+										"RA",
 										"NPP",
 										"CTRANSP",
 										"CET",
@@ -685,7 +687,7 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 										"GPP",
 										"GR",
 										"MR",
-										"AR",
+										"RA",
 										"NPP",
 										"Y(%)",
 										"PeakLAI",
