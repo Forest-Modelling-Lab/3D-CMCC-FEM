@@ -136,7 +136,6 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 	gl_s_sun = (s->value[F_CO2_TR] / 0.9116 * s->value[MAXCOND]) * m_final_sun * g_corr;
 	gl_s_shade = (s->value[F_CO2_TR] / 0.9116 * s->value[MAXCOND]) * m_final_sun * g_corr;
 
-
 	/* calculate leaf-and canopy-level conductances to water vapor and
 		sensible heat fluxes, to be used in Penman-Monteith calculations of
 		canopy evaporation and canopy transpiration. */

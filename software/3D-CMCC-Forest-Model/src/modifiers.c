@@ -45,12 +45,14 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 
 	/********************************************************************************************/
 
-	/* CO2 MODIFIER FOR ASSIMILATION */
-	/* fertilization effect with rising CO2 from: Veroustraete 1994,
-	 * Veroustraete et al., 2002, Remote Sensing of Environment
-	*/
+
 	if ( g_settings->CO2_mod )
 	{
+		/* CO2 MODIFIER FOR ASSIMILATION */
+		/* fertilization effect with rising CO2 from: Veroustraete 1994,
+		 * Veroustraete et al., 2002, Remote Sensing of Environment
+		*/
+
 		tairK = meteo_daily->tavg + TempAbs;
 
 		if (meteo_daily->tavg >= 15)
@@ -70,28 +72,25 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 
 		/* compute F_CO2 modifier */
 		s->value[F_CO2] = v1*v2;
+
+		/**********************************************************************************/
+
+		/* CO2 MODIFIER FOR TRANSPIRATION  */
+		/* limitation effects on maximum stomatal conductance from Hidy et al., 2016 GMDD
+		 * Frank et al., 2013 New Phytologist
+		*/
+
+		s->value[F_CO2_TR] = 39.43 * pow(meteo_annual->co2Conc, -0.64);
+		logger(g_debug_log, "annual [CO2] = %f ppmv\n", meteo_annual->co2Conc);
+
 	}
 	else
 	{
 		s->value[F_CO2] = 1.;
-	}
-	logger(g_debug_log, "annual [CO2] = %f ppmv\n", meteo_annual->co2Conc);
-	logger(g_debug_log, "f_CO2 modifier for assimilation = %g\n", s->value[F_CO2]);
 
-	/********************************************************************************************/
-
-	/* CO2 MODIFIER FOR TRANSPIRATION  */
-	/* limitation effects on maximum stomatal conductance from Hidy et al., 2016 GMDD
-	 * Frank et al., 2013 New Phytologist
-	*/
-	if ( g_settings->CO2_mod )
-	{
-		s->value[F_CO2_TR] = 39.43 * pow(meteo_annual->co2Conc, -0.64);
-	}
-	else
-	{
 		s->value[F_CO2_TR] = 1.;
 	}
+	logger(g_debug_log, "f_CO2 modifier for assimilation = %g\n", s->value[F_CO2]);
 	logger(g_debug_log, "f_CO2 modifier for transpiration = %g\n", s->value[F_CO2_TR]);
 
 	/********************************************************************************************/
