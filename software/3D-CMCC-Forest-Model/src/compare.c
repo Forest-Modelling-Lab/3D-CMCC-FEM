@@ -4,21 +4,14 @@
 #include <assert.h>
 #include <dirent.h>
 #include <sys/stat.h>
-#include <math.h>
 #include "common.h"
+#include <ctype.h>
 
 #define BUFFER_SIZE 1024
 #define VALUE_AT(d,r,c)	(((r)*(d)->columns_count)+(c))
 
 extern logger_t* g_debug_log;
 extern char sz_err_out_of_memory[];
-
-/*
-typedef enum {
-	FLOAT_TYPE
-	, STRING_TYPE
-} e_type;
-*/
 
 typedef union {
 	double v;
@@ -49,12 +42,6 @@ static e_type get_type(const char* const s) {
 		}
 	}
 	return TYPE_UNKNOWN;
-}
-
-static char* get_type_string(e_type type) {
-	if ( TYPE_DIRECTORY == type ) return "directory";
-	else if ( TYPE_FILE == type ) return "file";
-	return "unknown";
 }
 
 static dataset_comp_t* dataset_new(void) {
@@ -450,7 +437,7 @@ int diff(const char* const input1, const char* const input2) {
 					} else if ( IS_INVALID_VALUE(v1) || IS_INVALID_VALUE(v2) ) {
 						fprintf(f, "%g-%g", v1, v2);
 					} else {
-						fprintf(f, "%g", fabs(v1-v2));
+						fprintf(f, "%g", v1-v2 );
 					}
 				}
 				if ( col < d1->columns_count-1 ) {
@@ -468,7 +455,7 @@ quit:
 	if ( d2 ) dataset_free(d2);
 	if ( d1 ) dataset_free(d1);
 
-	return 1;
+	return ret;
 }
 
 int compare(const char* const input1, const char* const input2) {

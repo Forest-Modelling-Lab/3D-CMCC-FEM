@@ -338,7 +338,7 @@ static int log_start(const char* const sz_date, const char* const sitename)
 	len += sprintf(buffer+len, "_%d", (int)g_settings->sizeCell);
 
 	/* date */
-	len += sprintf(buffer+len, "_%s", date);
+	//len += sprintf(buffer+len, "_%s", date);
 
 	/* dndc */
 	if ( g_settings->dndc )
@@ -406,10 +406,11 @@ static int log_start(const char* const sz_date, const char* const sitename)
 
 		for ( i = 0 ; i < 5; ++i ) {
 			if ( log_flag[i] ) {
-				*logs[i] = logger_new("%s%soutput_%s_%s%s%s%s%s"
+				*logs[i] = logger_new("%s%soutput_%s_%s%s%s%s%s%s"
 										, g_sz_output_path
 										, flag ? "" : FOLDER_DELIMITER
 										, PROGRAM_VERSION
+										, date
 										, FOLDER_DELIMITER
 										, log_name[i]
 										, FOLDER_DELIMITER
@@ -1450,7 +1451,7 @@ int main(int argc, char *argv[]) {
 			int i;
 			char temp[256];
 			i = has_path_delimiter(g_sz_output_path);
-			sprintf(temp, "%s%soutput_%s_%s%\\"
+			sprintf(temp, "%s%soutput_%s_%s"
 							, g_sz_output_path
 							, i ? "" : FOLDER_DELIMITER
 							, PROGRAM_VERSION
