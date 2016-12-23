@@ -1,13 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <assert.h>
+#include <ctype.h>
 #include <dirent.h>
 #include <sys/stat.h>
+#include <assert.h>
 #include "common.h"
-#include <ctype.h>
 
-#define BUFFER_SIZE 1024
+#define BUFFER_SIZE		1024
 #define VALUE_AT(d,r,c)	(((r)*(d)->columns_count)+(c))
 
 extern logger_t* g_debug_log;
@@ -112,7 +112,9 @@ static dataset_comp_t* dataset_import(const char*const filename) {
 		goto err;
 	}
 
-	f = fopen(filename, "r");
+	// open file in binary mode
+	// for use fseek / ftell correctly
+	f = fopen(filename, "rb");
 	if ( ! f ) {
 		logger_error(g_debug_log, "unable to open %s\n", filename);
 		goto err;
@@ -189,9 +191,9 @@ static dataset_comp_t* dataset_import(const char*const filename) {
 		// remove initial spaces and tabs (if any)
 		while ( isspace(*p) || istab(*p) ) ++p;
 
-		// remove comment, carriage return and newline
+		// remove carriage return and newline
 		for ( i = 0; p[i]; ++i ) {
-			if ( ('/' == p[i]) || ('\n' == p[i]) || ('\r' == p[i]) ) {
+			if ( ('\n' == p[i]) || ('\r' == p[i]) ) {
 				p[i] = '\0';
 				break;
 			}
