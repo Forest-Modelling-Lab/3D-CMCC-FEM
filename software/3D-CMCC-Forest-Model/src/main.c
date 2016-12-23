@@ -42,6 +42,8 @@
 #include "soil_model.h"
 #include "compare.h"
 
+//#define BENCHMARK_ONLY
+
 /* Last cumulative days in months in non Leap years */
 int MonthLength [] = { 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365};
 
@@ -77,7 +79,7 @@ char	*g_sz_parameterization_path = NULL
 		, *g_sz_ndep_file = NULL
 		, *g_sz_co2_conc_file = NULL
 		, *g_sz_output_vars_file = NULL
-		, *g_sz_compare_path = NULL
+		, *g_sz_benchmark_path = NULL
 		;
 
 int g_year_start_index;
@@ -197,7 +199,7 @@ static const char* get_filename(const char *const s)
 
 static void clean_up(void)
 {
-	if ( g_sz_compare_path ) free(g_sz_compare_path);
+	if ( g_sz_benchmark_path ) free(g_sz_benchmark_path);
 	if ( g_sz_output_vars_file ) free(g_sz_output_vars_file);
 	if ( g_sz_ndep_file ) free(g_sz_ndep_file);
 	if ( g_sz_co2_conc_file ) free(g_sz_co2_conc_file);
@@ -531,7 +533,7 @@ static int parse_args(int argc, char *argv[])
 	g_sz_topo_file = NULL;
 	g_sz_settings_file = NULL;
 	g_sz_output_vars_file = NULL;
-	g_sz_compare_path = NULL;
+	g_sz_benchmark_path = NULL;
 
 	for ( i = 1; i < argc; ++i ) {
 		if ( argv[i][0] != '-' ) {
@@ -676,8 +678,8 @@ static int parse_args(int argc, char *argv[])
 				puts("compare path not specified!");
 				goto err;
 			}
-			g_sz_compare_path = string_copy(argv[i+1]);
-			if( ! g_sz_compare_path ) {
+			g_sz_benchmark_path = string_copy(argv[i+1]);
+			if( ! g_sz_benchmark_path ) {
 				puts(sz_err_out_of_memory);
 				goto err;
 			}
@@ -814,7 +816,7 @@ int main(int argc, char *argv[]) {
 	soil_settings_t* s;
 	topo_t* t;
 
-	//_CrtSetBreakAlloc(99);
+	//_CrtSetBreakAlloc();
 
 	/* initialize */
 	matrix = NULL;
@@ -874,6 +876,15 @@ int main(int argc, char *argv[]) {
 		}
 		puts(msg_ok);
 	}
+
+	if ( g_sz_benchmark_path && ! g_sz_output_path ) {
+		puts("unable to benchmark. output path not specified!");
+		return 0;
+	}
+
+#ifdef BENCHMARK_ONLY
+	goto benchmark;
+#endif
 
 	printf("import settings file %s...", g_sz_settings_file);
 	g_settings = settings_import(g_sz_settings_file);
@@ -1443,24 +1454,24 @@ int main(int argc, char *argv[]) {
 	/* ok ! */
 	prog_ret = 0;
 
-	/* compare ? */
-	if ( g_sz_compare_path ) {
-		if ( ! g_sz_output_path ) {
-			logger_error(g_debug_log, "\nunable to compare, output path not specified!\n");
-		} else {
-			int i;
-			char temp[256];
-			i = has_path_delimiter(g_sz_output_path);
-			sprintf(temp, "%s%soutput_%s_%s"
-							, g_sz_output_path
-							, i ? "" : FOLDER_DELIMITER
-							, PROGRAM_VERSION
-							, sz_date
-			);
-			logger_error(g_debug_log, "compare output with '%s'...", g_sz_compare_path);
-			if ( compare(temp, g_sz_compare_path) ) {
-				puts("ok!");
-			}
+#ifdef BENCHMARK_ONLY
+benchmark:
+#endif
+
+	/* benchmark ? */
+	if ( g_sz_benchmark_path ) {
+		int i;
+		char temp[256];
+		i = has_path_delimiter(g_sz_output_path);
+		sprintf(temp, "%s%soutput_%s_%s"
+						, g_sz_output_path
+						, i ? "" : FOLDER_DELIMITER
+						, PROGRAM_VERSION
+						, sz_date
+		);
+		logger_error(g_debug_log, "benchmark with '%s'...", g_sz_benchmark_path);
+		if ( compare(temp, g_sz_benchmark_path) ) {
+			puts("ok!");
 		}
 	}
 
