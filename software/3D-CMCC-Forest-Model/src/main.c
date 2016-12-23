@@ -1458,6 +1458,13 @@ int main(int argc, char *argv[]) {
 benchmark:
 #endif
 
+	// TODO: FIX THIS
+	/* close logger */
+	logger_close(g_soil_log); g_soil_log = NULL;
+	logger_close(g_annual_log); g_annual_log = NULL;
+	logger_close(g_monthly_log); g_monthly_log = NULL;
+	logger_close(g_daily_log); g_daily_log = NULL;
+
 	/* benchmark ? */
 	if ( g_sz_benchmark_path ) {
 		int i;
