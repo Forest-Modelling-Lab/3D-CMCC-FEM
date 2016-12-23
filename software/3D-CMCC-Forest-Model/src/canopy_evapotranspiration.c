@@ -24,6 +24,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 {
 	double g_corr;
 	double gl_bl;
+	double gl_x;                                                          /* maximum stomatal conductance */
 	double gl_s_sun, gl_s_shade;
 	double gl_c;
 	double m_final_sun, m_final_shade;
@@ -122,23 +123,28 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 	/* differently from BIOME we use F_T that takes into account not only minimum temperature effects */
 	/* differently from BIOME we use also F_AGE */
 
-	m_final_sun = s->value[F_LIGHT_SUN] * s->value[F_SW] * s->value[F_CO2] * s->value[F_T] * s->value[F_VPD] * s->value[F_AGE];
-	m_final_shade = s->value[F_LIGHT_SHADE] * s->value[F_SW] * s->value[F_CO2] * s->value[F_T] * s->value[F_VPD] * s->value[F_AGE];
+	m_final_sun = s->value[F_LIGHT_SUN] * s->value[F_SW] * s->value[F_T] * s->value[F_VPD] * s->value[F_AGE];
+	m_final_shade = s->value[F_LIGHT_SHADE] * s->value[F_SW]  * s->value[F_T] * s->value[F_VPD] * s->value[F_AGE];
 
 	if (m_final_sun < 0.00000001) m_final_sun = 0.00000001;
 	if (m_final_shade < 0.00000001) m_final_shade = 0.00000001;
+
+
+	/* correct maximum stomatal conductance for CO2 concentration*/
+	gl_x = (s->value[F_CO2_TR] / 0.9116) * s->value[MAXCOND];
 
 	/* following Jarvis 1997 approach (not more used) */
 	//gl_s_sun = s->value[MAXCOND] * m_final_sun * g_corr;
 	//gl_s_shade = s->value[MAXCOND] * m_final_shade * g_corr;
 
 	/* following Jarvis 1997 + Frank et al., 2013 + Hidy et al., 2016 GMDD */
-	gl_s_sun = (s->value[F_CO2_TR] / 0.9116 * s->value[MAXCOND]) * m_final_sun * g_corr;
-	gl_s_shade = (s->value[F_CO2_TR] / 0.9116 * s->value[MAXCOND]) * m_final_sun * g_corr;
+	gl_s_sun = gl_x * m_final_sun * g_corr;
+	gl_s_shade = gl_x * m_final_shade * g_corr;
 
 	/* calculate leaf-and canopy-level conductances to water vapor and
 		sensible heat fluxes, to be used in Penman-Monteith calculations of
 		canopy evaporation and canopy transpiration. */
+
 
 	/* Leaf conductance to evaporated water vapor, per unit projected LAI */
 	gl_e_wv = gl_bl;
