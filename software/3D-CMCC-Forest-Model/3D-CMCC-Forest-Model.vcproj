@@ -276,6 +276,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\compare.c"
+				>
+			</File>
+			<File
 				RelativePath=".\src\dendrometry.c"
 				>
 			</File>

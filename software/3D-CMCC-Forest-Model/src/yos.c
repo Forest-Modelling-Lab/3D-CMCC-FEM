@@ -835,6 +835,11 @@ static int yos_from_arr(double *const values, const int rows_count, const int co
 
 		// RH_f
 		yos[*yos_count-1].m[month].d[day].rh_f = values[VALUE_AT(row,RH_F)];
+
+		/* check */
+		CHECK_CONDITION(yos[*yos_count-1].m[month].d[day].tmax,<,yos[*yos_count-1].m[month].d[day].tavg);
+		CHECK_CONDITION(yos[*yos_count-1].m[month].d[day].tmax,<,yos[*yos_count-1].m[month].d[day].tmin);
+		CHECK_CONDITION(yos[*yos_count-1].m[month].d[day].tavg,<,yos[*yos_count-1].m[month].d[day].tmin);
 	}
 	*p_yos = yos;
 	return 1;

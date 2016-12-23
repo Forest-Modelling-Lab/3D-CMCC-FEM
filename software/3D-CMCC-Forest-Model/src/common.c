@@ -467,3 +467,12 @@ const char* file_get_name_only(const char* const filename) {
 
 	return p;
 }
+
+int has_path_delimiter(const char* const s) {
+	int i;
+
+	assert(s);
+
+	i = strlen(s);
+	return (('/' == s[i-1]) || ('\\' == s[i-1]));
+}

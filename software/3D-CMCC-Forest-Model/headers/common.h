@@ -2,8 +2,9 @@
 #ifndef COMMON_H
 #define COMMON_H
 
-#define PROGRAM_VERSION	"5.3.1"
-#define PROGRAM_NAME "3D-CMCC-CNR Forest Ecosystem Model v."PROGRAM_VERSION""
+#define PROGRAM_NAME		"3D-CMCC-CNR Forest Ecosystem Model"
+#define PROGRAM_VERSION		"5.3.1"
+#define PROGRAM_FULL_NAME	PROGRAM_NAME" v."PROGRAM_VERSION""
 
 #ifdef _WIN32
 #define FOLDER_DELIMITER	"\\"
@@ -104,6 +105,7 @@ unsigned int file_load_in_memory(const char* const filename, char** result);
 int file_copy(const char* const filename, const char* const path);
 const char* file_get_name_only(const char* const filename);
 int path_create(const char *const path);
+int has_path_delimiter(const char* const s);
 const char* datetime_current(void);
 void timer_init(void);
 double timer_get(void);

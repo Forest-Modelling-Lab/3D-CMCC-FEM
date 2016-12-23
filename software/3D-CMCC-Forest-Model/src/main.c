@@ -40,6 +40,7 @@
 #include "utility.h"
 #include "cell_model.h"
 #include "soil_model.h"
+#include "compare.h"
 
 /* Last cumulative days in months in non Leap years */
 int MonthLength [] = { 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365};
@@ -76,20 +77,22 @@ char	*g_sz_parameterization_path = NULL
 		, *g_sz_ndep_file = NULL
 		, *g_sz_co2_conc_file = NULL
 		, *g_sz_output_vars_file = NULL
+		, *g_sz_compare_path = NULL
 		;
 
 int g_year_start_index;
 char g_sz_parameterization_output_path[256];
+char g_sz_output_fullpath[256];
 
 static int years_of_simulation;	// default is none
 /* strings */
-const char sz_launched[] = "\n"PROGRAM_NAME"\n"
+const char sz_launched[] = "\n"PROGRAM_FULL_NAME"\n"
 		"compiled using "COMPILER" on "__DATE__" at "__TIME__"\n"
 		"using NetCDF %s\n"
 		"launched: %s\n"
 		"--------------------------------------------------------------------------------\n";
 
-static const char banner[] = "\n"PROGRAM_NAME"\n"
+static const char banner[] = "\n"PROGRAM_FULL_NAME"\n"
 		"compiled using "COMPILER" on "__DATE__" at "__TIME__"\n"
 		"using NetCDF %s\n"
 		/*
@@ -98,7 +101,7 @@ static const char banner[] = "\n"PROGRAM_NAME"\n"
 #endif
 		 */
 		"(use -h parameter for more information)\n\n"
-		"The "PROGRAM_NAME" has been developed by:\n"
+		"The "PROGRAM_FULL_NAME" has been developed by:\n"
 		"Alessio Collalti [alessio.collalti@cmcc.it, a.collalti@unitus.it],\n"
 		"Alessio Ribeca [alessio.ribeca@cmcc.it]\n"
 		"Carlo Trotta [trottacarlo@unitus.it]"
@@ -160,6 +163,7 @@ static const char msg_usage[]					=	"\nusage:\n"
 		"    -k co2 concentration file (i.e.: -k co2_conc.txt)\n"
 		"    -n ndep file (i.e.: -n ndep.txt)\n"
 		"    -r output vars list (i.e.: -r output_vars.lst)\n"
+		"    -u benchmark path\n"
 		"    -h print this help\n"
 		;
 
@@ -193,6 +197,7 @@ static const char* get_filename(const char *const s)
 
 static void clean_up(void)
 {
+	if ( g_sz_compare_path ) free(g_sz_compare_path);
 	if ( g_sz_output_vars_file ) free(g_sz_output_vars_file);
 	if ( g_sz_ndep_file ) free(g_sz_ndep_file);
 	if ( g_sz_co2_conc_file ) free(g_sz_co2_conc_file);
@@ -225,7 +230,6 @@ static void clean_up(void)
 	_CrtSetReportFile(_CRT_ASSERT, _CRTDBG_FILE_STDOUT);
 	_CrtDumpMemoryLeaks();
 
-	// REMOVE THIS
 	system("PAUSE");
 #endif
 #endif
@@ -241,12 +245,7 @@ static int parameterization_output_create(const char* const sz_date) {
 
 	assert(sz_date);
 
-	i = strlen(g_sz_output_path);
-	if ( ('/' == g_sz_output_path[i-1]) || ('\\' == g_sz_output_path[i-1]) ) {
-		i = 1;
-	} else {
-		i = 0;
-	}
+	i = has_path_delimiter(g_sz_output_path);
 	
 	/* create parameterization folder */
 	sprintf(g_sz_parameterization_output_path, "%s%soutput_%s_%s%sparameterization%s"
@@ -407,11 +406,10 @@ static int log_start(const char* const sz_date, const char* const sitename)
 
 		for ( i = 0 ; i < 5; ++i ) {
 			if ( log_flag[i] ) {
-				*logs[i] = logger_new("%s%soutput_%s_%s%s%s%s%s%s"
+				*logs[i] = logger_new("%s%soutput_%s_%s%s%s%s%s"
 										, g_sz_output_path
 										, flag ? "" : FOLDER_DELIMITER
 										, PROGRAM_VERSION
-										, date
 										, FOLDER_DELIMITER
 										, log_name[i]
 										, FOLDER_DELIMITER
@@ -490,6 +488,8 @@ char* path_copy(const char *const s) {
 	return NULL;
 }
 
+
+
 char* concatenate_path(char* s1, char* s2) {
 	char *p;
 	int i;
@@ -530,6 +530,7 @@ static int parse_args(int argc, char *argv[])
 	g_sz_topo_file = NULL;
 	g_sz_settings_file = NULL;
 	g_sz_output_vars_file = NULL;
+	g_sz_compare_path = NULL;
 
 	for ( i = 1; i < argc; ++i ) {
 		if ( argv[i][0] != '-' ) {
@@ -669,6 +670,18 @@ static int parse_args(int argc, char *argv[])
 			}
 		break;
 
+		case 'u': /* compare path */
+			if ( ! argv[i+1] ) {
+				puts("compare path not specified!");
+				goto err;
+			}
+			g_sz_compare_path = string_copy(argv[i+1]);
+			if( ! g_sz_compare_path ) {
+				puts(sz_err_out_of_memory);
+				goto err;
+			}
+		break;
+
 		case 'h': /* show help */
 			goto err_show_usage;
 			break;
@@ -800,7 +813,7 @@ int main(int argc, char *argv[]) {
 	soil_settings_t* s;
 	topo_t* t;
 
-	//_CrtSetBreakAlloc(89);
+	//_CrtSetBreakAlloc(99);
 
 	/* initialize */
 	matrix = NULL;
@@ -1429,13 +1442,39 @@ int main(int argc, char *argv[]) {
 	/* ok ! */
 	prog_ret = 0;
 
-	err:
+	/* compare ? */
+	if ( g_sz_compare_path ) {
+		if ( ! g_sz_output_path ) {
+			logger_error(g_debug_log, "\nunable to compare, output path not specified!\n");
+		} else {
+			int i;
+			char temp[256];
+			i = has_path_delimiter(g_sz_output_path);
+			sprintf(temp, "%s%soutput_%s_%s%\\"
+							, g_sz_output_path
+							, i ? "" : FOLDER_DELIMITER
+							, PROGRAM_VERSION
+							, sz_date
+			);
+			logger_error(g_debug_log, "compare output with '%s'...", g_sz_compare_path);
+			if ( compare(temp, g_sz_compare_path) ) {
+				puts("ok!");
+			}
+		}
+	}
+
+err:
+
+	/* cleanup memory...
+		do not remove null pointer to prevent
+		double free with clean_up func
+	*/
+
 	/* close logger */
 	logger_close(g_soil_log); g_soil_log = NULL;
 	logger_close(g_annual_log); g_annual_log = NULL;
 	logger_close(g_monthly_log); g_monthly_log = NULL;
 	logger_close(g_daily_log); g_daily_log = NULL;
-	logger_close(g_debug_log); g_debug_log = NULL;
 
 	/* free memory */
 	if ( t ) free(t);
@@ -1450,10 +1489,11 @@ int main(int argc, char *argv[]) {
 	free(g_sz_topo_file); g_sz_topo_file = NULL;
 	free(g_sz_soil_file); g_sz_soil_file = NULL;
 
-	/* timer */
+	/* print elapsed time */
 	end_timer = timer_get();
 	timer = end_timer - start_timer;
 	logger_error(g_debug_log, "%.2f secs / %.2f mins / %.2f hours elapsed\n", timer, timer / 60.0, timer / 3600.0);
+	logger_close(g_debug_log); g_debug_log = NULL;
 
 	return prog_ret;
 }
