@@ -145,6 +145,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 		sensible heat fluxes, to be used in Penman-Monteith calculations of
 		canopy evaporation and canopy transpiration. */
 
+
 	/* Leaf conductance to evaporated water vapor, per unit projected LAI */
 	gl_e_wv = gl_bl;
 
