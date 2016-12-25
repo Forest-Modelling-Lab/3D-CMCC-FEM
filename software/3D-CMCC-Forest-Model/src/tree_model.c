@@ -19,6 +19,7 @@
 #include "matrix.h"
 #include "g-function.h"
 #include "structure.h"
+#include "cue.h"
 #include "wue.h"
 #include "check_balance.h"
 #include "print.h"
@@ -287,6 +288,9 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 
 							/* N assimilation */
 							nitrogen_assimilation( s );
+
+							/* carbon use efficiency */
+							carbon_use_efficiency ( c, height, dbh, age, species, day, month, year );
 
 							/* water use efficiency */
 							water_use_efficiency ( c, height, dbh, age, species, day, month, year );

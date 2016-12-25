@@ -47,11 +47,11 @@ void water_use_efficiency( cell_t *const c, const int height, const int dbh, con
 	{
 		if( s->value[MONTHLY_NPP_gC] > 0 && s->value[MONTHLY_CANOPY_EVAPO_TRANSP] > 0.0 )
 		{
-			s->value[M_WUE] = s->value[MONTHLY_NPP_gC] / s->value[MONTHLY_CANOPY_TRANSP];
+			s->value[MONTHLY_WUE] = s->value[MONTHLY_NPP_gC] / s->value[MONTHLY_CANOPY_TRANSP];
 		}
 		else
 		{
-			s->value[M_WUE] = 0.0;
+			s->value[MONTHLY_WUE] = 0.0;
 		}
 	}
 	/* annual WUE */
@@ -60,11 +60,11 @@ void water_use_efficiency( cell_t *const c, const int height, const int dbh, con
 	{
 		if( s->value[YEARLY_NPP_gC] > 0 && s->value[YEARLY_CANOPY_EVAPO_TRANSP] > 0.0 )
 		{
-			s->value[Y_WUE] = s->value[YEARLY_NPP_gC] / s->value[YEARLY_CANOPY_TRANSP];
+			s->value[YEARLY_WUE] = s->value[YEARLY_NPP_gC] / s->value[YEARLY_CANOPY_TRANSP];
 		}
 		else
 		{
-			s->value[Y_WUE] = 0.0;
+			s->value[YEARLY_WUE] = 0.0;
 		}
 	}
 #else

@@ -252,10 +252,15 @@ enum {
 	MONTHLY_CANOPY_LATENT_HEAT,         /* monthly canopy latent heat W m-2 */
 	YEARLY_CANOPY_LATENT_HEAT,          /* annual canopy latent heat W m-2 */
 
+	/* carbon use efficiency */
+	CUE,                                /* daily Carbon Use Efficiency */
+	MONTHLY_CUE,                        /* monthly Carbon Use Efficiency */
+	YEARLY_CUE,                         /* annual Carbon Use Efficiency */
+
 	/* water use efficiency */
 	WUE,                                /* daily Water Use Efficiency */
-	M_WUE,                              /* monthly Water Use Efficiency */
-	Y_WUE,                              /* annual Water Use Efficiency */
+	MONTHLY_WUE,                        /* monthly Water Use Efficiency */
+	YEARLY_WUE,                         /* annual Water Use Efficiency */
 
 	/* LAI */
 	LAI_PROJ,                           /* LAI for Projected Area covered (at zenith angle)(m^2/m2) */

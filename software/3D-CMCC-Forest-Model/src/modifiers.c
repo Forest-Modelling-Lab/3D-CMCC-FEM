@@ -76,8 +76,9 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 		/**********************************************************************************/
 
 		/* CO2 MODIFIER FOR TRANSPIRATION  */
-		/* limitation effects on maximum stomatal conductance from Hidy et al., 2016 GMDD
+		/* limitation effects on maximum stomatal conductance from:
 		 * Frank et al., 2013 New Phytologist
+		 * Hidy et al., 2016 Geosc. Model Dev.
 		*/
 
 		s->value[F_CO2_TR] = 39.43 * pow(meteo_annual->co2Conc, -0.64);

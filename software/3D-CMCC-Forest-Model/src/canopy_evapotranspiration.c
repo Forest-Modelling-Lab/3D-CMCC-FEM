@@ -129,7 +129,6 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 	if (m_final_sun < 0.00000001) m_final_sun = 0.00000001;
 	if (m_final_shade < 0.00000001) m_final_shade = 0.00000001;
 
-
 	/* correct maximum stomatal conductance for CO2 concentration*/
 	gl_x = (s->value[F_CO2_TR] / 0.9116) * s->value[MAXCOND];
 
