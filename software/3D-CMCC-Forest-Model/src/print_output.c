@@ -230,6 +230,8 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 	/* print class level LAI values */
 	for ( layer = c->tree_layers_count - 1; layer >= 0; --layer )
 	{
+		qsort(c->heights, c->heights_count, sizeof(height_t), sort_by_heights_asc);
+
 		for ( height = c->heights_count - 1; height >= 0 ; --height )
 		{
 			if( layer == c->heights[height].height_z )
@@ -258,10 +260,10 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 							logger(g_daily_log,"\t%8.3s", c->heights[height].dbhs[dbh].ages[age].species[species].name);
 
 							/* print variables at layer-class level */
-							logger(g_daily_log,"\t%6.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3d \t%3d \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f"
+							logger(g_daily_log,"\t%6.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3d \t%3d \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f"
 									"\t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f"
 									"\t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f"
-									"\t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f",
+									"\t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f",
 									s->value[DAILY_GPP_gC],
 									s->value[TOTAL_GROWTH_RESP],
 									s->value[TOTAL_MAINT_RESP],
@@ -770,6 +772,8 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 	{
 		for ( layer = c->tree_layers_count - 1; layer >= 0; --layer )
 		{
+			qsort(c->heights, c->heights_count, sizeof (height_t), sort_by_heights_desc);
+
 			for ( height = c->heights_count - 1; height >= 0 ; --height )
 			{
 				if( layer == c->heights[height].height_z )

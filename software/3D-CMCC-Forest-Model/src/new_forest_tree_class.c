@@ -159,11 +159,9 @@ static int fill_cell_for_regeneration( cell_t *const c )
 	static age_t age = { 0 };
 	static species_t species = { 0 };
 
-
 	assert(c);
 
 	logger(g_debug_log, "\n**Fill cell from regeneration**\n");
-
 
 	/* alloc memory for heights */
 	if ( ! alloc_struct((void **)&c->heights, &c->heights_count, &c->heights_avail, sizeof(height_t)) )
