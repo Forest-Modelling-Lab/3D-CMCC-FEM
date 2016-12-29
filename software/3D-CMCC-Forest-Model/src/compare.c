@@ -270,6 +270,10 @@ static dataset_comp_t* dataset_import(const char*const filename) {
 				--i;
 				continue;
 			}
+			if ( i >= d->columns_count ) {
+				logger_error(g_debug_log, "too many columns in %s at row %d\n", filename, row+1);
+				goto err;
+			}
 			v = convert_string_to_float(token, &err);
 			if ( err ) {
 				// check if is species!

@@ -222,7 +222,6 @@ int add_tree_class_for_regeneration ( cell_t *const c )
 {
 	logger(g_debug_log, "**ADD NEW TREE CLASS (REGENERATION)**\n");
 
-
 	/* it is used only with natural regeneration */
 	if ( ! fill_cell_for_regeneration( c ) ) return 0;
 

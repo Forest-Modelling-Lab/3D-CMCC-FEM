@@ -363,11 +363,13 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 #endif
 
 									/* update pointers */
+									/*
 									l = &c->tree_layers[layer];
 									h = &c->heights[height];
 									d = &h->dbhs[dbh];
 									a = &d->ages[age];
 									s = &a->species[species];
+									*/
 								}
 
 								/************************************************************************************************************************************/

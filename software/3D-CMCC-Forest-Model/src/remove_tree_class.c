@@ -193,10 +193,18 @@ int tree_class_remove(cell_t *const c, const int height, const int dbh, const in
 {
 	assert(c);
 
-	if ( height > c->heights_count ) return 0;
-	if ( dbh > c->heights[height].dbhs_count ) return 0;
-	if ( age > c->heights[height].dbhs[dbh].ages_count ) return 0;
-	if ( species > c->heights[height].dbhs[dbh].ages[age].species_count ) return 0;
+	if ( c->heights_count ) {
+		if ( height > c->heights_count ) return 0;
+		if ( c->heights[height].dbhs_count ) {
+			if (  dbh > c->heights[height].dbhs_count ) return 0;
+			if ( c->heights[height].dbhs[dbh].ages_count ) {
+				if ( age > c->heights[height].dbhs[dbh].ages_count ) return 0;
+				if ( c->heights[height].dbhs[dbh].ages[age].species_count ) {
+					if ( species > c->heights[height].dbhs[dbh].ages[age].species_count ) return 0;
+				}
+			}
+		}
+	}
 
 #if 0
 	/* remove class if N_TREE < 0 or if called by harvesting function */

@@ -133,7 +133,9 @@ int annual_forest_structure(cell_t* const c, const int year)
 	/* assign zeta for each height class */
 	for ( height = c->heights_count -1 ; height >= 0; --height )
 	{
-		if ( (c->heights[height].value - c->heights[height-1].value) > g_settings->tree_layer_limit )
+		// ALESSIOR
+		//if ( (c->heights[height].value - c->heights[height-1].value) > g_settings->tree_layer_limit )
+		if ( height && (c->heights[height].value - c->heights[height-1].value) > g_settings->tree_layer_limit )
 		{
 			c->heights[height].height_z = zeta_count;
 			--zeta_count;
@@ -521,7 +523,7 @@ int daily_forest_structure (cell_t *const c)
 		l = &c->tree_layers[layer];
 
 		/* only if more than one layer is present */
-		if ( c->tree_layers_count > 1 )
+		if ( layer > 1 )
 		{
 			/* following Wallace et al., 1991, Cannell and Grace 1993 */
 			/* note: it considers differences in average values of tree height among all over the layers */

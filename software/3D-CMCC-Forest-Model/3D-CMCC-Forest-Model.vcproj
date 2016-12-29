@@ -280,6 +280,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\cue.c"
+				>
+			</File>
+			<File
 				RelativePath=".\src\dendrometry.c"
 				>
 			</File>
