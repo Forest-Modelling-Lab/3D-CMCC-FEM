@@ -49,6 +49,7 @@ topo_t* import_topo_txt(const char *const filename, int* const p_topos_count) {
 	if ( ! fgets(buffer, TOPO_BUFFER_SIZE, f) )
 	{
 		logger_error(g_debug_log, "header not found in %s\n", filename);
+		fclose(f);
 		return 0;
 	}
 

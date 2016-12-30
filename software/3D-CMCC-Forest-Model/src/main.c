@@ -920,7 +920,7 @@ int main(int argc, char *argv[]) {
 
 	printf("build matrix");
 	if ( g_sz_dataset_file )
-		 printf("using %s...", g_sz_dataset_file);
+		 printf(" using %s...", g_sz_dataset_file);
 	else
 		printf("...");
 	matrix = matrix_create(s, soil_settings_count, g_sz_dataset_file);

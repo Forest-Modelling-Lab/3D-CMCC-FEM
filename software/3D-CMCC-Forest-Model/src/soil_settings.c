@@ -82,6 +82,7 @@ soil_settings_t* import_txt(const char *const filename, int* const p_settings_co
 	if ( ! fgets(buffer, SOIL_BUFFER_SIZE, f) )
 	{
 		logger_error(g_debug_log, "header not found in %s\n", filename);
+		fclose(f);
 		return NULL;
 	}
 
