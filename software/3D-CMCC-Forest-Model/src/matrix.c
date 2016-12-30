@@ -978,7 +978,7 @@ int fill_species_from_file(species_t *const s) {
 	sprintf(filename, "%s%s.txt", g_sz_parameterization_path, s->name);
 	f = fopen(filename, "r");
 	if ( ! f ){
-		printf("unable to open %s!", filename);
+		printf("unable to open %s!\n", filename);
 		free(species_flags);
 		return 0;
 	}
@@ -1209,7 +1209,7 @@ matrix_t* matrix_create(const soil_settings_t*const s, const int count, const ch
 					d = dataset_import_txt(filename);
 				}
 			} else {
-				printf("bad filename!");
+				puts("bad filename!");
 				matrix_free(m);
 				return NULL;
 			}
