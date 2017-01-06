@@ -124,6 +124,7 @@ void photosynthesis(cell_t *const c, const int layer, const int height, const in
 	CHECK_CONDITION( GPPmolC, <, 0 );
 	CHECK_CONDITION( fabs ( GPPmolC - GPPmolC_tot ), >, eps );
 
+
 	/* Daily GPP in gC/m2/day */
 	/* molC/m2/day --> gC/m2/day */
 	s->value[DAILY_GPP_gC] = GPPmolC_tot * GC_MOL;

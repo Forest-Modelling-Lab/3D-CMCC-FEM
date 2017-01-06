@@ -34,6 +34,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	double Atau = 7.87 * pow(10,-5);
 	double tairK;
 	double v1, v2;
+	double co2_conc;
 
 	age_t *a;
 	species_t *s;
@@ -45,13 +46,24 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 
 	/********************************************************************************************/
 
+	/* following Medlyn et al., 2011 */
+	/* when co2 conc exceeds 600 ppmv it saturates */
+	if ( meteo_annual->co2Conc > 600 )
+	{
+		co2_conc = 600;
+	}
+	else
+	{
+		co2_conc = meteo_annual->co2Conc;
+	}
+
 
 	if ( g_settings->CO2_mod )
 	{
 		/* CO2 MODIFIER FOR ASSIMILATION */
 		/* fertilization effect with rising CO2 from: Veroustraete 1994,
 		 * Veroustraete et al., 2002, Remote Sensing of Environment
-		*/
+		 */
 
 		tairK = meteo_daily->tavg + TempAbs;
 
@@ -66,10 +78,13 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 		KO2 = AKO2 * exp (-EaKO2/(Rgas*tairK));
 
 		tau = Atau * exp (-Eatau/(Rgas*(tairK)));
-
+#if 1
 		v1 = (meteo_annual->co2Conc -(O2CONC/(2*tau)))/(g_settings->co2Conc-(O2CONC/(2*tau)));
 		v2 = (KmCO2*(1+(O2CONC/KO2))+g_settings->co2Conc)/(KmCO2*(1+(O2CONC/KO2))+meteo_annual->co2Conc);
-
+#else
+		v1 = (co2_conc -(O2CONC/(2*tau)))/(g_settings->co2Conc-(O2CONC/(2*tau)));
+		v2 = (KmCO2*(1+(O2CONC/KO2))+g_settings->co2Conc)/(KmCO2*(1+(O2CONC/KO2))+co2_conc);
+#endif
 		/* compute F_CO2 modifier */
 		s->value[F_CO2] = v1*v2;
 
@@ -79,7 +94,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 		/* limitation effects on maximum stomatal conductance from:
 		 * Frank et al., 2013 New Phytologist
 		 * Hidy et al., 2016 Geosc. Model Dev.
-		*/
+		 */
 
 		s->value[F_CO2_TR] = 39.43 * pow(meteo_annual->co2Conc, -0.64);
 		logger(g_debug_log, "annual [CO2] = %f ppmv\n", meteo_annual->co2Conc);
