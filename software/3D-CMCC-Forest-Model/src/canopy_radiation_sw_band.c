@@ -58,12 +58,13 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 
 	//test 18 november 2016
 #ifdef TEST
+
 	/** sun leaves **/
 
-	s->value[PAR] = meteo_daily->par;
-	s->value[PAR_REFL_SUN] = s->value[PAR] * Light_refl_par_frac_sun * s->value[DAILY_CANOPY_COVER_EXP];
+	s->value[PAR] = meteo_daily->par * s->value[DAILY_CANOPY_COVER_EXP];
+	s->value[PAR_REFL_SUN] = s->value[PAR] * Light_refl_par_frac_sun /* * s->value[DAILY_CANOPY_COVER_EXP]*/;
 	s->value[PAR_SUN] = s->value[PAR] - s->value[PAR_REFL_SUN];
-	s->value[APAR_SUN] = s->value[PAR_SUN] * Light_abs_frac_sun * s->value[DAILY_CANOPY_COVER_EXP];
+	s->value[APAR_SUN] = s->value[PAR_SUN] * Light_abs_frac_sun /* * s->value[DAILY_CANOPY_COVER_EXP]*/;
 	s->value[TRANSM_PAR_SUN] = s->value[PAR_SUN] - s->value[APAR_SUN];
 
 	/* check PAR balance for sun leaves */
@@ -72,9 +73,9 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 
 	/** shaded leaves **/
 
-	s->value[PAR_REFL_SHADE] = s->value[TRANSM_PAR_SUN] * Light_refl_par_frac_shade * s->value[DAILY_CANOPY_COVER_EXP];
+	s->value[PAR_REFL_SHADE] = s->value[TRANSM_PAR_SUN] * Light_refl_par_frac_shade /** s->value[DAILY_CANOPY_COVER_EXP]*/;
 	s->value[PAR_SHADE] = s->value[TRANSM_PAR_SUN] - s->value[PAR_REFL_SHADE];
-	s->value[APAR_SHADE] = s->value[PAR_SHADE] * Light_abs_frac_shade * s->value[DAILY_CANOPY_COVER_EXP];
+	s->value[APAR_SHADE] = s->value[PAR_SHADE] * Light_abs_frac_shade /** s->value[DAILY_CANOPY_COVER_EXP]*/;
 	s->value[TRANSM_PAR_SHADE] = s->value[PAR_SHADE] - s->value[APAR_SHADE];
 
 	/* check PAR balance for shaded leaves */
@@ -147,12 +148,13 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 
 	//test 18 november 2016
 #ifdef TEST
+
 	/** sun leaves **/
 
-	s->value[SW_RAD] = meteo_daily->sw_downward_W;
-	s->value[SW_RAD_REFL_SUN] = s->value[SW_RAD] * Light_refl_sw_frac_sun * s->value[DAILY_CANOPY_COVER_EXP];
+	s->value[SW_RAD] = meteo_daily->sw_downward_W * s->value[DAILY_CANOPY_COVER_EXP];
+	s->value[SW_RAD_REFL_SUN] = s->value[SW_RAD] * Light_refl_sw_frac_sun /* * s->value[DAILY_CANOPY_COVER_EXP]*/;
 	s->value[SW_RAD_SUN] = s->value[SW_RAD] - s->value[SW_RAD_REFL_SUN];
-	s->value[SW_RAD_ABS_SUN] = s->value[SW_RAD_SUN] * Light_abs_frac_sun * s->value[DAILY_CANOPY_COVER_EXP];
+	s->value[SW_RAD_ABS_SUN] = s->value[SW_RAD_SUN] * Light_abs_frac_sun /* * s->value[DAILY_CANOPY_COVER_EXP]*/;
 	s->value[SW_RAD_TRANSM_SUN] = s->value[SW_RAD_SUN] - s->value[SW_RAD_ABS_SUN];
 
 	/* check Short Wave balance for sun leaves */
@@ -161,9 +163,9 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 
 	/** shaded leaves **/
 
-	s->value[SW_RAD_REFL_SHADE] = s->value[SW_RAD_TRANSM_SUN] * Light_refl_sw_frac_shade * s->value[DAILY_CANOPY_COVER_EXP];
+	s->value[SW_RAD_REFL_SHADE] = s->value[SW_RAD_TRANSM_SUN] * Light_refl_sw_frac_shade /* * s->value[DAILY_CANOPY_COVER_EXP]*/;
 	s->value[SW_RAD_SHADE] = s->value[SW_RAD_TRANSM_SUN] - s->value[SW_RAD_REFL_SHADE];
-	s->value[SW_RAD_ABS_SHADE] = s->value[SW_RAD_SHADE] * Light_abs_frac_shade * s->value[DAILY_CANOPY_COVER_EXP];
+	s->value[SW_RAD_ABS_SHADE] = s->value[SW_RAD_SHADE] * Light_abs_frac_shade /* * s->value[DAILY_CANOPY_COVER_EXP]*/;
 	s->value[SW_RAD_TRANSM_SHADE] = s->value[SW_RAD_SHADE] - s->value[SW_RAD_ABS_SHADE];
 
 	/* check Short Wave balance for shaded leaves */
@@ -233,12 +235,13 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 
 	//test 18 november 2016
 #ifdef TEST
+
 	/** sun leaves **/
 
-	s->value[PPFD] = meteo_daily->ppfd;
-	s->value[PPFD_REFL_SUN] = s->value[PPFD] * Light_refl_par_frac_sun * s->value[DAILY_CANOPY_COVER_EXP];
+	s->value[PPFD] = meteo_daily->ppfd * s->value[DAILY_CANOPY_COVER_EXP];
+	s->value[PPFD_REFL_SUN] = s->value[PPFD] * Light_refl_par_frac_sun /* * s->value[DAILY_CANOPY_COVER_EXP]*/;
 	s->value[PPFD_SUN] = s->value[PPFD] - s->value[PPFD_REFL_SUN];
-	s->value[PPFD_ABS_SUN] = s->value[PPFD_SUN] * Light_abs_frac_sun * s->value[DAILY_CANOPY_COVER_EXP];
+	s->value[PPFD_ABS_SUN] = s->value[PPFD_SUN] * Light_abs_frac_sun /* * s->value[DAILY_CANOPY_COVER_EXP]*/ ;
 	s->value[PPFD_TRANSM_SUN] = s->value[PPFD_SUN] - s->value[PPFD_ABS_SUN];
 
 	/* check PPFD balance for sun leaves */
@@ -247,9 +250,9 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 
 	/** shaded leaves **/
 
-	s->value[PPFD_REFL_SHADE] = s->value[PPFD_TRANSM_SUN] * Light_refl_par_frac_shade * s->value[DAILY_CANOPY_COVER_EXP];
+	s->value[PPFD_REFL_SHADE] = s->value[PPFD_TRANSM_SUN] * Light_refl_par_frac_shade /* * s->value[DAILY_CANOPY_COVER_EXP]*/;
 	s->value[PPFD_SHADE] = s->value[PPFD_TRANSM_SUN] - s->value[PPFD_REFL_SHADE];
-	s->value[PPFD_ABS_SHADE] = s->value[PPFD_SHADE] * Light_abs_frac_shade * s->value[DAILY_CANOPY_COVER_EXP];
+	s->value[PPFD_ABS_SHADE] = s->value[PPFD_SHADE] * Light_abs_frac_shade /* * s->value[DAILY_CANOPY_COVER_EXP]*/;
 	s->value[PPFD_TRANSM_SHADE] = s->value[PPFD_SHADE] - s->value[PPFD_ABS_SHADE];
 
 	/* check PPFD balance for shaded leaves */
@@ -410,18 +413,22 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 	//it seems to have much more sense
 	if( s->value[LAI_EXP] >= 1.0 )
 	{
+		/* short wave */
 		Light_refl_sw_frac = s->value[ALBEDO];
 		Light_refl_sw_frac_sun = s->value[ALBEDO] * ( 1 - exp ( - s->value[K] * s->value[LAI_SUN_EXP]));
 		Light_refl_sw_frac_shade = s->value[ALBEDO] * ( 1 - exp ( - s->value[K] * s->value[LAI_SHADE_EXP]));
+		/* par */
 		Light_refl_par_frac = s->value[ALBEDO]/3.0;
 		Light_refl_par_frac_sun = (s->value[ALBEDO]/3.0) * ( 1 - exp ( - s->value[K] * s->value[LAI_SUN_EXP] ) );
 		Light_refl_par_frac_shade = s->value[ALBEDO]/3.0 * ( 1 - exp ( - s->value[K] * s->value[LAI_SHADE_EXP] ) );
 	}
 	else
 	{
+		/* short wave */
 		Light_refl_sw_frac = 0.0;
 		Light_refl_sw_frac_sun = 0.0;
 		Light_refl_sw_frac_shade = 0.0;
+		/* par */
 		Light_refl_par_frac = 0.0;
 		Light_refl_par_frac_sun = 0.0;
 		Light_refl_par_frac_shade = 0.0;
