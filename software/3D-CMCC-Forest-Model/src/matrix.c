@@ -152,6 +152,7 @@ static void dataset_free(dataset_t *p) {
 	}
 }
 
+#if 0
 static dataset_t* dataset_import_nc(const char* const filename, int* const px_cells_count, int* const py_cells_count) {
 	enum {
 		X_DIM
@@ -396,6 +397,250 @@ static dataset_t* dataset_import_nc(const char* const filename, int* const px_ce
 	nc_close(id_file);
 	return NULL;
 }
+#else
+static dataset_t* dataset_import_nc(const char* const filename, int* const px_cells_count, int* const py_cells_count) {
+	char buffer[256];
+	int i;
+	int vars[COLUMNS_COUNT];
+	float f_value;
+	double value;
+	const char sz_dim[] = "year";
+	int y;
+	int id_file;
+	int ret;
+	int dims_count;	/* dimensions */
+	int vars_count;
+	int atts_count;	/* attributes */
+	int unl_count;	/* unlimited dimensions */
+	char name[NC_MAX_NAME+1];
+	nc_type type;
+	size_t size;
+	int n_dims;
+	int year;
+	int ids[NC_MAX_VAR_DIMS];
+	dataset_t *dataset;
+	size_t start[1] = { 0 };
+	size_t count[1] = { 1 };
+	row_t* rows_no_leak;
+	row_t row;
+	int rows_count;
+
+	dataset = NULL;
+	ret = nc_open(filename, NC_NOWRITE, &id_file);
+	if ( ret != NC_NOERR ) goto quit;
+
+	ret = nc_inq(id_file, &dims_count, &vars_count, &atts_count, &unl_count);
+	if ( ret != NC_NOERR ) goto quit;
+
+	if ( ! dims_count || ! vars_count ) {
+		logger(g_debug_log, "bad nc file! %d dimensions and %d vars\n\n", dims_count, vars_count);
+		goto quit_no_nc_err;
+	}
+
+	if ( 1 != dims_count ) {
+		logger(g_debug_log, "bad dimension size. It should be 1 not %d\n", dims_count);
+		goto quit_no_nc_err;
+	}
+
+	/* get dimensions */
+	ret = nc_inq_dim(id_file, 0, name, &size);
+	if ( ret != NC_NOERR ) goto quit;
+	if ( string_compare_i(sz_dim, name) ) {
+		logger(g_debug_log, "dimension %s not found!\n", sz_dim);
+		goto quit_no_nc_err;
+	}
+
+	dataset = malloc(sizeof*dataset);
+	if ( ! dataset ) {
+		logger(g_debug_log, "%s\n", sz_err_out_of_memory);
+		goto quit_no_nc_err;
+	}
+	dataset->rows = NULL;
+	dataset->rows_count = 0;
+	
+	rows_count = 0;
+	for ( year = 0; year < (int)size; ++year ) {
+		for ( i = 0; i < COLUMNS_COUNT; ++i ) {
+			vars[i] = 0;
+		}
+		memset(&row, 0, sizeof(row_t));
+		for ( i = 0; i < vars_count; ++i ) {
+			ret = nc_inq_var(id_file, i, name, &type, &n_dims, ids, NULL);
+			if ( ret != NC_NOERR ) goto quit;
+			start[0] = year;
+			for ( y = 0; y < COLUMNS_COUNT; ++y ) {
+				if ( ! string_compare_i(name, sz_vars[y]) ) {
+					int flag_value;
+					/* check if we already have imported that var */
+					if ( vars[y] ) {
+						logger(g_debug_log, "var %s already imported\n", sz_vars[y]);
+						free(row.species);
+						goto quit_no_nc_err;
+					}
+					if ( n_dims != 1 ) {
+						logger(g_debug_log, "bad %s dimension size. It should be 1 not %d\n", sz_vars[y], n_dims);
+						free(row.species);
+						goto quit_no_nc_err;
+					}
+					/* get values */
+					flag_value = 0;
+					if ( NC_FLOAT == type ) {
+						ret = nc_get_vara_float(id_file, i, start, count, &f_value);
+						if ( ret != NC_NOERR ) {
+							free(row.species);
+							goto quit;
+						}
+						flag_value = 1;
+					} else if ( NC_DOUBLE == type ) {
+						ret = nc_get_vara_double(id_file, i, start, count, &value);
+						if ( ret != NC_NOERR ) {
+							free(row.species);
+							goto quit;
+						}
+					} else {
+						/* type format not supported! */
+						logger(g_debug_log, "type format in %s for %s column not supported\n\n", buffer, sz_vars[y]);
+						goto quit_no_nc_err;
+					}
+					if ( flag_value ) {
+						value = f_value;
+					}
+					
+					switch ( y ) {
+						case X_COLUMN:
+							//d->rows[year].x = (int)value;
+							row.x = (int)value;
+						break;
+
+						case Y_COLUMN:
+							//d->rows[year].y = (int)value;
+							row.y = (int)value;
+						break;
+
+						case YEAR_COLUMN:
+							//d->rows[year].year_stand = (int)value;
+							row.year_stand = (int)value;
+						break;
+
+						case AGE_COLUMN:
+							//d->rows[year].age = (int)value;
+							row.age = (int)value;
+						break;
+
+						case SPECIES_COLUMN: {
+							char temp[256];
+							sprintf(temp, "%s%s", g_sz_parameterization_path, sz_species);
+							//d->rows[year].species = species_get(temp, (int)value);
+							//if ( ! d->rows[year].species ) {
+							row.species = species_get(temp, (int)value);
+							if ( ! row.species ) {
+								logger(g_debug_log, "unable to get species from %s\n", temp);
+								goto quit_no_nc_err;
+							}
+						}
+						break;
+
+						case MANAGEMENT_COLUMN:
+							if ( 0 == (int)value ) {
+								//d->rows[year].management = T;
+								row.management = T;
+							} else {
+								//d->rows[year].management = C;
+								row.management = C;
+							}
+						break;
+
+						case N_COLUMN:
+							//d->rows[year].n = (int)value;
+							row.n = (int)value;
+						break;
+
+						case STOOL_COLUMN:
+							//d->rows[year].stool = (int)value;
+							row.stool = (int)value;
+						break;
+
+						case AVDBH_COLUMN:
+							//d->rows[year].avdbh = value;
+							row.avdbh = value;
+						break;
+
+						case HEIGHT_COLUMN:
+							//d->rows[year].height = value;
+							row.height = value;
+						break;
+
+						case WF_COLUMN:
+							//d->rows[year].wf = value;
+							row.wf = value;
+						break;
+
+						case WRC_COLUMN:
+							//d->rows[year].wrc = value;
+							row.wrc = value;
+						break;
+
+						case WRF_COLUMN:
+							//d->rows[year].wrf = value;
+							row.wrf = value;
+						break;
+
+						case WS_COLUMN:
+							//d->rows[year].ws = value;
+							row.ws = value;
+						break;
+
+						case WBB_COLUMN:
+							//d->rows[year].wbb = value;
+							row.wbb = value;
+						break;
+
+						case WRES_COLUMN:
+							//d->rows[year].wres = value;
+							row.wres = value;
+						break;
+
+						case LAI_COLUMN:
+							//d->rows[year].lai = value;
+							row.lai = value;
+						break;
+					}
+
+					vars[y] = 1;
+					break;
+				}
+			}
+		}
+		/* check for year */
+		if ( row.year_stand == g_settings->year_start ) {
+			/* alloc memory */
+			rows_no_leak = realloc(dataset->rows, (dataset->rows_count+1)*sizeof*rows_no_leak);
+			if ( ! rows_no_leak ) {
+				puts(sz_err_out_of_memory);
+				free(row.species);
+				dataset_free(dataset);
+				return NULL;
+			}
+
+			/* assign pointer */
+			dataset->rows = rows_no_leak;
+			dataset->rows[dataset->rows_count++] = row;
+		} else {
+			free(row.species);
+			row.species = NULL;
+		}
+	}
+	nc_close(id_file);
+	return dataset;
+
+quit:
+	logger(g_debug_log, nc_strerror(ret));
+	quit_no_nc_err:
+	if ( dataset ) dataset_free(dataset);
+	nc_close(id_file);
+	return NULL;
+}
+#endif
 
 static dataset_t* dataset_import_txt(const char* const filename) {
 #define BUFFER_SIZE	1024
