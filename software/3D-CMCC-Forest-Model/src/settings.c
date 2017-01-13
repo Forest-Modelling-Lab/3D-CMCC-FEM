@@ -232,6 +232,8 @@ settings_t* settings_import(const char *const filename) {
 					s->replanted_management = T;
 				} else if ( ('C' == token[0]) || ('c' == token[0]) ) {
 					s->replanted_management = C;
+				} else if ( ('N' == token[0]) || ('n' == token[0]) ) {
+					s->replanted_management = N;
 				} else {
 					printf("bad management habitus specified in settings: %s\n", token);
 					free(s);
@@ -249,6 +251,8 @@ settings_t* settings_import(const char *const filename) {
 					s->regeneration_management = T;
 				} else if ( ('C' == token[0]) || ('c' == token[0]) ) {
 					s->regeneration_management = C;
+				} else if ( ('N' == token[0]) || ('n' == token[0]) ) {
+					s->regeneration_management = N;
 				} else {
 					printf("bad regeneration habitus specified in settings: %s\n", token);
 					free(s);

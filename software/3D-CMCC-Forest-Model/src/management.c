@@ -63,71 +63,72 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 					/* assign shortcut */
 					s = &a->species[species];
 
-					/* this function handles all other management functions */
+					if ( g_settings->management && ((T == s->management) || (C == s->management)) ) {
+						/* this function handles all other management functions */
 
-					/* check at the beginning of simulation */
-					if( !year )
-					{
-						CHECK_CONDITION ( c->years[year].year, >, g_settings->year_start_management );
-						CHECK_CONDITION ( (g_settings->year_start_management - g_settings->year_start), >, s->value[THINNING] );
-					}
-
-
-					/***** THINNING *****/
-					//note : +1 since it works at the 1st of January of the subsequent year
-					if ( ( c->years[year].year == g_settings->year_start_management + 1 ) || ( s->value[THINNING] == years_for_thinning + 1 ) )
-					{
-						logger(g_debug_log,"**FOREST MANAGEMENT**\n");
-						logger(g_debug_log,"**THINNING**\n");
-
-						thinning ( c, height, dbh, age, species, year );
-
-						/* reset counter */
-						years_for_thinning = 0;
-						return 0;
-					}
-
-					/* increment counter */
-					++years_for_thinning;
-
-					/* check */
-					CHECK_CONDITION( years_for_thinning, >, s->value[ROTATION] );
-
-					/***** HARVESTING *****/
-					/* if class age matches with harvesting */
-					//note : +1 since it works at the 1st of January of the subsequent year
-
-					if ( ( a->value + 1 ) == s->value[ROTATION] )
-					{
-						logger(g_debug_log,"**FOREST MANAGEMENT**\n");
-						logger(g_debug_log,"**HARVESTING**\n");
-
-						/* remove tree class */
-						harvesting ( c, height, dbh, age, species );
-
-						/* reset years_for_thinning */
-						years_for_thinning = 0;
-
-						/* check that all mandatory variables are filled */
-						CHECK_CONDITION (g_settings->replanted_n_tree, <, 0);
-						CHECK_CONDITION (g_settings->replanted_height, <, 1.3);
-						CHECK_CONDITION (g_settings->replanted_avdbh, <, 0);
-						CHECK_CONDITION (g_settings->replanted_age, <, 0);
-
-						/* re-planting tree class */
-						if( g_settings->replanted_n_tree )
+						/* check at the beginning of simulation */
+						if( !year )
 						{
-							if ( ! add_tree_class_for_replanting( c , day, month, year ) )
-							{
-								logger_error(g_debug_log, "unable to add new replanted class! (exit)\n");
-								exit(1);
-							}
+							CHECK_CONDITION ( c->years[year].year, >, g_settings->year_start_management );
+							CHECK_CONDITION ( (g_settings->year_start_management - g_settings->year_start), >, s->value[THINNING] );
 						}
-						return 1;
-					}
-					else
-					{
-						return 0;
+
+						/***** THINNING *****/
+						//note : +1 since it works at the 1st of January of the subsequent year
+						if ( ( c->years[year].year == g_settings->year_start_management + 1 ) || ( s->value[THINNING] == years_for_thinning + 1 ) )
+						{
+							logger(g_debug_log,"**FOREST MANAGEMENT**\n");
+							logger(g_debug_log,"**THINNING**\n");
+
+							thinning ( c, height, dbh, age, species, year );
+
+							/* reset counter */
+							years_for_thinning = 0;
+							return 0;
+						}
+
+						/* increment counter */
+						++years_for_thinning;
+
+						/* check */
+						CHECK_CONDITION( years_for_thinning, >, s->value[ROTATION] );
+
+						/***** HARVESTING *****/
+						/* if class age matches with harvesting */
+						//note : +1 since it works at the 1st of January of the subsequent year
+
+						if ( ( a->value + 1 ) == s->value[ROTATION] )
+						{
+							logger(g_debug_log,"**FOREST MANAGEMENT**\n");
+							logger(g_debug_log,"**HARVESTING**\n");
+
+							/* remove tree class */
+							harvesting ( c, height, dbh, age, species );
+
+							/* reset years_for_thinning */
+							years_for_thinning = 0;
+
+							/* check that all mandatory variables are filled */
+							CHECK_CONDITION (g_settings->replanted_n_tree, <, 0);
+							CHECK_CONDITION (g_settings->replanted_height, <, 1.3);
+							CHECK_CONDITION (g_settings->replanted_avdbh, <, 0);
+							CHECK_CONDITION (g_settings->replanted_age, <, 0);
+
+							/* re-planting tree class */
+							if( g_settings->replanted_n_tree )
+							{
+								if ( ! add_tree_class_for_replanting( c , day, month, year ) )
+								{
+									logger_error(g_debug_log, "unable to add new replanted class! (exit)\n");
+									exit(1);
+								}
+							}
+							return 1;
+						}
+						else
+						{
+							return 0;
+						}
 					}
 				}
 			}

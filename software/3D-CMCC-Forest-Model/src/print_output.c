@@ -27,6 +27,8 @@ extern const char sz_launched[];
 extern int MonthLength [];
 extern int MonthLength_Leap [];
 
+static const char sz_management[] = "TCN";
+
 static const char* get_filename(const char *const s)
 {
 	const char *p;
@@ -135,9 +137,10 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 							{
 								/* heading for species name */
 								logger(g_daily_log,"\t%10s", "SPECIES");
-								//logger(g_daily_log,",SPECIES");
 
-								
+								/* heading for management */
+								logger(g_daily_log, "\t%s", "MANAGEMENT");
+
 								logger(g_daily_log,"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s"
 										"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s"
 										"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s "
@@ -340,7 +343,9 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 
 							/* print species name */
 							logger(g_daily_log,"\t%8.3s", c->heights[height].dbhs[dbh].ages[age].species[species].name);
-							//logger(g_daily_log,",%s", c->heights[height].dbhs[dbh].ages[age].species[species].name);
+
+							/* print management */
+							logger(g_daily_log,"\t%c", sz_management[c->heights[height].dbhs[dbh].ages[age].species[species].management]);
 
 							/* print variables at layer-class level */
 							logger(g_daily_log,"\t%6.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3d \t%3d \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f"
@@ -591,6 +596,9 @@ void EOM_print_cumulative_balance_cell_level(cell_t *const c, const int month, c
 								/* heading for species name */
 								logger(g_monthly_log,"\t%10s", "SPECIES");
 
+								/* heading for management */
+								logger(g_monthly_log,"\t%s", "MANAGEMENT");
+
 								logger(g_monthly_log,"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s"
 										"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s\t%4s \t%4s \t%4s \t%4s",
 										"GPP",
@@ -692,6 +700,9 @@ void EOM_print_cumulative_balance_cell_level(cell_t *const c, const int month, c
 
 							/* print species name */
 							logger(g_monthly_log,"\t%8.3s", c->heights[height].dbhs[dbh].ages[age].species[species].name);
+
+							/* print management */
+							logger(g_monthly_log,"\t%c", sz_management[c->heights[height].dbhs[dbh].ages[age].species[species].management]);
 
 							/* print variables at layer-class level */
 							logger(g_monthly_log,"\t%6.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3d \t%3.4f \t%3.4f \t%3.4f \t%3.4f"
@@ -858,6 +869,9 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 								/* heading for species name */
 								logger(g_annual_log,"\t%10s", "SPECIES");
 
+								/* heading for management name */
+								logger(g_annual_log,"\t%s", "MANAGEMENT");
+
 								logger(g_annual_log,"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s"
 										"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s",
 										"GPP",
@@ -970,6 +984,9 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 
 								/* print species name */
 								logger(g_annual_log,"\t%8.3s", c->heights[height].dbhs[dbh].ages[age].species[species].name);
+
+								/* print management */
+								logger(g_annual_log,"\t%c", sz_management[c->heights[height].dbhs[dbh].ages[age].species[species].management]);
 
 								/* print variables at layer-class level */
 								logger(g_annual_log,"\t%6.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3d \t%3d \t%3d \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f"

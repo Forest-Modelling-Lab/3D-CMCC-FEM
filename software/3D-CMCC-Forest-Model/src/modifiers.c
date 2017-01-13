@@ -216,7 +216,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 
 	if ( a->value != 0 )
 	{
-		if ( s->management == T )
+		if ( (s->management == T) || (s->management == N) )
 		{
 			/* for TIMBER */
 			/* AGE FOR TIMBER IS THE EFFECTIVE AGE */
@@ -224,7 +224,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 			s->value[F_AGE] = ( 1 / ( 1 + pow ((RelAge / (double)s->value[RAGE]), (double)s->value[NAGE])));
 			logger(g_debug_log, "fAge = %f\n", s->value[F_AGE]);
 		}
-		else
+		else if ( s->management == C )
 		{
 			/* for SHOOTS */
 			/* AGE FOR COPPICE IS THE AGE FROM THE COPPICING */

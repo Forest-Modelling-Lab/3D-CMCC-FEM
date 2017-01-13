@@ -229,7 +229,7 @@ void print_daily_forest_class_data(cell_t* const c, const int layer, const int h
 	logger(g_debug_log, "- Crown Diameter = %g \n",  s->value[CROWN_DIAMETER]);
 	logger(g_debug_log, "- Canopy Cover Projected = %g \n", s->value[CANOPY_COVER_PROJ]);
 	logger(g_debug_log, "- Phenology type = %g\n", s->value[PHENOLOGY]);
-	logger(g_debug_log, "- Management type = %s\n", s->management ? "C" : "T");
+	logger(g_debug_log, "- Management type = %c\n", (0 == s->management) ? 'T' : ((1 == s->management) ? 'C' : 'N'));
 	logger(g_debug_log, "++Carbon pools in tC++\n");
 	logger(g_debug_log, "+ leaf = %g tC/area\n", s->value[LEAF_C]);
 	logger(g_debug_log, "+ stem = %g tC/area\n", s->value[STEM_C]);
@@ -276,7 +276,7 @@ void print_new_daily_forest_class_data (cell_t* const c, const int height, const
 	logger(g_debug_log, "- Crown Diameter = %g \n",  s->value[CROWN_DIAMETER]);
 	logger(g_debug_log, "- Canopy Cover Projected = %g \n", s->value[CANOPY_COVER_PROJ]);
 	logger(g_debug_log, "- Phenology type = %g\n", s->value[PHENOLOGY]);
-	logger(g_debug_log, "- Management type = %s\n", s->management ? "C" : "T");
+	logger(g_debug_log, "- Management type = %c\n", (0 == s->management) ? 'T' : ((1 == s->management) ? 'C' : 'N'));
 	logger(g_debug_log, "++Carbon pools in tC++\n");
 	logger(g_debug_log, "+ leaf = %g tC/area\n", s->value[LEAF_C]);
 	logger(g_debug_log, "+ stem = %g tC/area\n", s->value[STEM_C]);

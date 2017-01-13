@@ -423,7 +423,6 @@ static dataset_t* dataset_import_nc(const char* const filename, int* const px_ce
 	size_t count[1] = { 1 };
 	row_t* rows_no_leak;
 	row_t row;
-	int rows_count;
 
 	dataset = NULL;
 	ret = nc_open(filename, NC_NOWRITE, &id_file);
@@ -458,7 +457,6 @@ static dataset_t* dataset_import_nc(const char* const filename, int* const px_ce
 	dataset->rows = NULL;
 	dataset->rows_count = 0;
 	
-	rows_count = 0;
 	for ( year = 0; year < (int)size; ++year ) {
 		for ( i = 0; i < COLUMNS_COUNT; ++i ) {
 			vars[i] = 0;
@@ -500,6 +498,7 @@ static dataset_t* dataset_import_nc(const char* const filename, int* const px_ce
 					} else {
 						/* type format not supported! */
 						logger(g_debug_log, "type format in %s for %s column not supported\n\n", buffer, sz_vars[y]);
+						free(row.species);
 						goto quit_no_nc_err;
 					}
 					if ( flag_value ) {
@@ -544,9 +543,15 @@ static dataset_t* dataset_import_nc(const char* const filename, int* const px_ce
 							if ( 0 == (int)value ) {
 								//d->rows[year].management = T;
 								row.management = T;
-							} else {
+							} else if ( 1 == (int)value ) {
 								//d->rows[year].management = C;
 								row.management = C;
+							} else if ( 2 == (int)value ) {
+								row.management = N;
+							} else {
+								logger(g_debug_log, "bad management specified (%d) at row %d\n", (int)value, year+1);
+								free(row.species);
+								goto quit_no_nc_err;
 							}
 						break;
 
@@ -793,6 +798,9 @@ static dataset_t* dataset_import_txt(const char* const filename) {
 						} else if ( ('C' == token[0]) || ('c' == token[0]) ) {
 							//dataset->rows[dataset->rows_count-1].management = C;
 							row.management = C;
+						} else if ( ('N' == token[0]) || ('n' == token[0]) ) {
+							//dataset->rows[dataset->rows_count-1].management = N;
+							row.management = N;
 						} else {
 							printf(err_bad_management, token[0], rows_count);
 							free(row.species);
@@ -1474,7 +1482,7 @@ matrix_t* matrix_create(const soil_settings_t*const s, const int count, const ch
 																, d->rows[i].y
 																, d->rows[i].age
 																, d->rows[i].species
-																, (T == d->rows[i].management) ? 'T' : 'C'
+																, (0 == d->rows[i].management) ? 'T' : ((1 == d->rows[i].management) ? 'C' : 'N')
 																, d->rows[i].n
 																, d->rows[i].stool
 																, d->rows[i].avdbh

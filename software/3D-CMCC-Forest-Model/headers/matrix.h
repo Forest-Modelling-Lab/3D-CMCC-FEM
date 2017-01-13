@@ -10,6 +10,7 @@
 typedef enum {
 	T		/* timber */ //fixme change with H (high forest)
 	, C		/* coppice */
+	, N		/* natural (no management) */
 } e_management;
 
 enum {
