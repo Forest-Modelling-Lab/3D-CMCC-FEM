@@ -74,7 +74,7 @@ soil_settings_t* import_txt(const char *const filename, int* const p_settings_co
 	/* open file */
 	f = fopen(filename, "r");
 	if ( ! f ) {
-		logger_error(g_debug_log, "unable to open %s, file doesn't exist?\n", filename);
+		logger_error(g_debug_log, "unable to open %s, file not found.\n", filename);
 		return 0;
 	}
 

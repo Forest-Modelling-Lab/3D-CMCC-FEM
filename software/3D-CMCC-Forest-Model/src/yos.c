@@ -1689,7 +1689,28 @@ static int import_txt(const char *const filename, yos_t** p_yos, int *const yos_
 	// get rows count
 	rows_count = file_get_rows_count(filename);
 	if ( rows_count <= 0 ) {
-		logger_error(g_debug_log, "file doesn't exist!\n");
+		char *err;
+		logger_error(g_debug_log, "unable to import '%s': ", filename);
+		switch ( rows_count )
+		{
+			case 0:
+				err = "file is empty!";
+			break;
+
+			case -1:
+				err = "file not found!";
+			break;
+
+			case -2:
+				err = "out of memory!";
+			break;
+
+			case -3:
+				err = "read error!";
+			break;
+		}
+		logger_error(g_debug_log, err);
+		logger_error(g_debug_log, "\n");
 		return 0;
 	}
 
