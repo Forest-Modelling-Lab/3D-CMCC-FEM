@@ -290,7 +290,7 @@ static int log_start(const char* const sz_date, const char* const sitename)
 		len += sprintf(buffer+len, "_%s", sitename);
 	}
 
-	/* setting version */
+	/* met file */
 	len += sprintf(buffer+len, "_%s", get_filename(g_sz_input_met_file));
 
 	/* co2_fixed */
@@ -322,6 +322,9 @@ static int log_start(const char* const sz_date, const char* const sitename)
 	}
 	len += sprintf(buffer+len, "_CO2_%s", p);
 
+	/* CO2 file */
+	len += sprintf(buffer+len, "_%s", get_filename(g_sz_co2_conc_file));
+
 	/* management */
 	if ( g_settings->management )
 	{
@@ -331,7 +334,7 @@ static int log_start(const char* const sz_date, const char* const sitename)
 	{
 		p = "OFF";
 	}
-	len += sprintf(buffer+len, "_Manag_%s", p);
+	len += sprintf(buffer+len, "_Man_%s", p);
 
 	/* time */
 	len += sprintf(buffer+len, "_%c", g_settings->time);
