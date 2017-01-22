@@ -987,6 +987,8 @@ typedef struct
 	double litr2c;
 	double litr4c;
 
+	double elev;
+
 	/*
 		those variables are referred to cell, they must be same for each layers
 	 */

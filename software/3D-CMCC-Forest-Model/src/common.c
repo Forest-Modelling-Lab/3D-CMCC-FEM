@@ -196,15 +196,21 @@ int path_exists(const char *const path) {
 	return 0;
 }
 
-unsigned int file_load_in_memory(const char* const filename, char** result) {
+// returns -1 if file not found
+// returns -2 if out of memory
+// returns -3 if read error
+int file_load_in_memory(const char* const filename, char** result) {
 	unsigned int size;
 	FILE *f;
+
+	assert(filename && result);
+
+	*result = NULL;
 
 	size = 0;
 	f = fopen(filename, "rb");
 	if ( !f )  {
-		*result = NULL;
-		return 0;
+		return -1;
 	}
 	fseek(f, 0, SEEK_END);
 	size = ftell(f);
@@ -212,12 +218,12 @@ unsigned int file_load_in_memory(const char* const filename, char** result) {
 	*result = malloc((size+1)*sizeof**result);
 	if ( !*result ) {
 		fclose(f);
-		return 0;
+		return -2;
 	}
 	if ( size != fread(*result, sizeof(char), size, f) )  {
 		free(*result);
 		fclose(f);
-		return 0;
+		return -3;
 	}
 	fclose(f);
 	(*result)[size] = '\0';
@@ -225,18 +231,19 @@ unsigned int file_load_in_memory(const char* const filename, char** result) {
 	return size;
 }
 
+// returns -1 if file not found
+// returns -2 if out of memory
+// returns -3 if read error
 int file_get_rows_count(const char* const filename) {
 	unsigned int i;
 	unsigned int size;
 	int rows_count;
 	char *p;
 
-	if ( !filename || ('\0' == filename[0]) ) {
-		return -1;
-	}
+	assert(filename);
 
 	size = file_load_in_memory(filename, &p);
-	if ( ! size ) return -1;
+	if ( size <= 0 ) return size;
 
 	//
 	rows_count = 0;

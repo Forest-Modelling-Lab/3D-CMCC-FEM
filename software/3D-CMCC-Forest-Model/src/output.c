@@ -42,8 +42,29 @@ output_t* output_import(const char *const filename) {
 
 	assert(filename);
 
-	if ( ! file_load_in_memory(filename, &buffer) ) {
-		printf("unable to import output filename: %s\n", filename);
+	i = file_load_in_memory(filename, &buffer);
+	if ( i <= 0 ) {
+		char *err;
+		printf("unable to import output filename '%s': ", filename);
+		switch ( i )
+		{
+			case 0:
+				err = "file is empty!";
+			break;
+
+			case -1:
+				err = "file not found!";
+			break;
+
+			case -2:
+				err = "out of memory!";
+			break;
+
+			case -3:
+				err = "read error!";
+			break;
+		}
+		puts(err);
 		return NULL;
 	}
 

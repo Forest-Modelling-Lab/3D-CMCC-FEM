@@ -81,7 +81,7 @@ settings_t* settings_import(const char *const filename) {
 
 	f = fopen(filename, "r");
 	if ( ! f ) {
-		printf("unable to open %s\n", filename);
+		puts("file not found!");
 		return 0;
 	}
 
@@ -235,7 +235,7 @@ settings_t* settings_import(const char *const filename) {
 				} else if ( ('N' == token[0]) || ('n' == token[0]) ) {
 					s->replanted_management = N;
 				} else {
-					printf("bad management habitus specified in settings: %s\n", token);
+					printf("bad management habitus specified: %s\n", token);
 					free(s);
 					fclose(f);
 					return 0;
@@ -254,7 +254,7 @@ settings_t* settings_import(const char *const filename) {
 				} else if ( ('N' == token[0]) || ('n' == token[0]) ) {
 					s->regeneration_management = N;
 				} else {
-					printf("bad regeneration habitus specified in settings: %s\n", token);
+					printf("bad regeneration habitus specified: %s\n", token);
 					free(s);
 					fclose(f);
 					return 0;

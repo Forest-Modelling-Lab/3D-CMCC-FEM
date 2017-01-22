@@ -177,6 +177,20 @@ const char err_window_size_too_big[] = "window size too big.";
 //static const char err_unable_get_current_path[] = "unable to retrieve current path.\n";
 static const char err_unable_to_register_atexit[] = "unable to register clean-up routine.\n";
 
+static int cells_sort(const void *a, const void *b)
+{
+	if ( ((cell_t*)a)->elev < ((cell_t*)b)->elev )
+	{
+		return -1;
+	} else if ( ((cell_t*)a)->elev > ((cell_t*)b)->elev )
+	{
+		return 1;
+	} else
+	{
+		return 0;
+	}
+}
+
 static const char* get_filename(const char *const s)
 {
 	const char *p;
@@ -933,7 +947,40 @@ int main(int argc, char *argv[]) {
 	g_year_start_index = -1;
 	
 	logger(g_debug_log, "\n3D-CMCC FEM START....\n\n");
-	
+
+#if 0
+	/* add elev to each cells */
+	for ( cell = 0; cell < matrix->cells_count; ++cell )
+	{
+		int i;
+		int index;
+
+		for ( i = 0; i < topos_count; ++i )
+		{
+			if ( (matrix->cells[cell].x == (int)t[i].values[TOPO_X])
+					&& (matrix->cells[cell].y == (int)t[i].values[TOPO_Y]) )
+			{
+				index = i;
+				break;
+			}
+		}
+
+		if ( -1 == index )
+		{
+			logger_error(g_debug_log, "no topo settings found for cell at %d,%d\n"
+											, matrix->cells[cell].x
+											, matrix->cells[cell].y
+			);
+			continue;
+		}
+
+		matrix->cells[cell].elev = t[index].values[TOPO_ELEV];
+	}
+
+	/* sort cells */
+	qsort(matrix->cells, matrix->cells_count, sizeof*matrix->cells, cells_sort);
+#endif
+
 	for ( cell = 0; cell < matrix->cells_count; ++cell )
 	{
 		logger(g_debug_log, "Processing met data files for cell at %d,%d...\n", matrix->cells[cell].x, matrix->cells[cell].y);
