@@ -313,9 +313,6 @@ static int log_start(const char* const sz_date, const char* const sitename)
 	/* end simulation */
 	len += sprintf(buffer+len, "-%d)", g_settings->year_end);
 
-	/* setting version */
-	//len += sprintf(buffer+len, "_%c", g_settings->version);
-
 	/* co2_transient */
 	switch ( g_settings->CO2_trans ) {
 		case CO2_TRANS_ON:
