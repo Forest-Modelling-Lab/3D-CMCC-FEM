@@ -205,8 +205,9 @@ int tree_class_remove(cell_t *const c, const int height, const int dbh, const in
 			}
 		}
 	}
-
-#if 0
+//ALESSIOR !! NOW IT WORKS WITH THE BELOW FUNCTION
+//YOU MUST TRY ALL CASES BEFORE COMMENT OR CHANGE FUNCTIONS!!!
+#if 1
 	/* remove class if N_TREE < 0 or if called by harvesting function */
 	if ( ! c->heights[height].dbhs[dbh].ages[age].species[species].counter[N_TREE]
 			|| g_settings->management ) {
@@ -238,6 +239,7 @@ int tree_class_remove(cell_t *const c, const int height, const int dbh, const in
 			}
 		}
 	}
+//ALESSIOR THIS FUNCTION DOESN'T WORK!!!!
 #else
 	/* remove class if N_TREE < 0 or if called by harvesting function */
 	if ( ! c->heights[height].dbhs[dbh].ages[age].species[species].counter[N_TREE]
