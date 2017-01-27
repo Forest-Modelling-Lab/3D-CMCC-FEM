@@ -1,4 +1,4 @@
-May 2016
+January 2017
 User’s Guide for 3D-CMCC-FEM, Version 5.x.x for 64 bit 
 Source:
 Alessio Collalti
@@ -66,19 +66,206 @@ IMPORTANT: BE SURE TO EXECUTE 3D-CMCC FEM ON A LINUX MACHINE WITH ARCHITECTURE X
 rebuild code to obtain the object files needed for runs.
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+
 Usage
 
-3D-CMCC-FEM is a command line program, and its behaviour is controlled by
-several command line options, specified in unix style.  
+3D-CMCC-FEM is a command line program, and its behaviour is controlled by several command line options:
 
-3D-CMCC-FEM reads input parameters from six text or netcdf files:
+	-i input path (i.e.: -i c:\input\directory\)
+	-o output path (i.e.: -o c:\output\directory\)
+	-p parameterization directory (i.e.: -i c:\parameterization\directory\)
+	-d dataset filename stored into input directory (i.e.: -d input.txt)
+	-m met filename list stored into input directory (i.e.: -m 1999.txt,2003.txt,2009.txt)
+	-s soil filename stored into input directory (i.e.: -s soil.txt or soil.nc)
+	-t topo filename stored into input directory (i.e.: -t topo.txt or topo.nc)
+	-c settings filename stored into input directory (i.e.: -c settings.txt)
+	-k co2 concentration file (i.e.: -k co2_conc.txt)
+	-n ndep file (i.e.: -n ndep.txt)
+	-r output vars list (i.e.: -r output_vars.lst)
+	-u benchmark path
+	-h print this help
+	
 
--settings.txt
--input.txt
--species.txt
--meteo.txt
--soil.txt
--topo.txt
+-i	this is not a mandatory parameter. if not used, input files will be searched where program is.
+
+-o	this is not a mandatory parameter. if not used, output files will be created where program is.
+
+-p	this is not a mandatory parameter. if not used, parameterization file will be searched where program is.
+
+-d	mandatory parameter. This file will be searched in input path, if specified.
+	It can be an ASCII or NETCDF file. You can use '//' for comment it.
+	ASCII file must have following header, separated by a comma :
+	
+		Year,x,y,Age,Species,Management,N,Stool,AvDBH,Height,Wf,Wrc,Wrf,Ws,Wbb,Wres,Lai
+		
+	Please see [SPECIES] section and [MANAGEMENT] section to check allowed values.
+	Same columns name applies to variables name in NETCDF version of file.
+	
+-m	mandatory parameter. This file will be searched in input path, if specified.
+	It can be an ASCII or NETCDF file.
+	You can specify a .lst ( list ) file if you have separated values.
+	List file must contains name of NETCDF files to import, one row for variable i.e. :
+	
+		6_WS_f_2000_2001_123_456.nc
+		6_TOT_PREC_2000_2001_123_456.nc
+		6_SWC_2000_2001_123_456.nc
+		6_TMAX_2M_2000_2001_123_456.nc
+		6_TMIN_2M_2000_2001_123_456.nc
+		6_TSOIL_2000_2001_123_456.nc
+		6_VPD_2000_2001_123_456.nc
+		6_ET_2000_2001_123_456.nc
+		6_LAI_2000_2001_123_456.nc
+		6_RADS_2000_2001_123_456.nc
+	
+	ASCII file must have following header, separated by a tab (/t) :
+	
+		Year	Month	n_days	Rg_f	Ta_f	Tmax	Tmin	Rh_f	Ts_f	Precip	SWC	LAI	ET	WS_f
+		
+	Same columns name applies to variables name in NETCDF version of file.
+	
+-s	mandatory parameter. This file will be searched in input path, if specified.
+	It can be an ASCII or NETCDF file.
+	
+	ASCII file must have following header, separated by a comma :
+
+	X,Y,LANDUSE,LAT,LON,CLAY_PERC,SILT_PERC,SAND_PERC,SOIL_DEPTH,FR,FN0,FNN,M0,SN,PH,NO3,NH4,HYDRAULIC_CONDUCTIVITY,INSOC,LIT_FRACT,HUMA_FRACT,HUMU_FRACT,BIO_FRACT,RCNRVL,RCNRL,RCNRR,RCNB,RCNH,RCNM,RCNH2,DC_LITTER,DC_HUMADS,DC_HUMUS
+	
+	Please see [LANDUSE] section to check allowed values.
+	Same columns name applies to variables name in NETCDF version of file.
+	
+-t	mandatory parameter. This file will be searched in input path, if specified.
+	It can be an ASCII or NETCDF file.
+	
+	ASCII file must have following header, separated by a comma :
+	
+	X,Y,ELEV
+	
+	Same columns name applies to variables name in NETCDF version of file.
+	
+-c	mandatory parameter. This file will be searched in input path, if specified.
+	It must be an ASCII file. You can put comment using '//' token;
+	The file must contains following rows :
+	
+	SITENAME Soroe
+	VERSION f                           //Must be 'f' for FEM version or 'b', for BGC version for FOREST LANDUSE
+	SPATIAL u                           //Must be 's' or 'u', spatial or unspatial
+	TIME d                              //Must be 'm' or 'd', monthly or daily
+	SCREEN_OUTPUT off                   //Must be  'on' or 'off'
+	DEBUG_OUTPUT off                    //Must be 'on' or 'off'
+	DAILY_OUTPUT on                     //Must be 'on' or 'off'
+	MONTHLY_OUTPUT on                   //Must be 'on' or 'off'
+	ANNUAL_OUTPUT on                    //Must be 'on' or 'off'
+	YEAR_START 1996                     //Starting year simulation
+	YEAR_END 2099                       //Ending year simulation
+	SOIL_OUTPUT off                     //Must be 'on' or 'off'
+	CO2_mod on                          //Must be 'on' or 'off'
+	CO2_trans var                       //Must be 'on' or 'off' or 'var'
+	YEAR_START_CO2_FIXED 2000           //When Co2_trans = var, year at which fix [CO2]
+	Ndep_fixed on                       //Must be 'on' or 'off'
+	Q10_fixed off                        //Q10 temperature acclimatation Must be 'on' or 'off'
+	regeneration off                    //Must be 'on' or 'off'
+	management on                       //Must be 'on' or 'off'
+	YEAR_START_MANAGEMENT 2005          //First year of management
+	Progn_Aut_Resp on                   //Prognostic autotrophic respiration, Must be 'on' or 'off', if off Y values are used
+	DNDC off                            //Must be 'on' or 'off'
+	SIZECELL 100                        //Its value must be within 10 and 100 (unity measure is meter: 10 = 10x10 = 100m^2) 
+	Y 0.48                              //Fixed_Aut_Resp_rate Assimilate use efficiency-Respiration rate-GPP/NPP
+	CO2CONC 368.865                     //CO2 concentration refers to 2000 as ISIMIP PROTOCOL
+	CO2_INCR 0.01                       //1% increment
+	INIT_FRAC_MAXASW 1                  //0.1 Minimum fraction of asw based on maxasw (wilting point) (unchanged)
+	TREE_LAYER_LIMIT 3                  //define differences among tree heights in meters classes to define number of layers in unspatial version
+	SOIL_LAYER 1                        //define soil layer/s to consider
+	MAX_LAYER_COVER 1.2
+	REPLANTED_SPECIES Fagussylvatica    // species name of replanted trees (mandatory)
+	REPLANTED_MANAGEMENT T              // (T) management of replated trees (should be only T)(mandatory)
+	REPLANTED_TREE 10000                // number of replanted trees (mandatory)
+	REPLANTED_AGE 1                     // (yr) age of replanted trees (mandatory)
+	REPLANTED_AVDBH 1                   // (cm) average dbh of replanted trees (mandatory)
+	REPLANTED_LAI 0                     // (m2/m2) lai for replanted trees (mandatory for evergreen, useless for deciduous)
+	REPLANTED_HEIGHT 1.3                // (m) height of replanted trees (mandatory)
+	REPLANTED_WS 0                      // (tDM/ha) stem biomass of replanted trees (optional)
+	REPLANTED_WCR 0                     // (tDM/ha) coarse root biomass of replanted trees (optional)
+	REPLANTED_WFR 0                     // (tDM/ha) fine root biomass of replanted trees (optional)
+	REPLANTED_WL 0                      // (tDM/ha) leaf biomass of replanted trees (optional for evergreen if LAI!= 0, otherwise useless)
+	REPLANTED_WBB 0                     // (tDM/ha) branch biomass of replanted trees (optional)
+	REGENERATION_SPECIES none          // NOT USED it comes from species that produces seeds
+	REGENERATION_MANAGEMENT T           // (T) management of replated trees (should be only T)(mandatory)
+	REGENERATION_N_TREE -9999           // number of replanted trees (mandatory) (NOT USED)
+	REGENERATION_AGE 1                  // (yr) age of regeneration trees (mandatory) (SHOULD BE ALWAYS 1)
+	REGENERATION_AVDBH 0.1              // (cm) average dbh of regeneration trees (mandatory)
+	REGENERATION_LAI 0.0                // (m2/m2) lai for regeneration trees (mandatory for evergreen, useless for deciduous)
+	REGENERATION_HEIGHT 1.2             // (m) height of replanted trees (mandatory) 
+	REGENERATION_WS 0                   // (tDM/ha) stem biomass of regeneration trees (optional)
+	REGENERATION_WCR 0                  // (tDM/ha) coarse root biomass of regeneration trees (optional)
+	REGENERATION_WFR 0                  // (tDM/ha) fine root biomass of regeneration trees (optional)
+	REGENERATION_WL 0                   // (tDM/ha) leaf biomass of regeneration trees (optional for evergreen if LAI!= 0, otherwise useless)
+	REGENERATION_WBB 0                  // (tDM/ha) branch biomass of regeneration trees (optional)
+	
+-k	mandatory parameter only if CO2_trans in settings file is setted on 'on' or 'var'.
+	This file will be searched in input path, if specified.
+	It must be an ASCII file and must have following header, separated by a tab (/t) :
+	
+		year	CO2_ppm
+		
+-n	mandatory parameter only if Ndep_fixed in settings file is setted on 'off'
+	This file will be searched in input path, if specified.
+	It must be an ASCII file and must have following header, separated by a tab (/t) :
+	
+		year	ndep
+		
+-r	not mandatory. Use it if you want export variables values inside a NETCDF file.
+	You can specify more variables per row using a comma as delimiter.
+	Each variable must have "daily_", "monthly_" or "annual_" prefix. i.e. :
+
+		daily_gpp, Annual_GPP
+		daily_ar
+		monthly_ar
+		annual_npp
+		
+	In previous example, daily values for GPP and AR are exported.
+	Monthly values for AR are exported and annual values for GPP and NPP are exported.
+	Files will be created in output path if any or where program is.
+		
+
+[SPECIES]
+
+Following species can be used on relative column inside an ASCII dataset (without indexes)
+Please note that you must use their indexes if you use a NETCDF file.
+
+0,Fagussylvatica
+1,Castaneasativa
+2,Fraxinusangustifolia
+3,Larixdecidua
+4,Piceaabies
+5,Pinussylvestris
+6,Quercuscerris
+7,Quercusilex
+8,Quercusrobur
+9,quercus_deciduous
+10,quercus_evergreen
+11,Wheat
+
+[MANAGEMENT]
+
+Following type of management can be used on relative column inside as ASCII dataset (without indexes)
+Please note that you must use their indexes if you use a NETCDF file.
+T is for timber.
+C is for coppice.
+N is for natural (no management)
+
+0,T
+1,C
+2,N
+
+[LANDUSE]
+
+Following type of landuse can be used on relative column inside as ASCII dataset (without indexes)
+Please note that you must use their indexes if you use a NETCDF file.
+F is for forest
+Z is for crop
+
+0,F
+1,Z
 
 RUN THE MODEL
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

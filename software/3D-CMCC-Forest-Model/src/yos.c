@@ -160,7 +160,7 @@ static double get_ndep(const int year, int*const err) {
 	if ( g_sz_input_path ) {
 		int len = strlen(g_sz_input_path);
 		int _flag = (('/' == g_sz_input_path[len-1]) || ('\\' == g_sz_input_path[len-1]));
-		sprintf(buf, "%s%s%s", g_sz_input_path, _flag ? "" : FOLDER_DELIMITER, g_sz_co2_conc_file);
+		sprintf(buf, "%s%s%s", g_sz_input_path, _flag ? "" : FOLDER_DELIMITER, g_sz_ndep_file);
 		f = fopen(buf, "r");
 	} else {
 		f = fopen(g_sz_ndep_file, "r");
