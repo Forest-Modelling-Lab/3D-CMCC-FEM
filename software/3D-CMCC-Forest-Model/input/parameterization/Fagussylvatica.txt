@@ -4,7 +4,7 @@ PHENOLOGY   0.1                //PHENOLOGY 0.1 = deciduous broadleaf, 0.2 = deci
 ALPHA   0.055                  //Canopy quantum efficiency (molC/molPAR) (0.055) Vitale et al., 2012, (0.05) from Williams 199, (0.056) Rotzer et al., 2010
 EPSILONgCMJ 0                  //Light Use Efficiency  (gC/MJ)(used if ALPHA is not available) 
 K   0.60                       //0.54 Extinction coefficient for absorption of PAR by canopy 0.71 for F. sylvatica Vitale et al., 2012, 0.5 from Williams 1996, 0.65
-ALBEDO  0.2                    //Albedo
+ALBEDO  0.2                    //Albedo, 0.15 from OTTO et al., BGS 2014
 GAMMA_LIGHT 0.01               //Light parameter for light modifier
 INT_COEFF  0.034               //precip interception coefficient for F. sylvatica fom Tatarinov
 SLA_AVG 48                     //Average Specific Leaf Area m^2/KgC sunlit leaves for Fagus s. 27.8 to 48 from Pietsch 2005, 35 for Tatarinov et al., 2006
