@@ -34,7 +34,9 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	double Atau = 7.87 * pow(10,-5);
 	double tairK;
 	double v1, v2;
-	double co2_conc;
+	double FCO2_Veroustraete;              /* CO2 modifier for assimilation through Veroustraete method */
+	double FCO2_Franks;                    /* CO2 modifier for assimilation through Franks method */
+
 
 	age_t *a;
 	species_t *s;
@@ -46,25 +48,14 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 
 	/********************************************************************************************/
 
-	/* following Medlyn et al., 2011 */
-	/* when co2 conc exceeds 600 ppmv it saturates */
-	if ( meteo_annual->co2Conc > 600 )
-	{
-		co2_conc = 600;
-	}
-	else
-	{
-		co2_conc = meteo_annual->co2Conc;
-	}
-
-
 	if ( g_settings->CO2_mod )
 	{
+		/***************************************************************/
 		/* CO2 MODIFIER FOR ASSIMILATION */
 		/* fertilization effect with rising CO2 from: Veroustraete 1994,
 		 * Veroustraete et al., 2002, Remote Sensing of Environment
 		 */
-
+#if 1
 		tairK = meteo_daily->tavg + TempAbs;
 
 		if (meteo_daily->tavg >= 15)
@@ -78,16 +69,28 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 		KO2 = AKO2 * exp (-EaKO2/(Rgas*tairK));
 
 		tau = Atau * exp (-Eatau/(Rgas*(tairK)));
-#if 1
+
 		v1 = (meteo_annual->co2Conc -(O2CONC/(2*tau)))/(g_settings->co2Conc-(O2CONC/(2*tau)));
 		v2 = (KmCO2*(1+(O2CONC/KO2))+g_settings->co2Conc)/(KmCO2*(1+(O2CONC/KO2))+meteo_annual->co2Conc);
-#else
-		v1 = (co2_conc -(O2CONC/(2*tau)))/(g_settings->co2Conc-(O2CONC/(2*tau)));
-		v2 = (KmCO2*(1+(O2CONC/KO2))+g_settings->co2Conc)/(KmCO2*(1+(O2CONC/KO2))+co2_conc);
-#endif
-		/* compute F_CO2 modifier */
-		s->value[F_CO2] = v1*v2;
 
+		/* compute F_CO2 modifier */
+		FCO2_Veroustraete = v1*v2;
+
+		/* CO2 assimilation modifier */
+		s->value[F_CO2] = FCO2_Veroustraete;
+
+#else
+		/***************************************************************/
+		/* CO2 MODIFIER FOR ASSIMILATION */
+		/* fertilization effect with rising CO2 from: Franks et al. 2013 New Phytologist */
+		/* assuming KLeaf temperature equal to daily avg air temperature */
+
+		FCO2_Franks = 1. + ( ( (meteo_annual->co2Conc - meteo_daily->tavg ) * ( g_settings->co2Conc + ( 2. * meteo_daily->tavg ) )
+				/ ( meteo_annual->co2Conc + ( 2. * meteo_daily->tavg ) ) * ( g_settings->co2Conc - meteo_daily->tavg ) ) / 100. );
+
+		/* CO2 assimilation modifier */
+		s->value[F_CO2] = FCO2_Franks;
+#endif
 		/**********************************************************************************/
 
 		/* CO2 MODIFIER FOR TRANSPIRATION  */
