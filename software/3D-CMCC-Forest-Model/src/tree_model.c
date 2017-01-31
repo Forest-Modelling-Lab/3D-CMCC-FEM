@@ -229,7 +229,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 								++s->counter[VEG_DAYS];
 								logger(g_debug_log, "VEG_DAYS = %d \n", s->counter[VEG_DAYS]);
 
-								++s->counter[YEARLY_VEG_DAYS];
+								//++s->counter[YEARLY_VEG_DAYS];
 							}
 							else
 							{
@@ -239,7 +239,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 								s->counter[VEG_DAYS] = 0;
 								logger(g_debug_log, "VEG_DAYS = %d \n", s->counter[VEG_DAYS]);
 
-								s->counter[YEARLY_VEG_DAYS] += 0;
+								//s->counter[YEARLY_VEG_DAYS] += 0;
 
 							}
 
