@@ -4,7 +4,7 @@ PHENOLOGY	0.1               //PHENOLOGY 0.1 = deciduous broadleaf, 0.2 = deciduo
 ALPHA	0.045                 //Canopy quantum efficiency (molC/molPAR) for Q. robur from Morecroft et al 2003
 EPSILONgCMJ	1.05              //Light Use Efficiency  (gC/molPAR)(used if ALPHA is not available)  for Brasschaat site see Horn and Shulze 2011  0.085 from Carrara et al., 2004
 K	0.54                      //0.54 Extinction coefficient for absorption of PAR by canopy Q. robur from Pietsch et al 2005
-ALBEDO	0.2                   //albedo for Quercus spp. from Breuer et al., 2003
+ALBEDO	0.2                   //albedo varying from 0.8-0.17 from Otto et al., 2014; 0.20 for Quercus spp. from Breuer et al., 2003
 GAMMA_LIGHT -9999             //Light parameter for light modifier
 INT_COEFF  0.3                //precip interception coefficient for Q. robur from Tatarinov
 SLA_AVG 34.5                  //Average Specific Leaf Area m^2/KgC sunlit/shaded leaves for Q. robur from Pietsch et al.
