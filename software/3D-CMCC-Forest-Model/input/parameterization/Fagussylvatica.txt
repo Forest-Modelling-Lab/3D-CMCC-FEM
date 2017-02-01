@@ -81,7 +81,7 @@ MASTSEED    5                  //ricorrenza anni di pasciona (da TREEMIG) (NOT U
 WEIGHTSEED  7                  //peso frutto in g FOR Quercus sp (Bernetti) 3.5 from Williams 1996 
 SEXAGE  30                     //Age at Sexual Maturity FOR Quercus sp (per Bernetti 75)
 GERMCAPACITY    0.70           //Geminability (Lischke H. & Loffler T. J.) 0.286 from Williams 1996 
-ROTATION    140                //Forest Rotation for harvesting for Q. robur from ISIMIP protocol see Schuetz 2006; Mund et al., 2004; Hein and Dhote 2006; Cescatti and Piutti 1998
+ROTATION    140                //Forest Rotation for harvesting for F. sylvatica ISIMIP protocol see Schuetz 2006; Mund et al., 2004; Hein and Dhote 2006; Cescatti and Piutti 1998
 THINNING     15                //Thinning (years) for Q. robur from ISIMIP protocol
 THINNING_REGIME    0           //Thinning regime (0 = above, 1 = below) for Q. robur from ISIMIP protocol
 THINNING_INTENSITY  30         //Thinning intensity (% of Basal Area/N-tree to remove) for F. sylvatica ISIMIP protocol
