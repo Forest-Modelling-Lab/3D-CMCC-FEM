@@ -1009,7 +1009,7 @@ void simulation_summary(const matrix_t* const m);
 void site_summary(const matrix_t* const m);
 void topo_summary(const matrix_t* const m);
 void soil_summary(const matrix_t* const m, const cell_t* const cell);
-void forest_summary(const matrix_t* const m, const int cell, const int day, const int month, const int year);
+void forest_summary(const matrix_t* const m, const int day, const int month, const int year);
 int layer_add(cell_t* const c);
 int fill_species_from_file(species_t *const s);
 #endif /* MATRIX_H_ */

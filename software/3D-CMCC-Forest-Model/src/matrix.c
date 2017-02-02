@@ -16,7 +16,7 @@
 #include "initialization.h"
 #include "structure.h"
 #include "netcdf.h"
-	
+
 extern logger_t* g_debug_log;
 extern settings_t* g_settings;
 extern soil_settings_t *g_soil_settings;
@@ -456,7 +456,7 @@ static dataset_t* dataset_import_nc(const char* const filename, int* const px_ce
 	}
 	dataset->rows = NULL;
 	dataset->rows_count = 0;
-	
+
 	for ( year = 0; year < (int)size; ++year ) {
 		for ( i = 0; i < COLUMNS_COUNT; ++i ) {
 			vars[i] = 0;
@@ -504,110 +504,110 @@ static dataset_t* dataset_import_nc(const char* const filename, int* const px_ce
 					if ( flag_value ) {
 						value = f_value;
 					}
-					
+
 					switch ( y ) {
-						case X_COLUMN:
-							//d->rows[year].x = (int)value;
-							row.x = (int)value;
+					case X_COLUMN:
+						//d->rows[year].x = (int)value;
+						row.x = (int)value;
 						break;
 
-						case Y_COLUMN:
-							//d->rows[year].y = (int)value;
-							row.y = (int)value;
+					case Y_COLUMN:
+						//d->rows[year].y = (int)value;
+						row.y = (int)value;
 						break;
 
-						case YEAR_COLUMN:
-							//d->rows[year].year_stand = (int)value;
-							row.year_stand = (int)value;
+					case YEAR_COLUMN:
+						//d->rows[year].year_stand = (int)value;
+						row.year_stand = (int)value;
 						break;
 
-						case AGE_COLUMN:
-							//d->rows[year].age = (int)value;
-							row.age = (int)value;
+					case AGE_COLUMN:
+						//d->rows[year].age = (int)value;
+						row.age = (int)value;
 						break;
 
-						case SPECIES_COLUMN: {
-							char temp[256];
-							sprintf(temp, "%s%s", g_sz_parameterization_path, sz_species);
-							//d->rows[year].species = species_get(temp, (int)value);
-							//if ( ! d->rows[year].species ) {
-							row.species = species_get(temp, (int)value);
-							if ( ! row.species ) {
-								logger(g_debug_log, "unable to get species from %s\n", temp);
-								goto quit_no_nc_err;
-							}
+					case SPECIES_COLUMN: {
+						char temp[256];
+						sprintf(temp, "%s%s", g_sz_parameterization_path, sz_species);
+						//d->rows[year].species = species_get(temp, (int)value);
+						//if ( ! d->rows[year].species ) {
+						row.species = species_get(temp, (int)value);
+						if ( ! row.species ) {
+							logger(g_debug_log, "unable to get species from %s\n", temp);
+							goto quit_no_nc_err;
+						}
+					}
+					break;
+
+					case MANAGEMENT_COLUMN:
+						if ( 0 == (int)value ) {
+							//d->rows[year].management = T;
+							row.management = T;
+						} else if ( 1 == (int)value ) {
+							//d->rows[year].management = C;
+							row.management = C;
+						} else if ( 2 == (int)value ) {
+							row.management = N;
+						} else {
+							logger(g_debug_log, "bad management specified (%d) at row %d\n", (int)value, year+1);
+							free(row.species);
+							goto quit_no_nc_err;
 						}
 						break;
 
-						case MANAGEMENT_COLUMN:
-							if ( 0 == (int)value ) {
-								//d->rows[year].management = T;
-								row.management = T;
-							} else if ( 1 == (int)value ) {
-								//d->rows[year].management = C;
-								row.management = C;
-							} else if ( 2 == (int)value ) {
-								row.management = N;
-							} else {
-								logger(g_debug_log, "bad management specified (%d) at row %d\n", (int)value, year+1);
-								free(row.species);
-								goto quit_no_nc_err;
-							}
+					case N_COLUMN:
+						//d->rows[year].n = (int)value;
+						row.n = (int)value;
 						break;
 
-						case N_COLUMN:
-							//d->rows[year].n = (int)value;
-							row.n = (int)value;
+					case STOOL_COLUMN:
+						//d->rows[year].stool = (int)value;
+						row.stool = (int)value;
 						break;
 
-						case STOOL_COLUMN:
-							//d->rows[year].stool = (int)value;
-							row.stool = (int)value;
+					case AVDBH_COLUMN:
+						//d->rows[year].avdbh = value;
+						row.avdbh = value;
 						break;
 
-						case AVDBH_COLUMN:
-							//d->rows[year].avdbh = value;
-							row.avdbh = value;
+					case HEIGHT_COLUMN:
+						//d->rows[year].height = value;
+						row.height = value;
 						break;
 
-						case HEIGHT_COLUMN:
-							//d->rows[year].height = value;
-							row.height = value;
+					case WF_COLUMN:
+						//d->rows[year].wf = value;
+						row.wf = value;
 						break;
 
-						case WF_COLUMN:
-							//d->rows[year].wf = value;
-							row.wf = value;
+					case WRC_COLUMN:
+						//d->rows[year].wrc = value;
+						row.wrc = value;
 						break;
 
-						case WRC_COLUMN:
-							//d->rows[year].wrc = value;
-							row.wrc = value;
+					case WRF_COLUMN:
+						//d->rows[year].wrf = value;
+						row.wrf = value;
 						break;
 
-						case WRF_COLUMN:
-							//d->rows[year].wrf = value;
-							row.wrf = value;
+					case WS_COLUMN:
+						//d->rows[year].ws = value;
+						row.ws = value;
 						break;
 
-						case WS_COLUMN:
-							//d->rows[year].ws = value;
-							row.ws = value;
+					case WBB_COLUMN:
+						//d->rows[year].wbb = value;
+						row.wbb = value;
 						break;
 
-						case WBB_COLUMN:
-							//d->rows[year].wbb = value;
-							row.wbb = value;
+					case WRES_COLUMN:
+						//d->rows[year].wres = value;
+						row.wres = value;
 						break;
 
-						case WRES_COLUMN:
-							//d->rows[year].wres = value;
-							row.wres = value;
-						break;
-
-						case LAI_COLUMN:
-							//d->rows[year].lai = value;
-							row.lai = value;
+					case LAI_COLUMN:
+						//d->rows[year].lai = value;
+						row.lai = value;
 						break;
 					}
 
@@ -638,7 +638,7 @@ static dataset_t* dataset_import_nc(const char* const filename, int* const px_ce
 	nc_close(id_file);
 	return dataset;
 
-quit:
+	quit:
 	logger(g_debug_log, nc_strerror(ret));
 	quit_no_nc_err:
 	if ( dataset ) dataset_free(dataset);
@@ -827,88 +827,88 @@ static dataset_t* dataset_import_txt(const char* const filename) {
 
 						/* assign value */
 						switch ( i ) {
-							case YEAR_COLUMN:
-								//dataset->rows[dataset->rows_count-1].year_stand = (int)value;
-								row.year_stand = (int)value;
+						case YEAR_COLUMN:
+							//dataset->rows[dataset->rows_count-1].year_stand = (int)value;
+							row.year_stand = (int)value;
 							break;
 
-							case X_COLUMN:
-								//dataset->rows[dataset->rows_count-1].x = (int)value;
-								row.x = (int)value;
+						case X_COLUMN:
+							//dataset->rows[dataset->rows_count-1].x = (int)value;
+							row.x = (int)value;
 							break;
 
-							case Y_COLUMN:
-								//dataset->rows[dataset->rows_count-1].y = (int)value;
-								row.y = (int)value;
+						case Y_COLUMN:
+							//dataset->rows[dataset->rows_count-1].y = (int)value;
+							row.y = (int)value;
 							break;
 
-							case AGE_COLUMN:
-								//dataset->rows[dataset->rows_count-1].age = (int)value;
-								row.age = (int)value;
+						case AGE_COLUMN:
+							//dataset->rows[dataset->rows_count-1].age = (int)value;
+							row.age = (int)value;
 							break;
 
-							case N_COLUMN:
-								//dataset->rows[dataset->rows_count-1].n = (int)value;
-								row.n = (int)value;
+						case N_COLUMN:
+							//dataset->rows[dataset->rows_count-1].n = (int)value;
+							row.n = (int)value;
 							break;
 
-							case STOOL_COLUMN:
-								//dataset->rows[dataset->rows_count-1].stool = (int)value;
-								row.stool = (int)value;
+						case STOOL_COLUMN:
+							//dataset->rows[dataset->rows_count-1].stool = (int)value;
+							row.stool = (int)value;
 							break;
 
-							case AVDBH_COLUMN:
-								//dataset->rows[dataset->rows_count-1].avdbh = value;
-								row.avdbh = value;
+						case AVDBH_COLUMN:
+							//dataset->rows[dataset->rows_count-1].avdbh = value;
+							row.avdbh = value;
 							break;
 
-							case HEIGHT_COLUMN:
-								//dataset->rows[dataset->rows_count-1].height = value;
-								row.height = value;
+						case HEIGHT_COLUMN:
+							//dataset->rows[dataset->rows_count-1].height = value;
+							row.height = value;
 							break;
 
-							case WF_COLUMN:
-								//dataset->rows[dataset->rows_count-1].wf = value;
-								row.wf = value;
+						case WF_COLUMN:
+							//dataset->rows[dataset->rows_count-1].wf = value;
+							row.wf = value;
 							break;
 
-							case WRC_COLUMN:
-								//dataset->rows[dataset->rows_count-1].wrc = value;
-								row.wrc = value;
+						case WRC_COLUMN:
+							//dataset->rows[dataset->rows_count-1].wrc = value;
+							row.wrc = value;
 							break;
 
-							case WRF_COLUMN:
-								//dataset->rows[dataset->rows_count-1].wrf = value;
-								row.wrf = value;
+						case WRF_COLUMN:
+							//dataset->rows[dataset->rows_count-1].wrf = value;
+							row.wrf = value;
 							break;
 
-							case WS_COLUMN:
-								//dataset->rows[dataset->rows_count-1].ws = value;
-								row.ws = value;
+						case WS_COLUMN:
+							//dataset->rows[dataset->rows_count-1].ws = value;
+							row.ws = value;
 							break;
 
-							case WBB_COLUMN:
-								//dataset->rows[dataset->rows_count-1].wbb = value;
-								row.wbb = value;
+						case WBB_COLUMN:
+							//dataset->rows[dataset->rows_count-1].wbb = value;
+							row.wbb = value;
 							break;
 
-							case WRES_COLUMN:
-								//dataset->rows[dataset->rows_count-1].wres = value;
-								row.wres = value;
+						case WRES_COLUMN:
+							//dataset->rows[dataset->rows_count-1].wres = value;
+							row.wres = value;
 							break;
 
-							case LAI_COLUMN:
-								//dataset->rows[dataset->rows_count-1].lai = value;
-								row.lai = value;
+						case LAI_COLUMN:
+							//dataset->rows[dataset->rows_count-1].lai = value;
+							row.lai = value;
 							break;
 
-							default:
-								printf(err_too_many_column, rows_count);
-								free(row.species);
-								free(columns);
-								dataset_free(dataset);
-								fclose(f);
-								return NULL;
+						default:
+							printf(err_too_many_column, rows_count);
+							free(row.species);
+							free(columns);
+							dataset_free(dataset);
+							fclose(f);
+							return NULL;
 						}
 					}
 					/* skip to next token */
@@ -1445,7 +1445,7 @@ matrix_t* matrix_create(const soil_settings_t*const s, const int count, const ch
 		/*
 		x_cells_count = 1;
 		y_cells_count = 1;
-		*/
+		 */
 	}
 
 	if ( filename )
@@ -1468,7 +1468,7 @@ matrix_t* matrix_create(const soil_settings_t*const s, const int count, const ch
 			}
 		}
 		if ( ! d ) return NULL;
-	#ifdef _DEBUG
+#ifdef _DEBUG
 		{
 			FILE *f;
 			f = fopen("debug_input.txt", "w");
@@ -1477,29 +1477,29 @@ matrix_t* matrix_create(const soil_settings_t*const s, const int count, const ch
 				fputs("year,x,y,age,species,management,n,stool,avdbg,height,wf,wrc,wrf,ws,wbb,wres,lai\n", f);
 				for ( i = 0; i < d->rows_count; ++i ) {
 					fprintf(f, "%d,%d,%d,%d,%s,%c,%d,%d,%g,%g,%g,%g,%g,%g,%g,%g,%g\n"
-																, d->rows[i].year_stand
-																, d->rows[i].x
-																, d->rows[i].y
-																, d->rows[i].age
-																, d->rows[i].species
-																, (0 == d->rows[i].management) ? 'T' : ((1 == d->rows[i].management) ? 'C' : 'N')
-																, d->rows[i].n
-																, d->rows[i].stool
-																, d->rows[i].avdbh
-																, d->rows[i].height
-																, d->rows[i].wf
-																, d->rows[i].wrc
-																, d->rows[i].wrf
-																, d->rows[i].ws
-																, d->rows[i].wbb
-																, d->rows[i].wres
-																, d->rows[i].lai
+							, d->rows[i].year_stand
+							, d->rows[i].x
+							, d->rows[i].y
+							, d->rows[i].age
+							, d->rows[i].species
+							, (0 == d->rows[i].management) ? 'T' : ((1 == d->rows[i].management) ? 'C' : 'N')
+									, d->rows[i].n
+									, d->rows[i].stool
+									, d->rows[i].avdbh
+									, d->rows[i].height
+									, d->rows[i].wf
+									, d->rows[i].wrc
+									, d->rows[i].wrf
+									, d->rows[i].ws
+									, d->rows[i].wbb
+									, d->rows[i].wres
+									, d->rows[i].lai
 					);
 				}
 				fclose(f);
 			}
 		}
-	#endif
+#endif
 	}
 
 	if ( d ) {
@@ -1510,8 +1510,8 @@ matrix_t* matrix_create(const soil_settings_t*const s, const int count, const ch
 			flag = 0;
 			for ( i = 0; i < m->cells_count; ++i ) {
 				if ( (d->rows[row].x == m->cells[i].x)
-					&& (d->rows[row].y == m->cells[i].y) ) {
-						
+						&& (d->rows[row].y == m->cells[i].y) ) {
+
 					if ( ! fill_cell_from_heights(&m->cells[i], &d->rows[row]) ) {
 						matrix_free(m);
 						return NULL;
@@ -1522,8 +1522,8 @@ matrix_t* matrix_create(const soil_settings_t*const s, const int count, const ch
 			}
 			if ( ! flag ) {
 				printf("stand values for cell at %d,%d skipped. (not found in soil settings).\n"
-									, d->rows[row].x
-									, d->rows[row].y
+						, d->rows[row].x
+						, d->rows[row].y
 				);
 			}
 
@@ -1534,7 +1534,7 @@ matrix_t* matrix_create(const soil_settings_t*const s, const int count, const ch
 				matrix_free(m);
 				return NULL;
 			}
-			*/
+			 */
 		}
 		dataset_free(d);
 		d = NULL;
@@ -1697,88 +1697,92 @@ void soil_summary(const matrix_t* const m, const cell_t* const cell)
 	logger(g_debug_log, "***************************************************\n\n");
 }
 
-void forest_summary(const matrix_t* const m, const int cell, const int day, const int month, const int year)
+void forest_summary(const matrix_t* const m, const int day, const int month, const int year)
 {
+	int cell;
 	int species;
 	int age;
 	int dbh;
 	int height;
 
 	assert (m);
-
-	logger(g_debug_log, "***************************************************\n");
-	logger(g_debug_log, "****FOREST CHARACTERISTICS for cell (%d, %d)****\n", m->cells[cell].x, m->cells[cell].y);
-	logger(g_debug_log, "FOREST DATASET\n");
-
-	logger(g_debug_log, "matrix has %d cell%s\n", m->cells_count, (m->cells_count > 1 ? "s" : ""));
-
-	logger(g_debug_log, "- cell n.%02d is at %d, %d and has %d height classes\n",
-			cell+1,
-			m->cells[cell].x,
-			m->cells[cell].y,
-			m->cells[cell].heights_count);
-
-	/* loop on each height */
-	for ( height = 0; height < m->cells[cell].heights_count; ++height )
+	for ( cell = 0; cell < m->cells_count; ++cell )
 	{
-		logger(g_debug_log, "**(%d)\n", height + 1);
-		logger(g_debug_log, "-- height n.%02d is %g and has %d dbh classes \n",
-				height + 1, m->cells[cell].heights[height].value,
-				m->cells[cell].heights[height].dbhs_count);
 
-		/* loop on each dbh */
-		for ( dbh = 0; dbh < m->cells[cell].heights[height].dbhs_count; ++dbh)
+		logger(g_debug_log, "***************************************************\n");
+		logger(g_debug_log, "****FOREST CHARACTERISTICS for cell (%d, %d)****\n", m->cells[cell].x, m->cells[cell].y);
+		logger(g_debug_log, "FOREST DATASET\n");
+
+		logger(g_debug_log, "matrix has %d cell%s\n", m->cells_count, (m->cells_count > 1 ? "s" : ""));
+
+		logger(g_debug_log, "- cell n.%02d is at %d, %d and has %d height classes\n",
+				cell+1,
+				m->cells[cell].x,
+				m->cells[cell].y,
+				m->cells[cell].heights_count);
+
+		/* loop on each height */
+		for ( height = 0; height < m->cells[cell].heights_count; ++height )
 		{
-			logger(g_debug_log, "**(%d)\n", dbh + 1);
-			logger(g_debug_log, "--- dbh n.%02d is %g and has %d ages classes\n",
-					dbh + 1, m->cells[cell].heights[height].dbhs[dbh].value,
-					m->cells[cell].heights[height].dbhs[dbh].ages_count);
+			logger(g_debug_log, "**(%d)\n", height + 1);
+			logger(g_debug_log, "-- height n.%02d is %g and has %d dbh classes \n",
+					height + 1, m->cells[cell].heights[height].value,
+					m->cells[cell].heights[height].dbhs_count);
 
-			/* loop on each age */
-			for ( age = 0; age < m->cells[cell].heights[height].dbhs[dbh].ages_count; ++age )
+			/* loop on each dbh */
+			for ( dbh = 0; dbh < m->cells[cell].heights[height].dbhs_count; ++dbh)
 			{
-				logger(g_debug_log, "**(%d)\n", age + 1);
-				logger(g_debug_log, "---- age n.%02d is %d yrs and has %d species\n",
-						age + 1,
-						m->cells[cell].heights[height].dbhs[dbh].ages[age].value,
-						m->cells[cell].heights[height].dbhs[dbh].ages[age].species_count);
+				logger(g_debug_log, "**(%d)\n", dbh + 1);
+				logger(g_debug_log, "--- dbh n.%02d is %g and has %d ages classes\n",
+						dbh + 1, m->cells[cell].heights[height].dbhs[dbh].value,
+						m->cells[cell].heights[height].dbhs[dbh].ages_count);
 
-				/* loop on each species */
-				for ( species = 0; species < m->cells[cell].heights[height].dbhs[dbh].ages[age].species_count; ++species )
+				/* loop on each age */
+				for ( age = 0; age < m->cells[cell].heights[height].dbhs[dbh].ages_count; ++age )
 				{
-					logger(g_debug_log, "----- species is %s\n",
-							m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species].name);
+					logger(g_debug_log, "**(%d)\n", age + 1);
+					logger(g_debug_log, "---- age n.%02d is %d yrs and has %d species\n",
+							age + 1,
+							m->cells[cell].heights[height].dbhs[dbh].ages[age].value,
+							m->cells[cell].heights[height].dbhs[dbh].ages[age].species_count);
+
+					/* loop on each species */
+					for ( species = 0; species < m->cells[cell].heights[height].dbhs[dbh].ages[age].species_count; ++species )
+					{
+						logger(g_debug_log, "----- species is %s\n",
+								m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species].name);
+					}
 				}
 			}
 		}
-	}
 
-	/*************FOREST INITIALIZATION DATA***********/
-	/* initialize power function */
-	allometry_power_function (&m->cells[cell]);
+		/*************FOREST INITIALIZATION DATA***********/
+		/* initialize power function */
+		allometry_power_function (&m->cells[cell]);
 
-	/* initialize carbon pool fraction */
-	carbon_pool_fraction (&m->cells[cell]);
+		/* initialize carbon pool fraction */
+		carbon_pool_fraction (&m->cells[cell]);
 
-	/* initialize forest structure */
-	initialization_forest_structure (&m->cells[cell], day, month, year);
+		/* initialize forest structure */
+		initialization_forest_structure (&m->cells[cell], day, month, year);
 
-	for ( height = 0; height < m->cells[cell].heights_count; ++height )
-	{
-		for ( dbh = 0; dbh < m->cells[cell].heights[height].dbhs_count; ++dbh )
+		for ( height = 0; height < m->cells[cell].heights_count; ++height )
 		{
-			for ( age = 0; age < m->cells[cell].heights[height].dbhs[dbh].ages_count; ++age )
+			for ( dbh = 0; dbh < m->cells[cell].heights[height].dbhs_count; ++dbh )
 			{
-				for ( species = 0; species < m->cells[cell].heights[height].dbhs[dbh].ages[age].species_count; ++species )
+				for ( age = 0; age < m->cells[cell].heights[height].dbhs[dbh].ages_count; ++age )
 				{
+					for ( species = 0; species < m->cells[cell].heights[height].dbhs[dbh].ages[age].species_count; ++species )
+					{
 
-					/* IF NO BIOMASS INITIALIZATION DATA OR TREE HEIGHTS ARE AVAILABLE FOR STAND
-					 * BUT JUST DENDROMETRIC VARIABLES (i.e. AVDBH, HEIGHT, THESE ARE MANDATORY) */
-					/* initialise carbon pools */
-					initialization_forest_class_C_biomass (&m->cells[cell], height, dbh, age, species);
+						/* IF NO BIOMASS INITIALIZATION DATA OR TREE HEIGHTS ARE AVAILABLE FOR STAND
+						 * BUT JUST DENDROMETRIC VARIABLES (i.e. AVDBH, HEIGHT, THESE ARE MANDATORY) */
+						/* initialise carbon pools */
+						initialization_forest_class_C_biomass (&m->cells[cell], height, dbh, age, species);
 
-					/* initialise nitrogen pools */
-					initialization_forest_class_N_biomass (&m->cells[cell], height, dbh, age, species);
+						/* initialise nitrogen pools */
+						initialization_forest_class_N_biomass (&m->cells[cell], height, dbh, age, species);
+					}
 				}
 			}
 		}
