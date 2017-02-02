@@ -177,6 +177,7 @@ const char err_window_size_too_big[] = "window size too big.";
 //static const char err_unable_get_current_path[] = "unable to retrieve current path.\n";
 static const char err_unable_to_register_atexit[] = "unable to register clean-up routine.\n";
 
+/*
 static int cells_sort(const void *a, const void *b)
 {
 	if ( ((cell_t*)a)->elev < ((cell_t*)b)->elev )
@@ -190,6 +191,7 @@ static int cells_sort(const void *a, const void *b)
 		return 0;
 	}
 }
+*/
 
 static const char* get_filename(const char *const s)
 {
@@ -1061,9 +1063,6 @@ int main(int argc, char *argv[]) {
 		} else {
 			matrix->cells[cell].north = 1;
 		}
-
-
-
 
 		/********************************** IMPORT MET DATA **********************************/
 		logger(g_debug_log, "Processing met data files for cell at %d,%d...\n", matrix->cells[cell].x, matrix->cells[cell].y);

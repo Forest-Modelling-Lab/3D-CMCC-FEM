@@ -582,7 +582,7 @@ static int yos_from_arr(double *const values, const int rows_count, const int co
 		else
 		{
 			previous_tavg = yos[*yos_count-1].m[month].d[day].tavg;
-		}
+		}printf("cazzo\n");
 
 		/* case TMAX: //TMAX -  maximum temperature */
 		yos[*yos_count-1].m[month].d[day].tmax = values[VALUE_AT(row,TMAX)];
