@@ -4,7 +4,7 @@ PHENOLOGY   1.2               //PHENOLOGY 0.1 = deciduous broadleaf, 0.2 = decid
 ALPHA   0.0455 //0.055        //Canopy quantum efficiency (molC/molPAR) for P. sylvestris Landsberg et al., 2005, 0.0545 Makela et al., 2006
 EPSILONgCMJ -9999             //Light Use Efficiency (gC/molPAR)(used if ALPHA is not available)  
 K   0.495                     //Extinction coefficient for absorption of PAR by canopy for P. sylvestris Landsberg et al., 2005 or 0.51 from Pietsch, 0.495 Tatarinov
-ALBEDO  0.15                  //averaged for P. sylvestris 0.15 Otto et al., 2014 BGS, 0.093 from Breuer et al., 2003
+ALBEDO  0.15                  //averaged for P. sylvestris 0.15 (or 0.12) Otto et al., 2014 BGS, 0.093 from Breuer et al., 2003
 GAMMA_LIGHT -9999             //Light parameter for light modifier
 INT_COEFF  0.3                //precip interception coefficient for P. sylvestris from Pietsch
 SLA_AVG 9.5 //13.0                  //Average Specific Leaf Area m^2/KgC sunlit/shaded leaves for P. sylvestris 13.0 from Pietsch 9.5 Tatarinov, 5.50 Mencuccini and Bonosi 2001
