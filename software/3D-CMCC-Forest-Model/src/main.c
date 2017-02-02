@@ -1277,6 +1277,14 @@ int main(int argc, char *argv[]) {
 
 				for ( cell = 0; cell < matrix->cells_count; ++cell )
 				{
+					/* counter day of the year */
+					if( !day && !month )matrix->cells[cell].doy = 1;
+					else ++matrix->cells[cell].doy;
+
+					/* counter day of simulation */
+					if( !day && !month && !year )matrix->cells[cell].dos = 1;
+					else ++matrix->cells[cell].dos;
+
 					/* print daily met data */
 					print_daily_met_data (&matrix->cells[cell], day, month, year);
 
