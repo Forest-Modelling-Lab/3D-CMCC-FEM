@@ -210,7 +210,6 @@ static const char* get_filename(const char *const s)
 	return p;
 }
 
-
 static void clean_up(void)
 {
 	if ( g_sz_benchmark_path ) free(g_sz_benchmark_path);
