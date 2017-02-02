@@ -1274,7 +1274,6 @@ int main(int argc, char *argv[]) {
 				/*check for leap years */
 				if ( day >= DaysInMonth[month] ) break;
 
-
 				for ( cell = 0; cell < matrix->cells_count; ++cell )
 				{
 					/* counter day of the year */

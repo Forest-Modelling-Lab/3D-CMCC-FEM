@@ -60,7 +60,7 @@ void print_model_paths(logger_t *const _log)
 	logger(_log, "met file = %s\n", get_filename(g_sz_input_met_file));
 	logger(_log, "settings file = %s\n", get_filename(g_sz_settings_file));
 	if ( g_settings->CO2_trans )
-	logger(_log, "CO2 file = %s\n", get_filename(g_sz_co2_conc_file));
+		logger(_log, "CO2 file = %s\n", get_filename(g_sz_co2_conc_file));
 }
 
 void print_model_settings(logger_t*const log)
@@ -106,7 +106,6 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 	if ( !day && !month && !year )
 	{
 		logger(g_daily_log, "%s \t%2s \t%s", "YEAR", "MONTH", "DAY");
-		//logger(g_daily_log, "YEAR,MONTH,DAY");
 
 		for ( layer = c->tree_layers_count - 1; layer >= 0; --layer )
 		{
@@ -251,7 +250,7 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 										",FVPD"
 										",FN"
 										",FSW");
-							*/
+								 */
 							}
 							if ( c->heights[height].dbhs[dbh].ages[age].species_count > 1 ) logger(g_daily_log,"\t%10s", "*");
 						}
@@ -272,7 +271,7 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 				if ( c->tree_layers[layer].layer_n_height_class > 1 ) logger(g_daily_log,",****");
 			}
 			if ( c->tree_layers_count > 1 ) logger(g_daily_log,",*****");
-		*/
+			 */
 		}
 		/************************************************************************/
 
@@ -298,7 +297,7 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 				"le",
 				"snow_pack",
 				"asw\n");
-		
+
 		//logger(g_daily_log,",et,le,snow_pack,asw\n");
 
 	}
@@ -459,9 +458,9 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 									s->value[F_VPD],
 									s->value[F_NUTR],
 									s->value[F_SW]);
-						*/
+							 */
 						}
-						
+
 						if ( c->heights[height].dbhs[dbh].ages[age].species_count > 1 ) logger(g_daily_log,"\t%10s", "*");
 					}
 					if ( c->heights[height].dbhs[dbh].ages_count > 1 ) logger(g_daily_log,"\t%10s", "**");
@@ -487,7 +486,7 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 		{
 			logger(g_daily_log,",*****");
 		}
-		*/
+		 */
 
 	}
 	/************************************************************************/
@@ -506,7 +505,7 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 							c->daily_npp_gC,
 							c->daily_aut_resp
 		);
-		*/
+		 */
 	}
 	/* printing variables at cell level also if there's more than one layer */
 	else
@@ -526,7 +525,7 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 			c->daily_latent_heat_flux,
 			c->snow_pack,
 			c->asw);
-	*/
+	 */
 
 	/************************************************************************/
 
@@ -1090,4 +1089,45 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 		print_model_settings(g_annual_log);
 	}
 }
+//
+//void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, const int month, const int year, const int years_of_simulation )
+//{
+//	int layer;
+//	int height;
+//	int dbh;
+//	int age;
+//	int species;
+//
+//	static int years_counter;
+//
+//	species_t *s;
+//
+//	/* return if daily logging is off*/
+//	if ( ! g_daily_log ) return;
+//
+//	/* heading */
+//	if ( !day && !month && !year )
+//	{
+//		logger(g_daily_log,"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s"
+//				"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s"
+//				"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s",
+//				"YEAR",	"MONTH", "DAY",	"GPP", "RA", "NPP", "CUE", "LAI", "CC_P", "CC_E", "Ntree", "C_INT",
+//				"C_EVA", "C_TRA", "C_ET", "C_LE", "S_EVA", "WUE", "WRes", "WS", "WSsap", "WSL", "WSD", "WL",
+//				"WFR", "WCR", "WCRsap", "WCRL", "WCRD", "WBB", "WBBsap", "WBBL", "WBBD", "FCO2", "FCO2_TR");
+//	}
+//	/*
+//
+//	logger(g_daily_log,"\t%6.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f"
+//			"\t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f"
+//			"\t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f",
+//			c->daily_gpp;
+//			c->daily_aut_resp,
+//			c->daily_npp_gC,
+//
+//
+//			)
+//			*/
+//
+//}
+
 

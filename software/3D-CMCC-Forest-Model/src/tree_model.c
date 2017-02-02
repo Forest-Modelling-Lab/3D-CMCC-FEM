@@ -104,7 +104,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	if ( ! day && ! month )
 	{
 		/* management blocks */
-		management = forest_management ( c, /*layer, height, dbh, age, species, */ day, month, year );
+		management = forest_management ( c, day, month, year );
 	}
 
 	/****************************************************************************/
