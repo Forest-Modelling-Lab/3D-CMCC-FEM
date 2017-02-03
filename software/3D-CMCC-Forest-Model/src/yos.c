@@ -447,6 +447,16 @@ static int yos_from_arr(double *const values, const int rows_count, const int co
 			}
 		}
 
+		/* vpd out of range */
+		if ( ! flag[VPD_F-3] ) {
+			for ( row = 0; row < rows_count; ++row ) {
+				if ( ! IS_INVALID_VALUE(values[VALUE_AT(row, VPD_F)]) ) {
+					if ( values[VALUE_AT(row, VPD_F)] < VPD_RANGE_MIN ) values[VALUE_AT(row, VPD_F)] = VPD_RANGE_MIN;
+					else if ( values[VALUE_AT(row, VPD_F)] > VPD_RANGE_MAX ) values[VALUE_AT(row, VPD_F)] = VPD_RANGE_MAX;
+				}
+			}
+		}
+
 		/* compute vpd ? or rh ?*/
 		/* please note that we must have TA, so computing is done after computing TA (if needed) */
 		if ( flag[VPD_F-3] ) {
@@ -837,9 +847,32 @@ static int yos_from_arr(double *const values, const int rows_count, const int co
 		yos[*yos_count-1].m[month].d[day].rh_f = values[VALUE_AT(row,RH_F)];
 
 		/* check */
+		if (yos[*yos_count-1].m[month].d[day].tmax < yos[*yos_count-1].m[month].d[day].tavg)
+		{
+			printf ("Tmax (%g) < Tavg (%g) at %d year, %d month, %d day\n",
+					yos[*yos_count-1].m[month].d[day].tmax,
+					yos[*yos_count-1].m[month].d[day].tavg,
+					*yos_count-1, month+1, day+1);getchar();
+		}
+		if (yos[*yos_count-1].m[month].d[day].tmax < yos[*yos_count-1].m[month].d[day].tmin)
+		{
+			printf ("Tmax (%g) < Tmin (%g) at %d year, %d month, %d day\n",
+					yos[*yos_count-1].m[month].d[day].tmax,
+					yos[*yos_count-1].m[month].d[day].tmin,
+					*yos_count-1, month+1, day+1);getchar();
+		}
+		if (yos[*yos_count-1].m[month].d[day].tavg < yos[*yos_count-1].m[month].d[day].tmin)
+		{
+			printf ("Tavg (%g) < Tmin (%g) at %d year, %d month, %d day\n",
+					yos[*yos_count-1].m[month].d[day].tavg,
+					yos[*yos_count-1].m[month].d[day].tmin,
+					*yos_count-1, month+1, day+1);getchar();
+		}
+		/*
 		CHECK_CONDITION(yos[*yos_count-1].m[month].d[day].tmax,<,yos[*yos_count-1].m[month].d[day].tavg);
 		CHECK_CONDITION(yos[*yos_count-1].m[month].d[day].tmax,<,yos[*yos_count-1].m[month].d[day].tmin);
 		CHECK_CONDITION(yos[*yos_count-1].m[month].d[day].tavg,<,yos[*yos_count-1].m[month].d[day].tmin);
+		*/
 	}
 	*p_yos = yos;
 	return 1;
