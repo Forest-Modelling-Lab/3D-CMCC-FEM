@@ -2,7 +2,18 @@
 #ifndef LOGGER_H_
 #define LOGGER_H_
 
-#include <stdio.h>
+#include <stdio.h> // for FILE
+
+/* do not change order */
+enum {
+	DEBUG_LOG
+	, DAILY_LOG
+	, MONTHLY_LOG
+	, YEARLY_LOG
+	, SOIL_LOG
+
+	, LOG_TYPES_COUNT
+};
 
 typedef struct {
 	FILE *f;

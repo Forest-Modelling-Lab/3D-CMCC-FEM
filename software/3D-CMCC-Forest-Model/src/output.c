@@ -10,6 +10,7 @@
 
 extern logger_t* g_debug_log;
 extern const char sz_err_out_of_memory[];
+extern const char* log_types[];
 
 /*
 	DO NOT CHANGE THIS ORDER
@@ -198,14 +199,14 @@ static int get_daily_row_from_date(const int yyyy, const int mm, const int dd) {
 
 static void daily_push_values(const output_t* const o, const cell_t* const c, const int year, const int month, const int day, const int year_index, const int years_count, const int x_cells_count, const int y_cells_count) {
 /*
-	la memoria � stata allocata come C*R*Y*X
+	la memoria e' stata allocata come C*R*Y*X
 
 	C = colonne ( variabili )
 	R = righe ( anni di elaborazione * 366 )
 	Y = numero y celle
 	X = numero x celle
 
-	quindi il valore [v1][v2][v3][v4] � indicizzato a
+	quindi il valore [v1][v2][v3][v4] e' indicizzato a
 
 	[v1 * n1 * n2 *n3 + v2 * n2 * n3 + v3 * n3 + v4]
 
@@ -372,11 +373,11 @@ static int output_write_nc(const output_t* const vars, const char *const path, c
 	for ( i = 0; i < n; ++i ) {
 		/* create output filename */
 		if ( OUTPUT_TYPE_DAILY == type )
-			sprintf(sz_buffer, "%s%s.nc", path, sz_output_vars[vars->daily_vars[i]]);
+			sprintf(sz_buffer, "%s%s%s%s.nc" , path, log_types[DAILY_LOG], FOLDER_DELIMITER, sz_output_vars[vars->daily_vars[i]]);
 		else if ( OUTPUT_TYPE_MONTHLY == type )
-			sprintf(sz_buffer, "%s%s.nc", path, sz_output_vars[vars->monthly_vars[i]]);
+			sprintf(sz_buffer, "%s%s%s%s.nc", path, log_types[MONTHLY_LOG], FOLDER_DELIMITER, sz_output_vars[vars->monthly_vars[i]]);
 		else
-			sprintf(sz_buffer, "%s%s.nc", path, sz_output_vars[vars->yearly_vars[i]]);
+			sprintf(sz_buffer, "%s%s%s%s.nc", path, log_types[YEARLY_LOG], FOLDER_DELIMITER, sz_output_vars[vars->yearly_vars[i]]);
 
 		/* create file */
 		ret = nc_create(sz_buffer, NC_CLOBBER, &id_file);

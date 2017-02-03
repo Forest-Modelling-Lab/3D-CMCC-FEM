@@ -235,8 +235,8 @@ int file_load_in_memory(const char* const filename, char** result) {
 // returns -2 if out of memory
 // returns -3 if read error
 int file_get_rows_count(const char* const filename) {
-	unsigned int i;
-	unsigned int size;
+	int i;
+	int size;
 	int rows_count;
 	char *p;
 

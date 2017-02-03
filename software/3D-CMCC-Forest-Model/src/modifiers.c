@@ -35,7 +35,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	double tairK;
 	double v1, v2;
 	double FCO2_Veroustraete;              /* CO2 modifier for assimilation through Veroustraete method */
-	double FCO2_Franks;                    /* CO2 modifier for assimilation through Franks method */
+	//double FCO2_Franks;                    /* CO2 modifier for assimilation through Franks method */
 
 
 	age_t *a;
