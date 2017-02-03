@@ -1176,14 +1176,12 @@ int main(int argc, char *argv[]) {
 
 	for ( year = 0; year < years_of_simulation; ++year )
 	{
-		/* for handling leap years */
-		//int days_per_month;
-
 		for ( month = 0; month < MONTHS_COUNT; ++month )
 		{
-			//days_per_month = DaysInMonth[month];
-
 			/*
+			 * int days_per_month;
+			days_per_month = DaysInMonth[month];
+
 			//ALESSIOR
 			if ( (FEBRUARY == month) && IS_LEAP_YEAR(matrix->cells[cell].years[year].year) )
 			{
@@ -1193,23 +1191,23 @@ int main(int argc, char *argv[]) {
 
 			for ( day = 0; day < 31; ++day )
 			{
-				/* check if leap years */
+				/* check if leap year */
 				if ( day >= DaysInMonth[month]) break;
 
 				if( !day && !month && !year )
 				{
 					/* note: this happens just the first day of simulation */
 
-					/* general summary on model simulation */
+					/* summary on model simulation */
 					simulation_summary(matrix);
 
-					/* summary on site */
+					/* summary on site data */
 					site_summary(matrix);
 
-					/* summary on topography */
+					/* summary on topographic data */
 					topo_summary(matrix);
 
-					/* summary on soil */
+					/* summary on soil data */
 					soil_summary(matrix, matrix->cells);
 
 					if( LANDUSE_F == g_soil_settings->landuse )
@@ -1256,11 +1254,10 @@ int main(int argc, char *argv[]) {
 
 		for ( month = 0; month < MONTHS_COUNT; ++month )
 		{
-			//int days_per_month;
-
-			//days_per_month = DaysInMonth[month];
-
 			/*
+			int days_per_month;
+			days_per_month = DaysInMonth[month];
+
 			//ALESSIOR
 			if ( (FEBRUARY == month) && IS_LEAP_YEAR(matrix->cells[cell].years[year].year) )
 			{
@@ -1275,11 +1272,11 @@ int main(int argc, char *argv[]) {
 
 				for ( cell = 0; cell < matrix->cells_count; ++cell )
 				{
-					/* counter day of the year */
+					/* counter "day of the year" */
 					if( !day && !month )matrix->cells[cell].doy = 1;
 					else ++matrix->cells[cell].doy;
 
-					/* counter day of simulation */
+					/* counter "day of simulation" */
 					if( !day && !month && !year )matrix->cells[cell].dos = 1;
 					else ++matrix->cells[cell].dos;
 
@@ -1296,6 +1293,7 @@ int main(int argc, char *argv[]) {
 						{
 							if ( 'f' == g_settings->version )
 							{
+								/* run tree model daily */
 								if ( !Tree_model_daily( matrix, cell, day, month, year ) )
 								{
 									logger(g_debug_log, "tree model daily failed!!!");
