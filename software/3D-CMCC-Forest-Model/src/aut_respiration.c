@@ -20,13 +20,16 @@ extern logger_t* g_debug_log;
 
 void maintenance_respiration(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, const meteo_daily_t *const meteo_daily)
 {
-	double MR_ref = 0.218;     /* Reference MR respiration linear N relationship with MR being kgC/kgN/day, 0.218 from Ryan 1991, 0.1584 Campioli et al., 2013 and from Dufrene et al 2005 */
-	double Q10_temp = 20.0;    /* t_base temperature for respiration, 15°C for Damesin et al., 2001 */
+	double MR_ref = 0.218;          /* Reference MR respiration linear N relationship with MR being kgC/kgN/day, 0.218 from Ryan 1991, 0.1584 Campioli et al., 2013 and from Dufrene et al 2005 */
+	double Q10_temp = 20.0;         /* t_base temperature for respiration, 15°C for Damesin et al., 2001 */
+	double Q10_temp_accl = 25.0;    /* t_base temperature for acclimation in respiration Atkin et al., 2008 GCB, Cox et al., 2000 Nature */
 
-	double q10_tavg = 2.0;     /* fractional change in rate with a T 10 °C increase in temperature  2.2 from Schwalm & Ek, 2004; Kimball et al., 1997 */
+	double q10_tavg = 2.0;          /* fractional change in rate with a T 10 °C increase in temperature  2.2 from Schwalm & Ek, 2004; Kimball et al., 1997 */
 	double q10_tday;
 	double q10_tnight;
 	double q10_tsoil;
+
+	double acc_const = 0.0079;      /* acclimation constant from Atkin et al., 2008 GCB */
 
 	double exponent_tday;
 	double exponent_tnight;
@@ -61,37 +64,26 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 	in kgC/day per kg of tissue N is:
 	MR_ref = 0.218 (kgC/kgN/d)
 	 */
+	/* if used recompute q10_tavg based on:
+	 * McGuire et al., 1992, Global Biogeochemical Cycles
+	 * Tjoelker et al., 2001, Global Change Biology
+	 * Smith and Dukes, 2013, Global Change Biology
+	 * */
 
-	//totest using weighted average Temperature of the current days and the four days before
+	q10_tday =  3.22 - 0.046 * meteo_daily->tday;
+	q10_tnight =  3.22 - 0.046 * meteo_daily->tnight;
 
-	if ( g_settings->Q10_fixed )
-	{
-		q10_tday = q10_tavg;
-		q10_tnight = q10_tavg;
-		q10_tsoil  = q10_tavg;
-	}
-	else
-	{
-		/* if used recompute q10_tavg based on:
-		 * McGuire et al., 1992, Global Biogeochemical Cycles
-		 * Tjoelker et al., 2001, Global Change Biology
-		 * Smith and Dukes, 2013, Global Change Biology
-		 * */
-
-		q10_tday =  3.22 - 0.046 * meteo_daily->tday;
-		q10_tnight =  3.22 - 0.046 * meteo_daily->tnight;
-
-		//note: for stem, branch, fine and coarse root we used the 5 days weighted average
 #if 1
-		q10_tavg = 3.22 - 0.046 * meteo_daily->tavg;
+	q10_tavg = 3.22 - 0.046 * meteo_daily->tavg;
 
-		q10_tsoil  =  3.22 - 0.046 * meteo_daily->tsoil;
+	q10_tsoil  =  3.22 - 0.046 * meteo_daily->tsoil;
 #else
-		q10_tavg = 3.22 - 0.046 * meteo_daily->five_day_tavg;
+	//note: for stem, branch, fine and coarse root we used the 5 days weighted average
 
-		q10_tsoil  =  3.22 - 0.046 * meteo_daily->five_day_tsoil;
+	q10_tavg = 3.22 - 0.046 * meteo_daily->ten_day_tavg;
+
+	q10_tsoil  =  3.22 - 0.046 * meteo_daily->ten_day_tsoil;
 #endif
-	}
 
 	/* Nitrogen content tN/area --> gN/m2 */
 	leaf_N = (s->value[LEAF_N] * 1000000.0 /g_settings->sizeCell);
@@ -109,7 +101,7 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 	exponent_tnight = (meteo_daily->tnight - Q10_temp) / 10.0;
 
 	/*******************************************************************************************************************/
-	//note: for stem, branch, fine and coarse root we used the 5 days weighted average
+
 #if 1
 	/* exponent for daily average temperature */
 	exponent_tavg = (meteo_daily->tavg - Q10_temp) / 10.0;
@@ -117,6 +109,8 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 	/* exponent for soil temperature */
 	exponent_tsoil = (meteo_daily->tsoil - Q10_temp) / 10.0;
 #else
+	//note: for stem, branch, fine and coarse root we used the 5 days weighted average
+
 	/* exponent for daily average temperature */
 	exponent_tavg = (meteo_daily->five_day_tavg - Q10_temp) / 10.0;
 
@@ -149,6 +143,12 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 	logger(g_debug_log, "daily fine root maintenance respiration = %g gC/m2/day\n", s->value[FINE_ROOT_MAINT_RESP]);
 
 	/*******************************************************************************************************************/
+	/* live coarse root maintenance respiration */
+
+	s->value[COARSE_ROOT_MAINT_RESP] = coarse_root_N * MR_ref * pow(q10_tsoil, exponent_tsoil);
+	logger(g_debug_log, "daily coarse root maintenance respiration = %g gC/m2/day\n", s->value[COARSE_ROOT_MAINT_RESP]);
+
+	/*******************************************************************************************************************/
 	/* live stem maintenance respiration */
 
 	s->value[STEM_MAINT_RESP] = stem_N * MR_ref * pow(q10_tavg, exponent_tavg);
@@ -161,12 +161,58 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 	logger(g_debug_log, "daily branch maintenance respiration = %g gC/m2/day\n", s->value[BRANCH_MAINT_RESP]);
 
 	/*******************************************************************************************************************/
-	/* live coarse root maintenance respiration */
 
-	s->value[COARSE_ROOT_MAINT_RESP] = coarse_root_N * MR_ref * pow(q10_tsoil, exponent_tsoil);
-	logger(g_debug_log, "daily coarse root maintenance respiration = %g gC/m2/day\n", s->value[COARSE_ROOT_MAINT_RESP]);
+#if 0
+	/* if acclimation for aut repiration = "on" */
+	//if ( g_settings->aut_resp_accl )
+	{
+		/********************************************ACCLIMATION FOR RESPIRATION********************************************/
+		/* FOLLOWING Atkin et al., 2008 "Using temperature-dependent changes in leaf scaling relationships
+		 * to quantitatively account for thermal acclimation of respiration in a coupled global climate–vegetation model",
+		 * 14, 1–18, GCB */
 
-	/*******************************************************************************************************************/
+		/* Leaf maintenance respiration is calculated separately for day and night */
+
+		/* day time leaf maintenance respiration */
+		s->value[DAILY_LEAF_MAINT_RESP] *= pow(10., ( acc_const * ( meteo_daily->ten_day_tday - Q10_temp_accl ) ) ) * ( meteo_daily->daylength / 24.0 );
+		logger(g_debug_log, "daily leaf maintenance respiration = %g gC/m2/day\n", s->value[DAILY_LEAF_MAINT_RESP]);
+
+		/* night time leaf maintenance respiration */
+		s->value[NIGHTLY_LEAF_MAINT_RESP] *= pow(10., ( acc_const * ( meteo_daily->ten_day_tnight - Q10_temp_accl ) ) ) * ( meteo_daily->daylength / 24.0 );
+		logger(g_debug_log, "nightly leaf maintenance respiration = %g gC/m2/day\n", s->value[NIGHTLY_LEAF_MAINT_RESP]);
+
+		/* total (all day) leaf maintenance respiration */
+		s->value[TOT_DAY_LEAF_MAINT_RESP] = s->value[DAILY_LEAF_MAINT_RESP] + s->value[NIGHTLY_LEAF_MAINT_RESP];
+		logger(g_debug_log, "daily total leaf maintenance respiration = %g gC/m2/day\n", s->value[TOT_DAY_LEAF_MAINT_RESP]);
+
+		/*******************************************************************************************************************/
+		/* fine roots maintenance respiration */
+
+		s->value[FINE_ROOT_MAINT_RESP]  *= pow(10., ( acc_const * ( meteo_daily->ten_day_tsoil - Q10_temp_accl ) ) );
+		logger(g_debug_log, "daily fine root maintenance respiration = %g gC/m2/day\n", s->value[FINE_ROOT_MAINT_RESP]);
+
+		/*******************************************************************************************************************/
+		/* live coarse root maintenance respiration */
+
+		s->value[COARSE_ROOT_MAINT_RESP] *= pow(10., ( acc_const * ( meteo_daily->ten_day_tsoil - Q10_temp_accl ) ) );
+		logger(g_debug_log, "daily coarse root maintenance respiration = %g gC/m2/day\n", s->value[COARSE_ROOT_MAINT_RESP]);
+
+		/*******************************************************************************************************************/
+		/* live stem maintenance respiration */
+
+		s->value[STEM_MAINT_RESP] *= pow(10., ( acc_const * ( meteo_daily->ten_day_tavg - Q10_temp_accl ) ) );
+		logger(g_debug_log, "daily stem maintenance respiration = %g gC/m2/day\n", s->value[STEM_MAINT_RESP]);
+
+		/*******************************************************************************************************************/
+		/* live branch maintenance respiration */
+
+		s->value[BRANCH_MAINT_RESP] *= pow(10., ( acc_const * ( meteo_daily->ten_day_tavg - Q10_temp_accl ) ) );
+		logger(g_debug_log, "daily branch maintenance respiration = %g gC/m2/day\n", s->value[BRANCH_MAINT_RESP]);
+
+		/*******************************************************************************************************************/
+	}
+#endif
+
 	/* COMPUTE TOTAL MAINTENANCE RESPIRATION */
 	s->value[TOTAL_MAINT_RESP] = s->value[TOT_DAY_LEAF_MAINT_RESP]+
 			s->value[FINE_ROOT_MAINT_RESP]+

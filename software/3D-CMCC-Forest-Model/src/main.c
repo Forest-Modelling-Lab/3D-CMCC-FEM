@@ -1251,6 +1251,10 @@ int main(int argc, char *argv[]) {
 					Dew_temperature(matrix->cells[cell].years[year].m, day, month);
 					Radiation(&matrix->cells[cell], day, month, year);
 					Check_prcp(&matrix->cells[cell], day, month, year);
+					Ten_day_tavg(matrix->cells[cell].years[year].m, day, month);
+					Ten_day_tday(matrix->cells[cell].years[year].m, day, month);
+					Ten_day_tnight(matrix->cells[cell].years[year].m, day, month);
+					Ten_day_tsoil(matrix->cells[cell].years[year].m, day, month);
 
 					if ( LANDUSE_F == g_soil_settings->landuse )
 					{

@@ -576,11 +576,12 @@ void Soil_temperature(meteo_t* met, const int day, const int month) {
 	}
 }
 
-void five_day_tavg (meteo_t* met, const int day, const int month) {
+void Ten_day_tavg (meteo_t* met, const int day, const int month)
+{
 	double avg = 0;
 	int i;
 	int day_temp = day;
-	int day_avg = 5;
+	int day_avg = 10;
 	int month_temp = month;
 	int weight;
 	int incr_weight;
@@ -588,7 +589,7 @@ void five_day_tavg (meteo_t* met, const int day, const int month) {
 
 	if ( day < day_avg && !month )
 	{
-		met[month_temp].d[day_temp].five_day_tavg = met[month_temp].d[day_temp].tavg;
+		met[month_temp].d[day_temp].ten_day_tavg = met[month_temp].d[day_temp].tavg;
 	}
 	else
 	{
@@ -620,15 +621,16 @@ void five_day_tavg (meteo_t* met, const int day, const int month) {
 			}
 		}
 		avg = avg / (double)incr_weight;
-		met[month].d[day].five_day_tavg = avg;
+		met[month].d[day].ten_day_tavg = avg;
 	}
 }
 
-void five_day_tsoil (meteo_t* met, const int day, const int month) {
+void Ten_day_tday (meteo_t* met, const int day, const int month)
+{
 	double avg = 0;
 	int i;
 	int day_temp = day;
-	int day_avg = 5;
+	int day_avg = 10;
 	int month_temp = month;
 	int weight;
 	int incr_weight;
@@ -636,7 +638,104 @@ void five_day_tsoil (meteo_t* met, const int day, const int month) {
 
 	if ( day < day_avg && !month )
 	{
-		met[month_temp].d[day_temp].five_day_tsoil = met[month_temp].d[day_temp].tsoil;
+		met[month_temp].d[day_temp].ten_day_tday = met[month_temp].d[day_temp].tday;
+	}
+	else
+	{
+		for (i=0; i <day_avg; i++)
+		{
+			weight = day_avg-i;
+
+			if (!i) incr_weight = 1;
+			else incr_weight += i;
+
+			if (day > day_avg-1)
+			{
+				avg += (met[month_temp].d[day_temp].tday * weight);
+				day_temp--;
+			}
+			else
+			{
+				if(day_temp == 0)
+				{
+					avg += (met[month_temp].d[day_temp].tday * weight);
+					month_temp--;
+					day_temp = days_per_month[month_temp] - 1;
+				}
+				else
+				{
+					avg += (met[month_temp].d[day_temp].tday * weight);
+					day_temp--;
+				}
+			}
+		}
+		avg = avg / (double)incr_weight;
+		met[month].d[day].ten_day_tday = avg;
+	}
+}
+
+void Ten_day_tnight (meteo_t* met, const int day, const int month)
+{
+	double avg = 0;
+	int i;
+	int day_temp = day;
+	int day_avg = 10;
+	int month_temp = month;
+	int weight;
+	int incr_weight;
+	const int days_per_month[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+
+	if ( day < day_avg && !month )
+	{
+		met[month_temp].d[day_temp].ten_day_tnight = met[month_temp].d[day_temp].tnight;
+	}
+	else
+	{
+		for (i=0; i <day_avg; i++)
+		{
+			weight = day_avg-i;
+
+			if (!i) incr_weight = 1;
+			else incr_weight += i;
+
+			if (day > day_avg-1)
+			{
+				avg += (met[month_temp].d[day_temp].tnight * weight);
+				day_temp--;
+			}
+			else
+			{
+				if(day_temp == 0)
+				{
+					avg += (met[month_temp].d[day_temp].tnight * weight);
+					month_temp--;
+					day_temp = days_per_month[month_temp] - 1;
+				}
+				else
+				{
+					avg += (met[month_temp].d[day_temp].tnight * weight);
+					day_temp--;
+				}
+			}
+		}
+		avg = avg / (double)incr_weight;
+		met[month].d[day].ten_day_tnight = avg;
+	}
+}
+
+void Ten_day_tsoil (meteo_t* met, const int day, const int month) {
+	double avg = 0;
+	int i;
+	int day_temp = day;
+	int day_avg = 10;
+	int month_temp = month;
+	int weight;
+	int incr_weight;
+	const int days_per_month[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+
+	if ( day < day_avg && !month )
+	{
+		met[month_temp].d[day_temp].ten_day_tsoil = met[month_temp].d[day_temp].tsoil;
 	}
 	else
 	{
@@ -668,7 +767,7 @@ void five_day_tsoil (meteo_t* met, const int day, const int month) {
 			}
 		}
 		avg = avg / (double)incr_weight;
-		met[month].d[day].five_day_tsoil = avg;
+		met[month].d[day].ten_day_tsoil = avg;
 	}
 }
 
