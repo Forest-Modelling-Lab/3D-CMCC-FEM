@@ -87,7 +87,7 @@ void print_model_settings(logger_t*const log)
 	}
 }
 
-void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, const int month, const int year, const int years_of_simulation )
+void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, const int month, const int year, const int years_of_simulation)
 {
 	int layer;
 	int height;
@@ -98,6 +98,9 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 	static int years_counter;
 
 	species_t *s;
+	meteo_t *met;
+
+	met = c->years[year].m;
 
 	/* return if daily logging is off*/
 	if ( ! g_daily_log ) return;
@@ -282,7 +285,11 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 					"***",
 					"gpp",
 					"npp",
-					"ar");
+					"ar",
+					"10tavg",
+					"10tday",
+					"10tnight",
+					"10tsoil");
 			//logger(g_daily_log,",***,gpp,npp,ar");
 		}
 		/* heading variables at cell level also if there's more than one layer */
@@ -292,11 +299,19 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 			//logger(g_daily_log,",*****");
 		}
 		/* heading variables only at cell level */
-		logger(g_daily_log,"\t%10s \t%10s \t%10s \t%10s",
+		logger(g_daily_log,"\t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s",
 				"et",
 				"le",
 				"snow_pack",
-				"asw\n");
+				"asw",
+				"10tavg",
+				"10tday",
+				"10tnight",
+				"10tsoil",
+				"tavg",
+				"tday",
+				"tnight",
+				"tsoil\n");
 
 		//logger(g_daily_log,",et,le,snow_pack,asw\n");
 
@@ -494,7 +509,7 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 	/* printing variables at cell level only if there's more than one layer */
 	if( c->heights_count > 1 )
 	{
-		logger(g_daily_log, "\t%4s \t%3.4f \t%3.4f \t%3.4f ",
+		logger(g_daily_log, "\t%4s \t%3.4f \t%3.4f \t%3.4f",
 				"***",
 				c->daily_gpp,
 				c->daily_npp_gC,
@@ -514,11 +529,19 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 		//logger(g_daily_log, ",*****");
 	}
 	/* printing variables only at cell level */
-	logger(g_daily_log, "\t%3.4f \t%3.4f \t%3.4f \t%3.4f\n",
+	logger(g_daily_log, "\t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f\n",
 			c->daily_et,
 			c->daily_latent_heat_flux,
 			c->snow_pack,
-			c->asw);
+			c->asw,
+			met[month].d[day].ten_day_tavg,
+			met[month].d[day].ten_day_tday,
+			met[month].d[day].ten_day_tnight,
+			met[month].d[day].ten_day_tsoil,
+			met[month].d[day].tavg,
+			met[month].d[day].tday,
+			met[month].d[day].tnight,
+			met[month].d[day].tsoil);
 	/*
 	logger(g_daily_log, ",%g,%g,%g,%g\n",
 			c->daily_et,

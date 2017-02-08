@@ -364,7 +364,8 @@ void Day_Length(cell_t *c, const int day, const int month, const int year)
 /* following Running et al., 1987 */
 void Avg_temperature(meteo_t *met, const int day, const int month)
 {
-	if ( NO_DATA == met[month].d[day].tavg ) {
+	if ( NO_DATA == met[month].d[day].tavg )
+	{
 		if ( (NO_DATA == met[month].d[day].tmax) && (NO_DATA == met[month].d[day].tmin) )
 		{
 			logger(g_debug_log, "NO DATA FOR TEMPERATURE!\n");
@@ -387,7 +388,9 @@ void Daylight_avg_temperature(meteo_t *const met, const int day, const int month
 	if (met[month].d[day].tmax != NO_DATA && met[month].d[day].tmin != NO_DATA)
 	{
 		met[month].d[day].tday = 0.45 * (met[month].d[day].tmax - met[month].d[day].tavg) + met[month].d[day].tavg;
-	} else {
+	}
+	else
+	{
 		met[month].d[day].tday = NO_DATA;
 		logger(g_debug_log, "NO TMAX and TMIN can't compute TDAY!!! \n");
 	}
@@ -543,231 +546,204 @@ void Soil_temperature(meteo_t* met, const int day, const int month) {
 	}
 	else
 	{
-		for (i=0; i <day_avg; i++)
+		//note new 08 Feb 2017
+		for ( i = day_avg; i > 0; --i )
 		{
-			weight = day_avg-i;
+			weight = i;
 
-			if (!i) incr_weight = 1;
-			else incr_weight += i;
+			incr_weight += i;
 
-			if (day > day_avg-1)
+			if ( day_temp >= 0 )
 			{
-				avg += (met[month_temp].d[day_temp].tavg * weight);
-				day_temp--;
+				avg += (met[month].d[day_temp].tavg * weight);
 			}
 			else
 			{
-				if(day_temp == 0)
-				{
-					avg += (met[month_temp].d[day_temp].tavg * weight);
-					month_temp--;
-					day_temp = days_per_month[month_temp] - 1;
-				}
-				else
-				{
-					avg += (met[month_temp].d[day_temp].tavg * weight);
-					day_temp--;
-				}
+				avg += (met[month-1].d[days_per_month[month-1] +(day_temp)].tavg * weight);
+				//note:
+				//avg += (met[month-1].d[days_per_month[month-1] - fabs(day_temp)].tavg * weight);
 			}
+			--day_temp;
 		}
+
+		/* compute average */
 		avg = avg / (double)incr_weight;
 		met[month].d[day].tsoil = avg;
 
 	}
 }
 
-void Ten_day_tavg (meteo_t* met, const int day, const int month)
+
+void Ten_day_tavg (cell_t *c, const int day, const int month, const int year)
 {
-	double avg = 0;
+	double avg = 0.0;
 	int i;
 	int day_temp = day;
 	int day_avg = 10;
-	int month_temp = month;
 	int weight;
 	int incr_weight;
-	const int days_per_month[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+	int days_per_month[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
+	//note: include for leap_years
+	//note: for the first ten days consider days before
 	if ( day < day_avg && !month )
 	{
-		met[month_temp].d[day_temp].ten_day_tavg = met[month_temp].d[day_temp].tavg;
+		c->years[year].m[month].d[day].ten_day_tavg = c->years[year].m[month].d[day].tavg;
 	}
 	else
 	{
-		for (i=0; i <day_avg; i++)
+		for ( i = day_avg; i > 0; --i )
 		{
-			weight = day_avg-i;
+			weight = i;
 
-			if (!i) incr_weight = 1;
-			else incr_weight += i;
+			incr_weight += i;
 
-			if (day > day_avg-1)
+			if ( day_temp >= 0 )
 			{
-				avg += (met[month_temp].d[day_temp].tavg * weight);
-				day_temp--;
+				avg += (c->years[year].m[month].d[day_temp].tavg * weight);
 			}
 			else
 			{
-				if(day_temp == 0)
+				if ( (month == MARCH) && IS_LEAP_YEAR (c->years[year].year) )
 				{
-					avg += (met[month_temp].d[day_temp].tavg * weight);
-					month_temp--;
-					day_temp = days_per_month[month_temp] - 1;
+					avg += (c->years[year].m[month-1].d[(days_per_month[month-1]+1) + day_temp].tday * weight);
 				}
 				else
 				{
-					avg += (met[month_temp].d[day_temp].tavg * weight);
-					day_temp--;
+					avg += (c->years[year].m[month-1].d[days_per_month[month-1] +(day_temp)].tday * weight);
 				}
 			}
+			--day_temp;
 		}
-		avg = avg / (double)incr_weight;
-		met[month].d[day].ten_day_tavg = avg;
+
+		/* compute average */
+		c->years[year].m[month].d[day].ten_day_tavg = avg / incr_weight;
 	}
 }
 
 void Ten_day_tday (meteo_t* met, const int day, const int month)
 {
-	double avg = 0;
+	double avg = 0.0;
 	int i;
 	int day_temp = day;
 	int day_avg = 10;
-	int month_temp = month;
 	int weight;
 	int incr_weight;
 	const int days_per_month[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
+	//note: include for leap_years
+	//note: for the first ten days consider days before
 	if ( day < day_avg && !month )
 	{
-		met[month_temp].d[day_temp].ten_day_tday = met[month_temp].d[day_temp].tday;
+		met[month].d[day].ten_day_tday = met[month].d[day].tday;
 	}
 	else
 	{
-		for (i=0; i <day_avg; i++)
+		for ( i = day_avg; i > 0; --i )
 		{
-			weight = day_avg-i;
+			weight = i;
 
-			if (!i) incr_weight = 1;
-			else incr_weight += i;
+			incr_weight += i;
 
-			if (day > day_avg-1)
+			if ( day_temp >= 0 )
 			{
-				avg += (met[month_temp].d[day_temp].tday * weight);
-				day_temp--;
+				avg += (met[month].d[day_temp].tday * weight);
 			}
 			else
 			{
-				if(day_temp == 0)
-				{
-					avg += (met[month_temp].d[day_temp].tday * weight);
-					month_temp--;
-					day_temp = days_per_month[month_temp] - 1;
-				}
-				else
-				{
-					avg += (met[month_temp].d[day_temp].tday * weight);
-					day_temp--;
-				}
+				avg += (met[month-1].d[days_per_month[month-1] +(day_temp)].tday * weight);
+				//note:
+				//avg += (met[month-1].d[days_per_month[month-1] - fabs(day_temp)].tavg * weight);
 			}
+			--day_temp;
 		}
-		avg = avg / (double)incr_weight;
-		met[month].d[day].ten_day_tday = avg;
+
+		/* compute average */
+		met[month].d[day].ten_day_tday = avg / incr_weight;
 	}
 }
 
 void Ten_day_tnight (meteo_t* met, const int day, const int month)
 {
-	double avg = 0;
+	double avg = 0.0;
 	int i;
 	int day_temp = day;
 	int day_avg = 10;
-	int month_temp = month;
 	int weight;
 	int incr_weight;
 	const int days_per_month[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
+	//note: include for leap_years
+	//note: for the first ten days consider days before
 	if ( day < day_avg && !month )
 	{
-		met[month_temp].d[day_temp].ten_day_tnight = met[month_temp].d[day_temp].tnight;
+		met[month].d[day].ten_day_tnight = met[month].d[day].tnight;
 	}
 	else
 	{
-		for (i=0; i <day_avg; i++)
+		for ( i = day_avg; i > 0; --i )
 		{
-			weight = day_avg-i;
+			weight = i;
 
-			if (!i) incr_weight = 1;
-			else incr_weight += i;
+			incr_weight += i;
 
-			if (day > day_avg-1)
+			if ( day_temp >= 0 )
 			{
-				avg += (met[month_temp].d[day_temp].tnight * weight);
-				day_temp--;
+				avg += (met[month].d[day_temp].tnight * weight);
 			}
 			else
 			{
-				if(day_temp == 0)
-				{
-					avg += (met[month_temp].d[day_temp].tnight * weight);
-					month_temp--;
-					day_temp = days_per_month[month_temp] - 1;
-				}
-				else
-				{
-					avg += (met[month_temp].d[day_temp].tnight * weight);
-					day_temp--;
-				}
+				avg += (met[month-1].d[days_per_month[month-1] +(day_temp)].tnight * weight);
+				//note:
+				//avg += (met[month-1].d[days_per_month[month-1] - fabs(day_temp)].tavg * weight);
 			}
+			--day_temp;
 		}
-		avg = avg / (double)incr_weight;
-		met[month].d[day].ten_day_tnight = avg;
+
+		/* compute average */
+		met[month].d[day].ten_day_tnight = avg / incr_weight;
 	}
 }
 
-void Ten_day_tsoil (meteo_t* met, const int day, const int month) {
-	double avg = 0;
+void Ten_day_tsoil (meteo_t* met, const int day, const int month)
+{
+	double avg = 0.0;
 	int i;
 	int day_temp = day;
 	int day_avg = 10;
-	int month_temp = month;
 	int weight;
 	int incr_weight;
 	const int days_per_month[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
+	//note: include for leap_years
+	//note: for the first ten days consider days before
 	if ( day < day_avg && !month )
 	{
-		met[month_temp].d[day_temp].ten_day_tsoil = met[month_temp].d[day_temp].tsoil;
+		met[month].d[day].ten_day_tsoil = met[month].d[day].tsoil;
 	}
 	else
 	{
-		for (i=0; i <day_avg; i++)
+		for ( i = day_avg; i > 0; --i )
 		{
-			weight = day_avg-i;
+			weight = i;
 
-			if (!i) incr_weight = 1;
-			else incr_weight += i;
+			incr_weight += i;
 
-			if (day > day_avg-1)
+			if ( day_temp >= 0 )
 			{
-				avg += (met[month_temp].d[day_temp].tsoil * weight);
-				day_temp--;
+				avg += (met[month].d[day_temp].tsoil * weight);
 			}
 			else
 			{
-				if(day_temp == 0)
-				{
-					avg += (met[month_temp].d[day_temp].tsoil * weight);
-					month_temp--;
-					day_temp = days_per_month[month_temp] - 1;
-				}
-				else
-				{
-					avg += (met[month_temp].d[day_temp].tsoil * weight);
-					day_temp--;
-				}
+				avg += (met[month-1].d[days_per_month[month-1] +(day_temp)].tsoil * weight);
+				//note:
+				//avg += (met[month-1].d[days_per_month[month-1] - fabs(day_temp)].tavg * weight);
 			}
+			--day_temp;
 		}
-		avg = avg / (double)incr_weight;
-		met[month].d[day].ten_day_tsoil = avg;
+
+		/* compute average */
+		met[month].d[day].ten_day_tsoil = avg / incr_weight;
 	}
 }
 

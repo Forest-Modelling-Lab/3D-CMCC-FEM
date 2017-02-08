@@ -19,7 +19,7 @@ void Sat_vapour_pressure(cell_t *const c, const int day, const int month, const 
 void Dew_temperature(meteo_t *met, const int day, const int month);
 void Check_prcp(cell_t *c, const int day, const int month, const int year);
 void Annual_met_values(cell_t *const c, const int day, const int month, const int year);
-void Ten_day_tavg(meteo_t* met, const int day, const int month);
+void Ten_day_tavg(cell_t *c, const int day, const int month, const int year);
 void Ten_day_tsoil(meteo_t* met, const int day, const int month);
 void Ten_day_tday(meteo_t* met, const int day, const int month);
 void Ten_day_tnight(meteo_t* met, const int day, const int month);

@@ -8,7 +8,7 @@ DAILY_OUTPUT on                     //Must be 'on' or 'off'
 MONTHLY_OUTPUT on                   //Must be 'on' or 'off'
 ANNUAL_OUTPUT on                    //Must be 'on' or 'off'
 YEAR_START 1996                     //Starting year simulation
-YEAR_END 2099                       //Ending year simulation
+YEAR_END 1997                       //Ending year simulation
 SOIL_OUTPUT off                     //Must be 'on' or 'off'
 CO2_mod on                          //Must be 'on' or 'off'
 CO2_trans var                       //Must be 'on' or 'off'
