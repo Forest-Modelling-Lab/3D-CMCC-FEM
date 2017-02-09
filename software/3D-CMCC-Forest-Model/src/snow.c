@@ -105,7 +105,7 @@ void snow_melt_subl(cell_t *const c, meteo_daily_t *meteo_daily)
 
 	/* following Lagergren et al., 2006 */
 	/* impose zero value for tsoil in case of snow presence */
-	if( c->snow_pack ) meteo_daily->tsoil = 0.0;
+	//if( c->snow_pack ) meteo_daily->tsoil = 0.0;
 
 	logger(g_debug_log, "*****************************************\n");
 

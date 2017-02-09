@@ -26,7 +26,7 @@ typedef struct {
 	char CO2_trans;                   /* CO2 transient */
 	int year_start_co2_fixed;         /* for CO2_trans = var, year at which CO2 is fixed */
 	char Ndep_fixed;
-	char Q10_fixed;
+	char Resp_accl;
 	char regeneration;
 	char management;
 	int year_start_management;        /* start year management */

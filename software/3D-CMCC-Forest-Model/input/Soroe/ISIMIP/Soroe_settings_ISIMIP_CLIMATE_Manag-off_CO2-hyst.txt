@@ -14,7 +14,7 @@ CO2_mod on                          //Must be 'on' or 'off'
 CO2_trans var                       //Must be 'on' or 'off'
 YEAR_START_CO2_FIXED 2000           //When Co2_trans = var, year at which fix [CO2]
 Ndep_fixed on                       //Must be 'on' or 'off'
-Q10_fixed off                       //Q10 temperature acclimatation Must be 'on' or 'off'
+Resp_accl off                       //Q10 temperature acclimatation Must be 'on' or 'off'
 regeneration off                    //Must be 'on' or 'off'
 management off                      //Must be 'on' or 'off'
 YEAR_START_MANAGEMENT 2005          //First year of management

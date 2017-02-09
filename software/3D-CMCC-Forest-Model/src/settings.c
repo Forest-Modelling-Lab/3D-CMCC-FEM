@@ -25,7 +25,7 @@ enum {
 	, SETTINGS_CO2_TRANS
 	, SETTINGS_YEAR_START_CO2_FIXED
 	, SETTINGS_NDEP_FIXED
-	, SETTINGS_Q10_FIXED
+	, SETTINGS_RESP_ACCL
 	, SETTINGS_REGENERATION
 	, SETTINGS_MANAGEMENT
 	, SETTINGS_YEAR_START_MANAGEMENT
@@ -193,9 +193,9 @@ settings_t* settings_import(const char *const filename) {
 				}
 			break;
 
-			case SETTINGS_Q10_FIXED:
+			case SETTINGS_RESP_ACCL:
 				if ( ! string_compare_i(token, "on") ) {
-					s->Q10_fixed = 1;
+					s->Resp_accl = 1;
 				}
 			break;
 

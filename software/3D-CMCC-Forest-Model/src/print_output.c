@@ -78,7 +78,7 @@ void print_model_settings(logger_t*const log)
 	{
 		logger(log, "year %d at which co2 concentration is fixed at value = %g ppmv\n", g_settings->year_start_co2_fixed, g_settings->co2Conc);
 	}
-	logger(log, "Q10 fixed = %s\n", g_settings->Q10_fixed ? "on" : "off");
+	logger(log, "Resp accl = %s\n", g_settings->Resp_accl ? "on" : "off");
 	logger(log, "regeneration = %s\n", g_settings->regeneration ? "on" : "off");
 	logger(log, "Management = %s\n", g_settings->management ? "on" : "off");
 	if ( g_settings->management )
@@ -199,61 +199,6 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 										"FVPD",
 										"FN",
 										"FSW");
-								/*
-								logger(g_daily_log,""
-										",GPP"
-										",RG"
-										",RM"
-										",RA"
-										",NPP"
-										",CUE"
-										",LAI"
-										",CC_P"
-										",CC_E"
-										",Ntree"
-										",VEG_D"
-										",C_INT"
-										",C_WAT"
-										",C_EVA"
-										",C_TRA"
-										",C_ET"
-										",C_LE"
-										",S_EVA"
-										",WUE"
-										",WRes"
-										",WS"
-										",WSsap"
-										",WSL"
-										",WSD"
-										",WL"
-										",WFR"
-										",WCR"
-										",WCRsap"
-										",WCRL"
-										",WCRD"
-										",WBB"
-										",WBBsap"
-										",WBBL"
-										",WBBD"
-										",dWRes"
-										",dWS"
-										",dWL"
-										",dWFR"
-										",dWCR"
-										",dWBB"
-										",SAR"
-										",LAR"
-										",FRAR"
-										",CRAR"
-										",BBAR"
-										",FCO2"
-										",FCO2_TR"
-										",FAGE"
-										",FT"
-										",FVPD"
-										",FN"
-										",FSW");
-								 */
 							}
 							if ( c->heights[height].dbhs[dbh].ages[age].species_count > 1 ) logger(g_daily_log,"\t%10s", "*");
 						}
@@ -285,11 +230,8 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 					"***",
 					"gpp",
 					"npp",
-					"ar",
-					"10tavg",
-					"10tday",
-					"10tnight",
-					"10tsoil");
+					"ar"
+			);
 			//logger(g_daily_log,",***,gpp,npp,ar");
 		}
 		/* heading variables at cell level also if there's more than one layer */
@@ -299,19 +241,12 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 			//logger(g_daily_log,",*****");
 		}
 		/* heading variables only at cell level */
-		logger(g_daily_log,"\t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s",
+		logger(g_daily_log,"\t%10s \t%10s \t%10s \t%10s ",
 				"et",
 				"le",
 				"snow_pack",
-				"asw",
-				"10tavg",
-				"10tday",
-				"10tnight",
-				"10tsoil",
-				"tavg",
-				"tday",
-				"tnight",
-				"tsoil\n");
+				"asw\n"
+		);
 
 		//logger(g_daily_log,",et,le,snow_pack,asw\n");
 
@@ -418,62 +353,6 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 									s->value[F_VPD],
 									s->value[F_NUTR],
 									s->value[F_SW]);
-							/*
-							logger(g_daily_log,",%g,%g,%g,%g,%g,%g,%g,%g,%g,%d,%d,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g" // STEM_LIVE_WOOD_C
-												",%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g",
-									s->value[DAILY_GPP_gC],
-									s->value[TOTAL_GROWTH_RESP],
-									s->value[TOTAL_MAINT_RESP],
-									s->value[TOTAL_AUT_RESP],
-									s->value[NPP_gC],
-									s->value[CUE],
-									s->value[LAI_PROJ],
-									s->value[DAILY_CANOPY_COVER_PROJ],
-									s->value[DAILY_CANOPY_COVER_EXP],
-									s->counter[N_TREE],
-									s->counter[VEG_DAYS],
-									s->value[CANOPY_INT],
-									s->value[CANOPY_WATER],
-									s->value[CANOPY_EVAPO],
-									s->value[CANOPY_TRANSP],
-									s->value[CANOPY_EVAPO_TRANSP],
-									s->value[CANOPY_LATENT_HEAT],
-									c->daily_soil_evapo,
-									s->value[WUE],
-									s->value[RESERVE_C],
-									s->value[STEM_C],
-									s->value[STEM_SAPWOOD_C],
-									s->value[STEM_LIVE_WOOD_C],
-									s->value[STEM_DEAD_WOOD_C],
-									s->value[LEAF_C],
-									s->value[FINE_ROOT_C],
-									s->value[COARSE_ROOT_C],
-									s->value[COARSE_ROOT_SAPWOOD_C],
-									s->value[COARSE_ROOT_LIVE_WOOD_C],
-									s->value[COARSE_ROOT_DEAD_WOOD_C],
-									s->value[BRANCH_C],
-									s->value[BRANCH_SAPWOOD_C],
-									s->value[BRANCH_LIVE_WOOD_C],
-									s->value[BRANCH_DEAD_WOOD_C],
-									s->value[C_TO_RESERVE],
-									s->value[C_TO_STEM],
-									s->value[C_TO_LEAF],
-									s->value[C_TO_FINEROOT],
-									s->value[C_TO_COARSEROOT],
-									s->value[C_TO_BRANCH],
-									s->value[STEM_AUT_RESP],
-									s->value[LEAF_AUT_RESP],
-									s->value[FINE_ROOT_AUT_RESP],
-									s->value[COARSE_ROOT_AUT_RESP],
-									s->value[BRANCH_AUT_RESP],
-									s->value[F_CO2],
-									s->value[F_CO2_TR],
-									s->value[F_AGE],
-									s->value[F_T],
-									s->value[F_VPD],
-									s->value[F_NUTR],
-									s->value[F_SW]);
-							 */
 						}
 
 						if ( c->heights[height].dbhs[dbh].ages[age].species_count > 1 ) logger(g_daily_log,"\t%10s", "*");
@@ -529,19 +408,12 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 		//logger(g_daily_log, ",*****");
 	}
 	/* printing variables only at cell level */
-	logger(g_daily_log, "\t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f\n",
+	logger(g_daily_log, "\t%3.4f \t%3.4f \t%3.4f \t%3.4f \n",
 			c->daily_et,
 			c->daily_latent_heat_flux,
 			c->snow_pack,
-			c->asw,
-			met[month].d[day].ten_day_tavg,
-			met[month].d[day].ten_day_tday,
-			met[month].d[day].ten_day_tnight,
-			met[month].d[day].ten_day_tsoil,
-			met[month].d[day].tavg,
-			met[month].d[day].tday,
-			met[month].d[day].tnight,
-			met[month].d[day].tsoil);
+			c->asw
+	);
 	/*
 	logger(g_daily_log, ",%g,%g,%g,%g\n",
 			c->daily_et,
@@ -562,9 +434,9 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 			print_model_paths(g_daily_log);
 			if ( g_daily_log )
 			{
-				const char* p;
-				p = file_get_name_only(g_daily_log->filename);
-				logger(g_daily_log, "output file = %s\n", p);
+				//const char* p;
+				//p = file_get_name_only(g_daily_log->filename);
+				logger(g_daily_log, "output file = %s\n", g_daily_log->filename);
 			}
 			print_model_settings(g_daily_log);
 		}
@@ -811,9 +683,9 @@ void EOM_print_cumulative_balance_cell_level(cell_t *const c, const int month, c
 			print_model_paths(g_monthly_log);
 			if ( g_monthly_log )
 			{
-				const char* p;
-				p = file_get_name_only(g_monthly_log->filename);
-				logger(g_monthly_log, "output file = %s\n", p);
+				//const char* p;
+				//p = file_get_name_only(g_monthly_log->filename);
+				logger(g_monthly_log, "output file = %s\n", g_monthly_log->filename);
 			}
 			print_model_settings(g_monthly_log);
 		}
@@ -1105,9 +977,9 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 		print_model_paths(g_annual_log);
 		if (g_annual_log)
 		{
-			const char* p;
-			p = file_get_name_only(g_annual_log->filename);
-			logger(g_annual_log, "output file = %s\n", p);
+			//const char* p;
+			//p = file_get_name_only(g_annual_log->filename);
+			logger(g_annual_log, "output file = %s\n", g_annual_log->filename);
 		}
 		print_model_settings(g_annual_log);
 	}

@@ -9,7 +9,10 @@
 #include "settings.h"
 #include "logger.h"
 #include "matrix.h"
+#include "met_data.h"
 #include "common.h"
+
+#define WEIGHTED_DAYS	10
 
 extern soil_settings_t *g_soil_settings;
 extern topo_t *g_topo;
@@ -396,7 +399,7 @@ void Daylight_avg_temperature(meteo_t *const met, const int day, const int month
 	}
 }
 
-void Nightime_avg_temperature(meteo_t *met, const int day, const int month)
+void Nightime_avg_temperature(meteo_t *const met, const int day, const int month)
 {
 	/* BIOME-BGC version */
 	/* Running-Coughlan 1988, Ecological Modelling */
@@ -495,255 +498,186 @@ void Latent_heat(meteo_t *met, const int day, const int month)
 	/*latent heat of sublimation (KJ/Kg)*/
 	met[month].d[day].lh_sub = 2845.0;
 }
-
-void Soil_temperature(meteo_t* met, const int day, const int month) {
-	double avg = 0;
+void Soil_temperature(const cell_t *const c, int day, int month, int year_index) {
+//	double avg = 0;
+//	int i;
+//	int day_temp = day;
+//	int day_avg = 11;
+//	int month_temp = month;
+//	int weight;
+//	int incr_weight = 0;
+//	const int days_per_month[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+//
+//
+//	/* following BIOME-bgc 4.2 */
+//	/* for this version, an 11-day running weighted average of daily
+//	average temperature is used as the soil temperature at 10 cm.
+//	For days 1-10, a 1-10 day running weighted average is used instead.
+//	The tail of the running average is weighted linearly from 1 to 11.
+//	There are no corrections for snowpack or vegetation cover.
+//	 */
+//
+//	//FIXME model doesn't get for the first 10 days of the year the averaged values
+//	//TODO CHECK SOIL TEMPÈRATURE CORRECTION FROM BIOME
+//	/* soil temperature correction using difference from annual average tair */
+//	/*file bgc.c*/
+//	/* original biome_bgc version */
+//	/* *
+//			tdiff = tair_avg - metv.tsoil;
+//			if (ws.snoww)
+//			{
+//				metv.tsoil += 0.83 * tdiff;
+//			}
+//			else
+//			{
+//				metv.tsoil += 0.2 * tdiff;
+//			}
+//	 */
+//#if 0
+//	if ( day < day_avg && !month )
+//	{
+//		if ( met[month].d[day].ts_f != NO_DATA )
+//		{
+//			met[month_temp].d[day_temp].tsoil = met[month].d[day].ts_f;
+//		}
+//		else
+//		{
+//			met[month_temp].d[day_temp].tsoil = met[month_temp].d[day_temp].tavg;
+//		}
+//	}
+//	else
+//	{
+//		//note new 08 Feb 2017
+//		for ( i = day_avg; i > 0; --i )
+//		{
+//			weight = i;
+//
+//			incr_weight += i;
+//
+//			if ( day_temp >= 0 )
+//			{
+//				avg += (met[month].d[day_temp].tavg * weight);
+//			}
+//			else
+//			{
+//				avg += (met[month-1].d[days_per_month[month-1] +(day_temp)].tavg * weight);
+//				//note:
+//				//avg += (met[month-1].d[days_per_month[month-1] - fabs(day_temp)].tavg * weight);
+//			}
+//			--day_temp;
+//		}
+//
+//		/* compute average */
+//		avg = avg / (double)incr_weight;
+//		met[month].d[day].tsoil = avg;
+//	}
+//#endif
 	int i;
-	int day_temp = day;
-	int day_avg = 11;
-	int month_temp = month;
-	int weight;
-	int incr_weight;
-	const int days_per_month[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+	int day_avg = WEIGHTED_DAYS;
+	int current_day = day;
+	int current_month = month;
+	int current_year_index = year_index;
+	double weighted_avg;
+	extern int days_per_month[];
 
-
-	/* following BIOME-bgc 4.2 */
-	/* for this version, an 11-day running weighted average of daily
-	average temperature is used as the soil temperature at 10 cm.
-	For days 1-10, a 1-10 day running weighted average is used instead.
-	The tail of the running average is weighted linearly from 1 to 11.
-	There are no corrections for snowpack or vegetation cover.
-	 */
-
-	//FIXME model doesn't get for the first 10 days of the year the averaged values
-	//TODO CHECK SOIL TEMPÈRATURE CORRECTION FROM BIOME
-	/* soil temperature correction using difference from annual average tair */
-	/*file bgc.c*/
-	/* original biome_bgc version */
-	/* *
-			tdiff = tair_avg - metv.tsoil;
-			if (ws.snoww)
-			{
-				metv.tsoil += 0.83 * tdiff;
-			}
-			else
-			{
-				metv.tsoil += 0.2 * tdiff;
-			}
-	 */
-
-
-	if ( day < day_avg && !month )
+	assert(c);
+	i = 0;
+	weighted_avg = 0.;
+	do
 	{
-		if ( met[month].d[day].ts_f != NO_DATA )
-		{
-			met[month_temp].d[day_temp].tsoil = met[month].d[day].ts_f;
-		}
-		else
-		{
-			met[month_temp].d[day_temp].tsoil = met[month_temp].d[day_temp].tavg;
-		}
-	}
-	else
-	{
-		//note new 08 Feb 2017
-		for ( i = day_avg; i > 0; --i )
-		{
-			weight = i;
+		i += day_avg;
+		weighted_avg += (c->years[year_index].m[month].d[day].tavg*day_avg);
 
-			incr_weight += i;
-
-			if ( day_temp >= 0 )
-			{
-				avg += (met[month].d[day_temp].tavg * weight);
-			}
-			else
-			{
-				avg += (met[month-1].d[days_per_month[month-1] +(day_temp)].tavg * weight);
-				//note:
-				//avg += (met[month-1].d[days_per_month[month-1] - fabs(day_temp)].tavg * weight);
-			}
-			--day_temp;
-		}
-
-		/* compute average */
-		avg = avg / (double)incr_weight;
-		met[month].d[day].tsoil = avg;
-
-	}
-}
-
-
-void Ten_day_tavg (cell_t *c, const int day, const int month, const int year)
-{
-	double avg = 0.0;
-	int i;
-	int day_temp = day;
-	int day_avg = 10;
-	int weight;
-	int incr_weight;
-	int days_per_month[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-
-	//note: include for leap_years
-	//note: for the first ten days consider days before
-	if ( day < day_avg && !month )
-	{
-		c->years[year].m[month].d[day].ten_day_tavg = c->years[year].m[month].d[day].tavg;
-	}
-	else
-	{
-		for ( i = day_avg; i > 0; --i )
-		{
-			weight = i;
-
-			incr_weight += i;
-
-			if ( day_temp >= 0 )
-			{
-				avg += (c->years[year].m[month].d[day_temp].tavg * weight);
-			}
-			else
-			{
-				if ( (month == MARCH) && IS_LEAP_YEAR (c->years[year].year) )
-				{
-					avg += (c->years[year].m[month-1].d[(days_per_month[month-1]+1) + day_temp].tday * weight);
+		if ( --day < 0 ) {
+			if ( --month < 0 ) {
+				if ( --year_index < 0 ) {
+					break;
 				}
-				else
-				{
-					avg += (c->years[year].m[month-1].d[days_per_month[month-1] +(day_temp)].tday * weight);
+				month = 11; // zero based index
+			}
+			day = days_per_month[month];
+			if ( IS_LEAP_YEAR(c->years[year_index].year) && (1 == month) ) {
+				++day;
+			}
+			--day; // zero based index
+		}
+		--day_avg;
+	} while ( day_avg > 0 );
+	c->years[current_year_index].m[current_month].d[current_day].tsoil = weighted_avg / i;
+}
+
+void Weighted_mean(const cell_t *const c, const e_weighted_mean_var var, int day, int month, int year_index) {
+	int i;
+	int day_avg = WEIGHTED_DAYS;
+	int current_day = day;
+	int current_month = month;
+	int current_year_index = year_index;
+	double weighted_avg;
+	extern int days_per_month[];
+
+	assert(((var >= 0) && (var < WEIGHTED_MEAN_COUNT)) && c);
+
+	i = 0;
+	weighted_avg = 0.;
+	do
+	{
+		double v;
+
+		i += day_avg;
+
+		switch ( var ) {
+			case WEIGHTED_MEAN_TAVG:
+				v = c->years[year_index].m[month].d[day].tavg;
+			break;
+
+			case WEIGHTED_MEAN_TDAY:
+				v = c->years[year_index].m[month].d[day].tday;
+			break;
+
+			case WEIGHTED_MEAN_TNIGHT:
+				v = c->years[year_index].m[month].d[day].tnight;
+			break;
+
+			case WEIGHTED_MEAN_TSOIL:
+				v = c->years[year_index].m[month].d[day].tsoil;
+			break;
+		}
+
+		weighted_avg += (v*day_avg);
+
+		if ( --day < 0 ) {
+			if ( --month < 0 ) {
+				if ( --year_index < 0 ) {
+					break;
 				}
+				month = 11; // zero based index
 			}
-			--day_temp;
+			day = days_per_month[month];
+			if ( IS_LEAP_YEAR(c->years[year_index].year) && (1 == month) ) {
+				++day;
+			}
+			--day; // zero based index
 		}
+		--day_avg;
 
-		/* compute average */
-		c->years[year].m[month].d[day].ten_day_tavg = avg / incr_weight;
-	}
-}
+	} while ( day_avg > 0 );
 
-void Ten_day_tday (meteo_t* met, const int day, const int month)
-{
-	double avg = 0.0;
-	int i;
-	int day_temp = day;
-	int day_avg = 10;
-	int weight;
-	int incr_weight;
-	const int days_per_month[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+	switch ( var ) {
+		case WEIGHTED_MEAN_TAVG:
+			c->years[current_year_index].m[current_month].d[current_day].ten_day_tavg = weighted_avg / i;
+		break;
 
-	//note: include for leap_years
-	//note: for the first ten days consider days before
-	if ( day < day_avg && !month )
-	{
-		met[month].d[day].ten_day_tday = met[month].d[day].tday;
-	}
-	else
-	{
-		for ( i = day_avg; i > 0; --i )
-		{
-			weight = i;
+		case WEIGHTED_MEAN_TDAY:
+			c->years[current_year_index].m[current_month].d[current_day].ten_day_tday = weighted_avg / i;
+		break;
 
-			incr_weight += i;
+		case WEIGHTED_MEAN_TNIGHT:
+			c->years[current_year_index].m[current_month].d[current_day].ten_day_tnight = weighted_avg / i;
+		break;
 
-			if ( day_temp >= 0 )
-			{
-				avg += (met[month].d[day_temp].tday * weight);
-			}
-			else
-			{
-				avg += (met[month-1].d[days_per_month[month-1] +(day_temp)].tday * weight);
-				//note:
-				//avg += (met[month-1].d[days_per_month[month-1] - fabs(day_temp)].tavg * weight);
-			}
-			--day_temp;
-		}
-
-		/* compute average */
-		met[month].d[day].ten_day_tday = avg / incr_weight;
-	}
-}
-
-void Ten_day_tnight (meteo_t* met, const int day, const int month)
-{
-	double avg = 0.0;
-	int i;
-	int day_temp = day;
-	int day_avg = 10;
-	int weight;
-	int incr_weight;
-	const int days_per_month[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-
-	//note: include for leap_years
-	//note: for the first ten days consider days before
-	if ( day < day_avg && !month )
-	{
-		met[month].d[day].ten_day_tnight = met[month].d[day].tnight;
-	}
-	else
-	{
-		for ( i = day_avg; i > 0; --i )
-		{
-			weight = i;
-
-			incr_weight += i;
-
-			if ( day_temp >= 0 )
-			{
-				avg += (met[month].d[day_temp].tnight * weight);
-			}
-			else
-			{
-				avg += (met[month-1].d[days_per_month[month-1] +(day_temp)].tnight * weight);
-				//note:
-				//avg += (met[month-1].d[days_per_month[month-1] - fabs(day_temp)].tavg * weight);
-			}
-			--day_temp;
-		}
-
-		/* compute average */
-		met[month].d[day].ten_day_tnight = avg / incr_weight;
-	}
-}
-
-void Ten_day_tsoil (meteo_t* met, const int day, const int month)
-{
-	double avg = 0.0;
-	int i;
-	int day_temp = day;
-	int day_avg = 10;
-	int weight;
-	int incr_weight;
-	const int days_per_month[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-
-	//note: include for leap_years
-	//note: for the first ten days consider days before
-	if ( day < day_avg && !month )
-	{
-		met[month].d[day].ten_day_tsoil = met[month].d[day].tsoil;
-	}
-	else
-	{
-		for ( i = day_avg; i > 0; --i )
-		{
-			weight = i;
-
-			incr_weight += i;
-
-			if ( day_temp >= 0 )
-			{
-				avg += (met[month].d[day_temp].tsoil * weight);
-			}
-			else
-			{
-				avg += (met[month-1].d[days_per_month[month-1] +(day_temp)].tsoil * weight);
-				//note:
-				//avg += (met[month-1].d[days_per_month[month-1] - fabs(day_temp)].tavg * weight);
-			}
-			--day_temp;
-		}
-
-		/* compute average */
-		met[month].d[day].ten_day_tsoil = avg / incr_weight;
+		case WEIGHTED_MEAN_TSOIL:
+			c->years[current_year_index].m[current_month].d[current_day].ten_day_tsoil = weighted_avg / i;
+		break;
 	}
 }
 

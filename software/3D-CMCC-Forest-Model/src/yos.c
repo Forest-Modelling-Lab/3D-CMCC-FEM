@@ -51,7 +51,7 @@ enum {
 
 /*	ALESSIOR: please note that leap years are handled correctly
 	so do not change 28 (february) to 29! */
-static int days_per_month [] = {
+int days_per_month [] = {
 		31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31
 };
 

@@ -1240,7 +1240,7 @@ int main(int argc, char *argv[]) {
 					Avg_temperature(matrix->cells[cell].years[year].m, day, month);
 					Daylight_avg_temperature(matrix->cells[cell].years[year].m, day, month);
 					Nightime_avg_temperature(matrix->cells[cell].years[year].m, day, month);
-					Soil_temperature(matrix->cells[cell].years[year].m, day, month);
+					Soil_temperature(&matrix->cells[cell], day, month, year);
 					Thermic_sum(matrix->cells[cell].years[year].m, day, month, year);
 					Air_density(matrix->cells[cell].years[year].m, day, month);
 					Day_Length(&matrix->cells[cell], day, month, year);
@@ -1251,11 +1251,10 @@ int main(int argc, char *argv[]) {
 					Dew_temperature(matrix->cells[cell].years[year].m, day, month);
 					Radiation(&matrix->cells[cell], day, month, year);
 					Check_prcp(&matrix->cells[cell], day, month, year);
-					Ten_day_tavg(&matrix->cells[cell], day, month, year);
-					Ten_day_tday(matrix->cells[cell].years[year].m, day, month);
-					Ten_day_tnight(matrix->cells[cell].years[year].m, day, month);
-					Ten_day_tsoil(matrix->cells[cell].years[year].m, day, month);
-
+					Weighted_mean(&matrix->cells[cell], WEIGHTED_MEAN_TAVG, day, month, year);
+					Weighted_mean(&matrix->cells[cell], WEIGHTED_MEAN_TDAY, day, month, year);
+					Weighted_mean(&matrix->cells[cell], WEIGHTED_MEAN_TNIGHT, day, month, year);
+					Weighted_mean(&matrix->cells[cell], WEIGHTED_MEAN_TSOIL, day, month, year);
 					if ( LANDUSE_F == g_soil_settings->landuse )
 					{
 						/* compute annually the days for the growing season BEFORE any other process */

@@ -162,9 +162,8 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 
 	/*******************************************************************************************************************/
 
-#if 0
 	/* if acclimation for aut repiration = "on" */
-	//if ( g_settings->aut_resp_accl )
+	if ( g_settings->Resp_accl )
 	{
 		/********************************************ACCLIMATION FOR RESPIRATION********************************************/
 		/* FOLLOWING Atkin et al., 2008 "Using temperature-dependent changes in leaf scaling relationships
@@ -211,7 +210,6 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 
 		/*******************************************************************************************************************/
 	}
-#endif
 
 	/* COMPUTE TOTAL MAINTENANCE RESPIRATION */
 	s->value[TOTAL_MAINT_RESP] = s->value[TOT_DAY_LEAF_MAINT_RESP]+
