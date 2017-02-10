@@ -11,7 +11,15 @@ typedef enum {
 	, WEIGHTED_MEAN_TSOIL
 
 	, WEIGHTED_MEAN_COUNT
-} e_weighted_mean_var;
+} e_weighted_average_var;
+typedef enum {
+	AVERAGED_TAVG
+	, AVERAGED_TDAY
+	, AVERAGED_TNIGHT
+	, AVERAGED_TSOIL
+
+	, AVERAGED_COUNT
+} e_averaged_var;
 
 void Radiation (cell_t *const c, const int day, const int month, const int year);
 void Avg_temperature(meteo_t *met, const int day, const int month);
@@ -27,7 +35,8 @@ void Sat_vapour_pressure(cell_t *const c, const int day, const int month, const 
 void Dew_temperature(meteo_t *const met, const int day, const int month);
 void Check_prcp(cell_t *c, const int day, const int month, const int year);
 void Annual_met_values(cell_t *const c, const int day, const int month, const int year);
-void Weighted_mean(const cell_t *const c, const e_weighted_mean_var var, int day, int month, int year_index);
+void Averaged_temperature(const cell_t *const c, const e_averaged_var var, int day, int month, int year_index);
+void Weighted_average_temperature(const cell_t *const c, const e_weighted_average_var var, int day, int month, int year_index);
 void Soil_temperature(const cell_t *const c, int day, int month, int year_index);
 
 #endif /* MET_DATA_H_ */

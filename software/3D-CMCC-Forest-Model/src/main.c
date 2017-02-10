@@ -1251,10 +1251,14 @@ int main(int argc, char *argv[]) {
 					Dew_temperature(matrix->cells[cell].years[year].m, day, month);
 					Radiation(&matrix->cells[cell], day, month, year);
 					Check_prcp(&matrix->cells[cell], day, month, year);
-					Weighted_mean(&matrix->cells[cell], WEIGHTED_MEAN_TAVG, day, month, year);
-					Weighted_mean(&matrix->cells[cell], WEIGHTED_MEAN_TDAY, day, month, year);
-					Weighted_mean(&matrix->cells[cell], WEIGHTED_MEAN_TNIGHT, day, month, year);
-					Weighted_mean(&matrix->cells[cell], WEIGHTED_MEAN_TSOIL, day, month, year);
+					Averaged_temperature(&matrix->cells[cell], AVERAGED_TAVG, day, month, year);
+					Averaged_temperature(&matrix->cells[cell], AVERAGED_TDAY, day, month, year);
+					Averaged_temperature(&matrix->cells[cell], AVERAGED_TNIGHT, day, month, year);
+					Averaged_temperature(&matrix->cells[cell], AVERAGED_TSOIL, day, month, year);
+					Weighted_average_temperature(&matrix->cells[cell], WEIGHTED_MEAN_TAVG, day, month, year);
+					Weighted_average_temperature(&matrix->cells[cell], WEIGHTED_MEAN_TDAY, day, month, year);
+					Weighted_average_temperature(&matrix->cells[cell], WEIGHTED_MEAN_TNIGHT, day, month, year);
+					Weighted_average_temperature(&matrix->cells[cell], WEIGHTED_MEAN_TSOIL, day, month, year);
 					if ( LANDUSE_F == g_soil_settings->landuse )
 					{
 						/* compute annually the days for the growing season BEFORE any other process */

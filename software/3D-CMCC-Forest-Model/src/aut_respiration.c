@@ -162,7 +162,7 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 
 	/*******************************************************************************************************************/
 
-	/* if acclimation for aut repiration = "on" */
+	/* if acclimation for autotrophic respiration = "on" */
 	if ( g_settings->Resp_accl )
 	{
 		/********************************************ACCLIMATION FOR RESPIRATION********************************************/
@@ -173,11 +173,11 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 		/* Leaf maintenance respiration is calculated separately for day and night */
 
 		/* day time leaf maintenance respiration */
-		s->value[DAILY_LEAF_MAINT_RESP] *= pow(10., ( acc_const * ( meteo_daily->ten_day_tday - Q10_temp_accl ) ) ) * ( meteo_daily->daylength / 24.0 );
+		s->value[DAILY_LEAF_MAINT_RESP] *= pow(10., ( acc_const * ( meteo_daily->ten_day_avg_tday - Q10_temp_accl ) ) ) * ( meteo_daily->daylength / 24.0 );
 		logger(g_debug_log, "daily leaf maintenance respiration = %g gC/m2/day\n", s->value[DAILY_LEAF_MAINT_RESP]);
 
 		/* night time leaf maintenance respiration */
-		s->value[NIGHTLY_LEAF_MAINT_RESP] *= pow(10., ( acc_const * ( meteo_daily->ten_day_tnight - Q10_temp_accl ) ) ) * ( meteo_daily->daylength / 24.0 );
+		s->value[NIGHTLY_LEAF_MAINT_RESP] *= pow(10., ( acc_const * ( meteo_daily->ten_day_avg_tnight - Q10_temp_accl ) ) ) * ( meteo_daily->daylength / 24.0 );
 		logger(g_debug_log, "nightly leaf maintenance respiration = %g gC/m2/day\n", s->value[NIGHTLY_LEAF_MAINT_RESP]);
 
 		/* total (all day) leaf maintenance respiration */
@@ -187,25 +187,25 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 		/*******************************************************************************************************************/
 		/* fine roots maintenance respiration */
 
-		s->value[FINE_ROOT_MAINT_RESP]  *= pow(10., ( acc_const * ( meteo_daily->ten_day_tsoil - Q10_temp_accl ) ) );
+		s->value[FINE_ROOT_MAINT_RESP]  *= pow(10., ( acc_const * ( meteo_daily->ten_day_avg_tsoil - Q10_temp_accl ) ) );
 		logger(g_debug_log, "daily fine root maintenance respiration = %g gC/m2/day\n", s->value[FINE_ROOT_MAINT_RESP]);
 
 		/*******************************************************************************************************************/
 		/* live coarse root maintenance respiration */
 
-		s->value[COARSE_ROOT_MAINT_RESP] *= pow(10., ( acc_const * ( meteo_daily->ten_day_tsoil - Q10_temp_accl ) ) );
+		s->value[COARSE_ROOT_MAINT_RESP] *= pow(10., ( acc_const * ( meteo_daily->ten_day_avg_tsoil - Q10_temp_accl ) ) );
 		logger(g_debug_log, "daily coarse root maintenance respiration = %g gC/m2/day\n", s->value[COARSE_ROOT_MAINT_RESP]);
 
 		/*******************************************************************************************************************/
 		/* live stem maintenance respiration */
 
-		s->value[STEM_MAINT_RESP] *= pow(10., ( acc_const * ( meteo_daily->ten_day_tavg - Q10_temp_accl ) ) );
+		s->value[STEM_MAINT_RESP] *= pow(10., ( acc_const * ( meteo_daily->ten_day_avg_tavg - Q10_temp_accl ) ) );
 		logger(g_debug_log, "daily stem maintenance respiration = %g gC/m2/day\n", s->value[STEM_MAINT_RESP]);
 
 		/*******************************************************************************************************************/
 		/* live branch maintenance respiration */
 
-		s->value[BRANCH_MAINT_RESP] *= pow(10., ( acc_const * ( meteo_daily->ten_day_tavg - Q10_temp_accl ) ) );
+		s->value[BRANCH_MAINT_RESP] *= pow(10., ( acc_const * ( meteo_daily->ten_day_avg_tavg - Q10_temp_accl ) ) );
 		logger(g_debug_log, "daily branch maintenance respiration = %g gC/m2/day\n", s->value[BRANCH_MAINT_RESP]);
 
 		/*******************************************************************************************************************/

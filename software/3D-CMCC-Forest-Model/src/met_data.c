@@ -13,6 +13,7 @@
 #include "common.h"
 
 #define WEIGHTED_DAYS	10
+#define AVERAGED_DAYS	10
 
 extern soil_settings_t *g_soil_settings;
 extern topo_t *g_topo;
@@ -606,7 +607,8 @@ void Soil_temperature(const cell_t *const c, int day, int month, int year_index)
 	c->years[current_year_index].m[current_month].d[current_day].tsoil = weighted_avg / i;
 }
 
-void Weighted_mean(const cell_t *const c, const e_weighted_mean_var var, int day, int month, int year_index) {
+void Weighted_average_temperature(const cell_t *const c, const e_weighted_average_var var, int day, int month, int year_index)
+{
 	int i;
 	int day_avg = WEIGHTED_DAYS;
 	int current_day = day;
@@ -664,19 +666,92 @@ void Weighted_mean(const cell_t *const c, const e_weighted_mean_var var, int day
 
 	switch ( var ) {
 		case WEIGHTED_MEAN_TAVG:
-			c->years[current_year_index].m[current_month].d[current_day].ten_day_tavg = weighted_avg / i;
+			c->years[current_year_index].m[current_month].d[current_day].ten_day_weighted_avg_tavg = weighted_avg / i;
 		break;
 
 		case WEIGHTED_MEAN_TDAY:
-			c->years[current_year_index].m[current_month].d[current_day].ten_day_tday = weighted_avg / i;
+			c->years[current_year_index].m[current_month].d[current_day].ten_day_weighted_avg_tday = weighted_avg / i;
 		break;
 
 		case WEIGHTED_MEAN_TNIGHT:
-			c->years[current_year_index].m[current_month].d[current_day].ten_day_tnight = weighted_avg / i;
+			c->years[current_year_index].m[current_month].d[current_day].ten_day_weighted_avg_tnight = weighted_avg / i;
 		break;
 
 		case WEIGHTED_MEAN_TSOIL:
-			c->years[current_year_index].m[current_month].d[current_day].ten_day_tsoil = weighted_avg / i;
+			c->years[current_year_index].m[current_month].d[current_day].ten_day_weighted_avg_tsoil = weighted_avg / i;
+		break;
+	}
+}
+
+void Averaged_temperature(const cell_t *const c, const e_averaged_var var, int day, int month, int year_index)
+{
+	int day_avg = AVERAGED_DAYS;
+	int current_day = day;
+	int current_month = month;
+	int current_year_index = year_index;
+	double weighted_avg;
+	extern int days_per_month[];
+
+	assert(((var >= 0) && (var < AVERAGED_COUNT)) && c);
+
+	weighted_avg = 0.;
+	do
+	{
+		double v;
+
+
+		switch ( var ) {
+			case AVERAGED_TAVG:
+				v = c->years[year_index].m[month].d[day].tavg;
+			break;
+
+			case AVERAGED_TDAY:
+				v = c->years[year_index].m[month].d[day].tday;
+			break;
+
+			case AVERAGED_TNIGHT:
+				v = c->years[year_index].m[month].d[day].tnight;
+			break;
+
+			case AVERAGED_TSOIL:
+				v = c->years[year_index].m[month].d[day].tsoil;
+			break;
+		}
+
+		weighted_avg += v;
+
+		if ( --day < 0 ) {
+			if ( --month < 0 ) {
+				if ( --year_index < 0 ) {
+					break;
+				}
+				month = 11; // zero based index
+			}
+			day = days_per_month[month];
+			if ( IS_LEAP_YEAR(c->years[year_index].year) && (1 == month) ) {
+				++day;
+			}
+			--day; // zero based index
+		}
+		--day_avg;
+
+	} while ( day_avg > 0 );
+
+	switch ( var ) {
+		case AVERAGED_TAVG:
+			c->years[current_year_index].m[current_month].d[current_day].ten_day_avg_tavg = weighted_avg / AVERAGED_DAYS;
+		break;
+
+		case AVERAGED_TDAY:
+			c->years[current_year_index].m[current_month].d[current_day].ten_day_avg_tday = weighted_avg / AVERAGED_DAYS;
+		break;
+
+		case AVERAGED_TNIGHT:
+			c->years[current_year_index].m[current_month].d[current_day].ten_day_avg_tnight = weighted_avg / AVERAGED_DAYS;
+		break;
+
+		case AVERAGED_TSOIL:
+			c->years[current_year_index].m[current_month].d[current_day].ten_day_avg_tsoil = weighted_avg / AVERAGED_DAYS;
 		break;
 	}
 }
