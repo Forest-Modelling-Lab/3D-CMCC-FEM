@@ -1237,7 +1237,7 @@ int main(int argc, char *argv[]) {
 				for ( cell = 0; cell < matrix->cells_count; ++cell )
 				{
 					/* compute daily climate variables not coming from met data */
-					Avg_temperature(matrix->cells[cell].years[year].m, day, month);
+					Daily_avg_temperature(matrix->cells[cell].years[year].m, day, month);
 					Daylight_avg_temperature(matrix->cells[cell].years[year].m, day, month);
 					Nightime_avg_temperature(matrix->cells[cell].years[year].m, day, month);
 					Soil_temperature(&matrix->cells[cell], day, month, year);

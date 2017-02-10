@@ -366,7 +366,7 @@ void Day_Length(cell_t *c, const int day, const int month, const int year)
 }
 
 /* following Running et al., 1987 */
-void Avg_temperature(meteo_t *met, const int day, const int month)
+void Daily_avg_temperature(meteo_t *met, const int day, const int month)
 {
 	if ( NO_DATA == met[month].d[day].tavg )
 	{
@@ -641,20 +641,22 @@ void Weighted_average_temperature(const cell_t *const c, const e_weighted_averag
 
 void Averaged_temperature(const cell_t *const c, const e_averaged_var var, int day, int month, int year_index)
 {
+	int i;
 	int day_avg = AVERAGED_DAYS;
 	int current_day = day;
 	int current_month = month;
 	int current_year_index = year_index;
-	double weighted_avg;
+	double averaged;
 	extern int days_per_month[];
 
 	assert(((var >= 0) && (var < AVERAGED_COUNT)) && c);
 
-	weighted_avg = 0.;
+	averaged = 0.;
 	do
 	{
 		double v;
 
+		++i;
 
 		switch ( var ) {
 		case AVERAGED_TAVG:
@@ -674,7 +676,7 @@ void Averaged_temperature(const cell_t *const c, const e_averaged_var var, int d
 			break;
 		}
 
-		weighted_avg += v;
+		averaged += v;
 
 		if ( --day < 0 ) {
 			if ( --month < 0 ) {
@@ -695,19 +697,19 @@ void Averaged_temperature(const cell_t *const c, const e_averaged_var var, int d
 
 	switch ( var ) {
 	case AVERAGED_TAVG:
-		c->years[current_year_index].m[current_month].d[current_day].ten_day_avg_tavg = weighted_avg / AVERAGED_DAYS;
+		c->years[current_year_index].m[current_month].d[current_day].ten_day_avg_tavg = averaged / i;
 		break;
 
 	case AVERAGED_TDAY:
-		c->years[current_year_index].m[current_month].d[current_day].ten_day_avg_tday = weighted_avg / AVERAGED_DAYS;
+		c->years[current_year_index].m[current_month].d[current_day].ten_day_avg_tday = averaged / i;
 		break;
 
 	case AVERAGED_TNIGHT:
-		c->years[current_year_index].m[current_month].d[current_day].ten_day_avg_tnight = weighted_avg / AVERAGED_DAYS;
+		c->years[current_year_index].m[current_month].d[current_day].ten_day_avg_tnight = averaged / i;
 		break;
 
 	case AVERAGED_TSOIL:
-		c->years[current_year_index].m[current_month].d[current_day].ten_day_avg_tsoil = weighted_avg / AVERAGED_DAYS;
+		c->years[current_year_index].m[current_month].d[current_day].ten_day_avg_tsoil = averaged / i;
 		break;
 	}
 }
