@@ -651,7 +651,9 @@ void Averaged_temperature(const cell_t *const c, const e_averaged_var var, int d
 
 	assert(((var >= 0) && (var < AVERAGED_COUNT)) && c);
 
+	i = 0;
 	averaged = 0.;
+
 	do
 	{
 		double v;
