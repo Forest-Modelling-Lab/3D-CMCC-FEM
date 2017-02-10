@@ -499,80 +499,8 @@ void Latent_heat(meteo_t *met, const int day, const int month)
 	/*latent heat of sublimation (KJ/Kg)*/
 	met[month].d[day].lh_sub = 2845.0;
 }
-void Soil_temperature(const cell_t *const c, int day, int month, int year_index) {
-//	double avg = 0;
-//	int i;
-//	int day_temp = day;
-//	int day_avg = 11;
-//	int month_temp = month;
-//	int weight;
-//	int incr_weight = 0;
-//	const int days_per_month[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-//
-//
-//	/* following BIOME-bgc 4.2 */
-//	/* for this version, an 11-day running weighted average of daily
-//	average temperature is used as the soil temperature at 10 cm.
-//	For days 1-10, a 1-10 day running weighted average is used instead.
-//	The tail of the running average is weighted linearly from 1 to 11.
-//	There are no corrections for snowpack or vegetation cover.
-//	 */
-//
-//	//FIXME model doesn't get for the first 10 days of the year the averaged values
-//	//TODO CHECK SOIL TEMPÈRATURE CORRECTION FROM BIOME
-//	/* soil temperature correction using difference from annual average tair */
-//	/*file bgc.c*/
-//	/* original biome_bgc version */
-//	/* *
-//			tdiff = tair_avg - metv.tsoil;
-//			if (ws.snoww)
-//			{
-//				metv.tsoil += 0.83 * tdiff;
-//			}
-//			else
-//			{
-//				metv.tsoil += 0.2 * tdiff;
-//			}
-//	 */
-//#if 0
-//	if ( day < day_avg && !month )
-//	{
-//		if ( met[month].d[day].ts_f != NO_DATA )
-//		{
-//			met[month_temp].d[day_temp].tsoil = met[month].d[day].ts_f;
-//		}
-//		else
-//		{
-//			met[month_temp].d[day_temp].tsoil = met[month_temp].d[day_temp].tavg;
-//		}
-//	}
-//	else
-//	{
-//		//note new 08 Feb 2017
-//		for ( i = day_avg; i > 0; --i )
-//		{
-//			weight = i;
-//
-//			incr_weight += i;
-//
-//			if ( day_temp >= 0 )
-//			{
-//				avg += (met[month].d[day_temp].tavg * weight);
-//			}
-//			else
-//			{
-//				avg += (met[month-1].d[days_per_month[month-1] +(day_temp)].tavg * weight);
-//				//note:
-//				//avg += (met[month-1].d[days_per_month[month-1] - fabs(day_temp)].tavg * weight);
-//			}
-//			--day_temp;
-//		}
-//
-//		/* compute average */
-//		avg = avg / (double)incr_weight;
-//		met[month].d[day].tsoil = avg;
-//	}
-//#endif
+void Soil_temperature(const cell_t *const c, int day, int month, int year_index)
+{
 	int i;
 	int day_avg = WEIGHTED_DAYS;
 	int current_day = day;
@@ -580,6 +508,30 @@ void Soil_temperature(const cell_t *const c, int day, int month, int year_index)
 	int current_year_index = year_index;
 	double weighted_avg;
 	extern int days_per_month[];
+
+	/* following BIOME-bgc 4.2 */
+	/* for this version, an 10-day running weighted average of daily
+	average temperature is used as the soil temperature at 10 cm.
+	For days 1-10, a 1-10 day running weighted average is used instead.
+	The tail of the running average is weighted linearly from 1 to 11.
+	There are no corrections for snowpack or vegetation cover.
+	 */
+
+	//TODO CHECK SOIL TEMPÈRATURE CORRECTION FROM BIOME
+	/* soil temperature correction using difference from annual average tair */
+	/*file bgc.c*/
+	/* original biome_bgc version */
+	/* *
+		tdiff = tair_avg - metv.tsoil;
+		if (ws.snoww)
+		{
+			metv.tsoil += 0.83 * tdiff;
+		}
+		else
+		{
+			metv.tsoil += 0.2 * tdiff;
+		}
+	 */
 
 	assert(c);
 	i = 0;
@@ -589,15 +541,19 @@ void Soil_temperature(const cell_t *const c, int day, int month, int year_index)
 		i += day_avg;
 		weighted_avg += (c->years[year_index].m[month].d[day].tavg*day_avg);
 
-		if ( --day < 0 ) {
-			if ( --month < 0 ) {
-				if ( --year_index < 0 ) {
+		if ( --day < 0 )
+		{
+			if ( --month < 0 )
+			{
+				if ( --year_index < 0 )
+				{
 					break;
 				}
 				month = 11; // zero based index
 			}
 			day = days_per_month[month];
-			if ( IS_LEAP_YEAR(c->years[year_index].year) && (1 == month) ) {
+			if ( IS_LEAP_YEAR(c->years[year_index].year) && (1 == month) )
+			{
 				++day;
 			}
 			--day; // zero based index
@@ -628,20 +584,20 @@ void Weighted_average_temperature(const cell_t *const c, const e_weighted_averag
 		i += day_avg;
 
 		switch ( var ) {
-			case WEIGHTED_MEAN_TAVG:
-				v = c->years[year_index].m[month].d[day].tavg;
+		case WEIGHTED_MEAN_TAVG:
+			v = c->years[year_index].m[month].d[day].tavg;
 			break;
 
-			case WEIGHTED_MEAN_TDAY:
-				v = c->years[year_index].m[month].d[day].tday;
+		case WEIGHTED_MEAN_TDAY:
+			v = c->years[year_index].m[month].d[day].tday;
 			break;
 
-			case WEIGHTED_MEAN_TNIGHT:
-				v = c->years[year_index].m[month].d[day].tnight;
+		case WEIGHTED_MEAN_TNIGHT:
+			v = c->years[year_index].m[month].d[day].tnight;
 			break;
 
-			case WEIGHTED_MEAN_TSOIL:
-				v = c->years[year_index].m[month].d[day].tsoil;
+		case WEIGHTED_MEAN_TSOIL:
+			v = c->years[year_index].m[month].d[day].tsoil;
 			break;
 		}
 
@@ -665,20 +621,20 @@ void Weighted_average_temperature(const cell_t *const c, const e_weighted_averag
 	} while ( day_avg > 0 );
 
 	switch ( var ) {
-		case WEIGHTED_MEAN_TAVG:
-			c->years[current_year_index].m[current_month].d[current_day].ten_day_weighted_avg_tavg = weighted_avg / i;
+	case WEIGHTED_MEAN_TAVG:
+		c->years[current_year_index].m[current_month].d[current_day].ten_day_weighted_avg_tavg = weighted_avg / i;
 		break;
 
-		case WEIGHTED_MEAN_TDAY:
-			c->years[current_year_index].m[current_month].d[current_day].ten_day_weighted_avg_tday = weighted_avg / i;
+	case WEIGHTED_MEAN_TDAY:
+		c->years[current_year_index].m[current_month].d[current_day].ten_day_weighted_avg_tday = weighted_avg / i;
 		break;
 
-		case WEIGHTED_MEAN_TNIGHT:
-			c->years[current_year_index].m[current_month].d[current_day].ten_day_weighted_avg_tnight = weighted_avg / i;
+	case WEIGHTED_MEAN_TNIGHT:
+		c->years[current_year_index].m[current_month].d[current_day].ten_day_weighted_avg_tnight = weighted_avg / i;
 		break;
 
-		case WEIGHTED_MEAN_TSOIL:
-			c->years[current_year_index].m[current_month].d[current_day].ten_day_weighted_avg_tsoil = weighted_avg / i;
+	case WEIGHTED_MEAN_TSOIL:
+		c->years[current_year_index].m[current_month].d[current_day].ten_day_weighted_avg_tsoil = weighted_avg / i;
 		break;
 	}
 }
@@ -701,20 +657,20 @@ void Averaged_temperature(const cell_t *const c, const e_averaged_var var, int d
 
 
 		switch ( var ) {
-			case AVERAGED_TAVG:
-				v = c->years[year_index].m[month].d[day].tavg;
+		case AVERAGED_TAVG:
+			v = c->years[year_index].m[month].d[day].tavg;
 			break;
 
-			case AVERAGED_TDAY:
-				v = c->years[year_index].m[month].d[day].tday;
+		case AVERAGED_TDAY:
+			v = c->years[year_index].m[month].d[day].tday;
 			break;
 
-			case AVERAGED_TNIGHT:
-				v = c->years[year_index].m[month].d[day].tnight;
+		case AVERAGED_TNIGHT:
+			v = c->years[year_index].m[month].d[day].tnight;
 			break;
 
-			case AVERAGED_TSOIL:
-				v = c->years[year_index].m[month].d[day].tsoil;
+		case AVERAGED_TSOIL:
+			v = c->years[year_index].m[month].d[day].tsoil;
 			break;
 		}
 
@@ -738,33 +694,45 @@ void Averaged_temperature(const cell_t *const c, const e_averaged_var var, int d
 	} while ( day_avg > 0 );
 
 	switch ( var ) {
-		case AVERAGED_TAVG:
-			c->years[current_year_index].m[current_month].d[current_day].ten_day_avg_tavg = weighted_avg / AVERAGED_DAYS;
+	case AVERAGED_TAVG:
+		c->years[current_year_index].m[current_month].d[current_day].ten_day_avg_tavg = weighted_avg / AVERAGED_DAYS;
 		break;
 
-		case AVERAGED_TDAY:
-			c->years[current_year_index].m[current_month].d[current_day].ten_day_avg_tday = weighted_avg / AVERAGED_DAYS;
+	case AVERAGED_TDAY:
+		c->years[current_year_index].m[current_month].d[current_day].ten_day_avg_tday = weighted_avg / AVERAGED_DAYS;
 		break;
 
-		case AVERAGED_TNIGHT:
-			c->years[current_year_index].m[current_month].d[current_day].ten_day_avg_tnight = weighted_avg / AVERAGED_DAYS;
+	case AVERAGED_TNIGHT:
+		c->years[current_year_index].m[current_month].d[current_day].ten_day_avg_tnight = weighted_avg / AVERAGED_DAYS;
 		break;
 
-		case AVERAGED_TSOIL:
-			c->years[current_year_index].m[current_month].d[current_day].ten_day_avg_tsoil = weighted_avg / AVERAGED_DAYS;
+	case AVERAGED_TSOIL:
+		c->years[current_year_index].m[current_month].d[current_day].ten_day_avg_tsoil = weighted_avg / AVERAGED_DAYS;
 		break;
 	}
 }
 
-void Dew_temperature(meteo_t *const met, const int day, const int month) {
+void Dew_temperature(meteo_t *const met, const int day, const int month)
+{
 	/* dew point temperature based on Allen et al., 1998; Bosen, 1958; Murray, 1967 */
 	met[month].d[day].tdew = (116.91 + 237.3 * log(met[month].d[day].ea))/(16.78 - log(met[month].d[day].ea));
 }
 
-void Annual_met_values(cell_t *const c, const int day, const int month, const int year) {
+void Annual_met_values(cell_t *const c, const int day, const int month, const int year)
+{
+	int days_of_year;
 	meteo_t* met;
-
 	assert(c);
+
+	if ( IS_LEAP_YEAR(c->years[year].year) )
+	{
+		days_of_year = 366.;
+	}
+	else
+	{
+		days_of_year = 365.;
+	}
+
 
 	met = c->years[year].m;
 	if(day == 0 && month == 0)
@@ -790,15 +758,15 @@ void Annual_met_values(cell_t *const c, const int day, const int month, const in
 	c->annual_vpd += met[month].d[day].vpd;
 	if(day == 30 && month == 11)
 	{
-		c->annual_tavg /= 365;
-		c->annual_tmax /= 365;
-		c->annual_tmin /= 365;
-		c->annual_tday /= 365;
-		c->annual_tnight /= 365;
-		c->annual_tsoil /= 365;
-		c->annual_solar_rad /= 365;
-		//c->annual_precip = 365;
-		c->annual_vpd /= 365;
+		c->annual_tavg /= days_of_year;
+		c->annual_tmax /= days_of_year;
+		c->annual_tmin /= days_of_year;
+		c->annual_tday /= days_of_year;
+		c->annual_tnight /= days_of_year;
+		c->annual_tsoil /= days_of_year;
+		c->annual_solar_rad /= days_of_year;
+		//c->annual_precip = days_of_year;
+		c->annual_vpd /= days_of_year;
 		logger(g_debug_log, "**ANNUAL MET VALUES day = %d month = %d year = %d**\n", day+1, month+1, year+1);
 		logger(g_debug_log, "-Annual average tavg = %f C°\n", c->annual_tavg);
 		logger(g_debug_log, "-Annual average tmax = %f C°\n", c->annual_tmax);
