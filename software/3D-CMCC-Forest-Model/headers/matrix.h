@@ -262,6 +262,9 @@ enum {
 	WUE,                                /* daily Water Use Efficiency */
 	MONTHLY_WUE,                        /* monthly Water Use Efficiency */
 	YEARLY_WUE,                         /* annual Water Use Efficiency */
+	iWUE,                               /* daily intrinsic Water Use Efficiency */
+	MONTHLY_iWUE,                       /* monthly intrinsic Water Use Efficiency */
+	YEARLY_iWUE,                        /* annual intrinsic Water Use Efficiency */
 
 	/* LAI */
 	LAI_PROJ,                           /* LAI for Projected Area covered (at zenith angle)(m^2/m2) */
@@ -884,14 +887,20 @@ typedef struct
 	double daily_fine_root_aut_resp;                                      /* daily fine root aut resp at cell level (gC/m2/day) */
 	double daily_coarse_root_aut_resp;                                    /* daily coarse root aut resp at cell level (gC/m2/day) */
 
-	/*water variables*/
-	double wilting_point;                                                 /* volumetric water content at wilting point (mm/m2) */
-	double field_capacity;                                                /* volumetric water content at field capacity (mm/m2) */
-	double sat_hydr_conduct;                                              /* saturated hydraulic conductivity (mm/m2) */
-	double bulk_density;                                                  /* soil bulk density (g/cm3) */
+	/* water use efficiency */
+	double daily_wue;                                                     /* daily water use efficiency */
+	double daily_iwue;                                                    /* daily intrinsic water use efficiency */
+	double monthly_wue;                                                   /* monthly water use efficiency */
+	double monthly_iwue;                                                  /* monthly intrinsic water use efficiency */
+	double annual_wue;                                                    /* annual water use efficiency */
+	double annual_iwue;                                                   /* annual intrinsic water use efficiency */
 
 	/* soil */
 	//ALESSIOR TO MOVE INTO SOIL LAYER STRUCTURE
+	double bulk_density;                                                  /* soil bulk density (g/cm3) */
+	double wilting_point;                                                 /* volumetric water content at wilting point (mm/m2) */
+	double field_capacity;                                                /* volumetric water content at field capacity (mm/m2) */
+	double sat_hydr_conduct;                                              /* saturated hydraulic conductivity (mm/m2) */
 	double asw;                                                           /* current available soil water (mm/volume) */
 	double old_asw;                                                       /* old available soil water (mm/volume) */
 	double max_asw_fc;                                                    /* max available soil water at field capacity mmKgH2O/m3*/

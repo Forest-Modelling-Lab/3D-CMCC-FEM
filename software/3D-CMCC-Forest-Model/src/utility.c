@@ -274,6 +274,7 @@ void reset_daily_class_variables(cell_t *const c)
 					s->value[CANOPY_TRANSP] =           0.;
 					s->value[CANOPY_EVAPO_TRANSP] =     0.;
 					s->value[WUE] =                     0.;
+					s->value[iWUE] =                    0.;
 
 					/* reset daily multipliers */
 					s->value[F_CO2] =                   0.;
@@ -369,6 +370,7 @@ void reset_monthly_class_variables(cell_t *const c)
 					s->value[MONTHLY_NPP_gC] =               0.;
 					s->value[MONTHLY_CUE] =                  0.;
 					s->value[MONTHLY_WUE] =                  0.;
+					s->value[MONTHLY_iWUE] =                 0.;
 					s->value[MONTHLY_CANOPY_LATENT_HEAT] =   0.;
 					s->value[MONTHLY_TOTAL_MAINT_RESP] =     0.;
 					s->value[MONTHLY_TOTAL_GROWTH_RESP] =    0.;
@@ -444,6 +446,7 @@ void reset_annual_class_variables(cell_t *const c)
 					s->value[YEARLY_NPP_tC] =               0.;
 					s->value[YEARLY_CUE] =                  0.;
 					s->value[YEARLY_WUE] =                  0.;
+					s->value[YEARLY_iWUE] =                 0.;
 					s->value[YEARLY_APAR] =                 0.;
 					s->value[YEARLY_TOTAL_MAINT_RESP] =     0.;
 					s->value[YEARLY_TOTAL_GROWTH_RESP] =    0.;

@@ -31,7 +31,7 @@ void water_use_efficiency( cell_t *const c, const int height, const int dbh, con
 	 * Farquhar et al., 1989
 	 * De Kauwe et al., 2013 GCB
 	 */
-#if 1
+
 	/* daily WUE */
 	if( s->value[NPP_gC] > 0 && s->value[CANOPY_EVAPO_TRANSP] > 0.0 )
 	{
@@ -67,44 +67,45 @@ void water_use_efficiency( cell_t *const c, const int height, const int dbh, con
 			s->value[YEARLY_WUE] = 0.0;
 		}
 	}
-#else
-	/* daily WUE */
-	if( s->value[DAILY_GPP_gC] > 0 && s->value[CANOPY_EVAPO_TRANSP] > 0.0 )
+
+	/*** Intrinsic Water Use Efficiency ***/
+	//note: it is based on cell level computation
+
+	/* daily iWUE */
+	if( c->daily_gpp > 0 && c->daily_et > 0.0 )
 	{
-		s->value[WUE] = s->value[DAILY_GPP_gC] / s->value[CANOPY_EVAPO_TRANSP];
+		c->daily_iwue = c->daily_gpp / c->daily_et;
 	}
 	else
 	{
-		s->value[WUE] = 0.0;
+		c->daily_iwue = 0.0;
 	}
 
-	/* monthly WUE */
+	/* monthly iWUE */
 	/* last day of the month */
 	if ( ( IS_LEAP_YEAR( c->years[year].year ) ? (MonthLength_Leap[month] ) : (MonthLength[month] )) == c->doy )
 	{
-		if( s->value[MONTHLY_GPP_gC] > 0 && s->value[MONTHLY_CANOPY_EVAPO_TRANSP] > 0.0 )
+		if( c->monthly_gpp > 0 && c->monthly_et > 0.0 )
 		{
-			s->value[M_WUE] = s->value[MONTHLY_GPP_gC] / s->value[MONTHLY_CANOPY_EVAPO_TRANSP];
+			c->monthly_iwue = c->monthly_gpp / c->monthly_et;
 		}
 		else
 		{
-			s->value[M_WUE] = 0.0;
+			c->monthly_iwue = 0.0;
 		}
 	}
 
-	/* annual WUE */
+	/* annual iWUE */
 	/* last day of the year */
 	if ( c->doy == ( IS_LEAP_YEAR( c->years[year].year ) ? 366 : 365) )
 	{
-		if( s->value[YEARLY_GPP_gC] > 0 && s->value[YEARLY_CANOPY_EVAPO_TRANSP] > 0.0 )
+		if( c->annual_gpp > 0 && c->annual_et > 0.0 )
 		{
-			s->value[Y_WUE] = s->value[YEARLY_GPP_gC] / s->value[YEARLY_CANOPY_EVAPO_TRANSP];
+			c->annual_iwue = c->annual_gpp / c->annual_et;
 		}
 		else
 		{
-			s->value[Y_WUE] = 0.0;
+			c->annual_iwue = 0.0;
 		}
 	}
-#endif
-
 }

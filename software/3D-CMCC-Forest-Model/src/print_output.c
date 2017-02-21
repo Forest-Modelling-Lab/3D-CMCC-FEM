@@ -241,11 +241,12 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 			//logger(g_daily_log,",*****");
 		}
 		/* heading variables only at cell level */
-		logger(g_daily_log,"\t%10s \t%10s \t%10s \t%10s ",
+		logger(g_daily_log,"\t%10s \t%10s \t%10s \t%10s \t%10s",
 				"et",
 				"le",
 				"snow_pack",
-				"asw\n"
+				"asw"
+				"iWue\n"
 		);
 
 		//logger(g_daily_log,",et,le,snow_pack,asw\n");
@@ -408,11 +409,12 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 		//logger(g_daily_log, ",*****");
 	}
 	/* printing variables only at cell level */
-	logger(g_daily_log, "\t%3.4f \t%3.4f \t%3.4f \t%3.4f \n",
+	logger(g_daily_log, "\t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f\n",
 			c->daily_et,
 			c->daily_latent_heat_flux,
 			c->snow_pack,
-			c->asw
+			c->asw,
+			c->daily_iwue
 	);
 	/*
 	logger(g_daily_log, ",%g,%g,%g,%g\n",
@@ -556,10 +558,11 @@ void EOM_print_cumulative_balance_cell_level(cell_t *const c, const int month, c
 			logger(g_monthly_log,"\t%10s", "*****");
 		}
 		/* heading variables only at cell level */
-		logger(g_monthly_log,"\t%10s \t%10s \t%10s",
+		logger(g_monthly_log,"\t%10s \t%10s \t%10s \t%10s",
 				"et",
 				"le",
-				"asw\n");
+				"asw"
+				"iWue\n");
 	}
 	/************************************************************************/
 	/* values */
@@ -665,10 +668,11 @@ void EOM_print_cumulative_balance_cell_level(cell_t *const c, const int month, c
 		logger(g_monthly_log,"\t%10s", "*****");
 	}
 	/* printing variables only at cell level */
-	logger(g_monthly_log, "\t%3.2f \t%3.2f \t%3.2f\n",
+	logger(g_monthly_log, "\t%3.2f \t%3.2f \t%3.2f \t%3.2f\n",
 			c->monthly_et,
 			c->monthly_latent_heat_flux,
-			c->asw);
+			c->asw,
+			c->monthly_iwue);
 
 	/************************************************************************/
 
@@ -835,10 +839,11 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 			logger(g_annual_log,"\t%10s", "*****");
 		}
 		/* heading variables only at cell level */
-		logger(g_annual_log,"\t%10s \t%10s \t%10s",
+		logger(g_annual_log,"\t%10s \t%10s \t%10s \t%10s",
 				"et",
 				"le",
-				"asw\n");
+				"asw",
+				"iWue\n");
 	}
 	/*****************************************************************************************************/
 
@@ -961,10 +966,11 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 	}
 
 	/* printing variables only at cell level */
-	logger(g_annual_log, "\t%3.2f \t%3.2f \t%3.2f\n",
+	logger(g_annual_log, "\t%3.2f \t%3.2f \t%3.2f \t%3.2f\n",
 			c->annual_et,
 			c->annual_latent_heat_flux,
-			c->asw);
+			c->asw,
+			c->annual_iwue);
 
 	/************************************************************************/
 
