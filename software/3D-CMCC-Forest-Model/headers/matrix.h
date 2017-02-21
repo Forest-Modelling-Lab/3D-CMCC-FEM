@@ -142,6 +142,7 @@ enum {
 	CAI,                                 /* Current Annual Increment (m3/sizeCell/year) */
 	MAI,                                 /* Mean Annual Volume Increment (m3/sizeCell/year) */
 	STEMCONST,
+	MAX_SPECIES_COVER,                   /* maximum species-specific cell cover (fraction) */
 
 	/* PAR */
 	PAR,                                /* Photosynthetically Active Radiation molPAR/m^2/day */

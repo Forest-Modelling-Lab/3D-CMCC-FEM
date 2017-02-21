@@ -70,7 +70,8 @@ void self_thinning_mortality ( cell_t *const c, const int layer )
 
 					/* sort by species-specific light tolerance (from the most light demanding to the lowest */
 					//test
-					//for ( light_tol = (int)s->value[LIGHT_TOL]; light_tol > 0; --light_tol)
+					//int i;
+					//for ( i = (int)s->value[LIGHT_TOL]; i > 0; --i)
 					//{
 						//fixme self thinning mortality should follows this rationale
 						//fixme it shouldn't work properly in this way
