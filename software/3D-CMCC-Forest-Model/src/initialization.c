@@ -43,8 +43,6 @@ void initialization_forest_structure(cell_t *const c, const int day, const int m
 
 void initialization_forest_class_C_biomass(cell_t *const c, const int height, const int dbh, const int age, const int species)
 {
-	int light_tol;
-
 	height_t *h;
 	dbh_t *d;
 	age_t *a;
@@ -57,31 +55,6 @@ void initialization_forest_class_C_biomass(cell_t *const c, const int height, co
 
 	logger(g_debug_log,"\n*******INITIALIZE FOREST CLASS CARBON POOLS*******\n");
 	logger(g_debug_log, "\n\n...checking initial biomass data for height %g, age %d, species %s...\n", h->value, a->value, s->name);
-
-	/* initialize maximum species-specific cover */
-	light_tol = s->value[LIGHT_TOL];
-
-	//todo to continue
-	//fixme to continue
-	switch( light_tol )
-	{
-	/* very shade tolerant */
-	case 1:
-		s->value[MAX_SPECIES_COVER] = 1.2;
-		break;
-		/* shade tolerant */
-	case 2:
-		s->value[MAX_SPECIES_COVER] = 1.1;
-		break;
-		/*  shade intolerant */
-	case 3:
-		s->value[MAX_SPECIES_COVER] = 1.0;
-		break;
-		/* very shade intolerant */
-	case 4:
-		s->value[MAX_SPECIES_COVER] = 0.9;
-		break;
-	}
 
 	/* compute mass density */
 	s->value[MASS_DENSITY] = s->value[RHOMAX] + (s->value[RHOMIN] - s->value[RHOMAX]) * exp(-ln2 * (a->value / s->value[TRHO]));

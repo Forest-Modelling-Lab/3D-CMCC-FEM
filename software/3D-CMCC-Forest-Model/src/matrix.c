@@ -1302,6 +1302,13 @@ int fill_species_from_file(species_t *const s) {
 	free(species_flags);
 	fclose(f);
 
+	// check if light tol is between 1-4
+	if ( (s->value[LIGHT_TOL] < 1.) || (s->value[LIGHT_TOL] > 4.) ) {
+		printf("error: LIGHT TOL cannot be %g. It must be between 1,2,3 or 4", s->value[LIGHT_TOL]);
+		return 0;
+	}
+	s->value[MAX_SPECIES_COVER] = (int)s->value[LIGHT_TOL];
+
 	/* copy file */
 	if ( ! species_copy_file(g_sz_parameterization_output_path, filename) ) {
 		printf("error: unable to copy species to %s\n", g_sz_parameterization_output_path);
