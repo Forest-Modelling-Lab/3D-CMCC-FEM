@@ -561,9 +561,10 @@ void EOM_print_cumulative_balance_cell_level(cell_t *const c, const int month, c
 		logger(g_monthly_log,"\t%10s \t%10s \t%10s \t%10s",
 				"et",
 				"le",
-				"asw"
+				"asw",
 				"iWue\n");
 	}
+
 	/************************************************************************/
 	/* values */
 	logger ( g_monthly_log, "%d \t%4d", c->years[year].year, month +1 );

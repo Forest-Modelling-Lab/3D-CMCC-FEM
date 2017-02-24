@@ -1424,6 +1424,7 @@ int main(int argc, char *argv[]) {
 
 					logger(g_debug_log, "****************END OF DAY (%d)*******************\n\n\n", day + 1 );
 
+
 					/* save values for put in output netcdf */
 					if ( output_vars && output_vars->monthly_vars_count ) {
 						/*
