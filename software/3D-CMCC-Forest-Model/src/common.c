@@ -95,6 +95,31 @@ char *string_tokenizer(char* string, const char* delimiters, char **p) {
 	return sbegin;
 }
 
+char* strstr_i(char* str1, const char* str2) {
+    char* p1 = str1 ;
+    const char* p2 = str2 ;
+    char* r = *p2 == 0 ? str1 : 0 ;
+
+    while( *p1 != 0 && *p2 != 0 ) {
+        if( tolower(*p1) == tolower(*p2) ) {
+            if ( ! r ){
+                r = p1;
+            }
+            p2++;
+        } else {
+            p2 = str2;
+            if ( tolower(*p1) == tolower(*p2) ) {
+                r = p1;
+                p2++;
+            } else {
+                r = 0;
+            }
+        }
+        p1++;
+    }
+    return *p2 == 0 ? r : 0;
+}
+
 int add_char_to_string(char *const string, char c, const int size) {
  int i;
 

@@ -13,17 +13,9 @@ typedef enum {
 } e_output_types;
 
 enum {
-	AR_DAILY_OUT
-	, AR_MONTHLY_OUT
-	, AR_YEARLY_OUT
-
-	, GPP_DAILY_OUT
-	, GPP_MONTHLY_OUT
-	, GPP_YEARLY_OUT
-
-	, NPP_DAILY_OUT
-	, NPP_MONTHLY_OUT
-	, NPP_YEARLY_OUT
+	AR_OUT
+	, GPP_OUT
+	, NPP_OUT
 
 	, OUTPUT_VARS_COUNT
 };

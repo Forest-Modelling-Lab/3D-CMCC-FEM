@@ -17,17 +17,9 @@ extern const char* log_types[];
 	please see output.h
 */
 static const char *sz_output_vars[OUTPUT_VARS_COUNT] = {
-		"daily_ar"
-		, "monthly_ar"
-		, "annual_ar"
-
-		, "daily_gpp"
-		, "monthly_gpp"
-		, "annual_gpp"
-
-		, "daily_npp"
-		, "monthly_npp"
-		, "annual_npp"
+		"ar"
+		, "gpp"
+		, "npp"
 };
 
 output_t* output_import(const char *const filename) {
@@ -40,6 +32,9 @@ output_t* output_import(const char *const filename) {
 	int flag;
 
 	const char delimiter[] = " ,\r\n";
+
+	enum { DAILY_FREQ, MONTHLY_FREQ, ANNUAL_FREQ, FREQ_COUNT };
+	const char *sz_freq[FREQ_COUNT] = { "daily_", "monthly_", "annual_" };
 
 	assert(filename);
 
@@ -87,26 +82,48 @@ output_t* output_import(const char *const filename) {
 
 	for ( token = string_tokenizer(buffer, delimiter, &p); token; token = string_tokenizer(NULL, delimiter, &p) ) {
 		if ( token[0] ) {
+			char* var;
+			int freq;
+
+			// get frequency
+			var = NULL;
+			for ( i = 0; i < FREQ_COUNT; ++i ) {
+				var = strstr_i(token, sz_freq[i]);
+				if ( var ) {
+					freq = i;
+					break;
+				}
+			}
+			if ( ! var ) {
+				printf("%s is an unknown output var. skipped\n", token);
+				continue;
+			}
+			
+			// get var name
+			if ( var - token ) {
+				printf("bad output var specified: %s. skipped\n", token);
+				continue;
+			}
+			var += strlen(sz_freq[freq]);
+
 			flag = 0;
 			for ( i = 0; i < OUTPUT_VARS_COUNT; ++i ) {
-				if ( ! string_compare_i(token, sz_output_vars[i]) ) {
-					/* daily */
-					if ( ('d' == token[0]) || ('D' == token[0]) ) {
-						int_no_leak = realloc(ov->daily_vars, (ov->daily_vars_count+1)*sizeof*int_no_leak);
-						if ( ! int_no_leak )
-						{
-							puts(sz_err_out_of_memory);
-							output_free(ov);
-							free(buffer);
-							return NULL;
-						}
-						ov->daily_vars = int_no_leak;
-						ov->daily_vars[ov->daily_vars_count++] = i;
-						flag = 1;
+				if ( ! string_compare_i(var, sz_output_vars[i]) ) {
+					switch ( freq ) {
+						case DAILY_FREQ:
+							int_no_leak = realloc(ov->daily_vars, (ov->daily_vars_count+1)*sizeof*int_no_leak);
+							if ( ! int_no_leak )
+							{
+								puts(sz_err_out_of_memory);
+								output_free(ov);
+								free(buffer);
+								return NULL;
+							}
+							ov->daily_vars = int_no_leak;
+							ov->daily_vars[ov->daily_vars_count++] = i;
 						break;
-					}
-					else /* monthly */
-						if ( ('m' == token[0]) || ('M' == token[0]) ) {
+
+						case MONTHLY_FREQ:
 							int_no_leak = realloc(ov->monthly_vars, (ov->monthly_vars_count+1)*sizeof*int_no_leak);
 							if ( ! int_no_leak )
 							{
@@ -117,28 +134,25 @@ output_t* output_import(const char *const filename) {
 							}
 							ov->monthly_vars = int_no_leak;
 							ov->monthly_vars[ov->monthly_vars_count++] = i;
-							flag = 1;
-							break;
-						}
-						else /* yearly */
-							if ( ('a' == token[0]) || ('A' == token[0]) ) { /* a/A means annual */
-								int_no_leak = realloc(ov->yearly_vars, (ov->yearly_vars_count+1)*sizeof*int_no_leak);
-								if ( ! int_no_leak )
-								{
-									puts(sz_err_out_of_memory);
-									output_free(ov);
-									free(buffer);
-									return NULL;
-								}
-								ov->yearly_vars = int_no_leak;
-								ov->yearly_vars[ov->yearly_vars_count++] = i;
-								flag = 1;
-								break;
+						break;
+
+						case ANNUAL_FREQ:
+							int_no_leak = realloc(ov->yearly_vars, (ov->yearly_vars_count+1)*sizeof*int_no_leak);
+							if ( ! int_no_leak )
+							{
+								puts(sz_err_out_of_memory);
+								output_free(ov);
+								free(buffer);
+								return NULL;
 							}
+							ov->yearly_vars = int_no_leak;
+							ov->yearly_vars[ov->yearly_vars_count++] = i;
+						break;
+
+						default:
+							assert(0);
+					}
 				}
-			}
-			if ( ! flag ) {
-				printf("%s is an unknown output var. skipped\n", token);
 			}
 		}
 	}
@@ -222,9 +236,9 @@ static void daily_push_values(const output_t* const o, const cell_t* const c, co
 	for ( i = 0; i < o->daily_vars_count; ++i ) {
 		int row = get_daily_row_from_date(year, month, day) + (year_index*366);
 		int index = VALUE_AT(c->x, c->y, row, i);
-		if ( AR_DAILY_OUT == o->daily_vars[i] )		o->daily_vars_value[index] = c->daily_aut_resp;
-		if ( GPP_DAILY_OUT == o->daily_vars[i] )	o->daily_vars_value[index] = c->daily_gpp;
-		if ( NPP_DAILY_OUT == o->daily_vars[i] )	o->daily_vars_value[index] = c->daily_npp_gC;
+		if ( AR_OUT == o->daily_vars[i] )		o->daily_vars_value[index] = c->daily_aut_resp;
+		if ( GPP_OUT == o->daily_vars[i] )	o->daily_vars_value[index] = c->daily_gpp;
+		if ( NPP_OUT == o->daily_vars[i] )	o->daily_vars_value[index] = c->daily_npp_gC;
 	}
 #undef VALUE_AT
 #undef ROWS
@@ -241,9 +255,9 @@ static void monthly_push_values(const output_t* const o, const cell_t* const c, 
 	for ( i = 0; i < o->monthly_vars_count; ++i ) {
 		int row = month + (year_index*12);
 		int index = VALUE_AT(c->x, c->y, row, i);
-		if ( AR_MONTHLY_OUT == o->monthly_vars[i] ) o->monthly_vars_value[index] = c->monthly_aut_resp;
-		if ( GPP_MONTHLY_OUT == o->monthly_vars[i] ) o->monthly_vars_value[index] = c->monthly_gpp;
-		if ( NPP_MONTHLY_OUT == o->monthly_vars[i] ) o->monthly_vars_value[index] = c->monthly_npp_gC;
+		if ( AR_OUT == o->monthly_vars[i] ) o->monthly_vars_value[index] = c->monthly_aut_resp;
+		if ( GPP_OUT == o->monthly_vars[i] ) o->monthly_vars_value[index] = c->monthly_gpp;
+		if ( NPP_OUT == o->monthly_vars[i] ) o->monthly_vars_value[index] = c->monthly_npp_gC;
 	}
 #undef VALUE_AT
 #undef ROWS
@@ -260,9 +274,9 @@ static void yearly_push_values(const output_t* const o, const cell_t* const c, c
 	for ( i = 0; i < o->yearly_vars_count; ++i )
 	{
 		int index = VALUE_AT(c->x, c->y, year_index, i);
-		if ( AR_YEARLY_OUT == o->yearly_vars[i] ) o->yearly_vars_value[index] = c->annual_aut_resp;
-		if ( GPP_YEARLY_OUT == o->yearly_vars[i] ) o->yearly_vars_value[index] = c->annual_gpp;
-		if ( NPP_YEARLY_OUT == o->yearly_vars[i] ) o->yearly_vars_value[index] = c->annual_npp_gC;
+		if ( AR_OUT == o->yearly_vars[i] ) o->yearly_vars_value[index] = c->annual_aut_resp;
+		if ( GPP_OUT == o->yearly_vars[i] ) o->yearly_vars_value[index] = c->annual_gpp;
+		if ( NPP_OUT == o->yearly_vars[i] ) o->yearly_vars_value[index] = c->annual_npp_gC;
 	}
 #undef VALUE_AT
 #undef ROWS
@@ -303,7 +317,7 @@ static int output_write_nc(const output_t* const vars, const char *const path, c
 */
 	int i;
 	int ret;
-	char *p;
+	const char *var;
 	char sz_buffer[256];
 	int n;
 	int index;
@@ -330,7 +344,7 @@ static int output_write_nc(const output_t* const vars, const char *const path, c
 	/* init */
 	time_rows = NULL;
 	values = NULL;
-	p = NULL;
+	var = NULL;
 	n = 0;
 	index = 0;
 
@@ -379,6 +393,19 @@ static int output_write_nc(const output_t* const vars, const char *const path, c
 		else
 			sprintf(sz_buffer, "%s%s%s%s.nc", path, log_types[YEARLY_LOG], FOLDER_DELIMITER, sz_output_vars[vars->yearly_vars[i]]);
 
+		/* get var name */
+		if ( OUTPUT_TYPE_DAILY == type)
+			var = sz_output_vars[vars->daily_vars[i]];
+		else if ( OUTPUT_TYPE_MONTHLY == type)
+			var = sz_output_vars[vars->monthly_vars[i]];
+		else if ( OUTPUT_TYPE_YEARLY == type)
+			var = sz_output_vars[vars->yearly_vars[i]];
+		else
+			//logger(g_debug_log, "unable to create output netcdf file %s: internal error (bad var name)", sz_buffer);
+			//free(time_rows);
+			//return 0;
+			assert(0);
+		
 		/* create file */
 		ret = nc_create(sz_buffer, NC_CLOBBER, &id_file);
 		if ( ret != NC_NOERR ) goto quit;
@@ -408,17 +435,7 @@ static int output_write_nc(const output_t* const vars, const char *const path, c
 		ret = nc_def_var(id_file, sz_time, NC_DOUBLE, 1, id_dims, &id_time);
 		if ( ret != NC_NOERR ) goto quit;
 
-		/* remove suffix from var name(daily, month or annual) */
-		if ( OUTPUT_TYPE_DAILY == type)
-			p = strchr(sz_output_vars[vars->daily_vars[i]], '_');
-		else if ( OUTPUT_TYPE_MONTHLY == type)
-			p = strchr(sz_output_vars[vars->monthly_vars[i]], '_');
-		else
-			p = strchr(sz_output_vars[vars->yearly_vars[i]], '_');
-		assert(p);
-		++p;
-
-		ret = nc_def_var(id_file, p, NC_DOUBLE, 3, id_dims, &id_var);
+		ret = nc_def_var(id_file, var, NC_DOUBLE, 3, id_dims, &id_var);
 		if ( ret != NC_NOERR ) goto quit;
 
 		/* close definition */
