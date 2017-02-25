@@ -31,7 +31,7 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 	double q10_tnight;
 	double q10_tsoil;
 
-	double acc_const = -0.00703;      /* temperature correction factor for acclimation -0.00703 Atkin et al., 2008 GCB, 0.0078 Hidy et al., 2016 GMD */
+	double acc_const = -0.00794;      /* temperature correction factor for acclimation -0.00703 Atkin et al., 2008 GCB, -0.00794 Smith & Dukes 2012; 0.0078 Hidy et al., 2016 GMD */
 
 	/* exponent for Temperature */
 	double exponent_tday;
