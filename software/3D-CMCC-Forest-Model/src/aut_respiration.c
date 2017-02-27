@@ -74,6 +74,7 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 	 * Smith and Dukes, 2013, Global Change Biology
 	 * */
 
+	/*** NOTE: Type I acclimation (Atkin & Tjoelker 2003; Atkin et al., 2005) ***/
 	/* Q10 dependent changes on temperature */
 	q10_tday        = 3.22 - 0.046 * meteo_daily->tday;
 	q10_tnight      = 3.22 - 0.046 * meteo_daily->tnight;
@@ -140,7 +141,7 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 	/* if acclimation for autotrophic respiration = "on" */
 	if ( g_settings->Resp_accl )
 	{
-		/********************************************ACCLIMATION FOR RESPIRATION********************************************/
+		/*** NOTE: Type II acclimation (Atkin & Tjoelker 2003; Atkin et al., 2005) ***/
 		/* FOLLOWING Atkin et al., 2008 "Using temperature-dependent changes in leaf scaling relationships
 		 * to quantitatively account for thermal acclimation of respiration in a coupled global climate–vegetation model",
 		 * 14, 1–18, GCB */
