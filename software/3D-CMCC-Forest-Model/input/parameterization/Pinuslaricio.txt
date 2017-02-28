@@ -12,7 +12,7 @@ SLA_RATIO                     //(DIM) ratio of shaded to sunlit projected SLA
 LAI_RATIO                     //(DIM) all-sided to projected leaf area ratio for
 FRACBB0                       //Branch and Bark fraction at age 0 
 FRACBB1                       //Branch and Bark fraction for mature stands 
-TBB                           //Age at which fracBB = (FRACBB0 + FRACBB1 )/ 2
+TBB                           //Age at which fracBB = (FRACBB0 + FRACBB1 )/2
 RHOMIN                        //Minimum Basic Density for young Trees t/m^3 
 RHOMAX                        //Maximum Basic Density for young Trees t/m^3
 TRHO                          //Age at which rho = (RHOMIN + RHOMAX )/2

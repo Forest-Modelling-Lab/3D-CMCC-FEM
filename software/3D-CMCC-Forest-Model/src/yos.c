@@ -487,7 +487,7 @@ static int yos_from_arr(double *const values, const int rows_count, const int co
 
 		day = (int)values[VALUE_AT(row, DAY)];
 		if ( (day <= 0) || day > days_per_month[month] + (((1 == month) && IS_LEAP_YEAR(year)) ? 1 :0 ) ) {
-			logger_error(g_debug_log, "bad day for %s %d\n\n", sz_month_names[month], year);
+			logger_error(g_debug_log, "bad n_day for %s %d\n\n", sz_month_names[month], year);
 			//free(yos);
 			return 0;
 		}
