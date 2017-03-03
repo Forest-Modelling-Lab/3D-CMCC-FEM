@@ -11,7 +11,6 @@
 #include "nc.h"
 
 extern settings_t* g_settings;
-//extern soil_settings_t* g_soil_settings;
 extern logger_t* g_daily_log;
 extern logger_t* g_monthly_log;
 extern logger_t* g_annual_log;
@@ -26,8 +25,6 @@ extern const char sz_launched[];
 
 extern int MonthLength [];
 extern int MonthLength_Leap [];
-
-extern int g_do_txt;
 
 static const char sz_management[] = "TCN";
 
@@ -110,7 +107,7 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 	/* heading */
 	if ( !day && !month && !year )
 	{
-		if ( g_do_txt )
+		if ( g_settings->no_spreadsheet )
 			logger(g_daily_log, "%s \t%2s \t%s", "YEAR", "MONTH", "DAY");
 		else
 			logger(g_daily_log, "YEAR,MONTH,DAY");
@@ -122,20 +119,20 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 				if( layer == c->heights[height].height_z )
 				{
 					/* heading for layers */
-					if ( g_do_txt )
+					if ( g_settings->no_spreadsheet )
 						logger(g_daily_log,"\t%s", "LAYER");
 					else
 						logger(g_daily_log, ",LAYER");
 
 					/* heading for heights value */
-					if ( g_do_txt )
+					if ( g_settings->no_spreadsheet )
 						logger(g_daily_log,"\t%4s", "HEIGHT");
 					else
 						logger(g_daily_log,",HEIGHT");
 
 					for ( dbh = c->heights[height].dbhs_count - 1; dbh >= 0; --dbh )
 					{
-						if ( g_do_txt )
+						if ( g_settings->no_spreadsheet )
 							logger(g_daily_log,"\t%4s", "DBH");
 						else
 							logger(g_daily_log,",DBH");
@@ -144,7 +141,7 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 						for ( age = 0; age < c->heights[height].dbhs[dbh].ages_count ; ++age )
 						{
 							/* heading for ages */
-							if ( g_do_txt )
+							if ( g_settings->no_spreadsheet )
 								logger(g_daily_log,"\t%7s", "AGE");
 							else
 								logger(g_daily_log,",AGE");
@@ -153,18 +150,18 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 							for ( species = 0; species < c->heights[height].dbhs[dbh].ages[age].species_count; ++species )
 							{
 								/* heading for species name */
-								if ( g_do_txt )
+								if ( g_settings->no_spreadsheet )
 									logger(g_daily_log,"\t%10s", "SPECIES");
 								else
 									logger(g_daily_log,",SPECIES");
 
 								/* heading for management */
-								if ( g_do_txt )
+								if ( g_settings->no_spreadsheet )
 									logger(g_daily_log, "\t%s", "MANAGEMENT");
 								else
 									logger(g_daily_log, ",MANAGEMENT");
 
-								if ( g_do_txt )
+								if ( g_settings->no_spreadsheet )
 										logger(g_daily_log,"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s"
 												"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s"
 												"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s "
@@ -280,31 +277,31 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 
 							}
 							if ( c->heights[height].dbhs[dbh].ages[age].species_count > 1 )
-								if ( g_do_txt )
+								if ( g_settings->no_spreadsheet )
 									logger(g_daily_log,"\t%10s", "*");
 								else
 									logger(g_daily_log,",*");
 						}
 						if ( c->heights[height].dbhs[dbh].ages_count > 1 )
-							if ( g_do_txt )
+							if ( g_settings->no_spreadsheet )
 								logger(g_daily_log,"\t%10s", "**");
 							else
 								logger(g_daily_log, ",**");
 					}
 					if ( c->heights[height].dbhs_count > 1 )
-						if ( g_do_txt )
+						if ( g_settings->no_spreadsheet )
 							logger(g_daily_log,"\t%10s", "***");
 						else
 							logger(g_daily_log,",***");
 				}
 				if ( c->tree_layers[layer].layer_n_height_class > 1 )
-					if ( g_do_txt )
+					if ( g_settings->no_spreadsheet )
 						logger(g_daily_log,"\t%10s", "****");
 					else
 						logger(g_daily_log,",****");
 			}
 			if ( c->tree_layers_count > 1 )
-				if ( g_do_txt )
+				if ( g_settings->no_spreadsheet )
 					logger(g_daily_log,"\t%10s", "*****");
 				else
 					logger(g_daily_log,",*****");
@@ -325,7 +322,7 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 		/* heading variables at cell level only if there's more than one layer */
 		if( c->heights_count > 1 )
 		{
-			if ( g_do_txt )
+			if ( g_settings->no_spreadsheet )
 				logger(g_daily_log,"\t%10s \t%10s \t%10s \t%10s",
 						"***",
 						"gpp",
@@ -338,14 +335,14 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 		/* heading variables at cell level also if there's more than one layer */
 		else
 		{
-			if ( g_do_txt )
+			if ( g_settings->no_spreadsheet )
 				logger(g_daily_log,"\t%10s", "*****");
 			else
 				logger(g_daily_log,",*****");
 			
 		}
 		/* heading variables only at cell level */
-		if ( g_do_txt )
+		if ( g_settings->no_spreadsheet )
 			logger(g_daily_log,"\t%10s \t%10s \t%10s \t%10s \t%10s",
 					"et",
 					"le",
@@ -360,7 +357,7 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 	/*****************************************************************************************************/
 
 	/* values */
-	if ( g_do_txt )
+	if ( g_settings->no_spreadsheet )
 		logger(g_daily_log, "%d \t%4d \t%4d", c->years[year].year, month + 1, day + 1);
 	else
 		logger(g_daily_log, "%d,%d,%d", c->years[year].year, month + 1, day + 1);
@@ -375,13 +372,13 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 			if( layer == c->heights[height].height_z )
 			{
 				/* print layer */
-				if ( g_do_txt )
+				if ( g_settings->no_spreadsheet )
 					logger(g_daily_log,"\t%6d", layer);
 				else
 					logger(g_daily_log,",%d", layer);
 
 				/* print height */
-				if ( g_do_txt )
+				if ( g_settings->no_spreadsheet )
 					logger(g_daily_log,"\t%5.4g", c->heights[height].value);
 				else
 					logger(g_daily_log,",%g", c->heights[height].value);
@@ -389,7 +386,7 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 				for ( dbh = c->heights[height].dbhs_count - 1; dbh >= 0; --dbh )
 				{
 					/* print dbh */
-					if ( g_do_txt )
+					if ( g_settings->no_spreadsheet )
 						logger(g_daily_log,"\t%5.4g", c->heights[height].dbhs[dbh].value);
 					else
 						logger(g_daily_log,",%g", c->heights[height].dbhs[dbh].value);
@@ -397,7 +394,7 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 					for ( age = 0; age < c->heights[height].dbhs[dbh].ages_count ; ++age )
 					{
 						/* print age */
-						if ( g_do_txt )
+						if ( g_settings->no_spreadsheet )
 							logger(g_daily_log,"\t%7d", c->heights[height].dbhs[dbh].ages[age].value);
 						else
 							logger(g_daily_log,",%d", c->heights[height].dbhs[dbh].ages[age].value);
@@ -407,19 +404,19 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 							s  = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 							/* print species name */
-							if ( g_do_txt )
+							if ( g_settings->no_spreadsheet )
 								logger(g_daily_log,"\t%8.3s", c->heights[height].dbhs[dbh].ages[age].species[species].name);
 							else
 								logger(g_daily_log,",%.3s", c->heights[height].dbhs[dbh].ages[age].species[species].name);
 
 							/* print management */
-							if ( g_do_txt )
+							if ( g_settings->no_spreadsheet )
 								logger(g_daily_log,"\t%c", sz_management[c->heights[height].dbhs[dbh].ages[age].species[species].management]);
 							else
 								logger(g_daily_log,",%c", sz_management[c->heights[height].dbhs[dbh].ages[age].species[species].management]);
 
 							/* print variables at layer-class level */
-							if ( g_do_txt )
+							if ( g_settings->no_spreadsheet )
 								logger(g_daily_log,"\t%6.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3d \t%3d \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f"
 										"\t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f"
 										"\t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f"
@@ -538,32 +535,32 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 						}
 
 						if ( c->heights[height].dbhs[dbh].ages[age].species_count > 1 )
-							if ( g_do_txt )
+							if ( g_settings->no_spreadsheet )
 								logger(g_daily_log,"\t%10s", "*");
 							else
 								logger(g_daily_log,",*");
 					}
 					if ( c->heights[height].dbhs[dbh].ages_count > 1 )
-						if ( g_do_txt )
+						if ( g_settings->no_spreadsheet )
 							logger(g_daily_log,"\t%10s", "**");
 						else
 							logger(g_daily_log,",**");
 				}
 				if ( c->heights[height].dbhs_count > 1 )
-					if ( g_do_txt )
+					if ( g_settings->no_spreadsheet )
 						logger(g_daily_log,"\t%10s", "***");
 					else
 						logger(g_daily_log,",***");
 			}
 			if ( c->tree_layers[layer].layer_n_height_class > 1 )
-				if ( g_do_txt )
+				if ( g_settings->no_spreadsheet )
 					logger(g_daily_log,"\t%10s", "****");
 				else
 					logger(g_daily_log,",****");
 		}
 		if ( c->tree_layers_count > 1 )
 		{
-			if ( g_do_txt )
+			if ( g_settings->no_spreadsheet )
 				logger(g_daily_log,"\t%10s", "*****");
 			else
 				logger(g_daily_log,",*****");
@@ -589,7 +586,7 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 	/* printing variables at cell level only if there's more than one layer */
 	if( c->heights_count > 1 )
 	{
-		if ( g_do_txt )
+		if ( g_settings->no_spreadsheet )
 			logger(g_daily_log, "\t%4s \t%3.4f \t%3.4f \t%3.4f",
 				"***",
 				c->daily_gpp,
@@ -606,13 +603,13 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 	/* printing variables at cell level also if there's more than one layer */
 	else
 	{
-		if ( g_do_txt )
+		if ( g_settings->no_spreadsheet )
 			logger(g_daily_log,"\t%10s", "*****");
 		else
 			logger(g_daily_log,",*****");
 	}
 	/* printing variables only at cell level */
-	if ( g_do_txt )
+	if ( g_settings->no_spreadsheet )
 		logger(g_daily_log, "\t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f\n",
 				c->daily_et,
 				c->daily_latent_heat_flux,
@@ -669,7 +666,7 @@ void EOM_print_cumulative_balance_cell_level(cell_t *const c, const int month, c
 	/* heading */
 	if ( !month && !year )
 	{
-		if ( g_do_txt )
+		if ( g_settings->no_spreadsheet )
 			logger(g_monthly_log, "%s \t%2s", "YEAR", "MONTH");
 		else
 			logger(g_monthly_log, "YEAR,MONTH");
@@ -681,14 +678,14 @@ void EOM_print_cumulative_balance_cell_level(cell_t *const c, const int month, c
 				if( layer == c->heights[height].height_z )
 				{
 					/* heading for layers */
-					if ( g_do_txt )
+					if ( g_settings->no_spreadsheet )
 						logger(g_monthly_log,"\t%s", "LAYER");
 					else
 						logger(g_monthly_log,",LAYER");
 
 
 					/* heading for heights value */
-					if ( g_do_txt )
+					if ( g_settings->no_spreadsheet )
 						logger(g_monthly_log,"\t%4s", "HEIGHT");
 					else
 						logger(g_monthly_log,",HEIGHT");
@@ -696,7 +693,7 @@ void EOM_print_cumulative_balance_cell_level(cell_t *const c, const int month, c
 					for ( dbh = c->heights[height].dbhs_count - 1; dbh >= 0; --dbh )
 					{
 						/* heading for dbhs value */
-						if ( g_do_txt )
+						if ( g_settings->no_spreadsheet )
 							logger(g_monthly_log, "\t%4s", "DBH");
 						else
 							logger(g_monthly_log, ",DBH");
@@ -704,7 +701,7 @@ void EOM_print_cumulative_balance_cell_level(cell_t *const c, const int month, c
 						for ( age = 0; age < c->heights[height].dbhs[dbh].ages_count ; ++age )
 						{
 							/* heading for ages */
-							if ( g_do_txt )
+							if ( g_settings->no_spreadsheet )
 								logger(g_monthly_log,"\t%7s", "AGE");
 							else
 								logger(g_monthly_log,",AGE");
@@ -712,18 +709,18 @@ void EOM_print_cumulative_balance_cell_level(cell_t *const c, const int month, c
 							for ( species = 0; species < c->heights[height].dbhs[dbh].ages[age].species_count; ++species )
 							{
 								/* heading for species name */
-								if ( g_do_txt )
+								if ( g_settings->no_spreadsheet )
 									logger(g_monthly_log,"\t%10s", "SPECIES");
 								else
 									logger(g_monthly_log,",SPECIES");
 
 								/* heading for management */
-								if ( g_do_txt )
+								if ( g_settings->no_spreadsheet )
 									logger(g_monthly_log,"\t%s", "MANAGEMENT");
 								else
 									logger(g_monthly_log,",MANAGEMENT");
 
-								if ( g_do_txt )
+								if ( g_settings->no_spreadsheet )
 									logger(g_monthly_log,"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s"
 											"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s\t%4s \t%4s \t%4s \t%4s",
 											"GPP",
@@ -797,31 +794,31 @@ void EOM_print_cumulative_balance_cell_level(cell_t *const c, const int month, c
 
 							}
 							if ( c->heights[height].dbhs[dbh].ages[age].species_count > 1 )
-								if ( g_do_txt )
+								if ( g_settings->no_spreadsheet )
 									logger(g_monthly_log,"\t%10s", "*");
 								else
 									logger(g_monthly_log,",*");
 						}
 						if ( c->heights[height].dbhs[dbh].ages_count > 1 )
-							if ( g_do_txt )
+							if ( g_settings->no_spreadsheet )
 								logger(g_monthly_log,"\t%10s", "**");
 							else
 								logger(g_monthly_log,",**");
 					}
 					if ( c->heights[height].dbhs_count > 1 )
-						if ( g_do_txt )
+						if ( g_settings->no_spreadsheet )
 							logger(g_monthly_log,"\t%10s", "***");
 						else
 							logger(g_monthly_log,",***");
 				}
 				if ( c->tree_layers[layer].layer_n_height_class > 1 )
-					if ( g_do_txt )
+					if ( g_settings->no_spreadsheet )
 						logger(g_monthly_log,"\t%10s", "****");
 					else
 						logger(g_monthly_log,",****");
 			}
 			if ( c->tree_layers_count > 1 )
-				if ( g_do_txt )
+				if ( g_settings->no_spreadsheet )
 					logger(g_monthly_log,"\t%10s", "*****");
 				else
 					logger(g_monthly_log,",*****");
@@ -831,7 +828,7 @@ void EOM_print_cumulative_balance_cell_level(cell_t *const c, const int month, c
 
 		if( c->heights_count > 1 )
 		{
-			if ( g_do_txt )
+			if ( g_settings->no_spreadsheet )
 				logger(g_monthly_log,"\t%10s \t%10s \t%10s \t%10s",
 					"***",
 					"gpp",
@@ -843,13 +840,13 @@ void EOM_print_cumulative_balance_cell_level(cell_t *const c, const int month, c
 		/* heading variables at cell level also if there's more than one layer */
 		else
 		{
-			if ( g_do_txt )
+			if ( g_settings->no_spreadsheet )
 				logger(g_monthly_log,"\t%10s", "*****");
 			else
 				logger(g_monthly_log,",*****");
 		}
 		/* heading variables only at cell level */
-		if ( g_do_txt )
+		if ( g_settings->no_spreadsheet )
 			logger(g_monthly_log,"\t%10s \t%10s \t%10s \t%10s",
 					"et",
 					"le",
@@ -861,7 +858,7 @@ void EOM_print_cumulative_balance_cell_level(cell_t *const c, const int month, c
 
 	/************************************************************************/
 	/* values */
-	if ( g_do_txt )
+	if ( g_settings->no_spreadsheet )
 		logger ( g_monthly_log, "%d \t%4d", c->years[year].year, month +1 );
 	else
 		logger ( g_monthly_log, "%d,%d", c->years[year].year, month +1 );
@@ -874,13 +871,13 @@ void EOM_print_cumulative_balance_cell_level(cell_t *const c, const int month, c
 			if( layer == c->heights[height].height_z )
 			{
 				/* print layer */
-				if ( g_do_txt )
+				if ( g_settings->no_spreadsheet )
 					logger(g_monthly_log,"\t%6d", layer);
 				else
 					logger(g_monthly_log,",%d", layer);
 
 				/* print height */
-				if ( g_do_txt )
+				if ( g_settings->no_spreadsheet )
 					logger(g_monthly_log,"\t%5.3g", c->heights[height].value);
 				else
 					logger(g_monthly_log,",%g", c->heights[height].value);
@@ -888,7 +885,7 @@ void EOM_print_cumulative_balance_cell_level(cell_t *const c, const int month, c
 				for ( dbh = c->heights[height].dbhs_count - 1; dbh >= 0; --dbh )
 				{
 					/* print age */
-					if ( g_do_txt )
+					if ( g_settings->no_spreadsheet )
 						logger(g_monthly_log,"\t%5.3g", c->heights[height].dbhs[dbh].value);
 					else
 						logger(g_monthly_log,",%g", c->heights[height].dbhs[dbh].value);
@@ -896,7 +893,7 @@ void EOM_print_cumulative_balance_cell_level(cell_t *const c, const int month, c
 					for ( age = 0; age < c->heights[height].dbhs[dbh].ages_count ; ++age )
 					{
 						/* print age */
-						if ( g_do_txt )
+						if ( g_settings->no_spreadsheet )
 							logger(g_monthly_log,"\t%7d", c->heights[height].dbhs[dbh].ages[age].value);
 						else
 							logger(g_monthly_log,",%d", c->heights[height].dbhs[dbh].ages[age].value);
@@ -906,19 +903,19 @@ void EOM_print_cumulative_balance_cell_level(cell_t *const c, const int month, c
 							s  = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 							/* print species name */
-							if ( g_do_txt )
+							if ( g_settings->no_spreadsheet )
 								logger(g_monthly_log,"\t%8.3s", c->heights[height].dbhs[dbh].ages[age].species[species].name);
 							else
 								logger(g_monthly_log,",%.3s", c->heights[height].dbhs[dbh].ages[age].species[species].name);
 
 							/* print management */
-							if ( g_do_txt )
+							if ( g_settings->no_spreadsheet )
 								logger(g_monthly_log,"\t%c", sz_management[c->heights[height].dbhs[dbh].ages[age].species[species].management]);
 							else
 								logger(g_monthly_log,",%c", sz_management[c->heights[height].dbhs[dbh].ages[age].species[species].management]);
 
 							/* print variables at layer-class level */
-							if ( g_do_txt )
+							if ( g_settings->no_spreadsheet )
 								logger(g_monthly_log,"\t%6.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3d \t%3.4f \t%3.4f \t%3.4f \t%3.4f"
 										"\t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f",
 										s->value[MONTHLY_GPP_gC],
@@ -992,32 +989,32 @@ void EOM_print_cumulative_balance_cell_level(cell_t *const c, const int month, c
 										s->value[BRANCH_DEAD_WOOD_C]);
 						}
 						if ( c->heights[height].dbhs[dbh].ages[age].species_count > 1 )
-							if ( g_do_txt )
+							if ( g_settings->no_spreadsheet )
 								logger(g_monthly_log,"\t%10s", "*");
 							else
 								logger(g_monthly_log,",*");
 					}
 					if ( c->heights[height].dbhs[dbh].ages_count > 1 )
-						if ( g_do_txt )
+						if ( g_settings->no_spreadsheet )
 							logger(g_monthly_log,"\t%10s", "**");
 						else
 							logger(g_monthly_log,",**");
 				}
 				if ( c->heights[height].dbhs_count > 1 )
-					if ( g_do_txt )
+					if ( g_settings->no_spreadsheet )
 						logger(g_monthly_log,"\t%10s", "***");
 					else
 						logger(g_monthly_log,",***");
 			}
 			if ( c->tree_layers[layer].layer_n_height_class > 1 )
-				if ( g_do_txt )
+				if ( g_settings->no_spreadsheet )
 					logger(g_monthly_log,"\t%10s", "****");
 				else
 					logger(g_monthly_log,",****");
 		}
 		if ( c->tree_layers_count > 1 )
 		{
-			if ( g_do_txt )
+			if ( g_settings->no_spreadsheet )
 				logger(g_monthly_log,"\t%10s", "*****");
 			else
 				logger(g_monthly_log,",*****");
@@ -1028,7 +1025,7 @@ void EOM_print_cumulative_balance_cell_level(cell_t *const c, const int month, c
 
 	if( c->heights_count > 1 )
 	{
-		if ( g_do_txt )
+		if ( g_settings->no_spreadsheet )
 			logger(g_monthly_log, "\t%4s \t%3.4f \t%3.4f \t%3.4f ",
 					"***",
 					c->monthly_gpp,
@@ -1044,13 +1041,13 @@ void EOM_print_cumulative_balance_cell_level(cell_t *const c, const int month, c
 	/* printing variables at cell level also if there's more than one layer */
 	else
 	{
-		if ( g_do_txt )
+		if ( g_settings->no_spreadsheet )
 			logger(g_monthly_log,"\t%10s", "*****");
 		else
 			logger(g_monthly_log,",*****");
 	}
 	/* printing variables only at cell level */
-	if ( g_do_txt )
+	if ( g_settings->no_spreadsheet )
 		logger(g_monthly_log, "\t%3.2f \t%3.2f \t%3.2f \t%3.2f\n",
 			c->monthly_et,
 			c->monthly_latent_heat_flux,
@@ -1136,13 +1133,13 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 				if( layer == c->heights[height].height_z )
 				{
 					/* heading for layers */
-					if ( g_do_txt )
+					if ( g_settings->no_spreadsheet )
 						logger(g_annual_log,"\t%s", "LAYER");
 					else
 						logger(g_annual_log,",LAYER");
 
 					/* heading for heights value */
-					if ( g_do_txt )
+					if ( g_settings->no_spreadsheet )
 						logger(g_annual_log,"\t%4s", "HEIGHT");
 					else
 						logger(g_annual_log,",HEIGHT");
@@ -1150,7 +1147,7 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 					for ( dbh = c->heights[height].dbhs_count - 1; dbh >= 0; --dbh )
 					{
 						/* heading for dbhs value */
-						if ( g_do_txt )
+						if ( g_settings->no_spreadsheet )
 							logger(g_annual_log, "\t%4s", "DBH");
 						else
 							logger(g_annual_log, ",DBH");
@@ -1158,7 +1155,7 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 						for ( age = 0; age < c->heights[height].dbhs[dbh].ages_count ; ++age )
 						{
 							/* heading for ages */
-							if ( g_do_txt )
+							if ( g_settings->no_spreadsheet )
 								logger(g_annual_log,"\t%7s", "AGE");
 							else
 								logger(g_annual_log,",AGE");
@@ -1166,18 +1163,18 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 							for ( species = 0; species < c->heights[height].dbhs[dbh].ages[age].species_count; ++species )
 							{
 								/* heading for species name */
-								if ( g_do_txt )
+								if ( g_settings->no_spreadsheet )
 									logger(g_annual_log,"\t%10s", "SPECIES");
 								else
 									logger(g_annual_log,",SPECIES");
 
 								/* heading for management name */
-								if ( g_do_txt )
+								if ( g_settings->no_spreadsheet )
 									logger(g_annual_log,"\t%s", "MANAGEMENT");
 								else
 									logger(g_annual_log,",MANAGEMENT");
 
-								if ( g_do_txt )
+								if ( g_settings->no_spreadsheet )
 									logger(g_annual_log,"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s"
 											"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s",
 											"GPP",
@@ -1186,7 +1183,7 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 											"RA",
 											"NPP",
 											"CUE",
-											"Y(%%)",
+											"Y(%)",
 											"PeakLAI",
 											"CC",
 											"DBHDC",
@@ -1261,31 +1258,31 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 
 							}
 							if ( c->heights[height].dbhs[dbh].ages[age].species_count > 1 )
-								if ( g_do_txt )
+								if ( g_settings->no_spreadsheet )
 									logger(g_annual_log,"\t%10s", "*");
 								else
 									logger(g_annual_log,",*");
 						}
 						if ( c->heights[height].dbhs[dbh].ages_count > 1 )
-							if ( g_do_txt )
+							if ( g_settings->no_spreadsheet )
 								logger(g_annual_log,"\t%10s", "**");
 							else
 								logger(g_annual_log,",**");
 					}
 					if ( c->heights[height].dbhs_count > 1 )
-						if ( g_do_txt )
+						if ( g_settings->no_spreadsheet )
 							logger(g_annual_log,"\t%10s", "***");
 						else
 							logger(g_annual_log,",***");
 				}
 				if ( c->tree_layers[layer].layer_n_height_class > 1 )
-					if ( g_do_txt )
+					if ( g_settings->no_spreadsheet )
 						logger(g_annual_log,"\t%10s", "****");
 					else
 						logger(g_annual_log,",****");
 			}
 			if ( c->tree_layers_count > 1 )
-				if ( g_do_txt )
+				if ( g_settings->no_spreadsheet )
 					logger(g_annual_log,"\t%10s", "*****");
 				else
 					logger(g_annual_log,",*****");
@@ -1295,13 +1292,13 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 
 		if( c->heights_count > 1 )
 		{
-			if ( g_do_txt )
+			if ( g_settings->no_spreadsheet )
 				logger(g_annual_log,"\t%10s \t%10s \t%10s \t%10s \t%10s",
 						"***",
 						"gpp",
 						"npp",
 						"ar",
-						"y(%%)");
+						"y(%)");
 			else
 				logger(g_annual_log,",***,gpp,npp,ar,y(%%)");
 
@@ -1309,13 +1306,13 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 		/* heading variables at cell level also if there's more than one layer */
 		else
 		{
-			if ( g_do_txt )
+			if ( g_settings->no_spreadsheet )
 				logger(g_annual_log,"\t%10s", "*****");
 			else
 				logger(g_annual_log,",*****");
 		}
 		/* heading variables only at cell level */
-		if ( g_do_txt )
+		if ( g_settings->no_spreadsheet )
 			logger(g_annual_log,"\t%10s \t%10s \t%10s \t%10s",
 					"et",
 					"le",
@@ -1341,13 +1338,13 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 				if( layer == c->heights[height].height_z )
 				{
 					/* print layer */
-					if ( g_do_txt )
+					if ( g_settings->no_spreadsheet )
 						logger(g_annual_log,"\t%6d", layer);
 					else
 						logger(g_annual_log,",%d", layer);
 
 					/* print height */
-					if ( g_do_txt )
+					if ( g_settings->no_spreadsheet )
 						logger(g_annual_log,"\t%5.5g", c->heights[height].value);
 					else
 						logger(g_annual_log,",%g", c->heights[height].value);
@@ -1355,7 +1352,7 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 					for ( dbh = c->heights[height].dbhs_count - 1; dbh >= 0; --dbh )
 					{
 						/* print age */
-						if ( g_do_txt )
+						if ( g_settings->no_spreadsheet )
 							logger(g_annual_log,"\t%5.5g", c->heights[height].dbhs[dbh].value);
 						else
 							logger(g_annual_log,",%g", c->heights[height].dbhs[dbh].value);
@@ -1363,7 +1360,7 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 						for ( age = 0; age < c->heights[height].dbhs[dbh].ages_count ; ++age )
 						{
 							/* print age */
-							if ( g_do_txt )
+							if ( g_settings->no_spreadsheet )
 								logger(g_annual_log,"\t%7d", c->heights[height].dbhs[dbh].ages[age].value);
 							else
 								logger(g_annual_log,",%d", c->heights[height].dbhs[dbh].ages[age].value);
@@ -1373,19 +1370,19 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 								s  = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 								/* print species name */
-								if ( g_do_txt )
+								if ( g_settings->no_spreadsheet )
 									logger(g_annual_log,"\t%8.3s", c->heights[height].dbhs[dbh].ages[age].species[species].name);
 								else
 									logger(g_annual_log,",%.3s", c->heights[height].dbhs[dbh].ages[age].species[species].name);
 
 								/* print management */
-								if ( g_do_txt )
+								if ( g_settings->no_spreadsheet )
 									logger(g_annual_log,"\t%c", sz_management[c->heights[height].dbhs[dbh].ages[age].species[species].management]);
 								else
 									logger(g_annual_log,",%c", sz_management[c->heights[height].dbhs[dbh].ages[age].species[species].management]);
 
 								/* print variables at layer-class level */
-								if ( g_do_txt )
+								if ( g_settings->no_spreadsheet )
 									logger(g_annual_log,"\t%6.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3d \t%3d \t%3d \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f"
 											"\t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f",
 											s->value[YEARLY_GPP_gC],
@@ -1470,32 +1467,32 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 
 							}
 							if ( c->heights[height].dbhs[dbh].ages[age].species_count > 1 )
-								if ( g_do_txt )
+								if ( g_settings->no_spreadsheet )
 									logger(g_annual_log,"\t%10s", "*");
 								else
 									logger(g_annual_log,",*");
 						}
 						if ( c->heights[height].dbhs[dbh].ages_count > 1 )
-							if ( g_do_txt )
+							if ( g_settings->no_spreadsheet )
 								logger(g_annual_log,"\t%10s", "**");
 							else
 								logger(g_annual_log,",**");
 					}
 					if ( c->heights[height].dbhs_count > 1 )
-						if ( g_do_txt )
+						if ( g_settings->no_spreadsheet )
 							logger(g_annual_log,"\t%10s", "***");
 						else
 							logger(g_annual_log,",***");
 				}
 				if ( c->tree_layers[layer].layer_n_height_class > 1 )
-					if ( g_do_txt )
+					if ( g_settings->no_spreadsheet )
 						logger(g_annual_log,"\t%10s", "****");
 					else
 						logger(g_annual_log,",****");
 			}
 			if ( c->tree_layers_count > 1 )
 			{
-				if ( g_do_txt )
+				if ( g_settings->no_spreadsheet )
 					logger(g_annual_log,"\t%10s", "*****");
 				else
 					logger(g_annual_log,",*****");
@@ -1506,7 +1503,7 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 
 		if( c->heights_count > 1 )
 		{
-			if ( g_do_txt )
+			if ( g_settings->no_spreadsheet )
 				logger(g_annual_log, "\t%4s \t%3.4f \t%3.4f \t%3.4f \t%3.4f",
 					"***",
 					c->annual_gpp,
@@ -1524,7 +1521,7 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 		/* printing variables at cell level also if there's more than one layer */
 		else
 		{
-			if ( g_do_txt )
+			if ( g_settings->no_spreadsheet )
 				logger(g_annual_log,"\t%10s", "*****");
 			else
 				logger(g_annual_log,",*****");
@@ -1536,7 +1533,7 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 	}
 
 	/* printing variables only at cell level */
-	if ( g_do_txt )
+	if ( g_settings->no_spreadsheet )
 		logger(g_annual_log, "\t%3.2f \t%3.2f \t%3.2f \t%3.2f\n",
 				c->annual_et,
 				c->annual_latent_heat_flux,

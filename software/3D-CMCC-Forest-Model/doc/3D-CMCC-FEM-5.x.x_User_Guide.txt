@@ -83,7 +83,6 @@ Usage
 	-n ndep file (i.e.: -n ndep.txt)
 	-r output vars list (i.e.: -r output_vars.lst)
 	-u benchmark path
-	-x output files uses tab and space as delimiter instead of a simple comma
 	-h print this help
 	
 
@@ -201,6 +200,7 @@ Usage
 	REGENERATION_WFR 0                  // (tDM/ha) fine root biomass of regeneration trees (optional)
 	REGENERATION_WL 0                   // (tDM/ha) leaf biomass of regeneration trees (optional for evergreen if LAI!= 0, otherwise useless)
 	REGENERATION_WBB 0                  // (tDM/ha) branch biomass of regeneration trees (optional)
+	NO_SPREADSHEET on					// (optional) if 'on', use crazy delimiters (tab and spaces) instead of a simple comma on output files. for people that are unable to use a spreadsheet.
 	
 -k	mandatory parameter only if CO2_trans in settings file is setted on 'on' or 'var'.
 	This file will be searched in input path, if specified.

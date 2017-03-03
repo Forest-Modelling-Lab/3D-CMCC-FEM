@@ -80,6 +80,15 @@ typedef struct {
 	double regeneration_wl;              /* leaf biomass of regeneration trees (probably no need to be used) (optional) */
 	double regeneration_wbb;             /* branch biomass of regeneration trees (probably no need to be used) (optional) */
 
+	int no_spreadsheet;						/*
+											ALESSIOR:
+
+											enables stupid delimiters ( tab and spaces ) on output files,
+											for people ( Collalti ) that are unable to use a spreadsheet.
+											please note that this settings was added to prevent aforementioned person
+											to cry like a baby do
+										*/
+
 } settings_t;
 
 settings_t* settings_import(const char *const filename);

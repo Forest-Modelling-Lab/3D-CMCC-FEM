@@ -63,18 +63,95 @@ enum {
 	, SETTINGS_REGENERATION_WFR
 	, SETTINGS_REGENERATION_WL
 	, SETTINGS_REGENERATION_WBB
+	, SETTINGS_NO_SPREADSHEET
 
 	, SETTINGS_COUNT
 };
 
 extern const char sz_err_out_of_memory[];
 
+const char* sz_settings[SETTINGS_COUNT] = {
+	"SITENAME"
+	, "VERSION"
+	, "SPATIAL"
+	, "TIME"
+	, "SCREEN_OUTPUT"
+	, "DEBUG_OUTPUT"
+	, "DAILY_OUTPUT"
+	, "MONTHLY_OUTPUT"
+	, "ANNUAL_OUTPUT"
+	, "YEAR_START"
+	, "YEAR_END"
+	, "SOIL_OUTPUT"
+	, "CO2_MOD"
+	, "CO2_TRANS"
+	, "YEAR_START_CO2_FIXED"
+	, "NDEP_FIXED"
+	, "RESP_ACCL"
+	, "REGENERATION"
+	, "MANAGEMENT"
+	, "YEAR_START_MANAGEMENT"
+	, "PROGN_AUT_RESP"
+	, "DNDC"
+	, "SIZECELL"
+	, "Y"
+	, "CO2CONC"
+	, "CO2_INCR"
+	, "INIT_FRAC_MAXASW"
+	, "TREE_LAYER_LIMIT"
+	, "SOIL_LAYER"
+	, "MAX_LAYER_COVER"
+	, "REPLANTED_SPECIES"
+	, "REPLANTED_MANAGEMENT"
+	, "REPLANTED_TREE"
+	, "REPLANTED_AGE"
+	, "REPLANTED_AVDBH"
+	, "REPLANTED_LAI"
+	, "REPLANTED_HEIGHT"
+	, "REPLANTED_WS"
+	, "REPLANTED_WCR"
+	, "REPLANTED_WFR"
+	, "REPLANTED_WL"
+	, "REPLANTED_WBB"
+	, "REGENERATION_SPECIES"
+	, "REGENERATION_MANAGEMENT"
+	, "REGENERATION_N_TREE"
+	, "REGENERATION_AGE"
+	, "REGENERATION_AVDBH"
+	, "REGENERATION_LAI"
+	, "REGENERATION_HEIGHT"
+	, "REGENERATION_WS"
+	, "REGENERATION_WCR"
+	, "REGENERATION_WFR"
+	, "REGENERATION_WL"
+	, "REGENERATION_WBB"
+	, "NO_SPREADSHEET"
+};
+
+const int optional[] = {
+	SETTINGS_REPLANTED_WS
+	, SETTINGS_REPLANTED_WCR
+	, SETTINGS_REPLANTED_WFR
+	, SETTINGS_REPLANTED_WL
+	, SETTINGS_REPLANTED_WBB
+	, SETTINGS_REGENERATION_SPECIES
+	//, SETTINGS_REGENERATION_LAI			// (m2/m2) lai for regeneration trees (mandatory for evergreen, useless for deciduous)
+	, SETTINGS_REGENERATION_WS
+	, SETTINGS_REGENERATION_WCR
+	, SETTINGS_REGENERATION_WFR
+	//, REGENERATION_WL						// (tDM/ha) leaf biomass of regeneration trees (optional for evergreen if LAI!= 0, otherwise useless)
+	, SETTINGS_REGENERATION_WBB
+	, SETTINGS_NO_SPREADSHEET
+};
+
 settings_t* settings_import(const char *const filename) {
 #define BUFFER_SIZE	256
 	char buffer[BUFFER_SIZE];
 	int i;
+	int index;
 	int err;
 	settings_t* s;
+	int imported[SETTINGS_COUNT] = { 0 };
 	FILE *f;
 
 	const char delimiter[] = " /\"\t\r\n";
@@ -93,8 +170,8 @@ settings_t* settings_import(const char *const filename) {
 	}
 	/* all settings values defaults to 0 ( off ) */
 	memset(s, 0, sizeof*s);
+	memset(imported, 0, (sizeof*imported)*SETTINGS_COUNT);
 
-	i = 0;
 	while ( fgets(buffer, BUFFER_SIZE, f) ) {
 		char *p;
 		char *p2;
@@ -114,13 +191,51 @@ settings_t* settings_import(const char *const filename) {
 
 		/* get setting name */
 		token = string_tokenizer(p2, delimiter, &p);
+		if ( ! token ) continue;
+
+		/* check for name */
+		index = -1;
+		for ( i = 0; i < SETTINGS_COUNT; i++ ) {
+			if ( ! string_compare_i(token, sz_settings[i]) ) {
+				index = i;
+				break;
+			}
+		}
+		if ( -1 == index ) {
+			printf("unknown parameter specified in settings: %s. skipped.", token);
+			continue;
+		}
+
+		if ( imported[index] ) {
+			printf("%s already specified. skipped.", token);
+			continue;
+		}
 
 		/* get value */
 		token = string_tokenizer(NULL, delimiter, &p);
+		if ( ! token ) {
+			int flag;
 
-		if ( ! token ) continue;
+			printf("no value specified for %s", token);
+			/* check if is an optional parameter */
+			flag = 0;
+			for ( i = 0; i < SIZE_OF_ARRAY(optional); ++i ) {
+				if ( index == optional[i] ) {
+					flag = 1;
+					break;
+				}
+			}
+			if ( ! flag ) {
+				free(s);
+				fclose(f);
+				return NULL;
+			} else {
+				puts(". skipped.");
+				continue;
+			}
+		}
 
-		switch ( i ) {
+		switch ( index ) {
 			case SETTINGS_SITENAME:
 				strncpy(s->sitename, token, SETTINGS_SITENAME_MAX_SIZE-1);
 			break;
@@ -261,6 +376,13 @@ settings_t* settings_import(const char *const filename) {
 				}
 			break;
 
+			case SETTINGS_NO_SPREADSHEET:
+				if ( ! string_compare_i(token, "on") || ! string_compare_i(token, "1") ) {
+					// puts("hi collalti! Spreadsheets are too difficult to use, aren't they?");
+					s->no_spreadsheet = 1;
+				}
+			break;
+
 			default:
 				value = convert_string_to_float(token, &err);
 				if ( err ) {
@@ -269,7 +391,7 @@ settings_t* settings_import(const char *const filename) {
 					fclose(f);
 					return 0;
 				}
-				switch ( i ) {
+				switch ( index ) {
 					case SETTINGS_YEAR_START:
 						s->year_start = (int)value;
 					break;
@@ -399,18 +521,34 @@ settings_t* settings_import(const char *const filename) {
 					case SETTINGS_REGENERATION_WBB:
 						s->regeneration_wbb = value;
 					break;
-
-					default:
-						puts("too many values!");
-						free(s);
-						fclose(f);
-						return 0;
 				}
 		}
-		++i;
+		imported[index] = 1;
+	}
+	fclose(f);
+
+	/* check if all setting values are imported */
+	for (  i = 0; i < SETTINGS_COUNT; i++ ) {
+		if ( ! imported[i] ) {
+			int y;
+			int flag;
+
+			/* check for optional parameter */
+			for ( y = 0; y < SIZE_OF_ARRAY(optional); ++y ) {
+				if ( i == optional[y] ) {
+					flag = 1;
+					break;
+				}
+			}
+
+			if ( ! flag ) {
+				printf("%s was not specified.\n", sz_settings[i]);
+				free(s);
+				return 0;
+			}
+		}
 	}
 
-	fclose(f);
 	return s;
 #undef BUFFER_SIZE
 }

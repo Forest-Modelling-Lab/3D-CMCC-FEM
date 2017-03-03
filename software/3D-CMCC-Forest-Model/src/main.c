@@ -89,8 +89,6 @@ int g_year_start_index;
 char g_sz_parameterization_output_path[256];
 char g_sz_output_fullpath[256];
 
-int g_do_txt = 0;
-
 static int years_of_simulation;	// default is none
 /* strings */
 const char sz_launched[] = "\n"PROGRAM_FULL_NAME"\n"
@@ -171,7 +169,6 @@ static const char msg_usage[]					=	"\nusage:\n"
 		"    -n ndep file (i.e.: -n ndep.txt)\n"
 		"    -r output vars list (i.e.: -r output_vars.lst)\n"
 		"    -u benchmark path\n"
-		"    -x output files uses tab and space as delimiter instead of a simple comma\n"
 		"    -h print this help\n"
 		;
 
@@ -724,10 +721,6 @@ static int parse_args(int argc, char *argv[])
 				goto err;
 			}
 			break;
-
-		case 'x':
-			g_do_txt = 1;
-		break;
 
 		case 'h': /* show help */
 			goto err_show_usage;
