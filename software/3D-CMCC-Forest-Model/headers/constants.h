@@ -71,11 +71,38 @@ enum {
 #define STEMPOWER_A	            2.08      /* Power in the Stem Mass v. diameter relationship for DBH < 9 cm */
 #define STEMPOWER_B	            2.64      /* Power in the Stem Mass v. diameter relationship for 9 < DBH < 15 cm */
 #define STEMPOWER_C	            2.51      /* Power in the Stem Mass v. diameter relationship for DBH > 15 cm */
-
 #define MAX_N_TREE_LAYER           3      /* define the maximum number for tree layers (todo move into setting.txt) */
+
+/** soil constants (BIOME-BGC method) **/
+#define SOIL1_CN                12.0      /* C:N for fast microbial recycling pool */
+#define SOIL2_CN                12.0      /* C:N for slow microbial recycling pool */
+#define SOIL3_CN                10.0      /* C:N for recalcitrant SOM pool (humus) */
+#define SOIL4_CN                10.0      /* C:N for recalcitrant SOM pool (humus) */
+#define DENITRIF_PROPORTION     0.01      /* fraction of mineralization to volatile */
+#define MOBILEN_PROPORTION       0.1      /* fraction mineral N avail for leaching */
+/* use this block of constants to include the dynamics for slowest soil pool (s4) */
+/* respiration fractions for fluxes between compartments (unitless) */
+#define	RFL1S1                  0.39      /* transfer from litter 1 to soil 1 */
+#define	RFL2S2                  0.55      /* transfer from litter 2 to soil 2 */
+#define	RFL4S3                  0.29      /* transfer from litter 4 to soil 3 */
+#define	RFS1S2                  0.28      /* transfer from soil 1 to soil 2 */
+#define	RFS2S3                  0.46      /* transfer from soil 2 to soil 3 */
+#define	RFS3S4                  0.55      /* transfer from soil 3 to soil 4 */
+/* base decomposition rate constants (1/day) */
+#define KL1_BASE                0.7       /* labile litter pool */
+#define KL2_BASE               0.07       /* cellulose litter pool */
+#define KL4_BASE              0.014       /* lignin litter pool */
+#define KS1_BASE               0.07       /* fast microbial recycling pool */
+#define KS2_BASE              0.014       /* medium microbial recycling pool */
+#define KS3_BASE             0.0014       /* slow microbial recycling pool */
+#define KS4_BASE             0.0001       /* recalcitrant SOM (humus) pool */
+#define KFRAG_BASE            0.001       /* physical fragmentation of coarse woody debris */
+
+
 
 //MARCONI CONSTANTS::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 //soil constants
+/*
 #define DRF                     0.04      //0.03
 #define EFFRB                    .67
 #define EFFAC                     .2
@@ -91,5 +118,7 @@ enum {
 //#define um_no2   .67
 //#define um_no    .34
 //#define um_n2o   .34
+
+ */
 
 #endif /* CONSTANTS_H */

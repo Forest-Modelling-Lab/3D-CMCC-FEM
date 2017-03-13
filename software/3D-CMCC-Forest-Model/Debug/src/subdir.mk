@@ -26,6 +26,7 @@ C_SRCS += \
 ../src/common.c \
 ../src/compare.c \
 ../src/cue.c \
+../src/decomposition.c \
 ../src/dendrometry.c \
 ../src/establishment.c \
 ../src/evapotranspiration.c \
@@ -96,6 +97,7 @@ OBJS += \
 ./src/common.o \
 ./src/compare.o \
 ./src/cue.o \
+./src/decomposition.o \
 ./src/dendrometry.o \
 ./src/establishment.o \
 ./src/evapotranspiration.o \
@@ -166,6 +168,7 @@ C_DEPS += \
 ./src/common.d \
 ./src/compare.d \
 ./src/cue.d \
+./src/decomposition.d \
 ./src/dendrometry.d \
 ./src/establishment.d \
 ./src/evapotranspiration.d \
@@ -218,7 +221,7 @@ C_DEPS += \
 src/%.o: ../src/%.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
-	gcc -I"/home/alessio-cmcc/git/3D-CMCC-FEM/software/3D-CMCC-Forest-Model/headers" -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
+	gcc -I"/home/alessio/git/3D-CMCC-FEM/software/3D-CMCC-Forest-Model/headers" -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 

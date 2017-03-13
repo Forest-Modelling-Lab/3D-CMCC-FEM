@@ -73,6 +73,18 @@ enum {
 	CN_FINE_ROOTS,                       /* CN of fine roots (kgC/kgN) */
 	CN_LIVE_WOODS,                       /* CN of live woods (kgC/kgN) */
 	CN_DEAD_WOODS,                       /* CN of dead woods (kgC/kgN) */
+	//todo include
+	//LEAF_LITT_LAB_FRAC,                  /* (DIM) leaf litter labile fraction */
+	//LEAF_LITT_UCEL_FRAC,                 /* (DIM) leaf litter UNshielded cellulose fraction */
+	//LEAF_LITT_SCEL_FRAC,                 /* (DIM) leaf litter shielded cellulose fraction */
+	//LEAF_LITT_LIGN_FRAC,                 /* (DIM) leaf litter lignin fraction */
+	//FINE_ROOT_LITT_LAB_FRAC,             /* (DIM) fine root litter labile fraction */
+	//FINE_ROOT_LITT_UCEL_FRAC,            /* (DIM) fine root litter UNshielded cellulose fraction */
+	//FINE_ROOT_LITT_SCEL_FRAC,            /* (DIM) fine root litter shielded cellulose fraction */
+	//FINE_ROOT_LITT_LIGN_FRAC,            /* (DIM) fine root litter lignin fraction */
+	//DEAD_WOOD_UCEL_FRAC,                 /* (DIM) dead wood litter UNshielded cellulose fraction */
+	//DEAD_WOOD_SCEL_FRAC,                 /* (DIM) dead wood litter shielded cellulose fraction */
+	//DEAD_WOOD_LIGN_FRAC,                 /* (DIM) dead wood litter lignin fraction */
 	BUD_BURST,                           /* days of bud burst at the beginning of growing season (only for deciduous) */
 	LEAF_FALL_FRAC_GROWING,              /* proportions of the growing season of leaf fall */
 	LEAF_FINEROOT_TURNOVER,              /* Average yearly leaves and fine root turnover rate */
@@ -85,9 +97,9 @@ enum {
 	SAP_WRES,                            /* Sapwood-Reserve biomass ratio used if no Wres data are available */
 	STEMCONST_P,                         /* constant in the stem mass vs. diameter relationship */
 	STEMPOWER_P,                         /* power in the stem mass vs. diameter relationship */
-	CRA,                                 /* Chapman-Richards maximum height */
-	CRB,                                 /* Chapman_Richards b parameter */
-	CRC,                                 /* Chapman_Richards c parameter */
+	CRA,                                 /* Chapman-Richards a parameter (maximum height, meter) */
+	CRB,                                 /* Chapman-Richards b parameter */
+	CRC,                                 /* Chapman-Richards c parameter */
 	HDMAX_A,                             /* A parameter for Height (m) to Base diameter (m) ratio MAX */
 	HDMAX_B,                             /* B parameter for Height (m) to Base diameter (m) ratio MAX */
 	HDMIN_A,                             /* A parameter for Height (m) to Base diameter (m) ratio MIN */
@@ -898,6 +910,7 @@ typedef struct
 
 	/* soil */
 	//ALESSIOR TO MOVE INTO SOIL LAYER STRUCTURE
+	/* soil water */
 	double bulk_density;                                                  /* soil bulk density (g/cm3) */
 	double wilting_point;                                                 /* volumetric water content at wilting point (mm/m2) */
 	double field_capacity;                                                /* volumetric water content at field capacity (mm/m2) */
@@ -916,7 +929,29 @@ typedef struct
 	double soilw_fc;                                                      /* soil water at field capacity (kgH2O/m2) */
 	double soilw_sat;                                                     /* soil water at saturation (kgH2O/m2) */
 	double swc;                                                           /* soil Water content (kgH2O/m2) */
+
+	/* soil nitrogen */
 	double soil_N;                                                        /* soil Nitrogen content (gN/m2) */
+	double soil_cwd;                                                      /* soil coarse woody debris (KgC/m2) */
+	double tsoil_scalar;                                                  /* soil temperature scalar */
+	double wsoil_scalar;                                                  /* soil water scalar */
+	double rate_scalar;                                                   /* soil (temperature * water) scalar */
+	double cwdn;                                                          /* (kgN/m2) coarse woody debris N */
+	double litr1n;                                                        /* (kgN/m2) litter labile N */
+	double litr2n;                                                        /* (kgN/m2) litter unshielded cellulose N */
+	double litr3n;                                                        /* (kgN/m2) litter shielded cellulose N */
+	double litr4n;                                                        /* (kgN/m2) litter lignin N */
+	double soil1n;                                                        /* (kgN/m2) microbial recycling pool N (fast) */
+	double soil2n;                                                        /* (kgN/m2) microbial recycling pool N (medium) */
+	double soil3n;                                                        /* (kgN/m2) microbial recycling pool N (slow) */
+	double soil4n;                                                        /* (kgN/m2) recalcitrant SOM N (humus, slowest) */
+	double sminn;                                                         /* (kgN/m2) soil mineral N */
+	double retransn;                                                      /* (kgN/m2) plant pool of retranslocated N */
+	double npool;                                                         /* (kgN/m2) temporary plant N pool */
+	double nfix_src;                                                      /* (kgN/m2) SUM of biological N fixation */
+	double ndep_src;                                                      /* (kgN/m2) SUM of N deposition inputs */
+	double nleached_snk;                                                  /* (kgN/m2) SUM of N leached */
+
 
 	double rain;
 	double snow;
@@ -952,14 +987,18 @@ typedef struct
 	double daily_c_sensible_heat_flux;                                               /* current daily canopy sensible heat flux (W/m2) */
 	double daily_sensible_heat_flux, monthly_sensible_heat_flux, annual_sensible_heat_flux;/* daily, monthly and annual sensible heat flux at cell level (W/m2) */
 
+
+
+
 	/**************************************************************************************************
 	 * 	SOIL PART; DEVELOPMENT OF DAILY SOIL CARBON NITROGEN AND PHOSPHORUS BALANCE
 	 * 			for any issue contact Sergio Marconi (sergio.marconi@cmcc.it)
 	 *
 	 **************************************************************************************************/
+	/*
 	//daily soil variables; 3D-CMCC-SGM
 	double soil_ph;
-	//sergio; not clear till concepts and dynamics; what's that and how to replace&introcude in 3d-cmcc
+	//sergio; not clear till concepts and dynamics; what's that and how to replace&introduce in 3d-cmcc
 	double till_fact, tilq;
 	//dC
 	double leafLittering, fineRootLittering,stemBrancLittering,stemLittering, coarseRootLittering;
@@ -982,6 +1021,7 @@ typedef struct
 	double yr_avet;
 	double base_clay_N, max_clay_N;
 	double AddC, AddCN, AddC1, AddC2, AddC3;
+	*/
 
 	//potentially already existent
 	int doy, dos;
@@ -989,13 +1029,6 @@ typedef struct
 	//todo to be removed used just to evaluate total biomass fluctuations in the several different compartments
 	double leafBiomass, stemBiomass, fineRootBiomass, coarseRootBiomass,stemBranchBiomass;
 	double vpSat[365], maxVpSat;
-
-	double litr1n;
-	double litr2n;
-	double litr4n;
-	double litr1c;
-	double litr2c;
-	double litr4c;
 
 	double elev;
 
