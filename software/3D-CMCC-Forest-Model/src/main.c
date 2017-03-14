@@ -1058,11 +1058,44 @@ int main(int argc, char *argv[]) {
 			logger(g_debug_log, "\n3D-CMCC FEM START....\n\n");
 		}
 
+		//TODO ALESSIOR please create a single function to check them all
+		/* check for soil mandatory values */
+		/* soil latitude and longitude */
+		if (	IS_INVALID_VALUE(g_soil_settings->values[SOIL_LAT])
+				|| IS_INVALID_VALUE(g_soil_settings->values[SOIL_LON]))
+		{
+			logger_error(g_debug_log, "NO SOIL DATA AVAILABLE (Latitude and Longitude)");
+			goto err;
+		}
+		/* soil texture */
 		if (	IS_INVALID_VALUE(g_soil_settings->values[SOIL_SAND_PERC])
 				|| IS_INVALID_VALUE(g_soil_settings->values[SOIL_CLAY_PERC])
 				|| IS_INVALID_VALUE(g_soil_settings->values[SOIL_SILT_PERC])
-				|| IS_INVALID_VALUE(g_soil_settings->values[SOIL_DEPTH]) ) {
-			logger_error(g_debug_log, "NO SOIL DATA AVAILABLE");
+				|| IS_INVALID_VALUE(g_soil_settings->values[SOIL_DEPTH]))
+		{
+			logger_error(g_debug_log, "NO SOIL DATA AVAILABLE (Percentage of texture)");
+			goto err;
+		}
+		/* soil depth */
+		if (	IS_INVALID_VALUE(g_soil_settings->values[SOIL_DEPTH]))
+		{
+			logger_error(g_debug_log, "NO SOIL DATA AVAILABLE (Percentage of texture)");
+			goto err;
+		}
+		/* soil fertility */
+		if (	IS_INVALID_VALUE(g_soil_settings->values[SOIL_FR])
+				|| IS_INVALID_VALUE(g_soil_settings->values[SOIL_FN0])
+				|| IS_INVALID_VALUE(g_soil_settings->values[SOIL_FNN])
+				|| IS_INVALID_VALUE(g_soil_settings->values[SOIL_M0]))
+		{
+			logger_error(g_debug_log, "NO SOIL DATA AVAILABLE (Soil fertility values)");
+			goto err;
+		}
+		/* check for topo mandatory values */
+		/* topo elevation */
+		if (	IS_INVALID_VALUE(g_topo->values[TOPO_ELEV]))
+		{
+			logger_error(g_debug_log, "NO TOPO DATA AVAILABLE (Topography elevation)");
 			goto err;
 		}
 
