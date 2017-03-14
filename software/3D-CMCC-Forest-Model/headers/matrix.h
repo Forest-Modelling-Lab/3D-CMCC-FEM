@@ -24,7 +24,6 @@ enum {
 	EPSILONgCMJ,                         /* Light Use Efficiency  (gC/MJ)(used if ALPHA is not available) */
 	K,                                   /* Extinction coefficient for absorption of PAR by canopy */
 	ALBEDO,                              /* Canopy albedo */
-	GAMMA_LIGHT,                         /* Value for Light modifier */
 	INT_COEFF,                           /* Precipitation interception coefficient */
 	SLA_AVG,                             /* AVERAGE Specific Leaf Area m^2/KgC for sunlit/shaded leaves */
 	SLA_RATIO,                           /* (DIM) ratio of shaded to sunlit projected SLA */
@@ -43,9 +42,6 @@ enum {
 	MAXAGE,                              /* Maximum tree age */
 	RAGE,                                /* Relative Age to give fAGE = 0.5 */
 	NAGE,                                /* Power of relative Age in function for Age */
-	MAXAGE_S,                            /* Maximum age for coppice */
-	RAGE_S,                              /* Relative Age to give fAGE = 0.5 */
-	NAGE_S,                              /* Power of relative Age in function for Age */
 	GROWTHTMIN,                          /* Minimum temperature for growth */
 	GROWTHTMAX,                          /* Maximum temperature for growth */
 	GROWTHTOPT,                          /* Optimum temperature for growth */
@@ -53,15 +49,10 @@ enum {
 	MINDAYLENGTH,                        /* Minimum day length for phenology */
 	SWPOPEN,                             /* Soil water potential open */
 	SWPCLOSE,                            /* Soil water potential close */
-	SWCONST,                             /* Constant in Soil Water modifier vs Moist Ratio */
-	SWPOWER,                             /* Power in Soil Water modifier vs Moist Ratio */
 	OMEGA_CTEM,                          /* ALLOCATION PARAMETER */
 	S0CTEM,                              /* PARAMETER CONTROLLING ALLOCATION TO STEM */
 	R0CTEM,                              /* PARAMETER CONTROLLING ALLOCATION TO ROOT */
 	F0CTEM,                              /* PARAMETER CONTROLLING ALLOCATION TO FOLIAGE */
-	MIN_R0CTEM,                          /* MINIMUM RATE TO ROOT AT THE FIRST YEAR AFTER COPPICING */
-	MAX_S0CTEM,                          /* MAXIMUM RATE TO STEM AT THE FIRST YEAR AFTER COPPICING */
-	YEARS_FOR_CONVERSION,                /* years from coppicing to consider tree as a timber */
 	FRUIT_PERC,                          /* percentage of npp to fruit */
 	CONES_LIFE_SPAN,                     /* cone life span */
 	FINE_ROOT_LEAF,                      /* allocation new fine root C:new leaf (ratio) */
@@ -73,18 +64,14 @@ enum {
 	CN_FINE_ROOTS,                       /* CN of fine roots (kgC/kgN) */
 	CN_LIVE_WOODS,                       /* CN of live woods (kgC/kgN) */
 	CN_DEAD_WOODS,                       /* CN of dead woods (kgC/kgN) */
-	//todo include
-	//LEAF_LITT_LAB_FRAC,                  /* (DIM) leaf litter labile fraction */
-	//LEAF_LITT_UCEL_FRAC,                 /* (DIM) leaf litter UNshielded cellulose fraction */
-	//LEAF_LITT_SCEL_FRAC,                 /* (DIM) leaf litter shielded cellulose fraction */
-	//LEAF_LITT_LIGN_FRAC,                 /* (DIM) leaf litter lignin fraction */
-	//FINE_ROOT_LITT_LAB_FRAC,             /* (DIM) fine root litter labile fraction */
-	//FINE_ROOT_LITT_UCEL_FRAC,            /* (DIM) fine root litter UNshielded cellulose fraction */
-	//FINE_ROOT_LITT_SCEL_FRAC,            /* (DIM) fine root litter shielded cellulose fraction */
-	//FINE_ROOT_LITT_LIGN_FRAC,            /* (DIM) fine root litter lignin fraction */
-	//DEAD_WOOD_UCEL_FRAC,                 /* (DIM) dead wood litter UNshielded cellulose fraction */
-	//DEAD_WOOD_SCEL_FRAC,                 /* (DIM) dead wood litter shielded cellulose fraction */
-	//DEAD_WOOD_LIGN_FRAC,                 /* (DIM) dead wood litter lignin fraction */
+	LEAF_LITT_LAB_FRAC,                  /* (DIM) leaf litter labile fraction */
+	LEAF_LITT_CEL_FRAC,                  /* (DIM) leaf litter cellulose fraction */
+	LEAF_LITT_LIGN_FRAC,                 /* (DIM) leaf litter lignin fraction */
+	FROOT_LITT_LAB_FRAC,                 /* (DIM) fine root litter labile fraction */
+	FROOT_LITT_CEL_FRAC,                 /* (DIM) fine root litter cellulose fraction */
+	FROOT_LITT_LIGN_FRAC,                /* (DIM) fine root litter lignin fraction */
+	DEAD_WOOD_CEL_FRAC,                  /* (DIM) dead wood litter cellulose fraction */
+	DEAD_WOOD_LIGN_FRAC,                 /* (DIM) dead wood litter lignin fraction */
 	BUD_BURST,                           /* days of bud burst at the beginning of growing season (only for deciduous) */
 	LEAF_FALL_FRAC_GROWING,              /* proportions of the growing season of leaf fall */
 	LEAF_FINEROOT_TURNOVER,              /* Average yearly leaves and fine root turnover rate */
@@ -116,9 +103,6 @@ enum {
 	THINNING,                            /* thinning regime (based on year simulation) */
 	THINNING_REGIME,                     /* thinning regime (0 = above, 1 = below) */
 	THINNING_INTENSITY,                  /* thinning intensity (% of Basal Area/N-tree to remove) */
-	MINAGEMANAG,                         /* Minimum age for Management */
-	MINDBHMANAG,                         /* Minimum DBH for Management */
-	AV_SHOOT,                            /* Average number of shoots produced after coppicing */
 
 	/*********************************************STATE VARIABLES*********************************************/
 	/*********************************************************************************************************/

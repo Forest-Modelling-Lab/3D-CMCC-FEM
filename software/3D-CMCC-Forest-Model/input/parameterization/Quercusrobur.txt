@@ -1,11 +1,10 @@
-﻿//Quercus_robur Quercus_petreae
+﻿//parameterization file for Quercus robur/petreae
 LIGHT_TOL	3   	          //4 = very shade intolerant 3 = shade intolerant 2 = shade tolerant 1 = very shade tolerant
 PHENOLOGY	0.1               //PHENOLOGY 0.1 = deciduous broadleaf, 0.2 = deciduous needle leaf, 1.1 = broad leaf evergreen, 1.2 = needle leaf evergreen 
 ALPHA	0.045                 //Canopy quantum efficiency (molC/molPAR) for Q. robur from Morecroft et al 2003
 EPSILONgCMJ	1.05              //Light Use Efficiency  (gC/molPAR)(used if ALPHA is not available)  for Brasschaat site see Horn and Shulze 2011  0.085 from Carrara et al., 2004
 K	0.54                      //0.54 Extinction coefficient for absorption of PAR by canopy Q. robur from Pietsch et al 2005
 ALBEDO	0.2                   //albedo varying from 0.8-0.17 from Otto et al., 2014; 0.20 for Quercus spp. from Breuer et al., 2003
-GAMMA_LIGHT -9999             //Light parameter for light modifier
 INT_COEFF  0.3                //precip interception coefficient for Q. robur from Tatarinov
 SLA_AVG 34.5                  //Average Specific Leaf Area m^2/KgC sunlit/shaded leaves for Q. robur from Pietsch et al.
 SLA_RATIO	2                 //(DIM) ratio of shaded to sunlit projected SLA  for Q. robur from Pietsch et al.
@@ -24,9 +23,6 @@ CUTCOND 0.00006               //Cuticul conductance in m/sec for Q. robur from P
 MAXAGE	300                   //Determines rate of "physiological decline" of forest 200 for Q. robur from Godet 1986 (see also Yuste et al 2005), 300 FROM aNGELO
 RAGE	0.8                   //Relative Age to give fAGE = 0.5
 NAGE	4                     //Power of relative Age in function for Age
-MAXAGE_S	100               //Determines rate of "physiological decline" of forest
-RAGE_S	0.75                  //Relative Age to give fAGE = 0.5
-NAGE_S	4                     //Power of relative Age in function for Age
 GROWTHTMIN	0                 //Minimum temperature for growth
 GROWTHTMAX	35                //Maximum temperature for growth
 GROWTHTOPT	17.66             //Optimum temperature for growth 25 for Q. robur from Lyr & Garbe, 1995, 17.66 for Brasschaat site see Horn and Shulze 2011, 14 from Carrara et al., 2004
@@ -34,15 +30,10 @@ GROWTHSTART	400               //400 Sergio 22/10 previously 583 average temperat
 MINDAYLENGTH	11            //minimum day length for deciduous
 SWPOPEN	-0.5                  //Leaf water potential: start of reduction for Q. robur from Pietsch et al., and from Cenciala and Tatarinov 2006
 SWPCLOSE -3.5                 //Leaf water potential: complete reduction for Q. robur from Pietsch et al., -2.5 from Cenciala and Tatarinov 2006
-SWCONST	1	                  //Costant in Soil Water modifier vs Moist Ratio
-SWPOWER	5                     //Power in Soil Water modifier vs Moist Ratio
 OMEGA_CTEM	0.8               //ALLOCATION PARAMETER control the sensitivity of allocation to changes in water and light availability
 S0CTEM	0.53                  //PARAMETER CONTROLLING ALLOCATION TO STEM/MINIMUM RATIO TO C TO STEM (0.1 defualt value) for 0.53 Q. robur from Balboa et al ppt
 R0CTEM	0.40                  //PARAMETER CONTROLLING ALLOCATION TO ROOT/MINIMUM RATIO TO C TO ROOTS (0.55 default value) 0.40 for Q. robur from Balboa et al ppt
 F0CTEM	0.7                   //PARAMETER CONTROLLING ALLOCATION TO FOLIAGE (0.35 defult value) 0.07 for Q. robur from Balboa et al ppt
-MIN_R0CTEM	0.1               //MINIMUM RATE TO ROOT AT THE FIRST YEAR AFTER COPPICING
-MAX_S0CTEM	0.55	          //MAXIMUM RATE TO STEM AT THE FIRST YEAR AFTER COPPICING
-YEARS_FOR_CONVERSION 30       //years from coppicing to consider tree as a timber
 FRUIT_PERC	0.05              //fraction of NPP allocated for reproduction (0 for broadleaf)
 CONES_LIFE_SPAN	0             //Life span for cones (yr)
 FINE_ROOT_LEAF	1.0	          //allocation new fine root C:new leaf (ratio) Q. robur from Pietsch et al 2005
@@ -54,6 +45,14 @@ CN_FALLING_LEAVES   64.1      //CN of leaf litter (kgC/kgN) 30 for Q. robur from
 CN_FINE_ROOTS   73.5          //CN of fine roots (kgC/kgN) 48 for Q. robur from Mollicone et al., 2002, 73.5 Pietsch
 CN_LIVE_WOODS   73.5          //CN of live woods (kgC/kgN)  73.5 for Q. robur from Pietsch et al., 2005, 50 from Mollicone et al., 2002
 CN_DEAD_WOODS   451           //CN of dead woods (kgC/kgN) for Q. robur from Pietsch et al., 2005
+LEAF_LITT_LAB_FRAC   0.20     //leaf litter labile fraction for Quercus from Cenciala & Tatarinov 2006
+LEAF_LITT_CEL_FRAC   0.56     //leaf litter cellulose fraction for Quercus from Cenciala & Tatarinov 2006
+LEAF_LITT_LIGN_FRAC  0.24     //leaf litter lignin fraction for Quercus from Cenciala & Tatarinov 2006
+FROOT_LITT_LAB_FRAC  0.34     //fine root litter labile fraction for Quercus from Cenciala & Tatarinov 2006
+FROOT_LITT_CEL_FRAC  0.44     //fine root litter cellulose fraction for Quercus from Cenciala & Tatarinov 2006
+FROOT_LITT_LIGN_FRAC 0.22     //fine root litter lignin fraction for Quercus from Cenciala & Tatarinov 2006
+DEAD_WOOD_CEL_FRAC   0.75     //dead wood litter cellulose fraction for Quercus from Cenciala & Tatarinov 2006
+DEAD_WOOD_LIGN_FRAC  0.25     //dead wood litter lignin fraction for Quercus from Cenciala & Tatarinov 2006
 BUD_BURST   30                //days of bud burst at the beginning of growing season (only for deciduous)
 LEAF_FALL_FRAC_GROWING	0.3   //proportions of the growing season of leaf fall Q. robur from Pietsch et al 2005
 LEAF_FINEROOT_TURNOVER	1     //Average yearly fine root turnover rate Q. robur from Pietsch et al 2005
@@ -85,6 +84,3 @@ ROTATION    200               //Forest Rotation for harvesting for Q. robur from
 THINNING     15               //Thinning regime for Q. robur from ISIMIP protocol
 THINNING_REGIME    0          //Thinning regime (0 = above, 1 = below) for Q. robur from ISIMIP protocol
 THINNING_INTENSITY  15        //Thinning intensity (% of Basal Area/N-tree to remove) for Q. robur/pubescens
-MINAGEMANAG	80                //Minimum age for Managment (Q. cerris)
-MINDBHMANAG	27                //Minimum DBH for Managment
-AV_SHOOT	10                //average number of shoot after cut

@@ -1,133 +1,87 @@
-//NOTE: BETWEEN NAME VARIABLES AND VALUE MUST BE SEPARATED BY ONE TAG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-LIGHT_TOL	3   	//4 = very shade intolerant
-		    	//3 = shade intolerant
-		    	//2 = shade tolerant
-		   	//1 = very shade tolerant
-PHENOLOGY	0.1 //PHENOLOGY 0.1 = deciduous broadleaf, 0.2 = deciduous needle leaf, 1.1 = broad leaf evergreen, 1.2 = needle leaf evergreen 
-ALPHA	0.0297		//   // Canopy quantum efficiency (molC/molPAR) 0.036 Vitale et al., 2012
-EPSILONgCMJ	0 // Light Use Efficiency  (gC/MJ)(used if ALPHA is not available) 
-K	0.60		//0.54 Extinction coefficient for absorption of PAR by canopy (for Q. cerris Chiesi et al 2007), 0.60 for F. sylvatica Vitale et al., 2012
-			//0.65      //Extinction coefficient for absorption of PAR by canopy for Quercus cerris L. (A. Cutini, Ann Sci For, 1996)
-ALBEDO	0.2   //0.15 from OTTO et al., BGS 2014
-GAMMA_LIGHT -9999   //Light parameter for light modifier
-
-INT_COEFF  0.3    //precip interception coefficient from Tatarinov
-
-//SPECIFIC LEAF AREA 
-SLA_AVG 30                 //Average Specific Leaf Area m^2/KgC sunlit leaves from Mollicone  
-SLA_RATIO	2       //(DIM) ratio of shaded to sunlit projected SLA  for Q. cerris from Mollicone et al., 2002 	
-LAI_RATIO   2     //(DIM) (DIM) all-sided to projected leaf area ratio				
-
-//FRACTION BRANCH-BARK
-FRACBB0	0.30            //Branch and Bark fraction at age 0
-FRACBB1	0.25            //Branch and Bark fraction for mature stands
-TBB	20              //Age at which fracBB = (FRACBB0 + FRACBB1 )/ 2
-//MASS DENSITY
-RHOMIN	0.4             //Minimum Basic Density for young Trees t/m^3
-RHOMAX	0.6             //Maximum Basic Density for young Trees (Ferrara-Nolè) 0.85 for Q. cerris from Knapic et al., 2007
-TRHO	4               //Age at which rho = (RHOMIN + RHOMAX )/2
-FORM_FACTOR 0.454       //Form factor Seidl et al., 2012 for Q.robur
-//VPD
-COEFFCOND	0.05    //Define stomatal responsee to VPD in mbar 
-BLCOND	0.005            //Canopy Boundary Layer conductance (for Q. cerris Chiesi et al 2007)
-MAXCOND	0.0024            //Maximum Canopy Conductance in m/sec (Nolè-Ferrara for Oaks Forest)
-CUTCOND 0.00006
-//AGE for timber
-MAXAGE	120             //Determines rate of "physiological decline" of forest
-RAGE	0.75            //Relative Age to give fAGE = 0.5
-NAGE	4               //Power of relative Age in function for Age
-//Age for shoots
-MAXAGE_S	100     //Determines rate of "physiological decline" of forest
-RAGE_S	0.75            //Relative Age to give fAGE = 0.5
-NAGE_S	4               //Power of relative Age in function for Age
-//TEMPERATURE
-GROWTHTMIN	0       //Minimum temperature for growth
-GROWTHTMAX	30      //Maximum temperature for growth
-GROWTHTOPT	20      //Optimum temperature for growth 15.05 for Roccarespampani see Horn and Shulze 2011
-GROWTHSTART	2       //average temperature for starting growth in °C (for Quercus cerris Cermak et al 2008), GDD 1900for q. pubescens, 1100for q. robur from Hickler et al 2012
-MINDAYLENGTH	11      //minimum day length for deciduous
-
-//SOIL WATER
-//modified 13 feb 2012
-//define the soil water modifier response in function of needless of the species to the soil water content
-SWPOPEN	-0.6 //for For Q cerris Mollicone et al., 2002
-SWPCLOSE	-2.3 //For Q cerris Mollicone et al., 2002
-SWCONST	1	        //Costant in Soil Water modifier vs Moist Ratio
-SWPOWER	5               //Power in Soil Water modifier vs Moist Ratio
-
-//BIOMASS PARTITIONING CTEM (see Arora et al., 2005)
-OMEGA_CTEM	0.8     //ALLOCATION PARAMETER control the sensitivity of allocation to changes in water and light availability
-S0CTEM	0.1             //PARAMETER CONTROLLING ALLOCATION TO STEM/MINIMUM RATIO TO C TO STEM
-R0CTEM	0.55            //PARAMETER CONTROLLING ALLOCATION TO ROOT/MINIMUM RATIO TO C TO ROOTS
-F0CTEM	0.35            //PARAMETER CONTROLLING ALLOCATION TO FOLIAGE
-MIN_R0CTEM	0.1	//MINIMUM RATE TO ROOT AT THE FIRST YEAR AFTER COPPICING
-MAX_S0CTEM	0.55	//MAXIMUM RATE TO STEM AT THE FIRST YEAR AFTER COPPICING
-YEARS_FOR_CONVERSION	30	//years from coppicing to consider tree as a timber
-
-FRUIT_PERC  0 //fraction of NPP allocated for reproduction (0 for broadleaf)
-CONES_LIFE_SPAN 0 //Life span for cones (yr)
-
-//FINE/COARSE ROOT RATIO data get from BIOME_BGC
-FINE_ROOT_LEAF	1.2	//allocation new fine root C:new leaf (ratio) see Chiesi et al., 2007
-STEM_LEAF	2.2	//allocation new stem C:new leaf (ratio) see Chiesi et al., 2007
-COARSE_ROOT_STEM	0.22	//allocation new coarse root C:new stem (ratio) see Chiesi et al., 2007 
-LIVE_TOTAL_WOOD	0.15	//new live C:new total wood ratio for deciduous P. Thornton pers. comm.
-
-//BIOME C:N RATIOS
-CN_LEAVES   25  //CN of leaves (kgC/kgN) for Q. cerris from Chiesi et al., 2007
-CN_FALLING_LEAVES   55  //CN of leaf litter (kgC/kgN) for Q. cerris from Chiesi et al., 2007
-CN_FINE_ROOTS   48  // CN of fine roots (kgC/kgN) for Q. cerris from Chiesi et al., 2007
-CN_LIVE_WOODS   48  //CN of live woods (kgC/kgN) for Q. cerris from Chiesi et al., 2007
-CN_DEAD_WOODS   550  //CN of dead woods (kgC/kgN) for Q. cerris from Chiesi et al., 2007
-
-
-//per specie caducifoglie LITTERFALL RATE = 1 !!!!!!!!!!!!!!
-//LITTERFALL
-BUD_BURST	30					//days of bud burst at the beginning of growing season (only for deciduous)
-//FOLLOWING BIOME-BGC
-LEAF_FALL_FRAC_GROWING	0.2		//proportions of the growing season of leaf fall
-
-//TURNOVER
-LEAF_FINEROOT_TURNOVER	1       //Average yearly fine root turnover rate
-LIVE_WOOD_TURNOVER	0.7 //Annual yearly live wood turnover rate 
-
-//ALLOMETRIC RELATIONSHIPS
-DBHDCMAX	0.24    //Low Density //CUURENTLY NOT USED
-DBHDCMIN	0.16    //High Density
-
-//SAPWOOD ALLOMETRIC RELATIONSHIP
-SAP_A	0.674         //a value from Kostner for Q. petreae in cm
-SAP_B	1.992         //b value from Kostner for Q. petreae in cm
-SAP_LEAF	2600          //sapwood_max leaf area ratio in pipe model  for Q petreae    
-SAP_WRES	0.11           //Sapwood-Reserve biomass ratio used if no Wres data are available 
-							//0.11 for deciduous 0.05 for evergreen  see Schwalm and Ek, 2004 Ecological Modelling
-//POWER FUNCTION to compute individual stem mass from DBH
-STEMCONST_P -9999   //
-STEMPOWER_P -9999   //
-
-
-//CHAPMAN-RICHARDS relationships to compute Height from DBH
-CRA	34.597
-CRB	0.038
-CRC	1.104
-HDMAX_A 240.5           //A parameter for Height (m) to Base diameter (m) ratio MAX Seidl et al., 2012 for Q. robur
-HDMAX_B -0.324          //B parameter for Height (m) to Base diameter (m) ratio MAX Seidl et al., 2012 for Q. robur
-HDMIN_A 127.2           //A parameter for Height (m) to Base diameter (m) ratio MIN Seidl et al., 2012 for Q. robur
-HDMIN_B -0.357          //B parameter for Height (m) to Base diameter (m) ratio MIN Seidl et al., 2012 for Q. robur
-CROWN_FORM_FACTOR 0     // Crown form factor (0 = cylinder, 1 = cone, 2 = sphere)
-CROWN_A    0.413               //Crown relationship with tree height for Q. robur as in Srtie ND
+//parameterization file for Quercus cerris
+LIGHT_TOL	3   	          //4 = very shade intolerant, 3 = shade intolerant,2 = shade tolerant,1 = very shade tolerant
+PHENOLOGY	0.1               //PHENOLOGY 0.1 = deciduous broadleaf, 0.2 = deciduous needle leaf, 1.1 = broad leaf evergreen, 1.2 = needle leaf evergreen 
+ALPHA	0.0297		          // Canopy quantum efficiency (molC/molPAR) 0.036 Vitale et al., 2012
+EPSILONgCMJ	0                 // Light Use Efficiency  (gC/MJ)(used if ALPHA is not available) 
+K	0.60		              //0.54 Extinction coefficient for absorption of PAR by canopy (for Q. cerris Chiesi et al 2007), 0.60 for F. sylvatica Vitale et al., 2012
+ALBEDO	0.2                   //0.15 from OTTO et al., BGS 2014
+INT_COEFF  0.3                //precip interception coefficient from Tatarinov
+SLA_AVG 30                    //Average Specific Leaf Area m^2/KgC sunlit leaves from Mollicone  
+SLA_RATIO	2                 //(DIM) ratio of shaded to sunlit projected SLA  for Q. cerris from Mollicone et al., 2002 	
+LAI_RATIO   2                 //(DIM) (DIM) all-sided to projected leaf area ratio				
+FRACBB0	0.30                  //Branch and Bark fraction at age 0
+FRACBB1	0.25                  //Branch and Bark fraction for mature stands
+TBB	20                        //Age at which fracBB = (FRACBB0 + FRACBB1 )/ 2
+RHOMIN	0.4                   //Minimum Basic Density for young Trees t/m^3
+RHOMAX	0.6                   //Maximum Basic Density for young Trees (Ferrara-Nolè) 0.85 for Q. cerris from Knapic et al., 2007
+TRHO	4                     //Age at which rho = (RHOMIN + RHOMAX )/2
+FORM_FACTOR 0.454             //Form factor Seidl et al., 2012 for Q.robur
+COEFFCOND	0.05              //Define stomatal responsee to VPD in mbar 
+BLCOND	0.005                 //Canopy Boundary Layer conductance (for Q. cerris Chiesi et al 2007)
+MAXCOND	0.0024                //Maximum Canopy Conductance in m/sec (Nolè-Ferrara for Oaks Forest)
+CUTCOND 0.00006               //Cuticul conductance in m/sec
+MAXAGE	120                   //Determines rate of "physiological decline" of forest
+RAGE	0.75                  //Relative Age to give fAGE = 0.5
+NAGE	4                     //Power of relative Age in function for Age
+GROWTHTMIN	0                 //Minimum temperature for growth
+GROWTHTMAX	30                //Maximum temperature for growth
+GROWTHTOPT	20                //Optimum temperature for growth 15.05 for Roccarespampani see Horn and Shulze 2011
+GROWTHSTART	2                 //average temperature for starting growth in °C (for Quercus cerris Cermak et al 2008), GDD 1900for q. pubescens, 1100for q. robur from Hickler et al 2012
+MINDAYLENGTH	11            //minimum day length for deciduous
+SWPOPEN	-0.6                  //for For Q cerris Mollicone et al., 2002
+SWPCLOSE	-2.3              //For Q cerris Mollicone et al., 2002
+OMEGA_CTEM	0.8               //ALLOCATION PARAMETER control the sensitivity of allocation to changes in water and light availability
+S0CTEM	0.1                   //PARAMETER CONTROLLING ALLOCATION TO STEM/MINIMUM RATIO TO C TO STEM
+R0CTEM	0.55                  //PARAMETER CONTROLLING ALLOCATION TO ROOT/MINIMUM RATIO TO C TO ROOTS
+F0CTEM	0.35                  //PARAMETER CONTROLLING ALLOCATION TO FOLIAGE
+FRUIT_PERC  0                 //fraction of NPP allocated for reproduction (0 for broadleaf)
+CONES_LIFE_SPAN 0             //Life span for cones (yr)
+FINE_ROOT_LEAF	1.2	          //allocation new fine root C:new leaf (ratio) see Chiesi et al., 2007
+STEM_LEAF 2.2	              //allocation new stem C:new leaf (ratio) see Chiesi et al., 2007
+COARSE_ROOT_STEM 0.22	      //allocation new coarse root C:new stem (ratio) see Chiesi et al., 2007 
+LIVE_TOTAL_WOOD	0.15          //new live C:new total wood ratio for deciduous P. Thornton pers. comm.
+CN_LEAVES   25                //CN of leaves (kgC/kgN) for Q. cerris from Chiesi et al., 2007
+CN_FALLING_LEAVES   55        //CN of leaf litter (kgC/kgN) for Q. cerris from Chiesi et al., 2007
+CN_FINE_ROOTS   48            //CN of fine roots (kgC/kgN) for Q. cerris from Chiesi et al., 2007
+CN_LIVE_WOODS   48            //CN of live woods (kgC/kgN) for Q. cerris from Chiesi et al., 2007
+CN_DEAD_WOODS   550           //CN of dead woods (kgC/kgN) for Q. cerris from Chiesi et al., 2007
+LEAF_LITT_LAB_FRAC   0.38     //leaf litter labile fraction for Quercus cerris from Chiesi et al., 2007, 0.20 Pietsch 2005
+LEAF_LITT_CEL_FRAC   0.44     //leaf litter cellulose fraction for Quercus cerris from Chiesi et al., 2007, 0.56 Pietsch 2005
+LEAF_LITT_LIGN_FRAC  0.18     //leaf litter lignin fraction for Quercus cerris from Chiesi et al., 2007, 0.24 Pietsch 2005
+FROOT_LITT_LAB_FRAC  0.34     //fine root litter labile fraction for Quercus cerris from Chiesi et al., 2007, 
+FROOT_LITT_CEL_FRAC  0.44     //fine root litter cellulose fraction for Quercus cerris from Chiesi et al., 2007
+FROOT_LITT_LIGN_FRAC 0.22     //fine root litter lignin fraction for Quercus cerris from Chiesi et al., 2007
+DEAD_WOOD_CEL_FRAC   0.77     //dead wood litter cellulose fraction for Quercus cerris from Chiesi et al., 2007, 0.75 Pietsch 2005
+DEAD_WOOD_LIGN_FRAC  0.23     //dead wood litter lignin fraction for Quercus cerris from Chiesi et al., 2007, 0.25 Pietsch 2005
+BUD_BURST	30                //days of bud burst at the beginning of growing season (only for deciduous)
+LEAF_FALL_FRAC_GROWING	0.2   //proportions of the growing season of leaf fall
+LEAF_FINEROOT_TURNOVER	1     //Average yearly fine root turnover rate
+LIVE_WOOD_TURNOVER	0.7       //Annual yearly live wood turnover rate 
+DBHDCMAX	0.24              //Low Density //CUURENTLY NOT USED
+DBHDCMIN	0.16              //High Density
+SAP_A	0.674                 //a value from Kostner for Q. petreae in cm
+SAP_B	1.992                 //b value from Kostner for Q. petreae in cm
+SAP_LEAF	2600              //sapwood_max leaf area ratio in pipe model  for Q petreae    
+SAP_WRES	0.11              //Sapwood-Reserve biomass ratio used if no Wres data are available 
+STEMCONST_P -9999             //
+STEMPOWER_P -9999             //
+CRA	34.597                    //
+CRB	0.038                     //
+CRC	1.104                     //
+HDMAX_A 240.5                 //A parameter for Height (m) to Base diameter (m) ratio MAX Seidl et al., 2012 for Q. robur
+HDMAX_B -0.324                //B parameter for Height (m) to Base diameter (m) ratio MAX Seidl et al., 2012 for Q. robur
+HDMIN_A 127.2                 //A parameter for Height (m) to Base diameter (m) ratio MIN Seidl et al., 2012 for Q. robur
+HDMIN_B -0.357                //B parameter for Height (m) to Base diameter (m) ratio MIN Seidl et al., 2012 for Q. robur
+CROWN_FORM_FACTOR 0           // Crown form factor (0 = cylinder, 1 = cone, 2 = sphere)
+CROWN_A    0.413              //Crown relationship with tree height for Q. robur as in Srtie ND
 CROWN_B     1                 //Crown exponential with tree height (Fixed to 1 as in Sorie-ND)
-MAXSEED	20000           //numero massimo semi prodotti dalla pianta (da TREEMIG) FOR Quercus sp
-MASTSEED	5       //ricorrenza anni di pasciona (da TREEMIG) FOR Quercus sp (Bernetti)
-WEIGHTSEED	7       //peso frutto in g FOR Quercus sp (Bernetti)
-SEXAGE	30              //Age at Sexual Maturity FOR Quercus sp (per Bernetti 75)
-GERMCAPACITY	0.70    //Geminability (Lischke H. & Loffler T. J.)
+MAXSEED	20000                 //numero massimo semi prodotti dalla pianta (da TREEMIG) FOR Quercus sp
+MASTSEED	5                 //ricorrenza anni di pasciona (da TREEMIG) FOR Quercus sp (Bernetti)
+WEIGHTSEED	7                 //peso frutto in g FOR Quercus sp (Bernetti)
+SEXAGE	30                    //Age at Sexual Maturity FOR Quercus sp (per Bernetti 75)
+GERMCAPACITY	0.70          //Geminability (Lischke H. & Loffler T. J.)
+ROTATION    200               //Forest Rotation for harvesting 
+THINNING     15               //Thinning regime
+THINNING_REGIME    0          //Thinning regime (0 = above, 1 = below)
+THINNING_INTENSITY  20        //Thinning intensity (% of Basal Area/N-tree to remove) for Q. robur/pubescens ISIMIP protocol
 
-//MANAGMENT
-ROTATION    200         //Forest Rotation for harvesting 
-THINNING     15         //Thinning regime
-THINNING_REGIME    0    //Thinning regime (0 = above, 1 = below)
-THINNING_INTENSITY  20         //Thinning intensity (% of Basal Area/N-tree to remove) for Q. robur/pubescens ISIMIP protocol
-MINAGEMANAG	80      //Minimum age for Managment (Q. cerris)
-MINDBHMANAG	27      //Minimum DBH for Managment
-AV_SHOOT	10      //average number of shoot after cut

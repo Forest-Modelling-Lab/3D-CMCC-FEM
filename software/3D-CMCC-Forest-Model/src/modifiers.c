@@ -227,6 +227,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 			s->value[F_AGE] = ( 1 / ( 1 + pow ((RelAge / (double)s->value[RAGE]), (double)s->value[NAGE])));
 			logger(g_debug_log, "fAge = %f\n", s->value[F_AGE]);
 		}
+#if 0
 		else if ( s->management == C )
 		{
 			/* for SHOOTS */
@@ -235,6 +236,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 			s->value[F_AGE] = ( 1 / ( 1 + pow ((RelAge / (double)s->value[RAGE_S]), (double)s->value[NAGE_S])));
 			logger(g_debug_log, "fAge = %f\n", s->value[F_AGE]);
 		}
+#endif
 	}
 	else
 	{
@@ -276,13 +278,13 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	CHECK_CONDITION(s->value[F_NUTR], <, 0);
 #endif
 	/********************************************************************************************/
-
+#if 0
 	/*SOIL WATER MODIFIER (3-PG METHOD)*/
 	//fixme include "dAdjMod" from 3-PG code
 	c->soil_moist_ratio = c->asw / c->max_asw_fc;
 	s->value[F_SW] = 1.0 / (1.0 + pow(((1.0 - c->soil_moist_ratio) / s->value[SWCONST]), s->value[SWPOWER]));
 	logger(g_debug_log, "fSW (3-PG)= %f\n", s->value[F_SW]);
-
+#endif
 
 	/* (MPa) water potential of soil and leaves */
 	/*SOIL MATRIC POTENTIAL*/

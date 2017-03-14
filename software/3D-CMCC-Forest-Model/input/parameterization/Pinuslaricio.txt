@@ -5,7 +5,6 @@ ALPHA                         //Canopy quantum efficiency (molC/molPAR)
 EPSILONgCMJ                   //Light Use Efficiency (gC/molPAR)(used if ALPHA is not available)  
 K                             //Extinction coefficient for absorption of PAR by canopy 
 ALBEDO                        //canopy albedo
-GAMMA_LIGHT -9999             //Light parameter for light modifier(NOT USED)
 INT_COEFF                     //precip interception coefficient 
 SLA_AVG                       //Average Specific Leaf Area m^2/KgC sunlit/shaded leaves
 SLA_RATIO                     //(DIM) ratio of shaded to sunlit projected SLA 
@@ -24,9 +23,6 @@ CUTCOND                       //Cuticul conductance in m/sec
 MAXAGE                        //Determines rate of "physiological decline" of forest 
 RAGE                          //Relative Age to give fAGE = 0.5 
 NAGE                          //Power of relative Age in function 
-MAXAGE_S    -9999             //Determines rate of "physiological decline" of forest 
-RAGE_S  -9999                 //Relative Age to give fAGE = 0.5
-NAGE_S  -9999                 //Power of relative Age in function for Age
 GROWTHTMIN                    //Minimum temperature for growth 
 GROWTHTMAX                    //Maximum temperature for growth 
 GROWTHTOPT                    //Optimum temperature for growth 
@@ -34,15 +30,10 @@ GROWTHSTART                   //average temperature for starting growth in °C
 MINDAYLENGTH    -9999         //minimum day length for deciduous
 SWPOPEN                       //Soil water potential open
 SWPCLOSE                      //Soil water potential close
-SWCONST     -9999             //Costant in Soil Water modifier vs Moist Ratio (NOT USED)
-SWPOWER     -9999             //Power in Soil Water modifier vs Moist Ratio (NOT USED)
 OMEGA_CTEM                    //ALLOCATION PARAMETER control the sensitivity of allocation to changes in water and light availability 
 S0CTEM                        //PARAMETER CONTROLLING ALLOCATION TO STEM/MINIMUM RATIO TO C TO STEM 
 R0CTEM                        //PARAMETER CONTROLLING ALLOCATION TO ROOT/MINIMUM RATIO TO C TO ROOTS 
 F0CTEM                        //PARAMETER CONTROLLING ALLOCATION TO FOLIAGE/MINIMUM RATIO TO C TO STEM
-MIN_R0CTEM        -9999       //MINIMUM RATE TO ROOT AT THE FIRST YEAR AFTER COPPICING (NOT USED)
-MAX_S0CTEM        -9999       //MAXIMUM RATE TO STEM AT THE FIRST YEAR AFTER COPPICING (NOT USED)
-YEARS_FOR_CONVERSION  -9999   //years from coppicing to consider tree as a timber (NOT USED)
 FRUIT_PERC                    //fraction of NPP allocated for reproduction 
 CONES_LIFE_SPAN               //Life span for cones (yrs)
 FINE_ROOT_LEAF                //allocation new fine root C:new leaf (ratio) 
@@ -54,6 +45,14 @@ CN_FALLING_LEAVES             //CN of leaf litter (kgC/kgN)
 CN_FINE_ROOTS                 //CN of fine roots (kgC/kgN)
 CN_LIVE_WOODS                 //CN of live woods (kgC/kgN)
 CN_DEAD_WOODS                 //CN of dead woods (kgC/kgN)
+LEAF_LITT_LAB_FRAC   0.26     //leaf litter labile fraction for Pinus from Cenciala & Tatarinov 2006
+LEAF_LITT_CEL_FRAC   0.49     //leaf litter cellulose fraction for Pinus from Cenciala & Tatarinov 2006
+LEAF_LITT_LIGN_FRAC  0.25     //leaf litter lignin fraction for Pinus from Cenciala & Tatarinov 2006
+FROOT_LITT_LAB_FRAC  0.23     //fine root litter labile fraction for Pinus from Cenciala & Tatarinov 2006
+FROOT_LITT_CEL_FRAC  0.41     //fine root litter cellulose fraction for Pinus from Cenciala & Tatarinov 2006
+FROOT_LITT_LIGN_FRAC 0.36     //fine root litter lignin fraction for Pinus from Cenciala & Tatarinov 2006
+DEAD_WOOD_CEL_FRAC   0.70     //dead wood litter cellulose fraction for Pinus from Cenciala & Tatarinov 2006
+DEAD_WOOD_LIGN_FRAC  0.30     //dead wood litter lignin fraction for Pinus from Cenciala & Tatarinov 2006
 BUD_BURST                     //days of bud burst at the beginning of growing season (only for deciduous)
 LEAF_FALL_FRAC_GROWING        //proportions of the growing season of leaf fall 
 LEAF_FINEROOT_TURNOVER        //Average YEARLY leaves and fine root turnover rate 
@@ -85,6 +84,3 @@ ROTATION                      //Forest Rotation for harvesting
 THINNING                      //Thinning regime
 THINNING_REGIME               //Thinning regime (0 = above, 1 = below) 
 THINNING_INTENSITY  0         //Thinning intensity (% of Basal Area/N-tree to remove) for P. abies ISIMIP protocol
-MINAGEMANAG -9999             //Minimum age for Managment (NOT USED)
-MINDBHMANAG -9999             //Minimum DBH for Managment (NOT USED)
-AV_SHOOT    -9999             //average number of shoot after cut (NOT USED)
