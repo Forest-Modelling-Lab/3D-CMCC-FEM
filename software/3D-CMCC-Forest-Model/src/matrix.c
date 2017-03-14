@@ -26,7 +26,7 @@ extern char *g_sz_parameterization_path;
 extern char g_sz_parameterization_output_path[];
 extern int g_year_start_index;
 
-/* ---------- dataset stuff ---------- */
+/** ---------- dataset stuff ---------- **/
 enum {
 	YEAR_COLUMN
 	, X_COLUMN
