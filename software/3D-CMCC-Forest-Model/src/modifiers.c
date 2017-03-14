@@ -334,7 +334,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 		s->value[F_PSI] = (s->value[SWPCLOSE] - c->psi)/(s->value[SWPCLOSE] - s->value[SWPOPEN]);
 
 		//test
-		// for consistency with complete stress values
+		//for consistency with complete stress values
 		if(s->value[F_PSI]< 0.3) s->value[F_PSI] = 0.3;
 	}
 
