@@ -137,6 +137,9 @@ int add_tree_class_for_replanting (cell_t *const c, const int day, const int mon
 	/* initialize nitrogen pools */
 	initialization_forest_class_N_biomass ( c, c->heights_count-1, 0, 0, 0 );
 
+	/* initialize litter pools */
+	initialization_forest_class_litter ( c, c->heights_count-1, 0, 0, 0 );
+
 	/* print new forest class dataset */
 	print_new_daily_forest_class_data( c, c->heights_count-1, 0, 0, 0 );
 
@@ -240,6 +243,9 @@ int add_tree_class_for_regeneration ( cell_t *const c )
 
 	/* initialize nitrogen pools */
 	initialization_forest_class_N_biomass ( c, c->heights_count-1, 0, 0, 0 );
+
+	/* initialize litter pools */
+	initialization_forest_class_litter ( c, c->heights_count-1, 0, 0, 0 );
 
 	/* print new forest class dataset */
 	print_new_daily_forest_class_data( c, c->heights_count-1, 0, 0, 0 );

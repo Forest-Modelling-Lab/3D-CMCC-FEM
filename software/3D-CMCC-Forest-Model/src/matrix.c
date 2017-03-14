@@ -1694,8 +1694,13 @@ void soil_summary(const matrix_t* const m, const cell_t* const cell)
 	logger(g_debug_log, "-Soil M0 = %g\n", g_soil_settings->values[SOIL_M0]);
 	logger(g_debug_log, "-Soil SN = %g\n", g_soil_settings->values[SOIL_SN]);
 
-	/* soil initialization */
-	initialization_soil (m->cells);
+
+	/***** initialize soil ****/
+	/** soil physic initialization **/
+	initialization_soil_physic (m->cells);
+
+	/** soil biogeochemistry initialization **/
+	initialization_soil_biogeochemistry (m->cells);
 
 	logger(g_debug_log, "***************************************************\n\n");
 }
@@ -1785,6 +1790,9 @@ void forest_summary(const matrix_t* const m, const int day, const int month, con
 
 						/* initialise nitrogen pools */
 						initialization_forest_class_N_biomass (&m->cells[cell], height, dbh, age, species);
+
+						/* initialize litter pools */
+						initialization_forest_class_litter (&m->cells[cell], height, dbh, age, species);
 					}
 				}
 			}

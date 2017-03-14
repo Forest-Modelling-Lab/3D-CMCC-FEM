@@ -500,7 +500,6 @@ enum {
 	YEARLY_BRANCH_AUT_RESP,             /* Annual Branch autotrophic respiration (gC/m2/year) */
 	YEARLY_TOTAL_AUT_RESP,              /* Annual Total autotrophic respiration (gC/m2/year) */
 
-
 	/* nitrogen to nitrogen pools */
 	N_TO_LEAF,                          /* Daily Net Primary Production to Leaf pool (tN/sizeCell day) */
 	N_TO_ROOT,                          /* Daily Net Primary Production to Root pool (tN/sizeCell day) */
@@ -555,6 +554,14 @@ enum {
 	AV_FINE_ROOT_MASS_kgN,              /* Average Fine root carbon pool kgN/tree */
 	AV_COARSE_ROOT_MASS_kgN,            /* Average Coarse carbon pool kgN/tree */
 	AV_BRANCH_MASS_kgN,                 /* Average Branch carbon pool kgN/tree */
+
+	/* soil pools */
+	LEAF_LITT_SCEL_FRAC,                /* (DIM) leaf litter shielded cellulose fraction */
+	LEAF_LITT_USCEL_FRAC,               /* (DIM) leaf litter unshielded cellulose fraction */
+	FROOT_LITT_SCEL_FRAC,               /* (DIM) fine root litter shielded cellulose fraction */
+	FROOT_LITT_USCEL_FRAC,              /* (DIM) fine root litter unshielded fraction */
+	DEAD_WOOD_SCEL_FRAC,                /* (DIM) dead wood litter shielded cellulose fraction */
+	DEAD_WOOD_USCEL_FRAC,               /* (DIM) dead wood litter unshielded fraction */
 
 
 	/* LPJ MORTALITY FUNCTION */
@@ -935,6 +942,12 @@ typedef struct
 	double nfix_src;                                                      /* (kgN/m2) SUM of biological N fixation */
 	double ndep_src;                                                      /* (kgN/m2) SUM of N deposition inputs */
 	double nleached_snk;                                                  /* (kgN/m2) SUM of N leached */
+	double leaf_litt_scel_frac;                                           /* (dim) leaf litter shielded cellulose fraction */
+	double leaf_litt_uscel_frac;                                          /* (dim) leaf litter unshielded cellulose fraction */
+	double froot_litt_scel_frac;                                          /* (dim) fine root litter shielded cellulose fraction */
+	double froot_litt_uscel_frac;                                         /* (dim) fine root litter unshielded fraction */
+	double dead_wood_scel_frac;                                           /* (dim) dead wood litter shielded cellulose fraction */
+	double dead_wood_uscel_frac;                                          /* (dim) dead wood litter unshielded fraction */
 
 
 	double rain;

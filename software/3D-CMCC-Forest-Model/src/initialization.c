@@ -537,7 +537,97 @@ void initialization_forest_class_N_biomass(cell_t *const c, const int height, co
 	}
 }
 
-void initialization_soil(cell_t *const c)
+void initialization_forest_class_litter (cell_t *const c, const int height, const int dbh, const int age, const int species)
+{
+	double r1;
+	double t1, t2, t3, t4;
+
+	species_t *s;
+	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
+
+	/* check */
+	CHECK_CONDITION ( fabs (s->value[LEAF_LITT_LAB_FRAC] + s->value[LEAF_LITT_CEL_FRAC] + s->value[LEAF_LITT_LIGN_FRAC]), >, 1+eps);
+	CHECK_CONDITION ( fabs (s->value[FROOT_LITT_LAB_FRAC] + s->value[FROOT_LITT_CEL_FRAC] + s->value[FROOT_LITT_LIGN_FRAC]), >, 1+eps);
+	CHECK_CONDITION ( fabs (s->value[DEAD_WOOD_CEL_FRAC] + s->value[DEAD_WOOD_LIGN_FRAC]), >, 1+eps);
+
+	/* calculate shielded and unshielded cellulose fraction */
+
+	/** leaf litter pool**/
+
+	t1 = s->value[LEAF_LITT_LAB_FRAC];
+	t2 = s->value[LEAF_LITT_CEL_FRAC];
+	t3 = s->value[LEAF_LITT_LIGN_FRAC];
+
+	r1 = t3/t2;
+	if (r1 <= 0.45)
+	{
+		s->value[LEAF_LITT_SCEL_FRAC] = 0.0;
+		s->value[LEAF_LITT_USCEL_FRAC] = t2;
+	}
+	else if (r1 > 0.45 && r1 < 0.7)
+	{
+		t4 = (r1 - 0.45)*3.2;
+		s->value[LEAF_LITT_SCEL_FRAC] = t4*t2;
+		s->value[LEAF_LITT_USCEL_FRAC] = (1.0 - t4)*t2;
+	}
+	else
+	{
+		s->value[LEAF_LITT_SCEL_FRAC] = 0.8*t2;
+		s->value[LEAF_LITT_USCEL_FRAC] = 0.2*t2;
+	}
+
+	/** fine root litter pool **/
+
+	t1 = s->value[FROOT_LITT_LAB_FRAC];
+	t2 = s->value[FROOT_LITT_CEL_FRAC];
+	t3 = s->value[FROOT_LITT_LIGN_FRAC];
+
+	r1 = t3/t2;
+
+	if (r1 <= 0.45)
+	{
+		s->value[FROOT_LITT_SCEL_FRAC] = 0.0;
+		s->value[FROOT_LITT_USCEL_FRAC] = t2;
+	}
+	else if (r1 > 0.45 && r1 < 0.7)
+	{
+		t4 = (r1 - 0.45)*3.2;
+		s->value[FROOT_LITT_SCEL_FRAC] = t4*t2;
+		s->value[FROOT_LITT_USCEL_FRAC] = (1.0 - t4)*t2;
+	}
+	else
+	{
+		s->value[FROOT_LITT_SCEL_FRAC] = 0.8*t2;
+		s->value[FROOT_LITT_USCEL_FRAC] = 0.2*t2;
+	}
+
+	/** dead wood litter pool **/
+
+	t1 = s->value[DEAD_WOOD_CEL_FRAC];
+	t2 = s->value[DEAD_WOOD_LIGN_FRAC];
+
+	r1 = t2/t1;
+
+	if (r1 <= 0.45)
+	{
+		s->value[DEAD_WOOD_SCEL_FRAC] = 0.0;
+		s->value[DEAD_WOOD_USCEL_FRAC] = t1;
+	}
+	else if (r1 > 0.45 && r1 < 0.7)
+	{
+		t4 = (r1 - 0.45)*3.2;
+		s->value[DEAD_WOOD_SCEL_FRAC] = t4*t1;
+		s->value[DEAD_WOOD_USCEL_FRAC] = (1.0 - t4)*t1;
+	}
+	else
+	{
+		s->value[DEAD_WOOD_SCEL_FRAC] = 0.8*t1;
+		s->value[DEAD_WOOD_USCEL_FRAC] = 0.2*t1;
+	}
+
+}
+
+void initialization_soil_physic(cell_t *const c)
 {
 	float acoeff;
 	float bcoeff;
@@ -546,7 +636,7 @@ void initialization_soil(cell_t *const c)
 	float volumetric_field_capacity;
 	float volumetric_saturated_hydraulic_conductivity;
 
-	logger(g_debug_log,"\nINITIALIZE SOIL\n");
+	logger(g_debug_log,"\nINITIALIZE SOIL PHYSIC\n");
 
 	/*soil matric potential*/
 	CHECK_CONDITION(fabs((g_soil_settings->values[SOIL_SAND_PERC] + g_soil_settings->values[SOIL_CLAY_PERC] + g_soil_settings->values[SOIL_SILT_PERC]) -100.0 ), >, eps);
@@ -652,6 +742,35 @@ void initialization_soil(cell_t *const c)
 	c->bulk_density += (-0.08 * c->bulk_density);
 	logger(g_debug_log, "Bulk density = %g g/cm^3\n", c->bulk_density);
 	logger(g_debug_log, "***************************************************\n\n");
+
+}
+
+void initialization_soil_biogeochemistry (cell_t *const c)
+{
+	//todo create cell litter pools based on different forest class litter pools
+	//double r1;
+
+	/* calculate shielded and unshielded cellulose fraction */
+	/*
+		r1 = t3/t2;
+		if (r1 <= 0.45)
+		{
+			epc->leaflitr_fscel = 0.0;
+			epc->leaflitr_fucel = t2;
+		}
+		else if (r1 > 0.45 && r1 < 0.7)
+		{
+			t4 = (r1 - 0.45)*3.2;
+			epc->leaflitr_fscel = t4*t2;
+			epc->leaflitr_fucel = (1.0 - t4)*t2;
+		}
+		else
+		{
+			epc->leaflitr_fscel = 0.8*t2;
+			epc->leaflitr_fucel = 0.2*t2;
+		}
+	 */
+
 
 }
 
