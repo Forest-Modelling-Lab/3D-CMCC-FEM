@@ -15,7 +15,7 @@ TBB 10                        //Age at which fracBB = (FRACBB0 + FRACBB1 )/ 2 fo
 RHOMIN  0.47                  //Minimum Basic Density for young Trees t/m^3 for P. sylvestris Landsberg et al., 2005, 0.49 Seidl et al., 2012
 RHOMAX  0.47                  //Maximum Basic Density for young Trees t/m^3 for P. sylvestris Landsberg et al., 2005, 0.49 Seidl et al., 2012
 TRHO    4                     //Age at which rho = (RHOMIN + RHOMAX )/2
-FORM_FACTOR 0.435             //Form factor Seidl et al., 2012
+FORM_FACTOR 0.435             //Form factor Seidl et al., 2012 
 COEFFCOND   0.05              //Define stomatal responsee to VPD in mbar for P. sylvestris Landsberg et al., 2005
 BLCOND  0.009                 //Canopy Boundary Layer conductance for P. sylvestris 0.009 from Pietsch, 0.01 for Tatarinov
 MAXCOND 0.0025                //Maximum Stomatal Conductance in m/sec for P. sylvestris 0.001 from Pietsch, 0.0025 for Tatarinov, 0.005 Makela et al., 2006
