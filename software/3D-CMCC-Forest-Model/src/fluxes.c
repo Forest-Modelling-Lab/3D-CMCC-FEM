@@ -36,22 +36,8 @@ void water_fluxes(cell_t *const c, const meteo_daily_t *const meteo_daily)
 //	logger(g_debug_log, "Daily_w_flux = %f \n", c->daily_tot_w_flux);
 }
 
-void get_net_ecosystem_exchange(cell_t *const c)
+void net_ecosystem_exchange(cell_t *const c)
 {
-//	int i;
-//	for(i = 0; i< c->soils_count; i++)
-//	{
-//		c->daily_het_resp += c->soils[i].co2 * 1000.0;
-//		c->monthly_het_resp += c->soils[i].co2 * 1000.0;
-//		c->annual_het_resp += c->soils[i].co2 * 1000.0;
-//	}
-//	c->daily_r_eco = c->daily_aut_resp + c->daily_het_resp;
-//	c->daily_nee = c->daily_gpp - c->daily_r_eco;
-//
-//	c->monthly_r_eco +=  c->daily_r_eco;
-//	c->monthly_nee +=  c->daily_nee;
-//
-//	c->annual_r_eco +=  c->daily_r_eco;
-//	c->annual_nee +=  c->daily_nee;
+
 }
 

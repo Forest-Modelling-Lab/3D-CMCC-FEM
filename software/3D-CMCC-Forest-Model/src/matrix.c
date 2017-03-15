@@ -1694,7 +1694,7 @@ void soil_summary(const matrix_t* const m, const cell_t* const cell)
 	logger(g_debug_log, "-Soil FN0 = %g\n", g_soil_settings->values[SOIL_FN0]);
 	logger(g_debug_log, "-Soil FNN = %g\n", g_soil_settings->values[SOIL_FNN]);
 	logger(g_debug_log, "-Soil M0 = %g\n", g_soil_settings->values[SOIL_M0]);
-	logger(g_debug_log, "-Soil SN = %g\n", g_soil_settings->values[SOIL_SN]);
+	logger(g_debug_log, "-Soil Litter = %g t/ha\n", g_soil_settings->values[SOIL_LITTER]);
 
 
 	/***** initialize soil ****/
@@ -1793,8 +1793,8 @@ void forest_summary(const matrix_t* const m, const int day, const int month, con
 						/* initialise nitrogen pools */
 						initialization_forest_class_N_biomass (&m->cells[cell], height, dbh, age, species);
 
-						/* initialize litter pools */
-						initialization_forest_class_litter (&m->cells[cell], height, dbh, age, species);
+						/* initialize litter and soil pools */
+						initialization_forest_class_litter_soil (&m->cells[cell], height, dbh, age, species);
 					}
 				}
 			}

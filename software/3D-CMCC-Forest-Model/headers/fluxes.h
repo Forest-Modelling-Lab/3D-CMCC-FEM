@@ -5,7 +5,9 @@
 #include "matrix.h"
 
 void carbon_fluxes(species_t *const s);
+
 void water_fluxes(cell_t *const c, const meteo_daily_t *const meteo_daily);
-void get_net_ecosystem_exchange(cell_t *const c);
+
+void net_ecosystem_exchange(cell_t *const c);
 
 #endif /* FLUXES_H_ */

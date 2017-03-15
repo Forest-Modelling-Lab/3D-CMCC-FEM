@@ -310,6 +310,7 @@ enum {
 	C_TO_RESERVE,                       /* Daily Net Primary Production to Reserve pool (tC/sizeCell day) */
 	C_TO_FRUIT,                         /* Daily Net Primary Production to Fruit pool (tC/sizeCell day) */
 	C_TO_LITTER,                        /* Daily Net Primary Production to Litter pool (tC/sizeCell day) */
+	C_TO_SOIL,                          /* Daily Net Primary Production to Soil pool (tC/sizeCell day) */
 	C_LEAF_TO_RESERVE,                  /* Daily retranslocated C from Leaf pool to Reserve (tC/sizeCell day) */
 	C_FINEROOT_TO_RESERVE,              /* Daily retranslocated C from Fine root pool to Reserve (tC/sizeCell day) */
 	C_LEAF_TO_LITTER,                   /* Daily tC from Leaf pool to Litter (tC/sizeCell day) */
@@ -360,6 +361,7 @@ enum {
 	RESERVE_C,                          /* Current Reserve carbon pool tC/sizeCell */
 	FRUIT_C,                            /* Current Fruit carbon pool tC/sizeCell */
 	LITTER_C,                           /* Current Litter carbon pool tC/sizeCell */
+	SOIL_C,                             /* Current Soil carbon pool tC/sizeCell */
 	LIVE_WOOD_C,                        /* Current Live wood carbon pool tC/sizeCell */
 	DEAD_WOOD_C,                        /* Current Dead wood carbon pool tC/sizeCell */
 	TOT_WOOD_C,                         /* Current Total wood carbon pool tC/sizeCell */
@@ -545,6 +547,7 @@ enum {
 	COARSE_ROOT_N,                      /* Current Coarse root nitrogen pool tN/sizeCell */
 	STEM_N,                             /* Current Stem nitrogen pool tN/sizeCell */
 	BRANCH_N,                           /* Current Branch nitrogen pool tN/sizeCell */
+	LITTER_N,                           /* Current Litter nitrogen pool tN/sizeCell */
 
 	/* per tree in kgN */
 	AV_LEAF_MASS_kgN,                   /* Average Leaf carbon pool kgN/tree */
@@ -555,13 +558,25 @@ enum {
 	AV_COARSE_ROOT_MASS_kgN,            /* Average Coarse carbon pool kgN/tree */
 	AV_BRANCH_MASS_kgN,                 /* Average Branch carbon pool kgN/tree */
 
-	/* soil pools */
+	/* litter and soil pools */
 	LEAF_LITT_SCEL_FRAC,                /* (DIM) leaf litter shielded cellulose fraction */
 	LEAF_LITT_USCEL_FRAC,               /* (DIM) leaf litter unshielded cellulose fraction */
 	FROOT_LITT_SCEL_FRAC,               /* (DIM) fine root litter shielded cellulose fraction */
 	FROOT_LITT_USCEL_FRAC,              /* (DIM) fine root litter unshielded fraction */
 	DEAD_WOOD_SCEL_FRAC,                /* (DIM) dead wood litter shielded cellulose fraction */
 	DEAD_WOOD_USCEL_FRAC,               /* (DIM) dead wood litter unshielded fraction */
+
+	LITR1N_RH,                          /* (kgC/m2/d) heterotrophic respiration for litter labile N */
+	LITR2N_RH,                          /* (kgC/m2/d) heterotrophic respiration for litter unshielded cellulose N */
+	LITR3N_RH,                          /* (kgC/m2/d) heterotrophic respiration for litter shielded cellulose N */
+	LITR4N_RH,                          /* (kgC/m2/d) heterotrophic respiration for litter lignin N */
+
+	//test maybe not necessary if we consider only soil pool
+	SOIL1N_RH,                          /* (kgC/m2/d) heterotrophic respiration for microbial recycling pool N (fast) */
+	SOIL2N_RH,                          /* (kgC/m2/d) heterotrophic respiration for microbial recycling pool N (medium) */
+	SOIL3N_RH,                          /* (kgC/m2/d) heterotrophic respiration for microbial recycling pool N (slow) */
+	SOIL4N_RH,                          /* (kgC/m2/d) heterotrophic respiration for recalcitrant SOM N (humus, slowest) */
+
 
 
 	/* LPJ MORTALITY FUNCTION */
@@ -864,7 +879,8 @@ typedef struct
 	double daily_root_carbon;                                             /* daily carbon assimilated to c pool at cell level (gC/m2/day) */
 	double daily_branch_carbon;                                           /* daily carbon assimilated to c pool at cell level (gC/m2/day) */
 	double daily_reserve_carbon;                                          /* daily carbon assimilated to c pool at cell level (gC/m2/day) */
-	double daily_litter_carbon;                                           /* daily carbon assimilated to litter c pool at cell level (gC/m2/day) */
+	double daily_litter_carbon;                                           /* daily carbon to litter c pool at cell level (gC/m2/day) */
+	double daily_soil_carbon;                                             /* daily carbon to soil c pool at cell level (gC/m2/day) */
 	double daily_fruit_carbon;                                            /* daily carbon assimilated to fruit c pool at cell level (gC/m2/day) */
 	double daily_leaf_carbon_tC;                                          /* daily carbon assimilated to c pool at cell level (tC/cell/day) */
 	double daily_stem_carbon_tC;                                          /* daily carbon assimilated to c pool at cell level (tC/cell/day) */
@@ -936,6 +952,15 @@ typedef struct
 	double soil2n;                                                        /* (kgN/m2) microbial recycling pool N (medium) */
 	double soil3n;                                                        /* (kgN/m2) microbial recycling pool N (slow) */
 	double soil4n;                                                        /* (kgN/m2) recalcitrant SOM N (humus, slowest) */
+	double litr1n_rh;                                                     /* (kgC/m2/d) heterotrophic respiration for litter labile N */
+	double litr2n_rh;                                                     /* (kgC/m2/d) heterotrophic respiration for litter unshielded cellulose N */
+	double litr3n_rh;                                                     /* (kgC/m2/d) heterotrophic respiration for litter shielded cellulose N */
+	double litr4n_rh;                                                     /* (kgC/m2/d) heterotrophic respiration for litter lignin N */
+	double soil1n_rh;                                                     /* (kgC/m2/d) heterotrophic respiration for microbial recycling pool N (fast) */
+	double soil2n_rh;                                                     /* (kgC/m2/d) heterotrophic respiration for microbial recycling pool N (medium) */
+	double soil3n_rh;                                                     /* (kgC/m2/d) heterotrophic respiration for microbial recycling pool N (slow) */
+	double soil4n_rh;                                                     /* (kgC/m2/d) heterotrophic respiration forrecalcitrant SOM N (humus, slowest) */
+
 	double sminn;                                                         /* (kgN/m2) soil mineral N */
 	double retransn;                                                      /* (kgN/m2) plant pool of retranslocated N */
 	double npool;                                                         /* (kgN/m2) temporary plant N pool */
@@ -1018,7 +1043,7 @@ typedef struct
 	double yr_avet;
 	double base_clay_N, max_clay_N;
 	double AddC, AddCN, AddC1, AddC2, AddC3;
-	*/
+	 */
 
 	//potentially already existent
 	int doy, dos;

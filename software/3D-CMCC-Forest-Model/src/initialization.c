@@ -525,7 +525,7 @@ void initialization_forest_class_N_biomass(cell_t *const c, const int height, co
 	s->value[BRANCH_N] = s->value[BRANCH_LIVE_WOOD_C] / s->value[CN_LIVE_WOODS];
 	logger(g_debug_log, "----Live branch nitrogen content = %g tN/cell\n", s->value[BRANCH_N]);
 
-	/* check that all mandatory variables are initialised */
+	/* check that all mandatory variables are initialized */
 	CHECK_CONDITION(s->value[STEM_N], ==, 0);
 	CHECK_CONDITION(s->value[COARSE_ROOT_N], ==, 0);
 	CHECK_CONDITION(s->value[BRANCH_N], ==, 0);
@@ -537,7 +537,7 @@ void initialization_forest_class_N_biomass(cell_t *const c, const int height, co
 	}
 }
 
-void initialization_forest_class_litter (cell_t *const c, const int height, const int dbh, const int age, const int species)
+void initialization_forest_class_litter_soil (cell_t *const c, const int height, const int dbh, const int age, const int species)
 {
 	double r1;
 	double t1, t2, t3, t4;
@@ -751,25 +751,7 @@ void initialization_soil_biogeochemistry (cell_t *const c)
 	//double r1;
 
 	/* calculate shielded and unshielded cellulose fraction */
-	/*
-		r1 = t3/t2;
-		if (r1 <= 0.45)
-		{
-			epc->leaflitr_fscel = 0.0;
-			epc->leaflitr_fucel = t2;
-		}
-		else if (r1 > 0.45 && r1 < 0.7)
-		{
-			t4 = (r1 - 0.45)*3.2;
-			epc->leaflitr_fscel = t4*t2;
-			epc->leaflitr_fucel = (1.0 - t4)*t2;
-		}
-		else
-		{
-			epc->leaflitr_fscel = 0.8*t2;
-			epc->leaflitr_fucel = 0.2*t2;
-		}
-	 */
+	//todo sum all class level litter and soil poools
 
 
 }
