@@ -1,86 +1,86 @@
-﻿//Pinus laricio parameterization file
-LIGHT_TOL        4            //4 = very shade intolerant 3 = shade intolerant 2 = shade tolerant 1 = very shade tolerant
-PHENOLOGY                     //PHENOLOGY 0.1 = deciduous broadleaf, 0.2 = deciduous needle leaf, 1.1 = broad leaf evergreen, 1.2 = needle leaf evergreen 
-ALPHA                         //Canopy quantum efficiency (molC/molPAR) 
-EPSILONgCMJ                   //Light Use Efficiency (gC/molPAR)(used if ALPHA is not available)  
-K                             //Extinction coefficient for absorption of PAR by canopy 
-ALBEDO                        //canopy albedo
-INT_COEFF                     //precip interception coefficient 
-SLA_AVG                       //Average Specific Leaf Area m^2/KgC sunlit/shaded leaves
-SLA_RATIO                     //(DIM) ratio of shaded to sunlit projected SLA 
-LAI_RATIO                     //(DIM) all-sided to projected leaf area ratio for
-FRACBB0                       //Branch and Bark fraction at age 0 
-FRACBB1                       //Branch and Bark fraction for mature stands 
-TBB                           //Age at which fracBB = (FRACBB0 + FRACBB1 )/2
-RHOMIN                        //Minimum Basic Density for young Trees t/m^3 
-RHOMAX                        //Maximum Basic Density for young Trees t/m^3
-TRHO                          //Age at which rho = (RHOMIN + RHOMAX )/2
-FORM_FACTOR                   //Form factor Seidl et al., 2012
-COEFFCOND                     //Define stomatal responsee to VPD in mbar
-BLCOND                        //Canopy Boundary Layer conductance 
-MAXCOND                       //Maximum Stomatal Conductance in m/sec 
-CUTCOND                       //Cuticul conductance in m/sec 
-MAXAGE                        //Determines rate of "physiological decline" of forest 
-RAGE                          //Relative Age to give fAGE = 0.5 
-NAGE                          //Power of relative Age in function 
-GROWTHTMIN                    //Minimum temperature for growth 
-GROWTHTMAX                    //Maximum temperature for growth 
-GROWTHTOPT                    //Optimum temperature for growth 
-GROWTHSTART                   //average temperature for starting growth in °C 
-MINDAYLENGTH    -9999         //minimum day length for deciduous
-SWPOPEN                       //Soil water potential open
-SWPCLOSE                      //Soil water potential close
-OMEGA_CTEM                    //ALLOCATION PARAMETER control the sensitivity of allocation to changes in water and light availability 
-S0CTEM                        //PARAMETER CONTROLLING ALLOCATION TO STEM/MINIMUM RATIO TO C TO STEM 
-R0CTEM                        //PARAMETER CONTROLLING ALLOCATION TO ROOT/MINIMUM RATIO TO C TO ROOTS 
-F0CTEM                        //PARAMETER CONTROLLING ALLOCATION TO FOLIAGE/MINIMUM RATIO TO C TO STEM
-FRUIT_PERC                    //fraction of NPP allocated for reproduction 
-CONES_LIFE_SPAN               //Life span for cones (yrs)
-FINE_ROOT_LEAF                //allocation new fine root C:new leaf (ratio) 
-STEM_LEAF                     //allocation new stem C:new leaf (ratio) 
-COARSE_ROOT_STEM              //allocation new coarse root C:new stem (ratio)
-LIVE_TOTAL_WOOD               //new live C:new total wood (ratio) 
-CN_LEAVES                     //CN of leaves (kgC/kgN) 
-CN_FALLING_LEAVES             //CN of leaf litter (kgC/kgN) 
-CN_FINE_ROOTS                 //CN of fine roots (kgC/kgN)
-CN_LIVE_WOODS                 //CN of live woods (kgC/kgN)
-CN_DEAD_WOODS                 //CN of dead woods (kgC/kgN)
-LEAF_LITT_LAB_FRAC   0.26     //leaf litter labile fraction for Pinus from Cenciala & Tatarinov 2006
-LEAF_LITT_CEL_FRAC   0.49     //leaf litter cellulose fraction for Pinus from Cenciala & Tatarinov 2006
-LEAF_LITT_LIGN_FRAC  0.25     //leaf litter lignin fraction for Pinus from Cenciala & Tatarinov 2006
-FROOT_LITT_LAB_FRAC  0.23     //fine root litter labile fraction for Pinus from Cenciala & Tatarinov 2006
-FROOT_LITT_CEL_FRAC  0.41     //fine root litter cellulose fraction for Pinus from Cenciala & Tatarinov 2006
-FROOT_LITT_LIGN_FRAC 0.36     //fine root litter lignin fraction for Pinus from Cenciala & Tatarinov 2006
-DEAD_WOOD_CEL_FRAC   0.70     //dead wood litter cellulose fraction for Pinus from Cenciala & Tatarinov 2006
-DEAD_WOOD_LIGN_FRAC  0.30     //dead wood litter lignin fraction for Pinus from Cenciala & Tatarinov 2006
-BUD_BURST                     //days of bud burst at the beginning of growing season (only for deciduous)
-LEAF_FALL_FRAC_GROWING        //proportions of the growing season of leaf fall 
-LEAF_FINEROOT_TURNOVER        //Average YEARLY leaves and fine root turnover rate 
-LIVE_WOOD_TURNOVER            //Annual yearly live wood turnover rate 
-DBHDCMAX                      //maximum dbh crown diameter relationship when minimum density
-DBHDCMIN                      //minimum dbh crown diameter relationship when maximum density
-SAP_A                         //a coefficient for sapwood
-SAP_B                         //b coefficient for sapwood
-SAP_LEAF                      //sapwood_max leaf area ratio in pipe model 
-SAP_WRES                      //Sapwood-Reserve biomass ratio used if no Wres data are available 0.11 for deciduous 0.05 for evergreen
-STEMCONST_P                   //constant in the stem mass vs. diameter relationship
-STEMPOWER_P                   //power in the stem mass vs. diameter relationship
-CRA                           //Chapman-Richards maximum height
-CRB                           //Chapman_Richards b parameter
-CRC                           //Chapman_Richards c parameter
-HDMAX_A ?                     //A parameter for Height (m) to Base diameter (m) ratio MAX Seidl et al., 2012
-HDMAX_B ?                     //B parameter for Height (m) to Base diameter (m) ratio MAX Seidl et al., 2012
-HDMIN_A ?                     //A parameter for Height (m) to Base diameter (m) ratio MIN Seidl et al., 2012
-HDMIN_B ?                     //B parameter for Height (m) to Base diameter (m) ratio MIN Seidl et al., 2012
-CROWN_FORM_FACTOR 1     // Crown form factor (0 = cylinder, 1 = cone, 2 = sphere)
-CROWN_A    0.43               //Crown relationship with tree height for Pinus sylvestris from Rautianinen and Stember 2006
-CROWN_B     1                 //Crown exponential with tree height (Fixed to 1 as in Sorie-ND)
-MAXSEED                       //numero massimo semi prodotti dalla pianta
-MASTSEED                      //ricorrenza anni di pasciona
-WEIGHTSEED                    //peso frutto in g 
-SEXAGE                        //Age at Sexual Maturity 
-GERMCAPACITY                  //Geminability 
-ROTATION                      //Forest Rotation for harvesting 
-THINNING                      //Thinning regime
-THINNING_REGIME               //Thinning regime (0 = above, 1 = below) 
-THINNING_INTENSITY  0         //Thinning intensity (% of Basal Area/N-tree to remove) for P. abies ISIMIP protocol
+//Pinus laricio parameterization file
+LIGHT_TOL	3
+PHENOLOGY	1.2
+ALPHA	0.046
+EPSILONgCMJ	-9999
+K	0.495
+ALBEDO	0.15
+INT_COEFF	0.3
+SLA_AVG	9.5
+SLA_RATIO	2
+LAI_RATIO	2.6
+FRACBB0	0.3
+FRACBB1	0.1
+TBB	10
+RHOMIN	0.47
+RHOMAX	0.47
+TRHO	4
+FORM_FACTOR	0.435
+COEFFCOND	0.0312203991338651
+BLCOND	0.009
+MAXCOND	0.00203732814849494
+CUTCOND	3e-05
+MAXAGE	300
+RAGE	0.75
+NAGE	4
+GROWTHTMIN	0
+GROWTHTMAX	29.7499895502112
+GROWTHTOPT	20
+GROWTHSTART	200
+MINDAYLENGTH	-9999
+SWPOPEN	-0.5
+SWPCLOSE	-1.9
+OMEGA_CTEM	0.5
+S0CTEM	0.45
+R0CTEM	0.25
+F0CTEM	0.3
+FRUIT_PERC	0.15
+CONES_LIFE_SPAN	3
+FINE_ROOT_LEAF	0.523
+STEM_LEAF	2.5
+COARSE_ROOT_STEM	0.29
+LIVE_TOTAL_WOOD	0.03
+CN_LEAVES	58 //36
+CN_FALLING_LEAVES	120
+CN_FINE_ROOTS	42 //49
+CN_LIVE_WOODS	58
+CN_DEAD_WOODS	-9999
+LEAF_LITT_LAB_FRAC	0.26
+LEAF_LITT_CEL_FRAC	0.49
+LEAF_LITT_LIGN_FRAC	0.25
+FROOT_LITT_LAB_FRAC	0.23
+FROOT_LITT_CEL_FRAC	0.41
+FROOT_LITT_LIGN_FRAC	0.36
+DEAD_WOOD_CEL_FRAC	0.70
+DEAD_WOOD_LIGN_FRAC	0.30
+BUD_BURST	0.3
+LEAF_FALL_FRAC_GROWING	-9999
+LEAF_FINEROOT_TURNOVER	0.18
+LIVE_WOOD_TURNOVER	0.7
+DBHDCMAX	0.2
+DBHDCMIN	0.14
+SAP_A	3.119
+SAP_B	1.45046047238159
+SAP_LEAF	1236.9302316224
+SAP_WRES	0.05
+STEMCONST_P	0.162876862108652
+STEMPOWER_P	2.50113735724108
+CRA	40.295
+CRB	0.042
+CRC	1.927
+HDMAX_A	-9999
+HDMAX_B	-9999
+HDMIN_A	-9999
+HDMIN_B	-9999
+CROWN_FORM_FACTOR	1
+CROWN_A	0.43
+CROWN_B	1
+MAXSEED	20000
+MASTSEED	5
+WEIGHTSEED	0.02
+SEXAGE	30
+GERMCAPACITY	0.7
+ROTATION	-9999
+THINNING	-9999
+THINNING_REGIME	-9999
+THINNING_INTENSITY	-9999

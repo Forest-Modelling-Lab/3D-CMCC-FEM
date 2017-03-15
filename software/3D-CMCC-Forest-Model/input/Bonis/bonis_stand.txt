@@ -1,0 +1,6 @@
+Year,x,y,Landuse,Age,Species,Management,N,Stool,AvDBH,Height,Wf,Wrc,Wrf,Ws,Wbb,Wres,Lai
+2004,0,0,F,39,Pinuslaricio,T,631,0,29.0,17.0,0,0,0,0,0,0,4.5
+//2004,0,0,F,39,Pinuslaricio,T,28,0,29.0,17.0,0,0,0,0,0,0,4.5
+2007,0,0,F,42,Pinuslaricio,T,28,0,31.65,20.73,0,0,0,0,0,0,4.8
+2013,0,0,F,48,Pinuslaricio,T,29,0,33.55,23.125,0,0,0,0,0,0,4.8
+2016,0,0,F,51,Pinuslaricio,T,25,0,34.41,24.34,0,0,0,0,0,0,4.8

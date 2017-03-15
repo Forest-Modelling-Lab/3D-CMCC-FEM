@@ -1,4 +1,4 @@
-﻿//Picea abies parameterization file
+﻿//Pinus sylvestris parameterization file
 LIGHT_TOL   3                 //4 = very shade intolerant 3 = shade intolerant 2 = shade tolerant 1 = very shade tolerant
 PHENOLOGY   1.2               //PHENOLOGY 0.1 = deciduous broadleaf, 0.2 = deciduous needle leaf, 1.1 = broad leaf evergreen, 1.2 = needle leaf evergreen 
 ALPHA   0.0455 //0.055        //Canopy quantum efficiency (molC/molPAR) for P. sylvestris Landsberg et al., 2005, 0.0545 Makela et al., 2006
