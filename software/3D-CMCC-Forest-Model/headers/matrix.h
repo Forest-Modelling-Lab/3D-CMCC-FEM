@@ -889,7 +889,8 @@ typedef struct
 	double daily_branch_carbon_tC;                                        /* daily carbon assimilated to c pool at cell level (tC/cell/day) */
 	double daily_reserve_carbon_tC;                                       /* daily carbon assimilated to c pool at cell level (tC/cell/day) */
 	double daily_root_carbon_tC;                                          /* daily carbon assimilated to c pool at cell level (tC/cell/day) */
-	double daily_litter_carbon_tC;                                        /* daily carbon assimilated to c pool at cell level (tC/cell/day) */
+	double daily_litter_carbon_tC;                                        /* daily carbon leaves to litter c pool at cell level (tC/cell/day) */
+	double daily_soil_carbon_tC;                                        /* daily carbon fine root to soil c pool at cell level (tC/cell/day) */
 	double daily_fruit_carbon_tC;                                         /* daily carbon assimilated to c pool at cell level (tC/cell/day) */
 	double daily_leaf_maint_resp;                                         /* daily leaf maint resp at cell level (gC/m2/day) */
 	double daily_stem_maint_resp;                                         /* daily stem maint resp at cell level (gC/m2/day) */

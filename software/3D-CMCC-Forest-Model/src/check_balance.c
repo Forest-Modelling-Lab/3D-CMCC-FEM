@@ -171,7 +171,8 @@ void check_carbon_balance(cell_t *const c)
 	store = c->daily_leaf_carbon + c->daily_stem_carbon +
 			c->daily_fine_root_carbon + c->daily_coarse_root_carbon +
 			c->daily_branch_carbon + c->daily_reserve_carbon +
-			c->daily_litter_carbon + c->daily_fruit_carbon;
+			c->daily_litter_carbon + c->daily_soil_carbon +
+			+ c->daily_fruit_carbon;
 
 	balance = in - out -store;
 
@@ -192,6 +193,7 @@ void check_carbon_balance(cell_t *const c)
 		logger(g_debug_log, "c->daily_branch_carbon = %g gC/m2/day\n", c->daily_branch_carbon);
 		logger(g_debug_log, "c->daily_reserve_carbon = %g gC/m2/day\n", c->daily_reserve_carbon);
 		logger(g_debug_log, "c->daily_litter_carbon = %g gC/m2/day\n", c->daily_litter_carbon);
+		logger(g_debug_log, "c->daily_soil_carbon = %g gC/m2/day\n", c->daily_soil_carbon);
 		logger(g_debug_log, "c->daily_fruit_carbon = %g gC/m2/day\n", c->daily_fruit_carbon);
 		logger(g_debug_log, "\ncarbon in = %g gC/m2/day\n", in);
 		logger(g_debug_log, "carbon out = %g gC/m2/day\n", out);
@@ -432,7 +434,8 @@ void check_class_carbon_balance(cell_t *const c, const int layer, const int heig
 	in = s->value[DAILY_GPP_gC];
 
 	/* sum of sinks */
-	out = s->value[TOTAL_MAINT_RESP] + s->value[TOTAL_GROWTH_RESP] + (s->value[C_TO_LITTER] * 1000000.0 / g_settings->sizeCell);
+	out = s->value[TOTAL_MAINT_RESP] + s->value[TOTAL_GROWTH_RESP] +
+			( ( s->value[C_TO_LITTER] + s->value[C_TO_SOIL]) * 1000000.0 / g_settings->sizeCell);
 
 	/* sum of current storage */
 	store = s->value[C_TO_LEAF] * 1000000.0 / g_settings->sizeCell +
@@ -459,6 +462,7 @@ void check_class_carbon_balance(cell_t *const c, const int layer, const int heig
 		logger(g_debug_log, "TOTAL_MAINT_RESP = %g gC/m2\n", s->value[TOTAL_MAINT_RESP]);
 		logger(g_debug_log, "TOTAL_GROWTH_RESP = %g gC/m2\n", s->value[TOTAL_GROWTH_RESP]);
 		logger(g_debug_log, "C_TO_LITTER = %g gC/m2\n", s->value[C_TO_LITTER] * 1000000.0 / g_settings->sizeCell);
+		logger(g_debug_log, "C_TO_SOIL = %g gC/m2\n", s->value[C_TO_SOIL] * 1000000.0 / g_settings->sizeCell);
 		logger(g_debug_log, "\nstore = %g gC/m2\n", store);
 		logger(g_debug_log, "C_TO_LEAF = %g gC/m2\n", s->value[C_TO_LEAF]* 1000000.0 / g_settings->sizeCell);
 		logger(g_debug_log, "C_TO_FINEROOT = %g gC/m2\n", s->value[C_TO_FINEROOT]* 1000000.0 / g_settings->sizeCell);
