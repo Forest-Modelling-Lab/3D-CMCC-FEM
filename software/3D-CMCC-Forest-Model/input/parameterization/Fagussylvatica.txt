@@ -1,4 +1,4 @@
-//Fagus_sylvatica
+//Fagus_sylvatica parameterization file
 LIGHT_TOL   3                  //4 = very shade intolerant (cc = 90%), 3 = shade intolerant (cc = 100%), 2 = shade tolerant (cc = 110%), 1 = very shade tolerant (cc = 120%)
 PHENOLOGY   0.1                //PHENOLOGY 0.1 = deciduous broadleaf, 0.2 = deciduous needle leaf, 1.1 = broad leaf evergreen, 1.2 = needle leaf evergreen 
 ALPHA   0.055                  //Canopy quantum efficiency (molC/molPAR) (0.055) Vitale et al., 2012, (0.05) from Williams 199, (0.056) Rotzer et al., 2010
