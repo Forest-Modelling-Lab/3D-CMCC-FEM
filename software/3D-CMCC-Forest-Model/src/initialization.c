@@ -469,9 +469,9 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 	CHECK_CONDITION(h->value, ==, 0);
 	CHECK_CONDITION(d->value, ==, 0);
 	/* note: ISIMIP special case */
-	//CHECK_CONDITION(a->value, == 0);
+	CHECK_CONDITION(a->value, ==, 0);
 
-	/* just for evergreen */
+	/* ONLY for evergreen */
 	if ( s->value[PHENOLOGY] == 1.1 || s->value[PHENOLOGY] == 1.2 )
 	{
 		CHECK_CONDITION(s->value[FINE_ROOT_C], <=, 0);
@@ -508,10 +508,16 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 
 	/*** update at cell level ***/
 	c->leaf_carbon += s->value[LEAF_C];
-	c->stem_carbon += s->value[STEM_C];
 	c->fine_root_carbon += s->value[FINE_ROOT_C];
+	c->stem_carbon += s->value[STEM_C];
+	c->stem_live_wood_carbon += s->value[STEM_LIVE_WOOD_C];
+	c->stem_dead_wood_carbon += s->value[STEM_DEAD_WOOD_C];
 	c->coarse_root_carbon += s->value[COARSE_ROOT_C];
+	c->coarse_root_live_wood_carbon += s->value[COARSE_ROOT_LIVE_WOOD_C];
+	c->coarse_root_dead_wood_carbon += s->value[COARSE_ROOT_DEAD_WOOD_C];
 	c->branch_carbon += s->value[BRANCH_C];
+	c->branch_live_wood_carbon += s->value[BRANCH_LIVE_WOOD_C];
+	c->branch_dead_wood_carbon += s->value[BRANCH_DEAD_WOOD_C];
 	c->reserve += s->value[RESERVE_C];
 
 }
@@ -565,6 +571,7 @@ void initialization_forest_class_N (cell_t *const c, const int height, const int
 	CHECK_CONDITION(s->value[STEM_N], <=, 0);
 	CHECK_CONDITION(s->value[COARSE_ROOT_N], <=, 0);
 	CHECK_CONDITION(s->value[BRANCH_N], <=, 0);
+
 	/* just for evergreen */
 	if ( s->value[PHENOLOGY] == 1.1 || s->value[PHENOLOGY] == 1.2 )
 	{

@@ -114,6 +114,11 @@ void leaf_fall_deciduous ( cell_t *const c, const int height, const int dbh, con
 		s->value[C_TO_SOIL] = 0.;
 		logger(g_debug_log, "C_TO_SOIL = %f\n", s->value[C_TO_SOIL]);
 	}
+
+	/* litter and soil compartments */
+
+
+
 }
 
 void leaf_fall_evergreen ( cell_t *const c, const int height, const int dbh, const int age, const int species )
@@ -192,6 +197,8 @@ void leaf_fall_evergreen ( cell_t *const c, const int height, const int dbh, con
 	logger(g_debug_log, "Carbon to litter after retranslocation = %g tC/cell/day\n", s->value[C_TO_LITTER]);
 	s->value[C_TO_SOIL] = s->value[C_FINE_ROOT_TO_SOIL];
 	logger(g_debug_log, "Carbon to soil after retranslocation = %g tC/cell/day\n", s->value[C_TO_SOIL]);
+
+
 
 }
 

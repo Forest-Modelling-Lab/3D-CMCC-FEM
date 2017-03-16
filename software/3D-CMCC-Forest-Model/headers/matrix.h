@@ -566,6 +566,23 @@ enum {
 	AV_BRANCH_MASS_kgN,                 /* Average Branch carbon pool kgN/tree */
 
 	/* litter and soil pools */
+	LITR1C,                             /* (kgC/m2) litter labile C */
+	LITR2C,                             /* (kgC/m2) litter unshielded cellulose C */
+	LITR3C,                             /* (kgC/m2) litter shielded cellulose C */
+	LITR4C,                             /* (kgC/m2) litter lignin C */
+	LITR1N,                             /* (kgN/m2) litter labile N */
+	LITR2N,                             /* (kgN/m2) litter unshielded Cellulose N */
+	LITR3N,                             /* (kgN/m2) litter shielded Cellulose N */
+	LITR4N,                             /* (kgN/m2) litter lignin N */
+	SOIL1C,                             /* (kgC/m2) microbial recycling pool C (fast) */
+	SOIL2C,                             /* (kgC/m2) microbial recycling pool C (medium) */
+	SOIL3C,                             /* (kgC/m2) microbial recycling pool C (slow) */
+	SOIL4C,                             /* (kgC/m2) recalcitrant SOM C (humus, slowest) */
+	SOIL1N,                             /* (kgN/m2) microbial recycling pool N (fast) */
+	SOIL2N,                             /* (kgN/m2) microbial recycling pool N (medium) */
+	SOIL3N,                             /* (kgN/m2) microbial recycling pool N (slow) */
+	SOIL4N,                             /* (kgN/m2) recalcitrant SOM N (humus, slowest) */
+	/* fractions */
 	LEAF_LITT_SCEL_FRAC,                /* (DIM) leaf litter shielded cellulose fraction */
 	LEAF_LITT_USCEL_FRAC,               /* (DIM) leaf litter unshielded cellulose fraction */
 	FROOT_LITT_SCEL_FRAC,               /* (DIM) fine root litter shielded cellulose fraction */
@@ -573,16 +590,15 @@ enum {
 	DEAD_WOOD_SCEL_FRAC,                /* (DIM) dead wood litter shielded cellulose fraction */
 	DEAD_WOOD_USCEL_FRAC,               /* (DIM) dead wood litter unshielded fraction */
 
-	LITR1N_RH,                          /* (kgC/m2/d) heterotrophic respiration for litter labile N */
-	LITR2N_RH,                          /* (kgC/m2/d) heterotrophic respiration for litter unshielded cellulose N */
-	LITR3N_RH,                          /* (kgC/m2/d) heterotrophic respiration for litter shielded cellulose N */
-	LITR4N_RH,                          /* (kgC/m2/d) heterotrophic respiration for litter lignin N */
-
-	//test maybe not necessary if we consider only soil pool
-	SOIL1N_RH,                          /* (kgC/m2/d) heterotrophic respiration for microbial recycling pool N (fast) */
-	SOIL2N_RH,                          /* (kgC/m2/d) heterotrophic respiration for microbial recycling pool N (medium) */
-	SOIL3N_RH,                          /* (kgC/m2/d) heterotrophic respiration for microbial recycling pool N (slow) */
-	SOIL4N_RH,                          /* (kgC/m2/d) heterotrophic respiration for recalcitrant SOM N (humus, slowest) */
+	/* heterotrophic soil pools */
+	LITR1_RH,                           /* (kgC/m2/d) heterotrophic respiration for litter labile */
+	LITR2_RH,                           /* (kgC/m2/d) heterotrophic respiration for litter unshielded cellulose */
+	LITR3_RH,                           /* (kgC/m2/d) heterotrophic respiration for litter shielded cellulose */
+	LITR4_RH,                           /* (kgC/m2/d) heterotrophic respiration for litter lignin */
+	SOIL1_RH,                           /* (kgC/m2/d) heterotrophic respiration for microbial recycling pool (fast) */
+	SOIL2_RH,                           /* (kgC/m2/d) heterotrophic respiration for microbial recycling pool (medium) */
+	SOIL3_RH,                           /* (kgC/m2/d) heterotrophic respiration for microbial recycling pool (slow) */
+	SOIL4_RH,                           /* (kgC/m2/d) heterotrophic respiration for recalcitrant SOM (humus, slowest) */
 
 
 
@@ -706,51 +722,7 @@ typedef struct {
 
 	double value[SOIL_COUNT];
 
-	//ALESSIOC ALESSIOR SERGIOS STUFFS SEE IF REMOVE AND USE ARRAYS
-	/**************************************************************************************************
-	 * 	SOIL PART; DEVELOPMENT OF DAILY SOIL CARBON NITROGEN AND PHOSPHORUS BALANCE
-	 * 			for any issue contact Sergio Marconi (sergio.marconi@cmcc.it)
-	 *
-	 **************************************************************************************************/
-	double sph;
-	double soilMoisture;
-	double soilTemp;
-	double ice;
-	double soc;
-	double doc;
-	double rcvl;
-	double rcr;
-	double rcl;
-	double CRB1;
-	double CRB2;
-	double crhl;
-	double crhr;
-	double dphum;
-	double no3;
-	double no2;
-	double nh4;
-	double nh3;
-	//double Eh;
-	double co2;
-	double day_O2;
-	double dcbavai;
-	double drcvl;
-	double DRCB1, DRCB2;
-	double soilDepth;
-	double clay_nh4;
-	double inert_C;
-	double LabP;
-	double AdsP;
-	//unknown
-	double sts,mmm;
-	double no, n2o;
-	double litco22, litco23;
 
-	double initialOrganicC;
-	double waterContent;
-	double CEC;
-
-	/*********************************************************************************************/
 } soil_layer_s;
 
 typedef struct
@@ -773,10 +745,11 @@ typedef struct
 	int years_count;
 	yos_t *years;
 
+	int doy;
+
 	/* for logger */
 	int initial_tree_layers_count;
 	int initial_heights_count;
-
 
 	/* overall cell counter */
 	int cell_tree_layers_count;
@@ -917,16 +890,28 @@ typedef struct
 
 	/* tree carbon pools */
 	double leaf_carbon;                                                   /* leaf carbon at cell level (gC/m2) */
-	double stem_carbon;                                                   /* stem carbon at cell level (gC/m2) */
 	double fine_root_carbon;                                              /* fine root carbon at cell level (gC/m2) */
+	double stem_carbon;                                                   /* stem carbon at cell level (gC/m2) */
+	double stem_live_wood_carbon;                                         /* stem live wood carbon at cell level (gC/m2) */
+	double stem_dead_wood_carbon;                                         /* stem dead wood carbon at cell level (gC/m2) */
 	double coarse_root_carbon;                                            /* coarse root carbon at cell level (gC/m2) */
+	double coarse_root_live_wood_carbon;                                  /* coarse root live wood carbon at cell level (gC/m2) */
+	double coarse_root_dead_wood_carbon;                                  /* coarse root dead wood carbon at cell level (gC/m2) */
 	double branch_carbon;                                                 /* branch carbon at cell level (gC/m2) */
+	double branch_live_wood_carbon;                                       /* branch live wood carbon at cell level (gC/m2) */
+	double branch_dead_wood_carbon;                                       /* branch dead wood carbon at cell level (gC/m2) */
 	double reserve;                                                       /* reserve at cell level (gC/m2) */
-	double leaf_carbon_tC;                                                /* leaf carbon at cell level (tC/cell) */
-	double stem_carbon_tC;                                                /* stem carbon at cell level (tC/cell) */
-	double fine_root_carbon_tC;                                           /* fine root carbon at cell level (tC/cell) */
-	double coarse_root_carbon_tC;                                         /* coarse root carbon at cell level (tC/cell) */
-	double branch_carbon_tC;                                              /* branch carbon at cell level (tC/cell) */
+	double leaf_tC;                                                       /* leaf carbon at cell level (tC/cell) */
+	double fine_root_tC;                                                  /* fine root carbon at cell level (tC/cell) */
+	double stem_tC;                                                       /* stem carbon at cell level (tC/cell) */
+	double stem_live_wood_tC;                                             /* stem live wood carbon at cell level (tC/cell) */
+	double stem_dead_wood_tC;                                             /* stem dead wood carbon at cell level (tC/cell) */
+	double coarse_root_tC;                                                /* coarse root carbon at cell level (tC/cell) */
+	double coarse_root_live_wood_tC;                                      /* coarse root live wood carbon at cell level (tC/cell) */
+	double coarse_root_dead_wood_tC;                                      /* coarse root dead wood carbon at cell level (tC/cell) */
+	double branch_tC;                                                     /* branch carbon at cell level (tC/cell) */
+	double branch_live_wood_tC;                                           /* branch live wood carbon at cell level (tC/cell) */
+	double branch_dead_wood_tC;                                           /* branch dead wood carbon at cell level (tC/cell) */
 	double reserve_tC;                                                    /* reserve at cell level (tC/cell) */
 
 	/* water use efficiency */
@@ -1010,14 +995,6 @@ typedef struct
 	double soil2C;                                                        /* (kgC/m2) microbial recycling pool C (medium) */
 	double soil3C;                                                        /* (kgC/m2) microbial recycling pool C (slow) */
 	double soil4C;                                                        /* (kgC/m2) recalcitrant SOM C (humus, slowest) */
-	double litr1C_rh;                                                     /* (kgC/m2/d) heterotrophic respiration for litter labile C */
-	double litr2C_rh;                                                     /* (kgC/m2/d) heterotrophic respiration for litter unshielded cellulose C */
-	double litr3C_rh;                                                     /* (kgC/m2/d) heterotrophic respiration for litter shielded cellulose C */
-	double litr4C_rh;                                                     /* (kgC/m2/d) heterotrophic respiration for litter lignin C */
-	double soil1C_rh;                                                     /* (kgC/m2/d) heterotrophic respiration for microbial recycling pool C (fast) */
-	double soil2C_rh;                                                     /* (kgC/m2/d) heterotrophic respiration for microbial recycling pool C (medium) */
-	double soil3C_rh;                                                     /* (kgC/m2/d) heterotrophic respiration for microbial recycling pool C (slow) */
-	double soil4C_rh;                                                     /* (kgC/m2/d) heterotrophic respiration for recalcitrant SOM C (humus, slowest) */
 
 	/* soil nitrogen */
 	double cwdN;                                                          /* (kgN/m2) coarse woody debris N */
@@ -1031,20 +1008,22 @@ typedef struct
 	double soil2N;                                                        /* (kgN/m2) microbial recycling pool N (medium) */
 	double soil3N;                                                        /* (kgN/m2) microbial recycling pool N (slow) */
 	double soil4N;                                                        /* (kgN/m2) recalcitrant SOM N (humus, slowest) */
-	double litr1N_rh;                                                     /* (kgC/m2/d) heterotrophic respiration for litter labile N */
-	double litr2N_rh;                                                     /* (kgC/m2/d) heterotrophic respiration for litter unshielded cellulose N */
-	double litr3N_rh;                                                     /* (kgC/m2/d) heterotrophic respiration for litter shielded cellulose N */
-	double litr4N_rh;                                                     /* (kgC/m2/d) heterotrophic respiration for litter lignin N */
-	double soil1N_rh;                                                     /* (kgC/m2/d) heterotrophic respiration for microbial recycling pool N (fast) */
-	double soil2N_rh;                                                     /* (kgC/m2/d) heterotrophic respiration for microbial recycling pool N (medium) */
-	double soil3N_rh;                                                     /* (kgC/m2/d) heterotrophic respiration for microbial recycling pool N (slow) */
-	double soil4N_rh;                                                     /* (kgC/m2/d) heterotrophic respiration for recalcitrant SOM N (humus, slowest) */
 	double sminN;                                                         /* (kgN/m2) soil mineral N */
 	double retransN;                                                      /* (kgN/m2) plant pool of retranslocated N */
 	double Npool;                                                         /* (kgN/m2) temporary plant N pool */
 	double Nfix_src;                                                      /* (kgN/m2) SUM of biological N fixation */
 	double Ndep_src;                                                      /* (kgN/m2) SUM of N deposition inputs */
 	double Nleached_snk;                                                  /* (kgN/m2) SUM of N leached */
+
+	/* heterotrophic soil */
+	double litr1_rh;                                                      /* (kgC/m2/d) heterotrophic respiration for litter labile C */
+	double litr2_rh;                                                      /* (kgC/m2/d) heterotrophic respiration for litter unshielded cellulose C */
+	double litr3_rh;                                                      /* (kgC/m2/d) heterotrophic respiration for litter shielded cellulose C */
+	double litr4_rh;                                                      /* (kgC/m2/d) heterotrophic respiration for litter lignin C */
+	double soil1_rh;                                                      /* (kgC/m2/d) heterotrophic respiration for microbial recycling pool C (fast) */
+	double soil2_rh;                                                      /* (kgC/m2/d) heterotrophic respiration for microbial recycling pool C (medium) */
+	double soil3_rh;                                                      /* (kgC/m2/d) heterotrophic respiration for microbial recycling pool C (slow) */
+	double soil4_rh;                                                      /* (kgC/m2/d) heterotrophic respiration for recalcitrant SOM C (humus, slowest) */
 
 	/* soil fraction */
 	double leaf_litt_scel_frac;                                           /* (dim) leaf litter shielded cellulose fraction */
@@ -1054,53 +1033,7 @@ typedef struct
 	double dead_wood_scel_frac;                                           /* (dim) dead wood litter shielded cellulose fraction */
 	double dead_wood_uscel_frac;                                          /* (dim) dead wood litter unshielded fraction */
 
-
-
-
-
-
-	/**************************************************************************************************
-	 * 	SOIL PART; DEVELOPMENT OF DAILY SOIL CARBON NITROGEN AND PHOSPHORUS BALANCE
-	 * 			for any issue contact Sergio Marconi (sergio.marconi@cmcc.it)
-	 *
-	 **************************************************************************************************/
-	/*
-	//daily soil variables; 3D-CMCC-SGM
-	double soil_ph;
-	//sergio; not clear till concepts and dynamics; what's that and how to replace&introduce in 3d-cmcc
-	double till_fact, tilq;
-	//dC
-	double leafLittering, fineRootLittering,stemBrancLittering,stemLittering, coarseRootLittering;
-	double leaflitN, fineRootlitN,stemBranclitN,stemlitN, coarseRootlitN;
-	double day_C_mine;
-	double day_N_mine;
-	double day_N_assim;
-	double day_soil_nh3;
-	double day_clay_N, day_clayn;
-	double wrcvl, wrcl, wrcr, wcrb, wcrh,whumus;
-	double wtcavai,w_no2,w_no3,w_n2o, w_nh4, w_nh3, wpool_no;
-	double wsoc;
-	double leach_u, day_no2, flux_no2;
-	//double wFreezedoc;
-	double End_SON;
-	double runoff_N;
-	double previousSoilT;
-	double soilSurfaceT;
-	double temp_avet;
-	double yr_avet;
-	double base_clay_N, max_clay_N;
-	double AddC, AddCN, AddC1, AddC2, AddC3;
-	 */
-
-	//potentially already existent
-	int doy, dos;
-	double vpSat[365], maxVpSat;
-
 	double elev;
-
-	/*
-		those variables are referred to cell, they must be same for each layers
-	 */
 
 } cell_t;
 
