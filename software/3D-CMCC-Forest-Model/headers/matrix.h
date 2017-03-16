@@ -566,6 +566,7 @@ enum {
 	AV_BRANCH_MASS_kgN,                 /* Average Branch carbon pool kgN/tree */
 
 	/* litter and soil pools */
+	CWDC,                               /* (kgC/m2) coarse woody debris C */
 	LITR1C,                             /* (kgC/m2) litter labile C */
 	LITR2C,                             /* (kgC/m2) litter unshielded cellulose C */
 	LITR3C,                             /* (kgC/m2) litter shielded cellulose C */
