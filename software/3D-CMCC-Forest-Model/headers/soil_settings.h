@@ -10,7 +10,6 @@ typedef enum {
 enum {
 	SOIL_X = 0
 	, SOIL_Y
-	, SOIL_LANDUSE                      /* Cell landuse */
 	, SOIL_LAT                          /* Cell latitude */
 	, SOIL_LON                          /* Cell longitude */
 	, SOIL_CLAY_PERC                    /* Clay percentage */
@@ -22,6 +21,9 @@ enum {
 	, SOIL_FNN                          /* parameter for soil fertility modifier (3-PG) */
 	, SOIL_M0                           /* parameter for soil fertility modifier (3-PG) */
 	, SOIL_LITTER                       /* Litter in tons if Carbon / SizeCell */
+
+	/* please keep it here! */
+	, SOIL_LANDUSE                      /* Cell landuse */
 
 	, SOIL_VARS_COUNT
 };

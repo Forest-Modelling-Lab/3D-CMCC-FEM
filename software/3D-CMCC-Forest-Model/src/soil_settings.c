@@ -18,7 +18,6 @@ static const char *sz_vars[SOIL_VARS_COUNT] =
 {
 	"X"
 	, "Y"
-	, "LANDUSE"
 	, "LAT"
 	, "LON"
 	, "CLAY_PERC"
@@ -30,6 +29,7 @@ static const char *sz_vars[SOIL_VARS_COUNT] =
 	, "FNN"
 	, "M0"
 	, "LITTER"
+	, "LANDUSE"
 };
 
 soil_settings_t* import_txt(const char *const filename, int* const p_settings_count) {
@@ -147,12 +147,12 @@ soil_settings_t* import_txt(const char *const filename, int* const p_settings_co
 				value = convert_string_to_float(token, &err);
 				if ( err )
 				{
-					if ( columns[SOIL_LANDUSE] != i) {
-						logger_error(g_debug_log, "unable to convert '%s' at columm %d in %s\n", token, y+1, filename);
-						if ( ps ) free(ps);
-						fclose(f);
-						return NULL;
-					}
+					//if ( columns[SOIL_LANDUSE] != i) {
+					logger_error(g_debug_log, "unable to convert '%s' at columm %d in %s\n", token, y+1, filename);
+					if ( ps ) free(ps);
+					fclose(f);
+					return NULL;
+					//}
 				}
 				s.values[columns[i]] = value;
 			}

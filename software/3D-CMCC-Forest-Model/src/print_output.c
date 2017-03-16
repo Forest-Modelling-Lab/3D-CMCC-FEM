@@ -280,35 +280,40 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 										);
 
 							}
-							if ( c->heights[height].dbhs[dbh].ages[age].species_count > 1 )
+							if ( c->heights[height].dbhs[dbh].ages[age].species_count > 1 ) {
 								if ( g_settings->no_spreadsheet )
 									logger(g_daily_log,"\t%10s", "*");
 								else
 									logger(g_daily_log,",*");
+							}
 						}
-						if ( c->heights[height].dbhs[dbh].ages_count > 1 )
+						if ( c->heights[height].dbhs[dbh].ages_count > 1 ) {
 							if ( g_settings->no_spreadsheet )
 								logger(g_daily_log,"\t%10s", "**");
 							else
 								logger(g_daily_log, ",**");
+						}
 					}
-					if ( c->heights[height].dbhs_count > 1 )
+					if ( c->heights[height].dbhs_count > 1 ) {
 						if ( g_settings->no_spreadsheet )
 							logger(g_daily_log,"\t%10s", "***");
 						else
 							logger(g_daily_log,",***");
+					}
 				}
-				if ( c->tree_layers[layer].layer_n_height_class > 1 )
+				if ( c->tree_layers[layer].layer_n_height_class > 1 ) {
 					if ( g_settings->no_spreadsheet )
 						logger(g_daily_log,"\t%10s", "****");
 					else
 						logger(g_daily_log,",****");
+				}
 			}
-			if ( c->tree_layers_count > 1 )
+			if ( c->tree_layers_count > 1 ) {
 				if ( g_settings->no_spreadsheet )
 					logger(g_daily_log,"\t%10s", "*****");
 				else
 					logger(g_daily_log,",*****");
+			}
 			/*
 							if ( c->heights[height].dbhs[dbh].ages[age].species_count > 1 ) logger(g_daily_log,",*");
 						}
@@ -546,29 +551,33 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 									);
 						}
 
-						if ( c->heights[height].dbhs[dbh].ages[age].species_count > 1 )
+						if ( c->heights[height].dbhs[dbh].ages[age].species_count > 1 ) {
 							if ( g_settings->no_spreadsheet )
 								logger(g_daily_log,"\t%10s", "*");
 							else
 								logger(g_daily_log,",*");
+						}
 					}
-					if ( c->heights[height].dbhs[dbh].ages_count > 1 )
+					if ( c->heights[height].dbhs[dbh].ages_count > 1 ) {
 						if ( g_settings->no_spreadsheet )
 							logger(g_daily_log,"\t%10s", "**");
 						else
 							logger(g_daily_log,",**");
+					}
 				}
-				if ( c->heights[height].dbhs_count > 1 )
+				if ( c->heights[height].dbhs_count > 1 ) {
 					if ( g_settings->no_spreadsheet )
 						logger(g_daily_log,"\t%10s", "***");
 					else
 						logger(g_daily_log,",***");
+				}
 			}
-			if ( c->tree_layers[layer].layer_n_height_class > 1 )
+			if ( c->tree_layers[layer].layer_n_height_class > 1 ) {
 				if ( g_settings->no_spreadsheet )
 					logger(g_daily_log,"\t%10s", "****");
 				else
 					logger(g_daily_log,",****");
+			}
 		}
 		if ( c->tree_layers_count > 1 )
 		{
@@ -813,35 +822,40 @@ void EOM_print_cumulative_balance_cell_level(cell_t *const c, const int month, c
 											",WBBD");
 
 							}
-							if ( c->heights[height].dbhs[dbh].ages[age].species_count > 1 )
+							if ( c->heights[height].dbhs[dbh].ages[age].species_count > 1 ) {
 								if ( g_settings->no_spreadsheet )
 									logger(g_monthly_log,"\t%10s", "*");
 								else
 									logger(g_monthly_log,",*");
+							}
 						}
-						if ( c->heights[height].dbhs[dbh].ages_count > 1 )
+						if ( c->heights[height].dbhs[dbh].ages_count > 1 ) {
 							if ( g_settings->no_spreadsheet )
 								logger(g_monthly_log,"\t%10s", "**");
 							else
 								logger(g_monthly_log,",**");
+						}
 					}
-					if ( c->heights[height].dbhs_count > 1 )
+					if ( c->heights[height].dbhs_count > 1 ) {
 						if ( g_settings->no_spreadsheet )
 							logger(g_monthly_log,"\t%10s", "***");
 						else
 							logger(g_monthly_log,",***");
+					}
 				}
-				if ( c->tree_layers[layer].layer_n_height_class > 1 )
+				if ( c->tree_layers[layer].layer_n_height_class > 1 ) {
 					if ( g_settings->no_spreadsheet )
 						logger(g_monthly_log,"\t%10s", "****");
 					else
 						logger(g_monthly_log,",****");
+				}
 			}
-			if ( c->tree_layers_count > 1 )
+			if ( c->tree_layers_count > 1 ) {
 				if ( g_settings->no_spreadsheet )
 					logger(g_monthly_log,"\t%10s", "*****");
 				else
 					logger(g_monthly_log,",*****");
+			}
 		}
 		/************************************************************************/
 		/* heading variables at cell level only if there's more than one layer */
@@ -1008,29 +1022,33 @@ void EOM_print_cumulative_balance_cell_level(cell_t *const c, const int month, c
 										s->value[BRANCH_LIVE_WOOD_C],
 										s->value[BRANCH_DEAD_WOOD_C]);
 						}
-						if ( c->heights[height].dbhs[dbh].ages[age].species_count > 1 )
+						if ( c->heights[height].dbhs[dbh].ages[age].species_count > 1 ) {
 							if ( g_settings->no_spreadsheet )
 								logger(g_monthly_log,"\t%10s", "*");
 							else
 								logger(g_monthly_log,",*");
+						}
 					}
-					if ( c->heights[height].dbhs[dbh].ages_count > 1 )
+					if ( c->heights[height].dbhs[dbh].ages_count > 1 ) {
 						if ( g_settings->no_spreadsheet )
 							logger(g_monthly_log,"\t%10s", "**");
 						else
 							logger(g_monthly_log,",**");
+					}
 				}
-				if ( c->heights[height].dbhs_count > 1 )
+				if ( c->heights[height].dbhs_count > 1 ) {
 					if ( g_settings->no_spreadsheet )
 						logger(g_monthly_log,"\t%10s", "***");
 					else
 						logger(g_monthly_log,",***");
+				}
 			}
-			if ( c->tree_layers[layer].layer_n_height_class > 1 )
+			if ( c->tree_layers[layer].layer_n_height_class > 1 ) {
 				if ( g_settings->no_spreadsheet )
 					logger(g_monthly_log,"\t%10s", "****");
 				else
 					logger(g_monthly_log,",****");
+			}
 		}
 		if ( c->tree_layers_count > 1 )
 		{
@@ -1277,35 +1295,40 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 											",BBAR");
 
 							}
-							if ( c->heights[height].dbhs[dbh].ages[age].species_count > 1 )
+							if ( c->heights[height].dbhs[dbh].ages[age].species_count > 1 ) {
 								if ( g_settings->no_spreadsheet )
 									logger(g_annual_log,"\t%10s", "*");
 								else
 									logger(g_annual_log,",*");
+							}
 						}
-						if ( c->heights[height].dbhs[dbh].ages_count > 1 )
+						if ( c->heights[height].dbhs[dbh].ages_count > 1 ) {
 							if ( g_settings->no_spreadsheet )
 								logger(g_annual_log,"\t%10s", "**");
 							else
 								logger(g_annual_log,",**");
+						}
 					}
-					if ( c->heights[height].dbhs_count > 1 )
+					if ( c->heights[height].dbhs_count > 1 ) {
 						if ( g_settings->no_spreadsheet )
 							logger(g_annual_log,"\t%10s", "***");
 						else
 							logger(g_annual_log,",***");
+					}
 				}
-				if ( c->tree_layers[layer].layer_n_height_class > 1 )
+				if ( c->tree_layers[layer].layer_n_height_class > 1 ) {
 					if ( g_settings->no_spreadsheet )
 						logger(g_annual_log,"\t%10s", "****");
 					else
 						logger(g_annual_log,",****");
+				}
 			}
-			if ( c->tree_layers_count > 1 )
+			if ( c->tree_layers_count > 1 ) {
 				if ( g_settings->no_spreadsheet )
 					logger(g_annual_log,"\t%10s", "*****");
 				else
 					logger(g_annual_log,",*****");
+			}
 		}
 		/************************************************************************/
 		/* heading variables at cell level only if there's more than one layer */
@@ -1486,29 +1509,33 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 											s->value[YEARLY_BRANCH_AUT_RESP]);
 
 							}
-							if ( c->heights[height].dbhs[dbh].ages[age].species_count > 1 )
+							if ( c->heights[height].dbhs[dbh].ages[age].species_count > 1 ) {
 								if ( g_settings->no_spreadsheet )
 									logger(g_annual_log,"\t%10s", "*");
 								else
 									logger(g_annual_log,",*");
+							}
 						}
-						if ( c->heights[height].dbhs[dbh].ages_count > 1 )
+						if ( c->heights[height].dbhs[dbh].ages_count > 1 ) {
 							if ( g_settings->no_spreadsheet )
 								logger(g_annual_log,"\t%10s", "**");
 							else
 								logger(g_annual_log,",**");
+						}
 					}
-					if ( c->heights[height].dbhs_count > 1 )
+					if ( c->heights[height].dbhs_count > 1 ) {
 						if ( g_settings->no_spreadsheet )
 							logger(g_annual_log,"\t%10s", "***");
 						else
 							logger(g_annual_log,",***");
+					}
 				}
-				if ( c->tree_layers[layer].layer_n_height_class > 1 )
+				if ( c->tree_layers[layer].layer_n_height_class > 1 ) {
 					if ( g_settings->no_spreadsheet )
 						logger(g_annual_log,"\t%10s", "****");
 					else
 						logger(g_annual_log,",****");
+				}
 			}
 			if ( c->tree_layers_count > 1 )
 			{
