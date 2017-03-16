@@ -41,7 +41,6 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 
 	/* nitrogen pools in gN/m2 */
 	double leaf_N;
-	double leaf_falling_N;
 	double fine_root_N;
 	double coarse_root_N;
 	double stem_N;
@@ -89,11 +88,10 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 
 	/* Nitrogen content tN/area --> gN/m2 */
 	leaf_N          = (s->value[LEAF_N] * 1000000.0 /g_settings->sizeCell);
-	leaf_falling_N  = (s->value[LEAF_FALLING_N] * 1000000.0 /g_settings->sizeCell);
 	fine_root_N     = (s->value[FINE_ROOT_N] * 1000000.0 /g_settings->sizeCell);
-	coarse_root_N   = (s->value[COARSE_ROOT_N] * 1000000.0 /g_settings->sizeCell);
-	stem_N          = (s->value[STEM_N] * 1000000.0 /g_settings->sizeCell);
-	branch_N        = (s->value[BRANCH_N] * 1000000.0 /g_settings->sizeCell);
+	stem_N          = (s->value[STEM_LIVE_WOOD_N] * 1000000.0 /g_settings->sizeCell);
+	coarse_root_N   = (s->value[COARSE_ROOT_LIVE_WOOD_N] * 1000000.0 /g_settings->sizeCell);
+	branch_N        = (s->value[BRANCH_LIVE_WOOD_N] * 1000000.0 /g_settings->sizeCell);
 
 	/* note: values are computed in gC/m2/day */
 
@@ -101,11 +99,11 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 	/* Leaf maintenance respiration is calculated separately for day and night */
 
 	/* day time leaf maintenance respiration */
-	s->value[DAILY_LEAF_MAINT_RESP] = ( (leaf_N + leaf_falling_N) * MR_ref * pow(q10_tday, exponent_tday) * (meteo_daily->daylength/24.0));
+	s->value[DAILY_LEAF_MAINT_RESP] = ( leaf_N * MR_ref * pow(q10_tday, exponent_tday) * (meteo_daily->daylength/24.0));
 	logger(g_debug_log, "daily leaf maintenance respiration = %g gC/m2/day\n", s->value[DAILY_LEAF_MAINT_RESP]);
 
 	/* night time leaf maintenance respiration */
-	s->value[NIGHTLY_LEAF_MAINT_RESP] = ( (leaf_N + leaf_falling_N) * MR_ref * pow(q10_tnight, exponent_tnight) * (1.0 - (meteo_daily->daylength/24.0)));
+	s->value[NIGHTLY_LEAF_MAINT_RESP] = ( leaf_N * MR_ref * pow(q10_tnight, exponent_tnight) * (1.0 - (meteo_daily->daylength/24.0)));
 	logger(g_debug_log, "nightly leaf maintenance respiration = %g gC/m2/day\n", s->value[NIGHTLY_LEAF_MAINT_RESP]);
 
 	/* total (all day) leaf maintenance respiration */

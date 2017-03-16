@@ -235,7 +235,7 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 	carbon_allocation ( s );
 
 	/* allocate daily nitrogen */
-	//nitrogen_allocation ( s );
+	nitrogen_allocation ( s );
 
 	/* compute single tree biomass pools */
 	average_tree_pools (s);

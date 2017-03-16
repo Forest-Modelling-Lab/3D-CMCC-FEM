@@ -85,8 +85,6 @@ void leaf_fall_deciduous ( cell_t *const c, const int height, const int dbh, con
 		logger(g_debug_log, "fineroot_to_remove = %f\n", fine_root_to_remove);
 
 		/* update leaf falling */
-		s->value[LEAF_FALLING_C] = foliage_to_remove;
-
 		s->value[C_TO_LEAF] = -foliage_to_remove ;
 		logger(g_debug_log, "C_TO_LEAF = %f\n", s->value[C_TO_LEAF]);
 		s->value[C_TO_FINEROOT] = -fine_root_to_remove;
@@ -120,6 +118,8 @@ void leaf_fall_deciduous ( cell_t *const c, const int height, const int dbh, con
 
 void leaf_fall_evergreen ( cell_t *const c, const int height, const int dbh, const int age, const int species )
 {
+	static double foliage_to_remove;
+	static double fine_root_to_remove;
 	double yearly_leaf_fall_falling_C;
 	double yearly_fine_root_turnover_C;
 	static double fraction_to_retransl = 0.1; /* fraction of C to retranslocate (see Bossel et al., 2006 and Campioli et al., 2013 */
@@ -138,33 +138,33 @@ void leaf_fall_evergreen ( cell_t *const c, const int height, const int dbh, con
 		logger(g_debug_log, "Annual leaf turnover = %g tC/cell/year\n", yearly_leaf_fall_falling_C);
 
 		/* daily leaf fall */
-		s->value[LEAF_FALLING_C] = yearly_leaf_fall_falling_C / 365;
-		logger(g_debug_log, "Daily leaf turnover = %g tC/cell/year\n", s->value[LEAF_FALLING_C]);
+		foliage_to_remove = yearly_leaf_fall_falling_C / 365;
+		logger(g_debug_log, "Daily leaf turnover = %g tC/cell/year\n", foliage_to_remove);
 
 		/* compute carbon fine root turnover */
 		yearly_fine_root_turnover_C = s->value[FINE_ROOT_C] * s->value[LEAF_FINEROOT_TURNOVER];
 		logger(g_debug_log, "Annual fine root turnover = %g tC/cell/year\n", yearly_fine_root_turnover_C);
 
 		/* daily fine root turnover */
-		s->value[FINE_ROOT_TURNOVER_C] = yearly_fine_root_turnover_C / 365;
-		logger(g_debug_log, "Daily fine root turnover = %g tC/cell/year\n", s->value[FINE_ROOT_TURNOVER_C]);
+		fine_root_to_remove = yearly_fine_root_turnover_C / 365;
+		logger(g_debug_log, "Daily fine root turnover = %g tC/cell/year\n", fine_root_to_remove);
 	}
 
 	/*************************************************************************************************************/
 
 	/* update carbon leaf pool */
-	s->value[LEAF_C] -= s->value[LEAF_FALLING_C];
+	s->value[LEAF_C] -= foliage_to_remove;
 	logger(g_debug_log, "LEAF_C = %f tC/cell/day\n", s->value[LEAF_C]);
 
 	/* compute daily amount of carbon leaf and fine root to remove */
-	s->value[C_LEAF_TO_LITTER] = s->value[LEAF_FALLING_C] ;
+	s->value[C_LEAF_TO_LITTER] = foliage_to_remove ;
 	logger(g_debug_log, "Daily leaf turnover = %g tC/cell/day\n", s->value[C_LEAF_TO_LITTER]);
 
 	/* update carbon fine root pool */
-	s->value[FINE_ROOT_C] -= s->value[FINE_ROOT_TURNOVER_C];
+	s->value[FINE_ROOT_C] -= fine_root_to_remove;
 	logger(g_debug_log, "FINE_ROOT_C = %g tC/cell/day\n", s->value[FINE_ROOT_C]);
 
-	s->value[C_FINE_ROOT_TO_SOIL] = s->value[FINE_ROOT_TURNOVER_C];
+	s->value[C_FINE_ROOT_TO_SOIL] = fine_root_to_remove;
 	logger(g_debug_log, "Daily fine root turnover = %g tC/cell/day\n", s->value[C_FINE_ROOT_TO_SOIL]);
 
 	logger(g_debug_log, "Daily Carbon turnover to litter before retranslocation = %g tC/cell/day\n", s->value[C_LEAF_TO_LITTER] + s->value[C_FINE_ROOT_TO_SOIL]);

@@ -523,26 +523,53 @@ void initialization_forest_class_N (cell_t *const c, const int height, const int
 
 	logger(g_debug_log,"\n*******INITIALIZE FOREST NITROGEN POOLS*******\n");
 
+	/* leaf */
 	s->value[LEAF_N] = s->value[LEAF_C] / s->value[CN_LEAVES];
 	logger(g_debug_log, "----Leaf nitrogen content = %g tN/cell\n", s->value[LEAF_N]);
+
+	/* fine root */
 	s->value[FINE_ROOT_N] = s->value[FINE_ROOT_C] / s->value[CN_FINE_ROOTS];
 	logger(g_debug_log, "----Fine root nitrogen content = %g tN/cell\n", s->value[FINE_ROOT_N]);
-	s->value[STEM_N] = s->value[STEM_LIVE_WOOD_C] / s->value[CN_LIVE_WOODS];
-	logger(g_debug_log, "----Live stem nitrogen content = %g tN/cell\n", s->value[STEM_N]);
-	s->value[COARSE_ROOT_N] = s->value[COARSE_ROOT_LIVE_WOOD_C] / s->value[CN_LIVE_WOODS];
-	logger(g_debug_log, "----Live coarse root nitrogen content = %g tN/cell\n", s->value[COARSE_ROOT_N]);
-	s->value[BRANCH_N] = s->value[BRANCH_LIVE_WOOD_C] / s->value[CN_LIVE_WOODS];
-	logger(g_debug_log, "----Live branch nitrogen content = %g tN/cell\n", s->value[BRANCH_N]);
+
+	/* stem */
+	s->value[STEM_LIVE_WOOD_N] = s->value[STEM_LIVE_WOOD_C] / s->value[CN_LIVE_WOODS];
+	logger(g_debug_log, "----Live stem nitrogen content = %g tN/cell\n", s->value[STEM_LIVE_WOOD_N]);
+
+	s->value[STEM_DEAD_WOOD_N] = s->value[STEM_DEAD_WOOD_C] / s->value[CN_DEAD_WOODS];
+	logger(g_debug_log, "----Dead stem nitrogen content = %g tN/cell\n", s->value[STEM_DEAD_WOOD_N]);
+
+	s->value[STEM_N] = s->value[STEM_LIVE_WOOD_N] + s->value[STEM_DEAD_WOOD_N];
+	logger(g_debug_log, "----Stem nitrogen content = %g tN/cell\n", s->value[STEM_N]);
+
+	/* coarse root */
+	s->value[COARSE_ROOT_LIVE_WOOD_N] = s->value[COARSE_ROOT_LIVE_WOOD_C] / s->value[CN_LIVE_WOODS];
+	logger(g_debug_log, "----Live coarse root nitrogen content = %g tN/cell\n", s->value[COARSE_ROOT_LIVE_WOOD_N]);
+
+	s->value[COARSE_ROOT_DEAD_WOOD_N] = s->value[COARSE_ROOT_DEAD_WOOD_C] / s->value[CN_DEAD_WOODS];
+	logger(g_debug_log, "----Dead coarse root nitrogen content = %g tN/cell\n", s->value[COARSE_ROOT_DEAD_WOOD_N]);
+
+	s->value[COARSE_ROOT_N] = s->value[COARSE_ROOT_LIVE_WOOD_N] + s->value[COARSE_ROOT_DEAD_WOOD_N];
+	logger(g_debug_log, "----Coarse root nitrogen content = %g tN/cell\n", s->value[COARSE_ROOT_N]);
+
+	/* branch */
+	s->value[BRANCH_LIVE_WOOD_N] = s->value[BRANCH_LIVE_WOOD_C] / s->value[CN_LIVE_WOODS];
+	logger(g_debug_log, "----Live branch nitrogen content = %g tN/cell\n", s->value[BRANCH_LIVE_WOOD_N]);
+
+	s->value[BRANCH_DEAD_WOOD_N] = s->value[BRANCH_DEAD_WOOD_C] / s->value[CN_DEAD_WOODS];
+	logger(g_debug_log, "----Dead branch nitrogen content = %g tN/cell\n", s->value[BRANCH_DEAD_WOOD_N]);
+
+	s->value[BRANCH_N] = s->value[BRANCH_LIVE_WOOD_N] + s->value[BRANCH_DEAD_WOOD_N];
+	logger(g_debug_log, "----Branch nitrogen content = %g tN/cell\n", s->value[BRANCH_N]);
 
 	/* check that all mandatory variables are initialized */
-	CHECK_CONDITION(s->value[STEM_N], ==, 0);
-	CHECK_CONDITION(s->value[COARSE_ROOT_N], ==, 0);
-	CHECK_CONDITION(s->value[BRANCH_N], ==, 0);
+	CHECK_CONDITION(s->value[STEM_N], <=, 0);
+	CHECK_CONDITION(s->value[COARSE_ROOT_N], <=, 0);
+	CHECK_CONDITION(s->value[BRANCH_N], <=, 0);
 	/* just for evergreen */
 	if ( s->value[PHENOLOGY] == 1.1 || s->value[PHENOLOGY] == 1.2 )
 	{
-		CHECK_CONDITION(s->value[LEAF_N], ==, 0);
-		CHECK_CONDITION(s->value[FINE_ROOT_N], ==, 0);
+		CHECK_CONDITION(s->value[LEAF_N], <=, 0);
+		CHECK_CONDITION(s->value[FINE_ROOT_N], <=, 0);
 	}
 }
 

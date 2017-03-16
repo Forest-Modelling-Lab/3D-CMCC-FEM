@@ -346,12 +346,12 @@ enum {
 
 	/* carbon biomass pools in tons of tC/sizeCell */
 	LEAF_C,                             /* Current Leaf carbon pool tC/sizeCell */
-	LEAF_FALLING_C,                     /* Current Leaf falling carbon pool tC/sizeCell */
+	//LEAF_FALLING_C,                     /* Current Leaf falling carbon pool tC/sizeCell */
 	MAX_LEAF_C,                         /* Maximum Current Leaf carbon pool tC/sizeCell */
 	TOT_ROOT_C,                         /* Current Total Coarse carbon pool tC/sizeCell */
 	COARSE_ROOT_C,                      /* Current Coarse root carbon pool tC/sizeCell */
 	FINE_ROOT_C,                        /* Current Fine root carbon pool tC/sizeCell */
-	FINE_ROOT_TURNOVER_C,               /* Current Fine root turnover tC/sizeCell */
+	//FINE_ROOT_TURNOVER_C,               /* Current Fine root turnover tC/sizeCell */
 	MAX_FINE_ROOT_C,                    /* Maximum Current Fine root carbon pool tC/sizeCell */
 	MAX_BUD_BURST_C,                    /* Maximum Current Leaf carbon pool for BudBurst tC/sizeCell */
 	STEM_C,                             /* Current Stem carbon pool tC/sizeCell */
@@ -545,9 +545,16 @@ enum {
 	LEAF_FALLING_N,                     /* Current Leaf falling nitrogen pool tN/sizeCell */
 	FINE_ROOT_N,                        /* Current Fine root nitrogen pool tN/sizeCell */
 	COARSE_ROOT_N,                      /* Current Coarse root nitrogen pool tN/sizeCell */
+	COARSE_ROOT_LIVE_WOOD_N,            /* Current Live Coarse root nitrogen pool tN/sizeCell */
+	COARSE_ROOT_DEAD_WOOD_N,            /* Current Dead Coarse root nitrogen pool tN/sizeCell */
 	STEM_N,                             /* Current Stem nitrogen pool tN/sizeCell */
+	STEM_LIVE_WOOD_N,                   /* Current Live Stem nitrogen pool tN/sizeCell */
+	STEM_DEAD_WOOD_N,                   /* Current Dead Stem nitrogen pool tN/sizeCell */
 	BRANCH_N,                           /* Current Branch nitrogen pool tN/sizeCell */
+	BRANCH_LIVE_WOOD_N,                 /* Current Live Branch nitrogen pool tN/sizeCell */
+	BRANCH_DEAD_WOOD_N,                 /* Current Dead Branch nitrogen pool tN/sizeCell */
 	LITTER_N,                           /* Current Litter nitrogen pool tN/sizeCell */
+	SOIL_N,                             /* Current soil nitrogen pool tN/sizeCell */
 
 	/* per tree in kgN */
 	AV_LEAF_MASS_kgN,                   /* Average Leaf carbon pool kgN/tree */

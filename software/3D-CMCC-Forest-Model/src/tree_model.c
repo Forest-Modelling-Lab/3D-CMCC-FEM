@@ -54,6 +54,7 @@
 #include "treemodel_daily.h"
 #include "remove_tree_class.h"
 #include "regeneration.h"
+#include "decomposition.h"
 
 extern settings_t* g_settings;
 extern logger_t* g_debug_log;
@@ -264,22 +265,25 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							carbon_fluxes ( s );
 
 							/* C assimilation */
-							carbon_assimilation( c, layer, height, dbh, age, species );
+							carbon_assimilation ( c, layer, height, dbh, age, species );
 
 							/* C-N-partitioning-allocation */
 							if ( s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2 )
 							{
 								/* deciduous */
-								daily_C_deciduous_partitioning_allocation( c, layer, height, dbh, age, species, meteo_daily, day, month, year );
+								daily_C_deciduous_partitioning_allocation ( c, layer, height, dbh, age, species, meteo_daily, day, month, year );
 							}
 							else
 							{
 								/* evergreen */
-								daily_C_evergreen_partitioning_allocation( c, layer, height, dbh, age, species, meteo_daily, day, month, year );
+								daily_C_evergreen_partitioning_allocation ( c, layer, height, dbh, age, species, meteo_daily, day, month, year );
 							}
 
 							/* N assimilation */
-							nitrogen_assimilation( s );
+							nitrogen_assimilation ( s );
+
+							/* decomposition */
+							decomposition ( c, height, dbh, age, species, meteo_daily );
 
 							/* carbon use efficiency */
 							carbon_use_efficiency ( c, height, dbh, age, species, day, month, year );
@@ -296,7 +300,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							check_class_radiation_balance ( c, layer, height, dbh, age, species );
 
 							/* check for carbon balance closure */
-							check_class_carbon_balance( c, layer, height, dbh, age, species );
+							check_class_carbon_balance ( c, layer, height, dbh, age, species );
 
 							/* check for water balance closure */
 							check_class_water_balance ( c, layer, height, dbh, age, species );

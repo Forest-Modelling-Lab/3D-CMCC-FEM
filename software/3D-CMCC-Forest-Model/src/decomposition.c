@@ -20,15 +20,15 @@
 //extern settings_t* g_settings;
 //extern logger_t* g_debug_log;
 
-void decomposition (cell_t *const c, const meteo_daily_t *const meteo_daily)
+void decomposition (cell_t *const c, const int height, const int dbh, const int age, const int species, const meteo_daily_t *const meteo_daily)
 {
 	double soil_tempK;                           /* soil temperature (Kelvin) */
 	double minpsi, maxpsi;                       /* minimum and maximum soil water potential limits (MPa) */
 
-	double cn_l1,cn_l2,cn_l4,cn_s1,cn_s2,cn_s3,cn_s4;
-	double rfl1s1, rfl2s2,rfl4s3,rfs1s2,rfs2s3,rfs3s4;
-	double kl1_base,kl2_base,kl4_base,ks1_base,ks2_base,ks3_base,ks4_base,kfrag_base;
-	double kl1,kl2,kl4,ks1,ks2,ks3,ks4,kfrag;
+	double cn_l1, cn_l2, cn_l4, cn_s1, cn_s2, cn_s3, cn_s4;
+	double rfl1s1, rfl2s2, rfl4s3, rfs1s2, rfs2s3, rfs3s4;
+	double kl1_base, kl2_base, kl4_base, ks1_base, ks2_base, ks3_base, ks4_base, kfrag_base;
+	double kl1, kl2, kl4, ks1, ks2, ks3, ks4, kfrag;
 
 	/** following BIOME-BGC decomp.c file **/
 	/* calculate the rate constant scalar for soil temperature,
@@ -41,15 +41,15 @@ void decomposition (cell_t *const c, const meteo_daily_t *const meteo_daily)
 	used to get the base decomp rates were controlled at 25 C. */
 
 	/* check for soil temperature */
-	if ( meteo_daily->tsoil < -10.0 )
+	if ( meteo_daily->tsoil < -10. )
 	{
 		/* no decomposition processes for tsoil < -10.0 C */
-		c->tsoil_scalar= 0.0;
+		c->tsoil_scalar= 0.;
 	}
 	else
 	{
 		soil_tempK = meteo_daily->tsoil + 273.15;
-		c->tsoil_scalar = exp(308.56*((1.0/71.02)-(1.0/(soil_tempK-227.13))));
+		c->tsoil_scalar = exp(308.56*((1./71.02)-(1.0/(soil_tempK-227.13))));
 	}
 
 	/* calculate the rate constant scalar for soil water content.
@@ -61,19 +61,19 @@ void decomposition (cell_t *const c, const meteo_daily_t *const meteo_daily)
 	and soil moisture. Soil Biol. Biochem., 15(4):447-453.
 	 */
 	/* set the maximum and minimum values for water potential limits (MPa) */
-	minpsi = -10.0;
+	minpsi = -10.;
 	maxpsi = c->psi_sat;
 
 	/* check for soil water */
 	if (c->psi < minpsi)
 	{
 		/* no decomposition below the minimum soil water potential */
-		c->wsoil_scalar = 0.0;
+		c->wsoil_scalar = 0.;
 	}
 	else if (c->psi > maxpsi)
 	{
 		/* this shouldn't ever happen, but just in case... */
-		c->wsoil_scalar = 1.0;
+		c->wsoil_scalar = 1.;
 	}
 	else
 	{
@@ -83,13 +83,18 @@ void decomposition (cell_t *const c, const meteo_daily_t *const meteo_daily)
 	/* calculate the final rate scalar as the product of the temperature and water scalars */
 	c->rate_scalar = c->tsoil_scalar * c->wsoil_scalar;
 
+	//todo compute Carbon and Nitrogen stocks for the different C and N pools
+
+
+
+
 	/* calculate compartment C:N ratios */
-	//TODO
-	/*
-	if (ns->litr1n > 0.0) cn_l1 = cs->litr1c/ns->litr1n;
-	if (ns->litr2n > 0.0) cn_l2 = cs->litr2c/ns->litr2n;
-	if (ns->litr4n > 0.0) cn_l4 = cs->litr4c/ns->litr4n;
-	*/
+	if (c->litr1N > 0.0) cn_l1 = c->litr1C/c->litr1N;
+	if (c->litr2N > 0.0) cn_l2 = c->litr2C/c->litr2N;
+	if (c->litr4N > 0.0) cn_l4 = c->litr4C/c->litr4N;
+
+
+
 	cn_s1 = SOIL1_CN;
 	cn_s2 = SOIL2_CN;
 	cn_s3 = SOIL3_CN;
@@ -121,6 +126,9 @@ void decomposition (cell_t *const c, const meteo_daily_t *const meteo_daily)
 	ks3 = ks3_base * c->rate_scalar;
 	ks4 = ks4_base * c->rate_scalar;
 	kfrag = kfrag_base * c->rate_scalar;
+
+	/*note: model computes here for each single class each litter and soil pools class related */
+
 
 	/* calculate the flux from CWD to litter lignin and cellulose
 	compartments, due to physical fragmentation */
