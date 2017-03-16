@@ -595,7 +595,7 @@ void initialization_forest_class_litter_soil (cell_t *const c, const int height,
 
 	/* calculate shielded and unshielded cellulose fraction */
 
-	/** leaf litter pool**/
+	/** leaf litter pool **/
 	t1 = s->value[LEAF_LITT_LAB_FRAC];
 	t2 = s->value[LEAF_LITT_CEL_FRAC];
 	t3 = s->value[LEAF_LITT_LIGN_FRAC];

@@ -20,7 +20,7 @@ enum {
 	, SOIL_FN0                          /* parameter for soil fertility modifier (3-PG) */
 	, SOIL_FNN                          /* parameter for soil fertility modifier (3-PG) */
 	, SOIL_M0                           /* parameter for soil fertility modifier (3-PG) */
-	, SOIL_LITTER                       /* Litter in tons if Carbon / SizeCell */
+	, SOIL_LITTERC                      /* Litter in tons of Carbon / SizeCell */
 
 	/* please keep it here! */
 	, SOIL_LANDUSE                      /* Cell landuse */

@@ -868,13 +868,14 @@ static int check_soil_topo_values(void) {
 		logger_error(g_debug_log, "NO SOIL DATA AVAILABLE (Soil fertility values)");
 		goto err;
 	}
-	/* soil litter */
-	if (IS_INVALID_VALUE(g_soil_settings->values[SOIL_LITTER]))
+	/* soil carbon litter */
+	if (IS_INVALID_VALUE(g_soil_settings->values[SOIL_LITTERC]))
 	{
 		/* initialize to zero value */
-		g_soil_settings->values[SOIL_LITTER] = 0.;
+		g_soil_settings->values[SOIL_LITTERC] = 0.;
 		logger_error(g_debug_log, "NO SOIL DATA AVAILABLE (Litter values)\n");
 	}
+
 
 	/** check for topo mandatory values **/
 	/* topo elevation */

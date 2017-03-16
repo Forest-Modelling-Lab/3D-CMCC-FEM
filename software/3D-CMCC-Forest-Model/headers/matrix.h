@@ -617,7 +617,7 @@ enum {
 	N_TREE_SAP,                         /* Numbers of Saplings per class */
 	VEG_UNVEG,                          /* vegetative-un vegetative period per class */
 	VEG_DAYS,                           /* day of vegetative period for class if != 0 is in veg period */
-	FIRST_VEG_DAYS,						/* first annual day of veg period */
+	FIRST_VEG_DAYS,                     /* first annual day of veg period */
 	YEARLY_VEG_DAYS,                    /* annual number of vegetative days */
 	BUD_BURST_COUNTER,                  /* days of budburst per class */
 	DAY_FRAC_FOLIAGE_REMOVE,            /* days of leaf fall per class */
@@ -636,25 +636,25 @@ typedef struct {
 	int phenology_phase;                /* species-specific phenological phase */
 	int counter[COUNTERS];
 	double value[VALUES];
-
 } species_t;
 
 typedef struct
 {
 	species_t *species;
+
+	int value;                          /** age value (year) **/
 	int species_count;                  /* number of different species */
 	int species_avail;
 
 	/* for logger */
 	int initial_species_count;
-
-	int value;                          /** age value (year) **/
-
 } age_t;
 
 typedef struct
 {
 	age_t* ages;
+
+	double value;                       /** dbh value (cm) **/
 	int ages_count;                     /* number of different cohorts (ages) */
 	int ages_avail;
 
@@ -663,9 +663,6 @@ typedef struct
 
 	int dbh_n_trees;                    /* number of trees per dbh class */
 	double dbh_density;                 /* density of trees per dbh class */
-
-	double value;                       /** dbh value (cm) **/
-
 } dbh_t;
 
 typedef struct
@@ -683,6 +680,8 @@ typedef struct
 typedef struct
 {
 	dbh_t *dbhs;
+
+	double value;                       /** height value (m) **/
 	int dbhs_count;                     /* number of different dbh classes */
 	int dbhs_avail;
 
@@ -691,9 +690,6 @@ typedef struct
 	int height_z;
 	double height_density;              /* tree density per height class (n_tree/sizecell) */
 	double height_cover;                /* height class cover per height class (n_tree/sizecell) */
-
-	double value;                       /** height value (m) **/
-
 } height_t;
 
 enum

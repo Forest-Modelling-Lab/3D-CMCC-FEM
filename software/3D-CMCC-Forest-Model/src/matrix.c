@@ -1694,7 +1694,7 @@ void soil_summary(const matrix_t* const m, const cell_t* const cell)
 	logger(g_debug_log, "-Soil FN0 = %g\n", g_soil_settings->values[SOIL_FN0]);
 	logger(g_debug_log, "-Soil FNN = %g\n", g_soil_settings->values[SOIL_FNN]);
 	logger(g_debug_log, "-Soil M0 = %g\n", g_soil_settings->values[SOIL_M0]);
-	logger(g_debug_log, "-Soil Litter = %g t/ha\n", g_soil_settings->values[SOIL_LITTER]);
+	logger(g_debug_log, "-Soil Litter = %g tC/ha\n", g_soil_settings->values[SOIL_LITTERC]);
 
 
 	/***** initialize soil ****/
@@ -1702,7 +1702,7 @@ void soil_summary(const matrix_t* const m, const cell_t* const cell)
 	initialization_soil_physic (m->cells);
 
 	/** soil biogeochemistry initialization **/
-	if ( !g_soil_settings->values[SOIL_LITTER] )
+	if ( ! g_soil_settings->values[SOIL_LITTERC] )
 	{
 		initialization_soil_biogeochemistry (m->cells);
 	}
@@ -1790,14 +1790,17 @@ void forest_summary(const matrix_t* const m, const int day, const int month, con
 
 						/* IF NO BIOMASS INITIALIZATION DATA OR TREE HEIGHTS ARE AVAILABLE FOR STAND
 						 * BUT JUST DENDROMETRIC VARIABLES (i.e. AVDBH, HEIGHT, THESE ARE MANDATORY) */
-						/* initialise carbon pools */
+						/* initialize carbon pools */
 						initialization_forest_class_C (&m->cells[cell], height, dbh, age, species);
 
-						/* initialise nitrogen pools */
+						/* initialize nitrogen pools */
 						initialization_forest_class_N (&m->cells[cell], height, dbh, age, species);
 
 						/* initialize litter and soil pools */
-						initialization_forest_class_litter_soil (&m->cells[cell], height, dbh, age, species);
+						if ( ! g_soil_settings->values[LITTER_C]  )
+						{
+							initialization_forest_class_litter_soil (&m->cells[cell], height, dbh, age, species);
+						}
 					}
 				}
 			}
