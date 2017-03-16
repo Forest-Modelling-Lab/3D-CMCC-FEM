@@ -165,7 +165,7 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 										logger(g_daily_log,"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s"
 												"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s"
 												"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s "
-												"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s",
+												"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s",
 												"GPP",
 												"RG",
 												"RM",
@@ -218,6 +218,8 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 												"FVPD",
 												"FN",
 												"FSW"
+												"LITTER_C"
+												"SOIL_C"
 										);
 								else
 									logger(g_daily_log,
@@ -273,6 +275,8 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 												",FVPD"
 												",FN"
 												",FSW"
+												",LITTER_C"
+												",SOIL_C"
 										);
 
 							}
@@ -343,12 +347,16 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 		}
 		/* heading variables only at cell level */
 		if ( g_settings->no_spreadsheet )
-			logger(g_daily_log,"\t%10s \t%10s \t%10s \t%10s \t%10s",
+			logger(g_daily_log,"\t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s",
 					"et",
 					"le",
 					"snow_pack",
 					"asw",
-					"iWue\n"
+					"iWue",
+					"litrC",
+					"soilC\n",
+					"litrN",
+					"soilN\n"
 			);
 		else
 			logger(g_daily_log,",et,le,snow_pack,asw,iWue\n");
@@ -420,7 +428,7 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 								logger(g_daily_log,"\t%6.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3d \t%3d \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f"
 										"\t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f"
 										"\t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f"
-										"\t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f",
+										"\t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f",
 										s->value[DAILY_GPP_gC],
 										s->value[TOTAL_GROWTH_RESP],
 										s->value[TOTAL_MAINT_RESP],
@@ -472,13 +480,15 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 										s->value[F_T],
 										s->value[F_VPD],
 										s->value[F_NUTR],
-										s->value[F_SW]
+										s->value[F_SW],
+										s->value[LITTER_C],
+										s->value[SOIL_C]
 									);
 							else
 								logger(g_daily_log,",%6.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%d,%d,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
 										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
 										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
-										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",
+										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",
 										s->value[DAILY_GPP_gC],
 										s->value[TOTAL_GROWTH_RESP],
 										s->value[TOTAL_MAINT_RESP],
@@ -530,7 +540,9 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 										s->value[F_T],
 										s->value[F_VPD],
 										s->value[F_NUTR],
-										s->value[F_SW]
+										s->value[F_SW],
+										s->value[LITTER_C],
+										s->value[SOIL_C]
 									);
 						}
 
@@ -610,20 +622,28 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 	}
 	/* printing variables only at cell level */
 	if ( g_settings->no_spreadsheet )
-		logger(g_daily_log, "\t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f\n",
+		logger(g_daily_log, "\t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f\n",
 				c->daily_et,
 				c->daily_latent_heat_flux,
 				c->snow_pack,
 				c->asw,
-				c->daily_iwue
+				c->daily_iwue,
+				c->litrC,
+				c->soilC,
+				c->litrN,
+				c->soilN
 		);
 	else
-		logger(g_daily_log, ",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f\n",
+		logger(g_daily_log, ",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f\n",
 				c->daily_et,
 				c->daily_latent_heat_flux,
 				c->snow_pack,
 				c->asw,
-				c->daily_iwue
+				c->daily_iwue,
+				c->litrC,
+				c->soilC,
+				c->litrN,
+				c->soilN
 		);
 	
 

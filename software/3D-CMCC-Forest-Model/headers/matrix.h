@@ -938,44 +938,7 @@ typedef struct
 	double soilw_sat;                                                     /* soil water at saturation (kgH2O/m2) */
 	double swc;                                                           /* soil Water content (kgH2O/m2) */
 
-	/* soil nitrogen */
-	double soil_N;                                                        /* soil Nitrogen content (gN/m2) */
-	double soil_cwd;                                                      /* soil coarse woody debris (KgC/m2) */
-	double tsoil_scalar;                                                  /* soil temperature scalar */
-	double wsoil_scalar;                                                  /* soil water scalar */
-	double rate_scalar;                                                   /* soil (temperature * water) scalar */
-	double cwdn;                                                          /* (kgN/m2) coarse woody debris N */
-	double litr1n;                                                        /* (kgN/m2) litter labile N */
-	double litr2n;                                                        /* (kgN/m2) litter unshielded cellulose N */
-	double litr3n;                                                        /* (kgN/m2) litter shielded cellulose N */
-	double litr4n;                                                        /* (kgN/m2) litter lignin N */
-	double soil1n;                                                        /* (kgN/m2) microbial recycling pool N (fast) */
-	double soil2n;                                                        /* (kgN/m2) microbial recycling pool N (medium) */
-	double soil3n;                                                        /* (kgN/m2) microbial recycling pool N (slow) */
-	double soil4n;                                                        /* (kgN/m2) recalcitrant SOM N (humus, slowest) */
-	double litr1n_rh;                                                     /* (kgC/m2/d) heterotrophic respiration for litter labile N */
-	double litr2n_rh;                                                     /* (kgC/m2/d) heterotrophic respiration for litter unshielded cellulose N */
-	double litr3n_rh;                                                     /* (kgC/m2/d) heterotrophic respiration for litter shielded cellulose N */
-	double litr4n_rh;                                                     /* (kgC/m2/d) heterotrophic respiration for litter lignin N */
-	double soil1n_rh;                                                     /* (kgC/m2/d) heterotrophic respiration for microbial recycling pool N (fast) */
-	double soil2n_rh;                                                     /* (kgC/m2/d) heterotrophic respiration for microbial recycling pool N (medium) */
-	double soil3n_rh;                                                     /* (kgC/m2/d) heterotrophic respiration for microbial recycling pool N (slow) */
-	double soil4n_rh;                                                     /* (kgC/m2/d) heterotrophic respiration forrecalcitrant SOM N (humus, slowest) */
-
-	double sminn;                                                         /* (kgN/m2) soil mineral N */
-	double retransn;                                                      /* (kgN/m2) plant pool of retranslocated N */
-	double npool;                                                         /* (kgN/m2) temporary plant N pool */
-	double nfix_src;                                                      /* (kgN/m2) SUM of biological N fixation */
-	double ndep_src;                                                      /* (kgN/m2) SUM of N deposition inputs */
-	double nleached_snk;                                                  /* (kgN/m2) SUM of N leached */
-	double leaf_litt_scel_frac;                                           /* (dim) leaf litter shielded cellulose fraction */
-	double leaf_litt_uscel_frac;                                          /* (dim) leaf litter unshielded cellulose fraction */
-	double froot_litt_scel_frac;                                          /* (dim) fine root litter shielded cellulose fraction */
-	double froot_litt_uscel_frac;                                         /* (dim) fine root litter unshielded fraction */
-	double dead_wood_scel_frac;                                           /* (dim) dead wood litter shielded cellulose fraction */
-	double dead_wood_uscel_frac;                                          /* (dim) dead wood litter unshielded fraction */
-
-
+	/* water */
 	double rain;
 	double snow;
 	int days_since_rain;                                                             /* consecutive days without rain */
@@ -996,7 +959,6 @@ typedef struct
 	double daily_et, monthly_et, annual_et;                                          /* daily, monthly and evapotranspiration at cell level (mm/m2/ ) */
 	double daily_tot_w_flux, monthly_tot_w_flux, annual_tot_w_flux;                  /* daily, monthly and annual water fluxes at cell level (mm/m2/ ) */
 	double old_daily_c_water_stored;
-
 	double daily_soil_evaporation_watt;                                              /* current daily soil evaporation in watt at cell level (W/m2) */
 	double daily_soil_latent_heat_flux;                                              /* current daily soil latent heat flux  at cell level (W/m2) */
 	double daily_soil_sensible_heat_flux;                                            /* current daily soil sensible heat flux at cell level (W/m2) */
@@ -1009,6 +971,69 @@ typedef struct
 	double daily_latent_heat_flux, monthly_latent_heat_flux, annual_latent_heat_flux;/* daily, monthly and annual latent heat flux at cell level (W/m2) */
 	double daily_c_sensible_heat_flux;                                               /* current daily canopy sensible heat flux (W/m2) */
 	double daily_sensible_heat_flux, monthly_sensible_heat_flux, annual_sensible_heat_flux;/* daily, monthly and annual sensible heat flux at cell level (W/m2) */
+
+	/* soil scalars */
+	double tsoil_scalar;                                                  /* soil temperature scalar */
+	double wsoil_scalar;                                                  /* soil water scalar */
+	double rate_scalar;                                                   /* soil (temperature * water) scalar */
+
+	/* soil carbon */
+	double cwdC;                                                          /* (kgC/m2) coarse woody debris C */
+	double litrC;                                                         /* (kgC/m2) litter total C */
+	double litr1C;                                                        /* (kgC/m2) litter labile C */
+	double litr2C;                                                        /* (kgC/m2) litter unshielded cellulose C */
+	double litr3C;                                                        /* (kgC/m2) litter shielded cellulose C */
+	double litr4C;                                                        /* (kgC/m2) litter lignin C */
+	double soilC;                                                         /* (kgC/m2) microbial recycling pool C (total) */
+	double soil1C;                                                        /* (kgC/m2) microbial recycling pool C (fast) */
+	double soil2C;                                                        /* (kgC/m2) microbial recycling pool C (medium) */
+	double soil3C;                                                        /* (kgC/m2) microbial recycling pool C (slow) */
+	double soil4C;                                                        /* (kgC/m2) recalcitrant SOM C (humus, slowest) */
+	double litr1C_rh;                                                     /* (kgC/m2/d) heterotrophic respiration for litter labile C */
+	double litr2C_rh;                                                     /* (kgC/m2/d) heterotrophic respiration for litter unshielded cellulose C */
+	double litr3C_rh;                                                     /* (kgC/m2/d) heterotrophic respiration for litter shielded cellulose C */
+	double litr4C_rh;                                                     /* (kgC/m2/d) heterotrophic respiration for litter lignin C */
+	double soil1C_rh;                                                     /* (kgC/m2/d) heterotrophic respiration for microbial recycling pool C (fast) */
+	double soil2C_rh;                                                     /* (kgC/m2/d) heterotrophic respiration for microbial recycling pool C (medium) */
+	double soil3C_rh;                                                     /* (kgC/m2/d) heterotrophic respiration for microbial recycling pool C (slow) */
+	double soil4C_rh;                                                     /* (kgC/m2/d) heterotrophic respiration for recalcitrant SOM C (humus, slowest) */
+
+	/* soil nitrogen */
+	double cwdN;                                                          /* (kgN/m2) coarse woody debris N */
+	double litrN;                                                         /* (kgN/m2) litter total N */
+	double litr1N;                                                        /* (kgN/m2) litter labile N */
+	double litr2N;                                                        /* (kgN/m2) litter unshielded cellulose N */
+	double litr3N;                                                        /* (kgN/m2) litter shielded cellulose N */
+	double litr4N;                                                        /* (kgN/m2) litter lignin N */
+	double soilN;                                                         /* (kgN/m2) microbial recycling pool N (total) */
+	double soil1N;                                                        /* (kgN/m2) microbial recycling pool N (fast) */
+	double soil2N;                                                        /* (kgN/m2) microbial recycling pool N (medium) */
+	double soil3N;                                                        /* (kgN/m2) microbial recycling pool N (slow) */
+	double soil4N;                                                        /* (kgN/m2) recalcitrant SOM N (humus, slowest) */
+	double litr1N_rh;                                                     /* (kgC/m2/d) heterotrophic respiration for litter labile N */
+	double litr2N_rh;                                                     /* (kgC/m2/d) heterotrophic respiration for litter unshielded cellulose N */
+	double litr3N_rh;                                                     /* (kgC/m2/d) heterotrophic respiration for litter shielded cellulose N */
+	double litr4N_rh;                                                     /* (kgC/m2/d) heterotrophic respiration for litter lignin N */
+	double soil1N_rh;                                                     /* (kgC/m2/d) heterotrophic respiration for microbial recycling pool N (fast) */
+	double soil2N_rh;                                                     /* (kgC/m2/d) heterotrophic respiration for microbial recycling pool N (medium) */
+	double soil3N_rh;                                                     /* (kgC/m2/d) heterotrophic respiration for microbial recycling pool N (slow) */
+	double soil4N_rh;                                                     /* (kgC/m2/d) heterotrophic respiration for recalcitrant SOM N (humus, slowest) */
+	double sminN;                                                         /* (kgN/m2) soil mineral N */
+	double retransN;                                                      /* (kgN/m2) plant pool of retranslocated N */
+	double Npool;                                                         /* (kgN/m2) temporary plant N pool */
+	double Nfix_src;                                                      /* (kgN/m2) SUM of biological N fixation */
+	double Ndep_src;                                                      /* (kgN/m2) SUM of N deposition inputs */
+	double Nleached_snk;                                                  /* (kgN/m2) SUM of N leached */
+
+	/* soil fraction */
+	double leaf_litt_scel_frac;                                           /* (dim) leaf litter shielded cellulose fraction */
+	double leaf_litt_uscel_frac;                                          /* (dim) leaf litter unshielded cellulose fraction */
+	double froot_litt_scel_frac;                                          /* (dim) fine root litter shielded cellulose fraction */
+	double froot_litt_uscel_frac;                                         /* (dim) fine root litter unshielded fraction */
+	double dead_wood_scel_frac;                                           /* (dim) dead wood litter shielded cellulose fraction */
+	double dead_wood_uscel_frac;                                          /* (dim) dead wood litter unshielded fraction */
+
+
 
 
 

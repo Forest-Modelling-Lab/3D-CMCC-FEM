@@ -264,7 +264,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	/* SOIL NUTRIENT */
 
 	/* compute fertility rate based on N available and N demand */
-	s->values[FR] = c->soil_N / s->value[NPP_gN];
+	s->values[FR] = c->soilN / s->value[NPP_gN];
 
 	/* check */
 	if ( s->values[FR] > 1.) s->values[FR] = 1.;

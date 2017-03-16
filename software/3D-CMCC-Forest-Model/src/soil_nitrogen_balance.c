@@ -23,10 +23,10 @@ void soil_nitrogen_balance (cell_t *const c)
 
 
 	//fixme to include in cel struct as a sum of tree model NPP demand
-	c->soil_N -= c->NPP_gN_demand;
+	c->soilN -= c->NPP_gN_demand;
 
 	//fixme to include in cell struct as a sum of soil nitrogen decomp
-	c->soil_N += c->N_decomp;
+	c->soilN += c->N_decomp;
 
 #endif
 
