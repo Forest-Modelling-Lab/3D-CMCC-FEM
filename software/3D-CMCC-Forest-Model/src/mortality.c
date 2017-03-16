@@ -140,7 +140,7 @@ void self_thinning_mortality ( cell_t *const c, const int layer )
 					}
 
 					/* remove dead C and N biomass */
-					tree_biomass_remove ( s, deadtree );
+					tree_biomass_remove ( c, s, deadtree );
 
 				}
 			}
@@ -272,7 +272,7 @@ void age_mortality (cell_t *const c, const int height, const int dbh, const int 
 		logger(g_debug_log, "dead trees = %d\n", dead_trees);
 
 		/* update C and N biomass */
-		tree_biomass_remove (s, dead_trees);
+		tree_biomass_remove ( c, s, dead_trees );
 
 		/* update current number of trees */
 		s->counter[N_TREE] -= dead_trees;

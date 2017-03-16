@@ -41,7 +41,7 @@ void initialization_forest_structure(cell_t *const c, const int day, const int m
 	//	}
 }
 
-void initialization_forest_class_C_biomass(cell_t *const c, const int height, const int dbh, const int age, const int species)
+void initialization_forest_class_C (cell_t *const c, const int height, const int dbh, const int age, const int species)
 {
 	height_t *h;
 	dbh_t *d;
@@ -465,7 +465,7 @@ void initialization_forest_class_C_biomass(cell_t *const c, const int height, co
 	s->value[TREE_VOLUME] = s->value[VOLUME] / (int) s->counter[N_TREE];
 	logger(g_debug_log, "-current single tree volume = %g m^3/tree\n", s->value[TREE_VOLUME]);
 
-	/* check that all mandatory variables are initialised */
+	/* check that all mandatory variables are initialized */
 	CHECK_CONDITION(h->value, ==, 0);
 	CHECK_CONDITION(d->value, ==, 0);
 	/* note: ISIMIP special case */
@@ -480,34 +480,43 @@ void initialization_forest_class_C_biomass(cell_t *const c, const int height, co
 		CHECK_CONDITION(s->value[LAI_SUN_PROJ], <=, 0);
 		CHECK_CONDITION(s->value[LAI_SHADE_PROJ], <=, 0);
 	}
-	CHECK_CONDITION(s->value[STEM_C], ==, 0);
-	CHECK_CONDITION(s->value[BRANCH_C], ==, 0);
-	CHECK_CONDITION(s->value[TOT_STEM_C], ==, 0);
-	CHECK_CONDITION(s->value[COARSE_ROOT_C], ==, 0);
-	CHECK_CONDITION(s->value[TOT_ROOT_C], ==, 0);
-	CHECK_CONDITION(s->value[TOT_WOOD_C], ==, 0);
-	CHECK_CONDITION(s->value[RESERVE_C], ==, 0);
-	CHECK_CONDITION(s->value[MIN_RESERVE_C], ==, 0);
-	CHECK_CONDITION(s->value[STEM_SAPWOOD_C], ==, 0);
-	CHECK_CONDITION(s->value[COARSE_ROOT_SAPWOOD_C], ==, 0);
-	CHECK_CONDITION(s->value[BRANCH_SAPWOOD_C], ==, 0);
-	CHECK_CONDITION(s->value[TOT_SAPWOOD_C], ==, 0);
-	CHECK_CONDITION(s->value[STEM_LIVE_WOOD_C], ==, 0);
-	CHECK_CONDITION(s->value[STEM_DEAD_WOOD_C], ==, 0);
-	CHECK_CONDITION(s->value[COARSE_ROOT_LIVE_WOOD_C], ==, 0);
-	CHECK_CONDITION(s->value[COARSE_ROOT_DEAD_WOOD_C], ==, 0);
-	CHECK_CONDITION(s->value[BRANCH_LIVE_WOOD_C], ==, 0);
-	CHECK_CONDITION(s->value[BRANCH_DEAD_WOOD_C], ==, 0);
-	CHECK_CONDITION(s->value[LIVE_WOOD_C], ==, 0);
-	CHECK_CONDITION(s->value[DEAD_WOOD_C], ==, 0);
-	CHECK_CONDITION(s->value[BASAL_AREA], ==, 0);
-	CHECK_CONDITION(s->value[CLASS_AGB], ==, 0);
-	CHECK_CONDITION(s->value[CLASS_BGB], ==, 0);
-	CHECK_CONDITION(s->value[VOLUME], ==, 0);
-	CHECK_CONDITION(s->value[TREE_VOLUME], ==, 0);
+	CHECK_CONDITION(s->value[STEM_C], <=, 0);
+	CHECK_CONDITION(s->value[BRANCH_C], <=, 0);
+	CHECK_CONDITION(s->value[TOT_STEM_C], <=, 0);
+	CHECK_CONDITION(s->value[COARSE_ROOT_C], <=, 0);
+	CHECK_CONDITION(s->value[TOT_ROOT_C], <=, 0);
+	CHECK_CONDITION(s->value[TOT_WOOD_C], <=, 0);
+	CHECK_CONDITION(s->value[RESERVE_C], <=, 0);
+	CHECK_CONDITION(s->value[MIN_RESERVE_C], <=, 0);
+	CHECK_CONDITION(s->value[STEM_SAPWOOD_C], <=, 0);
+	CHECK_CONDITION(s->value[COARSE_ROOT_SAPWOOD_C], <=, 0);
+	CHECK_CONDITION(s->value[BRANCH_SAPWOOD_C], <=, 0);
+	CHECK_CONDITION(s->value[TOT_SAPWOOD_C], <=, 0);
+	CHECK_CONDITION(s->value[STEM_LIVE_WOOD_C], <=, 0);
+	CHECK_CONDITION(s->value[STEM_DEAD_WOOD_C], <=, 0);
+	CHECK_CONDITION(s->value[COARSE_ROOT_LIVE_WOOD_C], <=, 0);
+	CHECK_CONDITION(s->value[COARSE_ROOT_DEAD_WOOD_C], <=, 0);
+	CHECK_CONDITION(s->value[BRANCH_LIVE_WOOD_C], <=, 0);
+	CHECK_CONDITION(s->value[BRANCH_DEAD_WOOD_C], <=, 0);
+	CHECK_CONDITION(s->value[LIVE_WOOD_C], <=, 0);
+	CHECK_CONDITION(s->value[DEAD_WOOD_C], <=, 0);
+	CHECK_CONDITION(s->value[BASAL_AREA], <=, 0);
+	CHECK_CONDITION(s->value[CLASS_AGB], <=, 0);
+	CHECK_CONDITION(s->value[CLASS_BGB], <=, 0);
+	CHECK_CONDITION(s->value[VOLUME], <=, 0);
+	CHECK_CONDITION(s->value[TREE_VOLUME], <=, 0);
+
+	/*** update at cell level ***/
+	c->leaf_carbon += s->value[LEAF_C];
+	c->stem_carbon += s->value[STEM_C];
+	c->fine_root_carbon += s->value[FINE_ROOT_C];
+	c->coarse_root_carbon += s->value[COARSE_ROOT_C];
+	c->branch_carbon += s->value[BRANCH_C];
+	c->reserve += s->value[RESERVE_C];
+
 }
 
-void initialization_forest_class_N_biomass(cell_t *const c, const int height, const int dbh, const int age, const int species)
+void initialization_forest_class_N (cell_t *const c, const int height, const int dbh, const int age, const int species)
 {
 	species_t *s;
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];

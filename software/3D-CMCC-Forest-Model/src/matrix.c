@@ -1791,10 +1791,10 @@ void forest_summary(const matrix_t* const m, const int day, const int month, con
 						/* IF NO BIOMASS INITIALIZATION DATA OR TREE HEIGHTS ARE AVAILABLE FOR STAND
 						 * BUT JUST DENDROMETRIC VARIABLES (i.e. AVDBH, HEIGHT, THESE ARE MANDATORY) */
 						/* initialise carbon pools */
-						initialization_forest_class_C_biomass (&m->cells[cell], height, dbh, age, species);
+						initialization_forest_class_C (&m->cells[cell], height, dbh, age, species);
 
 						/* initialise nitrogen pools */
-						initialization_forest_class_N_biomass (&m->cells[cell], height, dbh, age, species);
+						initialization_forest_class_N (&m->cells[cell], height, dbh, age, species);
 
 						/* initialize litter and soil pools */
 						initialization_forest_class_litter_soil (&m->cells[cell], height, dbh, age, species);

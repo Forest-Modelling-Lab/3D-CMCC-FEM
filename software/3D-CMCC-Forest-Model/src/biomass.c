@@ -184,7 +184,7 @@ void tree_branch_and_bark (cell_t *const c, const int height, const int dbh, con
 
 }
 
-void tree_biomass_remove (species_t *const s, const int tree_remove)
+void tree_biomass_remove (cell_t *const c, species_t *const s, const int tree_remove)
 {
 	average_tree_pools ( s );
 
@@ -220,6 +220,14 @@ void tree_biomass_remove (species_t *const s, const int tree_remove)
 			(s->value[AV_COARSE_ROOT_MASS_kgN]/1000.0*tree_remove) +
 			(s->value[AV_STEM_MASS_kgN]/1000.0*tree_remove) +
 			(s->value[AV_BRANCH_MASS_kgN]/1000.0*tree_remove);
+
+	/*** update at cell level ***/
+	c->leaf_carbon -= (s->value[AV_LEAF_MASS_KgC]/1000.0*tree_remove);
+	c->stem_carbon -= (s->value[AV_STEM_MASS_KgC]/1000.0*tree_remove);
+	c->fine_root_carbon -= (s->value[AV_FINE_ROOT_MASS_KgC]/1000.0*tree_remove);
+	c->coarse_root_carbon -= (s->value[AV_COARSE_ROOT_MASS_KgC]/1000.0*tree_remove);
+	c->branch_carbon -= (s->value[AV_BRANCH_MASS_KgC]/1000.0*tree_remove);
+	c->reserve -= (s->value[AV_RESERVE_MASS_KgC]/1000.0*tree_remove);
 
 
 }

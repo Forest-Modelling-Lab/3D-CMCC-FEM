@@ -25,9 +25,9 @@ extern logger_t* g_debug_log;
 void carbon_allocation(species_t *const s)
 {
 	/* it allocates Daily assimilated Carbon for both deciduous and evergreen daily */
-	logger(g_debug_log, "\n****CARBON BIOMASS ALLOCATION****\n");
+	logger(g_debug_log, "\n****CARBON ALLOCATION****\n");
 
-	/*** update class level carbon biomass pools ***/
+	/*** update class level carbon pools ***/
 
 	logger(g_debug_log, "C_TO_LEAF = %g tC/cell/day\n", s->value[C_TO_LEAF]);
 	logger(g_debug_log, "C_TO_FINEROOT = %g tC/cell/day\n", s->value[C_TO_FINEROOT]);
@@ -39,7 +39,6 @@ void carbon_allocation(species_t *const s)
 
 	//fixme
 	s->value[LEAF_C] += s->value[C_TO_LEAF] ;
-	//s->value[LEAF_C] -= s->value[C_LEAF_TO_LITTER];
 	logger(g_debug_log, "Leaf Carbon (Wl) = %g tC/Cell\n", s->value[LEAF_C]);
 
 	//fixme
@@ -139,20 +138,11 @@ void carbon_allocation(species_t *const s)
 	s->value[TOTAL_C] = s->value[LEAF_C] +s->value[STEM_C] + s->value[BRANCH_C] + s->value[TOT_ROOT_C] + s->value[FRUIT_C] + s->value[RESERVE_C];
 	logger(g_debug_log, "Total Carbon Biomass (Wtot) = %g tC/Cell\n", s->value[TOTAL_C]);
 
-	/* litter and soil pools */
-	/*
-	s->value[LEAF_LITT_LAB_FRAC] += ;
-	s->value[LEAF_LITT_CEL_FRAC ]+= ;
-	s->value[LEAF_LITT_LIGN_FRAC] += ;
-	s->value[LEAF_LITT_SCEL_FRAC] += ;
-	s->value[LEAF_LITT_USCEL_FRAC] += ;
-	*/
-
-
 	/* check for closure */
 	CHECK_CONDITION(fabs((s->value[STEM_LIVE_WOOD_C] + s->value[STEM_DEAD_WOOD_C])-s->value[STEM_C]),>,eps);
 	CHECK_CONDITION(fabs((s->value[COARSE_ROOT_LIVE_WOOD_C] + s->value[COARSE_ROOT_DEAD_WOOD_C])-s->value[COARSE_ROOT_C]),>,eps);
 	CHECK_CONDITION(fabs((s->value[BRANCH_LIVE_WOOD_C] + s->value[BRANCH_DEAD_WOOD_C])-s->value[BRANCH_C]),>,eps);
+
 }
 
 /********************************************************************************************************************************************/

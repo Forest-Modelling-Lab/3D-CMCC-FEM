@@ -359,12 +359,12 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 					"asw",
 					"iWue",
 					"litrC",
-					"soilC\n",
+					"soilC",
 					"litrN",
 					"soilN\n"
 			);
 		else
-			logger(g_daily_log,",et,le,snow_pack,asw,iWue\n");
+			logger(g_daily_log,",et,le,snow_pack,asw,iWue,litrC,soilC,litrN,soilN\n");
 
 	}
 	/*****************************************************************************************************/

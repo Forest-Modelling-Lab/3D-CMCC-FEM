@@ -314,7 +314,7 @@ enum {
 	C_LEAF_TO_RESERVE,                  /* Daily retranslocated C from Leaf pool to Reserve (tC/sizeCell day) */
 	C_FINEROOT_TO_RESERVE,              /* Daily retranslocated C from Fine root pool to Reserve (tC/sizeCell day) */
 	C_LEAF_TO_LITTER,                   /* Daily tC from Leaf pool to Litter (tC/sizeCell day) */
-	C_FINE_ROOT_TO_LITTER,              /* Daily tC from Fine root pool to Litter (tC/sizeCell day) */
+	C_FINE_ROOT_TO_SOIL,                /* Daily tC from Fine root pool to Soil (tC/sizeCell day) */
 	C_FRUIT_TO_LITTER,                  /* Daily tC from Fruit pool to Litter (tC/sizeCell day) */
 	C_STEM_LIVEWOOD_TO_DEADWOOD,        /* Daily tC from Stem live wood pool to Stem dead wood (tC/sizeCell day) */
 	C_COARSEROOT_LIVE_WOOD_TO_DEADWOOD, /* Daily tC from Coarse live wood pool to Coarse dead wood (tC/sizeCell day) */
@@ -890,7 +890,7 @@ typedef struct
 	double daily_reserve_carbon_tC;                                       /* daily carbon assimilated to c pool at cell level (tC/cell/day) */
 	double daily_root_carbon_tC;                                          /* daily carbon assimilated to c pool at cell level (tC/cell/day) */
 	double daily_litter_carbon_tC;                                        /* daily carbon leaves to litter c pool at cell level (tC/cell/day) */
-	double daily_soil_carbon_tC;                                        /* daily carbon fine root to soil c pool at cell level (tC/cell/day) */
+	double daily_soil_carbon_tC;                                          /* daily carbon fine root to soil c pool at cell level (tC/cell/day) */
 	double daily_fruit_carbon_tC;                                         /* daily carbon assimilated to c pool at cell level (tC/cell/day) */
 	double daily_leaf_maint_resp;                                         /* daily leaf maint resp at cell level (gC/m2/day) */
 	double daily_stem_maint_resp;                                         /* daily stem maint resp at cell level (gC/m2/day) */
@@ -907,6 +907,20 @@ typedef struct
 	double daily_branch_aut_resp;                                         /* daily branch and bark aut resp at cell level (gC/m2/day) */
 	double daily_fine_root_aut_resp;                                      /* daily fine root aut resp at cell level (gC/m2/day) */
 	double daily_coarse_root_aut_resp;                                    /* daily coarse root aut resp at cell level (gC/m2/day) */
+
+	/* tree carbon pools */
+	double leaf_carbon;                                                   /* leaf carbon at cell level (gC/m2) */
+	double stem_carbon;                                                   /* stem carbon at cell level (gC/m2) */
+	double fine_root_carbon;                                              /* fine root carbon at cell level (gC/m2) */
+	double coarse_root_carbon;                                            /* coarse root carbon at cell level (gC/m2) */
+	double branch_carbon;                                                 /* branch carbon at cell level (gC/m2) */
+	double reserve;                                                       /* reserve at cell level (gC/m2) */
+	double leaf_carbon_tC;                                                /* leaf carbon at cell level (tC/cell) */
+	double stem_carbon_tC;                                                /* stem carbon at cell level (tC/cell) */
+	double fine_root_carbon_tC;                                           /* fine root carbon at cell level (tC/cell) */
+	double coarse_root_carbon_tC;                                         /* coarse root carbon at cell level (tC/cell) */
+	double branch_carbon_tC;                                              /* branch carbon at cell level (tC/cell) */
+	double reserve_tC;                                                    /* reserve at cell level (tC/cell) */
 
 	/* water use efficiency */
 	double daily_wue;                                                     /* daily water use efficiency */
@@ -1073,9 +1087,6 @@ typedef struct
 
 	//potentially already existent
 	int doy, dos;
-
-	//todo to be removed used just to evaluate total biomass fluctuations in the several different compartments
-	double leafBiomass, stemBiomass, fineRootBiomass, coarseRootBiomass,stemBranchBiomass;
 	double vpSat[365], maxVpSat;
 
 	double elev;
