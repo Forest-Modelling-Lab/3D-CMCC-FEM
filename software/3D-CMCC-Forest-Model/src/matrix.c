@@ -1702,7 +1702,10 @@ void soil_summary(const matrix_t* const m, const cell_t* const cell)
 	initialization_soil_physic (m->cells);
 
 	/** soil biogeochemistry initialization **/
-	initialization_soil_biogeochemistry (m->cells);
+	if ( !g_soil_settings->values[SOIL_LITTER] )
+	{
+		initialization_soil_biogeochemistry (m->cells);
+	}
 
 	logger(g_debug_log, "***************************************************\n\n");
 }

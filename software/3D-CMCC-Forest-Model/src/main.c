@@ -194,7 +194,7 @@ static int cells_sort(const void *a, const void *b)
 		return 0;
 	}
 }
-*/
+ */
 
 static const char* get_filename(const char *const s)
 {
@@ -276,9 +276,9 @@ static int output_path_create(void)
 		time(&t);
 		ptm = gmtime(&t);
 		sprintf(date, "%04d_%s_%02d"
-								, ptm->tm_year + 1900
-								, szMonth[ptm->tm_mon]
-								, ptm->tm_mday
+				, ptm->tm_year + 1900
+				, szMonth[ptm->tm_mon]
+				          , ptm->tm_mday
 		);
 	}
 
@@ -292,11 +292,11 @@ static int output_path_create(void)
 
 	i = has_path_delimiter(g_sz_output_path);
 	i = sprintf(buf, "%s%soutput_%s_%s%s"
-								, g_sz_output_path
-								, i ? "" : FOLDER_DELIMITER
-								, PROGRAM_VERSION
-								, date
-								, FOLDER_DELIMITER
+			, g_sz_output_path
+			, i ? "" : FOLDER_DELIMITER
+					, PROGRAM_VERSION
+					, date
+					, FOLDER_DELIMITER
 	);
 	if ( i < 0 ) {
 		puts("unable to format output path!");
@@ -317,9 +317,9 @@ static int parameterization_output_create(void) {
 	int i;
 
 	i = sprintf(g_sz_parameterization_output_path
-							, "%sparameterization%s"
-							, g_sz_output_path
-							, FOLDER_DELIMITER
+			, "%sparameterization%s"
+			, g_sz_output_path
+			, FOLDER_DELIMITER
 	);
 	if ( i < 0 ) {
 		return 0;
@@ -450,11 +450,11 @@ static int log_start(const char* const sitename)
 		for ( i = 0 ; i < LOG_TYPES_COUNT; ++i ) {
 			if ( log_flag[i] ) {
 				*logs[i] = logger_new("%s%s%s%s%s"
-										, g_sz_output_path
-										, log_types[i]
-										, FOLDER_DELIMITER
-										, log_types[i]
-										, buffer
+						, g_sz_output_path
+						, log_types[i]
+						            , FOLDER_DELIMITER
+						            , log_types[i]
+						                        , buffer
 				);
 				if ( ! *logs[i] ) {
 					printf("Unable to create %s log!\n\n", log_types[i]);
@@ -1059,16 +1059,16 @@ int main(int argc, char *argv[]) {
 		}
 
 		//TODO ALESSIOR please create a single function to check them all
-		/* check for soil mandatory values */
+		/** check for soil mandatory values **/
 		/* soil latitude and longitude */
-		if (	IS_INVALID_VALUE(g_soil_settings->values[SOIL_LAT])
+		if (IS_INVALID_VALUE(g_soil_settings->values[SOIL_LAT])
 				|| IS_INVALID_VALUE(g_soil_settings->values[SOIL_LON]))
 		{
 			logger_error(g_debug_log, "NO SOIL DATA AVAILABLE (Latitude and Longitude)");
 			goto err;
 		}
 		/* soil texture */
-		if (	IS_INVALID_VALUE(g_soil_settings->values[SOIL_SAND_PERC])
+		if (IS_INVALID_VALUE(g_soil_settings->values[SOIL_SAND_PERC])
 				|| IS_INVALID_VALUE(g_soil_settings->values[SOIL_CLAY_PERC])
 				|| IS_INVALID_VALUE(g_soil_settings->values[SOIL_SILT_PERC])
 				|| IS_INVALID_VALUE(g_soil_settings->values[SOIL_DEPTH]))
@@ -1077,13 +1077,13 @@ int main(int argc, char *argv[]) {
 			goto err;
 		}
 		/* soil depth */
-		if (	IS_INVALID_VALUE(g_soil_settings->values[SOIL_DEPTH]))
+		if (IS_INVALID_VALUE(g_soil_settings->values[SOIL_DEPTH]))
 		{
 			logger_error(g_debug_log, "NO SOIL DATA AVAILABLE (Percentage of texture)");
 			goto err;
 		}
 		/* soil fertility */
-		if (	IS_INVALID_VALUE(g_soil_settings->values[SOIL_FR])
+		if (IS_INVALID_VALUE(g_soil_settings->values[SOIL_FR])
 				|| IS_INVALID_VALUE(g_soil_settings->values[SOIL_FN0])
 				|| IS_INVALID_VALUE(g_soil_settings->values[SOIL_FNN])
 				|| IS_INVALID_VALUE(g_soil_settings->values[SOIL_M0]))
@@ -1091,16 +1091,25 @@ int main(int argc, char *argv[]) {
 			logger_error(g_debug_log, "NO SOIL DATA AVAILABLE (Soil fertility values)");
 			goto err;
 		}
-		/* check for topo mandatory values */
+		/* soil litter */
+		if (IS_INVALID_VALUE(g_soil_settings->values[SOIL_LITTER]))
+		{
+			/* initialize to zero value */
+			g_soil_settings->values[SOIL_LITTER] = 0.;
+			logger_error(g_debug_log, "NO SOIL DATA AVAILABLE (Litter values)");
+		}
+
+		/** check for topo mandatory values **/
 		/* topo elevation */
-		if (	IS_INVALID_VALUE(g_topo->values[TOPO_ELEV]))
+		if (IS_INVALID_VALUE(g_topo->values[TOPO_ELEV]))
 		{
 			logger_error(g_debug_log, "NO TOPO DATA AVAILABLE (Topography elevation)");
 			goto err;
 		}
 
 		/* check hemisphere */
-		if ( g_soil_settings->values[SOIL_LAT] > 0 ) {
+		if ( g_soil_settings->values[SOIL_LAT] > 0 )
+		{
 			matrix->cells[cell].north = 0;
 		} else {
 			matrix->cells[cell].north = 1;
@@ -1220,10 +1229,10 @@ int main(int argc, char *argv[]) {
 		int current_doy;
 		int days_per_month;
 		int leap_year;
-		
+
 		current_doy = 0;
 		leap_year = IS_LEAP_YEAR(g_settings->year_start + year);
-				
+
 		for ( month = 0; month < MONTHS_COUNT; ++month )
 		{
 			days_per_month = DaysInMonth[month];
@@ -1315,14 +1324,14 @@ int main(int argc, char *argv[]) {
 			}
 
 			current_doy += days_per_month;
-			
+
 			for ( day = 0; day < 31; ++day )
 			{
 				if ( day >= days_per_month ) 
 				{
 					break;
 				}
-				
+
 				for ( cell = 0; cell < matrix->cells_count; ++cell )
 				{
 					/* counter "day of the year" */
@@ -1483,13 +1492,13 @@ int main(int argc, char *argv[]) {
 
 						output_push_values(output_vars
 								, &matrix->cells[cell]
-												 , month
-												 , day
-												 , year
-												 , years_of_simulation
-												 , matrix->x_cells_count
-												 , matrix->y_cells_count
-												 , OUTPUT_TYPE_MONTHLY
+								                 , month
+								                 , day
+								                 , year
+								                 , years_of_simulation
+								                 , matrix->x_cells_count
+								                 , matrix->y_cells_count
+								                 , OUTPUT_TYPE_MONTHLY
 						);
 					}
 
@@ -1703,9 +1712,9 @@ int main(int argc, char *argv[]) {
 		time(&t);
 		ptm = gmtime(&t);
 		sprintf(sz_date, "%04d_%s_%02d"
-					, ptm->tm_year + 1900
-					, szMonth[ptm->tm_mon]
-					, ptm->tm_mday
+				, ptm->tm_year + 1900
+				, szMonth[ptm->tm_mon]
+				          , ptm->tm_mday
 		);
 	}
 
@@ -1785,7 +1794,7 @@ int main(int argc, char *argv[]) {
 
 	printf("build matrix");
 	if ( g_sz_dataset_file )
-		 printf(" using %s...", g_sz_dataset_file);
+		printf(" using %s...", g_sz_dataset_file);
 	else
 		printf("...");
 	matrix = matrix_create(s, soil_settings_count, g_sz_dataset_file);
@@ -1816,8 +1825,8 @@ int main(int argc, char *argv[]) {
 		if ( -1 == index )
 		{
 			logger_error(g_debug_log, "no topo settings found for cell at %d,%d\n"
-											, matrix->cells[cell].x
-											, matrix->cells[cell].y
+					, matrix->cells[cell].x
+					, matrix->cells[cell].y
 			);
 			continue;
 		}
@@ -1855,8 +1864,8 @@ int main(int argc, char *argv[]) {
 			if ( -1 == index )
 			{
 				logger_error(g_debug_log, "no soil settings found for cell at %d,%d\n"
-												, matrix->cells[cell].x
-												, matrix->cells[cell].y
+						, matrix->cells[cell].x
+						, matrix->cells[cell].y
 				);
 				continue;
 			}
@@ -1876,8 +1885,8 @@ int main(int argc, char *argv[]) {
 			if ( -1 == index )
 			{
 				logger_error(g_debug_log, "no topo settings found for cell at %d,%d\n"
-												, matrix->cells[cell].x
-												, matrix->cells[cell].y
+						, matrix->cells[cell].x
+						, matrix->cells[cell].y
 				);
 				continue;
 			}
@@ -1924,9 +1933,9 @@ int main(int argc, char *argv[]) {
 			}
 			if ( -1 == g_year_start_index ) {
 				logger_error(g_debug_log, "start year (%d) not found. range is %d-%d\n"
-												, g_settings->year_start
-												, matrix->cells[0].years[0].year
-												, matrix->cells[0].years[years_of_simulation-1].year
+						, g_settings->year_start
+						, matrix->cells[0].years[0].year
+						, matrix->cells[0].years[years_of_simulation-1].year
 				);
 				goto err;
 			}
@@ -1937,8 +1946,8 @@ int main(int argc, char *argv[]) {
 				if ( g_settings->year_end == matrix->cells[0].years[i].year ) {
 					if ( g_year_start_index > i ) {
 						logger_error(g_debug_log, "start year (%d) cannot be > end year (%d)\n"
-												, g_settings->year_start
-												, g_settings->year_end
+								, g_settings->year_start
+								, g_settings->year_end
 						);
 						goto err;
 					}
@@ -1948,9 +1957,9 @@ int main(int argc, char *argv[]) {
 			}
 			if ( -1 == ii ) {
 				logger_error(g_debug_log, "end year (%d) not found. range is %d-%d\n"
-												, g_settings->year_end
-												, matrix->cells[0].years[0].year
-												, matrix->cells[0].years[years_of_simulation-1].year
+						, g_settings->year_end
+						, matrix->cells[0].years[0].year
+						, matrix->cells[0].years[years_of_simulation-1].year
 				);
 				goto err;
 			}
@@ -2188,13 +2197,13 @@ int main(int argc, char *argv[]) {
 						 */
 						output_push_values(output_vars
 								, &matrix->cells[cell]
-												 , month
-												 , day
-												 , year
-												 , years_of_simulation
-												 , matrix->x_cells_count
-												 , matrix->y_cells_count
-												 , OUTPUT_TYPE_DAILY
+								                 , month
+								                 , day
+								                 , year
+								                 , years_of_simulation
+								                 , matrix->x_cells_count
+								                 , matrix->y_cells_count
+								                 , OUTPUT_TYPE_DAILY
 						);
 					}
 					/******************************************************************************/
@@ -2236,13 +2245,13 @@ int main(int argc, char *argv[]) {
 					 */
 					output_push_values(output_vars
 							, &matrix->cells[cell]
-											 , month
-											 , day
-											 , year
-											 , years_of_simulation
-											 , matrix->x_cells_count
-											 , matrix->y_cells_count
-											 , OUTPUT_TYPE_MONTHLY
+							                 , month
+							                 , day
+							                 , year
+							                 , years_of_simulation
+							                 , matrix->x_cells_count
+							                 , matrix->y_cells_count
+							                 , OUTPUT_TYPE_MONTHLY
 					);
 				}
 				/******************************************************************************/
@@ -2281,13 +2290,13 @@ int main(int argc, char *argv[]) {
 				 */
 				output_push_values(output_vars
 						, &matrix->cells[cell]
-										 , month
-										 , day
-										 , year
-										 , years_of_simulation
-										 , matrix->x_cells_count
-										 , matrix->y_cells_count
-										 , OUTPUT_TYPE_YEARLY
+						                 , month
+						                 , day
+						                 , year
+						                 , years_of_simulation
+						                 , matrix->x_cells_count
+						                 , matrix->y_cells_count
+						                 , OUTPUT_TYPE_YEARLY
 				);
 			}
 			/******************************************************************************/
@@ -2355,7 +2364,7 @@ int main(int argc, char *argv[]) {
 	prog_ret = 0;
 
 #ifdef BENCHMARK_ONLY
-benchmark:
+	benchmark:
 #endif
 
 	// TODO: FIX THIS
@@ -2371,8 +2380,8 @@ benchmark:
 		char temp[256];
 		i = has_path_delimiter(g_sz_output_path);
 		sprintf(temp, "%s%soutput_%s_%s"
-						, g_sz_output_path
-						, i ? "" : FOLDER_DELIMITER
+				, g_sz_output_path
+				, i ? "" : FOLDER_DELIMITER
 						, PROGRAM_VERSION
 						, sz_date
 		);
@@ -2382,12 +2391,12 @@ benchmark:
 		}
 	}
 
-err:
+	err:
 
 	/* cleanup memory...
 		do not remove null pointer to prevent
 		double free with clean_up func
-	*/
+	 */
 
 	/* close logger */
 	logger_close(g_soil_log); g_soil_log = NULL;

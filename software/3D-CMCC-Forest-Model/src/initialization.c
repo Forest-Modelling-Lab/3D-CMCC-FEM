@@ -553,12 +553,12 @@ void initialization_forest_class_litter_soil (cell_t *const c, const int height,
 	/* calculate shielded and unshielded cellulose fraction */
 
 	/** leaf litter pool**/
-
 	t1 = s->value[LEAF_LITT_LAB_FRAC];
 	t2 = s->value[LEAF_LITT_CEL_FRAC];
 	t3 = s->value[LEAF_LITT_LIGN_FRAC];
 
 	r1 = t3/t2;
+
 	if (r1 <= 0.45)
 	{
 		s->value[LEAF_LITT_SCEL_FRAC] = 0.0;
@@ -577,7 +577,6 @@ void initialization_forest_class_litter_soil (cell_t *const c, const int height,
 	}
 
 	/** fine root litter pool **/
-
 	t1 = s->value[FROOT_LITT_LAB_FRAC];
 	t2 = s->value[FROOT_LITT_CEL_FRAC];
 	t3 = s->value[FROOT_LITT_LIGN_FRAC];
@@ -602,7 +601,6 @@ void initialization_forest_class_litter_soil (cell_t *const c, const int height,
 	}
 
 	/** dead wood litter pool **/
-
 	t1 = s->value[DEAD_WOOD_CEL_FRAC];
 	t2 = s->value[DEAD_WOOD_LIGN_FRAC];
 
@@ -697,7 +695,7 @@ void initialization_soil_physic(cell_t *const c)
 	logger(g_debug_log, "Initialization ASW = %g (mm-kgH2O/m2)\n\n\n", c->asw);
 
 
-	/* CENTURY METHOD */
+	/** CENTURY METHOD **/
 
 	/* soil data from https://www.nrel.colostate.edu/projects/century/soilCalculatorHelp.htm */
 	/* following Saxton et al 1986, 2006, 2008 */
@@ -747,11 +745,8 @@ void initialization_soil_physic(cell_t *const c)
 
 void initialization_soil_biogeochemistry (cell_t *const c)
 {
-	//todo create cell litter pools based on different forest class litter pools
-	//double r1;
+	//todo how create different litter and soil pools from one single litter value?
 
-	/* calculate shielded and unshielded cellulose fraction */
-	//todo sum all class level litter and soil poools
 
 
 }
