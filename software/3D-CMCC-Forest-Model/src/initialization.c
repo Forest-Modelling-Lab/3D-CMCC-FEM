@@ -805,60 +805,91 @@ void initialization_soil_biogeochemistry (cell_t *const c)
 	double leaf_litter_lignin_frac = 0.30;
 	double leaf_litter_unshel_frac;
 	double leaf_litter_scel_frac;
-	double froot_labile_frac = 0.30;
-	double froot_cellulose_frac = 0.40;
-	double froot_lignin_frac = 0.30;
-	double froot_unshel_frac;
-	double froot_scel_frac;
+	double froot_litter_labile_frac = 0.30;
+	double froot_litter_cellulose_frac = 0.40;
+	double froot_litter_lignin_frac = 0.30;
+	double froot_litter_unshel_frac;
+	double froot_litter_scel_frac;
 	double dead_wood_cellulose_frac = 0.75;
 	double dead_wood_lignin_frac = 0.25;
 
 	/* check */
 	CHECK_CONDITION (fabs((leaf_litter_labile_frac + leaf_litter_cellulose_frac + leaf_litter_lignin_frac)-1.), > , eps);
-	CHECK_CONDITION (fabs((froot_labile_frac + froot_cellulose_frac + froot_lignin_frac)-1.), > , eps);
+	CHECK_CONDITION (fabs((froot_litter_labile_frac + froot_litter_cellulose_frac + froot_litter_lignin_frac)-1.), > , eps);
 	CHECK_CONDITION (fabs((dead_wood_cellulose_frac + dead_wood_lignin_frac)-1.), > , eps);
 
 
 	/* share litter carbon among leaf and fine root */
 	//note: assuming that litter is shared based on "leaf_froot_frac" between leaf and fine root litter pools
+	leaf_litterC = g_soil_settings->values[LITTERC] * ( leaf_froot_frac / 2. );
+	froot_litterC = g_soil_settings->values[LITTERC] - leaf_litterC;
 
 
+	/*** leaf litter pool ***/
+	/* litter carbon labile */
+	c->leaf_litr1C = g_soil_settings->values[LITTERC] * leaf_litter_labile_frac;
 
-//	/*** leaf litter pool ***/
-//	/* litter carbon labile */
-//	c->litr1C = g_soil_settings->values[LITTERC] * leaf_litter_labile_frac;
-//
-//	/* litter carbon cellulose */
-//	leaf_litter_cellulose = g_soil_settings->values[LITTERC] * leaf_litter_cellulose_frac;
-//
-//	/* litter carbon lignin */
-//	c->litr4C = g_soil_settings->values[LITTERC] * leaf_litter_lignin_frac;
-//
-//	/* partitioning litter carbon cellulose into shielded and unshielded */
-//	//fixme check if correct
-//	r1 = c->litr4C/leaf_litter_cellulose;
-//
-//	if (r1 <= 0.45)
-//	{
-//		c->litr3C = 0.;
-//		c->litr2C = leaf_litter_cellulose;
-//	}
-//	else if (r1 > 0.45 && r1 < 0.7)
-//	{
-//		c->litr3C = (r1 - 0.45) * 3.2 * leaf_litter_cellulose;
-//		c->litr2C = ( 1. - c->litr4C ) * leaf_litter_cellulose;
-//	}
-//	else
-//	{
-//		c->litr3C = 0.8 * leaf_litter_cellulose;
-//		c->litr2C = 0.2 * leaf_litter_cellulose;
-//	}
-//
-//	/*check */
-//	CHECK_CONDITION ( c->litr2C + c->litr3C, ==, leaf_litter_cellulose );
-//
-//	/*** fine root litter pool ***/
+	/* litter carbon cellulose */
+	leaf_litter_cellulose = g_soil_settings->values[LITTERC] * leaf_litter_cellulose_frac;
 
+	/* litter carbon lignin */
+	c->leaf_litr4C = g_soil_settings->values[LITTERC] * leaf_litter_lignin_frac;
+
+	/* partitioning litter carbon cellulose into shielded and unshielded */
+	r1 = c->leaf_litr4C/leaf_litter_cellulose;
+
+	if (r1 <= 0.45)
+	{
+		c->leaf_litr3C = 0.;
+		c->leaf_litr2C = leaf_litter_cellulose;
+	}
+	else if (r1 > 0.45 && r1 < 0.7)
+	{
+		c->leaf_litr3C = (r1 - 0.45) * 3.2 * leaf_litter_cellulose;
+		c->leaf_litr2C = ( 1. - c->leaf_litr4C ) * leaf_litter_cellulose;
+	}
+	else
+	{
+		c->leaf_litr3C = 0.8 * leaf_litter_cellulose;
+		c->leaf_litr2C = 0.2 * leaf_litter_cellulose;
+	}
+
+	/*check */
+	//CHECK_CONDITION ( c->leaf_litr2C + c->leaf_litr3C, ==, leaf_litter_cellulose );
+
+	/*** fine root litter pool ***/
+	/* litter carbon labile */
+	c->froot_litr1C = g_soil_settings->values[LITTERC] * froot_litter_labile_frac;
+
+	/* litter carbon cellulose */
+	froot_litter_cellulose = g_soil_settings->values[LITTERC] * froot_litter_cellulose_frac;
+
+	/* litter carbon lignin */
+	c->froot_litr4C = g_soil_settings->values[LITTERC] * froot_litter_lignin_frac;
+
+	/* partitioning litter carbon cellulose into shielded and unshielded */
+	r1 = c->froot_litr4C/froot_litter_cellulose;
+
+	if (r1 <= 0.45)
+	{
+		c->froot_litr3C = 0.;
+		c->froot_litr2C = froot_litter_cellulose;
+	}
+	else if (r1 > 0.45 && r1 < 0.7)
+	{
+		c->froot_litr3C = (r1 - 0.45) * 3.2 * froot_litter_cellulose;
+		c->froot_litr2C = ( 1. - c->froot_litr4C ) * froot_litter_cellulose;
+	}
+	else
+	{
+		c->froot_litr3C = 0.8 * froot_litter_cellulose;
+		c->froot_litr2C = 0.2 * froot_litter_cellulose;
+	}
+
+	/*check */
+	//CHECK_CONDITION ( c->froot_litr2C + c->froot_litr3C, ==, froot_litter_cellulose );
+
+	/*** dead wood litter pool ***/
 
 
 

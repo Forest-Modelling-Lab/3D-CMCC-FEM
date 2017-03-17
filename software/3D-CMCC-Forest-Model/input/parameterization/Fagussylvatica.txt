@@ -5,7 +5,7 @@ ALPHA   0.055                  //Canopy quantum efficiency (molC/molPAR) (0.055)
 EPSILONgCMJ 0                  //Light Use Efficiency  (gC/MJ)(used if ALPHA is not available) 
 K   0.60                       //0.54 Extinction coefficient for absorption of PAR by canopy 0.71 for F. sylvatica Vitale et al., 2012, 0.5 from Williams 1996, 0.65
 ALBEDO  0.2                    //Albedo, 0.15 (varying from 0.13-0.17) from OTTO et al., BGS 2014
-INT_COEFF  0.034               //precip interception coefficient for F. sylvatica fom Tatarinov
+INT_COEFF  0.3                 //precip interception coefficient for F. sylvatica fom Tatarinov
 SLA_AVG 48                     //Average Specific Leaf Area m^2/KgC sunlit leaves for Fagus s. 27.8 to 48 from Pietsch 2005, 35 for Tatarinov et al., 2006
 SLA_RATIO   2                  //(DIM) ratio of shaded to sunlit projected SLA  for F. sylvatyica from Mollicone et al., 2002 , 2.0 from Pietsch 2005
 LAI_RATIO   2                  //(DIM) all-sided to projected leaf area ratio for F. sylvatyica from Mollicone et al., 2002 , 2.0 from Pietsch 2005
@@ -19,7 +19,7 @@ FORM_FACTOR 0.433              //Form factor Seidl et al., 2012
 COEFFCOND   0.06               //Define stomatal responsee to VPD in mbar see Pietsch et al., 2005
 BLCOND  0.01                   //Canopy Boundary Layer conductance see 0.01 for stomatal Pietsch et al., 2005
 MAXCOND 0.006                  //Maximum Stomatal Conductance in m/sec 0,005 for Tatarinov et al., 2006, 0.006 Pietsch
-CUTCOND 0.00006                //Cuticul conductance in m/sec for F sylvatica Pietsch et al., 2005
+CUTCOND 6e-05                  //Cuticul conductance in m/sec for F sylvatica 0.000006 Tatarinov et al., 2006
 MAXAGE  300                    //Determines rate of "physiological decline" of forest //modified from ettore
 RAGE    0.75                   //Relative Age to give fAGE = 0.5
 NAGE    10                     //Power of relative Age in function for Age
