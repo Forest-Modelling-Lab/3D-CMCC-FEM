@@ -125,6 +125,14 @@ soil_settings_t* import_txt(const char *const filename, int* const p_settings_co
 		{
 			int err;
 			double value;
+			
+			if ( ++y > SOIL_VARS_COUNT )
+			{
+				logger_error(g_debug_log, "too many columns in %s\n", filename);
+				if ( ps ) free(ps);
+				fclose(f);
+				return 0;
+			}
 
 			// check landuse
 			if ( SOIL_LANDUSE == columns[i] ) {
@@ -152,22 +160,12 @@ soil_settings_t* import_txt(const char *const filename, int* const p_settings_co
 				value = convert_string_to_float(token, &err);
 				if ( err )
 				{
-					//if ( columns[SOIL_LANDUSE] != i) {
-					logger_error(g_debug_log, "unable to convert '%s' at columm %d in %s\n", token, y+1, filename);
+					logger_error(g_debug_log, "unable to convert '%s' at columm %d in %s\n", token, y, filename);
 					if ( ps ) free(ps);
 					fclose(f);
 					return NULL;
-					//}
 				}
 				s.values[columns[i]] = value;
-			}
-
-			if ( ++y > SOIL_VARS_COUNT )
-			{
-				logger_error(g_debug_log, "too many columns in %s\n", filename);
-				if ( ps ) free(ps);
-				fclose(f);
-				return 0;
 			}
 		}
 

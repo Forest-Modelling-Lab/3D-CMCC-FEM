@@ -284,6 +284,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\decomposition.c"
+				>
+			</File>
+			<File
 				RelativePath=".\src\dendrometry.c"
 				>
 			</File>
