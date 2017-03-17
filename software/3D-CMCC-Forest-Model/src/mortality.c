@@ -342,7 +342,7 @@ void self_pruning ( cell_t *const c, const int layer )
 	//
 	//					/***************************************************************/
 	//					/* self-pruned C biomass to litter */
-	//					//s->value[LITTER_C] += (s->value[BRANCH_C] * (1 - red_perc)) +
+	//					//s->value[LITR_C] += (s->value[BRANCH_C] * (1 - red_perc)) +
 	//					//		(s->value[COARSE_ROOT_C] * (1 - red_perc)) +
 	//					//		(s->value[LEAF_C] * (1 - red_perc));
 	//
@@ -581,7 +581,7 @@ void self_pruning ( cell_t *const c, const int layer )
 //
 //					/***************************************************************/
 //					/* self-pruned C biomass to litter */
-//					//s->value[LITTER_C] += (s->value[BRANCH_C] * (1 - red_perc)) +
+//					//s->value[LITR_C] += (s->value[BRANCH_C] * (1 - red_perc)) +
 //					//		(s->value[COARSE_ROOT_C] * (1 - red_perc)) +
 //					//		(s->value[LEAF_C] * (1 - red_perc));
 //

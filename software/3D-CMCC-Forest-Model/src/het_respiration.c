@@ -15,8 +15,8 @@
 #include "settings.h"
 #include "logger.h"
 
-extern settings_t* g_settings;
-extern logger_t* g_debug_log;
+//extern settings_t* g_settings;
+//extern logger_t* g_debug_log;
 
 void heterotrophic_respiration(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, const meteo_daily_t *const meteo_daily)
 {

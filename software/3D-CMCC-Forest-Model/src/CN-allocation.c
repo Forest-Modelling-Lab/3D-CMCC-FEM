@@ -68,8 +68,8 @@ void carbon_allocation(species_t *const s)
 	s->value[FRUIT_C] += s->value[C_TO_FRUIT];
 	logger(g_debug_log, "Fuit Carbon (Wfruit)= %g tC/Cell\n", s->value[FRUIT_C]);
 
-	s->value[LITTER_C] += s->value[C_TO_LITTER] + s->value[C_FRUIT_TO_LITTER];
-	logger(g_debug_log, "Litter Carbon (Wlitter)= %g tC/Cell\n", s->value[LITTER_C]);
+	s->value[LITR_C] += s->value[C_TO_LITTER] + s->value[C_FRUIT_TO_LITTER];
+	logger(g_debug_log, "Litter Carbon (Wlitter)= %g tC/Cell\n", s->value[LITR_C]);
 
 	s->value[SOIL_C] += s->value[C_TO_SOIL];
 	logger(g_debug_log, "Soil Carbon (WSoil)= %g tC/Cell\n", s->value[SOIL_C]);

@@ -29,6 +29,11 @@ static const char *sz_vars[SOIL_VARS_COUNT] =
 	, "FNN"
 	, "M0"
 	, "LITTERC"
+	, "LITTERN"
+	, "SOILC"
+	, "SOILN"
+	, "LITTERCWDC"
+
 	, "LANDUSE"
 };
 

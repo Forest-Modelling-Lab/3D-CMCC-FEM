@@ -360,7 +360,7 @@ enum {
 	MIN_RESERVE_C,                      /* Current Minimum reserve carbon pool tC/sizeCell */
 	RESERVE_C,                          /* Current Reserve carbon pool tC/sizeCell */
 	FRUIT_C,                            /* Current Fruit carbon pool tC/sizeCell */
-	LITTER_C,                           /* Current Litter carbon pool tC/sizeCell */
+	LITR_C,                             /* Current Litter carbon pool tC/sizeCell */
 	SOIL_C,                             /* Current Soil carbon pool tC/sizeCell */
 	LIVE_WOOD_C,                        /* Current Live wood carbon pool tC/sizeCell */
 	DEAD_WOOD_C,                        /* Current Dead wood carbon pool tC/sizeCell */
@@ -980,7 +980,16 @@ typedef struct
 	double wsoil_scalar;                                                  /* soil water scalar */
 	double rate_scalar;                                                   /* soil (temperature * water) scalar */
 
-	/* soil carbon */
+	/* litter and soil carbon */
+	double leaf_litr1C;                                                   /* (kgC/m2) leaf litter labile C */
+	double leaf_litr2C;                                                   /* (kgC/m2) leaf litter unshielded cellulose C */
+	double leaf_litr3C;                                                   /* (kgC/m2) leaf litter shielded cellulose C */
+	double leaf_litr4C;                                                   /* (kgC/m2) leaf litter lignin C */
+	double froot_litr1C;                                                  /* (kgC/m2) fine root litter labile C */
+	double froot_litr2C;                                                  /* (kgC/m2) fine root litter unshielded cellulose C */
+	double froot_litr3C;                                                  /* (kgC/m2) fine root litter shielded cellulose C */
+	double froot_litr4C;                                                  /* (kgC/m2) fine root litter lignin C */
+
 	double cwdC;                                                          /* (kgC/m2) coarse woody debris C */
 	double litrC;                                                         /* (kgC/m2) litter total C */
 	double litr1C;                                                        /* (kgC/m2) litter labile C */

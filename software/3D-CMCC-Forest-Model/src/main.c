@@ -835,7 +835,8 @@ static int parse_args(int argc, char *argv[])
 	return 0;
 }
 
-static int check_soil_topo_values(void) {
+static int check_soil_values(void)
+{
 	/** check for soil mandatory values **/
 	/* soil latitude and longitude */
 	if (IS_INVALID_VALUE(g_soil_settings->values[SOIL_LAT])
@@ -865,26 +866,59 @@ static int check_soil_topo_values(void) {
 			|| IS_INVALID_VALUE(g_soil_settings->values[SOIL_FNN])
 			|| IS_INVALID_VALUE(g_soil_settings->values[SOIL_M0]))
 	{
-		logger_error(g_debug_log, "NO SOIL DATA AVAILABLE (Soil fertility values)");
+		logger_error(g_debug_log, "NO SOIL DATA AVAILABLE (Soil fertility value)");
 		goto err;
 	}
-	/* soil carbon litter */
-	if (IS_INVALID_VALUE(g_soil_settings->values[SOIL_LITTERC]))
+	/* litter carbon  */
+	if (IS_INVALID_VALUE(g_soil_settings->values[LITTERC]))
 	{
 		/* initialize to zero value */
-		g_soil_settings->values[SOIL_LITTERC] = 0.;
-		logger_error(g_debug_log, "NO SOIL DATA AVAILABLE (Litter values)\n");
+		g_soil_settings->values[LITTERC] = 0.;
+		logger_error(g_debug_log, "NO SOIL DATA AVAILABLE (Carbon litter value)\n");
+	}
+	/* litter nitrogen */
+	if (IS_INVALID_VALUE(g_soil_settings->values[LITTERN]))
+	{
+		/* initialize to zero value */
+		g_soil_settings->values[LITTERN] = 0.;
+		logger_error(g_debug_log, "NO SOIL DATA AVAILABLE (Nitrogen litter value)\n");
+	}
+	/* litter coarse woody debris carbon */
+	if (IS_INVALID_VALUE(g_soil_settings->values[LITTERCWDC]))
+	{
+		/* initialize to zero value */
+		g_soil_settings->values[LITTERCWDC] = 0.;
+		logger_error(g_debug_log, "NO SOIL DATA AVAILABLE (Coarse woody debris carbon value)\n");
+	}
+	/* soil carbon */
+	if (IS_INVALID_VALUE(g_soil_settings->values[SOILC]))
+	{
+		/* initialize to zero value */
+		g_soil_settings->values[SOILC] = 0.;
+		logger_error(g_debug_log, "NO SOIL DATA AVAILABLE (Carbon soil value)\n");
+	}
+	/* soil nitrogen */
+	if (IS_INVALID_VALUE(g_soil_settings->values[SOILN]))
+	{
+		/* initialize to zero value */
+		g_soil_settings->values[SOILN] = 0.;
+		logger_error(g_debug_log, "NO SOIL DATA AVAILABLE (Nitrogen soil value)\n");
 	}
 
+	return 1;
 
+err:
+	return 0;
+}
+static int check_topo_values(void)
+{
 	/** check for topo mandatory values **/
 	/* topo elevation */
 	if (IS_INVALID_VALUE(g_topo->values[TOPO_ELEV]))
 	{
-		logger_error(g_debug_log, "NO TOPO DATA AVAILABLE (Topography elevation)");
+		logger_error(g_debug_log, "NO TOPO DATA AVAILABLE (elevation value)");
 		goto err;
 	}
-
 	return 1;
 
 err:
@@ -1111,8 +1145,13 @@ int main(int argc, char *argv[]) {
 			logger(g_debug_log, "\n3D-CMCC FEM START....\n\n");
 		}
 
-		/* check soil and topo values */
-		if ( ! check_soil_topo_values() ) {
+		/* check soil values */
+		if ( ! check_soil_values() ) {
+			goto err;
+		}
+
+		/* check topo values */
+		if ( ! check_topo_values() ) {
 			goto err;
 		}
 

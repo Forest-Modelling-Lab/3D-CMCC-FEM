@@ -1694,15 +1694,21 @@ void soil_summary(const matrix_t* const m, const cell_t* const cell)
 	logger(g_debug_log, "-Soil FN0 = %g\n", g_soil_settings->values[SOIL_FN0]);
 	logger(g_debug_log, "-Soil FNN = %g\n", g_soil_settings->values[SOIL_FNN]);
 	logger(g_debug_log, "-Soil M0 = %g\n", g_soil_settings->values[SOIL_M0]);
-	logger(g_debug_log, "-Soil Litter = %g tC/ha\n", g_soil_settings->values[SOIL_LITTERC]);
+	logger(g_debug_log, "-Litter = %g tC/ha\n", g_soil_settings->values[LITTERC]);
+	logger(g_debug_log, "-Litter = %g tN/ha\n", g_soil_settings->values[LITTERN]);
+	logger(g_debug_log, "-Soil = %g tC/ha\n", g_soil_settings->values[SOILC]);
+	logger(g_debug_log, "-Soil = %g tN/ha\n", g_soil_settings->values[SOILN]);
 
 
 	/***** initialize soil ****/
-	/** soil physic initialization **/
+	/** soil bio-physic initialization **/
 	initialization_soil_physic (m->cells);
 
-	/** soil biogeochemistry initialization **/
-	if ( ! g_soil_settings->values[SOIL_LITTERC] )
+	/** soil bio-geo-chemistry initialization **/
+	if ( ! g_soil_settings->values[LITTERC] ||
+			! g_soil_settings->values[LITTERN] ||
+			! g_soil_settings->values[SOILC] ||
+			! g_soil_settings->values[SOILN])
 	{
 		initialization_soil_biogeochemistry (m->cells);
 	}
@@ -1795,12 +1801,6 @@ void forest_summary(const matrix_t* const m, const int day, const int month, con
 
 						/* initialize nitrogen pools */
 						initialization_forest_class_N (&m->cells[cell], height, dbh, age, species);
-
-						/* initialize litter and soil pools */
-						if ( ! g_soil_settings->values[LITTER_C]  )
-						{
-							initialization_forest_class_litter_soil (&m->cells[cell], height, dbh, age, species);
-						}
 					}
 				}
 			}

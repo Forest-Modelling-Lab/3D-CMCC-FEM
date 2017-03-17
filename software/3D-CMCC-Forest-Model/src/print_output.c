@@ -218,7 +218,7 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 												"FVPD",
 												"FN",
 												"FSW"
-												"LITTER_C"
+												"LITR_C"
 												"SOIL_C"
 										);
 								else
@@ -275,7 +275,7 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 												",FVPD"
 												",FN"
 												",FSW"
-												",LITTER_C"
+												",LITR_C"
 												",SOIL_C"
 										);
 
@@ -486,7 +486,7 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 										s->value[F_VPD],
 										s->value[F_NUTR],
 										s->value[F_SW],
-										s->value[LITTER_C],
+										s->value[LITR_C],
 										s->value[SOIL_C]
 									);
 							else
@@ -546,7 +546,7 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 										s->value[F_VPD],
 										s->value[F_NUTR],
 										s->value[F_SW],
-										s->value[LITTER_C],
+										s->value[LITR_C],
 										s->value[SOIL_C]
 									);
 						}
