@@ -889,8 +889,25 @@ void initialization_soil_biogeochemistry (cell_t *const c)
 	/*check */
 	//CHECK_CONDITION ( c->froot_litr2C + c->froot_litr3C, ==, froot_litter_cellulose );
 
+	//test do we use cwd?
 	/*** dead wood litter pool ***/
-
+//	r1 = t2/t1;
+//	if (r1 <= 0.45)
+//	{
+//		epc->deadwood_fscel = 0.0;
+//		epc->deadwood_fucel = t1;
+//	}
+//	else if (r1 > 0.45 && r1 < 0.7)
+//	{
+//		t4 = (r1 - 0.45)*3.2;
+//		epc->deadwood_fscel = t4*t1;
+//		epc->deadwood_fucel = (1.0 - t4)*t1;
+//	}
+//	else
+//	{
+//		epc->deadwood_fscel = 0.8*t1;
+//		epc->deadwood_fucel = 0.2*t1;
+//	}
 
 
 
