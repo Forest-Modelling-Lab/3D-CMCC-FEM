@@ -1501,7 +1501,7 @@ int main(int argc, char *argv[]) {
 					}
 					/******************************************************************************/
 					/* print daily output */
-					EOD_print_cumulative_balance_cell_level (&matrix->cells[cell], day, month, year, years_of_simulation );
+					EOD_print_output_cell_level (&matrix->cells[cell], day, month, year, years_of_simulation );
 
 					/* reset daily variables once printed */
 					reset_daily_class_variables ( &matrix->cells[cell] );
@@ -1550,7 +1550,7 @@ int main(int argc, char *argv[]) {
 					if ( current_doy == matrix->cells[cell].doy )
 					{
 						/* print monthly output */
-						EOM_print_cumulative_balance_cell_level( &matrix->cells[cell], month, year, years_of_simulation );
+						EOM_print_output_cell_level( &matrix->cells[cell], month, year, years_of_simulation );
 
 						reset_monthly_class_variables ( &matrix->cells[cell] );
 						reset_monthly_layer_variables ( &matrix->cells[cell] );
@@ -1594,7 +1594,7 @@ int main(int argc, char *argv[]) {
 					if ( matrix->cells[cell].doy == (leap_year ? 366 : 365)  )
 					{
 						/* print annual output */
-						EOY_print_cumulative_balance_cell_level( &matrix->cells[cell], year, years_of_simulation );
+						EOY_print_output_cell_level( &matrix->cells[cell], year, years_of_simulation );
 
 						reset_annual_class_variables ( &matrix->cells[cell] );
 						reset_annual_layer_variables ( &matrix->cells[cell] );
@@ -2252,7 +2252,7 @@ int main(int argc, char *argv[]) {
 					}
 					/******************************************************************************/
 					/* print daily output */
-					EOD_print_cumulative_balance_cell_level (&matrix->cells[cell], day, month, year, years_of_simulation );
+					EOD_print_output_cell_level (&matrix->cells[cell], day, month, year, years_of_simulation );
 
 					/* reset daily variables once printed */
 					reset_daily_class_variables ( &matrix->cells[cell] );
@@ -2300,7 +2300,7 @@ int main(int argc, char *argv[]) {
 				}
 				/******************************************************************************/
 				/* print monthly output */
-				EOM_print_cumulative_balance_cell_level( &matrix->cells[cell], month, year, years_of_simulation );
+				EOM_print_output_cell_level( &matrix->cells[cell], month, year, years_of_simulation );
 
 				/* reset monthly variables once printed */
 				if ( ( IS_LEAP_YEAR( matrix->cells[cell].years[year].year ) ? (MonthLength_Leap[month]) : (MonthLength[month] )) == matrix->cells[cell].doy )
@@ -2345,7 +2345,7 @@ int main(int argc, char *argv[]) {
 			}
 			/******************************************************************************/
 			/* print annual output */
-			EOY_print_cumulative_balance_cell_level( &matrix->cells[cell], year, years_of_simulation );
+			EOY_print_output_cell_level( &matrix->cells[cell], year, years_of_simulation );
 
 			/* reset annual variables once printed */
 			if ( ( IS_LEAP_YEAR( matrix->cells[cell].years[year].year ) ? (MonthLength_Leap[DECEMBER]) : (MonthLength[DECEMBER] )) == matrix->cells[cell].doy )

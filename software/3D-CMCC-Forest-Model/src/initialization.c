@@ -583,17 +583,20 @@ void initialization_forest_class_N (cell_t *const c, const int height, const int
 void initialization_forest_class_litter_soil (cell_t *const c, const int height, const int dbh, const int age, const int species)
 {
 	double r1;
-	double t1, t2, t3, t4;
+	double t1, t2, t3, t4;                           /* temporary pools */
 
 	species_t *s;
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 	/* check */
-	CHECK_CONDITION ( fabs (s->value[LEAF_LITT_LAB_FRAC] + s->value[LEAF_LITT_CEL_FRAC] + s->value[LEAF_LITT_LIGN_FRAC]), >, 1+eps);
-	CHECK_CONDITION ( fabs (s->value[FROOT_LITT_LAB_FRAC] + s->value[FROOT_LITT_CEL_FRAC] + s->value[FROOT_LITT_LIGN_FRAC]), >, 1+eps);
-	CHECK_CONDITION ( fabs (s->value[DEAD_WOOD_CEL_FRAC] + s->value[DEAD_WOOD_LIGN_FRAC]), >, 1+eps);
+	CHECK_CONDITION ( fabs (s->value[LEAF_LITT_LAB_FRAC] + s->value[LEAF_LITT_CEL_FRAC] + s->value[LEAF_LITT_LIGN_FRAC]), >, 1 + eps);
+	CHECK_CONDITION ( fabs (s->value[FROOT_LITT_LAB_FRAC] + s->value[FROOT_LITT_CEL_FRAC] + s->value[FROOT_LITT_LIGN_FRAC]), >, 1 + eps);
+	CHECK_CONDITION ( fabs (s->value[DEAD_WOOD_CEL_FRAC] + s->value[DEAD_WOOD_LIGN_FRAC]), >, 1 + eps);
 
-	/* calculate shielded and unshielded cellulose fraction */
+
+
+
+	/** calculate shielded and unshielded cellulose fraction **/
 
 	/** leaf litter pool **/
 	t1 = s->value[LEAF_LITT_LAB_FRAC];

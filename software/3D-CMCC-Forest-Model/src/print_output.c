@@ -86,7 +86,7 @@ void print_model_settings(logger_t*const log)
 	}
 }
 
-void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, const int month, const int year, const int years_of_simulation)
+void EOD_print_output_cell_level(cell_t *const c, const int day, const int month, const int year, const int years_of_simulation )
 {
 	int layer;
 	int height;
@@ -97,9 +97,6 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 	static int years_counter;
 
 	species_t *s;
-	meteo_t *met;
-
-	met = c->years[year].m;
 
 	/* return if daily logging is off*/
 	if ( ! g_daily_log ) return;
@@ -136,7 +133,7 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 							logger(g_daily_log,"\t%4s", "DBH");
 						else
 							logger(g_daily_log,",DBH");
-						
+
 
 						for ( age = 0; age < c->heights[height].dbhs[dbh].ages_count ; ++age )
 						{
@@ -145,7 +142,7 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 								logger(g_daily_log,"\t%7s", "AGE");
 							else
 								logger(g_daily_log,",AGE");
-							
+
 
 							for ( species = 0; species < c->heights[height].dbhs[dbh].ages[age].species_count; ++species )
 							{
@@ -162,122 +159,122 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 									logger(g_daily_log, ",MANAGEMENT");
 
 								if ( g_settings->no_spreadsheet )
-										logger(g_daily_log,"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s"
-												"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s"
-												"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s "
-												"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s",
-												"GPP",
-												"RG",
-												"RM",
-												"RA",
-												"NPP",
-												"CUE",
-												"LAI",
-												"CC_P",
-												"CC_E",
-												"Ntree",
-												"VEG_D",
-												"C_INT",
-												"C_WAT",
-												"C_EVA",
-												"C_TRA",
-												"C_ET",
-												"C_LE",
-												"S_EVA",
-												"WUE",
-												"WRes",
-												"WS",
-												"WSsap",
-												"WSL",
-												"WSD",
-												"WL",
-												"WFR",
-												"WCR",
-												"WCRsap",
-												"WCRL",
-												"WCRD",
-												"WBB",
-												"WBBsap",
-												"WBBL",
-												"WBBD",
-												"dWRes",
-												"dWS",
-												"dWL",
-												"dWFR",
-												"dWCR",
-												"dWBB",
-												"SAR",
-												"LAR",
-												"FRAR",
-												"CRAR",
-												"BBAR",
-												"FCO2",
-												"FCO2_TR",
-												"FAGE",
-												"FT",
-												"FVPD",
-												"FN",
-												"FSW"
-												"LITR_C"
-												"SOIL_C"
-										);
+									logger(g_daily_log,"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s"
+											"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s"
+											"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s "
+											"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s",
+											"GPP",
+											"RG",
+											"RM",
+											"RA",
+											"NPP",
+											"CUE",
+											"LAI",
+											"CC_P",
+											"CC_E",
+											"Ntree",
+											"VEG_D",
+											"C_INT",
+											"C_WAT",
+											"C_EVA",
+											"C_TRA",
+											"C_ET",
+											"C_LE",
+											"S_EVA",
+											"WUE",
+											"WRes",
+											"WS",
+											"WSsap",
+											"WSL",
+											"WSD",
+											"WL",
+											"WFR",
+											"WCR",
+											"WCRsap",
+											"WCRL",
+											"WCRD",
+											"WBB",
+											"WBBsap",
+											"WBBL",
+											"WBBD",
+											"dWRes",
+											"dWS",
+											"dWL",
+											"dWFR",
+											"dWCR",
+											"dWBB",
+											"SAR",
+											"LAR",
+											"FRAR",
+											"CRAR",
+											"BBAR",
+											"FCO2",
+											"FCO2_TR",
+											"FAGE",
+											"FT",
+											"FVPD",
+											"FN",
+											"FSW"
+											"LITR_C"
+											"SOIL_C"
+									);
 								else
 									logger(g_daily_log,
-												",GPP"
-												",RG"
-												",RM"
-												",RA"
-												",NPP"
-												",CUE"
-												",LAI"
-												",CC_P"
-												",CC_E"
-												",Ntree"
-												",VEG_D"
-												",C_INT"
-												",C_WAT"
-												",C_EVA"
-												",C_TRA"
-												",C_ET"
-												",C_LE"
-												",S_EVA"
-												",WUE"
-												",WRes"
-												",WS"
-												",WSsap"
-												",WSL"
-												",WSD"
-												",WL"
-												",WFR"
-												",WCR"
-												",WCRsap"
-												",WCRL"
-												",WCRD"
-												",WBB"
-												",WBBsap"
-												",WBBL"
-												",WBBD"
-												",dWRes"
-												",dWS"
-												",dWL"
-												",dWFR"
-												",dWCR"
-												",dWBB"
-												",SAR"
-												",LAR"
-												",FRAR"
-												",CRAR"
-												",BBAR"
-												",FCO2"
-												",FCO2_TR"
-												",FAGE"
-												",FT"
-												",FVPD"
-												",FN"
-												",FSW"
-												",LITR_C"
-												",SOIL_C"
-										);
+											",GPP"
+											",RG"
+											",RM"
+											",RA"
+											",NPP"
+											",CUE"
+											",LAI"
+											",CC_P"
+											",CC_E"
+											",Ntree"
+											",VEG_D"
+											",C_INT"
+											",C_WAT"
+											",C_EVA"
+											",C_TRA"
+											",C_ET"
+											",C_LE"
+											",S_EVA"
+											",WUE"
+											",WRes"
+											",WS"
+											",WSsap"
+											",WSL"
+											",WSD"
+											",WL"
+											",WFR"
+											",WCR"
+											",WCRsap"
+											",WCRL"
+											",WCRD"
+											",WBB"
+											",WBBsap"
+											",WBBL"
+											",WBBD"
+											",dWRes"
+											",dWS"
+											",dWL"
+											",dWFR"
+											",dWCR"
+											",dWBB"
+											",SAR"
+											",LAR"
+											",FRAR"
+											",CRAR"
+											",BBAR"
+											",FCO2"
+											",FCO2_TR"
+											",FAGE"
+											",FT"
+											",FVPD"
+											",FN"
+											",FSW"
+											",LITR_C"
+											",SOIL_C"
+									);
 
 							}
 							if ( c->heights[height].dbhs[dbh].ages[age].species_count > 1 ) {
@@ -348,7 +345,7 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 				logger(g_daily_log,"\t%10s", "*****");
 			else
 				logger(g_daily_log,",*****");
-			
+
 		}
 		/* heading variables only at cell level */
 		if ( g_settings->no_spreadsheet )
@@ -488,7 +485,7 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 										s->value[F_SW],
 										s->value[LITR_C],
 										s->value[SOIL_C]
-									);
+								);
 							else
 								logger(g_daily_log,",%6.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%d,%d,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
 										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
@@ -548,7 +545,7 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 										s->value[F_SW],
 										s->value[LITR_C],
 										s->value[SOIL_C]
-									);
+								);
 						}
 
 						if ( c->heights[height].dbhs[dbh].ages[age].species_count > 1 ) {
@@ -609,17 +606,17 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 	{
 		if ( g_settings->no_spreadsheet )
 			logger(g_daily_log, "\t%4s \t%3.4f \t%3.4f \t%3.4f",
-				"***",
-				c->daily_gpp,
-				c->daily_npp_gC,
-				c->daily_aut_resp);
+					"***",
+					c->daily_gpp,
+					c->daily_npp_gC,
+					c->daily_aut_resp);
 		else
 			logger(g_daily_log, ",%s,%3.4f,%3.4f,%3.4f",
-				"***",
-				c->daily_gpp,
-				c->daily_npp_gC,
-				c->daily_aut_resp);
-	
+					"***",
+					c->daily_gpp,
+					c->daily_npp_gC,
+					c->daily_aut_resp);
+
 	}
 	/* printing variables at cell level also if there's more than one layer */
 	else
@@ -654,7 +651,7 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 				c->litrN,
 				c->soilN
 		);
-	
+
 
 	/************************************************************************/
 
@@ -677,7 +674,7 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 	}
 }
 
-void EOM_print_cumulative_balance_cell_level(cell_t *const c, const int month, const int year, const int years_of_simulation )
+void EOM_print_output_cell_level(cell_t *const c, const int month, const int year, const int years_of_simulation )
 {
 	int layer;
 	int height;
@@ -864,10 +861,10 @@ void EOM_print_cumulative_balance_cell_level(cell_t *const c, const int month, c
 		{
 			if ( g_settings->no_spreadsheet )
 				logger(g_monthly_log,"\t%10s \t%10s \t%10s \t%10s",
-					"***",
-					"gpp",
-					"npp",
-					"ar");
+						"***",
+						"gpp",
+						"npp",
+						"ar");
 			else
 				logger(g_monthly_log,",***,gpp,npp,ar");
 		}
@@ -1074,7 +1071,7 @@ void EOM_print_cumulative_balance_cell_level(cell_t *const c, const int month, c
 					c->monthly_gpp,
 					c->monthly_npp_gC,
 					c->monthly_aut_resp);
-			
+
 	}
 	/* printing variables at cell level also if there's more than one layer */
 	else
@@ -1087,16 +1084,16 @@ void EOM_print_cumulative_balance_cell_level(cell_t *const c, const int month, c
 	/* printing variables only at cell level */
 	if ( g_settings->no_spreadsheet )
 		logger(g_monthly_log, "\t%3.2f \t%3.2f \t%3.2f \t%3.2f\n",
-			c->monthly_et,
-			c->monthly_latent_heat_flux,
-			c->asw,
-			c->monthly_iwue);
+				c->monthly_et,
+				c->monthly_latent_heat_flux,
+				c->asw,
+				c->monthly_iwue);
 	else
 		logger(g_monthly_log, ",%3.2f,%3.2f,%3.2f,%3.2f\n",
-			c->monthly_et,
-			c->monthly_latent_heat_flux,
-			c->asw,
-			c->monthly_iwue);
+				c->monthly_et,
+				c->monthly_latent_heat_flux,
+				c->asw,
+				c->monthly_iwue);
 
 	/************************************************************************/
 
@@ -1120,7 +1117,7 @@ void EOM_print_cumulative_balance_cell_level(cell_t *const c, const int month, c
 	}
 }
 
-void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, const int years_of_simulation )
+void EOY_print_output_cell_level(cell_t *const c, const int year, const int years_of_simulation )
 {
 	int layer;
 	int height;
@@ -1552,17 +1549,17 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 		{
 			if ( g_settings->no_spreadsheet )
 				logger(g_annual_log, "\t%4s \t%3.4f \t%3.4f \t%3.4f \t%3.4f",
-					"***",
-					c->annual_gpp,
-					c->annual_npp_gC,
-					c->annual_aut_resp,
-					(c->annual_aut_resp/c->annual_gpp)*100.0);
+						"***",
+						c->annual_gpp,
+						c->annual_npp_gC,
+						c->annual_aut_resp,
+						(c->annual_aut_resp/c->annual_gpp)*100.0);
 			else
 				logger(g_annual_log, "***,%3.4f,%3.4f,%3.4f,%3.4f",
-					c->annual_gpp,
-					c->annual_npp_gC,
-					c->annual_aut_resp,
-					(c->annual_aut_resp/c->annual_gpp)*100.0);
+						c->annual_gpp,
+						c->annual_npp_gC,
+						c->annual_aut_resp,
+						(c->annual_aut_resp/c->annual_gpp)*100.0);
 
 		}
 		/* printing variables at cell level also if there's more than one layer */
@@ -1611,45 +1608,193 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 		print_model_settings(g_annual_log);
 	}
 }
-//
-//void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, const int month, const int year, const int years_of_simulation )
-//{
-//	int layer;
-//	int height;
-//	int dbh;
-//	int age;
-//	int species;
-//
-//	static int years_counter;
-//
-//	species_t *s;
-//
-//	/* return if daily logging is off*/
-//	if ( ! g_daily_log ) return;
-//
-//	/* heading */
-//	if ( !day && !month && !year )
-//	{
-//		logger(g_daily_log,"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s"
-//				"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s"
-//				"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s",
-//				"YEAR",	"MONTH", "DAY",	"GPP", "RA", "NPP", "CUE", "LAI", "CC_P", "CC_E", "Ntree", "C_INT",
-//				"C_EVA", "C_TRA", "C_ET", "C_LE", "S_EVA", "WUE", "WRes", "WS", "WSsap", "WSL", "WSD", "WL",
-//				"WFR", "WCR", "WCRsap", "WCRL", "WCRD", "WBB", "WBBsap", "WBBL", "WBBD", "FCO2", "FCO2_TR");
-//	}
-//	/*
-//
-//	logger(g_daily_log,"\t%6.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f"
-//			"\t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f"
-//			"\t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f",
-//			c->daily_gpp;
-//			c->daily_aut_resp,
-//			c->daily_npp_gC,
-//
-//
-//			)
-//			*/
-//
-//}
+
+void EOD_print_output_soil_cell_level(cell_t *const c, const int day, const int month, const int year, const int years_of_simulation )
+{
+	//TODO
+}
+
+void EOM_print_output_soil_cell_level(cell_t *const c, const int month, const int year, const int years_of_simulation )
+{
+	//TODO
+}
+
+void EOY_print_output_soil_cell_level(cell_t *const c, const int year, const int years_of_simulation )
+{
+
+	static int years_counter;
+
+	/* return if annual logging is off*/
+	if ( ! g_annual_log ) return;
+
+	/* heading */
+	if ( !year )
+	{
+		logger(g_annual_log, "%s", "YEAR");
+
+
+		/************************************************************************/
+		/* heading variables at cell level only if there's more than one layer */
+
+		if ( g_settings->no_spreadsheet )
+		{
+			/* carbon pools */
+			logger(g_annual_log,"\t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s",
+					"***",
+					"litrC",
+					"litr1C",
+					"litr2C",
+					"litr3C",
+					"litr4C",
+					"soilC",
+					"soil1C",
+					"soil2C",
+					"soil3C",
+					"soil4C");
+			/* nitrogen pools */
+			logger(g_annual_log,"\t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s",
+					"***",
+					"litrN",
+					"litr1N",
+					"litr2N",
+					"litr3N",
+					"litr4N",
+					"soilN",
+					"soil1N",
+					"soil2N",
+					"soil3N",
+					"soil4N");
+		}
+		else
+		{
+			/* carbon pools */
+			logger(g_annual_log,",***,litrC,litr1C,litr2C,litr3C,litr4C,soilC,soil1C,soil2C,soil3C,soil4C");
+			/* nitrogen pools */
+			logger(g_annual_log,",***,litrN,litr1N,litr2N,litr3N,litr4N,soilN,soil1N,soil2N,soil3N,soil4N");
+		}
+
+		/* heading variables only at cell level */
+		if ( g_settings->no_spreadsheet )
+		{
+			/* carbon pools */
+			logger(g_annual_log,"\t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s",
+					"litrC",
+					"litr1C",
+					"litr2C",
+					"litr3C",
+					"litr4C",
+					"soilC",
+					"soil1C",
+					"soil2C",
+					"soil3C",
+					"soil4C");
+			/* nitrogen pools */
+			logger(g_annual_log,"\t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s",
+					"litrN",
+					"litr1N",
+					"litr2N",
+					"litr3N",
+					"litr4N",
+					"soilN",
+					"soil1N",
+					"soil2N",
+					"soil3N",
+					"soil4N");
+		}
+		else
+		{
+			/* carbon pools */
+			logger(g_annual_log,",litrC,litr1C,litr2C,litr3C,litr4C,soilC,soil1C,soil2C,soil3C,soil4C");
+			/* nitrogen pools */
+			logger(g_annual_log,",litrN,litr1N,litr2N,litr3N,litr4N,soilN,soil1N,soil2N,soil3N,soil4N\n");
+		}
+	}
+	/*****************************************************************************************************/
+
+	/* values */
+	logger(g_annual_log, "%d", c->years[year].year);
+
+	/* print class level values */
+
+
+	/************************************************************************/
+	/* printing variables at cell level only if there's more than one layer */
+
+
+		if ( g_settings->no_spreadsheet )
+		{
+			/* carbon pools */
+			logger(g_annual_log, "\t%4s \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f",
+					"***",
+					c->litrC,
+					c->litr1C,
+					c->litr2C,
+					c->litr3C,
+					c->litr4C,
+					c->soilC,
+					c->soil1C,
+					c->soil2C,
+					c->soil3C,
+					c->soil4C);
+			/* nitrogen pools */
+			logger(g_annual_log, "\t%4s \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f\n",
+					"***",
+					c->litrN,
+					c->litr1N,
+					c->litr2N,
+					c->litr3N,
+					c->litr4N,
+					c->soilN,
+					c->soil1N,
+					c->soil2N,
+					c->soil3N,
+					c->soil4N);
+		}
+		else
+		{
+			/* carbon pools */
+			logger(g_annual_log, "***,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",
+					c->litrC,
+					c->litr1C,
+					c->litr2C,
+					c->litr3C,
+					c->litr4C,
+					c->soilC,
+					c->soil1C,
+					c->soil2C,
+					c->soil3C,
+					c->soil4C);
+			/* nitrogen pools */
+			logger(g_annual_log, "***,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f\n",
+					c->litrN,
+					c->litr1N,
+					c->litr2N,
+					c->litr3N,
+					c->litr4N,
+					c->soilN,
+					c->soil1N,
+					c->soil2N,
+					c->soil3N,
+					c->soil4N);
+		}
+
+	/************************************************************************/
+
+	++years_counter;
+
+	if ( years_counter ==  years_of_simulation)
+	{
+		if (g_annual_log) g_annual_log->std_output = 1;
+		logger(g_annual_log, sz_launched, netcdf_get_version(), datetime_current());
+		print_model_paths(g_annual_log);
+		if (g_annual_log)
+		{
+			//const char* p;
+			//p = file_get_name_only(g_annual_log->filename);
+			logger(g_annual_log, "output file = %s\n", g_annual_log->filename);
+		}
+		print_model_settings(g_annual_log);
+	}
+}
 
 
