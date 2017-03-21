@@ -553,6 +553,7 @@ enum {
 	BRANCH_N,                           /* Current Branch nitrogen pool tN/sizeCell */
 	BRANCH_LIVE_WOOD_N,                 /* Current Live Branch nitrogen pool tN/sizeCell */
 	BRANCH_DEAD_WOOD_N,                 /* Current Dead Branch nitrogen pool tN/sizeCell */
+	TREE_N_DEMAND,                      /* Current Nitrogen demand for new plant tissues tN/sizeCell */
 	LITTER_N,                           /* Current Litter nitrogen pool tN/sizeCell */
 	SOIL_N,                             /* Current soil nitrogen pool tN/sizeCell */
 

@@ -10,8 +10,8 @@
 
 #include "matrix.h"
 
-void carbon_allocation(species_t *const s);
+void carbon_allocation( cell_t *const c, species_t *const s );
 
-void nitrogen_allocation(species_t *const s);
+void nitrogen_allocation( cell_t *const c, species_t *const s );
 
 #endif /*CN_ALLOCATION_H_ */

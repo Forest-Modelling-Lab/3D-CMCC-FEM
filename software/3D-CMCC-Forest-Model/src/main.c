@@ -1349,6 +1349,10 @@ int main(int argc, char *argv[]) {
 					Weighted_average_temperature(&matrix->cells[cell], WEIGHTED_MEAN_TDAY, day, month, year);
 					Weighted_average_temperature(&matrix->cells[cell], WEIGHTED_MEAN_TNIGHT, day, month, year);
 					Weighted_average_temperature(&matrix->cells[cell], WEIGHTED_MEAN_TSOIL, day, month, year);
+
+					//TODO ALESSIOC ASK TO ALESSIOR TO INCLUDE VALUES OF Ndep file INTO SOIL POOL
+					//Nitrogen_deposition(&matrix->cells[cell], year);
+
 					if ( LANDUSE_F == g_soil_settings->landuse )
 					{
 						/* compute annually the days for the growing season BEFORE any other process */

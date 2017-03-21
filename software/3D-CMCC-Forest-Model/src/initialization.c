@@ -798,13 +798,16 @@ void initialization_soil_biogeochemistry (cell_t *const c)
 	double deadwood_litter_cellulose;
 
 	/* fractions */
-	double leaf_froot_frac = 1.;                                          /* leaf fine root fraction */
+	double leaf_froot_frac = 1.;                                          /* (dim) leaf fine root fraction */
 	double leaf_litt_scel_frac;                                           /* (dim) leaf litter shielded cellulose fraction */
 	double leaf_litt_uscel_frac;                                          /* (dim) leaf litter unshielded cellulose fraction */
 	double froot_litt_scel_frac;                                          /* (dim) fine root litter shielded cellulose fraction */
 	double froot_litt_uscel_frac;                                         /* (dim) fine root litter unshielded fraction */
 	double dead_wood_scel_frac;                                           /* (dim) dead wood litter shielded cellulose fraction */
 	double dead_wood_uscel_frac;                                          /* (dim) dead wood litter unshielded fraction */
+
+	/* todo: if cell is monospecific than use values of species level instead generic */
+	/* fixme: arbitrary values for fractions */
 	double leaf_litter_labile_frac = 0.20;
 	double leaf_litter_cellulose_frac = 0.50;
 	double leaf_litter_lignin_frac = 0.30;
@@ -817,19 +820,19 @@ void initialization_soil_biogeochemistry (cell_t *const c)
 	/* carbon pools */
 	double leaf_litterC;
 	double froot_litterC;
+	double litterC;
 	double cwd_litterC;
 
 
-	CHECK_CONDITION (fabs(froot_litter_labile_frac + froot_litter_cellulose_frac + froot_litter_lignin_frac-1.), > , eps);
-	CHECK_CONDITION (fabs(deadwood_litter_cellulose_frac + deadwood_litter_lignin_frac-1.), > , eps);
-
-
+	/* note: BIOME-BGC method for fractions of pools */
 	/*************************************** CARBON POOLS ***************************************/
 
-	/* share litter carbon among leaf and fine root */
-	//note: assuming that litter is shared based on "leaf_froot_frac" between leaf and fine root litter pools
-	leaf_litterC = g_soil_settings->values[LITTERC] * ( leaf_froot_frac / 2. );
-	froot_litterC = g_soil_settings->values[LITTERC] - leaf_litterC;
+	/* share litter carbon among leaf and fine root tC/sizecell -> KgC/m2 */
+	//assumption: litter is shared based on "leaf_froot_frac" between leaf and fine root litter pools
+
+	litterC = g_soil_settings->values[LITTERC] * (1000 / g_settings->sizeCell);
+	leaf_litterC = litterC * ( leaf_froot_frac / 2. );
+	froot_litterC = litterC - leaf_litterC;
 
 
 	/****************** compute leaf litter pool ******************/
@@ -920,8 +923,11 @@ void initialization_soil_biogeochemistry (cell_t *const c)
 
 	/****************** coarse woody debris litter pool ******************/
 
-	/* coarse woody debris carbon cellulose pool */
-	cwd_litterC = g_soil_settings->values[LITTERCWDC];
+	/* check for coarse woody debris fractions sum to 1.0 */
+	CHECK_CONDITION (fabs(deadwood_litter_cellulose_frac + deadwood_litter_lignin_frac-1.), > , eps);
+
+	/* coarse woody debris carbon cellulose pool tC/sizecell -> kgC/m2 */
+	cwd_litterC = g_soil_settings->values[LITTERCWDC] * (1000 / g_settings->sizeCell);
 	deadwood_litter_cellulose = cwd_litterC * deadwood_litter_cellulose_frac;
 
 	/* coarse woody debris carbon lignin pool */
@@ -974,7 +980,7 @@ void initialization_soil_biogeochemistry (cell_t *const c)
 	c->litr4C = c->leaf_litr4C + c->froot_litr4C + c->deadwood_litr4C;
 
 	/* check */
-	CHECK_CONDITION ( fabs((c->litr1C + c->litr2C + c->litr3C + c->litr4C) - (g_soil_settings->values[LITTERC] + g_soil_settings->values[LITTERCWDC])), > , eps);
+	CHECK_CONDITION ( fabs((c->litr1C + c->litr2C + c->litr3C + c->litr4C) - (litterC + cwd_litterC)), > , eps);
 
 
 	/*************************************** NITROGEN POOLS ***************************************/

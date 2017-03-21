@@ -389,14 +389,16 @@ K	           0.60		 // Extinction coefficient for absorption of PAR by canopy
 
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-SITE PARAMETRIZATION
-The fourth required input file is "site.txt". It contains information about soil and fertility of the test site.
+SOIL PARAMETRIZATION
+The fourth required input file is "soil.txt". It contains information about soil and fertility of the test site.
 
 Comments are allowed in the parameter file. Comments can appear almost anywhere, must begin with two forward slash characters 
 '//', at the end of the line. Example parameter files are provided.
 
 In general, the format of parameters file is one parameter per line, with the parameter name being enclosed in double quotes, with a 
-tab character seperating the parameter name and its value.
+tab character separating the parameter name and its value.
+
+IMPORTANT: Values are referred to the SIZECELL dimensions specified in the setting.txt file (e.g. if SIZECELL = 100 meters -> tC/ha)
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 TOPO PARAMETRIZATION
 The fifth required input file is "topo.txt". It contains information about topography of the test site.
@@ -405,7 +407,7 @@ Comments are allowed in the parameter file. Comments can appear almost anywhere,
 '//', at the end of the line. Example parameter files are provided.
 
 In general, the format of parameters file is one parameter per line, with the parameter name being enclosed in double quotes, with a 
-tab character seperating the parameter name and its value.
+tab character separating the parameter name and its value.
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 

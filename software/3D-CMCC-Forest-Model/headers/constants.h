@@ -74,6 +74,7 @@ enum {
 #define MAX_N_TREE_LAYER           3      /* define the maximum number for tree layers (todo move into setting.txt) */
 
 /** soil constants (BIOME-BGC method) **/
+#define BULK_DENITRIF_FRAC       0.5      /* Fraction of Nitrogen lost through Denitrification when N demand is lower than N available */
 #define SOIL1_CN                12.0      /* C:N for fast microbial recycling pool */
 #define SOIL2_CN                12.0      /* C:N for slow microbial recycling pool */
 #define SOIL3_CN                10.0      /* C:N for recalcitrant SOM pool (humus) */

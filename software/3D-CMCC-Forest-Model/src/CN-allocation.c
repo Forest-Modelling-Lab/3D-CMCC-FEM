@@ -22,7 +22,7 @@
 extern settings_t* g_settings;
 extern logger_t* g_debug_log;
 
-void carbon_allocation(species_t *const s)
+void carbon_allocation( cell_t *const c, species_t *const s)
 {
 	/* it allocates Daily assimilated Carbon for both deciduous and evergreen daily */
 	logger(g_debug_log, "\n****CARBON ALLOCATION****\n");
@@ -89,7 +89,7 @@ void carbon_allocation(species_t *const s)
 	/***************************************************************************************/
 
 #if 0
-	//test_new
+	//test_new if not using the allometric equations for the sapwood amount
 	s->value[STEM_LIVE_WOOD_C] = s->value[STEM_SAPWOOD_C] * s->value[LIVE_TOTAL_WOOD_FRAC];
 #else
 	s->value[STEM_LIVE_WOOD_C] = s->value[STEM_C] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
@@ -105,7 +105,7 @@ void carbon_allocation(species_t *const s)
 	/***************************************************************************************/
 
 #if 0
-	//test_new
+	//test_new if not using the allometric equations for the sapwood amount
 	s->value[COARSE_ROOT_LIVE_WOOD_C] = s->value[COARSE_ROOT_SAPWOOD_C] * s->value[LIVE_TOTAL_WOOD_FRAC];
 #else
 	s->value[COARSE_ROOT_LIVE_WOOD_C] = s->value[COARSE_ROOT_C] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
@@ -120,7 +120,7 @@ void carbon_allocation(species_t *const s)
 	/***************************************************************************************/
 
 #if 0
-	//test_new
+	//test_new if not using the allometric equations for the sapwood amount
 	s->value[BRANCH_LIVE_WOOD_C] = s->value[BRANCH_SAPWOOD_C] * s->value[LIVE_TOTAL_WOOD_FRAC];
 #else
 	s->value[BRANCH_LIVE_WOOD_C] = s->value[BRANCH_C]* s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
@@ -147,7 +147,7 @@ void carbon_allocation(species_t *const s)
 
 /********************************************************************************************************************************************/
 
-void nitrogen_allocation (species_t *const s)
+void nitrogen_allocation ( cell_t *const c, species_t *const s )
 {
 	/* it allocates Daily assimilated Nitrogen for both deciduous and evergreen and compute Nitrogen demand */
 
@@ -156,23 +156,14 @@ void nitrogen_allocation (species_t *const s)
 	/*** update class level carbon Nitrogen pools ***/
 
 	s->value[N_TO_LEAF] = s->value[C_TO_LEAF] / s->value[CN_LEAVES];
-	//s->value[LEAF_N] += s->value[N_TO_LEAF];
-	//s->value[LEAF_C] -= s->value[C_LEAF_TO_LITTER];
-
 
 	s->value[N_TO_FINEROOT] = s->value[C_TO_FINEROOT] / s->value[CN_FINE_ROOTS];
-	//s->value[FINE_ROOT_N] += s->value[N_TO_FINEROOT];
-	//s->value[FINE_ROOT_C] -= s->value[C_FINE_ROOT_TO_LITTER];
 
 	s->value[N_TO_STEM] = s->value[C_TO_STEM] / s->value[CN_LIVE_WOODS];
-	//s->value[STEM_N] += s->value[N_TO_STEM];
 
 	s->value[N_TO_BRANCH] = s->value[C_TO_BRANCH] / s->value[CN_LIVE_WOODS];
-	//s->value[BRANCH_N] += s->value[N_TO_BRANCH];
 
 	s->value[N_TO_COARSEROOT] = s->value[C_TO_COARSEROOT] / s->value[CN_LIVE_WOODS];
-	//s->value[COARSE_ROOT_N] += s->value[N_TO_COARSEROOT];
-
 
 	logger(g_debug_log, "N_TO_LEAF = %g tN/cell/day\n", s->value[N_TO_LEAF]);
 	logger(g_debug_log, "N_TO_FINEROOT = %g tN/cell/day\n", s->value[N_TO_FINEROOT]);
@@ -191,6 +182,14 @@ void nitrogen_allocation (species_t *const s)
 	/* tN/Cell/day -> gC/m2/day */
 	s->value[NPP_gN] = s->value[NPP_tN] / g_settings->sizeCell * 1000000;
 	logger(g_debug_log, "Daily Nitrogen demand = %g gN/m2/day\n", s->value[NPP_gN]);
+
+	/* daily Nitrogen demand */
+	s->value[TREE_N_DEMAND] = s->value[NPP_gN];
+
+	if (s->value[TREE_N_DEMAND] > c->soilN)
+	{
+		//todo back to partitioning-allocation routine and recompute both NPP in gC and NPP in gN based on the available soil nitrogen content
+	}
 
 #if 0
 	s->value[TOT_ROOT_N] = s->value[COARSE_ROOT_N] + s->value[FINE_ROOT_N];

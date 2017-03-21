@@ -206,7 +206,7 @@ ntemp_struct* nt, double naddfrac, int mode) /* mode is MODE_SPINUP or MODE_MODE
 	}
 	else
 	{
-		/* N availability can not satisfy the sum of immobiliation and
+		/* N availability can not satisfy the sum of immobilization and
 		plant growth demands, so these two demands compete for available
 		soil mineral N */
 		nlimit = 1;
