@@ -1621,7 +1621,6 @@ void EOM_print_output_soil_cell_level(cell_t *const c, const int month, const in
 
 void EOY_print_output_soil_cell_level(cell_t *const c, const int year, const int years_of_simulation )
 {
-
 	static int years_counter;
 
 	/* return if annual logging is off*/
@@ -1632,15 +1631,22 @@ void EOY_print_output_soil_cell_level(cell_t *const c, const int year, const int
 	{
 		logger(g_annual_log, "%s", "YEAR");
 
-
 		/************************************************************************/
 		/* heading variables at cell level only if there's more than one layer */
 
 		if ( g_settings->no_spreadsheet )
 		{
 			/* carbon pools */
-			logger(g_annual_log,"\t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s",
+			logger(g_annual_log,"\t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s ",
 					"***",
+					"leaf_litr1C",
+					"leaf_litr2C",
+					"leaf_litr3C",
+					"leaf_litr4C",
+					"froot_litr1C",
+					"froot_litr2C",
+					"froot_litr3C",
+					"froot_litr4C",
 					"litrC",
 					"litr1C",
 					"litr2C",
@@ -1652,8 +1658,16 @@ void EOY_print_output_soil_cell_level(cell_t *const c, const int year, const int
 					"soil3C",
 					"soil4C");
 			/* nitrogen pools */
-			logger(g_annual_log,"\t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s",
+			logger(g_annual_log,"\t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s",
 					"***",
+					"leaf_litr1N",
+					"leaf_litr2N",
+					"leaf_litr3N",
+					"leaf_litr4N",
+					"froot_litr1N",
+					"froot_litr2N",
+					"froot_litr3N",
+					"froot_litr4N",
 					"litrN",
 					"litr1N",
 					"litr2N",
@@ -1668,121 +1682,152 @@ void EOY_print_output_soil_cell_level(cell_t *const c, const int year, const int
 		else
 		{
 			/* carbon pools */
-			logger(g_annual_log,",***,litrC,litr1C,litr2C,litr3C,litr4C,soilC,soil1C,soil2C,soil3C,soil4C");
+			logger(g_annual_log,
+					",***,"
+					"leaf_litr1C,",
+					"leaf_litr2C,",
+					"leaf_litr3C,",
+					"leaf_litr4C,",
+					"froot_litr1C,",
+					"froot_litr2C,",
+					"froot_litr3C,",
+					"froot_litr4C,",
+					"litrC,"
+					"litr1C,"
+					"litr2C,"
+					"litr3C,"
+					"litr4C,"
+					"soilC,"
+					"soil1C,"
+					"soil2C,"
+					"soil3C,"
+					"soil4C");
 			/* nitrogen pools */
-			logger(g_annual_log,",***,litrN,litr1N,litr2N,litr3N,litr4N,soilN,soil1N,soil2N,soil3N,soil4N");
+			logger(g_annual_log,
+					",***,"
+					"leaf_litr1N,",
+					"leaf_litr2N,",
+					"leaf_litr3N,",
+					"leaf_litr4N,",
+					"froot_litr1N,",
+					"froot_litr2N,",
+					"froot_litr3N,",
+					"froot_litr4N,",
+					"litrN,"
+					"litr1N,"
+					"litr2N,"
+					"litr3N,"
+					"litr4N,"
+					"soilN,"
+					"soil1N,"
+					"soil2N,"
+					"soil3N,"
+					"soil4N");
 		}
 
-		/* heading variables only at cell level */
-		if ( g_settings->no_spreadsheet )
-		{
-			/* carbon pools */
-			logger(g_annual_log,"\t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s",
-					"litrC",
-					"litr1C",
-					"litr2C",
-					"litr3C",
-					"litr4C",
-					"soilC",
-					"soil1C",
-					"soil2C",
-					"soil3C",
-					"soil4C");
-			/* nitrogen pools */
-			logger(g_annual_log,"\t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s",
-					"litrN",
-					"litr1N",
-					"litr2N",
-					"litr3N",
-					"litr4N",
-					"soilN",
-					"soil1N",
-					"soil2N",
-					"soil3N",
-					"soil4N");
-		}
-		else
-		{
-			/* carbon pools */
-			logger(g_annual_log,",litrC,litr1C,litr2C,litr3C,litr4C,soilC,soil1C,soil2C,soil3C,soil4C");
-			/* nitrogen pools */
-			logger(g_annual_log,",litrN,litr1N,litr2N,litr3N,litr4N,soilN,soil1N,soil2N,soil3N,soil4N\n");
-		}
+
 	}
 	/*****************************************************************************************************/
 
 	/* values */
 	logger(g_annual_log, "%d", c->years[year].year);
 
-	/* print class level values */
-
-
 	/************************************************************************/
-	/* printing variables at cell level only if there's more than one layer */
 
-
-		if ( g_settings->no_spreadsheet )
-		{
-			/* carbon pools */
-			logger(g_annual_log, "\t%4s \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f",
-					"***",
-					c->litrC,
-					c->litr1C,
-					c->litr2C,
-					c->litr3C,
-					c->litr4C,
-					c->soilC,
-					c->soil1C,
-					c->soil2C,
-					c->soil3C,
-					c->soil4C);
-			/* nitrogen pools */
-			logger(g_annual_log, "\t%4s \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f\n",
-					"***",
-					c->litrN,
-					c->litr1N,
-					c->litr2N,
-					c->litr3N,
-					c->litr4N,
-					c->soilN,
-					c->soil1N,
-					c->soil2N,
-					c->soil3N,
-					c->soil4N);
-		}
-		else
-		{
-			/* carbon pools */
-			logger(g_annual_log, "***,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",
-					c->litrC,
-					c->litr1C,
-					c->litr2C,
-					c->litr3C,
-					c->litr4C,
-					c->soilC,
-					c->soil1C,
-					c->soil2C,
-					c->soil3C,
-					c->soil4C);
-			/* nitrogen pools */
-			logger(g_annual_log, "***,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f\n",
-					c->litrN,
-					c->litr1N,
-					c->litr2N,
-					c->litr3N,
-					c->litr4N,
-					c->soilN,
-					c->soil1N,
-					c->soil2N,
-					c->soil3N,
-					c->soil4N);
-		}
+	if ( g_settings->no_spreadsheet )
+	{
+		/* carbon pools */
+		logger(g_annual_log, "\t%4s \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f",
+				"***",
+				c->leaf_litr1C,
+				c->leaf_litr2C,
+				c->leaf_litr3C,
+				c->leaf_litr4C,
+				c->froot_litr1C,
+				c->froot_litr2C,
+				c->froot_litr3C,
+				c->froot_litr4C,
+				c->litrC,
+				c->litr1C,
+				c->litr2C,
+				c->litr3C,
+				c->litr4C,
+				c->soilC,
+				c->soil1C,
+				c->soil2C,
+				c->soil3C,
+				c->soil4C);
+		/* nitrogen pools */
+		logger(g_annual_log, "\t%4s \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%4s \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \n",
+				"***",
+				c->leaf_litr1N,
+				c->leaf_litr2N,
+				c->leaf_litr3N,
+				c->leaf_litr4N,
+				c->froot_litr1N,
+				c->froot_litr2N,
+				c->froot_litr3N,
+				c->froot_litr4N,
+				c->litrN,
+				c->litr1N,
+				c->litr2N,
+				c->litr3N,
+				c->litr4N,
+				c->soilN,
+				c->soil1N,
+				c->soil2N,
+				c->soil3N,
+				c->soil4N);
+	}
+	else
+	{
+		/* carbon pools */
+		logger(g_annual_log, "***,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",
+				c->leaf_litr1C,
+				c->leaf_litr2C,
+				c->leaf_litr3C,
+				c->leaf_litr4C,
+				c->froot_litr1C,
+				c->froot_litr2C,
+				c->froot_litr3C,
+				c->froot_litr4C,
+				c->litrC,
+				c->litr1C,
+				c->litr2C,
+				c->litr3C,
+				c->litr4C,
+				c->soilC,
+				c->soil1C,
+				c->soil2C,
+				c->soil3C,
+				c->soil4C);
+		/* nitrogen pools */
+		logger(g_annual_log, "***,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f\n",
+				c->leaf_litr1N,
+				c->leaf_litr2N,
+				c->leaf_litr3N,
+				c->leaf_litr4N,
+				c->froot_litr1N,
+				c->froot_litr2N,
+				c->froot_litr3N,
+				c->froot_litr4N,
+				c->litrN,
+				c->litr1N,
+				c->litr2N,
+				c->litr3N,
+				c->litr4N,
+				c->soilN,
+				c->soil1N,
+				c->soil2N,
+				c->soil3N,
+				c->soil4N);
+	}
 
 	/************************************************************************/
 
 	++years_counter;
 
-	if ( years_counter ==  years_of_simulation)
+	if ( years_counter == years_of_simulation )
 	{
 		if (g_annual_log) g_annual_log->std_output = 1;
 		logger(g_annual_log, sz_launched, netcdf_get_version(), datetime_current());

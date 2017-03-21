@@ -980,7 +980,7 @@ typedef struct
 	double wsoil_scalar;                                                  /* soil water scalar */
 	double rate_scalar;                                                   /* soil (temperature * water) scalar */
 
-	/* litter and soil carbon */
+	/* litter and soil carbon pools */
 	double leaf_litr1C;                                                   /* (kgC/m2) leaf litter labile C */
 	double leaf_litr2C;                                                   /* (kgC/m2) leaf litter unshielded cellulose C */
 	double leaf_litr3C;                                                   /* (kgC/m2) leaf litter shielded cellulose C */
@@ -989,6 +989,10 @@ typedef struct
 	double froot_litr2C;                                                  /* (kgC/m2) fine root litter unshielded cellulose C */
 	double froot_litr3C;                                                  /* (kgC/m2) fine root litter shielded cellulose C */
 	double froot_litr4C;                                                  /* (kgC/m2) fine root litter lignin C */
+	double deadwood_litr1C;                                               /* (kgC/m2) deadwood litter labile C */
+	double deadwood_litr2C;                                               /* (kgC/m2) deadwood litter unshielded cellulose C */
+	double deadwood_litr3C;                                               /* (kgC/m2) deadwood litter shielded cellulose C */
+	double deadwood_litr4C;                                               /* (kgC/m2) deadwood litter lignin C */
 
 	double cwdC;                                                          /* (kgC/m2) coarse woody debris C */
 	double litrC;                                                         /* (kgC/m2) litter total C */
@@ -1002,7 +1006,20 @@ typedef struct
 	double soil3C;                                                        /* (kgC/m2) microbial recycling pool C (slow) */
 	double soil4C;                                                        /* (kgC/m2) recalcitrant SOM C (humus, slowest) */
 
-	/* soil nitrogen */
+	/* litter and soil nitrogen pools*/
+	double leaf_litr1N;                                                   /* (kgN/m2) leaf litter labile N */
+	double leaf_litr2N;                                                   /* (kgN/m2) leaf litter unshielded cellulose N */
+	double leaf_litr3N;                                                   /* (kgN/m2) leaf litter shielded cellulose N */
+	double leaf_litr4N;                                                   /* (kgN/m2) leaf litter lignin N */
+	double froot_litr1N;                                                  /* (kgN/m2) fine root litter labile N */
+	double froot_litr2N;                                                  /* (kgN/m2) fine root litter unshielded cellulose N */
+	double froot_litr3N;                                                  /* (kgN/m2) fine root litter shielded cellulose N */
+	double froot_litr4N;                                                  /* (kgN/m2) fine root litter lignin N */
+	double deadwood_litr1N;                                               /* (kgN/m2) deadwood litter labile N */
+	double deadwood_litr2N;                                               /* (kgN/m2) deadwood litter unshielded cellulose N */
+	double deadwood_litr3N;                                               /* (kgN/m2) deadwood litter shielded cellulose N */
+	double deadwood_litr4N;                                               /* (kgN/m2) deadwood litter lignin N */
+
 	double cwdN;                                                          /* (kgN/m2) coarse woody debris N */
 	double litrN;                                                         /* (kgN/m2) litter total N */
 	double litr1N;                                                        /* (kgN/m2) litter labile N */
