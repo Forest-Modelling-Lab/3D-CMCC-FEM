@@ -215,7 +215,6 @@ void growth_respiration(cell_t *const c, const int layer, const int height, cons
 {
 	double min_grperc = 0.25;  /* minimum fraction of growth respiration at maximum age see Ryan et al., */
 	double max_grperc = 0.35;  /* minimum fraction of growth respiration at maximum age see Ryan et al., */
-	double eff_grperc;         /* effective growth respiration fraction */
 
 	int min_age;               /* minimum age for max growth respiration fraction */
 	int max_age;               /* maximum age for min growth respiration fraction */
@@ -237,10 +236,10 @@ void growth_respiration(cell_t *const c, const int layer, const int height, cons
 	 * see Ryan 1991, Ecological Applications
 	 * see Ryan 1991, Tree Physiology*/
 
-	eff_grperc = (min_grperc - max_grperc) / (max_age - min_age) * (a->value - min_age) + max_grperc;
-	if( a->value > s->value[MAXAGE]) eff_grperc = min_grperc;
+	s->value[EFF_GRPERC] = (min_grperc - max_grperc) / (max_age - min_age) * (a->value - min_age) + max_grperc;
+	if( a->value > s->value[MAXAGE]) s->value[EFF_GRPERC] = min_grperc;
 
-	logger(g_debug_log, "GRPERC based on age (test) = %g \n", eff_grperc);
+	logger(g_debug_log, "GRPERC based on age (test) = %g \n", s->value[EFF_GRPERC]);
 
 	/*******************************************************************************************************/
 
@@ -251,27 +250,27 @@ void growth_respiration(cell_t *const c, const int layer, const int height, cons
 	if ( s->value[C_TO_LEAF] > 0)
 	{
 		/* leaf growth respiration */
-		s->value[LEAF_GROWTH_RESP] = (s->value[C_TO_LEAF] * 1000000.0/g_settings->sizeCell) * eff_grperc;
+		s->value[LEAF_GROWTH_RESP] = (s->value[C_TO_LEAF] * 1000000.0/g_settings->sizeCell) * s->value[EFF_GRPERC];
 	}
 	if ( s->value[C_TO_FINEROOT] > 0)
 	{
 		/* fine root growth respiration */
-		s->value[FINE_ROOT_GROWTH_RESP] = (s->value[C_TO_FINEROOT] *1000000.0/(g_settings->sizeCell))* eff_grperc;
+		s->value[FINE_ROOT_GROWTH_RESP] = (s->value[C_TO_FINEROOT] *1000000.0/(g_settings->sizeCell)) * s->value[EFF_GRPERC];
 	}
 	if ( s->value[C_TO_STEM] > 0)
 	{
 		/* stem growth respiration */
-		s->value[STEM_GROWTH_RESP] = (s->value[C_TO_STEM] * 1000000.0/(g_settings->sizeCell))* eff_grperc;
+		s->value[STEM_GROWTH_RESP] = (s->value[C_TO_STEM] * 1000000.0/(g_settings->sizeCell)) * s->value[EFF_GRPERC];
 	}
 	if ( s->value[C_TO_COARSEROOT] > 0)
 	{
 		/* coarse root respiration */
-		s->value[COARSE_ROOT_GROWTH_RESP] = (s->value[C_TO_COARSEROOT] * 1000000.0/(g_settings->sizeCell))* eff_grperc;
+		s->value[COARSE_ROOT_GROWTH_RESP] = (s->value[C_TO_COARSEROOT] * 1000000.0/(g_settings->sizeCell)) * s->value[EFF_GRPERC];
 	}
 	if ( s->value[C_TO_BRANCH] > 0)
 	{
 		/* branch and bark growth respiration */
-		s->value[BRANCH_GROWTH_RESP] = (s->value[C_TO_BRANCH] * 1000000.0/(g_settings->sizeCell))* eff_grperc;
+		s->value[BRANCH_GROWTH_RESP] = (s->value[C_TO_BRANCH] * 1000000.0/(g_settings->sizeCell)) * s->value[EFF_GRPERC];
 	}
 
 

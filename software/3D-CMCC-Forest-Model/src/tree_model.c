@@ -253,7 +253,9 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							/* canopy water fluxes */
 							canopy_evapotranspiration( c, layer, height, dbh, age, species, meteo_daily );
 
-							//note: following Piao et al., 2010 at first we should compute (Maint Resp)->(Growth Resp = (GPP - Maint Resp) * eff_grperc)->(NPP)
+							//note: following Piao et al., 2010 at first we should compute:
+							//(Maint Resp)->(Growth Resp = (GPP - Maint Resp) * eff_grperc)->(NPP)
+
 							/* canopy carbon assimilation */
 							photosynthesis( c, layer, height, dbh, age, species, DaysInMonth[month], meteo_annual);
 
@@ -357,7 +359,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 									d = &h->dbhs[dbh];
 									a = &d->ages[age];
 									s = &a->species[species];
-									*/
+									 */
 								}
 
 								/************************************************************************************************************************************/

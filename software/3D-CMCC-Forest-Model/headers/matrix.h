@@ -473,6 +473,7 @@ enum {
 	YEARLY_TOTAL_MAINT_RESP,            /* Yearly Total maintenance respiration (gC/m2/year) */
 
 	/* Growth respiration */
+	EFF_GRPERC,                         /* (DIM) Growth respiration ratio based on age */
 	LEAF_GROWTH_RESP,                   /* Leaf growth respiration (gC/m2/day) */
 	FINE_ROOT_GROWTH_RESP,              /* Fine root growth respiration (gC/m2/day) */
 	STEM_GROWTH_RESP,                   /* Stem growth respiration (gC/m2/day) */
