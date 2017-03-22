@@ -292,9 +292,6 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							/* N assimilation */
 							nitrogen_assimilation ( s );
 
-							/* decomposition */
-							decomposition ( c, height, dbh, age, species, meteo_daily );
-
 							/* carbon use efficiency */
 							carbon_use_efficiency ( c, height, dbh, age, species, day, month, year );
 

@@ -310,7 +310,7 @@ enum {
 	C_TO_RESERVE,                       /* Daily Net Primary Production to Reserve pool (tC/sizeCell day) */
 	C_TO_FRUIT,                         /* Daily Net Primary Production to Fruit pool (tC/sizeCell day) */
 	C_LEAF_TO_RESERVE,                  /* Daily retranslocated C from Leaf pool to Reserve (tC/sizeCell day) */
-	C_FINEROOT_TO_RESERVE,              /* Daily retranslocated C from Fine root pool to Reserve (tC/sizeCell day) */
+	C_FROOT_TO_RESERVE,                 /* Daily retranslocated C from Fine root pool to Reserve (tC/sizeCell day) */
 	C_LEAF_TO_LITR,                     /* Daily tC from Leaf pool to Litter (tC/sizeCell day) */
 	C_FROOT_TO_LITR,                    /* Daily tC from Fine root pool to Soil (tC/sizeCell day) */
 	C_FRUIT_TO_LITR,                    /* Daily tC from Fruit pool to Litter (tC/sizeCell day) */
@@ -351,14 +351,12 @@ enum {
 	Y_C_TO_COARSE_ROOT_SAPWOOD,         /* Yearly cumulated Net Primary Production to coarse root biomass (tC/year/sizeCell) */
 	Y_C_TO_BRANCH_SAPWOOD,              /* Yearly cumulated Net Primary Production to branch sapwood biomass (tC/year/sizeCell) */
 
-	/* carbon biomass pools in tons of tC/sizeCell */
+	/* carbon pools in tons of tC/sizeCell */
 	LEAF_C,                             /* Current Leaf carbon pool tC/sizeCell */
-	//LEAF_FALLING_C,                     /* Current Leaf falling carbon pool tC/sizeCell */
 	MAX_LEAF_C,                         /* Maximum Current Leaf carbon pool tC/sizeCell */
 	TOT_ROOT_C,                         /* Current Total Coarse carbon pool tC/sizeCell */
-	COARSE_ROOT_C,                      /* Current Coarse root carbon pool tC/sizeCell */
-	FINE_ROOT_C,                        /* Current Fine root carbon pool tC/sizeCell */
-	//FINE_ROOT_TURNOVER_C,               /* Current Fine root turnover tC/sizeCell */
+	CROOT_C,                            /* Current Coarse root carbon pool tC/sizeCell */
+	FROOT_C,                            /* Current Fine root carbon pool tC/sizeCell */
 	MAX_FINE_ROOT_C,                    /* Maximum Current Fine root carbon pool tC/sizeCell */
 	MAX_BUD_BURST_C,                    /* Maximum Current Leaf carbon pool for BudBurst tC/sizeCell */
 	STEM_C,                             /* Current Stem carbon pool tC/sizeCell */
@@ -569,6 +567,7 @@ enum {
 	BRANCH_N,                           /* Current Branch nitrogen pool tN/sizeCell */
 	BRANCH_LIVE_WOOD_N,                 /* Current Live Branch nitrogen pool tN/sizeCell */
 	BRANCH_DEAD_WOOD_N,                 /* Current Dead Branch nitrogen pool tN/sizeCell */
+	RESERVE_N,                          /* Current Reserve nitrogen pool tN/sizeCell */
 	TREE_N_DEMAND,                      /* Current Nitrogen demand for new plant tissues tN/sizeCell */
 	LITTER_N,                           /* Current Litter nitrogen pool tN/sizeCell */
 	SOIL_N,                             /* Current soil nitrogen pool tN/sizeCell */
@@ -583,23 +582,23 @@ enum {
 	AV_BRANCH_MASS_kgN,                 /* Average Branch carbon pool kgN/tree */
 
 	/* litter and soil pools */
-	CWDC,                               /* (kgC/m2) coarse woody debris C */
-	LITR1C,                             /* (kgC/m2) litter labile C */
-	LITR2C,                             /* (kgC/m2) litter unshielded cellulose C */
-	LITR3C,                             /* (kgC/m2) litter shielded cellulose C */
-	LITR4C,                             /* (kgC/m2) litter lignin C */
-	LITR1N,                             /* (kgN/m2) litter labile N */
-	LITR2N,                             /* (kgN/m2) litter unshielded Cellulose N */
-	LITR3N,                             /* (kgN/m2) litter shielded Cellulose N */
-	LITR4N,                             /* (kgN/m2) litter lignin N */
-	SOIL1C,                             /* (kgC/m2) microbial recycling pool C (fast) */
-	SOIL2C,                             /* (kgC/m2) microbial recycling pool C (medium) */
-	SOIL3C,                             /* (kgC/m2) microbial recycling pool C (slow) */
-	SOIL4C,                             /* (kgC/m2) recalcitrant SOM C (humus, slowest) */
-	SOIL1N,                             /* (kgN/m2) microbial recycling pool N (fast) */
-	SOIL2N,                             /* (kgN/m2) microbial recycling pool N (medium) */
-	SOIL3N,                             /* (kgN/m2) microbial recycling pool N (slow) */
-	SOIL4N,                             /* (kgN/m2) recalcitrant SOM N (humus, slowest) */
+	CWDC,                               /* (tC/sizecell) coarse woody debris C */
+	LITR1C,                             /* (tC/sizecell) litter labile C */
+	LITR2C,                             /* (tC/sizecell) litter unshielded cellulose C */
+	LITR3C,                             /* (tC/sizecell) litter shielded cellulose C */
+	LITR4C,                             /* (tC/sizecell) litter lignin C */
+	LITR1N,                             /* (tN/sizecell) litter labile N */
+	LITR2N,                             /* (tN/sizecell) litter unshielded Cellulose N */
+	LITR3N,                             /* (tN/sizecell) litter shielded Cellulose N */
+	LITR4N,                             /* (tN/sizecell) litter lignin N */
+	SOIL1C,                             /* (tC/sizecell) microbial recycling pool C (fast) */
+	SOIL2C,                             /* (tC/sizecell) microbial recycling pool C (medium) */
+	SOIL3C,                             /* (tC/sizecell) microbial recycling pool C (slow) */
+	SOIL4C,                             /* (tC/sizecell) recalcitrant SOM C (humus, slowest) */
+	SOIL1N,                             /* (tN/sizecell) microbial recycling pool N (fast) */
+	SOIL2N,                             /* (tN/sizecell) microbial recycling pool N (medium) */
+	SOIL3N,                             /* (tN/sizecell) microbial recycling pool N (slow) */
+	SOIL4N,                             /* (tN/sizecell) recalcitrant SOM N (humus, slowest) */
 	/* fractions */
 	LEAF_LITT_SCEL_FRAC,                /* (DIM) leaf litter shielded cellulose fraction */
 	LEAF_LITT_USCEL_FRAC,               /* (DIM) leaf litter unshielded cellulose fraction */
@@ -996,6 +995,10 @@ typedef struct
 	double tsoil_scalar;                                                  /* soil temperature scalar */
 	double wsoil_scalar;                                                  /* soil water scalar */
 	double rate_scalar;                                                   /* soil (temperature * water) scalar */
+	double daily_gross_nmin;                                              /* (tN/sizecell/d) daily gross N mineralization */
+	double daily_gross_nimmob;                                            /* (tNN/sizecell/d) daily gross N immobilization */
+	double daily_net_nmin;                                                /* (tN/sizecell/d) daily net N mineralization */
+	double fpi;                                                           /* (DIM) fraction of potential immobilization */
 
 	/* daily leaf and fine root litter transfer pools */
 	//FIXME ADD COARSE WOODY DEBRIS
@@ -1025,72 +1028,95 @@ typedef struct
 	double daily_froot_litr4N;                                            /* daily fine root to litter lignin nitrogen pool at cell level (tN/cell/day) */
 
 	/* litter and soil carbon pools */
-	double leaf_litr1C;                                                   /* (kgC/m2) leaf litter labile C */
-	double leaf_litr2C;                                                   /* (kgC/m2) leaf litter unshielded cellulose C */
-	double leaf_litr3C;                                                   /* (kgC/m2) leaf litter shielded cellulose C */
-	double leaf_litr4C;                                                   /* (kgC/m2) leaf litter lignin C */
-	double froot_litr1C;                                                  /* (kgC/m2) fine root litter labile C */
-	double froot_litr2C;                                                  /* (kgC/m2) fine root litter unshielded cellulose C */
-	double froot_litr3C;                                                  /* (kgC/m2) fine root litter shielded cellulose C */
-	double froot_litr4C;                                                  /* (kgC/m2) fine root litter lignin C */
-	double deadwood_litr1C;                                               /* (kgC/m2) deadwood litter labile C */
-	double deadwood_litr2C;                                               /* (kgC/m2) deadwood litter unshielded cellulose C */
-	double deadwood_litr3C;                                               /* (kgC/m2) deadwood litter shielded cellulose C */
-	double deadwood_litr4C;                                               /* (kgC/m2) deadwood litter lignin C */
+	double leaf_litrC;                                                    /* (tC/sizecell) leaf total litter carbon */
+	double leaf_litr1C;                                                   /* (tC/sizecell) leaf litter labile carbon */
+	double leaf_litr2C;                                                   /* (tC/sizecell) leaf litter unshielded cellulose carbon */
+	double leaf_litr3C;                                                   /* (tC/sizecell) leaf litter shielded cellulose carbon */
+	double leaf_litr4C;                                                   /* (tC/sizecell) leaf litter lignin carbon */
+	double froot_litrC;                                                   /* (tC/sizecell) fine root total litter carbon */
+	double froot_litr1C;                                                  /* (tC/sizecell) fine root litter labile carbon */
+	double froot_litr2C;                                                  /* (tC/sizecell) fine root litter unshielded cellulose carbon */
+	double froot_litr3C;                                                  /* (tC/sizecell) fine root litter shielded cellulose carbon */
+	double froot_litr4C;                                                  /* (tC/sizecell) fine root litter lignin carbon */
+	double deadwood_litr1C;                                               /* (tC/sizecell) deadwood litter labile carbon */
+	double deadwood_litr2C;                                               /* (tC/sizecell) deadwood litter unshielded cellulose carbon */
+	double deadwood_litr3C;                                               /* (tC/sizecell) deadwood litter shielded cellulose carbon */
+	double deadwood_litr4C;                                               /* (tC/sizecell) deadwood litter lignin carbon */
 
-	double cwdC;                                                          /* (kgC/m2) coarse woody debris C */
-	double litrC;                                                         /* (kgC/m2) litter + cwd total C */
-	double litr1C;                                                        /* (kgC/m2) litter labile C */
-	double litr2C;                                                        /* (kgC/m2) litter unshielded cellulose C */
-	double litr3C;                                                        /* (kgC/m2) litter shielded cellulose C */
-	double litr4C;                                                        /* (kgC/m2) litter lignin C */
-	double soilC;                                                         /* (kgC/m2) microbial recycling pool C (total) */
-	double soil1C;                                                        /* (kgC/m2) microbial recycling pool C (fast) */
-	double soil2C;                                                        /* (kgC/m2) microbial recycling pool C (medium) */
-	double soil3C;                                                        /* (kgC/m2) microbial recycling pool C (slow) */
-	double soil4C;                                                        /* (kgC/m2) recalcitrant SOM C (humus, slowest) */
+	double cwdC;                                                          /* (tC/sizecell) coarse woody debris carbon */
+	double litrC;                                                         /* (tC/sizecell) litter + cwd total carbon */
+	double litr1C;                                                        /* (tC/sizecell) litter labile carbon */
+	double litr2C;                                                        /* (tC/sizecell) litter unshielded cellulose carbon */
+	double litr3C;                                                        /* (tC/sizecell) litter shielded cellulose carbon */
+	double litr4C;                                                        /* (tC/sizecell) litter lignin carbon */
+	double soilC;                                                         /* (tC/sizecell) microbial recycling pool carbon (total) */
+	double soil1C;                                                        /* (tC/sizecell) microbial recycling pool carbon (fast) */
+	double soil2C;                                                        /* (tC/sizecell) microbial recycling pool carbon (medium) */
+	double soil3C;                                                        /* (tC/sizecell) microbial recycling pool carbon (slow) */
+	double soil4C;                                                        /* (tC/sizecell) recalcitrant SOM carbon (humus, slowest) */
 
 	/* litter and soil nitrogen pools*/
-	double leaf_litr1N;                                                   /* (kgN/m2) leaf litter labile N */
-	double leaf_litr2N;                                                   /* (kgN/m2) leaf litter unshielded cellulose N */
-	double leaf_litr3N;                                                   /* (kgN/m2) leaf litter shielded cellulose N */
-	double leaf_litr4N;                                                   /* (kgN/m2) leaf litter lignin N */
-	double froot_litr1N;                                                  /* (kgN/m2) fine root litter labile N */
-	double froot_litr2N;                                                  /* (kgN/m2) fine root litter unshielded cellulose N */
-	double froot_litr3N;                                                  /* (kgN/m2) fine root litter shielded cellulose N */
-	double froot_litr4N;                                                  /* (kgN/m2) fine root litter lignin N */
-	double deadwood_litr1N;                                               /* (kgN/m2) deadwood litter labile N */
-	double deadwood_litr2N;                                               /* (kgN/m2) deadwood litter unshielded cellulose N */
-	double deadwood_litr3N;                                               /* (kgN/m2) deadwood litter shielded cellulose N */
-	double deadwood_litr4N;                                               /* (kgN/m2) deadwood litter lignin N */
+	double leaf_litrN;                                                    /* (tN/sizecell) leaf total litter nitrogen */
+	double leaf_litr1N;                                                   /* (tN/sizecell) leaf litter labile nitrogen */
+	double leaf_litr2N;                                                   /* (tN/sizecell) leaf litter unshielded cellulose nitrogen */
+	double leaf_litr3N;                                                   /* (tN/sizecell) leaf litter shielded cellulose nitrogen */
+	double leaf_litr4N;                                                   /* (tN/sizecell) leaf litter lignin nitrogen */
+	double froot_litrN;                                                   /* (tN/sizecell) fine root total litter nitrogen */
+	double froot_litr1N;                                                  /* (tN/sizecell) fine root litter labile nitrogen */
+	double froot_litr2N;                                                  /* (tN/sizecell) fine root litter unshielded cellulose nitrogen */
+	double froot_litr3N;                                                  /* (tN/sizecell) fine root litter shielded cellulonitrogenN */
+	double froot_litr4N;                                                  /* (tN/sizecell) fine root litter lignin nitrogen */
+	double deadwood_litr1N;                                               /* (tN/sizecell) deadwood litter labile nitrogen */
+	double deadwood_litr2N;                                               /* (tN/sizecell) deadwood litter unshielded cellulose nitrogen */
+	double deadwood_litr3N;                                               /* (tN/sizecell) deadwood litter shielded cellulose nitrogen */
+	double deadwood_litr4N;                                               /* (tN/sizecell) deadwood litter lignin nitrogen */
 
-	double cwdN;                                                          /* (kgN/m2) coarse woody debris N */
-	double litrN;                                                         /* (kgN/m2) litter litter + cwd total N */
-	double litr1N;                                                        /* (kgN/m2) litter labile N */
-	double litr2N;                                                        /* (kgN/m2) litter unshielded cellulose N */
-	double litr3N;                                                        /* (kgN/m2) litter shielded cellulose N */
-	double litr4N;                                                        /* (kgN/m2) litter lignin N */
-	double soilN;                                                         /* (kgN/m2) microbial recycling pool N (total) */
-	double soil1N;                                                        /* (kgN/m2) microbial recycling pool N (fast) */
-	double soil2N;                                                        /* (kgN/m2) microbial recycling pool N (medium) */
-	double soil3N;                                                        /* (kgN/m2) microbial recycling pool N (slow) */
-	double soil4N;                                                        /* (kgN/m2) recalcitrant SOM N (humus, slowest) */
-	double sminN;                                                         /* (kgN/m2) soil mineral N */
-	double retransN;                                                      /* (kgN/m2) plant pool of retranslocated N */
-	double Npool;                                                         /* (kgN/m2) temporary plant N pool */
-	double Nfix_src;                                                      /* (kgN/m2) SUM of biological N fixation */
-	double Ndep_src;                                                      /* (kgN/m2) SUM of N deposition inputs */
-	double Nleached_snk;                                                  /* (kgN/m2) SUM of N leached */
+	double cwdN;                                                          /* (tN/sizecell) coarse woody debris nitrogen */
+	double litrN;                                                         /* (tN/sizecell) litter litter + cwd total nitrogen */
+	double litr1N;                                                        /* (tN/sizecell) litter labile nitrogen */
+	double litr2N;                                                        /* (tN/sizecell) litter unshielded cellulose nitrogen */
+	double litr3N;                                                        /* (tN/sizecell) litter shielded cellulose nitrogen */
+	double litr4N;                                                        /* (tN/sizecell) litter lignin nitrogen */
+	double soilN;                                                         /* (tN/sizecell) microbial recycling pool nitrogen (total) */
+	double soil1N;                                                        /* (tN/sizecell) microbial recycling pool nitrogen (fast) */
+	double soil2N;                                                        /* (tN/sizecell) microbial recycling pool nitrogen (medium) */
+	double soil3N;                                                        /* (tN/sizecell) microbial recycling pool nitrogen (slow) */
+	double soil4N;                                                        /* (tN/sizecell) recalcitrant SOM nitrogen (humus, slowest) */
+	double sminN;                                                         /* (tN/sizecell) soil mineral nitrogen */
+	double retransN;                                                      /* (tN/sizecell) plant pool of retranslocated nitrogen */
+	double Npool;                                                         /* (tN/sizecell) temporary plant nitrogen pool */
+	double Nfix_src;                                                      /* (tN/sizecell) SUM of biological nitrogen fixation */
+	double Ndep_src;                                                      /* (tN/sizecell) SUM of nitrogen deposition inputs */
+	double Nleached_snk;                                                  /* (tN/sizecell) SUM of nitrogen leached */
+
+	/* temporary nitrogen variables for reconciliation of decomposition
+	immobilization fluxes and plant growth N demands */
+	double mineralized;
+	double potential_immob;
+	double plitr1c_loss;                                                  /* litter carbon labile decomposition */
+	double pmnf_l1s1;
+	double plitr2c_loss;                                                  /* litter carbon cellulose decomposition */
+	double pmnf_l2s2;
+	double plitr4c_loss;                                                  /* litter carbon ligning decomposition */
+	double pmnf_l4s3;
+	double psoil1c_loss;
+	double pmnf_s1s2;
+	double psoil2c_loss;
+	double pmnf_s2s3;
+	double psoil3c_loss;
+	double pmnf_s3s4;
+	double psoil4c_loss;
+	double kl4;                                                           /* decay rate of lignin litter */
 
 	/* heterotrophic soil */
-	double litr1_rh;                                                      /* (kgC/m2/d) heterotrophic respiration for litter labile C */
-	double litr2_rh;                                                      /* (kgC/m2/d) heterotrophic respiration for litter unshielded cellulose C */
-	double litr3_rh;                                                      /* (kgC/m2/d) heterotrophic respiration for litter shielded cellulose C */
-	double litr4_rh;                                                      /* (kgC/m2/d) heterotrophic respiration for litter lignin C */
-	double soil1_rh;                                                      /* (kgC/m2/d) heterotrophic respiration for microbial recycling pool C (fast) */
-	double soil2_rh;                                                      /* (kgC/m2/d) heterotrophic respiration for microbial recycling pool C (medium) */
-	double soil3_rh;                                                      /* (kgC/m2/d) heterotrophic respiration for microbial recycling pool C (slow) */
-	double soil4_rh;                                                      /* (kgC/m2/d) heterotrophic respiration for recalcitrant SOM C (humus, slowest) */
+	double litr1_rh;                                                      /* (kgC/m2/d) heterotrophic respiration for litter labile carbon */
+	double litr2_rh;                                                      /* (kgC/m2/d) heterotrophic respiration for litter unshielded cellulose carbon */
+	double litr3_rh;                                                      /* (kgC/m2/d) heterotrophic respiration for litter shielded cellulose carbon */
+	double litr4_rh;                                                      /* (kgC/m2/d) heterotrophic respiration for litter lignin carbon */
+	double soil1_rh;                                                      /* (kgC/m2/d) heterotrophic respiration for microbial recycling pool carbon (fast) */
+	double soil2_rh;                                                      /* (kgC/m2/d) heterotrophic respiration for microbial recycling pool carbon (medium) */
+	double soil3_rh;                                                      /* (kgC/m2/d) heterotrophic respiration for microbial recycling pool carbon (slow) */
+	double soil4_rh;                                                      /* (kgC/m2/d) heterotrophic respiration for recalcitrant SOM carbon (humus, slowest) */
 
 	/* soil fraction */
 	double leaf_litt_scel_frac;                                           /* (dim) leaf litter shielded cellulose fraction */

@@ -17,10 +17,7 @@
 #include "logger.h"
 
 
-//extern settings_t* g_settings;
-//extern logger_t* g_debug_log;
-
-void decomposition (cell_t *const c, const int height, const int dbh, const int age, const int species, const meteo_daily_t *const meteo_daily)
+void decomposition (cell_t *const c, const meteo_daily_t *const meteo_daily)
 {
 	double soil_tempK;                           /* soil temperature (Kelvin) */
 	double minpsi, maxpsi;                       /* minimum and maximum soil water potential limits (MPa) */
@@ -29,6 +26,13 @@ void decomposition (cell_t *const c, const int height, const int dbh, const int 
 	double rfl1s1, rfl2s2, rfl4s3, rfs1s2, rfs2s3, rfs3s4;
 	double kl1_base, kl2_base, kl4_base, ks1_base, ks2_base, ks3_base, ks4_base, kfrag_base;
 	double kl1, kl2, kl4, ks1, ks2, ks3, ks4, kfrag;
+	double cwdc_loss;
+	double plitr1c_loss, plitr2c_loss, plitr4c_loss;                             /* decomposition */
+	double psoil1c_loss, psoil2c_loss, psoil3c_loss, psoil4c_loss;
+	double pmnf_l1s1,pmnf_l2s2,pmnf_l4s3,pmnf_s1s2,pmnf_s2s3,pmnf_s3s4,pmnf_s4;
+	double potential_immob,mineralized;
+	int nlimit;
+	double ratio;
 
 	/** following BIOME-BGC decomp.c file **/
 	/* calculate the rate constant scalar for soil temperature,
@@ -83,17 +87,10 @@ void decomposition (cell_t *const c, const int height, const int dbh, const int 
 	/* calculate the final rate scalar as the product of the temperature and water scalars */
 	c->rate_scalar = c->tsoil_scalar * c->wsoil_scalar;
 
-	//todo compute Carbon and Nitrogen stocks for the different C and N pools
-
-
-
-
 	/* calculate compartment C:N ratios */
 	if (c->litr1N > 0.0) cn_l1 = c->litr1C/c->litr1N;
 	if (c->litr2N > 0.0) cn_l2 = c->litr2C/c->litr2N;
 	if (c->litr4N > 0.0) cn_l4 = c->litr4C/c->litr4N;
-
-
 
 	cn_s1 = SOIL1_CN;
 	cn_s2 = SOIL2_CN;
@@ -110,22 +107,15 @@ void decomposition (cell_t *const c, const int height, const int dbh, const int 
 
 	/* calculate the corrected rate constants from the rate scalar and their
 	base values. All rate constants are (1/day) */
-	kl1_base = KL1_BASE;                             /* labile litter pool */
-	kl2_base = KL2_BASE;                             /* cellulose litter pool */
-	kl4_base = KL4_BASE;                             /* lignin litter pool */
-	ks1_base = KS1_BASE;                             /* fast microbial recycling pool */
-	ks2_base = KS2_BASE;                             /* medium microbial recycling pool */
-	ks3_base = KS3_BASE;                             /* slow microbial recycling pool */
-	ks4_base = KS4_BASE;                             /* recalcitrant SOM (humus) pool */
-	kfrag_base = KFRAG_BASE;                         /* physical fragmentation of coarse woody debris */
-	kl1 = kl1_base * c->rate_scalar;
-	kl2 = kl2_base * c->rate_scalar;
-	kl4 = kl4_base * c->rate_scalar;
-	ks1 = ks1_base * c->rate_scalar;
-	ks2 = ks2_base * c->rate_scalar;
-	ks3 = ks3_base * c->rate_scalar;
-	ks4 = ks4_base * c->rate_scalar;
-	kfrag = kfrag_base * c->rate_scalar;
+	/* compute decomposition rates for each pool */
+	kl1 = KL1_BASE * c->rate_scalar;                   /* labile litter pool */
+	kl2 = KL2_BASE * c->rate_scalar;                   /* cellulose litter pool */
+	kl4 = KL4_BASE * c->rate_scalar;                   /* lignin litter pool */
+	ks1 = KS1_BASE * c->rate_scalar;                   /* fast microbial recycling pool */
+	ks2 = KS2_BASE * c->rate_scalar;                   /* medium microbial recycling pool */
+	ks3 = KS3_BASE * c->rate_scalar;                   /* slow microbial recycling pool */
+	ks4 = KS4_BASE * c->rate_scalar;                   /* recalcitrant SOM (humus) pool */
+	kfrag = KFRAG_BASE * c->rate_scalar;               /* physical fragmentation of coarse woody debris */
 
 	/*note: model computes here for each single class each litter and soil pools class related */
 
@@ -141,8 +131,123 @@ void decomposition (cell_t *const c, const int height, const int dbh, const int 
 	nf->cwdn_to_litr2n = cf->cwdc_to_litr2c/epc->deadwood_cn;
 	nf->cwdn_to_litr3n = cf->cwdc_to_litr3c/epc->deadwood_cn;
 	nf->cwdn_to_litr4n = cf->cwdc_to_litr4c/epc->deadwood_cn;
-	*/
+	 */
+
+	/* initialize the potential loss and mineral N flux variables */
+	plitr1c_loss = plitr2c_loss = plitr4c_loss = 0.0;
+	psoil1c_loss = psoil2c_loss = psoil3c_loss = psoil4c_loss = 0.0;
+	pmnf_l1s1 = pmnf_l2s2 = pmnf_l4s3 = 0.0;
+	pmnf_s1s2 = pmnf_s2s3 = pmnf_s3s4 = pmnf_s4 = 0.0;
 
 
+	/** decomposition **/
+	/* calculate the non-nitrogen limited fluxes between litter and
+	soil compartments. These will be ammended for N limitation if it turns
+	out the potential gross immobilization is greater than potential gross
+	mineralization */
+
+	/* 1. labile litter to fast microbial recycling pool */
+	if (c->litr1C > 0.0)
+	{
+		plitr1c_loss = kl1 * c->litr1C;
+		if (c->litr1N > 0.0)
+		{
+			ratio = cn_s1/cn_l1;
+		}
+		else
+		{
+			ratio = 0.0;
+		}
+		pmnf_l1s1 = (plitr1c_loss * (1.0 - rfl1s1 - (ratio)))/cn_s1;
+	}
+
+	/* 2. cellulose litter to medium microbial recycling pool */
+	if (c->litr2C > 0.0)
+	{
+		plitr2c_loss = kl2 * c->litr2C;
+		if (c->litr2N > 0.0) ratio = cn_s2/cn_l2;
+		else ratio = 0.0;
+		pmnf_l2s2 = (plitr2c_loss * (1.0 - rfl2s2 - (ratio)))/cn_s2;
+	}
+
+	/* 3. lignin litter to slow microbial recycling pool */
+	if (c->litr4C > 0.0)
+	{
+		plitr4c_loss = kl4 * c->litr4C;
+		if (c->litr4N > 0.0) ratio = cn_s3/cn_l4;
+		else ratio = 0.0;
+		pmnf_l4s3 = (plitr4c_loss * (1.0 - rfl4s3 - (ratio)))/cn_s3;
+	}
+
+	//	/* 4. fast microbial recycling pool to medium microbial recycling pool */
+	//	if (cs->soil1c > 0.0)
+	//	{
+	//		psoil1c_loss = ks1 * cs->soil1c;
+	//		pmnf_s1s2 = (psoil1c_loss * (1.0 - rfs1s2 - (cn_s2/cn_s1)))/cn_s2;
+	//	}
+	//
+	//	/* 5. medium microbial recycling pool to slow microbial recycling pool */
+	//	if (cs->soil2c > 0.0)
+	//	{
+	//		psoil2c_loss = ks2 * cs->soil2c;
+	//		pmnf_s2s3 = (psoil2c_loss * (1.0 - rfs2s3 - (cn_s3/cn_s2)))/cn_s3;
+	//	}
+	//
+	//	/* 6. slow microbial recycling pool to recalcitrant SOM pool */
+	//	if (cs->soil3c > 0.0)
+	//	{
+	//		psoil3c_loss = ks3 * cs->soil3c;
+	//		pmnf_s3s4 = (psoil3c_loss * (1.0 - rfs3s4 - (cn_s4/cn_s3)))/cn_s4;
+	//	}
+	//
+	//	/* 7. mineralization of recalcitrant SOM */
+	//	if (cs->soil4c > 0.0)
+	//	{
+	//		psoil4c_loss = ks4 * cs->soil4c;
+	//		pmnf_s4 = -psoil4c_loss/cn_s4;
+	//	}
+
+	/* determine if there is sufficient mineral N to support potential
+	immobilization. Immobilization fluxes are positive, mineralization fluxes
+	are negative */
+	nlimit = 0;
+	potential_immob = 0.0;
+	mineralized = 0.0;
+	if (pmnf_l1s1 > 0.0) potential_immob += pmnf_l1s1;
+	else mineralized += -pmnf_l1s1;
+	if (pmnf_l2s2 > 0.0) potential_immob += pmnf_l2s2;
+	else mineralized += -pmnf_l2s2;
+	if (pmnf_l4s3 > 0.0) potential_immob += pmnf_l4s3;
+	else mineralized += -pmnf_l4s3;
+	//	if (pmnf_s1s2 > 0.0) potential_immob += pmnf_s1s2;
+	//	else mineralized += -pmnf_s1s2;
+	//	if (pmnf_s2s3 > 0.0) potential_immob += pmnf_s2s3;
+	//	else mineralized += -pmnf_s2s3;
+	//	if (pmnf_s3s4 > 0.0) potential_immob += pmnf_s3s4;
+	//	else mineralized += -pmnf_s3s4;
+	//	mineralized += -pmnf_s4;
+
+	/* save the potential fluxes until plant demand has been assessed,
+	to allow competition between immobilization fluxes and plant growth
+	demands */
+	c->mineralized = mineralized;
+	c->potential_immob = potential_immob;
+	c->plitr1c_loss = plitr1c_loss;
+	c->pmnf_l1s1 = pmnf_l1s1;
+	c->plitr2c_loss = plitr2c_loss;
+	c->pmnf_l2s2 = pmnf_l2s2;
+	c->plitr4c_loss = plitr4c_loss;
+	c->pmnf_l4s3 = pmnf_l4s3;
+	c->psoil1c_loss = psoil1c_loss;
+	c->pmnf_s1s2 = pmnf_s1s2;
+	c->psoil2c_loss = psoil2c_loss;
+	c->pmnf_s2s3 = pmnf_s2s3;
+	c->psoil3c_loss = psoil3c_loss;
+	c->pmnf_s3s4 = pmnf_s3s4;
+	c->psoil4c_loss = psoil4c_loss;
+	c->kl4 = kl4;
+
+	/* store the day's gross mineralization */
+	c->daily_gross_nmin = mineralized ;
 
 }

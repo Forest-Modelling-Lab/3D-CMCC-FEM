@@ -31,7 +31,7 @@ void nitrogen_assimilation(species_t *const s)
 	//logger(g_debug_log, "Leaf falling nitrogen content = %g tN/area\n", s->value[LEAF_FALLING_N]);
 
 	/* fine root */
-	s->value[FINE_ROOT_N] = s->value[FINE_ROOT_C] / s->value[CN_FINE_ROOTS];
+	s->value[FINE_ROOT_N] = s->value[FROOT_C] / s->value[CN_FINE_ROOTS];
 	logger(g_debug_log, "Fine root nitrogen content = %g tN/area\n", s->value[FINE_ROOT_N]);
 
 	/* stem */

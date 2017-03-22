@@ -42,12 +42,12 @@ void carbon_allocation( cell_t *const c, species_t *const s)
 	logger(g_debug_log, "Leaf Carbon (Wl) = %g tC/Cell\n", s->value[LEAF_C]);
 
 	//fixme
-	s->value[FINE_ROOT_C] += s->value[C_TO_FINEROOT];
+	s->value[FROOT_C] += s->value[C_TO_FINEROOT];
 	//s->value[FINE_ROOT_C] -= s->value[C_FINE_ROOT_TO_LITTER];
-	logger(g_debug_log, "Fine Root Carbon (Wrf) = %g tC/Cell\n", s->value[FINE_ROOT_C]);
+	logger(g_debug_log, "Fine Root Carbon (Wrf) = %g tC/Cell\n", s->value[FROOT_C]);
 
 	s->value[RESERVE_C] += s->value[C_TO_RESERVE];
-	s->value[RESERVE_C] += (s->value[C_LEAF_TO_RESERVE] + s->value[C_FINEROOT_TO_RESERVE]);;
+	s->value[RESERVE_C] += (s->value[C_LEAF_TO_RESERVE] + s->value[C_FROOT_TO_RESERVE]);;
 	logger(g_debug_log, "Reserve Carbon (Wres) = %g tC/Cell\n", s->value[RESERVE_C]);
 
 	s->value[STEM_C] += s->value[C_TO_STEM];
@@ -56,10 +56,10 @@ void carbon_allocation( cell_t *const c, species_t *const s)
 	s->value[BRANCH_C] += s->value[C_TO_BRANCH];
 	logger(g_debug_log, "Branch and Bark Carbon (Wbb) = %g tC/Cell\n", s->value[BRANCH_C]);
 
-	s->value[COARSE_ROOT_C] += s->value[C_TO_COARSEROOT];
-	logger(g_debug_log, "Coarse Root Carbon (Wcr) = %g tC/Cell\n", s->value[COARSE_ROOT_C]);
+	s->value[CROOT_C] += s->value[C_TO_COARSEROOT];
+	logger(g_debug_log, "Coarse Root Carbon (Wcr) = %g tC/Cell\n", s->value[CROOT_C]);
 
-	s->value[TOT_ROOT_C] = s->value[COARSE_ROOT_C] + s->value[FINE_ROOT_C];
+	s->value[TOT_ROOT_C] = s->value[CROOT_C] + s->value[FROOT_C];
 	logger(g_debug_log, "Total Root Carbon (Wtr) = %g tC/Cell\n", s->value[TOT_ROOT_C]);
 
 	s->value[TOT_STEM_C] += s->value[C_TO_STEM] + s->value[C_TO_BRANCH];
@@ -108,13 +108,13 @@ void carbon_allocation( cell_t *const c, species_t *const s)
 	//test_new if not using the allometric equations for the sapwood amount
 	s->value[COARSE_ROOT_LIVE_WOOD_C] = s->value[COARSE_ROOT_SAPWOOD_C] * s->value[LIVE_TOTAL_WOOD_FRAC];
 #else
-	s->value[COARSE_ROOT_LIVE_WOOD_C] = s->value[COARSE_ROOT_C] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
+	s->value[COARSE_ROOT_LIVE_WOOD_C] = s->value[CROOT_C] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
 	logger(g_debug_log, "Live Coarse Carbon (Wcrl) = %g tC/Cell\n", s->value[COARSE_ROOT_LIVE_WOOD_C]);
 #endif
-	s->value[COARSE_ROOT_DEAD_WOOD_C] = s->value[COARSE_ROOT_C] - s->value[COARSE_ROOT_LIVE_WOOD_C];
+	s->value[COARSE_ROOT_DEAD_WOOD_C] = s->value[CROOT_C] - s->value[COARSE_ROOT_LIVE_WOOD_C];
 	logger(g_debug_log, "Dead Coarse Carbon (Wcrd) = %g tC/Cell\n", s->value[COARSE_ROOT_DEAD_WOOD_C]);
 
-	s->value[COARSE_ROOT_HEARTWOOD_C] = s->value[COARSE_ROOT_C] - s->value[COARSE_ROOT_SAPWOOD_C];
+	s->value[COARSE_ROOT_HEARTWOOD_C] = s->value[CROOT_C] - s->value[COARSE_ROOT_SAPWOOD_C];
 	logger(g_debug_log, "Coarse root heartwood Carbon = %g tC/Cell\n", s->value[COARSE_ROOT_HEARTWOOD_C]);
 
 	/***************************************************************************************/
@@ -140,7 +140,7 @@ void carbon_allocation( cell_t *const c, species_t *const s)
 
 	/* check for closure */
 	CHECK_CONDITION(fabs((s->value[STEM_LIVE_WOOD_C] + s->value[STEM_DEAD_WOOD_C])-s->value[STEM_C]),>,eps);
-	CHECK_CONDITION(fabs((s->value[COARSE_ROOT_LIVE_WOOD_C] + s->value[COARSE_ROOT_DEAD_WOOD_C])-s->value[COARSE_ROOT_C]),>,eps);
+	CHECK_CONDITION(fabs((s->value[COARSE_ROOT_LIVE_WOOD_C] + s->value[COARSE_ROOT_DEAD_WOOD_C])-s->value[CROOT_C]),>,eps);
 	CHECK_CONDITION(fabs((s->value[BRANCH_LIVE_WOOD_C] + s->value[BRANCH_DEAD_WOOD_C])-s->value[BRANCH_C]),>,eps);
 
 }

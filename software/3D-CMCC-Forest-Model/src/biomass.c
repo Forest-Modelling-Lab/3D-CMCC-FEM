@@ -140,8 +140,8 @@ void average_tree_pools(species_t *const s)
 	s->value[AV_LEAF_MASS_KgC] = (s->value[LEAF_C]/(double)s->counter[N_TREE])*1000.0;
 	s->value[AV_STEM_MASS_KgC] = (s->value[STEM_C]/(double)s->counter[N_TREE])*1000.0;
 	s->value[AV_ROOT_MASS_KgC] = (s->value[TOT_ROOT_C]/(double)s->counter[N_TREE])*1000.0;
-	s->value[AV_FINE_ROOT_MASS_KgC] = (s->value[FINE_ROOT_C]/(double)s->counter[N_TREE])*1000.0;
-	s->value[AV_COARSE_ROOT_MASS_KgC] =(s->value[COARSE_ROOT_C]/(double)s->counter[N_TREE])*1000.0;
+	s->value[AV_FINE_ROOT_MASS_KgC] = (s->value[FROOT_C]/(double)s->counter[N_TREE])*1000.0;
+	s->value[AV_COARSE_ROOT_MASS_KgC] =(s->value[CROOT_C]/(double)s->counter[N_TREE])*1000.0;
 	s->value[AV_RESERVE_MASS_KgC] = (s->value[RESERVE_C]/(double)s->counter[N_TREE])*1000.0;
 	s->value[AV_BRANCH_MASS_KgC] = (s->value[BRANCH_C]/(double)s->counter[N_TREE])*1000.0;
 	s->value[AV_LIVE_STEM_MASS_KgC] = (s->value[STEM_LIVE_WOOD_C]/(double)s->counter[N_TREE])*1000.0;
@@ -191,8 +191,8 @@ void tree_biomass_remove (cell_t *const c, species_t *const s, const int tree_re
 	/* update class C and N */
 	s->value[STEM_C]                  -= (s->value[AV_STEM_MASS_KgC]/1000.0*tree_remove);
 	s->value[LEAF_C]                  -= (s->value[AV_LEAF_MASS_KgC]/1000.0*tree_remove);
-	s->value[FINE_ROOT_C]             -= (s->value[AV_FINE_ROOT_MASS_KgC]/1000.0*tree_remove);
-	s->value[COARSE_ROOT_C]           -= (s->value[AV_COARSE_ROOT_MASS_KgC]/1000.0*tree_remove);
+	s->value[FROOT_C]                 -= (s->value[AV_FINE_ROOT_MASS_KgC]/1000.0*tree_remove);
+	s->value[CROOT_C]                 -= (s->value[AV_COARSE_ROOT_MASS_KgC]/1000.0*tree_remove);
 	s->value[RESERVE_C]               -= (s->value[AV_RESERVE_MASS_KgC]/1000.0*tree_remove);
 	s->value[BRANCH_C]                -= (s->value[AV_BRANCH_MASS_KgC]/1000.0*tree_remove);
 	s->value[STEM_LIVE_WOOD_C]        -= (s->value[AV_LIVE_STEM_MASS_KgC]/1000.0*tree_remove);

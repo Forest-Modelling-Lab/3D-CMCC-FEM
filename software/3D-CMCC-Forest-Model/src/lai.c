@@ -45,9 +45,9 @@ void daily_lai (species_t *const s)
 		s->value[LEAF_C] = s->value[MAX_LEAF_C];
 
 		/* since fine root and leaf go in parallel */
-		s->value[C_FINEROOT_TO_RESERVE] = s->value[FINE_ROOT_C] - s->value[MAX_FINE_ROOT_C];
+		s->value[C_FROOT_TO_RESERVE] = s->value[FROOT_C] - s->value[MAX_FINE_ROOT_C];
 
-		s->value[FINE_ROOT_C] = s->value[MAX_FINE_ROOT_C];
+		s->value[FROOT_C] = s->value[MAX_FINE_ROOT_C];
 
 		/* recompute current LAI */
 		leaf_c = s->value[LEAF_C] * 1000.0 ;

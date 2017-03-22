@@ -165,18 +165,18 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 		logger(g_debug_log, "...Generating input Coarse root Biomass biomass data from DBH data...\n");
 		//compute coarse root biomass using root to shoot ratio
 		s->value[BIOMASS_COARSE_ROOT_tDM] = s->value[BIOMASS_STEM_tDM] * s->value[COARSE_ROOT_STEM];
-		s->value[COARSE_ROOT_C] = s->value[STEM_C] * s->value[COARSE_ROOT_STEM];
-		logger(g_debug_log, "--Coarse Root Biomass initialization data from Stem Biomass = %g tC/cell\n", s->value[COARSE_ROOT_C]);
+		s->value[CROOT_C] = s->value[STEM_C] * s->value[COARSE_ROOT_STEM];
+		logger(g_debug_log, "--Coarse Root Biomass initialization data from Stem Biomass = %g tC/cell\n", s->value[CROOT_C]);
 	}
 	else
 	{
 		logger(g_debug_log, "Ok coarse root biomass..\n");
 		logger(g_debug_log, "---Coarse Root Biomass from init file = %gtDM/cell \n", s->value[BIOMASS_COARSE_ROOT_tDM]);
-		s->value[COARSE_ROOT_C] = s->value[BIOMASS_COARSE_ROOT_tDM]/GC_GDM;
-		logger(g_debug_log, "---Coarse Root Biomass from init file = %gtC/cell \n", s->value[COARSE_ROOT_C]);
+		s->value[CROOT_C] = s->value[BIOMASS_COARSE_ROOT_tDM]/GC_GDM;
+		logger(g_debug_log, "---Coarse Root Biomass from init file = %gtC/cell \n", s->value[CROOT_C]);
 	}
 	s->value[AV_COARSE_ROOT_MASS_KgDM] = s->value[BIOMASS_COARSE_ROOT_tDM] * 1000.0 / s->counter[N_TREE];
-	s->value[AV_COARSE_ROOT_MASS_KgC] = s->value[COARSE_ROOT_C] * 1000.0 / s->counter[N_TREE];
+	s->value[AV_COARSE_ROOT_MASS_KgC] = s->value[CROOT_C] * 1000.0 / s->counter[N_TREE];
 	logger(g_debug_log, "-Individual coarse root biomass = %g KgC\n", s->value[AV_COARSE_ROOT_MASS_KgC]);
 
 	/*sapwood calculation*/
@@ -199,7 +199,7 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 	s->value[STEM_SAPWOOD_C] = (s->value[STEM_C] * s->value[SAPWOOD_PERC]);
 	logger(g_debug_log, "Sapwood stem biomass = %g tC class cell \n", s->value[STEM_SAPWOOD_C]);
 	s->value[WRC_sap_tDM] =  (s->value[BIOMASS_COARSE_ROOT_tDM] * s->value[SAPWOOD_PERC]);
-	s->value[COARSE_ROOT_SAPWOOD_C] =  (s->value[COARSE_ROOT_C] * s->value[SAPWOOD_PERC]);
+	s->value[COARSE_ROOT_SAPWOOD_C] =  (s->value[CROOT_C] * s->value[SAPWOOD_PERC]);
 	logger(g_debug_log, "Sapwood coarse root biomass = %g tDM class cell \n", s->value[WRC_sap_tDM]);
 	s->value[WBB_sap_tDM] = (s->value[BIOMASS_BRANCH_tDM] * s->value[SAPWOOD_PERC]);
 	s->value[BRANCH_SAPWOOD_C] = (s->value[BRANCH_C] * s->value[SAPWOOD_PERC]);
@@ -338,26 +338,26 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 		logger(g_debug_log, "...Generating input Fine root Biomass biomass data from DBH data...\n");
 		/* assuming FINE_ROOT_LEAF RATIO AS IN BIOME */
 		s->value[BIOMASS_FINE_ROOT_tDM] = s->value[BIOMASS_FOLIAGE_tDM] * s->value[FINE_ROOT_LEAF];
-		s->value[FINE_ROOT_C] = s->value[LEAF_C] * s->value[FINE_ROOT_LEAF];
-		logger(g_debug_log, "---Fine Root Biomass initialization data from Stem Biomass = %g tC cell\n", s->value[FINE_ROOT_C]);
+		s->value[FROOT_C] = s->value[LEAF_C] * s->value[FINE_ROOT_LEAF];
+		logger(g_debug_log, "---Fine Root Biomass initialization data from Stem Biomass = %g tC cell\n", s->value[FROOT_C]);
 	}
 	else
 	{
 		/* assuming no fine root at 1st of January */
 		s->value[BIOMASS_FINE_ROOT_tDM] = 0.0;
-		s->value[FINE_ROOT_C] = 0.0;
+		s->value[FROOT_C]               = 0.0;
 		logger(g_debug_log, "Ok fine root biomass..\n");
-		logger(g_debug_log, "---Fine Root Biomass from init file  = %g tC cell\n", s->value[FINE_ROOT_C]);
+		logger(g_debug_log, "---Fine Root Biomass from init file  = %g tC cell\n", s->value[FROOT_C]);
 	}
 	s->value[AV_FINE_ROOT_MASS_KgDM] = s->value[BIOMASS_FINE_ROOT_tDM] *1000.0 /s->counter[N_TREE];
-	s->value[AV_FINE_ROOT_MASS_KgC] = s->value[FINE_ROOT_C] *1000.0 /s->counter[N_TREE];
+	s->value[AV_FINE_ROOT_MASS_KgC] = s->value[FROOT_C] *1000.0 /s->counter[N_TREE];
 	logger(g_debug_log, "-Individual fine root biomass = %g KgC\n", s->value[AV_FINE_ROOT_MASS_KgC]);
 	s->value[BIOMASS_ROOTS_TOT_tDM] = s->value[BIOMASS_COARSE_ROOT_tDM] + s->value[BIOMASS_FINE_ROOT_tDM];
-	s->value[TOT_ROOT_C] = s->value[COARSE_ROOT_C] + s->value[FINE_ROOT_C];
+	s->value[TOT_ROOT_C] = s->value[CROOT_C] + s->value[FROOT_C];
 	logger(g_debug_log, "---Total Root Biomass = %g tC cell\n", s->value[TOT_ROOT_C]);
 	s->value[AV_ROOT_MASS_KgDM] = s->value[BIOMASS_ROOTS_TOT_tDM] * 1000.0 /s->counter[N_TREE];
 	s->value[AV_ROOT_MASS_KgC] = s->value[TOT_ROOT_C] * 1000.0 /s->counter[N_TREE];
-	CHECK_CONDITION(fabs((s->value[TOT_ROOT_C])-(s->value[COARSE_ROOT_C] + s->value[FINE_ROOT_C])), >, eps);
+	CHECK_CONDITION(fabs((s->value[TOT_ROOT_C])-(s->value[CROOT_C] + s->value[FROOT_C])), >, eps);
 	CHECK_CONDITION(fabs((s->value[AV_ROOT_MASS_KgC])-(s->value[AV_COARSE_ROOT_MASS_KgC] + s->value[AV_FINE_ROOT_MASS_KgC])), >, eps);
 
 	/***** COMPUTE LIVE BIOMASS *****/
@@ -386,10 +386,10 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 	/*FOR COARSE ROOT*/
 	logger(g_debug_log, "Total Root Biomass = %g tC cell\n", s->value[TOT_ROOT_C]);
 	s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD_tDM]= s->value[BIOMASS_COARSE_ROOT_tDM] * (s->value[EFF_LIVE_TOTAL_WOOD_FRAC]);
-	s->value[COARSE_ROOT_LIVE_WOOD_C]= s->value[COARSE_ROOT_C] * (s->value[EFF_LIVE_TOTAL_WOOD_FRAC]);
+	s->value[COARSE_ROOT_LIVE_WOOD_C]= s->value[CROOT_C] * (s->value[EFF_LIVE_TOTAL_WOOD_FRAC]);
 	logger(g_debug_log, "-Live Coarse Root Biomass = %g tC cell\n", s->value[COARSE_ROOT_LIVE_WOOD_C]);
 	s->value[BIOMASS_COARSE_ROOT_DEAD_WOOD_tDM]= s->value[BIOMASS_COARSE_ROOT_tDM] -s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD_tDM];
-	s->value[COARSE_ROOT_DEAD_WOOD_C]= s->value[COARSE_ROOT_C] -s->value[COARSE_ROOT_LIVE_WOOD_C];
+	s->value[COARSE_ROOT_DEAD_WOOD_C]= s->value[CROOT_C] -s->value[COARSE_ROOT_LIVE_WOOD_C];
 	logger(g_debug_log, "-Dead Coarse Root Biomass = %g tC cell\n", s->value[COARSE_ROOT_DEAD_WOOD_C]);
 	s->value[AV_LIVE_COARSE_ROOT_MASS_KgDM] = s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD_tDM] *1000.0 /s->counter[N_TREE];
 	s->value[AV_LIVE_COARSE_ROOT_MASS_KgDM] = s->value[COARSE_ROOT_LIVE_WOOD_C] *1000.0 /s->counter[N_TREE];
@@ -397,7 +397,7 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 	s->value[AV_DEAD_COARSE_ROOT_MASS_KgDM] = s->value[BIOMASS_COARSE_ROOT_DEAD_WOOD_tDM] *1000.0 /s->counter[N_TREE];
 	s->value[AV_DEAD_COARSE_ROOT_MASS_KgDM] = s->value[COARSE_ROOT_DEAD_WOOD_C] *1000.0 /s->counter[N_TREE];
 	logger(g_debug_log, "-Individual live coarse root biomass = %g KgC\n", s->value[AV_DEAD_COARSE_ROOT_MASS_KgDM]);
-	CHECK_CONDITION(fabs((s->value[COARSE_ROOT_C])-(s->value[COARSE_ROOT_LIVE_WOOD_C] + s->value[COARSE_ROOT_DEAD_WOOD_C])), >,eps);
+	CHECK_CONDITION(fabs((s->value[CROOT_C])-(s->value[COARSE_ROOT_LIVE_WOOD_C] + s->value[COARSE_ROOT_DEAD_WOOD_C])), >,eps);
 	CHECK_CONDITION(fabs((s->value[AV_COARSE_ROOT_MASS_KgC])-(s->value[AV_LIVE_COARSE_ROOT_MASS_KgDM] + s->value[AV_DEAD_COARSE_ROOT_MASS_KgDM])), >,eps);
 
 	/*FOR BRANCH*/
@@ -474,51 +474,51 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 	/* ONLY for evergreen */
 	if ( s->value[PHENOLOGY] == 1.1 || s->value[PHENOLOGY] == 1.2 )
 	{
-		CHECK_CONDITION(s->value[FINE_ROOT_C], <=, 0);
-		CHECK_CONDITION(s->value[LEAF_C], <=, 0);
-		CHECK_CONDITION(s->value[LAI_PROJ], <=, 0);
-		CHECK_CONDITION(s->value[LAI_SUN_PROJ], <=, 0);
-		CHECK_CONDITION(s->value[LAI_SHADE_PROJ], <=, 0);
+		CHECK_CONDITION(s->value[FROOT_C],             <=, 0);
+		CHECK_CONDITION(s->value[LEAF_C],              <=, 0);
+		CHECK_CONDITION(s->value[LAI_PROJ],            <=, 0);
+		CHECK_CONDITION(s->value[LAI_SUN_PROJ],        <=, 0);
+		CHECK_CONDITION(s->value[LAI_SHADE_PROJ],      <=, 0);
 	}
-	CHECK_CONDITION(s->value[STEM_C], <=, 0);
-	CHECK_CONDITION(s->value[BRANCH_C], <=, 0);
-	CHECK_CONDITION(s->value[TOT_STEM_C], <=, 0);
-	CHECK_CONDITION(s->value[COARSE_ROOT_C], <=, 0);
-	CHECK_CONDITION(s->value[TOT_ROOT_C], <=, 0);
-	CHECK_CONDITION(s->value[TOT_WOOD_C], <=, 0);
-	CHECK_CONDITION(s->value[RESERVE_C], <=, 0);
-	CHECK_CONDITION(s->value[MIN_RESERVE_C], <=, 0);
-	CHECK_CONDITION(s->value[STEM_SAPWOOD_C], <=, 0);
-	CHECK_CONDITION(s->value[COARSE_ROOT_SAPWOOD_C], <=, 0);
-	CHECK_CONDITION(s->value[BRANCH_SAPWOOD_C], <=, 0);
-	CHECK_CONDITION(s->value[TOT_SAPWOOD_C], <=, 0);
-	CHECK_CONDITION(s->value[STEM_LIVE_WOOD_C], <=, 0);
-	CHECK_CONDITION(s->value[STEM_DEAD_WOOD_C], <=, 0);
+	CHECK_CONDITION(s->value[STEM_C],                  <=, 0);
+	CHECK_CONDITION(s->value[BRANCH_C],                <=, 0);
+	CHECK_CONDITION(s->value[TOT_STEM_C],              <=, 0);
+	CHECK_CONDITION(s->value[CROOT_C],                 <=, 0);
+	CHECK_CONDITION(s->value[TOT_ROOT_C],              <=, 0);
+	CHECK_CONDITION(s->value[TOT_WOOD_C],              <=, 0);
+	CHECK_CONDITION(s->value[RESERVE_C],               <=, 0);
+	CHECK_CONDITION(s->value[MIN_RESERVE_C],           <=, 0);
+	CHECK_CONDITION(s->value[STEM_SAPWOOD_C],          <=, 0);
+	CHECK_CONDITION(s->value[COARSE_ROOT_SAPWOOD_C],   <=, 0);
+	CHECK_CONDITION(s->value[BRANCH_SAPWOOD_C],        <=, 0);
+	CHECK_CONDITION(s->value[TOT_SAPWOOD_C],           <=, 0);
+	CHECK_CONDITION(s->value[STEM_LIVE_WOOD_C],        <=, 0);
+	CHECK_CONDITION(s->value[STEM_DEAD_WOOD_C],        <=, 0);
 	CHECK_CONDITION(s->value[COARSE_ROOT_LIVE_WOOD_C], <=, 0);
 	CHECK_CONDITION(s->value[COARSE_ROOT_DEAD_WOOD_C], <=, 0);
-	CHECK_CONDITION(s->value[BRANCH_LIVE_WOOD_C], <=, 0);
-	CHECK_CONDITION(s->value[BRANCH_DEAD_WOOD_C], <=, 0);
-	CHECK_CONDITION(s->value[LIVE_WOOD_C], <=, 0);
-	CHECK_CONDITION(s->value[DEAD_WOOD_C], <=, 0);
-	CHECK_CONDITION(s->value[BASAL_AREA], <=, 0);
-	CHECK_CONDITION(s->value[CLASS_AGB], <=, 0);
-	CHECK_CONDITION(s->value[CLASS_BGB], <=, 0);
-	CHECK_CONDITION(s->value[VOLUME], <=, 0);
-	CHECK_CONDITION(s->value[TREE_VOLUME], <=, 0);
+	CHECK_CONDITION(s->value[BRANCH_LIVE_WOOD_C],      <=, 0);
+	CHECK_CONDITION(s->value[BRANCH_DEAD_WOOD_C],      <=, 0);
+	CHECK_CONDITION(s->value[LIVE_WOOD_C],             <=, 0);
+	CHECK_CONDITION(s->value[DEAD_WOOD_C],             <=, 0);
+	CHECK_CONDITION(s->value[BASAL_AREA],              <=, 0);
+	CHECK_CONDITION(s->value[CLASS_AGB],               <=, 0);
+	CHECK_CONDITION(s->value[CLASS_BGB],               <=, 0);
+	CHECK_CONDITION(s->value[VOLUME],                  <=, 0);
+	CHECK_CONDITION(s->value[TREE_VOLUME],             <=, 0);
 
 	/*** update at cell level ***/
-	c->leaf_carbon += s->value[LEAF_C];
-	c->fine_root_carbon += s->value[FINE_ROOT_C];
-	c->stem_carbon += s->value[STEM_C];
-	c->stem_live_wood_carbon += s->value[STEM_LIVE_WOOD_C];
-	c->stem_dead_wood_carbon += s->value[STEM_DEAD_WOOD_C];
-	c->coarse_root_carbon += s->value[COARSE_ROOT_C];
+	c->leaf_carbon                  += s->value[LEAF_C];
+	c->fine_root_carbon             += s->value[FROOT_C];
+	c->stem_carbon                  += s->value[STEM_C];
+	c->stem_live_wood_carbon        += s->value[STEM_LIVE_WOOD_C];
+	c->stem_dead_wood_carbon        += s->value[STEM_DEAD_WOOD_C];
+	c->coarse_root_carbon           += s->value[CROOT_C];
 	c->coarse_root_live_wood_carbon += s->value[COARSE_ROOT_LIVE_WOOD_C];
 	c->coarse_root_dead_wood_carbon += s->value[COARSE_ROOT_DEAD_WOOD_C];
-	c->branch_carbon += s->value[BRANCH_C];
-	c->branch_live_wood_carbon += s->value[BRANCH_LIVE_WOOD_C];
-	c->branch_dead_wood_carbon += s->value[BRANCH_DEAD_WOOD_C];
-	c->reserve += s->value[RESERVE_C];
+	c->branch_carbon                += s->value[BRANCH_C];
+	c->branch_live_wood_carbon      += s->value[BRANCH_LIVE_WOOD_C];
+	c->branch_dead_wood_carbon      += s->value[BRANCH_DEAD_WOOD_C];
+	c->reserve                      += s->value[RESERVE_C];
 
 }
 
@@ -534,7 +534,7 @@ void initialization_forest_class_N (cell_t *const c, const int height, const int
 	logger(g_debug_log, "----Leaf nitrogen content = %g tN/cell\n", s->value[LEAF_N]);
 
 	/* fine root */
-	s->value[FINE_ROOT_N] = s->value[FINE_ROOT_C] / s->value[CN_FINE_ROOTS];
+	s->value[FINE_ROOT_N] = s->value[FROOT_C] / s->value[CN_FINE_ROOTS];
 	logger(g_debug_log, "----Fine root nitrogen content = %g tN/cell\n", s->value[FINE_ROOT_N]);
 
 	/* stem */
@@ -568,14 +568,14 @@ void initialization_forest_class_N (cell_t *const c, const int height, const int
 	logger(g_debug_log, "----Branch nitrogen content = %g tN/cell\n", s->value[BRANCH_N]);
 
 	/* check that all mandatory variables are initialized */
-	CHECK_CONDITION(s->value[STEM_N], <=, 0);
-	CHECK_CONDITION(s->value[COARSE_ROOT_N], <=, 0);
-	CHECK_CONDITION(s->value[BRANCH_N], <=, 0);
+	CHECK_CONDITION(s->value[STEM_N],          <=, 0);
+	CHECK_CONDITION(s->value[COARSE_ROOT_N],   <=, 0);
+	CHECK_CONDITION(s->value[BRANCH_N],        <=, 0);
 
 	/* just for evergreen */
 	if ( s->value[PHENOLOGY] == 1.1 || s->value[PHENOLOGY] == 1.2 )
 	{
-		CHECK_CONDITION(s->value[LEAF_N], <=, 0);
+		CHECK_CONDITION(s->value[LEAF_N],      <=, 0);
 		CHECK_CONDITION(s->value[FINE_ROOT_N], <=, 0);
 	}
 }

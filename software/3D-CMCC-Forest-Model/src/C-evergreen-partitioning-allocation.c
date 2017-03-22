@@ -261,7 +261,7 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 	logger(g_debug_log, "C_LEAF_TO_LITTER = %g tC/cell/day\n", s->value[C_LEAF_TO_LITR]);
 	logger(g_debug_log, "C_FROOT_TO_LITR = %g tC/cell/day\n", s->value[C_FROOT_TO_LITR]);
 	logger(g_debug_log, "C_LEAF_TO_RESERVE = %g tC/cell/day\n", s->value[C_LEAF_TO_RESERVE]);
-	logger(g_debug_log, "C_FINEROOT_TO_RESERVE = %g tC/cell/day\n", s->value[C_FINEROOT_TO_RESERVE]);
+	logger(g_debug_log, "C_FINEROOT_TO_RESERVE = %g tC/cell/day\n", s->value[C_FROOT_TO_RESERVE]);
 	logger(g_debug_log, "C_STEM_LIVEWOOD_TO_DEADWOOD = %g tC/cell/day\n", s->value[C_STEM_LIVEWOOD_TO_DEADWOOD]);
 	logger(g_debug_log, "C_COARSEROOT_LIVE_WOOD_TO_DEADWOOD = %g tC/cell/day\n", s->value[C_COARSEROOT_LIVE_WOOD_TO_DEADWOOD]);
 	logger(g_debug_log, "C_BRANCH_LIVE_WOOD_TO_DEAD_WOOD = %g tC/cell/day\n", s->value[C_BRANCH_LIVE_WOOD_TO_DEAD_WOOD]);

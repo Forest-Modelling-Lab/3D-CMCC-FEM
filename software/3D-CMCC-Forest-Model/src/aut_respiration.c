@@ -314,7 +314,7 @@ void growth_respiration(cell_t *const c, const int layer, const int height, cons
 	s->value[C_LEAF_TO_LITR]        = 0.;
 	s->value[C_FROOT_TO_LITR]       = 0.;
 	s->value[C_LEAF_TO_RESERVE]     = 0.;
-	s->value[C_FINEROOT_TO_RESERVE] = 0.;
+	s->value[C_FROOT_TO_RESERVE]    = 0.;
 }
 
 void autotrophic_respiration(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, const meteo_daily_t *const meteo_daily)

@@ -234,8 +234,8 @@ void print_daily_forest_class_data(cell_t* const c, const int layer, const int h
 	logger(g_debug_log, "+ leaf = %g tC/area\n", s->value[LEAF_C]);
 	logger(g_debug_log, "+ stem = %g tC/area\n", s->value[STEM_C]);
 	logger(g_debug_log, "+ branch and bark = %g tC/area\n", s->value[BRANCH_C]);
-	logger(g_debug_log, "+ coarse root = %g tC/area\n", s->value[COARSE_ROOT_C]);
-	logger(g_debug_log, "+ fine root = %g tC/area\n", s->value[FINE_ROOT_C]);
+	logger(g_debug_log, "+ coarse root = %g tC/area\n", s->value[CROOT_C]);
+	logger(g_debug_log, "+ fine root = %g tC/area\n", s->value[FROOT_C]);
 	logger(g_debug_log, "+ total stem + branch  = %g tC/area\n", s->value[TOT_STEM_C]);
 	logger(g_debug_log, "+ total root = %g tC/area\n", s->value[TOT_ROOT_C]);
 	logger(g_debug_log, "+ reserve = %g tC/area\n", s->value[RESERVE_C]);
@@ -281,8 +281,8 @@ void print_new_daily_forest_class_data (cell_t* const c, const int height, const
 	logger(g_debug_log, "+ leaf = %g tC/area\n", s->value[LEAF_C]);
 	logger(g_debug_log, "+ stem = %g tC/area\n", s->value[STEM_C]);
 	logger(g_debug_log, "+ branch and bark = %g tC/area\n", s->value[BRANCH_C]);
-	logger(g_debug_log, "+ coarse root = %g tC/area\n", s->value[COARSE_ROOT_C]);
-	logger(g_debug_log, "+ fine root = %g tC/area\n", s->value[FINE_ROOT_C]);
+	logger(g_debug_log, "+ coarse root = %g tC/area\n", s->value[CROOT_C]);
+	logger(g_debug_log, "+ fine root = %g tC/area\n", s->value[FROOT_C]);
 	logger(g_debug_log, "+ total stem + branch  = %g tC/area\n", s->value[TOT_STEM_C]);
 	logger(g_debug_log, "+ total root = %g tC/area\n", s->value[TOT_ROOT_C]);
 	logger(g_debug_log, "+ reserve = %g tC/area\n", s->value[RESERVE_C]);

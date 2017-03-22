@@ -89,7 +89,7 @@ enum {
 #define	RFS1S2                  0.28      /* transfer from soil 1 to soil 2 */
 #define	RFS2S3                  0.46      /* transfer from soil 2 to soil 3 */
 #define	RFS3S4                  0.55      /* transfer from soil 3 to soil 4 */
-/* base decomposition rate constants (1/day) */
+/* base (maximum) decomposition rate constants (1/day) */
 #define KL1_BASE                0.7       /* labile litter pool */
 #define KL2_BASE               0.07       /* cellulose litter pool */
 #define KL4_BASE              0.014       /* lignin litter pool */

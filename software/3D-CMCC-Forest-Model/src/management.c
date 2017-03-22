@@ -195,7 +195,7 @@ void thinning (cell_t *const c, const int height, const int dbh, const int age, 
 	c->daily_litter_carbon_tC += s->value[C_LEAF_TO_LITR] ;
 
 	/* Total class C at the end */
-	s->value[TOTAL_C] = s->value[LEAF_C] + s->value[COARSE_ROOT_C] + s->value[FINE_ROOT_C] + s->value[STEM_C] + s->value[BRANCH_C] + s->value[RESERVE_C];
+	s->value[TOTAL_C] = s->value[LEAF_C] + s->value[CROOT_C] + s->value[FROOT_C] + s->value[STEM_C] + s->value[BRANCH_C] + s->value[RESERVE_C];
 	logger(g_debug_log, "Total Biomass = %f tC/ha\n", s->value[TOTAL_C]);
 
 	/* update stand trees */
