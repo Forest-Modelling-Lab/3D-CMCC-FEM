@@ -86,8 +86,8 @@ void turnover(species_t *const s)
 		/* daily fruit turnover */
 		if( s->value[PHENOLOGY] == 1.2 && s->value[FRUIT_C] != 0.0 )
 		{
-			s->value[C_FRUIT_TO_LITTER] -= (s->value[FRUIT_C] * (1 / s->value[CONES_LIFE_SPAN]));
-			logger(g_debug_log, "C_FRUIT_TO_LITTER = %g tC/cell\n", s->value[C_FRUIT_TO_LITTER]);
+			s->value[C_FRUIT_TO_LITR] -= (s->value[FRUIT_C] * (1 / s->value[CONES_LIFE_SPAN]));
+			logger(g_debug_log, "C_FRUIT_TO_LITR = %g tC/cell\n", s->value[C_FRUIT_TO_LITR]);
 		}
 	}
 	else

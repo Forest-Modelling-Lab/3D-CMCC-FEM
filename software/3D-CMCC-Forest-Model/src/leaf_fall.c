@@ -89,10 +89,10 @@ void leaf_fall_deciduous ( cell_t *const c, const int height, const int dbh, con
 		logger(g_debug_log, "C_TO_LEAF = %f\n", s->value[C_TO_LEAF]);
 		s->value[C_TO_FINEROOT]    = -fine_root_to_remove;
 		logger(g_debug_log, "C_TO_FINEROOT = %f\n", s->value[C_TO_FINEROOT]);
-		s->value[C_LEAF_TO_LITTER] = (foliage_to_remove - s->value[C_LEAF_TO_RESERVE]);
-		logger(g_debug_log, "C_TO_LITTER = %f\n", s->value[C_LEAF_TO_LITTER]);
-		s->value[C_FROOT_TO_LITTER]        = (fine_root_to_remove - s->value[C_FINEROOT_TO_RESERVE]);
-		logger(g_debug_log, "C_FROOT_TO_LITTER = %f\n", s->value[C_FROOT_TO_LITTER]);
+		s->value[C_LEAF_TO_LITR]   = (foliage_to_remove - s->value[C_LEAF_TO_RESERVE]);
+		logger(g_debug_log, "C_TO_LITR = %f\n", s->value[C_LEAF_TO_LITR]);
+		s->value[C_FROOT_TO_LITR]  = (fine_root_to_remove - s->value[C_FINEROOT_TO_RESERVE]);
+		logger(g_debug_log, "C_FROOT_TO_LITTER = %f\n", s->value[C_FROOT_TO_LITR]);
 	}
 	else
 	{
@@ -109,16 +109,14 @@ void leaf_fall_deciduous ( cell_t *const c, const int height, const int dbh, con
 		s->value[C_FINEROOT_TO_RESERVE] = s->value[FINE_ROOT_C];
 		logger(g_debug_log, "RETRANSL_C_FINEROOT_TO_RESERVE = %f\n", s->value[C_FINEROOT_TO_RESERVE]);
 
-		s->value[C_LEAF_TO_LITTER] = 0.;
-		logger(g_debug_log, "C_TO_LITTER = %f\n", s->value[C_LEAF_TO_LITTER]);
-		s->value[C_FROOT_TO_LITTER]        = 0.;
-		logger(g_debug_log, "C_FROOT_TO_LITTER = %f\n", s->value[C_FROOT_TO_LITTER]);
+		s->value[C_LEAF_TO_LITR]         = 0.;
+		logger(g_debug_log, "C_LEAF_TO_LITTER = %f\n", s->value[C_LEAF_TO_LITR]);
+		s->value[C_FROOT_TO_LITR]        = 0.;
+		logger(g_debug_log, "C_FROOT_TO_LITTER = %f\n", s->value[C_FROOT_TO_LITR]);
 	}
 
-	/* litter and soil compartments */
-	//s->value[C_TO_LITR1C] =
-
-
+	/* update litter pool */
+	littering ( c, s );
 
 }
 
@@ -140,19 +138,20 @@ void leaf_fall_evergreen ( cell_t *const c, const int height, const int dbh, con
 	if ( c->doy == 1 )
 	{
 		/* compute annual carbon leaf turnover */
-		yearly_leaf_fall_falling_C = s->value[LEAF_C] * s->value[LEAF_FINEROOT_TURNOVER];
-		logger(g_debug_log, "Annual leaf turnover = %g tC/cell/year\n", yearly_leaf_fall_falling_C);
+		yearly_leaf_fall_falling_C  = s->value[LEAF_C] * s->value[LEAF_FINEROOT_TURNOVER];
 
 		/* daily leaf fall */
-		foliage_to_remove = yearly_leaf_fall_falling_C / 365;
-		logger(g_debug_log, "Daily leaf turnover = %g tC/cell/year\n", foliage_to_remove);
+		foliage_to_remove           = yearly_leaf_fall_falling_C / 365;
 
 		/* compute carbon fine root turnover */
 		yearly_fine_root_turnover_C = s->value[FINE_ROOT_C] * s->value[LEAF_FINEROOT_TURNOVER];
-		logger(g_debug_log, "Annual fine root turnover = %g tC/cell/year\n", yearly_fine_root_turnover_C);
 
 		/* daily fine root turnover */
-		fine_root_to_remove = yearly_fine_root_turnover_C / 365;
+		fine_root_to_remove         = yearly_fine_root_turnover_C / 365;
+
+		logger(g_debug_log, "Annual leaf turnover = %g tC/cell/year\n", yearly_leaf_fall_falling_C);
+		logger(g_debug_log, "Daily leaf turnover = %g tC/cell/year\n", foliage_to_remove);
+		logger(g_debug_log, "Annual fine root turnover = %g tC/cell/year\n", yearly_fine_root_turnover_C);
 		logger(g_debug_log, "Daily fine root turnover = %g tC/cell/year\n", fine_root_to_remove);
 	}
 
@@ -163,44 +162,107 @@ void leaf_fall_evergreen ( cell_t *const c, const int height, const int dbh, con
 	logger(g_debug_log, "LEAF_C = %f tC/cell/day\n", s->value[LEAF_C]);
 
 	/* compute daily amount of carbon leaf and fine root to remove */
-	s->value[C_LEAF_TO_LITTER] = foliage_to_remove ;
-	logger(g_debug_log, "Daily leaf turnover = %g tC/cell/day\n", s->value[C_LEAF_TO_LITTER]);
+	s->value[C_LEAF_TO_LITR] = foliage_to_remove ;
+	logger(g_debug_log, "Daily leaf turnover = %g tC/cell/day\n", s->value[C_LEAF_TO_LITR]);
 
 	/* update carbon fine root pool */
 	s->value[FINE_ROOT_C] -= fine_root_to_remove;
 	logger(g_debug_log, "FINE_ROOT_C = %g tC/cell/day\n", s->value[FINE_ROOT_C]);
 
-	s->value[C_FROOT_TO_LITTER] = fine_root_to_remove;
-	logger(g_debug_log, "Daily fine root turnover = %g tC/cell/day\n", s->value[C_FROOT_TO_LITTER]);
+	s->value[C_FROOT_TO_LITR] = fine_root_to_remove;
+	logger(g_debug_log, "Daily fine root turnover = %g tC/cell/day\n", s->value[C_FROOT_TO_LITR]);
 
-	logger(g_debug_log, "Daily Carbon turnover to litter before retranslocation = %g tC/cell/day\n", s->value[C_LEAF_TO_LITTER] + s->value[C_FROOT_TO_LITTER]);
+	logger(g_debug_log, "Daily Carbon turnover to litter before retranslocation = %g tC/cell/day\n", s->value[C_LEAF_TO_LITR] + s->value[C_FROOT_TO_LITR]);
 
 	/* compute daily amount of carbon to re-translocate before remove leaf and fine root */
-	s->value[C_LEAF_TO_RESERVE] = s->value[C_LEAF_TO_LITTER] * fraction_to_retransl;
+	s->value[C_LEAF_TO_RESERVE] = s->value[C_LEAF_TO_LITR] * fraction_to_retransl;
 	logger(g_debug_log, "RETRANSL_C_LEAF_TO_RESERVE = %g tC/cell/day\n", s->value[C_LEAF_TO_RESERVE]);
 
-	s->value[C_FINEROOT_TO_RESERVE] = s->value[C_FROOT_TO_LITTER] * fraction_to_retransl;
+	s->value[C_FINEROOT_TO_RESERVE] = s->value[C_FROOT_TO_LITR] * fraction_to_retransl;
 	logger(g_debug_log, "RETRANSL_C_FINEROOT_TO_RESERVE = %g tC/cell/day\n", s->value[C_FINEROOT_TO_RESERVE]);
 
 	/* update considering carbon retranslocation */
-	s->value[C_LEAF_TO_LITTER] -= s->value[C_LEAF_TO_RESERVE];
-	logger(g_debug_log, "Daily leaf turnover after retranslocation = %g tC/cell/day\n", s->value[C_LEAF_TO_LITTER]);
+	s->value[C_LEAF_TO_LITR] -= s->value[C_LEAF_TO_RESERVE];
+	logger(g_debug_log, "Daily leaf turnover after retranslocation = %g tC/cell/day\n", s->value[C_LEAF_TO_LITR]);
 
-	s->value[C_FROOT_TO_LITTER] -= s->value[C_FINEROOT_TO_RESERVE];
-	logger(g_debug_log, "Daily fine root turnover after retranslocation = %g tC/cell/day\n", s->value[C_FROOT_TO_LITTER]);
+	s->value[C_FROOT_TO_LITR] -= s->value[C_FINEROOT_TO_RESERVE];
+	logger(g_debug_log, "Daily fine root turnover after retranslocation = %g tC/cell/day\n", s->value[C_FROOT_TO_LITR]);
 
 	/**/
-	s->value[C_TO_LEAF] -= s->value[C_LEAF_TO_LITTER];
-	s->value[C_TO_FINEROOT] -= s->value[C_FROOT_TO_LITTER];
+	s->value[C_TO_LEAF]        -= s->value[C_LEAF_TO_LITR];
+	s->value[C_TO_FINEROOT]    -= s->value[C_FROOT_TO_LITR];
 
-	/* considering that both carbon leaf and fine root contribute to the carbon litter and carbon soil pool */
-	//s->value[C_LEAF_TO_LITTER] = s->value[C_LEAF_TO_LITTER];
-	//logger(g_debug_log, "Leaf Carbon to litter after retranslocation = %g tC/cell/day\n", s->value[C_LEAF_TO_LITTER]);
-//	s->value[C_TO_SOIL] = s->value[C_FINE_ROOT_TO_SOIL];
-//	logger(g_debug_log, "Carbon to soil after retranslocation = %g tC/cell/day\n", s->value[C_TO_SOIL]);
+	/* update litter pool */
+	littering ( c, s );
 
 
+}
 
+void littering ( cell_t *const c, species_t *const s )
+{
+
+	/* leaf and fine root daily litter production */
+
+	/** carbon littering **/
+	/* carbon litter transfer to carbon litter pool */
+	s->value[C_TO_LITR]         = s->value[C_LEAF_TO_LITR] + s->value[C_FROOT_TO_LITR];
+
+	/* leaf litter carbon */
+	s->value[C_LEAF_TO_LITR1C]  = s->value[C_LEAF_TO_LITR] * s->value[LEAF_LITT_LAB_FRAC];
+	s->value[C_LEAF_TO_LITR2C]  = s->value[C_LEAF_TO_LITR] * s->value[LEAF_LITT_USCEL_FRAC];
+	s->value[C_LEAF_TO_LITR3C]  = s->value[C_LEAF_TO_LITR] * s->value[LEAF_LITT_SCEL_FRAC];
+	s->value[C_LEAF_TO_LITR4C]  = s->value[C_LEAF_TO_LITR] * s->value[LEAF_LITT_LIGN_FRAC];
+
+	/* fine root litter carbon */
+	s->value[C_FROOT_TO_LITR1C] = s->value[C_FROOT_TO_LITR] * s->value[FROOT_LITT_LAB_FRAC];
+	s->value[C_FROOT_TO_LITR2C] = s->value[C_FROOT_TO_LITR] * s->value[FROOT_LITT_USCEL_FRAC];
+	s->value[C_FROOT_TO_LITR3C] = s->value[C_FROOT_TO_LITR] * s->value[FROOT_LITT_SCEL_FRAC];
+	s->value[C_FROOT_TO_LITR4C] = s->value[C_FROOT_TO_LITR] * s->value[FROOT_LITT_LIGN_FRAC];
+
+	/* cell level litter carbon */
+	c->daily_leaf_litrC        += s->value[C_LEAF_TO_LITR];
+	c->daily_froot_litrC       += s->value[C_FROOT_TO_LITR];
+	c->daily_leaf_litr1C       += s->value[C_LEAF_TO_LITR1C];
+	c->daily_leaf_litr2C       += s->value[C_LEAF_TO_LITR2C];
+	c->daily_leaf_litr3C       += s->value[C_LEAF_TO_LITR3C];
+	c->daily_leaf_litr4C       += s->value[C_LEAF_TO_LITR4C];
+	c->daily_froot_litr1C      += s->value[C_FROOT_TO_LITR1C];
+	c->daily_froot_litr2C      += s->value[C_FROOT_TO_LITR2C];
+	c->daily_froot_litr3C      += s->value[C_FROOT_TO_LITR3C];
+	c->daily_froot_litr4C      += s->value[C_FROOT_TO_LITR4C];
+	c->daily_litrC             += (c->daily_leaf_litrC + c->daily_froot_litrC);
+
+	/** nitrogen littering **/
+	/* nitrogen litter transfer to nitrogen litter pool */
+	/* convert carbon amount to nitrogen amount */
+	s->value[N_LEAF_TO_LITR]    = s->value[C_LEAF_TO_LITR] / s->value[CN_FALLING_LEAVES];
+	s->value[N_FROOT_TO_LITR]   = s->value[N_FROOT_TO_LITR] / s->value[CN_FINE_ROOTS];
+	s->value[N_TO_LITR]         = s->value[N_LEAF_TO_LITR] + s->value[N_FROOT_TO_LITR];
+
+	/* leaf litter nitrogen */
+	s->value[N_LEAF_TO_LITR1N]  = s->value[N_LEAF_TO_LITR] * s->value[LEAF_LITT_LAB_FRAC];
+	s->value[N_LEAF_TO_LITR2N]  = s->value[N_LEAF_TO_LITR] * s->value[LEAF_LITT_USCEL_FRAC];
+	s->value[N_LEAF_TO_LITR3N]  = s->value[N_LEAF_TO_LITR] * s->value[LEAF_LITT_SCEL_FRAC];
+	s->value[N_LEAF_TO_LITR4N]  = s->value[N_LEAF_TO_LITR] * s->value[LEAF_LITT_LIGN_FRAC];
+
+	/* fine root litter carbon */
+	s->value[N_FROOT_TO_LITR1N] = s->value[N_FROOT_TO_LITR] * s->value[FROOT_LITT_LAB_FRAC];
+	s->value[N_FROOT_TO_LITR2N] = s->value[N_FROOT_TO_LITR] * s->value[FROOT_LITT_USCEL_FRAC];
+	s->value[N_FROOT_TO_LITR3N] = s->value[N_FROOT_TO_LITR] * s->value[FROOT_LITT_SCEL_FRAC];
+	s->value[N_FROOT_TO_LITR4N] = s->value[N_FROOT_TO_LITR] * s->value[FROOT_LITT_LIGN_FRAC];
+
+	/* cell level litter nitrogen */
+	c->daily_leaf_litrN        += s->value[N_LEAF_TO_LITR];
+	c->daily_froot_litrN       += s->value[N_FROOT_TO_LITR];
+	c->daily_leaf_litr1N       += s->value[N_LEAF_TO_LITR1N];
+	c->daily_leaf_litr2N       += s->value[N_LEAF_TO_LITR2N];
+	c->daily_leaf_litr3N       += s->value[N_LEAF_TO_LITR3N];
+	c->daily_leaf_litr4N       += s->value[N_LEAF_TO_LITR4N];
+	c->daily_froot_litr1N      += s->value[N_FROOT_TO_LITR1N];
+	c->daily_froot_litr2N      += s->value[N_FROOT_TO_LITR2N];
+	c->daily_froot_litr3N      += s->value[N_FROOT_TO_LITR3N];
+	c->daily_froot_litr4N      += s->value[N_FROOT_TO_LITR4N];
+	c->daily_litrN             += (c->daily_leaf_litrN + c->daily_froot_litrN);
 }
 
 

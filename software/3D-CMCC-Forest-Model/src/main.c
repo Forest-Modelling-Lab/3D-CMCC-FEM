@@ -40,6 +40,7 @@
 #include "utility.h"
 #include "cell_model.h"
 #include "soil_model.h"
+#include "litter_model.h"
 #include "compare.h"
 
 //#define BENCHMARK_ONLY
@@ -1406,7 +1407,11 @@ int main(int argc, char *argv[]) {
 								/* run tree model daily */
 								if ( !Tree_model_daily( matrix, cell, day, month, year ) )
 								{
-									logger(g_debug_log, "tree model daily failed!!!");
+									logger(g_debug_log, "tree model daily failed!!!\n");
+
+									// ALESSIOC TO ALESSIOR
+									/* exit */
+									return 0;
 								}
 								else
 								{
@@ -1420,24 +1425,33 @@ int main(int argc, char *argv[]) {
 						}
 						else
 						{
-							//if ( ! crop_model_D(matrix, cell, year, month, day, years_of_simulation) )
-							//{
-							//	logger(g_debug_log, "crop model failed.");
-							//}
-							//else
-							//{
-							//	puts(msg_ok);
-							//	//look if put it here or move before tree_model at the beginning of each month simulation
-							//	soil_model (matrix, yos, years, month, years_of_simulation);
-							//}
+							//here include different land use
 						}
 					}
 
 					/************************************************************************/
+					/* run for litter model */
+					if ( !Litter_model_daily(matrix, cell, day, month, year) )
+					{
+						logger_error(g_debug_log, "litter model daily failed!!!\n");
+
+						// ALESSIOC TO ALESSIOR
+						/* exit */
+						return 0;
+					}
+					else
+					{
+						printf("ok litter_model (%02d-%02d-%d)\n", day+1, month+1, year+g_settings->year_start);
+					}
+					/************************************************************************/
 					/* run for soil model */
 					if ( !Soil_model_daily(matrix, cell, day, month, year) )
 					{
-						logger_error(g_debug_log, "soil model daily failed!!!");
+						logger_error(g_debug_log, "soil model daily failed!!!\n");
+
+						// ALESSIOC TO ALESSIOR
+						/* exit */
+						return 0;
 					}
 					else
 					{
@@ -1447,7 +1461,11 @@ int main(int argc, char *argv[]) {
 					/* run for cell model */
 					if ( !Cell_model_daily(matrix, cell, day, month, year) )
 					{
-						logger_error(g_debug_log, "cell model daily failed!!!");
+						logger_error(g_debug_log, "cell model daily failed!!!\n");
+
+						// ALESSIOC TO ALESSIOR
+						/* exit */
+						return 0;
 					}
 					else
 					{

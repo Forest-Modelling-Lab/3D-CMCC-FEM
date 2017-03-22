@@ -311,17 +311,21 @@ enum {
 	C_TO_FRUIT,                         /* Daily Net Primary Production to Fruit pool (tC/sizeCell day) */
 	C_LEAF_TO_RESERVE,                  /* Daily retranslocated C from Leaf pool to Reserve (tC/sizeCell day) */
 	C_FINEROOT_TO_RESERVE,              /* Daily retranslocated C from Fine root pool to Reserve (tC/sizeCell day) */
-	C_LEAF_TO_LITTER,                   /* Daily tC from Leaf pool to Litter (tC/sizeCell day) */
-	C_FROOT_TO_LITTER,                  /* Daily tC from Fine root pool to Soil (tC/sizeCell day) */
-	C_FRUIT_TO_LITTER,                  /* Daily tC from Fruit pool to Litter (tC/sizeCell day) */
-	C_TO_LITTER,                        /* Daily Total Carbon to Litter pool (tC/sizeCell day) */
+	C_LEAF_TO_LITR,                     /* Daily tC from Leaf pool to Litter (tC/sizeCell day) */
+	C_FROOT_TO_LITR,                    /* Daily tC from Fine root pool to Soil (tC/sizeCell day) */
+	C_FRUIT_TO_LITR,                    /* Daily tC from Fruit pool to Litter (tC/sizeCell day) */
+	C_TO_LITR,                          /* Daily Total Carbon to Litter pool (tC/sizeCell day) */
 	C_STEM_LIVEWOOD_TO_DEADWOOD,        /* Daily tC from Stem live wood pool to Stem dead wood (tC/sizeCell day) */
 	C_COARSEROOT_LIVE_WOOD_TO_DEADWOOD, /* Daily tC from Coarse live wood pool to Coarse dead wood (tC/sizeCell day) */
 	C_BRANCH_LIVE_WOOD_TO_DEAD_WOOD,    /* Daily tC from Branch live wood pool to Branch dead wood (tC/sizeCell day) */
-	C_TO_LITR1C,                        /* Daily Litter Carbon to Litter labile carbon pool (tC/sizeCell day) */
-	C_TO_LITR2C,                        /* Daily Litter Carbon to Litter unshielded cellulose carbon pool (tC/sizeCell day) */
-	C_TO_LITR3C,                        /* Daily Litter Carbon to Litter shielded cellulose carbon pool (tC/sizeCell day) */
-	C_TO_LITR4C,                        /* Daily Litter Carbon to Litter lignin carbon pool (tC/sizeCell day) */
+	C_LEAF_TO_LITR1C,                   /* Daily Leaf Litter Carbon to Litter labile carbon pool (tC/sizeCell day) */
+	C_LEAF_TO_LITR2C,                   /* Daily Leaf Litter Carbon to Litter unshielded cellulose carbon pool (tC/sizeCell day) */
+	C_LEAF_TO_LITR3C,                   /* Daily Leaf Litter Carbon to Litter shielded cellulose carbon pool (tC/sizeCell day) */
+	C_LEAF_TO_LITR4C,                   /* Daily Leaf Litter Carbon to Litter lignin carbon pool (tC/sizeCell day) */
+	C_FROOT_TO_LITR1C,                  /* Daily Fine Root Litter Carbon to Litter labile carbon pool (tC/sizeCell day) */
+	C_FROOT_TO_LITR2C,                  /* Daily Fine Root Litter Carbon to Litter unshielded cellulose carbon pool (tC/sizeCell day) */
+	C_FROOT_TO_LITR3C,                  /* Daily Fine Root Litter Carbon to Litter shielded cellulose carbon pool (tC/sizeCell day) */
+	C_FROOT_TO_LITR4C,                  /* Daily Fine Root Litter Carbon to Litter lignin carbon pool (tC/sizeCell day) */
 	M_C_TO_TOT_STEM,                    /* Monthly cumulated Net Primary Production to total stem biomass  (tC/month/sizeCell) */
 	M_C_TO_STEM,                        /* Monthly cumulated Net Primary Production to stem biomass (tC/month/sizeCell) */
 	M_C_TO_LEAF,                        /* Monthly cumulated Net Primary Production to leaf biomass (tC/month/sizeCell) */
@@ -517,32 +521,40 @@ enum {
 	N_TO_RESERVE,                       /* Daily Net Primary Production to Reserve pool (tN/sizeCell day) */
 	N_TO_FRUIT,                         /* Daily Net Primary Production to Fruit pool (tN/sizeCell day) */
 	N_TO_LITTER,                        /* Daily Net Primary Production to Litter pool (tN/sizeCell day) */
+	N_TO_LITR,                          /* Daily Litter to Litter nitrogen pool (tN/sizeNell day) */
+	N_LEAF_TO_LITR,                     /* Daily Leaf Litter to Litter labile nitrogen pool (tN/sizeNell day) */
+	N_FROOT_TO_LITR,                    /* Daily Leaf Litter to Litter labile nitrogen pool (tN/sizeNell day) */
+	N_LEAF_TO_LITR1N,                   /* Daily Leaf Litter to Litter labile nitrogen pool (tN/sizeNell day) */
+	N_LEAF_TO_LITR2N,                   /* Daily Leaf Litter to Litter unshielded cellulose nitrogen pool (tN/sizeNell day) */
+	N_LEAF_TO_LITR3N,                   /* Daily Leaf Litter to Litter shielded cellulose nitrogen pool (tN/sizeNell day) */
+	N_LEAF_TO_LITR4N,                   /* Daily Leaf Litter to Litter lignin nitrogen pool (tN/sizeNell day) */
+	N_FROOT_TO_LITR1N,                  /* Daily Fine Root Litter to Litter labile nitrogen pool (tN/sizeNell day) */
+	N_FROOT_TO_LITR2N,                  /* Daily Fine Root Litter to Litter unshielded cellulose nitrogen pool (tN/sizeNell day) */
+	N_FROOT_TO_LITR3N,                  /* Daily Fine Root Litter to Litter shielded cellulose nitrogen pool (tN/sizeNell day) */
+	N_FROOT_TO_LITR4N,                  /* Daily Fine Root Litter to Litter lignin nitrogen pool (tN/sizeNell day) */
 	N_LEAF_TO_RESERVE,                  /* Daily retranslocated C from Leaf pool to Reserve (tN/sizeCell day) */
-	N_FINEROOT_TO_RESERVE,              /* Daily retranslocated C from Fine root pool to Reserve (tN/sizeCell day) */
-	N_LEAF_TO_LITTER,                   /* Daily tN from Leaf pool to Litter (tN/sizeCell day) */
-	N_FINE_ROOT_TO_LITTER,              /* Daily tN from Fine root pool to Litter (tN/sizeCell day) */
-	N_FRUIT_TO_LITTER,                  /* Daily tN from Fruit pool to Litter (tN/sizeCell day) */
+	N_FROOT_TO_RESERVE,                 /* Daily retranslocated C from Fine root pool to Reserve (tN/sizeCell day) */
 	N_STEM_LIVEWOOD_TO_DEADWOOD,        /* Daily tN from Stem live wood pool to Stem dead wood (tN/sizeCell day) */
 	N_COARSEROOT_LIVE_WOOD_TO_DEADWOOD, /* Daily tN from Coarse live wood pool to Coarse dead wood (tN/sizeCell day) */
 	N_BRANCH_LIVE_WOOD_TO_DEAD_WOOD,    /* Daily tN from Branch live wood pool to Branch dead wood (tN/sizeCell day) */
-	M_N_TO_TOT_STEM,                    /* Monthly cumulated Net Primary Production to total stem biomass  (tN/month/sizeCell) */
-	M_N_TO_STEM,                        /* Monthly cumulated Net Primary Production to stem biomass (tN/month/sizeCell) */
-	M_N_TO_LEAF,                        /* Monthly cumulated Net Primary Production to leaf biomass (tN/month/sizeCell) */
-	M_N_TO_ROOT,                        /* Monthly cumulated Net Primary Production to root biomass (tN/month/sizeCell) */
-	M_N_TO_FINEROOT,                    /* Monthly cumulated Net Primary Production to fine root biomass (tN/month/sizeCell) */
-	M_N_TO_COARSEROOT,                  /* Monthly cumulated Net Primary Production to coarse root biomass (tN/month/sizeCell) */
-	M_N_TO_RESERVE,                     /* Monthly cumulated Net Primary Production to reserve biomass (tN/month/sizeCell) */
-	M_N_TO_BRANCH,                      /* Monthly cumulated Net Primary Production to branch and bark biomass (tN/month/sizeCell) */
-	M_N_TO_FRUIT,                       /* Monthly cumulated Net Primary Production to fruit biomass (tN/month/sizeCell) */
-	Y_N_TO_TOT_STEM,                    /* Yearly cumulated Net Primary Production to total stem biomass (tN/year/sizeCell) */
-	Y_N_TO_STEM,                        /* Yearly cumulated Net Primary Production to stem biomass (tN/year/sizeCell) */
-	Y_N_TO_LEAF,                        /* Yearly cumulated Net Primary Production to leaf biomass (tN/year/sizeCell) */
-	Y_N_TO_ROOT,                        /* Yearly cumulated Net Primary Production to root biomass (tN/year/sizeCell) */
-	Y_N_TO_FINEROOT,                    /* Yearly cumulated Net Primary Production to fine root biomass (tN/year/sizeCell)*/
-	Y_N_TO_COARSEROOT,                  /* Yearly cumulated Net Primary Production to fine root biomass (tN/year/sizeCell)*/
-	Y_N_TO_RESERVE,                     /* Yearly cumulated Net Primary Production to reserve biomass (tN/year/sizeCell) */
-	Y_N_TO_BRANCH,                      /* Yearly cumulated Net Primary Production to branch and bark biomass (tN/year/sizeCell) */
-	Y_N_TO_FRUIT,                       /* Yearly cumulated Net Primary Production to fruit biomass (tN/year/sizeCell) */
+	M_N_TO_TOT_STEM,                    /* Monthly cumulated Net Primary Production to total stem  tN/month/sizeCell) */
+	M_N_TO_STEM,                        /* Monthly cumulated Net Primary Production to stem (tN/month/sizeCell) */
+	M_N_TO_LEAF,                        /* Monthly cumulated Net Primary Production to leaf (tN/month/sizeCell) */
+	M_N_TO_ROOT,                        /* Monthly cumulated Net Primary Production to root (tN/month/sizeCell) */
+	M_N_TO_FINEROOT,                    /* Monthly cumulated Net Primary Production to fine root (tN/month/sizeCell) */
+	M_N_TO_COARSEROOT,                  /* Monthly cumulated Net Primary Production to coarse root (tN/month/sizeCell) */
+	M_N_TO_RESERVE,                     /* Monthly cumulated Net Primary Production to reserve (tN/month/sizeCell) */
+	M_N_TO_BRANCH,                      /* Monthly cumulated Net Primary Production to branch and bark (tN/month/sizeCell) */
+	M_N_TO_FRUIT,                       /* Monthly cumulated Net Primary Production to fruit (tN/month/sizeCell) */
+	Y_N_TO_TOT_STEM,                    /* Yearly cumulated Net Primary Production to total stem (tN/year/sizeCell) */
+	Y_N_TO_STEM,                        /* Yearly cumulated Net Primary Production to stem (tN/year/sizeCell) */
+	Y_N_TO_LEAF,                        /* Yearly cumulated Net Primary Production to leaf (tN/year/sizeCell) */
+	Y_N_TO_ROOT,                        /* Yearly cumulated Net Primary Production to root (tN/year/sizeCell) */
+	Y_N_TO_FINEROOT,                    /* Yearly cumulated Net Primary Production to fine root (tN/year/sizeCell)*/
+	Y_N_TO_COARSEROOT,                  /* Yearly cumulated Net Primary Production to fine root tN/year/sizeCell)*/
+	Y_N_TO_RESERVE,                     /* Yearly cumulated Net Primary Production to reserve (tN/year/sizeCell) */
+	Y_N_TO_BRANCH,                      /* Yearly cumulated Net Primary Production to branch and bark (tN/year/sizeCell) */
+	Y_N_TO_FRUIT,                       /* Yearly cumulated Net Primary Production to fruit (tN/year/sizeCell) */
 
 	/* nitrogen pools (tN/area) */
 	LEAF_N,                             /* Current Leaf nitrogen pool tN/sizeCell */
@@ -984,6 +996,33 @@ typedef struct
 	double tsoil_scalar;                                                  /* soil temperature scalar */
 	double wsoil_scalar;                                                  /* soil water scalar */
 	double rate_scalar;                                                   /* soil (temperature * water) scalar */
+
+	/* daily leaf and fine root litter transfer pools */
+	//FIXME ADD COARSE WOODY DEBRIS
+	/* carbon */
+	double daily_litrC;                                                   /* daily leaf + fine root to litter carbon pool at cell level (tC/cell/day) */
+	double daily_leaf_litrC;                                              /* daily leaf to litter carbon pool at cell level (tC/cell/day) */
+	double daily_leaf_litr1C;                                             /* daily leaf to litter labile carbon pool at cell level (tC/cell/day) */
+	double daily_leaf_litr2C;                                             /* daily leaf to litter unshelded cellulose carbon pool at cell level (tC/cell/day) */
+	double daily_leaf_litr3C;                                             /* daily leaf to litter  shelded cellulose carbon pool at cell level (tC/cell/day) */
+	double daily_leaf_litr4C;                                             /* daily leaf to litter lignin carbon pool at cell level (tC/cell/day) */
+	double daily_froot_litrC;                                             /* daily fine root to litter carbon pool at cell level (tC/cell/day) */
+	double daily_froot_litr1C;                                            /* daily fine root to litter labile carbon pool at cell level (tC/cell/day) */
+	double daily_froot_litr2C;                                            /* daily fine root to litter unshelded cellulose carbon pool at cell level (tC/cell/day) */
+	double daily_froot_litr3C;                                            /* daily fine root to litter shelded cellulose carbon pool at cell level (tC/cell/day) */
+	double daily_froot_litr4C;                                            /* daily fine root to litter lignin carbon pool at cell level (tC/cell/day) */
+	/* nitrogen */
+	double daily_litrN;                                                   /* daily leaf + fine root to litter nitrogen pool at cell level (tN/cell/day) */
+	double daily_leaf_litrN;                                              /* daily leaf to litter nitrogen pool at cell level (tN/cell/day) */
+	double daily_leaf_litr1N;                                             /* daily leaf to litter labile nitrogen pool at cell level (tN/cell/day) */
+	double daily_leaf_litr2N;                                             /* daily leaf to litter unshelded cellulose nitrogen pool at cell level (tN/cell/day) */
+	double daily_leaf_litr3N;                                             /* daily leaf to litter  shelded cellulose nitrogen pool at cell level (tN/cell/day) */
+	double daily_leaf_litr4N;                                             /* daily leaf to litter lignin nitrogen pool at cell level (tN/cell/day) */
+	double daily_froot_litrN;                                             /* daily fine root to litter nitrogen pool at cell level (tN/cell/day) */
+	double daily_froot_litr1N;                                            /* daily fine root to litter labile nitrogen pool at cell level (tN/cell/day) */
+	double daily_froot_litr2N;                                            /* daily fine root to litter unshelded cellulose nitrogen pool at cell level (tN/cell/day) */
+	double daily_froot_litr3N;                                            /* daily fine root to litter shelded cellulose nitrogen pool at cell level (tN/cell/day) */
+	double daily_froot_litr4N;                                            /* daily fine root to litter lignin nitrogen pool at cell level (tN/cell/day) */
 
 	/* litter and soil carbon pools */
 	double leaf_litr1C;                                                   /* (kgC/m2) leaf litter labile C */

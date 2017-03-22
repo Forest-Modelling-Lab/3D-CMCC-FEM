@@ -258,7 +258,8 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 	logger(g_debug_log, "C_TO_RESERVE = %g tC/cell/day\n", s->value[C_TO_RESERVE]);
 	logger(g_debug_log, "C_TO_BRANCH = %g tC/cell/day\n", s->value[C_TO_BRANCH]);
 	logger(g_debug_log, "C_TO_FRUIT = %g tC/cell/day\n", s->value[C_TO_FRUIT]);
-	logger(g_debug_log, "C_LEAF_TO_LITTER = %g tC/cell/day\n", s->value[C_LEAF_TO_LITTER]);
+	logger(g_debug_log, "C_LEAF_TO_LITTER = %g tC/cell/day\n", s->value[C_LEAF_TO_LITR]);
+	logger(g_debug_log, "C_FROOT_TO_LITR = %g tC/cell/day\n", s->value[C_FROOT_TO_LITR]);
 	logger(g_debug_log, "C_LEAF_TO_RESERVE = %g tC/cell/day\n", s->value[C_LEAF_TO_RESERVE]);
 	logger(g_debug_log, "C_FINEROOT_TO_RESERVE = %g tC/cell/day\n", s->value[C_FINEROOT_TO_RESERVE]);
 	logger(g_debug_log, "C_STEM_LIVEWOOD_TO_DEADWOOD = %g tC/cell/day\n", s->value[C_STEM_LIVEWOOD_TO_DEADWOOD]);
@@ -282,7 +283,8 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 	logger(g_debug_log, "C_TO_RESERVE = %g tC/cell/day\n", s->value[C_TO_RESERVE]);
 	logger(g_debug_log, "C_TO_BRANCH = %g tC/cell/day\n", s->value[C_TO_BRANCH]);
 	logger(g_debug_log, "C_TO_FRUIT = %g tC/cell/day\n", s->value[C_TO_FRUIT]);
-	logger(g_debug_log, "C_LEAF_TO_LITTER = %g tC/cell/day\n", s->value[C_LEAF_TO_LITTER]);
+	logger(g_debug_log, "C_LEAF_TO_LITR = %g tC/cell/day\n", s->value[C_LEAF_TO_LITR]);
+	logger(g_debug_log, "C_FROOT_TO_LITR = %g tC/cell/day\n", s->value[C_FROOT_TO_LITR]);
 
 	/* update class level month carbon biomass increment in tC/month/cell */
 	s->value[M_C_TO_TOT_STEM]   += s->value[C_TO_TOT_STEM];
@@ -314,7 +316,7 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 	c->daily_branch_carbon      += s->value[C_TO_BRANCH] * 1000000.0 / g_settings->sizeCell ;
 	c->daily_reserve_carbon     += s->value[C_TO_RESERVE] * 1000000.0 / g_settings->sizeCell ;
 	c->daily_root_carbon        += s->value[C_TO_ROOT] * 1000000.0 / g_settings->sizeCell ;
-	c->daily_litter_carbon      += (s->value[C_LEAF_TO_LITTER] + s->value[C_FROOT_TO_LITTER]) * 1000000.0 / g_settings->sizeCell ;
+	c->daily_litter_carbon      += (s->value[C_LEAF_TO_LITR] + s->value[C_FROOT_TO_LITR]) * 1000000.0 / g_settings->sizeCell ;
 	c->daily_soil_carbon        += 0. ;
 	c->daily_fruit_carbon       += s->value[C_TO_FRUIT] * 1000000.0 / g_settings->sizeCell ;
 
@@ -326,7 +328,7 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 	c->daily_branch_carbon_tC      += s->value[C_TO_BRANCH];
 	c->daily_reserve_carbon_tC     += s->value[C_TO_RESERVE];
 	c->daily_root_carbon_tC        += s->value[C_TO_ROOT];
-	c->daily_litter_carbon_tC      += s->value[C_LEAF_TO_LITTER] + s->value[C_FROOT_TO_LITTER];
+	c->daily_litter_carbon_tC      += s->value[C_LEAF_TO_LITR] + s->value[C_FROOT_TO_LITR];
 	c->daily_soil_carbon_tC        += 0.;
 	c->daily_fruit_carbon_tC       += s->value[C_TO_FRUIT];
 

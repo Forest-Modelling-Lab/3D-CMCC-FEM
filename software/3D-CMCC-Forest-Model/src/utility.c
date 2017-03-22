@@ -76,6 +76,18 @@ void reset_daily_cell_variables(cell_t *const c)
 	c->daily_litter_carbon =            0.;
 	c->daily_soil_carbon =              0.;
 	c->daily_fruit_carbon =             0.;
+	c->daily_litrC =                    0.;
+	c->daily_leaf_litrC =               0.;
+	c->daily_leaf_litr1C =              0.;
+	c->daily_leaf_litr2C =              0.;
+	c->daily_leaf_litr3C =              0.;
+	c->daily_leaf_litr4C =              0.;
+	c->daily_froot_litrC =              0.;
+	c->daily_froot_litr1C =             0.;
+	c->daily_froot_litr2C =             0.;
+	c->daily_froot_litr3C =             0.;
+	c->daily_froot_litr4C =             0.;
+
 
 	/*reset daily water variables*/
 	c->snow_melt =                      0.;
