@@ -357,7 +357,7 @@ enum {
 	TOT_ROOT_C,                         /* Current Total Coarse carbon pool tC/sizeCell */
 	CROOT_C,                            /* Current Coarse root carbon pool tC/sizeCell */
 	FROOT_C,                            /* Current Fine root carbon pool tC/sizeCell */
-	MAX_FINE_ROOT_C,                    /* Maximum Current Fine root carbon pool tC/sizeCell */
+	MAX_FROOT_C,                        /* Maximum Current Fine root carbon pool tC/sizeCell */
 	MAX_BUD_BURST_C,                    /* Maximum Current Leaf carbon pool for BudBurst tC/sizeCell */
 	STEM_C,                             /* Current Stem carbon pool tC/sizeCell */
 	BRANCH_C,                           /* Current Branch carbon pool tC/sizeCell */
@@ -373,14 +373,14 @@ enum {
 	TOTAL_C,                            /* Current Total carbon pool tC/sizeCell */
 	STEM_LIVE_WOOD_C,                   /* Current Stem live wood carbon pool tC/sizeCell */
 	STEM_DEAD_WOOD_C,                   /* Current Stem dead wood carbon pool tC/sizeCell */
-	COARSE_ROOT_LIVE_WOOD_C,            /* Current Coarse root live wood carbon pool tC/sizeCell */
-	COARSE_ROOT_DEAD_WOOD_C,            /* Current Coarse root dead wood carbon pool tC/sizeCell */
+	CROOT_LIVE_WOOD_C,                  /* Current Coarse root live wood carbon pool tC/sizeCell */
+	CROOT_DEAD_WOOD_C,                  /* Current Coarse root dead wood carbon pool tC/sizeCell */
 	BRANCH_LIVE_WOOD_C,                 /* Current Branch live wood carbon pool tC/sizeCell */
 	BRANCH_DEAD_WOOD_C,                 /* Current Branch dead wood carbon pool tC/sizeCell */
 	STEM_SAPWOOD_C,                     /* Current Stem sapwood carbon pool tC/sizeCell */
 	STEM_HEARTWOOD_C,                   /* Current Stem heartwood carbon pool tC/sizeCell */
-	COARSE_ROOT_SAPWOOD_C,              /* Current Coarse root sapwood carbon pool tC/sizeCell */
-	COARSE_ROOT_HEARTWOOD_C,            /* Current Coarse root heartwood carbon pool tC/sizeCell */
+	CROOT_SAPWOOD_C,                    /* Current Coarse root sapwood carbon pool tC/sizeCell */
+	CROOT_HEARTWOOD_C,                  /* Current Coarse root heartwood carbon pool tC/sizeCell */
 	BRANCH_SAPWOOD_C,                   /* Current Branch sapwood carbon pool tC/sizeCell */
 	BRANCH_HEARTWOOD_C,                 /* Current Branch heartwood carbon pool tC/sizeCell */
 	TOT_SAPWOOD_C,                      /* Current total sapwood carbon pool tC/sizeCell */
@@ -557,8 +557,8 @@ enum {
 	/* nitrogen pools (tN/area) */
 	LEAF_N,                             /* Current Leaf nitrogen pool tN/sizeCell */
 	LEAF_FALLING_N,                     /* Current Leaf falling nitrogen pool tN/sizeCell */
-	FINE_ROOT_N,                        /* Current Fine root nitrogen pool tN/sizeCell */
-	COARSE_ROOT_N,                      /* Current Coarse root nitrogen pool tN/sizeCell */
+	FROOT_N,                            /* Current Fine root nitrogen pool tN/sizeCell */
+	CROOT_N,                            /* Current Coarse root nitrogen pool tN/sizeCell */
 	COARSE_ROOT_LIVE_WOOD_N,            /* Current Live Coarse root nitrogen pool tN/sizeCell */
 	COARSE_ROOT_DEAD_WOOD_N,            /* Current Dead Coarse root nitrogen pool tN/sizeCell */
 	STEM_N,                             /* Current Stem nitrogen pool tN/sizeCell */

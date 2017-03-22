@@ -308,12 +308,12 @@ void dendrometry ( cell_t *const c, const int layer, const int height, const int
 		logger(g_debug_log, " sapwood perc = %g%%\n", s->value[SAPWOOD_PERC]*100);
 		s->value[STEM_SAPWOOD_C] = (s->value[STEM_C] * s->value[SAPWOOD_PERC]);
 		logger(g_debug_log, " Sapwood stem biomass = %g tC class cell \n", s->value[STEM_SAPWOOD_C]);
-		s->value[COARSE_ROOT_SAPWOOD_C] =  (s->value[CROOT_C] * s->value[SAPWOOD_PERC]);
-		logger(g_debug_log, " Sapwood coarse root biomass = %g tC class cell \n", s->value[COARSE_ROOT_SAPWOOD_C]);
+		s->value[CROOT_SAPWOOD_C] =  (s->value[CROOT_C] * s->value[SAPWOOD_PERC]);
+		logger(g_debug_log, " Sapwood coarse root biomass = %g tC class cell \n", s->value[CROOT_SAPWOOD_C]);
 		s->value[BRANCH_SAPWOOD_C] = (s->value[BRANCH_C] * s->value[SAPWOOD_PERC]);
 		logger(g_debug_log, " Sapwood branch and bark biomass = %g tC class cell \n", s->value[BRANCH_SAPWOOD_C]);
 #endif
-		s->value[TOT_SAPWOOD_C] = s->value[STEM_SAPWOOD_C] + s->value[COARSE_ROOT_SAPWOOD_C] + s->value[BRANCH_SAPWOOD_C];
+		s->value[TOT_SAPWOOD_C] = s->value[STEM_SAPWOOD_C] + s->value[CROOT_SAPWOOD_C] + s->value[BRANCH_SAPWOOD_C];
 		logger(g_debug_log, " Total Sapwood biomass = %g tc class cell \n", s->value[TOT_SAPWOOD_C]);
 		s->value[STAND_BASAL_AREA] = s->value[BASAL_AREA] * s->counter[N_TREE];
 		logger(g_debug_log, " Stand level class basal area = %g cm^2/class cell\n", s->value[STAND_BASAL_AREA]);
@@ -476,12 +476,12 @@ void dendrometry_old(cell_t *const c, const int layer, const int height, const i
 	logger(g_debug_log, " sapwood perc = %g%%\n", s->value[SAPWOOD_PERC]*100);
 	s->value[STEM_SAPWOOD_C] = (s->value[STEM_C] * s->value[SAPWOOD_PERC]);
 	logger(g_debug_log, " Sapwood stem biomass = %g tC class cell \n", s->value[STEM_SAPWOOD_C]);
-	s->value[COARSE_ROOT_SAPWOOD_C] =  (s->value[CROOT_C] * s->value[SAPWOOD_PERC]);
-	logger(g_debug_log, " Sapwood coarse root biomass = %g tC class cell \n", s->value[COARSE_ROOT_SAPWOOD_C]);
+	s->value[CROOT_SAPWOOD_C] =  (s->value[CROOT_C] * s->value[SAPWOOD_PERC]);
+	logger(g_debug_log, " Sapwood coarse root biomass = %g tC class cell \n", s->value[CROOT_SAPWOOD_C]);
 	s->value[BRANCH_SAPWOOD_C] = (s->value[BRANCH_C] * s->value[SAPWOOD_PERC]);
 	logger(g_debug_log, " Sapwood branch and bark biomass = %g tC class cell \n", s->value[BRANCH_SAPWOOD_C]);
 #endif
-	s->value[TOT_SAPWOOD_C] = s->value[STEM_SAPWOOD_C] + s->value[COARSE_ROOT_SAPWOOD_C] + s->value[BRANCH_SAPWOOD_C];
+	s->value[TOT_SAPWOOD_C] = s->value[STEM_SAPWOOD_C] + s->value[CROOT_SAPWOOD_C] + s->value[BRANCH_SAPWOOD_C];
 	logger(g_debug_log, " Total Sapwood biomass = %g tc class cell \n", s->value[TOT_SAPWOOD_C]);
 	s->value[STAND_BASAL_AREA] = s->value[BASAL_AREA] * s->counter[N_TREE];
 	logger(g_debug_log, " Stand level class basal area = %g cm^2/class cell\n", s->value[STAND_BASAL_AREA]);

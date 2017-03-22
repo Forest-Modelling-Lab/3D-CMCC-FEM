@@ -27,8 +27,8 @@ void peak_lai(species_t *const s, const int day, const int month, const int year
 	logger(g_debug_log, "MAX_LEAF_C (sun and shaded)= %f tC/area \n", s->value[MAX_LEAF_C]);
 
 	/* then compute fine root carbon (tC/cell) at Peak Projected Lai */
-	s->value[MAX_FINE_ROOT_C] =s->value[MAX_LEAF_C] * (1.0 - s->value[FINE_ROOT_LEAF_FRAC]);
-	logger(g_debug_log, "MAX_FINE_ROOT_C = %f tC/area \n", s->value[MAX_LEAF_C]);
+	s->value[MAX_FROOT_C] =s->value[MAX_LEAF_C] * (1.0 - s->value[FINE_ROOT_LEAF_FRAC]);
+	logger(g_debug_log, "MAX_FINE_ROOT_C = %f tC/area \n", s->value[MAX_FROOT_C]);
 
 	/***************************************************************************************************************/
 	/* note: special case for evergreen */

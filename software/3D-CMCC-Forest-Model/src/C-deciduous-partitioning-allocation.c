@@ -147,7 +147,7 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 		reserve_for_foliage_budburst = s->value[MAX_LEAF_C] / (s->value[BUD_BURST]+1.0);
 		logger(g_debug_log, "daily amount of reserve for foliage budburst %g = tC/cell/day\n", reserve_for_foliage_budburst);
 
-		reserve_for_fine_root_budburst = s->value[MAX_FINE_ROOT_C] / (s->value[BUD_BURST]+1.0);
+		reserve_for_fine_root_budburst = s->value[MAX_FROOT_C] / (s->value[BUD_BURST]+1.0);
 		logger(g_debug_log, "daily amount of reserve for foliage budburst %g = tC/cell/day\n", reserve_for_foliage_budburst);
 
 		reserve_for_budburst = reserve_for_foliage_budburst + reserve_for_fine_root_budburst;

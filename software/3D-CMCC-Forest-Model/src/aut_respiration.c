@@ -88,7 +88,7 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 
 	/* Nitrogen content tN/area --> gN/m2 */
 	leaf_N          = (s->value[LEAF_N] * 1000000.0 /g_settings->sizeCell);
-	fine_root_N     = (s->value[FINE_ROOT_N] * 1000000.0 /g_settings->sizeCell);
+	fine_root_N     = (s->value[FROOT_N] * 1000000.0 /g_settings->sizeCell);
 	stem_N          = (s->value[STEM_LIVE_WOOD_N] * 1000000.0 /g_settings->sizeCell);
 	coarse_root_N   = (s->value[COARSE_ROOT_LIVE_WOOD_N] * 1000000.0 /g_settings->sizeCell);
 	branch_N        = (s->value[BRANCH_LIVE_WOOD_N] * 1000000.0 /g_settings->sizeCell);

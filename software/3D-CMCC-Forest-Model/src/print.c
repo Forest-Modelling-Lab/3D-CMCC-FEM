@@ -240,10 +240,10 @@ void print_daily_forest_class_data(cell_t* const c, const int layer, const int h
 	logger(g_debug_log, "+ total root = %g tC/area\n", s->value[TOT_ROOT_C]);
 	logger(g_debug_log, "+ reserve = %g tC/area\n", s->value[RESERVE_C]);
 	logger(g_debug_log, "+ stem live = %g tC/area\n", s->value[STEM_LIVE_WOOD_C]);
-	logger(g_debug_log, "+ coarse live = %g tC/area\n", s->value[COARSE_ROOT_LIVE_WOOD_C]);
+	logger(g_debug_log, "+ coarse live = %g tC/area\n", s->value[CROOT_LIVE_WOOD_C]);
 	logger(g_debug_log, "+ branch live = %g tC/area\n", s->value[BRANCH_LIVE_WOOD_C]);
 	logger(g_debug_log, "+ stem dead = %g tC/area\n", s->value[STEM_DEAD_WOOD_C]);
-	logger(g_debug_log, "+ coarse dead = %g tC/area\n", s->value[COARSE_ROOT_DEAD_WOOD_C]);
+	logger(g_debug_log, "+ coarse dead = %g tC/area\n", s->value[CROOT_DEAD_WOOD_C]);
 	logger(g_debug_log, "+ branch dead = %g tC/area\n", s->value[BRANCH_DEAD_WOOD_C]);
 	logger(g_debug_log, "+ fruit = %g tC/area\n", s->value[FRUIT_C]);
 
@@ -287,10 +287,10 @@ void print_new_daily_forest_class_data (cell_t* const c, const int height, const
 	logger(g_debug_log, "+ total root = %g tC/area\n", s->value[TOT_ROOT_C]);
 	logger(g_debug_log, "+ reserve = %g tC/area\n", s->value[RESERVE_C]);
 	logger(g_debug_log, "+ stem live = %g tC/area\n", s->value[STEM_LIVE_WOOD_C]);
-	logger(g_debug_log, "+ coarse live = %g tC/area\n", s->value[COARSE_ROOT_LIVE_WOOD_C]);
+	logger(g_debug_log, "+ coarse live = %g tC/area\n", s->value[CROOT_LIVE_WOOD_C]);
 	logger(g_debug_log, "+ branch live = %g tC/area\n", s->value[BRANCH_LIVE_WOOD_C]);
 	logger(g_debug_log, "+ stem dead = %g tC/area\n", s->value[STEM_DEAD_WOOD_C]);
-	logger(g_debug_log, "+ coarse dead = %g tC/area\n", s->value[COARSE_ROOT_DEAD_WOOD_C]);
+	logger(g_debug_log, "+ coarse dead = %g tC/area\n", s->value[CROOT_DEAD_WOOD_C]);
 	logger(g_debug_log, "+ branch dead = %g tC/area\n", s->value[BRANCH_DEAD_WOOD_C]);
 }
 

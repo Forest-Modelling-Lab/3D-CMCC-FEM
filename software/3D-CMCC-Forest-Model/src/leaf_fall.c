@@ -51,11 +51,11 @@ void leaf_fall_deciduous ( cell_t *const c, const int height, const int dbh, con
 		/* following Campioli et al., 2013 and Bossel 1996 10% of leaf and fine root Carbon is daily re-translocated as reserve in the reserve pool */
 		/* compute amount of leaf and fine root Carbon to re-translocate as reserve */
 
+		/* retranslocating carbon and nitrogen */
+		s->value[C_LEAF_TO_RESERVE]  = (s->value[LEAF_C] * C_fraction_to_retransl) / s->counter[DAY_FRAC_FOLIAGE_REMOVE];
+		s->value[N_LEAF_TO_RESERVE]  = s->value[C_LEAF_TO_RESERVE]/s->value[CN_LEAVES];
 
-		s->value[C_LEAF_TO_RESERVE] = (s->value[LEAF_C] * C_fraction_to_retransl) / s->counter[DAY_FRAC_FOLIAGE_REMOVE];
-		s->value[N_LEAF_TO_RESERVE] = s->value[C_LEAF_TO_RESERVE]/s->value[CN_LEAVES];
-
-		s->value[C_FROOT_TO_RESERVE]= (s->value[FROOT_C] * C_fraction_to_retransl) /s->counter[DAY_FRAC_FOLIAGE_REMOVE];
+		s->value[C_FROOT_TO_RESERVE] = (s->value[FROOT_C] * C_fraction_to_retransl) /s->counter[DAY_FRAC_FOLIAGE_REMOVE];
 		s->value[N_FROOT_TO_RESERVE] = s->value[C_FROOT_TO_RESERVE]/s->value[CN_FINE_ROOTS];
 
 		previousLai = s->value[LAI_PROJ];
@@ -72,10 +72,9 @@ void leaf_fall_deciduous ( cell_t *const c, const int height, const int dbh, con
 
 		previousBiomass_lai = previousLai * (s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell) / (s->value[SLA_AVG] * 1000.0);
 
-		newBiomass_lai = (currentLai * (s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell) / (s->value[SLA_AVG] * 1000.0));
+		newBiomass_lai      = (currentLai * (s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell) / (s->value[SLA_AVG] * 1000.0));
 
-		foliage_to_remove = previousBiomass_lai - newBiomass_lai;
-		logger(g_debug_log, "foliage_to_remove = %f\n", foliage_to_remove);
+		foliage_to_remove   = previousBiomass_lai - newBiomass_lai;
 
 
 		/* a simple linear correlation from leaf carbon to remove and fine root to remove */
@@ -84,33 +83,30 @@ void leaf_fall_deciduous ( cell_t *const c, const int height, const int dbh, con
 
 		/* update leaf falling */
 		s->value[C_TO_LEAF]        = -foliage_to_remove ;
-		logger(g_debug_log, "C_TO_LEAF = %f\n", s->value[C_TO_LEAF]);
 		s->value[C_TO_FINEROOT]    = -fine_root_to_remove;
-		logger(g_debug_log, "C_TO_FINEROOT = %f\n", s->value[C_TO_FINEROOT]);
 		s->value[C_LEAF_TO_LITR]   = (foliage_to_remove - s->value[C_LEAF_TO_RESERVE]);
-		logger(g_debug_log, "C_TO_LITR = %f\n", s->value[C_LEAF_TO_LITR]);
 		s->value[C_FROOT_TO_LITR]  = (fine_root_to_remove - s->value[C_FROOT_TO_RESERVE]);
-		logger(g_debug_log, "C_FROOT_TO_LITTER = %f\n", s->value[C_FROOT_TO_LITR]);
+		s->value[N_TO_LEAF]        = -foliage_to_remove ;
+		s->value[N_TO_FINEROOT]    = -fine_root_to_remove;
+		s->value[N_LEAF_TO_LITR]   = (foliage_to_remove - s->value[N_LEAF_TO_RESERVE]);
+		s->value[N_FROOT_TO_LITR]  = (fine_root_to_remove - s->value[N_FROOT_TO_RESERVE]);
 	}
 	else
 	{
 		/** LAST DAY OF LEAF FALL **/
 		logger(g_debug_log, "Last day of leaf fall\n");
 		s->value[C_TO_LEAF] = -s->value[LEAF_C];
-		logger(g_debug_log, "C_TO_LEAF = %f\n", s->value[C_TO_LEAF]);
 		s->value[C_TO_FINEROOT] = - s->value[FROOT_C];
-		logger(g_debug_log, "C_TO_FINEROOT = %f\n", -s->value[C_TO_FINEROOT]);
 
 		/* assuming that the last day of leaf fall all the remaining carbon goes to reserve */
-		s->value[C_LEAF_TO_RESERVE] = s->value[LEAF_C];
-		logger(g_debug_log, "RETRANSL_C_LEAF_TO_RESERVE = %f\n", s->value[C_LEAF_TO_RESERVE]);
-		s->value[C_FROOT_TO_RESERVE] = s->value[FROOT_C];
-		logger(g_debug_log, "RETRANSL_C_FINEROOT_TO_RESERVE = %f\n", s->value[C_FROOT_TO_RESERVE]);
-
+		s->value[C_LEAF_TO_RESERVE]      = s->value[LEAF_C];
+		s->value[C_FROOT_TO_RESERVE]     = s->value[FROOT_C];
 		s->value[C_LEAF_TO_LITR]         = 0.;
-		logger(g_debug_log, "C_LEAF_TO_LITTER = %f\n", s->value[C_LEAF_TO_LITR]);
 		s->value[C_FROOT_TO_LITR]        = 0.;
-		logger(g_debug_log, "C_FROOT_TO_LITTER = %f\n", s->value[C_FROOT_TO_LITR]);
+		s->value[N_LEAF_TO_RESERVE]      = s->value[LEAF_N];
+		s->value[N_FROOT_TO_RESERVE]     = s->value[FROOT_N];
+		s->value[N_LEAF_TO_LITR]         = 0.;
+		s->value[N_FROOT_TO_LITR]        = 0.;
 	}
 
 	/* update litter pool */
