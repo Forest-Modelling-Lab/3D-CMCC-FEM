@@ -1801,6 +1801,9 @@ void forest_summary(const matrix_t* const m, const int day, const int month, con
 
 						/* initialize nitrogen pools */
 						initialization_forest_class_N (&m->cells[cell], height, dbh, age, species);
+
+						/* initialization forest class litter fractions */
+						initialization_forest_class_litter_soil (&m->cells[cell], height, dbh, age, species);
 					}
 				}
 			}

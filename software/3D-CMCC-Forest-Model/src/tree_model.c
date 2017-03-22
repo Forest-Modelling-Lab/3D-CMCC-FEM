@@ -234,30 +234,39 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 
 							}
 
-							/* radiation */
 							/*********************************************************************/
+							/** radiation **/
 							/* short wave band */
-							canopy_radiation_sw_band( c, layer, height, dbh, age, species, meteo_daily );
+							canopy_radiation_sw_band ( c, layer, height, dbh, age, species, meteo_daily );
 							/* long wave band */
-							canopy_radiation_lw_band( c, layer, height, dbh, age, species, meteo_daily );
+							canopy_radiation_lw_band ( c, layer, height, dbh, age, species, meteo_daily );
 							/* net radiation */
-							canopy_net_radiation( c, layer, height, dbh, age, species );
+							canopy_net_radiation ( c, layer, height, dbh, age, species );
 							/**********************************************************************/
 
 							/* canopy temperature */
-							canopy_temperature( c, layer, height, dbh, age, species, meteo_daily );
+							canopy_temperature ( c, layer, height, dbh, age, species, meteo_daily );
 
 							/* daily modifier */
-							modifiers( c, layer, height, dbh, age, species, meteo_daily, meteo_annual);
+							modifiers ( c, layer, height, dbh, age, species, meteo_daily, meteo_annual );
 
 							/* canopy water fluxes */
-							canopy_evapotranspiration( c, layer, height, dbh, age, species, meteo_daily );
+							canopy_evapotranspiration ( c, layer, height, dbh, age, species, meteo_daily );
 
 							//note: following Piao et al., 2010 at first we should compute:
 							//(Maint Resp)->(Growth Resp = (GPP - Maint Resp) * eff_grperc)->(NPP)
 
 							/* canopy carbon assimilation */
-							photosynthesis( c, layer, height, dbh, age, species, DaysInMonth[month], meteo_annual);
+							photosynthesis ( c, layer, height, dbh, age, species, DaysInMonth[month], meteo_annual );
+
+							if ( g_settings->Prog_Aut_Resp )
+							{
+								/* maintenance respiration */
+								maintenance_respiration ( c, layer, height, dbh, age, species, meteo_daily );
+
+								/* growth respiration */
+								growth_respiration ( c, layer, height, dbh, age, species );
+							}
 
 							/* autotrophic respiration */
 							autotrophic_respiration ( c, layer, height, dbh, age, species, meteo_daily );

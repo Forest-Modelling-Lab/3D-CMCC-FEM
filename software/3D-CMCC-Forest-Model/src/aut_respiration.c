@@ -323,12 +323,6 @@ void autotrophic_respiration(cell_t *const c, const int layer, const int height,
 
 	if ( g_settings->Prog_Aut_Resp )
 	{
-		/* maintenance respiration */
-		maintenance_respiration( c, layer, height, dbh, age, species, meteo_daily );
-
-		/* growth respiration */
-		growth_respiration( c, layer, height, dbh, age, species );
-
 		logger(g_debug_log, "\n**AUTOTROPHIC_RESPIRATION**\n");
 
 		/* class level among pools */

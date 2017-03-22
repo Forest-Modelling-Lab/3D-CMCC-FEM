@@ -608,13 +608,13 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 			logger(g_daily_log, "\t%4s \t%3.4f \t%3.4f \t%3.4f",
 					"***",
 					c->daily_gpp,
-					c->daily_npp_gC,
+					c->daily_npp,
 					c->daily_aut_resp);
 		else
 			logger(g_daily_log, ",%s,%3.4f,%3.4f,%3.4f",
 					"***",
 					c->daily_gpp,
-					c->daily_npp_gC,
+					c->daily_npp,
 					c->daily_aut_resp);
 
 	}
@@ -1064,12 +1064,12 @@ void EOM_print_output_cell_level(cell_t *const c, const int month, const int yea
 			logger(g_monthly_log, "\t%4s \t%3.4f \t%3.4f \t%3.4f ",
 					"***",
 					c->monthly_gpp,
-					c->monthly_npp_gC,
+					c->monthly_npp,
 					c->monthly_aut_resp);
 		else
 			logger(g_monthly_log, ",***,%3.4f,%3.4f,%3.4f",
 					c->monthly_gpp,
-					c->monthly_npp_gC,
+					c->monthly_npp,
 					c->monthly_aut_resp);
 
 	}
@@ -1551,13 +1551,13 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 				logger(g_annual_log, "\t%4s \t%3.4f \t%3.4f \t%3.4f \t%3.4f",
 						"***",
 						c->annual_gpp,
-						c->annual_npp_gC,
+						c->annual_npp,
 						c->annual_aut_resp,
 						(c->annual_aut_resp/c->annual_gpp)*100.0);
 			else
 				logger(g_annual_log, "***,%3.4f,%3.4f,%3.4f,%3.4f",
 						c->annual_gpp,
-						c->annual_npp_gC,
+						c->annual_npp,
 						c->annual_aut_resp,
 						(c->annual_aut_resp/c->annual_gpp)*100.0);
 

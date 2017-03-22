@@ -165,6 +165,37 @@ void check_carbon_balance(cell_t *const c)
 	in = c->daily_gpp;
 
 	/* sum of sinks */
+	out = c->daily_aut_resp;
+
+	/* sum of current storage */
+	store = c->daily_npp;
+
+	balance = in - out -store;
+
+	logger(g_debug_log, "\nCELL CARBON POOL BALANCE\n");
+
+	if ( fabs( balance ) > eps )
+	{
+		logger(g_debug_log, "DOY = %d\n", c->doy);
+		logger(g_debug_log, "\nin\n");
+		logger(g_debug_log, "c->daily_gpp = %g gC/m2/day\n", c->daily_gpp);
+		logger(g_debug_log, "\nout\n");
+		logger(g_debug_log, "c->daily_tot_aut_resp = %g gC/m2/day\n",c->daily_aut_resp);
+		logger(g_debug_log, "\nstore\n");
+		logger(g_debug_log, "c->daily_leaf_carbon = %g gC/m2/day\n", c->daily_npp);
+		logger(g_debug_log, "\ncarbon in = %g gC/m2/day\n", in);
+		logger(g_debug_log, "carbon out = %g gC/m2/day\n", out);
+		logger(g_debug_log, "carbon store = %g gC/m2/day\n", store);
+		logger(g_debug_log, "carbon_balance = %g gC/m2/day\n",balance);
+		logger(g_debug_log, "...FATAL ERROR IN carbon balance (exit)\n");
+		logger(g_debug_log, "DOY = %d\n", c->doy);
+		CHECK_CONDITION(fabs(balance), >, eps);
+	}
+
+	/* sum of sources */
+	in = c->daily_gpp;
+
+	/* sum of sinks */
 	out = c->daily_maint_resp + c->daily_growth_resp;
 
 	/* sum of current storage */
@@ -426,6 +457,39 @@ void check_class_carbon_balance(cell_t *const c, const int layer, const int heig
 
 	species_t *s;
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
+
+	/* DAILY CHECK ON CLASS LEVEL CARBON BALANCE */
+	/* check complete tree level carbon balance */
+
+	/* sum of sources */
+	in = s->value[DAILY_GPP_gC];
+
+	/* sum of sinks */
+	out = s->value[TOTAL_AUT_RESP];
+
+	/* sum of current storage */
+	store = s->value[NPP_gC];
+
+
+	/* check carbon pool balance */
+	balance = in - out - store;
+
+	logger(g_debug_log, "\nCLASS LEVEL CARBON BALANCE\n");
+
+	/* check for carbon balance closure */
+	if ( fabs( balance ) > eps )
+	{
+		logger(g_debug_log, "DOY = %d\n", c->doy);
+		logger(g_debug_log, "\nin = %g gC/m2\n", in);
+		logger(g_debug_log, "GPP = %g gC/m2\n", s->value[DAILY_GPP_gC]);
+		logger(g_debug_log, "\nout = %g gC/m2\n", out);
+		logger(g_debug_log, "TOTAL_AUT_RESP = %g gC/m2\n", s->value[TOTAL_AUT_RESP]);
+		logger(g_debug_log, "\nstore = %g gC/m2\n", store);
+		logger(g_debug_log, "NPP = %g gC/m2\n", s->value[NPP_gC]);
+		logger(g_debug_log, "\nbalance = %g gC/m2\n", balance);
+		logger(g_debug_log, "...FATAL ERROR AT CLASS LEVEL carbon balance (exit)\n");
+		CHECK_CONDITION(fabs(balance), >, eps);
+	}
 
 	/* DAILY CHECK ON CLASS LEVEL CARBON BALANCE */
 	/* check complete tree level carbon balance */

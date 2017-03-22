@@ -44,8 +44,9 @@ void reset_daily_cell_variables(cell_t *const c)
 
 	/*reset daily carbon variables*/
 	c->daily_gpp =                      0.;
+	c->daily_npp =                      0.;
+	c->daily_npp_tC =                   0.;
 	c->daily_npp_tDM =                  0.;
-	c->daily_npp_gC =                   0.;
 	c->daily_leaf_maint_resp =          0.;
 	c->daily_stem_maint_resp =          0.;
 	c->daily_fine_root_maint_resp =     0.;
@@ -99,7 +100,8 @@ void reset_monthly_cell_variables(cell_t *const c)
 
 	/*reset cell level variables*/
 	c->monthly_gpp =                    0.;
-	c->monthly_npp_gC =                 0.;
+	c->monthly_npp =                    0.;
+	c->monthly_npp_tC =                 0.;
 	c->monthly_npp_tDM =                0.;
 	c->monthly_aut_resp =               0.;
 	c->monthly_aut_resp_tC =            0.;
@@ -140,7 +142,8 @@ void reset_annual_cell_variables(cell_t *const c)
 	c->cell_cover =                     0;
 	c->doy =                            0;
 	c->annual_gpp =                     0.;
-	c->annual_npp_gC =                  0.;
+	c->annual_npp =                     0.;
+	c->annual_npp_tC =                  0.;
 	c->annual_npp_tDM =                 0.;
 	c->annual_aut_resp =                0.;
 	c->annual_aut_resp_tC =             0.;

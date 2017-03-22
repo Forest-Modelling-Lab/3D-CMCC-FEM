@@ -38,9 +38,9 @@ void carbon_assimilation(cell_t *const c, const int layer, const int height, con
 	s->value[YEARLY_NPP_tC] += s->value[NPP_tC];
 
 	/* cell level */
-	c->daily_npp_gC += s->value[NPP_gC];
-	c->monthly_npp_gC += s->value[NPP_gC];
-	c->annual_npp_gC += s->value[NPP_gC];
+	c->daily_npp += s->value[NPP_gC];
+	c->monthly_npp += s->value[NPP_gC];
+	c->annual_npp += s->value[NPP_gC];
 	c->daily_npp_tC += s->value[NPP_tC];
 	c->monthly_npp_tC += s->value[NPP_tC];
 	c->annual_npp_tC += s->value[NPP_tC];

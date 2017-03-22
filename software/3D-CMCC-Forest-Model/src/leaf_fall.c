@@ -116,6 +116,7 @@ void leaf_fall_deciduous ( cell_t *const c, const int height, const int dbh, con
 	}
 
 	/* litter and soil compartments */
+	//s->value[C_TO_LITR1C] =
 
 
 

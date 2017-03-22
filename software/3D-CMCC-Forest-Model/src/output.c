@@ -238,7 +238,7 @@ static void daily_push_values(const output_t* const o, const cell_t* const c, co
 		int index = VALUE_AT(c->x, c->y, row, i);
 		if ( AR_OUT == o->daily_vars[i] )		o->daily_vars_value[index] = c->daily_aut_resp;
 		if ( GPP_OUT == o->daily_vars[i] )	o->daily_vars_value[index] = c->daily_gpp;
-		if ( NPP_OUT == o->daily_vars[i] )	o->daily_vars_value[index] = c->daily_npp_gC;
+		if ( NPP_OUT == o->daily_vars[i] )	o->daily_vars_value[index] = c->daily_npp;
 	}
 #undef VALUE_AT
 #undef ROWS
@@ -257,7 +257,7 @@ static void monthly_push_values(const output_t* const o, const cell_t* const c, 
 		int index = VALUE_AT(c->x, c->y, row, i);
 		if ( AR_OUT == o->monthly_vars[i] ) o->monthly_vars_value[index] = c->monthly_aut_resp;
 		if ( GPP_OUT == o->monthly_vars[i] ) o->monthly_vars_value[index] = c->monthly_gpp;
-		if ( NPP_OUT == o->monthly_vars[i] ) o->monthly_vars_value[index] = c->monthly_npp_gC;
+		if ( NPP_OUT == o->monthly_vars[i] ) o->monthly_vars_value[index] = c->monthly_npp;
 	}
 #undef VALUE_AT
 #undef ROWS
@@ -276,7 +276,7 @@ static void yearly_push_values(const output_t* const o, const cell_t* const c, c
 		int index = VALUE_AT(c->x, c->y, year_index, i);
 		if ( AR_OUT == o->yearly_vars[i] ) o->yearly_vars_value[index] = c->annual_aut_resp;
 		if ( GPP_OUT == o->yearly_vars[i] ) o->yearly_vars_value[index] = c->annual_gpp;
-		if ( NPP_OUT == o->yearly_vars[i] ) o->yearly_vars_value[index] = c->annual_npp_gC;
+		if ( NPP_OUT == o->yearly_vars[i] ) o->yearly_vars_value[index] = c->annual_npp;
 	}
 #undef VALUE_AT
 #undef ROWS

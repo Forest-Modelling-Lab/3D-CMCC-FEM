@@ -299,7 +299,7 @@ enum {
 	YEARLY_NPP_tN,                      /* Yearly Net Primary Production demand tN/sizeCell day */
 
 	/* biomass */
-	/* carbon to carbon pools */
+	/* transfer pools carbon to carbon pools */
 	C_TO_LEAF,                          /* Daily Net Primary Production to Leaf pool (tC/sizeCell day) */
 	C_TO_ROOT,                          /* Daily Net Primary Production to Root pool (tC/sizeCell day) */
 	C_TO_FINEROOT,                      /* Daily Net Primary Production to Fine root pool (tC/sizeCell day) */
@@ -309,7 +309,7 @@ enum {
 	C_TO_BRANCH,                        /* Daily Net Primary Production to Branch pool (tC/sizeCell day) */
 	C_TO_RESERVE,                       /* Daily Net Primary Production to Reserve pool (tC/sizeCell day) */
 	C_TO_FRUIT,                         /* Daily Net Primary Production to Fruit pool (tC/sizeCell day) */
-	C_TO_LITTER,                        /* Daily Net Primary Production to Litter pool (tC/sizeCell day) */
+	C_TO_LITTER,                        /* Daily Leaf Carbon to Litter pool (tC/sizeCell day) */
 	C_TO_SOIL,                          /* Daily Net Primary Production to Soil pool (tC/sizeCell day) */
 	C_LEAF_TO_RESERVE,                  /* Daily retranslocated C from Leaf pool to Reserve (tC/sizeCell day) */
 	C_FINEROOT_TO_RESERVE,              /* Daily retranslocated C from Fine root pool to Reserve (tC/sizeCell day) */
@@ -319,6 +319,10 @@ enum {
 	C_STEM_LIVEWOOD_TO_DEADWOOD,        /* Daily tC from Stem live wood pool to Stem dead wood (tC/sizeCell day) */
 	C_COARSEROOT_LIVE_WOOD_TO_DEADWOOD, /* Daily tC from Coarse live wood pool to Coarse dead wood (tC/sizeCell day) */
 	C_BRANCH_LIVE_WOOD_TO_DEAD_WOOD,    /* Daily tC from Branch live wood pool to Branch dead wood (tC/sizeCell day) */
+	C_TO_LITR1C,                        /* Daily Litter Carbon to Litter labile carbon pool (tC/sizeCell day) */
+	C_TO_LITR2C,                        /* Daily Litter Carbon to Litter unshielded cellulose carbon pool (tC/sizeCell day) */
+	C_TO_LITR3C,                        /* Daily Litter Carbon to Litter shielded cellulose carbon pool (tC/sizeCell day) */
+	C_TO_LITR4C,                        /* Daily Litter Carbon to Litter lignin carbon pool (tC/sizeCell day) */
 	M_C_TO_TOT_STEM,                    /* Monthly cumulated Net Primary Production to total stem biomass  (tC/month/sizeCell) */
 	M_C_TO_STEM,                        /* Monthly cumulated Net Primary Production to stem biomass (tC/month/sizeCell) */
 	M_C_TO_LEAF,                        /* Monthly cumulated Net Primary Production to leaf biomass (tC/month/sizeCell) */
@@ -840,7 +844,7 @@ typedef struct
 
 	/*carbon variables*/
 	double daily_gpp, monthly_gpp, annual_gpp;                            /* daily, monthly and annual GPP at cell level (gC/m2/ ) */
-	double daily_npp_gC, monthly_npp_gC, annual_npp_gC;                   /* daily, monthly and annual NPP at cell level (gC/m2/ ) */
+	double daily_npp, monthly_npp, annual_npp;                            /* daily, monthly and annual NPP at cell level (gC/m2/ ) */
 	double daily_npp_tC, monthly_npp_tC, annual_npp_tC;                   /* daily, monthly and annual NPP at cell level (tC/cell/ ) */
 	double daily_npp_tDM, monthly_npp_tDM, annual_npp_tDM;                /* daily, monthly and annual NPP at cell level (tDM/cell/ ) */
 	double daily_aut_resp, monthly_aut_resp, annual_aut_resp;             /* daily, monthly and annual aut resp at cell level (gC/m2/ ) */
@@ -997,7 +1001,7 @@ typedef struct
 	double deadwood_litr4C;                                               /* (kgC/m2) deadwood litter lignin C */
 
 	double cwdC;                                                          /* (kgC/m2) coarse woody debris C */
-	double litrC;                                                         /* (kgC/m2) litter total C */
+	double litrC;                                                         /* (kgC/m2) litter + cwd total C */
 	double litr1C;                                                        /* (kgC/m2) litter labile C */
 	double litr2C;                                                        /* (kgC/m2) litter unshielded cellulose C */
 	double litr3C;                                                        /* (kgC/m2) litter shielded cellulose C */
@@ -1023,7 +1027,7 @@ typedef struct
 	double deadwood_litr4N;                                               /* (kgN/m2) deadwood litter lignin N */
 
 	double cwdN;                                                          /* (kgN/m2) coarse woody debris N */
-	double litrN;                                                         /* (kgN/m2) litter total N */
+	double litrN;                                                         /* (kgN/m2) litter litter + cwd total N */
 	double litr1N;                                                        /* (kgN/m2) litter labile N */
 	double litr2N;                                                        /* (kgN/m2) litter unshielded cellulose N */
 	double litr3N;                                                        /* (kgN/m2) litter shielded cellulose N */
