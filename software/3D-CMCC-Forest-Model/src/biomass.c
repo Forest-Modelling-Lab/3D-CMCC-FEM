@@ -189,45 +189,46 @@ void tree_biomass_remove (cell_t *const c, species_t *const s, const int tree_re
 	average_tree_pools ( s );
 
 	/* update class C and N */
-	s->value[STEM_C] -= (s->value[AV_STEM_MASS_KgC]/1000.0*tree_remove);
-	s->value[LEAF_C] -= (s->value[AV_LEAF_MASS_KgC]/1000.0*tree_remove);
-	s->value[FINE_ROOT_C] -= (s->value[AV_FINE_ROOT_MASS_KgC]/1000.0*tree_remove);
-	s->value[COARSE_ROOT_C] -= (s->value[AV_COARSE_ROOT_MASS_KgC]/1000.0*tree_remove);
-	s->value[RESERVE_C] -= (s->value[AV_RESERVE_MASS_KgC]/1000.0*tree_remove);
-	s->value[BRANCH_C] -= (s->value[AV_BRANCH_MASS_KgC]/1000.0*tree_remove);
-	s->value[STEM_LIVE_WOOD_C] -= (s->value[AV_LIVE_STEM_MASS_KgC]/1000.0*tree_remove);
-	s->value[STEM_DEAD_WOOD_C] -= (s->value[AV_DEAD_STEM_MASS_KgC]/1000.0*tree_remove);
+	s->value[STEM_C]                  -= (s->value[AV_STEM_MASS_KgC]/1000.0*tree_remove);
+	s->value[LEAF_C]                  -= (s->value[AV_LEAF_MASS_KgC]/1000.0*tree_remove);
+	s->value[FINE_ROOT_C]             -= (s->value[AV_FINE_ROOT_MASS_KgC]/1000.0*tree_remove);
+	s->value[COARSE_ROOT_C]           -= (s->value[AV_COARSE_ROOT_MASS_KgC]/1000.0*tree_remove);
+	s->value[RESERVE_C]               -= (s->value[AV_RESERVE_MASS_KgC]/1000.0*tree_remove);
+	s->value[BRANCH_C]                -= (s->value[AV_BRANCH_MASS_KgC]/1000.0*tree_remove);
+	s->value[STEM_LIVE_WOOD_C]        -= (s->value[AV_LIVE_STEM_MASS_KgC]/1000.0*tree_remove);
+	s->value[STEM_DEAD_WOOD_C]        -= (s->value[AV_DEAD_STEM_MASS_KgC]/1000.0*tree_remove);
 	s->value[COARSE_ROOT_LIVE_WOOD_C] -= (s->value[AV_LIVE_COARSE_ROOT_MASS_KgC]/1000.0*tree_remove);
 	s->value[COARSE_ROOT_DEAD_WOOD_C] -= (s->value[AV_DEAD_COARSE_ROOT_MASS_KgC]/1000.0*tree_remove);
-	s->value[BRANCH_LIVE_WOOD_C] -= (s->value[AV_LIVE_BRANCH_MASS_KgC]/1000.0*tree_remove);
-	s->value[BRANCH_DEAD_WOOD_C] -= (s->value[AV_DEAD_BRANCH_MASS_KgC]/1000.0*tree_remove);
+	s->value[BRANCH_LIVE_WOOD_C]      -= (s->value[AV_LIVE_BRANCH_MASS_KgC]/1000.0*tree_remove);
+	s->value[BRANCH_DEAD_WOOD_C]      -= (s->value[AV_DEAD_BRANCH_MASS_KgC]/1000.0*tree_remove);
 
-	s->value[STEM_N] -= (s->value[AV_STEM_MASS_kgN]/1000.0*tree_remove);
-	s->value[LEAF_N] -= (s->value[AV_LEAF_MASS_kgN]/1000.0*tree_remove);
-	s->value[FINE_ROOT_N] -= (s->value[AV_FINE_ROOT_MASS_kgN]/1000.0*tree_remove);
-	s->value[COARSE_ROOT_N] -= (s->value[AV_COARSE_ROOT_MASS_kgN]/1000.0*tree_remove);
-	s->value[BRANCH_N] -= (s->value[AV_BRANCH_MASS_kgN]/1000.0*tree_remove);
+	s->value[STEM_N]                  -= (s->value[AV_STEM_MASS_kgN]/1000.0*tree_remove);
+	s->value[LEAF_N]                  -= (s->value[AV_LEAF_MASS_kgN]/1000.0*tree_remove);
+	s->value[FINE_ROOT_N]             -= (s->value[AV_FINE_ROOT_MASS_kgN]/1000.0*tree_remove);
+	s->value[COARSE_ROOT_N]           -= (s->value[AV_COARSE_ROOT_MASS_kgN]/1000.0*tree_remove);
+	s->value[BRANCH_N]                -= (s->value[AV_BRANCH_MASS_kgN]/1000.0*tree_remove);
 
-	s->value[C_TO_LITTER] += (s->value[AV_LEAF_MASS_KgC]/1000.0*tree_remove) +
-			(s->value[AV_FINE_ROOT_MASS_KgC]/1000.0*tree_remove) +
+	s->value[C_LEAF_TO_LITTER]        += (s->value[AV_LEAF_MASS_KgC]/1000.0*tree_remove);
+	/*		+(s->value[AV_FINE_ROOT_MASS_KgC]/1000.0*tree_remove) +
 			(s->value[AV_COARSE_ROOT_MASS_KgC]/1000.0*tree_remove) +
 			(s->value[AV_STEM_MASS_KgC]/1000.0*tree_remove) +
 			(s->value[AV_RESERVE_MASS_KgC]/1000.0*tree_remove) +
 			(s->value[AV_BRANCH_MASS_KgC]/1000.0*tree_remove);
+	 */
 
-	s->value[N_TO_LITTER] += (s->value[AV_LEAF_MASS_kgN]/1000.0*tree_remove) +
+	s->value[N_TO_LITTER]             += (s->value[AV_LEAF_MASS_kgN]/1000.0*tree_remove) +
 			(s->value[AV_FINE_ROOT_MASS_kgN]/1000.0*tree_remove) +
 			(s->value[AV_COARSE_ROOT_MASS_kgN]/1000.0*tree_remove) +
 			(s->value[AV_STEM_MASS_kgN]/1000.0*tree_remove) +
 			(s->value[AV_BRANCH_MASS_kgN]/1000.0*tree_remove);
 
 	/*** update at cell level ***/
-	c->leaf_carbon -= (s->value[AV_LEAF_MASS_KgC]/1000.0*tree_remove);
-	c->stem_carbon -= (s->value[AV_STEM_MASS_KgC]/1000.0*tree_remove);
-	c->fine_root_carbon -= (s->value[AV_FINE_ROOT_MASS_KgC]/1000.0*tree_remove);
+	c->leaf_carbon        -= (s->value[AV_LEAF_MASS_KgC]/1000.0*tree_remove);
+	c->stem_carbon        -= (s->value[AV_STEM_MASS_KgC]/1000.0*tree_remove);
+	c->fine_root_carbon   -= (s->value[AV_FINE_ROOT_MASS_KgC]/1000.0*tree_remove);
 	c->coarse_root_carbon -= (s->value[AV_COARSE_ROOT_MASS_KgC]/1000.0*tree_remove);
-	c->branch_carbon -= (s->value[AV_BRANCH_MASS_KgC]/1000.0*tree_remove);
-	c->reserve -= (s->value[AV_RESERVE_MASS_KgC]/1000.0*tree_remove);
+	c->branch_carbon      -= (s->value[AV_BRANCH_MASS_KgC]/1000.0*tree_remove);
+	c->reserve            -= (s->value[AV_RESERVE_MASS_KgC]/1000.0*tree_remove);
 
 
 }

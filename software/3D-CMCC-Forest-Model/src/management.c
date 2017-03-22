@@ -192,7 +192,7 @@ void thinning (cell_t *const c, const int height, const int dbh, const int age, 
 	/*********************************************************************************************************************************************************************/
 
 	/* adding coarse and fine root and leaf to litter pool */
-	c->daily_litter_carbon_tC += s->value[C_TO_LITTER] ;
+	c->daily_litter_carbon_tC += s->value[C_LEAF_TO_LITTER] ;
 
 	/* Total class C at the end */
 	s->value[TOTAL_C] = s->value[LEAF_C] + s->value[COARSE_ROOT_C] + s->value[FINE_ROOT_C] + s->value[STEM_C] + s->value[BRANCH_C] + s->value[RESERVE_C];

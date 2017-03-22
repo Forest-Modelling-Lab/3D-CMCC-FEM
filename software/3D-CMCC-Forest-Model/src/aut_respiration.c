@@ -311,7 +311,7 @@ void growth_respiration(cell_t *const c, const int layer, const int height, cons
 	s->value[C_TO_BRANCH]           = 0.;
 	s->value[C_TO_RESERVE]          = 0.;
 	s->value[C_TO_FRUIT]            = 0.;
-	s->value[C_TO_LITTER]           = 0.;
+	s->value[C_LEAF_TO_LITTER]      = 0.;
 	s->value[C_LEAF_TO_RESERVE]     = 0.;
 	s->value[C_FINEROOT_TO_RESERVE] = 0.;
 }

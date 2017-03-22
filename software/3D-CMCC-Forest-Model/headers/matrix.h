@@ -309,7 +309,7 @@ enum {
 	C_TO_BRANCH,                        /* Daily Net Primary Production to Branch pool (tC/sizeCell day) */
 	C_TO_RESERVE,                       /* Daily Net Primary Production to Reserve pool (tC/sizeCell day) */
 	C_TO_FRUIT,                         /* Daily Net Primary Production to Fruit pool (tC/sizeCell day) */
-	C_TO_LITTER,                        /* Daily Leaf Carbon to Litter pool (tC/sizeCell day) */
+	//C_TO_LITTER,                        /* Daily Leaf Carbon to Litter pool (tC/sizeCell day) */
 	C_TO_SOIL,                          /* Daily Net Primary Production to Soil pool (tC/sizeCell day) */
 	C_LEAF_TO_RESERVE,                  /* Daily retranslocated C from Leaf pool to Reserve (tC/sizeCell day) */
 	C_FINEROOT_TO_RESERVE,              /* Daily retranslocated C from Fine root pool to Reserve (tC/sizeCell day) */

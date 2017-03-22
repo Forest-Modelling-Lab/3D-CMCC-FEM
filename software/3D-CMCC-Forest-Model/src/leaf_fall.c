@@ -85,13 +85,13 @@ void leaf_fall_deciduous ( cell_t *const c, const int height, const int dbh, con
 		logger(g_debug_log, "fineroot_to_remove = %f\n", fine_root_to_remove);
 
 		/* update leaf falling */
-		s->value[C_TO_LEAF] = -foliage_to_remove ;
+		s->value[C_TO_LEAF]        = -foliage_to_remove ;
 		logger(g_debug_log, "C_TO_LEAF = %f\n", s->value[C_TO_LEAF]);
-		s->value[C_TO_FINEROOT] = -fine_root_to_remove;
+		s->value[C_TO_FINEROOT]    = -fine_root_to_remove;
 		logger(g_debug_log, "C_TO_FINEROOT = %f\n", s->value[C_TO_FINEROOT]);
-		s->value[C_TO_LITTER] = (foliage_to_remove - s->value[C_LEAF_TO_RESERVE]);
-		logger(g_debug_log, "C_TO_LITTER = %f\n", s->value[C_TO_LITTER]);
-		s->value[C_TO_SOIL]= (fine_root_to_remove - s->value[C_FINEROOT_TO_RESERVE]);
+		s->value[C_LEAF_TO_LITTER] = (foliage_to_remove - s->value[C_LEAF_TO_RESERVE]);
+		logger(g_debug_log, "C_TO_LITTER = %f\n", s->value[C_LEAF_TO_LITTER]);
+		s->value[C_TO_SOIL]        = (fine_root_to_remove - s->value[C_FINEROOT_TO_RESERVE]);
 		logger(g_debug_log, "C_TO_SOIL = %f\n", s->value[C_TO_SOIL]);
 	}
 	else
@@ -109,9 +109,9 @@ void leaf_fall_deciduous ( cell_t *const c, const int height, const int dbh, con
 		s->value[C_FINEROOT_TO_RESERVE] = s->value[FINE_ROOT_C];
 		logger(g_debug_log, "RETRANSL_C_FINEROOT_TO_RESERVE = %f\n", s->value[C_FINEROOT_TO_RESERVE]);
 
-		s->value[C_TO_LITTER] = 0.;
-		logger(g_debug_log, "C_TO_LITTER = %f\n", s->value[C_TO_LITTER]);
-		s->value[C_TO_SOIL] = 0.;
+		s->value[C_LEAF_TO_LITTER] = 0.;
+		logger(g_debug_log, "C_TO_LITTER = %f\n", s->value[C_LEAF_TO_LITTER]);
+		s->value[C_TO_SOIL]        = 0.;
 		logger(g_debug_log, "C_TO_SOIL = %f\n", s->value[C_TO_SOIL]);
 	}
 
@@ -194,8 +194,8 @@ void leaf_fall_evergreen ( cell_t *const c, const int height, const int dbh, con
 	s->value[C_TO_FINEROOT] -= s->value[C_FINE_ROOT_TO_SOIL];
 
 	/* considering that both carbon leaf and fine root contribute to the carbon litter and carbon soil pool */
-	s->value[C_TO_LITTER] = s->value[C_LEAF_TO_LITTER];
-	logger(g_debug_log, "Carbon to litter after retranslocation = %g tC/cell/day\n", s->value[C_TO_LITTER]);
+	//s->value[C_LEAF_TO_LITTER] = s->value[C_LEAF_TO_LITTER];
+	//logger(g_debug_log, "Leaf Carbon to litter after retranslocation = %g tC/cell/day\n", s->value[C_LEAF_TO_LITTER]);
 	s->value[C_TO_SOIL] = s->value[C_FINE_ROOT_TO_SOIL];
 	logger(g_debug_log, "Carbon to soil after retranslocation = %g tC/cell/day\n", s->value[C_TO_SOIL]);
 
