@@ -499,7 +499,7 @@ void check_class_carbon_balance(cell_t *const c, const int layer, const int heig
 
 	/* sum of sinks */
 	out = s->value[TOTAL_MAINT_RESP] + s->value[TOTAL_GROWTH_RESP] +
-			( ( s->value[C_LEAF_TO_LITTER] + s->value[C_TO_SOIL]) * 1000000.0 / g_settings->sizeCell);
+			(( s->value[C_LEAF_TO_LITTER] + s->value[C_FROOT_TO_LITTER]) * 1000000.0 / g_settings->sizeCell);
 
 	/* sum of current storage */
 	store = s->value[C_TO_LEAF] * 1000000.0 / g_settings->sizeCell +
@@ -526,7 +526,7 @@ void check_class_carbon_balance(cell_t *const c, const int layer, const int heig
 		logger(g_debug_log, "TOTAL_MAINT_RESP = %g gC/m2\n", s->value[TOTAL_MAINT_RESP]);
 		logger(g_debug_log, "TOTAL_GROWTH_RESP = %g gC/m2\n", s->value[TOTAL_GROWTH_RESP]);
 		logger(g_debug_log, "C_LEAF_TO_LITTER = %g gC/m2\n", s->value[C_LEAF_TO_LITTER] * 1000000.0 / g_settings->sizeCell);
-		logger(g_debug_log, "C_TO_SOIL = %g gC/m2\n", s->value[C_TO_SOIL] * 1000000.0 / g_settings->sizeCell);
+		logger(g_debug_log, "C_FROOT_TO_LITTER = %g gC/m2\n", s->value[C_FROOT_TO_LITTER] * 1000000.0 / g_settings->sizeCell);
 		logger(g_debug_log, "\nstore = %g gC/m2\n", store);
 		logger(g_debug_log, "C_TO_LEAF = %g gC/m2\n", s->value[C_TO_LEAF]* 1000000.0 / g_settings->sizeCell);
 		logger(g_debug_log, "C_TO_FINEROOT = %g gC/m2\n", s->value[C_TO_FINEROOT]* 1000000.0 / g_settings->sizeCell);

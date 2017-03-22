@@ -309,13 +309,12 @@ enum {
 	C_TO_BRANCH,                        /* Daily Net Primary Production to Branch pool (tC/sizeCell day) */
 	C_TO_RESERVE,                       /* Daily Net Primary Production to Reserve pool (tC/sizeCell day) */
 	C_TO_FRUIT,                         /* Daily Net Primary Production to Fruit pool (tC/sizeCell day) */
-	//C_TO_LITTER,                        /* Daily Leaf Carbon to Litter pool (tC/sizeCell day) */
-	C_TO_SOIL,                          /* Daily Net Primary Production to Soil pool (tC/sizeCell day) */
 	C_LEAF_TO_RESERVE,                  /* Daily retranslocated C from Leaf pool to Reserve (tC/sizeCell day) */
 	C_FINEROOT_TO_RESERVE,              /* Daily retranslocated C from Fine root pool to Reserve (tC/sizeCell day) */
 	C_LEAF_TO_LITTER,                   /* Daily tC from Leaf pool to Litter (tC/sizeCell day) */
-	C_FINE_ROOT_TO_SOIL,                /* Daily tC from Fine root pool to Soil (tC/sizeCell day) */
+	C_FROOT_TO_LITTER,                  /* Daily tC from Fine root pool to Soil (tC/sizeCell day) */
 	C_FRUIT_TO_LITTER,                  /* Daily tC from Fruit pool to Litter (tC/sizeCell day) */
+	C_TO_LITTER,                        /* Daily Total Carbon to Litter pool (tC/sizeCell day) */
 	C_STEM_LIVEWOOD_TO_DEADWOOD,        /* Daily tC from Stem live wood pool to Stem dead wood (tC/sizeCell day) */
 	C_COARSEROOT_LIVE_WOOD_TO_DEADWOOD, /* Daily tC from Coarse live wood pool to Coarse dead wood (tC/sizeCell day) */
 	C_BRANCH_LIVE_WOOD_TO_DEAD_WOOD,    /* Daily tC from Branch live wood pool to Branch dead wood (tC/sizeCell day) */

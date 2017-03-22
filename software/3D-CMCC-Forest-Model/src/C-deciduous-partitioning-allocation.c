@@ -362,8 +362,8 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 	c->daily_branch_carbon      += s->value[C_TO_BRANCH] * 1000000.0 / g_settings->sizeCell ;
 	c->daily_reserve_carbon     += s->value[C_TO_RESERVE] * 1000000.0 / g_settings->sizeCell ;
 	c->daily_root_carbon        += s->value[C_TO_ROOT] * 1000000.0 / g_settings->sizeCell ;
-	c->daily_litter_carbon      += s->value[C_LEAF_TO_LITTER] * 1000000.0 / g_settings->sizeCell ;
-	c->daily_soil_carbon        += s->value[C_TO_SOIL] * 1000000.0 / g_settings->sizeCell ;
+	c->daily_litter_carbon      += (s->value[C_LEAF_TO_LITTER] + s->value[C_FROOT_TO_LITTER]) * 1000000.0 / g_settings->sizeCell ;
+	c->daily_soil_carbon        += 0. ;
 	c->daily_fruit_carbon       += s->value[C_TO_FRUIT] * 1000000.0 / g_settings->sizeCell ;
 
 	/* update cell level carbon biomass in tC/cell/day */
@@ -374,8 +374,8 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 	c->daily_branch_carbon_tC      += s->value[C_TO_BRANCH];
 	c->daily_reserve_carbon_tC     += s->value[C_TO_RESERVE];
 	c->daily_root_carbon_tC        += s->value[C_TO_ROOT];
-	c->daily_litter_carbon_tC      += s->value[C_LEAF_TO_LITTER];
-	c->daily_soil_carbon_tC        += s->value[C_TO_SOIL];
+	c->daily_litter_carbon_tC      += s->value[C_LEAF_TO_LITTER] + s->value[C_FROOT_TO_LITTER];
+	c->daily_soil_carbon_tC        += 0.;
 	c->daily_fruit_carbon_tC       += s->value[C_TO_FRUIT];
 
 	logger(g_debug_log, "******************************\n");

@@ -208,13 +208,12 @@ void tree_biomass_remove (cell_t *const c, species_t *const s, const int tree_re
 	s->value[COARSE_ROOT_N]           -= (s->value[AV_COARSE_ROOT_MASS_kgN]/1000.0*tree_remove);
 	s->value[BRANCH_N]                -= (s->value[AV_BRANCH_MASS_kgN]/1000.0*tree_remove);
 
-	s->value[C_LEAF_TO_LITTER]        += (s->value[AV_LEAF_MASS_KgC]/1000.0*tree_remove);
-	/*		+(s->value[AV_FINE_ROOT_MASS_KgC]/1000.0*tree_remove) +
+	s->value[C_TO_LITTER]             += (s->value[AV_LEAF_MASS_KgC]/1000.0*tree_remove) +
+			(s->value[AV_FINE_ROOT_MASS_KgC]/1000.0*tree_remove) +
 			(s->value[AV_COARSE_ROOT_MASS_KgC]/1000.0*tree_remove) +
 			(s->value[AV_STEM_MASS_KgC]/1000.0*tree_remove) +
 			(s->value[AV_RESERVE_MASS_KgC]/1000.0*tree_remove) +
 			(s->value[AV_BRANCH_MASS_KgC]/1000.0*tree_remove);
-	 */
 
 	s->value[N_TO_LITTER]             += (s->value[AV_LEAF_MASS_kgN]/1000.0*tree_remove) +
 			(s->value[AV_FINE_ROOT_MASS_kgN]/1000.0*tree_remove) +
