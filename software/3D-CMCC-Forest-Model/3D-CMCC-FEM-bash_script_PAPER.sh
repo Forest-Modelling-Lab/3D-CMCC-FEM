@@ -111,7 +111,7 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
 				
 				folder_run=Release
 				
-				cd..
+				cd ..
 			else
 				echo "$executable executable doesn't exist (exit)"
 				exit
