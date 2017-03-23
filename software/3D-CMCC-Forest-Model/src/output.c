@@ -29,7 +29,6 @@ output_t* output_import(const char *const filename) {
 	int i;
 	output_t *ov;
 	int *int_no_leak;
-	int flag;
 
 	const char delimiter[] = " ,\r\n";
 
@@ -106,7 +105,6 @@ output_t* output_import(const char *const filename) {
 			}
 			var += strlen(sz_freq[freq]);
 
-			flag = 0;
 			for ( i = 0; i < OUTPUT_VARS_COUNT; ++i ) {
 				if ( ! string_compare_i(var, sz_output_vars[i]) ) {
 					switch ( freq ) {
