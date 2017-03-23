@@ -328,6 +328,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\litter_model.c"
+				>
+			</File>
+			<File
 				RelativePath=".\src\logger.c"
 				>
 			</File>
@@ -417,10 +421,6 @@
 			</File>
 			<File
 				RelativePath=".\src\snow.c"
-				>
-			</File>
-			<File
-				RelativePath=".\src\soil_decomp.c"
 				>
 			</File>
 			<File

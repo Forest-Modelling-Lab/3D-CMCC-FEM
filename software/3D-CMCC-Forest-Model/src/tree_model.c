@@ -304,13 +304,13 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							logger(g_debug_log, "\n**CLASS LEVEL BALANCE**\n");
 
 							/* check for radiative balance closure */
-							check_class_radiation_balance ( c, layer, height, dbh, age, species );
+							if ( ! check_class_radiation_balance ( c, layer, height, dbh, age, species ) ) return 0;
 
 							/* check for carbon balance closure */
-							check_class_carbon_balance ( c, layer, height, dbh, age, species );
+							if ( ! check_class_carbon_balance ( c, layer, height, dbh, age, species ) ) return 0;
 
 							/* check for water balance closure */
-							check_class_water_balance ( c, layer, height, dbh, age, species );
+							if ( ! check_class_water_balance ( c, layer, height, dbh, age, species ) ) return 0;
 
 							/****************************************************************************************************************************************/
 							/* END OF MONTH */

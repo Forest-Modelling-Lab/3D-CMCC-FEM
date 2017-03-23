@@ -63,7 +63,6 @@ enum {
 	, SETTINGS_REGENERATION_WFR
 	, SETTINGS_REGENERATION_WL
 	, SETTINGS_REGENERATION_WBB
-	, SETTINGS_NO_SPREADSHEET
 
 	, SETTINGS_COUNT
 };
@@ -125,7 +124,6 @@ const char* sz_settings[SETTINGS_COUNT] = {
 	, "REGENERATION_WFR"
 	, "REGENERATION_WL"
 	, "REGENERATION_WBB"
-	, "NO_SPREADSHEET"
 };
 
 const int optional[] = {
@@ -141,7 +139,6 @@ const int optional[] = {
 	, SETTINGS_REGENERATION_WFR
 	//, REGENERATION_WL						// (tDM/ha) leaf biomass of regeneration trees (optional for evergreen if LAI!= 0, otherwise useless)
 	, SETTINGS_REGENERATION_WBB
-	, SETTINGS_NO_SPREADSHEET
 };
 
 settings_t* settings_import(const char *const filename) {
@@ -373,13 +370,6 @@ settings_t* settings_import(const char *const filename) {
 					free(s);
 					fclose(f);
 					return 0;
-				}
-			break;
-
-			case SETTINGS_NO_SPREADSHEET:
-				if ( ! string_compare_i(token, "on") || ! string_compare_i(token, "1") ) {
-					// puts("hi collalti! Spreadsheets are too difficult to use, aren't they?");
-					s->no_spreadsheet = 1;
 				}
 			break;
 

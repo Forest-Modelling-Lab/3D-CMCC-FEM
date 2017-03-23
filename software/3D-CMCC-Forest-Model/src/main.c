@@ -58,7 +58,7 @@ const char *szMonth[MONTHS_COUNT] = { "JANUARY", "FEBRUARY", "MARCH", "APRIL", "
 		"AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER" };
 
 /* do not change order in logger.h */
-const char* log_types[LOG_TYPES_COUNT] = { "debug" , "daily" , "monthly" , "annual" , "soil" };
+const char* log_types[LOG_TYPES_COUNT] = { "debug" , "daily" , "monthly" , "annual" , "soil_daily", "soil_monthly", "soil_annual" };
 
 /* global vars */
 /* DO NOT REMOVE INITIALIZATION TO NULL, IT IS REQUIRED !! */
@@ -66,7 +66,9 @@ logger_t* g_debug_log = NULL;
 logger_t* g_daily_log = NULL;
 logger_t* g_monthly_log = NULL;
 logger_t* g_annual_log = NULL;
-logger_t* g_soil_log = NULL;
+logger_t* g_daily_soil_log = NULL;
+logger_t* g_monthly_soil_log = NULL;
+logger_t* g_annual_soil_log = NULL;
 soil_settings_t* g_soil_settings = NULL;
 topo_t* g_topo = NULL;
 settings_t* g_settings = NULL;
@@ -147,7 +149,9 @@ static const char msg_debug_output_file[]		=	"debug output file path = %s\n";
 static const char msg_daily_output_file[]		=	"daily output file path = %s\n";
 static const char msg_monthly_output_file[]		=	"monthly output file path = %s\n";
 static const char msg_annual_output_file[]		=	"annual output file path = %s\n";
-static const char msg_soil_output_file[]		=	"soil output file path = %s\n";
+static const char msg_soil_daily_output_file[]		=	"soil daily output file path = %s\n";
+static const char msg_soil_monthly_output_file[]	=	"soil monthly output file path = %s\n";
+static const char msg_soil_annual_output_file[]		=	"soil annual output file path = %s\n";
 static const char msg_ok[]						=	"ok ";
 static const char msg_usage[]					=	"\nusage:\n"
 		"  3D-CMCC-Forest-Model -i INPUT_DIR -d DATASET_FILENAME -m MET_FILE_LIST -s SITE_FILENAME -c SETTINGS_FILENAME [-o OUTPUT_FILENAME] [-h]\n"
@@ -223,13 +227,6 @@ static void clean_up(void)
 	if ( g_sz_ndep_file ) free(g_sz_ndep_file);
 	if ( g_sz_co2_conc_file ) free(g_sz_co2_conc_file);
 	if ( g_sz_settings_file ) free(g_sz_settings_file);
-	/*
-	if ( g_sz_debug_output_filename ) free(g_sz_debug_output_filename);
-	if ( g_sz_daily_output_filename ) free(g_sz_daily_output_filename);
-	if ( g_sz_monthly_output_filename ) free(g_sz_monthly_output_filename);
-	if ( g_sz_yearly_output_filename ) free(g_sz_yearly_output_filename);
-	if ( g_sz_soil_output_filename ) free(g_sz_soil_output_filename);
-	 */
 	if ( g_sz_parameterization_path ) free(g_sz_parameterization_path);
 	if ( g_sz_output_path ) free(g_sz_output_path);
 	if ( g_sz_input_path ) free(g_sz_input_path);
@@ -432,14 +429,15 @@ static int log_start(const char* const sitename)
 	/* create log files and parameterization folder */
 	{
 		int i;
-		int log_flag[5];
-
-		logger_t** logs[5] = {
+		int log_flag[LOG_TYPES_COUNT];
+		logger_t** logs[LOG_TYPES_COUNT] = {
 				&g_debug_log
 				, &g_daily_log
 				, &g_monthly_log
 				, &g_annual_log
-				, &g_soil_log
+				, &g_daily_soil_log
+				, &g_monthly_soil_log
+				, &g_annual_soil_log
 		};
 
 		log_flag[0] = g_settings->debug_output;
@@ -447,6 +445,8 @@ static int log_start(const char* const sitename)
 		log_flag[2] = g_settings->monthly_output;
 		log_flag[3] = g_settings->yearly_output;
 		log_flag[4] = g_settings->soil_output;
+		log_flag[5] = g_settings->soil_output;
+		log_flag[6] = g_settings->soil_output;
 
 		for ( i = 0 ; i < LOG_TYPES_COUNT; ++i ) {
 			if ( log_flag[i] ) {
@@ -494,11 +494,16 @@ static int log_start(const char* const sitename)
 	if ( g_debug_log && g_daily_log )		logger(g_debug_log, msg_daily_output_file, g_daily_log->filename);
 	if ( g_debug_log && g_monthly_log )		logger(g_debug_log, msg_monthly_output_file, g_monthly_log->filename);
 	if ( g_debug_log && g_annual_log )		logger(g_debug_log, msg_annual_output_file, g_annual_log->filename);
-	if ( g_debug_log && g_soil_log )		logger(g_debug_log, msg_soil_output_file, g_soil_log->filename);
+	if ( g_debug_log && g_daily_soil_log )		logger(g_debug_log, msg_soil_daily_output_file, g_daily_soil_log->filename);
+	if ( g_debug_log && g_monthly_soil_log )	logger(g_debug_log, msg_soil_monthly_output_file, g_monthly_soil_log->filename);
+	if ( g_debug_log && g_annual_soil_log )		logger(g_debug_log, msg_soil_annual_output_file, g_annual_soil_log->filename);
 
 	if ( g_daily_log ) g_daily_log->std_output = 0;
 	if ( g_monthly_log ) g_monthly_log->std_output = 0;
 	if ( g_annual_log ) g_annual_log->std_output = 0;
+	if ( g_daily_soil_log ) g_daily_soil_log->std_output = 0;
+	if ( g_monthly_soil_log ) g_monthly_soil_log->std_output = 0;
+	if ( g_annual_soil_log ) g_annual_soil_log->std_output = 0;
 
 	return 1;
 }
@@ -814,6 +819,28 @@ static int parse_args(int argc, char *argv[])
 		}
 		free(g_sz_settings_file);
 		g_sz_settings_file = p;
+	}
+
+	if ( g_sz_ndep_file ) {
+		p = concatenate_path(g_sz_input_path, g_sz_ndep_file);
+		if ( ! p )
+		{
+			puts(sz_err_out_of_memory);
+			goto err;
+		}
+		free(g_sz_ndep_file);
+		g_sz_ndep_file = p;
+	}
+	
+	if ( g_sz_co2_conc_file ) {
+		p = concatenate_path(g_sz_input_path, g_sz_co2_conc_file);
+		if ( ! p )
+		{
+			puts(sz_err_out_of_memory);
+			goto err;
+		}
+		free(g_sz_co2_conc_file);
+		g_sz_co2_conc_file = p;
 	}
 
 	if ( g_sz_output_vars_file ) {
@@ -1408,10 +1435,7 @@ int main(int argc, char *argv[]) {
 								if ( !Tree_model_daily( matrix, cell, day, month, year ) )
 								{
 									logger(g_debug_log, "tree model daily failed!!!\n");
-
-									// ALESSIOC TO ALESSIOR
-									/* exit */
-									return 0;
+									goto err;
 								}
 								else
 								{
@@ -1434,10 +1458,7 @@ int main(int argc, char *argv[]) {
 					if ( !Litter_model_daily(matrix, cell, day, month, year) )
 					{
 						logger_error(g_debug_log, "litter model daily failed!!!\n");
-
-						// ALESSIOC TO ALESSIOR
-						/* exit */
-						return 0;
+						goto err;
 					}
 					else
 					{
@@ -1448,10 +1469,7 @@ int main(int argc, char *argv[]) {
 					if ( !Soil_model_daily(matrix, cell, day, month, year) )
 					{
 						logger_error(g_debug_log, "soil model daily failed!!!\n");
-
-						// ALESSIOC TO ALESSIOR
-						/* exit */
-						return 0;
+						goto err;
 					}
 					else
 					{
@@ -1462,10 +1480,7 @@ int main(int argc, char *argv[]) {
 					if ( !Cell_model_daily(matrix, cell, day, month, year) )
 					{
 						logger_error(g_debug_log, "cell model daily failed!!!\n");
-
-						// ALESSIOC TO ALESSIOR
-						/* exit */
-						return 0;
+						goto err;
 					}
 					else
 					{
@@ -1524,6 +1539,7 @@ int main(int argc, char *argv[]) {
 					/******************************************************************************/
 					/* print daily output */
 					EOD_print_output_cell_level (&matrix->cells[cell], day, month, year, years_of_simulation );
+					EOD_print_output_soil_cell_level (&matrix->cells[cell], day, month, year, years_of_simulation );
 
 					/* reset daily variables once printed */
 					reset_daily_class_variables ( &matrix->cells[cell] );
@@ -1573,6 +1589,7 @@ int main(int argc, char *argv[]) {
 					{
 						/* print monthly output */
 						EOM_print_output_cell_level( &matrix->cells[cell], month, year, years_of_simulation );
+						EOM_print_output_soil_cell_level( &matrix->cells[cell], month, year, years_of_simulation );
 
 						reset_monthly_class_variables ( &matrix->cells[cell] );
 						reset_monthly_layer_variables ( &matrix->cells[cell] );
@@ -1617,6 +1634,7 @@ int main(int argc, char *argv[]) {
 					{
 						/* print annual output */
 						EOY_print_output_cell_level( &matrix->cells[cell], year, years_of_simulation );
+						EOY_print_output_soil_cell_level( &matrix->cells[cell], year, years_of_simulation );
 
 						reset_annual_class_variables ( &matrix->cells[cell] );
 						reset_annual_layer_variables ( &matrix->cells[cell] );
@@ -1687,10 +1705,10 @@ int main(int argc, char *argv[]) {
 
 	// TODO: FIX THIS
 	/* close logger */
-	logger_close(g_soil_log); g_soil_log = NULL;
-	logger_close(g_annual_log); g_annual_log = NULL;
-	logger_close(g_monthly_log); g_monthly_log = NULL;
-	logger_close(g_daily_log); g_daily_log = NULL;
+	//logger_close(g_soil_log); g_soil_log = NULL;
+	//logger_close(g_annual_log); g_annual_log = NULL;
+	//logger_close(g_monthly_log); g_monthly_log = NULL;
+	//logger_close(g_daily_log); g_daily_log = NULL;
 
 	/* benchmark ? */
 	if ( g_sz_benchmark_path ) {
@@ -1708,7 +1726,9 @@ int main(int argc, char *argv[]) {
 	 */
 
 	/* close logger */
-	logger_close(g_soil_log); g_soil_log = NULL;
+	logger_close(g_annual_soil_log); g_annual_soil_log = NULL;
+	logger_close(g_monthly_soil_log); g_monthly_soil_log = NULL;
+	logger_close(g_daily_soil_log); g_daily_soil_log = NULL;
 	logger_close(g_annual_log); g_annual_log = NULL;
 	logger_close(g_monthly_log); g_monthly_log = NULL;
 	logger_close(g_daily_log); g_daily_log = NULL;

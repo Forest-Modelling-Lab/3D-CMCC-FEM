@@ -59,13 +59,13 @@ int Cell_model_daily (matrix_t *const m, const int cell, const int day, const in
 	/* CHECK FOR BALANCE CLOSURE */
 
 	/* CHECK FOR RADIATIVE BALANCE CLOSURE */
-	check_radiation_balance ( c, meteo_daily );
+	if ( ! check_radiation_balance ( c, meteo_daily ) ) return 0;
 
 	/* CHECK FOR CARBON BALANCE CLOSURE */
-	check_carbon_balance ( c );
+	if ( ! check_carbon_balance ( c ) ) return 0;
 
 	/* CHECK FOR WATER BALANCE CLOSURE */
-	check_soil_water_balance ( c, meteo_daily );
+	if ( ! check_soil_water_balance ( c, meteo_daily ) ) return 0;
 
 	/*******************************************************************************************************/
 

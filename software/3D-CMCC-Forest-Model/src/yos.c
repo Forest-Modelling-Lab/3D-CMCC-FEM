@@ -113,15 +113,7 @@ static double get_co2_conc(const int year, int*const err) {
 
 	if ( ! g_sz_co2_conc_file ) { *err = 1; goto quit; }
 
-	if ( g_sz_input_path ) {
-		int len = strlen(g_sz_input_path);
-		int _flag = (('/' == g_sz_input_path[len-1]) || ('\\' == g_sz_input_path[len-1]));
-		sprintf(buf, "%s%s%s", g_sz_input_path, _flag ? "" : FOLDER_DELIMITER, g_sz_co2_conc_file);
-		f = fopen(buf, "r");
-	} else {
-		f = fopen(g_sz_co2_conc_file, "r");
-	}
-	
+	f = fopen(g_sz_co2_conc_file, "r");
 	if ( ! f )  { *err = 1; goto quit; }
 	while ( fgets(buf, 256, f) ) {
 		if ( 2 == sscanf(buf, "%d\t%lf", &_year, &co2_conc) ) {
@@ -157,15 +149,7 @@ static double get_ndep(const int year, int*const err) {
 
 	if ( ! g_sz_ndep_file ) { *err = 1; goto quit; }
 
-	if ( g_sz_input_path ) {
-		int len = strlen(g_sz_input_path);
-		int _flag = (('/' == g_sz_input_path[len-1]) || ('\\' == g_sz_input_path[len-1]));
-		sprintf(buf, "%s%s%s", g_sz_input_path, _flag ? "" : FOLDER_DELIMITER, g_sz_ndep_file);
-		f = fopen(buf, "r");
-	} else {
-		f = fopen(g_sz_ndep_file, "r");
-	}
-	
+	f = fopen(g_sz_ndep_file, "r");
 	if ( ! f )  { *err = 1; goto quit; }
 	while ( fgets(buf, 256, f) ) {
 		if ( 2 == sscanf(buf, "%d\t%lf", &_year, &ndep) ) {
@@ -2116,7 +2100,7 @@ yos_t* yos_import(const char *const file, int *const yos_count, const int x, con
 		for ( i = 0; i < *yos_count; ++i ) {
 			yos[i].Ndep = get_ndep(yos[i].year, &err);
 			if ( err ) {
-				logger_error(g_debug_log, "Ndep not found on file %s!!\n", g_sz_ndep_file);
+				logger_error(g_debug_log, "Ndep not found for year %d on %s!!\n", yos[i].year, g_sz_ndep_file);
 				free(yos);
 				return NULL;
 			}
