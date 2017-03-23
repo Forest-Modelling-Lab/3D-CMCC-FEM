@@ -81,6 +81,6 @@ WEIGHTSEED  7       //TO BE CHECKED           //peso frutto in g
 SEXAGE  30          //TO BE CHECKED           //Age at Sexual Maturity 
 GERMCAPACITY    0.70          //Geminability (Lischke H. & Loffler T. J.)
 ROTATION    140               //Forest Rotation for harvesting for P. sylvestris ISIMIP protocol
-THINNING     15               //Thinning regime for P. sylvestris ISIMIP protocol for P. sylvestris ISIMIP protocol
+THINNING    15                //Thinning regime for P. sylvestris ISIMIP protocol for P. sylvestris ISIMIP protocol
 THINNING_REGIME    1          //Thinning regime (0 = above, 1 = below) for P. sylvestris ISIMIP protocol
 THINNING_INTENSITY  20        //Thinning intensity (% of Basal Area/N-tree to remove) for P. sylvestris ISIMIP protocol
