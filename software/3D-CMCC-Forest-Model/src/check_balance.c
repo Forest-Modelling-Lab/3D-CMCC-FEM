@@ -206,7 +206,7 @@ int check_carbon_balance(cell_t *const c)
 
 	/* sum of current storage */
 	store = c->daily_leaf_carbon + c->daily_stem_carbon +
-			c->daily_fine_root_carbon + c->daily_coarse_root_carbon +
+			c->daily_froot_carbon + c->daily_croot_carbon +
 			c->daily_branch_carbon + c->daily_reserve_carbon +
 			c->daily_litter_carbon + c->daily_soil_carbon +
 			+ c->daily_fruit_carbon;
@@ -225,8 +225,8 @@ int check_carbon_balance(cell_t *const c)
 		logger(g_debug_log, "\nstore\n");
 		logger(g_debug_log, "c->daily_leaf_carbon = %g gC/m2/day\n", c->daily_leaf_carbon);
 		logger(g_debug_log, "c->daily_stem_carbon = %g gC/m2/day\n", c->daily_stem_carbon);
-		logger(g_debug_log, "c->daily_fine_root_carbon = %g gC/m2/day\n", c->daily_fine_root_carbon);
-		logger(g_debug_log, "c->daily_coarse_root_carbon = %g gC/m2/day\n", c->daily_coarse_root_carbon);
+		logger(g_debug_log, "c->daily_fine_root_carbon = %g gC/m2/day\n", c->daily_froot_carbon);
+		logger(g_debug_log, "c->daily_coarse_root_carbon = %g gC/m2/day\n", c->daily_croot_carbon);
 		logger(g_debug_log, "c->daily_branch_carbon = %g gC/m2/day\n", c->daily_branch_carbon);
 		logger(g_debug_log, "c->daily_reserve_carbon = %g gC/m2/day\n", c->daily_reserve_carbon);
 		logger(g_debug_log, "c->daily_litter_carbon = %g gC/m2/day\n", c->daily_litter_carbon);
@@ -523,8 +523,8 @@ int check_class_carbon_balance(cell_t *const c, const int layer, const int heigh
 	/* sum of current storage */
 	store = s->value[C_TO_LEAF] * 1000000.0 / g_settings->sizeCell +
 			s->value[C_TO_STEM] * 1000000.0 / g_settings->sizeCell +
-			s->value[C_TO_FINEROOT] * 1000000.0 / g_settings->sizeCell +
-			s->value[C_TO_COARSEROOT] * 1000000.0 / g_settings->sizeCell +
+			s->value[C_TO_FROOT] * 1000000.0 / g_settings->sizeCell +
+			s->value[C_TO_CROOT] * 1000000.0 / g_settings->sizeCell +
 			s->value[C_TO_BRANCH] * 1000000.0 / g_settings->sizeCell +
 			s->value[C_TO_RESERVE] * 1000000.0 / g_settings->sizeCell +
 			s->value[C_TO_FRUIT] * 1000000.0 / g_settings->sizeCell;
@@ -548,8 +548,8 @@ int check_class_carbon_balance(cell_t *const c, const int layer, const int heigh
 		logger(g_debug_log, "C_FROOT_TO_LITR = %g gC/m2\n", s->value[C_FROOT_TO_LITR] * 1000000.0 / g_settings->sizeCell);
 		logger(g_debug_log, "\nstore = %g gC/m2\n", store);
 		logger(g_debug_log, "C_TO_LEAF = %g gC/m2\n", s->value[C_TO_LEAF]* 1000000.0 / g_settings->sizeCell);
-		logger(g_debug_log, "C_TO_FINEROOT = %g gC/m2\n", s->value[C_TO_FINEROOT]* 1000000.0 / g_settings->sizeCell);
-		logger(g_debug_log, "C_TO_COARSEROOT = %g gC/m2\n", s->value[C_TO_COARSEROOT]* 1000000.0 / g_settings->sizeCell);
+		logger(g_debug_log, "C_TO_FINEROOT = %g gC/m2\n", s->value[C_TO_FROOT]* 1000000.0 / g_settings->sizeCell);
+		logger(g_debug_log, "C_TO_COARSEROOT = %g gC/m2\n", s->value[C_TO_CROOT]* 1000000.0 / g_settings->sizeCell);
 		logger(g_debug_log, "C_TO_STEM = %g gC/m2\n", s->value[C_TO_STEM]* 1000000.0 / g_settings->sizeCell);
 		logger(g_debug_log, "C_TO_RESERVE = %g gC/m2\n", s->value[C_TO_RESERVE]* 1000000.0 / g_settings->sizeCell);
 		logger(g_debug_log, "C_TO_BRANCH = %g gC/m2\n", s->value[C_TO_BRANCH]* 1000000.0 / g_settings->sizeCell);

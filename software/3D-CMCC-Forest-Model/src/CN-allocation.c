@@ -30,8 +30,8 @@ void carbon_allocation( cell_t *const c, species_t *const s)
 	/*** update class level carbon pools ***/
 
 	logger(g_debug_log, "C_TO_LEAF = %g tC/cell/day\n", s->value[C_TO_LEAF]);
-	logger(g_debug_log, "C_TO_FINEROOT = %g tC/cell/day\n", s->value[C_TO_FINEROOT]);
-	logger(g_debug_log, "C_TO_COARSEROOT = %g tC/cell/day\n", s->value[C_TO_COARSEROOT]);
+	logger(g_debug_log, "C_TO_FROOT = %g tC/cell/day\n", s->value[C_TO_FROOT]);
+	logger(g_debug_log, "C_TO_CROOT = %g tC/cell/day\n", s->value[C_TO_CROOT]);
 	logger(g_debug_log, "C_TO_STEM = %g tC/cell/day\n", s->value[C_TO_STEM]);
 	logger(g_debug_log, "C_TO_RESERVE = %g tC/cell/day\n", s->value[C_TO_RESERVE]);
 	logger(g_debug_log, "C_TO_BRANCH = %g tC/cell/day\n", s->value[C_TO_BRANCH]);
@@ -42,7 +42,7 @@ void carbon_allocation( cell_t *const c, species_t *const s)
 	logger(g_debug_log, "Leaf Carbon (Wl) = %g tC/Cell\n", s->value[LEAF_C]);
 
 	//fixme
-	s->value[FROOT_C] += s->value[C_TO_FINEROOT];
+	s->value[FROOT_C] += s->value[C_TO_FROOT];
 	//s->value[FINE_ROOT_C] -= s->value[C_FINE_ROOT_TO_LITTER];
 	logger(g_debug_log, "Fine Root Carbon (Wrf) = %g tC/Cell\n", s->value[FROOT_C]);
 
@@ -56,7 +56,7 @@ void carbon_allocation( cell_t *const c, species_t *const s)
 	s->value[BRANCH_C] += s->value[C_TO_BRANCH];
 	logger(g_debug_log, "Branch and Bark Carbon (Wbb) = %g tC/Cell\n", s->value[BRANCH_C]);
 
-	s->value[CROOT_C] += s->value[C_TO_COARSEROOT];
+	s->value[CROOT_C] += s->value[C_TO_CROOT];
 	logger(g_debug_log, "Coarse Root Carbon (Wcr) = %g tC/Cell\n", s->value[CROOT_C]);
 
 	s->value[TOT_ROOT_C] = s->value[CROOT_C] + s->value[FROOT_C];
@@ -79,7 +79,7 @@ void carbon_allocation( cell_t *const c, species_t *const s)
 	s->value[STEM_SAPWOOD_C] += s->value[C_TO_STEM];
 	logger(g_debug_log, "Stem sapwood Carbon = %g tC/Cell\n", s->value[STEM_SAPWOOD_C]);
 
-	s->value[CROOT_SAPWOOD_C] += s->value[C_TO_COARSEROOT];
+	s->value[CROOT_SAPWOOD_C] += s->value[C_TO_CROOT];
 	logger(g_debug_log, "Coarse root sapwood Carbon = %g tC/Cell\n", s->value[CROOT_SAPWOOD_C]);
 
 	s->value[BRANCH_SAPWOOD_C] += s->value[C_TO_BRANCH];
@@ -157,17 +157,17 @@ void nitrogen_allocation ( cell_t *const c, species_t *const s )
 
 	s->value[N_TO_LEAF] = s->value[C_TO_LEAF] / s->value[CN_LEAVES];
 
-	s->value[N_TO_FINEROOT] = s->value[C_TO_FINEROOT] / s->value[CN_FINE_ROOTS];
+	s->value[N_TO_FROOT] = s->value[C_TO_FROOT] / s->value[CN_FINE_ROOTS];
 
 	s->value[N_TO_STEM] = s->value[C_TO_STEM] / s->value[CN_LIVE_WOODS];
 
 	s->value[N_TO_BRANCH] = s->value[C_TO_BRANCH] / s->value[CN_LIVE_WOODS];
 
-	s->value[N_TO_COARSEROOT] = s->value[C_TO_COARSEROOT] / s->value[CN_LIVE_WOODS];
+	s->value[N_TO_CROOT] = s->value[C_TO_CROOT] / s->value[CN_LIVE_WOODS];
 
 	logger(g_debug_log, "N_TO_LEAF = %g tN/cell/day\n", s->value[N_TO_LEAF]);
-	logger(g_debug_log, "N_TO_FINEROOT = %g tN/cell/day\n", s->value[N_TO_FINEROOT]);
-	logger(g_debug_log, "N_TO_COARSEROOT = %g tN/cell/day\n", s->value[N_TO_COARSEROOT]);
+	logger(g_debug_log, "N_TO_FINEROOT = %g tN/cell/day\n", s->value[N_TO_FROOT]);
+	logger(g_debug_log, "N_TO_COARSEROOT = %g tN/cell/day\n", s->value[N_TO_CROOT]);
 	logger(g_debug_log, "N_TO_STEM = %g tN/cell/day\n", s->value[N_TO_STEM]);
 	logger(g_debug_log, "N_TO_BRANCH = %g tN/cell/day\n", s->value[N_TO_BRANCH]);
 
@@ -176,7 +176,7 @@ void nitrogen_allocation ( cell_t *const c, species_t *const s )
 	/*** compute daily nitrogen demand ***/
 
 	/* daily nitrogen demand */
-	s->value[NPP_tN] = s->value[N_TO_LEAF] + s->value[N_TO_FINEROOT] + s->value[N_TO_STEM] + s->value[N_TO_BRANCH] + s->value[N_TO_COARSEROOT];
+	s->value[NPP_tN] = s->value[N_TO_LEAF] + s->value[N_TO_FROOT] + s->value[N_TO_STEM] + s->value[N_TO_BRANCH] + s->value[N_TO_CROOT];
 	logger(g_debug_log, "Daily Nitrogen demand = %g tN/Cell/day\n", s->value[NPP_tN]);
 
 	/* tN/Cell/day -> gC/m2/day */

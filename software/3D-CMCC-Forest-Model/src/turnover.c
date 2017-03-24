@@ -70,8 +70,8 @@ void turnover(species_t *const s)
 		/* daily coarse root turnover live to dead wood */
 		logger(g_debug_log, "\n****Coarse root turnover****\n");
 
-		s->value[C_COARSEROOT_LIVE_WOOD_TO_DEADWOOD] = (s->value[C_TO_COARSEROOT] * s->value[DAILY_LIVE_WOOD_TURNOVER]);
-		logger(g_debug_log, "C_COARSEROOT_LIVE_WOOD_TO_DEADWOOD = %g tC/cell\n", s->value[C_COARSEROOT_LIVE_WOOD_TO_DEADWOOD]);
+		s->value[C_CROOT_LIVE_WOOD_TO_DEADWOOD] = (s->value[C_TO_CROOT] * s->value[DAILY_LIVE_WOOD_TURNOVER]);
+		logger(g_debug_log, "C_CROOT_LIVE_WOOD_TO_DEADWOOD = %g tC/cell\n", s->value[C_CROOT_LIVE_WOOD_TO_DEADWOOD]);
 
 		/*******************************************************************************************************************/
 

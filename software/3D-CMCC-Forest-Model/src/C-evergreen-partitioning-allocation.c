@@ -123,35 +123,35 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 			if(s->value[RESERVE_C] >= s->value[MIN_RESERVE_C])
 			{
 				logger(g_debug_log, "Allocating only into foliage and fine root pools (positive NPP)\n");
-				s->value[C_TO_LEAF] = npp_to_alloc * (1.0 - s->value[FINE_ROOT_LEAF_FRAC]);
-				s->value[C_TO_FINEROOT] = npp_to_alloc - s->value[C_TO_LEAF];
+				s->value[C_TO_LEAF]    = npp_to_alloc * (1.0 - s->value[FROOT_LEAF_FRAC]);
+				s->value[C_TO_FROOT]   = npp_to_alloc - s->value[C_TO_LEAF];
 				s->value[C_TO_RESERVE] = 0.0;
 			}
 			/* it needs */
 			else if (s->value[RESERVE_C] < s->value[MIN_RESERVE_C])
 			{
 				logger(g_debug_log, "Allocating only into reserve pool (low reserves, positive NPP)\n");
-				s->value[C_TO_LEAF] = 0.0;
-				s->value[C_TO_FINEROOT] = 0.0;
+				s->value[C_TO_LEAF]    = 0.0;
+				s->value[C_TO_FROOT]   = 0.0;
 				s->value[C_TO_RESERVE] = npp_to_alloc;
 			}
 
-			s->value[C_TO_COARSEROOT] = 0.0;
-			s->value[C_TO_STEM] = 0.0;
-			s->value[C_TO_BRANCH] = 0.0;
-			s->value[C_TO_FRUIT] = 0.0;
+			s->value[C_TO_CROOT]       = 0.0;
+			s->value[C_TO_STEM]        = 0.0;
+			s->value[C_TO_BRANCH]      = 0.0;
+			s->value[C_TO_FRUIT]       = 0.0;
 
 		}
 		else
 		{
 			logger(g_debug_log, "Consuming reserve pool (negative NPP)\n");
-			s->value[C_TO_LEAF] = 0.0;
-			s->value[C_TO_FINEROOT] = 0.0;
-			s->value[C_TO_RESERVE] = npp_to_alloc;
-			s->value[C_TO_COARSEROOT] = 0.0;
-			s->value[C_TO_STEM] = 0.0;
-			s->value[C_TO_BRANCH] = 0.0;
-			s->value[C_TO_FRUIT] = 0.0;
+			s->value[C_TO_LEAF]        = 0.0;
+			s->value[C_TO_FROOT]       = 0.0;
+			s->value[C_TO_RESERVE]     = npp_to_alloc;
+			s->value[C_TO_CROOT]       = 0.0;
+			s->value[C_TO_STEM]        = 0.0;
+			s->value[C_TO_BRANCH]      = 0.0;
+			s->value[C_TO_FRUIT]       = 0.0;
 		}
 		/**********************************************************************/
 		break;
@@ -183,39 +183,39 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 				{
 					s->value[C_TO_FRUIT] = 0.0;
 				}
-				s->value[C_TO_LEAF] = 0.0;
-				s->value[C_TO_COARSEROOT] = npp_to_alloc * pR;
-				s->value[C_TO_FINEROOT] = 0.0;
-				s->value[C_TO_RESERVE] = (npp_to_alloc * pL);
-				s->value[C_TO_TOT_STEM] = npp_to_alloc * pS;
-				s->value[C_TO_STEM] = (npp_to_alloc* pS) * (1.0 - s->value[FRACBB]);
-				s->value[C_TO_BRANCH] = (npp_to_alloc * pS) * s->value[FRACBB];
+				s->value[C_TO_LEAF]      = 0.0;
+				s->value[C_TO_CROOT]     = npp_to_alloc * pR;
+				s->value[C_TO_FROOT]     = 0.0;
+				s->value[C_TO_RESERVE]   = (npp_to_alloc * pL);
+				s->value[C_TO_TOT_STEM]  = npp_to_alloc * pS;
+				s->value[C_TO_STEM]      = (npp_to_alloc* pS) * (1.0 - s->value[FRACBB]);
+				s->value[C_TO_BRANCH]    = (npp_to_alloc * pS) * s->value[FRACBB];
 			}
 			/* it needs */
 			else
 			{
 				logger(g_debug_log, "Allocating only into reserve pool (low reserves, positive NPP)\n");
-				s->value[C_TO_RESERVE] = npp_to_alloc;
-				s->value[C_TO_FINEROOT] = 0.0;
-				s->value[C_TO_COARSEROOT] = 0.0;
-				s->value[C_TO_TOT_STEM] = 0.0;
-				s->value[C_TO_STEM] = 0.0;
-				s->value[C_TO_BRANCH] = 0.0;
-				s->value[C_TO_LEAF] = 0.0;
-				s->value[C_TO_FRUIT] = 0.0;
+				s->value[C_TO_RESERVE]   = npp_to_alloc;
+				s->value[C_TO_FROOT]     = 0.0;
+				s->value[C_TO_CROOT]     = 0.0;
+				s->value[C_TO_TOT_STEM]  = 0.0;
+				s->value[C_TO_STEM]      = 0.0;
+				s->value[C_TO_BRANCH]    = 0.0;
+				s->value[C_TO_LEAF]      = 0.0;
+				s->value[C_TO_FRUIT]     = 0.0;
 			}
 		}
 		else
 		{
 			logger(g_debug_log, "Consuming reserve pool (negative NPP)\n");
-			s->value[C_TO_RESERVE] = npp_to_alloc;
-			s->value[C_TO_FINEROOT] = 0.0;
-			s->value[C_TO_COARSEROOT] = 0.0;
-			s->value[C_TO_TOT_STEM] = 0.0;
-			s->value[C_TO_STEM] = 0.0;
-			s->value[C_TO_BRANCH] = 0.0;
-			s->value[C_TO_LEAF] = 0.0;
-			s->value[C_TO_FRUIT] = 0.0;
+			s->value[C_TO_RESERVE]       = npp_to_alloc;
+			s->value[C_TO_FROOT]         = 0.0;
+			s->value[C_TO_CROOT]         = 0.0;
+			s->value[C_TO_TOT_STEM]      = 0.0;
+			s->value[C_TO_STEM]          = 0.0;
+			s->value[C_TO_BRANCH]        = 0.0;
+			s->value[C_TO_LEAF]          = 0.0;
+			s->value[C_TO_FRUIT]         = 0.0;
 		}
 		/**********************************************************************/
 		break;
@@ -252,8 +252,8 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 
 	logger(g_debug_log, "\n-Daily increment in carbon pools-\n");
 	logger(g_debug_log, "C_TO_LEAF = %g tC/cell/day\n", s->value[C_TO_LEAF]);
-	logger(g_debug_log, "C_TO_FINEROOT = %g tC/cell/day\n", s->value[C_TO_FINEROOT]);
-	logger(g_debug_log, "C_TO_COARSEROOT = %g tC/cell/day\n", s->value[C_TO_COARSEROOT]);
+	logger(g_debug_log, "C_TO_FINEROOT = %g tC/cell/day\n", s->value[C_TO_FROOT]);
+	logger(g_debug_log, "C_TO_COARSEROOT = %g tC/cell/day\n", s->value[C_TO_CROOT]);
 	logger(g_debug_log, "C_TO_STEM = %g tC/cell/day\n", s->value[C_TO_STEM]);
 	logger(g_debug_log, "C_TO_RESERVE = %g tC/cell/day\n", s->value[C_TO_RESERVE]);
 	logger(g_debug_log, "C_TO_BRANCH = %g tC/cell/day\n", s->value[C_TO_BRANCH]);
@@ -263,7 +263,7 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 	logger(g_debug_log, "C_LEAF_TO_RESERVE = %g tC/cell/day\n", s->value[C_LEAF_TO_RESERVE]);
 	logger(g_debug_log, "C_FINEROOT_TO_RESERVE = %g tC/cell/day\n", s->value[C_FROOT_TO_RESERVE]);
 	logger(g_debug_log, "C_STEM_LIVEWOOD_TO_DEADWOOD = %g tC/cell/day\n", s->value[C_STEM_LIVEWOOD_TO_DEADWOOD]);
-	logger(g_debug_log, "C_COARSEROOT_LIVE_WOOD_TO_DEADWOOD = %g tC/cell/day\n", s->value[C_COARSEROOT_LIVE_WOOD_TO_DEADWOOD]);
+	logger(g_debug_log, "C_CROOT_LIVE_WOOD_TO_DEADWOOD = %g tC/cell/day\n", s->value[C_CROOT_LIVE_WOOD_TO_DEADWOOD]);
 	logger(g_debug_log, "C_BRANCH_LIVE_WOOD_TO_DEAD_WOOD = %g tC/cell/day\n", s->value[C_BRANCH_LIVE_WOOD_TO_DEAD_WOOD]);
 
 	/* leaf fall */
@@ -277,8 +277,8 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 
 	logger(g_debug_log, "\n-Daily increment in carbon pools (after leaf fall and turnover)-\n");
 	logger(g_debug_log, "C_TO_LEAF = %g tC/cell/day\n", s->value[C_TO_LEAF]);
-	logger(g_debug_log, "C_TO_FINEROOT = %g tC/cell/day\n", s->value[C_TO_FINEROOT]);
-	logger(g_debug_log, "C_TO_COARSEROOT = %g tC/cell/day\n", s->value[C_TO_COARSEROOT]);
+	logger(g_debug_log, "C_TO_FINEROOT = %g tC/cell/day\n", s->value[C_TO_FROOT]);
+	logger(g_debug_log, "C_TO_COARSEROOT = %g tC/cell/day\n", s->value[C_TO_CROOT]);
 	logger(g_debug_log, "C_TO_STEM = %g tC/cell/day\n", s->value[C_TO_STEM]);
 	logger(g_debug_log, "C_TO_RESERVE = %g tC/cell/day\n", s->value[C_TO_RESERVE]);
 	logger(g_debug_log, "C_TO_BRANCH = %g tC/cell/day\n", s->value[C_TO_BRANCH]);
@@ -290,41 +290,41 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 	s->value[M_C_TO_TOT_STEM]   += s->value[C_TO_TOT_STEM];
 	s->value[M_C_TO_STEM]       += s->value[C_TO_STEM];
 	s->value[M_C_TO_LEAF]       += s->value[C_TO_LEAF];
-	s->value[M_C_TO_FINEROOT]   += s->value[C_TO_FINEROOT];
-	s->value[M_C_TO_COARSEROOT] += s->value[C_TO_COARSEROOT];
+	s->value[M_C_TO_FROOT]      += s->value[C_TO_FROOT];
+	s->value[M_C_TO_CROOT]      += s->value[C_TO_CROOT];
 	s->value[M_C_TO_RESERVE]    += s->value[C_TO_RESERVE];
 	s->value[M_C_TO_ROOT]       += s->value[C_TO_ROOT];
 	s->value[M_C_TO_BRANCH]     += s->value[C_TO_BRANCH];
 	s->value[M_C_TO_FRUIT]      += s->value[C_TO_FRUIT];
 
 	/* update class level annual carbon biomass increment in tC/year/cell */
-	s->value[Y_C_TO_TOT_STEM]  += s->value[C_TO_TOT_STEM];
-	s->value[Y_C_TO_STEM]      += s->value[C_TO_STEM];
-	s->value[Y_C_TO_LEAF]      += s->value[C_TO_LEAF];
-	s->value[Y_C_TO_FINEROOT]  += s->value[C_TO_FINEROOT];
-	s->value[Y_C_TO_COARSEROOT]+= s->value[C_TO_COARSEROOT];
-	s->value[Y_C_TO_RESERVE]   += s->value[C_TO_RESERVE];
-	s->value[Y_C_TO_ROOT]      += s->value[C_TO_ROOT];
-	s->value[Y_C_TO_BRANCH]    += s->value[C_TO_BRANCH];
-	s->value[Y_C_TO_FRUIT]     += s->value[C_TO_FRUIT];
+	s->value[Y_C_TO_TOT_STEM]     += s->value[C_TO_TOT_STEM];
+	s->value[Y_C_TO_STEM]         += s->value[C_TO_STEM];
+	s->value[Y_C_TO_LEAF]         += s->value[C_TO_LEAF];
+	s->value[Y_C_TO_FROOT]        += s->value[C_TO_FROOT];
+	s->value[Y_C_TO_CROOT]        += s->value[C_TO_CROOT];
+	s->value[Y_C_TO_RESERVE]      += s->value[C_TO_RESERVE];
+	s->value[Y_C_TO_ROOT]         += s->value[C_TO_ROOT];
+	s->value[Y_C_TO_BRANCH]       += s->value[C_TO_BRANCH];
+	s->value[Y_C_TO_FRUIT]        += s->value[C_TO_FRUIT];
 
 	/* update cell level carbon biomass in gC/m2/day */
-	c->daily_leaf_carbon        += s->value[C_TO_LEAF] * 1000000.0 / g_settings->sizeCell ;
-	c->daily_stem_carbon        += s->value[C_TO_STEM] * 1000000.0 / g_settings->sizeCell ;
-	c->daily_fine_root_carbon   += s->value[C_TO_FINEROOT] * 1000000.0 / g_settings->sizeCell ;
-	c->daily_coarse_root_carbon += s->value[C_TO_COARSEROOT] * 1000000.0 / g_settings->sizeCell ;
-	c->daily_branch_carbon      += s->value[C_TO_BRANCH] * 1000000.0 / g_settings->sizeCell ;
-	c->daily_reserve_carbon     += s->value[C_TO_RESERVE] * 1000000.0 / g_settings->sizeCell ;
-	c->daily_root_carbon        += s->value[C_TO_ROOT] * 1000000.0 / g_settings->sizeCell ;
-	c->daily_litter_carbon      += (s->value[C_LEAF_TO_LITR] + s->value[C_FROOT_TO_LITR]) * 1000000.0 / g_settings->sizeCell ;
-	c->daily_soil_carbon        += 0. ;
-	c->daily_fruit_carbon       += s->value[C_TO_FRUIT] * 1000000.0 / g_settings->sizeCell ;
+	c->daily_leaf_carbon           += s->value[C_TO_LEAF] * 1000000.0 / g_settings->sizeCell ;
+	c->daily_stem_carbon           += s->value[C_TO_STEM] * 1000000.0 / g_settings->sizeCell ;
+	c->daily_froot_carbon          += s->value[C_TO_FROOT] * 1000000.0 / g_settings->sizeCell ;
+	c->daily_croot_carbon          += s->value[C_TO_CROOT] * 1000000.0 / g_settings->sizeCell ;
+	c->daily_branch_carbon         += s->value[C_TO_BRANCH] * 1000000.0 / g_settings->sizeCell ;
+	c->daily_reserve_carbon        += s->value[C_TO_RESERVE] * 1000000.0 / g_settings->sizeCell ;
+	c->daily_root_carbon           += s->value[C_TO_ROOT] * 1000000.0 / g_settings->sizeCell ;
+	c->daily_litter_carbon         += (s->value[C_LEAF_TO_LITR] + s->value[C_FROOT_TO_LITR]) * 1000000.0 / g_settings->sizeCell ;
+	c->daily_soil_carbon           += 0. ;
+	c->daily_fruit_carbon          += s->value[C_TO_FRUIT] * 1000000.0 / g_settings->sizeCell ;
 
 	/* update cell level carbon biomass in tC/cell/day */
 	c->daily_leaf_carbon_tC        += s->value[C_TO_LEAF];
 	c->daily_stem_carbon_tC        += s->value[C_TO_STEM];
-	c->daily_fine_root_carbon_tC   += s->value[C_TO_FINEROOT];
-	c->daily_coarse_root_carbon_tC += s->value[C_TO_COARSEROOT];
+	c->daily_froot_carbon_tC       += s->value[C_TO_FROOT];
+	c->daily_croot_carbon_tC       += s->value[C_TO_CROOT];
 	c->daily_branch_carbon_tC      += s->value[C_TO_BRANCH];
 	c->daily_reserve_carbon_tC     += s->value[C_TO_RESERVE];
 	c->daily_root_carbon_tC        += s->value[C_TO_ROOT];

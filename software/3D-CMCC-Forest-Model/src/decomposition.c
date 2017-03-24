@@ -24,10 +24,11 @@ void decomposition (cell_t *const c, const meteo_daily_t *const meteo_daily)
 
 	double cn_l1, cn_l2, cn_l4, cn_s1, cn_s2, cn_s3, cn_s4;
 	double rfl1s1, rfl2s2, rfl4s3, rfs1s2, rfs2s3, rfs3s4;
-	double kl1_base, kl2_base, kl4_base, ks1_base, ks2_base, ks3_base, ks4_base, kfrag_base;
-	double kl1, kl2, kl4, ks1, ks2, ks3, ks4, kfrag;
+	double kl1, kl2, kl4;                                                         /* current decomposition rate constant litter */
+	double ks1, ks2, ks3, ks4;                                                    /* current decomposition rate constant SOM */
+	double kfrag;                                                                 /* current fragmentation rate constant CWD */
 	double cwdc_loss;
-	double plitr1c_loss, plitr2c_loss, plitr4c_loss;                             /* decomposition */
+	double plitr1c_loss, plitr2c_loss, plitr4c_loss;                              /* decomposition */
 	double psoil1c_loss, psoil2c_loss, psoil3c_loss, psoil4c_loss;
 	double pmnf_l1s1,pmnf_l2s2,pmnf_l4s3,pmnf_s1s2,pmnf_s2s3,pmnf_s3s4,pmnf_s4;
 	double potential_immob,mineralized;

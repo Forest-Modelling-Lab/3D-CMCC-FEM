@@ -45,13 +45,13 @@ void nitrogen_assimilation(species_t *const s)
 	logger(g_debug_log, "Stem nitrogen content = %g tN/area\n", s->value[STEM_N]);
 
 	/* coarse root */
-	s->value[COARSE_ROOT_LIVE_WOOD_N] = s->value[CROOT_LIVE_WOOD_C] / s->value[CN_LIVE_WOODS];
-	logger(g_debug_log, "Live coarse root nitrogen content = %g tN/area\n", s->value[COARSE_ROOT_LIVE_WOOD_N]);
+	s->value[CROOT_LIVE_WOOD_N] = s->value[CROOT_LIVE_WOOD_C] / s->value[CN_LIVE_WOODS];
+	logger(g_debug_log, "Live coarse root nitrogen content = %g tN/area\n", s->value[CROOT_LIVE_WOOD_N]);
 
-	s->value[COARSE_ROOT_DEAD_WOOD_N] = s->value[CROOT_DEAD_WOOD_C] / s->value[CN_DEAD_WOODS];
-	logger(g_debug_log, "Dead coarse root nitrogen content = %g tN/area\n", s->value[COARSE_ROOT_DEAD_WOOD_N]);
+	s->value[CROOT_DEAD_WOOD_N] = s->value[CROOT_DEAD_WOOD_C] / s->value[CN_DEAD_WOODS];
+	logger(g_debug_log, "Dead coarse root nitrogen content = %g tN/area\n", s->value[CROOT_DEAD_WOOD_N]);
 
-	s->value[CROOT_N] = s->value[CROOT_LIVE_WOOD_C] + s->value[COARSE_ROOT_DEAD_WOOD_N];
+	s->value[CROOT_N] = s->value[CROOT_LIVE_WOOD_C] + s->value[CROOT_DEAD_WOOD_N];
 	logger(g_debug_log, "Coarse root nitrogen content = %g tN/area\n", s->value[CROOT_N]);
 
 	/* branch */

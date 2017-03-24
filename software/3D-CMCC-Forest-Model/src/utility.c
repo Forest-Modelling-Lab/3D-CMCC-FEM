@@ -49,27 +49,27 @@ void reset_daily_cell_variables(cell_t *const c)
 	c->daily_npp_tDM =                  0.;
 	c->daily_leaf_maint_resp =          0.;
 	c->daily_stem_maint_resp =          0.;
-	c->daily_fine_root_maint_resp =     0.;
+	c->daily_froot_maint_resp =         0.;
 	c->daily_branch_maint_resp =        0.;
 	c->daily_maint_resp =               0.;
-	c->daily_coarse_root_maint_resp=    0.;
+	c->daily_croot_maint_resp=          0.;
 	c->daily_leaf_growth_resp =         0.;
 	c->daily_stem_growth_resp =         0.;
-	c->daily_fine_root_growth_resp =    0.;
+	c->daily_froot_growth_resp =        0.;
 	c->daily_branch_growth_resp =       0.;
-	c->daily_coarse_root_growth_resp =  0.;
+	c->daily_croot_growth_resp =        0.;
 	c->daily_growth_resp =              0.;
 	c->daily_aut_resp =                 0.;
 	c->daily_aut_resp_tC =              0.;
 	c->daily_leaf_aut_resp =            0.;
 	c->daily_stem_aut_resp =            0.;
 	c->daily_branch_aut_resp =          0.;
-	c->daily_fine_root_aut_resp =       0.;
-	c->daily_coarse_root_aut_resp =     0.;
+	c->daily_froot_aut_resp =           0.;
+	c->daily_croot_aut_resp =           0.;
 	c->daily_leaf_carbon =              0.;
 	c->daily_stem_carbon =              0.;
-	c->daily_fine_root_carbon =         0.;
-	c->daily_coarse_root_carbon =       0.;
+	c->daily_froot_carbon =             0.;
+	c->daily_croot_carbon =             0.;
 	c->daily_root_carbon =              0.;
 	c->daily_branch_carbon =            0.;
 	c->daily_reserve_carbon =           0.;
@@ -134,8 +134,6 @@ void reset_monthly_cell_variables(cell_t *const c)
 	c->monthly_et =                     0.;
 	c->monthly_latent_heat_flux =       0.;
 	c->monthly_sensible_heat_flux =     0.;
-
-
 }
 
 void reset_annual_cell_variables(cell_t *const c)
@@ -177,9 +175,6 @@ void reset_annual_cell_variables(cell_t *const c)
 	c->bgb =                            0.;
 	//c->dead_tree =                    0;
 	c->annual_soil_evapo =              0.;
-
-
-
 }
 void reset_daily_layer_variables(cell_t *const c)
 {
@@ -320,26 +315,26 @@ void reset_daily_class_variables(cell_t *const c)
 					//s->value[C_FINEROOT_TO_RESERVE] = 0.;
 					/*****************************************/
 
-					/* reset daily maint,growth  and total respiration */
+					/* reset daily maint, growth and total respiration */
 					s->value[DAILY_LEAF_MAINT_RESP] =   0.;
 					s->value[NIGHTLY_LEAF_MAINT_RESP] = 0.;
 					s->value[TOT_DAY_LEAF_MAINT_RESP] = 0.;
-					s->value[FINE_ROOT_MAINT_RESP] =    0.;
+					s->value[FROOT_MAINT_RESP] =        0.;
 					s->value[STEM_MAINT_RESP] =         0.;
 					s->value[BRANCH_MAINT_RESP] =       0.;
-					s->value[COARSE_ROOT_MAINT_RESP] =  0.;
+					s->value[CROOT_MAINT_RESP] =        0.;
 					s->value[TOTAL_MAINT_RESP] =        0.;
 					s->value[LEAF_GROWTH_RESP] =        0.;
-					s->value[FINE_ROOT_GROWTH_RESP] =   0.;
-					s->value[COARSE_ROOT_GROWTH_RESP] = 0.;
+					s->value[FROOT_GROWTH_RESP] =       0.;
+					s->value[CROOT_GROWTH_RESP] =       0.;
 					s->value[STEM_GROWTH_RESP] =        0.;
 					s->value[BRANCH_GROWTH_RESP] =      0.;
 					s->value[TOTAL_GROWTH_RESP] =       0.;
 					s->value[LEAF_AUT_RESP] =           0.;
-					s->value[FINE_ROOT_AUT_RESP] =      0.;
+					s->value[FROOT_AUT_RESP] =          0.;
 					s->value[STEM_AUT_RESP] =           0.;
 					s->value[BRANCH_AUT_RESP] =         0.;
-					s->value[COARSE_ROOT_AUT_RESP] =    0.;
+					s->value[CROOT_AUT_RESP] =          0.;
 					s->value[TOTAL_AUT_RESP] =          0.;
 				}
 			}
@@ -403,8 +398,8 @@ void reset_monthly_class_variables(cell_t *const c)
 					s->value[M_C_TO_TOT_STEM] =              0.;
 					s->value[M_C_TO_STEM] =                  0.;
 					s->value[M_C_TO_LEAF] =                  0.;
-					s->value[M_C_TO_FINEROOT] =              0.;
-					s->value[M_C_TO_COARSEROOT] =            0.;
+					s->value[M_C_TO_FROOT] =                 0.;
+					s->value[M_C_TO_CROOT] =                 0.;
 					s->value[M_C_TO_RESERVE] =               0.;
 					s->value[M_C_TO_ROOT] =                  0.;
 					s->value[M_C_TO_BRANCH] =                0.;
@@ -479,8 +474,8 @@ void reset_annual_class_variables(cell_t *const c)
 					s->value[Y_C_TO_TOT_STEM] =             0.;
 					s->value[Y_C_TO_STEM] =                 0.;
 					s->value[Y_C_TO_LEAF] =                 0.;
-					s->value[Y_C_TO_FINEROOT] =             0.;
-					s->value[Y_C_TO_COARSEROOT] =           0.;
+					s->value[Y_C_TO_FROOT] =                0.;
+					s->value[Y_C_TO_CROOT] =                0.;
 					s->value[Y_C_TO_RESERVE] =              0.;
 					s->value[Y_C_TO_ROOT] =                 0.;
 					s->value[Y_C_TO_BRANCH] =               0.;
