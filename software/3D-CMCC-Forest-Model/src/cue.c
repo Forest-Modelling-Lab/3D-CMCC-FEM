@@ -24,9 +24,9 @@ void carbon_use_efficiency( cell_t *const c, const int height, const int dbh, co
 	DeLucia et al., GCB 2007
 	*/
 	/* daily CUE */
-	if( s->value[DAILY_GPP_gC] > 0 )
+	if( s->value[GPP_gC] > 0 )
 	{
-		s->value[CUE] = s->value[NPP_gC] / s->value[DAILY_GPP_gC];
+		s->value[CUE] = s->value[NPP_gC] / s->value[GPP_gC];
 	}
 	else
 	{

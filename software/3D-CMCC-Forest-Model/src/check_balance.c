@@ -480,7 +480,7 @@ int check_class_carbon_balance(cell_t *const c, const int layer, const int heigh
 	/* check complete tree level carbon balance */
 
 	/* sum of sources */
-	in = s->value[DAILY_GPP_gC];
+	in = s->value[GPP_gC];
 
 	/* sum of sinks */
 	out = s->value[TOTAL_AUT_RESP];
@@ -499,7 +499,7 @@ int check_class_carbon_balance(cell_t *const c, const int layer, const int heigh
 	{
 		logger(g_debug_log, "DOY = %d\n", c->doy);
 		logger(g_debug_log, "\nin = %g gC/m2\n", in);
-		logger(g_debug_log, "GPP = %g gC/m2\n", s->value[DAILY_GPP_gC]);
+		logger(g_debug_log, "GPP = %g gC/m2\n", s->value[GPP_gC]);
 		logger(g_debug_log, "\nout = %g gC/m2\n", out);
 		logger(g_debug_log, "TOTAL_AUT_RESP = %g gC/m2\n", s->value[TOTAL_AUT_RESP]);
 		logger(g_debug_log, "\nstore = %g gC/m2\n", store);
@@ -514,7 +514,7 @@ int check_class_carbon_balance(cell_t *const c, const int layer, const int heigh
 	/* check complete tree level carbon balance */
 
 	/* sum of sources */
-	in = s->value[DAILY_GPP_gC];
+	in = s->value[GPP_gC];
 
 	/* sum of sinks */
 	out = s->value[TOTAL_MAINT_RESP] + s->value[TOTAL_GROWTH_RESP] +
@@ -540,7 +540,7 @@ int check_class_carbon_balance(cell_t *const c, const int layer, const int heigh
 	{
 		logger(g_debug_log, "DOY = %d\n", c->doy);
 		logger(g_debug_log, "\nin = %g gC/m2\n", in);
-		logger(g_debug_log, "DAILY_GPP_gC = %g gC/m2\n", s->value[DAILY_GPP_gC]);
+		logger(g_debug_log, "GPP_gC = %g gC/m2\n", s->value[GPP_gC]);
 		logger(g_debug_log, "\nout = %g gC/m2\n", out);
 		logger(g_debug_log, "TOTAL_MAINT_RESP = %g gC/m2\n", s->value[TOTAL_MAINT_RESP]);
 		logger(g_debug_log, "TOTAL_GROWTH_RESP = %g gC/m2\n", s->value[TOTAL_GROWTH_RESP]);

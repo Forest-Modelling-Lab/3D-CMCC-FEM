@@ -82,20 +82,19 @@ void photosynthesis(cell_t *const c, const int layer, const int height, const in
 
 	/* Daily GPP in gC/m2/day */
 	/* molC/m2/day --> gC/m2/day */
-	s->value[DAILY_GPP_gC] = GPPmolC * GC_MOL;
-	logger(g_debug_log, "DAILY_GPP_gC = %g gC/m2/day\n", s->value[DAILY_GPP_gC]);
+	s->value[GPP_gC]          = GPPmolC * GC_MOL;
 
 	/* class level */
-	s->value[MONTHLY_GPP_gC] += s->value[DAILY_GPP_gC];
-	s->value[YEARLY_GPP_gC] += s->value[DAILY_GPP_gC];
+	s->value[MONTHLY_GPP_gC] += s->value[GPP_gC];
+	s->value[YEARLY_GPP_gC]  += s->value[GPP_gC];
 
 	/* cell level */
-	c->daily_gpp += s->value[DAILY_GPP_gC];
-	c->monthly_gpp += s->value[DAILY_GPP_gC];
-	c->annual_gpp += s->value[DAILY_GPP_gC];
+	c->daily_gpp             += s->value[GPP_gC];
+	c->monthly_gpp           += s->value[GPP_gC];
+	c->annual_gpp            += s->value[GPP_gC];
 
 	/* yearly veg days counter */
-	if ( s->value[DAILY_GPP_gC] > 0. )
+	if ( s->value[GPP_gC] > 0. )
 	{
 		++s->counter[YEARLY_VEG_DAYS];
 	}

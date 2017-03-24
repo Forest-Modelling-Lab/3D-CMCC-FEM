@@ -273,7 +273,7 @@ void reset_daily_class_variables(cell_t *const c)
 					s->value[PPFD_TRANSM_SHADE] =       0.;
 
 					/* reset daily carbon fluxes */
-					s->value[DAILY_GPP_gC] =            0.;
+					s->value[GPP_gC] =                  0.;
 					s->value[NPP_gC] =                  0.;
 					s->value[NPP_tC] =                  0.;
 					s->value[C_FLUX] =                  0.;
@@ -313,9 +313,25 @@ void reset_daily_class_variables(cell_t *const c)
 					//s->value[C_TO_LITTER] =           0.;
 					//s->value[C_LEAF_TO_RESERVE] =     0.;
 					//s->value[C_FINEROOT_TO_RESERVE] = 0.;
-					/*****************************************/
 
-					/* reset daily maint, growth and total respiration */
+					/* reset daily nitrogen fluxes among pools */
+					s->value[N_TO_LEAF] =               0.;
+					s->value[N_TO_ROOT] =               0.;
+					s->value[N_TO_FROOT] =              0.;
+					s->value[N_TO_CROOT] =              0.;
+					s->value[N_TO_TOT_STEM] =           0.;
+					s->value[N_TO_STEM] =               0.;
+					s->value[N_TO_BRANCH] =             0.;
+					s->value[N_TO_RESERVE] =            0.;
+					s->value[N_TO_FRUIT] =              0.;
+					s->value[N_TO_LITTER] =             0.;
+					s->value[N_LEAF_TO_RESERVE] =       0.;
+					s->value[N_FROOT_TO_RESERVE] =      0.;
+					s->value[N_LEAF_TO_LITR] =          0.;
+					s->value[N_FROOT_TO_LITR] =         0.;
+					/****************************************/
+
+					/* reset daily maintenance, growth and total respiration */
 					s->value[DAILY_LEAF_MAINT_RESP] =   0.;
 					s->value[NIGHTLY_LEAF_MAINT_RESP] = 0.;
 					s->value[TOT_DAY_LEAF_MAINT_RESP] = 0.;

@@ -287,7 +287,7 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 									",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
 									",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
 									",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",
-									s->value[DAILY_GPP_gC],
+									s->value[GPP_gC],
 									s->value[TOTAL_GROWTH_RESP],
 									s->value[TOTAL_MAINT_RESP],
 									s->value[TOTAL_AUT_RESP],

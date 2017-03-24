@@ -357,7 +357,7 @@ void autotrophic_respiration(cell_t *const c, const int layer, const int height,
 	else
 	{
 		/* COMPUTE TOTAL A RESPIRATION (using fixed ratio)*/
-		s->value[TOTAL_AUT_RESP] = s->value[DAILY_GPP_gC] * g_settings->Fixed_Aut_Resp_rate;
+		s->value[TOTAL_AUT_RESP] = s->value[GPP_gC] * g_settings->Fixed_Aut_Resp_rate;
 	}
 
 	logger(g_debug_log, "daily total autotrophic respiration = %g gC/m2/day\n", s->value[TOTAL_AUT_RESP]);

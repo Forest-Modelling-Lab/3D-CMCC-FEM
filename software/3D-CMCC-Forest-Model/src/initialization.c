@@ -593,8 +593,8 @@ void initialization_forest_class_litter_soil (cell_t *const c, const int height,
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 	/* check */
-	CHECK_CONDITION ( fabs (s->value[LEAF_LITT_LAB_FRAC] + s->value[LEAF_LITT_CEL_FRAC] + s->value[LEAF_LITT_LIGN_FRAC]), >, 1 + eps);
-	CHECK_CONDITION ( fabs (s->value[FROOT_LITT_LAB_FRAC] + s->value[FROOT_LITT_CEL_FRAC] + s->value[FROOT_LITT_LIGN_FRAC]), >, 1 + eps);
+	CHECK_CONDITION ( fabs (s->value[LEAF_LITR_LAB_FRAC] + s->value[LEAF_LITR_CEL_FRAC] + s->value[LEAF_LITR_LIGN_FRAC]), >, 1 + eps);
+	CHECK_CONDITION ( fabs (s->value[FROOT_LITR_LAB_FRAC] + s->value[FROOT_LITR_CEL_FRAC] + s->value[FROOT_LITR_LIGN_FRAC]), >, 1 + eps);
 	CHECK_CONDITION ( fabs (s->value[DEAD_WOOD_CEL_FRAC] + s->value[DEAD_WOOD_LIGN_FRAC]), >, 1 + eps);
 
 
@@ -603,45 +603,45 @@ void initialization_forest_class_litter_soil (cell_t *const c, const int height,
 	/*** compute leaf litter fractions ***/
 
 	/* partitioning leaf litter carbon cellulose into shielded and unshielded pools */
-	r1 = s->value[LEAF_LITT_LIGN_FRAC] / s->value[LEAF_LITT_LAB_FRAC];
+	r1 = s->value[LEAF_LITR_LIGN_FRAC] / s->value[LEAF_LITR_LAB_FRAC];
 
 	if ( r1 <= 0.45 )
 	{
-		s->value[LEAF_LITT_SCEL_FRAC]   = 0.;
-		s->value[LEAF_LITT_USCEL_FRAC]  = s->value[LEAF_LITT_CEL_FRAC];
+		s->value[LEAF_LITR_SCEL_FRAC]   = 0.;
+		s->value[LEAF_LITR_USCEL_FRAC]  = s->value[LEAF_LITR_CEL_FRAC];
 	}
 	else if ( r1 > 0.45 && r1 < 0.7 )
 	{
 		temp_var = ( r1 - 0.45 ) * 3.2;
-		s->value[LEAF_LITT_SCEL_FRAC]   = temp_var * s->value[LEAF_LITT_CEL_FRAC];
-		s->value[LEAF_LITT_USCEL_FRAC]  = ( 1. - temp_var ) * s->value[LEAF_LITT_CEL_FRAC];
+		s->value[LEAF_LITR_SCEL_FRAC]   = temp_var * s->value[LEAF_LITR_CEL_FRAC];
+		s->value[LEAF_LITR_USCEL_FRAC]  = ( 1. - temp_var ) * s->value[LEAF_LITR_CEL_FRAC];
 	}
 	else
 	{
-		s->value[LEAF_LITT_SCEL_FRAC]   = 0.8 * s->value[LEAF_LITT_CEL_FRAC];
-		s->value[LEAF_LITT_USCEL_FRAC]  = 0.2 * s->value[LEAF_LITT_CEL_FRAC];
+		s->value[LEAF_LITR_SCEL_FRAC]   = 0.8 * s->value[LEAF_LITR_CEL_FRAC];
+		s->value[LEAF_LITR_USCEL_FRAC]  = 0.2 * s->value[LEAF_LITR_CEL_FRAC];
 	}
 
 	/*** compute fine root litter fractions ***/
 
 	/* partitioning fine root litter carbon cellulose into shielded and unshielded pools */
-	r1 = s->value[FROOT_LITT_LIGN_FRAC] / s->value[FROOT_LITT_LAB_FRAC];
+	r1 = s->value[FROOT_LITR_LIGN_FRAC] / s->value[FROOT_LITR_LAB_FRAC];
 
 	if ( r1 <= 0.45 )
 	{
-		s->value[FROOT_LITT_SCEL_FRAC]   = 0.;
-		s->value[FROOT_LITT_USCEL_FRAC]  = s->value[FROOT_LITT_CEL_FRAC];
+		s->value[FROOT_LITR_SCEL_FRAC]   = 0.;
+		s->value[FROOT_LITR_USCEL_FRAC]  = s->value[FROOT_LITR_CEL_FRAC];
 	}
 	else if ( r1 > 0.45 && r1 < 0.7 )
 	{
 		temp_var = ( r1 - 0.45 ) * 3.2;
-		s->value[FROOT_LITT_SCEL_FRAC]   = temp_var * s->value[FROOT_LITT_CEL_FRAC];
-		s->value[FROOT_LITT_USCEL_FRAC]  = ( 1. - temp_var ) * s->value[FROOT_LITT_CEL_FRAC];
+		s->value[FROOT_LITR_SCEL_FRAC]   = temp_var * s->value[FROOT_LITR_CEL_FRAC];
+		s->value[FROOT_LITR_USCEL_FRAC]  = ( 1. - temp_var ) * s->value[FROOT_LITR_CEL_FRAC];
 	}
 	else
 	{
-		s->value[FROOT_LITT_SCEL_FRAC]   = 0.8 * s->value[FROOT_LITT_CEL_FRAC];
-		s->value[FROOT_LITT_USCEL_FRAC]  = 0.2 * s->value[FROOT_LITT_CEL_FRAC];
+		s->value[FROOT_LITR_SCEL_FRAC]   = 0.8 * s->value[FROOT_LITR_CEL_FRAC];
+		s->value[FROOT_LITR_USCEL_FRAC]  = 0.2 * s->value[FROOT_LITR_CEL_FRAC];
 	}
 
 	/*** compute coarse woody debris litter fractions ***/

@@ -67,17 +67,17 @@ enum {
 	CN_FINE_ROOTS,                       /* CN of fine roots (kgC/kgN) */
 	CN_LIVE_WOODS,                       /* CN of live woods (kgC/kgN) */
 	CN_DEAD_WOODS,                       /* CN of dead woods (kgC/kgN) */
-	LEAF_LITT_LAB_FRAC,                  /* (DIM) leaf litter labile fraction */
-	LEAF_LITT_CEL_FRAC,                  /* (DIM) leaf litter cellulose fraction */
-	LEAF_LITT_LIGN_FRAC,                 /* (DIM) leaf litter lignin fraction */
-	FROOT_LITT_LAB_FRAC,                 /* (DIM) fine root litter labile fraction */
-	FROOT_LITT_CEL_FRAC,                 /* (DIM) fine root litter cellulose fraction */
-	FROOT_LITT_LIGN_FRAC,                /* (DIM) fine root litter lignin fraction */
+	LEAF_LITR_LAB_FRAC,                  /* (DIM) leaf litter labile fraction */
+	LEAF_LITR_CEL_FRAC,                  /* (DIM) leaf litter cellulose fraction */
+	LEAF_LITR_LIGN_FRAC,                 /* (DIM) leaf litter lignin fraction */
+	FROOT_LITR_LAB_FRAC,                 /* (DIM) fine root litter labile fraction */
+	FROOT_LITR_CEL_FRAC,                 /* (DIM) fine root litter cellulose fraction */
+	FROOT_LITR_LIGN_FRAC,                /* (DIM) fine root litter lignin fraction */
 	DEAD_WOOD_CEL_FRAC,                  /* (DIM) dead wood litter cellulose fraction */
 	DEAD_WOOD_LIGN_FRAC,                 /* (DIM) dead wood litter lignin fraction */
 	BUD_BURST,                           /* days of bud burst at the beginning of growing season (only for deciduous) */
 	LEAF_FALL_FRAC_GROWING,              /* proportions of the growing season of leaf fall */
-	LEAF_FINEROOT_TURNOVER,              /* Average yearly leaves and fine root turnover rate */
+	LEAF_FROOT_TURNOVER,                 /* Average yearly leaves and fine root turnover rate */
 	LIVE_WOOD_TURNOVER,                  /* Average yearly live wood turnover rate */
 	DBHDCMAX,                            /* maximum dbh crown diameter relationship when minimum density */
 	DBHDCMIN,                            /* minimum dbh crown diameter relationship when maximum density */
@@ -283,7 +283,7 @@ enum {
 
 	/* carbon variable */
 	C_FLUX,
-	DAILY_GPP_gC,                       /* Daily Gross Primary Production gC/m^2 day */
+	GPP_gC,                             /* Daily Gross Primary Production gC/m^2 day */
 	MONTHLY_GPP_gC,                     /* Monthly Gross Primary Production gC/m^2 month */
 	YEARLY_GPP_gC,                      /* Yearly Gross Primary Production gC/m^2 day */
 	NPP_gC,                             /* Daily Net Primary Production gC/m^2 day */
@@ -603,10 +603,10 @@ enum {
 	SOIL3N,                             /* (tN/sizecell) microbial recycling pool N (slow) */
 	SOIL4N,                             /* (tN/sizecell) recalcitrant SOM N (humus, slowest) */
 	/* fractions */
-	LEAF_LITT_SCEL_FRAC,                /* (DIM) leaf litter shielded cellulose fraction */
-	LEAF_LITT_USCEL_FRAC,               /* (DIM) leaf litter unshielded cellulose fraction */
-	FROOT_LITT_SCEL_FRAC,               /* (DIM) fine root litter shielded cellulose fraction */
-	FROOT_LITT_USCEL_FRAC,              /* (DIM) fine root litter unshielded fraction */
+	LEAF_LITR_SCEL_FRAC,                /* (DIM) leaf litter shielded cellulose fraction */
+	LEAF_LITR_USCEL_FRAC,               /* (DIM) leaf litter unshielded cellulose fraction */
+	FROOT_LITR_SCEL_FRAC,               /* (DIM) fine root litter shielded cellulose fraction */
+	FROOT_LITR_USCEL_FRAC,              /* (DIM) fine root litter unshielded fraction */
 	DEAD_WOOD_SCEL_FRAC,                /* (DIM) dead wood litter shielded cellulose fraction */
 	DEAD_WOOD_USCEL_FRAC,               /* (DIM) dead wood litter unshielded fraction */
 
