@@ -389,6 +389,8 @@ enum {
 	TOT_SAPWOOD_C,                      /* Current total sapwood carbon pool tC/sizeCell */
 	EFF_LIVE_TOTAL_WOOD_FRAC,           /* Age-related fraction of Live biomass per Total biomass */
 	DAILY_LIVE_WOOD_TURNOVER,           /* Daily live wood turnover rate */
+	LEAF_TO_REMOVE,                     /* Daily Leaf to remove tC/sizeCell */
+	FROOT_TO_REMOVE,                    /* Daily Fine Root to remove tC/sizeCell */
 
 	/* per tree in KgC */
 	AV_LEAF_MASS_KgC,                   /* Average Leaf carbon pool kgC/tree */

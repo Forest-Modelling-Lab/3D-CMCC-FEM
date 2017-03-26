@@ -15,17 +15,16 @@ extern logger_t* g_debug_log;
 
 void leaf_fall_deciduous ( cell_t *const c, const int height, const int dbh, const int age, const int species )
 {
-	static double leaf_to_remove;
-	static double fine_root_to_remove;
 	static double fraction_to_retransl = 0.1;           /* fraction of C to re-translocate (see Bossell et al., 2006 and Campioli et al., 2013 */
 	double previousLai, currentLai;
 	double previousBiomass_lai, newBiomass_lai;
-
 
 	species_t *s;
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 	logger(g_debug_log, "\n**LEAF FALL DECIDUOUS **\n");
+
+	/************************************************************************************************************/
 
 	if(s->counter[LEAF_FALL_COUNTER] == 1)
 	{
@@ -50,18 +49,20 @@ void leaf_fall_deciduous ( cell_t *const c, const int height, const int dbh, con
 		CHECK_CONDITION(previousLai, <, currentLai);
 
 		/* update leaf carbon */
-		previousBiomass_lai = previousLai * (s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell) / (s->value[SLA_AVG] * 1000.0);
-		newBiomass_lai      = currentLai * (s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell) / (s->value[SLA_AVG] * 1000.0);
-		leaf_to_remove      = previousBiomass_lai - newBiomass_lai;
+		previousBiomass_lai       = previousLai * (s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell) / (s->value[SLA_AVG] * 1000.0);
+		newBiomass_lai            = currentLai * (s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell) / (s->value[SLA_AVG] * 1000.0);
+		s->value[LEAF_TO_REMOVE]  = previousBiomass_lai - newBiomass_lai;
 
 		/* a simple linear correlation from leaf carbon to remove and fine root to remove */
-		fine_root_to_remove = ( s->value[FROOT_C] * leaf_to_remove) / s->value[LEAF_C];
+		s->value[FROOT_TO_REMOVE] = ( s->value[FROOT_C] * s->value[LEAF_TO_REMOVE]) / s->value[LEAF_C];
 	}
+
+	/************************************************************************************************************/
 
 	if(s->counter[LEAF_FALL_COUNTER] < s->counter[DAY_FRAC_FOLIAGE_REMOVE])
 	{
 		/* reconcile leaf and fine root */
-		leaf_fall ( s, leaf_to_remove, fine_root_to_remove, fraction_to_retransl);
+		leaf_fall ( s, fraction_to_retransl);
 
 		/* update litter pool */
 		littering ( c, s );
@@ -70,8 +71,6 @@ void leaf_fall_deciduous ( cell_t *const c, const int height, const int dbh, con
 
 void leaf_fall_evergreen ( cell_t *const c, const int height, const int dbh, const int age, const int species )
 {
-	static double leaf_to_remove;
-	static double fine_root_to_remove;
 	static double fraction_to_retransl = 0.1; /* fraction of C to retranslocate (see Bossel et al., 2006 and Campioli et al., 2013 */
 
 	species_t *s;
@@ -84,39 +83,38 @@ void leaf_fall_evergreen ( cell_t *const c, const int height, const int dbh, con
 	if ( c->doy == 1 )
 	{
 		/* daily leaf fall turnover rate */
-		leaf_to_remove              = (s->value[LEAF_C] * s->value[LEAF_FROOT_TURNOVER]) / 365;
+		s->value[LEAF_TO_REMOVE] = (s->value[LEAF_C] * s->value[LEAF_FROOT_TURNOVER]) / 365;
 
 		/* daily fine root turnover rate */
-		fine_root_to_remove         = (s->value[FROOT_C] * s->value[LEAF_FROOT_TURNOVER]) / 365;
+		s->value[FROOT_TO_REMOVE]= (s->value[FROOT_C] * s->value[LEAF_FROOT_TURNOVER]) / 365;
 	}
 
 	/*************************************************************************************************************/
 
 	/* reconcile leaf and fine root */
-	leaf_fall ( s, leaf_to_remove, fine_root_to_remove, fraction_to_retransl);
+	leaf_fall ( s, fraction_to_retransl );
 
 	/* update litter pool */
 	littering ( c, s );
 
 }
 
-void leaf_fall (species_t *const s, double leaf_to_remove, double fine_root_to_remove, double fraction_to_retransl)
+void leaf_fall (species_t *const s, double fraction_to_retransl)
 {
 
 	/* compute fluxes of carbon leaf and fine root pool */
-	s->value[C_LEAF_TO_LITR]     = leaf_to_remove * ( 1. - fraction_to_retransl);
-	s->value[C_FROOT_TO_LITR]    = fine_root_to_remove * ( 1. - fraction_to_retransl);
-	s->value[C_LEAF_TO_RESERVE]  = leaf_to_remove * fraction_to_retransl;
-	s->value[C_FROOT_TO_RESERVE] = fine_root_to_remove * fraction_to_retransl;
+	s->value[C_LEAF_TO_LITR]     = s->value[LEAF_TO_REMOVE] * ( 1. - fraction_to_retransl);
+	s->value[C_FROOT_TO_LITR]    = s->value[FROOT_TO_REMOVE] * ( 1. - fraction_to_retransl);
+	s->value[C_LEAF_TO_RESERVE]  = s->value[LEAF_TO_REMOVE] * fraction_to_retransl;
+	s->value[C_FROOT_TO_RESERVE] = s->value[FROOT_TO_REMOVE] * fraction_to_retransl;
 
 	/* for evergreen to balance leaf_C in and out */
 	s->value[C_TO_LEAF]         -= s->value[C_LEAF_TO_LITR];
 	s->value[C_TO_FROOT]        -= s->value[C_FROOT_TO_LITR];
 
 	/* update carbon leaf and fine root pools */
-	s->value[LEAF_C]            -= leaf_to_remove;
-	s->value[FROOT_C]           -= fine_root_to_remove;
-
+	s->value[LEAF_C]            -= s->value[LEAF_TO_REMOVE];
+	s->value[FROOT_C]           -= s->value[FROOT_TO_REMOVE];
 
 	//todo Nitrogen fluxes
 
