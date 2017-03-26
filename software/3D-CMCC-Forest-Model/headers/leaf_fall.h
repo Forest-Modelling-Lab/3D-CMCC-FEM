@@ -8,7 +8,7 @@ void leaf_fall_deciduous(cell_t *const c, const int height, const int dbh, const
 
 void leaf_fall_evergreen(cell_t *const c, const int height, const int dbh, const int age, const int species);
 
-void leaf_fall (species_t *const s, double);
+void leaf_fall (species_t *const s);
 
 void littering ( cell_t *const c, species_t *const s );
 

@@ -248,10 +248,10 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 
 		/* leaf fall */
 		leaf_fall_deciduous(c, height, dbh, age, species);
+
 		/* note: these are computed in leaf_fall_deciduous function */
 		//		s->value[C_TO_LEAF] = ;
 		//		s->value[C_TO_FINEROOT] = ;
-		//		s->value[C_TO_LITTER] = ;
 		/* allocating into c pools */
 		s->value[C_TO_CROOT]   = 0.0;
 		s->value[C_TO_STEM]    = 0.0;
@@ -268,11 +268,11 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 		/* allocating into c pools */
 		s->value[C_TO_LEAF]        = 0.0;
 		s->value[C_TO_FROOT]       = 0.0;
-		s->value[C_TO_CROOT]      = 0.0;
+		s->value[C_TO_CROOT]       = 0.0;
 		s->value[C_TO_STEM]        = 0.0;
 		s->value[C_TO_BRANCH]      = 0.0;
 		s->value[C_TO_FRUIT]       = 0.0;
-		s->value[C_LEAF_TO_LITR  ] = 0.0;
+		s->value[C_LEAF_TO_LITR]   = 0.0;
 		s->value[C_FROOT_TO_LITR]  = 0.0;
 		s->value[C_TO_RESERVE]     = npp_to_alloc;
 
