@@ -31,7 +31,7 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 	double q10_tnight;
 	double q10_tsoil;
 
-	double acc_const = -0.00794;           /* temperature correction factor for acclimation -0.00703 Atkin et al., 2008 GCB, -0.00794 Smith & Dukes 2012; 0.0078 Hidy et al., 2016 GMD */
+	double acc_const = -0.00703;           /* temperature correction factor for acclimation -0.00703 Atkin et al., 2008 GCB, -0.00794 Smith & Dukes 2012; 0.0078 Hidy et al., 2016 GMD */
 
 	/* exponent for Temperature */
 	double exponent_tday;
@@ -187,10 +187,10 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 
 	/* COMPUTE TOTAL MAINTENANCE RESPIRATION */
 	s->value[TOTAL_MAINT_RESP] = s->value[TOT_DAY_LEAF_MAINT_RESP]+
-									s->value[FROOT_MAINT_RESP]+
-									s->value[STEM_MAINT_RESP]+
-									s->value[CROOT_MAINT_RESP]+
-									s->value[BRANCH_MAINT_RESP];
+			s->value[FROOT_MAINT_RESP]+
+			s->value[STEM_MAINT_RESP]+
+			s->value[CROOT_MAINT_RESP]+
+			s->value[BRANCH_MAINT_RESP];
 	logger(g_debug_log, "daily total maintenance respiration = %g gC/m2/day\n", s->value[TOTAL_MAINT_RESP]);
 
 	/* cumulate */
@@ -229,7 +229,6 @@ void growth_respiration(cell_t *const c, const int layer, const int height, cons
 	max_age = (int)s->value[MAXAGE];
 
 	logger(g_debug_log, "\n**GROWTH_RESPIRATION**\n");
-
 	/*******************************************************************************************************/
 	/* age-dependant growth respiration fraction */
 	/* see Waring and Running 1998, "Forest Ecosystem - Analysis at Multiple Scales"
@@ -276,10 +275,10 @@ void growth_respiration(cell_t *const c, const int layer, const int height, cons
 
 	/* COMPUTE TOTAL GROWTH RESPIRATION */
 	s->value[TOTAL_GROWTH_RESP] = s->value[LEAF_GROWTH_RESP] +
-									s->value[FROOT_GROWTH_RESP] +
-									s->value[STEM_GROWTH_RESP] +
-									s->value[CROOT_GROWTH_RESP] +
-									s->value[BRANCH_GROWTH_RESP];
+			s->value[FROOT_GROWTH_RESP] +
+			s->value[STEM_GROWTH_RESP] +
+			s->value[CROOT_GROWTH_RESP] +
+			s->value[BRANCH_GROWTH_RESP];
 
 	/* cumulate */
 	s->value[MONTHLY_TOTAL_GROWTH_RESP] += s->value[TOTAL_GROWTH_RESP];
@@ -324,6 +323,12 @@ void autotrophic_respiration(cell_t *const c, const int layer, const int height,
 
 	if ( g_settings->Prog_Aut_Resp )
 	{
+		/* maintenance respiration */
+		maintenance_respiration ( c, layer, height, dbh, age, species, meteo_daily );
+
+		/* growth respiration */
+		growth_respiration ( c, layer, height, dbh, age, species );
+
 		logger(g_debug_log, "\n**AUTOTROPHIC_RESPIRATION**\n");
 
 		/* class level among pools */

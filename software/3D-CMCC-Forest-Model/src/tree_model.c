@@ -259,15 +259,6 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							/* canopy carbon assimilation */
 							photosynthesis ( c, layer, height, dbh, age, species, DaysInMonth[month], meteo_annual );
 
-							if ( g_settings->Prog_Aut_Resp )
-							{
-								/* maintenance respiration */
-								maintenance_respiration ( c, layer, height, dbh, age, species, meteo_daily );
-
-								/* growth respiration */
-								growth_respiration ( c, layer, height, dbh, age, species );
-							}
-
 							/* autotrophic respiration */
 							autotrophic_respiration ( c, layer, height, dbh, age, species, meteo_daily );
 
