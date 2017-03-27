@@ -501,15 +501,15 @@ enum {
 	BRANCH_AUT_RESP,                    /* Branch autotrophic respiration (gC/m2/day) */
 	TOTAL_AUT_RESP,                     /* Total autotrophic respiration (gC/m2/day) */
 	MONTHLY_LEAF_AUT_RESP,              /* Monthly Leaf autotrophic respiration (gC/m2/month) */
-	MONTHLY_FINE_ROOT_AUT_RESP,         /* Monthly Fine root autotrophic respiration (gC/m2/month) */
+	MONTHLY_FROOT_AUT_RESP,             /* Monthly Fine root autotrophic respiration (gC/m2/month) */
 	MONTHLY_STEM_AUT_RESP,              /* Monthly Stem autotrophic respiration (gC/m2/month) */
-	MONTHLY_COARSE_ROOT_AUT_RESP,       /* Monthly Coarse root autotrophic respiration (gC/m2/month) */
+	MONTHLY_CROOT_AUT_RESP,             /* Monthly Coarse root autotrophic respiration (gC/m2/month) */
 	MONTHLY_BRANCH_AUT_RESP,            /* Monthly Branch autotrophic respiration (gC/m2/month) */
 	MONTHLY_TOTAL_AUT_RESP,             /* Monthly Total autotrophic respiration (gC/m2/month) */
 	YEARLY_LEAF_AUT_RESP,               /* Annual Leaf autotrophic respiration (gC/m2/year) */
-	YEARLY_FINE_ROOT_AUT_RESP,          /* Annual Fine root autotrophic respiration (gC/m2/year) */
+	YEARLY_FROOT_AUT_RESP,              /* Annual Fine root autotrophic respiration (gC/m2/year) */
 	YEARLY_STEM_AUT_RESP,               /* Annual Stem autotrophic respiration (gC/m2/year) */
-	YEARLY_COARSE_ROOT_AUT_RESP,        /* Annual Coarse root autotrophic respiration (gC/m2/year) */
+	YEARLY_CROOT_AUT_RESP,              /* Annual Coarse root autotrophic respiration (gC/m2/year) */
 	YEARLY_BRANCH_AUT_RESP,             /* Annual Branch autotrophic respiration (gC/m2/year) */
 	YEARLY_TOTAL_AUT_RESP,              /* Annual Total autotrophic respiration (gC/m2/year) */
 

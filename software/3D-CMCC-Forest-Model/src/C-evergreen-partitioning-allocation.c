@@ -191,7 +191,10 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 	//daily_growth_efficiency_mortality ( c, height, dbh, age, species );
 
 	/* update live_total wood fraction based on age */
-	live_total_wood_age (a, species);
+	live_total_wood_age ( a, species );
+
+	/* leaf and fine root fall */
+	leaf_fall_evergreen ( c, height, dbh, age, species );
 
 	/* allocate daily carbon */
 	carbon_allocation ( c, s );
@@ -200,7 +203,7 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 	nitrogen_allocation ( c, s );
 
 	/* compute single tree biomass pools */
-	average_tree_pools (s);
+	average_tree_pools ( s );
 
 	/* to avoid "jumps" of dbh it has computed once monthly */
 	if ( ( IS_LEAP_YEAR( c->years[year].year ) ? (MonthLength_Leap[month] ) : (MonthLength[month] )) == c->doy )
@@ -227,9 +230,6 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 	logger(g_debug_log, "C_STEM_LIVEWOOD_TO_DEADWOOD = %g tC/cell/day\n", s->value[C_STEM_LIVEWOOD_TO_DEADWOOD]);
 	logger(g_debug_log, "C_CROOT_LIVE_WOOD_TO_DEADWOOD = %g tC/cell/day\n", s->value[C_CROOT_LIVE_WOOD_TO_DEADWOOD]);
 	logger(g_debug_log, "C_BRANCH_LIVE_WOOD_TO_DEAD_WOOD = %g tC/cell/day\n", s->value[C_BRANCH_LIVE_WOOD_TO_DEAD_WOOD]);
-
-	/* leaf and fine root fall */
-	leaf_fall_evergreen(c, height, dbh, age, species);
 
 	/* turnover */
 	turnover ( s );

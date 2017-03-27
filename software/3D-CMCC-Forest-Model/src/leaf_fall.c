@@ -110,6 +110,10 @@ void leaf_fall_evergreen ( cell_t *const c, const int height, const int dbh, con
 		/* daily fine root turnover rate */
 		s->value[FROOT_TO_REMOVE]   = (s->value[FROOT_C] * s->value[LEAF_FROOT_TURNOVER]) / 365;
 	}
+	logger(g_debug_log, "LEAF_C %.8g\n", s->value[LEAF_C]);
+	logger(g_debug_log, "FROOT_C %.8g\n", s->value[FROOT_C]);
+	logger(g_debug_log, "leaf to remove %.8g\n", s->value[LEAF_TO_REMOVE]);
+	logger(g_debug_log, "froot to remove %.8g\n", s->value[FROOT_TO_REMOVE]);
 
 	/*************************************************************************************************************/
 
@@ -137,6 +141,11 @@ void leaf_fall (species_t *const s)
 	/* adding to main C transfer pools */
 	s->value[C_TO_RESERVE]      += (s->value[C_LEAF_TO_RESERVE] + s->value[C_FROOT_TO_RESERVE]);
 	s->value[C_TO_LITR]          = (s->value[C_LEAF_TO_LITR]    + s->value[C_FROOT_TO_LITR]);
+
+	logger(g_debug_log, "C_TO_LEAF %.8g\n", s->value[C_TO_LEAF]);
+	logger(g_debug_log, "C_TO_FROOT %.8g\n", s->value[C_TO_FROOT]);
+	logger(g_debug_log, "C_TO_RESERVE %.8g\n", s->value[C_TO_RESERVE]);
+	logger(g_debug_log, "C_TO_LITR %.8g\n", s->value[C_TO_LITR]);
 
 
 	//todo Nitrogen fluxes

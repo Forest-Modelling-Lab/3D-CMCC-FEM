@@ -56,7 +56,7 @@ void carbon_allocation( cell_t *const c, species_t *const s)
 	logger(g_debug_log, "Coarse Root Carbon (Wcr) = %g tC/Cell\n", s->value[CROOT_C]);
 	logger(g_debug_log, "Total Root Carbon (Wtr) = %g tC/Cell\n", s->value[TOT_ROOT_C]);
 	logger(g_debug_log, "Total Stem Carbon (Wts)= %g tC/Cell\n", s->value[TOT_STEM_C]);
-	logger(g_debug_log, "Fuit Carbon (Wfruit)= %g tC/Cell\n", s->value[FRUIT_C]);
+	logger(g_debug_log, "Fruit Carbon (Wfruit)= %g tC/Cell\n", s->value[FRUIT_C]);
 	logger(g_debug_log, "Litter Carbon (Wlitter)= %g tC/Cell\n", s->value[LITR_C]);
 
 	/***************************************************************************************/

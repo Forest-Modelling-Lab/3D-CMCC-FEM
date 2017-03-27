@@ -365,17 +365,17 @@ void autotrophic_respiration(cell_t *const c, const int layer, const int height,
 
 	/* monthly */
 	s->value[MONTHLY_LEAF_AUT_RESP]        += s->value[LEAF_AUT_RESP];
-	s->value[MONTHLY_FINE_ROOT_AUT_RESP]   += s->value[FROOT_AUT_RESP];
+	s->value[MONTHLY_FROOT_AUT_RESP]       += s->value[FROOT_AUT_RESP];
 	s->value[MONTHLY_STEM_AUT_RESP]        += s->value[STEM_AUT_RESP];
-	s->value[MONTHLY_COARSE_ROOT_AUT_RESP] += s->value[CROOT_AUT_RESP];
+	s->value[MONTHLY_CROOT_AUT_RESP]       += s->value[CROOT_AUT_RESP];
 	s->value[MONTHLY_BRANCH_AUT_RESP]      += s->value[BRANCH_AUT_RESP];
 	s->value[MONTHLY_TOTAL_AUT_RESP]       += s->value[TOTAL_AUT_RESP];
 
 	/* annual */
 	s->value[YEARLY_LEAF_AUT_RESP]         += s->value[LEAF_AUT_RESP];
-	s->value[YEARLY_FINE_ROOT_AUT_RESP]    += s->value[FROOT_AUT_RESP];
+	s->value[YEARLY_FROOT_AUT_RESP]        += s->value[FROOT_AUT_RESP];
 	s->value[YEARLY_STEM_AUT_RESP]         += s->value[STEM_AUT_RESP];
-	s->value[YEARLY_COARSE_ROOT_AUT_RESP]  += s->value[CROOT_AUT_RESP];
+	s->value[YEARLY_CROOT_AUT_RESP]        += s->value[CROOT_AUT_RESP];
 	s->value[YEARLY_BRANCH_AUT_RESP]       += s->value[BRANCH_AUT_RESP];
 	s->value[YEARLY_TOTAL_AUT_RESP]        += s->value[TOTAL_AUT_RESP];
 

@@ -903,8 +903,8 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 											s->value[BRANCH_DEAD_WOOD_C],
 											s->value[YEARLY_STEM_AUT_RESP],
 											s->value[YEARLY_LEAF_AUT_RESP],
-											s->value[YEARLY_FINE_ROOT_AUT_RESP],
-											s->value[YEARLY_COARSE_ROOT_AUT_RESP],
+											s->value[YEARLY_FROOT_AUT_RESP],
+											s->value[YEARLY_CROOT_AUT_RESP],
 											s->value[YEARLY_BRANCH_AUT_RESP]);
 
 							}

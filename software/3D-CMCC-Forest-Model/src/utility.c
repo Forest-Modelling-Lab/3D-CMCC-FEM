@@ -315,10 +315,6 @@ void reset_daily_class_variables(cell_t *const c)
 					s->value[C_LEAF_TO_LITR] =          0.;
 					s->value[C_FROOT_TO_LITR] =         0.;
 
-					/* leaf fine root fall */
-					s->value[LEAF_TO_REMOVE] =          0.;
-					s->value[FROOT_TO_REMOVE] =         0.;
-
 					/* reset daily nitrogen fluxes among pools */
 					s->value[N_TO_LEAF] =               0.;
 					s->value[N_TO_ROOT] =               0.;
@@ -407,9 +403,9 @@ void reset_monthly_class_variables(cell_t *const c)
 					s->value[MONTHLY_TOTAL_MAINT_RESP] =     0.;
 					s->value[MONTHLY_TOTAL_GROWTH_RESP] =    0.;
 					s->value[MONTHLY_LEAF_AUT_RESP] =        0.;
-					s->value[MONTHLY_FINE_ROOT_AUT_RESP] =   0.;
+					s->value[MONTHLY_FROOT_AUT_RESP] =       0.;
 					s->value[MONTHLY_STEM_AUT_RESP] =        0.;
-					s->value[MONTHLY_COARSE_ROOT_AUT_RESP] = 0.;
+					s->value[MONTHLY_CROOT_AUT_RESP] =       0.;
 					s->value[MONTHLY_BRANCH_AUT_RESP] =      0.;
 					s->value[MONTHLY_TOTAL_AUT_RESP] =       0.;
 					s->value[MONTHLY_CANOPY_TRANSP] =        0.;
@@ -468,6 +464,11 @@ void reset_annual_class_variables(cell_t *const c)
 
 					s->value[PEAK_LAI_PROJ] =               0.;
 					s->value[MAX_LEAF_C] =                  0.;
+
+					/* leaf fine root fall */
+					s->value[LEAF_TO_REMOVE] =              0.;
+					s->value[FROOT_TO_REMOVE] =             0.;
+
 					/*reset cumulative values*/
 					s->counter[LEAF_FALL_COUNTER] =         0;
 					s->counter[VEG_DAYS] =                  0;
@@ -483,9 +484,9 @@ void reset_annual_class_variables(cell_t *const c)
 					s->value[YEARLY_TOTAL_MAINT_RESP] =     0.;
 					s->value[YEARLY_TOTAL_GROWTH_RESP] =    0.;
 					s->value[YEARLY_LEAF_AUT_RESP] =        0.;
-					s->value[YEARLY_FINE_ROOT_AUT_RESP] =   0.;
+					s->value[YEARLY_FROOT_AUT_RESP] =       0.;
 					s->value[YEARLY_STEM_AUT_RESP] =        0.;
-					s->value[YEARLY_COARSE_ROOT_AUT_RESP] = 0.;
+					s->value[YEARLY_CROOT_AUT_RESP] =       0.;
 					s->value[YEARLY_BRANCH_AUT_RESP] =      0.;
 					s->value[YEARLY_TOTAL_AUT_RESP] =       0.;
 					s->value[YEARLY_CANOPY_TRANSP] =        0.;
