@@ -266,7 +266,7 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 	logger(g_debug_log, "C_CROOT_LIVE_WOOD_TO_DEADWOOD = %g tC/cell/day\n", s->value[C_CROOT_LIVE_WOOD_TO_DEADWOOD]);
 	logger(g_debug_log, "C_BRANCH_LIVE_WOOD_TO_DEAD_WOOD = %g tC/cell/day\n", s->value[C_BRANCH_LIVE_WOOD_TO_DEAD_WOOD]);
 
-	/* leaf fall */
+	/* leaf and fine root fall */
 	leaf_fall_evergreen(c, height, dbh, age, species);
 
 	/* turnover */

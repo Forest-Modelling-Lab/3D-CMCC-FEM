@@ -63,20 +63,11 @@ void leaf_fall_deciduous ( cell_t *const c, const int height, const int dbh, con
 		/* a simple linear correlation from leaf carbon to remove and fine root to remove */
 		s->value[FROOT_TO_REMOVE]  = ( s->value[FROOT_C] * s->value[LEAF_TO_REMOVE]) / s->value[LEAF_C];
 
+
+
+		/****************this block should go away ********************************/
+
 		/* compute fluxes of carbon leaf and fine root pool */
-#if 0
-		//note as it should be:
-		s->value[LEAF_C]             -= s->value[LEAF_TO_REMOVE];
-		s->value[FROOT_C]            -= s->value[FROOT_TO_REMOVE];
-
-		s->value[C_LEAF_TO_LITR]      = s->value[LEAF_TO_REMOVE] * ( 1. - FRAC_TO_RETRANSL);
-		s->value[C_FROOT_TO_LITR]     = s->value[FROOT_TO_REMOVE] * ( 1. - FRAC_TO_RETRANSL);
-		s->value[C_LEAF_TO_RESERVE]   = s->value[LEAF_TO_REMOVE] * FRAC_TO_RETRANSL;
-		s->value[C_FROOT_TO_RESERVE]  = s->value[FROOT_TO_REMOVE] * FRAC_TO_RETRANSL;
-
-		s->value[C_TO_LEAF]         -= s->value[C_LEAF_TO_LITR];
-		s->value[C_TO_FROOT]        -= s->value[C_FROOT_TO_LITR];
-#else
 		/* following Campioli et al., 2013 and Bossel 1996 10% of leaf and fine root Carbon is daily re-translocated as reserve in the reserve pool */
 		/* compute amount of leaf and fine root Carbon to re-translocate as reserve */
 
@@ -93,7 +84,6 @@ void leaf_fall_deciduous ( cell_t *const c, const int height, const int dbh, con
 		s->value[C_TO_FROOT]       = -s->value[FROOT_TO_REMOVE];
 		s->value[C_LEAF_TO_LITR]   = s->value[LEAF_TO_REMOVE] - s->value[C_LEAF_TO_RESERVE];
 		s->value[C_FROOT_TO_LITR]  = s->value[FROOT_TO_REMOVE] - s->value[C_FROOT_TO_RESERVE];
-#endif
 		/* nitrogen */
 		//fixme wrong!!!
 
@@ -152,20 +142,19 @@ void leaf_fall_evergreen ( cell_t *const c, const int height, const int dbh, con
 void leaf_fall (species_t *const s)
 {
 
-	/* update carbon leaf and fine root pools */
-	s->value[LEAF_C]            -= s->value[LEAF_TO_REMOVE];
-	s->value[FROOT_C]           -= s->value[FROOT_TO_REMOVE];
-
 	/* compute fluxes of carbon leaf and fine root pool */
 	s->value[C_LEAF_TO_LITR]     = s->value[LEAF_TO_REMOVE] * ( 1. - FRAC_TO_RETRANSL);
 	s->value[C_FROOT_TO_LITR]    = s->value[FROOT_TO_REMOVE] * ( 1. - FRAC_TO_RETRANSL);
 	s->value[C_LEAF_TO_RESERVE]  = s->value[LEAF_TO_REMOVE] * FRAC_TO_RETRANSL;
 	s->value[C_FROOT_TO_RESERVE] = s->value[FROOT_TO_REMOVE] * FRAC_TO_RETRANSL;
 
-	/* for evergreen to balance leaf_C in and out */
-	//fixme include leaf and fine root to reserve not counted here
-	s->value[C_TO_LEAF]         -= s->value[C_LEAF_TO_LITR];
-	s->value[C_TO_FROOT]        -= s->value[C_FROOT_TO_LITR];
+	/* balancing leaf_C in and out */
+	s->value[C_TO_LEAF]         -= (s->value[C_LEAF_TO_LITR] + s->value[C_LEAF_TO_RESERVE]);
+	s->value[C_TO_FROOT]        -= (s->value[C_FROOT_TO_LITR] + s->value[C_FROOT_TO_RESERVE]);
+
+	/* adding to main C transfer pools */
+	s->value[C_TO_RESERVE]      += (s->value[C_LEAF_TO_RESERVE] + s->value[C_FROOT_TO_RESERVE]);
+	s->value[C_TO_LITR]          = (s->value[C_LEAF_TO_LITR] + s->value[C_FROOT_TO_LITR]);
 
 
 	//todo Nitrogen fluxes
