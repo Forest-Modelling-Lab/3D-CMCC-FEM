@@ -132,17 +132,9 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 		who showed that only 44% of carbon in leaves came from
 		carbon reserves in beech trees" (Barbaroux et al., 2003) */
 
-		/* following Friedlingstein et al.,1998 and Krinner et al.,2005 during budburst model allocates
-		 to leaf and fine root */
+		/* following Friedlingstein et al.,1998 and Krinner et al.,2005 during budburst model allocates to leaf and fine root */
 
-		/*following Campioli et al., 2008, Maillard et al., 1994, Barbaroux et al., 2003*/
-
-		//test check it it seem that doesn't work!!
-		//SERGIO
-		//frac_to_foliage_fineroot = (s->value[RESERVE]) / s->counter[BUD_BURST_COUNTER];
-		//parameter = 2.0 / pow(s->value[BUD_BURST],2.0);
-		//frac_to_foliage_fineroot = (s->value[RESERVE]) * parameter * (s->value[BUD_BURST]+1.0 - s->counter[BUD_BURST_COUNTER]);
-		//logger(g_debug_log, "fraction of reserve for foliage and fine root = %g\n", frac_to_foliage_fineroot);
+		/* following Campioli et al., 2008, Maillard et al., 1994, Barbaroux et al., 2003*/
 
 		reserve_for_foliage_budburst = s->value[MAX_LEAF_C] / (s->value[BUD_BURST]+1.0);
 		logger(g_debug_log, "daily amount of reserve for foliage budburst %g = tC/cell/day\n", reserve_for_foliage_budburst);
@@ -156,12 +148,12 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 		s->value[C_TO_LEAF]        = reserve_for_foliage_budburst;
 		s->value[C_TO_FROOT]       = reserve_for_fine_root_budburst;
 		s->value[C_TO_RESERVE]     = npp_to_alloc - reserve_for_budburst;
-		s->value[C_TO_CROOT]       = 0.0;
-		s->value[C_TO_STEM]        = 0.0;
-		s->value[C_TO_BRANCH]      = 0.0;
-		s->value[C_TO_FRUIT]       = 0.0;
-		s->value[C_LEAF_TO_LITR]   = 0.0;
-		s->value[C_FROOT_TO_LITR]  = 0.0;
+		//s->value[C_TO_CROOT]       = 0.0;
+		//s->value[C_TO_STEM]        = 0.0;
+		//s->value[C_TO_BRANCH]      = 0.0;
+		//s->value[C_TO_FRUIT]       = 0.0;
+		//s->value[C_LEAF_TO_LITR]   = 0.0;
+		//s->value[C_FROOT_TO_LITR]  = 0.0;
 
 		break;
 		/**********************************************************************/
@@ -181,14 +173,14 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 
 				/* allocating into c pools */
 				s->value[C_TO_RESERVE]     = npp_to_alloc * pL;
-				s->value[C_TO_FROOT]       = 0.0;
+				//s->value[C_TO_FROOT]       = 0.0;
 				s->value[C_TO_CROOT]       = s->value[NPP_tC] * pR;
 				s->value[C_TO_STEM]        = (s->value[NPP_tC] * pS) * (1.0 - s->value[FRACBB]);
 				s->value[C_TO_BRANCH]      = (s->value[NPP_tC] * pS) * s->value[FRACBB];
-				s->value[C_TO_LEAF]        = 0.0;
-				s->value[C_TO_FRUIT]       = 0.0;
-				s->value[C_LEAF_TO_LITR]   = 0.0;
-				s->value[C_FROOT_TO_LITR]  = 0.0;
+				//s->value[C_TO_LEAF]        = 0.0;
+				//s->value[C_TO_FRUIT]       = 0.0;
+				//s->value[C_LEAF_TO_LITR]   = 0.0;
+				//s->value[C_FROOT_TO_LITR]  = 0.0;
 			}
 			/* it needs */
 			else
@@ -197,14 +189,14 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 
 				/* allocating into c pools */
 				s->value[C_TO_RESERVE]     = npp_to_alloc;
-				s->value[C_TO_FROOT]       = 0.0;
-				s->value[C_TO_CROOT]       = 0.0;
-				s->value[C_TO_TOT_STEM]    = 0.0;
-				s->value[C_TO_BRANCH]      = 0.0;
-				s->value[C_TO_LEAF]        = 0.0;
-				s->value[C_TO_FRUIT]       = 0.0;
-				s->value[C_LEAF_TO_LITR]   = 0.0;
-				s->value[C_FROOT_TO_LITR]  = 0.0;
+				//s->value[C_TO_FROOT]       = 0.0;
+				//s->value[C_TO_CROOT]       = 0.0;
+				//s->value[C_TO_TOT_STEM]    = 0.0;
+				//s->value[C_TO_BRANCH]      = 0.0;
+				//s->value[C_TO_LEAF]        = 0.0;
+				//s->value[C_TO_FRUIT]       = 0.0;
+				//s->value[C_LEAF_TO_LITR]   = 0.0;
+				//s->value[C_FROOT_TO_LITR]  = 0.0;
 			}
 		}
 		else
@@ -213,14 +205,14 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 
 			/* allocating into c pools */
 			s->value[C_TO_RESERVE]     = npp_to_alloc;
-			s->value[C_TO_FROOT]       = 0.0;
-			s->value[C_TO_CROOT]       = 0.0;
-			s->value[C_TO_STEM]        = 0.0;
-			s->value[C_TO_BRANCH]      = 0.0;
-			s->value[C_TO_LEAF]        = 0.0;
-			s->value[C_TO_FRUIT]       = 0.0;
-			s->value[C_LEAF_TO_LITR  ] = 0.0;
-			s->value[C_FROOT_TO_LITR]  = 0.0;
+			//s->value[C_TO_FROOT]       = 0.0;
+			//s->value[C_TO_CROOT]       = 0.0;
+			//s->value[C_TO_STEM]        = 0.0;
+			//s->value[C_TO_BRANCH]      = 0.0;
+			//s->value[C_TO_LEAF]        = 0.0;
+			//s->value[C_TO_FRUIT]       = 0.0;
+			//s->value[C_LEAF_TO_LITR]   = 0.0;
+			//s->value[C_FROOT_TO_LITR]  = 0.0;
 		}
 
 		break;
@@ -232,7 +224,7 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 
 		if (npp_to_alloc > 0.0 && s->value[RESERVE_C] >= s->value[MIN_RESERVE_C])
 		{
-			/* reproduction */
+			/* fruit pool */
 			if ( g_settings->regeneration && ( a->value > s->value[SEXAGE] ) )
 			{
 				logger(g_debug_log, "allocating into fruit pool\n");
@@ -246,18 +238,15 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 			s->value[C_TO_FRUIT] = 0.0;
 		}
 
+		/* allocating into c pools */
+		//s->value[C_TO_CROOT]   = 0.0;
+		//s->value[C_TO_STEM]    = 0.0;
+		//s->value[C_TO_BRANCH]  = 0.0;
+		/* including retranslocated C */
+		s->value[C_TO_RESERVE] = npp_to_alloc ;
+
 		/* leaf fall */
 		leaf_fall_deciduous(c, height, dbh, age, species);
-
-		/* note: these are computed in leaf_fall_deciduous function */
-		//		s->value[C_TO_LEAF] = ;
-		//		s->value[C_TO_FINEROOT] = ;
-		/* allocating into c pools */
-		s->value[C_TO_CROOT]   = 0.0;
-		s->value[C_TO_STEM]    = 0.0;
-		s->value[C_TO_BRANCH]  = 0.0;
-		/* including retranslocated C */
-		s->value[C_TO_RESERVE] = npp_to_alloc + s->value[C_LEAF_TO_RESERVE] + s->value[C_FROOT_TO_RESERVE];
 
 		break;
 		/**********************************************************************/
@@ -266,14 +255,14 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 		logger(g_debug_log, "consuming reserve pool\n");
 
 		/* allocating into c pools */
-		s->value[C_TO_LEAF]        = 0.0;
-		s->value[C_TO_FROOT]       = 0.0;
-		s->value[C_TO_CROOT]       = 0.0;
-		s->value[C_TO_STEM]        = 0.0;
-		s->value[C_TO_BRANCH]      = 0.0;
-		s->value[C_TO_FRUIT]       = 0.0;
-		s->value[C_LEAF_TO_LITR]   = 0.0;
-		s->value[C_FROOT_TO_LITR]  = 0.0;
+		//s->value[C_TO_LEAF]        = 0.0;
+		//s->value[C_TO_FROOT]       = 0.0;
+		//s->value[C_TO_CROOT]       = 0.0;
+		//s->value[C_TO_STEM]        = 0.0;
+		//s->value[C_TO_BRANCH]      = 0.0;
+		//s->value[C_TO_FRUIT]       = 0.0;
+		//s->value[C_LEAF_TO_LITR]   = 0.0;
+		//s->value[C_FROOT_TO_LITR]  = 0.0;
 		s->value[C_TO_RESERVE]     = npp_to_alloc;
 
 		break;

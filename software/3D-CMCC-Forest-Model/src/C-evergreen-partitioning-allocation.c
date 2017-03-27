@@ -125,33 +125,18 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 				logger(g_debug_log, "Allocating only into foliage and fine root pools (positive NPP)\n");
 				s->value[C_TO_LEAF]    = npp_to_alloc * (1.0 - s->value[FROOT_LEAF_FRAC]);
 				s->value[C_TO_FROOT]   = npp_to_alloc - s->value[C_TO_LEAF];
-				s->value[C_TO_RESERVE] = 0.0;
 			}
 			/* it needs */
 			else if (s->value[RESERVE_C] < s->value[MIN_RESERVE_C])
 			{
 				logger(g_debug_log, "Allocating only into reserve pool (low reserves, positive NPP)\n");
-				s->value[C_TO_LEAF]    = 0.0;
-				s->value[C_TO_FROOT]   = 0.0;
 				s->value[C_TO_RESERVE] = npp_to_alloc;
 			}
-
-			s->value[C_TO_CROOT]       = 0.0;
-			s->value[C_TO_STEM]        = 0.0;
-			s->value[C_TO_BRANCH]      = 0.0;
-			s->value[C_TO_FRUIT]       = 0.0;
-
 		}
 		else
 		{
 			logger(g_debug_log, "Consuming reserve pool (negative NPP)\n");
-			s->value[C_TO_LEAF]        = 0.0;
-			s->value[C_TO_FROOT]       = 0.0;
 			s->value[C_TO_RESERVE]     = npp_to_alloc;
-			s->value[C_TO_CROOT]       = 0.0;
-			s->value[C_TO_STEM]        = 0.0;
-			s->value[C_TO_BRANCH]      = 0.0;
-			s->value[C_TO_FRUIT]       = 0.0;
 		}
 		/**********************************************************************/
 		break;
@@ -179,16 +164,10 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 					s->value[C_TO_FRUIT] = npp_to_alloc * s->value[FRUIT_PERC];
 					npp_to_alloc -= s->value[C_TO_FRUIT];
 				}
-				else
-				{
-					s->value[C_TO_FRUIT] = 0.0;
-				}
-				s->value[C_TO_LEAF]      = 0.0;
 				s->value[C_TO_CROOT]     = npp_to_alloc * pR;
-				s->value[C_TO_FROOT]     = 0.0;
-				s->value[C_TO_RESERVE]   = (npp_to_alloc * pL);
+				s->value[C_TO_RESERVE]   = npp_to_alloc * pL;
 				s->value[C_TO_TOT_STEM]  = npp_to_alloc * pS;
-				s->value[C_TO_STEM]      = (npp_to_alloc* pS) * (1.0 - s->value[FRACBB]);
+				s->value[C_TO_STEM]      = (npp_to_alloc * pS) * (1.0 - s->value[FRACBB]);
 				s->value[C_TO_BRANCH]    = (npp_to_alloc * pS) * s->value[FRACBB];
 			}
 			/* it needs */
@@ -196,26 +175,12 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 			{
 				logger(g_debug_log, "Allocating only into reserve pool (low reserves, positive NPP)\n");
 				s->value[C_TO_RESERVE]   = npp_to_alloc;
-				s->value[C_TO_FROOT]     = 0.0;
-				s->value[C_TO_CROOT]     = 0.0;
-				s->value[C_TO_TOT_STEM]  = 0.0;
-				s->value[C_TO_STEM]      = 0.0;
-				s->value[C_TO_BRANCH]    = 0.0;
-				s->value[C_TO_LEAF]      = 0.0;
-				s->value[C_TO_FRUIT]     = 0.0;
 			}
 		}
 		else
 		{
 			logger(g_debug_log, "Consuming reserve pool (negative NPP)\n");
 			s->value[C_TO_RESERVE]       = npp_to_alloc;
-			s->value[C_TO_FROOT]         = 0.0;
-			s->value[C_TO_CROOT]         = 0.0;
-			s->value[C_TO_TOT_STEM]      = 0.0;
-			s->value[C_TO_STEM]          = 0.0;
-			s->value[C_TO_BRANCH]        = 0.0;
-			s->value[C_TO_LEAF]          = 0.0;
-			s->value[C_TO_FRUIT]         = 0.0;
 		}
 		/**********************************************************************/
 		break;
@@ -227,9 +192,6 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 
 	/* update live_total wood fraction based on age */
 	live_total_wood_age (a, species);
-
-	/* leaf fall */
-	//leaf_fall_evergreen(c, height, dbh, age, species);
 
 	/* allocate daily carbon */
 	carbon_allocation ( c, s );

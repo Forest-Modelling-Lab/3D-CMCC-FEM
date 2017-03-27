@@ -63,46 +63,28 @@ void leaf_fall_deciduous ( cell_t *const c, const int height, const int dbh, con
 		/* a simple linear correlation from leaf carbon to remove and fine root to remove */
 		s->value[FROOT_TO_REMOVE]  = ( s->value[FROOT_C] * s->value[LEAF_TO_REMOVE]) / s->value[LEAF_C];
 
-
-
-		/****************this block should go away ********************************/
-
-		/* compute fluxes of carbon leaf and fine root pool */
-		/* following Campioli et al., 2013 and Bossel 1996 10% of leaf and fine root Carbon is daily re-translocated as reserve in the reserve pool */
-		/* compute amount of leaf and fine root Carbon to re-translocate as reserve */
-
-		/* retranslocating carbon and nitrogen */
-		s->value[C_LEAF_TO_RESERVE]  = (s->value[LEAF_C] * FRAC_TO_RETRANSL) / s->counter[DAY_FRAC_FOLIAGE_REMOVE];
-		s->value[N_LEAF_TO_RESERVE]  = s->value[C_LEAF_TO_RESERVE]/s->value[CN_LEAVES];
-
-		s->value[C_FROOT_TO_RESERVE] = (s->value[FROOT_C] * FRAC_TO_RETRANSL) /s->counter[DAY_FRAC_FOLIAGE_REMOVE];
-		s->value[N_FROOT_TO_RESERVE] = s->value[C_FROOT_TO_RESERVE]/s->value[CN_FINE_ROOTS];
-
-		/* update leaf and fine root */
-		/* carbon */
-		s->value[C_TO_LEAF]        = -s->value[LEAF_TO_REMOVE] ;
-		s->value[C_TO_FROOT]       = -s->value[FROOT_TO_REMOVE];
-		s->value[C_LEAF_TO_LITR]   = s->value[LEAF_TO_REMOVE] - s->value[C_LEAF_TO_RESERVE];
-		s->value[C_FROOT_TO_LITR]  = s->value[FROOT_TO_REMOVE] - s->value[C_FROOT_TO_RESERVE];
-		/* nitrogen */
-		//fixme wrong!!!
+		/* reconcile leaf and fine root */
+		leaf_fall ( s );
 
 	}
 	else
 	{
 		/** LAST DAY OF LEAF FALL **/
 		logger(g_debug_log, "Last day of leaf fall\n");
-		s->value[C_TO_LEAF]              = - s->value[LEAF_C];
-		s->value[C_TO_FROOT]             = - s->value[FROOT_C];
 
-		/* assuming that the last day of leaf fall all the remaining carbon goes to reserve */
-		/* carbon */
-		s->value[C_LEAF_TO_RESERVE]      = s->value[LEAF_C];
-		s->value[C_FROOT_TO_RESERVE]     = s->value[FROOT_C];
-		s->value[C_LEAF_TO_LITR]         = 0.;
-		s->value[C_FROOT_TO_LITR]        = 0.;
-		/* nitrogen */
-		//fixme wrong!!!
+		//assumption: last day of leaf fall all C goes to litter with no retranslocation
+		s->value[C_LEAF_TO_LITR]     = s->value[LEAF_C];
+		s->value[C_FROOT_TO_LITR]    = s->value[FROOT_C];
+		s->value[C_LEAF_TO_RESERVE]  = 0.;
+		s->value[C_FROOT_TO_RESERVE] = 0.;
+
+		/* balancing leaf_C in and out */
+		s->value[C_TO_LEAF]          = - s->value[LEAF_C];
+		s->value[C_TO_FROOT]         = - s->value[FROOT_C];
+
+		/* adding to main C transfer pools */
+		s->value[C_TO_RESERVE]      += 0.; /*leave it as so */
+		s->value[C_TO_LITR]          = (s->value[LEAF_C] + s->value[FROOT_C]);
 
 	}
 
@@ -143,18 +125,18 @@ void leaf_fall (species_t *const s)
 {
 
 	/* compute fluxes of carbon leaf and fine root pool */
-	s->value[C_LEAF_TO_LITR]     = s->value[LEAF_TO_REMOVE] * ( 1. - FRAC_TO_RETRANSL);
-	s->value[C_FROOT_TO_LITR]    = s->value[FROOT_TO_REMOVE] * ( 1. - FRAC_TO_RETRANSL);
-	s->value[C_LEAF_TO_RESERVE]  = s->value[LEAF_TO_REMOVE] * FRAC_TO_RETRANSL;
-	s->value[C_FROOT_TO_RESERVE] = s->value[FROOT_TO_REMOVE] * FRAC_TO_RETRANSL;
+	s->value[C_LEAF_TO_LITR]     = s->value[LEAF_TO_REMOVE]     * ( 1. - FRAC_TO_RETRANSL);
+	s->value[C_FROOT_TO_LITR]    = s->value[FROOT_TO_REMOVE]    * ( 1. - FRAC_TO_RETRANSL);
+	s->value[C_LEAF_TO_RESERVE]  = s->value[LEAF_TO_REMOVE]     * FRAC_TO_RETRANSL;
+	s->value[C_FROOT_TO_RESERVE] = s->value[FROOT_TO_REMOVE]    * FRAC_TO_RETRANSL;
 
 	/* balancing leaf_C in and out */
-	s->value[C_TO_LEAF]         -= (s->value[C_LEAF_TO_LITR] + s->value[C_LEAF_TO_RESERVE]);
-	s->value[C_TO_FROOT]        -= (s->value[C_FROOT_TO_LITR] + s->value[C_FROOT_TO_RESERVE]);
+	s->value[C_TO_LEAF]         -= (s->value[C_LEAF_TO_LITR]    + s->value[C_LEAF_TO_RESERVE]);
+	s->value[C_TO_FROOT]        -= (s->value[C_FROOT_TO_LITR]   + s->value[C_FROOT_TO_RESERVE]);
 
 	/* adding to main C transfer pools */
 	s->value[C_TO_RESERVE]      += (s->value[C_LEAF_TO_RESERVE] + s->value[C_FROOT_TO_RESERVE]);
-	s->value[C_TO_LITR]          = (s->value[C_LEAF_TO_LITR] + s->value[C_FROOT_TO_LITR]);
+	s->value[C_TO_LITR]          = (s->value[C_LEAF_TO_LITR]    + s->value[C_FROOT_TO_LITR]);
 
 
 	//todo Nitrogen fluxes
