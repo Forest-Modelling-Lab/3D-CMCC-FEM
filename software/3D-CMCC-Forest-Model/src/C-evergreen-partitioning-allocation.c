@@ -127,7 +127,7 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 				s->value[C_TO_FROOT]   = npp_to_alloc - s->value[C_TO_LEAF];
 			}
 			/* it needs */
-			else if (s->value[RESERVE_C] < s->value[MIN_RESERVE_C])
+			else
 			{
 				logger(g_debug_log, "Allocating only into reserve pool (low reserves, positive NPP)\n");
 				s->value[C_TO_RESERVE] = npp_to_alloc;

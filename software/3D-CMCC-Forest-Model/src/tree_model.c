@@ -58,6 +58,7 @@
 
 extern settings_t* g_settings;
 extern logger_t* g_debug_log;
+extern soil_settings_t* g_soil_settings;
 
 //extern const char sz_err_out_of_memory[];
 
@@ -191,17 +192,15 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 									"*                              species = %s                         *\n"
 									"*****************************************************************************\n", s->name);
 
-							//todo move into forest structure
-							/* note: this is valid only for north hemisphere */
 							/* beginning of simulation (every year included the first one) */
-							if ( c->doy == 1)
+							if ( ( g_soil_settings->values[SOIL_LAT] > 0 && c->doy == 1)  ||
+									( g_soil_settings->values[SOIL_LAT] < 0 && c->doy == 180) )
 							{
 								/* compute annual minimum reserve for incoming year */
 								annual_minimum_reserve( s );
 
 								/* compute annual Maximum LAI */
 								peak_lai( s, day, month, year );
-
 							}
 							/***************************************************************/
 							/* print at the beginning of simulation forest class data */
