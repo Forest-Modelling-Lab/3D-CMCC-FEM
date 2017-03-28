@@ -218,8 +218,6 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 								/* increment vegetative days counter */
 								++s->counter[VEG_DAYS];
 								logger(g_debug_log, "VEG_DAYS = %d \n", s->counter[VEG_DAYS]);
-
-								//++s->counter[YEARLY_VEG_DAYS];
 							}
 							else
 							{
@@ -228,12 +226,10 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 								/* increment vegetative days counter */
 								s->counter[VEG_DAYS] = 0;
 								logger(g_debug_log, "VEG_DAYS = %d \n", s->counter[VEG_DAYS]);
-
-								//s->counter[YEARLY_VEG_DAYS] += 0;
-
 							}
 
 							/*********************************************************************/
+
 							/** radiation **/
 							/* short wave band */
 							canopy_radiation_sw_band ( c, layer, height, dbh, age, species, meteo_daily );
@@ -241,6 +237,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							canopy_radiation_lw_band ( c, layer, height, dbh, age, species, meteo_daily );
 							/* net radiation */
 							canopy_net_radiation ( c, layer, height, dbh, age, species );
+
 							/**********************************************************************/
 
 							/* canopy temperature */
