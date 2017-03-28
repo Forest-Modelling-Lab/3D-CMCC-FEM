@@ -573,9 +573,12 @@ enum {
 	BRANCH_LIVE_WOOD_N,                 /* Current Live Branch nitrogen pool tN/sizeCell */
 	BRANCH_DEAD_WOOD_N,                 /* Current Dead Branch nitrogen pool tN/sizeCell */
 	RESERVE_N,                          /* Current Reserve nitrogen pool tN/sizeCell */
+	FRUIT_N,                            /* Current Friut nitrogen pool tN/sizeCell */
 	TREE_N_DEMAND,                      /* Current Nitrogen demand for new plant tissues tN/sizeCell */
-	LITTER_N,                           /* Current Litter nitrogen pool tN/sizeCell */
+	LITR_N,                             /* Current Litter nitrogen pool tN/sizeCell */
 	SOIL_N,                             /* Current soil nitrogen pool tN/sizeCell */
+	TOT_STEM_N,                         /* Current Total Stem nitrogen pool tN/sizeCell */
+	TOT_ROOT_N,                         /*Current Total root nitrogen pool tN/sizeCell */
 
 	/* per tree in kgN */
 	AV_LEAF_MASS_kgN,                   /* Average Leaf carbon pool kgN/tree */

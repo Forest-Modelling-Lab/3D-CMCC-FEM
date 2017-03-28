@@ -55,7 +55,7 @@ void leaf_fall_deciduous ( cell_t *const c, const int height, const int dbh, con
 
 		/* checl Leaf Area Index */
 		previousBiomass_lai = previousLai * (s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell) / (s->value[SLA_AVG] * 1000.0);
-		newBiomass_lai      = currentLai * (s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell) / (s->value[SLA_AVG] * 1000.0);
+		newBiomass_lai      = currentLai  * (s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell) / (s->value[SLA_AVG] * 1000.0);
 
 		/* update leaf carbon */
 		s->value[LEAF_TO_REMOVE]   = previousBiomass_lai - newBiomass_lai;
@@ -72,7 +72,7 @@ void leaf_fall_deciduous ( cell_t *const c, const int height, const int dbh, con
 		/** LAST DAY OF LEAF FALL **/
 		logger(g_debug_log, "Last day of leaf fall\n");
 
-		//assumption: last day of leaf fall all C goes to litter with no retranslocation
+		//assumption: last day of leaf fall all carbon goes to litter with no retranslocation
 		s->value[C_LEAF_TO_LITR]     = s->value[LEAF_C];
 		s->value[C_FROOT_TO_LITR]    = s->value[FROOT_C];
 		s->value[C_LEAF_TO_RESERVE]  = 0.;
@@ -86,6 +86,20 @@ void leaf_fall_deciduous ( cell_t *const c, const int height, const int dbh, con
 		s->value[C_TO_RESERVE]      += 0.; /*leave it as so */
 		s->value[C_TO_LITR]          = (s->value[LEAF_C] + s->value[FROOT_C]);
 
+		//assumption: last day of leaf fall all nitrogen goes to litter with no retranslocation
+		s->value[N_LEAF_TO_LITR]     = s->value[LEAF_N];
+		s->value[N_FROOT_TO_LITR]    = s->value[FROOT_N];
+		s->value[N_LEAF_TO_RESERVE]  = 0.;
+		s->value[N_FROOT_TO_RESERVE] = 0.;
+
+		/* balancing leaf_C in and out */
+		s->value[N_TO_LEAF]          = - s->value[LEAF_N];
+		s->value[N_TO_FROOT]         = - s->value[FROOT_N];
+
+		/* adding to main C transfer pools */
+		s->value[N_TO_RESERVE]      += 0.; /*leave it as so */
+		s->value[N_TO_LITR]          = (s->value[LEAF_N] + s->value[FROOT_N]);
+
 	}
 
 	/* update litter pool */
@@ -95,6 +109,7 @@ void leaf_fall_deciduous ( cell_t *const c, const int height, const int dbh, con
 
 void leaf_fall_evergreen ( cell_t *const c, const int height, const int dbh, const int age, const int species )
 {
+
 	species_t *s;
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
@@ -109,11 +124,12 @@ void leaf_fall_evergreen ( cell_t *const c, const int height, const int dbh, con
 
 		/* daily fine root turnover rate */
 		s->value[FROOT_TO_REMOVE]   = (s->value[FROOT_C] * s->value[LEAF_FROOT_TURNOVER]) / 365;
+
+		//fixme
+		/* retranslocate for falling leaves Nitrogen and update current Nitrogen amount */
+		//s->value[LEAF_N] = (s->value[LEAF_TO_REMOVE] / s->value[CN_FALLING_LEAVES]) + ((s->value[LEAF_C] - s->value[LEAF_TO_REMOVE])/s->value[CN_LEAVES]);
+		//s->value[RESERVE_N]
 	}
-	logger(g_debug_log, "LEAF_C %.8g\n", s->value[LEAF_C]);
-	logger(g_debug_log, "FROOT_C %.8g\n", s->value[FROOT_C]);
-	logger(g_debug_log, "leaf to remove %.8g\n", s->value[LEAF_TO_REMOVE]);
-	logger(g_debug_log, "froot to remove %.8g\n", s->value[FROOT_TO_REMOVE]);
 
 	/*************************************************************************************************************/
 
@@ -128,6 +144,7 @@ void leaf_fall_evergreen ( cell_t *const c, const int height, const int dbh, con
 void leaf_fall (species_t *const s)
 {
 
+	/*** carbon leaf_fall ***/
 	/* compute fluxes of carbon leaf and fine root pool */
 	s->value[C_LEAF_TO_LITR]     = s->value[LEAF_TO_REMOVE]     * ( 1. - FRAC_TO_RETRANSL);
 	s->value[C_FROOT_TO_LITR]    = s->value[FROOT_TO_REMOVE]    * ( 1. - FRAC_TO_RETRANSL);
@@ -142,18 +159,26 @@ void leaf_fall (species_t *const s)
 	s->value[C_TO_RESERVE]      += (s->value[C_LEAF_TO_RESERVE] + s->value[C_FROOT_TO_RESERVE]);
 	s->value[C_TO_LITR]          = (s->value[C_LEAF_TO_LITR]    + s->value[C_FROOT_TO_LITR]);
 
-	logger(g_debug_log, "C_TO_LEAF %.8g\n", s->value[C_TO_LEAF]);
-	logger(g_debug_log, "C_TO_FROOT %.8g\n", s->value[C_TO_FROOT]);
-	logger(g_debug_log, "C_TO_RESERVE %.8g\n", s->value[C_TO_RESERVE]);
-	logger(g_debug_log, "C_TO_LITR %.8g\n", s->value[C_TO_LITR]);
+	/*** nitrogen leaf_fall ***/
+	/* compute fluxes of nitrogen leaf and fine root pool */
+	s->value[N_LEAF_TO_LITR]     = (s->value[LEAF_TO_REMOVE]  / s->value[CN_LEAVES])     * ( 1. - FRAC_TO_RETRANSL);
+	s->value[N_FROOT_TO_LITR]    = (s->value[FROOT_TO_REMOVE] / s->value[CN_FINE_ROOTS]) * ( 1. - FRAC_TO_RETRANSL);
+	s->value[N_LEAF_TO_RESERVE]  = (s->value[LEAF_TO_REMOVE]  / s->value[CN_LEAVES])     * FRAC_TO_RETRANSL;
+	s->value[N_FROOT_TO_RESERVE] = (s->value[FROOT_TO_REMOVE] / s->value[CN_FINE_ROOTS]) * FRAC_TO_RETRANSL;
 
+	/* balancing leaf_N in and out */
+	s->value[N_TO_LEAF]         -= (s->value[N_LEAF_TO_LITR]    + s->value[N_LEAF_TO_RESERVE]);
+	s->value[N_TO_FROOT]        -= (s->value[N_FROOT_TO_LITR]   + s->value[N_FROOT_TO_RESERVE]);
 
-	//todo Nitrogen fluxes
-
+	/* adding to main N transfer pools */
+	s->value[N_TO_RESERVE]      += (s->value[N_LEAF_TO_RESERVE] + s->value[N_FROOT_TO_RESERVE]);
+	s->value[N_TO_LITR]          = (s->value[N_LEAF_TO_LITR]    + s->value[N_FROOT_TO_LITR]);
 
 	/* check */
 	CHECK_CONDITION(s->value[LEAF_C], <, 0.);
 	CHECK_CONDITION(s->value[FROOT_C], <, 0.);
+	CHECK_CONDITION(s->value[LEAF_N], <, 0.);
+	CHECK_CONDITION(s->value[FROOT_N], <, 0.);
 }
 
 void littering ( cell_t *const c, species_t *const s )
@@ -193,8 +218,6 @@ void littering ( cell_t *const c, species_t *const s )
 	/** nitrogen littering **/
 	/* nitrogen litter transfer to nitrogen litter pool */
 	/* convert carbon amount to nitrogen amount */
-	s->value[N_LEAF_TO_LITR]    = s->value[C_LEAF_TO_LITR] / s->value[CN_FALLING_LEAVES];
-	s->value[N_FROOT_TO_LITR]   = s->value[N_FROOT_TO_LITR] / s->value[CN_FINE_ROOTS];
 	s->value[N_TO_LITR]         = s->value[N_LEAF_TO_LITR] + s->value[N_FROOT_TO_LITR];
 
 	/* leaf litter nitrogen */

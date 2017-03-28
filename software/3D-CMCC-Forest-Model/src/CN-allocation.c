@@ -145,60 +145,87 @@ void nitrogen_allocation ( cell_t *const c, species_t *const s )
 	}
 
 #if 0
-	s->value[TOT_ROOT_N] = s->value[COARSE_ROOT_N] + s->value[FINE_ROOT_N];
+	s->value[LEAF_N]     += s->value[N_TO_LEAF];
+	s->value[FROOT_N]    += s->value[N_TO_FROOT];
+	//s->value[RESERVE_N]  += s->value[N_TO_RESERVE]; //fixme
+	s->value[STEM_N]     += s->value[C_TO_STEM];
+	s->value[BRANCH_N]   += s->value[C_TO_BRANCH];
+	s->value[CROOT_N]    += s->value[C_TO_CROOT];
+	//s->value[FRUIT_N]    += s->value[N_TO_FRUIT]; //fixme
+	s->value[TOT_ROOT_N] += s->value[CROOT_N] + s->value[FROOT_N];
+	s->value[TOT_STEM_N] += s->value[N_TO_STEM] + s->value[N_TO_BRANCH];
+	s->value[LITR_N]     += s->value[N_TO_LITR] /*+ s->value[N_FRUIT_TO_LITR]*/; //fixme
+
+
+	logger(g_debug_log, "N_TO_LEAF = %g tN/cell/day\n", s->value[N_TO_LEAF]);
+	logger(g_debug_log, "N_TO_FROOT = %g tN/cell/day\n", s->value[N_TO_FROOT]);
+	logger(g_debug_log, "N_TO_NROOT = %g tN/cell/day\n", s->value[N_TO_NROOT]);
+	logger(g_debug_log, "N_TO_STEM = %g tN/cell/day\n", s->value[N_TO_STEM]);
+	logger(g_debug_log, "N_TO_RESERVE = %g tN/cell/day\n", s->value[N_TO_RESERVE]);
+	logger(g_debug_log, "N_TO_BRANCH = %g tN/cell/day\n", s->value[N_TO_BRANCH]);
+	logger(g_debug_log, "N_TO_FRUIT = %g tN/cell/day\n", s->value[N_TO_FRUIT]);
+	logger(g_debug_log, "Leaf Nitrogen (Wl) = %g tN/Cell\n", s->value[LEAF_N]);
+	logger(g_debug_log, "Fine Root Nitrogen (Wrf) = %g tN/Cell\n", s->value[FROOT_N]);
+	logger(g_debug_log, "Reserve Nitrogen (Wres) = %g tN/Cell\n", s->value[RESERVE_N]);
+	logger(g_debug_log, "Stem Nitrogen (Ws) = %g tN/Cell\n", s->value[STEM_N]);
+	logger(g_debug_log, "Branch and Bark Nitrogen (Wbb) = %g tN/Cell\n", s->value[BRANCH_N]);
+	logger(g_debug_log, "Coarse Root Nitrogen (Wcr) = %g tN/Cell\n", s->value[CROOT_N]);
 	logger(g_debug_log, "Total Root Nitrogen (Wtr) = %g tN/Cell\n", s->value[TOT_ROOT_N]);
-
-	s->value[TOT_STEM_N] += s->value[C_TO_STEM] + s->value[C_TO_BRANCH];
 	logger(g_debug_log, "Total Stem Nitrogen (Wts)= %g tN/Cell\n", s->value[TOT_STEM_N]);
+	logger(g_debug_log, "Fruit Nitrogen (Wfruit)= %g tN/Cell\n", s->value[FRUIT_N]);
+	logger(g_debug_log, "Litter Nitrogen (Wlitter)= %g tN/Cell\n", s->value[LITR_N]);
 
-	s->value[FRUIT_N] += s->value[C_TO_FRUIT];
-	logger(g_debug_log, "Fuit Nitrogen (Wfruit)= %g tN/Cell\n", s->value[FRUIT_N]);
+	/***************************************************************************************/
 
-	s->value[LITTER_N] += s->value[C_TO_LITTER] + s->value[C_FRUIT_TO_LITTER];
-	logger(g_debug_log, "Litter Nitrogen (Wlitter)= %g tN/Cell\n", s->value[LITTER_N]);
+	/* sapwood and heartwood*/
+
+	s->value[STEM_SAPWOOD_C] += s->value[C_TO_STEM];
+	s->value[CROOT_SAPWOOD_C] += s->value[C_TO_CROOT];
+	s->value[BRANCH_SAPWOOD_C] += s->value[C_TO_BRANCH];
 
 
-	/* live-dead wood Nitrogen */
-	//test
-	/*
-	s->value[STEM_LIVE_WOOD_N] += (s->value[C_TO_STEM] * s->value[LIVE_TOTAL_WOOD_FRAC]);
-	s->value[STEM_LIVE_WOOD_N] -= s->value[C_STEM_LIVEWOOD_TO_DEADWOOD];
-	*/
-	s->value[STEM_LIVE_WOOD_N] = s->value[STEM_N] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
-	logger(g_debug_log, "Live Stem Nitrogen (Wsl) = %g tN/Cell\n", s->value[STEM_LIVE_WOOD_N]);
+#if 0
+	//test_new if not using the allometric equations for the sapwood amount
+	s->value[STEM_LIVE_WOOD_C] = s->value[STEM_SAPWOOD_C] * s->value[LIVE_TOTAL_WOOD_FRAC];
+#else
+	s->value[STEM_LIVE_WOOD_C] = s->value[STEM_C] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
+#endif
+	s->value[STEM_DEAD_WOOD_C] = s->value[STEM_C] - s->value[STEM_LIVE_WOOD_C];
+	s->value[STEM_HEARTWOOD_C] = s->value[STEM_C] - s->value[STEM_SAPWOOD_C];
 
-	s->value[STEM_DEAD_WOOD_N] = s->value[STEM_N] - s->value[STEM_LIVE_WOOD_N];
-	logger(g_debug_log, "Dead Stem Nitrogen (Wsd) = %g tN/Cell\n", s->value[STEM_DEAD_WOOD_N]);
+	/***************************************************************************************/
 
-	//test
-	/*
-	s->value[COARSE_ROOT_LIVE_WOOD_N] += (s->value[C_TO_NOARSEROOT] * s->value[LIVE_TOTAL_WOOD_FRAC]);
-	s->value[COARSE_ROOT_LIVE_WOOD_N] -= s->value[C_NOARSEROOT_LIVE_WOOD_TO_DEADWOOD];
-	*/
-	s->value[COARSE_ROOT_LIVE_WOOD_N] = s->value[COARSE_ROOT_N] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
-	logger(g_debug_log, "Live Coarse Nitrogen (Wcrl) = %g tN/Cell\n", s->value[COARSE_ROOT_LIVE_WOOD_N]);
+#if 0
+	//test_new if not using the allometric equations for the sapwood amount
+	s->value[CROOT_LIVE_WOOD_C] = s->value[COARSE_ROOT_SAPWOOD_C] * s->value[LIVE_TOTAL_WOOD_FRAC];
+#else
+	s->value[CROOT_LIVE_WOOD_C] = s->value[CROOT_C] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
+#endif
+	s->value[CROOT_DEAD_WOOD_C] = s->value[CROOT_C] - s->value[CROOT_LIVE_WOOD_C];
+	s->value[CROOT_HEARTWOOD_C] = s->value[CROOT_C] - s->value[CROOT_SAPWOOD_C];
 
-	s->value[COARSE_ROOT_DEAD_WOOD_N] = s->value[COARSE_ROOT_N] - s->value[COARSE_ROOT_LIVE_WOOD_N];
-	logger(g_debug_log, "Dead Coarse Nitrogen (Wcrd) = %g tN/Cell\n", s->value[COARSE_ROOT_DEAD_WOOD_N]);
+	/***************************************************************************************/
 
-	//test
-	/*
-	s->value[BRANCH_LIVE_WOOD_N] += (s->value[C_TO_BRANCH] * s->value[LIVE_TOTAL_WOOD_FRAC]);
-	s->value[BRANCH_LIVE_WOOD_N] -= s->value[C_BRANCH_LIVE_WOOD_TO_DEAD_WOOD];
-	*/
-	s->value[BRANCH_LIVE_WOOD_N] = s->value[BRANCH_N]* s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
-	logger(g_debug_log, "Live Stem Branch Nitrogen (Wbbl) = %g tN/Cell\n", s->value[BRANCH_LIVE_WOOD_N]);
+#if 0
+	//test_new if not using the allometric equations for the sapwood amount
+	s->value[BRANCH_LIVE_WOOD_C] = s->value[BRANCH_SAPWOOD_C] * s->value[LIVE_TOTAL_WOOD_FRAC];
+#else
+	s->value[BRANCH_LIVE_WOOD_C] = s->value[BRANCH_C]* s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
+#endif
+	s->value[BRANCH_DEAD_WOOD_C] = s->value[BRANCH_C] - s->value[BRANCH_LIVE_WOOD_C];
+	s->value[BRANCH_HEARTWOOD_C] = s->value[BRANCH_C] - s->value[BRANCH_SAPWOOD_C];
 
-	s->value[BRANCH_DEAD_WOOD_N] = s->value[BRANCH_N] - s->value[BRANCH_LIVE_WOOD_N];
-	logger(g_debug_log, "Dead Stem Branch Nitrogen (Wbbd) = %g tN/Cell\n", s->value[BRANCH_DEAD_WOOD_N]);
+	/***************************************************************************************/
 
-	s->value[TOTAL_N] = s->value[LEAF_N] +s->value[STEM_N] + s->value[BRANCH_N] + s->value[TOT_ROOT_N] + s->value[FRUIT_N] + s->value[RESERVE_N];
-	logger(g_debug_log, "Total Carbon Nitrogen (Wtot) = %g tN/Cell\n", s->value[TOTAL_N]);
+	s->value[TOTAL_C] = s->value[LEAF_C] +s->value[STEM_C] + s->value[BRANCH_C] + s->value[TOT_ROOT_C] + s->value[FRUIT_C] + s->value[RESERVE_C];
 
 	/* check for closure */
-	CHECK_NONDITION(fabs((s->value[STEM_LIVE_WOOD_N] + s->value[STEM_DEAD_WOOD_N])-s->value[STEM_N]),>,eps);
-	CHECK_NONDITION(fabs((s->value[COARSE_ROOT_LIVE_WOOD_N] + s->value[COARSE_ROOT_DEAD_WOOD_N])-s->value[COARSE_ROOT_N]),>,eps);
-	CHECK_NONDITION(fabs((s->value[BRANCH_LIVE_WOOD_N] + s->value[BRANCH_DEAD_WOOD_N])-s->value[BRANCH_N]),>,eps);
+	CHECK_CONDITION(fabs((s->value[STEM_LIVE_WOOD_C] + s->value[STEM_DEAD_WOOD_C])-s->value[STEM_C]),>,eps);
+	CHECK_CONDITION(fabs((s->value[CROOT_LIVE_WOOD_C] + s->value[CROOT_DEAD_WOOD_C])-s->value[CROOT_C]),>,eps);
+	CHECK_CONDITION(fabs((s->value[BRANCH_LIVE_WOOD_C] + s->value[BRANCH_DEAD_WOOD_C])-s->value[BRANCH_C]),>,eps);
 #endif
+
+
+
 
 }
