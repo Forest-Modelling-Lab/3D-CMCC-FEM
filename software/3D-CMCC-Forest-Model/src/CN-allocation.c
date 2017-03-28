@@ -139,6 +139,7 @@ void nitrogen_allocation ( cell_t *const c, species_t *const s )
 	/* daily Nitrogen demand */
 	s->value[TREE_N_DEMAND] = s->value[NPP_gN];
 
+	//fixme
 	if (s->value[TREE_N_DEMAND] > c->soilN)
 	{
 		//todo back to partitioning-allocation routine and recompute both NPP in gC and NPP in gN based on the available soil nitrogen content
