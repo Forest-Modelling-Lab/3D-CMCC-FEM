@@ -14,6 +14,7 @@
 #include "turnover.h"
 #include "lai.h"
 #include "mortality.h"
+#include "aut_respiration.h"
 
 extern settings_t* g_settings;
 extern logger_t* g_debug_log;
@@ -33,8 +34,8 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 	double pL;
 	double Light_trasm;
 	double Perc_fine;
-	static double reserve_for_foliage_budburst;
-	static double reserve_for_fine_root_budburst;
+	static double reserve_for_leaf_budburst;
+	static double reserve_for_froot_budburst;
 	static double reserve_for_budburst;
 
 	/* for check */
@@ -111,11 +112,12 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 	logger(g_debug_log, "LAI PROJ = %g \n", s->value[LAI_PROJ]);
 	logger(g_debug_log, "PEAK_LAI_PROJ = %g \n", s->value[PEAK_LAI_PROJ]);
 
-	/* assign NPP to local variable */
-	npp_to_alloc = s->value[NPP_tC];
+	/* assign NPP to local variables */
+	npp_to_alloc = s->value[GPP_tC] - s->value[TOTAL_MAINT_RESP_tC] ;
+	logger(g_debug_log, "npp_to_alloc = %g tC/sizecell/day\n", npp_to_alloc);
 
-	/* note: none carbon pool is refilled if reserve is lower than minimum
-	reserves have priority before all other pools */
+	/* note: none carbon pool is refilled if reserve is lower than minimum */
+	/* reserves have priority before all other pools */
 
 	switch (s->phenology_phase)
 	{
@@ -133,27 +135,22 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 		carbon reserves in beech trees" (Barbaroux et al., 2003) */
 
 		/* following Friedlingstein et al.,1998 and Krinner et al.,2005 during budburst model allocates to leaf and fine root */
-
 		/* following Campioli et al., 2008, Maillard et al., 1994, Barbaroux et al., 2003*/
 
-		reserve_for_foliage_budburst = s->value[MAX_LEAF_C] / (s->value[BUD_BURST]+1.0);
-		logger(g_debug_log, "daily amount of reserve for foliage budburst %g = tC/cell/day\n", reserve_for_foliage_budburst);
+		/* compute amount of leaf carbon and relative growth respiration amount */
+		reserve_for_leaf_budburst = ( s->value[MAX_LEAF_C] + ( s->value[MAX_LEAF_C] * s->value[EFF_GRPERC] ) )/ (s->value[BUD_BURST] + 1.);
+		logger(g_debug_log, "daily amount of reserve for leaf budburst %g = tC/cell/day\n", reserve_for_leaf_budburst);
 
-		reserve_for_fine_root_budburst = s->value[MAX_FROOT_C] / (s->value[BUD_BURST]+1.0);
-		logger(g_debug_log, "daily amount of reserve for foliage budburst %g = tC/cell/day\n", reserve_for_foliage_budburst);
+		/* compute amount of fine root carbon and relative growth respiration amount */
+		reserve_for_froot_budburst = ( s->value[MAX_FROOT_C] + ( s->value[MAX_FROOT_C] * s->value[EFF_GRPERC] ) ) / (s->value[BUD_BURST] + 1.);
+		logger(g_debug_log, "daily amount of reserve for fine root budburst %g = tC/cell/day\n", reserve_for_froot_budburst);
 
-		reserve_for_budburst = reserve_for_foliage_budburst + reserve_for_fine_root_budburst;
-		logger(g_debug_log, "daily amount of reserve for foliage  and fine roots budburst %g = tC/cell/day\n", reserve_for_budburst);
+		reserve_for_budburst = reserve_for_leaf_budburst + reserve_for_froot_budburst;
+		logger(g_debug_log, "daily amount of reserve for leaf and fine roots budburst %g = tC/cell/day\n", reserve_for_budburst);
 
-		s->value[C_TO_LEAF]        = reserve_for_foliage_budburst;
-		s->value[C_TO_FROOT]       = reserve_for_fine_root_budburst;
+		s->value[C_TO_LEAF]        = reserve_for_leaf_budburst;
+		s->value[C_TO_FROOT]       = reserve_for_froot_budburst;
 		s->value[C_TO_RESERVE]     = npp_to_alloc - reserve_for_budburst;
-		//s->value[C_TO_CROOT]       = 0.0;
-		//s->value[C_TO_STEM]        = 0.0;
-		//s->value[C_TO_BRANCH]      = 0.0;
-		//s->value[C_TO_FRUIT]       = 0.0;
-		//s->value[C_LEAF_TO_LITR]   = 0.0;
-		//s->value[C_FROOT_TO_LITR]  = 0.0;
 
 		break;
 		/**********************************************************************/
@@ -173,14 +170,9 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 
 				/* allocating into c pools */
 				s->value[C_TO_RESERVE]     = npp_to_alloc * pL;
-				//s->value[C_TO_FROOT]       = 0.0;
-				s->value[C_TO_CROOT]       = s->value[NPP_tC] * pR;
-				s->value[C_TO_STEM]        = (s->value[NPP_tC] * pS) * (1.0 - s->value[FRACBB]);
-				s->value[C_TO_BRANCH]      = (s->value[NPP_tC] * pS) * s->value[FRACBB];
-				//s->value[C_TO_LEAF]        = 0.0;
-				//s->value[C_TO_FRUIT]       = 0.0;
-				//s->value[C_LEAF_TO_LITR]   = 0.0;
-				//s->value[C_FROOT_TO_LITR]  = 0.0;
+				s->value[C_TO_CROOT]       = (npp_to_alloc * pR);
+				s->value[C_TO_STEM]        = (npp_to_alloc * pS) * (1.0 - s->value[FRACBB]);
+				s->value[C_TO_BRANCH]      = (npp_to_alloc * pS) * s->value[FRACBB];
 			}
 			/* it needs */
 			else
@@ -189,14 +181,6 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 
 				/* allocating into c pools */
 				s->value[C_TO_RESERVE]     = npp_to_alloc;
-				//s->value[C_TO_FROOT]       = 0.0;
-				//s->value[C_TO_CROOT]       = 0.0;
-				//s->value[C_TO_TOT_STEM]    = 0.0;
-				//s->value[C_TO_BRANCH]      = 0.0;
-				//s->value[C_TO_LEAF]        = 0.0;
-				//s->value[C_TO_FRUIT]       = 0.0;
-				//s->value[C_LEAF_TO_LITR]   = 0.0;
-				//s->value[C_FROOT_TO_LITR]  = 0.0;
 			}
 		}
 		else
@@ -205,14 +189,6 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 
 			/* allocating into c pools */
 			s->value[C_TO_RESERVE]     = npp_to_alloc;
-			//s->value[C_TO_FROOT]       = 0.0;
-			//s->value[C_TO_CROOT]       = 0.0;
-			//s->value[C_TO_STEM]        = 0.0;
-			//s->value[C_TO_BRANCH]      = 0.0;
-			//s->value[C_TO_LEAF]        = 0.0;
-			//s->value[C_TO_FRUIT]       = 0.0;
-			//s->value[C_LEAF_TO_LITR]   = 0.0;
-			//s->value[C_FROOT_TO_LITR]  = 0.0;
 		}
 
 		break;
@@ -239,9 +215,6 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 		}
 
 		/* allocating into c pools */
-		//s->value[C_TO_CROOT]   = 0.0;
-		//s->value[C_TO_STEM]    = 0.0;
-		//s->value[C_TO_BRANCH]  = 0.0;
 		/* including retranslocated C */
 		s->value[C_TO_RESERVE] = npp_to_alloc ;
 
@@ -255,14 +228,6 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 		logger(g_debug_log, "consuming reserve pool\n");
 
 		/* allocating into c pools */
-		//s->value[C_TO_LEAF]        = 0.0;
-		//s->value[C_TO_FROOT]       = 0.0;
-		//s->value[C_TO_CROOT]       = 0.0;
-		//s->value[C_TO_STEM]        = 0.0;
-		//s->value[C_TO_BRANCH]      = 0.0;
-		//s->value[C_TO_FRUIT]       = 0.0;
-		//s->value[C_LEAF_TO_LITR]   = 0.0;
-		//s->value[C_FROOT_TO_LITR]  = 0.0;
 		s->value[C_TO_RESERVE]     = npp_to_alloc;
 
 		break;
@@ -274,7 +239,10 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 	//daily_growth_efficiency_mortality ( c, height, dbh, age, species );
 
 	/* update live_total wood fraction based on age */
-	live_total_wood_age (a, species);
+	live_total_wood_age ( a, s );
+
+	/* growth respiration */
+	growth_respiration ( c, layer, height, dbh, age, species );
 
 	/* allocate daily carbon */
 	carbon_allocation ( c, s );

@@ -25,21 +25,27 @@ extern logger_t* g_debug_log;
 void carbon_allocation( cell_t *const c, species_t *const s)
 {
 	/* it allocates Daily assimilated Carbon for both deciduous and evergreen daily */
+
 	logger(g_debug_log, "\n****CARBON ALLOCATION****\n");
 
-	/*** update class level carbon pools ***/
+	/*** removing growth respiration from carbon flux pools ***/
+	s->value[C_TO_LEAF]  -= (s->value[LEAF_GROWTH_RESP]   / 1e6 * g_settings->sizeCell);
+	s->value[C_TO_FROOT] -= (s->value[FROOT_GROWTH_RESP]  / 1e6 * g_settings->sizeCell);
+	s->value[C_TO_STEM]  -= (s->value[STEM_GROWTH_RESP]   / 1e6 * g_settings->sizeCell);
+	s->value[C_TO_CROOT] -= (s->value[CROOT_GROWTH_RESP]  / 1e6 * g_settings->sizeCell);
+	s->value[C_TO_BRANCH]-= (s->value[BRANCH_GROWTH_RESP] / 1e6 * g_settings->sizeCell);
 
+	/*** update class level carbon mass pools ***/
 	s->value[LEAF_C]     += s->value[C_TO_LEAF];
 	s->value[FROOT_C]    += s->value[C_TO_FROOT];
-	s->value[RESERVE_C]  += s->value[C_TO_RESERVE];
 	s->value[STEM_C]     += s->value[C_TO_STEM];
 	s->value[BRANCH_C]   += s->value[C_TO_BRANCH];
 	s->value[CROOT_C]    += s->value[C_TO_CROOT];
+	s->value[RESERVE_C]  += s->value[C_TO_RESERVE];
 	s->value[FRUIT_C]    += s->value[C_TO_FRUIT];
 	s->value[TOT_ROOT_C] += s->value[CROOT_C] + s->value[FROOT_C];
 	s->value[TOT_STEM_C] += s->value[C_TO_STEM] + s->value[C_TO_BRANCH];
 	s->value[LITR_C]     += s->value[C_TO_LITR] + s->value[C_FRUIT_TO_LITR];
-
 
 	logger(g_debug_log, "C_TO_LEAF = %g tC/cell/day\n", s->value[C_TO_LEAF]);
 	logger(g_debug_log, "C_TO_FROOT = %g tC/cell/day\n", s->value[C_TO_FROOT]);

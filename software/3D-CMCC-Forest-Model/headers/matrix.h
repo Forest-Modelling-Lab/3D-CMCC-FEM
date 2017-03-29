@@ -283,15 +283,16 @@ enum {
 
 	/* carbon variable */
 	C_FLUX,
-	GPP_gC,                             /* Daily Gross Primary Production gC/m^2 day */
-	MONTHLY_GPP_gC,                     /* Monthly Gross Primary Production gC/m^2 month */
-	YEARLY_GPP_gC,                      /* Yearly Gross Primary Production gC/m^2 day */
-	NPP_gC,                             /* Daily Net Primary Production gC/m^2 day */
-	MONTHLY_NPP_gC,                     /* Monthly Net Primary Production gC/m^2 day */
-	YEARLY_NPP_gC,                      /* Yearly Net Primary Production gC/m^2 day */
-	NPP_tC,                             /* Daily Net Primary Production tC/sizeCell day */
-	MONTHLY_NPP_tC,                     /* Monthly Net Primary Production tC/sizeCell day */
-	YEARLY_NPP_tC,                      /* Yearly Net Primary Production tC/sizeCell day */
+	GPP_gC,                             /* Daily Gross Primary Production gC/m2/day */
+	MONTHLY_GPP_gC,                     /* Monthly Gross Primary Production gC/m2/month */
+	YEARLY_GPP_gC,                      /* Yearly Gross Primary Production gC/m2/day */
+	GPP_tC,                             /* Daily Gross Primary Production tC/sizeCell/day */
+	NPP_gC,                             /* Daily Net Primary Production gC/m2/day */
+	MONTHLY_NPP_gC,                     /* Monthly Net Primary Production gC/m2/day */
+	YEARLY_NPP_gC,                      /* Yearly Net Primary Production gC/m2/day */
+	NPP_tC,                             /* Daily Net Primary Production tC/sizeCell/day */
+	MONTHLY_NPP_tC,                     /* Monthly Net Primary Production tC/sizeCell/day */
+	YEARLY_NPP_tC,                      /* Yearly Net Primary Production tC/sizeCell/day */
 
 	/* nitrogen variable */
 	NPP_gN,                             /* Daily Net Primary Production demand gN/m^2 day */
@@ -481,6 +482,7 @@ enum {
 	TOTAL_MAINT_RESP,                   /* Total maintenance respiration (gC/m2/day) */
 	MONTHLY_TOTAL_MAINT_RESP,           /* Monthly Total maintenance respiration (gC/m2/month) */
 	YEARLY_TOTAL_MAINT_RESP,            /* Yearly Total maintenance respiration (gC/m2/year) */
+	TOTAL_MAINT_RESP_tC,                /* Total maintenance respiration (tC/sizecell/day) */
 
 	/* Growth respiration */
 	EFF_GRPERC,                         /* (DIM) Growth respiration ratio based on age */
@@ -492,6 +494,7 @@ enum {
 	TOTAL_GROWTH_RESP,                  /* Total growth respiration (gC/m2/day) */
 	MONTHLY_TOTAL_GROWTH_RESP,          /* Monthly Total growth respiration (gC/m2/month) */
 	YEARLY_TOTAL_GROWTH_RESP,           /* Yearly Total growth respiration (gC/m2/year) */
+	TOTAL_GROWTH_RESP_tC,               /* Total growth respiration (tC/sizecell/day) */
 
 	/* Autotrophic respiration */
 	LEAF_AUT_RESP,                      /* Leaf autotrophic respiration (gC/m2/day) */

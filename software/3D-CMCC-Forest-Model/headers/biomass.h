@@ -4,7 +4,7 @@
 
 #include "matrix.h"
 
-void live_total_wood_age(const age_t *const a, const int species);
+void live_total_wood_age(const age_t *const a, species_t *const s);
 
 void average_tree_pools(species_t *const s);
 

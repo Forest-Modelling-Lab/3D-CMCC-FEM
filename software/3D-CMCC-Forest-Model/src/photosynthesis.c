@@ -10,6 +10,8 @@
 #include "logger.h"
 
 extern logger_t* g_debug_log;
+extern settings_t* g_settings;
+
 
 void photosynthesis(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, const int DaysInMonth, const yos_t *const meteo_annual)
 {
@@ -75,7 +77,6 @@ void photosynthesis(cell_t *const c, const int layer, const int height, const in
 	/* GPP */
 	/* Daily GPP in molC/m^2/day */
 	GPPmolC = Lue /* * s->value[CANOPY_FRAC_DAY_TRANSP]*/;
-	logger(g_debug_log, "GPPmolC = %g molC/m^2/day\n", GPPmolC);
 
 	/* check */
 	CHECK_CONDITION( GPPmolC, <, 0 );
@@ -83,6 +84,8 @@ void photosynthesis(cell_t *const c, const int layer, const int height, const in
 	/* Daily GPP in gC/m2/day */
 	/* molC/m2/day --> gC/m2/day */
 	s->value[GPP_gC]          = GPPmolC * GC_MOL;
+	s->value[GPP_tC]          = s->value[GPP_gC] / 1e6 * g_settings->sizeCell ;
+	logger(g_debug_log, "GPP_gC = %g gC/m^2/day\n", s->value[GPP_gC]);
 
 	/* class level */
 	s->value[MONTHLY_GPP_gC] += s->value[GPP_gC];

@@ -15,7 +15,7 @@
 #include "settings.h"
 #include "logger.h"
 
-extern settings_t* g_settings;
+//extern settings_t* g_settings;
 extern logger_t* g_debug_log;
 
 int check_radiation_flux_balance (cell_t *const c, const meteo_daily_t *const meteo_daily)
@@ -498,11 +498,10 @@ int check_class_carbon_flux_balance(cell_t *const c, const int layer, const int 
 	/* sum of current storage */
 	store = s->value[NPP_gC];
 
-
 	/* check carbon flux balance */
 	balance = in - out - store;
 
-	logger(g_debug_log, "\nCLASS LEVEL CARBON FLUX BALANCE\n");
+	logger(g_debug_log, "\nCLASS LEVEL CARBON FLUX BALANCE (first)\n");
 
 	/* check for carbon flux balance closure */
 	if ( fabs( balance ) > eps )
@@ -515,69 +514,68 @@ int check_class_carbon_flux_balance(cell_t *const c, const int layer, const int 
 		logger(g_debug_log, "\nstore = %g gC/m2/day\n", store);
 		logger(g_debug_log, "NPP = %g gC/m2/day\n", s->value[NPP_gC]);
 		logger(g_debug_log, "\nbalance = %g gC/m2/day\n", balance);
-		logger(g_debug_log, "...FATAL ERROR AT CLASS LEVEL carbon flux balance (exit)\n");
+		logger(g_debug_log, "...FATAL ERROR AT CLASS LEVEL carbon flux balance (first) (exit)\n");
 		CHECK_CONDITION (fabs( balance ), >, eps);
 
 		return 0;
 	}
 	else
 	{
-		logger(g_debug_log, "...ok carbon flux balance at class level\n");
+		logger(g_debug_log, "...ok carbon flux balance (first) at class level\n");
 	}
 
 	/* DAILY CHECK ON CLASS LEVEL CARBON BALANCE */
 	/* check complete tree level carbon balance */
 
 	/* sum of sources */
-	in = s->value[GPP_gC];
+	in = s->value[GPP_tC];
 
 	/* sum of sinks */
-	out = s->value[TOTAL_MAINT_RESP] + s->value[TOTAL_GROWTH_RESP] +
-			(( s->value[C_LEAF_TO_LITR] + s->value[C_FROOT_TO_LITR] + s->value[C_FRUIT_TO_LITR]) * 1e6 / g_settings->sizeCell);
+	out = s->value[TOTAL_MAINT_RESP_tC] + s->value[TOTAL_GROWTH_RESP_tC] +
+			( s->value[C_LEAF_TO_LITR] + s->value[C_FROOT_TO_LITR] + s->value[C_FRUIT_TO_LITR]);
 
 	/* sum of current storage */
-	store = s->value[C_TO_LEAF]    * 1e6 / g_settings->sizeCell +
-			s->value[C_TO_STEM]    * 1e6 / g_settings->sizeCell +
-			s->value[C_TO_FROOT]   * 1e6 / g_settings->sizeCell +
-			s->value[C_TO_CROOT]   * 1e6 / g_settings->sizeCell +
-			s->value[C_TO_BRANCH]  * 1e6 / g_settings->sizeCell +
-			s->value[C_TO_RESERVE] * 1e6 / g_settings->sizeCell +
-			s->value[C_TO_FRUIT]   * 1e6 / g_settings->sizeCell ;
-
+	store = s->value[C_TO_LEAF]    +
+			s->value[C_TO_STEM]    +
+			s->value[C_TO_FROOT]   +
+			s->value[C_TO_CROOT]   +
+			s->value[C_TO_BRANCH]  +
+			s->value[C_TO_RESERVE] +
+			s->value[C_TO_FRUIT]   ;
 
 	/* check carbon flux balance */
 	balance = in - out - store;
 
-	logger(g_debug_log, "\nCLASS LEVEL CARBON FLUX BALANCE\n");
+	logger(g_debug_log, "\nCLASS LEVEL CARBON FLUX BALANCE (second)\n");
 
 	/* check for carbon flux balance closure */
 	if ( fabs( balance ) > eps )
 	{
 		logger(g_debug_log, "DOY = %d\n", c->doy);
-		logger(g_debug_log, "\nin = %g gC/m2/day\n", in);
-		logger(g_debug_log, "GPP_gC = %g gC/m2/day\n", s->value[GPP_gC]);
-		logger(g_debug_log, "\nout = %g gC/m2/day\n", out);
-		logger(g_debug_log, "TOTAL_MAINT_RESP = %g gC/m2/day\n", s->value[TOTAL_MAINT_RESP]);
-		logger(g_debug_log, "TOTAL_GROWTH_RESP = %g gC/m2/day\n", s->value[TOTAL_GROWTH_RESP]);
-		logger(g_debug_log, "C_LEAF_TO_LITR = %g gC/m2/day\n", s->value[C_LEAF_TO_LITR] * 1e6 / g_settings->sizeCell);
-		logger(g_debug_log, "C_FROOT_TO_LITR = %g gC/m2/day\n", s->value[C_FROOT_TO_LITR] * 1e6 / g_settings->sizeCell);
-		logger(g_debug_log, "\nstore = %g gC/m2/day\n", store);
-		logger(g_debug_log, "C_TO_LEAF = %g gC/m2/day\n", s->value[C_TO_LEAF]* 1e6 / g_settings->sizeCell);
-		logger(g_debug_log, "C_TO_FINEROOT = %g gC/m2/day\n", s->value[C_TO_FROOT]* 1e6 / g_settings->sizeCell);
-		logger(g_debug_log, "C_TO_COARSEROOT = %g gC/m2/day\n", s->value[C_TO_CROOT]* 1e6 / g_settings->sizeCell);
-		logger(g_debug_log, "C_TO_STEM = %g gC/m2/day\n", s->value[C_TO_STEM]* 1e6 / g_settings->sizeCell);
-		logger(g_debug_log, "C_TO_RESERVE = %g gC/m2/day\n", s->value[C_TO_RESERVE]* 1e6 / g_settings->sizeCell);
-		logger(g_debug_log, "C_TO_BRANCH = %g gC/m2/day\n", s->value[C_TO_BRANCH]* 1e6 / g_settings->sizeCell);
-		logger(g_debug_log, "C_TO_FRUIT = %g gC/m2/day\n", s->value[C_TO_FRUIT]* 1e6 / g_settings->sizeCell);
-		logger(g_debug_log, "\nbalance = %g gC/m2/day\n", balance);
-		logger(g_debug_log, "...FATAL ERROR AT CLASS LEVEL carbon flux balance (exit)\n");
+		logger(g_debug_log, "\nin = %g tC/sizecell/day\n", in);
+		logger(g_debug_log, "GPP_gC = %g tC/sizecell/day\n", s->value[GPP_tC]);
+		logger(g_debug_log, "\nout = %g tC/sizecell/day\n", out);
+		logger(g_debug_log, "TOTAL_MAINT_RESP = %g tC/sizecell/day\n", s->value[TOTAL_MAINT_RESP_tC]);
+		logger(g_debug_log, "TOTAL_GROWTH_RESP = %g tC/sizecell/day\n", s->value[TOTAL_GROWTH_RESP_tC]);
+		logger(g_debug_log, "C_LEAF_TO_LITR = %g tC/sizecell/day\n", s->value[C_LEAF_TO_LITR]);
+		logger(g_debug_log, "C_FROOT_TO_LITR = %g tC/sizecell/day\n", s->value[C_FROOT_TO_LITR]);
+		logger(g_debug_log, "\nstore = %g tC/sizecell/day\n", store);
+		logger(g_debug_log, "C_TO_LEAF = %g tC/sizecell/day\n", s->value[C_TO_LEAF]);
+		logger(g_debug_log, "C_TO_FINEROOT = %g tC/sizecell/day\n", s->value[C_TO_FROOT]);
+		logger(g_debug_log, "C_TO_COARSEROOT = %g tC/sizecell/day\n", s->value[C_TO_CROOT]);
+		logger(g_debug_log, "C_TO_STEM = %g tC/sizecell/day\n", s->value[C_TO_STEM]);
+		logger(g_debug_log, "C_TO_RESERVE = %g tC/sizecell/day\n", s->value[C_TO_RESERVE]);
+		logger(g_debug_log, "C_TO_BRANCH = %g tC/sizecell/day\n", s->value[C_TO_BRANCH]);
+		logger(g_debug_log, "C_TO_FRUIT = %g tC/sizecell/day\n", s->value[C_TO_FRUIT]);
+		logger(g_debug_log, "\nbalance = %g tC/sizecell/day\n", balance);
+		logger(g_debug_log, "...FATAL ERROR AT CLASS LEVEL carbon flux balance (second) (exit)\n");
 		CHECK_CONDITION (fabs( balance ), >, eps);
 
 		return 0;
 	}
 	else
 	{
-		logger(g_debug_log, "...ok carbon flux balance at class level\n");
+		logger(g_debug_log, "...ok carbon flux balance (second) at class level\n");
 	}
 
 	/*******************************************************************************************************************/

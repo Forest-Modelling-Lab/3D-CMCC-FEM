@@ -10,7 +10,7 @@
 
 extern logger_t* g_debug_log;
 
-void live_total_wood_age(const age_t *const a, const int species)
+void live_total_wood_age(const age_t *const a, species_t *const s)
 {
 	/* this function update based on current tree age the amount of live:total wood ratio
 	 * based on the assumption that the live wood decrease linearly increasing age */
@@ -24,14 +24,9 @@ void live_total_wood_age(const age_t *const a, const int species)
 	int min_age;
 	int max_age;
 
-	species_t *s;
-	s = &a->species[species];
-
 	logger(g_debug_log, "\n*live:total wood ratio based on tree age*\n");
-	logger(g_debug_log, "current age = %d\n", a->value);
 
 	max_age = (int)s->value[MAXAGE];
-	logger(g_debug_log, "max age = %d\n", max_age);
 
 	//fixme values should be included in species.txt
 	/* age at which live:total wood ratio is maximum */
@@ -39,13 +34,9 @@ void live_total_wood_age(const age_t *const a, const int species)
 	logger(g_debug_log, "min age = %d\n", min_age);
 
 	max_live_total_ratio = s->value[LIVE_TOTAL_WOOD]; /* for min_age = 1 */
-	logger(g_debug_log, "max_live_total_ratio = %g\n", max_live_total_ratio);
 
 	//fixme values should be included in species.txt
 	min_live_total_ratio = 0.03; /* for max_age = 160 */
-
-
-	logger(g_debug_log, "min_live_total_ratio = %g\n", min_live_total_ratio);
 
 	t1 = max_live_total_ratio - min_live_total_ratio;
 	t2 = max_age - min_age;

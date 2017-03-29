@@ -253,14 +253,8 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							/* canopy carbon assimilation */
 							photosynthesis ( c, layer, height, dbh, age, species, DaysInMonth[month], meteo_annual );
 
-							/* autotrophic respiration */
-							autotrophic_respiration ( c, layer, height, dbh, age, species, meteo_daily );
-
-							/* carbon fluxes */
-							carbon_fluxes ( s );
-
-							/* C assimilation */
-							carbon_assimilation ( c, layer, height, dbh, age, species );
+							/* maintenance respiration */
+							maintenance_respiration ( c, layer, height, dbh, age, species, meteo_daily );
 
 							/* C-N-partitioning-allocation */
 							if ( s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2 )
@@ -273,6 +267,15 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 								/* evergreen */
 								daily_C_evergreen_partitioning_allocation ( c, layer, height, dbh, age, species, meteo_daily, day, month, year );
 							}
+
+							/* autotrophic respiration */
+							autotrophic_respiration ( c, layer, height, dbh, age, species, meteo_daily );
+
+							/* carbon fluxes */
+							carbon_fluxes ( s );
+
+							/* C assimilation */
+							carbon_assimilation ( c, layer, height, dbh, age, species );
 
 							/* N assimilation */
 							nitrogen_assimilation ( s );

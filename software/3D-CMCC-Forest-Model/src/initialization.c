@@ -11,6 +11,7 @@
 #include "structure.h"
 #include "biomass.h"
 #include "lai.h"
+#include "aut_respiration.h"
 
 extern settings_t *g_settings;
 extern logger_t* g_debug_log;
@@ -52,6 +53,9 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 	d = &c->heights[height].dbhs[dbh];
 	a = &c->heights[height].dbhs[dbh].ages[age];
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
+
+	/* compute growth respiration fraction */
+	growth_respiration_frac ( a, s );
 
 	logger(g_debug_log,"\n*******INITIALIZE FOREST CLASS CARBON POOLS*******\n");
 	logger(g_debug_log, "\n\n...checking initial biomass data for height %g, age %d, species %s...\n", h->value, a->value, s->name);
@@ -366,7 +370,7 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 	logger(g_debug_log, "\n*******************************\n");
 
 	/*FOR STEM*/
-	live_total_wood_age(a, species);
+	live_total_wood_age( a, s );
 	logger(g_debug_log, "Total Stem Biomass = %g tC cell\n", s->value[STEM_C]);
 	s->value[BIOMASS_STEM_LIVE_WOOD_tDM]= s->value[BIOMASS_STEM_tDM] * (s->value[EFF_LIVE_TOTAL_WOOD_FRAC]);
 	s->value[STEM_LIVE_WOOD_C]= s->value[STEM_C] * (s->value[EFF_LIVE_TOTAL_WOOD_FRAC]);

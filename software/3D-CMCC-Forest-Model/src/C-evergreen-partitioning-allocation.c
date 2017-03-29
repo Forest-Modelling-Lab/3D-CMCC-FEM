@@ -21,6 +21,7 @@
 #include "biomass.h"
 #include "check_balance.h"
 #include "mortality.h"
+#include "aut_respiration.h"
 
 extern settings_t* g_settings;
 extern logger_t* g_debug_log;
@@ -62,10 +63,10 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 	Light_trasm = exp(- s->value[K] * s->value[LAI_PROJ]);
 
 	/* Marconi: here the allocation of biomass reserve is divided in fineroot and leaves following the
-	* allocation ratio parameter between them. That because
-	* in evergreen we don't have bud burst phenology phase, and indeed there are two phenology phases;
-	* the former in which carbon is allocated in fineroot and foliage, the latter in
-	* every pool except foliage*/
+	 * allocation ratio parameter between them. That because
+	 * in evergreen we don't have bud burst phenology phase, and indeed there are two phenology phases;
+	 * the former in which carbon is allocated in fineroot and foliage, the latter in
+	 * every pool except foliage*/
 
 	logger(g_debug_log, "\n**C-PARTITIONING-ALLOCATION**\n");
 	logger(g_debug_log, "Carbon partitioning for evergreen\n");
@@ -91,8 +92,8 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 	logger(g_debug_log, "LAI_PROJ = %g\n", s->value[LAI_PROJ]);
 	logger(g_debug_log, "PEAK_LAI_PROJ = %g \n", s->value[PEAK_LAI_PROJ]);
 
-	/* assign NPP to local variable */
-	npp_to_alloc = s->value[NPP_tC];
+	/* assign NPP to local variables */
+	npp_to_alloc = s->value[GPP_tC] - s->value[TOTAL_MAINT_RESP_tC] ;
 
 	/* note: none carbon pool is refilled if reserve is lower than minimum
 	reserves have priority before all other pools */
@@ -191,7 +192,10 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 	//daily_growth_efficiency_mortality ( c, height, dbh, age, species );
 
 	/* update live_total wood fraction based on age */
-	live_total_wood_age ( a, species );
+	live_total_wood_age ( a, s );
+
+	/* growth respiration */
+	growth_respiration ( c, layer, height, dbh, age, species );
 
 	/* leaf and fine root fall */
 	leaf_fall_evergreen ( c, height, dbh, age, species );
