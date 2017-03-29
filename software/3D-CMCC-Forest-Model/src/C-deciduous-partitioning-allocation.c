@@ -138,11 +138,11 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 		/* following Campioli et al., 2008, Maillard et al., 1994, Barbaroux et al., 2003*/
 
 		/* compute amount of leaf carbon and relative growth respiration amount */
-		reserve_for_leaf_budburst = ( s->value[MAX_LEAF_C] + ( s->value[MAX_LEAF_C] * s->value[EFF_GRPERC] ) )/ (s->value[BUD_BURST] + 1.);
+		reserve_for_leaf_budburst = ( s->value[MAX_LEAF_C] + ( s->value[MAX_LEAF_C] * s->value[EFF_GRPERC] ) )/ (s->value[BUD_BURST] -1.);
 		logger(g_debug_log, "daily amount of reserve for leaf budburst %g = tC/cell/day\n", reserve_for_leaf_budburst);
 
 		/* compute amount of fine root carbon and relative growth respiration amount */
-		reserve_for_froot_budburst = ( s->value[MAX_FROOT_C] + ( s->value[MAX_FROOT_C] * s->value[EFF_GRPERC] ) ) / (s->value[BUD_BURST] + 1.);
+		reserve_for_froot_budburst = ( s->value[MAX_FROOT_C] + ( s->value[MAX_FROOT_C] * s->value[EFF_GRPERC] ) ) / (s->value[BUD_BURST] - 1.);
 		logger(g_debug_log, "daily amount of reserve for fine root budburst %g = tC/cell/day\n", reserve_for_froot_budburst);
 
 		reserve_for_budburst = reserve_for_leaf_budburst + reserve_for_froot_budburst;

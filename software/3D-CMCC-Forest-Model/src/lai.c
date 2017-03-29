@@ -61,7 +61,7 @@ void daily_lai (species_t *const s)
 	}
 
 	/* compute LAI for sunlit and shaded Projected Area */
-	s->value[LAI_SUN_PROJ] = 1.0 - exp(-s->value[LAI_PROJ]);
+	s->value[LAI_SUN_PROJ] = 1. - exp(-s->value[LAI_PROJ]);
 	s->value[LAI_SHADE_PROJ] = s->value[LAI_PROJ] - s->value[LAI_SUN_PROJ];
 	logger(g_debug_log, "LAI_SUN_PROJ = %g m2/m-2\n", s->value[LAI_SUN_PROJ]);
 	logger(g_debug_log, "LAI_SHADE_PROJ = %g m2/m-2\n", s->value[LAI_SHADE_PROJ]);
