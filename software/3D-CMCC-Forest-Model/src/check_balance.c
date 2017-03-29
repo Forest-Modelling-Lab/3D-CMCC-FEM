@@ -18,7 +18,7 @@
 extern settings_t* g_settings;
 extern logger_t* g_debug_log;
 
-int check_radiation_balance (cell_t *const c, const meteo_daily_t *const meteo_daily)
+int check_radiation_flux_balance (cell_t *const c, const meteo_daily_t *const meteo_daily)
 {
 	double in;
 	double out;
@@ -157,7 +157,7 @@ int check_radiation_balance (cell_t *const c, const meteo_daily_t *const meteo_d
 	return 1;
 }
 
-int check_carbon_balance(cell_t *const c)
+int check_carbon_flux_balance(cell_t *const c)
 {
 	double in;
 	double out;
@@ -180,7 +180,7 @@ int check_carbon_balance(cell_t *const c)
 
 	balance = in - out -store;
 
-	logger(g_debug_log, "\nCELL CARBON POOL BALANCE\n");
+	logger(g_debug_log, "\nCELL CARBON FLUX BALANCE\n");
 
 	if ( fabs( balance ) > eps )
 	{
@@ -217,7 +217,7 @@ int check_carbon_balance(cell_t *const c)
 
 	balance = in - out -store;
 
-	logger(g_debug_log, "\nCELL CARBON POOL BALANCE\n");
+	logger(g_debug_log, "\nCELL CARBON FLUX BALANCE\n");
 
 	if ( fabs( balance ) > eps )
 	{
@@ -255,7 +255,7 @@ int check_carbon_balance(cell_t *const c)
 	return 1;
 }
 
-int check_soil_water_balance(cell_t *const c, const meteo_daily_t *const meteo_daily)
+int check_water_flux_balance(cell_t *const c, const meteo_daily_t *const meteo_daily)
 {
 	double in;
 	double out;
@@ -360,7 +360,7 @@ int check_soil_water_balance(cell_t *const c, const meteo_daily_t *const meteo_d
 
 /******************************************************CLASS LEVEL BALANCE CLOSURE*****************************************************/
 
-int check_class_radiation_balance(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species)
+int check_class_radiation_flux_balance(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species)
 {
 	double in;
 	double out;
@@ -476,7 +476,7 @@ int check_class_radiation_balance(cell_t *const c, const int layer, const int he
 	return 1;
 }
 
-int check_class_carbon_balance(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species)
+int check_class_carbon_flux_balance(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species)
 {
 	double in;
 	double out;
@@ -486,8 +486,8 @@ int check_class_carbon_balance(cell_t *const c, const int layer, const int heigh
 	species_t *s;
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
-	/* DAILY CHECK ON CLASS LEVEL CARBON BALANCE */
-	/* check complete tree level carbon balance */
+	/* DAILY CHECK ON CLASS LEVEL CARBON FLUX BALANCE */
+	/* check complete tree level carbon flux balance */
 
 	/* sum of sources */
 	in = s->value[GPP_gC];
@@ -499,26 +499,30 @@ int check_class_carbon_balance(cell_t *const c, const int layer, const int heigh
 	store = s->value[NPP_gC];
 
 
-	/* check carbon pool balance */
+	/* check carbon flux balance */
 	balance = in - out - store;
 
-	logger(g_debug_log, "\nCLASS LEVEL CARBON BALANCE\n");
+	logger(g_debug_log, "\nCLASS LEVEL CARBON FLUX BALANCE\n");
 
-	/* check for carbon balance closure */
+	/* check for carbon flux balance closure */
 	if ( fabs( balance ) > eps )
 	{
 		logger(g_debug_log, "DOY = %d\n", c->doy);
-		logger(g_debug_log, "\nin = %g gC/m2\n", in);
-		logger(g_debug_log, "GPP = %g gC/m2\n", s->value[GPP_gC]);
-		logger(g_debug_log, "\nout = %g gC/m2\n", out);
-		logger(g_debug_log, "TOTAL_AUT_RESP = %g gC/m2\n", s->value[TOTAL_AUT_RESP]);
-		logger(g_debug_log, "\nstore = %g gC/m2\n", store);
-		logger(g_debug_log, "NPP = %g gC/m2\n", s->value[NPP_gC]);
-		logger(g_debug_log, "\nbalance = %g gC/m2\n", balance);
-		logger(g_debug_log, "...FATAL ERROR AT CLASS LEVEL carbon balance (exit)\n");
+		logger(g_debug_log, "\nin = %g gC/m2/day\n", in);
+		logger(g_debug_log, "GPP = %g gC/m2/day\n", s->value[GPP_gC]);
+		logger(g_debug_log, "\nout = %g gC/m2/day\n", out);
+		logger(g_debug_log, "TOTAL_AUT_RESP = %g gC/m2/day\n", s->value[TOTAL_AUT_RESP]);
+		logger(g_debug_log, "\nstore = %g gC/m2/day\n", store);
+		logger(g_debug_log, "NPP = %g gC/m2/day\n", s->value[NPP_gC]);
+		logger(g_debug_log, "\nbalance = %g gC/m2/day\n", balance);
+		logger(g_debug_log, "...FATAL ERROR AT CLASS LEVEL carbon flux balance (exit)\n");
 		CHECK_CONDITION (fabs( balance ), >, eps);
 
 		return 0;
+	}
+	else
+	{
+		logger(g_debug_log, "...ok carbon flux balance at class level\n");
 	}
 
 	/* DAILY CHECK ON CLASS LEVEL CARBON BALANCE */
@@ -529,58 +533,124 @@ int check_class_carbon_balance(cell_t *const c, const int layer, const int heigh
 
 	/* sum of sinks */
 	out = s->value[TOTAL_MAINT_RESP] + s->value[TOTAL_GROWTH_RESP] +
-			(( s->value[C_LEAF_TO_LITR] + s->value[C_FROOT_TO_LITR] + s->value[C_FRUIT_TO_LITR]) * 1000000.0 / g_settings->sizeCell);
+			(( s->value[C_LEAF_TO_LITR] + s->value[C_FROOT_TO_LITR] + s->value[C_FRUIT_TO_LITR]) * 1e6 / g_settings->sizeCell);
 
 	/* sum of current storage */
-	store = s->value[C_TO_LEAF] * 1000000.0 / g_settings->sizeCell +
-			s->value[C_TO_STEM] * 1000000.0 / g_settings->sizeCell +
-			s->value[C_TO_FROOT] * 1000000.0 / g_settings->sizeCell +
-			s->value[C_TO_CROOT] * 1000000.0 / g_settings->sizeCell +
-			s->value[C_TO_BRANCH] * 1000000.0 / g_settings->sizeCell +
-			s->value[C_TO_RESERVE] * 1000000.0 / g_settings->sizeCell +
-			s->value[C_TO_FRUIT] * 1000000.0 / g_settings->sizeCell;
+	store = s->value[C_TO_LEAF]    * 1e6 / g_settings->sizeCell +
+			s->value[C_TO_STEM]    * 1e6 / g_settings->sizeCell +
+			s->value[C_TO_FROOT]   * 1e6 / g_settings->sizeCell +
+			s->value[C_TO_CROOT]   * 1e6 / g_settings->sizeCell +
+			s->value[C_TO_BRANCH]  * 1e6 / g_settings->sizeCell +
+			s->value[C_TO_RESERVE] * 1e6 / g_settings->sizeCell +
+			s->value[C_TO_FRUIT]   * 1e6 / g_settings->sizeCell ;
 
 
-	/* check carbon pool balance */
+	/* check carbon flux balance */
 	balance = in - out - store;
 
-	logger(g_debug_log, "\nCLASS LEVEL CARBON BALANCE\n");
+	logger(g_debug_log, "\nCLASS LEVEL CARBON FLUX BALANCE\n");
 
-	/* check for carbon balance closure */
+	/* check for carbon flux balance closure */
 	if ( fabs( balance ) > eps )
 	{
 		logger(g_debug_log, "DOY = %d\n", c->doy);
-		logger(g_debug_log, "\nin = %g gC/m2\n", in);
-		logger(g_debug_log, "GPP_gC = %g gC/m2\n", s->value[GPP_gC]);
-		logger(g_debug_log, "\nout = %g gC/m2\n", out);
-		logger(g_debug_log, "TOTAL_MAINT_RESP = %g gC/m2\n", s->value[TOTAL_MAINT_RESP]);
-		logger(g_debug_log, "TOTAL_GROWTH_RESP = %g gC/m2\n", s->value[TOTAL_GROWTH_RESP]);
-		logger(g_debug_log, "C_LEAF_TO_LITR = %g gC/m2\n", s->value[C_LEAF_TO_LITR] * 1000000.0 / g_settings->sizeCell);
-		logger(g_debug_log, "C_FROOT_TO_LITR = %g gC/m2\n", s->value[C_FROOT_TO_LITR] * 1000000.0 / g_settings->sizeCell);
-		logger(g_debug_log, "\nstore = %g gC/m2\n", store);
-		logger(g_debug_log, "C_TO_LEAF = %g gC/m2\n", s->value[C_TO_LEAF]* 1000000.0 / g_settings->sizeCell);
-		logger(g_debug_log, "C_TO_FINEROOT = %g gC/m2\n", s->value[C_TO_FROOT]* 1000000.0 / g_settings->sizeCell);
-		logger(g_debug_log, "C_TO_COARSEROOT = %g gC/m2\n", s->value[C_TO_CROOT]* 1000000.0 / g_settings->sizeCell);
-		logger(g_debug_log, "C_TO_STEM = %g gC/m2\n", s->value[C_TO_STEM]* 1000000.0 / g_settings->sizeCell);
-		logger(g_debug_log, "C_TO_RESERVE = %g gC/m2\n", s->value[C_TO_RESERVE]* 1000000.0 / g_settings->sizeCell);
-		logger(g_debug_log, "C_TO_BRANCH = %g gC/m2\n", s->value[C_TO_BRANCH]* 1000000.0 / g_settings->sizeCell);
-		logger(g_debug_log, "C_TO_FRUIT = %g gC/m2\n", s->value[C_TO_FRUIT]* 1000000.0 / g_settings->sizeCell);
-		logger(g_debug_log, "\nbalance = %g gC/m2\n", balance);
-		logger(g_debug_log, "...FATAL ERROR AT CLASS LEVEL carbon balance (exit)\n");
+		logger(g_debug_log, "\nin = %g gC/m2/day\n", in);
+		logger(g_debug_log, "GPP_gC = %g gC/m2/day\n", s->value[GPP_gC]);
+		logger(g_debug_log, "\nout = %g gC/m2/day\n", out);
+		logger(g_debug_log, "TOTAL_MAINT_RESP = %g gC/m2/day\n", s->value[TOTAL_MAINT_RESP]);
+		logger(g_debug_log, "TOTAL_GROWTH_RESP = %g gC/m2/day\n", s->value[TOTAL_GROWTH_RESP]);
+		logger(g_debug_log, "C_LEAF_TO_LITR = %g gC/m2/day\n", s->value[C_LEAF_TO_LITR] * 1e6 / g_settings->sizeCell);
+		logger(g_debug_log, "C_FROOT_TO_LITR = %g gC/m2/day\n", s->value[C_FROOT_TO_LITR] * 1e6 / g_settings->sizeCell);
+		logger(g_debug_log, "\nstore = %g gC/m2/day\n", store);
+		logger(g_debug_log, "C_TO_LEAF = %g gC/m2/day\n", s->value[C_TO_LEAF]* 1e6 / g_settings->sizeCell);
+		logger(g_debug_log, "C_TO_FINEROOT = %g gC/m2/day\n", s->value[C_TO_FROOT]* 1e6 / g_settings->sizeCell);
+		logger(g_debug_log, "C_TO_COARSEROOT = %g gC/m2/day\n", s->value[C_TO_CROOT]* 1e6 / g_settings->sizeCell);
+		logger(g_debug_log, "C_TO_STEM = %g gC/m2/day\n", s->value[C_TO_STEM]* 1e6 / g_settings->sizeCell);
+		logger(g_debug_log, "C_TO_RESERVE = %g gC/m2/day\n", s->value[C_TO_RESERVE]* 1e6 / g_settings->sizeCell);
+		logger(g_debug_log, "C_TO_BRANCH = %g gC/m2/day\n", s->value[C_TO_BRANCH]* 1e6 / g_settings->sizeCell);
+		logger(g_debug_log, "C_TO_FRUIT = %g gC/m2/day\n", s->value[C_TO_FRUIT]* 1e6 / g_settings->sizeCell);
+		logger(g_debug_log, "\nbalance = %g gC/m2/day\n", balance);
+		logger(g_debug_log, "...FATAL ERROR AT CLASS LEVEL carbon flux balance (exit)\n");
 		CHECK_CONDITION (fabs( balance ), >, eps);
 
 		return 0;
 	}
 	else
 	{
-		logger(g_debug_log, "...ok carbon balance at class level\n");
+		logger(g_debug_log, "...ok carbon flux balance at class level\n");
 	}
 
 	/*******************************************************************************************************************/
 	return 1;
 }
 
-int check_class_water_balance(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species)
+int check_class_carbon_mass_balance(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species)
+{
+	double in;
+	double out;
+	double store;
+	double balance;
+	static double old_store;
+
+	species_t *s;
+	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
+
+	/* DAILY CHECK ON CLASS LEVEL CARBON MASS BALANCE */
+	/* check complete tree level carbon mass balance */
+
+	/* sum of sources */
+	if ( s->value[NPP_tC] > 0. )
+	{
+		in = s->value[NPP_tC];
+	}
+	else
+	{
+		in = 0.;
+	}
+
+	/* sum of sinks */
+	out = - (s->value[TOTAL_AUT_RESP_tC] + s->value[LITR_C]);
+
+	/* sum of current storage */
+	store = s->value[LEAF_C] + s->value[FROOT_C] + s->value[CROOT_C] + s->value[STEM_C] +
+			s->value[BRANCH_C] + s->value[RESERVE_C] + s->value[FRUIT_C];
+
+	/* check carbon pool balance */
+	balance = in - out - (old_store - store);
+
+	logger(g_debug_log, "\nCLASS LEVEL CARBON MASS BALANCE\n");
+
+	/* check for carbon mass balance closure */
+	if ( fabs( balance ) > eps && c->doy > 1 )
+	{
+		logger(g_debug_log, "DOY = %d\n", c->doy);
+		logger(g_debug_log, "\nin = %g tC/sizecell/day\n", in);
+		logger(g_debug_log, "NPP = %g tC/sizecell\n", s->value[NPP_tC]);
+		logger(g_debug_log, "\nout = %g tC/sizecell/day\n", out);
+		logger(g_debug_log, "TOTAL_AUT_RESP = %g tC/sizecell/day\n", s->value[TOTAL_AUT_RESP_tC]);
+		logger(g_debug_log, "LITR_C = %g tC/sizecell/day\n", s->value[LITR_C]);
+		logger(g_debug_log, "\nold_store = %g tC/sizecell\n", old_store);
+		logger(g_debug_log, "store = %g tC/sizecell\n", store);
+		logger(g_debug_log, "old_store - store = %g tC/sizecell\n", old_store - store);
+		logger(g_debug_log, "\nbalance = %g tC/sizecell\n", balance);
+		logger(g_debug_log, "...FATAL ERROR AT CLASS LEVEL carbon mass balance (exit)\n");
+		CHECK_CONDITION (fabs( balance ), >, eps);
+
+		old_store = store;
+
+		return 0;
+	}
+	else
+	{
+		old_store = store;
+		logger(g_debug_log, "...ok carbon mass balance at class level\n");
+	}
+
+	/*******************************************************************************************************************/
+	return 1;
+}
+
+int check_class_water_flux_balance(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species)
 {
 	double in;
 	double out;

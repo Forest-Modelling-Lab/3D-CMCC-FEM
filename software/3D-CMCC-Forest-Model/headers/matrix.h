@@ -512,6 +512,7 @@ enum {
 	YEARLY_CROOT_AUT_RESP,              /* Annual Coarse root autotrophic respiration (gC/m2/year) */
 	YEARLY_BRANCH_AUT_RESP,             /* Annual Branch autotrophic respiration (gC/m2/year) */
 	YEARLY_TOTAL_AUT_RESP,              /* Annual Total autotrophic respiration (gC/m2/year) */
+	TOTAL_AUT_RESP_tC,                  /* Total autotrophic respiration (tC/sizecell/day) */
 
 	/* nitrogen to nitrogen pools */
 	N_TO_LEAF,                          /* Daily Net Primary Production to Leaf pool (tN/sizeCell day) */
