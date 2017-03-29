@@ -490,13 +490,13 @@ int check_class_carbon_flux_balance(cell_t *const c, const int layer, const int 
 	/* check complete tree level carbon flux balance */
 
 	/* sum of sources */
-	in = s->value[GPP_gC];
+	in = s->value[GPP];
 
 	/* sum of sinks */
 	out = s->value[TOTAL_AUT_RESP];
 
 	/* sum of current storage */
-	store = s->value[NPP_gC];
+	store = s->value[NPP];
 
 	/* check carbon flux balance */
 	balance = in - out - store;
@@ -508,11 +508,11 @@ int check_class_carbon_flux_balance(cell_t *const c, const int layer, const int 
 	{
 		logger(g_debug_log, "DOY = %d\n", c->doy);
 		logger(g_debug_log, "\nin = %g gC/m2/day\n", in);
-		logger(g_debug_log, "GPP = %g gC/m2/day\n", s->value[GPP_gC]);
+		logger(g_debug_log, "GPP = %g gC/m2/day\n", s->value[GPP]);
 		logger(g_debug_log, "\nout = %g gC/m2/day\n", out);
 		logger(g_debug_log, "TOTAL_AUT_RESP = %g gC/m2/day\n", s->value[TOTAL_AUT_RESP]);
 		logger(g_debug_log, "\nstore = %g gC/m2/day\n", store);
-		logger(g_debug_log, "NPP = %g gC/m2/day\n", s->value[NPP_gC]);
+		logger(g_debug_log, "NPP = %g gC/m2/day\n", s->value[NPP]);
 		logger(g_debug_log, "\nbalance = %g gC/m2/day\n", balance);
 		logger(g_debug_log, "...FATAL ERROR AT CLASS LEVEL carbon flux balance (first) (exit)\n");
 		CHECK_CONDITION (fabs( balance ), >, eps);
@@ -597,24 +597,23 @@ int check_class_carbon_mass_balance(cell_t *const c, const int layer, const int 
 	/* check complete tree level carbon mass balance */
 
 	/* sum of sources */
-	if ( s->value[NPP_tC] > 0. )
-	{
-		in = s->value[NPP_tC];
-	}
-	else
-	{
-		in = 0.;
-	}
+	in = s->value[GPP_tC];
 
 	/* sum of sinks */
-	out = - (s->value[TOTAL_AUT_RESP_tC] + s->value[LITR_C]);
+	out = (s->value[TOTAL_MAINT_RESP_tC] + s->value[TOTAL_GROWTH_RESP_tC]) +
+			s->value[C_TO_LITR];
 
 	/* sum of current storage */
-	store = s->value[LEAF_C] + s->value[FROOT_C] + s->value[CROOT_C] + s->value[STEM_C] +
-			s->value[BRANCH_C] + s->value[RESERVE_C] + s->value[FRUIT_C];
+	store = s->value[LEAF_C]    +
+			s->value[FROOT_C]   +
+			s->value[CROOT_C]   +
+			s->value[STEM_C]    +
+			s->value[BRANCH_C]  +
+			s->value[RESERVE_C] +
+			s->value[FRUIT_C]   ;
 
 	/* check carbon pool balance */
-	balance = in - out - (old_store - store);
+	balance = in - out - (store - old_store);
 
 	logger(g_debug_log, "\nCLASS LEVEL CARBON MASS BALANCE\n");
 
@@ -623,13 +622,21 @@ int check_class_carbon_mass_balance(cell_t *const c, const int layer, const int 
 	{
 		logger(g_debug_log, "DOY = %d\n", c->doy);
 		logger(g_debug_log, "\nin = %g tC/sizecell/day\n", in);
-		logger(g_debug_log, "NPP = %g tC/sizecell\n", s->value[NPP_tC]);
+		logger(g_debug_log, "GPP = %g tC/sizecell\n", s->value[GPP_tC]);
 		logger(g_debug_log, "\nout = %g tC/sizecell/day\n", out);
-		logger(g_debug_log, "TOTAL_AUT_RESP = %g tC/sizecell/day\n", s->value[TOTAL_AUT_RESP_tC]);
+		logger(g_debug_log, "TOTAL_MAINT_RESP_tC = %g tC/sizecell/day\n", s->value[TOTAL_MAINT_RESP_tC]);
+		logger(g_debug_log, "TOTAL_GROWTH_RESP_tC = %g tC/sizecell/day\n", s->value[TOTAL_GROWTH_RESP_tC]);
 		logger(g_debug_log, "LITR_C = %g tC/sizecell/day\n", s->value[LITR_C]);
 		logger(g_debug_log, "\nold_store = %g tC/sizecell\n", old_store);
 		logger(g_debug_log, "store = %g tC/sizecell\n", store);
-		logger(g_debug_log, "old_store - store = %g tC/sizecell\n", old_store - store);
+		logger(g_debug_log, "old_store - store = %g tC/sizecell\n", store - old_store);
+		logger(g_debug_log, "LEAF_C = %g tC/cell/day\n", s->value[LEAF_C]);
+		logger(g_debug_log, "FROOT_C = %g tC/cell/day\n", s->value[FROOT_C]);
+		logger(g_debug_log, "CROOT_C = %g tC/cell/day\n", s->value[CROOT_C]);
+		logger(g_debug_log, "STEM_C = %g tC/cell/day\n", s->value[STEM_C]);
+		logger(g_debug_log, "BRANCH_C = %g tC/cell/day\n", s->value[BRANCH_C]);
+		logger(g_debug_log, "RESERVE_C = %g tC/cell/day\n", s->value[RESERVE_C]);
+		logger(g_debug_log, "FRUIT_C = %g tC/cell/day\n", s->value[FRUIT_C]);
 		logger(g_debug_log, "\nbalance = %g tC/sizecell\n", balance);
 		logger(g_debug_log, "...FATAL ERROR AT CLASS LEVEL carbon mass balance (exit)\n");
 		CHECK_CONDITION (fabs( balance ), >, eps);

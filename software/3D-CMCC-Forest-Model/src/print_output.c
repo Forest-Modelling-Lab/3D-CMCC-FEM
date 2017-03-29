@@ -287,11 +287,11 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 									",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
 									",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
 									",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",
-									s->value[GPP_gC],
+									s->value[GPP],
 									s->value[TOTAL_GROWTH_RESP],
 									s->value[TOTAL_MAINT_RESP],
 									s->value[TOTAL_AUT_RESP],
-									s->value[NPP_gC],
+									s->value[NPP],
 									s->value[CUE],
 									s->value[LAI_PROJ],
 									s->value[DAILY_CANOPY_COVER_PROJ],
@@ -576,9 +576,9 @@ void EOM_print_output_cell_level(cell_t *const c, const int month, const int yea
 							/* print variables at layer-class level */
 							logger(g_monthly_log,",%6.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%d,%3.4f,%3.4f,%3.4f,%3.4f"
 										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",
-										s->value[MONTHLY_GPP_gC],
+										s->value[MONTHLY_GPP],
 										s->value[MONTHLY_TOTAL_AUT_RESP],
-										s->value[MONTHLY_NPP_gC],
+										s->value[MONTHLY_NPP],
 										s->value[MONTHLY_CUE],
 										s->value[MONTHLY_CANOPY_TRANSP],
 										s->value[MONTHLY_CANOPY_EVAPO_TRANSP],
@@ -868,13 +868,13 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 								/* print variables at layer-class level */
 								logger(g_annual_log,",%6.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%d,%d,%d,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
 											",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",
-											s->value[YEARLY_GPP_gC],
+											s->value[YEARLY_GPP],
 											s->value[YEARLY_TOTAL_GROWTH_RESP],
 											s->value[YEARLY_TOTAL_MAINT_RESP],
 											s->value[YEARLY_TOTAL_AUT_RESP],
-											s->value[YEARLY_NPP_gC],
+											s->value[YEARLY_NPP],
 											s->value[YEARLY_CUE],
-											s->value[YEARLY_TOTAL_AUT_RESP]/s->value[YEARLY_GPP_gC]*100,
+											s->value[YEARLY_TOTAL_AUT_RESP]/s->value[YEARLY_GPP]*100,
 											s->value[PEAK_LAI_PROJ],
 											s->value[CANOPY_COVER_PROJ],
 											s->value[DBHDC_EFF],

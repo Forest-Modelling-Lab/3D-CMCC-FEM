@@ -283,13 +283,13 @@ enum {
 
 	/* carbon variable */
 	C_FLUX,
-	GPP_gC,                             /* Daily Gross Primary Production gC/m2/day */
-	MONTHLY_GPP_gC,                     /* Monthly Gross Primary Production gC/m2/month */
-	YEARLY_GPP_gC,                      /* Yearly Gross Primary Production gC/m2/day */
+	GPP,                                /* Daily Gross Primary Production gC/m2/day */
+	MONTHLY_GPP,                        /* Monthly Gross Primary Production gC/m2/month */
+	YEARLY_GPP,                         /* Yearly Gross Primary Production gC/m2/day */
 	GPP_tC,                             /* Daily Gross Primary Production tC/sizeCell/day */
-	NPP_gC,                             /* Daily Net Primary Production gC/m2/day */
-	MONTHLY_NPP_gC,                     /* Monthly Net Primary Production gC/m2/day */
-	YEARLY_NPP_gC,                      /* Yearly Net Primary Production gC/m2/day */
+	NPP,                                /* Daily Net Primary Production gC/m2/day */
+	MONTHLY_NPP,                        /* Monthly Net Primary Production gC/m2/day */
+	YEARLY_NPP,                         /* Yearly Net Primary Production gC/m2/day */
 	NPP_tC,                             /* Daily Net Primary Production tC/sizeCell/day */
 	MONTHLY_NPP_tC,                     /* Monthly Net Primary Production tC/sizeCell/day */
 	YEARLY_NPP_tC,                      /* Yearly Net Primary Production tC/sizeCell/day */

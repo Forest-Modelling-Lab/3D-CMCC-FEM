@@ -25,25 +25,22 @@ void carbon_assimilation(cell_t *const c, const int layer, const int height, con
 	logger (g_debug_log, "\n**C-ASSIMILATION**\n");
 
 	/* NPP computation is based on ground surface area */
-	s->value[NPP_gC] = s->value[GPP_gC] - s->value[TOTAL_AUT_RESP];
-
-	s->value[NPP_tC] = s->value[NPP_gC] / 1000000 * g_settings->sizeCell;
-	logger(g_debug_log, "Daily NPP = %f gC/m^2/day\n", s->value[NPP_gC]);
-	logger(g_debug_log, "Daily NPP = %f tC/area/day\n", s->value[NPP_tC]);
+	s->value[NPP]    = s->value[GPP] - s->value[TOTAL_AUT_RESP];
+	s->value[NPP_tC] = s->value[NPP] / 1e6 * g_settings->sizeCell;
 
 	/* class level */
-	s->value[MONTHLY_NPP_gC] += s->value[NPP_gC];
-	s->value[YEARLY_NPP_gC] += s->value[NPP_gC];
+	s->value[MONTHLY_NPP]    += s->value[NPP];
+	s->value[YEARLY_NPP]     += s->value[NPP];
 	s->value[MONTHLY_NPP_tC] += s->value[NPP_tC];
-	s->value[YEARLY_NPP_tC] += s->value[NPP_tC];
+	s->value[YEARLY_NPP_tC]  += s->value[NPP_tC];
 
 	/* cell level */
-	c->daily_npp += s->value[NPP_gC];
-	c->monthly_npp += s->value[NPP_gC];
-	c->annual_npp += s->value[NPP_gC];
-	c->daily_npp_tC += s->value[NPP_tC];
-	c->monthly_npp_tC += s->value[NPP_tC];
-	c->annual_npp_tC += s->value[NPP_tC];
+	c->daily_npp             += s->value[NPP];
+	c->monthly_npp           += s->value[NPP];
+	c->annual_npp            += s->value[NPP];
+	c->daily_npp_tC          += s->value[NPP_tC];
+	c->monthly_npp_tC        += s->value[NPP_tC];
+	c->annual_npp_tC         += s->value[NPP_tC];
 
 }
 

@@ -24,9 +24,9 @@ void carbon_use_efficiency( cell_t *const c, const int height, const int dbh, co
 	DeLucia et al., GCB 2007
 	*/
 	/* daily CUE */
-	if( s->value[GPP_gC] > 0 )
+	if( s->value[GPP] > 0 )
 	{
-		s->value[CUE] = s->value[NPP_gC] / s->value[GPP_gC];
+		s->value[CUE] = s->value[NPP] / s->value[GPP];
 	}
 	else
 	{
@@ -36,9 +36,9 @@ void carbon_use_efficiency( cell_t *const c, const int height, const int dbh, co
 	/* last day of the month */
 	if ( ( IS_LEAP_YEAR ( c->years[year].year ) ? ( MonthLength_Leap[month] ) : ( MonthLength[month] ) ) == c->doy )
 	{
-		if( s->value[MONTHLY_GPP_gC] > 0 )
+		if( s->value[MONTHLY_GPP] > 0 )
 		{
-			s->value[MONTHLY_CUE] = s->value[MONTHLY_NPP_gC] / s->value[MONTHLY_GPP_gC];
+			s->value[MONTHLY_CUE] = s->value[MONTHLY_NPP] / s->value[MONTHLY_GPP];
 		}
 		else
 		{
@@ -49,9 +49,9 @@ void carbon_use_efficiency( cell_t *const c, const int height, const int dbh, co
 	/* last day of the year */
 	if ( c->doy == ( IS_LEAP_YEAR( c->years[year].year ) ? 366 : 365) )
 	{
-		if( s->value[YEARLY_NPP_gC] > 0 )
+		if( s->value[YEARLY_NPP] > 0 )
 		{
-			s->value[YEARLY_CUE] = s->value[YEARLY_NPP_gC] / s->value[YEARLY_GPP_gC];
+			s->value[YEARLY_CUE] = s->value[YEARLY_NPP] / s->value[YEARLY_GPP];
 		}
 		else
 		{
