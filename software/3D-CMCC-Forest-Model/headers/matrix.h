@@ -392,6 +392,7 @@ enum {
 	DAILY_LIVE_WOOD_TURNOVER,           /* Daily live wood turnover rate */
 	LEAF_TO_REMOVE,                     /* Daily Leaf to remove tC/sizeCell */
 	FROOT_TO_REMOVE,                    /* Daily Fine Root to remove tC/sizeCell */
+	FRUIT_TO_REMOVE,                    /* Daily Fruit to remove tC/sizeCell */
 
 	/* per tree in KgC */
 	AV_LEAF_MASS_KgC,                   /* Average Leaf carbon pool kgC/tree */

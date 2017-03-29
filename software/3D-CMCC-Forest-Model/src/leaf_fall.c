@@ -53,15 +53,18 @@ void leaf_fall_deciduous ( cell_t *const c, const int height, const int dbh, con
 		/* check */
 		CHECK_CONDITION(previousLai, <, currentLai);
 
-		/* checl Leaf Area Index */
+		/* check Leaf Area Index */
 		previousBiomass_lai = previousLai * (s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell) / (s->value[SLA_AVG] * 1000.0);
 		newBiomass_lai      = currentLai  * (s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell) / (s->value[SLA_AVG] * 1000.0);
 
 		/* update leaf carbon */
 		s->value[LEAF_TO_REMOVE]   = previousBiomass_lai - newBiomass_lai;
 
-		/* a simple linear correlation from leaf carbon to remove and fine root to remove */
+		/* update fine root carbon */
 		s->value[FROOT_TO_REMOVE]  = ( s->value[FROOT_C] * s->value[LEAF_TO_REMOVE]) / s->value[LEAF_C];
+
+		/* update fuitt carbon */
+		s->value[FRUIT_TO_REMOVE]  = ( s->value[FRUIT_C] * s->value[LEAF_TO_REMOVE]) / s->value[LEAF_C];
 
 		/* reconcile leaf and fine root */
 		leaf_fall ( s );
@@ -81,6 +84,7 @@ void leaf_fall_deciduous ( cell_t *const c, const int height, const int dbh, con
 		/* balancing leaf_C in and out */
 		s->value[C_TO_LEAF]          = - s->value[LEAF_C];
 		s->value[C_TO_FROOT]         = - s->value[FROOT_C];
+		s->value[C_TO_FRUIT]         = - s->value[FRUIT_C];
 
 		/* adding to main C transfer pools */
 		s->value[C_TO_RESERVE]      += 0.; /*leave it as so */
@@ -125,6 +129,9 @@ void leaf_fall_evergreen ( cell_t *const c, const int height, const int dbh, con
 		/* daily fine root turnover rate */
 		s->value[FROOT_TO_REMOVE]   = (s->value[FROOT_C] * s->value[LEAF_FROOT_TURNOVER]) / 365;
 
+		/* daily fruit turnover rate */
+		s->value[FRUIT_TO_REMOVE]   = (s->value[FRUIT_C] * s->value[LEAF_FROOT_TURNOVER]) / 365;
+
 		//fixme
 		/* retranslocate for falling leaves Nitrogen and update current Nitrogen amount */
 		//s->value[LEAF_N] = (s->value[LEAF_TO_REMOVE] / s->value[CN_FALLING_LEAVES]) + ((s->value[LEAF_C] - s->value[LEAF_TO_REMOVE])/s->value[CN_LEAVES]);
@@ -157,7 +164,7 @@ void leaf_fall (species_t *const s)
 
 	/* adding to main C transfer pools */
 	s->value[C_TO_RESERVE]      += (s->value[C_LEAF_TO_RESERVE] + s->value[C_FROOT_TO_RESERVE]);
-	s->value[C_TO_LITR]          = (s->value[C_LEAF_TO_LITR]    + s->value[C_FROOT_TO_LITR]);
+	s->value[C_TO_LITR]          = (s->value[C_LEAF_TO_LITR] + s->value[C_FROOT_TO_LITR] + s->value[C_FRUIT_TO_LITR]);
 
 	/*** nitrogen leaf_fall ***/
 	/* compute fluxes of nitrogen leaf and fine root pool */
