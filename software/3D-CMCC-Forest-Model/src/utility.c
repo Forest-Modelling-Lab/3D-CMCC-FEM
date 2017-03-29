@@ -73,7 +73,7 @@ void reset_daily_cell_variables(cell_t *const c)
 	c->daily_root_carbon =              0.;
 	c->daily_branch_carbon =            0.;
 	c->daily_reserve_carbon =           0.;
-	c->daily_litter_carbon =            0.;
+	c->daily_litr_carbon =              0.;
 	c->daily_soil_carbon =              0.;
 	c->daily_fruit_carbon =             0.;
 	c->daily_litrC =                    0.;

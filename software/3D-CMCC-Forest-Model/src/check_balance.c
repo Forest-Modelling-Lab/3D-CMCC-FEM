@@ -104,7 +104,7 @@ int check_radiation_flux_balance (cell_t *const c, const meteo_daily_t *const me
 		logger(g_debug_log, "radiation balance = %g W/m2\n",balance);
 		logger(g_debug_log, "...FATAL ERROR IN Short Wave Radiation radiative balance (exit)\n");
 		CHECK_CONDITION (fabs( balance ), >, eps);
-		
+
 		return 0;
 	}
 	else
@@ -212,7 +212,7 @@ int check_carbon_flux_balance(cell_t *const c)
 	store = c->daily_leaf_carbon + c->daily_stem_carbon +
 			c->daily_froot_carbon + c->daily_croot_carbon +
 			c->daily_branch_carbon + c->daily_reserve_carbon +
-			c->daily_litter_carbon + c->daily_soil_carbon +
+			c->daily_litr_carbon + c->daily_soil_carbon +
 			+ c->daily_fruit_carbon;
 
 	balance = in - out -store;
@@ -233,7 +233,7 @@ int check_carbon_flux_balance(cell_t *const c)
 		logger(g_debug_log, "c->daily_coarse_root_carbon = %g gC/m2/day\n", c->daily_croot_carbon);
 		logger(g_debug_log, "c->daily_branch_carbon = %g gC/m2/day\n", c->daily_branch_carbon);
 		logger(g_debug_log, "c->daily_reserve_carbon = %g gC/m2/day\n", c->daily_reserve_carbon);
-		logger(g_debug_log, "c->daily_litter_carbon = %g gC/m2/day\n", c->daily_litter_carbon);
+		logger(g_debug_log, "c->daily_litter_carbon = %g gC/m2/day\n", c->daily_litr_carbon);
 		logger(g_debug_log, "c->daily_soil_carbon = %g gC/m2/day\n", c->daily_soil_carbon);
 		logger(g_debug_log, "c->daily_fruit_carbon = %g gC/m2/day\n", c->daily_fruit_carbon);
 		logger(g_debug_log, "\ncarbon in = %g gC/m2/day\n", in);
@@ -600,7 +600,8 @@ int check_class_carbon_mass_balance(cell_t *const c, const int layer, const int 
 	in = s->value[GPP_tC];
 
 	/* sum of sinks */
-	out = (s->value[TOTAL_MAINT_RESP_tC] + s->value[TOTAL_GROWTH_RESP_tC]) +
+	out = s->value[TOTAL_MAINT_RESP_tC] +
+			s->value[TOTAL_GROWTH_RESP_tC] +
 			s->value[C_TO_LITR];
 
 	/* sum of current storage */
