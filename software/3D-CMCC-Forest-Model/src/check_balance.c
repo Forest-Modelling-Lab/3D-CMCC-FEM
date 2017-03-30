@@ -166,16 +166,15 @@ int check_carbon_flux_balance(cell_t *const c)
 
 	logger(g_debug_log, "\n*********CHECK CELL CARBON BALANCE************\n");
 
-	/* DAILY CHECK ON CARBON BALANCE */
-	/* note: all biomass increments pools are in gC/m2/day */
+	/* check complete cell level carbon flux balance */
 
-	/* sum of sources */
+	/* sum of carbon sources */
 	in = c->daily_gpp;
 
-	/* sum of sinks */
+	/* sum of carbon sinks */
 	out = c->daily_aut_resp;
 
-	/* sum of current storage */
+	/* sum of current carbon storage */
 	store = c->daily_npp;
 
 	balance = in - out -store;
@@ -202,13 +201,15 @@ int check_carbon_flux_balance(cell_t *const c)
 		return 0;
 	}
 
-	/* sum of sources */
+	/***************************************************************************************************************/
+
+	/* sum of carbon sources */
 	in = c->daily_gpp;
 
-	/* sum of sinks */
+	/* sum of carbon sinks */
 	out = c->daily_maint_resp + c->daily_growth_resp;
 
-	/* sum of current storage */
+	/* sum of current carbon storage */
 	store = c->daily_leaf_carbon + c->daily_stem_carbon +
 			c->daily_froot_carbon + c->daily_croot_carbon +
 			c->daily_branch_carbon + c->daily_reserve_carbon +
@@ -263,16 +264,15 @@ int check_carbon_mass_balance(cell_t *const c)
 	double balance;
 	static double old_store;
 
-	/* DAILY CHECK ON CELL LEVEL CARBON MASS BALANCE */
 	/* check complete cell level carbon mass balance */
 
-	/* sum of sources */
+	/* sum of carbon sources */
 	in = c->daily_gpp_tC;
 
-	/* sum of sinks */
+	/* sum of carbon sinks */
 	out = c->daily_aut_resp_tC;
 
-	/* sum of current storage */
+	/* sum of current carbon storage */
 	store = c->leaf_tC    +
 			c->froot_tC   +
 			c->croot_tC   +
@@ -280,35 +280,36 @@ int check_carbon_mass_balance(cell_t *const c)
 			c->branch_tC  +
 			c->reserve_tC +
 			c->litr_tC    +
+			c->soil_tC    +
 			c->fruit_tC   ;
 
 	/* check carbon pool balance */
 	balance = in - out - (store - old_store);
 
-	logger(g_debug_log, "\nCLASS LEVEL CARBON MASS BALANCE\n");
+	logger(g_debug_log, "\CELL LEVEL CARBON MASS BALANCE\n");
 
 	/* check for carbon mass balance closure */
 	if ( fabs( balance ) > eps && c->doy > 1 )
 	{
 		logger(g_debug_log, "DOY = %d\n", c->doy);
 		logger(g_debug_log, "\nin = %g tC/sizecell/day\n", in);
-//		logger(g_debug_log, "GPP = %g tC/sizecell\n", s->value[GPP_tC]);
-//		logger(g_debug_log, "\nout = %g tC/sizecell/day\n", out);
-//		logger(g_debug_log, "TOTAL_MAINT_RESP_tC = %g tC/sizecell/day\n", s->value[TOTAL_MAINT_RESP_tC]);
-//		logger(g_debug_log, "TOTAL_GROWTH_RESP_tC = %g tC/sizecell/day\n", s->value[TOTAL_GROWTH_RESP_tC]);
-//		logger(g_debug_log, "LITR_C = %g tC/sizecell/day\n", s->value[LITR_C]);
-//		logger(g_debug_log, "\nold_store = %g tC/sizecell\n", old_store);
-//		logger(g_debug_log, "store = %g tC/sizecell\n", store);
-//		logger(g_debug_log, "store - old_tore = %g tC/sizecell\n", store - old_store);
-//		logger(g_debug_log, "LEAF_C = %g tC/cell/day\n", s->value[LEAF_C]);
-//		logger(g_debug_log, "FROOT_C = %g tC/cell/day\n", s->value[FROOT_C]);
-//		logger(g_debug_log, "CROOT_C = %g tC/cell/day\n", s->value[CROOT_C]);
-//		logger(g_debug_log, "STEM_C = %g tC/cell/day\n", s->value[STEM_C]);
-//		logger(g_debug_log, "BRANCH_C = %g tC/cell/day\n", s->value[BRANCH_C]);
-//		logger(g_debug_log, "RESERVE_C = %g tC/cell/day\n", s->value[RESERVE_C]);
-//		logger(g_debug_log, "FRUIT_C = %g tC/cell/day\n", s->value[FRUIT_C]);
+		logger(g_debug_log, "daily_gpp_tC = %g tC/sizecell\n", c->daily_gpp_tC);
+		logger(g_debug_log, "\nout = %g tC/sizecell/day\n", out);
+		logger(g_debug_log, "daily_aut_resp_tC = %g tC/sizecell/day\n", c->daily_aut_resp_tC);
+		logger(g_debug_log, "\nold_store = %g tC/sizecell\n", old_store);
+		logger(g_debug_log, "store = %g tC/sizecell\n", store);
+		logger(g_debug_log, "store - old_tore = %g tC/sizecell\n", store - old_store);
+		logger(g_debug_log, "leaf_tC = %g tC/cell/day\n", c->leaf_tC);
+		logger(g_debug_log, "froot_tC = %g tC/cell/day\n", c->froot_tC);
+		logger(g_debug_log, "croot_tC = %g tC/cell/day\n",c->croot_tC);
+		logger(g_debug_log, "stem_tC = %g tC/cell/day\n",c->stem_tC);
+		logger(g_debug_log, "branch_tC = %g tC/cell/day\n",c->branch_tC);
+		logger(g_debug_log, "reserve_tC = %g tC/cell/day\n",c->reserve_tC);
+		logger(g_debug_log, "fruit_tC = %g tC/cell/day\n",c->fruit_tC);
+		logger(g_debug_log, "litr_tC = %g tC/cell/day\n",c->litr_tC);
+		logger(g_debug_log, "soil_tC = %g tC/cell/day\n",c->soil_tC);
 		logger(g_debug_log, "\nbalance = %g tC/sizecell\n", balance);
-		logger(g_debug_log, "...FATAL ERROR AT CLASS LEVEL carbon mass balance (exit)\n");
+		logger(g_debug_log, "...FATAL ERROR AT CELL LEVEL carbon mass balance (exit)\n");
 		CHECK_CONDITION (fabs( balance ), >, eps);
 
 		old_store = store;
@@ -318,7 +319,7 @@ int check_carbon_mass_balance(cell_t *const c)
 	else
 	{
 		old_store = store;
-		logger(g_debug_log, "...ok carbon mass balance at class level\n");
+		logger(g_debug_log, "...ok carbon mass balance at cell level\n");
 	}
 
 	/*******************************************************************************************************************/

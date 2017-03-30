@@ -1061,7 +1061,7 @@ typedef struct
 	double deadwood_litr2C;                                               /* (tC/sizecell) deadwood litter unshielded cellulose carbon */
 	double deadwood_litr3C;                                               /* (tC/sizecell) deadwood litter shielded cellulose carbon */
 	double deadwood_litr4C;                                               /* (tC/sizecell) deadwood litter lignin carbon */
-	double litr_tC;                                                       /* Litter at cell level (tC/cell) */
+	double litr_tC;                                                       /* (tC/sizecell) Litter at cell level */
 
 	double cwdC;                                                          /* (tC/sizecell) coarse woody debris carbon */
 	double litrC;                                                         /* (tC/sizecell) litter + cwd total carbon */
@@ -1074,6 +1074,7 @@ typedef struct
 	double soil2C;                                                        /* (tC/sizecell) microbial recycling pool carbon (medium) */
 	double soil3C;                                                        /* (tC/sizecell) microbial recycling pool carbon (slow) */
 	double soil4C;                                                        /* (tC/sizecell) recalcitrant SOM carbon (humus, slowest) */
+	double soil_tC;                                                       /* (tC/sizecell) Soil at cell level */
 
 	/* litter and soil nitrogen pools*/
 	double leaf_litrN;                                                    /* (tN/sizecell) leaf total litter nitrogen */
@@ -1090,7 +1091,7 @@ typedef struct
 	double deadwood_litr2N;                                               /* (tN/sizecell) deadwood litter unshielded cellulose nitrogen */
 	double deadwood_litr3N;                                               /* (tN/sizecell) deadwood litter shielded cellulose nitrogen */
 	double deadwood_litr4N;                                               /* (tN/sizecell) deadwood litter lignin nitrogen */
-	double litr_tN;                                                       /* Litter at cell level (tN/cell) */
+	double litr_tN;                                                       /* (tN/sizecell)  Litter at cell level */
 
 	double cwdN;                                                          /* (tN/sizecell) coarse woody debris nitrogen */
 	double litrN;                                                         /* (tN/sizecell) litter litter + cwd total nitrogen */
