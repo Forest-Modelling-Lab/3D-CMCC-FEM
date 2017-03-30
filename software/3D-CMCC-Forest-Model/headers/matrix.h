@@ -404,6 +404,7 @@ enum {
 	AV_CROOT_MASS_KgC,                  /* Average Coarse carbon pool kgC/tree */
 	AV_RESERVE_MASS_KgC,                /* Average Reserve carbon pool kgC/tree */
 	AV_MIN_RESERVE_KgC,                 /* Average Minimum Reserve carbon pool kgC/tree */
+	AV_FRUIT_MASS_KgC,                  /* Average Fruit carbon pool kgC/tree */
 	AV_BRANCH_MASS_KgC,                 /* Average Branch carbon pool kgC/tree */
 	AV_LIVE_STEM_MASS_KgC,              /* Average Live Stem carbon pool kgC/tree */
 	AV_DEAD_STEM_MASS_KgC,              /* Average Dead Stem carbon pool kgC/tree */
@@ -868,6 +869,7 @@ typedef struct
 
 	/*carbon variables*/
 	double daily_gpp, monthly_gpp, annual_gpp;                            /* daily, monthly and annual GPP at cell level (gC/m2/ ) */
+	double daily_gpp_tC, monthly_gpp_tC, annual_gpp_tC;                   /* daily, monthly and annual GPP at cell level (tC/m2/ ) */
 	double daily_npp, monthly_npp, annual_npp;                            /* daily, monthly and annual NPP at cell level (gC/m2/ ) */
 	double daily_npp_tC, monthly_npp_tC, annual_npp_tC;                   /* daily, monthly and annual NPP at cell level (tC/cell/ ) */
 	double daily_npp_tDM, monthly_npp_tDM, annual_npp_tDM;                /* daily, monthly and annual NPP at cell level (tDM/cell/ ) */
@@ -927,7 +929,8 @@ typedef struct
 	double branch_carbon;                                                 /* branch carbon at cell level (gC/m2) */
 	double branch_live_wood_carbon;                                       /* branch live wood carbon at cell level (gC/m2) */
 	double branch_dead_wood_carbon;                                       /* branch dead wood carbon at cell level (gC/m2) */
-	double reserve;                                                       /* reserve at cell level (gC/m2) */
+	double reserve_carbon;                                                /* reserve at cell level (gC/m2) */
+	double fruit_carbon;                                                  /* fruit at cell level (gC/m2) */
 	double leaf_tC;                                                       /* leaf carbon at cell level (tC/cell) */
 	double froot_tC;                                                      /* fine root carbon at cell level (tC/cell) */
 	double stem_tC;                                                       /* stem carbon at cell level (tC/cell) */
@@ -940,6 +943,7 @@ typedef struct
 	double branch_live_wood_tC;                                           /* branch live wood carbon at cell level (tC/cell) */
 	double branch_dead_wood_tC;                                           /* branch dead wood carbon at cell level (tC/cell) */
 	double reserve_tC;                                                    /* reserve at cell level (tC/cell) */
+	double fruit_tC;                                                      /* fruit at cell level (tC/cell) */
 
 	/* water use efficiency */
 	double daily_wue;                                                     /* daily water use efficiency */
@@ -1028,6 +1032,7 @@ typedef struct
 	double daily_froot_litr2C;                                            /* daily fine root to litter unshelded cellulose carbon pool at cell level (tC/cell/day) */
 	double daily_froot_litr3C;                                            /* daily fine root to litter shelded cellulose carbon pool at cell level (tC/cell/day) */
 	double daily_froot_litr4C;                                            /* daily fine root to litter lignin carbon pool at cell level (tC/cell/day) */
+
 	/* nitrogen */
 	double daily_litrN;                                                   /* daily leaf + fine root to litter nitrogen pool at cell level (tN/cell/day) */
 	double daily_leaf_litrN;                                              /* daily leaf to litter nitrogen pool at cell level (tN/cell/day) */
@@ -1056,6 +1061,7 @@ typedef struct
 	double deadwood_litr2C;                                               /* (tC/sizecell) deadwood litter unshielded cellulose carbon */
 	double deadwood_litr3C;                                               /* (tC/sizecell) deadwood litter shielded cellulose carbon */
 	double deadwood_litr4C;                                               /* (tC/sizecell) deadwood litter lignin carbon */
+	double litr_tC;                                                       /* Litter at cell level (tC/cell) */
 
 	double cwdC;                                                          /* (tC/sizecell) coarse woody debris carbon */
 	double litrC;                                                         /* (tC/sizecell) litter + cwd total carbon */
@@ -1084,6 +1090,7 @@ typedef struct
 	double deadwood_litr2N;                                               /* (tN/sizecell) deadwood litter unshielded cellulose nitrogen */
 	double deadwood_litr3N;                                               /* (tN/sizecell) deadwood litter shielded cellulose nitrogen */
 	double deadwood_litr4N;                                               /* (tN/sizecell) deadwood litter lignin nitrogen */
+	double litr_tN;                                                       /* Litter at cell level (tN/cell) */
 
 	double cwdN;                                                          /* (tN/sizecell) coarse woody debris nitrogen */
 	double litrN;                                                         /* (tN/sizecell) litter litter + cwd total nitrogen */

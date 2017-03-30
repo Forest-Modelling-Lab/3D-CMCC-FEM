@@ -306,7 +306,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							/****************************************************************************************************************************************/
 							/* END OF MONTH */
 							/* last day of the month */
-							if ( ( IS_LEAP_YEAR( c->years[year].year ) ? (MonthLength_Leap[month] ) : (MonthLength[month] )) == c->doy )
+							if ( ( IS_LEAP_YEAR( c->years[year].year ) ? ( MonthLength_Leap[month] ) : ( MonthLength[month] ) ) == c->doy )
 							{
 								//dendrometry ( c, layer, height, dbh, age, species, meteo_daily );
 							}
@@ -318,8 +318,6 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							{
 								logger(g_debug_log, "*****END OF YEAR %d ******\n", c->years[year].year);
 
-
-								/************************************************************************************************************************************/
 								/* MORTALITY and RENOVATION */
 
 								/* Mortality based on growth efficiency */
@@ -358,8 +356,6 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 									s = &a->species[species];
 									 */
 								}
-
-								/************************************************************************************************************************************/
 							}
 						}
 						logger(g_debug_log, "****************END OF SPECIES CLASS***************\n");

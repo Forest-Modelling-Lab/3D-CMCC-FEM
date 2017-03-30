@@ -96,6 +96,10 @@ void photosynthesis(cell_t *const c, const int layer, const int height, const in
 	c->monthly_gpp           += s->value[GPP];
 	c->annual_gpp            += s->value[GPP];
 
+	c->daily_gpp_tC          += s->value[GPP_tC];
+	c->monthly_gpp_tC        += s->value[GPP_tC];
+	c->annual_gpp_tC         += s->value[GPP_tC];
+
 	/* yearly veg days counter */
 	if ( s->value[GPP] > 0. )
 	{
