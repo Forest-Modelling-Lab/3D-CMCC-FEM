@@ -41,8 +41,8 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 
 	/* nitrogen pools in gN/m2 */
 	double leaf_N;
-	double fine_root_N;
-	double coarse_root_N;
+	double froot_N;
+	double croot_N;
 	double stem_N;
 	double branch_N;
 
@@ -81,17 +81,17 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 	q10_tsoil       = 3.22 - 0.046 * meteo_daily->tsoil;
 
 	/* compute exponents */
-	exponent_tday   = (meteo_daily->tday - Q10_temp) / 10.0;
+	exponent_tday   = (meteo_daily->tday - Q10_temp)   / 10.0;
 	exponent_tnight = (meteo_daily->tnight - Q10_temp) / 10.0;
-	exponent_tavg   = (meteo_daily->tavg - Q10_temp) / 10.0;
-	exponent_tsoil  = (meteo_daily->tsoil - Q10_temp) / 10.0;
+	exponent_tavg   = (meteo_daily->tavg - Q10_temp)   / 10.0;
+	exponent_tsoil  = (meteo_daily->tsoil - Q10_temp)  / 10.0;
 
 	/* Nitrogen content tN/area --> gN/m2 */
-	leaf_N          = (s->value[LEAF_N] * 1000000.0 /g_settings->sizeCell);
-	fine_root_N     = (s->value[FROOT_N] * 1000000.0 /g_settings->sizeCell);
-	stem_N          = (s->value[STEM_LIVE_WOOD_N] * 1000000.0 /g_settings->sizeCell);
-	coarse_root_N   = (s->value[CROOT_LIVE_WOOD_N] * 1000000.0 /g_settings->sizeCell);
-	branch_N        = (s->value[BRANCH_LIVE_WOOD_N] * 1000000.0 /g_settings->sizeCell);
+	leaf_N          = (s->value[LEAF_N]             * 1e6 /g_settings->sizeCell);
+	froot_N         = (s->value[FROOT_N]            * 1e6 /g_settings->sizeCell);
+	stem_N          = (s->value[STEM_LIVE_WOOD_N]   * 1e6 /g_settings->sizeCell);
+	croot_N         = (s->value[CROOT_LIVE_WOOD_N]  * 1e6 /g_settings->sizeCell);
+	branch_N        = (s->value[BRANCH_LIVE_WOOD_N] * 1e6 /g_settings->sizeCell);
 
 	/* note: values are computed in gC/m2/day */
 
@@ -99,10 +99,10 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 	/* Leaf maintenance respiration is calculated separately for day and night */
 
 	/* day time leaf maintenance respiration */
-	s->value[DAILY_LEAF_MAINT_RESP] = ( leaf_N * MR_ref * pow(q10_tday, exponent_tday) * (meteo_daily->daylength/24.0));
+	s->value[DAILY_LEAF_MAINT_RESP]   = ( leaf_N * MR_ref * pow(q10_tday, exponent_tday) * (meteo_daily->daylength / 24.));
 
 	/* night time leaf maintenance respiration */
-	s->value[NIGHTLY_LEAF_MAINT_RESP] = ( leaf_N * MR_ref * pow(q10_tnight, exponent_tnight) * (1.0 - (meteo_daily->daylength/24.0)));
+	s->value[NIGHTLY_LEAF_MAINT_RESP] = ( leaf_N * MR_ref * pow(q10_tnight, exponent_tnight) * (1. - (meteo_daily->daylength/24.)));
 
 	/* total (all day) leaf maintenance respiration */
 	s->value[TOT_DAY_LEAF_MAINT_RESP] = s->value[DAILY_LEAF_MAINT_RESP] + s->value[NIGHTLY_LEAF_MAINT_RESP];
@@ -110,17 +110,17 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 	/*******************************************************************************************************************/
 	/* fine roots maintenance respiration */
 
-	s->value[FROOT_MAINT_RESP] = fine_root_N * MR_ref * pow(q10_tsoil, exponent_tsoil);
+	s->value[FROOT_MAINT_RESP]  = froot_N * MR_ref * pow(q10_tsoil, exponent_tsoil);
 
 	/*******************************************************************************************************************/
 	/* live coarse root maintenance respiration */
 
-	s->value[CROOT_MAINT_RESP] = coarse_root_N * MR_ref * pow(q10_tsoil, exponent_tsoil);
+	s->value[CROOT_MAINT_RESP]  = croot_N * MR_ref * pow(q10_tsoil, exponent_tsoil);
 
 	/*******************************************************************************************************************/
 	/* live stem maintenance respiration */
 
-	s->value[STEM_MAINT_RESP] = stem_N * MR_ref * pow(q10_tavg, exponent_tavg);
+	s->value[STEM_MAINT_RESP]   = stem_N * MR_ref * pow(q10_tavg, exponent_tavg);
 
 	/*******************************************************************************************************************/
 	/* live branch maintenance respiration */
@@ -132,7 +132,7 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 	/* if acclimation for autotrophic respiration = "on" */
 	if ( g_settings->Resp_accl )
 	{
-		/*** NOTE: Type II acclimation (Atkin & Tjoelker 2003; Atkin et al., 2005) ***/
+		/*** NOTE: Type II acclimation (Atkin & Tjoelker 2003; Atkin et al., 2005, Smith and Dukes, 2013) ***/
 		/* FOLLOWING Atkin et al., 2008 "Using temperature-dependent changes in leaf scaling relationships
 		 * to quantitatively account for thermal acclimation of respiration in a coupled global climate–vegetation model",
 		 * 14, 1–18, GCB */
@@ -140,33 +140,33 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 		/* Leaf maintenance respiration is calculated separately for day and night */
 
 		/* day time leaf maintenance respiration */
-		s->value[DAILY_LEAF_MAINT_RESP] *= pow(10., ( acc_const * ( meteo_daily->ten_day_avg_tday - Q10_temp ) ) ) * ( meteo_daily->daylength / 24.0 );
+		s->value[DAILY_LEAF_MAINT_RESP]   *= pow ( 10., ( acc_const * ( meteo_daily->ten_day_avg_tday - Q10_temp ) ) );
 
 		/* night time leaf maintenance respiration */
-		s->value[NIGHTLY_LEAF_MAINT_RESP] *= pow(10., ( acc_const * ( meteo_daily->ten_day_avg_tnight - Q10_temp ) ) ) * ( meteo_daily->daylength / 24.0 );
+		s->value[NIGHTLY_LEAF_MAINT_RESP] *= pow ( 10., ( acc_const * ( meteo_daily->ten_day_avg_tnight - Q10_temp ) ) );
 
 		/* total (all day) leaf maintenance respiration */
-		s->value[TOT_DAY_LEAF_MAINT_RESP] = s->value[DAILY_LEAF_MAINT_RESP] + s->value[NIGHTLY_LEAF_MAINT_RESP];
+		s->value[TOT_DAY_LEAF_MAINT_RESP]  = s->value[DAILY_LEAF_MAINT_RESP] + s->value[NIGHTLY_LEAF_MAINT_RESP];
 
 		/*******************************************************************************************************************/
 		/* fine roots maintenance respiration */
 
-		s->value[FROOT_MAINT_RESP]  *= pow(10., ( acc_const * ( meteo_daily->ten_day_avg_tsoil - Q10_temp ) ) );
+		s->value[FROOT_MAINT_RESP]        *= pow ( 10., ( acc_const * ( meteo_daily->ten_day_avg_tsoil - Q10_temp ) ) );
 
 		/*******************************************************************************************************************/
 		/* live coarse root maintenance respiration */
 
-		s->value[CROOT_MAINT_RESP] *= pow(10., ( acc_const * ( meteo_daily->ten_day_avg_tsoil - Q10_temp ) ) );
+		s->value[CROOT_MAINT_RESP]        *= pow (10., ( acc_const * ( meteo_daily->ten_day_avg_tsoil - Q10_temp ) ) );
 
 		/*******************************************************************************************************************/
 		/* live stem maintenance respiration */
 
-		s->value[STEM_MAINT_RESP] *= pow(10., ( acc_const * ( meteo_daily->ten_day_avg_tavg - Q10_temp ) ) );
+		s->value[STEM_MAINT_RESP]         *= pow ( 10., ( acc_const * ( meteo_daily->ten_day_avg_tavg - Q10_temp ) ) );
 
 		/*******************************************************************************************************************/
 		/* live branch maintenance respiration */
 
-		s->value[BRANCH_MAINT_RESP] *= pow(10., ( acc_const * ( meteo_daily->ten_day_avg_tavg - Q10_temp ) ) );
+		s->value[BRANCH_MAINT_RESP] *= pow ( 10., ( acc_const * ( meteo_daily->ten_day_avg_tavg - Q10_temp ) ) );
 
 		/*******************************************************************************************************************/
 	}
@@ -229,11 +229,6 @@ void growth_respiration(cell_t *const c, const int layer, const int height, cons
 			s->value[BRANCH_GROWTH_RESP];
 	s->value[TOTAL_GROWTH_RESP_tC] = s->value[TOTAL_GROWTH_RESP] / 1e6 * g_settings->sizeCell ;
 
-	logger(g_debug_log, "daily total growth respiration = %g gC/m2/day\n", s->value[C_TO_LEAF]);
-	logger(g_debug_log, "daily total growth respiration = %g gC/m2/day\n", s->value[C_TO_FROOT]);
-	logger(g_debug_log, "daily total growth respiration = %g gC/m2/day\n", s->value[C_TO_STEM]);
-	logger(g_debug_log, "daily total growth respiration = %g gC/m2/day\n", s->value[C_TO_CROOT]);
-	logger(g_debug_log, "daily total growth respiration = %g gC/m2/day\n", s->value[C_TO_BRANCH]);
 	logger(g_debug_log, "daily total growth respiration = %g gC/m2/day\n", s->value[TOTAL_GROWTH_RESP]);
 
 	/* cumulate */

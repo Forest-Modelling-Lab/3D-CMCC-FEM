@@ -295,13 +295,13 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							if ( ! check_class_radiation_flux_balance ( c, layer, height, dbh, age, species ) ) return 0;
 
 							/* check for carbon flux balance closure */
-							if ( ! check_class_carbon_flux_balance ( c, layer, height, dbh, age, species ) ) return 0;
+							if ( ! check_class_carbon_flux_balance    ( c, layer, height, dbh, age, species ) ) return 0;
 
 							/* check for water flux balance closure */
-							if ( ! check_class_water_flux_balance ( c, layer, height, dbh, age, species ) ) return 0;
+							if ( ! check_class_water_flux_balance     ( c, layer, height, dbh, age, species ) ) return 0;
 
 							/* check for carbon mass balance closure */
-							//fixme if ( ! check_class_carbon_mass_balance ( c, layer, height, dbh, age, species ) ) return 0;
+							//fixme if ( ! check_class_carbon_mass_balance    ( c, layer, height, dbh, age, species ) ) return 0;
 
 							/****************************************************************************************************************************************/
 							/* END OF MONTH */
@@ -320,7 +320,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 
 
 								/************************************************************************************************************************************/
-								/* MORTALITY and RENOVATION*/
+								/* MORTALITY and RENOVATION */
 
 								/* Mortality based on growth efficiency */
 								/* note: it currently works on a annual scale (no more daily) */
