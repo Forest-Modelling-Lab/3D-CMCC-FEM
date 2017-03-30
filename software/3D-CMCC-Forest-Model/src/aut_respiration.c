@@ -133,9 +133,7 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 	if ( g_settings->Resp_accl )
 	{
 		/*** NOTE: Type II acclimation (Atkin & Tjoelker 2003; Atkin et al., 2005, Smith and Dukes, 2013) ***/
-		/* FOLLOWING Atkin et al., 2008 "Using temperature-dependent changes in leaf scaling relationships
-		 * to quantitatively account for thermal acclimation of respiration in a coupled global climate–vegetation model",
-		 * 14, 1–18, GCB */
+		/* FOLLOWING Atkin et al., 2008: (14), 1–18, GCB */
 
 		/* Leaf maintenance respiration is calculated separately for day and night */
 
@@ -166,7 +164,7 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 		/*******************************************************************************************************************/
 		/* live branch maintenance respiration */
 
-		s->value[BRANCH_MAINT_RESP] *= pow ( 10., ( acc_const * ( meteo_daily->ten_day_avg_tavg - Q10_temp ) ) );
+		s->value[BRANCH_MAINT_RESP]       *= pow ( 10., ( acc_const * ( meteo_daily->ten_day_avg_tavg - Q10_temp ) ) );
 
 		/*******************************************************************************************************************/
 	}
@@ -180,6 +178,7 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 	s->value[TOTAL_MAINT_RESP_tC] = s->value[TOTAL_MAINT_RESP] / 1e6 * g_settings->sizeCell ;
 
 	logger(g_debug_log, "daily total maintenance respiration = %g gC/m2/day\n", s->value[TOTAL_MAINT_RESP]);
+	logger(g_debug_log, "daily total maintenance respiration = %g tC/sizecell/day\n", s->value[TOTAL_MAINT_RESP_tC]);
 
 	/* cumulate */
 	s->value[MONTHLY_TOTAL_MAINT_RESP] += s->value[TOTAL_MAINT_RESP];
@@ -215,10 +214,10 @@ void growth_respiration(cell_t *const c, const int layer, const int height, cons
 	/*******************************************************************************************************/
 
 	/* values are computed in gC/m2/day */
-	if ( s->value[C_TO_LEAF] > 0. )   s->value[LEAF_GROWTH_RESP]   = (s->value[C_TO_LEAF]   * 1e6 / g_settings->sizeCell) * s->value[EFF_GRPERC];
-	if ( s->value[C_TO_FROOT] > 0. )  s->value[FROOT_GROWTH_RESP]  = (s->value[C_TO_FROOT]  * 1e6 / g_settings->sizeCell) * s->value[EFF_GRPERC];
-	if ( s->value[C_TO_STEM] > 0. )   s->value[STEM_GROWTH_RESP]   = (s->value[C_TO_STEM]   * 1e6 / g_settings->sizeCell) * s->value[EFF_GRPERC];
-	if ( s->value[C_TO_CROOT] > 0. )  s->value[CROOT_GROWTH_RESP]  = (s->value[C_TO_CROOT]  * 1e6 / g_settings->sizeCell) * s->value[EFF_GRPERC];
+	if ( s->value[C_TO_LEAF]   > 0. ) s->value[LEAF_GROWTH_RESP]   = (s->value[C_TO_LEAF]   * 1e6 / g_settings->sizeCell) * s->value[EFF_GRPERC];
+	if ( s->value[C_TO_FROOT]  > 0. ) s->value[FROOT_GROWTH_RESP]  = (s->value[C_TO_FROOT]  * 1e6 / g_settings->sizeCell) * s->value[EFF_GRPERC];
+	if ( s->value[C_TO_STEM]   > 0. ) s->value[STEM_GROWTH_RESP]   = (s->value[C_TO_STEM]   * 1e6 / g_settings->sizeCell) * s->value[EFF_GRPERC];
+	if ( s->value[C_TO_CROOT]  > 0. ) s->value[CROOT_GROWTH_RESP]  = (s->value[C_TO_CROOT]  * 1e6 / g_settings->sizeCell) * s->value[EFF_GRPERC];
 	if ( s->value[C_TO_BRANCH] > 0. ) s->value[BRANCH_GROWTH_RESP] = (s->value[C_TO_BRANCH] * 1e6 / g_settings->sizeCell) * s->value[EFF_GRPERC];
 
 	/* COMPUTE TOTAL GROWTH RESPIRATION */
@@ -230,6 +229,7 @@ void growth_respiration(cell_t *const c, const int layer, const int height, cons
 	s->value[TOTAL_GROWTH_RESP_tC] = s->value[TOTAL_GROWTH_RESP] / 1e6 * g_settings->sizeCell ;
 
 	logger(g_debug_log, "daily total growth respiration = %g gC/m2/day\n", s->value[TOTAL_GROWTH_RESP]);
+	logger(g_debug_log, "daily total growth respiration = %g tC/sizecell/day\n", s->value[TOTAL_GROWTH_RESP_tC]);
 
 	/* cumulate */
 	s->value[MONTHLY_TOTAL_GROWTH_RESP] += s->value[TOTAL_GROWTH_RESP];
@@ -249,22 +249,6 @@ void growth_respiration(cell_t *const c, const int layer, const int height, cons
 
 	/* check */
 	CHECK_CONDITION(s->value[TOTAL_GROWTH_RESP], <, 0);
-
-	/* reset previous day carbon increments among pools */
-	/* note: THESE VARIABLES MUST BE RESETTED HERE!!! */
-	//	s->value[C_TO_LEAF]             = 0.;
-	//	s->value[C_TO_ROOT]             = 0.;
-	//	s->value[C_TO_FROOT]            = 0.;
-	//	s->value[C_TO_CROOT]            = 0.;
-	//	s->value[C_TO_TOT_STEM]         = 0.;
-	//	s->value[C_TO_STEM]             = 0.;
-	//	s->value[C_TO_BRANCH]           = 0.;
-	//	s->value[C_TO_RESERVE]          = 0.;
-	//	s->value[C_TO_FRUIT]            = 0.;
-	//	s->value[C_LEAF_TO_LITR]        = 0.;
-	//	s->value[C_FROOT_TO_LITR]       = 0.;
-	//	s->value[C_LEAF_TO_RESERVE]     = 0.;
-	//	s->value[C_FROOT_TO_RESERVE]    = 0.;
 }
 
 void autotrophic_respiration(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, const meteo_daily_t *const meteo_daily)
@@ -335,26 +319,19 @@ void autotrophic_respiration(cell_t *const c, const int layer, const int height,
 
 void growth_respiration_frac ( const age_t *const a, species_t *const s )
 {
-
-	double min_grperc = 0.25;  /* minimum fraction of growth respiration at maximum age see Ryan et al., */
-	double max_grperc = 0.35;  /* minimum fraction of growth respiration at maximum age see Ryan et al., */
-
 	int min_age;               /* minimum age for max growth respiration fraction */
 	int max_age;               /* maximum age for min growth respiration fraction */
 
 	min_age = 1;
 	max_age = (int)s->value[MAXAGE];
 
-	logger(g_debug_log, "\n**GROWTH_RESPIRATION FRACTION**\n");
-
 	/* age-dependant growth respiration fraction */
 	/* see Waring and Running 1998, "Forest Ecosystem - Analysis at Multiple Scales"
 	 * see Ryan 1991, Ecological Applications
 	 * see Ryan 1991, Tree Physiology*/
 
-	s->value[EFF_GRPERC] = (min_grperc - max_grperc) / (max_age - min_age) * (a->value - min_age) + max_grperc;
-	if( a->value > s->value[MAXAGE]) s->value[EFF_GRPERC] = min_grperc;
-	logger(g_debug_log, "EFF_GRPERC = %g\n", s->value[EFF_GRPERC]);
+	s->value[EFF_GRPERC] = (GRPERCMIN - GRPERCMAX) / (max_age - min_age) * (a->value - min_age) + GRPERCMAX;
+	if( a->value > s->value[MAXAGE]) s->value[EFF_GRPERC] = GRPERCMIN;
 }
 
 

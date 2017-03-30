@@ -301,7 +301,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							if ( ! check_class_water_flux_balance     ( c, layer, height, dbh, age, species ) ) return 0;
 
 							/* check for carbon mass balance closure */
-							//fixme if ( ! check_class_carbon_mass_balance    ( c, layer, height, dbh, age, species ) ) return 0;
+							if ( ! check_class_carbon_mass_balance    ( c, layer, height, dbh, age, species ) ) return 0;
 
 							/****************************************************************************************************************************************/
 							/* END OF MONTH */
@@ -314,7 +314,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							/****************************************************************************************************************************************/
 							/* END OF YEAR */
 							/* last day of the year */
-							if ( c->doy == ( IS_LEAP_YEAR( c->years[year].year ) ? 366 : 365) )
+							if ( c->doy == ( IS_LEAP_YEAR ( c->years[year].year ) ? 366 : 365) )
 							{
 								logger(g_debug_log, "*****END OF YEAR %d ******\n", c->years[year].year);
 

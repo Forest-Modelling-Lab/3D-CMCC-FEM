@@ -16,8 +16,6 @@ extern logger_t* g_debug_log;
 void daily_lai (species_t *const s)
 {
 	double leaf_C;                             /* leaf carbon KgC/sizecell */
-	double exceeding_leaf_C;                   /* exceeding leaf carbon KgC/sizecell */
-	double exceeding_froot_C;                  /* exceeding fine root carbon KgC/sizecell */
 
 	/* NOTE: it mainly follows rationale of TREEDYN 3, Bossel, 1996, Ecological Modelling (eq. 30) */
 	/* no consideration of leaf angle is taken into account at daily scale as described by Thornton (1998)
@@ -36,49 +34,12 @@ void daily_lai (species_t *const s)
 
 	/* compute total LAI for Projected Area */
 	s->value[LAI_PROJ] = (leaf_C * s->value[SLA_AVG])/(s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell);
-	logger(g_debug_log, "LAI_PROJ = %f m2/m-2\n", s->value[LAI_PROJ]);
-
-	/* check if LAI_PROJ > PEAK_LAI_PROJ (this should happen only for evergreen) */
-	if ( s->value[LAI_PROJ] > s->value[PEAK_LAI_PROJ] )
-	{
-		/* retranslocate biomass from leaf to reserve */
-		exceeding_leaf_C = s->value[LEAF_C] - s->value[MAX_LEAF_C];
-
-		/* compute exceeding carbon to fine root  */
-		exceeding_froot_C = s->value[FROOT_C] - s->value[MAX_FROOT_C];
-
-		/* retranslocate biomass from leaf to reserve considering carbon lost for growth respiration */
-		s->value[C_LEAF_TO_RESERVE]  += (exceeding_leaf_C + (exceeding_leaf_C * s->value[EFF_GRPERC]));
-
-		//fixme update growth resp
-
-		s->value[LEAF_C] = s->value[MAX_LEAF_C];
-
-		/* since fine root and leaf go in parallel */
-		s->value[C_FROOT_TO_RESERVE] += (exceeding_froot_C + (exceeding_froot_C * s->value[EFF_GRPERC]));
-
-		//fixme update growth resp
-
-		s->value[FROOT_C] = s->value[MAX_FROOT_C];
-
-		/* recompute current LAI */
-		logger(g_debug_log, "** recompute LAI **\n");
-
-		leaf_C = s->value[LEAF_C] * 1000.0 ;
-		logger(g_debug_log, "Leaf Biomass = %g KgC/cell\n", leaf_C);
-		logger(g_debug_log, "CANOPY_COVER_PROJ = %g %%\n", s->value[CANOPY_COVER_PROJ]);
-
-		/* compute total LAI for Projected Area */
-		s->value[LAI_PROJ] = (leaf_C * s->value[SLA_AVG]) / (s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell);
-		logger(g_debug_log, "LAI_PROJ = %f m2/m-2\n", s->value[LAI_PROJ]);
-		logger(g_debug_log, "PEAK_LAI_PROJ = %f m2/m-2\n", s->value[PEAK_LAI_PROJ]);
-	}
-
-	/* compute LAI for sunlit and shaded Projected Area */
-	s->value[LAI_SUN_PROJ] = 1. - exp(-s->value[LAI_PROJ]);
+	s->value[LAI_SUN_PROJ]   = 1. - exp(-s->value[LAI_PROJ]);
 	s->value[LAI_SHADE_PROJ] = s->value[LAI_PROJ] - s->value[LAI_SUN_PROJ];
-	logger(g_debug_log, "LAI_SUN_PROJ = %g m2/m-2\n", s->value[LAI_SUN_PROJ]);
-	logger(g_debug_log, "LAI_SHADE_PROJ = %g m2/m-2\n", s->value[LAI_SHADE_PROJ]);
+	logger(g_debug_log, "LAI_PROJ = %f m2/m2\n", s->value[LAI_PROJ]);
+	logger(g_debug_log, "LAI_SUN_PROJ = %g m2/m2\n", s->value[LAI_SUN_PROJ]);
+	logger(g_debug_log, "LAI_SHADE_PROJ = %g m2/m2\n", s->value[LAI_SHADE_PROJ]);
+	logger(g_debug_log, "PEAK_LAI_PROJ = %f m2/m2\n", s->value[PEAK_LAI_PROJ]);
 
 	/**************************************************************************************************/
 
@@ -117,7 +78,7 @@ void daily_lai (species_t *const s)
 	CHECK_CONDITION(s->value[LAI_SHADE_PROJ], <, 0.0);
 	CHECK_CONDITION(s->value[ALL_LAI_PROJ],   <, 0.0);
 	CHECK_CONDITION(fabs((s->value[LAI_SUN_PROJ] + s->value[LAI_SHADE_PROJ]) - s->value[LAI_PROJ]), >, eps );
-	CHECK_CONDITION(s->value[LAI_PROJ], >, s->value[PEAK_LAI_PROJ] + eps);
+	CHECK_CONDITION(s->value[LAI_PROJ], >, (s->value[PEAK_LAI_PROJ] + eps));
 }
 
 

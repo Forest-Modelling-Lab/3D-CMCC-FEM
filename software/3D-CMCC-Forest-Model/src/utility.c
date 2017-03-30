@@ -465,10 +465,11 @@ void reset_annual_class_variables(cell_t *const c)
 
 					s->value[PEAK_LAI_PROJ] =               0.;
 					s->value[MAX_LEAF_C] =                  0.;
+					s->value[MAX_FROOT_C] =                 0.;
 
-					/* leaf fine root fall */
 					s->value[LEAF_TO_REMOVE] =              0.;
 					s->value[FROOT_TO_REMOVE] =             0.;
+					s->value[FRUIT_TO_REMOVE] =             0.;
 
 					/*reset cumulative values*/
 					s->counter[LEAF_FALL_COUNTER] =         0;

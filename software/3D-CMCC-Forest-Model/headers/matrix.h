@@ -313,6 +313,9 @@ enum {
 	C_TO_BRANCH,                        /* Daily Net Primary Production to Branch pool (tC/sizeCell day) */
 	C_TO_RESERVE,                       /* Daily Net Primary Production to Reserve pool (tC/sizeCell day) */
 	C_TO_FRUIT,                         /* Daily Net Primary Production to Fruit pool (tC/sizeCell day) */
+	LEAF_TO_REMOVE,                     /* Daily Leaf to remove tC/sizeCell */
+	FROOT_TO_REMOVE,                    /* Daily Fine Root to remove tC/sizeCell */
+	FRUIT_TO_REMOVE,                    /* Daily Fruit to remove tC/sizeCell */
 	C_LEAF_TO_RESERVE,                  /* Daily retranslocated C from Leaf pool to Reserve (tC/sizeCell day) */
 	C_FROOT_TO_RESERVE,                 /* Daily retranslocated C from Fine root pool to Reserve (tC/sizeCell day) */
 	C_LEAF_TO_LITR,                     /* Daily tC from Leaf pool to Litter (tC/sizeCell day) */
@@ -390,9 +393,7 @@ enum {
 	TOT_SAPWOOD_C,                      /* Current total sapwood carbon pool tC/sizeCell */
 	EFF_LIVE_TOTAL_WOOD_FRAC,           /* Age-related fraction of Live biomass per Total biomass */
 	DAILY_LIVE_WOOD_TURNOVER,           /* Daily live wood turnover rate */
-	LEAF_TO_REMOVE,                     /* Daily Leaf to remove tC/sizeCell */
-	FROOT_TO_REMOVE,                    /* Daily Fine Root to remove tC/sizeCell */
-	FRUIT_TO_REMOVE,                    /* Daily Fruit to remove tC/sizeCell */
+
 
 	/* per tree in KgC */
 	AV_LEAF_MASS_KgC,                   /* Average Leaf carbon pool kgC/tree */

@@ -630,7 +630,7 @@ int check_class_carbon_mass_balance(cell_t *const c, const int layer, const int 
 		logger(g_debug_log, "LITR_C = %g tC/sizecell/day\n", s->value[LITR_C]);
 		logger(g_debug_log, "\nold_store = %g tC/sizecell\n", old_store);
 		logger(g_debug_log, "store = %g tC/sizecell\n", store);
-		logger(g_debug_log, "old_store - store = %g tC/sizecell\n", store - old_store);
+		logger(g_debug_log, "store - old_tore = %g tC/sizecell\n", store - old_store);
 		logger(g_debug_log, "LEAF_C = %g tC/cell/day\n", s->value[LEAF_C]);
 		logger(g_debug_log, "FROOT_C = %g tC/cell/day\n", s->value[FROOT_C]);
 		logger(g_debug_log, "CROOT_C = %g tC/cell/day\n", s->value[CROOT_C]);

@@ -31,7 +31,7 @@ void live_total_wood_age(const age_t *const a, species_t *const s)
 	//fixme values should be included in species.txt
 	/* age at which live:total wood ratio is maximum */
 	min_age = 25;
-	logger(g_debug_log, "min age = %d\n", min_age);
+	//logger(g_debug_log, "min age = %d\n", min_age);
 
 	max_live_total_ratio = s->value[LIVE_TOTAL_WOOD]; /* for min_age = 1 */
 
@@ -42,7 +42,7 @@ void live_total_wood_age(const age_t *const a, species_t *const s)
 	t2 = max_age - min_age;
 
 	s->value[EFF_LIVE_TOTAL_WOOD_FRAC] = (t1/t2)*(max_age - a->value) + min_live_total_ratio;
-	logger(g_debug_log, "Effective live:total wood fraction based on stand age = %g\n", s->value[EFF_LIVE_TOTAL_WOOD_FRAC]);
+	//logger(g_debug_log, "Effective live:total wood fraction based on stand age = %g\n", s->value[EFF_LIVE_TOTAL_WOOD_FRAC]);
 }
 
 

@@ -124,7 +124,7 @@ void leaf_fall_evergreen ( cell_t *const c, const int height, const int dbh, con
 	if ( c->doy == 1 )
 	{
 		/* daily leaf fall turnover rate */
-		s->value[LEAF_TO_REMOVE]    = (s->value[LEAF_C] * s->value[LEAF_FROOT_TURNOVER]) / 365;
+		s->value[LEAF_TO_REMOVE]    = (s->value[LEAF_C]  * s->value[LEAF_FROOT_TURNOVER]) / 365;
 
 		/* daily fine root turnover rate */
 		s->value[FROOT_TO_REMOVE]   = (s->value[FROOT_C] * s->value[LEAF_FROOT_TURNOVER]) / 365;
@@ -150,7 +150,6 @@ void leaf_fall_evergreen ( cell_t *const c, const int height, const int dbh, con
 
 void leaf_fall (species_t *const s)
 {
-
 	/*** carbon leaf_fall ***/
 	/* compute fluxes of carbon leaf and fine root pool */
 	s->value[C_LEAF_TO_LITR]     = s->value[LEAF_TO_REMOVE]     * ( 1. - FRAC_TO_RETRANSL);

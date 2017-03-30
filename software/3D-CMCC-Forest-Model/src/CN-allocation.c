@@ -24,7 +24,7 @@ extern logger_t* g_debug_log;
 
 void carbon_allocation( cell_t *const c, species_t *const s)
 {
-	/* it allocates Daily assimilated Carbon for both deciduous and evergreen daily */
+	/* it allocates daily assimilated carbon for both deciduous and evergreen daily */
 
 	logger(g_debug_log, "\n**CARBON ALLOCATION**\n");
 
@@ -43,28 +43,61 @@ void carbon_allocation( cell_t *const c, species_t *const s)
 	s->value[CROOT_C]    += s->value[C_TO_CROOT];
 	s->value[RESERVE_C]  += s->value[C_TO_RESERVE];
 	s->value[FRUIT_C]    += s->value[C_TO_FRUIT];
-	s->value[LITR_C]     += s->value[C_TO_LITR]  + s->value[C_FRUIT_TO_LITR];
 	s->value[TOT_ROOT_C] += s->value[C_TO_CROOT] + s->value[C_TO_FROOT];
 	s->value[TOT_STEM_C] += s->value[C_TO_STEM]  + s->value[C_TO_BRANCH];
 	s->value[LITR_C]     += s->value[C_TO_LITR]  + s->value[C_FRUIT_TO_LITR];
 
-	logger(g_debug_log, "C_TO_LEAF = %g tC/cell/day\n", s->value[C_TO_LEAF]);
-	logger(g_debug_log, "C_TO_FROOT = %g tC/cell/day\n", s->value[C_TO_FROOT]);
-	logger(g_debug_log, "C_TO_CROOT = %g tC/cell/day\n", s->value[C_TO_CROOT]);
-	logger(g_debug_log, "C_TO_STEM = %g tC/cell/day\n", s->value[C_TO_STEM]);
-	logger(g_debug_log, "C_TO_RESERVE = %g tC/cell/day\n", s->value[C_TO_RESERVE]);
-	logger(g_debug_log, "C_TO_BRANCH = %g tC/cell/day\n", s->value[C_TO_BRANCH]);
-	logger(g_debug_log, "C_TO_FRUIT = %g tC/cell/day\n", s->value[C_TO_FRUIT]);
-	logger(g_debug_log, "Leaf Carbon (Wl) = %g tC/Cell\n", s->value[LEAF_C]);
-	logger(g_debug_log, "Fine Root Carbon (Wrf) = %g tC/Cell\n", s->value[FROOT_C]);
-	logger(g_debug_log, "Reserve Carbon (Wres) = %g tC/Cell\n", s->value[RESERVE_C]);
-	logger(g_debug_log, "Stem Carbon (Ws) = %g tC/Cell\n", s->value[STEM_C]);
-	logger(g_debug_log, "Branch and Bark Carbon (Wbb) = %g tC/Cell\n", s->value[BRANCH_C]);
-	logger(g_debug_log, "Coarse Root Carbon (Wcr) = %g tC/Cell\n", s->value[CROOT_C]);
-	logger(g_debug_log, "Total Root Carbon (Wtr) = %g tC/Cell\n", s->value[TOT_ROOT_C]);
-	logger(g_debug_log, "Total Stem Carbon (Wts)= %g tC/Cell\n", s->value[TOT_STEM_C]);
-	logger(g_debug_log, "Fruit Carbon (Wfruit)= %g tC/Cell\n", s->value[FRUIT_C]);
-	logger(g_debug_log, "Litter Carbon (Wlitter)= %g tC/Cell\n", s->value[LITR_C]);
+#if 0
+	/* check for possible overexceeding carbon flux */
+	if ( s->value[LEAF_C] > s->value[MAX_LEAF_C] )
+	{
+		double exceeding_leaf_C;
+		double ex_leaf_to_reserve;
+
+		/* retranslocate biomass from leaf to reserve */
+		exceeding_leaf_C   = s->value[LEAF_C] - s->value[MAX_LEAF_C];
+		ex_leaf_to_reserve = (exceeding_leaf_C + (exceeding_leaf_C * s->value[EFF_GRPERC]));
+
+		/* retranslocate biomass from leaf to reserve considering carbon lost for growth respiration */
+		s->value[C_LEAF_TO_RESERVE]   += ex_leaf_to_reserve;
+		s->value[RESERVE_C]           += ex_leaf_to_reserve;
+
+		/* recompute leaf growth respiration */
+		//s->value[LEAF_GROWTH_RESP]    -= (exceeding_leaf_C * 1e6 / g_settings->sizeCell) * s->value[EFF_GRPERC];
+
+		/* recompute total growth respiration */
+		//s->value[TOTAL_GROWTH_RESP]   -= (exceeding_leaf_C * 1e6 / g_settings->sizeCell) * s->value[EFF_GRPERC];
+		//s->value[TOTAL_GROWTH_RESP_tC] = s->value[TOTAL_GROWTH_RESP] / 1e6 * g_settings->sizeCell ;
+
+		/* fix leaf carbon to correct value */
+		s->value[LEAF_C] = s->value[MAX_LEAF_C];
+
+	}
+	if ( s->value[FROOT_C] > s->value[MAX_FROOT_C] )
+	{
+		double exceeding_froot_C;
+		double ex_froot_to_reserve;
+
+		/* compute exceeding carbon to fine root  */
+		exceeding_froot_C   = s->value[FROOT_C] - s->value[MAX_FROOT_C];
+		ex_froot_to_reserve = (exceeding_froot_C + (exceeding_froot_C * s->value[EFF_GRPERC]));
+
+		/* since fine root and leaf go in parallel */
+		s->value[C_FROOT_TO_RESERVE]  += ex_froot_to_reserve;
+		s->value[RESERVE_C]           += ex_froot_to_reserve;
+
+		/* recompute fine root growth respiration */
+		//s->value[FROOT_GROWTH_RESP]   -= (exceeding_froot_C * 1e6 / g_settings->sizeCell) * s->value[EFF_GRPERC];
+
+		/* recompute total growth respiration */
+		//s->value[TOTAL_GROWTH_RESP]   -= (exceeding_froot_C * 1e6 / g_settings->sizeCell) * s->value[EFF_GRPERC];
+		//s->value[TOTAL_GROWTH_RESP_tC] = s->value[TOTAL_GROWTH_RESP] / 1e6 * g_settings->sizeCell ;
+
+		/* fix fine root carbon to correct value */
+		s->value[FROOT_C] = s->value[MAX_FROOT_C];
+
+	}
+#endif
 
 	/***************************************************************************************/
 
@@ -73,7 +106,6 @@ void carbon_allocation( cell_t *const c, species_t *const s)
 	s->value[STEM_SAPWOOD_C] += s->value[C_TO_STEM];
 	s->value[CROOT_SAPWOOD_C] += s->value[C_TO_CROOT];
 	s->value[BRANCH_SAPWOOD_C] += s->value[C_TO_BRANCH];
-
 
 #if 0
 	//test_new if not using the allometric equations for the sapwood amount

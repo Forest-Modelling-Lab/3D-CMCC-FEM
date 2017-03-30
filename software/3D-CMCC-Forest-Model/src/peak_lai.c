@@ -40,11 +40,15 @@ void peak_lai(species_t *const s, const int day, const int month, const int year
 			/* force current LAI to Peak Lai */
 			s->value[LAI_PROJ] = s->value[PEAK_LAI_PROJ];
 			logger(g_debug_log, "Initial LAI > PEAK LAI, recompute it\n");
-			logger(g_debug_log, "recomputed LAI_PROJ = %f\n", s->value[LAI_PROJ]);
+			logger(g_debug_log, "recomputed LAI_PROJ = %f m2/m2\n", s->value[LAI_PROJ]);
 
 			/* then recompute leaf biomass */
 			s->value[LEAF_C] = s->value[MAX_LEAF_C];
-			logger(g_debug_log, "recomputed leaf mass = %f tC\n", s->value[MAX_LEAF_C]);
+			logger(g_debug_log, "recomputed leaf mass = %f tC\n", s->value[LEAF_C]);
+
+			/* then recompute fine root biomass */
+			s->value[FROOT_C] = s->value[MAX_FROOT_C];
+			logger(g_debug_log, "recomputed fine root mass = %f tC\n", s->value[FROOT_C]);
 		}
 	}
 }
