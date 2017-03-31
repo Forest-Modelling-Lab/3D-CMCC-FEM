@@ -286,7 +286,7 @@ int check_carbon_mass_balance(cell_t *const c)
 	/* check carbon pool balance */
 	balance = in - out - (store - old_store);
 
-	logger(g_debug_log, "\CELL LEVEL CARBON MASS BALANCE\n");
+	logger(g_debug_log, "\nCELL LEVEL CARBON MASS BALANCE\n");
 
 	/* check for carbon mass balance closure */
 	if ( fabs( balance ) > eps && c->doy > 1 )

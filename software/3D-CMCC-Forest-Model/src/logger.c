@@ -92,3 +92,11 @@ void logger_close(logger_t* p) {
 		free(p);
 	}
 }
+
+void logger_flush(logger_t *p) {
+	if ( p ) {
+		if ( p->f ) {
+			fflush(p->f);
+		}
+	}
+}

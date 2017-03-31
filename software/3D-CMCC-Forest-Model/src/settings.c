@@ -13,14 +13,16 @@ enum {
 	, SETTINGS_VERSION
 	, SETTINGS_SPATIAL
 	, SETTINGS_TIME
+	// SETTINGS_SPINUP "on" or "off"
 	, SETTINGS_SCREEN_OUTPUT
 	, SETTINGS_DEBUG_OUTPUT
 	, SETTINGS_DAILY_OUTPUT
 	, SETTINGS_MONTHLY_OUTPUT
 	, SETTINGS_YEARLY_OUTPUT
+	, SETTINGS_SOIL_OUTPUT
 	, SETTINGS_YEAR_START
 	, SETTINGS_YEAR_END
-	, SETTINGS_SOIL_OUTPUT
+	, SETTINGS_YEAR_RESTART
 	, SETTINGS_CO2_MOD
 	, SETTINGS_CO2_TRANS
 	, SETTINGS_YEAR_START_CO2_FIXED
@@ -79,9 +81,10 @@ const char* sz_settings[SETTINGS_COUNT] = {
 	, "DAILY_OUTPUT"
 	, "MONTHLY_OUTPUT"
 	, "ANNUAL_OUTPUT"
+	, "SOIL_OUTPUT"
 	, "YEAR_START"
 	, "YEAR_END"
-	, "SOIL_OUTPUT"
+	, "YEAR_RESTART"
 	, "CO2_MOD"
 	, "CO2_TRANS"
 	, "YEAR_START_CO2_FIXED"
@@ -127,7 +130,8 @@ const char* sz_settings[SETTINGS_COUNT] = {
 };
 
 const int optional[] = {
-	SETTINGS_REPLANTED_WS
+	SETTINGS_YEAR_RESTART
+	, SETTINGS_REPLANTED_WS
 	, SETTINGS_REPLANTED_WCR
 	, SETTINGS_REPLANTED_WFR
 	, SETTINGS_REPLANTED_WL
@@ -247,6 +251,12 @@ settings_t* settings_import(const char *const filename) {
 
 			case SETTINGS_TIME:
 				s->time = *token;
+				if ( s->time != 'd' ) {
+					puts("uncorrect time step choiced!");
+					free(s);
+					fclose(f);
+					return 0;
+				}
 			break;
 
 			case SETTINGS_SCREEN_OUTPUT:
@@ -376,10 +386,12 @@ settings_t* settings_import(const char *const filename) {
 			default:
 				value = convert_string_to_float(token, &err);
 				if ( err ) {
-					printf("unable to convert value: %s\n", token);
-					free(s);
-					fclose(f);
-					return 0;
+					if ( ! ((SETTINGS_YEAR_RESTART == index) && ! string_compare_i(token, "off")) ) {
+						printf("unable to convert value for %s: \"%s\"\n", sz_settings[index], token);
+						free(s);
+						fclose(f);
+						return 0;
+					}
 				}
 				switch ( index ) {
 					case SETTINGS_YEAR_START:
@@ -388,6 +400,10 @@ settings_t* settings_import(const char *const filename) {
 
 					case SETTINGS_YEAR_END:
 						s->year_end = (int)value;
+					break;
+
+					case SETTINGS_YEAR_RESTART:
+						s->year_restart = (int)value;
 					break;
 
 					case SETTINGS_YEAR_START_CO2_FIXED:
@@ -524,6 +540,7 @@ settings_t* settings_import(const char *const filename) {
 			int flag;
 
 			/* check for optional parameter */
+			flag = 0;
 			for ( y = 0; y < SIZE_OF_ARRAY(optional); ++y ) {
 				if ( i == optional[y] ) {
 					flag = 1;
@@ -539,6 +556,25 @@ settings_t* settings_import(const char *const filename) {
 		}
 	}
 
+	/* check for restart year */
+	if ( 0 == s->year_restart ) {
+		s->year_restart = -1;
+	} else {
+		if ( (s->year_restart <= s->year_start) || (s->year_restart >= s->year_end) ) {
+			printf("%s must be between %d and %d not %d\n", sz_settings[SETTINGS_YEAR_RESTART]
+						, s->year_start+1
+						, s->year_end-1
+						, s->year_restart
+			);
+			free(s);
+			return NULL;
+		}
+	}
+
 	return s;
 #undef BUFFER_SIZE
+}
+
+void settings_free(settings_t* s) {
+	if ( s ) free(s);
 }

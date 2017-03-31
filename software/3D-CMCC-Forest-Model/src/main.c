@@ -239,7 +239,7 @@ static void clean_up(void)
 	if ( g_sz_topo_file ) free(g_sz_topo_file);
 	//if ( g_soil_settings ) free(g_soil_settings);
 	if ( g_sz_soil_file ) free(g_sz_soil_file);
-	if ( g_settings ) free(g_settings);
+	if ( g_settings ) settings_free(g_settings);
 	if ( g_sz_input_met_file ) free(g_sz_input_met_file);
 	if ( g_sz_dataset_file ) free(g_sz_dataset_file);
 
@@ -958,6 +958,54 @@ static int check_topo_values(void)
 	return 0;
 }
 
+static int restart(const matrix_t*const m, int restart_year) {
+	logger_flush(g_daily_log);
+	logger_flush(g_monthly_log);
+	logger_flush(g_annual_log);
+	logger_flush(g_daily_soil_log);
+	logger_flush(g_monthly_soil_log);
+	logger_flush(g_annual_soil_log);
+
+	printf("\nprogram paused due to restart on %d\nhit enter when ready\n", restart_year);
+	getchar();
+
+	printf("re-import settings file %s...", g_sz_settings_file);
+	settings_free(g_settings);
+	g_settings = settings_import(g_sz_settings_file);
+	if ( ! g_settings )
+	{
+		return 0;
+	}
+	puts(msg_ok);
+
+	printf("re-import species...");
+	{
+		int cell, height, dbh, age, species;
+		for ( cell = 0; cell < m->cells_count; ++cell )
+		{
+			for (height = 0; height < m->cells[cell].heights_count; ++height)
+			{
+				for (dbh = 0; dbh < m->cells[cell].heights[height].dbhs_count; ++dbh)
+				{
+					for (age = 0; age < m->cells[cell].heights[height].dbhs[dbh].ages_count; ++age )
+					{
+						for ( species = 0; species < m->cells[cell].heights[height].dbhs[dbh].ages[age].species_count; ++species )
+						{
+							if ( ! fill_species_from_file(&m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species]) )
+							{
+								return 0;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	puts(msg_ok);
+
+	return 1;
+}
+
 #if 1
 //note: 02/february/2017
 //now model runs for one dau and then changes cell
@@ -1040,16 +1088,10 @@ int main(int argc, char *argv[]) {
 
 	printf("import settings file %s...", g_sz_settings_file);
 	g_settings = settings_import(g_sz_settings_file);
-	if ( ! g_settings )
-	{
+	if ( ! g_settings ) {
 		goto err;
 	}
-	if ( g_settings->time != 'd' ) {
-		puts("uncorrect time step choiced!");
-		goto err;
-	} else {
-		puts(msg_ok);
-	}
+	puts(msg_ok);
 
 	if ( ! g_settings->Ndep_fixed && ! g_sz_ndep_file ) {
 		puts("ndep file not specified for ndep_fixed off");
@@ -1313,6 +1355,11 @@ int main(int argc, char *argv[]) {
 
 		current_doy = 0;
 		leap_year = IS_LEAP_YEAR(g_settings->year_start + year);
+
+		if ( g_settings->year_restart == g_settings->year_start+year )
+		{
+			if ( ! restart(matrix, g_settings->year_restart) ) goto err;
+		}
 
 		for ( month = 0; month < MONTHS_COUNT; ++month )
 		{

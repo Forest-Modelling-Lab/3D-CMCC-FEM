@@ -19,9 +19,10 @@ typedef struct {
 	char daily_output;
 	char monthly_output;
 	char yearly_output;
+	char soil_output;
 	int year_start;
 	int year_end;
-	char soil_output;
+	int year_restart;
 	char CO2_mod;
 	char CO2_trans;                   /* CO2 transient */
 	int year_start_co2_fixed;         /* for CO2_trans = var, year at which CO2 is fixed */
