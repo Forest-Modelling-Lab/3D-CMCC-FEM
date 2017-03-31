@@ -88,6 +88,14 @@ void print_model_settings(logger_t*const log)
 	{
 		logger(log, "#Year Start Management = %d\n", g_settings->year_start_management);
 	}
+	if ( g_settings->year_restart != -1 )
+	{
+		logger(log, "#Year restart = %d\n", g_settings->year_restart);
+	}
+	else
+	{
+		logger(log, "#Year Start Management = off\n");
+	}
 }
 
 void EOD_print_output_cell_level(cell_t *const c, const int day, const int month, const int year, const int years_of_simulation )
