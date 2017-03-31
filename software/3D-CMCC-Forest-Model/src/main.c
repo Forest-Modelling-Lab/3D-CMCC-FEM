@@ -94,15 +94,16 @@ char g_sz_output_fullpath[256];
 
 static int years_of_simulation;	// default is none
 /* strings */
-const char sz_launched[] = "\n"PROGRAM_FULL_NAME"\n"
-		"compiled using "COMPILER" on "__DATE__" at "__TIME__"\n"
-		"using NetCDF %s\n"
-		"launched: %s\n"
-		"--------------------------------------------------------------------------------\n";
+const char sz_launched[] = "\n#--------------------------------------------------------------------------------\n"
+		"#"PROGRAM_FULL_NAME"\n"
+		"#compiled using "COMPILER" on "__DATE__" at "__TIME__"\n"
+		"#using NetCDF %s\n"
+		"#launched: %s\n"
+		"#--------------------------------------------------------------------------------\n";
 
-static const char banner[] = "\n"PROGRAM_FULL_NAME"\n"
-		"compiled using "COMPILER" on "__DATE__" at "__TIME__"\n"
-		"using NetCDF %s\n"
+static const char banner[] = "\n#"PROGRAM_FULL_NAME"\n"
+		"#compiled using "COMPILER" on "__DATE__" at "__TIME__"\n"
+		"#using NetCDF %s\n"
 		/*
 #if defined _WIN32
 		"previous commit hash: "COMMIT_HASH"\n"
@@ -122,17 +123,21 @@ static const char banner[] = "\n"PROGRAM_FULL_NAME"\n"
 		"Department for innovation in biological, agro-food and forest systems (DIBAF),\n"
 		"Forest Ecology Lab\n"
 		"\n"
+		"and \n"
+		"National Research Council of Italy (CNR),\n"
+		"Institute for Agricultural and Forestry Systems in the Mediterranean(ISAFOM),\n"
+		"Via Cavour, 4-6 I-87036 Rende (CS) Italy\n"
 		"Programmers: Alessio Collalti - Alessio Ribeca - Carlo Trotta - Monia Santini\n"
 		"\n"
 		"\"DISCLAIMER\"\n"
-		"CMCC and UNITUS\n"
+		"CMCC-UNITUS-CNR\n"
 		"accepts no responsibility for the use of the 3D_CMCC FEM in\n"
 		"the form supplied or as subsequently modified by third parties.\n"
 		"CMCC and UNITUS disclaims liability for all losses,\n"
 		"damages and costs incurred by any person as a result of relying on this software.\n"
 		"Use of this software assumes agreement to this condition of use.\n"
 		"Removal of this statement violates the spirit in which 3D-CMCC FEM,\n"
-		"was released by CMCC-UNITUS.\n"
+		"was released by CMCC-UNITUS-CNR.\n"
 		"for more information see:\n"
 		"-Collalti et al., 2014 Ecological Modelling,\n"
 		"-Collalti et al., 2016 Geoscientific Model Development\n"
@@ -276,7 +281,7 @@ static int output_path_create(void)
 		sprintf(date, "%04d_%s_%02d"
 				, ptm->tm_year + 1900
 				, szMonth[ptm->tm_mon]
-				          , ptm->tm_mday
+						  , ptm->tm_mday
 		);
 	}
 
@@ -453,9 +458,9 @@ static int log_start(const char* const sitename)
 				*logs[i] = logger_new("%s%s%s%s%s"
 						, g_sz_output_path
 						, log_types[i]
-						            , FOLDER_DELIMITER
-						            , log_types[i]
-						                        , buffer
+									, FOLDER_DELIMITER
+									, log_types[i]
+												, buffer
 				);
 				if ( ! *logs[i] ) {
 					printf("Unable to create %s log!\n\n", log_types[i]);
@@ -831,7 +836,7 @@ static int parse_args(int argc, char *argv[])
 		free(g_sz_ndep_file);
 		g_sz_ndep_file = p;
 	}
-	
+
 	if ( g_sz_co2_conc_file ) {
 		p = concatenate_path(g_sz_input_path, g_sz_co2_conc_file);
 		if ( ! p )
@@ -935,7 +940,7 @@ static int check_soil_values(void)
 
 	return 1;
 
-err:
+	err:
 	return 0;
 }
 static int check_topo_values(void)
@@ -949,7 +954,7 @@ static int check_topo_values(void)
 	}
 	return 1;
 
-err:
+	err:
 	return 0;
 }
 
@@ -1527,13 +1532,13 @@ int main(int argc, char *argv[]) {
 						 */
 						output_push_values(output_vars
 								, &matrix->cells[cell]
-								                 , month
-								                 , day
-								                 , year
-								                 , years_of_simulation
-								                 , matrix->x_cells_count
-								                 , matrix->y_cells_count
-								                 , OUTPUT_TYPE_DAILY
+												 , month
+												 , day
+												 , year
+												 , years_of_simulation
+												 , matrix->x_cells_count
+												 , matrix->y_cells_count
+												 , OUTPUT_TYPE_DAILY
 						);
 					}
 					/******************************************************************************/
@@ -1574,13 +1579,13 @@ int main(int argc, char *argv[]) {
 
 						output_push_values(output_vars
 								, &matrix->cells[cell]
-								                 , month
-								                 , day
-								                 , year
-								                 , years_of_simulation
-								                 , matrix->x_cells_count
-								                 , matrix->y_cells_count
-								                 , OUTPUT_TYPE_MONTHLY
+												 , month
+												 , day
+												 , year
+												 , years_of_simulation
+												 , matrix->x_cells_count
+												 , matrix->y_cells_count
+												 , OUTPUT_TYPE_MONTHLY
 						);
 					}
 
@@ -1619,13 +1624,13 @@ int main(int argc, char *argv[]) {
 						 */
 						output_push_values(output_vars
 								, &matrix->cells[cell]
-								                 , month
-								                 , day
-								                 , year
-								                 , years_of_simulation
-								                 , matrix->x_cells_count
-								                 , matrix->y_cells_count
-								                 , OUTPUT_TYPE_YEARLY
+												 , month
+												 , day
+												 , year
+												 , years_of_simulation
+												 , matrix->x_cells_count
+												 , matrix->y_cells_count
+												 , OUTPUT_TYPE_YEARLY
 						);
 					}
 
@@ -1800,7 +1805,7 @@ int main(int argc, char *argv[]) {
 		sprintf(sz_date, "%04d_%s_%02d"
 				, ptm->tm_year + 1900
 				, szMonth[ptm->tm_mon]
-				          , ptm->tm_mday
+						  , ptm->tm_mday
 		);
 	}
 
@@ -2283,13 +2288,13 @@ int main(int argc, char *argv[]) {
 						 */
 						output_push_values(output_vars
 								, &matrix->cells[cell]
-								                 , month
-								                 , day
-								                 , year
-								                 , years_of_simulation
-								                 , matrix->x_cells_count
-								                 , matrix->y_cells_count
-								                 , OUTPUT_TYPE_DAILY
+												 , month
+												 , day
+												 , year
+												 , years_of_simulation
+												 , matrix->x_cells_count
+												 , matrix->y_cells_count
+												 , OUTPUT_TYPE_DAILY
 						);
 					}
 					/******************************************************************************/
@@ -2331,13 +2336,13 @@ int main(int argc, char *argv[]) {
 					 */
 					output_push_values(output_vars
 							, &matrix->cells[cell]
-							                 , month
-							                 , day
-							                 , year
-							                 , years_of_simulation
-							                 , matrix->x_cells_count
-							                 , matrix->y_cells_count
-							                 , OUTPUT_TYPE_MONTHLY
+											 , month
+											 , day
+											 , year
+											 , years_of_simulation
+											 , matrix->x_cells_count
+											 , matrix->y_cells_count
+											 , OUTPUT_TYPE_MONTHLY
 					);
 				}
 				/******************************************************************************/
@@ -2376,13 +2381,13 @@ int main(int argc, char *argv[]) {
 				 */
 				output_push_values(output_vars
 						, &matrix->cells[cell]
-						                 , month
-						                 , day
-						                 , year
-						                 , years_of_simulation
-						                 , matrix->x_cells_count
-						                 , matrix->y_cells_count
-						                 , OUTPUT_TYPE_YEARLY
+										 , month
+										 , day
+										 , year
+										 , years_of_simulation
+										 , matrix->x_cells_count
+										 , matrix->y_cells_count
+										 , OUTPUT_TYPE_YEARLY
 				);
 			}
 			/******************************************************************************/
