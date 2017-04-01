@@ -1008,7 +1008,7 @@ static int restart(const matrix_t*const m, int restart_year) {
 
 #if 1
 //note: 02/february/2017
-//now model runs for one dau and then changes cell
+//now model runs for one day and then changes the cell
 
 int main(int argc, char *argv[]) {
 	int ret;
@@ -1430,9 +1430,6 @@ int main(int argc, char *argv[]) {
 					Weighted_average_temperature(&matrix->cells[cell], WEIGHTED_MEAN_TNIGHT, day, month, year);
 					Weighted_average_temperature(&matrix->cells[cell], WEIGHTED_MEAN_TSOIL, day, month, year);
 
-					//TODO ALESSIOC ASK TO ALESSIOR TO INCLUDE VALUES OF Ndep file INTO SOIL POOL
-					//Nitrogen_deposition(&matrix->cells[cell], year);
-
 					if ( LANDUSE_F == g_soil_settings->landuse )
 					{
 						/* compute annually the days for the growing season BEFORE any other process */
@@ -1496,12 +1493,12 @@ int main(int argc, char *argv[]) {
 							}
 							else
 							{
-								/* run for BGC version */
+								/* run for possible other forest model versions */
 							}
 						}
 						else
 						{
-							//here include different land use
+							/* run for possible other Land Use versions */
 						}
 					}
 
@@ -1540,7 +1537,7 @@ int main(int argc, char *argv[]) {
 					}
 					/*************************************************************************/
 
-					// save values for put in output netcdf
+					/* save values for put in output netcdf */
 					if ( output_vars && output_vars->daily_vars_count ) {
 						/*
 							la memoria è stata allocata come C*R*Y*X
