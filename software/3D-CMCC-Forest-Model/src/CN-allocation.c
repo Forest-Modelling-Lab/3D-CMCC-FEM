@@ -47,6 +47,25 @@ void carbon_allocation( cell_t *const c, species_t *const s)
 	s->value[TOT_STEM_C] += s->value[C_TO_STEM]  + s->value[C_TO_BRANCH];
 	s->value[LITR_C]     += s->value[C_TO_LITR]  + s->value[C_FRUIT_TO_LITR];
 
+	/*** update cell level carbon mass pools ***/
+	c->leaf_tC       += s->value[C_TO_LEAF];
+	c->froot_tC      += s->value[C_TO_FROOT];
+	c->stem_tC       += s->value[C_TO_STEM];
+	c->branch_tC     += s->value[C_TO_BRANCH];
+	c->croot_tC      += s->value[C_TO_CROOT];
+	c->reserve_tC    += s->value[C_TO_RESERVE];
+	c->fruit_tC      += s->value[C_TO_FRUIT];
+
+	/*** update cell level carbon mass pools ***/
+	c->leaf_carbon       += s->value[C_TO_LEAF]    * 1e6 / g_settings->sizeCell;
+	c->froot_carbon      += s->value[C_TO_FROOT]   * 1e6 / g_settings->sizeCell;
+	c->stem_carbon       += s->value[C_TO_STEM]    * 1e6 / g_settings->sizeCell;
+	c->branch_carbon     += s->value[C_TO_BRANCH]  * 1e6 / g_settings->sizeCell;
+	c->croot_carbon      += s->value[C_TO_CROOT]   * 1e6 / g_settings->sizeCell;
+	c->reserve_carbon    += s->value[C_TO_RESERVE] * 1e6 / g_settings->sizeCell;
+	c->fruit_carbon      += s->value[C_TO_FRUIT]   * 1e6 / g_settings->sizeCell;
+
+
 #if 0
 	/* check for possible overexceeding carbon flux */
 	if ( s->value[LEAF_C] > s->value[MAX_LEAF_C] )

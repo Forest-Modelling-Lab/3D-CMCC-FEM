@@ -923,9 +923,11 @@ typedef struct
 	double stem_carbon;                                                   /* stem carbon at cell level (gC/m2) */
 	double stem_live_wood_carbon;                                         /* stem live wood carbon at cell level (gC/m2) */
 	double stem_dead_wood_carbon;                                         /* stem dead wood carbon at cell level (gC/m2) */
+	double tot_stem_carbon;                                               /* total stem carbon at cell level (gC/m2) */
 	double croot_carbon;                                                  /* coarse root carbon at cell level (gC/m2) */
 	double croot_live_wood_carbon;                                        /* coarse root live wood carbon at cell level (gC/m2) */
 	double croot_dead_wood_carbon;                                        /* coarse root dead wood carbon at cell level (gC/m2) */
+	double tot_root_carbon;                                               /* total root carbon at cell level (gC/m2) */
 	double branch_carbon;                                                 /* branch carbon at cell level (gC/m2) */
 	double branch_live_wood_carbon;                                       /* branch live wood carbon at cell level (gC/m2) */
 	double branch_dead_wood_carbon;                                       /* branch dead wood carbon at cell level (gC/m2) */
