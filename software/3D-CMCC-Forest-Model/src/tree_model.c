@@ -247,8 +247,8 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							/* canopy water fluxes */
 							canopy_evapotranspiration ( c, layer, height, dbh, age, species, meteo_daily );
 
-							//note: following Piao et al., 2010 at first we should compute:
-							//(Maint Resp)->(Growth Resp = (GPP - Maint Resp) * eff_grperc)->(NPP)
+							/* note: following Piao et al., 2010 */
+							/* (Maint Resp)->(Growth Resp = (GPP - Maint Resp) * eff_grperc)->(NPP) */
 
 							/* canopy carbon assimilation */
 							photosynthesis ( c, layer, height, dbh, age, species, DaysInMonth[month], meteo_annual );
@@ -287,30 +287,12 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							water_use_efficiency ( c, height, dbh, age, species, day, month, year );
 
 							/****************************************************************************************************************************************/
-
-							/* check for fluxes and mass  balance closure at the class level */
-							logger(g_debug_log, "\n**CLASS LEVEL BALANCE**\n");
-
-							/* check for radiative flux balance closure */
-							if ( ! check_class_radiation_flux_balance ( c, layer, height, dbh, age, species ) ) return 0;
-
-							/* check for carbon flux balance closure */
-							if ( ! check_class_carbon_flux_balance    ( c, layer, height, dbh, age, species ) ) return 0;
-
-							/* check for water flux balance closure */
-							if ( ! check_class_water_flux_balance     ( c, layer, height, dbh, age, species ) ) return 0;
-
-							/* check for carbon mass balance closure */
-							if ( ! check_class_carbon_mass_balance    ( c, layer, height, dbh, age, species ) ) return 0;
-
-							/****************************************************************************************************************************************/
 							/* END OF MONTH */
 							/* last day of the month */
 							if ( ( IS_LEAP_YEAR( c->years[year].year ) ? ( MonthLength_Leap[month] ) : ( MonthLength[month] ) ) == c->doy )
 							{
 								//dendrometry ( c, layer, height, dbh, age, species, meteo_daily );
 							}
-
 							/****************************************************************************************************************************************/
 							/* END OF YEAR */
 							/* last day of the year */
@@ -357,6 +339,25 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 									 */
 								}
 							}
+							/****************************************************************************************************************************************/
+
+							/* check for fluxes and mass balance closure at the class level */
+
+							logger(g_debug_log, "\n**CLASS LEVEL BALANCE**\n");
+
+							/* check for radiative flux balance closure */
+							if ( ! check_class_radiation_flux_balance ( c, layer, height, dbh, age, species ) ) return 0;
+
+							/* check for carbon flux balance closure */
+							if ( ! check_class_carbon_flux_balance    ( c, layer, height, dbh, age, species ) ) return 0;
+
+							/* check for water flux balance closure */
+							if ( ! check_class_water_flux_balance     ( c, layer, height, dbh, age, species ) ) return 0;
+
+							/* check for carbon mass balance closure */
+							if ( ! check_class_carbon_mass_balance    ( c, layer, height, dbh, age, species ) ) return 0;
+
+							/****************************************************************************************************************************************/
 						}
 						logger(g_debug_log, "****************END OF SPECIES CLASS***************\n");
 					}

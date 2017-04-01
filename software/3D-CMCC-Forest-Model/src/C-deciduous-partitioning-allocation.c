@@ -33,7 +33,6 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 	double pR;
 	double pL;
 	double Light_trasm;
-	double Perc_fine;
 	static double reserve_to_leaf_budburst;
 	static double reserve_to_froot_budburst;
 	static double reserve_to_budburst;
@@ -83,11 +82,6 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 
 	/* fine root vs. coarse root ratio */
 	s->value[FINE_COARSE_ROOT] = (s->value[FINE_ROOT_LEAF] / s->value[COARSE_ROOT_STEM]) * ( 1. / s->value[STEM_LEAF]);
-	//logger(g_debug_log, "Fine/Coarse root ratio = %g\n", s->value[FINE_COARSE_ROOT] );
-
-	Perc_fine = s->value[FINE_COARSE_ROOT] / (s->value[FINE_COARSE_ROOT] + 1. );
-	//logger(g_debug_log, "Percentage of fine root against total root = %g %%\n", Perc_fine * 100. );
-
 
 	if (s->counter[VEG_DAYS] == 1)
 	{
@@ -240,9 +234,6 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 		/* including retranslocated C */
 		s->value[C_TO_RESERVE] = npp_to_alloc ;
 
-		/* leaf fall */
-		leaf_fall_deciduous(c, height, dbh, age, species);
-
 		break;
 		/**********************************************************************/
 	case 0:
@@ -259,6 +250,12 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 	/* check for daily growth efficiency mortality */
 	//note: since forest structure works on annual scale it must be turned off
 	//daily_growth_efficiency_mortality ( c, height, dbh, age, species );
+
+	if ( s->phenology_phase == 3 )
+	{
+		/* leaf fall */
+		leaf_fall_deciduous( c, height, dbh, age, species );
+	}
 
 	/* update live_total wood fraction based on age */
 	live_total_wood_age ( a, s );
@@ -324,7 +321,6 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 	c->daily_fruit_carbon          += s->value[C_TO_FRUIT]   * 1e6 / g_settings->sizeCell ;
 	c->daily_litr_carbon           += (s->value[C_LEAF_TO_LITR] + s->value[C_FROOT_TO_LITR]  + s->value[C_FRUIT_TO_LITR]) * 1e6 / g_settings->sizeCell ;
 	c->daily_soil_carbon           += 0. ;
-
 
 	/* update cell level carbon biomass in tC/cell/day */
 	c->daily_leaf_carbon_tC        += s->value[C_TO_LEAF];
