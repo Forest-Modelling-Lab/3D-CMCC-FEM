@@ -62,13 +62,13 @@ int Cell_model_daily (matrix_t *const m, const int cell, const int day, const in
 	if ( ! check_radiation_flux_balance ( c, meteo_daily ) ) return 0;
 
 	/* CHECK FOR CARBON FLUX BALANCE CLOSURE */
-	if ( ! check_carbon_flux_balance ( c ) ) return 0;
+	if ( ! check_carbon_flux_balance    ( c ) ) return 0;
 
 	/* CHECK FOR CARBON MASS BALANCE CLOSURE */
-	//fixme if ( ! check_carbon_mass_balance ( c ) ) return 0;
+	//fixme if ( ! check_carbon_mass_balance    ( c ) ) return 0;
 
 	/* CHECK FOR WATER FLUX BALANCE CLOSURE */
-	if ( ! check_water_flux_balance ( c, meteo_daily ) ) return 0;
+	if ( ! check_water_flux_balance     ( c, meteo_daily ) ) return 0;
 
 	/*******************************************************************************************************/
 

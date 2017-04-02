@@ -424,51 +424,51 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 	turnover ( s );
 
 	/* update class level month carbon biomass increment in tC/month/cell */
-	s->value[M_C_TO_STEM]          += s->value[C_TO_STEM];
-	s->value[M_C_TO_LEAF]          += s->value[C_TO_LEAF];
-	s->value[M_C_TO_FROOT]         += s->value[C_TO_FROOT];
-	s->value[M_C_TO_CROOT]         += s->value[C_TO_CROOT];
-	s->value[M_C_TO_RESERVE]       += s->value[C_TO_RESERVE];
-	s->value[M_C_TO_ROOT]          += s->value[C_TO_ROOT];
-	s->value[M_C_TO_BRANCH]        += s->value[C_TO_BRANCH];
-	s->value[M_C_TO_FRUIT]         += s->value[C_TO_FRUIT];
-	s->value[M_C_TO_TOT_STEM]      += s->value[C_TO_TOT_STEM];
+	s->value[M_C_TO_STEM]      += s->value[C_TO_STEM];
+	s->value[M_C_TO_LEAF]      += s->value[C_TO_LEAF];
+	s->value[M_C_TO_FROOT]     += s->value[C_TO_FROOT];
+	s->value[M_C_TO_CROOT]     += s->value[C_TO_CROOT];
+	s->value[M_C_TO_RESERVE]   += s->value[C_TO_RESERVE];
+	s->value[M_C_TO_ROOT]      += s->value[C_TO_ROOT];
+	s->value[M_C_TO_BRANCH]    += s->value[C_TO_BRANCH];
+	s->value[M_C_TO_FRUIT]     += s->value[C_TO_FRUIT];
+	s->value[M_C_TO_TOT_STEM]  += s->value[C_TO_TOT_STEM];
 
 	/* update class level annual carbon biomass increment in tC/year/cell */
-	s->value[Y_C_TO_STEM]          += s->value[C_TO_STEM];
-	s->value[Y_C_TO_LEAF]          += s->value[C_TO_LEAF];
-	s->value[Y_C_TO_FROOT]         += s->value[C_TO_FROOT];
-	s->value[Y_C_TO_CROOT]         += s->value[C_TO_CROOT];
-	s->value[Y_C_TO_RESERVE]       += s->value[C_TO_RESERVE];
-	s->value[Y_C_TO_ROOT]          += s->value[C_TO_ROOT];
-	s->value[Y_C_TO_BRANCH]        += s->value[C_TO_BRANCH];
-	s->value[Y_C_TO_FRUIT]         += s->value[C_TO_FRUIT];
-	s->value[Y_C_TO_TOT_STEM]      += s->value[C_TO_TOT_STEM];
+	s->value[Y_C_TO_STEM]      += s->value[C_TO_STEM];
+	s->value[Y_C_TO_LEAF]      += s->value[C_TO_LEAF];
+	s->value[Y_C_TO_FROOT]     += s->value[C_TO_FROOT];
+	s->value[Y_C_TO_CROOT]     += s->value[C_TO_CROOT];
+	s->value[Y_C_TO_RESERVE]   += s->value[C_TO_RESERVE];
+	s->value[Y_C_TO_ROOT]      += s->value[C_TO_ROOT];
+	s->value[Y_C_TO_BRANCH]    += s->value[C_TO_BRANCH];
+	s->value[Y_C_TO_FRUIT]     += s->value[C_TO_FRUIT];
+	s->value[Y_C_TO_TOT_STEM]  += s->value[C_TO_TOT_STEM];
 
 	/* update cell level carbon biomass in gC/m2/day */
-	c->daily_leaf_carbon           += s->value[C_TO_LEAF]    * 1e6 / g_settings->sizeCell;
-	c->daily_stem_carbon           += s->value[C_TO_STEM]    * 1e6 / g_settings->sizeCell;
-	c->daily_froot_carbon          += s->value[C_TO_FROOT]   * 1e6 / g_settings->sizeCell;
-	c->daily_croot_carbon          += s->value[C_TO_CROOT]   * 1e6 / g_settings->sizeCell;
-	c->daily_branch_carbon         += s->value[C_TO_BRANCH]  * 1e6 / g_settings->sizeCell;
-	c->daily_reserve_carbon        += s->value[C_TO_RESERVE] * 1e6 / g_settings->sizeCell;
-	c->daily_root_carbon           += s->value[C_TO_ROOT]    * 1e6 / g_settings->sizeCell;
-	c->daily_fruit_carbon          += s->value[C_TO_FRUIT]   * 1e6 / g_settings->sizeCell;
-	c->daily_litr_carbon           += (s->value[C_LEAF_TO_LITR] + s->value[C_FROOT_TO_LITR] + s->value[C_FRUIT_TO_LITR]) * 1e6 / g_settings->sizeCell ;
-	c->daily_soil_carbon           += 0. ;
+	c->daily_leaf_carbon       += s->value[C_TO_LEAF]    * 1e6 / g_settings->sizeCell;
+	c->daily_stem_carbon       += s->value[C_TO_STEM]    * 1e6 / g_settings->sizeCell;
+	c->daily_froot_carbon      += s->value[C_TO_FROOT]   * 1e6 / g_settings->sizeCell;
+	c->daily_croot_carbon      += s->value[C_TO_CROOT]   * 1e6 / g_settings->sizeCell;
+	c->daily_branch_carbon     += s->value[C_TO_BRANCH]  * 1e6 / g_settings->sizeCell;
+	c->daily_reserve_carbon    += s->value[C_TO_RESERVE] * 1e6 / g_settings->sizeCell;
+	c->daily_root_carbon       += s->value[C_TO_ROOT]    * 1e6 / g_settings->sizeCell;
+	c->daily_fruit_carbon      += s->value[C_TO_FRUIT]   * 1e6 / g_settings->sizeCell;
+	c->daily_litr_carbon       += (s->value[C_LEAF_TO_LITR] + s->value[C_FROOT_TO_LITR] + s->value[C_FRUIT_TO_LITR]) * 1e6 / g_settings->sizeCell ;
+	c->daily_soil_carbon       += 0. ;
 
 
 	/* update cell level carbon biomass in tC/cell/day */
-	c->daily_leaf_carbon_tC        += s->value[C_TO_LEAF];
-	c->daily_stem_carbon_tC        += s->value[C_TO_STEM];
-	c->daily_froot_carbon_tC       += s->value[C_TO_FROOT];
-	c->daily_croot_carbon_tC       += s->value[C_TO_CROOT];
-	c->daily_branch_carbon_tC      += s->value[C_TO_BRANCH];
-	c->daily_reserve_carbon_tC     += s->value[C_TO_RESERVE];
-	c->daily_root_carbon_tC        += s->value[C_TO_ROOT];
-	c->daily_fruit_carbon_tC       += s->value[C_TO_FRUIT];
-	c->daily_litter_carbon_tC      += s->value[C_LEAF_TO_LITR] + s->value[C_FROOT_TO_LITR] + s->value[C_TO_FRUIT];
-	c->daily_soil_carbon_tC        += 0.;
+	c->daily_leaf_tC               += s->value[C_TO_LEAF];
+	c->daily_stem_tC               += s->value[C_TO_STEM];
+	c->daily_froot_tC              += s->value[C_TO_FROOT];
+	c->daily_croot_tC              += s->value[C_TO_CROOT];
+	c->daily_branch_tC             += s->value[C_TO_BRANCH];
+	c->daily_reserve_tC            += s->value[C_TO_RESERVE];
+	c->daily_root_tC               += s->value[C_TO_ROOT];
+	c->daily_fruit_tC              += s->value[C_TO_FRUIT];
+	c->daily_litter_tC             += s->value[C_LEAF_TO_LITR] + s->value[C_FROOT_TO_LITR] + s->value[C_TO_FRUIT];
+	c->daily_soil_tC               += 0.;
 	logger(g_debug_log, "******************************\n");
 }
 

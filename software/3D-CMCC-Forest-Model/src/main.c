@@ -1501,7 +1501,6 @@ int main(int argc, char *argv[]) {
 							/* run for possible other Land Use versions */
 						}
 					}
-
 					/************************************************************************/
 					/* run for litter model */
 					if ( !Litter_model_daily(matrix, cell, day, month, year) )

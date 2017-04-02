@@ -588,13 +588,15 @@ enum {
 	TOT_ROOT_N,                         /*Current Total root nitrogen pool tN/sizeCell */
 
 	/* per tree in kgN */
-	AV_LEAF_MASS_kgN,                   /* Average Leaf carbon pool kgN/tree */
-	AV_STEM_MASS_kgN,                   /* Average Stem carbon pool kgN/tree */
-	AV_TOT_STEM_MASS_kgN,               /* Average Stem + Branch carbon pool kgN/tree */
-	AV_ROOT_MASS_kgN,                   /* Average Total root carbon pool kgN/tree */
-	AV_FROOT_MASS_kgN,                  /* Average Fine root carbon pool kgN/tree */
-	AV_CROOT_MASS_kgN,                  /* Average Coarse carbon pool kgN/tree */
-	AV_BRANCH_MASS_kgN,                 /* Average Branch carbon pool kgN/tree */
+	AV_LEAF_MASS_KgN,                   /* Average Leaf nitrogen pool kgN/tree */
+	AV_STEM_MASS_KgN,                   /* Average Stem nitrogen pool kgN/tree */
+	AV_TOT_STEM_MASS_KgN,               /* Average Stem + Branch nitrogen pool kgN/tree */
+	AV_ROOT_MASS_KgN,                   /* Average Total root nitrogen pool kgN/tree */
+	AV_FROOT_MASS_KgN,                  /* Average Fine root nitrogen pool kgN/tree */
+	AV_CROOT_MASS_KgN,                  /* Average Coarse nitrogen pool kgN/tree */
+	AV_BRANCH_MASS_KgN,                 /* Average Branch nitrogen pool kgN/tree */
+	AV_RESERVE_MASS_KgN,                /* Average Reserve nitrogen pool kgN/tree */
+	AV_FRUIT_MASS_KgN,                  /* Average Fruit nitrogen pool kgN/tree */
 
 	/* litter and soil pools */
 	CWDC,                               /* (tC/sizecell) coarse woody debris C */
@@ -891,16 +893,16 @@ typedef struct
 	double daily_litr_carbon;                                             /* daily carbon to litter c pool at cell level (gC/m2/day) */
 	double daily_soil_carbon;                                             /* daily carbon to soil c pool at cell level (gC/m2/day) */
 	double daily_fruit_carbon;                                            /* daily carbon assimilated to fruit c pool at cell level (gC/m2/day) */
-	double daily_leaf_carbon_tC;                                          /* daily carbon assimilated to c pool at cell level (tC/cell/day) */
-	double daily_stem_carbon_tC;                                          /* daily carbon assimilated to c pool at cell level (tC/cell/day) */
-	double daily_froot_carbon_tC;                                         /* daily carbon assimilated to c pool at cell level (tC/cell/day) */
-	double daily_croot_carbon_tC;                                         /* daily carbon assimilated to c pool at cell level (tC/cell/day) */
-	double daily_branch_carbon_tC;                                        /* daily carbon assimilated to c pool at cell level (tC/cell/day) */
-	double daily_reserve_carbon_tC;                                       /* daily carbon assimilated to c pool at cell level (tC/cell/day) */
-	double daily_root_carbon_tC;                                          /* daily carbon assimilated to c pool at cell level (tC/cell/day) */
-	double daily_litter_carbon_tC;                                        /* daily carbon leaves to litter c pool at cell level (tC/cell/day) */
-	double daily_soil_carbon_tC;                                          /* daily carbon fine root to soil c pool at cell level (tC/cell/day) */
-	double daily_fruit_carbon_tC;                                         /* daily carbon assimilated to c pool at cell level (tC/cell/day) */
+	double daily_leaf_tC;                                                 /* daily carbon assimilated to c pool at cell level (tC/cell/day) */
+	double daily_stem_tC;                                                 /* daily carbon assimilated to c pool at cell level (tC/cell/day) */
+	double daily_froot_tC;                                                /* daily carbon assimilated to c pool at cell level (tC/cell/day) */
+	double daily_croot_tC;                                                /* daily carbon assimilated to c pool at cell level (tC/cell/day) */
+	double daily_branch_tC;                                               /* daily carbon assimilated to c pool at cell level (tC/cell/day) */
+	double daily_reserve_tC;                                              /* daily carbon assimilated to c pool at cell level (tC/cell/day) */
+	double daily_root_tC;                                                 /* daily carbon assimilated to c pool at cell level (tC/cell/day) */
+	double daily_litter_tC;                                               /* daily carbon leaves to litter c pool at cell level (tC/cell/day) */
+	double daily_soil_tC;                                                 /* daily carbon fine root to soil c pool at cell level (tC/cell/day) */
+	double daily_fruit_tC;                                                /* daily carbon assimilated to c pool at cell level (tC/cell/day) */
 	double daily_leaf_maint_resp;                                         /* daily leaf maint resp at cell level (gC/m2/day) */
 	double daily_stem_maint_resp;                                         /* daily stem maint resp at cell level (gC/m2/day) */
 	double daily_froot_maint_resp;                                        /* daily fine root maint resp at cell level (gC/m2/day) */
@@ -946,6 +948,36 @@ typedef struct
 	double branch_dead_wood_tC;                                           /* branch dead wood carbon at cell level (tC/cell) */
 	double reserve_tC;                                                    /* reserve at cell level (tC/cell) */
 	double fruit_tC;                                                      /* fruit at cell level (tC/cell) */
+
+	/* tree nitrogen pools */
+	double leaf_nitrogen;                                                 /* leaf carbon at cell level (gN/m2) */
+	double froot_nitrogen;                                                /* fine root carbon at cell level (gN/m2) */
+	double stem_nitrogen;                                                 /* stem carbon at cell level (gN/m2) */
+	double stem_live_wood_nitrogen;                                       /* stem live wood carbon at cell level (gN/m2) */
+	double stem_dead_wood_nitrogen;                                       /* stem dead wood carbon at cell level (gN/m2) */
+	double tot_stem_nitrogen;                                             /* total stem carbon at cell level (gN/m2) */
+	double croot_nitrogen;                                                /* coarse root carbon at cell level (gN/m2) */
+	double croot_live_wood_nitrogen;                                      /* coarse root live wood carbon at cell level (gN/m2) */
+	double croot_dead_wood_nitrogen;                                      /* coarse root dead wood carbon at cell level (gN/m2) */
+	double tot_root_nitrogen;                                             /* total root carbon at cell level (gN/m2) */
+	double branch_nitrogen;                                               /* branch carbon at cell level (gN/m2) */
+	double branch_live_wood_nitrogen;                                     /* branch live wood carbon at cell level (gN/m2) */
+	double branch_dead_wood_nitrogen;                                     /* branch dead wood carbon at cell level (gN/m2) */
+	double reserve_nitrogen;                                              /* reserve at cell level (gN/m2) */
+	double fruit_nitrogen;                                                /* fruit at cell level (gN/m2) */
+	double leaf_tN;                                                       /* leaf carbon at cell level (tN/cell) */
+	double froot_tN;                                                      /* fine root carbon at cell level (tN/cell) */
+	double stem_tN;                                                       /* stem carbon at cell level (tN/cell) */
+	double stem_live_wood_tN;                                             /* stem live wood carbon at cell level (tN/cell) */
+	double stem_dead_wood_tN;                                             /* stem dead wood carbon at cell level (tN/cell) */
+	double croot_tN;                                                      /* coarse root carbon at cell level (tN/cell) */
+	double croot_live_wood_tN;                                            /* coarse root live wood carbon at cell level (tN/cell) */
+	double croot_dead_wood_tN;                                            /* coarse root dead wood carbon at cell level (tN/cell) */
+	double branch_tN;                                                     /* branch carbon at cell level (tN/cell) */
+	double branch_live_wood_tN;                                           /* branch live wood carbon at cell level (tN/cell) */
+	double branch_dead_wood_tN;                                           /* branch dead wood carbon at cell level (tN/cell) */
+	double reserve_tN;                                                    /* reserve at cell level (tN/cell) */
+	double fruit_tN;                                                      /* fruit at cell level (tN/cell) */
 
 	/* water use efficiency */
 	double daily_wue;                                                     /* daily water use efficiency */
