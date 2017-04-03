@@ -331,7 +331,7 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 	c->daily_reserve_tC         += s->value[C_TO_RESERVE];
 	c->daily_root_tC            += s->value[C_TO_ROOT];
 	c->daily_fruit_tC           += s->value[C_TO_FRUIT];
-	c->daily_litter_tC          += s->value[C_LEAF_TO_LITR] + s->value[C_FROOT_TO_LITR] + s->value[C_TO_FRUIT];
+	c->daily_litr_tC            += s->value[C_LEAF_TO_LITR] + s->value[C_FROOT_TO_LITR] + s->value[C_TO_FRUIT];
 	c->daily_soil_tC            += 0.;
 
 	logger(g_debug_log, "******************************\n");

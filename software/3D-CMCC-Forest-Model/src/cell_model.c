@@ -38,7 +38,7 @@ int Cell_model_daily (matrix_t *const m, const int cell, const int day, const in
 	logger (g_debug_log, "\n*********CELL_MODEL_DAILY*********\n");
 
 	logger(g_debug_log, "-number of tree heights (if present) = %d\n", c->heights_count);
-	logger(g_debug_log, "-number of tree layer (if present) = %d\n", c->tree_layers_count);
+	logger(g_debug_log, "-number of tree layer   (if present) = %d\n", c->tree_layers_count);
 
 	/* OVERALL CELL */
 
@@ -65,7 +65,7 @@ int Cell_model_daily (matrix_t *const m, const int cell, const int day, const in
 	if ( ! check_carbon_flux_balance    ( c ) ) return 0;
 
 	/* CHECK FOR CARBON MASS BALANCE CLOSURE */
-	//fixme if ( ! check_carbon_mass_balance    ( c ) ) return 0;
+	if ( ! check_carbon_mass_balance    ( c ) ) return 0;
 
 	/* CHECK FOR WATER FLUX BALANCE CLOSURE */
 	if ( ! check_water_flux_balance     ( c, meteo_daily ) ) return 0;
