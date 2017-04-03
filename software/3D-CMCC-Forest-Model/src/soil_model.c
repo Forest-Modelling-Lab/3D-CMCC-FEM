@@ -97,7 +97,7 @@ int Soil_model_daily (matrix_t *const m, const int cell, const int day, const in
 	/* 3 */ //fixme if ( ! check_soil_carbon_mass_balance    ( c ) ) return 0;
 
 	/* CHECK FOR WATER FLUX BALANCE CLOSURE */
-	/* 4 */ //fixme if ( ! check_soil_water_flux_balance     ( c, meteo_daily ) ) return 0;
+	/* 4 */ if ( ! check_soil_water_flux_balance     ( c, meteo_daily ) ) return 0;
 
 	/*******************************************************************************************************/
 
