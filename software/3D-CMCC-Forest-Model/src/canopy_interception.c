@@ -19,7 +19,7 @@
 
 extern logger_t* g_debug_log;
 
-void canopy_interception(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, const meteo_daily_t *const meteo_daily)
+void canopy_interception(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, meteo_daily_t *const meteo_daily)
 {
 	static int cell_height_class_counter;
 	static int layer_height_class_counter;
@@ -47,10 +47,10 @@ void canopy_interception(cell_t *const c, const int layer, const int height, con
 
 		/* assign meteo variables to cell variables */
 		/* assign incoming rain */
-		c->rain = meteo_daily->rain;
+		//c->rain = meteo_daily->rain;
 
 		/* assign incoming snow */
-		c->snow = meteo_daily->snow;
+		//c->snow = meteo_daily->snow;
 	}
 
 	/*****************************************************************************************************************/
@@ -61,20 +61,16 @@ void canopy_interception(cell_t *const c, const int layer, const int height, con
 	/*************************************************************************/
 	/* shared functions among all class/layers */
 	/* compute interception for dry canopy (Lawrence et al., 2006) */
-	if( meteo_daily->prcp > 0.0 && s->value[LAI_PROJ] > 0.0 && s->value[CANOPY_WATER] == 0.0 )
+	if( ( meteo_daily->prcp > 0.0 ) && ( s->value[LAI_PROJ] > 0.0 ) && ( ! s->value[CANOPY_WATER] ) )
 	{
 		/* for rain */
 		if( meteo_daily->rain != 0.0 )
 		{
 			logger(g_debug_log, "rain = %g mm/m2/day\n", meteo_daily->rain);
 
-			s->value[CANOPY_INT] = s->value[INT_COEFF] * meteo_daily->rain * (1.0 - exp(-0.5 * s->value[LAI_PROJ])) * s->value[DAILY_CANOPY_COVER_PROJ];
-			logger(g_debug_log, "CANOPY_INT = %g mm/m2/day\n", s->value[CANOPY_INT]);
-
-			s->value[CANOPY_WATER] = s->value[CANOPY_INT];
-
-			/* no snow interception when rain */
-			s->value[CANOPY_INT_SNOW] = 0.0;
+			s->value[CANOPY_INT]      = s->value[INT_COEFF] * meteo_daily->rain * (1.0 - exp(-0.5 * s->value[LAI_PROJ])) * s->value[DAILY_CANOPY_COVER_PROJ];
+			s->value[CANOPY_WATER]    = s->value[CANOPY_INT];
+			s->value[CANOPY_INT_SNOW] = 0.;
 
 			CHECK_CONDITION(s->value[CANOPY_INT], >, meteo_daily->rain);
 		}
@@ -86,16 +82,14 @@ void canopy_interception(cell_t *const c, const int layer, const int height, con
 
 			logger(g_debug_log, "snow = %g mm/m2/day\n", meteo_daily->snow);
 
-			Int_max_snow = 4.4 * s->value[LAI_PROJ];
-			s->value[CANOPY_INT_SNOW] = s->value[CANOPY_SNOW] + 0.7 * ( Int_max_snow - s->value[CANOPY_SNOW] ) *
-				(1 - exp( - ( meteo_daily->snow /Int_max_snow ) ) ) * s->value[DAILY_CANOPY_COVER_PROJ];
-
-			/* no rain interception when snow */
-			s->value[CANOPY_INT] = 0.;
+			Int_max_snow              = 4.4 * s->value[LAI_PROJ];
+			s->value[CANOPY_INT_SNOW] = s->value[CANOPY_SNOW] + 0.7 * ( Int_max_snow - s->value[CANOPY_SNOW] ) * (1 - exp( - ( meteo_daily->snow /Int_max_snow ) ) ) * s->value[DAILY_CANOPY_COVER_PROJ];
+			s->value[CANOPY_INT]      = 0.;
 
 			//fixme for now assuming no snow interception
-			s->value[CANOPY_INT_SNOW] = 0.0;
-			logger(g_debug_log, "CANOPY_INT_SNOW = %g mm/m2/day\n", s->value[CANOPY_INT_SNOW]);
+			s->value[CANOPY_INT_SNOW] = 0.;
+
+			CHECK_CONDITION(s->value[CANOPY_INT_SNOW], >, meteo_daily->snow);
 		}
 	}
 
@@ -114,15 +108,15 @@ void canopy_interception(cell_t *const c, const int layer, const int height, con
 
 		/* compute interceptable rain for lower layers */
 		c->daily_c_rain_int += s->value[CANOPY_INT];
-		c->rain -= temp_int_rain;
+		meteo_daily->rain   -= temp_int_rain;
 
 		/* compute interceptable snow for lower layers */
 		c->daily_c_snow_int += s->value[CANOPY_INT_SNOW];
-		c->snow -= temp_int_snow;
+		meteo_daily->snow   -= temp_int_snow;
 
 		/* reset temporary values when the last height class in layer is processed */
-		temp_int_rain = 0.0;
-		temp_int_snow = 0.0;
+		temp_int_rain = 0.;
+		temp_int_snow = 0.;
 
 		/* reset counter */
 		layer_height_class_counter = 0;
@@ -134,8 +128,8 @@ void canopy_interception(cell_t *const c, const int layer, const int height, con
 	{
 		logger(g_debug_log,"\n***********************************\n");
 		logger(g_debug_log,"last height class in cell processed\n");
-		logger(g_debug_log, "rain to soil = %g mm\n", c->rain);
-		logger(g_debug_log, "snow to soil = %g cm\n", c->snow);
+		logger(g_debug_log, "rain to soil = %g mm\n", meteo_daily->rain);
+		logger(g_debug_log, "snow to soil = %g cm\n", meteo_daily->snow);
 
 		/* reset counter */
 		cell_height_class_counter = 0;
@@ -144,5 +138,5 @@ void canopy_interception(cell_t *const c, const int layer, const int height, con
 
 	/* cumulate */
 	s->value[MONTHLY_CANOPY_INT] += (s->value[CANOPY_INT] + s->value[CANOPY_INT_SNOW]);
-	s->value[YEARLY_CANOPY_INT] += (s->value[CANOPY_INT] + s->value[CANOPY_INT_SNOW]);
+	s->value[YEARLY_CANOPY_INT]  += (s->value[CANOPY_INT] + s->value[CANOPY_INT_SNOW]);
 }

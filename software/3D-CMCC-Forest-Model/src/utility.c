@@ -90,11 +90,10 @@ void reset_daily_cell_variables(cell_t *const c)
 	c->daily_froot_litr4C =             0.;
 	c->daily_soilC =                    0.;
 
-
 	/*reset daily water variables*/
-	c->snow_melt =                      0.;
-	c->snow_subl =                      0.;
-	c->out_flow =                       0.;
+	c->daily_snow_melt =                0.;
+	c->daily_snow_subl =                0.;
+	c->daily_out_flow =                 0.;
 	c->daily_c_transp =                 0.;
 	c->daily_c_rain_int =               0.;
 	c->daily_c_snow_int =               0.;

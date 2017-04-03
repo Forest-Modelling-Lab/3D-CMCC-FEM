@@ -56,19 +56,19 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 	/* reset if LAI == 0.0*/
 	if( !s->value[LAI_PROJ] )
 	{
-		s->value[OLD_CANOPY_WATER]= 0.0;
-		s->value[CANOPY_WATER] = 0.0;
-		s->value[CANOPY_SNOW] = 0.0;
-		s->value[OLD_CANOPY_SNOW] = 0.0;
+		s->value[OLD_CANOPY_WATER] = 0.;
+		s->value[CANOPY_WATER]     = 0.;
+		s->value[CANOPY_SNOW]      = 0.;
+		s->value[OLD_CANOPY_SNOW]  = 0.;
 	}
 	/* otherwise assign values of the day before */
 	else
 	{
 		/* in case of water on canopy */
-		if ( s->value[CANOPY_WATER] >= 0.0 )s->value[OLD_CANOPY_WATER]= s->value[CANOPY_WATER];
+		if ( s->value[CANOPY_WATER] >= 0. ) s->value[OLD_CANOPY_WATER] = s->value[CANOPY_WATER];
 
 		/* in case of snow on canopy */
-		if ( s->value[CANOPY_SNOW] >= 0 ) s->value[OLD_CANOPY_SNOW]= s->value[CANOPY_SNOW];
+		if ( s->value[CANOPY_SNOW]  >= 0. ) s->value[OLD_CANOPY_SNOW]  = s->value[CANOPY_SNOW];
 	}
 
 	/********************************************************************************************************/
@@ -123,11 +123,11 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 	/* differently from BIOME we use F_T that takes into account not only minimum temperature effects */
 	/* differently from BIOME we use also F_AGE */
 
-	m_final_sun = s->value[F_LIGHT_SUN] * s->value[F_SW] * s->value[F_T] * s->value[F_VPD] * s->value[F_AGE];
+	m_final_sun   = s->value[F_LIGHT_SUN] * s->value[F_SW] * s->value[F_T] * s->value[F_VPD] * s->value[F_AGE];
 	m_final_shade = s->value[F_LIGHT_SHADE] * s->value[F_SW] * s->value[F_T] * s->value[F_VPD] * s->value[F_AGE];
 
-	if (m_final_sun < 0.00000001) m_final_sun = 0.00000001;
-	if (m_final_shade < 0.00000001) m_final_shade = 0.00000001;
+	if (m_final_sun   < eps) m_final_sun   = eps;
+	if (m_final_shade < eps) m_final_shade = eps;
 
 	/* correct maximum stomatal conductance for CO2 concentration*/
 	gl_x = (s->value[F_CO2_TR] / 0.9116) * s->value[MAXCOND];
@@ -137,31 +137,31 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 	//gl_s_shade = s->value[MAXCOND] * m_final_shade * g_corr;
 
 	/* following Jarvis 1997 + Frank et al., 2013 + Hidy et al., 2016 GMDD */
-	gl_s_sun = gl_x * m_final_sun * g_corr;
-	gl_s_shade = gl_x * m_final_shade * g_corr;
+	gl_s_sun      = gl_x * m_final_sun * g_corr;
+	gl_s_shade    = gl_x * m_final_shade * g_corr;
 
 	/* calculate leaf-and canopy-level conductances to water vapor and
 		sensible heat fluxes, to be used in Penman-Monteith calculations of
 		canopy evaporation and canopy transpiration */
 
 	/* Leaf conductance to evaporated water vapor, per unit projected LAI */
-	gl_e_wv = gl_bl;
+	gl_e_wv       = gl_bl;
 
 	/* Leaf conductance to transpired water vapor, per unit projected
 		LAI.  This formula is derived from stomatal and cuticular conductances
 		in parallel with each other, and both in series with leaf boundary
 		layer conductance. */
-	gl_t_wv_sun = (gl_bl * (gl_s_sun + gl_c)) / (gl_bl + gl_s_sun + gl_c);
+	gl_t_wv_sun   = (gl_bl * (gl_s_sun + gl_c)) / (gl_bl + gl_s_sun + gl_c);
 	gl_t_wv_shade = (gl_bl * (gl_s_shade + gl_c)) / (gl_bl + gl_s_shade + gl_c);
 
 	/* Leaf conductance to sensible heat, per unit all-sided LAI */
-	gl_sh = gl_bl;
+	gl_sh         = gl_bl;
 
 	/* Canopy conductance to evaporated water vapor */
-	gc_e_wv = gl_e_wv * s->value[LAI_PROJ];
+	gc_e_wv       = gl_e_wv * s->value[LAI_PROJ];
 
 	/* Canopy conductance to sensible heat */
-	gc_sh = gl_sh * s->value[LAI_PROJ];
+	gc_sh         = gl_sh * s->value[LAI_PROJ];
 
 	/* Canopy evaporation, if any water was intercepted */
 	/* Calculate Penman-Monteith evaporation, given the canopy conductances to
@@ -174,10 +174,10 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 	model should use Absorbed Radiation (instead just incident) but
 	composed of Short and Long wave radiation */
 
-	if(s->value[LAI_PROJ]>0.0)
+	if( s->value[LAI_PROJ] > 0. )
 	{
 		/* if canopy has water */
-		if(s->value[CANOPY_WATER] > 0.0)
+		if(s->value[CANOPY_WATER] > 0.)
 		{
 			logger(g_debug_log, "\n*CANOPY EVAPORATION (Canopy Wet) *\n");
 			logger(g_debug_log, "LAI_PROJ = %g\n",s->value[LAI_PROJ]);
@@ -195,7 +195,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 			evapo = Penman_Monteith (meteo_daily, rv, rh, net_rad);
 
 			/* check for negative values */
-			if(evapo < 0.0) evapo = 0.0;
+			if(evapo < 0.0) evapo = 0.;
 
 			s->value[CANOPY_EVAPO] = evapo;
 

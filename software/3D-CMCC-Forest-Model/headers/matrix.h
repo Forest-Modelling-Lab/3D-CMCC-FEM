@@ -1005,7 +1005,6 @@ typedef struct
 	double field_capacity;                                                /* volumetric water content at field capacity (mm/m2) */
 	double sat_hydr_conduct;                                              /* saturated hydraulic conductivity (mm/m2) */
 	double asw;                                                           /* current available soil water (mm/volume) */
-	double old_asw;                                                       /* old available soil water (mm/volume) */
 	double max_asw_fc;                                                    /* max available soil water at field capacity mmKgH2O/m3*/
 	double max_asw_sat;                                                   /* max available soil water at field capacity mmKgH2O/m3*/
 	double psi;                                                           /* water potential of soil and leaves (MPa) */
@@ -1020,16 +1019,13 @@ typedef struct
 	double swc;                                                           /* soil Water content (kgH2O/m2) */
 
 	/* water */
-	double rain;
-	double snow;
 	int days_since_rain;                                                             /* consecutive days without rain */
 	double rain_intercepted;                                                         /* current amount of intercepted rain (mm/m2) */
 	double vapour_to_atmosphere;                                                     /* current water flux water to atmosphere (mm/m2) */
 	double snow_pack;                                                                /* current amount of snow (Kg/m2) */
-	double snow_melt;                                                                /* current amount of melted snow (mm/m2) */
-	double snow_subl;                                                                /* current amount of sublimated snow (mm/m2) */
-	double old_snow_pack;                                                            /* old amount of snow (Kg/m2) */
-	double out_flow;                                                                 /* current amount of water outflow (mm/m2) */
+	double daily_snow_melt;                                                          /* current amount of melted snow (mm/m2) */
+	double daily_snow_subl;                                                          /* current amount of sublimated snow (mm/m2) */
+	double daily_out_flow;                                                           /* current amount of water outflow (mm/m2) */
 	double daily_c_rain_int, monthly_c_rain_int, annual_c_rain_int;                  /* daily, monthly and canopy rain interception at cell level (mm/m2/ ) */
 	double daily_c_snow_int, monthly_c_snow_int, annual_c_snow_int;                  /* daily, monthly and canopy snow interception at cell level (mm/m2/ ) */
 	double daily_c_transp, monthly_c_transp, annual_c_transp;                        /* daily, monthly and canopy transpiration at cell level (mm/m2/ ) */
@@ -1039,7 +1035,6 @@ typedef struct
 	double daily_soil_evapo, monthly_soil_evapo, annual_soil_evapo;                  /* daily, monthly and soil evaporation at cell level (mm/m2/ ) */
 	double daily_et, monthly_et, annual_et;                                          /* daily, monthly and evapotranspiration at cell level (mm/m2/ ) */
 	double daily_tot_w_flux, monthly_tot_w_flux, annual_tot_w_flux;                  /* daily, monthly and annual water fluxes at cell level (mm/m2/ ) */
-	double old_daily_c_water_stored;
 	double daily_soil_evaporation_watt;                                              /* current daily soil evaporation in watt at cell level (W/m2) */
 	double daily_soil_latent_heat_flux;                                              /* current daily soil latent heat flux  at cell level (W/m2) */
 	double daily_soil_sensible_heat_flux;                                            /* current daily soil sensible heat flux at cell level (W/m2) */

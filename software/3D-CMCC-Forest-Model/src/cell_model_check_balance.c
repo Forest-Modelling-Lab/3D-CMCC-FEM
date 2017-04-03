@@ -327,42 +327,48 @@ int check_cell_water_flux_balance(cell_t *const c, const meteo_daily_t *const me
 	double out;
 	double store;
 	double balance;
+	static double old_store;
+
+	double in_snow;
+	double out_snow;
+	double store_snow;
+	double balance_snow;
+	static double old_store_snow;
 
 	logger(g_debug_log, "\n*********CHECK CELL SOIL WATER BALANCE************\n");
 	/* DAILY CHECK ON SOIL POOL-ATMOSPHERE WATER BALANCE */
 	/* it takes into account soil-atmosphere fluxes */
 
 	/* sum of sources (rain + snow) */
-	in = meteo_daily->rain + c->snow_melt;
+	in      = meteo_daily->rain + meteo_daily->snow;
 
 	/* sum of sinks */
-	out = c->daily_c_transp + c->daily_c_rain_int + c->daily_soil_evapo + c->out_flow;
+	out     = c->daily_c_transp + c->daily_c_evapo + c->daily_soil_evapo + c->daily_out_flow;
 
 	/* sum of current storage in soil */
-	store = (c->asw - c->old_asw);
+	store   = c->asw  + c->daily_c_water_stored + c->snow_pack;
 
 	/* check soil pool water balance */
-	balance = in - out - store;
+	balance = in - out - ( store - old_store );
 
 	logger(g_debug_log, "\nCELL SOIL POOL WATER BALANCE\n");
 
 	/* check for soil water pool water balance */
-	if ( fabs( balance ) > eps )
+	if ( ( fabs( balance ) > eps ) && ( c->dos > 1 ) )
 	{
-		printf("DOY = %d\n", c->doy);
+		printf("DOY = %d\n", c->dos);
 		printf("\nin\n");
 		printf("meteo_daily->rain = %g\n", meteo_daily->rain);
-		printf("c->snow_melt = %g\n", c->snow_melt);
+		printf("meteo_daily->snow = %g\n", meteo_daily->snow);
 		printf("\nout\n");
 		printf("c->daily_c_transp = %g\n", c->daily_c_transp);
-		printf("c->daily_c_int = %g\n", c->daily_c_rain_int);
+		printf("c->daily_c_int = %g\n", c->daily_c_evapo);
 		printf("c->soil_evaporation = %g\n", c->daily_soil_evapo);
-		printf("c->out_flow = %g\n", c->out_flow);
+		printf("c->out_flow = %g\n", c->daily_out_flow);
 		printf("\nstore (as a difference between old and current)\n");
 		printf("c->daily_c_water_stored = %g\n", c->daily_c_water_stored);
-		printf("delta c->asw = %g\n", (c->asw - c->old_asw));
 		printf("c->asw = %g\n", c->asw);
-		printf("c->old_asw = %g\n", c->old_asw);
+		printf("c->snow_pack = %g\n", c->snow_pack);
 		printf("soil water in = %g\n", in);
 		printf("soil water out = %g\n", out);
 		printf("soil water store = %g\n", store);
@@ -374,6 +380,7 @@ int check_cell_water_flux_balance(cell_t *const c, const meteo_daily_t *const me
 	}
 	else
 	{
+		old_store = store;
 		logger(g_debug_log, "...ok soil water balance\n");
 	}
 
@@ -381,35 +388,35 @@ int check_cell_water_flux_balance(cell_t *const c, const meteo_daily_t *const me
 	/* DAILY CHECK ON SNOW POOL-SOIL POOL-ATMOSPHERE WATER BALANCE */
 	/* it takes into account snow-soil-atmosphere fluxes */
 
-	/* sum of sources (rain + snow) */
-	in = meteo_daily->snow;
+	/* sum of sources (snow) */
+	in_snow      = meteo_daily->snow;
 
 	/* sum of sinks */
-	out = c->snow_melt + c->snow_subl;
+	out_snow     = c->daily_snow_melt + c->daily_snow_subl;
 
 	/* sum of current storage in snow pack */
-	store = c->snow_pack - c->old_snow_pack;
+	store_snow   = c->snow_pack;
 
 	/* check snow pool water balance */
-	balance = in - out - store;
+	balance_snow = in_snow - out_snow - ( store_snow - old_store_snow);
 
 	logger(g_debug_log, "\nCELL SNOW POOL WATER BALANCE\n");
 
 	/* check for soil water pool water balance */
-	if ( fabs( balance ) > eps )
+	if ( ( fabs( balance ) > eps ) && ( c->dos > 1 ) )
 	{
 		printf("DOY = %d\n", c->doy);
 		printf("\nin\n");
 		printf("meteo_daily->snow = %g\n", meteo_daily->snow);
 		printf("\nout\n");
-		printf("c->snow_subl = %g\n", c->snow_subl);
-		printf("c->snow_melt = %g\n", c->snow_melt);
+		printf("c->daily_snow_subl = %g\n", c->daily_snow_subl);
+		printf("c->daily_snow_melt = %g\n", c->daily_snow_melt);
 		printf("\nstore (as a difference between old and current)\n");
-		printf("delta c->asw = %g\n", (c->snow_pack - c->old_snow_pack));
-		printf("soil water in = %g\n", in);
-		printf("soil water out = %g\n", out);
-		printf("soil water store = %g\n", store);
-		printf("soil water balance = %g\n", balance);
+		printf("delta c->asw = %g\n", c->snow_pack);
+		printf("soil water in = %g\n", in_snow);
+		printf("soil water out = %g\n", out_snow);
+		printf("soil water store = %g\n", store_snow);
+		printf("soil water balance = %g\n", balance_snow);
 		printf("...FATAL ERROR IN snow water balance (exit)\n");
 		CHECK_CONDITION (fabs( balance ), >, eps);
 
@@ -417,6 +424,7 @@ int check_cell_water_flux_balance(cell_t *const c, const meteo_daily_t *const me
 	}
 	else
 	{
+		old_store_snow = store_snow;
 		logger(g_debug_log, "...ok snow water balance\n");
 	}
 	logger(g_debug_log,"*****************************************************\n");

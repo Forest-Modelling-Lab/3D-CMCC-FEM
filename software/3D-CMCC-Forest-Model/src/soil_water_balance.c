@@ -16,40 +16,22 @@
 
 extern logger_t* g_debug_log;
 
-//fixme  maybe it can be moved to soil_model.c
 void soil_water_balance(cell_t *c, const meteo_daily_t *const meteo_daily)
 {
 	logger(g_debug_log, "\n**SOIL-SNOW WATER BALANCE**\n");
 
-	/* water pools */
-	c->old_daily_c_water_stored = c->daily_c_water_stored;
-	c->old_snow_pack = c->snow_pack;
-	c->old_asw = c->asw;
-
-	/*update balance*/
+	/* update balance */
 
 	/* soil water balance */
-	c->asw = c->old_asw + (meteo_daily->rain + c->snow_melt) - (c->daily_c_transp + c->daily_soil_evapo + c->daily_c_rain_int);
+	c->asw       += (meteo_daily->rain + c->daily_snow_melt) - (c->daily_c_transp + c->daily_soil_evapo + c->daily_c_rain_int);
 
 	/* snow pack balance */
-	c->snow_pack = c->old_snow_pack + meteo_daily->snow - (c->snow_melt + c->snow_subl);
-
-	logger(g_debug_log, "asw = %g mm\n", c->asw);
-	logger(g_debug_log, "snow pack = %g mm\n", c->snow_pack);
+	c->snow_pack += meteo_daily->snow - (c->daily_snow_melt + c->daily_snow_subl);
 
 	if ( c->asw > c->max_asw_fc)
 	{
-		logger(g_debug_log," asw %g > max_asw_fc %g\n", c->asw, c->max_asw_fc);
-		c->out_flow = c->asw - c->max_asw_fc;
-		logger(g_debug_log, "out_flow = %g\n", c->out_flow);
-		logger(g_debug_log, "ATTENTION asw exceeds max_asw_fc!! \n");
-		c->asw = c->max_asw_fc;
-		logger(g_debug_log, "Available soil water = %g\n", c->asw);
-	}
-	/* otherwise, no outflow */
-	else
-	{
-		c->out_flow = 0.0;
+		c->daily_out_flow = c->asw - c->max_asw_fc;
+		c->asw            = c->max_asw_fc;
 	}
 	/* calculates the outflow flux from the difference between soilwater
 	and maximum soilwater */
@@ -91,11 +73,11 @@ void soil_water_balance(cell_t *c, const meteo_daily_t *const meteo_daily)
 		set these fluxes to 0.0 */
 		c->asw             += c->daily_soil_evapo;
 		c->asw             += c->daily_c_transp;
-		c->daily_soil_evapo = 0.0;
-		c->daily_c_transp   = 0.0;
+		c->daily_soil_evapo = 0.;
+		c->daily_c_transp   = 0.;
 	}
 
-	CHECK_CONDITION(c->asw, <, 0.0);
+	CHECK_CONDITION(c->asw,       <, 0.0);
 	CHECK_CONDITION(c->snow_pack, <, 0.0);
 
 	//fixme
