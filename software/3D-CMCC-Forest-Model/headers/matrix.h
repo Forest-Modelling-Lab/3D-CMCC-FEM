@@ -391,6 +391,7 @@ enum {
 	BRANCH_SAPWOOD_C,                   /* Current Branch sapwood carbon pool tC/sizeCell */
 	BRANCH_HEARTWOOD_C,                 /* Current Branch heartwood carbon pool tC/sizeCell */
 	TOT_SAPWOOD_C,                      /* Current total sapwood carbon pool tC/sizeCell */
+	TOT_HEARTWOOD_C,                    /* Current total heartwood carbon pool tC/sizeCell */
 	EFF_LIVE_TOTAL_WOOD_FRAC,           /* Age-related fraction of Live biomass per Total biomass */
 	DAILY_LIVE_WOOD_TURNOVER,           /* Daily live wood turnover rate */
 
@@ -406,10 +407,16 @@ enum {
 	AV_MIN_RESERVE_KgC,                 /* Average Minimum Reserve carbon pool kgC/tree */
 	AV_FRUIT_MASS_KgC,                  /* Average Fruit carbon pool kgC/tree */
 	AV_BRANCH_MASS_KgC,                 /* Average Branch carbon pool kgC/tree */
+	AV_STEM_SAPWOOD_MASS_KgC,           /* Average Sapwood Stem carbon pool kgC/tree */
+	AV_STEM_HEARTWOOD_MASS_KgC,         /* Average Heartwood Stem carbon pool kgC/tree */
 	AV_LIVE_STEM_MASS_KgC,              /* Average Live Stem carbon pool kgC/tree */
 	AV_DEAD_STEM_MASS_KgC,              /* Average Dead Stem carbon pool kgC/tree */
+	AV_CROOT_SAPWOOD_MASS_KgC,          /* Average Sapwood Coarse root carbon pool kgC/tree */
+	AV_CROOT_HEARTWOOD_MASS_KgC,        /* Average Heartwood Coarse root carbon pool kgC/tree */
 	AV_LIVE_CROOT_MASS_KgC,             /* Average Live Coarse root carbon pool kgC/tree */
 	AV_DEAD_CROOT_MASS_KgC,             /* Average Dead Coarse root carbon pool kgC/tree */
+	AV_BRANCH_SAPWOOD_MASS_KgC,         /* Average Sapwood Branch carbon pool kgC/tree */
+	AV_BRANCH_HEARTWOOD_MASS_KgC,       /* Average Heartwood Branch carbon pool kgC/tree */
 	AV_LIVE_BRANCH_MASS_KgC,            /* Average Live Branch carbon pool kgC/tree */
 	AV_DEAD_BRANCH_MASS_KgC,            /* Average Dead Stem carbon pool kgC/tree */
 	AV_LIVE_WOOD_MASS_KgC,              /* Average Live Wood carbon pool kgC/tree */
@@ -775,7 +782,8 @@ typedef struct
 	int years_count;
 	yos_t *years;
 
-	int doy;
+	int doy;                                            /* day of the year */
+	int dos;                                            /* day of simulation */
 
 	/* for logger */
 	int initial_tree_layers_count;
@@ -935,6 +943,7 @@ typedef struct
 	double branch_dead_wood_carbon;                                       /* branch dead wood carbon at cell level (gC/m2) */
 	double reserve_carbon;                                                /* reserve at cell level (gC/m2) */
 	double fruit_carbon;                                                  /* fruit at cell level (gC/m2) */
+	double litr_carbon;                                                   /* litter at cell level (gC/m2) */
 	double leaf_tC;                                                       /* leaf carbon at cell level (tC/cell) */
 	double froot_tC;                                                      /* fine root carbon at cell level (tC/cell) */
 	double stem_tC;                                                       /* stem carbon at cell level (tC/cell) */
@@ -948,6 +957,7 @@ typedef struct
 	double branch_dead_wood_tC;                                           /* branch dead wood carbon at cell level (tC/cell) */
 	double reserve_tC;                                                    /* reserve at cell level (tC/cell) */
 	double fruit_tC;                                                      /* fruit at cell level (tC/cell) */
+	double litr_tC;                                                       /* litter at cell level (tC/cell) */
 
 	/* tree nitrogen pools */
 	double leaf_nitrogen;                                                 /* leaf carbon at cell level (gN/m2) */
@@ -1095,7 +1105,6 @@ typedef struct
 	double deadwood_litr2C;                                               /* (tC/sizecell) deadwood litter unshielded cellulose carbon */
 	double deadwood_litr3C;                                               /* (tC/sizecell) deadwood litter shielded cellulose carbon */
 	double deadwood_litr4C;                                               /* (tC/sizecell) deadwood litter lignin carbon */
-	double litr_tC;                                                       /* (tC/sizecell) Litter at cell level */
 
 	double cwdC;                                                          /* (tC/sizecell) coarse woody debris carbon */
 	double litrC;                                                         /* (tC/sizecell) litter + cwd total carbon */

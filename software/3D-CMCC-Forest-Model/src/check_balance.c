@@ -278,7 +278,7 @@ int check_carbon_mass_balance(cell_t *const c)
 	in = c->daily_gpp_tC;
 
 	/* sum of carbon sinks */
-	out = c->daily_aut_resp_tC;
+	out = c->daily_aut_resp_tC + c->litr_tC + c->soil_tC;
 
 	/* sum of current carbon storage */
 	store = c->leaf_tC    +
@@ -287,8 +287,6 @@ int check_carbon_mass_balance(cell_t *const c)
 			c->stem_tC    +
 			c->branch_tC  +
 			c->reserve_tC +
-			c->litr_tC    +
-			c->soil_tC    +
 			c->fruit_tC   ;
 
 	/* check carbon pool balance */
@@ -297,19 +295,9 @@ int check_carbon_mass_balance(cell_t *const c)
 	logger(g_debug_log, "\nCELL LEVEL CARBON MASS BALANCE\n");
 
 	/* check for carbon mass balance closure */
-	if ( fabs( balance ) > eps && c->doy > 1 )
+	if ( fabs( balance ) > eps && c->dos > 1 )
 	{
-		old_leaf = c->leaf_tC;
-		old_froot = c->froot_tC;
-		old_reserve = c->reserve_tC;
-		old_croot = c->croot_tC;
-		old_stem = c->stem_tC;
-		old_branch = c->branch_tC;
-		old_fruit = c->fruit_tC;
-		old_litr = c->litr_tC;
-
-
-		logger(g_debug_log, "DOY = %d\n", c->doy);
+		logger(g_debug_log, "DOS = %d\n", c->dos);
 		logger(g_debug_log, "\nin = %g tC/sizecell/day\n", in);
 		logger(g_debug_log, "daily_gpp_tC = %g tC/sizecell\n", c->daily_gpp_tC);
 		logger(g_debug_log, "\nout = %g tC/sizecell/day\n", out);
@@ -330,12 +318,19 @@ int check_carbon_mass_balance(cell_t *const c)
 		logger(g_debug_log, "...FATAL ERROR AT CELL LEVEL carbon mass balance (exit)\n");
 		CHECK_CONDITION (fabs( balance ), >, eps);
 
-		old_store = store;
-
 		return 0;
 	}
 	else
 	{
+		old_leaf = c->leaf_tC;
+		old_froot = c->froot_tC;
+		old_reserve = c->reserve_tC;
+		old_croot = c->croot_tC;
+		old_stem = c->stem_tC;
+		old_branch = c->branch_tC;
+		old_fruit = c->fruit_tC;
+		old_litr = c->litr_tC;
+
 		old_store = store;
 		logger(g_debug_log, "...ok carbon mass balance at cell level\n");
 	}
@@ -708,9 +703,9 @@ int check_class_carbon_mass_balance(cell_t *const c, const int layer, const int 
 	logger(g_debug_log, "\nCLASS LEVEL CARBON MASS BALANCE\n");
 
 	/* check for carbon mass balance closure */
-	if ( fabs( balance ) > eps && c->doy > 1 )
+	if ( ( fabs( balance ) > eps ) && ( c->dos > 1 ) )
 	{
-		logger(g_debug_log, "DOY = %d\n", c->doy);
+		logger(g_debug_log, "DOS = %d\n", c->dos);
 		logger(g_debug_log, "\nin = %g tC/sizecell/day\n", in);
 		logger(g_debug_log, "GPP = %g tC/sizecell\n", s->value[GPP_tC]);
 		logger(g_debug_log, "\nout = %g tC/sizecell/day\n", out);
@@ -730,8 +725,6 @@ int check_class_carbon_mass_balance(cell_t *const c, const int layer, const int 
 		logger(g_debug_log, "\nbalance = %g tC/sizecell\n", balance);
 		logger(g_debug_log, "...FATAL ERROR AT CLASS LEVEL carbon mass balance (exit)\n");
 		CHECK_CONDITION (fabs( balance ), >, eps);
-
-		old_store = store;
 
 		return 0;
 	}

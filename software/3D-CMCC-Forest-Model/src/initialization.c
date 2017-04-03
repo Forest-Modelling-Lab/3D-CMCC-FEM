@@ -202,17 +202,36 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 	s->value[WS_sap_tDM] = (s->value[BIOMASS_STEM_tDM] * s->value[SAPWOOD_PERC]);
 	s->value[STEM_SAPWOOD_C] = (s->value[STEM_C] * s->value[SAPWOOD_PERC]);
 	logger(g_debug_log, "Sapwood stem biomass = %g tC class cell \n", s->value[STEM_SAPWOOD_C]);
+	s->value[STEM_HEARTWOOD_C] = (s->value[STEM_C] - s->value[STEM_SAPWOOD_C]);
+	logger(g_debug_log, "Heartwood stem biomass = %g tC class cell \n", s->value[STEM_HEARTWOOD_C]);
 	s->value[WRC_sap_tDM] =  (s->value[BIOMASS_CROOT_tDM] * s->value[SAPWOOD_PERC]);
 	s->value[CROOT_SAPWOOD_C] =  (s->value[CROOT_C] * s->value[SAPWOOD_PERC]);
-	logger(g_debug_log, "Sapwood coarse root biomass = %g tDM class cell \n", s->value[WRC_sap_tDM]);
+	logger(g_debug_log, "Sapwood coarse root biomass = %g tDM class cell \n", s->value[CROOT_SAPWOOD_C]);
+	s->value[CROOT_HEARTWOOD_C] = (s->value[CROOT_C] - s->value[CROOT_SAPWOOD_C]);
+	logger(g_debug_log, "Heartwood coarse root biomass = %g tC class cell \n", s->value[CROOT_HEARTWOOD_C]);
 	s->value[WBB_sap_tDM] = (s->value[BIOMASS_BRANCH_tDM] * s->value[SAPWOOD_PERC]);
 	s->value[BRANCH_SAPWOOD_C] = (s->value[BRANCH_C] * s->value[SAPWOOD_PERC]);
 	logger(g_debug_log, "Sapwood branch and bark biomass = %g tC class cell \n", s->value[BRANCH_SAPWOOD_C]);
+	s->value[BRANCH_HEARTWOOD_C] = (s->value[BRANCH_C] - s->value[BRANCH_SAPWOOD_C]);
+	logger(g_debug_log, "Heartwood branch biomass = %g tC class cell \n", s->value[BRANCH_HEARTWOOD_C]);
 	s->value[WTOT_sap_tDM] = s->value[WS_sap_tDM] + s->value[WRC_sap_tDM] + s->value[WBB_sap_tDM];
 	s->value[TOT_SAPWOOD_C] = s->value[STEM_SAPWOOD_C] + s->value[CROOT_SAPWOOD_C] + s->value[BRANCH_SAPWOOD_C];
 	logger(g_debug_log, "Total Sapwood biomass = %g tC class cell \n", s->value[TOT_SAPWOOD_C]);
 	logger(g_debug_log, "Total Sapwood biomass per tree = %g tC tree \n", s->value[TOT_SAPWOOD_C] / s->counter[N_TREE]);
 	logger(g_debug_log, "Total Sapwood biomass per tree = %g KgC tree \n", (s->value[TOT_SAPWOOD_C] / s->counter[N_TREE]) * 1e3);
+
+	s->value[TOT_HEARTWOOD_C] = s->value[STEM_HEARTWOOD_C] + s->value[CROOT_HEARTWOOD_C] + s->value[BRANCH_HEARTWOOD_C];
+	logger(g_debug_log, "Total Heartwood biomass = %g tC class cell \n", s->value[TOT_HEARTWOOD_C]);
+	logger(g_debug_log, "Total Heartwood biomass per tree = %g tC tree \n", s->value[TOT_HEARTWOOD_C] / s->counter[N_TREE]);
+	logger(g_debug_log, "Total Heartwood biomass per tree = %g KgC tree \n", (s->value[TOT_HEARTWOOD_C] / s->counter[N_TREE]) * 1e3);
+
+	s->value[AV_STEM_SAPWOOD_MASS_KgC]     = s->value[STEM_SAPWOOD_C]   * 1e3 / s->counter[N_TREE];
+	s->value[AV_STEM_HEARTWOOD_MASS_KgC]   = s->value[CROOT_C]          * 1e3 / s->counter[N_TREE];
+	s->value[AV_CROOT_SAPWOOD_MASS_KgC]    = s->value[CROOT_SAPWOOD_C]  * 1e3 / s->counter[N_TREE];
+	s->value[AV_CROOT_HEARTWOOD_MASS_KgC]  = s->value[CROOT_C]          * 1e3 / s->counter[N_TREE];
+	s->value[AV_BRANCH_SAPWOOD_MASS_KgC]   = s->value[BRANCH_SAPWOOD_C] * 1e3 / s->counter[N_TREE];
+	s->value[AV_BRANCH_HEARTWOOD_MASS_KgC] = s->value[CROOT_C]          * 1e3 / s->counter[N_TREE];
+
 
 	/*reserve*/
 	if (s->value[RESERVE_tDM] == 0 || s->value[RESERVE_tDM] == NO_DATA)
