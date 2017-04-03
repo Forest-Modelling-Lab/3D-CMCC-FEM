@@ -17,7 +17,7 @@
 
 extern logger_t* g_debug_log;
 
-int check_radiation_flux_balance (cell_t *const c, const meteo_daily_t *const meteo_daily)
+int check_cell_radiation_flux_balance (cell_t *const c, const meteo_daily_t *const meteo_daily)
 {
 	double in;
 	double out;
@@ -44,22 +44,22 @@ int check_radiation_flux_balance (cell_t *const c, const meteo_daily_t *const me
 
 	if ( fabs( balance ) > eps )
 	{
-		logger(g_debug_log, "DOY = %d\n", c->doy);
-		logger(g_debug_log, "\nin\n");
-		logger(g_debug_log, "incoming par = %g molPAR/m2/day\n", meteo_daily->incoming_par);
-		logger(g_debug_log, "\nout\n");
-		logger(g_debug_log, "c->par_refl = %g molPAR/m2/day\n",c->par_refl);
-		logger(g_debug_log, "c->par_refl_soil = %g molPAR/m2/day\n",c->par_refl_soil);
-		logger(g_debug_log, "c->par_refl_snow = %g molPAR/m2/day\n",c->par_refl_snow);
-		logger(g_debug_log, "\nstore\n");
-		logger(g_debug_log, "c->apar = %g molPAR/m2/day\n", c->apar);
-		logger(g_debug_log, "c->par_for_soil = %g molPAR/m2/day\n", c->apar_soil);
-		logger(g_debug_log, "c->par_for_snow = %g molPAR/m2/day\n", c->apar_snow);
-		logger(g_debug_log, "\npar in = %g molPAR/m2/day\n", in);
-		logger(g_debug_log, "par out = %g molPAR/m2/day\n", out);
-		logger(g_debug_log, "par store = %g molPAR/m2/day\n", store);
-		logger(g_debug_log, "par balance = %g molPAR/m2/day\n",balance);
-		logger(g_debug_log, "...FATAL ERROR IN PAR radiative balance (exit)\n");
+		printf("DOY = %d\n", c->doy);
+		printf("\nin\n");
+		printf("incoming par = %g molPAR/m2/day\n", meteo_daily->incoming_par);
+		printf("\nout\n");
+		printf("c->par_refl = %g molPAR/m2/day\n",c->par_refl);
+		printf("c->par_refl_soil = %g molPAR/m2/day\n",c->par_refl_soil);
+		printf("c->par_refl_snow = %g molPAR/m2/day\n",c->par_refl_snow);
+		printf("\nstore\n");
+		printf("c->apar = %g molPAR/m2/day\n", c->apar);
+		printf("c->par_for_soil = %g molPAR/m2/day\n", c->apar_soil);
+		printf("c->par_for_snow = %g molPAR/m2/day\n", c->apar_snow);
+		printf("\npar in = %g molPAR/m2/day\n", in);
+		printf("par out = %g molPAR/m2/day\n", out);
+		printf("par store = %g molPAR/m2/day\n", store);
+		printf("par balance = %g molPAR/m2/day\n",balance);
+		printf("...FATAL ERROR IN PAR radiative balance (exit)\n");
 		CHECK_CONDITION (fabs( balance ), >, eps);
 
 		return 0;
@@ -88,20 +88,20 @@ int check_radiation_flux_balance (cell_t *const c, const meteo_daily_t *const me
 
 	if ( fabs( balance ) > eps )
 	{
-		logger(g_debug_log, "DOY = %d\n", c->doy);
-		logger(g_debug_log, "\nin\n");
-		logger(g_debug_log, "incoming radiation = %g W/m2\n", meteo_daily->incoming_sw_downward_W);
-		logger(g_debug_log, "\nout\n");
-		logger(g_debug_log, "c->sw_rad_refl = %g W/m2\n",c->sw_rad_refl);
-		logger(g_debug_log, "c->sw_rad_for_soil_refl = %g W/m2\n",c->sw_rad_for_soil_refl);
-		logger(g_debug_log, "\nstore\n");
-		logger(g_debug_log, "c->sw_rad_abs = %g W/m2\n", c->sw_rad_abs);
-		logger(g_debug_log, "c->net_sw_rad_for_soil = %g W/m2\n", c->sw_rad_abs_soil);
-		logger(g_debug_log, "\nradiation in = %g W/m2\n", in);
-		logger(g_debug_log, "radiation out = %g W/m2\n", out);
-		logger(g_debug_log, "net radiation store = %g W/m2\n", store);
-		logger(g_debug_log, "radiation balance = %g W/m2\n",balance);
-		logger(g_debug_log, "...FATAL ERROR IN Short Wave Radiation radiative balance (exit)\n");
+		printf("DOY = %d\n", c->doy);
+		printf("\nin\n");
+		printf("incoming radiation = %g W/m2\n", meteo_daily->incoming_sw_downward_W);
+		printf("\nout\n");
+		printf("c->sw_rad_refl = %g W/m2\n",c->sw_rad_refl);
+		printf("c->sw_rad_for_soil_refl = %g W/m2\n",c->sw_rad_for_soil_refl);
+		printf("\nstore\n");
+		printf("c->sw_rad_abs = %g W/m2\n", c->sw_rad_abs);
+		printf("c->net_sw_rad_for_soil = %g W/m2\n", c->sw_rad_abs_soil);
+		printf("\nradiation in = %g W/m2\n", in);
+		printf("radiation out = %g W/m2\n", out);
+		printf("net radiation store = %g W/m2\n", store);
+		printf("radiation balance = %g W/m2\n",balance);
+		printf("...FATAL ERROR IN Short Wave Radiation radiative balance (exit)\n");
 		CHECK_CONDITION (fabs( balance ), >, eps);
 
 		return 0;
@@ -129,20 +129,20 @@ int check_radiation_flux_balance (cell_t *const c, const meteo_daily_t *const me
 
 	if ( fabs( balance ) > eps )
 	{
-		logger(g_debug_log, "DOY = %d\n", c->doy);
-		logger(g_debug_log, "\nin\n");
-		logger(g_debug_log, "incoming PPFD = %g umol/m2/sec\n", meteo_daily->incoming_ppfd);
-		logger(g_debug_log, "\nout\n");
-		logger(g_debug_log, "c->ppfd_refl = %g umol/m2/sec\n",c->ppfd_refl);
-		logger(g_debug_log, "c->ppfd_refl_soil = %g umol/m2/sec\n",c->ppfd_refl_soil);
-		logger(g_debug_log, "\nstore\n");
-		logger(g_debug_log, "c->ppfd_abs = %g umol/m2/sec\n", c->ppfd_abs);
-		logger(g_debug_log, "c->ppfd_for_soil = %g umol/m2/sec\n", c->ppfd_abs_soil);
-		logger(g_debug_log, "\nPPFD in = %g umol/m2/sec\n", in);
-		logger(g_debug_log, "PPFD out = %g umol/m2/sec\n", out);
-		logger(g_debug_log, "PPFD store = %g umol/m2/sec\n", store);
-		logger(g_debug_log, "PPFD balance = %g umol/m2/sec\n",balance);
-		logger(g_debug_log, "...FATAL ERROR IN PPFD radiative balance (exit)\n");
+		printf("DOY = %d\n", c->doy);
+		printf("\nin\n");
+		printf("incoming PPFD = %g umol/m2/sec\n", meteo_daily->incoming_ppfd);
+		printf("\nout\n");
+		printf("c->ppfd_refl = %g umol/m2/sec\n",c->ppfd_refl);
+		printf("c->ppfd_refl_soil = %g umol/m2/sec\n",c->ppfd_refl_soil);
+		printf("\nstore\n");
+		printf("c->ppfd_abs = %g umol/m2/sec\n", c->ppfd_abs);
+		printf("c->ppfd_for_soil = %g umol/m2/sec\n", c->ppfd_abs_soil);
+		printf("\nPPFD in = %g umol/m2/sec\n", in);
+		printf("PPFD out = %g umol/m2/sec\n", out);
+		printf("PPFD store = %g umol/m2/sec\n", store);
+		printf("PPFD balance = %g umol/m2/sec\n",balance);
+		printf("...FATAL ERROR IN PPFD radiative balance (exit)\n");
 		CHECK_CONDITION (fabs( balance ), >, eps);
 
 		return 0;
@@ -156,7 +156,7 @@ int check_radiation_flux_balance (cell_t *const c, const meteo_daily_t *const me
 	return 1;
 }
 
-int check_carbon_flux_balance(cell_t *const c)
+int check_cell_carbon_flux_balance(cell_t *const c)
 {
 	double in;
 	double out;
@@ -182,19 +182,19 @@ int check_carbon_flux_balance(cell_t *const c)
 
 	if ( fabs( balance ) > eps )
 	{
-		logger(g_debug_log, "DOY = %d\n", c->doy);
-		logger(g_debug_log, "\nin\n");
-		logger(g_debug_log, "c->daily_gpp = %g gC/m2/day\n", c->daily_gpp);
-		logger(g_debug_log, "\nout\n");
-		logger(g_debug_log, "c->daily_tot_aut_resp = %g gC/m2/day\n",c->daily_aut_resp);
-		logger(g_debug_log, "\nstore\n");
-		logger(g_debug_log, "c->daily_leaf_carbon = %g gC/m2/day\n", c->daily_npp);
-		logger(g_debug_log, "\ncarbon in = %g gC/m2/day\n", in);
-		logger(g_debug_log, "carbon out = %g gC/m2/day\n", out);
-		logger(g_debug_log, "carbon store = %g gC/m2/day\n", store);
-		logger(g_debug_log, "carbon_balance = %g gC/m2/day\n",balance);
-		logger(g_debug_log, "...FATAL ERROR IN carbon balance (exit)\n");
-		logger(g_debug_log, "DOY = %d\n", c->doy);
+		printf("DOY = %d\n", c->doy);
+		printf("\nin\n");
+		printf("c->daily_gpp = %g gC/m2/day\n", c->daily_gpp);
+		printf("\nout\n");
+		printf("c->daily_tot_aut_resp = %g gC/m2/day\n",c->daily_aut_resp);
+		printf("\nstore\n");
+		printf("c->daily_leaf_carbon = %g gC/m2/day\n", c->daily_npp);
+		printf("\ncarbon in = %g gC/m2/day\n", in);
+		printf("carbon out = %g gC/m2/day\n", out);
+		printf("carbon store = %g gC/m2/day\n", store);
+		printf("carbon_balance = %g gC/m2/day\n",balance);
+		printf("...FATAL ERROR IN carbon balance (exit)\n");
+		printf("DOY = %d\n", c->doy);
 		CHECK_CONDITION (fabs( balance ), >, eps);
 
 		return 0;
@@ -221,27 +221,27 @@ int check_carbon_flux_balance(cell_t *const c)
 
 	if ( fabs( balance ) > eps )
 	{
-		logger(g_debug_log, "DOY = %d\n", c->doy);
-		logger(g_debug_log, "\nin\n");
-		logger(g_debug_log, "c->daily_gpp = %g gC/m2/day\n", c->daily_gpp);
-		logger(g_debug_log, "\nout\n");
-		logger(g_debug_log, "c->daily_tot_aut_resp = %g gC/m2/day\n",c->daily_maint_resp + c->daily_growth_resp);
-		logger(g_debug_log, "\nstore\n");
-		logger(g_debug_log, "c->daily_leaf_carbon = %g gC/m2/day\n", c->daily_leaf_carbon);
-		logger(g_debug_log, "c->daily_stem_carbon = %g gC/m2/day\n", c->daily_stem_carbon);
-		logger(g_debug_log, "c->daily_fine_root_carbon = %g gC/m2/day\n", c->daily_froot_carbon);
-		logger(g_debug_log, "c->daily_coarse_root_carbon = %g gC/m2/day\n", c->daily_croot_carbon);
-		logger(g_debug_log, "c->daily_branch_carbon = %g gC/m2/day\n", c->daily_branch_carbon);
-		logger(g_debug_log, "c->daily_reserve_carbon = %g gC/m2/day\n", c->daily_reserve_carbon);
-		logger(g_debug_log, "c->daily_litter_carbon = %g gC/m2/day\n", c->daily_litr_carbon);
-		logger(g_debug_log, "c->daily_soil_carbon = %g gC/m2/day\n", c->daily_soil_carbon);
-		logger(g_debug_log, "c->daily_fruit_carbon = %g gC/m2/day\n", c->daily_fruit_carbon);
-		logger(g_debug_log, "\ncarbon in = %g gC/m2/day\n", in);
-		logger(g_debug_log, "carbon out = %g gC/m2/day\n", out);
-		logger(g_debug_log, "carbon store = %g gC/m2/day\n", store);
-		logger(g_debug_log, "carbon_balance = %g gC/m2/day\n",balance);
-		logger(g_debug_log, "...FATAL ERROR IN carbon balance (exit)\n");
-		logger(g_debug_log, "DOY = %d\n", c->doy);
+		printf("DOY = %d\n", c->doy);
+		printf("\nin\n");
+		printf("c->daily_gpp = %g gC/m2/day\n", c->daily_gpp);
+		printf("\nout\n");
+		printf("c->daily_tot_aut_resp = %g gC/m2/day\n",c->daily_maint_resp + c->daily_growth_resp);
+		printf("\nstore\n");
+		printf("c->daily_leaf_carbon = %g gC/m2/day\n", c->daily_leaf_carbon);
+		printf("c->daily_stem_carbon = %g gC/m2/day\n", c->daily_stem_carbon);
+		printf("c->daily_fine_root_carbon = %g gC/m2/day\n", c->daily_froot_carbon);
+		printf("c->daily_coarse_root_carbon = %g gC/m2/day\n", c->daily_croot_carbon);
+		printf("c->daily_branch_carbon = %g gC/m2/day\n", c->daily_branch_carbon);
+		printf("c->daily_reserve_carbon = %g gC/m2/day\n", c->daily_reserve_carbon);
+		printf("c->daily_litter_carbon = %g gC/m2/day\n", c->daily_litr_carbon);
+		printf("c->daily_soil_carbon = %g gC/m2/day\n", c->daily_soil_carbon);
+		printf("c->daily_fruit_carbon = %g gC/m2/day\n", c->daily_fruit_carbon);
+		printf("\ncarbon in = %g gC/m2/day\n", in);
+		printf("carbon out = %g gC/m2/day\n", out);
+		printf("carbon store = %g gC/m2/day\n", store);
+		printf("carbon_balance = %g gC/m2/day\n",balance);
+		printf("...FATAL ERROR IN carbon balance (exit)\n");
+		printf("DOY = %d\n", c->doy);
 		CHECK_CONDITION (fabs( balance ), >, eps);
 
 		return 0;
@@ -254,7 +254,7 @@ int check_carbon_flux_balance(cell_t *const c)
 	return 1;
 }
 
-int check_carbon_mass_balance(cell_t *const c)
+int check_cell_carbon_mass_balance(cell_t *const c)
 {
 	double in;
 	double out;
@@ -283,29 +283,29 @@ int check_carbon_mass_balance(cell_t *const c)
 	/* check carbon pool balance */
 	balance = in - out - (store - old_store);
 
-	logger(g_debug_log, "\CELL LEVEL CARBON MASS BALANCE\n");
+	logger(g_debug_log, "\nCELL LEVEL CARBON MASS BALANCE\n");
 
 	/* check for carbon mass balance closure */
 	if ( ( fabs( balance ) > eps ) && ( c->dos > 1 ) )
 	{
-		logger(g_debug_log, "DOS = %d\n", c->dos);
-		logger(g_debug_log, "\nin = %g tC/sizecell/day\n", in);
-		logger(g_debug_log, "daily_gpp_tC = %g tC/sizecell\n", c->daily_gpp_tC);
-		logger(g_debug_log, "\nout = %g tC/sizecell/day\n", out);
-		logger(g_debug_log, "daily_aut_resp_tC = %g tC/sizecell/day\n", c->daily_aut_resp_tC);
-		logger(g_debug_log, "daily_litr_carbon = %g tC/sizecell/day\n", c->daily_litr_carbon);
-		logger(g_debug_log, "\nold_store = %g tC/sizecell\n", old_store);
-		logger(g_debug_log, "store = %g tC/sizecell\n", store);
-		logger(g_debug_log, "store - old_tore = %g tC/sizecell\n", store - old_store);
-		logger(g_debug_log, "leaf_tC = %g tC/cell/day\n", c->leaf_tC );
-		logger(g_debug_log, "froot_tC = %g tC/cell/day\n", c->froot_tC );
-		logger(g_debug_log, "croot_tC = %g tC/cell/day\n",c->croot_tC );
-		logger(g_debug_log, "stem_tC = %g tC/cell/day\n",c->stem_tC );
-		logger(g_debug_log, "branch_tC = %g tC/cell/day\n",c->branch_tC );
-		logger(g_debug_log, "reserve_tC = %g tC/cell/day\n",c->reserve_tC );
-		logger(g_debug_log, "fruit_tC = %g tC/cell/day\n",c->fruit_tC );
-		logger(g_debug_log, "\nbalance = %g tC/sizecell\n", balance);
-		logger(g_debug_log, "...FATAL ERROR AT CELL LEVEL carbon mass balance (exit)\n");
+		printf("DOS = %d\n", c->dos);
+		printf("\nin = %g tC/sizecell/day\n", in);
+		printf("daily_gpp_tC = %g tC/sizecell\n", c->daily_gpp_tC);
+		printf("\nout = %g tC/sizecell/day\n", out);
+		printf("daily_aut_resp_tC = %g tC/sizecell/day\n", c->daily_aut_resp_tC);
+		printf("daily_litr_carbon = %g tC/sizecell/day\n", c->daily_litr_carbon);
+		printf("\nold_store = %g tC/sizecell\n", old_store);
+		printf("store = %g tC/sizecell\n", store);
+		printf("store - old_tore = %g tC/sizecell\n", store - old_store);
+		printf("leaf_tC = %g tC/cell/day\n", c->leaf_tC );
+		printf("froot_tC = %g tC/cell/day\n", c->froot_tC );
+		printf("croot_tC = %g tC/cell/day\n",c->croot_tC );
+		printf("stem_tC = %g tC/cell/day\n",c->stem_tC );
+		printf("branch_tC = %g tC/cell/day\n",c->branch_tC );
+		printf("reserve_tC = %g tC/cell/day\n",c->reserve_tC );
+		printf("fruit_tC = %g tC/cell/day\n",c->fruit_tC );
+		printf("\nbalance = %g tC/sizecell\n", balance);
+		printf("...FATAL ERROR AT CELL LEVEL carbon mass balance (exit)\n");
 		CHECK_CONDITION (fabs( balance ), >, eps);
 
 		return 0;
@@ -319,7 +319,7 @@ int check_carbon_mass_balance(cell_t *const c)
 	return 1;
 }
 
-int check_water_flux_balance(cell_t *const c, const meteo_daily_t *const meteo_daily)
+int check_cell_water_flux_balance(cell_t *const c, const meteo_daily_t *const meteo_daily)
 {
 	double in;
 	double out;
@@ -347,25 +347,25 @@ int check_water_flux_balance(cell_t *const c, const meteo_daily_t *const meteo_d
 	/* check for soil water pool water balance */
 	if ( fabs( balance ) > eps )
 	{
-		logger(g_debug_log, "DOY = %d\n", c->doy);
-		logger(g_debug_log, "\nin\n");
-		logger(g_debug_log, "meteo_daily->rain = %g\n", meteo_daily->rain);
-		logger(g_debug_log, "c->snow_melt = %g\n", c->snow_melt);
-		logger(g_debug_log, "\nout\n");
-		logger(g_debug_log, "c->daily_c_transp = %g\n", c->daily_c_transp);
-		logger(g_debug_log, "c->daily_c_int = %g\n", c->daily_c_rain_int);
-		logger(g_debug_log, "c->soil_evaporation = %g\n", c->daily_soil_evapo);
-		logger(g_debug_log, "c->out_flow = %g\n", c->out_flow);
-		logger(g_debug_log, "\nstore (as a difference between old and current)\n");
-		logger(g_debug_log, "c->daily_c_water_stored = %g\n", c->daily_c_water_stored);
-		logger(g_debug_log, "delta c->asw = %g\n", (c->asw - c->old_asw));
-		logger(g_debug_log, "c->asw = %g\n", c->asw);
-		logger(g_debug_log, "c->old_asw = %g\n", c->old_asw);
-		logger(g_debug_log, "soil water in = %g\n", in);
-		logger(g_debug_log, "soil water out = %g\n", out);
-		logger(g_debug_log, "soil water store = %g\n", store);
-		logger(g_debug_log, "soil water balance = %g\n", balance);
-		logger(g_debug_log, "...FATAL ERROR IN soil water balance (exit)\n");
+		printf("DOY = %d\n", c->doy);
+		printf("\nin\n");
+		printf("meteo_daily->rain = %g\n", meteo_daily->rain);
+		printf("c->snow_melt = %g\n", c->snow_melt);
+		printf("\nout\n");
+		printf("c->daily_c_transp = %g\n", c->daily_c_transp);
+		printf("c->daily_c_int = %g\n", c->daily_c_rain_int);
+		printf("c->soil_evaporation = %g\n", c->daily_soil_evapo);
+		printf("c->out_flow = %g\n", c->out_flow);
+		printf("\nstore (as a difference between old and current)\n");
+		printf("c->daily_c_water_stored = %g\n", c->daily_c_water_stored);
+		printf("delta c->asw = %g\n", (c->asw - c->old_asw));
+		printf("c->asw = %g\n", c->asw);
+		printf("c->old_asw = %g\n", c->old_asw);
+		printf("soil water in = %g\n", in);
+		printf("soil water out = %g\n", out);
+		printf("soil water store = %g\n", store);
+		printf("soil water balance = %g\n", balance);
+		printf("...FATAL ERROR IN soil water balance (exit)\n");
 		CHECK_CONDITION (fabs( balance ), >, eps);
 
 		return 0;
@@ -396,19 +396,19 @@ int check_water_flux_balance(cell_t *const c, const meteo_daily_t *const meteo_d
 	/* check for soil water pool water balance */
 	if ( fabs( balance ) > eps )
 	{
-		logger(g_debug_log, "DOY = %d\n", c->doy);
-		logger(g_debug_log, "\nin\n");
-		logger(g_debug_log, "meteo_daily->snow = %g\n", meteo_daily->snow);
-		logger(g_debug_log, "\nout\n");
-		logger(g_debug_log, "c->snow_subl = %g\n", c->snow_subl);
-		logger(g_debug_log, "c->snow_melt = %g\n", c->snow_melt);
-		logger(g_debug_log, "\nstore (as a difference between old and current)\n");
-		logger(g_debug_log, "delta c->asw = %g\n", (c->snow_pack - c->old_snow_pack));
-		logger(g_debug_log, "soil water in = %g\n", in);
-		logger(g_debug_log, "soil water out = %g\n", out);
-		logger(g_debug_log, "soil water store = %g\n", store);
-		logger(g_debug_log, "soil water balance = %g\n", balance);
-		logger(g_debug_log, "...FATAL ERROR IN snow water balance (exit)\n");
+		printf("DOY = %d\n", c->doy);
+		printf("\nin\n");
+		printf("meteo_daily->snow = %g\n", meteo_daily->snow);
+		printf("\nout\n");
+		printf("c->snow_subl = %g\n", c->snow_subl);
+		printf("c->snow_melt = %g\n", c->snow_melt);
+		printf("\nstore (as a difference between old and current)\n");
+		printf("delta c->asw = %g\n", (c->snow_pack - c->old_snow_pack));
+		printf("soil water in = %g\n", in);
+		printf("soil water out = %g\n", out);
+		printf("soil water store = %g\n", store);
+		printf("soil water balance = %g\n", balance);
+		printf("...FATAL ERROR IN snow water balance (exit)\n");
 		CHECK_CONDITION (fabs( balance ), >, eps);
 
 		return 0;
@@ -424,7 +424,7 @@ int check_water_flux_balance(cell_t *const c, const meteo_daily_t *const meteo_d
 
 /******************************************************CLASS LEVEL BALANCE CLOSURE*****************************************************/
 
-int check_class_radiation_flux_balance(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species)
+int check_tree_class_radiation_flux_balance(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species)
 {
 	double in;
 	double out;
@@ -455,12 +455,12 @@ int check_class_radiation_flux_balance(cell_t *const c, const int layer, const i
 	/* check for PAR balance closure*/
 	if ( fabs( balance ) > eps )
 	{
-		logger(g_debug_log, "DOY = %d\n", c->doy);
-		logger(g_debug_log, "PAR in = %g\n", in);
-		logger(g_debug_log, "PAR out = %g\n", out);
-		logger(g_debug_log, "PAR store = %g\n", store);
-		logger(g_debug_log, "PAR balance = %g\n", balance);
-		logger(g_debug_log, "...FATAL ERROR AT CLASS LEVEL PAR balance (exit)\n");
+		printf("DOY = %d\n", c->doy);
+		printf("PAR in = %g\n", in);
+		printf("PAR out = %g\n", out);
+		printf("PAR store = %g\n", store);
+		printf("PAR balance = %g\n", balance);
+		printf("...FATAL ERROR AT CLASS LEVEL PAR balance (exit)\n");
 		CHECK_CONDITION (fabs( balance ), >, eps);
 
 		return 0;
@@ -472,14 +472,14 @@ int check_class_radiation_flux_balance(cell_t *const c, const int layer, const i
 	/****************************************************************************************************************/
 	/* Net Short-Wave radiation balance */
 	/* sum of sources */
-	in = /*s->value[SW_RAD_REFL] + */s->value[SW_RAD];
+	in      = s->value[SW_RAD];
 
 	/* sum of sinks */
 	/* it must take into account the overall transmitted NET_RAD (reflected is yet computed for net radiation) */
-	out = s->value[SW_RAD_REFL] + s->value[SW_RAD_TRANSM];
+	out     = s->value[SW_RAD_REFL] + s->value[SW_RAD_TRANSM];
 
 	/* sum of current storage */
-	store = s->value[SW_RAD_ABS_SUN] + s->value[SW_RAD_ABS_SHADE];
+	store   = s->value[SW_RAD_ABS_SUN] + s->value[SW_RAD_ABS_SHADE];
 
 	/* check canopy water pool balance */
 	balance = in - out - store;
@@ -489,12 +489,12 @@ int check_class_radiation_flux_balance(cell_t *const c, const int layer, const i
 	/* check for NET_RAD balance closure*/
 	if ( fabs( balance ) > eps )
 	{
-		logger(g_debug_log, "DOY = %d\n", c->doy);
-		logger(g_debug_log, "NET_SW_RAD in = %g\n", in);
-		logger(g_debug_log, "NET_RAD out = %g\n", out);
-		logger(g_debug_log, "NET_RAD store = %g\n", store);
-		logger(g_debug_log, "NET_RAD balance = %g\n", balance);
-		logger(g_debug_log, "...FATAL ERROR AT CLASS LEVEL NET_RAD balance (exit)\n");
+		printf("DOY = %d\n", c->doy);
+		printf("NET_SW_RAD in = %g\n", in);
+		printf("NET_RAD out = %g\n", out);
+		printf("NET_RAD store = %g\n", store);
+		printf("NET_RAD balance = %g\n", balance);
+		printf("...FATAL ERROR AT CLASS LEVEL NET_RAD balance (exit)\n");
 		CHECK_CONDITION (fabs( balance ), >, eps);
 
 		return 0;
@@ -506,13 +506,13 @@ int check_class_radiation_flux_balance(cell_t *const c, const int layer, const i
 	/****************************************************************************************************************/
 	/* PPFD balance */
 	/* sum of sources */
-	in = s->value[PPFD];
+	in      = s->value[PPFD];
 
 	/* sum of sinks */
-	out = s->value[PPFD_REFL] +  s->value[PPFD_TRANSM];
+	out     = s->value[PPFD_REFL] +  s->value[PPFD_TRANSM];
 
 	/* sum of current storage */
-	store = s->value[PPFD_ABS_SUN] + s->value[PPFD_ABS_SHADE];
+	store   = s->value[PPFD_ABS_SUN] + s->value[PPFD_ABS_SHADE];
 
 	/* check canopy water pool balance */
 	balance = in - out - store;
@@ -522,12 +522,12 @@ int check_class_radiation_flux_balance(cell_t *const c, const int layer, const i
 	/* check for PPFD balance closure*/
 	if ( fabs( balance ) > eps )
 	{
-		logger(g_debug_log, "DOY = %d\n", c->doy);
-		logger(g_debug_log, "PPFD in = %g\n", in);
-		logger(g_debug_log, "PPFD out = %g\n", out);
-		logger(g_debug_log, "PPFD store = %g\n", store);
-		logger(g_debug_log, "PPFD balance = %g\n", balance);
-		logger(g_debug_log, "...FATAL ERROR AT CLASS LEVEL PPFD balance (exit)\n");
+		printf("DOY = %d\n", c->doy);
+		printf("PPFD in = %g\n", in);
+		printf("PPFD out = %g\n", out);
+		printf("PPFD store = %g\n", store);
+		printf("PPFD balance = %g\n", balance);
+		printf("...FATAL ERROR AT CLASS LEVEL PPFD balance (exit)\n");
 		CHECK_CONDITION (fabs( balance ), >, eps);
 
 		return 0;
@@ -540,7 +540,7 @@ int check_class_radiation_flux_balance(cell_t *const c, const int layer, const i
 	return 1;
 }
 
-int check_class_carbon_flux_balance(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species)
+int check_tree_class_carbon_flux_balance(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species)
 {
 	double in;
 	double out;
@@ -554,13 +554,13 @@ int check_class_carbon_flux_balance(cell_t *const c, const int layer, const int 
 	/* check complete tree level carbon flux balance */
 
 	/* sum of sources */
-	in = s->value[GPP];
+	in      = s->value[GPP];
 
 	/* sum of sinks */
-	out = s->value[TOTAL_AUT_RESP];
+	out     = s->value[TOTAL_AUT_RESP];
 
 	/* sum of current storage */
-	store = s->value[NPP];
+	store   = s->value[NPP];
 
 	/* check carbon flux balance */
 	balance = in - out - store;
@@ -570,15 +570,15 @@ int check_class_carbon_flux_balance(cell_t *const c, const int layer, const int 
 	/* check for carbon flux balance closure */
 	if ( fabs( balance ) > eps )
 	{
-		logger(g_debug_log, "DOY = %d\n", c->doy);
-		logger(g_debug_log, "\nin = %g gC/m2/day\n", in);
-		logger(g_debug_log, "GPP = %g gC/m2/day\n", s->value[GPP]);
-		logger(g_debug_log, "\nout = %g gC/m2/day\n", out);
-		logger(g_debug_log, "TOTAL_AUT_RESP = %g gC/m2/day\n", s->value[TOTAL_AUT_RESP]);
-		logger(g_debug_log, "\nstore = %g gC/m2/day\n", store);
-		logger(g_debug_log, "NPP = %g gC/m2/day\n", s->value[NPP]);
-		logger(g_debug_log, "\nbalance = %g gC/m2/day\n", balance);
-		logger(g_debug_log, "...FATAL ERROR AT CLASS LEVEL carbon flux balance (first) (exit)\n");
+		printf("DOY = %d\n", c->doy);
+		printf("\nin = %g gC/m2/day\n", in);
+		printf("GPP = %g gC/m2/day\n", s->value[GPP]);
+		printf("\nout = %g gC/m2/day\n", out);
+		printf("TOTAL_AUT_RESP = %g gC/m2/day\n", s->value[TOTAL_AUT_RESP]);
+		printf("\nstore = %g gC/m2/day\n", store);
+		printf("NPP = %g gC/m2/day\n", s->value[NPP]);
+		printf("\nbalance = %g gC/m2/day\n", balance);
+		printf("...FATAL ERROR AT CLASS LEVEL carbon flux balance (first) (exit)\n");
 		CHECK_CONDITION (fabs( balance ), >, eps);
 
 		return 0;
@@ -592,14 +592,14 @@ int check_class_carbon_flux_balance(cell_t *const c, const int layer, const int 
 	/* check complete tree level carbon balance */
 
 	/* sum of sources */
-	in = s->value[GPP_tC];
+	in      = s->value[GPP_tC];
 
 	/* sum of sinks */
-	out = s->value[TOTAL_MAINT_RESP_tC] + s->value[TOTAL_GROWTH_RESP_tC] +
+	out     = s->value[TOTAL_MAINT_RESP_tC] + s->value[TOTAL_GROWTH_RESP_tC] +
 			( s->value[C_LEAF_TO_LITR] + s->value[C_FROOT_TO_LITR] + s->value[C_FRUIT_TO_LITR]);
 
 	/* sum of current storage */
-	store = s->value[C_TO_LEAF]    +
+	store   = s->value[C_TO_LEAF]  +
 			s->value[C_TO_STEM]    +
 			s->value[C_TO_FROOT]   +
 			s->value[C_TO_CROOT]   +
@@ -615,24 +615,24 @@ int check_class_carbon_flux_balance(cell_t *const c, const int layer, const int 
 	/* check for carbon flux balance closure */
 	if ( fabs( balance ) > eps )
 	{
-		logger(g_debug_log, "DOY = %d\n", c->doy);
-		logger(g_debug_log, "\nin = %g tC/sizecell/day\n", in);
-		logger(g_debug_log, "GPP_gC = %g tC/sizecell/day\n", s->value[GPP_tC]);
-		logger(g_debug_log, "\nout = %g tC/sizecell/day\n", out);
-		logger(g_debug_log, "TOTAL_MAINT_RESP = %g tC/sizecell/day\n", s->value[TOTAL_MAINT_RESP_tC]);
-		logger(g_debug_log, "TOTAL_GROWTH_RESP = %g tC/sizecell/day\n", s->value[TOTAL_GROWTH_RESP_tC]);
-		logger(g_debug_log, "C_LEAF_TO_LITR = %g tC/sizecell/day\n", s->value[C_LEAF_TO_LITR]);
-		logger(g_debug_log, "C_FROOT_TO_LITR = %g tC/sizecell/day\n", s->value[C_FROOT_TO_LITR]);
-		logger(g_debug_log, "\nstore = %g tC/sizecell/day\n", store);
-		logger(g_debug_log, "C_TO_LEAF = %g tC/sizecell/day\n", s->value[C_TO_LEAF]);
-		logger(g_debug_log, "C_TO_FINEROOT = %g tC/sizecell/day\n", s->value[C_TO_FROOT]);
-		logger(g_debug_log, "C_TO_COARSEROOT = %g tC/sizecell/day\n", s->value[C_TO_CROOT]);
-		logger(g_debug_log, "C_TO_STEM = %g tC/sizecell/day\n", s->value[C_TO_STEM]);
-		logger(g_debug_log, "C_TO_RESERVE = %g tC/sizecell/day\n", s->value[C_TO_RESERVE]);
-		logger(g_debug_log, "C_TO_BRANCH = %g tC/sizecell/day\n", s->value[C_TO_BRANCH]);
-		logger(g_debug_log, "C_TO_FRUIT = %g tC/sizecell/day\n", s->value[C_TO_FRUIT]);
-		logger(g_debug_log, "\nbalance = %g tC/sizecell/day\n", balance);
-		logger(g_debug_log, "...FATAL ERROR AT CLASS LEVEL carbon flux balance (second) (exit)\n");
+		printf("DOY = %d\n", c->doy);
+		printf("\nin = %g tC/sizecell/day\n", in);
+		printf("GPP_gC = %g tC/sizecell/day\n", s->value[GPP_tC]);
+		printf("\nout = %g tC/sizecell/day\n", out);
+		printf("TOTAL_MAINT_RESP = %g tC/sizecell/day\n", s->value[TOTAL_MAINT_RESP_tC]);
+		printf("TOTAL_GROWTH_RESP = %g tC/sizecell/day\n", s->value[TOTAL_GROWTH_RESP_tC]);
+		printf("C_LEAF_TO_LITR = %g tC/sizecell/day\n", s->value[C_LEAF_TO_LITR]);
+		printf("C_FROOT_TO_LITR = %g tC/sizecell/day\n", s->value[C_FROOT_TO_LITR]);
+		printf("\nstore = %g tC/sizecell/day\n", store);
+		printf("C_TO_LEAF = %g tC/sizecell/day\n", s->value[C_TO_LEAF]);
+		printf("C_TO_FROOT = %g tC/sizecell/day\n", s->value[C_TO_FROOT]);
+		printf("C_TO_CROOT = %g tC/sizecell/day\n", s->value[C_TO_CROOT]);
+		printf("C_TO_STEM = %g tC/sizecell/day\n", s->value[C_TO_STEM]);
+		printf("C_TO_RESERVE = %g tC/sizecell/day\n", s->value[C_TO_RESERVE]);
+		printf("C_TO_BRANCH = %g tC/sizecell/day\n", s->value[C_TO_BRANCH]);
+		printf("C_TO_FRUIT = %g tC/sizecell/day\n", s->value[C_TO_FRUIT]);
+		printf("\nbalance = %g tC/sizecell/day\n", balance);
+		printf("...FATAL ERROR AT CLASS LEVEL carbon flux balance (second) (exit)\n");
 		CHECK_CONDITION (fabs( balance ), >, eps);
 
 		return 0;
@@ -646,7 +646,7 @@ int check_class_carbon_flux_balance(cell_t *const c, const int layer, const int 
 	return 1;
 }
 
-int check_class_carbon_mass_balance(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species)
+int check_tree_class_carbon_mass_balance(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species)
 {
 	double in;
 	double out;
@@ -661,15 +661,15 @@ int check_class_carbon_mass_balance(cell_t *const c, const int layer, const int 
 	/* check complete tree level carbon mass balance */
 
 	/* sum of sources */
-	in = s->value[GPP_tC];
+	in      = s->value[GPP_tC];
 
 	/* sum of sinks */
-	out = s->value[TOTAL_MAINT_RESP_tC] +
+	out     = s->value[TOTAL_MAINT_RESP_tC] +
 			s->value[TOTAL_GROWTH_RESP_tC] +
 			s->value[C_TO_LITR];
 
 	/* sum of current storage */
-	store = s->value[LEAF_C]    +
+	store   = s->value[LEAF_C]  +
 			s->value[FROOT_C]   +
 			s->value[CROOT_C]   +
 			s->value[STEM_C]    +
@@ -685,25 +685,25 @@ int check_class_carbon_mass_balance(cell_t *const c, const int layer, const int 
 	/* check for carbon mass balance closure */
 	if ( ( fabs( balance ) > eps ) && ( c->dos > 1 ) )
 	{
-		logger(g_debug_log, "DOS = %d\n", c->dos);
-		logger(g_debug_log, "\nin = %g tC/sizecell/day\n", in);
-		logger(g_debug_log, "GPP = %g tC/sizecell\n", s->value[GPP_tC]);
-		logger(g_debug_log, "\nout = %g tC/sizecell/day\n", out);
-		logger(g_debug_log, "TOTAL_MAINT_RESP_tC = %g tC/sizecell/day\n", s->value[TOTAL_MAINT_RESP_tC]);
-		logger(g_debug_log, "TOTAL_GROWTH_RESP_tC = %g tC/sizecell/day\n", s->value[TOTAL_GROWTH_RESP_tC]);
-		logger(g_debug_log, "LITR_C = %g tC/sizecell/day\n", s->value[LITR_C]);
-		logger(g_debug_log, "\nold_store = %g tC/sizecell\n", old_store);
-		logger(g_debug_log, "store = %g tC/sizecell\n", store);
-		logger(g_debug_log, "store - old_tore = %g tC/sizecell\n", store - old_store);
-		logger(g_debug_log, "LEAF_C = %g tC/cell/day\n", s->value[LEAF_C]);
-		logger(g_debug_log, "FROOT_C = %g tC/cell/day\n", s->value[FROOT_C]);
-		logger(g_debug_log, "CROOT_C = %g tC/cell/day\n", s->value[CROOT_C]);
-		logger(g_debug_log, "STEM_C = %g tC/cell/day\n", s->value[STEM_C]);
-		logger(g_debug_log, "BRANCH_C = %g tC/cell/day\n", s->value[BRANCH_C]);
-		logger(g_debug_log, "RESERVE_C = %g tC/cell/day\n", s->value[RESERVE_C]);
-		logger(g_debug_log, "FRUIT_C = %g tC/cell/day\n", s->value[FRUIT_C]);
-		logger(g_debug_log, "\nbalance = %g tC/sizecell\n", balance);
-		logger(g_debug_log, "...FATAL ERROR AT CLASS LEVEL carbon mass balance (exit)\n");
+		printf("DOS = %d\n", c->dos);
+		printf("\nin = %g tC/sizecell/day\n", in);
+		printf("GPP = %g tC/sizecell\n", s->value[GPP_tC]);
+		printf("\nout = %g tC/sizecell/day\n", out);
+		printf("TOTAL_MAINT_RESP_tC = %g tC/sizecell/day\n", s->value[TOTAL_MAINT_RESP_tC]);
+		printf("TOTAL_GROWTH_RESP_tC = %g tC/sizecell/day\n", s->value[TOTAL_GROWTH_RESP_tC]);
+		printf("LITR_C = %g tC/sizecell/day\n", s->value[LITR_C]);
+		printf("\nold_store = %g tC/sizecell\n", old_store);
+		printf("store = %g tC/sizecell\n", store);
+		printf("store - old_tore = %g tC/sizecell\n", store - old_store);
+		printf("LEAF_C = %g tC/cell/day\n", s->value[LEAF_C]);
+		printf("FROOT_C = %g tC/cell/day\n", s->value[FROOT_C]);
+		printf("CROOT_C = %g tC/cell/day\n", s->value[CROOT_C]);
+		printf("STEM_C = %g tC/cell/day\n", s->value[STEM_C]);
+		printf("BRANCH_C = %g tC/cell/day\n", s->value[BRANCH_C]);
+		printf("RESERVE_C = %g tC/cell/day\n", s->value[RESERVE_C]);
+		printf("FRUIT_C = %g tC/cell/day\n", s->value[FRUIT_C]);
+		printf("\nbalance = %g tC/sizecell\n", balance);
+		printf("...FATAL ERROR AT CLASS LEVEL carbon mass balance (exit)\n");
 		CHECK_CONDITION (fabs( balance ), >, eps);
 
 		return 0;
@@ -717,8 +717,71 @@ int check_class_carbon_mass_balance(cell_t *const c, const int layer, const int 
 	/*******************************************************************************************************************/
 	return 1;
 }
+int check_tree_class_nitrogen_flux_balance (cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species)
+{
+	double in;
+	double out;
+	double store;
+	double balance;
 
-int check_class_water_flux_balance(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species)
+	species_t *s;
+	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
+
+	/* DAILY CHECK ON CLASS LEVEL NITROGEN BALANCE */
+	/* check complete tree level nitrogen balance */
+
+	/* sum of sources */
+	in      = s->value[NPP_tN];
+
+	/* sum of sinks */
+	out     =  s->value[N_LEAF_TO_LITR] + s->value[N_FROOT_TO_LITR]/* + s->value[N_FRUIT_TO_LITR]*/;
+
+	/* sum of current storage */
+	store   = s->value[N_TO_LEAF] +
+			s->value[N_TO_STEM]   +
+			s->value[N_TO_FROOT]  +
+			s->value[N_TO_CROOT]  +
+			s->value[N_TO_BRANCH] +
+			s->value[N_TO_RESERVE];
+
+	/* check nitrogen flux balance */
+	balance = in - out - store;
+
+	logger(g_debug_log, "\nCLASS LEVEL NITROGEN FLUX BALANCE\n");
+
+	/* check for nitrogen flux balance closure */
+	if ( fabs( balance ) > eps )
+	{
+		printf("DOY = %d\n", c->doy);
+		printf("\nin = %g tN/sizecell/day\n", in);
+		printf("NPP_tN = %g tN/sizecell/day\n", s->value[NPP_tN]);
+		printf("\nout = %g tN/sizecell/day\n", out);
+		printf("N_LEAF_TO_LITR = %g tN/sizecell/day\n", s->value[N_LEAF_TO_LITR]);
+		printf("N_FROOT_TO_LITR = %g tN/sizecell/day\n", s->value[N_FROOT_TO_LITR]);
+		printf("\nstore = %g tN/sizecell/day\n", store);
+		printf("N_TO_LEAF = %g tN/sizecell/day\n", s->value[N_TO_LEAF]);
+		printf("N_TO_FROOT = %g tN/sizecell/day\n", s->value[N_TO_FROOT]);
+		printf("N_TO_CROOT = %g tN/sizecell/day\n", s->value[N_TO_CROOT]);
+		printf("N_TO_STEM = %g tN/sizecell/day\n", s->value[N_TO_STEM]);
+		printf("N_TO_RESERVE = %g tN/sizecell/day\n", s->value[N_TO_RESERVE]);
+		printf("N_TO_BRANCH = %g tN/sizecell/day\n", s->value[N_TO_BRANCH]);
+		printf("N_TO_FRUIT = %g tN/sizecell/day\n", s->value[N_TO_FRUIT]);
+		printf("\nbalance = %g tN/sizecell/day\n", balance);
+		printf("...FATAL ERROR AT CLASS LEVEL nitrogen flux balance (exit)\n");
+		CHECK_CONDITION (fabs( balance ), >, eps);
+
+		return 0;
+	}
+	else
+	{
+		logger(g_debug_log, "...ok carbon flux nitrogen at class level\n");
+	}
+
+	/*******************************************************************************************************************/
+	return 1;
+}
+
+int check_tree_class_water_flux_balance(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species)
 {
 	double in;
 	double out;
@@ -731,13 +794,13 @@ int check_class_water_flux_balance(cell_t *const c, const int layer, const int h
 	/* DAILY CHECK ON CLASS LEVEL CANOPY POOL-ATMOSPHERE WATER BALANCE */
 
 	/* sum of sources */
-	in = s->value[CANOPY_INT];
+	in      = s->value[CANOPY_INT];
 
 	/* sum of sinks */
-	out = s->value[CANOPY_EVAPO];
+	out     = s->value[CANOPY_EVAPO];
 
 	/* sum of current storage */
-	store = s->value[CANOPY_WATER] - s->value[OLD_CANOPY_WATER];
+	store   = s->value[CANOPY_WATER] - s->value[OLD_CANOPY_WATER];
 
 	/* check canopy water pool balance */
 	balance = in - out - store;
@@ -746,12 +809,12 @@ int check_class_water_flux_balance(cell_t *const c, const int layer, const int h
 
 	if ( fabs( balance ) > eps )
 	{
-		logger(g_debug_log, "DOY = %d\n", c->doy);
-		logger(g_debug_log, "canopy water in = %g\n", in);
-		logger(g_debug_log, "canopy water out = %g\n", out);
-		logger(g_debug_log, "canopy water store = %g\n", store);
-		logger(g_debug_log, "canopy water balance = %g\n", balance);
-		logger(g_debug_log, "...FATAL ERROR AT CELL LEVEL canopy water balance (exit)\n");
+		printf("DOY = %d\n", c->doy);
+		printf("canopy water in = %g\n", in);
+		printf("canopy water out = %g\n", out);
+		printf("canopy water store = %g\n", store);
+		printf("canopy water balance = %g\n", balance);
+		printf("...FATAL ERROR AT CELL LEVEL canopy water balance (exit)\n");
 		CHECK_CONDITION (fabs( balance ), >, eps);
 
 		return 0;

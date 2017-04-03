@@ -266,11 +266,11 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 	/* allocate daily carbon */
 	carbon_allocation ( c, s );
 
-	/* update Leaf Area Index */
-	daily_lai ( s );
-
 	/* allocate daily nitrogen */
 	nitrogen_allocation ( c, s );
+
+	/* update Leaf Area Index */
+	daily_lai ( s );
 
 	/* compute single tree biomass pools */
 	average_tree_pools ( s );

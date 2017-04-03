@@ -192,7 +192,7 @@ void nitrogen_allocation ( cell_t *const c, species_t *const s )
 	s->value[NPP_tN] = s->value[N_TO_LEAF] + s->value[N_TO_FROOT] + s->value[N_TO_STEM] + s->value[N_TO_BRANCH] + s->value[N_TO_CROOT];
 
 	/* tN/Cell/day -> gC/m2/day */
-	s->value[NPP_gN] = s->value[NPP_tN] / g_settings->sizeCell * 1000000;
+	s->value[NPP_gN] = s->value[NPP_tN] * 1e6 / g_settings->sizeCell;
 
 	/* daily Nitrogen demand */
 	s->value[TREE_N_DEMAND] = s->value[NPP_gN];
