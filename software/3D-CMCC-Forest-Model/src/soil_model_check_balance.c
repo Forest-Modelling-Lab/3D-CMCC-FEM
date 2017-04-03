@@ -1,5 +1,5 @@
 /*
- * soil_model_check_balance.c
+ * Soil_model_daily_check_balance.c
  *
  *  Created on: 03 apr 2017
  *      Author: alessio
@@ -57,14 +57,14 @@ int check_soil_radiation_flux_balance (cell_t *const c, const meteo_daily_t *con
 		printf("par out = %g molPAR/m2/day\n", out);
 		printf("par store = %g molPAR/m2/day\n", store);
 		printf("par balance = %g molPAR/m2/day\n",balance);
-		printf("...FATAL ERROR SOIL PAR radiative balance (exit)\n");
+		printf("...FATAL ERROR in 'Soil_model' PAR radiative balance (exit)\n");
 		CHECK_CONDITION (fabs( balance ), >, eps);
 
 		return 0;
 	}
 	else
 	{
-		logger(g_debug_log, "...ok SOIL PAR radiative balance\n");
+		logger(g_debug_log, "...ok 'Soil_model_daily' PAR radiative balance\n");
 	}
 
 	/*******************************************************************************************************************************************/
@@ -98,14 +98,14 @@ int check_soil_radiation_flux_balance (cell_t *const c, const meteo_daily_t *con
 		printf("radiation out = %g W/m2\n", out);
 		printf("net radiation store = %g W/m2\n", store);
 		printf("radiation balance = %g W/m2\n",balance);
-		printf("...FATAL ERROR IN SOIL Short Wave Radiation radiative balance (exit)\n");
+		printf("...FATAL ERROR IN 'Soil_model_daily' Short Wave Radiation radiative balance (exit)\n");
 		CHECK_CONDITION (fabs( balance ), >, eps);
 
 		return 0;
 	}
 	else
 	{
-		logger(g_debug_log, "...ok SOIL Short Wave Radiation radiative balance\n");
+		logger(g_debug_log, "...ok 'Soil_model_daily' Short Wave Radiation radiative balance\n");
 	}
 
 	/*******************************************************************************************************************************************/
@@ -138,14 +138,14 @@ int check_soil_radiation_flux_balance (cell_t *const c, const meteo_daily_t *con
 		printf("PPFD out = %g umol/m2/sec\n", out);
 		printf("PPFD store = %g umol/m2/sec\n", store);
 		printf("PPFD balance = %g umol/m2/sec\n",balance);
-		printf("...FATAL ERROR IN SOIL PPFD radiative balance (exit)\n");
+		printf("...FATAL ERROR IN 'Soil_model_daily' PPFD radiative balance (exit)\n");
 		CHECK_CONDITION (fabs( balance ), >, eps);
 
 		return 0;
 	}
 	else
 	{
-		logger(g_debug_log, "...ok SOIL PPFD radiative balance\n");
+		logger(g_debug_log, "...ok 'Soil_model_daily' PPFD radiative balance\n");
 	}
 
 
@@ -165,13 +165,13 @@ int check_soil_carbon_flux_balance(cell_t *const c)
 	/* check complete soil level carbon flux balance */
 
 	/* sum of carbon sources */
-	in = c->daily_soilC;
+	in      = c->daily_soilC;
 
 	/* sum of carbon sinks */
-	out = c->daily_het_resp;
+	out     = c->daily_het_resp;
 
 	/* sum of current carbon storage */
-	store = c->soil1C +
+	store   = c->soil1C +
 			c->soil2C +
 			c->soil3C +
 			c->soil4C ;
@@ -196,7 +196,7 @@ int check_soil_carbon_flux_balance(cell_t *const c)
 		printf("carbon out = %g gC/m2/day\n", out);
 		printf("carbon store = %g gC/m2/day\n", store);
 		printf("carbon_balance = %g gC/m2/day\n",balance);
-		printf("...FATAL ERROR IN SOIL carbon balance (exit)\n");
+		printf("...FATAL ERROR IN 'Soil_model_daily' carbon balance (exit)\n");
 		printf("DOY = %d\n", c->doy);
 		CHECK_CONDITION (fabs( balance ), >, eps);
 
@@ -204,7 +204,7 @@ int check_soil_carbon_flux_balance(cell_t *const c)
 	}
 	else
 	{
-		logger(g_debug_log, "...ok SOIL carbon balance\n");
+		logger(g_debug_log, "...ok 'Soil_model_daily' carbon balance\n");
 	}
 
 	return 1;
@@ -223,13 +223,13 @@ int check_soil_water_flux_balance(cell_t *const c, const meteo_daily_t *const me
 	/* it takes into account soil-atmosphere fluxes */
 
 	/* sum of sources (rain + snow melt) */
-	in = meteo_daily->rain + c->daily_snow_melt;
+	in      = meteo_daily->rain + c->daily_snow_melt;
 
 	/* sum of sinks */
-	out = c->daily_soil_evapo + c->daily_out_flow;
+	out     = c->daily_soil_evapo + c->daily_out_flow;
 
 	/* sum of current storage in soil */
-	store = c->asw;
+	store   = c->asw;
 
 	/* check soil pool water balance */
 	balance = in - out - ( store - old_store );
@@ -239,7 +239,7 @@ int check_soil_water_flux_balance(cell_t *const c, const meteo_daily_t *const me
 	/* check for soil water pool water balance */
 	if ( ( fabs( balance ) > eps ) && (c->dos > 1) )
 	{
-		printf("DOY = %d\n", c->doy);
+		printf("DOY = %d\n", c->dos);
 		printf("\nin\n");
 		printf("meteo_daily->rain = %g\n", meteo_daily->rain);
 		printf("c->daily_snow_melt = %g\n", c->daily_snow_melt);
@@ -252,7 +252,7 @@ int check_soil_water_flux_balance(cell_t *const c, const meteo_daily_t *const me
 		printf("soil water out = %g\n", out);
 		printf("soil water store = %g\n", store);
 		printf("soil water balance = %g\n", balance);
-		printf("...FATAL ERROR IN soil water balance (exit)\n");
+		printf("...FATAL ERROR IN 'Soil_model_daily' soil water balance (exit)\n");
 		CHECK_CONDITION (fabs( balance ), >, eps);
 
 		return 0;
@@ -260,7 +260,7 @@ int check_soil_water_flux_balance(cell_t *const c, const meteo_daily_t *const me
 	else
 	{
 		old_store = store;
-		logger(g_debug_log, "...ok soil water balance\n");
+		logger(g_debug_log, "...ok 'Soil_model_daily' soil water balance\n");
 	}
 	logger(g_debug_log,"*****************************************************\n");
 

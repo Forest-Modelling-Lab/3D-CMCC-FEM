@@ -62,7 +62,6 @@ int Litter_model_daily (matrix_t *const m, const int cell, const int day, const 
 	c->litrN                   += (c->daily_leaf_litrN + c->daily_froot_litrN);
 	//todo include cwdN
 
-
 	/* decomposition */
 	decomposition ( c, meteo_daily );
 

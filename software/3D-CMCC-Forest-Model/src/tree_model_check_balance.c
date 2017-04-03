@@ -53,14 +53,14 @@ int check_tree_class_radiation_flux_balance(cell_t *const c, const int layer, co
 		printf("PAR out = %g\n", out);
 		printf("PAR store = %g\n", store);
 		printf("PAR balance = %g\n", balance);
-		printf("...FATAL ERROR AT CLASS LEVEL PAR balance (exit)\n");
+		printf("...FATAL ERROR in 'Tree_model_daily' PAR balance (exit)\n");
 		CHECK_CONDITION (fabs( balance ), >, eps);
 
 		return 0;
 	}
 	else
 	{
-		logger(g_debug_log, "...ok PAR balance at class level\n");
+		logger(g_debug_log, "...ok 'Tree_model_daily' PAR balance\n");
 	}
 	/****************************************************************************************************************/
 	/* Net Short-Wave radiation balance */
@@ -94,7 +94,7 @@ int check_tree_class_radiation_flux_balance(cell_t *const c, const int layer, co
 	}
 	else
 	{
-		logger(g_debug_log, "...ok Short Wave radiation balance at class level\n");
+		logger(g_debug_log, "...ok in 'Tree_model_daily' Short Wave radiation balance \n");
 	}
 	/****************************************************************************************************************/
 	/* PPFD balance */
@@ -120,14 +120,14 @@ int check_tree_class_radiation_flux_balance(cell_t *const c, const int layer, co
 		printf("PPFD out = %g\n", out);
 		printf("PPFD store = %g\n", store);
 		printf("PPFD balance = %g\n", balance);
-		printf("...FATAL ERROR AT CLASS LEVEL PPFD balance (exit)\n");
+		printf("...FATAL ERROR in 'Tree_model_daily' PPFD balance (exit)\n");
 		CHECK_CONDITION (fabs( balance ), >, eps);
 
 		return 0;
 	}
 	else
 	{
-		logger(g_debug_log, "...ok PPFD balance at class level\n");
+		logger(g_debug_log, "...ok in 'Tree_model_daily' PPFD balance\n");
 	}
 
 	return 1;
@@ -171,14 +171,14 @@ int check_tree_class_carbon_flux_balance(cell_t *const c, const int layer, const
 		printf("\nstore = %g gC/m2/day\n", store);
 		printf("NPP = %g gC/m2/day\n", s->value[NPP]);
 		printf("\nbalance = %g gC/m2/day\n", balance);
-		printf("...FATAL ERROR AT CLASS LEVEL carbon flux balance (first) (exit)\n");
+		printf("...FATAL ERROR in 'Tree_model_daily' carbon flux balance (first) (exit)\n");
 		CHECK_CONDITION (fabs( balance ), >, eps);
 
 		return 0;
 	}
 	else
 	{
-		logger(g_debug_log, "...ok carbon flux balance (first) at class level\n");
+		logger(g_debug_log, "...ok in 'Tree_model_daily' carbon flux balance (first)\n");
 	}
 
 	/* DAILY CHECK ON CLASS LEVEL CARBON BALANCE */
@@ -225,14 +225,14 @@ int check_tree_class_carbon_flux_balance(cell_t *const c, const int layer, const
 		printf("C_TO_BRANCH = %g tC/sizecell/day\n", s->value[C_TO_BRANCH]);
 		printf("C_TO_FRUIT = %g tC/sizecell/day\n", s->value[C_TO_FRUIT]);
 		printf("\nbalance = %g tC/sizecell/day\n", balance);
-		printf("...FATAL ERROR AT CLASS LEVEL carbon flux balance (second) (exit)\n");
+		printf("...FATAL ERROR in 'Tree_model_daily'  carbon flux balance (second) (exit)\n");
 		CHECK_CONDITION (fabs( balance ), >, eps);
 
 		return 0;
 	}
 	else
 	{
-		logger(g_debug_log, "...ok carbon flux balance (second) at class level\n");
+		logger(g_debug_log, "...ok in 'Tree_model_daily' carbon flux balance (second)\n");
 	}
 
 	/*******************************************************************************************************************/
@@ -296,7 +296,7 @@ int check_tree_class_carbon_mass_balance(cell_t *const c, const int layer, const
 		printf("RESERVE_C = %g tC/cell/day\n", s->value[RESERVE_C]);
 		printf("FRUIT_C = %g tC/cell/day\n", s->value[FRUIT_C]);
 		printf("\nbalance = %g tC/sizecell\n", balance);
-		printf("...FATAL ERROR AT CLASS LEVEL carbon mass balance (exit)\n");
+		printf("...FATAL ERROR in 'Tree_model_daily' carbon mass balance (exit)\n");
 		CHECK_CONDITION (fabs( balance ), >, eps);
 
 		return 0;
@@ -304,7 +304,7 @@ int check_tree_class_carbon_mass_balance(cell_t *const c, const int layer, const
 	else
 	{
 		old_store = store;
-		logger(g_debug_log, "...ok carbon mass balance at class level\n");
+		logger(g_debug_log, "...ok in 'Tree_model_daily' carbon mass balance\n");
 	}
 
 	/*******************************************************************************************************************/
@@ -360,14 +360,14 @@ int check_tree_class_nitrogen_flux_balance (cell_t *const c, const int layer, co
 		printf("N_TO_BRANCH = %g tN/sizecell/day\n", s->value[N_TO_BRANCH]);
 		printf("N_TO_FRUIT = %g tN/sizecell/day\n", s->value[N_TO_FRUIT]);
 		printf("\nbalance = %g tN/sizecell/day\n", balance);
-		printf("...FATAL ERROR AT CLASS LEVEL nitrogen flux balance (exit)\n");
+		printf("...FATAL ERROR in 'Tree_model_daily'  nitrogen flux balance (exit)\n");
 		CHECK_CONDITION (fabs( balance ), >, eps);
 
 		return 0;
 	}
 	else
 	{
-		logger(g_debug_log, "...ok carbon flux nitrogen at class level\n");
+		logger(g_debug_log, "...ok in 'Tree_model_daily' nitrogen flux balance\n");
 	}
 
 	/*******************************************************************************************************************/
@@ -380,6 +380,7 @@ int check_tree_class_water_flux_balance(cell_t *const c, const int layer, const 
 	double out;
 	double store;
 	double balance;
+	static double old_store;
 
 	species_t *s;
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
@@ -393,28 +394,29 @@ int check_tree_class_water_flux_balance(cell_t *const c, const int layer, const 
 	out     = s->value[CANOPY_EVAPO];
 
 	/* sum of current storage */
-	store   = s->value[CANOPY_WATER] - s->value[OLD_CANOPY_WATER];
+	store   = s->value[CANOPY_WATER];
 
 	/* check canopy water pool balance */
-	balance = in - out - store;
+	balance = in - out - ( store - old_store );
 
 	logger(g_debug_log, "\nCLASS LEVEL WATER BALANCE\n");
 
-	if ( fabs( balance ) > eps )
+	if ( ( fabs( balance ) > eps ) && ( c->dos > 1 ) )
 	{
 		printf("DOY = %d\n", c->doy);
 		printf("canopy water in = %g\n", in);
 		printf("canopy water out = %g\n", out);
 		printf("canopy water store = %g\n", store);
 		printf("canopy water balance = %g\n", balance);
-		printf("...FATAL ERROR AT CELL LEVEL canopy water balance (exit)\n");
+		printf("...FATAL ERROR in 'Tree_model_daily' canopy water balance (exit)\n");
 		CHECK_CONDITION (fabs( balance ), >, eps);
 
 		return 0;
 	}
 	else
 	{
-		logger(g_debug_log, "...ok canopy water balance at class level\n");
+		old_store = store;
+		logger(g_debug_log, "...ok in 'Tree_model_daily' canopy water balance\n");
 	}
 
 	return 1;

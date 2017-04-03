@@ -237,7 +237,6 @@ enum {
 	CANOPY_EVAPO_TRANSP,                /* canopy evapotranspiration mm day-1 */
 	CANOPY_INT_SNOW,                    /* canopy interception of snow mm day-1 */
 	CANOPY_WATER,                       /* it should'nt be reset every day */
-	OLD_CANOPY_WATER,                   /* it should'nt be reset every day */
 	CANOPY_SNOW,                        /* it should'nt be reset every day */
 	OLD_CANOPY_SNOW,                    /* it should'nt be reset every day */
 	CANOPY_FRAC_DAY_TRANSP,             /* Fraction of daily canopy transpiration (DIM) */

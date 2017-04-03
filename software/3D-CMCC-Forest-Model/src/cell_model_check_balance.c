@@ -307,7 +307,7 @@ int check_cell_carbon_mass_balance(cell_t *const c)
 		printf("reserve_tC = %g tC/cell/day\n",c->reserve_tC );
 		printf("fruit_tC = %g tC/cell/day\n",c->fruit_tC );
 		printf("\nbalance = %g tC/sizecell\n", balance);
-		printf("...FATAL ERROR AT CELL LEVEL carbon mass balance (exit)\n");
+		printf("...FATAL ERROR in 'Cell_model_daily' carbon mass balance (exit)\n");
 		CHECK_CONDITION (fabs( balance ), >, eps);
 
 		return 0;
@@ -315,7 +315,7 @@ int check_cell_carbon_mass_balance(cell_t *const c)
 	else
 	{
 		old_store = store;
-		logger(g_debug_log, "...ok carbon mass balance at cell level\n");
+		logger(g_debug_log, "...ok in 'Cell_model_daily' carbon mass balance \n");
 	}
 	/*******************************************************************************************************************/
 	return 1;
@@ -373,7 +373,7 @@ int check_cell_water_flux_balance(cell_t *const c, const meteo_daily_t *const me
 		printf("soil water out = %g\n", out);
 		printf("soil water store = %g\n", store);
 		printf("soil water balance = %g\n", balance);
-		printf("...FATAL ERROR IN soil water balance (exit)\n");
+		printf("...FATAL ERROR IN 'Cell_model_daily' soil water balance (exit)\n");
 		CHECK_CONDITION (fabs( balance ), >, eps);
 
 		return 0;
@@ -381,7 +381,7 @@ int check_cell_water_flux_balance(cell_t *const c, const meteo_daily_t *const me
 	else
 	{
 		old_store = store;
-		logger(g_debug_log, "...ok soil water balance\n");
+		logger(g_debug_log, "...ok 'Cell_model_daily' soil water balance\n");
 	}
 
 	logger(g_debug_log, "\n*********CHECK CELL SNOW WATER BALANCE************\n");
@@ -417,7 +417,7 @@ int check_cell_water_flux_balance(cell_t *const c, const meteo_daily_t *const me
 		printf("soil water out = %g\n", out_snow);
 		printf("soil water store = %g\n", store_snow);
 		printf("soil water balance = %g\n", balance_snow);
-		printf("...FATAL ERROR IN snow water balance (exit)\n");
+		printf("...FATAL ERROR IN 'Cell_model_daily' snow water balance (exit)\n");
 		CHECK_CONDITION (fabs( balance ), >, eps);
 
 		return 0;
@@ -425,7 +425,7 @@ int check_cell_water_flux_balance(cell_t *const c, const meteo_daily_t *const me
 	else
 	{
 		old_store_snow = store_snow;
-		logger(g_debug_log, "...ok snow water balance\n");
+		logger(g_debug_log, "...ok 'Cell_model_daily' snow water balance\n");
 	}
 	logger(g_debug_log,"*****************************************************\n");
 
