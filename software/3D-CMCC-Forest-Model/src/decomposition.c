@@ -123,16 +123,16 @@ void decomposition (cell_t *const c, const meteo_daily_t *const meteo_daily)
 
 	/* calculate the flux from CWD to litter lignin and cellulose
 	compartments, due to physical fragmentation */
-	//TODO
 	/*
-	cwdc_loss = kfrag * cs->cwdc;
-	cf->cwdc_to_litr2c = cwdc_loss * epc->deadwood_fucel;
-	cf->cwdc_to_litr3c = cwdc_loss * epc->deadwood_fscel;
-	cf->cwdc_to_litr4c = cwdc_loss * epc->deadwood_flig;
-	nf->cwdn_to_litr2n = cf->cwdc_to_litr2c/epc->deadwood_cn;
-	nf->cwdn_to_litr3n = cf->cwdc_to_litr3c/epc->deadwood_cn;
-	nf->cwdn_to_litr4n = cf->cwdc_to_litr4c/epc->deadwood_cn;
-	 */
+	cwdc_loss = kfrag * c->cwd_carbon;
+	c->cwdc_to_litr2c = cwdc_loss * epc->deadwood_fucel;
+	c->cwdc_to_litr3c = cwdc_loss * epc->deadwood_fscel;
+	c->cwdc_to_litr4c = cwdc_loss * epc->deadwood_flig;
+	c->cwdn_to_litr2n = cf->cwdc_to_litr2c/epc->deadwood_cn;
+	c->cwdn_to_litr3n = cf->cwdc_to_litr3c/epc->deadwood_cn;
+	c->cwdn_to_litr4n = cf->cwdc_to_litr4c/epc->deadwood_cn;
+	*/
+
 
 	/* initialize the potential loss and mineral N flux variables */
 	plitr1c_loss = plitr2c_loss = plitr4c_loss = 0.0;

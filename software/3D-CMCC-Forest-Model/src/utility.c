@@ -76,6 +76,7 @@ void reset_daily_cell_variables(cell_t *const c)
 	c->daily_reserve_carbon =           0.;
 	c->daily_litr_carbon =              0.;
 	c->daily_soil_carbon =              0.;
+	c->daily_cwd_carbon =               0.;
 	c->daily_fruit_carbon =             0.;
 	c->daily_litrC =                    0.;
 	c->daily_leaf_litrC =               0.;
@@ -303,7 +304,6 @@ void reset_daily_class_variables(cell_t *const c)
 
 					/*****************************************/
 					/* reset daily carbon fluxes among pools */
-					//note: these variables are set to zero after growth respiration
 					s->value[C_TO_LEAF] =               0.;
 					s->value[C_TO_ROOT] =               0.;
 					s->value[C_TO_FROOT] =              0.;
@@ -314,6 +314,7 @@ void reset_daily_class_variables(cell_t *const c)
 					s->value[C_TO_RESERVE] =            0.;
 					s->value[C_TO_FRUIT] =              0.;
 					s->value[C_TO_LITR] =               0.;
+					s->value[C_TO_CWD] =                0.;
 					s->value[C_LEAF_TO_RESERVE] =       0.;
 					s->value[C_FROOT_TO_RESERVE] =      0.;
 					s->value[C_LEAF_TO_LITR] =          0.;
@@ -330,6 +331,8 @@ void reset_daily_class_variables(cell_t *const c)
 					s->value[N_TO_RESERVE] =            0.;
 					s->value[N_TO_FRUIT] =              0.;
 					s->value[N_TO_LITTER] =             0.;
+					s->value[N_TO_LITR] =               0.;
+					s->value[N_TO_CWD] =                0.;
 					s->value[N_LEAF_TO_RESERVE] =       0.;
 					s->value[N_FROOT_TO_RESERVE] =      0.;
 					s->value[N_LEAF_TO_LITR] =          0.;
@@ -470,16 +473,19 @@ void reset_annual_class_variables(cell_t *const c)
 					s->value[MAX_LEAF_C] =                  0.;
 					s->value[MAX_FROOT_C] =                 0.;
 
-					s->value[LEAF_TO_REMOVE] =              0.;
-					s->value[FROOT_TO_REMOVE] =             0.;
-					s->value[FRUIT_TO_REMOVE] =             0.;
+					s->value[LEAF_C_TO_REMOVE] =            0.;
+					s->value[FROOT_C_TO_REMOVE] =           0.;
+					s->value[FRUIT_C_TO_REMOVE] =           0.;
+					s->value[LEAF_N_TO_REMOVE] =            0.;
+					s->value[FROOT_N_TO_REMOVE] =           0.;
+					s->value[FRUIT_N_TO_REMOVE] =           0.;
 
 					/*reset cumulative values*/
 					s->counter[LEAF_FALL_COUNTER] =         0;
 					s->counter[VEG_DAYS] =                  0;
 					s->counter[YEARLY_VEG_DAYS] =           0;
 					s->counter[FIRST_VEG_DAYS] =            0;
-					s->value[YEARLY_GPP] =                  0;
+					s->value[YEARLY_GPP] =                  0.;
 					s->value[YEARLY_NPP] =                  0.;
 					s->value[YEARLY_NPP_tC] =               0.;
 					s->value[YEARLY_CUE] =                  0.;

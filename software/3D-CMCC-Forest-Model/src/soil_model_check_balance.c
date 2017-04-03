@@ -66,6 +66,7 @@ int check_soil_radiation_flux_balance (cell_t *const c, const meteo_daily_t *con
 	{
 		logger(g_debug_log, "...ok 'Soil_model_daily' PAR radiative balance\n");
 	}
+	logger(g_debug_log,"*****************************************************\n");
 
 	/*******************************************************************************************************************************************/
 
@@ -107,6 +108,7 @@ int check_soil_radiation_flux_balance (cell_t *const c, const meteo_daily_t *con
 	{
 		logger(g_debug_log, "...ok 'Soil_model_daily' Short Wave Radiation radiative balance\n");
 	}
+	logger(g_debug_log,"*****************************************************\n");
 
 	/*******************************************************************************************************************************************/
 
@@ -147,7 +149,7 @@ int check_soil_radiation_flux_balance (cell_t *const c, const meteo_daily_t *con
 	{
 		logger(g_debug_log, "...ok 'Soil_model_daily' PPFD radiative balance\n");
 	}
-
+	logger(g_debug_log,"*****************************************************\n");
 
 	/*******************************************************************************************************************************************/
 	return 1;
@@ -206,6 +208,7 @@ int check_soil_carbon_flux_balance(cell_t *const c)
 	{
 		logger(g_debug_log, "...ok 'Soil_model_daily' carbon balance\n");
 	}
+	logger(g_debug_log,"*****************************************************\n");
 
 	return 1;
 }
@@ -218,7 +221,7 @@ int check_soil_water_flux_balance(cell_t *const c, const meteo_daily_t *const me
 	double balance;
 	static double old_store;
 
-	logger(g_debug_log, "\n*********CHECK SOIL SOIL WATER BALANCE************\n");
+	logger(g_debug_log, "\n*********CHECK SOIL WATER BALANCE************\n");
 	/* DAILY CHECK ON SOIL POOL-ATMOSPHERE WATER BALANCE */
 	/* it takes into account soil-atmosphere fluxes */
 
@@ -234,7 +237,7 @@ int check_soil_water_flux_balance(cell_t *const c, const meteo_daily_t *const me
 	/* check soil pool water balance */
 	balance = in - out - ( store - old_store );
 
-	logger(g_debug_log, "\nCELL SOIL POOL WATER BALANCE\n");
+	logger(g_debug_log, "\nSOIL POOL WATER BALANCE\n");
 
 	/* check for soil water pool water balance */
 	if ( ( fabs( balance ) > eps ) && (c->dos > 1) )

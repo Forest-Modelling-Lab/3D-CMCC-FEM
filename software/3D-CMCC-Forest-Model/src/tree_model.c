@@ -306,11 +306,11 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 								/* note: it currently works on a annual scale (no more daily) */
 								if ( ! annual_growth_efficiency_mortality ( c, height, dbh, age, species ) )
 								{
-									/*Mortality based on tree Age (LPJ)*/
+									/* Mortality based on tree Age (LPJ) */
 									age_mortality ( c, height, dbh, age, species);
 
 									/************************************************************************************************************************************/
-									/* above ground-below ground biomass */
+									/* above ground-below ground stocks */
 									abg_bgb_biomass ( c, height, dbh, age, species );
 
 									/* annual branch and bark fraction */

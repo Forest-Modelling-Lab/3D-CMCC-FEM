@@ -259,7 +259,7 @@ int check_tree_class_carbon_mass_balance(cell_t *const c, const int layer, const
 	/* sum of sinks */
 	out     = s->value[TOTAL_MAINT_RESP_tC] +
 			s->value[TOTAL_GROWTH_RESP_tC] +
-			s->value[C_TO_LITR];
+			s->value[C_TO_LITR] + s->value[C_TO_CWD];
 
 	/* sum of current storage */
 	store   = s->value[LEAF_C]  +
@@ -284,7 +284,8 @@ int check_tree_class_carbon_mass_balance(cell_t *const c, const int layer, const
 		printf("\nout = %g tC/sizecell/day\n", out);
 		printf("TOTAL_MAINT_RESP_tC = %g tC/sizecell/day\n", s->value[TOTAL_MAINT_RESP_tC]);
 		printf("TOTAL_GROWTH_RESP_tC = %g tC/sizecell/day\n", s->value[TOTAL_GROWTH_RESP_tC]);
-		printf("LITR_C = %g tC/sizecell/day\n", s->value[LITR_C]);
+		printf("C_TO_LITR = %g tC/sizecell/day\n", s->value[C_TO_LITR]);
+		printf("C_TO_CWD = %g tC/sizecell/day\n", s->value[C_TO_CWD]);
 		printf("\nold_store = %g tC/sizecell\n", old_store);
 		printf("store = %g tC/sizecell\n", store);
 		printf("store - old_tore = %g tC/sizecell\n", store - old_store);
@@ -327,7 +328,10 @@ int check_tree_class_nitrogen_flux_balance (cell_t *const c, const int layer, co
 	in      = s->value[NPP_tN];
 
 	/* sum of sinks */
-	out     =  s->value[N_LEAF_TO_LITR] + s->value[N_FROOT_TO_LITR]/* + s->value[N_FRUIT_TO_LITR]*/;
+	out     =  s->value[N_LEAF_TO_LITR] +
+			s->value[N_FROOT_TO_LITR]   +
+			s->value[N_FRUIT_TO_LITR]   +
+			s->value[N_TO_CWD];
 
 	/* sum of current storage */
 	store   = s->value[N_TO_LEAF] +

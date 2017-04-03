@@ -44,8 +44,9 @@ int Litter_model_daily (matrix_t *const m, const int cell, const int day, const 
 	c->froot_litr2C            += c->daily_froot_litr2C;
 	c->froot_litr3C            += c->daily_froot_litr3C;
 	c->froot_litr4C            += c->daily_froot_litr4C;
-	c->litrC                   += (c->daily_leaf_litrC + c->daily_froot_litrC);
-	//todo include cwdC
+	c->litr_carbon             += (c->daily_leaf_litrC + c->daily_froot_litrC);
+	//todo
+	//c->cwd_carbon              += ();
 
 	/*** LITTER NITROGEN POOLS ***/
 	/* cell level litter nitrogen pools (tN/sizecell) */
@@ -59,8 +60,9 @@ int Litter_model_daily (matrix_t *const m, const int cell, const int day, const 
 	c->froot_litr2N            += c->daily_froot_litr2N;
 	c->froot_litr3N            += c->daily_froot_litr3N;
 	c->froot_litr4N            += c->daily_froot_litr4N;
-	c->litrN                   += (c->daily_leaf_litrN + c->daily_froot_litrN);
-	//todo include cwdN
+	c->litr_nitrogen           += (c->daily_leaf_litrN + c->daily_froot_litrN);
+	//todo
+	//c->cwd_nitrogen
 
 	/* decomposition */
 	decomposition ( c, meteo_daily );

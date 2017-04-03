@@ -170,13 +170,13 @@ int check_cell_carbon_flux_balance(cell_t *const c)
 	/* check complete cell level carbon flux balance */
 
 	/* sum of carbon sources */
-	in = c->daily_gpp;
+	in      = c->daily_gpp;
 
 	/* sum of carbon sinks */
-	out = c->daily_aut_resp;
+	out     = c->daily_aut_resp;
 
 	/* sum of current carbon storage */
-	store = c->daily_npp;
+	store   = c->daily_npp;
 
 	balance = in - out -store;
 
@@ -195,11 +195,15 @@ int check_cell_carbon_flux_balance(cell_t *const c)
 		printf("carbon out = %g gC/m2/day\n", out);
 		printf("carbon store = %g gC/m2/day\n", store);
 		printf("carbon_balance = %g gC/m2/day\n",balance);
-		printf("...FATAL ERROR IN carbon balance (exit)\n");
+		printf("...FATAL ERROR in 'Cell_model_daily' carbon balance (exit)\n");
 		printf("DOY = %d\n", c->doy);
 		CHECK_CONDITION (fabs( balance ), >, eps);
 
 		return 0;
+	}
+	else
+	{
+		logger(g_debug_log, "...ok 'Cell_model_daily' carbon balance\n");
 	}
 
 	/***************************************************************************************************************/
@@ -215,7 +219,7 @@ int check_cell_carbon_flux_balance(cell_t *const c)
 			c->daily_froot_carbon + c->daily_croot_carbon +
 			c->daily_branch_carbon + c->daily_reserve_carbon +
 			c->daily_litr_carbon + c->daily_soil_carbon +
-			+ c->daily_fruit_carbon;
+			+ c->daily_fruit_carbon + c->daily_cwd_carbon;
 
 	balance = in - out - store;
 
@@ -242,7 +246,7 @@ int check_cell_carbon_flux_balance(cell_t *const c)
 		printf("carbon out = %g gC/m2/day\n", out);
 		printf("carbon store = %g gC/m2/day\n", store);
 		printf("carbon_balance = %g gC/m2/day\n",balance);
-		printf("...FATAL ERROR IN carbon balance (exit)\n");
+		printf("...FATAL ERROR in 'Cell_model_daily' carbon balance (exit)\n");
 		printf("DOY = %d\n", c->doy);
 		CHECK_CONDITION (fabs( balance ), >, eps);
 
@@ -271,7 +275,7 @@ int check_cell_carbon_mass_balance(cell_t *const c)
 	in = c->daily_gpp_tC;
 
 	/* sum of sinks */
-	out = c->daily_aut_resp_tC + c->daily_litr_carbon;
+	out = c->daily_aut_resp_tC /*+ c->daily_het_resp_tC*/;
 
 	/* sum of current storage */
 	store = c->leaf_tC    +
@@ -280,7 +284,10 @@ int check_cell_carbon_mass_balance(cell_t *const c)
 			c->stem_tC    +
 			c->branch_tC  +
 			c->reserve_tC +
-			c->fruit_tC   ;
+			c->fruit_tC   +
+			c->litr_carbon+
+			c->cwd_carbon +
+			c->soil_carbon;
 
 	/* check carbon pool balance */
 	balance = in - out - (store - old_store);

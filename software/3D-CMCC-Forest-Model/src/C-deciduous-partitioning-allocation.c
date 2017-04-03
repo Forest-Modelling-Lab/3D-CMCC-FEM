@@ -254,7 +254,7 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 	if ( s->phenology_phase == 3 )
 	{
 		/* leaf fall */
-		leaf_fall_deciduous( c, height, dbh, age, species );
+		leaffall_deciduous( c, height, dbh, age, species );
 	}
 
 	/* update live_total wood fraction based on age */

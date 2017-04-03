@@ -1016,7 +1016,7 @@ void initialization_soil_biogeochemistry (cell_t *const c)
 
 	/****************** SUM ALL OVER CARBON POOLS ******************/
 	/* compute litter total (litter + cwd) carbon pool */
-	c->litrC = litterC + cwd_litterC;
+	c->litr_carbon = litterC + cwd_litterC;
 
 	/* compute litter total labile carbon pool */
 	c->litr1C = c->leaf_litr1C + c->froot_litr1C;
@@ -1031,7 +1031,7 @@ void initialization_soil_biogeochemistry (cell_t *const c)
 	c->litr4C = c->leaf_litr4C + c->froot_litr4C + c->deadwood_litr4C;
 
 	/* check */
-	CHECK_CONDITION ( fabs((c->litr1C + c->litr2C + c->litr3C + c->litr4C) - (c->litrC)), > , eps);
+	CHECK_CONDITION ( fabs((c->litr1C + c->litr2C + c->litr3C + c->litr4C) - (c->litr_carbon)), > , eps);
 
 
 	/*************************************** NITROGEN POOLS ***************************************/
@@ -1084,7 +1084,7 @@ void initialization_soil_biogeochemistry (cell_t *const c)
 
 	/****************** SUM ALL OVER NITROGEN POOLS ******************/
 	/* compute litter total (litter + cwd) nitrogen pool */
-	c->litrN  = litterN + cwd_litterN;
+	c->litr_nitrogen  = litterN + cwd_litterN;
 
 	/* compute litter total labile nitrogen pool */
 	c->litr1N = c->leaf_litr1N + c->froot_litr1N;
@@ -1099,7 +1099,7 @@ void initialization_soil_biogeochemistry (cell_t *const c)
 	c->litr4N = c->leaf_litr4N + c->froot_litr4N + c->deadwood_litr4N;
 
 	/* check */
-	CHECK_CONDITION ( fabs((c->litr1N + c->litr2N + c->litr3N + c->litr4N) - (c->litrN)), > , eps);
+	CHECK_CONDITION ( fabs((c->litr1N + c->litr2N + c->litr3N + c->litr4N) - (c->litr_nitrogen)), > , eps);
 }
 
 

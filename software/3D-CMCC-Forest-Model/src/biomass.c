@@ -69,11 +69,6 @@ void annual_tree_increment(cell_t *const c, const int height, const int dbh, con
 	{
 		logger(g_debug_log, "***CAI & MAI***\n");
 
-		//		/* compute effective mass density */
-		//		useless here it is computed monthly in dendrometry
-		//		s->value[MASS_DENSITY] = s->value[RHOMAX] + (s->value[RHOMIN] - s->value[RHOMAX]) * exp(-ln2 * (a->value / s->value[TRHO]));
-		//		logger(g_debug_log, "-Mass Density = %g\n", s->value[MASS_DENSITY]);
-
 		/* STAND VOLUME-(STEM VOLUME) */
 		/* assign previous volume to temporary variables */
 		prev_vol = s->value[VOLUME];
@@ -159,20 +154,13 @@ void tree_branch_and_bark (cell_t *const c, const int height, const int dbh, con
 
 	a = &c->heights[height].dbhs[dbh].ages[age];
 	// ALESSIOR
-	//if ( !a ) return;
+	//if ( ! a ) return;
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
-	if (s->value[FRACBB0] == 0)
-	{
-		logger(g_debug_log, "I don't have FRACBB0 = FRACBB1 \n");
-		s->value[FRACBB0] = s->value[FRACBB1];
-		logger(g_debug_log, "FRACBB0 = %g\n", s->value[FRACBB0]);
-	}
-	else
-	{
-		s->value[FRACBB] = s->value[FRACBB1] + (s->value[FRACBB0]- s->value[FRACBB1])* exp(-ln2 * (a->value / s->value[TBB]));
-	}
+	/* compute branch and bark fractions */
 
+	if ( !s->value[FRACBB0] ) s->value[FRACBB0] = s->value[FRACBB1];
+	else s->value[FRACBB] = s->value[FRACBB1] + ( s->value[FRACBB0]- s->value[FRACBB1] )* exp( -ln2 * ( a->value / s->value[TBB] ) );
 }
 
 void tree_biomass_remove (cell_t *const c, species_t *const s, const int tree_remove)
@@ -200,7 +188,6 @@ void tree_biomass_remove (cell_t *const c, species_t *const s, const int tree_re
 	s->value[BRANCH_DEAD_WOOD_C]      -= (s->value[AV_DEAD_BRANCH_MASS_KgC]      / 1e3 * tree_remove);
 	s->value[FRUIT_C]                 -= (s->value[AV_FRUIT_MASS_KgC]            / 1e3 * tree_remove);
 
-
 	/* update class nitrogen pools */
 	s->value[STEM_N]                  -= (s->value[AV_STEM_MASS_KgN]             / 1e3 * tree_remove);
 	s->value[LEAF_N]                  -= (s->value[AV_LEAF_MASS_KgN]             / 1e3 * tree_remove);
@@ -210,17 +197,22 @@ void tree_biomass_remove (cell_t *const c, species_t *const s, const int tree_re
 
 	/* carbon to litter pool */
 	s->value[C_TO_LITR]               += (s->value[AV_LEAF_MASS_KgC]             / 1e3 * tree_remove) +
-			(s->value[AV_FROOT_MASS_KgC]                                         / 1e3 * tree_remove) +
-			(s->value[AV_CROOT_MASS_KgC]                                         / 1e3 * tree_remove) +
+			(s->value[AV_FROOT_MASS_KgC]                                         / 1e3 * tree_remove);
+
+	/* carbon to cwd pool */
+	s->value[C_TO_CWD]                += (s->value[AV_CROOT_MASS_KgC]            / 1e3 * tree_remove) +
 			(s->value[AV_STEM_MASS_KgC]                                          / 1e3 * tree_remove) +
 			(s->value[AV_RESERVE_MASS_KgC]                                       / 1e3 * tree_remove) +
 			(s->value[AV_BRANCH_MASS_KgC]                                        / 1e3 * tree_remove);
 
 	/* nitrogen to litter pool */
 	s->value[N_TO_LITTER]             += (s->value[AV_LEAF_MASS_KgN]             / 1e3 * tree_remove) +
-			(s->value[AV_FROOT_MASS_KgN]                                         / 1e3 * tree_remove) +
-			(s->value[AV_CROOT_MASS_KgN]                                         / 1e3 * tree_remove) +
+			(s->value[AV_FROOT_MASS_KgN]                                         / 1e3 * tree_remove);;
+
+	/* nitrogen to cwd pool */
+	s->value[N_TO_CWD]                += (s->value[AV_CROOT_MASS_KgN]            / 1e3 * tree_remove) +
 			(s->value[AV_STEM_MASS_KgN]                                          / 1e3 * tree_remove) +
+			(s->value[AV_RESERVE_MASS_KgN]                                       / 1e3 * tree_remove) +
 			(s->value[AV_BRANCH_MASS_KgN]                                        / 1e3 * tree_remove);
 
 	/*** carbon ***/
@@ -233,6 +225,11 @@ void tree_biomass_remove (cell_t *const c, species_t *const s, const int tree_re
 	c->branch_carbon                  -= (s->value[AV_BRANCH_MASS_KgC]           / 1e3 * tree_remove);
 	c->reserve_carbon                 -= (s->value[AV_RESERVE_MASS_KgC]          / 1e3 * tree_remove);
 	c->fruit_carbon                   -= (s->value[AV_FRUIT_MASS_KgC]            / 1e3 * tree_remove);
+	c->litr_carbon                    += ((s->value[AV_LEAF_MASS_KgC]            / 1e3 * tree_remove))+
+			((s->value[AV_FROOT_MASS_KgC]                                        / 1e3 * tree_remove));
+	c->cwd_carbon                     +=((s->value[AV_STEM_MASS_KgC]             / 1e3 * tree_remove))+
+			((s->value[AV_CROOT_MASS_KgC]                                        / 1e3 * tree_remove))+
+			((s->value[AV_BRANCH_MASS_KgC]                                       / 1e3 * tree_remove));
 
 	/*** update at cell level ***/
 	c->leaf_tC                        -= (s->value[AV_LEAF_MASS_KgC]                   * tree_remove);
@@ -242,6 +239,12 @@ void tree_biomass_remove (cell_t *const c, species_t *const s, const int tree_re
 	c->branch_tC                      -= (s->value[AV_BRANCH_MASS_KgC]                 * tree_remove);
 	c->reserve_tC                     -= (s->value[AV_RESERVE_MASS_KgC]                * tree_remove);
 	c->fruit_tC                       -= (s->value[AV_FRUIT_MASS_KgC]                  * tree_remove);
+	c->litr_tC                    += ((s->value[AV_LEAF_MASS_KgC]                      * tree_remove))+
+			((s->value[AV_FROOT_MASS_KgC]                                              * tree_remove));
+	c->cwd_tC                     +=((s->value[AV_STEM_MASS_KgC]                       * tree_remove))+
+			((s->value[AV_CROOT_MASS_KgC]                                              * tree_remove))+
+			((s->value[AV_BRANCH_MASS_KgC]                                             * tree_remove));
+
 
 	/*** nitrogen ***/
 
@@ -253,15 +256,25 @@ void tree_biomass_remove (cell_t *const c, species_t *const s, const int tree_re
 	c->branch_nitrogen                -= (s->value[AV_BRANCH_MASS_KgN]           / 1e3 * tree_remove);
 	c->reserve_nitrogen               -= (s->value[AV_RESERVE_MASS_KgN]          / 1e3 * tree_remove);
 	c->fruit_nitrogen                 -= (s->value[AV_FRUIT_MASS_KgN]            / 1e3 * tree_remove);
+	c->litr_nitrogen                  += ((s->value[AV_LEAF_MASS_KgN]            / 1e3 * tree_remove))+
+			((s->value[AV_FROOT_MASS_KgN]                                        / 1e3 * tree_remove));
+	c->cwd_nitrogen                   +=((s->value[AV_STEM_MASS_KgN]             / 1e3 * tree_remove))+
+			((s->value[AV_CROOT_MASS_KgN]                                        / 1e3 * tree_remove))+
+			((s->value[AV_BRANCH_MASS_KgN]                                       / 1e3 * tree_remove));
 
 	/*** update at cell level ***/
-	c->leaf_tN                        -= (s->value[AV_LEAF_MASS_KgC]                   * tree_remove);
-	c->stem_tN                        -= (s->value[AV_STEM_MASS_KgC]                   * tree_remove);
-	c->froot_tN                       -= (s->value[AV_FROOT_MASS_KgC]                  * tree_remove);
-	c->croot_tN                       -= (s->value[AV_CROOT_MASS_KgC]                  * tree_remove);
-	c->branch_tN                      -= (s->value[AV_BRANCH_MASS_KgC]                 * tree_remove);
-	c->reserve_tN                     -= (s->value[AV_RESERVE_MASS_KgC]                * tree_remove);
-	c->fruit_tN                       -= (s->value[AV_FRUIT_MASS_KgC]                  * tree_remove);
+	c->leaf_tN                        -= (s->value[AV_LEAF_MASS_KgN]                   * tree_remove);
+	c->stem_tN                        -= (s->value[AV_STEM_MASS_KgN]                   * tree_remove);
+	c->froot_tN                       -= (s->value[AV_FROOT_MASS_KgN]                  * tree_remove);
+	c->croot_tN                       -= (s->value[AV_CROOT_MASS_KgN]                  * tree_remove);
+	c->branch_tN                      -= (s->value[AV_BRANCH_MASS_KgN]                 * tree_remove);
+	c->reserve_tN                     -= (s->value[AV_RESERVE_MASS_KgN]                * tree_remove);
+	c->fruit_tN                       -= (s->value[AV_FRUIT_MASS_KgN]                  * tree_remove);
+	c->litr_tN                    += ((s->value[AV_LEAF_MASS_KgN]                      * tree_remove))+
+			((s->value[AV_FROOT_MASS_KgN]                                              * tree_remove));
+	c->cwd_tN                     +=((s->value[AV_STEM_MASS_KgN]                       * tree_remove))+
+			((s->value[AV_CROOT_MASS_KgN]                                              * tree_remove))+
+			((s->value[AV_BRANCH_MASS_KgN]                                             * tree_remove));
 
 
 }

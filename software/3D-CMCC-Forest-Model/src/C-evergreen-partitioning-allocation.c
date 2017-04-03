@@ -396,7 +396,7 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 	growth_respiration ( c, layer, height, dbh, age, species );
 
 	/* leaf and fine root fall */
-	leaf_fall_evergreen ( c, height, dbh, age, species );
+	leaffall_evergreen ( c, height, dbh, age, species, year );
 
 	/* allocate daily carbon */
 	carbon_allocation ( c, s );

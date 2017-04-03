@@ -4,11 +4,11 @@
 
 #include "matrix.h"
 
-void leaf_fall_deciduous(cell_t *const c, const int height, const int dbh, const int age, const int species);
+void leaffall_deciduous(cell_t *const c, const int height, const int dbh, const int age, const int species);
 
-void leaf_fall_evergreen(cell_t *const c, const int height, const int dbh, const int age, const int species);
+void leaffall_evergreen(cell_t *const c, const int height, const int dbh, const int age, const int species, const int year);
 
-void leaf_fall (species_t *const s);
+void leaffall (species_t *const s);
 
 void littering ( cell_t *const c, species_t *const s );
 
