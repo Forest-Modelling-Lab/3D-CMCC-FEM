@@ -33,7 +33,7 @@
 #include "cropmodel_daily.h"
 #include "g-function.h"
 #include "leaf_fall.h"
-#include "treemodel_daily.h"
+#include "tree_model.h"
 #include "soil_dndc.h"
 #include "fluxes.h"
 #include "print.h"

@@ -13,7 +13,7 @@
 #include "settings.h"
 #include "logger.h"
 #include "mortality.h"
-#include "treemodel_daily.h"
+#include "tree_model.h"
 #include "remove_tree_class.h"
 #include "biomass.h"
 

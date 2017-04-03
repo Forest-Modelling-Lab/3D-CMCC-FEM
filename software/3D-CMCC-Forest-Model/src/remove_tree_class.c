@@ -13,7 +13,7 @@
 #include "constants.h"
 #include "settings.h"
 #include "common.h"
-#include "treemodel_daily.h"
+#include "tree_model.h"
 #include "remove_tree_class.h"
 
 extern settings_t* g_settings;

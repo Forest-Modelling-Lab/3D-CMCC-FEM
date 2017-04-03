@@ -51,7 +51,7 @@
 #include "soil_water_balance.h"
 #include "leaf_fall.h"
 #include "settings.h"
-#include "treemodel_daily.h"
+#include "tree_model.h"
 #include "remove_tree_class.h"
 #include "regeneration.h"
 #include "decomposition.h"

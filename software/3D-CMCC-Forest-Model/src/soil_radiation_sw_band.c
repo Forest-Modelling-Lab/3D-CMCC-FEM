@@ -54,22 +54,22 @@ void soil_radiation_sw_band ( cell_t *const c, meteo_daily_t *meteo_daily )
 
 	if ( ! c->snow_pack )
 	{
-		c->par_refl_soil = meteo_daily->par * Light_refl_sw_rad_soil_frac;
-		c->sw_rad_for_soil_refl = meteo_daily->sw_downward_W * Light_refl_sw_rad_soil_frac;
-		c->ppfd_refl_soil = meteo_daily->ppfd * Light_refl_sw_rad_soil_frac;
+		c->par_refl_soil    = meteo_daily->par * Light_refl_sw_rad_soil_frac;
+		c->sw_rad_refl_soil = meteo_daily->sw_downward_W * Light_refl_sw_rad_soil_frac;
+		c->ppfd_refl_soil   = meteo_daily->ppfd * Light_refl_sw_rad_soil_frac;
 		logger(g_debug_log,"reflected light from the soil\n");
 		logger(g_debug_log,"par_refl_soil = %g molPAR/m^2/day\n", c->par_refl_soil);
-		logger(g_debug_log,"sw_rad_for_soil_refl = %g W/m2\n", c->sw_rad_for_soil_refl);
+		logger(g_debug_log,"sw_rad_for_soil_refl = %g W/m2\n", c->sw_rad_refl_soil);
 		logger(g_debug_log,"ppfd_refl_soil = %g umol/m2/sec\n", c->ppfd_refl_soil);
 	}
 	else
 	{
-		c->par_refl_snow = meteo_daily->par * Light_refl_sw_rad_snow_frac;
-		c->sw_rad_for_snow_refl = meteo_daily->sw_downward_W * Light_refl_sw_rad_snow_frac;
-		c->ppfd_refl_snow = meteo_daily->ppfd * Light_refl_sw_rad_snow_frac;
+		c->par_refl_snow    = meteo_daily->par * Light_refl_sw_rad_snow_frac;
+		c->sw_rad_refl_snow = meteo_daily->sw_downward_W * Light_refl_sw_rad_snow_frac;
+		c->ppfd_refl_snow   = meteo_daily->ppfd * Light_refl_sw_rad_snow_frac;
 		logger(g_debug_log,"reflected light from the snow\n");
 		logger(g_debug_log,"par_refl_snow = %g molPAR/m^2/day\n", c->par_refl_snow);
-		logger(g_debug_log,"sw_rad_for_snow_refl = %g W/m2\n", c->sw_rad_for_snow_refl);
+		logger(g_debug_log,"sw_rad_for_snow_refl = %g W/m2\n", c->sw_rad_refl_snow);
 		logger(g_debug_log,"ppfd_refl_snow = %g umol/m2/sec\n", c->ppfd_refl_snow);
 	}
 
@@ -82,15 +82,15 @@ void soil_radiation_sw_band ( cell_t *const c, meteo_daily_t *meteo_daily )
 	if ( ! c->snow_pack )
 	{
 		/* compute absorbed part from soil */
-		c->apar_soil = meteo_daily->par - c->par_refl_soil;
-		c->sw_rad_abs_soil = meteo_daily->sw_downward_W - c->sw_rad_for_soil_refl;
-		c->ppfd_abs_soil = meteo_daily->ppfd - c->ppfd_refl_soil;
+		c->apar_soil       = meteo_daily->par - c->par_refl_soil;
+		c->sw_rad_abs_soil = meteo_daily->sw_downward_W - c->sw_rad_refl_soil;
+		c->ppfd_abs_soil   = meteo_daily->ppfd - c->ppfd_refl_soil;
 	}
 	else
 	{
 		/* compute absorbed part from snow */
-		c->apar_snow = meteo_daily->par - c->par_refl_snow;
-		c->sw_rad_abs_snow = meteo_daily->sw_downward_W - c->sw_rad_for_snow_refl;
-		c->ppfd_abs_snow = meteo_daily->ppfd - c->ppfd_refl_snow;
+		c->apar_snow       = meteo_daily->par - c->par_refl_snow;
+		c->sw_rad_abs_snow = meteo_daily->sw_downward_W - c->sw_rad_refl_snow;
+		c->ppfd_abs_snow   = meteo_daily->ppfd - c->ppfd_refl_snow;
 	}
 }

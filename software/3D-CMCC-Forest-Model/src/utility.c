@@ -27,8 +27,8 @@ void reset_daily_cell_variables(cell_t *const c)
 	c->par_refl_soil =                  0.;
 	c->par_refl_snow =                  0.;
 	c->sw_rad_refl =                    0.;
-	c->sw_rad_for_soil_refl =           0.;
-	c->sw_rad_for_snow_refl =           0.;
+	c->sw_rad_refl_soil =               0.;
+	c->sw_rad_refl_snow =               0.;
 	c->sw_rad_abs =                     0.;
 	c->sw_rad_abs_soil =                0.;
 	c->sw_rad_abs_snow =                0.;
@@ -88,6 +88,7 @@ void reset_daily_cell_variables(cell_t *const c)
 	c->daily_froot_litr2C =             0.;
 	c->daily_froot_litr3C =             0.;
 	c->daily_froot_litr4C =             0.;
+	c->daily_soilC =                    0.;
 
 
 	/*reset daily water variables*/

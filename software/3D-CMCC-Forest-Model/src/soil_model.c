@@ -20,6 +20,7 @@
 #include "soil_water_balance.h"
 #include "soil_nitrogen_balance.h"
 #include "settings.h"
+#include "check_balance.h"
 
 extern logger_t* g_debug_log;
 extern settings_t* g_settings;
@@ -81,6 +82,24 @@ int Soil_model_daily (matrix_t *const m, const int cell, const int day, const in
 		/* compute soil respiration (not yet implemented) */
 		soil_respiration ( c );
 	}
+
+	/*******************************************************************************************************/
+
+	/* CHECK FOR BALANCE CLOSURE */
+
+	/* CHECK FOR RADIATIVE FLUX BALANCE CLOSURE */
+	/* 1 */ if ( ! check_soil_radiation_flux_balance ( c, meteo_daily ) ) return 0;
+
+	/* CHECK FOR CARBON FLUX BALANCE CLOSURE */
+	/* 2 */ //fixme if ( ! check_soil_carbon_flux_balance    ( c ) ) return 0;
+
+	/* CHECK FOR CARBON MASS BALANCE CLOSURE */
+	/* 3 */ //fixme if ( ! check_soil_carbon_mass_balance    ( c ) ) return 0;
+
+	/* CHECK FOR WATER FLUX BALANCE CLOSURE */
+	/* 4 */ //fixme if ( ! check_soil_water_flux_balance     ( c, meteo_daily ) ) return 0;
+
+	/*******************************************************************************************************/
 
 	/* ok */
 	return 1;

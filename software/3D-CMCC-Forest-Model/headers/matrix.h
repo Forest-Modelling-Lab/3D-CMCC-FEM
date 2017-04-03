@@ -836,8 +836,8 @@ typedef struct
 	double short_wave_radiation_upward_MJ;              /* Upward short wave radiation flux (MJ/m2/day) */
 	double short_wave_radiation_upward_W;               /* Upward short wave radiation flux (W/m2) */
 	double sw_rad_refl;                                 /* Short Wave radiation reflected (W/m2) */
-	double sw_rad_for_soil_refl;                        /* Short Wave radiation reflected from soil level (W/m2) */
-	double sw_rad_for_snow_refl;                        /* Short Wave radiation reflected from snow level (W/m2) */
+	double sw_rad_refl_soil;                            /* Short Wave radiation reflected from soil level (W/m2) */
+	double sw_rad_refl_snow;                            /* Short Wave radiation reflected from snow level (W/m2) */
 	double sw_rad_abs;                                  /* Short Wave radiation absorbed tree level (W/m2) */
 	double sw_rad_abs_soil;                             /* Short Wave radiation absorbed soil level (W/m2) */
 	double sw_rad_abs_snow;                             /* Short Wave radiation absorbed snow level (W/m2) */
@@ -1076,6 +1076,7 @@ typedef struct
 	double daily_froot_litr2C;                                            /* daily fine root to litter unshelded cellulose carbon pool at cell level (tC/cell/day) */
 	double daily_froot_litr3C;                                            /* daily fine root to litter shelded cellulose carbon pool at cell level (tC/cell/day) */
 	double daily_froot_litr4C;                                            /* daily fine root to litter lignin carbon pool at cell level (tC/cell/day) */
+	double daily_soilC;                                                   /* daily litter carbon to soil (tC/cell/day) */
 
 	/* nitrogen */
 	double daily_litrN;                                                   /* daily leaf + fine root to litter nitrogen pool at cell level (tN/cell/day) */
@@ -1089,6 +1090,7 @@ typedef struct
 	double daily_froot_litr2N;                                            /* daily fine root to litter unshelded cellulose nitrogen pool at cell level (tN/cell/day) */
 	double daily_froot_litr3N;                                            /* daily fine root to litter shelded cellulose nitrogen pool at cell level (tN/cell/day) */
 	double daily_froot_litr4N;                                            /* daily fine root to litter lignin nitrogen pool at cell level (tN/cell/day) */
+	double daily_soilN;                                                   /* daily litter nitrogen to soil (tN/cell/day) */
 
 	/* litter and soil carbon pools */
 	double leaf_litrC;                                                    /* (tC/sizecell) leaf total litter carbon */

@@ -66,6 +66,18 @@ int Litter_model_daily (matrix_t *const m, const int cell, const int day, const 
 	/* decomposition */
 	decomposition ( c, meteo_daily );
 
+	/*******************************************************************************************************/
+
+	/* CHECK FOR BALANCE CLOSURE */
+
+	/* CHECK FOR CARBON FLUX BALANCE CLOSURE */
+	/* 1 */ //fixme if ( ! check_litter_carbon_flux_balance    ( c ) ) return 0;
+
+	/* CHECK FOR CARBON MASS BALANCE CLOSURE */
+	/* 2 */ //fixme if ( ! check_litter_carbon_mass_balance    ( c ) ) return 0;
+
+	/*******************************************************************************************************/
+
 	/* ok */
 	return 1;
 }
