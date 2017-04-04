@@ -131,7 +131,6 @@ void reset_monthly_cell_variables(cell_t *const c)
 	c->monthly_c_rain_int =             0.;
 	c->monthly_c_transp =               0.;
 	c->monthly_c_evapo =                0.;
-	c->monthly_c_water_stored =         0.;
 	c->monthly_c_evapotransp =          0.;
 	c->monthly_soil_evapo =             0.;
 	c->monthly_et =                     0.;
@@ -168,7 +167,6 @@ void reset_annual_cell_variables(cell_t *const c)
 	c->annual_c_rain_int =              0.;
 	c->annual_c_transp =                0.;
 	c->annual_c_evapo =                 0.;
-	c->annual_c_water_stored =          0.;
 	c->annual_c_evapotransp =           0.;
 	c->annual_soil_evapo =              0.;
 	c->annual_et =                      0.;

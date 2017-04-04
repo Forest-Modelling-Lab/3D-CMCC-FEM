@@ -250,7 +250,7 @@ int check_soil_water_flux_balance(cell_t *const c, const meteo_daily_t *const me
 		logger_all("soil water in = %g\n", in);
 		logger_all("soil water out = %g\n", out);
 		logger_all("soil water store = %g\n", store);
-		logger_all("soil water balance = %g\n", balance);
+		logger_all("delta soil water balance = %g\n", store - old_store );
 		logger_all("...FATAL ERROR IN 'Soil_model_daily' soil water balance (exit)\n");
 
 		return 0;

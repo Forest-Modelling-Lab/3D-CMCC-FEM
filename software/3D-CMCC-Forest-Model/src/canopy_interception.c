@@ -69,8 +69,10 @@ void canopy_interception(cell_t *const c, const int layer, const int height, con
 			logger(g_debug_log, "rain = %g mm/m2/day\n", meteo_daily->rain);
 
 			s->value[CANOPY_INT]      = s->value[INT_COEFF] * meteo_daily->rain * (1.0 - exp(-0.5 * s->value[LAI_PROJ])) * s->value[DAILY_CANOPY_COVER_PROJ];
-			s->value[CANOPY_WATER]    = s->value[CANOPY_INT];
 			s->value[CANOPY_INT_SNOW] = 0.;
+
+			/* update pool */
+			s->value[CANOPY_WATER]    = s->value[CANOPY_INT];
 
 			CHECK_CONDITION(s->value[CANOPY_INT], >, meteo_daily->rain);
 		}

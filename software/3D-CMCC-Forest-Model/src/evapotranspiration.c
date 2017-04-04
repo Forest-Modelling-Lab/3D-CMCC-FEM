@@ -15,10 +15,6 @@ void evapotranspiration(cell_t* const c)
 	logger(g_debug_log, "Monthly EVAPOTRANSPIRATION = %f \n", c->monthly_et);
 	c->annual_et += c->daily_et;
 	logger(g_debug_log, "Annual EVAPOTRANSPIRATION = %f \n", c->annual_et);
-
-	/*compute water to atmosphere*/
-	c->vapour_to_atmosphere = c->daily_et;
-	logger(g_debug_log, "vapour to atmosphere = %f \n", c->vapour_to_atmosphere);
 }
 
 

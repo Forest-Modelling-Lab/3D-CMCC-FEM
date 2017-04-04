@@ -221,7 +221,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 				s->value[CANOPY_EVAPO_TRANSP] = s->value[CANOPY_EVAPO] + s->value[CANOPY_TRANSP];
 				logger(g_debug_log, "Canopy evapo-transpiration = %g mm\n", s->value[CANOPY_EVAPO_TRANSP]);
 
-				/* remove evaporated water from canopy */
+				/* remove evaporated water from canopy water pool */
 				s->value[CANOPY_WATER] -= s->value[CANOPY_EVAPO];
 				logger(g_debug_log, "Canopy water = %g mm\n", s->value[CANOPY_WATER]);
 
@@ -240,7 +240,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 				s->value[CANOPY_EVAPO]  = evapo;
 				logger(g_debug_log, "Canopy evaporation = %g mm\n", s->value[CANOPY_EVAPO]);
 
-				/* reset canopy water */
+				/* reset canopy water from canopy water pool */
 				s->value[CANOPY_WATER] -= s->value[CANOPY_EVAPO];
 				logger(g_debug_log, "Canopy water = %g mm\n", s->value[CANOPY_WATER]);
 
@@ -418,8 +418,10 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 
 	c->daily_c_evapo                      += s->value[CANOPY_EVAPO];
 	c->daily_c_transp                     += s->value[CANOPY_TRANSP];
-	c->daily_c_water_stored               += s->value[CANOPY_WATER];
 	c->daily_c_evapotransp                += s->value[CANOPY_EVAPO_TRANSP];
+
+	/* update canopy water pool */
+	c->canopy_water_stored                += (s->value[CANOPY_INT] - s->value[CANOPY_EVAPO] );
 }
 
 

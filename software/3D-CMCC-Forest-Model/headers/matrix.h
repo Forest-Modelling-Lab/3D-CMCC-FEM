@@ -227,6 +227,11 @@ enum {
 	PHYS_MOD,                           /* PHYSIOLOGICAL modifier */
 
 	/* water */
+	/* pools */
+	CANOPY_WATER,                       /* it should'nt be reset every day */
+	CANOPY_SNOW,                        /* it should'nt be reset every day */
+	OLD_CANOPY_SNOW,                    /* it should'nt be reset every day */
+	/* fluxes */
 	CANOPY_CONDUCTANCE,
 	CANOPY_BLCOND,                      /* Canopy Boundary Layer conductance (m s-1) */
 	FRAC_DAYTIME_TRANSP,                /* fraction of daytime for transpiration (and photosynthesis) */
@@ -236,9 +241,6 @@ enum {
 	CANOPY_TRANSP,                      /* canopy transpiration mm day -1 */
 	CANOPY_EVAPO_TRANSP,                /* canopy evapotranspiration mm day-1 */
 	CANOPY_INT_SNOW,                    /* canopy interception of snow mm day-1 */
-	CANOPY_WATER,                       /* it should'nt be reset every day */
-	CANOPY_SNOW,                        /* it should'nt be reset every day */
-	OLD_CANOPY_SNOW,                    /* it should'nt be reset every day */
 	CANOPY_FRAC_DAY_TRANSP,             /* Fraction of daily canopy transpiration (DIM) */
 	CANOPY_LATENT_HEAT,                 /* canopy latent heat W m-2 */
 	CANOPY_SENSIBLE_HEAT,               /* canopy sensible heat W m-2 */
@@ -1023,9 +1025,6 @@ typedef struct
 	double wilting_point;                                                 /* volumetric water content at wilting point (mm/m2) */
 	double field_capacity;                                                /* volumetric water content at field capacity (mm/m2) */
 	double sat_hydr_conduct;                                              /* saturated hydraulic conductivity (mm/m2) */
-	double asw;                                                           /* current available soil water (mm/volume) */
-	double max_asw_fc;                                                    /* max available soil water at field capacity mmKgH2O/m3*/
-	double max_asw_sat;                                                   /* max available soil water at field capacity mmKgH2O/m3*/
 	double psi;                                                           /* water potential of soil and leaves (MPa) */
 	double soil_moist_ratio;                                              /* soil moisture ratio */
 	double vwc;                                                           /* soil volumetric water content (mm/m2) */
@@ -1039,9 +1038,13 @@ typedef struct
 
 	/* water */
 	int days_since_rain;                                                             /* consecutive days without rain */
-	double rain_intercepted;                                                         /* current amount of intercepted rain (mm/m2) */
-	double vapour_to_atmosphere;                                                     /* current water flux water to atmosphere (mm/m2) */
+	/* pools */
+	double asw;                                                                      /* current available soil water (mm/volume) */
+	double max_asw_fc;                                                               /* max available soil water at field capacity mmKgH2O/m3*/
+	double max_asw_sat;                                                              /* max available soil water at field capacity mmKgH2O/m3*/
 	double snow_pack;                                                                /* current amount of snow (Kg/m2) */
+	double canopy_water_stored;                                                      /* canopy water stored at cell level (mm/m2/ ) */
+	/* fluxes */
 	double daily_snow_melt;                                                          /* current amount of melted snow (mm/m2) */
 	double daily_snow_subl;                                                          /* current amount of sublimated snow (mm/m2) */
 	double daily_out_flow;                                                           /* current amount of water outflow (mm/m2) */
@@ -1049,7 +1052,6 @@ typedef struct
 	double daily_c_snow_int, monthly_c_snow_int, annual_c_snow_int;                  /* daily, monthly and canopy snow interception at cell level (mm/m2/ ) */
 	double daily_c_transp, monthly_c_transp, annual_c_transp;                        /* daily, monthly and canopy transpiration at cell level (mm/m2/ ) */
 	double daily_c_evapo, monthly_c_evapo, annual_c_evapo;                           /* daily, monthly and canopy evaporation at cell level (mm/m2/ ) */
-	double daily_c_water_stored, monthly_c_water_stored, annual_c_water_stored;      /* daily, monthly and canopy water stored at cell level (mm/m2/ ) */
 	double daily_c_evapotransp, monthly_c_evapotransp, annual_c_evapotransp;         /* daily, monthly and canopy evapotranspiration at cell level (mm/m2/ ) */
 	double daily_soil_evapo, monthly_soil_evapo, annual_soil_evapo;                  /* daily, monthly and soil evaporation at cell level (mm/m2/ ) */
 	double daily_et, monthly_et, annual_et;                                          /* daily, monthly and evapotranspiration at cell level (mm/m2/ ) */
