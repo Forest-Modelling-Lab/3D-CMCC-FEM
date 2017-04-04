@@ -68,7 +68,7 @@ void canopy_interception(cell_t *const c, const int layer, const int height, con
 		{
 			logger(g_debug_log, "rain = %g mm/m2/day\n", meteo_daily->rain);
 
-			s->value[CANOPY_INT]      = s->value[INT_COEFF] * meteo_daily->rain * (1.0 - exp(-0.5 * s->value[LAI_PROJ])) * s->value[DAILY_CANOPY_COVER_PROJ];
+			s->value[CANOPY_INT]      = s->value[INT_COEFF] * meteo_daily->rain * (1. - exp(-0.5 * s->value[LAI_PROJ])) * s->value[DAILY_CANOPY_COVER_PROJ];
 			s->value[CANOPY_INT_SNOW] = 0.;
 
 			/* update pool */
@@ -85,11 +85,13 @@ void canopy_interception(cell_t *const c, const int layer, const int height, con
 			logger(g_debug_log, "snow = %g mm/m2/day\n", meteo_daily->snow);
 
 			Int_max_snow              = 4.4 * s->value[LAI_PROJ];
-			s->value[CANOPY_INT_SNOW] = s->value[CANOPY_SNOW] + 0.7 * ( Int_max_snow - s->value[CANOPY_SNOW] ) * (1 - exp( - ( meteo_daily->snow /Int_max_snow ) ) ) * s->value[DAILY_CANOPY_COVER_PROJ];
+			s->value[CANOPY_INT_SNOW] = 0. /*s->value[CANOPY_SNOW] + 0.7 * ( Int_max_snow - s->value[CANOPY_SNOW] ) * (1. - exp( - ( meteo_daily->snow /Int_max_snow ) ) ) * s->value[DAILY_CANOPY_COVER_PROJ]*/;
 			s->value[CANOPY_INT]      = 0.;
 
+			/* update pool */
 			//fixme for now assuming no snow interception
-			s->value[CANOPY_INT_SNOW] = 0.;
+			//once completed compute sublimation and and melt and include no radiation
+			s->value[CANOPY_SNOW]    = s->value[CANOPY_INT_SNOW] ;
 
 			CHECK_CONDITION(s->value[CANOPY_INT_SNOW], >, meteo_daily->snow);
 		}

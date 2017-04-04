@@ -52,18 +52,6 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 	/* it mainly follows rationale and algorithms of BIOME-BGC v.4.2 */
 	/* it computes canopy interception, evaporation and transpiration */
 
-	/* assign values of previous day canopy water/snow */
-	/* reset if LAI == 0.0*/
-	/*
-	if( !s->value[LAI_PROJ] )
-	{
-		s->value[CANOPY_WATER]     = 0.;
-		s->value[CANOPY_SNOW]      = 0.;
-		s->value[OLD_CANOPY_SNOW]  = 0.;
-
-	}
-	 */
-
 	/********************************************************************************************************/
 
 	logger(g_debug_log, "\n**CANOPY EVAPO-TRANSPIRATION**\n");

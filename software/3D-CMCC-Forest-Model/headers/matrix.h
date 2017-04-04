@@ -228,9 +228,8 @@ enum {
 
 	/* water */
 	/* pools */
-	CANOPY_WATER,                       /* it should'nt be reset every day */
-	CANOPY_SNOW,                        /* it should'nt be reset every day */
-	OLD_CANOPY_SNOW,                    /* it should'nt be reset every day */
+	CANOPY_WATER,                       /* canopy water pool */
+	CANOPY_SNOW,                        /* canopy snow pool  */
 	/* fluxes */
 	CANOPY_CONDUCTANCE,
 	CANOPY_BLCOND,                      /* Canopy Boundary Layer conductance (m s-1) */
