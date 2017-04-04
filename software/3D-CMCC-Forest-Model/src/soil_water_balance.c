@@ -23,15 +23,25 @@ void soil_water_balance(cell_t *c, const meteo_daily_t *const meteo_daily)
 	/* update balance */
 
 	/* soil water balance */
-	c->asw       += (meteo_daily->rain + c->daily_snow_melt) - (c->daily_c_transp + c->daily_soil_evapo + c->daily_c_rain_int);
+	c->asw       += ( ( meteo_daily->rain + c->daily_snow_melt ) - ( c->daily_c_transp + c->daily_soil_evapo ) );
+	logger(g_debug_log, "asw = %g\n", c->asw);
+	logger(g_debug_log, "rain = %g\n", meteo_daily->rain);
+	logger(g_debug_log, "daily_snow_melt = %g\n", c->daily_snow_melt);
+	logger(g_debug_log, "daily_c_transp = %g\n", c->daily_c_transp);
+	logger(g_debug_log, "daily_soil_evapo = %g\n", c->daily_soil_evapo);
 
 	/* snow pack balance */
 	c->snow_pack += meteo_daily->snow - (c->daily_snow_melt + c->daily_snow_subl);
+	logger(g_debug_log, "snow_pack = %g\n", c->snow_pack);
 
 	if ( c->asw > c->max_asw_fc)
 	{
 		c->daily_out_flow = c->asw - c->max_asw_fc;
 		c->asw            = c->max_asw_fc;
+
+		logger(g_debug_log, "daily_out_flow = %g\n", c->daily_out_flow);
+		logger(g_debug_log, "asw = %g\n", c->asw);
+		logger(g_debug_log, "max_asw_fc = %g\n", c->max_asw_fc);
 	}
 	/* calculates the outflow flux from the difference between soilwater
 	and maximum soilwater */

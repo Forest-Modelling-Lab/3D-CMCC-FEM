@@ -379,7 +379,8 @@ void Daily_avg_temperature(meteo_t *met, const int day, const int month)
 	}
 }
 
-void Psychrometric(meteo_t *met, const int day, const int month) {
+void Psychrometric(meteo_t *met, const int day, const int month)
+{
 	/* compute psychrometric (KPa/°C) constant as in Allen et al., 1998 */
 	met[month].d[day].psych = ((CP/1000000.0)*(met[month].d[day].air_pressure/1000.0))/(MWratio*(met[month].d[day].lh_vap/1000000.0));
 }

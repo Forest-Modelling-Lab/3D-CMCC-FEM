@@ -344,7 +344,7 @@ int check_cell_water_flux_balance(cell_t *const c, const meteo_daily_t *const me
 	/* sum of sinks */
 	out     = c->daily_c_transp + c->daily_c_evapo + c->daily_soil_evapo + c->daily_out_flow;
 
-	/* sum of current storage in soil */
+	/* sum of current storage in cell pools */
 	store   = c->asw  + c->daily_c_water_stored + c->snow_pack;
 
 	/* check soil pool water balance */
@@ -361,7 +361,7 @@ int check_cell_water_flux_balance(cell_t *const c, const meteo_daily_t *const me
 		logger_all("meteo_daily->snow = %g\n", meteo_daily->snow);
 		logger_all("\nout\n");
 		logger_all("c->daily_c_transp = %g\n", c->daily_c_transp);
-		logger_all("c->daily_c_int = %g\n", c->daily_c_evapo);
+		logger_all("c->daily_c_evapo = %g\n", c->daily_c_evapo);
 		logger_all("c->soil_evaporation = %g\n", c->daily_soil_evapo);
 		logger_all("c->out_flow = %g\n", c->daily_out_flow);
 		logger_all("\nstore (as a difference between old and current)\n");

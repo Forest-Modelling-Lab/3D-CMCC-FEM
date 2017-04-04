@@ -20,7 +20,7 @@
 
 extern logger_t* g_debug_log;
 
-void canopy_evapotranspiration(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, const meteo_daily_t *const meteo_daily)
+void canopy_evapotranspiration(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, meteo_daily_t *const meteo_daily)
 {
 	double g_corr;
 	double gl_bl;
@@ -54,12 +54,15 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 
 	/* assign values of previous day canopy water/snow */
 	/* reset if LAI == 0.0*/
+	/*
 	if( !s->value[LAI_PROJ] )
 	{
 		s->value[CANOPY_WATER]     = 0.;
 		s->value[CANOPY_SNOW]      = 0.;
 		s->value[OLD_CANOPY_SNOW]  = 0.;
+
 	}
+	 */
 
 	/********************************************************************************************************/
 
@@ -185,12 +188,12 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 			evapo = Penman_Monteith (meteo_daily, rv, rh, net_rad);
 
 			/* check for negative values */
-			if(evapo < 0.0) evapo = 0.;
+			if(evapo < 0.0) evapo  = 0.;
 
 			s->value[CANOPY_EVAPO] = evapo;
 
 			/* calculate the time required to evaporate all the canopy water */
-			evap_daylength_sec = s->value[CANOPY_WATER] / s->value[CANOPY_EVAPO];
+			evap_daylength_sec     = s->value[CANOPY_WATER] / s->value[CANOPY_EVAPO];
 			logger(g_debug_log, "evap_daylength_sec = %g sec\n", evap_daylength_sec);
 
 			/* day not long enough to evap. all int. water */
@@ -203,7 +206,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 				++days_with_canopy_wet;
 
 				/* adjust daylength for transpiration */
-				transp_daylength_sec = 0.;
+				transp_daylength_sec             = 0.;
 				s->value[CANOPY_FRAC_DAY_TRANSP] = 0.;
 				logger(g_debug_log, "transp_daylength_sec = %g\n", s->value[CANOPY_FRAC_DAY_TRANSP]);
 
@@ -261,7 +264,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 				rv = 1.0/gl_t_wv_sun;
 
 				/* note: Net Rad is Short wave flux */
-				net_rad = s->value[SW_RAD_ABS_SUN] / (1.0 - exp(- s->value[LAI_PROJ]));
+				net_rad = s->value[SW_RAD_ABS_SUN] / (1. - exp(- s->value[LAI_PROJ]));
 				logger(g_debug_log, "sw rad for evaporation (LAI sun) = %g W/m2\n", net_rad);
 
 				/* call Penman-Monteith function, returns e in kg/m2/s for transpiration and W/m2 for latent heat */
@@ -276,7 +279,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 				logger(g_debug_log, "\n--Transpiration for LAI shade--\n");
 
 				/* for shaded canopy fraction */
-				rv = 1.0/gl_t_wv_shade;
+				rv = 1. / gl_t_wv_shade;
 
 				/* note: Net Rad is Short wave flux */
 				net_rad = s->value[SW_RAD_ABS_SHADE] / (s->value[LAI_PROJ] - s->value[LAI_SUN_PROJ]);
@@ -300,11 +303,20 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 				/* considering effective coverage of cell */
 				s->value[CANOPY_TRANSP]      *= /*leaf_cell_cover_eff*/s->value[DAILY_CANOPY_COVER_EXP];
 				s->value[CANOPY_EVAPO_TRANSP] = s->value[CANOPY_EVAPO] + s->value[CANOPY_TRANSP];
+			}
 
+			/* note special case: assuming that all canopy water evaporates during last day of leaffall */
+			if ( ( s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2 ) &&
+					(s->counter[DAY_FRAC_FOLIAGE_REMOVE] == s->counter[LEAF_FALL_COUNTER] ) )
+			{
+				logger(g_debug_log, "\nlast day of leaf fall !!!\n");
+				s->value[CANOPY_EVAPO]       += s->value[CANOPY_WATER];
+				s->value[CANOPY_WATER]        = 0.;
+				s->value[CANOPY_EVAPO_TRANSP] = s->value[CANOPY_EVAPO] + s->value[CANOPY_TRANSP];
 			}
 		}
 		/* if canopy has snow */
-		else if (s->value[CANOPY_SNOW] > 0.0)
+		else if (s->value[CANOPY_SNOW] > 0.)
 		{
 			//todo get functions from snow_melt_subl snow subl(evaporated) or melt (that goes to soil pool) for canopy intercepted snow
 		}
@@ -320,11 +332,11 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 			logger(g_debug_log, "*CANOPY TRANSPIRATION (Canopy Dry)*\n");
 
 			/* all day transp */
-			transp_daylength_sec             = 1.0;
-			s->value[CANOPY_FRAC_DAY_TRANSP] = 1.0;
+			transp_daylength_sec             = 1.;
+			s->value[CANOPY_FRAC_DAY_TRANSP] = 1.;
 
 			/* Leaf-Canopy resistance to sensible heat */
-			rh = 1.0/gl_sh;
+			rh = 1.0 / gl_sh;
 
 			/************************************************************************************/
 			/* calculate transpiration using adjusted day length */
@@ -333,11 +345,11 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 			/* LAI SUN */
 			logger(g_debug_log, "\n--Transpiration for LAI sun--\n");
 
-			rv = 1.0/gl_t_wv_sun;
+			rv = 1. / gl_t_wv_sun;
 
 			/* note: Net Rad is Short wave flux */
 			//fixme why??????????
-			net_rad = s->value[SW_RAD_ABS_SUN] / (1.0 - exp(- s->value[LAI_PROJ]));
+			net_rad = s->value[SW_RAD_ABS_SUN] / (1. - exp(- s->value[LAI_PROJ]));
 			logger(g_debug_log, "sw rad for evaporation (LAI sun ) = %g W/m2\n", net_rad);
 
 			/* call Penman-Monteith function, returns e in kg/m2/s for transpiration and W/m2 for latent heat*/
@@ -351,7 +363,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 			/* LAI SHADE */
 			logger(g_debug_log, "\n--Transpiration for LAI shade--\n");
 
-			rv = 1.0/gl_t_wv_shade;
+			rv = 1. / gl_t_wv_shade;
 
 			/* note: Net Rad is Short wave flux */
 			//fixme why??????????
@@ -368,7 +380,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 			transp = transp_sun + transp_shade;
 
 			/* check for negative values */
-			if(transp < 0.0) transp = 0.0;
+			if(transp < 0.) transp = 0.;
 
 			/* assign values */
 			s->value[CANOPY_TRANSP] = transp;
@@ -380,11 +392,11 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 	}
 	else
 	{
-		s->value[CANOPY_INT] = 0.0;
-		s->value[CANOPY_WATER] = 0.0;
-		s->value[CANOPY_TRANSP] = 0.0;
-		s->value[CANOPY_EVAPO] = 0.0;
-		s->value[CANOPY_EVAPO_TRANSP] = 0.0;
+		s->value[CANOPY_INT]          = 0.;
+		s->value[CANOPY_WATER]        = 0.;
+		s->value[CANOPY_TRANSP]       = 0.;
+		s->value[CANOPY_EVAPO]        = 0.;
+		s->value[CANOPY_EVAPO_TRANSP] = 0.;
 	}
 
 	logger(g_debug_log,"\n--Overall canopy--\n");
@@ -394,20 +406,20 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 	logger(g_debug_log, "CANOPY_EVAPO_TRANSP = %g mm/m2/day\n", s->value[CANOPY_EVAPO_TRANSP]);
 
 	/* compute latent heat fluxes for canopy */
-	Canopy_latent_heat_fluxes (s, meteo_daily);
+	Canopy_latent_heat_fluxes   (s, meteo_daily);
 
 	/* compute sensible heat fluxes for canopy */
-	Canopy_sensible_heat_fluxes(c, layer, height, dbh, age, species, meteo_daily);
+	Canopy_sensible_heat_fluxes (c, layer, height, dbh, age, species, meteo_daily);
 
-	s->value[MONTHLY_CANOPY_TRANSP] += s->value[CANOPY_TRANSP];
+	s->value[MONTHLY_CANOPY_TRANSP]       += s->value[CANOPY_TRANSP];
 	s->value[MONTHLY_CANOPY_EVAPO_TRANSP] += s->value[CANOPY_EVAPO_TRANSP];
-	s->value[YEARLY_CANOPY_TRANSP] += s->value[CANOPY_TRANSP];
-	s->value[YEARLY_CANOPY_EVAPO_TRANSP] += s->value[CANOPY_EVAPO_TRANSP];
+	s->value[YEARLY_CANOPY_TRANSP]        += s->value[CANOPY_TRANSP];
+	s->value[YEARLY_CANOPY_EVAPO_TRANSP]  += s->value[CANOPY_EVAPO_TRANSP];
 
-	c->daily_c_evapo        += s->value[CANOPY_EVAPO];
-	c->daily_c_transp       += s->value[CANOPY_TRANSP];
-	c->daily_c_water_stored += s->value[CANOPY_WATER];
-	c->daily_c_evapotransp  += s->value[CANOPY_EVAPO_TRANSP];
+	c->daily_c_evapo                      += s->value[CANOPY_EVAPO];
+	c->daily_c_transp                     += s->value[CANOPY_TRANSP];
+	c->daily_c_water_stored               += s->value[CANOPY_WATER];
+	c->daily_c_evapotransp                += s->value[CANOPY_EVAPO_TRANSP];
 }
 
 
