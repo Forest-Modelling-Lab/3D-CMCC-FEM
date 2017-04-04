@@ -264,7 +264,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\check_balance.c"
+				RelativePath=".\src\cell_model_check_balance.c"
 				>
 			</File>
 			<File
@@ -329,6 +329,10 @@
 			</File>
 			<File
 				RelativePath=".\src\litter_model.c"
+				>
+			</File>
+			<File
+				RelativePath=".\src\litter_model_check_balance.c"
 				>
 			</File>
 			<File
@@ -432,6 +436,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\soil_model_check_balance.c"
+				>
+			</File>
+			<File
 				RelativePath=".\src\soil_radiation_sw_band.c"
 				>
 			</File>
@@ -465,6 +473,10 @@
 			</File>
 			<File
 				RelativePath=".\src\tree_model.c"
+				>
+			</File>
+			<File
+				RelativePath=".\src\tree_model_check_balance.c"
 				>
 			</File>
 			<File

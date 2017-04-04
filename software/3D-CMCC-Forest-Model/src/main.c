@@ -61,14 +61,6 @@ const char *szMonth[MONTHS_COUNT] = { "JANUARY", "FEBRUARY", "MARCH", "APRIL", "
 const char* log_types[LOG_TYPES_COUNT] = { "debug" , "daily" , "monthly" , "annual" , "soil_daily", "soil_monthly", "soil_annual" };
 
 /* global vars */
-/* DO NOT REMOVE INITIALIZATION TO NULL, IT IS REQUIRED !! */
-logger_t* g_debug_log = NULL;
-logger_t* g_daily_log = NULL;
-logger_t* g_monthly_log = NULL;
-logger_t* g_annual_log = NULL;
-logger_t* g_daily_soil_log = NULL;
-logger_t* g_monthly_soil_log = NULL;
-logger_t* g_annual_soil_log = NULL;
 soil_settings_t* g_soil_settings = NULL;
 topo_t* g_topo = NULL;
 settings_t* g_settings = NULL;
@@ -93,6 +85,16 @@ char g_sz_parameterization_output_path[256];
 char g_sz_output_fullpath[256];
 
 static int years_of_simulation;	// default is none
+
+/* extern variables */
+extern logger_t* g_debug_log;
+extern logger_t* g_daily_log;
+extern logger_t* g_monthly_log;
+extern logger_t* g_annual_log;
+extern logger_t* g_daily_soil_log;
+extern logger_t* g_monthly_soil_log;
+extern logger_t* g_annual_soil_log;
+
 /* strings */
 const char sz_launched[] = "\n#--------------------------------------------------------------------------------\n"
 		"#"PROGRAM_FULL_NAME"\n"
@@ -1466,6 +1468,10 @@ int main(int argc, char *argv[]) {
 					/* counter "day of the year" */
 					if( !day && !month )matrix->cells[cell].doy = 1;
 					else ++matrix->cells[cell].doy;
+
+					/* counter "days of simulation" */
+					if( !day && !month && !year )matrix->cells[cell].dos = 1;
+					else ++matrix->cells[cell].dos;
 
 					/* print daily met data */
 					print_daily_met_data (&matrix->cells[cell], day, month, year);

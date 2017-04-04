@@ -47,22 +47,21 @@ int check_litter_carbon_flux_balance(cell_t *const c)
 
 	if ( ( fabs( balance ) > eps ) && ( c->dos > 1) )
 	{
-		printf("DOY = %d\n", c->doy);
-		printf("\nin\n");
-		printf("c->daily_litrC = %g gC/m2/day\n", c->daily_litrC);
-		printf("\nout\n");
-		printf("c->daily_soilC = %g gC/m2/day\n",c->daily_soilC);
-		printf("\nstore\n");
-		printf("c->litr1C = %g gC/m2/day\n", c->litr1C);
-		printf("c->litr2C = %g gC/m2/day\n", c->litr2C);
-		printf("c->litr3C = %g gC/m2/day\n", c->litr3C);
-		printf("c->litr4C = %g gC/m2/day\n", c->litr4C);
-		printf("\ncarbon in = %g gC/m2/day\n", in);
-		printf("carbon out = %g gC/m2/day\n", out);
-		printf("carbon store = %g gC/m2/day\n", store);
-		printf("carbon_balance = %g gC/m2/day\n",balance);
-		printf("...FATAL ERROR in 'Litter_ model_daily' carbon balance (exit)\n");
-		CHECK_CONDITION (fabs( balance ), >, eps);
+		logger_all("DOY = %d\n", c->doy);
+		logger_all("\nin\n");
+		logger_all("c->daily_litrC = %g gC/m2/day\n", c->daily_litrC);
+		logger_all("\nout\n");
+		logger_all("c->daily_soilC = %g gC/m2/day\n",c->daily_soilC);
+		logger_all("\nstore\n");
+		logger_all("c->litr1C = %g gC/m2/day\n", c->litr1C);
+		logger_all("c->litr2C = %g gC/m2/day\n", c->litr2C);
+		logger_all("c->litr3C = %g gC/m2/day\n", c->litr3C);
+		logger_all("c->litr4C = %g gC/m2/day\n", c->litr4C);
+		logger_all("\ncarbon in = %g gC/m2/day\n", in);
+		logger_all("carbon out = %g gC/m2/day\n", out);
+		logger_all("carbon store = %g gC/m2/day\n", store);
+		logger_all("carbon_balance = %g gC/m2/day\n",balance);
+		logger_all("...FATAL ERROR in 'Litter_ model_daily' carbon balance (exit)\n");
 
 		return 0;
 	}
