@@ -283,7 +283,7 @@ int check_cell_carbon_mass_balance(cell_t *const c)
 			c->soil_carbon;
 
 	/* check carbon pool balance */
-	balance = in - out - (store - old_store);
+	balance = in - out - ( store - old_store );
 
 	logger(g_debug_log, "\nCELL LEVEL CARBON MASS BALANCE\n");
 
@@ -295,10 +295,7 @@ int check_cell_carbon_mass_balance(cell_t *const c)
 		logger_all("daily_gpp_tC = %g tC/sizecell\n", c->daily_gpp_tC);
 		logger_all("\nout = %g tC/sizecell/day\n", out);
 		logger_all("daily_aut_resp_tC = %g tC/sizecell/day\n", c->daily_aut_resp_tC);
-		logger_all("daily_litr_carbon = %g tC/sizecell/day\n", c->daily_litr_carbon);
-		logger_all("\nold_store = %g tC/sizecell\n", old_store);
-		logger_all("store = %g tC/sizecell\n", store);
-		logger_all("store - old_tore = %g tC/sizecell\n", store - old_store);
+		logger_all("\nstore\n");
 		logger_all("leaf_tC = %g tC/cell/day\n", c->leaf_tC );
 		logger_all("froot_tC = %g tC/cell/day\n", c->froot_tC );
 		logger_all("croot_tC = %g tC/cell/day\n",c->croot_tC );
@@ -306,7 +303,13 @@ int check_cell_carbon_mass_balance(cell_t *const c)
 		logger_all("branch_tC = %g tC/cell/day\n",c->branch_tC );
 		logger_all("reserve_tC = %g tC/cell/day\n",c->reserve_tC );
 		logger_all("fruit_tC = %g tC/cell/day\n",c->fruit_tC );
-		logger_all("\nbalance = %g tC/sizecell\n", balance);
+		logger_all("branch_tC = %g tC/cell/day\n",c->litr_carbon );
+		logger_all("reserve_tC = %g tC/cell/day\n",c->cwd_carbon );
+		logger_all("fruit_tC = %g tC/cell/day\n",c->soil_carbon );
+		logger_all("\ncarbon in = %g gC/m2/day\n", in);
+		logger_all("carbon out = %g gC/m2/day\n", out);
+		logger_all("carbon store = %g gC/m2/day\n", store);
+		logger_all("carbon_balance = %g gC/m2/day\n",balance);
 		logger_all("...FATAL ERROR in 'Cell_model_daily' carbon mass balance (exit)\n");
 
 		return 0;

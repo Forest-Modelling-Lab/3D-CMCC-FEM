@@ -409,7 +409,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 	c->daily_c_evapotransp                += s->value[CANOPY_EVAPO_TRANSP];
 
 	/* update canopy water pool */
-	c->canopy_water_stored                += (s->value[CANOPY_INT] - s->value[CANOPY_EVAPO] );
+	c->canopy_water_stored                += ( s->value[CANOPY_INT] - s->value[CANOPY_EVAPO] );
 }
 
 

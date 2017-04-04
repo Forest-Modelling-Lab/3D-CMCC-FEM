@@ -235,11 +235,11 @@ enum {
 	CANOPY_BLCOND,                      /* Canopy Boundary Layer conductance (m s-1) */
 	FRAC_DAYTIME_TRANSP,                /* fraction of daytime for transpiration (and photosynthesis) */
 	CANOPY_INT,                         /* canopy interception of rainfall mm day-1 */
+	CANOPY_INT_SNOW,                    /* canopy interception of snow mm day-1 */
 	CANOPY_EVAPO,                       /* canopy evaporation mm day-1 */
 	CANOPY_WET,                         /* it should'nt be reset every day */
 	CANOPY_TRANSP,                      /* canopy transpiration mm day -1 */
 	CANOPY_EVAPO_TRANSP,                /* canopy evapotranspiration mm day-1 */
-	CANOPY_INT_SNOW,                    /* canopy interception of snow mm day-1 */
 	CANOPY_FRAC_DAY_TRANSP,             /* Fraction of daily canopy transpiration (DIM) */
 	CANOPY_LATENT_HEAT,                 /* canopy latent heat W m-2 */
 	CANOPY_SENSIBLE_HEAT,               /* canopy sensible heat W m-2 */

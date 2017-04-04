@@ -42,6 +42,9 @@ int Cell_model_daily (matrix_t *const m, const int cell, const int day, const in
 
 	/* OVERALL CELL */
 
+	/* compute cell level carbon fluxes */
+	//carbon_fluxes ( c );
+
 	/* compute cell level evapotranspiration */
 	evapotranspiration ( c );
 

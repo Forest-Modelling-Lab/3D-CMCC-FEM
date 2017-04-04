@@ -239,9 +239,9 @@ void tree_biomass_remove (cell_t *const c, species_t *const s, const int tree_re
 	c->branch_tC                      -= (s->value[AV_BRANCH_MASS_KgC]                 * tree_remove);
 	c->reserve_tC                     -= (s->value[AV_RESERVE_MASS_KgC]                * tree_remove);
 	c->fruit_tC                       -= (s->value[AV_FRUIT_MASS_KgC]                  * tree_remove);
-	c->litr_tC                    += ((s->value[AV_LEAF_MASS_KgC]                      * tree_remove))+
+	c->litr_tC                        += ((s->value[AV_LEAF_MASS_KgC]                  * tree_remove))+
 			((s->value[AV_FROOT_MASS_KgC]                                              * tree_remove));
-	c->cwd_tC                     +=((s->value[AV_STEM_MASS_KgC]                       * tree_remove))+
+	c->cwd_tC                         +=((s->value[AV_STEM_MASS_KgC]                   * tree_remove))+
 			((s->value[AV_CROOT_MASS_KgC]                                              * tree_remove))+
 			((s->value[AV_BRANCH_MASS_KgC]                                             * tree_remove));
 
