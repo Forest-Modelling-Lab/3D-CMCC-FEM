@@ -61,6 +61,7 @@ int check_cell_radiation_flux_balance (cell_t *const c, const meteo_daily_t *con
 		error_log("par store = %g molPAR/m2/day\n", store);
 		error_log("par balance = %g molPAR/m2/day\n",balance);
 		error_log("...FATAL ERROR IN PAR radiative balance (exit)\n");
+		CHECK_CONDITION(fabs( balance ), > , eps);
 
 		return 0;
 	}
@@ -103,6 +104,7 @@ int check_cell_radiation_flux_balance (cell_t *const c, const meteo_daily_t *con
 		error_log("net radiation store = %g W/m2\n", store);
 		error_log("radiation balance = %g W/m2\n",balance);
 		error_log("...FATAL ERROR IN Short Wave Radiation radiative balance (exit)\n");
+		CHECK_CONDITION(fabs( balance ), > , eps);
 
 		return 0;
 	}
@@ -143,6 +145,7 @@ int check_cell_radiation_flux_balance (cell_t *const c, const meteo_daily_t *con
 		error_log("PPFD store = %g umol/m2/sec\n", store);
 		error_log("PPFD balance = %g umol/m2/sec\n",balance);
 		error_log("...FATAL ERROR IN PPFD radiative balance (exit)\n");
+		CHECK_CONDITION(fabs( balance ), > , eps);
 
 		return 0;
 	}
@@ -192,7 +195,8 @@ int check_cell_carbon_flux_balance(cell_t *const c)
 		error_log("carbon out = %g gC/m2/day\n", out);
 		error_log("carbon store = %g gC/m2/day\n", store);
 		error_log("carbon_balance = %g gC/m2/day\n",balance);
-		error_log("...FATAL ERROR in 'Cell_model_daily' carbon balance (exit)\n");
+		error_log("...FATAL ERROR in 'Cell_model_daily' carbon flux balance (first) (exit)\n");
+		CHECK_CONDITION(fabs( balance ), > , eps);
 
 		return 0;
 	}
@@ -241,7 +245,8 @@ int check_cell_carbon_flux_balance(cell_t *const c)
 		error_log("carbon out = %g gC/m2/day\n", out);
 		error_log("carbon store = %g gC/m2/day\n", store);
 		error_log("carbon_balance = %g gC/m2/day\n",balance);
-		error_log("...FATAL ERROR in 'Cell_model_daily' carbon balance (exit)\n");
+		error_log("...FATAL ERROR in 'Cell_model_daily' carbon flux balance (second) (exit)\n");
+		CHECK_CONDITION(fabs( balance ), > , eps);
 
 		return 0;
 	}
@@ -278,9 +283,9 @@ int check_cell_carbon_mass_balance(cell_t *const c)
 			c->branch_tC  +
 			c->reserve_tC +
 			c->fruit_tC   +
-			c->litr_carbon+
-			c->cwd_carbon +
-			c->soil_carbon;
+			c->litr_tC    +
+			c->cwd_tC     +
+			c->soil_tC    ;
 
 	/* check carbon pool balance */
 	balance = in - out - ( store - old_store );
@@ -303,14 +308,15 @@ int check_cell_carbon_mass_balance(cell_t *const c)
 		error_log("branch_tC = %g tC/cell/day\n",c->branch_tC );
 		error_log("reserve_tC = %g tC/cell/day\n",c->reserve_tC );
 		error_log("fruit_tC = %g tC/cell/day\n",c->fruit_tC );
-		error_log("branch_tC = %g tC/cell/day\n",c->litr_carbon );
-		error_log("reserve_tC = %g tC/cell/day\n",c->cwd_carbon );
-		error_log("fruit_tC = %g tC/cell/day\n",c->soil_carbon );
-		error_log("\ncarbon in = %g gC/m2/day\n", in);
-		error_log("carbon out = %g gC/m2/day\n", out);
-		error_log("carbon store = %g gC/m2/day\n", store);
-		error_log("carbon_balance = %g gC/m2/day\n",balance);
+		error_log("litr_tC = %g tC/cell/day\n",c->litr_tC );
+		error_log("cwd_tC = %g tC/cell/day\n",c->cwd_tC );
+		error_log("soil_tC = %g tC/cell/day\n",c->soil_tC );
+		error_log("\ncarbon in = %g tC/m2/day\n", in);
+		error_log("carbon out = %g tC/m2/day\n", out);
+		error_log("carbon store = %g tC/m2/day\n", store);
+		error_log("carbon_balance = %g tC/m2/day\n",balance);
 		error_log("...FATAL ERROR in 'Cell_model_daily' carbon mass balance (exit)\n");
+		CHECK_CONDITION(fabs( balance ), > , eps);
 
 		return 0;
 	}
@@ -377,6 +383,7 @@ int check_cell_water_flux_balance(cell_t *const c, const meteo_daily_t *const me
 		error_log("delta soil water store = %g\n", store - old_store);
 		error_log("soil water balance = %g\n", balance);
 		error_log("...FATAL ERROR IN 'Cell_model_daily' soil water balance (exit)\n");
+		CHECK_CONDITION(fabs( balance ), > , eps);
 
 		return 0;
 	}
@@ -420,6 +427,7 @@ int check_cell_water_flux_balance(cell_t *const c, const meteo_daily_t *const me
 		error_log("soil water store = %g\n", store_snow);
 		error_log("soil water balance = %g\n", balance_snow);
 		error_log("...FATAL ERROR IN 'Cell_model_daily' snow water balance (exit)\n");
+		CHECK_CONDITION(fabs( balance ), > , eps);
 
 		return 0;
 	}

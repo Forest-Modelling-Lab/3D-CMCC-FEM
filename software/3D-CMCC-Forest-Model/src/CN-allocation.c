@@ -45,7 +45,6 @@ void carbon_allocation( cell_t *const c, species_t *const s)
 	s->value[FRUIT_C]    += s->value[C_TO_FRUIT];
 	s->value[TOT_ROOT_C] += s->value[C_TO_CROOT] + s->value[C_TO_FROOT];
 	s->value[TOT_STEM_C] += s->value[C_TO_STEM]  + s->value[C_TO_BRANCH];
-	s->value[LITR_C]     += s->value[C_TO_LITR]  + s->value[C_FRUIT_TO_LITR];
 
 	/*** update cell level carbon mass pools ***/
 	c->leaf_tC           += s->value[C_TO_LEAF];

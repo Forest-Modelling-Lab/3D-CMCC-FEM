@@ -315,6 +315,7 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 			else
 			{
 				/* reproduction */
+#if 0
 				if ( g_settings->regeneration && ( a->value > s->value[SEXAGE] ) )
 				{
 					logger(g_debug_log, "allocating into fruit pool\n");
@@ -322,6 +323,7 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 					s->value[C_TO_FRUIT] = npp_to_alloc * s->value[FRUIT_PERC];
 					npp_to_alloc        -= s->value[C_TO_FRUIT];
 				}
+#endif
 
 				s->value[C_TO_CROOT]     = (npp_to_alloc * pR);
 				s->value[C_TO_LEAF]      = (npp_to_alloc * pL) * ( 1. - s->value[FROOT_LEAF_FRAC] );

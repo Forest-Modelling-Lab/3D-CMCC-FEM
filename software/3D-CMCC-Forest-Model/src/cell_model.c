@@ -49,10 +49,10 @@ int Cell_model_daily (matrix_t *const m, const int cell, const int day, const in
 	evapotranspiration ( c );
 
 	/* compute cell level latent heat fluxes */
-	latent_heat_flux   ( c, meteo_daily );
+	latent_heat_fluxes   ( c, meteo_daily );
 
 	/* compute cell level sensible heat fluxes */
-	sensible_heat_flux ( c, meteo_daily );
+	sensible_heat_fluxes ( c, meteo_daily );
 
 	/* compute cell level water fluxes */
 	water_fluxes       ( c, meteo_daily );

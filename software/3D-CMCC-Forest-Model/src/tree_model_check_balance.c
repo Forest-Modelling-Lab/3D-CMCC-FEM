@@ -54,6 +54,7 @@ int check_tree_class_radiation_flux_balance(cell_t *const c, const int layer, co
 		error_log("PAR store = %g\n", store);
 		error_log("PAR balance = %g\n", balance);
 		error_log("...FATAL ERROR in 'Tree_model_daily' PAR balance (exit)\n");
+		CHECK_CONDITION(fabs( balance ), > , eps);
 
 		return 0;
 	}
@@ -87,6 +88,7 @@ int check_tree_class_radiation_flux_balance(cell_t *const c, const int layer, co
 		error_log("NET_RAD store = %g\n", store);
 		error_log("NET_RAD balance = %g\n", balance);
 		error_log("...FATAL ERROR AT CLASS LEVEL NET_RAD balance (exit)\n");
+		CHECK_CONDITION(fabs( balance ), > , eps);
 
 		return 0;
 	}
@@ -119,6 +121,7 @@ int check_tree_class_radiation_flux_balance(cell_t *const c, const int layer, co
 		error_log("PPFD store = %g\n", store);
 		error_log("PPFD balance = %g\n", balance);
 		error_log("...FATAL ERROR in 'Tree_model_daily' PPFD balance (exit)\n");
+		CHECK_CONDITION(fabs( balance ), > , eps);
 
 		return 0;
 	}
@@ -169,6 +172,7 @@ int check_tree_class_carbon_flux_balance(cell_t *const c, const int layer, const
 		error_log("NPP = %g gC/m2/day\n", s->value[NPP]);
 		error_log("\nbalance = %g gC/m2/day\n", balance);
 		error_log("...FATAL ERROR in 'Tree_model_daily' carbon flux balance (first) (exit)\n");
+		CHECK_CONDITION(fabs( balance ), > , eps);
 
 		return 0;
 	}
@@ -222,6 +226,7 @@ int check_tree_class_carbon_flux_balance(cell_t *const c, const int layer, const
 		error_log("C_TO_FRUIT = %g tC/sizecell/day\n", s->value[C_TO_FRUIT]);
 		error_log("\nbalance = %g tC/sizecell/day\n", balance);
 		error_log("...FATAL ERROR in 'Tree_model_daily'  carbon flux balance (second) (exit)\n");
+		CHECK_CONDITION(fabs( balance ), > , eps);
 
 		return 0;
 	}
@@ -293,6 +298,7 @@ int check_tree_class_carbon_mass_balance(cell_t *const c, const int layer, const
 		error_log("FRUIT_C = %g tC/cell/day\n", s->value[FRUIT_C]);
 		error_log("\nbalance = %g tC/sizecell\n", balance);
 		error_log("...FATAL ERROR in 'Tree_model_daily' carbon mass balance (exit)\n");
+		CHECK_CONDITION(fabs( balance ), > , eps);
 
 		return 0;
 	}
@@ -358,7 +364,8 @@ int check_tree_class_nitrogen_flux_balance (cell_t *const c, const int layer, co
 		error_log("N_TO_BRANCH = %g tN/sizecell/day\n", s->value[N_TO_BRANCH]);
 		error_log("N_TO_FRUIT = %g tN/sizecell/day\n", s->value[N_TO_FRUIT]);
 		error_log("\nbalance = %g tN/sizecell/day\n", balance);
-		error_log("...FATAL ERROR in 'Tree_model_daily'  nitrogen flux balance (exit)\n");
+		error_log("...FATAL ERROR in 'Tree_model_daily' nitrogen flux balance (exit)\n");
+		CHECK_CONDITION(fabs( balance ), > , eps);
 
 		return 0;
 	}
@@ -406,6 +413,7 @@ int check_tree_class_water_flux_balance(cell_t *const c, const int layer, const 
 		error_log("canopy water store = %g\n", store);
 		error_log("canopy water balance = %g\n", balance);
 		error_log("...FATAL ERROR in 'Tree_model_daily' canopy water balance (exit)\n");
+		CHECK_CONDITION(fabs( balance ), > , eps);
 
 		return 0;
 	}
