@@ -90,7 +90,7 @@ void logger_error(logger_t *p, const char *text, ...) {
 #undef LOGGER_BUFFER_SIZE
 }
 
-void logger_all(const char *text, ...) {
+void error_log(const char *text, ...) {
 #define LOGGER_BUFFER_SIZE	4096
 	char buffer[LOGGER_BUFFER_SIZE];
 	int std_out[LOG_TYPES_COUNT] = { 0 };
