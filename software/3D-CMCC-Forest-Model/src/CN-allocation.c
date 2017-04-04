@@ -283,7 +283,4 @@ void nitrogen_allocation ( cell_t *const c, species_t *const s )
 	CHECK_CONDITION(fabs((s->value[BRANCH_LIVE_WOOD_C] + s->value[BRANCH_DEAD_WOOD_C])-s->value[BRANCH_C]),>,eps);
 #endif
 
-
-
-
 }

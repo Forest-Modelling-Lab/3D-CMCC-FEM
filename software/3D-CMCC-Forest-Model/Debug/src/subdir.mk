@@ -22,7 +22,7 @@ C_SRCS += \
 ../src/canopy_sensible_heat.c \
 ../src/canopy_temperature.c \
 ../src/cell_model.c \
-../src/check_balance.c \
+../src/cell_model_check_balance.c \
 ../src/common.c \
 ../src/compare.c \
 ../src/cue.c \
@@ -33,9 +33,12 @@ C_SRCS += \
 ../src/fluxes.c \
 ../src/g-function.c \
 ../src/heat_fluxes.c \
+../src/het_respiration.c \
 ../src/initialization.c \
 ../src/lai.c \
 ../src/leaf_fall.c \
+../src/litter_model.c \
+../src/litter_model_check_balance.c \
 ../src/logger.c \
 ../src/main.c \
 ../src/management.c \
@@ -55,9 +58,9 @@ C_SRCS += \
 ../src/remove_tree_class.c \
 ../src/settings.c \
 ../src/snow.c \
-../src/soil_decomp.c \
 ../src/soil_evaporation.c \
 ../src/soil_model.c \
+../src/soil_model_check_balance.c \
 ../src/soil_nitrogen_balance.c \
 ../src/soil_radiation_sw_band.c \
 ../src/soil_respiration.c \
@@ -67,6 +70,7 @@ C_SRCS += \
 ../src/structure.c \
 ../src/topo.c \
 ../src/tree_model.c \
+../src/tree_model_check_balance.c \
 ../src/turnover.c \
 ../src/turnover_Marconi.c \
 ../src/utility.c \
@@ -93,7 +97,7 @@ OBJS += \
 ./src/canopy_sensible_heat.o \
 ./src/canopy_temperature.o \
 ./src/cell_model.o \
-./src/check_balance.o \
+./src/cell_model_check_balance.o \
 ./src/common.o \
 ./src/compare.o \
 ./src/cue.o \
@@ -104,9 +108,12 @@ OBJS += \
 ./src/fluxes.o \
 ./src/g-function.o \
 ./src/heat_fluxes.o \
+./src/het_respiration.o \
 ./src/initialization.o \
 ./src/lai.o \
 ./src/leaf_fall.o \
+./src/litter_model.o \
+./src/litter_model_check_balance.o \
 ./src/logger.o \
 ./src/main.o \
 ./src/management.o \
@@ -126,9 +133,9 @@ OBJS += \
 ./src/remove_tree_class.o \
 ./src/settings.o \
 ./src/snow.o \
-./src/soil_decomp.o \
 ./src/soil_evaporation.o \
 ./src/soil_model.o \
+./src/soil_model_check_balance.o \
 ./src/soil_nitrogen_balance.o \
 ./src/soil_radiation_sw_band.o \
 ./src/soil_respiration.o \
@@ -138,6 +145,7 @@ OBJS += \
 ./src/structure.o \
 ./src/topo.o \
 ./src/tree_model.o \
+./src/tree_model_check_balance.o \
 ./src/turnover.o \
 ./src/turnover_Marconi.o \
 ./src/utility.o \
@@ -164,7 +172,7 @@ C_DEPS += \
 ./src/canopy_sensible_heat.d \
 ./src/canopy_temperature.d \
 ./src/cell_model.d \
-./src/check_balance.d \
+./src/cell_model_check_balance.d \
 ./src/common.d \
 ./src/compare.d \
 ./src/cue.d \
@@ -175,9 +183,12 @@ C_DEPS += \
 ./src/fluxes.d \
 ./src/g-function.d \
 ./src/heat_fluxes.d \
+./src/het_respiration.d \
 ./src/initialization.d \
 ./src/lai.d \
 ./src/leaf_fall.d \
+./src/litter_model.d \
+./src/litter_model_check_balance.d \
 ./src/logger.d \
 ./src/main.d \
 ./src/management.d \
@@ -197,9 +208,9 @@ C_DEPS += \
 ./src/remove_tree_class.d \
 ./src/settings.d \
 ./src/snow.d \
-./src/soil_decomp.d \
 ./src/soil_evaporation.d \
 ./src/soil_model.d \
+./src/soil_model_check_balance.d \
 ./src/soil_nitrogen_balance.d \
 ./src/soil_radiation_sw_band.d \
 ./src/soil_respiration.d \
@@ -209,6 +220,7 @@ C_DEPS += \
 ./src/structure.d \
 ./src/topo.d \
 ./src/tree_model.d \
+./src/tree_model_check_balance.d \
 ./src/turnover.d \
 ./src/turnover_Marconi.d \
 ./src/utility.d \
