@@ -1710,7 +1710,7 @@ void soil_summary(const matrix_t* const m, const cell_t* const cell)
 			! g_soil_settings->values[SOILC] ||
 			! g_soil_settings->values[SOILN])
 	{
-		initialization_soil_biogeochemistry (m->cells);
+		//fixme initialization_soil_biogeochemistry (m->cells);
 	}
 
 	logger(g_debug_log, "***************************************************\n\n");

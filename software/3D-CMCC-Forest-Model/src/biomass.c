@@ -169,9 +169,10 @@ void tree_biomass_remove (cell_t *const c, species_t *const s, const int tree_re
 	average_tree_pools ( s );
 
 	/* update class carbon pools */
-	s->value[STEM_C]                  -= (s->value[AV_STEM_MASS_KgC]             / 1e3 * tree_remove);
+
 	s->value[LEAF_C]                  -= (s->value[AV_LEAF_MASS_KgC]             / 1e3 * tree_remove);
 	s->value[FROOT_C]                 -= (s->value[AV_FROOT_MASS_KgC]            / 1e3 * tree_remove);
+	s->value[STEM_C]                  -= (s->value[AV_STEM_MASS_KgC]             / 1e3 * tree_remove);
 	s->value[CROOT_C]                 -= (s->value[AV_CROOT_MASS_KgC]            / 1e3 * tree_remove);
 	s->value[RESERVE_C]               -= (s->value[AV_RESERVE_MASS_KgC]          / 1e3 * tree_remove);
 	s->value[BRANCH_C]                -= (s->value[AV_BRANCH_MASS_KgC]           / 1e3 * tree_remove);

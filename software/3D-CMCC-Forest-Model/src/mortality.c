@@ -278,11 +278,8 @@ void age_mortality (cell_t *const c, const int height, const int dbh, const int 
 		s->counter[N_TREE] -= dead_trees;
 		logger(g_debug_log, "Number of Trees after age mortality = %d trees\n", s->counter[N_TREE]);
 
-
 		/* assign to global variable */
 		s->counter[DEAD_STEMS] = dead_trees;
-
-
 
 	}
 	else
@@ -301,7 +298,6 @@ void age_mortality (cell_t *const c, const int height, const int dbh, const int 
 			exit(1);
 		}
 	}
-
 	logger(g_debug_log, "**********************************\n");
 }
 

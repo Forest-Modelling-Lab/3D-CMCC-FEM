@@ -200,7 +200,7 @@ void leaffall (species_t *const s)
 
 void littering ( cell_t *const c, species_t *const s )
 {
-	/* leaf and fine root daily litter production */
+	/* leaf and fine root daily flux for litter production */
 
 	/** carbon littering **/
 
@@ -228,10 +228,6 @@ void littering ( cell_t *const c, species_t *const s )
 	c->daily_froot_litr3C      += s->value[C_FROOT_TO_LITR3C];
 	c->daily_froot_litr4C      += s->value[C_FROOT_TO_LITR4C];
 	c->daily_litrC             += (c->daily_leaf_litrC + c->daily_froot_litrC);
-
-	/* update pools */
-	c->litr_tC                 += c->daily_litrC;
-	c->leaf_carbon             += c->daily_litrC * 1e6 / g_settings->sizeCell;
 
 	/** nitrogen littering **/
 
