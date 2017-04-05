@@ -316,7 +316,7 @@ int check_cell_carbon_mass_balance(cell_t *const c)
 		error_log("fruit_carbon = %g gC/m2/day\n",c->fruit_carbon);
 		error_log("litr_carbon = %g gC/m2/day\n", c->litr_carbon);
 		error_log("cwd_carbon = %g gC/m2/day\n", c->cwd_carbon);
-		error_log("delta soil_carbon = %g gC/m2/day\n", c->soil_carbon);
+		error_log("soil_carbon = %g gC/m2/day\n", c->soil_carbon);
 		error_log("\ncarbon in = %g gC/m2/day\n", in);
 		error_log("carbon out = %g gC/m2/day\n", out);
 		error_log("delta carbon store = %g gC/m2/day\n", store - old_store);

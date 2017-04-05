@@ -44,19 +44,17 @@ void carbon_allocation( cell_t *const c, species_t *const s)
 	s->value[CROOT_C]    += s->value[C_TO_CROOT];
 	s->value[RESERVE_C]  += s->value[C_TO_RESERVE];
 	s->value[FRUIT_C]    += s->value[C_TO_FRUIT];
-	s->value[TOT_ROOT_C] += s->value[C_TO_CROOT] + s->value[C_TO_FROOT];
-	s->value[TOT_STEM_C] += s->value[C_TO_STEM]  + s->value[C_TO_BRANCH];
 
 	/* check */
-	CHECK_CONDITION ( s->value[LEAF_C],     < , 0. ) ;
-	CHECK_CONDITION ( s->value[FROOT_C],    < , 0. ) ;
-	CHECK_CONDITION ( s->value[STEM_C],     < , 0. ) ;
-	CHECK_CONDITION ( s->value[BRANCH_C],   < , 0. ) ;
-	CHECK_CONDITION ( s->value[CROOT_C],    < , 0. ) ;
-	CHECK_CONDITION ( s->value[RESERVE_C],  < , 0. ) ;
-	CHECK_CONDITION ( s->value[FRUIT_C],    < , 0. ) ;
-	CHECK_CONDITION ( s->value[TOT_ROOT_C], < , 0. ) ;
-	CHECK_CONDITION ( s->value[TOT_STEM_C], < , 0. ) ;
+	CHECK_CONDITION ( s->value[LEAF_C],     < , 0. );
+	CHECK_CONDITION ( s->value[FROOT_C],    < , 0. );
+	CHECK_CONDITION ( s->value[STEM_C],     < , 0. );
+	CHECK_CONDITION ( s->value[BRANCH_C],   < , 0. );
+	CHECK_CONDITION ( s->value[CROOT_C],    < , 0. );
+	CHECK_CONDITION ( s->value[RESERVE_C],  < , 0. );
+	CHECK_CONDITION ( s->value[FRUIT_C],    < , 0. );
+	CHECK_CONDITION ( s->value[TOT_ROOT_C], < , 0. );
+	CHECK_CONDITION ( s->value[TOT_STEM_C], < , 0. );
 
 	/*** update cell level carbon mass pools ***/
 	c->leaf_tC           += s->value[C_TO_LEAF];
@@ -68,13 +66,13 @@ void carbon_allocation( cell_t *const c, species_t *const s)
 	c->fruit_tC          += s->value[C_TO_FRUIT];
 
 	/* check */
-	CHECK_CONDITION ( c->leaf_tC,    < , 0. ) ;
-	CHECK_CONDITION ( c->froot_tC,   < , 0. ) ;
-	CHECK_CONDITION ( c->stem_tC,    < , 0. ) ;
-	CHECK_CONDITION ( c->branch_tC,  < , 0. ) ;
-	CHECK_CONDITION ( c->croot_tC,   < , 0. ) ;
-	CHECK_CONDITION ( c->reserve_tC, < , 0. ) ;
-	CHECK_CONDITION ( c->fruit_tC,   < , 0. ) ;
+	CHECK_CONDITION ( c->leaf_tC,    < , 0. );
+	CHECK_CONDITION ( c->froot_tC,   < , 0. );
+	CHECK_CONDITION ( c->stem_tC,    < , 0. );
+	CHECK_CONDITION ( c->branch_tC,  < , 0. );
+	CHECK_CONDITION ( c->croot_tC,   < , 0. );
+	CHECK_CONDITION ( c->reserve_tC, < , 0. );
+	CHECK_CONDITION ( c->fruit_tC,   < , 0. );
 
 	/*** update cell level carbon mass pools ***/
 	c->leaf_carbon       += (s->value[C_TO_LEAF]    * 1e6 / g_settings->sizeCell);
@@ -86,67 +84,13 @@ void carbon_allocation( cell_t *const c, species_t *const s)
 	c->fruit_carbon      += (s->value[C_TO_FRUIT]   * 1e6 / g_settings->sizeCell);
 
 	/* check */
-	//CHECK_CONDITION ( c->leaf_carbon,    < , 0. ) ;
-	//CHECK_CONDITION ( c->froot_carbon,   < , 0. ) ;
-	CHECK_CONDITION ( c->stem_carbon,    < , 0. ) ;
-	CHECK_CONDITION ( c->branch_carbon,  < , 0. ) ;
-	CHECK_CONDITION ( c->croot_carbon,   < , 0. ) ;
-	CHECK_CONDITION ( c->reserve_carbon, < , 0. ) ;
-	CHECK_CONDITION ( c->fruit_carbon,   < , 0. ) ;
-
-
-#if 0
-	/* check for possible overexceeding carbon flux */
-	if ( s->value[LEAF_C] > s->value[MAX_LEAF_C] )
-	{
-		double exceeding_leaf_C;
-		double ex_leaf_to_reserve;
-
-		/* retranslocate biomass from leaf to reserve */
-		exceeding_leaf_C   = s->value[LEAF_C] - s->value[MAX_LEAF_C];
-		ex_leaf_to_reserve = (exceeding_leaf_C + (exceeding_leaf_C * s->value[EFF_GRPERC]));
-
-		/* retranslocate biomass from leaf to reserve considering carbon lost for growth respiration */
-		s->value[C_LEAF_TO_RESERVE]   += ex_leaf_to_reserve;
-		s->value[RESERVE_C]           += ex_leaf_to_reserve;
-
-		/* recompute leaf growth respiration */
-		//s->value[LEAF_GROWTH_RESP]    -= (exceeding_leaf_C * 1e6 / g_settings->sizeCell) * s->value[EFF_GRPERC];
-
-		/* recompute total growth respiration */
-		//s->value[TOTAL_GROWTH_RESP]   -= (exceeding_leaf_C * 1e6 / g_settings->sizeCell) * s->value[EFF_GRPERC];
-		//s->value[TOTAL_GROWTH_RESP_tC] = s->value[TOTAL_GROWTH_RESP] / 1e6 * g_settings->sizeCell ;
-
-		/* fix leaf carbon to correct value */
-		s->value[LEAF_C] = s->value[MAX_LEAF_C];
-
-	}
-	if ( s->value[FROOT_C] > s->value[MAX_FROOT_C] )
-	{
-		double exceeding_froot_C;
-		double ex_froot_to_reserve;
-
-		/* compute exceeding carbon to fine root  */
-		exceeding_froot_C   = s->value[FROOT_C] - s->value[MAX_FROOT_C];
-		ex_froot_to_reserve = (exceeding_froot_C + (exceeding_froot_C * s->value[EFF_GRPERC]));
-
-		/* since fine root and leaf go in parallel */
-		s->value[C_FROOT_TO_RESERVE]  += ex_froot_to_reserve;
-		s->value[RESERVE_C]           += ex_froot_to_reserve;
-
-		/* recompute fine root growth respiration */
-		//s->value[FROOT_GROWTH_RESP]   -= (exceeding_froot_C * 1e6 / g_settings->sizeCell) * s->value[EFF_GRPERC];
-
-		/* recompute total growth respiration */
-		//s->value[TOTAL_GROWTH_RESP]   -= (exceeding_froot_C * 1e6 / g_settings->sizeCell) * s->value[EFF_GRPERC];
-		//s->value[TOTAL_GROWTH_RESP_tC] = s->value[TOTAL_GROWTH_RESP] / 1e6 * g_settings->sizeCell ;
-
-		/* fix fine root carbon to correct value */
-		s->value[FROOT_C] = s->value[MAX_FROOT_C];
-
-	}
-#endif
-
+	CHECK_CONDITION ( c->leaf_carbon,    < , 0. );
+	CHECK_CONDITION ( c->froot_carbon,   < , 0. );
+	CHECK_CONDITION ( c->stem_carbon,    < , 0. );
+	CHECK_CONDITION ( c->branch_carbon,  < , 0. );
+	CHECK_CONDITION ( c->croot_carbon,   < , 0. );
+	CHECK_CONDITION ( c->reserve_carbon, < , 0. );
+	CHECK_CONDITION ( c->fruit_carbon,   < , 0. );
 	/***************************************************************************************/
 
 	/* sapwood and heartwood*/
@@ -267,50 +211,50 @@ void nitrogen_allocation ( cell_t *const c, species_t *const s )
 
 	/* sapwood and heartwood*/
 
-	s->value[STEM_SAPWOOD_C] += s->value[C_TO_STEM];
-	s->value[CROOT_SAPWOOD_C] += s->value[C_TO_CROOT];
-	s->value[BRANCH_SAPWOOD_C] += s->value[C_TO_BRANCH];
+	s->value[STEM_SAPWOOD_N] += s->value[C_TO_STEM];
+	s->value[CROOT_SAPWOOD_N] += s->value[C_TO_CROOT];
+	s->value[BRANCH_SAPWOOD_N] += s->value[C_TO_BRANCH];
 
 
 #if 0
 	//test_new if not using the allometric equations for the sapwood amount
-	s->value[STEM_LIVE_WOOD_C] = s->value[STEM_SAPWOOD_C] * s->value[LIVE_TOTAL_WOOD_FRAC];
+	s->value[STEM_LIVE_WOOD_N] = s->value[STEM_SAPWOOD_N] * s->value[LIVE_TOTAL_WOOD_FRAC];
 #else
-	s->value[STEM_LIVE_WOOD_C] = s->value[STEM_C] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
+	s->value[STEM_LIVE_WOOD_N] = s->value[STEM_N] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
 #endif
-	s->value[STEM_DEAD_WOOD_C] = s->value[STEM_C] - s->value[STEM_LIVE_WOOD_C];
-	s->value[STEM_HEARTWOOD_C] = s->value[STEM_C] - s->value[STEM_SAPWOOD_C];
+	s->value[STEM_DEAD_WOOD_N] = s->value[STEM_N] - s->value[STEM_LIVE_WOOD_N];
+	s->value[STEM_HEARTWOOD_N] = s->value[STEM_N] - s->value[STEM_SAPWOOD_N];
 
 	/***************************************************************************************/
 
 #if 0
 	//test_new if not using the allometric equations for the sapwood amount
-	s->value[CROOT_LIVE_WOOD_C] = s->value[COARSE_ROOT_SAPWOOD_C] * s->value[LIVE_TOTAL_WOOD_FRAC];
+	s->value[CROOT_LIVE_WOOD_N] = s->value[COARSE_ROOT_SAPWOOD_N] * s->value[LIVE_TOTAL_WOOD_FRAC];
 #else
-	s->value[CROOT_LIVE_WOOD_C] = s->value[CROOT_C] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
+	s->value[CROOT_LIVE_WOOD_N] = s->value[CROOT_N] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
 #endif
-	s->value[CROOT_DEAD_WOOD_C] = s->value[CROOT_C] - s->value[CROOT_LIVE_WOOD_C];
-	s->value[CROOT_HEARTWOOD_C] = s->value[CROOT_C] - s->value[CROOT_SAPWOOD_C];
+	s->value[CROOT_DEAD_WOOD_N] = s->value[CROOT_N] - s->value[CROOT_LIVE_WOOD_N];
+	s->value[CROOT_HEARTWOOD_N] = s->value[CROOT_N] - s->value[CROOT_SAPWOOD_N];
 
 	/***************************************************************************************/
 
 #if 0
 	//test_new if not using the allometric equations for the sapwood amount
-	s->value[BRANCH_LIVE_WOOD_C] = s->value[BRANCH_SAPWOOD_C] * s->value[LIVE_TOTAL_WOOD_FRAC];
+	s->value[BRANCH_LIVE_WOOD_N] = s->value[BRANCH_SAPWOOD_N] * s->value[LIVE_TOTAL_WOOD_FRAC];
 #else
-	s->value[BRANCH_LIVE_WOOD_C] = s->value[BRANCH_C]* s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
+	s->value[BRANCH_LIVE_WOOD_N] = s->value[BRANCH_N]* s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
 #endif
-	s->value[BRANCH_DEAD_WOOD_C] = s->value[BRANCH_C] - s->value[BRANCH_LIVE_WOOD_C];
-	s->value[BRANCH_HEARTWOOD_C] = s->value[BRANCH_C] - s->value[BRANCH_SAPWOOD_C];
+	s->value[BRANCH_DEAD_WOOD_N] = s->value[BRANCH_N] - s->value[BRANCH_LIVE_WOOD_N];
+	s->value[BRANCH_HEARTWOOD_N] = s->value[BRANCH_N] - s->value[BRANCH_SAPWOOD_N];
 
 	/***************************************************************************************/
 
-	s->value[TOTAL_C] = s->value[LEAF_C] +s->value[STEM_C] + s->value[BRANCH_C] + s->value[TOT_ROOT_C] + s->value[FRUIT_C] + s->value[RESERVE_C];
+	s->value[TOTAL_N] = s->value[LEAF_N] +s->value[STEM_N] + s->value[BRANCH_N] + s->value[TOT_ROOT_N] + s->value[FRUIT_N] + s->value[RESERVE_N];
 
 	/* check for closure */
-	CHECK_CONDITION(fabs((s->value[STEM_LIVE_WOOD_C] + s->value[STEM_DEAD_WOOD_C])-s->value[STEM_C]),>,eps);
-	CHECK_CONDITION(fabs((s->value[CROOT_LIVE_WOOD_C] + s->value[CROOT_DEAD_WOOD_C])-s->value[CROOT_C]),>,eps);
-	CHECK_CONDITION(fabs((s->value[BRANCH_LIVE_WOOD_C] + s->value[BRANCH_DEAD_WOOD_C])-s->value[BRANCH_C]),>,eps);
+	CHECK_CONDITION(fabs((s->value[STEM_LIVE_WOOD_N] + s->value[STEM_DEAD_WOOD_N])-s->value[STEM_N]),>,eps);
+	CHECK_CONDITION(fabs((s->value[CROOT_LIVE_WOOD_N] + s->value[CROOT_DEAD_WOOD_N])-s->value[CROOT_N]),>,eps);
+	CHECK_CONDITION(fabs((s->value[BRANCH_LIVE_WOOD_N] + s->value[BRANCH_DEAD_WOOD_N])-s->value[BRANCH_N]),>,eps);
 #endif
 
 }

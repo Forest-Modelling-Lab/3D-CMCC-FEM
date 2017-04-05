@@ -182,12 +182,14 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 										",WBBsap"
 										",WBBL"
 										",WBBD"
+										",WFru"
 										",dWRes"
 										",dWS"
 										",dWL"
 										",dWFR"
 										",dWCR"
 										",dWBB"
+										",dFRUIT"
 										",SAR"
 										",LAR"
 										",FRAR"
@@ -293,7 +295,7 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 
 							/* print variables at layer-class level */
 							logger(g_daily_log,",%6.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%d,%d,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
-									",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
+									",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
 									",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
 									",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",
 									s->value[GPP],
@@ -330,12 +332,14 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 									s->value[BRANCH_SAPWOOD_C],
 									s->value[BRANCH_LIVE_WOOD_C],
 									s->value[BRANCH_DEAD_WOOD_C],
+									s->value[FRUIT_C],
 									s->value[C_TO_RESERVE],
 									s->value[C_TO_STEM],
 									s->value[C_TO_LEAF],
 									s->value[C_TO_FROOT],
 									s->value[C_TO_CROOT],
 									s->value[C_TO_BRANCH],
+									s->value[C_TO_FRUIT],
 									s->value[STEM_AUT_RESP],
 									s->value[LEAF_AUT_RESP],
 									s->value[FROOT_AUT_RESP],

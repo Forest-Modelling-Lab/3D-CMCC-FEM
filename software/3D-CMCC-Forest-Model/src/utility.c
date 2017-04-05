@@ -89,6 +89,7 @@ void reset_daily_cell_variables(cell_t *const c)
 	c->daily_froot_litr2C =             0.;
 	c->daily_froot_litr3C =             0.;
 	c->daily_froot_litr4C =             0.;
+	c->daily_fruit_litrC =              0.;
 	c->daily_soilC =                    0.;
 
 	/*reset daily water variables*/
@@ -317,6 +318,7 @@ void reset_daily_class_variables(cell_t *const c)
 					s->value[C_FROOT_TO_RESERVE] =      0.;
 					s->value[C_LEAF_TO_LITR] =          0.;
 					s->value[C_FROOT_TO_LITR] =         0.;
+					s->value[C_FRUIT_TO_LITR] =         0.;
 
 					/* reset daily nitrogen fluxes among pools */
 					s->value[N_TO_LEAF] =               0.;
