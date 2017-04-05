@@ -213,6 +213,7 @@ void littering ( cell_t *const c, species_t *const s )
 	c->leaf_litrC              += c->daily_leaf_litrC;
 	c->froot_litrC             += c->daily_froot_litrC;
 	c->litr_carbon             += c->daily_litrC;
+	c->litr_tC                 += c->daily_litrC            /1e6 * g_settings->sizeCell;
 
 	/* leaf litter carbon fluxes */
 	s->value[C_LEAF_TO_LITR1C]  = s->value[C_LEAF_TO_LITR]  * s->value[LEAF_LITR_LAB_FRAC];
@@ -259,12 +260,13 @@ void littering ( cell_t *const c, species_t *const s )
 	c->leaf_litrN              += c->daily_leaf_litrN;
 	c->froot_litrN             += c->daily_froot_litrN;
 	c->litr_nitrogen           += c->daily_litrN;
+	c->litr_tN                 += c->daily_litrN            / 1e6 * g_settings->sizeCell;
 
 	/* leaf litter nitrogen fluxes */
-	s->value[N_LEAF_TO_LITR1N]  = s->value[N_LEAF_TO_LITR] * s->value[LEAF_LITR_LAB_FRAC];
-	s->value[N_LEAF_TO_LITR2N]  = s->value[N_LEAF_TO_LITR] * s->value[LEAF_LITR_USCEL_FRAC];
-	s->value[N_LEAF_TO_LITR3N]  = s->value[N_LEAF_TO_LITR] * s->value[LEAF_LITR_SCEL_FRAC];
-	s->value[N_LEAF_TO_LITR4N]  = s->value[N_LEAF_TO_LITR] * s->value[LEAF_LITR_LIGN_FRAC];
+	s->value[N_LEAF_TO_LITR1N]  = s->value[N_LEAF_TO_LITR]  * s->value[LEAF_LITR_LAB_FRAC];
+	s->value[N_LEAF_TO_LITR2N]  = s->value[N_LEAF_TO_LITR]  * s->value[LEAF_LITR_USCEL_FRAC];
+	s->value[N_LEAF_TO_LITR3N]  = s->value[N_LEAF_TO_LITR]  * s->value[LEAF_LITR_SCEL_FRAC];
+	s->value[N_LEAF_TO_LITR4N]  = s->value[N_LEAF_TO_LITR]  * s->value[LEAF_LITR_LIGN_FRAC];
 
 	/* fine root litter carbon fluxes */
 	s->value[N_FROOT_TO_LITR1N] = s->value[N_FROOT_TO_LITR] * s->value[FROOT_LITR_LAB_FRAC];
