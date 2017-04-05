@@ -268,10 +268,10 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 			double pR1              = 0.;
 			double pS1              = 0.;
 
-			logger(g_debug_log, "Allocating only into leaf and fine root pools (positive NPP)\n");
-
 			if ( month < JULY )
 			{
+				logger(g_debug_log, "Allocating only into leaf and fine root pools (positive NPP)\n");
+
 				/* update carbon flux */
 				s->value[C_TO_LEAF]      = npp_to_alloc * ( 1. - s->value[FROOT_LEAF_FRAC] );
 				s->value[C_TO_FROOT]     = npp_to_alloc * s->value[FROOT_LEAF_FRAC];
@@ -314,9 +314,9 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 			}
 			else
 			{
-				/* reproduction */
 #if 0
-				if ( g_settings->regeneration && ( a->value > s->value[SEXAGE] ) )
+				/* reproduction */
+				if ( a->value > s->value[SEXAGE] )
 				{
 					logger(g_debug_log, "allocating into fruit pool\n");
 

@@ -23,8 +23,6 @@ extern logger_t* g_debug_log;
 
 int Cell_model_daily (matrix_t *const m, const int cell, const int day, const int month, const int year)
 {
-
-	/* shortcuts */
 	cell_t *c;
 	meteo_daily_t *meteo_daily;
 
@@ -43,10 +41,10 @@ int Cell_model_daily (matrix_t *const m, const int cell, const int day, const in
 	/* OVERALL CELL */
 
 	/* compute cell level carbon fluxes */
-	//carbon_fluxes ( c );
+	//carbon_fluxes        ( c );
 
 	/* compute cell level evapotranspiration */
-	evapotranspiration ( c );
+	evapotranspiration   ( c );
 
 	/* compute cell level latent heat fluxes */
 	latent_heat_fluxes   ( c, meteo_daily );
@@ -55,7 +53,7 @@ int Cell_model_daily (matrix_t *const m, const int cell, const int day, const in
 	sensible_heat_fluxes ( c, meteo_daily );
 
 	/* compute cell level water fluxes */
-	water_fluxes       ( c, meteo_daily );
+	water_fluxes         ( c, meteo_daily );
 
 	/*******************************************************************************************************/
 

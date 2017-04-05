@@ -153,8 +153,7 @@ int check_cell_radiation_flux_balance (cell_t *const c, const meteo_daily_t *con
 	{
 		logger(g_debug_log, "...ok PPFD radiative balance\n");
 	}
-
-	/*******************************************************************************************************************************************/
+	/* ok */
 	return 1;
 }
 
@@ -392,7 +391,7 @@ int check_cell_carbon_mass_balance(cell_t *const c)
 		old_store_tC   = store_tC;
 		logger(g_debug_log, "...ok in 'Cell_model_daily' carbon mass balance(tC/sizecell/day) \n");
 	}
-	/*******************************************************************************************************************/
+	/* ok */
 	return 1;
 }
 
@@ -503,7 +502,6 @@ int check_cell_water_flux_balance(cell_t *const c, const meteo_daily_t *const me
 		old_store_snow = store_snow;
 		logger(g_debug_log, "...ok 'Cell_model_daily' snow water balance\n");
 	}
-	logger(g_debug_log,"*****************************************************\n");
-
+	/* ok */
 	return 1;
 }

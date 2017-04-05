@@ -401,32 +401,32 @@ enum {
 	DAILY_LIVE_WOOD_TURNOVER,           /* Daily live wood turnover rate */
 
 
-	/* per tree in KgC */
-	AV_LEAF_MASS_KgC,                   /* Average Leaf carbon pool kgC/tree */
-	AV_STEM_MASS_KgC,                   /* Average Stem carbon pool kgC/tree */
-	AV_TOT_STEM_MASS_KgC,               /* Average Stem + Branch carbon pool kgC/tree */
-	AV_ROOT_MASS_KgC,                   /* Average Total root carbon pool kgC/tree */
-	AV_FROOT_MASS_KgC,                  /* Average Fine root carbon pool kgC/tree */
-	AV_CROOT_MASS_KgC,                  /* Average Coarse carbon pool kgC/tree */
-	AV_RESERVE_MASS_KgC,                /* Average Reserve carbon pool kgC/tree */
-	AV_MIN_RESERVE_KgC,                 /* Average Minimum Reserve carbon pool kgC/tree */
-	AV_FRUIT_MASS_KgC,                  /* Average Fruit carbon pool kgC/tree */
-	AV_BRANCH_MASS_KgC,                 /* Average Branch carbon pool kgC/tree */
-	AV_STEM_SAPWOOD_MASS_KgC,           /* Average Sapwood Stem carbon pool kgC/tree */
-	AV_STEM_HEARTWOOD_MASS_KgC,         /* Average Heartwood Stem carbon pool kgC/tree */
-	AV_LIVE_STEM_MASS_KgC,              /* Average Live Stem carbon pool kgC/tree */
-	AV_DEAD_STEM_MASS_KgC,              /* Average Dead Stem carbon pool kgC/tree */
-	AV_CROOT_SAPWOOD_MASS_KgC,          /* Average Sapwood Coarse root carbon pool kgC/tree */
-	AV_CROOT_HEARTWOOD_MASS_KgC,        /* Average Heartwood Coarse root carbon pool kgC/tree */
-	AV_LIVE_CROOT_MASS_KgC,             /* Average Live Coarse root carbon pool kgC/tree */
-	AV_DEAD_CROOT_MASS_KgC,             /* Average Dead Coarse root carbon pool kgC/tree */
-	AV_BRANCH_SAPWOOD_MASS_KgC,         /* Average Sapwood Branch carbon pool kgC/tree */
-	AV_BRANCH_HEARTWOOD_MASS_KgC,       /* Average Heartwood Branch carbon pool kgC/tree */
-	AV_LIVE_BRANCH_MASS_KgC,            /* Average Live Branch carbon pool kgC/tree */
-	AV_DEAD_BRANCH_MASS_KgC,            /* Average Dead Stem carbon pool kgC/tree */
-	AV_LIVE_WOOD_MASS_KgC,              /* Average Live Wood carbon pool kgC/tree */
-	AV_DEAD_WOOD_MASS_KgC,              /* Average Dead Wood carbon pool kgC/tree */
-	AV_TOT_WOOD_MASS_KgC,               /* Average Total Wood carbon pool kgC/tree */
+	/* per tree in tC */
+	AV_LEAF_MASS_C,                     /* Average Leaf carbon pool tC/tree */
+	AV_STEM_MASS_C,                     /* Average Stem carbon pool tC/tree */
+	AV_TOT_STEM_MASS_C,                 /* Average Stem + Branch carbon pool tC/tree */
+	AV_ROOT_MASS_C,                     /* Average Total root carbon pool tC/tree */
+	AV_FROOT_MASS_C,                    /* Average Fine root carbon pool tC/tree */
+	AV_CROOT_MASS_C,                    /* Average Coarse carbon pool tC/tree */
+	AV_RESERVE_MASS_C,                  /* Average Reserve carbon pool tC/tree */
+	AV_MIN_RESERVE_C,                   /* Average Minimum Reserve carbon pool tC/tree */
+	AV_FRUIT_MASS_C,                    /* Average Fruit carbon pool tC/tree */
+	AV_BRANCH_MASS_C,                   /* Average Branch carbon pool tC/tree */
+	AV_STEM_SAPWOOD_MASS_C,             /* Average Sapwood Stem carbon pool tC/tree */
+	AV_STEM_HEARTWOOD_MASS_C,           /* Average Heartwood Stem carbon pool tC/tree */
+	AV_LIVE_STEM_MASS_C,                /* Average Live Stem carbon pool tC/tree */
+	AV_DEAD_STEM_MASS_C,                /* Average Dead Stem carbon pool tC/tree */
+	AV_CROOT_SAPWOOD_MASS_C,            /* Average Sapwood Coarse root carbon pool tC/tree */
+	AV_CROOT_HEARTWOOD_MASS_C,          /* Average Heartwood Coarse root carbon pool tC/tree */
+	AV_LIVE_CROOT_MASS_C,               /* Average Live Coarse root carbon pool tC/tree */
+	AV_DEAD_CROOT_MASS_C,               /* Average Dead Coarse root carbon pool tC/tree */
+	AV_BRANCH_SAPWOOD_MASS_C,           /* Average Sapwood Branch carbon pool tC/tree */
+	AV_BRANCH_HEARTWOOD_MASS_C,         /* Average Heartwood Branch carbon pool tC/tree */
+	AV_LIVE_BRANCH_MASS_C,              /* Average Live Branch carbon pool tC/tree */
+	AV_DEAD_BRANCH_MASS_C,              /* Average Dead Stem carbon pool tC/tree */
+	AV_LIVE_WOOD_MASS_C,                /* Average Live Wood carbon pool tC/tree */
+	AV_DEAD_WOOD_MASS_C,                /* Average Dead Wood carbon pool tC/tree */
+	AV_TOT_WOOD_MASS_C,                 /* Average Total Wood carbon pool tC/tree */
 
 	/* carbon biomass pools in tDM/sizeCell */
 	BIOMASS_LEAF_tDM,                   /* Current Leaf carbon pool tDM/sizeCell */
@@ -506,6 +506,7 @@ enum {
 	STEM_GROWTH_RESP,                   /* Stem growth respiration (gC/m2/day) */
 	BRANCH_GROWTH_RESP,                 /* Branch growth respiration (gC/m2/day) */
 	CROOT_GROWTH_RESP,                  /* Coarse root growth respiration (gC/m2/day) */
+	FRUIT_GROWTH_RESP,                  /* Fruit growth respiration (gC/m2/day) */
 	TOTAL_GROWTH_RESP,                  /* Total growth respiration (gC/m2/day) */
 	MONTHLY_TOTAL_GROWTH_RESP,          /* Monthly Total growth respiration (gC/m2/month) */
 	YEARLY_TOTAL_GROWTH_RESP,           /* Yearly Total growth respiration (gC/m2/year) */
@@ -517,11 +518,13 @@ enum {
 	STEM_AUT_RESP,                      /* Stem autotrophic respiration (gC/m2/day) */
 	CROOT_AUT_RESP,                     /* Coarse root autotrophic respiration (gC/m2/day) */
 	BRANCH_AUT_RESP,                    /* Branch autotrophic respiration (gC/m2/day) */
+	FRUIT_AUT_RESP,                     /* Fruit autotrophic respiration (gC/m2/day) */
 	TOTAL_AUT_RESP,                     /* Total autotrophic respiration (gC/m2/day) */
 	MONTHLY_LEAF_AUT_RESP,              /* Monthly Leaf autotrophic respiration (gC/m2/month) */
 	MONTHLY_FROOT_AUT_RESP,             /* Monthly Fine root autotrophic respiration (gC/m2/month) */
 	MONTHLY_STEM_AUT_RESP,              /* Monthly Stem autotrophic respiration (gC/m2/month) */
 	MONTHLY_CROOT_AUT_RESP,             /* Monthly Coarse root autotrophic respiration (gC/m2/month) */
+	MONTHLY_FRUIT_AUT_RESP,             /* Monthly Fruit autotrophic respiration (gC/m2/month) */
 	MONTHLY_BRANCH_AUT_RESP,            /* Monthly Branch autotrophic respiration (gC/m2/month) */
 	MONTHLY_TOTAL_AUT_RESP,             /* Monthly Total autotrophic respiration (gC/m2/month) */
 	YEARLY_LEAF_AUT_RESP,               /* Annual Leaf autotrophic respiration (gC/m2/year) */
@@ -529,6 +532,7 @@ enum {
 	YEARLY_STEM_AUT_RESP,               /* Annual Stem autotrophic respiration (gC/m2/year) */
 	YEARLY_CROOT_AUT_RESP,              /* Annual Coarse root autotrophic respiration (gC/m2/year) */
 	YEARLY_BRANCH_AUT_RESP,             /* Annual Branch autotrophic respiration (gC/m2/year) */
+	YEARLY_FRUIT_AUT_RESP,              /* Annual fRUIT autotrophic respiration (gC/m2/year) */
 	YEARLY_TOTAL_AUT_RESP,              /* Annual Total autotrophic respiration (gC/m2/year) */
 	TOTAL_AUT_RESP_tC,                  /* Total autotrophic respiration (tC/sizecell/day) */
 
@@ -605,16 +609,16 @@ enum {
 	TOT_STEM_N,                         /* Current Total Stem nitrogen pool tN/sizeCell */
 	TOT_ROOT_N,                         /* Current Total root nitrogen pool tN/sizeCell */
 
-	/* per tree in kgN */
-	AV_LEAF_MASS_KgN,                   /* Average Leaf nitrogen pool kgN/tree */
-	AV_STEM_MASS_KgN,                   /* Average Stem nitrogen pool kgN/tree */
-	AV_TOT_STEM_MASS_KgN,               /* Average Stem + Branch nitrogen pool kgN/tree */
-	AV_ROOT_MASS_KgN,                   /* Average Total root nitrogen pool kgN/tree */
-	AV_FROOT_MASS_KgN,                  /* Average Fine root nitrogen pool kgN/tree */
-	AV_CROOT_MASS_KgN,                  /* Average Coarse nitrogen pool kgN/tree */
-	AV_BRANCH_MASS_KgN,                 /* Average Branch nitrogen pool kgN/tree */
-	AV_RESERVE_MASS_KgN,                /* Average Reserve nitrogen pool kgN/tree */
-	AV_FRUIT_MASS_KgN,                  /* Average Fruit nitrogen pool kgN/tree */
+	/* per tree in tN */
+	AV_LEAF_MASS_N,                    /* Average Leaf nitrogen pool tN/tree */
+	AV_STEM_MASS_N,                    /* Average Stem nitrogen pool tN/tree */
+	AV_TOT_STEM_MASS_N,                /* Average Stem + Branch nitrogen pool tN/tree */
+	AV_ROOT_MASS_N,                    /* Average Total root nitrogen pool tN/tree */
+	AV_FROOT_MASS_N,                   /* Average Fine root nitrogen pool tN/tree */
+	AV_CROOT_MASS_N,                   /* Average Coarse nitrogen pool tN/tree */
+	AV_BRANCH_MASS_N,                  /* Average Branch nitrogen pool tN/tree */
+	AV_RESERVE_MASS_N,                 /* Average Reserve nitrogen pool tN/tree */
+	AV_FRUIT_MASS_N,                   /* Average Fruit nitrogen pool tN/tree */
 
 	/* litter and soil pools */
 	CWDC,                               /* (tC/sizecell) coarse woody debris C */
@@ -933,11 +937,13 @@ typedef struct
 	double daily_froot_growth_resp;                                       /* daily fine root growth resp at cell level (gC/m2/day) */
 	double daily_branch_growth_resp;                                      /* daily branch and bark growth resp at cell level (gC/m2/day) */
 	double daily_croot_growth_resp;                                       /* daily coarse root growth resp at cell level (gC/m2/day) */
+	double daily_fruit_growth_resp;                                       /* daily fruit growth resp at cell level (gC/m2/day) */
 	double daily_leaf_aut_resp;                                           /* daily leaf aut resp at cell level (gC/m2/day) */
 	double daily_stem_aut_resp;                                           /* daily stem aut resp at cell level (gC/m2/day) */
 	double daily_branch_aut_resp;                                         /* daily branch and bark aut resp at cell level (gC/m2/day) */
 	double daily_froot_aut_resp;                                          /* daily fine root aut resp at cell level (gC/m2/day) */
 	double daily_croot_aut_resp;                                          /* daily coarse root aut resp at cell level (gC/m2/day) */
+	double daily_fruit_aut_resp;                                          /* daily fruit aut resp at cell level (gC/m2/day) */
 
 	/* tree carbon pools */
 	double leaf_carbon;                                                   /* leaf carbon at cell level (gC/m2) */
@@ -1091,6 +1097,7 @@ typedef struct
 	double daily_froot_litr2C;                                            /* daily fine root to litter unshelded cellulose carbon pool at cell level (tC/cell/day) */
 	double daily_froot_litr3C;                                            /* daily fine root to litter shelded cellulose carbon pool at cell level (tC/cell/day) */
 	double daily_froot_litr4C;                                            /* daily fine root to litter lignin carbon pool at cell level (tC/cell/day) */
+	double daily_fruit_litrC;                                             /* daily fruit to litter lignin carbon pool at cell level (tC/cell/day) */
 	double daily_soilC;                                                   /* daily litter carbon to soil (tC/cell/day) */
 
 	/* nitrogen */
@@ -1105,6 +1112,7 @@ typedef struct
 	double daily_froot_litr2N;                                            /* daily fine root to litter unshelded cellulose nitrogen pool at cell level (tN/cell/day) */
 	double daily_froot_litr3N;                                            /* daily fine root to litter shelded cellulose nitrogen pool at cell level (tN/cell/day) */
 	double daily_froot_litr4N;                                            /* daily fine root to litter lignin nitrogen pool at cell level (tN/cell/day) */
+	double daily_fruit_litrN;                                             /* daily fruit to litter nitrogen pool at cell level (tN/cell/day) */
 	double daily_soilN;                                                   /* daily litter nitrogen to soil (tN/cell/day) */
 
 	/* litter and soil carbon pools */
@@ -1118,6 +1126,7 @@ typedef struct
 	double froot_litr2C;                                                  /* (tC/sizecell) fine root litter unshielded cellulose carbon */
 	double froot_litr3C;                                                  /* (tC/sizecell) fine root litter shielded cellulose carbon */
 	double froot_litr4C;                                                  /* (tC/sizecell) fine root litter lignin carbon */
+	double fruit_litrC;                                                   /* (tC/sizecell) fruit total litter carbon */
 	double deadwood_litr1C;                                               /* (tC/sizecell) deadwood litter labile carbon */
 	double deadwood_litr2C;                                               /* (tC/sizecell) deadwood litter unshielded cellulose carbon */
 	double deadwood_litr3C;                                               /* (tC/sizecell) deadwood litter shielded cellulose carbon */
@@ -1144,6 +1153,7 @@ typedef struct
 	double froot_litr2N;                                                  /* (tN/sizecell) fine root litter unshielded cellulose nitrogen */
 	double froot_litr3N;                                                  /* (tN/sizecell) fine root litter shielded cellulonitrogenN */
 	double froot_litr4N;                                                  /* (tN/sizecell) fine root litter lignin nitrogen */
+	double fruit_litrN;                                                   /* (tN/sizecell) fruit total litter nitrogen */
 	double deadwood_litr1N;                                               /* (tN/sizecell) deadwood litter labile nitrogen */
 	double deadwood_litr2N;                                               /* (tN/sizecell) deadwood litter unshielded cellulose nitrogen */
 	double deadwood_litr3N;                                               /* (tN/sizecell) deadwood litter shielded cellulose nitrogen */

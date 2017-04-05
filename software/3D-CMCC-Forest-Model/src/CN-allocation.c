@@ -34,6 +34,7 @@ void carbon_allocation( cell_t *const c, species_t *const s)
 	s->value[C_TO_STEM]  -= (s->value[STEM_GROWTH_RESP]   / 1e6 * g_settings->sizeCell);
 	s->value[C_TO_CROOT] -= (s->value[CROOT_GROWTH_RESP]  / 1e6 * g_settings->sizeCell);
 	s->value[C_TO_BRANCH]-= (s->value[BRANCH_GROWTH_RESP] / 1e6 * g_settings->sizeCell);
+	s->value[C_TO_FRUIT] -= (s->value[FRUIT_GROWTH_RESP]  / 1e6 * g_settings->sizeCell);
 
 	/*** update class level carbon mass pools ***/
 	s->value[LEAF_C]     += s->value[C_TO_LEAF];
@@ -46,6 +47,17 @@ void carbon_allocation( cell_t *const c, species_t *const s)
 	s->value[TOT_ROOT_C] += s->value[C_TO_CROOT] + s->value[C_TO_FROOT];
 	s->value[TOT_STEM_C] += s->value[C_TO_STEM]  + s->value[C_TO_BRANCH];
 
+	/* check */
+	CHECK_CONDITION ( s->value[LEAF_C],     < , 0. ) ;
+	CHECK_CONDITION ( s->value[FROOT_C],    < , 0. ) ;
+	CHECK_CONDITION ( s->value[STEM_C],     < , 0. ) ;
+	CHECK_CONDITION ( s->value[BRANCH_C],   < , 0. ) ;
+	CHECK_CONDITION ( s->value[CROOT_C],    < , 0. ) ;
+	CHECK_CONDITION ( s->value[RESERVE_C],  < , 0. ) ;
+	CHECK_CONDITION ( s->value[FRUIT_C],    < , 0. ) ;
+	CHECK_CONDITION ( s->value[TOT_ROOT_C], < , 0. ) ;
+	CHECK_CONDITION ( s->value[TOT_STEM_C], < , 0. ) ;
+
 	/*** update cell level carbon mass pools ***/
 	c->leaf_tC           += s->value[C_TO_LEAF];
 	c->froot_tC          += s->value[C_TO_FROOT];
@@ -55,14 +67,32 @@ void carbon_allocation( cell_t *const c, species_t *const s)
 	c->reserve_tC        += s->value[C_TO_RESERVE];
 	c->fruit_tC          += s->value[C_TO_FRUIT];
 
+	/* check */
+	CHECK_CONDITION ( c->leaf_tC,    < , 0. ) ;
+	CHECK_CONDITION ( c->froot_tC,   < , 0. ) ;
+	CHECK_CONDITION ( c->stem_tC,    < , 0. ) ;
+	CHECK_CONDITION ( c->branch_tC,  < , 0. ) ;
+	CHECK_CONDITION ( c->croot_tC,   < , 0. ) ;
+	CHECK_CONDITION ( c->reserve_tC, < , 0. ) ;
+	CHECK_CONDITION ( c->fruit_tC,   < , 0. ) ;
+
 	/*** update cell level carbon mass pools ***/
-	c->leaf_carbon       += s->value[C_TO_LEAF]    * 1e6 / g_settings->sizeCell;
-	c->froot_carbon      += s->value[C_TO_FROOT]   * 1e6 / g_settings->sizeCell;
-	c->stem_carbon       += s->value[C_TO_STEM]    * 1e6 / g_settings->sizeCell;
-	c->branch_carbon     += s->value[C_TO_BRANCH]  * 1e6 / g_settings->sizeCell;
-	c->croot_carbon      += s->value[C_TO_CROOT]   * 1e6 / g_settings->sizeCell;
-	c->reserve_carbon    += s->value[C_TO_RESERVE] * 1e6 / g_settings->sizeCell;
-	c->fruit_carbon      += s->value[C_TO_FRUIT]   * 1e6 / g_settings->sizeCell;
+	c->leaf_carbon       += (s->value[C_TO_LEAF]    * 1e6 / g_settings->sizeCell);
+	c->froot_carbon      += (s->value[C_TO_FROOT]   * 1e6 / g_settings->sizeCell);
+	c->stem_carbon       += (s->value[C_TO_STEM]    * 1e6 / g_settings->sizeCell);
+	c->branch_carbon     += (s->value[C_TO_BRANCH]  * 1e6 / g_settings->sizeCell);
+	c->croot_carbon      += (s->value[C_TO_CROOT]   * 1e6 / g_settings->sizeCell);
+	c->reserve_carbon    += (s->value[C_TO_RESERVE] * 1e6 / g_settings->sizeCell);
+	c->fruit_carbon      += (s->value[C_TO_FRUIT]   * 1e6 / g_settings->sizeCell);
+
+	/* check */
+	//CHECK_CONDITION ( c->leaf_carbon,    < , 0. ) ;
+	//CHECK_CONDITION ( c->froot_carbon,   < , 0. ) ;
+	CHECK_CONDITION ( c->stem_carbon,    < , 0. ) ;
+	CHECK_CONDITION ( c->branch_carbon,  < , 0. ) ;
+	CHECK_CONDITION ( c->croot_carbon,   < , 0. ) ;
+	CHECK_CONDITION ( c->reserve_carbon, < , 0. ) ;
+	CHECK_CONDITION ( c->fruit_carbon,   < , 0. ) ;
 
 
 #if 0

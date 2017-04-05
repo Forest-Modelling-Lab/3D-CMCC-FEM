@@ -146,9 +146,7 @@ int check_soil_radiation_flux_balance (cell_t *const c, const meteo_daily_t *con
 	{
 		logger(g_debug_log, "...ok 'Soil_model_daily' PPFD radiative balance\n");
 	}
-	logger(g_debug_log,"*****************************************************\n");
-
-	/*******************************************************************************************************************************************/
+	/* ok */
 	return 1;
 }
 
@@ -203,8 +201,7 @@ int check_soil_carbon_flux_balance(cell_t *const c)
 	{
 		logger(g_debug_log, "...ok 'Soil_model_daily' carbon balance\n");
 	}
-	logger(g_debug_log,"*****************************************************\n");
-
+	/* ok */
 	return 1;
 }
 
@@ -260,7 +257,6 @@ int check_soil_water_flux_balance(cell_t *const c, const meteo_daily_t *const me
 		old_store = store;
 		logger(g_debug_log, "...ok 'Soil_model_daily' soil water balance\n");
 	}
-	logger(g_debug_log,"*****************************************************\n");
-
+	/* ok */
 	return 1;
 }

@@ -346,8 +346,8 @@ void annual_minimum_reserve (species_t *const s)
 	s->value[MIN_RESERVE_C]= s->value[WTOT_sap_tDM] * s->value[SAP_WRES];
 	logger(g_debug_log, "--MINIMUM Reserve Biomass = %g t res/class \n", s->value[RESERVE_C]);
 
-	s->value[AV_MIN_RESERVE_KgC] = s->value[MIN_RESERVE_C] * 1000.0 /s->counter[N_TREE];
-	logger(g_debug_log, "--Average MINIMUM Reserve Biomass = %g Kgres/class tree \n", s->value[RESERVE_C]);
+	s->value[AV_MIN_RESERVE_C] = s->value[MIN_RESERVE_C] / s->counter[N_TREE];
+	logger(g_debug_log, "--Average MINIMUM Reserve Biomass = %g tC/class tree \n", s->value[RESERVE_C]);
 }
 
 void dendrometry_old(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species)
@@ -385,22 +385,22 @@ void dendrometry_old(cell_t *const c, const int layer, const int height, const i
 		/* use generic stemconst stempower values */
 		if (oldavDBH < 9)
 		{
-			d->value = pow((s->value[AV_STEM_MASS_KgC] * GC_GDM / s->value[STEMCONST]), (1.0 / STEMPOWER_A));
+			d->value = pow(((s->value[AV_STEM_MASS_C] * 1e3) * GC_GDM / s->value[STEMCONST]), (1. / STEMPOWER_A));
 		}
 		else if (oldavDBH > 9 && oldavDBH < 15)
 		{
-			d->value = pow((s->value[AV_STEM_MASS_KgC] * GC_GDM / s->value[STEMCONST]), (1.0 / STEMPOWER_B));
+			d->value = pow(((s->value[AV_STEM_MASS_C] * 1e3) * GC_GDM / s->value[STEMCONST]), (1. / STEMPOWER_B));
 		}
 		else
 		{
-			d->value = pow((s->value[AV_STEM_MASS_KgC] * GC_GDM / s->value[STEMCONST]), (1.0 / STEMPOWER_C));
+			d->value = pow(((s->value[AV_STEM_MASS_C] * 1e3) * GC_GDM / s->value[STEMCONST]), (1. / STEMPOWER_C));
 		}
 	}
 	else
 	{
 		/* use site specific stemconst stempower values */
 		logger(g_debug_log, "Using site related stemconst stempower\n");
-		d->value = pow((s->value[AV_STEM_MASS_KgC] * GC_GDM) / s->value[STEMCONST_P], (1.0 / s->value[STEMPOWER_P]));
+		d->value = pow(((s->value[AV_STEM_MASS_C] * 1e3) * GC_GDM) / s->value[STEMCONST_P], (1. / s->value[STEMPOWER_P]));
 	}
 	logger(g_debug_log, "-Old AVDBH = %g cm\n", oldavDBH);
 	logger(g_debug_log, "-New Average DBH = %g cm\n", d->value);

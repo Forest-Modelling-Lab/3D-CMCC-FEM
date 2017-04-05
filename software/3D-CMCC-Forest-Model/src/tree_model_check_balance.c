@@ -129,7 +129,7 @@ int check_tree_class_radiation_flux_balance(cell_t *const c, const int layer, co
 	{
 		logger(g_debug_log, "...ok in 'Tree_model_daily' PPFD balance\n");
 	}
-
+	/* ok */
 	return 1;
 }
 
@@ -188,8 +188,11 @@ int check_tree_class_carbon_flux_balance(cell_t *const c, const int layer, const
 	in      = s->value[GPP_tC];
 
 	/* sum of sinks */
-	out     = s->value[TOTAL_MAINT_RESP_tC] + s->value[TOTAL_GROWTH_RESP_tC] +
-			( s->value[C_LEAF_TO_LITR] + s->value[C_FROOT_TO_LITR] + s->value[C_FRUIT_TO_LITR]);
+	out     = s->value[TOTAL_MAINT_RESP_tC] +
+			s->value[TOTAL_GROWTH_RESP_tC]  +
+			s->value[C_LEAF_TO_LITR]        +
+			s->value[C_FROOT_TO_LITR]       +
+			s->value[C_FRUIT_TO_LITR]       ;
 
 	/* sum of current storage */
 	store   = s->value[C_TO_LEAF]  +
@@ -216,6 +219,7 @@ int check_tree_class_carbon_flux_balance(cell_t *const c, const int layer, const
 		error_log("TOTAL_GROWTH_RESP = %g tC/sizecell/day\n", s->value[TOTAL_GROWTH_RESP_tC]);
 		error_log("C_LEAF_TO_LITR = %g tC/sizecell/day\n", s->value[C_LEAF_TO_LITR]);
 		error_log("C_FROOT_TO_LITR = %g tC/sizecell/day\n", s->value[C_FROOT_TO_LITR]);
+		error_log("C_FRUIT_TO_LITR = %g tC/sizecell/day\n", s->value[C_FRUIT_TO_LITR]);
 		error_log("\nstore = %g tC/sizecell/day\n", store);
 		error_log("C_TO_LEAF = %g tC/sizecell/day\n", s->value[C_TO_LEAF]);
 		error_log("C_TO_FROOT = %g tC/sizecell/day\n", s->value[C_TO_FROOT]);
@@ -234,8 +238,7 @@ int check_tree_class_carbon_flux_balance(cell_t *const c, const int layer, const
 	{
 		logger(g_debug_log, "...ok in 'Tree_model_daily' carbon flux balance (second)\n");
 	}
-
-	/*******************************************************************************************************************/
+	/* ok */
 	return 1;
 }
 
@@ -307,8 +310,7 @@ int check_tree_class_carbon_mass_balance(cell_t *const c, const int layer, const
 		old_store = store;
 		logger(g_debug_log, "...ok in 'Tree_model_daily' carbon mass balance\n");
 	}
-
-	/*******************************************************************************************************************/
+	/* ok */
 	return 1;
 }
 int check_tree_class_nitrogen_flux_balance (cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species)
@@ -373,8 +375,7 @@ int check_tree_class_nitrogen_flux_balance (cell_t *const c, const int layer, co
 	{
 		logger(g_debug_log, "...ok in 'Tree_model_daily' nitrogen flux balance\n");
 	}
-
-	/*******************************************************************************************************************/
+	/* ok */
 	return 1;
 }
 
@@ -422,7 +423,7 @@ int check_tree_class_water_flux_balance(cell_t *const c, const int layer, const 
 		old_store = store;
 		logger(g_debug_log, "...ok in 'Tree_model_daily' canopy water balance\n");
 	}
-
+	/* ok */
 	return 1;
 }
 

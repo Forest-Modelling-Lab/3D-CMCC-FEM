@@ -70,7 +70,6 @@ int check_litter_carbon_flux_balance(cell_t *const c)
 		old_store = store;
 		logger(g_debug_log, "...ok 'Litter_ model_daily' carbon balance\n");
 	}
-	logger(g_debug_log,"*****************************************************\n");
-
+	/* ok */
 	return 1;
 }
