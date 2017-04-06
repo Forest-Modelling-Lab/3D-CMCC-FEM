@@ -336,7 +336,7 @@ static int parameterization_output_create(void) {
 static int log_start(const char* const sitename)
 {
 	char *p;
-	char buffer[128];	/* should be enough */
+	char buffer[512];	/* should be enough */
 	int len;
 
 	/* build log filename */
