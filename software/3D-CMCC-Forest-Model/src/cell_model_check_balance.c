@@ -263,30 +263,18 @@ int check_cell_carbon_flux_balance(cell_t *const c)
 
 int check_cell_carbon_mass_balance(cell_t *const c)
 {
-	double in;
-	double out;
-	double store;
-	double balance;
-	static double old_store;
-
-	double in_tC;
-	double out_tC;
-	double store_tC;
-	double balance_tC;
-	static double old_store_tC;
-
 
 	/* DAILY CHECK ON CELL LEVEL CARBON MASS BALANCE */
 	/* check complete cell level carbon mass balance */
 
 	/* sum of sources */
-	in = c->daily_gpp;
+	c->carbon_in    = c->daily_gpp;
 
 	/* sum of sinks */
-	out = c->daily_growth_resp + c->daily_maint_resp /* + c->daily_het_resp */;
+	c->carbon_out   = c->daily_growth_resp + c->daily_maint_resp /* + c->daily_het_resp */;
 
 	/* sum of current storage */
-	store = c->leaf_carbon    +
+	c->carbon_store = c->leaf_carbon +
 			c->froot_carbon   +
 			c->croot_carbon   +
 			c->stem_carbon    +
@@ -298,17 +286,17 @@ int check_cell_carbon_mass_balance(cell_t *const c)
 			c->soil_carbon    ;
 
 	/* check carbon pool balance */
-	balance = in - out - ( store - old_store );
+	c->carbon_balance = c->carbon_in - c->carbon_out - ( c->carbon_store - c->carbon_old_store );
 
 	logger(g_debug_log, "\nCELL LEVEL CARBON MASS BALANCE\n");
 
 	/* check for carbon mass balance closure */
-	if ( ( fabs( balance ) > eps ) && ( c->dos > 1 ) )
+	if ( ( fabs( c->carbon_balance ) > eps ) && ( c->dos > 1 ) )
 	{
 		error_log("DOS = %d\n", c->dos);
-		error_log("\nin = %g gC/m2/day\n", in);
+		error_log("\nin = %g gC/m2/day\n", c->carbon_in);
 		error_log("daily_gpp_carbon = %g gC/m2\n", c->daily_gpp);
-		error_log("\nout = %g gC/m2/day\n", out);
+		error_log("\nout = %g gC/m2/day\n", c->carbon_out);
 		error_log("daily_aut_resp = %g gC/m2/day\n", c->daily_aut_resp);
 		error_log("\nstore\n");
 		error_log("leaf_carbon = %g gC/m2/day\n", c->leaf_carbon);
@@ -321,18 +309,18 @@ int check_cell_carbon_mass_balance(cell_t *const c)
 		error_log("litr_carbon = %g gC/m2/day\n", c->litr_carbon);
 		error_log("cwd_carbon = %g gC/m2/day\n", c->cwd_carbon);
 		error_log("soil_carbon = %g gC/m2/day\n", c->soil_carbon);
-		error_log("\ncarbon in = %g gC/m2/day\n", in);
-		error_log("carbon out = %g gC/m2/day\n", out);
-		error_log("delta carbon store = %g gC/m2/day\n", store - old_store);
-		error_log("carbon_balance = %g gC/m2/day\n",balance);
+		error_log("\ncarbon in = %g gC/m2/day\n", c->carbon_in);
+		error_log("carbon out = %g gC/m2/day\n", c->carbon_out);
+		error_log("delta carbon store = %g gC/m2/day\n", c->carbon_store - c->carbon_old_store);
+		error_log("carbon_balance = %g gC/m2/day\n",c->carbon_balance);
 		error_log("...FATAL ERROR in 'Cell_model_daily' carbon mass balance (gC/m2/day) (exit)\n");
-		CHECK_CONDITION(fabs( balance ), > , eps);
+		CHECK_CONDITION(fabs( c->carbon_balance ), > , eps);
 
 		return 0;
 	}
 	else
 	{
-		old_store = store;
+		c->carbon_old_store = c->carbon_store;
 		logger(g_debug_log, "...ok in 'Cell_model_daily' carbon mass balance (gC/m2/day)\n");
 	}
 	/*******************************************************************************************************************/
@@ -340,13 +328,13 @@ int check_cell_carbon_mass_balance(cell_t *const c)
 	/* check complete cell level carbon mass balance */
 
 	/* sum of sources */
-	in_tC    = c->daily_gpp_tC;
+	c->carbontc_in    = c->daily_gpp_tC;
 
 	/* sum of sinks */
-	out_tC   = c->daily_aut_resp_tC /*+ c->daily_het_resp_tC*/;
+	c->carbontc_out   = c->daily_aut_resp_tC /*+ c->daily_het_resp_tC*/;
 
 	/* sum of current storage */
-	store_tC = c->leaf_tC +
+	c->carbontc_store = c->leaf_tC +
 			c->froot_tC   +
 			c->croot_tC   +
 			c->stem_tC    +
@@ -358,17 +346,17 @@ int check_cell_carbon_mass_balance(cell_t *const c)
 			c->soil_tC    ;
 
 	/* check carbon pool balance */
-	balance_tC = in_tC - out_tC - ( store_tC - old_store_tC );
+	c->carbontc_balance = c->carbontc_in - c->carbontc_out - ( c->carbontc_store - c->carbontc_old_store );
 
 	logger(g_debug_log, "\nCELL LEVEL CARBON MASS BALANCE\n");
 
 	/* check for carbon mass balance closure */
-	if ( ( fabs( balance_tC ) > eps ) && ( c->dos > 1 ) )
+	if ( ( fabs( c->carbontc_balance ) > eps ) && ( c->dos > 1 ) )
 	{
 		error_log("DOS = %d\n", c->dos);
-		error_log("\nin = %g tC/sizecell/day\n", in_tC);
+		error_log("\nin = %g tC/sizecell/day\n", c->carbontc_in);
 		error_log("daily_gpp_carbon = %g tC/sizecell\n", c->daily_gpp);
-		error_log("\nout = %g tC/sizecell/day\n", out_tC);
+		error_log("\nout = %g tC/sizecell/day\n", c->carbontc_out);
 		error_log("daily_aut_resp = %g tC/sizecell/day\n", c->daily_aut_resp);
 		error_log("\nstore\n");
 		error_log("leaf_tC = %g tC/sizecell/day\n", c->leaf_tC);
@@ -381,18 +369,18 @@ int check_cell_carbon_mass_balance(cell_t *const c)
 		error_log("litr_tC = %g tC/sizecell/day\n", c->litr_tC);
 		error_log("cwd_tC = %g tC/sizecell/day\n", c->cwd_tC);
 		error_log("soil_tC = %g tC/sizecell/day\n", c->soil_tC);
-		error_log("\ncarbon in = %g tC/sizecell/day\n", in_tC);
-		error_log("carbon out = %g tC/sizecell/day\n", out_tC);
-		error_log("delta carbon store = %g tC/sizecell/day\n", store_tC - old_store_tC);
-		error_log("carbon_balance = %g tC/sizecell/day\n",balance_tC);
+		error_log("\ncarbon in = %g tC/sizecell/day\n", c->carbontc_in);
+		error_log("carbon out = %g tC/sizecell/day\n", c->carbontc_out);
+		error_log("delta carbon store = %g tC/sizecell/day\n", c->carbontc_store - c->carbontc_old_store);
+		error_log("carbon_balance = %g tC/sizecell/day\n",c->carbontc_balance);
 		error_log("...FATAL ERROR in 'Cell_model_daily' carbon mass balance (tC/sizecell/day)(exit)\n");
-		CHECK_CONDITION(fabs( balance_tC ), > , eps);
+		CHECK_CONDITION(fabs( c->carbontc_balance ), > , eps);
 
 		return 0;
 	}
 	else
 	{
-		old_store_tC   = store_tC;
+		c->carbontc_old_store = c->carbontc_store;
 		logger(g_debug_log, "...ok in 'Cell_model_daily' carbon mass balance(tC/sizecell/day) \n");
 	}
 	/* ok */
@@ -401,38 +389,27 @@ int check_cell_carbon_mass_balance(cell_t *const c)
 
 int check_cell_water_flux_balance(cell_t *const c, const meteo_daily_t *const meteo_daily)
 {
-	double in;
-	double out;
-	double store;
-	double balance;
-	static double old_store;
-
-	double in_snow;
-	double out_snow;
-	double store_snow;
-	double balance_snow;
-	static double old_store_snow;
 
 	logger(g_debug_log, "\n*********CHECK CELL SOIL WATER BALANCE************\n");
 	/* DAILY CHECK ON SOIL POOL-ATMOSPHERE WATER BALANCE */
 	/* it takes into account soil-atmosphere fluxes */
 
 	/* sum of sources (rain + snow) */
-	in      = meteo_daily->prcp;
+	c->water_in      = meteo_daily->prcp;
 
 	/* sum of sinks */
-	out     = c->daily_c_transp + c->daily_c_evapo + c->daily_soil_evapo + c->daily_snow_subl + c->daily_out_flow;
+	c->water_out     = c->daily_c_transp + c->daily_c_evapo + c->daily_soil_evapo + c->daily_snow_subl + c->daily_out_flow;
 
 	/* sum of current storage in cell pools */
-	store   = ( c->asw + c->canopy_water_stored + c->snow_pack );
+	c->water_store   = ( c->asw + c->canopy_water_stored + c->snow_pack );
 
 	/* check soil pool water balance */
-	balance = in - out - ( store - old_store );
+	c->water_balance = c->water_in - c->water_out - ( c->water_store - c->water_old_store );
 
 	logger(g_debug_log, "\nCELL SOIL POOL WATER BALANCE\n");
 
 	/* check for soil water pool water balance */
-	if ( ( fabs( balance ) > eps ) && ( c->dos > 1 ) )
+	if ( ( fabs( c->water_balance ) > eps ) && ( c->dos > 1 ) )
 	{
 		error_log("DOY = %d\n", c->dos);
 		error_log("\nin\n");
@@ -447,19 +424,19 @@ int check_cell_water_flux_balance(cell_t *const c, const meteo_daily_t *const me
 		error_log("c->canopy_water_stored = %g\n", c->canopy_water_stored);
 		error_log("c->asw = %g\n", c->asw);
 		error_log("c->snow_pack = %g\n", c->snow_pack);
-		error_log("soil water in = %g\n", in);
-		error_log("soil water out = %g\n", out);
-		error_log("soil water store = %g\n", store);
-		error_log("delta soil water store = %g\n", store - old_store);
-		error_log("soil water balance = %g\n", balance);
+		error_log("soil water in = %g\n", c->water_in);
+		error_log("soil water out = %g\n", c->water_out  );
+		error_log("soil water store = %g\n", c->water_store);
+		error_log("delta soil water store = %g\n", c->water_store - c->water_old_store);
+		error_log("soil water balance = %g\n", c->water_balance);
 		error_log("...FATAL ERROR IN 'Cell_model_daily' soil water balance (exit)\n");
-		CHECK_CONDITION(fabs( balance ), > , eps);
+		CHECK_CONDITION(fabs( c->water_balance ), > , eps);
 
 		return 0;
 	}
 	else
 	{
-		old_store = store;
+		c->water_old_store = c->water_store;
 		logger(g_debug_log, "...ok 'Cell_model_daily' soil water balance\n");
 	}
 
@@ -468,21 +445,21 @@ int check_cell_water_flux_balance(cell_t *const c, const meteo_daily_t *const me
 	/* it takes into account snow-soil-atmosphere fluxes */
 
 	/* sum of sources (snow) */
-	in_snow      = meteo_daily->snow;
+	c->snow_in      = meteo_daily->snow;
 
 	/* sum of sinks */
-	out_snow     = c->daily_snow_melt + c->daily_snow_subl;
+	c->snow_out     = c->daily_snow_melt + c->daily_snow_subl;
 
 	/* sum of current storage in snow pack */
-	store_snow   = c->snow_pack;
+	c->snow_store   = c->snow_pack;
 
 	/* check snow pool water balance */
-	balance_snow = in_snow - out_snow - ( store_snow - old_store_snow);
+	c->snow_balance = c->snow_in - c->snow_out - ( c->snow_store - c->snow_old_store);
 
 	logger(g_debug_log, "\nCELL SNOW POOL WATER BALANCE\n");
 
 	/* check for soil water pool water balance */
-	if ( ( fabs( balance ) > eps ) && ( c->dos > 1 ) )
+	if ( ( fabs( c->snow_balance ) > eps ) && ( c->dos > 1 ) )
 	{
 		error_log("DOY = %d\n", c->doy);
 		error_log("\nin\n");
@@ -492,18 +469,18 @@ int check_cell_water_flux_balance(cell_t *const c, const meteo_daily_t *const me
 		error_log("c->daily_snow_melt = %g\n", c->daily_snow_melt);
 		error_log("\nstore (as a difference between old and current)\n");
 		error_log("delta c->asw = %g\n", c->snow_pack);
-		error_log("soil water in = %g\n", in_snow);
-		error_log("soil water out = %g\n", out_snow);
-		error_log("soil water store = %g\n", store_snow);
-		error_log("soil water balance = %g\n", balance_snow);
+		error_log("soil water in = %g\n", c->snow_in);
+		error_log("soil water out = %g\n", c->snow_out);
+		error_log("soil water store = %g\n", c->snow_store);
+		error_log("soil water balance = %g\n", c->snow_balance);
 		error_log("...FATAL ERROR IN 'Cell_model_daily' snow water balance (exit)\n");
-		CHECK_CONDITION(fabs( balance ), > , eps);
+		CHECK_CONDITION(fabs( c->snow_balance ), > , eps);
 
 		return 0;
 	}
 	else
 	{
-		old_store_snow = store_snow;
+		c->snow_old_store = c->snow_store;
 		logger(g_debug_log, "...ok 'Cell_model_daily' snow water balance\n");
 	}
 	/* ok */
