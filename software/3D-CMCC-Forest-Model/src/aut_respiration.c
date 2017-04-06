@@ -195,7 +195,7 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 	c->monthly_maint_resp              += s->value[TOTAL_MAINT_RESP];
 	c->annual_maint_resp               += s->value[TOTAL_MAINT_RESP];
 
-	CHECK_CONDITION(s->value[TOTAL_MAINT_RESP], <, 0);
+	CHECK_CONDITION(s->value[TOTAL_MAINT_RESP], <, ZERO );
 }
 
 void growth_respiration(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species)
@@ -251,7 +251,7 @@ void growth_respiration(cell_t *const c, const int layer, const int height, cons
 	c->annual_growth_resp               += s->value[TOTAL_GROWTH_RESP];
 
 	/* check */
-	CHECK_CONDITION(s->value[TOTAL_GROWTH_RESP], <, 0);
+	CHECK_CONDITION(s->value[TOTAL_GROWTH_RESP], < , ZERO );
 }
 
 void autotrophic_respiration(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, const meteo_daily_t *const meteo_daily)
@@ -322,7 +322,7 @@ void autotrophic_respiration(cell_t *const c, const int layer, const int height,
 	c->annual_aut_resp_tC                  += (s->value[TOTAL_AUT_RESP] / 1e6 * g_settings->sizeCell);
 
 	/* check */
-	CHECK_CONDITION(s->value[TOTAL_AUT_RESP], <, 0);
+	CHECK_CONDITION(s->value[TOTAL_AUT_RESP], < , ZERO );
 }
 
 void growth_respiration_frac ( const age_t *const a, species_t *const s )

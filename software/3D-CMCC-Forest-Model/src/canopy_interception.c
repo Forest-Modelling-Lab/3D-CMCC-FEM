@@ -42,8 +42,8 @@ void canopy_interception(cell_t *const c, const int layer, const int height, con
 	if( !layer_height_class_counter && !cell_height_class_counter )
 	{
 		/* reset temporary values when the first height class in layer is processed */
-		temp_int_rain = 0.0;
-		temp_int_snow = 0.0;
+		temp_int_rain = 0.;
+		temp_int_snow = 0.;
 
 		/* assign meteo variables to cell variables */
 		/* assign incoming rain */

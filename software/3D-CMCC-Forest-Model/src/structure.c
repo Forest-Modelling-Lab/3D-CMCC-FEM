@@ -173,7 +173,7 @@ int annual_forest_structure(cell_t* const c, const int year)
 		logger(g_debug_log, "-layer %d height class(es) = %d\n", layer, c->tree_layers[layer].layer_n_height_class);
 
 		/* check */
-		CHECK_CONDITION(c->tree_layers[layer].layer_n_height_class, <, 0);
+		CHECK_CONDITION(c->tree_layers[layer].layer_n_height_class, <, ZERO);
 	}
 	logger(g_debug_log, "**************************************\n\n");
 

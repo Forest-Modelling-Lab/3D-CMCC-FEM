@@ -79,7 +79,7 @@ void photosynthesis(cell_t *const c, const int layer, const int height, const in
 	GPPmolC = Lue /* * s->value[CANOPY_FRAC_DAY_TRANSP]*/;
 
 	/* check */
-	CHECK_CONDITION( GPPmolC, <, 0 );
+	CHECK_CONDITION( GPPmolC, <, ZERO);
 
 	/* Daily GPP in gC/m2/day */
 	/* molC/m2/day --> gC/m2/day */

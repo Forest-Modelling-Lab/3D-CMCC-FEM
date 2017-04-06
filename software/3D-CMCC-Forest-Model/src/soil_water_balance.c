@@ -87,8 +87,8 @@ void soil_water_balance(cell_t *c, const meteo_daily_t *const meteo_daily)
 		c->daily_c_transp   = 0.;
 	}
 
-	CHECK_CONDITION(c->asw,       <, 0.0);
-	CHECK_CONDITION(c->snow_pack, <, 0.0);
+	CHECK_CONDITION(c->asw,       <, ZERO);
+	CHECK_CONDITION(c->snow_pack, <, ZERO);
 
 	//fixme
 	//	c->swc = (c->asw * 100)/c->max_asw_fc;
@@ -98,6 +98,6 @@ void soil_water_balance(cell_t *c, const meteo_daily_t *const meteo_daily)
 	//
 	//	/* check */
 	//	CHECK_CONDITION (c->swc, >, 100.1);
-	//	CHECK_CONDITION (c->swc, <, 0);
+	//	CHECK_CONDITION (c->swc, <, ZERO);
 
 }

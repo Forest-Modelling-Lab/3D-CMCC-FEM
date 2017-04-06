@@ -177,7 +177,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 
 	/* check */
 	CHECK_CONDITION(s->value[F_T], >, 1);
-	CHECK_CONDITION(s->value[F_T], <, 0);
+	CHECK_CONDITION(s->value[F_T], <, ZERO);
 
 	/********************************************************************************************/
 
@@ -197,7 +197,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 
 	/* check */
 	CHECK_CONDITION(s->value[F_VPD], >, 1);
-	CHECK_CONDITION(s->value[F_VPD], <, 0);
+	CHECK_CONDITION(s->value[F_VPD], <, ZERO);
 
 	/********************************************************************************************/
 
@@ -246,7 +246,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 
 	/* check */
 	CHECK_CONDITION(s->value[F_AGE], >, 1);
-	CHECK_CONDITION(s->value[F_AGE], <, 0);
+	CHECK_CONDITION(s->value[F_AGE], <, ZERO);
 
 	/********************************************************************************************/
 
@@ -256,7 +256,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 
 	/* check */
 	CHECK_CONDITION(s->value[F_NUTR], >, 1);
-	CHECK_CONDITION(s->value[F_NUTR], <, 0);
+	CHECK_CONDITION(s->value[F_NUTR], <, ZERO);
 
 	//test 25 nov 2016
 	//test move FN0, FNN to species.txt
@@ -275,7 +275,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 
 	/* check */
 	CHECK_CONDITION(s->value[F_NUTR], >, 1);
-	CHECK_CONDITION(s->value[F_NUTR], <, 0);
+	CHECK_CONDITION(s->value[F_NUTR], <, ZERO);
 #endif
 	/********************************************************************************************/
 #if 0
@@ -303,6 +303,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	logger(g_debug_log, "vwc_sat = %f (DIM)\n", c->vwc_sat);
 	logger(g_debug_log, "vwc/vwc_sat = %f \n", c->vwc / c->vwc_sat);
 	logger(g_debug_log, "vwc/vwc_fc = %f \n", c->vwc / c->vwc_fc);
+
 	c->psi = c->psi_sat * pow((c->vwc/c->vwc_sat), c->soil_b);
 	logger(g_debug_log, "PSI BIOME = %f (MPa)\n", c->psi);
 
@@ -345,7 +346,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 
 	/* check */
 	CHECK_CONDITION(s->value[F_SW], >, 1);
-	CHECK_CONDITION(s->value[F_SW], <, 0);
+	CHECK_CONDITION(s->value[F_SW], <, ZERO);
 
 	/********************************************************************************************/
 
@@ -363,7 +364,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 
 	/* check */
 	CHECK_CONDITION(s->value[PHYS_MOD], >, 1);
-	CHECK_CONDITION(s->value[PHYS_MOD], <, 0);
+	CHECK_CONDITION(s->value[PHYS_MOD], <, ZERO);
 
 	/********************************************************************************************/
 

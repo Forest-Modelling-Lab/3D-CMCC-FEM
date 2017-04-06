@@ -73,10 +73,10 @@ void daily_lai (species_t *const s)
 	logger(g_debug_log,"*****************************\n");
 
 	/* checks */
-	CHECK_CONDITION(s->value[LAI_PROJ],       <, 0.0);
-	CHECK_CONDITION(s->value[LAI_SUN_PROJ],   <, 0.0);
-	CHECK_CONDITION(s->value[LAI_SHADE_PROJ], <, 0.0);
-	CHECK_CONDITION(s->value[ALL_LAI_PROJ],   <, 0.0);
+	CHECK_CONDITION(s->value[LAI_PROJ],       <, ZERO);
+	CHECK_CONDITION(s->value[LAI_SUN_PROJ],   <, ZERO);
+	CHECK_CONDITION(s->value[LAI_SHADE_PROJ], <, ZERO);
+	CHECK_CONDITION(s->value[ALL_LAI_PROJ],   <, ZERO);
 	CHECK_CONDITION(fabs((s->value[LAI_SUN_PROJ] + s->value[LAI_SHADE_PROJ]) - s->value[LAI_PROJ]), >, eps );
 	CHECK_CONDITION(s->value[LAI_PROJ], >, (s->value[PEAK_LAI_PROJ] + eps));
 }

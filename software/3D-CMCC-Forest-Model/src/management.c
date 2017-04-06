@@ -109,10 +109,10 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 							years_for_thinning = 0;
 
 							/* check that all mandatory variables are filled */
-							CHECK_CONDITION (g_settings->replanted_n_tree, <, 0);
+							CHECK_CONDITION (g_settings->replanted_n_tree, <, ZERO);
 							CHECK_CONDITION (g_settings->replanted_height, <, 1.3);
-							CHECK_CONDITION (g_settings->replanted_avdbh, <, 0);
-							CHECK_CONDITION (g_settings->replanted_age, <, 0);
+							CHECK_CONDITION (g_settings->replanted_avdbh,  <, ZERO);
+							CHECK_CONDITION (g_settings->replanted_age,    <, ZERO);
 
 							/* re-planting tree class */
 							if( g_settings->replanted_n_tree )
@@ -187,7 +187,7 @@ void thinning (cell_t *const c, const int height, const int dbh, const int age, 
 	logger(g_debug_log, "Number of trees after management = %d trees/cell\n", s->counter[N_TREE]);
 
 	/* check */
-	CHECK_CONDITION(s->counter[N_TREE], <, 0);
+	CHECK_CONDITION(s->counter[N_TREE], <, ZERO );
 
 	/*********************************************************************************************************************************************************************/
 

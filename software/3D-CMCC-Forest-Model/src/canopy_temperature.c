@@ -66,7 +66,7 @@ void canopy_temperature(cell_t *const c, const int layer, const int height, cons
 
 	delta = (pvs1-pvs2) / (t1-t2);
 	/* converts into kPA following Webber et al., 2016 */
-	delta /= 1000.0;
+	delta /= 1e3;
 
 	/* leaf boundary-layer conductance */
 	gl_bl = s->value[BLCOND] * g_corr;
@@ -78,7 +78,7 @@ void canopy_temperature(cell_t *const c, const int layer, const int height, cons
 	gc_sh = gl_sh * s->value[LAI_PROJ];
 
 	/* Canopy resistance to sensible heat */
-	ra = 1./gc_sh;
+	ra = 1. / gc_sh;
 
 	/* Leaf conductance to evaporated water vapor, per unit projected LAI */
 	gl_e_wv = gl_bl;
@@ -87,10 +87,10 @@ void canopy_temperature(cell_t *const c, const int layer, const int height, cons
 	gc_e_wv = gl_e_wv * s->value[LAI_PROJ];
 
 	/* Canopy resistance to vapour transport */
-	rc = 1./gc_e_wv;
+	rc = 1. / gc_e_wv;
 
 	/* compute product of psychrometric constant */
-	psych_p = meteo_daily->psych * (1. + (rc/ra));
+	psych_p = meteo_daily->psych * (1. + ( rc / ra ));
 
 	if(s->counter[VEG_DAYS] == 1)
 	{

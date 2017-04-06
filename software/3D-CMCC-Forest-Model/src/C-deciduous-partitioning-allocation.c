@@ -68,15 +68,15 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 	logger(g_debug_log, "*Partitioning ratios*\n");
 
 	/* roots */
-	pR = (r0 + (omega * ( 1.0 - s->value[F_SW]))) / (1.0 + (omega * (2.0 - Light_trasm - s->value[F_SW])));
+	pR = (r0 + (omega * ( 1. - s->value[F_SW]))) / (1. + (omega * (2. - Light_trasm - s->value[F_SW])));
 	//logger(g_debug_log, "Roots CTEM ratio = %g %%\n", pR * 100);
 
 	/* stem */
-	pS = (s0 + (omega * ( 1.0 - Light_trasm))) / (1.0 + ( omega * (2.0 - Light_trasm - s->value[F_SW])));
+	pS = (s0 + (omega * ( 1. - Light_trasm))) / (1. + ( omega * (2. - Light_trasm - s->value[F_SW])));
 	//logger(g_debug_log, "Stem CTEM ratio = %g %%\n", pS * 100. );
 
 	/* reserve and leaves */
-	pL = (1.0 - pS - pR);
+	pL = (1. - pS - pR);
 	//logger(g_debug_log, "Reserve CTEM ratio = %g %%\n", pL * 100. );
 	CHECK_CONDITION( fabs ( pR + pS + pL ), >, 1 + eps );
 

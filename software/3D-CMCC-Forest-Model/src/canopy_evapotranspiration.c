@@ -164,8 +164,8 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 			logger(g_debug_log, "LAI_PROJ = %g\n",s->value[LAI_PROJ]);
 			logger(g_debug_log, "CANOPY_WATER = %g mm\n",s->value[CANOPY_WATER]);
 
-			rv = 1.0/gc_e_wv;
-			rh = 1.0/gc_sh;
+			rv = 1. / gc_e_wv;
+			rh = 1. / gc_sh;
 
 			/* radiation */
 			net_rad = s->value[SW_RAD_ABS];
@@ -241,7 +241,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 				logger(g_debug_log, "transp_daylength_sec = %g\n", s->value[CANOPY_FRAC_DAY_TRANSP]);
 
 				/* Leaf-Canopy resistance to sensible heat */
-				rh = 1.0/gl_sh;
+				rh = 1. / gl_sh;
 
 				/************************************************************************************/
 				/* calculate transpiration using adjusted day length */
@@ -249,7 +249,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 				logger(g_debug_log, "\n--Transpiration for LAI sun--\n");
 
 				/* for sun canopy fraction */
-				rv = 1.0/gl_t_wv_sun;
+				rv = 1. / gl_t_wv_sun;
 
 				/* note: Net Rad is Short wave flux */
 				net_rad = s->value[SW_RAD_ABS_SUN] / (1. - exp(- s->value[LAI_PROJ]));
@@ -324,7 +324,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 			s->value[CANOPY_FRAC_DAY_TRANSP] = 1.;
 
 			/* Leaf-Canopy resistance to sensible heat */
-			rh = 1.0 / gl_sh;
+			rh = 1. / gl_sh;
 
 			/************************************************************************************/
 			/* calculate transpiration using adjusted day length */

@@ -63,6 +63,7 @@ enum {
 #define Pi               3.141592654      /* Pi greek */
 #define ln2              0.693147181      /* logarithm constant */
 #define eps                     1e-6      /* differences in comparison */
+#define ZERO                  -1e-10      /* ower limit of state variables before they are set to 0.0 to control rounding and overflow errors */
 #define e                 2.71828183      /* nepero/eulero constant */
 #define DBH_ref                  1.3      /* reference DBH value */
 #define GRPERC                   0.3      /* (DIM) percentage of growth resp per unit of C grown see BIOME, 0.25 for LPJ */

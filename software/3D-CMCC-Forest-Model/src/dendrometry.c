@@ -165,7 +165,7 @@ void dendrometry ( cell_t *const c, const int layer, const int height, const int
 
 		/*check */
 		CHECK_CONDITION(current_lcf, >, 1);
-		CHECK_CONDITION(current_lcf, <, 0);
+		CHECK_CONDITION(current_lcf, <, ZERO );
 
 		/* cumulate annual light competition factor */
 		annual_lcf += current_lcf;
@@ -180,7 +180,7 @@ void dendrometry ( cell_t *const c, const int layer, const int height, const int
 
 		/*check */
 		CHECK_CONDITION(current_ccf, >, 1);
-		CHECK_CONDITION(current_ccf, <, 0);
+		CHECK_CONDITION(current_ccf, <, ZERO );
 
 		/* cumulate annual crown competition factor */
 		annual_ccf += current_ccf;
@@ -198,14 +198,14 @@ void dendrometry ( cell_t *const c, const int layer, const int height, const int
 
 		/* check */
 		CHECK_CONDITION(annual_lcf, >, 1);
-		CHECK_CONDITION(annual_lcf, <, 0);
+		CHECK_CONDITION(annual_lcf, <, ZERO);
 
 		/* compute average annual crown competition factor */
 		annual_ccf /= (double)counter_annual_ccf;
 
 		/* check */
 		CHECK_CONDITION(annual_ccf, >, 1);
-		CHECK_CONDITION(annual_ccf, <, 0);
+		CHECK_CONDITION(annual_ccf, <, ZERO);
 
 		/*******************************************************************************************/
 
