@@ -105,6 +105,9 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 							/* remove tree class */
 							harvesting ( c, height, dbh, age, species );
 
+							/* note: RESET c->dos */
+							c->dos = 0.;
+
 							/* reset years_for_thinning */
 							years_for_thinning = 0;
 

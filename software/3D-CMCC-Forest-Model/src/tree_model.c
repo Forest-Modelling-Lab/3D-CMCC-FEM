@@ -346,7 +346,6 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							/* 4 */ if ( ! check_tree_class_water_flux_balance     ( c, layer, height, dbh, age, species ) ) return 0;
 
 							/* check for carbon mass balance closure */
-							//ALESSIOC TO ALESSIOR model crashes when management is on after harvesting
 							/* 5 */ if ( ! check_tree_class_carbon_mass_balance    ( c, layer, height, dbh, age, species ) ) return 0;
 
 							/****************************************************************************************************************************************/

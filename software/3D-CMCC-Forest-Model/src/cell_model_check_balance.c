@@ -18,6 +18,10 @@
 
 extern logger_t* g_debug_log;
 
+/* note: when model checks fluxes there's no need to use global variables */
+/* note: when model checks for stocks and it uses at least one stock for balance or it
+ *  simulates more than one class it needs to use global variables */
+
 int check_cell_radiation_flux_balance (cell_t *const c, const meteo_daily_t *const meteo_daily)
 {
 	double in;
@@ -177,7 +181,7 @@ int check_cell_carbon_flux_balance(cell_t *const c)
 	/* sum of current carbon storage */
 	store   = c->daily_npp;
 
-	balance = in - out -store;
+	balance = in - out - store;
 
 	logger(g_debug_log, "\nCELL CARBON FLUX BALANCE\n");
 

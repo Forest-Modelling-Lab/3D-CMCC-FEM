@@ -17,7 +17,8 @@
 extern logger_t* g_debug_log;
 
 /* note: when model checks fluxes there's no need to use global variables */
-/* note: when model checks for stocks and it uses at least one stock it needs to use global variables */
+/* note: when model checks for stocks and it uses at least one stock for balance or it
+ *  simulates more than one class it needs to use global variables */
 
 
 int check_tree_class_radiation_flux_balance(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species)
@@ -244,7 +245,7 @@ int check_tree_class_carbon_flux_balance(cell_t *const c, const int layer, const
 	return 1;
 }
 
-int check_tree_class_carbon_mass_balance(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species)
+int check_tree_class_carbon_mass_balance ( cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species )
 {
 	species_t *s;
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
@@ -309,7 +310,7 @@ int check_tree_class_carbon_mass_balance(cell_t *const c, const int layer, const
 	/* ok */
 	return 1;
 }
-int check_tree_class_nitrogen_flux_balance (cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species)
+int check_tree_class_nitrogen_flux_balance ( cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species )
 {
 	double in;
 	double out;
@@ -374,14 +375,14 @@ int check_tree_class_nitrogen_flux_balance (cell_t *const c, const int layer, co
 	/* ok */
 	return 1;
 }
-int check_tree_class_nitrogen_mass_balance(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species)
+int check_tree_class_nitrogen_mass_balance ( cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species )
 {
 	//fixme TODO
 	/* ok */
 	return 1;
 }
 
-int check_tree_class_water_flux_balance(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species)
+int check_tree_class_water_flux_balance ( cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species )
 {
 	species_t *s;
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
