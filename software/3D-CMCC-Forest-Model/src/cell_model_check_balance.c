@@ -20,7 +20,7 @@ extern logger_t* g_debug_log;
 
 /* note: when model checks fluxes there's no need to use global variables */
 /* note: when model checks for stocks and it uses at least one stock for balance or it
- *  simulates more than one class it needs to use global variables */
+ *  simulates more than one cell it needs to use global variables */
 
 int check_cell_radiation_flux_balance (cell_t *const c, const meteo_daily_t *const meteo_daily)
 {
