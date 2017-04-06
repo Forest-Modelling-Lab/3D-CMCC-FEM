@@ -656,10 +656,27 @@ enum {
 	SOIL3_RH,                           /* (kgC/m2/d) heterotrophic respiration for microbial recycling pool (slow) */
 	SOIL4_RH,                           /* (kgC/m2/d) heterotrophic respiration for recalcitrant SOM (humus, slowest) */
 
-
-
 	/* LPJ MORTALITY FUNCTION */
 	AGEMORT,                            /* Age probability mortality function */
+
+	/*** BALANCES VALUES ***/
+	TREEC_IN,                           /* tree carbon balance in */
+	TREEC_OUT,                          /* tree carbon balance out */
+	TREEC_STORE,                        /* tree carbon balance store */
+	TREEC_OLDSTORE,                     /* tree carbon balance old_store */
+	TREEC_BALANCE,                      /* tree carbon balance balance */
+
+	TREEW_IN,                           /* tree water balance in */
+	TREEW_OUT,                          /* tree water balance out */
+	TREEW_STORE,                        /* tree water balance store */
+	TREEW_OLDSTORE,                     /* tree water balance old_store */
+	TREEW_BALANCE,                      /* tree water balance balance */
+
+	TREEN_IN,                           /* tree nitrogen balance in */
+	TREEN_OUT,                          /* tree nitrogen balance out */
+	TREEN_STORE,                        /* tree nitrogen balance store */
+	TREEN_OLDSTORE,                     /* tree nitrogen balance old_store */
+	TREEN_BALANCE,                      /* tree nitrogen balance balance */
 
 	VALUES
 };
@@ -681,6 +698,7 @@ enum {
 	DAY_VEG_FOR_LEAF_FALL,              /* days for leaf fall */
 	LEAF_FALL_COUNTER,                  /* counter for leaf fall */
 	SENESCENCE_DAY_ONE,                 /* doy at first day of the senescence */
+	DOS,                                /* day of simulation */
 
 	COUNTERS
 };

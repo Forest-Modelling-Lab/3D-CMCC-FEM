@@ -16,6 +16,9 @@
 
 extern logger_t* g_debug_log;
 
+/* note: when model checks fluxes there's no need to use global variables */
+/* note: when model checks for stocks and it uses at least one stock it needs to use global variables */
+
 
 int check_tree_class_radiation_flux_balance(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species)
 {
@@ -28,7 +31,6 @@ int check_tree_class_radiation_flux_balance(cell_t *const c, const int layer, co
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 	/* DAILY CHECK ON CLASS LEVEL CANOPY POOL-ATMOSPHERE RADIATIVE BALANCE */
-	//fixme: for all the balance doesn't takes into account the amount of light previously removed in Radiation function
 
 	/* PAR balance */
 	/* sum of sources */
@@ -244,12 +246,6 @@ int check_tree_class_carbon_flux_balance(cell_t *const c, const int layer, const
 
 int check_tree_class_carbon_mass_balance(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species)
 {
-	double in;
-	double out;
-	double store;
-	double balance;
-	static double old_store;
-
 	species_t *s;
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
@@ -257,15 +253,15 @@ int check_tree_class_carbon_mass_balance(cell_t *const c, const int layer, const
 	/* check complete tree level carbon mass balance */
 
 	/* sum of sources */
-	in      = s->value[GPP_tC];
+	s->value[TREEC_IN]    = s->value[GPP_tC];
 
 	/* sum of sinks */
-	out     = s->value[TOTAL_MAINT_RESP_tC] +
+	s->value[TREEC_OUT]   = s->value[TOTAL_MAINT_RESP_tC] +
 			s->value[TOTAL_GROWTH_RESP_tC] +
 			s->value[C_TO_LITR] + s->value[C_TO_CWD];
 
 	/* sum of current storage */
-	store   = s->value[LEAF_C]  +
+	s->value[TREEC_STORE] = s->value[LEAF_C]  +
 			s->value[FROOT_C]   +
 			s->value[CROOT_C]   +
 			s->value[STEM_C]    +
@@ -274,24 +270,24 @@ int check_tree_class_carbon_mass_balance(cell_t *const c, const int layer, const
 			s->value[FRUIT_C]   ;
 
 	/* check carbon pool balance */
-	balance = in - out - (store - old_store);
+	s->value[TREEC_BALANCE] = s->value[TREEC_IN] - s->value[TREEC_OUT] - (s->value[TREEC_STORE] - s->value[TREEC_OLDSTORE]);
 
 	logger(g_debug_log, "\nCLASS LEVEL CARBON MASS BALANCE\n");
 
 	/* check for carbon mass balance closure */
-	if ( ( fabs( balance ) > eps ) && ( c->dos > 1 ) )
+	if ( ( fabs( s->value[TREEC_BALANCE] ) > eps ) && ( s->counter[DOS] > 1 ) )
 	{
-		error_log("DOS = %d\n", c->dos);
-		error_log("\nin = %g tC/sizecell/day\n", in);
+		error_log("TREE DOS = %d\n", s->counter[DOS]);
+		error_log("\nin = %g tC/sizecell/day\n", s->value[TREEC_IN]);
 		error_log("GPP = %g tC/sizecell\n", s->value[GPP_tC]);
-		error_log("\nout = %g tC/sizecell/day\n", out);
+		error_log("\nout = %g tC/sizecell/day\n", s->value[TREEC_OUT]);
 		error_log("TOTAL_MAINT_RESP_tC = %g tC/sizecell/day\n", s->value[TOTAL_MAINT_RESP_tC]);
 		error_log("TOTAL_GROWTH_RESP_tC = %g tC/sizecell/day\n", s->value[TOTAL_GROWTH_RESP_tC]);
 		error_log("C_TO_LITR = %g tC/sizecell/day\n", s->value[C_TO_LITR]);
 		error_log("C_TO_CWD = %g tC/sizecell/day\n", s->value[C_TO_CWD]);
-		error_log("\nold_store = %g tC/sizecell\n", old_store);
-		error_log("store = %g tC/sizecell\n", store);
-		error_log("store - old_tore = %g tC/sizecell\n", store - old_store);
+		error_log("\nold_store = %g tC/sizecell\n", s->value[TREEC_OLDSTORE]);
+		error_log("store = %g tC/sizecell\n", s->value[TREEC_STORE]);
+		error_log("store - old_tore = %g tC/sizecell\n", s->value[TREEC_STORE] - s->value[TREEC_OLDSTORE]);
 		error_log("LEAF_C = %g tC/cell/day\n", s->value[LEAF_C]);
 		error_log("FROOT_C = %g tC/cell/day\n", s->value[FROOT_C]);
 		error_log("CROOT_C = %g tC/cell/day\n", s->value[CROOT_C]);
@@ -299,15 +295,15 @@ int check_tree_class_carbon_mass_balance(cell_t *const c, const int layer, const
 		error_log("BRANCH_C = %g tC/cell/day\n", s->value[BRANCH_C]);
 		error_log("RESERVE_C = %g tC/cell/day\n", s->value[RESERVE_C]);
 		error_log("FRUIT_C = %g tC/cell/day\n", s->value[FRUIT_C]);
-		error_log("\nbalance = %g tC/sizecell\n", balance);
+		error_log("\nbalance = %g tC/sizecell\n", s->value[TREEC_BALANCE]);
 		error_log("...FATAL ERROR in 'Tree_model_daily' carbon mass balance (exit)\n");
-		CHECK_CONDITION(fabs( balance ), > , eps);
+		CHECK_CONDITION(fabs( s->value[TREEC_BALANCE] ), > , eps);
 
 		return 0;
 	}
 	else
 	{
-		old_store = store;
+		s->value[TREEC_OLDSTORE] = s->value[TREEC_STORE];
 		logger(g_debug_log, "...ok in 'Tree_model_daily' carbon mass balance\n");
 	}
 	/* ok */
@@ -378,49 +374,49 @@ int check_tree_class_nitrogen_flux_balance (cell_t *const c, const int layer, co
 	/* ok */
 	return 1;
 }
+int check_tree_class_nitrogen_mass_balance(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species)
+{
+	//fixme TODO
+	/* ok */
+	return 1;
+}
 
 int check_tree_class_water_flux_balance(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species)
 {
-	double in;
-	double out;
-	double store;
-	double balance;
-	static double old_store;
-
 	species_t *s;
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 	/* DAILY CHECK ON CLASS LEVEL CANOPY POOL-ATMOSPHERE WATER BALANCE */
 
 	/* sum of sources */
-	in      = s->value[CANOPY_INT];
+	s->value[TREEW_IN]      = s->value[CANOPY_INT];
 
 	/* sum of sinks */
-	out     = s->value[CANOPY_EVAPO];
+	s->value[TREEW_OUT]     = s->value[CANOPY_EVAPO];
 
 	/* sum of current storage */
-	store   = s->value[CANOPY_WATER];
+	s->value[TREEW_STORE]   = s->value[CANOPY_WATER];
 
 	/* check canopy water pool balance */
-	balance = in - out - ( store - old_store );
+	s->value[TREEW_BALANCE] = s->value[TREEW_IN] - s->value[TREEW_OUT] - ( s->value[TREEW_STORE] - s->value[TREEW_OLDSTORE] );
 
 	logger(g_debug_log, "\nCLASS LEVEL WATER BALANCE\n");
 
-	if ( ( fabs( balance ) > eps ) && ( c->dos > 1 ) )
+	if ( ( fabs( s->value[TREEW_BALANCE] ) > eps ) && ( s->counter[DOS] > 1 ) )
 	{
-		error_log("DOY = %d\n", c->doy);
-		error_log("canopy water in = %g\n", in);
-		error_log("canopy water out = %g\n", out);
-		error_log("canopy water store = %g\n", store);
-		error_log("canopy water balance = %g\n", balance);
+		error_log("TREE DOS = %d\n", s->counter[DOS]);
+		error_log("canopy water in = %g\n", s->value[TREEW_IN]);
+		error_log("canopy water out = %g\n", s->value[TREEW_OUT]);
+		error_log("canopy water store = %g\n", s->value[TREEW_STORE]);
+		error_log("canopy water balance = %g\n", s->value[TREEW_BALANCE]);
 		error_log("...FATAL ERROR in 'Tree_model_daily' canopy water balance (exit)\n");
-		CHECK_CONDITION(fabs( balance ), > , eps);
+		CHECK_CONDITION(fabs( s->value[TREEW_BALANCE] ), > , eps);
 
 		return 0;
 	}
 	else
 	{
-		old_store = store;
+		s->value[TREEW_OLDSTORE] = s->value[TREEW_STORE];
 		logger(g_debug_log, "...ok in 'Tree_model_daily' canopy water balance\n");
 	}
 	/* ok */

@@ -187,6 +187,25 @@ void phenology(cell_t *const c, const int layer, const int height, const int dbh
 		}
 	}
 	logger(g_debug_log, "phenology phase = %d\n", s->phenology_phase);
+
+
+	if ( s->counter[VEG_UNVEG] == 1 )
+	{
+		logger(g_debug_log, "\n\n*****VEGETATIVE PERIOD FOR %s SPECIES*****\n", s->name );
+
+		/* increment vegetative days counter */
+		++s->counter[VEG_DAYS];
+		logger(g_debug_log, "VEG_DAYS = %d \n", s->counter[VEG_DAYS]);
+	}
+	else
+	{
+		logger(g_debug_log, "\n\n*****UN-VEGETATIVE PERIOD FOR %s SPECIES*****\n", s->name );
+
+		/* increment vegetative days counter */
+		s->counter[VEG_DAYS] = 0;
+		logger(g_debug_log, "VEG_DAYS = %d \n", s->counter[VEG_DAYS]);
+	}
+
 }
 
 //void Phenology_phase (species_t *const s, const meteo_t* const met, const int year, const int month, const int day)

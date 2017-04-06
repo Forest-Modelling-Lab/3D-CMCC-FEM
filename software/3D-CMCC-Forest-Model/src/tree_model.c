@@ -192,6 +192,11 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 									"*                              species = %s                         *\n"
 									"*****************************************************************************\n", s->name);
 
+							/**********************************/
+							/* counter for days of simulation */
+							++s->counter[DOS];
+							/**********************************/
+
 							/* beginning of simulation (every year included the first one) */
 							if ( ( g_soil_settings->values[SOIL_LAT] > 0 && c->doy == 1)  ||
 									( g_soil_settings->values[SOIL_LAT] < 0 && c->doy == 180) )
@@ -210,23 +215,6 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							phenology ( c, layer, height, dbh, age, species, meteo_daily, day, month, year);
 
 							logger(g_debug_log, "--PHYSIOLOGICAL PROCESSES LAYER %d --\n", l->layer_z);
-
-							if ( s->counter[VEG_UNVEG] == 1 )
-							{
-								logger(g_debug_log, "\n\n*****VEGETATIVE PERIOD FOR %s SPECIES*****\n", s->name );
-
-								/* increment vegetative days counter */
-								++s->counter[VEG_DAYS];
-								logger(g_debug_log, "VEG_DAYS = %d \n", s->counter[VEG_DAYS]);
-							}
-							else
-							{
-								logger(g_debug_log, "\n\n*****UN-VEGETATIVE PERIOD FOR %s SPECIES*****\n", s->name );
-
-								/* increment vegetative days counter */
-								s->counter[VEG_DAYS] = 0;
-								logger(g_debug_log, "VEG_DAYS = %d \n", s->counter[VEG_DAYS]);
-							}
 
 							/*********************************************************************/
 							/** radiation **/
@@ -358,6 +346,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							/* 4 */ if ( ! check_tree_class_water_flux_balance     ( c, layer, height, dbh, age, species ) ) return 0;
 
 							/* check for carbon mass balance closure */
+							//ALESSIOC TO ALESSIOR model crashes when management is on after harvesting
 							/* 5 */ if ( ! check_tree_class_carbon_mass_balance    ( c, layer, height, dbh, age, species ) ) return 0;
 
 							/****************************************************************************************************************************************/

@@ -12,6 +12,7 @@ int check_tree_class_nitrogen_flux_balance  ( cell_t *const c, const int layer, 
 int check_tree_class_water_flux_balance     ( cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species );
 /* mass */
 int check_tree_class_carbon_mass_balance    ( cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species );
+int check_tree_class_nitrogen_mass_balance  ( cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species );
 
 /* litter level */
 int check_litter_carbon_flux_balance        ( cell_t *const c );
