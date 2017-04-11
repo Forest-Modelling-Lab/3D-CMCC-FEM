@@ -224,6 +224,8 @@ enum {
 	F_PSI,                              /* SOIL WATER modifier using PSI, see Biome */
 	F_CO2,                              /* CO2 soil fertilization effect */
 	F_CO2_TR,                           /* CO2 reduction effect (for stomatal conductance) */
+	F_A_SUN,                            /* ASSIMILATION modifier for Sun leaves (test) */
+	F_A_SHADE,                          /* ASSIMILATION modifier for Shaded leaves (test) */
 	PHYS_MOD,                           /* PHYSIOLOGICAL modifier */
 
 	/* water */
@@ -284,6 +286,8 @@ enum {
 	/* carbon variable */
 	C_FLUX,
 	GPP,                                /* Daily Gross Primary Production gC/m2/day */
+	GPP_SUN,                            /* Daily Sun Leaves Gross Primary Production gC/m2/day */
+	GPP_SHADE,                          /* Daily Shade Leaves Gross Primary Production gC/m2/day */
 	MONTHLY_GPP,                        /* Monthly Gross Primary Production gC/m2/month */
 	YEARLY_GPP,                         /* Yearly Gross Primary Production gC/m2/day */
 	GPP_tC,                             /* Daily Gross Primary Production tC/sizeCell/day */

@@ -1,0 +1,4 @@
+Year,x,y,Landuse,Age,Species,Management,N,Stool,AvDBH,Height,Wf,Wrc,Wrf,Ws,Wbb,Wres,Lai
+2004,0,0,F,39,Pinuslaricio3,T,637,0,29.0,21.2,0,0,0,0,0,0,4.5
+
+

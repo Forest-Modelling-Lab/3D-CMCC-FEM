@@ -103,9 +103,16 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 	/* apply all multipliers to the maximum stomatal conductance */
 	/* differently from BIOME we use F_T that takes into account not only minimum temperature effects */
 	/* differently from BIOME we use also F_AGE */
-
-	m_final_sun   = s->value[F_LIGHT_SUN] * s->value[F_SW] * s->value[F_T] * s->value[F_VPD] * s->value[F_AGE];
+#if 1
+	/* original BIOME version (Jarvis method) */
+	m_final_sun   = s->value[F_LIGHT_SUN]   * s->value[F_SW] * s->value[F_T] * s->value[F_VPD] * s->value[F_AGE];
 	m_final_shade = s->value[F_LIGHT_SHADE] * s->value[F_SW] * s->value[F_T] * s->value[F_VPD] * s->value[F_AGE];
+#else
+	/* following Duursma Maestro/Maestra Model (TO TEST) */
+	//note: Duursma uses fPAR, fVPD and fA, cause we include them into F_A calculation we exlude them from eq.
+	m_final_sun   = s->value[F_LIGHT_SUN]   * s->value[F_A_SUN];
+	m_final_shade = s->value[F_LIGHT_SHADE] * s->value[F_A_SHADE];
+#endif
 
 	if (m_final_sun   < eps) m_final_sun   = eps;
 	if (m_final_shade < eps) m_final_shade = eps;
@@ -118,7 +125,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 	//gl_s_shade = s->value[MAXCOND] * m_final_shade * g_corr;
 
 	/* following Jarvis 1997 + Frank et al., 2013 + Hidy et al., 2016 GMDD */
-	gl_s_sun      = gl_x * m_final_sun * g_corr;
+	gl_s_sun      = gl_x * m_final_sun   * g_corr;
 	gl_s_shade    = gl_x * m_final_shade * g_corr;
 
 	/* calculate leaf-and canopy-level conductances to water vapor and
@@ -132,7 +139,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 		LAI.  This formula is derived from stomatal and cuticular conductances
 		in parallel with each other, and both in series with leaf boundary
 		layer conductance. */
-	gl_t_wv_sun   = (gl_bl * (gl_s_sun + gl_c)) / (gl_bl + gl_s_sun + gl_c);
+	gl_t_wv_sun   = (gl_bl * (gl_s_sun + gl_c))   / (gl_bl + gl_s_sun + gl_c);
 	gl_t_wv_shade = (gl_bl * (gl_s_shade + gl_c)) / (gl_bl + gl_s_shade + gl_c);
 
 	/* Leaf conductance to sensible heat, per unit all-sided LAI */
@@ -142,7 +149,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 	gc_e_wv       = gl_e_wv * s->value[LAI_PROJ];
 
 	/* Canopy conductance to sensible heat */
-	gc_sh         = gl_sh * s->value[LAI_PROJ];
+	gc_sh         = gl_sh   * s->value[LAI_PROJ];
 
 	/* Canopy evaporation, if any water was intercepted */
 	/* Calculate Penman-Monteith evaporation, given the canopy conductances to
@@ -171,7 +178,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 			net_rad = s->value[SW_RAD_ABS];
 			logger(g_debug_log, "sw rad for evaporation (tot LAI) = %g W/m2\n", net_rad);
 
-			/* call Penman-Monteith function, it returns Potential evaporation in kg/m2/s for evaporation and W/m2 for latent heat*/
+			/* call Penman-Monteith function, it returns Potential evaporation in kg/m2/s for evaporation and W/m2 for latent heat */
 			//fixme use correct net radiation
 			evapo = Penman_Monteith (meteo_daily, rv, rh, net_rad);
 
@@ -193,7 +200,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 
 				++days_with_canopy_wet;
 
-				/* adjust daylength for transpiration */
+				/* adjust day length for transpiration */
 				transp_daylength_sec             = 0.;
 				s->value[CANOPY_FRAC_DAY_TRANSP] = 0.;
 				logger(g_debug_log, "transp_daylength_sec = %g\n", s->value[CANOPY_FRAC_DAY_TRANSP]);
@@ -234,7 +241,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 
 				logger(g_debug_log, "\n*CANOPY TRANSPIRATION (Partial Canopy Wet)*\n");
 
-				/* adjust daylength for transpiration */
+				/* adjust day length for transpiration */
 				transp_daylength_sec   = daylength_sec - evap_daylength_sec;
 
 				s->value[CANOPY_FRAC_DAY_TRANSP] = transp_daylength_sec / daylength_sec;
@@ -293,7 +300,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 				s->value[CANOPY_EVAPO_TRANSP] = s->value[CANOPY_EVAPO] + s->value[CANOPY_TRANSP];
 			}
 
-			/* note special case: assuming that all canopy water evaporates during last day of leaffall */
+			/* note special case for deciduous: assuming that all canopy water evaporates during last day of leaffall */
 			if ( ( s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2 ) &&
 					(s->counter[DAY_FRAC_FOLIAGE_REMOVE] == s->counter[LEAF_FALL_COUNTER] ) )
 			{

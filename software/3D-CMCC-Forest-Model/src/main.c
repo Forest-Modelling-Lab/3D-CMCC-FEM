@@ -1480,13 +1480,15 @@ int main(int argc, char *argv[]) {
 					print_daily_cell_data ( &matrix->cells[cell] );
 
 					/************************************************************************/
+
 					if ( g_sz_dataset_file )
 					{
+						/* run tree model daily */
 						if ( (LANDUSE_F == g_soil_settings->landuse) && (matrix->cells[cell].heights_count != 0) )
 						{
 							if ( 'f' == g_settings->version )
 							{
-								/* run tree model daily */
+
 								if ( !Tree_model_daily( matrix, cell, day, month, year ) )
 								{
 									logger(g_debug_log, "tree model daily failed!!!\n");
@@ -1516,7 +1518,7 @@ int main(int argc, char *argv[]) {
 					}
 					else
 					{
-						printf("ok litter_model (%02d-%02d-%d)\n", day+1, month+1, year+g_settings->year_start);
+						printf("ok litr_model (%02d-%02d-%d)\n", day+1, month+1, year+g_settings->year_start);
 					}
 					/************************************************************************/
 					/* run for soil model */
