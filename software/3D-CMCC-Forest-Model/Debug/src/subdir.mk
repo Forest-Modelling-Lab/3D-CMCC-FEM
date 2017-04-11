@@ -33,9 +33,11 @@ C_SRCS += \
 ../src/fluxes.c \
 ../src/g-function.c \
 ../src/heat_fluxes.c \
+../src/het_respiration.c \
 ../src/initialization.c \
 ../src/lai.c \
 ../src/leaf_fall.c \
+../src/litter_model.c \
 ../src/logger.c \
 ../src/main.c \
 ../src/management.c \
@@ -55,7 +57,6 @@ C_SRCS += \
 ../src/remove_tree_class.c \
 ../src/settings.c \
 ../src/snow.c \
-../src/soil_decomp.c \
 ../src/soil_evaporation.c \
 ../src/soil_model.c \
 ../src/soil_nitrogen_balance.c \
@@ -104,9 +105,11 @@ OBJS += \
 ./src/fluxes.o \
 ./src/g-function.o \
 ./src/heat_fluxes.o \
+./src/het_respiration.o \
 ./src/initialization.o \
 ./src/lai.o \
 ./src/leaf_fall.o \
+./src/litter_model.o \
 ./src/logger.o \
 ./src/main.o \
 ./src/management.o \
@@ -126,7 +129,6 @@ OBJS += \
 ./src/remove_tree_class.o \
 ./src/settings.o \
 ./src/snow.o \
-./src/soil_decomp.o \
 ./src/soil_evaporation.o \
 ./src/soil_model.o \
 ./src/soil_nitrogen_balance.o \
@@ -175,9 +177,11 @@ C_DEPS += \
 ./src/fluxes.d \
 ./src/g-function.d \
 ./src/heat_fluxes.d \
+./src/het_respiration.d \
 ./src/initialization.d \
 ./src/lai.d \
 ./src/leaf_fall.d \
+./src/litter_model.d \
 ./src/logger.d \
 ./src/main.d \
 ./src/management.d \
@@ -197,7 +201,6 @@ C_DEPS += \
 ./src/remove_tree_class.d \
 ./src/settings.d \
 ./src/snow.d \
-./src/soil_decomp.d \
 ./src/soil_evaporation.d \
 ./src/soil_model.d \
 ./src/soil_nitrogen_balance.d \
@@ -221,7 +224,7 @@ C_DEPS += \
 src/%.o: ../src/%.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
-	gcc -I"/home/alessio-cmcc/git/3D-CMCC-FEM/software/3D-CMCC-Forest-Model/headers" -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
+	gcc -I"/home/alessio/git/3D-CMCC-LAND/software/3D-CMCC-Forest-Model/headers" -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
