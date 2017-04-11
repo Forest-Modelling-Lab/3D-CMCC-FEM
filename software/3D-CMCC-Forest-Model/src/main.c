@@ -113,7 +113,7 @@ static const char banner[] = "\n#"PROGRAM_FULL_NAME"\n"
 		 */
 		"(use -h parameter for more information)\n\n"
 		"The "PROGRAM_FULL_NAME" has been developed by:\n"
-		"Alessio Collalti [alessio.collalti@cmcc.it, a.collalti@unitus.it],\n"
+		"Alessio Collalti [alessio.collalti@cmcc.it, alessio.collalti@isafom.cnr.it],\n"
 		"Alessio Ribeca [alessio.ribeca@cmcc.it]\n"
 		"Carlo Trotta [trottacarlo@unitus.it]"
 		"Monia Santini [monia.santini@cmcc.it]\n"
