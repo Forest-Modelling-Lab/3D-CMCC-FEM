@@ -399,9 +399,11 @@ int annual_forest_structure(cell_t* const c, const int year)
 						{
 							for ( species = 0; species < c->heights[height].dbhs[dbh].ages[age].species_count; ++species )
 							{
-								while ( c->tree_layers[layer].layer_cover > g_settings->max_layer_cover &&  s->value[DBHDC_EFF] > s->value[DBHDCMIN] )
-								{
+								double old_layer_cover;
+								old_layer_cover = c->tree_layers[layer].layer_cover;
 
+								while ( ( c->tree_layers[layer].layer_cover > g_settings->max_layer_cover ) &&  ( s->value[DBHDC_EFF] > s->value[DBHDCMIN] ) )
+								{
 									/* reduce DBHDC_EFF */
 									s->value[DBHDC_EFF] -= 0.001;
 
@@ -414,13 +416,14 @@ int annual_forest_structure(cell_t* const c, const int year)
 									/* recompute layer cover with current DBHDC_EFF */
 									c->tree_layers[layer].layer_cover += s->value[CANOPY_COVER_PROJ];
 
-									//fixme make self-pruning function!
+									/* self pruning function */
+									self_pruning ( c, height, dbh, age, species, old_layer_cover );
 
 									/* check if self-pruning was enough */
 									if ( c->tree_layers[layer].layer_cover > g_settings->max_layer_cover && s->value[DBHDC_EFF] <= s->value[DBHDCMIN] )
 									{
-										/* self-pruning was not enough */
-										self_thinning_mortality (c, layer);
+										/* if self-pruning was not enough run thinning mortality */
+										self_thinning_mortality ( c, layer );
 									}
 								}
 							}

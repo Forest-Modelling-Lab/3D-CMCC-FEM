@@ -220,8 +220,8 @@ int check_cell_carbon_flux_balance(cell_t *const c)
 	store = c->daily_leaf_carbon + c->daily_stem_carbon +
 			c->daily_froot_carbon + c->daily_croot_carbon +
 			c->daily_branch_carbon + c->daily_reserve_carbon +
-			c->daily_litr_carbon + c->daily_soil_carbon +
-			+ c->daily_fruit_carbon + c->daily_cwd_carbon;
+			c->daily_fruit_carbon + c->daily_litr_carbon +
+			c->daily_soil_carbon + c->daily_cwd_carbon;
 
 	balance = in - out - store;
 

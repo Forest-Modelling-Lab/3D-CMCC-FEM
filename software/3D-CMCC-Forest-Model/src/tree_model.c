@@ -99,7 +99,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	/* check parameters */
 	assert( m );
 
-	logger (g_debug_log, "\n*********TREE_MODEL_DAILY*********\n");
+	logger (g_debug_log, "\n********* TREE_MODEL_DAILY *********\n");
 
 	/****************************************************************************/
 

@@ -301,54 +301,44 @@ void age_mortality (cell_t *const c, const int height, const int dbh, const int 
 	logger(g_debug_log, "**********************************\n");
 }
 
-void self_pruning ( cell_t *const c, const int layer )
+void self_pruning ( cell_t *const c, const int height, const int dbh, const int age, const int species, const double old_layer_cover )
 {
+	double self_pruning_ratio;
+
+	species_t *s;
+	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
+
 	logger(g_debug_log, "\n\n*****SELF PRUNING*****\n");
 
-	/* reduce proportionally to the crown area reduction the amount of branch and leaf C pool */
-	//					/* compute percentage in crown area reduction for self-pruning */
-	//					red_perc = (s->value[CROWN_AREA_DBHDC] / old_crown_area);
-	//					//logger(g_log, "percentage of reduction in crown area = %g %%\n", (1 - red_perc) * 100 );
-	//
-	//					/***************************************************************/
-	//					/* update branch C pool */
-	//					//fixme model highly overestimate reduction
-	//					//because it removes indistinctly coarse branch and fine branch
-	//					//fixme something should be retranslocated to reserve??
-	//					//s->value[BRANCH_C] *= red_perc;
-	//
-	//					/* update branch N pool */
-	//					//s->value[BRANCH_N] *= red_perc;
-	//
-	//					/***************************************************************/
-	//					/* update coarse root C pool */
-	//					//fixme something should be retranslocated to reserve??
-	//					//s->value[COARSE_ROOT_C] *= red_perc;
-	//
-	//					/* update coarse root N pool */
-	//					//s->value[COARSE_ROOT_N] *= red_perc;
-	//
-	//					/***************************************************************/
-	//					/* update leaf C pool */
-	//					//fixme something should be retranslocated to reserve??
-	//					//s->value[LEAF_C] *= perc;
-	//
-	//					/* update leaf N pool */
-	//					//s->value[LEAF_N] *= perc;
-	//
-	//					/***************************************************************/
-	//					/* self-pruned C biomass to litter */
-	//					//s->value[LITR_C] += (s->value[BRANCH_C] * (1 - red_perc)) +
-	//					//		(s->value[COARSE_ROOT_C] * (1 - red_perc)) +
-	//					//		(s->value[LEAF_C] * (1 - red_perc));
-	//
-	//					/***************************************************************/
-	//					/* summary after pruning */
-	//					logger(g_log, "-after pruning-\n");
-	//					logger(g_log, "-DBHDC effective = %g\n", s->value[DBHDC_EFF]);
-	//					logger(g_log, "-Crown Diameter from DBHDC function  = %g m\n", s->value[CROWN_DIAMETER_DBHDC]);
-	//					logger(g_log, "-Canopy cover DBH-DC class level = %g %%\n", s->value[CANOPY_COVER_DBHDC] * 100.0);
-	//					logger(g_log, "-layer cover cell level = %g\n", l->layer_cover);
+	/* reduce proportionally branch biomass to the crown area reduction */
+
+	/* compute FRACTION in crown area reduction for self-pruning */
+	self_pruning_ratio = g_settings->max_layer_cover / old_layer_cover;
+
+	/* check for precision control */
+	if (self_pruning_ratio > 1) self_pruning_ratio = 1.;
+
+	/* remove biomass from branch */
+	s->value[BRANCH_C_TO_REMOVE]  += ( s->value[BRANCH_C] * ( 1. - self_pruning_ratio ) );
+
+	s->value[C_TO_BRANCH]         -= s->value[BRANCH_C_TO_REMOVE];
+
+	/* adding to BRANCH C transfer pools */
+	s->value[C_BRANCH_TO_RESERVE] += s->value[BRANCH_C_TO_REMOVE] * FRAC_TO_RETRANSL;
+	s->value[C_BRANCH_TO_CWD]     += s->value[BRANCH_C_TO_REMOVE] * ( 1. - FRAC_TO_RETRANSL );
+
+	s->value[C_TO_RESERVE]        += s->value[C_BRANCH_TO_RESERVE];
+	s->value[C_TO_CWD]            += s->value[C_BRANCH_TO_CWD];
+
+	/* remove biomass from branch */
+	s->value[BRANCH_N_TO_REMOVE]  += ( s->value[BRANCH_C] * ( 1. - self_pruning_ratio ) );
+
+	/* adding to BRANCH C transfer pools */
+	s->value[N_BRANCH_TO_RESERVE] += s->value[BRANCH_N_TO_REMOVE] * FRAC_TO_RETRANSL;
+	s->value[N_BRANCH_TO_CWD]     += s->value[BRANCH_N_TO_REMOVE] * ( 1. - FRAC_TO_RETRANSL );
+
+	s->value[N_TO_RESERVE]        += s->value[N_BRANCH_TO_RESERVE];
+	s->value[N_TO_CWD]            += s->value[N_BRANCH_TO_CWD];
 
 }
 
