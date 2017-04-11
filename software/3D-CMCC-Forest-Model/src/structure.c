@@ -414,7 +414,7 @@ int annual_forest_structure(cell_t* const c, const int year)
 									/* recompute layer cover with current DBHDC_EFF */
 									c->tree_layers[layer].layer_cover += s->value[CANOPY_COVER_PROJ];
 
-									//fixme make self-pruning function
+									//fixme make self-pruning function!
 
 									/* check if self-pruning was enough */
 									if ( c->tree_layers[layer].layer_cover > g_settings->max_layer_cover && s->value[DBHDC_EFF] <= s->value[DBHDCMIN] )
