@@ -1289,41 +1289,55 @@ typedef struct
 	double dead_wood_uscel_frac;                                          /* (DIM) dead wood litter unshielded fraction */
 
 	/*** BALANCES VARIABLES ***/
-	double carbon_in;                                                     /* (gC/day/day) cell carbon balances in */
-	double carbon_out;                                                    /* (gC/day/day) cell carbon balances out */
-	double carbon_store;                                                  /* (gC/day) cell carbon balances store */
-	double carbon_old_store;                                              /* (gC/day) cell carbon balances old_store */
-	double carbon_balance;                                                /* (gC/day/day) cell carbon balances balance */
+	/** cell **/
+	double cell_carbon_in;                                                     /* (gC/day/day) cell carbon balances in */
+	double cell_carbon_out;                                                    /* (gC/day/day) cell carbon balances out */
+	double cell_carbon_store;                                                  /* (gC/day) cell carbon balances store */
+	double cell_carbon_old_store;                                              /* (gC/day) cell carbon balances old_store */
+	double cell_carbon_balance;                                                /* (gC/day/day) cell carbon balances balance */
 
-	double carbontc_in;                                                   /* (tC/cell/day) cell carbon balances in */
-	double carbontc_out;                                                  /* (tC/cell/day) cell carbon balances out */
-	double carbontc_store;                                                /* (tC/cell) cell carbon balances store */
-	double carbontc_old_store;                                            /* (tC/cell) cell carbon balances old_store */
-	double carbontc_balance;                                              /* (tC/cell/day) cell carbon balances balance */
+	double cell_carbontc_in;                                                   /* (tC/cell/day) cell carbon balances in */
+	double cell_carbontc_out;                                                  /* (tC/cell/day) cell carbon balances out */
+	double cell_carbontc_store;                                                /* (tC/cell) cell carbon balances store */
+	double cell_carbontc_old_store;                                            /* (tC/cell) cell carbon balances old_store */
+	double cell_carbontc_balance;                                              /* (tC/cell/day) cell carbon balances balance */
 
-	double water_in;                                                      /* (mm/day/day) cell water balances in */
-	double water_out;                                                     /* (mm/day/day) cell water balances out */
-	double water_store;                                                   /* (mm/day) cell water balances store */
-	double water_old_store;                                               /* (mm/day) cell water balances old_store */
-	double water_balance;                                                 /* (mm/day/day) cell water balances balance */
+	double cell_water_in;                                                      /* (mm/day/day) cell water balances in */
+	double cell_water_out;                                                     /* (mm/day/day) cell water balances out */
+	double cell_water_store;                                                   /* (mm/day) cell water balances store */
+	double cell_water_old_store;                                               /* (mm/day) cell water balances old_store */
+	double cell_water_balance;                                                 /* (mm/day/day) cell water balances balance */
 
-	double snow_in;                                                       /* (mm/day/day) cell snow balances in */
-	double snow_out;                                                      /* (mm/day/day) cell snow balances out */
-	double snow_store;                                                    /* (mm/day) cell snow balances store */
-	double snow_old_store;                                                /* (mm/day) cell snow balances old_store */
-	double snow_balance;                                                  /* (mm/day/day) cell snow balances balance */
+	double cell_snow_in;                                                       /* (mm/day/day) cell snow balances in */
+	double cell_snow_out;                                                      /* (mm/day/day) cell snow balances out */
+	double cell_snow_store;                                                    /* (mm/day) cell snow balances store */
+	double cell_snow_old_store;                                                /* (mm/day) cell snow balances old_store */
+	double cell_snow_balance;                                                  /* (mm/day/day) cell snow balances balance */
 
-	double nitrogen_in;                                                   /* (gN/day/day) cell nitrogen balances in */
-	double nitrogen_out;                                                  /* (gN/day/day) cell nitrogen balances out */
-	double nitrogen_store;                                                /* (gN/day) cell nitrogen balances store */
-	double nitrogen_old_store;                                            /* (gN/day) cell nitrogen balances old_store */
-	double nitrogen_balance;                                              /* (gN/day/day) cell nitrogen balances balance */
+	double cell_nitrogen_in;                                                   /* (gN/day/day) cell nitrogen balances in */
+	double cell_nitrogen_out;                                                  /* (gN/day/day) cell nitrogen balances out */
+	double cell_nitrogen_store;                                                /* (gN/day) cell nitrogen balances store */
+	double cell_nitrogen_old_store;                                            /* (gN/day) cell nitrogen balances old_store */
+	double cell_nitrogen_balance;                                              /* (gN/day/day) cell nitrogen balances balance */
 
-	double nitrogentc_in;                                                 /* (tN/cell/day) cell nitrogen balances in */
-	double nitrogentc_out;                                                /* (tN/cell/day) cell nitrogen balances out */
-	double nitrogentc_store;                                              /* (tN/cell) cell nitrogen balances store */
-	double nitrogentc_old_store;                                          /* (tN/cell/day) cell nitrogen balances old_store */
-	double nitrogentc_balance;                                            /* (tN/cell/day) cell nitrogen balances balance */
+	double cell_nitrogentc_in;                                                 /* (tN/cell/day) cell nitrogen balances in */
+	double cell_nitrogentc_out;                                                /* (tN/cell/day) cell nitrogen balances out */
+	double cell_nitrogentc_store;                                              /* (tN/cell) cell nitrogen balances store */
+	double cell_nitrogentc_old_store;                                          /* (tN/cell/day) cell nitrogen balances old_store */
+	double cell_nitrogentc_balance;                                            /* (tN/cell/day) cell nitrogen balances balance */
+
+	/** litter **/
+	double litr_carbon_in;                                                     /* (gC/day/day) cell carbon balances in */
+	double litr_carbon_out;                                                    /* (gC/day/day) cell carbon balances out */
+	double litr_carbon_store;                                                  /* (gC/day) cell carbon balances store */
+	double litr_carbon_old_store;                                              /* (gC/day) cell carbon balances old_store */
+	double litr_carbon_balance;                                                /* (gC/day/day) cell carbon balances balance */
+
+	double litr_nitrogen_in;                                                   /* (gN/day/day) cell nitrogen balances in */
+	double litr_nitrogen_out;                                                  /* (gN/day/day) cell nitrogen balances out */
+	double litr_nitrogen_store;                                                /* (gN/day) cell nitrogen balances store */
+	double litr_nitrogen_old_store;                                            /* (gN/day) cell nitrogen balances old_store */
+	double litr_nitrogen_balance;                                              /* (gN/day/day) cell nitrogen balances balance */
 
 } cell_t;
 
