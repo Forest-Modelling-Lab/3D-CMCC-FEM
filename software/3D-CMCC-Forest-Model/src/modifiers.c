@@ -134,6 +134,10 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	/* following Biome-BGC */
 	/* photosynthetic photon flux density conductance control */
 
+	/* for overall leaves */
+	s->value[F_LIGHT] = s->value[PPFD_ABS] /(PPFD50 + s->value[PPFD_ABS]);
+	logger(g_debug_log, "f_LIGHT (BIOME) = %f \n", s->value[F_LIGHT]);
+
 	/* for sun leaves */
 	s->value[F_LIGHT_SUN] = s->value[PPFD_ABS_SUN] /(PPFD50 + s->value[PPFD_ABS_SUN]);
 	logger(g_debug_log, "f_LIGHT_SUN (BIOME) = %f \n", s->value[F_LIGHT_SUN]);

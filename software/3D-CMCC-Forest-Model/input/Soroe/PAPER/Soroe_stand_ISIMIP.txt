@@ -2,7 +2,6 @@ Year,x,y,Age,Species,Management,N,Stool,AvDBH,Height,Wf,Wrc,Wrf,Ws,Wbb,Wres,Lai
 1950,0,0,29,Fagussylvatica,T,1525,0,5.96,7.2,0,0,0,0,0,0,0
 1960,0,0,39,Fagussylvatica,T,1023,0,9.60,10.5,0,0,0,0,0,0,0
 1996,0,0,75,Fagussylvatica,T,381,0,24.2628,20.98653,0,0,0,0,0,0,0
-//1996,0,0,28,Fagussylvatica,T,1796,0,10.3,11,0,0,0,0,0,0,0 //TEST CASE: THIS IS "COPIED" TO HYYTIALA STAND NOT CHANGING JUST SPECIES
 2001,0,0,80,Fagussylvatica,T,329,0,26.12,21.86,0,0,0,0,0,0,0
 2006,0,0,85,Fagussylvatica,T,307,0,27.72,22.68,0,0,0,0,0,0,0
 

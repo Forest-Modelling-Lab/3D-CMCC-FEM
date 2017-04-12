@@ -27,8 +27,6 @@ void photosynthesis(cell_t *const c, const int layer, const int height, const in
 	double Lue_shade;
 	double Lue_shade_max;
 
-
-
 	species_t *s;
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
@@ -119,8 +117,12 @@ void photosynthesis(cell_t *const c, const int layer, const int height, const in
 	s->value[GPP_tC]          = s->value[GPP] / 1e6 * g_settings->sizeCell ;
 
 	/* class level */
-	s->value[MONTHLY_GPP]    += s->value[GPP];
-	s->value[YEARLY_GPP]     += s->value[GPP];
+	s->value[MONTHLY_GPP]       += s->value[GPP];
+	s->value[MONTHLY_GPP_SUN]   += s->value[GPP_SUN];
+	s->value[MONTHLY_GPP_SHADE] += s->value[GPP_SHADE];
+	s->value[YEARLY_GPP]        += s->value[GPP];
+	s->value[YEARLY_GPP_SUN]    += s->value[GPP_SUN];
+	s->value[YEARLY_GPP_SHADE]  += s->value[GPP_SHADE];
 
 	/* cell level */
 	c->daily_gpp             += s->value[GPP];

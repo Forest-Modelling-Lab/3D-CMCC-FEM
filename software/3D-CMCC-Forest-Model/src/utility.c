@@ -253,116 +253,124 @@ void reset_daily_class_variables(cell_t *const c)
 					s = &a->species[species];
 
 					/* reset daily radiative variables */
-					s->value[PAR] =                     0.;
-					s->value[APAR] =                    0.;
-					s->value[APAR_SUN] =                0.;
-					s->value[APAR_SHADE] =              0.;
-					s->value[TRANSM_PAR] =              0.;
-					s->value[TRANSM_PAR_SUN] =          0.;
-					s->value[TRANSM_PAR_SHADE] =        0.;
-					s->value[SW_RAD] =                  0.;
-					s->value[SW_RAD_ABS] =              0.;
-					s->value[SW_RAD_ABS_SUN] =          0.;
-					s->value[SW_RAD_ABS_SHADE] =        0.;
-					s->value[SW_RAD_TRANSM] =           0.;
-					s->value[SW_RAD_TRANSM_SUN] =       0.;
-					s->value[SW_RAD_TRANSM_SHADE] =     0.;
-					s->value[PPFD] =                    0.;
-					s->value[PPFD_ABS] =                0.;
-					s->value[PPFD_ABS_SUN] =            0.;
-					s->value[PPFD_ABS_SHADE] =          0.;
-					s->value[PPFD_TRANSM] =             0.;
-					s->value[PPFD_TRANSM_SUN] =         0.;
-					s->value[PPFD_TRANSM_SHADE] =       0.;
+					s->value[PAR] =                       0.;
+					s->value[APAR] =                      0.;
+					s->value[APAR_SUN] =                  0.;
+					s->value[APAR_SHADE] =                0.;
+					s->value[TRANSM_PAR] =                0.;
+					s->value[TRANSM_PAR_SUN] =            0.;
+					s->value[TRANSM_PAR_SHADE] =          0.;
+					s->value[SW_RAD] =                    0.;
+					s->value[SW_RAD_ABS] =                0.;
+					s->value[SW_RAD_ABS_SUN] =            0.;
+					s->value[SW_RAD_ABS_SHADE] =          0.;
+					s->value[SW_RAD_TRANSM] =             0.;
+					s->value[SW_RAD_TRANSM_SUN] =         0.;
+					s->value[SW_RAD_TRANSM_SHADE] =       0.;
+					s->value[PPFD] =                      0.;
+					s->value[PPFD_ABS] =                  0.;
+					s->value[PPFD_ABS_SUN] =              0.;
+					s->value[PPFD_ABS_SHADE] =            0.;
+					s->value[PPFD_TRANSM] =               0.;
+					s->value[PPFD_TRANSM_SUN] =           0.;
+					s->value[PPFD_TRANSM_SHADE] =         0.;
 
 					/* reset daily carbon fluxes */
-					s->value[GPP] =                     0.;
-					s->value[NPP] =                     0.;
-					s->value[NPP_tC] =                  0.;
-					s->value[C_FLUX] =                  0.;
-					s->value[CUE] =                     0.;
+					s->value[GPP] =                       0.;
+					s->value[NPP] =                       0.;
+					s->value[NPP_tC] =                    0.;
+					s->value[C_FLUX] =                    0.;
+					s->value[CUE] =                       0.;
 
 					/* reset daily water fluxes */
-					s->value[CANOPY_INT] =              0.;
-					s->value[CANOPY_EVAPO] =            0.;
-					s->value[CANOPY_TRANSP] =           0.;
-					s->value[CANOPY_EVAPO_TRANSP] =     0.;
-					s->value[WUE] =                     0.;
-					s->value[iWUE] =                    0.;
+					s->value[STOMATAL_CONDUCTANCE] =      0.;
+					s->value[STOMATAL_SUN_CONDUCTANCE] =  0.;
+					s->value[STOMATAL_SHADE_CONDUCTANCE]= 0.;
+					s->value[LEAF_CONDUCTANCE] =          0.;
+					s->value[LEAF_SUN_CONDUCTANCE] =      0.;
+					s->value[LEAF_SHADE_CONDUCTANCE] =    0.;
+					s->value[CANOPY_INT] =                0.;
+					s->value[CANOPY_EVAPO] =              0.;
+					s->value[CANOPY_TRANSP] =             0.;
+					s->value[CANOPY_TRANSP_SUN] =         0.;
+					s->value[CANOPY_TRANSP_SHADE] =       0.;
+					s->value[CANOPY_EVAPO_TRANSP] =       0.;
+					s->value[WUE] =                       0.;
+					s->value[iWUE] =                      0.;
 
 					/* reset daily multipliers */
-					s->value[F_CO2] =                   0.;
-					s->value[F_LIGHT] =                 0.;
-					s->value[F_T] =                     0.;
-					s->value[F_VPD] =                   0.;
-					s->value[F_AGE] =                   0.;
-					s->value[F_NUTR] =                  0.;
-					s->value[F_SW] =                    0.;
-					s->value[F_PSI] =                   0.;
-					s->value[PHYS_MOD] =                0.;
+					s->value[F_CO2] =                     0.;
+					s->value[F_LIGHT] =                   0.;
+					s->value[F_T] =                       0.;
+					s->value[F_VPD] =                     0.;
+					s->value[F_AGE] =                     0.;
+					s->value[F_NUTR] =                    0.;
+					s->value[F_SW] =                      0.;
+					s->value[F_PSI] =                     0.;
+					s->value[PHYS_MOD] =                  0.;
 
 					/*****************************************/
 					/* reset daily carbon fluxes among pools */
-					s->value[C_TO_LEAF] =               0.;
-					s->value[C_TO_ROOT] =               0.;
-					s->value[C_TO_FROOT] =              0.;
-					s->value[C_TO_CROOT] =              0.;
-					s->value[C_TO_TOT_STEM] =           0.;
-					s->value[C_TO_STEM] =               0.;
-					s->value[C_TO_BRANCH] =             0.;
-					s->value[C_TO_RESERVE] =            0.;
-					s->value[C_TO_FRUIT] =              0.;
-					s->value[C_TO_LITR] =               0.;
-					s->value[C_TO_CWD] =                0.;
-					s->value[C_LEAF_TO_RESERVE] =       0.;
-					s->value[C_FROOT_TO_RESERVE] =      0.;
-					s->value[C_BRANCH_TO_RESERVE] =     0.;
-					s->value[C_LEAF_TO_LITR] =          0.;
-					s->value[C_FROOT_TO_LITR] =         0.;
-					s->value[C_FRUIT_TO_LITR] =         0.;
-					s->value[C_BRANCH_TO_CWD] =         0.;
+					s->value[C_TO_LEAF] =                 0.;
+					s->value[C_TO_ROOT] =                 0.;
+					s->value[C_TO_FROOT] =                0.;
+					s->value[C_TO_CROOT] =                0.;
+					s->value[C_TO_TOT_STEM] =             0.;
+					s->value[C_TO_STEM] =                 0.;
+					s->value[C_TO_BRANCH] =               0.;
+					s->value[C_TO_RESERVE] =              0.;
+					s->value[C_TO_FRUIT] =                0.;
+					s->value[C_TO_LITR] =                 0.;
+					s->value[C_TO_CWD] =                  0.;
+					s->value[C_LEAF_TO_RESERVE] =         0.;
+					s->value[C_FROOT_TO_RESERVE] =        0.;
+					s->value[C_BRANCH_TO_RESERVE] =       0.;
+					s->value[C_LEAF_TO_LITR] =            0.;
+					s->value[C_FROOT_TO_LITR] =           0.;
+					s->value[C_FRUIT_TO_LITR] =           0.;
+					s->value[C_BRANCH_TO_CWD] =           0.;
 
 
 					/* reset daily nitrogen fluxes among pools */
-					s->value[N_TO_LEAF] =               0.;
-					s->value[N_TO_ROOT] =               0.;
-					s->value[N_TO_FROOT] =              0.;
-					s->value[N_TO_CROOT] =              0.;
-					s->value[N_TO_TOT_STEM] =           0.;
-					s->value[N_TO_STEM] =               0.;
-					s->value[N_TO_BRANCH] =             0.;
-					s->value[N_TO_RESERVE] =            0.;
-					s->value[N_TO_FRUIT] =              0.;
-					s->value[N_TO_LITTER] =             0.;
-					s->value[N_TO_LITR] =               0.;
-					s->value[N_TO_CWD] =                0.;
-					s->value[N_LEAF_TO_RESERVE] =       0.;
-					s->value[N_FROOT_TO_RESERVE] =      0.;
-					s->value[N_LEAF_TO_LITR] =          0.;
-					s->value[N_FROOT_TO_LITR] =         0.;
+					s->value[N_TO_LEAF] =                 0.;
+					s->value[N_TO_ROOT] =                 0.;
+					s->value[N_TO_FROOT] =                0.;
+					s->value[N_TO_CROOT] =                0.;
+					s->value[N_TO_TOT_STEM] =             0.;
+					s->value[N_TO_STEM] =                 0.;
+					s->value[N_TO_BRANCH] =               0.;
+					s->value[N_TO_RESERVE] =              0.;
+					s->value[N_TO_FRUIT] =                0.;
+					s->value[N_TO_LITTER] =               0.;
+					s->value[N_TO_LITR] =                 0.;
+					s->value[N_TO_CWD] =                  0.;
+					s->value[N_LEAF_TO_RESERVE] =         0.;
+					s->value[N_FROOT_TO_RESERVE] =        0.;
+					s->value[N_LEAF_TO_LITR] =            0.;
+					s->value[N_FROOT_TO_LITR] =           0.;
 					/****************************************/
 
 					/* reset daily maintenance, growth and total respiration */
-					s->value[DAILY_LEAF_MAINT_RESP] =   0.;
-					s->value[NIGHTLY_LEAF_MAINT_RESP] = 0.;
-					s->value[TOT_DAY_LEAF_MAINT_RESP] = 0.;
-					s->value[FROOT_MAINT_RESP] =        0.;
-					s->value[STEM_MAINT_RESP] =         0.;
-					s->value[BRANCH_MAINT_RESP] =       0.;
-					s->value[CROOT_MAINT_RESP] =        0.;
-					s->value[TOTAL_MAINT_RESP] =        0.;
-					s->value[LEAF_GROWTH_RESP] =        0.;
-					s->value[FROOT_GROWTH_RESP] =       0.;
-					s->value[CROOT_GROWTH_RESP] =       0.;
-					s->value[STEM_GROWTH_RESP] =        0.;
-					s->value[BRANCH_GROWTH_RESP] =      0.;
-					s->value[TOTAL_GROWTH_RESP] =       0.;
-					s->value[LEAF_AUT_RESP] =           0.;
-					s->value[FROOT_AUT_RESP] =          0.;
-					s->value[STEM_AUT_RESP] =           0.;
-					s->value[BRANCH_AUT_RESP] =         0.;
-					s->value[CROOT_AUT_RESP] =          0.;
-					s->value[TOTAL_AUT_RESP] =          0.;
+					s->value[DAILY_LEAF_MAINT_RESP] =     0.;
+					s->value[NIGHTLY_LEAF_MAINT_RESP] =   0.;
+					s->value[TOT_DAY_LEAF_MAINT_RESP] =   0.;
+					s->value[FROOT_MAINT_RESP] =          0.;
+					s->value[STEM_MAINT_RESP] =           0.;
+					s->value[BRANCH_MAINT_RESP] =         0.;
+					s->value[CROOT_MAINT_RESP] =          0.;
+					s->value[TOTAL_MAINT_RESP] =          0.;
+					s->value[LEAF_GROWTH_RESP] =          0.;
+					s->value[FROOT_GROWTH_RESP] =         0.;
+					s->value[CROOT_GROWTH_RESP] =         0.;
+					s->value[STEM_GROWTH_RESP] =          0.;
+					s->value[BRANCH_GROWTH_RESP] =        0.;
+					s->value[TOTAL_GROWTH_RESP] =         0.;
+					s->value[LEAF_AUT_RESP] =             0.;
+					s->value[FROOT_AUT_RESP] =            0.;
+					s->value[STEM_AUT_RESP] =             0.;
+					s->value[BRANCH_AUT_RESP] =           0.;
+					s->value[CROOT_AUT_RESP] =            0.;
+					s->value[TOTAL_AUT_RESP] =            0.;
 				}
 			}
 		}
@@ -419,6 +427,8 @@ void reset_monthly_class_variables(cell_t *const c)
 					s->value[MONTHLY_BRANCH_AUT_RESP] =      0.;
 					s->value[MONTHLY_TOTAL_AUT_RESP] =       0.;
 					s->value[MONTHLY_CANOPY_TRANSP] =        0.;
+					s->value[MONTHLY_CANOPY_TRANSP_SUN] =    0.;
+					s->value[MONTHLY_CANOPY_TRANSP_SHADE] =  0.;
 					s->value[MONTHLY_CANOPY_INT] =           0.;
 					s->value[MONTHLY_CANOPY_EVAPO_TRANSP] =  0.;
 					s->value[MONTHLY_CANOPY_LATENT_HEAT] =   0.;
@@ -504,6 +514,8 @@ void reset_annual_class_variables(cell_t *const c)
 					s->value[YEARLY_BRANCH_AUT_RESP] =      0.;
 					s->value[YEARLY_TOTAL_AUT_RESP] =       0.;
 					s->value[YEARLY_CANOPY_TRANSP] =        0.;
+					s->value[YEARLY_CANOPY_TRANSP_SUN] =    0.;
+					s->value[YEARLY_CANOPY_TRANSP_SHADE] =  0.;
 					s->value[YEARLY_CANOPY_INT] =           0.;
 					s->value[YEARLY_CANOPY_EVAPO_TRANSP] =  0.;
 					s->value[YEARLY_CANOPY_LATENT_HEAT] =   0.;

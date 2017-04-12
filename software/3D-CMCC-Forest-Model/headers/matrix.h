@@ -233,27 +233,38 @@ enum {
 	CANOPY_WATER,                       /* canopy water pool */
 	CANOPY_SNOW,                        /* canopy snow pool  */
 	/* fluxes */
-	CANOPY_CONDUCTANCE,
-	CANOPY_BLCOND,                      /* Canopy Boundary Layer conductance (m s-1) */
+	STOMATAL_CONDUCTANCE,               /* stomatal conductance (m/sec) */
+	STOMATAL_SUN_CONDUCTANCE,           /* stomatal conductance for sun leaves (m/sec) */
+	STOMATAL_SHADE_CONDUCTANCE,         /* stomatal conductance for shade leaves (m/sec) */
+	LEAF_CONDUCTANCE,                   /* leaf conductance (m/sec) */
+	LEAF_SUN_CONDUCTANCE,               /* leaf conductance for sun leaves (m/sec) */
+	LEAF_SHADE_CONDUCTANCE,             /* leaf conductance for shade leaves (m/sec) */
+	CANOPY_BLCOND,                      /* Canopy Boundary Layer conductance (m/sec) */
 	FRAC_DAYTIME_TRANSP,                /* fraction of daytime for transpiration (and photosynthesis) */
-	CANOPY_INT,                         /* canopy interception of rainfall mm day-1 */
-	CANOPY_INT_SNOW,                    /* canopy interception of snow mm day-1 */
-	CANOPY_EVAPO,                       /* canopy evaporation mm day-1 */
+	CANOPY_INT,                         /* canopy interception of rainfall (mm/day) */
+	CANOPY_INT_SNOW,                    /* canopy interception of snow (mm/day) */
+	CANOPY_EVAPO,                       /* canopy evaporation (mm/day) */
 	CANOPY_WET,                         /* it should'nt be reset every day */
-	CANOPY_TRANSP,                      /* canopy transpiration mm day -1 */
-	CANOPY_EVAPO_TRANSP,                /* canopy evapotranspiration mm day-1 */
+	CANOPY_TRANSP,                      /* canopy transpiration (mm/day) */
+	CANOPY_TRANSP_SUN,                  /* canopy transpiration (mm/day) for sun leaves */
+	CANOPY_TRANSP_SHADE,                /* canopy transpiration (mm/day) for shade leaves */
+	CANOPY_EVAPO_TRANSP,                /* canopy evapotranspiration (mm/day) */
 	CANOPY_FRAC_DAY_TRANSP,             /* Fraction of daily canopy transpiration (DIM) */
-	CANOPY_LATENT_HEAT,                 /* canopy latent heat W m-2 */
-	CANOPY_SENSIBLE_HEAT,               /* canopy sensible heat W m-2 */
+	CANOPY_LATENT_HEAT,                 /* canopy latent heat (W/m2) */
+	CANOPY_SENSIBLE_HEAT,               /* canopy sensible heat (W/m2) */
 
-	MONTHLY_CANOPY_TRANSP,              /* monthly canopy transpiration mm month-1 */
-	MONTHLY_CANOPY_INT,                 /* monthly canopy interception mm month-1 */
-	MONTHLY_CANOPY_EVAPO_TRANSP,        /* monthly canopy evapotranspiration mm month-1 */
-	YEARLY_CANOPY_TRANSP,               /* annual canopy transpiration mm year-1 */
-	YEARLY_CANOPY_INT,                  /* annual canopy interception mm year-1 */
-	YEARLY_CANOPY_EVAPO_TRANSP,         /* annual canopy evapotranspiration mm year-1 */
-	MONTHLY_CANOPY_LATENT_HEAT,         /* monthly canopy latent heat W m-2 */
-	YEARLY_CANOPY_LATENT_HEAT,          /* annual canopy latent heat W m-2 */
+	MONTHLY_CANOPY_TRANSP,              /* monthly canopy transpiration (mm/month) */
+	MONTHLY_CANOPY_TRANSP_SUN,          /* monthly canopy transpiration (mm/month) for sun leaves */
+	MONTHLY_CANOPY_TRANSP_SHADE,        /* monthly canopy transpiration (mm/month) for shade leaves */
+	MONTHLY_CANOPY_INT,                 /* monthly canopy interception (mm/month) */
+	MONTHLY_CANOPY_EVAPO_TRANSP,        /* monthly canopy evapotranspiration (mm/month) */
+	YEARLY_CANOPY_TRANSP,               /* annual canopy transpiration (mm/year) */
+	YEARLY_CANOPY_TRANSP_SUN,           /* annual canopy transpiration (mm/year) for sun leaves */
+	YEARLY_CANOPY_TRANSP_SHADE,         /* annual canopy transpiration (mm/year) for shade leaves */
+	YEARLY_CANOPY_INT,                  /* annual canopy interception (mm/year) */
+	YEARLY_CANOPY_EVAPO_TRANSP,         /* annual canopy evapotranspiration (mm/year) */
+	MONTHLY_CANOPY_LATENT_HEAT,         /* monthly canopy latent heat (W/m2) */
+	YEARLY_CANOPY_LATENT_HEAT,          /* annual canopy latent heat (W/m2) */
 
 	/* carbon use efficiency */
 	CUE,                                /* daily Carbon Use Efficiency */
@@ -267,6 +278,12 @@ enum {
 	iWUE,                               /* daily intrinsic Water Use Efficiency */
 	MONTHLY_iWUE,                       /* monthly intrinsic Water Use Efficiency */
 	YEARLY_iWUE,                        /* annual intrinsic Water Use Efficiency */
+	iWUE_SUN,                           /* daily intrinsic Water Use Efficiency for sun leaves */
+	MONTHLY_iWUE_SUN,                   /* monthly intrinsic Water Use Efficiency for sun leaves */
+	YEARLY_iWUE_SUN,                    /* annual intrinsic Water Use Efficiency for sun leaves */
+	iWUE_SHADE,                         /* daily intrinsic Water Use Efficiency for shade leaves */
+	MONTHLY_iWUE_SHADE,                 /* monthly intrinsic Water Use Efficiency for shade leaves */
+	YEARLY_iWUE_SHADE,                  /* annual intrinsic Water Use Efficiency for shade leaves */
 
 	/* LAI */
 	LAI_PROJ,                           /* LAI for Projected Area covered (at zenith angle)(m^2/m2) */
@@ -289,7 +306,11 @@ enum {
 	GPP_SUN,                            /* Daily Sun Leaves Gross Primary Production gC/m2/day */
 	GPP_SHADE,                          /* Daily Shade Leaves Gross Primary Production gC/m2/day */
 	MONTHLY_GPP,                        /* Monthly Gross Primary Production gC/m2/month */
-	YEARLY_GPP,                         /* Yearly Gross Primary Production gC/m2/day */
+	MONTHLY_GPP_SUN,                    /* Monthly Gross Primary Production gC/m2/month for sun leaves */
+	MONTHLY_GPP_SHADE,                  /* Monthly Gross Primary Production gC/m2/month for shaded leaves */
+	YEARLY_GPP,                         /* Yearly Gross Primary Production gC/m2/year */
+	YEARLY_GPP_SUN,                     /* Yearly Gross Primary Production gC/m2/year for sun leaves */
+	YEARLY_GPP_SHADE,                   /* Yearly Gross Primary Production gC/m2/year for shaded leaves */
 	GPP_tC,                             /* Daily Gross Primary Production tC/sizeCell/day */
 	NPP,                                /* Daily Net Primary Production gC/m2/day */
 	MONTHLY_NPP,                        /* Monthly Net Primary Production gC/m2/day */

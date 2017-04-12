@@ -32,6 +32,9 @@ void water_use_efficiency( cell_t *const c, const int height, const int dbh, con
 	 * De Kauwe et al., 2013 GCB
 	 */
 
+	/*** Water Use Efficiency (Tree Level) ***/
+	//note: this is based on tree level computation than uses npp and canopy transpiration
+
 	/* daily WUE */
 	if( s->value[NPP] > 0 && s->value[CANOPY_TRANSP] > 0.0 )
 	{
@@ -68,8 +71,60 @@ void water_use_efficiency( cell_t *const c, const int height, const int dbh, con
 		}
 	}
 
-	/*** Intrinsic Water Use Efficiency ***/
-	//note: it is based on cell level computation
+	/*** Intrinsic Water Use Efficiency (Tree Level) ***/
+	//note: this is based on tree level computation than uses gpp and canopy transpiration
+
+	/* daily iWUE */
+	if( s->value[GPP] > 0. && s->value[CANOPY_TRANSP] > 0. )
+	{
+		s->value[iWUE]       = s->value[GPP]       / s->value[CANOPY_TRANSP];
+		s->value[iWUE_SUN]   = s->value[GPP_SUN]   / s->value[CANOPY_TRANSP_SUN];
+		s->value[iWUE_SHADE] = s->value[GPP_SHADE] / s->value[CANOPY_TRANSP_SHADE];
+	}
+	else
+	{
+		s->value[iWUE]       = 0.;
+		s->value[iWUE_SUN]   = 0.;
+		s->value[iWUE_SHADE] = 0.;
+	}
+	/* monthly iWUE */
+	/* last day of the month */
+	if ( ( IS_LEAP_YEAR ( c->years[year].year ) ? ( MonthLength_Leap[month] ) : ( MonthLength[month] ) ) == c->doy )
+	{
+		if( s->value[MONTHLY_GPP] > 0. && s->value[MONTHLY_CANOPY_TRANSP] > 0. )
+		{
+			s->value[MONTHLY_iWUE]       = s->value[MONTHLY_GPP]       / s->value[MONTHLY_CANOPY_TRANSP];
+			s->value[MONTHLY_iWUE_SUN]   = s->value[MONTHLY_GPP_SUN]   / s->value[MONTHLY_CANOPY_TRANSP_SUN];
+			s->value[MONTHLY_iWUE_SHADE] = s->value[MONTHLY_GPP_SHADE] / s->value[MONTHLY_CANOPY_TRANSP_SHADE];
+		}
+		else
+		{
+			s->value[MONTHLY_iWUE]       = 0.;
+			s->value[MONTHLY_iWUE_SUN]   = 0.;
+			s->value[MONTHLY_iWUE_SHADE] = 0.;
+		}
+	}
+	/* annual iWUE */
+	/* last day of the year */
+	if ( c->doy == ( IS_LEAP_YEAR( c->years[year].year ) ? 366 : 365) )
+	{
+		if( s->value[YEARLY_GPP] > 0. && s->value[YEARLY_CANOPY_TRANSP] > 0. )
+		{
+			s->value[YEARLY_iWUE]       = s->value[YEARLY_GPP]       / s->value[YEARLY_CANOPY_TRANSP];
+			s->value[YEARLY_iWUE_SUN]   = s->value[YEARLY_GPP_SUN]   / s->value[YEARLY_CANOPY_TRANSP_SUN];
+			s->value[YEARLY_iWUE_SHADE] = s->value[YEARLY_GPP_SHADE] / s->value[YEARLY_CANOPY_TRANSP_SHADE];
+		}
+		else
+		{
+			s->value[YEARLY_iWUE]       = 0.;
+			s->value[YEARLY_iWUE_SUN]   = 0.;
+			s->value[YEARLY_iWUE_SHADE] = 0.;
+		}
+	}
+
+
+	/*** Intrinsic Water Use Efficiency (Cell Level) ***/
+	//note: this is based on cell level computation than uses cell evapotranspiration
 
 	/* daily iWUE */
 	if( c->daily_gpp > 0 && c->daily_et > 0.0 )
