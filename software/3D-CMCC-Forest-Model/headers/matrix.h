@@ -350,8 +350,12 @@ enum {
 	C_LEAF_TO_LITR,                     /* Daily tC from Leaf pool to Litter (tC/sizeCell day) */
 	C_FROOT_TO_LITR,                    /* Daily tC from Fine root pool to Soil (tC/sizeCell day) */
 	C_FRUIT_TO_LITR,                    /* Daily tC from Fruit pool to Litter (tC/sizeCell day) */
-	C_BRANCH_TO_RESERVE,                /* Annual tC from Branch pool to Litter (tC/sizeCell day) */
-	C_BRANCH_TO_CWD,                    /* Annual tC from Branch pool to Coarse Woody Debris (tC/sizeCell day) */
+	C_BRANCH_TO_RESERVE,                /* tC from Branch pool to Litter (tC/sizeCell day) */
+	C_STEM_TO_CWD,                      /* tC from Stem pool to Coarse Woody Debris (tC/sizeCell day) */
+	C_CROOT_TO_CWD,                     /* tC from Coarse root pool to Coarse Woody Debris (tC/sizeCell day) */
+	C_BRANCH_TO_CWD,                    /* tC from Branch pool to Coarse Woody Debris (tC/sizeCell day) */
+	C_RESERVE_TO_CWD,                   /* tC from Reserve pool to Coarse Woody Debris (tC/sizeCell day) */
+	C_FRUIT_TO_CWD,                     /* tC from Fruit pool to Coarse Woody Debris (tC/sizeCell day) */
 	C_TO_LITR,                          /* Daily Leaf and Fine root Carbon to Litter pool (tC/sizeCell day) */
 	C_TO_CWD,                           /* Daily Wood Carbon to Coarse Woody Debirs (tC/sizeCell day) */
 	C_STEM_LIVEWOOD_TO_DEADWOOD,        /* Daily tC from Stem live wood pool to Stem dead wood (tC/sizeCell day) */
@@ -595,7 +599,11 @@ enum {
 	N_FROOT_TO_LITR2N,                  /* Daily Fine Root Litter to Litter unshielded cellulose nitrogen pool (tN/sizeNell day) */
 	N_FROOT_TO_LITR3N,                  /* Daily Fine Root Litter to Litter shielded cellulose nitrogen pool (tN/sizeNell day) */
 	N_FROOT_TO_LITR4N,                  /* Daily Fine Root Litter to Litter lignin nitrogen pool (tN/sizeNell day) */
-	N_BRANCH_TO_CWD,                    /* Annual Branch to Coarse Woody Debris nitrogen pool (tN/sizeNell day) */
+	N_STEM_TO_CWD,                      /* tN from Stem pool to Coarse Woody Debris (tN/sizeCell day) */
+	N_CROOT_TO_CWD,                     /* tN from Coarse root pool to Coarse Woody Debris (tN/sizeCell day) */
+	N_BRANCH_TO_CWD,                    /* tN from Branch pool to Coarse Woody Debris (tN/sizeCell day) */
+	N_RESERVE_TO_CWD,                   /* tN from Reserve pool to Coarse Woody Debris (tN/sizeCell day) */
+	N_FRUIT_TO_CWD,                     /* tN from Fruit pool to Coarse Woody Debris (tN/sizeCell day) */
 	N_LEAF_TO_RESERVE,                  /* Daily retranslocated C from Leaf pool to Reserve (tN/sizeCell day) */
 	N_FROOT_TO_RESERVE,                 /* Daily retranslocated C from Fine root pool to Reserve (tN/sizeCell day) */
 	N_BRANCH_TO_RESERVE,                /* Annual retranslocated C from Branch pool to Reserve (tN/sizeCell day) */

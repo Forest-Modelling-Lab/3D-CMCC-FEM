@@ -257,9 +257,6 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 								daily_C_evergreen_partitioning_allocation ( c, layer, height, dbh, age, species, meteo_daily, day, month, year );
 							}
 
-							/* litter pools */
-							littering ( c, s );
-
 							/* autotrophic respiration */
 							autotrophic_respiration ( c, layer, height, dbh, age, species, meteo_daily );
 
@@ -332,6 +329,9 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 								}
 							}
 							/****************************************************************************************************************************************/
+
+							/* litter fluxes and pools */
+							littering ( c, s );
 
 							/* check for fluxes and mass balance closure at the class level */
 

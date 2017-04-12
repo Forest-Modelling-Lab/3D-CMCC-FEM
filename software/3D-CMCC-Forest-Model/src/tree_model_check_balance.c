@@ -197,6 +197,18 @@ int check_tree_class_carbon_flux_balance(cell_t *const c, const int layer, const
 			s->value[C_FROOT_TO_LITR]       +
 			s->value[C_FRUIT_TO_LITR]       +
 			s->value[C_BRANCH_TO_CWD]       ;
+#if 0
+	/* sum of sinks */
+out     = s->value[TOTAL_MAINT_RESP_tC] +
+s->value[TOTAL_GROWTH_RESP_tC]  +
+s->value[C_LEAF_TO_LITR]        +
+s->value[C_FROOT_TO_LITR]       +
+s->value[C_STEM_TO_CWD]         +
+s->value[C_CROOT_TO_CWD]        +
+s->value[C_BRANCH_TO_CWD]       +
+s->value[C_RESERVE_TO_CWD]      +
+s->value[C_FRUIT_TO_CWD]        ;
+#endif
 
 	/* sum of current storage */
 	store   = s->value[C_TO_LEAF]  +

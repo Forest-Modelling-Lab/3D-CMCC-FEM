@@ -48,7 +48,7 @@ int check_litter_carbon_flux_balance(cell_t *const c)
 
 	balance = in - out - store;
 
-	logger(g_debug_log, "\LITTER CARBON FLUX BALANCE\n");
+	logger(g_debug_log, "\nLITTER CARBON FLUX BALANCE\n");
 
 	if ( ( fabs( balance ) > eps ) && ( c->dos > 1) )
 	{
