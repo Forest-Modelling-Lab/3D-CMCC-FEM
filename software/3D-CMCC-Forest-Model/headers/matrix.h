@@ -284,6 +284,9 @@ enum {
 	iWUE_SHADE,                         /* daily intrinsic Water Use Efficiency for shade leaves */
 	MONTHLY_iWUE_SHADE,                 /* monthly intrinsic Water Use Efficiency for shade leaves */
 	YEARLY_iWUE_SHADE,                  /* annual intrinsic Water Use Efficiency for shade leaves */
+	gsWUE,                              /* daily intrinsic Water Use Efficiency (stomatal) */
+	gsWUE_SUN,                          /* daily intrinsic Water Use Efficiency (stomatal) for sun leaves */
+	gsWUE_SHADE,                        /* daily intrinsic Water Use Efficiency (stomatal) for shade leaves */
 
 	/* LAI */
 	LAI_PROJ,                           /* LAI for Projected Area covered (at zenith angle)(m^2/m2) */

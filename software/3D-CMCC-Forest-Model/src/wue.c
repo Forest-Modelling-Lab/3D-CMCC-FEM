@@ -122,6 +122,23 @@ void water_use_efficiency( cell_t *const c, const int height, const int dbh, con
 		}
 	}
 
+	/*** Stomatal Water Use Efficiency (Tree Level) ***/
+	//note: this is based on tree level computation than uses gpp and stomatal conductance
+
+	/* daily gsWUE */
+	if( s->value[GPP] > 0. && s->value[STOMATAL_CONDUCTANCE] > 0. )
+	{
+		s->value[gsWUE]       = s->value[GPP]       / s->value[STOMATAL_CONDUCTANCE];
+		s->value[gsWUE_SUN]   = s->value[GPP_SUN]   / s->value[STOMATAL_SUN_CONDUCTANCE];
+		s->value[gsWUE_SHADE] = s->value[GPP_SHADE] / s->value[STOMATAL_SHADE_CONDUCTANCE];
+	}
+	else
+	{
+		s->value[gsWUE]       = 0.;
+		s->value[gsWUE_SUN]   = 0.;
+		s->value[gsWUE_SHADE] = 0.;
+	}
+
 
 	/*** Intrinsic Water Use Efficiency (Cell Level) ***/
 	//note: this is based on cell level computation than uses cell evapotranspiration
