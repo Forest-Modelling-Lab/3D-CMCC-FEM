@@ -92,6 +92,8 @@ void reset_daily_cell_variables(cell_t *const c)
 	c->daily_froot_litr3C =             0.;
 	c->daily_froot_litr4C =             0.;
 	c->daily_fruit_litrC =              0.;
+	c->daily_branch_cwdC =              0.;
+	c->daily_cwdC =                     0.;
 	c->daily_soilC =                    0.;
 
 	c->daily_litrN =                    0.;
@@ -106,6 +108,8 @@ void reset_daily_cell_variables(cell_t *const c)
 	c->daily_froot_litr3N =             0.;
 	c->daily_froot_litr4N =             0.;
 	c->daily_fruit_litrN =              0.;
+	c->daily_branch_cwdN =              0.;
+	c->daily_cwdN =                     0.;
 	c->daily_soilN =                    0.;
 
 	/*reset daily water variables*/

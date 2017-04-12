@@ -55,6 +55,7 @@
 #include "remove_tree_class.h"
 #include "regeneration.h"
 #include "decomposition.h"
+#include "littering.h"
 
 extern settings_t* g_settings;
 extern logger_t* g_debug_log;
@@ -255,6 +256,9 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 								/* evergreen */
 								daily_C_evergreen_partitioning_allocation ( c, layer, height, dbh, age, species, meteo_daily, day, month, year );
 							}
+
+							/* litter pools */
+							littering ( c, s );
 
 							/* autotrophic respiration */
 							autotrophic_respiration ( c, layer, height, dbh, age, species, meteo_daily );

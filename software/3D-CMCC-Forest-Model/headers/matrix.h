@@ -1136,7 +1136,7 @@ typedef struct
 	/* daily leaf and fine root litter transfer pools */
 	//FIXME ADD COARSE WOODY DEBRIS
 	/* carbon */
-	double daily_litrC;                                                   /* (tC/cell/day) daily leaf + fine root to litter carbon pool at cell level */
+	double daily_litrC;                                                   /* (tC/cell/day) daily litter carbon pool at cell level */
 	double daily_leaf_litrC;                                              /* (tC/cell/day) daily leaf to litter carbon pool at cell level */
 	double daily_leaf_litr1C;                                             /* (tC/cell/day) daily leaf to litter labile carbon pool at cell level */
 	double daily_leaf_litr2C;                                             /* (tC/cell/day) daily leaf to litter unshelded cellulose carbon pool at cell level */
@@ -1148,7 +1148,10 @@ typedef struct
 	double daily_froot_litr3C;                                            /* (tC/cell/day) daily fine root to litter shelded cellulose carbon pool at cell level */
 	double daily_froot_litr4C;                                            /* (tC/cell/day) daily fine root to litter lignin carbon pool at cell level */
 	double daily_fruit_litrC;                                             /* (tC/cell/day) daily fruit to litter lignin carbon pool at cell level */
+	double daily_cwdC;                                                    /* (tC/cell/day) daily cwd carbon pool at cell level */
+	double daily_branch_cwdC;                                             /* (tC/cell/day) daily branch carbon to Coarse Woody Debris */
 	double daily_soilC;                                                   /* (tC/cell/day) daily litter carbon to soil */
+
 
 	/* nitrogen */
 	double daily_litrN;                                                   /* (tN/cell/day) daily leaf + fine root to litter nitrogen pool at cell level */
@@ -1163,6 +1166,8 @@ typedef struct
 	double daily_froot_litr3N;                                            /* (tN/cell/day) daily fine root to litter shelded cellulose nitrogen pool at cell level */
 	double daily_froot_litr4N;                                            /* (tN/cell/day) daily fine root to litter lignin nitrogen pool at cell level */
 	double daily_fruit_litrN;                                             /* (tN/cell/day) daily fruit to litter nitrogen pool at cell level */
+	double daily_cwdN;                                                    /* (tN/cell/day) daily cwd nitrogen pool at cell level */
+	double daily_branch_cwdN;                                             /* (tN/cell/day) daily branch nitrogen to Coarse Woody Debris */
 	double daily_soilN;                                                   /* (tN/cell/day) daily litter nitrogen to soil */
 
 	/* litter and soil carbon pools */

@@ -10,6 +10,4 @@ void leaffall_evergreen (cell_t *const c, const int height, const int dbh, const
 
 void leaffall           (species_t *const s);
 
-void littering          ( cell_t *const c, species_t *const s );
-
 #endif /* LEAF_FALL_H_ */
