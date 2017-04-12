@@ -79,7 +79,7 @@ void reset_daily_cell_variables(cell_t *const c)
 	c->daily_cwd_carbon =               0.;
 	c->daily_fruit_carbon =             0.;
 
-	/**/
+	/* carbon litter fluxes */
 	c->daily_litrC =                    0.;
 	c->daily_leaf_litrC =               0.;
 	c->daily_leaf_litr1C =              0.;
@@ -96,6 +96,7 @@ void reset_daily_cell_variables(cell_t *const c)
 	c->daily_cwdC =                     0.;
 	c->daily_soilC =                    0.;
 
+	/* nitrogen litter fluxes */
 	c->daily_litrN =                    0.;
 	c->daily_leaf_litrN =               0.;
 	c->daily_leaf_litr1N =              0.;
