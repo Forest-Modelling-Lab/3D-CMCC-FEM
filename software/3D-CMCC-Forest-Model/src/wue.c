@@ -36,38 +36,38 @@ void water_use_efficiency( cell_t *const c, const int height, const int dbh, con
 	//note: this is based on tree level computation than uses npp and canopy transpiration
 
 	/* daily WUE */
-	if( s->value[NPP] > 0 && s->value[CANOPY_TRANSP] > 0.0 )
+	if( s->value[NPP] > 0. && s->value[CANOPY_TRANSP] > 0. )
 	{
 		s->value[WUE] = s->value[NPP] / s->value[CANOPY_TRANSP];
 	}
 	else
 	{
-		s->value[WUE] = 0.0;
+		s->value[WUE] = 0.;
 	}
 	/* monthly WUE */
 	/* last day of the month */
 	if ( ( IS_LEAP_YEAR ( c->years[year].year ) ? ( MonthLength_Leap[month] ) : ( MonthLength[month] ) ) == c->doy )
 	{
-		if( s->value[MONTHLY_NPP] > 0 && s->value[MONTHLY_CANOPY_TRANSP] > 0.0 )
+		if( s->value[MONTHLY_NPP] > 0. && s->value[MONTHLY_CANOPY_TRANSP] > 0. )
 		{
 			s->value[MONTHLY_WUE] = s->value[MONTHLY_NPP] / s->value[MONTHLY_CANOPY_TRANSP];
 		}
 		else
 		{
-			s->value[MONTHLY_WUE] = 0.0;
+			s->value[MONTHLY_WUE] = 0.;
 		}
 	}
 	/* annual WUE */
 	/* last day of the year */
 	if ( c->doy == ( IS_LEAP_YEAR( c->years[year].year ) ? 366 : 365) )
 	{
-		if( s->value[YEARLY_NPP] > 0 && s->value[YEARLY_CANOPY_TRANSP] > 0.0 )
+		if( s->value[YEARLY_NPP] > 0. && s->value[YEARLY_CANOPY_TRANSP] > 0. )
 		{
 			s->value[YEARLY_WUE] = s->value[YEARLY_NPP] / s->value[YEARLY_CANOPY_TRANSP];
 		}
 		else
 		{
-			s->value[YEARLY_WUE] = 0.0;
+			s->value[YEARLY_WUE] = 0.;
 		}
 	}
 

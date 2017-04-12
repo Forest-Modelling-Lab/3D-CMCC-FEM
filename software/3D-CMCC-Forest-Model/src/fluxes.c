@@ -21,7 +21,7 @@ void carbon_fluxes (species_t *const s)
 
 	logger(g_debug_log, "\n**C-FLUXES**\n");
 
-	s->value[C_FLUX] = s->value[GPP] - fabs(s->value[TOTAL_AUT_RESP]);
+	s->value[C_FLUX] = s->value[GPP] - s->value[TOTAL_AUT_RESP];
 	logger(g_debug_log, "c-flux = %f gC/m2/day\n", s->value[C_FLUX]);
 }
 

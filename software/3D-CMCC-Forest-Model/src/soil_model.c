@@ -47,7 +47,7 @@ int Soil_model_daily (matrix_t *const m, const int cell, const int day, const in
 	CHECK_CONDITION( c->soil_layers_count, !=, g_settings->number_of_soil_layer );
 
 	/* add Nitrogen soil pool from atmospheric deposition */
-	//TODO ALESSIOC ASK TO ALESSIOR TO INCLUDE VALUES OF Ndep file INTO SOIL POOL
+	//TODO INCLUDE VALUES OF Ndep file INTO SOIL POOL
 
 	/* loop on each cell layers starting from highest to lower */
 	for ( soil_layer = c->soil_layers_count -1 ; soil_layer >= 0; -- soil_layer )

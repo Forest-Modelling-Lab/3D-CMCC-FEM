@@ -11,14 +11,20 @@
 
 extern logger_t* g_debug_log;
 
-void turnover(species_t *const s)
+void turnover( cell_t *const c, species_t *const s, const int year )
 {
+#if 0
+	int days_for_turnover;
+
 	logger(g_debug_log, "\n**TURNOVER**\n");
 
-#if 0
+	if ( c->doy ==  IS_LEAP_YEAR ( c->years[year].year ) ) days_for_turnover = 366;
+	else days_for_turnover = 365;
+
+
 	//test_new
 	/* following Krinner et al., 2005 turnover occurs every day of the year */
-	s->value[DAILY_LIVE_WOOD_TURNOVER] = s->value[LIVE_WOOD_TURNOVER]/365.0;
+	s->value[DAILY_LIVE_WOOD_TURNOVER] = s->value[LIVE_WOOD_TURNOVER]/days_for_turnover;
 
 	/*******************************************************************************************************************/
 	/* daily stem turnover live to dead wood*/

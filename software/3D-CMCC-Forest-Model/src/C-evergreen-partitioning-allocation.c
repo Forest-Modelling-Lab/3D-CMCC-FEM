@@ -423,7 +423,7 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 #endif
 
 	/* turnover */
-	turnover ( s );
+	turnover ( c, s, year );
 
 	/* update class level month carbon biomass increment in tC/month/cell */
 	s->value[M_C_TO_STEM]      += s->value[C_TO_STEM];
