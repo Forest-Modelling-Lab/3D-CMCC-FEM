@@ -94,7 +94,7 @@ void print_model_settings(logger_t*const log)
 	}
 	else
 	{
-		logger(log, "#Year Start Management = off\n");
+		logger(log, "#Year restart = off\n");
 	}
 }
 

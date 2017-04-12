@@ -48,7 +48,7 @@ int check_litter_carbon_flux_balance(cell_t *const c)
 
 	balance = in - out - store;
 
-	logger(g_debug_log, "\nCELL CARBON FLUX BALANCE\n");
+	logger(g_debug_log, "\LITTER CARBON FLUX BALANCE\n");
 
 	if ( ( fabs( balance ) > eps ) && ( c->dos > 1) )
 	{
@@ -141,7 +141,7 @@ int check_litter_carbon_mass_balance(cell_t *const c)
 	else
 	{
 		c->litr_carbon_old_store = c->litr_carbon_store;
-		logger(g_debug_log, "...ok in 'Cell_model_daily' carbon mass balance (gC/m2/day)\n");
+		logger(g_debug_log, "...ok in 'Litter_model_daily' carbon mass balance (gC/m2/day)\n");
 	}
 	/* ok */
 	return 1;
@@ -165,25 +165,25 @@ int check_litter_nitrogen_flux_balance(cell_t *const c)
 	//todo include cwd nitrogen fluxes
 
 	/* sum of nitrogen sources */
-	in      = c->daily_litrN  /* fixme include Ndepostiion id daily */;
+	in      = c->daily_litrN  /* fixme include Ndepostiion daily */;
 
 	/* sum of nitrogen sinks */
 	out     = c->daily_soilN;
 
 	/* sum of current nitrogen storage */
 	store   = c->daily_leaf_litr1N +
-			c->daily_leaf_litr2N +
-			c->daily_leaf_litr3N +
-			c->daily_leaf_litr4N +
-			c->daily_froot_litr1N +
-			c->daily_froot_litr2N +
-			c->daily_froot_litr3N +
-			c->daily_froot_litr4N +
-			c->daily_fruit_litrN  ;
+			c->daily_leaf_litr2N   +
+			c->daily_leaf_litr3N   +
+			c->daily_leaf_litr4N   +
+			c->daily_froot_litr1N  +
+			c->daily_froot_litr2N  +
+			c->daily_froot_litr3N  +
+			c->daily_froot_litr4N  +
+			c->daily_fruit_litrN   ;
 
 	balance = in - out - store;
 
-	logger(g_debug_log, "\nCELL NITROGEN FLUX BALANCE\n");
+	logger(g_debug_log, "\LITTER NITROGEN FLUX BALANCE\n");
 
 	if ( ( fabs( balance ) > eps ) && ( c->dos > 1) )
 	{
@@ -213,6 +213,70 @@ int check_litter_nitrogen_flux_balance(cell_t *const c)
 	else
 	{
 		logger(g_debug_log, "...ok 'Litter_ model_daily' nitrogen balance\n");
+	}
+	/* ok */
+	return 1;
+}
+
+int check_litter_nitrogen_mass_balance(cell_t *const c)
+{
+	/* DAILY CHECK ON LITTER LEVEL NITROGEN MASS BALANCE */
+	/* check complete litter level nitrogen mass balance */
+
+	/* sum of sources */
+	c->litr_nitrogen_in    = c->daily_litrN /* fixme include Ndepostiion daily */;
+
+	//fixme
+	/* sum of sinks */
+	c->litr_nitrogen_out   = c->daily_soilN;
+
+	//todo include cwd nitrogen pool
+	/* sum of current storage */
+	c->litr_nitrogen_store = c->leaf_litr1N +
+			c->leaf_litr2N  +
+			c->leaf_litr3N  +
+			c->leaf_litr4N  +
+			c->froot_litr1N +
+			c->froot_litr2N +
+			c->froot_litr3N +
+			c->froot_litr4N ;
+
+	/* check nitrogen pool balance */
+	c->litr_nitrogen_balance = c->litr_nitrogen_in - c->litr_nitrogen_out - ( c->litr_nitrogen_store - c->litr_nitrogen_old_store );
+
+	logger(g_debug_log, "\nLITTER LEVEL NITROGEN MASS BALANCE\n");
+
+	/* check for nitrogen mass balance closure */
+	if ( ( fabs( c->litr_nitrogen_balance ) > eps ) && ( c->dos > 1 ) )
+	{
+		error_log("DOS = %d\n", c->dos);
+		error_log("\nin = %g gC/m2/day\n", c->litr_nitrogen_in);
+		error_log("daily_litrC = %g gC/m2\n", c->daily_litrC);
+		error_log("\nout = %g gC/m2/day\n", c->litr_nitrogen_out);
+		error_log("daily_het_resp = 0 gC/m2/day\n");
+		error_log("daily_soilC = 0 gC/m2/day\n");
+		error_log("\nstore\n");
+		error_log("leaf_litr1N = %g gC/m2/day\n", c->leaf_litr1N);
+		error_log("leaf_litr2N = %g gC/m2/day\n", c->leaf_litr2N);
+		error_log("leaf_litr3N = %g gC/m2/day\n", c->leaf_litr3N);
+		error_log("leaf_litr4N = %g gC/m2/day\n", c->leaf_litr4N);
+		error_log("froot_litr1N = %g gC/m2/day\n", c->froot_litr1N);
+		error_log("froot_litr2N = %g gC/m2/day\n", c->froot_litr2N);
+		error_log("froot_litr3N = %g gC/m2/day\n",c->froot_litr3N);
+		error_log("froot_litr4N = %g gC/m2/day\n", c->froot_litr4N);
+		error_log("\nnitrogen in = %g gC/m2/day\n", c->litr_nitrogen_in);
+		error_log("nitrogen out = %g gC/m2/day\n", c->litr_nitrogen_out);
+		error_log("delta nitrogen store = %g gC/m2/day\n", c->litr_nitrogen_store - c->litr_nitrogen_old_store);
+		error_log("nitrogen = %g gC/m2/day\n",c->litr_nitrogen_balance);
+		error_log("...FATAL ERROR in 'Litter_model_daily' nitrogen mass balance (gC/m2/day) (exit)\n");
+		CHECK_CONDITION(fabs( c->litr_nitrogen_balance ), > , eps);
+
+		return 0;
+	}
+	else
+	{
+		c->litr_nitrogen_old_store = c->litr_nitrogen_store;
+		logger(g_debug_log, "...ok in 'Litter_model_daily' nitrogen mass balance (gC/m2/day)\n");
 	}
 	/* ok */
 	return 1;
