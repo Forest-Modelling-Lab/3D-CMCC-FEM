@@ -694,7 +694,7 @@ void initialization_forest_class_litter_soil (cell_t *const c, const int height,
 	r1 = s->value[DEAD_WOOD_LIGN_FRAC] / s->value[DEAD_WOOD_CEL_FRAC];
 	if ( r1 <= 0.45 )
 	{
-		s->value[DEAD_WOOD_SCEL_FRAC]  = 0.0;
+		s->value[DEAD_WOOD_SCEL_FRAC]  = 0.;
 		s->value[DEAD_WOOD_USCEL_FRAC] = s->value[DEAD_WOOD_CEL_FRAC];
 	}
 	else if ( r1 > 0.45 && r1 < 0.7 )
@@ -842,8 +842,8 @@ void initialization_soil_biogeochemistry (cell_t *const c)
 	double leaf_litt_uscel_frac;                                          /* (dim) leaf litter unshielded cellulose fraction */
 	double froot_litt_scel_frac;                                          /* (dim) fine root litter shielded cellulose fraction */
 	double froot_litt_uscel_frac;                                         /* (dim) fine root litter unshielded fraction */
-	double deadwood_scel_frac;                                           /* (dim) dead wood litter shielded cellulose fraction */
-	double deadwood_uscel_frac;                                          /* (dim) dead wood litter unshielded fraction */
+	double deadwood_scel_frac;                                            /* (dim) dead wood litter shielded cellulose fraction */
+	double deadwood_uscel_frac;                                           /* (dim) dead wood litter unshielded fraction */
 
 	/* todo: if cell is monospecific than use values of species level instead generic */
 	/* assumption: arbitrary values for fractions (assuming averaged values among species) */
@@ -880,8 +880,8 @@ void initialization_soil_biogeochemistry (cell_t *const c)
 	//assumption: litter is shared based on "leaf_froot_frac" between leaf and fine root litter pools
 
 	/* compute carbon pools */
-	litterC = g_soil_settings->values[LITTERC] * (1000 / g_settings->sizeCell);
-	leaf_litterC = litterC * ( leaf_froot_frac / 2. );
+	litterC       = g_soil_settings->values[LITTERC] * (1000 / g_settings->sizeCell);
+	leaf_litterC  = litterC * ( leaf_froot_frac / 2. );
 	froot_litterC = litterC - leaf_litterC;
 
 	/****************** compute leaf litter pool ******************/
@@ -1011,7 +1011,7 @@ void initialization_soil_biogeochemistry (cell_t *const c)
 	c->deadwood_litr3C = cwd_litterC * deadwood_scel_frac;
 
 	/* check */
-	CHECK_CONDITION ( fabs(c->deadwood_litr2C + c->deadwood_litr3C + c->deadwood_litr4C - cwd_litterC), > , eps);
+	CHECK_CONDITION ( fabs( c->deadwood_litr2C + c->deadwood_litr3C + c->deadwood_litr4C - cwd_litterC ), > , eps);
 
 
 	/****************** SUM ALL OVER CARBON POOLS ******************/
@@ -1084,7 +1084,7 @@ void initialization_soil_biogeochemistry (cell_t *const c)
 
 	/****************** SUM ALL OVER NITROGEN POOLS ******************/
 	/* compute litter total (litter + cwd) nitrogen pool */
-	c->litr_nitrogen  = litterN + cwd_litterN;
+	c->litr_nitrogen   = litterN + cwd_litterN;
 
 	/* compute litter total labile nitrogen pool */
 	c->litr1N = c->leaf_litr1N + c->froot_litr1N;

@@ -244,12 +244,12 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	}
 	else
 	{
-		s->value[F_AGE] = 1;
+		s->value[F_AGE] = 1.;
 		logger(g_debug_log, "no data for age F_AGE = 1\n");
 	}
 
 	/* check */
-	CHECK_CONDITION(s->value[F_AGE], >, 1);
+	CHECK_CONDITION(s->value[F_AGE], >, 1.);
 	CHECK_CONDITION(s->value[F_AGE], <, ZERO);
 
 	/********************************************************************************************/
@@ -265,16 +265,13 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	//test 25 nov 2016
 	//test move FN0, FNN to species.txt
 #if 0
-	/* SOIL NUTRIENT */
+	/* SOIL NUTRIENT MODIFIER */
 
 	/* compute fertility rate based on N available and N demand */
-	s->values[FR] = c->soilN / s->value[NPP_gN];
+	s->values[F_NUTR] = c->soilN / s->value[NPP_gN];
 
 	/* check */
-	if ( s->values[FR] > 1.) s->values[FR] = 1.;
-
-	/*SOIL NUTRIENT MODIFIER*/
-	s->value[F_NUTR] = 1.0 - ( 1.0- g_soil_settings->values[SOIL_FN0]) * pow ((1.0 - g_soil_settings->values[SOIL_FR]), g_soil_settings->values[SOIL_FNN]);
+	if ( s->values[F_NUTR] > 1.) s->values[F_NUTR] = 1.;
 	logger(g_debug_log, "fNutr = %f\n", s->value[F_NUTR]);
 
 	/* check */
@@ -282,14 +279,6 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	CHECK_CONDITION(s->value[F_NUTR], <, ZERO);
 #endif
 	/********************************************************************************************/
-#if 0
-	/*SOIL WATER MODIFIER (3-PG METHOD)*/
-	//fixme include "dAdjMod" from 3-PG code
-	c->soil_moist_ratio = c->asw / c->max_asw_fc;
-	s->value[F_SW] = 1.0 / (1.0 + pow(((1.0 - c->soil_moist_ratio) / s->value[SWCONST]), s->value[SWPOWER]));
-	logger(g_debug_log, "fSW (3-PG)= %f\n", s->value[F_SW]);
-#endif
-
 	/* (MPa) water potential of soil and leaves */
 	/*SOIL MATRIC POTENTIAL*/
 
@@ -300,7 +289,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	/* volumetric water content */
 	logger(g_debug_log, "\nBIOME SOIL WATER MODIFIER\n");
 
-	/* note:changed from biome*/
+	/* note:changed from biome */
 	c->vwc = c->asw / c->max_asw_fc /* /(100.0 * g_soil_settings->values[SOIL_DEPTH])*/;
 	logger(g_debug_log, "volumetric available soil water  = %f %(vol)\n", c->vwc);
 	logger(g_debug_log, "vwc_fc = %f (DIM)\n", c->vwc_fc);
@@ -316,7 +305,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	{
 		logger(g_debug_log, "no water stress\n");
 
-		s->value[F_PSI] = 1.0;
+		s->value[F_PSI] = 1.;
 	}
 	/* full water stress */
 	else if (c->psi <= s->value[SWPCLOSE])
@@ -349,7 +338,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	logger(g_debug_log, "F_PSI-F_SW (BIOME)= %f\n", s->value[F_PSI]);
 
 	/* check */
-	CHECK_CONDITION(s->value[F_SW], >, 1);
+	CHECK_CONDITION(s->value[F_SW], >, 1.);
 	CHECK_CONDITION(s->value[F_SW], <, ZERO);
 
 	/********************************************************************************************/
@@ -367,7 +356,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	}
 
 	/* check */
-	CHECK_CONDITION(s->value[PHYS_MOD], >, 1);
+	CHECK_CONDITION(s->value[PHYS_MOD], >, 1.);
 	CHECK_CONDITION(s->value[PHYS_MOD], <, ZERO);
 
 	/********************************************************************************************/

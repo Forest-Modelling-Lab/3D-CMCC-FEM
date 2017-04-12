@@ -990,6 +990,9 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 	}
 }
 
+/*************************************************************************************************************************************/
+/*************************************************************************************************************************************/
+
 void EOD_print_output_soil_cell_level(cell_t *const c, const int day, const int month, const int year, const int years_of_simulation )
 {
 	static int years_counter;

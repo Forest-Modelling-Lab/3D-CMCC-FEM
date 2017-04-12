@@ -17,6 +17,8 @@ int check_tree_class_nitrogen_mass_balance  ( cell_t *const c, const int layer, 
 /* litter level */
 int check_litter_carbon_flux_balance        ( cell_t *const c );
 int check_litter_carbon_mass_balance        ( cell_t *const c );
+int check_litter_nitrogen_flux_balance      ( cell_t *const c );
+int check_litter_nitrogen_mass_balance      ( cell_t *const c );
 
 
 /* soil level */

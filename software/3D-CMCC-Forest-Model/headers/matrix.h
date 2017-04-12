@@ -884,7 +884,8 @@ typedef struct
 
 	/*forest structure variables*/	
 	int Veg_Counter;                                    /* number of class in vegetative period  in the cell */
-	double cell_cover;                                  /* (ratio) canopy cover  */
+	double cell_cover;                                  /* (ratio) Canopy cover  */
+	double bare_soil_cover;                             /* (ratio) Bare soil cover */
 	int cell_n_trees;                                   /* (trees/cell/day) number of trees */
 	int daily_dead_tree;                                /* (trees/cell/day) daily number of dead tree */
 	int monthly_dead_tree;                              /* (trees/cell/month) monthly number of dead tree */

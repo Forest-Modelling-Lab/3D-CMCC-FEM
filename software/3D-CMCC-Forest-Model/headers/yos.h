@@ -42,9 +42,6 @@ typedef struct {
 	double ten_day_weighted_avg_tsoil;          /* (°C) ten day weighted avg tsoil */
 	double ten_day_weighted_avg_tday;           /* (°C) ten day weighted avg tday */
 	double ten_day_weighted_avg_tnight;         /* (°C) ten day weighted avg tnight */
-	// ALESSIOR this is an annual value not daily
-	// moved into yos struct
-	//double co2_conc;                            /* (ppmv) daily CO2 concentration */
 	double es;                                  /* (KPa) daily weighted mean saturation vapour pressure at the air temperature */
 	double ea;                                  /* (KPa) daily actual vapour pressure derived from relative humidity data */
 	double psych;                               /* (KPa/°C) daily psychrometric constant */

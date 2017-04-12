@@ -50,8 +50,8 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 	a = &d->ages[age];
 	s = &a->species[species];
 
-	s0 = s->value[S0CTEM];        /* parameter controlling allocation to stem (minimum ratio to stem pool */
-	r0 = s->value[R0CTEM];        /* parameter controlling allocation to roots (minimum ratio to root pools */
+	s0    = s->value[S0CTEM];        /* parameter controlling allocation to stem (minimum ratio to stem pool */
+	r0    = s->value[R0CTEM];        /* parameter controlling allocation to roots (minimum ratio to root pools */
 	omega = s->value[OMEGA_CTEM]; /* controls the sensitivity of allocation to changes in water and light availability */
 
 	//fixme it should takes into account above layers
@@ -216,14 +216,16 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 
 		if (npp_to_alloc > 0.0 && s->value[RESERVE_C] >= s->value[MIN_RESERVE_C])
 		{
-			/* fruit pool */
-			if ( g_settings->regeneration && ( a->value > s->value[SEXAGE] ) )
+#if 0
+			/* reproduction */
+			if ( a->value > s->value[SEXAGE] )
 			{
 				logger(g_debug_log, "allocating into fruit pool\n");
 
 				s->value[C_TO_FRUIT] = npp_to_alloc * s->value[FRUIT_PERC];
-				npp_to_alloc -= s->value[C_TO_FRUIT];
+				npp_to_alloc        -= s->value[C_TO_FRUIT];
 			}
+#endif
 		}
 		else
 		{
