@@ -108,13 +108,11 @@ void photosynthesis(cell_t *const c, const int layer, const int height, const in
 
 	/* Daily GPP in gC/m2/day */
 	/* molC/m2/day --> gC/m2/day */
-#if 1
-	s->value[GPP]             = GPPmolC        * GC_MOL;
-#else
-	s->value[GPP_SUN]         = GPP_sun_molC   * GC_MOL;
-	s->value[GPP_SHADE]       = GPP_shade_molC * GC_MOL;
-	s->value[GPP] = s->value[GPP_SUN] + s->value[GPP_SHADE];
-#endif
+
+	s->value[GPP_SUN]   = GPP_sun_molC   * GC_MOL;
+	s->value[GPP_SHADE] = GPP_shade_molC * GC_MOL;
+	s->value[GPP]       = s->value[GPP_SUN] + s->value[GPP_SHADE];
+
 	logger(g_debug_log, "GPP_gC = %g gC/m^2/day\n", s->value[GPP]);
 
 	/* gC/m2/day --> tC/cell/day */
