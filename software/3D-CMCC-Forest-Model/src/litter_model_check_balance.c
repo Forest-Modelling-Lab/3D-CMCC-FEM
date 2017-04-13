@@ -43,8 +43,11 @@ int check_litter_carbon_flux_balance(cell_t *const c)
 			c->daily_froot_litr2C  +
 			c->daily_froot_litr3C  +
 			c->daily_froot_litr4C  +
-			c->daily_fruit_cwdC    +
-			c->daily_branch_cwdC   ;
+			c->daily_stem_cwdC     +
+			c->daily_croot_cwdC    +
+			c->daily_branch_cwdC   +
+			c->daily_reserve_cwdC  +
+			c->daily_fruit_cwdC    ;
 
 	balance = in - out - store;
 
@@ -67,13 +70,18 @@ int check_litter_carbon_flux_balance(cell_t *const c)
 		error_log("c->daily_froot_litr2C = %g gC/m2/day\n", c->daily_froot_litr2C);
 		error_log("c->daily_leaf_litrC = %g gC/m2/day\n",   c->daily_froot_litr3C);
 		error_log("c->daily_froot_litr4C = %g gC/m2/day\n", c->daily_froot_litr4C);
-		error_log("c->daily_fruit_litrC = %g gC/m2/day\n",  c->daily_fruit_cwdC);
+		error_log("c->daily_stem_cwdC = %g gC/m2/day\n",    c->daily_stem_cwdC);
+		error_log("c->daily_croot_cwdC = %g gC/m2/day\n",   c->daily_croot_cwdC);
+		error_log("c->daily_reserve_cwdC = %g gC/m2/day\n", c->daily_reserve_cwdC);
 		error_log("c->daily_branch_cwdC = %g gC/m2/day\n",  c->daily_branch_cwdC);
+		error_log("c->daily_fruit_litrC = %g gC/m2/day\n",  c->daily_fruit_cwdC);
+
 		error_log("\ncarbon in = %g gC/m2/day\n", in);
 		error_log("carbon out = %g gC/m2/day\n", out);
 		error_log("carbon store = %g gC/m2/day\n", store);
 		error_log("carbon_balance = %g gC/m2/day\n",balance);
 		error_log("...FATAL ERROR in 'Litter_ model_daily' carbon balance (exit)\n");
+		CHECK_CONDITION(fabs( balance ), > , eps);
 
 		return 0;
 	}
@@ -91,7 +99,8 @@ int check_litter_carbon_mass_balance(cell_t *const c)
 	/* check complete litter level carbon mass balance */
 
 	/* sum of sources */
-	c->litr_carbon_in    = c->daily_litrC;
+	c->litr_carbon_in    = c->daily_litrC + c->daily_cwdC;
+
 
 	//fixme
 	/* sum of sinks */
@@ -210,6 +219,7 @@ int check_litter_nitrogen_flux_balance(cell_t *const c)
 		error_log("nitrogen store = %g gC/m2/day\n", store);
 		error_log("nitrogen_balance = %g gC/m2/day\n",balance);
 		error_log("...FATAL ERROR in 'Litter_ model_daily' nitrogen balance (exit)\n");
+		CHECK_CONDITION(fabs( balance ), > , eps);
 
 		return 0;
 	}

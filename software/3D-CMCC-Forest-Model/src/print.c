@@ -117,7 +117,7 @@ void print_daily_met_data(cell_t *c, const int day, const int month, const int y
 			"-precip = %g mm\n"
 			"-rain = %g mm\n"
 			"-snow = %g cm\n"
-			"-swc (computed/measured)= %g %%vol\n"
+			"-swc (measured)= %g %%vol\n"
 			"-thermic_sum = %g °C\n"
 			"-rho air = %g kg/m3\n"
 			"-daylength = %g hrs\n"

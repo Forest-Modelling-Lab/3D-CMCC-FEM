@@ -74,9 +74,9 @@ void reset_daily_cell_variables(cell_t *const c)
 	c->daily_root_carbon =              0.;
 	c->daily_branch_carbon =            0.;
 	c->daily_reserve_carbon =           0.;
-	c->daily_litr_carbon =              0.;
-	c->daily_soil_carbon =              0.;
-	c->daily_cwd_carbon =               0.;
+	c->daily_litrC =                    0.;
+	c->daily_soilC =                    0.;
+	c->daily_cwdC =                     0.;
 	c->daily_fruit_carbon =             0.;
 
 	/* carbon litter fluxes */
@@ -91,8 +91,11 @@ void reset_daily_cell_variables(cell_t *const c)
 	c->daily_froot_litr2C =             0.;
 	c->daily_froot_litr3C =             0.;
 	c->daily_froot_litr4C =             0.;
-	c->daily_fruit_cwdC =               0.;
+	c->daily_stem_cwdC =                0.;
+	c->daily_croot_cwdC =               0.;
+	c->daily_reserve_cwdC =             0.;
 	c->daily_branch_cwdC =              0.;
+	c->daily_fruit_cwdC =               0.;
 	c->daily_cwdC =                     0.;
 	c->daily_soilC =                    0.;
 

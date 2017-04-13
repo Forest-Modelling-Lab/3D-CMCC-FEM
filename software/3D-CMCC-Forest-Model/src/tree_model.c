@@ -41,6 +41,9 @@
 #include "C-assimilation.h"
 #include "C-deciduous-partitioning-allocation.h"
 #include "C-evergreen-partitioning-allocation.h"
+#include "CN-allocation.h"
+#include "lai.h"
+#include "turnover.h"
 #include "mortality.h"
 #include "biomass.h"
 #include "management.h"
@@ -263,6 +266,9 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 								daily_C_evergreen_partitioning ( c, layer, height, dbh, age, species, meteo_daily, day, month, year );
 							}
 
+							/* growth respiration */
+							growth_respiration ( c, layer, height, dbh, age, species );
+
 							/* autotrophic respiration */
 							autotrophic_respiration ( c, layer, height, dbh, age, species, meteo_daily );
 
@@ -272,8 +278,11 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							/* C assimilation */
 							carbon_assimilation ( c, layer, height, dbh, age, species );
 
-							/* N assimilation */
-							nitrogen_assimilation ( s );
+							/* compute single tree biomass pools */
+							average_tree_pools ( s );
+
+							/* turnover */
+							turnover ( c, s, year );
 
 							/* carbon use efficiency */
 							carbon_use_efficiency ( c, height, dbh, age, species, day, month, year );
@@ -287,7 +296,8 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							/* last day of the month */
 							if ( ( IS_LEAP_YEAR( c->years[year].year ) ? ( MonthLength_Leap[month] ) : ( MonthLength[month] ) ) == c->doy )
 							{
-								//dendrometry_old ( c, layer, height, dbh, age, species );
+								/* to avoid "jumps" of dbh it has computed once monthly */
+								dendrometry_old ( c, layer, height, dbh, age, species );
 
 								//FIXME
 								//dendrometry ( c, layer, height, dbh, age, species, meteo_daily );
@@ -321,9 +331,6 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 									/* annual volume, MAI and CAI */
 									annual_tree_increment ( c, height, dbh, age, species, year );
 
-									/* print at the end of simulation class level data */
-									print_daily_forest_class_data ( c, layer, height, dbh, age, species );
-
 									/************************************************************************************************************************************/
 
 									if ( g_settings->regeneration && ( a->value > s->value[SEXAGE] ) )
@@ -345,8 +352,22 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 
 							/****************************************************************************************************************************************/
 
+							/* allocate daily carbon */
+							carbon_allocation   ( c, s );
+
+							/* allocate daily nitrogen */
+							nitrogen_allocation ( c, s );
+
+							/* update Leaf Area Index */
+							daily_lai ( s );
+
+							/* N assimilation */
+							nitrogen_assimilation ( s );
+
 							/* litter fluxes and pools */
 							littering ( c, s );
+
+							/****************************************************************************************************************************************/
 
 							/* check for fluxes and mass balance closure at the class level */
 

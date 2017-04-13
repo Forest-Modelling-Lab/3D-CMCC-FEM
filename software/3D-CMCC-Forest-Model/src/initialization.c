@@ -538,21 +538,6 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 	CHECK_CONDITION(s->value[VOLUME],                  <=, 0);
 	CHECK_CONDITION(s->value[TREE_VOLUME],             <=, 0);
 
-	/*** update at cell level (tC/sizecell)  ***/
-	c->leaf_tC                  += s->value[LEAF_C];
-	c->froot_tC                 += s->value[FROOT_C];
-	c->stem_tC                  += s->value[STEM_C];
-	c->stem_live_wood_tC        += s->value[STEM_LIVE_WOOD_C];
-	c->stem_dead_wood_tC        += s->value[STEM_DEAD_WOOD_C];
-	c->croot_tC                 += s->value[CROOT_C];
-	c->croot_live_wood_tC       += s->value[CROOT_LIVE_WOOD_C];
-	c->croot_dead_wood_tC       += s->value[CROOT_DEAD_WOOD_C];
-	c->branch_tC                += s->value[BRANCH_C];
-	c->branch_live_wood_tC      += s->value[BRANCH_LIVE_WOOD_C];
-	c->branch_dead_wood_tC      += s->value[BRANCH_DEAD_WOOD_C];
-	c->reserve_tC               += s->value[RESERVE_C];
-	c->fruit_tC                 += s->value[FRUIT_C];
-
 	/*** update at cell level (gC/m2)  ***/
 	c->leaf_carbon              += (s->value[LEAF_C]             * 1e6 / g_settings->sizeCell);
 	c->froot_carbon             += (s->value[FROOT_C]            * 1e6 / g_settings->sizeCell);
@@ -1016,7 +1001,7 @@ void initialization_soil_biogeochemistry (cell_t *const c)
 
 	/****************** SUM ALL OVER CARBON POOLS ******************/
 	/* compute litter total (litter + cwd) carbon pool */
-	c->litr_carbon = litterC + cwd_litterC;
+	c->litrC   = litterC;
 
 	/* compute litter total labile carbon pool */
 	c->litr1C = c->leaf_litr1C + c->froot_litr1C;
@@ -1030,8 +1015,10 @@ void initialization_soil_biogeochemistry (cell_t *const c)
 	/* compute litter total lignin carbon pool */
 	c->litr4C = c->leaf_litr4C + c->froot_litr4C + c->deadwood_litr4C;
 
+	c->cwdC   = cwd_litterC;
+
 	/* check */
-	CHECK_CONDITION ( fabs((c->litr1C + c->litr2C + c->litr3C + c->litr4C) - (c->litr_carbon)), > , eps);
+	CHECK_CONDITION ( fabs((c->litr1C + c->litr2C + c->litr3C + c->litr4C) - (c->litrC)), > , eps);
 
 
 	/*************************************** NITROGEN POOLS ***************************************/

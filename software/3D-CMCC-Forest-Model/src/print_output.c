@@ -203,6 +203,7 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 										",FN"
 										",FSW"
 										",LITR_C"
+										",CWD_C"
 										",SOIL_C"
 								);
 
@@ -395,14 +396,15 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 		logger(g_daily_log,",*****");
 	}
 	/* printing variables only at cell level */
-	logger(g_daily_log, ",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f\n",
+	logger(g_daily_log, ",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f\n",
 			c->daily_et,
 			c->daily_latent_heat_flux,
 			c->snow_pack,
 			c->asw,
 			c->daily_iwue,
-			c->litr_carbon,
-			c->soil_carbon,
+			c->litrC,
+			c->cwdC,
+			c->soilC,
 			c->litr_nitrogen,
 			c->soil_nitrogen
 	);
@@ -1068,12 +1070,12 @@ void EOD_print_output_soil_cell_level(cell_t *const c, const int day, const int 
 			c->froot_litr2C,
 			c->froot_litr3C,
 			c->froot_litr4C,
-			c->litr_carbon,
+			c->litrC,
 			c->litr1C,
 			c->litr2C,
 			c->litr3C,
 			c->litr4C,
-			c->soil_carbon,
+			c->soilC,
 			c->soil1C,
 			c->soil2C,
 			c->soil3C,
@@ -1191,12 +1193,12 @@ void EOM_print_output_soil_cell_level(cell_t *const c, const int month, const in
 			c->froot_litr2C,
 			c->froot_litr3C,
 			c->froot_litr4C,
-			c->litr_carbon,
+			c->litrC,
 			c->litr1C,
 			c->litr2C,
 			c->litr3C,
 			c->litr4C,
-			c->soil_carbon,
+			c->soilC,
 			c->soil1C,
 			c->soil2C,
 			c->soil3C,
@@ -1315,12 +1317,12 @@ void EOY_print_output_soil_cell_level(cell_t *const c, const int year, const int
 			c->froot_litr2C,
 			c->froot_litr3C,
 			c->froot_litr4C,
-			c->litr_carbon,
+			c->litrC,
 			c->litr1C,
 			c->litr2C,
 			c->litr3C,
 			c->litr4C,
-			c->soil_carbon,
+			c->soilC,
 			c->soil1C,
 			c->soil2C,
 			c->soil3C,

@@ -16,10 +16,7 @@
 #include "mortality.h"
 #include "aut_respiration.h"
 
-extern settings_t* g_settings;
 extern logger_t* g_debug_log;
-extern int MonthLength [];
-extern int MonthLength_Leap [];
 
 /* Deciduous carbon allocation routine */
 void daily_C_deciduous_partitioning (cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species,
@@ -236,6 +233,9 @@ void daily_C_deciduous_partitioning (cell_t *const c, const int layer, const int
 		/* including retranslocated C */
 		s->value[C_TO_RESERVE] = npp_to_alloc ;
 
+		/* leaf fall */
+		leaffall_deciduous( c, height, dbh, age, species );
+
 		break;
 		/**********************************************************************/
 	case 0:
@@ -249,96 +249,9 @@ void daily_C_deciduous_partitioning (cell_t *const c, const int layer, const int
 		/**********************************************************************/
 	}
 
-	/* check for daily growth efficiency mortality */
-	//note: since forest structure works on annual scale it must be turned off
-	//daily_growth_efficiency_mortality ( c, height, dbh, age, species );
-
-	if ( s->phenology_phase == 3 )
-	{
-		/* leaf fall */
-		leaffall_deciduous( c, height, dbh, age, species );
-	}
 
 	/* update live_total wood fraction based on age */
 	live_total_wood_age ( a, s );
-
-	/* growth respiration */
-	growth_respiration ( c, layer, height, dbh, age, species );
-
-	/* allocate daily carbon */
-	carbon_allocation ( c, s );
-
-	/* allocate daily nitrogen */
-	nitrogen_allocation ( c, s );
-
-	/* update Leaf Area Index */
-	daily_lai ( s );
-
-	/* compute single tree biomass pools */
-	average_tree_pools ( s );
-
-	/* to avoid "jumps" of dbh it has computed once monthly */
-	if ( ( IS_LEAP_YEAR( c->years[year].year ) ? (MonthLength_Leap[month] ) : (MonthLength[month] )) == c->doy )
-	{
-		/* old */
-		dendrometry_old ( c, layer, height, dbh, age, species);
-	}
-#if 0
-	dendrometry ( c, layer, height, dbh, age, species, meteo_daily, month, year );
-#endif
-
-	/* turnover */
-	turnover ( c, s, year );
-
-	/* update class level month carbon biomass increment in tC/month/cell */
-	s->value[M_C_TO_STEM]       += s->value[C_TO_STEM];
-	s->value[M_C_TO_LEAF]       += s->value[C_TO_LEAF];
-	s->value[M_C_TO_FROOT]      += s->value[C_TO_FROOT];
-	s->value[M_C_TO_CROOT]      += s->value[C_TO_CROOT];
-	s->value[M_C_TO_RESERVE]    += s->value[C_TO_RESERVE];
-	s->value[M_C_TO_ROOT]       += s->value[C_TO_ROOT];
-	s->value[M_C_TO_BRANCH]     += s->value[C_TO_BRANCH];
-	s->value[M_C_TO_FRUIT]      += s->value[C_TO_FRUIT];
-	s->value[M_C_TO_TOT_STEM]   += s->value[C_TO_TOT_STEM];
-
-	/* update class level annual carbon biomass increment in tC/year/cell */
-	s->value[Y_C_TO_STEM]       += s->value[C_TO_STEM];
-	s->value[Y_C_TO_LEAF]       += s->value[C_TO_LEAF];
-	s->value[Y_C_TO_FROOT]      += s->value[C_TO_FROOT];
-	s->value[Y_C_TO_CROOT]      += s->value[C_TO_CROOT];
-	s->value[Y_C_TO_RESERVE]    += s->value[C_TO_RESERVE];
-	s->value[Y_C_TO_ROOT]       += s->value[C_TO_ROOT];
-	s->value[Y_C_TO_BRANCH]     += s->value[C_TO_BRANCH];
-	s->value[Y_C_TO_FRUIT]      += s->value[C_TO_FRUIT];
-	s->value[Y_C_TO_TOT_STEM]   += s->value[C_TO_TOT_STEM];
-
-	/* update cell level carbon biomass in gC/m2/day */
-	c->daily_leaf_carbon        += (s->value[C_TO_LEAF]      * 1e6 / g_settings->sizeCell);
-	c->daily_stem_carbon        += (s->value[C_TO_STEM]      * 1e6 / g_settings->sizeCell);
-	c->daily_froot_carbon       += (s->value[C_TO_FROOT]     * 1e6 / g_settings->sizeCell);
-	c->daily_croot_carbon       += (s->value[C_TO_CROOT]     * 1e6 / g_settings->sizeCell);
-	c->daily_branch_carbon      += (s->value[C_TO_BRANCH]    * 1e6 / g_settings->sizeCell);
-	c->daily_reserve_carbon     += (s->value[C_TO_RESERVE]   * 1e6 / g_settings->sizeCell);
-	c->daily_root_carbon        += (s->value[C_TO_ROOT]      * 1e6 / g_settings->sizeCell);
-	c->daily_fruit_carbon       += (s->value[C_TO_FRUIT]     * 1e6 / g_settings->sizeCell);
-	c->daily_cwd_carbon         += (s->value[C_FRUIT_TO_CWD] * 1e6 / g_settings->sizeCell);
-	c->daily_litr_carbon        += ((s->value[C_LEAF_TO_LITR] + s->value[C_FROOT_TO_LITR] ) * ( 1e6 / g_settings->sizeCell));
-	c->daily_soil_carbon        += 0. ;
-
-	/* update cell level carbon biomass in tC/cell/day */
-	c->daily_leaf_tC            += s->value[C_TO_LEAF];
-	c->daily_stem_tC            += s->value[C_TO_STEM];
-	c->daily_froot_tC           += s->value[C_TO_FROOT];
-	c->daily_croot_tC           += s->value[C_TO_CROOT];
-	c->daily_branch_tC          += s->value[C_TO_BRANCH];
-	c->daily_reserve_tC         += s->value[C_TO_RESERVE];
-	c->daily_root_tC            += s->value[C_TO_ROOT];
-	c->daily_fruit_tC           += s->value[C_TO_FRUIT];
-	c->daily_cwd_tC             += s->value[C_TO_FRUIT];
-	c->daily_litr_tC            += (s->value[C_LEAF_TO_LITR] + s->value[C_FROOT_TO_LITR]);
-	c->daily_soil_tC            += 0.;
-
-	logger(g_debug_log, "******************************\n");
 }
 
 

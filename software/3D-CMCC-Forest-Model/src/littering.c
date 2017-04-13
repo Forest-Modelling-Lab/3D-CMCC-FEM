@@ -19,30 +19,33 @@ extern settings_t* g_settings;
 
 void littering ( cell_t *const c, species_t *const s )
 {
-	/* leaf, fine root, branch daily flux for litter production */
+	/* daily flux for litter production */
 
 	/** carbon littering **/
 
-	/* cell level litter carbon fluxes */
-	c->daily_leaf_litrC        += s->value[C_LEAF_TO_LITR]  * 1e6 / g_settings->sizeCell;
-	c->daily_froot_litrC       += s->value[C_FROOT_TO_LITR] * 1e6 / g_settings->sizeCell;
-	c->daily_litrC             += (c->daily_leaf_litrC + c->daily_froot_litrC );
-	/* cell level cwd carbon fluxes */
-	c->daily_branch_cwdC       += s->value[C_BRANCH_TO_CWD] * 1e6 / g_settings->sizeCell;
-	c->daily_fruit_cwdC        += s->value[C_FRUIT_TO_CWD]  * 1e6 / g_settings->sizeCell;
-	c->daily_cwdC              += (c->daily_branch_cwdC + c->daily_fruit_cwdC/* + ....*/);
+	/* cell level litter carbon fluxes (gC/m2/day) */
+	c->daily_leaf_litrC        += s->value[C_LEAF_TO_LITR]   * 1e6 / g_settings->sizeCell;
+	c->daily_froot_litrC       += s->value[C_FROOT_TO_LITR]  * 1e6 / g_settings->sizeCell;
+	c->daily_litrC             += ((s->value[C_LEAF_TO_LITR] +
+			s->value[C_FROOT_TO_LITR]) * ( 1e6 / g_settings->sizeCell));
+	/* cell level cwd carbon fluxes (gC/m2/day) */
+	c->daily_stem_cwdC         += s->value[C_STEM_TO_CWD]    * 1e6 / g_settings->sizeCell;
+	c->daily_croot_cwdC        += s->value[C_CROOT_TO_CWD]   * 1e6 / g_settings->sizeCell;
+	c->daily_branch_cwdC       += s->value[C_BRANCH_TO_CWD]  * 1e6 / g_settings->sizeCell;
+	c->daily_reserve_cwdC      += s->value[C_RESERVE_TO_CWD] * 1e6 / g_settings->sizeCell;
+	c->daily_fruit_cwdC        += s->value[C_FRUIT_TO_CWD]   * 1e6 / g_settings->sizeCell;
+	c->daily_cwdC              += ((s->value[C_STEM_TO_CWD] +
+			s->value[C_CROOT_TO_CWD]                        +
+			s->value[C_BRANCH_TO_CWD]                       +
+			s->value[C_RESERVE_TO_CWD]                      +
+			s->value[C_FRUIT_TO_CWD]) * ( 1e6 / g_settings->sizeCell));
+	/* cell level soil carbon fluxes (gC/m2/day) */
+	c->daily_soilC       += 0. ;
 
-
-	/* cell level litter carbon pools */
-	c->leaf_litrC              += c->daily_leaf_litrC;
-	c->froot_litrC             += c->daily_froot_litrC;
-	c->litr_carbon             += c->daily_litrC;
-	c->litr_tC                 += c->daily_litrC             / 1e6 * g_settings->sizeCell;
-	/* cell level cwd carbon pools */
-	c->branch_cwdC             += c->daily_branch_cwdC;
-	c->fruit_cwdC              += c->daily_fruit_cwdC;
-	c->cwd_carbon              += c->daily_cwdC;
-	c->cwd_tC                  += c->daily_cwdC              / 1e6 * g_settings->sizeCell;
+	/* cell level litter carbon pools (gC/m2) */
+	c->litrC                   += c->daily_litrC;
+	c->cwdC                    += c->daily_cwdC ;
+	c->soilC                   += c->daily_soilC ;
 
 	/* leaf litter carbon fluxes */
 	s->value[C_LEAF_TO_LITR1C]  = s->value[C_LEAF_TO_LITR]   * s->value[LEAF_LITR_LAB_FRAC];
@@ -78,43 +81,47 @@ void littering ( cell_t *const c, species_t *const s )
 	//todo
 	//c->daily_cwd1C              += ();
 
-	/** nitrogen littering **/
+	/** nitrgen littering **/
 
-	/* cell level litter nitrogen fluxes */
-	c->daily_leaf_litrN        += s->value[N_LEAF_TO_LITR]    * 1e6 / g_settings->sizeCell;
-	c->daily_froot_litrN       += s->value[N_FROOT_TO_LITR]   * 1e6 / g_settings->sizeCell;
-	c->daily_litrN             += (c->daily_leaf_litrN + c->daily_froot_litrN);
-	/* cell level cwd nitrogen fluxes */
-	c->daily_branch_cwdN       += s->value[N_BRANCH_TO_CWD]   * 1e6 / g_settings->sizeCell;
-	c->daily_fruit_cwdN        += s->value[N_FRUIT_TO_CWD]    * 1e6 / g_settings->sizeCell;
-	c->daily_cwdN              += c->daily_branch_cwdN + c->daily_fruit_cwdN /* + ....*/;
+	/* cell level litter nitrgen fluxes (gN/m2/day) */
+	c->daily_leaf_litrN        += s->value[N_LEAF_TO_LITR]   * 1e6 / g_settings->sizeCell;
+	c->daily_froot_litrN       += s->value[N_FROOT_TO_LITR]  * 1e6 / g_settings->sizeCell;
+	c->daily_litrN             += ((s->value[N_LEAF_TO_LITR] +
+			s->value[N_FROOT_TO_LITR]) * ( 1e6 / g_settings->sizeCell));
+	/* cell level cwd nitrgen fluxes (gN/m2/day) */
+	c->daily_stem_cwdN         += s->value[N_STEM_TO_CWD]    * 1e6 / g_settings->sizeCell;
+	c->daily_croot_cwdN        += s->value[N_CROOT_TO_CWD]   * 1e6 / g_settings->sizeCell;
+	c->daily_branch_cwdN       += s->value[N_BRANCH_TO_CWD]  * 1e6 / g_settings->sizeCell;
+	c->daily_reserve_cwdN      += s->value[N_RESERVE_TO_CWD] * 1e6 / g_settings->sizeCell;
+	c->daily_fruit_cwdN        += s->value[N_FRUIT_TO_CWD]   * 1e6 / g_settings->sizeCell;
+	c->daily_cwdN              += ((s->value[N_STEM_TO_CWD] +
+			s->value[N_CROOT_TO_CWD]                        +
+			s->value[N_BRANCH_TO_CWD]                       +
+			s->value[N_RESERVE_TO_CWD]                      +
+			s->value[N_FRUIT_TO_CWD]) * ( 1e6 / g_settings->sizeCell));
+	/* cell level soil nitrgen fluxes (gN/m2/day) */
+	c->daily_soilN       += 0. ;
 
-	/* cell level cwd carbon pools */
-	c->leaf_litrN              += c->daily_leaf_litrN;
-	c->froot_litrN             += c->daily_froot_litrN;
-	c->litr_nitrogen           += c->daily_litrN;
-	c->litr_tN                 += c->daily_litrN              / 1e6 * g_settings->sizeCell;
-	/* cell level cwd nitrogen pools */
-	c->branch_cwdN             += c->daily_branch_cwdN;
-	c->fruit_cwdN              += c->daily_fruit_cwdN;
-	c->cwd_nitrogen            += c->daily_cwdN;
-	c->cwd_tN                  += c->daily_cwdN               / 1e6 * g_settings->sizeCell;
+	/* cell level litter nitrgen pools (gN/m2) */
+	c->litrN                   += c->daily_litrN;
+	c->cwdN                    += c->daily_cwdN ;
+	c->soilN                   += c->daily_soilN ;
 
-	/* leaf litter nitrogen fluxes */
-	s->value[N_LEAF_TO_LITR1N]  = s->value[N_LEAF_TO_LITR]    * s->value[LEAF_LITR_LAB_FRAC];
-	s->value[N_LEAF_TO_LITR2N]  = s->value[N_LEAF_TO_LITR]    * s->value[LEAF_LITR_USCEL_FRAC];
-	s->value[N_LEAF_TO_LITR3N]  = s->value[N_LEAF_TO_LITR]    * s->value[LEAF_LITR_SCEL_FRAC];
-	s->value[N_LEAF_TO_LITR4N]  = s->value[N_LEAF_TO_LITR]    * s->value[LEAF_LITR_LIGN_FRAC];
+	/* leaf litter nitrgen fluxes */
+	s->value[N_LEAF_TO_LITR1N]  = s->value[N_LEAF_TO_LITR]   * s->value[LEAF_LITR_LAB_FRAC];
+	s->value[N_LEAF_TO_LITR2N]  = s->value[N_LEAF_TO_LITR]   * s->value[LEAF_LITR_USCEL_FRAC];
+	s->value[N_LEAF_TO_LITR3N]  = s->value[N_LEAF_TO_LITR]   * s->value[LEAF_LITR_SCEL_FRAC];
+	s->value[N_LEAF_TO_LITR4N]  = s->value[N_LEAF_TO_LITR]   * s->value[LEAF_LITR_LIGN_FRAC];
 
-	/* fine root litter carbon fluxes */
-	s->value[N_FROOT_TO_LITR1N] = s->value[N_FROOT_TO_LITR]   * s->value[FROOT_LITR_LAB_FRAC];
-	s->value[N_FROOT_TO_LITR2N] = s->value[N_FROOT_TO_LITR]   * s->value[FROOT_LITR_USCEL_FRAC];
-	s->value[N_FROOT_TO_LITR3N] = s->value[N_FROOT_TO_LITR]   * s->value[FROOT_LITR_SCEL_FRAC];
-	s->value[N_FROOT_TO_LITR4N] = s->value[N_FROOT_TO_LITR]   * s->value[FROOT_LITR_LIGN_FRAC];
+	/* fine root litter nitrgen fluxes */
+	s->value[N_FROOT_TO_LITR1N] = s->value[N_FROOT_TO_LITR]  * s->value[FROOT_LITR_LAB_FRAC];
+	s->value[N_FROOT_TO_LITR2N] = s->value[N_FROOT_TO_LITR]  * s->value[FROOT_LITR_USCEL_FRAC];
+	s->value[N_FROOT_TO_LITR3N] = s->value[N_FROOT_TO_LITR]  * s->value[FROOT_LITR_SCEL_FRAC];
+	s->value[N_FROOT_TO_LITR4N] = s->value[N_FROOT_TO_LITR]  * s->value[FROOT_LITR_LIGN_FRAC];
 
-	/* cell level litter nitrogen fluxes */
+	/* cell level litter nitrgen fluxes */
 	c->daily_leaf_litr1N       += s->value[N_LEAF_TO_LITR1N]  * 1e6 / g_settings->sizeCell;
-	c->daily_leaf_litr2N       += s->value[N_LEAF_TO_LITR2N]  * 1e6 / g_settings->sizeCell;
+	c->daily_leaf_litr2N       += s->value[N_LEAF_TO_LITR2N]  * 1e6 / g_settings->sizeCell ;
 	c->daily_leaf_litr3N       += s->value[N_LEAF_TO_LITR3N]  * 1e6 / g_settings->sizeCell;
 	c->daily_leaf_litr4N       += s->value[N_LEAF_TO_LITR4N]  * 1e6 / g_settings->sizeCell;
 	c->daily_froot_litr1N      += s->value[N_FROOT_TO_LITR1N] * 1e6 / g_settings->sizeCell;
@@ -122,7 +129,7 @@ void littering ( cell_t *const c, species_t *const s )
 	c->daily_froot_litr3N      += s->value[N_FROOT_TO_LITR3N] * 1e6 / g_settings->sizeCell;
 	c->daily_froot_litr4N      += s->value[N_FROOT_TO_LITR4N] * 1e6 / g_settings->sizeCell;
 
-	/* cell level litter nitrogen pools (tN/sizecell) */
+	/* cell level litter nitrgen pools (tN/sizecell) */
 	c->leaf_litr1N             += c->daily_leaf_litr1N;
 	c->leaf_litr2N             += c->daily_leaf_litr2N;
 	c->leaf_litr3N             += c->daily_leaf_litr3N;
@@ -132,6 +139,6 @@ void littering ( cell_t *const c, species_t *const s )
 	c->froot_litr3N            += c->daily_froot_litr3N;
 	c->froot_litr4N            += c->daily_froot_litr4N;
 	//todo
-	//c->cwd_nitrogen
+	//c->daily_cwd1N              += ();
 
 }
