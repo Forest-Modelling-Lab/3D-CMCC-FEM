@@ -101,7 +101,6 @@ int check_litter_carbon_mass_balance(cell_t *const c)
 	/* sum of sources */
 	c->litr_carbon_in    = c->daily_litrC + c->daily_cwdC;
 
-
 	//fixme
 	/* sum of sinks */
 	c->litr_carbon_out   = 0. /* + c->daily_het_resp + c->daily_soilC */;
@@ -115,7 +114,8 @@ int check_litter_carbon_mass_balance(cell_t *const c)
 			c->froot_litr1C +
 			c->froot_litr2C +
 			c->froot_litr3C +
-			c->froot_litr4C ;
+			c->froot_litr4C +
+			c->cwdC;
 
 	/* check carbon pool balance */
 	c->litr_carbon_balance = c->litr_carbon_in - c->litr_carbon_out - ( c->litr_carbon_store - c->litr_carbon_old_store );
@@ -128,6 +128,7 @@ int check_litter_carbon_mass_balance(cell_t *const c)
 		error_log("DOS = %d\n", c->dos);
 		error_log("\nin = %g gC/m2/day\n", c->litr_carbon_in);
 		error_log("daily_litrC = %g gC/m2\n", c->daily_litrC);
+		error_log("daily_cwdC = %g gC/m2\n", c->daily_cwdC);
 		error_log("\nout = %g gC/m2/day\n", c->litr_carbon_out);
 		error_log("daily_het_resp = 0 gC/m2/day\n");
 		error_log("daily_soilC = 0 gC/m2/day\n");
@@ -140,6 +141,7 @@ int check_litter_carbon_mass_balance(cell_t *const c)
 		error_log("froot_litr2C = %g gC/m2/day\n", c->froot_litr2C);
 		error_log("froot_litr3C = %g gC/m2/day\n",c->froot_litr3C);
 		error_log("froot_litr4C = %g gC/m2/day\n", c->froot_litr4C);
+		error_log("cwdC = %g gC/m2/day\n", c->cwdC);
 		error_log("\ncarbon in = %g gC/m2/day\n", c->litr_carbon_in);
 		error_log("carbon out = %g gC/m2/day\n", c->litr_carbon_out);
 		error_log("delta carbon store = %g gC/m2/day\n", c->litr_carbon_store - c->litr_carbon_old_store);
@@ -188,8 +190,11 @@ int check_litter_nitrogen_flux_balance(cell_t *const c)
 			c->daily_froot_litr2N  +
 			c->daily_froot_litr3N  +
 			c->daily_froot_litr4N  +
-			c->daily_fruit_cwdN    +
-			c->daily_branch_cwdN   ;
+			c->daily_stem_cwdN     +
+			c->daily_croot_cwdN    +
+			c->daily_branch_cwdN   +
+			c->daily_reserve_cwdN  +
+			c->daily_fruit_cwdN    ;
 
 	balance = in - out - store;
 
@@ -202,18 +207,21 @@ int check_litter_nitrogen_flux_balance(cell_t *const c)
 		error_log("c->daily_litrC = %g gC/m2/day\n", c->daily_litrC);
 		error_log("c->daily_cwdN = %g gC/m2/day\n", c->daily_cwdN);
 		error_log("\nout\n");
-		error_log("c->daily_soilC = %g gC/m2/day\n",c->daily_soilC);
+		error_log("c->daily_soilN = %g gC/m2/day\n",c->daily_soilN);
 		error_log("\nstore\n");
-		error_log("c->daily_leaf_litr1N = %g gC/m2/day\n",  c->daily_leaf_litr1N);
-		error_log("c->daily_leaf_litr2N = %g gC/m2/day\n",  c->daily_leaf_litr2N);
-		error_log("c->daily_leaf_litr3N = %g gC/m2/day\n",  c->daily_leaf_litr3N);
-		error_log("c->daily_leaf_litr4N = %g gC/m2/day\n",  c->daily_leaf_litr4N);
-		error_log("c->daily_froot_litr1N = %g gC/m2/day\n", c->daily_froot_litr1N);
-		error_log("c->daily_froot_litr2N = %g gC/m2/day\n", c->daily_froot_litr2N);
-		error_log("c->daily_leaf_litrC = %g gC/m2/day\n",   c->daily_froot_litr3N);
-		error_log("c->daily_froot_litr4N = %g gC/m2/day\n", c->daily_froot_litr4N);
-		error_log("c->daily_fruit_litrC = %g gC/m2/day\n",  c->daily_fruit_cwdN);
-		error_log("c->daily_branch_cwdN = %g gC/m2/day\n",  c->daily_branch_cwdN);
+		error_log("c->daily_leaf_litr1N = %g gN/m2/day\n",  c->daily_leaf_litr1N);
+		error_log("c->daily_leaf_litr2N = %g gN/m2/day\n",  c->daily_leaf_litr2N);
+		error_log("c->daily_leaf_litr3N = %g gN/m2/day\n",  c->daily_leaf_litr3N);
+		error_log("c->daily_leaf_litr4N = %g gN/m2/day\n",  c->daily_leaf_litr4N);
+		error_log("c->daily_froot_litr1N = %g gN/m2/day\n", c->daily_froot_litr1N);
+		error_log("c->daily_froot_litr2N = %g gN/m2/day\n", c->daily_froot_litr2N);
+		error_log("c->daily_leaf_litrN = %g gN/m2/day\n",   c->daily_froot_litr3N);
+		error_log("c->daily_froot_litr4N = %g gN/m2/day\n", c->daily_froot_litr4N);
+		error_log("c->daily_stem_cwdN = %g gN/m2/day\n",    c->daily_stem_cwdN);
+		error_log("c->daily_croot_cwdN = %g gN/m2/day\n",   c->daily_croot_cwdN);
+		error_log("c->daily_reserve_cwdN = %g gN/m2/day\n", c->daily_reserve_cwdN);
+		error_log("c->daily_branch_cwdN = %g gN/m2/day\n",  c->daily_branch_cwdN);
+		error_log("c->daily_fruit_litrN = %g gN/m2/day\n",  c->daily_fruit_cwdN);
 		error_log("\nnitrogen in = %g gC/m2/day\n", in);
 		error_log("nitrogen out = %g gC/m2/day\n", out);
 		error_log("nitrogen store = %g gC/m2/day\n", store);
@@ -237,7 +245,7 @@ int check_litter_nitrogen_mass_balance(cell_t *const c)
 	/* check complete litter level nitrogen mass balance */
 
 	/* sum of sources */
-	c->litr_nitrogen_in    = c->daily_litrN /* fixme include Ndepostiion daily */;
+	c->litr_nitrogen_in    = c->daily_litrN + c->daily_cwdN/* fixme include Ndepostiion daily */;
 
 	//fixme
 	/* sum of sinks */
@@ -252,7 +260,8 @@ int check_litter_nitrogen_mass_balance(cell_t *const c)
 			c->froot_litr1N +
 			c->froot_litr2N +
 			c->froot_litr3N +
-			c->froot_litr4N ;
+			c->froot_litr4N +
+			c->cwdN         ;
 
 	/* check nitrogen pool balance */
 	c->litr_nitrogen_balance = c->litr_nitrogen_in - c->litr_nitrogen_out - ( c->litr_nitrogen_store - c->litr_nitrogen_old_store );
@@ -264,7 +273,8 @@ int check_litter_nitrogen_mass_balance(cell_t *const c)
 	{
 		error_log("DOS = %d\n", c->dos);
 		error_log("\nin = %g gC/m2/day\n", c->litr_nitrogen_in);
-		error_log("daily_litrC = %g gC/m2\n", c->daily_litrC);
+		error_log("daily_litrC = %g gC/m2\n", c->daily_litrN);
+		error_log("daily_cwdN = %g gC/m2\n", c->daily_cwdN);
 		error_log("\nout = %g gC/m2/day\n", c->litr_nitrogen_out);
 		error_log("daily_het_resp = 0 gC/m2/day\n");
 		error_log("daily_soilC = 0 gC/m2/day\n");
@@ -277,6 +287,7 @@ int check_litter_nitrogen_mass_balance(cell_t *const c)
 		error_log("froot_litr2N = %g gC/m2/day\n", c->froot_litr2N);
 		error_log("froot_litr3N = %g gC/m2/day\n",c->froot_litr3N);
 		error_log("froot_litr4N = %g gC/m2/day\n", c->froot_litr4N);
+		error_log("cwdN = %g gC/m2/day\n", c->cwdN);
 		error_log("\nnitrogen in = %g gC/m2/day\n", c->litr_nitrogen_in);
 		error_log("nitrogen out = %g gC/m2/day\n", c->litr_nitrogen_out);
 		error_log("delta nitrogen store = %g gC/m2/day\n", c->litr_nitrogen_store - c->litr_nitrogen_old_store);

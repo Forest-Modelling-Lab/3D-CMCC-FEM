@@ -111,6 +111,9 @@ void reset_daily_cell_variables(cell_t *const c)
 	c->daily_froot_litr2N =             0.;
 	c->daily_froot_litr3N =             0.;
 	c->daily_froot_litr4N =             0.;
+	c->daily_stem_cwdN =                0.;
+	c->daily_croot_cwdN =               0.;
+	c->daily_reserve_cwdN =             0.;
 	c->daily_fruit_cwdN =               0.;
 	c->daily_branch_cwdN =              0.;
 	c->daily_cwdN =                     0.;
@@ -339,7 +342,6 @@ void reset_daily_class_variables(cell_t *const c)
 					s->value[C_TO_ROOT] =                 0.;
 					s->value[C_TO_FROOT] =                0.;
 					s->value[C_TO_CROOT] =                0.;
-					s->value[C_TO_TOT_STEM] =             0.;
 					s->value[C_TO_STEM] =                 0.;
 					s->value[C_TO_BRANCH] =               0.;
 					s->value[C_TO_RESERVE] =              0.;
@@ -356,6 +358,16 @@ void reset_daily_class_variables(cell_t *const c)
 					s->value[C_BRANCH_TO_CWD] =           0.;
 					s->value[C_RESERVE_TO_CWD] =          0.;
 					s->value[C_FRUIT_TO_CWD] =            0.;
+
+					s->value[DEAD_LEAF_C] =               0.;
+					s->value[DEAD_FROOT_C] =              0.;
+					s->value[DEAD_STEM_C] =               0.;
+					s->value[DEAD_CROOT_C] =              0.;
+					s->value[DEAD_BRANCH_C] =             0.;
+					s->value[DEAD_RESERVE_C] =            0.;
+					s->value[DEAD_FRUIT_C] =              0.;
+					s->value[DEAD_TO_LITRC] =             0.;
+					s->value[DEAD_TO_CWDC] =              0.;
 
 
 					/* reset daily nitrogen fluxes among pools */
@@ -380,6 +392,16 @@ void reset_daily_class_variables(cell_t *const c)
 					s->value[N_BRANCH_TO_CWD] =           0.;
 					s->value[N_RESERVE_TO_CWD] =          0.;
 					s->value[N_FRUIT_TO_CWD] =            0.;
+
+					s->value[DEAD_LEAF_N] =               0.;
+					s->value[DEAD_FROOT_N] =              0.;
+					s->value[DEAD_STEM_N] =               0.;
+					s->value[DEAD_CROOT_N] =              0.;
+					s->value[DEAD_BRANCH_N] =             0.;
+					s->value[DEAD_RESERVE_N] =            0.;
+					s->value[DEAD_FRUIT_N] =              0.;
+					s->value[DEAD_TO_LITRN] =             0.;
+					s->value[DEAD_TO_CWDN] =              0.;
 					/****************************************/
 
 					/* reset daily maintenance, growth and total respiration */

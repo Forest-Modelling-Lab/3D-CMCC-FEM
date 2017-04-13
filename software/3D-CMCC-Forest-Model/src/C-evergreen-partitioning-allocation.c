@@ -166,7 +166,6 @@ void daily_C_evergreen_partitioning (cell_t *const c, const int layer, const int
 
 				/* to other carbon pools */
 				s->value[C_TO_CROOT]     = (exceeding_C * pR1);
-				s->value[C_TO_TOT_STEM]  = (exceeding_C * pS1);
 				s->value[C_TO_STEM]      = (exceeding_C * pS1) * (1. - s->value[FRACBB]);
 				s->value[C_TO_BRANCH]    = (exceeding_C * pS1) * s->value[FRACBB];
 
@@ -214,7 +213,6 @@ void daily_C_evergreen_partitioning (cell_t *const c, const int layer, const int
 
 				s->value[C_TO_CROOT]     = (npp_to_alloc * pR);
 				s->value[C_TO_RESERVE]   = (npp_to_alloc * pL);
-				s->value[C_TO_TOT_STEM]  = (npp_to_alloc * pS);
 				s->value[C_TO_STEM]      = (npp_to_alloc * pS) * ( 1. - s->value[FRACBB] );
 				s->value[C_TO_BRANCH]    = (npp_to_alloc * pS) * s->value[FRACBB];
 

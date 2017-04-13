@@ -336,7 +336,6 @@ enum {
 	C_TO_ROOT,                          /* Daily Net Primary Production to Root pool (tC/sizeCell day) */
 	C_TO_FROOT,                         /* Daily Net Primary Production to Fine root pool (tC/sizeCell day) */
 	C_TO_CROOT,                         /* Daily Net Primary Production to Coarse root pool (tC/sizeCell day) */
-	C_TO_TOT_STEM,                      /* Daily Net Primary Production to Stem and Branch pool (tC/sizeCell day) */
 	C_TO_STEM,                          /* Daily Net Primary Production to Stem pool (tC/sizeCell day) */
 	C_TO_BRANCH,                        /* Daily Net Primary Production to Branch pool (tC/sizeCell day) */
 	C_TO_RESERVE,                       /* Daily Net Primary Production to Reserve pool (tC/sizeCell day) */
@@ -433,6 +432,17 @@ enum {
 	TOT_HEARTWOOD_C,                    /* Current total heartwood carbon pool tC/sizeCell */
 	EFF_LIVE_TOTAL_WOOD_FRAC,           /* Age-related fraction of Live biomass per Total biomass */
 	DAILY_LIVE_WOOD_TURNOVER,           /* Daily live wood turnover rate */
+
+	/* dead pools */
+	DEAD_LEAF_C,
+	DEAD_FROOT_C,
+	DEAD_STEM_C,
+	DEAD_CROOT_C,
+	DEAD_BRANCH_C,
+	DEAD_RESERVE_C,
+	DEAD_FRUIT_C,
+	DEAD_TO_LITRC,
+	DEAD_TO_CWDC,
 
 
 	/* per tree in tC */
@@ -649,6 +659,17 @@ enum {
 	CWD_N,                              /* Current Coarse Woody Debris nitrogen pool tN/sizeCell */
 	TOT_STEM_N,                         /* Current Total Stem nitrogen pool tN/sizeCell */
 	TOT_ROOT_N,                         /* Current Total root nitrogen pool tN/sizeCell */
+
+	/* dead pools */
+	DEAD_LEAF_N,
+	DEAD_FROOT_N,
+	DEAD_STEM_N,
+	DEAD_CROOT_N,
+	DEAD_BRANCH_N,
+	DEAD_RESERVE_N,
+	DEAD_FRUIT_N,
+	DEAD_TO_LITRN,
+	DEAD_TO_CWDN,
 
 	/* per tree in tN */
 	AV_LEAF_MASS_N,                    /* Average Leaf nitrogen pool tN/tree */

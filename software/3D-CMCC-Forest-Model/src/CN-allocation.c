@@ -28,14 +28,14 @@ void carbon_allocation( cell_t *const c, species_t *const s)
 
 	logger(g_debug_log, "\n**CARBON ALLOCATION**\n");
 
-	/*** removing growth respiration from carbon flux pools ***/
-	s->value[C_TO_LEAF]    -= (s->value[LEAF_GROWTH_RESP]   / 1e6 * g_settings->sizeCell);
-	s->value[C_TO_FROOT]   -= (s->value[FROOT_GROWTH_RESP]  / 1e6 * g_settings->sizeCell);
-	s->value[C_TO_STEM]    -= (s->value[STEM_GROWTH_RESP]   / 1e6 * g_settings->sizeCell);
-	s->value[C_TO_CROOT]   -= (s->value[CROOT_GROWTH_RESP]  / 1e6 * g_settings->sizeCell);
-	s->value[C_TO_BRANCH]  -= (s->value[BRANCH_GROWTH_RESP] / 1e6 * g_settings->sizeCell);
-	s->value[C_TO_FRUIT]   -= (s->value[FRUIT_GROWTH_RESP]  / 1e6 * g_settings->sizeCell);
-	s->value[C_TO_RESERVE] -= 0.;
+	/*** removing growth respiration and dead pools from carbon flux pools ***/
+	s->value[C_TO_LEAF]    -= ((s->value[LEAF_GROWTH_RESP]   / 1e6 * g_settings->sizeCell) + s->value[DEAD_LEAF_C]);
+	s->value[C_TO_FROOT]   -= ((s->value[FROOT_GROWTH_RESP]  / 1e6 * g_settings->sizeCell) + s->value[DEAD_FROOT_C]);
+	s->value[C_TO_STEM]    -= ((s->value[STEM_GROWTH_RESP]   / 1e6 * g_settings->sizeCell) + s->value[DEAD_STEM_C]);
+	s->value[C_TO_CROOT]   -= ((s->value[CROOT_GROWTH_RESP]  / 1e6 * g_settings->sizeCell) + s->value[DEAD_CROOT_C]);
+	s->value[C_TO_BRANCH]  -= ((s->value[BRANCH_GROWTH_RESP] / 1e6 * g_settings->sizeCell) + s->value[DEAD_BRANCH_C]);
+	s->value[C_TO_FRUIT]   -= ((s->value[FRUIT_GROWTH_RESP]  / 1e6 * g_settings->sizeCell) + s->value[DEAD_FRUIT_C]);
+	s->value[C_TO_RESERVE] -=  (s->value[DEAD_RESERVE_C]);
 
 	/* update class level month carbon biomass increment (tC/month/cell) */
 	s->value[M_C_TO_STEM]      += s->value[C_TO_STEM];
@@ -56,21 +56,14 @@ void carbon_allocation( cell_t *const c, species_t *const s)
 	s->value[Y_C_TO_BRANCH]    += s->value[C_TO_BRANCH];
 	s->value[Y_C_TO_FRUIT]     += s->value[C_TO_FRUIT];
 
-	printf("C_TO_LEAF in alloc %g\n", s->value[C_TO_LEAF]);
-	printf("C_TO_FROOT in alloc %g\n", s->value[C_TO_FROOT]);
-	printf("C_TO_RESERVE in alloc %g\n", s->value[C_TO_RESERVE]);
-	printf("C_LEAF_TO_LITR in alloc %g\n", s->value[C_LEAF_TO_LITR]);
-	printf("C_FROOT_TO_LITR in alloc %g\n", s->value[C_FROOT_TO_LITR]);
-	printf("C_RESERVE_TO_CWD in alloc %g\n", s->value[C_RESERVE_TO_CWD]);
-
 	/*** update class level carbon mass pools ***/
-	s->value[LEAF_C]     += s->value[C_TO_LEAF];
-	s->value[FROOT_C]    += s->value[C_TO_FROOT];
-	s->value[STEM_C]     += s->value[C_TO_STEM];
-	s->value[BRANCH_C]   += s->value[C_TO_BRANCH];
-	s->value[CROOT_C]    += s->value[C_TO_CROOT];
-	s->value[RESERVE_C]  += s->value[C_TO_RESERVE];
-	s->value[FRUIT_C]    += s->value[C_TO_FRUIT];
+	s->value[LEAF_C]     += s->value[C_TO_LEAF]    ;
+	s->value[FROOT_C]    += s->value[C_TO_FROOT]   ;
+	s->value[STEM_C]     += s->value[C_TO_STEM]    ;
+	s->value[CROOT_C]    += s->value[C_TO_CROOT]   ;
+	s->value[BRANCH_C]   += s->value[C_TO_BRANCH]  ;
+	s->value[RESERVE_C]  += s->value[C_TO_RESERVE] ;
+	s->value[FRUIT_C]    += s->value[C_TO_FRUIT]   ;
 
 	/* check */
 	CHECK_CONDITION ( s->value[LEAF_C],     < , ZERO );

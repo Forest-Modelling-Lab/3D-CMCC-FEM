@@ -31,7 +31,6 @@ int Litter_model_daily (matrix_t *const m, const int cell, const int day, const 
 	/* check parameters */
 	assert(m);
 
-
 	/* decomposition */
 	decomposition ( c, meteo_daily );
 
