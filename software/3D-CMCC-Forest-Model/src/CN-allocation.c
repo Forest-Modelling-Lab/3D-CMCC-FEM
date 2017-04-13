@@ -24,7 +24,8 @@ extern logger_t* g_debug_log;
 
 void carbon_allocation( cell_t *const c, species_t *const s)
 {
-	/* it allocates daily assimilated carbon for both deciduous and evergreen daily */
+	/* it allocates daily assimilated carbon for both deciduous and evergreen daily
+	 * and removes the respired and dead parts */
 
 	logger(g_debug_log, "\n**CARBON ALLOCATION**\n");
 
@@ -36,6 +37,16 @@ void carbon_allocation( cell_t *const c, species_t *const s)
 	s->value[C_TO_BRANCH]  -= ((s->value[BRANCH_GROWTH_RESP] / 1e6 * g_settings->sizeCell) + s->value[DEAD_BRANCH_C]);
 	s->value[C_TO_FRUIT]   -= ((s->value[FRUIT_GROWTH_RESP]  / 1e6 * g_settings->sizeCell) + s->value[DEAD_FRUIT_C]);
 	s->value[C_TO_RESERVE] -=  (s->value[DEAD_RESERVE_C]);
+	s->value[C_TO_LITR]    +=   s->value[C_LEAF_TO_LITR] +
+			s->value[C_FROOT_TO_LITR];
+	s->value[C_TO_CWD]     +=   s->value[C_BRANCH_TO_CWD]+
+			s->value[DEAD_LEAF_C]           +
+			s->value[DEAD_FROOT_C]          +
+			s->value[DEAD_STEM_C]           +
+			s->value[DEAD_CROOT_C]          +
+			s->value[DEAD_BRANCH_C]         +
+			s->value[DEAD_RESERVE_C]        +
+			s->value[DEAD_FRUIT_C]          ;
 
 	/* update class level month carbon biomass increment (tC/month/cell) */
 	s->value[M_C_TO_STEM]      += s->value[C_TO_STEM];
@@ -45,6 +56,8 @@ void carbon_allocation( cell_t *const c, species_t *const s)
 	s->value[M_C_TO_RESERVE]   += s->value[C_TO_RESERVE];
 	s->value[M_C_TO_BRANCH]    += s->value[C_TO_BRANCH];
 	s->value[M_C_TO_FRUIT]     += s->value[C_TO_FRUIT];
+	s->value[M_C_TO_LITR]      += s->value[C_TO_LITR];
+	s->value[M_C_TO_CWD]       += s->value[C_TO_CWD];
 
 	/* update class level annual carbon biomass increment (tC/year/cell) */
 	s->value[Y_C_TO_STEM]      += s->value[C_TO_STEM];
@@ -55,6 +68,8 @@ void carbon_allocation( cell_t *const c, species_t *const s)
 	s->value[Y_C_TO_ROOT]      += s->value[C_TO_ROOT];
 	s->value[Y_C_TO_BRANCH]    += s->value[C_TO_BRANCH];
 	s->value[Y_C_TO_FRUIT]     += s->value[C_TO_FRUIT];
+	s->value[Y_C_TO_LITR]      += s->value[C_TO_LITR];
+	s->value[Y_C_TO_CWD]       += s->value[C_TO_CWD];
 
 	/*** update class level carbon mass pools ***/
 	s->value[LEAF_C]     += s->value[C_TO_LEAF]    ;

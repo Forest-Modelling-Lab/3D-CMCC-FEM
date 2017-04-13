@@ -379,6 +379,8 @@ enum {
 	M_C_TO_RESERVE,                     /* Monthly cumulated Net Primary Production to reserve biomass (tC/month/sizeCell) */
 	M_C_TO_BRANCH,                      /* Monthly cumulated Net Primary Production to branch and bark biomass (tC/month/sizeCell) */
 	M_C_TO_FRUIT,                       /* Monthly cumulated Net Primary Production to fruit biomass (tC/month/sizeCell) */
+	M_C_TO_LITR,                        /* Monthly cumulated Net Primary Production to litter biomass (tC/month/sizeCell) */
+	M_C_TO_CWD,                         /* Monthly cumulated Net Primary Production to cwd biomass (tC/month/sizeCell) */
 	M_C_TO_STEM_SAPWOOD,                /* Monthly cumulated Net Primary Production to stem sapwood biomass (tC/month/sizeCell) */
 	M_C_TO_CROOT_SAPWOOD,               /* Monthly cumulated Net Primary Production to coarse root biomass (tC/month/sizeCell) */
 	M_C_TO_BRANCH_SAPWOOD,              /* Monthly cumulated Net Primary Production to branch sapwood biomass (tC/month/sizeCell) */
@@ -391,6 +393,8 @@ enum {
 	Y_C_TO_RESERVE,                     /* Yearly cumulated Net Primary Production to reserve biomass (tC/year/sizeCell) */
 	Y_C_TO_BRANCH,                      /* Yearly cumulated Net Primary Production to branch and bark biomass (tC/year/sizeCell) */
 	Y_C_TO_FRUIT,                       /* Yearly cumulated Net Primary Production to fruit biomass (tC/year/sizeCell) */
+	Y_C_TO_LITR,                        /* Yearly cumulated Net Primary Production to litter biomass (tC/year/sizeCell) */
+	Y_C_TO_CWD,                         /* Yearly cumulated Net Primary Production to cwd biomass (tC/year/sizeCell) */
 	Y_C_TO_STEM_SAPWOOD,                /* Yearly cumulated Net Primary Production to stem sapwood biomass (tC/year/sizeCell) */
 	Y_C_TO_CROOT_SAPWOOD,               /* Yearly cumulated Net Primary Production to coarse root biomass (tC/year/sizeCell) */
 	Y_C_TO_BRANCH_SAPWOOD,              /* Yearly cumulated Net Primary Production to branch sapwood biomass (tC/year/sizeCell) */

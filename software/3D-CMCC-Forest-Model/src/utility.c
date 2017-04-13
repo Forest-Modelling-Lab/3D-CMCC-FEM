@@ -495,6 +495,8 @@ void reset_monthly_class_variables(cell_t *const c)
 					s->value[M_C_TO_ROOT] =                  0.;
 					s->value[M_C_TO_BRANCH] =                0.;
 					s->value[M_C_TO_FRUIT] =                 0.;
+					s->value[M_C_TO_LITR] =                  0.;
+					s->value[M_C_TO_CWD] =                   0.;
 				}
 			}
 		}
@@ -582,6 +584,8 @@ void reset_annual_class_variables(cell_t *const c)
 					s->value[Y_C_TO_ROOT] =                 0.;
 					s->value[Y_C_TO_BRANCH] =               0.;
 					s->value[Y_C_TO_FRUIT] =                0.;
+					s->value[Y_C_TO_LITR] =                  0.;
+					s->value[Y_C_TO_CWD] =                   0.;
 					s->counter[DEAD_STEMS] =                0;
 					s->counter[N_TREE_SAP] =                0;
 				}
