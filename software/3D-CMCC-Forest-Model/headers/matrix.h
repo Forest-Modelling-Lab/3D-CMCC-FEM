@@ -349,7 +349,6 @@ enum {
 	C_FROOT_TO_RESERVE,                 /* Daily retranslocated C from Fine root pool to Reserve (tC/sizeCell day) */
 	C_LEAF_TO_LITR,                     /* Daily tC from Leaf pool to Litter (tC/sizeCell day) */
 	C_FROOT_TO_LITR,                    /* Daily tC from Fine root pool to Soil (tC/sizeCell day) */
-	C_FRUIT_TO_LITR,                    /* Daily tC from Fruit pool to Litter (tC/sizeCell day) */
 	C_BRANCH_TO_RESERVE,                /* tC from Branch pool to Litter (tC/sizeCell day) */
 	C_STEM_TO_CWD,                      /* tC from Stem pool to Coarse Woody Debris (tC/sizeCell day) */
 	C_CROOT_TO_CWD,                     /* tC from Coarse root pool to Coarse Woody Debris (tC/sizeCell day) */
@@ -982,7 +981,8 @@ typedef struct
 	double daily_branch_tC;                                               /* (tC/cell/day) daily carbon assimilated to c pool at cell level */
 	double daily_reserve_tC;                                              /* (tC/cell/day) daily carbon assimilated to c pool at cell level */
 	double daily_root_tC;                                                 /* (tC/cell/day) daily carbon assimilated to c pool at cell level */
-	double daily_litr_tC;                                                 /* (tC/cell/day) daily carbon leaves to litter c pool at cell level */
+	double daily_litr_tC;                                                 /* (tC/cell/day) daily carbon to litter c pool at cell level */
+	double daily_cwd_tC;                                                  /* (tC/cell/day) daily carbon to cwd c pool at cell level */
 	double daily_soil_tC;                                                 /* (tC/cell/day) daily carbon fine root to soil c pool at cell level */
 	double daily_fruit_tC;                                                /* (tC/cell/day) daily carbon assimilated to c pool at cell level */
 	double daily_leaf_maint_resp;                                         /* (gC/day/day) daily leaf maint resp at cell level */
@@ -1155,9 +1155,9 @@ typedef struct
 	double daily_froot_litr2C;                                            /* (tC/cell/day) daily fine root to litter unshelded cellulose carbon pool at cell level */
 	double daily_froot_litr3C;                                            /* (tC/cell/day) daily fine root to litter shelded cellulose carbon pool at cell level */
 	double daily_froot_litr4C;                                            /* (tC/cell/day) daily fine root to litter lignin carbon pool at cell level */
-	double daily_fruit_litrC;                                             /* (tC/cell/day) daily fruit to litter lignin carbon pool at cell level */
-	double daily_cwdC;                                                    /* (tC/cell/day) daily cwd carbon pool at cell level */
 	double daily_branch_cwdC;                                             /* (tC/cell/day) daily branch carbon to Coarse Woody Debris */
+	double daily_fruit_cwdC;                                              /* (tC/cell/day) daily fruit to CWD lignin carbon pool at cell level */
+	double daily_cwdC;                                                    /* (tC/cell/day) daily cwd carbon pool at cell level */
 	double daily_soilC;                                                   /* (tC/cell/day) daily litter carbon to soil */
 
 
@@ -1173,9 +1173,9 @@ typedef struct
 	double daily_froot_litr2N;                                            /* (tN/cell/day) daily fine root to litter unshelded cellulose nitrogen pool at cell level */
 	double daily_froot_litr3N;                                            /* (tN/cell/day) daily fine root to litter shelded cellulose nitrogen pool at cell level */
 	double daily_froot_litr4N;                                            /* (tN/cell/day) daily fine root to litter lignin nitrogen pool at cell level */
-	double daily_fruit_litrN;                                             /* (tN/cell/day) daily fruit to litter nitrogen pool at cell level */
-	double daily_cwdN;                                                    /* (tN/cell/day) daily cwd nitrogen pool at cell level */
 	double daily_branch_cwdN;                                             /* (tN/cell/day) daily branch nitrogen to Coarse Woody Debris */
+	double daily_fruit_cwdN;                                              /* (tN/cell/day) daily fruit to cwd nitrogen pool at cell level */
+	double daily_cwdN;                                                    /* (tN/cell/day) daily cwd nitrogen pool at cell level */
 	double daily_soilN;                                                   /* (tN/cell/day) daily litter nitrogen to soil */
 
 	/* litter and soil carbon pools */
@@ -1189,7 +1189,8 @@ typedef struct
 	double froot_litr2C;                                                  /* (tC/cell) fine root litter unshielded cellulose carbon */
 	double froot_litr3C;                                                  /* (tC/cell) fine root litter shielded cellulose carbon */
 	double froot_litr4C;                                                  /* (tC/cell) fine root litter lignin carbon */
-	double fruit_litrC;                                                   /* (tC/cell) fruit total litter carbon */
+	double branch_cwdC;                                                   /* (tC/cell) branch total cwd carbon */
+	double fruit_cwdC;                                                    /* (tC/cell) fruit total cwd carbon */
 	double deadwood_litr1C;                                               /* (tC/cell) deadwood litter labile carbon */
 	double deadwood_litr2C;                                               /* (tC/cell) deadwood litter unshielded cellulose carbon */
 	double deadwood_litr3C;                                               /* (tC/cell) deadwood litter shielded cellulose carbon */
@@ -1216,7 +1217,8 @@ typedef struct
 	double froot_litr2N;                                                  /* (tN/cell) fine root litter unshielded cellulose nitrogen */
 	double froot_litr3N;                                                  /* (tN/cell) fine root litter shielded cellulonitrogenN */
 	double froot_litr4N;                                                  /* (tN/cell) fine root litter lignin nitrogen */
-	double fruit_litrN;                                                   /* (tN/cell) fruit total litter nitrogen */
+	double branch_cwdN;                                                   /* (tN/cell) branch total cwd nitrogen */
+	double fruit_cwdN;                                                    /* (tN/cell) fruit total cwd nitrogen */
 	double deadwood_litr1N;                                               /* (tN/cell) deadwood litter labile nitrogen */
 	double deadwood_litr2N;                                               /* (tN/cell) deadwood litter unshielded cellulose nitrogen */
 	double deadwood_litr3N;                                               /* (tN/cell) deadwood litter shielded cellulose nitrogen */

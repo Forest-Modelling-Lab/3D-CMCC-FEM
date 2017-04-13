@@ -32,7 +32,7 @@ extern int MonthLength_Leap [];
 #define TEST 0
 
 /* Evergreen carbon allocation routine */
-void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species,
+void daily_C_evergreen_partitioning (cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species,
 		const meteo_daily_t *const meteo_daily, const int day, const int month, const int year)
 {
 	double s0;
@@ -460,15 +460,16 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 	c->daily_soil_tC               += 0.;
 
 	/* update cell level carbon biomass in gC/m2/day */
-	c->daily_leaf_carbon       += (s->value[C_TO_LEAF]    * 1e6 / g_settings->sizeCell);
-	c->daily_stem_carbon       += (s->value[C_TO_STEM]    * 1e6 / g_settings->sizeCell);
-	c->daily_froot_carbon      += (s->value[C_TO_FROOT]   * 1e6 / g_settings->sizeCell);
-	c->daily_croot_carbon      += (s->value[C_TO_CROOT]   * 1e6 / g_settings->sizeCell);
-	c->daily_branch_carbon     += (s->value[C_TO_BRANCH]  * 1e6 / g_settings->sizeCell);
-	c->daily_reserve_carbon    += (s->value[C_TO_RESERVE] * 1e6 / g_settings->sizeCell);
-	c->daily_root_carbon       += (s->value[C_TO_ROOT]    * 1e6 / g_settings->sizeCell);
-	c->daily_fruit_carbon      += (s->value[C_TO_FRUIT]   * 1e6 / g_settings->sizeCell);
-	c->daily_litr_carbon       += (s->value[C_LEAF_TO_LITR] + s->value[C_FROOT_TO_LITR] + s->value[C_FRUIT_TO_LITR]) * 1e6 / g_settings->sizeCell ;
+	c->daily_leaf_carbon       += (s->value[C_TO_LEAF]      * 1e6 / g_settings->sizeCell);
+	c->daily_stem_carbon       += (s->value[C_TO_STEM]      * 1e6 / g_settings->sizeCell);
+	c->daily_froot_carbon      += (s->value[C_TO_FROOT]     * 1e6 / g_settings->sizeCell);
+	c->daily_croot_carbon      += (s->value[C_TO_CROOT]     * 1e6 / g_settings->sizeCell);
+	c->daily_branch_carbon     += (s->value[C_TO_BRANCH]    * 1e6 / g_settings->sizeCell);
+	c->daily_reserve_carbon    += (s->value[C_TO_RESERVE]   * 1e6 / g_settings->sizeCell);
+	c->daily_root_carbon       += (s->value[C_TO_ROOT]      * 1e6 / g_settings->sizeCell);
+	c->daily_fruit_carbon      += (s->value[C_TO_FRUIT]     * 1e6 / g_settings->sizeCell);
+	c->daily_cwd_carbon        += (s->value[C_FRUIT_TO_CWD] * 1e6 / g_settings->sizeCell);
+	c->daily_litr_carbon       += (s->value[C_LEAF_TO_LITR] + s->value[C_FROOT_TO_LITR] ) * 1e6 / g_settings->sizeCell ;
 	c->daily_soil_carbon       += 0. ;
 
 	logger(g_debug_log, "******************************\n");
