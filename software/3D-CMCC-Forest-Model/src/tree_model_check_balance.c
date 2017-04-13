@@ -195,19 +195,19 @@ int check_tree_class_carbon_flux_balance(cell_t *const c, const int layer, const
 			s->value[TOTAL_GROWTH_RESP_tC]  +
 			s->value[C_LEAF_TO_LITR]        +
 			s->value[C_FROOT_TO_LITR]       +
-			s->value[C_FRUIT_TO_LITR]       +
+			s->value[C_FRUIT_TO_CWD]        +
 			s->value[C_BRANCH_TO_CWD]       ;
 #if 0
 	/* sum of sinks */
-out     = s->value[TOTAL_MAINT_RESP_tC] +
-s->value[TOTAL_GROWTH_RESP_tC]  +
-s->value[C_LEAF_TO_LITR]        +
-s->value[C_FROOT_TO_LITR]       +
-s->value[C_STEM_TO_CWD]         +
-s->value[C_CROOT_TO_CWD]        +
-s->value[C_BRANCH_TO_CWD]       +
-s->value[C_RESERVE_TO_CWD]      +
-s->value[C_FRUIT_TO_CWD]        ;
+	out     = s->value[TOTAL_MAINT_RESP_tC] +
+			s->value[TOTAL_GROWTH_RESP_tC]  +
+			s->value[C_LEAF_TO_LITR]        +
+			s->value[C_FROOT_TO_LITR]       +
+			s->value[C_STEM_TO_CWD]         +
+			s->value[C_CROOT_TO_CWD]        +
+			s->value[C_BRANCH_TO_CWD]       +
+			s->value[C_RESERVE_TO_CWD]      +
+			s->value[C_FRUIT_TO_CWD]        ;
 #endif
 
 	/* sum of current storage */
@@ -235,7 +235,7 @@ s->value[C_FRUIT_TO_CWD]        ;
 		error_log("TOTAL_GROWTH_RESP = %g tC/sizecell/day\n", s->value[TOTAL_GROWTH_RESP_tC]);
 		error_log("C_LEAF_TO_LITR = %g tC/sizecell/day\n", s->value[C_LEAF_TO_LITR]);
 		error_log("C_FROOT_TO_LITR = %g tC/sizecell/day\n", s->value[C_FROOT_TO_LITR]);
-		error_log("C_FRUIT_TO_LITR = %g tC/sizecell/day\n", s->value[C_FRUIT_TO_LITR]);
+		error_log("C_FRUIT_TO_CWD = %g tC/sizecell/day\n", s->value[C_FRUIT_TO_CWD]);
 		error_log("C_BRANCH_TO_CWD = %g tC/sizecell/day\n", s->value[C_BRANCH_TO_CWD]);
 		error_log("\nstore = %g tC/sizecell/day\n", store);
 		error_log("C_TO_LEAF = %g tC/sizecell/day\n", s->value[C_TO_LEAF]);

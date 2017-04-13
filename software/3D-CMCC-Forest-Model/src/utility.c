@@ -91,7 +91,7 @@ void reset_daily_cell_variables(cell_t *const c)
 	c->daily_froot_litr2C =             0.;
 	c->daily_froot_litr3C =             0.;
 	c->daily_froot_litr4C =             0.;
-	c->daily_fruit_litrC =              0.;
+	c->daily_fruit_cwdC =               0.;
 	c->daily_branch_cwdC =              0.;
 	c->daily_cwdC =                     0.;
 	c->daily_soilC =                    0.;
@@ -108,7 +108,7 @@ void reset_daily_cell_variables(cell_t *const c)
 	c->daily_froot_litr2N =             0.;
 	c->daily_froot_litr3N =             0.;
 	c->daily_froot_litr4N =             0.;
-	c->daily_fruit_litrN =              0.;
+	c->daily_fruit_cwdN =               0.;
 	c->daily_branch_cwdN =              0.;
 	c->daily_cwdN =                     0.;
 	c->daily_soilN =                    0.;
@@ -348,7 +348,7 @@ void reset_daily_class_variables(cell_t *const c)
 					s->value[C_BRANCH_TO_RESERVE] =       0.;
 					s->value[C_LEAF_TO_LITR] =            0.;
 					s->value[C_FROOT_TO_LITR] =           0.;
-					s->value[C_FRUIT_TO_LITR] =           0.;
+					s->value[C_FRUIT_TO_CWD] =            0.;
 					s->value[C_BRANCH_TO_CWD] =           0.;
 
 

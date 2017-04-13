@@ -43,7 +43,7 @@ int check_litter_carbon_flux_balance(cell_t *const c)
 			c->daily_froot_litr2C  +
 			c->daily_froot_litr3C  +
 			c->daily_froot_litr4C  +
-			c->daily_fruit_litrC   +
+			c->daily_fruit_cwdC    +
 			c->daily_branch_cwdC   ;
 
 	balance = in - out - store;
@@ -59,16 +59,16 @@ int check_litter_carbon_flux_balance(cell_t *const c)
 		error_log("\nout\n");
 		error_log("c->daily_soilC = %g gC/m2/day\n",c->daily_soilC);
 		error_log("\nstore\n");
-		error_log("c->daily_leaf_litr1C = %g gC/m2/day\n", c->daily_leaf_litr1C);
-		error_log("c->daily_leaf_litr2C = %g gC/m2/day\n", c->daily_leaf_litr2C);
-		error_log("c->daily_leaf_litr3C = %g gC/m2/day\n", c->daily_leaf_litr3C);
-		error_log("c->daily_leaf_litr4C = %g gC/m2/day\n", c->daily_leaf_litr4C);
+		error_log("c->daily_leaf_litr1C = %g gC/m2/day\n",  c->daily_leaf_litr1C);
+		error_log("c->daily_leaf_litr2C = %g gC/m2/day\n",  c->daily_leaf_litr2C);
+		error_log("c->daily_leaf_litr3C = %g gC/m2/day\n",  c->daily_leaf_litr3C);
+		error_log("c->daily_leaf_litr4C = %g gC/m2/day\n",  c->daily_leaf_litr4C);
 		error_log("c->daily_froot_litr1C = %g gC/m2/day\n", c->daily_froot_litr1C);
 		error_log("c->daily_froot_litr2C = %g gC/m2/day\n", c->daily_froot_litr2C);
-		error_log("c->daily_leaf_litrC = %g gC/m2/day\n", c->daily_froot_litr3C);
+		error_log("c->daily_leaf_litrC = %g gC/m2/day\n",   c->daily_froot_litr3C);
 		error_log("c->daily_froot_litr4C = %g gC/m2/day\n", c->daily_froot_litr4C);
-		error_log("c->daily_fruit_litrC = %g gC/m2/day\n", c->daily_fruit_litrC);
-		error_log("c->daily_branch_cwdC = %g gC/m2/day\n", c->daily_branch_cwdC);
+		error_log("c->daily_fruit_litrC = %g gC/m2/day\n",  c->daily_fruit_cwdC);
+		error_log("c->daily_branch_cwdC = %g gC/m2/day\n",  c->daily_branch_cwdC);
 		error_log("\ncarbon in = %g gC/m2/day\n", in);
 		error_log("carbon out = %g gC/m2/day\n", out);
 		error_log("carbon store = %g gC/m2/day\n", store);
@@ -179,7 +179,7 @@ int check_litter_nitrogen_flux_balance(cell_t *const c)
 			c->daily_froot_litr2N  +
 			c->daily_froot_litr3N  +
 			c->daily_froot_litr4N  +
-			c->daily_fruit_litrN   +
+			c->daily_fruit_cwdN    +
 			c->daily_branch_cwdN   ;
 
 	balance = in - out - store;
@@ -195,16 +195,16 @@ int check_litter_nitrogen_flux_balance(cell_t *const c)
 		error_log("\nout\n");
 		error_log("c->daily_soilC = %g gC/m2/day\n",c->daily_soilC);
 		error_log("\nstore\n");
-		error_log("c->daily_leaf_litr1N = %g gC/m2/day\n", c->daily_leaf_litr1N);
-		error_log("c->daily_leaf_litr2N = %g gC/m2/day\n", c->daily_leaf_litr2N);
-		error_log("c->daily_leaf_litr3N = %g gC/m2/day\n", c->daily_leaf_litr3N);
-		error_log("c->daily_leaf_litr4N = %g gC/m2/day\n", c->daily_leaf_litr4N);
+		error_log("c->daily_leaf_litr1N = %g gC/m2/day\n",  c->daily_leaf_litr1N);
+		error_log("c->daily_leaf_litr2N = %g gC/m2/day\n",  c->daily_leaf_litr2N);
+		error_log("c->daily_leaf_litr3N = %g gC/m2/day\n",  c->daily_leaf_litr3N);
+		error_log("c->daily_leaf_litr4N = %g gC/m2/day\n",  c->daily_leaf_litr4N);
 		error_log("c->daily_froot_litr1N = %g gC/m2/day\n", c->daily_froot_litr1N);
 		error_log("c->daily_froot_litr2N = %g gC/m2/day\n", c->daily_froot_litr2N);
-		error_log("c->daily_leaf_litrC = %g gC/m2/day\n", c->daily_froot_litr3N);
+		error_log("c->daily_leaf_litrC = %g gC/m2/day\n",   c->daily_froot_litr3N);
 		error_log("c->daily_froot_litr4N = %g gC/m2/day\n", c->daily_froot_litr4N);
-		error_log("c->daily_fruit_litrC = %g gC/m2/day\n", c->daily_fruit_litrC);
-		error_log("c->daily_branch_cwdN = %g gC/m2/day\n", c->daily_branch_cwdN);
+		error_log("c->daily_fruit_litrC = %g gC/m2/day\n",  c->daily_fruit_cwdN);
+		error_log("c->daily_branch_cwdN = %g gC/m2/day\n",  c->daily_branch_cwdN);
 		error_log("\nnitrogen in = %g gC/m2/day\n", in);
 		error_log("nitrogen out = %g gC/m2/day\n", out);
 		error_log("nitrogen store = %g gC/m2/day\n", store);

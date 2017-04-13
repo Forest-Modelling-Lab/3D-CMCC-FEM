@@ -194,8 +194,10 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 									"*****************************************************************************\n", s->name);
 
 							/**********************************/
+
 							/* counter for days of simulation */
 							++s->counter[DOS];
+
 							/**********************************/
 
 							/* beginning of simulation (every year included the first one) */
@@ -208,16 +210,19 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 								/* compute annual Maximum LAI */
 								peak_lai( s, day, month, year );
 							}
+
 							/***************************************************************/
+
 							/* print at the beginning of simulation forest class data */
 							print_daily_forest_class_data ( c, layer, height, dbh, age, species );
 
 							/* compute species-specific phenological phase */
-							phenology ( c, layer, height, dbh, age, species, meteo_daily, day, month, year);
+							phenology ( c, layer, height, dbh, age, species, meteo_daily, day, month, year );
 
 							logger(g_debug_log, "--PHYSIOLOGICAL PROCESSES LAYER %d --\n", l->layer_z);
 
 							/*********************************************************************/
+
 							/** radiation **/
 							/* short wave band */
 							canopy_radiation_sw_band ( c, layer, height, dbh, age, species, meteo_daily );
@@ -225,6 +230,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							canopy_radiation_lw_band ( c, layer, height, dbh, age, species, meteo_daily );
 							/* net radiation */
 							canopy_net_radiation ( c, layer, height, dbh, age, species );
+
 							/**********************************************************************/
 
 							/* canopy temperature */
@@ -249,12 +255,12 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							if ( s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2 )
 							{
 								/* deciduous */
-								daily_C_deciduous_partitioning_allocation ( c, layer, height, dbh, age, species, meteo_daily, day, month, year );
+								daily_C_deciduous_partitioning ( c, layer, height, dbh, age, species, meteo_daily, day, month, year );
 							}
 							else
 							{
 								/* evergreen */
-								daily_C_evergreen_partitioning_allocation ( c, layer, height, dbh, age, species, meteo_daily, day, month, year );
+								daily_C_evergreen_partitioning ( c, layer, height, dbh, age, species, meteo_daily, day, month, year );
 							}
 
 							/* autotrophic respiration */
@@ -276,13 +282,19 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							water_use_efficiency ( c, height, dbh, age, species, day, month, year );
 
 							/****************************************************************************************************************************************/
+
 							/* END OF MONTH */
 							/* last day of the month */
 							if ( ( IS_LEAP_YEAR( c->years[year].year ) ? ( MonthLength_Leap[month] ) : ( MonthLength[month] ) ) == c->doy )
 							{
+								//dendrometry_old ( c, layer, height, dbh, age, species );
+
+								//FIXME
 								//dendrometry ( c, layer, height, dbh, age, species, meteo_daily );
 							}
+
 							/****************************************************************************************************************************************/
+
 							/* END OF YEAR */
 							/* last day of the year */
 							if ( c->doy == ( IS_LEAP_YEAR ( c->years[year].year ) ? 366 : 365) )
@@ -299,6 +311,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 									age_mortality ( c, height, dbh, age, species);
 
 									/************************************************************************************************************************************/
+
 									/* above ground-below ground stocks */
 									abg_bgb_biomass ( c, height, dbh, age, species );
 
@@ -312,6 +325,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 									print_daily_forest_class_data ( c, layer, height, dbh, age, species );
 
 									/************************************************************************************************************************************/
+
 									if ( g_settings->regeneration && ( a->value > s->value[SEXAGE] ) )
 									{
 										/* regeneration */
@@ -328,6 +342,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 									 */
 								}
 							}
+
 							/****************************************************************************************************************************************/
 
 							/* litter fluxes and pools */
