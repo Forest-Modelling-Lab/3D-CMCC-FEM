@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "C-deciduous-partitioning-allocation.h"
+#include "C-deciduous-partitioning.h"
 #include "common.h"
 #include "constants.h"
 #include "settings.h"

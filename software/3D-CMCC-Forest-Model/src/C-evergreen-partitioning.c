@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include "matrix.h"
+#include "C-evergreen-partitioning.h"
 #include "common.h"
 #include "constants.h"
 #include "settings.h"

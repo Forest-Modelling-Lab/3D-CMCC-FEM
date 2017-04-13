@@ -114,11 +114,10 @@ void abg_bgb_biomass(cell_t *const c, const int height, const int dbh, const int
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 	logger(g_debug_log, "**AGB & BGB**\n");
-	logger(g_debug_log, "-for Class\n");
-	s->value[CLASS_AGB] = s->value[TOT_STEM_C] + s->value[LEAF_C];
-	logger(g_debug_log, "Yearly Class AGB = %g tC/cell year\n", s->value[CLASS_AGB]);
-	s->value[CLASS_BGB] = s->value[TOT_ROOT_C];
-	logger(g_debug_log, "Yearly Class BGB = %g tC/cell year\n", s->value[CLASS_BGB]);
+
+	s->value[CLASS_AGB] = s->value[LEAF_C] + s->value[STEM_C] + s->value[FRUIT_C];
+	s->value[CLASS_BGB] = s->value[FROOT_C] + s->value[CROOT_C];
+
 }
 
 void average_tree_pools(species_t *const s)
