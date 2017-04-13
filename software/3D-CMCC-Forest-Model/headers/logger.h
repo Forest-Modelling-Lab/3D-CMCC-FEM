@@ -35,5 +35,4 @@ void error_log(const char *text, ...);
 void logger_flush(logger_t *p);
 void logger_close(logger_t* p);
 
-
 #endif /* LOGGER_H_ */

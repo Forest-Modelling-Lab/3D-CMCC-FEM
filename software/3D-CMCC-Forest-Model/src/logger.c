@@ -35,8 +35,8 @@ logger_t* logger_new(const char* const path, ...) {
 	}
 
 	p = malloc(sizeof*p);
-
 	if ( ! p ) return NULL;
+
 	p->filename = string_copy(buffer);
 	if ( ! p->filename ) {
 		free(p);
@@ -128,14 +128,6 @@ void error_log(const char *text, ...) {
 
 #undef LOGGER_BUFFER_SIZE
 }
-
-extern logger_t* g_debug_log;
-extern logger_t* g_daily_log;
-extern logger_t* g_monthly_log;
-extern logger_t* g_annual_log;
-extern logger_t* g_daily_soil_log;
-extern logger_t* g_monthly_soil_log;
-extern logger_t* g_annual_soil_log;
 
 void logger_close(logger_t* p) {
 	if ( p ) {

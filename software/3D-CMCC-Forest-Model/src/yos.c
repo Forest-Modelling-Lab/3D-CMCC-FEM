@@ -200,7 +200,85 @@ static void yos_clear(yos_t *const yos) {
 				yos->m[i].d[y].lh_fus = INVALID_VALUE;
 				yos->m[i].d[y].lh_sub = INVALID_VALUE;
 				yos->m[i].d[y].air_pressure = INVALID_VALUE;
+				yos->m[i].d[y].ten_day_avg_tavg = INVALID_VALUE;
+				yos->m[i].d[y].ten_day_avg_tsoil = INVALID_VALUE;
+				yos->m[i].d[y].ten_day_avg_tday = INVALID_VALUE;
+				yos->m[i].d[y].ten_day_avg_tnight = INVALID_VALUE;
+				yos->m[i].d[y].ten_day_weighted_avg_tavg = INVALID_VALUE;
+				yos->m[i].d[y].ten_day_weighted_avg_tsoil = INVALID_VALUE;
+				yos->m[i].d[y].ten_day_weighted_avg_tday = INVALID_VALUE;
+				yos->m[i].d[y].ten_day_weighted_avg_tnight = INVALID_VALUE;
+				yos->m[i].d[y].es = INVALID_VALUE;
+				yos->m[i].d[y].ea = INVALID_VALUE;
+				yos->m[i].d[y].psych = INVALID_VALUE;
+				yos->m[i].d[y].sw_pot_downward_W = INVALID_VALUE;
+				yos->m[i].d[y].sw_downward_MJ = INVALID_VALUE;
+				yos->m[i].d[y].incoming_sw_downward_W = INVALID_VALUE;
+				yos->m[i].d[y].sw_downward_W = INVALID_VALUE;
+				yos->m[i].d[y].lw_downward_MJ = INVALID_VALUE;
+				yos->m[i].d[y].atm_lw_downward_W = INVALID_VALUE;
+				yos->m[i].d[y].lw_net_MJ = INVALID_VALUE;
+				yos->m[i].d[y].lw_net_W = INVALID_VALUE;
+				yos->m[i].d[y].incoming_par = INVALID_VALUE;
+				yos->m[i].d[y].par = INVALID_VALUE;
+				yos->m[i].d[y].incoming_ppfd = INVALID_VALUE;
+				yos->m[i].d[y].ppfd = INVALID_VALUE;
+				yos->m[i].d[y].emis_atm_clear_sky = INVALID_VALUE;
+				yos->m[i].d[y].emis_atm = INVALID_VALUE;
+				yos->m[i].d[y].cloud_cover_frac = INVALID_VALUE;
+				yos->m[i].d[y].cloud_cover_frac_corr = INVALID_VALUE;
 			}
+			yos->m[i].m.n_days = INVALID_VALUE;
+			yos->m[i].m.solar_rad = INVALID_VALUE;
+			yos->m[i].m.tavg = INVALID_VALUE;
+			yos->m[i].m.tmax = INVALID_VALUE;
+			yos->m[i].m.tmin = INVALID_VALUE;
+			yos->m[i].m.tday = INVALID_VALUE;
+			yos->m[i].m.tnight = INVALID_VALUE;
+			yos->m[i].m.vpd = INVALID_VALUE;
+			yos->m[i].m.ts_f = INVALID_VALUE;
+			yos->m[i].m.prcp = INVALID_VALUE;
+			yos->m[i].m.swc = INVALID_VALUE;
+			yos->m[i].m.ndvi_lai = INVALID_VALUE;
+			yos->m[i].m.daylength = INVALID_VALUE;
+			yos->m[i].m.thermic_sum = INVALID_VALUE;
+			yos->m[i].m.rho_air = INVALID_VALUE;
+			yos->m[i].m.tsoil = INVALID_VALUE;
+			yos->m[i].m.et = INVALID_VALUE;
+			yos->m[i].m.windspeed = INVALID_VALUE;
+			yos->m[i].m.rh_f = INVALID_VALUE;
+			yos->m[i].m.lh_vap = INVALID_VALUE;
+			yos->m[i].m.lh_vap_soil = INVALID_VALUE;
+			yos->m[i].m.lh_fus = INVALID_VALUE;
+			yos->m[i].m.lh_sub = INVALID_VALUE;
+			yos->m[i].m.air_pressure = INVALID_VALUE;
+			yos->m[i].m.ten_day_avg_tavg = INVALID_VALUE;
+			yos->m[i].m.ten_day_avg_tsoil = INVALID_VALUE;
+			yos->m[i].m.ten_day_avg_tday = INVALID_VALUE;
+			yos->m[i].m.ten_day_avg_tnight = INVALID_VALUE;
+			yos->m[i].m.ten_day_weighted_avg_tavg = INVALID_VALUE;
+			yos->m[i].m.ten_day_weighted_avg_tsoil = INVALID_VALUE;
+			yos->m[i].m.ten_day_weighted_avg_tday = INVALID_VALUE;
+			yos->m[i].m.ten_day_weighted_avg_tnight = INVALID_VALUE;
+			yos->m[i].m.es = INVALID_VALUE;
+			yos->m[i].m.ea = INVALID_VALUE;
+			yos->m[i].m.psych = INVALID_VALUE;
+			yos->m[i].m.sw_pot_downward_W = INVALID_VALUE;
+			yos->m[i].m.sw_downward_MJ = INVALID_VALUE;
+			yos->m[i].m.incoming_sw_downward_W = INVALID_VALUE;
+			yos->m[i].m.sw_downward_W = INVALID_VALUE;
+			yos->m[i].m.lw_downward_MJ = INVALID_VALUE;
+			yos->m[i].m.atm_lw_downward_W = INVALID_VALUE;
+			yos->m[i].m.lw_net_MJ = INVALID_VALUE;
+			yos->m[i].m.lw_net_W = INVALID_VALUE;
+			yos->m[i].m.incoming_par = INVALID_VALUE;
+			yos->m[i].m.par = INVALID_VALUE;
+			yos->m[i].m.incoming_ppfd = INVALID_VALUE;
+			yos->m[i].m.ppfd = INVALID_VALUE;
+			yos->m[i].m.emis_atm_clear_sky = INVALID_VALUE;
+			yos->m[i].m.emis_atm = INVALID_VALUE;
+			yos->m[i].m.cloud_cover_frac = INVALID_VALUE;
+			yos->m[i].m.cloud_cover_frac_corr = INVALID_VALUE;
 		}
 	}
 }
@@ -2055,6 +2133,178 @@ yos_t* yos_import(const char *const file, int *const yos_count, const int x, con
 		}
 	}
 	free(temp);
+
+	/* compute monthly stuff */
+	for ( i = 0 ; i < *yos_count; ++i ) {
+		int j;
+		int z;
+
+		for ( j = 0; j < YOS_MONTHS_COUNT; ++j ) {
+			//yos[i].m[j].m.n_days = 0;
+			yos[i].m[j].m.solar_rad = 0.;
+			yos[i].m[j].m.tavg = 0.;
+			yos[i].m[j].m.tmax = 0.;
+			yos[i].m[j].m.tmin = 0.;
+			yos[i].m[j].m.tday = 0.;
+			yos[i].m[j].m.tnight = 0.;
+			yos[i].m[j].m.vpd = 0.;
+			yos[i].m[j].m.ts_f = 0.;
+			yos[i].m[j].m.prcp = 0.;
+			yos[i].m[j].m.swc = 0.;
+			//yos[i].m[j].m.ndvi_lai = 0.;
+			//yos[i].m[j].m.daylength = 0.;
+			//yos[i].m[j].m.thermic_sum = 0.;
+			//yos[i].m[j].m.rho_air = 0.;
+			yos[i].m[j].m.tsoil = 0.;
+			//yos[i].m[j].m.et = 0.;
+			yos[i].m[j].m.windspeed = 0.;
+			yos[i].m[j].m.rh_f = 0.;
+			//yos[i].m[j].m.lh_vap = 0.;
+			//yos[i].m[j].m.lh_vap_soil = 0.;
+			//yos[i].m[j].m.lh_fus = 0.;
+			//yos[i].m[j].m.lh_sub = 0.;
+			//yos[i].m[j].m.air_pressure = 0.;
+			//yos[i].m[j].m.ten_day_avg_tavg = 0.;
+			//yos[i].m[j].m.ten_day_avg_tsoil = 0.;
+			//yos[i].m[j].m.ten_day_avg_tday = 0.;
+			//yos[i].m[j].m.ten_day_avg_tnight = 0.;
+			//yos[i].m[j].m.ten_day_weighted_avg_tavg = 0.;
+			//yos[i].m[j].m.ten_day_weighted_avg_tsoil = 0.;
+			//yos[i].m[j].m.ten_day_weighted_avg_tday = 0.;
+			//yos[i].m[j].m.ten_day_weighted_avg_tnight = 0.;
+			//yos[i].m[j].m.es = 0.;
+			//yos[i].m[j].m.ea = 0.;
+			yos[i].m[j].m.psych = 0.;
+			yos[i].m[j].m.sw_pot_downward_W = 0.;
+			yos[i].m[j].m.sw_downward_MJ = 0.;
+			yos[i].m[j].m.incoming_sw_downward_W = 0.;
+			yos[i].m[j].m.sw_downward_W = 0.;
+			yos[i].m[j].m.lw_downward_MJ = 0.;
+			yos[i].m[j].m.atm_lw_downward_W = 0.;
+			yos[i].m[j].m.lw_net_MJ = 0.;
+			yos[i].m[j].m.lw_net_W = 0.;
+			yos[i].m[j].m.incoming_par = 0.;
+			yos[i].m[j].m.par = 0.;
+			yos[i].m[j].m.incoming_ppfd = 0.;
+			yos[i].m[j].m.ppfd = 0.;
+			//yos[i].m[j].m.emis_atm_clear_sky = 0.;
+			//yos[i].m[j].m.emis_atm = 0.;
+			//yos[i].m[j].m.cloud_cover_frac = 0.;
+			//yos[i].m[j].m.cloud_cover_frac_corr = 0.;
+		}
+
+		for ( j = 0; j < YOS_MONTHS_COUNT; ++j ) {
+			int d = days_per_month[j];
+
+			if ( IS_LEAP_YEAR(yos[i].year) && (1 == j) ) {
+				++d;
+			}
+
+			for ( z = 0; z < d; ++z ) {
+				//yos[i].m[j].m.n_days += yos->m[i].d[y].n_days;
+				yos[i].m[j].m.solar_rad += yos[i].m[j].d[z].solar_rad;
+				yos[i].m[j].m.tavg += yos[i].m[j].d[z].tavg;
+				yos[i].m[j].m.tmax += yos[i].m[j].d[z].tmax;
+				yos[i].m[j].m.tmin += yos[i].m[j].d[z].tmin;
+				yos[i].m[j].m.tday += yos[i].m[j].d[z].tday;
+				yos[i].m[j].m.tnight += yos[i].m[j].d[z].tnight;
+				yos[i].m[j].m.vpd += yos[i].m[j].d[z].vpd;
+				yos[i].m[j].m.ts_f += yos[i].m[j].d[z].ts_f;
+				yos[i].m[j].m.prcp += yos[i].m[j].d[z].prcp;
+				yos[i].m[j].m.swc += yos[i].m[j].d[z].swc;
+				//yos[i].m[j].m.ndvi_lai += yos[i].m[j].d[z].ndvi_lai;
+				//yos[i].m[j].m.daylength += yos[i].m[j].d[z].daylength;
+				//yos[i].m[j].m.thermic_sum += yos[i].m[j].d[z].thermic_sum;
+				//yos[i].m[j].m.rho_air += yos[i].m[j].d[z].rho_air;
+				yos[i].m[j].m.tsoil += yos[i].m[j].d[z].tsoil;
+				//yos[i].m[j].m.et += yos[i].m[j].d[z].et;
+				yos[i].m[j].m.windspeed += yos[i].m[j].d[z].windspeed;
+				yos[i].m[j].m.rh_f += yos[i].m[j].d[z].rh_f;
+				//yos[i].m[j].m.lh_vap += yos[i].m[j].d[z].lh_vap;
+				//yos[i].m[j].m.lh_vap_soil += yos[i].m[j].d[z].lh_vap_soil;
+				//yos[i].m[j].m.lh_fus += yos[i].m[j].d[z].lh_fus;
+				//yos[i].m[j].m.lh_sub += yos[i].m[j].d[z].lh_sub;
+				//yos[i].m[j].m.air_pressure += yos[i].m[j].d[z].air_pressure;
+				//yos[i].m[j].m.ten_day_avg_tavg += yos[i].m[j].d[z].ten_day_avg_tavg;
+				//yos[i].m[j].m.ten_day_avg_tsoil += yos[i].m[j].d[z].ten_day_avg_tsoil;
+				//yos[i].m[j].m.ten_day_avg_tday += yos[i].m[j].d[z].ten_day_avg_tday;
+				//yos[i].m[j].m.ten_day_avg_tnight += yos[i].m[j].d[z].ten_day_avg_tnight;
+				//yos[i].m[j].m.ten_day_weighted_avg_tavg += yos[i].m[j].d[z].ten_day_weighted_avg_tavg;
+				//yos[i].m[j].m.ten_day_weighted_avg_tsoil += yos[i].m[j].d[z].ten_day_weighted_avg_tsoil;
+				//yos[i].m[j].m.ten_day_weighted_avg_tday += yos[i].m[j].d[z].ten_day_weighted_avg_tday;
+				//yos[i].m[j].m.ten_day_weighted_avg_tnight += yos[i].m[j].d[z].ten_day_weighted_avg_tnight;
+				//yos[i].m[j].m.es += yos[i].m[j].d[z].es;
+				//yos[i].m[j].m.ea += yos[i].m[j].d[z].ea;
+				yos[i].m[j].m.psych += yos[i].m[j].d[z].psych;
+				yos[i].m[j].m.sw_pot_downward_W += yos[i].m[j].d[z].sw_pot_downward_W;
+				yos[i].m[j].m.sw_downward_MJ += yos[i].m[j].d[z].sw_downward_MJ;
+				yos[i].m[j].m.incoming_sw_downward_W += yos[i].m[j].d[z].incoming_sw_downward_W;
+				yos[i].m[j].m.sw_downward_W += yos[i].m[j].d[z].sw_downward_W;
+				yos[i].m[j].m.lw_downward_MJ += yos[i].m[j].d[z].lw_downward_MJ;
+				yos[i].m[j].m.atm_lw_downward_W += yos[i].m[j].d[z].atm_lw_downward_W;
+				yos[i].m[j].m.lw_net_MJ += yos[i].m[j].d[z].lw_net_MJ;
+				yos[i].m[j].m.lw_net_W += yos[i].m[j].d[z].lw_net_W;
+				yos[i].m[j].m.incoming_par += yos[i].m[j].d[z].incoming_par;
+				yos[i].m[j].m.par += yos[i].m[j].d[z].par;
+				yos[i].m[j].m.incoming_ppfd += yos[i].m[j].d[z].incoming_ppfd;
+				yos[i].m[j].m.ppfd += yos[i].m[j].d[z].ppfd;
+				//yos[i].m[j].m.emis_atm_clear_sky += yos[i].m[j].d[z].emis_atm_clear_sky;
+				//yos[i].m[j].m.emis_atm += yos[i].m[j].d[z].emis_atm;
+				//yos[i].m[j].m.cloud_cover_frac += yos[i].m[j].d[z].cloud_cover_frac;
+				//yos[i].m[j].m.cloud_cover_frac_corr += yos[i].m[j].d[z].cloud_cover_frac_corr;
+			}
+			//yos[i].m[j].m.n_days /= d;
+			yos[i].m[j].m.solar_rad /= d;
+			yos[i].m[j].m.tavg /= d;
+			yos[i].m[j].m.tmax /= d;
+			yos[i].m[j].m.tmin /= d;
+			yos[i].m[j].m.tday /= d;
+			yos[i].m[j].m.tnight /= d;
+			yos[i].m[j].m.vpd /= d;
+			yos[i].m[j].m.ts_f /= d;
+			yos[i].m[j].m.swc /= d;
+			//yos[i].m[j].m.ndvi_lai /= d;
+			//yos[i].m[j].m.daylength /= d;
+			//yos[i].m[j].m.thermic_sum /= d;
+			//yos[i].m[j].m.rho_air /= d;
+			yos[i].m[j].m.tsoil /= d;
+			//yos[i].m[j].m.et /= d;
+			yos[i].m[j].m.windspeed /= d;
+			yos[i].m[j].m.rh_f /= d;
+			//yos[i].m[j].m.lh_vap /= d;
+			//yos[i].m[j].m.lh_vap_soil /= d;
+			//yos[i].m[j].m.lh_fus /= d;
+			//yos[i].m[j].m.lh_sub /= d;
+			//yos[i].m[j].m.air_pressure /= d;
+			//yos[i].m[j].m.ten_day_avg_tavg /= d;
+			//yos[i].m[j].m.ten_day_avg_tsoil /= d;
+			//yos[i].m[j].m.ten_day_avg_tday /= d;
+			//yos[i].m[j].m.ten_day_avg_tnight /= d;
+			//yos[i].m[j].m.ten_day_weighted_avg_tavg /= d;
+			//yos[i].m[j].m.ten_day_weighted_avg_tsoil /= d;
+			//yos[i].m[j].m.ten_day_weighted_avg_tday /= d;
+			//yos[i].m[j].m.ten_day_weighted_avg_tnight /= d;
+			//yos[i].m[j].m.es /= d;
+			//yos[i].m[j].m.ea /= d;
+			yos[i].m[j].m.psych /= d;
+			yos[i].m[j].m.sw_pot_downward_W /= d;
+			yos[i].m[j].m.sw_downward_MJ /= d;
+			yos[i].m[j].m.incoming_sw_downward_W /= d;
+			yos[i].m[j].m.sw_downward_W /= d;
+			yos[i].m[j].m.lw_downward_MJ /= d;
+			yos[i].m[j].m.atm_lw_downward_W /= d;
+			yos[i].m[j].m.lw_net_MJ /= d;
+			yos[i].m[j].m.lw_net_W /= d;
+			yos[i].m[j].m.incoming_par /= d;
+			yos[i].m[j].m.par /= d;
+			yos[i].m[j].m.incoming_ppfd /= d;
+			yos[i].m[j].m.ppfd /= d;
+			//yos[i].m[j].m.emis_atm_clear_sky /= d;
+			//yos[i].m[j].m.emis_atm /= d;
+			//yos[i].m[j].m.cloud_cover_frac /= d;
+			//yos[i].m[j].m.cloud_cover_frac_corr /= d;
+		}
+	}
 
 	/* import co2 conc */
 	if ( g_settings->CO2_mod ) {

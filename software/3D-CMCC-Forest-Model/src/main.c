@@ -465,7 +465,7 @@ static int log_start(const char* const sitename)
 												, buffer
 				);
 				if ( ! *logs[i] ) {
-					printf("Unable to create %s log!\n\n", log_types[i]);
+					printf("Unable to create %s log! (path too long?)\n\n", log_types[i]);
 					return 0;
 				}
 			}

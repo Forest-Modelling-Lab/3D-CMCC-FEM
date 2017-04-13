@@ -65,6 +65,7 @@ typedef struct {
 
 typedef struct {
 	meteo_daily_t d[YOS_DAYS_COUNT];
+	meteo_daily_t m;
 } meteo_t;
 
 typedef struct {
