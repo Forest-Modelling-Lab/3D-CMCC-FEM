@@ -1115,7 +1115,6 @@ typedef struct
 	double daily_cwdC;                                                    /* (gC/m2/day) daily cwd carbon pool at cell level */
 	double daily_soilC;                                                   /* (gC/m2/day) daily litter carbon to soil */
 
-
 	/* nitrogen */
 	double daily_litrN;                                                   /* (gN/m2/day) daily leaf + fine root to litter nitrogen pool at cell level */
 	double daily_leaf_litrN;                                              /* (gN/m2/day) daily leaf to litter nitrogen pool at cell level */

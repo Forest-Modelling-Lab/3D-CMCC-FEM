@@ -81,14 +81,14 @@ void littering ( cell_t *const c, species_t *const s )
 	//todo
 	//c->daily_cwd1C              += ();
 
-	/** nitrgen littering **/
+	/** nitrogen littering **/
 
-	/* cell level litter nitrgen fluxes (gN/m2/day) */
+	/* cell level litter nitrogen fluxes (gN/m2/day) */
 	c->daily_leaf_litrN        += s->value[N_LEAF_TO_LITR]   * 1e6 / g_settings->sizeCell;
 	c->daily_froot_litrN       += s->value[N_FROOT_TO_LITR]  * 1e6 / g_settings->sizeCell;
 	c->daily_litrN             += ((s->value[N_LEAF_TO_LITR] +
 			s->value[N_FROOT_TO_LITR]) * ( 1e6 / g_settings->sizeCell));
-	/* cell level cwd nitrgen fluxes (gN/m2/day) */
+	/* cell level cwd nitrogen fluxes (gN/m2/day) */
 	c->daily_stem_cwdN         += s->value[N_STEM_TO_CWD]    * 1e6 / g_settings->sizeCell;
 	c->daily_croot_cwdN        += s->value[N_CROOT_TO_CWD]   * 1e6 / g_settings->sizeCell;
 	c->daily_branch_cwdN       += s->value[N_BRANCH_TO_CWD]  * 1e6 / g_settings->sizeCell;
@@ -99,27 +99,27 @@ void littering ( cell_t *const c, species_t *const s )
 			s->value[N_BRANCH_TO_CWD]                       +
 			s->value[N_RESERVE_TO_CWD]                      +
 			s->value[N_FRUIT_TO_CWD]) * ( 1e6 / g_settings->sizeCell));
-	/* cell level soil nitrgen fluxes (gN/m2/day) */
+	/* cell level soil nitrogen fluxes (gN/m2/day) */
 	c->daily_soilN       += 0. ;
 
-	/* cell level litter nitrgen pools (gN/m2) */
+	/* cell level litter nitrogen pools (gN/m2) */
 	c->litrN                   += c->daily_litrN;
 	c->cwdN                    += c->daily_cwdN ;
 	c->soilN                   += c->daily_soilN ;
 
-	/* leaf litter nitrgen fluxes */
+	/* leaf litter nitrogen fluxes */
 	s->value[N_LEAF_TO_LITR1N]  = s->value[N_LEAF_TO_LITR]   * s->value[LEAF_LITR_LAB_FRAC];
 	s->value[N_LEAF_TO_LITR2N]  = s->value[N_LEAF_TO_LITR]   * s->value[LEAF_LITR_USCEL_FRAC];
 	s->value[N_LEAF_TO_LITR3N]  = s->value[N_LEAF_TO_LITR]   * s->value[LEAF_LITR_SCEL_FRAC];
 	s->value[N_LEAF_TO_LITR4N]  = s->value[N_LEAF_TO_LITR]   * s->value[LEAF_LITR_LIGN_FRAC];
 
-	/* fine root litter nitrgen fluxes */
+	/* fine root litter nitrogen fluxes */
 	s->value[N_FROOT_TO_LITR1N] = s->value[N_FROOT_TO_LITR]  * s->value[FROOT_LITR_LAB_FRAC];
 	s->value[N_FROOT_TO_LITR2N] = s->value[N_FROOT_TO_LITR]  * s->value[FROOT_LITR_USCEL_FRAC];
 	s->value[N_FROOT_TO_LITR3N] = s->value[N_FROOT_TO_LITR]  * s->value[FROOT_LITR_SCEL_FRAC];
 	s->value[N_FROOT_TO_LITR4N] = s->value[N_FROOT_TO_LITR]  * s->value[FROOT_LITR_LIGN_FRAC];
 
-	/* cell level litter nitrgen fluxes */
+	/* cell level litter nitrogen fluxes */
 	c->daily_leaf_litr1N       += s->value[N_LEAF_TO_LITR1N]  * 1e6 / g_settings->sizeCell;
 	c->daily_leaf_litr2N       += s->value[N_LEAF_TO_LITR2N]  * 1e6 / g_settings->sizeCell ;
 	c->daily_leaf_litr3N       += s->value[N_LEAF_TO_LITR3N]  * 1e6 / g_settings->sizeCell;
@@ -129,7 +129,7 @@ void littering ( cell_t *const c, species_t *const s )
 	c->daily_froot_litr3N      += s->value[N_FROOT_TO_LITR3N] * 1e6 / g_settings->sizeCell;
 	c->daily_froot_litr4N      += s->value[N_FROOT_TO_LITR4N] * 1e6 / g_settings->sizeCell;
 
-	/* cell level litter nitrgen pools (tN/sizecell) */
+	/* cell level litter nitrogen pools (tN/sizecell) */
 	c->leaf_litr1N             += c->daily_leaf_litr1N;
 	c->leaf_litr2N             += c->daily_leaf_litr2N;
 	c->leaf_litr3N             += c->daily_leaf_litr3N;

@@ -56,6 +56,13 @@ void carbon_allocation( cell_t *const c, species_t *const s)
 	s->value[Y_C_TO_BRANCH]    += s->value[C_TO_BRANCH];
 	s->value[Y_C_TO_FRUIT]     += s->value[C_TO_FRUIT];
 
+	printf("C_TO_LEAF in alloc %g\n", s->value[C_TO_LEAF]);
+	printf("C_TO_FROOT in alloc %g\n", s->value[C_TO_FROOT]);
+	printf("C_TO_RESERVE in alloc %g\n", s->value[C_TO_RESERVE]);
+	printf("C_LEAF_TO_LITR in alloc %g\n", s->value[C_LEAF_TO_LITR]);
+	printf("C_FROOT_TO_LITR in alloc %g\n", s->value[C_FROOT_TO_LITR]);
+	printf("C_RESERVE_TO_CWD in alloc %g\n", s->value[C_RESERVE_TO_CWD]);
+
 	/*** update class level carbon mass pools ***/
 	s->value[LEAF_C]     += s->value[C_TO_LEAF];
 	s->value[FROOT_C]    += s->value[C_TO_FROOT];

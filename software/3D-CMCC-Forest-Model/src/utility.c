@@ -351,8 +351,11 @@ void reset_daily_class_variables(cell_t *const c)
 					s->value[C_BRANCH_TO_RESERVE] =       0.;
 					s->value[C_LEAF_TO_LITR] =            0.;
 					s->value[C_FROOT_TO_LITR] =           0.;
-					s->value[C_FRUIT_TO_CWD] =            0.;
+					s->value[C_STEM_TO_CWD] =             0.;
+					s->value[C_CROOT_TO_CWD] =            0.;
 					s->value[C_BRANCH_TO_CWD] =           0.;
+					s->value[C_RESERVE_TO_CWD] =          0.;
+					s->value[C_FRUIT_TO_CWD] =            0.;
 
 
 					/* reset daily nitrogen fluxes among pools */
@@ -372,6 +375,11 @@ void reset_daily_class_variables(cell_t *const c)
 					s->value[N_FROOT_TO_RESERVE] =        0.;
 					s->value[N_LEAF_TO_LITR] =            0.;
 					s->value[N_FROOT_TO_LITR] =           0.;
+					s->value[N_STEM_TO_CWD] =             0.;
+					s->value[N_CROOT_TO_CWD] =            0.;
+					s->value[N_BRANCH_TO_CWD] =           0.;
+					s->value[N_RESERVE_TO_CWD] =          0.;
+					s->value[N_FRUIT_TO_CWD] =            0.;
 					/****************************************/
 
 					/* reset daily maintenance, growth and total respiration */
