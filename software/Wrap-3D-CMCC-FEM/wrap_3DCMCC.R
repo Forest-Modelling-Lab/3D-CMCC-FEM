@@ -6,7 +6,7 @@ setwd('C:/SviluppoR/')
 
 input_dir = 'C:\\Users\\CMCC\\Desktop\\profound\\'
 
-output_dir_gen = paste0(input_dir,'\\out_R_wrapper\\')
+output_dir_gen = paste0(input_dir,'\\out_R_wrapper_new\\')
 
 dir.create(output_dir_gen,showWarnings = FALSE)
 
@@ -23,6 +23,8 @@ alltables = dbListTables(con)
 write.csv(alltables,paste0(output_dir_gen,'alltables.csv'),row.names = FALSE)
 
 # write the METADATA* files ----
+output_dir_gen2 = paste0(output_dir_gen,'/meta_data/')
+dir.create(output_dir_gen2,showWarnings = FALSE)
 
 for ( t in alltables) {
   pos = grep("METADATA", t)
@@ -31,7 +33,7 @@ for ( t in alltables) {
       paste("SELECT * FROM",t)
           )
     cat(paste("write table: ",t,'\n'))
-    write.csv(qrt,paste0(output_dir_gen,t,'.csv'),row.names = FALSE)
+    write.csv(qrt,paste0(output_dir_gen2,t,'.csv'),row.names = FALSE)
     rm(qrt)
     cat(paste("write table: ",t,' ...OK\n'))
   }
@@ -53,7 +55,7 @@ for (t in t_1) {
   rm(qrt)
 }
 rm(t,t_1)
-
+rm(output_dir_gen2)
 
 # # extract all tables for sites
 # all_tab_for_site = alltables[grep("_21", alltables)]
@@ -69,11 +71,6 @@ rm(t,t_1)
 #   cat(paste("write table for site: ",t,' ...OK\n'))  
 # }
 
-t = 'SITES'
-lista_siti = dbGetQuery(con, 
-                 paste("SELECT site_id,site FROM",t)
-)
-rm(t)
 # 
 # # create the soil file ----
 # 
@@ -111,10 +108,15 @@ rm(t)
 # 
 # topo_elev = qrt$elevation_masl
 # rm(qrt,t)
-cyS = lista_siti$site_id[1]
+
+# for each site etraxct inpout dataset and create folder structure ----
+
+lista_siti = read.csv(paste0(output_dir_gen,'SITES.csv'))
+cyS = lista_siti$site_id[8]
+
 for (cyS in lista_siti$site_id) {
   
-  output_dir = paste0(output_dir_gen,lista_siti$site[which(lista_siti$site_id == cyS)],'/')
+  output_dir = paste0(output_dir_gen,factor(lista_siti$site)[which(lista_siti$site_id == cyS)],'/')
   dir.create(output_dir,showWarnings = FALSE)
   
   # create STAND input file ----
@@ -359,16 +361,267 @@ for (cyS in lista_siti$site_id) {
   }
   rm(t,co2_tab)
   
-  # move ti files in each subfolder
-  file_to_move = list.files(path=output_dir,pattern = 'historical')
+  # check duplicate dataset and move in folder '_identici'
   
+  for(cyDes in c('CLIMATE','CO2')) {
+    
+    # compare all CLIMATE files and delete the similar
+    file_all = list.files(path=output_dir,pattern = cyDes)
+    
+    for ( cy1 in seq(1,length(file_all)) ) {
+      
+      
+      if ( !file.exists(paste0(output_dir,file_all[cy1])) ) {
+        next
+      }
+      
+      cat(paste('REFERENCE import file:',file_all[cy1],'\n'))
+      
+      if ('STAND' == cyDes) {
+        df_ref = read.csv(paste0(output_dir,file_all[cy1]),sep = ',')
+      } else {
+        df_ref = read.csv(paste0(output_dir,file_all[cy1]),sep = '\t')
+      }
+      
+      
+      for ( cy2 in seq((cy1 + 1),length(file_all)) ) {
+        
+        if ( !file.exists(paste0(output_dir,file_all[cy2])) ) {
+          next
+        }
+        
+        cat(paste('COMPARE import file:',file_all[cy2],'\n'))
+        
+        if ( abs(file.info(paste0(output_dir,file_all[cy1]))$size -
+            file.info(paste0(output_dir,file_all[cy2]))$size ) > 0) {
+          next
+        }
+        
+        if ('STAND' == cyDes) {
+          df_cmp = read.csv(paste0(output_dir,file_all[cy2]),sep = ',') 
+        } else {
+          df_cmp = read.csv(paste0(output_dir,file_all[cy2]),sep = '\t') 
+        }
+        
+        if ( abs (length(df_cmp[,1]) - length(df_ref[,1])) > 0 ){
+          rm(df_cmp)
+          next
+        }
+        
+        listaV = unique(c(colnames(df_cmp),colnames(df_ref)))
+        
+        conta_diffe = 0
+        
+        for( cyv in listaV ) {
+          
+          M = data.frame('ref' = df_ref[,which(colnames(df_ref) == cyv)],
+                'cmp' = df_cmp[,which(colnames(df_cmp) == cyv)])
+        
+          M_diffe = M[,1]-M[,2]
+          M_diffe = M_diffe[-1*which( M_diffe == 0)]
+          
+          if ( length(M_diffe) > 0 ) {
+            conta_diffe = 1
+            break
+          }
+        }
+        rm(M_diffe,cyv,listaV)
+        rm(df_cmp)
+        if ( conta_diffe == 0 ) {
+          
+          dir.create(paste0(output_dir,'_identici/'),showWarnings = FALSE)
+          
+          file.copy(paste0(output_dir,file_all[cy2]),
+                    paste0(output_dir,'_identici/',file_all[cy2]))
+          
+          file.remove(paste0(output_dir,file_all[cy2]))
+        }
+        rm(conta_diffe)
+      }
+      rm(df_ref)
+    }
+    rm(cy1,file_all)
+  }
+  rm(cyDes)
 }
-
-
 
 # clean up ----
 dbDisconnect(con)
 rm(con)
+rm(lista_siti)
+
+# move climate files in subfolder and rename ----
+
+lista_siti = read.csv(paste0(output_dir_gen,'SITES.csv'))
+
+for ( cy in lista_siti$site ) {
+  
+  lf = list.files(path=paste0(output_dir_gen,cy,'/'),pattern = 'CLIMATE')
+  
+  for (cy_f in lf ) {
+    
+    name = gsub('CLIMATE_ISIMIP','',cy_f)
+    name2 = unlist(strsplit(name,'_'))
+    
+    dir.create(paste0(output_dir_gen,cy,'/',name2[1],'/'),showWarnings = FALSE)
+    
+    file.copy(paste0(output_dir_gen,cy,'/',cy_f),
+              paste0(output_dir_gen,cy,'/',name2[1],'/'))
+    
+    name3 = c(paste0(name2[1],'_'),paste0(name2[2],'_'))
+    
+    file.rename(
+      paste0(output_dir_gen,cy,'/',name2[1],'/',cy_f),
+      paste0(output_dir_gen,cy,'/',name2[1],'/',
+             gsub('historical','hist',
+             gsub(name3[2],'',gsub(name3[1],'',gsub('CLIMATE_ISIMIP','',cy_f))))))
+    
+    file.remove(paste0(output_dir_gen,cy,'/',cy_f))
+    
+    rm(name2,name3,name)
+    
+  }
+  
+  rm(lf)
+
+}
+rm(cy,lista_siti)
+
+# check begin and end of timeseries ----
+
+lista_siti = read.csv(paste0(output_dir_gen,'SITES.csv'))
+
+list_des_rcp = c('hist','rcp2p6','rcp4p5','rcp6p0','rcp8p5')
+
+cy = lista_siti$site[8]
+
+# for ( cy in lista_siti$site ) {
+  # list of files and RCP
+  lf = c()
+  lf_des = c()
+  for (cy_des_rcp in list_des_rcp) {
+    lf = c(lf,list.files(path = paste0(output_dir_gen,cy,'/'),pattern = cy_des_rcp))
+    lf_des = c(lf_des,
+               rep(cy_des_rcp,
+                   length(list.files(path = paste0(output_dir_gen,cy,'/'),pattern = cy_des_rcp))))
+  }
+  rm(cy_des_rcp)
+  
+  fine_name = c()
+  begin_year = c()
+  end_year = c()
+    
+  for (cy2 in lf) {
+    
+    cat(paste('open file:',cy2,'\n'))
+    df = read.csv(paste0(output_dir_gen,cy,'/',cy2),sep='\t')
+    fine_name = c(fine_name,cy2)
+    
+    if ( grepl('^CO2',cy2) ) {
+      begin_year = c(begin_year,min(df$year))
+      end_year = c(end_year,max(df$year))
+    } else {
+      begin_year = c(begin_year,min(df$Year))
+      end_year = c(end_year,max(df$Year))
+    }
+    rm(df)
+  }
+  rm(cy2)
+  
+  dff = data.frame(fine_name,begin_year,end_year)
+  
+  for ( cyf in seq(1,length(fine_name)) ) {
+    if ( grepl('^CO2',fine_name[cyf]) ) {
+      next
+    }
+    
+    file_co2 = fine_name[grep('^CO2',fine_name)]
+    file_co2 = file_co2[grep(lf_des[cyf],file_co2)]
+    
+    cat('\tcreate setting file\n')
+          
+    # import settings file
+    filepath = paste0(output_dir_gen,'Soroe_settings_ISIMIP_Manag-on_CO2-on_test.txt')
+    con = file(filepath, "r")
+    line = readLines(con)
+    close(con)
+    
+    rm(filepath,con)
+    
+    line_year_start = line[grep('^YEAR_START ',line)]
+    line_year_end = line[grep('^YEAR_END ',line)]
+    
+    begin_year[cyf] = 1950
+    
+    line_year_start = gsub(line_year_start,paste0('YEAR_START ',begin_year[cyf]),line_year_start)
+    line_year_end = gsub(line_year_end,paste0('YEAR_END ',end_year[cyf]),line_year_end)
+    
+    line_year_start = paste0(line_year_start,'    //Starting year simulation')
+    line_year_end = paste0(line_year_end,'    //Ending year simulation')
+    
+    line[grep('^YEAR_START ',line)] = line_year_start
+    line[grep('^YEAR_END ',line)] = line_year_end
+    
+    file_setting = paste0('s_M-on_CO2-on_',gsub('.txt','',fine_name[cyf]),'.txt')
+    
+    filepath = paste0(output_dir_gen,cy,'/',file_setting)
+
+    cat('\tsetting file:',filepath,' CREATED\n')
+    
+    fileConn<-file(filepath)
+    writeLines(line, fileConn)
+    close(fileConn)
+    
+    rm(line,filepath,fileConn)
+    
+    # create batch file
+    str_cmd = '3D-CMCC-Forest-Model '
+    str_cmd = paste0(str_cmd,' -i soro/')
+    str_cmd = paste0(str_cmd,' -o soro/output_',gsub('.txt','',fine_name[cyf]),'/')
+    str_cmd = paste0(str_cmd,' -p parameterization/')
+    str_cmd = paste0(str_cmd,' -d Soroe_stand_ISIMIP.txt')
+    str_cmd = paste0(str_cmd,' -s Soroe_soil_ISIMIP.txt')
+    str_cmd = paste0(str_cmd,' -t Soroe_topo_ISIMIP.txt')
+    str_cmd = paste0(str_cmd,' -k ',file_co2)
+    str_cmd = paste0(str_cmd,' -c ',file_setting)
+    str_cmd = paste0(str_cmd,' -m ',fine_name[cyf])
+    
+    str_cmd = paste0(str_cmd,'>result_',gsub('.txt','',fine_name[cyf]),'.txt')
+    
+    filepath = paste0(output_dir_gen,'/launch_',gsub('.txt','',fine_name[cyf]),'.bat')
+    
+    fileConn<-file(filepath)
+    writeLines(str_cmd, fileConn)
+    close(fileConn)
+    
+    file.copy(paste0(output_dir_gen,'/Soroe_stand_ISIMIP.txt'),
+              paste0(output_dir_gen,'/',cy,'/Soroe_stand_ISIMIP.txt'))
+    file.copy(paste0(output_dir_gen,'/Soroe_soil_ISIMIP.txt'),
+              paste0(output_dir_gen,'/',cy,'/Soroe_soil_ISIMIP.txt'))
+    file.copy(paste0(output_dir_gen,'/Soroe_topo_ISIMIP.txt'),
+              paste0(output_dir_gen,'/',cy,'/Soroe_topo_ISIMIP.txt'))
+    
+    old_wd = getwd()
+    
+    setwd(output_dir_gen)
+    system(paste0('launch_',gsub('.txt','',fine_name[cyf]),'.bat'))
+  
+    setwd(old_wd)
+    
+    rm(filepath,str_cmd,fileConn,old_wd)
+    
+    file.remove(paste0(output_dir_gen,'/',cy,'/Soroe_stand_ISIMIP.txt'))
+    file.remove(paste0(output_dir_gen,'/',cy,'/Soroe_soil_ISIMIP.txt'))
+    file.remove(paste0(output_dir_gen,'/',cy,'/Soroe_topo_ISIMIP.txt'))
+    
+  }
+  rm(cyf)
+}
+rm(cy_des_rcp)
+  
+rm(cy)
+
+
 # 
 # # create input directory and launch the model ----
 # 
