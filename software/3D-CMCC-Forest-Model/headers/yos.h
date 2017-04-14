@@ -64,8 +64,24 @@ typedef struct {
 } meteo_daily_t;
 
 typedef struct {
+	double solar_rad;
+	double tavg;
+	double tmax;
+	double tmin;
+	double tday;
+	double tnight;
+	double vpd;
+	double prcp;
+	double tsoil;
+	double rh_f;
+	double incoming_par;
+	double par;
+	double incoming_ppfd;
+	double ppfd;
+} meteo_mean_t;
+
+typedef struct {
 	meteo_daily_t d[YOS_DAYS_COUNT];
-	meteo_daily_t m;
 } meteo_t;
 
 typedef struct {
@@ -73,6 +89,8 @@ typedef struct {
 	double co2Conc;	// (ppmv) annual CO2 concentration
 	double Ndep;	// nitrogen deposition
 	meteo_t m[YOS_MONTHS_COUNT];
+	meteo_mean_t monthly_mean[YOS_MONTHS_COUNT];
+	meteo_mean_t yearly_mean;
 } yos_t; /* just for clarification YOS stand for Year Of Simulation ! */
 
 yos_t* yos_import(const char *const file, int *const yos_count, const int x, const int y);
