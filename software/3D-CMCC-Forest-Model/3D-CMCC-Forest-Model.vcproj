@@ -212,19 +212,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\C-deciduous-partitioning-allocation.c"
+				RelativePath=".\src\C-deciduous-partitioning.c"
 				>
 			</File>
 			<File
-				RelativePath=".\headers\C-deciduous-partitioning-allocation.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\C-evergreen-partitioning-allocation.c"
-				>
-			</File>
-			<File
-				RelativePath=".\headers\C-evergreen-partitioning-allocation.h"
+				RelativePath=".\src\C-evergreen-partitioning.c"
 				>
 			</File>
 			<File
@@ -333,6 +325,10 @@
 			</File>
 			<File
 				RelativePath=".\src\litter_model_check_balance.c"
+				>
+			</File>
+			<File
+				RelativePath=".\src\littering.c"
 				>
 			</File>
 			<File
