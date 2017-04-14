@@ -31,15 +31,15 @@ void latent_heat_fluxes (cell_t *const c, const meteo_daily_t *const meteo_daily
 	logger(g_debug_log, "\n**CELL LATENT HEAT**\n");
 
 	/*compute latent heat from canopy*/
-	c->daily_canopy_evapo_watt  = c->daily_c_evapo  * meteo_daily->lh_vap / 86400.0;
-	c->daily_canopy_transp_watt = c->daily_c_transp * meteo_daily->lh_vap / 86400.0;
+	c->daily_canopy_evapo_watt  = c->daily_canopy_evapo  * meteo_daily->lh_vap / 86400.0;
+	c->daily_canopy_transp_watt = c->daily_canopy_transp * meteo_daily->lh_vap / 86400.0;
 	c->daily_canopy_et_watt     = c->daily_canopy_evapo_watt + c->daily_canopy_transp_watt;
 	c->daily_canopy_lh_flux     = c->daily_canopy_et_watt;
 	logger(g_debug_log, "Latent heat canopy evapotranspiration = %g W/m^2\n", c->daily_canopy_lh_flux);
-	logger(g_debug_log, "Latent heat soil evaporation = %g W/m^2\n", c->daily_soil_evaporation_watt);
+	logger(g_debug_log, "Latent heat soil evaporation = %g W/m^2\n", c->daily_soil_evapo_watt);
 
 	/* adding soil latent heat flux to overall latent heat flux */
-	c->daily_lh_flux = c->daily_canopy_et_watt + c->daily_soil_evaporation_watt;
+	c->daily_lh_flux = c->daily_canopy_et_watt + c->daily_soil_evapo_watt;
 
 	/*in case of snow formation or dew fall*/
 	if(meteo_daily->snow != 0.0)

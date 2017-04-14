@@ -845,84 +845,75 @@ typedef struct
 	/* overall cell counter */
 	int cell_tree_layers_count;
 	int cell_heights_count;
-	int cell_dbhs_count;
-	int cell_ages_count;
-	int cell_species_count;
+	int cell_dbhs_count;                                                  /* (dbh/cell) number of different dbh */
+	int cell_ages_count;                                                  /* (ages/cell) number of different ages */
+	int cell_species_count;                                               /* (species/cell) number of different species */
 
-	int year_stand;                                     /* input stand.txt row stand year */
+	int year_stand;                                                       /* input stand.txt row stand year */
 
-	int x;                                              /* cell index within the matrix */
-	int y;                                              /* cell index within the matrix */
-	double elev;                                        /* cell elevation (m) */
-	int north;                                          /* northern hemisphere north = 0, south hemisphere south = 1 */
+	int x;                                                                /* cell index within the matrix */
+	int y;                                                                /* cell index within the matrix */
+	double elev;                                                          /* cell elevation (m) */
+	int north;                                                            /* northern hemisphere north = 0, south hemisphere south = 1 */
 
 	/* annual met values */
-	double abscission_daylength;                        /* (hrs/day) day length for starting abscission (not used) */
-	double annual_tavg;                                 /* (°C) annual avg daily avg temperature */
-	double annual_tmin;                                 /* (°C) annual avg daily min temperature */
-	double annual_tmax;                                 /* (°C) annual avg daily max temperature */
-	double annual_tday;                                 /* (°C) annual avg daily daytime temperature */
-	double annual_tnight;                               /* (°C) annual avg daily nighttime temperature */
-	double annual_tsoil;                                /* (°C) (°C)  avg daily soil temperature */
-	double annual_solar_rad;                            /* (MJ/day/yr) annual avg daily solar radiation (short wave)  */
-	double annual_precip;                               /* (mm) annual cumulate daily precipitation */
-	double annual_vpd;                                  /* (hPa) annual avg daily vpd */
+	double abscission_daylength;                                          /* (hrs/day) day length for starting abscission (not used) */
 
 	/*forest structure variables*/	
-	int Veg_Counter;                                    /* number of class in vegetative period  in the cell */
-	double cell_cover;                                  /* (ratio) Canopy cover  */
-	double bare_soil_cover;                             /* (ratio) Bare soil cover */
-	int cell_n_trees;                                   /* (trees/cell/day) number of trees */
-	int daily_dead_tree;                                /* (trees/cell/day) daily number of dead tree */
-	int monthly_dead_tree;                              /* (trees/cell/month) monthly number of dead tree */
-	int annual_dead_tree ;                              /* (trees/cell/year ) annual number of dead tree */
-	int saplings_counter;                               /* (trees/cell) number of class as sapling */
-	double basal_area;                                  /* (day/cell) cumulated basal area at cell level */
-	double agb;                                         /* (tC/cell) current above ground biomass at cell level */
-	double bgb;                                         /* (tC/cell) current below ground biomass at cell level */
+	int Veg_Counter;                                                      /* number of class in vegetative period  in the cell */
+	double cell_cover;                                                    /* (ratio) Canopy cover  */
+	double bare_soil_cover;                                               /* (ratio) Bare soil cover */
+	int cell_n_trees;                                                     /* (trees/cell/day) number of trees */
+	int daily_dead_tree;                                                  /* (trees/cell/day) daily number of dead tree */
+	int monthly_dead_tree;                                                /* (trees/cell/month) monthly number of dead tree */
+	int annual_dead_tree ;                                                /* (trees/cell/year ) annual number of dead tree */
+	int saplings_counter;                                                 /* (trees/cell) number of class as sapling */
+	double basal_area;                                                    /* (day/cell) cumulated basal area at cell level */
+	double agb;                                                           /* (tC/cell) current above ground biomass at cell level */
+	double bgb;                                                           /* (tC/cell) current below ground biomass at cell level */
 
 	/* radiation variables */
 	/* short wave radiation */
-	double sw_rad_down_MJ;                              /* (MJ/day/day) Downward short wave radiation flux */
-	double short_wave_radiation_upward_MJ;              /* (MJ/day/day) Upward short wave radiation flux */
-	double short_wave_radiation_upward_W;               /* (W/day) Upward short wave radiation flux */
-	double sw_rad_refl;                                 /* (W/day) Short Wave radiation reflected */
-	double sw_rad_refl_soil;                            /* (W/day) Short Wave radiation reflected from soil level */
-	double sw_rad_refl_snow;                            /* (W/day) (W/day)  Wave radiation reflected from snow level */
-	double sw_rad_abs;                                  /* (W/day) Short Wave radiation absorbed tree level */
-	double sw_rad_abs_soil;                             /* (W/day) Short Wave radiation absorbed soil level */
-	double sw_rad_abs_snow;                             /* (W/day) Short Wave radiation absorbed snow level */
-	double sw_rad_transm;                               /* (W/day) Short Wave radiation transmitted */
+	double sw_rad_down_MJ;                                                /* (MJ/day/day) Downward short wave radiation flux */
+	double short_wave_radiation_upward_MJ;                                /* (MJ/day/day) Upward short wave radiation flux */
+	double short_wave_radiation_upward_W;                                 /* (W/day) Upward short wave radiation flux */
+	double sw_rad_refl;                                                   /* (W/day) Short Wave radiation reflected */
+	double sw_rad_refl_soil;                                              /* (W/day) Short Wave radiation reflected from soil level */
+	double sw_rad_refl_snow;                                              /* (W/day) (W/day)  Wave radiation reflected from snow level */
+	double sw_rad_abs;                                                    /* (W/day) Short Wave radiation absorbed tree level */
+	double sw_rad_abs_soil;                                               /* (W/day) Short Wave radiation absorbed soil level */
+	double sw_rad_abs_snow;                                               /* (W/day) Short Wave radiation absorbed snow level */
+	double sw_rad_transm;                                                 /* (W/day) Short Wave radiation transmitted */
 
 	/* long wave radiation */
-	double long_wave_radiation_upward_MJ;               /* (MJ/day/day) Upward long wave radiation flux */
-	double long_wave_radiation_upward_W;                /* (W/day) Upward long wave radiation flux */
-	double net_long_wave_radiation_MJ;                  /* (MJ/day/day) Net long wave radiation flux  */
-	double net_long_wave_radiation_W;                   /* (W/day) Net long wave radiation flux */
-	double long_wave_absorbed;                          /* (W/day) Total absorbed long wave wave radiation flux */
-	double long_wave_reflected;                         /* (W/day) Total reflected long wave radiation flux */
-	double long_wave_emitted;                           /* (W/day) Total emitted long wave radiation flux */
-	double soil_long_wave_emitted;                      /* (W/day) Soil emitted long wave radiation flux */
-	double net_lw_rad_for_soil;                         /* (W/day) Net Long Wave radiation to soil level */
-	double net_rad_for_soil;                            /* (W/day) Net radiation to soil level */
+	double long_wave_radiation_upward_MJ;                                 /* (MJ/day/day) Upward long wave radiation flux */
+	double long_wave_radiation_upward_W;                                  /* (W/day) Upward long wave radiation flux */
+	double net_long_wave_radiation_MJ;                                    /* (MJ/day/day) Net long wave radiation flux  */
+	double net_long_wave_radiation_W;                                     /* (W/day) Net long wave radiation flux */
+	double long_wave_absorbed;                                            /* (W/day) Total absorbed long wave wave radiation flux */
+	double long_wave_reflected;                                           /* (W/day) Total reflected long wave radiation flux */
+	double long_wave_emitted;                                             /* (W/day) Total emitted long wave radiation flux */
+	double soil_long_wave_emitted;                                        /* (W/day) Soil emitted long wave radiation flux */
+	double net_lw_rad_for_soil;                                           /* (W/day) Net Long Wave radiation to soil level */
+	double net_rad_for_soil;                                              /* (W/day) Net radiation to soil level */
 
 	/* PAR radiation */
-	double apar;                                        /* (molPAR/day/day) cumulated absorbed PAR at tree level */
-	double apar_soil;                                   /* (molPAR/day/day) cumulated absorbed PAR at soil level */
-	double apar_snow;                                   /* (molPAR/day/day) cumulated absorbed PAR at snow level */
-	double par_transm;                                  /* (molPAR/day/day) cumulated transmitted PAR at cell level */
-	double par_refl;                                    /* (molPAR/day/day) cumulated reflected PAR at cell level */
-	double par_refl_soil;                               /* (molPAR/day/day) reflected PAR by the soil */
-	double par_refl_snow;                               /* (molPAR/day/day) reflected PAR by the snow */
+	double apar;                                                          /* (molPAR/day/day) cumulated absorbed PAR at tree level */
+	double apar_soil;                                                     /* (molPAR/day/day) cumulated absorbed PAR at soil level */
+	double apar_snow;                                                     /* (molPAR/day/day) cumulated absorbed PAR at snow level */
+	double par_transm;                                                    /* (molPAR/day/day) cumulated transmitted PAR at cell level */
+	double par_refl;                                                      /* (molPAR/day/day) cumulated reflected PAR at cell level */
+	double par_refl_soil;                                                 /* (molPAR/day/day) reflected PAR by the soil */
+	double par_refl_snow;                                                 /* (molPAR/day/day) reflected PAR by the snow */
 
 	/* PPFD radiation */
-	double ppfd_abs;                                    /* (umol/day/sec) Absorbed Photosynthetic photon flux density tree level  */
-	double ppfd_abs_soil;                               /* (umol/day/sec) Absorbed Photosynthetic photon flux density soil level */
-	double ppfd_abs_snow;                               /* (umol/day/sec) Absorbed Photosynthetic photon flux density snow level */
-	double ppfd_transm;                                 /* (umol/day/sec) Transmitted Photosynthetic photon flux density */
-	double ppfd_refl;                                   /* (umol/day/sec) Reflected Photosynthetic photon flux density */
-	double ppfd_refl_soil;                              /* (umol/day/sec) PPFD reflected by the soil */
-	double ppfd_refl_snow;                              /* (umol/day/sec) PPFD reflected by the snow */
+	double ppfd_abs;                                                      /* (umol/day/sec) Absorbed Photosynthetic photon flux density tree level  */
+	double ppfd_abs_soil;                                                 /* (umol/day/sec) Absorbed Photosynthetic photon flux density soil level */
+	double ppfd_abs_snow;                                                 /* (umol/day/sec) Absorbed Photosynthetic photon flux density snow level */
+	double ppfd_transm;                                                   /* (umol/day/sec) Transmitted Photosynthetic photon flux density */
+	double ppfd_refl;                                                     /* (umol/day/sec) Reflected Photosynthetic photon flux density */
+	double ppfd_refl_soil;                                                /* (umol/day/sec) PPFD reflected by the soil */
+	double ppfd_refl_snow;                                                /* (umol/day/sec) PPFD reflected by the snow */
 
 	/************************************************** forest trees **************************************************/
 
@@ -1003,9 +994,6 @@ typedef struct
 	double branch_dead_wood_nitrogen;                                     /* (gN/m2) branch dead wood carbon at cell level */
 	double reserve_nitrogen;                                              /* (gN/m2) reserve at cell level */
 	double fruit_nitrogen;                                                /* (gN/m2) fruit at cell level */
-	double litr_nitrogen;                                                 /* (gN/m2) litter at cell level */
-	double cwd_nitrogen;                                                  /* (gN/m2) coarse woody debris at cell level */
-	double soil_nitrogen;                                                 /* (gN/m2) soil at cell level */
 
 	/* carbon use efficiency */
 	double daily_cue;                                                     /* (DIM) daily carbon use efficiency */
@@ -1040,7 +1028,7 @@ typedef struct
 	double daily_net_nmin;                                                /* (tN/cell/m2) daily net N mineralization */
 	double fpi;                                                           /* (DIM) fraction of potential immobilization */
 
-	/* litter ans soil decomposition carbon fluxes */
+	/* litter and soil decomposition carbon fluxes */
 	/* litter */
 	double daily_litrC;                                                   /* (gC/m2/day) daily litter carbon pool at cell level */
 	double daily_leaf_litrC;                                              /* (gC/m2/day) daily leaf to litter carbon pool at cell level */
@@ -1232,92 +1220,94 @@ typedef struct
 	double swc;                                                           /* (kgH2O/day) soil Water content */
 
 	/* water */
-	int days_since_rain;                                                             /* (days) consecutive days without rain */
+	int days_since_rain;                                                  /* (days) consecutive days without rain */
+
 	/* pools */
-	double asw;                                                                      /* (mm/volume) current available soil water  */
-	double max_asw_fc;                                                               /* (mmKgH2O/m3) max available soil water at field capacity */
-	double max_asw_sat;                                                              /* (mmKgH2O/m3) max available soil water at field capacity */
-	double snow_pack;                                                                /* (Kg/m2)current amount of snow */
-	double canopy_water_stored;                                                      /* (mm/m2) canopy water stored at cell level */
+	double asw;                                                           /* (mm/volume) current available soil water  */
+	double max_asw_fc;                                                    /* (mmKgH2O/m3) max available soil water at field capacity */
+	double max_asw_sat;                                                   /* (mmKgH2O/m3) max available soil water at field capacity */
+	double snow_pack;                                                     /* (Kg/m2)current amount of snow */
+	double canopy_water_stored;                                           /* (mm/m2) canopy water stored at cell level */
+
 	/* fluxes */
-	double daily_snow_melt;                                                          /* (mm/m2/time) current amount of melted snow  */
-	double daily_snow_subl;                                                          /* (mm/m2/time) current amount of sublimated snow */
-	double daily_out_flow;                                                           /* (mm/m2/time) current amount of water outflow */
-	double daily_c_rain_int, monthly_c_rain_int, annual_c_rain_int;                  /* (mm/m2/time) daily, monthly and canopy rain interception at cell level */
-	double daily_c_snow_int, monthly_c_snow_int, annual_c_snow_int;                  /* (mm/m2/time) daily, monthly and canopy snow interception at cell level */
-	double daily_c_transp, monthly_c_transp, annual_c_transp;                        /* (mm/m2/time) daily, monthly and canopy transpiration at cell level */
-	double daily_c_evapo, monthly_c_evapo, annual_c_evapo;                           /* (mm/m2/time) daily, monthly and canopy evaporation at cell level */
-	double daily_c_evapotransp, monthly_c_evapotransp, annual_c_evapotransp;         /* (mm/m2/time) daily, monthly and canopy evapotranspiration at cell level */
-	double daily_soil_evapo, monthly_soil_evapo, annual_soil_evapo;                  /* (mm/m2/time) daily, monthly and soil evaporation at cell level */
-	double daily_et, monthly_et, annual_et;                                          /* (mm/m2/time) daily, monthly and evapotranspiration at cell level */
-	double daily_tot_w_flux, monthly_tot_w_flux, annual_tot_w_flux;                  /* (mm/m2/time) daily, monthly and annual water fluxes at cell level */
-	double daily_soil_evaporation_watt;                                              /* (W/m2) current daily soil evaporation in watt at cell level */
-	double daily_soil_lh_flux;                                                 /* (W/m2) current daily soil latent heat flux  at cell level */
-	double daily_soil_sh_flux;                                                 /* (W/m2) current daily soil sensible heat flux at cell level */
+	double daily_snow_melt;                                               /* (mm/m2/time) current amount of melted snow  */
+	double daily_snow_subl;                                               /* (mm/m2/time) current amount of sublimated snow */
+	double daily_out_flow;                                                /* (mm/m2/time) current amount of water outflow */
+	double daily_canopy_rain_int, monthly_canopy_rain_int, annual_canopy_rain_int; /* (mm/m2/time) daily, monthly and canopy rain interception */
+	double daily_canopy_snow_int, monthly_canopy_snow_int, annual_canopy_snow_int; /* (mm/m2/time) daily, monthly and canopy snow interception */
+	double daily_canopy_transp, monthly_canopy_transp, annual_canopy_transp; /* (mm/m2/time) daily, monthly and canopy transpiration */
+	double daily_canopy_evapo, monthly_canopy_evapo, annual_canopy_evapo; /* (mm/m2/time) daily, monthly and canopy evaporation */
+	double daily_canopy_et, monthly_canopy_et, annual_canopy_et;          /* (mm/m2/time) daily, monthly and canopy evapotranspiration */
+	double daily_soil_evapo, monthly_soil_evapo, annual_soil_evapo;       /* (mm/m2/time) daily, monthly and soil evaporation */
+	double daily_et, monthly_et, annual_et;                               /* (mm/m2/time) daily, monthly and evapotranspiration */
+	double daily_tot_w_flux, monthly_tot_w_flux, annual_tot_w_flux;       /* (mm/m2/time) daily, monthly and annual water fluxes */
+	double daily_soil_evapo_watt;                                         /* (W/m2) current daily soil evaporation */
+	double daily_soil_lh_flux;                                            /* (W/m2) current daily soil latent heat flux */
+	double daily_soil_sh_flux;                                            /* (W/m2) current daily soil sensible heat flux */
 
 	/************************************************** BALANCES VARIABLES **************************************************/
 	/* cell */
-	double cell_carbon_in;                                                     /* (gC/day/day) cell carbon balances in */
-	double cell_carbon_out;                                                    /* (gC/day/day) cell carbon balances out */
-	double cell_carbon_store;                                                  /* (gC/day) cell carbon balances store */
-	double cell_carbon_old_store;                                              /* (gC/day) cell carbon balances old_store */
-	double cell_carbon_balance;                                                /* (gC/day/day) cell carbon balances balance */
+	double cell_carbon_in;                                                /* (gC/day/day) cell carbon balances in */
+	double cell_carbon_out;                                               /* (gC/day/day) cell carbon balances out */
+	double cell_carbon_store;                                             /* (gC/day) cell carbon balances store */
+	double cell_carbon_old_store;                                         /* (gC/day) cell carbon balances old_store */
+	double cell_carbon_balance;                                           /* (gC/day/day) cell carbon balances balance */
 
-	double cell_carbontc_in;                                                   /* (tC/cell/day) cell carbon balances in */
-	double cell_carbontc_out;                                                  /* (tC/cell/day) cell carbon balances out */
-	double cell_carbontc_store;                                                /* (tC/cell) cell carbon balances store */
-	double cell_carbontc_old_store;                                            /* (tC/cell) cell carbon balances old_store */
-	double cell_carbontc_balance;                                              /* (tC/cell/day) cell carbon balances balance */
+	double cell_carbontc_in;                                              /* (tC/cell/day) cell carbon balances in */
+	double cell_carbontc_out;                                             /* (tC/cell/day) cell carbon balances out */
+	double cell_carbontc_store;                                           /* (tC/cell) cell carbon balances store */
+	double cell_carbontc_old_store;                                       /* (tC/cell) cell carbon balances old_store */
+	double cell_carbontc_balance;                                         /* (tC/cell/day) cell carbon balances balance */
 
-	double cell_water_in;                                                      /* (mm/day/day) cell water balances in */
-	double cell_water_out;                                                     /* (mm/day/day) cell water balances out */
-	double cell_water_store;                                                   /* (mm/day) cell water balances store */
-	double cell_water_old_store;                                               /* (mm/day) cell water balances old_store */
-	double cell_water_balance;                                                 /* (mm/day/day) cell water balances balance */
+	double cell_water_in;                                                 /* (mm/day/day) cell water balances in */
+	double cell_water_out;                                                /* (mm/day/day) cell water balances out */
+	double cell_water_store;                                              /* (mm/day) cell water balances store */
+	double cell_water_old_store;                                          /* (mm/day) cell water balances old_store */
+	double cell_water_balance;                                            /* (mm/day/day) cell water balances balance */
 
-	double cell_snow_in;                                                       /* (mm/day/day) cell snow balances in */
-	double cell_snow_out;                                                      /* (mm/day/day) cell snow balances out */
-	double cell_snow_store;                                                    /* (mm/day) cell snow balances store */
-	double cell_snow_old_store;                                                /* (mm/day) cell snow balances old_store */
-	double cell_snow_balance;                                                  /* (mm/day/day) cell snow balances balance */
+	double cell_snow_in;                                                  /* (mm/day/day) cell snow balances in */
+	double cell_snow_out;                                                 /* (mm/day/day) cell snow balances out */
+	double cell_snow_store;                                               /* (mm/day) cell snow balances store */
+	double cell_snow_old_store;                                           /* (mm/day) cell snow balances old_store */
+	double cell_snow_balance;                                             /* (mm/day/day) cell snow balances balance */
 
-	double cell_nitrogen_in;                                                   /* (gN/day/day) cell nitrogen balances in */
-	double cell_nitrogen_out;                                                  /* (gN/day/day) cell nitrogen balances out */
-	double cell_nitrogen_store;                                                /* (gN/day) cell nitrogen balances store */
-	double cell_nitrogen_old_store;                                            /* (gN/day) cell nitrogen balances old_store */
-	double cell_nitrogen_balance;                                              /* (gN/day/day) cell nitrogen balances balance */
+	double cell_nitrogen_in;                                              /* (gN/day/day) cell nitrogen balances in */
+	double cell_nitrogen_out;                                             /* (gN/day/day) cell nitrogen balances out */
+	double cell_nitrogen_store;                                           /* (gN/day) cell nitrogen balances store */
+	double cell_nitrogen_old_store;                                       /* (gN/day) cell nitrogen balances old_store */
+	double cell_nitrogen_balance;                                         /* (gN/day/day) cell nitrogen balances balance */
 
-	double cell_nitrogentc_in;                                                 /* (tN/cell/day) cell nitrogen balances in */
-	double cell_nitrogentc_out;                                                /* (tN/cell/day) cell nitrogen balances out */
-	double cell_nitrogentc_store;                                              /* (tN/cell) cell nitrogen balances store */
-	double cell_nitrogentc_old_store;                                          /* (tN/cell/day) cell nitrogen balances old_store */
-	double cell_nitrogentc_balance;                                            /* (tN/cell/day) cell nitrogen balances balance */
+	double cell_nitrogentc_in;                                            /* (tN/cell/day) cell nitrogen balances in */
+	double cell_nitrogentc_out;                                           /* (tN/cell/day) cell nitrogen balances out */
+	double cell_nitrogentc_store;                                         /* (tN/cell) cell nitrogen balances store */
+	double cell_nitrogentc_old_store;                                     /* (tN/cell/day) cell nitrogen balances old_store */
+	double cell_nitrogentc_balance;                                       /* (tN/cell/day) cell nitrogen balances balance */
 
 	/* litter */
-	double litr_carbon_in;                                                     /* (gC/day/day) cell carbon balances in */
-	double litr_carbon_out;                                                    /* (gC/day/day) cell carbon balances out */
-	double litr_carbon_store;                                                  /* (gC/day) cell carbon balances store */
-	double litr_carbon_old_store;                                              /* (gC/day) cell carbon balances old_store */
-	double litr_carbon_balance;                                                /* (gC/day/day) cell carbon balances balance */
+	double litr_carbon_in;                                                /* (gC/day/day) cell carbon balances in */
+	double litr_carbon_out;                                               /* (gC/day/day) cell carbon balances out */
+	double litr_carbon_store;                                             /* (gC/day) cell carbon balances store */
+	double litr_carbon_old_store;                                         /* (gC/day) cell carbon balances old_store */
+	double litr_carbon_balance;                                           /* (gC/day/day) cell carbon balances balance */
 
-	double litr_nitrogen_in;                                                   /* (gN/day/day) cell nitrogen balances in */
-	double litr_nitrogen_out;                                                  /* (gN/day/day) cell nitrogen balances out */
-	double litr_nitrogen_store;                                                /* (gN/day) cell nitrogen balances store */
-	double litr_nitrogen_old_store;                                            /* (gN/day) cell nitrogen balances old_store */
-	double litr_nitrogen_balance;                                              /* (gN/day/day) cell nitrogen balances balance */
+	double litr_nitrogen_in;                                              /* (gN/day/day) cell nitrogen balances in */
+	double litr_nitrogen_out;                                             /* (gN/day/day) cell nitrogen balances out */
+	double litr_nitrogen_store;                                           /* (gN/day) cell nitrogen balances store */
+	double litr_nitrogen_old_store;                                       /* (gN/day) cell nitrogen balances old_store */
+	double litr_nitrogen_balance;                                         /* (gN/day/day) cell nitrogen balances balance */
 
 	/* soil */
-	double soil_carbon_in;                                                     /* (gC/day/day) cell carbon balances in */
-	double soil_carbon_out;                                                    /* (gC/day/day) cell carbon balances out */
-	double soil_carbon_store;                                                  /* (gC/day) cell carbon balances store */
-	double soil_carbon_old_store;                                              /* (gC/day) cell carbon balances old_store */
-	double soil_carbon_balance;                                                /* (gC/day/day) cell carbon balances balance */
+	double soil_carbon_in;                                                /* (gC/day/day) cell carbon balances in */
+	double soil_carbon_out;                                               /* (gC/day/day) cell carbon balances out */
+	double soil_carbon_store;                                             /* (gC/day) cell carbon balances store */
+	double soil_carbon_old_store;                                         /* (gC/day) cell carbon balances old_store */
+	double soil_carbon_balance;                                           /* (gC/day/day) cell carbon balances balance */
 
-	double soil_nitrogen_in;                                                   /* (gN/day/day) cell nitrogen balances in */
-	double soil_nitrogen_out;                                                  /* (gN/day/day) cell nitrogen balances out */
-	double soil_nitrogen_store;                                                /* (gN/day) cell nitrogen balances store */
-	double soil_nitrogen_old_store;                                            /* (gN/day) cell nitrogen balances old_store */
-	double soil_nitrogen_balance;                                              /* (gN/day/day) cell nitrogen balances balance */
+	double soil_nitrogen_in;                                              /* (gN/day/day) cell nitrogen balances in */
+	double soil_nitrogen_out;                                             /* (gN/day/day) cell nitrogen balances out */
+	double soil_nitrogen_store;                                           /* (gN/day) cell nitrogen balances store */
+	double soil_nitrogen_old_store;                                       /* (gN/day) cell nitrogen balances old_store */
+	double soil_nitrogen_balance;                                         /* (gN/day/day) cell nitrogen balances balance */
 
 } cell_t;
 

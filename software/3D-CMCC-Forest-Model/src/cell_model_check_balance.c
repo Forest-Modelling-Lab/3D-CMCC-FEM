@@ -360,7 +360,7 @@ int check_cell_water_flux_balance(cell_t *const c, const meteo_daily_t *const me
 	c->cell_water_in      = meteo_daily->prcp;
 
 	/* sum of sinks */
-	c->cell_water_out     = c->daily_c_transp + c->daily_c_evapo + c->daily_soil_evapo + c->daily_snow_subl + c->daily_out_flow;
+	c->cell_water_out     = c->daily_canopy_transp + c->daily_canopy_evapo + c->daily_soil_evapo + c->daily_snow_subl + c->daily_out_flow;
 
 	/* sum of current storage in cell pools */
 	c->cell_water_store   = ( c->asw + c->canopy_water_stored + c->snow_pack );
@@ -377,8 +377,8 @@ int check_cell_water_flux_balance(cell_t *const c, const meteo_daily_t *const me
 		error_log("\nin\n");
 		error_log("meteo_daily->prcp = %g\n", meteo_daily->prcp);
 		error_log("\nout\n");
-		error_log("c->daily_c_transp = %g\n", c->daily_c_transp);
-		error_log("c->daily_c_evapo = %g\n", c->daily_c_evapo);
+		error_log("c->daily_canopy_transp = %g\n", c->daily_canopy_transp);
+		error_log("c->daily_canopy_evapo = %g\n", c->daily_canopy_evapo);
 		error_log("c->soil_evaporation = %g\n", c->daily_soil_evapo);
 		error_log("c->daily_snow_subl = %g\n", c->daily_snow_subl);
 		error_log("c->out_flow = %g\n", c->daily_out_flow);

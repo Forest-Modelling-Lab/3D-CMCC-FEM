@@ -418,9 +418,9 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 	s->value[YEARLY_CANOPY_TRANSP_SHADE]  += s->value[CANOPY_TRANSP_SHADE];
 	s->value[YEARLY_CANOPY_EVAPO_TRANSP]  += s->value[CANOPY_EVAPO_TRANSP];
 
-	c->daily_c_evapo                      += s->value[CANOPY_EVAPO];
-	c->daily_c_transp                     += s->value[CANOPY_TRANSP];
-	c->daily_c_evapotransp                += s->value[CANOPY_EVAPO_TRANSP];
+	c->daily_canopy_evapo                 += s->value[CANOPY_EVAPO];
+	c->daily_canopy_transp                += s->value[CANOPY_TRANSP];
+	c->daily_canopy_et                    += s->value[CANOPY_EVAPO_TRANSP];
 
 	/* update canopy water pool */
 	c->canopy_water_stored                += ( s->value[CANOPY_INT] - s->value[CANOPY_EVAPO] );

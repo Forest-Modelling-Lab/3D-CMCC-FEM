@@ -34,7 +34,6 @@ void Psychrometric(meteo_t *met, const int day, const int month);
 void Sat_vapour_pressure(cell_t *const c, const int day, const int month, const int year);
 void Dew_temperature(meteo_t *const met, const int day, const int month);
 void Check_prcp(cell_t *c, const int day, const int month, const int year);
-void Annual_met_values(cell_t *const c, const int day, const int month, const int year);
 void Averaged_temperature(const cell_t *const c, const e_averaged_var var, int day, int month, int year_index);
 void Weighted_average_temperature(const cell_t *const c, const e_weighted_average_var var, int day, int month, int year_index);
 void Soil_temperature(const cell_t *const c, int day, int month, int year_index);

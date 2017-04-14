@@ -23,11 +23,11 @@ void soil_water_balance(cell_t *c, const meteo_daily_t *const meteo_daily)
 	/* update balance */
 
 	/* soil water balance */
-	c->asw += ( ( meteo_daily->rain + c->daily_snow_melt ) - ( c->daily_c_transp + c->daily_soil_evapo ) );
+	c->asw += ( ( meteo_daily->rain + c->daily_snow_melt ) - ( c->daily_canopy_transp + c->daily_soil_evapo ) );
 	logger(g_debug_log, "asw = %g\n", c->asw);
 	logger(g_debug_log, "rain = %g\n", meteo_daily->rain);
 	logger(g_debug_log, "daily_snow_melt = %g\n", c->daily_snow_melt);
-	logger(g_debug_log, "daily_c_transp = %g\n", c->daily_c_transp);
+	logger(g_debug_log, "daily_canopy_transp = %g\n", c->daily_canopy_transp);
 	logger(g_debug_log, "daily_soil_evapo = %g\n", c->daily_soil_evapo);
 
 	/* snow pack balance */
@@ -53,10 +53,10 @@ void soil_water_balance(cell_t *c, const meteo_daily_t *const meteo_daily)
 		logger(g_debug_log,"WARNING negative values for soil water!\n");
 		/* add back the evaporation and transpiration fluxes, and
 		set these fluxes to 0.0 */
-		c->asw             += c->daily_soil_evapo;
-		c->asw             += c->daily_c_transp;
-		c->daily_soil_evapo = 0.;
-		c->daily_c_transp   = 0.;
+		c->asw                  += c->daily_soil_evapo;
+		c->asw                  += c->daily_canopy_transp;
+		c->daily_soil_evapo      = 0.;
+		c->daily_canopy_transp   = 0.;
 	}
 
 	CHECK_CONDITION(c->asw,       <, ZERO);
