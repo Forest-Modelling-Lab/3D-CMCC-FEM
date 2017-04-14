@@ -31,15 +31,15 @@ void latent_heat_fluxes (cell_t *const c, const meteo_daily_t *const meteo_daily
 	logger(g_debug_log, "\n**CELL LATENT HEAT**\n");
 
 	/*compute latent heat from canopy*/
-	c->daily_c_evapo_watt = c->daily_c_evapo * meteo_daily->lh_vap / 86400.0;
-	c->daily_c_transp_watt = c->daily_c_transp * meteo_daily->lh_vap / 86400.0;
-	c->daily_c_evapotransp_watt = c->daily_c_evapo_watt + c->daily_c_transp_watt;
-	c->daily_c_latent_heat_flux = c->daily_c_evapotransp_watt;
-	logger(g_debug_log, "Latent heat canopy evapotranspiration = %g W/m^2\n", c->daily_c_latent_heat_flux);
+	c->daily_canopy_evapo_watt  = c->daily_c_evapo  * meteo_daily->lh_vap / 86400.0;
+	c->daily_canopy_transp_watt = c->daily_c_transp * meteo_daily->lh_vap / 86400.0;
+	c->daily_canopy_et_watt     = c->daily_canopy_evapo_watt + c->daily_canopy_transp_watt;
+	c->daily_canopy_lh_flux     = c->daily_canopy_et_watt;
+	logger(g_debug_log, "Latent heat canopy evapotranspiration = %g W/m^2\n", c->daily_canopy_lh_flux);
 	logger(g_debug_log, "Latent heat soil evaporation = %g W/m^2\n", c->daily_soil_evaporation_watt);
 
 	/* adding soil latent heat flux to overall latent heat flux */
-	c->daily_latent_heat_flux = c->daily_c_evapotransp_watt + c->daily_soil_evaporation_watt;
+	c->daily_lh_flux = c->daily_canopy_et_watt + c->daily_soil_evaporation_watt;
 
 	/*in case of snow formation or dew fall*/
 	if(meteo_daily->snow != 0.0)
@@ -49,16 +49,16 @@ void latent_heat_fluxes (cell_t *const c, const meteo_daily_t *const meteo_daily
 	/*in case of snow sublimation*/
 	if(c->daily_snow_subl != 0.0)
 	{
-		c->daily_latent_heat_flux += c->daily_snow_subl * (meteo_daily->lh_sub * 1000.0) / 86400.0;
-		logger(g_debug_log, "Daily total latent heat flux with sublimation = %g W/m\n", c->daily_latent_heat_flux);
+		c->daily_lh_flux += c->daily_snow_subl * (meteo_daily->lh_sub * 1000.0) / 86400.0;
+		logger(g_debug_log, "Daily total latent heat flux with sublimation = %g W/m\n", c->daily_lh_flux);
 	}
 	else
 	{
-		logger(g_debug_log, "Daily total latent heat flux = %g W/m\n", c->daily_latent_heat_flux);
+		logger(g_debug_log, "Daily total latent heat flux = %g W/m\n", c->daily_lh_flux);
 	}
 
-	c->monthly_latent_heat_flux += c->daily_latent_heat_flux;
-	c->annual_latent_heat_flux += c->daily_latent_heat_flux;
+	c->monthly_lh_flux += c->daily_lh_flux;
+	c->annual_lh_flux  += c->daily_lh_flux;
 
 }
 
@@ -66,9 +66,9 @@ void sensible_heat_fluxes (cell_t *const c, const meteo_daily_t *const meteo_dai
 {
 	logger(g_debug_log, "\n**CELL SENSIBLE HEAT**\n");
 
-	c->daily_sensible_heat_flux = c->daily_c_sensible_heat_flux + c->daily_soil_sensible_heat_flux;
-	logger(g_debug_log, "Daily sensible heat flux = %g W/m\n", c->daily_sensible_heat_flux);
+	c->daily_sh_flux = c->daily_canopy_sh_flux + c->daily_soil_sh_flux;
+	logger(g_debug_log, "Daily sensible heat flux = %g W/m\n", c->daily_sh_flux);
 
-	c->monthly_sensible_heat_flux += c->daily_latent_heat_flux;
-	c->annual_sensible_heat_flux += c->daily_latent_heat_flux;
+	c->monthly_sh_flux += c->daily_lh_flux;
+	c->annual_sh_flux  += c->daily_lh_flux;
 }

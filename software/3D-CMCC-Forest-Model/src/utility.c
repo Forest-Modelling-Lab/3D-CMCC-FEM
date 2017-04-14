@@ -130,10 +130,10 @@ void reset_daily_cell_variables(cell_t *const c)
 	c->daily_soil_evapo =               0.;
 	c->daily_c_evapotransp =            0.;
 	c->daily_et =                       0.;
-	c->daily_c_sensible_heat_flux =     0.;
-	c->daily_soil_latent_heat_flux =    0.;
-	c->daily_latent_heat_flux =         0.;
-	c->daily_sensible_heat_flux =       0.;
+	c->daily_canopy_sh_flux =           0.;
+	c->daily_soil_lh_flux =             0.;
+	c->daily_lh_flux =                  0.;
+	c->daily_sh_flux =                  0.;
 }
 
 void reset_monthly_cell_variables(cell_t *const c)
@@ -162,8 +162,8 @@ void reset_monthly_cell_variables(cell_t *const c)
 	c->monthly_c_evapotransp =          0.;
 	c->monthly_soil_evapo =             0.;
 	c->monthly_et =                     0.;
-	c->monthly_latent_heat_flux =       0.;
-	c->monthly_sensible_heat_flux =     0.;
+	c->monthly_lh_flux =                0.;
+	c->monthly_sh_flux =                0.;
 }
 
 void reset_annual_cell_variables(cell_t *const c)
@@ -198,8 +198,8 @@ void reset_annual_cell_variables(cell_t *const c)
 	c->annual_c_evapotransp =           0.;
 	c->annual_soil_evapo =              0.;
 	c->annual_et =                      0.;
-	c->annual_latent_heat_flux =        0.;
-	c->annual_sensible_heat_flux =      0.;
+	c->annual_lh_flux =                 0.;
+	c->annual_sh_flux =                 0.;
 	c->basal_area =                     0.;
 	c->agb =                            0.;
 	c->bgb =                            0.;
@@ -486,17 +486,6 @@ void reset_monthly_class_variables(cell_t *const c)
 					s->value[MONTHLY_CANOPY_INT] =           0.;
 					s->value[MONTHLY_CANOPY_EVAPO_TRANSP] =  0.;
 					s->value[MONTHLY_CANOPY_LATENT_HEAT] =   0.;
-					s->value[M_C_TO_TOT_STEM] =              0.;
-					s->value[M_C_TO_STEM] =                  0.;
-					s->value[M_C_TO_LEAF] =                  0.;
-					s->value[M_C_TO_FROOT] =                 0.;
-					s->value[M_C_TO_CROOT] =                 0.;
-					s->value[M_C_TO_RESERVE] =               0.;
-					s->value[M_C_TO_ROOT] =                  0.;
-					s->value[M_C_TO_BRANCH] =                0.;
-					s->value[M_C_TO_FRUIT] =                 0.;
-					s->value[M_C_TO_LITR] =                  0.;
-					s->value[M_C_TO_CWD] =                   0.;
 				}
 			}
 		}
@@ -575,17 +564,6 @@ void reset_annual_class_variables(cell_t *const c)
 					s->value[YEARLY_CANOPY_INT] =           0.;
 					s->value[YEARLY_CANOPY_EVAPO_TRANSP] =  0.;
 					s->value[YEARLY_CANOPY_LATENT_HEAT] =   0.;
-					s->value[Y_C_TO_TOT_STEM] =             0.;
-					s->value[Y_C_TO_STEM] =                 0.;
-					s->value[Y_C_TO_LEAF] =                 0.;
-					s->value[Y_C_TO_FROOT] =                0.;
-					s->value[Y_C_TO_CROOT] =                0.;
-					s->value[Y_C_TO_RESERVE] =              0.;
-					s->value[Y_C_TO_ROOT] =                 0.;
-					s->value[Y_C_TO_BRANCH] =               0.;
-					s->value[Y_C_TO_FRUIT] =                0.;
-					s->value[Y_C_TO_LITR] =                  0.;
-					s->value[Y_C_TO_CWD] =                   0.;
 					s->counter[DEAD_STEMS] =                0;
 					s->counter[N_TREE_SAP] =                0;
 				}

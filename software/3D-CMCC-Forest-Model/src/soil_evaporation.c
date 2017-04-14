@@ -130,8 +130,8 @@ void soil_evaporation(cell_t *const c, const meteo_daily_t *const meteo_daily)
 
 	/* compute a energy balance evaporation from soil */
 	c->daily_soil_evaporation_watt = c->daily_soil_evapo * meteo_daily->lh_vap_soil / 86400.0;
-	c->daily_soil_latent_heat_flux = c->daily_soil_evaporation_watt;
-	logger(g_debug_log, "Daily Latent heat soil evaporation = %g W/m^2\n", c->daily_soil_latent_heat_flux);
+	c->daily_soil_lh_flux          = c->daily_soil_evaporation_watt;
+	logger(g_debug_log, "Daily Latent heat soil evaporation = %g W/m^2\n", c->daily_soil_lh_flux);
 
 	//test 9 May 2016 following Maes & Steppe 2012 as in JULES model (Best et al., GMD)
 	/* soil sensible heat flux */
@@ -142,7 +142,7 @@ void soil_evaporation(cell_t *const c, const meteo_daily_t *const meteo_daily)
 		/* calculate resistance to radiative heat transfer through air, rr */
 		rr = meteo_daily->rho_air * CP / (4.0 * SBC_W * (pow(tsoilK, 3)));
 		rhr = (rh * rr)/ (rh + rr);
-		c->daily_soil_sensible_heat_flux = meteo_daily->rho_air * CP * ((tairK-tsoilK)/rhr);
+		c->daily_soil_sh_flux = meteo_daily->rho_air * CP * ((tairK-tsoilK)/rhr);
 	}
 	else
 	{
@@ -152,9 +152,9 @@ void soil_evaporation(cell_t *const c, const meteo_daily_t *const meteo_daily)
 		rhr = ???;
 		c->daily_soil_sensible_heat_flux = meteo_daily->rho_air * CP * ((tairK-tsnowK)/rhr);
 		 */
-		c->daily_soil_sensible_heat_flux = 0.0;
+		c->daily_soil_sh_flux = 0.0;
 	}
-	logger(g_debug_log, "Daily soil_sensible_heat flux = %g W/m^2\n", c->daily_soil_sensible_heat_flux);
+	logger(g_debug_log, "Daily soil_sensible_heat flux = %g W/m^2\n", c->daily_soil_sh_flux);
 }
 
 

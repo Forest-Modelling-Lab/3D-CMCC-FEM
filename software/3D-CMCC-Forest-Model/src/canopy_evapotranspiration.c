@@ -305,7 +305,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 
 			/* note special case for deciduous: assuming that all canopy water evaporates during last day of leaffall */
 			if ( ( s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2 ) &&
-					(s->counter[DAY_FRAC_FOLIAGE_REMOVE] == s->counter[LEAF_FALL_COUNTER] ) )
+					(s->counter[DAYS_LEAFFALL] == s->counter[LEAF_FALL_COUNTER] ) )
 			{
 				logger(g_debug_log, "\nlast day of leaf fall !!!\n");
 				s->value[CANOPY_EVAPO]       += s->value[CANOPY_WATER];

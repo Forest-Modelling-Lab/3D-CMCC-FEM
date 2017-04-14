@@ -49,8 +49,8 @@ void prephenology (cell_t *const c, const meteo_daily_t *const meteo_daily, cons
 					if (s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2)
 					{
 						/* compute days for leaf fall based on the annual number of veg days */
-						s->counter[DAY_FRAC_FOLIAGE_REMOVE] = (int)(s->value[LEAF_FALL_FRAC_GROWING] * s->counter[DAY_VEG_FOR_LEAF_FALL]);
-						logger(g_debug_log, "-days of leaf fall for %s = %d day\n", c->heights[height].dbhs[dbh].ages[age].species[species].name, s->counter[DAY_FRAC_FOLIAGE_REMOVE]);
+						s->counter[DAYS_LEAFFALL] = (int)(s->value[LEAF_FALL_FRAC_GROWING] * s->counter[DAY_VEG_FOR_LEAF_FALL]);
+						logger(g_debug_log, "-days of leaf fall for %s = %d day\n", c->heights[height].dbhs[dbh].ages[age].species[species].name, s->counter[DAYS_LEAFFALL]);
 
 						//note: currently model can simulate only forests in boreal hemisphere
 						if ((meteo_daily->thermic_sum >= s->value[GROWTHSTART] && month <= 6) ||
@@ -72,7 +72,7 @@ void prephenology (cell_t *const c, const meteo_daily_t *const meteo_daily, cons
 							{
 								s->counter[LEAF_FALL_COUNTER] += 1;
 
-								if(s->counter[LEAF_FALL_COUNTER] <= (int)s->counter[DAY_FRAC_FOLIAGE_REMOVE])
+								if(s->counter[LEAF_FALL_COUNTER] <= (int)s->counter[DAYS_LEAFFALL])
 								{
 									/*days of leaf fall*/
 									s->counter[VEG_UNVEG] = 1;

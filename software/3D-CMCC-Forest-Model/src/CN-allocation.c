@@ -48,29 +48,6 @@ void carbon_allocation( cell_t *const c, species_t *const s)
 			s->value[DEAD_RESERVE_C]        +
 			s->value[DEAD_FRUIT_C]          ;
 
-	/* update class level month carbon biomass increment (tC/month/cell) */
-	s->value[M_C_TO_STEM]      += s->value[C_TO_STEM];
-	s->value[M_C_TO_LEAF]      += s->value[C_TO_LEAF];
-	s->value[M_C_TO_FROOT]     += s->value[C_TO_FROOT];
-	s->value[M_C_TO_CROOT]     += s->value[C_TO_CROOT];
-	s->value[M_C_TO_RESERVE]   += s->value[C_TO_RESERVE];
-	s->value[M_C_TO_BRANCH]    += s->value[C_TO_BRANCH];
-	s->value[M_C_TO_FRUIT]     += s->value[C_TO_FRUIT];
-	s->value[M_C_TO_LITR]      += s->value[C_TO_LITR];
-	s->value[M_C_TO_CWD]       += s->value[C_TO_CWD];
-
-	/* update class level annual carbon biomass increment (tC/year/cell) */
-	s->value[Y_C_TO_STEM]      += s->value[C_TO_STEM];
-	s->value[Y_C_TO_LEAF]      += s->value[C_TO_LEAF];
-	s->value[Y_C_TO_FROOT]     += s->value[C_TO_FROOT];
-	s->value[Y_C_TO_CROOT]     += s->value[C_TO_CROOT];
-	s->value[Y_C_TO_RESERVE]   += s->value[C_TO_RESERVE];
-	s->value[Y_C_TO_ROOT]      += s->value[C_TO_ROOT];
-	s->value[Y_C_TO_BRANCH]    += s->value[C_TO_BRANCH];
-	s->value[Y_C_TO_FRUIT]     += s->value[C_TO_FRUIT];
-	s->value[Y_C_TO_LITR]      += s->value[C_TO_LITR];
-	s->value[Y_C_TO_CWD]       += s->value[C_TO_CWD];
-
 	/*** update class level carbon mass pools ***/
 	s->value[LEAF_C]     += s->value[C_TO_LEAF]    ;
 	s->value[FROOT_C]    += s->value[C_TO_FROOT]   ;

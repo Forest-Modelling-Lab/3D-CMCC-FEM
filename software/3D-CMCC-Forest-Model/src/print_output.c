@@ -398,7 +398,7 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 	/* printing variables only at cell level */
 	logger(g_daily_log, ",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f\n",
 			c->daily_et,
-			c->daily_latent_heat_flux,
+			c->daily_lh_flux,
 			c->snow_pack,
 			c->asw,
 			c->daily_iwue,
@@ -493,13 +493,6 @@ void EOM_print_output_cell_level(cell_t *const c, const int month, const int yea
 										",HDMIN"
 										",N_TREE"
 										",WUE"
-										",DEL_M_WS"
-										",DEL_M_WL"
-										",DEL_M_WFR"
-										",DEL_M_WCR"
-										",DEL_M_WRES"
-										",DEL_M_BB"
-										",DEL_M_FRUIT"
 										",WRes"
 										",WS"
 										",WSL"
@@ -590,7 +583,7 @@ void EOM_print_output_cell_level(cell_t *const c, const int month, const int yea
 
 							/* print variables at layer-class level */
 							logger(g_monthly_log,",%6.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%d,%3.4f,%3.4f,%3.4f,%3.4f"
-									",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",
+									",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",
 									s->value[MONTHLY_GPP],
 									s->value[MONTHLY_TOTAL_AUT_RESP],
 									s->value[MONTHLY_NPP],
@@ -605,13 +598,6 @@ void EOM_print_output_cell_level(cell_t *const c, const int month, const int yea
 									s->value[HD_MIN],
 									s->counter[N_TREE],
 									s->value[MONTHLY_WUE],
-									s->value[M_C_TO_STEM],
-									s->value[M_C_TO_LEAF],
-									s->value[M_C_TO_FROOT],
-									s->value[M_C_TO_CROOT],
-									s->value[M_C_TO_RESERVE],
-									s->value[M_C_TO_BRANCH],
-									s->value[M_C_TO_FRUIT],
 									s->value[RESERVE_C],
 									s->value[STEM_C],
 									s->value[STEM_LIVE_WOOD_C],
@@ -664,7 +650,7 @@ void EOM_print_output_cell_level(cell_t *const c, const int month, const int yea
 	/* printing variables only at cell level */
 	logger(g_monthly_log, ",%3.2f,%3.2f,%3.2f,%3.2f\n",
 			c->monthly_et,
-			c->monthly_latent_heat_flux,
+			c->monthly_lh_flux,
 			c->asw,
 			c->monthly_iwue);
 
@@ -972,7 +958,7 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 	/* printing variables only at cell level */
 	logger(g_annual_log, ",%3.2f,%3.2f,%3.2f,%3.2f\n",
 			c->annual_et,
-			c->annual_latent_heat_flux,
+			c->annual_lh_flux,
 			c->asw,
 			c->annual_iwue);
 

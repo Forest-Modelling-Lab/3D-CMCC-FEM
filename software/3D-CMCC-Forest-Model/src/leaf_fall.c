@@ -39,14 +39,14 @@ void leaffall_deciduous ( cell_t *const c, const int height, const int dbh, cons
 		s->counter[SENESCENCE_DAY_ONE] = c->doy;
 	}
 
-	if( s->counter[LEAF_FALL_COUNTER] < s->counter[DAY_FRAC_FOLIAGE_REMOVE] )
+	if( s->counter[LEAF_FALL_COUNTER] < s->counter[DAYS_LEAFFALL] )
 	{
 		/* load previous LAI */
 		previousLai = s->value[LAI_PROJ];
 
 		/* sigmoid shape drives LAI reduction during leaf fall */
-		currentLai  = MAX(0,s->value[MAX_LAI_PROJ] / (1 + exp(-(s->counter[DAY_FRAC_FOLIAGE_REMOVE] / 2. + s->counter[SENESCENCE_DAY_ONE] - c->doy)
-				/(s->counter[DAY_FRAC_FOLIAGE_REMOVE] / (log(9. * s->counter[DAY_FRAC_FOLIAGE_REMOVE] / 2. + s->counter[SENESCENCE_DAY_ONE]) -
+		currentLai  = MAX(0,s->value[MAX_LAI_PROJ] / (1 + exp(-(s->counter[DAYS_LEAFFALL] / 2. + s->counter[SENESCENCE_DAY_ONE] - c->doy)
+				/(s->counter[DAYS_LEAFFALL] / (log(9. * s->counter[DAYS_LEAFFALL] / 2. + s->counter[SENESCENCE_DAY_ONE]) -
 						log(.11111111111))))));
 
 		/* check */

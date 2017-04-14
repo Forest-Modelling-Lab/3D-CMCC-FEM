@@ -41,6 +41,7 @@ void dendrometry ( cell_t *const c, const int layer, const int height, const int
 	static int counter_annual_lcf;
 	static double annual_ccf;
 	static int counter_annual_ccf;
+	static double old_stem;
 
 	height_t *h;
 	dbh_t *d;
@@ -252,8 +253,11 @@ void dendrometry ( cell_t *const c, const int layer, const int height, const int
 
 		/* following Peng et al., 2002*/
 		s->value[HD_EFF] /= 100.;
-		delta_stem = s->value[Y_C_TO_STEM] * GC_GDM;
+		delta_stem = (s->value[STEM_C] - old_stem) * GC_GDM;
 		logger(g_debug_log, "-Annual stem increment = %g tC/year\n", delta_stem);
+
+		//fixme old_stem MUST be in matrix since every class have to be thir own!!!
+		old_stem = s->value[STEM_C];
 
 		delta_dbh = (4.*delta_stem)/(Pi*s->value[FORM_FACTOR]*s->value[MASS_DENSITY]*pow(d->value,2.)*((2*(h->value/d->value)+s->value[HD_EFF])));
 
