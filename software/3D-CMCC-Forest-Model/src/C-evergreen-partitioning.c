@@ -25,6 +25,7 @@
 #include "aut_respiration.h"
 
 extern logger_t* g_debug_log;
+extern settings_t* g_settings;
 
 #define TEST 0
 
@@ -84,9 +85,17 @@ void daily_C_evergreen_partitioning (cell_t *const c, const int layer, const int
 	logger(g_debug_log, "LAI_PROJ = %g\n", s->value[LAI_PROJ]);
 	logger(g_debug_log, "PEAK_LAI_PROJ = %g \n", s->value[PEAK_LAI_PROJ]);
 
-	/* assign NPP to local variables */
-	npp_to_alloc = s->value[GPP_tC] - s->value[TOTAL_MAINT_RESP_tC];
-	logger(g_debug_log, "npp_to_alloc = %g\n", npp_to_alloc);
+	if ( g_settings->Prog_Aut_Resp )
+	{
+		/* assign NPP to local variables and remove the maintenance respiration */
+		npp_to_alloc = s->value[GPP_tC] - s->value[TOTAL_MAINT_RESP_tC] ;
+		logger(g_debug_log, "npp_to_alloc = %g tC/sizecell/day\n", npp_to_alloc);
+	}
+	else
+	{
+		/* assign NPP to local variables and remove the prognostic respiration */
+		npp_to_alloc = s->value[GPP_tC] * ( 1. - g_settings->Fixed_Aut_Resp_rate );
+	}
 
 	/* note: none carbon pool is refilled if reserve is lower than minimum */
 	/* reserves have priority before all other pools!!! */

@@ -46,14 +46,14 @@ typedef struct {
 
 	double Fixed_Aut_Resp_rate; /* It is the "Y"values for fixed autotrophic respiration */
 
-	double co2Conc, co2_incr; /* Co2 concentration and annual co2 increment */
+	double co2Conc, co2_incr;            /* Co2 concentration and annual co2 increment */
 
-	double init_frac_maxasw; /* minimum fraction of available soil water at the beginning of simulation */
+	double init_frac_maxasw;             /* minimum fraction of available soil water at the beginning of simulation */
 
 	/* layer settings */
-	double tree_layer_limit;
-	double number_of_soil_layer;
-	double max_layer_cover;
+	double tree_layer_limit;             /* differences in meters among tree heights before to consder different canopy layers */
+	double number_of_soil_layer;         /* number of soil layers to model */
+	double max_layer_cover;              /* maximum layer cover */
 
 	/* replanted input (Management options)*/
 	double replanted_n_tree;             /* number of replanted trees per sizecell (mandatory) */

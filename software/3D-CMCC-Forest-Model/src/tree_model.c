@@ -212,6 +212,9 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 
 								/* compute annual Maximum LAI */
 								peak_lai( s, day, month, year );
+
+								/* compute growth respiration fraction */
+								growth_respiration_frac ( a, s );
 							}
 
 							/***************************************************************/
@@ -254,7 +257,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							/* maintenance respiration */
 							maintenance_respiration ( c, layer, height, dbh, age, species, meteo_daily );
 
-							/* C-N-partitioning-allocation */
+							/* C-N-partitioning */
 							if ( s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2 )
 							{
 								/* deciduous */
