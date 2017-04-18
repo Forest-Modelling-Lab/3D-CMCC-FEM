@@ -5,14 +5,15 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
 ../src/C-assimilation.c \
-../src/C-deciduous-partitioning-allocation.c \
-../src/C-evergreen-partitioning-allocation.c \
-../src/C-fruit-partitioning-allocation.c \
+../src/C-deciduous-partitioning.c \
+../src/C-evergreen-partitioning.c \
+../src/C-fruit-partitioning.c \
 ../src/CN-allocation.c \
 ../src/N-assimilation.c \
 ../src/Penman_Monteith.c \
 ../src/allometry.c \
 ../src/aut_respiration.c \
+../src/balance.c \
 ../src/biomass.c \
 ../src/canopy_evapotranspiration.c \
 ../src/canopy_interception.c \
@@ -39,6 +40,7 @@ C_SRCS += \
 ../src/leaf_fall.c \
 ../src/litter_model.c \
 ../src/litter_model_check_balance.c \
+../src/littering.c \
 ../src/logger.c \
 ../src/main.c \
 ../src/management.c \
@@ -66,7 +68,6 @@ C_SRCS += \
 ../src/soil_respiration.c \
 ../src/soil_settings.c \
 ../src/soil_water_balance.c \
-../src/state_var_update.c \
 ../src/structure.c \
 ../src/topo.c \
 ../src/tree_model.c \
@@ -80,14 +81,15 @@ C_SRCS += \
 
 OBJS += \
 ./src/C-assimilation.o \
-./src/C-deciduous-partitioning-allocation.o \
-./src/C-evergreen-partitioning-allocation.o \
-./src/C-fruit-partitioning-allocation.o \
+./src/C-deciduous-partitioning.o \
+./src/C-evergreen-partitioning.o \
+./src/C-fruit-partitioning.o \
 ./src/CN-allocation.o \
 ./src/N-assimilation.o \
 ./src/Penman_Monteith.o \
 ./src/allometry.o \
 ./src/aut_respiration.o \
+./src/balance.o \
 ./src/biomass.o \
 ./src/canopy_evapotranspiration.o \
 ./src/canopy_interception.o \
@@ -114,6 +116,7 @@ OBJS += \
 ./src/leaf_fall.o \
 ./src/litter_model.o \
 ./src/litter_model_check_balance.o \
+./src/littering.o \
 ./src/logger.o \
 ./src/main.o \
 ./src/management.o \
@@ -141,7 +144,6 @@ OBJS += \
 ./src/soil_respiration.o \
 ./src/soil_settings.o \
 ./src/soil_water_balance.o \
-./src/state_var_update.o \
 ./src/structure.o \
 ./src/topo.o \
 ./src/tree_model.o \
@@ -155,14 +157,15 @@ OBJS += \
 
 C_DEPS += \
 ./src/C-assimilation.d \
-./src/C-deciduous-partitioning-allocation.d \
-./src/C-evergreen-partitioning-allocation.d \
-./src/C-fruit-partitioning-allocation.d \
+./src/C-deciduous-partitioning.d \
+./src/C-evergreen-partitioning.d \
+./src/C-fruit-partitioning.d \
 ./src/CN-allocation.d \
 ./src/N-assimilation.d \
 ./src/Penman_Monteith.d \
 ./src/allometry.d \
 ./src/aut_respiration.d \
+./src/balance.d \
 ./src/biomass.d \
 ./src/canopy_evapotranspiration.d \
 ./src/canopy_interception.d \
@@ -189,6 +192,7 @@ C_DEPS += \
 ./src/leaf_fall.d \
 ./src/litter_model.d \
 ./src/litter_model_check_balance.d \
+./src/littering.d \
 ./src/logger.d \
 ./src/main.d \
 ./src/management.d \
@@ -216,7 +220,6 @@ C_DEPS += \
 ./src/soil_respiration.d \
 ./src/soil_settings.d \
 ./src/soil_water_balance.d \
-./src/state_var_update.d \
 ./src/structure.d \
 ./src/topo.d \
 ./src/tree_model.d \
@@ -233,7 +236,7 @@ C_DEPS += \
 src/%.o: ../src/%.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
-	gcc -I"/home/alessio/git/3D-CMCC-FEM/software/3D-CMCC-Forest-Model/headers" -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
+	gcc -I"/home/alessio-cmcc/git/3D-CMCC-LAND/software/3D-CMCC-Forest-Model/headers" -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 

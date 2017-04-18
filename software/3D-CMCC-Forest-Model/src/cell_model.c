@@ -24,13 +24,13 @@ extern logger_t* g_debug_log;
 int Cell_model_daily (matrix_t *const m, const int cell, const int day, const int month, const int year)
 {
 	cell_t *c;
-	meteo_daily_t *meteo_daily;
-	yos_t *meteo_yearly;
+	meteo_daily_t  *meteo_daily;
+	meteo_annual_t *meteo_annual;
 
 	/* assign shortcuts */
 	c = &m->cells[cell];
 	meteo_daily  = &m->cells[cell].years[year].m[month].d[day];
-	meteo_yearly = &m->cells[cell].years[year];
+	meteo_annual = &m->cells[cell].years[year];
 
 	/* check parameters */
 	assert(m);
@@ -74,7 +74,7 @@ int Cell_model_daily (matrix_t *const m, const int cell, const int day, const in
 	/* 5 */ if ( ! check_cell_water_flux_balance     ( c, meteo_daily ) ) return 0;
 
 	/* CHECK FOR NITROGEN MASS BALANCE CLOSURE */
-	/* 6 */ //fixme if ( ! check_cell_nitrogen_mass_balance    ( c, meteo_yearly ) ) return 0;
+	/* 6 */ //fixme if ( ! check_cell_nitrogen_mass_balance    ( c, meteo_annual ) ) return 0;
 
 	/*******************************************************************************************************/
 

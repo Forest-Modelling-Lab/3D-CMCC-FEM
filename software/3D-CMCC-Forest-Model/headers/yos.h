@@ -2,8 +2,8 @@
 #ifndef YOS_H_
 #define YOS_H_
 
-#define YOS_MONTHS_COUNT	12
-#define YOS_DAYS_COUNT		31
+#define METEO_MONTHS_COUNT	12
+#define METEO_DAYS_COUNT		31
 
 typedef struct {
 	int n_days;
@@ -81,18 +81,18 @@ typedef struct {
 } meteo_mean_t;
 
 typedef struct {
-	meteo_daily_t d[YOS_DAYS_COUNT];
+	meteo_daily_t d[METEO_DAYS_COUNT];
 } meteo_t;
 
 typedef struct {
 	int year;
-	double co2Conc;	// (ppmv) annual CO2 concentration
-	double Ndep;	// nitrogen deposition
-	meteo_t m[YOS_MONTHS_COUNT];
-	meteo_mean_t monthly_mean[YOS_MONTHS_COUNT];
+	double co2Conc;	                             /* (ppmv) annual atmospheric CO2 concentration */
+	double Ndep;	                             /* ((kgN/m2/year) annual nitrogen deposition */
+	meteo_t m[METEO_MONTHS_COUNT];
+	meteo_mean_t monthly_mean[METEO_MONTHS_COUNT];
 	meteo_mean_t yearly_mean;
-} yos_t; /* just for clarification YOS stand for Year Of Simulation ! */
+} meteo_annual_t;
 
-yos_t* yos_import(const char *const file, int *const yos_count, const int x, const int y);
+meteo_annual_t* meteo_annual_import(const char *const file, int *const yos_count, const int x, const int y);
 
 #endif /* YOS_H_ */

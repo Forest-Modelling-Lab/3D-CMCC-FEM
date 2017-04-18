@@ -1030,7 +1030,7 @@ int main(int argc, char *argv[]) {
 	topo_t* t;
 
 	//_CrtSetBreakAlloc(); do not remove, for debuggin under ms vc++
-	assert(MONTHS_COUNT == YOS_MONTHS_COUNT); // just to be sure
+	assert(MONTHS_COUNT == METEO_MONTHS_COUNT); // just to be sure
 
 	/* initialize */
 	matrix = NULL;
@@ -1246,7 +1246,7 @@ int main(int argc, char *argv[]) {
 		logger(g_debug_log, "input_met_path = %s\n", g_sz_input_met_file);
 		logger_error(g_debug_log, "importing met data...");
 
-		matrix->cells[cell].years = yos_import(g_sz_input_met_file, &years_of_simulation, matrix->cells[cell].x, matrix->cells[cell].y);
+		matrix->cells[cell].years = meteo_annual_import(g_sz_input_met_file, &years_of_simulation, matrix->cells[cell].x, matrix->cells[cell].y);
 
 		if ( ! matrix->cells[cell].years ) goto err;
 		logger_error(g_debug_log, "ok\n");
@@ -2170,7 +2170,7 @@ int main(int argc, char *argv[]) {
 		}
 
 		logger_error(g_debug_log, "importing met data...");
-		matrix->cells[cell].years = yos_import(g_sz_input_met_file, &years_of_simulation, matrix->cells[cell].x, matrix->cells[cell].y);
+		matrix->cells[cell].years = meteo_annual_import(g_sz_input_met_file, &years_of_simulation, matrix->cells[cell].x, matrix->cells[cell].y);
 		if ( ! matrix->cells[cell].years ) goto err;
 		logger_error(g_debug_log, "ok\n");
 

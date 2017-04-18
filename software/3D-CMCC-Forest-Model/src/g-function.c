@@ -14,10 +14,10 @@ extern soil_settings_t *g_soil_settings;
 
 int sort_by_years(const void *a, const void *b)
 {
-	if ( ((yos_t*)a)->year < ((yos_t*)b)->year )
+	if ( ((meteo_annual_t*)a)->year < ((meteo_annual_t*)b)->year )
 	{
 		return -1;
-	} else if ( ((yos_t*)a)->year > ((yos_t*)b)->year )
+	} else if ( ((meteo_annual_t*)a)->year > ((meteo_annual_t*)b)->year )
 	{
 		return 1;
 	} else

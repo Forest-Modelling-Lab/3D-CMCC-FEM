@@ -93,7 +93,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	age_t *a;
 	species_t *s;
 	meteo_daily_t *meteo_daily;
-	yos_t *meteo_annual;
+	meteo_annual_t *meteo_annual;
 
 	/* assign shortcuts */
 	c = &m->cells[cell];

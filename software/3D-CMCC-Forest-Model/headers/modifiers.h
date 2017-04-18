@@ -4,6 +4,6 @@
 
 #include "matrix.h"
 
-void modifiers(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, const meteo_daily_t *const meteo_daily,	const yos_t *const meteo_annual);
+void modifiers(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, const meteo_daily_t *const meteo_daily,	const meteo_annual_t *const meteo_annual);
 
 #endif /* MODIFIERS_H_ */

@@ -17,7 +17,7 @@ extern logger_t* g_debug_log;
 extern soil_settings_t *g_soil_settings;
 
 void modifiers(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, const meteo_daily_t *const meteo_daily,
-		const yos_t *const meteo_annual)
+		const meteo_annual_t *const meteo_annual)
 {
 	double RelAge;
 	/*variables for CO2 modifier computation*/

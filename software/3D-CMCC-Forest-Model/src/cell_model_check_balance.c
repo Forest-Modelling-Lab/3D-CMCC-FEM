@@ -450,7 +450,7 @@ int check_cell_nitrogen_flux_balance(cell_t *const c)
 	return 1;
 }
 
-int check_cell_nitrogen_mass_balance(cell_t *const c, const yos_t *const meteo_annual)
+int check_cell_nitrogen_mass_balance(cell_t *const c, const meteo_annual_t *const meteo_annual)
 {
 	static double leaf;
 	static double froot;

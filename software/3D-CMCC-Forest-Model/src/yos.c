@@ -55,7 +55,7 @@ int days_per_month [] = {
 		31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31
 };
 
-static const char *sz_month_names[YOS_MONTHS_COUNT] = {
+static const char *sz_month_names[METEO_MONTHS_COUNT] = {
 		"JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY"
 		, "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"
 };
@@ -168,96 +168,96 @@ quit:
 	return ndep;
 }
 
-static void yos_clear(yos_t *const yos) {
-	if ( yos ) {
+static void yos_clear(meteo_annual_t *const meteo_annual) {
+	if ( meteo_annual ) {
 		int i;
 		int y;
-		yos->year = 0;
-		yos->co2Conc = INVALID_VALUE;
-		for ( i = 0; i < YOS_MONTHS_COUNT; ++i ) {
-			for ( y = 0; y < YOS_DAYS_COUNT; ++y ) {
-				yos->m[i].d[y].n_days = INVALID_VALUE;
-				yos->m[i].d[y].solar_rad = INVALID_VALUE;
-				yos->m[i].d[y].tavg = INVALID_VALUE;
-				yos->m[i].d[y].tmax = INVALID_VALUE;
-				yos->m[i].d[y].tmin = INVALID_VALUE;
-				yos->m[i].d[y].tday = INVALID_VALUE;
-				yos->m[i].d[y].tnight = INVALID_VALUE;
-				yos->m[i].d[y].vpd = INVALID_VALUE;
-				yos->m[i].d[y].ts_f = INVALID_VALUE;
-				yos->m[i].d[y].prcp = INVALID_VALUE;
-				yos->m[i].d[y].swc = INVALID_VALUE;
-				yos->m[i].d[y].ndvi_lai = INVALID_VALUE;
-				yos->m[i].d[y].daylength = INVALID_VALUE;
-				yos->m[i].d[y].thermic_sum = INVALID_VALUE;
-				yos->m[i].d[y].rho_air = INVALID_VALUE;
-				yos->m[i].d[y].tsoil = INVALID_VALUE;
-				yos->m[i].d[y].et = INVALID_VALUE;
-				yos->m[i].d[y].windspeed = INVALID_VALUE;
-				yos->m[i].d[y].rh_f = INVALID_VALUE;
-				yos->m[i].d[y].lh_vap = INVALID_VALUE;
-				yos->m[i].d[y].lh_vap_soil = INVALID_VALUE;
-				yos->m[i].d[y].lh_fus = INVALID_VALUE;
-				yos->m[i].d[y].lh_sub = INVALID_VALUE;
-				yos->m[i].d[y].air_pressure = INVALID_VALUE;
-				yos->m[i].d[y].ten_day_avg_tavg = INVALID_VALUE;
-				yos->m[i].d[y].ten_day_avg_tsoil = INVALID_VALUE;
-				yos->m[i].d[y].ten_day_avg_tday = INVALID_VALUE;
-				yos->m[i].d[y].ten_day_avg_tnight = INVALID_VALUE;
-				yos->m[i].d[y].ten_day_weighted_avg_tavg = INVALID_VALUE;
-				yos->m[i].d[y].ten_day_weighted_avg_tsoil = INVALID_VALUE;
-				yos->m[i].d[y].ten_day_weighted_avg_tday = INVALID_VALUE;
-				yos->m[i].d[y].ten_day_weighted_avg_tnight = INVALID_VALUE;
-				yos->m[i].d[y].es = INVALID_VALUE;
-				yos->m[i].d[y].ea = INVALID_VALUE;
-				yos->m[i].d[y].psych = INVALID_VALUE;
-				yos->m[i].d[y].sw_pot_downward_W = INVALID_VALUE;
-				yos->m[i].d[y].sw_downward_MJ = INVALID_VALUE;
-				yos->m[i].d[y].incoming_sw_downward_W = INVALID_VALUE;
-				yos->m[i].d[y].sw_downward_W = INVALID_VALUE;
-				yos->m[i].d[y].lw_downward_MJ = INVALID_VALUE;
-				yos->m[i].d[y].atm_lw_downward_W = INVALID_VALUE;
-				yos->m[i].d[y].lw_net_MJ = INVALID_VALUE;
-				yos->m[i].d[y].lw_net_W = INVALID_VALUE;
-				yos->m[i].d[y].incoming_par = INVALID_VALUE;
-				yos->m[i].d[y].par = INVALID_VALUE;
-				yos->m[i].d[y].incoming_ppfd = INVALID_VALUE;
-				yos->m[i].d[y].ppfd = INVALID_VALUE;
-				yos->m[i].d[y].emis_atm_clear_sky = INVALID_VALUE;
-				yos->m[i].d[y].emis_atm = INVALID_VALUE;
-				yos->m[i].d[y].cloud_cover_frac = INVALID_VALUE;
-				yos->m[i].d[y].cloud_cover_frac_corr = INVALID_VALUE;
+		meteo_annual->year = 0;
+		meteo_annual->co2Conc = INVALID_VALUE;
+		for ( i = 0; i < METEO_MONTHS_COUNT; ++i ) {
+			for ( y = 0; y < METEO_DAYS_COUNT; ++y ) {
+				meteo_annual->m[i].d[y].n_days = INVALID_VALUE;
+				meteo_annual->m[i].d[y].solar_rad = INVALID_VALUE;
+				meteo_annual->m[i].d[y].tavg = INVALID_VALUE;
+				meteo_annual->m[i].d[y].tmax = INVALID_VALUE;
+				meteo_annual->m[i].d[y].tmin = INVALID_VALUE;
+				meteo_annual->m[i].d[y].tday = INVALID_VALUE;
+				meteo_annual->m[i].d[y].tnight = INVALID_VALUE;
+				meteo_annual->m[i].d[y].vpd = INVALID_VALUE;
+				meteo_annual->m[i].d[y].ts_f = INVALID_VALUE;
+				meteo_annual->m[i].d[y].prcp = INVALID_VALUE;
+				meteo_annual->m[i].d[y].swc = INVALID_VALUE;
+				meteo_annual->m[i].d[y].ndvi_lai = INVALID_VALUE;
+				meteo_annual->m[i].d[y].daylength = INVALID_VALUE;
+				meteo_annual->m[i].d[y].thermic_sum = INVALID_VALUE;
+				meteo_annual->m[i].d[y].rho_air = INVALID_VALUE;
+				meteo_annual->m[i].d[y].tsoil = INVALID_VALUE;
+				meteo_annual->m[i].d[y].et = INVALID_VALUE;
+				meteo_annual->m[i].d[y].windspeed = INVALID_VALUE;
+				meteo_annual->m[i].d[y].rh_f = INVALID_VALUE;
+				meteo_annual->m[i].d[y].lh_vap = INVALID_VALUE;
+				meteo_annual->m[i].d[y].lh_vap_soil = INVALID_VALUE;
+				meteo_annual->m[i].d[y].lh_fus = INVALID_VALUE;
+				meteo_annual->m[i].d[y].lh_sub = INVALID_VALUE;
+				meteo_annual->m[i].d[y].air_pressure = INVALID_VALUE;
+				meteo_annual->m[i].d[y].ten_day_avg_tavg = INVALID_VALUE;
+				meteo_annual->m[i].d[y].ten_day_avg_tsoil = INVALID_VALUE;
+				meteo_annual->m[i].d[y].ten_day_avg_tday = INVALID_VALUE;
+				meteo_annual->m[i].d[y].ten_day_avg_tnight = INVALID_VALUE;
+				meteo_annual->m[i].d[y].ten_day_weighted_avg_tavg = INVALID_VALUE;
+				meteo_annual->m[i].d[y].ten_day_weighted_avg_tsoil = INVALID_VALUE;
+				meteo_annual->m[i].d[y].ten_day_weighted_avg_tday = INVALID_VALUE;
+				meteo_annual->m[i].d[y].ten_day_weighted_avg_tnight = INVALID_VALUE;
+				meteo_annual->m[i].d[y].es = INVALID_VALUE;
+				meteo_annual->m[i].d[y].ea = INVALID_VALUE;
+				meteo_annual->m[i].d[y].psych = INVALID_VALUE;
+				meteo_annual->m[i].d[y].sw_pot_downward_W = INVALID_VALUE;
+				meteo_annual->m[i].d[y].sw_downward_MJ = INVALID_VALUE;
+				meteo_annual->m[i].d[y].incoming_sw_downward_W = INVALID_VALUE;
+				meteo_annual->m[i].d[y].sw_downward_W = INVALID_VALUE;
+				meteo_annual->m[i].d[y].lw_downward_MJ = INVALID_VALUE;
+				meteo_annual->m[i].d[y].atm_lw_downward_W = INVALID_VALUE;
+				meteo_annual->m[i].d[y].lw_net_MJ = INVALID_VALUE;
+				meteo_annual->m[i].d[y].lw_net_W = INVALID_VALUE;
+				meteo_annual->m[i].d[y].incoming_par = INVALID_VALUE;
+				meteo_annual->m[i].d[y].par = INVALID_VALUE;
+				meteo_annual->m[i].d[y].incoming_ppfd = INVALID_VALUE;
+				meteo_annual->m[i].d[y].ppfd = INVALID_VALUE;
+				meteo_annual->m[i].d[y].emis_atm_clear_sky = INVALID_VALUE;
+				meteo_annual->m[i].d[y].emis_atm = INVALID_VALUE;
+				meteo_annual->m[i].d[y].cloud_cover_frac = INVALID_VALUE;
+				meteo_annual->m[i].d[y].cloud_cover_frac_corr = INVALID_VALUE;
 			}
-			yos->monthly_mean[i].solar_rad = INVALID_VALUE;
-			yos->monthly_mean[i].tavg = INVALID_VALUE;
-			yos->monthly_mean[i].tmax = INVALID_VALUE;
-			yos->monthly_mean[i].tmin = INVALID_VALUE;
-			yos->monthly_mean[i].tday = INVALID_VALUE;
-			yos->monthly_mean[i].tnight = INVALID_VALUE;
-			yos->monthly_mean[i].vpd = INVALID_VALUE;
-			yos->monthly_mean[i].prcp = INVALID_VALUE;
-			yos->monthly_mean[i].tsoil = INVALID_VALUE;
-			yos->monthly_mean[i].rh_f = INVALID_VALUE;
-			yos->monthly_mean[i].incoming_par = INVALID_VALUE;
-			yos->monthly_mean[i].par = INVALID_VALUE;
-			yos->monthly_mean[i].incoming_ppfd = INVALID_VALUE;
-			yos->monthly_mean[i].ppfd = INVALID_VALUE;			
+			meteo_annual->monthly_mean[i].solar_rad = INVALID_VALUE;
+			meteo_annual->monthly_mean[i].tavg = INVALID_VALUE;
+			meteo_annual->monthly_mean[i].tmax = INVALID_VALUE;
+			meteo_annual->monthly_mean[i].tmin = INVALID_VALUE;
+			meteo_annual->monthly_mean[i].tday = INVALID_VALUE;
+			meteo_annual->monthly_mean[i].tnight = INVALID_VALUE;
+			meteo_annual->monthly_mean[i].vpd = INVALID_VALUE;
+			meteo_annual->monthly_mean[i].prcp = INVALID_VALUE;
+			meteo_annual->monthly_mean[i].tsoil = INVALID_VALUE;
+			meteo_annual->monthly_mean[i].rh_f = INVALID_VALUE;
+			meteo_annual->monthly_mean[i].incoming_par = INVALID_VALUE;
+			meteo_annual->monthly_mean[i].par = INVALID_VALUE;
+			meteo_annual->monthly_mean[i].incoming_ppfd = INVALID_VALUE;
+			meteo_annual->monthly_mean[i].ppfd = INVALID_VALUE;
 		}
 	}
-	yos->yearly_mean.solar_rad = INVALID_VALUE;
-	yos->yearly_mean.tavg = INVALID_VALUE;
-	yos->yearly_mean.tmax = INVALID_VALUE;
-	yos->yearly_mean.tmin = INVALID_VALUE;
-	yos->yearly_mean.tday = INVALID_VALUE;
-	yos->yearly_mean.tnight = INVALID_VALUE;
-	yos->yearly_mean.vpd = INVALID_VALUE;
-	yos->yearly_mean.prcp = INVALID_VALUE;
-	yos->yearly_mean.tsoil = INVALID_VALUE;
-	yos->yearly_mean.rh_f = INVALID_VALUE;
-	yos->yearly_mean.incoming_par = INVALID_VALUE;
-	yos->yearly_mean.par = INVALID_VALUE;
-	yos->yearly_mean.incoming_ppfd = INVALID_VALUE;
-	yos->yearly_mean.ppfd = INVALID_VALUE;
+	meteo_annual->yearly_mean.solar_rad = INVALID_VALUE;
+	meteo_annual->yearly_mean.tavg = INVALID_VALUE;
+	meteo_annual->yearly_mean.tmax = INVALID_VALUE;
+	meteo_annual->yearly_mean.tmin = INVALID_VALUE;
+	meteo_annual->yearly_mean.tday = INVALID_VALUE;
+	meteo_annual->yearly_mean.tnight = INVALID_VALUE;
+	meteo_annual->yearly_mean.vpd = INVALID_VALUE;
+	meteo_annual->yearly_mean.prcp = INVALID_VALUE;
+	meteo_annual->yearly_mean.tsoil = INVALID_VALUE;
+	meteo_annual->yearly_mean.rh_f = INVALID_VALUE;
+	meteo_annual->yearly_mean.incoming_par = INVALID_VALUE;
+	meteo_annual->yearly_mean.par = INVALID_VALUE;
+	meteo_annual->yearly_mean.incoming_ppfd = INVALID_VALUE;
+	meteo_annual->yearly_mean.ppfd = INVALID_VALUE;
 }
 
 static void compute_vpd(double *const values, const int rows_count, const int columns_count) {
@@ -375,10 +375,10 @@ static void compute_rh(double *const values, const int rows_count, const int col
 #undef VALUE_AT
 }
 
-static int yos_from_arr(double *const values, const int rows_count, const int columns_count, yos_t** p_yos, int *const yos_count) {
+static int meteo_from_arr(double *const values, const int rows_count, const int columns_count, meteo_annual_t** p_yos, int *const yos_count) {
 #define VALUE_AT(r,c)	((r)+((c)*rows_count))
-	yos_t *yos_no_leak;
-	yos_t *yos;
+	meteo_annual_t *yos_no_leak;
+	meteo_annual_t *yos;
 	int row;
 	int year;
 	int month;
@@ -516,7 +516,7 @@ static int yos_from_arr(double *const values, const int rows_count, const int co
 		}
 
 		month = (int)values[VALUE_AT(row, MONTH)];
-		if ( month < 1 || month > YOS_MONTHS_COUNT ) {
+		if ( month < 1 || month > METEO_MONTHS_COUNT ) {
 			logger_error(g_debug_log, "bad month for year %d\n\n", year);
 			//free(yos);
 			return 0;
@@ -550,7 +550,7 @@ static int yos_from_arr(double *const values, const int rows_count, const int co
 		}
 
 		yos[*yos_count-1].m[month].d[day].n_days = day+1;
-		if (yos[*yos_count-1].m[month].d[day].n_days > YOS_DAYS_COUNT)
+		if (yos[*yos_count-1].m[month].d[day].n_days > METEO_DAYS_COUNT)
 		{
 			logger_error(g_debug_log, "ERROR IN N_DAYS DATA!!\n");
 			//free(yos);
@@ -918,7 +918,7 @@ static int yos_from_arr(double *const values, const int rows_count, const int co
 #undef VALUE_AT
 }
 
-static int import_nc(const char* const filename, yos_t** pyos, int* const yos_count) {
+static int import_nc(const char* const filename, meteo_annual_t** pyos, int* const yos_count) {
 #define COLUMN_AT(c)	((c)*dims_size[ROWS_DIM])
 #define VALUE_AT(r,c)	((r)+(COLUMN_AT((c))))
 	int i;
@@ -1154,7 +1154,7 @@ static int import_nc(const char* const filename, yos_t** pyos, int* const yos_co
 		fclose(f);
 	}
 #endif
-	if ( ! yos_from_arr(values, dims_size[ROWS_DIM], MET_COLUMNS_COUNT, pyos, yos_count) ) {
+	if ( ! meteo_from_arr(values, dims_size[ROWS_DIM], MET_COLUMNS_COUNT, pyos, yos_count) ) {
 		free(values);
 		return 0;
 	}
@@ -1176,7 +1176,7 @@ static int import_nc(const char* const filename, yos_t** pyos, int* const yos_co
 }
 
 
-static int import_lst(const char *const filename, yos_t** p_yos, int *const yos_count, const int x_cell, const int y_cell) {
+static int import_lst(const char *const filename, meteo_annual_t** p_yos, int *const yos_count, const int x_cell, const int y_cell) {
 #define VARS_COUNT		((MET_COLUMNS_COUNT)-3)	/* we remove first 3 columns: year, month and day */
 #define COLUMN_AT(c)	((c)*rows_count)
 #define VALUE_AT(r,c)	((r)+(COLUMN_AT(c)))
@@ -1717,7 +1717,7 @@ static int import_lst(const char *const filename, yos_t** p_yos, int *const yos_
 #endif
 #endif
 
-	i = yos_from_arr(values, rows_count, MET_COLUMNS_COUNT, p_yos, yos_count);
+	i = meteo_from_arr(values, rows_count, MET_COLUMNS_COUNT, p_yos, yos_count);
 	free(values);
 	return i;
 
@@ -1734,7 +1734,7 @@ quit_no_nc_err:
 #undef VARS_COUNT
 }
 
-static int import_txt(const char *const filename, yos_t** p_yos, int *const yos_count) {
+static int import_txt(const char *const filename, meteo_annual_t** p_yos, int *const yos_count) {
 #define BUFFER_SIZE	1024
 #define VALUE_AT(r,c)	((r)+((c)*rows_count))
 	int i = 0,
@@ -2036,7 +2036,7 @@ static int import_txt(const char *const filename, yos_t** p_yos, int *const yos_
 		compute_rh(values, rows_count, MET_COLUMNS_COUNT);
 	}
 #endif
-	if ( ! yos_from_arr(values, rows_count, MET_COLUMNS_COUNT, p_yos, yos_count) ) {
+	if ( ! meteo_from_arr(values, rows_count, MET_COLUMNS_COUNT, p_yos, yos_count) ) {
 		free(values);
 		return 0;
 	}
@@ -2050,14 +2050,14 @@ static int import_txt(const char *const filename, yos_t** p_yos, int *const yos_
 }
 
 /* file is the comma separated files list!!! not a single file, initially yos_count is equal to 0 */
-yos_t* yos_import(const char *const file, int *const yos_count, const int x, const int y) {
+meteo_annual_t* meteo_annual_import(const char *const file, int *const yos_count, const int x, const int y) {
 	int i;
 	char *token;
 	char *p;
 	char *p2;
 	char *filename;
 	char *temp;
-	yos_t *yos;
+	meteo_annual_t *meteo_annual;
 	const char comma_delimiter[] = ",\r\n";
 
 	assert(file && yos_count);
@@ -2068,7 +2068,7 @@ yos_t* yos_import(const char *const file, int *const yos_count, const int x, con
 		return NULL;
 	}
 
-	yos = NULL;
+	meteo_annual = NULL;
 	*yos_count = 0;
 	for ( token = string_tokenizer(temp, comma_delimiter, &p); token; token = string_tokenizer(NULL, comma_delimiter, &p) ) {
 		i = strlen(token);
@@ -2097,15 +2097,15 @@ yos_t* yos_import(const char *const file, int *const yos_count, const int x, con
 			}
 		}
 		if ( i ) {
-			i = import_nc(token, &yos, yos_count);
+			i = import_nc(token, &meteo_annual, yos_count);
 		} else if ( ! string_compare_i(p2, "lst") ) {
-			i = import_lst(token, &yos, yos_count, x, y);
+			i = import_lst(token, &meteo_annual, yos_count, x, y);
 		} else {
-			i = import_txt(token, &yos, yos_count);
+			i = import_txt(token, &meteo_annual, yos_count);
 		}
 		if ( ! i ) {
 			free(temp);
-			free(yos);
+			free(meteo_annual);
 			return NULL;
 		}
 	}
@@ -2119,30 +2119,30 @@ yos_t* yos_import(const char *const file, int *const yos_count, const int x, con
 
 			if ( ! g_sz_co2_conc_file ) {
 				logger_error(g_debug_log, "co2 concentration file not specified!");
-				free(yos);
+				free(meteo_annual);
 				return NULL;
 			}
 
 			for ( i = 0; i < *yos_count; ++i ) {
 
-				yos[i].co2Conc = get_co2_conc(yos[i].year, &err);
+				meteo_annual[i].co2Conc = get_co2_conc(meteo_annual[i].year, &err);
 
 				if ( CO2_TRANS_VAR == g_settings->CO2_trans ) {
-					if ( yos[i].year >= g_settings->year_start_co2_fixed ) {
-						yos[i].co2Conc = yos[i-1].co2Conc;
+					if ( meteo_annual[i].year >= g_settings->year_start_co2_fixed ) {
+						meteo_annual[i].co2Conc = meteo_annual[i-1].co2Conc;
 					}
 				}
 
 				if ( err ) {
 					logger_error(g_debug_log, "co2 concentration not found!!\n");
-					free(yos);
+					free(meteo_annual);
 					return NULL;
 				}
 			}
 		}
 		else {
 			for ( i = 0; i < *yos_count; ++i ) {
-				yos[i].co2Conc = g_settings->co2Conc;
+				meteo_annual[i].co2Conc = g_settings->co2Conc;
 			}
 		}
 	}
@@ -2153,21 +2153,21 @@ yos_t* yos_import(const char *const file, int *const yos_count, const int x, con
 		int err;
 
 		for ( i = 0; i < *yos_count; ++i ) {
-			yos[i].Ndep = get_ndep(yos[i].year, &err);
+			meteo_annual[i].Ndep = get_ndep(meteo_annual[i].year, &err);
 			if ( err ) {
-				logger_error(g_debug_log, "Ndep not found for year %d on %s!!\n", yos[i].year, g_sz_ndep_file);
-				free(yos);
+				logger_error(g_debug_log, "Ndep not found for year %d on %s!!\n", meteo_annual[i].year, g_sz_ndep_file);
+				free(meteo_annual);
 				return NULL;
 			}
 		}
 	} else {
 		for ( i = 0; i < *yos_count; ++i ) {
-			yos[i].Ndep = 0.;
+			meteo_annual[i].Ndep = 0.;
 		}
 	}
 
 	if ( *yos_count > 1 ) {
-		qsort(yos, *yos_count, sizeof*yos, sort_by_years);
+		qsort(meteo_annual, *yos_count, sizeof*meteo_annual, sort_by_years);
 	}
 #if 0
 	/* save imported yos for debugging purposes */
@@ -2192,34 +2192,34 @@ yos_t* yos_import(const char *const file, int *const yos_count, const int x, con
 
 			for ( month = 0; month < 12; ++month ) {
 				for ( z = 0; z < 31; ++z ) {
-					if ( z == yos[i].m[month].d[z].n_days )
+					if ( z == meteo_annual[i].m[month].d[z].n_days )
 					{
 						break;
 					}
 					fprintf(f, "%d,%d,%d,%g,%d,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g\n"
-							, yos[i].year
+							, meteo_annual[i].year
 							, month+1
 							, z+1
-							, yos[i].co2_conc
-							, yos[i].m[month].d[z].n_days
-							, yos[i].m[month].d[z].solar_rad
-							, yos[i].m[month].d[z].tavg
-							, yos[i].m[month].d[z].tmax
-							, yos[i].m[month].d[z].tmin
-							, yos[i].m[month].d[z].tday
-							, yos[i].m[month].d[z].tnight
-							, yos[i].m[month].d[z].vpd
-							, yos[i].m[month].d[z].ts_f
-							, yos[i].m[month].d[z].rain
-							, yos[i].m[month].d[z].swc
-							, yos[i].m[month].d[z].ndvi_lai
-							, yos[i].m[month].d[z].daylength
-							, yos[i].m[month].d[z].thermic_sum
-							, yos[i].m[month].d[z].rho_air
-							, yos[i].m[month].d[z].tsoil
-							, yos[i].m[month].d[z].et
+							, meteo_annual[i].co2_conc
+							, meteo_annual[i].m[month].d[z].n_days
+							, meteo_annual[i].m[month].d[z].solar_rad
+							, meteo_annual[i].m[month].d[z].tavg
+							, meteo_annual[i].m[month].d[z].tmax
+							, meteo_annual[i].m[month].d[z].tmin
+							, meteo_annual[i].m[month].d[z].tday
+							, meteo_annual[i].m[month].d[z].tnight
+							, meteo_annual[i].m[month].d[z].vpd
+							, meteo_annual[i].m[month].d[z].ts_f
+							, meteo_annual[i].m[month].d[z].rain
+							, meteo_annual[i].m[month].d[z].swc
+							, meteo_annual[i].m[month].d[z].ndvi_lai
+							, meteo_annual[i].m[month].d[z].daylength
+							, meteo_annual[i].m[month].d[z].thermic_sum
+							, meteo_annual[i].m[month].d[z].rho_air
+							, meteo_annual[i].m[month].d[z].tsoil
+							, meteo_annual[i].m[month].d[z].et
 							//ALESSIOC
-							, yos[i].m[month].d[z].windspeed);
+							, meteo_annual[i].m[month].d[z].windspeed);
 				}
 			}
 			fclose(f);
@@ -2227,5 +2227,5 @@ yos_t* yos_import(const char *const file, int *const yos_count, const int x, con
 	}
 #endif
 
-	return yos;
+	return meteo_annual;
 }

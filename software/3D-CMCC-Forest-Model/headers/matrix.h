@@ -833,10 +833,10 @@ typedef struct
 	int s_layers_avail;
 
 	int years_count;
-	yos_t *years;
+	meteo_annual_t *years;
 
-	int doy;                                            /* day of the year */
-	int dos;                                            /* day of simulation */
+	int doy;                                                              /* day of the year */
+	int dos;                                                              /* day of simulation */
 
 	/* for logger */
 	int initial_tree_layers_count;
@@ -866,54 +866,54 @@ typedef struct
 	int cell_n_trees;                                                     /* (trees/cell/day) number of trees */
 	int daily_dead_tree;                                                  /* (trees/cell/day) daily number of dead tree */
 	int monthly_dead_tree;                                                /* (trees/cell/month) monthly number of dead tree */
-	int annual_dead_tree ;                                                /* (trees/cell/year ) annual number of dead tree */
+	int annual_dead_tree ;                                                /* (trees/cell/year) annual number of dead tree */
 	int saplings_counter;                                                 /* (trees/cell) number of class as sapling */
-	double basal_area;                                                    /* (day/cell) cumulated basal area at cell level */
+	double basal_area;                                                    /* (m2/cell) cumulated basal area at cell level */
 	double agb;                                                           /* (tC/cell) current above ground biomass at cell level */
 	double bgb;                                                           /* (tC/cell) current below ground biomass at cell level */
 
 	/* radiation variables */
 	/* short wave radiation */
-	double sw_rad_down_MJ;                                                /* (MJ/day/day) Downward short wave radiation flux */
-	double short_wave_radiation_upward_MJ;                                /* (MJ/day/day) Upward short wave radiation flux */
-	double short_wave_radiation_upward_W;                                 /* (W/day) Upward short wave radiation flux */
-	double sw_rad_refl;                                                   /* (W/day) Short Wave radiation reflected */
-	double sw_rad_refl_soil;                                              /* (W/day) Short Wave radiation reflected from soil level */
-	double sw_rad_refl_snow;                                              /* (W/day) (W/day)  Wave radiation reflected from snow level */
-	double sw_rad_abs;                                                    /* (W/day) Short Wave radiation absorbed tree level */
-	double sw_rad_abs_soil;                                               /* (W/day) Short Wave radiation absorbed soil level */
-	double sw_rad_abs_snow;                                               /* (W/day) Short Wave radiation absorbed snow level */
-	double sw_rad_transm;                                                 /* (W/day) Short Wave radiation transmitted */
+	double sw_rad_down_MJ;                                                /* (MJ/m2/day) Downward short wave radiation flux */
+	double short_wave_radiation_upward_MJ;                                /* (MJ/m2/day) Upward short wave radiation flux */
+	double short_wave_radiation_upward_W;                                 /* (W/m2) Upward short wave radiation flux */
+	double sw_rad_refl;                                                   /* (W/m2) Short Wave radiation reflected */
+	double sw_rad_refl_soil;                                              /* (W/m2) Short Wave radiation reflected from soil level */
+	double sw_rad_refl_snow;                                              /* (W/m2) (W/day)  Wave radiation reflected from snow level */
+	double sw_rad_abs;                                                    /* (W/m2) Short Wave radiation absorbed tree level */
+	double sw_rad_abs_soil;                                               /* (W/m2) Short Wave radiation absorbed soil level */
+	double sw_rad_abs_snow;                                               /* (W/m2) Short Wave radiation absorbed snow level */
+	double sw_rad_transm;                                                 /* (W/m2) Short Wave radiation transmitted */
 
 	/* long wave radiation */
-	double long_wave_radiation_upward_MJ;                                 /* (MJ/day/day) Upward long wave radiation flux */
-	double long_wave_radiation_upward_W;                                  /* (W/day) Upward long wave radiation flux */
-	double net_long_wave_radiation_MJ;                                    /* (MJ/day/day) Net long wave radiation flux  */
-	double net_long_wave_radiation_W;                                     /* (W/day) Net long wave radiation flux */
-	double long_wave_absorbed;                                            /* (W/day) Total absorbed long wave wave radiation flux */
-	double long_wave_reflected;                                           /* (W/day) Total reflected long wave radiation flux */
-	double long_wave_emitted;                                             /* (W/day) Total emitted long wave radiation flux */
-	double soil_long_wave_emitted;                                        /* (W/day) Soil emitted long wave radiation flux */
-	double net_lw_rad_for_soil;                                           /* (W/day) Net Long Wave radiation to soil level */
-	double net_rad_for_soil;                                              /* (W/day) Net radiation to soil level */
+	double long_wave_radiation_upward_MJ;                                 /* (MJ/m2/day) Upward long wave radiation flux */
+	double long_wave_radiation_upward_W;                                  /* (W/m2) Upward long wave radiation flux */
+	double net_long_wave_radiation_MJ;                                    /* (MJ/m2/day) Net long wave radiation flux  */
+	double net_long_wave_radiation_W;                                     /* (W/m2) Net long wave radiation flux */
+	double long_wave_absorbed;                                            /* (W/m2) Total absorbed long wave wave radiation flux */
+	double long_wave_reflected;                                           /* (W/m2) Total reflected long wave radiation flux */
+	double long_wave_emitted;                                             /* (W/m2) Total emitted long wave radiation flux */
+	double soil_long_wave_emitted;                                        /* (W/m2) Soil emitted long wave radiation flux */
+	double net_lw_rad_for_soil;                                           /* (W/m2) Net Long Wave radiation to soil level */
+	double net_rad_for_soil;                                              /* (W/m2) Net radiation to soil level */
 
 	/* PAR radiation */
-	double apar;                                                          /* (molPAR/day/day) cumulated absorbed PAR at tree level */
-	double apar_soil;                                                     /* (molPAR/day/day) cumulated absorbed PAR at soil level */
-	double apar_snow;                                                     /* (molPAR/day/day) cumulated absorbed PAR at snow level */
-	double par_transm;                                                    /* (molPAR/day/day) cumulated transmitted PAR at cell level */
-	double par_refl;                                                      /* (molPAR/day/day) cumulated reflected PAR at cell level */
-	double par_refl_soil;                                                 /* (molPAR/day/day) reflected PAR by the soil */
-	double par_refl_snow;                                                 /* (molPAR/day/day) reflected PAR by the snow */
+	double apar;                                                          /* (molPAR/m2/day) cumulated absorbed PAR at tree level */
+	double apar_soil;                                                     /* (molPAR/m2/day) cumulated absorbed PAR at soil level */
+	double apar_snow;                                                     /* (molPAR/m2/day) cumulated absorbed PAR at snow level */
+	double par_transm;                                                    /* (molPAR/m2/day) cumulated transmitted PAR at cell level */
+	double par_refl;                                                      /* (molPAR/m2/day) cumulated reflected PAR at cell level */
+	double par_refl_soil;                                                 /* (molPAR/m2/day) reflected PAR by the soil */
+	double par_refl_snow;                                                 /* (molPAR/m2/day) reflected PAR by the snow */
 
 	/* PPFD radiation */
-	double ppfd_abs;                                                      /* (umol/day/sec) Absorbed Photosynthetic photon flux density tree level  */
-	double ppfd_abs_soil;                                                 /* (umol/day/sec) Absorbed Photosynthetic photon flux density soil level */
-	double ppfd_abs_snow;                                                 /* (umol/day/sec) Absorbed Photosynthetic photon flux density snow level */
-	double ppfd_transm;                                                   /* (umol/day/sec) Transmitted Photosynthetic photon flux density */
-	double ppfd_refl;                                                     /* (umol/day/sec) Reflected Photosynthetic photon flux density */
-	double ppfd_refl_soil;                                                /* (umol/day/sec) PPFD reflected by the soil */
-	double ppfd_refl_snow;                                                /* (umol/day/sec) PPFD reflected by the snow */
+	double ppfd_abs;                                                      /* (umol/m2/sec) Absorbed Photosynthetic photon flux density tree level  */
+	double ppfd_abs_soil;                                                 /* (umol/m2/sec) Absorbed Photosynthetic photon flux density soil level */
+	double ppfd_abs_snow;                                                 /* (umol/m2/sec) Absorbed Photosynthetic photon flux density snow level */
+	double ppfd_transm;                                                   /* (umol/m2/sec) Transmitted Photosynthetic photon flux density */
+	double ppfd_refl;                                                     /* (umol/m2/sec) Reflected Photosynthetic photon flux density */
+	double ppfd_refl_soil;                                                /* (umol/m2/sec) PPFD reflected by the soil */
+	double ppfd_refl_snow;                                                /* (umol/m2/sec) PPFD reflected by the snow */
 
 	/************************************************** forest trees **************************************************/
 

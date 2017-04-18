@@ -85,9 +85,9 @@ void print_daily_met_data(cell_t *c, const int day, const int month, const int y
 	static int doy;
 
 	meteo_t *met;
-	yos_t *annual_met;
+	meteo_annual_t *meteo_annual;
 	met = c->years[year].m;
-	annual_met = &c->years[year];
+	meteo_annual = &c->years[year];
 
 	if (!day && !month)
 	{
@@ -157,7 +157,7 @@ void print_daily_met_data(cell_t *c, const int day, const int month, const int y
 			doy
 	);
 
-	logger(g_debug_log,"-co2 concentration (variable) = %g ppmv\n", annual_met->co2Conc);
+	logger(g_debug_log,"-co2 concentration (variable) = %g ppmv\n", meteo_annual->co2Conc);
 
 
 	if (g_settings->spatial == 's')
