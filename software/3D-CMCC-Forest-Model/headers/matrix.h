@@ -574,7 +574,7 @@ enum {
 	N_TO_CWD,                           /* (tN/cell/day) Daily Woody Nitrogen to Coarse Woody Debris */
 	N_LEAF_TO_LITR,                     /* (tN/cell/day) Daily Leaf Litter to Litter labile nitrogen pool */
 	N_FROOT_TO_LITR,                    /* (tN/cell/day) Daily Leaf Litter to Litter labile nitrogen pool */
-	N_FRUIT_TO_LITR,                    /* (tN/cell/day) Daily Fruitr to Litter labile nitrogen pool */
+	//N_FRUIT_TO_LITR,                    /* (tN/cell/day) Daily Fruitr to Litter labile nitrogen pool */
 	N_LEAF_TO_LITR1N,                   /* (tN/cell/day) Daily Leaf Litter to Litter labile nitrogen pool */
 	N_LEAF_TO_LITR2N,                   /* (tN/cell/day) Daily Leaf Litter to Litter unshielded cellulose nitrogen pool */
 	N_LEAF_TO_LITR3N,                   /* (tN/cell/day) Daily Leaf Litter to Litter shielded cellulose nitrogen pool */
@@ -1160,9 +1160,9 @@ typedef struct
 	double sminN;                                                         /* (gN/m2) soil mineral nitrogen */
 	double retransN;                                                      /* (gN/m2) plant pool of retranslocated nitrogen */
 	double Npool;                                                         /* (gN/m2) temporary plant nitrogen pool */
-	double Nfix_src;                                                      /* (gN/m2) SUM of biological nitrogen fixation */
-	double Ndep_src;                                                      /* (gN/m2) SUM of nitrogen deposition inputs */
-	double Nleached;                                                      /* (gN/m2) SUM of nitrogen leached */
+	double Nfix;                                                          /* (gN/m2) SUM of biological nitrogen fixation */
+	double Nleach;                                                        /* (gN/m2) SUM of nitrogen lost for leacheing */
+	double Nvol;                                                          /* (gN/m2) SUM of nitrogen lost for volatilization  */
 
 	/* temporary nitrogen variables for reconciliation of decomposition
 	immobilization fluxes and plant growth N demands */

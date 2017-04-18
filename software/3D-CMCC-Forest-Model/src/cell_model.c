@@ -25,10 +25,12 @@ int Cell_model_daily (matrix_t *const m, const int cell, const int day, const in
 {
 	cell_t *c;
 	meteo_daily_t *meteo_daily;
+	yos_t *meteo_yearly;
 
 	/* assign shortcuts */
 	c = &m->cells[cell];
-	meteo_daily = &m->cells[cell].years[year].m[month].d[day];
+	meteo_daily  = &m->cells[cell].years[year].m[month].d[day];
+	meteo_yearly = &m->cells[cell].years[year];
 
 	/* check parameters */
 	assert(m);
@@ -62,11 +64,17 @@ int Cell_model_daily (matrix_t *const m, const int cell, const int day, const in
 	/* CHECK FOR CARBON FLUX BALANCE CLOSURE */
 	/* 2 */ if ( ! check_cell_carbon_flux_balance    ( c ) ) return 0;
 
+	/* CHECK FOR NITROGEN FLUX BALANCE CLOSURE */
+	/* 3 */ //fixme if ( ! check_cell_nitrogen_flux_balance    ( c ) ) return 0;
+
 	/* CHECK FOR CARBON MASS BALANCE CLOSURE */
-	/* 3 */ if ( ! check_cell_carbon_mass_balance    ( c ) ) return 0;
+	/* 4 */ if ( ! check_cell_carbon_mass_balance    ( c ) ) return 0;
 
 	/* CHECK FOR WATER FLUX BALANCE CLOSURE */
-	/* 4 */ if ( ! check_cell_water_flux_balance     ( c, meteo_daily ) ) return 0;
+	/* 5 */ if ( ! check_cell_water_flux_balance     ( c, meteo_daily ) ) return 0;
+
+	/* CHECK FOR NITROGEN MASS BALANCE CLOSURE */
+	/* 6 */ //fixme if ( ! check_cell_nitrogen_mass_balance    ( c, meteo_yearly ) ) return 0;
 
 	/*******************************************************************************************************/
 

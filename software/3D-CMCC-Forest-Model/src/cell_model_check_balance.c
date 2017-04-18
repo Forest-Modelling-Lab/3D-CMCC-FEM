@@ -349,6 +349,196 @@ int check_cell_carbon_mass_balance(cell_t *const c)
 	return 1;
 }
 
+int check_cell_nitrogen_flux_balance(cell_t *const c)
+{
+	//todo as for carbon
+//	double in;
+//	double out;
+//	double store;
+//	double balance;
+//
+//	logger(g_debug_log, "\n*********CHECK CELL CARBON BALANCE************\n");
+//
+//	/* check complete cell level carbon flux balance */
+//
+//	/* sum of carbon sources */
+//	in      = c->daily_gpp;
+//
+//	/* sum of carbon sinks */
+//	out     = c->daily_aut_resp;
+//
+//	/* sum of current carbon storage */
+//	store   = c->daily_npp;
+//
+//	balance = in - out - store;
+//
+//	logger(g_debug_log, "\nCELL CARBON FLUX BALANCE\n");
+//
+//	if ( fabs( balance ) > eps )
+//	{
+//		error_log("DOY = %d\n", c->doy);
+//		error_log("\nin\n");
+//		error_log("c->daily_gpp = %g gC/m2/day\n", c->daily_gpp);
+//		error_log("\nout\n");
+//		error_log("c->daily_tot_aut_resp = %g gC/m2/day\n",c->daily_aut_resp);
+//		error_log("\nstore\n");
+//		error_log("c->daily_leaf_carbon = %g gC/m2/day\n", c->daily_npp);
+//		error_log("\ncarbon in = %g gC/m2/day\n", in);
+//		error_log("carbon out = %g gC/m2/day\n", out);
+//		error_log("carbon store = %g gC/m2/day\n", store);
+//		error_log("carbon_balance = %g gC/m2/day\n",balance);
+//		error_log("...FATAL ERROR in 'Cell_model_daily' carbon flux balance (first) (exit)\n");
+//		CHECK_CONDITION(fabs( balance ), > , eps);
+//
+//		return 0;
+//	}
+//	else
+//	{
+//		logger(g_debug_log, "...ok 'Cell_model_daily' carbon balance\n");
+//	}
+//
+//	/***************************************************************************************************************/
+//
+//	/* sum of carbon sources */
+//	in = c->daily_gpp;
+//
+//	/* sum of carbon sinks */
+//	out = c->daily_maint_resp + c->daily_growth_resp;
+//
+//	/* sum of current carbon storage */
+//	store = c->daily_leaf_carbon   + c->daily_stem_carbon +
+//			c->daily_froot_carbon  + c->daily_croot_carbon +
+//			c->daily_branch_carbon + c->daily_reserve_carbon +
+//			c->daily_fruit_carbon  + c->daily_litrC +
+//			c->daily_soilC         + c->daily_cwdC;
+//
+//	balance = in - out - store;
+//
+//	logger(g_debug_log, "\nCELL CARBON FLUX BALANCE\n");
+//
+//	if ( fabs( balance ) > eps )
+//	{
+//		error_log("DOY = %d\n", c->doy);
+//		error_log("\nin\n");
+//		error_log("c->daily_gpp = %g gC/m2/day\n", c->daily_gpp);
+//		error_log("\nout\n");
+//		error_log("c->daily_tot_aut_resp = %g gC/m2/day\n",c->daily_maint_resp + c->daily_growth_resp);
+//		error_log("\nstore\n");
+//		error_log("c->daily_leaf_carbon = %g gC/m2/day\n",        c->daily_leaf_carbon);
+//		error_log("c->daily_stem_carbon = %g gC/m2/day\n",        c->daily_stem_carbon);
+//		error_log("c->daily_fine_root_carbon = %g gC/m2/day\n",   c->daily_froot_carbon);
+//		error_log("c->daily_coarse_root_carbon = %g gC/m2/day\n", c->daily_croot_carbon);
+//		error_log("c->daily_branch_carbon = %g gC/m2/day\n",      c->daily_branch_carbon);
+//		error_log("c->daily_reserve_carbon = %g gC/m2/day\n",     c->daily_reserve_carbon);
+//		error_log("c->daily_litrC = %g gC/m2/day\n",              c->daily_litrC);
+//		error_log("c->daily_cwdC = %g gC/m2/day\n",               c->daily_cwdC);
+//		error_log("c->daily_soilC = %g gC/m2/day\n",              c->daily_soilC);
+//		error_log("\ncarbon in = %g gC/m2/day\n", in);
+//		error_log("carbon out = %g gC/m2/day\n", out);
+//		error_log("carbon store = %g gC/m2/day\n", store);
+//		error_log("carbon_balance = %g gC/m2/day\n",balance);
+//		error_log("...FATAL ERROR in 'Cell_model_daily' carbon flux balance (second) (exit)\n");
+//		CHECK_CONDITION(fabs( balance ), > , eps);
+//
+//		return 0;
+//	}
+//	else
+//	{
+//		logger(g_debug_log, "...ok carbon balance\n");
+//	}
+	/* ok */
+	return 1;
+}
+
+int check_cell_nitrogen_mass_balance(cell_t *const c, const yos_t *const meteo_annual)
+{
+	static double leaf;
+	static double froot;
+	static double croot;
+	static double branch;
+	static double reserve;
+	static double stem;
+	static double fruit;
+	static double litr;
+	static double cwd;
+	static double soil;
+
+	/* DAILY CHECK ON CELL LEVEL NITROGEN MASS BALANCE */
+	/* check complete cell level nitrogen mass balance */
+
+	/* sum of sources */
+	c->cell_nitrogen_in    = meteo_annual->Ndep + c->Nfix;
+
+	/* sum of sinks */
+	c->cell_nitrogen_out   = c->Nleach + c->Nvol;
+
+	/* sum of current storage */
+	c->cell_nitrogen_store = c->leaf_nitrogen +
+			c->froot_nitrogen   +
+			c->croot_nitrogen   +
+			c->stem_nitrogen    +
+			c->branch_nitrogen  +
+			c->reserve_nitrogen +
+			c->fruit_nitrogen   +
+			c->litrN          +
+			c->cwdN           +
+			c->soilN          ;
+
+	/* check nitrogen pool balance */
+	c->cell_nitrogen_balance = c->cell_nitrogen_in - c->cell_nitrogen_out - ( c->cell_nitrogen_store - c->cell_nitrogen_old_store );
+
+	logger(g_debug_log, "\nCELL LEVEL NITROGEN MASS BALANCE\n");
+
+	/* check for nitrogen mass balance closure */
+	if ( ( fabs( c->cell_nitrogen_balance ) > eps ) && ( c->dos > 1 ) )
+	{
+		error_log("DOS = %d\n", c->dos);
+		error_log("\nin\n");
+		error_log("Ndep = %g gN/m2\n",                     meteo_annual->Ndep);
+		error_log("c->Nfix = %g gN/m2\n",                  c->Nfix);
+		error_log("\nout\n");
+		error_log("Nleach = %g gN/m2/day\n",               c->Nleach);
+		error_log("Nvol = %g gN/m2/day\n",                 c->Nvol);
+		error_log("\nstore\n");
+		error_log("leaf_nitrogen = %g gN/m2/day\n",        leaf - c->leaf_nitrogen);
+		error_log("froot_nitrogen = %g gN/m2/day\n",       froot - c->froot_nitrogen);
+		error_log("croot_nitrogen = %g gN/m2/day\n",       croot - c->croot_nitrogen);
+		error_log("stem_nitrogen = %g gN/m2/day\n",        stem - c->stem_nitrogen);
+		error_log("branch_nitrogen = %g gN/m2/day\n",      branch - c->branch_nitrogen);
+		error_log("reserve_nitrogen = %g gN/m2/day\n",     reserve - c->reserve_nitrogen);
+		error_log("fruit_nitrogen = %g gN/m2/day\n",       fruit - c->fruit_nitrogen);
+		error_log("litr_nitrogen = %g gN/m2/day\n",        litr - c->litrN);
+		error_log("cwd_nitrogen = %g gN/m2/day\n",         cwd - c->cwdN);
+		error_log("soil_nitrogen = %g gN/m2/day\n",        soil - c->soilN);
+		error_log("\nnitrogen in = %g gN/m2/day\n",        c->cell_nitrogen_in);
+		error_log("nitrogen out = %g gN/m2/day\n",         c->cell_nitrogen_out);
+		error_log("delta nitrogen store = %g gN/m2/day\n", c->cell_nitrogen_store - c->cell_nitrogen_old_store);
+		error_log("nitrogen_balance = %g gN/m2/day\n",     c->cell_nitrogen_balance);
+		error_log("...FATAL ERROR in 'Cell_model_daily' nitrogen mass balance (gN/m2/day) (exit)\n");
+		CHECK_CONDITION(fabs( c->cell_nitrogen_balance ), > , eps);
+
+		return 0;
+	}
+	else
+	{
+		leaf = c->leaf_nitrogen;
+		froot = c->froot_nitrogen;
+		croot = c->croot_nitrogen;
+		branch = c->branch_nitrogen;
+		reserve = c->reserve_nitrogen;
+		stem = c->stem_nitrogen;
+		fruit = c->fruit_nitrogen;
+		litr = c->litrC;
+		cwd = c->cwdC;
+		soil = c->soilC;
+
+		c->cell_nitrogen_old_store = c->cell_nitrogen_store;
+		logger(g_debug_log, "...ok in 'Cell_model_daily' nitrogen mass balance (gC/m2/day)\n");
+	}
+	/* ok */
+	return 1;
+}
+
 int check_cell_water_flux_balance(cell_t *const c, const meteo_daily_t *const meteo_daily)
 {
 

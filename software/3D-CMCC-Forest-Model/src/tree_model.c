@@ -341,7 +341,6 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 										/* regeneration */
 										regeneration ( c, height, dbh, age, species);
 									}
-
 									/* update pointers */
 									/*
 									l = &c->tree_layers[layer];
@@ -390,6 +389,9 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 
 							/* check for carbon mass balance closure */
 							/* 5 */ if ( ! check_tree_class_carbon_mass_balance    ( c, layer, height, dbh, age, species ) ) return 0;
+
+							/* check for nitrogen mass balance closure */
+							/* 6 */ //fixme if ( ! check_tree_class_nitrogen_mass_balance  ( c, layer, height, dbh, age, species ) ) return 0;
 
 							/****************************************************************************************************************************************/
 						}

@@ -237,9 +237,6 @@ void growth_respiration(cell_t *const c, const int layer, const int height, cons
 				s->value[FRUIT_GROWTH_RESP])                      ;
 		s->value[TOTAL_GROWTH_RESP_tC] = (s->value[TOTAL_GROWTH_RESP] / 1e6 * g_settings->sizeCell);
 
-		logger(g_debug_log, "daily total growth respiration = %g gC/m2/day\n", s->value[TOTAL_GROWTH_RESP]);
-		logger(g_debug_log, "daily total growth respiration = %g tC/sizecell/day\n", s->value[TOTAL_GROWTH_RESP_tC]);
-
 		/* pools */
 		c->daily_leaf_growth_resp           += s->value[LEAF_GROWTH_RESP];
 		c->daily_stem_growth_resp           += s->value[STEM_GROWTH_RESP];
@@ -253,6 +250,10 @@ void growth_respiration(cell_t *const c, const int layer, const int height, cons
 		/* compute total growth respiration */
 		s->value[TOTAL_GROWTH_RESP] = s->value[GPP] * ( 1. - g_settings->Fixed_Aut_Resp_rate ) * GRPERC;
 	}
+
+	logger(g_debug_log, "daily total growth respiration = %g gC/m2/day\n", s->value[TOTAL_GROWTH_RESP]);
+	logger(g_debug_log, "daily total growth respiration = %g tC/sizecell/day\n", s->value[TOTAL_GROWTH_RESP_tC]);
+
 
 	/* cumulate */
 	s->value[MONTHLY_TOTAL_GROWTH_RESP] += s->value[TOTAL_GROWTH_RESP];
