@@ -35,7 +35,7 @@ int check_soil_carbon_mass_balance          ( cell_t *const c );
 /* fluxes */
 int check_cell_radiation_flux_balance       ( cell_t *const c, const meteo_daily_t *const meteo_daily );
 int check_cell_carbon_flux_balance          ( cell_t *const c );
-int check_cell_nitrogen_flux_balance        ( cell_t *const c );
+int check_cell_nitrogen_flux_balance        ( cell_t *const c, const meteo_daily_t *const meteo_daily );
 int check_cell_water_flux_balance           ( cell_t *const c, const meteo_daily_t *const meteo_daily );
 /* mass */
 int check_cell_carbon_mass_balance          ( cell_t *const c );
