@@ -1,6 +1,6 @@
-/* yos.h */
-#ifndef YOS_H_
-#define YOS_H_
+/* meteo.h */
+#ifndef METEO_H_
+#define METEO_H_
 
 #define METEO_MONTHS_COUNT	12
 #define METEO_DAYS_COUNT		31
@@ -61,6 +61,7 @@ typedef struct {
 	double emis_atm;                            /* (ratio) atmospheric emissivity corrected for cloud cover */
 	double cloud_cover_frac;                    /* (ratio) daily cloud cover fraction */
 	double cloud_cover_frac_corr;               /* (ratio) daily cloud cover fraction */
+	double ndeposition;                         /* (gN/m2/day) nitrogen deposition scaled from annual */
 } meteo_daily_t;
 
 typedef struct {
@@ -95,4 +96,4 @@ typedef struct {
 
 meteo_annual_t* meteo_annual_import(const char *const file, int *const yos_count, const int x, const int y);
 
-#endif /* YOS_H_ */
+#endif /* METEO_H_ */

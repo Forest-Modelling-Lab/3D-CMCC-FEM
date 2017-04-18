@@ -1,5 +1,5 @@
-/* yos.c */
-#include "yos.h"
+/* meteo.c */
+#include "meteo.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include "logger.h"
