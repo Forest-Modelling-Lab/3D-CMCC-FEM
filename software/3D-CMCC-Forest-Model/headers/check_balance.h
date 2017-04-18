@@ -39,7 +39,7 @@ int check_cell_nitrogen_flux_balance        ( cell_t *const c );
 int check_cell_water_flux_balance           ( cell_t *const c, const meteo_daily_t *const meteo_daily );
 /* mass */
 int check_cell_carbon_mass_balance          ( cell_t *const c );
-int check_cell_nitrogen_mass_balance        ( cell_t *const c, const meteo_annual_t *const meteo_annual );
+int check_cell_nitrogen_mass_balance        ( cell_t *const c, const meteo_daily_t *const meteo_daily );
 
 
 #endif /* CHECK_BALANCE_H_ */

@@ -43,12 +43,12 @@ void Sat_vapour_pressure(cell_t *const c, const int day, const int month, const 
 	met[month].d[day].es = ((e0max*met[month].d[day].ni) + (e0min*(1.0-met[month].d[day].ni)));
 
 	/* compute actual vapour pressure derived from relative humidity data (KPa) */
-	met[month].d[day].ea = (met[month].d[day].rh_f/100.0)*met[month].d[day].es;
+	met[month].d[day].ea = (met[month].d[day].rh_f/100.)*met[month].d[day].es;
 	//CHECK_CONDITION(met[month].d[day].ea, < 0.0);
 	//fixme
-	if (met[month].d[day].ea < 0.0)
+	if (met[month].d[day].ea < 0.)
 	{
-		met[month].d[day].ea = 0.0;
+		met[month].d[day].ea = 0.;
 	}
 }
 
@@ -176,16 +176,16 @@ void compute_atm_lw_downward_W(cell_t *const c, const int day, const int month, 
 	}
 
 	/* Cloud cover and cloud correction factor Eq. (3) */
-	met[month].d[day].cloud_cover_frac = 1.0 - (fpar - 0.5) / 0.4;
-	if ( met[month].d[day].cloud_cover_frac > 1.0 )
+	met[month].d[day].cloud_cover_frac = 1. - (fpar - 0.5) / 0.4;
+	if ( met[month].d[day].cloud_cover_frac > 1. )
 	{
-		met[month].d[day].cloud_cover_frac = 1.0;
+		met[month].d[day].cloud_cover_frac = 1.;
 	}
 	if ( met[month].d[day].cloud_cover_frac < 0. )
 	{
-		met[month].d[day].cloud_cover_frac = 0.0;
+		met[month].d[day].cloud_cover_frac = 0.;
 	}
-	met[month].d[day].cloud_cover_frac_corr = 1 + 0.22 * pow(met[month].d[day].cloud_cover_frac, 2.0);
+	met[month].d[day].cloud_cover_frac_corr = 1. + 0.22 * pow( met[month].d[day].cloud_cover_frac, 2. );
 
 	/* Saturation and actual Vapour pressure [3], and associated emissivity Eq. [2] */
 	/* convert esat kPa --> Pa */
@@ -200,7 +200,7 @@ void compute_atm_lw_downward_W(cell_t *const c, const int day, const int month, 
 	{
 		vp = 3.3546e-004;
 	}
-	met[month].d[day].emis_atm_clear_sky = 0.64 * pow(vp / TairK, 0.14285714);
+	met[month].d[day].emis_atm_clear_sky = 0.64 * pow( vp / TairK, 0.14285714 );
 
 	/* compute atmopsheric emissivity based on cloud cover corrected */
 	met[month].d[day].emis_atm = met[month].d[day].cloud_cover_frac_corr * met[month].d[day].emis_atm_clear_sky;
@@ -215,12 +215,9 @@ void compute_atm_lw_downward_W(cell_t *const c, const int day, const int month, 
 
 void Radiation (cell_t *const c, const int day, const int month, const int year)
 {
-	double a = 107.0;                                                                    //(W/m)  empirical constants for long wave radiation computation
-	double b = 0.2;                                                                      //(unit less) empirical constants for long wave radiation computation
+	double a = 107.;                                           /* (W/m)  empirical constants for long wave radiation computation */
+	double b = 0.2;                                            /* (unit less) empirical constants for long wave radiation computation */
 	double TmaxK, TminK;
-
-	//double fpar;
-
 
 	meteo_t *met;
 	met = (meteo_t*) c->years[year].m;
@@ -234,25 +231,25 @@ void Radiation (cell_t *const c, const int day, const int month, const int year)
 	/* INCOMING SHORT WAVE RADIATION */
 
 	/* compute downward Short-Wave radiation */
-	met[month].d[day].sw_downward_MJ = met[month].d[day].solar_rad;
+	met[month].d[day].sw_downward_MJ         = met[month].d[day].solar_rad;
 	//logger(g_debug_log, "Short_wave_radiation (downward) = %g MJ/m^2 day\n", met[month].d[day].sw_downward_MJ);
 
 	/* convert into W/m2 */
 	met[month].d[day].incoming_sw_downward_W = met[month].d[day].sw_downward_MJ * MJ_TO_W;
-	met[month].d[day].sw_downward_W = met[month].d[day].incoming_sw_downward_W ;
+	met[month].d[day].sw_downward_W          = met[month].d[day].incoming_sw_downward_W ;
 	//logger(g_debug_log, "Short wave radiation (downward) = %g W/m2\n", met[month].d[day].sw_downward_W);
 
-	met[month].d[day].sw_pot_downward_W = compute_potential_rad(g_soil_settings->values[SOIL_LAT], g_soil_settings->values[SOIL_LON], day);
+	met[month].d[day].sw_pot_downward_W      = compute_potential_rad(g_soil_settings->values[SOIL_LAT], g_soil_settings->values[SOIL_LON], day);
 	//logger(g_debug_log, "sw_pot_downward_W = %g W/m2\n", met[month].d[day].sw_pot_downward_W);
 
 	/* convert incoming Short-Wave flux in PAR from MJ/m2/day to molPAR/m2/day (Biome-BGC method) */
-	met[month].d[day].incoming_par = (met[month].d[day].sw_downward_MJ * RAD2PAR * EPAR);
-	met[month].d[day].par = met[month].d[day].incoming_par;
+	met[month].d[day].incoming_par           = (met[month].d[day].sw_downward_MJ * RAD2PAR * EPAR);
+	met[month].d[day].par                    = met[month].d[day].incoming_par;
 	//logger(g_debug_log, "Par = %g molPAR/m^2 day\n", met[month].d[day].par);
 
 	/* convert incoming Short-Wave flux in PPFD from W/m2 to umol/m2/sec (Biome-BGC method) */
-	met[month].d[day].incoming_ppfd = met[month].d[day].sw_downward_W * RAD2PAR * EPAR;
-	met[month].d[day].ppfd = met[month].d[day].incoming_ppfd;
+	met[month].d[day].incoming_ppfd          = met[month].d[day].sw_downward_W * RAD2PAR * EPAR;
+	met[month].d[day].ppfd                   = met[month].d[day].incoming_ppfd;
 	//logger(g_debug_log, "PPFD = %g umolPPFD/m2/sec\n", met[month].d[day].ppfd);
 
 	/***************************************************************************************************************************************/
@@ -270,7 +267,7 @@ void Radiation (cell_t *const c, const int day, const int month, const int year)
 	{
 		/* following Allen et al., 1998 */
 		/* it represents the outgoing part of long wave radiation */
-		met[month].d[day].lw_net_MJ = SBC_MJ * (pow(((TmaxK + TminK)/2.0),4))*(0.34-0.14*(sqrt(met[month].d[day].ea)))*met[month].d[day].cloud_cover_frac;
+		met[month].d[day].lw_net_MJ = SBC_MJ * ( pow ( ( ( TmaxK + TminK ) / 2.) , 4 ) ) * ( 0.34 - 0.14 * ( sqrt(met[month].d[day].ea ) ) ) * met[month].d[day].cloud_cover_frac;
 		//logger(g_debug_log, "Net Long wave radiation (Allen)= %g MJ/m^2 day\n", met[month].d[day].lw_net_MJ);
 
 		/* convert into W/m2 */
@@ -282,7 +279,7 @@ void Radiation (cell_t *const c, const int day, const int month, const int year)
 	{
 		//todo check it Prentice says "net upward long-wave flux"
 		/* following Prentice et al., 1993 */
-		met[month].d[day].lw_net_W = (b+(1.0-b)*met[month].d[day].ni)*(a - met[month].d[day].tavg);
+		met[month].d[day].lw_net_W = ( b + ( 1. - b ) * met[month].d[day].ni ) * ( a - met[month].d[day].tavg );
 		//logger(g_debug_log, "Net Long wave radiation (Prentice)= %g W/m2\n", met[month].d[day].lw_net_W);
 
 		/* convert into MJ/m^2 day */
@@ -303,23 +300,23 @@ void Check_prcp(cell_t *c, const int day, const int month, const int year)
 {
 	meteo_t *met;
 	met = c->years[year].m;
-	if(met[month].d[day].prcp > 0.0)
+	if(met[month].d[day].prcp > 0.)
 	{
-		if (met[month].d[day].tavg > 0.0)
+		if (met[month].d[day].tavg > 0.)
 		{
 			met[month].d[day].rain = met[month].d[day].prcp;
-			met[month].d[day].snow = 0.0;
+			met[month].d[day].snow = 0.;
 		}
 		else
 		{
 			met[month].d[day].snow = met[month].d[day].prcp;
-			met[month].d[day].rain = 0.0;
+			met[month].d[day].rain = 0.;
 		}
 	}
 	else
 	{
-		met[month].d[day].rain = 0.0;
-		met[month].d[day].snow = 0.0;
+		met[month].d[day].rain = 0.;
+		met[month].d[day].snow = 0.;
 	}
 
 	/* following Lagergren et al., 2006 */
@@ -356,8 +353,8 @@ void Day_Length(cell_t *c, const int day, const int month, const int year)
 	//	met[month].d[day].daylength = ampl * (sin ((doy - 79) * 0.01721)) + 12;
 	//logger(g_debug_log, "with altitude = %f\n", met[month].d[day].daylength);
 
-	ampl = (exp (7.42 + (0.045 * g_soil_settings->values[SOIL_LAT]))) / 3600;
-	met[month].d[day].daylength = ampl * (sin ((doy - 79) * 0.01721)) + 12;
+	ampl = (exp (7.42 + (0.045 * g_soil_settings->values[SOIL_LAT]))) / 3600.;
+	met[month].d[day].daylength = ampl * (sin ((doy - 79.) * 0.01721)) + 12.;
 
 
 	/* compute fraction of daytime */
@@ -382,7 +379,7 @@ void Daily_avg_temperature(meteo_t *met, const int day, const int month)
 void Psychrometric(meteo_t *met, const int day, const int month)
 {
 	/* compute psychrometric (KPa/°C) constant as in Allen et al., 1998 */
-	met[month].d[day].psych = ((CP/1000000.0)*(met[month].d[day].air_pressure/1000.0))/(MWratio*(met[month].d[day].lh_vap/1000000.0));
+	met[month].d[day].psych = ( ( CP / 1e6 ) * ( met[month].d[day].air_pressure / 1e3 ) ) / ( MWratio * ( met[month].d[day].lh_vap / 1e6 ) );
 }
 
 void Daylight_avg_temperature(meteo_t *const met, const int day, const int month)
@@ -390,9 +387,9 @@ void Daylight_avg_temperature(meteo_t *const met, const int day, const int month
 	/* BIOME-BGC version */
 	/* Running-Coughlan 1988, Ecological Modelling */
 
-	if (met[month].d[day].tmax != NO_DATA && met[month].d[day].tmin != NO_DATA)
+	if ( met[month].d[day].tmax != NO_DATA && met[month].d[day].tmin != NO_DATA )
 	{
-		met[month].d[day].tday = 0.45 * (met[month].d[day].tmax - met[month].d[day].tavg) + met[month].d[day].tavg;
+		met[month].d[day].tday = 0.45 * ( met[month].d[day].tmax - met[month].d[day].tavg ) + met[month].d[day].tavg;
 	}
 	else
 	{
@@ -408,7 +405,7 @@ void Nightime_avg_temperature(meteo_t *const met, const int day, const int month
 
 	if (met[month].d[day].tday != NO_DATA )
 	{
-		met[month].d[day].tnight = (met[month].d[day].tday + met[month].d[day].tmin)/2 ;
+		met[month].d[day].tnight = ( met[month].d[day].tday + met[month].d[day].tmin ) / 2. ;
 	}
 	else
 	{
@@ -417,12 +414,13 @@ void Nightime_avg_temperature(meteo_t *const met, const int day, const int month
 	}
 }
 
-void Thermic_sum (meteo_t *met, const int day, const int month, const int year) {
+void Thermic_sum (meteo_t *met, const int day, const int month, const int year)
+{
 	static double previous_thermic_sum;
 
 	if (!day && !month)
 	{
-		met[month].d[day].thermic_sum = 0;
+		met[month].d[day].thermic_sum = 0.;
 
 		if(met[month].d[day].tavg > GDD_BASIS)
 		{
@@ -431,8 +429,8 @@ void Thermic_sum (meteo_t *met, const int day, const int month, const int year) 
 		}
 		else
 		{
-			met[month].d[day].thermic_sum = 0;
-			previous_thermic_sum = 0;
+			met[month].d[day].thermic_sum = 0.;
+			previous_thermic_sum          = 0.;
 		}
 		if (met[month].d[day].tavg == NO_DATA)
 			logger(g_debug_log, "tavg NO_DATA!!\n");
@@ -466,9 +464,9 @@ void Air_pressure(meteo_t *met, const int day, const int month)
 		Edition. D. Reidel Publishing Company, Dordrecht, The Netherlands.
 		(p. 168)*/
 
-	t1 = 1.0 - (LR_STD * g_topo->values[TOPO_ELEV])/T_STD;
-	t2 = G_STD / (LR_STD * (Rgas / MA));
-	met[month].d[day].air_pressure = P_STD * pow (t1, t2);
+	t1 = 1. - ( LR_STD * g_topo->values[TOPO_ELEV] ) / T_STD;
+	t2 = G_STD / ( LR_STD * ( Rgas / MA ) );
+	met[month].d[day].air_pressure = P_STD * pow ( t1, t2 );
 	//logger(g_debug_log, "Air pressure = %f Pa\n", met[month].d[day].air_pressure);
 }
 
@@ -484,7 +482,7 @@ void Air_density (meteo_t *met, const int day, const int month) {
 	}
 	else
 	{
-		met[month].d[day].rho_air= 1.292 - (0.00428 * met[month].d[day].tday);
+		met[month].d[day].rho_air = 1.292 - (0.00428 * met[month].d[day].tday);
 	}
 }
 
@@ -493,20 +491,20 @@ void Latent_heat(meteo_t *met, const int day, const int month)
 	/*BIOME-BGC APPROACH*/
 	/*compute latent heat of vaporization (J/Kg)*/
 
-	met[month].d[day].lh_vap = 2.5023e6 - 2430.54 * met[month].d[day].tavg;
+	met[month].d[day].lh_vap      = 2.5023e6 - 2430.54 * met[month].d[day].tavg;
 	met[month].d[day].lh_vap_soil = 2.5023e6 - 2430.54 * met[month].d[day].tsoil;
 	/*latent heat of fusion (KJ/Kg)*/
-	met[month].d[day].lh_fus = 335.0;
+	met[month].d[day].lh_fus      = 335.;
 	/*latent heat of sublimation (KJ/Kg)*/
-	met[month].d[day].lh_sub = 2845.0;
+	met[month].d[day].lh_sub      = 2845.;
 }
-void Soil_temperature(const cell_t *const c, int day, int month, int year_index)
+void Soil_temperature(const cell_t *const c, int day, int month, int year)
 {
 	int i;
 	int day_avg = WEIGHTED_DAYS;
 	int current_day = day;
 	int current_month = month;
-	int current_year_index = year_index;
+	int current_year_index = year;
 	double weighted_avg;
 	extern int days_per_month[];
 
@@ -540,20 +538,20 @@ void Soil_temperature(const cell_t *const c, int day, int month, int year_index)
 	do
 	{
 		i += day_avg;
-		weighted_avg += (c->years[year_index].m[month].d[day].tavg*day_avg);
+		weighted_avg += ( c->years[year].m[month].d[day].tavg * day_avg );
 
 		if ( --day < 0 )
 		{
 			if ( --month < 0 )
 			{
-				if ( --year_index < 0 )
+				if ( --year < 0 )
 				{
 					break;
 				}
 				month = 11; // zero based index
 			}
 			day = days_per_month[month];
-			if ( IS_LEAP_YEAR(c->years[year_index].year) && (1 == month) )
+			if ( IS_LEAP_YEAR(c->years[year].year) && (1 == month) )
 			{
 				++day;
 			}
@@ -564,13 +562,13 @@ void Soil_temperature(const cell_t *const c, int day, int month, int year_index)
 	c->years[current_year_index].m[current_month].d[current_day].tsoil = weighted_avg / i;
 }
 
-void Weighted_average_temperature(const cell_t *const c, const e_weighted_average_var var, int day, int month, int year_index)
+void Weighted_average_temperature(const cell_t *const c, const e_weighted_average_var var, int day, int month, int year)
 {
 	int i;
 	int day_avg = WEIGHTED_DAYS;
 	int current_day = day;
 	int current_month = month;
-	int current_year_index = year_index;
+	int current_year_index = year;
 	double weighted_avg;
 	extern int days_per_month[];
 
@@ -586,19 +584,19 @@ void Weighted_average_temperature(const cell_t *const c, const e_weighted_averag
 
 		switch ( var ) {
 		case WEIGHTED_MEAN_TAVG:
-			v = c->years[year_index].m[month].d[day].tavg;
+			v = c->years[year].m[month].d[day].tavg;
 			break;
 
 		case WEIGHTED_MEAN_TDAY:
-			v = c->years[year_index].m[month].d[day].tday;
+			v = c->years[year].m[month].d[day].tday;
 			break;
 
 		case WEIGHTED_MEAN_TNIGHT:
-			v = c->years[year_index].m[month].d[day].tnight;
+			v = c->years[year].m[month].d[day].tnight;
 			break;
 
 		case WEIGHTED_MEAN_TSOIL:
-			v = c->years[year_index].m[month].d[day].tsoil;
+			v = c->years[year].m[month].d[day].tsoil;
 			break;
 		}
 
@@ -606,13 +604,13 @@ void Weighted_average_temperature(const cell_t *const c, const e_weighted_averag
 
 		if ( --day < 0 ) {
 			if ( --month < 0 ) {
-				if ( --year_index < 0 ) {
+				if ( --year < 0 ) {
 					break;
 				}
 				month = 11; // zero based index
 			}
 			day = days_per_month[month];
-			if ( IS_LEAP_YEAR(c->years[year_index].year) && (1 == month) ) {
+			if ( IS_LEAP_YEAR(c->years[year].year) && (1 == month) ) {
 				++day;
 			}
 			--day; // zero based index
@@ -640,13 +638,13 @@ void Weighted_average_temperature(const cell_t *const c, const e_weighted_averag
 	}
 }
 
-void Averaged_temperature(const cell_t *const c, const e_averaged_var var, int day, int month, int year_index)
+void Averaged_temperature(const cell_t *const c, const e_averaged_var var, int day, int month, int year)
 {
 	int i;
 	int day_avg = AVERAGED_DAYS;
 	int current_day = day;
 	int current_month = month;
-	int current_year_index = year_index;
+	int current_year_index = year;
 	double averaged;
 	extern int days_per_month[];
 
@@ -663,19 +661,19 @@ void Averaged_temperature(const cell_t *const c, const e_averaged_var var, int d
 
 		switch ( var ) {
 		case AVERAGED_TAVG:
-			v = c->years[year_index].m[month].d[day].tavg;
+			v = c->years[year].m[month].d[day].tavg;
 			break;
 
 		case AVERAGED_TDAY:
-			v = c->years[year_index].m[month].d[day].tday;
+			v = c->years[year].m[month].d[day].tday;
 			break;
 
 		case AVERAGED_TNIGHT:
-			v = c->years[year_index].m[month].d[day].tnight;
+			v = c->years[year].m[month].d[day].tnight;
 			break;
 
 		case AVERAGED_TSOIL:
-			v = c->years[year_index].m[month].d[day].tsoil;
+			v = c->years[year].m[month].d[day].tsoil;
 			break;
 		}
 
@@ -683,13 +681,13 @@ void Averaged_temperature(const cell_t *const c, const e_averaged_var var, int d
 
 		if ( --day < 0 ) {
 			if ( --month < 0 ) {
-				if ( --year_index < 0 ) {
+				if ( --year < 0 ) {
 					break;
 				}
 				month = 11; // zero based index
 			}
 			day = days_per_month[month];
-			if ( IS_LEAP_YEAR(c->years[year_index].year) && (1 == month) ) {
+			if ( IS_LEAP_YEAR(c->years[year].year) && (1 == month) ) {
 				++day;
 			}
 			--day; // zero based index
@@ -717,10 +715,21 @@ void Averaged_temperature(const cell_t *const c, const e_averaged_var var, int d
 	}
 }
 
-void Dew_temperature(meteo_t *const met, const int day, const int month)
+void Dew_temperature (meteo_t *const met, const int day, const int month)
 {
 	/* dew point temperature based on Allen et al., 1998; Bosen, 1958; Murray, 1967 */
 	met[month].d[day].tdew = (116.91 + 237.3 * log(met[month].d[day].ea))/(16.78 - log(met[month].d[day].ea));
+}
+
+void Daily_Ndeposition (const cell_t *const c, int day, int month, int year)
+{
+	int doy;
+
+	if ( IS_LEAP_YEAR(c->years[year].year)) doy = 366;
+	else doy = 365;
+
+	c->years[year].m[month].d[day].Ndeposition = c->years[year].Ndep / doy;
+
 }
 
 

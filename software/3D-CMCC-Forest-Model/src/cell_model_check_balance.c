@@ -450,7 +450,7 @@ int check_cell_nitrogen_flux_balance(cell_t *const c)
 	return 1;
 }
 
-int check_cell_nitrogen_mass_balance(cell_t *const c, const meteo_annual_t *const meteo_annual)
+int check_cell_nitrogen_mass_balance(cell_t *const c, const meteo_daily_t *const meteo_daily)
 {
 	static double leaf;
 	static double froot;
@@ -467,7 +467,7 @@ int check_cell_nitrogen_mass_balance(cell_t *const c, const meteo_annual_t *cons
 	/* check complete cell level nitrogen mass balance */
 
 	/* sum of sources */
-	c->cell_nitrogen_in    = meteo_annual->Ndep + c->Nfix;
+	c->cell_nitrogen_in    = meteo_daily->Ndeposition + c->Nfix;
 
 	/* sum of sinks */
 	c->cell_nitrogen_out   = c->Nleach + c->Nvol;
@@ -480,9 +480,9 @@ int check_cell_nitrogen_mass_balance(cell_t *const c, const meteo_annual_t *cons
 			c->branch_nitrogen  +
 			c->reserve_nitrogen +
 			c->fruit_nitrogen   +
-			c->litrN          +
-			c->cwdN           +
-			c->soilN          ;
+			c->litrN            +
+			c->cwdN             +
+			c->soilN            ;
 
 	/* check nitrogen pool balance */
 	c->cell_nitrogen_balance = c->cell_nitrogen_in - c->cell_nitrogen_out - ( c->cell_nitrogen_store - c->cell_nitrogen_old_store );
@@ -494,7 +494,7 @@ int check_cell_nitrogen_mass_balance(cell_t *const c, const meteo_annual_t *cons
 	{
 		error_log("DOS = %d\n", c->dos);
 		error_log("\nin\n");
-		error_log("Ndep = %g gN/m2\n",                     meteo_annual->Ndep);
+		error_log("Ndep = %g gN/m2\n",                     meteo_daily->Ndeposition);
 		error_log("c->Nfix = %g gN/m2\n",                  c->Nfix);
 		error_log("\nout\n");
 		error_log("Nleach = %g gN/m2/day\n",               c->Nleach);

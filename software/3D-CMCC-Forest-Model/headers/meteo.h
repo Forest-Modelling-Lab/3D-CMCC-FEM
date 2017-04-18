@@ -61,7 +61,7 @@ typedef struct {
 	double emis_atm;                            /* (ratio) atmospheric emissivity corrected for cloud cover */
 	double cloud_cover_frac;                    /* (ratio) daily cloud cover fraction */
 	double cloud_cover_frac_corr;               /* (ratio) daily cloud cover fraction */
-	double ndeposition;                         /* (gN/m2/day) nitrogen deposition scaled from annual */
+	double Ndeposition;                         /* (gN/m2/day) nitrogen deposition scaled from annual */
 } meteo_daily_t;
 
 typedef struct {
@@ -88,7 +88,7 @@ typedef struct {
 typedef struct {
 	int year;
 	double co2Conc;	                             /* (ppmv) annual atmospheric CO2 concentration */
-	double Ndep;	                             /* ((kgN/m2/year) annual nitrogen deposition */
+	double Ndep;	                             /* (kgN/m2/year) annual nitrogen deposition */
 	meteo_t m[METEO_MONTHS_COUNT];
 	meteo_mean_t monthly_mean[METEO_MONTHS_COUNT];
 	meteo_mean_t yearly_mean;

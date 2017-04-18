@@ -1355,37 +1355,37 @@ int main(int argc, char *argv[]) {
 	{
 		for ( year = 0; year < years_of_simulation; ++year )
 		{
-			matrix->cells[cell].years[year].yearly_mean.solar_rad = 0.;
-			matrix->cells[cell].years[year].yearly_mean.tavg = 0.;
-			matrix->cells[cell].years[year].yearly_mean.tmax = 0.;
-			matrix->cells[cell].years[year].yearly_mean.tmin = 0.;
-			matrix->cells[cell].years[year].yearly_mean.tday = 0.;
-			matrix->cells[cell].years[year].yearly_mean.tnight = 0.;
-			matrix->cells[cell].years[year].yearly_mean.vpd = 0.;
-			matrix->cells[cell].years[year].yearly_mean.prcp = 0.;
-			matrix->cells[cell].years[year].yearly_mean.tsoil = 0.;
-			matrix->cells[cell].years[year].yearly_mean.rh_f = 0.;
-			matrix->cells[cell].years[year].yearly_mean.incoming_par = 0.;
-			matrix->cells[cell].years[year].yearly_mean.par = 0.;
+			matrix->cells[cell].years[year].yearly_mean.solar_rad     = 0.;
+			matrix->cells[cell].years[year].yearly_mean.tavg          = 0.;
+			matrix->cells[cell].years[year].yearly_mean.tmax          = 0.;
+			matrix->cells[cell].years[year].yearly_mean.tmin          = 0.;
+			matrix->cells[cell].years[year].yearly_mean.tday          = 0.;
+			matrix->cells[cell].years[year].yearly_mean.tnight        = 0.;
+			matrix->cells[cell].years[year].yearly_mean.vpd           = 0.;
+			matrix->cells[cell].years[year].yearly_mean.prcp          = 0.;
+			matrix->cells[cell].years[year].yearly_mean.tsoil         = 0.;
+			matrix->cells[cell].years[year].yearly_mean.rh_f          = 0.;
+			matrix->cells[cell].years[year].yearly_mean.incoming_par  = 0.;
+			matrix->cells[cell].years[year].yearly_mean.par           = 0.;
 			matrix->cells[cell].years[year].yearly_mean.incoming_ppfd = 0.;
-			matrix->cells[cell].years[year].yearly_mean.ppfd = 0.;
+			matrix->cells[cell].years[year].yearly_mean.ppfd          = 0.;
 
 			for ( month = 0; month < MONTHS_COUNT; ++month )
 			{
-				matrix->cells[cell].years[year].monthly_mean[month].solar_rad = 0.;
-				matrix->cells[cell].years[year].monthly_mean[month].tavg = 0.;
-				matrix->cells[cell].years[year].monthly_mean[month].tmax = 0.;
-				matrix->cells[cell].years[year].monthly_mean[month].tmin = 0.;
-				matrix->cells[cell].years[year].monthly_mean[month].tday = 0.;
-				matrix->cells[cell].years[year].monthly_mean[month].tnight = 0.;
-				matrix->cells[cell].years[year].monthly_mean[month].vpd = 0.;
-				matrix->cells[cell].years[year].monthly_mean[month].prcp = 0.;
-				matrix->cells[cell].years[year].monthly_mean[month].tsoil = 0.;
-				matrix->cells[cell].years[year].monthly_mean[month].rh_f = 0.;
-				matrix->cells[cell].years[year].monthly_mean[month].incoming_par = 0.;
-				matrix->cells[cell].years[year].monthly_mean[month].par = 0.;
+				matrix->cells[cell].years[year].monthly_mean[month].solar_rad     = 0.;
+				matrix->cells[cell].years[year].monthly_mean[month].tavg          = 0.;
+				matrix->cells[cell].years[year].monthly_mean[month].tmax          = 0.;
+				matrix->cells[cell].years[year].monthly_mean[month].tmin          = 0.;
+				matrix->cells[cell].years[year].monthly_mean[month].tday          = 0.;
+				matrix->cells[cell].years[year].monthly_mean[month].tnight        = 0.;
+				matrix->cells[cell].years[year].monthly_mean[month].vpd           = 0.;
+				matrix->cells[cell].years[year].monthly_mean[month].prcp          = 0.;
+				matrix->cells[cell].years[year].monthly_mean[month].tsoil         = 0.;
+				matrix->cells[cell].years[year].monthly_mean[month].rh_f          = 0.;
+				matrix->cells[cell].years[year].monthly_mean[month].incoming_par  = 0.;
+				matrix->cells[cell].years[year].monthly_mean[month].par           = 0.;
 				matrix->cells[cell].years[year].monthly_mean[month].incoming_ppfd = 0.;
-				matrix->cells[cell].years[year].monthly_mean[month].ppfd = 0.;
+				matrix->cells[cell].years[year].monthly_mean[month].ppfd          = 0.;
 			}
 		}
 	}
@@ -1451,28 +1451,29 @@ int main(int argc, char *argv[]) {
 				for ( cell = 0; cell < matrix->cells_count; ++cell )
 				{
 					/* compute daily climate variables not coming from met data */
-					Daily_avg_temperature(matrix->cells[cell].years[year].m, day, month);
-					Daylight_avg_temperature(matrix->cells[cell].years[year].m, day, month);
-					Nightime_avg_temperature(matrix->cells[cell].years[year].m, day, month);
-					Soil_temperature(&matrix->cells[cell], day, month, year);
-					Thermic_sum(matrix->cells[cell].years[year].m, day, month, year);
-					Air_density(matrix->cells[cell].years[year].m, day, month);
-					Day_Length(&matrix->cells[cell], day, month, year);
-					Latent_heat(matrix->cells[cell].years[year].m, day, month);
-					Air_pressure(matrix->cells[cell].years[year].m, day, month);
-					Psychrometric(matrix->cells[cell].years[year].m, day, month);
-					Sat_vapour_pressure(&matrix->cells[cell], day, month, year);
-					Dew_temperature(matrix->cells[cell].years[year].m, day, month);
-					Radiation(&matrix->cells[cell], day, month, year);
-					Check_prcp(&matrix->cells[cell], day, month, year);
-					Averaged_temperature(&matrix->cells[cell], AVERAGED_TAVG, day, month, year);
-					Averaged_temperature(&matrix->cells[cell], AVERAGED_TDAY, day, month, year);
-					Averaged_temperature(&matrix->cells[cell], AVERAGED_TNIGHT, day, month, year);
-					Averaged_temperature(&matrix->cells[cell], AVERAGED_TSOIL, day, month, year);
-					Weighted_average_temperature(&matrix->cells[cell], WEIGHTED_MEAN_TAVG, day, month, year);
-					Weighted_average_temperature(&matrix->cells[cell], WEIGHTED_MEAN_TDAY, day, month, year);
-					Weighted_average_temperature(&matrix->cells[cell], WEIGHTED_MEAN_TNIGHT, day, month, year);
-					Weighted_average_temperature(&matrix->cells[cell], WEIGHTED_MEAN_TSOIL, day, month, year);
+					Daily_avg_temperature       ( matrix->cells[cell].years[year].m, day, month );
+					Daylight_avg_temperature    ( matrix->cells[cell].years[year].m, day, month );
+					Nightime_avg_temperature    ( matrix->cells[cell].years[year].m, day, month );
+					Soil_temperature            ( &matrix->cells[cell], day, month, year );
+					Thermic_sum                 ( matrix->cells[cell].years[year].m, day, month, year );
+					Air_density                 ( matrix->cells[cell].years[year].m, day, month );
+					Day_Length                  ( &matrix->cells[cell], day, month, year );
+					Latent_heat                 ( matrix->cells[cell].years[year].m, day, month );
+					Air_pressure                ( matrix->cells[cell].years[year].m, day, month );
+					Psychrometric               ( matrix->cells[cell].years[year].m, day, month );
+					Sat_vapour_pressure         ( &matrix->cells[cell], day, month, year );
+					Dew_temperature             ( matrix->cells[cell].years[year].m, day, month );
+					Radiation                   ( &matrix->cells[cell], day, month, year );
+					Check_prcp                  ( &matrix->cells[cell], day, month, year );
+					Daily_Ndeposition           ( &matrix->cells[cell], day, month, year );
+					Averaged_temperature        ( &matrix->cells[cell], AVERAGED_TAVG, day, month, year );
+					Averaged_temperature        ( &matrix->cells[cell], AVERAGED_TDAY, day, month, year );
+					Averaged_temperature        ( &matrix->cells[cell], AVERAGED_TNIGHT, day, month, year );
+					Averaged_temperature        ( &matrix->cells[cell], AVERAGED_TSOIL, day, month, year );
+					Weighted_average_temperature( &matrix->cells[cell], WEIGHTED_MEAN_TAVG, day, month, year );
+					Weighted_average_temperature( &matrix->cells[cell], WEIGHTED_MEAN_TDAY, day, month, year );
+					Weighted_average_temperature( &matrix->cells[cell], WEIGHTED_MEAN_TNIGHT, day, month, year );
+					Weighted_average_temperature( &matrix->cells[cell], WEIGHTED_MEAN_TSOIL, day, month, year );
 
 					if ( LANDUSE_F == g_soil_settings->landuse )
 					{
