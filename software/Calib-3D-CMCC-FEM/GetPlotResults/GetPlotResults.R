@@ -1,16 +1,29 @@
 setwd("C:/Users/gaetano/Desktop/ITbon_gpp/")
 
-systemCall  <- paste0("./model/3D-CMCC-Forest-Model.exe"," ",
-                      "-i"," ", "./input/"," ",
-                      "-p"," ", "parameters/"," ",
-                      "-o"," ", "output/"," ",
-                      "-d"," ", "Bonis_stand_plaricio.txt", " ",
-                      "-m"," ", "Bonis_meteo_1955_new.txt"," ",
-                      "-s"," ", "Bonis_soil_new.txt"," ",
-                      "-t"," ", "Bonis_topo.txt"," ",
-                      "-c"," ", "Bonis_settings_rep.txt"," ",
-                      "-k"," ", "z_CO2_historical_1901_2012.txt")
-system(systemCall)
+if(.Platform$OS.type=="unix"){
+  systemCall  <- paste0("./model/3D-CMCC-Forest-Model"," ",
+                        "-i"," ", "./input/"," ",
+                        "-p"," ", "parameters/"," ",
+                        "-o"," ", "output/"," ",
+                        "-d"," ", "Bonis_stand_plaricio.txt", " ",
+                        "-m"," ", "Bonis_meteo_1955_new.txt"," ",
+                        "-s"," ", "Bonis_soil_new.txt"," ",
+                        "-t"," ", "Bonis_topo.txt"," ",
+                        "-c"," ", "Bonis_settings_rep.txt"," ",
+                        "-k"," ", "z_CO2_historical_1901_2012.txt")
+  system(systemCall)}
+if(.Platform$OS.type=="windows"){
+  systemCall  <- paste0("./model/3D-CMCC-Forest-Model.exe"," ",
+                        "-i"," ", "./input/"," ",
+                        "-p"," ", "parameters/"," ",
+                        "-o"," ", "output/"," ",
+                        "-d"," ", "Bonis_stand_plaricio.txt", " ",
+                        "-m"," ", "Bonis_meteo_1955_new.txt"," ",
+                        "-s"," ", "Bonis_soil_new.txt"," ",
+                        "-t"," ", "Bonis_topo.txt"," ",
+                        "-c"," ", "Bonis_settings_rep.txt"," ",
+                        "-k"," ", "z_CO2_historical_1901_2012.txt")
+  system(systemCall)}
 
 outputCMCC<- list()
 
