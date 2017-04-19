@@ -61,7 +61,7 @@ void daily_C_evergreen_partitioning (cell_t *const c, const int layer, const int
 	 * the former in which carbon is allocated in fine root and foliage, the latter in
 	 * every pool except foliage*/
 
-	logger(g_debug_log, "\n**C-PARTITIONING-ALLOCATION**\n");
+	logger(g_debug_log, "\n**C-PARTITIONING**\n");
 	logger(g_debug_log, "Carbon partitioning for evergreen\n");
 
 	/* partitioning block using approach of Potter et al., 1993, Schwalm & Ek, 2004; Arora and Boer 2005 */

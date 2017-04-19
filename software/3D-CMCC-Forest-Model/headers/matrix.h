@@ -1157,7 +1157,7 @@ typedef struct
 	double soil2N;                                                        /* (gN/m2) microbial recycling pool nitrogen (medium) */
 	double soil3N;                                                        /* (gN/m2) microbial recycling pool nitrogen (slow) */
 	double soil4N;                                                        /* (gN/m2) recalcitrant SOM nitrogen (humus, slowest) */
-	double sminN;                                                         /* (gN/m2) soil mineral nitrogen */
+	double SoilMinN;                                                      /* (gN/m2) Soil mineral nitrogen */
 	double Npool;                                                         /* (gN/m2) temporary plant nitrogen pool */
 	double Nfix;                                                          /* (gN/m2) SUM of biological nitrogen fixation */
 	double Nleach;                                                        /* (gN/m2) SUM of nitrogen lost for leacheing */

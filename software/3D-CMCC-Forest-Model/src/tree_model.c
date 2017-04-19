@@ -371,7 +371,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 
 							/****************************************************************************************************************************************/
 
-							/* check for fluxes and mass balance closure at the class level */
+							/* check for fluxes and mass balance closure at the tree class level */
 
 							logger(g_debug_log, "\n**TREE CLASS LEVEL BALANCE**\n");
 

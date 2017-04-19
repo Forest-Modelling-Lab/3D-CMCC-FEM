@@ -122,7 +122,7 @@ void abg_bgb_biomass(cell_t *const c, const int height, const int dbh, const int
 
 void average_tree_pools(species_t *const s)
 {
-	/* compute tree average C biomass */
+	/* compute tree average C pools */
 	s->value[AV_LEAF_MASS_C]             = (s->value[LEAF_C]             / (double)s->counter[N_TREE]);
 	s->value[AV_STEM_MASS_C]             = (s->value[STEM_C]             / (double)s->counter[N_TREE]);
 	s->value[AV_FROOT_MASS_C]            = (s->value[FROOT_C]            / (double)s->counter[N_TREE]);
@@ -137,12 +137,14 @@ void average_tree_pools(species_t *const s)
 	s->value[AV_LIVE_BRANCH_MASS_C]      = (s->value[BRANCH_LIVE_WOOD_C] / (double)s->counter[N_TREE]);
 	s->value[AV_DEAD_BRANCH_MASS_C]      = (s->value[BRANCH_DEAD_WOOD_C] / (double)s->counter[N_TREE]);
 
-	/* compute tree average N biomass */
+	/* compute tree average N pools */
 	s->value[AV_LEAF_MASS_N]             = (s->value[LEAF_N]             / (double)s->counter[N_TREE]);
 	s->value[AV_STEM_MASS_N]             = (s->value[STEM_N]             / (double)s->counter[N_TREE]);
 	s->value[AV_FROOT_MASS_N]            = (s->value[FROOT_N]            / (double)s->counter[N_TREE]);
 	s->value[AV_CROOT_MASS_N]            = (s->value[CROOT_N]            / (double)s->counter[N_TREE]);
 	s->value[AV_BRANCH_MASS_N]           = (s->value[BRANCH_N]           / (double)s->counter[N_TREE]);
+	s->value[AV_RESERVE_MASS_N]          = (s->value[RESERVE_N]          / (double)s->counter[N_TREE]);
+	s->value[AV_FRUIT_MASS_N]            = (s->value[FRUIT_N]            / (double)s->counter[N_TREE]);
 
 }
 
@@ -212,6 +214,5 @@ void tree_biomass_remove (cell_t *const c, species_t *const s, const int tree_re
 			s->value[DEAD_BRANCH_N] +
 			s->value[DEAD_RESERVE_N]+
 			s->value[DEAD_FRUIT_N]) ;
-
 
 }

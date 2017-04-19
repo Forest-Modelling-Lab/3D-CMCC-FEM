@@ -46,9 +46,6 @@ int Soil_model_daily (matrix_t *const m, const int cell, const int day, const in
 
 	CHECK_CONDITION( c->soil_layers_count, !=, g_settings->number_of_soil_layer );
 
-	/* add Nitrogen soil pool from atmospheric deposition */
-	//TODO INCLUDE VALUES OF Ndep file INTO SOIL POOL
-
 	/* loop on each cell layers starting from highest to lower */
 	for ( soil_layer = c->soil_layers_count -1 ; soil_layer >= 0; -- soil_layer )
 	{
@@ -57,6 +54,9 @@ int Soil_model_daily (matrix_t *const m, const int cell, const int day, const in
 		/* run on only for the highest soil layer */
 		if ( soil_layer == c->soil_layers_count -1)
 		{
+			/* add Nitrogen to top soil pool from atmospheric deposition */
+			c->daily_soilN += meteo_daily->Ndeposition;
+
 			/* soil radiative balance */
 			soil_radiation_sw_band ( c, meteo_daily );
 

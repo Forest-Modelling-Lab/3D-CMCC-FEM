@@ -13,11 +13,11 @@ extern logger_t* g_debug_log;
 
 void turnover( cell_t *const c, species_t *const s, const int year )
 {
-#if 0
+
 	int days_for_turnover;
 
 	logger(g_debug_log, "\n**TURNOVER**\n");
-
+#if 0
 	if ( c->doy ==  IS_LEAP_YEAR ( c->years[year].year ) ) days_for_turnover = 366;
 	else days_for_turnover = 365;
 
@@ -59,7 +59,6 @@ void turnover( cell_t *const c, species_t *const s, const int year )
 	{
 		/*******************************************************************************************************************/
 		/* daily stem turnover live to dead wood*/
-		logger(g_debug_log, "\n****Stem turnover****\n");
 
 		s->value[C_STEM_LIVEWOOD_TO_DEADWOOD] = (s->value[C_TO_STEM] * s->value[DAILY_LIVE_WOOD_TURNOVER]);
 		logger(g_debug_log, "C_STEM_LIVEWOOD_TO_DEADWOOD = %g tC/cell\n", s->value[C_STEM_LIVEWOOD_TO_DEADWOOD]);
@@ -67,7 +66,6 @@ void turnover( cell_t *const c, species_t *const s, const int year )
 		/*******************************************************************************************************************/
 
 		/* daily coarse root turnover live to dead wood */
-		logger(g_debug_log, "\n****Coarse root turnover****\n");
 
 		s->value[C_CROOT_LIVE_WOOD_TO_DEADWOOD] = (s->value[C_TO_CROOT] * s->value[DAILY_LIVE_WOOD_TURNOVER]);
 		logger(g_debug_log, "C_CROOT_LIVE_WOOD_TO_DEADWOOD = %g tC/cell\n", s->value[C_CROOT_LIVE_WOOD_TO_DEADWOOD]);
@@ -75,7 +73,6 @@ void turnover( cell_t *const c, species_t *const s, const int year )
 		/*******************************************************************************************************************/
 
 		/* daily branch turnover live to dead wood */
-		logger(g_debug_log, "\n****Branch turnover****\n");
 
 		s->value[C_BRANCH_LIVE_WOOD_TO_DEAD_WOOD] = (s->value[C_TO_BRANCH] * s->value[DAILY_LIVE_WOOD_TURNOVER]);
 		logger(g_debug_log, "C_BRANCH_LIVE_WOOD_TO_DEAD_WOOD = %g tC/cell\n", s->value[C_BRANCH_LIVE_WOOD_TO_DEAD_WOOD]);
