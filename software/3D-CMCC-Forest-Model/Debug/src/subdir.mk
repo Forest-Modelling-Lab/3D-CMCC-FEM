@@ -46,6 +46,7 @@ C_SRCS += \
 ../src/management.c \
 ../src/matrix.c \
 ../src/met_data.c \
+../src/meteo.c \
 ../src/modifiers.c \
 ../src/mortality.c \
 ../src/nc.c \
@@ -76,8 +77,7 @@ C_SRCS += \
 ../src/turnover_Marconi.c \
 ../src/utility.c \
 ../src/water_balance.c \
-../src/wue.c \
-../src/yos.c 
+../src/wue.c 
 
 OBJS += \
 ./src/C-assimilation.o \
@@ -122,6 +122,7 @@ OBJS += \
 ./src/management.o \
 ./src/matrix.o \
 ./src/met_data.o \
+./src/meteo.o \
 ./src/modifiers.o \
 ./src/mortality.o \
 ./src/nc.o \
@@ -152,8 +153,7 @@ OBJS += \
 ./src/turnover_Marconi.o \
 ./src/utility.o \
 ./src/water_balance.o \
-./src/wue.o \
-./src/yos.o 
+./src/wue.o 
 
 C_DEPS += \
 ./src/C-assimilation.d \
@@ -198,6 +198,7 @@ C_DEPS += \
 ./src/management.d \
 ./src/matrix.d \
 ./src/met_data.d \
+./src/meteo.d \
 ./src/modifiers.d \
 ./src/mortality.d \
 ./src/nc.d \
@@ -228,8 +229,7 @@ C_DEPS += \
 ./src/turnover_Marconi.d \
 ./src/utility.d \
 ./src/water_balance.d \
-./src/wue.d \
-./src/yos.d 
+./src/wue.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes

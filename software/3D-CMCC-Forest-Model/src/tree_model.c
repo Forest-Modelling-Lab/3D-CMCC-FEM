@@ -406,7 +406,6 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	}
 	logger(g_debug_log, "****************END OF LAYER CLASS***************\n");
 
-
 	/* ok */
 	return 1;
 }
