@@ -146,7 +146,13 @@ void carbon_allocation( cell_t *const c, species_t *const s)
 
 	/***************************************************************************************/
 
-	s->value[TOTAL_C] = s->value[LEAF_C] +s->value[STEM_C] + s->value[BRANCH_C] + s->value[TOT_ROOT_C] + s->value[FRUIT_C] + s->value[RESERVE_C];
+	s->value[TOTAL_C] = s->value[LEAF_C] +
+			s->value[FROOT_C]            +
+			s->value[STEM_C]             +
+			s->value[BRANCH_C]           +
+			s->value[CROOT_C]            +
+			s->value[FRUIT_C]            +
+			s->value[RESERVE_C]          ;
 
 	/* check for closure */
 	CHECK_CONDITION(fabs((s->value[STEM_LIVE_WOOD_C] + s->value[STEM_DEAD_WOOD_C])-s->value[STEM_C]),>,eps);

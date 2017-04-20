@@ -4,8 +4,6 @@
 
 #include "matrix.h"
 
-void Print_parameters(species_t *const s, const int species_count, const int day, const int month, const int years);
-
 void print_daily_cell_data(cell_t* const c);
 
 void print_daily_forest_data(cell_t* const c);

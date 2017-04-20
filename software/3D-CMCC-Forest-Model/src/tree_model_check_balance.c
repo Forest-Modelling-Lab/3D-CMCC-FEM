@@ -403,10 +403,10 @@ int check_tree_class_nitrogen_flux_balance ( cell_t *const c, const int layer, c
 		error_log("\nstore         = %f tN/cell/day\n", store);
 		error_log("N_TO_LEAF       = %f tN/cell/day\n", s->value[N_TO_LEAF]);
 		error_log("N_TO_FROOT      = %f tN/cell/day\n", s->value[N_TO_FROOT]);
-		error_log("N_TO_CROOT      = %f tN/cell/day\n", s->value[N_TO_CROOT]);
 		error_log("N_TO_STEM       = %f tN/cell/day\n", s->value[N_TO_STEM]);
-		error_log("N_TO_RESERVE    = %f tN/cell/day\n", s->value[N_TO_RESERVE]);
+		error_log("N_TO_CROOT      = %f tN/cell/day\n", s->value[N_TO_CROOT]);
 		error_log("N_TO_BRANCH     = %f tN/cell/day\n", s->value[N_TO_BRANCH]);
+		error_log("N_TO_RESERVE    = %f tN/cell/day\n", s->value[N_TO_RESERVE]);
 		error_log("N_TO_FRUIT      = %f tN/cell/day\n", s->value[N_TO_FRUIT]);
 		error_log("\nbalance       = %f tN/cell/day\n", balance);
 		error_log("...FATAL ERROR in 'Tree_model_daily' nitrogen flux balance (exit)\n");

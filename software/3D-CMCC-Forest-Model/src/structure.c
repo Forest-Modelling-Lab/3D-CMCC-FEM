@@ -435,7 +435,32 @@ int annual_forest_structure(cell_t* const c, const int year)
 	}
 	logger(g_debug_log, "**************************************\n");
 	logger(g_debug_log, "**************************************\n");
+	/*************************************************************************************/
 
+	/* compute total number of trees */
+	logger(g_debug_log, "*compute total number of trees*\n\n");
+
+	for (layer = c->tree_layers_count - 1; layer >= 0; --layer)
+	{
+		for ( height = 0; height < c->heights_count ; ++height )
+		{
+			if( layer == c->heights[height].height_z )
+			{
+				for ( dbh = 0; dbh < c->heights[height].dbhs_count; ++dbh )
+				{
+					for ( age = 0; age < c->heights[height].dbhs[dbh].ages_count ; ++age )
+					{
+						for ( species = 0; species < c->heights[height].dbhs[dbh].ages[age].species_count; ++species )
+						{
+							c->cell_n_trees += s->counter[N_TREE];
+						}
+					}
+				}
+			}
+		}
+	}
+	logger(g_debug_log, "**************************************\n");
+	logger(g_debug_log, "**************************************\n");
 	/*************************************************************************************/
 	/* compute daily overall cell cover (cell level) */
 	logger(g_debug_log, "*daily overall cell cover (cell level))*\n");

@@ -27,7 +27,7 @@ void nitrogen_assimilation(species_t *const s)
 	s->value[STEM_N]            = s->value[STEM_LIVE_WOOD_N]   + s->value[STEM_DEAD_WOOD_N];
 	s->value[CROOT_LIVE_WOOD_N] = s->value[CROOT_LIVE_WOOD_C]  / s->value[CN_LIVE_WOODS];
 	s->value[CROOT_DEAD_WOOD_N] = s->value[CROOT_DEAD_WOOD_C]  / s->value[CN_DEAD_WOODS];
-	s->value[CROOT_N]           = s->value[CROOT_LIVE_WOOD_C]  + s->value[CROOT_DEAD_WOOD_N];
+	s->value[CROOT_N]           = s->value[CROOT_LIVE_WOOD_N]  + s->value[CROOT_DEAD_WOOD_N];
 	s->value[BRANCH_LIVE_WOOD_N]= s->value[BRANCH_LIVE_WOOD_C] / s->value[CN_LIVE_WOODS];
 	s->value[BRANCH_DEAD_WOOD_N]= s->value[BRANCH_DEAD_WOOD_C] / s->value[CN_DEAD_WOODS];
 	s->value[BRANCH_N]          = s->value[BRANCH_LIVE_WOOD_N] + s->value[BRANCH_DEAD_WOOD_N];
