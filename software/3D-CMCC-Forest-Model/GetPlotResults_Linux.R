@@ -8,7 +8,7 @@ systemCall  <- paste0("3D-CMCC-Forest-Model/3D_CMCC_Forest_Model"," ",
                       "-m"," ", "PAPER/GCM1/GCM1_rcp8p5.txt"," ",
                       "-s"," ", "PAPER/Soroe_soil_ISIMIP.txt"," ",
                       "-t"," ", "PAPER/Soroe_topo_ISIMIP.txt"," ",
-                      "-c"," ", "PAPER/Soroe_settings_ISIMIP_Manag-off_CO2-on.txt"," ",
+                      "-c"," ", "PAPER/Soroe_settings_ISIMIP_Manag-on_CO2-on.txt"," ",
                       "-k"," ", "PAPER/CO2/CO2_rcp8p5_1950_2099.txt")
 system(systemCall)
 
@@ -49,6 +49,14 @@ pdf("./3D-CMCC-Forest-Model/output/prova_Rstudio/output_5.3.2-ISIMIP_2017_APRIL_
 par(mfrow=c(4,4))
 for (i in 1:length(outputCMCC$annual)) plot(outputCMCC$annual$Date,outputCMCC$annual[,i], main=colnames(outputCMCC$annual[i]),type="l")
 dev.off()
+
+# create annual Height plot
+dev.new()
+plot(outputCMCC$annual$Date,outputCMCC$annual[,3], main = colnames(outputCMCC$annual[3]),type = "l")
+
+# create annual DBH plot
+dev.new()
+plot(outputCMCC$annual$Date,outputCMCC$annual[,4], main = colnames(outputCMCC$annual[4]),type = "l")
 
 # create annual GPP plot
 dev.new()
