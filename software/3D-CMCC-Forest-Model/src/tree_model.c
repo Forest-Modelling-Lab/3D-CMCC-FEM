@@ -341,6 +341,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 										/* regeneration */
 										regeneration ( c, height, dbh, age, species);
 									}
+
 									/* update pointers */
 									/*
 									l = &c->tree_layers[layer];

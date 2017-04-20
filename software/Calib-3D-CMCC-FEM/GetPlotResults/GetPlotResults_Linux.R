@@ -14,6 +14,7 @@ system(systemCall)
 
 outputCMCC<- list()
 
+
 annual <- list.files("./3D-CMCC-Forest-Model/output/prova_Rstudio/", pattern = "annual",recursive = TRUE, full.names = TRUE)
 monthly <- list.files("./3D-CMCC-Forest-Model/output/prova_Rstudio/", pattern = "monthly",recursive = TRUE, full.names = TRUE)
 daily <- list.files("./3D-CMCC-Forest-Model/output/prova_Rstudio/", pattern = "daily",recursive = TRUE, full.names = TRUE)
@@ -51,17 +52,21 @@ dev.off()
 
 # create annual GPP plot
 dev.new()
-plot(outputCMCC$annual$Date,outputCMCC$annual[,8], main = colnames(outputCMCC$annual[8]))
-# plot(outputCMCC$annual$Date,outputCMCC$annual[,8], main=colnames(outputCMCC$annual[8]),type = "l")
+plot(outputCMCC$annual$Date,outputCMCC$annual[,8], main = colnames(outputCMCC$annual[8]),type = "l")
+
 # # create annual RA plot
 dev.new()
-plot(outputCMCC$annual$Date,outputCMCC$annual[,11], main = colnames(outputCMCC$annual[11]))
-# plot(outputCMCC$annual$Date,outputCMCC$annual[,11], main=colnames(outputCMCC$annual[11]),type = "l")
+plot(outputCMCC$annual$Date,outputCMCC$annual[,11], main = colnames(outputCMCC$annual[11]),type = "l")
+
 # # create annual NPP plot
 dev.new()
-plot(outputCMCC$annual$Date,outputCMCC$annual[,12], main = colnames(outputCMCC$annual[12]))
-# plot(outputCMCC$annual$Date,outputCMCC$annual[,12], main=colnames(outputCMCC$annual[12]),type = "l")
+plot(outputCMCC$annual$Date,outputCMCC$annual[,12], main = colnames(outputCMCC$annual[12]),type = "l")
+
+# # create annual NPP plot
+dev.new()
+plot(outputCMCC$annual$Date,outputCMCC$annual[,13], main = colnames(outputCMCC$annual[13]),type = "l")
+
 # # create annual LAI plot
 dev.new()
-plot(outputCMCC$annual$Date,outputCMCC$annual[,15], main = colnames(outputCMCC$annual[15]))
-# plot(outputCMCC$annual$Date,outputCMCC$annual[,15], main=colnames(outputCMCC$annual[15]),type = "l")
+plot(outputCMCC$annual$Date,outputCMCC$annual[,15], main = colnames(outputCMCC$annual[15]),type = "l")
+
