@@ -383,7 +383,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							/* 2 */ if ( ! check_tree_class_carbon_flux_balance    ( c, layer, height, dbh, age, species ) ) return 0;
 
 							/* check for nitrogen flux balance closure */
-							/* 3 */ if ( ! check_tree_class_nitrogen_flux_balance  ( c, layer, height, dbh, age, species ) ) return 0;
+							/* 3 */ //fixme if ( ! check_tree_class_nitrogen_flux_balance  ( c, layer, height, dbh, age, species ) ) return 0;
 
 							/* check for water flux balance closure */
 							/* 4 */ if ( ! check_tree_class_water_flux_balance     ( c, layer, height, dbh, age, species ) ) return 0;

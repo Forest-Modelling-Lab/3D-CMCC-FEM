@@ -257,7 +257,7 @@ void age_mortality (cell_t *const c, const int height, const int dbh, const int 
 	s = &a->species[species];
 
 	/* Age probability function */
-	s->value[AGEMORT] = (-(3 * log (0.001)) / (s->value[MAXAGE])) * pow (((double)a->value /s->value[MAXAGE]), 2);
+	s->value[AGEMORT] = ( - ( 3. * log ( 0.001 ) ) / (s->value[MAXAGE])) * pow (((double)a->value /s->value[MAXAGE]), 2.);
 	logger(g_debug_log, "Max Age = %g years\n", s->value[MAXAGE]);
 	logger(g_debug_log, "Age factor (LPJ-GUESS) = %g\n", s->value[AGEMORT]);
 

@@ -380,7 +380,6 @@ enum {
 	MAX_BUD_BURST_C,                    /* (tC/cell) Maximum Current Leaf carbon pool for BudBurst */
 	STEM_C,                             /* (tC/cell) Current Stem carbon pool */
 	BRANCH_C,                           /* (tC/cell) Current Branch carbon pool */
-	TOT_STEM_C,                         /* (tC/cell) Current Stem + Branch carbon pool */
 	MIN_RESERVE_C,                      /* (tC/cell) Current Minimum reserve carbon pool */
 	RESERVE_C,                          /* (tC/cell) Current Reserve carbon pool */
 	FRUIT_C,                            /* (tC/cell) Current Fruit carbon pool */
@@ -422,7 +421,6 @@ enum {
 	/* per tree in tC */
 	AV_LEAF_MASS_C,                     /* (tC/tree) Average Leaf carbon pool */
 	AV_STEM_MASS_C,                     /* (tC/tree) Average Stem carbon pool */
-	AV_TOT_STEM_MASS_C,                 /* (tC/tree) Average Stem + Branch carbon pool */
 	AV_FROOT_MASS_C,                    /* (tC/tree) Average Fine root carbon pool */
 	AV_CROOT_MASS_C,                    /* (tC/tree) Average Coarse carbon pool */
 	AV_RESERVE_MASS_C,                  /* (tC/tree) Average Reserve carbon pool */
@@ -451,7 +449,6 @@ enum {
 	BIOMASS_FROOT_tDM,                  /* (tDM/cell) Current Fine root carbon pool */
 	BIOMASS_STEM_tDM,                   /* (tDM/cell) Current Stem carbon pool */
 	BIOMASS_BRANCH_tDM,                 /* (tDM/cell) Current Branch carbon pool */
-	BIOMASS_TOT_STEM_tDM,               /* (tDM/cell) Current Total Stem carbon pool */
 	RESERVE_tDM,                        /* (tDM/cell) Current Reserve carbon pool */
 	BIOMASS_FRUIT_tDM,                  /* (tDM/cell) Current Fruit carbon pool */
 	BIOMASS_LIVE_WOOD_tDM,              /* (tDM/cell) Current Live Wood carbon pool */
@@ -465,7 +462,6 @@ enum {
 
 	/* (kgDM/tree) per tree in KgDM */
 	AV_LEAF_MASS_KgDM,                  /* (kgDM/tree) Average Leaf carbon pool */
-	AV_TOT_STEM_MASS_KgDM,              /* (kgDM/tree) Average Stem + Branch carbon pool */
 	AV_STEM_MASS_KgDM,                  /* (kgDM/tree) Average Leaf carbon pool */
 	AV_FROOT_MASS_KgDM,                 /* (kgDM/tree) Average Fine root carbon pool */
 	AV_CROOT_MASS_KgDM,                 /* (kgDM/tree) Average Coarse root carbon pool */

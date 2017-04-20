@@ -152,16 +152,6 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 	s->value[AV_BRANCH_MASS_C] = s->value[BRANCH_C] / s->counter[N_TREE];
 	logger(g_debug_log, "-Individual branch biomass = %g tC\n", s->value[AV_BRANCH_MASS_C]);
 
-	/*computing total stem biomass*/
-	s->value[BIOMASS_TOT_STEM_tDM] = s->value[BIOMASS_STEM_tDM] + s->value[BIOMASS_BRANCH_tDM];
-	s->value[TOT_STEM_C] = s->value[STEM_C] + s->value[BRANCH_C];
-	logger(g_debug_log, "---Total stem biomass (Ws + Wbb) = %g tC/cell\n", s->value[TOT_STEM_C]);
-	CHECK_CONDITION(fabs((s->value[TOT_STEM_C])-(s->value[STEM_C] + s->value[BRANCH_C])), >,eps);
-
-	s->value[AV_TOT_STEM_MASS_KgDM] = s->value[BIOMASS_TOT_STEM_tDM] * 1e3 / s->counter[N_TREE];
-	s->value[AV_TOT_STEM_MASS_C] = s->value[TOT_STEM_C] / s->counter[N_TREE];
-	logger(g_debug_log, "-Individual total stem = %g tC\n", s->value[AV_TOT_STEM_MASS_C]);
-	CHECK_CONDITION(fabs((s->value[AV_TOT_STEM_MASS_C])-(s->value[AV_STEM_MASS_C] + s->value[AV_BRANCH_MASS_C])), >,eps);
 
 	if(s->value[BIOMASS_CROOT_tDM]== 0 || s->value[BIOMASS_CROOT_tDM] == NO_DATA)
 	{
@@ -476,7 +466,7 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 	/* compute AGB and BGB */
 	logger(g_debug_log, "**AGB & BGB**\n");
 	logger(g_debug_log, "-for Class\n");
-	s->value[CLASS_AGB] = s->value[TOT_STEM_C] + s->value[LEAF_C];
+	s->value[CLASS_AGB] = s->value[STEM_C] + s->value[BRANCH_C] + s->value[LEAF_C] + s->value[FRUIT_C];
 	logger(g_debug_log, "Yearly Class AGB = %g tC/cell year\n", s->value[CLASS_AGB]);
 	s->value[CLASS_BGB] = s->value[FROOT_C] + s->value[CROOT_C];
 	logger(g_debug_log, "Yearly Class BGB = %g tC/cell year\n", s->value[CLASS_BGB]);
@@ -506,7 +496,6 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 	}
 	CHECK_CONDITION(s->value[STEM_C],                  <=, 0);
 	CHECK_CONDITION(s->value[BRANCH_C],                <=, 0);
-	CHECK_CONDITION(s->value[TOT_STEM_C],              <=, 0);
 	CHECK_CONDITION(s->value[CROOT_C],                 <=, 0);
 	CHECK_CONDITION(s->value[TOT_WOOD_C],              <=, 0);
 	CHECK_CONDITION(s->value[RESERVE_C],               <=, 0);
