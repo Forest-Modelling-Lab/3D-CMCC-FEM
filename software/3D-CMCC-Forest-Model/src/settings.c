@@ -203,12 +203,12 @@ settings_t* settings_import(const char *const filename) {
 			}
 		}
 		if ( -1 == index ) {
-			printf("unknown parameter specified in settings: %s. skipped.", token);
+			printf("unknown parameter specified in settings: %s. skipped.\n", token);
 			continue;
 		}
 
 		if ( imported[index] ) {
-			printf("%s already specified. skipped.", token);
+			printf("%s already specified. skipped.\n", token);
 			continue;
 		}
 

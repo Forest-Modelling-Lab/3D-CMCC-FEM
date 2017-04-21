@@ -298,7 +298,7 @@ int file_copy(const char* const filename, const char* const path) {
 	if ( ! p || (p2 && (p2 < p)) ) {
 		p = p2;
 	}
-	if ( ! p ) p = p2;
+	//if ( ! p ) p = p2;
 	if ( p ) ++p;
 
 	i = strlen(path);
@@ -363,7 +363,7 @@ int path_create(const char *const path) {
 	if ( ! p || (p2 && (p2 < p)) ) {
 		p = p2;
 	}
-	if ( ! p ) p = p2;
+	//if ( ! p ) p = p2;
 
 	while ( p ) {
 		char *p3;
