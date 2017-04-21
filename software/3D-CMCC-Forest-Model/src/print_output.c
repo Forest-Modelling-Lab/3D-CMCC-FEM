@@ -57,7 +57,7 @@ void print_model_paths(logger_t *const _log)
 	logger(_log, "\n\n#site: %s\n", g_settings->sitename);
 	if ( g_sz_dataset_file )
 		logger(_log, "#--input files--\n");
-		logger(_log, "#input file = %s\n", get_filename(g_sz_dataset_file));
+	logger(_log, "#input file = %s\n", get_filename(g_sz_dataset_file));
 	logger(_log, "#soil file = %s\n", get_filename(g_sz_soil_file));
 	logger(_log, "#topo file = %s\n", get_filename(g_sz_topo_file));
 	logger(_log, "#met file = %s\n", get_filename(g_sz_input_met_file));
@@ -165,7 +165,6 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 										",C_TRA"
 										",C_ET"
 										",C_LE"
-										",S_EVA"
 										",WUE"
 										",WRes"
 										",WS"
@@ -240,19 +239,8 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 			 */
 		}
 		/************************************************************************/
-
-		/* heading variables at cell level only if there's more than one layer */
-		if( c->heights_count > 1 )
-		{
-			logger(g_daily_log,",***,gpp,npp,ar");
-		}
-		/* heading variables at cell level also if there's more than one layer */
-		else
-		{
-			logger(g_daily_log,",*****");
-		}
 		/* heading variables only at cell level */
-		logger(g_daily_log,",et,le,snow_pack,asw,iWue,litrC,soilC,litrN,soilN\n");
+		logger(g_daily_log,",gpp,npp,ar,et,le,soil_evapo,snow_pack,asw,iWue,litrC,cwdC,soilC,litrN,soilN\n");
 	}
 	/*****************************************************************************************************/
 
@@ -316,7 +304,6 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 									s->value[CANOPY_TRANSP],
 									s->value[CANOPY_EVAPO_TRANSP],
 									s->value[CANOPY_LATENT_HEAT],
-									c->daily_soil_evapo,
 									s->value[WUE],
 									s->value[RESERVE_C],
 									s->value[STEM_C],
@@ -354,6 +341,7 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 									s->value[F_NUTR],
 									s->value[F_SW],
 									s->value[LITR_C],
+									s->value[CWD_C],
 									s->value[SOIL_C]
 							);
 						}
@@ -379,26 +367,15 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 		}
 	}
 	/************************************************************************/
-
-	/* printing variables at cell level only if there's more than one layer */
-	if( c->heights_count > 1 )
-	{
-		logger(g_daily_log, ",%s,%3.4f,%3.4f,%3.4f",
-				"***",
-				c->daily_gpp,
-				c->daily_npp,
-				c->daily_aut_resp);
-
-	}
-	/* printing variables at cell level also if there's more than one layer */
-	else
-	{
-		logger(g_daily_log,",*****");
-	}
 	/* printing variables only at cell level */
-	logger(g_daily_log, ",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f\n",
+
+	logger(g_daily_log, ",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f\n",
+			c->daily_gpp,
+			c->daily_npp,
+			c->daily_aut_resp,
 			c->daily_et,
 			c->daily_lh_flux,
+			c->daily_soil_evapo,
 			c->snow_pack,
 			c->asw,
 			c->daily_iwue,
@@ -408,8 +385,6 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 			c->litrN,
 			c->soilN
 	);
-
-
 	/************************************************************************/
 
 	if ( c->doy == ( IS_LEAP_YEAR( c->years[year].year ) ? 366 : 365 ) )
@@ -756,7 +731,7 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 										",CUE"
 										",Y(%%)"
 										",PeakLAI"
-										",CC"
+										",CC-Proj"
 										",DBHDC"
 										",HD"
 										",HDMAX"
@@ -768,25 +743,25 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 										",CINT"
 										",CLE"
 										",WUE"
-										",LTW"
-										",MinRes"
-										",WRes"
-										",WS"
-										",WSL"
-										",WSD"
-										",PWL"
-										",PWFR"
-										",WCR"
-										",WCRL"
-										",WCRD"
-										",WBB"
-										",WBBL"
-										",WBBD"
-										",SAR"
-										",LAR"
-										",FRAR"
-										",CRAR"
-										",BBAR");
+										",EFF_LIVE_TOTAL_WOOD_FRAC"
+										",MIN_RESERVE_C"
+										",RESERVE_C"
+										",STEM_C"
+										",STEM_LIVE_WOOD_C"
+										",STEM_DEAD_WOOD_C"
+										",MAX_LEAF_C"
+										",MAX_FROOT_C"
+										",CROOT_C"
+										",CROOT_LIVE_WOOD_C"
+										",CROOT_DEAD_WOOD_C"
+										",BRANCH_C"
+										",BRANCH_LIVE_WOOD_C"
+										",BRANCH_DEAD_WOOD_C"
+										",STEM_AUT_RESP"
+										",LEAF_AUT_RESP"
+										",FROOT_AUT_RESP"
+										",CROOT_AUT_RESP"
+										",BRANCH_AUT_RESP");
 
 							}
 							if ( c->heights[height].dbhs[dbh].ages[age].species_count > 1 ) {
@@ -810,20 +785,9 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 			}
 		}
 		/************************************************************************/
-		/* heading variables at cell level only if there's more than one layer */
-
-		if( c->heights_count > 1 )
-		{
-			logger(g_annual_log,",***,gpp,npp,ar,y(%%)");
-
-		}
-		/* heading variables at cell level also if there's more than one layer */
-		else
-		{
-			logger(g_annual_log,",*****");
-		}
 		/* heading variables only at cell level */
-		logger(g_annual_log,",et,le,asw,iWue\n");
+		logger(g_annual_log,",gpp,npp,ar,y(%%),et,le,soil-evapo,asw,iWue\n");
+
 	}
 	/*****************************************************************************************************/
 
@@ -935,33 +899,22 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 		/************************************************************************/
 		/* printing variables at cell level only if there's more than one layer */
 
-		if( c->heights_count > 1 )
-		{
-			logger(g_annual_log, "***,%3.4f,%3.4f,%3.4f,%3.4f",
-					c->annual_gpp,
-					c->annual_npp,
-					c->annual_aut_resp,
-					(c->annual_aut_resp/c->annual_gpp)*100.0);
+		logger(g_annual_log, ",%3.4f,%3.4f,%3.4f,%3.4f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f\n",
+				c->annual_gpp,
+				c->annual_npp,
+				c->annual_aut_resp,
+				(c->annual_aut_resp/c->annual_gpp)*100.0,
+				c->annual_et,
+				c->annual_lh_flux,
+				c->annual_soil_evapo,
+				c->asw,
+				c->annual_iwue)	;
 
-		}
-		/* printing variables at cell level also if there's more than one layer */
-		else
-		{
-			logger(g_annual_log,",*****");
-		}
 	}
 	else
 	{
 		//ALESSIOC TO ALLESSIOR PRINT EMPTY SPACES WHEN TREE = 0
 	}
-
-	/* printing variables only at cell level */
-	logger(g_annual_log, ",%3.2f,%3.2f,%3.2f,%3.2f\n",
-			c->annual_et,
-			c->annual_lh_flux,
-			c->asw,
-			c->annual_iwue);
-
 	/************************************************************************/
 
 	++years_counter;

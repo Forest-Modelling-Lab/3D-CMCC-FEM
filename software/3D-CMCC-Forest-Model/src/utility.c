@@ -48,6 +48,8 @@ void reset_daily_cell_variables(cell_t *const c)
 	c->daily_npp =                      0.;
 	c->daily_npp_tC =                   0.;
 	c->daily_npp_tDM =                  0.;
+	c->daily_wue =                      0.;
+	c->daily_iwue =                     0.;
 	c->daily_leaf_maint_resp =          0.;
 	c->daily_stem_maint_resp =          0.;
 	c->daily_froot_maint_resp =         0.;
@@ -324,6 +326,8 @@ void reset_daily_class_variables(cell_t *const c)
 					s->value[CANOPY_EVAPO_TRANSP] =       0.;
 					s->value[WUE] =                       0.;
 					s->value[iWUE] =                      0.;
+					s->value[iWUE_SUN] =                  0.;
+					s->value[iWUE_SHADE] =                0.;
 
 					/* reset daily multipliers */
 					s->value[F_CO2] =                     0.;
@@ -475,6 +479,8 @@ void reset_monthly_class_variables(cell_t *const c)
 					s->value[MONTHLY_CUE] =                  0.;
 					s->value[MONTHLY_WUE] =                  0.;
 					s->value[MONTHLY_iWUE] =                 0.;
+					s->value[MONTHLY_iWUE_SUN] =             0.;
+					s->value[MONTHLY_iWUE_SHADE] =           0.;
 					s->value[MONTHLY_CANOPY_LATENT_HEAT] =   0.;
 					s->value[MONTHLY_TOTAL_MAINT_RESP] =     0.;
 					s->value[MONTHLY_TOTAL_GROWTH_RESP] =    0.;
@@ -553,6 +559,8 @@ void reset_annual_class_variables(cell_t *const c)
 					s->value[YEARLY_CUE] =                  0.;
 					s->value[YEARLY_WUE] =                  0.;
 					s->value[YEARLY_iWUE] =                 0.;
+					s->value[YEARLY_iWUE_SUN] =             0.;
+					s->value[YEARLY_iWUE_SHADE] =           0.;
 					s->value[YEARLY_APAR] =                 0.;
 					s->value[YEARLY_TOTAL_MAINT_RESP] =     0.;
 					s->value[YEARLY_TOTAL_GROWTH_RESP] =    0.;
