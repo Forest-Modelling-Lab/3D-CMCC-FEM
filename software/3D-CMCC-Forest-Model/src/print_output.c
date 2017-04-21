@@ -239,7 +239,6 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 			 */
 		}
 		/************************************************************************/
-
 		/* heading variables at cell level only if there's more than one layer */
 		if( c->heights_count > 1 )
 		{
