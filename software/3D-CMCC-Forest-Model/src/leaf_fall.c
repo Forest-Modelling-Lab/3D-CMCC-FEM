@@ -178,7 +178,6 @@ void leaffall (species_t *const s)
 	logger(g_debug_log, "C_TO_FROOT         = %f\n", s->value[C_TO_FROOT]);
 	logger(g_debug_log, "C_TO_FRUIT         = %f\n", s->value[C_TO_FRUIT]);
 
-
 	/* carbon litter transfer fluxes to carbon litter pool and reserves */
 	s->value[C_TO_RESERVE]      += (s->value[C_LEAF_TO_RESERVE] + s->value[C_FROOT_TO_RESERVE]);
 	s->value[C_TO_LITR]         += (s->value[C_LEAF_TO_LITR]    + s->value[C_FROOT_TO_LITR] );
@@ -190,6 +189,8 @@ void leaffall (species_t *const s)
 	/*** nitrogen leaf_fall ***/
 	/* compute fluxes of nitrogen leaf and fine root pool */
 	//assumption: retranslocation happens as for C using falling leaves parameter
+	//see Dezi et al., 2010 GCB
+	//
 	s->value[N_LEAF_TO_RESERVE]  = 0. /* s->value[LEAF_N_TO_REMOVE]   * (1. - (s->value[CN_LEAVES]     / s->value[CN_FALLING_LEAVES]))*/;
 	s->value[N_FROOT_TO_RESERVE] = 0. /* s->value[FROOT_N_TO_REMOVE]  * (1. - (s->value[CN_FINE_ROOTS] / s->value[CN_FALLING_LEAVES]))*/;
 	s->value[N_LEAF_TO_LITR]     = s->value[LEAF_N_TO_REMOVE] /*  * (s->value[CN_LEAVES]     / s->value[CN_FALLING_LEAVES])*/;

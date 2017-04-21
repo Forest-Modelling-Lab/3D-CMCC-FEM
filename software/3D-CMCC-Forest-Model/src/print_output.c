@@ -757,6 +757,11 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 										",BRANCH_C"
 										",BRANCH_LIVE_WOOD_C"
 										",BRANCH_DEAD_WOOD_C"
+										",TREE_CAI"
+										",TREE_MAI"
+										",VOLUME"
+										",AGB-live"
+										",BGB-live"
 										",STEM_AUT_RESP"
 										",LEAF_AUT_RESP"
 										",FROOT_AUT_RESP"
@@ -832,8 +837,9 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 								logger(g_annual_log,",%c", sz_management[c->heights[height].dbhs[dbh].ages[age].species[species].management]);
 
 								/* print variables at layer-class level */
-								logger(g_annual_log,",%6.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%d,%d,%d,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
-										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",
+								logger(g_annual_log,",%6.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%d,%d,%d,%3.4f"
+										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
+										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",
 										s->value[YEARLY_GPP],
 										s->value[YEARLY_TOTAL_GROWTH_RESP],
 										s->value[YEARLY_TOTAL_MAINT_RESP],
@@ -868,12 +874,16 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 										s->value[BRANCH_C],
 										s->value[BRANCH_LIVE_WOOD_C],
 										s->value[BRANCH_DEAD_WOOD_C],
+										s->value[TREE_CAI],
+										s->value[TREE_MAI],
+										s->value[VOLUME],
+										s->value[CLASS_AGB],
+										s->value[CLASS_BGB],
 										s->value[YEARLY_STEM_AUT_RESP],
 										s->value[YEARLY_LEAF_AUT_RESP],
 										s->value[YEARLY_FROOT_AUT_RESP],
 										s->value[YEARLY_CROOT_AUT_RESP],
 										s->value[YEARLY_BRANCH_AUT_RESP]);
-
 							}
 							if ( c->heights[height].dbhs[dbh].ages[age].species_count > 1 ) {
 								logger(g_annual_log,",*");

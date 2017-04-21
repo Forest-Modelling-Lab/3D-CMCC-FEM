@@ -138,8 +138,10 @@ enum {
 	MASS_DENSITY,                        /* (tDM/m3) mass density */
 	VOLUME,                              /* (m3/class) Stem Volume */
 	TREE_VOLUME,                         /* (m3/tree) Single Tree Volume */
-	CAI,                                 /* (m3/class/year) Current Annual Increment */
+	CAI,                                 /* (m3/class/year) Current Annual Volume Increment */
+	TREE_CAI,                            /* (m3/tree/year) Single Tree Current Annual Volume Increment */
 	MAI,                                 /* (m3/class/year) Mean Annual Volume Increment */
+	TREE_MAI,                            /* (m3/tree/year) Single Tree Mean Annual Volume Increment */
 	STEMCONST,                           /* constant in the stem mass vs. diameter relationship */
 	MAX_SPECIES_COVER,                   /* (DIM) maximum species-specific cell cover */
 
