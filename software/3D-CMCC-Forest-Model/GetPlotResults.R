@@ -12,7 +12,7 @@ output_folder="output_Rstudio"
 # single simulation
 site="Soroe"
 esm="1"
-rcp="8p5"
+rcp="0p0"
 man="off"
 co2="on"
 
@@ -70,44 +70,44 @@ if (single_simulation == "on"){
   #****************************************************************************************************************************************************************************
   
   #output model TREE DAILY
-  pdf(paste0("./output/",output_folder, "-", version, "-", site,"/output_", version,"_", year,"_", month,"_", day,"/daily/Daily.pdf"), onefile = T,width = 15,height = 12)
-  par(mfrow=c(4,4))
-  for (i in 5:length(outputCMCC$daily)) plot(outputCMCC$daily$Date, outputCMCC$daily[,i], main=colnames(outputCMCC$daily[i]),type = "l")
+  pdf(paste0("./output/",output_folder, "-", version, "-", site,"/output_", version,"_", year,"_", month,"_", day,"/daily/Daily.pdf"), onefile = T, width = 30,height = 24)
+  par(mfrow=c(5,5))
+  for (i in 5:length(outputCMCC$daily)) plot(outputCMCC$daily$Date, outputCMCC$daily[,i], main=colnames(outputCMCC$daily[i]), col="black", xlab = "year", ylab= "unit", type = "l")
   dev.off()
   
   #output model TREE MONTHLY
-  pdf(paste0("./output/",output_folder, "-", version, "-", site,"/output_", version, "_", year,"_", month,"_", day,"/monthly/Monthly.pdf"), onefile = T,width = 15,height = 12)
-  par(mfrow=c(4,4))
-  for (i in 4:length(outputCMCC$monthly)) plot(outputCMCC$monthly$Date,outputCMCC$monthly[,i], main=colnames(outputCMCC$monthly[i]),type = "l")
+  pdf(paste0("./output/",output_folder, "-", version, "-", site,"/output_", version, "_", year,"_", month,"_", day,"/monthly/Monthly.pdf"), onefile = T, width = 30,height = 24)
+  par(mfrow=c(5,5))
+  for (i in 4:length(outputCMCC$monthly)) plot(outputCMCC$monthly$Date,outputCMCC$monthly[,i], main=colnames(outputCMCC$monthly[i]), col="black", xlab = "year", ylab= "unit", type = "l")
   dev.off()
   
   #output model TREE ANNUAL
-  pdf(paste0("./output/",output_folder, "-", version, "-", site, "/output_", version, "_", year,"_", month,"_", day,"/annual/Annual.pdf"), onefile = T,width = 15,height = 12)
-  par(mfrow=c(4,4))
-  for (i in 3:length(outputCMCC$annual)) plot(outputCMCC$annual$Date,outputCMCC$annual[,i], main=colnames(outputCMCC$annual[i]),type="l")
+  pdf(paste0("./output/",output_folder, "-", version, "-", site, "/output_", version, "_", year,"_", month,"_", day,"/annual/Annual.pdf"), onefile = T, width = 20,height = 16)
+  par(mfrow=c(5,5))
+  for (i in 3:length(outputCMCC$annual)) plot(outputCMCC$annual$Date,outputCMCC$annual[,i], main=colnames(outputCMCC$annual[i]), col="black", xlab = "year", ylab= "unit", type = "l")
   dev.off()
 
   #****************************************************************************************************************************************************************************
   
   # create annual GPP plot
   dev.new()
-  plot(outputCMCC$annual$Date,outputCMCC$annual[,"GPP"], main = colnames(outputCMCC$annual[8]),type = "l")
+  plot(outputCMCC$annual$Date,outputCMCC$annual[,"GPP"], main = colnames(outputCMCC$annual[8]), col="red", xlab = "year", type = "l")
 
   # create annual RA plot
   dev.new()
-  plot(outputCMCC$annual$Date,outputCMCC$annual[,"RA"], main = colnames(outputCMCC$annual[11]),type = "l")
-
+  plot(outputCMCC$annual$Date,outputCMCC$annual[,"RA"], main = colnames(outputCMCC$annual[11]), col="red", xlab = "year", type = "l")
+ 
   # create annual NPP plot
   dev.new()
-  plot(outputCMCC$annual$Date,outputCMCC$annual[,"NPP"], main = colnames(outputCMCC$annual[12]),type = "l")
+  plot(outputCMCC$annual$Date,outputCMCC$annual[,"NPP"], main = colnames(outputCMCC$annual[12]), col="red", xlab = "year", type = "l")
 
   # create annual CUE plot
   dev.new()
-  plot(outputCMCC$annual$Date,outputCMCC$annual[,"CUE"], main = colnames(outputCMCC$annual[13]),type = "l")
+  plot(outputCMCC$annual$Date,outputCMCC$annual[,"CUE"], main = colnames(outputCMCC$annual[13]), col="red", xlab = "year", type = "l")
 
   # create annual LAI plot
   dev.new()
-  plot(outputCMCC$annual$Date,outputCMCC$annual[,"PeakLAI"], main = colnames(outputCMCC$annual[15]),type = "l")
+  plot(outputCMCC$annual$Date,outputCMCC$annual[,"PeakLAI"], main = colnames(outputCMCC$annual[15]), xlab = "year", type = "l")
   
 }else{
   for (e in 1: length(site_list))
