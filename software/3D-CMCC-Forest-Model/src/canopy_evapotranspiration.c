@@ -42,7 +42,6 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 	double evapo;
 	static int days_with_canopy_wet;
 
-
 	species_t *s;
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
