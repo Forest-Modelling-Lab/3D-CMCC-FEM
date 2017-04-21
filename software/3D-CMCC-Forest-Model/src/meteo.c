@@ -96,6 +96,9 @@ static void timestamp_split(const double value, int *const YYYY, int *const MM, 
 	*DD = (int)value - (*YYYY*10000) - (*MM*100);
 }
 
+// torna sempre un valore anche se non trova l'anno
+// (in pratica ritorna l'ultimo valore del file)
+// se non trova nulla, INVALID_VALUE 
 static double get_co2_conc(const int year, int*const err) {
 	char buf[256];
 	int _year;
@@ -106,7 +109,7 @@ static double get_co2_conc(const int year, int*const err) {
 	assert(err);
 
 	flag = 0;
-	co2_conc = 0.;
+	co2_conc = INVALID_VALUE;
 	f = NULL;
 
 	*err = 0;
@@ -2051,13 +2054,15 @@ static int import_txt(const char *const filename, meteo_annual_t** p_yos, int *c
 
 /* file is the comma separated files list!!! not a single file, initially yos_count is equal to 0 */
 meteo_annual_t* meteo_annual_import(const char *const file, int *const yos_count, const int x, const int y) {
-	int i;
 	char *token;
 	char *p;
 	char *p2;
 	char *filename;
 	char *temp;
+	int i;
+	int year_start_co2_fixed_index;
 	meteo_annual_t *meteo_annual;
+
 	const char comma_delimiter[] = ",\r\n";
 
 	assert(file && yos_count);
@@ -2111,6 +2116,17 @@ meteo_annual_t* meteo_annual_import(const char *const file, int *const yos_count
 	}
 	free(temp);
 
+	// get year_start_co2_fixed_index
+	year_start_co2_fixed_index = -1;
+	if ( CO2_TRANS_VAR == g_settings->CO2_trans ) {
+		for ( i = 0; i < *yos_count; ++i ) {
+			if ( meteo_annual[i].year == g_settings->year_start_co2_fixed ) {
+				year_start_co2_fixed_index = i;
+				break;
+			}
+		}
+	}
+
 	/* import co2 conc */
 	if ( g_settings->CO2_mod ) {
 		if ( (CO2_TRANS_ON == g_settings->CO2_trans) || (CO2_TRANS_VAR == g_settings->CO2_trans) )
@@ -2129,11 +2145,16 @@ meteo_annual_t* meteo_annual_import(const char *const file, int *const yos_count
 
 				if ( CO2_TRANS_VAR == g_settings->CO2_trans ) {
 					if ( meteo_annual[i].year >= g_settings->year_start_co2_fixed ) {
-						meteo_annual[i].co2Conc = meteo_annual[i-1].co2Conc;
+						if ( -1 == year_start_co2_fixed_index ) {
+							logger_error(g_debug_log, "year_start_co2_fixed_index not found!");
+							free(meteo_annual);
+							return NULL;
+						}
+						meteo_annual[i].co2Conc = meteo_annual[year_start_co2_fixed_index].co2Conc;
 					}
 				}
 
-				if ( err ) {
+				if ( /*err &&*/ IS_INVALID_VALUE(meteo_annual[i].co2Conc) ) {
 					logger_error(g_debug_log, "co2 concentration not found!!\n");
 					free(meteo_annual);
 					return NULL;
