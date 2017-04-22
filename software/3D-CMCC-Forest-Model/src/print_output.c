@@ -738,7 +738,7 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 										",HDMIN"
 										",Ntree"
 										",VEG_D"
-										",VEG_FIRST"
+										",FIRST_VEG_DAY"
 										",CTRANSP"
 										",CINT"
 										",CLE"
@@ -762,12 +762,12 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 										",VOLUME"
 										",AGB"
 										",BGB"
+										",BGB/AGB"
 										",STEM_AUT_RESP"
 										",LEAF_AUT_RESP"
 										",FROOT_AUT_RESP"
 										",CROOT_AUT_RESP"
 										",BRANCH_AUT_RESP");
-
 							}
 							if ( c->heights[height].dbhs[dbh].ages[age].species_count > 1 ) {
 								logger(g_annual_log,",*");
@@ -839,14 +839,14 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 								/* print variables at layer-class level */
 								logger(g_annual_log,",%6.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%d,%d,%d,%3.4f"
 										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
-										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",
+										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",
 										s->value[YEARLY_GPP],
 										s->value[YEARLY_TOTAL_GROWTH_RESP],
 										s->value[YEARLY_TOTAL_MAINT_RESP],
 										s->value[YEARLY_TOTAL_AUT_RESP],
 										s->value[YEARLY_NPP],
 										s->value[YEARLY_CUE],
-										s->value[YEARLY_TOTAL_AUT_RESP]/s->value[YEARLY_GPP]*100,
+										s->value[YEARLY_TOTAL_AUT_RESP]/s->value[YEARLY_GPP]*100.,
 										s->value[PEAK_LAI_PROJ],
 										s->value[CANOPY_COVER_PROJ],
 										s->value[DBHDC_EFF],
@@ -879,6 +879,7 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 										s->value[VOLUME],
 										s->value[CLASS_AGB],
 										s->value[CLASS_BGB],
+										s->value[CLASS_BGB]/s->value[CLASS_AGB],
 										s->value[YEARLY_STEM_AUT_RESP],
 										s->value[YEARLY_LEAF_AUT_RESP],
 										s->value[YEARLY_FROOT_AUT_RESP],

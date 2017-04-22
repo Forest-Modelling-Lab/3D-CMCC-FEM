@@ -11,10 +11,11 @@ output_folder="output_Rstudio"
 
 # single simulation
 site="Soroe"
-esm="1"
+esm="2"
 rcp="0p0"
 man="off"
-co2="on"
+co2="off"
+protocol="2B"
 
 # multiple simulations
 site_list<-c("Soroe","Hyytiala")
@@ -36,21 +37,21 @@ if (single_simulation == "on"){
   systemCall  <- paste0("Debug/3D_CMCC_Forest_Model", " ",
                         "-i"," ", "input/", site, " ",
                         "-p"," ", "input/parameterization", " ",
-                        "-o"," ", "output/",output_folder,"-", version, "-", site, " ",
+                        "-o"," ", "output/",output_folder,"-", version,"-",protocol,"-", site, " ",
                         "-d"," ", "PAPER/", site,"_stand_ISIMIP.txt", " ",
-                        "-m"," ", "PAPER/", "GCM", esm,"/", "GCM", esm,"_", "rcp", rcp, ".txt", " ",
+                        "-m"," ", "PAPER/", protocol, "/GCM", esm,"/", "GCM", esm,"_", "rcp", rcp, ".txt", " ",
                         "-s"," ", "PAPER/", site,"_soil_ISIMIP.txt", " ",
                         "-t"," ", "PAPER/", site,"_topo_ISIMIP.txt", " ",
-                        "-c"," ", "PAPER/", site,"_settings_ISIMIP_Manag-", man, "_CO2-", co2,".txt", " ",
-                        "-k"," ", "PAPER/CO2/CO2_", "rcp",rcp, "_1950_2099.txt")
+                        "-c"," ", "PAPER/", protocol, "/", site,"_settings_ISIMIP_Manag-", man, "_CO2-", co2,".txt", " ",
+                        "-k"," ", "PAPER/", protocol,"/CO2/CO2_", "rcp",rcp, "_1950_2099.txt")
   # launch execution
   system(systemCall)
   outputCMCC<- list()
   
   # tree
-  annual <- list.files(paste0("./output/",output_folder,"-", version, "-", site), pattern = "annual",recursive = TRUE, full.names = TRUE)
-  monthly <- list.files(paste0("./output/",output_folder,"-", version, "-", site), pattern = "monthly",recursive = TRUE, full.names = TRUE)
-  daily <- list.files(paste0("./output/",output_folder,"-", version, "-", site), pattern = "daily",recursive = TRUE, full.names = TRUE)
+  annual <-  list.files(paste0("./output/",output_folder,"-", version,"-",protocol,"-", site), pattern = "annual",recursive = TRUE, full.names = TRUE)
+  monthly <- list.files(paste0("./output/",output_folder,"-", version,"-",protocol,"-", site), pattern = "monthly",recursive = TRUE, full.names = TRUE)
+  daily <-   list.files(paste0("./output/",output_folder,"-", version,"-",protocol,"-", site), pattern = "daily",recursive = TRUE, full.names = TRUE)
 
   # tree
   if (file.exists(annual)) outputCMCC[["annual"]]<-read.csv(annual,header=T,comment.char = "#")
@@ -70,19 +71,19 @@ if (single_simulation == "on"){
   #****************************************************************************************************************************************************************************
   
   #output model TREE DAILY
-  pdf(paste0("./output/",output_folder, "-", version, "-", site,"/output_", version,"_", year,"_", month,"_", day,"/daily/Daily.pdf"), onefile = T, width = 30,height = 24)
+  pdf(paste0("./output/",output_folder, "-",version,"-",protocol,"-", site,"/output_", version,"_", year,"_", month,"_", day,"/daily/Daily.pdf"), onefile = T, width = 30,height = 24)
   par(mfrow=c(5,5))
   for (i in 5:length(outputCMCC$daily)) plot(outputCMCC$daily$Date, outputCMCC$daily[,i], main=colnames(outputCMCC$daily[i]), col="black", xlab = "year", ylab= "unit", type = "l")
   dev.off()
   
   #output model TREE MONTHLY
-  pdf(paste0("./output/",output_folder, "-", version, "-", site,"/output_", version, "_", year,"_", month,"_", day,"/monthly/Monthly.pdf"), onefile = T, width = 30,height = 24)
+  pdf(paste0("./output/",output_folder, "-",version,"-",protocol,"-", site,"/output_", version, "_", year,"_", month,"_", day,"/monthly/Monthly.pdf"), onefile = T, width = 30,height = 24)
   par(mfrow=c(5,5))
   for (i in 4:length(outputCMCC$monthly)) plot(outputCMCC$monthly$Date,outputCMCC$monthly[,i], main=colnames(outputCMCC$monthly[i]), col="black", xlab = "year", ylab= "unit", type = "l")
   dev.off()
   
   #output model TREE ANNUAL
-  pdf(paste0("./output/",output_folder, "-", version, "-", site, "/output_", version, "_", year,"_", month,"_", day,"/annual/Annual.pdf"), onefile = T, width = 20,height = 16)
+  pdf(paste0("./output/",output_folder, "-", version,"-",protocol,"-", site,"/output_", version, "_", year,"_", month,"_", day,"/annual/Annual.pdf"), onefile = T, width = 20,height = 16)
   par(mfrow=c(5,5))
   for (i in 3:length(outputCMCC$annual)) plot(outputCMCC$annual$Date,outputCMCC$annual[,i], main=colnames(outputCMCC$annual[i]), col="black", xlab = "year", ylab= "unit", type = "l")
   dev.off()

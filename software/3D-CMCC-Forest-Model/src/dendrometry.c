@@ -350,7 +350,7 @@ void annual_minimum_reserve (species_t *const s)
 	s->value[MIN_RESERVE_C]= s->value[WTOT_sap_tDM] * s->value[SAP_WRES];
 	logger(g_debug_log, "--MINIMUM Reserve Biomass = %g t res/class \n", s->value[RESERVE_C]);
 
-	s->value[AV_MIN_RESERVE_C] = s->value[MIN_RESERVE_C] / s->counter[N_TREE];
+	s->value[AV_MIN_RESERVE_C] = s->value[MIN_RESERVE_C] / (double)s->counter[N_TREE];
 	logger(g_debug_log, "--Average MINIMUM Reserve Biomass = %g tC/class tree \n", s->value[RESERVE_C]);
 }
 
@@ -448,14 +448,13 @@ void dendrometry_old(cell_t *const c, const int layer, const int height, const i
 	logger(g_debug_log, "-Old Tree Height = %g m\n", oldTreeHeight);
 	logger(g_debug_log, "-New Tree Height = %g m\n", h->value);
 
-	/* Weibull function */
+	/** Weibull function **/
 	/* for references see also: R. Pilli et al. Forest Ecology and Management 237 (2006) 583–593 */
 	/*
 	 h->value = DBH_ref + s->value[WA] *(1.0 - exp ( - s->value[WB] * d->value * s->value[WC]));
-	 */
-
 	logger(g_debug_log, "-Old Tree Height = %g m\n", oldTreeHeight);
 	logger(g_debug_log, "-New Tree Height = %g m\n", h->value);
+	 */
 
 	/* check */
 	CHECK_CONDITION( h->value, <, oldTreeHeight - eps );

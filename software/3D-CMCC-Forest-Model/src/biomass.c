@@ -52,6 +52,8 @@ void annual_tree_increment(cell_t *const c, const int height, const int dbh, con
 	double prev_vol;
 	double single_tree_prev_vol;
 
+	static double prev_stemC;
+
 	age_t *a;
 	species_t *s;
 
@@ -61,45 +63,51 @@ void annual_tree_increment(cell_t *const c, const int height, const int dbh, con
 	s = &a->species[species];
 
 	/* in m^3/cell/yr */
-	/* CAI = Volume t1 - Volume t0 */
-	/* MAI = Volume t1 / Age t1 */
+	/* assumption: CAI = Volume t1 - Volume t0 */
+	/* assumption: MAI = Volume t1 / Age t1 */
 
 	/* CURRENT ANNUAL INCREMENT-CAI */
 
-	logger(g_debug_log, "***CAI & MAI***\n");
+	logger(g_debug_log, "***VOLUME & CAI & MAI***\n");
+
+	logger(g_debug_log, "prev_stemC    = %f m^3/cell\n", prev_stemC / (double) s->counter[N_TREE]);
+	logger(g_debug_log, "current_stemC    = %f m^3/cell\n", s->value[STEM_C] / (double) s->counter[N_TREE]);
 
 	/* STAND VOLUME-(STEM VOLUME) */
 	/* assign previous volume to temporary variables */
-	prev_vol = s->value[VOLUME];
-	logger(g_debug_log, "-previous stand volume = %g m^3/cell\n", prev_vol );
+	prev_vol              = s->value[VOLUME];
+	logger(g_debug_log, "Previous stand volume        = %f m^3/cell\n", prev_vol );
 
-	single_tree_prev_vol = s->value[TREE_VOLUME];
-	logger(g_debug_log, "-previous single tree volume = %.8f m^3/tree\n", single_tree_prev_vol );
+	single_tree_prev_vol  = s->value[TREE_VOLUME];
+	logger(g_debug_log, "Previous single tree volume  = %f m^3DM/tree\n", single_tree_prev_vol );
 
 	/* compute current stand level volume */
-	s->value[VOLUME] = ( s->value[STEM_C] * GC_GDM ) / s->value[MASS_DENSITY];
-	logger(g_debug_log, "-current stand volume = %g m^3/cell\n", s->value[VOLUME] );
+	s->value[VOLUME]      = ( s->value[STEM_C] * GC_GDM ) / s->value[MASS_DENSITY];
+	logger(g_debug_log, "Current stand volume         = %f m^3DM/cell\n", s->value[VOLUME] );
 
 	/* compute current stand level volume */
 	s->value[TREE_VOLUME] = s->value[VOLUME] / (int) s->counter[N_TREE];
-	logger(g_debug_log, "-current single tree volume = %.8f m^3/tree\n", s->value[TREE_VOLUME] );
+	logger(g_debug_log, "Current single tree volume   = %f m^3DM/tree\n", s->value[TREE_VOLUME] );
 
 	/* CAI-Current Annual Increment */
-	s->value[CAI] = s->value[VOLUME] - prev_vol;
-	logger(g_debug_log, "CAI-Current Annual Increment = %g m^3/cell/yr\n", s->value[CAI]);
+	s->value[CAI]         = s->value[VOLUME]      - prev_vol;
+	logger(g_debug_log, "CAI-Current Annual Increment = %f m^3DM/cell/yr\n", s->value[CAI]);
 
-	s->value[TREE_CAI] = s->value[TREE_VOLUME] - single_tree_prev_vol;
-	logger(g_debug_log, "CAI-Current Annual Increment = %g m^3/tree/yr\n", s->value[TREE_CAI]);
+	s->value[TREE_CAI]    = s->value[TREE_VOLUME] - single_tree_prev_vol;
+	logger(g_debug_log, "CAI-Current Annual Increment = %f m^3DM/tree/yr\n", s->value[TREE_CAI]);
 
 	/* MAI-Mean Annual Increment */
-	s->value[MAI] = s->value[VOLUME] / (double)a->value;
-	logger(g_debug_log, "MAI-Mean Annual Increment = %g m^3/cell/yr \n", s->value[MAI]);
+	s->value[MAI]         = s->value[VOLUME]      / (double)a->value;
+	logger(g_debug_log, "MAI-Mean Annual Increment    = %f m^3DM/cell/yr \n", s->value[MAI]);
 
-	s->value[TREE_MAI] = s->value[TREE_VOLUME] / (double)a->value;
-	logger(g_debug_log, "MAI-Mean Annual Increment = %g m^3/tree/yr \n", s->value[TREE_MAI]);
+	s->value[TREE_MAI]    = s->value[TREE_VOLUME] / (double)a->value;
+	logger(g_debug_log, "MAI-Mean Annual Increment    = %f m^3DM/tree/yr \n", s->value[TREE_MAI]);
 
 	/* check */
 	CHECK_CONDITION(s->value[TREE_VOLUME], <, single_tree_prev_vol - eps);
+
+	prev_stemC = s->value[STEM_C];
+	logger(g_debug_log, "prev_stemC    = %f m^3/cell\n", prev_stemC / (double)s->counter[N_TREE]);
 
 }
 
@@ -107,21 +115,22 @@ void abg_bgb_biomass(cell_t *const c, const int height, const int dbh, const int
 {
 	species_t *s;
 
-	// ALESSIOR
+	//ALESSIOR
 	/*
 	if ( ! c->heights ) return;
 	if ( ! c->heights[height].dbhs ) return;
 	if ( ! c->heights[height].dbhs[dbh].ages ) return;
 	if ( ! c->heights[height].dbhs[dbh].ages[age].species ) return;
 	 */
-
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 	logger(g_debug_log, "**AGB & BGB**\n");
 
 	s->value[CLASS_AGB] = s->value[LEAF_C] + s->value[STEM_C] + s->value[BRANCH_C] +s->value[FRUIT_C];
-	s->value[CLASS_BGB] = s->value[FROOT_C] + s->value[CROOT_C];
+	logger(g_debug_log, "CLASS_AGB    = %f tC/cell\n", s->value[CLASS_AGB]);
 
+	s->value[CLASS_BGB] = s->value[FROOT_C] + s->value[CROOT_C];
+	logger(g_debug_log, "CLASS_BGB    = %f tC/cell\n", s->value[CLASS_BGB]);
 }
 
 void average_tree_pools(species_t *const s)

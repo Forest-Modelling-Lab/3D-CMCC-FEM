@@ -198,7 +198,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 
 							/**********************************/
 
-							/* counter for days of simulation */
+							/* counter for class days of simulation */
 							++s->counter[DOS];
 
 							/**********************************/
@@ -229,11 +229,12 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 
 							/*********************************************************************/
 
-							/** radiation **/
 							/* short wave band */
 							canopy_radiation_sw_band ( c, layer, height, dbh, age, species, meteo_daily );
+
 							/* long wave band */
 							canopy_radiation_lw_band ( c, layer, height, dbh, age, species, meteo_daily );
+
 							/* net radiation */
 							canopy_net_radiation ( c, layer, height, dbh, age, species );
 
@@ -294,7 +295,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							water_use_efficiency ( c, height, dbh, age, species, day, month, year );
 
 							/****************************************************************************************************************************************/
-
+#if 0
 							/* END OF MONTH */
 							/* last day of the month */
 							if ( ( IS_LEAP_YEAR( c->years[year].year ) ? ( MonthLength_Leap[month] ) : ( MonthLength[month] ) ) == c->doy )
@@ -305,9 +306,10 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 								//FIXME
 								//dendrometry ( c, layer, height, dbh, age, species, meteo_daily );
 							}
+#endif
 
 							/****************************************************************************************************************************************/
-
+#if 0
 							/* END OF YEAR */
 							/* last day of the year */
 							if ( c->doy == ( IS_LEAP_YEAR ( c->years[year].year ) ? 366 : 365) )
@@ -315,9 +317,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 								logger(g_debug_log, "*****END OF YEAR %d ******\n", c->years[year].year);
 
 								/* MORTALITY and RENOVATION */
-
 								/* Mortality based on growth efficiency */
-								/* note: it currently works on a annual scale (no more daily) */
 								if ( ! annual_growth_efficiency_mortality ( c, height, dbh, age, species ) )
 								{
 									/* Mortality based on tree Age (LPJ) */
@@ -369,6 +369,67 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 
 							/* litter fluxes and pools */
 							littering ( c, s );
+#else
+
+							if ( c->doy == ( IS_LEAP_YEAR ( c->years[year].year ) ? 366 : 365) )
+							{
+								/* MORTALITY */
+								/* Mortality based on growth efficiency */
+								if ( ! annual_growth_efficiency_mortality ( c, height, dbh, age, species ) )
+								{
+									/* Mortality based on tree Age (LPJ) */
+									age_mortality ( c, height, dbh, age, species);
+								}
+							}
+
+							/****************************************************************************************************************************************/
+
+							/* allocate daily carbon */
+							carbon_allocation     ( c, s );
+
+							/* allocate daily nitrogen */
+							nitrogen_allocation   ( c, s );
+
+							/* update Leaf Area Index */
+							daily_lai             ( s );
+
+							/* N assimilation */
+							nitrogen_assimilation ( s );
+
+							/* litter fluxes and pools */
+							littering             ( c, s );
+#if 1
+							/* END OF MONTH */
+							/* last day of the month */
+							if ( c->doy == ( IS_LEAP_YEAR( c->years[year].year ) ? ( MonthLength_Leap[month] ) : ( MonthLength[month] ) ) )
+							{
+								/* to avoid "jumps" of dbh it has computed once monthly */
+								dendrometry_old ( c, layer, height, dbh, age, species );
+
+								//FIXME
+								//dendrometry ( c, layer, height, dbh, age, species, meteo_daily );
+							}
+#endif
+							/* END OF YEAR */
+							/* last day of the year */
+							if ( c->doy == ( IS_LEAP_YEAR ( c->years[year].year ) ? 366 : 365) )
+							{
+								logger(g_debug_log, "*****END OF YEAR %d ******\n", c->years[year].year);
+
+								/************************************************************************************************************************************/
+
+								/* above ground-below ground stocks */
+								abg_bgb_biomass ( c, height, dbh, age, species );
+
+								/* annual branch and bark fraction */
+								tree_branch_and_bark ( c, height, dbh, age, species );
+
+								/* annual volume, MAI and CAI */
+								annual_tree_increment ( c, height, dbh, age, species, year );
+
+							}
+
+#endif
 
 							/****************************************************************************************************************************************/
 

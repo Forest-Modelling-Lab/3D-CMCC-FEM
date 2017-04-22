@@ -87,7 +87,7 @@ void crown_allometry (cell_t *const c, const int height, const int dbh, const in
 
 	/* Crown density (NOT USED) */
 	/* following Duursma et al., 2012 */
-	s->value[CROWN_DENSITY] = (s->value[ALL_LAI_PROJ] / s->counter[N_TREE]) / s->value[CROWN_AREA_EXP];
+	s->value[CROWN_DENSITY] = (s->value[ALL_LAI_PROJ] / (double)s->counter[N_TREE]) / s->value[CROWN_AREA_EXP];
 	logger(g_debug_log, "-Crown Density = %g 1/m-1\n", s->value[CROWN_DENSITY]);
 
 	/*** Canopy allometry ***/
@@ -154,19 +154,7 @@ void allometry_power_function(cell_t *const c)
 				{
 					s = &a->species[species];
 
-					logger(g_debug_log, "Species = %s\n", s->name);
-
-					logger(g_debug_log, "Age = %d\n", a->value);
-
-					/* note: ISIMIP special case */
-					if (a->value == 0)
-					{
-						mod_age = 1;
-					}
-					else
-					{
-						mod_age = a->value;
-					}
+					mod_age = a->value;
 					logger(g_debug_log, "Age (used in function) = %d\n", mod_age);
 
 					s->value[MASS_DENSITY] = s->value[RHOMAX] + (s->value[RHOMIN] - s->value[RHOMAX]) * exp(-ln2 * (mod_age / s->value[TRHO]));

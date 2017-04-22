@@ -179,7 +179,6 @@ void print_daily_forest_class_data(cell_t* const c, const int layer, const int h
 	logger(g_debug_log, "+ stem dead         = %f tC/area\n", s->value[STEM_DEAD_WOOD_C]);
 	logger(g_debug_log, "+ coarse dead       = %f tC/area\n", s->value[CROOT_DEAD_WOOD_C]);
 	logger(g_debug_log, "+ branch dead       = %f tC/area\n", s->value[BRANCH_DEAD_WOOD_C]);
-	logger(g_debug_log, "++Nitrogen pools in tN++\n");
 	logger(g_debug_log, "+ leaf              = %f tN/area\n", s->value[LEAF_N]);
 	logger(g_debug_log, "+ stem              = %f tN/area\n", s->value[STEM_N]);
 	logger(g_debug_log, "+ branch and bark   = %f tN/area\n", s->value[BRANCH_N]);
@@ -232,7 +231,6 @@ void print_new_daily_forest_class_data (cell_t* const c, const int height, const
 	logger(g_debug_log, "+ stem dead         = %f tC/area\n", s->value[STEM_DEAD_WOOD_C]);
 	logger(g_debug_log, "+ coarse dead       = %f tC/area\n", s->value[CROOT_DEAD_WOOD_C]);
 	logger(g_debug_log, "+ branch dead       = %f tC/area\n", s->value[BRANCH_DEAD_WOOD_C]);
-	logger(g_debug_log, "++Nitrogen pools in tN++\n");
 	logger(g_debug_log, "+ leaf              = %f tN/area\n", s->value[LEAF_N]);
 	logger(g_debug_log, "+ stem              = %f tN/area\n", s->value[STEM_N]);
 	logger(g_debug_log, "+ branch and bark   = %f tN/area\n", s->value[BRANCH_N]);
