@@ -76,6 +76,8 @@ enum {
 #define STEMPOWER_C	            2.51      /* Power in the Stem Mass v. diameter relationship for DBH > 15 cm */
 #define MAX_N_TREE_LAYER           3      /* define the maximum number for tree layers (todo move into setting.txt) */
 #define FRAC_TO_RETRANSL         0.1      /* fraction of C to re-translocate (see Bossell et al., 2006 and Campioli et al., 2013 */
+#define MAX_PEAK_LAI_PROJ          8      /* Maximum Peak Lai (m2/m2)
+
 
 /** soil constants (BIOME-BGC method) **/
 #define BULK_DENITRIF_FRAC       0.5      /* Fraction of Nitrogen lost through Denitrification when N demand is lower than N available */

@@ -63,11 +63,11 @@ SAP_A   3.119                 //TO BE CHECKED           //a value for Picea abie
 SAP_B   1.4544                //TO BE CHECKED           //b value for Picea abies deducted from p.c. Kostner and Clausnitzer et al., 2011
 SAP_LEAF    1480              //1020   //sapwood_max leaf area ratio in pipe model for Pinus sylvestris 1480 Mencuccini Bonosi, 2001; 1020 Makela et al., 1995 (to be checked)
 SAP_WRES    0.05              //Sapwood-Reserve biomass ratio used if no Wres data are available 0.11 for deciduous 0.05 for evergreen see Schwalm and Ek, 2004 Ecological Modelling
-STEMCONST_P 0.292             //a parameter for allometric equation 0.06552  E. Cienciala et al., 2006 For P. sylvestrisM; from Yuste et al 2005 0.1227, 0.084 from xiao and Ceulemans, 0.7 Seidl et al., 2012
-STEMPOWER_P 2.0087            //b parameter for allometric equation 2.50626 E. Cienciala et al., 2006 For P. sylvestris; from Yuste et al 2005 2.3272, 1.985 from xiao and Ceulemans, 3.0 Seidl et al., 2012
-CRA 40.2947                   //for P. sylvestris 32 from Rupsys et al., 2010, 23.2674 Cannell 1982, 40.2947 Vaninen et al., 1996 (Pilli et al., 2016)
-CRB 0.04163                   //for P. sylvestris 0.04 from Rupsys et al., 2010, 0.09025 Cannell 1982, 0.04163 Vaninen et al., 1996 (Pilli et al., 2016)
-CRC 1.92688                   //for P. sylvestris 0.99 from Rupsys et al., 2010, 2.18562 Cannell 1982, 1.92688 Vaninen et al., 1996 (Pilli et al., 2016)
+STEMCONST_P 0.292             //a parameter for allometric equation 0.06552  E. Cienciala et al., 2006 For P. sylvestrisM; from Yuste et al 2005 0.1227, 0.084 from xiao and Ceulemans, 0.7 Seidl et al., 2012, 0.027 Landsberg and Sands
+STEMPOWER_P 2.0087            //b parameter for allometric equation 2.50626 E. Cienciala et al., 2006 For P. sylvestris; from Yuste et al 2005 2.3272, 1.985 from xiao and Ceulemans, 3.0 Seidl et al., 2012, 2.86 Landsberg and Sands
+CRA 32                        //for P. sylvestris 32 from Rupsys et al., 2010, 23.2674 Cannell 1982, 40.2947 Vaninen et al., 1996 (Pilli et al., 2016)
+CRB 0.04                      //for P. sylvestris 0.04 from Rupsys et al., 2010, 0.09025 Cannell 1982, 0.04163 Vaninen et al., 1996 (Pilli et al., 2016)
+CRC 0.99                      //for P. sylvestris 0.99 from Rupsys et al., 2010, 2.18562 Cannell 1982, 1.92688 Vaninen et al., 1996 (Pilli et al., 2016)
 HDMAX_A 148.1                 //A parameter for Height (m) to Base diameter (m) ratio MAX Seidl et al., 2012
 HDMAX_B -0.165                //B parameter for Height (m) to Base diameter (m) ratio MAX Seidl et al., 2012
 HDMIN_A 76.3                  //A parameter for Height (m) to Base diameter (m) ratio MIN Seidl et al., 2012

@@ -10,10 +10,10 @@ single_simulation="on"
 output_folder="output_Rstudio"
 
 # single simulation
-site="Soroe"
+site="Hyytiala"
 esm="3"
 rcp="2p6"
-man="off"
+man="on"
 co2="on"
 protocol="2B"
 
@@ -71,24 +71,24 @@ if (single_simulation == "on"){
   #****************************************************************************************************************************************************************************
   
   #output model TREE DAILY
-  pdf(paste0("./output/",output_folder, "-", version, "-", site,"-",protocol,"/output_", version,"_", year,"_", month,"_", day,"/daily/Daily_GCM",esm,"-RCP-",rcp,"-Man-",man,"-Co2-",co2,".pdf"), onefile = T, width = 30,height = 24)
+  pdf(paste0("./output/",output_folder, "-", version, "-", site,"-",protocol,"/output_", version,"_", year,"_", month,"_", day,"/daily/Daily_",site,"-GCM",esm,"-RCP-",rcp,"-Man-",man,"-Co2-",co2,".pdf"), onefile = T, width = 30,height = 24)
   par(mfrow=c(5,5))
   for (i in 5:length(outputCMCC$daily)) plot(outputCMCC$daily$Date, outputCMCC$daily[,i], main=colnames(outputCMCC$daily[i]), 
-                                             col="black", xlab = "year", ylab= "unit", type = "l", col.lab="red", cex.lab=2, cex.axis=1.5, pch =30)
+                                             col="black", xlab = "year", ylab= "unit", type = "l", col.lab="red", cex.lab=2, cex.axis=1.5, cex.main=2, pch =30)
   dev.off()
   
   #output model TREE MONTHLY
-  pdf(paste0("./output/",output_folder, "-", version, "-", site,"-",protocol,"/output_", version, "_", year,"_", month,"_", day,"/monthly/Monthly_GCM",esm,"-RCP-",rcp,"-Man-",man,"-Co2-",co2,".pdf"), onefile = T, width = 30,height = 24)
+  pdf(paste0("./output/",output_folder, "-", version, "-", site,"-",protocol,"/output_", version, "_", year,"_", month,"_", day,"/monthly/Monthly_",site,"-GCM",esm,"-RCP-",rcp,"-Man-",man,"-Co2-",co2,".pdf"), onefile = T, width = 30,height = 24)
   par(mfrow=c(5,5))
   for (i in 4:length(outputCMCC$monthly)) plot(outputCMCC$monthly$Date,outputCMCC$monthly[,i], main=colnames(outputCMCC$monthly[i]),
-                                               col="black", xlab = "year", ylab= "unit", type = "l", col.lab="red", cex.lab=1.5, pch =30)
+                                               col="black", xlab = "year", ylab= "unit", type = "l", col.lab="red", cex.lab=1.5, cex.axis=1.5, cex.main=2, pch =30)
   dev.off()
   
   #output model TREE ANNUAL
-  pdf(paste0("./output/",output_folder, "-", version, "-", site,"-",protocol,"/output_", version, "_", year,"_", month,"_", day,"/annual/Annual_GCM",esm,"-RCP-",rcp,"-Man-",man,"-Co2-",co2,".pdf"), onefile = T, width = 20,height = 16)
+  pdf(paste0("./output/",output_folder, "-", version, "-", site,"-",protocol,"/output_", version, "_", year,"_", month,"_", day,"/annual/Annual_",site,"-GCM",esm,"-RCP-",rcp,"-Man-",man,"-Co2-",co2,".pdf"), onefile = T, width = 20,height = 16)
   par(mfrow=c(5,5))
   for (i in 3:length(outputCMCC$annual)) plot(outputCMCC$annual$Date,outputCMCC$annual[,i], main=colnames(outputCMCC$annual[i]), 
-                                              col="black", xlab = "year", ylab= "unit", type = "l", col.lab="red", cex.lab=1.5, pch =30)
+                                              col="black", xlab = "year", ylab= "unit", type = "l", col.lab="red", cex.lab=1.5, cex.axis=1.5, cex.main=2, pch =30)
   dev.off()
 
   #****************************************************************************************************************************************************************************
