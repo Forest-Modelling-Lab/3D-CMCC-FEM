@@ -760,9 +760,13 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 										",TREE_CAI"
 										",TREE_MAI"
 										",VOLUME"
+										",DELTA_AGB"
+										",DELTA_BGB"
 										",AGB"
 										",BGB"
 										",BGB/AGB"
+										",DELTA_TREE_AGB"
+										",DELTA_TREE_BGB"
 										",STEM_AUT_RESP"
 										",LEAF_AUT_RESP"
 										",FROOT_AUT_RESP"
@@ -839,7 +843,7 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 								/* print variables at layer-class level */
 								logger(g_annual_log,",%6.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%d,%d,%d,%3.4f"
 										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
-										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",
+										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",
 										s->value[YEARLY_GPP],
 										s->value[YEARLY_TOTAL_GROWTH_RESP],
 										s->value[YEARLY_TOTAL_MAINT_RESP],
@@ -877,9 +881,13 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 										s->value[TREE_CAI],
 										s->value[TREE_MAI],
 										s->value[VOLUME],
-										s->value[CLASS_AGB],
-										s->value[CLASS_BGB],
-										s->value[CLASS_BGB]/s->value[CLASS_AGB],
+										s->value[DELTA_AGB],
+										s->value[DELTA_BGB],
+										s->value[AGB],
+										s->value[BGB],
+										s->value[BGB]/s->value[AGB],
+										s->value[DELTA_TREE_AGB],
+										s->value[DELTA_TREE_BGB],
 										s->value[YEARLY_STEM_AUT_RESP],
 										s->value[YEARLY_LEAF_AUT_RESP],
 										s->value[YEARLY_FROOT_AUT_RESP],

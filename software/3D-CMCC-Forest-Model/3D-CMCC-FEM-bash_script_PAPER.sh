@@ -408,7 +408,7 @@ function CC_run {
 					#add gcm and rcp to meteo co2 and soil path
 					MET_PATH=PAPER/2A/"$gcm"/"$gcm"_"$rcp".txt
 					SOIL_PATH=PAPER/"$site"_soil_ISIMIP.txt
-					CO2_PATH=PAPER/2A/CO2/CO2_"$rcp"_1950_2099.txt
+					CO2_PATH=PAPER/2A/CO2/CO2_"$rcp".txt
 									
 					#add paths and arguments to executable and run
 					$launch$executable -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH #&
@@ -466,7 +466,7 @@ function no_CC_CO2_run {
 					#add gcm and rcp to meteo co2 and soil path
 					MET_PATH=PAPER/2A/"$gcm"/"$gcm"_rcp0p0.txt
 					SOIL_PATH=PAPER/"$site"_soil_ISIMIP.txt
-					CO2_PATH=PAPER/2A/CO2/CO2_"$rcp"_1950_2099.txt
+					CO2_PATH=PAPER/2A/CO2/CO2_"$rcp".txt
 									
 					#add paths and arguments to executable and run
 					$launch$executable -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH #&

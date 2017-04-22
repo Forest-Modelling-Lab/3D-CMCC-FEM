@@ -479,8 +479,14 @@ enum {
 	AV_DEAD_BRANCH_MASS_KgDM,           /* (kgDM/tree) Average Dead Branch carbon pool */
 
 	/* Above and Below Ground Biomass */
-	CLASS_AGB,                          /* (tC/cell) Above Ground Biomass pool */
-	CLASS_BGB,                          /* (tC/cell) Below Ground Biomass pool */
+	AGB,                                /* (tC/cell) Above Ground Biomass pool */
+	BGB,                                /* (tC/cell) Below Ground Biomass pool */
+	DELTA_AGB,                          /* (tC/cell/year) Above Ground Biomass increment */
+	DELTA_BGB,                          /* (tC/cell/year) Below Ground Biomass increment */
+	TREE_AGB,                           /* (tC/tree) Above Ground Biomass pool */
+	TREE_BGB,                           /* (tC/tree) Below Ground Biomass pool */
+	DELTA_TREE_AGB,                     /* (tC/tree/year) Above Ground Biomass increment */
+	DELTA_TREE_BGB,                     /* (tC/tree/year) Below Ground Biomass increment */
 
 	/* converted fraction for turnover */
 	WS_sap_tDM,                         /* (tDM/cell) Fraction Sapwood in Stem biomass */

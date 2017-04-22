@@ -465,11 +465,14 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 
 	/* compute AGB and BGB */
 	logger(g_debug_log, "**AGB & BGB**\n");
-	logger(g_debug_log, "-for Class\n");
-	s->value[CLASS_AGB] = s->value[STEM_C] + s->value[BRANCH_C] + s->value[LEAF_C] + s->value[FRUIT_C];
-	logger(g_debug_log, "Yearly Class AGB = %g tC/cell year\n", s->value[CLASS_AGB]);
-	s->value[CLASS_BGB] = s->value[FROOT_C] + s->value[CROOT_C];
-	logger(g_debug_log, "Yearly Class BGB = %g tC/cell year\n", s->value[CLASS_BGB]);
+	s->value[AGB]      = s->value[STEM_C] + s->value[BRANCH_C] + s->value[LEAF_C] + s->value[FRUIT_C];
+	logger(g_debug_log, "Yearly Class AGB = %g tC/cell\n", s->value[AGB]);
+	s->value[BGB]      = s->value[FROOT_C] + s->value[CROOT_C];
+	logger(g_debug_log, "Yearly Class BGB = %g tC/cell\n", s->value[BGB]);
+	s->value[TREE_AGB] = s->value[AGB] / (double)s->counter[N_TREE];
+	logger(g_debug_log, "Yearly Class AGB = %g tC/tree\n", s->value[TREE_AGB]);
+	s->value[TREE_BGB] = s->value[BGB] / (double)s->counter[N_TREE];
+	logger(g_debug_log, "Yearly Class BGB = %g tC/tree\n", s->value[TREE_BGB]);
 
 	/* compute volume */
 	/* volume is computed using DM biomass */
@@ -513,8 +516,8 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 	CHECK_CONDITION(s->value[LIVE_WOOD_C],             <=, 0);
 	CHECK_CONDITION(s->value[DEAD_WOOD_C],             <=, 0);
 	CHECK_CONDITION(s->value[BASAL_AREA],              <=, 0);
-	CHECK_CONDITION(s->value[CLASS_AGB],               <=, 0);
-	CHECK_CONDITION(s->value[CLASS_BGB],               <=, 0);
+	CHECK_CONDITION(s->value[AGB],                     <=, 0);
+	CHECK_CONDITION(s->value[BGB],                     <=, 0);
 	CHECK_CONDITION(s->value[VOLUME],                  <=, 0);
 	CHECK_CONDITION(s->value[TREE_VOLUME],             <=, 0);
 
