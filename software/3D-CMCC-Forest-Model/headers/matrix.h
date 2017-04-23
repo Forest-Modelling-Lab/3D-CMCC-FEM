@@ -719,6 +719,8 @@ enum {
 	LEAF_FALL_COUNTER,                  /* (DIM) counter for leaf fall */
 	SENESCENCE_DAY_ONE,                 /* (DIM) doy at first day of the senescence */
 	DOS,                                /* (days) day of simulation */
+	MOS,                                /* (months) month of simulation */
+	YOS,                                /* (years) year of simulation */
 
 	COUNTERS
 };

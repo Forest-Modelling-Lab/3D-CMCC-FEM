@@ -458,7 +458,6 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 
 	logger(g_debug_log, "***reserves following live tissues C (not used) BIOME = %g tC/cell\n", s->value[LIVE_WOOD_C] * s->value[SAP_WRES] );
 
-
 	/* fruit */
 	s->value[FRUIT_C]         = 0.;
 	s->value[AV_FRUIT_MASS_C] = 0.;
@@ -473,14 +472,6 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 	logger(g_debug_log, "Yearly Class AGB = %g tC/tree\n", s->value[TREE_AGB]);
 	s->value[TREE_BGB] = s->value[BGB] / (double)s->counter[N_TREE];
 	logger(g_debug_log, "Yearly Class BGB = %g tC/tree\n", s->value[TREE_BGB]);
-
-	/* compute volume */
-	/* volume is computed using DM biomass */
-	logger(g_debug_log, "**Allometry**\n");
-	s->value[VOLUME] = ( s->value[STEM_C] * GC_GDM ) / s->value[MASS_DENSITY];
-	logger(g_debug_log, "-current class volume = %g m^3/cell\n", s->value[VOLUME]);
-	s->value[TREE_VOLUME] = s->value[VOLUME] / (double)s->counter[N_TREE];
-	logger(g_debug_log, "-current single tree volume = %g m^3/tree\n", s->value[TREE_VOLUME]);
 
 	/* check that all mandatory variables are initialized */
 	CHECK_CONDITION(h->value, ==, 0);

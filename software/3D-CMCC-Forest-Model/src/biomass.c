@@ -52,13 +52,15 @@ void annual_tree_increment(cell_t *const c, const int height, const int dbh, con
 	double prev_vol;
 	double tree_prev_vol;
 
+	height_t *h;
+	dbh_t *d;
 	age_t *a;
 	species_t *s;
 
+	h = &c->heights[height];
+	d = &c->heights[height].dbhs[dbh];
 	a = &c->heights[height].dbhs[dbh].ages[age];
-	// ALESSIOR
-	//if ( ! a ) return;
-	s = &a->species[species];
+	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 	/* in m^3/cell/yr */
 	/* assumption: CAI = Volume t1 - Volume t0 */
@@ -76,13 +78,13 @@ void annual_tree_increment(cell_t *const c, const int height, const int dbh, con
 	tree_prev_vol  = s->value[TREE_VOLUME];
 	logger(g_debug_log, "Previous single tree volume  = %f m^3DM/tree\n", tree_prev_vol );
 
-	/* compute current stand level volume */
-	s->value[VOLUME]      = ( s->value[STEM_C] * GC_GDM ) / s->value[MASS_DENSITY];
-	logger(g_debug_log, "Current stand volume         = %f m^3DM/cell\n", s->value[VOLUME] );
+	/* compute single tree volume */
+	s->value[TREE_VOLUME] = (Pi * s->value[FORM_FACTOR] * pow((d->value / 100.) , 2.) * h->value) / 4.;
+	logger(g_debug_log, "-Single tree volume = %g m3/tree\n", s->value[TREE_VOLUME]);
 
-	/* compute current stand level volume */
-	s->value[TREE_VOLUME] = s->value[VOLUME] / (int) s->counter[N_TREE];
-	logger(g_debug_log, "Current single tree volume   = %f m^3DM/tree\n", s->value[TREE_VOLUME] );
+	/* compute class volume */
+	s->value[VOLUME] = s->value[TREE_VOLUME] * s->counter[N_TREE];
+	logger(g_debug_log, "-Class volume = %g m3/sizeCell\n", s->value[VOLUME]);
 
 	/* CAI-Current Annual Increment */
 	s->value[CAI]         = s->value[VOLUME]      - prev_vol;
@@ -98,8 +100,8 @@ void annual_tree_increment(cell_t *const c, const int height, const int dbh, con
 	s->value[TREE_MAI]    = s->value[TREE_VOLUME] / (double)a->value;
 	logger(g_debug_log, "MAI-Mean Annual Increment    = %f m^3DM/tree/yr \n", s->value[TREE_MAI]);
 
-	/* check */
-	CHECK_CONDITION(s->value[TREE_VOLUME], <, tree_prev_vol - eps);
+	/* check every year after the first */
+	CHECK_CONDITION( s->value[TREE_VOLUME], < , tree_prev_vol - eps );
 
 
 }
