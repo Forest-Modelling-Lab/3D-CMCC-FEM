@@ -205,6 +205,7 @@ void reset_annual_cell_variables(cell_t *const c)
 	c->basal_area =                     0.;
 	c->agb =                            0.;
 	c->bgb =                            0.;
+	c->volume =                         0.;
 	//c->dead_tree =                    0;
 	c->annual_soil_evapo =              0.;
 }

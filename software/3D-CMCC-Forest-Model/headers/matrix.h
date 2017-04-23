@@ -873,6 +873,8 @@ typedef struct
 	double basal_area;                                                    /* (m2/cell) cumulated basal area at cell level */
 	double agb;                                                           /* (tC/cell) current above ground biomass at cell level */
 	double bgb;                                                           /* (tC/cell) current below ground biomass at cell level */
+	double volume;                                                        /* (m3/cell) current volume */
+	double cum_volume;                                                    /* (m3/cell) cumulated volume */
 
 	/* radiation variables */
 	/* short wave radiation */

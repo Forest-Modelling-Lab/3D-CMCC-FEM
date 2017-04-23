@@ -100,6 +100,9 @@ void annual_tree_increment(cell_t *const c, const int height, const int dbh, con
 	s->value[TREE_MAI]    = s->value[TREE_VOLUME] / (double)a->value;
 	logger(g_debug_log, "MAI-Mean Annual Increment    = %f m^3DM/tree/yr \n", s->value[TREE_MAI]);
 
+	c->volume     += s->value[VOLUME];
+	c->cum_volume += s->value[VOLUME];
+
 	/* check every year after the first */
 	CHECK_CONDITION( s->value[TREE_VOLUME], < , tree_prev_vol - eps );
 

@@ -659,6 +659,7 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 	static int years_counter;
 
 	species_t *s;
+	meteo_annual_t *meteo_annual;
 
 	/* return if annual logging is off*/
 	if ( ! g_annual_log ) return;
@@ -760,6 +761,7 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 										",TREE_CAI"
 										",TREE_MAI"
 										",VOLUME"
+										",DELTA_TREE_VOL(perc)"
 										",DELTA_AGB"
 										",DELTA_BGB"
 										",AGB"
@@ -795,7 +797,8 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 		}
 		/************************************************************************/
 		/* heading variables only at cell level */
-		logger(g_annual_log,",gpp,npp,ar,y(%%),et,le,soil-evapo,asw,iWue\n");
+		logger(g_annual_log,",gpp,npp,ar,y(%%),et,le,soil-evapo,asw,iWue,vol,cum_vol");
+		logger(g_annual_log,",CO2\n");
 
 	}
 	/*****************************************************************************************************/
@@ -843,7 +846,7 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 								/* print variables at layer-class level */
 								logger(g_annual_log,",%6.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%d,%d,%d,%3.4f"
 										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
-										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",
+										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",
 										s->value[YEARLY_GPP],
 										s->value[YEARLY_TOTAL_GROWTH_RESP],
 										s->value[YEARLY_TOTAL_MAINT_RESP],
@@ -881,6 +884,7 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 										s->value[TREE_CAI],
 										s->value[TREE_MAI],
 										s->value[VOLUME],
+										(s->value[TREE_CAI]/s->value[TREE_VOLUME])*100.,
 										s->value[DELTA_AGB],
 										s->value[DELTA_BGB],
 										s->value[AGB],
@@ -917,8 +921,7 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 		}
 		/************************************************************************/
 		/* printing variables at cell level only if there's more than one layer */
-
-		logger(g_annual_log, ",%3.4f,%3.4f,%3.4f,%3.4f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f\n",
+		logger(g_annual_log, ",%3.4f,%3.4f,%3.4f,%3.4f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f",
 				c->annual_gpp,
 				c->annual_npp,
 				c->annual_aut_resp,
@@ -927,12 +930,18 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 				c->annual_lh_flux,
 				c->annual_soil_evapo,
 				c->asw,
-				c->annual_iwue)	;
+				c->annual_iwue,
+				c->volume,
+				c->cum_volume);
+		/* print meteo variables at cell level */
+		//ALESSIOC TO ALESSIOR
+		logger(g_annual_log, ",%3.4f\n", meteo_annual->co2Conc);
+
 
 	}
 	else
 	{
-		//ALESSIOC TO ALLESSIOR PRINT EMPTY SPACES WHEN TREE = 0
+		//ALESSIOC TO ALLESSIOR PRINT EMPTY SPACES WHEN N_TREE = 0
 	}
 	/************************************************************************/
 
