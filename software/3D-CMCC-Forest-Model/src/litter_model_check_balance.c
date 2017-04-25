@@ -105,7 +105,6 @@ int check_litter_carbon_mass_balance(cell_t *const c)
 	/* sum of sinks */
 	c->litr_carbon_out   = 0. /* + c->daily_het_resp + c->daily_soilC */;
 
-	//todo include cwd carbon pool
 	/* sum of current storage */
 	c->litr_carbon_store = c->leaf_litr1C +
 			c->leaf_litr2C  +

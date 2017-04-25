@@ -296,83 +296,6 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							/* water use efficiency */
 							water_use_efficiency ( c, height, dbh, age, species, day, month, year );
 
-							/****************************************************************************************************************************************/
-#if 0
-							/* END OF MONTH */
-							/* last day of the month */
-							if ( ( IS_LEAP_YEAR( c->years[year].year ) ? ( MonthLength_Leap[month] ) : ( MonthLength[month] ) ) == c->doy )
-							{
-								/* to avoid "jumps" of dbh it has computed once monthly */
-								dendrometry_old ( c, layer, height, dbh, age, species );
-
-								//FIXME
-								//dendrometry ( c, layer, height, dbh, age, species, meteo_daily );
-							}
-#endif
-
-							/****************************************************************************************************************************************/
-#if 0
-							/* END OF YEAR */
-							/* last day of the year */
-							if ( c->doy == ( IS_LEAP_YEAR ( c->years[year].year ) ? 366 : 365) )
-							{
-								logger(g_debug_log, "*****END OF YEAR %d ******\n", c->years[year].year);
-
-								/* MORTALITY and RENOVATION */
-								/* Mortality based on growth efficiency */
-								if ( ! annual_growth_efficiency_mortality ( c, height, dbh, age, species ) )
-								{
-									/* Mortality based on tree Age (LPJ) */
-									age_mortality ( c, height, dbh, age, species);
-
-									/************************************************************************************************************************************/
-
-									/* above ground-below ground stocks */
-									abg_bgb_biomass ( c, height, dbh, age, species );
-
-									/* annual branch and bark fraction */
-									tree_branch_and_bark ( c, height, dbh, age, species );
-
-									/* annual volume, MAI and CAI */
-									annual_tree_increment ( c, height, dbh, age, species, year );
-
-									/************************************************************************************************************************************/
-
-									if ( g_settings->regeneration && ( a->value > s->value[SEXAGE] ) )
-									{
-										/* regeneration */
-										regeneration ( c, height, dbh, age, species);
-									}
-
-									/* update pointers */
-									/*
-									l = &c->tree_layers[layer];
-									h = &c->heights[height];
-									d = &h->dbhs[dbh];
-									a = &d->ages[age];
-									s = &a->species[species];
-									 */
-								}
-							}
-
-							/****************************************************************************************************************************************/
-
-							/* allocate daily carbon */
-							carbon_allocation   ( c, s );
-
-							/* allocate daily nitrogen */
-							nitrogen_allocation ( c, s );
-
-							/* update Leaf Area Index */
-							daily_lai ( s );
-
-							/* N assimilation */
-							nitrogen_assimilation ( s );
-
-							/* litter fluxes and pools */
-							littering ( c, s );
-#else
-
 							if ( c->doy == ( IS_LEAP_YEAR ( c->years[year].year ) ? 366 : 365) )
 							{
 								/* MORTALITY */
@@ -383,8 +306,6 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 									age_mortality ( c, height, dbh, age, species);
 								}
 							}
-
-							/****************************************************************************************************************************************/
 
 							/* allocate daily carbon */
 							carbon_allocation     ( c, s );
@@ -400,7 +321,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 
 							/* litter fluxes and pools */
 							littering             ( c, s );
-#if 1
+
 							/* END OF MONTH */
 							/* last day of the month */
 							if ( c->doy == ( IS_LEAP_YEAR( c->years[year].year ) ? ( MonthLength_Leap[month] ) : ( MonthLength[month] ) ) )
@@ -408,10 +329,12 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 								/* to avoid "jumps" of dbh it has computed once monthly */
 								dendrometry_old ( c, layer, height, dbh, age, species );
 
-								//FIXME
+								//FIXME (v.5.3.1-a)
 								//dendrometry ( c, layer, height, dbh, age, species, meteo_daily );
 							}
-#endif
+
+							/****************************************************************************************************************************************/
+
 							/* END OF YEAR */
 							/* last day of the year */
 							if ( c->doy == ( IS_LEAP_YEAR ( c->years[year].year ) ? 366 : 365) )
@@ -430,8 +353,6 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 								annual_tree_increment ( c, height, dbh, age, species, year );
 
 							}
-
-#endif
 
 							/****************************************************************************************************************************************/
 

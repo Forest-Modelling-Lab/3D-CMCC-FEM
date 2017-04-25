@@ -1615,10 +1615,6 @@ int main(int argc, char *argv[]) {
 									printf("ok tree_model (%02d-%02d-%d)\n", day+1, month+1, year+g_settings->year_start);
 								}
 							}
-							else
-							{
-								/* run for possible other forest model versions */
-							}
 						}
 						else
 						{
