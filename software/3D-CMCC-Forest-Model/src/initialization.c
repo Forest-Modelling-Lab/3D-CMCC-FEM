@@ -482,35 +482,44 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 	/* ONLY for evergreen */
 	if ( s->value[PHENOLOGY] == 1.1 || s->value[PHENOLOGY] == 1.2 )
 	{
-		CHECK_CONDITION(s->value[FROOT_C],             <=, 0);
-		CHECK_CONDITION(s->value[LEAF_C],              <=, 0);
-		CHECK_CONDITION(s->value[LAI_PROJ],            <=, 0);
-		CHECK_CONDITION(s->value[LAI_SUN_PROJ],        <=, 0);
-		CHECK_CONDITION(s->value[LAI_SHADE_PROJ],      <=, 0);
+		CHECK_CONDITION(s->value[FROOT_C],             <=, ZERO);
+		CHECK_CONDITION(s->value[LEAF_C],              <=, ZERO);
+		CHECK_CONDITION(s->value[LAI_PROJ],            <=, ZERO);
+		CHECK_CONDITION(s->value[LAI_SUN_PROJ],        <=, ZERO);
+		CHECK_CONDITION(s->value[LAI_SHADE_PROJ],      <=, ZERO);
 	}
-	CHECK_CONDITION(s->value[STEM_C],                  <=, 0);
-	CHECK_CONDITION(s->value[BRANCH_C],                <=, 0);
-	CHECK_CONDITION(s->value[CROOT_C],                 <=, 0);
-	CHECK_CONDITION(s->value[TOT_WOOD_C],              <=, 0);
-	CHECK_CONDITION(s->value[RESERVE_C],               <=, 0);
-	CHECK_CONDITION(s->value[MIN_RESERVE_C],           <=, 0);
-	CHECK_CONDITION(s->value[STEM_SAPWOOD_C],          <=, 0);
-	CHECK_CONDITION(s->value[CROOT_SAPWOOD_C],         <=, 0);
-	CHECK_CONDITION(s->value[BRANCH_SAPWOOD_C],        <=, 0);
-	CHECK_CONDITION(s->value[TOT_SAPWOOD_C],           <=, 0);
-	CHECK_CONDITION(s->value[STEM_LIVE_WOOD_C],        <=, 0);
-	CHECK_CONDITION(s->value[STEM_DEAD_WOOD_C],        <=, 0);
-	CHECK_CONDITION(s->value[CROOT_LIVE_WOOD_C],       <=, 0);
-	CHECK_CONDITION(s->value[CROOT_DEAD_WOOD_C],       <=, 0);
-	CHECK_CONDITION(s->value[BRANCH_LIVE_WOOD_C],      <=, 0);
-	CHECK_CONDITION(s->value[BRANCH_DEAD_WOOD_C],      <=, 0);
-	CHECK_CONDITION(s->value[LIVE_WOOD_C],             <=, 0);
-	CHECK_CONDITION(s->value[DEAD_WOOD_C],             <=, 0);
-	CHECK_CONDITION(s->value[BASAL_AREA],              <=, 0);
-	CHECK_CONDITION(s->value[AGB],                     <=, 0);
-	CHECK_CONDITION(s->value[BGB],                     <=, 0);
-	CHECK_CONDITION(s->value[VOLUME],                  <=, 0);
-	CHECK_CONDITION(s->value[TREE_VOLUME],             <=, 0);
+	CHECK_CONDITION(s->value[STEM_C],                  <=, ZERO);
+	CHECK_CONDITION(s->value[BRANCH_C],                <=, ZERO);
+	CHECK_CONDITION(s->value[CROOT_C],                 <=, ZERO);
+	CHECK_CONDITION(s->value[TOT_WOOD_C],              <=, ZERO);
+	CHECK_CONDITION(s->value[RESERVE_C],               <=, ZERO);
+	CHECK_CONDITION(s->value[MIN_RESERVE_C],           <=, ZERO);
+	CHECK_CONDITION(s->value[STEM_SAPWOOD_C],          <=, ZERO);
+	CHECK_CONDITION(s->value[CROOT_SAPWOOD_C],         <=, ZERO);
+	CHECK_CONDITION(s->value[BRANCH_SAPWOOD_C],        <=, ZERO);
+	CHECK_CONDITION(s->value[TOT_SAPWOOD_C],           <=, ZERO);
+	CHECK_CONDITION(s->value[STEM_LIVE_WOOD_C],        <=, ZERO);
+	CHECK_CONDITION(s->value[STEM_DEAD_WOOD_C],        <=, ZERO);
+	CHECK_CONDITION(s->value[CROOT_LIVE_WOOD_C],       <=, ZERO);
+	CHECK_CONDITION(s->value[CROOT_DEAD_WOOD_C],       <=, ZERO);
+	CHECK_CONDITION(s->value[BRANCH_LIVE_WOOD_C],      <=, ZERO);
+	CHECK_CONDITION(s->value[BRANCH_DEAD_WOOD_C],      <=, ZERO);
+	CHECK_CONDITION(s->value[LIVE_WOOD_C],             <=, ZERO);
+	CHECK_CONDITION(s->value[DEAD_WOOD_C],             <=, ZERO);
+	CHECK_CONDITION(s->value[BASAL_AREA],              <=, ZERO);
+	CHECK_CONDITION(s->value[AGB],                     <=, ZERO);
+	CHECK_CONDITION(s->value[BGB],                     <=, ZERO);
+	CHECK_CONDITION(s->value[VOLUME],                  <=, ZERO);
+	CHECK_CONDITION(s->value[TREE_VOLUME],             <=, ZERO);
+
+
+
+}
+
+void initialization_forest_C (cell_t *const c, const int height, const int dbh, const int age, const int species)
+{
+	species_t *s;
+	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 	/*** update at cell level (gC/m2)  ***/
 	c->leaf_carbon              += (s->value[LEAF_C]             * 1e6 / g_settings->sizeCell);
@@ -526,6 +535,21 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 	c->branch_dead_wood_carbon  += (s->value[BRANCH_DEAD_WOOD_C] * 1e6 / g_settings->sizeCell);
 	c->reserve_carbon           += (s->value[RESERVE_C]          * 1e6 / g_settings->sizeCell);
 	c->fruit_carbon             += (s->value[FRUIT_C]            * 1e6 / g_settings->sizeCell);
+
+	/* check */
+	CHECK_CONDITION(c->leaf_carbon,                    <=, ZERO);
+	CHECK_CONDITION(c->froot_carbon,                   <=, ZERO);
+	CHECK_CONDITION(c->stem_carbon,                    <=, ZERO);
+	CHECK_CONDITION(c->stem_live_wood_carbon,          <=, ZERO);
+	CHECK_CONDITION(c->stem_dead_wood_carbon,          <=, ZERO);
+	CHECK_CONDITION(c->croot_carbon,                   <=, ZERO);
+	CHECK_CONDITION(c->croot_live_wood_carbon,         <=, ZERO);
+	CHECK_CONDITION(c->croot_live_wood_carbon,         <=, ZERO);
+	CHECK_CONDITION(c->branch_carbon,                  <=, ZERO);
+	CHECK_CONDITION(c->branch_live_wood_carbon,        <=, ZERO);
+	CHECK_CONDITION(c->branch_dead_wood_carbon,        <=, ZERO);
+	CHECK_CONDITION(c->reserve_carbon,                 <=, ZERO);
+	CHECK_CONDITION(c->fruit_carbon,                   <=, ZERO);
 
 }
 
@@ -575,16 +599,54 @@ void initialization_forest_class_N (cell_t *const c, const int height, const int
 	logger(g_debug_log, "----Branch nitrogen content = %g tN/cell\n", s->value[BRANCH_N]);
 
 	/* check that all mandatory variables are initialized */
-	CHECK_CONDITION(s->value[STEM_N],          <=, 0);
-	CHECK_CONDITION(s->value[CROOT_N],         <=, 0);
-	CHECK_CONDITION(s->value[BRANCH_N],        <=, 0);
+	CHECK_CONDITION(s->value[STEM_N],          <=, ZERO);
+	CHECK_CONDITION(s->value[CROOT_N],         <=, ZERO);
+	CHECK_CONDITION(s->value[BRANCH_N],        <=, ZERO);
 
 	/* just for evergreen */
 	if ( s->value[PHENOLOGY] == 1.1 || s->value[PHENOLOGY] == 1.2 )
 	{
-		CHECK_CONDITION(s->value[LEAF_N],      <=, 0);
-		CHECK_CONDITION(s->value[FROOT_N],     <=, 0);
+		CHECK_CONDITION(s->value[LEAF_N],      <=, ZERO);
+		CHECK_CONDITION(s->value[FROOT_N],     <=, ZERO);
 	}
+}
+
+void initialization_forest_N (cell_t *const c, const int height, const int dbh, const int age, const int species)
+{
+	species_t *s;
+	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
+
+	/*** update at cell level (gN/m2)  ***/
+	c->leaf_nitrogen              += (s->value[LEAF_N]             * 1e6 / g_settings->sizeCell);
+	c->froot_nitrogen             += (s->value[FROOT_N]            * 1e6 / g_settings->sizeCell);
+	c->stem_nitrogen              += (s->value[STEM_N]             * 1e6 / g_settings->sizeCell);
+	c->stem_live_wood_nitrogen    += (s->value[STEM_LIVE_WOOD_N]   * 1e6 / g_settings->sizeCell);
+	c->stem_dead_wood_nitrogen    += (s->value[STEM_DEAD_WOOD_N]   * 1e6 / g_settings->sizeCell);
+	c->croot_nitrogen             += (s->value[CROOT_N]            * 1e6 / g_settings->sizeCell);
+	c->croot_live_wood_nitrogen   += (s->value[CROOT_LIVE_WOOD_N]  * 1e6 / g_settings->sizeCell);
+	c->croot_dead_wood_nitrogen   += (s->value[CROOT_DEAD_WOOD_N]  * 1e6 / g_settings->sizeCell);
+	c->branch_nitrogen            += (s->value[BRANCH_N]           * 1e6 / g_settings->sizeCell);
+	c->branch_live_wood_nitrogen  += (s->value[BRANCH_LIVE_WOOD_N] * 1e6 / g_settings->sizeCell);
+	c->branch_dead_wood_nitrogen  += (s->value[BRANCH_DEAD_WOOD_N] * 1e6 / g_settings->sizeCell);
+	c->reserve_nitrogen           += (s->value[RESERVE_N]          * 1e6 / g_settings->sizeCell);
+	c->fruit_nitrogen             += (s->value[FRUIT_N]            * 1e6 / g_settings->sizeCell);
+
+	/* check */
+	CHECK_CONDITION(c->leaf_nitrogen,                    <=, ZERO);
+	CHECK_CONDITION(c->froot_nitrogen,                   <=, ZERO);
+	CHECK_CONDITION(c->stem_nitrogen,                    <=, ZERO);
+	CHECK_CONDITION(c->stem_live_wood_nitrogen,          <=, ZERO);
+	CHECK_CONDITION(c->stem_dead_wood_nitrogen,          <=, ZERO);
+	CHECK_CONDITION(c->croot_nitrogen,                   <=, ZERO);
+	CHECK_CONDITION(c->croot_live_wood_nitrogen,         <=, ZERO);
+	CHECK_CONDITION(c->croot_live_wood_nitrogen,         <=, ZERO);
+	CHECK_CONDITION(c->branch_nitrogen,                  <=, ZERO);
+	CHECK_CONDITION(c->branch_live_wood_nitrogen,        <=, ZERO);
+	CHECK_CONDITION(c->branch_dead_wood_nitrogen,        <=, ZERO);
+	CHECK_CONDITION(c->reserve_nitrogen,                 <=, ZERO);
+	CHECK_CONDITION(c->fruit_nitrogen,                   <=, ZERO);
+
+
 }
 
 void initialization_forest_class_litter_soil (cell_t *const c, const int height, const int dbh, const int age, const int species)

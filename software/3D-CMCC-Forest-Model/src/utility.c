@@ -344,7 +344,6 @@ void reset_daily_class_variables(cell_t *const c)
 					/*****************************************/
 					/* reset daily carbon fluxes among pools */
 					s->value[C_TO_LEAF] =                 0.;
-					s->value[C_TO_ROOT] =                 0.;
 					s->value[C_TO_FROOT] =                0.;
 					s->value[C_TO_CROOT] =                0.;
 					s->value[C_TO_STEM] =                 0.;

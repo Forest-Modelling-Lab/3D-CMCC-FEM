@@ -254,7 +254,7 @@ void daily_C_evergreen_partitioning (cell_t *const c, const int layer, const int
 	 * the fraction of reserve to allocate for foliage is re-computed for each of the BUD_BURST days
 	 * sharing the daily remaining amount (taking into account respiration costs) of NSC */
 
-	/*note: every day of the year leaf and fine root turnover happens, that's why every day
+	/*note: every day of the year leaf and fine root turnover happen, that's why every day
 	 * an amount of leaf and fine root C is re-translocated to the reserve pool*/
 
 	/* partitioning */

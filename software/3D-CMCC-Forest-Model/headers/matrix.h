@@ -334,7 +334,6 @@ enum {
 
 	/* transfer pools carbon to carbon pools */
 	C_TO_LEAF,                          /* (tC/cell/day) Daily Net Primary Production to Leaf pool */
-	C_TO_ROOT,                          /* (tC/cell/day) Daily Net Primary Production to Root pool */
 	C_TO_FROOT,                         /* (tC/cell/day) Daily Net Primary Production to Fine root pool */
 	C_TO_CROOT,                         /* (tC/cell/day) Daily Net Primary Production to Coarse root pool */
 	C_TO_STEM,                          /* (tC/cell/day) Daily Net Primary Production to Stem pool */
