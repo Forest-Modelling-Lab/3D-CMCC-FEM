@@ -1700,7 +1700,7 @@ void soil_summary(const matrix_t* const m, const cell_t* const cell)
 	logger(g_debug_log, "-Soil = %g tN/ha\n", g_soil_settings->values[SOILN]);
 
 
-	/***** initialize soil ****/
+	/********** initialize soil *********/
 	/** soil bio-physic initialization **/
 	initialization_soil_physic (m->cells);
 
@@ -1730,7 +1730,7 @@ void forest_summary(const matrix_t* const m, const int day, const int month, con
 
 		logger(g_debug_log, "***************************************************\n");
 		logger(g_debug_log, "****FOREST CHARACTERISTICS for cell (%d, %d)****\n", m->cells[cell].x, m->cells[cell].y);
-		logger(g_debug_log, "FOREST DATASET\n");
+		logger(g_debug_log, "***FOREST DATASET***\n");
 
 		logger(g_debug_log, "matrix has %d cell%s\n", m->cells_count, (m->cells_count > 1 ? "s" : ""));
 
@@ -1776,6 +1776,7 @@ void forest_summary(const matrix_t* const m, const int day, const int month, con
 		}
 
 		/*************FOREST INITIALIZATION DATA***********/
+
 		/* initialize power function */
 		allometry_power_function (&m->cells[cell]);
 
@@ -1785,6 +1786,7 @@ void forest_summary(const matrix_t* const m, const int day, const int month, con
 		/* initialize forest structure */
 		initialization_forest_structure (&m->cells[cell], day, month, year);
 
+		/* initialize pools */
 		for ( height = 0; height < m->cells[cell].heights_count; ++height )
 		{
 			for ( dbh = 0; dbh < m->cells[cell].heights[height].dbhs_count; ++dbh )
@@ -1810,10 +1812,49 @@ void forest_summary(const matrix_t* const m, const int day, const int month, con
 
 						/* initialization forest class litter fractions */
 						initialization_forest_class_litter_soil (&m->cells[cell], height, dbh, age, species);
+
+						/* initialization class litter fractions */
+						initialization_forest_class_litter_soil (&m->cells[cell], height, dbh, age, species);
+
+						/* initialization cell litter fractions */
+						initialization_forest_litter_soil (&m->cells[cell], height, dbh, age, species);
 					}
 				}
 			}
 		}
+
+		logger(g_debug_log, "\n*******FOREST POOLS*******\n");
+		logger(g_debug_log, "***FOREST CELL POOLS (CARBON)***\n");
+		logger(g_debug_log, "----leaf_carbon               = %f gC/m2\n", m->cells[cell].leaf_carbon);
+		logger(g_debug_log, "----froot_carbon              = %f gC/m2\n", m->cells[cell].froot_carbon);
+		logger(g_debug_log, "----stem_carbon               = %f gC/m2\n", m->cells[cell].stem_carbon);
+		logger(g_debug_log, "----stem_live_wood_carbon     = %f gC/m2\n", m->cells[cell].stem_live_wood_carbon);
+		logger(g_debug_log, "----stem_dead_wood_carbon     = %f gC/m2\n", m->cells[cell].stem_dead_wood_carbon);
+		logger(g_debug_log, "----croot_carbon              = %f gC/m2\n", m->cells[cell].croot_carbon);
+		logger(g_debug_log, "----croot_live_wood_carbon    = %f gC/m2\n", m->cells[cell].croot_live_wood_carbon);
+		logger(g_debug_log, "----croot_dead_wood_carbon    = %f gC/m2\n", m->cells[cell].croot_dead_wood_carbon);
+		logger(g_debug_log, "----branch_carbon             = %f gC/m2\n", m->cells[cell].branch_carbon);
+		logger(g_debug_log, "----branch_live_wood_carbon   = %f gC/m2\n", m->cells[cell].branch_live_wood_carbon);
+		logger(g_debug_log, "----branch_dead_wood_carbon   = %f gC/m2\n", m->cells[cell].branch_dead_wood_carbon);
+		logger(g_debug_log, "----reserve_carbon            = %f gC/m2\n", m->cells[cell].reserve_carbon);
+		logger(g_debug_log, "----fruit_carbon              = %f gC/m2\n", m->cells[cell].fruit_carbon);
+		logger(g_debug_log, "\n***FOREST CELL POOLS (NITROGEN)***\n");
+		logger(g_debug_log, "----leaf_nitrogen             = %f gN/m2\n", m->cells[cell].leaf_nitrogen);
+		logger(g_debug_log, "----froot_nitrogen            = %f gN/m2\n", m->cells[cell].froot_nitrogen);
+		logger(g_debug_log, "----stem_nitrogen             = %f gN/m2\n", m->cells[cell].stem_nitrogen);
+		logger(g_debug_log, "----stem_live_wood_nitrogen   = %f gN/m2\n", m->cells[cell].stem_live_wood_nitrogen);
+		logger(g_debug_log, "----stem_dead_wood_nitrogen   = %f gN/m2\n", m->cells[cell].stem_dead_wood_nitrogen);
+		logger(g_debug_log, "----croot_nitrogen            = %f gN/m2\n", m->cells[cell].croot_nitrogen);
+		logger(g_debug_log, "----croot_live_wood_nitrogen  = %f gN/m2\n", m->cells[cell].croot_live_wood_nitrogen);
+		logger(g_debug_log, "----croot_dead_wood_nitrogen  = %f gN/m2\n", m->cells[cell].croot_dead_wood_nitrogen);
+		logger(g_debug_log, "----branch_nitrogen           = %f gN/m2\n", m->cells[cell].branch_nitrogen);
+		logger(g_debug_log, "----branch_live_wood_nitrogen = %f gN/m2\n", m->cells[cell].branch_live_wood_nitrogen);
+		logger(g_debug_log, "----branch_dead_wood_nitrogen = %f gN/m2\n", m->cells[cell].branch_dead_wood_nitrogen);
+		logger(g_debug_log, "----reserve_nitrogen          = %f gN/m2\n", m->cells[cell].reserve_nitrogen);
+		logger(g_debug_log, "----fruit_nitrogen            = %f gN/m2\n", m->cells[cell].fruit_nitrogen);
+
+
+
 	}
 }
 

@@ -58,7 +58,7 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 	growth_respiration_frac ( a, s );
 
 	logger(g_debug_log,"\n*******INITIALIZE FOREST CLASS CARBON POOLS*******\n");
-	logger(g_debug_log, "\n\n...checking initial biomass data for height %g, age %d, species %s...\n", h->value, a->value, s->name);
+	logger(g_debug_log, "...checking initial biomass data for height %g, age %d, species %s...\n", h->value, a->value, s->name);
 
 	/* compute mass density */
 	s->value[MASS_DENSITY] = s->value[RHOMAX] + (s->value[RHOMIN] - s->value[RHOMAX]) * exp(-ln2 * (a->value / s->value[TRHO]));
@@ -465,13 +465,13 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 	/* compute AGB and BGB */
 	logger(g_debug_log, "**AGB & BGB**\n");
 	s->value[AGB]      = s->value[STEM_C] + s->value[BRANCH_C] + s->value[LEAF_C] + s->value[FRUIT_C];
-	logger(g_debug_log, "Yearly Class AGB = %g tC/cell\n", s->value[AGB]);
+	logger(g_debug_log, "----Yearly Class AGB = %g tC/cell\n", s->value[AGB]);
 	s->value[BGB]      = s->value[FROOT_C] + s->value[CROOT_C];
-	logger(g_debug_log, "Yearly Class BGB = %g tC/cell\n", s->value[BGB]);
+	logger(g_debug_log, "----Yearly Class BGB = %g tC/cell\n", s->value[BGB]);
 	s->value[TREE_AGB] = s->value[AGB] / (double)s->counter[N_TREE];
-	logger(g_debug_log, "Yearly Class AGB = %g tC/tree\n", s->value[TREE_AGB]);
+	logger(g_debug_log, "----Yearly Class AGB = %g tC/tree\n", s->value[TREE_AGB]);
 	s->value[TREE_BGB] = s->value[BGB] / (double)s->counter[N_TREE];
-	logger(g_debug_log, "Yearly Class BGB = %g tC/tree\n", s->value[TREE_BGB]);
+	logger(g_debug_log, "----Yearly Class BGB = %g tC/tree\n", s->value[TREE_BGB]);
 
 	/* check that all mandatory variables are initialized */
 	CHECK_CONDITION(h->value, ==, 0);
@@ -536,6 +536,9 @@ void initialization_forest_C (cell_t *const c, const int height, const int dbh, 
 	c->reserve_carbon           += (s->value[RESERVE_C]          * 1e6 / g_settings->sizeCell);
 	c->fruit_carbon             += (s->value[FRUIT_C]            * 1e6 / g_settings->sizeCell);
 
+	c->agb                      += (c->leaf_carbon + c->stem_carbon + c->branch_carbon + c->fruit_carbon);
+	c->bgb                      += (c->froot_carbon + c->croot_carbon);
+
 	/* check */
 	CHECK_CONDITION(c->leaf_carbon,                    <=, ZERO);
 	CHECK_CONDITION(c->froot_carbon,                   <=, ZERO);
@@ -550,6 +553,8 @@ void initialization_forest_C (cell_t *const c, const int height, const int dbh, 
 	CHECK_CONDITION(c->branch_dead_wood_carbon,        <=, ZERO);
 	CHECK_CONDITION(c->reserve_carbon,                 <=, ZERO);
 	CHECK_CONDITION(c->fruit_carbon,                   <=, ZERO);
+	CHECK_CONDITION(c->agb,                            <=, ZERO);
+	CHECK_CONDITION(c->bgb,                            <=, ZERO);
 
 }
 
@@ -558,45 +563,45 @@ void initialization_forest_class_N (cell_t *const c, const int height, const int
 	species_t *s;
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
-	logger(g_debug_log,"\n*******INITIALIZE FOREST NITROGEN POOLS*******\n");
+	logger(g_debug_log,"\n*******INITIALIZE FOREST CLASS NITROGEN POOLS*******\n");
 
 	/* leaf */
 	s->value[LEAF_N] = s->value[LEAF_C] / s->value[CN_LEAVES];
-	logger(g_debug_log, "----Leaf nitrogen content = %g tN/cell\n", s->value[LEAF_N]);
+	logger(g_debug_log, "----LEAF_N             = %g tN/cell\n", s->value[LEAF_N]);
 
 	/* fine root */
 	s->value[FROOT_N] = s->value[FROOT_C] / s->value[CN_FINE_ROOTS];
-	logger(g_debug_log, "----Fine root nitrogen content = %g tN/cell\n", s->value[FROOT_N]);
+	logger(g_debug_log, "----FROOT_N            = %g tN/cell\n", s->value[FROOT_N]);
 
 	/* stem */
 	s->value[STEM_LIVE_WOOD_N] = s->value[STEM_LIVE_WOOD_C] / s->value[CN_LIVE_WOODS];
-	logger(g_debug_log, "----Live stem nitrogen content = %g tN/cell\n", s->value[STEM_LIVE_WOOD_N]);
+	logger(g_debug_log, "----STEM_LIVE_WOOD_N   = %g tN/cell\n", s->value[STEM_LIVE_WOOD_N]);
 
 	s->value[STEM_DEAD_WOOD_N] = s->value[STEM_DEAD_WOOD_C] / s->value[CN_DEAD_WOODS];
-	logger(g_debug_log, "----Dead stem nitrogen content = %g tN/cell\n", s->value[STEM_DEAD_WOOD_N]);
+	logger(g_debug_log, "----STEM_DEAD_WOOD_N   = %g tN/cell\n", s->value[STEM_DEAD_WOOD_N]);
 
 	s->value[STEM_N] = s->value[STEM_LIVE_WOOD_N] + s->value[STEM_DEAD_WOOD_N];
-	logger(g_debug_log, "----Stem nitrogen content = %g tN/cell\n", s->value[STEM_N]);
+	logger(g_debug_log, "----STEM_N             = %g tN/cell\n", s->value[STEM_N]);
 
 	/* coarse root */
 	s->value[CROOT_LIVE_WOOD_N] = s->value[CROOT_LIVE_WOOD_C] / s->value[CN_LIVE_WOODS];
-	logger(g_debug_log, "----Live coarse root nitrogen content = %g tN/cell\n", s->value[CROOT_LIVE_WOOD_N]);
+	logger(g_debug_log, "----CROOT_LIVE_WOOD_N  = %g tN/cell\n", s->value[CROOT_LIVE_WOOD_N]);
 
 	s->value[CROOT_DEAD_WOOD_N] = s->value[CROOT_DEAD_WOOD_C] / s->value[CN_DEAD_WOODS];
-	logger(g_debug_log, "----Dead coarse root nitrogen content = %g tN/cell\n", s->value[CROOT_DEAD_WOOD_N]);
+	logger(g_debug_log, "----CROOT_DEAD_WOOD_N  = %g tN/cell\n", s->value[CROOT_DEAD_WOOD_N]);
 
 	s->value[CROOT_N] = s->value[CROOT_LIVE_WOOD_N] + s->value[CROOT_DEAD_WOOD_N];
-	logger(g_debug_log, "----Coarse root nitrogen content = %g tN/cell\n", s->value[CROOT_N]);
+	logger(g_debug_log, "----CROOT_N            = %g tN/cell\n", s->value[CROOT_N]);
 
 	/* branch */
 	s->value[BRANCH_LIVE_WOOD_N] = s->value[BRANCH_LIVE_WOOD_C] / s->value[CN_LIVE_WOODS];
-	logger(g_debug_log, "----Live branch nitrogen content = %g tN/cell\n", s->value[BRANCH_LIVE_WOOD_N]);
+	logger(g_debug_log, "----BRANCH_LIVE_WOOD_N = %g tN/cell\n", s->value[BRANCH_LIVE_WOOD_N]);
 
 	s->value[BRANCH_DEAD_WOOD_N] = s->value[BRANCH_DEAD_WOOD_C] / s->value[CN_DEAD_WOODS];
-	logger(g_debug_log, "----Dead branch nitrogen content = %g tN/cell\n", s->value[BRANCH_DEAD_WOOD_N]);
+	logger(g_debug_log, "----BRANCH_DEAD_WOOD_N = %g tN/cell\n", s->value[BRANCH_DEAD_WOOD_N]);
 
 	s->value[BRANCH_N] = s->value[BRANCH_LIVE_WOOD_N] + s->value[BRANCH_DEAD_WOOD_N];
-	logger(g_debug_log, "----Branch nitrogen content = %g tN/cell\n", s->value[BRANCH_N]);
+	logger(g_debug_log, "----BRANCH_N           = %g tN/cell\n", s->value[BRANCH_N]);
 
 	/* check that all mandatory variables are initialized */
 	CHECK_CONDITION(s->value[STEM_N],          <=, ZERO);
@@ -730,6 +735,11 @@ void initialization_forest_class_litter_soil (cell_t *const c, const int height,
 		s->value[DEAD_WOOD_USCEL_FRAC] = 0.2 * s->value[DEAD_WOOD_CEL_FRAC];
 	}
 }
+void initialization_forest_litter_soil (cell_t *const c, const int height, const int dbh, const int age, const int species)
+{
+	//fixme todo
+
+}
 
 void initialization_soil_physic(cell_t *const c)
 {
@@ -740,7 +750,7 @@ void initialization_soil_physic(cell_t *const c)
 	float volumetric_field_capacity;
 	float volumetric_saturated_hydraulic_conductivity;
 
-	logger(g_debug_log,"\nINITIALIZE SOIL PHYSIC\n");
+	logger(g_debug_log,"\n*******INITIALIZE SOIL *******\n");
 
 	/*soil matric potential*/
 	CHECK_CONDITION(fabs((g_soil_settings->values[SOIL_SAND_PERC] + g_soil_settings->values[SOIL_CLAY_PERC] + g_soil_settings->values[SOIL_SILT_PERC]) -100.0 ), >, eps);
