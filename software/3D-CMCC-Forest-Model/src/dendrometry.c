@@ -354,11 +354,13 @@ void annual_minimum_reserve (species_t *const s)
 	logger(g_debug_log, "--Average MINIMUM Reserve Biomass = %g tC/class tree \n", s->value[RESERVE_C]);
 }
 
-void dendrometry_old(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species)
+void dendrometry_old(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, const int year)
 {
 	double oldavDBH;
 	double oldTreeHeight;
 	double oldBasalArea;
+
+	double max_diff = 2.;          /* maximum allowed differences in meter between initialized tree height and computed at the first year */
 
 	height_t *h;
 	dbh_t *d;
@@ -457,7 +459,8 @@ void dendrometry_old(cell_t *const c, const int layer, const int height, const i
 	 */
 
 	/* check */
-	CHECK_CONDITION( h->value, <, oldTreeHeight - eps );
+	if ( ! year ){ CHECK_CONDITION( h->value - oldTreeHeight, > , max_diff );}
+	else {CHECK_CONDITION( h->value, < , oldTreeHeight - eps );}
 
 	/*************************************************************************************************************************/
 

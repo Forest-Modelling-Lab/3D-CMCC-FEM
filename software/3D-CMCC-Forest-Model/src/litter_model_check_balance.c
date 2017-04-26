@@ -106,7 +106,7 @@ int check_litter_carbon_mass_balance(cell_t *const c)
 	c->litr_carbon_out   = 0. /* + c->daily_het_resp + c->daily_soilC */;
 
 	/* sum of current storage */
-	c->litr_carbon_store = c->leaf_litr1C +
+	c->litr_carbon_store =c->leaf_litr1C +
 			c->leaf_litr2C  +
 			c->leaf_litr3C  +
 			c->leaf_litr4C  +

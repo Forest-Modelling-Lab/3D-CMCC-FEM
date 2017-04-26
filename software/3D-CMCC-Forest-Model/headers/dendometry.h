@@ -4,7 +4,7 @@
 
 #include "matrix.h"
 
-void dendrometry_old(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species);
+void dendrometry_old(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, const int year );
 
 void dendrometry(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, const meteo_daily_t *const meteo_daily, const int month, const int year );
 

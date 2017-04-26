@@ -327,7 +327,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							if ( c->doy == ( IS_LEAP_YEAR( c->years[year].year ) ? ( MonthLength_Leap[month] ) : ( MonthLength[month] ) ) )
 							{
 								/* to avoid "jumps" of dbh it has computed once monthly */
-								dendrometry_old ( c, layer, height, dbh, age, species );
+								dendrometry_old ( c, layer, height, dbh, age, species, year );
 
 								//FIXME (v.5.3.1-a)
 								//dendrometry ( c, layer, height, dbh, age, species, meteo_daily );
