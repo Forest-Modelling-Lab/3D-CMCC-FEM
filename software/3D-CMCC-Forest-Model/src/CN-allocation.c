@@ -81,8 +81,16 @@ void carbon_allocation( cell_t *const c, species_t *const s)
 	CHECK_CONDITION ( s->value[STEM_C],     < , ZERO );
 	CHECK_CONDITION ( s->value[BRANCH_C],   < , ZERO );
 	CHECK_CONDITION ( s->value[CROOT_C],    < , ZERO );
-	CHECK_CONDITION ( s->value[RESERVE_C],  < , ZERO );
 	CHECK_CONDITION ( s->value[FRUIT_C],    < , ZERO );
+	//fixme
+#if 0
+	if ( s->value[RESERVE_C] < ZERO )
+	{
+		tree_class_remove(c, height, dbh, age, species);
+	}
+#else
+	CHECK_CONDITION ( s->value[RESERVE_C],  < , ZERO );
+#endif
 
 	/*** update cell level carbon fluxes ***/
 	/* update cell level carbon fluxes (gC/m2/day) */

@@ -1,6 +1,6 @@
 Year,x,y,Age,Species,Management,N,Stool,AvDBH,Height,Wf,Wrc,Wrf,Ws,Wbb,Wres,Lai
 //1996,0,0,34,Pinussylvestris,T,2500,0,10.56,6.5,0,0,0,0,0,0,5 //references: Vesala 1996, Vesala et al.; 1998, Kramer et al., 2002 
 1996,0,0,28,Pinussylvestris,T,1796,0,10.3,6.5,0,0,0,0,0,0,2.5 //references:Mencuccini and Bonosi Can. J. For. Res 2001
-2006,0,0,45,Piceaabies,T,770,0,5.1,4.9,0,0,0,0,0,0,4 //ISIMIP 
-2006,0,0,45,Pinussylvestris,T,754,0,16.15,15.19,0,0,0,0,0,0,4 //ISIMIP
-//2006,0,0,45,Pinussylvestris,T,1454,0,16.15,15.19,0,0,0,0,0,0,5 //merging the above two rows for test
+//2006,0,0,45,Piceaabies,T,770,0,5.1,4.9,0,0,0,0,0,0,4 //ISIMIP 
+//2006,0,0,45,Pinussylvestris,T,754,0,16.15,15.19,0,0,0,0,0,0,4 //ISIMIP
+2006,0,0,45,Pinussylvestris,T,1454,0,16.15,15.19,0,0,0,0,0,0,5 //merging the above two rows for test

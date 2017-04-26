@@ -50,6 +50,7 @@ void annual_tree_increment(cell_t *const c, const int height, const int dbh, con
 {
 	double prev_vol;
 	double tree_prev_vol;
+	double max_diff = 0.05;           /* maximum allowed differences in m3/tree between initialized volume and computed at the first year */
 
 	height_t *h;
 	dbh_t *d;
@@ -103,7 +104,8 @@ void annual_tree_increment(cell_t *const c, const int height, const int dbh, con
 	c->cum_volume += s->value[VOLUME];
 
 	/* check every year after the first */
-	CHECK_CONDITION( s->value[TREE_VOLUME], < , tree_prev_vol - eps );
+	if ( ! year ) { CHECK_CONDITION( fabs(s->value[TREE_VOLUME] - tree_prev_vol), > , max_diff ); }
+	else { CHECK_CONDITION( s->value[TREE_VOLUME], < , tree_prev_vol - eps ); }
 
 
 }

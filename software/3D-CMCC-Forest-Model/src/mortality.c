@@ -230,6 +230,7 @@ int annual_growth_efficiency_mortality ( cell_t *const c, const int height, cons
 	if( s->value[RESERVE_C] < 0 )
 	{
 		/* reset to zero n_trees */
+		//ALESSIOC TO ALESSIOR IMPOSE N_TREE = 0 IS USEFUL?
 		s->counter[N_TREE] = 0;
 
 		/* call remove_tree_class */
