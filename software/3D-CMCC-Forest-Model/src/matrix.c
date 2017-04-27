@@ -1823,6 +1823,7 @@ void forest_summary(const matrix_t* const m, const int day, const int month, con
 		initialization_forest_structure (&m->cells[cell], day, month, year);
 
 		/* initialize pools */
+#if 0
 		for ( height = 0; height < m->cells[cell].heights_count; ++height )
 		{
 			for ( dbh = 0; dbh < m->cells[cell].heights[height].dbhs_count; ++dbh )
@@ -1858,6 +1859,43 @@ void forest_summary(const matrix_t* const m, const int day, const int month, con
 				}
 			}
 		}
+#else
+		for ( height = m->cells[cell].heights_count - 1; height >= 0; --height )
+		{
+			for ( dbh = m->cells[cell].heights[height].dbhs_count - 1; dbh >= 0; --dbh )
+			{
+				for ( age = m->cells[cell].heights[height].dbhs[dbh].ages_count - 1; age >= 0; --age )
+				{
+					for ( species = m->cells[cell].heights[height].dbhs[dbh].ages[age].species_count - 1; species >= 0; --species )
+					{
+
+						/* IF NO BIOMASS INITIALIZATION DATA ARE AVAILABLE FOR STAND BUT JUST
+						 * DENDROMETRIC VARIABLES (i.e. AVDBH, HEIGHT, THESE ARE MANDATORY) */
+						/* initialize class carbon pools */
+						initialization_forest_class_C (&m->cells[cell], height, dbh, age, species);
+
+						/* initialize cell carbon pools */
+						initialization_forest_C       (&m->cells[cell], height, dbh, age, species);
+
+						/* initialize class nitrogen pools */
+						initialization_forest_class_N (&m->cells[cell], height, dbh, age, species);
+
+						/* initialize cell nitrogen pools */
+						initialization_forest_N       (&m->cells[cell], height, dbh, age, species);
+
+						/* initialization forest class litter fractions */
+						initialization_forest_class_litter_soil (&m->cells[cell], height, dbh, age, species);
+
+						/* initialization class litter fractions */
+						initialization_forest_class_litter_soil (&m->cells[cell], height, dbh, age, species);
+
+						/* initialization cell litter fractions */
+						initialization_forest_litter_soil (&m->cells[cell], height, dbh, age, species);
+					}
+				}
+			}
+		}
+#endif
 
 		logger(g_debug_log, "\n*******FOREST POOLS*******\n");
 		logger(g_debug_log, "***FOREST CELL POOLS (CARBON)***\n");
@@ -1888,9 +1926,6 @@ void forest_summary(const matrix_t* const m, const int day, const int month, con
 		logger(g_debug_log, "----branch_dead_wood_nitrogen = %f gN/m2\n", m->cells[cell].branch_dead_wood_nitrogen);
 		logger(g_debug_log, "----reserve_nitrogen          = %f gN/m2\n", m->cells[cell].reserve_nitrogen);
 		logger(g_debug_log, "----fruit_nitrogen            = %f gN/m2\n", m->cells[cell].fruit_nitrogen);
-
-
-
 	}
 }
 
