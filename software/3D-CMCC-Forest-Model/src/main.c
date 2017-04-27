@@ -277,10 +277,7 @@ static int output_path_create(void)
 		struct tm* ptm;
 		time_t t;
 
-
-		//ALESSIOC TO ALESSIOR I changed from gmtime since it didn't take into
-		//account fuso orario?
-		/* get current date */
+		/* get local datetime */
 		time(&t);
 		ptm = localtime(&t);
 		sprintf(date, "%04d_%s_%02d"
