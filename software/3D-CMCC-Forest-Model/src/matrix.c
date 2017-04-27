@@ -1741,6 +1741,7 @@ void forest_summary(const matrix_t* const m, const int day, const int month, con
 				m->cells[cell].heights_count);
 
 		/* loop on each height */
+#if 0
 		for ( height = 0; height < m->cells[cell].heights_count; ++height )
 		{
 			logger(g_debug_log, "**(%d)\n", height + 1);
@@ -1774,6 +1775,41 @@ void forest_summary(const matrix_t* const m, const int day, const int month, con
 				}
 			}
 		}
+#else
+		for ( height = m->cells[cell].heights_count - 1; height >= 0; --height )
+		{
+			logger(g_debug_log, "**(%d)\n", height + 1);
+			logger(g_debug_log, "-- height n.%02d is %g and has %d dbh classes \n",
+					height + 1, m->cells[cell].heights[height].value,
+					m->cells[cell].heights[height].dbhs_count);
+
+			/* loop on each dbh */
+			for ( dbh = m->cells[cell].heights[height].dbhs_count - 1; dbh >= 0; --dbh )
+			{
+				logger(g_debug_log, "**(%d)\n", dbh + 1);
+				logger(g_debug_log, "--- dbh n.%02d is %g and has %d ages classes\n",
+						dbh + 1, m->cells[cell].heights[height].dbhs[dbh].value,
+						m->cells[cell].heights[height].dbhs[dbh].ages_count);
+
+				/* loop on each age */
+				for ( age = m->cells[cell].heights[height].dbhs[dbh].ages_count - 1; age >= 0 ; --age )
+				{
+					logger(g_debug_log, "**(%d)\n", age + 1);
+					logger(g_debug_log, "---- age n.%02d is %d yrs and has %d species\n",
+							age + 1,
+							m->cells[cell].heights[height].dbhs[dbh].ages[age].value,
+							m->cells[cell].heights[height].dbhs[dbh].ages[age].species_count);
+
+					/* loop on each species */
+					for ( species = m->cells[cell].heights[height].dbhs[dbh].ages[age].species_count - 1; species >= 0; --species )
+					{
+						logger(g_debug_log, "----- species is %s\n",
+								m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species].name);
+					}
+				}
+			}
+		}
+#endif
 
 		/*************FOREST INITIALIZATION DATA***********/
 
