@@ -57,8 +57,8 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 	/* compute growth respiration fraction */
 	growth_respiration_frac ( a, s );
 
-	logger(g_debug_log,"\n*******INITIALIZE FOREST CLASS CARBON POOLS*******\n");
-	logger(g_debug_log, "...checking initial biomass data for height %g, age %d, species %s...\n", h->value, a->value, s->name);
+	logger(g_debug_log,"\n*******INITIALIZE FOREST CLASS CARBON POOLS (%s)*******\n", s->name);
+	logger(g_debug_log, "...checking initial biomass data for height %g, dbh %g, age %d, species %s...\n", h->value, d->value, a->value, s->name);
 
 	/* compute mass density */
 	s->value[MASS_DENSITY] = s->value[RHOMAX] + (s->value[RHOMIN] - s->value[RHOMAX]) * exp(-ln2 * (a->value / s->value[TRHO]));
@@ -82,7 +82,7 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 		//compute stem biomass from DBH
 		if (s->value[STEMCONST_P] == NO_DATA && s->value[STEMPOWER_P] == NO_DATA)
 		{
-			//use generic stemconst stempower values
+			/* use generic stemconst stempower values */
 			logger(g_debug_log, "..computing stem biomass from generic stempower and stemconst DBH = %g cm\n", d->value);
 			if (d->value < 9)
 			{
@@ -102,7 +102,7 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 
 		else
 		{
-			//use site specific stemconst stempower values
+			/* use site specific stemconst stempower values */
 			logger(g_debug_log, "..computing stem biomass from generic stempower and stemconst DBH = %g cm\n", d->value);
 			s->value[AV_STEM_MASS_KgDM] = s->value[STEMCONST_P] * pow (d->value, s->value[STEMPOWER_P]);
 			logger(g_debug_log, "Single tree stem mass = %g KgDM/tree\n", s->value[AV_STEM_MASS_KgDM]);
@@ -111,7 +111,7 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 		s->value[BIOMASS_STEM_tDM] = s->value[AV_STEM_MASS_KgDM] * s->counter[N_TREE] / 1e3;
 
 		s->value[STEM_C] = s->value[BIOMASS_STEM_tDM] / GC_GDM;
-		logger(g_debug_log, "-Class stem Biomass initialization (measured)= %g tC/cell\n", s->value[STEM_C]);
+		logger(g_debug_log, "-Class stem Biomass initialization = %g tC/cell\n", s->value[STEM_C]);
 	}
 	else
 	{
@@ -563,7 +563,7 @@ void initialization_forest_class_N (cell_t *const c, const int height, const int
 	species_t *s;
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
-	logger(g_debug_log,"\n*******INITIALIZE FOREST CLASS NITROGEN POOLS*******\n");
+	logger(g_debug_log,"\n*******INITIALIZE FOREST CLASS NITROGEN POOLS (%s)*******\n", s->name);
 
 	/* leaf */
 	s->value[LEAF_N] = s->value[LEAF_C] / s->value[CN_LEAVES];
@@ -602,6 +602,7 @@ void initialization_forest_class_N (cell_t *const c, const int height, const int
 
 	s->value[BRANCH_N] = s->value[BRANCH_LIVE_WOOD_N] + s->value[BRANCH_DEAD_WOOD_N];
 	logger(g_debug_log, "----BRANCH_N           = %g tN/cell\n", s->value[BRANCH_N]);
+
 
 	/* check that all mandatory variables are initialized */
 	CHECK_CONDITION(s->value[STEM_N],          <=, ZERO);

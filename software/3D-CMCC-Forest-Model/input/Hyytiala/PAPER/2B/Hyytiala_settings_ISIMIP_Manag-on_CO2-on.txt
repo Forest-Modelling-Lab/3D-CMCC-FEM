@@ -26,7 +26,7 @@ Y 0.48                              //Fixed_Aut_Resp_rate Assimilate use efficie
 CO2CONC 368.865                     //CO2 concentration refers to 2000 as ISIMIP PROTOCOL
 CO2_INCR 0.01                       //1% increment
 INIT_FRAC_MAXASW 1                  //0.1 Minimum fraction of asw based on maxasw (wilting point) (unchanged)
-TREE_LAYER_LIMIT 3                  //define differences among tree heights in meters classes to define number of layers in unspatial version
+TREE_LAYER_LIMIT 15 //3                  //define differences among tree heights in meters classes to define number of layers in unspatial version
 SOIL_LAYER 1                        //define soil layer/s to consider
 MAX_LAYER_COVER 1.0
 REPLANTED_SPECIES Pinussylvestris   // species name of replanted trees (mandatory)

@@ -114,7 +114,7 @@ for (protocol in protocol_list) {
                                 if ( grepl('^annual_',file_name) ) {
                                     outputCMCC$Date <- paste0("01/01/",outputCMCC$YEAR)
                                     outputCMCC$Date <- as.Date(outputCMCC$Date, format = "%d/%m/%Y")
-                                    start_col = 5
+                                    start_col = 3
                                 }
                                 if ( grepl('^monthly_',file_name) ) {
                                     outputCMCC$Date <- paste0("01/",outputCMCC$MONTH, "/",outputCMCC$YEAR)
