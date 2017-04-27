@@ -250,8 +250,6 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 	/* print class level LAI values */
 	for ( layer = c->tree_layers_count - 1; layer >= 0; --layer )
 	{
-		qsort(c->heights, c->heights_count, sizeof(height_t), sort_by_heights_asc);
-
 		for ( height = c->heights_count - 1; height >= 0 ; --height )
 		{
 			if( layer == c->heights[height].height_z )
@@ -810,8 +808,6 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 	{
 		for ( layer = c->tree_layers_count - 1; layer >= 0; --layer )
 		{
-			qsort(c->heights, c->heights_count, sizeof (height_t), sort_by_heights_desc);
-
 			for ( height = c->heights_count - 1; height >= 0 ; --height )
 			{
 				if( layer == c->heights[height].height_z )

@@ -64,8 +64,10 @@ void daily_C_evergreen_partitioning (cell_t *const c, const int layer, const int
 	logger(g_debug_log, "\n**C-PARTITIONING**\n");
 	logger(g_debug_log, "Carbon partitioning for evergreen\n");
 
-	/* partitioning block using approach of Potter et al., 1993, Schwalm & Ek, 2004; Arora and Boer 2005 */
-	//logger(g_debug_log, "*Partitioning ratios*\n");
+	/* partitioning block using approach of:
+	 *  Potter et al., 1993, Friendlingstein et al., 1999;
+	 *  Schwalm & Ek, 2004; Arora and Boer 2005 */
+	logger(g_debug_log, "*Partitioning ratios*\n");
 
 	/* roots */
 	pR = (r0 + (omega * ( 1. - s->value[F_SW]))) / (1. + (omega * (2. - Light_trasm - s->value[F_SW])));

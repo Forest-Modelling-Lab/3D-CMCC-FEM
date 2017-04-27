@@ -62,7 +62,9 @@ void daily_C_deciduous_partitioning (cell_t *const c, const int layer, const int
 	logger(g_debug_log, "\n**C-PARTITIONING**\n");
 	logger(g_debug_log, "Carbon partitioning for deciduous\n");
 
-	/* partitioning block using approach of Potter et al., 1993, Schwalm & Ek, 2004; Arora and Boer 2005 */
+	/* partitioning block using approach of:
+	 *  Potter et al., 1993, Friendlingstein et al., 1999;
+	 *  Schwalm & Ek, 2004; Arora and Boer 2005 */
 	logger(g_debug_log, "*Partitioning ratios*\n");
 
 	/* roots */
