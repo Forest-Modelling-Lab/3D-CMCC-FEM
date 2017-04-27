@@ -16,27 +16,26 @@ extern settings_t* g_settings;
 extern logger_t* g_debug_log;
 extern soil_settings_t *g_soil_settings;
 
+#define WATER_STRESS_LIMIT 0.3
+
 void modifiers(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, const meteo_daily_t *const meteo_daily,
 		const meteo_annual_t *const meteo_annual)
 {
 	double RelAge;
 	/*variables for CO2 modifier computation*/
 	double KmCO2;	                       /* affinity coefficients temperature dependent according to Arrhenius relationship */
-	double Ea1 = 59400.0;                  /* KJ mol^-1 */
-	double A1 = 2.419 * pow(10,13);
-	double Ea2 = 109600.0;	               /* KJ mol^-1 */
-	double A2 = 1.976 * pow(10,22);
+	double Ea1   = 59400.0;                  /* KJ mol^-1 */
+	double A1    = 2.419 * pow(10,13);
+	double Ea2   = 109600.0;	               /* KJ mol^-1 */
+	double A2    = 1.976 * pow(10,22);
 	double KO2;	                           /* Inhibition constant for 02 */
 	double EaKO2 = 13913.5;                /* KJ mol^-1 */
-	double AKO2 = 8240;
+	double AKO2  = 8240;
 	double tau;	                           /* CO2/O2 specifity ratio */
 	double Eatau = -42896.9;
-	double Atau = 7.87 * pow(10,-5);
+	double Atau  = 7.87 * pow(10,-5);
 	double tairK;
 	double v1, v2;
-	double FCO2_Veroustraete;              /* CO2 modifier for assimilation through Veroustraete method */
-	//double FCO2_Franks;                    /* CO2 modifier for assimilation through Franks method */
-
 
 	age_t *a;
 	species_t *s;
@@ -54,8 +53,9 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 		/* CO2 MODIFIER AND ACCLIMATIONFOR ASSIMILATION  */
 		/* fertilization effect with rising CO2 from: Veroustraete 1994,
 		 * Veroustraete et al., 2002, Remote Sensing of Environment
+		 * (Michaelis-Menthen)
 		 */
-#if 1
+
 		tairK = meteo_daily->tavg + TempAbs;
 
 		if (meteo_daily->tavg >= 15)
@@ -73,24 +73,9 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 		v1 = (meteo_annual->co2Conc -(O2CONC/(2*tau)))/(g_settings->co2Conc-(O2CONC/(2*tau)));
 		v2 = (KmCO2*(1+(O2CONC/KO2))+g_settings->co2Conc)/(KmCO2*(1+(O2CONC/KO2))+meteo_annual->co2Conc);
 
-		/* compute F_CO2 modifier */
-		FCO2_Veroustraete = v1*v2;
-
 		/* CO2 assimilation modifier */
-		s->value[F_CO2] = FCO2_Veroustraete;
+		s->value[F_CO2] = v1*v2;
 
-#else
-		/***************************************************************/
-		/* CO2 MODIFIER FOR ASSIMILATION */
-		/* fertilization effect with rising CO2 from: Franks et al. 2013 New Phytologist */
-		/* assuming KLeaf temperature equal to daily avg air temperature */
-
-		FCO2_Franks = 1. + ( ( (meteo_annual->co2Conc - meteo_daily->tavg ) * ( g_settings->co2Conc + ( 2. * meteo_daily->tavg ) )
-				/ ( meteo_annual->co2Conc + ( 2. * meteo_daily->tavg ) ) * ( g_settings->co2Conc - meteo_daily->tavg ) ) / 100. );
-
-		/* CO2 assimilation modifier */
-		s->value[F_CO2] = FCO2_Franks;
-#endif
 		/**********************************************************************************/
 
 		/* CO2 MODIFIER FOR TRANSPIRATION  */
@@ -105,11 +90,11 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	}
 	else
 	{
-		s->value[F_CO2] = 1.;
+		s->value[F_CO2]    = 1.;
 
 		s->value[F_CO2_TR] = 1.;
 	}
-	logger(g_debug_log, "f_CO2 modifier for assimilation = %g\n", s->value[F_CO2]);
+	logger(g_debug_log, "f_CO2 modifier for assimilation  = %g\n", s->value[F_CO2]);
 	logger(g_debug_log, "f_CO2 modifier for transpiration = %g\n", s->value[F_CO2_TR]);
 
 	/********************************************************************************************/
@@ -135,11 +120,11 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	/* photosynthetic photon flux density conductance control */
 
 	/* for overall leaves */
-	s->value[F_LIGHT] = s->value[PPFD_ABS] /(PPFD50 + s->value[PPFD_ABS]);
+	s->value[F_LIGHT]       = s->value[PPFD_ABS] /(PPFD50 + s->value[PPFD_ABS]);
 	logger(g_debug_log, "f_LIGHT (BIOME) = %f \n", s->value[F_LIGHT]);
 
 	/* for sun leaves */
-	s->value[F_LIGHT_SUN] = s->value[PPFD_ABS_SUN] /(PPFD50 + s->value[PPFD_ABS_SUN]);
+	s->value[F_LIGHT_SUN]   = s->value[PPFD_ABS_SUN] /(PPFD50 + s->value[PPFD_ABS_SUN]);
 	logger(g_debug_log, "f_LIGHT_SUN (BIOME) = %f \n", s->value[F_LIGHT_SUN]);
 
 	/* for shaded leaves */
@@ -318,7 +303,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 
 		/* forced to  0.3 to avoid zero values */
 		/* see: Clark et al., 2011 for JULES model impose 0.2 */
-		s->value[F_PSI] = 0.3;
+		s->value[F_PSI] = WATER_STRESS_LIMIT ; //0.3;
 		logger(g_debug_log, "F_PSI = %f\n", s->value[F_PSI]);
 		//CHECK_CONDITION(counter_water_stress, >, 31);
 
@@ -331,7 +316,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 
 		//test
 		//for consistency with complete stress values
-		if(s->value[F_PSI]< 0.3) s->value[F_PSI] = 0.3;
+		if(s->value[F_PSI]< WATER_STRESS_LIMIT) s->value[F_PSI] = WATER_STRESS_LIMIT;
 	}
 
 	s->value[F_SW] = s->value[F_PSI];

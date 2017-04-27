@@ -62,7 +62,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 
 	/********************************************************************************************************/
 	/* temperature and pressure correction factor for conductances */
-	g_corr = pow( ( meteo_daily->tday + TempAbs ) / 293.15, 1.75) * 101300 / meteo_daily->air_pressure;
+	g_corr = pow( ( meteo_daily->tday + TempAbs ) / 293.15, 1.75) * 101300. / meteo_daily->air_pressure;
 
 	/* calculate leaf- and canopy-level conductances to water vapor and
 		sensible heat fluxes */
@@ -159,7 +159,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 
 	/* Canopy evaporation, if any water was intercepted */
 	/* Calculate Penman-Monteith evaporation, given the canopy conductances to
-	evaporated water and sensible heat.  Calculate the time required to
+	evaporated water and sensible heat. Calculate the time required to
 	evaporate all the canopy water at the daily average conditions, and
 	subtract that time from the daylength to get the effective daylength for
 	transpiration. */
@@ -400,6 +400,18 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 	logger(g_debug_log, "CANOPY_TRANSP_SUN   = %g mm/m2/day\n", s->value[CANOPY_TRANSP_SUN]);
 	logger(g_debug_log, "CANOPY_TRANSP_SHADE = %g mm/m2/day\n", s->value[CANOPY_TRANSP_SHADE]);
 	logger(g_debug_log, "CANOPY_EVAPO_TRANSP = %g mm/m2/day\n", s->value[CANOPY_EVAPO_TRANSP]);
+
+	/* control if canopy transpiration exceeds availbale soil water */
+	/* in case it happens down-regulate transpiration to maximum available soil water */
+	//fixme it MUST be implemented for multi class approach
+	if ( s->value[CANOPY_TRANSP] > c->asw )
+	{
+		s->value[CANOPY_TRANSP] = c->asw;
+		error_log("ATTENTION CANOPY TRANSPIRATION EXCEEDS ASW!!\n");
+	}
+
+	/* check */
+	CHECK_CONDITION (s->value[CANOPY_TRANSP], > , c->asw);
 
 	/* compute latent heat fluxes for canopy */
 	Canopy_latent_heat_fluxes   (s, meteo_daily);
