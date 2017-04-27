@@ -659,7 +659,6 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 	static int years_counter;
 
 	species_t *s;
-	meteo_annual_t *meteo_annual;
 
 	/* return if annual logging is off*/
 	if ( ! g_annual_log ) return;
@@ -934,10 +933,7 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 				c->volume,
 				c->cum_volume);
 		/* print meteo variables at cell level */
-		//ALESSIOC TO ALESSIOR
-		logger(g_annual_log, ",%3.4f\n", meteo_annual->co2Conc);
-
-
+		logger(g_annual_log, ",%3.4f\n", c->years[year].co2Conc);
 	}
 	else
 	{
