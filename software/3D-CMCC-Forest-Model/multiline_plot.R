@@ -1,15 +1,22 @@
+# Developed by:
+# Alessio Collalti (alessio.collalti@cmcc.it)
+# Carlo Trotta (trottacarlo@unitus.it)
+# Gaetano Pellicone (gaetano.pellicone@isafom.cnr.it)
+# starting date: 27 April 2017
+
+
 rm(list = ls())
 library(ggplot2)
 library(grid)
 library(gridExtra)
 library(cowplot)
 
-setwd('C:/SviluppoR/')
+setwd('/home/alessio-cmcc/git/3D-CMCC-LAND/software/3D-CMCC-Forest-Model/')
 
 # source('multiplot.R')
 
-input_dir = ('C:/Users/CMCC/Desktop/profound/')
-file_name = 'annual_5.3.2-ISIMIP_Hyytiala_GCM3_rcp2p6.txt_(2006-2299)_CO2_ON_CO2_rcp2p6.txt_Man_ON_d_10000_txt.txt'
+input_dir = ('/home/alessio-cmcc/git/3D-CMCC-LAND/software/3D-CMCC-Forest-Model/output/output_Rstudio-5.3.2-ISIMIP-Hyytiala-2B/output_5.3.2-ISIMIP_2017_APRIL_28/annual/')
+file_name = 'annual_5.3.2-ISIMIP_Hyytiala_GCM2_rcp2p6.txt_(2006-2299)_CO2_ON_CO2_rcp2p6.txt_Man_ON_d_10000_txt.txt'
 
 df = read.csv(paste0(input_dir,file_name),comment.char = '#')
 

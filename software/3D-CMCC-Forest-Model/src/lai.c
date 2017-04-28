@@ -28,18 +28,18 @@ void daily_lai (species_t *const s)
 	/* compute LAI for Projected Area */
 
 	/* convert tC/cell to KgC/m^2 */
-	leaf_C = s->value[LEAF_C] * 1000.0 ;
+	leaf_C = s->value[LEAF_C] * 1000.;
 	logger(g_debug_log, "Leaf Biomass = %g KgC/sizecell\n", leaf_C);
 	logger(g_debug_log, "CANOPY_COVER_PROJ = %g %%\n", s->value[CANOPY_COVER_PROJ]);
 
 	/* compute total LAI for Projected Area */
-	s->value[LAI_PROJ] = (leaf_C * s->value[SLA_AVG])/(s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell);
+	s->value[LAI_PROJ]       = (leaf_C * s->value[SLA_AVG])/(s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell);
 	s->value[LAI_SUN_PROJ]   = 1. - exp(-s->value[LAI_PROJ]);
 	s->value[LAI_SHADE_PROJ] = s->value[LAI_PROJ] - s->value[LAI_SUN_PROJ];
-	logger(g_debug_log, "LAI_PROJ = %f m2/m2\n", s->value[LAI_PROJ]);
-	logger(g_debug_log, "LAI_SUN_PROJ = %g m2/m2\n", s->value[LAI_SUN_PROJ]);
+	logger(g_debug_log, "LAI_PROJ       = %f m2/m2\n", s->value[LAI_PROJ]);
+	logger(g_debug_log, "LAI_SUN_PROJ   = %g m2/m2\n", s->value[LAI_SUN_PROJ]);
 	logger(g_debug_log, "LAI_SHADE_PROJ = %g m2/m2\n", s->value[LAI_SHADE_PROJ]);
-	logger(g_debug_log, "PEAK_LAI_PROJ = %f m2/m2\n", s->value[PEAK_LAI_PROJ]);
+	logger(g_debug_log, "PEAK_LAI_PROJ  = %f m2/m2\n", s->value[PEAK_LAI_PROJ]);
 
 	/**************************************************************************************************/
 
@@ -56,12 +56,10 @@ void daily_lai (species_t *const s)
 	logger(g_debug_log, "single height class canopy cover exposed = %g %%\n", s->value[CANOPY_COVER_EXP]*100.0);
 
 	/* compute total LAI for Exposed Area */
-	s->value[LAI_EXP]       = s->value[LAI_PROJ] * (1 + s->value[CANOPY_COVER_EXP]);
-	logger(g_debug_log, "LAI_EXP = %f m-2\n", s->value[LAI_EXP]);
-
-	/* compute LAI for sunlit and shaded canopy portions for Exposed Area */
-	s->value[LAI_SUN_EXP]   = s->value[LAI_SUN_PROJ] * (1 + s->value[CANOPY_COVER_EXP]);
+	s->value[LAI_EXP]       = s->value[LAI_PROJ]       * (1 + s->value[CANOPY_COVER_EXP]);
+	s->value[LAI_SUN_EXP]   = s->value[LAI_SUN_PROJ]   * (1 + s->value[CANOPY_COVER_EXP]);
 	s->value[LAI_SHADE_EXP] = s->value[LAI_SHADE_PROJ] * (1 + s->value[CANOPY_COVER_EXP]);
+	logger(g_debug_log, "LAI_EXP = %f m-2\n", s->value[LAI_EXP]);
 	logger(g_debug_log, "LAI_SUN_EXP = %g m2 m-2\n", s->value[LAI_SUN_EXP]);
 	logger(g_debug_log, "LAI_SHADE_EXP = %g m2 m-2\n", s->value[LAI_SHADE_EXP]);
 

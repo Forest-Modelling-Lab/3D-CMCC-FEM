@@ -615,7 +615,7 @@ int daily_forest_structure (cell_t *const c)
 						s->value[DAILY_CANOPY_COVER_PROJ] = s->value[CANOPY_COVER_PROJ];
 
 
-						/* canopy cannot absorb more than 100% of incoming flux (e.g. rain) */
+						/* canopy cannot absorbs more than 100% of incoming flux (e.g. rain) */
 						if( s->value[DAILY_CANOPY_COVER_PROJ] > 1. )
 						{
 							s->value[DAILY_CANOPY_COVER_PROJ] = 1.;
