@@ -530,7 +530,7 @@ void reset_annual_class_variables(cell_t *const c)
 				a = &d->ages[age];
 
 				/* species level */
-				for (species = a->species_count - 1; species >= 0; species -- )
+				for ( species = a->species_count - 1; species >= 0; species -- )
 				{
 					s = &a->species[species];
 

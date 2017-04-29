@@ -33,7 +33,7 @@ output_folder="output_Rstudio"
 site_list<-c("Hyytiala")#,"Soroe","Hyytiala","All")
 esm_list <-c("2")# ("1","2","3","4","5")
 rcp_list <-c("2p6")# ("0p0","2p6","4p5","6p0","8p5")
-man_list <-c("off")# ("on",'off')
+man_list <-c("on")# ("on",'off')
 co2_list <-c("on")# , "off")
 protocol_list<-c("2B")# ("2A","2B") 
 
@@ -129,10 +129,10 @@ for (protocol in protocol_list) {
                                 
                                 # plot output model 
                                 pdf(gsub('_txt.txt','_txt.pdf',f), onefile = T, width = 30,height = 24)
-                                par(mfrow=c(5,5))
+                                par(mfrow=c(4,4))
                                 for (i in seq(start_col,length(outputCMCC)) ) {
                                     plot(outputCMCC$Date, outputCMCC[,i], main=colnames(outputCMCC[i]), 
-                                         col="black", xlab = "year", ylab= "unit", type = "l", col.lab="red", cex.lab=2, cex.axis=1.5, cex.main=2, pch =30)
+                                         col="black", xlab = "year", ylab= "unit", type = "l", col.lab="red", cex.lab=2, cex.axis=2, cex.main=2, pch =30)
                                 } 
                                 dev.off()
                                 cat(paste0('\n',gsub('_txt.txt','_txt.pdf',f),'\n'))

@@ -123,7 +123,7 @@ enum {
 	CANOPY_COVER_PROJ,                   /* (DIM) Canopy Projected Cover % of pixel covered (at zenith angle) */
 	CANOPY_COVER_EXP,                    /* (DIM) Canopy Exposed Cover % of pixel exposed (integrated all over all viewing angles) */
 	DAILY_CANOPY_COVER_PROJ,             /* (DIM) Daily Canopy Projected Cover % of pixel covered (at zenith angle) */
-	DAILY_CANOPY_COVER_EXP,              /* (DIM) Daily Canopy Exposed Cover % of pixel exposed (integrated all over all viewing angles) */
+	DAILY_CANOPY_COVER_EXP,              /* (DIM) Daily Canopy Exposed Cover % of pixel exposed (integrated all over the daylength) */
 	HD_EFF,                              /* (DIM) Effective Height/Diameter ratio */
 	HD_MAX,                              /* (DIM) Height (m) to Base diameter (m) ratio MAX */
 	HD_MIN,                              /* (DIM) Height (m) to Base diameter (m) ratio MIN */

@@ -96,7 +96,7 @@ void crown_allometry (cell_t *const c, const int height, const int dbh, const in
 
 	/* Canopy and Soil Projected Cover using DBH-DC (at zenith angle) */
 	s->value[CANOPY_COVER_PROJ] = s->value[CROWN_AREA_PROJ] * s->counter[N_TREE] / g_settings->sizeCell;
-	logger(g_debug_log, "-Canopy Projected Cover (at zenith angle) = %g %%\n", s->value[CANOPY_COVER_PROJ] * 100.0);
+	logger(g_debug_log, "-Canopy Projected Cover (at zenith angle) = %g %%\n", s->value[CANOPY_COVER_PROJ] * 100.);
 
 	/* (ORIGINAL) Canopy Projected Cover (integrated all over all viewing angles) */
 	/* following Cauchy's theorems Duursma et al., 2012) */

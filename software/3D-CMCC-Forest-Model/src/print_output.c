@@ -157,6 +157,10 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 										",LAI"
 										",CC_P"
 										",CC_E"
+										",DBHDC"
+										",CROWN_AREA_PROJ"
+										",CROWN_AREA_EXP"
+										",APAR"
 										",Ntree"
 										",VEG_D"
 										",C_INT"
@@ -281,7 +285,7 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 							logger(g_daily_log,",%c", sz_management[c->heights[height].dbhs[dbh].ages[age].species[species].management]);
 
 							/* print variables at layer-class level */
-							logger(g_daily_log,",%6.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%d,%d,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
+							logger(g_daily_log,",%6.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%d,%d,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
 									",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
 									",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
 									",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",
@@ -294,6 +298,10 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 									s->value[LAI_PROJ],
 									s->value[DAILY_CANOPY_COVER_PROJ],
 									s->value[DAILY_CANOPY_COVER_EXP],
+									s->value[DBHDC_EFF],
+									s->value[CROWN_AREA_PROJ],
+									s->value[CROWN_AREA_EXP],
+									s->value[APAR],
 									s->counter[N_TREE],
 									s->counter[VEG_DAYS],
 									s->value[CANOPY_INT],
@@ -731,6 +739,7 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 										",PeakLAI"
 										",CC-Proj"
 										",DBHDC"
+										",APAR"
 										",HD"
 										",HDMAX"
 										",HDMIN"
@@ -839,7 +848,7 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 								logger(g_annual_log,",%c", sz_management[c->heights[height].dbhs[dbh].ages[age].species[species].management]);
 
 								/* print variables at layer-class level */
-								logger(g_annual_log,",%6.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%d,%d,%d,%3.4f"
+								logger(g_annual_log,",%6.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%d,%d,%d,%3.4f"
 										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
 										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",
 										s->value[YEARLY_GPP],
@@ -852,6 +861,7 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 										s->value[PEAK_LAI_PROJ],
 										s->value[CANOPY_COVER_PROJ],
 										s->value[DBHDC_EFF],
+										s->value[YEARLY_APAR],
 										s->value[HD_EFF],
 										s->value[HD_MAX],
 										s->value[HD_MIN],

@@ -60,7 +60,6 @@
 #include "decomposition.h"
 #include "littering.h"
 
-extern settings_t* g_settings;
 extern logger_t* g_debug_log;
 extern soil_settings_t* g_soil_settings;
 
@@ -97,7 +96,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 
 	/* assign shortcuts */
 	c = &m->cells[cell];
-	meteo_daily = &m->cells[cell].years[year].m[month].d[day];
+	meteo_daily  = &m->cells[cell].years[year].m[month].d[day];
 	meteo_annual = &m->cells[cell].years[year];
 
 	/* check parameters */
@@ -122,7 +121,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	}
 
 	/* daily forest structure*/
-	daily_forest_structure ( c );
+	daily_forest_structure ( c,  meteo_daily);
 
 	/* print forest cell data */
 	print_daily_forest_data ( c );

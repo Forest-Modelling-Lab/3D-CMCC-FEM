@@ -497,7 +497,7 @@ int monthly_forest_structure (cell_t* const c)
 	return 1;
 }
 
-int daily_forest_structure (cell_t *const c)
+int daily_forest_structure ( cell_t *const c, const meteo_daily_t *const meteo_daily )
 {
 	int layer;
 	int height;
@@ -607,6 +607,16 @@ int daily_forest_structure (cell_t *const c)
 				{
 					for ( species = 0; species < c->heights[height].dbhs[dbh].ages[age].species_count; ++species )
 					{
+						int i;
+						int odd;
+						double diff_cover;
+						double max_cover;
+						double min_cover;
+						double temp_diff_cover;
+						double temp_can_cover;
+						double cum_temp_cover;
+						int daylength = round(meteo_daily->daylength);
+
 						s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 						/*****************************************************************************************/
@@ -620,7 +630,7 @@ int daily_forest_structure (cell_t *const c)
 						{
 							s->value[DAILY_CANOPY_COVER_PROJ] = 1.;
 						}
-						logger(g_debug_log, "%s height class canopy projected cover = %g %%\n", s->name, s->value[DAILY_CANOPY_COVER_PROJ]*100.0);
+						logger(g_debug_log, "%s height class canopy projected cover = %g %%\n", s->name, s->value[DAILY_CANOPY_COVER_PROJ] * 100.);
 
 						/*****************************************************************************************/
 
@@ -644,9 +654,68 @@ int daily_forest_structure (cell_t *const c)
 						{
 							s->value[DAILY_CANOPY_COVER_EXP] = 1.;
 						}
-						logger(g_debug_log, "%s height class canopy exposed cover = %g %%\n", s->name, s->value[CANOPY_COVER_EXP]*100.0);
 
-						/*****************************************************************************************/
+						/** now integrating all over the daylength **/
+						max_cover       = s->value[DAILY_CANOPY_COVER_EXP];
+						min_cover       = s->value[DAILY_CANOPY_COVER_PROJ];
+						diff_cover      = max_cover - min_cover;
+						temp_diff_cover = diff_cover / ( meteo_daily->daylength / 2. );
+
+						/* check if odd */
+						if(daylength %2 != 0) odd = 0; /* ok is a odd number */
+						else odd = 1;                  /* in NOT an odd number */
+
+						/* morning to nadir */
+						for ( i = 0; i < daylength ; ++i)
+						{
+							if ( ! odd )
+							{
+								if ( i == 0 )
+								{
+									temp_can_cover  = max_cover;
+								}
+								else if ( i <= ( daylength  / 2. ) )
+								{
+									/* morning to nadir */
+									temp_can_cover -= ( temp_diff_cover );
+								}
+								else
+								{
+									/* from nadir to evening */
+									temp_can_cover += ( temp_diff_cover );
+								}
+							}
+							else
+							{
+								if ( i == 0 )
+								{
+									temp_can_cover  = max_cover;
+								}
+								else if ( i <= ( daylength  / 2. ) -1 )
+								{
+									/* morning to nadir */
+									temp_can_cover -= ( temp_diff_cover );
+								}
+								else if (i <= ( daylength  / 2. ))
+								{
+									/* nothing to do */
+								}
+								else
+								{
+									/* from nadir to evening */
+									temp_can_cover += ( temp_diff_cover );
+								}
+							}
+							/* cumulate */
+							cum_temp_cover += temp_can_cover;
+						}
+
+						/** compute integrating all over the daylength corresponding canopy intercepting cover **/
+						s->value[DAILY_CANOPY_COVER_EXP] = cum_temp_cover / daylength;
+						cum_temp_cover = 0.;
+
+						/* check */
+						CHECK_CONDITION ( s->value[DAILY_CANOPY_COVER_EXP], > , 1 )
 					}
 				}
 			}
