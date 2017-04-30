@@ -676,9 +676,6 @@ enum {
 	SOIL3_RH,                           /* (kgC/m2/d) heterotrophic respiration for microbial recycling pool (slow) */
 	SOIL4_RH,                           /* (kgC/m2/d) heterotrophic respiration for recalcitrant SOM (humus, slowest) */
 
-	/* LPJ MORTALITY FUNCTION */
-	AGEMORT,                            /* (DIM) Age probability mortality function */
-
 	/*** BALANCES VALUES ***/
 	TREEC_IN,                           /* tree carbon balance in */
 	TREEC_OUT,                          /* tree carbon balance out */
@@ -703,10 +700,10 @@ enum {
 
 enum {
 
-	N_TREE,                             /* (tree/cell) Numbers of Adult Tree per class */
+	N_TREE,                             /* (tree/cell) Live Tree per class */
+	DEAD_TREE,                          /* (tree/cell) Dead Tree per class */
 	N_STUMP,                            /* (stump/cell) Number of stumps for coppice per class */
 	N_SEED,                             /* (seeds/cell) Seeds number per class */
-	DEAD_STEMS,                         /* (tree/cell) Dead Trees per class */
 	N_TREE_SAP,                         /* (saplings/cell) Numbers of Saplings per class */
 	VEG_UNVEG,                          /* (DIM) vegetative-un vegetative period per class */
 	VEG_DAYS,                           /* (days/year) day of vegetative period for class if != 0 is in veg period */

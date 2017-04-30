@@ -279,6 +279,8 @@ void reset_daily_class_variables(cell_t *const c)
 				{
 					s = &a->species[species];
 
+					s->counter[DEAD_TREE] =                0;
+
 					/* reset daily radiative variables */
 					s->value[PAR] =                       0.;
 					s->value[APAR] =                      0.;
@@ -573,7 +575,6 @@ void reset_annual_class_variables(cell_t *const c)
 					s->value[YEARLY_CANOPY_INT] =           0.;
 					s->value[YEARLY_CANOPY_EVAPO_TRANSP] =  0.;
 					s->value[YEARLY_CANOPY_LATENT_HEAT] =   0.;
-					s->counter[DEAD_STEMS] =                0;
 					s->counter[N_TREE_SAP] =                0;
 				}
 			}

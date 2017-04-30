@@ -27,6 +27,7 @@ void self_thinning_mortality ( cell_t *const c, const int layer )
 	int age;
 	int species;
 
+	int livetree = 0;
 	int deadtree = 0;
 	//int oldNstump;
 	//int deadstump = 0;
@@ -73,8 +74,8 @@ void self_thinning_mortality ( cell_t *const c, const int layer )
 					//int i;
 					//for ( i = (int)s->value[LIGHT_TOL]; i > 0; --i)
 					//{
-						//fixme self thinning mortality should follows this rationale
-						//fixme it shouldn't work properly in this way
+					//fixme self thinning mortality should follows this rationale
+					//fixme it shouldn't work properly in this way
 					//}
 
 					logger(g_debug_log, "MORTALITY BASED ON HIGH CANOPY COVER height %g species %s dbh %g !!!\n", h->value, s->name, d->value);
@@ -83,11 +84,11 @@ void self_thinning_mortality ( cell_t *const c, const int layer )
 					while ( c->tree_layers[layer].layer_cover > g_settings->max_layer_cover )
 					{
 						/* remove one tree per run */
-						--s->counter[N_TREE];
+						--livetree;
 						++deadtree;
 						logger(g_debug_log,"dead tree = %d\n", deadtree);
 
-						if ( s->counter[N_TREE] > 0 )
+						if ( livetree > 0 )
 						{
 							/* recompute class level canopy cover */
 							s->value[CANOPY_COVER_PROJ] -= (s->value[CROWN_AREA_PROJ] / g_settings->sizeCell);
@@ -110,7 +111,7 @@ void self_thinning_mortality ( cell_t *const c, const int layer )
 									c->heights[height + 1].dbhs[dbh].ages[age].species[species].counter[N_TREE] >= 0)
 							{
 								--c->heights[height + 1].dbhs[dbh].ages[age].species[species].counter[N_TREE];
-								++deadtree;
+								++c->heights[height + 1].dbhs[dbh].ages[age].species[species].counter[DEAD_TREE];
 
 								//fixme not correct
 								c->heights[height + 1].dbhs[dbh].ages[age].species[species].value[CANOPY_COVER_PROJ] -=
@@ -130,13 +131,24 @@ void self_thinning_mortality ( cell_t *const c, const int layer )
 							}
 						}
 
+						/* update at class level */
+						s->counter[DEAD_TREE] += deadtree;
+						s->counter[N_TREE]    -= deadtree;
+
 						/* check */
-						CHECK_CONDITION(s->counter[N_TREE], <=, 0);
+						CHECK_CONDITION(s->counter[N_TREE],    <=, 0);
+						CHECK_CONDITION(s->counter[DEAD_TREE], <, 0);
 
 						/* update at cell level */
-						c->daily_dead_tree += deadtree;
+						c->daily_dead_tree   += deadtree;
 						c->monthly_dead_tree += deadtree;
-						c->annual_dead_tree += deadtree;
+						c->annual_dead_tree  += deadtree;
+
+						/* check */
+						CHECK_CONDITION(c->daily_dead_tree  , <, 0);
+						CHECK_CONDITION(c->monthly_dead_tree, <, 0);
+						CHECK_CONDITION(c->annual_dead_tree , <, 0);
+
 					}
 
 					/* remove dead C and N biomass */
@@ -149,8 +161,8 @@ void self_thinning_mortality ( cell_t *const c, const int layer )
 
 	/* reset values for layer (they are recomputed below) */
 	c->tree_layers[layer].layer_n_height_class = 0;
-	c->tree_layers[layer].layer_n_trees = 0;
-	c->tree_layers[layer].layer_density = 0;
+	c->tree_layers[layer].layer_n_trees        = 0;
+	c->tree_layers[layer].layer_density        = 0;
 
 	/* REcompute numbers of height classes, tree number and density after mortality within each layer */
 	logger(g_debug_log, "REcompute numbers of height classes, tree number and density after mortality within each layer\n\n");
@@ -231,7 +243,8 @@ int annual_growth_efficiency_mortality ( cell_t *const c, const int height, cons
 	{
 		/* reset to zero n_trees */
 		//ALESSIOC TO ALESSIOR IMPOSE N_TREE = 0 IS USEFUL?
-		s->counter[N_TREE] = 0;
+		s->counter[DEAD_TREE] = s->counter[N_TREE];
+		s->counter[N_TREE]    = 0;
 
 		/* call remove_tree_class */
 		if ( ! tree_class_remove(c, height, dbh, age, species) )
@@ -247,7 +260,9 @@ int annual_growth_efficiency_mortality ( cell_t *const c, const int height, cons
 /* Age mortality function from LPJ-GUESS */
 void age_mortality (cell_t *const c, const int height, const int dbh, const int age, const int species)
 {
-	int dead_trees;
+	int livetree = 0;
+	int deadtree = 0;
+	double age_mort;
 
 	age_t *a;
 	species_t *s;
@@ -258,47 +273,56 @@ void age_mortality (cell_t *const c, const int height, const int dbh, const int 
 	s = &a->species[species];
 
 	/* Age probability function */
-	s->value[AGEMORT] = ( - ( 3. * log ( 0.001 ) ) / (s->value[MAXAGE])) * pow (((double)a->value /s->value[MAXAGE]), 2.);
-	logger(g_debug_log, "Max Age = %g years\n", s->value[MAXAGE]);
-	logger(g_debug_log, "Age factor (LPJ-GUESS) = %g\n", s->value[AGEMORT]);
+	age_mort = ( - ( 3. * log ( 0.001 ) ) / (s->value[MAXAGE])) * pow (((double)a->value /s->value[MAXAGE]), 2.);
 
-	if ( ( s->counter[N_TREE] * s->value[AGEMORT] ) > 1 )
+	livetree = s->counter[N_TREE];
+
+
+	if ( ( livetree * age_mort ) > 1 )
 	{
 		logger(g_debug_log, "**MORTALITY based on Tree Age (LPJ)**\n");
-		logger(g_debug_log, "Age = %d years\n", a->value);
-		logger(g_debug_log, "Age factor (LPJ-GUESS) = %g\n", s->value[AGEMORT]);
 
-		/* casting to int dead_trees */
-		dead_trees = (int)(s->counter[N_TREE] * s->value[AGEMORT]);
-		logger(g_debug_log, "dead trees = %d\n", dead_trees);
+		deadtree = (int)(livetree * age_mort);
+		logger(g_debug_log, "dead trees = %d\n", deadtree);
 
-		/* update C and N biomass */
-		tree_biomass_remove ( c, s, dead_trees );
-
-		/* update current number of trees */
-		s->counter[N_TREE] -= dead_trees;
-		logger(g_debug_log, "Number of Trees after age mortality = %d trees\n", s->counter[N_TREE]);
-
-		/* assign to global variable */
-		s->counter[DEAD_STEMS] = dead_trees;
-
+		if ( livetree > deadtree)
+		{
+			/* update C and N biomass */
+			tree_biomass_remove ( c, s, deadtree );
+		}
+		else
+		{
+			if ( ! tree_class_remove(c, height, dbh, age, species) )
+			{
+				logger_error(g_debug_log, "unable to remove tree class");
+				exit(1);
+			}
+		}
 	}
 	else
 	{
-		logger(g_debug_log, "**NO-MORTALITY based on Tree Age (LPJ)**\n");
-
-		s->counter[DEAD_STEMS] = 0;
+		deadtree = 0;
 	}
 
-	/* check if dead_trees > s->counter[N_TREE] */
-	if ( s->counter[N_TREE] < 0 )
-	{
-		if ( ! tree_class_remove(c, height, dbh, age, species) )
-		{
-			logger_error(g_debug_log, "unable to remove tree class");
-			exit(1);
-		}
-	}
+	/* update at class level */
+	s->counter[DEAD_TREE] += deadtree;
+	s->counter[N_TREE]    -= deadtree;
+
+	/* check */
+	CHECK_CONDITION(s->counter[N_TREE],    <=, 0);
+	CHECK_CONDITION(s->counter[DEAD_TREE], <, 0);
+
+	/* update at cell level */
+	c->daily_dead_tree   += deadtree;
+	c->monthly_dead_tree += deadtree;
+	c->annual_dead_tree  += deadtree;
+
+	/* check */
+	CHECK_CONDITION(c->daily_dead_tree  , <, 0);
+	CHECK_CONDITION(c->monthly_dead_tree, <, 0);
+	CHECK_CONDITION(c->annual_dead_tree , <, 0);
+
+
 	logger(g_debug_log, "**********************************\n");
 }
 
