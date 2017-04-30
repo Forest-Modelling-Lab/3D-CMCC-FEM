@@ -147,7 +147,7 @@ void dendrometry ( cell_t *const c, const int layer, const int height, const int
 	}
 	else
 	{
-		Light_refl_par_frac = (s->value[ALBEDO]/3.0) * s->value[LAI_EXP];
+		Light_refl_par_frac = (s->value[ALBEDO]/3.0) * s->value[LAI_PROJ];
 	}
 
 	if ( s->value[LAI_PROJ] > 0.)
@@ -156,8 +156,8 @@ void dendrometry ( cell_t *const c, const int layer, const int height, const int
 		pot_par = meteo_daily->incoming_par - (meteo_daily->incoming_par * Light_refl_par_frac * s->value[DAILY_CANOPY_COVER_EXP]);
 
 		/* compute potential absorbed incoming par */
-		pot_apar_sun = pot_par * (1. - (exp(- s->value[K] * s->value[LAI_SUN_EXP]))) * s->value[DAILY_CANOPY_COVER_EXP];
-		pot_apar_shade = (pot_par - pot_apar_sun) * (1. - (exp(- s->value[K] * s->value[LAI_SHADE_EXP]))) * s->value[DAILY_CANOPY_COVER_EXP];
+		pot_apar_sun = pot_par * (1. - (exp(- s->value[K] * s->value[LAI_SUN_PROJ]))) * s->value[DAILY_CANOPY_COVER_EXP];
+		pot_apar_shade = (pot_par - pot_apar_sun) * (1. - (exp(- s->value[K] * s->value[LAI_SHADE_PROJ]))) * s->value[DAILY_CANOPY_COVER_EXP];
 		pot_apar = pot_apar_sun + pot_apar_shade;
 
 		/* current light competition factor */
@@ -379,11 +379,13 @@ void dendrometry_old(cell_t *const c, const int layer, const int height, const i
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 	/* assign previous month values */
-	oldavDBH = d->value;
+	oldavDBH      = d->value;
 	oldTreeHeight = h->value;
-	oldBasalArea = s->value[BASAL_AREA];
+	oldBasalArea  = s->value[BASAL_AREA];
 
 	logger(g_debug_log, "\n**DENDROMETRY**\n");
+
+	s->value[AV_STEM_MASS_C] = (s->value[STEM_C] / (double)s->counter[N_TREE]);
 
 	/* compute tree AVDBH */
 	if (s->value[STEMCONST_P] == NO_DATA && s->value[STEMPOWER_P] == NO_DATA)
@@ -408,9 +410,10 @@ void dendrometry_old(cell_t *const c, const int layer, const int height, const i
 		logger(g_debug_log, "Using site related stemconst stempower\n");
 		d->value = pow(((s->value[AV_STEM_MASS_C] * 1e3) * GC_GDM) / s->value[STEMCONST_P], (1. / s->value[STEMPOWER_P]));
 	}
+	logger(g_debug_log, "-STEM_C = %g cm\n", s->value[STEM_C]);
+	logger(g_debug_log, "-AV_STEM_MASS_C = %g cm\n", s->value[AV_STEM_MASS_C]);
 	logger(g_debug_log, "-Old AVDBH = %g cm\n", oldavDBH);
 	logger(g_debug_log, "-New Average DBH = %g cm\n", d->value);
-
 
 	/* check */
 	CHECK_CONDITION( d->value, <, oldavDBH - eps );
@@ -472,8 +475,6 @@ void dendrometry_old(cell_t *const c, const int layer, const int height, const i
 	logger(g_debug_log, " BASAL AREA = %g cm^2\n", s->value[BASAL_AREA]);
 	s->value[BASAL_AREA_m2]= s->value[BASAL_AREA] * 0.0001;
 	logger(g_debug_log, " BASAL BASAL_AREA_m2 = %g m^2\n", s->value[BASAL_AREA_m2]);
-#if 1
-	//test_new
 	s->value[SAPWOOD_AREA] = s->value[SAP_A] * pow (d->value, s->value[SAP_B]);
 	logger(g_debug_log, " SAPWOOD_AREA = %g cm^2\n", s->value[SAPWOOD_AREA]);
 	s->value[HEARTWOOD_AREA] = s->value[BASAL_AREA] - s->value[SAPWOOD_AREA];
@@ -486,7 +487,6 @@ void dendrometry_old(cell_t *const c, const int layer, const int height, const i
 	logger(g_debug_log, " Sapwood coarse root biomass = %g tC class cell \n", s->value[CROOT_SAPWOOD_C]);
 	s->value[BRANCH_SAPWOOD_C] = (s->value[BRANCH_C] * s->value[SAPWOOD_PERC]);
 	logger(g_debug_log, " Sapwood branch and bark biomass = %g tC class cell \n", s->value[BRANCH_SAPWOOD_C]);
-#endif
 	s->value[TOT_SAPWOOD_C] = s->value[STEM_SAPWOOD_C] + s->value[CROOT_SAPWOOD_C] + s->value[BRANCH_SAPWOOD_C];
 	logger(g_debug_log, " Total Sapwood biomass = %g tc class cell \n", s->value[TOT_SAPWOOD_C]);
 	s->value[STAND_BASAL_AREA] = s->value[BASAL_AREA] * s->counter[N_TREE];

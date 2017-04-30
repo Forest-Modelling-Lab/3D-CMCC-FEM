@@ -24,20 +24,20 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 	species_t *s;
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
-	/* note: This function works at layer/class level computing absorbed transmitted and reflected PAR, NET RADIATION
+	/* note: This function works at layer/class level computing absorbed, transmitted and reflected PAR, Short Wave
 	 * and PPFD through different height classes/layers considering at square meter takes into account coverage,
 	 * it means that a square meter grid cell * represents overall grid cell (see Duursma and Makela, 2007) */
 
 	/* it follows a little bit different rationale compared to BIOME-BGC approach
-	 * in BIOME_BGC:
+	 * in BIOME-BGC:
 	 * apar = par * (1 - (exp(- K * LAI)));
 	 * apar_sun = par * (1 - (exp(- K * LAI_SUN)));
 	 * apar_shade = apar- apar_sun;
 	 *
 	 * in 3D-CMCC FEM:
-	 * apar_sun = par * (1 - (exp(- K * LAI_SUN_EXP)));
+	 * apar_sun = par * (1 - (exp(- K * LAI_SUN)));
 	 * par_transm_sun  = par - apar_sun;
-	 * apar_shade = par_transm_sun * (1 - (exp(- K * LAI_SHADE_EXP)));
+	 * apar_shade = par_transm_sun * (1 - (exp(- K * LAI_SHADE)));
 	 * apar = apar_sun + apar_shade;
 	 *
 	 * then it consider that an amount of sunlit leaf are not completely outside the canopy
@@ -236,11 +236,11 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 	 * and Forrester et al, Forest Ecosystems,2014
 	 * we currently use approach for homogeneous canopies that improves representation when canopy is not closed
 	 */
-	if ( s->value[LAI_EXP] )
+	if ( s->value[LAI_PROJ] )
 	{
-		Light_trasm_frac       = exp(- s->value[K] * s->value[LAI_EXP]);
-		Light_trasm_frac_sun   = exp(- s->value[K] * s->value[LAI_SUN_EXP]);
-		Light_trasm_frac_shade = exp(- s->value[K] * s->value[LAI_SHADE_EXP]);
+		Light_trasm_frac       = exp(- s->value[K] * s->value[LAI_PROJ]);
+		Light_trasm_frac_sun   = exp(- s->value[K] * s->value[LAI_SUN_PROJ]);
+		Light_trasm_frac_shade = exp(- s->value[K] * s->value[LAI_SHADE_PROJ]);
 	}
 	else
 	{
@@ -250,7 +250,7 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 	}
 
 	/* fraction of light absorbed by the canopy */
-	Light_abs_frac       = 1. - Light_trasm_frac; //not used
+	Light_abs_frac       = 1. - Light_trasm_frac;
 	Light_abs_frac_sun   = 1. - Light_trasm_frac_sun;
 	Light_abs_frac_shade = 1. - Light_trasm_frac_shade;
 
@@ -260,76 +260,33 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 	calculated similarly to sw except that albedo is 1/3 for PAR because less
 	PAR is reflected than sw_radiation (Jones 1992)*/
 
-#ifdef TEST
-	//test 18 november 2016
-	//it seems to have much more sense
-	if( s->value[LAI_EXP] >= 1. )
+	if( s->value[LAI_PROJ] >= 1. )
 	{
-		/* short wave */
 		Light_refl_sw_frac        = s->value[ALBEDO];
-		Light_refl_sw_frac_sun    = s->value[ALBEDO] * ( 1. - exp ( - s->value[K] * s->value[LAI_SUN_EXP]));
-		Light_refl_sw_frac_shade  = s->value[ALBEDO] * ( 1. - exp ( - s->value[K] * s->value[LAI_SHADE_EXP]));
-		/* par */
-		Light_refl_par_frac       = (s->value[ALBEDO] / 3.);
-		Light_refl_par_frac_sun   = (s->value[ALBEDO] / 3.) * ( 1 - exp ( - s->value[K] * s->value[LAI_SUN_EXP] ) );
-		Light_refl_par_frac_shade = (s->value[ALBEDO] / 3.) * ( 1 - exp ( - s->value[K] * s->value[LAI_SHADE_EXP] ) );
+		Light_refl_sw_frac_sun    = s->value[ALBEDO] * ( 1 - exp ( - s->value[K] * s->value[LAI_SUN_PROJ]));
+		Light_refl_sw_frac_shade  = s->value[ALBEDO] * ( 1 - exp ( - s->value[K] * s->value[LAI_SHADE_PROJ]));
+		Light_refl_par_frac       = (s->value[ALBEDO]/3.);
+		Light_refl_par_frac_sun   = (s->value[ALBEDO]/3.) * ( 1 - exp ( - s->value[K] * s->value[LAI_SUN_PROJ] ) );
+		Light_refl_par_frac_shade = (s->value[ALBEDO]/3.) * ( 1 - exp ( - s->value[K] * s->value[LAI_SHADE_PROJ] ) );
 	}
-	else
+	else if ( !s->value[LAI_PROJ])
 	{
-		/* short wave */
 		Light_refl_sw_frac        = 0.;
 		Light_refl_sw_frac_sun    = 0.;
 		Light_refl_sw_frac_shade  = 0.;
-		/* par */
 		Light_refl_par_frac       = 0.;
 		Light_refl_par_frac_sun   = 0.;
 		Light_refl_par_frac_shade = 0.;
 	}
-#else
-
-	//test change with;
-	//if( s->value[LAI_EXP] >= 1.0 )
-	if( s->value[LAI_PROJ] >= 1.0 )
-	{
-		Light_refl_sw_frac = s->value[ALBEDO];
-		Light_refl_sw_frac_sun = s->value[ALBEDO] * ( 1 - exp ( - s->value[K] * s->value[LAI_SUN_EXP]));
-		Light_refl_sw_frac_shade = s->value[ALBEDO] * ( 1 - exp ( - s->value[K] * s->value[LAI_SHADE_EXP]));
-		Light_refl_par_frac = s->value[ALBEDO]/3.0;
-		Light_refl_par_frac_sun = (s->value[ALBEDO]/3.0) * ( 1 - exp ( - s->value[K] * s->value[LAI_SUN_EXP] ) );
-		Light_refl_par_frac_shade = s->value[ALBEDO]/3.0 * ( 1 - exp ( - s->value[K] * s->value[LAI_SHADE_EXP] ) );
-	}
-	//test change with;
-	//if( s->value[LAI_EXP] >= 1.0 )
-	else if ( !s->value[LAI_PROJ])
-	{
-		Light_refl_sw_frac = 0.0;
-		Light_refl_sw_frac_sun = 0.0;
-		Light_refl_sw_frac_shade = 0.0;
-		Light_refl_par_frac = 0.0;
-		Light_refl_par_frac_sun = 0.0;
-		Light_refl_par_frac_shade = 0.0;
-	}
 	else
 	{
-		Light_refl_sw_frac = s->value[ALBEDO] * s->value[LAI_EXP];
-		Light_refl_sw_frac_sun = s->value[ALBEDO] * ( 1 - exp ( - s->value[K] * s->value[LAI_SUN_EXP] ) );
-		Light_refl_sw_frac_shade = s->value[ALBEDO] * ( 1 - exp ( - s->value[K] * s->value[LAI_SHADE_EXP] ) );
-		Light_refl_par_frac = (s->value[ALBEDO]/3.0) * s->value[LAI_EXP];
-		Light_refl_par_frac_sun = (s->value[ALBEDO]/3.0) * ( 1 - exp ( - s->value[K] * s->value[LAI_SUN_EXP] ) );
-		Light_refl_par_frac_shade =  (s->value[ALBEDO]/3.0) * ( 1 - exp ( - s->value[K] * s->value[LAI_SHADE_EXP] ) );
+		Light_refl_sw_frac        = s->value[ALBEDO] * s->value[LAI_PROJ];
+		Light_refl_sw_frac_sun    = s->value[ALBEDO] * ( 1 - exp ( - s->value[K] * s->value[LAI_SUN_PROJ] ) );
+		Light_refl_sw_frac_shade  = s->value[ALBEDO] * ( 1 - exp ( - s->value[K] * s->value[LAI_SHADE_PROJ] ) );
+		Light_refl_par_frac       = (s->value[ALBEDO]/3.) * s->value[LAI_PROJ];
+		Light_refl_par_frac_sun   = (s->value[ALBEDO]/3.) * ( 1 - exp ( - s->value[K] * s->value[LAI_SUN_PROJ] ) );
+		Light_refl_par_frac_shade = (s->value[ALBEDO]/3.) * ( 1 - exp ( - s->value[K] * s->value[LAI_SHADE_PROJ] ) );
 	}
-#endif
-
-	logger(g_debug_log, "*Fractions of light absorbed, transmitted and reflected*\n\n");
-	logger(g_debug_log, "Light_abs_frac_sun            = %g %%\n", Light_abs_frac_sun * 100);
-	logger(g_debug_log, "LightTrasm_sun                = %g %%\n\n", Light_trasm_frac_sun * 100);
-	logger(g_debug_log, "Light_abs_frac_shade          = %g %%\n", Light_abs_frac_shade * 100);
-	logger(g_debug_log, "LightTrasm_sun                = %g %%\n\n", Light_trasm_frac_shade * 100);
-	logger(g_debug_log, "Light_abs_frac (sun+shaded)   = %g %%\n", Light_abs_frac * 100);
-	logger(g_debug_log, "LightTrasm (sun+shaded)       = %g %%\n\n", Light_trasm_frac * 100);
-	logger(g_debug_log, "Light_refl_sw_rad_canopy_frac = %g %%\n", Light_refl_sw_frac_sun * 100);
-	logger(g_debug_log, "LightReflec_par               = %g %%\n\n", Light_refl_par_frac * 100);
-
 
 	//fixme set that if gapcover is bigger then 0.5 albedo should be considered also in dominated layer!!!!
 	//fixme following MAESPA (Duursma et al.,) and from Campbell & Norman (2000, p. 259) dominated layers should have just shaded leaves
@@ -395,6 +352,7 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 		logger(g_debug_log,"\n************************************\n");
 		logger(g_debug_log,"last height class in layer processed\n");
 		logger(g_debug_log,"update radiation values for lower layer\n");
+
 		/* compute values for lower layer when last height class in layer is processed */
 		/* compute par for lower layer */
 		meteo_daily->par           -= (temp_apar + temp_par_refl);
@@ -424,7 +382,7 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 
 	/*************************************************************************/
 	/* when matches the last height class in the cell is processed */
-	//fixme fixme fixme fixme fixme sometimes it doesn't go in caused by the a jump in "cell_height_class_counter"
+	//fixme sometimes it doesn't go in caused by the a jump in "cell_height_class_counter"
 	//as it is now is used just for print data but it should be fixed
 	if ( c->heights_count == cell_height_class_counter )
 	{

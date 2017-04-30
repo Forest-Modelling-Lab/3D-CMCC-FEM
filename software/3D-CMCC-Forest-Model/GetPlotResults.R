@@ -33,7 +33,7 @@ output_folder="output_Rstudio"
 site_list<-c("Hyytiala")#,"Soroe","Hyytiala","All")
 esm_list <-c("2")# ("1","2","3","4","5")
 rcp_list <-c("2p6")# ("0p0","2p6","4p5","6p0","8p5")
-man_list <-c("on")# ("on",'off')
+man_list <-c("off")# ("on",'off')
 co2_list <-c("on")# , "off")
 protocol_list<-c("2B")# ("2A","2B") 
 

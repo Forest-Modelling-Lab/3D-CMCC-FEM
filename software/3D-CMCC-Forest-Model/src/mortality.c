@@ -85,7 +85,7 @@ void self_thinning_mortality ( cell_t *const c, const int layer )
 						/* remove one tree per run */
 						--s->counter[N_TREE];
 						++deadtree;
-						printf("dead tree =%d\n", deadtree);
+						logger(g_debug_log,"dead tree = %d\n", deadtree);
 
 						if ( s->counter[N_TREE] > 0 )
 						{
