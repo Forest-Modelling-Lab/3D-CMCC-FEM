@@ -4,7 +4,7 @@
 
 #include "matrix.h"
 
-void daily_growth_efficiency_mortality ( cell_t *const c, const int height, const int dbh, const int age, const int species );
+int growth_efficiency_mortality ( cell_t *const c, const int height, const int dbh, const int age, const int species );
 
 int annual_growth_efficiency_mortality ( cell_t *const c, const int height, const int dbh, const int age, const int species );
 

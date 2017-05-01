@@ -207,7 +207,7 @@ void self_thinning_mortality ( cell_t *const c, const int layer )
 
 }
 
-void daily_growth_efficiency_mortality ( cell_t *const c, const int height, const int dbh, const int age, const int species )
+int growth_efficiency_mortality ( cell_t *const c, const int height, const int dbh, const int age, const int species )
 {
 	/* this function superimpose mortality for all trees in class when reserves
 	 * go under zero assuming that reserve pool hasn't be refilled during the day
@@ -219,7 +219,9 @@ void daily_growth_efficiency_mortality ( cell_t *const c, const int height, cons
 	if( s->value[RESERVE_C] < 0 )
 	{
 		/* reset to zero n_trees */
-		s->counter[N_TREE] = 0;
+		//ALESSIOC TO ALESSIOR IMPOSE N_TREE = 0 IS USEFUL?
+		s->counter[DEAD_TREE] = s->counter[N_TREE];
+		s->counter[N_TREE]    = 0;
 
 		/* call remove_tree_class */
 		if ( ! tree_class_remove(c, height, dbh, age, species) )
@@ -227,7 +229,9 @@ void daily_growth_efficiency_mortality ( cell_t *const c, const int height, cons
 			logger_error(g_debug_log, "unable to remove tree class");
 			exit(1);
 		}
+		return 1;
 	}
+	return 0;
 }
 
 int annual_growth_efficiency_mortality ( cell_t *const c, const int height, const int dbh, const int age, const int species )

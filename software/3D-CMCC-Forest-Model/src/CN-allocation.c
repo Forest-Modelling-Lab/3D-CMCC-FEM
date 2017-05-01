@@ -18,12 +18,17 @@
 #include "dendometry.h"
 #include "biomass.h"
 #include "check_balance.h"
+#include "mortality.h"
+#include "remove_tree_class.h"
 
 extern settings_t* g_settings;
 extern logger_t* g_debug_log;
 
-void carbon_allocation( cell_t *const c, species_t *const s)
+void carbon_allocation( cell_t *const c, const int height, const int dbh, const int age, const int species )
 {
+	species_t *s;
+	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
+
 	/* it allocates daily assimilated carbon for both deciduous and evergreen daily
 	 * and removes the respired and dead parts */
 
@@ -82,11 +87,13 @@ void carbon_allocation( cell_t *const c, species_t *const s)
 	CHECK_CONDITION ( s->value[BRANCH_C],   < , ZERO );
 	CHECK_CONDITION ( s->value[CROOT_C],    < , ZERO );
 	CHECK_CONDITION ( s->value[FRUIT_C],    < , ZERO );
-	//fixme
-#if 0
+
+
+#if 1
+	/* growth efficiency mortality */
 	if ( s->value[RESERVE_C] < ZERO )
 	{
-		tree_class_remove(c, height, dbh, age, species);
+		growth_efficiency_mortality(c, height, dbh, age, species);
 	}
 #else
 	CHECK_CONDITION ( s->value[RESERVE_C],  < , ZERO );
@@ -138,7 +145,7 @@ void carbon_allocation( cell_t *const c, species_t *const s)
 	CHECK_CONDITION ( c->stem_carbon,    < , ZERO );
 	CHECK_CONDITION ( c->branch_carbon,  < , ZERO );
 	CHECK_CONDITION ( c->croot_carbon,   < , ZERO );
-	CHECK_CONDITION ( c->reserve_carbon, < , ZERO );
+	//CHECK_CONDITION ( c->reserve_carbon, < , ZERO );
 	CHECK_CONDITION ( c->fruit_carbon,   < , ZERO );
 	/***************************************************************************************/
 

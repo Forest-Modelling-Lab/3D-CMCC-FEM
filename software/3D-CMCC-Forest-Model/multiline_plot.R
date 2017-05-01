@@ -15,7 +15,7 @@ library(cowplot)
 getwd()
 # source('multiplot.R')
 
-input_dir = ('/home/alessio-cmcc/git/3D-CMCC-LAND/software/3D-CMCC-Forest-Model/output/output_Rstudio-5.3.2-ISIMIP-Hyytiala-2B/output_5.3.2-ISIMIP_2017_MAY_01/annual/')
+input_dir = ('/home/alessio-cmcc/git/3D-CMCC-LAND/software/3D-CMCC-Forest-Model/output/output_Rstudio-5.3.2-ISIMIP-Hyytiala-2B/output_5.3.2-ISIMIP_2017_MAY_02/annual/')
 file_name = 'annual_5.3.2-ISIMIP_Hyytiala_GCM2_rcp2p6.txt_(2006-2299)_CO2_ON_CO2_rcp2p6.txt_Man_OFF_d_10000_txt.txt'
 
 df = read.csv(paste0(input_dir,file_name),comment.char = '#')

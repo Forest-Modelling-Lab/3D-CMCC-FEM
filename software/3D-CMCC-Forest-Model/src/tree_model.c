@@ -62,7 +62,6 @@
 
 extern logger_t* g_debug_log;
 extern soil_settings_t* g_soil_settings;
-extern settings_t* g_settings;
 
 //extern const char sz_err_out_of_memory[];
 
@@ -308,7 +307,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							}
 
 							/* allocate daily carbon */
-							carbon_allocation     ( c, s );
+							carbon_allocation     ( c, height, dbh, age, species );
 
 							/* allocate daily nitrogen */
 							nitrogen_allocation   ( c, s );

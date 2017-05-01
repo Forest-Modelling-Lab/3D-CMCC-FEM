@@ -10,7 +10,7 @@
 
 #include "matrix.h"
 
-void carbon_allocation( cell_t *const c, species_t *const s );
+void carbon_allocation( cell_t *const c, const int height, const int dbh, const int age, const int species );
 
 void nitrogen_allocation( cell_t *const c, species_t *const s );
 

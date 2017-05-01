@@ -346,7 +346,6 @@ int annual_forest_structure(cell_t* const c, const int year)
 	//todo: control if with a drastic tree number reduction (e.g. management) there's a unrealistic strong variation in DBHDCeffective
 	for (layer = c->tree_layers_count - 1; layer >= 0; --layer)
 	{
-		//ALESSIOC TO ALESSIOR PLEASE INVERT HEIGHT AGE DBH SPECIES ORDER
 		for ( height = 0; height < c->heights_count ; ++height )
 		{
 			if( layer == c->heights[height].height_z )
@@ -362,10 +361,6 @@ int annual_forest_structure(cell_t* const c, const int year)
 						}
 					}
 				}
-			}
-			if( height == ( c->heights_count - 1 ) )
-			{
-				logger(g_debug_log, "-Canopy cover DBH-DC layer (%d) level = %g%%\n", layer, c->tree_layers[layer].layer_cover * 100.0);
 			}
 		}
 	}
@@ -402,10 +397,10 @@ int annual_forest_structure(cell_t* const c, const int year)
 								double old_layer_cover;
 								old_layer_cover = c->tree_layers[layer].layer_cover;
 
+								s = &c->heights[height].dbhs[dbh].ages[age].species[species];
+
 								while ( ( c->tree_layers[layer].layer_cover > g_settings->max_layer_cover ) &&  ( s->value[DBHDC_EFF] > s->value[DBHDCMIN] ) )
 								{
-									logger(g_debug_log, "-Canopy cover DBH-DC layer (%d) level = %g%%\n", layer, c->tree_layers[layer].layer_cover * 100.0);
-									logger(g_debug_log, "-Canopy cover DBH-DC clss (%d) level = %g%%\n", layer, s->value[CANOPY_COVER_PROJ] * 100.0);
 
 									/* reduce DBHDC_EFF */
 									s->value[DBHDC_EFF] -= 0.001;
