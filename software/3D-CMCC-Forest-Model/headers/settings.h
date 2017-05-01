@@ -10,49 +10,49 @@ enum { CO2_TRANS_OFF = 0, CO2_TRANS_ON, CO2_TRANS_VAR };
 
 typedef struct {
 	char sitename[SETTINGS_SITENAME_MAX_SIZE];
-	char version;
-	char spatial;	                  /* must be 's' or 'u' (spatial or unspatial) */
-	char time;		                  /* must be 'm' or 'd' (monthly or daily) */
-
-	char screen_output;
-	char debug_output;
-	char daily_output;
-	char monthly_output;
-	char yearly_output;
-	char soil_output;
-	int year_start;
-	int year_end;
-	int year_restart;
-	char CO2_mod;
-	char CO2_trans;                   /* CO2 transient */
-	int year_start_co2_fixed;         /* for CO2_trans = var, year at which CO2 is fixed */
-	char Ndep_fixed;
-	char Resp_accl;
-	char regeneration;
-	char management;
-	int year_start_management;        /* start year management */
-	char Prog_Aut_Resp;               /* Prognostic autotrophic respiration */
+	char version;                        /* fixme to remove */
+	char spatial;	                     /* spatial or unspatial must be 's' or 'u' (not longer used) fixme to remove */
+	char time;		                     /* time scale simulation must be 'm' or 'd' (monthly or daily) */
+	char screen_output;                  /* screen output must be 'on' or 'off' */
+	char debug_output;                   /* debug output must be 'on' or 'off' */
+	char daily_output;                   /* daily output must be 'on' or 'off' */
+	char monthly_output;                 /* monthly output must be 'on' or 'off' */
+	char yearly_output;                  /* annual output must be 'on' or 'off' */
+	char soil_output;                    /* soil output must be 'on' or 'off' */
+	int year_start;                      /* starting year of simulation */
+	int year_end;                        /* ending year of simulation */
+	int year_restart;                    /* year to restart simulation */
+	char CO2_mod;                        /* CO2 modifier for photosynthesis and conductance must be 'on' or 'off' */
+	char CO2_trans;                      /* CO2 transient must be 'on' or 'off' or 'var' */
+	int year_start_co2_fixed;            /* for CO2_trans = var, year at which CO2 is fixed */
+	char Ndep_fixed;                     /* fixed Nitrogen deposition must be 'on' or 'off' */
+	char Resp_accl;                      /* acclimation of repiration must be 'on' or 'off' */
+	char regeneration;                   /* regeneration must be 'on' or 'off' */
+	char management;                     /* management must be 'on' of 'off' */
+	int year_start_management;           /* start year management (if management is on) */
+	char Prog_Aut_Resp;                  /* Prognostic autotrophic respiration */
 	char dndc;
-	char replanted_species[SETTINGS_REPLANTED_SPECIES_MAX_SIZE]; /* species name of replanted species */
+	char replanted_species[SETTINGS_REPLANTED_SPECIES_MAX_SIZE];       /* species name of replanted species */
 	char regeneration_species[SETTINGS_REGENERATION_SPECIES_MAX_SIZE]; /* species name of regeneration species */
 	// ALESSIOR: use e_management from matrix.h not char
-	char replanted_management;    /*this is a mandatory variables that each class has to have AND DETERMINES HABITUS OF PLANT*/
-	char regeneration_management;    /*this is a mandatory variables that each class has to have AND DETERMINES HABITUS OF PLANT*/
+	char replanted_management;           /*this is a mandatory variables that each class has to have AND DETERMINES HABITUS OF PLANT*/
+	char regeneration_management;        /*this is a mandatory variables that each class has to have AND DETERMINES HABITUS OF PLANT*/
 
 
 	/* DO NOT MODIFY BELOW, PLEASE INSERT STUFF IN SPACE ABOVE */
 
 	double sizeCell;
 
-	double Fixed_Aut_Resp_rate; /* It is the "Y"values for fixed autotrophic respiration */
+	double Fixed_Aut_Resp_rate;          /* It is the "Y"values for fixed autotrophic respiration */
 
-	double co2Conc, co2_incr;            /* Co2 concentration and annual co2 increment */
+	double co2Conc;                      /* CO2 concentration (ppmv) */
+	double co2_incr;                     /* annual co2 increment fixme to remove */
 
 	double init_frac_maxasw;             /* minimum fraction of available soil water at the beginning of simulation */
 
 	/* layer settings */
-	double tree_layer_limit;             /* differences in meters among tree heights before to consder different canopy layers */
-	double number_of_soil_layer;         /* number of soil layers to model */
+	double tree_layer_limit;             /* differences among tree heights before to consder different canopy layers (meters) */
+	double number_of_soil_layer;         /* number of soil layers to simulate */
 	double max_layer_cover;              /* maximum layer cover */
 
 	/* replanted input (Management options)*/
