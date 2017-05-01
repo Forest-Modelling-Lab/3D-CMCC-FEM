@@ -21,7 +21,6 @@ regeneration off                    //Must be 'on' or 'off'
 management on                       //Must be 'on' or 'off'
 YEAR_START_MANAGEMENT 2005          //First year of management
 Progn_Aut_Resp on                   //Prognostic autotrophic respiration, Must be 'on' or 'off', if off Y values are used
-DNDC off                            //Must be 'on' or 'off'
 SIZECELL 100                        //Its value must be within 10 and 100 (unity measure is meter: 10 = 10x10 = 100m^2) 
 Y 0.48                              //Fixed_Aut_Resp_rate Assimilate use efficiency-Respiration rate-GPP/NPP
 CO2CONC 368.865                     //CO2 concentration refers to 2000 as ISIMIP PROTOCOL
@@ -30,6 +29,7 @@ INIT_FRAC_MAXASW 1                  //0.1 Minimum fraction of asw based on maxas
 TREE_LAYER_LIMIT 3                  //define differences among tree heights in meters classes to define number of layers in unspatial version
 SOIL_LAYER 1                        //define soil layer/s to consider
 MAX_LAYER_COVER 1.2
+THINNING_REGIME  Above              // thinning regime (Above or Below)
 REPLANTED_SPECIES Fagussylvatica    // species name of replanted trees (mandatory)
 REPLANTED_MANAGEMENT T              // (T) management of replated trees (should be only T)(mandatory)
 REPLANTED_TREE 10000                // number of replanted trees (mandatory)

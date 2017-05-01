@@ -32,7 +32,6 @@ enum {
 	, SETTINGS_MANAGEMENT
 	, SETTINGS_YEAR_START_MANAGEMENT
 	, SETTINGS_PROGN_AUT_RESP
-	, SETTINGS_DNDC
 	, SETTINGS_SIZECELL
 	, SETTINGS_Y
 	, SETTINGS_CO2CONC
@@ -41,6 +40,7 @@ enum {
 	, SETTINGS_TREE_LAYER_LIMIT
 	, SETTINGS_SOIL_LAYER
 	, SETTINGS_MAX_LAYER_COVER
+	, SETTINGS_THINNING_REGIME
 	, SETTINGS_REPLANTED_SPECIES
 	, SETTINGS_REPLANTED_MANAGEMENT
 	, SETTINGS_REPLANTED_TREE
@@ -94,7 +94,6 @@ const char* sz_settings[SETTINGS_COUNT] = {
 	, "MANAGEMENT"
 	, "YEAR_START_MANAGEMENT"
 	, "PROGN_AUT_RESP"
-	, "DNDC"
 	, "SIZECELL"
 	, "Y"
 	, "CO2CONC"
@@ -103,6 +102,7 @@ const char* sz_settings[SETTINGS_COUNT] = {
 	, "TREE_LAYER_LIMIT"
 	, "SOIL_LAYER"
 	, "MAX_LAYER_COVER"
+	, "THINNING_REGIME"
 	, "REPLANTED_SPECIES"
 	, "REPLANTED_MANAGEMENT"
 	, "REPLANTED_TREE"
@@ -339,9 +339,9 @@ settings_t* settings_import(const char *const filename) {
 				}
 			break;
 
-			case SETTINGS_DNDC:
-				if ( ! string_compare_i(token, "on") ) {
-					s->dndc = 1;
+			case SETTINGS_THINNING_REGIME:
+				if ( ! string_compare_i(token, "Below") ) {
+					s->thinning_regime = 1;
 				}
 			break;
 

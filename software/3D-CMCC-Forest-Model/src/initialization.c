@@ -285,10 +285,8 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 				s->value[LEAF_C] = (s->value[LAI_PROJ] / s->value[SLA_AVG]);
 				logger(g_debug_log, "--Leaf carbon = %g KgC/m2\n", s->value[LEAF_C]);
 
-				//fixme it should takes into account effective cell coverage
 				/* convert to tons of C and to cell cell */
 				/* note: it uses canopy cover because computed from LAI */
-				//fixme it could be that canopy cover isn't initialized!!!!
 				s->value[LEAF_C] = s->value[LEAF_C] / 1e3 * (s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell);
 				logger(g_debug_log, "--Leaf carbon = %g tC/cell size\n", s->value[LEAF_C]);
 
@@ -848,7 +846,7 @@ void initialization_soil_physic(cell_t *const c)
 	/* volumetric percentage saturated hydraulic conductivity */
 	volumetric_saturated_hydraulic_conductivity /= 1500.0;
 	logger(g_debug_log, "volumetric water content at saturated hydraulic conductance (CENTURY) = %g %%(vol)\n", volumetric_saturated_hydraulic_conductivity);
-	//fixme not clear what it is
+
 	/* (kgH2O/m2) soil water at saturated hydraulic conductivity */
 	c->sat_hydr_conduct = (g_soil_settings->values[SOIL_DEPTH] / 100) * volumetric_saturated_hydraulic_conductivity * 1e3;
 	logger(g_debug_log, "Saturated hydraulic conductivity (CENTURY) = %g mm/m2\n", c->sat_hydr_conduct);

@@ -401,12 +401,6 @@ static int log_start(const char* const sitename)
 	/* date */
 	//len += sprintf(buffer+len, "_%s", date);
 
-	/* dndc */
-	if ( g_settings->dndc )
-	{
-		len += sprintf(buffer+len, "_DNDC");
-	}
-
 	/* files type */
 	{
 		char *p;
@@ -1220,7 +1214,7 @@ int main(int argc, char *argv[]) {
 			if ( ! log_start(g_settings->sitename) ) {
 				goto err;
 			}
-			logger(g_debug_log, "\n3D-CMCC FEM START....\n\n");
+			logger(g_debug_log, "\n3D-CMCC LAND START....\n\n");
 		}
 
 		/* check soil values */
@@ -1423,8 +1417,6 @@ int main(int argc, char *argv[]) {
 
 				if( !day && !month && !year )
 				{
-					/* note: this happens just the first day of simulation */
-
 					/* summary on model simulation */
 					simulation_summary(matrix);
 

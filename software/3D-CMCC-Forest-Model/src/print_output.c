@@ -740,6 +740,8 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 										",PeakLAI"
 										",CC-Proj"
 										",DBHDC"
+										",CROWN_DIAMETER"
+										",CROWN_AREA_PROJ"
 										",APAR"
 										",HD"
 										",HDMAX"
@@ -849,7 +851,7 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 								logger(g_annual_log,",%c", sz_management[c->heights[height].dbhs[dbh].ages[age].species[species].management]);
 
 								/* print variables at layer-class level */
-								logger(g_annual_log,",%6.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%d,%d,%d,%3.4f"
+								logger(g_annual_log,",%6.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%d,%d,%d,%3.4f"
 										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
 										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",
 										s->value[YEARLY_GPP],
@@ -862,6 +864,8 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 										s->value[PEAK_LAI_PROJ],
 										s->value[CANOPY_COVER_PROJ],
 										s->value[DBHDC_EFF],
+										s->value[CROWN_DIAMETER],
+										s->value[CROWN_AREA_PROJ],
 										s->value[YEARLY_APAR],
 										s->value[HD_EFF],
 										s->value[HD_MAX],

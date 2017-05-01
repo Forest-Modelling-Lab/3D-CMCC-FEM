@@ -62,6 +62,7 @@
 
 extern logger_t* g_debug_log;
 extern soil_settings_t* g_soil_settings;
+extern settings_t* g_settings;
 
 //extern const char sz_err_out_of_memory[];
 

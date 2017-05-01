@@ -16,7 +16,6 @@ regeneration "off"                //Must be 'on' or 'off'
 management "off"   //Must be 'on' or 'off'
 YEAR_START_MANAGEMENT 1964          //First year of management
 Progn_Aut_Resp "on" //Prognostic autotrophic respiration, Must be 'on' or 'off', if "off" Y values are used
-DNDC "off" //Must be  'on' or 'off'
 SIZECELL "100"	//Its value must be within 10 and 100 (unity measure is "meter": 10 = 10x10 = 100m^2) 
 Y "0.48" // "Fixed_Aut_Resp_rate" Assimilate use efficiency-Respiration rate-GPP/NPP
 //co2 concentration and annual increment
@@ -33,6 +32,7 @@ CO2_INCR "0.01"
 
 //NATURAL/HUMAN (management)REGENERATION CLASS BIOMASS VALUES
 //MANAGMENT (optional)
+THINNING_REGIME  Above              // thinning regime (Above or Below)
 REPLANTED_SPECIES "none"    //species name of replanted trees (mandatory)
 REPLANTED_MANAGEMENT "T"    // (T) management of replated trees (should be only T)(mandatory)
 REPLANTED_TREE "0"          //number of replanted trees (mandatory)
