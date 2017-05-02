@@ -810,7 +810,9 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 		logger(g_annual_log,",CO2\n");
 
 	}
+
 	/*****************************************************************************************************/
+
 
 	/* values */
 	logger(g_annual_log, "%d", c->years[year].year);
@@ -950,6 +952,7 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 	{
 		//ALESSIOC TO ALLESSIOR PRINT EMPTY SPACES WHEN N_TREE = 0
 	}
+
 	/************************************************************************/
 
 	++years_counter;

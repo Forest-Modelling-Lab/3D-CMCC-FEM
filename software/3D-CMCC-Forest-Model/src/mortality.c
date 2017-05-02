@@ -16,24 +16,24 @@
 #include "tree_model.h"
 #include "remove_tree_class.h"
 #include "biomass.h"
+#include "canopy_cover.h"
+#include "allometry.h"
 
 extern settings_t* g_settings;
 extern logger_t* g_debug_log;
 
-void self_thinning_mortality ( cell_t *const c, const int layer )
+void self_thinning_mortality (cell_t *const c, const int layer, const int year)
 {
 	int height;
 	int dbh;
 	int age;
 	int species;
-
-	int livetree = 0;
 	int deadtree = 0;
-	//int oldNstump;
-	//int deadstump = 0;
+
 
 	height_t *h;
 	dbh_t *d;
+	age_t *a;
 	species_t *s;
 
 	/* "First, large plants suppress small plants.
@@ -65,7 +65,9 @@ void self_thinning_mortality ( cell_t *const c, const int layer )
 
 			for ( age = 0; age < d->ages_count ; ++age )
 			{
-				for ( species = 0; species < d->ages[age].species_count; ++species )
+				a = &c->heights[height].dbhs[dbh].ages[age];
+
+				for ( species = 0; species < a->species_count; ++species )
 				{
 					s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
@@ -84,17 +86,31 @@ void self_thinning_mortality ( cell_t *const c, const int layer )
 					while ( c->tree_layers[layer].layer_cover > g_settings->max_layer_cover )
 					{
 						/* remove one tree per run */
-						--livetree;
 						++deadtree;
-						logger(g_debug_log,"dead tree = %d\n", deadtree);
 
-						if ( livetree > 0 )
+						/* update at class level */
+						++s->counter[DEAD_TREE];
+						--s->counter[N_TREE];
+
+						/* update at cell level */
+						++c->daily_dead_tree   ;
+
+						/* update layer trees */
+						--c->tree_layers[layer].layer_n_trees;
+
+						/* update density */
+						c->tree_layers[layer].layer_density = c->tree_layers[layer].layer_n_trees / g_settings->sizeCell;
+
+						c->tree_layers[layer].layer_cover  -= s->value[CANOPY_COVER_PROJ];
+
+						if ( s->counter[N_TREE] > 0 )
 						{
-							/* recompute class level canopy cover */
-							s->value[CANOPY_COVER_PROJ] -= (s->value[CROWN_AREA_PROJ] / g_settings->sizeCell);
+							dbhdc_function         ( c, layer, height, dbh, age, species, year );
+							crown_allometry        ( c, height, dbh, age, species );
+							canopy_cover_projected ( c, height, dbh, age, species );
 
-							/* recompute layer level canopy cover */
-							c->tree_layers[layer].layer_cover -= (s->value[CROWN_AREA_PROJ] / g_settings->sizeCell);
+							/* check for recompued canopy cover */
+							c->tree_layers[layer].layer_cover += s->value[CANOPY_COVER_PROJ];
 						}
 						else
 						{
@@ -113,13 +129,10 @@ void self_thinning_mortality ( cell_t *const c, const int layer )
 								--c->heights[height + 1].dbhs[dbh].ages[age].species[species].counter[N_TREE];
 								++c->heights[height + 1].dbhs[dbh].ages[age].species[species].counter[DEAD_TREE];
 
-								//fixme not correct
-								c->heights[height + 1].dbhs[dbh].ages[age].species[species].value[CANOPY_COVER_PROJ] -=
-										(c->heights[height + 1].dbhs[dbh].ages[age].species[species].value[CROWN_AREA_PROJ] / g_settings->sizeCell);
-
-								/* recompute layer level canopy cover */
-								c->tree_layers[layer].layer_cover -=
-										(c->heights[height + 1].dbhs[dbh].ages[age].species[species].value[CROWN_AREA_PROJ] / g_settings->sizeCell);
+								//todo check if correct
+								dbhdc_function         ( c, layer, height + 1, dbh, age, species, year );
+								crown_allometry        ( c, height + 1, dbh, age, species );
+								canopy_cover_projected ( c, height + 1, dbh, age, species );
 
 								/* call remove_tree_class */
 								if ( ! tree_class_remove(c, height, dbh, age, species) )
@@ -127,33 +140,11 @@ void self_thinning_mortality ( cell_t *const c, const int layer )
 									logger_error(g_debug_log, "unable to remove tree class");
 									exit(1);
 								}
-
 							}
 						}
-
-						/* update at class level */
-						s->counter[DEAD_TREE] += deadtree;
-						s->counter[N_TREE]    -= deadtree;
-
-						/* check */
-						CHECK_CONDITION(s->counter[N_TREE],    <=, 0);
-						CHECK_CONDITION(s->counter[DEAD_TREE], <, 0);
-
-						/* update at cell level */
-						c->daily_dead_tree   += deadtree;
-						c->monthly_dead_tree += deadtree;
-						c->annual_dead_tree  += deadtree;
-
-						/* check */
-						CHECK_CONDITION(c->daily_dead_tree  , <, 0);
-						CHECK_CONDITION(c->monthly_dead_tree, <, 0);
-						CHECK_CONDITION(c->annual_dead_tree , <, 0);
-
 					}
-
 					/* remove dead C and N biomass */
 					tree_biomass_remove ( c, s, deadtree );
-
 				}
 			}
 		}

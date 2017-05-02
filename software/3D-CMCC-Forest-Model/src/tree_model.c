@@ -302,7 +302,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 								if ( ! annual_growth_efficiency_mortality ( c, height, dbh, age, species ) )
 								{
 									/* Mortality based on tree Age (LPJ) */
-									age_mortality ( c, height, dbh, age, species);
+									//age_mortality ( c, height, dbh, age, species);
 								}
 							}
 

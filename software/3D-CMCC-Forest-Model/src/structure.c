@@ -13,6 +13,7 @@
 #include "structure.h"
 #include "g-function.h"
 #include "allometry.h"
+#include "canopy_cover.h"
 
 extern settings_t* g_settings;
 extern logger_t* g_debug_log;
@@ -237,73 +238,7 @@ int annual_forest_structure(cell_t* const c, const int year)
 					{
 						for ( species = 0; species < c->heights[height].dbhs[dbh].ages[age].species_count; ++species )
 						{
-							h = &c->heights[height];
-							d = &c->heights[height].dbhs[dbh];
-							a = &c->heights[height].dbhs[dbh].ages[age];
-							s = &c->heights[height].dbhs[dbh].ages[age].species[species];
-
-							logger(g_debug_log,"-layer = %d layer density = %g height = %g dbh = %g age = %d species = %s\n", layer,c->tree_layers[layer].layer_density, h->value, d->value, a->value, s->name);
-
-							/************************************************************************************************************************/
-							/* note: 04 Oct 2016 still USEFULL ?????*/
-							/* compute potential maximum and minimum density for DBHDC function */
-							//potential_max_min_density ( c );
-							/* compute effective dbh/crown diameter */
-							/*
-							s->value[DBHDC_EFF] = ((s->value[DBHDCMIN] - s->value[DBHDCMAX]) / (s->value[DENMAX] - s->value[DENMIN]) *
-									(c->tree_layers[layer].layer_density - s->value[DENMIN]) + s->value[DBHDCMAX]);
-							logger(g_debug_log,"-DENMAX = %g\n", s->value[DENMAX]);
-							logger(g_debug_log,"-DENMIN = %g\n", s->value[DENMIN]);
-							logger(g_debug_log,"-DBHDCMAX = %g\n", s->value[DBHDCMAX]);
-							logger(g_debug_log,"-DBHDCMIN = %g\n", s->value[DBHDCMIN]);
-							logger(g_debug_log,"-DBHDC effective = %g\n", s->value[DBHDC_EFF]);
-							 */
-
-							/************************************************************************************************************************/
-							/* note: 04 Oct 2016 */
-							/* compute potential maximum and minimum density for DBHDC function */
-							/* new DBHDC function */
-							/* this function in mainly based on the assumptions that trees tend to occupy */
-							/* all space they can, if they cannot then fixed values constrain their crown */
-							/* see also: Lhotka and Loewenstein, 1997; Lhotka and Loewenstein, 2008 */
-
-							/* previous dbhdc eff */
-							previous_dbhdc_eff = s->value[DBHDC_EFF];
-
-							temp_crown_area = (g_settings->sizeCell * g_settings->max_layer_cover) / (c->tree_layers[layer].layer_density * g_settings->sizeCell);
-
-							temp_crown_radius = sqrt(temp_crown_area / Pi);
-
-							temp_crown_diameter = temp_crown_radius * 2.;
-
-							s->value[DBHDC_EFF] = temp_crown_diameter / d->value;
-							logger(g_debug_log,"-DBHDC effective = %g\n", s->value[DBHDC_EFF]);
-
-							/* check if current dbhdc_eff grows to much (case when there's thinning) */
-							/* this is checked to avoid unrealistic crown area increment */
-
-							//note max_dbhdc_incr corresponds to an arbitrary increment of n value
-							if ( ( year ) && ( s->value[DBHDC_EFF] > ( previous_dbhdc_eff + (previous_dbhdc_eff * max_dbhdc_incr ) ) ) )
-							{
-								s->value[DBHDC_EFF] = previous_dbhdc_eff + ( previous_dbhdc_eff * max_dbhdc_incr );
-							}
-
-
-							/************************************************************************************************************************/
-							/* check */
-							if (s->value[DBHDC_EFF] > s->value[DBHDCMAX])
-							{
-								logger(g_debug_log,"-DBHDC effective (%g) > DBHDCMAX (%g) \n", s->value[DBHDC_EFF] , s->value[DBHDCMAX]);
-								s->value[DBHDC_EFF] = s->value[DBHDCMAX];
-								logger(g_debug_log,"-DBHDC effective = %g\n", s->value[DBHDC_EFF]);
-							}
-							//fixme
-							if (s->value[DBHDC_EFF] < s->value[DBHDCMIN])
-							{
-								logger(g_debug_log,"-DBHDC effective (%g) > DBHDCMIN (%g) \n", s->value[DBHDC_EFF] , s->value[DBHDCMIN]);
-								s->value[DBHDC_EFF] = s->value[DBHDCMIN];
-								logger(g_debug_log,"-DBHDC effective = %g\n", s->value[DBHDC_EFF]);
-							}
+							dbhdc_function (c, layer, height, dbh, age, species, year);
 						}
 					}
 				}
@@ -329,8 +264,8 @@ int annual_forest_structure(cell_t* const c, const int year)
 					{
 						for ( species = 0; species < c->heights[height].dbhs[dbh].ages[age].species_count; ++species )
 						{
-							logger(g_debug_log, "----------------------------------\n");
-							crown_allometry ( c, height, dbh, age, species );
+							crown_allometry        ( c, height, dbh, age, species );
+							canopy_cover_projected ( c, height, dbh, age, species );
 						}
 					}
 				}
@@ -397,35 +332,48 @@ int annual_forest_structure(cell_t* const c, const int year)
 						{
 							for ( species = 0; species < c->heights[height].dbhs[dbh].ages[age].species_count; ++species )
 							{
-								double old_layer_cover;
-								old_layer_cover = c->tree_layers[layer].layer_cover;
+								//double old_layer_cover;
+								//old_layer_cover = c->tree_layers[layer].layer_cover;
 
 								s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
-								while ( ( c->tree_layers[layer].layer_cover > g_settings->max_layer_cover ) && ( s->value[DBHDC_EFF] > s->value[DBHDCMIN] ) )
+								printf("c->tree_layers[layer].layer_cover %f\n", c->tree_layers[layer].layer_cover);
+								printf("CANOPY_COVER_PROJ  %f\n", s->value[CANOPY_COVER_PROJ]);
+								printf("n_tree %d\n", s->counter[N_TREE]);
+								printf("DBHDC_EFF  %f\n", s->value[DBHDC_EFF]);getchar();
+
+								while ( ( c->tree_layers[layer].layer_cover > g_settings->max_layer_cover ) && ( s->value[DBHDC_EFF] < s->value[DBHDCMIN] ) )
 								{
+									puts("dentro while\n");
+									printf("DBHDC_EFF  %f\n", s->value[DBHDC_EFF]);
 
 									/* reduce DBHDC_EFF */
-									s->value[DBHDC_EFF] -= 0.001;
+									//s->value[DBHDC_EFF] -= 0.001;
 
 									/* remove current class cover for layer cover */
-									c->tree_layers[layer].layer_cover -= s->value[CANOPY_COVER_PROJ];
+									//c->tree_layers[layer].layer_cover -= s->value[CANOPY_COVER_PROJ];
 
 									/* recall crown allometry */
-									crown_allometry ( c, height, dbh, age, species );
+									//crown_allometry ( c, height, dbh, age, species );
 
 									/* recompute layer cover with current DBHDC_EFF */
-									c->tree_layers[layer].layer_cover += s->value[CANOPY_COVER_PROJ];
+									//c->tree_layers[layer].layer_cover += s->value[CANOPY_COVER_PROJ];
 
 									/* self pruning function */
-									self_pruning ( c, height, dbh, age, species, old_layer_cover );
+									//self_pruning ( c, height, dbh, age, species, old_layer_cover );
 
-									/* check if self-pruning was enough */
-									if ( c->tree_layers[layer].layer_cover > g_settings->max_layer_cover && s->value[DBHDC_EFF] <= s->value[DBHDCMIN] )
+									if ( c->tree_layers[layer].layer_cover > g_settings->max_layer_cover &&  s->value[DBHDC_EFF] <= s->value[DBHDCMIN] )
 									{
 										/* if self-pruning was not enough run thinning mortality */
-										self_thinning_mortality ( c, layer );
+										self_thinning_mortality ( c, layer, year );
 									}
+
+									//todo todo todo todo better
+									//self_pruning ( c, height, dbh, age, species, old_layer_cover );
+
+									printf("c->tree_layers[layer].layer_cover %f\n", c->tree_layers[layer].layer_cover);
+									printf("CANOPY_COVER_PROJ  %f\n", s->value[CANOPY_COVER_PROJ]);
+									printf("DBHDC_EFF  %f\n", s->value[DBHDC_EFF]);getchar();
 								}
 							}
 						}
