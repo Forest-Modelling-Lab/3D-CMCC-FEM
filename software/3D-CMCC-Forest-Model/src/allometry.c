@@ -12,9 +12,7 @@ extern logger_t* g_debug_log;
 
 void crown_allometry (cell_t *const c, const int height, const int dbh, const int age, const int species)
 {
-	int crown_form_factor;
-	double eff_canopy_cover;
-	double lateral_area;
+	int crown_form_factor = 0;
 
 	height_t *h;
 	dbh_t *d;

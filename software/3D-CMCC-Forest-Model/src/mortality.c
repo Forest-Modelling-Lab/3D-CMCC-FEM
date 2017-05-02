@@ -83,68 +83,77 @@ void self_thinning_mortality (cell_t *const c, const int layer, const int year)
 					logger(g_debug_log, "MORTALITY BASED ON HIGH CANOPY COVER height %g species %s dbh %g !!!\n", h->value, s->name, d->value);
 
 					/* mortality */
-					while ( c->tree_layers[layer].layer_cover > g_settings->max_layer_cover )
+					//FIXME PORCATA
+					while ( c->tree_layers[layer].layer_cover >= g_settings->max_layer_cover )
 					{
-						/* remove one tree per run */
-						++deadtree;
-
-						/* update at class level */
-						++s->counter[DEAD_TREE];
-						--s->counter[N_TREE];
-
-						/* update at cell level */
-						++c->daily_dead_tree   ;
-
-						/* update layer trees */
-						--c->tree_layers[layer].layer_n_trees;
-
-						/* update density */
-						c->tree_layers[layer].layer_density = c->tree_layers[layer].layer_n_trees / g_settings->sizeCell;
-
-						c->tree_layers[layer].layer_cover  -= s->value[CANOPY_COVER_PROJ];
-
-						if ( s->counter[N_TREE] > 0 )
+						while (s->value[DBHDC_EFF] <= s->value[DBHDCMIN])
 						{
-							dbhdc_function         ( c, layer, height, dbh, age, species, year );
-							crown_allometry        ( c, height, dbh, age, species );
-							canopy_cover_projected ( c, height, dbh, age, species );
+							/* remove one tree per run */
+							++deadtree;
 
-							/* check for recompued canopy cover */
-							c->tree_layers[layer].layer_cover += s->value[CANOPY_COVER_PROJ];
-						}
-						else
-						{
-							/* call remove_tree_class */
-							logger(g_debug_log, "completely removed lower class, starting to remove from higher..\n");
-							if ( ! tree_class_remove(c, height, dbh, age, species) )
+							/* update at class level */
+							++s->counter[DEAD_TREE];
+							--s->counter[N_TREE];
+
+							/* update at cell level */
+							++c->daily_dead_tree   ;
+
+							/* update layer trees */
+							--c->tree_layers[layer].layer_n_trees;
+
+							/* update density */
+							c->tree_layers[layer].layer_density = c->tree_layers[layer].layer_n_trees / g_settings->sizeCell;
+
+							c->tree_layers[layer].layer_cover  -= s->value[CANOPY_COVER_PROJ];
+
+							if ( s->counter[N_TREE] > 0 )
 							{
-								logger_error(g_debug_log, "unable to remove tree class");
-								exit(1);
+								dbhdc_function         ( c, layer, height, dbh, age, species, year );
+								crown_allometry        ( c, height, dbh, age, species );
+								canopy_cover_projected ( c, height, dbh, age, species );
+
+								/* check for recompued canopy cover */
+								c->tree_layers[layer].layer_cover += s->value[CANOPY_COVER_PROJ];
 							}
-
-							/* mortality for the higher height class */
-							while (c->tree_layers[layer].layer_cover > g_settings->max_layer_cover &&
-									c->heights[height + 1].dbhs[dbh].ages[age].species[species].counter[N_TREE] >= 0)
+							else
 							{
-								--c->heights[height + 1].dbhs[dbh].ages[age].species[species].counter[N_TREE];
-								++c->heights[height + 1].dbhs[dbh].ages[age].species[species].counter[DEAD_TREE];
-
-								//todo check if correct
-								dbhdc_function         ( c, layer, height + 1, dbh, age, species, year );
-								crown_allometry        ( c, height + 1, dbh, age, species );
-								canopy_cover_projected ( c, height + 1, dbh, age, species );
-
-								/* call remove_tree_class */
+								/* remove_tree_class */
+								logger(g_debug_log, "completely removed lower class, starting to remove from higher..\n");
 								if ( ! tree_class_remove(c, height, dbh, age, species) )
 								{
 									logger_error(g_debug_log, "unable to remove tree class");
 									exit(1);
 								}
+
+								/* mortality for the higher height class */
+								while (c->tree_layers[layer].layer_cover > g_settings->max_layer_cover &&
+										c->heights[height + 1].dbhs[dbh].ages[age].species[species].counter[N_TREE] >= 0)
+								{
+									--c->heights[height + 1].dbhs[dbh].ages[age].species[species].counter[N_TREE];
+									++c->heights[height + 1].dbhs[dbh].ages[age].species[species].counter[DEAD_TREE];
+
+									//todo check if correct
+									dbhdc_function         ( c, layer, height + 1, dbh, age, species, year );
+									crown_allometry        ( c, height + 1, dbh, age, species );
+									canopy_cover_projected ( c, height + 1, dbh, age, species );
+
+									/* remove_tree_class */
+									if ( ! tree_class_remove(c, height, dbh, age, species) )
+									{
+										logger_error(g_debug_log, "unable to remove tree class");
+										exit(1);
+									}
+								}
 							}
 						}
 					}
+					//fixme this is not correct for multilayer
 					/* remove dead C and N biomass */
 					tree_biomass_remove ( c, s, deadtree );
+
+					printf("%d\n", year);
+					printf(" ssssSTEM_C %f\n", s->value[STEM_C]);
+					printf(" AV_STEM_MASS_C %f\n", s->value[AV_STEM_MASS_C]);
 				}
 			}
 		}
