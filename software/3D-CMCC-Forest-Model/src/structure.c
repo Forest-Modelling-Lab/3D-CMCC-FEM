@@ -615,8 +615,8 @@ int daily_forest_structure ( cell_t *const c, const meteo_daily_t *const meteo_d
 						double min_cover;
 						double temp_diff_cover;
 						double temp_can_cover;
-						double cum_temp_cover;
-						int daylength = round(meteo_daily->daylength);
+						double cum_temp_cover = 0.;
+						int daylength = ROUND(meteo_daily->daylength);
 
 						s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
@@ -713,7 +713,6 @@ int daily_forest_structure ( cell_t *const c, const meteo_daily_t *const meteo_d
 
 						/** compute integrating all over the daylength corresponding canopy intercepting cover **/
 						s->value[DAILY_CANOPY_COVER_EXP] = cum_temp_cover / daylength;
-						cum_temp_cover = 0.;
 
 						/* check */
 						CHECK_CONDITION ( s->value[DAILY_CANOPY_COVER_EXP], > , 1 )

@@ -27,7 +27,7 @@
 #define MIN(a, b)  (((a) < (b)) ? (a) : (b))
 #endif
 
-#ifndef round
+#ifndef ROUND
 /* we add 0.5 so if x is > 0.5 we truncate to next integer */
 #define ROUND(x)	((x)>=0?(long)((x)+0.5):(long)((x)-0.5))
 #else
