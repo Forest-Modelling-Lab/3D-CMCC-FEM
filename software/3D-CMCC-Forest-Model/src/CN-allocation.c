@@ -93,7 +93,7 @@ void carbon_allocation( cell_t *const c, const int height, const int dbh, const 
 	/* growth efficiency mortality */
 	if ( s->value[RESERVE_C] < ZERO )
 	{
-		growth_efficiency_mortality(c, height, dbh, age, species);
+		growth_efficiency_mortality(c, height, dbh, age, species);puts("ok");getchar();
 	}
 #else
 	CHECK_CONDITION ( s->value[RESERVE_C],  < , ZERO );

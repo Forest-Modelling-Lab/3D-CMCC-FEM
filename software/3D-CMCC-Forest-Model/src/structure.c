@@ -297,6 +297,7 @@ int annual_forest_structure(cell_t* const c, const int year)
 								s->value[DBHDC_EFF] = s->value[DBHDCMAX];
 								logger(g_debug_log,"-DBHDC effective = %g\n", s->value[DBHDC_EFF]);
 							}
+							//fixme
 							if (s->value[DBHDC_EFF] < s->value[DBHDCMIN])
 							{
 								logger(g_debug_log,"-DBHDC effective (%g) > DBHDCMIN (%g) \n", s->value[DBHDC_EFF] , s->value[DBHDCMIN]);
