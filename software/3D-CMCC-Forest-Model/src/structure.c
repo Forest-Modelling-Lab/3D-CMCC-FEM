@@ -358,6 +358,8 @@ int annual_forest_structure(cell_t* const c, const int year)
 						{
 							s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 							c->tree_layers[layer].layer_cover += s->value[CANOPY_COVER_PROJ];
+							logger(g_debug_log, "CANOPY_COVER_PROJ = %f\n", s->value[CANOPY_COVER_PROJ]);
+							logger(g_debug_log, "layer_cover       = %f\n", c->tree_layers[layer].layer_cover);
 						}
 					}
 				}
@@ -399,7 +401,7 @@ int annual_forest_structure(cell_t* const c, const int year)
 
 								s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
-								while ( ( c->tree_layers[layer].layer_cover > g_settings->max_layer_cover ) &&  ( s->value[DBHDC_EFF] > s->value[DBHDCMIN] ) )
+								while ( ( c->tree_layers[layer].layer_cover > g_settings->max_layer_cover ) && ( s->value[DBHDC_EFF] > s->value[DBHDCMIN] ) )
 								{
 
 									/* reduce DBHDC_EFF */

@@ -53,8 +53,7 @@ void crown_allometry (cell_t *const c, const int height, const int dbh, const in
 	/* cast s->value[CROWN_FORM_FACTOR] to integer */
 	//crown_form_factor = (int)s->value[CROWN_FORM_FACTOR];
 
-	// note: fixed for CYLINDER CROWN SHAPE
-	crown_form_factor = 1;
+	crown_form_factor = 0;
 
 	switch (crown_form_factor)
 	{

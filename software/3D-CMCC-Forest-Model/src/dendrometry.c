@@ -462,7 +462,7 @@ void dendrometry_old(cell_t *const c, const int layer, const int height, const i
 	 */
 
 	/* check */
-	if ( ! year ){ CHECK_CONDITION( h->value - oldTreeHeight, > , max_diff );}
+	if ( ! year ){ CHECK_CONDITION( oldTreeHeight - h->value , > , max_diff );}
 	else {CHECK_CONDITION( h->value, < , oldTreeHeight - eps );}
 
 	/*************************************************************************************************************************/

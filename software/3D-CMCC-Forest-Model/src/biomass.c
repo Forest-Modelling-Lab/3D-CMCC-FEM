@@ -75,7 +75,7 @@ void annual_tree_increment(cell_t *const c, const int height, const int dbh, con
 	prev_vol              = s->value[VOLUME];
 	logger(g_debug_log, "Previous stand volume        = %f m^3/cell\n", prev_vol );
 
-	tree_prev_vol  = s->value[TREE_VOLUME];
+	tree_prev_vol         = s->value[TREE_VOLUME];
 	logger(g_debug_log, "Previous single tree volume  = %f m^3DM/tree\n", tree_prev_vol );
 
 	/* compute single tree volume */
@@ -83,7 +83,7 @@ void annual_tree_increment(cell_t *const c, const int height, const int dbh, con
 	logger(g_debug_log, "-Single tree volume = %g m3/tree\n", s->value[TREE_VOLUME]);
 
 	/* compute class volume */
-	s->value[VOLUME] = s->value[TREE_VOLUME] * s->counter[N_TREE];
+	s->value[VOLUME]      = s->value[TREE_VOLUME] * s->counter[N_TREE];
 	logger(g_debug_log, "-Class volume = %g m3/sizeCell\n", s->value[VOLUME]);
 
 	/* CAI-Current Annual Increment */
@@ -104,7 +104,7 @@ void annual_tree_increment(cell_t *const c, const int height, const int dbh, con
 	c->cum_volume += s->value[VOLUME];
 
 	/* check every year after the first */
-	if ( ! year ) { CHECK_CONDITION( fabs(s->value[TREE_VOLUME] - tree_prev_vol), > , max_diff ); }
+	if ( ! year ) { CHECK_CONDITION( ( tree_prev_vol - s->value[TREE_VOLUME] ), > , max_diff ); }
 	else { CHECK_CONDITION( s->value[TREE_VOLUME], < , tree_prev_vol - eps ); }
 
 

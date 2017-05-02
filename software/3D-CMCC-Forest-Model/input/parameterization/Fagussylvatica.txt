@@ -28,8 +28,8 @@ GROWTHTMAX  35                 //Maximum temperature for growth 40 from Williams
 GROWTHTOPT  20                 //Optimum temperature for growth 19.4 Rasse et al 2001, 20 from Lyr & Garbe, 1994
 GROWTHSTART 100                //(5 °C)average temperature or (GDD) thermic sum for starting growth in °C 130 ettore with t base = 5°C
 MINDAYLENGTH    12             //minimum day length for fagus from ettore, 12 through satellite images
-SWPOPEN -0.34                  //Leaf water potential: start of reduction for Fagus sylvatica -0.6 Mollicone et al., 2002
-SWPCLOSE    -1.7               //Leaf water potential: complete reduction for Fagus sylvatica -2.3 Mollicone et al., 2002, -2.2 Tatarinov et al., 2006
+SWPOPEN -0.34                  //Leaf water potential: start of reduction for Fagus sylvatica -0.6 Mollicone et al., 2002, -0.34 Tatarinov et al., 2006
+SWPCLOSE    -2.2               //Leaf water potential: complete reduction for Fagus sylvatica -2.3 Mollicone et al., 2002, -2.2 Tatarinov et al., 2006
 OMEGA_CTEM  0.8                //ALLOCATION PARAMETER control the sensitivity of allocation to changes in water and light availability
 S0CTEM  0.45                   //PARAMETER CONTROLLING ALLOCATION TO STEM/MINIMUM RATIO TO C TO STEM
 R0CTEM  0.25                   //PARAMETER CONTROLLING ALLOCATION TO ROOT/MINIMUM RATIO TO C TO ROOTS
@@ -62,7 +62,7 @@ DBHDCMIN    0.14               //High Density from ettore
 SAP_A   0.674                  //a value from Kostner for Fagus sylvatica
 SAP_B   1.992                  //b value from Kostner for Fagus sylvatica
 SAP_LEAF    2100               //leaf area/sapwood max ratio in pipe model  185 from Williams 1996, 3410 Bartelink 1998 , 2100 from Kostner, 3310 from ettore
-SAP_WRES    0.05               //Sapwood-Reserve biomass ratio gTNC/100gDM 0.043 in January for fagus see Barbaroux 2002 0.11 for deciduous 0.05 for evergreen  see Schwalm and Ek, 2004 Ecological Modelling
+SAP_WRES    0.05               //Sapwood-Reserve biomass ratio gTNC/100gDM 0.043 in January for fagus see Barbaroux 2002 0.11 for deciduous 0.05 for evergreen see Schwalm and Ek, 2004 Ecological Modelling
 STEMCONST_P 0.2837             //a parameter for F. sylvatica for allometric equation from ettore, 0.70 Seidl et al., 2012
 STEMPOWER_P 2.134              //b parameter for F. sylvatica for allometric equation from ettore, 3.00 Seidl et al., 2012
 CRA 35                         //Chapman-Richards Maximum height H_MAX (48) for f. sylvatica Seidl et al., 2012 , 30.6323 for F. sylvatica Pilli et al., 2016

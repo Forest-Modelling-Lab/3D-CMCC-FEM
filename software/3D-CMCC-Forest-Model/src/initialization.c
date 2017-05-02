@@ -228,7 +228,7 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 	{
 		logger(g_debug_log, "\nNo Reserve Biomass Data are available for model initialization \n");
 		logger(g_debug_log, "...Generating input Reserve Biomass biomass data\n");
-		//these values are taken from: following Schwalm and Ek, 2004 Ecological Modelling
+		//these values are taken from: Schwalm and Ek, 2004 Ecological Modelling
 		//see if change with the ratio reported from Barbaroux et al., 2002 (using DryMatter)
 
 		/* IMPORTANT! reserve computation if not in initialized is computed from DryMatter */

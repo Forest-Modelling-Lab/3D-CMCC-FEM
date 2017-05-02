@@ -401,17 +401,25 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 	logger(g_debug_log, "CANOPY_TRANSP_SHADE = %g mm/m2/day\n", s->value[CANOPY_TRANSP_SHADE]);
 	logger(g_debug_log, "CANOPY_EVAPO_TRANSP = %g mm/m2/day\n", s->value[CANOPY_EVAPO_TRANSP]);
 
-	/* control if canopy transpiration exceeds availbale soil water */
-	/* in case it happens down-regulate transpiration to maximum available soil water */
-	//fixme it MUST be implemented for multi class approach
+	/**********************************************************************************/
+	/**********************************************************************************/
+	/* control if canopy transpiration exceeds available soil water */
+	/* in case it happens firstly down-regulate transpiration to soil water modifier
+	 * if it is not enough than superimpose to zero */
 	if ( s->value[CANOPY_TRANSP] > c->asw )
 	{
-		s->value[CANOPY_TRANSP] = c->asw;
-		error_log("ATTENTION CANOPY TRANSPIRATION EXCEEDS ASW!!\n");
-	}
+		printf("ATTENTION CANOPY TRANSPIRATION EXCEEDS ASW!!!!!!\n");
 
-	/* check */
-	CHECK_CONDITION (s->value[CANOPY_TRANSP], > , c->asw);
+		s->value[CANOPY_TRANSP] *= s->value[F_SW];
+		if ( s->value[CANOPY_TRANSP] > c->asw )
+		{
+			s->value[CANOPY_TRANSP] = 0.;
+		}
+		/* check */
+		CHECK_CONDITION (s->value[CANOPY_TRANSP], > , c->asw);
+	}
+	/**********************************************************************************/
+	/**********************************************************************************/
 
 	/* compute latent heat fluxes for canopy */
 	Canopy_latent_heat_fluxes   (s, meteo_daily);

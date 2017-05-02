@@ -88,7 +88,7 @@ void carbon_allocation( cell_t *const c, const int height, const int dbh, const 
 	CHECK_CONDITION ( s->value[CROOT_C],    < , ZERO );
 	CHECK_CONDITION ( s->value[FRUIT_C],    < , ZERO );
 
-
+//fixme ALESSIOR
 #if 1
 	/* growth efficiency mortality */
 	if ( s->value[RESERVE_C] < ZERO )
