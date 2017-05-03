@@ -152,7 +152,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 			/* assign shortcut */
 			h = &m->cells[cell].heights[height];
 
-			//ALESSIOC FIXME PORCATA
+			//ALESSIOC FIXME
 			c->cell_heights_count ++;
 
 			/* check if tree height class matches with corresponding cell layer */
@@ -283,9 +283,6 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							/* C assimilation */
 							carbon_assimilation ( c, layer, height, dbh, age, species );
 
-							/* compute single tree biomass pools */
-							average_tree_pools ( s );
-
 							/* turnover */
 							turnover ( c, s, year );
 
@@ -299,6 +296,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							{
 								/* MORTALITY */
 								/* Mortality based on growth efficiency */
+								//fixme once fixed growth_efficiency_mortality remove annual_growth efficiency mortality
 								if ( ! annual_growth_efficiency_mortality ( c, height, dbh, age, species ) )
 								{
 									/* Mortality based on tree Age (LPJ) */
@@ -320,6 +318,9 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 
 							/* litter fluxes and pools */
 							littering             ( c, s );
+
+							/* compute single tree biomass pools */
+							average_tree_pools ( s );
 
 							/* END OF MONTH */
 							/* last day of the month */

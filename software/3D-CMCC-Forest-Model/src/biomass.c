@@ -162,6 +162,8 @@ void abg_bgb_biomass(cell_t *const c, const int height, const int dbh, const int
 
 void average_tree_pools(species_t *const s)
 {
+	logger(g_debug_log, "\n*AVERAGE TREE POOLS*\n");
+
 	/* compute tree average C pools */
 	s->value[AV_LEAF_MASS_C]             = (s->value[LEAF_C]             / (double)s->counter[N_TREE]);
 	s->value[AV_STEM_MASS_C]             = (s->value[STEM_C]             / (double)s->counter[N_TREE]);
@@ -205,28 +207,49 @@ void tree_branch_and_bark (cell_t *const c, const int height, const int dbh, con
 	else s->value[FRACBB] = s->value[FRACBB1] + ( s->value[FRACBB0]- s->value[FRACBB1] )* exp( -ln2 * ( a->value / s->value[TBB] ) );
 }
 
-void tree_biomass_remove (cell_t *const c, species_t *const s, const int tree_remove)
+void tree_biomass_remove (cell_t *const c, const int height, const int dbh, const int age, const int species, const int tree_remove)
 {
+	species_t *s;
+	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
+
+	/* compute single tree average biomass */
 	average_tree_pools ( s );
+
+	logger(g_debug_log, "\n*TREE BIOMASS REMOVE*\n");
 
 	/* update class carbon pools */
 
 	/* carbon to litter fluxes */
 	s->value[DEAD_LEAF_C]           += (s->value[AV_LEAF_MASS_C]    * tree_remove);
+	s->value[LEAF_C]                -= s->value[DEAD_LEAF_C];
+
 	s->value[DEAD_FROOT_C]          += (s->value[AV_FROOT_MASS_C]   * tree_remove);
+	s->value[FROOT_C]               -= s->value[DEAD_FROOT_C];
+
 	/* overall litter */
 	s->value[DEAD_TO_LITRC]         += s->value[DEAD_LEAF_C] +
 			s->value[DEAD_FROOT_C];
 
+	s->value[LITR_C]                += s->value[DEAD_TO_LITRC];
+
 	/* carbon to cwd fluxes */
 	s->value[DEAD_STEM_C]           += (s->value[AV_STEM_MASS_C]    * tree_remove);
+	s->value[STEM_C]                -= s->value[DEAD_STEM_C];
+
 	s->value[DEAD_CROOT_C]          += (s->value[AV_CROOT_MASS_C]   * tree_remove);
+	s->value[CROOT_C]               -= s->value[DEAD_CROOT_C];
+
 	s->value[DEAD_BRANCH_C]         += (s->value[AV_BRANCH_MASS_C]  * tree_remove);
+	s->value[BRANCH_C]              -= s->value[DEAD_BRANCH_C];
+
 	s->value[DEAD_RESERVE_C]        += (s->value[AV_RESERVE_MASS_C] * tree_remove);
+	s->value[RESERVE_C]             -= s->value[DEAD_RESERVE_C];
+
 	s->value[DEAD_FRUIT_C]          += (s->value[AV_FRUIT_MASS_C]   * tree_remove);
+	s->value[FRUIT_C]               -= s->value[DEAD_FRUIT_C];
 
 	/* overall cwd */
-	s->value[DEAD_TO_CWDC]          += (s->value[DEAD_STEM_C] +
+	s->value[CWDC]                  += (s->value[DEAD_STEM_C] +
 			s->value[DEAD_CROOT_C]  +
 			s->value[DEAD_BRANCH_C] +
 			s->value[DEAD_RESERVE_C]+
@@ -246,25 +269,42 @@ void tree_biomass_remove (cell_t *const c, species_t *const s, const int tree_re
 	/******************************************************************************************/
 
 	/* nitrogen to litter pool */
-	s->value[DEAD_LEAF_N]           += (s->value[AV_LEAF_MASS_N]     * tree_remove);
-	s->value[DEAD_FROOT_N]          += (s->value[AV_FROOT_MASS_N]    * tree_remove);
+	s->value[DEAD_LEAF_N]           += (s->value[AV_LEAF_MASS_N]    * tree_remove);
+	s->value[LEAF_N]                -= s->value[DEAD_LEAF_N];
+
+	s->value[DEAD_FROOT_N]          += (s->value[AV_FROOT_MASS_N]   * tree_remove);
+	s->value[FROOT_N]               -= s->value[DEAD_FROOT_N];
+
 	/* overall litter */
-	s->value[DEAD_TO_LITRN]         += s->value[DEAD_LEAF_N] +
+	s->value[DEAD_TO_LITRC]         += s->value[DEAD_LEAF_N] +
 			s->value[DEAD_FROOT_N];
 
-	/* nitrogen to cwd fluxes */
-	s->value[DEAD_STEM_N]           += (s->value[AV_STEM_MASS_N]     * tree_remove);
-	s->value[DEAD_CROOT_N]          += (s->value[AV_CROOT_MASS_N]    * tree_remove);
-	s->value[DEAD_BRANCH_N]         += (s->value[AV_BRANCH_MASS_N]   * tree_remove);
-	s->value[DEAD_RESERVE_N]        += (s->value[AV_RESERVE_MASS_N]  * tree_remove);
-	s->value[DEAD_FRUIT_N]          += (s->value[AV_FRUIT_MASS_N]    * tree_remove);
+	s->value[LITR_N]                += s->value[DEAD_TO_LITRC];
+
+	/* carbon to cwd fluxes */
+	s->value[DEAD_STEM_N]           += (s->value[AV_STEM_MASS_N]    * tree_remove);
+	s->value[STEM_N]                -= s->value[DEAD_STEM_N];
+
+	s->value[DEAD_CROOT_N]          += (s->value[AV_CROOT_MASS_N]   * tree_remove);
+	s->value[CROOT_N]               -= s->value[DEAD_CROOT_N];
+
+	s->value[DEAD_BRANCH_N]         += (s->value[AV_BRANCH_MASS_N]  * tree_remove);
+	s->value[BRANCH_N]              -= s->value[DEAD_BRANCH_N];
+
+	s->value[DEAD_RESERVE_N]        += (s->value[AV_RESERVE_MASS_N] * tree_remove);
+	s->value[RESERVE_N]             -= s->value[DEAD_RESERVE_N];
+
+	s->value[DEAD_FRUIT_N]          += (s->value[AV_FRUIT_MASS_N]   * tree_remove);
+	s->value[FRUIT_N]               -= s->value[DEAD_FRUIT_N];
 
 	/* overall cwd */
-	s->value[DEAD_TO_CWDN]          += (s->value[DEAD_STEM_N] +
+	s->value[CWD_N]                 += (s->value[DEAD_STEM_N] +
 			s->value[DEAD_CROOT_N]  +
 			s->value[DEAD_BRANCH_N] +
 			s->value[DEAD_RESERVE_N]+
 			s->value[DEAD_FRUIT_N]) ;
+
+	s->value[N_TO_CWD]             += s->value[DEAD_TO_CWDC];
 
 	logger(g_debug_log, "Nitrogen biomass to remove\n");
 	logger(g_debug_log, "DEAD_LEAF_N    = %f tN/cell\n", s->value[DEAD_LEAF_N]);
@@ -276,5 +316,10 @@ void tree_biomass_remove (cell_t *const c, species_t *const s, const int tree_re
 	logger(g_debug_log, "DEAD_RESERVE_N = %f tN/cell\n", s->value[DEAD_RESERVE_N]);
 	logger(g_debug_log, "DEAD_FRUIT_N   = %f tN/cell\n", s->value[DEAD_FRUIT_N]);
 	logger(g_debug_log, "DEAD_TO_CWDN   = %f tN/cell\n", s->value[DEAD_TO_CWDN]);
+
+	/******************************************************************************************/
+	/* compute single tree average biomass */
+	average_tree_pools ( s );
+	/******************************************************************************************/
 
 }

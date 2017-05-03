@@ -14,6 +14,6 @@ void abg_bgb_biomass (cell_t *const c, const int height, const int dbh, const in
 
 void annual_tree_increment(cell_t *const c, const int height, const int dbh, const int age, const int species, const int year);
 
-void tree_biomass_remove (cell_t *const c, species_t *const s, const int tree_remove);
+void tree_biomass_remove (cell_t *const c, const int height, const int dbh, const int age, const int species, const int tree_remove);
 
 #endif /* BIOMASS_H */

@@ -183,7 +183,7 @@ void thinning (cell_t *const c, const int height, const int dbh, const int age, 
 	logger(g_debug_log, "trees_to_remove = %d\n", trees_to_remove);
 
 	/* update C and N biomass */
-	tree_biomass_remove ( c, s, trees_to_remove );
+	tree_biomass_remove ( c, height, dbh, age, species, trees_to_remove );
 
 	/* remove trees */
 	s->counter[N_TREE] -= trees_to_remove;
@@ -219,7 +219,7 @@ void harvesting (cell_t *const c, const int height, const int dbh, const int age
 	logger(g_debug_log, "\n\n\n\n\n** Management options: Harvesting ** \n\n\n\n\n");
 
 	/* update C and N biomass */
-	tree_biomass_remove ( c, s, s->counter[N_TREE] );
+	tree_biomass_remove ( c, height, dbh, age, species, s->counter[N_TREE] );
 
 	/* remove completely all trees */
 	tree_class_remove (c, height, dbh, age, species );

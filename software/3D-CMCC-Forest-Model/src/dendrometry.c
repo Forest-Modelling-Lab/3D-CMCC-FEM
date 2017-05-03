@@ -385,8 +385,6 @@ void dendrometry_old(cell_t *const c, const int layer, const int height, const i
 
 	logger(g_debug_log, "\n**DENDROMETRY**\n");
 
-	s->value[AV_STEM_MASS_C] = (s->value[STEM_C] / (double)s->counter[N_TREE]);
-
 	/* compute tree AVDBH */
 	if (s->value[STEMCONST_P] == NO_DATA && s->value[STEMPOWER_P] == NO_DATA)
 	{
@@ -407,17 +405,12 @@ void dendrometry_old(cell_t *const c, const int layer, const int height, const i
 	else
 	{
 		/* use site specific stemconst stempower values */
-		logger(g_debug_log, "Using site related stemconst stempower\n");
 		d->value = pow(((s->value[AV_STEM_MASS_C] * 1e3) * GC_GDM) / s->value[STEMCONST_P], (1. / s->value[STEMPOWER_P]));
 	}
-	printf("%d\n", year);
-	printf(" STEM_C %f\n", s->value[STEM_C]);
-	printf(" AV_STEM_MASS_C %f\n", s->value[AV_STEM_MASS_C]);
 	logger(g_debug_log, "-STEM_C          = %f tC/cell\n", s->value[STEM_C]);
 	logger(g_debug_log, "-AV_STEM_MASS_C  = %f tC/tree\n", s->value[AV_STEM_MASS_C]);
 	logger(g_debug_log, "-Old AVDBH       = %f cm\n", oldavDBH);
 	logger(g_debug_log, "-New Average DBH = %f cm\n", d->value);
-	if(year == 43) getchar();
 
 	/* check */
 	CHECK_CONDITION( d->value, <, oldavDBH - eps );

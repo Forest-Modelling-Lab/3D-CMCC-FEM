@@ -331,13 +331,12 @@ int annual_forest_structure(cell_t* const c, const int year)
 
 								while ( c->tree_layers[layer].layer_cover >= g_settings->max_layer_cover )
 								{
-
 									/** self-thinning **/
 									if ( s->value[DBHDC_EFF] <= s->value[DBHDCMIN] )
 									{
 										self_thinning_mortality ( c, layer, year );
 									}
-									/** self pruning **/
+									/** self-pruning **/
 									else
 									{
 										c->tree_layers[layer].layer_cover -= s->value[CANOPY_COVER_PROJ];
@@ -352,6 +351,12 @@ int annual_forest_structure(cell_t* const c, const int year)
 
 										/* self pruning function */
 										self_pruning ( c, height, dbh, age, species, old_layer_cover );
+
+										/** self-thinning **/
+										if ( s->value[DBHDC_EFF] <= s->value[DBHDCMIN] )
+										{
+											self_thinning_mortality ( c, layer, year );
+										}
 									}
 								}
 							}

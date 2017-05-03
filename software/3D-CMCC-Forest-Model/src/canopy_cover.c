@@ -46,7 +46,7 @@ void dbhdc_function (cell_t *const c, const int layer, const int height, const i
 	a = &c->heights[height].dbhs[dbh].ages[age];
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
-	logger(g_debug_log,"-layer = %d layer density = %g height = %g dbh = %g age = %d species = %s\n", layer,c->tree_layers[layer].layer_density, h->value, d->value, a->value, s->name);
+	logger(g_debug_log,"\n*DBHDC FUNCTION*\n");
 
 	/************************************************************************************************************************/
 	/* note: 04 Oct 2016 still USEFULL ?????*/
@@ -81,7 +81,6 @@ void dbhdc_function (cell_t *const c, const int layer, const int height, const i
 	temp_crown_diameter = temp_crown_radius * 2.;
 
 	s->value[DBHDC_EFF] = temp_crown_diameter / d->value;
-	logger(g_debug_log,"-DBHDC effective = %g\n", s->value[DBHDC_EFF]);
 
 	/* check if current dbhdc_eff grows to much (case when there's thinning) */
 	/* this is checked to avoid unrealistic crown area increment */
@@ -108,6 +107,8 @@ void dbhdc_function (cell_t *const c, const int layer, const int height, const i
 		logger(g_debug_log,"-DBHDC effective = %g\n", s->value[DBHDC_EFF]);
 	}
 #endif
+
+	logger(g_debug_log,"-DBHDC effective = %g\n", s->value[DBHDC_EFF]);
 
 }
 
