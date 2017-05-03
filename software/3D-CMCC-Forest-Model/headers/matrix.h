@@ -607,15 +607,15 @@ enum {
 	TOT_ROOT_N,                         /* (tN/cell) Current Total root nitrogen pool */
 
 	/* dead pools */
-	DEAD_LEAF_N,                        /* (tN/cell) dead leaf flux/pool */
-	DEAD_FROOT_N,                       /* (tN/cell) dead froot flux/pool */
-	DEAD_STEM_N,                        /* (tN/cell) dead stem flux/pool */
-	DEAD_CROOT_N,                       /* (tN/cell) dead croot flux/pool */
-	DEAD_BRANCH_N,                      /* (tN/cell) dead branch flux/pool */
-	DEAD_RESERVE_N,                     /* (tN/cell) dead reserve flux/pool */
-	DEAD_FRUIT_N,                       /* (tN/cell) dead fruit flux/pool */
-	DEAD_TO_LITRN,                      /* (tN/cell) dead pool to litter pool flux */
-	DEAD_TO_CWDN,                       /* (tN/cell) dead pool to cwd pool flux */
+//	DEAD_LEAF_N,                        /* (tN/cell) dead leaf flux/pool */
+//	DEAD_FROOT_N,                       /* (tN/cell) dead froot flux/pool */
+//	DEAD_STEM_N,                        /* (tN/cell) dead stem flux/pool */
+//	DEAD_CROOT_N,                       /* (tN/cell) dead croot flux/pool */
+//	DEAD_BRANCH_N,                      /* (tN/cell) dead branch flux/pool */
+//	DEAD_RESERVE_N,                     /* (tN/cell) dead reserve flux/pool */
+//	DEAD_FRUIT_N,                       /* (tN/cell) dead fruit flux/pool */
+//	DEAD_TO_LITRN,                      /* (tN/cell) dead pool to litter pool flux */
+//	DEAD_TO_CWDN,                       /* (tN/cell) dead pool to cwd pool flux */
 
 	/* per tree in tN */
 	AV_LEAF_MASS_N,                     /* (tN/tree) Average Leaf nitrogen pool */

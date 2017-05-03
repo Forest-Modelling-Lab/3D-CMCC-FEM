@@ -390,15 +390,6 @@ void reset_daily_class_variables(cell_t *const c)
 					s->value[N_RESERVE_TO_CWD] =          0.;
 					s->value[N_FRUIT_TO_CWD] =            0.;
 
-					s->value[DEAD_LEAF_N] =               0.;
-					s->value[DEAD_FROOT_N] =              0.;
-					s->value[DEAD_STEM_N] =               0.;
-					s->value[DEAD_CROOT_N] =              0.;
-					s->value[DEAD_BRANCH_N] =             0.;
-					s->value[DEAD_RESERVE_N] =            0.;
-					s->value[DEAD_FRUIT_N] =              0.;
-					s->value[DEAD_TO_LITRN] =             0.;
-					s->value[DEAD_TO_CWDN] =              0.;
 					/****************************************/
 
 					/* reset daily maintenance, growth and total respiration */
