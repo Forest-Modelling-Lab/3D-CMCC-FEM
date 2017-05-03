@@ -96,10 +96,6 @@ void self_thinning_mortality (cell_t *const c, const int layer, const int year)
 						++deadtree;
 						--livetree;
 
-						/* update live and dead tree */
-						++s->counter[DEAD_TREE];
-						--s->counter[N_TREE];
-
 						/* impose DBHDC_EFF = DBHDCMIN */
 						s->value[DBHDC_EFF] = s->value[DBHDCMIN];
 
@@ -159,6 +155,10 @@ void self_thinning_mortality (cell_t *const c, const int layer, const int year)
 					//fixme this is not correct for multilayer
 					/* remove dead C and N biomass */
 					tree_biomass_remove ( c, height, dbh, age, species, deadtree );
+
+					/* update live and dead tree (do not move above) */
+					s->counter[DEAD_TREE] = deadtree;
+					s->counter[N_TREE]    = livetree;
 
 				}
 			}
@@ -344,8 +344,6 @@ void self_pruning ( cell_t *const c, const int height, const int dbh, const int 
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 	logger(g_debug_log, "\n\n*****SELF PRUNING*****\n");
-
-	printf("\n*****SELF PRUNING*****\n");
 
 	/* reduce proportionally branch biomass to the crown area reduction */
 

@@ -163,6 +163,7 @@ void abg_bgb_biomass(cell_t *const c, const int height, const int dbh, const int
 void average_tree_pools(species_t *const s)
 {
 	logger(g_debug_log, "\n*AVERAGE TREE POOLS*\n");
+	logger(g_debug_log,  "N_TREE = %d\n", s->counter[N_TREE]);
 
 	/* compute tree average C pools */
 	s->value[AV_LEAF_MASS_C]             = (s->value[LEAF_C]             / (double)s->counter[N_TREE]);
@@ -187,6 +188,16 @@ void average_tree_pools(species_t *const s)
 	s->value[AV_BRANCH_MASS_N]           = (s->value[BRANCH_N]           / (double)s->counter[N_TREE]);
 	s->value[AV_RESERVE_MASS_N]          = (s->value[RESERVE_N]          / (double)s->counter[N_TREE]);
 	s->value[AV_FRUIT_MASS_N]            = (s->value[FRUIT_N]            / (double)s->counter[N_TREE]);
+
+	logger(g_debug_log, "AV_LEAF_MASS_C    = %f tC/cell\n", s->value[AV_LEAF_MASS_C]);
+	logger(g_debug_log, "AV_STEM_MASS_C    = %f tC/cell\n", s->value[AV_STEM_MASS_C]);
+	logger(g_debug_log, "AV_FROOT_MASS_C   = %f tC/cell\n", s->value[AV_FROOT_MASS_C]);
+	logger(g_debug_log, "AV_CROOT_MASS_C   = %f tC/cell\n", s->value[AV_CROOT_MASS_C]);
+	logger(g_debug_log, "AV_RESERVE_MASS_C = %f tC/cell\n", s->value[AV_RESERVE_MASS_C]);
+	logger(g_debug_log, "AV_BRANCH_MASS_C  = %f tC/cell\n", s->value[AV_BRANCH_MASS_C]);
+	logger(g_debug_log, "AV_BRANCH_MASS_C  = %f tC/cell\n", s->value[AV_BRANCH_MASS_C]);
+	logger(g_debug_log, "AV_FRUIT_MASS_C   = %f tC/cell\n", s->value[AV_FRUIT_MASS_C]);
+
 
 }
 
@@ -290,7 +301,7 @@ void tree_biomass_remove (cell_t *const c, const int height, const int dbh, cons
 			s->value[N_BRANCH_TO_CWD] +
 			s->value[N_FRUIT_TO_CWD]) ;
 
-	logger(g_debug_log, "Carbon biomass to remove\n");
+	logger(g_debug_log, "Nitrogen biomass to remove\n");
 	logger(g_debug_log, "N_LEAF_TO_LITR   = %f tN/cell\n", s->value[N_LEAF_TO_LITR]);
 	logger(g_debug_log, "N_FROOT_TO_LITR  = %f tN/cell\n", s->value[N_FROOT_TO_LITR]);
 	logger(g_debug_log, "N_TO_LITR        = %f tN/cell\n", s->value[N_TO_LITR]);
@@ -300,10 +311,5 @@ void tree_biomass_remove (cell_t *const c, const int height, const int dbh, cons
 	logger(g_debug_log, "N_BRANCH_TO_CWD  = %f tN/cell\n", s->value[N_BRANCH_TO_CWD]);
 	logger(g_debug_log, "N_FRUIT_TO_CWD   = %f tN/cell\n", s->value[N_FRUIT_TO_CWD]);
 	logger(g_debug_log, "N_TO_CWD         = %f tN/cell\n", s->value[N_TO_CWD]);
-
-	/******************************************************************************************/
-	/* compute single tree average biomass */
-	average_tree_pools ( s );
-	/******************************************************************************************/
 
 }

@@ -114,7 +114,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 
 	/****************************************************************************/
 
-	/* annual forest structure */
+	/* annual forest structure (only the year after the first) */
 	if ( ( ! day && ! month && year ) && ( ! management ) )
 	{
 		annual_forest_structure ( c, year );
@@ -300,7 +300,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 								if ( ! annual_growth_efficiency_mortality ( c, height, dbh, age, species ) )
 								{
 									/* Mortality based on tree Age (LPJ) */
-									//age_mortality ( c, height, dbh, age, species);
+									age_mortality ( c, height, dbh, age, species);
 								}
 							}
 
@@ -319,19 +319,12 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							/* litter fluxes and pools */
 							littering             ( c, s );
 
-							/* compute single tree biomass pools */
-							average_tree_pools ( s );
+							/* tree level dendrometry */
+							dendrometry_old ( c, layer, height, dbh, age, species, year );
 
-							/* END OF MONTH */
-							/* last day of the month */
-							if ( c->doy == ( IS_LEAP_YEAR( c->years[year].year ) ? ( MonthLength_Leap[month] ) : ( MonthLength[month] ) ) )
-							{
-								/* to avoid "jumps" of dbh it has computed once monthly */
-								dendrometry_old ( c, layer, height, dbh, age, species, year );
+							//FIXME (v.5.3.1-a)
+							//dendrometry ( c, layer, height, dbh, age, species, meteo_daily );
 
-								//FIXME (v.5.3.1-a)
-								//dendrometry ( c, layer, height, dbh, age, species, meteo_daily );
-							}
 
 							/****************************************************************************************************************************************/
 
