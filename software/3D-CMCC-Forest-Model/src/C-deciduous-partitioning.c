@@ -176,7 +176,7 @@ void daily_C_deciduous_partitioning (cell_t *const c, const int layer, const int
 		logger(g_debug_log, "\n*NORMAL GROWTH*\n");
 		logger(g_debug_log, "(LAI == PEAK LAI)\n");
 
-		/*see Barbaroux et al., 2002, Scartazza et al., 2013*/
+		/* see Barbaroux et al., 2002, Scartazza et al., 2013 */
 
 		if (npp_to_alloc > 0.0)
 		{
@@ -184,6 +184,20 @@ void daily_C_deciduous_partitioning (cell_t *const c, const int layer, const int
 			/* it doesn't need */
 			if(s->value[RESERVE_C] >= s->value[MIN_RESERVE_C])
 			{
+#if 0
+				/* reproduction */
+				if ( a->value > s->value[SEXAGE] )
+				{
+					logger(g_debug_log, "allocating into fruit pool\n");
+
+					s->value[C_TO_FRUIT] = npp_to_alloc * s->value[FRUIT_PERC];
+					npp_to_alloc        -= s->value[C_TO_FRUIT];
+				}
+				else
+				{
+					s->value[C_TO_FRUIT] = 0.;
+				}
+#endif
 				logger(g_debug_log, "allocating into the three pools Ws(Ws+Wbb)+Wr(Wrc)+Wreserve\n");
 
 				/* allocating into c pools */
@@ -215,24 +229,6 @@ void daily_C_deciduous_partitioning (cell_t *const c, const int layer, const int
 		logger(g_debug_log, "\n*LEAF FALL*\n");
 		logger(g_debug_log, "(DayLength < MINDAYLENGTH)\n");
 		logger(g_debug_log, "allocating into W reserve pool\n");
-
-		if (npp_to_alloc > 0.0 && s->value[RESERVE_C] >= s->value[MIN_RESERVE_C])
-		{
-#if 0
-			/* reproduction */
-			if ( a->value > s->value[SEXAGE] )
-			{
-				logger(g_debug_log, "allocating into fruit pool\n");
-
-				s->value[C_TO_FRUIT] = npp_to_alloc * s->value[FRUIT_PERC];
-				npp_to_alloc        -= s->value[C_TO_FRUIT];
-			}
-#endif
-		}
-		else
-		{
-			s->value[C_TO_FRUIT] = 0.;
-		}
 
 		/* allocating into c pools */
 		/* including retranslocated C */

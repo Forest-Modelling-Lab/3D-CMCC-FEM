@@ -156,9 +156,9 @@ void dendrometry ( cell_t *const c, const int layer, const int height, const int
 		pot_par = meteo_daily->incoming_par - (meteo_daily->incoming_par * Light_refl_par_frac * s->value[DAILY_CANOPY_COVER_EXP]);
 
 		/* compute potential absorbed incoming par */
-		pot_apar_sun = pot_par * (1. - (exp(- s->value[K] * s->value[LAI_SUN_PROJ]))) * s->value[DAILY_CANOPY_COVER_EXP];
+		pot_apar_sun   = pot_par * (1. - (exp(- s->value[K] * s->value[LAI_SUN_PROJ]))) * s->value[DAILY_CANOPY_COVER_EXP];
 		pot_apar_shade = (pot_par - pot_apar_sun) * (1. - (exp(- s->value[K] * s->value[LAI_SHADE_PROJ]))) * s->value[DAILY_CANOPY_COVER_EXP];
-		pot_apar = pot_apar_sun + pot_apar_shade;
+		pot_apar       = pot_apar_sun + pot_apar_shade;
 
 		/* current light competition factor */
 		current_lcf = s->value[APAR] / pot_apar;
@@ -175,7 +175,7 @@ void dendrometry ( cell_t *const c, const int layer, const int height, const int
 		/*******************************************************************************************/
 
 		/* current crown competition factor (current_ccf) */
-		slope = s->value[DBHDCMAX]- s->value[DBHDCMIN];
+		slope       = s->value[DBHDCMAX]- s->value[DBHDCMIN];
 		current_ccf = (s->value[DBHDC_EFF] - s->value[DBHDCMIN])/slope;
 		logger(g_debug_log, "crown_competition factor = %g\n", current_ccf);
 
@@ -331,28 +331,7 @@ void dendrometry ( cell_t *const c, const int layer, const int height, const int
 		CHECK_CONDITION( s->value[BASAL_AREA], <, oldBasalArea - eps );
 	}
 }
-void annual_minimum_reserve (species_t *const s)
-{
-	/* recompute annual minimum reserve pool for  year allocation */
-	/* these values are taken from: Schwalm and Ek, 2004 Ecological Modelling */
-	/* following Krinner et al., 2005 */
 
-	/* IMPORTANT! reserve computation if not in init data are computed from DM */
-	logger(g_debug_log, "\n*annual minimum reserve*\n");
-
-
-	/* compute total sapwood biomass */
-	/* note: since SAP_WRES is parameterized for DryMatter it must be converted into DryMatter */
-	s->value[WTOT_sap_tDM] = s->value[TOT_SAPWOOD_C] * GC_GDM;
-	logger(g_debug_log, "--WTOT_sap_tDM = %f tDM/class \n", s->value[WTOT_sap_tDM]);
-
-	/* compute minimum annual reserve */
-	s->value[MIN_RESERVE_C]= s->value[WTOT_sap_tDM] * s->value[SAP_WRES];
-	logger(g_debug_log, "--MINIMUM Reserve Biomass = %g t res/class \n", s->value[RESERVE_C]);
-
-	s->value[AV_MIN_RESERVE_C] = s->value[MIN_RESERVE_C] / (double)s->counter[N_TREE];
-	logger(g_debug_log, "--Average MINIMUM Reserve Biomass = %g tC/class tree \n", s->value[RESERVE_C]);
-}
 
 void dendrometry_old(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, const int year)
 {
@@ -497,4 +476,27 @@ void dendrometry_old(cell_t *const c, const int layer, const int height, const i
 	/* check */
 	CHECK_CONDITION( s->value[BASAL_AREA], <, oldBasalArea - eps );
 
+}
+
+void annual_minimum_reserve (species_t *const s)
+{
+	/* recompute annual minimum reserve pool for  year allocation */
+	/* these values are taken from: Schwalm and Ek, 2004 Ecological Modelling */
+	/* following Krinner et al., 2005 */
+
+	/* IMPORTANT! reserve computation if not in init data are computed from DM */
+	logger(g_debug_log, "\n*annual minimum reserve*\n");
+
+
+	/* compute total sapwood biomass */
+	/* note: since SAP_WRES is parameterized for DryMatter it must be converted into DryMatter */
+	s->value[WTOT_sap_tDM] = s->value[TOT_SAPWOOD_C] * GC_GDM;
+	logger(g_debug_log, "--WTOT_sap_tDM = %f tDM/class \n", s->value[WTOT_sap_tDM]);
+
+	/* compute minimum annual reserve */
+	s->value[MIN_RESERVE_C]= s->value[WTOT_sap_tDM] * s->value[SAP_WRES];
+	logger(g_debug_log, "--MINIMUM Reserve Biomass = %g t res/class \n", s->value[RESERVE_C]);
+
+	s->value[AV_MIN_RESERVE_C] = s->value[MIN_RESERVE_C] / (double)s->counter[N_TREE];
+	logger(g_debug_log, "--Average MINIMUM Reserve Biomass = %g tC/class tree \n", s->value[RESERVE_C]);
 }
