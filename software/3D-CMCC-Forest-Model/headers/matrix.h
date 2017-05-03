@@ -408,17 +408,6 @@ enum {
 	EFF_LIVE_TOTAL_WOOD_FRAC,           /* (DIM) Age-related fraction of Live biomass per Total biomass */
 	DAILY_LIVE_WOOD_TURNOVER,           /* (tC/cell/day) Daily live wood turnover rate */
 
-	/* dead pools */
-	DEAD_LEAF_C,                        /* (tC/cell) dead leaf flux/pool */
-	DEAD_FROOT_C,                       /* (tC/cell) dead froot flux/pool */
-	DEAD_STEM_C,                        /* (tC/cell) dead stem flux/pool */
-	DEAD_CROOT_C,                       /* (tC/cell) dead croot flux/pool */
-	DEAD_BRANCH_C,                      /* (tC/cell) dead branch flux/pool */
-	DEAD_RESERVE_C,                     /* (tC/cell) dead reserve flux/pool */
-	DEAD_FRUIT_C,                       /* (tC/cell) dead fruit flux/pool */
-	DEAD_TO_LITRC,                      /* (tC/cell) dead pool to litter pool flux */
-	DEAD_TO_CWDC,                       /* (tC/cell) dead pool to cwd pool flux */
-
 	/* per tree in tC */
 	AV_LEAF_MASS_C,                     /* (tC/tree) Average Leaf carbon pool */
 	AV_STEM_MASS_C,                     /* (tC/tree) Average Stem carbon pool */

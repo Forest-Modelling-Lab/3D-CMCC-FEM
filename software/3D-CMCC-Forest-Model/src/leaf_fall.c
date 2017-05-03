@@ -82,15 +82,15 @@ void leaffall_deciduous ( cell_t *const c, const int height, const int dbh, cons
 		logger(g_debug_log, "Last day of leaf fall\n");
 
 		//assumption: last day of leaf fall all carbon goes to litter and cwd with no retranslocation
-		s->value[C_LEAF_TO_LITR]     = s->value[LEAF_C];
-		s->value[C_FROOT_TO_LITR]    = s->value[FROOT_C];
+		s->value[C_LEAF_TO_LITR]     += s->value[LEAF_C];
+		s->value[C_FROOT_TO_LITR]    += s->value[FROOT_C];
 		s->value[C_FRUIT_TO_CWD]     = s->value[FRUIT_C];
 		s->value[C_LEAF_TO_RESERVE]  = 0.;
 		s->value[C_FROOT_TO_RESERVE] = 0.;
 
 		/* balancing leaf_C in and out */
-		s->value[C_TO_LEAF]          = - s->value[LEAF_C];
-		s->value[C_TO_FROOT]         = - s->value[FROOT_C];
+		//s->value[C_TO_LEAF]          = - s->value[LEAF_C];
+		//s->value[C_TO_FROOT]         = - s->value[FROOT_C];
 		s->value[C_TO_FRUIT]         = - s->value[FRUIT_C];
 
 		/* adding to main C transfer pools */
@@ -171,8 +171,8 @@ void leaffall (species_t *const s)
 	logger(g_debug_log, "C_FRUIT_TO_CWD     = %f\n", s->value[C_FRUIT_TO_CWD]);
 
 	/* balancing leaf and fine root carbon in and out */
-	s->value[C_TO_LEAF]         -= (s->value[C_LEAF_TO_LITR]    + s->value[C_LEAF_TO_RESERVE]);
-	s->value[C_TO_FROOT]        -= (s->value[C_FROOT_TO_LITR]   + s->value[C_FROOT_TO_RESERVE]);
+	//s->value[C_TO_LEAF]         -= (s->value[C_LEAF_TO_LITR]    + s->value[C_LEAF_TO_RESERVE]);
+	//s->value[C_TO_FROOT]        -= (s->value[C_FROOT_TO_LITR]   + s->value[C_FROOT_TO_RESERVE]);
 	s->value[C_TO_FRUIT]        -= s->value[C_FRUIT_TO_CWD];
 	logger(g_debug_log, "C_TO_LEAF          = %f\n", s->value[C_TO_LEAF]);
 	logger(g_debug_log, "C_TO_FROOT         = %f\n", s->value[C_TO_FROOT]);

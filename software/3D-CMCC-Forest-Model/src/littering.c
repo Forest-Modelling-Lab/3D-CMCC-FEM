@@ -23,30 +23,24 @@ void littering ( cell_t *const c, species_t *const s )
 	/** carbon littering **/
 
 	/* cell level litter carbon fluxes (gC/m2/day) */
-	c->daily_leaf_litrC        += (s->value[C_LEAF_TO_LITR]  + s->value[DEAD_LEAF_C] )  * 1e6 / g_settings->sizeCell;
-	c->daily_froot_litrC       += (s->value[C_FROOT_TO_LITR] + s->value[DEAD_FROOT_C] ) * 1e6 / g_settings->sizeCell;
+	c->daily_leaf_litrC        += s->value[C_LEAF_TO_LITR]  * 1e6 / g_settings->sizeCell;
+	c->daily_froot_litrC       += s->value[C_FROOT_TO_LITR] * 1e6 / g_settings->sizeCell;
 	c->daily_litrC             += ((s->value[C_LEAF_TO_LITR] +
-			s->value[C_FROOT_TO_LITR] +
-			s->value[DEAD_LEAF_C]     +
-			s->value[DEAD_FROOT_C])   *
+			s->value[C_FROOT_TO_LITR]) *
 			(1e6 / g_settings->sizeCell));
 
 	/* cell level cwd carbon fluxes (gC/m2/day) */
-	c->daily_stem_cwdC         += (s->value[C_STEM_TO_CWD]    + s->value[DEAD_STEM_C])    * 1e6 / g_settings->sizeCell;
-	c->daily_croot_cwdC        += (s->value[C_CROOT_TO_CWD]   + s->value[DEAD_CROOT_C])   * 1e6 / g_settings->sizeCell;
-	c->daily_branch_cwdC       += (s->value[C_BRANCH_TO_CWD]  + s->value[DEAD_BRANCH_C])  * 1e6 / g_settings->sizeCell;
-	c->daily_reserve_cwdC      += (s->value[C_RESERVE_TO_CWD] + s->value[DEAD_RESERVE_C]) * 1e6 / g_settings->sizeCell;
-	c->daily_fruit_cwdC        += (s->value[C_FRUIT_TO_CWD]   + s->value[DEAD_FRUIT_C])   * 1e6 / g_settings->sizeCell;
+	c->daily_stem_cwdC         += s->value[C_STEM_TO_CWD]    * 1e6 / g_settings->sizeCell;
+	c->daily_croot_cwdC        += s->value[C_CROOT_TO_CWD]   * 1e6 / g_settings->sizeCell;
+	c->daily_branch_cwdC       += s->value[C_BRANCH_TO_CWD]  * 1e6 / g_settings->sizeCell;
+	c->daily_reserve_cwdC      += s->value[C_RESERVE_TO_CWD] * 1e6 / g_settings->sizeCell;
+	c->daily_fruit_cwdC        += s->value[C_FRUIT_TO_CWD]   * 1e6 / g_settings->sizeCell;
 	c->daily_cwdC              += ((s->value[C_STEM_TO_CWD] +
 			s->value[C_CROOT_TO_CWD]                        +
 			s->value[C_BRANCH_TO_CWD]                       +
 			s->value[C_RESERVE_TO_CWD]                      +
 			s->value[C_FRUIT_TO_CWD]                        +
-			s->value[DEAD_STEM_C]                           +
-			s->value[DEAD_CROOT_C]                          +
-			s->value[DEAD_BRANCH_C]                         +
-			s->value[DEAD_RESERVE_C]                        +
-			s->value[DEAD_FRUIT_C])                         *
+			s->value[C_RESERVE_TO_CWD])                     *
 			(1e6 / g_settings->sizeCell));
 
 	/* cell level soil carbon fluxes (gC/m2/day) */
@@ -54,37 +48,31 @@ void littering ( cell_t *const c, species_t *const s )
 
 	/* cell level litter carbon pools (gC/m2) */
 	c->litrC                   += ((s->value[C_LEAF_TO_LITR] +
-			s->value[C_FROOT_TO_LITR] +
-			s->value[DEAD_LEAF_C]     +
-			s->value[DEAD_FROOT_C])   *
+			s->value[C_FROOT_TO_LITR]) *
 			(1e6 / g_settings->sizeCell));
 	c->cwdC                    += ((s->value[C_STEM_TO_CWD] +
 			s->value[C_CROOT_TO_CWD]                        +
 			s->value[C_BRANCH_TO_CWD]                       +
 			s->value[C_RESERVE_TO_CWD]                      +
 			s->value[C_FRUIT_TO_CWD]                        +
-			s->value[DEAD_STEM_C]                           +
-			s->value[DEAD_CROOT_C]                          +
-			s->value[DEAD_BRANCH_C]                         +
-			s->value[DEAD_RESERVE_C]                        +
-			s->value[DEAD_FRUIT_C])                         *
+			s->value[C_RESERVE_TO_CWD])                     *
 			(1e6 / g_settings->sizeCell));
 	c->soilC                   += 0. ;
 
 	/* leaf litter carbon fluxes */
-	s->value[C_LEAF_TO_LITR1C]  = (s->value[C_LEAF_TO_LITR]  + s->value[DEAD_LEAF_C])  * s->value[LEAF_LITR_LAB_FRAC];
-	s->value[C_LEAF_TO_LITR2C]  = (s->value[C_LEAF_TO_LITR]  + s->value[DEAD_LEAF_C])  * s->value[LEAF_LITR_USCEL_FRAC];
-	s->value[C_LEAF_TO_LITR3C]  = (s->value[C_LEAF_TO_LITR]  + s->value[DEAD_LEAF_C])  * s->value[LEAF_LITR_SCEL_FRAC];
-	s->value[C_LEAF_TO_LITR4C]  = (s->value[C_LEAF_TO_LITR]  + s->value[DEAD_LEAF_C])  * s->value[LEAF_LITR_LIGN_FRAC];
+	s->value[C_LEAF_TO_LITR1C]  = s->value[C_LEAF_TO_LITR]  * s->value[LEAF_LITR_LAB_FRAC];
+	s->value[C_LEAF_TO_LITR2C]  = s->value[C_LEAF_TO_LITR]  * s->value[LEAF_LITR_USCEL_FRAC];
+	s->value[C_LEAF_TO_LITR3C]  = s->value[C_LEAF_TO_LITR]  * s->value[LEAF_LITR_SCEL_FRAC];
+	s->value[C_LEAF_TO_LITR4C]  = s->value[C_LEAF_TO_LITR]  * s->value[LEAF_LITR_LIGN_FRAC];
 
 	/* fine root litter carbon fluxes */
-	s->value[C_FROOT_TO_LITR1C] = (s->value[C_FROOT_TO_LITR] + s->value[DEAD_FROOT_C]) * s->value[FROOT_LITR_LAB_FRAC];
-	s->value[C_FROOT_TO_LITR2C] = (s->value[C_FROOT_TO_LITR] + s->value[DEAD_FROOT_C]) * s->value[FROOT_LITR_USCEL_FRAC];
-	s->value[C_FROOT_TO_LITR3C] = (s->value[C_FROOT_TO_LITR] + s->value[DEAD_FROOT_C]) * s->value[FROOT_LITR_SCEL_FRAC];
-	s->value[C_FROOT_TO_LITR4C] = (s->value[C_FROOT_TO_LITR] + s->value[DEAD_FROOT_C]) * s->value[FROOT_LITR_LIGN_FRAC];
+	s->value[C_FROOT_TO_LITR1C] = s->value[C_FROOT_TO_LITR] * s->value[FROOT_LITR_LAB_FRAC];
+	s->value[C_FROOT_TO_LITR2C] = s->value[C_FROOT_TO_LITR] * s->value[FROOT_LITR_USCEL_FRAC];
+	s->value[C_FROOT_TO_LITR3C] = s->value[C_FROOT_TO_LITR] * s->value[FROOT_LITR_SCEL_FRAC];
+	s->value[C_FROOT_TO_LITR4C] = s->value[C_FROOT_TO_LITR] * s->value[FROOT_LITR_LIGN_FRAC];
 
-	CHECK_CONDITION ( fabs(s->value[C_LEAF_TO_LITR1C] +	s->value[C_LEAF_TO_LITR2C] + s->value[C_LEAF_TO_LITR3C] + s->value[C_LEAF_TO_LITR4C]) -	(s->value[C_LEAF_TO_LITR] +	s->value[DEAD_LEAF_C]), >, eps );
-	CHECK_CONDITION ( fabs(s->value[C_FROOT_TO_LITR1C] + s->value[C_FROOT_TO_LITR2C] + s->value[C_FROOT_TO_LITR3C] + s->value[C_FROOT_TO_LITR4C]) -	(s->value[C_FROOT_TO_LITR] +	s->value[DEAD_FROOT_C]), >, eps );
+	CHECK_CONDITION ( fabs(s->value[C_LEAF_TO_LITR1C] +	s->value[C_LEAF_TO_LITR2C] + s->value[C_LEAF_TO_LITR3C] + s->value[C_LEAF_TO_LITR4C]) -	s->value[C_LEAF_TO_LITR] , >, eps );
+	CHECK_CONDITION ( fabs(s->value[C_FROOT_TO_LITR1C] + s->value[C_FROOT_TO_LITR2C] + s->value[C_FROOT_TO_LITR3C] + s->value[C_FROOT_TO_LITR4C]) -	s->value[C_FROOT_TO_LITR] , >, eps );
 
 	/* cell level litter carbon fluxes */
 	c->daily_leaf_litr1C       += s->value[C_LEAF_TO_LITR1C]  * 1e6 / g_settings->sizeCell;
