@@ -248,7 +248,7 @@ void tree_biomass_remove (cell_t *const c, const int height, const int dbh, cons
 
 	s->value[C_BRANCH_TO_CWD]         += (s->value[AV_BRANCH_MASS_C]  * tree_remove);
 
-	s->value[C_BRANCH_TO_CWD]         += (s->value[AV_RESERVE_MASS_C] * tree_remove);
+	s->value[C_RESERVE_TO_CWD]        += (s->value[AV_RESERVE_MASS_C] * tree_remove);
 
 	s->value[C_FRUIT_TO_CWD]          += (s->value[AV_FRUIT_MASS_C]   * tree_remove);
 
@@ -256,7 +256,7 @@ void tree_biomass_remove (cell_t *const c, const int height, const int dbh, cons
 	s->value[C_TO_CWD]                += (s->value[C_STEM_TO_CWD] +
 			s->value[C_CROOT_TO_CWD]  +
 			s->value[C_BRANCH_TO_CWD] +
-			s->value[C_BRANCH_TO_CWD] +
+			s->value[C_RESERVE_TO_CWD]+
 			s->value[C_FRUIT_TO_CWD]) ;
 
 	logger(g_debug_log, "Carbon biomass to remove\n");

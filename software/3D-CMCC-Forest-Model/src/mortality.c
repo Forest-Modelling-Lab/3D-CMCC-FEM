@@ -354,8 +354,6 @@ void self_pruning ( cell_t *const c, const int height, const int dbh, const int 
 	/* remove biomass from branch */
 	s->value[BRANCH_C_TO_REMOVE]  += ( s->value[BRANCH_C] * ( 1. - self_pruning_ratio ) );
 
-	s->value[C_TO_BRANCH]         -= s->value[BRANCH_C_TO_REMOVE];
-
 	/* adding to BRANCH C transfer pools */
 	s->value[C_BRANCH_TO_RESERVE] += s->value[BRANCH_C_TO_REMOVE] * FRAC_TO_RETRANSL;
 	s->value[C_BRANCH_TO_CWD]     += s->value[BRANCH_C_TO_REMOVE] * ( 1. - FRAC_TO_RETRANSL );

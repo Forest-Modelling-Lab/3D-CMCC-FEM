@@ -39,8 +39,7 @@ void littering ( cell_t *const c, species_t *const s )
 			s->value[C_CROOT_TO_CWD]                        +
 			s->value[C_BRANCH_TO_CWD]                       +
 			s->value[C_RESERVE_TO_CWD]                      +
-			s->value[C_FRUIT_TO_CWD]                        +
-			s->value[C_RESERVE_TO_CWD])                     *
+			s->value[C_FRUIT_TO_CWD])                       *
 			(1e6 / g_settings->sizeCell));
 
 	/* cell level soil carbon fluxes (gC/m2/day) */
@@ -54,8 +53,7 @@ void littering ( cell_t *const c, species_t *const s )
 			s->value[C_CROOT_TO_CWD]                        +
 			s->value[C_BRANCH_TO_CWD]                       +
 			s->value[C_RESERVE_TO_CWD]                      +
-			s->value[C_FRUIT_TO_CWD]                        +
-			s->value[C_RESERVE_TO_CWD])                     *
+			s->value[C_FRUIT_TO_CWD])                       *
 			(1e6 / g_settings->sizeCell));
 	c->soilC                   += 0. ;
 

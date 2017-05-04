@@ -30,7 +30,7 @@ getwd()
 output_folder="output_Rstudio"
 
 # multiple simulations
-site_list<-c("Soroe")#,"Soroe","Hyytiala","All")
+site_list<-c("Hyytiala")#,"Soroe","Hyytiala","All")
 esm_list <-c("2")# ("1","2","3","4","5")
 rcp_list <-c("2p6")# ("0p0","2p6","4p5","6p0","8p5")
 man_list <-c("off")# ("on",'off')
