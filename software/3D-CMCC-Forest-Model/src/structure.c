@@ -373,6 +373,7 @@ int annual_forest_structure(cell_t* const c, const int year)
 	/* compute total number of trees */
 	logger(g_debug_log, "*compute total number of trees*\n\n");
 
+	c->n_trees = 0;
 	for (layer = c->tree_layers_count - 1; layer >= 0; --layer)
 	{
 		for ( height = 0; height < c->heights_count ; ++height )

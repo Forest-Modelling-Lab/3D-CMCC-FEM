@@ -15,7 +15,7 @@ void reset_daily_cell_variables(cell_t *const c)
 	logger(g_debug_log, "...resetting cell level daily variables...\n");
 
 	c->cell_cover =                     0.;
-	c->n_trees =                        0;
+	//c->n_trees =                        0;
 	c->cell_heights_count =             0;
 
 	/* reset daily radiative variables */
