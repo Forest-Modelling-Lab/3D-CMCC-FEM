@@ -359,8 +359,8 @@ void self_pruning ( cell_t *const c, const int height, const int dbh, const int 
 	s->value[BRANCH_C_TO_REMOVE]  += ( s->value[BRANCH_C] * ( 1. - self_pruning_ratio ) );
 
 	/* adding to BRANCH C transfer pools */
-	s->value[C_BRANCH_TO_RESERVE] += s->value[BRANCH_C_TO_REMOVE] * FRAC_TO_RETRANSL;
-	s->value[C_BRANCH_TO_CWD]     += s->value[BRANCH_C_TO_REMOVE] * ( 1. - FRAC_TO_RETRANSL );
+	s->value[C_BRANCH_TO_RESERVE] += s->value[BRANCH_C_TO_REMOVE] * C_FRAC_TO_RETRANSL;
+	s->value[C_BRANCH_TO_CWD]     += s->value[BRANCH_C_TO_REMOVE] * ( 1. - C_FRAC_TO_RETRANSL );
 
 	s->value[C_TO_RESERVE]        += s->value[C_BRANCH_TO_RESERVE];
 	s->value[C_TO_CWD]            += s->value[C_BRANCH_TO_CWD];
@@ -369,8 +369,8 @@ void self_pruning ( cell_t *const c, const int height, const int dbh, const int 
 	s->value[BRANCH_N_TO_REMOVE]  += ( s->value[BRANCH_C] * ( 1. - self_pruning_ratio ) );
 
 	/* adding to BRANCH C transfer pools */
-	s->value[N_BRANCH_TO_RESERVE] += s->value[BRANCH_N_TO_REMOVE] * FRAC_TO_RETRANSL;
-	s->value[N_BRANCH_TO_CWD]     += s->value[BRANCH_N_TO_REMOVE] * ( 1. - FRAC_TO_RETRANSL );
+	s->value[N_BRANCH_TO_RESERVE] += s->value[BRANCH_N_TO_REMOVE] * N_FRAC_TO_RETRANSL;
+	s->value[N_BRANCH_TO_CWD]     += s->value[BRANCH_N_TO_REMOVE] * ( 1. - N_FRAC_TO_RETRANSL );
 
 	s->value[N_TO_RESERVE]        += s->value[N_BRANCH_TO_RESERVE];
 	s->value[N_TO_CWD]            += s->value[N_BRANCH_TO_CWD];

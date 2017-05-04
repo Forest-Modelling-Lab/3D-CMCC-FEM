@@ -67,7 +67,7 @@ void leaffall_deciduous ( cell_t *const c, const int height, const int dbh, cons
 		s->value[FROOT_C_TO_REMOVE]  = ( s->value[FROOT_C] * s->value[LEAF_C_TO_REMOVE]) / s->value[LEAF_C];
 		s->value[FROOT_N_TO_REMOVE]  = ( s->value[FROOT_N] * s->value[LEAF_N_TO_REMOVE]) / s->value[LEAF_N];
 
-		/* update fuitt carbon */
+		/* update fruit carbon */
 		s->value[FRUIT_C_TO_REMOVE]  = ( s->value[FRUIT_C] * s->value[LEAF_C_TO_REMOVE]) / s->value[LEAF_C];
 		s->value[FRUIT_N_TO_REMOVE]  = ( s->value[FRUIT_N] * s->value[LEAF_N_TO_REMOVE]) / s->value[LEAF_N];
 
@@ -77,21 +77,16 @@ void leaffall_deciduous ( cell_t *const c, const int height, const int dbh, cons
 	}
 	else
 	{
-		/* last day of litterfall, special case to gaurantee that pools go to 0.0 */
+		/* last day of litterfall, special case to guarantee that pools go to 0.0 */
 
 		logger(g_debug_log, "Last day of leaf fall\n");
 
 		//assumption: last day of leaf fall all carbon goes to litter and cwd with no retranslocation
-		s->value[C_LEAF_TO_LITR]     += s->value[LEAF_C];
-		s->value[C_FROOT_TO_LITR]    += s->value[FROOT_C];
+		s->value[C_LEAF_TO_LITR]    += s->value[LEAF_C];
+		s->value[C_FROOT_TO_LITR]   += s->value[FROOT_C];
 		s->value[C_FRUIT_TO_CWD]     = s->value[FRUIT_C];
 		s->value[C_LEAF_TO_RESERVE]  = 0.;
 		s->value[C_FROOT_TO_RESERVE] = 0.;
-
-		/* balancing leaf_C in and out */
-		//s->value[C_TO_LEAF]          = - s->value[LEAF_C];
-		//s->value[C_TO_FROOT]         = - s->value[FROOT_C];
-		s->value[C_TO_FRUIT]         = - s->value[FRUIT_C];
 
 		/* adding to main C transfer pools */
 		s->value[C_TO_RESERVE]      += 0.; /*leave it as so */
@@ -159,24 +154,16 @@ void leaffall (species_t *const s)
 {
 	/*** carbon leaf_fall ***/
 	/* compute fluxes of carbon leaf and fine root pool */
-	s->value[C_LEAF_TO_RESERVE]  = s->value[LEAF_C_TO_REMOVE]   * FRAC_TO_RETRANSL;
-	s->value[C_FROOT_TO_RESERVE] = s->value[FROOT_C_TO_REMOVE]  * FRAC_TO_RETRANSL;
-	s->value[C_LEAF_TO_LITR]     = s->value[LEAF_C_TO_REMOVE]   * ( 1. - FRAC_TO_RETRANSL );
-	s->value[C_FROOT_TO_LITR]    = s->value[FROOT_C_TO_REMOVE]  * ( 1. - FRAC_TO_RETRANSL );
+	s->value[C_LEAF_TO_RESERVE]  = s->value[LEAF_C_TO_REMOVE]   * C_FRAC_TO_RETRANSL;
+	s->value[C_FROOT_TO_RESERVE] = s->value[FROOT_C_TO_REMOVE]  * C_FRAC_TO_RETRANSL;
+	s->value[C_LEAF_TO_LITR]     = s->value[LEAF_C_TO_REMOVE]   * ( 1. - C_FRAC_TO_RETRANSL );
+	s->value[C_FROOT_TO_LITR]    = s->value[FROOT_C_TO_REMOVE]  * ( 1. - C_FRAC_TO_RETRANSL );
 	s->value[C_FRUIT_TO_CWD]     = s->value[FRUIT_C_TO_REMOVE];
 	logger(g_debug_log, "C_LEAF_TO_RESERVE  = %f\n", s->value[C_LEAF_TO_RESERVE]);
 	logger(g_debug_log, "C_FROOT_TO_RESERVE = %f\n", s->value[C_FROOT_TO_RESERVE]);
 	logger(g_debug_log, "C_LEAF_TO_LITR     = %f\n", s->value[C_LEAF_TO_LITR]);
 	logger(g_debug_log, "C_FROOT_TO_LITR    = %f\n", s->value[C_FROOT_TO_LITR]);
 	logger(g_debug_log, "C_FRUIT_TO_CWD     = %f\n", s->value[C_FRUIT_TO_CWD]);
-
-	/* balancing leaf and fine root carbon in and out */
-	//s->value[C_TO_LEAF]         -= (s->value[C_LEAF_TO_LITR]    + s->value[C_LEAF_TO_RESERVE]);
-	//s->value[C_TO_FROOT]        -= (s->value[C_FROOT_TO_LITR]   + s->value[C_FROOT_TO_RESERVE]);
-	s->value[C_TO_FRUIT]        -= s->value[C_FRUIT_TO_CWD];
-	logger(g_debug_log, "C_TO_LEAF          = %f\n", s->value[C_TO_LEAF]);
-	logger(g_debug_log, "C_TO_FROOT         = %f\n", s->value[C_TO_FROOT]);
-	logger(g_debug_log, "C_TO_FRUIT         = %f\n", s->value[C_TO_FRUIT]);
 
 	/* carbon litter transfer fluxes to carbon litter pool and reserves */
 	s->value[C_TO_RESERVE]      += (s->value[C_LEAF_TO_RESERVE] + s->value[C_FROOT_TO_RESERVE]);
@@ -188,35 +175,29 @@ void leaffall (species_t *const s)
 
 	/*** nitrogen leaf_fall ***/
 	/* compute fluxes of nitrogen leaf and fine root pool */
-	//assumption: retranslocation happens as for C using falling leaves parameter
-	//see Dezi et al., 2010 GCB
-	//
-	s->value[N_LEAF_TO_RESERVE]  = 0. /* s->value[LEAF_N_TO_REMOVE]   * (1. - (s->value[CN_LEAVES]     / s->value[CN_FALLING_LEAVES]))*/;
-	s->value[N_FROOT_TO_RESERVE] = 0. /* s->value[FROOT_N_TO_REMOVE]  * (1. - (s->value[CN_FINE_ROOTS] / s->value[CN_FALLING_LEAVES]))*/;
-	s->value[N_LEAF_TO_LITR]     = s->value[LEAF_N_TO_REMOVE] /*  * (s->value[CN_LEAVES]     / s->value[CN_FALLING_LEAVES])*/;
-	s->value[N_FROOT_TO_LITR]    = s->value[FROOT_N_TO_REMOVE]/*  * (s->value[CN_FINE_ROOTS] / s->value[CN_FALLING_LEAVES])*/;
-	s->value[N_FRUIT_TO_CWD]     = s->value[FRUIT_N_TO_REMOVE];
-//	logger(g_debug_log, "N_LEAF_TO_RESERVE  = %f\n", s->value[N_LEAF_TO_RESERVE]);
-//	logger(g_debug_log, "N_FROOT_TO_RESERVE = %f\n", s->value[N_FROOT_TO_RESERVE]);
-//	logger(g_debug_log, "N_LEAF_TO_LITR     = %f\n", s->value[N_LEAF_TO_LITR]);
-//	logger(g_debug_log, "N_FROOT_TO_LITR    = %f\n", s->value[N_FROOT_TO_LITR]);
-//	logger(g_debug_log, "N_FRUIT_TO_CWD     = %f\n", s->value[N_FRUIT_TO_CWD]);
+	/* assumption: retranslocation happens as for C using falling leaves parameter: */
+	/* see Bossel, 1996 Ecological Modelling */
+	/* see Dezi et al., 2010 GCB */
 
-	/* balancing leaf_N in and out */
-	s->value[N_TO_LEAF]         -= (s->value[N_LEAF_TO_LITR]    + s->value[N_LEAF_TO_RESERVE]);
-	s->value[N_TO_FROOT]        -= (s->value[N_FROOT_TO_LITR]   + s->value[N_FROOT_TO_RESERVE]);
-	s->value[N_TO_FRUIT]        -= s->value[N_FRUIT_TO_CWD];
-//	logger(g_debug_log, "N_TO_LEAF          = %f\n", s->value[N_TO_LEAF]);
-//	logger(g_debug_log, "N_TO_FROOT         = %f\n", s->value[N_TO_FROOT]);
-//	logger(g_debug_log, "N_TO_FRUIT         = %f\n", s->value[N_TO_FRUIT]);
+	//fixme to include
+	s->value[N_LEAF_TO_RESERVE]  = 0. /* s->value[LEAF_N_TO_REMOVE]   * (1. - (s->value[CN_LEAVES]     / s->value[CN_FALLING_LEAVES]))*/;
+	s->value[N_LEAF_TO_LITR]     = s->value[LEAF_N_TO_REMOVE] /*  * (s->value[CN_LEAVES]     / s->value[CN_FALLING_LEAVES])*/;
+	s->value[N_FROOT_TO_RESERVE] = 0. /* s->value[FROOT_N_TO_REMOVE]  * N_FRAC_TO_RETRANSL*/;
+	s->value[N_FROOT_TO_LITR]    = s->value[FROOT_N_TO_REMOVE]/*  * (1 - N_FRAC_TO_RETRANSL)*/;
+	s->value[N_FRUIT_TO_CWD]     = s->value[FRUIT_N_TO_REMOVE];
+	logger(g_debug_log, "N_LEAF_TO_RESERVE  = %f\n", s->value[N_LEAF_TO_RESERVE]);
+	logger(g_debug_log, "N_FROOT_TO_RESERVE = %f\n", s->value[N_FROOT_TO_RESERVE]);
+	logger(g_debug_log, "N_LEAF_TO_LITR     = %f\n", s->value[N_LEAF_TO_LITR]);
+	logger(g_debug_log, "N_FROOT_TO_LITR    = %f\n", s->value[N_FROOT_TO_LITR]);
+	logger(g_debug_log, "N_FRUIT_TO_CWD     = %f\n", s->value[N_FRUIT_TO_CWD]);
 
 	/* nitrogen litter transfer fluxes to nitrogen litter pool and reserves */
 	s->value[N_TO_RESERVE]      += (s->value[N_LEAF_TO_RESERVE] + s->value[N_FROOT_TO_RESERVE]);
 	s->value[N_TO_LITR]         += (s->value[N_LEAF_TO_LITR] + s->value[N_FROOT_TO_LITR]);
 	s->value[N_TO_CWD]          += s->value[N_FRUIT_TO_CWD];
-//	logger(g_debug_log, "N_TO_RESERVE       = %f\n", s->value[N_TO_RESERVE]);
-//	logger(g_debug_log, "N_TO_LITR          = %f\n", s->value[N_TO_LITR]);
-//	logger(g_debug_log, "N_TO_CWD           = %f\n", s->value[N_TO_CWD]);
+	logger(g_debug_log, "N_TO_RESERVE       = %f\n", s->value[N_TO_RESERVE]);
+	logger(g_debug_log, "N_TO_LITR          = %f\n", s->value[N_TO_LITR]);
+	logger(g_debug_log, "N_TO_CWD           = %f\n", s->value[N_TO_CWD]);
 
 	/* check */
 	CHECK_CONDITION(s->value[LEAF_C],  <, s->value[LEAF_C_TO_REMOVE]);

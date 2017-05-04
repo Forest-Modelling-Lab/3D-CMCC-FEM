@@ -320,7 +320,8 @@ void daily_C_evergreen_partitioning (cell_t *const c, const int layer, const int
 			}
 			else
 			{
-#if 0
+#if 1
+				/* as in Bossel (1996), second priority is assigned to fruit */
 				/* reproduction */
 				if ( a->value > s->value[SEXAGE] )
 				{

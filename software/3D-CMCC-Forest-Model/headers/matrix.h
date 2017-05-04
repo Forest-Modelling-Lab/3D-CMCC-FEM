@@ -513,7 +513,7 @@ enum {
 	STEM_GROWTH_RESP,                   /* (gC/m2/day) Stem growth respiration */
 	BRANCH_GROWTH_RESP,                 /* (gC/m2/day) Branch growth respiration */
 	CROOT_GROWTH_RESP,                  /* (gC/m2/day) Coarse root growth respiration */
-	FRUIT_GROWTH_RESP,                  /* (gC/m2/day) Fruit growth respiration */
+	//FRUIT_GROWTH_RESP,                  /* (gC/m2/day) Fruit growth respiration */
 	TOTAL_GROWTH_RESP,                  /* (gC/m2/day) Total growth respiration */
 	MONTHLY_TOTAL_GROWTH_RESP,          /* (gC/m2/monthly) Monthly Total growth respiration */
 	YEARLY_TOTAL_GROWTH_RESP,           /* (gC/m2/year) Yearly Total growth respiration */
@@ -525,13 +525,13 @@ enum {
 	STEM_AUT_RESP,                      /* (gC/m2/day) Stem autotrophic respiration */
 	CROOT_AUT_RESP,                     /* (gC/m2/day) Coarse root autotrophic respiration */
 	BRANCH_AUT_RESP,                    /* (gC/m2/day) Branch autotrophic respiration */
-	FRUIT_AUT_RESP,                     /* (gC/m2/day) Fruit autotrophic respiration */
+	//FRUIT_AUT_RESP,                     /* (gC/m2/day) Fruit autotrophic respiration */
 	TOTAL_AUT_RESP,                     /* (gC/m2/day) Total autotrophic respiration */
 	MONTHLY_LEAF_AUT_RESP,              /* (gC/m2/month) Monthly Leaf autotrophic respiration */
 	MONTHLY_FROOT_AUT_RESP,             /* (gC/m2/month) Monthly Fine root autotrophic respiration */
 	MONTHLY_STEM_AUT_RESP,              /* (gC/m2/month) Monthly Stem autotrophic respiration */
 	MONTHLY_CROOT_AUT_RESP,             /* (gC/m2/month) Monthly Coarse root autotrophic respiration */
-	MONTHLY_FRUIT_AUT_RESP,             /* (gC/m2/month) Monthly Fruit autotrophic respiration */
+	//MONTHLY_FRUIT_AUT_RESP,             /* (gC/m2/month) Monthly Fruit autotrophic respiration */
 	MONTHLY_BRANCH_AUT_RESP,            /* (gC/m2/month) Monthly Branch autotrophic respiration */
 	MONTHLY_TOTAL_AUT_RESP,             /* (gC/m2/month) Monthly Total autotrophic respiration */
 	YEARLY_LEAF_AUT_RESP,               /* (gC/m2/year) Annual Leaf autotrophic respiration */
@@ -539,7 +539,7 @@ enum {
 	YEARLY_STEM_AUT_RESP,               /* (gC/m2/year) Annual Stem autotrophic respiration */
 	YEARLY_CROOT_AUT_RESP,              /* (gC/m2/year) Annual Coarse root autotrophic respiration */
 	YEARLY_BRANCH_AUT_RESP,             /* (gC/m2/year) Annual Branch autotrophic respiration */
-	YEARLY_FRUIT_AUT_RESP,              /* (gC/m2/year) Annual fRUIT autotrophic respiration */
+	//YEARLY_FRUIT_AUT_RESP,              /* (gC/m2/year) Annual fRUIT autotrophic respiration */
 	YEARLY_TOTAL_AUT_RESP,              /* (gC/m2/year) Annual Total autotrophic respiration */
 	TOTAL_AUT_RESP_tC,                  /* (tC/cell/day) Total autotrophic respiration */
 
@@ -948,7 +948,6 @@ typedef struct
 	double daily_branch_aut_resp;                                         /* (gC/m2/day) daily branch and bark aut resp at cell level */
 	double daily_froot_aut_resp;                                          /* (gC/m2/day) daily fine root aut resp at cell level */
 	double daily_croot_aut_resp;                                          /* (gC/m2/day) daily coarse root aut resp at cell level */
-	double daily_fruit_aut_resp;                                          /* (gC/m2/day) daily fruit aut resp at cell level */
 
 	/* tree carbon pools */
 	double leaf_carbon;                                                   /* (gC/m2) leaf carbon at cell level */

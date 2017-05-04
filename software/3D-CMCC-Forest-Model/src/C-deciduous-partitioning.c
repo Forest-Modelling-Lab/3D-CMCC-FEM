@@ -184,7 +184,8 @@ void daily_C_deciduous_partitioning (cell_t *const c, const int layer, const int
 			/* it doesn't need */
 			if(s->value[RESERVE_C] >= s->value[MIN_RESERVE_C])
 			{
-#if 0
+#if 1
+				/* as in Bossel (1996), second priority is assigned to fruit */
 				/* reproduction */
 				if ( a->value > s->value[SEXAGE] )
 				{

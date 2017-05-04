@@ -75,7 +75,8 @@ enum {
 #define STEMPOWER_B	            2.64      /* Power in the Stem Mass v. diameter relationship for 9 < DBH < 15 cm */
 #define STEMPOWER_C	            2.51      /* Power in the Stem Mass v. diameter relationship for DBH > 15 cm */
 #define MAX_N_TREE_LAYER           3      /* define the maximum number for tree layers (todo move into setting.txt) */
-#define FRAC_TO_RETRANSL         0.1      /* fraction of C to re-translocate (see Bossell et al., 2006 and Campioli et al., 2013 */
+#define C_FRAC_TO_RETRANSL       0.1      /* fraction of C to re-translocate (see Bossell et al., 2006 and Campioli et al., 2013; 0.2 Hoffmann 1995 */
+#define N_FRAC_TO_RETRANSL       0.1      /* fraction of N to re-translocate (see Bossell et al., 2006 and Campioli et al., 2013; 0.2 Hoffmann 1995 */
 #define MAX_PEAK_LAI_PROJ          8      /* Maximum Peak Lai (m2/m2) */
 
 
