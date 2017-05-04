@@ -120,7 +120,7 @@ void print_daily_forest_data (cell_t *const c)
 {
 	/* print at the beginning stand data */
 	logger(g_debug_log, "**************DAILY FOREST CELL DATA**************\n\n");
-	logger(g_debug_log, "* number of trees = %d\n", c->cell_n_trees);
+	logger(g_debug_log, "* number of trees = %d\n", c->n_trees);
 	logger(g_debug_log, "* number of layers = %d\n", c->tree_layers_count);
 	logger(g_debug_log, "* number of height class = %d\n", c->heights_count);
 	//logger(g_debug_log, "* number of height class = %d\n", c->cell_heights_count);

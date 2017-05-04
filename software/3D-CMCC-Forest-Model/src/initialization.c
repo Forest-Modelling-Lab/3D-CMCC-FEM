@@ -240,7 +240,7 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 		logger(g_debug_log, "\n!!!!RESERVE ARE COMPUTED AS A COSTANT FRACTION OF SAPWOOD IN DRYMATTER!!!!\n");
 		logger(g_debug_log, "-----Reserve initialization data  = %g t res/cell \n", s->value[RESERVE_C]);
 		logger(g_debug_log, "-----Reserve initialization data  = %g Kg res/cell \n", s->value[RESERVE_C] * 1e3);
-		logger(g_debug_log, "-----Reserve initialization data  = %g g res/tree \n", s->value[RESERVE_C] * 1e6 / (int)s->counter[N_TREE]);
+		logger(g_debug_log, "-----Reserve initialization data  = %g g res/tree \n", s->value[RESERVE_C] * 1e6 / (double)s->counter[N_TREE]);
 	}
 	else
 	{

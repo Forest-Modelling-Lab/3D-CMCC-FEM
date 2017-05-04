@@ -203,7 +203,7 @@ void thinning (cell_t *const c, const int height, const int dbh, const int age, 
 	logger(g_debug_log, "Total Biomass = %f tC/ha\n", s->value[TOTAL_C]);
 
 	/* update stand trees */
-	c->cell_n_trees -= trees_to_remove;
+	c->n_trees -= trees_to_remove;
 	c->annual_dead_tree += trees_to_remove;
 
 }

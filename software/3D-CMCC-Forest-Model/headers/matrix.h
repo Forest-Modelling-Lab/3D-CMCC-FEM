@@ -850,7 +850,7 @@ typedef struct
 	int Veg_Counter;                                                      /* number of class in vegetative period  in the cell */
 	double cell_cover;                                                    /* (ratio) Canopy cover  */
 	double bare_soil_cover;                                               /* (ratio) Bare soil cover */
-	int cell_n_trees;                                                     /* (trees/cell/day) number of trees */
+	int n_trees;			                                              /* (trees/cell/day) number of trees */
 	int daily_dead_tree;                                                  /* (trees/cell/day) daily number of dead tree */
 	int monthly_dead_tree;                                                /* (trees/cell/month) monthly number of dead tree */
 	int annual_dead_tree ;                                                /* (trees/cell/year) annual number of dead tree */

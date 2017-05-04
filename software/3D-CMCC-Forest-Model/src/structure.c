@@ -385,7 +385,7 @@ int annual_forest_structure(cell_t* const c, const int year)
 					{
 						for ( species = 0; species < c->heights[height].dbhs[dbh].ages[age].species_count; ++species )
 						{
-							c->cell_n_trees += s->counter[N_TREE];
+							c->n_trees += s->counter[N_TREE];
 						}
 					}
 				}
@@ -414,7 +414,7 @@ int annual_forest_structure(cell_t* const c, const int year)
 	/* compute overall bare soil cover */
 	c->bare_soil_cover = 1. - c->cell_cover;
 
-	logger(g_debug_log, "-Number of trees cell level = %d trees/cell\n", c->cell_n_trees);
+	logger(g_debug_log, "-Number of trees cell level = %d trees/cell\n", c->n_trees);
 	logger(g_debug_log, "-Canopy cover at cell level = %g %%\n", c->cell_cover * 100.0);
 	logger(g_debug_log, "-Bare soil cover at cell level = %g %%\n", c->bare_soil_cover * 100.0);
 	logger(g_debug_log, "**************************************\n");

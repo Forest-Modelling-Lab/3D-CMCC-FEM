@@ -57,7 +57,7 @@ extern logger_t* g_annual_log;
 #define CHECK_CONDITION(x,c,y) {					\
 		if ( (x)c(y) ) { 							\
 			char buf[256]; 							\
-			sprintf(buf, "\n#error: condition (%s %s %s) is true, value of %s is %g, value of %s is %g in %s on line %d\n"	\
+			sprintf(buf, "\n#error:\ncondition \"%s %s %s\" is true\nvalue of %s is %g\nvalue of %s is %g\nin %s on line %d\n"	\
 							, XSTR(x)				\
 							, XSTR(c)				\
 							, XSTR(y)				\

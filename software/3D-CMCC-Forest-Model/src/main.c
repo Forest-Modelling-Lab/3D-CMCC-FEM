@@ -1593,15 +1593,17 @@ int main(int argc, char *argv[]) {
 						{
 							if ( 'f' == g_settings->version )
 							{
-
-								if ( !Tree_model_daily( matrix, cell, day, month, year ) )
+								if ( matrix->cells[cell].n_trees > 0 )
 								{
-									logger(g_debug_log, "tree model daily failed!!!\n");
-									goto err;
-								}
-								else
-								{
-									printf("ok tree_model (%02d-%02d-%d)\n", day+1, month+1, year+g_settings->year_start);
+									if ( !Tree_model_daily( matrix, cell, day, month, year ) )
+									{
+										logger(g_debug_log, "tree model daily failed!!!\n");
+										goto err;
+									}
+									else
+									{
+										printf("ok tree_model (%02d-%02d-%d)\n", day+1, month+1, year+g_settings->year_start);
+									}
 								}
 							}
 						}

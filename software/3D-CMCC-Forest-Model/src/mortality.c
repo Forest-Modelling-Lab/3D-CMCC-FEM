@@ -158,6 +158,7 @@ void self_thinning_mortality (cell_t *const c, const int layer, const int year)
 					/* update live and dead tree (do not move above) */
 					s->counter[DEAD_TREE] = deadtree;
 					s->counter[N_TREE]    = livetree;
+					c->n_trees -= deadtree;
 				}
 			}
 		}
@@ -226,6 +227,7 @@ int growth_efficiency_mortality ( cell_t *const c, const int height, const int d
 		//ALESSIOC TO ALESSIOR IMPOSE N_TREE = 0 IS USEFUL?
 		s->counter[DEAD_TREE] = s->counter[N_TREE];
 		s->counter[N_TREE]    = 0;
+		c->n_trees -= s->counter[DEAD_TREE];
 
 		/* call remove_tree_class */
 		if ( ! tree_class_remove(c, height, dbh, age, species) )
@@ -253,6 +255,7 @@ int annual_growth_efficiency_mortality ( cell_t *const c, const int height, cons
 		//ALESSIOC TO ALESSIOR IMPOSE N_TREE = 0 IS USEFUL?
 		s->counter[DEAD_TREE] = s->counter[N_TREE];
 		s->counter[N_TREE]    = 0;
+		c->n_trees -= s->counter[DEAD_TREE];
 
 		/* call remove_tree_class */
 		if ( ! tree_class_remove(c, height, dbh, age, species) )
@@ -324,6 +327,7 @@ void age_mortality (cell_t *const c, const int height, const int dbh, const int 
 	c->daily_dead_tree   += deadtree;
 	c->monthly_dead_tree += deadtree;
 	c->annual_dead_tree  += deadtree;
+	c->n_trees -= deadtree;
 
 	/* check */
 	CHECK_CONDITION(c->daily_dead_tree  , <, 0);
