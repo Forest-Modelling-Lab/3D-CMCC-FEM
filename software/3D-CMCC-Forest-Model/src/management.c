@@ -171,15 +171,15 @@ void thinning (cell_t *const c, const int height, const int dbh, const int age, 
 	logger(g_debug_log, "trees before thinning = %d trees/cell\n", s->counter[N_TREE]);
 
 	/* compute basal area to remain */
-	stand_basal_area_to_remain = (1.0 - (s->value[THINNING_INTENSITY] / 100.0 ) ) * s->value[STAND_BASAL_AREA_m2];
+	stand_basal_area_to_remain = (1.0 - (s->value[THINNING_INTENSITY] / 100. ) ) * s->value[STAND_BASAL_AREA_m2];
 	logger(g_debug_log, "basal area to remain = %f m2/class\n", stand_basal_area_to_remain);
 
 	/* compute basal area to remove */
-	stand_basal_area_to_remove = (s->value[THINNING_INTENSITY] / 100.0) * s->value[STAND_BASAL_AREA_m2];
+	stand_basal_area_to_remove = (s->value[THINNING_INTENSITY] / 100. ) * s->value[STAND_BASAL_AREA_m2];
 	logger(g_debug_log, "basal area to remove = %f\n", stand_basal_area_to_remove);
 
 	/* compute integer number of trees to remove */
-	trees_to_remove = ROUND((s->value[THINNING_INTENSITY] / 100.0) * s->counter[N_TREE]);
+	trees_to_remove = ROUND((s->value[THINNING_INTENSITY] / 100. ) * s->counter[N_TREE]);
 	logger(g_debug_log, "trees_to_remove = %d\n", trees_to_remove);
 
 	/* update C and N biomass */

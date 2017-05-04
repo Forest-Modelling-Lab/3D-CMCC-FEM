@@ -84,7 +84,7 @@ void leaffall_deciduous ( cell_t *const c, const int height, const int dbh, cons
 		//assumption: last day of leaf fall all carbon goes to litter and cwd with no retranslocation
 		s->value[C_LEAF_TO_LITR]    += s->value[LEAF_C];
 		s->value[C_FROOT_TO_LITR]   += s->value[FROOT_C];
-		s->value[C_FRUIT_TO_CWD]     = s->value[FRUIT_C];
+		s->value[C_FRUIT_TO_CWD]    += s->value[FRUIT_C];
 		s->value[C_LEAF_TO_RESERVE]  = 0.;
 		s->value[C_FROOT_TO_RESERVE] = 0.;
 
@@ -94,9 +94,9 @@ void leaffall_deciduous ( cell_t *const c, const int height, const int dbh, cons
 		s->value[C_TO_CWD]           = s->value[FRUIT_C];
 
 		//assumption: last day of leaf fall all nitrogen goes to litter with no retranslocation
-		s->value[N_LEAF_TO_LITR]     = s->value[LEAF_N];
-		s->value[N_FROOT_TO_LITR]    = s->value[FROOT_N];
-		s->value[N_FRUIT_TO_CWD]     = s->value[FRUIT_N];
+		s->value[N_LEAF_TO_LITR]    += s->value[LEAF_N];
+		s->value[N_FROOT_TO_LITR]   += s->value[FROOT_N];
+		s->value[N_FRUIT_TO_CWD]    += s->value[FRUIT_N];
 		s->value[N_LEAF_TO_RESERVE]  = 0.;
 		s->value[N_FROOT_TO_RESERVE] = 0.;
 
@@ -157,11 +157,11 @@ void leaffall (species_t *const s)
 {
 	/*** carbon leaf_fall ***/
 	/* compute fluxes of carbon leaf and fine root pool */
-	s->value[C_LEAF_TO_RESERVE]  = s->value[LEAF_C_TO_REMOVE]   * C_FRAC_TO_RETRANSL;
-	s->value[C_FROOT_TO_RESERVE] = s->value[FROOT_C_TO_REMOVE]  * C_FRAC_TO_RETRANSL;
-	s->value[C_LEAF_TO_LITR]     = s->value[LEAF_C_TO_REMOVE]   * ( 1. - C_FRAC_TO_RETRANSL );
-	s->value[C_FROOT_TO_LITR]    = s->value[FROOT_C_TO_REMOVE]  * ( 1. - C_FRAC_TO_RETRANSL );
-	s->value[C_FRUIT_TO_CWD]     = s->value[FRUIT_C_TO_REMOVE];
+	s->value[C_LEAF_TO_RESERVE]  += s->value[LEAF_C_TO_REMOVE]   * C_FRAC_TO_RETRANSL;
+	s->value[C_FROOT_TO_RESERVE] += s->value[FROOT_C_TO_REMOVE]  * C_FRAC_TO_RETRANSL;
+	s->value[C_LEAF_TO_LITR]     += s->value[LEAF_C_TO_REMOVE]   * ( 1. - C_FRAC_TO_RETRANSL );
+	s->value[C_FROOT_TO_LITR]    += s->value[FROOT_C_TO_REMOVE]  * ( 1. - C_FRAC_TO_RETRANSL );
+	s->value[C_FRUIT_TO_CWD]     += s->value[FRUIT_C_TO_REMOVE];
 	logger(g_debug_log, "C_LEAF_TO_RESERVE  = %f\n", s->value[C_LEAF_TO_RESERVE]);
 	logger(g_debug_log, "C_FROOT_TO_RESERVE = %f\n", s->value[C_FROOT_TO_RESERVE]);
 	logger(g_debug_log, "C_LEAF_TO_LITR     = %f\n", s->value[C_LEAF_TO_LITR]);

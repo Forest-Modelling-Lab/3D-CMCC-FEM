@@ -1705,7 +1705,7 @@ int main(int argc, char *argv[]) {
 					reset_daily_layer_variables ( &matrix->cells[cell] );
 					reset_daily_cell_variables  ( &matrix->cells[cell] );
 
-					logger(g_debug_log, "****************END OF DAY (%d)*******************\n\n\n", day + 1 );
+					logger(g_debug_log, "******************* END OF DAY (%d) *******************\n\n\n", day + 1 );
 
 
 					/* save values for put in output netcdf */
@@ -1754,7 +1754,7 @@ int main(int argc, char *argv[]) {
 						reset_monthly_layer_variables ( &matrix->cells[cell] );
 						reset_monthly_cell_variables  ( &matrix->cells[cell] );
 
-						logger(g_debug_log, "****************END OF MONTH (%d)*******************\n\n", month + 1 );
+						logger(g_debug_log, "******************* END OF MONTH (%d) *******************\n\n", month + 1 );
 					}
 
 					if ( output_vars && output_vars->yearly_vars_count ) {
@@ -1799,7 +1799,7 @@ int main(int argc, char *argv[]) {
 						reset_annual_layer_variables ( &matrix->cells[cell] );
 						reset_annual_cell_variables  ( &matrix->cells[cell] );
 
-						logger(g_debug_log, "****************END OF YEAR (%d)*******************\n\n\n", matrix->cells[cell].years[year].year );
+						logger(g_debug_log, "******************* END OF YEAR (%d) *******************\n\n\n\n\n\n", matrix->cells[cell].years[year].year );
 					}
 				}
 			}
