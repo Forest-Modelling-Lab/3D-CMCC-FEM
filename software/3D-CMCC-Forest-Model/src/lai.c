@@ -50,18 +50,18 @@ void daily_lai (species_t *const s)
 	//s->value[LAI_SUN_EXP] = s->value[LAI_SUN_PROJ] / s->value[CANOPY_COVER_PROJ];
 	//s->value[LAI_SHADE_EXP] = s->value[LAI_SHADE_PROJ] / s->value[CANOPY_COVER_PROJ];
 
+	///* compute total LAI for Exposed Area */
+	//s->value[LAI_EXP]       = s->value[LAI_PROJ]       * (1 + s->value[CANOPY_COVER_EXP]);
+	//s->value[LAI_SUN_EXP]   = s->value[LAI_SUN_PROJ]   * (1 + s->value[CANOPY_COVER_EXP]);
+	//s->value[LAI_SHADE_EXP] = s->value[LAI_SHADE_PROJ] * (1 + s->value[CANOPY_COVER_EXP]);
+	//logger(g_debug_log, "LAI_EXP = %f m-2\n", s->value[LAI_EXP]);
+	//logger(g_debug_log, "LAI_SUN_EXP = %g m2 m-2\n", s->value[LAI_SUN_EXP]);
+	//logger(g_debug_log, "LAI_SHADE_EXP = %g m2 m-2\n", s->value[LAI_SHADE_EXP]);
+
 	/* differently from above don't divide for ground area but multiply for fraction of exposed area */
 
 	logger(g_debug_log, "single height class canopy cover projected = %g %%\n", s->value[CANOPY_COVER_PROJ]*100.0);
 	logger(g_debug_log, "single height class canopy cover exposed = %g %%\n", s->value[CANOPY_COVER_EXP]*100.0);
-
-//	/* compute total LAI for Exposed Area */
-//	s->value[LAI_EXP]       = s->value[LAI_PROJ]       * (1 + s->value[CANOPY_COVER_EXP]);
-//	s->value[LAI_SUN_EXP]   = s->value[LAI_SUN_PROJ]   * (1 + s->value[CANOPY_COVER_EXP]);
-//	s->value[LAI_SHADE_EXP] = s->value[LAI_SHADE_PROJ] * (1 + s->value[CANOPY_COVER_EXP]);
-//	logger(g_debug_log, "LAI_EXP = %f m-2\n", s->value[LAI_EXP]);
-//	logger(g_debug_log, "LAI_SUN_EXP = %g m2 m-2\n", s->value[LAI_SUN_EXP]);
-//	logger(g_debug_log, "LAI_SHADE_EXP = %g m2 m-2\n", s->value[LAI_SHADE_EXP]);
 
 	/**************************************************************************************************/
 
@@ -76,7 +76,7 @@ void daily_lai (species_t *const s)
 	CHECK_CONDITION(s->value[LAI_SHADE_PROJ], <, ZERO);
 	CHECK_CONDITION(s->value[ALL_LAI_PROJ],   <, ZERO);
 	CHECK_CONDITION(fabs((s->value[LAI_SUN_PROJ] + s->value[LAI_SHADE_PROJ]) - s->value[LAI_PROJ]), >, eps );
-	CHECK_CONDITION(s->value[LAI_PROJ], >, (s->value[PEAK_LAI_PROJ] + eps));
+	//FIXME ALESSIOC CHECK_CONDITION(s->value[LAI_PROJ], >, (s->value[PEAK_LAI_PROJ] + eps));
 }
 
 

@@ -85,7 +85,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 		 */
 
 		s->value[F_CO2_TR] = 39.43 * pow(meteo_annual->co2Conc, -0.64);
-		logger(g_debug_log, "annual [CO2] = %f ppmv\n", meteo_annual->co2Conc);
+
 
 	}
 	else
@@ -94,8 +94,8 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 
 		s->value[F_CO2_TR] = 1.;
 	}
-	logger(g_debug_log, "f_CO2 modifier for assimilation  = %g\n", s->value[F_CO2]);
-	logger(g_debug_log, "f_CO2 modifier for transpiration = %g\n", s->value[F_CO2_TR]);
+	logger(g_debug_log, "fCO2 modifier for assimilation  = %g\n", s->value[F_CO2]);
+	logger(g_debug_log, "fCO2 modifier for transpiration = %g\n", s->value[F_CO2_TR]);
 
 	/********************************************************************************************/
 
@@ -139,7 +139,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 		if ( ( meteo_daily->tavg <= s->value[GROWTHTMIN]) || (meteo_daily->tavg >= s->value[GROWTHTMAX] ) )
 		{
 			s->value[F_T] = 0;
-			logger(g_debug_log, "F_T = 0 \n");
+			logger(g_debug_log, "fT = 0 \n");
 		}
 		else
 		{
@@ -272,46 +272,26 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	/* calculate the soil pressure-volume coefficients from texture data */
 	/* Uses the multivariate regressions from Cosby et al., 1984 */
 	/* volumetric water content */
-	logger(g_debug_log, "\nBIOME SOIL WATER MODIFIER\n");
-
 	/* note:changed from biome */
 	c->vwc = c->asw / c->max_asw_fc /* /(100.0 * g_soil_settings->values[SOIL_DEPTH])*/;
-	logger(g_debug_log, "volumetric available soil water  = %f %(vol)\n", c->vwc);
-	logger(g_debug_log, "vwc_fc = %f (DIM)\n", c->vwc_fc);
-	logger(g_debug_log, "vwc_sat = %f (DIM)\n", c->vwc_sat);
-	logger(g_debug_log, "vwc/vwc_sat = %f \n", c->vwc / c->vwc_sat);
-	logger(g_debug_log, "vwc/vwc_fc = %f \n", c->vwc / c->vwc_fc);
-
 	c->psi = c->psi_sat * pow((c->vwc/c->vwc_sat), c->soil_b);
-	logger(g_debug_log, "PSI BIOME = %f (MPa)\n", c->psi);
 
 	/*no water stress*/
 	if (c->psi > s->value[SWPOPEN])
 	{
-		logger(g_debug_log, "no water stress\n");
-
 		s->value[F_PSI] = 1.;
 	}
 	/* full water stress */
 	else if (c->psi <= s->value[SWPCLOSE])
 	{
-		logger(g_debug_log, "complete water stress\n");
-
-		//s->value[F_PSI] = 0.0;
-		logger(g_debug_log, "Water stress\n");
-		logger(g_debug_log, "F_PSI = %f\n", s->value[F_PSI]);
-
 		/* forced to  0.3 to avoid zero values */
 		/* see: Clark et al., 2011 for JULES model impose 0.2 */
 		s->value[F_PSI] = WATER_STRESS_LIMIT ; //0.3;
-		logger(g_debug_log, "F_PSI = %f\n", s->value[F_PSI]);
 		//CHECK_CONDITION(counter_water_stress, >, 31);
-
 	}
 	/* partial water stress */
 	else
 	{
-		logger(g_debug_log, "partial water stress\n");
 		s->value[F_PSI] = (s->value[SWPCLOSE] - c->psi)/(s->value[SWPCLOSE] - s->value[SWPOPEN]);
 
 		//test
@@ -320,7 +300,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	}
 
 	s->value[F_SW] = s->value[F_PSI];
-	logger(g_debug_log, "F_PSI-F_SW (BIOME)= %f\n", s->value[F_PSI]);
+	logger(g_debug_log, "fSW = %f\n", s->value[F_PSI]);
 
 	/* check */
 	CHECK_CONDITION(s->value[F_SW], >, 1.);

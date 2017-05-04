@@ -92,8 +92,7 @@ void photosynthesis(cell_t *const c, const int layer, const int height, const in
 	/* compute assimilation modifier (test) */
 	s->value[F_A_SUN]   = Lue_sun   / Lue_sun_max;
 	s->value[F_A_SHADE] = Lue_shade / Lue_shade_max;
-	logger(g_debug_log, "Assimilation modifier (sun)   = %g (DIM)\n", s->value[F_A_SUN]);
-	logger(g_debug_log, "Assimilation modifier (shade) = %g (DIM)\n", s->value[F_A_SHADE]);
+
 
 	/* GPP */
 	/* Daily GPP in molC/m^2/day */

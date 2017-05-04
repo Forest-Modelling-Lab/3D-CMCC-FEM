@@ -155,6 +155,7 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 										",NPP"
 										",CUE"
 										",LAI_PROJ"
+										",PEAK-LAI_PROJ"
 										",CC_P"
 										",CC_E"
 										",DBHDC"
@@ -285,8 +286,8 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 							logger(g_daily_log,",%c", sz_management[c->heights[height].dbhs[dbh].ages[age].species[species].management]);
 
 							/* print variables at layer-class level */
-							logger(g_daily_log,",%6.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%d,%d"
-									",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
+							logger(g_daily_log,",%6.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,"
+									"%d,%d,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
 									",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
 									",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
 									",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",
@@ -297,6 +298,7 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 									s->value[NPP],
 									s->value[CUE],
 									s->value[LAI_PROJ],
+									s->value[PEAK_LAI_PROJ],
 									s->value[DAILY_CANOPY_COVER_PROJ],
 									s->value[DAILY_CANOPY_COVER_EXP],
 									s->value[DBHDC_EFF],
