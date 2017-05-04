@@ -19,7 +19,7 @@ void peak_lai(species_t *const s, const int day, const int month, const int year
 	logger(g_debug_log, "\n**PEAK LAI**\n");
 
 	/* compute annual Peak Projected Lai (m2/m2) */
-	s->value[PEAK_LAI_PROJ] = ((s->value[SAPWOOD_AREA] / 10000) * s->value[SAP_LEAF]) / s->value[CROWN_AREA_PROJ];
+	s->value[PEAK_LAI_PROJ] = ((s->value[SAPWOOD_AREA] / 10000.) * s->value[SAP_LEAF]) / s->value[CROWN_AREA_PROJ];
 	logger(g_debug_log, "year %d PEAK_LAI_PROJ from Kostner = %f m2/m2\n",years, s->value[PEAK_LAI_PROJ]);
 
 	/* check if Peak Lai exceeds Maximum prescribed Peak Lai (this shouldn't happen) */

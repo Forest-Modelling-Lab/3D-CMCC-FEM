@@ -36,14 +36,9 @@ void dbhdc_function (cell_t *const c, const int layer, const int height, const i
 	double previous_dbhdc_eff  = 0.;
 	double max_dbhdc_incr      = 0.1;               /* fraction of maximum dbhdc increment */
 
-	height_t *h;
 	dbh_t *d;
-	age_t *a;
 	species_t *s;
-
-	h = &c->heights[height];
 	d = &c->heights[height].dbhs[dbh];
-	a = &c->heights[height].dbhs[dbh].ages[age];
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 	logger(g_debug_log,"\n*DBHDC FUNCTION*\n");
@@ -86,7 +81,8 @@ void dbhdc_function (cell_t *const c, const int layer, const int height, const i
 	/* this is checked to avoid unrealistic crown area increment */
 
 	//note max_dbhdc_incr corresponds to an arbitrary increment of n value
-	if ( ( year ) && ( s->value[DBHDC_EFF] > ( previous_dbhdc_eff + (previous_dbhdc_eff * max_dbhdc_incr ) ) ) )
+	//note: not used in the first year of simulation
+	if ( ( s->counter[YOS] ) && ( s->value[DBHDC_EFF] > ( previous_dbhdc_eff + (previous_dbhdc_eff * max_dbhdc_incr ) ) ) )
 	{
 		s->value[DBHDC_EFF] = previous_dbhdc_eff + ( previous_dbhdc_eff * max_dbhdc_incr );
 	}
@@ -109,6 +105,9 @@ void dbhdc_function (cell_t *const c, const int layer, const int height, const i
 #endif
 
 	logger(g_debug_log,"-DBHDC effective = %g\n", s->value[DBHDC_EFF]);
+
+	/* check */
+	CHECK_CONDITION (s->value[DBHDC_EFF], < , ZERO);
 
 }
 

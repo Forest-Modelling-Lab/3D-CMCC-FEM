@@ -513,7 +513,6 @@ enum {
 	STEM_GROWTH_RESP,                   /* (gC/m2/day) Stem growth respiration */
 	BRANCH_GROWTH_RESP,                 /* (gC/m2/day) Branch growth respiration */
 	CROOT_GROWTH_RESP,                  /* (gC/m2/day) Coarse root growth respiration */
-	//FRUIT_GROWTH_RESP,                  /* (gC/m2/day) Fruit growth respiration */
 	TOTAL_GROWTH_RESP,                  /* (gC/m2/day) Total growth respiration */
 	MONTHLY_TOTAL_GROWTH_RESP,          /* (gC/m2/monthly) Monthly Total growth respiration */
 	YEARLY_TOTAL_GROWTH_RESP,           /* (gC/m2/year) Yearly Total growth respiration */
@@ -525,13 +524,11 @@ enum {
 	STEM_AUT_RESP,                      /* (gC/m2/day) Stem autotrophic respiration */
 	CROOT_AUT_RESP,                     /* (gC/m2/day) Coarse root autotrophic respiration */
 	BRANCH_AUT_RESP,                    /* (gC/m2/day) Branch autotrophic respiration */
-	//FRUIT_AUT_RESP,                     /* (gC/m2/day) Fruit autotrophic respiration */
 	TOTAL_AUT_RESP,                     /* (gC/m2/day) Total autotrophic respiration */
 	MONTHLY_LEAF_AUT_RESP,              /* (gC/m2/month) Monthly Leaf autotrophic respiration */
 	MONTHLY_FROOT_AUT_RESP,             /* (gC/m2/month) Monthly Fine root autotrophic respiration */
 	MONTHLY_STEM_AUT_RESP,              /* (gC/m2/month) Monthly Stem autotrophic respiration */
 	MONTHLY_CROOT_AUT_RESP,             /* (gC/m2/month) Monthly Coarse root autotrophic respiration */
-	//MONTHLY_FRUIT_AUT_RESP,             /* (gC/m2/month) Monthly Fruit autotrophic respiration */
 	MONTHLY_BRANCH_AUT_RESP,            /* (gC/m2/month) Monthly Branch autotrophic respiration */
 	MONTHLY_TOTAL_AUT_RESP,             /* (gC/m2/month) Monthly Total autotrophic respiration */
 	YEARLY_LEAF_AUT_RESP,               /* (gC/m2/year) Annual Leaf autotrophic respiration */
@@ -539,7 +536,6 @@ enum {
 	YEARLY_STEM_AUT_RESP,               /* (gC/m2/year) Annual Stem autotrophic respiration */
 	YEARLY_CROOT_AUT_RESP,              /* (gC/m2/year) Annual Coarse root autotrophic respiration */
 	YEARLY_BRANCH_AUT_RESP,             /* (gC/m2/year) Annual Branch autotrophic respiration */
-	//YEARLY_FRUIT_AUT_RESP,              /* (gC/m2/year) Annual fRUIT autotrophic respiration */
 	YEARLY_TOTAL_AUT_RESP,              /* (gC/m2/year) Annual Total autotrophic respiration */
 	TOTAL_AUT_RESP_tC,                  /* (tC/cell/day) Total autotrophic respiration */
 
@@ -562,7 +558,7 @@ enum {
 	N_TO_CWD,                           /* (tN/cell/day) Daily Woody Nitrogen to Coarse Woody Debris */
 	N_LEAF_TO_LITR,                     /* (tN/cell/day) Daily Leaf Litter to Litter labile nitrogen pool */
 	N_FROOT_TO_LITR,                    /* (tN/cell/day) Daily Leaf Litter to Litter labile nitrogen pool */
-	//N_FRUIT_TO_LITR,                    /* (tN/cell/day) Daily Fruitr to Litter labile nitrogen pool */
+	//N_FRUIT_TO_LITR,                    /* (tN/cell/day) Daily Fruit to Litter labile nitrogen pool */
 	N_LEAF_TO_LITR1N,                   /* (tN/cell/day) Daily Leaf Litter to Litter labile nitrogen pool */
 	N_LEAF_TO_LITR2N,                   /* (tN/cell/day) Daily Leaf Litter to Litter unshielded cellulose nitrogen pool */
 	N_LEAF_TO_LITR3N,                   /* (tN/cell/day) Daily Leaf Litter to Litter shielded cellulose nitrogen pool */

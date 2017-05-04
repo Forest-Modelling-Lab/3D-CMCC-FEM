@@ -124,6 +124,9 @@ void leaffall_evergreen ( cell_t *const c, const int height, const int dbh, cons
 
 	logger(g_debug_log, "\n**LEAF FALL (turnover) EVERGREEN**\n");
 
+	/* assign max annual LAI */
+	if (s->value[MAX_LAI_PROJ] < s->value[LAI_PROJ] ) s->value[MAX_LAI_PROJ] = s->value[LAI_PROJ];
+
 	/************************************************************************************************************/
 
 	if ( c->doy == 1 )
