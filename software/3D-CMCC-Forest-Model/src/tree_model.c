@@ -71,8 +71,8 @@ extern soil_settings_t* g_soil_settings;
 extern int DaysInMonth[];
 
 /* Last cumulative days in months */
-extern int MonthLength [];
-extern int MonthLength_Leap [];
+//extern int MonthLength [];
+//extern int MonthLength_Leap [];
 
 /*****************************************************************************************************************/
 int Tree_model_daily (matrix_t *const m, const int cell, const int day, const int month, const int year)
