@@ -246,21 +246,21 @@ static void yos_clear(meteo_annual_t *const meteo_annual) {
 			meteo_annual->monthly_mean[i].incoming_ppfd = INVALID_VALUE;
 			meteo_annual->monthly_mean[i].ppfd = INVALID_VALUE;
 		}
+		meteo_annual->yearly_mean.solar_rad = INVALID_VALUE;
+		meteo_annual->yearly_mean.tavg = INVALID_VALUE;
+		meteo_annual->yearly_mean.tmax = INVALID_VALUE;
+		meteo_annual->yearly_mean.tmin = INVALID_VALUE;
+		meteo_annual->yearly_mean.tday = INVALID_VALUE;
+		meteo_annual->yearly_mean.tnight = INVALID_VALUE;
+		meteo_annual->yearly_mean.vpd = INVALID_VALUE;
+		meteo_annual->yearly_mean.prcp = INVALID_VALUE;
+		meteo_annual->yearly_mean.tsoil = INVALID_VALUE;
+		meteo_annual->yearly_mean.rh_f = INVALID_VALUE;
+		meteo_annual->yearly_mean.incoming_par = INVALID_VALUE;
+		meteo_annual->yearly_mean.par = INVALID_VALUE;
+		meteo_annual->yearly_mean.incoming_ppfd = INVALID_VALUE;
+		meteo_annual->yearly_mean.ppfd = INVALID_VALUE;
 	}
-	meteo_annual->yearly_mean.solar_rad = INVALID_VALUE;
-	meteo_annual->yearly_mean.tavg = INVALID_VALUE;
-	meteo_annual->yearly_mean.tmax = INVALID_VALUE;
-	meteo_annual->yearly_mean.tmin = INVALID_VALUE;
-	meteo_annual->yearly_mean.tday = INVALID_VALUE;
-	meteo_annual->yearly_mean.tnight = INVALID_VALUE;
-	meteo_annual->yearly_mean.vpd = INVALID_VALUE;
-	meteo_annual->yearly_mean.prcp = INVALID_VALUE;
-	meteo_annual->yearly_mean.tsoil = INVALID_VALUE;
-	meteo_annual->yearly_mean.rh_f = INVALID_VALUE;
-	meteo_annual->yearly_mean.incoming_par = INVALID_VALUE;
-	meteo_annual->yearly_mean.par = INVALID_VALUE;
-	meteo_annual->yearly_mean.incoming_ppfd = INVALID_VALUE;
-	meteo_annual->yearly_mean.ppfd = INVALID_VALUE;
 }
 
 static void compute_vpd(double *const values, const int rows_count, const int columns_count) {
