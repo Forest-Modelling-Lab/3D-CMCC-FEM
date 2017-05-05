@@ -56,6 +56,66 @@ int sort_by_heights_desc(const void * a, const void * b)
 	}
 }
 
+/* todo : implement a better comparison for equality */
+int sort_by_dbhs_asc(const void * a, const void * b)
+{
+	if ( ((dbh_t *)a)->value < ((dbh_t *)b)->value )
+	{
+		return -1;
+	} else if ( ((dbh_t *)a)->value > ((dbh_t *)b)->value )
+	{
+		return 1;
+	} else
+	{
+		return 0;
+	}
+}
+
+/* todo : implement a better comparison for equality */
+int sort_by_dbhs_desc(const void * a, const void * b)
+{
+	if ( ((dbh_t *)a)->value < ((dbh_t *)b)->value )
+	{
+		return 1;
+	} else if ( ((dbh_t *)a)->value > ((dbh_t *)b)->value )
+	{
+		return -1;
+	} else
+	{
+		return 0;
+	}
+}
+
+/* todo : implement a better comparison for equality */
+int sort_by_ages_asc(const void * a, const void * b)
+{
+	if ( ((age_t *)a)->value < ((age_t *)b)->value )
+	{
+		return -1;
+	} else if ( ((age_t *)a)->value > ((age_t *)b)->value )
+	{
+		return 1;
+	} else
+	{
+		return 0;
+	}
+}
+
+/* todo : implement a better comparison for equality */
+int sort_by_ages_desc(const void * a, const void * b)
+{
+	if ( ((age_t *)a)->value < ((age_t *)b)->value )
+	{
+		return 1;
+	} else if ( ((age_t *)a)->value > ((age_t *)b)->value )
+	{
+		return -1;
+	} else
+	{
+		return 0;
+	}
+}
+
 
 void carbon_pool_fraction(cell_t *c)
 {

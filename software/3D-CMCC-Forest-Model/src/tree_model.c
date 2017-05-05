@@ -131,8 +131,8 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 
 	/***********************************************************************************************/
 
-	/* sort class in ascending way by heights */
-	qsort ( c->heights, c->heights_count, sizeof (height_t), sort_by_heights_asc );
+	/* sort heights in descending order */
+	qsort ( c->heights, c->heights_count, sizeof (height_t), sort_by_heights_desc );
 
 	/* loop on each cell layers starting from highest to lower */
 	for ( layer = c->tree_layers_count -1 ; layer >= 0; --layer )
@@ -147,10 +147,13 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 		l->layer_z = layer;
 
 		/* loop on each heights starting from highest to lower */
-		for ( height = c->heights_count -1 ; height >= 0; --height )
+		for ( height = 0; height <  c->heights_count; ++height )
 		{
 			/* assign shortcut */
 			h = &m->cells[cell].heights[height];
+
+			/* sort dbhs in descending order */
+			qsort ( h->dbhs, h->dbhs_count, sizeof (dbh_t), sort_by_dbhs_desc );
 
 			//ALESSIOC FIXME
 			c->cell_heights_count ++;
@@ -162,18 +165,23 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 						"                              height = %g                              \n"
 						"*****************************************************************************\n", h->value);
 
+
+
 				/* loop on each dbh starting from highest to lower */
-				for ( dbh = h->dbhs_count - 1; dbh >= 0; --dbh )
+				for ( dbh = 0; dbh < h->dbhs_count; ++dbh )
 				{
 					/* assign shortcut */
 					d = &h->dbhs[dbh];
+
+					/* sort ages in descending order */
+					qsort ( d->ages, d->ages_count, sizeof (age_t), sort_by_ages_desc );
 
 					logger(g_debug_log,"*****************************************************************************\n"
 							"                              dbh = %g                              \n"
 							"*****************************************************************************\n", d->value);
 
 					/* loop on each age class */
-					for ( age = d->ages_count - 1 ; age >= 0 ; --age )
+					for ( age = 0; age < d->ages_count; ++age )
 					{
 						/* assign shortcut */
 						a = &m->cells[cell].heights[height].dbhs[dbh].ages[age];

@@ -340,8 +340,8 @@ settings_t* settings_import(const char *const filename) {
 			break;
 
 			case SETTINGS_THINNING_REGIME:
-				if ( ! string_compare_i(token, "Below") ) {
-					s->thinning_regime = 1;
+				if ( ! string_compare_i(token, "below") ) {
+					s->thinning_regime = THINNING_REGIME_BELOW;
 				}
 			break;
 

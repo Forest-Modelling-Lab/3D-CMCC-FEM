@@ -825,7 +825,9 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 	{
 		for ( layer = c->tree_layers_count - 1; layer >= 0; --layer )
 		{
-			for ( height = c->heights_count - 1; height >= 0 ; --height )
+			qsort(c->heights, c->heights_count, sizeof(height_t), sort_by_heights_desc);
+
+			for ( height = 0; height < c->heights_count; ++height )
 			{
 				if( layer == c->heights[height].height_z )
 				{
@@ -840,6 +842,9 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 						/* print dbh */
 						logger(g_annual_log,",%g", c->heights[height].dbhs[dbh].value);
 
+						// ALESSIOR TO ALESSIOC
+						// SHOULD THIS BE CHANGED TO
+						// start from c->heights[height].dbhs[dbh].ages_count-1 ?
 						for ( age = 0; age < c->heights[height].dbhs[dbh].ages_count ; ++age )
 						{
 							/* print age */

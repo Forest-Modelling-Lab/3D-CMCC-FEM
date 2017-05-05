@@ -33,8 +33,12 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 	age_t *a;
 	species_t *s;
 
-	/* sort class in ascending way by heights */
-	qsort ( c->heights, c->heights_count, sizeof (height_t), sort_by_heights_asc );
+	// sort by above or below ?
+	// ALESSIOR TO ALESSIOC FIXME
+	qsort ( c->heights, c->heights_count, sizeof (height_t),
+		
+			(THINNING_REGIME_ABOVE == g_settings->thinning_regime) ? sort_by_heights_asc : sort_by_heights_desc
+	);
 
 	//fixme to include once THINNING_REGIME is included
 	//	for ( layer = c->tree_layers_count - 1 ; layer >= 0; --layer )
@@ -156,7 +160,7 @@ void thinning (cell_t *const c, const int height, const int dbh, const int age, 
 	/* thinning function based on basal area */
 
 	//TODO
-	if (s->value[THINNING_REGIME] == 0)
+	if (THINNING_REGIME_ABOVE == s->value[THINNING_REGIME] )
 	{
 
 	}
