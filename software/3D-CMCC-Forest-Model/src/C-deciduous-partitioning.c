@@ -23,7 +23,6 @@ extern settings_t* g_settings;
 void daily_C_deciduous_partitioning (cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species,
 		const meteo_daily_t *const meteo_daily, const int day, const int month, const int year)
 {
-
 	double s0;
 	double r0;
 	double omega;
