@@ -245,7 +245,6 @@ int growth_efficiency_mortality ( cell_t *const c, const int height, const int d
 		c->daily_fruit_carbon       -= (s->value[C_FRUIT_TO_CWD]   * 1e6 / g_settings->sizeCell);
 
 		/*** update cell level carbon pools ***/
-
 		/* tree */
 		c->leaf_carbon              -= (s->value[C_LEAF_TO_LITR]  + s->value[C_LEAF_TO_RESERVE])    * 1e6 / g_settings->sizeCell;
 		c->froot_carbon             -= (s->value[C_FROOT_TO_LITR] + s->value[C_FROOT_TO_RESERVE])   * 1e6 / g_settings->sizeCell;
