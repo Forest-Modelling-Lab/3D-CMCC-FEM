@@ -13,6 +13,18 @@
 extern settings_t* g_settings;
 extern logger_t* g_debug_log;
 
+void specific_leaf_area ( const age_t *const a, species_t *const s )
+{
+//	double t_age = s->value[MAXAGE] / 2.;//fixme to be fixed
+//	double n = 2; //?????;
+//	double sla_juvenile = 40;//??
+//	double sla_mature = 20;// ??
+//	double sla_prova;
+//
+//	sla_prova = sla_mature + (sla_mature - sla_juvenile)* exp(-ln2 * pow((a->value/ t_age),n));
+
+}
+
 void daily_lai (species_t *const s)
 {
 	double leaf_C;                             /* leaf carbon KgC/sizecell */

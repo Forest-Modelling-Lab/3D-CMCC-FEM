@@ -220,6 +220,9 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 								/* compute annual minimum reserve for incoming year */
 								annual_minimum_reserve( s );
 
+								/* compute age-related sla */
+								specific_leaf_area ( a, s);
+
 								/* compute annual Maximum LAI */
 								peak_lai( s, day, month, year );
 
