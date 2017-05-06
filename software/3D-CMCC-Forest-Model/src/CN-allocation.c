@@ -84,45 +84,6 @@ void carbon_allocation( cell_t *const c, const int height, const int dbh, const 
 	/* single tree average tree pools */
 	average_tree_pools ( s );
 
-#if 1
-	/* growth efficiency mortality */
-	if ( s->value[RESERVE_C] < ZERO )
-	{
-		growth_efficiency_mortality(c, height, dbh, age, species);
-		// ALESSIOR TO ALESSIOC
-		// FIX THIS!
-	#if 0
-		// we must check that species pointer is valid
-		// pointer is derived from c->heights[height].dbhs[dbh].ages[age].species[species];
-		if ( height < c->heights_count )
-		{
-			if ( dbh < c->heights[height].dbhs_count )
-			{
-				if ( age < c->heights[height].dbhs[dbh].ages_count )
-				{
-					if ( species >= c->heights[height].dbhs[dbh].ages[age].species_count )
-					{
-						// species was removed
-						return;
-					}
-				}
-				else
-				{	// age was removed
-					return;
-				}
-			} else {
-				// dbh was removed
-				return;
-			}
-		} else {
-			// height was removed
-			return;
-		}
-	#endif
-	}
-#else
-	CHECK_CONDITION ( s->value[RESERVE_C],  < , ZERO );
-#endif
 
 	/*** update cell level carbon fluxes ***/
 	/* update cell level carbon fluxes (gC/m2/day) */

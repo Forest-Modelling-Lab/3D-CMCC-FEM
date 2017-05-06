@@ -59,6 +59,7 @@
 #include "regeneration.h"
 #include "decomposition.h"
 #include "littering.h"
+#include "CN-balance.h"
 
 extern logger_t* g_debug_log;
 extern soil_settings_t* g_soil_settings;
@@ -71,8 +72,8 @@ extern soil_settings_t* g_soil_settings;
 extern int DaysInMonth[];
 
 /* Last cumulative days in months */
-extern int MonthLength [];
-extern int MonthLength_Leap [];
+//extern int MonthLength [];
+//extern int MonthLength_Leap [];
 
 /*****************************************************************************************************************/
 int Tree_model_daily (matrix_t *const m, const int cell, const int day, const int month, const int year)
@@ -280,105 +281,96 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							}
 
 							/* growth respiration */
-							growth_respiration ( c, layer, height, dbh, age, species );
+							growth_respiration      ( c, layer, height, dbh, age, species );
 
 							/* autotrophic respiration */
 							autotrophic_respiration ( c, layer, height, dbh, age, species, meteo_daily );
 
 							/* carbon fluxes */
-							carbon_fluxes ( s );
+							carbon_fluxes           ( s );
 
 							/* C assimilation */
-							carbon_assimilation ( c, layer, height, dbh, age, species );
-
-							/* turnover */
-							turnover ( c, s, year );
-
-							/* carbon use efficiency */
-							carbon_use_efficiency ( c, height, dbh, age, species, day, month, year );
-
-							/* water use efficiency */
-							water_use_efficiency ( c, height, dbh, age, species, day, month, year );
+							carbon_assimilation     ( c, layer, height, dbh, age, species );
 
 							if ( c->doy == ( IS_LEAP_YEAR ( c->years[year].year ) ? 366 : 365) )
 							{
-								/* MORTALITY */
-								/* Mortality based on growth efficiency */
-								//fixme once fixed growth_efficiency_mortality remove annual_growth efficiency mortality
-								if ( ! annual_growth_efficiency_mortality ( c, height, dbh, age, species ) )
-								{
-									/* Mortality based on tree Age (LPJ) */
-									age_mortality ( c, height, dbh, age, species);
-								}
+								/* Mortality based on tree Age (LPJ) */
+								age_mortality ( c, height, dbh, age, species);
 							}
 
 							/* allocate daily carbon */
-							carbon_allocation     ( c, height, dbh, age, species );
+							carbon_allocation       ( c, height, dbh, age, species );
 
 							/* allocate daily nitrogen */
-							nitrogen_allocation   ( c, s );
+							nitrogen_allocation     ( c, s );
 
-							/* update Leaf Area Index */
-							daily_lai             ( s );
+							/* allocate daily carbon */
+							//carbon_balance     ( c, height, dbh, age, species );
 
-							/* N assimilation */
-							nitrogen_assimilation ( s );
-
-							/* litter fluxes and pools */
-							littering             ( c, s );
-
-							/* tree level dendrometry */
-							dendrometry_old ( c, layer, height, dbh, age, species, year );
-
-							//FIXME (v.5.3.1-a)
-							//dendrometry ( c, layer, height, dbh, age, species, meteo_daily );
-
-
-							/****************************************************************************************************************************************/
-
-							/* END OF YEAR */
-							/* last day of the year */
-							if ( c->doy == ( IS_LEAP_YEAR ( c->years[year].year ) ? 366 : 365) )
+							/* MORTALITY */
+							/* Mortality based on growth efficiency */
+							/* note: when it happens the overall class is removed */
+							if ( ! growth_efficiency_mortality ( c, height, dbh, age, species ) )
 							{
-								logger(g_debug_log, "*****END OF YEAR %d ******\n", c->years[year].year);
+								/* turnover */
+								turnover ( c, s, year );
 
-								/************************************************************************************************************************************/
+								/* carbon use efficiency */
+								carbon_use_efficiency ( c, height, dbh, age, species, day, month, year );
 
-								/* above ground-below ground stocks */
-								abg_bgb_biomass ( c, height, dbh, age, species );
+								/* water use efficiency */
+								water_use_efficiency  ( c, height, dbh, age, species, day, month, year );
 
-								/* annual branch and bark fraction */
-								tree_branch_and_bark ( c, height, dbh, age, species );
+								/* update Leaf Area Index */
+								daily_lai             ( s );
 
-								/* annual volume, MAI and CAI */
-								annual_tree_increment ( c, height, dbh, age, species, year );
+								/* N assimilation */
+								nitrogen_assimilation ( s );
 
+								/* litter fluxes and pools */
+								littering             ( c, s );
+
+								/* tree level dendrometry */
+								dendrometry_old       ( c, layer, height, dbh, age, species, year );
+
+								/** END OF YEAR **/
+								/* last day of the year */
+								if ( c->doy == ( IS_LEAP_YEAR ( c->years[year].year ) ? 366 : 365) )
+								{
+
+									/* above ground-below ground stocks */
+									abg_bgb_biomass ( c, height, dbh, age, species );
+
+									/* annual branch and bark fraction */
+									tree_branch_and_bark ( c, height, dbh, age, species );
+
+									/* annual volume, MAI and CAI */
+									annual_tree_increment ( c, height, dbh, age, species, year );
+								}
+
+								/** check for fluxes and mass balance closure at the tree class level **/
+
+								logger(g_debug_log, "\n**TREE CLASS LEVEL BALANCE**\n");
+
+								/* check for radiative flux balance closure */
+								/* 1 */ if ( ! check_tree_class_radiation_flux_balance ( c, layer, height, dbh, age, species ) ) return 0;
+
+								/* check for carbon flux balance closure */
+								/* 2 */ if ( ! check_tree_class_carbon_flux_balance    ( c, layer, height, dbh, age, species ) ) return 0;
+
+								/* check for nitrogen flux balance closure */
+								/* 3 */ //fixme if ( ! check_tree_class_nitrogen_flux_balance  ( c, layer, height, dbh, age, species ) ) return 0;
+
+								/* check for water flux balance closure */
+								/* 4 */ if ( ! check_tree_class_water_flux_balance     ( c, layer, height, dbh, age, species ) ) return 0;
+
+								/* check for carbon mass balance closure */
+								/* 5 */ if ( ! check_tree_class_carbon_mass_balance    ( c, layer, height, dbh, age, species ) ) return 0;
+
+								/* check for nitrogen mass balance closure */
+								/* 6 */ //fixme if ( ! check_tree_class_nitrogen_mass_balance  ( c, layer, height, dbh, age, species ) ) return 0;
 							}
-
 							/****************************************************************************************************************************************/
-
-							/* check for fluxes and mass balance closure at the tree class level */
-
-							logger(g_debug_log, "\n**TREE CLASS LEVEL BALANCE**\n");
-
-							/* check for radiative flux balance closure */
-							/* 1 */ if ( ! check_tree_class_radiation_flux_balance ( c, layer, height, dbh, age, species ) ) return 0;
-
-							/* check for carbon flux balance closure */
-							/* 2 */ if ( ! check_tree_class_carbon_flux_balance    ( c, layer, height, dbh, age, species ) ) return 0;
-
-							/* check for nitrogen flux balance closure */
-							/* 3 */ //fixme if ( ! check_tree_class_nitrogen_flux_balance  ( c, layer, height, dbh, age, species ) ) return 0;
-
-							/* check for water flux balance closure */
-							/* 4 */ if ( ! check_tree_class_water_flux_balance     ( c, layer, height, dbh, age, species ) ) return 0;
-
-							/* check for carbon mass balance closure */
-							/* 5 */ if ( ! check_tree_class_carbon_mass_balance    ( c, layer, height, dbh, age, species ) ) return 0;
-
-							/* check for nitrogen mass balance closure */
-							/* 6 */ //fixme if ( ! check_tree_class_nitrogen_mass_balance  ( c, layer, height, dbh, age, species ) ) return 0;
-
 							/****************************************************************************************************************************************/
 						}
 						logger(g_debug_log, "****************END OF SPECIES CLASS***************\n");

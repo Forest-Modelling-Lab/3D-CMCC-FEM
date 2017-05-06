@@ -118,37 +118,37 @@ void self_thinning_mortality (cell_t *const c, const int layer, const int year)
 							/* check for recompued canopy cover */
 							c->tree_layers[layer].layer_cover += s->value[CANOPY_COVER_PROJ];
 						}
-//							else
-//							{
-//								//fixme
-//								/* remove_tree_class */
-//								logger(g_debug_log, "completely removed lower class, starting to remove from higher..\n");
-//								if ( ! tree_class_remove(c, height, dbh, age, species) )
-//								{
-//									logger_error(g_debug_log, "unable to remove tree class");
-//									exit(1);
-//								}
-//
-//								/* mortality for the higher height class */
-//								while (c->tree_layers[layer].layer_cover > g_settings->max_layer_cover &&
-//										c->heights[height + 1].dbhs[dbh].ages[age].species[species].counter[N_TREE] >= 0)
-//								{
-//									--c->heights[height + 1].dbhs[dbh].ages[age].species[species].counter[N_TREE];
-//									++c->heights[height + 1].dbhs[dbh].ages[age].species[species].counter[DEAD_TREE];
-//
-//									//todo check if correct (probably not)
-//									dbhdc_function         ( c, layer, height + 1, dbh, age, species, year );
-//									crown_allometry        ( c, height + 1, dbh, age, species );
-//									canopy_cover_projected ( c, height + 1, dbh, age, species );
-//
-//									/* remove_tree_class */
-//									if ( ! tree_class_remove(c, height, dbh, age, species) )
-//									{
-//										logger_error(g_debug_log, "unable to remove tree class");
-//										exit(1);
-//									}
-//								}
-//							}
+						//							else
+						//							{
+						//								//fixme
+						//								/* remove_tree_class */
+						//								logger(g_debug_log, "completely removed lower class, starting to remove from higher..\n");
+						//								if ( ! tree_class_remove(c, height, dbh, age, species) )
+						//								{
+						//									logger_error(g_debug_log, "unable to remove tree class");
+						//									exit(1);
+						//								}
+						//
+						//								/* mortality for the higher height class */
+						//								while (c->tree_layers[layer].layer_cover > g_settings->max_layer_cover &&
+						//										c->heights[height + 1].dbhs[dbh].ages[age].species[species].counter[N_TREE] >= 0)
+						//								{
+						//									--c->heights[height + 1].dbhs[dbh].ages[age].species[species].counter[N_TREE];
+						//									++c->heights[height + 1].dbhs[dbh].ages[age].species[species].counter[DEAD_TREE];
+						//
+						//									//todo check if correct (probably not)
+						//									dbhdc_function         ( c, layer, height + 1, dbh, age, species, year );
+						//									crown_allometry        ( c, height + 1, dbh, age, species );
+						//									canopy_cover_projected ( c, height + 1, dbh, age, species );
+						//
+						//									/* remove_tree_class */
+						//									if ( ! tree_class_remove(c, height, dbh, age, species) )
+						//									{
+						//										logger_error(g_debug_log, "unable to remove tree class");
+						//										exit(1);
+						//									}
+						//								}
+						//							}
 					}
 
 					//fixme this is not correct for multilayer
@@ -309,10 +309,6 @@ void age_mortality (cell_t *const c, const int height, const int dbh, const int 
 				exit(1);
 			}
 		}
-	}
-	else
-	{
-		deadtree = 0;
 	}
 
 	/* update at class level */
