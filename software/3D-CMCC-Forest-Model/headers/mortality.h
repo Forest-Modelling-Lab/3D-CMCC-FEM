@@ -14,4 +14,6 @@ void self_thinning_mortality           ( cell_t *const c, const int layer, const
 
 void age_mortality                     ( cell_t *const c, const int height, const int dbh, const int age, const int species );
 
+void mortality                         (cell_t *const c, const int height, const int dbh, const int age, const int species, const int tree_remove);
+
 #endif /* MORTALITY_H_ */

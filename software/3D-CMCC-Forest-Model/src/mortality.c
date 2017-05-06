@@ -223,11 +223,46 @@ int growth_efficiency_mortality ( cell_t *const c, const int height, const int d
 
 	if( s->value[RESERVE_C] < 0 )
 	{
+		puts("growth efficiency mortality!!!\n");
 		/* reset to zero n_trees */
-		//ALESSIOC TO ALESSIOR IMPOSE N_TREE = 0 IS USEFUL?
 		s->counter[DEAD_TREE] = s->counter[N_TREE];
 		s->counter[N_TREE]    = 0;
 		c->n_trees -= s->counter[DEAD_TREE];
+
+		/* remove dead C and N biomass */
+		tree_biomass_remove ( c, height, dbh, age, species, s->counter[N_TREE] );
+
+		//fixme
+		/*** update cell level carbon fluxes ***/
+		/* update cell level carbon fluxes (gC/m2/day) */
+		/* tree */
+		c->daily_leaf_carbon        -= (s->value[C_LEAF_TO_LITR]  + s->value[C_LEAF_TO_RESERVE])    * 1e6 / g_settings->sizeCell;
+		c->daily_froot_carbon       -= (s->value[C_FROOT_TO_LITR] + s->value[C_FROOT_TO_RESERVE])   * 1e6 / g_settings->sizeCell;
+		c->daily_stem_carbon        -= (s->value[C_STEM_TO_CWD]    * 1e6 / g_settings->sizeCell);
+		c->daily_croot_carbon       -= (s->value[C_CROOT_TO_CWD]   * 1e6 / g_settings->sizeCell);
+		c->daily_branch_carbon      -= (s->value[C_BRANCH_TO_CWD]  * 1e6 / g_settings->sizeCell);
+		c->daily_reserve_carbon     -= (s->value[C_RESERVE_TO_CWD] * 1e6 / g_settings->sizeCell);
+		c->daily_fruit_carbon       -= (s->value[C_FRUIT_TO_CWD]   * 1e6 / g_settings->sizeCell);
+
+		/*** update cell level carbon pools ***/
+
+		/* tree */
+		c->leaf_carbon              -= (s->value[C_LEAF_TO_LITR]  + s->value[C_LEAF_TO_RESERVE])    * 1e6 / g_settings->sizeCell;
+		c->froot_carbon             -= (s->value[C_FROOT_TO_LITR] + s->value[C_FROOT_TO_RESERVE])   * 1e6 / g_settings->sizeCell;
+		c->stem_carbon              -= (s->value[C_STEM_TO_CWD]    * 1e6 / g_settings->sizeCell);
+		c->branch_carbon            -= (s->value[C_BRANCH_TO_CWD]  * 1e6 / g_settings->sizeCell);
+		c->croot_carbon             -= (s->value[C_CROOT_TO_CWD]   * 1e6 / g_settings->sizeCell);
+		c->reserve_carbon           -= (s->value[C_RESERVE_TO_CWD] * 1e6 / g_settings->sizeCell);
+		c->fruit_carbon             -= (s->value[C_FRUIT_TO_CWD]   * 1e6 / g_settings->sizeCell);
+
+		/* check */
+		CHECK_CONDITION ( c->leaf_carbon,    < , ZERO );
+		CHECK_CONDITION ( c->froot_carbon,   < , ZERO );
+		CHECK_CONDITION ( c->stem_carbon,    < , ZERO );
+		CHECK_CONDITION ( c->branch_carbon,  < , ZERO );
+		CHECK_CONDITION ( c->croot_carbon,   < , ZERO );
+		CHECK_CONDITION ( c->reserve_carbon, < , ZERO );
+		CHECK_CONDITION ( c->fruit_carbon,   < , ZERO );
 
 		/* call remove_tree_class */
 		if ( ! tree_class_remove(c, height, dbh, age, species) )
@@ -251,11 +286,8 @@ int annual_growth_efficiency_mortality ( cell_t *const c, const int height, cons
 
 	if( s->value[RESERVE_C] < 0 )
 	{
-		/* reset to zero n_trees */
-		//ALESSIOC TO ALESSIOR IMPOSE N_TREE = 0 IS USEFUL?
-		s->counter[DEAD_TREE] = s->counter[N_TREE];
-		s->counter[N_TREE]    = 0;
-		c->n_trees -= s->counter[DEAD_TREE];
+		/* remove dead C and N biomass */
+		tree_biomass_remove ( c, height, dbh, age, species, s->counter[N_TREE] );
 
 		/* call remove_tree_class */
 		if ( ! tree_class_remove(c, height, dbh, age, species) )
@@ -263,6 +295,12 @@ int annual_growth_efficiency_mortality ( cell_t *const c, const int height, cons
 			logger_error(g_debug_log, "unable to remove tree class");
 			exit(1);
 		}
+
+		/* reset to zero n_trees */
+		s->counter[DEAD_TREE] = s->counter[N_TREE];
+		s->counter[N_TREE]    = 0;
+		c->n_trees -= s->counter[DEAD_TREE];
+
 		return 1;
 	}
 	return 0;
@@ -288,13 +326,12 @@ void age_mortality (cell_t *const c, const int height, const int dbh, const int 
 
 	livetree = s->counter[N_TREE];
 
+	deadtree = (int)(livetree * age_mort);
+	logger(g_debug_log, "dead trees = %d\n", deadtree);
 
-	if ( ( livetree * age_mort ) > 1 )
+	if ( ( deadtree ) > 1 )
 	{
 		logger(g_debug_log, "**MORTALITY based on Tree Age (LPJ)**\n");
-
-		deadtree = (int)(livetree * age_mort);
-		logger(g_debug_log, "dead trees = %d\n", deadtree);
 
 		if ( livetree > deadtree)
 		{
@@ -309,29 +346,26 @@ void age_mortality (cell_t *const c, const int height, const int dbh, const int 
 				exit(1);
 			}
 		}
+
+		/* update at class level */
+		s->counter[DEAD_TREE] += deadtree;
+		s->counter[N_TREE]    -= deadtree;
+
+		/* check */
+		CHECK_CONDITION(s->counter[N_TREE],    <=, 0);
+		CHECK_CONDITION(s->counter[DEAD_TREE], <, 0);
+
+		/* update at cell level */
+		c->daily_dead_tree   += deadtree;
+		c->monthly_dead_tree += deadtree;
+		c->annual_dead_tree  += deadtree;
+		c->n_trees -= deadtree;
+
+		/* check */
+		CHECK_CONDITION(c->daily_dead_tree  , <, 0);
+		CHECK_CONDITION(c->monthly_dead_tree, <, 0);
+		CHECK_CONDITION(c->annual_dead_tree , <, 0);
 	}
-
-	/* update at class level */
-	s->counter[DEAD_TREE] += deadtree;
-	s->counter[N_TREE]    -= deadtree;
-
-	/* check */
-	CHECK_CONDITION(s->counter[N_TREE],    <=, 0);
-	CHECK_CONDITION(s->counter[DEAD_TREE], <, 0);
-
-	/* update at cell level */
-	c->daily_dead_tree   += deadtree;
-	c->monthly_dead_tree += deadtree;
-	c->annual_dead_tree  += deadtree;
-	c->n_trees -= deadtree;
-
-	/* check */
-	CHECK_CONDITION(c->daily_dead_tree  , <, 0);
-	CHECK_CONDITION(c->monthly_dead_tree, <, 0);
-	CHECK_CONDITION(c->annual_dead_tree , <, 0);
-
-
-	logger(g_debug_log, "**********************************\n");
 }
 
 void self_pruning ( cell_t *const c, const int height, const int dbh, const int age, const int species, const double old_layer_cover )
