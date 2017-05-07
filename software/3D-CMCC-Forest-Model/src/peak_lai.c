@@ -28,7 +28,6 @@ void peak_lai(species_t *const s, const int day, const int month, const int year
 	/* compute max leaf carbon (tC/cell) at Peak Projected Lai */
 	s->value[MAX_LEAF_C]   = (s->value[PEAK_LAI_PROJ] / s->value[SLA_AVG]) /1000. * (s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell);
 	logger(g_debug_log, "MAX_LEAF_C (sun and shaded)= %f tC/area \n", s->value[MAX_LEAF_C]);
-	printf("MAX_LEAF_C (sun and shaded)= %f tC/area \n", s->value[MAX_LEAF_C]);getchar();
 
 	/* then compute fine root carbon (tC/cell) at Peak Projected Lai */
 	s->value[MAX_FROOT_C]  = s->value[MAX_LEAF_C] * (1.0 - s->value[FROOT_LEAF_FRAC]);

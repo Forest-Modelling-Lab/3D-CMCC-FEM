@@ -1,9 +1,9 @@
 ﻿//Pinus sylvestris parameterization file
 LIGHT_TOL   3                 //4 = very shade intolerant 3 = shade intolerant 2 = shade tolerant 1 = very shade tolerant
 PHENOLOGY   1.2               //PHENOLOGY 0.1 = deciduous broadleaf, 0.2 = deciduous needle leaf, 1.1 = broad leaf evergreen, 1.2 = needle leaf evergreen 
-ALPHA   0.0455 //0.055        //Canopy quantum efficiency (molC/molPAR) for P. sylvestris Landsberg et al., 2005, 0.0545 Makela et al., 2006
+ALPHA   0.0455 //0.055        //Canopy quantum efficiency (molC/molPAR) for P. sylvestris Landsberg et al., 2005, 0.0545 Makela et al., 2006, 0.05 Xenakis et al., 2007
 EPSILONgCMJ -9999             //Light Use Efficiency (gC/molPAR)(used if ALPHA is not available)  
-K   0.495                     //Extinction coefficient for absorption of PAR by canopy for P. sylvestris Landsberg et al., 2005 or 0.51 from Pietsch, 0.495 Tatarinov
+K   0.495                     //Extinction coefficient for absorption of PAR by canopy for P. sylvestris Landsberg et al., 2005 or 0.51 from Pietsch, 0.495 Tatarinov, 
 ALBEDO  0.15                  //averaged for P. sylvestris 0.15 (or 0.12) Otto et al., 2014 BGS, 0.093 from Breuer et al., 2003
 INT_COEFF  0.3                //precip interception coefficient for P. sylvestris from Pietsch
 SLA_AVG 9.5 //13.0                  //Average Specific Leaf Area m^2/KgC sunlit/shaded leaves for P. sylvestris 13.0 from Pietsch 9.5 Tatarinov, 5.50 Mencuccini and Bonosi 2001
@@ -12,8 +12,8 @@ LAI_RATIO   2.6               //(DIM) all-sided to projected leaf area ratio for
 FRACBB0 0.30                  //Branch and Bark fraction at age 0 for P. sylvestris, from Xenakis et al., 2008, 0.29 deducted for P. sylvestris from Yuste et al., 2005, 0.29 from Lehtonen et al., 2004 For Eco Manag, 0.71 from xiao and Ceulemans
 FRACBB1 0.1                   //Branch and Bark fraction for mature stands for P. sylvestris, from Xenakis et al., 2008, 0.29 deducted for P. sylvestris from Yuste et al., 2005, 0.29 from Lehtonen et al., 2004 For Eco Manag, 0.18 from Jenssen et al 1999, 0.77 from xiao and Ceulemans
 TBB 10                        //Age at which fracBB = (FRACBB0 + FRACBB1 )/ 2 for P. sylvestris, from Xenakis et al., 2008
-RHOMIN  0.47                  //Minimum Basic Density for young Trees t/m^3 for P. sylvestris Landsberg et al., 2005, 0.49 Seidl et al., 2012
-RHOMAX  0.47                  //Maximum Basic Density for young Trees t/m^3 for P. sylvestris Landsberg et al., 2005, 0.49 Seidl et al., 2012
+RHOMIN  0.40                  //Minimum Basic Density for young Trees t/m^3 for P. sylvestris Landsberg et al., 2005, 0.49 Seidl et al., 2012
+RHOMAX  0.39                  //Maximum Basic Density for young Trees t/m^3 for P. sylvestris Landsberg et al., 2005, 0.49 Seidl et al., 2012
 TRHO    4                     //Age at which rho = (RHOMIN + RHOMAX )/2
 FORM_FACTOR 0.435             //Form factor Seidl et al., 2012 
 COEFFCOND   0.05              //Define stomatal responsee to VPD in mbar for P. sylvestris Landsberg et al., 2005
@@ -63,8 +63,8 @@ SAP_A   3.119                 //TO BE CHECKED           //a value for Picea abie
 SAP_B   1.4544                //TO BE CHECKED           //b value for Picea abies deducted from p.c. Kostner and Clausnitzer et al., 2011
 SAP_LEAF    1480              //1020   //sapwood_max leaf area ratio in pipe model for Pinus sylvestris 1480 Mencuccini Bonosi, 2001; 1020 Makela et al., 1995 (to be checked)
 SAP_WRES    0.05              //Sapwood-Reserve biomass ratio used if no Wres data are available 0.11 for deciduous 0.05 for evergreen see Schwalm and Ek, 2004 Ecological Modelling
-STEMCONST_P 0.127 //0.292             //a parameter for allometric equation 0.06552  E. Cienciala et al., 2006 For P. sylvestrisM; from Yuste et al 2005 0.1227, 0.084 from xiao and Ceulemans, 0.7 Seidl et al., 2012, 0.027 Landsberg and Sands
-STEMPOWER_P 2.30  //2.0087            //b parameter for allometric equation 2.50626 E. Cienciala et al., 2006 For P. sylvestris; from Yuste et al 2005 2.3272, 1.985 from xiao and Ceulemans, 3.0 Seidl et al., 2012, 2.86 Landsberg and Sands
+STEMCONST_P 0.127 //0.292             //a parameter for allometric equation 0.06552  E. Cienciala et al., 2006 For P. sylvestrisM; from Yuste et al 2005 0.1227, 0.084 from xiao and Ceulemans, 0.7 Seidl et al., 2012, 0.027 Landsberg and Sands, 0.046 Landsberg et al., 2005
+STEMPOWER_P 2.30  //2.0087            //b parameter for allometric equation 2.50626 E. Cienciala et al., 2006 For P. sylvestris; from Yuste et al 2005 2.3272, 1.985 from xiao and Ceulemans, 3.0 Seidl et al., 2012, 2.86 Landsberg and Sands, 2.6496 Landsberg et al., 2005
 CRA 32                        //for P. sylvestris 32 from Rupsys et al., 2010, 23.2674 Cannell 1982, 40.2947 Vaninen et al., 1996 (Pilli et al., 2016)
 CRB 0.04                      //for P. sylvestris 0.04 from Rupsys et al., 2010, 0.09025 Cannell 1982, 0.04163 Vaninen et al., 1996 (Pilli et al., 2016)
 CRC 0.99                      //for P. sylvestris 0.99 from Rupsys et al., 2010, 2.18562 Cannell 1982, 1.92688 Vaninen et al., 1996 (Pilli et al., 2016)

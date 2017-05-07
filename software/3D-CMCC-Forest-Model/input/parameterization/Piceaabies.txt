@@ -14,7 +14,7 @@ FRACBB1                 0.1     //Branch and Bark fraction for mature stands for
 TBB                     10      //Age at which fracBB = (FRACBB0 + FRACBB1 )/ 2 for P. sylvestris, from Xenakis et al., 2008
 RHOMIN                  0.425   //Minimum Basic Density for young Trees t/m^3 for Picea abies Kantola and Makela 2006, 0.43 Seidl et al., 2012, 0.45 Pilli et al., 2006
 RHOMAX                  0.374   //Maximum Basic Density for old Trees t/m^3 for Picea abies Kantola and Makela 2006, 0.43 Seidl et al., 20120, 0.45 Pilli et al., 2006
-TRHO                    4       //Age at which rho = (RHOMIN + RHOMAX )/2
+TRHO                    50      //Age at which rho = (RHOMIN + RHOMAX )/2
 FORM_FACTOR             0.423   //Form factor Seidl et al., 2012
 COEFFCOND               0.06    //Define stomatal responsee to VPD in mbar for Picea abies
 BLCOND                  0.009   //Canopy Boundary Layer conductance  for Picea abies 
