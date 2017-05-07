@@ -224,6 +224,7 @@ int growth_efficiency_mortality ( cell_t *const c, const int height, const int d
 	if( s->value[RESERVE_C] < 0 )
 	{
 		puts("growth efficiency mortality!!!\n");
+
 		/* reset to zero n_trees */
 		s->counter[DEAD_TREE] = s->counter[N_TREE];
 		s->counter[N_TREE]    = 0;

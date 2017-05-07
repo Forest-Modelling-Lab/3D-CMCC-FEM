@@ -239,8 +239,6 @@ void tree_biomass_remove (cell_t *const c, const int height, const int dbh, cons
 	s->value[C_TO_LITR]               += s->value[C_LEAF_TO_LITR] +
 			s->value[C_FROOT_TO_LITR];
 
-	s->value[LITR_C]                  += s->value[C_TO_LITR];
-
 	/* carbon to cwd fluxes */
 	s->value[C_STEM_TO_CWD]           += (s->value[AV_STEM_MASS_C]    * tree_remove);
 
@@ -281,7 +279,7 @@ void tree_biomass_remove (cell_t *const c, const int height, const int dbh, cons
 	s->value[N_TO_LITR]               += s->value[N_LEAF_TO_LITR] +
 			s->value[N_FROOT_TO_LITR];
 
-	s->value[LITR_C]                  += s->value[N_TO_LITR];
+	s->value[LITR_N]                  += s->value[N_TO_LITR];
 
 	/* nitrogen to cwd fluxes */
 	s->value[N_STEM_TO_CWD]           += (s->value[AV_STEM_MASS_N]    * tree_remove);

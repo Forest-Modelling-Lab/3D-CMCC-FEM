@@ -17,7 +17,7 @@ extern settings_t* g_settings;
 extern logger_t* g_debug_log;
 
 
-void carbon_assimilation(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species)
+void carbon_assimilation(cell_t *const c, const int height, const int dbh, const int age, const int species)
 {
 	species_t *s;
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];

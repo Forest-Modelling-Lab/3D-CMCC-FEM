@@ -240,7 +240,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	/********************************************************************************************/
 
 	/* SOIL NUTRIENT MODIFIER */
-	s->value[F_NUTR] = 1.0 - ( 1.0- g_soil_settings->values[SOIL_FN0]) * pow ((1.0 - g_soil_settings->values[SOIL_FR]), g_soil_settings->values[SOIL_FNN]);
+	s->value[F_NUTR] = 1.  - ( 1. - g_soil_settings->values[SOIL_FN0]) * pow ((1.0 - g_soil_settings->values[SOIL_FR]), g_soil_settings->values[SOIL_FNN]);
 	logger(g_debug_log, "fNutr = %f\n", s->value[F_NUTR]);
 
 	/* check */

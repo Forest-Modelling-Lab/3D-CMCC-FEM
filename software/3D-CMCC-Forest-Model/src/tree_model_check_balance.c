@@ -274,7 +274,7 @@ int check_tree_class_carbon_mass_balance ( cell_t *const c, const int layer, con
 			s->value[C_CROOT_TO_CWD]                      +
 			s->value[C_RESERVE_TO_CWD]                    +
 			s->value[C_FRUIT_TO_CWD]                      ;
-
+#if 1
 	/* sum of current storage */
 	s->value[TREEC_STORE] = s->value[LEAF_C] +
 			s->value[FROOT_C]                +
@@ -283,6 +283,19 @@ int check_tree_class_carbon_mass_balance ( cell_t *const c, const int layer, con
 			s->value[BRANCH_C]               +
 			s->value[RESERVE_C]              +
 			s->value[FRUIT_C]                ;
+#else
+	s->value[TREEC_STORE] = s->value[LEAF_C] +
+			s->value[FROOT_C]                +
+			s->value[CROOT_C]                +
+			s->value[STEM_C]                 +
+			s->value[BRANCH_C]               +
+			s->value[RESERVE_C]              +
+			s->value[FRUIT_C]                +
+			s->value[LITR_C]                 +
+			s->value[CWD_C]                  ;
+#endif
+
+
 
 	/* check carbon pool balance */
 	s->value[TREEC_BALANCE] = s->value[TREEC_IN] - s->value[TREEC_OUT] - (s->value[TREEC_STORE] - s->value[TREEC_OLDSTORE]);

@@ -4,7 +4,7 @@
  *  Created on: 08/nov/2016
  *      Author: alessio-cmcc
  */
-/* treemodel.c */
+/* tree_model.c */
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -223,7 +223,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 								/* compute age-related sla */
 								specific_leaf_area ( a, s);
 
-								/* compute annual Maximum LAI */
+								/* compute annual potential Maximum LAI */
 								peak_lai( s, day, month, year );
 
 								/* compute growth respiration fraction */
@@ -293,7 +293,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							carbon_fluxes           ( s );
 
 							/* C assimilation */
-							carbon_assimilation     ( c, layer, height, dbh, age, species );
+							carbon_assimilation     ( c, height, dbh, age, species );
 
 							if ( c->doy == ( IS_LEAP_YEAR ( c->years[year].year ) ? 366 : 365) )
 							{
@@ -307,14 +307,20 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							/* allocate daily nitrogen */
 							nitrogen_allocation     ( c, s );
 
-							/* allocate daily carbon */
-							//carbon_balance     ( c, height, dbh, age, species );
-
 							/* MORTALITY */
 							/* Mortality based on growth efficiency */
 							/* note: when it happens the overall class is removed */
 							if ( ! growth_efficiency_mortality ( c, height, dbh, age, species ) )
 							{
+//								if ( c->doy == ( IS_LEAP_YEAR ( c->years[year].year ) ? 366 : 365) )
+//								{
+//									/* Mortality based on tree Age (LPJ) */
+//									age_mortality ( c, height, dbh, age, species);
+//								}
+//
+//								/* allocate daily carbon */
+//								carbon_balance          ( c, height, dbh, age, species );
+
 								/* turnover */
 								turnover ( c, s, year );
 
@@ -372,6 +378,11 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 
 								/* check for nitrogen mass balance closure */
 								/* 6 */ //fixme if ( ! check_tree_class_nitrogen_mass_balance  ( c, layer, height, dbh, age, species ) ) return 0;
+							}
+							else
+							{
+								//fixme here model should remove class just after have checked the balances are closed
+								//so model has to include c fluxes that go out to litter and cwd
 							}
 							/****************************************************************************************************************************************/
 							/****************************************************************************************************************************************/

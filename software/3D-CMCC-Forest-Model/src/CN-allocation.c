@@ -35,6 +35,7 @@ void carbon_allocation( cell_t *const c, const int height, const int dbh, const 
 	logger(g_debug_log, "\n**CARBON ALLOCATION**\n");
 
 	/*** removing growth respiration and dead pools from carbon flux pools ***/
+#if 1 //test
 	s->value[C_TO_LEAF]    -= ((s->value[LEAF_GROWTH_RESP]   / 1e6 * g_settings->sizeCell) + s->value[C_LEAF_TO_LITR]  + s->value[C_LEAF_TO_RESERVE]);
 	s->value[C_TO_FROOT]   -= ((s->value[FROOT_GROWTH_RESP]  / 1e6 * g_settings->sizeCell) + s->value[C_FROOT_TO_LITR] + s->value[C_FROOT_TO_RESERVE]);
 	s->value[C_TO_STEM]    -= ((s->value[STEM_GROWTH_RESP]   / 1e6 * g_settings->sizeCell) + s->value[C_STEM_TO_CWD]);
@@ -45,33 +46,30 @@ void carbon_allocation( cell_t *const c, const int height, const int dbh, const 
 	s->value[C_TO_LITR]    +=   s->value[C_LEAF_TO_LITR] +
 			s->value[C_FROOT_TO_LITR];
 	s->value[C_TO_CWD]     +=   s->value[C_BRANCH_TO_CWD];
-
-	logger(g_debug_log, "\n* transfer carbon pools (tree level) *\n");
-	logger(g_debug_log, "C_TO_LEAF    = %f tC/cell/day\n", s->value[C_TO_LEAF]);
-	logger(g_debug_log, "C_TO_FROOT   = %f tC/cell/day\n", s->value[C_TO_FROOT]);
-	logger(g_debug_log, "C_TO_CROOT   = %f tC/cell/day\n", s->value[C_TO_CROOT]);
-	logger(g_debug_log, "C_TO_STEM    = %f tC/cell/day\n", s->value[C_TO_STEM]);
-	logger(g_debug_log, "C_TO_RESERVE = %f tC/cell/day\n", s->value[C_TO_RESERVE]);
-	logger(g_debug_log, "C_TO_BRANCH  = %f tC/cell/day\n", s->value[C_TO_BRANCH]);
-	logger(g_debug_log, "C_TO_FRUIT   = %f tC/cell/day\n", s->value[C_TO_FRUIT]);
+#else
+	//if using test
+	s->value[C_TO_LEAF]    -= ((s->value[LEAF_GROWTH_RESP]   / 1e6 * g_settings->sizeCell) + s->value[C_LEAF_TO_LITR]  + s->value[C_LEAF_TO_RESERVE]);
+	s->value[C_TO_FROOT]   -= ((s->value[FROOT_GROWTH_RESP]  / 1e6 * g_settings->sizeCell) + s->value[C_FROOT_TO_LITR] + s->value[C_FROOT_TO_RESERVE]);
+	s->value[C_TO_STEM]    -= ((s->value[STEM_GROWTH_RESP]   / 1e6 * g_settings->sizeCell));
+	s->value[C_TO_CROOT]   -= ((s->value[CROOT_GROWTH_RESP]  / 1e6 * g_settings->sizeCell));
+	s->value[C_TO_BRANCH]  -= ((s->value[BRANCH_GROWTH_RESP] / 1e6 * g_settings->sizeCell));
+	s->value[C_TO_FRUIT]   -=   s->value[C_FRUIT_TO_CWD];
+	s->value[C_TO_RESERVE] -=  (s->value[C_RESERVE_TO_CWD]);
+	s->value[C_TO_LITR]    +=   s->value[C_LEAF_TO_LITR] +
+			s->value[C_FROOT_TO_LITR];
+	s->value[C_TO_CWD]     +=   s->value[C_BRANCH_TO_CWD];
+#endif
 
 	/*** update class level carbon mass pools ***/
-	s->value[LEAF_C]     += s->value[C_TO_LEAF]    ;
-	s->value[FROOT_C]    += s->value[C_TO_FROOT]   ;
-	s->value[STEM_C]     += s->value[C_TO_STEM]    ;
-	s->value[CROOT_C]    += s->value[C_TO_CROOT]   ;
-	s->value[BRANCH_C]   += s->value[C_TO_BRANCH]  ;
-	s->value[RESERVE_C]  += s->value[C_TO_RESERVE] ;
-	s->value[FRUIT_C]    += s->value[C_TO_FRUIT]   ;
-
-	logger(g_debug_log, "\n* carbon pools (tree level) *\n");
-	logger(g_debug_log, "LEAF_C      = %f tC/cell\n", s->value[LEAF_C]);
-	logger(g_debug_log, "FROOT_C     = %f tC/cell\n", s->value[FROOT_C]);
-	logger(g_debug_log, "STEM_C      = %f tC/cell\n", s->value[STEM_C]);
-	logger(g_debug_log, "CROOT_C     = %f tC/cell\n", s->value[CROOT_C]);
-	logger(g_debug_log, "BRANCH_C    = %f tC/cell\n", s->value[BRANCH_C]);
-	logger(g_debug_log, "RESERVE_C   = %f tC/cell\n", s->value[RESERVE_C]);
-	logger(g_debug_log, "FRUIT_C     = %f tC/cell\n", s->value[FRUIT_C]);
+	s->value[LEAF_C]     += s->value[C_TO_LEAF];
+	s->value[FROOT_C]    += s->value[C_TO_FROOT];
+	s->value[STEM_C]     += s->value[C_TO_STEM];
+	s->value[CROOT_C]    += s->value[C_TO_CROOT];
+	s->value[BRANCH_C]   += s->value[C_TO_BRANCH];
+	s->value[RESERVE_C]  += s->value[C_TO_RESERVE];
+	s->value[FRUIT_C]    += s->value[C_TO_FRUIT];
+	s->value[LITR_C]     += s->value[C_TO_LITR];
+	s->value[CWD_C]      += s->value[C_TO_CWD];
 
 	/* check */
 	CHECK_CONDITION ( s->value[LEAF_C],     < , ZERO );
@@ -80,14 +78,14 @@ void carbon_allocation( cell_t *const c, const int height, const int dbh, const 
 	CHECK_CONDITION ( s->value[BRANCH_C],   < , ZERO );
 	CHECK_CONDITION ( s->value[CROOT_C],    < , ZERO );
 	CHECK_CONDITION ( s->value[FRUIT_C],    < , ZERO );
+	CHECK_CONDITION ( s->value[LITR_C],     < , ZERO );
+	CHECK_CONDITION ( s->value[CWD_C],      < , ZERO );
 
 	/* single tree average tree pools */
 	average_tree_pools ( s );
 
 
-	/*** update cell level carbon fluxes ***/
-	/* update cell level carbon fluxes (gC/m2/day) */
-	/* tree */
+	/*** update cell level carbon fluxes (gC/m2/day)***/
 	c->daily_leaf_carbon        += (s->value[C_TO_LEAF]    * 1e6 / g_settings->sizeCell);
 	c->daily_froot_carbon       += (s->value[C_TO_FROOT]   * 1e6 / g_settings->sizeCell);
 	c->daily_stem_carbon        += (s->value[C_TO_STEM]    * 1e6 / g_settings->sizeCell);
@@ -95,19 +93,11 @@ void carbon_allocation( cell_t *const c, const int height, const int dbh, const 
 	c->daily_branch_carbon      += (s->value[C_TO_BRANCH]  * 1e6 / g_settings->sizeCell);
 	c->daily_reserve_carbon     += (s->value[C_TO_RESERVE] * 1e6 / g_settings->sizeCell);
 	c->daily_fruit_carbon       += (s->value[C_TO_FRUIT]   * 1e6 / g_settings->sizeCell);
+	//computed in littering.c
+	//c->daily_litrC              += (s->value[C_TO_LITR]    * 1e6 / g_settings->sizeCell);
+	//c->daily_cwdC               += (s->value[C_TO_CWD]     * 1e6 / g_settings->sizeCell);
 
-	logger(g_debug_log, "\n* transfer carbon pools (cell level) *\n");
-	logger(g_debug_log, "daily_leaf_carbon    = %f gC/m2/day\n", c->daily_leaf_carbon);
-	logger(g_debug_log, "daily_froot_carbon   = %f gC/m2/day\n", c->daily_froot_carbon);
-	logger(g_debug_log, "daily_stem_carbon    = %f gC/m2/day\n", c->daily_stem_carbon);
-	logger(g_debug_log, "daily_croot_carbon   = %f gC/m2/day\n", c->daily_croot_carbon);
-	logger(g_debug_log, "daily_croot_carbon   = %f gC/m2/day\n", c->daily_croot_carbon);
-	logger(g_debug_log, "daily_branch_carbon  = %f gC/m2/day\n", c->daily_branch_carbon);
-	logger(g_debug_log, "daily_fruit_carbon   = %f gC/m2/day\n", c->daily_fruit_carbon);
-
-	/*** update cell level carbon pools ***/
-
-	/* tree */
+	/*** update cell level carbon pools (gC/m2)***/
 	c->leaf_carbon              += (s->value[C_TO_LEAF]    * 1e6 / g_settings->sizeCell);
 	c->froot_carbon             += (s->value[C_TO_FROOT]   * 1e6 / g_settings->sizeCell);
 	c->stem_carbon              += (s->value[C_TO_STEM]    * 1e6 / g_settings->sizeCell);
@@ -115,15 +105,9 @@ void carbon_allocation( cell_t *const c, const int height, const int dbh, const 
 	c->croot_carbon             += (s->value[C_TO_CROOT]   * 1e6 / g_settings->sizeCell);
 	c->reserve_carbon           += (s->value[C_TO_RESERVE] * 1e6 / g_settings->sizeCell);
 	c->fruit_carbon             += (s->value[C_TO_FRUIT]   * 1e6 / g_settings->sizeCell);
-
-	logger(g_debug_log, "\n* carbon pools (cell level) *\n");
-	logger(g_debug_log, "leaf_carbon          = %f gC/m2\n", c->leaf_carbon);
-	logger(g_debug_log, "froot_carbon         = %f gC/m2\n", c->froot_carbon);
-	logger(g_debug_log, "stem_carbon          = %f gC/m2\n", c->stem_carbon);
-	logger(g_debug_log, "branch_carbon        = %f gC/m2\n", c->branch_carbon);
-	logger(g_debug_log, "croot_carbon         = %f gC/m2\n", c->croot_carbon);
-	logger(g_debug_log, "reserve_carbon       = %f gC/m2\n", c->reserve_carbon);
-	logger(g_debug_log, "fruit_carbon         = %f gC/m2\n", c->fruit_carbon);
+	//computed in littering.c
+	//c->litrC                    += (s->value[C_TO_LITR]    * 1e6 / g_settings->sizeCell);
+	//c->cwdC                     += (s->value[C_TO_CWD]     * 1e6 / g_settings->sizeCell);
 
 	/* check */
 	CHECK_CONDITION ( c->leaf_carbon,    < , ZERO );
@@ -131,8 +115,9 @@ void carbon_allocation( cell_t *const c, const int height, const int dbh, const 
 	CHECK_CONDITION ( c->stem_carbon,    < , ZERO );
 	CHECK_CONDITION ( c->branch_carbon,  < , ZERO );
 	CHECK_CONDITION ( c->croot_carbon,   < , ZERO );
-	//CHECK_CONDITION ( c->reserve_carbon, < , ZERO );
 	CHECK_CONDITION ( c->fruit_carbon,   < , ZERO );
+	CHECK_CONDITION ( c->litrC,          < , ZERO );
+	CHECK_CONDITION ( c->cwdC,           < , ZERO );
 	/***************************************************************************************/
 }
 
