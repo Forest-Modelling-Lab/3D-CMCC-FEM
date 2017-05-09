@@ -139,7 +139,7 @@ void leaffall_evergreen ( cell_t *const c, const int height, const int dbh, cons
 		s->value[FROOT_C_TO_REMOVE]   = (s->value[FROOT_C] * s->value[LEAF_FROOT_TURNOVER]) / days_for_leaffall;
 		s->value[FROOT_N_TO_REMOVE]   = (s->value[FROOT_N] * s->value[LEAF_FROOT_TURNOVER]) / days_for_leaffall;
 
-		if ( year > s->value[CONES_LIFE_SPAN] )
+		if ( s->counter[YOS] > s->value[CONES_LIFE_SPAN] )
 		{
 			/* daily fruit turnover rate */
 			s->value[FRUIT_C_TO_REMOVE]   = (s->value[FRUIT_C] * (1. / s->value[CONES_LIFE_SPAN])) / days_for_leaffall;

@@ -6,14 +6,16 @@ EPSILONgCMJ	0 // Light Use Efficiency  (gC/MJ)(used if ALPHA is not available)
 K	0.54		//0.54 Extinction coefficient for absorption of PAR by canopy 
 ALBEDO	0.2
 INT_COEFF  0.3    //precip interception coefficient
-SLA_AVG 34.5                 //Average Specific Leaf Area m^2/KgC sunlit/shaded leaves from White
+SLA_AVG0 14                 //(juvenile)Average Specific Leaf Area m^2/KgC sunlit/shaded leaves from Covone et al., 2006
+SLA_AVG1 10                 //(mature) Average Specific Leaf Area m^2/KgC sunlit/shaded leaves from Covone et al., 2006
+TSLA 60                     //Age at which SLA_AVG = (SLA_AVG1 + SLA_AVG0 )/2 Forrester et al., 2017
 SLA_RATIO	2       //(DIM) ratio of shaded to sunlit projected SLA		
 LAI_RATIO   2     //(DIM) (DIM) all-sided to projected leaf area ratio	
 FRACBB0	0.2            //Branch and Bark fraction at age 0 for C. sativa Ranger et al 1996
 FRACBB1	0.17            //Branch and Bark fraction for mature stands for C. sativa Ranger et al 1996
 TBB	10              //Age at which fracBB = (FRACBB0 + FRACBB1 )/ 2
-RHOMIN	0.49             //Minimum Basic Density for young Trees t/m^3
-RHOMAX	0.49             //Maximum Basic Density for young Trees 
+RHO0	0.49             //Minimum Basic Density for young Trees t/m^3
+RHO1	0.49             //Maximum Basic Density for young Trees 
 TRHO	4               //Age at which rho = (RHOMIN + RHOMAX )/2
 FORM_FACTOR 0.454       //Form factor Seidl et al., 2012 for Q. robur
 COEFFCOND	0.05    //Define stomatal responsee to VPD in mbar 

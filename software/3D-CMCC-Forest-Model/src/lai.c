@@ -15,21 +15,15 @@ extern logger_t* g_debug_log;
 
 void specific_leaf_area ( const age_t *const a, species_t *const s )
 {
-	double t_age = s->value[MAXAGE] / 2.;//fixme in case used include in species.txt
+
 	double n = 2;
-	double sla_juvenile = 40;            //fixme in case used include in species.txt
-	double sla_mature = 20;              //fixme in case used include in species.txt
-	double sla_prova;                    //fixme in case used remove
 
 	logger(g_debug_log, "\n**SPECIFIC LEAF AREA**\n");
-#if 0
-	s->value[SLA_AVG] = s->value[SLAMAX] + (s->value[SLAMIN] - s->value[SLAMAX]) * exp(-ln2 * pow((a->value / s->value[TSLA]), n));
-	logger(g_debug_log, "SLA_AVG = %f\n", s->value[SLA_AVG]);
-#else
-	sla_prova = sla_mature + (sla_juvenile - sla_mature)* exp(-ln2 * pow((a->value/ t_age),n));
-	logger(g_debug_log, "sla_prova = %f\n", sla_prova);
-#endif
 
+	/* ager related SLA based on 3-PG model approach */
+
+	s->value[SLA_AVG] = s->value[SLA_AVG1] + ( s->value[SLA_AVG0] - s->value[SLA_AVG1] ) * exp( -ln2 * pow((a->value / s->value[TSLA]), n));
+	logger(g_debug_log, "SLA_AVG = %f (kgC/m2)\n", s->value[SLA_AVG]);
 }
 
 void daily_lai (species_t *const s)

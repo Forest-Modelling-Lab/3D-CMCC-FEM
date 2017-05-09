@@ -6,14 +6,16 @@ EPSILONgCMJ 0                  //Light Use Efficiency  (gC/MJ)(used if ALPHA is 
 K   0.60                       //0.54 Extinction coefficient for absorption of PAR by canopy 0.71 for F. sylvatica Vitale et al., 2012, 0.5 from Williams 1996, 0.65 Hoffmann 1995
 ALBEDO  0.2                    //Albedo, 0.15 (varying from 0.13-0.17) from OTTO et al., BGS 2014
 INT_COEFF  0.3                 //precip interception coefficient for F. sylvatica fom Tatarinov
-SLA_AVG 48                     //Average Specific Leaf Area m^2/KgC sunlit leaves for Fagus s. 27.8 to 48 from Pietsch 2005, 35 for Tatarinov et al., 2006
+SLA_AVG0 30                    //Average Specific Leaf Area m^2/KgC (juvenile) sunlit/shaded leaves for Fagus s. Adriaenssens et al., 2011; 27.8 to 48 from Pietsch 2005, 35 for Tatarinov et al., 2006
+SLA_AVG1 15                    //Average Specific Leaf Area m^2/KgC (mature) sunlit/shaded leaves for Fagus s. Holscher et al., 2004; 27.8 to 48 from Pietsch 2005, 35 for Tatarinov et al., 2006
+TSLA 150                       //Age at which SLA_AVG = (SLA_AVG1 + SLA_AVG0 )/2 for Fagus s. Forrester et al., 2017
 SLA_RATIO   2                  //(DIM) ratio of shaded to sunlit projected SLA  for F. sylvatyica from Mollicone et al., 2002 , 2.0 from Pietsch 2005
 LAI_RATIO   2                  //(DIM) all-sided to projected leaf area ratio for F. sylvatyica from Mollicone et al., 2002 , 2.0 from Pietsch 2005
 FRACBB0 0.20                   //Branch and Bark fraction at age 0
 FRACBB1 0.125                  //Branch and Bark fraction for mature stands (0.125 from Damesin et al., 2003)(0.1 from Hoffmann 1995)
 TBB 20                         //Age at which fracBB = (FRACBB0 + FRACBB1 )/ 2
-RHOMIN  0.64                   //Minimum Basic Density for young Trees tDM/m^3 0.72 Bouriaud et al., 2004, 0.64 ettore, 0.68 Seidl et al., 2012, 0.58 Bartelink 1997
-RHOMAX  0.64                   //Maximum Basic Density for young Trees tDM/m^3 0.79 Bouriaud et al., 2004, 0.64 ettore, 0.68 Seidl et al., 2012, 0.58 Bartelink 1997
+RHO0  0.64                     //Minimum Basic Density for young Trees tDM/m^3 0.72 Bouriaud et al., 2004, 0.64 ettore, 0.68 Seidl et al., 2012, 0.58 Bartelink 1997
+RHO1  0.64                     //Maximum Basic Density for young Trees tDM/m^3 0.79 Bouriaud et al., 2004, 0.64 ettore, 0.68 Seidl et al., 2012, 0.58 Bartelink 1997
 TRHO    100                    //Age at which rho = (RHOMIN + RHOMAX )/2
 FORM_FACTOR 0.433              //Form factor Seidl et al., 2012
 COEFFCOND   0.06               //Define stomatal responsee to VPD in mbar see Pietsch et al., 2005

@@ -6,14 +6,16 @@ EPSILONgCMJ -9999             //Light Use Efficiency (gC/molPAR)(used if ALPHA i
 K   0.495                     //Extinction coefficient for absorption of PAR by canopy for P. sylvestris Landsberg et al., 2005 or 0.51 from Pietsch, 0.495 Tatarinov, 
 ALBEDO  0.15                  //averaged for P. sylvestris 0.15 (or 0.12) Otto et al., 2014 BGS, 0.093 from Breuer et al., 2003
 INT_COEFF  0.3                //precip interception coefficient for P. sylvestris from Pietsch
-SLA_AVG 9.5 //13.0                  //Average Specific Leaf Area m^2/KgC sunlit/shaded leaves for P. sylvestris 13.0 from Pietsch 9.5 Tatarinov, 5.50 Mencuccini and Bonosi 2001
+SLA_AVG0  9                   //Average Specific Leaf Area m^2/KgC (juvenile) sunlit/shaded leaves for P. sylvestris Landsberg et al., 2005, 13.0 from Pietsch 9.5 Tatarinov, 5.50 Mencuccini and Bonosi 2001
+SLA_AVG1  6                   //Average Specific Leaf Area m^2/KgC (mature) sunlit/shaded leaves for P. sylvestris Landsberg et al., 2005, 5.5 Mencuccini Bonosi 2003, 13.0 from Pietsch 9.5 Tatarinov, 5.50 Mencuccini and Bonosi 2001
+TSLA      10                  //Age at which SLA_AVG = (SLA_AVG1 + SLA_AVG0 )/2 Landsberg et al., 2005
 SLA_RATIO   2                 //(DIM) ratio of shaded to sunlit projected SLA for P. sylvestris from Pietsch
 LAI_RATIO   2.6               //(DIM) all-sided to projected leaf area ratio for P. sylvestris from Pietsch
 FRACBB0 0.30                  //Branch and Bark fraction at age 0 for P. sylvestris, from Xenakis et al., 2008, 0.29 deducted for P. sylvestris from Yuste et al., 2005, 0.29 from Lehtonen et al., 2004 For Eco Manag, 0.71 from xiao and Ceulemans
 FRACBB1 0.1                   //Branch and Bark fraction for mature stands for P. sylvestris, from Xenakis et al., 2008, 0.29 deducted for P. sylvestris from Yuste et al., 2005, 0.29 from Lehtonen et al., 2004 For Eco Manag, 0.18 from Jenssen et al 1999, 0.77 from xiao and Ceulemans
 TBB 10                        //Age at which fracBB = (FRACBB0 + FRACBB1 )/ 2 for P. sylvestris, from Xenakis et al., 2008
-RHOMIN  0.40                  //Minimum Basic Density for young Trees t/m^3 for P. sylvestris Landsberg et al., 2005, 0.49 Seidl et al., 2012
-RHOMAX  0.39                  //Maximum Basic Density for young Trees t/m^3 for P. sylvestris Landsberg et al., 2005, 0.49 Seidl et al., 2012
+RHO0  0.40                    //Minimum Basic Density for young Trees t/m^3 for P. sylvestris Landsberg et al., 2005, 0.49 Seidl et al., 2012
+RHO1  0.39                    //Maximum Basic Density for young Trees t/m^3 for P. sylvestris Landsberg et al., 2005, 0.49 Seidl et al., 2012
 TRHO    4                     //Age at which rho = (RHOMIN + RHOMAX )/2
 FORM_FACTOR 0.435             //Form factor Seidl et al., 2012 
 COEFFCOND   0.05              //Define stomatal responsee to VPD in mbar for P. sylvestris Landsberg et al., 2005

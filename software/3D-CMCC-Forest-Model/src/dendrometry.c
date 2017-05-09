@@ -78,7 +78,7 @@ void dendrometry ( cell_t *const c, const int layer, const int height, const int
 	logger(g_debug_log, "\n**Mass density**\n");
 
 	/* compute mass density tDM/m3 */
-	s->value[MASS_DENSITY] = s->value[RHOMAX] + (s->value[RHOMIN] - s->value[RHOMAX]) * exp(-ln2 * (a->value / s->value[TRHO]));
+	s->value[MASS_DENSITY] = s->value[RHO1] + (s->value[RHO0] - s->value[RHO1]) * exp(-ln2 * (a->value / s->value[TRHO]));
 	logger(g_debug_log, "-Mass Density = %g tDM/m3\n", s->value[MASS_DENSITY]);
 
 	/* convert to tDM-->kgDM m3 */
@@ -438,7 +438,7 @@ void dendrometry_old(cell_t *const c, const int layer, const int height, const i
 	 */
 
 	/* check */
-	if ( ! year ){ CHECK_CONDITION( oldTreeHeight - h->value , > , max_diff );}
+	if ( ! s->counter[YOS] ){ CHECK_CONDITION( oldTreeHeight - h->value , > , max_diff );}
 	else {CHECK_CONDITION( h->value, < , oldTreeHeight - eps );}
 
 	/*************************************************************************************************************************/

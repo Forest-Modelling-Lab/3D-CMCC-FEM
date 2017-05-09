@@ -12,6 +12,7 @@
 #include "common.h"
 #include "constants.h"
 #include "settings.h"
+#include "biomass.h"
 
 extern settings_t* g_settings;
 //extern logger_t* g_debug_log;

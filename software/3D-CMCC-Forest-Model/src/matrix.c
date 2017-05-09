@@ -977,14 +977,16 @@ static const char *sz_species_values[] =
 		"K",                          /* Extinction coefficient for absorption of PAR by canopy */
 		"ALBEDO",                     /* Canopy albedo */
 		"INT_COEFF",                  /* Precipitation interception coefficient */
-		"SLA_AVG",                    /* AVERAGE Specific Leaf Area m^2/KgC for sunlit/shaded leaves */
+		"SLA_AVG0",                   /* AVERAGE Specific Leaf Area m^2/KgC for sunlit/shaded leaves (juvenile) */
+		"SLA_AVG1",                   /* AVERAGE Specific Leaf Area m^2/KgC for sunlit/shaded leaves (mature) */
+		"TSLA",                       /* Age at which SLA_AVG = (SLA_AVG1 + SLA_AVG0 )/2 */
 		"SLA_RATIO",                  /* (DIM) ratio of shaded to sunlit projected SLA */
 		"LAI_RATIO",                  /* (DIM) all-sided to projected leaf area ratio */
 		"FRACBB0",                    /* Branch and Bark fraction at age 0 (m^2/kg) */
 		"FRACBB1",                    /* Branch and Bark fraction for mature stands (m^2/kg) */
 		"TBB",                        /* Age at which fracBB = (FRACBB0 + FRACBB1 )/ 2 */
-		"RHOMIN",                     /* Minimum Basic Density for young Trees */
-		"RHOMAX",                     /* Maximum Basic Density for young Trees */
+		"RHO0",                       /* Minimum Basic Density for young Trees */
+		"RHO1",                       /* Maximum Basic Density for mature Trees */
 		"TRHO",                       /* Age at which rho = (RHOMIN + RHOMAX )/2 */
 		"FORM_FACTOR",                /* Tree form factor (adim) */
 		"COEFFCOND",                  /* Define stomatal responsee to VPD in m/sec */

@@ -28,14 +28,16 @@ enum {
 	K,                                   /* Extinction coefficient for absorption of PAR by canopy */
 	ALBEDO,                              /* Canopy albedo */
 	INT_COEFF,                           /* Precipitation interception coefficient */
-	SLA_AVG,                             /* AVERAGE Specific Leaf Area m^2/KgC for sunlit/shaded leaves */
+	SLA_AVG0,                            /* AVERAGE Specific Leaf Area m2/KgC for sunlit/shaded leaves (juvenile) */
+	SLA_AVG1,                            /* AVERAGE Specific Leaf Area m2/KgC for sunlit/shaded leaves (mature) */
+	TSLA,                                /* Age at which SLA_AVG = (SLA_AVG1 + SLA_AVG0 )/2 */
 	SLA_RATIO,                           /* (DIM) ratio of shaded to sunlit projected SLA */
 	LAI_RATIO,                           /* (DIM) all-sided to projected leaf area ratio */
 	FRACBB0,                             /* Branch and Bark fraction at age 0 (m^2/kg) */
 	FRACBB1,                             /* Branch and Bark fraction for mature stands (m^2/kg) */
 	TBB,                                 /* Age at which fracBB = (FRACBB0 + FRACBB1 )/ 2 */
-	RHOMIN,                              /* Minimum Basic Density for young Trees (tDM/m3) */
-	RHOMAX,                              /* Maximum Basic Density for young Trees (tDM/m3) */
+	RHO0,                                /* Minimum Basic Density for young Trees (tDM/m3) */
+	RHO1,                                /* Maximum Basic Density for mature Trees (tDM/m3) */
 	TRHO,                                /* Age at which rho = (RHOMIN + RHOMAX )/2 */
 	FORM_FACTOR,                         /* Stem form factor (adim) */
 	COEFFCOND,                           /* Define stomatal responsee to VPD in m/sec */
@@ -291,6 +293,7 @@ enum {
 	gsWUE_SHADE,                        /* daily intrinsic Water Use Efficiency (stomatal) for shade leaves */
 
 	/* LAI */
+	SLA_AVG,                            /* (kgC/m2) Age-related Average Specific Leaf Area */
 	LAI_PROJ,                           /* (m2/m2) LAI for Projected Area covered (at zenith angle) */
 	LAI_SUN_PROJ,                       /* (m2/m2) LAI for sun leaves for Projected Area covered (at zenith angle) */
 	LAI_SHADE_PROJ,                     /* (m2/m2) LAI for shaded leaves for Projected Area covered (at zenith angle) */

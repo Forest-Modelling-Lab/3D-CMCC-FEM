@@ -30,12 +30,28 @@ getwd()
 output_folder="output_Rstudio"
 
 # multiple simulations
-site_list<-c("Soroe")#,"Soroe","Hyytiala","All")
-esm_list <-c("2")# ("1","2","3","4","5")
-rcp_list <-c("2p6")# ("0p0","2p6","4p5","6p0","8p5")
-man_list <-c("off")# ("on",'off')
-co2_list <-c("on")# , "off")
-protocol_list<-c("2B")# ("2A","2B") 
+site_list<-c("Hyytiala")#,"Soroe","Hyytiala","All")
+esm_list <-c("3")# ("1","2","3","4","5", "All")
+rcp_list <-c("8p5")# ("0p0","2p6","4p5","6p0","8p5","All")
+man_list <-c("off")# ("on",'off', "All")
+co2_list <-c("on")# , "on",off", "All")
+protocol_list<-c("2A")# ("2A","2B") 
+
+if ( grepl('All', esm_list) ) {
+  esm_list = c("1","2","3","4","5")
+}
+if( grepl('All', rcp_list) ) {
+  rcp_list = c("0p0","2p6","4p5","6p0","8p5")
+}
+if( grepl('All', man_list ) ) {
+  man_list = c("on",'off')
+}
+if( grepl('All', co2_list) ) {
+  co2_list = c("on",'off')
+}
+if ( grepl('All', protocol_list) ) {
+  protocol_list = c("2A","2B")
+}
 
 ## a way to time an R expression: system.time is preferred
 start.time <- Sys.time()

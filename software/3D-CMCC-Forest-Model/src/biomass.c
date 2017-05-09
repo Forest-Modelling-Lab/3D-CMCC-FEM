@@ -104,7 +104,7 @@ void annual_tree_increment(cell_t *const c, const int height, const int dbh, con
 	c->cum_volume += s->value[VOLUME];
 
 	/* check every year after the first */
-	if ( ! year ) { CHECK_CONDITION( ( tree_prev_vol - s->value[TREE_VOLUME] ), > , max_diff ); }
+	if ( ! s->counter[YOS] ) { CHECK_CONDITION( ( tree_prev_vol - s->value[TREE_VOLUME] ), > , max_diff ); }
 	else { CHECK_CONDITION( s->value[TREE_VOLUME], < , tree_prev_vol - eps ); }
 
 

@@ -57,11 +57,15 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 	/* compute growth respiration fraction */
 	growth_respiration_frac ( a, s );
 
+	/* compute age-related specific leaf area */
+	specific_leaf_area ( a, s);
+
 	logger(g_debug_log,"\n*******INITIALIZE FOREST CLASS CARBON POOLS (%s)*******\n", s->name);
 	logger(g_debug_log, "...checking initial biomass data for height %g, dbh %g, age %d, species %s...\n", h->value, d->value, a->value, s->name);
 
+
 	/* compute mass density */
-	s->value[MASS_DENSITY] = s->value[RHOMAX] + (s->value[RHOMIN] - s->value[RHOMAX]) * exp(-ln2 * (a->value / s->value[TRHO]));
+	s->value[MASS_DENSITY] = s->value[RHO1] + (s->value[RHO0] - s->value[RHO1]) * exp(-ln2 * (a->value / s->value[TRHO]));
 	logger(g_debug_log, "-Mass Density = %g tDM/m3\n", s->value[MASS_DENSITY]);
 
 	/* compute single tree volume */
