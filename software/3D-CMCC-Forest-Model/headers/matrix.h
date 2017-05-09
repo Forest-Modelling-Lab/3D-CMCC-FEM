@@ -38,7 +38,7 @@ enum {
 	TBB,                                 /* Age at which fracBB = (FRACBB0 + FRACBB1 )/ 2 */
 	RHO0,                                /* Minimum Basic Density for young Trees (tDM/m3) */
 	RHO1,                                /* Maximum Basic Density for mature Trees (tDM/m3) */
-	TRHO,                                /* Age at which rho = (RHOMIN + RHOMAX )/2 */
+	TRHO,                                /* Age at which rho = (RHO0 + RHO1 )/2 */
 	FORM_FACTOR,                         /* Stem form factor (adim) */
 	COEFFCOND,                           /* Define stomatal responsee to VPD in m/sec */
 	BLCOND,                              /* Canopy Boundary Layer conductance */
@@ -80,7 +80,7 @@ enum {
 	BUD_BURST,                           /* days of bud burst at the beginning of growing season (only for deciduous) */
 	LEAF_FALL_FRAC_GROWING,              /* proportions of the growing season of leaf fall */
 	LEAF_FROOT_TURNOVER,                 /* Average yearly leaves and fine root turnover rate */
-	LIVE_WOOD_TURNOVER,                  /* Average yearly live wood turnover rate */
+	LIVEWOOD_TURNOVER,                  /* Average yearly live wood turnover rate */
 	DBHDCMAX,                            /* maximum dbh crown diameter relationship when minimum density */
 	DBHDCMIN,                            /* minimum dbh crown diameter relationship when maximum density */
 	SAP_A,                               /* a coefficient for sapwood */
@@ -360,8 +360,8 @@ enum {
 	C_TO_LITR,                          /* (tC/cell/day) Daily Leaf and Fine root Carbon to Litter pool */
 	C_TO_CWD,                           /* (tC/cell/day) Daily Wood Carbon to Coarse Woody Debirs */
 	C_STEM_LIVEWOOD_TO_DEADWOOD,        /* (tC/cell/day) Daily tC from Stem live wood pool to Stem dead wood */
-	C_CROOT_LIVE_WOOD_TO_DEADWOOD,      /* (tC/cell/day) Daily tC from Coarse live wood pool to Coarse dead wood */
-	C_BRANCH_LIVE_WOOD_TO_DEAD_WOOD,    /* (tC/cell/day) Daily tC from Branch live wood pool to Branch dead wood */
+	C_CROOT_LIVEWOOD_TO_DEADWOOD,      /* (tC/cell/day) Daily tC from Coarse live wood pool to Coarse dead wood */
+	C_BRANCH_LIVEWOOD_TO_DEADWOOD,    /* (tC/cell/day) Daily tC from Branch live wood pool to Branch dead wood */
 	C_LEAF_TO_LITR1C,                   /* (tC/cell/day) Daily Leaf Litter Carbon to Litter labile carbon pool */
 	C_LEAF_TO_LITR2C,                   /* (tC/cell/day) Daily Leaf Litter Carbon to Litter unshielded cellulose carbon pool */
 	C_LEAF_TO_LITR3C,                   /* (tC/cell/day) Daily Leaf Litter Carbon to Litter shielded cellulose carbon pool */
@@ -390,16 +390,16 @@ enum {
 	LITR_C,                             /* (tC/cell) Current Litter carbon pool */
 	SOIL_C,                             /* (tC/cell) Current Soil carbon pool */
 	CWD_C,                              /* (tC/cell) Current Coarse Woody Debris carbon pool */
-	LIVE_WOOD_C,                        /* (tC/cell) Current Live wood carbon pool */
-	DEAD_WOOD_C,                        /* (tC/cell) Current Dead wood carbon pool */
+	LIVEWOOD_C,                        /* (tC/cell) Current Live wood carbon pool */
+	DEADWOOD_C,                        /* (tC/cell) Current Dead wood carbon pool */
 	TOT_WOOD_C,                         /* (tC/cell) Current Total wood carbon pool */
 	TOTAL_C,                            /* (tC/cell) Current Total carbon pool */
-	STEM_LIVE_WOOD_C,                   /* (tC/cell) Current Stem live wood carbon pool */
-	STEM_DEAD_WOOD_C,                   /* (tC/cell) Current Stem dead wood carbon pool */
-	CROOT_LIVE_WOOD_C,                  /* (tC/cell) Current Coarse root live wood carbon pool */
-	CROOT_DEAD_WOOD_C,                  /* (tC/cell) Current Coarse root dead wood carbon pool */
-	BRANCH_LIVE_WOOD_C,                 /* (tC/cell) Current Branch live wood carbon pool */
-	BRANCH_DEAD_WOOD_C,                 /* (tC/cell) Current Branch dead wood carbon pool */
+	STEM_LIVEWOOD_C,                   /* (tC/cell) Current Stem live wood carbon pool */
+	STEM_DEADWOOD_C,                   /* (tC/cell) Current Stem dead wood carbon pool */
+	CROOT_LIVEWOOD_C,                  /* (tC/cell) Current Coarse root live wood carbon pool */
+	CROOT_DEADWOOD_C,                  /* (tC/cell) Current Coarse root dead wood carbon pool */
+	BRANCH_LIVEWOOD_C,                 /* (tC/cell) Current Branch live wood carbon pool */
+	BRANCH_DEADWOOD_C,                 /* (tC/cell) Current Branch dead wood carbon pool */
 	STEM_SAPWOOD_C,                     /* (tC/cell) Current Stem sapwood carbon pool */
 	STEM_HEARTWOOD_C,                   /* (tC/cell) Current Stem heartwood carbon pool */
 	CROOT_SAPWOOD_C,                    /* (tC/cell) Current Coarse root sapwood carbon pool */
@@ -409,7 +409,7 @@ enum {
 	TOT_SAPWOOD_C,                      /* (tC/cell) Current total sapwood carbon pool */
 	TOT_HEARTWOOD_C,                    /* (tC/cell) Current total heartwood carbon pool */
 	EFF_LIVE_TOTAL_WOOD_FRAC,           /* (DIM) Age-related fraction of Live biomass per Total biomass */
-	DAILY_LIVE_WOOD_TURNOVER,           /* (tC/cell/day) Daily live wood turnover rate */
+	DAILY_LIVEWOOD_TURNOVER,           /* (tC/cell/day) Daily live wood turnover rate */
 
 	/* per tree in tC */
 	AV_LEAF_MASS_C,                     /* (tC/tree) Average Leaf carbon pool */
@@ -437,21 +437,21 @@ enum {
 	AV_TOT_WOOD_MASS_C,                 /* (tC/tree) Average Total Wood carbon pool */
 
 	/* carbon biomass pools in tDM/sizeCell */
-	BIOMASS_LEAF_tDM,                   /* (tDM/cell) Current Leaf carbon pool */
-	BIOMASS_CROOT_tDM,                  /* (tDM/cell) Current Coarse root carbon pool */
-	BIOMASS_FROOT_tDM,                  /* (tDM/cell) Current Fine root carbon pool */
-	BIOMASS_STEM_tDM,                   /* (tDM/cell) Current Stem carbon pool */
-	BIOMASS_BRANCH_tDM,                 /* (tDM/cell) Current Branch carbon pool */
-	RESERVE_tDM,                        /* (tDM/cell) Current Reserve carbon pool */
-	BIOMASS_FRUIT_tDM,                  /* (tDM/cell) Current Fruit carbon pool */
-	BIOMASS_LIVE_WOOD_tDM,              /* (tDM/cell) Current Live Wood carbon pool */
-	BIOMASS_DEAD_WOOD_tDM,              /* (tDM/cell) Current Dead Wood carbon pool */
-	BIOMASS_STEM_LIVE_WOOD_tDM,         /* (tDM/cell) Current Live Stem carbon pool */
-	BIOMASS_STEM_DEAD_WOOD_tDM,         /* (tDM/cell) Current Dead Stem carbon pool */
-	BIOMASS_CROOT_LIVE_WOOD_tDM,        /* (tDM/cell) Current Live Coarse root carbon pool */
-	BIOMASS_CROOT_DEAD_WOOD_tDM,        /* (tDM/cell) Current Dead Coarse root carbon pool */
-	BIOMASS_STEM_BRANCH_LIVE_WOOD_tDM,  /* (tDM/cell) Current Live Stem carbon pool */
-	BIOMASS_STEM_BRANCH_DEAD_WOOD_tDM,  /* (tDM/cell) Current Dead Stem carbon pool */
+	LEAF_DM,                            /* (tDM/cell) Current Leaf carbon pool */
+	FROOT_DM,                           /* (tDM/cell) Current Fine root carbon pool */
+	STEM_DM,                            /* (tDM/cell) Current Stem carbon pool */
+	CROOT_DM,                           /* (tDM/cell) Current Coarse root carbon pool */
+	BRANCH_DM,                          /* (tDM/cell) Current Branch carbon pool */
+	RESERVE_DM,                         /* (tDM/cell) Current Reserve carbon pool */
+	FRUIT_DM,                           /* (tDM/cell) Current Fruit carbon pool */
+	LIVEWOOD_DM,                        /* (tDM/cell) Current Live Wood carbon pool */
+	DEADWOOD_DM,                        /* (tDM/cell) Current Dead Wood carbon pool */
+	STEM_LIVEWOOD_DM,                   /* (tDM/cell) Current Live Stem carbon pool */
+	STEM_DEADWOOD_DM,                   /* (tDM/cell) Current Dead Stem carbon pool */
+	CROOT_LIVEWOOD_DM,                  /* (tDM/cell) Current Live Coarse root carbon pool */
+	CROOT_DEADWOOD_DM,                  /* (tDM/cell) Current Dead Coarse root carbon pool */
+	BRANCH_LIVEWOOD_DM,                 /* (tDM/cell) Current Live Branch carbon pool */
+	BRANCH_DEADWOOD_DM,                 /* (tDM/cell) Current Dead Branch carbon pool */
 
 	/* (kgDM/tree) per tree in KgDM */
 	AV_LEAF_MASS_KgDM,                  /* (kgDM/tree) Average Leaf carbon pool */
@@ -588,16 +588,16 @@ enum {
 	LEAF_FALLING_N,                     /* (tN/cell) Current Leaf falling nitrogen pool */
 	FROOT_N,                            /* (tN/cell) Current Fine root nitrogen pool */
 	CROOT_N,                            /* (tN/cell) Current Coarse root nitrogen pool */
-	CROOT_LIVE_WOOD_N,                  /* (tN/cell) Current Live Coarse root nitrogen pool */
-	CROOT_DEAD_WOOD_N,                  /* (tN/cell) Current Dead Coarse root nitrogen pool */
+	CROOT_LIVEWOOD_N,                   /* (tN/cell) Current Live Coarse root nitrogen pool */
+	CROOT_DEADWOOD_N,                   /* (tN/cell) Current Dead Coarse root nitrogen pool */
 	STEM_N,                             /* (tN/cell) Current Stem nitrogen pool */
-	STEM_LIVE_WOOD_N,                   /* (tN/cell) Current Live Stem nitrogen pool */
-	STEM_DEAD_WOOD_N,                   /* (tN/cell) Current Dead Stem nitrogen pool */
+	STEM_LIVEWOOD_N,                    /* (tN/cell) Current Live Stem nitrogen pool */
+	STEM_DEADWOOD_N,                    /* (tN/cell) Current Dead Stem nitrogen pool */
 	BRANCH_N,                           /* (tN/cell) Current Branch nitrogen pool */
-	BRANCH_LIVE_WOOD_N,                 /* (tN/cell) Current Live Branch nitrogen pool */
-	BRANCH_DEAD_WOOD_N,                 /* (tN/cell) Current Dead Branch nitrogen pool */
+	BRANCH_LIVEWOOD_N,                  /* (tN/cell) Current Live Branch nitrogen pool */
+	BRANCH_DEADWOOD_N,                  /* (tN/cell) Current Dead Branch nitrogen pool */
 	RESERVE_N,                          /* (tN/cell) Current Reserve nitrogen pool */
-	FRUIT_N,                            /* (tN/cell) Current Friut nitrogen pool */
+	FRUIT_N,                            /* (tN/cell) Current Fruit nitrogen pool */
 	TREE_N_DEMAND,                      /* (tN/cell) Current Nitrogen demand for new plant tissues */
 	LITR_N,                             /* (tN/cell) Current Litter nitrogen pool */
 	SOIL_N,                             /* (tN/cell) Current soil nitrogen pool */

@@ -1085,15 +1085,15 @@ static int fill_cell_from_species(age_t* const a, const row_t* const row) {
 	a->species[a->species_count-1] = species;
 	a->species[a->species_count-1].management = row ? row->management : T;
 	a->species[a->species_count-1].name = p;
-	a->species[a->species_count-1].counter[N_TREE] = row ? row->n : 0;
-	a->species[a->species_count-1].counter[N_STUMP] = row ? row->stool : 0;
-	a->species[a->species_count-1].value[BIOMASS_LEAF_tDM] = row ? row->wf : INVALID_VALUE;
-	a->species[a->species_count-1].value[BIOMASS_CROOT_tDM] = row ? row->wrc : INVALID_VALUE;
-	a->species[a->species_count-1].value[BIOMASS_FROOT_tDM] = row ? row->wrf : INVALID_VALUE;
-	a->species[a->species_count-1].value[BIOMASS_STEM_tDM] = row ? row->ws : INVALID_VALUE;
-	a->species[a->species_count-1].value[BIOMASS_BRANCH_tDM] = row ? row->wbb : INVALID_VALUE;
-	a->species[a->species_count-1].value[RESERVE_tDM] = row ? row->wres : INVALID_VALUE;
-	a->species[a->species_count-1].value[LAI_PROJ] = row ? row->lai : INVALID_VALUE;
+	a->species[a->species_count-1].counter[N_TREE]    = row ? row->n : 0;
+	a->species[a->species_count-1].counter[N_STUMP]   = row ? row->stool : 0;
+	a->species[a->species_count-1].value[LEAF_DM]     = row ? row->wf   : INVALID_VALUE;
+	a->species[a->species_count-1].value[CROOT_DM]    = row ? row->wrc  : INVALID_VALUE;
+	a->species[a->species_count-1].value[FROOT_DM]    = row ? row->wrf  : INVALID_VALUE;
+	a->species[a->species_count-1].value[STEM_DM]     = row ? row->ws   : INVALID_VALUE;
+	a->species[a->species_count-1].value[BRANCH_DM]   = row ? row->wbb  : INVALID_VALUE;
+	a->species[a->species_count-1].value[RESERVE_DM]  = row ? row->wres : INVALID_VALUE;
+	a->species[a->species_count-1].value[LAI_PROJ]    = row ? row->lai  : INVALID_VALUE;
 
 	return 1;
 }

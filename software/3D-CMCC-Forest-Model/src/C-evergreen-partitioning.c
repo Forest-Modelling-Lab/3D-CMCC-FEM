@@ -249,7 +249,7 @@ void daily_C_evergreen_partitioning (cell_t *const c, const int layer, const int
 
 	//NEW function TEST 31 MARCH 2017
 	//note: this is the simplest function for evergreen species
-	//todo in case it will be definately used then remove evergreen phenology from phenology function
+	//todo in case it will be definitely used then remove evergreen phenology from phenology function
 
 	/*just a fraction of biomass reserve is used for foliage the other part is allocated to the stem (Magnani pers comm),
 	 * and Barbaroux et al., 2002, the ratio is driven by the BIOME_BGC newStem:newLeaf ratio
@@ -258,6 +258,7 @@ void daily_C_evergreen_partitioning (cell_t *const c, const int layer, const int
 
 	/*note: every day of the year leaf and fine root turnover happen, that's why every day
 	 * an amount of leaf and fine root C is re-translocated to the reserve pool*/
+	/*note: for patterns and NSC usage behavior in conifer see also Woodruff & Meinzer, 2011, Plant Cell and Environment */
 
 	/* partitioning */
 	if (npp_to_alloc > 0.0)

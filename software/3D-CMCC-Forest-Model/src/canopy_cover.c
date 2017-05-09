@@ -95,14 +95,6 @@ void dbhdc_function (cell_t *const c, const int layer, const int height, const i
 		s->value[DBHDC_EFF] = s->value[DBHDCMAX];
 		logger(g_debug_log,"-DBHDC effective = %g\n", s->value[DBHDC_EFF]);
 	}
-#if 0
-	if (s->value[DBHDC_EFF] < s->value[DBHDCMIN])
-	{
-		logger(g_debug_log,"-DBHDC effective (%g) > DBHDCMIN (%g) \n", s->value[DBHDC_EFF] , s->value[DBHDCMIN]);
-		s->value[DBHDC_EFF] = s->value[DBHDCMIN];
-		logger(g_debug_log,"-DBHDC effective = %g\n", s->value[DBHDC_EFF]);
-	}
-#endif
 
 	logger(g_debug_log,"-DBHDC effective = %g\n", s->value[DBHDC_EFF]);
 

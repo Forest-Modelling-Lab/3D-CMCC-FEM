@@ -322,7 +322,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 //								carbon_balance          ( c, height, dbh, age, species );
 
 								/* turnover */
-								turnover ( c, s, year );
+								turnover ( c, s, day, month, year );
 
 								/* carbon use efficiency */
 								carbon_use_efficiency ( c, height, dbh, age, species, day, month, year );

@@ -23,10 +23,10 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 	double MR_ref    = 0.218;          /* Reference MR respiration linear N relationship with MR being kgC/kgN/day, 0.218 from Ryan 1991, 0.1584 Campioli et al., 2013 and from Dufrene et al 2005 */
 
 	//NOTE: Atkin et al. 2008 and Cox et al., reports 25 °C for both
-	double Q10_temp  = 20.0;                /* T_base temperature for respiration, 15°C for Damesin et al., 2001, 20°C Thornton */
+	double Q10_temp  = 20.;                /* T_base temperature for respiration, 15°C for Damesin et al., 2001, 20°C Thornton */
 	//double Q10_temp_accl = 20.0; //25;   /* T_base temperature for acclimation in respiration (25°C) Atkin et al., 2008 GCB, Cox et al., 2000 Nature */
 
-	double q10_tavg  = 2.0;                 /* fractional change in rate with a T 10 °C increase in temperature: 2.2 from Schwalm & Ek, 2004; Kimball et al., 1997, 1.5 Mahecha Science, 2010 */
+	double q10_tavg  = 2.;                 /* fractional change in rate with a T 10 °C increase in temperature: 2.2 from Schwalm & Ek, 2004; Kimball et al., 1997, 1.5 Mahecha Science, 2010 */
 	double q10_tday;
 	double q10_tnight;
 	double q10_tsoil;
@@ -89,11 +89,11 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 		exponent_tsoil  = (meteo_daily->tsoil  - Q10_temp) / 10.;
 
 		/* Nitrogen content tN/area --> gN/m2 */
-		leaf_N          = (s->value[LEAF_N]             * 1e6 /g_settings->sizeCell);
-		froot_N         = (s->value[FROOT_N]            * 1e6 /g_settings->sizeCell);
-		stem_N          = (s->value[STEM_LIVE_WOOD_N]   * 1e6 /g_settings->sizeCell);
-		croot_N         = (s->value[CROOT_LIVE_WOOD_N]  * 1e6 /g_settings->sizeCell);
-		branch_N        = (s->value[BRANCH_LIVE_WOOD_N] * 1e6 /g_settings->sizeCell);
+		leaf_N          = (s->value[LEAF_N]            * 1e6 /g_settings->sizeCell);
+		froot_N         = (s->value[FROOT_N]           * 1e6 /g_settings->sizeCell);
+		stem_N          = (s->value[STEM_LIVEWOOD_N]   * 1e6 /g_settings->sizeCell);
+		croot_N         = (s->value[CROOT_LIVEWOOD_N]  * 1e6 /g_settings->sizeCell);
+		branch_N        = (s->value[BRANCH_LIVEWOOD_N] * 1e6 /g_settings->sizeCell);
 
 		/* note: values are computed in gC/m2/day */
 

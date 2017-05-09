@@ -31,10 +31,10 @@ output_folder="output_Rstudio"
 
 # multiple simulations
 site_list<-c("Hyytiala")#,"Soroe","Hyytiala","All")
-esm_list <-c("3")# ("1","2","3","4","5", "All")
-rcp_list <-c("8p5")# ("0p0","2p6","4p5","6p0","8p5","All")
-man_list <-c("off")# ("on",'off', "All")
-co2_list <-c("on")# , "on",off", "All")
+esm_list <-c("All")# ("1","2","3","4","5", "All")
+rcp_list <-c("All")# ("0p0","2p6","4p5","6p0","8p5","All")
+man_list <-c("All")# ("on",'off', "All")
+co2_list <-c("off")# , "on",off", "All")
 protocol_list<-c("2A")# ("2A","2B") 
 
 if ( grepl('All', esm_list) ) {
@@ -67,7 +67,7 @@ for (protocol in protocol_list) {
                         
                         cat(paste0("\nstart", model," ",version," ","protocol: ",protocol, " site: ", site, 
                                    " ESM: ", esm," RCP: ", rcp," Manag-", man, " CO2-", co2,'\n'))
-                        
+
                         systemCall  <- paste0("Debug/3D_CMCC_Forest_Model", " ",
                                               "-i"," ", "input/", site, " ",
                                               "-p"," ", "input/parameterization", " ",
@@ -82,7 +82,7 @@ for (protocol in protocol_list) {
                         # launch execution
                         system(systemCall)
                         outputCMCC<- list()
-                        
+
                         cat(paste0("start 3D-CMCC ",
                                    "protocol: ",protocol, " site: ", site, 
                                    " ESM: ", esm," RCP: ", rcp," Manag-", man, " CO2-", co2,' ... COMPLETE!\n'))
@@ -114,7 +114,11 @@ for (protocol in protocol_list) {
                                 
                                 # plot only the last results
                                 ck_f = 0
-                                if ( paste0(cy_time,'_',version,'_',site,'_GCM',esm,'_rcp',rcp,'.txt_(',start_year,'-',end_year,')_CO2_',toupper(co2),'_CO2_rcp',rcp,'.txt_Man_',toupper(man),'_d_10000_txt.txt') == file_name ) {
+                                co2_1 = 'on'
+                                if (co2 == 'off') {
+                                  co2_1 = 'var'
+                                } 
+                                if ( paste0(cy_time,'_',version,'_',site,'_GCM',esm,'_rcp',rcp,'.txt_(',start_year,'-',end_year,')_CO2_',toupper(co2_1),'_CO2_rcp',rcp,'.txt_Man_',toupper(man),'_d_10000_txt.txt') == file_name ) {
                                     ck_f = 1
                                 }
                                 
