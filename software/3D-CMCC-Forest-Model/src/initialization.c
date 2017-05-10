@@ -55,10 +55,9 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 	/* check that all mandatory variables are initialized */
-	CHECK_CONDITION(h->value, ==, 0);
-	CHECK_CONDITION(d->value, ==, 0);
-	/* note: ISIMIP special case */
-	CHECK_CONDITION(a->value, ==, 0);
+	CHECK_CONDITION(h->value, <=, 0);
+	CHECK_CONDITION(d->value, <=, 0);
+	CHECK_CONDITION(a->value, <=, 0);
 
 	/* compute growth respiration fraction */
 	growth_respiration_frac ( a, s );
@@ -68,7 +67,6 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 
 	logger(g_debug_log,"\n*******INITIALIZE FOREST CLASS CARBON POOLS (%s)*******\n", s->name);
 	logger(g_debug_log, "...checking initial biomass data for height %f, dbh %f, age %d, species %s...\n", h->value, d->value, a->value, s->name);
-
 
 	/* compute mass density */
 	s->value[MASS_DENSITY] = s->value[RHO1] + (s->value[RHO0] - s->value[RHO1]) * exp(-ln2 * (a->value / s->value[TRHO]));
@@ -147,7 +145,7 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 		}
 		else
 		{
-			s->value[FRACBB]    = s->value[FRACBB1]+ (s->value[FRACBB0] - s->value[FRACBB1])* exp(-ln2 * (h->value / s->value[TBB]));
+			s->value[FRACBB]    = s->value[FRACBB1] + (s->value[FRACBB0] - s->value[FRACBB1])* exp(-ln2 * (h->value / s->value[TBB]));
 			s->value[BRANCH_DM] = s->value[STEM_DM] * s->value[FRACBB];
 			s->value[BRANCH_C]  = s->value[STEM_C] * s->value[FRACBB];
 			logger(g_debug_log, "-Stem Branch Biomass initialization data from DBH = %f tC/cell\n", s->value[BRANCH_C]);
@@ -186,12 +184,19 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 	s->value[AV_CROOT_C]    = s->value[CROOT_C] / (double)s->counter[N_TREE];
 	logger(g_debug_log, "-Individual coarse root biomass = %f KgC\n", s->value[AV_CROOT_C]);
 
-	/* sapwood */
-
+	/* basal area */
 	s->value[BASAL_AREA]          = ((pow((d->value / 2.), 2.)) * Pi);
 	s->value[BASAL_AREA_m2]       = s->value[BASAL_AREA] * 0.0001;
 	s->value[STAND_BASAL_AREA]    = s->value[BASAL_AREA] * s->counter[N_TREE];
 	s->value[STAND_BASAL_AREA_m2] = s->value[BASAL_AREA_m2] * s->counter[N_TREE];
+
+	logger(g_debug_log, "-Basal area                       = %f cm^2\n",       s->value[BASAL_AREA]);
+	logger(g_debug_log, "-Basal basal_area_m2              = %f m^2\n",        s->value[BASAL_AREA_m2]);
+	logger(g_debug_log, "-Stand level class basal cell     = %f cm^2/class\n", s->value[STAND_BASAL_AREA]);
+	logger(g_debug_log, "-Stand level class basal cell     = %f cm^2/class\n", s->value[STAND_BASAL_AREA]);
+
+
+	/* sapwood and heartwood */
 	s->value[SAPWOOD_AREA]        = s->value[SAP_A] * pow (d->value, s->value[SAP_B]);
 	s->value[HEARTWOOD_AREA]      = s->value[BASAL_AREA] -  s->value[SAPWOOD_AREA];
 	s->value[SAPWOOD_PERC]        = s->value[SAPWOOD_AREA] / s->value[BASAL_AREA];
@@ -208,10 +213,6 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 	s->value[TOT_SAPWOOD_C]       = s->value[STEM_SAPWOOD_C] + s->value[CROOT_SAPWOOD_C] + s->value[BRANCH_SAPWOOD_C];
 	s->value[TOT_HEARTWOOD_C]     = s->value[STEM_HEARTWOOD_C] + s->value[CROOT_HEARTWOOD_C] + s->value[BRANCH_HEARTWOOD_C];
 
-	logger(g_debug_log, "-Basal area                       = %f cm^2\n",       s->value[BASAL_AREA]);
-	logger(g_debug_log, "-Basal basal_area_m2              = %f m^2\n",        s->value[BASAL_AREA_m2]);
-	logger(g_debug_log, "-Stand level class basal cell     = %f cm^2/class\n", s->value[STAND_BASAL_AREA]);
-	logger(g_debug_log, "-Stand level class basal cell     = %f cm^2/class\n", s->value[STAND_BASAL_AREA]);
 	logger(g_debug_log, "-Sapwood_area                     = %f cm^2\n",       s->value[SAPWOOD_AREA]);
 	logger(g_debug_log, "-Heart_wood_area                  = %f cm^2\n",       s->value[HEARTWOOD_AREA]);
 	logger(g_debug_log, "-Sapwood perc                     = %f%%\n",          s->value[SAPWOOD_PERC]*100);
@@ -228,6 +229,7 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 	logger(g_debug_log, "-Total Heartwood biomass per tree = %f tC tree \n",   s->value[TOT_HEARTWOOD_C] / (double)s->counter[N_TREE]);
 	logger(g_debug_log, "-Total Heartwood biomass per tree = %f KgC tree \n",  (s->value[TOT_HEARTWOOD_C] / (double)s->counter[N_TREE]) * 1e3);
 
+	/* compute average */
 	s->value[AV_STEM_SAPWOOD_C]     = s->value[STEM_SAPWOOD_C] / (double)s->counter[N_TREE];
 	s->value[AV_STEM_HEARTWOOD_C]   = (s->value[STEM_C] - s->value[AV_STEM_SAPWOOD_C])               / (double)s->counter[N_TREE];
 	s->value[AV_CROOT_SAPWOOD_C]    = s->value[CROOT_SAPWOOD_C]  / (double)s->counter[N_TREE];
@@ -305,16 +307,6 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 				s->value[LAI_SHADE_PROJ] = s->value[LAI_PROJ] - s->value[LAI_SUN_PROJ];
 				logger(g_debug_log, "LAI_SUN_PROJ   = %f\n", s->value[LAI_SUN_PROJ]);
 				logger(g_debug_log, "LAI_SHADE_PROJ = %f\n", s->value[LAI_SHADE_PROJ]);
-
-//				/* compute total LAI for Exposed Area */
-//				s->value[LAI_EXP] = s->value[LAI_PROJ] * ( 1. + s->value[CANOPY_COVER_EXP]);
-//				logger(g_debug_log, "LAI_EXP = %f m-2\n", s->value[LAI_EXP]);
-//
-//				/* compute LAI for sunlit and shaded canopy portions for Exposed Area */
-//				s->value[LAI_SUN_EXP] = s->value[LAI_SUN_PROJ] * ( 1. + s->value[CANOPY_COVER_EXP]);
-//				s->value[LAI_SHADE_EXP] = s->value[LAI_SHADE_PROJ] * (1 + s->value[CANOPY_COVER_EXP]);
-//				logger(g_debug_log, "LAI_SUN_EXP = %f m2 m-2\n", s->value[LAI_SUN_EXP]);
-//				logger(g_debug_log, "LAI_SHADE_EXP = %f m2 m-2\n", s->value[LAI_SHADE_EXP]);
 			}
 		}
 	}
@@ -378,9 +370,9 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 	/* assuming LIVE_DEAD WOOD RATIO AS IN BIOME */
 	logger(g_debug_log, "\n*******************************\n");
 
-	/* stem */
 	live_total_wood_age( a, s );
 
+	/* stem */
 	s->value[STEM_LIVEWOOD_DM]    = s->value[STEM_DM] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
 	s->value[STEM_LIVEWOOD_C]     = s->value[STEM_C]  * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
 	s->value[STEM_DEADWOOD_DM]    = s->value[STEM_DM] - s->value[STEM_LIVEWOOD_DM];
@@ -395,21 +387,25 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 	logger(g_debug_log, "-Dead Stem Biomass = %f tC cell\n", s->value[STEM_DEADWOOD_C]);
 	logger(g_debug_log, "-Individual live wood biomass = %f tC\n", s->value[AV_LIVE_STEM_C]);
 	logger(g_debug_log, "-Individual dead wood biomass = %f tC\n", s->value[AV_DEAD_STEM_C]);
+
+	/* check */
 	CHECK_CONDITION(fabs((s->value[STEM_C])-(s->value[STEM_LIVEWOOD_C] + s->value[STEM_DEADWOOD_C])), >,eps);
 	CHECK_CONDITION(fabs((s->value[AV_STEM_C])-(s->value[AV_LIVE_STEM_C] + s->value[AV_DEAD_STEM_C])), >,eps);
 
 	/* coarse root */
-	s->value[CROOT_LIVEWOOD_DM]= s->value[CROOT_DM] * (s->value[EFF_LIVE_TOTAL_WOOD_FRAC]);
-	s->value[CROOT_LIVEWOOD_C]= s->value[CROOT_C] * (s->value[EFF_LIVE_TOTAL_WOOD_FRAC]);
-	logger(g_debug_log, "-Live Coarse Root Biomass = %f tC cell\n", s->value[CROOT_LIVEWOOD_C]);
-	s->value[CROOT_DEADWOOD_DM]= s->value[CROOT_DM] -s->value[CROOT_LIVEWOOD_DM];
-	s->value[CROOT_DEADWOOD_C]= s->value[CROOT_C] -s->value[CROOT_LIVEWOOD_C];
-	logger(g_debug_log, "-Dead Coarse Root Biomass = %f tC cell\n", s->value[CROOT_DEADWOOD_C]);
+	s->value[CROOT_LIVEWOOD_DM]  = s->value[CROOT_DM] * (s->value[EFF_LIVE_TOTAL_WOOD_FRAC]);
+	s->value[CROOT_LIVEWOOD_C]   = s->value[CROOT_C] * (s->value[EFF_LIVE_TOTAL_WOOD_FRAC]);
+	s->value[CROOT_DEADWOOD_DM]  = s->value[CROOT_DM] -s->value[CROOT_LIVEWOOD_DM];
+	s->value[CROOT_DEADWOOD_C]   = s->value[CROOT_C] -s->value[CROOT_LIVEWOOD_C];
 	s->value[AV_LIVE_CROOT_KgDM] = s->value[CROOT_LIVEWOOD_DM] * 1e3 / (double)s->counter[N_TREE];
-	s->value[AV_LIVE_CROOT_C] = s->value[CROOT_LIVEWOOD_C] / (double)s->counter[N_TREE];
-	logger(g_debug_log, "-Individual live coarse root biomass = %f tC\n", s->value[AV_LIVE_CROOT_C]);
+	s->value[AV_LIVE_CROOT_C]    = s->value[CROOT_LIVEWOOD_C] / (double)s->counter[N_TREE];
 	s->value[AV_DEAD_CROOT_KgDM] = s->value[CROOT_DEADWOOD_DM] * 1e3 / (double)s->counter[N_TREE];
-	s->value[AV_DEAD_CROOT_C] = s->value[CROOT_DEADWOOD_C] / (double)s->counter[N_TREE];
+	s->value[AV_DEAD_CROOT_C]    = s->value[CROOT_DEADWOOD_C] / (double)s->counter[N_TREE];
+
+	logger(g_debug_log, "Total Coarse root = %f tC/cell\n", s->value[CROOT_C]);
+	logger(g_debug_log, "-Live Coarse Root Biomass = %f tC cell\n", s->value[CROOT_LIVEWOOD_C]);
+	logger(g_debug_log, "-Dead Coarse Root Biomass = %f tC cell\n", s->value[CROOT_DEADWOOD_C]);
+	logger(g_debug_log, "-Individual live coarse root biomass = %f tC\n", s->value[AV_LIVE_CROOT_C]);
 	logger(g_debug_log, "-Individual live coarse root biomass = %f tC\n", s->value[AV_DEAD_CROOT_C]);
 
 	/* check */
@@ -417,44 +413,41 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 	CHECK_CONDITION(fabs((s->value[AV_CROOT_C])-(s->value[AV_LIVE_CROOT_C] + s->value[AV_DEAD_CROOT_C])), >,eps);
 
 	/* branch */
-	logger(g_debug_log, "Total BB Branch = %f tC/cell\n", s->value[BRANCH_C]);
-	s->value[BRANCH_LIVEWOOD_DM] = s->value[BRANCH_DM] * (s->value[EFF_LIVE_TOTAL_WOOD_FRAC]);
-	s->value[BRANCH_LIVEWOOD_C]  = s->value[BRANCH_C]  * (s->value[EFF_LIVE_TOTAL_WOOD_FRAC]);
-	logger(g_debug_log, "-Live Stem Branch Biomass = %f tC cell\n", s->value[BRANCH_LIVEWOOD_C]);
-	s->value[BRANCH_DEADWOOD_DM] = s->value[BRANCH_DM] - s->value[BRANCH_LIVEWOOD_DM];
-	s->value[BRANCH_DEADWOOD_C]  = s->value[BRANCH_C] -s->value[BRANCH_LIVEWOOD_C];
-	logger(g_debug_log, "-Dead Stem Branch Biomass = %f tC cell\n", s->value[BRANCH_DEADWOOD_C]);
+	s->value[BRANCH_LIVEWOOD_DM]  = s->value[BRANCH_DM] * (s->value[EFF_LIVE_TOTAL_WOOD_FRAC]);
+	s->value[BRANCH_LIVEWOOD_C]   = s->value[BRANCH_C]  * (s->value[EFF_LIVE_TOTAL_WOOD_FRAC]);
+	s->value[BRANCH_DEADWOOD_DM]  = s->value[BRANCH_DM] - s->value[BRANCH_LIVEWOOD_DM];
+	s->value[BRANCH_DEADWOOD_C]   = s->value[BRANCH_C] -s->value[BRANCH_LIVEWOOD_C];
 	s->value[AV_LIVE_BRANCH_KgDM] = s->value[BRANCH_LIVEWOOD_DM] * 1e3 / (double)s->counter[N_TREE];
-	s->value[AV_LIVE_BRANCH_C] = s->value[BRANCH_LIVEWOOD_C] / s->counter[N_TREE];
-	logger(g_debug_log, "-Individual live branch biomass = %f tC\n", s->value[AV_LIVE_BRANCH_C]);
+	s->value[AV_LIVE_BRANCH_C]    = s->value[BRANCH_LIVEWOOD_C] / s->counter[N_TREE];
 	s->value[AV_DEAD_BRANCH_KgDM] = s->value[BRANCH_DEADWOOD_DM] * 1e3 / (double)s->counter[N_TREE];
-	s->value[AV_DEAD_BRANCH_C] = s->value[BRANCH_DEADWOOD_C] / (double)s->counter[N_TREE];
+	s->value[AV_DEAD_BRANCH_C]    = s->value[BRANCH_DEADWOOD_C] / (double)s->counter[N_TREE];
+
+	logger(g_debug_log, "Total Branch = %f tC/cell\n", s->value[BRANCH_C]);
+	logger(g_debug_log, "-Live Stem Branch Biomass = %f tC cell\n", s->value[BRANCH_LIVEWOOD_C]);
+	logger(g_debug_log, "-Dead Stem Branch Biomass = %f tC cell\n", s->value[BRANCH_DEADWOOD_C]);
+	logger(g_debug_log, "-Individual live branch biomass = %f tC\n", s->value[AV_LIVE_BRANCH_C]);
 	logger(g_debug_log, "-Individual dead branch biomass = %f tC\n", s->value[AV_DEAD_BRANCH_C]);
 
 	/* check */
 	CHECK_CONDITION(fabs((s->value[BRANCH_C])-(s->value[BRANCH_LIVEWOOD_C] + s->value[BRANCH_DEADWOOD_C])), >,eps);
 	CHECK_CONDITION(fabs((s->value[AV_BRANCH_C])-(s->value[AV_LIVE_BRANCH_C] + s->value[AV_DEAD_BRANCH_C])), >,eps);
 
-	s->value[LIVEWOOD_DM] = s->value[STEM_LIVEWOOD_DM] +
-			s->value[CROOT_LIVEWOOD_DM]+
-			s->value[BRANCH_LIVEWOOD_DM];
-	s->value[LIVEWOOD_C] = s->value[STEM_LIVEWOOD_C] +
-			s->value[CROOT_LIVEWOOD_C]+
-			s->value[BRANCH_LIVEWOOD_C];
-	logger(g_debug_log, "---Live biomass = %f tC/cell\n", s->value[LIVEWOOD_C]);
+	/* live biomass */
+	s->value[LIVEWOOD_DM]       = s->value[STEM_LIVEWOOD_DM] + s->value[CROOT_LIVEWOOD_DM] + s->value[BRANCH_LIVEWOOD_DM];
+	s->value[LIVEWOOD_C]        = s->value[STEM_LIVEWOOD_C]   + s->value[CROOT_LIVEWOOD_C]  + s->value[BRANCH_LIVEWOOD_C];
 	s->value[AV_LIVE_WOOD_KgDM] = s->value[LIVEWOOD_DM] * 1e3 / (double)s->counter[N_TREE];
-	s->value[AV_LIVE_WOOD_C] = s->value[LIVEWOOD_C] / (double)s->counter[N_TREE];
+	s->value[AV_LIVE_WOOD_C]    = s->value[LIVEWOOD_C] / (double)s->counter[N_TREE];
+
+	logger(g_debug_log, "---Live biomass = %f tC/cell\n", s->value[LIVEWOOD_C]);
 	logger(g_debug_log, "-Individual total live biomass = %f tC\n", s->value[AV_LIVE_WOOD_C]);
 
-	s->value[DEADWOOD_DM] = s->value[STEM_DEADWOOD_DM]+
-			s->value[CROOT_DEADWOOD_DM]+
-			s->value[BRANCH_DEADWOOD_DM];
-	s->value[DEADWOOD_C] = s->value[STEM_DEADWOOD_C]+
-			s->value[CROOT_DEADWOOD_C]+
-			s->value[BRANCH_DEADWOOD_C];
-	logger(g_debug_log, "---Dead biomass = %f tC/cell\n", s->value[DEADWOOD_C]);
+	/* dead biomass */
+	s->value[DEADWOOD_DM]       = s->value[STEM_DEADWOOD_DM] + s->value[CROOT_DEADWOOD_DM] + s->value[BRANCH_DEADWOOD_DM];
+	s->value[DEADWOOD_C]        = s->value[STEM_DEADWOOD_C]  + s->value[CROOT_DEADWOOD_C]  + s->value[BRANCH_DEADWOOD_C];
 	s->value[AV_DEAD_WOOD_KgDM] = s->value[DEADWOOD_DM] * 1e3 / (double)s->counter[N_TREE];
 	s->value[AV_DEAD_WOOD_C]    = s->value[DEADWOOD_C] / (double)s->counter[N_TREE];
+
+	logger(g_debug_log, "---Dead biomass = %f tC/cell\n", s->value[DEADWOOD_C]);
 	logger(g_debug_log, "-Individual total dead biomass = %f tC\n", s->value[AV_DEAD_WOOD_C]);
 
 	/* compute percentage of live vs total biomass */
@@ -464,7 +457,7 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 	logger(g_debug_log, "----Total wood = %f tC/tree\n",s->value[AV_TOT_WOOD_C]);
 	logger(g_debug_log, "----Live wood vs total biomass = %f %%\n", (s->value[LIVEWOOD_C] / s->value[TOT_WOOD_C]) * 100.);
 	logger(g_debug_log, "----Dead wood vs total biomass = %f %%\n", (s->value[DEADWOOD_C] / s->value[TOT_WOOD_C]) * 100.);
-	logger(g_debug_log, "***reserves following live tissues C (not used) BIOME = %f tC/cell\n", s->value[LIVEWOOD_C] * s->value[SAP_WRES] );
+	logger(g_debug_log, "***reserves following live tissues C = %f tC/cell\n", s->value[LIVEWOOD_C] * s->value[SAP_WRES] );
 
 	/* fruit */
 	s->value[FRUIT_C]    = 0.;
@@ -485,8 +478,8 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 	/* ONLY for evergreen */
 	if ( s->value[PHENOLOGY] == 1.1 || s->value[PHENOLOGY] == 1.2 )
 	{
-		CHECK_CONDITION(s->value[FROOT_C],             <=, ZERO);
 		CHECK_CONDITION(s->value[LEAF_C],              <=, ZERO);
+		CHECK_CONDITION(s->value[FROOT_C],             <=, ZERO);
 		CHECK_CONDITION(s->value[LAI_PROJ],            <=, ZERO);
 		CHECK_CONDITION(s->value[LAI_SUN_PROJ],        <=, ZERO);
 		CHECK_CONDITION(s->value[LAI_SHADE_PROJ],      <=, ZERO);
@@ -539,8 +532,8 @@ void initialization_forest_C (cell_t *const c, const int height, const int dbh, 
 	c->reserve_carbon           += (s->value[RESERVE_C]          * 1e6 / g_settings->sizeCell);
 	c->fruit_carbon             += (s->value[FRUIT_C]            * 1e6 / g_settings->sizeCell);
 
-	c->agb                      += (c->leaf_carbon + c->stem_carbon + c->branch_carbon + c->fruit_carbon);
-	c->bgb                      += (c->froot_carbon + c->croot_carbon);
+	c->agb                      += ((s->value[LEAF_C] + s->value[STEM_C] + s->value[BRANCH_C] + s->value[FRUIT_C]) * 1e6 / g_settings->sizeCell);
+	c->bgb                      += ((s->value[FROOT_C] + s->value[CROOT_C]) * 1e6 / g_settings->sizeCell);
 
 	/* check */
 	CHECK_CONDITION(c->leaf_carbon,                    <=, ZERO);
@@ -570,42 +563,36 @@ void initialization_forest_class_N (cell_t *const c, const int height, const int
 
 	/* leaf */
 	s->value[LEAF_N] = s->value[LEAF_C] / s->value[CN_LEAVES];
-	logger(g_debug_log, "----LEAF_N             = %f tN/cell\n", s->value[LEAF_N]);
 
 	/* fine root */
 	s->value[FROOT_N] = s->value[FROOT_C] / s->value[CN_FINE_ROOTS];
-	logger(g_debug_log, "----FROOT_N            = %f tN/cell\n", s->value[FROOT_N]);
 
 	/* stem */
 	s->value[STEM_LIVEWOOD_N] = s->value[STEM_LIVEWOOD_C] / s->value[CN_LIVE_WOODS];
-	logger(g_debug_log, "----STEM_LIVE_WOOD_N   = %f tN/cell\n", s->value[STEM_LIVEWOOD_N]);
-
 	s->value[STEM_DEADWOOD_N] = s->value[STEM_DEADWOOD_C] / s->value[CN_DEAD_WOODS];
-	logger(g_debug_log, "----STEM_DEAD_WOOD_N   = %f tN/cell\n", s->value[STEM_DEADWOOD_N]);
-
 	s->value[STEM_N] = s->value[STEM_LIVEWOOD_N] + s->value[STEM_DEADWOOD_N];
-	logger(g_debug_log, "----STEM_N             = %f tN/cell\n", s->value[STEM_N]);
 
 	/* coarse root */
 	s->value[CROOT_LIVEWOOD_N] = s->value[CROOT_LIVEWOOD_C] / s->value[CN_LIVE_WOODS];
-	logger(g_debug_log, "----CROOT_LIVE_WOOD_N  = %f tN/cell\n", s->value[CROOT_LIVEWOOD_N]);
-
 	s->value[CROOT_DEADWOOD_N] = s->value[CROOT_DEADWOOD_C] / s->value[CN_DEAD_WOODS];
-	logger(g_debug_log, "----CROOT_DEAD_WOOD_N  = %f tN/cell\n", s->value[CROOT_DEADWOOD_N]);
-
 	s->value[CROOT_N] = s->value[CROOT_LIVEWOOD_N] + s->value[CROOT_DEADWOOD_N];
-	logger(g_debug_log, "----CROOT_N            = %f tN/cell\n", s->value[CROOT_N]);
 
 	/* branch */
 	s->value[BRANCH_LIVEWOOD_N] = s->value[BRANCH_LIVEWOOD_C] / s->value[CN_LIVE_WOODS];
-	logger(g_debug_log, "----BRANCH_LIVE_WOOD_N = %f tN/cell\n", s->value[BRANCH_LIVEWOOD_N]);
-
 	s->value[BRANCH_DEADWOOD_N] = s->value[BRANCH_DEADWOOD_C] / s->value[CN_DEAD_WOODS];
-	logger(g_debug_log, "----BRANCH_DEAD_WOOD_N = %f tN/cell\n", s->value[BRANCH_DEADWOOD_N]);
-
 	s->value[BRANCH_N] = s->value[BRANCH_LIVEWOOD_N] + s->value[BRANCH_DEADWOOD_N];
-	logger(g_debug_log, "----BRANCH_N           = %f tN/cell\n", s->value[BRANCH_N]);
 
+	logger(g_debug_log, "----LEAF_N             = %f tN/cell\n", s->value[LEAF_N]);
+	logger(g_debug_log, "----FROOT_N            = %f tN/cell\n", s->value[FROOT_N]);
+	logger(g_debug_log, "----STEM_LIVE_WOOD_N   = %f tN/cell\n", s->value[STEM_LIVEWOOD_N]);
+	logger(g_debug_log, "----STEM_DEAD_WOOD_N   = %f tN/cell\n", s->value[STEM_DEADWOOD_N]);
+	logger(g_debug_log, "----STEM_N             = %f tN/cell\n", s->value[STEM_N]);
+	logger(g_debug_log, "----CROOT_LIVE_WOOD_N  = %f tN/cell\n", s->value[CROOT_LIVEWOOD_N]);
+	logger(g_debug_log, "----CROOT_DEAD_WOOD_N  = %f tN/cell\n", s->value[CROOT_DEADWOOD_N]);
+	logger(g_debug_log, "----CROOT_N            = %f tN/cell\n", s->value[CROOT_N]);
+	logger(g_debug_log, "----BRANCH_LIVE_WOOD_N = %f tN/cell\n", s->value[BRANCH_LIVEWOOD_N]);
+	logger(g_debug_log, "----BRANCH_DEAD_WOOD_N = %f tN/cell\n", s->value[BRANCH_DEADWOOD_N]);
+	logger(g_debug_log, "----BRANCH_N           = %f tN/cell\n", s->value[BRANCH_N]);
 
 	/* check that all mandatory variables are initialized */
 	CHECK_CONDITION(s->value[STEM_N],          <=, ZERO);
