@@ -236,11 +236,12 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 	 * and Forrester et al, Forest Ecosystems,2014
 	 * we currently use approach for homogeneous canopies that improves representation when canopy is not closed
 	 */
-	if ( s->value[LAI_PROJ] )
+
+	if ( s->value[LAI_EXP] )
 	{
-		Light_trasm_frac       = exp(- s->value[K] * s->value[LAI_PROJ]);
-		Light_trasm_frac_sun   = exp(- s->value[K] * s->value[LAI_SUN_PROJ]);
-		Light_trasm_frac_shade = exp(- s->value[K] * s->value[LAI_SHADE_PROJ]);
+		Light_trasm_frac       = exp(- s->value[K] * s->value[LAI_EXP]);
+		Light_trasm_frac_sun   = exp(- s->value[K] * s->value[LAI_SUN_EXP]);
+		Light_trasm_frac_shade = exp(- s->value[K] * s->value[LAI_SHADE_EXP]);
 	}
 	else
 	{
@@ -260,16 +261,16 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 	calculated similarly to sw except that albedo is 1/3 for PAR because less
 	PAR is reflected than sw_radiation (Jones 1992)*/
 
-	if( s->value[LAI_PROJ] >= 1. )
+	if( s->value[LAI_EXP] >= 1. )
 	{
 		Light_refl_sw_frac        = s->value[ALBEDO];
-		Light_refl_sw_frac_sun    = s->value[ALBEDO] * ( 1 - exp ( - s->value[K] * s->value[LAI_SUN_PROJ]));
-		Light_refl_sw_frac_shade  = s->value[ALBEDO] * ( 1 - exp ( - s->value[K] * s->value[LAI_SHADE_PROJ]));
+		Light_refl_sw_frac_sun    = s->value[ALBEDO] * ( 1 - exp ( - s->value[K] * s->value[LAI_SUN_EXP]));
+		Light_refl_sw_frac_shade  = s->value[ALBEDO] * ( 1 - exp ( - s->value[K] * s->value[LAI_SHADE_EXP]));
 		Light_refl_par_frac       = (s->value[ALBEDO]/3.);
-		Light_refl_par_frac_sun   = (s->value[ALBEDO]/3.) * ( 1 - exp ( - s->value[K] * s->value[LAI_SUN_PROJ] ) );
-		Light_refl_par_frac_shade = (s->value[ALBEDO]/3.) * ( 1 - exp ( - s->value[K] * s->value[LAI_SHADE_PROJ] ) );
+		Light_refl_par_frac_sun   = (s->value[ALBEDO]/3.) * ( 1 - exp ( - s->value[K] * s->value[LAI_SUN_EXP] ) );
+		Light_refl_par_frac_shade = (s->value[ALBEDO]/3.) * ( 1 - exp ( - s->value[K] * s->value[LAI_SHADE_EXP] ) );
 	}
-	else if ( !s->value[LAI_PROJ])
+	else if ( !s->value[LAI_EXP])
 	{
 		Light_refl_sw_frac        = 0.;
 		Light_refl_sw_frac_sun    = 0.;
@@ -281,11 +282,11 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 	else
 	{
 		Light_refl_sw_frac        = s->value[ALBEDO] * s->value[LAI_PROJ];
-		Light_refl_sw_frac_sun    = s->value[ALBEDO] * ( 1 - exp ( - s->value[K] * s->value[LAI_SUN_PROJ] ) );
-		Light_refl_sw_frac_shade  = s->value[ALBEDO] * ( 1 - exp ( - s->value[K] * s->value[LAI_SHADE_PROJ] ) );
+		Light_refl_sw_frac_sun    = s->value[ALBEDO] * ( 1 - exp ( - s->value[K] * s->value[LAI_SUN_EXP] ) );
+		Light_refl_sw_frac_shade  = s->value[ALBEDO] * ( 1 - exp ( - s->value[K] * s->value[LAI_SHADE_EXP] ) );
 		Light_refl_par_frac       = (s->value[ALBEDO]/3.) * s->value[LAI_PROJ];
-		Light_refl_par_frac_sun   = (s->value[ALBEDO]/3.) * ( 1 - exp ( - s->value[K] * s->value[LAI_SUN_PROJ] ) );
-		Light_refl_par_frac_shade = (s->value[ALBEDO]/3.) * ( 1 - exp ( - s->value[K] * s->value[LAI_SHADE_PROJ] ) );
+		Light_refl_par_frac_sun   = (s->value[ALBEDO]/3.) * ( 1 - exp ( - s->value[K] * s->value[LAI_SUN_EXP] ) );
+		Light_refl_par_frac_shade = (s->value[ALBEDO]/3.) * ( 1 - exp ( - s->value[K] * s->value[LAI_SHADE_EXP] ) );
 	}
 
 	//fixme set that if gapcover is bigger then 0.5 albedo should be considered also in dominated layer!!!!
@@ -324,26 +325,26 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 	logger(g_debug_log,"\ntemporary cumulated absorbed and reflect light\n");
 	temp_apar       += s->value[APAR];
 	c->apar         += s->value[APAR];
-	logger(g_debug_log,"cum apar = %g\n", c->apar);
+	logger(g_debug_log,"cum apar = %f\n", c->apar);
 	temp_par_refl   += s->value[PAR_REFL];
 	c->par_refl     += s->value[PAR_REFL];
-	logger(g_debug_log,"cum par_refl = %g\n", c->par_refl);
+	logger(g_debug_log,"cum par_refl = %f\n", c->par_refl);
 
 	/* update temporary absorbed and transmitted Short Wave radiation lower layer */
 	temp_sw_rad_abs  += s->value[SW_RAD_ABS];
 	c->sw_rad_abs    += s->value[SW_RAD_ABS];
-	logger(g_debug_log,"cum sw_rad_abs = %g\n", c->sw_rad_abs);
+	logger(g_debug_log,"cum sw_rad_abs = %f\n", c->sw_rad_abs);
 	temp_sw_rad_refl += s->value[SW_RAD_REFL];
 	c->sw_rad_refl   += s->value[SW_RAD_REFL];
-	logger(g_debug_log,"cum sw_rad_refl = %g\n", c->sw_rad_refl);
+	logger(g_debug_log,"cum sw_rad_refl = %f\n", c->sw_rad_refl);
 
 	/* update temporary absorbed and transmitted PPFD lower layer */
 	temp_ppfd_abs    += s->value[PPFD_ABS];
 	c->ppfd_abs      += s->value[PPFD_ABS];
-	logger(g_debug_log,"cum ppfd_abs = %g\n", c->ppfd_abs);
+	logger(g_debug_log,"cum ppfd_abs = %f\n", c->ppfd_abs);
 	temp_ppfd_refl   += s->value[PPFD_REFL];
 	c->ppfd_refl     += s->value[PPFD_REFL];
-	logger(g_debug_log,"cum ppfd_refl = %g\n", c->ppfd_refl);
+	logger(g_debug_log,"cum ppfd_refl = %f\n", c->ppfd_refl);
 
 	/*****************************************************************************************************************/
 	/* when it matches the last height class in the layer is processed */
@@ -364,9 +365,9 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 		meteo_daily->ppfd          -= (temp_ppfd_abs + temp_ppfd_refl);
 
 		logger(g_debug_log, "Radiation for lower layers\n");
-		logger(g_debug_log, "PAR        = %g molPAR/m2/day\n", meteo_daily->par);
-		logger(g_debug_log, "Short Wave = %g W/m2\n", meteo_daily->sw_downward_W);
-		logger(g_debug_log, "PPFD       = %g umol/m2/sec\n", meteo_daily->ppfd);
+		logger(g_debug_log, "PAR        = %f molPAR/m2/day\n", meteo_daily->par);
+		logger(g_debug_log, "Short Wave = %f W/m2\n", meteo_daily->sw_downward_W);
+		logger(g_debug_log, "PPFD       = %f umol/m2/sec\n", meteo_daily->ppfd);
 
 		/* reset temporary values when the last height class in layer is processed */
 		temp_apar        = 0.;
@@ -389,9 +390,9 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 		logger(g_debug_log,"\n************************************\n");
 		logger(g_debug_log, "last height class in cell processed\n");
 		logger(g_debug_log, "Radiation for soil\n");
-		logger(g_debug_log, "PAR        = %g molPAR/m2/day\n", meteo_daily->par);
-		logger(g_debug_log, "Short Wave = %g W/m2\n", meteo_daily->sw_downward_W);
-		logger(g_debug_log, "PPFD       = %g umol/m2/sec\n", meteo_daily->ppfd);
+		logger(g_debug_log, "PAR        = %f molPAR/m2/day\n", meteo_daily->par);
+		logger(g_debug_log, "Short Wave = %f W/m2\n", meteo_daily->sw_downward_W);
+		logger(g_debug_log, "PPFD       = %f umol/m2/sec\n", meteo_daily->ppfd);
 		logger(g_debug_log,"\n***********************************\n");
 	}
 	/*****************************************************************************************************************/

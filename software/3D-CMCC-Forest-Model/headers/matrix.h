@@ -300,9 +300,9 @@ enum {
 	MAX_LAI_PROJ,                       /* (m2/m2) LAI Projected at the very first day of senescence: parameter of the sigmoid function */
 	PEAK_LAI_PROJ,                      /* (m2/m2) Peak Projected LAI */
 	ALL_LAI_PROJ,                       /* (m2) All side Projected LAI */
-//	LAI_EXP,                            /* (m2/m2) LAI for Exposed Area covered (all over all viewing angles) */
-//	LAI_SUN_EXP,                        /* (m2/m2) LAI for sun leaves for Exposed Area covered (all over all viewing angles) */
-//	LAI_SHADE_EXP,                      /* (m2/m2) LAI for shaded leaves for Exposed Area covered (all over all viewing angles) */
+	LAI_EXP,                            /* (m2/m2) LAI for Exposed Area covered (all over all viewing angles) */
+	LAI_SUN_EXP,                        /* (m2/m2) LAI for sun leaves for Exposed Area covered (all over all viewing angles) */
+	LAI_SHADE_EXP,                      /* (m2/m2) LAI for shaded leaves for Exposed Area covered (all over all viewing angles) */
 	LAD,                                /* (m2/m2) Leaf Area Density */
 	LEAF_TEMP_K,                        /* (K) leaf temperature */
 	CANOPY_TEMP_K,                      /* (K) canopy temperature */

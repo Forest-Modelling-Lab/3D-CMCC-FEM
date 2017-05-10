@@ -22,7 +22,7 @@ COEFFCOND   0.06               //Define stomatal responsee to VPD in mbar see Pi
 BLCOND  0.01                   //Canopy Boundary Layer conductance see 0.01 for stomatal Pietsch et al., 2005
 MAXCOND 0.006                  //Maximum Stomatal Conductance in m/sec 0,005 for Tatarinov et al., 2006, 0.006 Pietsch
 CUTCOND 6e-05                  //Cuticul conductance in m/sec for F sylvatica 0.000006 Tatarinov et al., 2006
-MAXAGE  300                    //Determines rate of "physiological decline" of forest //modified from ettore
+MAXAGE 350 // 300                    //Determines rate of "physiological decline" of forest //modified from ettore
 RAGE    0.75                   //Relative Age to give fAGE = 0.5
 NAGE    10                     //Power of relative Age in function for Age
 GROWTHTMIN  0                  //Minimum temperature for growth 5  Rasse et al 2001 0 from Williams 1996, -2 Hoffmann 1995
@@ -63,7 +63,7 @@ DBHDCMAX    0.24               //0.22 //CHANGED FROM  0.18       //Low Density
 DBHDCMIN    0.14               //High Density from ettore
 SAP_A   0.674                  //a value from Kostner for Fagus sylvatica
 SAP_B   1.992                  //b value from Kostner for Fagus sylvatica
-SAP_LEAF    2100               //leaf area/sapwood max ratio in pipe model 1850 from Williams 1996, 3410 Bartelink 1998 , 2100 from Kostner, 3310 from ettore
+SAP_LEAF    3310 //2100               //leaf area/sapwood max ratio in pipe model 1850 from Williams 1996, 3410 Bartelink 1998 , 2100 from Kostner, 3310 from ettore
 SAP_WRES    0.05               //Sapwood-Reserve biomass ratio gTNC/100gDM 0.043 in January for fagus see Barbaroux 2002 0.11 for deciduous 0.05 for evergreen see Schwalm and Ek, 2004 Ecological Modelling
 STEMCONST_P 0.2837             //a parameter for F. sylvatica for allometric equation from ettore, 0.70 Seidl et al., 2012
 STEMPOWER_P 2.134              //b parameter for F. sylvatica for allometric equation from ettore, 3.00 Seidl et al., 2012

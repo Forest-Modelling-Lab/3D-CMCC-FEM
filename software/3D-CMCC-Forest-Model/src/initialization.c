@@ -313,8 +313,17 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 				s->value[LAI_SUN_PROJ]   = 1. - exp(-s->value[LAI_PROJ]);
 				s->value[LAI_SHADE_PROJ] = s->value[LAI_PROJ] - s->value[LAI_SUN_PROJ];
 
-				logger(g_debug_log, "LAI_SUN_PROJ   = %f\n", s->value[LAI_SUN_PROJ]);
-				logger(g_debug_log, "LAI_SHADE_PROJ = %f\n", s->value[LAI_SHADE_PROJ]);
+				logger(g_debug_log, "LAI_SUN_PROJ   = %f m2/m2\n", s->value[LAI_SUN_PROJ]);
+				logger(g_debug_log, "LAI_SHADE_PROJ = %f m2/m2\n", s->value[LAI_SHADE_PROJ]);
+				
+				/* compute total LAI for Exposed Area */
+				s->value[LAI_EXP]       = s->value[LAI_PROJ]       * ( 1. + s->value[CANOPY_COVER_EXP]);
+				s->value[LAI_SUN_EXP]   = s->value[LAI_SUN_PROJ]   * ( 1. + s->value[CANOPY_COVER_EXP]);
+				s->value[LAI_SHADE_EXP] = s->value[LAI_SHADE_PROJ] * ( 1. + s->value[CANOPY_COVER_EXP]);
+
+				logger(g_debug_log, "LAI_EXP        = %f m2/m2\n", s->value[LAI_EXP]);
+				logger(g_debug_log, "LAI_SUN_EXP    = %f m2/m2\n", s->value[LAI_SUN_EXP]);
+				logger(g_debug_log, "LAI_SHADE_EXP  = %f m2/m2\n", s->value[LAI_SHADE_EXP]);
 			}
 		}
 	}
