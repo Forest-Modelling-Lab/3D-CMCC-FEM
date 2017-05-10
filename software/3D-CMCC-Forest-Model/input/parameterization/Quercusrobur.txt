@@ -6,8 +6,8 @@ EPSILONgCMJ	1.05              //Light Use Efficiency  (gC/molPAR)(used if ALPHA 
 K	0.54                      //0.54 Extinction coefficient for absorption of PAR by canopy Q. robur from Pietsch et al 2005
 ALBEDO	0.2                   //albedo varying from 0.8-0.17 from Otto et al., 2014; 0.20 for Quercus spp. from Breuer et al., 2003
 INT_COEFF  0.3                //precip interception coefficient for Q. robur from Tatarinov
-SLA_AVG0 20                   //Average Specific Leaf Area m^2/KgC (juvenile) sunlit/shaded leaves Giertych et al., 2015
-SLA_AVG0 13.5                 //Average Specific Leaf Area m^2/KgC (mature) sunlit/shaded leaves Holscher et alk., 2004
+SLA_AVG0 40.88                //Average Specific Leaf Area m^2/KgC (juvenile) sunlit/shaded leaves Giertych et al., 2015
+SLA_AVG0 24.2                 //Average Specific Leaf Area m^2/KgC (mature) sunlit/shaded leaves Holscher et al., 2004
 TSLA     80                   //Age at which SLA_AVG = (SLA_AVG1 + SLA_AVG0 )/2 for Q. robur Forrester et al., 2017
 SLA_RATIO	2                 //(DIM) ratio of shaded to sunlit projected SLA  for Q. robur from Pietsch et al.
 LAI_RATIO   2                 //(DIM) all-sided to projected leaf area ratio for Q. robur from Pietsch et al.

@@ -583,7 +583,6 @@ enum {
 	N_CROOT_LIVE_WOOD_TO_DEADWOOD,      /* (tN/cell/day) Daily tN from Coarse live wood pool to Coarse dead wood */
 	N_BRANCH_LIVE_WOOD_TO_DEAD_WOOD,    /* (tN/cell/day) Daily tN from Branch live wood pool to Branch dead wood */
 
-
 	/* nitrogen pools (tN/area) */
 	LEAF_N,                             /* (tN/cell) Current Leaf nitrogen pool */
 	LEAF_FALLING_N,                     /* (tN/cell) Current Leaf falling nitrogen pool */
@@ -605,17 +604,6 @@ enum {
 	CWD_N,                              /* (tN/cell) Current Coarse Woody Debris nitrogen pool */
 	TOT_STEM_N,                         /* (tN/cell) Current Total Stem nitrogen pool */
 	TOT_ROOT_N,                         /* (tN/cell) Current Total root nitrogen pool */
-
-	/* dead pools */
-//	DEAD_LEAF_N,                        /* (tN/cell) dead leaf flux/pool */
-//	DEAD_FROOT_N,                       /* (tN/cell) dead froot flux/pool */
-//	DEAD_STEM_N,                        /* (tN/cell) dead stem flux/pool */
-//	DEAD_CROOT_N,                       /* (tN/cell) dead croot flux/pool */
-//	DEAD_BRANCH_N,                      /* (tN/cell) dead branch flux/pool */
-//	DEAD_RESERVE_N,                     /* (tN/cell) dead reserve flux/pool */
-//	DEAD_FRUIT_N,                       /* (tN/cell) dead fruit flux/pool */
-//	DEAD_TO_LITRN,                      /* (tN/cell) dead pool to litter pool flux */
-//	DEAD_TO_CWDN,                       /* (tN/cell) dead pool to cwd pool flux */
 
 	/* per tree in tN */
 	TREE_LEAF_N,                        /* (tN/tree) Single Tree Leaf nitrogen pool */

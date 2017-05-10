@@ -6,8 +6,8 @@ EPSILONgCMJ -9999           //Light Use Efficiency  (gC/MJ)(used if ALPHA is not
 K   0.72                    //Extinction coefficient for absorption of PAR by canopy  (0.65 Rambal et al., 1996, 0.72 Hoff et al., 2002), 0.69 for Q. ilex Vitale et al., 2012 
 ALBEDO  0.12                //albedo 0.12 (Hoff et al., 2002)
 INT_COEFF  0.3              //precip interception coefficient for DNF from Tatarinov et al., 
-SLA_AVG0 6.6                //Average Specific Leaf Area m^2/KgC (juvenile) sunlit/shaded leaves Rambal et al., 1996
-SLA_AVG1 4.5                //Average Specific Leaf Area m^2/KgC (mature) sunlit/shaded leaves Escudero et al., 2013
+SLA_AVG0 13.32              //Average Specific Leaf Area m^2/KgC (juvenile) sunlit/shaded leaves Rambal et al., 1996
+SLA_AVG1 8.6                //Average Specific Leaf Area m^2/KgC (mature) sunlit/shaded leaves Vaz et al., 2011
 TSLA     80                 //Age at which SLA_AVG = (SLA_AVG1 + SLA_AVG0 )/2 Forrester et al., 2017
 SLA_RATIO   2               //(DIM) ratio of shaded to sunlit projected SLA  for Q. ilex from Mollicone et al., 2002 Chiesi et al., 2007 
 LAI_RATIO   2               //(DIM) all-sided to projected leaf area ratio               
