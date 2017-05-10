@@ -14,6 +14,7 @@ void crown_allometry (cell_t *const c, const int height, const int dbh, const in
 {
 	int crown_form_factor = 0;
 
+
 	height_t *h;
 	dbh_t *d;
 	age_t *a;
