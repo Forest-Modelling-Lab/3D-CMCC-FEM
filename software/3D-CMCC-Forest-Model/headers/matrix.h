@@ -390,16 +390,16 @@ enum {
 	LITR_C,                             /* (tC/cell) Current Litter carbon pool */
 	SOIL_C,                             /* (tC/cell) Current Soil carbon pool */
 	CWD_C,                              /* (tC/cell) Current Coarse Woody Debris carbon pool */
-	LIVEWOOD_C,                        /* (tC/cell) Current Live wood carbon pool */
-	DEADWOOD_C,                        /* (tC/cell) Current Dead wood carbon pool */
+	LIVEWOOD_C,                         /* (tC/cell) Current Live wood carbon pool */
+	DEADWOOD_C,                         /* (tC/cell) Current Dead wood carbon pool */
 	TOT_WOOD_C,                         /* (tC/cell) Current Total wood carbon pool */
 	TOTAL_C,                            /* (tC/cell) Current Total carbon pool */
-	STEM_LIVEWOOD_C,                   /* (tC/cell) Current Stem live wood carbon pool */
-	STEM_DEADWOOD_C,                   /* (tC/cell) Current Stem dead wood carbon pool */
-	CROOT_LIVEWOOD_C,                  /* (tC/cell) Current Coarse root live wood carbon pool */
-	CROOT_DEADWOOD_C,                  /* (tC/cell) Current Coarse root dead wood carbon pool */
-	BRANCH_LIVEWOOD_C,                 /* (tC/cell) Current Branch live wood carbon pool */
-	BRANCH_DEADWOOD_C,                 /* (tC/cell) Current Branch dead wood carbon pool */
+	STEM_LIVEWOOD_C,                    /* (tC/cell) Current Stem live wood carbon pool */
+	STEM_DEADWOOD_C,                    /* (tC/cell) Current Stem dead wood carbon pool */
+	CROOT_LIVEWOOD_C,                   /* (tC/cell) Current Coarse root live wood carbon pool */
+	CROOT_DEADWOOD_C,                   /* (tC/cell) Current Coarse root dead wood carbon pool */
+	BRANCH_LIVEWOOD_C,                  /* (tC/cell) Current Branch live wood carbon pool */
+	BRANCH_DEADWOOD_C,                  /* (tC/cell) Current Branch dead wood carbon pool */
 	STEM_SAPWOOD_C,                     /* (tC/cell) Current Stem sapwood carbon pool */
 	STEM_HEARTWOOD_C,                   /* (tC/cell) Current Stem heartwood carbon pool */
 	CROOT_SAPWOOD_C,                    /* (tC/cell) Current Coarse root sapwood carbon pool */
@@ -409,32 +409,32 @@ enum {
 	TOT_SAPWOOD_C,                      /* (tC/cell) Current total sapwood carbon pool */
 	TOT_HEARTWOOD_C,                    /* (tC/cell) Current total heartwood carbon pool */
 	EFF_LIVE_TOTAL_WOOD_FRAC,           /* (DIM) Age-related fraction of Live biomass per Total biomass */
-	DAILY_LIVEWOOD_TURNOVER,           /* (tC/cell/day) Daily live wood turnover rate */
+	DAILY_LIVEWOOD_TURNOVER,            /* (tC/cell/day) Daily live wood turnover rate */
 
 	/* per tree in tC */
-	AV_LEAF_MASS_C,                     /* (tC/tree) Average Leaf carbon pool */
-	AV_STEM_MASS_C,                     /* (tC/tree) Average Stem carbon pool */
-	AV_FROOT_MASS_C,                    /* (tC/tree) Average Fine root carbon pool */
-	AV_CROOT_MASS_C,                    /* (tC/tree) Average Coarse carbon pool */
-	AV_RESERVE_MASS_C,                  /* (tC/tree) Average Reserve carbon pool */
+	AV_LEAF_C,                          /* (tC/tree) Average Leaf carbon pool */
+	AV_STEM_C,                          /* (tC/tree) Average Stem carbon pool */
+	AV_FROOT_C,                         /* (tC/tree) Average Fine root carbon pool */
+	AV_CROOT_C,                         /* (tC/tree) Average Coarse carbon pool */
+	AV_RESERVE_C,                       /* (tC/tree) Average Reserve carbon pool */
 	AV_MIN_RESERVE_C,                   /* (tC/tree) Average Minimum Reserve carbon pool */
-	AV_FRUIT_MASS_C,                    /* (tC/tree) Average Fruit carbon pool */
-	AV_BRANCH_MASS_C,                   /* (tC/tree) Average Branch carbon pool */
-	AV_STEM_SAPWOOD_MASS_C,             /* (tC/tree) Average Sapwood Stem carbon pool */
-	AV_STEM_HEARTWOOD_MASS_C,           /* (tC/tree) Average Heartwood Stem carbon pool */
-	AV_LIVE_STEM_MASS_C,                /* (tC/tree) Average Live Stem carbon pool */
-	AV_DEAD_STEM_MASS_C,                /* (tC/tree) Average Dead Stem carbon pool */
-	AV_CROOT_SAPWOOD_MASS_C,            /* (tC/tree) Average Sapwood Coarse root carbon pool */
-	AV_CROOT_HEARTWOOD_MASS_C,          /* (tC/tree) Average Heartwood Coarse root carbon pool */
-	AV_LIVE_CROOT_MASS_C,               /* (tC/tree) Average Live Coarse root carbon pool */
-	AV_DEAD_CROOT_MASS_C,               /* (tC/tree) Average Dead Coarse root carbon pool */
-	AV_BRANCH_SAPWOOD_MASS_C,           /* (tC/tree) Average Sapwood Branch carbon pool */
-	AV_BRANCH_HEARTWOOD_MASS_C,         /* (tC/tree) Average Heartwood Branch carbon pool */
-	AV_LIVE_BRANCH_MASS_C,              /* (tC/tree) Average Live Branch carbon pool */
-	AV_DEAD_BRANCH_MASS_C,              /* (tC/tree) Average Dead Stem carbon pool */
-	AV_LIVE_WOOD_MASS_C,                /* (tC/tree) Average Live Wood carbon pool */
-	AV_DEAD_WOOD_MASS_C,                /* (tC/tree) Average Dead Wood carbon pool */
-	AV_TOT_WOOD_MASS_C,                 /* (tC/tree) Average Total Wood carbon pool */
+	AV_FRUIT_C,                         /* (tC/tree) Average Fruit carbon pool */
+	AV_BRANCH_C,                        /* (tC/tree) Average Branch carbon pool */
+	AV_STEM_SAPWOOD_C,                  /* (tC/tree) Average Sapwood Stem carbon pool */
+	AV_STEM_HEARTWOOD_C,                /* (tC/tree) Average Heartwood Stem carbon pool */
+	AV_LIVE_STEM_C,                     /* (tC/tree) Average Live Stem carbon pool */
+	AV_DEAD_STEM_C,                     /* (tC/tree) Average Dead Stem carbon pool */
+	AV_CROOT_SAPWOOD_C,                 /* (tC/tree) Average Sapwood Coarse root carbon pool */
+	AV_CROOT_HEARTWOOD_C,               /* (tC/tree) Average Heartwood Coarse root carbon pool */
+	AV_LIVE_CROOT_C,                    /* (tC/tree) Average Live Coarse root carbon pool */
+	AV_DEAD_CROOT_C,                    /* (tC/tree) Average Dead Coarse root carbon pool */
+	AV_BRANCH_SAPWOOD_C,                /* (tC/tree) Average Sapwood Branch carbon pool */
+	AV_BRANCH_HEARTWOOD_C,              /* (tC/tree) Average Heartwood Branch carbon pool */
+	AV_LIVE_BRANCH_C,                   /* (tC/tree) Average Live Branch carbon pool */
+	AV_DEAD_BRANCH_C,                   /* (tC/tree) Average Dead Stem carbon pool */
+	AV_LIVE_WOOD_C,                     /* (tC/tree) Average Live Wood carbon pool */
+	AV_DEAD_WOOD_C,                     /* (tC/tree) Average Dead Wood carbon pool */
+	AV_TOT_WOOD_C,                      /* (tC/tree) Average Total Wood carbon pool */
 
 	/* carbon biomass pools in tDM/sizeCell */
 	LEAF_DM,                            /* (tDM/cell) Current Leaf carbon pool */
@@ -454,20 +454,21 @@ enum {
 	BRANCH_DEADWOOD_DM,                 /* (tDM/cell) Current Dead Branch carbon pool */
 
 	/* (kgDM/tree) per tree in KgDM */
-	AV_LEAF_MASS_KgDM,                  /* (kgDM/tree) Average Leaf carbon pool */
-	AV_STEM_MASS_KgDM,                  /* (kgDM/tree) Average Leaf carbon pool */
-	AV_FROOT_MASS_KgDM,                 /* (kgDM/tree) Average Fine root carbon pool */
-	AV_CROOT_MASS_KgDM,                 /* (kgDM/tree) Average Coarse root carbon pool */
-	AV_RESERVE_MASS_KgDM,               /* (kgDM/tree) Average Reserve carbon pool */
-	AV_BRANCH_MASS_KgDM,                /* (kgDM/tree) Average Branch carbon pool */
-	AV_LIVE_STEM_MASS_KgDM,             /* (kgDM/tree) Average Live Stem carbon pool */
-	AV_DEAD_STEM_MASS_KgDM,             /* (kgDM/tree) Average Dead Stem carbon pool */
-	AV_LIVE_CROOT_MASS_KgDM,            /* (kgDM/tree) Average Live Coarse root carbon pool */
-	AV_DEAD_CROOT_MASS_KgDM,            /* (kgDM/tree) Average Dead Coarse root carbon pool */
-	AV_LIVE_WOOD_MASS_KgDM,             /* (kgDM/tree) Average Live Wood carbon pool */
-	AV_DEAD_WOOD_MASS_KgDM,             /* (kgDM/tree) Average Dead Wood carbon pool */
-	AV_LIVE_BRANCH_MASS_KgDM,           /* (kgDM/tree) Average Live Branch carbon pool */
-	AV_DEAD_BRANCH_MASS_KgDM,           /* (kgDM/tree) Average Dead Branch carbon pool */
+	AV_LEAF_KgDM,                       /* (kgDM/tree) Average Leaf carbon pool */
+	AV_STEM_KgDM,                       /* (kgDM/tree) Average Leaf carbon pool */
+	AV_FROOT_KgDM,                      /* (kgDM/tree) Average Fine root carbon pool */
+	AV_CROOT_KgDM,                      /* (kgDM/tree) Average Coarse root carbon pool */
+	AV_RESERVE_KgDM,                    /* (kgDM/tree) Average Reserve carbon pool */
+	AV_BRANCH_KgDM,                     /* (kgDM/tree) Average Branch carbon pool */
+	AV_LIVE_STEM_KgDM,                  /* (kgDM/tree) Average Live Stem carbon pool */
+	AV_DEAD_STEM_KgDM,                  /* (kgDM/tree) Average Dead Stem carbon pool */
+	AV_LIVE_CROOT_KgDM,                 /* (kgDM/tree) Average Live Coarse root carbon pool */
+	AV_DEAD_CROOT_KgDM,                 /* (kgDM/tree) Average Dead Coarse root carbon pool */
+	AV_LIVE_BRANCH_KgDM,                /* (kgDM/tree) Average Live Branch carbon pool */
+	AV_DEAD_BRANCH_KgDM,                /* (kgDM/tree) Average Dead Branch carbon pool */
+	AV_LIVE_WOOD_KgDM,                  /* (kgDM/tree) Average Live Wood carbon pool */
+	AV_DEAD_WOOD_KgDM,                  /* (kgDM/tree) Average Dead Wood carbon pool */
+
 
 	/* Above and Below Ground Biomass */
 	AGB,                                /* (tC/cell) Above Ground Biomass pool */
