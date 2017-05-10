@@ -81,6 +81,48 @@ void carbon_allocation( cell_t *const c, const int height, const int dbh, const 
 	CHECK_CONDITION ( s->value[LITR_C],     < , ZERO );
 	CHECK_CONDITION ( s->value[CWD_C],      < , ZERO );
 
+	/***************************************************************************************/
+	/* stem */
+	s->value[STEM_SAPWOOD_C]    += s->value[C_TO_STEM];
+	s->value[STEM_HEARTWOOD_C]   = s->value[STEM_C] - s->value[STEM_SAPWOOD_C];
+	s->value[STEM_LIVEWOOD_C]    = s->value[STEM_C] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
+	s->value[STEM_DEADWOOD_C]    = s->value[STEM_C] - s->value[STEM_LIVEWOOD_C];
+
+	s->value[YEARLY_C_TO_STEM] += s->value[C_TO_STEM];
+
+	/***************************************************************************************/
+	/* coarse root */
+	s->value[CROOT_SAPWOOD_C]   += s->value[C_TO_CROOT];
+	s->value[CROOT_HEARTWOOD_C]  = s->value[CROOT_C] - s->value[CROOT_SAPWOOD_C];
+	s->value[CROOT_LIVEWOOD_C]   = s->value[CROOT_C] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
+	s->value[CROOT_DEADWOOD_C]   = s->value[CROOT_C] - s->value[CROOT_LIVEWOOD_C];
+
+	s->value[YEARLY_C_TO_CROOT] += s->value[C_TO_CROOT];
+
+	/***************************************************************************************/
+	/* branch */
+	s->value[BRANCH_SAPWOOD_C]  += s->value[C_TO_BRANCH];
+	s->value[BRANCH_HEARTWOOD_C] = s->value[BRANCH_C] - s->value[BRANCH_SAPWOOD_C];
+	s->value[BRANCH_LIVEWOOD_C]  = s->value[BRANCH_C] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
+	s->value[BRANCH_DEADWOOD_C]  = s->value[BRANCH_C] - s->value[BRANCH_LIVEWOOD_C];
+
+	s->value[YEARLY_C_TO_BRANCH] += s->value[C_TO_BRANCH];
+
+	/***************************************************************************************/
+
+	s->value[TOTAL_C] = s->value[LEAF_C] +
+			s->value[FROOT_C]            +
+			s->value[STEM_C]             +
+			s->value[BRANCH_C]           +
+			s->value[CROOT_C]            +
+			s->value[FRUIT_C]            +
+			s->value[RESERVE_C]          ;
+
+	/* check for closure */
+	CHECK_CONDITION(fabs((s->value[STEM_LIVEWOOD_C]   + s->value[STEM_DEADWOOD_C])  -s->value[STEM_C]),  >,eps);
+	CHECK_CONDITION(fabs((s->value[CROOT_LIVEWOOD_C]  + s->value[CROOT_DEADWOOD_C]) -s->value[CROOT_C]), >,eps);
+	CHECK_CONDITION(fabs((s->value[BRANCH_LIVEWOOD_C] + s->value[BRANCH_DEADWOOD_C])-s->value[BRANCH_C]),>,eps);
+
 	/* single tree average tree pools */
 	average_tree_pools ( s );
 
@@ -118,56 +160,7 @@ void carbon_allocation( cell_t *const c, const int height, const int dbh, const 
 	CHECK_CONDITION ( c->litrC,          < , ZERO );
 	CHECK_CONDITION ( c->cwdC,           < , ZERO );
 
-	/***************************************************************************************/
-	/* stem */
-	s->value[STEM_SAPWOOD_C]  += s->value[C_TO_STEM];
-#if 0
-	//test_new if not using the allometric equations for the sapwood amount
-	s->value[STEM_LIVE_WOOD_C] = s->value[STEM_SAPWOOD_C] * s->value[LIVE_TOTAL_WOOD_FRAC];
-#else
-	s->value[STEM_LIVEWOOD_C]  = s->value[STEM_C] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
-#endif
-	s->value[STEM_DEADWOOD_C]  = s->value[STEM_C] - s->value[STEM_LIVEWOOD_C];
-	s->value[STEM_HEARTWOOD_C] = s->value[STEM_C] - s->value[STEM_SAPWOOD_C];
 
-	/***************************************************************************************/
-	/* coarse root */
-	s->value[CROOT_SAPWOOD_C]  += s->value[C_TO_CROOT];
-#if 0
-	//test_new if not using the allometric equations for the sapwood amount
-	s->value[CROOT_LIVE_WOOD_C] = s->value[COARSE_ROOT_SAPWOOD_C] * s->value[LIVE_TOTAL_WOOD_FRAC];
-#else
-	s->value[CROOT_LIVEWOOD_C]  = s->value[CROOT_C] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
-#endif
-	s->value[CROOT_DEADWOOD_C]  = s->value[CROOT_C] - s->value[CROOT_LIVEWOOD_C];
-	s->value[CROOT_HEARTWOOD_C] = s->value[CROOT_C] - s->value[CROOT_SAPWOOD_C];
-
-	/***************************************************************************************/
-	/* branch */
-	s->value[BRANCH_SAPWOOD_C]  += s->value[C_TO_BRANCH];
-#if 0
-	//test_new if not using the allometric equations for the sapwood amount
-	s->value[BRANCH_LIVEWOOD_C]  = s->value[BRANCH_SAPWOOD_C] * s->value[LIVE_TOTAL_WOOD_FRAC];
-#else
-	s->value[BRANCH_LIVEWOOD_C]  = s->value[BRANCH_C] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
-#endif
-	s->value[BRANCH_DEADWOOD_C]  = s->value[BRANCH_C] - s->value[BRANCH_LIVEWOOD_C];
-	s->value[BRANCH_HEARTWOOD_C] = s->value[BRANCH_C] - s->value[BRANCH_SAPWOOD_C];
-
-	/***************************************************************************************/
-
-	s->value[TOTAL_C] = s->value[LEAF_C] +
-			s->value[FROOT_C]            +
-			s->value[STEM_C]             +
-			s->value[BRANCH_C]           +
-			s->value[CROOT_C]            +
-			s->value[FRUIT_C]            +
-			s->value[RESERVE_C]          ;
-
-	/* check for closure */
-	CHECK_CONDITION(fabs((s->value[STEM_LIVEWOOD_C]   + s->value[STEM_DEADWOOD_C])  -s->value[STEM_C]),  >,eps);
-	CHECK_CONDITION(fabs((s->value[CROOT_LIVEWOOD_C]  + s->value[CROOT_DEADWOOD_C]) -s->value[CROOT_C]), >,eps);
-	CHECK_CONDITION(fabs((s->value[BRANCH_LIVEWOOD_C] + s->value[BRANCH_DEADWOOD_C])-s->value[BRANCH_C]),>,eps);
 }
 
 /********************************************************************************************************************************************/
