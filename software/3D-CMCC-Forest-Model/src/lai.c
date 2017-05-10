@@ -46,8 +46,8 @@ void daily_lai (species_t *const s)
 	logger(g_debug_log, "CANOPY_COVER_PROJ = %g %%\n", s->value[CANOPY_COVER_PROJ]);
 
 	/* compute total LAI for Projected Area */
-	s->value[LAI_PROJ]       = (leaf_C * s->value[SLA_AVG])/(s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell);
-	s->value[LAI_SUN_PROJ]   = 1. - exp(-s->value[LAI_PROJ]);
+	s->value[LAI_PROJ]       = ( leaf_C * s->value[SLA_AVG] ) / ( s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell );
+	s->value[LAI_SUN_PROJ]   = 1. - exp ( -s->value[LAI_PROJ] );
 	s->value[LAI_SHADE_PROJ] = s->value[LAI_PROJ] - s->value[LAI_SUN_PROJ];
 	logger(g_debug_log, "LAI_PROJ       = %f m2/m2\n", s->value[LAI_PROJ]);
 	logger(g_debug_log, "LAI_SUN_PROJ   = %g m2/m2\n", s->value[LAI_SUN_PROJ]);

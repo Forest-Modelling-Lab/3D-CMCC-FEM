@@ -340,8 +340,8 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 		}
 	}
 
-	s->value[AV_LEAF_C] = s->value[LEAF_C] / s->counter[N_TREE];
-	logger(g_debug_log, "-Individual foliage biomass = %f tC\n", s->value[AV_LEAF_C]);
+	s->value[TREE_LEAF_C] = s->value[LEAF_C] / s->counter[N_TREE];
+	logger(g_debug_log, "-Individual foliage biomass = %f tC\n", s->value[TREE_LEAF_C]);
 
 	/* note: model assumes that if no fine-root biomass are available the same ratio foliage-fine roots is used */
 	if (( s->value[FROOT_DM] == 0.0 || s->value[FROOT_DM] == NO_DATA)

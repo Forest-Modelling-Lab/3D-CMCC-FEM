@@ -166,7 +166,7 @@ void average_tree_pools(species_t *const s)
 	logger(g_debug_log,  "N_TREE = %d\n", s->counter[N_TREE]);
 
 	/* compute tree average C pools */
-	s->value[AV_LEAF_C]                  = (s->value[LEAF_C]             / (double)s->counter[N_TREE]);
+	s->value[TREE_LEAF_C]                = (s->value[LEAF_C]             / (double)s->counter[N_TREE]);
 	s->value[AV_STEM_C]                  = (s->value[STEM_C]             / (double)s->counter[N_TREE]);
 	s->value[AV_FROOT_C]                 = (s->value[FROOT_C]            / (double)s->counter[N_TREE]);
 	s->value[AV_CROOT_C]                 = (s->value[CROOT_C]            / (double)s->counter[N_TREE]);
@@ -189,7 +189,7 @@ void average_tree_pools(species_t *const s)
 	s->value[AV_RESERVE_MASS_N]          = (s->value[RESERVE_N]          / (double)s->counter[N_TREE]);
 	s->value[AV_FRUIT_MASS_N]            = (s->value[FRUIT_N]            / (double)s->counter[N_TREE]);
 
-	logger(g_debug_log, "AV_LEAF_C    = %f tC/cell\n", s->value[AV_LEAF_C]);
+	logger(g_debug_log, "AV_LEAF_C    = %f tC/cell\n", s->value[TREE_LEAF_C]);
 	logger(g_debug_log, "AV_STEM_C    = %f tC/cell\n", s->value[AV_STEM_C]);
 	logger(g_debug_log, "AV_FROOT_C   = %f tC/cell\n", s->value[AV_FROOT_C]);
 	logger(g_debug_log, "AV_CROOT_C   = %f tC/cell\n", s->value[AV_CROOT_C]);
@@ -231,7 +231,7 @@ void tree_biomass_remove (cell_t *const c, const int height, const int dbh, cons
 	/* update class carbon pools */
 
 	/* carbon to litter fluxes */
-	s->value[C_LEAF_TO_LITR]          += (s->value[AV_LEAF_C]    * tree_remove);
+	s->value[C_LEAF_TO_LITR]          += (s->value[TREE_LEAF_C]    * tree_remove);
 
 	s->value[C_FROOT_TO_LITR]         += (s->value[AV_FROOT_C]   * tree_remove);
 

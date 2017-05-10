@@ -360,8 +360,8 @@ enum {
 	C_TO_LITR,                          /* (tC/cell/day) Daily Leaf and Fine root Carbon to Litter pool */
 	C_TO_CWD,                           /* (tC/cell/day) Daily Wood Carbon to Coarse Woody Debirs */
 	C_STEM_LIVEWOOD_TO_DEADWOOD,        /* (tC/cell/day) Daily tC from Stem live wood pool to Stem dead wood */
-	C_CROOT_LIVEWOOD_TO_DEADWOOD,      /* (tC/cell/day) Daily tC from Coarse live wood pool to Coarse dead wood */
-	C_BRANCH_LIVEWOOD_TO_DEADWOOD,    /* (tC/cell/day) Daily tC from Branch live wood pool to Branch dead wood */
+	C_CROOT_LIVEWOOD_TO_DEADWOOD,       /* (tC/cell/day) Daily tC from Coarse live wood pool to Coarse dead wood */
+	C_BRANCH_LIVEWOOD_TO_DEADWOOD,      /* (tC/cell/day) Daily tC from Branch live wood pool to Branch dead wood */
 	C_LEAF_TO_LITR1C,                   /* (tC/cell/day) Daily Leaf Litter Carbon to Litter labile carbon pool */
 	C_LEAF_TO_LITR2C,                   /* (tC/cell/day) Daily Leaf Litter Carbon to Litter unshielded cellulose carbon pool */
 	C_LEAF_TO_LITR3C,                   /* (tC/cell/day) Daily Leaf Litter Carbon to Litter shielded cellulose carbon pool */
@@ -412,7 +412,7 @@ enum {
 	DAILY_LIVEWOOD_TURNOVER,            /* (tC/cell/day) Daily live wood turnover rate */
 
 	/* per tree in tC */
-	AV_LEAF_C,                          /* (tC/tree) Average Leaf carbon pool */
+	TREE_LEAF_C,                        /* (tC/tree) Single Tree Leaf carbon pool */
 	AV_STEM_C,                          /* (tC/tree) Average Stem carbon pool */
 	AV_FROOT_C,                         /* (tC/tree) Average Fine root carbon pool */
 	AV_CROOT_C,                         /* (tC/tree) Average Coarse carbon pool */
