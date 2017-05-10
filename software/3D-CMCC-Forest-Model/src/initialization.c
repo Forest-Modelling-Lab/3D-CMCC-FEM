@@ -44,9 +44,6 @@ void initialization_forest_structure(cell_t *const c, const int day, const int m
 
 void initialization_forest_class_C (cell_t *const c, const int height, const int dbh, const int age, const int species)
 {
-
-	//richecca
-
 	height_t *h;
 	dbh_t *d;
 	age_t *a;

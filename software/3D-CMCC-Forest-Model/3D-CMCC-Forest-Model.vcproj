@@ -220,6 +220,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\canopy_cover.c"
+				>
+			</File>
+			<File
 				RelativePath=".\src\canopy_evapotranspiration.c"
 				>
 			</File>
@@ -360,6 +364,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\meteo.c"
+				>
+			</File>
+			<File
 				RelativePath=".\src\modifiers.c"
 				>
 			</File>
@@ -489,10 +497,6 @@
 			</File>
 			<File
 				RelativePath=".\src\wue.c"
-				>
-			</File>
-			<File
-				RelativePath=".\src\yos.c"
 				>
 			</File>
 		</Filter>
