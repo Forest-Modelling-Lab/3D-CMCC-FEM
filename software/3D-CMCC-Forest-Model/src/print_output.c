@@ -760,6 +760,8 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 										",MIN_RESERVE_C"
 										",RESERVE_C"
 										",STEM_C"
+										",STEM_SAP_C"
+										",STEM_HEA_C"
 										",STEM_LIVE_C"
 										",STEM_DEAD_C"
 										",MAX_LEAF_C"
@@ -863,7 +865,7 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 
 								/* print variables at layer-class level */
 								logger(g_annual_log,",%6.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%d,%d,%d,%3.4f"
-										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
+										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
 										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",
 										s->value[YEARLY_GPP],
 										s->value[YEARLY_TOTAL_GROWTH_RESP],
@@ -893,6 +895,8 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 										s->value[MIN_RESERVE_C],
 										s->value[RESERVE_C],
 										s->value[STEM_C],
+										s->value[STEM_SAPWOOD_C],
+										s->value[STEM_HEARTWOOD_C],
 										s->value[STEM_LIVEWOOD_C],
 										s->value[STEM_DEADWOOD_C],
 										s->value[MAX_LEAF_C],
