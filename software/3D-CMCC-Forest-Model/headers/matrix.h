@@ -80,7 +80,7 @@ enum {
 	BUD_BURST,                           /* days of bud burst at the beginning of growing season (only for deciduous) */
 	LEAF_FALL_FRAC_GROWING,              /* proportions of the growing season of leaf fall */
 	LEAF_FROOT_TURNOVER,                 /* Average yearly leaves and fine root turnover rate */
-	LIVEWOOD_TURNOVER,                  /* Average yearly live wood turnover rate */
+	LIVEWOOD_TURNOVER,                   /* Average yearly live wood turnover rate */
 	DBHDCMAX,                            /* maximum dbh crown diameter relationship when minimum density */
 	DBHDCMIN,                            /* minimum dbh crown diameter relationship when maximum density */
 	SAP_A,                               /* a coefficient for sapwood */
@@ -413,28 +413,28 @@ enum {
 
 	/* per tree in tC */
 	TREE_LEAF_C,                        /* (tC/tree) Single Tree Leaf carbon pool */
-	AV_STEM_C,                          /* (tC/tree) Average Stem carbon pool */
-	AV_FROOT_C,                         /* (tC/tree) Average Fine root carbon pool */
-	AV_CROOT_C,                         /* (tC/tree) Average Coarse carbon pool */
-	AV_RESERVE_C,                       /* (tC/tree) Average Reserve carbon pool */
-	AV_MIN_RESERVE_C,                   /* (tC/tree) Average Minimum Reserve carbon pool */
-	AV_FRUIT_C,                         /* (tC/tree) Average Fruit carbon pool */
-	AV_BRANCH_C,                        /* (tC/tree) Average Branch carbon pool */
-	AV_STEM_SAPWOOD_C,                  /* (tC/tree) Average Sapwood Stem carbon pool */
-	AV_STEM_HEARTWOOD_C,                /* (tC/tree) Average Heartwood Stem carbon pool */
-	AV_LIVE_STEM_C,                     /* (tC/tree) Average Live Stem carbon pool */
-	AV_DEAD_STEM_C,                     /* (tC/tree) Average Dead Stem carbon pool */
-	AV_CROOT_SAPWOOD_C,                 /* (tC/tree) Average Sapwood Coarse root carbon pool */
-	AV_CROOT_HEARTWOOD_C,               /* (tC/tree) Average Heartwood Coarse root carbon pool */
-	AV_LIVE_CROOT_C,                    /* (tC/tree) Average Live Coarse root carbon pool */
-	AV_DEAD_CROOT_C,                    /* (tC/tree) Average Dead Coarse root carbon pool */
-	AV_BRANCH_SAPWOOD_C,                /* (tC/tree) Average Sapwood Branch carbon pool */
-	AV_BRANCH_HEARTWOOD_C,              /* (tC/tree) Average Heartwood Branch carbon pool */
-	AV_LIVE_BRANCH_C,                   /* (tC/tree) Average Live Branch carbon pool */
-	AV_DEAD_BRANCH_C,                   /* (tC/tree) Average Dead Stem carbon pool */
-	AV_LIVE_WOOD_C,                     /* (tC/tree) Average Live Wood carbon pool */
-	AV_DEAD_WOOD_C,                     /* (tC/tree) Average Dead Wood carbon pool */
-	AV_TOT_WOOD_C,                      /* (tC/tree) Average Total Wood carbon pool */
+	TREE_STEM_C,                        /* (tC/tree) Single Tree Stem carbon pool */
+	TREE_FROOT_C,                       /* (tC/tree) Single Tree Fine root carbon pool */
+	TREE_CROOT_C,                       /* (tC/tree) Single Tree Coarse carbon pool */
+	TREE_RESERVE_C,                     /* (tC/tree) Single Tree Reserve carbon pool */
+	TREE_MIN_RESERVE_C,                 /* (tC/tree) Single Tree Minimum Reserve carbon pool */
+	TREE_FRUIT_C,                       /* (tC/tree) Single Tree Fruit carbon pool */
+	TREE_BRANCH_C,                      /* (tC/tree) Single Tree Branch carbon pool */
+	TREE_STEM_SAPWOOD_C,                /* (tC/tree) Single Tree Sapwood Stem carbon pool */
+	TREE_STEM_HEARTWOOD_C,              /* (tC/tree) Single Tree Heartwood Stem carbon pool */
+	TREE_STEM_LIVE_C,                   /* (tC/tree) Single Tree Live Stem carbon pool */
+	TREE_STEM_DEAD_C,                   /* (tC/tree) Single Tree Dead Stem carbon pool */
+	TREE_CROOT_SAPWOOD_C,               /* (tC/tree) Single Tree Sapwood Coarse root carbon pool */
+	TREE_CROOT_HEARTWOOD_C,             /* (tC/tree) Single Tree Heartwood Coarse root carbon pool */
+	TREE_CROOT_LIVE_C,                  /* (tC/tree) Single Tree Live Coarse root carbon pool */
+	TREE_CROOT_DEAD_C,                  /* (tC/tree) Single Tree Dead Coarse root carbon pool */
+	TREE_BRANCH_SAPWOOD_C,              /* (tC/tree) Single Tree Sapwood Branch carbon pool */
+	TREE_BRANCH_HEARTWOOD_C,            /* (tC/tree) Single Tree Heartwood Branch carbon pool */
+	TREE_BRANCH_LIVE_C,                 /* (tC/tree) Single Tree Live Branch carbon pool */
+	TREE_BRANCH_DEAD_C,                 /* (tC/tree) Single Tree Dead Stem carbon pool */
+	TREE_LIVEWOOD_C,                    /* (tC/tree) Single Tree Live Wood carbon pool */
+	TREE_DEADWOOD_C,                    /* (tC/tree) Single Tree Dead Wood carbon pool */
+	TREE_TOT_WOOD_C,                    /* (tC/tree) Single Tree Total Wood carbon pool */
 
 	/* carbon biomass pools in tDM/sizeCell */
 	LEAF_DM,                            /* (tDM/cell) Current Leaf carbon pool */
@@ -454,20 +454,20 @@ enum {
 	BRANCH_DEADWOOD_DM,                 /* (tDM/cell) Current Dead Branch carbon pool */
 
 	/* (kgDM/tree) per tree in KgDM */
-	AV_LEAF_KgDM,                       /* (kgDM/tree) Average Leaf carbon pool */
-	AV_STEM_KgDM,                       /* (kgDM/tree) Average Leaf carbon pool */
-	AV_FROOT_KgDM,                      /* (kgDM/tree) Average Fine root carbon pool */
-	AV_CROOT_KgDM,                      /* (kgDM/tree) Average Coarse root carbon pool */
-	AV_RESERVE_KgDM,                    /* (kgDM/tree) Average Reserve carbon pool */
-	AV_BRANCH_KgDM,                     /* (kgDM/tree) Average Branch carbon pool */
-	AV_LIVE_STEM_KgDM,                  /* (kgDM/tree) Average Live Stem carbon pool */
-	AV_DEAD_STEM_KgDM,                  /* (kgDM/tree) Average Dead Stem carbon pool */
-	AV_LIVE_CROOT_KgDM,                 /* (kgDM/tree) Average Live Coarse root carbon pool */
-	AV_DEAD_CROOT_KgDM,                 /* (kgDM/tree) Average Dead Coarse root carbon pool */
-	AV_LIVE_BRANCH_KgDM,                /* (kgDM/tree) Average Live Branch carbon pool */
-	AV_DEAD_BRANCH_KgDM,                /* (kgDM/tree) Average Dead Branch carbon pool */
-	AV_LIVE_WOOD_KgDM,                  /* (kgDM/tree) Average Live Wood carbon pool */
-	AV_DEAD_WOOD_KgDM,                  /* (kgDM/tree) Average Dead Wood carbon pool */
+	TREE_LEAF_KgDM,                     /* (kgDM/tree) Single Tree Leaf carbon pool */
+	TREE_STEM_KgDM,                     /* (kgDM/tree) Single Tree Leaf carbon pool */
+	TREE_FROOT_KgDM,                    /* (kgDM/tree) Single Tree Fine root carbon pool */
+	TREE_CROOT_KgDM,                    /* (kgDM/tree) Single Tree Coarse root carbon pool */
+	TREE_RESERVE_KgDM,                  /* (kgDM/tree) Single Tree Reserve carbon pool */
+	TREE_BRANCH_KgDM,                   /* (kgDM/tree) Single Tree Branch carbon pool */
+	TREE_STEM_LIVE_KgDM,                /* (kgDM/tree) Single Tree Live Stem carbon pool */
+	TREE_STEM_DEAD_KgDM,                /* (kgDM/tree) Single Tree Dead Stem carbon pool */
+	TREE_CROOT_LIVE_KgDM,               /* (kgDM/tree) Single Tree Live Coarse root carbon pool */
+	TREE_CROOT_DEAD_KgDM,               /* (kgDM/tree) Single Tree Dead Coarse root carbon pool */
+	TREE_BRANCH_LIVE_KgDM,              /* (kgDM/tree) Single Tree Live Branch carbon pool */
+	TREE_BRANCH_DEAD_KgDM,              /* (kgDM/tree) Single Tree Dead Branch carbon pool */
+	TREE_LIVEWOOD_KgDM,                 /* (kgDM/tree) Single Tree Live Wood carbon pool */
+	TREE_DEADWOOD_KgDM,                 /* (kgDM/tree) Single Tree Dead Wood carbon pool */
 
 
 	/* Above and Below Ground Biomass */
@@ -618,15 +618,15 @@ enum {
 //	DEAD_TO_CWDN,                       /* (tN/cell) dead pool to cwd pool flux */
 
 	/* per tree in tN */
-	AV_LEAF_MASS_N,                     /* (tN/tree) Average Leaf nitrogen pool */
-	AV_STEM_MASS_N,                     /* (tN/tree) Average Stem nitrogen pool */
-	AV_TOT_STEM_MASS_N,                 /* (tN/tree) Average Stem + Branch nitrogen pool */
-	AV_ROOT_MASS_N,                     /* (tN/tree) Average Total root nitrogen pool */
-	AV_FROOT_MASS_N,                    /* (tN/tree) Average Fine root nitrogen pool */
-	AV_CROOT_MASS_N,                    /* (tN/tree) Average Coarse nitrogen pool */
-	AV_BRANCH_MASS_N,                   /* (tN/tree) Average Branch nitrogen pool */
-	AV_RESERVE_MASS_N,                  /* (tN/tree) Average Reserve nitrogen pool */
-	AV_FRUIT_MASS_N,                    /* (tN/tree) Average Fruit nitrogen pool */
+	TREE_LEAF_N,                        /* (tN/tree) Single Tree Leaf nitrogen pool */
+	TREE_STEM_N,                        /* (tN/tree) Single Tree Stem nitrogen pool */
+	TREE_TOT_STEM_N,                    /* (tN/tree) Single Tree Stem + Branch nitrogen pool */
+	TREE_ROOT_N,                        /* (tN/tree) Single Tree Total root nitrogen pool */
+	TREE_FROOT_N,                       /* (tN/tree) Single Tree Fine root nitrogen pool */
+	TREE_CROOT_N,                       /* (tN/tree) Single Tree Coarse nitrogen pool */
+	TREE_BRANCH_N,                      /* (tN/tree) Single Tree Branch nitrogen pool */
+	TREE_RESERVE_N,                     /* (tN/tree) Single Tree Reserve nitrogen pool */
+	TREE_FRUIT_N,                       /* (tN/tree) Single Tree Fruit nitrogen pool */
 
 	/* litter and soil pools */
 	CWDC,                               /* (tC/cell) coarse woody debris C */
