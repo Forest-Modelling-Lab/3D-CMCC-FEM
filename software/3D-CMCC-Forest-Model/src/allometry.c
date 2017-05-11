@@ -96,8 +96,6 @@ void allometry_power_function(cell_t *const c)
 	int age;
 	int species;
 
-	int mod_age;
-
 	height_t *h;
 	dbh_t *d;
 	age_t *a;
@@ -121,10 +119,7 @@ void allometry_power_function(cell_t *const c)
 				{
 					s = &a->species[species];
 
-					mod_age = a->value;
-					logger(g_debug_log, "Age (used in function) = %d\n", mod_age);
-
-					s->value[MASS_DENSITY] = s->value[RHO1] + (s->value[RHO0] - s->value[RHO1]) * exp(-ln2 * (mod_age / s->value[TRHO]));
+					s->value[MASS_DENSITY] = s->value[RHO1] + (s->value[RHO0] - s->value[RHO1]) * exp(-LN2 * ((double)a->value / s->value[TRHO]));
 					logger(g_debug_log, "-Mass Density = %g (tDM/m3)\n", s->value[MASS_DENSITY]);
 
 					if ( d->value < 9 )

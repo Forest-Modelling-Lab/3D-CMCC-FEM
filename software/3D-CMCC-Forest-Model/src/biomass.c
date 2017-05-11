@@ -151,7 +151,7 @@ void tree_branch_and_bark (cell_t *const c, const int height, const int dbh, con
 	/* compute branch and bark fractions */
 
 	if ( !s->value[FRACBB0] ) s->value[FRACBB0] = s->value[FRACBB1];
-	else s->value[FRACBB] = s->value[FRACBB1] + ( s->value[FRACBB0]- s->value[FRACBB1] )* exp( -ln2 * ( a->value / s->value[TBB] ) );
+	else s->value[FRACBB] = s->value[FRACBB1] + ( s->value[FRACBB0]- s->value[FRACBB1] )* exp( -LN2 * ( (double)a->value / s->value[TBB] ) );
 }
 
 void tree_biomass_remove (cell_t *const c, const int height, const int dbh, const int age, const int species, const int tree_remove)

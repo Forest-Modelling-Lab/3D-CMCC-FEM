@@ -328,7 +328,7 @@ void dendrometry ( cell_t *const c, const int layer, const int height, const int
 //	logger(g_debug_log, "\n**Mass density**\n");
 //
 //	/* compute mass density tDM/m3 */
-//	s->value[MASS_DENSITY] = s->value[RHO1] + (s->value[RHO0] - s->value[RHO1]) * exp(-ln2 * (a->value / s->value[TRHO]));
+//	s->value[MASS_DENSITY] = s->value[RHO1] + (s->value[RHO0] - s->value[RHO1]) * exp(-LN2 * ((double)a->value / s->value[TRHO]));
 //	logger(g_debug_log, "-Mass Density = %f tDM/m3\n", s->value[MASS_DENSITY]);
 //
 //	/* convert to tDM-->kgDM m3 */

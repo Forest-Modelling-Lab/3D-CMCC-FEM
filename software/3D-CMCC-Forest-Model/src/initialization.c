@@ -69,7 +69,7 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 	logger(g_debug_log, "...checking initial biomass data for height %f, dbh %f, age %d, species %s...\n", h->value, d->value, a->value, s->name);
 
 	/* compute mass density */
-	s->value[MASS_DENSITY] = s->value[RHO1] + (s->value[RHO0] - s->value[RHO1]) * exp(-ln2 * (a->value / s->value[TRHO]));
+	s->value[MASS_DENSITY] = s->value[RHO1] + (s->value[RHO0] - s->value[RHO1]) * exp(-LN2 * ((double)a->value / s->value[TRHO]));
 	logger(g_debug_log, "-Mass Density = %f tDM/m3\n", s->value[MASS_DENSITY]);
 
 	/* compute volume */
@@ -148,7 +148,7 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 		}
 		else
 		{
-			s->value[FRACBB]    = s->value[FRACBB1] + (s->value[FRACBB0] - s->value[FRACBB1])* exp(-ln2 * (h->value / s->value[TBB]));
+			s->value[FRACBB]    = s->value[FRACBB1] + (s->value[FRACBB0] - s->value[FRACBB1])* exp(-LN2 * (h->value / s->value[TBB]));
 			s->value[BRANCH_DM] = s->value[STEM_DM] * s->value[FRACBB];
 			s->value[BRANCH_C]  = s->value[STEM_C] * s->value[FRACBB];
 			logger(g_debug_log, "-Stem Branch Biomass initialization data from DBH = %f tC/cell\n", s->value[BRANCH_C]);

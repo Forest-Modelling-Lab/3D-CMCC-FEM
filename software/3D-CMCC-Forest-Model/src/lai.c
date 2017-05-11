@@ -22,7 +22,7 @@ void specific_leaf_area ( const age_t *const a, species_t *const s )
 
 	/* ager related SLA based on 3-PG model approach */
 
-	s->value[SLA_AVG] = s->value[SLA_AVG1] + ( s->value[SLA_AVG0] - s->value[SLA_AVG1] ) * exp( -ln2 * pow((a->value / s->value[TSLA]), n));
+	s->value[SLA_AVG] = s->value[SLA_AVG1] + ( s->value[SLA_AVG0] - s->value[SLA_AVG1] ) * exp( -LN2 * pow(((double)a->value / s->value[TSLA]), n));
 	logger(g_debug_log, "SLA_AVG = %f (kgC/m2)\n", s->value[SLA_AVG]);
 }
 

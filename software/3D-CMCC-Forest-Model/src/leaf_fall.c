@@ -119,7 +119,7 @@ void leaffall_evergreen ( cell_t *const c, const int height, const int dbh, cons
 	species_t *s;
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
-	if ( c->doy ==  IS_LEAP_YEAR ( c->years[year].year ) ) days_for_leaffall = 366;
+	if ( IS_LEAP_YEAR ( c->years[year].year ) ) days_for_leaffall = 366;
 	else days_for_leaffall = 365;
 
 	logger(g_debug_log, "\n**LEAF FALL (turnover) EVERGREEN**\n");

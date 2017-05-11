@@ -13,8 +13,6 @@ extern logger_t* g_debug_log;
 
 void turnover( cell_t *const c, age_t *const a, species_t *const s, const int day, const int month, const int year )
 {
-	int days_for_turnover;
-
 #if 1
 	double juvenile_livewood_turnover_frac;  /* juvenile fraction of turnover */
 	double mature_livewood_turnover_frac;    /* mature fraction of turnover */
@@ -32,28 +30,22 @@ void turnover( cell_t *const c, age_t *const a, species_t *const s, const int da
 
 	/* note: it recomputes variables in species.txt */
 	effective_livewood_turnover = mature_livewood_turnover_frac + ( juvenile_livewood_turnover_frac - mature_livewood_turnover_frac ) *
-			exp( -ln2 * pow( ( a->value / t_age ), n ) );
+			exp( -LN2 * pow( ( (double)a->value / t_age ), n ) );
 
 	s->value[LIVEWOOD_TURNOVER] = effective_livewood_turnover;
 
-	if ( c->doy ==  IS_LEAP_YEAR ( c->years[year].year ) ) days_for_turnover = 366;
-	else days_for_turnover = 365;
-
-	s->value[DAILY_LIVEWOOD_TURNOVER] = effective_livewood_turnover / (double)days_for_turnover;
+	s->value[DAILY_LIVEWOOD_TURNOVER] = effective_livewood_turnover / (IS_LEAP_YEAR ( c->years[year].year ) ? 366 : 365);
 
 #else
 
 
 	logger(g_debug_log, "\n**TURNOVER**\n");
 
-	if ( c->doy ==  IS_LEAP_YEAR ( c->years[year].year ) ) days_for_turnover = 366;
-	else days_for_turnover = 365;
-
 	/* test it accounts for fractions for previous year carbon biomass for daily turnover */
 	/* following Krinner et al., 2005 turnover occurs every day of the year */
 	/* daily fraction of biomass to remove */
 
-	s->value[DAILY_LIVEWOOD_TURNOVER] = s->value[LIVEWOOD_TURNOVER] / (double)days_for_turnover;
+	s->value[DAILY_LIVEWOOD_TURNOVER] = s->value[LIVEWOOD_TURNOVER] / (IS_LEAP_YEAR ( c->years[year].year ) ? 366 : 365);
 
 #endif
 
