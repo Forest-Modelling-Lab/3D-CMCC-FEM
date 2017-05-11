@@ -103,7 +103,7 @@ void dbhdc_function (cell_t *const c, const int layer, const int height, const i
 
 }
 
-void canopy_cover_projected (cell_t *const c, const int height, const int dbh, const int age, const int species)
+void canopy_cover (cell_t *const c, const int height, const int dbh, const int age, const int species)
 {
 	double eff_canopy_cover;
 	double lateral_area;

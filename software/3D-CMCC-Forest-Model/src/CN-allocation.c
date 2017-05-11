@@ -42,9 +42,8 @@ void carbon_allocation( cell_t *const c, const int height, const int dbh, const 
 	s->value[C_TO_CROOT]   -= ((s->value[CROOT_GROWTH_RESP]  / 1e6 * g_settings->sizeCell) + s->value[C_CROOT_TO_CWD]);
 	s->value[C_TO_BRANCH]  -= ((s->value[BRANCH_GROWTH_RESP] / 1e6 * g_settings->sizeCell) + s->value[C_BRANCH_TO_CWD]);
 	s->value[C_TO_FRUIT]   -=   s->value[C_FRUIT_TO_CWD];
-	s->value[C_TO_RESERVE] -=  (s->value[C_RESERVE_TO_CWD]);
-	s->value[C_TO_LITR]    +=   s->value[C_LEAF_TO_LITR] +
-			s->value[C_FROOT_TO_LITR];
+	s->value[C_TO_RESERVE] -=   s->value[C_RESERVE_TO_CWD];
+	s->value[C_TO_LITR]    +=   fabs(s->value[C_LEAF_TO_LITR] + s->value[C_FROOT_TO_LITR]);
 	s->value[C_TO_CWD]     +=   s->value[C_BRANCH_TO_CWD];
 #else
 	//if using test
@@ -88,7 +87,7 @@ void carbon_allocation( cell_t *const c, const int height, const int dbh, const 
 	s->value[STEM_LIVEWOOD_C]    = s->value[STEM_C] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
 	s->value[STEM_DEADWOOD_C]    = s->value[STEM_C] - s->value[STEM_LIVEWOOD_C];
 
-	s->value[YEARLY_C_TO_STEM] += s->value[C_TO_STEM];
+	s->value[YEARLY_C_TO_STEM]  += s->value[C_TO_STEM];
 
 	/***************************************************************************************/
 	/* coarse root */

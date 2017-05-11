@@ -13,31 +13,32 @@ extern logger_t* g_debug_log;
 
 void turnover( cell_t *const c, age_t *const a, species_t *const s, const int day, const int month, const int year )
 {
-#if 1
-	double juvenile_livewood_turnover_frac;  /* juvenile fraction of turnover */
-	double mature_livewood_turnover_frac;    /* mature fraction of turnover */
+
+#if 1 /* test */
+	double juv_livewood_turnover_frac;       /* juvenile fraction of turnover */
+	double mat_livewood_turnover_frac;       /* mature fraction of turnover */
 	double effective_livewood_turnover;      /* effective livewood turnover */
 	int t_age;                               /* age at which TURNOVER = (juvenile_livewood_turnover_frac/mature_livewood_turnover_frac)/2 */
 	double n = 2.;
 
-	/* this function assumes that turnover increase with increasing tree age */
+	/** age related function for turnover **/
+
+	/* this function assumes that turnover rate increases with increasing tree age */
 	/* note: assumptions */
-	juvenile_livewood_turnover_frac = 0.1;
-	mature_livewood_turnover_frac   = 0.7;
-	t_age = 5;
+	juv_livewood_turnover_frac = 0.1;    //fixme it should be moved to species.txt
+	mat_livewood_turnover_frac = 0.7;    //fixme it should be moved to species.txt
+	t_age                      = 10;     //fixme it should be moved to species.txt
 
 	logger(g_debug_log, "\n**TURNOVER**\n");
 
 	/* note: it recomputes variables in species.txt */
-	effective_livewood_turnover = mature_livewood_turnover_frac + ( juvenile_livewood_turnover_frac - mature_livewood_turnover_frac ) *
+	effective_livewood_turnover = mat_livewood_turnover_frac + ( juv_livewood_turnover_frac - mat_livewood_turnover_frac ) *
 			exp( -LN2 * pow( ( (double)a->value / t_age ), n ) );
 
+	/* note: overwrites value to those in species.txt */
 	s->value[LIVEWOOD_TURNOVER] = effective_livewood_turnover;
 
-	s->value[DAILY_LIVEWOOD_TURNOVER] = effective_livewood_turnover / (IS_LEAP_YEAR ( c->years[year].year ) ? 366 : 365);
-
-#else
-
+#endif
 
 	logger(g_debug_log, "\n**TURNOVER**\n");
 
@@ -47,7 +48,6 @@ void turnover( cell_t *const c, age_t *const a, species_t *const s, const int da
 
 	s->value[DAILY_LIVEWOOD_TURNOVER] = s->value[LIVEWOOD_TURNOVER] / (IS_LEAP_YEAR ( c->years[year].year ) ? 366 : 365);
 
-#endif
 
 	if ( ! day &&  ! month && s->counter[YOS] > 1 )
 	{

@@ -25,21 +25,12 @@ void initialization_forest_structure(cell_t *const c, const int day, const int m
 
 	logger(g_debug_log,"\n*******INITIALIZE FOREST STRUCTURE*******\n");
 
-	//	if ( ! day && ! month && ! year)
-	//	{
 	/* annual forest structure */
 	if ( ! annual_forest_structure ( c, year ) )
 	{
 		puts(sz_err_out_of_memory);
 		exit(1);
 	}
-	//		/* monthly forest structure */
-	//		if ( ! monthly_forest_structure ( c ) )
-	//		{
-	//			puts(sz_err_out_of_memory);
-	//			exit(1);
-	//		}
-	//	}
 }
 
 void initialization_forest_class_C (cell_t *const c, const int height, const int dbh, const int age, const int species)

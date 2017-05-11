@@ -61,9 +61,9 @@ LEAF_FINEROOT_TURNOVER  0.18  //Average YEARLY leaves and fine root turnover rat
 LIVE_WOOD_TURNOVER  0.7       //Annual yearly live wood turnover rate for P. sylvestris from Pietsch
 DBHDCMAX  0.20                //Low Density for Picea abies from Rautianen and Stenberg 2005,  0.255 Seidl et al., 2012, 0.18 from Kalliovirta and Tokola 2005, 0.34 from Grote 2001
 DBHDCMIN  0.14                //High Density for P. sylvestris from Ameztegui et al., 2012 0.14, 0.15 from Kalliovirta and Tokola 2005
-SAP_A   3.119                 //TO BE CHECKED           //a value for Picea abies deducted from  p.c. Kostner and Clausnitzer et al., 2011 CHECK IT!!!!!!!!!
-SAP_B   1.4544                //TO BE CHECKED           //b value for Picea abies deducted from p.c. Kostner and Clausnitzer et al., 2011
-SAP_LEAF    1480              //sapwood_max leaf area ratio in pipe model for Pinus sylvestris 1480 Mencuccini Bonosi, 2001; 1020 Makela et al., 1995; from 1300 to 1800 Veerbeck et al., 2007
+SAP_A   0.974                 //a value for Pinus sylvestris 0.7731 from Xiao & Ceulemans 2004, 3.119 from Verbeek et al., 2007, 0.974 summing up Xiao + Veerbeck 
+SAP_B   1.7979                //b value for Pinus sylvestris 1.9174 from Xiao & Ceulemans 2004 1.4544 from Verbeek et al., 2007, 1.7979 summing up Xiao + Veerbeck
+SAP_LEAF    1600              //sapwood_max leaf area ratio in pipe model for Pinus sylvestris 1480 Mencuccini Bonosi, 2001; 1020 Makela et al., 1995; from 1300 to 1800 Veerbeck et al., 2007
 SAP_WRES    0.05              //Sapwood-Reserve biomass ratio used if no Wres data are available 0.11 for deciduous 0.05 for evergreen see Schwalm and Ek, 2004 Ecological Modelling
 STEMCONST_P 0.127             //a parameter for allometric equation 0.06552  E. Cienciala et al., 2006 For P. sylvestrisM; from Yuste et al 2005 0.1227, 0.084 from Xiao and Ceulemans, 0.7 Seidl et al., 2012, 0.027 Landsberg and Sands, 0.046 Landsberg et al., 2005
 STEMPOWER_P 2.30              //b parameter for allometric equation 2.50626 E. Cienciala et al., 2006 For P. sylvestris; from Yuste et al 2005 2.3272, 1.985 from Xiao and Ceulemans, 3.0 Seidl et al., 2012, 2.86 Landsberg and Sands, 2.6496 Landsberg et al., 2005
@@ -75,8 +75,8 @@ HDMAX_B -0.165                //B parameter for Height (m) to Base diameter (m) 
 HDMIN_A 76.3                  //A parameter for Height (m) to Base diameter (m) ratio MIN Seidl et al., 2012
 HDMIN_B -0.129                //B parameter for Height (m) to Base diameter (m) ratio MIN Seidl et al., 2012
 CROWN_FORM_FACTOR 1           //Crown form factor (0 = cylinder, 1 = cone, 2 = sphere)
-CROWN_A    0.43               //Crown relationship with tree height for Pinus sylvestris from Rautianinen and Stember 2006
-CROWN_B     1                 //Crown exponential with tree height (Fixed to 1 as in Sorie-ND)
+CROWN_A     0.0033            //Crown relationship with tree height for Pinus sylvestris  Xiao et al., 2006,0.43 from Rautianinen and Stember 2006
+CROWN_B     2.3546            //Crown exponential with tree height for Pinus sylvestris  Xiao et al., 2006
 MAXSEED 20000                 //numero massimo semi prodotti dalla pianta
 MASTSEED    5                 //ricorrenza anni di pasciona
 WEIGHTSEED  7                 //peso frutto in g 

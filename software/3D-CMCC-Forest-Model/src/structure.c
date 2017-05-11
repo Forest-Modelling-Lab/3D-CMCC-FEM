@@ -256,8 +256,8 @@ int annual_forest_structure(cell_t* const c, const int year)
 					{
 						for ( species = 0; species < c->heights[height].dbhs[dbh].ages[age].species_count; ++species )
 						{
-							crown_allometry        ( c, height, dbh, age, species );
-							canopy_cover_projected ( c, height, dbh, age, species );
+							crown_allometry ( c, height, dbh, age, species );
+							canopy_cover    ( c, height, dbh, age, species );
 						}
 					}
 				}
@@ -343,8 +343,8 @@ int annual_forest_structure(cell_t* const c, const int year)
 
 										s->value[DBHDC_EFF] -= 0.001;
 
-										crown_allometry        ( c, height, dbh, age, species );
-										canopy_cover_projected ( c, height, dbh, age, species );
+										crown_allometry ( c, height, dbh, age, species );
+										canopy_cover    ( c, height, dbh, age, species );
 
 										/* check for recompued canopy cover */
 										c->tree_layers[layer].layer_cover += s->value[CANOPY_COVER_PROJ];

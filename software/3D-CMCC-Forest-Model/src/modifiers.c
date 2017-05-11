@@ -16,7 +16,7 @@ extern settings_t* g_settings;
 extern logger_t* g_debug_log;
 extern soil_settings_t *g_soil_settings;
 
-#define WATER_STRESS_LIMIT 0.2
+#define WATER_STRESS_LIMIT 0.3
 
 void modifiers(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, const meteo_daily_t *const meteo_daily,
 		const meteo_annual_t *const meteo_annual)
@@ -24,9 +24,9 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	double RelAge;
 	/*variables for CO2 modifier computation*/
 	double KmCO2;	                       /* affinity coefficients temperature dependent according to Arrhenius relationship */
-	double Ea1   = 59400.0;                  /* KJ mol^-1 */
+	double Ea1   = 59400.0;                /* KJ mol^-1 */
 	double A1    = 2.419 * pow(10,13);
-	double Ea2   = 109600.0;	               /* KJ mol^-1 */
+	double Ea2   = 109600.0;	           /* KJ mol^-1 */
 	double A2    = 1.976 * pow(10,22);
 	double KO2;	                           /* Inhibition constant for 02 */
 	double EaKO2 = 13913.5;                /* KJ mol^-1 */
@@ -94,8 +94,8 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 
 		s->value[F_CO2_TR] = 1.;
 	}
-	logger(g_debug_log, "fCO2 modifier for assimilation  = %g\n", s->value[F_CO2]);
-	logger(g_debug_log, "fCO2 modifier for transpiration = %g\n", s->value[F_CO2_TR]);
+	logger(g_debug_log, "fCO2 modifier for assimilation  = %f\n", s->value[F_CO2]);
+	logger(g_debug_log, "fCO2 modifier for transpiration = %f\n", s->value[F_CO2_TR]);
 
 	/********************************************************************************************/
 
