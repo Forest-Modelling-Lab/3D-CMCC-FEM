@@ -1275,6 +1275,7 @@ int main(int argc, char *argv[]) {
 								, g_settings->year_start
 								, g_settings->year_end
 						);
+						g_year_start_index = -1;
 						goto err;
 					}
 					ii = i;
@@ -1287,6 +1288,7 @@ int main(int argc, char *argv[]) {
 						, matrix->cells[0].years[0].year
 						, matrix->cells[0].years[years_of_simulation-1].year
 				);
+				g_year_start_index = -1;
 				goto err;
 			}
 			/* i is year_end_index */
