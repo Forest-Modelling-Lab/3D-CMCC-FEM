@@ -1283,13 +1283,12 @@ int main(int argc, char *argv[]) {
 				}
 			}
 			if ( -1 == ii ) {
-				logger_error(g_debug_log, "end year (%d) not found. range is %d-%d\n"
+				logger_error(g_debug_log, "end year (%d) not found. end year will be changed to %d\n"
 						, g_settings->year_end
-						, matrix->cells[0].years[0].year
 						, matrix->cells[0].years[years_of_simulation-1].year
 				);
-				g_year_start_index = -1;
-				goto err;
+				g_settings->year_end = matrix->cells[0].years[years_of_simulation-1].year;
+				ii = years_of_simulation-1;
 			}
 			/* i is year_end_index */
 			i = ii + 1;
