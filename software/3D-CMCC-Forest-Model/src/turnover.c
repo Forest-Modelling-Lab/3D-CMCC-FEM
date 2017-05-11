@@ -15,22 +15,33 @@ void turnover( cell_t *const c, age_t *const a, species_t *const s, const int da
 {
 	int days_for_turnover;
 
-#if 0
+#if 1
 	double juvenile_livewood_turnover_frac;  /* juvenile fraction of turnover */
 	double mature_livewood_turnover_frac;    /* mature fraction of turnover */
+	double effective_livewood_turnover;      /* effective livewood turnover */
 	int t_age;                               /* age at which TURNOVER = (juvenile_livewood_turnover_frac/mature_livewood_turnover_frac)/2 */
 	double n = 2.;
 
-	/* this function assumes that turonver increase with increasing tree age */
-	/* assumptions */
+	/* this function assumes that turnover increase with increasing tree age */
+	/* note: assumptions */
 	juvenile_livewood_turnover_frac = 0.1;
-	mature_livewood_turnover_frac   = s->value[LIVEWOOD_TURNOVER];
+	mature_livewood_turnover_frac   = 0.7;
 	t_age = 5;
 
+	logger(g_debug_log, "\n**TURNOVER**\n");
+
 	/* note: it recomputes variables in species.txt */
-	s->value[LIVEWOOD_TURNOVER] = mature_livewood_turnover_frac + ( juvenile_livewood_turnover_frac - mature_livewood_turnover_frac ) *
+	effective_livewood_turnover = mature_livewood_turnover_frac + ( juvenile_livewood_turnover_frac - mature_livewood_turnover_frac ) *
 			exp( -ln2 * pow( ( a->value / t_age ), n ) );
-#endif
+
+	s->value[LIVEWOOD_TURNOVER] = effective_livewood_turnover;
+
+	if ( c->doy ==  IS_LEAP_YEAR ( c->years[year].year ) ) days_for_turnover = 366;
+	else days_for_turnover = 365;
+
+	s->value[DAILY_LIVEWOOD_TURNOVER] = effective_livewood_turnover / (double)days_for_turnover;
+
+#else
 
 
 	logger(g_debug_log, "\n**TURNOVER**\n");
@@ -41,18 +52,21 @@ void turnover( cell_t *const c, age_t *const a, species_t *const s, const int da
 	/* test it accounts for fractions for previous year carbon biomass for daily turnover */
 	/* following Krinner et al., 2005 turnover occurs every day of the year */
 	/* daily fraction of biomass to remove */
+
 	s->value[DAILY_LIVEWOOD_TURNOVER] = s->value[LIVEWOOD_TURNOVER] / (double)days_for_turnover;
 
-	if ( ! day &&  ! month && year )
+#endif
+
+	if ( ! day &&  ! month && s->counter[YOS] > 1 )
 	{
 		/* stem */
-		s->value[C_STEM_LIVEWOOD_TO_DEADWOOD]   = s->value[YEARLY_C_TO_STEM]    * s->value[DAILY_LIVEWOOD_TURNOVER];
+		s->value[C_STEM_LIVEWOOD_TO_DEADWOOD]   = s->value[YEARLY_C_TO_STEM]   * s->value[DAILY_LIVEWOOD_TURNOVER];
 
 		/* coarse root */
-		s->value[C_CROOT_LIVEWOOD_TO_DEADWOOD]  = s->value[YEARLY_C_TO_CROOT]   * s->value[DAILY_LIVEWOOD_TURNOVER];
+		s->value[C_CROOT_LIVEWOOD_TO_DEADWOOD]  = s->value[YEARLY_C_TO_CROOT]  * s->value[DAILY_LIVEWOOD_TURNOVER];
 
 		/* branch */
-		s->value[C_BRANCH_LIVEWOOD_TO_DEADWOOD] = s->value[YEARLY_C_TO_BRANCH]  * s->value[DAILY_LIVEWOOD_TURNOVER];
+		s->value[C_BRANCH_LIVEWOOD_TO_DEADWOOD] = s->value[YEARLY_C_TO_BRANCH] * s->value[DAILY_LIVEWOOD_TURNOVER];
 
 		/* reset annual values once used */
 		s->value[YEARLY_C_TO_STEM]   = 0.;

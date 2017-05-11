@@ -209,7 +209,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							/* counter for class days, months and years of simulation */
 							++s->counter[DOS];
 							if ( ! day && ! month ) ++s->counter[MOS];
-							if ( ! day && ! month && year ) ++s->counter[YOS];
+							if ( ! day && ! month ) ++s->counter[YOS];
 
 							/**********************************/
 
