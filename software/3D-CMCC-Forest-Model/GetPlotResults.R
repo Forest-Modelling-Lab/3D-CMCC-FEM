@@ -31,7 +31,7 @@ output_folder="output_Rstudio"
 
 # multiple simulations
 site_list<-c("Soroe")#,"Soroe","Hyytiala","All")
-esm_list <-c("All")# ("1","2","3","4","5", "All")
+esm_list <-c("1")# ("1","2","3","4","5", "All")
 rcp_list <-c("All")# ("0p0","2p6","4p5","6p0","8p5","All")
 man_list <-c("All")# ("on",'off', "All")
 co2_list <-c("All")# , "on",off", "All")

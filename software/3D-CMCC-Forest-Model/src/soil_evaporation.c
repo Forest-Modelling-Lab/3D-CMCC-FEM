@@ -28,7 +28,7 @@ void soil_evaporation(cell_t *const c, const meteo_daily_t *const meteo_daily)
 	double rhr;
 
 
-	tairK = meteo_daily->tavg + TempAbs;
+	tairK  = meteo_daily->tavg + TempAbs;
 	tsoilK = meteo_daily->tsoil + TempAbs;
 
 	/* correct conductances for temperature and pressure based on Jones (1992)

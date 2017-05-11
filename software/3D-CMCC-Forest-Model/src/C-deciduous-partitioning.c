@@ -130,7 +130,7 @@ void daily_C_deciduous_partitioning (cell_t *const c, const int layer, const int
 		carbon reserves in beech trees" (Barbaroux et al., 2003) */
 
 		/* following Friedlingstein et al.,1998 and Krinner et al.,2005 during budburst model allocates to leaf and fine root */
-		/* following Campioli et al., 2008, Maillard et al., 1994, Barbaroux et al., 2003*/
+		/* following Campioli et al., 2008, Maillard et al., 1994, Barbaroux et al., 2003 */
 
 		/* compute amount of leaf carbon and relative growth respiration amount */
 		reserve_to_leaf_budburst   = ( s->value[MAX_LEAF_C] + ( s->value[MAX_LEAF_C] * s->value[EFF_GRPERC] ) ) / (s->value[BUD_BURST] - 1.);
@@ -202,10 +202,10 @@ void daily_C_deciduous_partitioning (cell_t *const c, const int layer, const int
 				logger(g_debug_log, "allocating into the three pools stem , branch coarse root and reserve\n");
 
 				/* allocating into c pools */
-				s->value[C_TO_RESERVE]     = (npp_to_alloc * pL);
-				s->value[C_TO_CROOT]       = (npp_to_alloc * pR);
-				s->value[C_TO_STEM]        = (npp_to_alloc * pS) * (1. - s->value[FRACBB]);
-				s->value[C_TO_BRANCH]      = (npp_to_alloc * pS) * s->value[FRACBB];
+				s->value[C_TO_RESERVE]   = (npp_to_alloc * pL);
+				s->value[C_TO_CROOT]     = (npp_to_alloc * pR);
+				s->value[C_TO_STEM]      = (npp_to_alloc * pS) * (1. - s->value[FRACBB]);
+				s->value[C_TO_BRANCH]    = (npp_to_alloc * pS) * s->value[FRACBB];
 			}
 			/* it needs */
 			else
@@ -220,43 +220,58 @@ void daily_C_deciduous_partitioning (cell_t *const c, const int layer, const int
 		{
 			if ( s->value[RESERVE_C] >= s->value[MIN_RESERVE_C] )
 			{
+				logger(g_debug_log, "Consuming reserve pool (negative NPP)\n");
+
 				/* consuming reserve carbon pools */
+
 				s->value[C_TO_RESERVE]     = npp_to_alloc;
 			}
 			else
 			{
 				double leaf_froot_ratio;
+				double leaf_reserve_to_remove;
+				double leaf_litter_to_remove;
 				double leaf_to_remove;
+				double froot_reserve_to_remove;
+				double froot_litter_to_remove;
 				double froot_to_remove;
 
-				logger(g_debug_log, "Consuming reserve pool (negative NPP)\n");
+				logger(g_debug_log, "Defoliation (negative NPP)\n");
 
 				/* consuming reserve carbon pools */
 				s->value[C_TO_RESERVE]     = npp_to_alloc;
 
-#if 0
 				/* TEST special case when DEFOLIATION happens */
-				leaf_froot_ratio = s->value[LEAF_C] / ( s->value[LEAF_C] + s->value[FROOT_C]);
 
-				/* leaf and fine root carbon to remove */
-				leaf_to_remove  = npp_to_alloc * leaf_froot_ratio;
-				froot_to_remove = npp_to_alloc * (1. - leaf_froot_ratio);
+				leaf_froot_ratio = s->value[LEAF_C] / ( s->value[LEAF_C] + s->value[FROOT_C] );
 
-				/* leaf carbon to remove and to retranslocate for respiration demand */
-				s->value[C_LEAF_TO_RESERVE]  += fabs(leaf_to_remove);
-				s->value[C_LEAF_TO_LITR]     += fabs(leaf_to_remove  * (1. - C_FRAC_TO_RETRANSL));
+				/* leaf carbon to litter and to retranslocate for respiration demand */
+				/* to reserve pool */
+				leaf_reserve_to_remove  = fabs(npp_to_alloc * leaf_froot_ratio);
+				froot_reserve_to_remove = fabs(npp_to_alloc * (1. - leaf_froot_ratio));
 
-				/* leaf carbon to remove and to retranslocate for respiration demand */
-				s->value[C_FROOT_TO_RESERVE] += fabs(froot_to_remove);
-				s->value[C_FROOT_TO_LITR]    += fabs(froot_to_remove * (1. - C_FRAC_TO_RETRANSL));
+				/* to litterfall */
+				leaf_litter_to_remove   = fabs(leaf_reserve_to_remove  * (1. - C_FRAC_TO_RETRANSL));
+				froot_litter_to_remove  = fabs(froot_reserve_to_remove * (1. - C_FRAC_TO_RETRANSL));
 
-				/* refill reserve pool with retranslocated reserve from leaf and fine root */
-				s->value[C_TO_RESERVE]       += fabs(s->value[C_LEAF_TO_RESERVE] + s->value[C_FROOT_TO_RESERVE]);
+				/* overall */
+				leaf_to_remove          = leaf_reserve_to_remove  + leaf_litter_to_remove;
+				froot_to_remove         = froot_reserve_to_remove + froot_litter_to_remove;
 
-#endif
+				if ( ( s->value[LEAF_C] > leaf_to_remove ) && ( s->value[FROOT_C] > froot_to_remove ) )
+				{
+					/* leaf carbon to remove and to retranslocate for respiration demand */
+					s->value[C_LEAF_TO_RESERVE]  += leaf_reserve_to_remove;
+					s->value[C_LEAF_TO_LITR]     += leaf_litter_to_remove;
+
+					/* leaf carbon to remove and to retranslocate for respiration demand */
+					s->value[C_FROOT_TO_RESERVE] += froot_reserve_to_remove;
+					s->value[C_FROOT_TO_LITR]    += froot_litter_to_remove;
+
+					/* refill reserve pool with retranslocated reserve from leaf and fine root */
+					s->value[C_TO_RESERVE]       += s->value[C_LEAF_TO_RESERVE] + s->value[C_FROOT_TO_RESERVE];
+				}
 			}
-
-
 		}
 
 		break;
@@ -268,6 +283,7 @@ void daily_C_deciduous_partitioning (cell_t *const c, const int layer, const int
 
 		/* allocating into c pools */
 		/* including retranslocated C */
+
 		s->value[C_TO_RESERVE] = npp_to_alloc ;
 
 		/* leaf fall */

@@ -137,20 +137,20 @@ void phenology(cell_t *const c, const int layer, const int height, const int dbh
 			else
 			{
 				/* Normal growth */
-				if (month+1 <= 6)
+				if ( month + 1 <= 6)
 				{
 					s->phenology_phase = 2;
 				}
 				else
 				{
-					if (meteo_daily->daylength > s->value[MINDAYLENGTH])
+					/* Normal growth */
+					if ( meteo_daily->daylength > s->value[MINDAYLENGTH] )
 					{
-						/* Normal growth */
 						s->phenology_phase = 2;
 					}
+					/* Leaf fall */
 					else
 					{
-						/* Leaf fall */
 						s->phenology_phase = 3;
 					}
 				}

@@ -321,7 +321,6 @@ void daily_C_evergreen_partitioning (cell_t *const c, const int layer, const int
 			}
 			else
 			{
-#if 1
 				/* as in Bossel (1996), second priority is assigned to fruit */
 				/* reproduction */
 				if ( a->value > s->value[SEXAGE] )
@@ -331,7 +330,6 @@ void daily_C_evergreen_partitioning (cell_t *const c, const int layer, const int
 					s->value[C_TO_FRUIT] = npp_to_alloc * s->value[FRUIT_PERC];
 					npp_to_alloc        -= s->value[C_TO_FRUIT];
 				}
-#endif
 
 				s->value[C_TO_CROOT]     = (npp_to_alloc * pR);
 				s->value[C_TO_LEAF]      = (npp_to_alloc * pL) * ( 1. - s->value[FROOT_LEAF_FRAC] );
