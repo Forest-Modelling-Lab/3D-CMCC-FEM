@@ -189,6 +189,45 @@ static int species_remove(cell_t *c, const int height, const int dbh, const int 
 	return 1;
 }
 
+static int species_zeroes(cell_t *c, const int height, const int dbh, const int age, const int species) {
+	int i;
+
+	assert(c);
+
+	if ( height > c->heights_count ) {
+		return 0;
+	}
+
+	if ( dbh > c->heights[height].dbhs_count ) {
+		return 0;
+	}
+
+	if ( age > c->heights[height].dbhs[dbh].ages_count ) {
+		return 0;
+	}
+
+	if ( species > c->heights[height].dbhs[dbh].ages[age].species_count ) {
+		return 0;
+	}
+
+	for ( i = 0; i < c->heights[height].dbhs[dbh].ages[age].species_count; ++i ) {
+		if ( species == i ) {
+			int y;
+
+			for ( y = 0; y < VALUES; y++ ) {
+				c->heights[height].dbhs[dbh].ages[age].species[i].value[y] = 0.;
+			}
+			for ( y = 0; y < COUNTERS; y++ ) {
+				c->heights[height].dbhs[dbh].ages[age].species[i].counter[y] = 0;
+			}
+			c->heights[height].dbhs[dbh].ages[age].species[i].management = 0;
+			c->heights[height].dbhs[dbh].ages[age].species[i].phenology_phase = 0;
+		}
+	}
+
+	return 1;
+}
+
 int tree_class_remove(cell_t *const c, const int height, const int dbh, const int age, const int species)
 {
 	assert(c);
@@ -206,6 +245,7 @@ int tree_class_remove(cell_t *const c, const int height, const int dbh, const in
 		}
 	}
 
+#if 1
 	/* remove class if N_TREE < 0 or if called by harvesting function */
 	if ( ! c->heights[height].dbhs[dbh].ages[age].species[species].counter[N_TREE]
 			|| g_settings->management ) {
@@ -236,6 +276,12 @@ int tree_class_remove(cell_t *const c, const int height, const int dbh, const in
 			}
 		}
 	}
-
+#else
+	/* zeroes species class if N_TREE < 0 or if called by harvesting function */
+	if ( ! c->heights[height].dbhs[dbh].ages[age].species[species].counter[N_TREE]
+			|| g_settings->management ) {	
+		if ( ! species_zeroes(c, height, dbh, age, species) ) return 0;
+	}
+#endif
 	return 1;
 }
