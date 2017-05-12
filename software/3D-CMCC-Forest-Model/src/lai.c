@@ -77,8 +77,6 @@ void daily_lai (species_t *const s)
 	logger(g_debug_log, "LAI_SUN_EXP   = %f m2/m2\n", s->value[LAI_SUN_EXP]);
 	logger(g_debug_log, "LAI_SHADE_EXP = %f m2/m2\n", s->value[LAI_SHADE_EXP]);
 
-
-
 	logger(g_debug_log, "single height class canopy cover projected = %f %%\n", s->value[CANOPY_COVER_PROJ] * 100.);
 	logger(g_debug_log, "single height class canopy cover exposed   = %f %%\n", s->value[CANOPY_COVER_EXP]  * 100.);
 
