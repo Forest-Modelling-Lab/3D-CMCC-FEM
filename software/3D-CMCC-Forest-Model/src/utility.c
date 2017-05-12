@@ -177,7 +177,6 @@ void reset_annual_cell_variables(cell_t *const c)
 	}
 
 	/* reset cell level variables */
-	c->tree_layers_count =              0;
 	c->cell_cover =                     0;
 	c->doy =                            0;
 	c->annual_gpp =                     0.;
