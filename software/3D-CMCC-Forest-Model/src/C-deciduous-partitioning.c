@@ -238,6 +238,7 @@ void daily_C_deciduous_partitioning (cell_t *const c, const int layer, const int
 				double froot_to_remove;
 
 				logger(g_debug_log, "Defoliation (negative NPP)\n");
+				/* note: see Jaquet et al., 2014 Tree Phys. */
 
 				/* consuming reserve carbon pools */
 				s->value[C_TO_RESERVE]     = npp_to_alloc;

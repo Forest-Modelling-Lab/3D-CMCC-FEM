@@ -1001,8 +1001,8 @@ static const char *sz_species_values[] =
 		"GROWTHTOPT",                 /* Optimum temperature for growth */
 		"GROWTHSTART",                /* Thermic sum  value for starting growth in °C */
 		"MINDAYLENGTH",               /* Minimum day length for phenology */
-		"SWPOPEN",                    /* Soil water potential open */
-		"SWPCLOSE",                   /* Soil water potential close */
+		"SWPOPEN",                    /* (MPa) Soil water potential open */
+		"SWPCLOSE",                   /* (MPa) Soil water potential close */
 		"OMEGA_CTEM",                 /* ALLOCATION PARAMETER */
 		"S0CTEM",                     /* PARAMETER CONTROLLING ALLOCATION TO STEM */
 		"R0CTEM",                     /* PARAMETER CONTROLLING ALLOCATION TO ROOT */
@@ -1034,7 +1034,7 @@ static const char *sz_species_values[] =
 		"DBHDCMIN",                   /* minimum dbh crown diameter relationship when maximum density */
 		"SAP_A",                      /* a coefficient for sapwood */
 		"SAP_B",                      /* b coefficient for sapwood */
-		"SAP_LEAF",                   /* sapwood_max leaf area ratio in pipe model */
+		"SAP_LEAF",                   /* (m2/m2) sapwood_max leaf area ratio in pipe model */
 		"SAP_WRES",                   /* Sapwood-Reserve biomass ratio used if no Wres data are available */
 		"STEMCONST_P",                /* constant in the stem mass vs. diameter relationship */
 		"STEMPOWER_P",                /* power in the stem mass vs. diameter relationship */

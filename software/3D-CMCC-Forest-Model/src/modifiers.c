@@ -276,7 +276,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	c->vwc = c->asw / c->max_asw_fc /* /(100.0 * g_soil_settings->values[SOIL_DEPTH])*/;
 	c->psi = c->psi_sat * pow((c->vwc/c->vwc_sat), c->soil_b);
 
-	/*no water stress*/
+	/* no water stress */
 	if (c->psi > s->value[SWPOPEN])
 	{
 		s->value[F_PSI] = 1.;
