@@ -72,7 +72,6 @@ void dendrometry_old(cell_t *const c, const int layer, const int height, const i
 	CHECK_CONDITION( d->value, <, oldavDBH - eps );
 
 	/*************************************************************************************************************************/
-
 	/* compute Tree Height */
 	/* using Chapman_Richards Function */
 	/*
