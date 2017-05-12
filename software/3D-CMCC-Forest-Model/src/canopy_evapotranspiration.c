@@ -186,7 +186,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 
 			/* call Penman-Monteith function, it returns Potential evaporation in kg/m2/s for evaporation and W/m2 for latent heat */
 			//fixme use correct net radiation
-			evapo = Penman_Monteith (meteo_daily, rv, rh, net_rad);
+			evapo = Penman_Monteith ( meteo_daily, rv, rh, net_rad );
 
 			/* check for negative values */
 			if(evapo < 0.0) evapo  = 0.;
@@ -408,12 +408,14 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 	 * if it is not enough than superimpose to zero */
 	if ( s->value[CANOPY_TRANSP] > c->asw )
 	{
-		printf("ATTENTION CANOPY TRANSPIRATION EXCEEDS ASW!!!!!!\n");
+		printf("ATTENTION CANOPY TRANSPIRATION EXCEEDS ASW!!!!!!\n");getchar();
 
 		s->value[CANOPY_TRANSP] *= s->value[F_SW];
+
 		if ( s->value[CANOPY_TRANSP] > c->asw )
 		{
 			s->value[CANOPY_TRANSP] = 0.;
+			printf("CANOPY_TRANSP = 0 !!!!!!\n");getchar();
 		}
 		/* check */
 		CHECK_CONDITION (s->value[CANOPY_TRANSP], > , c->asw);

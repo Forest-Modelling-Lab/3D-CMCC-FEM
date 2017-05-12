@@ -57,7 +57,7 @@ DEAD_WOOD_CEL_FRAC   0.70     //dead wood litter cellulose fraction for Pinus fr
 DEAD_WOOD_LIGN_FRAC  0.30     //dead wood litter lignin fraction for Pinus from Cenciala & Tatarinov 2006, 0.29 Pietsch 2005
 BUD_BURST 0.3                 //days of bud burst at the beginning of growing season for P. sylvestris from Tatarinov
 LEAF_FALL_FRAC_GROWING  0     //proportions of the growing season of leaf fall 
-LEAF_FINEROOT_TURNOVER  0.18  //Average YEARLY leaves and fine root turnover rate for P. sylvestris 0.18 from Pietsch, 0.39 Tatarinov
+LEAF_FINEROOT_TURNOVER  0.25  //Average YEARLY leaves and fine root turnover rate for P. sylvestris 0.18 from Pietsch, 0.39 Tatarinov, 0.25 Makela et al., 1997
 LIVE_WOOD_TURNOVER  0.7       //Annual yearly live wood turnover rate for P. sylvestris from Pietsch
 DBHDCMAX  0.20                //Low Density for Picea abies from Rautianen and Stenberg 2005,  0.255 Seidl et al., 2012, 0.18 from Kalliovirta and Tokola 2005, 0.34 from Grote 2001
 DBHDCMIN  0.14                //High Density for P. sylvestris from Ameztegui et al., 2012 0.14, 0.15 from Kalliovirta and Tokola 2005

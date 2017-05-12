@@ -16,7 +16,7 @@ extern settings_t* g_settings;
 extern logger_t* g_debug_log;
 extern soil_settings_t *g_soil_settings;
 
-#define WATER_STRESS_LIMIT 0.3
+#define WATER_STRESS_LIMIT 0.2
 
 void modifiers(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, const meteo_daily_t *const meteo_daily,
 		const meteo_annual_t *const meteo_annual)

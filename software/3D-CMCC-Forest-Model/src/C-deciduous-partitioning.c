@@ -202,6 +202,7 @@ void daily_C_deciduous_partitioning (cell_t *const c, const int layer, const int
 				logger(g_debug_log, "allocating into the three pools stem , branch coarse root and reserve\n");
 
 				/* allocating into c pools */
+				/* note: for references see: Potter et al., 1993; Schwalm and Ek 2004 */
 				s->value[C_TO_RESERVE]   = (npp_to_alloc * pL);
 				s->value[C_TO_CROOT]     = (npp_to_alloc * pR);
 				s->value[C_TO_STEM]      = (npp_to_alloc * pS) * (1. - s->value[FRACBB]);
