@@ -189,7 +189,7 @@ static int species_remove(cell_t *c, const int height, const int dbh, const int 
 	return 1;
 }
 
-static int species_zeroes(cell_t *c, const int height, const int dbh, const int age, const int species) {
+static int species_zeroed(cell_t *c, const int height, const int dbh, const int age, const int species) {
 	int i;
 
 	assert(c);
@@ -220,7 +220,7 @@ static int species_zeroes(cell_t *c, const int height, const int dbh, const int 
 			for ( y = 0; y < COUNTERS; y++ ) {
 				c->heights[height].dbhs[dbh].ages[age].species[i].counter[y] = 0;
 			}
-			c->heights[height].dbhs[dbh].ages[age].species[i].management = 0;
+			//c->heights[height].dbhs[dbh].ages[age].species[i].management = 0;
 			c->heights[height].dbhs[dbh].ages[age].species[i].phenology_phase = 0;
 		}
 	}
@@ -277,10 +277,10 @@ int tree_class_remove(cell_t *const c, const int height, const int dbh, const in
 		}
 	}
 #else
-	/* zeroes species class if N_TREE < 0 or if called by harvesting function */
+	/* zeroed species class if N_TREE < 0 or if called by harvesting function */
 	if ( ! c->heights[height].dbhs[dbh].ages[age].species[species].counter[N_TREE]
 			|| g_settings->management ) {	
-		if ( ! species_zeroes(c, height, dbh, age, species) ) return 0;
+		if ( ! species_zeroed(c, height, dbh, age, species) ) return 0;
 	}
 #endif
 	return 1;
