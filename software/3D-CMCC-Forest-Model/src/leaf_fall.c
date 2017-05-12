@@ -32,8 +32,8 @@ void leaffall_deciduous ( cell_t *const c, const int height, const int dbh, cons
 		/* note: assuming that fine roots and fruit for deciduous species progressively die together with leaves */
 		/* note: due to reduction during vegetative period for reduction in canopy cover MAX_LAI != PEAK_LAI */
 
-		/* assign LAI values at the beginning of the sigmoid shape */
-		s->value[MAX_LAI_PROJ] = s->value[LAI_PROJ];
+		/* assign Maximum LAI values at the beginning of the sigmoid shape */
+		s->value[MAX_LAI_LEAFFALL_PROJ] = s->value[LAI_PROJ];
 
 		/* assign senescence doy */
 		s->counter[SENESCENCE_DAY_ONE] = c->doy;
@@ -45,7 +45,7 @@ void leaffall_deciduous ( cell_t *const c, const int height, const int dbh, cons
 		previousLai = s->value[LAI_PROJ];
 
 		/* sigmoid shape drives LAI reduction during leaf fall */
-		currentLai  = MAX(0,s->value[MAX_LAI_PROJ] / (1 + exp(-(s->counter[DAYS_LEAFFALL] / 2. + s->counter[SENESCENCE_DAY_ONE] - c->doy)
+		currentLai  = MAX(0,s->value[MAX_LAI_LEAFFALL_PROJ] / (1 + exp(-(s->counter[DAYS_LEAFFALL] / 2. + s->counter[SENESCENCE_DAY_ONE] - c->doy)
 				/(s->counter[DAYS_LEAFFALL] / (log(9. * s->counter[DAYS_LEAFFALL] / 2. + s->counter[SENESCENCE_DAY_ONE]) -
 						log(.11111111111))))));
 
@@ -124,9 +124,6 @@ void leaffall_evergreen ( cell_t *const c, const int height, const int dbh, cons
 
 	logger(g_debug_log, "\n**LEAF FALL (turnover) EVERGREEN**\n");
 
-	/* assign max annual LAI */
-	if (s->value[MAX_LAI_PROJ] < s->value[LAI_PROJ] ) s->value[MAX_LAI_PROJ] = s->value[LAI_PROJ];
-
 	/************************************************************************************************************/
 
 	if ( c->doy == 1 )
@@ -162,6 +159,7 @@ void leaffall (species_t *const s)
 	s->value[C_LEAF_TO_LITR]     += s->value[LEAF_C_TO_REMOVE]   * ( 1. - C_FRAC_TO_RETRANSL );
 	s->value[C_FROOT_TO_LITR]    += s->value[FROOT_C_TO_REMOVE]  * ( 1. - C_FRAC_TO_RETRANSL );
 	s->value[C_FRUIT_TO_CWD]     += s->value[FRUIT_C_TO_REMOVE];
+
 	logger(g_debug_log, "C_LEAF_TO_RESERVE  = %f\n", s->value[C_LEAF_TO_RESERVE]);
 	logger(g_debug_log, "C_FROOT_TO_RESERVE = %f\n", s->value[C_FROOT_TO_RESERVE]);
 	logger(g_debug_log, "C_LEAF_TO_LITR     = %f\n", s->value[C_LEAF_TO_LITR]);
@@ -172,6 +170,7 @@ void leaffall (species_t *const s)
 	s->value[C_TO_RESERVE]      += (s->value[C_LEAF_TO_RESERVE] + s->value[C_FROOT_TO_RESERVE]);
 	s->value[C_TO_LITR]         += (s->value[C_LEAF_TO_LITR]    + s->value[C_FROOT_TO_LITR] );
 	s->value[C_TO_CWD]          += s->value[C_FRUIT_TO_CWD];
+
 	logger(g_debug_log, "C_TO_RESERVE       = %f\n", s->value[C_TO_RESERVE]);
 	logger(g_debug_log, "C_TO_LITR          = %f\n", s->value[C_TO_LITR]);
 	logger(g_debug_log, "C_TO_CWD           = %f\n", s->value[C_TO_CWD]);
@@ -188,6 +187,7 @@ void leaffall (species_t *const s)
 	s->value[N_FROOT_TO_RESERVE] = 0. /* s->value[FROOT_N_TO_REMOVE]  * N_FRAC_TO_RETRANSL*/;
 	s->value[N_FROOT_TO_LITR]    = s->value[FROOT_N_TO_REMOVE]/*  * (1 - N_FRAC_TO_RETRANSL)*/;
 	s->value[N_FRUIT_TO_CWD]     = s->value[FRUIT_N_TO_REMOVE];
+
 	logger(g_debug_log, "N_LEAF_TO_RESERVE  = %f\n", s->value[N_LEAF_TO_RESERVE]);
 	logger(g_debug_log, "N_FROOT_TO_RESERVE = %f\n", s->value[N_FROOT_TO_RESERVE]);
 	logger(g_debug_log, "N_LEAF_TO_LITR     = %f\n", s->value[N_LEAF_TO_LITR]);
@@ -196,8 +196,9 @@ void leaffall (species_t *const s)
 
 	/* nitrogen litter transfer fluxes to nitrogen litter pool and reserves */
 	s->value[N_TO_RESERVE]      += (s->value[N_LEAF_TO_RESERVE] + s->value[N_FROOT_TO_RESERVE]);
-	s->value[N_TO_LITR]         += (s->value[N_LEAF_TO_LITR] + s->value[N_FROOT_TO_LITR]);
+	s->value[N_TO_LITR]         += (s->value[N_LEAF_TO_LITR]    + s->value[N_FROOT_TO_LITR]);
 	s->value[N_TO_CWD]          += s->value[N_FRUIT_TO_CWD];
+
 	logger(g_debug_log, "N_TO_RESERVE       = %f\n", s->value[N_TO_RESERVE]);
 	logger(g_debug_log, "N_TO_LITR          = %f\n", s->value[N_TO_LITR]);
 	logger(g_debug_log, "N_TO_CWD           = %f\n", s->value[N_TO_CWD]);

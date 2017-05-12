@@ -245,7 +245,7 @@ void daily_C_deciduous_partitioning (cell_t *const c, const int layer, const int
 
 				leaf_froot_ratio = s->value[LEAF_C] / ( s->value[LEAF_C] + s->value[FROOT_C] );
 
-				/* leaf carbon to litter and to retranslocate for respiration demand */
+				/* leaf and fine rooot carbon to litter and to reserve for respiration demand */
 				/* to reserve pool */
 				leaf_reserve_to_remove  = fabs(npp_to_alloc * leaf_froot_ratio);
 				froot_reserve_to_remove = fabs(npp_to_alloc * (1. - leaf_froot_ratio));
@@ -296,7 +296,7 @@ void daily_C_deciduous_partitioning (cell_t *const c, const int layer, const int
 		logger(g_debug_log, "consuming reserve pool\n");
 
 		/* allocating into c pools */
-		s->value[C_TO_RESERVE]     = npp_to_alloc;
+		s->value[C_TO_RESERVE] = npp_to_alloc;
 
 		break;
 		/**********************************************************************/

@@ -42,7 +42,7 @@ void daily_lai (species_t *const s)
 
 	/* convert tC/cell to KgC/m^2 */
 	leaf_C = s->value[LEAF_C] * 1000.;
-	logger(g_debug_log, "Leaf Biomass = %f KgC/sizecell\n", leaf_C);
+	logger(g_debug_log, "Leaf Biomass = %f KgC/cell\n", leaf_C);
 
 	/* compute total LAI for Projected Area */
 	s->value[LAI_PROJ]       = ( leaf_C * s->value[SLA_AVG] ) / ( s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell );
@@ -52,6 +52,10 @@ void daily_lai (species_t *const s)
 	logger(g_debug_log, "LAI_PROJ       = %f m2/m2\n", s->value[LAI_PROJ]);
 	logger(g_debug_log, "LAI_SUN_PROJ   = %f m2/m2\n", s->value[LAI_SUN_PROJ]);
 	logger(g_debug_log, "LAI_SHADE_PROJ = %f m2/m2\n", s->value[LAI_SHADE_PROJ]);
+	logger(g_debug_log, "PEAK_LAI_PROJ  = %f m2/m2\n", s->value[PEAK_LAI_PROJ]);
+
+	/* assign max annual LAI */
+	s->value[MAX_LAI_PROJ] = MAX(s->value[MAX_LAI_PROJ], s->value[LAI_PROJ]);
 	logger(g_debug_log, "PEAK_LAI_PROJ  = %f m2/m2\n", s->value[PEAK_LAI_PROJ]);
 
 	/**************************************************************************************************/
@@ -64,6 +68,7 @@ void daily_lai (species_t *const s)
 	//s->value[LAI_SHADE_EXP] = s->value[LAI_SHADE_PROJ] / s->value[CANOPY_COVER_PROJ];
 
 	/* compute total LAI for Exposed Area */
+	/* note: differently from above don't divide for ground area but multiply for fraction of exposed area */
 	s->value[LAI_EXP]       = s->value[LAI_PROJ]       * (1 + s->value[CANOPY_COVER_EXP]);
 	s->value[LAI_SUN_EXP]   = s->value[LAI_SUN_PROJ]   * (1 + s->value[CANOPY_COVER_EXP]);
 	s->value[LAI_SHADE_EXP] = s->value[LAI_SHADE_PROJ] * (1 + s->value[CANOPY_COVER_EXP]);
@@ -72,12 +77,15 @@ void daily_lai (species_t *const s)
 	logger(g_debug_log, "LAI_SUN_EXP   = %f m2/m2\n", s->value[LAI_SUN_EXP]);
 	logger(g_debug_log, "LAI_SHADE_EXP = %f m2/m2\n", s->value[LAI_SHADE_EXP]);
 
-	/* differently from above don't divide for ground area but multiply for fraction of exposed area */
 
-	logger(g_debug_log, "single height class canopy cover projected = %f %%\n", s->value[CANOPY_COVER_PROJ]*100.0);
-	logger(g_debug_log, "single height class canopy cover exposed = %f %%\n", s->value[CANOPY_COVER_EXP]*100.0);
+
+	logger(g_debug_log, "single height class canopy cover projected = %f %%\n", s->value[CANOPY_COVER_PROJ] * 100.);
+	logger(g_debug_log, "single height class canopy cover exposed   = %f %%\n", s->value[CANOPY_COVER_EXP]  * 100.);
 
 	/**************************************************************************************************/
+
+	/* compute the annual max lai reached */
+
 
 	/* compute all-sided LAI */
 	s->value[ALL_LAI_PROJ] = s->value[LAI_PROJ] * s->value[CANOPY_COVER_PROJ];
