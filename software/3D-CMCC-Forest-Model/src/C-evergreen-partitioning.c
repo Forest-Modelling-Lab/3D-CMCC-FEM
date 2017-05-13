@@ -412,7 +412,7 @@ void daily_C_evergreen_partitioning (cell_t *const c, const int layer, const int
 			double froot_litter_to_remove;
 			double froot_to_remove;
 
-			printf("Defoliation (negative NPP)\n");getchar();
+			printf("Defoliation (negative NPP)\n");
 
 			logger(g_debug_log, "Defoliation (negative NPP)\n");
 			/* note: see Jaquet et al., 2014 Tree Phys. */

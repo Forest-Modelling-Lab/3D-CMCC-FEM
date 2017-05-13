@@ -20,7 +20,7 @@ extern logger_t* g_debug_log;
 
 void maintenance_respiration(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, const meteo_daily_t *const meteo_daily)
 {
-	double MR_ref    = 0.218;          /* Reference MR respiration linear N relationship with MR being kgC/kgN/day, 0.218 from Ryan 1991, 0.1584 Campioli et al., 2013 and from Dufrene et al 2005 */
+	double MR_ref    = 0.218;               /* Reference MR respiration linear N relationship with MR being kgC/kgN/day, 0.218 from Ryan 1991, 0.1584 Campioli et al., 2013 and from Dufrene et al 2005 */
 
 	//NOTE: Atkin et al. 2008 and Cox et al., reports 25 °C for both
 	double Q10_temp  = 20.;                /* T_base temperature for respiration, 15°C for Damesin et al., 2001, 20°C Thornton */
@@ -92,7 +92,7 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 		exponent_tavg   = (meteo_daily->tavg   - Q10_temp) / 10.;
 		exponent_tsoil  = (meteo_daily->tsoil  - Q10_temp) / 10.;
 
-		/* Nitrogen content tN/area --> gN/m2 */
+		/* Nitrogen content tN/cell --> gN/m2 */
 		leaf_N          = (s->value[LEAF_N]            * 1e6 /g_settings->sizeCell);
 		froot_N         = (s->value[FROOT_N]           * 1e6 /g_settings->sizeCell);
 		stem_N          = (s->value[STEM_LIVEWOOD_N]   * 1e6 /g_settings->sizeCell);
