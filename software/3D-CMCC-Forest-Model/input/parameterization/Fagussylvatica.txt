@@ -44,8 +44,8 @@ COARSE_ROOT_STEM  0.115        //allocation new coarse root C:new stem (ratio) 0
 LIVE_TOTAL_WOOD 0.10           //0.05    //0.10  Bond Lamberty for dbl  //0.154   //new live C:new total wood (ratio) 0.15 for deciduous P. Thornton pers. comm. (about 13%), 0.154 from Pietsch et al., 2015 20% Proportion of living cells in trunks for F. sylvatica from Dufrene et al., 2005, 20.6% Ceschia etal 2002
 CN_LEAVES   27                 //CN of leaves (kgC/kgN) 27 for Tatarinov et al., 2006 20.3 for F. sylvatica from Mollicone et al., 2002, 19.52 ettore, 18.6 Campioli, 19.67 Guidolotti
 CN_FALLING_LEAVES   44         //CN of leaf litter (kgC/kgN) 38 for F. sylvatica from Mollicone et al., 2002, 
-CN_FINE_ROOTS   72             //CHANGED FROM 47.6    //CN of fine roots (kgC/kgN) 72 for Tatarinov et al., 2006 112 for F. sylvatica from Mollicone et al., 2002, 38.28 ettore, 9., 45 Campioli
-CN_LIVE_WOODS   70             //CHANGED FROM 50      //CN of live woods (kgC/kgN) 70 for Tatarinov et al., 2006 48.2 for F. sylvatica from Mollicone et 92,5 for dbl Bond Lamberty 2006
+CN_FINE_ROOTS   72             //CN of fine roots (kgC/kgN) 72 for Tatarinov et al., 2006 112 for F. sylvatica from Mollicone et al., 2002, 38.28 ettore, 9., 45 Campioli
+CN_LIVE_WOODS   70             //CN of live woods (kgC/kgN) 70 for Tatarinov et al., 2006 48.2 for F. sylvatica from Mollicone et 92,5 for dbl Bond Lamberty 2006
 CN_DEAD_WOODS   550            //CN of dead woods (kgC/kgN)  for F. sylvatica from Pietsch et al., 2005 112 ettore
 LEAF_LITT_LAB_FRAC   0.12      //leaf litter labile fraction for F. sylvatica from Cenciala & Tatarinov 2006
 LEAF_LITT_CEL_FRAC   0.56      //leaf litter cellulose fraction for F. sylvatica from Cenciala & Tatarinov 2006
@@ -59,12 +59,12 @@ BUD_BURST   15                 //days of bud burst at the beginning of growing s
 LEAF_FALL_FRAC_GROWING 0.2     //proportions of the growing season of leaf fall from Pietsch et al., 2005
 LEAF_FINEROOT_TURNOVER  1      //Average yearly fine root turnover rate Rasse et al 2001
 LIVE_WOOD_TURNOVER  0.7        //Annual yearly live wood turnover rate 
-DBHDCMAX    0.24               //0.22 //CHANGED FROM  0.18       //Low Density
+DBHDCMAX    0.24               //Low Density
 DBHDCMIN    0.14               //High Density from ettore
 SAP_A   0.674                  //a value from Kostner for Fagus sylvatica
 SAP_B   1.992                  //b value from Kostner for Fagus sylvatica
-SAP_LEAF    3310 //2100               //leaf area/sapwood max ratio in pipe model 1850 from Williams 1996, 3410 Bartelink 1998 , 2100 from Kostner, 3310 from ettore
-SAP_WRES    0.11 //0.05               //Sapwood-Reserve biomass ratio gTNC/100gDM 0.043 in January for fagus see Barbaroux 2002 0.11 for deciduous 0.05 for evergreen see Schwalm and Ek, 2004 Ecological Modelling
+SAP_LEAF   2775.25 //averaged  //leaf area/sapwood max ratio in pipe model 1850 from Williams 1996, 3410 Bartelink 1998 , 2100 from Kostner, 3310 from ettore
+SAP_WRES    0.11               //Sapwood-Reserve biomass ratio gTNC/100gDM 0.043 in January for fagus see Barbaroux 2002 0.11 for deciduous 0.05 for evergreen see Schwalm and Ek, 2004 Ecological Modelling
 STEMCONST_P 0.2837             //a parameter for F. sylvatica for allometric equation from ettore, 0.70 Seidl et al., 2012
 STEMPOWER_P 2.134              //b parameter for F. sylvatica for allometric equation from ettore, 3.00 Seidl et al., 2012
 CRA 35                         //Chapman-Richards Maximum height H_MAX (48) for f. sylvatica Seidl et al., 2012 , 30.6323 for F. sylvatica Pilli et al., 2016

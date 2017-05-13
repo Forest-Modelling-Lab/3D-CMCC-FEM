@@ -20,18 +20,18 @@ extern logger_t* g_debug_log;
 
 void maintenance_respiration(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, const meteo_daily_t *const meteo_daily)
 {
-	double MR_ref    = 0.218;               /* Reference MR respiration linear N relationship with MR being kgC/kgN/day, 0.218 from Ryan 1991, 0.1584 Campioli et al., 2013 and from Dufrene et al 2005 */
+	double MR_ref    = 0.1584; //test 0.218;               /* Reference MR respiration linear N relationship with MR being kgC/kgN/day, 0.218 from Ryan 1991, 0.1584 Campioli et al., 2013 and from Dufrene et al 2005 */
 
 	//NOTE: Atkin et al. 2008 and Cox et al., reports 25 °C for both
-	double Q10_temp  = 20.;                /* T_base temperature for respiration, 15°C for Damesin et al., 2001, 20°C Thornton */
-	//double Q10_temp_accl = 20.0; //25;   /* T_base temperature for acclimation in respiration (25°C) Atkin et al., 2008 GCB, Cox et al., 2000 Nature */
+	double Q10_temp  = 20.; //test 25.;                    /* T_base temperature for respiration, 15°C for Damesin et al., 2001, 20°C Thornton */
+	//double Q10_temp_accl = 20.0; //25;                   /* T_base temperature for acclimation in respiration (25°C) Atkin et al., 2008 GCB, Cox et al., 2000 Nature */
 
-	double q10_tavg  = 2.;                 /* fractional change in rate with a T 10 °C increase in temperature: 2.2 from Schwalm & Ek, 2004; Kimball et al., 1997, 1.5 Mahecha Science, 2010 */
+	double q10_tavg  = 2.; //note: not used when resp accl is 'on' /* fractional change in rate with a T 10 °C increase in temperature: 2.2 from Schwalm & Ek, 2004; Kimball et al., 1997, 1.5 Mahecha Science, 2010 */
 	double q10_tday;
 	double q10_tnight;
 	double q10_tsoil;
 
-	double acc_const = -0.00703;           /* temperature correction factor for acclimation -0.00703 Atkin et al., 2008 GCB, -0.00794 Smith & Dukes 2012; 0.0078 Hidy et al., 2016 GMD */
+	double acc_const = -0.00703;                                   /* temperature correction factor for acclimation -0.00703 Atkin et al., 2008 GCB, -0.00794 Smith & Dukes 2012; 0.0078 Hidy et al., 2016 GMD */
 
 	/* exponent for Temperature */
 	double exponent_tday;
@@ -46,7 +46,7 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 	double stem_N;
 	double branch_N;
 
-	/* NOTE: No respiration happens for reserve (see Schwalm and Ek 2004) */
+	/* NOTE: No respiration happens for reserve pool (see Schwalm and Ek 2004) */
 
 	species_t *s;
 	s  = &c->heights[height].dbhs[dbh].ages[age].species[species];
