@@ -26,12 +26,13 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 	double Q10_temp  = 20.; //test 25.;                    /* T_base temperature for respiration, 15°C for Damesin et al., 2001, 20°C Thornton */
 	//double Q10_temp_accl = 20.0; //25;                   /* T_base temperature for acclimation in respiration (25°C) Atkin et al., 2008 GCB, Cox et al., 2000 Nature */
 
-	double q10_tavg  = 2.; //note: not used when resp accl is 'on' /* fractional change in rate with a T 10 °C increase in temperature: 2.2 from Schwalm & Ek, 2004; Kimball et al., 1997, 1.5 Mahecha Science, 2010 */
-	double q10_tday;
-	double q10_tnight;
-	double q10_tsoil;
+	//note: q10 variables are recomputed by resp acclimation Type I'
+	double q10_tavg   = 2.;                                /* fractional change in rate with a T 10 °C increase in temperature: 2.2 from Schwalm & Ek, 2004; Kimball et al., 1997, 1.5 Mahecha Science, 2010 */
+	double q10_tday   = 2.;                                /* fractional change in rate with a T 10 °C increase in temperature: 2.2 from Schwalm & Ek, 2004; Kimball et al., 1997, 1.5 Mahecha Science, 2010 */
+	double q10_tnight = 2.;                                /* fractional change in rate with a T 10 °C increase in temperature: 2.2 from Schwalm & Ek, 2004; Kimball et al., 1997, 1.5 Mahecha Science, 2010 */
+	double q10_tsoil  = 2.;                                /* fractional change in rate with a T 10 °C increase in temperature: 2.2 from Schwalm & Ek, 2004; Kimball et al., 1997, 1.5 Mahecha Science, 2010 */
 
-	double acc_const = -0.00703;                                   /* temperature correction factor for acclimation -0.00703 Atkin et al., 2008 GCB, -0.00794 Smith & Dukes 2012; 0.0078 Hidy et al., 2016 GMD */
+	double acc_const = -0.00703;                           /* temperature correction factor for acclimation -0.00703 Atkin et al., 2008 GCB, -0.00794 Smith & Dukes 2012; 0.0078 Hidy et al., 2016 GMD */
 
 	/* exponent for Temperature */
 	double exponent_tday;

@@ -405,14 +405,14 @@ enum {
 	CROOT_DEADWOOD_C,                   /* (tC/cell) Current Coarse root dead wood carbon pool */
 	BRANCH_LIVEWOOD_C,                  /* (tC/cell) Current Branch live wood carbon pool */
 	BRANCH_DEADWOOD_C,                  /* (tC/cell) Current Branch dead wood carbon pool */
+	SAPWOOD_C,                          /* (tC/cell) Current total sapwood carbon pool */
+	HEARTWOOD_C,                        /* (tC/cell) Current total heartwood carbon pool */
 	STEM_SAPWOOD_C,                     /* (tC/cell) Current Stem sapwood carbon pool */
 	STEM_HEARTWOOD_C,                   /* (tC/cell) Current Stem heartwood carbon pool */
 	CROOT_SAPWOOD_C,                    /* (tC/cell) Current Coarse root sapwood carbon pool */
 	CROOT_HEARTWOOD_C,                  /* (tC/cell) Current Coarse root heartwood carbon pool */
 	BRANCH_SAPWOOD_C,                   /* (tC/cell) Current Branch sapwood carbon pool */
 	BRANCH_HEARTWOOD_C,                 /* (tC/cell) Current Branch heartwood carbon pool */
-	TOT_SAPWOOD_C,                      /* (tC/cell) Current total sapwood carbon pool */
-	TOT_HEARTWOOD_C,                    /* (tC/cell) Current total heartwood carbon pool */
 	EFF_LIVE_TOTAL_WOOD_FRAC,           /* (DIM) Age-related fraction of Live biomass per Total biomass */
 	DAILY_LIVEWOOD_TURNOVER,            /* (tC/cell/day) Daily live wood turnover rate */
 
@@ -449,6 +449,14 @@ enum {
 	BRANCH_DM,                          /* (tDM/cell) Current Branch carbon pool */
 	RESERVE_DM,                         /* (tDM/cell) Current Reserve carbon pool */
 	FRUIT_DM,                           /* (tDM/cell) Current Fruit carbon pool */
+	SAPWOOD_DM,                         /* (tDM/cell) Current Sapwood carbon pool */
+	HEARTWOOD_DM,                       /* (tDM/cell) Current Heartwood carbon pool */
+	STEM_SAPWOOD_DM,                    /* (tDM/cell) Current Live Stem carbon pool */
+	STEM_HEARTWOOD_DM,                  /* (tDM/cell) Current Dead Stem carbon pool */
+	CROOT_SAPWOOD_DM,                   /* (tDM/cell) Current Live Coarse root carbon pool */
+	CROOT_HEARTWOOD_DM,                 /* (tDM/cell) Current Dead Coarse root carbon pool */
+	BRANCH_SAPWOOD_DM,                  /* (tDM/cell) Current Live Branch carbon pool */
+	BRANCH_HEARTWOOD_DM,                /* (tDM/cell) Current Dead Branch carbon pool */
 	LIVEWOOD_DM,                        /* (tDM/cell) Current Live Wood carbon pool */
 	DEADWOOD_DM,                        /* (tDM/cell) Current Dead Wood carbon pool */
 	STEM_LIVEWOOD_DM,                   /* (tDM/cell) Current Live Stem carbon pool */
@@ -484,15 +492,6 @@ enum {
 	TREE_BGB,                           /* (tC/tree) Below Ground Biomass pool */
 	DELTA_TREE_AGB,                     /* (tC/tree/year) Above Ground Biomass increment */
 	DELTA_TREE_BGB,                     /* (tC/tree/year) Below Ground Biomass increment */
-
-	/* converted fraction for turnover */
-	WS_sap_tDM,                         /* (tDM/cell) Fraction Sapwood in Stem biomass */
-	WS_heart_tDM,                       /* (tDM/cell) Fraction Heartwood in Stem biomass */
-	WRC_sap_tDM,                        /* (tDM/cell) Fraction Sapwood in Coarse root biomass */
-	WRC_heart_tDM,                      /* (tDM/cell) Fraction Heartwood in Coarse root biomass */
-	WBB_sap_tDM,                        /* (tDM/cell) Fraction Sapwood in Branch biomass */
-	WBB_heart_tDM,                      /* (tDM/cell) Fraction Heartwood in Branch biomass */
-	WTOT_sap_tDM,                       /* (tDM/cell) Fraction Sapwood in Total biomass */
 
 	/* converted fraction for allocation */
 	FROOT_LEAF_FRAC,                    /* (DIM) Fraction fine root to leaf */

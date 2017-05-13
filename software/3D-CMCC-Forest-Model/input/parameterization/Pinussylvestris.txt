@@ -41,12 +41,12 @@ CONES_LIFE_SPAN 3             //Life span for cones (yrs)
 FINE_ROOT_LEAF  0.523         //allocation new fine root C:new leaf (ratio) 0.523 for P. sylvestris from Pietsch 1 from Tatarinov
 STEM_LEAF   2.5               //allocation new stem C:new leaf (ratio) 2.5 for P. sylvestris from Pietsch 2.2 from Tatarinov
 COARSE_ROOT_STEM   0.29       //allocation new coarse root C:new stem (ratio) 0.29 for P. sylvestris from Pietsch 0.44 from Tatarinov
-LIVE_TOTAL_WOOD 0.05          //new live C:new total wood (ratio) for P. sylvestris 0.59 from Pietsch, 0.076 from Tatarinov
+LIVE_TOTAL_WOOD 0.076 //0.05 CHECK IT!!!         //new live C:new total wood (ratio) for P. sylvestris 0.59 from Pietsch, 0.076 from Tatarinov
 CN_LEAVES   36                //CN of leaves (kgC/kgN) for P. sylvestris 33.1 from Pietsch 36 from Tatarinov
-CN_FALLING_LEAVES   132       //CN of leaf litter (kgC/kgN) for P. sylvestris from Pietsch, 122 from Tatarinov 
+CN_FALLING_LEAVES   122       //CN of leaf litter (kgC/kgN) for P. sylvestris from Pietsch, 122 from Tatarinov 
 CN_FINE_ROOTS   49.0          //CN of fine roots (kgC/kgN) for P. sylvestris 38 from Pietsch 49 from Tatarinov
 CN_LIVE_WOODS   58.0          //CN of live woods (kgC/kgN)for P. sylvestris 50 from Pietsch 58 tatarinov
-CN_DEAD_WOODS   1400          //CN of dead woods (kgC/kgN) for P. sylvestris 1400 from Pietsch 730 from tatarinov
+CN_DEAD_WOODS   730           //CN of dead woods (kgC/kgN) for P. sylvestris 1400 from Pietsch 730 from tatarinov
 LEAF_LITT_LAB_FRAC   0.26     //leaf litter labile fraction for Pinus from Cenciala & Tatarinov 2006, 0.257 Pietsch 2005
 LEAF_LITT_CEL_FRAC   0.49     //leaf litter cellulose fraction for Pinus from Cenciala & Tatarinov 2006, 0.493 Pietsch 2005
 LEAF_LITT_LIGN_FRAC  0.25     //leaf litter lignin fraction for Pinus from Cenciala & Tatarinov 2006, 0.25 Pietsch 2005

@@ -24,6 +24,8 @@
 extern settings_t* g_settings;
 extern logger_t* g_debug_log;
 
+#define TEST_RESP 1
+
 void carbon_allocation( cell_t *const c, const int height, const int dbh, const int age, const int species )
 {
 	species_t *s;
@@ -35,7 +37,6 @@ void carbon_allocation( cell_t *const c, const int height, const int dbh, const 
 	logger(g_debug_log, "\n**CARBON ALLOCATION**\n");
 
 	/*** removing growth respiration and dead pools from carbon flux pools ***/
-#if 1 //test
 	s->value[C_TO_LEAF]    -= ((s->value[LEAF_GROWTH_RESP]   / 1e6 * g_settings->sizeCell) + s->value[C_LEAF_TO_LITR]  + s->value[C_LEAF_TO_RESERVE]);
 	s->value[C_TO_FROOT]   -= ((s->value[FROOT_GROWTH_RESP]  / 1e6 * g_settings->sizeCell) + s->value[C_FROOT_TO_LITR] + s->value[C_FROOT_TO_RESERVE]);
 	s->value[C_TO_STEM]    -= ((s->value[STEM_GROWTH_RESP]   / 1e6 * g_settings->sizeCell) + s->value[C_STEM_TO_CWD]);
@@ -45,19 +46,6 @@ void carbon_allocation( cell_t *const c, const int height, const int dbh, const 
 	s->value[C_TO_RESERVE] -=   s->value[C_RESERVE_TO_CWD];
 	s->value[C_TO_LITR]    +=   fabs(s->value[C_LEAF_TO_LITR] + s->value[C_FROOT_TO_LITR]);
 	s->value[C_TO_CWD]     +=   s->value[C_BRANCH_TO_CWD];
-#else
-	//if using test
-	s->value[C_TO_LEAF]    -= ((s->value[LEAF_GROWTH_RESP]   / 1e6 * g_settings->sizeCell) + s->value[C_LEAF_TO_LITR]  + s->value[C_LEAF_TO_RESERVE]);
-	s->value[C_TO_FROOT]   -= ((s->value[FROOT_GROWTH_RESP]  / 1e6 * g_settings->sizeCell) + s->value[C_FROOT_TO_LITR] + s->value[C_FROOT_TO_RESERVE]);
-	s->value[C_TO_STEM]    -= ((s->value[STEM_GROWTH_RESP]   / 1e6 * g_settings->sizeCell));
-	s->value[C_TO_CROOT]   -= ((s->value[CROOT_GROWTH_RESP]  / 1e6 * g_settings->sizeCell));
-	s->value[C_TO_BRANCH]  -= ((s->value[BRANCH_GROWTH_RESP] / 1e6 * g_settings->sizeCell));
-	s->value[C_TO_FRUIT]   -=   s->value[C_FRUIT_TO_CWD];
-	s->value[C_TO_RESERVE] -=  (s->value[C_RESERVE_TO_CWD]);
-	s->value[C_TO_LITR]    +=   s->value[C_LEAF_TO_LITR] +
-			s->value[C_FROOT_TO_LITR];
-	s->value[C_TO_CWD]     +=   s->value[C_BRANCH_TO_CWD];
-#endif
 
 	/*** update class level carbon mass pools ***/
 	s->value[LEAF_C]     += s->value[C_TO_LEAF];
@@ -84,7 +72,15 @@ void carbon_allocation( cell_t *const c, const int height, const int dbh, const 
 	/* stem */
 	s->value[STEM_SAPWOOD_C]    += s->value[C_TO_STEM];
 	s->value[STEM_HEARTWOOD_C]   = s->value[STEM_C] - s->value[STEM_SAPWOOD_C];
+
+	/* respiring stem */
+#if TEST_RESP
+	//new
+	s->value[STEM_LIVEWOOD_C]    = s->value[STEM_SAPWOOD_C] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
+#else
 	s->value[STEM_LIVEWOOD_C]    = s->value[STEM_C] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
+#endif
+
 	s->value[STEM_DEADWOOD_C]    = s->value[STEM_C] - s->value[STEM_LIVEWOOD_C];
 
 	s->value[YEARLY_C_TO_STEM]  += s->value[C_TO_STEM];
@@ -93,7 +89,15 @@ void carbon_allocation( cell_t *const c, const int height, const int dbh, const 
 	/* coarse root */
 	s->value[CROOT_SAPWOOD_C]   += s->value[C_TO_CROOT];
 	s->value[CROOT_HEARTWOOD_C]  = s->value[CROOT_C] - s->value[CROOT_SAPWOOD_C];
+
+	/* respiring coarse root */
+#if TEST_RESP
+	//new
+	s->value[CROOT_LIVEWOOD_C]   = s->value[CROOT_SAPWOOD_C] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
+#else
 	s->value[CROOT_LIVEWOOD_C]   = s->value[CROOT_C] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
+#endif
+
 	s->value[CROOT_DEADWOOD_C]   = s->value[CROOT_C] - s->value[CROOT_LIVEWOOD_C];
 
 	s->value[YEARLY_C_TO_CROOT] += s->value[C_TO_CROOT];
@@ -102,7 +106,15 @@ void carbon_allocation( cell_t *const c, const int height, const int dbh, const 
 	/* branch */
 	s->value[BRANCH_SAPWOOD_C]  += s->value[C_TO_BRANCH];
 	s->value[BRANCH_HEARTWOOD_C] = s->value[BRANCH_C] - s->value[BRANCH_SAPWOOD_C];
+
+#if TEST_RESP
+	//new
+	s->value[BRANCH_LIVEWOOD_C]  = s->value[BRANCH_SAPWOOD_C] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
+#else
 	s->value[BRANCH_LIVEWOOD_C]  = s->value[BRANCH_C] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
+#endif
+
+	/* respiring branch */
 	s->value[BRANCH_DEADWOOD_C]  = s->value[BRANCH_C] - s->value[BRANCH_LIVEWOOD_C];
 
 	s->value[YEARLY_C_TO_BRANCH] += s->value[C_TO_BRANCH];

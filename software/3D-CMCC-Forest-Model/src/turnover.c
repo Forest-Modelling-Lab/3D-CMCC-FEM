@@ -98,8 +98,8 @@ void turnover( cell_t *const c, age_t *const a, species_t *const s, const int da
 	/*******************************************************************************************************************/
 
 	/* Overall sapwood and heartwood */
-	s->value[TOT_SAPWOOD_C]   = s->value[STEM_SAPWOOD_C]   + s->value[CROOT_SAPWOOD_C]   + s->value[BRANCH_SAPWOOD_C];
-	s->value[TOT_HEARTWOOD_C] = s->value[STEM_HEARTWOOD_C] + s->value[CROOT_HEARTWOOD_C] + s->value[BRANCH_HEARTWOOD_C];
+	s->value[SAPWOOD_C]   = s->value[STEM_SAPWOOD_C]   + s->value[CROOT_SAPWOOD_C]   + s->value[BRANCH_SAPWOOD_C];
+	s->value[HEARTWOOD_C] = s->value[STEM_HEARTWOOD_C] + s->value[CROOT_HEARTWOOD_C] + s->value[BRANCH_HEARTWOOD_C];
 
 	logger(g_debug_log, "STEM_SAPWOOD_C     = %f tC/cell\n", s->value[STEM_SAPWOOD_C]);
 	logger(g_debug_log, "STEM_HEARTWOOD_C   = %f tC/cell\n", s->value[STEM_HEARTWOOD_C]);
@@ -107,7 +107,7 @@ void turnover( cell_t *const c, age_t *const a, species_t *const s, const int da
 	logger(g_debug_log, "CROOT_HEARTWOOD_C  = %f tC/cell\n", s->value[CROOT_HEARTWOOD_C]);
 	logger(g_debug_log, "BRANCH_SAPWOOD_C   = %f tC/cell\n", s->value[BRANCH_SAPWOOD_C]);
 	logger(g_debug_log, "BRANCH_HEARTWOOD_C = %f tC/cell\n", s->value[BRANCH_HEARTWOOD_C]);
-	logger(g_debug_log, "TOT_SAPWOOD_C      = %f tC/cell\n", s->value[TOT_SAPWOOD_C]);
-	logger(g_debug_log, "TOT_HEARTWOOD_C    = %f tC/cell\n", s->value[TOT_HEARTWOOD_C]);
+	logger(g_debug_log, "TOT_SAPWOOD_C      = %f tC/cell\n", s->value[SAPWOOD_C]);
+	logger(g_debug_log, "TOT_HEARTWOOD_C    = %f tC/cell\n", s->value[HEARTWOOD_C]);
 }
 
