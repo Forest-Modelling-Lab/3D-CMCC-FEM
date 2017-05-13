@@ -66,6 +66,14 @@ void turnover( cell_t *const c, age_t *const a, species_t *const s, const int da
 		s->value[YEARLY_C_TO_BRANCH] = 0.;
 	}
 
+	/* check */
+//	CHECK_CONDITION (s->value[C_STEM_LIVEWOOD_TO_DEADWOOD],   <, 0.);
+//	CHECK_CONDITION (s->value[C_CROOT_LIVEWOOD_TO_DEADWOOD],  <, 0.);
+//	CHECK_CONDITION (s->value[C_BRANCH_LIVEWOOD_TO_DEADWOOD], <, 0.);
+//	CHECK_CONDITION (s->value[C_STEM_LIVEWOOD_TO_DEADWOOD],   >, s->value[STEM_SAPWOOD_C]);
+//	CHECK_CONDITION (s->value[C_CROOT_LIVEWOOD_TO_DEADWOOD],  >, s->value[CROOT_SAPWOOD_C]);
+//	CHECK_CONDITION (s->value[C_BRANCH_LIVEWOOD_TO_DEADWOOD], >, s->value[BRANCH_SAPWOOD_C]);
+
 	/*******************************************************************************************************************/
 	/* daily stem turnover live to dead wood*/
 	logger(g_debug_log, "\n****Stem turnover****\n");

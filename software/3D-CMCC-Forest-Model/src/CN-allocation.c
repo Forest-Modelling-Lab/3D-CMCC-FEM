@@ -75,7 +75,7 @@ void carbon_allocation( cell_t *const c, const int height, const int dbh, const 
 
 	/* respiring stem */
 #if TEST_RESP
-	//new
+	//new 13 May 2017
 	s->value[STEM_LIVEWOOD_C]    = s->value[STEM_SAPWOOD_C] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
 #else
 	s->value[STEM_LIVEWOOD_C]    = s->value[STEM_C] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
@@ -92,7 +92,7 @@ void carbon_allocation( cell_t *const c, const int height, const int dbh, const 
 
 	/* respiring coarse root */
 #if TEST_RESP
-	//new
+	//new 13 May 2017
 	s->value[CROOT_LIVEWOOD_C]   = s->value[CROOT_SAPWOOD_C] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
 #else
 	s->value[CROOT_LIVEWOOD_C]   = s->value[CROOT_C] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
@@ -108,7 +108,7 @@ void carbon_allocation( cell_t *const c, const int height, const int dbh, const 
 	s->value[BRANCH_HEARTWOOD_C] = s->value[BRANCH_C] - s->value[BRANCH_SAPWOOD_C];
 
 #if TEST_RESP
-	//new
+	//new 13 May 2017
 	s->value[BRANCH_LIVEWOOD_C]  = s->value[BRANCH_SAPWOOD_C] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
 #else
 	s->value[BRANCH_LIVEWOOD_C]  = s->value[BRANCH_C] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];

@@ -32,7 +32,7 @@ output_folder="output_Rstudio"
 # multiple simulations
 site_list<-c("Soroe")#,"Soroe","Hyytiala","All")
 esm_list <-c("1")# ("1","2","3","4","5", "All")
-rcp_list <-c("0p0")# ("0p0","2p6","4p5","6p0","8p5","All")
+rcp_list <-c("2p6")# ("0p0","2p6","4p5","6p0","8p5","All")
 man_list <-c("off")# ("on",'off', "All")
 co2_list <-c("on")# , "on",off", "All")
 protocol_list<-c("2A")# ("2A","2B", "All") 

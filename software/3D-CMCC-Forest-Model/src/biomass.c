@@ -204,6 +204,7 @@ void tree_biomass_remove (cell_t *const c, const int height, const int dbh, cons
 	logger(g_debug_log, "C_FRUIT_TO_CWD   = %f tC/cell\n", s->value[C_FRUIT_TO_CWD]);
 	logger(g_debug_log, "C_TO_CWD         = %f tC/cell\n", s->value[C_TO_CWD]);
 
+
 	/******************************************************************************************/
 
 	/* nitrogen to litter pool */

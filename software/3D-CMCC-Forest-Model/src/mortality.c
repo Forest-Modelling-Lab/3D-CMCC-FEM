@@ -346,6 +346,12 @@ void age_mortality (cell_t *const c, const int height, const int dbh, const int 
 			}
 		}
 
+		/* note: special case for turnover and mortality */
+		/* removing biomass to NOT consider in turnover of the subsequent year */
+		s->value[YEARLY_C_TO_STEM]   -= ((s->value[YEARLY_C_TO_STEM]   / s->counter[N_TREE]) * deadtree);
+		s->value[YEARLY_C_TO_CROOT]  -= ((s->value[YEARLY_C_TO_CROOT]  / s->counter[N_TREE]) * deadtree);
+		s->value[YEARLY_C_TO_BRANCH] -= ((s->value[YEARLY_C_TO_BRANCH] / s->counter[N_TREE]) * deadtree);
+
 		/* update at class level */
 		s->counter[DEAD_TREE] += deadtree;
 		s->counter[N_TREE]    -= deadtree;
@@ -358,12 +364,13 @@ void age_mortality (cell_t *const c, const int height, const int dbh, const int 
 		c->daily_dead_tree   += deadtree;
 		c->monthly_dead_tree += deadtree;
 		c->annual_dead_tree  += deadtree;
-		c->n_trees -= deadtree;
+		c->n_trees           -= deadtree;
 
 		/* check */
 		CHECK_CONDITION(c->daily_dead_tree  , <, 0);
 		CHECK_CONDITION(c->monthly_dead_tree, <, 0);
 		CHECK_CONDITION(c->annual_dead_tree , <, 0);
+
 	}
 }
 
