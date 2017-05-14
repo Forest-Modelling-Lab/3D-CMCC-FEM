@@ -378,6 +378,9 @@ enum {
 	YEARLY_C_TO_STEM,
 	YEARLY_C_TO_CROOT,
 	YEARLY_C_TO_BRANCH,
+	YEARLY_C_TO_TREE_STEM,
+	YEARLY_C_TO_TREE_CROOT,
+	YEARLY_C_TO_TREE_BRANCH,
 
 
 	/* carbon pools in tons of tC/sizeCell */
@@ -427,19 +430,21 @@ enum {
 	TREE_BRANCH_C,                      /* (tC/tree) Single Tree Branch carbon pool */
 	TREE_STEM_SAPWOOD_C,                /* (tC/tree) Single Tree Sapwood Stem carbon pool */
 	TREE_STEM_HEARTWOOD_C,              /* (tC/tree) Single Tree Heartwood Stem carbon pool */
-	TREE_STEM_LIVE_C,                   /* (tC/tree) Single Tree Live Stem carbon pool */
-	TREE_STEM_DEAD_C,                   /* (tC/tree) Single Tree Dead Stem carbon pool */
+	TREE_STEM_LIVEWOOD_C,               /* (tC/tree) Single Tree Live Stem carbon pool */
+	TREE_STEM_DEADWOOD_C,               /* (tC/tree) Single Tree Dead Stem carbon pool */
 	TREE_CROOT_SAPWOOD_C,               /* (tC/tree) Single Tree Sapwood Coarse root carbon pool */
 	TREE_CROOT_HEARTWOOD_C,             /* (tC/tree) Single Tree Heartwood Coarse root carbon pool */
-	TREE_CROOT_LIVE_C,                  /* (tC/tree) Single Tree Live Coarse root carbon pool */
-	TREE_CROOT_DEAD_C,                  /* (tC/tree) Single Tree Dead Coarse root carbon pool */
+	TREE_CROOT_LIVEWOOD_C,              /* (tC/tree) Single Tree Live Coarse root carbon pool */
+	TREE_CROOT_DEADWOOD_C,              /* (tC/tree) Single Tree Dead Coarse root carbon pool */
 	TREE_BRANCH_SAPWOOD_C,              /* (tC/tree) Single Tree Sapwood Branch carbon pool */
 	TREE_BRANCH_HEARTWOOD_C,            /* (tC/tree) Single Tree Heartwood Branch carbon pool */
-	TREE_BRANCH_LIVE_C,                 /* (tC/tree) Single Tree Live Branch carbon pool */
-	TREE_BRANCH_DEAD_C,                 /* (tC/tree) Single Tree Dead Stem carbon pool */
+	TREE_BRANCH_LIVEWOOD_C,             /* (tC/tree) Single Tree Live Branch carbon pool */
+	TREE_BRANCH_DEADWOOD_C,             /* (tC/tree) Single Tree Dead Stem carbon pool */
 	TREE_LIVEWOOD_C,                    /* (tC/tree) Single Tree Live Wood carbon pool */
 	TREE_DEADWOOD_C,                    /* (tC/tree) Single Tree Dead Wood carbon pool */
 	TREE_TOT_WOOD_C,                    /* (tC/tree) Single Tree Total Wood carbon pool */
+	TREE_SAPWOOD_C,                     /* (tC/tree) Single Tree Sapwood carbon pool */
+	TREE_HEARTWOOD_C,                   /* (tC/tree) Single Tree Heartwood carbon pool */
 
 	/* carbon biomass pools in tDM/sizeCell */
 	LEAF_DM,                            /* (tDM/cell) Current Leaf carbon pool */
@@ -465,23 +470,6 @@ enum {
 	CROOT_DEADWOOD_DM,                  /* (tDM/cell) Current Dead Coarse root carbon pool */
 	BRANCH_LIVEWOOD_DM,                 /* (tDM/cell) Current Live Branch carbon pool */
 	BRANCH_DEADWOOD_DM,                 /* (tDM/cell) Current Dead Branch carbon pool */
-
-	/* (kgDM/tree) per tree in KgDM */
-	TREE_LEAF_KgDM,                     /* (kgDM/tree) Single Tree Leaf carbon pool */
-	TREE_STEM_KgDM,                     /* (kgDM/tree) Single Tree Leaf carbon pool */
-	TREE_FROOT_KgDM,                    /* (kgDM/tree) Single Tree Fine root carbon pool */
-	TREE_CROOT_KgDM,                    /* (kgDM/tree) Single Tree Coarse root carbon pool */
-	TREE_RESERVE_KgDM,                  /* (kgDM/tree) Single Tree Reserve carbon pool */
-	TREE_BRANCH_KgDM,                   /* (kgDM/tree) Single Tree Branch carbon pool */
-	TREE_STEM_LIVE_KgDM,                /* (kgDM/tree) Single Tree Live Stem carbon pool */
-	TREE_STEM_DEAD_KgDM,                /* (kgDM/tree) Single Tree Dead Stem carbon pool */
-	TREE_CROOT_LIVE_KgDM,               /* (kgDM/tree) Single Tree Live Coarse root carbon pool */
-	TREE_CROOT_DEAD_KgDM,               /* (kgDM/tree) Single Tree Dead Coarse root carbon pool */
-	TREE_BRANCH_LIVE_KgDM,              /* (kgDM/tree) Single Tree Live Branch carbon pool */
-	TREE_BRANCH_DEAD_KgDM,              /* (kgDM/tree) Single Tree Dead Branch carbon pool */
-	TREE_LIVEWOOD_KgDM,                 /* (kgDM/tree) Single Tree Live Wood carbon pool */
-	TREE_DEADWOOD_KgDM,                 /* (kgDM/tree) Single Tree Dead Wood carbon pool */
-
 
 	/* Above and Below Ground Biomass */
 	AGB,                                /* (tC/cell) Above Ground Biomass pool */

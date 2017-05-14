@@ -109,12 +109,14 @@ void average_tree_pools(species_t *const s)
 	s->value[TREE_RESERVE_C]             = (s->value[RESERVE_C]          / (double)s->counter[N_TREE]);
 	s->value[TREE_BRANCH_C]              = (s->value[BRANCH_C]           / (double)s->counter[N_TREE]);
 	s->value[TREE_FRUIT_C]               = (s->value[FRUIT_C]            / (double)s->counter[N_TREE]);
-	s->value[TREE_STEM_LIVE_C]           = (s->value[STEM_LIVEWOOD_C]    / (double)s->counter[N_TREE]);
-	s->value[TREE_STEM_DEAD_C]           = (s->value[STEM_DEADWOOD_C]    / (double)s->counter[N_TREE]);
-	s->value[TREE_CROOT_LIVE_C]          = (s->value[CROOT_LIVEWOOD_C]   / (double)s->counter[N_TREE]);
-	s->value[TREE_CROOT_DEAD_C]          = (s->value[CROOT_DEADWOOD_C]   / (double)s->counter[N_TREE]);
-	s->value[TREE_BRANCH_LIVE_C]         = (s->value[BRANCH_LIVEWOOD_C]  / (double)s->counter[N_TREE]);
-	s->value[TREE_BRANCH_DEAD_C]         = (s->value[BRANCH_DEADWOOD_C]  / (double)s->counter[N_TREE]);
+	s->value[TREE_STEM_LIVEWOOD_C]       = (s->value[STEM_LIVEWOOD_C]    / (double)s->counter[N_TREE]);
+	s->value[TREE_STEM_DEADWOOD_C]       = (s->value[STEM_DEADWOOD_C]    / (double)s->counter[N_TREE]);
+	s->value[TREE_CROOT_LIVEWOOD_C]      = (s->value[CROOT_LIVEWOOD_C]   / (double)s->counter[N_TREE]);
+	s->value[TREE_CROOT_DEADWOOD_C]      = (s->value[CROOT_DEADWOOD_C]   / (double)s->counter[N_TREE]);
+	s->value[TREE_BRANCH_LIVEWOOD_C]     = (s->value[BRANCH_LIVEWOOD_C]  / (double)s->counter[N_TREE]);
+	s->value[TREE_BRANCH_DEADWOOD_C]     = (s->value[BRANCH_DEADWOOD_C]  / (double)s->counter[N_TREE]);
+	s->value[TREE_LIVEWOOD_C]            = (s->value[LIVEWOOD_C]  / (double)s->counter[N_TREE]);
+	s->value[TREE_DEADWOOD_C]            = (s->value[DEADWOOD_C]  / (double)s->counter[N_TREE]);
 
 	/* compute tree average N pools */
 	s->value[TREE_LEAF_N]                = (s->value[LEAF_N]             / (double)s->counter[N_TREE]);

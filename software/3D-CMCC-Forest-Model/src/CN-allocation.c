@@ -70,54 +70,69 @@ void carbon_allocation( cell_t *const c, const int height, const int dbh, const 
 
 	/***************************************************************************************/
 	/* stem */
-	s->value[STEM_SAPWOOD_C]    += s->value[C_TO_STEM];
-	s->value[STEM_HEARTWOOD_C]   = s->value[STEM_C] - s->value[STEM_SAPWOOD_C];
+	s->value[STEM_SAPWOOD_C]          += s->value[C_TO_STEM];
+	s->value[STEM_HEARTWOOD_C]         = s->value[STEM_C] - s->value[STEM_SAPWOOD_C];
+	s->value[TREE_STEM_SAPWOOD_C]     += s->value[C_TO_STEM] / s->value[N_TREE];
+	s->value[TREE_STEM_HEARTWOOD_C]    = s->value[TREE_STEM_C] - s->value[TREE_STEM_SAPWOOD_C];
 
 	/* respiring stem */
 #if TEST_RESP
 	//new 13 May 2017
-	s->value[STEM_LIVEWOOD_C]    = s->value[STEM_SAPWOOD_C] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
+	s->value[STEM_LIVEWOOD_C]          = s->value[STEM_SAPWOOD_C]      * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
+	s->value[TREE_STEM_LIVEWOOD_C]     = s->value[TREE_STEM_SAPWOOD_C] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
 #else
-	s->value[STEM_LIVEWOOD_C]    = s->value[STEM_C] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
+	s->value[STEM_LIVEWOOD_C]          = s->value[STEM_C] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
 #endif
 
-	s->value[STEM_DEADWOOD_C]    = s->value[STEM_C] - s->value[STEM_LIVEWOOD_C];
+	s->value[STEM_DEADWOOD_C]          = s->value[STEM_C]      - s->value[STEM_LIVEWOOD_C];
+	s->value[TREE_STEM_DEADWOOD_C]     = s->value[TREE_STEM_C] - s->value[TREE_STEM_LIVEWOOD_C];
 
-	s->value[YEARLY_C_TO_STEM]  += s->value[C_TO_STEM];
+	s->value[YEARLY_C_TO_STEM]        += s->value[C_TO_STEM];
+	s->value[YEARLY_C_TO_TREE_STEM]   += s->value[C_TO_STEM] / s->counter[N_TREE];
 
 	/***************************************************************************************/
 	/* coarse root */
-	s->value[CROOT_SAPWOOD_C]   += s->value[C_TO_CROOT];
-	s->value[CROOT_HEARTWOOD_C]  = s->value[CROOT_C] - s->value[CROOT_SAPWOOD_C];
+	s->value[CROOT_SAPWOOD_C]         += s->value[C_TO_CROOT];
+	s->value[CROOT_HEARTWOOD_C]        = s->value[CROOT_C] - s->value[CROOT_SAPWOOD_C];
+	s->value[TREE_CROOT_SAPWOOD_C]    += s->value[C_TO_CROOT] / s->value[N_TREE];
+	s->value[TREE_CROOT_HEARTWOOD_C]   = s->value[TREE_CROOT_C] - s->value[TREE_CROOT_SAPWOOD_C];
 
 	/* respiring coarse root */
 #if TEST_RESP
 	//new 13 May 2017
-	s->value[CROOT_LIVEWOOD_C]   = s->value[CROOT_SAPWOOD_C] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
+	s->value[CROOT_LIVEWOOD_C]         = s->value[CROOT_SAPWOOD_C]      * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
+	s->value[TREE_CROOT_LIVEWOOD_C]    = s->value[TREE_CROOT_SAPWOOD_C] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
 #else
-	s->value[CROOT_LIVEWOOD_C]   = s->value[CROOT_C] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
+	s->value[CROOT_LIVEWOOD_C]         = s->value[CROOT_C] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
 #endif
 
-	s->value[CROOT_DEADWOOD_C]   = s->value[CROOT_C] - s->value[CROOT_LIVEWOOD_C];
+	s->value[CROOT_DEADWOOD_C]         = s->value[CROOT_C] - s->value[CROOT_LIVEWOOD_C];
+	s->value[TREE_CROOT_DEADWOOD_C]    = s->value[TREE_CROOT_C] - s->value[TREE_CROOT_LIVEWOOD_C];
 
-	s->value[YEARLY_C_TO_CROOT] += s->value[C_TO_CROOT];
+	s->value[YEARLY_C_TO_CROOT]       += s->value[C_TO_CROOT];
+	s->value[YEARLY_C_TO_TREE_CROOT]  += s->value[C_TO_CROOT] / s->counter[N_TREE];
 
 	/***************************************************************************************/
 	/* branch */
-	s->value[BRANCH_SAPWOOD_C]  += s->value[C_TO_BRANCH];
-	s->value[BRANCH_HEARTWOOD_C] = s->value[BRANCH_C] - s->value[BRANCH_SAPWOOD_C];
+	s->value[BRANCH_SAPWOOD_C]        += s->value[C_TO_BRANCH];
+	s->value[BRANCH_HEARTWOOD_C]       = s->value[BRANCH_C] - s->value[BRANCH_SAPWOOD_C];
+	s->value[TREE_BRANCH_SAPWOOD_C]   += s->value[C_TO_BRANCH] / s->value[N_TREE];
+	s->value[TREE_BRANCH_HEARTWOOD_C]  = s->value[TREE_BRANCH_C] - s->value[TREE_BRANCH_SAPWOOD_C];
 
 #if TEST_RESP
 	//new 13 May 2017
-	s->value[BRANCH_LIVEWOOD_C]  = s->value[BRANCH_SAPWOOD_C] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
+	s->value[BRANCH_LIVEWOOD_C]        = s->value[BRANCH_SAPWOOD_C]      * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
+	s->value[TREE_BRANCH_LIVEWOOD_C]   = s->value[TREE_BRANCH_SAPWOOD_C] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
 #else
-	s->value[BRANCH_LIVEWOOD_C]  = s->value[BRANCH_C] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
+	s->value[BRANCH_LIVEWOOD_C]        = s->value[BRANCH_C] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
 #endif
 
 	/* respiring branch */
-	s->value[BRANCH_DEADWOOD_C]  = s->value[BRANCH_C] - s->value[BRANCH_LIVEWOOD_C];
+	s->value[BRANCH_DEADWOOD_C]        = s->value[BRANCH_C]      - s->value[BRANCH_LIVEWOOD_C];
+	s->value[TREE_BRANCH_DEADWOOD_C]   = s->value[TREE_BRANCH_C] - s->value[TREE_BRANCH_LIVEWOOD_C];
 
-	s->value[YEARLY_C_TO_BRANCH] += s->value[C_TO_BRANCH];
+	s->value[YEARLY_C_TO_BRANCH]      += s->value[C_TO_BRANCH];
+	s->value[YEARLY_C_TO_TREE_BRANCH] += s->value[C_TO_BRANCH] / s->counter[N_TREE];
 
 	/***************************************************************************************/
 
