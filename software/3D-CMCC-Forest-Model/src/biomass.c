@@ -40,9 +40,12 @@ void live_total_wood_age(const age_t *const a, species_t *const s)
 
 	t1 = max_live_total_ratio - min_live_total_ratio;
 	t2 = max_age - min_age;
-
+#if 0
 	s->value[EFF_LIVE_TOTAL_WOOD_FRAC] = (t1/t2)*(max_age - a->value) + min_live_total_ratio;
-	//logger(g_debug_log, "Effective live:total wood fraction based on stand age = %g\n", s->value[EFF_LIVE_TOTAL_WOOD_FRAC]);
+#else
+	s->value[EFF_LIVE_TOTAL_WOOD_FRAC] = s->value[LIVE_TOTAL_WOOD];
+#endif
+	logger(g_debug_log, "Effective live:total wood fraction based on stand age = %g\n", s->value[EFF_LIVE_TOTAL_WOOD_FRAC]);
 }
 
 
@@ -109,6 +112,14 @@ void average_tree_pools(species_t *const s)
 	s->value[TREE_RESERVE_C]             = (s->value[RESERVE_C]          / (double)s->counter[N_TREE]);
 	s->value[TREE_BRANCH_C]              = (s->value[BRANCH_C]           / (double)s->counter[N_TREE]);
 	s->value[TREE_FRUIT_C]               = (s->value[FRUIT_C]            / (double)s->counter[N_TREE]);
+	s->value[TREE_STEM_SAPWOOD_C]        = (s->value[STEM_SAPWOOD_C]     / (double)s->counter[N_TREE]);
+	s->value[TREE_STEM_HEARTWOOD_C]      = (s->value[STEM_HEARTWOOD_C]   / (double)s->counter[N_TREE]);
+	s->value[TREE_CROOT_SAPWOOD_C]       = (s->value[CROOT_SAPWOOD_C]    / (double)s->counter[N_TREE]);
+	s->value[TREE_CROOT_HEARTWOOD_C]     = (s->value[CROOT_HEARTWOOD_C]  / (double)s->counter[N_TREE]);
+	s->value[TREE_BRANCH_SAPWOOD_C]      = (s->value[BRANCH_SAPWOOD_C]   / (double)s->counter[N_TREE]);
+	s->value[TREE_BRANCH_HEARTWOOD_C]    = (s->value[BRANCH_HEARTWOOD_C] / (double)s->counter[N_TREE]);
+	s->value[TREE_SAPWOOD_C]             = (s->value[SAPWOOD_C]          / (double)s->counter[N_TREE]);
+	s->value[TREE_HEARTWOOD_C]           = (s->value[HEARTWOOD_C]        / (double)s->counter[N_TREE]);
 	s->value[TREE_STEM_LIVEWOOD_C]       = (s->value[STEM_LIVEWOOD_C]    / (double)s->counter[N_TREE]);
 	s->value[TREE_STEM_DEADWOOD_C]       = (s->value[STEM_DEADWOOD_C]    / (double)s->counter[N_TREE]);
 	s->value[TREE_CROOT_LIVEWOOD_C]      = (s->value[CROOT_LIVEWOOD_C]   / (double)s->counter[N_TREE]);
@@ -127,14 +138,13 @@ void average_tree_pools(species_t *const s)
 	s->value[TREE_RESERVE_N]             = (s->value[RESERVE_N]          / (double)s->counter[N_TREE]);
 	s->value[TREE_FRUIT_N]               = (s->value[FRUIT_N]            / (double)s->counter[N_TREE]);
 
-	logger(g_debug_log, "AV_LEAF_C    = %f tC/cell\n", s->value[TREE_LEAF_C]);
-	logger(g_debug_log, "AV_STEM_C    = %f tC/cell\n", s->value[TREE_STEM_C]);
-	logger(g_debug_log, "AV_FROOT_C   = %f tC/cell\n", s->value[TREE_FROOT_C]);
-	logger(g_debug_log, "TREE_CROOT_C   = %f tC/cell\n", s->value[TREE_CROOT_C]);
-	logger(g_debug_log, "TREE_RESERVE_C = %f tC/cell\n", s->value[TREE_RESERVE_C]);
-	logger(g_debug_log, "AV_BRANCH_C  = %f tC/cell\n", s->value[TREE_BRANCH_C]);
-	logger(g_debug_log, "AV_BRANCH_C  = %f tC/cell\n", s->value[TREE_BRANCH_C]);
-	logger(g_debug_log, "AV_FRUIT_C   = %f tC/cell\n", s->value[TREE_FRUIT_C]);
+	logger(g_debug_log, "TREE_LEAF_C    = %f tC/tree\n", s->value[TREE_LEAF_C]);
+	logger(g_debug_log, "TREE_STEM_C    = %f tC/tree\n", s->value[TREE_STEM_C]);
+	logger(g_debug_log, "TREE_FROOT_C   = %f tC/tree\n", s->value[TREE_FROOT_C]);
+	logger(g_debug_log, "TREE_CROOT_C   = %f tC/tree\n", s->value[TREE_CROOT_C]);
+	logger(g_debug_log, "TREE_RESERVE_C = %f tC/tree\n", s->value[TREE_RESERVE_C]);
+	logger(g_debug_log, "TREE_BRANCH_C  = %f tC/tree\n", s->value[TREE_BRANCH_C]);
+	logger(g_debug_log, "TREE_FRUIT_C   = %f tC/tree\n", s->value[TREE_FRUIT_C]);
 
 
 }
@@ -195,16 +205,35 @@ void tree_biomass_remove (cell_t *const c, const int height, const int dbh, cons
 			s->value[C_RESERVE_TO_CWD]+
 			s->value[C_FRUIT_TO_CWD]) ;
 
+	/* sapwood and heartwood */
+	s->value[C_STEM_SAPWOOD_TO_CWD]     += (s->value[TREE_STEM_SAPWOOD_C]   * tree_remove);
+
+	s->value[C_CROOT_SAPWOOD_TO_CWD]    += (s->value[TREE_CROOT_SAPWOOD_C]  * tree_remove);
+
+	s->value[C_BRANCH_SAPWOOD_TO_CWD]   += (s->value[TREE_BRANCH_SAPWOOD_C] * tree_remove);
+
+	s->value[C_STEM_HEARTWOOD_TO_CWD]   += (s->value[TREE_STEM_HEARTWOOD_C]   * tree_remove);
+
+	s->value[C_CROOT_HEARTWOOD_TO_CWD]  += (s->value[TREE_CROOT_HEARTWOOD_C]  * tree_remove);
+
+	s->value[C_BRANCH_HEARTWOOD_TO_CWD] += (s->value[TREE_BRANCH_HEARTWOOD_C] * tree_remove);
+
 	logger(g_debug_log, "Carbon biomass to remove\n");
-	logger(g_debug_log, "C_LEAF_TO_LITR   = %f tC/cell\n", s->value[C_LEAF_TO_LITR]);
-	logger(g_debug_log, "C_FROOT_TO_LITR  = %f tC/cell\n", s->value[C_FROOT_TO_LITR]);
-	logger(g_debug_log, "C_TO_LITR        = %f tC/cell\n", s->value[C_TO_LITR]);
-	logger(g_debug_log, "C_STEM_TO_CWD    = %f tC/cell\n", s->value[C_STEM_TO_CWD]);
-	logger(g_debug_log, "C_CROOT_TO_CWD   = %f tC/cell\n", s->value[C_CROOT_TO_CWD]);
-	logger(g_debug_log, "C_BRANCH_TO_CWD  = %f tC/cell\n", s->value[C_BRANCH_TO_CWD]);
-	logger(g_debug_log, "C_BRANCH_TO_CWD  = %f tC/cell\n", s->value[C_BRANCH_TO_CWD]);
-	logger(g_debug_log, "C_FRUIT_TO_CWD   = %f tC/cell\n", s->value[C_FRUIT_TO_CWD]);
-	logger(g_debug_log, "C_TO_CWD         = %f tC/cell\n", s->value[C_TO_CWD]);
+	logger(g_debug_log, "C_LEAF_TO_LITR            = %f tC/cell\n", s->value[C_LEAF_TO_LITR]);
+	logger(g_debug_log, "C_FROOT_TO_LITR           = %f tC/cell\n", s->value[C_FROOT_TO_LITR]);
+	logger(g_debug_log, "C_TO_LITR                 = %f tC/cell\n", s->value[C_TO_LITR]);
+	logger(g_debug_log, "C_STEM_TO_CWD             = %f tC/cell\n", s->value[C_STEM_TO_CWD]);
+	logger(g_debug_log, "C_CROOT_TO_CWD            = %f tC/cell\n", s->value[C_CROOT_TO_CWD]);
+	logger(g_debug_log, "C_BRANCH_TO_CWD           = %f tC/cell\n", s->value[C_BRANCH_TO_CWD]);
+	logger(g_debug_log, "C_BRANCH_TO_CWD           = %f tC/cell\n", s->value[C_BRANCH_TO_CWD]);
+	logger(g_debug_log, "C_FRUIT_TO_CWD            = %f tC/cell\n", s->value[C_FRUIT_TO_CWD]);
+	logger(g_debug_log, "C_TO_CWD                  = %f tC/cell\n", s->value[C_TO_CWD]);
+	logger(g_debug_log, "C_STEM_SAPWOOD_TO_CWD     = %f tC/cell\n", s->value[C_STEM_SAPWOOD_TO_CWD]);
+	logger(g_debug_log, "C_CROOT_SAPWOOD_TO_CWD    = %f tC/cell\n", s->value[C_CROOT_SAPWOOD_TO_CWD]);
+	logger(g_debug_log, "C_BRANCH_SAPWOOD_TO_CWD   = %f tC/cell\n", s->value[C_TO_CWD]);
+	logger(g_debug_log, "C_STEM_HEARTWOOD_TO_CWD   = %f tC/cell\n", s->value[C_STEM_HEARTWOOD_TO_CWD]);
+	logger(g_debug_log, "C_CROOT_HEARTWOOD_TO_CWD  = %f tC/cell\n", s->value[C_CROOT_HEARTWOOD_TO_CWD]);
+	logger(g_debug_log, "C_BRANCH_HEARTWOOD_TO_CWD = %f tC/cell\n", s->value[C_TO_CWD]);
 
 
 	/******************************************************************************************/

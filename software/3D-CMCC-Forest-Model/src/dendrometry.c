@@ -144,8 +144,8 @@ void dendrometry_old(cell_t *const c, const int layer, const int height, const i
 #if 1
 	//new 10 May 2017
 	/* compute sapwood and heartwood area as fraction proportional to stem/sapwood/heartwood carbon */
-	s->value[SAPWOOD_AREA]   = ( s->value[BASAL_AREA] * s->value[STEM_SAPWOOD_C] )   / s->value[STEM_C];
-	s->value[HEARTWOOD_AREA] = ( s->value[BASAL_AREA] * s->value[STEM_HEARTWOOD_C] ) / s->value[STEM_C];
+	s->value[SAPWOOD_AREA]   = ( s->value[BASAL_AREA] * s->value[STEM_SAPWOOD_C] ) / s->value[STEM_C];
+	s->value[HEARTWOOD_AREA] = ( s->value[BASAL_AREA] - s->value[SAPWOOD_AREA] )   / s->value[STEM_C];
 #else
 	//old
 	/* sapwood and heartwood */

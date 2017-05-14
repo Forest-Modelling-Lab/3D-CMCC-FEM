@@ -26,7 +26,7 @@ extern logger_t* g_debug_log;
 
 #define TEST_RESP 1
 
-void carbon_allocation( cell_t *const c, const int height, const int dbh, const int age, const int species )
+void carbon_allocation( cell_t *const c, const int height, const int dbh, const int age, const int species, const int day, const int month  )
 {
 	species_t *s;
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
@@ -36,16 +36,96 @@ void carbon_allocation( cell_t *const c, const int height, const int dbh, const 
 
 	logger(g_debug_log, "\n**CARBON ALLOCATION**\n");
 
-	/*** removing growth respiration and dead pools from carbon flux pools ***/
-	s->value[C_TO_LEAF]    -= ((s->value[LEAF_GROWTH_RESP]   / 1e6 * g_settings->sizeCell) + s->value[C_LEAF_TO_LITR]  + s->value[C_LEAF_TO_RESERVE]);
-	s->value[C_TO_FROOT]   -= ((s->value[FROOT_GROWTH_RESP]  / 1e6 * g_settings->sizeCell) + s->value[C_FROOT_TO_LITR] + s->value[C_FROOT_TO_RESERVE]);
-	s->value[C_TO_STEM]    -= ((s->value[STEM_GROWTH_RESP]   / 1e6 * g_settings->sizeCell) + s->value[C_STEM_TO_CWD]);
-	s->value[C_TO_CROOT]   -= ((s->value[CROOT_GROWTH_RESP]  / 1e6 * g_settings->sizeCell) + s->value[C_CROOT_TO_CWD]);
-	s->value[C_TO_BRANCH]  -= ((s->value[BRANCH_GROWTH_RESP] / 1e6 * g_settings->sizeCell) + s->value[C_BRANCH_TO_CWD]);
-	s->value[C_TO_FRUIT]   -=   s->value[C_FRUIT_TO_CWD];
-	s->value[C_TO_RESERVE] -=   s->value[C_RESERVE_TO_CWD];
-	s->value[C_TO_LITR]    +=   fabs(s->value[C_LEAF_TO_LITR] + s->value[C_FROOT_TO_LITR]);
-	s->value[C_TO_CWD]     +=   s->value[C_BRANCH_TO_CWD];
+
+	/*** removing growth respiration from carbon flux pools ***/
+	s->value[C_TO_LEAF]    -= (s->value[LEAF_GROWTH_RESP]   / 1e6 * g_settings->sizeCell);
+	s->value[C_TO_FROOT]   -= (s->value[FROOT_GROWTH_RESP]  / 1e6 * g_settings->sizeCell);
+	s->value[C_TO_STEM]    -= (s->value[STEM_GROWTH_RESP]   / 1e6 * g_settings->sizeCell);
+	s->value[C_TO_CROOT]   -= (s->value[CROOT_GROWTH_RESP]  / 1e6 * g_settings->sizeCell);
+	s->value[C_TO_BRANCH]  -= (s->value[BRANCH_GROWTH_RESP] / 1e6 * g_settings->sizeCell);
+
+	logger(g_debug_log, "C_TO_LEAF   = %f tC/cell\n", s->value[C_TO_LEAF]);
+	logger(g_debug_log, "C_TO_FROOT  = %f tC/cell\n", s->value[C_TO_FROOT]);
+	logger(g_debug_log, "C_TO_STEM   = %f tC/cell\n", s->value[C_TO_STEM]);
+	logger(g_debug_log, "C_TO_CROOT  = %f tC/cell\n", s->value[C_TO_CROOT]);
+	logger(g_debug_log, "C_TO_BRANCH = %f tC/cell\n", s->value[C_TO_BRANCH]);
+
+	/***************************************************************************************/
+	/* stem */
+	s->value[STEM_SAPWOOD_C]          += s->value[C_TO_STEM] - s->value[C_STEM_SAPWOOD_TO_CWD];
+	s->value[STEM_HEARTWOOD_C]         = s->value[STEM_C] - s->value[STEM_SAPWOOD_C];
+
+	/* respiring stem */
+#if TEST_RESP
+	//new 13 May 2017
+	s->value[STEM_LIVEWOOD_C]          = s->value[STEM_SAPWOOD_C] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
+#else
+	s->value[STEM_LIVEWOOD_C]          = s->value[STEM_C] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
+#endif
+
+	if (day && month) s->value[YEARLY_C_TO_STEM] += s->value[C_TO_STEM];
+
+	/***************************************************************************************/
+
+	/* coarse root */
+	s->value[CROOT_SAPWOOD_C]         += s->value[C_TO_CROOT] - s->value[C_CROOT_SAPWOOD_TO_CWD];
+	s->value[CROOT_HEARTWOOD_C]        = s->value[CROOT_C] - s->value[CROOT_SAPWOOD_C];
+
+	/* respiring coarse root */
+#if TEST_RESP
+	//new 13 May 2017
+	s->value[CROOT_LIVEWOOD_C]         = s->value[CROOT_SAPWOOD_C] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
+#else
+	s->value[CROOT_LIVEWOOD_C]         = s->value[CROOT_C] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
+#endif
+
+	if (day && month) s->value[YEARLY_C_TO_CROOT] += s->value[C_TO_CROOT];
+
+
+	/***************************************************************************************/
+	/* branch */
+	s->value[BRANCH_SAPWOOD_C]        += s->value[C_TO_BRANCH] - s->value[C_BRANCH_SAPWOOD_TO_CWD];
+	s->value[BRANCH_HEARTWOOD_C]       = s->value[BRANCH_C] - s->value[BRANCH_SAPWOOD_C];
+
+	/* respiring branch */
+#if TEST_RESP
+	//new 13 May 2017
+	s->value[BRANCH_LIVEWOOD_C]        = s->value[BRANCH_SAPWOOD_C] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
+
+#else
+	s->value[BRANCH_LIVEWOOD_C]        = s->value[BRANCH_C] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
+#endif
+
+	if (day && month) s->value[YEARLY_C_TO_BRANCH]      += s->value[C_TO_BRANCH];
+
+	/***************************************************************************************/
+
+	/* check for closure */
+	CHECK_CONDITION(fabs((s->value[STEM_SAPWOOD_C]   + s->value[STEM_HEARTWOOD_C])  - s->value[STEM_C]),  >,eps);
+	CHECK_CONDITION(fabs((s->value[CROOT_SAPWOOD_C]  + s->value[CROOT_HEARTWOOD_C]) - s->value[CROOT_C]), >,eps);
+	CHECK_CONDITION(fabs((s->value[BRANCH_SAPWOOD_C] + s->value[BRANCH_HEARTWOOD_C])- s->value[BRANCH_C]),>,eps);
+
+
+	/*** removing dead pools from carbon flux pools ***/
+	s->value[C_TO_LEAF]    -= s->value[C_LEAF_TO_LITR]  + s->value[C_LEAF_TO_RESERVE];
+	s->value[C_TO_FROOT]   -= s->value[C_FROOT_TO_LITR] + s->value[C_FROOT_TO_RESERVE];
+	s->value[C_TO_STEM]    -= s->value[C_STEM_TO_CWD];
+	s->value[C_TO_CROOT]   -= s->value[C_CROOT_TO_CWD];
+	s->value[C_TO_BRANCH]  -= s->value[C_BRANCH_TO_CWD];
+	s->value[C_TO_FRUIT]   -= s->value[C_FRUIT_TO_CWD];
+	s->value[C_TO_RESERVE] -= s->value[C_RESERVE_TO_CWD];
+	s->value[C_TO_LITR]    += fabs(s->value[C_LEAF_TO_LITR] + s->value[C_FROOT_TO_LITR]);
+	s->value[C_TO_CWD]     += s->value[C_BRANCH_TO_CWD];
+
+	logger(g_debug_log, "C_TO_LEAF    = %f tC/cell\n", s->value[C_TO_LEAF]);
+	logger(g_debug_log, "C_TO_FROOT   = %f tC/cell\n", s->value[C_TO_FROOT]);
+	logger(g_debug_log, "C_TO_STEM    = %f tC/cell\n", s->value[C_TO_STEM]);
+	logger(g_debug_log, "C_TO_CROOT   = %f tC/cell\n", s->value[C_TO_CROOT]);
+	logger(g_debug_log, "C_TO_BRANCH  = %f tC/cell\n", s->value[C_TO_BRANCH]);
+	logger(g_debug_log, "C_TO_FRUIT   = %f tC/cell\n", s->value[C_TO_FRUIT]);
+	logger(g_debug_log, "C_TO_RESERVE = %f tC/cell\n", s->value[C_TO_RESERVE]);
+	logger(g_debug_log, "C_TO_LITR    = %f tC/cell\n", s->value[C_TO_LITR]);
+	logger(g_debug_log, "C_TO_CWD     = %f tC/cell\n", s->value[C_TO_CWD]);
 
 	/*** update class level carbon mass pools ***/
 	s->value[LEAF_C]     += s->value[C_TO_LEAF];
@@ -58,6 +138,16 @@ void carbon_allocation( cell_t *const c, const int height, const int dbh, const 
 	s->value[LITR_C]     += s->value[C_TO_LITR];
 	s->value[CWD_C]      += s->value[C_TO_CWD];
 
+	logger(g_debug_log, "LEAF_C    = %f tC/cell\n", s->value[LEAF_C]);
+	logger(g_debug_log, "FROOT_C   = %f tC/cell\n", s->value[FROOT_C]);
+	logger(g_debug_log, "STEM_C    = %f tC/cell\n", s->value[STEM_C]);
+	logger(g_debug_log, "CROOT_C   = %f tC/cell\n", s->value[CROOT_C]);
+	logger(g_debug_log, "BRANCH_C  = %f tC/cell\n", s->value[BRANCH_C]);
+	logger(g_debug_log, "RESERVE_C = %f tC/cell\n", s->value[RESERVE_C]);
+	logger(g_debug_log, "FRUIT_C   = %f tC/cell\n", s->value[FRUIT_C]);
+	logger(g_debug_log, "LITR_C    = %f tC/cell\n", s->value[LITR_C]);
+	logger(g_debug_log, "CWD_C     = %f tC/cell\n", s->value[CWD_C]);
+
 	/* check */
 	CHECK_CONDITION ( s->value[LEAF_C],     < , ZERO );
 	CHECK_CONDITION ( s->value[FROOT_C],    < , ZERO );
@@ -68,74 +158,6 @@ void carbon_allocation( cell_t *const c, const int height, const int dbh, const 
 	CHECK_CONDITION ( s->value[LITR_C],     < , ZERO );
 	CHECK_CONDITION ( s->value[CWD_C],      < , ZERO );
 
-	/***************************************************************************************/
-	/* stem */
-	s->value[STEM_SAPWOOD_C]          += s->value[C_TO_STEM];
-	s->value[STEM_HEARTWOOD_C]         = s->value[STEM_C] - s->value[STEM_SAPWOOD_C];
-	s->value[TREE_STEM_SAPWOOD_C]     += s->value[C_TO_STEM] / s->value[N_TREE];
-	s->value[TREE_STEM_HEARTWOOD_C]    = s->value[TREE_STEM_C] - s->value[TREE_STEM_SAPWOOD_C];
-
-	/* respiring stem */
-#if TEST_RESP
-	//new 13 May 2017
-	s->value[STEM_LIVEWOOD_C]          = s->value[STEM_SAPWOOD_C]      * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
-	s->value[TREE_STEM_LIVEWOOD_C]     = s->value[TREE_STEM_SAPWOOD_C] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
-#else
-	s->value[STEM_LIVEWOOD_C]          = s->value[STEM_C] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
-#endif
-
-	s->value[STEM_DEADWOOD_C]          = s->value[STEM_C]      - s->value[STEM_LIVEWOOD_C];
-	s->value[TREE_STEM_DEADWOOD_C]     = s->value[TREE_STEM_C] - s->value[TREE_STEM_LIVEWOOD_C];
-
-	s->value[YEARLY_C_TO_STEM]        += s->value[C_TO_STEM];
-	s->value[YEARLY_C_TO_TREE_STEM]   += s->value[C_TO_STEM] / s->counter[N_TREE];
-
-	/***************************************************************************************/
-	/* coarse root */
-	s->value[CROOT_SAPWOOD_C]         += s->value[C_TO_CROOT];
-	s->value[CROOT_HEARTWOOD_C]        = s->value[CROOT_C] - s->value[CROOT_SAPWOOD_C];
-	s->value[TREE_CROOT_SAPWOOD_C]    += s->value[C_TO_CROOT] / s->value[N_TREE];
-	s->value[TREE_CROOT_HEARTWOOD_C]   = s->value[TREE_CROOT_C] - s->value[TREE_CROOT_SAPWOOD_C];
-
-	/* respiring coarse root */
-#if TEST_RESP
-	//new 13 May 2017
-	s->value[CROOT_LIVEWOOD_C]         = s->value[CROOT_SAPWOOD_C]      * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
-	s->value[TREE_CROOT_LIVEWOOD_C]    = s->value[TREE_CROOT_SAPWOOD_C] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
-#else
-	s->value[CROOT_LIVEWOOD_C]         = s->value[CROOT_C] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
-#endif
-
-	s->value[CROOT_DEADWOOD_C]         = s->value[CROOT_C] - s->value[CROOT_LIVEWOOD_C];
-	s->value[TREE_CROOT_DEADWOOD_C]    = s->value[TREE_CROOT_C] - s->value[TREE_CROOT_LIVEWOOD_C];
-
-	s->value[YEARLY_C_TO_CROOT]       += s->value[C_TO_CROOT];
-	s->value[YEARLY_C_TO_TREE_CROOT]  += s->value[C_TO_CROOT] / s->counter[N_TREE];
-
-	/***************************************************************************************/
-	/* branch */
-	s->value[BRANCH_SAPWOOD_C]        += s->value[C_TO_BRANCH];
-	s->value[BRANCH_HEARTWOOD_C]       = s->value[BRANCH_C] - s->value[BRANCH_SAPWOOD_C];
-	s->value[TREE_BRANCH_SAPWOOD_C]   += s->value[C_TO_BRANCH] / s->value[N_TREE];
-	s->value[TREE_BRANCH_HEARTWOOD_C]  = s->value[TREE_BRANCH_C] - s->value[TREE_BRANCH_SAPWOOD_C];
-
-#if TEST_RESP
-	//new 13 May 2017
-	s->value[BRANCH_LIVEWOOD_C]        = s->value[BRANCH_SAPWOOD_C]      * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
-	s->value[TREE_BRANCH_LIVEWOOD_C]   = s->value[TREE_BRANCH_SAPWOOD_C] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
-#else
-	s->value[BRANCH_LIVEWOOD_C]        = s->value[BRANCH_C] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
-#endif
-
-	/* respiring branch */
-	s->value[BRANCH_DEADWOOD_C]        = s->value[BRANCH_C]      - s->value[BRANCH_LIVEWOOD_C];
-	s->value[TREE_BRANCH_DEADWOOD_C]   = s->value[TREE_BRANCH_C] - s->value[TREE_BRANCH_LIVEWOOD_C];
-
-	s->value[YEARLY_C_TO_BRANCH]      += s->value[C_TO_BRANCH];
-	s->value[YEARLY_C_TO_TREE_BRANCH] += s->value[C_TO_BRANCH] / s->counter[N_TREE];
-
-	/***************************************************************************************/
-
 	s->value[TOTAL_C] = s->value[LEAF_C] +
 			s->value[FROOT_C]            +
 			s->value[STEM_C]             +
@@ -143,11 +165,6 @@ void carbon_allocation( cell_t *const c, const int height, const int dbh, const 
 			s->value[CROOT_C]            +
 			s->value[FRUIT_C]            +
 			s->value[RESERVE_C]          ;
-
-	/* check for closure */
-	CHECK_CONDITION(fabs((s->value[STEM_LIVEWOOD_C]   + s->value[STEM_DEADWOOD_C])  -s->value[STEM_C]),  >,eps);
-	CHECK_CONDITION(fabs((s->value[CROOT_LIVEWOOD_C]  + s->value[CROOT_DEADWOOD_C]) -s->value[CROOT_C]), >,eps);
-	CHECK_CONDITION(fabs((s->value[BRANCH_LIVEWOOD_C] + s->value[BRANCH_DEADWOOD_C])-s->value[BRANCH_C]),>,eps);
 
 	/* single tree average tree pools */
 	average_tree_pools ( s );

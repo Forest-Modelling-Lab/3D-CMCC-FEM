@@ -358,6 +358,12 @@ enum {
 	C_BRANCH_TO_CWD,                    /* (tC/cell/day) Daily tC from Branch pool to Coarse Woody Debris */
 	C_RESERVE_TO_CWD,                   /* (tC/cell/day) Daily tC from Reserve pool to Coarse Woody Debris */
 	C_FRUIT_TO_CWD,                     /* (tC/cell/day) Daily tC from Fruit pool to Coarse Woody Debris */
+	C_STEM_SAPWOOD_TO_CWD,              /* (tC/cell/day) Daily tC from Stem Sapwood to Coarse Woody Debris */
+	C_CROOT_SAPWOOD_TO_CWD,             /* (tC/cell/day) Daily tC from Coarse root Sapwood to Coarse Woody Debris */
+	C_BRANCH_SAPWOOD_TO_CWD,            /* (tC/cell/day) Daily tC from Branch Sapwood to Coarse Woody Debris */
+	C_STEM_HEARTWOOD_TO_CWD,            /* (tC/cell/day) Daily tC from Stem Heartwood to Coarse Woody Debris */
+	C_CROOT_HEARTWOOD_TO_CWD,           /* (tC/cell/day) Daily tC from Coarse root Heartwood to Coarse Woody Debris */
+	C_BRANCH_HEARTWOOD_TO_CWD,          /* (tC/cell/day) Daily tC from Branch Heartwood to Coarse Woody Debris */
 	C_TO_LITR,                          /* (tC/cell/day) Daily Leaf and Fine root Carbon to Litter pool */
 	C_TO_CWD,                           /* (tC/cell/day) Daily Wood Carbon to Coarse Woody Debirs */
 	C_STEM_LIVEWOOD_TO_DEADWOOD,        /* (tC/cell/day) Daily tC from Stem live wood pool to Stem dead wood */

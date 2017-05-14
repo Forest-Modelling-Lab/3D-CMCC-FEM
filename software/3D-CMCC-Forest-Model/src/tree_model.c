@@ -302,7 +302,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							}
 
 							/* allocate daily carbon */
-							carbon_allocation       ( c, height, dbh, age, species );
+							carbon_allocation       ( c, height, dbh, age, species, day, month );
 
 							/* allocate daily nitrogen */
 							nitrogen_allocation     ( c, s );

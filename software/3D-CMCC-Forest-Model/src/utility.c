@@ -360,6 +360,9 @@ void reset_daily_class_variables(cell_t *const c)
 					s->value[C_BRANCH_TO_CWD] =           0.;
 					s->value[C_RESERVE_TO_CWD] =          0.;
 					s->value[C_FRUIT_TO_CWD] =            0.;
+					s->value[C_STEM_SAPWOOD_TO_CWD] =     0.;
+					s->value[C_CROOT_SAPWOOD_TO_CWD] =    0.;
+					s->value[C_BRANCH_SAPWOOD_TO_CWD] =   0.;
 
 					/* reset daily nitrogen fluxes */
 					s->value[GPP] =                       0.;
