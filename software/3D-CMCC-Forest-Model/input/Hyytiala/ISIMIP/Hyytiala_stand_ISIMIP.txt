@@ -3,10 +3,10 @@ Year,x,y,Age,Species,Management,N,Stool,AvDBH,Height,Wf,Wrc,Wrf,Ws,Wbb,Wres,Lai
 1995,0,0,34,Pinussylvestris,T,870,0,12.74,10.92,0,0,0,0,0,0,1.37
 //1995,0,0,34,Pinussylvestris,T,1835,0,12.74,10.92,0,0,0,0,0,0,1.37 //meerging the above two rows for test
 
-//1996,0,0,35,Piceaabies,T,965,0,4.2,3.82,0,0,0,0,0,0,0.81
-//1996,0,0,35,Pinussylvestris,T,870,0,12.99,11.31,0,0,0,0,0,0,1.39
+1996,0,0,35,Piceaabies,T,965,0,4.2,3.82,0,0,0,0,0,0,0.81
+1996,0,0,35,Pinussylvestris,T,870,0,12.99,11.31,0,0,0,0,0,0,1.39
 //1996,0,0,34,Pinussylvestris,T,2500,0,10.56,6.5,0,0,0,0,0,0,5 //references: Vesala 1996, Vesala et al.; 1998, Kramer et al., 2002 
-1996,0,0,28,Pinussylvestris,T,1796,0,10.3,6.5,0,0,0,0,0,0,2.5 //references:Mencuccini and Bonosi Can. J. For. Res 2001
+//1996,0,0,28,Pinussylvestris,T,1796,0,10.3,6.5,0,0,0,0,0,0,2 //references:Mencuccini and Bonosi Can. J. For. Res 2001
 
 1997,0,0,36,Piceaabies,T,965,0,4.28,3.95,0,0,0,0,0,0,0.83
 1997,0,0,36,Pinussylvestris,T,870,0,13.23,11.68,0,0,0,0,0,0,1.41
