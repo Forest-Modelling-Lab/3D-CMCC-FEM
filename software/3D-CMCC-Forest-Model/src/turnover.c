@@ -23,8 +23,7 @@ void turnover( cell_t *const c, age_t *const a, species_t *const s, const int da
 
 	/** age related function for turnover **/
 
-	/* this function assumes that turnover rate increases with increasing tree age */
-	/* note: assumptions */
+	/* assumption: this function assumes that turnover rate increases with increasing tree age */
 	juv_livewood_turnover_frac = 0.1;    //fixme it should be moved to species.txt
 	mat_livewood_turnover_frac = 0.7;    //fixme it should be moved to species.txt
 	t_age                      = 10;     //fixme it should be moved to species.txt
@@ -106,7 +105,7 @@ void turnover( cell_t *const c, age_t *const a, species_t *const s, const int da
 
 	/*******************************************************************************************************************/
 
-	/* Overall sapwood and heartwood */
+	/* Overall sapwood and heartwood stocks */
 	s->value[SAPWOOD_C]   = s->value[STEM_SAPWOOD_C]   + s->value[CROOT_SAPWOOD_C]   + s->value[BRANCH_SAPWOOD_C];
 	s->value[HEARTWOOD_C] = s->value[STEM_HEARTWOOD_C] + s->value[CROOT_HEARTWOOD_C] + s->value[BRANCH_HEARTWOOD_C];
 

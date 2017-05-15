@@ -36,7 +36,6 @@ void carbon_allocation( cell_t *const c, const int height, const int dbh, const 
 
 	logger(g_debug_log, "\n**CARBON ALLOCATION**\n");
 
-
 	/*** removing growth respiration from carbon flux pools ***/
 	s->value[C_TO_LEAF]    -= (s->value[LEAF_GROWTH_RESP]   / 1e6 * g_settings->sizeCell);
 	s->value[C_TO_FROOT]   -= (s->value[FROOT_GROWTH_RESP]  / 1e6 * g_settings->sizeCell);
@@ -60,10 +59,12 @@ void carbon_allocation( cell_t *const c, const int height, const int dbh, const 
 	//new 13 May 2017
 	s->value[STEM_LIVEWOOD_C]          = s->value[STEM_SAPWOOD_C] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
 #else
+	//old
 	s->value[STEM_LIVEWOOD_C]          = s->value[STEM_C] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
 #endif
 
-	if (day && month) s->value[YEARLY_C_TO_STEM] += s->value[C_TO_STEM];
+	/* to avoid that self-thinning mortality happens to remove to much biomass */
+	if ( day && month ) s->value[YEARLY_C_TO_STEM] += s->value[C_TO_STEM];
 
 	/***************************************************************************************/
 
@@ -76,11 +77,12 @@ void carbon_allocation( cell_t *const c, const int height, const int dbh, const 
 	//new 13 May 2017
 	s->value[CROOT_LIVEWOOD_C]         = s->value[CROOT_SAPWOOD_C] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
 #else
+	//old
 	s->value[CROOT_LIVEWOOD_C]         = s->value[CROOT_C] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
 #endif
 
-	if (day && month) s->value[YEARLY_C_TO_CROOT] += s->value[C_TO_CROOT];
-
+	/* to avoid that self-thinning mortality happens to remove to much biomass */
+	if ( day && month ) s->value[YEARLY_C_TO_CROOT] += s->value[C_TO_CROOT];
 
 	/***************************************************************************************/
 	/* branch */
@@ -91,12 +93,13 @@ void carbon_allocation( cell_t *const c, const int height, const int dbh, const 
 #if TEST_RESP
 	//new 13 May 2017
 	s->value[BRANCH_LIVEWOOD_C]        = s->value[BRANCH_SAPWOOD_C] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
-
 #else
+	//old
 	s->value[BRANCH_LIVEWOOD_C]        = s->value[BRANCH_C] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
 #endif
 
-	if (day && month) s->value[YEARLY_C_TO_BRANCH]      += s->value[C_TO_BRANCH];
+	/* to avoid that self-thinning mortality happens to remove to much biomass */
+	if ( day && month ) s->value[YEARLY_C_TO_BRANCH]      += s->value[C_TO_BRANCH];
 
 	/***************************************************************************************/
 
@@ -104,7 +107,6 @@ void carbon_allocation( cell_t *const c, const int height, const int dbh, const 
 	CHECK_CONDITION(fabs((s->value[STEM_SAPWOOD_C]   + s->value[STEM_HEARTWOOD_C])  - s->value[STEM_C]),  >,eps);
 	CHECK_CONDITION(fabs((s->value[CROOT_SAPWOOD_C]  + s->value[CROOT_HEARTWOOD_C]) - s->value[CROOT_C]), >,eps);
 	CHECK_CONDITION(fabs((s->value[BRANCH_SAPWOOD_C] + s->value[BRANCH_HEARTWOOD_C])- s->value[BRANCH_C]),>,eps);
-
 
 	/*** removing dead pools from carbon flux pools ***/
 	s->value[C_TO_LEAF]    -= s->value[C_LEAF_TO_LITR]  + s->value[C_LEAF_TO_RESERVE];
