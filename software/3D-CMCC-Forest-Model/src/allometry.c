@@ -126,13 +126,9 @@ void allometry_power_function(cell_t *const c)
 					{
 						s->value[STEMCONST] = pow (e, -1.6381);
 					}
-					else if ( d->value > 9 && d->value < 15 )
-					{
-						s->value[STEMCONST] = pow (e, -3.51+1.27* s->value[MASS_DENSITY]);
-					}
 					else
 					{
-						s->value[STEMCONST] = pow (e, -3.51+1.27*s->value[MASS_DENSITY]);
+						s->value[STEMCONST] = pow (e, -3.51 + 1.27 * s->value[MASS_DENSITY]);
 					}
 					logger(g_debug_log, "-Stem const = %f\n", s->value[STEMCONST]);
 				}

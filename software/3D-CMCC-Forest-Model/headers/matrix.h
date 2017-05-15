@@ -381,13 +381,9 @@ enum {
 	C_CWDC_TO_LITR3C,                   /* (tC/cell/day) Daily Coarse Woody Debris Carbon to Litter shielded cellulose carbon pool */
 	C_CWDC_TO_LITR4C,                   /* (tC/cell/day) Daily Coarse Woody Debris Carbon to Litter lignin carbon pool */
 
-	YEARLY_C_TO_STEM,
-	YEARLY_C_TO_CROOT,
-	YEARLY_C_TO_BRANCH,
-	YEARLY_C_TO_TREE_STEM,
-	YEARLY_C_TO_TREE_CROOT,
-	YEARLY_C_TO_TREE_BRANCH,
-
+	YEARLY_C_TO_STEM,                   /* (tC/cell/year) Annual Stem biomass for turnover */
+	YEARLY_C_TO_CROOT,                  /* (tC/cell/year) Annual Coarse root biomass for turnover */
+	YEARLY_C_TO_BRANCH,                 /* (tC/cell/year) Annual Branch biomass for turnover */
 
 	/* carbon pools in tons of tC/sizeCell */
 	LEAF_C,                             /* (tC/cell) Current Leaf carbon pool */

@@ -3,7 +3,7 @@ LIGHT_TOL               3       //4 = very shade intolerant 3 = shade intolerant
 PHENOLOGY               1.2     //PHENOLOGY 0.1 = deciduous broadleaf, 0.2 = deciduous needle leaf, 1.1 = broad leaf evergreen, 1.2 = needle leaf evergreen 
 ALPHA                   0.055   //0.050 //Canopy quantum efficiency (molC/molPAR) converted from 1.8 gCMJ for Picea abies (0.065) Seidl et al., 2005, (0.048) Rotzer et al., 2010
 EPSILONgCMJ             1.05    //Light Use Efficiency (gC/molPAR)(used if ALPHA is not available)  
-K                       0.54    //Extinction coefficient for absorption of PAR by canopy for Picea abies from Pietsch et al., 2005,  0.54 from MOllicone
+K                       0.54    //Extinction coefficient for absorption of PAR by canopy for Picea abies from Pietsch et al., 2005,  0.54 from Mollicone
 ALBEDO                  0.095   //averaged for P.abies from Breuer et al., 2003
 INT_COEFF               0.3     //precip interception coefficient for Picea abies (see Tatarinov)
 SLA_AVG1                12      //Average Specific Leaf Area m^2/KgC (juvenile) sunlit/shaded leaves for Picea abies Konopka et al., 2014, (5.9) see Johansson, T. 1999
@@ -59,8 +59,8 @@ BUD_BURST               0       //days of bud burst at the beginning of growing 
 LEAF_FALL_FRAC_GROWING  0       //proportions of the growing season of leaf fall 
 LEAF_FINEROOT_TURNOVER  0.195   //Average YEARLY leaves and fine root turnover rate for Picea abies from Pietsch et al., 2005, 0.11 for Picea abies Seidl et al., 2012
 LIVE_WOOD_TURNOVER      0.7     //Annual yearly live wood turnover rate for Picea abies from Pietsch et al., 2005
-DBHDCMAX                0.18    //Low Density for Picea abies 0.255 Seidl et al., 2012, 0.18 from Kalliovirta and Tokola 2005, 0.25 Bossel 1996, 0.20 Urban et al., 2012
-DBHDCMIN                0.12    //High Density for P. sylvestris from Ameztegui et al., 2012 0.14, 0.2 from Grote 2001, 0.14 Urban et al., 2012
+DBHDCMAX                0.20    //Low Density for Picea abies 0.255 Seidl et al., 2012, 0.18 from Kalliovirta and Tokola 2005, 0.25 Bossel 1996, 0.20 Urban et al., 2012
+DBHDCMIN                0.14    //High Density for P. sylvestris from Ameztegui et al., 2012 0.14, 0.2 from Grote 2001, 0.14 Urban et al., 2012
 SAP_A        0.0851 //           3.119   //a value for Picea abies 0.0851 deducted from  p.c. Kostner and Clausnitzer et al., 2011 CHECK IT!!!!!!!!!
 SAP_B        1.684  //           1.4544  //b value for Picea abies 1.684 deducted from p.c. Kostner and Clausnitzer et al., 2011
 SAP_LEAF                2600    //sapwood_max leaf area ratio in pipe model for Picea abies varying from 2600 to 4800 from Kostner et al., 2002 Tree Phys CHECK IT!!!!!!!!!

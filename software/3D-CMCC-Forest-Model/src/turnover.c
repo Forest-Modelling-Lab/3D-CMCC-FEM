@@ -14,7 +14,7 @@ extern logger_t* g_debug_log;
 void turnover( cell_t *const c, age_t *const a, species_t *const s, const int day, const int month, const int year )
 {
 
-#if 1 /* test */
+#if 0
 	double juv_livewood_turnover_frac;       /* juvenile fraction of turnover */
 	double mat_livewood_turnover_frac;       /* mature fraction of turnover */
 	double effective_livewood_turnover;      /* effective livewood turnover */
@@ -36,7 +36,6 @@ void turnover( cell_t *const c, age_t *const a, species_t *const s, const int da
 
 	/* note: overwrites value to those in species.txt */
 	s->value[LIVEWOOD_TURNOVER] = effective_livewood_turnover;
-
 #endif
 
 	logger(g_debug_log, "\n**TURNOVER**\n");

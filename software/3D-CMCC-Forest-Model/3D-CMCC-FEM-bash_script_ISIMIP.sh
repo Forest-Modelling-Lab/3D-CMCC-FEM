@@ -2,14 +2,14 @@
 # Developed by:
 # Alessio Collalti (alessio.collalti@cmcc.it)
 # Alessio Ribeca (alessio.ribeca@cmcc.it)
-# starting date: 5 October 2016
+# starting date: 13 November 2016
 
 MODEL="3D-CMCC-CNR FEM"
-VERSION="v.5.2.2"
+VERSION="v.5.3.2"
 PROJECT="ISIMIP"
 
 echo "***************************************************************"
-echo "* $MODEL $VERSION script for $PROJECT runs in "$OSTYPE" *"
+echo "* $MODEL $VERSION script for ISIMIP runs in "$OSTYPE" *"
 echo "***************************************************************"
 
 launch="./"
@@ -30,22 +30,13 @@ export OUTPUT_PATH=output/
 model_run=(Debug Release)
 
 #declare sites
-SITEs=(Soroe Kroof Peitz)
+SITEs=(Soroe Hyytiala All)
 
-#declare project
-PROJECTs=(ISIMIP NO_ISIMIP PAPER)
-
-#declare climate
-CLIMATEs=(Historical Scenario All)
-
-#declare historical
-HYSTs=(CLIMATE PRINCETON WATCH GSWP3 WATCH-WFDEI All)
-
-#declare GCMs
+#declare GCMs or Repeated
 GCMs=(GCM1 GCM2 GCM3 GCM4 GCM5 All)
 
 #declare RCPs
-RCPs=( rcp8p5 rcp6p0 rcp4p5 rcp2p6 All)
+RCPs=(rcp0p0 rcp2p6 rcp4p5 rcp6p0 rcp8p5 All)
 
 #declare Management
 MANs=(on off All)
@@ -120,7 +111,7 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
 				
 				folder_run=Release
 				
-				cd..
+				cd ..
 			else
 				echo "$executable executable doesn't exist (exit)"
 				exit
@@ -187,7 +178,7 @@ cd ..
 cd input
 
 #assign all available site folders to site array
-SITEs=(*)
+#SITEs=(*)
 
 cd ..
 
@@ -215,163 +206,19 @@ while :
 	fi
 	
 	echo "'$site' doesn't match with site list. please rewrite it."
-done
-
-#########################################################################################################
-cd input 
-cd "$site"
-
-#ask which project use
-echo "which project do you want to simulate?"
-match=no
-
-#log available projects
-echo 'available sites to be simulated:'
-for (( i = 0 ; i < ${#PROJECTs[@]} ; ++i )) ; do
-	echo -"${PROJECTs[i]}"
-done
-
-
-while :
-	do
-	read project
-	for (( i = 0 ; i <= ${#PROJECTs[@]} ; ++i )) ; do
-		if [ "${project,,}" = "${PROJECTs[$i],,}" ] ; then
-			match=yes
-			project=${PROJECTs[$i]}
-		fi
-	done
-	if [ "$match" == "yes" ] ; then
-		break;
-	fi
 	
-	echo "'$project' doesn't match with site list. please rewrite it."
-done
-
-cd "$project"
-
-#log available Input data
-#assign for a single site a starting year	
-#echo "$site available stand initialization year(s):"
-
-#check if is an ISIMIP project
-#if [ -d "$PROJECT" ] ; then
-#
-	#	cd "$PROJECT"
-	#	
-	#find among *.txt files occurrence for "stand" and "year" and put in array
-	#YEARs=($(find *.txt | ( grep "stand" | sed -e s/[^0-9]//g )))
-	#cd ../../..
-#else	
-	#find among *.txt files occurrence for "stand" and "year" and put in array
-	#	YEARs=($(find *.txt | ( grep "stand" | sed -e s/[^0-9]//g )))
-	#cd ../..
-#fi
-#
-#for (( i = 0 ; i < ${#YEARs[@]} ; ++i )) ; do
-	#	echo -"${YEARs[i]}"
-#done
-
-#log available year data ask which year to use
-#match=no
-#echo "which is the starting year for "$site" to simulate?"
-#while :
-	#	do
-	#read year
-	#for (( i = 0 ; i < ${#YEARs[@]} ; ++i )) ; do
-		#	if [ "${year,,}" = "${YEARs[$i],,}" ] ; then
-			#	match=yes
-			#year=${YEARs[$i]}
-		#fi
-	#done
-	#if [ "$match" == "yes" ] ; then
-		#	break;
-	#fi
-	
-	#echo "'$year' doesn't match with year list. please rewrite it."
-#done
-	
-#echo "starting year for '$site' = '$year'"
-
-#########################################################################################################
-#log available CLIMATEs
-	
-echo 'available CLIMATEs:'
-for (( i = 0 ; i < ${#CLIMATEs[@]} ; ++i )) ; do
-	echo -"${CLIMATEs[i]}"
-done
-
-echo "which CLIMATEs do you want to use for '$site'?"
-	
-	#ask which climate use
-match=no
-while :
-	do
-	read climate
-	for (( i = 0 ; i <= ${#CLIMATEs[@]} ; ++i )) ; do
-		if [ "${climate,,}" = "${CLIMATEs[$i],,}" ] ; then
-			match=yes
-			climate=${CLIMATEs[$i]}
-		fi
-	done
-	if [ "$match" == "yes" ] ; then
-		break;
-	fi
-	
-	echo "'$climate' doesn't match with climate list. please rewrite it."
-done
-
-	#for counter
-if [ "$climate" == 'All' ] ; then
-	clim_counter=${#CLIMATEs[@]} 
-	let "clim_counter-=1"
-else
-	clim_counter=1
-fi
-	#########################################################################################################
-
-	#Historical
-if [ "$climate" == "${CLIMATEs[0]}" ] ; then
-	
-	#log available Historical
-	echo 'available Historical:'
-	for (( i = 0 ; i < ${#HYSTs[@]} ; ++i )) ; do
-		echo -"${HYSTs[i]}"
-		done
-
-	echo "which Historical do you want to use for '$site'?"
-		
-	#ask which historical use
-	match=no
-	while :
-	do
-	read Hist
-	for (( i = 0 ; i <= ${#HYSTs[@]} ; ++i )) ; do
-		if [ "${Hist,,}" = "${HYSTs[$i],,}" ] ; then
-			match=yes
-			Hist=${HYSTs[$i]}
-		fi
-	done
-	if [ "$match" == "yes" ] ; then
-		break;
-	fi
-	
-	echo "'$Hist' doesn't match with climate list. please rewrite it."
 	done
 	
-	#for counter
-	if [ "$Hist" == 'All' ] ; then
-		hist_counter=${#HYSTs[@]} 
-		let "hist_counter-=1"
+		#for counter
+	if [ "$site" == 'All' ] ; then
+		site_counter=${#SITEs[@]}
+		let "site_counter-=1"
 	else
-		hist_counter=1
+		site_counter=1
 	fi
-fi
 
-	#****************************************************************************
 
-	#Scenario
-if [ "$climate" == "${CLIMATEs[1]}" ] ; then
+#########################################################################################################
 	
 	#log available GCMs
 	echo 'available GCMs:'
@@ -407,7 +254,6 @@ if [ "$climate" == "${CLIMATEs[1]}" ] ; then
 		gcm_counter=1
 	fi
 
-	#*****************************************************************
 
 	#log available RCPs
 	echo 'available RCPs:'
@@ -442,7 +288,8 @@ if [ "$climate" == "${CLIMATEs[1]}" ] ; then
 	else
 		rcp_counter=1
 	fi
-fi
+
+
 
 	#########################################################################################################
 
@@ -482,9 +329,9 @@ else
 	man_counter=1
 fi
 
-	#########################################################################################################
+#########################################################################################################
 
-	#log available CO2
+#log available CO2
 echo 'CO2 enrichment on or off?:'
 for (( i = 0 ; i < ${#CO2s[@]} ; ++i )) ; do
 	echo -"${CO2s[i]}"
@@ -510,7 +357,7 @@ echo "CO2 enrichment on or off for '$site' and '$gcm' and '$rcp' and Management 
 	fi
 	
 	echo "'$co2' doesn't match with CO2s list. please rewrite it."
-	done
+		done
 
 	#for counter
 if [ "$co2" == 'All' ] ; then
@@ -521,6 +368,7 @@ else
 fi
 
 
+
 #########################################################################################################
 #########################################################################################################
 #########################################################################################################
@@ -528,24 +376,21 @@ fi
 # compute elapsed time
 START=`date +%s%N`
 
-echo 'running for' "$site"
-
-cd ../../..
-
-function multi_run_isimip {
-	for (( b = 0 ; b < $clim_counter ; ++b )) ; do
+function CC_run {
+	for (( b = 0 ; b < $site_counter ; ++b )) ; do
 		for (( c = 0 ; c < $gcm_counter ; ++c )) ; do
 			for (( d = 0 ; d < $rcp_counter ; ++d )) ; do
 				for (( e = 0 ; e < $man_counter ; ++e )) ; do
 					for (( f = 0 ; f < $co2_counter ; ++f )) ; do
 					
-					if (( $clim_counter > 1 )) ; then climate=${CLIMATEs[$b]}; fi
-					if (( $gcm_counter > 1 )) ; then gcm=${GCMs[$c]}; fi
-					if (( $rcp_counter > 1)) ; then rcp=${RCPs[$d]}; fi				
-					if (( $man_counter > 1 )) ; then management=${MANs[$e]}; fi
-					if (( $co2_counter > 1 )) ; then co2=${CO2s[$f]}; fi
+					if (( $site_counter > 1 )) ; then site=${SITEs[$b]}; fi
+					if (( $gcm_counter  > 1 )) ; then gcm=${GCMs[$c]}; fi
+					if (( $rcp_counter  > 1 )) ; then rcp=${RCPs[$d]}; fi
+					if (( $man_counter  > 1 )) ; then management=${MANs[$e]}; fi
+					if (( $co2_counter  > 1 )) ; then co2=${CO2s[$f]}; fi
 					
 					echo "multi run"
+					echo 'running for' "$site"
 					echo 'running for' "$climate"
 					echo 'running for' "$gcm"
 					echo 'running for' "$rcp"
@@ -555,24 +400,23 @@ function multi_run_isimip {
 					#add site name to current paths
 					SITE_PATH=input/"$site"
 					OUTPUT_PATH=output/"$site"
-					STAND_PATH="$project"/"$site"_stand_"$PROJECT".txt
-					TOPO_PATH="$project"/"$site"_topo_"$PROJECT".txt
-				
-					#add management and co2 to setting path
-					SETTING_PATH="$project"/"$site"_settings_"$PROJECT"_Manag-"$management"_CO2-"$co2".txt
+					STAND_PATH=ISIMIP/"$site"_stand_ISIMIP.txt
+					TOPO_PATH=ISIMIP/"$site"_topo_ISIMIP.txt
+		
+					SETTING_PATH=ISIMIP/2A/"$site"_settings_ISIMIP_Manag-"$management"_CO2-"$co2".txt
 				
 					#add gcm and rcp to meteo co2 and soil path
-					MET_PATH="$project"/"$gcm"/"$gcm"_hist_"$rcp"_1960_2099.txt
-					SOIL_PATH="$project"/"$gcm"/"$site"_soil_"$rcp"_"$PROJECT".txt
-					CO2_PATH="$project"/CO2/CO2_"$rcp"_1950_2099.txt
+					MET_PATH=ISIMIP/2A/"$gcm"/"$gcm"_"$rcp".txt
+					SOIL_PATH=ISIMIP/"$site"_soil_ISIMIP.txt
+					CO2_PATH=ISIMIP/2A/CO2/CO2_"$rcp".txt
 									
 					#add paths and arguments to executable and run
-					$launch$executable -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH
+					$launch$executable -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH #&
 					
 					#log arguments paths
 					echo "*****************************"
 					echo "$launch$executable -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH"
-					echo "$MODEL $VERSION-$PROJECT arguments:"
+					echo "$MODEL $VERSION-ISIMIP arguments:"
 					echo "-i" $SITE_PATH
 					echo "-p" $PARAMETERIZATION_PATH
 					echo "-d" $STAND_PATH
@@ -590,11 +434,68 @@ function multi_run_isimip {
 	done
 }
 
+#NO CLIMATE CHANGE SIMULATIONS + TRANSIENT CO2
+function no_CC_CO2_run {
+	for (( b = 0 ; b < $site_counter ; ++b )) ; do
+		for (( c = 0 ; c < $gcm_counter ; ++c )) ; do
+			for (( d = 0 ; d < $rcp_counter ; ++d )) ; do
+				for (( e = 0 ; e < $man_counter ; ++e )) ; do
+					
+					if (( $site_counter > 1 )) ; then site=${SITEs[$b]}; fi
+					if (( $gcm_counter  > 1 )) ; then gcm=${GCMs[$c]}; fi
+					if (( $rcp_counter  > 1 )) ; then rcp=${RCPs[$d]}; fi
+					if (( $man_counter  > 1 )) ; then management=${MANs[$e]}; fi
+					if (( $co2_counter  > 1 )) ; then co2=${CO2s[$f]}; fi
+					
+					echo "multi run"
+					echo 'running for' "$site"
+					echo 'running for' "$climate"
+					echo 'running for' "$gcm"
+					echo 'running for' "$rcp"
+					echo 'running with management =' "$management" 
+					echo 'running with co2 =' "$co2"
+										
+					#add site name to current paths
+					SITE_PATH=input/"$site"
+					OUTPUT_PATH=output/"$site"
+					STAND_PATH=ISIMIP/"$site"_stand_ISIMIP.txt
+					TOPO_PATH=ISIMIP/"$site"_topo_ISIMIP.txt
+		
+					SETTING_PATH=ISIMIP/2A/"$site"_settings_ISIMIP_Manag-"$management"_CO2-on.txt
+				
+					#add gcm and rcp to meteo co2 and soil path
+					MET_PATH=ISIMIP/2A/"$gcm"/"$gcm"_rcp0p0.txt
+					SOIL_PATH=ISIMIP/"$site"_soil_ISIMIP.txt
+					CO2_PATH=ISIMIP/2A/CO2/CO2_"$rcp".txt
+									
+					#add paths and arguments to executable and run
+					$launch$executable -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH #&
+					
+					#log arguments paths
+					echo "*****************************"
+					echo "$launch$executable -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH"
+					echo "$MODEL $VERSION-ISIMIP arguments:"
+					echo "-i" $SITE_PATH
+					echo "-p" $PARAMETERIZATION_PATH
+					echo "-d" $STAND_PATH
+					echo "-s" $SOIL_PATH
+					echo "-t" $TOPO_PATH
+					echo "-m" $MET_PATH
+					echo "-k" $CO2_PATH
+					echo "-c" $SETTING_PATH
+					echo "-o" $OUTPUT_PATH
+					echo "*****************************"
+				done
+			done
+		done
+	done	
+}
 
-#launch multi run
-multi_run_isimip
+#simulation with climate change
+CC_run
 
-
+#simulation with NO climate change (rcp0.0) but transient [CO2]
+#no_CC_CO2_run
 
 #delete copied executable from current directory
 echo "...removing executable from project directory"
@@ -610,8 +511,11 @@ fi
 #log elapsed time
 #if [[ "$OSTYPE" == "linux-gnu" ]]; then
 END=`date +%s%N`
-ELAPSED=`echo "scale=2; ($END - $START) / 1000000000" | bc`
-echo "elapsed time in bash script = $ELAPSED secs"
+ELAPSED=`echo "scale=4; ($END - $START) / 1000000000" | bc`
+ELAPSED_min=`echo "scale=4; $ELAPSED / 60" | bc`
+ELAPSED_hou=`echo "scale=4; $ELAPSED / 3600" | bc`
+echo "elapsed time in bash script:" $ELAPSED "secs" $ELAPSED_min "min" $ELAPSED_hou "hours"
+
 #fi
 
 echo "script finished!"
