@@ -17,6 +17,8 @@
 
 extern logger_t* g_debug_log;
 
+#define TEST_RAD 0 //0 = old version; 1 = new version
+
 void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, const int dbh, const int age, const int species, const meteo_daily_t *const meteo_daily,
 		double Light_abs_frac, double Light_abs_frac_sun, double Light_abs_frac_shade, double Light_refl_par_frac, double Light_refl_par_frac_sun, double Light_refl_par_frac_shade,
 		double Light_refl_sw_frac, double Light_refl_sw_frac_sun, double Light_refl_sw_frac_shade)
@@ -48,13 +50,19 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 
 	/* light reflection, absorption and transmission */
 	logger(g_debug_log,"\n*Light reflection, absorption and transmission*\n");
+	logger(g_debug_log,"DAILY_CANOPY_COVER_EXP = %f\n", s->value[DAILY_CANOPY_COVER_EXP]);
+	logger(g_debug_log,"CANOPY_COVER_EXP       = %f\n", s->value[CANOPY_COVER_EXP]);
 
 	/***********************************************************************************************/
 	/* PAR computation (molPAR/m2 covered/day) */
 	logger(g_debug_log,"\n-PAR-\n");
 
 	/** available par **/
+#if TEST_RAD
 	s->value[PAR]             = meteo_daily->par  * s->value[DAILY_CANOPY_COVER_EXP];
+#else
+	s->value[PAR]             = meteo_daily->par  * s->value[CANOPY_COVER_EXP];
+#endif
 
 	/** sun leaves **/
 	s->value[PAR_REFL_SUN]    = s->value[PAR]     * Light_refl_par_frac_sun;
@@ -82,6 +90,8 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 	s->value[PAR_REFL]         = s->value[PAR_REFL_SUN] + s->value[PAR_REFL_SHADE];
 	s->value[TRANSM_PAR]       = s->value[TRANSM_PAR_SHADE];
 
+	logger(g_debug_log,"APAR = %f par/m2\n", s->value[APAR]);
+
 	s->value[YEARLY_APAR]     += s->value[APAR];
 
 	/* check */
@@ -96,7 +106,11 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 	logger(g_debug_log,"\n-Short Wave-\n");
 
 	/** available Short Wave **/
+#if TEST_RAD
 	s->value[SW_RAD]              = meteo_daily->sw_downward_W * s->value[DAILY_CANOPY_COVER_EXP];
+#else
+	s->value[SW_RAD]              = meteo_daily->sw_downward_W * s->value[CANOPY_COVER_EXP];
+#endif
 
 	/** sun leaves **/
 	s->value[SW_RAD_REFL_SUN]     = s->value[SW_RAD]     * Light_refl_sw_frac_sun;
@@ -124,6 +138,8 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 	s->value[SW_RAD_REFL]         = s->value[SW_RAD_REFL_SUN] + s->value[SW_RAD_REFL_SHADE];
 	s->value[SW_RAD_TRANSM]       = s->value[SW_RAD_TRANSM_SHADE];
 
+	logger(g_debug_log,"SW_RAD_ABS = %f W/m2\n", s->value[SW_RAD_ABS]);
+
 	/* check */
 	CHECK_CONDITION(s->value[SW_RAD_ABS],    <, ZERO );
 	CHECK_CONDITION(s->value[SW_RAD_TRANSM], <, ZERO);
@@ -135,7 +151,11 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 	logger(g_debug_log,"\n-PPFD-\n");
 
 	/** available PPFD **/
+#if TEST_RAD
 	s->value[PPFD]              = meteo_daily->ppfd * s->value[DAILY_CANOPY_COVER_EXP];
+#else
+	s->value[PPFD]              = meteo_daily->ppfd * s->value[CANOPY_COVER_EXP];
+#endif
 
 	/** sun leaves **/
 	s->value[PPFD_REFL_SUN]     = s->value[PPFD] * Light_refl_par_frac_sun;
@@ -162,6 +182,8 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 	s->value[PPFD_ABS]          = s->value[PPFD_ABS_SUN]  + s->value[PPFD_ABS_SHADE];
 	s->value[PPFD_REFL]         = s->value[PPFD_REFL_SUN] + s->value[PPFD_REFL_SHADE];
 	s->value[PPFD_TRANSM]       = s->value[PPFD_TRANSM_SHADE];
+
+	logger(g_debug_log,"PPFD_ABS = %f ppfd/m2\n", s->value[PPFD_ABS]);
 
 	/* check */
 	CHECK_CONDITION(s->value[PPFD_ABS],    < , ZERO );
@@ -227,7 +249,7 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 	logger(g_debug_log, "\n**SHORT WAVE BAND RADIATION**\n");
 
 	/***********************************************************************************************************/
-#if 1
+#if TEST_RAD
 	/* SHORT WAVE RADIATION FRACTIONS */
 	/* compute fractions of light intercepted, transmitted and reflected from the canopy */
 	/* fraction of light transmitted through the canopy */
@@ -265,10 +287,9 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 	 * we currently use approach for homogeneous canopies that improves representation when canopy is not closed
 	 */
 
-	Light_trasm_frac       = exp(- s->value[K] * (s->value[LAI_PROJ]/s->value[DAILY_CANOPY_COVER_EXP]));
-	Light_trasm_frac_sun   = exp(- s->value[K] * (s->value[LAI_SUN_PROJ]/s->value[DAILY_CANOPY_COVER_EXP]));
-	Light_trasm_frac_shade = exp(- s->value[K] * (s->value[LAI_SHADE_PROJ]/s->value[DAILY_CANOPY_COVER_EXP]));
-
+	Light_trasm_frac       = exp(- s->value[K] * s->value[LAI_PROJ]);
+	Light_trasm_frac_sun   = exp(- s->value[K] * s->value[LAI_SUN_PROJ]);
+	Light_trasm_frac_shade = exp(- s->value[K] * s->value[LAI_SHADE_PROJ]);
 
 	/* fraction of light absorbed by the canopy */
 	Light_abs_frac       = 1. - Light_trasm_frac;
@@ -282,21 +303,29 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 		PAR is reflected than sw_radiation (Jones 1992)*/
 
 	Light_refl_sw_frac        = s->value[ALBEDO];
-	Light_refl_sw_frac_sun    = s->value[ALBEDO] * ( 1 - exp ( - s->value[K] * (s->value[LAI_SUN_PROJ]/s->value[DAILY_CANOPY_COVER_EXP])));
-	Light_refl_sw_frac_shade  = s->value[ALBEDO] * ( 1 - exp ( - s->value[K] * (s->value[LAI_SHADE_PROJ]/s->value[DAILY_CANOPY_COVER_EXP])));
+	Light_refl_sw_frac_sun    = s->value[ALBEDO] * ( 1 - exp ( - s->value[K] * s->value[LAI_SUN_PROJ]));
+	Light_refl_sw_frac_shade  = s->value[ALBEDO] * ( 1 - exp ( - s->value[K] * s->value[LAI_SHADE_PROJ]));
 	Light_refl_par_frac       = (s->value[ALBEDO]/3.);
-	Light_refl_par_frac_sun   = (s->value[ALBEDO]/3.) * ( 1 - exp ( - s->value[K] * (s->value[LAI_SUN_PROJ]/s->value[DAILY_CANOPY_COVER_EXP])));
-	Light_refl_par_frac_shade = (s->value[ALBEDO]/3.) * ( 1 - exp ( - s->value[K] * (s->value[LAI_SHADE_PROJ]/s->value[DAILY_CANOPY_COVER_EXP])));
+	Light_refl_par_frac_sun   = (s->value[ALBEDO]/3.) * ( 1 - exp ( - s->value[K] * s->value[LAI_SUN_PROJ]));
+	Light_refl_par_frac_shade = (s->value[ALBEDO]/3.) * ( 1 - exp ( - s->value[K] * s->value[LAI_SHADE_PROJ]));
 
 #endif
 
-	logger(g_debug_log, "Light_trasm_frac       = %f\n", Light_trasm_frac);
-	logger(g_debug_log, "Light_trasm_frac_sun   = %f\n", Light_trasm_frac_sun);
-	logger(g_debug_log, "Light_trasm_frac_shade = %f\n", Light_trasm_frac_shade);
+	logger(g_debug_log, "Light_trasm_frac          = %f\n", Light_trasm_frac);
+	logger(g_debug_log, "Light_trasm_frac_sun      = %f\n", Light_trasm_frac_sun);
+	logger(g_debug_log, "Light_trasm_frac_shade    = %f\n", Light_trasm_frac_shade);
 
-	logger(g_debug_log, "Light_abs_frac       = %f\n", Light_abs_frac);
-	logger(g_debug_log, "Light_abs_frac_sun   = %f\n", Light_abs_frac_sun);
-	logger(g_debug_log, "Light_abs_frac_shade = %f\n", Light_abs_frac_shade);
+	logger(g_debug_log, "Light_abs_frac            = %f\n", Light_abs_frac);
+	logger(g_debug_log, "Light_abs_frac_sun        = %f\n", Light_abs_frac_sun);
+	logger(g_debug_log, "Light_abs_frac_shade      = %f\n", Light_abs_frac_shade);
+
+	logger(g_debug_log, "Light_refl_sw_frac        = %f\n", Light_refl_sw_frac);
+	logger(g_debug_log, "Light_refl_sw_frac_sun    = %f\n", Light_refl_sw_frac_sun);
+	logger(g_debug_log, "Light_refl_sw_frac_shade  = %f\n", Light_refl_sw_frac_shade);
+
+	logger(g_debug_log, "Light_refl_par_frac       = %f\n", Light_refl_par_frac);
+	logger(g_debug_log, "Light_refl_par_frac_sun   = %f\n", Light_refl_par_frac_sun);
+	logger(g_debug_log, "Light_refl_par_frac_shade = %f\n", Light_refl_par_frac_shade);
 
 	//fixme set that if gapcover is bigger then 0.5 albedo should be considered also in dominated layer!!!!
 	//fixme following MAESPA (Duursma et al.,) and from Campbell & Norman (2000, p. 259) dominated layers should have just shaded leaves

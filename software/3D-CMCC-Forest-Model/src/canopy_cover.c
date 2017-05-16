@@ -122,6 +122,9 @@ void canopy_cover (cell_t *const c, const int height, const int dbh, const int a
 	s->value[CANOPY_COVER_PROJ] = s->value[CROWN_AREA_PROJ] * s->counter[N_TREE] / g_settings->sizeCell;
 	logger(g_debug_log, "-Canopy Projected Cover  = %f %%\n", s->value[CANOPY_COVER_PROJ] * 100.);
 
+	/* check */
+	CHECK_CONDITION( s->value[CANOPY_COVER_PROJ] ,  > , g_settings->max_layer_cover + eps );
+
 //	/* (MODIFIED) formulation based on canopy cover */
 //	/* note: this is valid ONLY for cylinder shape crowns */
 //
@@ -138,6 +141,10 @@ void canopy_cover (cell_t *const c, const int height, const int dbh, const int a
 
 	/* Canopy cover able to absorb light (integrated all over all viewing angles) */
 	s->value[CANOPY_COVER_EXP] = (s->value[CROWN_AREA_EXP] * s->counter[N_TREE]) / g_settings->sizeCell ;
-	logger(g_debug_log, "-Canopy Cover Exposed   = %f %%\n", s->value[CANOPY_COVER_EXP]  * 100.);getchar();
+	logger(g_debug_log, "-Canopy Exposed Cover    = %f %%\n", s->value[CANOPY_COVER_EXP]  * 100.);
+
+	//new test
+	if (s->value[CANOPY_COVER_EXP] > 1)s->value[CANOPY_COVER_EXP] = 1.;
+
 
 }

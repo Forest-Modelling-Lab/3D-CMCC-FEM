@@ -75,12 +75,12 @@ for (protocol in protocol_list) {
                                               "-i"," ", "input/", site, " ",
                                               "-p"," ", "input/parameterization", " ",
                                               "-o"," ", "output/",output_folder,"-", version, "-", site,"-",protocol," ",
-                                              "-d"," ", "PAPER/", site,"_stand_ISIMIP.txt", " ",
-                                              "-m"," ", "PAPER/", protocol, "/GCM", esm,"/", "GCM", esm,"_", "rcp", rcp, ".txt", " ",
-                                              "-s"," ", "PAPER/", site,"_soil_ISIMIP.txt", " ",
-                                              "-t"," ", "PAPER/", site,"_topo_ISIMIP.txt", " ",
-                                              "-c"," ", "PAPER/", protocol, "/", site,"_settings_ISIMIP_Manag-", man, "_CO2-", co2,".txt", " ",
-                                              "-k"," ", "PAPER/", protocol,"/CO2/CO2_", "rcp",rcp, ".txt"
+                                              "-d"," ", "ISIMIP/", site,"_stand_ISIMIP.txt", " ",
+                                              "-m"," ", "ISIMIP/", protocol, "/GCM", esm,"/", "GCM", esm,"_", "rcp", rcp, ".txt", " ",
+                                              "-s"," ", "ISIMIP/", site,"_soil_ISIMIP.txt", " ",
+                                              "-t"," ", "ISIMIP/", site,"_topo_ISIMIP.txt", " ",
+                                              "-c"," ", "ISIMIP/", protocol, "/", site,"_settings_ISIMIP_Manag-", man, "_CO2-", co2,".txt", " ",
+                                              "-k"," ", "ISIMIP/", protocol,"/CO2/CO2_", "rcp",rcp, ".txt"
                         )
                         # launch execution
                         system(systemCall)

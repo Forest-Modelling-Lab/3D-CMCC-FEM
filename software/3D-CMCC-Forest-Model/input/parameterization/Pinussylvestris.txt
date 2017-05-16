@@ -1,10 +1,10 @@
 ﻿//Pinus sylvestris parameterization file
 LIGHT_TOL   3                 //4 = very shade intolerant 3 = shade intolerant 2 = shade tolerant 1 = very shade tolerant
 PHENOLOGY   1.2               //PHENOLOGY 0.1 = deciduous broadleaf, 0.2 = deciduous needle leaf, 1.1 = broad leaf evergreen, 1.2 = needle leaf evergreen 
-ALPHA   0.05 //0.055        //Canopy quantum efficiency (molC/molPAR) for P. sylvestris Landsberg et al., 2005, 0.0545 Makela et al., 2006, 0.05 Xenakis et al., 2007
+ALPHA   0.055                 //Canopy quantum efficiency (molC/molPAR) for P. sylvestris Landsberg et al., 2005, 0.0545 Makela et al., 2006, 0.05 Xenakis et al., 2007
 EPSILONgCMJ -9999             //Light Use Efficiency (gC/molPAR)(used if ALPHA is not available)  
-K   0.495                     //Extinction coefficient for absorption of PAR by canopy for P. sylvestris Landsberg et al., 2005 or 0.51 from Pietsch, 0.495 Tatarinov, 
-ALBEDO  0.15                  //averaged for P. sylvestris 0.15 (or 0.12) Otto et al., 2014 BGS, 0.093 from Breuer et al., 2003
+K   0.51                      //Extinction coefficient for absorption of PAR by canopy for P. sylvestris Landsberg et al., 2005 or 0.51 from Pietsch, 0.495 Tatarinov, 
+ALBEDO  0.10                  //averaged for P. sylvestris 0.15 (or 0.12) Otto et al., 2014 BGS, 0.093 from Breuer et al., 2003
 INT_COEFF  0.3                //precip interception coefficient for P. sylvestris from Pietsch
 SLA_AVG0  14.7                //Average Specific Leaf Area m^2/KgC (juvenile) sunlit/shaded leaves for P. sylvestris 14.7 Van Nevel 2015, 9.0 Landsberg et al., 2005, 13.0 from Pietsch 9.5 Tatarinov, 5.50 Mencuccini and Bonosi 2001
 SLA_AVG1  7.46                //Average Specific Leaf Area m^2/KgC (mature) sunlit/shaded leaves for P. sylvestris Mencuccini & Bonosi 2001, Landsberg et al., 2005, 5.5 Mencuccini Bonosi 2003, 13.0 from Pietsch 9.5 Tatarinov, 5.50 Mencuccini and Bonosi 2001
@@ -19,11 +19,11 @@ RHO1  0.39                    //Maximum Basic Density for young Trees t/m^3 for 
 TRHO    4                     //Age at which rho = (RHO0 + RHO1 )/2
 FORM_FACTOR 0.435             //Form factor Seidl et al., 2012 
 COEFFCOND   0.05              //Define stomatal responsee to VPD in mbar for P. sylvestris Landsberg et al., 2005
-BLCOND  0.009                 //Canopy Boundary Layer conductance for P. sylvestris 0.009 from Pietsch, 0.01 for Tatarinov
-MAXCOND 0.0025                //Maximum Stomatal Conductance in m/sec for P. sylvestris 0.001 from Pietsch, 0.0025 for Tatarinov, 0.005 Makela et al., 2006
-CUTCOND 0.00006               //Cuticul conductance in m/sec for P. sylvestris 0.00001 from Pietsch  0,00006 for Tatarinov, 0.000075 Makela et al., 2006
+BLCOND  0.01                  //Canopy Boundary Layer conductance for P. sylvestris 0.009 from Pietsch, 0.01 for Tatarinov
+MAXCOND 0.005                 //Maximum Stomatal Conductance in m/sec for P. sylvestris 0.001 from Pietsch, 0.0025 for Tatarinov, 0.005 Makela et al., 2006
+CUTCOND 0.000075               //Cuticul conductance in m/sec for P. sylvestris 0.00001 from Pietsch  0,00006 for Tatarinov, 0.000075 Makela et al., 2006
 MAXAGE  300 //500             //Determines rate of "physiological decline" of forest 500 for P. sylvestris Landsberg et al., 2005
-RAGE    0.75                  //Relative Age to give fAGE = 0.5 for P. sylvestris 0.95 Landsberg et al., 2005
+RAGE    0.95                  //Relative Age to give fAGE = 0.5 for P. sylvestris 0.95 Landsberg et al., 2005
 NAGE    4                     //Power of relative Age in function for P. sylvestris Landsberg et al., 2005
 GROWTHTMIN  -2                //Minimum temperature for growth for P. sylvestris 0 Leverenz et al., 1987 -2 Landsberg et al., 2005, -5.93 Makela et al., 2006
 GROWTHTMAX  30                //Maximum temperature for growth for P. sylvestris 30 Leverenz et al., 1987;  25 Landsberg et al., 2005
@@ -63,7 +63,7 @@ DBHDCMAX  0.24                //Low Density for P. sylvestris deducted from Raut
 DBHDCMIN  0.14                //High Density for P. sylvestris deducted from Rautianen and Stenberg 2005 from Ameztegui et al., 2012 0.14, 0.15 from Kalliovirta and Tokola 2005
 SAP_A   0.974                 //a value for Pinus sylvestris 0.7731 from Xiao & Ceulemans 2004, 3.119 from Verbeek et al., 2007, 0.974 summing up Xiao + Veerbeck 
 SAP_B   1.7979                //b value for Pinus sylvestris 1.9174 from Xiao & Ceulemans 2004 1.4544 from Verbeek et al., 2007, 1.7979 summing up Xiao + Veerbeck
-SAP_LEAF    1600              //sapwood_max leaf area ratio in pipe model for Pinus sylvestris 1480 Mencuccini Bonosi, 2001; 1020 Makela et al., 1995; from 1300 to 1800 Veerbeck et al., 2007
+SAP_LEAF    1800              //sapwood_max leaf area ratio in pipe model for Pinus sylvestris 1480 Mencuccini Bonosi, 2001; 1020 Makela et al., 1995; from 1300 to 1800 Veerbeck et al., 2007
 SAP_WRES    0.05              //Sapwood-Reserve biomass ratio used if no Wres data are available 0.11 for deciduous 0.05 for evergreen see Schwalm and Ek, 2004 Ecological Modelling
 STEMCONST_P 0.127             //a parameter for allometric equation 0.06552  E. Cienciala et al., 2006 For P. sylvestrisM; from Yuste et al 2005 0.1227, 0.084 from Xiao and Ceulemans, 0.7 Seidl et al., 2012, 0.027 Landsberg and Sands, 0.046 Landsberg et al., 2005
 STEMPOWER_P 2.30              //b parameter for allometric equation 2.50626 E. Cienciala et al., 2006 For P. sylvestris; from Yuste et al 2005 2.3272, 1.985 from Xiao and Ceulemans, 3.0 Seidl et al., 2012, 2.86 Landsberg and Sands, 2.6496 Landsberg et al., 2005

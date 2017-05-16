@@ -57,7 +57,7 @@ void crown_allometry (cell_t *const c, const int height, const int dbh, const in
 
 	/* compute overall single tree crown area */
 
-#if 1 //old
+#if 0 //old
 	switch (crown_form_factor)
 	{
 	case 0: /* cylinder */

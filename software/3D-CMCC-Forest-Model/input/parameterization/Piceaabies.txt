@@ -63,7 +63,7 @@ DBHDCMAX                0.24    //Low Density for Picea abies 0.255 Seidl et al.
 DBHDCMIN                0.14    //High Density for P. sylvestris from Ameztegui et al., 2012 0.14, 0.2 from Grote 2001, 0.14 Urban et al., 2012
 SAP_A        0.0851 //           3.119   //a value for Picea abies 0.0851 deducted from  p.c. Kostner and Clausnitzer et al., 2011 CHECK IT!!!!!!!!!
 SAP_B        1.684  //           1.4544  //b value for Picea abies 1.684 deducted from p.c. Kostner and Clausnitzer et al., 2011
-SAP_LEAF                2600    //sapwood_max leaf area ratio in pipe model for Picea abies varying from 2600 to 4800 from Kostner et al., 2002 Tree Phys CHECK IT!!!!!!!!!
+SAP_LEAF                3500    //sapwood_max leaf area ratio in pipe model for Picea abies varying from 2600 to 4800 from Kostner et al., 2002 Tree Phys CHECK IT!!!!!!!!!
 SAP_WRES                0.05    //Sapwood-Reserve biomass ratio used if no Wres data are available 0.11 for deciduous 0.05 for evergreen see Schwalm and Ek, 2004 Ecological Modelling
 STEMCONST_P             0.127   //a parameter for allometric equation for P. abies from Siedl et al., 2012, 0.04 for P. abies from Pokorny & Tomaskova 2007
 STEMPOWER_P             2.3     //b parameter for allometric equation for P. abies from Siedl et al., 2012, 2.4696 for P. abies from Pokorny & Tomaskova 2007

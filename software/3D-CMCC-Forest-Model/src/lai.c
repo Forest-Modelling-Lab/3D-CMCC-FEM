@@ -42,7 +42,9 @@ void daily_lai (species_t *const s)
 
 	/* convert tC/cell to KgC/m^2 */
 	leaf_C = s->value[LEAF_C] * 1000.;
-	logger(g_debug_log, "Leaf Biomass = %f KgC/cell\n", leaf_C);
+	logger(g_debug_log, "Leaf Biomass      = %f KgC/cell\n", leaf_C);
+	logger(g_debug_log, "SLA_AVG           = %f kgC/m2\n",   s->value[SLA_AVG]);
+	logger(g_debug_log, "CANOPY_COVER_PROJ = %f \n",         s->value[CANOPY_COVER_PROJ]);
 
 	/* compute total LAI for Projected Area */
 	s->value[LAI_PROJ]       = ( leaf_C * s->value[SLA_AVG] ) / ( s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell );
