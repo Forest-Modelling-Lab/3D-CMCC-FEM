@@ -227,7 +227,7 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 	logger(g_debug_log, "\n**SHORT WAVE BAND RADIATION**\n");
 
 	/***********************************************************************************************************/
-
+#if 1
 	/* SHORT WAVE RADIATION FRACTIONS */
 	/* compute fractions of light intercepted, transmitted and reflected from the canopy */
 	/* fraction of light transmitted through the canopy */
@@ -281,15 +281,77 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 	}
 	else
 	{
-		Light_refl_sw_frac        = s->value[ALBEDO] * s->value[LAI_PROJ];
+		Light_refl_sw_frac        = s->value[ALBEDO] * s->value[LAI_EXP];
 		Light_refl_sw_frac_sun    = s->value[ALBEDO] * ( 1 - exp ( - s->value[K] * s->value[LAI_SUN_EXP] ) );
 		Light_refl_sw_frac_shade  = s->value[ALBEDO] * ( 1 - exp ( - s->value[K] * s->value[LAI_SHADE_EXP] ) );
 		Light_refl_par_frac       = (s->value[ALBEDO]/3.) * s->value[LAI_PROJ];
 		Light_refl_par_frac_sun   = (s->value[ALBEDO]/3.) * ( 1 - exp ( - s->value[K] * s->value[LAI_SUN_EXP] ) );
 		Light_refl_par_frac_shade = (s->value[ALBEDO]/3.) * ( 1 - exp ( - s->value[K] * s->value[LAI_SHADE_EXP] ) );
 	}
+#else
+	/* SHORT WAVE RADIATION FRACTIONS */
+	/* compute fractions of light intercepted, transmitted and reflected from the canopy */
+	/* fraction of light transmitted through the canopy */
+	/* note: 21 October 2016, following Duursma and Makela, "LIGHT INTERCEPTION OF NON-HOMOGENEOUS CANOPIES"
+	 * Tree Physiology Vol. 27, 2007; exp(- s->value[K] * (s->value[LAI]/leaf_cell_cover_eff))
+	 * and Forrester et al, Forest Ecosystems,2014
+	 * we currently use approach for homogeneous canopies that improves representation when canopy is not closed
+	 */
 
-	//fixme set that if gapcover is bigger then 0.5 albedo should be considered also in dominated layer!!!!
+	if ( s->value[LAI_PROJ] )
+	{
+		Light_trasm_frac       = exp(- s->value[K] * s->value[LAI_PROJ]);
+		Light_trasm_frac_sun   = exp(- s->value[K] * s->value[LAI_SUN_PROJ]);
+		Light_trasm_frac_shade = exp(- s->value[K] * s->value[LAI_SHADE_PROJ]);
+	}
+	else
+	{
+		Light_trasm_frac       = 1.;
+		Light_trasm_frac_sun   = 1.;
+		Light_trasm_frac_shade = 1.;
+	}
+
+	/* fraction of light absorbed by the canopy */
+	Light_abs_frac       = 1. - Light_trasm_frac;
+	Light_abs_frac_sun   = 1. - Light_trasm_frac_sun;
+	Light_abs_frac_shade = 1. - Light_trasm_frac_shade;
+
+	/* fraction of light reflected by the canopy */
+	/* for Short Wave radiation and PAR */
+	/* following BIOME albedo for PAR is 1/3 of albedo. the absorbed PAR is
+		calculated similarly to sw except that albedo is 1/3 for PAR because less
+		PAR is reflected than sw_radiation (Jones 1992)*/
+
+	if( s->value[LAI_PROJ] >= 1. )
+	{
+		Light_refl_sw_frac        = s->value[ALBEDO];
+		Light_refl_sw_frac_sun    = s->value[ALBEDO] * ( 1 - exp ( - s->value[K] * s->value[LAI_SUN_PROJ]));
+		Light_refl_sw_frac_shade  = s->value[ALBEDO] * ( 1 - exp ( - s->value[K] * s->value[LAI_SHADE_PROJ]));
+		Light_refl_par_frac       = (s->value[ALBEDO]/3.);
+		Light_refl_par_frac_sun   = (s->value[ALBEDO]/3.) * ( 1 - exp ( - s->value[K] * s->value[LAI_SUN_PROJ] ) );
+		Light_refl_par_frac_shade = (s->value[ALBEDO]/3.) * ( 1 - exp ( - s->value[K] * s->value[LAI_SHADE_PROJ] ) );
+	}
+	else if ( !s->value[LAI_PROJ])
+	{
+		Light_refl_sw_frac        = 0.;
+		Light_refl_sw_frac_sun    = 0.;
+		Light_refl_sw_frac_shade  = 0.;
+		Light_refl_par_frac       = 0.;
+		Light_refl_par_frac_sun   = 0.;
+		Light_refl_par_frac_shade = 0.;
+	}
+	else
+	{
+		Light_refl_sw_frac        = s->value[ALBEDO] * s->value[LAI_PROJ];
+		Light_refl_sw_frac_sun    = s->value[ALBEDO] * ( 1 - exp ( - s->value[K] * s->value[LAI_SUN_PROJ] ) );
+		Light_refl_sw_frac_shade  = s->value[ALBEDO] * ( 1 - exp ( - s->value[K] * s->value[LAI_SHADE_PROJ] ) );
+		Light_refl_par_frac       = (s->value[ALBEDO]/3.) * s->value[LAI_PROJ];
+		Light_refl_par_frac_sun   = (s->value[ALBEDO]/3.) * ( 1 - exp ( - s->value[K] * s->value[LAI_SUN_PROJ] ) );
+		Light_refl_par_frac_shade = (s->value[ALBEDO]/3.) * ( 1 - exp ( - s->value[K] * s->value[LAI_SHADE_PROJ] ) );
+	}
+#endif
+
+//fixme set that if gapcover is bigger then 0.5 albedo should be considered also in dominated layer!!!!
 	//fixme following MAESPA (Duursma et al.,) and from Campbell & Norman (2000, p. 259) dominated layers should have just shaded leaves
 
 	/* RADIATION */

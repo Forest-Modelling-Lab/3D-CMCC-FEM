@@ -31,22 +31,22 @@ void crown_allometry (cell_t *const c, const int height, const int dbh, const in
 
 	/* Crown Projected Diameter using DBH-DC (at zenith angle) */
 	s->value[CROWN_DIAMETER] = d->value * s->value[DBHDC_EFF];
-	logger(g_debug_log, "-Crown Projected Diameter = %g m\n", s->value[CROWN_DIAMETER]);
+	logger(g_debug_log, "-Crown Projected Diameter = %f m\n", s->value[CROWN_DIAMETER]);
 
 	/* Crown Projected Radius using DBH-DC (at zenith angle) */
 	s->value[CROWN_RADIUS] = s->value[CROWN_DIAMETER] / 2.;
-	logger(g_debug_log, "-Crown Projected Radius = %g m\n", s->value[CROWN_RADIUS]);
+	logger(g_debug_log, "-Crown Projected Radius = %f m\n", s->value[CROWN_RADIUS]);
 
 	/* Crown Projected Area using DBH-DC (at zenith angle) */
 	s->value[CROWN_AREA_PROJ] = ( Pi / 4) * pow (s->value[CROWN_DIAMETER], 2 );
-	logger(g_debug_log, "-Crown Projected Area = %g m2\n", s->value[CROWN_AREA_PROJ]);
+	logger(g_debug_log, "-Crown Projected Area = %f m2\n", s->value[CROWN_AREA_PROJ]);
 
 	/* Crown Height */
 	/* it mainly follows SORTIE-ND approach in the form of x = a*tree height^c */
 	/* note when b = 1 the function is prettily a linear function */
 
 	s->value[CROWN_HEIGHT] = s->value[CROWN_A] * pow(h->value, s->value[CROWN_B]);
-	logger(g_debug_log, "-Crown Height = %g m\n", s->value[CROWN_HEIGHT]);
+	logger(g_debug_log, "-Crown Height = %f m\n", s->value[CROWN_HEIGHT]);
 
 	/* cast s->value[CROWN_FORM_FACTOR] to integer */
 	crown_form_factor = (int)s->value[CROWN_FORM_FACTOR];
@@ -57,35 +57,36 @@ void crown_allometry (cell_t *const c, const int height, const int dbh, const in
 	{
 	case 0: /* cylinder */
 		logger(g_debug_log, "-Crown form factor = cylinder\n");
+
+		s->value[CROWN_AREA]     = (2 * Pi * s->value[CROWN_RADIUS] * s->value[CROWN_HEIGHT]);
 		s->value[CROWN_AREA_EXP] = s->value[CROWN_AREA_PROJ] + ((s->value[CROWN_DIAMETER] * Pi) * s->value[CROWN_HEIGHT]);
-		s->value[CROWN_VOLUME] = (s->value[CROWN_AREA_PROJ] * s->value[CROWN_HEIGHT]) / 3.;
+		s->value[CROWN_VOLUME]   = (s->value[CROWN_AREA_PROJ] * s->value[CROWN_HEIGHT]) / 3.;
 		break;
 
 	case 1: /* cone */
 		logger(g_debug_log, "-Crown form factor = cone\n");
+
+		s->value[CROWN_AREA]     = s->value[CROWN_AREA_PROJ] + (Pi * s->value[CROWN_RADIUS] * (sqrt(pow(s->value[CROWN_RADIUS],2.) + pow(s->value[CROWN_HEIGHT],2.))));
 		s->value[CROWN_AREA_EXP] = Pi * s->value[CROWN_RADIUS] * sqrt(pow(s->value[CROWN_RADIUS],2.) + pow(s->value[CROWN_HEIGHT],2.));
-		s->value[CROWN_VOLUME] = (s->value[CROWN_AREA_PROJ] * s->value[CROWN_HEIGHT])/3.;
+		s->value[CROWN_VOLUME]   = (s->value[CROWN_AREA_PROJ] * s->value[CROWN_HEIGHT])/3.;
 		break;
 
 	case 2: /* sphere */
 		logger(g_debug_log, "-Crown form factor = sphere\n");
-		s->value[CROWN_AREA_EXP] = s->value[CROWN_AREA_PROJ] * 4.;
-		s->value[CROWN_VOLUME] = 4. / 3. * Pi * pow (s->value[CROWN_RADIUS],3.);
-		break;
 
-	case 3: /* ellipsoid (bi-axial) */
-		logger(g_debug_log, "-Crown form factor = ellipsoid\n");
-		s->value[CROWN_AREA_EXP] = 2. * Pi * (s->value[CROWN_RADIUS] * s->value[CROWN_HEIGHT]);
-		s->value[CROWN_VOLUME] = 4. / 3. * Pi * pow (s->value[CROWN_RADIUS],2.) * s->value[CROWN_HEIGHT];
+		s->value[CROWN_AREA]     = ( s->value[CROWN_AREA_PROJ] * 4 );
+		s->value[CROWN_AREA_EXP] = ( s->value[CROWN_AREA_PROJ] * 4. ) / 2 ;
+		s->value[CROWN_VOLUME]   = 4. / 3. * Pi * pow (s->value[CROWN_RADIUS],3.);
 		break;
 	}
-	logger(g_debug_log, "-Crown Surface Area = %g m2\n", s->value[CROWN_AREA_EXP]);
-	logger(g_debug_log, "-Crown Volume = %g m3\n", s->value[CROWN_VOLUME]);
+	logger(g_debug_log, "-Crown Area       = %f m2\n", s->value[CROWN_AREA]);
+	logger(g_debug_log, "-Crown Area (exp) = %f m2\n", s->value[CROWN_AREA_EXP]);
+	logger(g_debug_log, "-Crown Volume     = %f m3\n", s->value[CROWN_VOLUME]);
 
 	/* Crown density (NOT USED) */
 	/* following Duursma et al., 2012 */
 	//s->value[CROWN_DENSITY] = (s->value[ALL_LAI_PROJ] / (double)s->counter[N_TREE]) / s->value[CROWN_AREA_EXP];
-	//logger(g_debug_log, "-Crown Density = %g 1/m-1\n", s->value[CROWN_DENSITY]);
+	//logger(g_debug_log, "-Crown Density = %f 1/m-1\n", s->value[CROWN_DENSITY]);
 
 }
 
@@ -120,7 +121,7 @@ void allometry_power_function(cell_t *const c)
 					s = &a->species[species];
 
 					s->value[MASS_DENSITY] = s->value[RHO1] + (s->value[RHO0] - s->value[RHO1]) * exp(-LN2 * ((double)a->value / s->value[TRHO]));
-					logger(g_debug_log, "-Mass Density = %g (tDM/m3)\n", s->value[MASS_DENSITY]);
+					logger(g_debug_log, "-Mass Density = %f (tDM/m3)\n", s->value[MASS_DENSITY]);
 
 					if ( d->value < 9 )
 					{

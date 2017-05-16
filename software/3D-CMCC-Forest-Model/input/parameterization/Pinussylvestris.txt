@@ -59,8 +59,8 @@ BUD_BURST 0.3                 //days of bud burst at the beginning of growing se
 LEAF_FALL_FRAC_GROWING  0     //proportions of the growing season of leaf fall 
 LEAF_FINEROOT_TURNOVER  0.25  //Average YEARLY leaves and fine root turnover rate for P. sylvestris 0.18 from Pietsch, 0.39 Tatarinov, 0.25 Makela et al., 1997
 LIVE_WOOD_TURNOVER  0.7       //Annual yearly live wood turnover rate for P. sylvestris from Pietsch
-DBHDCMAX  0.20                //Low Density for Picea abies from Rautianen and Stenberg 2005,  0.255 Seidl et al., 2012, 0.18 from Kalliovirta and Tokola 2005, 0.34 from Grote 2001
-DBHDCMIN  0.14                //High Density for P. sylvestris from Ameztegui et al., 2012 0.14, 0.15 from Kalliovirta and Tokola 2005
+DBHDCMAX  0.24                //Low Density for P. sylvestris deducted from Rautianen and Stenberg 2005,  0.255 Seidl et al., 2012, 0.18 from Kalliovirta and Tokola 2005, 0.34 from Grote 2001
+DBHDCMIN  0.14                //High Density for P. sylvestris deducted from Rautianen and Stenberg 2005 from Ameztegui et al., 2012 0.14, 0.15 from Kalliovirta and Tokola 2005
 SAP_A   0.974                 //a value for Pinus sylvestris 0.7731 from Xiao & Ceulemans 2004, 3.119 from Verbeek et al., 2007, 0.974 summing up Xiao + Veerbeck 
 SAP_B   1.7979                //b value for Pinus sylvestris 1.9174 from Xiao & Ceulemans 2004 1.4544 from Verbeek et al., 2007, 1.7979 summing up Xiao + Veerbeck
 SAP_LEAF    1600              //sapwood_max leaf area ratio in pipe model for Pinus sylvestris 1480 Mencuccini Bonosi, 2001; 1020 Makela et al., 1995; from 1300 to 1800 Veerbeck et al., 2007
@@ -75,8 +75,8 @@ HDMAX_B -0.165                //B parameter for Height (m) to Base diameter (m) 
 HDMIN_A 76.3                  //A parameter for Height (m) to Base diameter (m) ratio MIN Seidl et al., 2012
 HDMIN_B -0.129                //B parameter for Height (m) to Base diameter (m) ratio MIN Seidl et al., 2012
 CROWN_FORM_FACTOR 1           //Crown form factor (0 = cylinder, 1 = cone, 2 = sphere)
-CROWN_A     0.0033            //Crown relationship with tree height for Pinus sylvestris  Xiao et al., 2006,0.43 from Rautianinen and Stember 2006
-CROWN_B     2.3546            //Crown exponential with tree height for Pinus sylvestris  Xiao et al., 2006
+CROWN_A     0.7141            //Crown relationship with tree height for Pinus sylvestris deducted from Rautianinen and Stember 2005
+CROWN_B     0.8846            //Crown exponential with tree height for Pinus sylvestris  deducted from Rautianinen and Stember 2005
 MAXSEED 20000                 //numero massimo semi prodotti dalla pianta
 MASTSEED    5                 //ricorrenza anni di pasciona
 WEIGHTSEED  7                 //peso frutto in g 

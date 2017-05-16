@@ -118,6 +118,7 @@ enum {
 	CROWN_RADIUS,                        /* (m) Crown Projected Radius */
 	CROWN_DIAMETER,                      /* (m) Crown Projected Diameter */
 	CROWN_HEIGHT,                        /* (m) Crown height */
+	CROWN_AREA,                          /* (m2) Crown Area */
 	CROWN_AREA_PROJ,                     /* (m2) Crown Projected Area (at zenith angle) */
 	CROWN_AREA_EXP,                      /* (m2) Crown Exposed Area (considered as the area that can intercepts light) */
 	CROWN_VOLUME,                        /* (m3) Crown Volume */
