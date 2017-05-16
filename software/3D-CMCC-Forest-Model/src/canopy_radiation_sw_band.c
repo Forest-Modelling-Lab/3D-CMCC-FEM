@@ -232,18 +232,10 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 	/* compute fractions of light intercepted, transmitted and reflected from the canopy */
 	/* fraction of light transmitted through the canopy */
 
-	if ( s->value[LAI_EXP] )
-	{
-		Light_trasm_frac       = exp(- s->value[K] * s->value[LAI_EXP]);
-		Light_trasm_frac_sun   = exp(- s->value[K] * s->value[LAI_SUN_EXP]);
-		Light_trasm_frac_shade = exp(- s->value[K] * s->value[LAI_SHADE_EXP]);
-	}
-	else
-	{
-		Light_trasm_frac       = 1.;
-		Light_trasm_frac_sun   = 1.;
-		Light_trasm_frac_shade = 1.;
-	}
+
+	Light_trasm_frac       = exp(- s->value[K] * s->value[LAI_EXP]);
+	Light_trasm_frac_sun   = exp(- s->value[K] * s->value[LAI_SUN_EXP]);
+	Light_trasm_frac_shade = exp(- s->value[K] * s->value[LAI_SHADE_EXP]);
 
 	/* fraction of light absorbed by the canopy */
 	Light_abs_frac       = 1. - Light_trasm_frac;
@@ -256,33 +248,13 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 	calculated similarly to sw except that albedo is 1/3 for PAR because less
 	PAR is reflected than sw_radiation (Jones 1992)*/
 
-	if( s->value[LAI_EXP] >= 1. )
-	{
-		Light_refl_sw_frac        = s->value[ALBEDO];
-		Light_refl_sw_frac_sun    = s->value[ALBEDO] * ( 1 - exp ( - s->value[K] * s->value[LAI_SUN_EXP]));
-		Light_refl_sw_frac_shade  = s->value[ALBEDO] * ( 1 - exp ( - s->value[K] * s->value[LAI_SHADE_EXP]));
-		Light_refl_par_frac       = (s->value[ALBEDO]/3.);
-		Light_refl_par_frac_sun   = (s->value[ALBEDO]/3.) * ( 1 - exp ( - s->value[K] * s->value[LAI_SUN_EXP] ) );
-		Light_refl_par_frac_shade = (s->value[ALBEDO]/3.) * ( 1 - exp ( - s->value[K] * s->value[LAI_SHADE_EXP] ) );
-	}
-	else if ( !s->value[LAI_EXP])
-	{
-		Light_refl_sw_frac        = 0.;
-		Light_refl_sw_frac_sun    = 0.;
-		Light_refl_sw_frac_shade  = 0.;
-		Light_refl_par_frac       = 0.;
-		Light_refl_par_frac_sun   = 0.;
-		Light_refl_par_frac_shade = 0.;
-	}
-	else
-	{
-		Light_refl_sw_frac        = s->value[ALBEDO] * s->value[LAI_EXP];
-		Light_refl_sw_frac_sun    = s->value[ALBEDO] * ( 1 - exp ( - s->value[K] * s->value[LAI_SUN_EXP] ) );
-		Light_refl_sw_frac_shade  = s->value[ALBEDO] * ( 1 - exp ( - s->value[K] * s->value[LAI_SHADE_EXP] ) );
-		Light_refl_par_frac       = (s->value[ALBEDO]/3.) * s->value[LAI_PROJ];
-		Light_refl_par_frac_sun   = (s->value[ALBEDO]/3.) * ( 1 - exp ( - s->value[K] * s->value[LAI_SUN_EXP] ) );
-		Light_refl_par_frac_shade = (s->value[ALBEDO]/3.) * ( 1 - exp ( - s->value[K] * s->value[LAI_SHADE_EXP] ) );
-	}
+	Light_refl_sw_frac        = s->value[ALBEDO];
+	Light_refl_sw_frac_sun    = s->value[ALBEDO] * ( 1 - exp ( - s->value[K] * s->value[LAI_SUN_EXP]));
+	Light_refl_sw_frac_shade  = s->value[ALBEDO] * ( 1 - exp ( - s->value[K] * s->value[LAI_SHADE_EXP]));
+	Light_refl_par_frac       = (s->value[ALBEDO]/3.);
+	Light_refl_par_frac_sun   = (s->value[ALBEDO]/3.) * ( 1 - exp ( - s->value[K] * s->value[LAI_SUN_EXP] ) );
+	Light_refl_par_frac_shade = (s->value[ALBEDO]/3.) * ( 1 - exp ( - s->value[K] * s->value[LAI_SHADE_EXP] ) );
+
 #else
 	/* SHORT WAVE RADIATION FRACTIONS */
 	/* compute fractions of light intercepted, transmitted and reflected from the canopy */
@@ -293,18 +265,10 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 	 * we currently use approach for homogeneous canopies that improves representation when canopy is not closed
 	 */
 
-	if ( s->value[LAI_PROJ] )
-	{
-		Light_trasm_frac       = exp(- s->value[K] * (s->value[LAI_PROJ]/s->value[DAILY_CANOPY_COVER_EXP]));
-		Light_trasm_frac_sun   = exp(- s->value[K] * (s->value[LAI_SUN_PROJ]/s->value[DAILY_CANOPY_COVER_EXP]));
-		Light_trasm_frac_shade = exp(- s->value[K] * (s->value[LAI_SHADE_PROJ]/s->value[DAILY_CANOPY_COVER_EXP]));
-	}
-	else
-	{
-		Light_trasm_frac       = 1.;
-		Light_trasm_frac_sun   = 1.;
-		Light_trasm_frac_shade = 1.;
-	}
+	Light_trasm_frac       = exp(- s->value[K] * (s->value[LAI_PROJ]/s->value[DAILY_CANOPY_COVER_EXP]));
+	Light_trasm_frac_sun   = exp(- s->value[K] * (s->value[LAI_SUN_PROJ]/s->value[DAILY_CANOPY_COVER_EXP]));
+	Light_trasm_frac_shade = exp(- s->value[K] * (s->value[LAI_SHADE_PROJ]/s->value[DAILY_CANOPY_COVER_EXP]));
+
 
 	/* fraction of light absorbed by the canopy */
 	Light_abs_frac       = 1. - Light_trasm_frac;
@@ -317,34 +281,22 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 		calculated similarly to sw except that albedo is 1/3 for PAR because less
 		PAR is reflected than sw_radiation (Jones 1992)*/
 
-	if( s->value[LAI_PROJ] >= 1. )
-	{
-		Light_refl_sw_frac        = s->value[ALBEDO];
-		Light_refl_sw_frac_sun    = s->value[ALBEDO] * ( 1 - exp ( - s->value[K] * (s->value[LAI_SUN_PROJ]/s->value[DAILY_CANOPY_COVER_EXP])));
-		Light_refl_sw_frac_shade  = s->value[ALBEDO] * ( 1 - exp ( - s->value[K] * (s->value[LAI_SHADE_PROJ]/s->value[DAILY_CANOPY_COVER_EXP])));
-		Light_refl_par_frac       = (s->value[ALBEDO]/3.);
-		Light_refl_par_frac_sun   = (s->value[ALBEDO]/3.) * ( 1 - exp ( - s->value[K] * (s->value[LAI_SUN_PROJ]/s->value[DAILY_CANOPY_COVER_EXP])));
-		Light_refl_par_frac_shade = (s->value[ALBEDO]/3.) * ( 1 - exp ( - s->value[K] * (s->value[LAI_SHADE_PROJ]/s->value[DAILY_CANOPY_COVER_EXP])));
-	}
-	else if ( !s->value[LAI_PROJ])
-	{
-		Light_refl_sw_frac        = 0.;
-		Light_refl_sw_frac_sun    = 0.;
-		Light_refl_sw_frac_shade  = 0.;
-		Light_refl_par_frac       = 0.;
-		Light_refl_par_frac_sun   = 0.;
-		Light_refl_par_frac_shade = 0.;
-	}
-	else
-	{
-		Light_refl_sw_frac        = s->value[ALBEDO] * ( 1 - exp ( - s->value[K] * (s->value[LAI_PROJ]/s->value[DAILY_CANOPY_COVER_EXP])));
-		Light_refl_sw_frac_sun    = s->value[ALBEDO] * ( 1 - exp ( - s->value[K] * (s->value[LAI_SUN_PROJ]/s->value[DAILY_CANOPY_COVER_EXP])));
-		Light_refl_sw_frac_shade  = s->value[ALBEDO] * ( 1 - exp ( - s->value[K] * (s->value[LAI_SHADE_PROJ]/s->value[DAILY_CANOPY_COVER_EXP])));
-		Light_refl_par_frac       = (s->value[ALBEDO]/3.) * s->value[LAI_PROJ];
-		Light_refl_par_frac_sun   = (s->value[ALBEDO]/3.) * ( 1 - exp ( - s->value[K] * (s->value[LAI_SUN_PROJ]/s->value[DAILY_CANOPY_COVER_EXP])));
-		Light_refl_par_frac_shade = (s->value[ALBEDO]/3.) * ( 1 - exp ( - s->value[K] * (s->value[LAI_SHADE_PROJ]/s->value[DAILY_CANOPY_COVER_EXP])));
-	}
+	Light_refl_sw_frac        = s->value[ALBEDO];
+	Light_refl_sw_frac_sun    = s->value[ALBEDO] * ( 1 - exp ( - s->value[K] * (s->value[LAI_SUN_PROJ]/s->value[DAILY_CANOPY_COVER_EXP])));
+	Light_refl_sw_frac_shade  = s->value[ALBEDO] * ( 1 - exp ( - s->value[K] * (s->value[LAI_SHADE_PROJ]/s->value[DAILY_CANOPY_COVER_EXP])));
+	Light_refl_par_frac       = (s->value[ALBEDO]/3.);
+	Light_refl_par_frac_sun   = (s->value[ALBEDO]/3.) * ( 1 - exp ( - s->value[K] * (s->value[LAI_SUN_PROJ]/s->value[DAILY_CANOPY_COVER_EXP])));
+	Light_refl_par_frac_shade = (s->value[ALBEDO]/3.) * ( 1 - exp ( - s->value[K] * (s->value[LAI_SHADE_PROJ]/s->value[DAILY_CANOPY_COVER_EXP])));
+
 #endif
+
+	logger(g_debug_log, "Light_trasm_frac       = %f\n", Light_trasm_frac);
+	logger(g_debug_log, "Light_trasm_frac_sun   = %f\n", Light_trasm_frac_sun);
+	logger(g_debug_log, "Light_trasm_frac_shade = %f\n", Light_trasm_frac_shade);
+
+	logger(g_debug_log, "Light_abs_frac       = %f\n", Light_abs_frac);
+	logger(g_debug_log, "Light_abs_frac_sun   = %f\n", Light_abs_frac_sun);
+	logger(g_debug_log, "Light_abs_frac_shade = %f\n", Light_abs_frac_shade);
 
 	//fixme set that if gapcover is bigger then 0.5 albedo should be considered also in dominated layer!!!!
 	//fixme following MAESPA (Duursma et al.,) and from Campbell & Norman (2000, p. 259) dominated layers should have just shaded leaves

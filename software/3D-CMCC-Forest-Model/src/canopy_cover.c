@@ -105,11 +105,11 @@ void dbhdc_function (cell_t *const c, const int layer, const int height, const i
 
 void canopy_cover (cell_t *const c, const int height, const int dbh, const int age, const int species)
 {
-	double eff_canopy_cover;
-	double lateral_area;
-
-	double crown_surface_area;
-	double canopy_surface_cover;
+//	double eff_canopy_cover;
+//	double lateral_area;
+//
+//	double crown_surface_area;
+//	double canopy_surface_cover;
 
 	species_t *s;
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
@@ -120,10 +120,7 @@ void canopy_cover (cell_t *const c, const int height, const int dbh, const int a
 
 	/* Canopy and Soil Projected Cover using DBH-DC (at zenith angle) */
 	s->value[CANOPY_COVER_PROJ] = s->value[CROWN_AREA_PROJ] * s->counter[N_TREE] / g_settings->sizeCell;
-	logger(g_debug_log, "-Canopy Projected Cover (at zenith angle) = %f %%\n", s->value[CANOPY_COVER_PROJ] * 100.);
-
-	/* (ORIGINAL) Canopy Projected Cover (integrated all over all viewing angles) */
-	/* following Cauchy's theorems Duursma et al., 2012, Tree Phys) */
+	logger(g_debug_log, "-Canopy Projected Cover  = %f %%\n", s->value[CANOPY_COVER_PROJ] * 100.);
 
 //	/* (MODIFIED) formulation based on canopy cover */
 //	/* note: this is valid ONLY for cylinder shape crowns */
@@ -141,7 +138,6 @@ void canopy_cover (cell_t *const c, const int height, const int dbh, const int a
 
 	/* Canopy cover able to absorb light (integrated all over all viewing angles) */
 	s->value[CANOPY_COVER_EXP] = (s->value[CROWN_AREA_EXP] * s->counter[N_TREE]) / g_settings->sizeCell ;
-	logger(g_debug_log, "-Canopy Cover Projected = %f %%\n", s->value[CANOPY_COVER_PROJ] * 100.);
-	logger(g_debug_log, "-Canopy Cover Exposed   = %f %%\n", s->value[CANOPY_COVER_EXP]  * 100.);
+	logger(g_debug_log, "-Canopy Cover Exposed   = %f %%\n", s->value[CANOPY_COVER_EXP]  * 100.);getchar();
 
 }

@@ -38,7 +38,7 @@ void crown_allometry (cell_t *const c, const int height, const int dbh, const in
 	logger(g_debug_log, "-Crown Projected Radius = %f m\n", s->value[CROWN_RADIUS]);
 
 	/* Crown Projected Area using DBH-DC (at zenith angle) */
-	s->value[CROWN_AREA_PROJ] = ( Pi / 4) * pow (s->value[CROWN_DIAMETER], 2 );
+	s->value[CROWN_AREA_PROJ] = Pi  * pow (s->value[CROWN_RADIUS], 2 );
 	logger(g_debug_log, "-Crown Projected Area = %f m2\n", s->value[CROWN_AREA_PROJ]);
 
 	/* Crown Height */
@@ -53,9 +53,11 @@ void crown_allometry (cell_t *const c, const int height, const int dbh, const in
 
 	/* cast s->value[CROWN_FORM_FACTOR] to integer */
 	crown_form_factor = (int)s->value[CROWN_FORM_FACTOR];
-
 	//crown_form_factor = 0;
 
+	/* compute overall single tree crown area */
+
+#if 1 //old
 	switch (crown_form_factor)
 	{
 	case 0: /* cylinder */
@@ -81,7 +83,49 @@ void crown_allometry (cell_t *const c, const int height, const int dbh, const in
 		s->value[CROWN_AREA_EXP] = ( s->value[CROWN_AREA_PROJ] * 4. ) / 2 ;
 		s->value[CROWN_VOLUME]   = 4. / 3. * Pi * pow (s->value[CROWN_RADIUS],3.);
 		break;
+
+	case 3: /* ellispoid */
+		//todo s->value[CROWN_AREA]     =
+
+		break;
 	}
+#else //new
+	switch (crown_form_factor)
+	{
+	case 0: /* cylinder */
+		logger(g_debug_log, "-Crown form factor = cylinder\n");
+
+		s->value[CROWN_AREA]     = ( 2. * s->value[CROWN_AREA]) + (2 * Pi * s->value[CROWN_RADIUS] * s->value[CROWN_HEIGHT]);
+		s->value[CROWN_VOLUME]   = s->value[CROWN_AREA_PROJ] * s->value[CROWN_HEIGHT];
+		break;
+
+	case 1: /* cone */
+		logger(g_debug_log, "-Crown form factor = cone\n");
+
+		s->value[CROWN_AREA]     = s->value[CROWN_AREA_PROJ] + (Pi * s->value[CROWN_RADIUS] * (sqrt(pow(s->value[CROWN_RADIUS],2.) + pow(s->value[CROWN_HEIGHT],2.))));
+		s->value[CROWN_VOLUME]   = (s->value[CROWN_AREA_PROJ] * s->value[CROWN_HEIGHT])/3.;
+		break;
+
+	case 2: /* sphere */
+		logger(g_debug_log, "-Crown form factor = sphere\n");
+
+		s->value[CROWN_AREA]     = ( s->value[CROWN_AREA_PROJ] * 4 );
+		s->value[CROWN_VOLUME]   = 4. / 3. * Pi * pow (s->value[CROWN_RADIUS],3.);
+		break;
+
+	case 3: /* ellispoid */
+		//todo s->value[CROWN_AREA]     =
+
+		break;
+	}
+
+	/****************************************************************************/
+	/* crown area exposed */
+	/* (ORIGINAL) Canopy Projected Cover (integrated all over all viewing angles) */
+	/* following Cauchy's theorems Duursma et al., 2012, Tree Phys) */
+	s->value[CROWN_AREA_EXP] = s->value[CROWN_AREA] / 4 ;
+
+#endif
 	logger(g_debug_log, "-Crown Area       = %f m2\n", s->value[CROWN_AREA]);
 	logger(g_debug_log, "-Crown Area (exp) = %f m2\n", s->value[CROWN_AREA_EXP]);
 	logger(g_debug_log, "-Crown Volume     = %f m3\n", s->value[CROWN_VOLUME]);
