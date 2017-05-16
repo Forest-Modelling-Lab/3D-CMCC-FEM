@@ -75,7 +75,7 @@ HDMAX_B -0.368                 //B parameter for Height (m) to Base diameter (m)
 HDMIN_A 100.9                  //A parameter for Height (m) to Base diameter (m) ratio MIN Seidl et al., 2012
 HDMIN_B -0.243                 //B parameter for Height (m) to Base diameter (m) ratio MIN Seidl et al., 2012
 CROWN_FORM_FACTOR   0          //Crown form factor (0 = cylinder, 1 = cone, 2 = sphere)
-CROWN_A    0.3                 //Crown relationship with tree height for Fagus sylvatica from Petritan et al., 2009 (Sortie uses 0.664 for F. grandifolia)
+CROWN_A    0.3                 //Crown relationship with tree height for Fagus sylvatica from Petritan et al., 2009
 CROWN_B     1                  //Crown exponential with tree height (Fixed to 1 as in Sorie-ND)
 MAXSEED 20000                  //numero massimo semi prodotti dalla pianta (da TREEMIG) (NOT USED)
 MASTSEED    5                  //ricorrenza anni di pasciona (da TREEMIG) (NOT USED)
