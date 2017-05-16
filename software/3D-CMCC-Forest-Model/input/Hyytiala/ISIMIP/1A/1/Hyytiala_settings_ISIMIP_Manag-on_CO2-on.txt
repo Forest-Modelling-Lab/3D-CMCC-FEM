@@ -9,7 +9,7 @@ MONTHLY_OUTPUT on                   //Must be 'on' or 'off'
 ANNUAL_OUTPUT on                    //Must be 'on' or 'off'
 SOIL_OUTPUT off                     //Must be 'on' or 'off'
 YEAR_START 1996                     //Starting year simulation
-YEAR_END 2099                       //Ending year simulation
+YEAR_END 2014                       //Ending year simulation
 YEAR_RESTART off                    //Year to restart
 CO2_mod on                          //Must be 'on' or 'off'
 CO2_trans on                        //Must be 'on' or 'off'
@@ -18,7 +18,7 @@ Ndep_fixed on                       //Must be 'on' or 'off'
 Resp_accl on                        //Q10 temperature acclimatation Must be 'on' or 'off'
 regeneration off                    //Must be 'on' or 'off'
 management on                       //Must be 'on' or 'off'
-YEAR_START_MANAGEMENT 2005          //First year of management
+YEAR_START_MANAGEMENT 2009          //First year of management
 Progn_Aut_Resp on                   //Prognostic autotrophic respiration, Must be 'on' or 'off', if off Y values are used
 SIZECELL 100                        //Its value must be within 10 and 100 (unity measure is meter: 10 = 10x10 = 100m^2) 
 Y 0.48                              //Fixed_Aut_Resp_rate Assimilate use efficiency-Respiration rate-GPP/NPP

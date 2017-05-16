@@ -26,8 +26,8 @@ MAXAGE                  300     //Determines rate of "physiological decline" of 
 RAGE                    0.95    //Relative Age to give fAGE = 0.5 0.95 for Picea abies Seidl et al., 2012
 NAGE                    4       //Power of relative Age in function for Age for Picea abies Seidl et al., 2012
 GROWTHTMIN              0       //Minimum temperature for growth 0 for Picea abies from p.c. Seidl, -4 from Bossel 1996
-GROWTHTMAX              30      //Maximum temperature for growth 35 for Picea abies from p.c. Seidl 
-GROWTHTOPT              17.5 //15 //Optimum temperature for growth 17.5 for Picea abies from p.c. Seidl, 18 from Bossel 1996
+GROWTHTMAX              35      //Maximum temperature for growth 35 for Picea abies from p.c. Seidl 
+GROWTHTOPT              17.5    //Optimum temperature for growth 17.5 for Picea abies from p.c. Seidl, 18 from Bossel 1996
 GROWTHSTART             200     //average temperature for starting growth in °C 
 MINDAYLENGTH            0       //minimum day length for deciduous
 SWPOPEN                -0.5     //in KPa for P. abies from Pietsch et al 2005

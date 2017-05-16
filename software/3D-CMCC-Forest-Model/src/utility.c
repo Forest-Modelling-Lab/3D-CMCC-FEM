@@ -521,6 +521,8 @@ void reset_annual_class_variables(cell_t *const c)
 
 					s->value[PEAK_LAI_PROJ] =               0.;
 					s->value[MAX_LAI_PROJ] =                0.;
+					s->value[PEAK_LAI_EXP] =                0.;
+					s->value[MAX_LAI_EXP] =                 0.;
 					s->value[MAX_LEAF_C] =                  0.;
 					s->value[MAX_FROOT_C] =                 0.;
 					s->value[MAX_LAI_LEAFFALL_PROJ] =       0.;

@@ -19,19 +19,25 @@ void peak_lai(species_t *const s, const int day, const int month, const int year
 	logger(g_debug_log, "\n**PEAK LAI**\n");
 
 	/* compute annual Peak Projected Lai (m2/m2) */
-	s->value[PEAK_LAI_PROJ] = ((s->value[SAPWOOD_AREA] / 10000.) * s->value[SAP_LEAF]) / s->value[CROWN_AREA_PROJ];
-	logger(g_debug_log, "PEAK_LAI_PROJ from Kostner = %f m2/m2\n",s->value[PEAK_LAI_PROJ]);
+	s->value[PEAK_LAI_PROJ] = ( ( s->value[SAPWOOD_AREA] / 10000. ) * s->value[SAP_LEAF]) / s->value[CROWN_AREA_PROJ];
+	logger(g_debug_log, "PEAK_LAI_PROJ = %f m2/m2\n",s->value[PEAK_LAI_PROJ]);
 
-	/* check if Peak Lai exceeds Maximum prescribed Peak Lai (this shouldn't happen) */
+	/* check if Peak Lai exceeds Maximum prescribed Peak Lai (this shouldn't happens) */
 	if (s->value[PEAK_LAI_PROJ] > MAX_PEAK_LAI_PROJ) s->value[PEAK_LAI_PROJ] = MAX_PEAK_LAI_PROJ;
 
 	/* compute max leaf carbon (tC/cell) at Peak Projected Lai */
-	s->value[MAX_LEAF_C]   = (s->value[PEAK_LAI_PROJ] / s->value[SLA_AVG]) /1000. * (s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell);
+	s->value[MAX_LEAF_C]   = ( s->value[PEAK_LAI_PROJ] / s->value[SLA_AVG] ) / 1000. * ( s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell );
 	logger(g_debug_log, "MAX_LEAF_C (sun and shaded)= %f tC/area \n", s->value[MAX_LEAF_C]);
 
 	/* then compute fine root carbon (tC/cell) at Peak Projected Lai */
-	s->value[MAX_FROOT_C]  = s->value[MAX_LEAF_C] * (1.0 - s->value[FROOT_LEAF_FRAC]);
+	s->value[MAX_FROOT_C]  = s->value[MAX_LEAF_C] * ( 1. - s->value[FROOT_LEAF_FRAC] );
 	logger(g_debug_log, "MAX_FINE_ROOT_C = %f tC/area \n", s->value[MAX_FROOT_C]);
+
+	/***************************************************************************************************************/
+
+	/* compute annual Peak Exposed Lai (m2/m2) */
+	s->value[PEAK_LAI_EXP] = s->value[PEAK_LAI_PROJ] * ( 1 + s->value[CANOPY_COVER_EXP] );
+	logger(g_debug_log, "PEAK_LAI_PROJ = %f m2/m2\n",s->value[PEAK_LAI_EXP]);
 
 	/***************************************************************************************************************/
 	/* note: special case for evergreen */

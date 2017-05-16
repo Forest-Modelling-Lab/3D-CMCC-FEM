@@ -56,7 +56,7 @@ void daily_lai (species_t *const s)
 
 	/* assign max annual LAI */
 	s->value[MAX_LAI_PROJ] = MAX(s->value[MAX_LAI_PROJ], s->value[LAI_PROJ]);
-	logger(g_debug_log, "PEAK_LAI_PROJ  = %f m2/m2\n", s->value[PEAK_LAI_PROJ]);
+	logger(g_debug_log, "MAX_LAI_PROJ   = %f m2/m2\n", s->value[MAX_LAI_PROJ]);
 
 	/**************************************************************************************************/
 
@@ -68,7 +68,8 @@ void daily_lai (species_t *const s)
 	//s->value[LAI_SHADE_EXP] = s->value[LAI_SHADE_PROJ] / s->value[CANOPY_COVER_PROJ];
 
 	/* compute total LAI for Exposed Area */
-	/* note: differently from above don't divide for ground area but multiply for fraction of exposed area */
+	/* note: differently from above don't divide for ground area but multiply for fraction of exposed area (for a different purposes) */
+
 	s->value[LAI_EXP]       = s->value[LAI_PROJ]       * (1 + s->value[CANOPY_COVER_EXP]);
 	s->value[LAI_SUN_EXP]   = s->value[LAI_SUN_PROJ]   * (1 + s->value[CANOPY_COVER_EXP]);
 	s->value[LAI_SHADE_EXP] = s->value[LAI_SHADE_PROJ] * (1 + s->value[CANOPY_COVER_EXP]);
@@ -76,14 +77,16 @@ void daily_lai (species_t *const s)
 	logger(g_debug_log, "LAI_EXP       = %f m2/m2\n", s->value[LAI_EXP]);
 	logger(g_debug_log, "LAI_SUN_EXP   = %f m2/m2\n", s->value[LAI_SUN_EXP]);
 	logger(g_debug_log, "LAI_SHADE_EXP = %f m2/m2\n", s->value[LAI_SHADE_EXP]);
+	logger(g_debug_log, "PEAK_LAI_EXP  = %f m2/m2\n", s->value[PEAK_LAI_EXP]);
 
 	logger(g_debug_log, "single height class canopy cover projected = %f %%\n", s->value[CANOPY_COVER_PROJ] * 100.);
 	logger(g_debug_log, "single height class canopy cover exposed   = %f %%\n", s->value[CANOPY_COVER_EXP]  * 100.);
 
+	/* assign max annual LAI EXP */
+	s->value[MAX_LAI_EXP]  = MAX(s->value[MAX_LAI_EXP], s->value[LAI_EXP]);
+	logger(g_debug_log, "MAX_LAI_EXP   = %f m2/m2\n", s->value[MAX_LAI_EXP]);
+
 	/**************************************************************************************************/
-
-	/* compute the annual max lai reached */
-
 
 	/* compute all-sided LAI */
 	s->value[ALL_LAI_PROJ] = s->value[LAI_PROJ] * s->value[CANOPY_COVER_PROJ];

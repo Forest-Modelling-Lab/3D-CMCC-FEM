@@ -49,21 +49,21 @@ void crown_allometry (cell_t *const c, const int height, const int dbh, const in
 	logger(g_debug_log, "-Crown Height = %g m\n", s->value[CROWN_HEIGHT]);
 
 	/* cast s->value[CROWN_FORM_FACTOR] to integer */
-	//crown_form_factor = (int)s->value[CROWN_FORM_FACTOR];
+	crown_form_factor = (int)s->value[CROWN_FORM_FACTOR];
 
-	crown_form_factor = 0;
+	//crown_form_factor = 0;
 
 	switch (crown_form_factor)
 	{
 	case 0: /* cylinder */
 		logger(g_debug_log, "-Crown form factor = cylinder\n");
-		s->value[CROWN_AREA_EXP] = (2. * s->value[CROWN_AREA_PROJ]) + ((s->value[CROWN_DIAMETER] * Pi) * s->value[CROWN_HEIGHT]);
+		s->value[CROWN_AREA_EXP] = s->value[CROWN_AREA_PROJ] + ((s->value[CROWN_DIAMETER] * Pi) * s->value[CROWN_HEIGHT]);
 		s->value[CROWN_VOLUME] = (s->value[CROWN_AREA_PROJ] * s->value[CROWN_HEIGHT]) / 3.;
 		break;
 
 	case 1: /* cone */
 		logger(g_debug_log, "-Crown form factor = cone\n");
-		s->value[CROWN_AREA_EXP] = Pi * s->value[CROWN_RADIUS] * sqrt(pow(s->value[CROWN_RADIUS],2.) + pow(s->value[CROWN_HEIGHT],2.)) + s->value[CROWN_AREA_PROJ];
+		s->value[CROWN_AREA_EXP] = Pi * s->value[CROWN_RADIUS] * sqrt(pow(s->value[CROWN_RADIUS],2.) + pow(s->value[CROWN_HEIGHT],2.));
 		s->value[CROWN_VOLUME] = (s->value[CROWN_AREA_PROJ] * s->value[CROWN_HEIGHT])/3.;
 		break;
 
