@@ -454,7 +454,6 @@ int daily_forest_structure ( cell_t *const c, const meteo_daily_t *const meteo_d
 
 	logger(g_debug_log, "\n***DAILY FOREST STRUCTURE***\n");
 
-
 	/*******************************COMPUTE VERTICAL COMPETITION*******************************/
 
 	logger(g_debug_log, "\n***VERTICAL COMPUTATION***\n");
