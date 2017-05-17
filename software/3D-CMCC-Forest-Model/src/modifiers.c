@@ -16,8 +16,6 @@ extern settings_t* g_settings;
 extern logger_t* g_debug_log;
 extern soil_settings_t *g_soil_settings;
 
-#define WATER_STRESS_LIMIT 0.2
-
 void modifiers(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, const meteo_daily_t *const meteo_daily,
 		const meteo_annual_t *const meteo_annual)
 {
@@ -50,7 +48,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	if ( g_settings->CO2_mod )
 	{
 		/***************************************************************/
-		/* CO2 MODIFIER AND ACCLIMATIONFOR ASSIMILATION  */
+		/* CO2 MODIFIER AND ACCLIMATION FOR ASSIMILATION  */
 		/* fertilization effect with rising CO2 from: Veroustraete 1994,
 		 * Veroustraete et al., 2002, Remote Sensing of Environment
 		 * (Michaelis-Menthen)
@@ -70,8 +68,8 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 
 		tau = Atau * exp (-Eatau/(Rgas*(tairK)));
 
-		v1 = (meteo_annual->co2Conc -(O2CONC/(2*tau)))/(g_settings->co2Conc-(O2CONC/(2*tau)));
-		v2 = (KmCO2*(1+(O2CONC/KO2))+g_settings->co2Conc)/(KmCO2*(1+(O2CONC/KO2))+meteo_annual->co2Conc);
+		v1 = ( meteo_annual->co2Conc -( O2CONC / ( 2. * tau ) ) ) / ( g_settings->co2Conc - ( O2CONC / ( 2. * tau ) ) );
+		v2 = ( KmCO2 * ( 1 + ( O2CONC / KO2 ) ) + g_settings->co2Conc ) / ( KmCO2 * ( 1. + ( O2CONC / KO2 ) ) + meteo_annual->co2Conc );
 
 		/* CO2 assimilation modifier */
 		s->value[F_CO2] = v1*v2;
@@ -101,7 +99,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 
 
 	/* LIGHT MODIFIER (NOT USED) */
-	/* (Following Makela et al , 2008, Peltioniemi_etal_2012) */
+	/* (Following Makela et al. , 2008, Peltioniemi et al. 2012) */
 	//FIXME chose which type of light use and differentiate for different layers
 	//following Nolè should be used apar
 	//following Peltionemi should be used par
@@ -120,16 +118,16 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	/* photosynthetic photon flux density conductance control */
 
 	/* for overall leaves */
-	s->value[F_LIGHT]       = s->value[PPFD_ABS] /(PPFD50 + s->value[PPFD_ABS]);
-	logger(g_debug_log, "f_LIGHT (BIOME) = %f \n", s->value[F_LIGHT]);
+	s->value[F_LIGHT]       = s->value[PPFD_ABS]       / (PPFD50 + s->value[PPFD_ABS]);
+	logger(g_debug_log, "fLIGHT       = %f \n", s->value[F_LIGHT]);
 
 	/* for sun leaves */
-	s->value[F_LIGHT_SUN]   = s->value[PPFD_ABS_SUN] /(PPFD50 + s->value[PPFD_ABS_SUN]);
-	logger(g_debug_log, "f_LIGHT_SUN (BIOME) = %f \n", s->value[F_LIGHT_SUN]);
+	s->value[F_LIGHT_SUN]   = s->value[PPFD_ABS_SUN]   / (PPFD50 + s->value[PPFD_ABS_SUN]);
+	logger(g_debug_log, "fLIGHT_SUN   = %f \n", s->value[F_LIGHT_SUN]);
 
 	/* for shaded leaves */
-	s->value[F_LIGHT_SHADE] = s->value[PPFD_ABS_SHADE] /(PPFD50 + s->value[PPFD_ABS_SHADE]);
-	logger(g_debug_log, "f_LIGHT_SHADE (BIOME) = %f \n", s->value[F_LIGHT_SHADE]);
+	s->value[F_LIGHT_SHADE] = s->value[PPFD_ABS_SHADE] / (PPFD50 + s->value[PPFD_ABS_SHADE]);
+	logger(g_debug_log, "fLIGHT_SHADE = %f \n", s->value[F_LIGHT_SHADE]);
 
 	/********************************************************************************************/
 
@@ -153,7 +151,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 		if ( ( meteo_daily->tday <= s->value[GROWTHTMIN]) || (meteo_daily->tday >= s->value[GROWTHTMAX] ) )
 		{
 			s->value[F_T] = 0;
-			logger(g_debug_log, "F_T = 0 \n");
+			logger(g_debug_log, "fT = 0 \n");
 		}
 		else
 		{
@@ -170,7 +168,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 
 	/********************************************************************************************/
 
-	/*VPD MODIFIER*/
+	/* VPD MODIFIER */
 	//logger(g_debug_log, "--RH = %f %%\n", met[month].rh);
 	//logger(g_debug_log, "--vpd = %f mbar", vpd);
 
@@ -265,15 +263,15 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 #endif
 	/********************************************************************************************/
 	/* (MPa) water potential of soil and leaves */
-	/*SOIL MATRIC POTENTIAL*/
+	/* SOIL MATRIC POTENTIAL */
 
 	/* convert kg/m2 or mm --> m3/m2 --> m3/m3 */
 	/* 100 mm H20 m^-2 = 100 kg H20 m^-2 */
 	/* calculate the soil pressure-volume coefficients from texture data */
 	/* Uses the multivariate regressions from Cosby et al., 1984 */
 	/* volumetric water content */
-	/* note:changed from biome */
-	c->vwc = c->asw / c->max_asw_fc /* /(100.0 * g_soil_settings->values[SOIL_DEPTH])*/;
+
+	c->vwc = c->asw / c->max_asw_fc;
 	c->psi = c->psi_sat * pow((c->vwc/c->vwc_sat), c->soil_b);
 
 	/* no water stress */
@@ -286,16 +284,14 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	{
 		/* forced to  0.3 to avoid zero values */
 		/* see: Clark et al., 2011 for JULES model impose 0.2 */
-		s->value[F_PSI] = WATER_STRESS_LIMIT ; //0.3;
-		//CHECK_CONDITION(counter_water_stress, >, 31);
+		s->value[F_PSI] = WATER_STRESS_LIMIT ;
 	}
 	/* partial water stress */
 	else
 	{
 		s->value[F_PSI] = (s->value[SWPCLOSE] - c->psi)/(s->value[SWPCLOSE] - s->value[SWPOPEN]);
 
-		//test
-		//for consistency with complete stress values
+		/* for consistency with complete stress values */
 		if(s->value[F_PSI]< WATER_STRESS_LIMIT) s->value[F_PSI] = WATER_STRESS_LIMIT;
 	}
 
@@ -308,7 +304,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 
 	/********************************************************************************************/
 
-	/*PHYSIOLOGICAL MODIFIER*/
+	/* PHYSIOLOGICAL MODIFIER */
 	s->value[PHYS_MOD] = MIN (s->value[F_VPD], (s->value[F_SW] * s->value[F_AGE]));
 	logger(g_debug_log, "PhysMod = %f\n", s->value[PHYS_MOD]);
 	if (s->value[F_VPD] < (s->value[F_SW] * s->value[F_AGE]))

@@ -36,7 +36,7 @@ void peak_lai(species_t *const s, const int day, const int month, const int year
 	/***************************************************************************************************************/
 
 	/* compute annual Peak Exposed Lai (m2/m2) */
-	s->value[PEAK_LAI_EXP] = s->value[PEAK_LAI_PROJ] * ( 1 + s->value[CANOPY_COVER_EXP] );
+	s->value[PEAK_LAI_EXP] = ( ( s->value[SAPWOOD_AREA] / 10000. ) * s->value[SAP_LEAF]) / s->value[CROWN_AREA_EXP];
 	logger(g_debug_log, "PEAK_LAI_PROJ = %f m2/m2\n",s->value[PEAK_LAI_EXP]);
 
 	/***************************************************************************************************************/

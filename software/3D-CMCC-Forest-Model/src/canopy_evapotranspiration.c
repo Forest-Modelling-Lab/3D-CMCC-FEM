@@ -421,7 +421,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 			printf("CANOPY_TRANSP = 0 !!!!!!\n");
 		}
 		/* check */
-		CHECK_CONDITION (s->value[CANOPY_TRANSP], > , c->asw);
+		CHECK_CONDITION ( s->value[CANOPY_TRANSP] , > , c->asw );
 	}
 	/**********************************************************************************/
 	/**********************************************************************************/

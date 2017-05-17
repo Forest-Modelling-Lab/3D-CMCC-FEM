@@ -48,7 +48,7 @@ void daily_lai (species_t *const s)
 
 	/* compute total LAI for Projected Area */
 	s->value[LAI_PROJ]       = ( leaf_C * s->value[SLA_AVG] ) / ( s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell );
-	s->value[LAI_SUN_PROJ]   = 1. - exp ( -s->value[LAI_PROJ] );
+	s->value[LAI_SUN_PROJ]   = 1. - exp ( - s->value[LAI_PROJ] );
 	s->value[LAI_SHADE_PROJ] = s->value[LAI_PROJ] - s->value[LAI_SUN_PROJ];
 
 	logger(g_debug_log, "LAI_PROJ       = %f m2/m2\n", s->value[LAI_PROJ]);
@@ -64,17 +64,10 @@ void daily_lai (species_t *const s)
 
 	/* compute LAI for Exposed Area */
 
-	/* note: is partially based on: Jackson & Palmer, 1979, 1981, 1983; Cannell and Grace 1993, Duursma and Makela 2006 */
-	//s->value[LAI_EXP]       = s->value[LAI_PROJ] / s->value[CANOPY_COVER_PROJ];
-	//s->value[LAI_SUN_EXP]   = s->value[LAI_SUN_PROJ] / s->value[CANOPY_COVER_PROJ];
-	//s->value[LAI_SHADE_EXP] = s->value[LAI_SHADE_PROJ] / s->value[CANOPY_COVER_PROJ];
-
-	/* compute total LAI for Exposed Area */
-	/* note: differently from above don't divide for ground area but multiply for fraction of exposed area (for a different purposes) */
-
-	s->value[LAI_EXP]       = s->value[LAI_PROJ]       * (1 + s->value[CANOPY_COVER_EXP]);
-	s->value[LAI_SUN_EXP]   = s->value[LAI_SUN_PROJ]   * (1 + s->value[CANOPY_COVER_EXP]);
-	s->value[LAI_SHADE_EXP] = s->value[LAI_SHADE_PROJ] * (1 + s->value[CANOPY_COVER_EXP]);
+	/* note: is partially based on: Jackson & Palmer, 1979, 1981, 1983; Cannell and Grace 1993, Duursma and Makela 2007 */
+	s->value[LAI_EXP]       = ( leaf_C * s->value[SLA_AVG] ) / ( s->value[CANOPY_COVER_EXP] * g_settings->sizeCell );
+	s->value[LAI_SUN_EXP]   = 1. - exp ( - s->value[LAI_EXP] );
+	s->value[LAI_SHADE_EXP] = s->value[LAI_EXP] - s->value[LAI_SUN_EXP];
 
 	logger(g_debug_log, "LAI_EXP       = %f m2/m2\n", s->value[LAI_EXP]);
 	logger(g_debug_log, "LAI_SUN_EXP   = %f m2/m2\n", s->value[LAI_SUN_EXP]);

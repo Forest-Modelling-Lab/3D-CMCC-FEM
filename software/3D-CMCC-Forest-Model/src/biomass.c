@@ -13,6 +13,7 @@ extern logger_t* g_debug_log;
 
 void live_total_wood_age(const age_t *const a, species_t *const s)
 {
+#if 0
 	/* this function update based on current tree age the amount of live:total wood ratio
 	 * based on the assumption that the live wood decrease linearly increasing age */
 	/* e.g. for Fagus sylvatica  base on simulation for Hesse site (age 30) and Collelongo site (age 160)*/
@@ -40,7 +41,7 @@ void live_total_wood_age(const age_t *const a, species_t *const s)
 
 	t1 = max_live_total_ratio - min_live_total_ratio;
 	t2 = max_age - min_age;
-#if 0
+
 	s->value[EFF_LIVE_TOTAL_WOOD_FRAC] = (t1/t2)*(max_age - a->value) + min_live_total_ratio;
 #else
 	s->value[EFF_LIVE_TOTAL_WOOD_FRAC] = s->value[LIVE_TOTAL_WOOD];
@@ -163,7 +164,7 @@ void tree_branch_and_bark (cell_t *const c, const int height, const int dbh, con
 	/* compute branch and bark fractions */
 
 	if ( !s->value[FRACBB0] ) s->value[FRACBB0] = s->value[FRACBB1];
-	else s->value[FRACBB] = s->value[FRACBB1] + ( s->value[FRACBB0]- s->value[FRACBB1] )* exp( -LN2 * ( (double)a->value / s->value[TBB] ) );
+	else s->value[FRACBB] = s->value[FRACBB1] + ( s->value[FRACBB0] - s->value[FRACBB1] )* exp( -LN2 * ( (double)a->value / s->value[TBB] ) );
 }
 
 void tree_biomass_remove (cell_t *const c, const int height, const int dbh, const int age, const int species, const int tree_remove)

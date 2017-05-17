@@ -53,8 +53,22 @@ void photosynthesis(cell_t *const c, const int layer, const int height, const in
 		Alpha_C = Epsilon_C / (MOLPAR_MJ * GC_MOL);
 	}
 
+	/* note: special case when fSW <= WATER_STRESS_LIMIT for coupling with canopy transpiration */
+	/* to be fixed once */
+	if ( s->value[F_SW] <= WATER_STRESS_LIMIT )
+	{
+		if ( ! s->value[CANOPY_TRANSP] )
+		{
+			Alpha_C = 0.;
+		}
+		else
+		{
+			Alpha_C *=  s->value[F_SW];
+		}
+	}
+
 	/* check if current Alpha exceeds (saturates) maximum Alpha */
-	/* (canopy saturation at 600 ppmv see Medlyn, 1996;  Medlyn et al., 2011) */
+	/* (canopy saturation at 600 ppmv see Medlyn, 1996; Medlyn et al., 2011) */
 	if (Alpha_C > s->value[ALPHA])
 	{
 		/* set Alpha C to s->value[ALPHA] */
@@ -98,7 +112,7 @@ void photosynthesis(cell_t *const c, const int layer, const int height, const in
 	/* Daily GPP in molC/m^2/day */
 	GPPmolC        = Lue       /* FIXME it should accounts for transp * s->value[CANOPY_FRAC_DAY_TRANSP]*/;
 	GPP_sun_molC   = Lue_sun   /* FIXME it should accounts for sun transp * s->value[CANOPY_SUN_FRAC_DAY_TRANSP]*/;
-	GPP_shade_molC = Lue_shade /* FIXME it should accounts for shade transp* s->value[CANOPY_SHADE_FRAC_DAY_TRANSP]*/;
+	GPP_shade_molC = Lue_shade /* FIXME it should accounts for shade transp * s->value[CANOPY_SHADE_FRAC_DAY_TRANSP]*/;
 
 	/* check */
 	CHECK_CONDITION( GPPmolC, <, ZERO);
@@ -124,9 +138,9 @@ void photosynthesis(cell_t *const c, const int layer, const int height, const in
 	s->value[YEARLY_GPP_SHADE]  += s->value[GPP_SHADE];
 
 	/* cell level */
-	c->daily_gpp             += s->value[GPP];
-	c->monthly_gpp           += s->value[GPP];
-	c->annual_gpp            += s->value[GPP];
+	c->daily_gpp                += s->value[GPP];
+	c->monthly_gpp              += s->value[GPP];
+	c->annual_gpp               += s->value[GPP];
 
 	c->daily_gpp_tC          += s->value[GPP_tC];
 	c->monthly_gpp_tC        += s->value[GPP_tC];

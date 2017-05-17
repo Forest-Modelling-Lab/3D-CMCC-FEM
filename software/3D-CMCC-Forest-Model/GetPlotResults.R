@@ -30,12 +30,12 @@ getwd()
 output_folder="output_Rstudio"
 
 # multiple simulations
-build_list<-c('Debug')#, 'Release')
-site_list<-c("All")#,"Soroe","Hyytiala","All")
-esm_list <-c("All")# ("1","2","3","4","5", "All")
-rcp_list <-c("All")# ("0p0","2p6","4p5","6p0","8p5","All")
-man_list <-c("All")# ("on",'off', "All")
-co2_list <-c("All")# , "on",off", "All")
+build_list<-c('Release')#, 'Release')
+site_list<-c("Soroe")#,"Soroe","Hyytiala","All")
+esm_list <-c("1")# ("1","2","3","4","5", "All")
+rcp_list <-c("4p5")# ("0p0","2p6","4p5","6p0","8p5","All")
+man_list <-c("off")# ("on",'off', "All")
+co2_list <-c("off")# , "on",off", "All")
 protocol_list<-c("2A")# ("2A","2B", "All") 
 
 if ( grepl('All', site_list) ) {
@@ -92,7 +92,7 @@ for (protocol in protocol_list) {
                                    " ESM: ", esm," RCP: ", rcp," Manag-", man, " CO2-", co2,' ... COMPLETE!\n'))
                         
                         # read start and end_year from setting file
-                        fid = file(paste0(getwd(),"/input/",site,"/PAPER/", protocol, "/", site,"_settings_ISIMIP_Manag-", 
+                        fid = file(paste0(getwd(),"/input/",site,"/ISIMIP/", protocol, "/", site,"_settings_ISIMIP_Manag-", 
                                           man, "_CO2-", co2,".txt"),'r')
                         settings = readLines(fid)
                         close(fid)
