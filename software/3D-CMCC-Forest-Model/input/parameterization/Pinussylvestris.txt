@@ -74,7 +74,7 @@ HDMAX_A 148.1                 //A parameter for Height (m) to Base diameter (m) 
 HDMAX_B -0.165                //B parameter for Height (m) to Base diameter (m) ratio MAX Seidl et al., 2012
 HDMIN_A 76.3                  //A parameter for Height (m) to Base diameter (m) ratio MIN Seidl et al., 2012
 HDMIN_B -0.129                //B parameter for Height (m) to Base diameter (m) ratio MIN Seidl et al., 2012
-CROWN_FORM_FACTOR 1           //Crown form factor (0 = cylinder, 1 = cone, 2 = sphere)
+CROWN_FORM_FACTOR 3           //Crown form factor (0 = cylinder, 1 = cone, 2 = sphere, 3 = ellipsoid)
 CROWN_A     0.7141            //Crown relationship with tree height for Pinus sylvestris deducted from Rautianinen and Stember 2005
 CROWN_B     0.8846            //Crown exponential with tree height for Pinus sylvestris  deducted from Rautianinen and Stember 2005
 MAXSEED 20000                 //numero massimo semi prodotti dalla pianta

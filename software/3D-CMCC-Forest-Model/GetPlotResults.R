@@ -30,6 +30,7 @@ getwd()
 output_folder="output_Rstudio"
 
 # multiple simulations
+build_list<-c('Debug')#, 'Release')
 site_list<-c("All")#,"Soroe","Hyytiala","All")
 esm_list <-c("All")# ("1","2","3","4","5", "All")
 rcp_list <-c("All")# ("0p0","2p6","4p5","6p0","8p5","All")
@@ -53,7 +54,7 @@ if( grepl('All', co2_list) ) {
   co2_list = c("on",'off')
 }
 if ( grepl('All', protocol_list) ) {
-  protocol_list = c("2A","2B")
+  protocol_list = c('1A','2A','2B')
 }
 
 ## a way to time an R expression: system.time is preferred
@@ -71,7 +72,7 @@ for (protocol in protocol_list) {
                         cat(paste0("\nstart", model," ",version," ","protocol: ",protocol, " site: ", site, 
                                    " ESM: ", esm," RCP: ", rcp," Manag-", man, " CO2-", co2,'\n'))
 
-                        systemCall  <- paste0("Debug/3D_CMCC_Forest_Model", " ",
+                        systemCall  <- paste0(build_list,'/3D_CMCC_Forest_Model', " ",
                                               "-i"," ", "input/", site, " ",
                                               "-p"," ", "input/parameterization", " ",
                                               "-o"," ", "output/",output_folder,"-", version, "-", site,"-",protocol," ",
