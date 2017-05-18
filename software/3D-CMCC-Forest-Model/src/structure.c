@@ -571,7 +571,7 @@ int daily_forest_structure ( cell_t *const c, const meteo_daily_t *const meteo_d
 						/* compute daily canopy exposed cover */
 						s->value[DAILY_CANOPY_COVER_EXP] = s->value[CANOPY_COVER_EXP];
 
-						/* canopy cannot absorb more than 100% of incoming flux (e.g. rain) */
+						/* canopy cannot absorb more than 100% of incoming flux (e.g. light) */
 						if( s->value[DAILY_CANOPY_COVER_EXP] > 1. )
 						{
 							s->value[DAILY_CANOPY_COVER_EXP] = 1.;

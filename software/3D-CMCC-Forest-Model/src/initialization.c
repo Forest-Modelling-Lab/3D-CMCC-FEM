@@ -78,7 +78,7 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 		logger(g_debug_log, "\nNo Stem Biomass Data are available for model initialization\n");
 		logger(g_debug_log, "...Generating input Stem Biomass biomass data from DBH = %f cm\n", d->value);
 
-		//compute stem biomass from DBH
+		/* compute stem biomass from DBH */
 		if (s->value[STEMCONST_P] == NO_DATA && s->value[STEMPOWER_P] == NO_DATA)
 		{
 			/* use generic stemconst stempower values */
@@ -277,8 +277,9 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 	logger(g_debug_log, "-Minimum reserve = %f tC/cell\n", s->value[MIN_RESERVE_C]);
 	logger(g_debug_log, "-Minimum reserve = %f tC/tree\n", s->value[TREE_MIN_RESERVE_C]);
 
+
 	/* leaf */
-	if (s->value[LEAF_DM] == 0.0 || s->value[LEAF_DM] == NO_DATA)
+	if ( ! s->value[LEAF_DM] || s->value[LEAF_DM] == NO_DATA )
 	{
 		/* deciduous */
 		if ( ( s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2 ) && c->north == 0)
@@ -294,37 +295,44 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 			logger(g_debug_log, "...Generating input Leaf Biomass data from LAI\n");
 
 			/* check */
-			if( ! s->value[LAI_PROJ] )
+			if( ! s->value[LAI_PROJ] || s->value[LAI_PROJ] == NO_DATA )
 			{
-				logger_error(g_debug_log,"No Leaf Biomass nor LAI values from initialization file (exit)!!!!\n");
-				exit(1);
+				logger_error(g_debug_log,"No Leaf Biomass nor LAI values from initialization file (recompue it using sapwood)!!!!\n");
+
+				/* compute LAI (assuming at peak value) */
+				s->value[LAI_PROJ] = ( ( s->value[SAPWOOD_AREA] / 10000. ) * s->value[SAP_LEAF]) / s->value[CROWN_AREA_PROJ];
+				logger(g_debug_log, "PEAK_LAI_PROJ = %f m2/m2\n",s->value[PEAK_LAI_PROJ]);
+
+				/* compute leaf carbon to PEAK LAI down-scaled to canopy cover */
+				/* convert to tons of C and to cell cell */
+				s->value[LEAF_C]   = (s->value[LAI_PROJ] / s->value[SLA_AVG]) / 1e3 * (s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell);
 			}
 			/* otherwise use LAI */
 			else
 			{
-				/* compute leaf carbon to LAI down-scaled to canopy cover*/
+				/* compute leaf carbon to LAI down-scaled to canopy cover */
 				/* convert to tons of C and to cell cell */
-				/* note: it uses canopy cover because computed from LAI */
-				s->value[LEAF_C] = (s->value[LAI_PROJ] / s->value[SLA_AVG]) / 1e3 * (s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell);
-
-				/* Calculate projected LAI for sunlit and shaded canopy portions */
-				s->value[LAI_SUN_PROJ]   = 1. - exp(-s->value[LAI_PROJ]);
-				s->value[LAI_SHADE_PROJ] = s->value[LAI_PROJ] - s->value[LAI_SUN_PROJ];
-
-				logger(g_debug_log, "LAI_SUN        = %f m2/m2\n", s->value[LAI_PROJ]);
-				logger(g_debug_log, "LAI_SUN_PROJ   = %f m2/m2\n", s->value[LAI_SUN_PROJ]);
-				logger(g_debug_log, "LAI_SHADE_PROJ = %f m2/m2\n", s->value[LAI_SHADE_PROJ]);
-				
-				/* compute total LAI for Exposed Area */
-				/* note: is partially based on: Jackson & Palmer, 1979, 1981, 1983; Cannell and Grace 1993, Duursma and Makela 2007 */
-				s->value[LAI_EXP]       = (s->value[LAI_PROJ] / s->value[SLA_AVG]) / 1e3 * ( s->value[CANOPY_COVER_EXP] * g_settings->sizeCell );
-				s->value[LAI_SUN_EXP]   = 1. - exp ( -s->value[LAI_EXP] );
-				s->value[LAI_SHADE_EXP] = s->value[LAI_EXP] - s->value[LAI_SUN_EXP];
-
-				logger(g_debug_log, "LAI_EXP        = %f m2/m2\n", s->value[LAI_EXP]);
-				logger(g_debug_log, "LAI_SUN_EXP    = %f m2/m2\n", s->value[LAI_SUN_EXP]);
-				logger(g_debug_log, "LAI_SHADE_EXP  = %f m2/m2\n", s->value[LAI_SHADE_EXP]);
+				s->value[LEAF_C]   = (s->value[LAI_PROJ] / s->value[SLA_AVG]) / 1e3 * (s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell);
 			}
+
+			s->value[LEAF_DM]      = s->value[LEAF_C] * GC_GDM;
+
+			/* Calculate projected LAI for sunlit and shaded canopy portions */
+			s->value[LAI_SUN_PROJ]   = 1. - exp(-s->value[LAI_PROJ]);
+			s->value[LAI_SHADE_PROJ] = s->value[LAI_PROJ] - s->value[LAI_SUN_PROJ];
+
+			logger(g_debug_log, "LAI_PROJ       = %f m2/m2\n", s->value[LAI_PROJ]);
+			logger(g_debug_log, "LAI_SUN_PROJ   = %f m2/m2\n", s->value[LAI_SUN_PROJ]);
+			logger(g_debug_log, "LAI_SHADE_PROJ = %f m2/m2\n", s->value[LAI_SHADE_PROJ]);
+
+			/* compute total LAI for Exposed Area */
+			s->value[LAI_EXP]       = (s->value[LAI_PROJ] / s->value[SLA_AVG]) / 1e3 * ( s->value[CANOPY_COVER_EXP] * g_settings->sizeCell );
+			s->value[LAI_SUN_EXP]   = 1. - exp ( -s->value[LAI_EXP] );
+			s->value[LAI_SHADE_EXP] = s->value[LAI_EXP] - s->value[LAI_SUN_EXP];
+
+			logger(g_debug_log, "LAI_EXP        = %f m2/m2\n", s->value[LAI_EXP]);
+			logger(g_debug_log, "LAI_SUN_EXP    = %f m2/m2\n", s->value[LAI_SUN_EXP]);
+			logger(g_debug_log, "LAI_SHADE_EXP  = %f m2/m2\n", s->value[LAI_SHADE_EXP]);
 		}
 	}
 	else
@@ -360,7 +368,7 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 
 	logger(g_debug_log, "-Leaf Biomass = %f tC/tree\n",  s->value[TREE_LEAF_C]);
 	logger(g_debug_log, "-Leaf Biomass = %f tDM/cell\n", s->value[LEAF_DM]);
-	logger(g_debug_log, "-Leaf Biomass = %f tC/cell\n",  s->value[LEAF_C]);
+	logger(g_debug_log, "-Leaf Biomass = %f tC/cell\n",  s->value[LEAF_C]);getchar();
 
 	/* note: model assumes that if no fine-root biomass are available the same ratio foliage-fine roots is used */
 	if (( s->value[FROOT_DM] == 0.0 || s->value[FROOT_DM] == NO_DATA)

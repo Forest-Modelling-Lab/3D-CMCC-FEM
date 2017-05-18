@@ -67,11 +67,11 @@ void dbhdc_function (cell_t *const c, const int layer, const int height, const i
 	/* see also: Lhotka and Loewenstein, 1997; Lhotka and Loewenstein, 2008 */
 
 	/* previous dbhdc eff */
-	previous_dbhdc_eff = s->value[DBHDC_EFF];
+	previous_dbhdc_eff  = s->value[DBHDC_EFF];
 
-	temp_crown_area = (g_settings->sizeCell * g_settings->max_layer_cover) / (c->tree_layers[layer].layer_density * g_settings->sizeCell);
+	temp_crown_area     = (g_settings->sizeCell * g_settings->max_layer_cover) / (c->tree_layers[layer].layer_density * g_settings->sizeCell);
 
-	temp_crown_radius = sqrt(temp_crown_area / Pi);
+	temp_crown_radius   = sqrt(temp_crown_area / Pi);
 
 	temp_crown_diameter = temp_crown_radius * 2.;
 

@@ -122,7 +122,7 @@ void leaffall_evergreen ( cell_t *const c, const int height, const int dbh, cons
 	if ( IS_LEAP_YEAR ( c->years[year].year ) ) days_for_leaffall = 366;
 	else days_for_leaffall = 365;
 
-	logger(g_debug_log, "\n**LEAF FALL (turnover) EVERGREEN**\n");
+	logger(g_debug_log, "\n**LEAF FALL EVERGREEN**\n");
 
 	/************************************************************************************************************/
 
