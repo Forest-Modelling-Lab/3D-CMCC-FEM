@@ -368,7 +368,7 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 
 	logger(g_debug_log, "-Leaf Biomass = %f tC/tree\n",  s->value[TREE_LEAF_C]);
 	logger(g_debug_log, "-Leaf Biomass = %f tDM/cell\n", s->value[LEAF_DM]);
-	logger(g_debug_log, "-Leaf Biomass = %f tC/cell\n",  s->value[LEAF_C]);getchar();
+	logger(g_debug_log, "-Leaf Biomass = %f tC/cell\n",  s->value[LEAF_C]);
 
 	/* note: model assumes that if no fine-root biomass are available the same ratio foliage-fine roots is used */
 	if (( s->value[FROOT_DM] == 0.0 || s->value[FROOT_DM] == NO_DATA)

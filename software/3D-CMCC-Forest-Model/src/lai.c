@@ -81,7 +81,7 @@ void daily_lai (species_t *const s)
 
 	/* assign max annual LAI EXP */
 	s->value[MAX_LAI_EXP]  = MAX(s->value[MAX_LAI_EXP], s->value[LAI_EXP]);
-	logger(g_debug_log, "MAX_LAI_EXP   = %f m2/m2\n", s->value[MAX_LAI_EXP]);getchar();
+	logger(g_debug_log, "MAX_LAI_EXP   = %f m2/m2\n", s->value[MAX_LAI_EXP]);
 
 	/**************************************************************************************************/
 
