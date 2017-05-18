@@ -17,8 +17,6 @@
 
 extern logger_t* g_debug_log;
 
-#define TEST_RAD 0 //0 = old version; 1 = new version
-
 void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, const int dbh, const int age, const int species, const meteo_daily_t *const meteo_daily,
 		double Light_abs_frac, double Light_abs_frac_sun, double Light_abs_frac_shade, double Light_refl_par_frac, double Light_refl_par_frac_sun, double Light_refl_par_frac_shade,
 		double Light_refl_sw_frac, double Light_refl_sw_frac_sun, double Light_refl_sw_frac_shade)
@@ -43,26 +41,21 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 	 * apar = apar_sun + apar_shade;
 	 *
 	 * then it consider that an amount of sunlit leaf are not completely outside the canopy
-	 * but there's an exponential decay of absorption also for sunlit foliage	 *
+	 * but there's an exponential decay of absorption also for sunlit leaves	 *
 	 */
 
 	/***********************************************************************************************/
 
 	/* light reflection, absorption and transmission */
 	logger(g_debug_log,"\n*Light reflection, absorption and transmission*\n");
-	logger(g_debug_log,"DAILY_CANOPY_COVER_EXP = %f\n", s->value[DAILY_CANOPY_COVER_EXP]);
-	logger(g_debug_log,"CANOPY_COVER_EXP       = %f\n", s->value[CANOPY_COVER_EXP]);
+	logger(g_debug_log,"DAILY_CANOPY_COVER_EXP       = %f\n", s->value[DAILY_CANOPY_COVER_EXP]);
 
 	/***********************************************************************************************/
 	/* PAR computation (molPAR/m2 covered/day) */
 	logger(g_debug_log,"\n-PAR-\n");
 
 	/** available par **/
-#if TEST_RAD
 	s->value[PAR]             = meteo_daily->par  * s->value[DAILY_CANOPY_COVER_EXP];
-#else
-	s->value[PAR]             = meteo_daily->par  * s->value[CANOPY_COVER_EXP];
-#endif
 
 	/** sun leaves **/
 	s->value[PAR_REFL_SUN]    = s->value[PAR]     * Light_refl_par_frac_sun;
@@ -106,11 +99,7 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 	logger(g_debug_log,"\n-Short Wave-\n");
 
 	/** available Short Wave **/
-#if TEST_RAD
 	s->value[SW_RAD]              = meteo_daily->sw_downward_W * s->value[DAILY_CANOPY_COVER_EXP];
-#else
-	s->value[SW_RAD]              = meteo_daily->sw_downward_W * s->value[CANOPY_COVER_EXP];
-#endif
 
 	/** sun leaves **/
 	s->value[SW_RAD_REFL_SUN]     = s->value[SW_RAD]     * Light_refl_sw_frac_sun;
@@ -151,11 +140,7 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 	logger(g_debug_log,"\n-PPFD-\n");
 
 	/** available PPFD **/
-#if TEST_RAD
 	s->value[PPFD]              = meteo_daily->ppfd * s->value[DAILY_CANOPY_COVER_EXP];
-#else
-	s->value[PPFD]              = meteo_daily->ppfd * s->value[CANOPY_COVER_EXP];
-#endif
 
 	/** sun leaves **/
 	s->value[PPFD_REFL_SUN]     = s->value[PPFD] * Light_refl_par_frac_sun;
@@ -249,35 +234,6 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 	logger(g_debug_log, "\n**SHORT WAVE BAND RADIATION**\n");
 
 	/***********************************************************************************************************/
-#if TEST_RAD
-	/* SHORT WAVE RADIATION FRACTIONS */
-	/* compute fractions of light intercepted, transmitted and reflected from the canopy */
-	/* fraction of light transmitted through the canopy */
-
-
-	Light_trasm_frac       = exp(- s->value[K] * s->value[LAI_EXP]);
-	Light_trasm_frac_sun   = exp(- s->value[K] * s->value[LAI_SUN_EXP]);
-	Light_trasm_frac_shade = exp(- s->value[K] * s->value[LAI_SHADE_EXP]);
-
-	/* fraction of light absorbed by the canopy */
-	Light_abs_frac       = 1. - Light_trasm_frac;
-	Light_abs_frac_sun   = 1. - Light_trasm_frac_sun;
-	Light_abs_frac_shade = 1. - Light_trasm_frac_shade;
-
-	/* fraction of light reflected by the canopy */
-	/* for Short Wave radiation and PAR */
-	/* following BIOME albedo for PAR is 1/3 of albedo. the absorbed PAR is
-	calculated similarly to sw except that albedo is 1/3 for PAR because less
-	PAR is reflected than sw_radiation (Jones 1992)*/
-
-	Light_refl_sw_frac        = s->value[ALBEDO];
-	Light_refl_sw_frac_sun    = s->value[ALBEDO] * ( 1 - exp ( - s->value[K] * s->value[LAI_SUN_EXP]));
-	Light_refl_sw_frac_shade  = s->value[ALBEDO] * ( 1 - exp ( - s->value[K] * s->value[LAI_SHADE_EXP]));
-	Light_refl_par_frac       = (s->value[ALBEDO]/3.);
-	Light_refl_par_frac_sun   = (s->value[ALBEDO]/3.) * ( 1 - exp ( - s->value[K] * s->value[LAI_SUN_EXP] ) );
-	Light_refl_par_frac_shade = (s->value[ALBEDO]/3.) * ( 1 - exp ( - s->value[K] * s->value[LAI_SHADE_EXP] ) );
-
-#else
 	/* SHORT WAVE RADIATION FRACTIONS */
 	/* compute fractions of light intercepted, transmitted and reflected from the canopy */
 	/* fraction of light transmitted through the canopy */
@@ -308,8 +264,6 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 	Light_refl_par_frac       = (s->value[ALBEDO]/3.);
 	Light_refl_par_frac_sun   = (s->value[ALBEDO]/3.) * ( 1 - exp ( - s->value[K] * s->value[LAI_SUN_PROJ]));
 	Light_refl_par_frac_shade = (s->value[ALBEDO]/3.) * ( 1 - exp ( - s->value[K] * s->value[LAI_SHADE_PROJ]));
-
-#endif
 
 	logger(g_debug_log, "Light_trasm_frac          = %f\n", Light_trasm_frac);
 	logger(g_debug_log, "Light_trasm_frac_sun      = %f\n", Light_trasm_frac_sun);

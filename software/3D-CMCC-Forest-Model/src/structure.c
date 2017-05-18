@@ -500,8 +500,9 @@ int daily_forest_structure ( cell_t *const c, const meteo_daily_t *const meteo_d
 		//if ( c->tree_layers_count > 1 )
 		if ( layer > 1 )
 		{
-			/* following Wallace et al., 1991, Cannell and Grace 1993 */
+			/* following Wallace et al., 1991, Cannell and Grace 1993, Can. J. For. Res. Vol. 23 pag. 1976 */
 			/* note: it considers differences in average values of tree height among all over the layers */
+			/* note: it obviously works among layers and not within the same class or layer */
 
 			/* upper layer */
 			l->layer_tree_height_modifier = 0.5 * ( 1. + pow ( 2. , ( - c->tree_layers[layer].layer_avg_tree_height / c->tree_layers[layer-1].layer_avg_tree_height ) ) -
@@ -643,7 +644,7 @@ int daily_forest_structure ( cell_t *const c, const meteo_daily_t *const meteo_d
 							cum_temp_cover += temp_can_cover;
 						}
 
-						/** compute integrating all over the daylength corresponding canopy intercepting cover **/
+						/** compute integrating all over the day length corresponding canopy intercepting cover **/
 						s->value[DAILY_CANOPY_COVER_EXP] = cum_temp_cover / daylength;
 
 						/* check */

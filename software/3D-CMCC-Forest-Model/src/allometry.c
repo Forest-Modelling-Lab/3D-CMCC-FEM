@@ -13,11 +13,8 @@ extern logger_t* g_debug_log;
 void crown_allometry (cell_t *const c, const int height, const int dbh, const int age, const int species)
 {
 	int crown_form_factor;
-	double p = 1.6075;      /* Knud Thomsen's constant */
 	double c_diameter;        /* crown diameter (m) */
 	double c_height ;         /* crown height   (m) */
-	double i;
-	double f;
 	double ce;
 
 	height_t *h;
@@ -121,16 +118,12 @@ void crown_allometry (cell_t *const c, const int height, const int dbh, const in
 	case 3: /* tri-bi-axial ellipsoid */
 		logger(g_debug_log, "-Crown form factor = ellipsoid \n");
 
-		c_diameter = s->value[CROWN_DIAMETER];
-		c_height   = s->value[CROWN_HEIGHT];
-
-		i = pow(c_diameter, p);
-		f = pow(c_height  , p);
-		ce = acos (c_diameter/c_height);
+		c_diameter = s->value[CROWN_DIAMETER] / 2.;
+		c_height   = s->value[CROWN_HEIGHT]   / 2.;
+		ce = acos (c_diameter / c_height);
 
 		/* ellissoide prolato */
-		//s->value[CROWN_AREA]     = 2. * Pi * ( i + ( c_diameter * c_height ) * ( ce / sin(ce) ));
-		s->value[CROWN_AREA]     = 4. * Pi * sqrt ( ( pow ( i , 2. ) + ( 2. * ( i * f ) ) ) / 3.);
+		s->value[CROWN_AREA]     = 2. * Pi * ( pow(c_diameter, 2.) + ( c_diameter * c_height ) * ( ce / sin(ce) ));
 		s->value[CROWN_VOLUME]   = ( 4. / 3. ) * Pi * pow ( c_diameter , 2. ) * c_height;
 
 		break;

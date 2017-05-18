@@ -3,7 +3,7 @@ LIGHT_TOL   3                  //4 = very shade intolerant (cc = 90%), 3 = shade
 PHENOLOGY   0.1                //PHENOLOGY 0.1 = deciduous broadleaf, 0.2 = deciduous needle leaf, 1.1 = broad leaf evergreen, 1.2 = needle leaf evergreen 
 ALPHA   0.055                  //Canopy quantum efficiency (molC/molPAR) (0.055) Vitale et al., 2012, (0.05) from Williams 199, (0.056) Rotzer et al., 2010
 EPSILONgCMJ 0                  //Light Use Efficiency  (gC/MJ)(used if ALPHA is not available) 
-K   0.60                       //0.54 Extinction coefficient for absorption of PAR by canopy 0.71 for F. sylvatica Vitale et al., 2012, 0.5 from Williams 1996, 0.65 Hoffmann 1995
+K   0.60                       //0.54 Extinction coefficient for absorption of PAR by canopy 0.71 for F. sylvatica Vitale et al., 2012, 0.5 from Williams 1996, 0.65 Hoffmann 1995, 0.45 Forrester et al., 2014
 ALBEDO 0.15 // 0.2             //Albedo, 0.15 (varying from 0.13-0.17) from OTTO et al., BGS 2014
 INT_COEFF  0.3                 //precip interception coefficient for F. sylvatica fom Tatarinov
 SLA_AVG0 60                    //Average Specific Leaf Area m^2/KgC (juvenile) sunlit/shaded leaves for Fagus s. Adriaenssens et al., 2011; 27.8 to 48 from Pietsch 2005, 35 for Tatarinov et al., 2006
