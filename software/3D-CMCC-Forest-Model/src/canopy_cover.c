@@ -125,20 +125,6 @@ void canopy_cover (cell_t *const c, const int height, const int dbh, const int a
 	/* check */
 	CHECK_CONDITION( s->value[CANOPY_COVER_PROJ] ,  > , g_settings->max_layer_cover + eps );
 
-//	/* (MODIFIED) formulation based on canopy cover */
-//	/* note: this is valid ONLY for cylinder shape crowns */
-//
-//	/* Normalizing CANOPY_COVER and max_layer_cover (0-1) */
-//	eff_canopy_cover = s->value[CANOPY_COVER_PROJ] / g_settings->max_layer_cover;
-//	logger(g_debug_log, "-eff_canopy_cover = %.4g %%\n", eff_canopy_cover * 100.);
-//
-//	if ( eff_canopy_cover > 1. ) eff_canopy_cover = 1.;
-//
-//	/* it considers crown projected area (at zenith angles) plus half of lateral area of a cylinder */
-//	/* when canopy tends to closure the later part of the crown area that absorbs light tends to be reduced */
-//	lateral_area = ((s->value[CROWN_DIAMETER] * Pi * s->value[CROWN_HEIGHT]) / 2.) * (1. - eff_canopy_cover);
-//	logger(g_debug_log, "-Crown Lateral Area = %f \n", lateral_area);
-
 	/* Canopy cover able to absorb light (integrated all over all viewing angles) */
 	s->value[CANOPY_COVER_EXP] = (s->value[CROWN_AREA_EXP] * s->counter[N_TREE]) / g_settings->sizeCell ;
 	logger(g_debug_log, "-Canopy Exposed Cover    = %f %%\n", s->value[CANOPY_COVER_EXP]  * 100.);
