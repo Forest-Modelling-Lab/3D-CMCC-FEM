@@ -112,5 +112,6 @@ int has_path_delimiter(const char* const s);
 const char* datetime_current(void);
 void timer_init(void);
 double timer_get(void);
+int istab(const int c);
 
 #endif /* COMMON_H */

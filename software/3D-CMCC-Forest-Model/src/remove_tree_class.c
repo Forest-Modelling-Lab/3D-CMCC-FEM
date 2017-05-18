@@ -279,7 +279,7 @@ int tree_class_remove(cell_t *const c, const int height, const int dbh, const in
 #else
 	/* zeroed species class if N_TREE < 0 or if called by harvesting function */
 	if ( ! c->heights[height].dbhs[dbh].ages[age].species[species].counter[N_TREE]
-			|| g_settings->management ) {	
+			/*|| g_settings->management*/ ) {	
 		if ( ! species_zeroed(c, height, dbh, age, species) ) return 0;
 	}
 #endif

@@ -82,10 +82,6 @@ static void dataset_free(dataset_comp_t* d) {
 	}
 }
 
-static int istab(const int c) {
-	return ('\t' == c);
-}
-
 static dataset_comp_t* dataset_import(const char*const filename) {
 	char buffer[BUFFER_SIZE];
 	char* p;

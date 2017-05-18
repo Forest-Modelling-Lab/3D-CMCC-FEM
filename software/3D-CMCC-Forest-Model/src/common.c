@@ -508,3 +508,7 @@ int has_path_delimiter(const char* const s) {
 	i = strlen(s);
 	return (('/' == s[i-1]) || ('\\' == s[i-1]));
 }
+
+int istab(const int c) {
+	return ('\t' == c);
+}

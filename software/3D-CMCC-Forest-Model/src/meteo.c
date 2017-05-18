@@ -2,6 +2,7 @@
 #include "meteo.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <ctype.h>
 #include "logger.h"
 #include "netcdf.h"
 #include "common.h"
@@ -1761,37 +1762,51 @@ static int import_txt(const char *const filename, meteo_annual_t** p_yos, int *c
 
 	assert(p_yos);
 
-	// get rows count
-	rows_count = file_get_rows_count(filename);
-	if ( rows_count <= 0 ) {
-		char *err;
-		logger_error(g_debug_log, "unable to import '%s': ", filename);
-		switch ( rows_count )
+	// open file for rows count
+	f = fopen(filename, "r");
+	if ( ! f )
+	{
+		logger_error(g_debug_log, "unable to open met data file, problems in filename !\n");
+		return 0;
+	}
+
+	// rows count
+	rows_count = 0;
+	for ( ; ; )
+	{
+		if ( ! fgets(buffer, BUFFER_SIZE, f) )
 		{
-			case 0:
-				err = "file is empty!";
-			break;
-
-			case -1:
-				err = "file not found!";
-			break;
-
-			case -2:
-				err = "out of memory!";
-			break;
-
-			case -3:
-				err = "read error!";
-			break;
+			break;			
 		}
-		logger_error(g_debug_log, err);
-		logger_error(g_debug_log, "\n");
+
+		// remove initial spaces and tabs (if any)
+		p = buffer;
+		while ( isspace(*p) ) ++p;
+
+		if ( ('/r' != p[0]) && ('/n' != p[0]) && ('/' != p[0]) && ('/0' != p[0]) )
+		{
+			++rows_count;
+		}	
+	}
+
+	// close file
+	fclose(f);
+	
+	if ( ! rows_count  )
+	{
+		logger_error(g_debug_log, "unable to import '%s': file is empty!", filename);
 		return 0;
 	}
 
 	// remove header
 	--rows_count;
 
+	if ( ! rows_count  )
+	{
+		logger_error(g_debug_log, "unable to import '%s': data is missing!", filename);
+		return 0;
+	}
+	
 	// alloc memory for values
 	values = malloc(rows_count*MET_COLUMNS_COUNT*sizeof*values);
 	if ( ! values ) {
@@ -1814,8 +1829,23 @@ static int import_txt(const char *const filename, meteo_annual_t** p_yos, int *c
 	}
 
 	// get header
-	if ( ! fgets(buffer, BUFFER_SIZE, f) )
+	do
 	{
+		if ( ! fgets(buffer, BUFFER_SIZE, f) )
+		{
+			logger_error(g_debug_log, "empty met data file ?\n");
+			free(values);
+			fclose(f);
+			return 0;
+		}
+
+		// remove initial spaces and tabs (if any)
+		p = buffer;
+		while ( isspace(*p) ) ++p;
+
+		// skip empty lines and comments
+	} while ( ('/0' == p[0]) || ('/' == p[0]) );
+	if ( ! p || ! p[0] ) {
 		logger_error(g_debug_log, "empty met data file ?\n");
 		free(values);
 		fclose(f);
@@ -1899,21 +1929,16 @@ static int import_txt(const char *const filename, meteo_annual_t** p_yos, int *c
 	current_row = 0;
 	while ( fgets(buffer, BUFFER_SIZE, f) )
 	{
-		// remove carriage return and newline ( if any )
-		for ( i = 0; buffer[i]; i++ )
-		{
-			if ( ('\n' == buffer[i]) || ('\r' == buffer[i]) )
-			{
-				buffer[i] = '\0';
-				break;
-			}
-		}
-
-		// skip empty lines
-		if ( '\0' == buffer[0] )
+		// remove initial spaces (if any)
+		p = buffer;
+		while ( isspace(*p) ) ++p;
+	
+		// skip empty lines or comment
+		if ( ('\0' == p[0]) || ('/' == p[0]) )
 		{
 			continue;
 		}
+
 		if ( ++current_row > rows_count ) {
 			logger_error(g_debug_log, "too many rows found!");
 			free(values);
@@ -1975,7 +2000,7 @@ static int import_txt(const char *const filename, meteo_annual_t** p_yos, int *c
 			return 0;
 		}
 		/* write header */
-		fputs("Year,Month,n_days,", f);
+		//fputs("Year,Month,n_days,", f);
 		for ( i = 0; i < MET_COLUMNS_COUNT; ++i ) {
 			fprintf(f, "%s", sz_met_columns[i]);
 			if ( i < MET_COLUMNS_COUNT-1 ) {
