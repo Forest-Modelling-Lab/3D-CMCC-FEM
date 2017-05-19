@@ -736,7 +736,10 @@ typedef struct
 	int layer_n_height_class;           /* number of height class per layer */
 	int layer_n_trees;                  /* number of trees per layer */
 	double layer_density;               /* tree density per layer (n_tree/sizecell) */
-	double layer_cover;                 /* layer canopy cover per layer */
+	double layer_cover_proj;            /* layer canopy cover projected per layer */
+	double layer_cover_exp;             /* layer canopy cover exposed per layer */
+	double daily_layer_cover_proj;      /* layer canopy cover projected per layer */
+	double daily_layer_cover_exp;       /* layer canopy cover exposed per layer */
 	double layer_avg_tree_height;       /* average tree layer height */
 	double layer_tree_height_modifier;  /* layer level tree height modifier (see Wallace et al., 1991; Cannell & Grace 1993) */
 

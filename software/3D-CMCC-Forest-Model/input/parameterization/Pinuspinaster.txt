@@ -7,7 +7,7 @@ K   0.34                      //Extinction coefficient for absorption of PAR by 
 ALBEDO  0.15                  //averaged for P. pinaster 0.19-0.12 Moreaux et al., 2011; 0.279 Berbigier and Bonnefpnd 1994
 INT_COEFF  0.3                //precip interception coefficient for P. sylvestris from Pietsch
 SLA_AVG0  9.56                //Average Specific Leaf Area m^2/KgC (juvenile) sunlit/shaded leaves for P. pinaster Sànchez-Gomez et al.,2006
-SLA_AVG1  4.0                 //Average Specific Leaf Area m^2/KgC (mature) sunlit/shaded leaves for P. pinaster Mediavilla et al., 2011
+SLA_AVG1  2                   //Average Specific Leaf Area m^2/KgC (mature) sunlit/shaded leaves for P. pinaster Mediavilla et al., 2011
 TSLA      20                  //Age at which SLA_AVG = (SLA_AVG1 + SLA_AVG0 )/2 Forrester et al., 2017
 SLA_RATIO   2                 //(DIM) ratio of shaded to sunlit projected SLA for P. sylvestris from Pietsch
 LAI_RATIO   2.6               //(DIM) all-sided to projected leaf area ratio for P. sylvestris from Pietsch
