@@ -363,12 +363,16 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 			logger(g_debug_log, "Ok LAI..\n");
 		}
 	}
-
 	s->value[TREE_LEAF_C] = s->value[LEAF_C] / s->counter[N_TREE];
 
 	logger(g_debug_log, "-Leaf Biomass = %f tC/tree\n",  s->value[TREE_LEAF_C]);
 	logger(g_debug_log, "-Leaf Biomass = %f tDM/cell\n", s->value[LEAF_DM]);
 	logger(g_debug_log, "-Leaf Biomass = %f tC/cell\n",  s->value[LEAF_C]);
+
+	/* compute all-sided Leaf Area */
+	s->value[ALL_LAI_PROJ] = s->value[LAI_PROJ] * s->value[CANOPY_COVER_PROJ];
+	logger(g_debug_log, "ALL_LAI_PROJ = %f (m2)\n", s->value[ALL_LAI_PROJ]);
+	logger(g_debug_log,"*****************************\n");
 
 	/* note: model assumes that if no fine-root biomass are available the same ratio foliage-fine roots is used */
 	if (( s->value[FROOT_DM] == 0.0 || s->value[FROOT_DM] == NO_DATA)

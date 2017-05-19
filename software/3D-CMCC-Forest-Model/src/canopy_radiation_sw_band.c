@@ -222,6 +222,7 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 	static double temp_ppfd_abs;                                           /* temporary absorbed PPFD for layer */
 	static double temp_ppfd_refl;                                          /* temporary reflected PPFD for layer */
 
+	double k;
 	double k_eff;
 
 	tree_layer_t *l;
@@ -237,12 +238,15 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 
 	/***********************************************************************************************************/
 
-	/* following Duursma and Makela 2007 */
+	/* following Duursma and Makela 2007, Tree Phys. 27, 2007 */
 
-	k_eff =
+	k_eff = (s->value[CANOPY_COVER_EXP] / s->value[ALL_LAI_PROJ]) * ( 1. - exp (- s->value[K] * s->value[LAI_EXP]));
 
-
-
+#if 0
+	k = k_eff;
+#else
+	k = s->value[K];
+#endif
 
 	/***********************************************************************************************************/
 	/* SHORT WAVE RADIATION FRACTIONS */
@@ -252,9 +256,9 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 	/* note: we currently use approach for homogeneous canopies that improves representation when canopy is not closed: */
 	/* see method from Cannel and Grace, Can. J. For: Res. Vol. 23, 1993 [Eq]8  */
 
-	Light_trasm_frac       = exp(- s->value[K] * s->value[LAI_PROJ]);
-	Light_trasm_frac_sun   = exp(- s->value[K] * s->value[LAI_SUN_PROJ]);
-	Light_trasm_frac_shade = exp(- s->value[K] * s->value[LAI_SHADE_PROJ]);
+	Light_trasm_frac       = exp(- k * s->value[LAI_PROJ]);
+	Light_trasm_frac_sun   = exp(- k * s->value[LAI_SUN_PROJ]);
+	Light_trasm_frac_shade = exp(- k * s->value[LAI_SHADE_PROJ]);
 
 	/** fraction of light absorbed by the canopy **/
 	Light_abs_frac       = 1. - Light_trasm_frac;
@@ -268,11 +272,11 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 	/* PAR is reflected than sw_radiation (Jones 1992) */
 
 	Light_refl_sw_frac        = s->value[ALBEDO];
-	Light_refl_sw_frac_sun    = s->value[ALBEDO] * ( 1 - exp ( - s->value[K] * s->value[LAI_SUN_PROJ]));
-	Light_refl_sw_frac_shade  = s->value[ALBEDO] * ( 1 - exp ( - s->value[K] * s->value[LAI_SHADE_PROJ]));
+	Light_refl_sw_frac_sun    = s->value[ALBEDO] * ( 1 - exp ( - k * s->value[LAI_SUN_PROJ]));
+	Light_refl_sw_frac_shade  = s->value[ALBEDO] * ( 1 - exp ( - k * s->value[LAI_SHADE_PROJ]));
 	Light_refl_par_frac       = (s->value[ALBEDO]/3.);
-	Light_refl_par_frac_sun   = (s->value[ALBEDO]/3.) * ( 1 - exp ( - s->value[K] * s->value[LAI_SUN_PROJ]));
-	Light_refl_par_frac_shade = (s->value[ALBEDO]/3.) * ( 1 - exp ( - s->value[K] * s->value[LAI_SHADE_PROJ]));
+	Light_refl_par_frac_sun   = (s->value[ALBEDO]/3.) * ( 1 - exp ( - k * s->value[LAI_SUN_PROJ]));
+	Light_refl_par_frac_shade = (s->value[ALBEDO]/3.) * ( 1 - exp ( - k * s->value[LAI_SHADE_PROJ]));
 
 	logger(g_debug_log, "Light_trasm_frac          = %f\n", Light_trasm_frac);
 	logger(g_debug_log, "Light_trasm_frac_sun      = %f\n", Light_trasm_frac_sun);

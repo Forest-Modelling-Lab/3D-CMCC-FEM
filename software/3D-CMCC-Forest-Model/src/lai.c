@@ -74,7 +74,7 @@ void daily_lai (species_t *const s)
 	logger(g_debug_log, "PEAK_LAI_EXP  = %f m2/m2\n", s->value[PEAK_LAI_EXP]);
 
 	/* assign max annual LAI EXP */
-	s->value[MAX_LAI_EXP]  = MAX(s->value[MAX_LAI_EXP], s->value[LAI_EXP]);
+	s->value[MAX_LAI_EXP]   = MAX(s->value[MAX_LAI_EXP], s->value[LAI_EXP]);
 	logger(g_debug_log, "MAX_LAI_EXP   = %f m2/m2\n", s->value[MAX_LAI_EXP]);
 
 	/**************************************************************************************************/
@@ -82,7 +82,7 @@ void daily_lai (species_t *const s)
 	logger(g_debug_log, "single height class canopy cover projected = %f %%\n", s->value[CANOPY_COVER_PROJ] * 100.);
 	logger(g_debug_log, "single height class canopy cover exposed   = %f %%\n", s->value[CANOPY_COVER_EXP]  * 100.);
 
-	/* compute all-sided LAI */
+	/* compute all-sided Leaf Area */
 	s->value[ALL_LAI_PROJ] = s->value[LAI_PROJ] * s->value[CANOPY_COVER_PROJ];
 	logger(g_debug_log, "ALL_LAI_PROJ = %f (m2)\n", s->value[ALL_LAI_PROJ]);
 	logger(g_debug_log,"*****************************\n");
