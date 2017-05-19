@@ -33,14 +33,22 @@ we can let our user community know when there are updates. We will appreciate yo
 Referencing 3D-CMCC-FEM:
 If you use 3D-CMCC-FEM in your research, we request that you include the following acknowledgement in the relevant
 manuscripts:
-"3D-CMCC-FEM, Version 5.x.x was provided by Alessio Collalti, euroMediterranean Center for Climate Changes (CMCC) and University of Tuscia Viterbo,"
+
+3D-CMCC-FEM, Version 5.x.x was provided by Alessio Collalti, from:
+
+-euroMediterranean Center on Climate Changes (CMCC)  IAFES division (Viterbo)
+-National Research Council of Italy, Institute for Agricultural and Forestry Systems in the Mediterranean (ISAFOM), 
+-University of Tuscia (Viterbo),
+
 Please also reference the following citation as the most recent and complete description of the current model version:
 
+v.4.0
 "A process-based model to simulate growth and dynamics in forests with complex structure: evaluation and use of 3D-CMCC Forest Ecosystem Model
 in a deciduous forest in Central Italy"
 A. Collalti, L. Perugini, T. Chiti, A. Nolè, G. Matteucci, R. Valentini
 Ecological modeling 2014
 
+v.5.1.1
 "Validation of 3D-CMCC Forest Ecosystem Model (v.5.1) against eddy covariance data for 10 European forest sites"
 A. Collalti, S. Marconi, A. Ibrom, C. Trotta, A. Anav, E. D’Andrea, G. Matteucci, L. Montagnani, B. Gielen, I. Mammarella, T. Grünwald, 
 A. Knohl, F. Berninger, Y. Zhao, R. Valentini and M. Santini, Geosci. Model Dev., 9, 479-504, 2016
@@ -54,8 +62,11 @@ and is a good starting point for this kind of inquiry. The files matrix.c define
 pass information between the process modules, and includes both a short text description and the units for each internal
 variable. If you have questions about the code, appropriate model applications, possible programming errors, etc.,
 please read this entire guide first, then feel free to contact:
+
 Alessio Collalti (alessio.collalti@cmcc.it)
 Monia Santini (monia.santini@cmcc.it)
+Alessio Ribeca (alessio.ribeca@cmcc.it)
+Carlo Trotta (trotca@unitus.it)
 
 
 CODE CHARACTERISTIC
@@ -117,7 +128,7 @@ Usage
 		6_LAI_2000_2001_123_456.nc
 		6_RADS_2000_2001_123_456.nc
 	
-	ASCII file must have following header, separated by a tab (/t) :
+	ASCII file must have following header, separated by a tab (/t) or comma(,):
 	
 		Year	Month	n_days	Rg_f	Ta_f	Tmax	Tmin	Rh_f	Ts_f	Precip	SWC	LAI	ET	WS_f
 		
@@ -128,7 +139,7 @@ Usage
 	
 	ASCII file must have following header, separated by a comma :
 
-	X,Y,LANDUSE,LAT,LON,CLAY_PERC,SILT_PERC,SAND_PERC,SOIL_DEPTH,FR,FN0,FNN,M0,SN,PH,NO3,NH4,HYDRAULIC_CONDUCTIVITY,INSOC,LIT_FRACT,HUMA_FRACT,HUMU_FRACT,BIO_FRACT,RCNRVL,RCNRL,RCNRR,RCNB,RCNH,RCNM,RCNH2,DC_LITTER,DC_HUMADS,DC_HUMUS
+	X,Y,LANDUSE,LAT,LON,CLAY_PERC,SILT_PERC,SAND_PERC,SOIL_DEPTH,FR,FN0,FNN,M0,SN,...,....
 	
 	Please see [LANDUSE] section to check allowed values.
 	Same columns name applies to variables name in NETCDF version of file.
@@ -144,7 +155,7 @@ Usage
 	
 -c	mandatory parameter. This file will be searched in input path, if specified.
 	It must be an ASCII file. You can put comment using '//' token;
-	The file must contains following rows :
+	The file must contains following rows:
 	
 	SITENAME Soroe
 	VERSION f                           //Must be 'f' for FEM version or 'b', for BGC version for FOREST LANDUSE
@@ -188,7 +199,7 @@ Usage
 	REPLANTED_WFR 0                     // (tDM/ha) fine root biomass of replanted trees (optional)
 	REPLANTED_WL 0                      // (tDM/ha) leaf biomass of replanted trees (optional for evergreen if LAI!= 0, otherwise useless)
 	REPLANTED_WBB 0                     // (tDM/ha) branch biomass of replanted trees (optional)
-	REGENERATION_SPECIES none          // NOT USED it comes from species that produces seeds
+	REGENERATION_SPECIES none           // NOT USED it comes from species that produces seeds
 	REGENERATION_MANAGEMENT T           // (T) management of replated trees (should be only T)(mandatory)
 	REGENERATION_N_TREE -9999           // number of replanted trees (mandatory) (NOT USED)
 	REGENERATION_AGE 1                  // (yr) age of regeneration trees (mandatory) (SHOULD BE ALWAYS 1)
@@ -200,7 +211,7 @@ Usage
 	REGENERATION_WFR 0                  // (tDM/ha) fine root biomass of regeneration trees (optional)
 	REGENERATION_WL 0                   // (tDM/ha) leaf biomass of regeneration trees (optional for evergreen if LAI!= 0, otherwise useless)
 	REGENERATION_WBB 0                  // (tDM/ha) branch biomass of regeneration trees (optional)
-	NO_SPREADSHEET on					// (optional) if 'on', use crazy delimiters (tab and spaces) instead of a simple comma on output files. for people that are unable to use a spreadsheet.
+	NO_SPREADSHEET on                   // (optional) if 'on', use crazy delimiters (tab and spaces) instead of a simple comma on output files. for people that are unable to use a spreadsheet.
 	
 -k	mandatory parameter only if CO2_trans in settings file is setted on 'on' or 'var'.
 	This file will be searched in input path, if specified.
@@ -244,19 +255,16 @@ Please note that you must use their indexes if you use a NETCDF file.
 8,Quercusrobur
 9,quercus_deciduous
 10,quercus_evergreen
-11,Wheat
 
 [MANAGEMENT]
 
 Following type of management can be used on relative column inside as ASCII dataset (without indexes)
 Please note that you must use their indexes if you use a NETCDF file.
 T is for timber.
-C is for coppice.
-N is for natural (no management)
+C is for coppice. (not currently working!)
 
 0,T
 1,C
-2,N
 
 [LANDUSE]
 
@@ -272,14 +280,14 @@ RUN THE MODEL
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Be sure to set the right arguments passed to the project 
 
-# Example usage:
+# Example usage (UNIX OS):
 # Go into into bin directory:
 cd bin
 # Run executable with default parameters:
 ./3D_CMCC_Forest_Model -i ../input -o ../output/output.txt -d ../input/1526_962_input.txt -m ../input/1526_962_2007.txt,../input/1526_962_2008.txt -s ../input/site.txt -c ../input/settings.txt
 
 
-the model runs daily starting from the row 0,0 -> 0,n and then starts to process a new row
+the model runs daily starting from the row 0,0 -> 0,n and then starts to process a new row every single day
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 SETTING MODEL:
@@ -294,22 +302,23 @@ The file "settings.txt" permits to set the model run, choosing:
 
 INPUT FILES: OVERVIEW
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-INITIALIZATION DATA
-The first required input file is called the "input.txt". It provides information about the stand conditions.
+INITIALIZATION DATA (Stand data)
+The first required input file is called the "stand.txt". It provides information about the stand conditions at year "Year"
+(multiple years are allowed)
 Example for a cell resolution of 10x10 meters cell X = 0, Y = 0:
 
-x,y,Age,Species,Management,N,Stool,AvDBH,Height,Wf,Wrc,Wrf,Ws,Wres,Lai, Perc
-0,0,42,Fagussylvatica,T,34,0,8.46,9.66,0,0.22,0,0.81,0.02,0,1
-0,0,26,Quercuscerris,T,45,0,7.23,6.42,0,0.15,0,0.42,0.01,0,1
-0,0,11,Quercuscerris,T,54,0,6.4,2.21,0,0.08,0,0.23,0.006,0,1
-..,..,..,..,..,..,..,..,..,..,..,..,..,..,..,..,..,..,..,..
-..,..,..,..,..,..,..,..,..,..,..,..,..,..,..,..,..,..,..,..
-..,..,..,..,..,..,..,..,..,..,..,..,..,..,..,..,..,..,..,..
-..,..,..,..,..,..,..,..,..,..,..,..,..,..,..,..,..,..,..,..
-..,..,..,..,..,..,..,..,..,..,..,..,..,..,..,..,..,..,..,..
-150,87,42,Fagussylvatica,T,34,0,8.46,9.66,0,0.22,0,0.81,0.02,0,1
-150,87,26,Quercuscerris,T,45,0,7.23,6.42,0,0.15,0,0.42,0.01,0,1
-150,87,11,Quercuscerris,T,54,0,6.4,2.21,0,0.08,0,0.23,0.006,0,1
+Year,x,y,Age,Species,Management,N,Stool,AvDBH,Height,Lai,
+2000,0,0,42,Fagussylvatica,T,34,0,8.46,9.66,1
+2000,0,0,26,Quercuscerris,T,45,0,7.23,6.42,1
+2000,0,0,11,Quercuscerris,T,54,0,6.4,2.21,1
+..,..,..,..,..,..,..,..,..,..
+..,..,..,..,..,..,..,..,..,..
+..,..,..,..,..,..,..,..,..,..
+..,..,..,..,..,..,..,..,..,..
+..,..,..,..,..,..,..,..,..,..
+2000,150,87,42,Fagussylvatica,T,34,0,8.46,9.66,1
+2000,150,87,26,Quercuscerris,T,45,0,7.23,6.42,1
+2000,150,87,11,Quercuscerris,T,54,0,6.4,2.21,1
 
 The text file must be created following this logic architecture
 - for each tree height class define the number of age classes and their values
@@ -322,15 +331,10 @@ The text file must be created following this logic architecture
 ---- Stool = number of stool per area (only if Management is setted to C)
 ---- AvDBH = average diameter at breast height in cm for that class
 ---- Height = tree height in meters for that class
----- Wf = foliage biomass in tDM per area for that class (mandatory only for evergreen if Lai = 0)
----- Wrc = coarse root biomass in tDM per area for that class
----- Wrf = fine root biomass in tDM per area for that class (it can be setted with 0)
----- Ws = stem biomass in tDM per area for that class (which comprises branch and bark fraction)
----- Wres = non structural carbon in tDM per area for that class
----- Lai = leaf area index (m^2m^-2), (mandatory only for evergreen if Wf = 0)
+---- Lai = leaf area index (m^2m^-2), (optional only for evergreen)
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-METEOROLOGICAL DATA
+METEOROLOGICAL DATA (e.g. rcp8.5.txt)
 The second required input file is the meteorological data file named using the year of simulation (optionally), 
 (e.g. "2007_2010.txt") containing the daily meteorological data information for that years.
 Years of simulation depends on the number years included in the met file. 
@@ -347,8 +351,8 @@ example for year 2007-200x in daily/unspatial version
 Year	Month	n_days	Rg_f	Ta_f	Tmax	Tmin	VPD_f	Ts_f	Precip	SWC	LAI 
 2007	1       1       5.1     -9999   13.1    7.1     0.2     7.8     1       -9999   0
 2007	1       2       6.1     -9999   10.4    5.8     0.2     6.3     0.2     0.27    0
-2007  1       3       6.1     -9999   9.9     3.1     0.2     3.3     0       0.39    0
-2007  1       4       6.1     -9999   10      1.9     0.2     0.5     0       0.2     0
+2007    1       3       6.1     -9999   9.9     3.1     0.2     3.3     0       0.39    0
+2007    1       4       6.1     -9999   10      1.9     0.2     0.5     0       0.2     0
 ...
 
 if you don't have optional data set value as -9999
@@ -372,7 +376,7 @@ IMPORTANT: for now the model can't hold any -9999 on january the first for the v
 
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-SPECIES PARAMETERIZATION
+SPECIES PARAMETERIZATION (e.g. Fagussylvatica.txt)
 The third required input file is the species eco-physiological constants file, named with species names to simulate (e.g."Fagussylvatica.txt").
 It contains parameters such as Quantum canopy efficiency, Specific Leaf Area and allocation ratios for example.
 IMPORTANT: use the same characters used within input.txt file to rename this file.
@@ -389,7 +393,7 @@ K	           0.60		 // Extinction coefficient for absorption of PAR by canopy
 
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-SOIL PARAMETRIZATION
+SOIL PARAMETRIZATION (e.g. soil.txt)
 The fourth required input file is "soil.txt". It contains information about soil and fertility of the test site.
 
 Comments are allowed in the parameter file. Comments can appear almost anywhere, must begin with two forward slash characters 
@@ -400,7 +404,7 @@ tab character separating the parameter name and its value.
 
 IMPORTANT: Values are referred to the SIZECELL dimensions specified in the setting.txt file (e.g. if SIZECELL = 100 meters -> tC/ha)
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-TOPO PARAMETRIZATION
+TOPO PARAMETRIZATION (e.g. topo.txt)
 The fifth required input file is "topo.txt". It contains information about topography of the test site.
 
 Comments are allowed in the parameter file. Comments can appear almost anywhere, must begin with two forward slash characters 
@@ -410,13 +414,11 @@ In general, the format of parameters file is one parameter per line, with the pa
 tab character separating the parameter name and its value.
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-
 IMPORTANT: If any required parameter is left unset by all files an error will be written and the program terminates.
-
 
 OUTPUT FILES: OVERVIEW
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-For each simulation the Model creates or rewrites into the output folder a file named "output.txt".
+For each simulation 3D-CMCC-FEM creates or rewrites into the output folder a file named "output.txt".
 In this folder 4 other subfolders based on time scale should created.
 These files contain every result for debug (if necessary) daily, monthly and annual simulations.
 It is also useful to check which model functions have been used. 
@@ -502,8 +504,8 @@ to make the model work under eclipse4.3 using git you shall follow this guide
 
 HOW TO CREATE A NEW BRANCH IN GIT
 
-The 3D-CMCC-FEM-DNDC/RothC project is currently hosted by the repo http://dev.cmcc.it. It is developed under the GIT version control system and password protected. 
-Please ask Alessio Collalti for access to the source code.
+The 3D-CMCC-FEM project is currently hosted by the repo https://github.com/CMCC-Foundation/3D-CMCC-LAND. It is developed under the GITHUB version control system and password protected. 
+Please ask to Alessio Collalti for access to the source code.
 Git allows you to create a local branch which can be committed and pushed to the repository. To do that follow the following steps:
 1) install git on your machine and the Egit plugin in Eclipse
 2) after importing the git project right click on the project folder, go to "team", then to "switch to" and finally click on "new branch"
