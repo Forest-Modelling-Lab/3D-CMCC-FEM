@@ -307,7 +307,6 @@ enum {
 	MAX_LAI_EXP,                        /* (m2/m2) Maximum annual LAI exposed */
 	PEAK_LAI_EXP,                       /* (m2/m2) Peak Projected LAI exposed */
 	MAX_LAI_LEAFFALL_PROJ,              /* (m2/m2) LAI Projected at the very first day of senescence: parameter of the sigmoid function */
-	LAD,                                /* (m2/m2) Leaf Area Density */
 	LEAF_TEMP_K,                        /* (K) leaf temperature */
 	CANOPY_TEMP_K,                      /* (K) canopy temperature */
 	CANOPY_TEMP_K_OLD,                  /* (K) previous time canopy temperature */
@@ -833,7 +832,10 @@ typedef struct
 
 	/*forest structure variables*/	
 	int Veg_Counter;                                                      /* number of class in vegetative period  in the cell */
-	double cell_cover;                                                    /* (ratio) Canopy cover  */
+	double daily_cell_cover_proj;                                         /* (ratio) Daily canopy cover projected */
+	double daily_cell_cover_exp;                                          /* (ratio) Daily canopy cover exposed */
+	double cell_cover_proj;                                               /* (ratio) Canopy cover projected */
+	double cell_cover_exp;                                                /* (ratio) Canopy cover exposed */
 	double bare_soil_cover;                                               /* (ratio) Bare soil cover */
 	int n_trees;			                                              /* (trees/cell/day) number of trees */
 	int daily_dead_tree;                                                  /* (trees/cell/day) daily number of dead tree */

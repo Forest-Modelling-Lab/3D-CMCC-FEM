@@ -36,10 +36,6 @@ void daily_lai (species_t *const s)
 
 	logger(g_debug_log, "\n**LEAF AREA INDEX**\n");
 
-	/**************************************************************************************************/
-
-	/* compute LAI for Projected Area */
-
 	/* convert tC/cell to KgC/m^2 */
 	leaf_C = s->value[LEAF_C] * 1000.;
 	logger(g_debug_log, "Leaf Biomass      = %f KgC/cell\n", leaf_C);
@@ -48,7 +44,8 @@ void daily_lai (species_t *const s)
 
 	/**************************************************************************************************/
 
-	/* compute total LAI for Projected Area */
+	/* compute LAI for Projected Area */
+
 	s->value[LAI_PROJ]       = ( leaf_C * s->value[SLA_AVG] ) / ( s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell );
 	s->value[LAI_SUN_PROJ]   = 1. - exp ( - s->value[LAI_PROJ] );
 	s->value[LAI_SHADE_PROJ] = s->value[LAI_PROJ] - s->value[LAI_SUN_PROJ];
@@ -76,18 +73,18 @@ void daily_lai (species_t *const s)
 	logger(g_debug_log, "LAI_SHADE_EXP = %f m2/m2\n", s->value[LAI_SHADE_EXP]);
 	logger(g_debug_log, "PEAK_LAI_EXP  = %f m2/m2\n", s->value[PEAK_LAI_EXP]);
 
-	logger(g_debug_log, "single height class canopy cover projected = %f %%\n", s->value[CANOPY_COVER_PROJ] * 100.);
-	logger(g_debug_log, "single height class canopy cover exposed   = %f %%\n", s->value[CANOPY_COVER_EXP]  * 100.);
-
 	/* assign max annual LAI EXP */
 	s->value[MAX_LAI_EXP]  = MAX(s->value[MAX_LAI_EXP], s->value[LAI_EXP]);
 	logger(g_debug_log, "MAX_LAI_EXP   = %f m2/m2\n", s->value[MAX_LAI_EXP]);
 
 	/**************************************************************************************************/
 
+	logger(g_debug_log, "single height class canopy cover projected = %f %%\n", s->value[CANOPY_COVER_PROJ] * 100.);
+	logger(g_debug_log, "single height class canopy cover exposed   = %f %%\n", s->value[CANOPY_COVER_EXP]  * 100.);
+
 	/* compute all-sided LAI */
 	s->value[ALL_LAI_PROJ] = s->value[LAI_PROJ] * s->value[CANOPY_COVER_PROJ];
-	logger(g_debug_log, "ALL_LAI_PROJ = %f (fraction cover)\n", s->value[ALL_LAI_PROJ]);
+	logger(g_debug_log, "ALL_LAI_PROJ = %f (m2)\n", s->value[ALL_LAI_PROJ]);
 	logger(g_debug_log,"*****************************\n");
 
 	/* checks */

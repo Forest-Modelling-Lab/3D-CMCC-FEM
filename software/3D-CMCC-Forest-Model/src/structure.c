@@ -107,7 +107,7 @@ int annual_forest_structure(cell_t* const c, const int year)
 	{
 		for ( height = 0; height < c->heights_count-1; ++height )
 		{
-			logger(g_debug_log, "*value %g*\n\n", c->heights[height].value);
+			logger(g_debug_log, "*value %f*\n\n", c->heights[height].value);
 
 			// ALESSIOR TO ALESSIOC...this give error
 			// on +1 YOU MUST remove -1 from count!
@@ -139,7 +139,7 @@ int annual_forest_structure(cell_t* const c, const int year)
 		{
 			c->heights[height].height_z = zeta_count;
 		}
-		logger(g_debug_log, "*value %g z = %d*\n\n", c->heights[height].value, c->heights[height].height_z);
+		logger(g_debug_log, "*value %f z = %d*\n\n", c->heights[height].value, c->heights[height].height_z);
 	}
 
 	logger(g_debug_log, "-Number of height classes = %d per cell\n", c->heights_count);
@@ -207,7 +207,7 @@ int annual_forest_structure(cell_t* const c, const int year)
 	{
 		c->tree_layers[layer].layer_density = c->tree_layers[layer].layer_n_trees / g_settings->sizeCell;
 
-		logger(g_debug_log, "-layer %d density = %g layer\n", layer, c->tree_layers[layer].layer_density);
+		logger(g_debug_log, "-layer %d density = %f layer\n", layer, c->tree_layers[layer].layer_density);
 	}
 	logger(g_debug_log, "**************************************\n\n");
 
@@ -402,22 +402,22 @@ int annual_forest_structure(cell_t* const c, const int year)
 	for ( layer = c->tree_layers_count - 1; layer >= 0; --layer )
 	{
 		/* note: overall cell cover can't exceed its area */
-		c->cell_cover += c->tree_layers[layer].layer_cover;
+		c->cell_cover_proj += c->tree_layers[layer].layer_cover;
 
-		if ( c->cell_cover > 1)
+		if ( c->cell_cover_proj > 1)
 		{
 			//fixme
-			c->cell_cover = 1;
+			c->cell_cover_proj = 1;
 			//puts("attention canopy cover at cell level exceeds 1!!!\n");
 		}
 	}
 
 	/* compute overall bare soil cover */
-	c->bare_soil_cover = 1. - c->cell_cover;
+	c->bare_soil_cover = 1. - c->cell_cover_proj;
 
-	logger(g_debug_log, "-Number of trees cell level = %d trees/cell\n", c->n_trees);
-	logger(g_debug_log, "-Canopy cover at cell level = %g %%\n", c->cell_cover * 100.0);
-	logger(g_debug_log, "-Bare soil cover at cell level = %g %%\n", c->bare_soil_cover * 100.0);
+	logger(g_debug_log, "-Number of trees cell level    = %d trees/cell\n", c->n_trees);
+	logger(g_debug_log, "-Canopy cover at cell level    = %f %%\n", c->cell_cover_proj * 100.0);
+	logger(g_debug_log, "-Bare soil cover at cell level = %f %%\n", c->bare_soil_cover * 100.0);
 	logger(g_debug_log, "**************************************\n");
 
 	return 1;
@@ -485,7 +485,7 @@ int daily_forest_structure ( cell_t *const c, const meteo_daily_t *const meteo_d
 			l->layer_avg_tree_height /= l->layer_n_height_class;
 		}
 
-		logger(g_debug_log, "\n-Layer %d avg tree height = %g\n", layer, l->layer_tree_height_modifier);
+		logger(g_debug_log, "\n-Layer %d avg tree height = %f\n", layer, l->layer_tree_height_modifier);
 	}
 
 	/*****************************************************************************/
@@ -507,18 +507,18 @@ int daily_forest_structure ( cell_t *const c, const meteo_daily_t *const meteo_d
 			/* upper layer */
 			l->layer_tree_height_modifier = 0.5 * ( 1. + pow ( 2. , ( - c->tree_layers[layer].layer_avg_tree_height / c->tree_layers[layer-1].layer_avg_tree_height ) ) -
 					( pow ( 2. , ( - c->tree_layers[layer-1].layer_avg_tree_height / c->tree_layers[layer].layer_avg_tree_height ) ) ) );
-			logger(g_debug_log, "\n-Layer %d light vertical modifier = %g\n", layer, l->layer_tree_height_modifier);
+			logger(g_debug_log, "\n-Layer %d light vertical modifier = %f\n", layer, l->layer_tree_height_modifier);
 
 			/* lower layer */
 			c->tree_layers[layer-1].layer_tree_height_modifier = 1. - l->layer_tree_height_modifier;
-			logger(g_debug_log, "\n-Layer %d light vertical modifier = %g\n", layer - 1, c->tree_layers[layer-1].layer_tree_height_modifier);
+			logger(g_debug_log, "\n-Layer %d light vertical modifier = %f\n", layer - 1, c->tree_layers[layer-1].layer_tree_height_modifier);
 
 		}
 		else
 		{
 			/* no vertical competition */
 			l->layer_tree_height_modifier = 1.;
-			logger(g_debug_log, "\n-Layer %d light vertical modifier = %g\n", layer, l->layer_tree_height_modifier);
+			logger(g_debug_log, "\n-Layer %d light vertical modifier = %f\n", layer, l->layer_tree_height_modifier);
 		}
 	}
 
@@ -564,9 +564,11 @@ int daily_forest_structure ( cell_t *const c, const meteo_daily_t *const meteo_d
 						{
 							s->value[DAILY_CANOPY_COVER_PROJ] = 1.;
 						}
-						logger(g_debug_log, "%s height class canopy projected cover = %g %%\n", s->name, s->value[DAILY_CANOPY_COVER_PROJ] * 100.);
+						logger(g_debug_log, "%s height class canopy projected cover = %f %%\n", s->name, s->value[DAILY_CANOPY_COVER_PROJ] * 100.);
 
 						/*****************************************************************************************/
+
+						//FIXME IT SHOULD SCALED TO CELL LEVEL!!!!
 
 						/* compute daily canopy exposed cover */
 						s->value[DAILY_CANOPY_COVER_EXP] = s->value[CANOPY_COVER_EXP];

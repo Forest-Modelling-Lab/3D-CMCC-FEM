@@ -14,7 +14,7 @@ void reset_daily_cell_variables(cell_t *const c)
 {
 	logger(g_debug_log, "...resetting cell level daily variables...\n");
 
-	c->cell_cover =                     0.;
+	c->cell_cover_proj =                0.;
 	//c->n_trees =                        0;
 	c->cell_heights_count =             0;
 
@@ -177,7 +177,7 @@ void reset_annual_cell_variables(cell_t *const c)
 	}
 
 	/* reset cell level variables */
-	c->cell_cover =                     0;
+	c->cell_cover_proj =                0;
 	c->doy =                            0;
 	c->annual_gpp =                     0.;
 	c->annual_gpp_tC =                  0.;

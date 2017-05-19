@@ -222,6 +222,8 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 	static double temp_ppfd_abs;                                           /* temporary absorbed PPFD for layer */
 	static double temp_ppfd_refl;                                          /* temporary reflected PPFD for layer */
 
+	double k_eff;
+
 	tree_layer_t *l;
 	species_t *s;
 
@@ -234,29 +236,36 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 	logger(g_debug_log, "\n**SHORT WAVE BAND RADIATION**\n");
 
 	/***********************************************************************************************************/
+
+	/* following Duursma and Makela 2007 */
+
+	k_eff =
+
+
+
+
+	/***********************************************************************************************************/
 	/* SHORT WAVE RADIATION FRACTIONS */
 	/* compute fractions of light intercepted, transmitted and reflected from the canopy */
-	/* fraction of light transmitted through the canopy */
-	/* note: 21 October 2016, following Duursma and Makela, "LIGHT INTERCEPTION OF NON-HOMOGENEOUS CANOPIES"
-	 * Tree Physiology Vol. 27, 2007; exp(- s->value[K] * (s->value[LAI]/leaf_cell_cover_eff))
-	 * and Forrester et al, Forest Ecosystems,2014
-	 * we currently use approach for homogeneous canopies that improves representation when canopy is not closed
-	 */
+
+	/** fraction of light transmitted through the canopy **/
+	/* note: we currently use approach for homogeneous canopies that improves representation when canopy is not closed: */
+	/* see method from Cannel and Grace, Can. J. For: Res. Vol. 23, 1993 [Eq]8  */
 
 	Light_trasm_frac       = exp(- s->value[K] * s->value[LAI_PROJ]);
 	Light_trasm_frac_sun   = exp(- s->value[K] * s->value[LAI_SUN_PROJ]);
 	Light_trasm_frac_shade = exp(- s->value[K] * s->value[LAI_SHADE_PROJ]);
 
-	/* fraction of light absorbed by the canopy */
+	/** fraction of light absorbed by the canopy **/
 	Light_abs_frac       = 1. - Light_trasm_frac;
 	Light_abs_frac_sun   = 1. - Light_trasm_frac_sun;
 	Light_abs_frac_shade = 1. - Light_trasm_frac_shade;
 
-	/* fraction of light reflected by the canopy */
+	/** fraction of light reflected by the canopy **/
 	/* for Short Wave radiation and PAR */
-	/* following BIOME albedo for PAR is 1/3 of albedo. the absorbed PAR is
-		calculated similarly to sw except that albedo is 1/3 for PAR because less
-		PAR is reflected than sw_radiation (Jones 1992)*/
+	/* following BIOME albedo for PAR is 1/3 of albedo. the absorbed PAR is */
+	/*calculated similarly to sw except that albedo is 1/3 for PAR because less */
+	/* PAR is reflected than sw_radiation (Jones 1992) */
 
 	Light_refl_sw_frac        = s->value[ALBEDO];
 	Light_refl_sw_frac_sun    = s->value[ALBEDO] * ( 1 - exp ( - s->value[K] * s->value[LAI_SUN_PROJ]));
