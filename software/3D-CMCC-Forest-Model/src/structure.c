@@ -285,9 +285,10 @@ int annual_forest_structure(cell_t* const c, const int year)
 						for ( species = 0; species < c->heights[height].dbhs[dbh].ages[age].species_count; ++species )
 						{
 							s = &c->heights[height].dbhs[dbh].ages[age].species[species];
-							c->tree_layers[layer].layer_cover += s->value[CANOPY_COVER_PROJ];
+
+							c->tree_layers[layer].layer_cover_proj += s->value[CANOPY_COVER_PROJ];
 							logger(g_debug_log, "CANOPY_COVER_PROJ = %f\n", s->value[CANOPY_COVER_PROJ]);
-							logger(g_debug_log, "layer_cover       = %f\n", c->tree_layers[layer].layer_cover);
+							logger(g_debug_log, "layer_cover       = %f\n", c->tree_layers[layer].layer_cover_proj);
 						}
 					}
 				}
@@ -303,7 +304,7 @@ int annual_forest_structure(cell_t* const c, const int year)
 
 	for (layer = c->tree_layers_count - 1; layer >= 0; --layer)
 	{
-		if ( c->tree_layers[layer].layer_cover > g_settings->max_layer_cover )
+		if ( c->tree_layers[layer].layer_cover_proj > g_settings->max_layer_cover )
 		{
 			/* note: 04 Oct 2016 */
 			/* call of this function is due to the assumption that:
@@ -325,11 +326,11 @@ int annual_forest_structure(cell_t* const c, const int year)
 							for ( species = 0; species < c->heights[height].dbhs[dbh].ages[age].species_count; ++species )
 							{
 								double old_layer_cover;
-								old_layer_cover = c->tree_layers[layer].layer_cover;
+								old_layer_cover = c->tree_layers[layer].layer_cover_proj;
 
 								s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
-								while ( c->tree_layers[layer].layer_cover >= g_settings->max_layer_cover )
+								while ( c->tree_layers[layer].layer_cover_proj >= g_settings->max_layer_cover )
 								{
 									/** self-thinning **/
 									if ( s->value[DBHDC_EFF] <= s->value[DBHDCMIN] )
@@ -339,7 +340,7 @@ int annual_forest_structure(cell_t* const c, const int year)
 									/** self-pruning **/
 									else
 									{
-										c->tree_layers[layer].layer_cover -= s->value[CANOPY_COVER_PROJ];
+										c->tree_layers[layer].layer_cover_proj -= s->value[CANOPY_COVER_PROJ];
 
 										s->value[DBHDC_EFF] -= 0.001;
 
@@ -347,7 +348,7 @@ int annual_forest_structure(cell_t* const c, const int year)
 										canopy_cover    ( c, height, dbh, age, species );
 
 										/* check for recompued canopy cover */
-										c->tree_layers[layer].layer_cover += s->value[CANOPY_COVER_PROJ];
+										c->tree_layers[layer].layer_cover_proj += s->value[CANOPY_COVER_PROJ];
 
 										/* self pruning function */
 										self_pruning ( c, height, dbh, age, species, old_layer_cover );
@@ -402,7 +403,7 @@ int annual_forest_structure(cell_t* const c, const int year)
 	for ( layer = c->tree_layers_count - 1; layer >= 0; --layer )
 	{
 		/* note: overall cell cover can't exceed its area */
-		c->cell_cover_proj += c->tree_layers[layer].layer_cover;
+		c->cell_cover_proj += c->tree_layers[layer].layer_cover_proj;
 
 		if ( c->cell_cover_proj > 1)
 		{
@@ -462,7 +463,8 @@ int daily_forest_structure ( cell_t *const c, const meteo_daily_t *const meteo_d
 	for (layer = c->tree_layers_count - 1; layer >= 0; --layer)
 	{
 		l = &c->tree_layers[layer];
-		l->layer_avg_tree_height = 0.;
+
+		l->layer_avg_tree_height   = 0.;
 		layer_height_class_counter = 0;
 
 		for ( height = 0; height < c->heights_count ; ++height )
@@ -526,6 +528,68 @@ int daily_forest_structure ( cell_t *const c, const meteo_daily_t *const meteo_d
 
 	logger(g_debug_log, "\n***HORIZONTAL COMPUTATION***\n");
 
+	/* overall cell level within each layer  */
+	for (layer = c->tree_layers_count - 1; layer >= 0; --layer)
+	{
+		l = &c->tree_layers[layer];
+
+		for ( height = 0; height < c->heights_count ; ++height )
+		{
+			if ( layer == c->heights[height].height_z )
+			{
+				h = &c->heights[height];
+
+				for ( dbh = 0; dbh < c->heights[height].dbhs_count; ++dbh )
+				{
+					for ( age = 0; age < c->heights[height].dbhs[dbh].ages_count ; ++age )
+					{
+						for ( species = 0; species < c->heights[height].dbhs[dbh].ages[age].species_count; ++species )
+						{
+							s = &c->heights[height].dbhs[dbh].ages[age].species[species];
+
+							/* check for Veg period otherwise don't consider the class */
+							if ( s->value[LAI_PROJ] )
+							{
+								/*******************************************************************************************/
+								/* compute daily canopy projected cover */
+								s->value[DAILY_CANOPY_COVER_PROJ] = s->value[CANOPY_COVER_PROJ];
+
+								/* canopy cannot absorbs more than 100% of incoming flux (e.g. rain) */
+								if( s->value[DAILY_CANOPY_COVER_PROJ] > 1. ) s->value[DAILY_CANOPY_COVER_PROJ] = 1.;
+
+								/*******************************************************************************************/
+
+								/* compute daily canopy exposed cover */
+								s->value[DAILY_CANOPY_COVER_EXP] = s->value[CANOPY_COVER_EXP];
+
+								/* canopy cannot absorb more than 100% of incoming flux (e.g. light) */
+								if( s->value[DAILY_CANOPY_COVER_EXP] > 1. ) s->value[DAILY_CANOPY_COVER_EXP] = 1.;
+
+								/*******************************************************************************************/
+
+								/* integrate with layer TREE HEIGHT MODIFIER */
+								if ( layer == c->heights[height].height_z ) s->value[DAILY_CANOPY_COVER_EXP] *= l->layer_tree_height_modifier ;
+
+								/*******************************************************************************************/
+
+								/* canopy cannot absorb more than 100% of incoming flux (e.g. light) */
+								if( s->value[DAILY_CANOPY_COVER_EXP] > 1. ) s->value[DAILY_CANOPY_COVER_EXP] = 1.;
+
+								/*******************************************************************************************/
+
+								/* sum all over canopy cover projected for each layer */
+								c->tree_layers[layer].daily_layer_cover_proj += s->value[DAILY_CANOPY_COVER_PROJ];
+
+								/* sum all over canopy cover exposed for each layer */
+								c->tree_layers[layer].daily_layer_cover_exp  += s->value[DAILY_CANOPY_COVER_EXP];
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
 	/* compute fraction of class cover (exposed and projected) */
 	for (layer = c->tree_layers_count - 1; layer >= 0; --layer)
 	{
@@ -533,124 +597,93 @@ int daily_forest_structure ( cell_t *const c, const meteo_daily_t *const meteo_d
 
 		for ( height = 0; height < c->heights_count ; ++height )
 		{
-			h = &c->heights[height];
-
-			for ( dbh = 0; dbh < c->heights[height].dbhs_count; ++dbh )
+			if ( layer == c->heights[height].height_z )
 			{
-				for ( age = 0; age < c->heights[height].dbhs[dbh].ages_count ; ++age )
+				h = &c->heights[height];
+
+				for ( dbh = 0; dbh < c->heights[height].dbhs_count; ++dbh )
 				{
-					for ( species = 0; species < c->heights[height].dbhs[dbh].ages[age].species_count; ++species )
+					for ( age = 0; age < c->heights[height].dbhs[dbh].ages_count ; ++age )
 					{
-						int i;
-						int odd;
-						double diff_cover;
-						double max_cover;
-						double min_cover;
-						double temp_diff_cover;
-						double temp_can_cover;
-						double cum_temp_cover = 0.;
-						int daylength = ROUND(meteo_daily->daylength);
-
-						s = &c->heights[height].dbhs[dbh].ages[age].species[species];
-
-						/*****************************************************************************************/
-
-						/* compute daily canopy projected cover */
-						s->value[DAILY_CANOPY_COVER_PROJ] = s->value[CANOPY_COVER_PROJ];
-
-
-						/* canopy cannot absorbs more than 100% of incoming flux (e.g. rain) */
-						if( s->value[DAILY_CANOPY_COVER_PROJ] > 1. )
+						for ( species = 0; species < c->heights[height].dbhs[dbh].ages[age].species_count; ++species )
 						{
-							s->value[DAILY_CANOPY_COVER_PROJ] = 1.;
-						}
-						logger(g_debug_log, "%s height class canopy projected cover = %f %%\n", s->name, s->value[DAILY_CANOPY_COVER_PROJ] * 100.);
+							int i;
+							int odd;
+							double diff_cover;
+							double max_cover;
+							double min_cover;
+							double temp_diff_cover;
+							double temp_can_cover;
+							double cum_temp_cover = 0.;
+							int daylength = ROUND(meteo_daily->daylength);
 
-						/*****************************************************************************************/
+							s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
-						//FIXME IT SHOULD SCALED TO CELL LEVEL!!!!
+							/*****************************************************************************************/
 
-						/* compute daily canopy exposed cover */
-						s->value[DAILY_CANOPY_COVER_EXP] = s->value[CANOPY_COVER_EXP];
+							//fixme IT MUST BE INTEGRATED ALL OVER THE LAYER!!!!!!!!!!
 
-						/* canopy cannot absorb more than 100% of incoming flux (e.g. light) */
-						if( s->value[DAILY_CANOPY_COVER_EXP] > 1. )
-						{
-							s->value[DAILY_CANOPY_COVER_EXP] = 1.;
-						}
+							/** now integrating all over the daylength **/
+							max_cover       = s->value[DAILY_CANOPY_COVER_EXP];
+							min_cover       = s->value[DAILY_CANOPY_COVER_PROJ];
+							diff_cover      = max_cover - min_cover;
+							temp_diff_cover = diff_cover / ( meteo_daily->daylength / 2. );
 
-						/* integrate with layer TREE HEIGHT MODIFIER */
-						if ( layer == c->heights[height].height_z )
-						{
-							s->value[DAILY_CANOPY_COVER_EXP] *= l->layer_tree_height_modifier ;
-						}
+							/* check if odd */
+							if(daylength %2 != 0) odd = 0; /* ok is a odd number */
+							else odd = 1;                  /* in NOT an odd number */
 
-						/* canopy cannot absorb more than 100% of incoming flux (e.g. light) */
-						if( s->value[DAILY_CANOPY_COVER_EXP] > 1. )
-						{
-							s->value[DAILY_CANOPY_COVER_EXP] = 1.;
-						}
-
-						/** now integrating all over the daylength **/
-						max_cover       = s->value[DAILY_CANOPY_COVER_EXP];
-						min_cover       = s->value[DAILY_CANOPY_COVER_PROJ];
-						diff_cover      = max_cover - min_cover;
-						temp_diff_cover = diff_cover / ( meteo_daily->daylength / 2. );
-
-						/* check if odd */
-						if(daylength %2 != 0) odd = 0; /* ok is a odd number */
-						else odd = 1;                  /* in NOT an odd number */
-
-						/* morning to nadir */
-						for ( i = 0; i < daylength ; ++i)
-						{
-							if ( ! odd )
+							/* morning to nadir */
+							for ( i = 0; i < daylength ; ++i)
 							{
-								if ( i == 0 )
+								if ( ! odd )
 								{
-									temp_can_cover  = max_cover;
-								}
-								else if ( i <= ( daylength  / 2. ) )
-								{
-									/* morning to nadir */
-									temp_can_cover -= ( temp_diff_cover );
+									if ( i == 0 )
+									{
+										temp_can_cover  = max_cover;
+									}
+									else if ( i <= ( daylength  / 2. ) )
+									{
+										/* morning to nadir */
+										temp_can_cover -= ( temp_diff_cover );
+									}
+									else
+									{
+										/* from nadir to evening */
+										temp_can_cover += ( temp_diff_cover );
+									}
 								}
 								else
 								{
-									/* from nadir to evening */
-									temp_can_cover += ( temp_diff_cover );
+									if ( i == 0 )
+									{
+										temp_can_cover  = max_cover;
+									}
+									else if ( i <= ( daylength  / 2. ) -1 )
+									{
+										/* morning to nadir */
+										temp_can_cover -= ( temp_diff_cover );
+									}
+									else if (i <= ( daylength  / 2. ))
+									{
+										/* nothing to do */
+									}
+									else
+									{
+										/* from nadir to evening */
+										temp_can_cover += ( temp_diff_cover );
+									}
 								}
+								/* cumulate */
+								cum_temp_cover += temp_can_cover;
 							}
-							else
-							{
-								if ( i == 0 )
-								{
-									temp_can_cover  = max_cover;
-								}
-								else if ( i <= ( daylength  / 2. ) -1 )
-								{
-									/* morning to nadir */
-									temp_can_cover -= ( temp_diff_cover );
-								}
-								else if (i <= ( daylength  / 2. ))
-								{
-									/* nothing to do */
-								}
-								else
-								{
-									/* from nadir to evening */
-									temp_can_cover += ( temp_diff_cover );
-								}
-							}
-							/* cumulate */
-							cum_temp_cover += temp_can_cover;
+
+							/** compute integrating all over the day length corresponding canopy intercepting cover **/
+							s->value[DAILY_CANOPY_COVER_EXP] = cum_temp_cover / daylength;
+
+							/* check */
+							CHECK_CONDITION ( s->value[DAILY_CANOPY_COVER_EXP], > , 1 )
 						}
-
-						/** compute integrating all over the day length corresponding canopy intercepting cover **/
-						s->value[DAILY_CANOPY_COVER_EXP] = cum_temp_cover / daylength;
-
-						/* check */
-						CHECK_CONDITION ( s->value[DAILY_CANOPY_COVER_EXP], > , 1 )
 					}
 				}
 			}

@@ -56,7 +56,7 @@ void daily_lai (species_t *const s)
 	logger(g_debug_log, "PEAK_LAI_PROJ  = %f m2/m2\n", s->value[PEAK_LAI_PROJ]);
 
 	/* assign max annual LAI */
-	s->value[MAX_LAI_PROJ] = MAX(s->value[MAX_LAI_PROJ], s->value[LAI_PROJ]);
+	s->value[MAX_LAI_PROJ]   = MAX(s->value[MAX_LAI_PROJ], s->value[LAI_PROJ]);
 	logger(g_debug_log, "MAX_LAI_PROJ   = %f m2/m2\n", s->value[MAX_LAI_PROJ]);
 
 	/**************************************************************************************************/
@@ -64,9 +64,9 @@ void daily_lai (species_t *const s)
 	/* compute LAI for Exposed Area */
 
 	/* note: is partially based on: Jackson & Palmer, 1979, 1981, 1983; Cannell and Grace 1993, Duursma and Makela 2007 */
-	s->value[LAI_EXP]       = ( leaf_C * s->value[SLA_AVG] ) / ( s->value[CANOPY_COVER_EXP] * g_settings->sizeCell );
-	s->value[LAI_SUN_EXP]   = 1. - exp ( - s->value[LAI_EXP] );
-	s->value[LAI_SHADE_EXP] = s->value[LAI_EXP] - s->value[LAI_SUN_EXP];
+	s->value[LAI_EXP]        = ( leaf_C * s->value[SLA_AVG] ) / ( s->value[CANOPY_COVER_EXP] * g_settings->sizeCell );
+	s->value[LAI_SUN_EXP]    = 1. - exp ( - s->value[LAI_EXP] );
+	s->value[LAI_SHADE_EXP]  = s->value[LAI_EXP] - s->value[LAI_SUN_EXP];
 
 	logger(g_debug_log, "LAI_EXP       = %f m2/m2\n", s->value[LAI_EXP]);
 	logger(g_debug_log, "LAI_SUN_EXP   = %f m2/m2\n", s->value[LAI_SUN_EXP]);

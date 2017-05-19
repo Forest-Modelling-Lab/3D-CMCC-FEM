@@ -89,7 +89,7 @@ void self_thinning_mortality (cell_t *const c, const int layer, const int year)
 
 					/* mortality */
 					//FIXME PORCATA
-					while ( c->tree_layers[layer].layer_cover >= g_settings->max_layer_cover )
+					while ( c->tree_layers[layer].layer_cover_proj >= g_settings->max_layer_cover )
 					{
 						/* remove one single tree at each run */
 						++deadtree;
@@ -104,7 +104,7 @@ void self_thinning_mortality (cell_t *const c, const int layer, const int year)
 						/* update layer trees */
 						--c->tree_layers[layer].layer_n_trees;
 
-						c->tree_layers[layer].layer_cover  -= s->value[CANOPY_COVER_PROJ];
+						c->tree_layers[layer].layer_cover_proj  -= s->value[CANOPY_COVER_PROJ];
 
 						if ( livetree > 0 )
 						{
@@ -115,7 +115,7 @@ void self_thinning_mortality (cell_t *const c, const int layer, const int year)
 							s->value[CANOPY_COVER_PROJ] = s->value[CROWN_AREA_PROJ] * livetree / g_settings->sizeCell;
 
 							/* check for recompued canopy cover */
-							c->tree_layers[layer].layer_cover += s->value[CANOPY_COVER_PROJ];
+							c->tree_layers[layer].layer_cover_proj += s->value[CANOPY_COVER_PROJ];
 						}
 						//							else
 						//							{
