@@ -1023,7 +1023,7 @@ int main(int argc, char *argv[]) {
 	soil_settings_t* s;
 	topo_t* t;
 
-	//_CrtSetBreakAlloc(); //do not remove, for debuggin under ms vc++
+	//_CrtSetBreakAlloc(); //do not remove, for debugging under ms vc++
 	assert(MONTHS_COUNT == METEO_MONTHS_COUNT); // just to be sure
 
 	/* initialize */
