@@ -38,13 +38,16 @@ enum {
 	, STOOL_COLUMN
 	, AVDBH_COLUMN
 	, HEIGHT_COLUMN
-	, WF_COLUMN
+	, LAI_COLUMN
+
+	, COLUMNS_TO_IMPORT
+
+	, WF_COLUMN = COLUMNS_TO_IMPORT
 	, WRC_COLUMN
 	, WRF_COLUMN
 	, WS_COLUMN
 	, WBB_COLUMN
 	, WRES_COLUMN
-	, LAI_COLUMN
 
 	, COLUMNS_COUNT
 };
@@ -74,7 +77,7 @@ typedef struct {
 	int rows_count;
 } dataset_t;
 
-static const char* sz_vars[COLUMNS_COUNT] = {
+static const char* sz_vars[COLUMNS_TO_IMPORT] = {
 		"YEAR"
 		, "X"
 		, "Y"
@@ -85,12 +88,6 @@ static const char* sz_vars[COLUMNS_COUNT] = {
 		, "STOOL"
 		, "AVDBH"
 		, "HEIGHT"
-		, "WF"
-		, "WRC"
-		, "WRF"
-		, "WS"
-		, "WBB"
-		, "WRES"
 		, "LAI"
 };
 
@@ -104,6 +101,7 @@ static const char err_conversion[] = "error during conversion of \"%s\" value at
 static const char err_bad_management_length[] =" bad management length at row %d, management must be 1 character.\n";
 static const char err_bad_management[] = "bad management %c at row %d\n";
 static const char err_too_many_column[] = "too many columns at row %d\n";
+static const char err_column_skipped[] = "column %d skipped\n";
 
 extern const char err_empty_file[];
 extern const char sz_err_out_of_memory[];
@@ -401,7 +399,7 @@ static dataset_t* dataset_import_nc(const char* const filename, int* const px_ce
 static dataset_t* dataset_import_nc(const char* const filename, int* const px_cells_count, int* const py_cells_count) {
 	char buffer[256];
 	int i;
-	int vars[COLUMNS_COUNT];
+	int vars[COLUMNS_TO_IMPORT];
 	float f_value;
 	double value;
 	const char sz_dim[] = "year";
@@ -458,7 +456,7 @@ static dataset_t* dataset_import_nc(const char* const filename, int* const px_ce
 	dataset->rows_count = 0;
 
 	for ( year = 0; year < (int)size; ++year ) {
-		for ( i = 0; i < COLUMNS_COUNT; ++i ) {
+		for ( i = 0; i < COLUMNS_TO_IMPORT; ++i ) {
 			vars[i] = 0;
 		}
 		memset(&row, 0, sizeof(row_t));
@@ -466,7 +464,7 @@ static dataset_t* dataset_import_nc(const char* const filename, int* const px_ce
 			ret = nc_inq_var(id_file, i, name, &type, &n_dims, ids, NULL);
 			if ( ret != NC_NOERR ) goto quit;
 			start[0] = year;
-			for ( y = 0; y < COLUMNS_COUNT; ++y ) {
+			for ( y = 0; y < COLUMNS_TO_IMPORT; ++y ) {
 				if ( ! string_compare_i(name, sz_vars[y]) ) {
 					int flag_value;
 					/* check if we already have imported that var */
@@ -575,40 +573,14 @@ static dataset_t* dataset_import_nc(const char* const filename, int* const px_ce
 						row.height = value;
 						break;
 
-					case WF_COLUMN:
-						//d->rows[year].wf = value;
-						row.wf = value;
-						break;
-
-					case WRC_COLUMN:
-						//d->rows[year].wrc = value;
-						row.wrc = value;
-						break;
-
-					case WRF_COLUMN:
-						//d->rows[year].wrf = value;
-						row.wrf = value;
-						break;
-
-					case WS_COLUMN:
-						//d->rows[year].ws = value;
-						row.ws = value;
-						break;
-
-					case WBB_COLUMN:
-						//d->rows[year].wbb = value;
-						row.wbb = value;
-						break;
-
-					case WRES_COLUMN:
-						//d->rows[year].wres = value;
-						row.wres = value;
-						break;
-
 					case LAI_COLUMN:
 						//d->rows[year].lai = value;
 						row.lai = value;
 						break;
+
+						// ALESSIOR TEST IT!!!!
+						default:
+						continue;
 					}
 
 					vars[y] = 1;
@@ -661,7 +633,7 @@ static dataset_t* dataset_import_txt(const char* const filename) {
 	int *columns;
 	double value;
 	row_t* rows_no_leak;
-	row_t row;
+	row_t row = { 0 }; // keep Wf,Wrc,Wrf,Ws,Wbb,Wres to zero
 	dataset_t* dataset;
 	int assigned;
 
@@ -690,19 +662,19 @@ static dataset_t* dataset_import_txt(const char* const filename) {
 		/* skip empty lines and comments */
 	} while ( ('\r' == p2[0]) || ('\n' == p2[0]) || ('/' == p2[0]) );
 
-	columns = malloc(COLUMNS_COUNT*sizeof*columns);
+	columns = malloc(COLUMNS_TO_IMPORT*sizeof*columns);
 	if ( ! columns ) {
 		puts(sz_err_out_of_memory);
 		fclose(f);
 		return NULL;
 	}
 
-	for ( i = 0; i < COLUMNS_COUNT; i++ ) {
+	for ( i = 0; i < COLUMNS_TO_IMPORT; i++ ) {
 		columns[i] = -1;
 	}
 
 	for ( y = 0, token = string_tokenizer(p2, delimiter, &p); token; token = string_tokenizer(NULL, delimiter, &p), ++y ) {
-		for ( i = 0; i < COLUMNS_COUNT; i++ ) {
+		for ( i = 0; i < COLUMNS_TO_IMPORT; i++ ) {
 			if ( 0 == string_compare_i(token, sz_vars[i]) ) {
 				/* check for duplicated columns */
 				if ( -1 != columns[i] ) {
@@ -719,7 +691,7 @@ static dataset_t* dataset_import_txt(const char* const filename) {
 		}
 	}
 	/* check for missing values */
-	for ( i = 0; i < COLUMNS_COUNT; i++ ) {
+	for ( i = 0; i < COLUMNS_TO_IMPORT; i++ ) {
 		if ( -1 == columns[i] ) {
 			printf(err_unable_find_column, sz_vars[i]);
 			free(columns);
@@ -867,48 +839,13 @@ static dataset_t* dataset_import_txt(const char* const filename) {
 							row.height = value;
 							break;
 
-						case WF_COLUMN:
-							//dataset->rows[dataset->rows_count-1].wf = value;
-							row.wf = value;
-							break;
-
-						case WRC_COLUMN:
-							//dataset->rows[dataset->rows_count-1].wrc = value;
-							row.wrc = value;
-							break;
-
-						case WRF_COLUMN:
-							//dataset->rows[dataset->rows_count-1].wrf = value;
-							row.wrf = value;
-							break;
-
-						case WS_COLUMN:
-							//dataset->rows[dataset->rows_count-1].ws = value;
-							row.ws = value;
-							break;
-
-						case WBB_COLUMN:
-							//dataset->rows[dataset->rows_count-1].wbb = value;
-							row.wbb = value;
-							break;
-
-						case WRES_COLUMN:
-							//dataset->rows[dataset->rows_count-1].wres = value;
-							row.wres = value;
-							break;
-
 						case LAI_COLUMN:
 							//dataset->rows[dataset->rows_count-1].lai = value;
 							row.lai = value;
 							break;
 
-						default:
-							printf(err_too_many_column, rows_count);
-							free(row.species);
-							free(columns);
-							dataset_free(dataset);
-							fclose(f);
-							return NULL;
+						//default:
+							//printf(err_column_skipped, i);
 						}
 					}
 					/* skip to next token */
@@ -918,7 +855,7 @@ static dataset_t* dataset_import_txt(const char* const filename) {
 		}
 
 		/* check columns */
-		if ( assigned != COLUMNS_COUNT ) {
+		if ( assigned != COLUMNS_TO_IMPORT ) {
 			puts("not all values has been imported!");
 			free(row.species);
 			free(columns);
@@ -1950,15 +1887,15 @@ void matrix_free(matrix_t *m)
 			{			
 				for ( height = 0; height < m->cells[cell].heights_count; ++height )
 				{
-					if ( m->cells[cell].tree_layers_count )
+					if ( m->cells[cell].tree_layers_count || m->cells[cell].t_layers_avail )
 					{
 						free( m->cells[cell].tree_layers );
 					}
-					if ( m->cells[cell].heights[height].dbhs_count )
+					if ( m->cells[cell].heights[height].dbhs_count || m->cells[cell].heights[height].dbhs_avail )
 					{
 						for ( dbh = 0; dbh < m->cells[cell].heights[height].dbhs_count; ++dbh)
 						{
-							if ( m->cells[cell].heights[height].dbhs[dbh].ages_count )
+							if ( m->cells[cell].heights[height].dbhs[dbh].ages_count || m->cells[cell].heights[height].dbhs[dbh].ages_avail )
 							{
 								for ( age = 0; age < m->cells[cell].heights[height].dbhs[dbh].ages_count; ++age )
 								{
