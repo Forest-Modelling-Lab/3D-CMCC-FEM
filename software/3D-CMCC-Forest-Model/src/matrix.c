@@ -21,7 +21,6 @@ extern logger_t* g_debug_log;
 extern settings_t* g_settings;
 extern soil_settings_t *g_soil_settings;
 extern topo_t *g_topo;
-//extern char *g_sz_input_path;
 extern char *g_sz_parameterization_path;
 extern char g_sz_parameterization_output_path[];
 extern int g_year_start_index;
