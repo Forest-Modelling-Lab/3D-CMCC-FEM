@@ -34,14 +34,15 @@ void dbhdc_function (cell_t *const c, const int layer, const int height, const i
 	double temp_crown_radius   = 0.;
 	double temp_crown_diameter = 0.;
 	double previous_dbhdc_eff  = 0.;
-	double max_dbhdc_incr      = 0.1;               /* fraction of maximum dbhdc increment */
+	double max_dbhdc_incr      = 0.05;               /* fraction of maximum dbhdc increment */
+	double max_dbhdc_decr      = 0.05;               /* fraction of maximum dbhdc decrement */
 
 	dbh_t *d;
 	species_t *s;
 	d = &c->heights[height].dbhs[dbh];
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
-	logger(g_debug_log,"\n*DBHDC FUNCTION for %s *\n", s->name);
+	logger(g_debug_log,"\n*DBHDC FUNCTION for %s for %d*\n", s->name, year);
 
 	/************************************************************************************************************************/
 	/* note: 04 Oct 2016 still USEFULL ?????*/
@@ -68,26 +69,32 @@ void dbhdc_function (cell_t *const c, const int layer, const int height, const i
 
 	/* previous dbhdc eff */
 	previous_dbhdc_eff  = s->value[DBHDC_EFF];
+	logger(g_debug_log,"-DBHDC (old)         = %f\n", s->value[DBHDC_EFF]);
 
-	temp_crown_area     = (g_settings->sizeCell * g_settings->max_layer_cover) / (c->tree_layers[layer].layer_density * g_settings->sizeCell);
+	temp_crown_area     = ( g_settings->max_layer_cover * g_settings->sizeCell ) / ( c->tree_layers[layer].layer_density * g_settings->sizeCell );
+	logger(g_debug_log,"-temp_crown_area     = %f\n", temp_crown_area);
+
 
 	temp_crown_radius   = sqrt(temp_crown_area / Pi);
+	logger(g_debug_log,"-temp_crown_radius   = %f\n", temp_crown_radius);
 
 	temp_crown_diameter = temp_crown_radius * 2.;
+	logger(g_debug_log,"-temp_crown_diameter = %f\n", temp_crown_diameter);
 
 	s->value[DBHDC_EFF] = temp_crown_diameter / d->value;
+	logger(g_debug_log,"-DBHDC (new)         = %f\n", s->value[DBHDC_EFF]);
 
-	/* check if current dbhdc_eff grows to much (case when there's thinning) */
+	/* check if current dbhdc_eff grows too much (case when there's thinning) */
 	/* this is checked to avoid unrealistic crown area increment */
 
-	//note max_dbhdc_incr corresponds to an arbitrary increment of n value
+	//note: max_dbhdc_incr corresponds to an arbitrary increment of n value
 	//note: not used in the first year of simulation
+	//fixme use less consider YOS????
 	if ( ( s->counter[YOS] ) && ( s->value[DBHDC_EFF] > ( previous_dbhdc_eff + (previous_dbhdc_eff * max_dbhdc_incr ) ) ) )
 	{
 		s->value[DBHDC_EFF] = previous_dbhdc_eff + ( previous_dbhdc_eff * max_dbhdc_incr );
 	}
 
-	/************************************************************************************************************************/
 	/* check */
 	if (s->value[DBHDC_EFF] > s->value[DBHDCMAX])
 	{
@@ -95,7 +102,20 @@ void dbhdc_function (cell_t *const c, const int layer, const int height, const i
 		s->value[DBHDC_EFF] = s->value[DBHDCMAX];
 	}
 
-	logger(g_debug_log,"-DBHDC effective = %f\n", s->value[DBHDC_EFF]);
+	/************************************************************************************************************************/
+
+	/* check if current dbhdc_eff decreases too much (case when there's reduction in layers) */
+	/* this is checked to avoid unrealistic crown area decrement */
+
+	//note: max_dbhdc_decr corresponds to an arbitrary increment of n value
+#if 0
+	if ( s->value[DBHDC_EFF] < ( previous_dbhdc_eff - (previous_dbhdc_eff * max_dbhdc_decr ) ) )
+	{
+		s->value[DBHDC_EFF] = previous_dbhdc_eff - ( previous_dbhdc_eff * max_dbhdc_decr );
+	}
+#endif
+
+	logger(g_debug_log,"-DBHDC effective     = %f\n", s->value[DBHDC_EFF]);
 
 	/* check */
 	CHECK_CONDITION (s->value[DBHDC_EFF], < , ZERO);

@@ -294,6 +294,8 @@ void reset_daily_class_variables(cell_t *const c)
 
 					s->counter[DEAD_TREE] =                0;
 
+					s->value[DAILY_CANOPY_COVER_PROJ] =   0.;
+
 					/* reset daily radiative variables */
 					s->value[PAR] =                       0.;
 					s->value[APAR] =                      0.;
@@ -379,7 +381,6 @@ void reset_daily_class_variables(cell_t *const c)
 					s->value[C_BRANCH_SAPWOOD_TO_CWD] =   0.;
 
 					/* reset daily nitrogen fluxes */
-					s->value[GPP] =                       0.;
 					s->value[NPP_gN] =                    0.;
 					s->value[NPP_tN] =                    0.;
 
@@ -541,6 +542,8 @@ void reset_annual_class_variables(cell_t *const c)
 					s->value[MAX_FROOT_C] =                 0.;
 					s->value[MAX_LAI_LEAFFALL_PROJ] =       0.;
 					s->value[CANOPY_COVER_EXP] =            0.;
+					s->value[CROWN_AREA] =                  0.;
+					s->value[CROWN_VOLUME] =                0.;
 
 					s->value[LEAF_C_TO_REMOVE] =            0.;
 					s->value[FROOT_C_TO_REMOVE] =           0.;

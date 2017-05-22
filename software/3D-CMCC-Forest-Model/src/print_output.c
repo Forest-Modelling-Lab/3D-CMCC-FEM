@@ -157,8 +157,8 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 										",LAI_PROJ"
 										",PEAK-LAI_PROJ"
 										",LAI_EXP"
-										",CC_P"
-										",CC_E"
+										",D-CC_P"
+										",D-CC_E"
 										",DBHDC"
 										",CROWN_AREA_PROJ"
 										",CROWN_AREA_EXP"
@@ -253,10 +253,12 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 	/* values */
 	logger(g_daily_log, "%d,%d,%d", c->years[year].year, month + 1, day + 1);
 
-	/* print class level LAI values */
+	/* print class level values */
 	for ( layer = c->tree_layers_count - 1; layer >= 0; --layer )
 	{
-		for ( height = c->heights_count - 1; height >= 0 ; --height )
+		qsort(c->heights, c->heights_count, sizeof(height_t), sort_by_heights_desc);
+
+		for ( height = 0; height < c->heights_count; ++height )
 		{
 			if( layer == c->heights[height].height_z )
 			{

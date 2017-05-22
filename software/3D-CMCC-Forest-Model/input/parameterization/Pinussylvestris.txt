@@ -25,7 +25,7 @@ CUTCOND 0.000075               //Cuticul conductance in m/sec for P. sylvestris 
 MAXAGE  300 //500             //Determines rate of "physiological decline" of forest 500 for P. sylvestris Landsberg et al., 2005
 RAGE    0.95                  //Relative Age to give fAGE = 0.5 for P. sylvestris 0.95 Landsberg et al., 2005
 NAGE    4                     //Power of relative Age in function for P. sylvestris Landsberg et al., 2005
-GROWTHTMIN  -2                //Minimum temperature for growth for P. sylvestris 0 Leverenz et al., 1987 -2 Landsberg et al., 2005, -5.93 Makela et al., 2006
+GROWTHTMIN  -6                //Minimum temperature for growth for P. sylvestris 0 Leverenz et al., 1987 -2 Landsberg et al., 2005, -5.93 Makela et al., 2006
 GROWTHTMAX  30                //Maximum temperature for growth for P. sylvestris 30 Leverenz et al., 1987;  25 Landsberg et al., 2005
 GROWTHTOPT  20                //Optimum temperature for growth for P. sylvestris 20 Medlyn et al., 2002; 15 Landsberg et al., 2005
 GROWTHSTART 200               //average temperature for starting growth in °C 

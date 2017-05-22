@@ -230,6 +230,8 @@ int annual_forest_structure(cell_t* const c, const int year)
 	{
 		logger(g_debug_log, "----------------------------------\n");
 
+		qsort (c->heights, c->heights_count, sizeof (height_t), sort_by_heights_desc);
+
 		for ( height = 0; height < c->heights_count ; ++height )
 		{
 			if( layer == c->heights[height].height_z )
@@ -325,7 +327,7 @@ int annual_forest_structure(cell_t* const c, const int year)
 			 */
 
 			/* start to reduce DBHDC_EFF from the lowest height class */
-			qsort (c->heights, c->heights_count, sizeof (height_t), sort_by_heights_desc);
+			qsort (c->heights, c->heights_count, sizeof (height_t), sort_by_heights_asc);
 
 			for ( height = 0; height < c->heights_count ; ++height )
 			{
@@ -450,6 +452,8 @@ int monthly_forest_structure (cell_t* const c)
 	return 1;
 }
 /*************************************************************************************************************************/
+
+#define TEST 1 //test 1 = old 0 = new
 int daily_forest_structure ( cell_t *const c, const meteo_daily_t *const meteo_daily )
 {
 	int layer;
@@ -474,7 +478,7 @@ int daily_forest_structure ( cell_t *const c, const meteo_daily_t *const meteo_d
 	logger(g_debug_log, "\n***DAILY FOREST STRUCTURE***\n");
 
 	/*******************************COMPUTE VERTICAL COMPETITION*******************************/
-#if 1 //test layer level
+#if TEST //test layer level
 	/** compute average layer tree height **/
 
 	logger(g_debug_log, "\n***VERTICAL COMPUTATION***\n");
@@ -569,7 +573,7 @@ int daily_forest_structure ( cell_t *const c, const meteo_daily_t *const meteo_d
 			{
 				for ( species = 0; species < c->heights[height].dbhs[dbh].ages[age].species_count; ++species )
 				{
-					if ( c->heights_count > 1 )
+					if ( c->heights_count > 1 && c->heights[height+1].dbhs[dbh].ages[age].species[species].value[LAI_PROJ] )
 					{
 						/* upper height class */
 						c->heights[height].dbhs[dbh].ages[age].species[species].value[F_LIGHT_VERT] = 0.5 * ( 1. + pow ( 2. , ( - c->heights[height+1].value / c->heights[height].value ) ) -
@@ -592,7 +596,7 @@ int daily_forest_structure ( cell_t *const c, const meteo_daily_t *const meteo_d
 	}
 #endif
 	logger(g_debug_log, "**************************************\n");
-	logger(g_debug_log, "**************************************\n");getchar();
+	logger(g_debug_log, "**************************************\n");
 
 	/******************************COMPUTE HORIZONTAL COMPETITION******************************/
 
@@ -637,10 +641,10 @@ int daily_forest_structure ( cell_t *const c, const meteo_daily_t *const meteo_d
 								if( s->value[DAILY_CANOPY_COVER_EXP] > 1. ) s->value[DAILY_CANOPY_COVER_EXP] = 1.;
 
 								/*******************************************************************************************/
-
+#if TEST
 								/* integrate with layer TREE HEIGHT MODIFIER */
 								if ( layer == c->heights[height].height_z ) s->value[DAILY_CANOPY_COVER_EXP] *= l->layer_tree_height_modifier ;
-
+#endif
 								/*******************************************************************************************/
 
 								/* canopy cannot absorb more than 100% of incoming flux (e.g. light) */
@@ -775,8 +779,34 @@ int daily_forest_structure ( cell_t *const c, const meteo_daily_t *const meteo_d
 			}
 		}
 	}
+
+	/******************************COUPLING HORIZONTAL+VERTICAL******************************/
+#if TEST
+#else
+
+	/** coupling vertical and horizontal modifiers **/
+
+	logger(g_debug_log, "\n..coupling vertical modifier with canopy cover exp\n");
+
+	for ( height = 0; height < c->heights_count ; ++height )
+	{
+		for ( dbh = 0; dbh < c->heights[height].dbhs_count; ++dbh )
+		{
+			for ( age = 0; age < c->heights[height].dbhs[dbh].ages_count ; ++age )
+			{
+				for ( species = 0; species < c->heights[height].dbhs[dbh].ages[age].species_count; ++species )
+				{
+					s = &c->heights[height].dbhs[dbh].ages[age].species[species];
+
+					s->value[DAILY_CANOPY_COVER_EXP] *=s->value[F_LIGHT_VERT];
+					logger(g_debug_log, "-Species %s test_daily_conopy_cover_exp  = %f\n", s->name, s->value[DAILY_CANOPY_COVER_EXP]);
+				}
+			}
+		}
+	}
 	logger(g_debug_log, "**************************************\n");
 	logger(g_debug_log, "**************************************\n");
+#endif
 	return 1;
 }
 
