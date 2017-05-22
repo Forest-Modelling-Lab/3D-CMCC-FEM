@@ -31,7 +31,7 @@ GROWTHTOPT              17.5    //Optimum temperature for growth 17.5 for Picea 
 GROWTHSTART             200     //average temperature for starting growth in °C 
 MINDAYLENGTH            0       //minimum day length for deciduous
 SWPOPEN                -0.5     //in KPa for P. abies from Pietsch et al 2005
-SWPCLOSE               -2.5     //in KPa for P. abies from Pietsch et al 2005
+SWPCLOSE               -2.5     //in KPa for P. abies from Pietsch et al 2005, -3.5 Pietsch et al., 2014
 OMEGA_CTEM              0.5     //ALLOCATION PARAMETER control the sensitivity of allocation to changes in water and light availability for Needlleleaf deciduous from Arora et al 2005
 S0CTEM                  0.05    //PARAMETER CONTROLLING ALLOCATION TO STEM/MINIMUM RATIO TO C TO STEM for Needleleaf deciduous from Arora et al 2005
 R0CTEM                  0.89    //PARAMETER CONTROLLING ALLOCATION TO ROOT/MINIMUM RATIO TO C TO ROOTS for Needleleaf deciduous from Arora et al 2005 
@@ -74,7 +74,7 @@ HDMAX_A                 196.3   //A parameter for Height (m) to Base diameter (m
 HDMAX_B                -0.240   //B parameter for Height (m) to Base diameter (m) ratio MAX Seidl et al., 2012
 HDMIN_A                 84.8    //A parameter for Height (m) to Base diameter (m) ratio MIN Seidl et al., 2012
 HDMIN_B                -0.194   //B parameter for Height (m) to Base diameter (m) ratio MIN Seidl et al., 2012
-CROWN_FORM_FACTOR       1       //Crown form factor (0 = cylinder, 1 = cone, 2 = sphere)
+CROWN_FORM_FACTOR       3       //Crown form factor (0 = cylinder, 1 = cone, 2 = sphere, 3 = ellipsoid)
 CROWN_A                 1.1769  //0.47    //Crown relationship with tree height for Picea Abies deducted from Sharma et al., 2016, 0.47 Kantola and Makela 2006
 CROWN_B                 0.5503  //1       //Crown exponential with tree height for Picea Abies deducted from Sharma et al., 2016, 1 as in Sorie-ND)
 MAXSEED                -9999    //TO BE CHECKED           //numero massimo semi prodotti dalla pianta

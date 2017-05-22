@@ -163,7 +163,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 			if( h->height_z == l->layer_z )
 			{
 				logger(g_debug_log,"*****************************************************************************\n"
-						"                              height = %g                              \n"
+						"                              height = %f                              \n"
 						"*****************************************************************************\n", h->value);
 
 
@@ -178,7 +178,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 					qsort ( d->ages, d->ages_count, sizeof (age_t), sort_by_ages_desc );
 
 					logger(g_debug_log,"*****************************************************************************\n"
-							"                              dbh = %g                              \n"
+							"                              dbh = %f                              \n"
 							"*****************************************************************************\n", d->value);
 
 					/* loop on each age class */
@@ -192,7 +192,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 								"*****************************************************************************\n", a->value);
 
 						/* increment age after first year */
-						if( !day && !month && year != 0) a->value += 1;
+						if( !day && !month && year ) a->value += 1;
 
 						/* loop on each species class */
 						for ( species = 0; species < a->species_count; ++species )
@@ -381,7 +381,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							}
 							else
 							{
-								//fixme here model should remove class just after have checked the balances are closed
+								//fixme here model should remove class just after have checked that the balances are closed
 								//so model has to include c fluxes that go out to litter and cwd
 							}
 							/****************************************************************************************************************************************/

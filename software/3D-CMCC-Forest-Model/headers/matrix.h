@@ -233,6 +233,8 @@ enum {
 	F_A_SHADE,                          /* (DIM) ASSIMILATION modifier for Shaded leaves (test) */
 	PHYS_MOD,                           /* (DIM) PHYSIOLOGICAL modifier */
 
+	F_LIGHT_VERT,
+
 	/* water */
 	/* pools */
 	CANOPY_WATER,                       /* (mm/m2) canopy water pool */

@@ -89,7 +89,8 @@ int annual_forest_structure(cell_t* const c, const int year)
 
 	/*********************************************************************************************************/
 
-	/* compute number of annual layers */
+	/** compute number of annual layers **/
+
 	/* note: it starts from the lowest height values up to the highest */
 
 	/* add 1 layer by default */
@@ -103,6 +104,7 @@ int annual_forest_structure(cell_t* const c, const int year)
 	logger(g_debug_log, "*compute height_z*\n");
 
 	/* compute zeta counter */
+
 	if (c->heights_count > 1)
 	{
 		for ( height = 0; height < c->heights_count-1; ++height )
@@ -125,7 +127,8 @@ int annual_forest_structure(cell_t* const c, const int year)
 
 	/*****************************************************************************************/
 
-	/* assign zeta for each height class */
+	/** assign zeta for each height class **/
+
 	for ( height = c->heights_count -1 ; height >= 0; --height )
 	{
 		// ALESSIOR...on height == 0 you can't go to previous values (height-1)
@@ -143,7 +146,7 @@ int annual_forest_structure(cell_t* const c, const int year)
 	}
 
 	logger(g_debug_log, "-Number of height classes = %d per cell\n", c->heights_count);
-	logger(g_debug_log, "-Number of layers = %d per cell\n\n", c->tree_layers_count);
+	logger(g_debug_log, "-Number of layers         = %d per cell\n\n", c->tree_layers_count);
 	logger(g_debug_log,"***********************************\n");
 
 	/* check */
@@ -151,7 +154,9 @@ int annual_forest_structure(cell_t* const c, const int year)
 	CHECK_CONDITION(c->tree_layers_count, >, c->heights_count);
 
 	/*************************************************************************************/
-	/* compute numbers of height classes within each layer */
+
+	/** compute numbers of height classes within each layer **/
+
 	logger(g_debug_log, "*compute numbers of height classes within each layer*\n\n");
 
 	for ( layer = c->tree_layers_count - 1; layer >= 0 ; --layer )
@@ -171,7 +176,9 @@ int annual_forest_structure(cell_t* const c, const int year)
 	logger(g_debug_log, "**************************************\n\n");
 
 	/*************************************************************************************/
-	/* compute numbers of trees within each layer */
+
+	/** compute numbers of trees within each layer **/
+
 	logger(g_debug_log, "*compute numbers of trees within each layer*\n\n");
 
 	for ( layer = c->tree_layers_count - 1; layer >= 0; --layer )
@@ -200,7 +207,9 @@ int annual_forest_structure(cell_t* const c, const int year)
 	logger(g_debug_log, "**************************************\n\n");
 
 	/*************************************************************************************/
-	/* compute density within each layer */
+
+	/** compute density within each layer **/
+
 	logger(g_debug_log, "*compute density within each layer*\n\n");
 
 	for (layer = c->tree_layers_count - 1; layer >= 0; layer --)
@@ -213,7 +222,8 @@ int annual_forest_structure(cell_t* const c, const int year)
 
 	/*************************************************************************************/
 
-	/* compute effective dbh/crown diameter ratio within each class based on layer density (class level) */
+	/** compute effective dbh/crown diameter ratio within each class based on layer density (class level) **/
+
 	logger(g_debug_log, "compute effective dbh/crown diameter ratio within each class based on layer density (class level)\n\n");
 
 	for ( layer = c->tree_layers_count - 1; layer >= 0; --layer )
@@ -241,8 +251,9 @@ int annual_forest_structure(cell_t* const c, const int year)
 
 	/*************************************************************************************/
 
-	/* Compute Crown and Canopy allometry */
-	logger(g_debug_log, "*Compute Crown and Canopy allometry*\n\n");
+	/** Compute Crown and Canopy allometry **/
+
+	logger(g_debug_log, "*Compute Crown and Canopy allometry*\n");
 
 	for ( layer = c->tree_layers_count - 1; layer >= 0; --layer )
 	{
@@ -268,7 +279,8 @@ int annual_forest_structure(cell_t* const c, const int year)
 
 	/*************************************************************************************/
 
-	/* compute layer canopy cover within each layer (layer level) */
+	/** compute layer canopy cover within each layer (layer level) **/
+
 	logger(g_debug_log, "*compute layer canopy cover within each layer (layer level)*\n\n");
 
 	//todo: control if with a drastic tree number reduction (e.g. management) there's a unrealistic strong variation in DBHDCeffective
@@ -287,8 +299,7 @@ int annual_forest_structure(cell_t* const c, const int year)
 							s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 							c->tree_layers[layer].layer_cover_proj += s->value[CANOPY_COVER_PROJ];
-							logger(g_debug_log, "CANOPY_COVER_PROJ = %f\n", s->value[CANOPY_COVER_PROJ]);
-							logger(g_debug_log, "layer_cover       = %f\n", c->tree_layers[layer].layer_cover_proj);
+							logger(g_debug_log, "layer %d cover_proj         = %f\n", layer, c->tree_layers[layer].layer_cover_proj);
 						}
 					}
 				}
@@ -299,7 +310,8 @@ int annual_forest_structure(cell_t* const c, const int year)
 
 	/*************************************************************************************/
 
-	/* check if layer cover exceeds maximum layer cover */
+	/** check if layer cover exceeds maximum layer cover **/
+
 	logger(g_debug_log, "*check if layer cover exceeds maximum layer cover*\n\n");
 
 	for (layer = c->tree_layers_count - 1; layer >= 0; --layer)
@@ -309,7 +321,7 @@ int annual_forest_structure(cell_t* const c, const int year)
 			/* note: 04 Oct 2016 */
 			/* call of this function is due to the assumption that:
 			  -overall layer canopy cover cannot exceeds its maximum
-			  -DBHDC_EFF cannot be < DBHDCMIN
+			  -DBHDC_EFF cannot be < DBHDCMIN (otherwise self-thinning mortality is called)
 			 */
 
 			/* start to reduce DBHDC_EFF from the lowest height class */
@@ -330,8 +342,11 @@ int annual_forest_structure(cell_t* const c, const int year)
 
 								s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
-								while ( c->tree_layers[layer].layer_cover_proj >= g_settings->max_layer_cover )
+								while ( c->tree_layers[layer].layer_cover_proj > ( g_settings->max_layer_cover + eps ) )
 								{
+									logger(g_debug_log,"layer_cover_proj = %f \n", c->tree_layers[layer].layer_cover_proj);
+									logger(g_debug_log,"max_layer_cover  = %f \n", g_settings->max_layer_cover);
+
 									/** self-thinning **/
 									if ( s->value[DBHDC_EFF] <= s->value[DBHDCMIN] )
 									{
@@ -350,10 +365,12 @@ int annual_forest_structure(cell_t* const c, const int year)
 										/* check for recompued canopy cover */
 										c->tree_layers[layer].layer_cover_proj += s->value[CANOPY_COVER_PROJ];
 
-										/* self pruning function */
+										/** self pruning **/
 										self_pruning ( c, height, dbh, age, species, old_layer_cover );
 
 										/** self-thinning **/
+										/* call self-thinning mortality if pruning was not enough */
+
 										if ( s->value[DBHDC_EFF] <= s->value[DBHDCMIN] )
 										{
 											self_thinning_mortality ( c, layer, year );
@@ -371,33 +388,35 @@ int annual_forest_structure(cell_t* const c, const int year)
 	logger(g_debug_log, "**************************************\n");
 	/*************************************************************************************/
 
-	/* compute total number of trees */
+	/** compute total number of trees **/
+
 	logger(g_debug_log, "*compute total number of trees*\n\n");
 
 	c->n_trees = 0;
-	for (layer = c->tree_layers_count - 1; layer >= 0; --layer)
+
+	for ( height = 0; height < c->heights_count ; ++height )
 	{
-		for ( height = 0; height < c->heights_count ; ++height )
+		for ( dbh = 0; dbh < c->heights[height].dbhs_count; ++dbh )
 		{
-			if( layer == c->heights[height].height_z )
+			for ( age = 0; age < c->heights[height].dbhs[dbh].ages_count ; ++age )
 			{
-				for ( dbh = 0; dbh < c->heights[height].dbhs_count; ++dbh )
+				for ( species = 0; species < c->heights[height].dbhs[dbh].ages[age].species_count; ++species )
 				{
-					for ( age = 0; age < c->heights[height].dbhs[dbh].ages_count ; ++age )
-					{
-						for ( species = 0; species < c->heights[height].dbhs[dbh].ages[age].species_count; ++species )
-						{
-							c->n_trees += s->counter[N_TREE];
-						}
-					}
+					s = &c->heights[height].dbhs[dbh].ages[age].species[species];
+
+					c->n_trees += s->counter[N_TREE];
 				}
 			}
 		}
 	}
+
+	logger(g_debug_log,"n_trees = %d \n", c->n_trees);
 	logger(g_debug_log, "**************************************\n");
 	logger(g_debug_log, "**************************************\n");
 	/*************************************************************************************/
-	/* compute daily overall cell cover (cell level) */
+
+	/** compute overall cell cover (cell level) **/
+
 	logger(g_debug_log, "*daily overall cell cover (cell level))*\n");
 
 	for ( layer = c->tree_layers_count - 1; layer >= 0; --layer )
@@ -405,20 +424,22 @@ int annual_forest_structure(cell_t* const c, const int year)
 		/* note: overall cell cover can't exceed its area */
 		c->cell_cover_proj += c->tree_layers[layer].layer_cover_proj;
 
-		if ( c->cell_cover_proj > 1)
+		if ( c->cell_cover_proj > 1 + eps )
 		{
-			//fixme
 			c->cell_cover_proj = 1;
-			//puts("attention canopy cover at cell level exceeds 1!!!\n");
 		}
 	}
 
-	/* compute overall bare soil cover */
+	/*************************************************************************************/
+
+	/** compute overall bare soil cover **/
+
 	c->bare_soil_cover = 1. - c->cell_cover_proj;
 
 	logger(g_debug_log, "-Number of trees cell level    = %d trees/cell\n", c->n_trees);
-	logger(g_debug_log, "-Canopy cover at cell level    = %f %%\n", c->cell_cover_proj * 100.0);
-	logger(g_debug_log, "-Bare soil cover at cell level = %f %%\n", c->bare_soil_cover * 100.0);
+	logger(g_debug_log, "-Canopy cover at cell level    = %f %%\n", c->cell_cover_proj * 100.);
+	logger(g_debug_log, "-Bare soil cover at cell level = %f %%\n", c->bare_soil_cover * 100.);
+	logger(g_debug_log, "**************************************\n");
 	logger(g_debug_log, "**************************************\n");
 
 	return 1;
@@ -426,12 +447,9 @@ int annual_forest_structure(cell_t* const c, const int year)
 /*************************************************************************************************************************/
 int monthly_forest_structure (cell_t* const c)
 {
-
-	//logger(g_debug_log, "\n***MONTHLY FOREST STRUCTURE***\n");
-
 	return 1;
 }
-
+/*************************************************************************************************************************/
 int daily_forest_structure ( cell_t *const c, const meteo_daily_t *const meteo_daily )
 {
 	int layer;
@@ -456,15 +474,15 @@ int daily_forest_structure ( cell_t *const c, const meteo_daily_t *const meteo_d
 	logger(g_debug_log, "\n***DAILY FOREST STRUCTURE***\n");
 
 	/*******************************COMPUTE VERTICAL COMPETITION*******************************/
+#if 1 //test layer level
+	/** compute average layer tree height **/
 
 	logger(g_debug_log, "\n***VERTICAL COMPUTATION***\n");
 
-	/* compute average layer tree height */
 	for (layer = c->tree_layers_count - 1; layer >= 0; --layer)
 	{
 		l = &c->tree_layers[layer];
 
-		l->layer_avg_tree_height   = 0.;
 		layer_height_class_counter = 0;
 
 		for ( height = 0; height < c->heights_count ; ++height )
@@ -472,6 +490,8 @@ int daily_forest_structure ( cell_t *const c, const meteo_daily_t *const meteo_d
 			if ( layer == c->heights[height].height_z )
 			{
 				h = &c->heights[height];
+				logger(g_debug_log, "-Layer %d tree_height           = %f\n", layer, h->value);
+
 				/* cumulate class height values */
 				l->layer_avg_tree_height += h->value;
 
@@ -480,55 +500,106 @@ int daily_forest_structure ( cell_t *const c, const meteo_daily_t *const meteo_d
 			}
 		}
 
-		/* to avoid division by zero */
-		if ( layer_height_class_counter > 0 )
-		{
-			/* compute mean */
-			l->layer_avg_tree_height /= l->layer_n_height_class;
-		}
+		/* compute mean */
+		l->layer_avg_tree_height /= l->layer_n_height_class;
 
-		logger(g_debug_log, "\n-Layer %d avg tree height = %f\n", layer, l->layer_tree_height_modifier);
+		logger(g_debug_log, "-Layer %d layer_avg_tree_height = %f\n", layer, l->layer_avg_tree_height);
+		logger(g_debug_log, "-Layer %d layer_n_height_class  = %d\n", layer, l->layer_n_height_class);
 	}
+	logger(g_debug_log, "**************************************\n");
+	logger(g_debug_log, "**************************************\n");
 
 	/*****************************************************************************/
-	/* compute TREE HEIGHT VERTICAL MODIFIER */
+
+	/** compute TREE HEIGHT VERTICAL MODIFIER **/
+
+	logger(g_debug_log, "\n*TREE HEIGHT VERTICAL MODIFIER*\n");
+
+	//note: do not add to layer > 0 layer >= 0 !!!
 	for (layer = c->tree_layers_count - 1; layer >= 0; --layer)
 	{
 		l = &c->tree_layers[layer];
 
+		logger(g_debug_log, "layers count = %d\n", c->tree_layers_count);
+
 		/* only if more than one layer is present */
-		//ALESSIOR
-		// bad counter specified ?
-		//if ( c->tree_layers_count > 1 )
-		if ( layer > 1 )
+		if ( layer > 0 )
 		{
 			/* following Wallace et al., 1991, Cannell and Grace 1993, Can. J. For. Res. Vol. 23 pag. 1976 */
 			/* note: it considers differences in average values of tree height among all over the layers */
-			/* note: it obviously works among layers and not within the same class or layer */
+			/* note: it currently works among layers and not within the same class or layer */
+			/* fixme: it could works also within the same layer, to be fixed once... */
+
+			logger(g_debug_log, "-Layer %d minus layer %d = %f\n", layer, layer - 1, c->tree_layers[layer].layer_avg_tree_height - c->tree_layers[layer-1].layer_avg_tree_height);
 
 			/* upper layer */
-			l->layer_tree_height_modifier = 0.5 * ( 1. + pow ( 2. , ( - c->tree_layers[layer].layer_avg_tree_height / c->tree_layers[layer-1].layer_avg_tree_height ) ) -
-					( pow ( 2. , ( - c->tree_layers[layer-1].layer_avg_tree_height / c->tree_layers[layer].layer_avg_tree_height ) ) ) );
-			logger(g_debug_log, "\n-Layer %d light vertical modifier = %f\n", layer, l->layer_tree_height_modifier);
+			l->layer_tree_height_modifier = 0.5 * ( 1. + pow ( 2. , ( - c->tree_layers[layer-1].layer_avg_tree_height / c->tree_layers[layer].layer_avg_tree_height ) ) -
+					( pow ( 2. , ( - c->tree_layers[layer].layer_avg_tree_height / c->tree_layers[layer-1].layer_avg_tree_height ) ) ) );
+			logger(g_debug_log, "-Layer %d light vertical modifier = %f\n", layer, l->layer_tree_height_modifier);
 
 			/* lower layer */
 			c->tree_layers[layer-1].layer_tree_height_modifier = 1. - l->layer_tree_height_modifier;
-			logger(g_debug_log, "\n-Layer %d light vertical modifier = %f\n", layer - 1, c->tree_layers[layer-1].layer_tree_height_modifier);
+			logger(g_debug_log, "-Layer %d light vertical modifier = %f\n", layer - 1, c->tree_layers[layer-1].layer_tree_height_modifier);
 
 		}
-		else
+		if( c->tree_layers_count == 1 )
 		{
 			/* no vertical competition */
 			l->layer_tree_height_modifier = 1.;
-			logger(g_debug_log, "\n-Layer %d light vertical modifier = %f\n", layer, l->layer_tree_height_modifier);
+			logger(g_debug_log, "-Only one layer %d light vertical modifier = %f\n", layer, l->layer_tree_height_modifier);
 		}
 	}
+#else //test tree height class level 22 May 2016
+
+	/* following Wallace et al., 1991, Cannell and Grace 1993, Can. J. For. Res. Vol. 23 pag. 1976 */
+	/* note: it considers differences in average values of tree height among all over the layers */
+	/* note: it currently works among layers and not within the same class or layer */
+
+
+	/* sort heights in descending order */
+	qsort ( c->heights, c->heights_count, sizeof (height_t), sort_by_heights_desc );
+
+	// ALESSIOR TO ALESSIOC...this give error
+	// on +1 YOU MUST remove -1 from count!
+	for ( height = 0; height < c->heights_count-1; ++height )
+	{
+		for ( dbh = 0; dbh < c->heights[height].dbhs_count; ++dbh )
+		{
+			for ( age = 0; age < c->heights[height].dbhs[dbh].ages_count ; ++age )
+			{
+				for ( species = 0; species < c->heights[height].dbhs[dbh].ages[age].species_count; ++species )
+				{
+					if ( c->heights_count > 1 )
+					{
+						/* upper height class */
+						c->heights[height].dbhs[dbh].ages[age].species[species].value[F_LIGHT_VERT] = 0.5 * ( 1. + pow ( 2. , ( - c->heights[height+1].value / c->heights[height].value ) ) -
+								( pow ( 2. , ( - c->heights[height].value / c->heights[height+1].value ) ) ) );
+
+						/* lower height class */
+						c->heights[height+1].dbhs[dbh].ages[age].species[species].value[F_LIGHT_VERT] = 1 - c->heights[height].dbhs[dbh].ages[age].species[species].value[F_LIGHT_VERT];
+
+						logger(g_debug_log, "-%s light vertical modifier = %f\n", c->heights[height].dbhs[dbh].ages[age].species[species].name, c->heights[height].dbhs[dbh].ages[age].species[species].value[F_LIGHT_VERT]);
+						logger(g_debug_log, "-%s light vertical modifier = %f\n", c->heights[height+1].dbhs[dbh].ages[age].species[species].name, c->heights[height+1].dbhs[dbh].ages[age].species[species].value[F_LIGHT_VERT]);
+					}
+					else
+					{
+						c->heights[height].dbhs[dbh].ages[age].species[species].value[F_LIGHT_VERT] = 1.;
+						logger(g_debug_log, "-Only one Height light vertical modifier = %f\n", c->heights[height].dbhs[dbh].ages[age].species[species].value[F_LIGHT_VERT]);
+					}
+				}
+			}
+		}
+	}
+#endif
+	logger(g_debug_log, "**************************************\n");
+	logger(g_debug_log, "**************************************\n");getchar();
 
 	/******************************COMPUTE HORIZONTAL COMPETITION******************************/
 
+	/** overall cell level within each layer **/
+
 	logger(g_debug_log, "\n***HORIZONTAL COMPUTATION***\n");
 
-	/* overall cell level within each layer  */
 	for (layer = c->tree_layers_count - 1; layer >= 0; --layer)
 	{
 		l = &c->tree_layers[layer];
@@ -583,14 +654,23 @@ int daily_forest_structure ( cell_t *const c, const meteo_daily_t *const meteo_d
 								/* sum all over canopy cover exposed for each layer */
 								c->tree_layers[layer].daily_layer_cover_exp  += s->value[DAILY_CANOPY_COVER_EXP];
 							}
+
+							logger(g_debug_log, "-Species %s DAILY_CANOPY_COVER_PROJ = %f\n", s->name, s->value[DAILY_CANOPY_COVER_PROJ]);
+							logger(g_debug_log, "-Species %s DAILY_CANOPY_COVER_EXP  = %f\n", s->name, s->value[DAILY_CANOPY_COVER_EXP]);
+
+							logger(g_debug_log, "-Layer %d daily_layer_cover_proj = %f\n", layer, l->daily_layer_cover_proj);
+							logger(g_debug_log, "-Layer %d daily_layer_cover_exp  = %f\n", layer, l->daily_layer_cover_exp);
 						}
 					}
 				}
 			}
 		}
 	}
+	logger(g_debug_log, "**************************************\n");
+	logger(g_debug_log, "**************************************\n");
 
-	/* compute fraction of class cover (exposed and projected) */
+	/** compute fraction of class cover (exposed and projected) **/
+
 	for (layer = c->tree_layers_count - 1; layer >= 0; --layer)
 	{
 		l = &c->tree_layers[layer];
@@ -620,6 +700,9 @@ int daily_forest_structure ( cell_t *const c, const meteo_daily_t *const meteo_d
 							s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 							/*****************************************************************************************/
+
+
+							logger(g_debug_log, "\n..integrating all over the day\n");
 
 							//fixme IT MUST BE INTEGRATED ALL OVER THE LAYER!!!!!!!!!!
 
@@ -681,6 +764,9 @@ int daily_forest_structure ( cell_t *const c, const meteo_daily_t *const meteo_d
 							/** compute integrating all over the day length corresponding canopy intercepting cover **/
 							s->value[DAILY_CANOPY_COVER_EXP] = cum_temp_cover / daylength;
 
+							logger(g_debug_log, "-Species %s DAILY_CANOPY_COVER_PROJ = %f\n", s->name, s->value[DAILY_CANOPY_COVER_PROJ]);
+							logger(g_debug_log, "-Species %s DAILY_CANOPY_COVER_EXP  = %f\n", s->name, s->value[DAILY_CANOPY_COVER_EXP]);
+
 							/* check */
 							CHECK_CONDITION ( s->value[DAILY_CANOPY_COVER_EXP], > , 1 )
 						}
@@ -689,6 +775,8 @@ int daily_forest_structure ( cell_t *const c, const meteo_daily_t *const meteo_d
 			}
 		}
 	}
+	logger(g_debug_log, "**************************************\n");
+	logger(g_debug_log, "**************************************\n");
 	return 1;
 }
 

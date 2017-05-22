@@ -29,7 +29,7 @@ void crown_allometry (cell_t *const c, const int height, const int dbh, const in
 
 	/*** Crown allometry ***/
 
-	logger(g_debug_log,"\n*CROWN ALLOMETRY*\n");
+	logger(g_debug_log,"\n*CROWN ALLOMETRY for %s *\n", s->name);
 
 	/* Crown Projected Diameter using DBH-DC (at zenith angle) */
 	s->value[CROWN_DIAMETER] = d->value * s->value[DBHDC_EFF];
@@ -37,18 +37,18 @@ void crown_allometry (cell_t *const c, const int height, const int dbh, const in
 
 	/* Crown Projected Radius using DBH-DC (at zenith angle) */
 	s->value[CROWN_RADIUS] = s->value[CROWN_DIAMETER] / 2.;
-	logger(g_debug_log, "-Crown Projected Radius = %f m\n", s->value[CROWN_RADIUS]);
+	logger(g_debug_log, "-Crown Projected Radius   = %f m\n", s->value[CROWN_RADIUS]);
 
 	/* Crown Projected Area using DBH-DC (at zenith angle) */
 	s->value[CROWN_AREA_PROJ] = Pi  * pow (s->value[CROWN_RADIUS], 2 );
-	logger(g_debug_log, "-Crown Projected Area = %f m2\n", s->value[CROWN_AREA_PROJ]);
+	logger(g_debug_log, "-Crown Projected Area     = %f m2\n", s->value[CROWN_AREA_PROJ]);
 
 	/* Crown Height */
 	/* it mainly follows SORTIE-ND approach in the form of x = a*tree height^c */
 	/* note when b = 1 the function is prettily a linear function */
 
 	s->value[CROWN_HEIGHT] = s->value[CROWN_A] * pow(h->value, s->value[CROWN_B]);
-	logger(g_debug_log, "-Crown Height = %f m\n", s->value[CROWN_HEIGHT]);
+	logger(g_debug_log, "-Crown Height             = %f m\n", s->value[CROWN_HEIGHT]);
 
 	/* check */
 	CHECK_CONDITION(s->value[CROWN_HEIGHT], >, h->value);
@@ -95,28 +95,28 @@ void crown_allometry (cell_t *const c, const int height, const int dbh, const in
 	switch (crown_form_factor)
 	{
 	case 0: /* cylinder */
-		logger(g_debug_log, "-Crown form factor = cylinder\n");
+		logger(g_debug_log, "-Crown form factor        = cylinder\n");
 
 		s->value[CROWN_AREA]     = ( 2. * s->value[CROWN_AREA]) + (2 * Pi * s->value[CROWN_RADIUS] * s->value[CROWN_HEIGHT]);
 		s->value[CROWN_VOLUME]   = s->value[CROWN_AREA_PROJ] * s->value[CROWN_HEIGHT];
 		break;
 
 	case 1: /* cone */
-		logger(g_debug_log, "-Crown form factor = cone\n");
+		logger(g_debug_log, "-Crown form factor        = cone\n");
 
 		s->value[CROWN_AREA]     = s->value[CROWN_AREA_PROJ] + (Pi * s->value[CROWN_RADIUS] * (sqrt(pow(s->value[CROWN_RADIUS],2.) + pow(s->value[CROWN_HEIGHT],2.))));
 		s->value[CROWN_VOLUME]   = (s->value[CROWN_AREA_PROJ] * s->value[CROWN_HEIGHT])/3.;
 		break;
 
 	case 2: /* sphere */
-		logger(g_debug_log, "-Crown form factor = sphere\n");
+		logger(g_debug_log, "-Crown form factor        = sphere\n");
 
 		s->value[CROWN_AREA]     = ( s->value[CROWN_AREA_PROJ] * 4 );
 		s->value[CROWN_VOLUME]   = 4. / 3. * Pi * pow (s->value[CROWN_RADIUS],3.);
 		break;
 
 	case 3: /* tri-bi-axial ellipsoid */
-		logger(g_debug_log, "-Crown form factor = ellipsoid \n");
+		logger(g_debug_log, "-Crown form factor        = ellipsoid \n");
 
 		c_diameter = s->value[CROWN_DIAMETER] / 2.;
 		c_height   = s->value[CROWN_HEIGHT]   / 2.;
@@ -139,9 +139,9 @@ void crown_allometry (cell_t *const c, const int height, const int dbh, const in
 	/****************************************************************************/
 
 #endif
-	logger(g_debug_log, "-Crown Area       = %f m2\n", s->value[CROWN_AREA]);
-	logger(g_debug_log, "-Crown Area (exp) = %f m2\n", s->value[CROWN_AREA_EXP]);
-	logger(g_debug_log, "-Crown Volume     = %f m3\n", s->value[CROWN_VOLUME]);
+	logger(g_debug_log, "-Crown Area               = %f m2\n", s->value[CROWN_AREA]);
+	logger(g_debug_log, "-Crown Area (exp)         = %f m2\n", s->value[CROWN_AREA_EXP]);
+	logger(g_debug_log, "-Crown Volume             = %f m3\n", s->value[CROWN_VOLUME]);
 
 	/* Crown density (NOT USED) */
 	/* following Duursma et al., 2012 */

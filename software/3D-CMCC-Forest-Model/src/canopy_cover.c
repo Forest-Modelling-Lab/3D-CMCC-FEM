@@ -41,7 +41,7 @@ void dbhdc_function (cell_t *const c, const int layer, const int height, const i
 	d = &c->heights[height].dbhs[dbh];
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
-	logger(g_debug_log,"\n*DBHDC FUNCTION*\n");
+	logger(g_debug_log,"\n*DBHDC FUNCTION for %s *\n", s->name);
 
 	/************************************************************************************************************************/
 	/* note: 04 Oct 2016 still USEFULL ?????*/
@@ -93,7 +93,6 @@ void dbhdc_function (cell_t *const c, const int layer, const int height, const i
 	{
 		logger(g_debug_log,"-DBHDC effective (%f) > DBHDCMAX (%f) \n", s->value[DBHDC_EFF] , s->value[DBHDCMAX]);
 		s->value[DBHDC_EFF] = s->value[DBHDCMAX];
-		logger(g_debug_log,"-DBHDC effective = %f\n", s->value[DBHDC_EFF]);
 	}
 
 	logger(g_debug_log,"-DBHDC effective = %f\n", s->value[DBHDC_EFF]);
@@ -116,18 +115,18 @@ void canopy_cover (cell_t *const c, const int height, const int dbh, const int a
 
 	/*** Canopy cover ***/
 
-	logger(g_debug_log,"\n*CANOPY COVER*\n");
+	logger(g_debug_log,"\n*CANOPY COVER for %s *\n", s->name);
 
 	/* Canopy and Soil Projected Cover using DBH-DC (at zenith angle) */
 	s->value[CANOPY_COVER_PROJ] = s->value[CROWN_AREA_PROJ] * s->counter[N_TREE] / g_settings->sizeCell;
-	logger(g_debug_log, "-Canopy Projected Cover  = %f %%\n", s->value[CANOPY_COVER_PROJ] * 100.);
+	logger(g_debug_log, "-Canopy Projected Cover   = %f %%\n", s->value[CANOPY_COVER_PROJ] * 100.);
 
 	/* check */
 	CHECK_CONDITION( s->value[CANOPY_COVER_PROJ] ,  > , g_settings->max_layer_cover + eps );
 
 	/* Canopy cover able to absorb light (integrated all over all viewing angles) */
 	s->value[CANOPY_COVER_EXP] = (s->value[CROWN_AREA_EXP] * s->counter[N_TREE]) / g_settings->sizeCell ;
-	logger(g_debug_log, "-Canopy Exposed Cover    = %f %%\n", s->value[CANOPY_COVER_EXP]  * 100.);
+	logger(g_debug_log, "-Canopy Exposed Cover     = %f %%\n", s->value[CANOPY_COVER_EXP]  * 100.);
 
 	//new test
 	if (s->value[CANOPY_COVER_EXP] > 1)s->value[CANOPY_COVER_EXP] = 1.;
