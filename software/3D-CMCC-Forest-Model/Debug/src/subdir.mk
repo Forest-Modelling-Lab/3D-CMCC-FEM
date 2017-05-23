@@ -9,12 +9,13 @@ C_SRCS += \
 ../src/C-evergreen-partitioning.c \
 ../src/C-fruit-partitioning.c \
 ../src/CN-allocation.c \
+../src/CN-balance.c \
 ../src/N-assimilation.c \
 ../src/Penman_Monteith.c \
 ../src/allometry.c \
 ../src/aut_respiration.c \
-../src/balance.c \
 ../src/biomass.c \
+../src/canopy_cover.c \
 ../src/canopy_evapotranspiration.c \
 ../src/canopy_interception.c \
 ../src/canopy_net_radiation.c \
@@ -74,7 +75,6 @@ C_SRCS += \
 ../src/tree_model.c \
 ../src/tree_model_check_balance.c \
 ../src/turnover.c \
-../src/turnover_Marconi.c \
 ../src/utility.c \
 ../src/water_balance.c \
 ../src/wue.c 
@@ -85,12 +85,13 @@ OBJS += \
 ./src/C-evergreen-partitioning.o \
 ./src/C-fruit-partitioning.o \
 ./src/CN-allocation.o \
+./src/CN-balance.o \
 ./src/N-assimilation.o \
 ./src/Penman_Monteith.o \
 ./src/allometry.o \
 ./src/aut_respiration.o \
-./src/balance.o \
 ./src/biomass.o \
+./src/canopy_cover.o \
 ./src/canopy_evapotranspiration.o \
 ./src/canopy_interception.o \
 ./src/canopy_net_radiation.o \
@@ -150,7 +151,6 @@ OBJS += \
 ./src/tree_model.o \
 ./src/tree_model_check_balance.o \
 ./src/turnover.o \
-./src/turnover_Marconi.o \
 ./src/utility.o \
 ./src/water_balance.o \
 ./src/wue.o 
@@ -161,12 +161,13 @@ C_DEPS += \
 ./src/C-evergreen-partitioning.d \
 ./src/C-fruit-partitioning.d \
 ./src/CN-allocation.d \
+./src/CN-balance.d \
 ./src/N-assimilation.d \
 ./src/Penman_Monteith.d \
 ./src/allometry.d \
 ./src/aut_respiration.d \
-./src/balance.d \
 ./src/biomass.d \
+./src/canopy_cover.d \
 ./src/canopy_evapotranspiration.d \
 ./src/canopy_interception.d \
 ./src/canopy_net_radiation.d \
@@ -226,7 +227,6 @@ C_DEPS += \
 ./src/tree_model.d \
 ./src/tree_model_check_balance.d \
 ./src/turnover.d \
-./src/turnover_Marconi.d \
 ./src/utility.d \
 ./src/water_balance.d \
 ./src/wue.d 
