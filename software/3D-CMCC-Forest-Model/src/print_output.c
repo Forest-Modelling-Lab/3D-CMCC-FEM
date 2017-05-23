@@ -746,7 +746,6 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 										",PeakLAI"
 										",MaxLAI"
 										",SAPWOOD-AREA"
-										",LIVEWOOD_TURNOVER"
 										",CC-Proj"
 										",CC-Exp"
 										",DBHDC"
@@ -754,9 +753,6 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 										",CROWN_HEIGHT"
 										",CROWN_AREA_PROJ"
 										",APAR"
-										",HD"
-										",HDMAX"
-										",HDMIN"
 										",Ntree"
 										",VEG_D"
 										",FIRST_VEG_DAY"
@@ -764,7 +760,6 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 										",CINT"
 										",CLE"
 										",WUE"
-										",EFF_LIVE_TOTAL_FRAC"
 										",MIN_RESERVE_C"
 										",RESERVE_C"
 										",STEM_C"
@@ -878,8 +873,8 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 								logger(g_annual_log,",%c", sz_management[c->heights[height].dbhs[dbh].ages[age].species[species].management]);
 
 								/* print variables at layer-class level */
-								logger(g_annual_log,",%6.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%d,%d,%d,%3.4f"
-										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
+								logger(g_annual_log,",%6.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%d,%d,%d,%3.4f"
+										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
 										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",
 										s->value[YEARLY_GPP],
 										s->value[YEARLY_TOTAL_GROWTH_RESP],
@@ -891,7 +886,6 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 										s->value[PEAK_LAI_PROJ],
 										s->value[MAX_LAI_PROJ],
 										s->value[SAPWOOD_AREA],
-										s->value[LIVEWOOD_TURNOVER],
 										s->value[CANOPY_COVER_PROJ],
 										s->value[CANOPY_COVER_EXP],
 										s->value[DBHDC_EFF],
@@ -899,9 +893,6 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 										s->value[CROWN_HEIGHT],
 										s->value[CROWN_AREA_PROJ],
 										s->value[YEARLY_APAR],
-										s->value[HD_EFF],
-										s->value[HD_MAX],
-										s->value[HD_MIN],
 										s->counter[N_TREE],
 										s->counter[YEARLY_VEG_DAYS],
 										s->counter[FIRST_VEG_DAYS],
@@ -909,7 +900,6 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 										s->value[YEARLY_CANOPY_INT],
 										s->value[YEARLY_CANOPY_LATENT_HEAT],
 										s->value[YEARLY_WUE],
-										s->value[EFF_LIVE_TOTAL_WOOD_FRAC],
 										s->value[MIN_RESERVE_C],
 										s->value[RESERVE_C],
 										s->value[STEM_C],

@@ -1,37 +1,37 @@
 Year,x,y,Age,Species,Management,N,Stool,AvDBH,Height,Lai
 
-1997,0,0,46,Piceaabies,T,512,0,26.11,24.11,-9999
-1997,0,0,46,Pinussylvestris,T,12,0,27.66,25.21,-9999
-1997,0,0,66,Fagussylvatica,T,324,0,20.59,23.02,0
+1997,0,0,47,Piceaabies,T,512,0,26.11,24.11,-9999
+1997,0,0,47,Pinussylvestris,T,12,0,27.66,25.21,-9999
+1997,0,0,54,Fagussylvatica,T,324,0,20.59,23.02,0
 
-1999,0,0,48,Piceaabies,T,502,0,27.1,24.79,-9999
-//1999,0,0,48,Pinussylvestris,T,12,0,28.13,22.99,-9999 //for test
-1999,0,0,68,Fagussylvatica,T,292,0,21.96,19.96,0
+1999,0,0,49,Piceaabies,T,502,0,27.1,24.79,-9999
+//1999,0,0,49,Pinussylvestris,T,12,0,28.13,22.99,-9999 //for test
+1999,0,0,56,Fagussylvatica,T,292,0,21.96,19.96,0
 
 
-2001,0,0,50,Piceaabies,T,488,0,28.33,25.47,-9999
-2001,0,0,50,Pinussylvestris,T,12,0,28.633,23.20,-9999
-2001,0,0,70,Fagussylvatica,T,270,0,23.025,20.59,0
+2001,0,0,51,Piceaabies,T,488,0,28.33,25.47,-9999
+2001,0,0,51,Pinussylvestris,T,12,0,28.633,23.20,-9999
+2001,0,0,58,Fagussylvatica,T,270,0,23.025,20.59,0
 
-2003,0,0,52,Piceaabies,T,474,0,29.353,26.00,-9999
-2003,0,0,52,Pinussylvestris,T,12,0,29.06,23.37,-9999
-2003,0,0,72,Fagussylvatica,T,260,0,23.75,21.01,0
+2003,0,0,53,Piceaabies,T,474,0,29.353,26.00,-9999
+2003,0,0,53,Pinussylvestris,T,12,0,29.06,23.37,-9999
+2003,0,0,60,Fagussylvatica,T,260,0,23.75,21.01,0
 
-2005,0,0,54,Piceaabies,T,448,0,30.61,26.61,-9999
-2005,0,0,54,Pinussylvestris,T,12,0,29.46,23.53,-9999
-2005,0,0,74,Fagussylvatica,T,240,0,24.37,21.35,0
+2005,0,0,55,Piceaabies,T,448,0,30.61,26.61,-9999
+2005,0,0,55,Pinussylvestris,T,12,0,29.46,23.53,-9999
+2005,0,0,62,Fagussylvatica,T,240,0,24.37,21.35,0
 
-2007,0,0,56,Piceaabies,T,438,0,31.65,27.08,-9999
-2007,0,0,56,Pinussylvestris,T,10,0,31,24.11,-9999
-2007,0,0,76,Fagussylvatica,T,228,0,25.29,21.85,0
+2007,0,0,57,Piceaabies,T,438,0,31.65,27.08,-9999
+2007,0,0,57,Pinussylvestris,T,10,0,31,24.11,-9999
+2007,0,0,64,Fagussylvatica,T,228,0,25.29,21.85,0
 
-2009,0,0,58,Piceaabies,T,434,0,32.4,27.41,-9999
-2009,0,0,58,Pinussylvestris,T,10,0,31.22,24.19,-9999
-2009,0,0,78,Fagussylvatica,T,228,0,25.65,22.04,0
+2009,0,0,59,Piceaabies,T,434,0,32.4,27.41,-9999
+2009,0,0,59,Pinussylvestris,T,10,0,31.22,24.19,-9999
+2009,0,0,66,Fagussylvatica,T,228,0,25.65,22.04,0
 
-2010,0,0,59,Piceaabies,T,434,0,32.92,27.62,-9999
-2010,0,0,59,Pinussilvestrys,T,8,0,31.32,24.23,-9999
-2010,0,0,79,Fagussylvatica,T,220,0,26.31,22.39,0
+2010,0,0,60,Piceaabies,T,434,0,32.92,27.62,-9999
+2010,0,0,60,Pinussilvestrys,T,8,0,31.32,24.23,-9999
+2010,0,0,67,Fagussylvatica,T,220,0,26.31,22.39,0
 
 //notes:
 //class age data are data downloaded from http://kroof.wzw.tum.de/index.php?id=18&L=1
