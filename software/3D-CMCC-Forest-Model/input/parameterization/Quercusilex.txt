@@ -59,7 +59,7 @@ BUD_BURST   0               //days of bud burst at the beginning of growing seas
 LEAF_FALL_FRAC_GROWING  0.2 //proportions of the growing season of leaf fall
 LEAF_FINEROOT_TURNOVER  0.5 //Average yearly fine root turnover rate for Q. ilex from Chiesi et al., 2007
 LIVE_WOOD_TURNOVER  0.7     //Annual yearly live wood turnover rate 
-DBHDCMAX    0.24            //Low Density
+DBHDCMAX    0.24       //0.45 Condes & Sterba 2005       //Low Density
 DBHDCMIN    0.18            //High Density
 SAP_A   0.674               //a value from Kostner for Q. petreae in cm
 SAP_B   1.992               //b value from Kostner for Q. petreae in cm

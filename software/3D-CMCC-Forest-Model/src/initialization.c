@@ -191,7 +191,7 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 	logger(g_debug_log, "-Stand level class basal cell     = %f cm2/class\n", s->value[STAND_BASAL_AREA]);
 	logger(g_debug_log, "-Stand level class basal cell     = %f cm2/class\n", s->value[STAND_BASAL_AREA]);
 
-	/* sapwood area */
+	/* sapwood and heartwood area are based on  Vertessy  et  al.  (1995)  and  Meinzer  et  al.(2001, 2005)*/
 	s->value[SAPWOOD_AREA]           = s->value[SAP_A] * pow (d->value, s->value[SAP_B]);
 	s->value[HEARTWOOD_AREA]         = s->value[BASAL_AREA] -  s->value[SAPWOOD_AREA];
 	s->value[SAPWOOD_PERC]           = s->value[SAPWOOD_AREA] / s->value[BASAL_AREA];

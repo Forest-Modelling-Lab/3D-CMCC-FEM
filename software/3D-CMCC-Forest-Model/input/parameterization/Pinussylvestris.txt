@@ -59,11 +59,11 @@ BUD_BURST 0.3                 //days of bud burst at the beginning of growing se
 LEAF_FALL_FRAC_GROWING  0     //proportions of the growing season of leaf fall 
 LEAF_FINEROOT_TURNOVER  0.25  //Average YEARLY leaves and fine root turnover rate for P. sylvestris 0.18 from Pietsch, 0.39 Tatarinov, 0.25 Makela et al., 1997
 LIVE_WOOD_TURNOVER  0.7       //Annual yearly live wood turnover rate for P. sylvestris from Pietsch
-DBHDCMAX  0.24                //Low Density for P. sylvestris deducted from Rautianen and Stenberg 2005,  0.255 Seidl et al., 2012, 0.18 from Kalliovirta and Tokola 2005, 0.34 from Grote 2001
+DBHDCMAX  0.24   //0.45 Condes & Sterba 2005             //Low Density for P. sylvestris deducted from Rautianen and Stenberg 2005,  0.255 Seidl et al., 2012, 0.18 from Kalliovirta and Tokola 2005, 0.34 from Grote 2001
 DBHDCMIN  0.14                //High Density for P. sylvestris deducted from Rautianen and Stenberg 2005 from Ameztegui et al., 2012 0.14, 0.15 from Kalliovirta and Tokola 2005
 SAP_A   0.974                 //a value for Pinus sylvestris 0.7731 from Xiao & Ceulemans 2004, 3.119 from Verbeek et al., 2007, 0.974 summing up Xiao + Veerbeck 
 SAP_B   1.7979                //b value for Pinus sylvestris 1.9174 from Xiao & Ceulemans 2004 1.4544 from Verbeek et al., 2007, 1.7979 summing up Xiao + Veerbeck
-SAP_LEAF    1800              //sapwood_max leaf area ratio in pipe model for Pinus sylvestris 1480 Mencuccini Bonosi, 2001; 1020 Makela et al., 1995; from 1300 to 1800 Veerbeck et al., 2007
+SAP_LEAF    1800              //sapwood_max leaf area ratio in pipe model for Pinus sylvestris 1480 Mencuccini Bonosi, 2001; 1020 Makela et al., 1995; from 1300 to 1800 Veerbeck et al., 2007, up to 2000 McDowell et al., 2002
 SAP_WRES    0.05              //Sapwood-Reserve biomass ratio used if no Wres data are available 0.11 for deciduous 0.05 for evergreen see Schwalm and Ek, 2004 Ecological Modelling
 STEMCONST_P 0.127             //a parameter for allometric equation 0.06552  E. Cienciala et al., 2006 For P. sylvestrisM; from Yuste et al 2005 0.1227, 0.084 from Xiao and Ceulemans, 0.7 Seidl et al., 2012, 0.027 Landsberg and Sands, 0.046 Landsberg et al., 2005
 STEMPOWER_P 2.30              //b parameter for allometric equation 2.50626 E. Cienciala et al., 2006 For P. sylvestris; from Yuste et al 2005 2.3272, 1.985 from Xiao and Ceulemans, 3.0 Seidl et al., 2012, 2.86 Landsberg and Sands, 2.6496 Landsberg et al., 2005

@@ -148,7 +148,7 @@ void dendrometry_old(cell_t *const c, const int layer, const int height, const i
 	s->value[HEARTWOOD_AREA] = ( s->value[BASAL_AREA] - s->value[SAPWOOD_AREA] )   / s->value[STEM_C];
 #else
 	//old
-	/* sapwood and heartwood */
+	/* sapwood and heartwood are based on  Vertessy  et  al.  (1995)  and  Meinzer  et  al.(2001, 2005)*/
 	s->value[SAPWOOD_AREA]     = s->value[SAP_A] * pow (d->value, s->value[SAP_B]);
 	s->value[HEARTWOOD_AREA]   = s->value[BASAL_AREA] - s->value[SAPWOOD_AREA];
 	s->value[SAPWOOD_PERC]     = s->value[SAPWOOD_AREA] / s->value[BASAL_AREA];
@@ -161,6 +161,8 @@ void dendrometry_old(cell_t *const c, const int layer, const int height, const i
 #endif
 
 	/* check */
+	CHECK_CONDITION( s->value[SAPWOOD_AREA]  , > , s->value[BASAL_AREA]);
+	CHECK_CONDITION( s->value[HEARTWOOD_AREA], > , s->value[BASAL_AREA]);
 	CHECK_CONDITION( (fabs(s->value[SAPWOOD_AREA] + s->value[HEARTWOOD_AREA]) - s->value[BASAL_AREA]), > , eps);
 
 	logger(g_debug_log, " SAPWOOD_AREA     = %f cm^2\n",    s->value[SAPWOOD_AREA]);
