@@ -69,6 +69,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 
 	/* leaf aerodynamic-boundary-layer conductance */
 	gl_bl = s->value[BLCOND] * g_corr;
+	logger(g_debug_log, "gl_bl NOT corrected for wind speed = %g mm\n",gl_bl);
 
 #if 0
 	/**************************************************************************/
@@ -79,6 +80,8 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 		double zero = 20;    /* height measurement of wind speed (m) */ //fixme add to settings.txt data
 		double rough;        /* roughness length */
 		double plane;        /* zero place displacement */
+		height_t *h;
+		h = &c->heights[height];
 
 		/* compute roughness length (m) */
 		rough = 0.032 * h->value;
@@ -88,6 +91,8 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 
 		/* aerodynamic boundary layer conductance */
 		gl_bl = pow ( KARM , 2.) / pow ( log ( ( zero - plane) / rough ) , 2. );
+		logger(g_debug_log, "gl_bl corrected for wind speed = %g mm\n",gl_bl);
+		printf("wind speed = %f gl_bl corrected for wind speed %f\n", meteo_daily->windspeed, gl_bl);getchar();
 	}
 	/**************************************************************************/
 #endif
