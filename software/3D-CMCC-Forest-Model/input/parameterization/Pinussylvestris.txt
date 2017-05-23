@@ -21,7 +21,7 @@ FORM_FACTOR 0.435             //Form factor Seidl et al., 2012
 COEFFCOND   0.05              //Define stomatal responsee to VPD in mbar for P. sylvestris Landsberg et al., 2005
 BLCOND  0.01                  //Canopy Boundary Layer conductance for P. sylvestris 0.009 from Pietsch, 0.01 for Tatarinov
 MAXCOND 0.005                 //Maximum Stomatal Conductance in m/sec for P. sylvestris 0.001 from Pietsch, 0.0025 for Tatarinov, 0.005 Makela et al., 2006
-CUTCOND 0.000075               //Cuticul conductance in m/sec for P. sylvestris 0.00001 from Pietsch  0,00006 for Tatarinov, 0.000075 Makela et al., 2006
+CUTCOND 0.000075              //Cuticul conductance in m/sec for P. sylvestris 0.00001 from Pietsch  0,00006 for Tatarinov, 0.000075 Makela et al., 2006
 MAXAGE  300 //500             //Determines rate of "physiological decline" of forest 500 for P. sylvestris Landsberg et al., 2005
 RAGE    0.95                  //Relative Age to give fAGE = 0.5 for P. sylvestris 0.95 Landsberg et al., 2005
 NAGE    4                     //Power of relative Age in function for P. sylvestris Landsberg et al., 2005
@@ -41,7 +41,7 @@ CONES_LIFE_SPAN 3             //Life span for cones (yrs)
 FINE_ROOT_LEAF  0.523         //allocation new fine root C:new leaf (ratio) 0.523 for P. sylvestris from Pietsch 1 from Tatarinov
 STEM_LEAF   2.5               //allocation new stem C:new leaf (ratio) 2.5 for P. sylvestris from Pietsch 2.2 from Tatarinov
 COARSE_ROOT_STEM   0.29       //allocation new coarse root C:new stem (ratio) 0.29 for P. sylvestris from Pietsch 0.44 from Tatarinov
-LIVE_TOTAL_WOOD 0.076 //0.05 CHECK IT!!!         //new live C:new total wood (ratio) for P. sylvestris 0.59 from Pietsch, 0.076 from Tatarinov
+LIVE_TOTAL_WOOD 0.076         //new live C:new total wood (ratio) for P. sylvestris 0.59 from Pietsch, 0.076 from Tatarinov
 CN_LEAVES   36                //CN of leaves (kgC/kgN) for P. sylvestris 33.1 from Pietsch 36 from Tatarinov
 CN_FALLING_LEAVES   122       //CN of leaf litter (kgC/kgN) for P. sylvestris from Pietsch, 122 from Tatarinov 
 CN_FINE_ROOTS   49.0          //CN of fine roots (kgC/kgN) for P. sylvestris 38 from Pietsch 49 from Tatarinov
@@ -59,7 +59,7 @@ BUD_BURST 0.3                 //days of bud burst at the beginning of growing se
 LEAF_FALL_FRAC_GROWING  0     //proportions of the growing season of leaf fall 
 LEAF_FINEROOT_TURNOVER  0.25  //Average YEARLY leaves and fine root turnover rate for P. sylvestris 0.18 from Pietsch, 0.39 Tatarinov, 0.25 Makela et al., 1997
 LIVE_WOOD_TURNOVER  0.7       //Annual yearly live wood turnover rate for P. sylvestris from Pietsch
-DBHDCMAX  0.24   //0.45 Condes & Sterba 2005             //Low Density for P. sylvestris deducted from Rautianen and Stenberg 2005,  0.255 Seidl et al., 2012, 0.18 from Kalliovirta and Tokola 2005, 0.34 from Grote 2001
+DBHDCMAX  0.45                //Low Density for P. sylvestris 0.45 Condes & Sterba 2005, deducted from Rautianen and Stenberg 2005,  0.255 Seidl et al., 2012, 0.18 from Kalliovirta and Tokola 2005, 0.34 from Grote 2001
 DBHDCMIN  0.14                //High Density for P. sylvestris deducted from Rautianen and Stenberg 2005 from Ameztegui et al., 2012 0.14, 0.15 from Kalliovirta and Tokola 2005
 SAP_A   0.974                 //a value for Pinus sylvestris 0.7731 from Xiao & Ceulemans 2004, 3.119 from Verbeek et al., 2007, 0.974 summing up Xiao + Veerbeck 
 SAP_B   1.7979                //b value for Pinus sylvestris 1.9174 from Xiao & Ceulemans 2004 1.4544 from Verbeek et al., 2007, 1.7979 summing up Xiao + Veerbeck
