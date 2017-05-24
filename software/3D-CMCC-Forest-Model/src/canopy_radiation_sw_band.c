@@ -237,7 +237,7 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 	static double temp_ppfd_refl;                                          /* temporary reflected PPFD for layer */
 
 	double k;
-	double k_eff;
+	//double k_eff;
 
 	tree_layer_t *l;
 	species_t *s;

@@ -58,6 +58,30 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 	/* compute age-related specific leaf area */
 	specific_leaf_area ( a, s);
 
+
+	/**************************************************************************************************/
+
+	/* note: special case, model recomputes tree height based on its parameterizations to avoid differences between
+	 * modelled and initialized tree height data */
+
+	/* Chapman-Richards function */
+	/* for references see also: R. Pilli et al. Forest Ecology and Management 237 (2006) 583–593 */
+	/* note: this shouldn't be applied to saplings that are lower than 1.3 meter */
+	h->value = DBH_ref + s->value[CRA] * pow (1. - exp ( - s->value[CRB] * d->value) , s->value[CRC]);
+
+	if ( h->value > s->value[CRA] )
+	{
+		h->value = s->value[CRA];
+	}
+	logger(g_debug_log, "-Tree Height using Chapman-Richard function = %f m\n", h->value);
+
+	/* check */
+	CHECK_CONDITION (h->value, >, s->value[CRA] + eps )
+	logger(g_debug_log, "-New Tree Height = %f m\n", h->value);
+
+	/**************************************************************************************************/
+
+
 	logger(g_debug_log,"\n*******INITIALIZE FOREST CLASS CARBON POOLS (%s)*******\n", s->name);
 	logger(g_debug_log, "...checking initial biomass data for class: height %f, dbh %f, age %d, species %s...\n", h->value, d->value, a->value, s->name);
 

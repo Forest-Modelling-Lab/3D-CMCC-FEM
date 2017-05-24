@@ -36,7 +36,7 @@ SITEs=(Soroe Hyytiala All)
 ESMs=(ESM1 ESM2 ESM3 ESM4 ESM5 All)
 
 #declare RCPs
-RCPs=(rcp0p0 rcp2p6 rcp4p5 rcp6p0 rcp8p5 All)
+RCPs=(rcp2p6 rcp4p5 rcp6p0 rcp8p5 All)
 
 #declare Management
 MANs=(on off All)
@@ -399,7 +399,7 @@ function CC_run {
 										
 					#add site name to current paths
 					SITE_PATH=input/"$site"
-					OUTPUT_PATH=output/"$site"
+					OUTPUT_PATH=output/ISIMIP_OUTPUT/"$site"
 					STAND_PATH=ISIMIP/"$site"_stand_ISIMIP.txt
 					TOPO_PATH=ISIMIP/"$site"_topo_ISIMIP.txt
 		

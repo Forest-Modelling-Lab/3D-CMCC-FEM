@@ -30,10 +30,10 @@ getwd()
 output_folder="output_Rstudio"
 
 # multiple simulations
-build_list<-c('Release')#, 'Release')
+build_list<-c('Debug')#, 'Release')
 site_list<-c("Soroe")#,"Soroe","Hyytiala","All")
 esm_list <-c("1")# ("1","2","3","4","5", "All")
-rcp_list <-c("0p0")# ("0p0","2p6","4p5","6p0","8p5","All")
+rcp_list <-c("8p5")# ("0p0","2p6","4p5","6p0","8p5","All")
 man_list <-c("on")# ("on",'off', "All")
 co2_list <-c("on")# , "on",off", "All")
 protocol_list<-c("FT")# ("2A","2B", "All") 
@@ -45,7 +45,7 @@ if ( grepl('All', esm_list) ) {
   esm_list = c("1","2","3","4","5")
 }
 if( grepl('All', rcp_list) ) {
-  rcp_list = c("0p0","2p6","4p5","6p0","8p5")
+  rcp_list = c("hist","2p6","4p5","6p0","8p5")
 }
 if( grepl('All', man_list ) ) {
   man_list = c("on",'off')
@@ -77,7 +77,7 @@ for (protocol in protocol_list) {
                                               "-p"," ", "input/parameterization", " ",
                                               "-o"," ", "output/",output_folder,"-", version, "-", site,"-",protocol," ",
                                               "-d"," ", "ISIMIP/", site,"_stand_ISIMIP.txt", " ",
-                                              "-m"," ", "ISIMIP/", protocol, "/GCM", esm,"/", "GCM", esm,"_", "rcp", rcp, ".txt", " ",
+                                              "-m"," ", "ISIMIP/", protocol, "/ESM", esm,"/", "ESM", esm,"_", "rcp", rcp, ".txt", " ",
                                               "-s"," ", "ISIMIP/", site,"_soil_ISIMIP.txt", " ",
                                               "-t"," ", "ISIMIP/", site,"_topo_ISIMIP.txt", " ",
                                               "-c"," ", "ISIMIP/", protocol, "/", site,"_settings_ISIMIP_Manag-", man, "_CO2-", co2,".txt", " ",
@@ -104,7 +104,7 @@ for (protocol in protocol_list) {
                         rm(settings)
                         
                         all_out_files = list.files(paste0("output/",output_folder,"-", version, "-", site,"-",protocol,"/"), 
-                                                   pattern = paste0(version,'_',site,'_GCM',esm,'_rcp',rcp,
+                                                   pattern = paste0(version,'_',site,'_ESM',esm,'_rcp',rcp,
                                                                     '.txt_'),
                                                    recursive = TRUE, full.names = TRUE)
                         
@@ -122,7 +122,7 @@ for (protocol in protocol_list) {
                                 if (co2 == 'off') {
                                   co2_1 = 'var'
                                 } 
-                                if ( paste0(cy_time,'_',version,'_',site,'_GCM',esm,'_rcp',rcp,'.txt_(',start_year,'-',end_year,')_CO2_',toupper(co2_1),'_CO2_rcp',rcp,'.txt_Man_',toupper(man),'_d_10000_txt.txt') == file_name ) {
+                                if ( paste0(cy_time,'_',version,'_',site,'_ESM',esm,'_rcp',rcp,'.txt_(',start_year,'-',end_year,')_CO2_',toupper(co2_1),'_CO2_rcp',rcp,'.txt_Man_',toupper(man),'_d_10000_txt.txt') == file_name ) {
                                     ck_f = 1
                                 }
                                 
@@ -249,21 +249,21 @@ print(end.time - start.time)
 #     #****************************************************************************************************************************************************************************
 #     
 #     #output model TREE DAILY
-#     pdf(paste0("./output/",output_folder, "-", version, "-", site,"-",protocol,"/output_", version,"_", year,"_", month,"_", day,"/daily/Daily_",site,"-GCM",esm,"-RCP-",rcp,"-Man-",man,"-Co2-",co2,".pdf"), onefile = T, width = 30,height = 24)
+#     pdf(paste0("./output/",output_folder, "-", version, "-", site,"-",protocol,"/output_", version,"_", year,"_", month,"_", day,"/daily/Daily_",site,"-ESM",esm,"-RCP-",rcp,"-Man-",man,"-Co2-",co2,".pdf"), onefile = T, width = 30,height = 24)
 #     par(mfrow=c(5,5))
 #     for (i in 5:length(outputCMCC$daily)) plot(outputCMCC$daily$Date, outputCMCC$daily[,i], main=colnames(outputCMCC$daily[i]), 
 #                                                col="black", xlab = "year", ylab= "unit", type = "l", col.lab="red", cex.lab=2, cex.axis=1.5, cex.main=2, pch =30)
 #     dev.off()
 #     
 #     #output model TREE MONTHLY
-#     pdf(paste0("./output/",output_folder, "-", version, "-", site,"-",protocol,"/output_", version, "_", year,"_", month,"_", day,"/monthly/Monthly_",site,"-GCM",esm,"-RCP-",rcp,"-Man-",man,"-Co2-",co2,".pdf"), onefile = T, width = 30,height = 24)
+#     pdf(paste0("./output/",output_folder, "-", version, "-", site,"-",protocol,"/output_", version, "_", year,"_", month,"_", day,"/monthly/Monthly_",site,"-ESM",esm,"-RCP-",rcp,"-Man-",man,"-Co2-",co2,".pdf"), onefile = T, width = 30,height = 24)
 #     par(mfrow=c(5,5))
 #     for (i in 4:length(outputCMCC$monthly)) plot(outputCMCC$monthly$Date,outputCMCC$monthly[,i], main=colnames(outputCMCC$monthly[i]),
 #                                                  col="black", xlab = "year", ylab= "unit", type = "l", col.lab="red", cex.lab=1.5, cex.axis=1.5, cex.main=2, pch =30)
 #     dev.off()
 #     
 #     #output model TREE ANNUAL
-#     pdf(paste0("./output/",output_folder, "-", version, "-", site,"-",protocol,"/output_", version, "_", year,"_", month,"_", day,"/annual/Annual_",site,"-GCM",esm,"-RCP-",rcp,"-Man-",man,"-Co2-",co2,".pdf"), onefile = T, width = 20,height = 16)
+#     pdf(paste0("./output/",output_folder, "-", version, "-", site,"-",protocol,"/output_", version, "_", year,"_", month,"_", day,"/annual/Annual_",site,"-ESM",esm,"-RCP-",rcp,"-Man-",man,"-Co2-",co2,".pdf"), onefile = T, width = 20,height = 16)
 #     par(mfrow=c(5,5))
 #     for (i in 3:length(outputCMCC$annual)) plot(outputCMCC$annual$Date,outputCMCC$annual[,i], main=colnames(outputCMCC$annual[i]), 
 #                                                 col="black", xlab = "year", ylab= "unit", type = "l", col.lab="red", cex.lab=1.5, cex.axis=1.5, cex.main=2, pch =30)
@@ -352,7 +352,7 @@ print(end.time - start.time)
 #                                               "-p"," ", "input/parameterization", " ",
 #                                               "-o"," ", "output/",output_folder, "-", version, "-", site_list[e],"-",protocol," ",
 #                                               "-d"," ", "PAPER/", site_list[e],"_stand_ISIMIP.txt", " ",
-#                                               "-m"," ", "PAPER/", "GCM", esm_list[f],"/", "GCM", esm_list[f],"_", "rcp", rcp_list[g], ".txt", " ",
+#                                               "-m"," ", "PAPER/", "ESM", esm_list[f],"/", "ESM", esm_list[f],"_", "rcp", rcp_list[g], ".txt", " ",
 #                                               "-s"," ", "PAPER/", site_list[e],"_soil_ISIMIP.txt", " ",
 #                                               "-t"," ", "PAPER/", site_list[e],"_topo_ISIMIP.txt", " ",
 #                                               "-c"," ", "PAPER/", site_list[e],"_settings_ISIMIP_Manag-", man_list[h], "_CO2-", co2_list[i],".txt", " ",
