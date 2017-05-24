@@ -32,8 +32,8 @@ model_run=(Debug Release)
 #declare sites
 SITEs=(Soroe Hyytiala All)
 
-#declare GCMs or Repeated
-GCMs=(GCM1 GCM2 GCM3 GCM4 GCM5 All)
+#declare ESMs or Repeated
+ESMs=(ESM1 ESM2 ESM3 ESM4 ESM5 All)
 
 #declare RCPs
 RCPs=(rcp0p0 rcp2p6 rcp4p5 rcp6p0 rcp8p5 All)
@@ -220,38 +220,38 @@ while :
 
 #########################################################################################################
 	
-	#log available GCMs
-	echo 'available GCMs:'
-	for (( i = 0 ; i < ${#GCMs[@]} ; ++i )) ; do
-			echo -"${GCMs[i]}"
+	#log available ESMs
+	echo 'available ESMs:'
+	for (( i = 0 ; i < ${#ESMs[@]} ; ++i )) ; do
+			echo -"${ESMs[i]}"
 	done
 
-	echo "which GCMs do you want to use for '$site'?"
+	echo "which ESMs do you want to use for '$site'?"
 				
-	#ask which GCMs use
+	#ask which ESMs use
 	match=no
 	while :
 	do
-	read gcm
-	for (( i = 0 ; i <= ${#GCMs[@]} ; ++i )) ; do
-		if [ "${gcm,,}" = "${GCMs[$i],,}" ] ; then
+	read esm
+	for (( i = 0 ; i <= ${#ESMs[@]} ; ++i )) ; do
+		if [ "${esm,,}" = "${ESMs[$i],,}" ] ; then
 			match=yes
-			gcm=${GCMs[$i]}
+			esm=${ESMs[$i]}
 		fi
 	done
 	if [ "$match" == "yes" ] ; then
 		break;
 	fi
 	
-	echo "'$gcm' doesn't match with GCMs list. please rewrite it."
+	echo "'$esm' doesn't match with ESMs list. please rewrite it."
 	done
 	
 	#for counter
-	if [ "$gcm" == 'All' ] ; then
-		gcm_counter=${#GCMs[@]}
-		let "gcm_counter-=1"
+	if [ "$esm" == 'All' ] ; then
+		esm_counter=${#ESMs[@]}
+		let "esm_counter-=1"
 	else
-		gcm_counter=1
+		esm_counter=1
 	fi
 
 
@@ -261,7 +261,7 @@ while :
 			echo -"${RCPs[i]}"
 	done
 
-	echo "which RCPs do you want to use for '$site' and '$gcm'?"
+	echo "which RCPs do you want to use for '$site' and '$esm'?"
 		
 	#ask which RCPs use
 	match=no
@@ -299,7 +299,7 @@ for (( i = 0 ; i < ${#MANs[@]} ; ++i )) ; do
 	echo -"${MANs[i]}"
 done
 
-echo "Management on or off for '$site' and '$gcm' and '$rcp'?"
+echo "Management on or off for '$site' and '$esm' and '$rcp'?"
 
 	#ask which run use
 	match=no
@@ -337,7 +337,7 @@ for (( i = 0 ; i < ${#CO2s[@]} ; ++i )) ; do
 	echo -"${CO2s[i]}"
 done
 
-echo "CO2 enrichment on or off for '$site' and '$gcm' and '$rcp' and Management '$management'?"
+echo "CO2 enrichment on or off for '$site' and '$esm' and '$rcp' and Management '$management'?"
 
 	#ask which co2 use
 	match=no
@@ -378,13 +378,13 @@ START=`date +%s%N`
 
 function CC_run {
 	for (( b = 0 ; b < $site_counter ; ++b )) ; do
-		for (( c = 0 ; c < $gcm_counter ; ++c )) ; do
+		for (( c = 0 ; c < $esm_counter ; ++c )) ; do
 			for (( d = 0 ; d < $rcp_counter ; ++d )) ; do
 				for (( e = 0 ; e < $man_counter ; ++e )) ; do
 					for (( f = 0 ; f < $co2_counter ; ++f )) ; do
 					
 					if (( $site_counter > 1 )) ; then site=${SITEs[$b]}; fi
-					if (( $gcm_counter  > 1 )) ; then gcm=${GCMs[$c]}; fi
+					if (( $esm_counter  > 1 )) ; then esm=${ESMs[$c]}; fi
 					if (( $rcp_counter  > 1 )) ; then rcp=${RCPs[$d]}; fi
 					if (( $man_counter  > 1 )) ; then management=${MANs[$e]}; fi
 					if (( $co2_counter  > 1 )) ; then co2=${CO2s[$f]}; fi
@@ -392,7 +392,7 @@ function CC_run {
 					echo "multi run"
 					echo 'running for' "$site"
 					echo 'running for' "$climate"
-					echo 'running for' "$gcm"
+					echo 'running for' "$esm"
 					echo 'running for' "$rcp"
 					echo 'running with management =' "$management" 
 					echo 'running with co2 =' "$co2"
@@ -403,12 +403,12 @@ function CC_run {
 					STAND_PATH=ISIMIP/"$site"_stand_ISIMIP.txt
 					TOPO_PATH=ISIMIP/"$site"_topo_ISIMIP.txt
 		
-					SETTING_PATH=ISIMIP/2A/"$site"_settings_ISIMIP_Manag-"$management"_CO2-"$co2".txt
+					SETTING_PATH=ISIMIP/FT/"$site"_settings_ISIMIP_Manag-"$management"_CO2-"$co2".txt
 				
-					#add gcm and rcp to meteo co2 and soil path
-					MET_PATH=ISIMIP/2A/"$gcm"/"$gcm"_"$rcp".txt
+					#add esm and rcp to meteo co2 and soil path
+					MET_PATH=ISIMIP/FT/"$esm"/"$esm"_"$rcp".txt
 					SOIL_PATH=ISIMIP/"$site"_soil_ISIMIP.txt
-					CO2_PATH=ISIMIP/2A/CO2/CO2_"$rcp".txt
+					CO2_PATH=ISIMIP/FT/CO2/CO2_"$rcp".txt
 									
 					#add paths and arguments to executable and run
 					$launch$executable -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH #&
@@ -437,12 +437,12 @@ function CC_run {
 #NO CLIMATE CHANGE SIMULATIONS + TRANSIENT CO2
 function no_CC_CO2_run {
 	for (( b = 0 ; b < $site_counter ; ++b )) ; do
-		for (( c = 0 ; c < $gcm_counter ; ++c )) ; do
+		for (( c = 0 ; c < $esm_counter ; ++c )) ; do
 			for (( d = 0 ; d < $rcp_counter ; ++d )) ; do
 				for (( e = 0 ; e < $man_counter ; ++e )) ; do
 					
 					if (( $site_counter > 1 )) ; then site=${SITEs[$b]}; fi
-					if (( $gcm_counter  > 1 )) ; then gcm=${GCMs[$c]}; fi
+					if (( $esm_counter  > 1 )) ; then esm=${ESMs[$c]}; fi
 					if (( $rcp_counter  > 1 )) ; then rcp=${RCPs[$d]}; fi
 					if (( $man_counter  > 1 )) ; then management=${MANs[$e]}; fi
 					if (( $co2_counter  > 1 )) ; then co2=${CO2s[$f]}; fi
@@ -450,7 +450,7 @@ function no_CC_CO2_run {
 					echo "multi run"
 					echo 'running for' "$site"
 					echo 'running for' "$climate"
-					echo 'running for' "$gcm"
+					echo 'running for' "$esm"
 					echo 'running for' "$rcp"
 					echo 'running with management =' "$management" 
 					echo 'running with co2 =' "$co2"
@@ -461,12 +461,12 @@ function no_CC_CO2_run {
 					STAND_PATH=ISIMIP/"$site"_stand_ISIMIP.txt
 					TOPO_PATH=ISIMIP/"$site"_topo_ISIMIP.txt
 		
-					SETTING_PATH=ISIMIP/2A/"$site"_settings_ISIMIP_Manag-"$management"_CO2-on.txt
+					SETTING_PATH=ISIMIP/FT/"$site"_settings_ISIMIP_Manag-"$management"_CO2-on.txt
 				
-					#add gcm and rcp to meteo co2 and soil path
-					MET_PATH=ISIMIP/2A/"$gcm"/"$gcm"_rcp0p0.txt
+					#add esm and rcp to meteo co2 and soil path
+					MET_PATH=ISIMIP/FT/"$esm"/"$esm"_rcp0p0.txt
 					SOIL_PATH=ISIMIP/"$site"_soil_ISIMIP.txt
-					CO2_PATH=ISIMIP/2A/CO2/CO2_"$rcp".txt
+					CO2_PATH=ISIMIP/FT/CO2/CO2_"$rcp".txt
 									
 					#add paths and arguments to executable and run
 					$launch$executable -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH #&
