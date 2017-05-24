@@ -295,6 +295,7 @@ void reset_daily_class_variables(cell_t *const c)
 					s->counter[DEAD_TREE] =                0;
 
 					s->value[DAILY_CANOPY_COVER_PROJ] =   0.;
+					s->value[DAILY_CANOPY_COVER_EXP] =    0.;
 
 					/* reset daily radiative variables */
 					s->value[PAR] =                       0.;

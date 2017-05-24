@@ -20,6 +20,8 @@
 
 extern logger_t* g_debug_log;
 
+#define TEST 1
+
 void canopy_evapotranspiration(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, meteo_daily_t *const meteo_daily)
 {
 	double g_corr;
@@ -63,13 +65,14 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 	/********************************************************************************************************/
 	/* temperature and pressure correction factor for conductances */
 	g_corr = pow( ( meteo_daily->tday + TempAbs ) / 293.15, 1.75) * 101300. / meteo_daily->air_pressure;
+	logger(g_debug_log, "g_corr = %f \n",g_corr);
 
 	/* calculate leaf- and canopy-level conductances to water vapor and
 		sensible heat fluxes */
 
 	/* leaf aerodynamic-boundary-layer conductance */
 	gl_bl = s->value[BLCOND] * g_corr;
-	logger(g_debug_log, "gl_bl NOT corrected for wind speed = %g mm\n",gl_bl);
+	logger(g_debug_log, "gl_bl NOT corrected for wind speed = %f mm\n",gl_bl);
 
 #if 0
 	/**************************************************************************/
@@ -91,35 +94,39 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 
 		/* aerodynamic boundary layer conductance */
 		gl_bl = pow ( KARM , 2.) / pow ( log ( ( zero - plane) / rough ) , 2. );
-		logger(g_debug_log, "gl_bl corrected for wind speed = %g mm\n",gl_bl);
-		printf("wind speed = %f gl_bl corrected for wind speed %f\n", meteo_daily->windspeed, gl_bl);getchar();
+		logger(g_debug_log, "gl_bl corrected for wind speed = %f mm\n",gl_bl);
+		printf("wind speed = %f gl_bl corrected for wind speed %f\n", meteo_daily->windspeed, gl_bl);
+
+		//gl_bl *= g_corr;
+		//printf("wind speed = %f gl_bl corrected for wind speed and corrected for g_corr %f\n", meteo_daily->windspeed, gl_bl);
+
 	}
 	/**************************************************************************/
 #endif
 
 	/* canopy boundary layer conductance */
 	s->value[CANOPY_BLCOND] = gl_bl * s->value[LAI_PROJ];
+	logger(g_debug_log, "CANOPY_BLCOND = %f \n",s->value[CANOPY_BLCOND]);
 
 	/* leaf cuticular conductance corrected for temperature and air pressure */
 	gl_c = s->value[CUTCOND] * g_corr;
+	logger(g_debug_log, "gl_c          = %f \n",gl_c);
 
 	/* leaf stomatal conductance: first generate multipliers, then apply them to maximum stomatal conductance */
 	/* apply all multipliers to the maximum stomatal conductance */
 	/* differently from BIOME we use F_T that takes into account not only minimum temperature effects */
 	/* differently from BIOME we use also F_AGE */
-#if 1
+
 	/* original BIOME version (Jarvis method) */
 	m_final       = s->value[F_LIGHT]       * s->value[F_SW] * s->value[F_T] * s->value[F_VPD] * s->value[F_AGE];
 	m_final_sun   = s->value[F_LIGHT_SUN]   * s->value[F_SW] * s->value[F_T] * s->value[F_VPD] * s->value[F_AGE];
 	m_final_shade = s->value[F_LIGHT_SHADE] * s->value[F_SW] * s->value[F_T] * s->value[F_VPD] * s->value[F_AGE];
-#else
-	/* following Duursma Maestro/Maestra Model (TO TEST) */
-	//note: Duursma uses fPAR, fVPD and fA, cause we include them into F_A calculation we exclude them from eq.
-	m_final       = s->value[F_LIGHT]       * s->value[F_A];
-	m_final_sun   = s->value[F_LIGHT_SUN]   * s->value[F_A_SUN];
-	m_final_shade = s->value[F_LIGHT_SHADE] * s->value[F_A_SHADE];
-#endif
 
+	logger(g_debug_log, "m_final       = %f \n",m_final);
+	logger(g_debug_log, "m_final_sun   = %f \n",m_final_sun);
+	logger(g_debug_log, "m_final_shade = %f \n",m_final_shade);
+
+	/* check */
 	if (m_final       < eps) m_final       = eps;
 	if (m_final_sun   < eps) m_final_sun   = eps;
 	if (m_final_shade < eps) m_final_shade = eps;
@@ -127,6 +134,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 	/** stomatal conductance **/
 	/* correct maximum stomatal conductance for CO2 concentration*/
 	gl_x = (s->value[F_CO2_TR] / 0.9116) * s->value[MAXCOND];
+	logger(g_debug_log, "gl_x = %f\n",gl_x);
 
 	/* following Jarvis 1997 approach (not more used) */
 	//gl_s_sun = s->value[MAXCOND] * m_final_sun * g_corr;
@@ -136,6 +144,9 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 	s->value[STOMATAL_CONDUCTANCE]       = gl_x * m_final       * g_corr;
 	s->value[STOMATAL_SUN_CONDUCTANCE]   = gl_x * m_final_sun   * g_corr;
 	s->value[STOMATAL_SHADE_CONDUCTANCE] = gl_x * m_final_shade * g_corr;
+	logger(g_debug_log, "STOMATAL_CONDUCTANCE       = %f\n",s->value[STOMATAL_CONDUCTANCE]);
+	logger(g_debug_log, "STOMATAL_SUN_CONDUCTANCE   = %f\n",s->value[STOMATAL_SUN_CONDUCTANCE]);
+	logger(g_debug_log, "STOMATAL_SHADE_CONDUCTANCE = %f\n",s->value[STOMATAL_SHADE_CONDUCTANCE]);
 
 	/* calculate leaf-and canopy-level conductances to water vapor and
 		sensible heat fluxes, to be used in Penman-Monteith calculations of
@@ -143,6 +154,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 
 	/* Leaf conductance to evaporated water vapor, per unit projected LAI */
 	gl_e_wv       = gl_bl;
+	logger(g_debug_log, "gl_e_wv = %f\n",gl_e_wv);
 
 	/** leaf conductance **/
 	/* Leaf conductance to transpired water vapor, per unit projected
@@ -152,15 +164,21 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 	s->value[LEAF_CONDUCTANCE]       = (gl_bl * (s->value[STOMATAL_CONDUCTANCE]       + gl_c)) / (gl_bl + s->value[STOMATAL_CONDUCTANCE]       + gl_c);
 	s->value[LEAF_SUN_CONDUCTANCE]   = (gl_bl * (s->value[STOMATAL_SUN_CONDUCTANCE]   + gl_c)) / (gl_bl + s->value[STOMATAL_SUN_CONDUCTANCE]   + gl_c);
 	s->value[LEAF_SHADE_CONDUCTANCE] = (gl_bl * (s->value[STOMATAL_SHADE_CONDUCTANCE] + gl_c)) / (gl_bl + s->value[STOMATAL_SHADE_CONDUCTANCE] + gl_c);
+	logger(g_debug_log, "LEAF_CONDUCTANCE       = %f\n",s->value[LEAF_CONDUCTANCE]);
+	logger(g_debug_log, "LEAF_SUN_CONDUCTANCE   = %f\n",s->value[LEAF_SUN_CONDUCTANCE]);
+	logger(g_debug_log, "LEAF_SHADE_CONDUCTANCE = %f\n",s->value[LEAF_SHADE_CONDUCTANCE]);
 
 	/* Leaf conductance to sensible heat, per unit all-sided LAI */
 	gl_sh         = gl_bl;
+	logger(g_debug_log, "gl_sh = %f\n",gl_sh);
 
 	/* Canopy conductance to evaporated water vapor */
 	gc_e_wv       = gl_e_wv * s->value[LAI_PROJ];
+	logger(g_debug_log, "gc_e_wv = %f\n",gc_e_wv);
 
 	/* Canopy conductance to sensible heat */
 	gc_sh         = gl_sh   * s->value[LAI_PROJ];
+	logger(g_debug_log, "gc_sh = %f\n",gc_sh);
 
 	/* Canopy evaporation, if any water was intercepted */
 	/* Calculate Penman-Monteith evaporation, given the canopy conductances to
@@ -179,15 +197,15 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 		if(s->value[CANOPY_WATER] > 0.)
 		{
 			logger(g_debug_log, "\n*CANOPY EVAPORATION (Canopy Wet) *\n");
-			logger(g_debug_log, "LAI_PROJ = %g\n",s->value[LAI_PROJ]);
-			logger(g_debug_log, "CANOPY_WATER = %g mm\n",s->value[CANOPY_WATER]);
+			logger(g_debug_log, "LAI_PROJ = %f\n",s->value[LAI_PROJ]);
+			logger(g_debug_log, "CANOPY_WATER = %f mm\n",s->value[CANOPY_WATER]);
 
 			rv = 1. / gc_e_wv;
 			rh = 1. / gc_sh;
 
 			/* radiation */
 			net_rad = s->value[SW_RAD_ABS];
-			logger(g_debug_log, "sw rad for evaporation (tot LAI) = %g W/m2\n", net_rad);
+			logger(g_debug_log, "sw rad for evaporation (tot LAI) = %f W/m2\n", net_rad);
 
 			/* call Penman-Monteith function, it returns Potential evaporation in kg/m2/s for evaporation and W/m2 for latent heat */
 			//fixme use correct net radiation
@@ -200,7 +218,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 
 			/* calculate the time required to evaporate all the canopy water */
 			evap_daylength_sec     = s->value[CANOPY_WATER] / s->value[CANOPY_EVAPO];
-			logger(g_debug_log, "evap_daylength_sec = %g sec\n", evap_daylength_sec);
+			logger(g_debug_log, "evap_daylength_sec = %f sec\n", evap_daylength_sec);
 
 			/* day not long enough to evap. all int. water */
 			if( evap_daylength_sec > daylength_sec )
@@ -214,7 +232,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 				/* adjust day length for transpiration */
 				transp_daylength_sec             = 0.;
 				s->value[CANOPY_FRAC_DAY_TRANSP] = 0.;
-				logger(g_debug_log, "transp_daylength_sec = %g\n", s->value[CANOPY_FRAC_DAY_TRANSP]);
+				logger(g_debug_log, "transp_daylength_sec = %f\n", s->value[CANOPY_FRAC_DAY_TRANSP]);
 
 				/* no time left for transpiration */
 				s->value[CANOPY_TRANSP] = 0.;
@@ -222,14 +240,14 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 				/* day length limits canopy evaporation */
 				evapo *= daylength_sec;
 				s->value[CANOPY_EVAPO] = evapo;
-				logger(g_debug_log, "Canopy evaporation = %g mm\n", s->value[CANOPY_EVAPO]);
+				logger(g_debug_log, "Canopy evaporation = %f mm\n", s->value[CANOPY_EVAPO]);
 
 				s->value[CANOPY_EVAPO_TRANSP] = s->value[CANOPY_EVAPO] + s->value[CANOPY_TRANSP];
-				logger(g_debug_log, "Canopy evapo-transpiration = %g mm\n", s->value[CANOPY_EVAPO_TRANSP]);
+				logger(g_debug_log, "Canopy evapo-transpiration = %f mm\n", s->value[CANOPY_EVAPO_TRANSP]);
 
 				/* remove evaporated water from canopy water pool */
 				s->value[CANOPY_WATER] -= s->value[CANOPY_EVAPO];
-				logger(g_debug_log, "Canopy water = %g mm\n", s->value[CANOPY_WATER]);
+				logger(g_debug_log, "Canopy water = %f mm\n", s->value[CANOPY_WATER]);
 
 			}
 			/* all intercepted water evaporated */
@@ -242,11 +260,11 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 				evapo = s->value[CANOPY_WATER];
 
 				s->value[CANOPY_EVAPO]  = evapo;
-				logger(g_debug_log, "Canopy evaporation = %g mm\n", s->value[CANOPY_EVAPO]);
+				logger(g_debug_log, "Canopy evaporation = %f mm\n", s->value[CANOPY_EVAPO]);
 
 				/* reset canopy water from canopy water pool */
 				s->value[CANOPY_WATER] -= s->value[CANOPY_EVAPO];
-				logger(g_debug_log, "Canopy water = %g mm\n", s->value[CANOPY_WATER]);
+				logger(g_debug_log, "Canopy water = %f mm\n", s->value[CANOPY_WATER]);
 
 				logger(g_debug_log, "\n*CANOPY TRANSPIRATION (Partial Canopy Wet)*\n");
 
@@ -254,7 +272,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 				transp_daylength_sec   = daylength_sec - evap_daylength_sec;
 
 				s->value[CANOPY_FRAC_DAY_TRANSP] = transp_daylength_sec / daylength_sec;
-				logger(g_debug_log, "transp_daylength_sec = %g\n", s->value[CANOPY_FRAC_DAY_TRANSP]);
+				logger(g_debug_log, "transp_daylength_sec = %f\n", s->value[CANOPY_FRAC_DAY_TRANSP]);
 
 				/* Leaf-Canopy resistance to sensible heat */
 				rh = 1. / gl_sh;
@@ -266,37 +284,47 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 
 				/* for sun canopy fraction */
 				rv = 1. / s->value[LEAF_SUN_CONDUCTANCE];
+				logger(g_debug_log, "Leaf sun resistance = %f \n",rv);
 
 				/* note: Net Rad is Short wave flux */
 				/* convert radiation to stomatal scale */
 				//fixme why??????????
 
 				net_rad = s->value[SW_RAD_ABS_SUN] / s->value[LAI_SUN_PROJ];
-				logger(g_debug_log, "sw rad for evaporation (LAI sun ) = %g W/m2\n", net_rad);
+				logger(g_debug_log, "sw rad for evaporation (LAI sun ) = %f W/m2\n", net_rad);
 
 				/* call Penman-Monteith function, returns e in kg/m2/s for transpiration and W/m2 for latent heat */
 				//fixme use correct net radiation
 				s->value[CANOPY_TRANSP_SUN]  = Penman_Monteith (meteo_daily, rv, rh, net_rad);
+#if TEST
 				s->value[CANOPY_TRANSP_SUN] *= ( transp_daylength_sec * s->value[LAI_SUN_PROJ] * s->value[DAILY_CANOPY_COVER_EXP] );
-				logger(g_debug_log, "transp_sun = %g mm/m2/day\n", s->value[CANOPY_TRANSP_SUN]);
+#else
+				s->value[CANOPY_TRANSP_SUN] *= ( transp_daylength_sec * s->value[LAI_SUN_PROJ] * s->value[DAILY_CANOPY_COVER_PROJ] );
+#endif
+				logger(g_debug_log, "transp_sun = %f mm/m2/day\n", s->value[CANOPY_TRANSP_SUN]);
 
 				/** LAI SHADE **/
 				logger(g_debug_log, "\n--Transpiration for LAI shade--\n");
 
 				/* for shaded canopy fraction */
 				rv = 1. / s->value[LEAF_SHADE_CONDUCTANCE];
+				logger(g_debug_log, "Leaf shade resistance = %f \n",rv);
 
 				/* note: Net Rad is Short wave flux */
 				/* convert radiation to stomatal scale */
 				//fixme why??????????
 				net_rad = s->value[SW_RAD_ABS_SHADE] / s->value[LAI_SHADE_PROJ];
-				logger(g_debug_log, "sw rad for evaporation (LAI shade) = %g W/m2\n", net_rad);
+				logger(g_debug_log, "sw rad for evaporation (LAI shade) = %f W/m2\n", net_rad);
 
 				/* call Penman-Monteith function, returns e in kg/m2/s for transpiration and W/m2 for latent heat*/
 				//fixme use correct net radiation
 				s->value[CANOPY_TRANSP_SHADE]  = Penman_Monteith (meteo_daily, rv, rh, net_rad);
+#if TEST
 				s->value[CANOPY_TRANSP_SHADE] *= ( transp_daylength_sec * s->value[LAI_SHADE_PROJ] * s->value[DAILY_CANOPY_COVER_EXP] );
-				logger(g_debug_log, "transp_shade = %g mm/m2/day\n", s->value[CANOPY_TRANSP_SHADE]);
+#else
+				s->value[CANOPY_TRANSP_SHADE] *= ( transp_daylength_sec * s->value[LAI_SHADE_PROJ] * s->value[DAILY_CANOPY_COVER_PROJ] );
+#endif
+				logger(g_debug_log, "transp_shade = %f mm/m2/day\n", s->value[CANOPY_TRANSP_SHADE]);
 
 				/************************************************************************************/
 				/* overall canopy */
@@ -331,16 +359,19 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 			evapo = 0.;
 
 			s->value[CANOPY_EVAPO] = evapo;
-			logger(g_debug_log, "Canopy evaporation = %g mm\n", s->value[CANOPY_EVAPO]);
+			logger(g_debug_log, "Canopy evaporation = %f mm\n", s->value[CANOPY_EVAPO]);
 
 			logger(g_debug_log, "*CANOPY TRANSPIRATION (Canopy Dry)*\n");
 
 			/* all day transp */
-			transp_daylength_sec             = 1.;
+			transp_daylength_sec             = daylength_sec;
+			logger(g_debug_log, "transp_daylength_sec = %f\n",transp_daylength_sec);
+
 			s->value[CANOPY_FRAC_DAY_TRANSP] = 1.;
 
 			/* Leaf-Canopy resistance to sensible heat */
 			rh = 1. / gl_sh;
+			logger(g_debug_log, "rh = %f\n",rh);
 
 			/************************************************************************************/
 			/* calculate transpiration using adjusted day length */
@@ -350,34 +381,44 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 			logger(g_debug_log, "\n--Transpiration for LAI sun--\n");
 
 			rv = 1. / s->value[LEAF_SUN_CONDUCTANCE];
+			logger(g_debug_log, "Leaf sun resistance = %f \n",rv);
 
 			/* note: Net Rad is Short wave flux */
 			/* convert radiation to stomatal scale */
 			//fixme why??????????
 			net_rad = s->value[SW_RAD_ABS_SUN] / s->value[LAI_SUN_PROJ];
-			logger(g_debug_log, "sw rad for evaporation (LAI sun ) = %g W/m2\n", net_rad);
+			logger(g_debug_log, "sw rad for evaporation (LAI sun) = %f W/m2\n", net_rad);
 
 			/* call Penman-Monteith function, returns e in kg/m2/s for transpiration and W/m2 for latent heat*/
 			//fixme use correct net radiation
 			s->value[CANOPY_TRANSP_SUN]  = Penman_Monteith (meteo_daily, rv, rh, net_rad);
-			s->value[CANOPY_TRANSP_SUN] *= daylength_sec * s->value[LAI_SUN_PROJ] * s->value[DAILY_CANOPY_COVER_EXP];
-			logger(g_debug_log, "transp_sun = %g mm/m2/day\n", s->value[CANOPY_TRANSP_SUN]);
+#if TEST
+				s->value[CANOPY_TRANSP_SUN] *= ( transp_daylength_sec * s->value[LAI_SUN_PROJ] * s->value[DAILY_CANOPY_COVER_EXP] );
+#else
+				s->value[CANOPY_TRANSP_SUN] *= ( transp_daylength_sec * s->value[LAI_SUN_PROJ] * s->value[DAILY_CANOPY_COVER_PROJ] );
+#endif
+			logger(g_debug_log, "transp_sun = %f mm/m2/day\n", s->value[CANOPY_TRANSP_SUN]);
 
 			/** LAI SHADE **/
 			logger(g_debug_log, "\n--Transpiration for LAI shade--\n");
 
 			rv = 1. / s->value[LEAF_SHADE_CONDUCTANCE];
+			logger(g_debug_log, "Leaf shade resistance = %f \n",rv);
 
 			/* note: Net Rad is Short wave flux */
 			/* convert radiation to stomatal scale */
 			//fixme why??????????
 			net_rad = s->value[SW_RAD_ABS_SHADE] / s->value[LAI_SHADE_PROJ];
-			logger(g_debug_log, "sw rad for evaporation (LAI shade) = %g W\n", net_rad);
+			logger(g_debug_log, "sw rad for evaporation (LAI shade) = %f W/m2\n", net_rad);
 
 			/* call Penman-Monteith function, returns e in kg/m2/s for transpiration and W/m2 for latent heat*/
 			s->value[CANOPY_TRANSP_SHADE]  = Penman_Monteith (meteo_daily, rv, rh, net_rad);
-			s->value[CANOPY_TRANSP_SHADE] *= daylength_sec * s->value[LAI_SHADE_PROJ] * s->value[DAILY_CANOPY_COVER_EXP];
-			logger(g_debug_log, "transp_shade = %g mm/m2/day\n", s->value[CANOPY_TRANSP_SHADE]);
+#if TEST
+				s->value[CANOPY_TRANSP_SHADE] *= ( transp_daylength_sec * s->value[LAI_SHADE_PROJ] * s->value[DAILY_CANOPY_COVER_EXP] );
+#else
+				s->value[CANOPY_TRANSP_SHADE] *= ( transp_daylength_sec * s->value[LAI_SHADE_PROJ] * s->value[DAILY_CANOPY_COVER_PROJ] );
+#endif
+			logger(g_debug_log, "transp_shade = %f mm/m2/day\n", s->value[CANOPY_TRANSP_SHADE]);
 
 			/************************************************************************************/
 			/* overall canopy */
@@ -402,12 +443,12 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 	}
 
 	logger(g_debug_log,"\n--Overall canopy--\n");
-	logger(g_debug_log, "CANOPY_WATER        = %g mm/m2/day\n", s->value[CANOPY_WATER]);
-	logger(g_debug_log, "CANOPY_EVAPO        = %g mm/m2/day\n", s->value[CANOPY_EVAPO]);
-	logger(g_debug_log, "CANOPY_TRANSP       = %g mm/m2/day\n", s->value[CANOPY_TRANSP]);
-	logger(g_debug_log, "CANOPY_TRANSP_SUN   = %g mm/m2/day\n", s->value[CANOPY_TRANSP_SUN]);
-	logger(g_debug_log, "CANOPY_TRANSP_SHADE = %g mm/m2/day\n", s->value[CANOPY_TRANSP_SHADE]);
-	logger(g_debug_log, "CANOPY_EVAPO_TRANSP = %g mm/m2/day\n", s->value[CANOPY_EVAPO_TRANSP]);
+	logger(g_debug_log, "CANOPY_WATER        = %f mm/m2/day\n", s->value[CANOPY_WATER]);
+	logger(g_debug_log, "CANOPY_EVAPO        = %f mm/m2/day\n", s->value[CANOPY_EVAPO]);
+	logger(g_debug_log, "CANOPY_TRANSP       = %f mm/m2/day\n", s->value[CANOPY_TRANSP]);
+	logger(g_debug_log, "CANOPY_TRANSP_SUN   = %f mm/m2/day\n", s->value[CANOPY_TRANSP_SUN]);
+	logger(g_debug_log, "CANOPY_TRANSP_SHADE = %f mm/m2/day\n", s->value[CANOPY_TRANSP_SHADE]);
+	logger(g_debug_log, "CANOPY_EVAPO_TRANSP = %f mm/m2/day\n", s->value[CANOPY_EVAPO_TRANSP]);
 
 	/**********************************************************************************/
 	/**********************************************************************************/
