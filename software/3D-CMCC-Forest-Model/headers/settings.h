@@ -28,6 +28,7 @@ typedef struct {
 	char CO2_trans;                      /* CO2 transient must be 'on' or 'off' or 'var' */
 	int year_start_co2_fixed;            /* for CO2_trans = var, year at which CO2 is fixed */
 	char Ndep_fixed;                     /* fixed Nitrogen deposition must be 'on' or 'off' */
+	//ALESSIOR double Tbase_resp;                   /* T base temperature for respiration (°C) */
 	char Resp_accl;                      /* acclimation of repiration must be 'on' or 'off' */
 	char regeneration;                   /* regeneration must be 'on' or 'off' */
 	char management;                     /* management must be 'on' of 'off' */
