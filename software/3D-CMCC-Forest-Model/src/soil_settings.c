@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 #include <assert.h>
 #include "matrix.h"
 #include "common.h"
@@ -49,7 +50,7 @@ soil_settings_t* import_txt(const char *const filename, int* const p_settings_co
 	soil_settings_t s;
 	soil_settings_t *ps_no_leak;
 
-	const char delimiters[] = ",\r\n";
+	const char delimiters[] = " ,/\t\r\n";
 
 	assert(filename && p_settings_count);
 
@@ -63,14 +64,21 @@ soil_settings_t* import_txt(const char *const filename, int* const p_settings_co
 		logger_error(g_debug_log, "unable to open %s, file not found.\n", filename);
 		return 0;
 	}
+	
+	/* get header ( skip comments ) */
+	do {
+		if ( ! fgets(buffer, SOIL_BUFFER_SIZE, f) ) {
+			logger_error(g_debug_log, "header not found in %s\n", filename);
+			fclose(f);
+			return NULL;
+		}
 
-	/* get header */
-	if ( ! fgets(buffer, SOIL_BUFFER_SIZE, f) )
-	{
-		logger_error(g_debug_log, "header not found in %s\n", filename);
-		fclose(f);
-		return NULL;
-	}
+		/* remove initial spaces (if any) */
+		p = buffer;
+		while ( isspace(*p) ) ++p;
+
+		/* skip empty lines and comments */
+	} while ( ('\r' == p[0]) || ('\n' == p[0]) || ('/' == p[0]) || ('\0' == p[0]) );
 
 	/* reset columns */
 	for ( i = 0; i < SOIL_VARS_COUNT; i++ )
@@ -111,28 +119,25 @@ soil_settings_t* import_txt(const char *const filename, int* const p_settings_co
 
 	/* import values */
 	while ( fgets(buffer, SOIL_BUFFER_SIZE, f) ) {
+		char* p2;
 		int y; /* keep track of imported values */
+		
+		/* remove initial spaces (if any) */
+		p2 = buffer;
+		while ( isspace(*p2) ) ++p2;
 
-		/* skip empty rows */
-		if ( ('\r' == buffer[0]) || ('\n' == buffer[0]) )
+		/* skip empty rows and comment*/
+		if ( ('\r' == p2[0]) || ('\n' == p2[0]) || ('/' == p2[0]) || ('\0' == p2[0]) )
 		{
 			continue;
 		}
 
 		/* parse values */
 		y = 0;
-		for ( i = 0, token = string_tokenizer(buffer, delimiters, &p); token; token = string_tokenizer(NULL, delimiters, &p), ++i )
+		for ( i = 0, token = string_tokenizer(p2, delimiters, &p); token; token = string_tokenizer(NULL, delimiters, &p), ++i )
 		{
 			int err;
 			double value;
-			
-			if ( ++y > SOIL_VARS_COUNT )
-			{
-				logger_error(g_debug_log, "too many columns in %s\n", filename);
-				if ( ps ) free(ps);
-				fclose(f);
-				return 0;
-			}
 
 			// check landuse
 			if ( SOIL_LANDUSE == columns[i] ) {
@@ -166,6 +171,12 @@ soil_settings_t* import_txt(const char *const filename, int* const p_settings_co
 					return NULL;
 				}
 				s.values[columns[i]] = value;
+			}
+			
+			// skip comments
+			if ( ++y == SOIL_VARS_COUNT )
+			{
+				break;
 			}
 		}
 

@@ -92,7 +92,7 @@ static const char* sz_vars[COLUMNS_TO_IMPORT] = {
 
 static const char sz_species[] = "species_code.txt";
 
-static const char delimiter[] = " ,/\r\n";
+static const char delimiter[] = " ,/\t\r\n";
 
 static const char err_redundancy[] = "redundancy: var \"%s\" already founded at column %d.\n";
 static const char err_unable_find_column[] = "unable to find column for \"%s\" var.\n";
@@ -659,7 +659,7 @@ static dataset_t* dataset_import_txt(const char* const filename) {
 		while ( isspace(*p2) ) ++p2;
 
 		/* skip empty lines and comments */
-	} while ( ('\r' == p2[0]) || ('\n' == p2[0]) || ('/' == p2[0]) );
+	} while ( ('\r' == p2[0]) || ('\n' == p2[0]) || ('/' == p2[0]) || ('\0' == p2[0]) );
 
 	columns = malloc(COLUMNS_TO_IMPORT*sizeof*columns);
 	if ( ! columns ) {

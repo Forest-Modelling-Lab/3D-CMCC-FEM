@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 #include <assert.h>
 #include "matrix.h"
 #include "common.h"
@@ -30,7 +31,7 @@ topo_t* import_topo_txt(const char *const filename, int* const p_topos_count) {
 	topo_t t;
 	topo_t *pt_no_leak;
 
-	const char delimiters[] = ",\r\n";
+	const char delimiters[] = " ,/\t\r\n";
 
 	assert(filename && p_topos_count);
 
@@ -45,13 +46,20 @@ topo_t* import_topo_txt(const char *const filename, int* const p_topos_count) {
 		return 0;
 	}
 
-	/* get header */
-	if ( ! fgets(buffer, TOPO_BUFFER_SIZE, f) )
-	{
-		logger_error(g_debug_log, "header not found in %s\n", filename);
-		fclose(f);
-		return 0;
-	}
+	/* get header ( skip comments ) */
+	do {
+		if ( ! fgets(buffer, TOPO_BUFFER_SIZE, f) ) {
+			logger_error(g_debug_log, "header not found in %s\n", filename);
+			fclose(f);
+			return 0;
+		}
+
+		/* remove initial spaces (if any) */
+		p = buffer;
+		while ( isspace(*p) ) ++p;
+
+		/* skip empty lines and comments */
+	} while ( ('\r' == p[0]) || ('\n' == p[0]) || ('/' == p[0]) || ('\0' == p[0]) );
 
 	/* reset columns */
 	for ( i = 0; i < TOPO_VARS_COUNT; i++ )
@@ -92,17 +100,22 @@ topo_t* import_topo_txt(const char *const filename, int* const p_topos_count) {
 
 	/* import values */
 	while ( fgets(buffer, TOPO_BUFFER_SIZE, f) ) {
+		char* p2;
 		int y; /* keep track of imported values */
 
-		/* skip empty rows */
-		if ( ('\r' == buffer[0]) || ('\n' == buffer[0]) )
+		/* remove initial spaces (if any) */
+		p2 = buffer;
+		while ( isspace(*p2) ) ++p2;
+
+		/* skip empty rows and comment*/
+		if ( ('\r' == p2[0]) || ('\n' == p2[0]) || ('/' == p2[0]) || ('\0' == p2[0]) )
 		{
 			continue;
 		}
 
 		/* parse values */
 		y = 0;
-		for ( i = 0, token = string_tokenizer(buffer, delimiters, &p); token; token = string_tokenizer(NULL, delimiters, &p), ++i )
+		for ( i = 0, token = string_tokenizer(p2, delimiters, &p); token; token = string_tokenizer(NULL, delimiters, &p), ++i )
 		{
 			int err;
 			float value;
@@ -115,16 +128,14 @@ topo_t* import_topo_txt(const char *const filename, int* const p_topos_count) {
 				fclose(f);
 				return 0;
 			}
-
-			if ( ++y > TOPO_VARS_COUNT )
-			{
-				logger_error(g_debug_log, "too many columns in %s\n", filename);
-				if ( pt ) free(pt);
-				fclose(f);
-				return 0;
-			}
 			
 			t.values[columns[i]] = value;
+
+			// skip comments
+			if ( ++y == TOPO_VARS_COUNT )
+			{
+				break;
+			}
 		}
 
 		/* check imported stuff */

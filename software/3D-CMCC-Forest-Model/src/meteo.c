@@ -1766,7 +1766,7 @@ static int import_txt(const char *const filename, meteo_annual_t** p_yos, int *c
 	f = fopen(filename, "r");
 	if ( ! f )
 	{
-		logger_error(g_debug_log, "unable to open met data file, problems in filename !\n");
+		logger_error(g_debug_log, "unable to open met data file. file not found !\n");
 		return 0;
 	}
 
