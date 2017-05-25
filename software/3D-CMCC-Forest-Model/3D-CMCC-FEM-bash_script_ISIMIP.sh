@@ -30,7 +30,7 @@ export OUTPUT_PATH=output/
 model_run=(Debug Release)
 
 #declare sites
-SITEs=(Soroe Hyytiala All)
+SITEs=(Soroe Hyytiala Collelongo All)
 
 #experiments
 EXPs=(LOCAL FT 2A All)

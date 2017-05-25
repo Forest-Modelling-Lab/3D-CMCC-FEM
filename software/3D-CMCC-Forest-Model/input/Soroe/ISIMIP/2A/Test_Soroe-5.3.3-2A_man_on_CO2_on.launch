@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <launchConfiguration type="org.eclipse.cdt.launch.applicationLaunchType">
-<stringAttribute key="bad_container_name" value="/3D_CMCC_Forest_Model/input/Hyytiala/ISIMIP/A"/>
 <intAttribute key="org.eclipse.cdt.launch.ATTR_BUILD_BEFORE_LAUNCH_ATTR" value="2"/>
 <stringAttribute key="org.eclipse.cdt.launch.COREFILE_PATH" value=""/>
-<stringAttribute key="org.eclipse.cdt.launch.DEBUGGER_REGISTER_GROUPS" value=""/>
-<stringAttribute key="org.eclipse.cdt.launch.PROGRAM_ARGUMENTS" value="-i input/Kroof &#10;-o output/Test_Kroof-5.3.3-1A-man_off_co2_on-Local&#10;-p input/parameterization &#10;-d ISIMIP/Kroof_stand_ISIMIP.txt &#10;-m ISIMIP/1A/1/hist.txt &#10;-s ISIMIP/Kroof_soil_ISIMIP.txt &#10;-t ISIMIP/Kroof_topo_ISIMIP.txt &#10;-c ISIMIP/1A/1/Kroof_settings_ISIMIP_Manag-off_CO2-on.txt &#10;-k ISIMIP/1A/CO2/CO2_rcp0p0.txt"/>
+<stringAttribute key="org.eclipse.cdt.launch.PROGRAM_ARGUMENTS" value="-i input/Soroe &#10;-p input/parameterization &#10;-o output/Test_Soroe5.3.3-2A_man_on_co2_on&#10;-d ISIMIP/Soroe_stand_ISIMIP.txt &#10;-m ISIMIP/2A/ESM10/ESM10_hist.txt &#10;-s ISIMIP/Soroe_soil_ISIMIP.txt &#10;-t ISIMIP/Soroe_topo_ISIMIP.txt &#10;-c ISIMIP/2A/Soroe_settings_ISIMIP_Manag-on_CO2-on.txt &#10;-k ISIMIP/CO2/CO2_rcp0p0.txt"/>
 <stringAttribute key="org.eclipse.cdt.launch.PROGRAM_NAME" value="Debug/3D_CMCC_Forest_Model"/>
 <stringAttribute key="org.eclipse.cdt.launch.PROJECT_ATTR" value="3D_CMCC_Forest_Model"/>
 <booleanAttribute key="org.eclipse.cdt.launch.PROJECT_BUILD_CONFIG_AUTO_ATTR" value="true"/>
@@ -20,6 +18,6 @@
 <listEntry value="org.eclipse.debug.ui.launchGroup.debug"/>
 <listEntry value="org.eclipse.debug.ui.launchGroup.run"/>
 </listAttribute>
-<stringAttribute key="org.eclipse.dsf.launch.MEMORY_BLOCKS" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#10;&lt;memoryBlockExpressionList context=&quot;reserved-for-future-use&quot;/&gt;&#10;"/>
+<stringAttribute key="org.eclipse.dsf.launch.MEMORY_BLOCKS" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#10;&lt;memoryBlockExpressionList context=&quot;reserved-for-future-use&quot;&gt;&#10;&lt;gdbmemoryBlockExpression address=&quot;93824995009360&quot; label=&quot;&amp;amp;((s)-&amp;gt;value[206])&quot;/&gt;&#10;&lt;/memoryBlockExpressionList&gt;&#10;"/>
 <stringAttribute key="process_factory_id" value="org.eclipse.cdt.dsf.gdb.GdbProcessFactory"/>
 </launchConfiguration>

@@ -30,22 +30,22 @@ getwd()
 output_folder="output_Rstudio"
 
 # multiple simulations
-build_list<-c('Debug')#, 'Release')
-site_list<-c("Soroe")#,"Soroe","Hyytiala","All")
-esm_list <-c("1")# ("1","2","3","4","5", "All")
-rcp_list <-c("8p5")# ("0p0","2p6","4p5","6p0","8p5","All")
-man_list <-c("on")# ("on",'off', "All")
-co2_list <-c("on")# , "on",off", "All")
+build_list<-c('Release')#, 'Release')
+site_list<-c("Collelongo")#,"Soroe","Hyytiala","All")
+esm_list <-c("All")# ("1","2","3","4","5", "All")
+rcp_list <-c("All")# ("0p0","2p6","4p5","6p0","8p5","All")
+man_list <-c("All")# ("on",'off', "All")
+co2_list <-c("All")# , "on",off", "All")
 protocol_list<-c("FT")# ("2A","2B", "All") 
 
 if ( grepl('All', site_list) ) {
-    site_list = c("Soroe","Hyytiala")
+    site_list = c("Soroe","Hyytiala, Collelongo")
 }
 if ( grepl('All', esm_list) ) {
   esm_list = c("1","2","3","4","5")
 }
 if( grepl('All', rcp_list) ) {
-  rcp_list = c("hist","2p6","4p5","6p0","8p5")
+  rcp_list = c("2p6","4p5","6p0","8p5")
 }
 if( grepl('All', man_list ) ) {
   man_list = c("on",'off')
@@ -81,7 +81,7 @@ for (protocol in protocol_list) {
                                               "-s"," ", "ISIMIP/", site,"_soil_ISIMIP.txt", " ",
                                               "-t"," ", "ISIMIP/", site,"_topo_ISIMIP.txt", " ",
                                               "-c"," ", "ISIMIP/", protocol, "/", site,"_settings_ISIMIP_Manag-", man, "_CO2-", co2,".txt", " ",
-                                              "-k"," ", "ISIMIP/", protocol,"/CO2/CO2_", "rcp",rcp, ".txt"
+                                              "-k"," ", "ISIMIP/", "/CO2/CO2_", "rcp",rcp, ".txt"
                         )
                         # launch execution
                         system(systemCall)

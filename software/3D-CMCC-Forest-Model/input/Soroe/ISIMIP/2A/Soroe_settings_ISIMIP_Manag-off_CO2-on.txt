@@ -5,7 +5,7 @@ TIME d                              //Must be 'm' or 'd', monthly or daily
 SCREEN_OUTPUT off                   //Must be  'on' or 'off'
 DEBUG_OUTPUT off                    //Must be 'on' or 'off'
 DAILY_OUTPUT on                     //Must be 'on' or 'off'
-MONTHLY_OUTPUT off                   //Must be 'on' or 'off'
+MONTHLY_OUTPUT off                  //Must be 'on' or 'off'
 ANNUAL_OUTPUT on                    //Must be 'on' or 'off'
 SOIL_OUTPUT off                     //Must be 'on' or 'off'
 YEAR_START 1944                     //Starting year simulation
