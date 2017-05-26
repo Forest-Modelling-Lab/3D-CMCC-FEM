@@ -1,9 +1,9 @@
 //Picea abies parameterization
 LIGHT_TOL               3       //4 = very shade intolerant 3 = shade intolerant 2 = shade tolerant 1 = very shade tolerant
 PHENOLOGY               1.2     //PHENOLOGY 0.1 = deciduous broadleaf, 0.2 = deciduous needle leaf, 1.1 = broad leaf evergreen, 1.2 = needle leaf evergreen 
-ALPHA                   0.055   //0.050 //Canopy quantum efficiency (molC/molPAR) converted from 1.8 gCMJ for Picea abies (0.065) Seidl et al., 2005, (0.048) Rotzer et al., 2010
-EPSILONgCMJ             1.05    //Light Use Efficiency (gC/molPAR)(used if ALPHA is not available)  
-K                       0.67    //0.54    //Extinction coefficient for absorption of PAR by canopy for Picea abies Pietsch et al., 2005 ,0.54 from Pietsch et al., 2005,  0.54 from Mollicone, 0.4241 Forrester et al., 2014
+ALPHA                   0.054   //Canopy quantum efficiency (molC/molPAR) converted from 1.8 gCMJ for Picea abies (0.065) Seidl et al., 2005, (0.048) Rotzer et al., 2010, 0.051 Peltionemi et al., 2012
+EPSILONgCMJ             0.61    //Light Use Efficiency (gC/molPAR)(used if ALPHA is not available) 0.61 Peltionemi et al., 2012
+K                       0.67    //Extinction coefficient for absorption of PAR by canopy for Picea abies Pietsch et al., 2005 ,0.54 from Pietsch et al., 2005,  0.54 from Mollicone, 0.4241 Forrester et al., 2014
 ALBEDO                  0.06    //averaged for P.abies, 0.06 Jarvis et al., 1976, 0.095 from Breuer et al., 2003
 INT_COEFF               0.3     //precip interception coefficient for Picea abies (see Tatarinov)
 SLA_AVG1                12      //Average Specific Leaf Area m^2/KgC (juvenile) sunlit/shaded leaves for Picea abies Konopka et al., 2014, (5.9) see Johansson, T. 1999
