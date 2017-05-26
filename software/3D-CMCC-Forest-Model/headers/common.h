@@ -14,10 +14,10 @@
 #define FOLDER_DELIMITER_C	'/'
 #endif
 
-#define INVALID_VALUE		-9999
-#define IS_INVALID_VALUE(x)	((INVALID_VALUE==(x)))
-#define IS_LEAP_YEAR(x)		(((x) % 4 == 0 && (x) % 100 != 0) || (x) % 400 == 0)
-#define SIZE_OF_ARRAY(a)	sizeof((a))/sizeof((a)[0])
+#define INVALID_VALUE			-9999
+#define IS_INVALID_VALUE(x)		((INVALID_VALUE==(x)))
+#define IS_LEAP_YEAR(x)			(((x) % 4 == 0 && (x) % 100 != 0) || (x) % 400 == 0)
+#define SIZE_OF_ARRAY(a)		sizeof((a))/sizeof((a)[0])
 #define ARE_FLOATS_EQUAL(a,b)	(((a)==(b)))
 
 #ifndef MAX

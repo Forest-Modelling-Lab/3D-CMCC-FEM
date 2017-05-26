@@ -115,7 +115,6 @@ const int optional[] = {
 	SETTINGS_YEAR_RESTART
 	, SETTINGS_REGENERATION_SPECIES
 	, SETTINGS_TBASE_RESP
-	//, SETTINGS_REGENERATION_LAI			// (m2/m2) lai for regeneration trees (mandatory for evergreen, useless for deciduous)
 };
 
 settings_t* settings_import(const char *const filename) {

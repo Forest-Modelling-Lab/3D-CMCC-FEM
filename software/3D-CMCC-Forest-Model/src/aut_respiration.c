@@ -52,6 +52,7 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 	species_t *s;
 	s  = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
+	// set default value to Tbase_resp
 	if (  ARE_FLOATS_EQUAL(g_settings->Tbase_resp, 0.) )
 	{
 		Q10_temp = 20.;
