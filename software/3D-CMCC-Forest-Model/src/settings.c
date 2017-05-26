@@ -114,6 +114,7 @@ const char* sz_settings[SETTINGS_COUNT] = {
 const int optional[] = {
 	SETTINGS_YEAR_RESTART
 	, SETTINGS_REGENERATION_SPECIES
+	, SETTINGS_TBASE_RESP
 	//, SETTINGS_REGENERATION_LAI			// (m2/m2) lai for regeneration trees (mandatory for evergreen, useless for deciduous)
 };
 
@@ -484,10 +485,16 @@ settings_t* settings_import(const char *const filename) {
 				}
 			}
 
+			printf("%s was not specified.", sz_settings[i]);
+
 			if ( ! flag ) {
-				printf("%s was not specified.\n", sz_settings[i]);
+				puts("");
 				free(s);
 				return 0;
+			}
+			else
+			{
+				printf(" optional.\n", sz_settings[i]);
 			}
 		}
 	}

@@ -23,7 +23,7 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 	double MR_ref     = 0.218;               /* Reference MR respiration linear N relationship with MR being kgC/kgN/day, 0.218 from Ryan 1991, 0.1584 Campioli et al., 2013 and from Dufrene et al 2005 */
 
 	//NOTE: Atkin et al. 2008 and Cox et al., reports 25 °C for both
-	double Q10_temp   = 20.; //test 25.;     /* T_base temperature for respiration, 15°C for Damesin et al., 2001, 20°C Thornton */
+	double Q10_temp; //test 25.;     /* T_base temperature for respiration, 15°C for Damesin et al., 2001, 20°C Thornton */
 	//double Q10_temp_accl = 20.0; //25;     /* T_base temperature for acclimation in respiration (25°C) Atkin et al., 2008 GCB, Cox et al., 2000 Nature */
 
 	//note: q10 variables are recomputed by resp acclimation 'Type I'
@@ -51,6 +51,15 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 
 	species_t *s;
 	s  = &c->heights[height].dbhs[dbh].ages[age].species[species];
+
+	if (  ARE_FLOATS_EQUAL(g_settings->Tbase_resp, 0.) )
+	{
+		Q10_temp = 20.;
+	}
+	else
+	{
+		Q10_temp = g_settings->Tbase_resp;
+	}
 
 	logger(g_debug_log, "\n**MAINTENANCE_RESPIRATION**\n");
 
