@@ -1,6 +1,6 @@
-Year,x,y,Age,Species,Management,N,Stool,AvDBH,Height,Wf,Wrc,Wrf,Ws,Wbb,Wres,Lai
-1992,0,0,100,Fagussylvatica,T,905,0,18.77,16.51,0,0,0,0,0,0,0
-1997,0,0,105,Fagussylvatica,T,900,0,20.20,17.31,0,0,0,0,0,0,0
-2002,0,0,110,Fagussylvatica,T,830,0,22.06,18.53,0,0,0,0,0,0,0
-2007,0,0,115,Fagussylvatica,T,820,0,22.63,18.87,0,0,0,0,0,0,0
-2012,0,0,120,Fagussylvatica,T,740,0,25.33,20.66,0,0,0,0,0,0,0
+Year,x,y,Age,Species,Management,N,Stool,AvDBH,Height,Lai
+1992,0,0,100,Fagussylvatica,T,905,0,18.77,16.51,0
+1997,0,0,105,Fagussylvatica,T,900,0,20.20,17.31,0
+2002,0,0,110,Fagussylvatica,T,830,0,22.06,18.53,0
+2007,0,0,115,Fagussylvatica,T,820,0,22.63,18.87,0
+2012,0,0,120,Fagussylvatica,T,740,0,25.33,20.66,0

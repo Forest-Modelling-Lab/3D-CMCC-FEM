@@ -50,15 +50,19 @@ void crown_allometry (cell_t *const c, const int height, const int dbh, const in
 	s->value[CROWN_HEIGHT] = s->value[CROWN_A] * pow(h->value, s->value[CROWN_B]);
 	logger(g_debug_log, "-Crown Height             = %f m\n", s->value[CROWN_HEIGHT]);
 
+	/* controls and use it if need */
+	if ( s->value[CROWN_HEIGHT] > h->value )
+	{
+		s->value[CROWN_HEIGHT] = h->value;
+	}
+
 	/* check */
 	CHECK_CONDITION(s->value[CROWN_HEIGHT], >, h->value);
 
 	/* cast s->value[CROWN_FORM_FACTOR] to integer */
 	crown_form_factor = (int)s->value[CROWN_FORM_FACTOR];
-	//crown_form_factor = 0;
 
 	/* compute overall single tree crown area */
-
 #if 0 //old
 	switch (crown_form_factor)
 	{

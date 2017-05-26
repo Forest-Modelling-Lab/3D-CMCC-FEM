@@ -30,7 +30,7 @@ export OUTPUT_PATH=output/
 model_run=(Debug Release)
 
 #declare sites
-SITEs=(Soroe Hyytiala Collelongo All)
+SITEs=(Bily_Kriz Collelongo Hyytiala Kroof LeBray Peitz Solling_beech Solling_spruce Soroe All)
 
 #experiments
 EXPs=(LOCAL FT 2A All)
@@ -724,10 +724,10 @@ for (( e = 0 ; e < $exp_counter ; ++e )) ; do
 	LOCAL_runs
 	
 	#2 simulation for 'FAST TRACK' experimet
-	FT_runs
+	#FT_runs
 	
 	#3  simulation for '2A' experiment
-	2A_runs
+	#2A_runs
 	
 	#3  simulation for '2B' experiment
 	#2B_runs
