@@ -28,7 +28,7 @@ typedef struct {
 	char CO2_trans;                      /* CO2 transient must be 'on' or 'off' or 'var' */
 	int year_start_co2_fixed;            /* for CO2_trans = var, year at which CO2 is fixed */
 	char Ndep_fixed;                     /* fixed Nitrogen deposition must be 'on' or 'off' */
-	//ALESSIOR double Tbase_resp;                   /* T base temperature for respiration (°C) */
+	double Tbase_resp;                   /* T base temperature for respiration (°C) */
 	char Resp_accl;                      /* acclimation of repiration must be 'on' or 'off' */
 	char regeneration;                   /* regeneration must be 'on' or 'off' */
 	char management;                     /* management must be 'on' of 'off' */
@@ -64,12 +64,6 @@ typedef struct {
 	double replanted_avdbh;              /* average dbh of replanted trees (cm) (mandatory) */
 	double replanted_lai;                /* LAI of replanted trees (m2/m2) (mandatory for evergreen) */
 	double replanted_height;             /* height of replanted trees (meters) (mandatory) */
-	/* biomass */
-	double replanted_ws;                 /* stem biomass of replanted trees (tDM/cell) (probably no need to be used) (optional)*/
-	double replanted_wcr;                /* coarse root of replanted trees (tDM/cell) (probably no need to be used) (optional) */
-	double replanted_wfr;                /* fine root biomass of replanted trees (tDM/cell) (probably no need to be used) (optional) */
-	double replanted_wl;                 /* leaf biomass of replanted trees (tDM/cell) (probably no need to be used) (optional) */
-	double replanted_wbb;                /* branch biomass of replanted trees (tDM/cell)  (probably no need to be used) (optional) */
 
 	/* regeneration input (Regeneration options)*/
 	double regeneration_n_tree;
@@ -77,12 +71,6 @@ typedef struct {
 	double regeneration_avdbh;           /* dbh for regeneration (cm) */
 	double regeneration_lai;             /* regeneration LAI (m2/m2) (mandatory for evergreen) */
 	double regeneration_height;          /* regeneration height (meter) */
-	/* biomass */
-	double regeneration_ws;              /* stem biomass of regeneration trees (tDM/cell) (probably no need to be used) (optional)*/
-	double regeneration_wcr;             /* coarse root of regeneration trees (tDM/cell) (probably no need to be used) (optional) */
-	double regeneration_wfr;             /* fine root biomass of regeneration trees (tDM/cell) (probably no need to be used) (optional) */
-	double regeneration_wl;              /* leaf biomass of regeneration trees (tDM/cell) (probably no need to be used) (optional) */
-	double regeneration_wbb;             /* branch biomass of regeneration trees (tDM/cell) (probably no need to be used) (optional) */
 } settings_t;
 
 settings_t* settings_import(const char *const filename);

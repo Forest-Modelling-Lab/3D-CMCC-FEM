@@ -27,6 +27,7 @@ enum {
 	, SETTINGS_CO2_TRANS
 	, SETTINGS_YEAR_START_CO2_FIXED
 	, SETTINGS_NDEP_FIXED
+	, SETTINGS_TBASE_RESP
 	, SETTINGS_RESP_ACCL
 	, SETTINGS_REGENERATION
 	, SETTINGS_MANAGEMENT
@@ -48,11 +49,6 @@ enum {
 	, SETTINGS_REPLANTED_AVDBH
 	, SETTINGS_REPLANTED_LAI
 	, SETTINGS_REPLANTED_HEIGHT
-	, SETTINGS_REPLANTED_WS
-	, SETTINGS_REPLANTED_WCR
-	, SETTINGS_REPLANTED_WFR
-	, SETTINGS_REPLANTED_WL
-	, SETTINGS_REPLANTED_WBB
 	, SETTINGS_REGENERATION_SPECIES
 	, SETTINGS_REGENERATION_MANAGEMENT
 	, SETTINGS_REGENERATION_N_TREE
@@ -60,11 +56,6 @@ enum {
 	, SETTINGS_REGENERATION_AVDBH
 	, SETTINGS_REGENERATION_LAI
 	, SETTINGS_REGENERATION_HEIGHT
-	, SETTINGS_REGENERATION_WS
-	, SETTINGS_REGENERATION_WCR
-	, SETTINGS_REGENERATION_WFR
-	, SETTINGS_REGENERATION_WL
-	, SETTINGS_REGENERATION_WBB
 
 	, SETTINGS_COUNT
 };
@@ -89,6 +80,7 @@ const char* sz_settings[SETTINGS_COUNT] = {
 	, "CO2_TRANS"
 	, "YEAR_START_CO2_FIXED"
 	, "NDEP_FIXED"
+	, "TBASE_RESP"
 	, "RESP_ACCL"
 	, "REGENERATION"
 	, "MANAGEMENT"
@@ -110,11 +102,6 @@ const char* sz_settings[SETTINGS_COUNT] = {
 	, "REPLANTED_AVDBH"
 	, "REPLANTED_LAI"
 	, "REPLANTED_HEIGHT"
-	, "REPLANTED_WS"
-	, "REPLANTED_WCR"
-	, "REPLANTED_WFR"
-	, "REPLANTED_WL"
-	, "REPLANTED_WBB"
 	, "REGENERATION_SPECIES"
 	, "REGENERATION_MANAGEMENT"
 	, "REGENERATION_N_TREE"
@@ -122,27 +109,12 @@ const char* sz_settings[SETTINGS_COUNT] = {
 	, "REGENERATION_AVDBH"
 	, "REGENERATION_LAI"
 	, "REGENERATION_HEIGHT"
-	, "REGENERATION_WS"
-	, "REGENERATION_WCR"
-	, "REGENERATION_WFR"
-	, "REGENERATION_WL"
-	, "REGENERATION_WBB"
 };
 
 const int optional[] = {
 	SETTINGS_YEAR_RESTART
-	, SETTINGS_REPLANTED_WS
-	, SETTINGS_REPLANTED_WCR
-	, SETTINGS_REPLANTED_WFR
-	, SETTINGS_REPLANTED_WL
-	, SETTINGS_REPLANTED_WBB
 	, SETTINGS_REGENERATION_SPECIES
 	//, SETTINGS_REGENERATION_LAI			// (m2/m2) lai for regeneration trees (mandatory for evergreen, useless for deciduous)
-	, SETTINGS_REGENERATION_WS
-	, SETTINGS_REGENERATION_WCR
-	, SETTINGS_REGENERATION_WFR
-	//, REGENERATION_WL						// (tDM/ha) leaf biomass of regeneration trees (optional for evergreen if LAI!= 0, otherwise useless)
-	, SETTINGS_REGENERATION_WBB
 };
 
 settings_t* settings_import(const char *const filename) {
@@ -410,6 +382,10 @@ settings_t* settings_import(const char *const filename) {
 						s->year_start_co2_fixed = (int)value;
 					break;
 
+					case SETTINGS_TBASE_RESP:
+						s->Tbase_resp = value;
+					break;
+
 					case SETTINGS_YEAR_START_MANAGEMENT:
 						s->year_start_management = (int)value;
 					break;
@@ -468,26 +444,6 @@ settings_t* settings_import(const char *const filename) {
 						s->replanted_height = value;
 					break;
 
-					case SETTINGS_REPLANTED_WS:
-						s->replanted_ws = value;
-					break;
-
-					case SETTINGS_REPLANTED_WCR:
-						s->replanted_wcr = value;
-					break;
-
-					case SETTINGS_REPLANTED_WFR:
-						s->replanted_wfr = value;
-					break;
-
-					case SETTINGS_REPLANTED_WL:
-						s->replanted_wl = value;
-					break;
-
-					case SETTINGS_REPLANTED_WBB:
-						s->replanted_wbb = value;
-					break;
-
 					case SETTINGS_REGENERATION_N_TREE:
 						s->regeneration_n_tree = value;
 					break;
@@ -506,26 +462,6 @@ settings_t* settings_import(const char *const filename) {
 
 					case SETTINGS_REGENERATION_HEIGHT:
 						s->regeneration_height = value;
-					break;
-
-					case SETTINGS_REGENERATION_WS:
-						s->regeneration_ws = value;
-					break;
-
-					case SETTINGS_REGENERATION_WCR:
-						s->regeneration_wcr = value;
-					break;
-
-					case SETTINGS_REGENERATION_WFR:
-						s->regeneration_wfr = value;
-					break;
-
-					case SETTINGS_REGENERATION_WL:
-						s->regeneration_wl = value;
-					break;
-
-					case SETTINGS_REGENERATION_WBB:
-						s->regeneration_wbb = value;
 					break;
 				}
 		}
