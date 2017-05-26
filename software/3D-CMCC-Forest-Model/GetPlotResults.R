@@ -32,10 +32,10 @@ output_folder="output_Rstudio"
 # multiple simulations
 build_list<-c('Release')#, 'Release')
 site_list<-c("Collelongo")#,"Soroe","Hyytiala","All")
-esm_list <-c("3")# ("1","2","3","4","5", "All")
-rcp_list <-c("2p6")# ("0p0","2p6","4p5","6p0","8p5","All")
-man_list <-c("on")# ("on",'off', "All")
-co2_list <-c("on")# , "on",off", "All")
+esm_list <-c("All")# ("1","2","3","4","5", "All")
+rcp_list <-c("All")# ("0p0","2p6","4p5","6p0","8p5","All")
+man_list <-c("All")# ("on",'off', "All")
+co2_list <-c("All")# , "on",off", "All")
 protocol_list<-c("FT")# ("2A","2B", "All") 
 
 if ( grepl('All', site_list) ) {
