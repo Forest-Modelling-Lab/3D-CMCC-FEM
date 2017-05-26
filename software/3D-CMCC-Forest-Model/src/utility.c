@@ -126,7 +126,10 @@ void reset_daily_cell_variables(cell_t *const c)
 	c->daily_canopy_rain_int =          0.;
 	c->daily_canopy_snow_int =          0.;
 	c->daily_canopy_evapo =             0.;
+	c->daily_canopy_transp_watt =       0.;
+	c->daily_canopy_et_watt =           0.;
 	c->daily_soil_evapo =               0.;
+	c->daily_soil_evapo_watt =          0.;
 	c->daily_canopy_et =                0.;
 	c->daily_et =                       0.;
 	c->daily_canopy_sh_flux =           0.;

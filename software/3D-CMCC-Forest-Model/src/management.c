@@ -186,12 +186,23 @@ void thinning (cell_t *const c, const int height, const int dbh, const int age, 
 	trees_to_remove = ROUND((s->value[THINNING_INTENSITY] / 100. ) * s->counter[N_TREE]);
 	logger(g_debug_log, "trees_to_remove = %d\n", trees_to_remove);
 
-	/* update C and N biomass */
-	tree_biomass_remove ( c, height, dbh, age, species, trees_to_remove );
+	if ( trees_to_remove < s->counter[N_TREE] )
+	{
+		/* update C and N biomass */
+		tree_biomass_remove ( c, height, dbh, age, species, trees_to_remove );
 
-	/* remove trees */
-	s->counter[N_TREE] -= trees_to_remove;
-	logger(g_debug_log, "Number of trees after management = %d trees/cell\n", s->counter[N_TREE]);
+		/* remove trees */
+		s->counter[N_TREE] -= trees_to_remove;
+		logger(g_debug_log, "Number of trees after management = %d trees/cell\n", s->counter[N_TREE]);
+	}
+	else
+	{
+		/* update C and N biomass */
+		tree_biomass_remove ( c, height, dbh, age, species, s->counter[N_TREE] );
+
+		/* remove completely all trees */
+		tree_class_remove (c, height, dbh, age, species );
+	}
 
 	/* check */
 	CHECK_CONDITION(s->counter[N_TREE], <, ZERO );

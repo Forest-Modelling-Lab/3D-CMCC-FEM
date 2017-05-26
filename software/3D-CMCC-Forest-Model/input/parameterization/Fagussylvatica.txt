@@ -18,11 +18,11 @@ RHO0  0.64                     //Minimum Basic Density for young Trees tDM/m^3 0
 RHO1  0.64                     //Maximum Basic Density for young Trees tDM/m^3 0.79 Bouriaud et al., 2004, 0.64 ettore, 0.68 Seidl et al., 2012, 0.58 Bartelink 1997
 TRHO    100                    //Age at which rho = (RHOMIN + RHOMAX )/2
 FORM_FACTOR 0.433              //Form factor Seidl et al., 2012
-COEFFCOND   0.06               //Define stomatal responsee to VPD in mbar see Pietsch et al., 2005
+COEFFCOND   0.1   //0.06       //Define stomatal responsee to VPD in mbar see Pietsch et al., 2005
 BLCOND  0.01                   //Canopy Boundary Layer conductance see 0.01 for stomatal Pietsch et al., 2005
-MAXCOND 0.005                  //Maximum Stomatal Conductance in m/sec 0,005 for Tatarinov et al., 2006, 0.006 Pietsch
+MAXCOND 0.003     //0.005      //Maximum Stomatal Conductance in m/sec 0,005 for Tatarinov et al., 2006, 0.006 Pietsch
 CUTCOND 6e-05                  //Cuticul conductance in m/sec for F sylvatica 0.000006 Tatarinov et al., 2006
-MAXAGE 500 //350  //400        //Determines rate of "physiological decline" of forest
+MAXAGE  400                    //Determines rate of "physiological decline" of forest
 RAGE    0.95                   //Relative Age to give fAGE = 0.5
 NAGE    10                     //Power of relative Age in function for Age
 GROWTHTMIN  0                  //Minimum temperature for growth 5  Rasse et al 2001 0 from Williams 1996, -2 Hoffmann 1995
