@@ -313,8 +313,10 @@ int annual_growth_efficiency_mortality ( cell_t *const c, const int height, cons
 /* Age mortality function from LPJ-GUESS */
 void age_mortality (cell_t *const c, const int height, const int dbh, const int age, const int species)
 {
-	int livetree = 0;
-	int deadtree = 0;
+	int livetree       = 0;
+	int deadtree       = 0;
+	double mort_factor = 3;     /* age mortality factor 3 as in Smith et al., (LPJ-Guess) */
+	double mort_log    = 0.001; /* age mortality log 0.001 as in Smith et al., (LPJ-Guess) */
 	double age_mort;
 
 	age_t *a;
@@ -326,7 +328,7 @@ void age_mortality (cell_t *const c, const int height, const int dbh, const int 
 	s = &a->species[species];
 
 	/* Age probability function */
-	age_mort = ( - ( 3. * log ( 0.001 ) ) / (s->value[MAXAGE])) * pow (((double)a->value /s->value[MAXAGE]), 2.);
+	age_mort = ( - ( mort_factor * log ( mort_log ) ) / (s->value[MAXAGE])) * pow (((double)a->value /s->value[MAXAGE]), 2.);
 
 	livetree = s->counter[N_TREE];
 
