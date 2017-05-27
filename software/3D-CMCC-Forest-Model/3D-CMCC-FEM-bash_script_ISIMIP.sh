@@ -721,10 +721,10 @@ for (( e = 0 ; e < $exp_counter ; ++e )) ; do
 	if (( $exp_counter > 1 )) ; then exp=${EXPs[$e]}; fi
 	
 	#1 simulations for 'LOCAL' experiments
-	#LOCAL_runs
+	LOCAL_runs
 	
 	#2 simulation for 'FAST TRACK' experimet
-	FT_runs
+	#FT_runs
 	
 	#3  simulation for '2A' experiment
 	#2A_runs

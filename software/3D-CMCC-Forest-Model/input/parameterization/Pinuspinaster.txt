@@ -1,16 +1,15 @@
-//Pinus pinaster parameterization file
-LIGHT_TOL   3                 //4 = very shade intolerant 3 = shade intolerant 2 = shade tolerant 1 = very shade tolerant
-PHENOLOGY   1.2               //PHENOLOGY 0.1 = deciduous broadleaf, 0.2 = deciduous needle leaf, 1.1 = broad leaf evergreen, 1.2 = needle leaf evergreen 
+LIGHT_TOL	3
+PHENOLOGY	1.2
 ALPHA   0.048                 //Canopy quantum efficiency (molC/molPAR) for P. pinaster (LeBray site) Peltionemi et al., 2012
 EPSILONgCMJ 0.58              //Light Use Efficiency (gC/molPAR)(used if ALPHA is not available) for P. pinaster (LeBray site) Peltionemi et al., 2012
-K   0.34                      //Extinction coefficient for absorption of PAR by canopy for P. pinaster Berbigier & Bonnefond 1994, 0.32 Berbigier & Bonnefond 1995, 0.467 Dezi PhD Thesis
+K   0.467                     //Extinction coefficient for absorption of PAR by canopy for P. pinaster, 0.34 Berbigier & Bonnefond 1994, 0.32 Berbigier & Bonnefond 1995, 0.467 Dezi PhD Thesis
 ALBEDO  0.15                  //averaged for P. pinaster 0.19-0.12 Moreaux et al., 2011; 0.279 Berbigier and Bonnefpnd 1994
 INT_COEFF  0.3                //precip interception coefficient for P. sylvestris from Pietsch
-SLA_AVG0  9.56                //Average Specific Leaf Area m^2/KgC (juvenile) sunlit/shaded leaves for P. pinaster Sànchez-Gomez et al.,2006, 21.13 Dezi PhD thesis
-SLA_AVG1  2                   //Average Specific Leaf Area m^2/KgC (mature) sunlit/shaded leaves for P. pinaster Mediavilla et al., 2011
-TSLA      20                  //Age at which SLA_AVG = (SLA_AVG1 + SLA_AVG0 )/2 Forrester et al., 2017
-SLA_RATIO   2                 //(DIM) ratio of shaded to sunlit projected SLA for P. sylvestris from Pietsch
-LAI_RATIO   2.6               //(DIM) all-sided to projected leaf area ratio for P. sylvestris from Pietsch
+SLA_AVG0	5.84507211204618
+SLA_AVG1	5.12287027656566
+TSLA	5.69355466472916
+SLA_RATIO	2
+LAI_RATIO	2.6
 FRACBB0 0.33                  //Branch and Bark fraction at age 0 for P. pinaster Portè et al., 2002
 FRACBB1 0.11                  //Branch and Bark fraction for mature stands for P. pinaster Portè et al., 2002
 TBB 10                        //Age at which fracBB = (FRACBB0 + FRACBB1 )/ 2 for P. sylvestris, from Xenakis et al., 2008
@@ -18,16 +17,16 @@ RHO0  0.40                    //Minimum Basic Density for young Trees t/m^3 for 
 RHO1  0.50                    //Maximum Basic Density for mature Trees t/m^3 for P. pinaster Portè et al., 2002
 TRHO    4                     //Age at which rho = (RHO0 + RHO1 )/2
 FORM_FACTOR 0.435             //Form factor Seidl et al., 2012 
-COEFFCOND   0.05              //Define stomatal responsee to VPD in mbar for P. nigra Navarro-Cerrillo 2016
+COEFFCOND	0.0225589787135832
 BLCOND  0.009                 //Canopy Boundary Layer conductance for P. sylvestris 0.009 from Pietsch, 0.01 for Tatarinov
 MAXCOND 0.0025                //Maximum Stomatal Conductance in m/sec for P. pinaster from 0.0014 to 0.0046 David et al., 1997 Oecologia
 CUTCOND 0.00006               //Cuticul conductance in m/sec for P. sylvestris 0.00001 from Pietsch  0,00006 for Tatarinov, 0.000075 Makela et al., 2006
-MAXAGE  120                   //Determines rate of "physiological decline" of forest for P. nigra Navarro-Cerrillo 2016
+MAXAGE  200                   //Determines rate of "physiological decline" of forest for P. nigra Navarro-Cerrillo 2016
 RAGE    0.95                  //Relative Age to give fAGE = 0.5 for P. nigra Navarro-Cerrillo 2016
 NAGE    4                     //Power of relative Age in function for P. nigra Navarro-Cerrillo 2016
-GROWTHTMIN  0                 //Minimum temperature for growth for P. nigra Navarro-Cerrillo 2016
-GROWTHTMAX  30                //Maximum temperature for growth for P. nigra Navarro-Cerrillo 2016
-GROWTHTOPT  15                //Optimum temperature for growth for P. nigra Navarro-Cerrillo 2016
+GROWTHTMIN	1.53676223382354
+GROWTHTMAX	34.3005954322871
+GROWTHTOPT	16.6863663536496
 GROWTHSTART 200               //average temperature for starting growth in °C 
 MINDAYLENGTH    0             //minimum day length for deciduous
 SWPOPEN -0.5                  //in MPa for P. pinaster Delzon et al., 2004
@@ -59,11 +58,11 @@ BUD_BURST 0.3                 //days of bud burst at the beginning of growing se
 LEAF_FALL_FRAC_GROWING  0     //proportions of the growing season of leaf fall 
 LEAF_FINEROOT_TURNOVER  0.25  //Average YEARLY leaves and fine root turnover rate for P. pinaster Moro et al., 1996 Annals of Botany, for sylvestris 0.18 from Pietsch, 0.39 Tatarinov, 0.25 Makela et al., 1997
 LIVE_WOOD_TURNOVER  0.7       //Annual yearly live wood turnover rate for P. sylvestris from Pietsch
-DBHDCMAX  0.55 //to be checked//Low Density for P. pinaster deducted from Delzon et al., 2004
-DBHDCMIN  0.14 //to be checked//High Density for P. pinaster Jimènez et al., 2013
-SAP_A   0.586                 //a value for P. pinaster deducted from Delzon et al., 2004
-SAP_B   1.9926                //b value for P. pinaster deducted from Delzon et al., 2004
-SAP_LEAF    1700              //(m2/m2) sapwood_max leaf area ratio in pipe model for P. pinaster Delzon et al., 2004
+DBHDCMAX  0.55                //Low Density for P. pinaster deducted from Delzon et al., 2004
+DBHDCMIN  0.14                //to be checked//High Density for P. pinaster Jimènez et al., 2013
+SAP_A	0.201202044449747
+SAP_B	2.06402077581733
+SAP_LEAF	1332.36979446374
 SAP_WRES    0.05              //Sapwood-Reserve biomass ratio used if no Wres data are available 0.11 for deciduous 0.05 for evergreen see Schwalm and Ek, 2004 Ecological Modelling
 STEMCONST_P 0.127             //a parameter for allometric equation 0.06552  E. Cienciala et al., 2006 For P. sylvestris; from Yuste et al 2005 0.1227, 0.084 from Xiao and Ceulemans, 0.7 Seidl et al., 2012, 0.027 Landsberg and Sands, 0.046 Landsberg et al., 2005
 STEMPOWER_P 2.30              //b parameter for allometric equation 2.50626 E. Cienciala et al., 2006 For P. sylvestris; from Yuste et al 2005 2.3272, 1.985 from Xiao and Ceulemans, 3.0 Seidl et al., 2012, 2.86 Landsberg and Sands, 2.6496 Landsberg et al., 2005
@@ -82,7 +81,7 @@ MASTSEED    5                 //ricorrenza anni di pasciona
 WEIGHTSEED  7                 //peso frutto in g 
 SEXAGE  30                    //Age at Sexual Maturity 
 GERMCAPACITY    0.70          //Geminability (Lischke H. & Loffler T. J.)
-ROTATION    140               //Forest Rotation for harvesting for P. sylvestris ISIMIP protocol
-THINNING    15                //Thinning regime for P. sylvestris ISIMIP protocol for P. sylvestris ISIMIP protocol
-THINNING_REGIME    1          //Thinning regime (0 = above, 1 = below) for P. sylvestris ISIMIP protocol
-THINNING_INTENSITY  20        //Thinning intensity (% of Basal Area/N-tree to remove) for P. sylvestris ISIMIP protocol
+ROTATION    45                //Forest Rotation for harvesting for P. pinaster ISIMIP protocol
+THINNING    10                //Thinning regime for P. sylvestris ISIMIP protocol for P. pinaster ISIMIP protocol
+THINNING_REGIME    1          //Thinning regime (0 = above, 1 = below) for P. pinaster ISIMIP protocol
+THINNING_INTENSITY  20        //Thinning intensity (% of Basal Area/N-tree to remove) for P. pinaster ISIMIP protocol
