@@ -515,7 +515,7 @@ function LOCAL_runs {
 			#add esm and rcp to meteo co2 and soil path
 			MET_PATH=ISIMIP/LOCAL/hist.txt
 			SOIL_PATH=ISIMIP/"$site"_soil_ISIMIP.txt
-			CO2_PATH=ISIMIP/CO2/CO2_rcp0p0.txt
+			CO2_PATH=ISIMIP/CO2/CO2_hist.txt
 							
 			#log arguments paths
 			echo "*****************************"
