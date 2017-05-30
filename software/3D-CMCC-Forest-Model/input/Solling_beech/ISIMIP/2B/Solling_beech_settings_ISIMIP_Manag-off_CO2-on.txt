@@ -9,7 +9,7 @@ MONTHLY_OUTPUT off                   //Must be 'on' or 'off'
 ANNUAL_OUTPUT on                    //Must be 'on' or 'off'
 SOIL_OUTPUT off                     //Must be 'on' or 'off'
 YEAR_START 1967                     //Starting year simulation
-YEAR_END 2099                       //Ending year simulation
+YEAR_END 2299                       //Ending year simulation
 YEAR_RESTART off                    //Year to restart
 CO2_mod on                          //Must be 'on' or 'off'
 CO2_trans on                        //Must be 'on' or 'off'
@@ -30,7 +30,7 @@ SOIL_LAYER 1                        //define soil layer/s to consider
 MAX_LAYER_COVER 1.2
 THINNING_REGIME  Above              // thinning regime (Above or Below)
 REPLANTED_SPECIES 9999              // species name of replanted trees (mandatory)
-REPLANTED_MANAGEMENT 9999           // (T) management of replated trees (should be only T)(mandatory)
+REPLANTED_MANAGEMENT T              // (T) management of replated trees (should be only T)(mandatory)
 REPLANTED_TREE 9999                 // number of replanted trees (mandatory)
 REPLANTED_AGE 9999                  // (yr) age of replanted trees (mandatory)
 REPLANTED_AVDBH 9999                // (cm) average dbh of replanted trees (mandatory)

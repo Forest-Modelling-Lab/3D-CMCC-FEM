@@ -158,7 +158,6 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 										",PEAK-LAI_PROJ"
 										",LAI_EXP"
 										",D-CC_P"
-										",D-CC_E"
 										",DBHDC"
 										",CROWN_AREA_PROJ"
 										",CROWN_AREA_EXP"
@@ -291,7 +290,7 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 							/* print variables at layer-class level */
 							logger(g_daily_log,",%6.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,"
 									"%d,%d,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
-									",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
+									",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
 									",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
 									",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",
 									s->value[GPP],
@@ -304,7 +303,6 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 									s->value[PEAK_LAI_PROJ],
 									s->value[LAI_EXP],
 									s->value[DAILY_CANOPY_COVER_PROJ],
-									s->value[DAILY_CANOPY_COVER_EXP],
 									s->value[DBHDC_EFF],
 									s->value[CROWN_AREA_PROJ],
 									s->value[CROWN_AREA_EXP],
@@ -747,7 +745,6 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 										",MaxLAI"
 										",SAPWOOD-AREA"
 										",CC-Proj"
-										",CC-Exp"
 										",DBHDC"
 										",CROWN_DIAMETER"
 										",CROWN_HEIGHT"
@@ -874,7 +871,7 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 
 								/* print variables at layer-class level */
 								logger(g_annual_log,",%6.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%d,%d,%d,%3.4f"
-										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
+										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
 										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",
 										s->value[YEARLY_GPP],
 										s->value[YEARLY_TOTAL_GROWTH_RESP],
@@ -887,7 +884,6 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 										s->value[MAX_LAI_PROJ],
 										s->value[SAPWOOD_AREA],
 										s->value[CANOPY_COVER_PROJ],
-										s->value[CANOPY_COVER_EXP],
 										s->value[DBHDC_EFF],
 										s->value[CROWN_DIAMETER],
 										s->value[CROWN_HEIGHT],

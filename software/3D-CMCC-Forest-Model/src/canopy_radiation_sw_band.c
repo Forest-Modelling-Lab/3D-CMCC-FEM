@@ -50,18 +50,13 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 
 	/* light reflection, absorption and transmission */
 	logger(g_debug_log,"\n*Light reflection, absorption and transmission*\n");
-	logger(g_debug_log,"DAILY_CANOPY_COVER_EXP       = %f\n", s->value[DAILY_CANOPY_COVER_EXP]);
 
 	/***********************************************************************************************/
 	/* PAR computation (molPAR/m2 covered/day) */
 	logger(g_debug_log,"\n-PAR-\n");
 
 	/** available par **/
-#if TEST
-	s->value[PAR]             = meteo_daily->par  * s->value[DAILY_CANOPY_COVER_EXP];
-#else
 	s->value[PAR]             = meteo_daily->par  * s->value[DAILY_CANOPY_COVER_PROJ];
-#endif
 
 	/** sun leaves **/
 	s->value[PAR_REFL_SUN]    = s->value[PAR]     * Light_refl_par_frac_sun;
@@ -105,11 +100,7 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 	logger(g_debug_log,"\n-Short Wave-\n");
 
 	/** available Short Wave **/
-#if TEST
-	s->value[SW_RAD]              = meteo_daily->sw_downward_W * s->value[DAILY_CANOPY_COVER_EXP];
-#else
 	s->value[SW_RAD]              = meteo_daily->sw_downward_W * s->value[DAILY_CANOPY_COVER_PROJ];
-#endif
 
 	/** sun leaves **/
 	s->value[SW_RAD_REFL_SUN]     = s->value[SW_RAD]     * Light_refl_sw_frac_sun;
@@ -150,11 +141,7 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 	logger(g_debug_log,"\n-PPFD-\n");
 
 	/** available PPFD **/
-#if TEST
-	s->value[PPFD]              = meteo_daily->ppfd * s->value[DAILY_CANOPY_COVER_EXP];
-#else
 	s->value[PPFD]              = meteo_daily->ppfd * s->value[DAILY_CANOPY_COVER_PROJ];
-#endif
 
 	/** sun leaves **/
 	s->value[PPFD_REFL_SUN]     = s->value[PPFD] * Light_refl_par_frac_sun;

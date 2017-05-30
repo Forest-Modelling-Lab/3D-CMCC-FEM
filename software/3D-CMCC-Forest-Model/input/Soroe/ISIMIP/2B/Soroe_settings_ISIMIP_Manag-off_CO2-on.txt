@@ -5,7 +5,7 @@ TIME d                              //Must be 'm' or 'd', monthly or daily
 SCREEN_OUTPUT off                   //Must be  'on' or 'off'
 DEBUG_OUTPUT off                    //Must be 'on' or 'off'
 DAILY_OUTPUT on                     //Must be 'on' or 'off'
-MONTHLY_OUTPUT on                   //Must be 'on' or 'off'
+MONTHLY_OUTPUT off                   //Must be 'on' or 'off'
 ANNUAL_OUTPUT on                    //Must be 'on' or 'off'
 SOIL_OUTPUT off                     //Must be 'on' or 'off'
 YEAR_START 2006                     //Starting year simulation
@@ -13,7 +13,7 @@ YEAR_END 2299                       //Ending year simulation
 YEAR_RESTART off                    //Year to restart
 CO2_mod on                          //Must be 'on' or 'off'
 CO2_trans on                        //Must be 'on' or 'off'
-YEAR_START_CO2_FIXED 2000           //When Co2_trans = var, year at which fix [CO2]
+YEAR_START_CO2_FIXED -9999          //When Co2_trans = var, year at which fix [CO2]
 Ndep_fixed on                       //Must be 'on' or 'off'
 Resp_accl on                        //Q10 temperature acclimatation Must be 'on' or 'off'
 regeneration off                    //Must be 'on' or 'off'

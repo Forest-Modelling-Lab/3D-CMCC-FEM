@@ -33,7 +33,7 @@ model_run=(Debug Release)
 SITEs=(Bily_Kriz Collelongo Hyytiala Kroof LeBray Peitz Solling_beech Solling_spruce Soroe All)
 
 #experiments
-EXPs=(LOCAL FT 2A All)
+EXPs=(LOCAL FT 2A 2B 2BLBC All)
 
 #declare ESMs or Repeated
 ESMs=(ESM1 ESM2 ESM3 ESM4 ESM5 ESM6 ESM7 ESM8 ESM9 ESM10 All)
@@ -352,28 +352,28 @@ match=no
 while :
 	do
 		
-	read management
+	read man
 	for (( i = 0 ; i <= ${#MANs[@]} ; ++i )) ; do
-		if [ "${management,,}" = "${MANs[$i],,}" ] ; then
+		if [ "${man,,}" = "${MANs[$i],,}" ] ; then
 			match=yes
-			management=${MANs[$i]}
+			man=${MANs[$i]}
 		fi
 	done
 	if [ "$match" == "yes" ] ; then
 		break;
 	fi
 
-	echo "'$management' doesn't match with MANs list. please rewrite it."
+	echo "'$man' doesn't match with MANs list. please rewrite it."
 	done
 
 	#for counter
-if [ "$management" == 'All' ] ; then
+if [ "$man" == 'All' ] ; then
 	man_counter=${#MANs[@]} 
 	let "man_counter-=1"
 else
 man_counter=1
 fi
-echo "management = '$management'"
+echo "management = '$man'"
 
 #########################################################################################################
 
@@ -385,7 +385,7 @@ if [ "${exp,,}" != "${EXPs[$1],,}" ] ; then
 		echo -"${CO2s[i]}"
 	done
 	
-	echo "CO2 enrichment on or off for '$site' and '$esm' and '$rcp' and Management '$management'?"
+	echo "CO2 enrichment on or off for '$site' and '$esm' and '$rcp' and Management '$man'?"
 	
 	#ask which co2 use
 		match=no
@@ -437,7 +437,7 @@ function FT_runs {
 					if (( $site_counter > 1 )) ; then site=${SITEs[$b]}; fi
 					if (( $esm_counter  > 1 )) ; then esm=${ESMs[$c]}; fi
 					if (( $rcp_counter  > 1 )) ; then rcp=${RCPs[$d]}; fi
-					if (( $man_counter  > 1 )) ; then management=${MANs[$e]}; fi
+					if (( $man_counter  > 1 )) ; then man=${MANs[$e]}; fi
 					if (( $co2_counter  > 1 )) ; then co2=${CO2s[$f]}; fi
 					
 					echo "*****************************"
@@ -446,7 +446,7 @@ function FT_runs {
 					echo 'running for' "$climate"
 					echo 'running for' "$esm"
 					echo 'running for' "$rcp"
-					echo 'running with management =' "$management" 
+					echo 'running with management =' "$man" 
 					echo 'running with co2 =' "$co2"
 					echo "*****************************"
 										
@@ -456,7 +456,7 @@ function FT_runs {
 					STAND_PATH=ISIMIP/"$site"_stand_ISIMIP.txt
 					TOPO_PATH=ISIMIP/"$site"_topo_ISIMIP.txt
 		
-					SETTING_PATH=ISIMIP/FT/"$site"_settings_ISIMIP_Manag-"$management"_CO2-"$co2".txt
+					SETTING_PATH=ISIMIP/FT/"$site"_settings_ISIMIP_Manag-"$man"_CO2-"$co2".txt
 				
 					#add esm and rcp to meteo co2 and soil path
 					MET_PATH=ISIMIP/FT/"$esm"/"$esm"_"$rcp".txt
@@ -496,12 +496,12 @@ function LOCAL_runs {
 		for (( e = 0 ; e < $man_counter ; ++e )) ; do
 			
 			if (( $site_counter > 1 )) ; then site=${SITEs[$b]}; fi
-			if (( $man_counter  > 1 )) ; then management=${MANs[$e]}; fi
+			if (( $man_counter  > 1 )) ; then man=${MANs[$e]}; fi
 			
 			echo "*****************************"
 			echo 'running for' "$exp"
 			echo 'running for' "$site"
-			echo 'running with management =' "$management" 
+			echo 'running with management =' "$man" 
 			echo "*****************************"
 								
 			#add site name to current paths
@@ -510,7 +510,7 @@ function LOCAL_runs {
 			STAND_PATH=ISIMIP/"$site"_stand_ISIMIP.txt
 			TOPO_PATH=ISIMIP/"$site"_topo_ISIMIP.txt
 
-			SETTING_PATH=ISIMIP/LOCAL/"$site"_settings_ISIMIP_Manag-"$management"_CO2-on.txt
+			SETTING_PATH=ISIMIP/LOCAL/"$site"_settings_ISIMIP_Manag-"$man"_CO2-on.txt
 		
 			#add esm and rcp to meteo co2 and soil path
 			MET_PATH=ISIMIP/LOCAL/hist.txt
@@ -549,14 +549,14 @@ function 2A_runs {
 				
 				if (( $site_counter > 1 )) ; then site=${SITEs[$b]}; fi
 				if (( $esm_counter  > 1 )) ; then esm=${ESMs[$c]}; fi
-				if (( $man_counter  > 1 )) ; then management=${MANs[$e]}; fi
+				if (( $man_counter  > 1 )) ; then man=${MANs[$e]}; fi
 				
 				echo "*****************************"
 				echo 'running for' "$exp"
 				echo 'running for' "$site"
 				echo 'running for' "$climate"
 				echo 'running for' "$esm"
-				echo 'running with management =' "$management" 
+				echo 'running with management =' "$man" 
 				echo "*****************************"
 									
 				#add site name to current paths
@@ -565,12 +565,12 @@ function 2A_runs {
 				STAND_PATH=ISIMIP/"$site"_stand_ISIMIP.txt
 				TOPO_PATH=ISIMIP/"$site"_topo_ISIMIP.txt
 	
-				SETTING_PATH=ISIMIP/2A/"$site"_settings_ISIMIP_Manag-"$management"_CO2-on.txt
+				SETTING_PATH=ISIMIP/2A/"$site"_settings_ISIMIP_Manag-"$man"_CO2-on.txt
 			
 				#add esm and rcp to meteo co2 and soil path
 				MET_PATH=ISIMIP/2A/"$esm"/"$esm"_hist.txt
 				SOIL_PATH=ISIMIP/"$site"_soil_ISIMIP.txt
-				CO2_PATH=ISIMIP/CO2/CO2_rcp0p0.txt
+				CO2_PATH=ISIMIP/CO2/CO2_hist.txt
 				
 				#log arguments paths
 				echo "*****************************"
@@ -598,61 +598,66 @@ function 2A_runs {
 #########################################################################################################
 ############################################### 2B ######################################################
 #########################################################################################################
-#
-#function 2B_runs {
-#	for (( b = 0 ; b < $site_counter ; ++b )) ; do
-#		for (( c = 0 ; c < $esm_counter ; ++c )) ; do
-#			for (( d = 0 ; d < $rcp_counter ; ++d )) ; do
-#				for (( e = 0 ; e < $man_counter ; ++e )) ; do
-#					
-#					if (( $site_counter > 1 )) ; then site=${SITEs[$b]}; fi
-#					if (( $esm_counter  > 1 )) ; then esm=${ESMs[$c]}; fi
-#					if (( $rcp_counter  > 1 )) ; then rcp=${RCPs[$d]}; fi
-#					if (( $man_counter  > 1 )) ; then management=${MANs[$e]}; fi
-#					
-#					echo "2B run"
-#					echo 'running for' "$site"
-#					echo 'running for' "$climate"
-#					echo 'running for' "$esm"
-#					echo 'running for' "$rcp"
-#					echo 'running with management =' "$management" 
-#										
-#					#add site name to current paths
-#					SITE_PATH=input/"$site"
-#					OUTPUT_PATH=output/ISIMIP_OUTPUT/2B/"$site"
-#					STAND_PATH=ISIMIP/"$site"_stand_ISIMIP.txt
-#					TOPO_PATH=ISIMIP/"$site"_topo_ISIMIP.txt
-#		
-#					SETTING_PATH=ISIMIP/2B/"$site"_settings_ISIMIP_Manag-"$management"_CO2-on.txt
-#				
-#					#add esm and rcp to meteo co2 and soil path
-#					MET_PATH=ISIMIP/2B/"$esm"/"$esm"_"$rcp".txt
-#					SOIL_PATH=ISIMIP/"$site"_soil_ISIMIP.txt
-#					CO2_PATH=ISIMIP/2B/CO2/CO2_"$rcp".txt
-#									
-#					#add paths and arguments to executable and run
-#					$launch$executable -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH #&
-#					
-#					#log arguments paths
-#					echo "*****************************"
-#					echo "$launch$executable -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH"
-#					echo "$MODEL $VERSION-ISIMIP arguments:"
-#					echo "-i" $SITE_PATH
-#					echo "-p" $PARAMETERIZATION_PATH
-#					echo "-d" $STAND_PATH
-#					echo "-s" $SOIL_PATH
-#					echo "-t" $TOPO_PATH
-#					echo "-m" $MET_PATH
-#					echo "-k" $CO2_PATH
-#					echo "-c" $SETTING_PATH
-#					echo "-o" $OUTPUT_PATH
-#					echo "*****************************"
-#					done
-#				done
-#			done
-#		done
-#	done
-#}
+
+function 2B_runs {
+	for (( b = 0 ; b < $site_counter ; ++b )) ; do
+		for (( c = 0 ; c < $esm_counter ; ++c )) ; do
+			for (( d = 0 ; d < $rcp_counter ; ++d )) ; do
+				for (( e = 0 ; e < $man_counter ; ++e )) ; do
+					for (( f = 0 ; f < $co2_counter ; ++f )) ; do
+						
+						if (( $site_counter > 1 )) ; then site=${SITEs[$b]}; fi
+						if (( $esm_counter  > 1 )) ; then esm=${ESMs[$c]}; fi
+						if (( $rcp_counter  > 1 )) ; then rcp=${RCPs[$d]}; fi
+						if (( $man_counter  > 1 )) ; then man=${MANs[$e]}; fi
+						if (( $co2_counter  > 1 )) ; then co2=${CO2s[$f]}; fi
+						
+						echo "*****************************"
+						echo 'running for' "$exp"
+						echo 'running for' "$site"
+						echo 'running for' "$climate"
+						echo 'running for' "$esm"
+						echo 'running for' "$rcp"
+						echo 'running with management =' "$man" 
+						echo 'running with co2 =' "$co2"
+						echo "*****************************"
+											
+						#add site name to current paths
+						SITE_PATH=input/"$site"
+						OUTPUT_PATH=output/ISIMIP_OUTPUT/2B/"$site"
+						STAND_PATH=ISIMIP/"$site"_stand_ISIMIP.txt
+						TOPO_PATH=ISIMIP/"$site"_topo_ISIMIP.txt
+			
+						SETTING_PATH=ISIMIP/2B/"$site"_settings_ISIMIP_Manag-"$man"_CO2-"$co2".txt
+					
+						#add esm and rcp to meteo co2 and soil path
+						MET_PATH=ISIMIP/2B/"$esm"/"$esm"_"$rcp".txt
+						SOIL_PATH=ISIMIP/"$site"_soil_ISIMIP.txt
+						CO2_PATH=ISIMIP/CO2/CO2_"$rcp".txt
+										
+						#add paths and arguments to executable and run
+						$launch$executable -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH #&
+						
+						#log arguments paths
+						echo "*****************************"
+						echo "$launch$executable -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH"
+						echo "$MODEL $VERSION-ISIMIP arguments:"
+						echo "-i" $SITE_PATH
+						echo "-p" $PARAMETERIZATION_PATH
+						echo "-d" $STAND_PATH
+						echo "-s" $SOIL_PATH
+						echo "-t" $TOPO_PATH
+						echo "-m" $MET_PATH
+						echo "-k" $CO2_PATH
+						echo "-c" $SETTING_PATH
+						echo "-o" $OUTPUT_PATH
+						echo "*****************************"
+					done
+				done
+			done
+		done
+	done
+}
 #########################################################################################################
 ############################################## 2BLB #####################################################
 #########################################################################################################
@@ -666,14 +671,14 @@ function 2A_runs {
 #					if (( $site_counter > 1 )) ; then site=${SITEs[$b]}; fi
 #					if (( $esm_counter  > 1 )) ; then esm=${ESMs[$c]}; fi
 #					if (( $rcp_counter  > 1 )) ; then rcp=${RCPs[$d]}; fi
-#					if (( $man_counter  > 1 )) ; then management=${MANs[$e]}; fi
+#					if (( $man_counter  > 1 )) ; then man=${MANs[$e]}; fi
 #					
 #					echo "2BLBC run"
 #					echo 'running for' "$site"
 #					echo 'running for' "$climate"
 #					echo 'running for' "$esm"
 #					echo 'running for' "$rcp"
-#					echo 'running with management =' "$management" 
+#					echo 'running with management =' "$man" 
 #										
 #					#add site name to current paths
 #					SITE_PATH=input/"$site"
@@ -681,12 +686,12 @@ function 2A_runs {
 #					STAND_PATH=ISIMIP/"$site"_stand_ISIMIP.txt
 #					TOPO_PATH=ISIMIP/"$site"_topo_ISIMIP.txt
 #		
-#					SETTING_PATH=ISIMIP/2BLBC/"$site"_settings_ISIMIP_Manag-"$management"_CO2-on.txt
+#					SETTING_PATH=ISIMIP/2BLBC/"$site"_settings_ISIMIP_Manag-"$man"_CO2-on.txt
 #				
 #					#add esm and rcp to meteo co2 and soil path
 #					MET_PATH=ISIMIP/2BLBC/"$esm"/"$esm"_"$rcp".txt
 #					SOIL_PATH=ISIMIP/"$site"_soil_ISIMIP.txt
-#					CO2_PATH=ISIMIP/2BLBC/CO2/CO2_"$rcp".txt
+#					CO2_PATH=ISIMIP/CO2/CO2_"$rcp".txt
 #									
 #					#add paths and arguments to executable and run
 #					$launch$executable -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH #&
@@ -721,7 +726,7 @@ for (( e = 0 ; e < $exp_counter ; ++e )) ; do
 	if (( $exp_counter > 1 )) ; then exp=${EXPs[$e]}; fi
 	
 	#1 simulations for 'LOCAL' experiments
-	LOCAL_runs
+	#LOCAL_runs
 	
 	#2 simulation for 'FAST TRACK' experimet
 	#FT_runs
@@ -730,7 +735,7 @@ for (( e = 0 ; e < $exp_counter ; ++e )) ; do
 	#2A_runs
 	
 	#3  simulation for '2B' experiment
-	#2B_runs
+	2B_runs
 	
 	#4  simulation for '2BLBC' experiment
 	#2BLBC_runs
