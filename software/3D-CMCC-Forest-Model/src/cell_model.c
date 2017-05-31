@@ -18,6 +18,7 @@
 #include "heat_fluxes.h"
 #include "fluxes.h"
 #include "check_balance.h"
+#include "wue.h"
 
 extern logger_t* g_debug_log;
 
@@ -25,12 +26,12 @@ int Cell_model_daily (matrix_t *const m, const int cell, const int day, const in
 {
 	cell_t *c;
 	meteo_daily_t  *meteo_daily;
-	meteo_annual_t *meteo_annual;
+	//meteo_annual_t *meteo_annual;
 
 	/* assign shortcuts */
 	c = &m->cells[cell];
 	meteo_daily  = &m->cells[cell].years[year].m[month].d[day];
-	meteo_annual = &m->cells[cell].years[year];
+	//meteo_annual = &m->cells[cell].years[year];
 
 	/* check parameters */
 	assert(m);
@@ -53,6 +54,9 @@ int Cell_model_daily (matrix_t *const m, const int cell, const int day, const in
 
 	/* compute cell level water fluxes */
 	water_fluxes         ( c, meteo_daily );
+
+	/* cell water use efficiency */
+	cell_water_use_efficiency (c, day, month, year);
 
 	/*******************************************************************************************************/
 

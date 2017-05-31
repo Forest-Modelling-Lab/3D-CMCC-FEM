@@ -138,8 +138,10 @@ void water_use_efficiency( cell_t *const c, const int height, const int dbh, con
 		s->value[gsWUE_SUN]   = 0.;
 		s->value[gsWUE_SHADE] = 0.;
 	}
+}
 
-
+void cell_water_use_efficiency ( cell_t *const c, const int day, const int month, const int year )
+{
 	/*** Intrinsic Water Use Efficiency (Cell Level) ***/
 	//note: this is based on cell level computation than uses cell evapotranspiration
 
