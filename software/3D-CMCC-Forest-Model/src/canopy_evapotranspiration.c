@@ -52,7 +52,6 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 
 	/* it mainly follows rationale and algorithms of BIOME-BGC v.4.2 */
 	/* it computes canopy interception, evaporation and transpiration */
-
 	/********************************************************************************************************/
 
 	logger(g_debug_log, "\n**CANOPY EVAPO-TRANSPIRATION**\n");
