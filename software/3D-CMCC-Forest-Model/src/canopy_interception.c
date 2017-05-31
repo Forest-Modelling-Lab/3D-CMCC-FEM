@@ -66,7 +66,7 @@ void canopy_interception(cell_t *const c, const int layer, const int height, con
 		/* for rain */
 		if( meteo_daily->rain != 0.0 )
 		{
-			logger(g_debug_log, "rain = %g mm/m2/day\n", meteo_daily->rain);
+			logger(g_debug_log, "rain = %f mm/m2/day\n", meteo_daily->rain);
 
 			s->value[CANOPY_INT]      = s->value[INT_COEFF] * meteo_daily->rain * (1. - exp(-0.5 * s->value[LAI_PROJ])) * s->value[DAILY_CANOPY_COVER_PROJ];
 			s->value[CANOPY_INT_SNOW] = 0.;
@@ -82,7 +82,7 @@ void canopy_interception(cell_t *const c, const int layer, const int height, con
 			/* following Dewire (PhD thesis) and Pomeroy et al., 1998., Hedstrom & Pomeroy, 1998 */
 			double Int_max_snow;                           /* maximum intercepted snow (mm)*/
 
-			logger(g_debug_log, "snow = %g mm/m2/day\n", meteo_daily->snow);
+			logger(g_debug_log, "snow = %f mm/m2/day\n", meteo_daily->snow);
 
 			Int_max_snow              = 4.4 * s->value[LAI_PROJ];
 			s->value[CANOPY_INT_SNOW] = 0. /*s->value[CANOPY_SNOW] + 0.7 * ( Int_max_snow - s->value[CANOPY_SNOW] ) * (1. - exp( - ( meteo_daily->snow /Int_max_snow ) ) ) * s->value[DAILY_CANOPY_COVER_PROJ]*/;
@@ -112,11 +112,11 @@ void canopy_interception(cell_t *const c, const int layer, const int height, con
 
 		/* compute interceptable rain for lower layers */
 		c->daily_canopy_rain_int += s->value[CANOPY_INT];
-		meteo_daily->rain   -= temp_int_rain;
+		meteo_daily->rain        -= temp_int_rain;
 
 		/* compute interceptable snow for lower layers */
 		c->daily_canopy_snow_int += s->value[CANOPY_INT_SNOW];
-		meteo_daily->snow   -= temp_int_snow;
+		meteo_daily->snow        -= temp_int_snow;
 
 		/* reset temporary values when the last height class in layer is processed */
 		temp_int_rain = 0.;
@@ -132,8 +132,8 @@ void canopy_interception(cell_t *const c, const int layer, const int height, con
 	{
 		logger(g_debug_log,"\n***********************************\n");
 		logger(g_debug_log,"last height class in cell processed\n");
-		logger(g_debug_log, "rain to soil = %g mm\n", meteo_daily->rain);
-		logger(g_debug_log, "snow to soil = %g cm\n", meteo_daily->snow);
+		logger(g_debug_log, "rain to soil = %f mm\n", meteo_daily->rain);
+		logger(g_debug_log, "snow to soil = %f cm\n", meteo_daily->snow);
 
 		/* reset counter */
 		cell_height_class_counter = 0;

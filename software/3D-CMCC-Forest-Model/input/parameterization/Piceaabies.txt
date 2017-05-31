@@ -5,7 +5,7 @@ ALPHA                   0.054   //Canopy quantum efficiency (molC/molPAR) conver
 EPSILONgCMJ             0.61    //Light Use Efficiency (gC/molPAR)(used if ALPHA is not available) 0.61 Peltionemi et al., 2012
 K                   0.54    //0.67    //Extinction coefficient for absorption of PAR by canopy for Picea abies Pietsch et al., 2005 ,0.54 from Pietsch et al., 2005,  0.54 from Mollicone, 0.4241 Forrester et al., 2014
 ALBEDO                  0.06    //averaged for P.abies, 0.06 Jarvis et al., 1976, 0.095 from Breuer et al., 2003
-INT_COEFF               0.3     //precip interception coefficient for Picea abies (see Tatarinov)
+INT_COEFF               0.25    //precip interception coefficient for Picea abies (0.3 see Tatarinov) (0.25 see Lawrence et al., 2007)
 SLA_AVG1                12      //Average Specific Leaf Area m^2/KgC (juvenile) sunlit/shaded leaves for Picea abies Konopka et al., 2014, (5.9) see Johansson, T. 1999
 SLA_AVG0                7.52    //Average Specific Leaf Area m^2/KgC (MATURE) sunlit/shaded leaves for Picea abies Mund et al., 2002, (5.9) see Johansson, T. 1999
 TSLA                    30      //Age at which SLA_AVG = (SLA_AVG1 + SLA_AVG0 )/2 Forrester et al., 2017

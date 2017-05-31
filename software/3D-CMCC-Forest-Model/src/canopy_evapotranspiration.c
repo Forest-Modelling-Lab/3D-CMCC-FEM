@@ -131,7 +131,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 	if (m_final_shade < eps) m_final_shade = eps;
 
 	/** stomatal conductance **/
-	/* correct maximum stomatal conductance for CO2 concentration*/
+	/* correct maximum stomatal conductance for CO2 concentration */
 	gl_x = (s->value[F_CO2_TR] / 0.9116) * s->value[MAXCOND];
 	logger(g_debug_log, "gl_x = %f\n",gl_x);
 
@@ -249,7 +249,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 				logger(g_debug_log, "Canopy water = %f mm\n", s->value[CANOPY_WATER]);
 
 			}
-			/* all intercepted water evaporated */
+			/* all intercepted water evaporated and there's time for transpiration */
 			else
 			{
 				logger(g_debug_log, "all intercepted water evaporated\n");
