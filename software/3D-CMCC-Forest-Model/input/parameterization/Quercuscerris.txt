@@ -33,8 +33,8 @@ MINDAYLENGTH	11            //minimum day length for deciduous
 SWPOPEN	-0.6                  //for For Q cerris Mollicone et al., 2002
 SWPCLOSE	-2.3              //For Q cerris Mollicone et al., 2002
 OMEGA_CTEM	0.8               //ALLOCATION PARAMETER control the sensitivity of allocation to changes in water and light availability
-S0CTEM	0.1                   //PARAMETER CONTROLLING ALLOCATION TO STEM/MINIMUM RATIO TO C TO STEM
-R0CTEM	0.55                  //PARAMETER CONTROLLING ALLOCATION TO ROOT/MINIMUM RATIO TO C TO ROOTS
+S0CTEM	0.45                  //PARAMETER CONTROLLING ALLOCATION TO STEM/MINIMUM RATIO TO C TO STEM
+R0CTEM	0.30                  //PARAMETER CONTROLLING ALLOCATION TO ROOT/MINIMUM RATIO TO C TO ROOTS
 F0CTEM	0.35                  //PARAMETER CONTROLLING ALLOCATION TO FOLIAGE
 FRUIT_PERC  0                 //fraction of NPP allocated for reproduction (0 for broadleaf)
 CONES_LIFE_SPAN 0             //Life span for cones (yr)

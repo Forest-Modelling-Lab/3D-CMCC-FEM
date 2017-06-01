@@ -4,7 +4,7 @@
 <intAttribute key="org.eclipse.cdt.launch.ATTR_BUILD_BEFORE_LAUNCH_ATTR" value="2"/>
 <stringAttribute key="org.eclipse.cdt.launch.COREFILE_PATH" value=""/>
 <stringAttribute key="org.eclipse.cdt.launch.DEBUGGER_REGISTER_GROUPS" value=""/>
-<stringAttribute key="org.eclipse.cdt.launch.PROGRAM_ARGUMENTS" value="-i input/Solling_spruce &#10;-o output/Test_Solling_spruce-5.3.3-LOCAL-man_off_co2_on&#10;-p input/parameterization &#10;-d ISIMIP/Solling_spruce_stand_ISIMIP.txt &#10;-m ISIMIP/LOCAL/hist.txt &#10;-s ISIMIP/Solling_spruce_soil_ISIMIP.txt &#10;-t ISIMIP/Solling_spruce_topo_ISIMIP.txt &#10;-c ISIMIP/LOCAL/Solling_spruce_settings_ISIMIP_Manag-off_CO2-on.txt &#10;-k ISIMIP/CO2/CO2_rcp0p0.txt"/>
+<stringAttribute key="org.eclipse.cdt.launch.PROGRAM_ARGUMENTS" value="-i input/Solling_spruce &#10;-o output/Test_Solling_spruce-5.3.3-LOCAL-man_off_co2_on&#10;-p input/parameterization &#10;-d ISIMIP/Solling_spruce_stand_ISIMIP.txt &#10;-m ISIMIP/LOCAL/hist.txt &#10;-s ISIMIP/Solling_spruce_soil_ISIMIP.txt &#10;-t ISIMIP/Solling_spruce_topo_ISIMIP.txt &#10;-c ISIMIP/LOCAL/Solling_spruce_settings_ISIMIP_Manag-off_CO2-on.txt &#10;-k ISIMIP/CO2/CO2_hist.txt"/>
 <stringAttribute key="org.eclipse.cdt.launch.PROGRAM_NAME" value="Debug/3D_CMCC_Forest_Model"/>
 <stringAttribute key="org.eclipse.cdt.launch.PROJECT_ATTR" value="3D_CMCC_Forest_Model"/>
 <booleanAttribute key="org.eclipse.cdt.launch.PROJECT_BUILD_CONFIG_AUTO_ATTR" value="true"/>

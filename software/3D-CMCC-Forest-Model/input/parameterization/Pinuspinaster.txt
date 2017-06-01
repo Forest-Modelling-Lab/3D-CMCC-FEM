@@ -17,9 +17,9 @@ RHO0  0.40                    //Minimum Basic Density for young Trees t/m^3 for 
 RHO1  0.50                    //Maximum Basic Density for mature Trees t/m^3 for P. pinaster Portè et al., 2002
 TRHO    4                     //Age at which rho = (RHO0 + RHO1 )/2
 FORM_FACTOR 0.435             //Form factor Seidl et al., 2012 
-COEFFCOND	0.0225589787135832
+COEFFCOND	0.02 //0.0225589787135832
 BLCOND  0.009                 //Canopy Boundary Layer conductance for P. sylvestris 0.009 from Pietsch, 0.01 for Tatarinov
-MAXCOND 0.005 //0.0025                //Maximum Stomatal Conductance in m/sec for P. pinaster from 0.0014 to 0.0046 David et al., 1997 Oecologia
+MAXCOND 0.006 //0.005                //Maximum Stomatal Conductance in m/sec for P. pinaster from 0.0014 to 0.0046 David et al., 1997 Oecologia
 CUTCOND 0.00006               //Cuticul conductance in m/sec for P. sylvestris 0.00001 from Pietsch  0,00006 for Tatarinov, 0.000075 Makela et al., 2006
 MAXAGE  200                   //Determines rate of "physiological decline" of forest for P. nigra Navarro-Cerrillo 2016
 RAGE    0.95                  //Relative Age to give fAGE = 0.5 for P. nigra Navarro-Cerrillo 2016
