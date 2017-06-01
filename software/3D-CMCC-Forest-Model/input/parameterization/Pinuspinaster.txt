@@ -60,8 +60,8 @@ LEAF_FINEROOT_TURNOVER  0.25  //Average YEARLY leaves and fine root turnover rat
 LIVE_WOOD_TURNOVER  0.7       //Annual yearly live wood turnover rate for P. sylvestris from Pietsch
 DBHDCMAX  0.55                //Low Density for P. pinaster deducted from Delzon et al., 2004
 DBHDCMIN  0.14                //to be checked//High Density for P. pinaster Jimènez et al., 2013
-SAP_A	0.201202044449747
-SAP_B	2.06402077581733
+SAP_A	0.321202044449747
+SAP_B	1.9806402077581733
 SAP_LEAF	1332.36979446374
 SAP_WRES    0.05              //Sapwood-Reserve biomass ratio used if no Wres data are available 0.11 for deciduous 0.05 for evergreen see Schwalm and Ek, 2004 Ecological Modelling
 STEMCONST_P 0.127             //a parameter for allometric equation 0.06552  E. Cienciala et al., 2006 For P. sylvestris; from Yuste et al 2005 0.1227, 0.084 from Xiao and Ceulemans, 0.7 Seidl et al., 2012, 0.027 Landsberg and Sands, 0.046 Landsberg et al., 2005
