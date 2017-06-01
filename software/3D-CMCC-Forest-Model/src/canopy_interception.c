@@ -61,15 +61,28 @@ void canopy_interception(cell_t *const c, const int layer, const int height, con
 	/*************************************************************************/
 	/* shared functions among all class/layers */
 	/* compute interception for dry canopy (Lawrence et al., 2006) */
-	if( ( meteo_daily->prcp > 0.0 ) && ( s->value[LAI_PROJ] > 0.0 ) && ( ! s->value[CANOPY_WATER] ) )
+	if( ( meteo_daily->prcp > 0.) && ( s->value[LAI_PROJ] > 0. ) && ( ! s->value[CANOPY_WATER] ) )
 	{
 		/* for rain */
-		if( meteo_daily->rain != 0.0 )
+		if( meteo_daily->rain )
 		{
+#if 0
 			logger(g_debug_log, "rain = %f mm/m2/day\n", meteo_daily->rain);
 
-			s->value[CANOPY_INT]      = s->value[INT_COEFF] * meteo_daily->rain * (1. - exp(-0.5 * s->value[LAI_PROJ])) * s->value[DAILY_CANOPY_COVER_PROJ];
+			s->value[CANOPY_INT]      = s->value[INT_COEFF] * meteo_daily->rain * ( 1. - exp(-0.5 * s->value[LAI_PROJ])) * s->value[DAILY_CANOPY_COVER_PROJ];
 			s->value[CANOPY_INT_SNOW] = 0.;
+#else
+			//test 01 june 2017
+
+			double max_int;
+
+			/* following Jiao et al., 2016, Water Eq. [8] pg. 9 */
+
+			max_int = 0.284 + 0.092 * s->value[LAI_PROJ] * ( 1. - exp ( -0.231 * meteo_daily->rain ) );
+
+			s->value[CANOPY_INT] = MIN( max_int , meteo_daily->rain );
+
+#endif
 
 			/* update pool */
 			s->value[CANOPY_WATER]    = s->value[CANOPY_INT];

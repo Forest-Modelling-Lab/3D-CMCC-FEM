@@ -33,9 +33,9 @@ MINDAYLENGTH            0       //minimum day length for deciduous
 SWPOPEN                -0.5     //in KPa for P. abies from Pietsch et al 2005
 SWPCLOSE               -2.5     //in KPa for P. abies from Pietsch et al 2005, -3.5 Pietsch et al., 2014
 OMEGA_CTEM              0.5     //ALLOCATION PARAMETER control the sensitivity of allocation to changes in water and light availability for Needlleleaf deciduous from Arora et al 2005
-S0CTEM                  0.05    //PARAMETER CONTROLLING ALLOCATION TO STEM/MINIMUM RATIO TO C TO STEM for Needleleaf deciduous from Arora et al 2005
-R0CTEM                  0.89    //PARAMETER CONTROLLING ALLOCATION TO ROOT/MINIMUM RATIO TO C TO ROOTS for Needleleaf deciduous from Arora et al 2005 
-F0CTEM                  0.06    //PARAMETER CONTROLLING ALLOCATION TO FOLIAGE/MINIMUM RATIO TO C TO STEM for Needleleaf deciduous from Arora et al 2005
+S0CTEM                  0.40    //PARAMETER CONTROLLING ALLOCATION TO STEM/MINIMUM RATIO TO C TO STEM 
+R0CTEM                  0.30    //PARAMETER CONTROLLING ALLOCATION TO ROOT/MINIMUM RATIO TO C TO ROOTS
+F0CTEM                  0.30    //PARAMETER CONTROLLING ALLOCATION TO FOLIAGE/MINIMUM RATIO TO C TO STEM
 FRUIT_PERC              0.20    //fraction of NPP allocated for reproduction (0 for broadleaf) for P. sylvestris 0.15 from Xiao et al., 2003, 0.2 from Yuste et al., 2005, 
 CONES_LIFE_SPAN         3       //Life span for cones (yrs)
 FINE_ROOT_LEAF          0.622   //allocation new fine root C:new leaf (ratio) for Picea abies from 1.4 Mollicone et al. 2002 for Picea abies (see Pietsch)

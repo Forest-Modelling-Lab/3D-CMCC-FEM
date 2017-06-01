@@ -17,9 +17,9 @@ RHO0  0.40                    //Minimum Basic Density for young Trees t/m^3 for 
 RHO1  0.50                    //Maximum Basic Density for mature Trees t/m^3 for P. pinaster Portè et al., 2002
 TRHO    4                     //Age at which rho = (RHO0 + RHO1 )/2
 FORM_FACTOR 0.435             //Form factor Seidl et al., 2012 
-COEFFCOND	0.0225589787135832
+COEFFCOND	0.02 //0.0225589787135832
 BLCOND  0.009                 //Canopy Boundary Layer conductance for P. sylvestris 0.009 from Pietsch, 0.01 for Tatarinov
-MAXCOND 0.005 //0.0025                //Maximum Stomatal Conductance in m/sec for P. pinaster from 0.0014 to 0.0046 David et al., 1997 Oecologia
+MAXCOND 0.006 //0.005                //Maximum Stomatal Conductance in m/sec for P. pinaster from 0.0014 to 0.0046 David et al., 1997 Oecologia
 CUTCOND 0.00006               //Cuticul conductance in m/sec for P. sylvestris 0.00001 from Pietsch  0,00006 for Tatarinov, 0.000075 Makela et al., 2006
 MAXAGE  200                   //Determines rate of "physiological decline" of forest for P. nigra Navarro-Cerrillo 2016
 RAGE    0.95                  //Relative Age to give fAGE = 0.5 for P. nigra Navarro-Cerrillo 2016
@@ -60,8 +60,8 @@ LEAF_FINEROOT_TURNOVER  0.25  //Average YEARLY leaves and fine root turnover rat
 LIVE_WOOD_TURNOVER  0.7       //Annual yearly live wood turnover rate for P. sylvestris from Pietsch
 DBHDCMAX  0.55                //Low Density for P. pinaster deducted from Delzon et al., 2004
 DBHDCMIN  0.14                //to be checked//High Density for P. pinaster Jimènez et al., 2013
-SAP_A	0.201202044449747
-SAP_B	2.06402077581733
+SAP_A	0.321202044449747
+SAP_B	1.9806402077581733
 SAP_LEAF	1332.36979446374
 SAP_WRES    0.05              //Sapwood-Reserve biomass ratio used if no Wres data are available 0.11 for deciduous 0.05 for evergreen see Schwalm and Ek, 2004 Ecological Modelling
 STEMCONST_P 0.127             //a parameter for allometric equation 0.06552  E. Cienciala et al., 2006 For P. sylvestris; from Yuste et al 2005 0.1227, 0.084 from Xiao and Ceulemans, 0.7 Seidl et al., 2012, 0.027 Landsberg and Sands, 0.046 Landsberg et al., 2005
