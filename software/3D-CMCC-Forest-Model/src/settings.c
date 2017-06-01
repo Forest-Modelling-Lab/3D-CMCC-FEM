@@ -145,7 +145,6 @@ static int realloc_replanted_temp(replanted_temp_t** t, int* count) {
 		return 0;
 	}
 	*t = no_leak;
-
 	return 1;
 }
 
@@ -161,7 +160,6 @@ static replanted_temp_t* get_current_by_index(replanted_temp_t* p, int count, in
 			return &p[i];
 		}
 	}
-
 	return NULL;
 }
 
