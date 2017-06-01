@@ -25,7 +25,7 @@ MAXAGE  200                   //Determines rate of "physiological decline" of fo
 RAGE    0.95                  //Relative Age to give fAGE = 0.5 for P. nigra Navarro-Cerrillo 2016
 NAGE    4                     //Power of relative Age in function for P. nigra Navarro-Cerrillo 2016
 GROWTHTMIN	1.53676223382354
-GROWTHTMAX	34.3005954322871
+GROWTHTMAX	40 //34.3005954322871
 GROWTHTOPT	16.6863663536496
 GROWTHSTART 200               //average temperature for starting growth in °C 
 MINDAYLENGTH    0             //minimum day length for deciduous
