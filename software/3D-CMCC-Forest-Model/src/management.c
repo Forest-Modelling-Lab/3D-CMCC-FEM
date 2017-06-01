@@ -148,7 +148,7 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 						}
 						else
 						{
-							//return 0;
+							c->management = 0;
 						}
 					}
 				}
