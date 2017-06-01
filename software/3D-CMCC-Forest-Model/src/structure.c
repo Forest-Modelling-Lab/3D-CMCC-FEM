@@ -78,8 +78,6 @@ int annual_forest_structure(cell_t* const c, const int year)
 
 	logger(g_debug_log, "\n***ANNUAL FOREST STRUCTURE***\n");
 
-
-
 	assert( ! c->tree_layers_count );
 
 	for ( height = 0; height < c->heights_count; ++height )

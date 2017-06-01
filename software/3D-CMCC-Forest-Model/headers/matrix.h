@@ -692,6 +692,7 @@ enum {
 	DOS,                                /* (days) day of simulation */
 	MOS,                                /* (months) month of simulation */
 	YOS,                                /* (years) year of simulation */
+	YEARS_THINNING,
 
 	COUNTERS
 };
@@ -813,6 +814,8 @@ typedef struct
 
 	int doy;                                                              /* day of the year */
 	int dos;                                                              /* day of simulation */
+
+	int management;														 /* 0 = off, 1 = on */
 
 	/* for logger */
 	int initial_tree_layers_count;
@@ -1287,7 +1290,6 @@ typedef struct
 	double soil_nitrogen_store;                                           /* (gN/day) cell nitrogen balances store */
 	double soil_nitrogen_old_store;                                       /* (gN/day) cell nitrogen balances old_store */
 	double soil_nitrogen_balance;                                         /* (gN/day/day) cell nitrogen balances balance */
-
 } cell_t;
 
 typedef struct {

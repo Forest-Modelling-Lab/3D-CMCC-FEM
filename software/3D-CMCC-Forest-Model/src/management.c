@@ -5,7 +5,8 @@
 #include <stdlib.h>
 #include <math.h>
 #include <math.h>
-#include <new_forest_tree_class.h>
+#include <assert.h>
+#include "new_forest_tree_class.h"
 #include "g-function.h"
 #include "management.h"
 #include "constants.h"
@@ -25,8 +26,6 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 	int dbh;
 	int age;
 	int species;
-
-	static int years_for_thinning;
 
 	height_t *h;
 	dbh_t *d;
@@ -79,7 +78,7 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 
 						/***** THINNING *****/
 						//note : +1 since it works at the 1st of January of the subsequent year
-						if ( ( c->years[year].year == g_settings->year_start_management + 1 ) || ( s->value[THINNING] == years_for_thinning + 1 ) )
+						if ( ( c->years[year].year == g_settings->year_start_management + 1 ) || ( s->value[THINNING] == s->counter[YEARS_THINNING] + 1 ) )
 						{
 							logger(g_debug_log,"**FOREST MANAGEMENT**\n");
 							logger(g_debug_log,"**THINNING**\n");
@@ -87,15 +86,16 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 							thinning ( c, height, dbh, age, species, year );
 
 							/* reset counter */
-							years_for_thinning = 0;
-							return 0;
+							s->counter[YEARS_THINNING] = 0;
+
+							//return 0;
 						}
 
 						/* increment counter */
-						++years_for_thinning;
+						++s->counter[YEARS_THINNING];
 
 						/* check */
-						CHECK_CONDITION( years_for_thinning, >, s->value[ROTATION] );
+						CHECK_CONDITION( s->counter[YEARS_THINNING], >, s->value[ROTATION] );
 
 						/***** HARVESTING *****/
 						/* if class age matches with harvesting */
@@ -103,38 +103,52 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 
 						if ( ( a->value + 1 ) == s->value[ROTATION] )
 						{
+							int rsi; // replanted species index
+
 							logger(g_debug_log,"**FOREST MANAGEMENT**\n");
 							logger(g_debug_log,"**HARVESTING**\n");
 
+							/* get replanted_species_index */
+							for ( rsi = 0; rsi < g_settings->replanted_count; rsi++ )
+							{
+								if ( ! string_compare_i(c->heights[height].dbhs[dbh].ages[age].species[species].name
+															, g_settings->replanted[rsi].species) )
+								{
+									// index found
+									break;
+								}
+							}
+							assert( rsi != g_settings->replanted_count );
+							
 							/* remove tree class */
 							harvesting ( c, height, dbh, age, species );
 
 							/* note: RESET c->dos */
-							c->dos = 0.;
+							c->dos = 0;
 
 							/* reset years_for_thinning */
-							years_for_thinning = 0;
+							s->counter[YEARS_THINNING] = 0;
 
 							/* check that all mandatory variables are filled */
-							CHECK_CONDITION (g_settings->replanted_n_tree, <, ZERO);
-							CHECK_CONDITION (g_settings->replanted_height, <, 1.3);
-							CHECK_CONDITION (g_settings->replanted_avdbh,  <, ZERO);
-							CHECK_CONDITION (g_settings->replanted_age,    <, ZERO);
+							CHECK_CONDITION (g_settings->replanted[rsi].n_tree, <, ZERO);
+							CHECK_CONDITION (g_settings->replanted[rsi].height, <, 1.3);
+							CHECK_CONDITION (g_settings->replanted[rsi].avdbh,  <, ZERO);
+							CHECK_CONDITION (g_settings->replanted[rsi].age,    <, ZERO);
 
 							/* re-planting tree class */
-							if( g_settings->replanted_n_tree )
+							if( g_settings->replanted[rsi].n_tree )
 							{
-								if ( ! add_tree_class_for_replanting( c , day, month, year ) )
+								if ( ! add_tree_class_for_replanting( c , day, month, year, rsi ) )
 								{
 									logger_error(g_debug_log, "unable to add new replanted class! (exit)\n");
 									exit(1);
 								}
 							}
-							return 1;
+							c->management = 1;
 						}
 						else
 						{
-							return 0;
+							//return 0;
 						}
 					}
 				}

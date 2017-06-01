@@ -10,6 +10,18 @@ enum { CO2_TRANS_OFF, CO2_TRANS_ON, CO2_TRANS_VAR };
 
 enum { THINNING_REGIME_ABOVE, THINNING_REGIME_BELOW };
 
+typedef struct
+{
+	char species[SETTINGS_REPLANTED_SPECIES_MAX_SIZE];
+	char management;           /*this is a mandatory variables that each class has to have AND DETERMINES HABITUS OF PLANT*/
+	double n_tree;
+	double age;
+	double avdbh;
+	double lai;
+	double height;
+
+} replanted_vars_t;
+
 typedef struct {
 	char sitename[SETTINGS_SITENAME_MAX_SIZE];
 	char version;                        /* fixme to remove */
@@ -35,12 +47,9 @@ typedef struct {
 	int year_start_management;           /* start year management (if management is on) */
 	char Prog_Aut_Resp;                  /* Prognostic autotrophic respiration */
 	char thinning_regime;                /* thinning regime above = A or below = B */
-	char replanted_species[SETTINGS_REPLANTED_SPECIES_MAX_SIZE];       /* species name of replanted species */
 	char regeneration_species[SETTINGS_REGENERATION_SPECIES_MAX_SIZE]; /* species name of regeneration species */
 	// ALESSIOR: use e_management from matrix.h not char
-	char replanted_management;           /*this is a mandatory variables that each class has to have AND DETERMINES HABITUS OF PLANT*/
 	char regeneration_management;        /*this is a mandatory variables that each class has to have AND DETERMINES HABITUS OF PLANT*/
-
 
 	/* DO NOT MODIFY BELOW, PLEASE INSERT STUFF IN SPACE ABOVE */
 
@@ -59,11 +68,8 @@ typedef struct {
 	double max_layer_cover;              /* maximum layer cover */
 
 	/* replanted input (Management options)*/
-	double replanted_n_tree;             /* number of replanted trees per sizecell (mandatory) */
-	double replanted_age;                /* age of replanted trees (year)(mandatory) */
-	double replanted_avdbh;              /* average dbh of replanted trees (cm) (mandatory) */
-	double replanted_lai;                /* LAI of replanted trees (m2/m2) (mandatory for evergreen) */
-	double replanted_height;             /* height of replanted trees (meters) (mandatory) */
+	replanted_vars_t* replanted;
+	int replanted_count;
 
 	/* regeneration input (Regeneration options)*/
 	double regeneration_n_tree;

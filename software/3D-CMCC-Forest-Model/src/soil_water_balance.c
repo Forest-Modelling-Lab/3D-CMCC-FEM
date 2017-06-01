@@ -30,6 +30,8 @@ void soil_water_balance(cell_t *c, const meteo_daily_t *const meteo_daily)
 	logger(g_debug_log, "daily_canopy_transp = %g\n", c->daily_canopy_transp);
 	logger(g_debug_log, "daily_soil_evapo = %g\n", c->daily_soil_evapo);
 
+
+
 	/* snow pack balance */
 	c->snow_pack += meteo_daily->snow - (c->daily_snow_melt + c->daily_snow_subl);
 	logger(g_debug_log, "snow_pack = %g\n", c->snow_pack);

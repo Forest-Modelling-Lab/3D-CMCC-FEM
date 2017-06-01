@@ -265,7 +265,7 @@ int tree_class_remove(cell_t *const c, const int height, const int dbh, const in
 					if ( ! dbh_remove(c, height, 0) ) return 0;
 				}
 		}
-
+#if 0
 		if ( 1 == c->heights_count ) {
 			if ( ! c->heights[0].dbhs_count 
 				|| ( (1 == c->heights[0].dbhs_count) 
@@ -275,6 +275,15 @@ int tree_class_remove(cell_t *const c, const int height, const int dbh, const in
 					if ( ! height_remove(c, 0) ) return 0;
 			}
 		}
+#else
+		if ( ! c->heights[height].dbhs_count 
+			|| ( (1 == c->heights[height].dbhs_count) 
+				&& (c->heights[height].dbhs[0].ages_count <= 1)
+				&& (c->heights[height].dbhs[0].ages[0].species_count <= 1) )
+			) {
+				if ( ! height_remove(c, 0) ) return 0;
+		}
+#endif
 	}
 #else
 	/* zeroed species class if N_TREE < 0 or if called by harvesting function */

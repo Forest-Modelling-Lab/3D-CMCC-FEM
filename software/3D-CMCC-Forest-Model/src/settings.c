@@ -42,13 +42,6 @@ enum {
 	, SETTINGS_SOIL_LAYER
 	, SETTINGS_MAX_LAYER_COVER
 	, SETTINGS_THINNING_REGIME
-	, SETTINGS_REPLANTED_SPECIES
-	, SETTINGS_REPLANTED_MANAGEMENT
-	, SETTINGS_REPLANTED_TREE
-	, SETTINGS_REPLANTED_AGE
-	, SETTINGS_REPLANTED_AVDBH
-	, SETTINGS_REPLANTED_LAI
-	, SETTINGS_REPLANTED_HEIGHT
 	, SETTINGS_REGENERATION_SPECIES
 	, SETTINGS_REGENERATION_MANAGEMENT
 	, SETTINGS_REGENERATION_N_TREE
@@ -59,6 +52,27 @@ enum {
 
 	, SETTINGS_COUNT
 };
+
+enum
+{
+	SETTINGS_REPLANTED_SPECIES
+	, SETTINGS_REPLANTED_MANAGEMENT
+	, SETTINGS_REPLANTED_TREE
+	, SETTINGS_REPLANTED_AGE
+	, SETTINGS_REPLANTED_AVDBH
+	, SETTINGS_REPLANTED_LAI
+	, SETTINGS_REPLANTED_HEIGHT
+
+	, REPLANTED_SETTINGS_COUNT
+};
+
+typedef struct
+{
+	replanted_vars_t values;
+	int assigned_values[REPLANTED_SETTINGS_COUNT];
+	int index;
+
+} replanted_temp_t;
 
 extern const char sz_err_out_of_memory[];
 
@@ -95,13 +109,6 @@ const char* sz_settings[SETTINGS_COUNT] = {
 	, "SOIL_LAYER"
 	, "MAX_LAYER_COVER"
 	, "THINNING_REGIME"
-	, "REPLANTED_SPECIES"
-	, "REPLANTED_MANAGEMENT"
-	, "REPLANTED_TREE"
-	, "REPLANTED_AGE"
-	, "REPLANTED_AVDBH"
-	, "REPLANTED_LAI"
-	, "REPLANTED_HEIGHT"
 	, "REGENERATION_SPECIES"
 	, "REGENERATION_MANAGEMENT"
 	, "REGENERATION_N_TREE"
@@ -116,6 +123,336 @@ const int optional[] = {
 	, SETTINGS_REGENERATION_SPECIES
 	, SETTINGS_TBASE_RESP
 };
+
+static const char* sz_replanted_settings[REPLANTED_SETTINGS_COUNT] =
+{
+	"REPLANTED_SPECIES"
+	, "REPLANTED_MANAGEMENT"
+	, "REPLANTED_TREE"
+	, "REPLANTED_AGE"
+	, "REPLANTED_AVDBH"
+	, "REPLANTED_LAI"
+	, "REPLANTED_HEIGHT"
+};
+
+static int realloc_replanted_temp(replanted_temp_t** t, int* count) {
+	replanted_temp_t *no_leak;
+
+	no_leak = realloc(*t, ++*count*sizeof*no_leak);
+	if ( ! no_leak )
+	{
+		--*count;
+		return 0;
+	}
+	*t = no_leak;
+
+	return 1;
+}
+
+// index is zero based
+static replanted_temp_t* get_current_by_index(replanted_temp_t* p, int count, int index)
+{
+	int i;
+
+	for ( i = 0; i < count; i++ )
+	{
+		if ( index == p[i].index )
+		{
+			return &p[i];
+		}
+	}
+
+	return NULL;
+}
+
+static int settings_replanted_import(const char* const filename, settings_t* s)
+{
+#define BUFFER_SIZE	256
+
+	char buffer[BUFFER_SIZE];
+	int i;
+	//int imported[REPLANTED_SETTINGS_COUNT] = { 0 };
+	replanted_temp_t* temp;
+	int temp_count;
+	
+	replanted_vars_t replanted = { 0 };
+	FILE* f;
+
+	const char delimiter[] = " /\"\t\r\n";
+
+	assert(filename && s);
+
+	temp = NULL;
+	temp_count = 0;
+
+	f = fopen(filename, "r");
+	if ( ! f ) {
+		puts("file not found!");
+		return 0;
+	}
+
+	while ( fgets(buffer, BUFFER_SIZE, f) )
+	{
+		char *p;
+		char *p2;
+		char *token;
+		int index;
+		replanted_temp_t* current;
+
+		/* remove initial spaces (if any) */
+		p2 = buffer;
+		while ( isspace(*p2) ) ++p2;
+
+		/* skip empty lines and comments */
+		if (	('\r' == p2[0])
+				|| ('\n' == p2[0])
+				|| ('/' == p2[0]) ) {
+			continue;
+		}
+
+		/* get setting name */
+		current = NULL;
+		token = string_tokenizer(p2, delimiter, &p);
+		if ( ! token ) continue;
+
+		/* check for name */
+		for ( i = 0; i < REPLANTED_SETTINGS_COUNT; i++ )
+		{
+			if ( ! string_compare_i(token, sz_replanted_settings[i]) )
+			{ 
+				// token found, without index
+
+				current = get_current_by_index(temp, temp_count, 0);
+				if ( ! current )
+				{
+					// add new
+					replanted_temp_t* no_leak;
+					no_leak = realloc(temp, (temp_count+1)*sizeof*no_leak);
+					if ( ! no_leak )
+					{
+						printf("unable to retrieve index from %s\n", token);
+						if ( temp ) free(temp);
+						fclose(f);
+						return 0;
+					}
+					temp = no_leak;
+					current = &temp[temp_count++];
+					current->index = 0;
+					{
+						int y;
+						for ( y = 0; y < REPLANTED_SETTINGS_COUNT; y++ )
+						{
+							current->assigned_values[y] = 0;
+						}
+					}
+				}
+				break;
+			}
+			else
+			{
+				// not found ? maybe we have an index ?
+				// e.g: REPLANTED_SPECIES_1
+				p2 = strstr(token, sz_replanted_settings[i]);
+				if ( 0 == p2 - token )
+				{
+					// get index
+					if ( 1 != sscanf(token, "%*[^0-9]%d", &index) )
+					{
+						printf("unable to retrieve index from %s\n", token);
+						if ( temp ) free(temp);
+						fclose(f);
+						return 0;
+					}
+					if ( index < 0 )
+					{
+						printf("bad index specified for %s\n", token);
+						if ( temp ) free(temp);
+						fclose(f);
+						return 0;
+					}
+					if ( index > temp_count )
+					{
+						printf("bad index specified for %s: should be %d\n", token, temp_count);
+						if ( temp ) free(temp);
+						fclose(f);
+						return 0;
+					}
+					current = get_current_by_index(temp, temp_count, index);
+					if ( ! current )
+					{
+						// add new
+						replanted_temp_t* no_leak;
+						no_leak = realloc(temp, (temp_count+1)*sizeof*no_leak);
+						if ( ! no_leak )
+						{
+							printf("unable to retrieve index from %s\n", token);
+							if ( temp ) free(temp);
+							fclose(f);
+							return 0;
+						}
+						temp = no_leak;
+						current = &temp[temp_count++];
+						current->index = index;
+						{
+							int y;
+							for ( y = 0; y < REPLANTED_SETTINGS_COUNT; y++ )
+							{
+								current->assigned_values[y] = 0;
+							}
+						}
+					}
+					break;
+				}
+			}
+		}
+		
+		if ( REPLANTED_SETTINGS_COUNT == i )
+		{
+			continue;
+		}
+
+		if ( ! current )
+		{
+			return 0;
+		}
+
+		if ( current->assigned_values[i] )
+		{
+			if ( current->index )
+				printf("%s_%d already specified\n", sz_replanted_settings[i], current->index);
+			else
+				printf("%s already specified\n", sz_replanted_settings[i]);
+			free(temp);
+			fclose(f);
+			return 0;
+		}
+
+		/* get value */
+		token = string_tokenizer(NULL, delimiter, &p);
+		if ( ! token ) {
+			if ( current->index )
+				printf("no value specified for %s_%d\n", sz_replanted_settings[i], current->index);
+			else
+				printf("no value specified for %s\n", sz_replanted_settings[i]);
+			free(temp);
+			fclose(f);
+			return 0;
+		}
+
+		if ( SETTINGS_REPLANTED_SPECIES == i )
+		{
+			strncpy(current->values.species, (const char*)token, SETTINGS_REPLANTED_SPECIES_MAX_SIZE-1);
+		}
+		else if ( i == SETTINGS_REPLANTED_MANAGEMENT )
+		{
+			if ( ('T' == token[0]) || ('t' == token[0]) ) {
+				current->values.management = T;
+			} else if ( ('C' == token[0]) || ('c' == token[0]) ) {
+				current->values.management = C;
+			} else if ( ('N' == token[0]) || ('n' == token[0]) ) {
+				current->values.management = N;
+			} else {
+				printf("bad management habitus specified: %s\n", token);
+				free(temp);
+				fclose(f);
+				return 0;
+			}
+		} else {
+			int err;
+			double value;
+
+			value = convert_string_to_float(token, &err);
+			if ( err )
+			{
+				printf("unable to convert value for %s: \"%s\"\n", sz_replanted_settings[i], token);
+				free(temp);
+				fclose(f);
+				return 0;
+			}
+			switch ( i )
+			{
+				case SETTINGS_REPLANTED_TREE:
+					current->values.n_tree = value;
+				break;
+
+				case SETTINGS_REPLANTED_AGE:
+					current->values.age = value;
+				break;
+
+				case SETTINGS_REPLANTED_AVDBH:
+					current->values.avdbh = value;
+				break;
+
+				case SETTINGS_REPLANTED_LAI:
+					current->values.lai = value;
+				break;
+
+				case SETTINGS_REPLANTED_HEIGHT:
+					current->values.height = value;
+				break;
+			}
+		}
+		current->assigned_values[i] = 1;
+	}
+	fclose(f);
+
+	// parse imported stuff
+	if ( ! temp_count )
+	{
+		puts("no replanted stuff found!");
+		return 0;
+	}
+
+	// imported all stuff ?
+	for  ( i = 0; i < temp_count; i++ )
+	{
+		int y;
+		int flag = 0;
+		for  ( y = 0; y < REPLANTED_SETTINGS_COUNT; y++ )
+		{
+			if ( ! temp[i].assigned_values[y] )
+			{
+				if ( temp[i].index )
+				{
+					printf("%s_%d not specified\n", sz_replanted_settings[y], temp[i].index);
+				}
+				else
+				{
+					printf("%s not specified\n", sz_replanted_settings[y]);
+				}
+				free(temp);
+				return 0;
+			}
+		}
+	}
+
+	// assign values
+	s->replanted_count = temp_count;
+	s->replanted = malloc(s->replanted_count*sizeof*s->replanted);
+	if ( ! s->replanted )
+	{
+		puts("out of memory!");
+		free(temp);
+		return 0;
+	}
+
+	for ( i = 0; i < s->replanted_count; i++ )
+	{
+		strcpy(s->replanted[i].species, temp[i].values.species);
+		s->replanted[i].management = temp[i].values.management;
+		s->replanted[i].n_tree = temp[i].values.n_tree;
+		s->replanted[i].age = temp[i].values.age;
+		s->replanted[i].avdbh = temp[i].values.avdbh;
+		s->replanted[i].lai = temp[i].values.lai;
+		s->replanted[i].height = temp[i].values.height;
+	}
+
+	free(temp);
+
+	return 1;
+
+#undef BUFFER_SIZE	
+}
 
 settings_t* settings_import(const char *const filename) {
 #define BUFFER_SIZE	256
@@ -174,8 +511,10 @@ settings_t* settings_import(const char *const filename) {
 				break;
 			}
 		}
-		if ( -1 == index ) {
-			printf("unknown parameter specified in settings: %s. skipped.\n", token);
+		// not found ?
+		if ( -1 == index )
+		{
+			//printf("unknown parameter specified in settings: %s. skipped.\n", token);
 			continue;
 		}
 
@@ -199,7 +538,7 @@ settings_t* settings_import(const char *const filename) {
 				}
 			}
 			if ( ! flag ) {
-				free(s);
+				settings_free(s);
 				fclose(f);
 				return NULL;
 			} else {
@@ -225,7 +564,7 @@ settings_t* settings_import(const char *const filename) {
 				s->time = *token;
 				if ( s->time != 'd' ) {
 					puts("uncorrect time step choiced!");
-					free(s);
+					settings_free(s);
 					fclose(f);
 					return 0;
 				}
@@ -317,25 +656,6 @@ settings_t* settings_import(const char *const filename) {
 				}
 			break;
 
-			case SETTINGS_REPLANTED_SPECIES:
-				strncpy(s->replanted_species, (const char*)token, SETTINGS_REPLANTED_SPECIES_MAX_SIZE-1);
-			break;
-
-			case SETTINGS_REPLANTED_MANAGEMENT:
-				if ( ('T' == token[0]) || ('t' == token[0]) ) {
-					s->replanted_management = T;
-				} else if ( ('C' == token[0]) || ('c' == token[0]) ) {
-					s->replanted_management = C;
-				} else if ( ('N' == token[0]) || ('n' == token[0]) ) {
-					s->replanted_management = N;
-				} else {
-					printf("bad management habitus specified: %s\n", token);
-					free(s);
-					fclose(f);
-					return 0;
-				}
-			break;
-
 			case SETTINGS_REGENERATION_SPECIES:
 				strncpy(s->regeneration_species, (const char*)token, SETTINGS_REGENERATION_SPECIES_MAX_SIZE-1);
 			break;
@@ -349,7 +669,7 @@ settings_t* settings_import(const char *const filename) {
 					s->regeneration_management = N;
 				} else {
 					printf("bad regeneration habitus specified: %s\n", token);
-					free(s);
+					settings_free(s);
 					fclose(f);
 					return 0;
 				}
@@ -424,26 +744,6 @@ settings_t* settings_import(const char *const filename) {
 						s->max_layer_cover = value;
 					break;
 
-					case SETTINGS_REPLANTED_TREE:
-						s->replanted_n_tree = value;
-					break;
-
-					case SETTINGS_REPLANTED_AGE:
-						s->replanted_age = value;
-					break;
-
-					case SETTINGS_REPLANTED_AVDBH:
-						s->replanted_avdbh = value;
-					break;
-
-					case SETTINGS_REPLANTED_LAI:
-						s->replanted_lai = value;
-					break;
-
-					case SETTINGS_REPLANTED_HEIGHT:
-						s->replanted_height = value;
-					break;
-
 					case SETTINGS_REGENERATION_N_TREE:
 						s->regeneration_n_tree = value;
 					break;
@@ -488,7 +788,7 @@ settings_t* settings_import(const char *const filename) {
 
 			if ( ! flag ) {
 				puts("");
-				free(s);
+				settings_free(s);
 				return 0;
 			}
 			else
@@ -501,16 +801,20 @@ settings_t* settings_import(const char *const filename) {
 	/* check for restart year */
 	if ( 0 == s->year_restart ) {
 		s->year_restart = -1;
-	} else {
-		if ( (s->year_restart <= s->year_start) || (s->year_restart >= s->year_end) ) {
-			printf("%s must be between %d and %d not %d\n", sz_settings[SETTINGS_YEAR_RESTART]
-						, s->year_start+1
-						, s->year_end-1
-						, s->year_restart
-			);
-			free(s);
-			return NULL;
-		}
+	} else if ( (s->year_restart <= s->year_start) || (s->year_restart >= s->year_end) ) {
+		printf("%s must be between %d and %d not %d\n", sz_settings[SETTINGS_YEAR_RESTART]
+					, s->year_start+1
+					, s->year_end-1
+					, s->year_restart
+		);
+		settings_free(s);
+		return NULL;
+	}
+
+	if ( ! settings_replanted_import(filename, s) )
+	{
+		settings_free(s);
+		s = NULL;
 	}
 
 	return s;
@@ -518,5 +822,13 @@ settings_t* settings_import(const char *const filename) {
 }
 
 void settings_free(settings_t* s) {
-	if ( s ) free(s);
+	if ( s )
+	{
+		if ( s->replanted_count )
+		{
+			free(s->replanted);
+		}
+
+		free(s);
+	}
 }

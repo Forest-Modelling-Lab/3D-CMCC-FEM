@@ -737,7 +737,8 @@ static dataset_t* dataset_import_txt(const char* const filename) {
 		row.species = NULL;
 		for ( token = string_tokenizer(p2, delimiter, &p), y = 0; token; token = string_tokenizer(NULL, delimiter, &p), ++y ) {
 			/* put value at specified columns */
-			for ( i = 0; i < COLUMNS_COUNT; i++ ) {
+			//for ( i = 0; i < COLUMNS_COUNT; i++ ) {
+			for ( i = 0; i < COLUMNS_TO_IMPORT; i++ ) {
 				if ( y == columns[i] ) {
 					/* assigned */
 					++assigned;
@@ -1248,8 +1249,6 @@ int fill_species_from_file(species_t *const s) {
 		printf("error: unable to copy species to %s\n", g_sz_parameterization_output_path);
 		return 0;
 	}
-
-
 
 	return 1;
 #undef BUFFER_SIZE

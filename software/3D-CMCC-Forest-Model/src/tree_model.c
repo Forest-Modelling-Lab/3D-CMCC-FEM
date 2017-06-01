@@ -110,13 +110,13 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	if ( ! day && ! month )
 	{
 		/* management blocks */
-		management = forest_management ( c, day, month, year );
+		forest_management ( c, day, month, year );
 	}
 
 	/****************************************************************************/
 
 	/* annual forest structure (only the year after the first) */
-	if ( ( ! day && ! month && year ) && ( ! management ) )
+	if ( ( ! day && ! month && year ) && ( ! c->management ) )
 	{
 		annual_forest_structure ( c, year );
 	}

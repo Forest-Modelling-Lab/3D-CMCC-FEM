@@ -321,7 +321,7 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 			/* check */
 			if( ! s->value[LAI_PROJ] || s->value[LAI_PROJ] == NO_DATA )
 			{
-				logger_error(g_debug_log,"No Leaf Biomass nor LAI values from initialization file (recompue it using sapwood)!!!!\n");
+				logger_error(g_debug_log,"No Leaf Biomass nor LAI values from initialization file (recompute it using sapwood)!!!!\n");
 
 				/* compute LAI (assuming at peak value) */
 				s->value[LAI_PROJ] = ( ( s->value[SAPWOOD_AREA] / 10000. ) * s->value[SAP_LEAF]) / s->value[CROWN_AREA_PROJ];

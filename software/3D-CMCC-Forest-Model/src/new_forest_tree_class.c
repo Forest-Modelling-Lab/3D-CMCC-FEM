@@ -23,7 +23,7 @@
 extern settings_t* g_settings;
 extern logger_t* g_debug_log;
 
-static int fill_cell_for_replanting(cell_t *const c)
+static int fill_cell_for_replanting(cell_t *const c, const int species_index)
 {
 	char* p;
 	height_t* h;
@@ -43,7 +43,7 @@ static int fill_cell_for_replanting(cell_t *const c)
 		return 0;
 	}
 	c->heights[c->heights_count-1] = height;
-	c->heights[c->heights_count-1].value = g_settings->replanted_height;
+	c->heights[c->heights_count-1].value = g_settings->replanted[species_index].height;
 	h = &c->heights[c->heights_count-1];
 
 	/* alloc memory for dbhs */
@@ -52,7 +52,7 @@ static int fill_cell_for_replanting(cell_t *const c)
 		return 0;
 	}
 	h->dbhs[h->dbhs_count-1] = dbh;
-	h->dbhs[h->dbhs_count-1].value = g_settings->replanted_avdbh;
+	h->dbhs[h->dbhs_count-1].value = g_settings->replanted[species_index].avdbh;
 	d = &h->dbhs[h->dbhs_count-1];
 
 	/* alloc memory for ages */
@@ -61,7 +61,7 @@ static int fill_cell_for_replanting(cell_t *const c)
 		return 0;
 	}
 	d->ages[d->ages_count-1] = age;
-	d->ages[d->ages_count-1].value = (int)g_settings->replanted_age;
+	d->ages[d->ages_count-1].value = (int)g_settings->replanted[species_index].age;
 	a = &d->ages[d->ages_count-1];
 
 	/* alloc memory for species */
@@ -70,22 +70,21 @@ static int fill_cell_for_replanting(cell_t *const c)
 		return 0;
 	}
 
-	p = string_copy(g_settings->replanted_species);
+	p = string_copy(g_settings->replanted[species_index].species);
 	if ( ! p ) return 0;
 
 	a->species[a->species_count-1] = species;
 	a->species[a->species_count-1].management = T;
 	a->species[a->species_count-1].name = p;
-	a->species[a->species_count-1].counter[N_TREE] = (int)g_settings->replanted_n_tree;
+	a->species[a->species_count-1].counter[N_TREE] = (int)g_settings->replanted[species_index].n_tree;
 	a->species[a->species_count-1].counter[N_STUMP] = 0;
-	a->species[a->species_count-1].value[LAI_PROJ] = g_settings->replanted_lai;
+	a->species[a->species_count-1].value[LAI_PROJ] = g_settings->replanted[species_index].lai;
 
 	return 1;
 }
 
-int add_tree_class_for_replanting (cell_t *const c, const int day, const int month, const int year )
+int add_tree_class_for_replanting (cell_t *const c, const int day, const int month, const int year, const int rsi)
 {
-
 	int day_temp;
 	int month_temp;
 	int DaysInMonth [] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
@@ -95,7 +94,7 @@ int add_tree_class_for_replanting (cell_t *const c, const int day, const int mon
 	/* it is used only with "human" regeneration */
 	logger(g_debug_log, "Human management\n");
 
-	if ( ! fill_cell_for_replanting ( c ) ) return 0;
+	if ( ! fill_cell_for_replanting ( c, rsi ) ) return 0;
 
 	/* fill with species values from parameterization file */
 	if ( ! fill_species_from_file ( &c->heights[c->heights_count-1].dbhs[0].ages[0].species[0]) )
