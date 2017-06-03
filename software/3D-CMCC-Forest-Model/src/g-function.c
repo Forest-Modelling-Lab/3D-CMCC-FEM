@@ -210,7 +210,7 @@ void Veg_Days(cell_t *const c, const int day, const int month, const int year)
 						s->counter[DAYS_LEAFFALL] =  (int) (s->value[LEAF_FALL_FRAC_GROWING] *
 								s->counter[DAY_VEG_FOR_LEAF_FALL]);
 						logger(g_debug_log, "Days of leaf fall = %d\n", s->counter[DAYS_LEAFFALL] );
-						//add leaf fall days
+
 						if (s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2)
 						{
 							s->counter[DAY_VEG_FOR_LEAF_FALL] += (int)(s->counter[DAY_VEG_FOR_LEAF_FALL] *
@@ -219,7 +219,6 @@ void Veg_Days(cell_t *const c, const int day, const int month, const int year)
 						}
 						logger(g_debug_log, "-species %s annual vegetative days = %d \n", s->name, s->counter[DAY_VEG_FOR_LEAF_FALL]);
 					}
-
 				}
 			}
 		}

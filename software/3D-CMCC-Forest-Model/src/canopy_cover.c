@@ -45,21 +45,6 @@ void dbhdc_function (cell_t *const c, const int layer, const int height, const i
 	logger(g_debug_log,"\n*DBHDC FUNCTION for %s for %d*\n", s->name, year);
 
 	/************************************************************************************************************************/
-	/* note: 04 Oct 2016 still USEFULL ?????*/
-	/* compute potential maximum and minimum density for DBHDC function */
-	//potential_max_min_density ( c );
-	/* compute effective dbh/crown diameter */
-	/*
-		s->value[DBHDC_EFF] = ((s->value[DBHDCMIN] - s->value[DBHDCMAX]) / (s->value[DENMAX] - s->value[DENMIN]) *
-				(c->tree_layers[layer].layer_density - s->value[DENMIN]) + s->value[DBHDCMAX]);
-		logger(g_debug_log,"-DENMAX = %f\n", s->value[DENMAX]);
-		logger(g_debug_log,"-DENMIN = %f\n", s->value[DENMIN]);
-		logger(g_debug_log,"-DBHDCMAX = %f\n", s->value[DBHDCMAX]);
-		logger(g_debug_log,"-DBHDCMIN = %f\n", s->value[DBHDCMIN]);
-		logger(g_debug_log,"-DBHDC effective = %f\n", s->value[DBHDC_EFF]);
-	 */
-
-	/************************************************************************************************************************/
 	/* note: 04 Oct 2016 */
 	/* compute potential maximum and minimum density for DBHDC function */
 	/* new DBHDC function */
@@ -88,9 +73,8 @@ void dbhdc_function (cell_t *const c, const int layer, const int height, const i
 	/* this is checked to avoid unrealistic crown area increment */
 
 	//note: max_dbhdc_incr corresponds to an arbitrary increment of n value
-	//note: not used in the first year of simulation
-	//fixme use less consider YOS????
-	if ( ( s->counter[YOS] ) && ( s->value[DBHDC_EFF] > ( previous_dbhdc_eff + (previous_dbhdc_eff * max_dbhdc_incr ) ) ) )
+	/* note: not used in the first year of simulation */
+	if ( ( s->counter[YOS] > 0 ) && ( s->value[DBHDC_EFF] > ( previous_dbhdc_eff + (previous_dbhdc_eff * max_dbhdc_incr ) ) ) )
 	{
 		s->value[DBHDC_EFF] = previous_dbhdc_eff + ( previous_dbhdc_eff * max_dbhdc_incr );
 	}

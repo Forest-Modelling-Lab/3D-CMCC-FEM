@@ -15,6 +15,7 @@
 #include "logger.h"
 #include "remove_tree_class.h"
 #include "biomass.h"
+#include "littering.h"
 
 extern settings_t* g_settings;
 extern logger_t* g_debug_log;
@@ -107,7 +108,7 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 
 							logger(g_debug_log,"**FOREST MANAGEMENT**\n");
 							logger(g_debug_log,"**HARVESTING**\n");
-
+#if 0
 							/* get replanted_species_index */
 							for ( rsi = 0; rsi < g_settings->replanted_count; rsi++ )
 							{
@@ -119,15 +120,19 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 								}
 							}
 							assert( rsi != g_settings->replanted_count );
-							
-							/* remove tree class */
-							harvesting ( c, height, dbh, age, species );
+#endif
+							/* remove tree class and replant */
+							harvesting ( c, height, dbh, age, species, day, month, year );
 
 							/* note: RESET c->dos */
+							//fixme usefull at cell level?????
 							c->dos = 0;
-
+#if 0
 							/* reset years_for_thinning */
 							s->counter[YEARS_THINNING] = 0;
+
+							/* reset years of simulation for new class */
+							s->counter[YOS] = 0;
 
 							/* check that all mandatory variables are filled */
 							CHECK_CONDITION (g_settings->replanted[rsi].n_tree, <, ZERO);
@@ -141,6 +146,7 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 							CHECK_CONDITION (g_settings->replanted[rsi].age,    <, NO_DATA);
 							*/
 
+
 							/* re-planting tree class */
 							if( g_settings->replanted[rsi].n_tree )
 							{
@@ -150,6 +156,7 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 									exit(1);
 								}
 							}
+#endif
 							c->management = 1;
 						}
 						else
@@ -245,19 +252,67 @@ void thinning (cell_t *const c, const int height, const int dbh, const int age, 
 
 /*****************************************************************************************************************************************/
 
-void harvesting (cell_t *const c, const int height, const int dbh, const int age, const int species)
+void harvesting (cell_t *const c, const int height, const int dbh, const int age, const int species, const int day, const int month, const int year)
 {
+
+	int rsi; /* replanted species index */
+
 	species_t *s;
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 	/* at the moment it considers a complete harvesting for all classes (if considered) */
-	logger(g_debug_log, "\n\n\n\n\n** Management options: Harvesting ** \n\n\n\n\n");
+	logger(g_debug_log, "\n** Management options: Harvesting**\n");
 
 	/* update C and N biomass */
 	tree_biomass_remove ( c, height, dbh, age, species, s->counter[N_TREE] );
 
-	/* remove completely all trees */
-	tree_class_remove (c, height, dbh, age, species );
+	/* littering once harvested */
+	littering_after_harvesting ( c, s );
+
+	/* get replanted_species_index */
+	for ( rsi = 0; rsi < g_settings->replanted_count; rsi++ )
+	{
+		if ( ! string_compare_i(c->heights[height].dbhs[dbh].ages[age].species[species].name
+									, g_settings->replanted[rsi].species) )
+		{
+			/* Index found */
+			break;
+		}
+	}
+	assert( rsi != g_settings->replanted_count );
+
+
+
+	/* check that all mandatory variables are filled */
+	CHECK_CONDITION (g_settings->replanted[rsi].n_tree, <, ZERO);
+	CHECK_CONDITION (g_settings->replanted[rsi].height, <, 1.3);
+	CHECK_CONDITION (g_settings->replanted[rsi].avdbh,  <, ZERO);
+	CHECK_CONDITION (g_settings->replanted[rsi].age,    <, ZERO);
+	CHECK_CONDITION (g_settings->replanted[rsi].n_tree, <, NO_DATA);
+	CHECK_CONDITION (g_settings->replanted[rsi].height, <, NO_DATA);
+	CHECK_CONDITION (g_settings->replanted[rsi].avdbh,  <, NO_DATA);
+	CHECK_CONDITION (g_settings->replanted[rsi].age,    <, NO_DATA);
+
+	/* re-planting tree class overwriting removed tree class */
+	if( g_settings->replanted[rsi].n_tree || g_settings->replanted[rsi].n_tree != NO_DATA )
+	{
+		if ( ! add_tree_class_for_replanting( c, height, dbh, age, species, rsi, day, month, year ) )
+		{
+			logger_error(g_debug_log, "unable to add new replanted class! (exit)\n");
+			exit(1);
+		}
+		else
+		{
+			/* reset years_for_thinning */
+			s->counter[YEARS_THINNING] = 0;
+		}
+	}
+	else
+	{
+		/* remove completely all trees */
+		//tree_class_remove (c, height, dbh, age, species );
+		puts("no trees to replant\n");
+	}
 }
 
 /*****************************************************************************************************************************************/

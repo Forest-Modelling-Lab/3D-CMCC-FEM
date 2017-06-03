@@ -44,7 +44,7 @@ typedef struct {
 	double Tbase_resp;                   /* T base temperature for respiration (°C) */
 	char Resp_accl;                      /* acclimation of repiration must be 'on' or 'off' */
 	char regeneration;                   /* regeneration must be 'on' or 'off' */
-	char management;                     /* management must be 'on' of 'off' */
+	char management;                     /* management must be 'on' of 'off' or 'var'*/
 	int year_start_management;           /* start year management (if management is on) */
 	char Prog_Aut_Resp;                  /* Prognostic autotrophic respiration */
 	char thinning_regime;                /* thinning regime above = A or below = B */

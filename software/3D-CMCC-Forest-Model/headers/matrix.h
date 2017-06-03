@@ -814,8 +814,9 @@ typedef struct
 
 	int doy;                                                              /* day of the year */
 	int dos;                                                              /* day of simulation */
+	int mos;                                                              /* month of simulation */
 
-	int management;														 /* 0 = off, 1 = on */
+	int management;                                                       /* 0 = off, 1 = on */
 
 	/* for logger */
 	int initial_tree_layers_count;

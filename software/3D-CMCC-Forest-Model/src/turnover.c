@@ -47,22 +47,44 @@ void turnover( cell_t *const c, age_t *const a, species_t *const s, const int da
 	s->value[DAILY_LIVEWOOD_TURNOVER] = s->value[LIVEWOOD_TURNOVER] / (IS_LEAP_YEAR ( c->years[year].year ) ? 366 : 365);
 
 
-	if ( ! day &&  ! month && s->counter[YOS] > 1 )
+	if ( ! day &&  ! month  )
 	{
-		/* stem */
-		s->value[C_STEM_LIVEWOOD_TO_DEADWOOD]   = s->value[YEARLY_C_TO_STEM]   * s->value[DAILY_LIVEWOOD_TURNOVER];
+		if ( s->counter[YOS] ==  1 )
+		{
+			/* no turnover happend first year of simulation for class */
 
-		/* coarse root */
-		s->value[C_CROOT_LIVEWOOD_TO_DEADWOOD]  = s->value[YEARLY_C_TO_CROOT]  * s->value[DAILY_LIVEWOOD_TURNOVER];
+			/* stem */
+			s->value[C_STEM_LIVEWOOD_TO_DEADWOOD]   = 0;
 
-		/* branch */
-		s->value[C_BRANCH_LIVEWOOD_TO_DEADWOOD] = s->value[YEARLY_C_TO_BRANCH] * s->value[DAILY_LIVEWOOD_TURNOVER];
+			/* coarse root */
+			s->value[C_CROOT_LIVEWOOD_TO_DEADWOOD]  = 0;
 
-		/* reset annual values once used */
-		s->value[YEARLY_C_TO_STEM]   = 0.;
-		s->value[YEARLY_C_TO_CROOT]  = 0.;
-		s->value[YEARLY_C_TO_BRANCH] = 0.;
+			/* branch */
+			s->value[C_BRANCH_LIVEWOOD_TO_DEADWOOD] = 0;
+
+			/* reset annual values once used */
+			s->value[YEARLY_C_TO_STEM]   = 0.;
+			s->value[YEARLY_C_TO_CROOT]  = 0.;
+			s->value[YEARLY_C_TO_BRANCH] = 0.;
+		}
+		else
+		{
+			/* stem */
+			s->value[C_STEM_LIVEWOOD_TO_DEADWOOD]   = s->value[YEARLY_C_TO_STEM]   * s->value[DAILY_LIVEWOOD_TURNOVER];
+
+			/* coarse root */
+			s->value[C_CROOT_LIVEWOOD_TO_DEADWOOD]  = s->value[YEARLY_C_TO_CROOT]  * s->value[DAILY_LIVEWOOD_TURNOVER];
+
+			/* branch */
+			s->value[C_BRANCH_LIVEWOOD_TO_DEADWOOD] = s->value[YEARLY_C_TO_BRANCH] * s->value[DAILY_LIVEWOOD_TURNOVER];
+
+			/* reset annual values once used */
+			s->value[YEARLY_C_TO_STEM]   = 0.;
+			s->value[YEARLY_C_TO_CROOT]  = 0.;
+			s->value[YEARLY_C_TO_BRANCH] = 0.;
+		}
 	}
+
 
 	/* check */
 	CHECK_CONDITION (s->value[C_STEM_LIVEWOOD_TO_DEADWOOD],   <, 0.);

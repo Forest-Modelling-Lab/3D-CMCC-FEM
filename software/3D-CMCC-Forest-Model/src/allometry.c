@@ -166,6 +166,7 @@ void allometry_power_function(cell_t *const c)
 	age_t *a;
 	species_t *s;
 
+
 	logger(g_debug_log,"\nAllometry Power Function\n");
 
 	for ( height = 0; height < c->heights_count; ++height )

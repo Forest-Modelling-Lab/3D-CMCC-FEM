@@ -18,7 +18,7 @@ void clearcut_timber_upon_request(cell_t *const c, const int layer, const int he
 
 void thinning (cell_t *const c, const int height, const int dbh, const int age, const int species, const int year);
 
-void harvesting (cell_t *const c, const int height, const int dbh, const int age, const int species);
+void harvesting (cell_t *const c, const int height, const int dbh, const int age, const int species, const int day, const int month, const int year);
 
 void clearcut_coppice(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species);
 

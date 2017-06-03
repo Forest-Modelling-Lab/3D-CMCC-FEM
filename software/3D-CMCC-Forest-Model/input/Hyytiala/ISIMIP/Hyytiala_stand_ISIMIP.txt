@@ -1,11 +1,11 @@
 Year,x,y,Age,Species,Management,N,Stool,AvDBH,Height,Lai
-//1995,0,0,34,Piceaabies,T,965,0,4.12,3.69,0.8
+1995,0,0,34,Piceaabies,T,965,0,4.12,3.69,0.8
 1995,0,0,34,Pinussylvestris,T,870,0,12.74,10.92,1.37
 
 1996,0,0,35,Piceaabies,T,965,0,4.2,3.82,0.81
 1996,0,0,35,Pinussylvestris,T,870,0,12.99,11.31,1.39
 //1996,0,0,34,Pinussylvestris,T,2500,0,10.56,6.5,5 //references: Vesala 1996
-//1996,0,0,28,Pinussylvestris,T,1796,0,10.3,6.5,2 //references:Mencuccini and Bonosi Can. J. For. Res 2001
+//1996,0,0,28,Pinussylvestris,T,1796,0,10.3,6.5,2  //references:Mencuccini and Bonosi Can. J. For. Res 2001
 
 1997,0,0,36,Piceaabies,T,965,0,4.28,3.95,0.83
 1997,0,0,36,Pinussylvestris,T,870,0,13.23,11.68,1.41
@@ -34,9 +34,8 @@ Year,x,y,Age,Species,Management,N,Stool,AvDBH,Height,Lai
 2005,0,0,44,Piceaabies,T,770,0,4.99,4.78,0.78
 2005,0,0,44,Pinussylvestris,T,754,0,15.96,14.89,1.25
 
-//2006,0,0,45,Piceaabies,T,770,0,5.1,4.9,0.8
-//2006,0,0,45,Pinussylvestris,T,754,0,16.15,15.19,1.27
-2006,0,0,45,Pinussylvestris,T,1454,0,16.15,15.19,2 //merging the above two rows for test
+2006,0,0,45,Piceaabies,T,770,0,5.1,4.9,0.8
+2006,0,0,45,Pinussylvestris,T,754,0,16.15,15.19,1.27
 
 2007,0,0,46,Piceaabies,T,770,0,5.25,5.03,0.83
 2007,0,0,46,Pinussylvestris,T,754,0,16.39,15.51,1.29

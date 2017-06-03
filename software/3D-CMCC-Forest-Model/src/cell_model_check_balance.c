@@ -47,7 +47,7 @@ int check_cell_radiation_flux_balance (cell_t *const c, const meteo_daily_t *con
 
 	logger(g_debug_log, "\nCELL RADIATIVE BALANCE (PAR)\n");
 
-	if ( fabs( balance ) > eps )
+	if ( fabs( balance ) > eps && ( c->dos > 1 ) )
 	{
 		error_log("DOY = %d\n", c->doy);
 		error_log("\nin\n");
@@ -91,7 +91,7 @@ int check_cell_radiation_flux_balance (cell_t *const c, const meteo_daily_t *con
 
 	logger(g_debug_log, "\nCELL RADIATIVE BALANCE (Short Wave Radiation)\n");
 
-	if ( fabs( balance ) > eps )
+	if ( fabs( balance ) > eps && ( c->dos > 1 ) )
 	{
 		error_log("DOY = %d\n", c->doy);
 		error_log("\nin\n");
@@ -133,7 +133,7 @@ int check_cell_radiation_flux_balance (cell_t *const c, const meteo_daily_t *con
 
 	logger(g_debug_log, "\nCELL RADIATIVE BALANCE (PPFD)\n");
 
-	if ( fabs( balance ) > eps )
+	if ( fabs( balance ) > eps && ( c->dos > 1 ) )
 	{
 		error_log("DOY = %d\n", c->doy);
 		error_log("\nin\n");
@@ -185,7 +185,7 @@ int check_cell_carbon_flux_balance(cell_t *const c)
 
 	logger(g_debug_log, "\nCELL CARBON FLUX BALANCE\n");
 
-	if ( fabs( balance ) > eps )
+	if ( fabs( balance ) > eps && ( c->dos > 1 ) )
 	{
 		error_log("DOY = %d\n", c->doy);
 		error_log("\nin\n");
@@ -227,7 +227,7 @@ int check_cell_carbon_flux_balance(cell_t *const c)
 
 	logger(g_debug_log, "\nCELL CARBON FLUX BALANCE\n");
 
-	if ( fabs( balance ) > eps )
+	if ( fabs( balance ) > eps && ( c->dos > 1 ) )
 	{
 		error_log("DOY = %d\n", c->doy);
 		error_log("\nin\n");
@@ -354,7 +354,7 @@ int check_cell_nitrogen_flux_balance(cell_t *const c, const meteo_daily_t *const
 
 	logger(g_debug_log, "\nCELL NITROGEN FLUX BALANCE\n");
 
-	if ( fabs( balance ) > eps )
+	if ( fabs( balance ) > eps && ( c->dos > 1 ) )
 	{
 		error_log("DOS = %d\n", c->dos);
 		error_log("\nin\n");
