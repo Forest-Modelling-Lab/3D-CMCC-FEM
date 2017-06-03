@@ -337,7 +337,8 @@ void reset_daily_class_variables(cell_t *const c)
 					s->value[LEAF_CONDUCTANCE] =          0.;
 					s->value[LEAF_SUN_CONDUCTANCE] =      0.;
 					s->value[LEAF_SHADE_CONDUCTANCE] =    0.;
-					s->value[CANOPY_INT] =                0.;
+					s->value[CANOPY_INT_RAIN] =           0.;
+					s->value[CANOPY_INT_SNOW] =           0.;
 					s->value[CANOPY_EVAPO] =              0.;
 					s->value[CANOPY_TRANSP] =             0.;
 					s->value[CANOPY_TRANSP_SUN] =         0.;

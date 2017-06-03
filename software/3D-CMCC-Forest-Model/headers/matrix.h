@@ -249,7 +249,7 @@ enum {
 	LEAF_SHADE_CONDUCTANCE,             /* (m/sec) leaf conductance for shade leaves */
 	CANOPY_BLCOND,                      /* (m/sec) Canopy Boundary Layer conductance */
 	FRAC_DAYTIME_TRANSP,                /* (DIM) fraction of daytime for transpiration (and photosynthesis) */
-	CANOPY_INT,                         /* (mm/day) canopy interception of rainfall */
+	CANOPY_INT_RAIN,                    /* (mm/day) canopy interception of rainfall */
 	CANOPY_INT_SNOW,                    /* (mm/day) canopy interception of snow */
 	CANOPY_EVAPO,                       /* (mm/day) canopy evaporation */
 	CANOPY_TRANSP,                      /* (mm/day) canopy transpiration */

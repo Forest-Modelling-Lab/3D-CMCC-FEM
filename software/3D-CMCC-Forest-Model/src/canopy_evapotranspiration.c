@@ -160,6 +160,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 		LAI.  This formula is derived from stomatal and cuticular conductances
 		in parallel with each other, and both in series with leaf boundary
 		layer conductance. */
+
 	s->value[LEAF_CONDUCTANCE]       = (gl_bl * (s->value[STOMATAL_CONDUCTANCE]       + gl_c)) / (gl_bl + s->value[STOMATAL_CONDUCTANCE]       + gl_c);
 	s->value[LEAF_SUN_CONDUCTANCE]   = (gl_bl * (s->value[STOMATAL_SUN_CONDUCTANCE]   + gl_c)) / (gl_bl + s->value[STOMATAL_SUN_CONDUCTANCE]   + gl_c);
 	s->value[LEAF_SHADE_CONDUCTANCE] = (gl_bl * (s->value[STOMATAL_SHADE_CONDUCTANCE] + gl_c)) / (gl_bl + s->value[STOMATAL_SHADE_CONDUCTANCE] + gl_c);
@@ -416,7 +417,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 	}
 	else
 	{
-		s->value[CANOPY_INT]          = 0.;
+		s->value[CANOPY_INT_RAIN]     = 0.;
 		s->value[CANOPY_WATER]        = 0.;
 		s->value[CANOPY_TRANSP]       = 0.;
 		s->value[CANOPY_TRANSP_SHADE] = 0.;
@@ -475,7 +476,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 	c->daily_canopy_et                    += s->value[CANOPY_EVAPO_TRANSP];
 
 	/* update canopy water pool */
-	c->canopy_water_stored                += ( s->value[CANOPY_INT] - s->value[CANOPY_EVAPO] );
+	c->canopy_water_stored                += ( s->value[CANOPY_INT_RAIN] - s->value[CANOPY_EVAPO] );
 }
 
 

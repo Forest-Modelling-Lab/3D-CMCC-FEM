@@ -63,6 +63,7 @@
 
 extern logger_t* g_debug_log;
 extern soil_settings_t* g_soil_settings;
+extern settings_t* g_settings;
 
 //extern const char sz_err_out_of_memory[];
 
@@ -165,8 +166,6 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 				logger(g_debug_log,"*****************************************************************************\n"
 						"                              height = %f                              \n"
 						"*****************************************************************************\n", h->value);
-
-
 
 				/* loop on each dbh starting from highest to lower */
 				for ( dbh = 0; dbh < h->dbhs_count; ++dbh )
@@ -297,8 +296,12 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 
 							if ( c->doy == ( IS_LEAP_YEAR ( c->years[year].year ) ? 366 : 365) )
 							{
-								/* Mortality based on tree Age (LPJ) */
-								age_mortality ( c, height, dbh, age, species);
+								/* ISIMIP: exclude age mortality function when management is "var" and year < year start management */
+								if ( c->years[year].year > g_settings->year_start_management && g_settings->management != MANAGEMENT_VAR)
+								{
+									/* Mortality based on tree Age (LPJ) */
+									age_mortality ( c, height, dbh, age, species);
+								}
 							}
 
 							/* allocate daily carbon */
@@ -312,14 +315,6 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							/* note: when it happens the overall class is removed */
 							if ( ! growth_efficiency_mortality ( c, height, dbh, age, species ) )
 							{
-//								if ( c->doy == ( IS_LEAP_YEAR ( c->years[year].year ) ? 366 : 365) )
-//								{
-//									/* Mortality based on tree Age (LPJ) */
-//									age_mortality ( c, height, dbh, age, species);
-//								}
-//
-//								/* allocate daily carbon */
-//								carbon_balance          ( c, height, dbh, age, species );
 
 								/* turnover */
 								turnover ( c, a, s, day, month, year );

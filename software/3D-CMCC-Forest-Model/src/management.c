@@ -134,6 +134,12 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 							CHECK_CONDITION (g_settings->replanted[rsi].height, <, 1.3);
 							CHECK_CONDITION (g_settings->replanted[rsi].avdbh,  <, ZERO);
 							CHECK_CONDITION (g_settings->replanted[rsi].age,    <, ZERO);
+							/*
+							CHECK_CONDITION (g_settings->replanted[rsi].n_tree, <, NO_DATA);
+							CHECK_CONDITION (g_settings->replanted[rsi].height, <, NO_DATA);
+							CHECK_CONDITION (g_settings->replanted[rsi].avdbh,  <, NO_DATA);
+							CHECK_CONDITION (g_settings->replanted[rsi].age,    <, NO_DATA);
+							*/
 
 							/* re-planting tree class */
 							if( g_settings->replanted[rsi].n_tree )
@@ -186,19 +192,19 @@ void thinning (cell_t *const c, const int height, const int dbh, const int age, 
 	logger(g_debug_log, "** Management options: Thinning ** \n");
 
 	logger(g_debug_log, "basal area before thinning = %f m2/class cell\n", s->value[STAND_BASAL_AREA_m2]);
-	logger(g_debug_log, "trees before thinning = %d trees/cell\n", s->counter[N_TREE]);
+	logger(g_debug_log, "trees before thinning      = %d trees/cell\n", s->counter[N_TREE]);
 
 	/* compute basal area to remain */
-	stand_basal_area_to_remain = (1.0 - (s->value[THINNING_INTENSITY] / 100. ) ) * s->value[STAND_BASAL_AREA_m2];
-	logger(g_debug_log, "basal area to remain = %f m2/class\n", stand_basal_area_to_remain);
+	stand_basal_area_to_remain = ( 1. - (s->value[THINNING_INTENSITY] / 100. ) ) * s->value[STAND_BASAL_AREA_m2];
+	logger(g_debug_log, "basal area to remain       = %f m2/class\n", stand_basal_area_to_remain);
 
 	/* compute basal area to remove */
 	stand_basal_area_to_remove = (s->value[THINNING_INTENSITY] / 100. ) * s->value[STAND_BASAL_AREA_m2];
-	logger(g_debug_log, "basal area to remove = %f\n", stand_basal_area_to_remove);
+	logger(g_debug_log, "basal area to remove       = %f\n", stand_basal_area_to_remove);
 
 	/* compute integer number of trees to remove */
 	trees_to_remove = ROUND((s->value[THINNING_INTENSITY] / 100. ) * s->counter[N_TREE]);
-	logger(g_debug_log, "trees_to_remove = %d\n", trees_to_remove);
+	logger(g_debug_log, "trees_to_remove            = %d\n", trees_to_remove);
 
 	if ( trees_to_remove < s->counter[N_TREE] )
 	{
@@ -232,7 +238,7 @@ void thinning (cell_t *const c, const int height, const int dbh, const int age, 
 	logger(g_debug_log, "Total Biomass = %f tC/ha\n", s->value[TOTAL_C]);
 
 	/* update stand trees */
-	c->n_trees -= trees_to_remove;
+	c->n_trees          -= trees_to_remove;
 	c->annual_dead_tree += trees_to_remove;
 
 }

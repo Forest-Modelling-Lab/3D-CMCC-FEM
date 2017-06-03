@@ -382,13 +382,22 @@ static int log_start(const char* const sitename)
 	len += sprintf(buffer+len, "_%s", get_filename(g_sz_co2_conc_file));
 
 	/* management */
-	if ( g_settings->management )
-	{
+	switch ( g_settings->management ) {
+	case MANAGEMENT_ON:
 		p = "ON";
-	}
-	else
-	{
+		break;
+
+	case MANAGEMENT_OFF:
 		p = "OFF";
+		break;
+
+	case MANAGEMENT_VAR:
+		p = "VAR";
+		break;
+
+	default:
+		puts("bad management value in settings file!\n");
+		return 0;
 	}
 	len += sprintf(buffer+len, "_Man_%s", p);
 

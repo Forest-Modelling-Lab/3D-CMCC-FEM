@@ -638,7 +638,9 @@ settings_t* settings_import(const char *const filename) {
 
 			case SETTINGS_MANAGEMENT:
 				if ( ! string_compare_i(token, "on") ) {
-					s->management = 1;
+					s->management = MANAGEMENT_ON;
+				} else if ( ! string_compare_i(token, "var") ) {
+					s->management = MANAGEMENT_VAR;
 				}
 			break;
 

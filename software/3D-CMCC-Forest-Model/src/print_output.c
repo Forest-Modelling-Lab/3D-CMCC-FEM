@@ -83,7 +83,7 @@ void print_model_settings(logger_t*const log)
 	}
 	logger(log, "#Resp accl = %s\n", g_settings->Resp_accl ? "on" : "off");
 	logger(log, "#regeneration = %s\n", g_settings->regeneration ? "on" : "off");
-	logger(log, "#Management = %s\n", g_settings->management ? "on" : "off");
+	logger(log, "#Management = %s\n", (MANAGEMENT_VAR == g_settings->management) ? "var" : (MANAGEMENT_ON == g_settings->management) ? "on" : "off");
 	if ( g_settings->management )
 	{
 		logger(log, "#Year Start Management = %d\n", g_settings->year_start_management);
@@ -309,7 +309,7 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 									s->value[APAR],
 									s->counter[N_TREE],
 									s->counter[VEG_DAYS],
-									s->value[CANOPY_INT],
+									s->value[CANOPY_INT_RAIN],
 									s->value[CANOPY_WATER],
 									s->value[CANOPY_EVAPO],
 									s->value[CANOPY_TRANSP],

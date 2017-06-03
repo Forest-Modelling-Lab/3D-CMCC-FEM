@@ -30,9 +30,9 @@ static int fill_cell_for_replanting(cell_t *const c, const int species_index)
 	dbh_t* d;
 	age_t* a;
 
-	static height_t height = { 0 };
-	static dbh_t dbh = { 0 };
-	static age_t age = { 0 };
+	static height_t height   = { 0 };
+	static dbh_t dbh         = { 0 };
+	static age_t age         = { 0 };
 	static species_t species = { 0 };
 
 	assert(c);
@@ -42,7 +42,7 @@ static int fill_cell_for_replanting(cell_t *const c, const int species_index)
 	{
 		return 0;
 	}
-	c->heights[c->heights_count-1] = height;
+	c->heights[c->heights_count-1]       = height;
 	c->heights[c->heights_count-1].value = g_settings->replanted[species_index].height;
 	h = &c->heights[c->heights_count-1];
 
@@ -51,7 +51,7 @@ static int fill_cell_for_replanting(cell_t *const c, const int species_index)
 	{
 		return 0;
 	}
-	h->dbhs[h->dbhs_count-1] = dbh;
+	h->dbhs[h->dbhs_count-1]       = dbh;
 	h->dbhs[h->dbhs_count-1].value = g_settings->replanted[species_index].avdbh;
 	d = &h->dbhs[h->dbhs_count-1];
 
@@ -60,7 +60,7 @@ static int fill_cell_for_replanting(cell_t *const c, const int species_index)
 	{
 		return 0;
 	}
-	d->ages[d->ages_count-1] = age;
+	d->ages[d->ages_count-1]       = age;
 	d->ages[d->ages_count-1].value = (int)g_settings->replanted[species_index].age;
 	a = &d->ages[d->ages_count-1];
 
@@ -73,12 +73,12 @@ static int fill_cell_for_replanting(cell_t *const c, const int species_index)
 	p = string_copy(g_settings->replanted[species_index].species);
 	if ( ! p ) return 0;
 
-	a->species[a->species_count-1] = species;
-	a->species[a->species_count-1].management = T;
-	a->species[a->species_count-1].name = p;
-	a->species[a->species_count-1].counter[N_TREE] = (int)g_settings->replanted[species_index].n_tree;
+	a->species[a->species_count-1]                  = species;
+	a->species[a->species_count-1].management       = T;
+	a->species[a->species_count-1].name             = p;
+	a->species[a->species_count-1].counter[N_TREE]  = (int)g_settings->replanted[species_index].n_tree;
 	a->species[a->species_count-1].counter[N_STUMP] = 0;
-	a->species[a->species_count-1].value[LAI_PROJ] = g_settings->replanted[species_index].lai;
+	a->species[a->species_count-1].value[LAI_PROJ]  = g_settings->replanted[species_index].lai;
 
 	return 1;
 }
@@ -121,22 +121,22 @@ int add_tree_class_for_replanting (cell_t *const c, const int day, const int mon
 		}
 	}
 
-	/* initialize power function */
+	/* initialize new power function */
 	allometry_power_function ( c );
 
-	/* initialize carbon pool fraction */
+	/* initialize new carbon pool fraction */
 	carbon_pool_fraction ( c );
 
-	/* initialize forest structure */
+	/* initialize new forest structure */
 	initialization_forest_structure (c , day, month, year);
 
 	/* initialize new forest class pools */
 	initialization_forest_class_C ( c, c->heights_count-1, 0, 0, 0 );
 
-	/* initialize nitrogen pools */
+	/* initialize new nitrogen pools */
 	initialization_forest_class_N ( c, c->heights_count-1, 0, 0, 0 );
 
-	/* initialize litter pools */
+	/* initialize new litter pools */
 	initialization_forest_class_litter_soil ( c, c->heights_count-1, 0, 0, 0 );
 
 	/* print new forest class dataset */

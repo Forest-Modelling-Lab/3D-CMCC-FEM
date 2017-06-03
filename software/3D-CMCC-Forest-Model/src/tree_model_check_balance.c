@@ -501,7 +501,7 @@ int check_tree_class_water_flux_balance ( cell_t *const c, const int layer, cons
 	/* DAILY CHECK ON CLASS LEVEL CANOPY POOL-ATMOSPHERE WATER BALANCE */
 
 	/* sum of sources */
-	s->value[TREEW_IN]      = s->value[CANOPY_INT];
+	s->value[TREEW_IN]      = s->value[CANOPY_INT_RAIN];
 
 	/* sum of sinks */
 	s->value[TREEW_OUT]     = s->value[CANOPY_EVAPO];
