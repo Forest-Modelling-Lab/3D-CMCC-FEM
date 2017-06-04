@@ -172,7 +172,6 @@ int add_tree_class_for_replanting (cell_t *const c, const int height, const int 
 		}
 	}
 
-
 	/* reset years of simulation for new class */
 	c->heights[height].dbhs[dbh].ages[age].species[species].counter[DOS] = 0;
 	c->heights[height].dbhs[dbh].ages[age].species[species].counter[MOS] = 0;
