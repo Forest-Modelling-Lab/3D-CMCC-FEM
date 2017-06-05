@@ -17,8 +17,8 @@ YEAR_START_CO2_FIXED 2005           //When Co2_trans = var, year at which fix [C
 Ndep_fixed on                       //Must be 'on' or 'off'
 Resp_accl on                        //Q10 temperature acclimatation Must be 'on' or 'off'
 regeneration off                    //Must be 'on' or 'off'
-management on                       //Must be 'on' or 'off'
-YEAR_START_MANAGEMENT 2000          //First year of management
+management var                      //Must be 'on' or 'off'
+YEAR_START_MANAGEMENT 2030          //First year of management
 Progn_Aut_Resp on                   //Prognostic autotrophic respiration, Must be 'on' or 'off', if off Y values are used
 SIZECELL 100                        //Its value must be within 10 and 100 (unity measure is meter: 10 = 10x10 = 100m^2) 
 Y 0.48                              //Fixed_Aut_Resp_rate Assimilate use efficiency-Respiration rate-GPP/NPP
