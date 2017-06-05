@@ -729,13 +729,13 @@ for (( e = 0 ; e < $exp_counter ; ++e )) ; do
 	#LOCAL_runs
 	
 	#2 simulation for 'FAST TRACK' experimet
-	#FT_runs
+	FT_runs
 	
 	#3  simulation for '2A' experiment
 	#2A_runs
 	
 	#3  simulation for '2B' experiment
-	2B_runs
+	#2B_runs
 	
 	#4  simulation for '2BLBC' experiment
 	#2BLBC_runs

@@ -236,6 +236,13 @@ void tree_biomass_remove (cell_t *const c, const int height, const int dbh, cons
 	logger(g_debug_log, "C_CROOT_HEARTWOOD_TO_CWD  = %f tC/cell\n", s->value[C_CROOT_HEARTWOOD_TO_CWD]);
 	logger(g_debug_log, "C_BRANCH_HEARTWOOD_TO_CWD = %f tC/cell\n", s->value[C_TO_CWD]);
 
+	/******************************************************************************************/
+
+	/* note: special case for turnover when mortality and thinning management happen */
+	/* removing biomass to NOT consider in turnover of the subsequent year */
+	s->value[YEARLY_C_TO_STEM]   -= ((s->value[YEARLY_C_TO_STEM]   / s->counter[N_TREE]) * tree_remove);
+	s->value[YEARLY_C_TO_CROOT]  -= ((s->value[YEARLY_C_TO_CROOT]  / s->counter[N_TREE]) * tree_remove);
+	s->value[YEARLY_C_TO_BRANCH] -= ((s->value[YEARLY_C_TO_BRANCH] / s->counter[N_TREE]) * tree_remove);
 
 	/******************************************************************************************/
 

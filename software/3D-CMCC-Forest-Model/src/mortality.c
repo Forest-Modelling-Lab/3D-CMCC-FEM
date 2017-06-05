@@ -153,12 +153,6 @@ void self_thinning_mortality (cell_t *const c, const int layer, const int year)
 					/* remove dead C and N biomass */
 					tree_biomass_remove ( c, height, dbh, age, species, deadtree );
 
-					/* note: special case for turnover and mortality */
-					/* removing biomass to NOT consider in turnover of the subsequent year */
-					s->value[YEARLY_C_TO_STEM]   -= ((s->value[YEARLY_C_TO_STEM]   / s->counter[N_TREE]) * deadtree);
-					s->value[YEARLY_C_TO_CROOT]  -= ((s->value[YEARLY_C_TO_CROOT]  / s->counter[N_TREE]) * deadtree);
-					s->value[YEARLY_C_TO_BRANCH] -= ((s->value[YEARLY_C_TO_BRANCH] / s->counter[N_TREE]) * deadtree);
-
 					/* update live and dead tree (do not move above) */
 					s->counter[DEAD_TREE] = deadtree;
 					s->counter[N_TREE]    = livetree;
@@ -352,12 +346,6 @@ void age_mortality (cell_t *const c, const int height, const int dbh, const int 
 				exit(1);
 			}
 		}
-
-		/* note: special case for turnover and mortality */
-		/* removing biomass to NOT consider in turnover of the subsequent year */
-		s->value[YEARLY_C_TO_STEM]   -= ((s->value[YEARLY_C_TO_STEM]   / s->counter[N_TREE]) * deadtree);
-		s->value[YEARLY_C_TO_CROOT]  -= ((s->value[YEARLY_C_TO_CROOT]  / s->counter[N_TREE]) * deadtree);
-		s->value[YEARLY_C_TO_BRANCH] -= ((s->value[YEARLY_C_TO_BRANCH] / s->counter[N_TREE]) * deadtree);
 
 		/* update at class level */
 		s->counter[DEAD_TREE] += deadtree;

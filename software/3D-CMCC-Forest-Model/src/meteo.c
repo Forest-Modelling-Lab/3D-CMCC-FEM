@@ -18,7 +18,7 @@
 #define TA_RANGE_MIN       -50
 #define TA_RANGE_MAX        50
 #define TMAX_RANGE_MIN     -50
-#define TMAX_RANGE_MAX      50
+#define TMAX_RANGE_MAX      55
 #define TMIN_RANGE_MIN     -50
 #define TMIN_RANGE_MAX      50
 #define VPD_RANGE_MIN        0

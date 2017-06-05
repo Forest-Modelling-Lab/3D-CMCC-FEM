@@ -41,7 +41,7 @@ CONES_LIFE_SPAN 0              //Life span for cones (yr)
 FINE_ROOT_LEAF  0.545          //allocation new fine root C:new leaf (ratio) 1.4 see Mollicone et al 2002, 0.545 see Pietsch et al 2005, 1.1 Tatarinov
 STEM_LEAF  3.8                 //allocation new stem C:new leaf (ratio) 3.8 pietsch - 1 see Mollicone et al 2002, 2.71 Tatarinov
 COARSE_ROOT_STEM  0.115        //allocation new coarse root C:new stem (ratio) 0.36 see Mollicone et al 2002 0.15 Tatarinov
-LIVE_TOTAL_WOOD 0.15           //new live C:new total wood (ratio) 0.15 for deciduous P. Thornton pers. comm. (about 13%), 0.154 from Pietsch et al., 2015 20% Proportion of living cells in trunks for F. sylvatica from Dufrene et al., 2005, 20.6% Ceschia etal 2002
+LIVE_TOTAL_WOOD 0.13 //0.15    //new live C:new total wood (ratio) 0.15 for deciduous P. Thornton pers. comm. (about 13%), 0.154 from Pietsch et al., 2015 20% Proportion of living cells in trunks for F. sylvatica from Dufrene et al., 2005, 20.6% Ceschia etal 2002
 CN_LEAVES   27                 //CN of leaves (kgC/kgN) 27 for Tatarinov et al., 2006 20.3 for F. sylvatica from Mollicone et al., 2002, 19.52 ettore, 18.6 Campioli, 19.67 Guidolotti
 CN_FALLING_LEAVES   44         //CN of leaf litter (kgC/kgN) 38 for F. sylvatica from Mollicone et al., 2002, 
 CN_FINE_ROOTS   72             //CN of fine roots (kgC/kgN) 72 for Tatarinov et al., 2006 112 for F. sylvatica from Mollicone et al., 2002, 38.28 ettore, 9., 45 Campioli
@@ -61,8 +61,8 @@ LEAF_FINEROOT_TURNOVER  1      //Average yearly fine root turnover rate Rasse et
 LIVE_WOOD_TURNOVER  0.7        //Annual yearly live wood turnover rate 
 DBHDCMAX    0.50               //Low Density Condes & Sterba 2005
 DBHDCMIN    0.14               //High Density from ettore
-SAP_A  0.674                   //a value 0.674 from Kostner, 0.778 Gebauer et al., 2008, for Fagus sylvatica
-SAP_B  1.992                   //b value 1.992 from Kostner, 1.917 Gebauer et al., 2008,for Fagus sylvatica
+SAP_A  0.778 //0.674                   //a value 0.674 from Kostner, 0.778 Gebauer et al., 2008, for Fagus sylvatica
+SAP_B  1.917 //1.992                   //b value 1.992 from Kostner, 1.917 Gebauer et al., 2008,for Fagus sylvatica
 SAP_LEAF      5400 //  3410           //leaf area/sapwood max ratio in pipe model 5400 McDowell et al 2002, 1850 from Williams 1996, 3310. 3410 Bartelink 1997, 1998 , 2100 from Kostner, 3310 from ettore
 SAP_WRES    0.11               //Sapwood-Reserve biomass ratio gTNC/100gDM 0.043 in January for fagus see Barbaroux 2002 0.11 for deciduous 0.05 for evergreen see Schwalm and Ek, 2004 Ecological Modelling
 STEMCONST_P 0.2837             //a parameter for F. sylvatica for allometric equation from ettore, 0.70 Seidl et al., 2012
