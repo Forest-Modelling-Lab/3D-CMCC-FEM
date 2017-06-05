@@ -42,7 +42,7 @@ void dbhdc_function (cell_t *const c, const int layer, const int height, const i
 	d = &c->heights[height].dbhs[dbh];
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
-	logger(g_debug_log,"\n*DBHDC FUNCTION for %s for %d*\n", s->name, year);
+	logger(g_debug_log,"\n*DBHDC FUNCTION for %s*\n", s->name);
 
 	/************************************************************************************************************************/
 	/* note: 04 Oct 2016 */
@@ -88,7 +88,7 @@ void dbhdc_function (cell_t *const c, const int layer, const int height, const i
 
 	/************************************************************************************************************************/
 
-	/* check if current dbhdc_eff decreases too much (case when there's reduction in layers) */
+	/* check if current dbhdc_eff decreases too much (case when there's a reduction in layers number) */
 	/* this is checked to avoid unrealistic crown area decrement */
 
 	//note: max_dbhdc_decr corresponds to an arbitrary increment of n value

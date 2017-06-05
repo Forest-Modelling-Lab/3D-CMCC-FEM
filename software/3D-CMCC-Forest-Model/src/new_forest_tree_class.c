@@ -183,8 +183,14 @@ int add_tree_class_for_replanting (cell_t *const c, const int height, const int 
 	/* initialize new carbon pool fraction */
 	carbon_pool_fraction ( c );
 
+	//ALESSIOC TO ALESSIOR
+	printf("test height %d dbh %d age %d species %d for species %s\n",height, dbh, age, species, c->heights[height].dbhs[dbh].ages[age].species[species].name );
+
 	/* initialize new forest structure */
 	initialization_forest_structure (c , day, month, year);
+
+	//ALESSIOC TO ALESSIOR
+	printf("test height %d dbh %d age %d species %d for species %s\n",height, dbh, age, species, c->heights[height].dbhs[dbh].ages[age].species[species].name );
 
 	/* initialize new forest class pools */
 	initialization_forest_class_C ( c, height, dbh, age, species );

@@ -7,7 +7,7 @@ library(ggplot2)
 library(cowplot)
 
 model<-"3D-CMCC-FEM"
-version="5.3.3-ISIMIP"
+version="5.3.3-ISIMIP-a"
 
 print("*******************************************************")
 print(paste0("* ", model, " version: ", version, " R script *"))
@@ -31,12 +31,12 @@ output_folder="output_Rstudio"
 
 # multiple simulations
 build_list<-c('Release')#, 'Release')
-site_list<-c("Collelongo")#,"Soroe","Hyytiala","All")
-esm_list <-c("All")# ("1","2","3","4","5", "All")
-rcp_list <-c("All")# ("0p0","2p6","4p5","6p0","8p5","All")
-man_list <-c("All")# ("on",'off', "All")
-co2_list <-c("All")# , "on",off", "All")
-protocol_list<-c("FT")# ("2A","2B", "All") 
+site_list<-c("Hyytiala")#,"Soroe","Hyytiala","All")
+esm_list <-c("2")# ("1","2","3","4","5", "All")
+rcp_list <-c("2p6")# ("0p0","2p6","4p5","6p0","8p5","All")
+man_list <-c("off")# ("on",'off', "All")
+co2_list <-c("on")# , "on",off", "All")
+protocol_list<-c("2B")# ("2A","2B", "All") 
 
 if ( grepl('All', site_list) ) {
     site_list = c("Soroe","Hyytiala, Collelongo")

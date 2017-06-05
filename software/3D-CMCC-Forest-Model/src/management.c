@@ -196,7 +196,7 @@ void thinning (cell_t *const c, const int height, const int dbh, const int age, 
 
 	}
 
-	logger(g_debug_log, "** Management options: Thinning ** \n");
+	logger(g_debug_log, "** Management options: Thinning for %s ** \n", s->name);
 
 	logger(g_debug_log, "basal area before thinning = %f m2/class cell\n", s->value[STAND_BASAL_AREA_m2]);
 	logger(g_debug_log, "trees before thinning      = %d trees/cell\n", s->counter[N_TREE]);
@@ -261,7 +261,7 @@ void harvesting (cell_t *const c, const int height, const int dbh, const int age
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 	/* at the moment it considers a complete harvesting for all classes (if considered) */
-	logger(g_debug_log, "\n** Management options: Harvesting**\n");
+	logger(g_debug_log, "\n**Management options: Harvesting for %s**\n", s->name);
 
 	/* update C and N biomass */
 	tree_biomass_remove ( c, height, dbh, age, species, s->counter[N_TREE] );

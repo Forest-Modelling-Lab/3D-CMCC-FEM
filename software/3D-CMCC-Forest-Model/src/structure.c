@@ -239,7 +239,7 @@ int annual_forest_structure(cell_t* const c, const int year)
 					for ( age = 0; age < c->heights[height].dbhs[dbh].ages_count ; ++age )
 					{
 						for ( species = 0; species < c->heights[height].dbhs[dbh].ages[age].species_count; ++species )
-						{
+						{	printf("test height %d dbh %d age %d species %d for species %s\n",height, dbh, age, species, c->heights[height].dbhs[dbh].ages[age].species[species].name );
 							dbhdc_function (c, layer, height, dbh, age, species, year);
 						}
 					}
@@ -403,7 +403,6 @@ int annual_forest_structure(cell_t* const c, const int year)
 				for ( species = 0; species < c->heights[height].dbhs[dbh].ages[age].species_count; ++species )
 				{
 					s = &c->heights[height].dbhs[dbh].ages[age].species[species];
-
 					c->n_trees += s->counter[N_TREE];
 				}
 			}
