@@ -64,6 +64,7 @@ const char* log_types[LOG_TYPES_COUNT] = { "debug" , "daily" , "monthly" , "annu
 soil_settings_t* g_soil_settings = NULL;
 topo_t* g_topo = NULL;
 settings_t* g_settings = NULL;
+dataset_t* g_dataset = NULL;
 
 /* DO NOT REMOVE INITIALIZATION TO NULL, IT IS REQUIRED !! */
 char	*g_sz_parameterization_path = NULL
@@ -241,6 +242,7 @@ static void clean_up(void)
 	if ( g_sz_topo_file ) free(g_sz_topo_file);
 	//if ( g_soil_settings ) free(g_soil_settings);
 	if ( g_sz_soil_file ) free(g_sz_soil_file);
+	if ( g_dataset) dataset_free(g_dataset);
 	if ( g_settings ) settings_free(g_settings);
 	if ( g_sz_input_met_file ) free(g_sz_input_met_file);
 	if ( g_sz_dataset_file ) free(g_sz_dataset_file);
@@ -1123,7 +1125,7 @@ int main(int argc, char *argv[]) {
 		printf(" using %s...", g_sz_dataset_file);
 	else
 		printf("...");
-	matrix = matrix_create(s, soil_settings_count, g_sz_dataset_file);
+	matrix = matrix_create(s, soil_settings_count, g_sz_dataset_file, &g_dataset);
 	if ( ! matrix ) goto err;
 	puts(msg_ok);
 

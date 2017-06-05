@@ -18,6 +18,9 @@
 
 extern settings_t* g_settings;
 extern logger_t* g_debug_log;
+extern dataset_t* g_dataset;
+
+int harvesting (cell_t *const c, const int height, const int dbh, const int age, const int species, const int rsi);
 
 int forest_management (cell_t *const c, const int day, const int month, const int year)
 {
@@ -58,7 +61,7 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 			for ( age = d->ages_count - 1 ; age >= 0 ; --age )
 			{
 				/* assign shortcut */
-				a = &h->dbhs[dbh].ages[age];
+				a = &d->ages[age];
 
 				/* loop on each species class */
 				for ( species = 0; species < a->species_count; ++species )
@@ -79,14 +82,15 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 
 						/***** THINNING *****/
 						/* ISIMIP case: management forced by stand data */
-						if ( g_settings->management == MANAGEMENT_VAR )
+						if ( year && (MANAGEMENT_VAR == g_settings->management)  )
 						{
-							prescribed_thinning ( c, height, dbh, age, species, year );
+							prescribed_thinning ( c, height, dbh, age, species, c->years[year].year );
 						}
 
-						//FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME
-						//note : +1 since it works at the 1st of January of the subsequent year
-						if ( ( c->years[year].year == g_settings->year_start_management + 1 ) || ( s->value[THINNING] == s->counter[YEARS_THINNING] + 1 ) )
+						if ( ( c->years[year].year == g_settings->year_start_management) ||
+							
+							(( c->years[year].year >= g_settings->year_start_management )
+							&& ( s->value[THINNING] == s->counter[YEARS_THINNING] )) )
 						{
 							logger(g_debug_log,"**FOREST MANAGEMENT**\n");
 							logger(g_debug_log,"**THINNING**\n");
@@ -105,9 +109,7 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 
 						/***** HARVESTING *****/
 						/* if class age matches with harvesting */
-						/* note : +1 since it works at the 1st of January of the subsequent year */
-
-						if ( ( a->value + 1 ) == s->value[ROTATION] )
+						if (  a->value  == s->value[ROTATION] )
 						{
 							int rsi;               /* replanted species index */
 
@@ -127,13 +129,14 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 							assert( rsi != g_settings->replanted_count );
 							
 							/* remove tree class */
-							harvesting ( c, height, dbh, age, species );
+							if (  ! harvesting ( c, height, dbh, age, species, rsi ) )
+							{
+								logger_error(g_debug_log, "unable to harvesting! (exit)\n");
+								exit(1);
+							}
 
 							/* note: RESET c->dos */
-							c->dos = 0;
-
-							/* reset years_for_thinning */
-							s->counter[YEARS_THINNING] = 0;
+							c->dos = 0;						
 
 							/* check that all mandatory variables are filled */
 							CHECK_CONDITION (g_settings->replanted[rsi].n_tree, <, ZERO);
@@ -155,6 +158,15 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 									logger_error(g_debug_log, "unable to add new replanted class! (exit)\n");
 									exit(1);
 								}
+
+								// indexes
+								h = &c->heights[height];
+								d = &h->dbhs[dbh];
+								a = &d->ages[age];
+								s = &a->species[species];
+
+								/* reset years_for_thinning */
+								s->counter[YEARS_THINNING] = 1;
 							}
 							c->management = 1;
 						}
@@ -252,12 +264,33 @@ void thinning (cell_t *const c, const int height, const int dbh, const int age, 
 
 void prescribed_thinning (cell_t *const c, const int height, const int dbh, const int age, const int species, const int year)
 {
+	int row;
 
+	assert(g_dataset);
+
+	for ( row = 0; row < g_dataset->rows_count; ++row )
+	{
+		if ( year == g_dataset->rows[row].year_stand )
+		{
+			if ( ! string_compare_i(g_dataset->rows[row].species, c->heights[height].dbhs[dbh].ages[age].species[species].name) )
+			{
+				if ( g_dataset->rows[row].n != c->heights[height].dbhs[dbh].ages[age].species[species].counter[N_TREE] )
+				{
+					CHECK_CONDITION(c->heights[height].dbhs[dbh].ages[age].species[species].counter[N_TREE], <, g_dataset->rows[row].n);
+
+					tree_biomass_remove(c, height, dbh, age, species
+						, c->heights[height].dbhs[dbh].ages[age].species[species].counter[N_TREE] - g_dataset->rows[row].n
+					); 
+					c->heights[height].dbhs[dbh].ages[age].species[species].counter[N_TREE] = g_dataset->rows[row].n;
+				}
+			}
+		}
+	}
 }
 
 /*****************************************************************************************************************************************/
 
-void harvesting (cell_t *const c, const int height, const int dbh, const int age, const int species)
+static int harvesting (cell_t *const c, const int height, const int dbh, const int age, const int species, const int rsi)
 {
 	species_t *s;
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
@@ -269,7 +302,7 @@ void harvesting (cell_t *const c, const int height, const int dbh, const int age
 	tree_biomass_remove ( c, height, dbh, age, species, s->counter[N_TREE] );
 
 	/* remove completely all trees */
-	tree_class_remove (c, height, dbh, age, species );
+	return tree_class_remove (c, height, dbh, age, species );
 }
 
 

@@ -698,6 +698,31 @@ enum {
 };
 
 typedef struct {
+	int year_stand;
+	int x;
+	int y;
+	int age;
+	char *species;
+	e_management management;
+	int n;
+	int stool;
+	double avdbh;
+	double height;
+	double wf;
+	double wrc;
+	double wrf;
+	double ws;
+	double wbb;
+	double wres;
+	double lai;
+} row_t;
+
+typedef struct {
+	row_t* rows;
+	int rows_count;
+} dataset_t;
+
+typedef struct {
 	e_management management;
 
 	char *name;                         /** species name **/
@@ -1300,8 +1325,9 @@ typedef struct {
 	int y_cells_count;
 } matrix_t;
 
-matrix_t* matrix_create(const soil_settings_t*const s, const int count, const char* const filename);
+matrix_t* matrix_create(const soil_settings_t*const s, const int count, const char* const filename, dataset_t** dataset);
 void matrix_free(matrix_t *m);
+void dataset_free(dataset_t *p);
 void simulation_summary(const matrix_t* const m);
 void site_summary(const matrix_t* const m);
 void topo_summary(const matrix_t* const m);

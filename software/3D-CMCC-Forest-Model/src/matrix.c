@@ -51,31 +51,6 @@ enum {
 	, COLUMNS_COUNT
 };
 
-typedef struct {
-	int year_stand;
-	int x;
-	int y;
-	int age;
-	char *species;
-	e_management management;
-	int n;
-	int stool;
-	double avdbh;
-	double height;
-	double wf;
-	double wrc;
-	double wrf;
-	double ws;
-	double wbb;
-	double wres;
-	double lai;
-} row_t;
-
-typedef struct {
-	row_t* rows;
-	int rows_count;
-} dataset_t;
-
 static const char* sz_vars[COLUMNS_TO_IMPORT] = {
 		"YEAR"
 		, "X"
@@ -134,7 +109,7 @@ static char* species_get(const char* const filename, const int id) {
 	return p;
 }
 
-static void dataset_free(dataset_t *p) {
+void dataset_free(dataset_t *p) {
 	if ( p ) {
 		if ( p->rows_count ) {
 			int i;
@@ -865,7 +840,7 @@ static dataset_t* dataset_import_txt(const char* const filename) {
 		}
 
 		/* check for year */
-		if ( row.year_stand == g_settings->year_start ) {
+		//if ( row.year_stand == g_settings->year_start ) {
 			/* alloc memory */
 			rows_no_leak = realloc(dataset->rows, (dataset->rows_count+1)*sizeof*rows_no_leak);
 			if ( ! rows_no_leak ) {
@@ -880,10 +855,10 @@ static dataset_t* dataset_import_txt(const char* const filename) {
 			/* assign pointer */
 			dataset->rows = rows_no_leak;
 			dataset->rows[dataset->rows_count++] = row;
-		} else {
-			free(row.species);
-			row.species = NULL;
-		}
+		//} else {
+			//free(row.species);
+			//row.species = NULL;
+		//}
 	}
 	free(columns);
 	fclose(f);
@@ -1336,7 +1311,7 @@ static int compute_x_y_cells_count(matrix_t* const m) {
 	return ret;
 }
 
-matrix_t* matrix_create(const soil_settings_t*const s, const int count, const char* const filename) {
+matrix_t* matrix_create(const soil_settings_t*const s, const int count, const char* const filename, dataset_t** dataset) {
 	int i;
 	int row;
 	int cell;
@@ -1448,66 +1423,33 @@ matrix_t* matrix_create(const soil_settings_t*const s, const int count, const ch
 		int flag;
 
 		for ( row = 0; row < d->rows_count; ++row ) {
-			/* check against x and y */
-			flag = 0;
-			for ( i = 0; i < m->cells_count; ++i ) {
-				if ( (d->rows[row].x == m->cells[i].x)
-						&& (d->rows[row].y == m->cells[i].y) ) {
+			if ( d->rows[row].year_stand == g_settings->year_start )
+			{
+				/* check against x and y */
+				flag = 0;
+				for ( i = 0; i < m->cells_count; ++i ) {
+					if ( (d->rows[row].x == m->cells[i].x)
+							&& (d->rows[row].y == m->cells[i].y) ) {
 
-					if ( ! fill_cell_from_heights(&m->cells[i], &d->rows[row]) ) {
-						matrix_free(m);
-						return NULL;
+						if ( ! fill_cell_from_heights(&m->cells[i], &d->rows[row]) ) {
+							matrix_free(m);
+							return NULL;
+						}
+						flag = 1;
+						break;
 					}
-					flag = 1;
-					break;
+				}
+				if ( ! flag ) {
+					printf("stand values for cell at %d,%d skipped. (not found in soil settings).\n"
+							, d->rows[row].x
+							, d->rows[row].y
+					);
 				}
 			}
-			if ( ! flag ) {
-				printf("stand values for cell at %d,%d skipped. (not found in soil settings).\n"
-						, d->rows[row].x
-						, d->rows[row].y
-				);
-			}
-
-			/*
-			if ( ! fill_cell(m, &d->rows[row]) )
-			{
-				dataset_free(d);
-				matrix_free(m);
-				return NULL;
-			}
-			 */
 		}
-		dataset_free(d);
-		d = NULL;
+		*dataset = d;
 	}
-	//} else {
-	//	static cell_t cell = { 0 };
 
-	//	// add an empty cell
-	//	if ( ! alloc_struct((void**)&m->cells, &m->cells_count, &m->cells_avail, sizeof(cell_t)) )
-	//	{
-	//		return 0;
-	//	}
-	//	row = m->cells_count-1;
-	//	m->cells[row] = cell;
-	//	m->cells[row].landuse = F;
-	//	m->cells[row].x = 0;
-	//	m->cells[row].y = 0;
-
-	//	if ( ! fill_cell_from_soils(&m->cells[row]) )
-	//	{
-	//		return 0;
-	//	}
-
-	//	if ( ! fill_cell_from_heights(&m->cells[row], NULL) )
-	//	{
-	//		return 0;
-	//	}
-	//	x_cells_count = 1;
-	//	y_cells_count = 1;
-	//}
-	//
 	/* fill with species values */
 	for ( cell = 0; cell < m->cells_count; ++cell )
 	{
@@ -1536,6 +1478,7 @@ matrix_t* matrix_create(const soil_settings_t*const s, const int count, const ch
 	/* compute x and y cells count */
 	if ( ! compute_x_y_cells_count(m) )
 	{
+		dataset_free(d);
 		matrix_free(m);
 		m = NULL;
 	}

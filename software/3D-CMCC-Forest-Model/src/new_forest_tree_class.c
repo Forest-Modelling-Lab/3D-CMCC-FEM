@@ -85,6 +85,10 @@ static int fill_cell_for_replanting(cell_t *const c, const int species_index)
 
 int add_tree_class_for_replanting (cell_t *const c, const int day, const int month, const int year, const int rsi)
 {
+	int height;
+	int dbh;
+	int age;
+	int species;
 	int day_temp;
 	int month_temp;
 	int DaysInMonth [] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
@@ -96,8 +100,14 @@ int add_tree_class_for_replanting (cell_t *const c, const int day, const int mon
 
 	if ( ! fill_cell_for_replanting ( c, rsi ) ) return 0;
 
+	// get indexes
+	height = c->heights_count - 1;
+	dbh = c->heights[height].dbhs_count - 1;
+	age = c->heights[height].dbhs[dbh].ages_count - 1;
+	species = c->heights[height].dbhs[dbh].ages[age].species_count - 1;
+
 	/* fill with species values from parameterization file */
-	if ( ! fill_species_from_file ( &c->heights[c->heights_count-1].dbhs[0].ages[0].species[0]) )
+	if ( ! fill_species_from_file ( &c->heights[height].dbhs[dbh].ages[age].species[species]) )
 	{
 		return 0;
 	}
@@ -131,16 +141,16 @@ int add_tree_class_for_replanting (cell_t *const c, const int day, const int mon
 	initialization_forest_structure (c , day, month, year);
 
 	/* initialize new forest class pools */
-	initialization_forest_class_C ( c, c->heights_count-1, 0, 0, 0 );
+	initialization_forest_class_C ( c, height, dbh, age, species );
 
 	/* initialize new nitrogen pools */
-	initialization_forest_class_N ( c, c->heights_count-1, 0, 0, 0 );
+	initialization_forest_class_N ( c, height, dbh, age, species );
 
 	/* initialize new litter pools */
-	initialization_forest_class_litter_soil ( c, c->heights_count-1, 0, 0, 0 );
+	initialization_forest_class_litter_soil ( c, height, dbh, age, species );
 
 	/* print new forest class dataset */
-	print_new_daily_forest_class_data( c, c->heights_count-1, 0, 0, 0 );
+	print_new_daily_forest_class_data( c, height, dbh, age, species );
 
 	return 1;
 }
