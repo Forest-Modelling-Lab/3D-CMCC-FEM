@@ -66,17 +66,25 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 					/* assign shortcut */
 					s = &a->species[species];
 
-					if ( g_settings->management && ((T == s->management) || (C == s->management)) ) {
+					if ( g_settings->management == MANAGEMENT_ON || g_settings->management == MANAGEMENT_VAR )
+					{
 						/* this function handles all other management functions */
 
 						/* check at the beginning of simulation */
-						if( !year )
+						if( !year  && g_settings->management == MANAGEMENT_ON )
 						{
 							CHECK_CONDITION ( c->years[year].year, >, g_settings->year_start_management );
 							CHECK_CONDITION ( (g_settings->year_start_management - g_settings->year_start), >, s->value[THINNING] );
 						}
 
 						/***** THINNING *****/
+						/* ISIMIP case: management forced but stand data */
+						if ( g_settings->management == MANAGEMENT_VAR )
+						{
+							prescribed_thinning ( c, height, dbh, age, species, year );
+						}
+
+						//FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME
 						//note : +1 since it works at the 1st of January of the subsequent year
 						if ( ( c->years[year].year == g_settings->year_start_management + 1 ) || ( s->value[THINNING] == s->counter[YEARS_THINNING] + 1 ) )
 						{
@@ -87,8 +95,6 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 
 							/* reset counter */
 							s->counter[YEARS_THINNING] = 0;
-
-							//return 0;
 						}
 
 						/* increment counter */
@@ -99,11 +105,11 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 
 						/***** HARVESTING *****/
 						/* if class age matches with harvesting */
-						//note : +1 since it works at the 1st of January of the subsequent year
+						/* note : +1 since it works at the 1st of January of the subsequent year */
 
 						if ( ( a->value + 1 ) == s->value[ROTATION] )
 						{
-							int rsi; // replanted species index
+							int rsi;               /* replanted species index */
 
 							logger(g_debug_log,"**FOREST MANAGEMENT**\n");
 							logger(g_debug_log,"**HARVESTING**\n");
@@ -114,7 +120,7 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 								if ( ! string_compare_i(c->heights[height].dbhs[dbh].ages[age].species[species].name
 															, g_settings->replanted[rsi].species) )
 								{
-									// index found
+									/* index found */
 									break;
 								}
 							}
@@ -242,6 +248,12 @@ void thinning (cell_t *const c, const int height, const int dbh, const int age, 
 	c->annual_dead_tree += trees_to_remove;
 
 }
+/*****************************************************************************************************************************************/
+
+void prescribed_thinning (cell_t *const c, const int height, const int dbh, const int age, const int species, const int year)
+{
+
+}
 
 /*****************************************************************************************************************************************/
 
@@ -259,8 +271,6 @@ void harvesting (cell_t *const c, const int height, const int dbh, const int age
 	/* remove completely all trees */
 	tree_class_remove (c, height, dbh, age, species );
 }
-
-/*****************************************************************************************************************************************/
 
 
 
