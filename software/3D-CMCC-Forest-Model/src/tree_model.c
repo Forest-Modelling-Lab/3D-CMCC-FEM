@@ -378,17 +378,24 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							{
 								//fixme here model should remove class just after have checked that the balances are closed
 								//so model has to include c fluxes that go out to litter and cwd
+								if ( height >= m->cells[cell].heights_count ) goto height_end;
+								if ( dbh >= m->cells[cell].heights[height].dbhs_count ) goto dbh_end;
+								if ( age >= m->cells[cell].heights[height].dbhs[dbh].ages_count ) goto age_end;
+								//if ( species >= m->cells[cell].heights[height].dbhs[dbh].ages[age].species_count ) goto species_end;
 							}
 							/****************************************************************************************************************************************/
 							/****************************************************************************************************************************************/
 						}
 						logger(g_debug_log, "****************END OF SPECIES CLASS***************\n");
 					}
+				age_end:
 					logger(g_debug_log, "****************END OF AGES CLASS***************\n");
 				}
+			dbh_end:
 				logger(g_debug_log, "****************END OF DBH CLASS***************\n");
 			}
 		}
+	height_end:
 		logger(g_debug_log, "****************END OF HEIGHT CLASS***************\n");
 	}
 	logger(g_debug_log, "****************END OF LAYER CLASS***************\n");

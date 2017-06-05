@@ -20,7 +20,7 @@ extern settings_t* g_settings;
 extern logger_t* g_debug_log;
 extern dataset_t* g_dataset;
 
-int harvesting (cell_t *const c, const int height, const int dbh, const int age, const int species, const int rsi);
+static int harvesting (cell_t *const c, const int height, const int dbh, const int age, const int species, const int rsi);
 
 int forest_management (cell_t *const c, const int day, const int month, const int year)
 {
@@ -304,6 +304,3 @@ static int harvesting (cell_t *const c, const int height, const int dbh, const i
 	/* remove completely all trees */
 	return tree_class_remove (c, height, dbh, age, species );
 }
-
-
-
