@@ -4,12 +4,11 @@
 
 enum { CO2_TRANS_OFF, CO2_TRANS_ON, CO2_TRANS_VAR };
 enum { MANAGEMENT_OFF, MANAGEMENT_ON, MANAGEMENT_VAR };
+enum { THINNING_REGIME_ABOVE, THINNING_REGIME_BELOW };
 
 #define SETTINGS_SITENAME_MAX_SIZE					(255+1)
 #define SETTINGS_REPLANTED_SPECIES_MAX_SIZE			(32+1)
 #define SETTINGS_REGENERATION_SPECIES_MAX_SIZE		(32+1)
-
-enum { THINNING_REGIME_ABOVE, THINNING_REGIME_BELOW };
 
 typedef struct
 {
@@ -64,7 +63,7 @@ typedef struct {
 	double init_frac_maxasw;             /* minimum fraction of available soil water at the beginning of simulation */
 
 	/* layer settings */
-	double tree_layer_limit;             /* differences among tree heights before to consder different canopy layers (meters) */
+	double tree_layer_limit;             /* differences among tree heights before to consider different canopy layers (meters) */
 	double number_of_soil_layer;         /* number of soil layers to simulate */
 	double max_layer_cover;              /* maximum layer cover */
 

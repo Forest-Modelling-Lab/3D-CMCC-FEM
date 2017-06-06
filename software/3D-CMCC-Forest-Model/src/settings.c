@@ -74,6 +74,7 @@ typedef struct
 
 } replanted_temp_t;
 
+
 extern const char sz_err_out_of_memory[];
 
 const char* sz_settings[SETTINGS_COUNT] = {

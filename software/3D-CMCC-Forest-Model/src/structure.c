@@ -316,8 +316,8 @@ int annual_forest_structure(cell_t* const c, const int year)
 
 	for (layer = c->tree_layers_count - 1; layer >= 0; --layer)
 	{
-		if ( c->tree_layers[layer].layer_cover_proj > g_settings->max_layer_cover )
-		{
+//		if ( c->tree_layers[layer].layer_cover_proj > g_settings->max_layer_cover )
+//		{
 			/* note: 04 Oct 2016 */
 			/* call of this function is due to the assumption that:
 			  -overall layer canopy cover cannot exceeds its maximum
@@ -341,7 +341,7 @@ int annual_forest_structure(cell_t* const c, const int year)
 								old_layer_cover = c->tree_layers[layer].layer_cover_proj;
 
 								s = &c->heights[height].dbhs[dbh].ages[age].species[species];
-
+#if 0
 								while ( c->tree_layers[layer].layer_cover_proj > ( g_settings->max_layer_cover + eps ) )
 								{
 									logger(g_debug_log,"layer_cover_proj = %f \n", c->tree_layers[layer].layer_cover_proj);
@@ -377,12 +377,19 @@ int annual_forest_structure(cell_t* const c, const int year)
 										}
 									}
 								}
+#else
+								/** self-thinning **/
+								if ( s->value[DBHDC_EFF] <= s->value[DBHDCMIN] )
+								{
+									self_thinning_mortality ( c, layer, year );
+								}
+#endif
 							}
 						}
 					}
 				}
 			}
-		}
+//		}
 	}
 	logger(g_debug_log, "**************************************\n");
 	logger(g_debug_log, "**************************************\n");

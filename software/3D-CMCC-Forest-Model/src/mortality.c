@@ -72,15 +72,6 @@ void self_thinning_mortality (cell_t *const c, const int layer, const int year)
 				{
 					s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
-					/* sort by species-specific light tolerance (from the most light demanding to the lowest */
-					//test
-					//int i;
-					//for ( i = (int)s->value[LIGHT_TOL]; i > 0; --i)
-					//{
-					//fixme self thinning mortality should follows this rationale
-					//fixme it shouldn't work properly in this way
-					//}
-
 					logger(g_debug_log, "MORTALITY BASED ON HIGH CANOPY COVER height %f species %s dbh %f !!!\n", h->value, s->name, d->value);
 
 					/* initialize variables */
@@ -88,15 +79,17 @@ void self_thinning_mortality (cell_t *const c, const int layer, const int year)
 					deadtree = 0;
 
 					/* mortality */
-					//FIXME PORCATA
-					while ( c->tree_layers[layer].layer_cover_proj >= g_settings->max_layer_cover )
+					//FIXME FOR MULTICLASS IN THE SAME LAYER POURPOSES
+//					while ( c->tree_layers[layer].layer_cover_proj >= g_settings->max_layer_cover )
+//					{
+					while (s->value[DBHDC_EFF] <  s->value[DBHDCMIN])
 					{
 						/* remove one single tree at each run */
 						++deadtree;
 						--livetree;
 
 						/* impose DBHDC_EFF = DBHDCMIN */
-						s->value[DBHDC_EFF] = s->value[DBHDCMIN];
+						//s->value[DBHDC_EFF] = s->value[DBHDCMIN];getchar();
 
 						/* update at cell level */
 						++c->daily_dead_tree;
@@ -104,51 +97,29 @@ void self_thinning_mortality (cell_t *const c, const int layer, const int year)
 						/* update layer trees */
 						--c->tree_layers[layer].layer_n_trees;
 
+						/* update layer density */
+						c->tree_layers[layer].layer_density = c->tree_layers[layer].layer_n_trees / g_settings->sizeCell;
+
+						/* update layer cover proj */
 						c->tree_layers[layer].layer_cover_proj  -= s->value[CANOPY_COVER_PROJ];
 
 						if ( livetree > 0 )
 						{
-							/* recompute crown imposed DBHDC_EFF */
+							/* recompute dbhdc eff */
+							dbhdc_function         (c, layer, height, dbh, age, species, year);
+
+							/* recompute crown area */
 							crown_allometry        ( c, height, dbh, age, species );
 
-							/* recompute canopy cover with imposed DBHDC_EFF */
+							/* recompute canopy cover with */
 							s->value[CANOPY_COVER_PROJ] = s->value[CROWN_AREA_PROJ] * livetree / g_settings->sizeCell;
 
 							/* check for recompued canopy cover */
 							c->tree_layers[layer].layer_cover_proj += s->value[CANOPY_COVER_PROJ];
 						}
-						//							else
-						//							{
-						//								//fixme
-						//								/* remove_tree_class */
-						//								logger(g_debug_log, "completely removed lower class, starting to remove from higher..\n");
-						//								if ( ! tree_class_remove(c, height, dbh, age, species) )
-						//								{
-						//									logger_error(g_debug_log, "unable to remove tree class");
-						//									exit(1);
-						//								}
-						//
-						//								/* mortality for the higher height class */
-						//								while (c->tree_layers[layer].layer_cover > g_settings->max_layer_cover &&
-						//										c->heights[height + 1].dbhs[dbh].ages[age].species[species].counter[N_TREE] >= 0)
-						//								{
-						//									--c->heights[height + 1].dbhs[dbh].ages[age].species[species].counter[N_TREE];
-						//									++c->heights[height + 1].dbhs[dbh].ages[age].species[species].counter[DEAD_TREE];
-						//
-						//									//todo check if correct (probably not)
-						//									dbhdc_function         ( c, layer, height + 1, dbh, age, species, year );
-						//									crown_allometry        ( c, height + 1, dbh, age, species );
-						//									canopy_cover_projected ( c, height + 1, dbh, age, species );
-						//
-						//									/* remove_tree_class */
-						//									if ( ! tree_class_remove(c, height, dbh, age, species) )
-						//									{
-						//										logger_error(g_debug_log, "unable to remove tree class");
-						//										exit(1);
-						//									}
-						//								}
-						//							}
+
 					}
+
 					//fixme this is not correct for multilayer
 					/* remove dead C and N biomass */
 					tree_biomass_remove ( c, height, dbh, age, species, deadtree );
@@ -157,6 +128,12 @@ void self_thinning_mortality (cell_t *const c, const int layer, const int year)
 					s->counter[DEAD_TREE] = deadtree;
 					s->counter[N_TREE]    = livetree;
 					c->n_trees           -= deadtree;
+
+					deadtree = 0;
+					livetree = 0;
+
+					/* check */
+					CHECK_CONDITION( s->value[CANOPY_COVER_PROJ] ,  > , g_settings->max_layer_cover + eps );
 				}
 			}
 		}

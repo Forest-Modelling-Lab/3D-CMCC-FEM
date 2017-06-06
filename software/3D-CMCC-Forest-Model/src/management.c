@@ -3,6 +3,7 @@
 /* includes */
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <math.h>
 #include <math.h>
 #include <assert.h>
@@ -34,6 +35,71 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 	dbh_t *d;
 	age_t *a;
 	species_t *s;
+/*
+	if ( strcmp(g_settings->sitename,"Bily_Kriz") == 0)
+	{
+		int thinning_year []   = { 2030 , 2045 , 2060 , 2075 , 2090 , 2117 , 2132 , 2147 , 2162 , 2177 , 2192 , 2207 , 2238 , 2253 , 2268 , 2283 , 2298 };
+		int harvesting_year [] = { 2102 , 2223 };
+		printf("sitename %s\n", g_settings->sitename);
+		printf("sitename %s\n", g_settings->sitename);getchar();
+	}
+	else if ( strcmp(g_settings->sitename,"Collelongo") == 0)
+	{
+		int thinning_year [] = {};
+		int harvesting_year [] = {};
+		printf("sitename %s\n", g_settings->sitename);getchar();
+	}
+	else if ( strcmp(g_settings->sitename,"Hyytiala") == 0)
+	{
+		int thinning_year [] = {};
+		int harvesting_year [] = {};
+		printf("sitename %s\n", g_settings->sitename);getchar();
+	}
+	else if ( strcmp(g_settings->sitename,"Kroof") == 0)
+	{
+		int thinning_year [] = {};
+		int harvesting_year [] = {};
+		printf("sitename %s\n", g_settings->sitename);getchar();
+	}
+	else if ( strcmp(g_settings->sitename,"LeBray") == 0)
+	{
+		int thinning_year [] = {};
+		int harvesting_year [] = {};
+		printf("sitename %s\n", g_settings->sitename);getchar();
+	}
+	else if ( strcmp(g_settings->sitename,"Peitz") == 0)
+	{
+		int thinning_year [] = {};
+		int harvesting_year [] = {};
+		printf("sitename %s\n", g_settings->sitename);getchar();
+	}
+	else if ( strcmp(g_settings->sitename,"Solling_beech") == 0)
+	{
+		int thinning_year [] = {};
+		int harvesting_year [] = {};
+		printf("sitename %s\n", g_settings->sitename);getchar();
+	}
+	else if ( strcmp(g_settings->sitename,"Solling_spruce") == 0)
+	{
+		int thinning_year [] = {};
+		int harvesting_year [] = {};
+		printf("sitename %s\n", g_settings->sitename);getchar();
+	}
+	else if ( strcmp(g_settings->sitename,"Soroe") == 0)
+	{
+		int thinning_year [] = {};
+		int harvesting_year [] = {};
+		printf("sitename %s\n", g_settings->sitename);getchar();
+	}
+	else
+	{
+		printf("Bad site choose!!!\n");
+		exit(1);
+	}
+*/
+
+
+
 
 	// sort by above or below ?
 	// ALESSIOR TO ALESSIOC FIXME
@@ -80,12 +146,14 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 							CHECK_CONDITION ( (g_settings->year_start_management - g_settings->year_start), >, s->value[THINNING] );
 						}
 
-						/***** THINNING *****/
+						/*************************************** THINNING *************************************/
 						/* ISIMIP case: management forced by stand data */
 						if ( year && (MANAGEMENT_VAR == g_settings->management)  )
 						{
 							prescribed_thinning ( c, height, dbh, age, species, c->years[year].year );
 						}
+
+						//fixme fixme ALESSIOR for thinning use data from ISIMIP_thinning.csv file
 
 						if ( ( c->years[year].year == g_settings->year_start_management) ||
 							
@@ -107,7 +175,10 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 						/* check */
 						CHECK_CONDITION( s->counter[YEARS_THINNING], >, s->value[ROTATION] );
 
-						/***** HARVESTING *****/
+						/*************************************** HARVESTING *************************************/
+
+						//fixme fixme ALESSIOR for harvesting use data from ISIMIP_harvesting.csv file
+
 						/* if class age matches with harvesting */
 						if (  a->value  == s->value[ROTATION] )
 						{
