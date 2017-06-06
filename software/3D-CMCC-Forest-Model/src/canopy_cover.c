@@ -37,27 +37,13 @@ void dbhdc_function (cell_t *const c, const int layer, const int height, const i
 	double max_dbhdc_incr      = 0.05;               /* fraction of maximum dbhdc increment */
 	double max_dbhdc_decr      = 0.05;               /* fraction of maximum dbhdc decrement */
 
+
 	dbh_t *d;
 	species_t *s;
 	d = &c->heights[height].dbhs[dbh];
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 	logger(g_debug_log,"\n*DBHDC FUNCTION for %s for %d*\n", s->name, year);
-
-	/************************************************************************************************************************/
-	/* note: 04 Oct 2016 still USEFULL ?????*/
-	/* compute potential maximum and minimum density for DBHDC function */
-	//potential_max_min_density ( c );
-	/* compute effective dbh/crown diameter */
-	/*
-		s->value[DBHDC_EFF] = ((s->value[DBHDCMIN] - s->value[DBHDCMAX]) / (s->value[DENMAX] - s->value[DENMIN]) *
-				(c->tree_layers[layer].layer_density - s->value[DENMIN]) + s->value[DBHDCMAX]);
-		logger(g_debug_log,"-DENMAX = %f\n", s->value[DENMAX]);
-		logger(g_debug_log,"-DENMIN = %f\n", s->value[DENMIN]);
-		logger(g_debug_log,"-DBHDCMAX = %f\n", s->value[DBHDCMAX]);
-		logger(g_debug_log,"-DBHDCMIN = %f\n", s->value[DBHDCMIN]);
-		logger(g_debug_log,"-DBHDC effective = %f\n", s->value[DBHDC_EFF]);
-	 */
 
 	/************************************************************************************************************************/
 	/* note: 04 Oct 2016 */
@@ -87,9 +73,8 @@ void dbhdc_function (cell_t *const c, const int layer, const int height, const i
 	/* check if current dbhdc_eff grows too much (case when there's thinning) */
 	/* this is checked to avoid unrealistic crown area increment */
 
-	//note: max_dbhdc_incr corresponds to an arbitrary increment of n value
-	//note: not used in the first year of simulation
-	//fixme use less consider YOS????
+	/* note: max_dbhdc_incr corresponds to an arbitrary increment of n value */
+	/* note: not used in the first year of simulation */
 	if ( ( s->counter[YOS] ) && ( s->value[DBHDC_EFF] > ( previous_dbhdc_eff + (previous_dbhdc_eff * max_dbhdc_incr ) ) ) )
 	{
 		s->value[DBHDC_EFF] = previous_dbhdc_eff + ( previous_dbhdc_eff * max_dbhdc_incr );
@@ -107,7 +92,7 @@ void dbhdc_function (cell_t *const c, const int layer, const int height, const i
 	/* check if current dbhdc_eff decreases too much (case when there's reduction in layers) */
 	/* this is checked to avoid unrealistic crown area decrement */
 
-	//note: max_dbhdc_decr corresponds to an arbitrary increment of n value
+	/* note: max_dbhdc_decr corresponds to an arbitrary increment of n value */
 #if 0
 	if ( s->value[DBHDC_EFF] < ( previous_dbhdc_eff - (previous_dbhdc_eff * max_dbhdc_decr ) ) )
 	{
@@ -124,11 +109,6 @@ void dbhdc_function (cell_t *const c, const int layer, const int height, const i
 
 void canopy_cover (cell_t *const c, const int height, const int dbh, const int age, const int species)
 {
-//	double eff_canopy_cover;
-//	double lateral_area;
-//
-//	double crown_surface_area;
-//	double canopy_surface_cover;
 
 	species_t *s;
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
@@ -148,7 +128,6 @@ void canopy_cover (cell_t *const c, const int height, const int dbh, const int a
 	s->value[CANOPY_COVER_EXP] = (s->value[CROWN_AREA_EXP] * s->counter[N_TREE]) / g_settings->sizeCell ;
 	logger(g_debug_log, "-Canopy Exposed Cover     = %f %%\n", s->value[CANOPY_COVER_EXP]  * 100.);
 
-	//new test
 	if (s->value[CANOPY_COVER_EXP] > 1)s->value[CANOPY_COVER_EXP] = 1.;
 
 

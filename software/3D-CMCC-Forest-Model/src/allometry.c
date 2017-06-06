@@ -12,6 +12,7 @@ extern logger_t* g_debug_log;
 
 void crown_allometry (cell_t *const c, const int height, const int dbh, const int age, const int species)
 {
+	double old_crown_proj;
 	int crown_form_factor;
 	double c_diameter;        /* crown diameter (m) */
 	double c_height ;         /* crown height   (m) */
@@ -31,6 +32,10 @@ void crown_allometry (cell_t *const c, const int height, const int dbh, const in
 
 	logger(g_debug_log,"\n*CROWN ALLOMETRY for %s *\n", s->name);
 
+
+	/* assign previous year crown area projected */
+	old_crown_proj = s->value[CROWN_AREA_PROJ];
+
 	/* Crown Projected Diameter using DBH-DC (at zenith angle) */
 	s->value[CROWN_DIAMETER] = d->value * s->value[DBHDC_EFF];
 	logger(g_debug_log, "-Crown Projected Diameter = %f m\n", s->value[CROWN_DIAMETER]);
@@ -42,6 +47,16 @@ void crown_allometry (cell_t *const c, const int height, const int dbh, const in
 	/* Crown Projected Area using DBH-DC (at zenith angle) */
 	s->value[CROWN_AREA_PROJ] = Pi  * pow (s->value[CROWN_RADIUS], 2 );
 	logger(g_debug_log, "-Crown Projected Area     = %f m2\n", s->value[CROWN_AREA_PROJ]);
+
+
+	/* check if current canopy cover has been reduced */
+	if ( s->counter[YOS] && ( old_crown_proj > s->value[CROWN_AREA_PROJ] ) )
+	{
+		//FIXME it basically rarely happens since crown area proj never descreases...
+		/******** self pruning ********/
+		self_pruning ( c, height, dbh, age, species, old_crown_proj );
+	}
+
 
 	/* Crown Height */
 	/* it mainly follows SORTIE-ND approach in the form of x = a*tree height^c */
@@ -63,39 +78,6 @@ void crown_allometry (cell_t *const c, const int height, const int dbh, const in
 	crown_form_factor = (int)s->value[CROWN_FORM_FACTOR];
 
 	/* compute overall single tree crown area */
-#if 0 //old
-	switch (crown_form_factor)
-	{
-	case 0: /* cylinder */
-		logger(g_debug_log, "-Crown form factor = cylinder\n");
-
-		s->value[CROWN_AREA]     = (2 * Pi * s->value[CROWN_RADIUS] * s->value[CROWN_HEIGHT]);
-		s->value[CROWN_AREA_EXP] = s->value[CROWN_AREA_PROJ] + ((s->value[CROWN_DIAMETER] * Pi) * s->value[CROWN_HEIGHT]);
-		s->value[CROWN_VOLUME]   = (s->value[CROWN_AREA_PROJ] * s->value[CROWN_HEIGHT]) / 3.;
-		break;
-
-	case 1: /* cone */
-		logger(g_debug_log, "-Crown form factor = cone\n");
-
-		s->value[CROWN_AREA]     = s->value[CROWN_AREA_PROJ] + (Pi * s->value[CROWN_RADIUS] * (sqrt(pow(s->value[CROWN_RADIUS],2.) + pow(s->value[CROWN_HEIGHT],2.))));
-		s->value[CROWN_AREA_EXP] = Pi * s->value[CROWN_RADIUS] * sqrt(pow(s->value[CROWN_RADIUS],2.) + pow(s->value[CROWN_HEIGHT],2.));
-		s->value[CROWN_VOLUME]   = (s->value[CROWN_AREA_PROJ] * s->value[CROWN_HEIGHT])/3.;
-		break;
-
-	case 2: /* sphere */
-		logger(g_debug_log, "-Crown form factor = sphere\n");
-
-		s->value[CROWN_AREA]     = ( s->value[CROWN_AREA_PROJ] * 4 );
-		s->value[CROWN_AREA_EXP] = ( s->value[CROWN_AREA_PROJ] * 4. ) / 2 ;
-		s->value[CROWN_VOLUME]   = 4. / 3. * Pi * pow (s->value[CROWN_RADIUS],3.);
-		break;
-
-	case 3: /* ellispoid */
-		//todo s->value[CROWN_AREA]     =
-
-		break;
-	}
-#else //new
 	switch (crown_form_factor)
 	{
 	case 0: /* cylinder */
@@ -142,7 +124,6 @@ void crown_allometry (cell_t *const c, const int height, const int dbh, const in
 
 	/****************************************************************************/
 
-#endif
 	logger(g_debug_log, "-Crown Area               = %f m2\n", s->value[CROWN_AREA]);
 	logger(g_debug_log, "-Crown Area (exp)         = %f m2\n", s->value[CROWN_AREA_EXP]);
 	logger(g_debug_log, "-Crown Volume             = %f m3\n", s->value[CROWN_VOLUME]);

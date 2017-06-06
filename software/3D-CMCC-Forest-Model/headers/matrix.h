@@ -352,11 +352,13 @@ enum {
 	FROOT_C_TO_REMOVE,                  /* (tC/cell/day) Daily Fine Root to remove tC/sizeCell */
 	FRUIT_C_TO_REMOVE,                  /* (tC/cell/day) Daily Fruit to remove */
 	BRANCH_C_TO_REMOVE,                 /* (tC/cell/day) Annual Branch to remove */
+	CROOT_C_TO_REMOVE,                  /* (tC/cell/day) Annual Coarse root to remove */
 	C_LEAF_TO_RESERVE,                  /* (tC/cell/day) Daily retranslocated C from Leaf pool to Reserve */
 	C_FROOT_TO_RESERVE,                 /* (tC/cell/day) Daily retranslocated C from Fine root pool to Reserve */
 	C_LEAF_TO_LITR,                     /* (tC/cell/day) Daily tC from Leaf pool to Litter */
 	C_FROOT_TO_LITR,                    /* (tC/cell/day) Daily tC from Fine root pool to Soil */
 	C_BRANCH_TO_RESERVE,                /* (tC/cell/day) Daily tC from Branch pool to Litter */
+	C_CROOT_TO_RESERVE,                 /* (tC/cell/day) Daily tC from Coarse root pool to Litter */
 	C_STEM_TO_CWD,                      /* (tC/cell/day) Daily tC from Stem pool to Coarse Woody Debris */
 	C_CROOT_TO_CWD,                     /* (tC/cell/day) Daily tC from Coarse root pool to Coarse Woody Debris */
 	C_BRANCH_TO_CWD,                    /* (tC/cell/day) Daily tC from Branch pool to Coarse Woody Debris */
@@ -557,6 +559,7 @@ enum {
 	FROOT_N_TO_REMOVE,                  /* (tN/cell/day) Daily Fine Root to remove */
 	FRUIT_N_TO_REMOVE,                  /* (tN/cell/day) Daily Fruit to remove */
 	BRANCH_N_TO_REMOVE,                 /* (tN/cell/day) Annual Branch to remove */
+	CROOT_N_TO_REMOVE,                  /* (tN/cell/day) Annual Coarse root to remove */
 	N_TO_CWD,                           /* (tN/cell/day) Daily Woody Nitrogen to Coarse Woody Debris */
 	N_LEAF_TO_LITR,                     /* (tN/cell/day) Daily Leaf Litter to Litter labile nitrogen pool */
 	N_FROOT_TO_LITR,                    /* (tN/cell/day) Daily Leaf Litter to Litter labile nitrogen pool */
@@ -577,6 +580,7 @@ enum {
 	N_LEAF_TO_RESERVE,                  /* (tN/cell/day) Daily retranslocated C from Leaf pool to Reserve */
 	N_FROOT_TO_RESERVE,                 /* (tN/cell/day) Daily retranslocated C from Fine root pool to Reserve */
 	N_BRANCH_TO_RESERVE,                /* (tN/cell/day) Annual retranslocated C from Branch pool to Reserve */
+	N_CROOT_TO_RESERVE,                 /* (tN/cell/day) Annual retranslocated C from Coarse root pool to Reserve */
 	N_STEM_LIVEWOOD_TO_DEADWOOD,        /* (tN/cell/day) Daily tN from Stem live wood pool to Stem dead wood */
 	N_CROOT_LIVE_WOOD_TO_DEADWOOD,      /* (tN/cell/day) Daily tN from Coarse live wood pool to Coarse dead wood */
 	N_BRANCH_LIVE_WOOD_TO_DEAD_WOOD,    /* (tN/cell/day) Daily tN from Branch live wood pool to Branch dead wood */

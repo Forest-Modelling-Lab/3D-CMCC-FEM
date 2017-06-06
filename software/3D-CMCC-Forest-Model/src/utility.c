@@ -374,6 +374,7 @@ void reset_daily_class_variables(cell_t *const c)
 					s->value[C_LEAF_TO_RESERVE] =         0.;
 					s->value[C_FROOT_TO_RESERVE] =        0.;
 					s->value[C_BRANCH_TO_RESERVE] =       0.;
+					s->value[C_CROOT_TO_RESERVE] =        0.;
 					s->value[C_LEAF_TO_LITR] =            0.;
 					s->value[C_FROOT_TO_LITR] =           0.;
 					s->value[C_STEM_TO_CWD] =             0.;
@@ -553,9 +554,13 @@ void reset_annual_class_variables(cell_t *const c)
 					s->value[LEAF_C_TO_REMOVE] =            0.;
 					s->value[FROOT_C_TO_REMOVE] =           0.;
 					s->value[FRUIT_C_TO_REMOVE] =           0.;
+					s->value[CROOT_C_TO_REMOVE] =           0.;
+					s->value[BRANCH_C_TO_REMOVE] =          0.;
 					s->value[LEAF_N_TO_REMOVE] =            0.;
 					s->value[FROOT_N_TO_REMOVE] =           0.;
 					s->value[FRUIT_N_TO_REMOVE] =           0.;
+					s->value[CROOT_N_TO_REMOVE] =           0.;
+					s->value[BRANCH_N_TO_REMOVE] =          0.;
 
 					/*reset cumulative values*/
 					s->counter[LEAF_FALL_COUNTER] =         0;

@@ -316,80 +316,38 @@ int annual_forest_structure(cell_t* const c, const int year)
 
 	for (layer = c->tree_layers_count - 1; layer >= 0; --layer)
 	{
-//		if ( c->tree_layers[layer].layer_cover_proj > g_settings->max_layer_cover )
-//		{
-			/* note: 04 Oct 2016 */
-			/* call of this function is due to the assumption that:
-			  -overall layer canopy cover cannot exceeds its maximum
-			  -DBHDC_EFF cannot be < DBHDCMIN (otherwise self-thinning mortality is called)
-			 */
 
-			/* start to reduce DBHDC_EFF from the lowest height class */
-			qsort (c->heights, c->heights_count, sizeof (height_t), sort_by_heights_asc);
+		/* note: 04 Oct 2016 */
+		/* call of this function is due to the assumption that:
+			-overall layer canopy cover cannot exceeds its maximum
+			-DBHDC_EFF cannot be < DBHDCMIN (otherwise self-thinning mortality is called)
+		 */
 
-			for ( height = 0; height < c->heights_count ; ++height )
+		/* start to reduce DBHDC_EFF from the lowest height class */
+		qsort (c->heights, c->heights_count, sizeof (height_t), sort_by_heights_asc);
+
+		for ( height = 0; height < c->heights_count ; ++height )
+		{
+			if( layer == c->heights[height].height_z )
 			{
-				if( layer == c->heights[height].height_z )
+				for ( dbh = 0; dbh < c->heights[height].dbhs_count; ++dbh )
 				{
-					for ( dbh = 0; dbh < c->heights[height].dbhs_count; ++dbh )
+					for ( age = 0; age < c->heights[height].dbhs[dbh].ages_count ; ++age )
 					{
-						for ( age = 0; age < c->heights[height].dbhs[dbh].ages_count ; ++age )
+						for ( species = 0; species < c->heights[height].dbhs[dbh].ages[age].species_count; ++species )
 						{
-							for ( species = 0; species < c->heights[height].dbhs[dbh].ages[age].species_count; ++species )
+							s = &c->heights[height].dbhs[dbh].ages[age].species[species];
+
+							/*************** self-thinning ****************/
+							if ( s->value[DBHDC_EFF] <= s->value[DBHDCMIN] )
 							{
-								double old_layer_cover;
-								old_layer_cover = c->tree_layers[layer].layer_cover_proj;
-
-								s = &c->heights[height].dbhs[dbh].ages[age].species[species];
-#if 0
-								while ( c->tree_layers[layer].layer_cover_proj > ( g_settings->max_layer_cover + eps ) )
-								{
-									logger(g_debug_log,"layer_cover_proj = %f \n", c->tree_layers[layer].layer_cover_proj);
-									logger(g_debug_log,"max_layer_cover  = %f \n", g_settings->max_layer_cover);
-
-									/** self-thinning **/
-									if ( s->value[DBHDC_EFF] <= s->value[DBHDCMIN] )
-									{
-										self_thinning_mortality ( c, layer, year );
-									}
-									/** self-pruning **/
-									else
-									{
-										c->tree_layers[layer].layer_cover_proj -= s->value[CANOPY_COVER_PROJ];
-
-										s->value[DBHDC_EFF] -= 0.001;
-
-										crown_allometry ( c, height, dbh, age, species );
-										canopy_cover    ( c, height, dbh, age, species );
-
-										/* check for recompued canopy cover */
-										c->tree_layers[layer].layer_cover_proj += s->value[CANOPY_COVER_PROJ];
-
-										/** self pruning **/
-										self_pruning ( c, height, dbh, age, species, old_layer_cover );
-
-										/** self-thinning **/
-										/* call self-thinning mortality if pruning was not enough */
-
-										if ( s->value[DBHDC_EFF] <= s->value[DBHDCMIN] )
-										{
-											self_thinning_mortality ( c, layer, year );
-										}
-									}
-								}
-#else
-								/** self-thinning **/
-								if ( s->value[DBHDC_EFF] <= s->value[DBHDCMIN] )
-								{
-									self_thinning_mortality ( c, layer, year );
-								}
-#endif
+								self_thinning_mortality ( c, layer, year );
 							}
 						}
 					}
 				}
 			}
-//		}
+		}
 	}
 	logger(g_debug_log, "**************************************\n");
 	logger(g_debug_log, "**************************************\n");

@@ -24,7 +24,6 @@
 extern settings_t* g_settings;
 extern logger_t* g_debug_log;
 
-#define TEST_RESP 1
 
 void carbon_allocation( cell_t *const c, const int height, const int dbh, const int age, const int species, const int day, const int month, const int year  )
 {
@@ -55,13 +54,7 @@ void carbon_allocation( cell_t *const c, const int height, const int dbh, const 
 	s->value[STEM_HEARTWOOD_C]         = s->value[STEM_C] - s->value[STEM_SAPWOOD_C];
 
 	/* respiring stem */
-#if TEST_RESP
-	//new 13 May 2017
 	s->value[STEM_LIVEWOOD_C]          = s->value[STEM_SAPWOOD_C] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
-#else
-	//old
-	s->value[STEM_LIVEWOOD_C]          = s->value[STEM_C] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
-#endif
 
 	/* to avoid that self-thinning mortality happens to remove to much biomass */
 	if ( day && month ) s->value[YEARLY_C_TO_STEM] += s->value[C_TO_STEM];
@@ -73,13 +66,7 @@ void carbon_allocation( cell_t *const c, const int height, const int dbh, const 
 	s->value[CROOT_HEARTWOOD_C]        = s->value[CROOT_C] - s->value[CROOT_SAPWOOD_C];
 
 	/* respiring coarse root */
-#if TEST_RESP
-	//new 13 May 2017
 	s->value[CROOT_LIVEWOOD_C]         = s->value[CROOT_SAPWOOD_C] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
-#else
-	//old
-	s->value[CROOT_LIVEWOOD_C]         = s->value[CROOT_C] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
-#endif
 
 	/* to avoid that self-thinning mortality happens to remove to much biomass */
 	if ( day && month ) s->value[YEARLY_C_TO_CROOT] += s->value[C_TO_CROOT];
@@ -90,13 +77,7 @@ void carbon_allocation( cell_t *const c, const int height, const int dbh, const 
 	s->value[BRANCH_HEARTWOOD_C]       = s->value[BRANCH_C] - s->value[BRANCH_SAPWOOD_C];
 
 	/* respiring branch */
-#if TEST_RESP
-	//new 13 May 2017
 	s->value[BRANCH_LIVEWOOD_C]        = s->value[BRANCH_SAPWOOD_C] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
-#else
-	//old
-	s->value[BRANCH_LIVEWOOD_C]        = s->value[BRANCH_C] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
-#endif
 
 	/* to avoid that self-thinning mortality happens to remove to much biomass */
 	if ( day && month ) s->value[YEARLY_C_TO_BRANCH]      += s->value[C_TO_BRANCH];
