@@ -35,6 +35,8 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	double tairK;
 	double v1, v2;
 
+	double gamma_light = 0.0025; //0.01;
+
 	age_t *a;
 	species_t *s;
 
@@ -98,20 +100,11 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	/********************************************************************************************/
 
 
-	/* LIGHT MODIFIER (NOT USED) */
+	/* LIGHT MODIFIER */
 	/* (Following Makela et al. , 2008, Peltioniemi et al. 2012) */
-	//FIXME chose which type of light use and differentiate for different layers
-	//following Nolè should be used apar
-	//following Peltionemi should be used par
-	//	if (s->value[GAMMA_LIGHT] != -9999)
-	//	{
-	//		s->value[F_LIGHT]= 1.0/ ((s->value[GAMMA_LIGHT]* s->value[APAR]) +1.0);
-	//	}
-	//	else
-	//	{
-	//		s->value[F_LIGHT]= 1.0;
-	//	}
-	//	logger(g_debug_log, "FLight (NOT USED)= %f\n", s->value[F_LIGHT]);
+	s->value[F_LIGHT_MAKELA]        = 1. / ( ( s->value[GAMMA_LIGHT] * s->value[APAR])       + 1.);
+	s->value[F_LIGHT_SUN_MAKELA]    = 1. / ( ( s->value[GAMMA_LIGHT] * s->value[APAR_SUN])   + 1.);
+	s->value[F_LIGHT_SHADE_MAKELA]  = 1. / ( ( s->value[GAMMA_LIGHT] * s->value[APAR_SHADE]) + 1.);
 
 	/* LIGHT MODIFIER (BIOME METHOD) */
 	/* following Biome-BGC */
@@ -136,8 +129,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	{
 		if ( ( meteo_daily->tavg <= s->value[GROWTHTMIN]) || (meteo_daily->tavg >= s->value[GROWTHTMAX] ) )
 		{
-			s->value[F_T] = 0;
-			logger(g_debug_log, "fT = 0 \n");
+			s->value[F_T] = 0.;
 		}
 		else
 		{
@@ -151,7 +143,6 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 		if ( ( meteo_daily->tday <= s->value[GROWTHTMIN]) || (meteo_daily->tday >= s->value[GROWTHTMAX] ) )
 		{
 			s->value[F_T] = 0;
-			logger(g_debug_log, "fT = 0 \n");
 		}
 		else
 		{

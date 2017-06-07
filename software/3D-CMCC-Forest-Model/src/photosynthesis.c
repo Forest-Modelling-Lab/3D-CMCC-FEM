@@ -78,9 +78,9 @@ void photosynthesis(cell_t *const c, const int layer, const int height, const in
 	/* Light Use Efficiency Actual and Potential */
 	Lue           = s->value[APAR]       * Alpha_C;
 	Lue_max       = s->value[PAR]        * Alpha_C;
-	Lue_sun       = s->value[APAR_SUN]   * Alpha_C;
+	Lue_sun       = s->value[APAR_SUN]   * Alpha_C * s->value[F_LIGHT_SUN_MAKELA];
 	Lue_sun_max   = s->value[PAR_SUN]    * Alpha_C;
-	Lue_shade     = s->value[APAR_SHADE] * Alpha_C;
+	Lue_shade     = s->value[APAR_SHADE] * Alpha_C * s->value[F_LIGHT_SHADE_MAKELA];
 	Lue_shade_max = s->value[PAR_SHADE]  * Alpha_C;
 
 	/* check */

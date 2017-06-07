@@ -3,6 +3,7 @@ LIGHT_TOL	3   	          //4 = very shade intolerant 3 = shade intolerant 2 = sh
 PHENOLOGY	0.1               //PHENOLOGY 0.1 = deciduous broadleaf, 0.2 = deciduous needle leaf, 1.1 = broad leaf evergreen, 1.2 = needle leaf evergreen 
 ALPHA	0.045                 //Canopy quantum efficiency (molC/molPAR) for Q. robur from Morecroft et al 2003
 EPSILONgCMJ	1.05              //Light Use Efficiency  (gC/molPAR)(used if ALPHA is not available)  for Brasschaat site see Horn and Shulze 2011  0.085 from Carrara et al., 2004
+GAMMA_LIGHT           0.021   // Empirical parameter for Light modifiers see Bagnara et al., 2015 
 K	0.54                      //0.54 Extinction coefficient for absorption of PAR by canopy Q. robur from Pietsch et al 2005
 ALBEDO	0.2                   //albedo varying from 0.8-0.17 from Otto et al., 2014; 0.20 for Quercus spp. from Breuer et al., 2003
 INT_COEFF  0.3                //precip interception coefficient for Q. robur from Tatarinov

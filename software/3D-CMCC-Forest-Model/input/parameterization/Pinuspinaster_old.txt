@@ -3,6 +3,7 @@ LIGHT_TOL   3                 //4 = very shade intolerant 3 = shade intolerant 2
 PHENOLOGY   1.2               //PHENOLOGY 0.1 = deciduous broadleaf, 0.2 = deciduous needle leaf, 1.1 = broad leaf evergreen, 1.2 = needle leaf evergreen 
 ALPHA   0.048                 //Canopy quantum efficiency (molC/molPAR) for P. pinaster (LeBray site) Peltionemi et al., 2012
 EPSILONgCMJ 0.58              //Light Use Efficiency (gC/molPAR)(used if ALPHA is not available) for P. pinaster (LeBray site) Peltionemi et al., 2012
+GAMMA_LIGHT           0.022   // Empirical parameter for Light modifiers see Bagnara et al., 2015 
 K   0.34                      //Extinction coefficient for absorption of PAR by canopy for P. pinaster, 0.34 Berbigier & Bonnefond 1994, 0.32 Berbigier & Bonnefond 1995, 0.467 Dezi PhD Thesis
 ALBEDO  0.15                  //averaged for P. pinaster 0.19-0.12 Moreaux et al., 2011; 0.279 Berbigier and Bonnefpnd 1994
 INT_COEFF  0.3                //precip interception coefficient for P. sylvestris from Pietsch

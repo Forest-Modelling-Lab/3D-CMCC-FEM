@@ -3,6 +3,7 @@ LIGHT_TOL   3                 //4 = very shade intolerant 3 = shade intolerant 2
 PHENOLOGY   1.2               //PHENOLOGY 0.1 = deciduous broadleaf, 0.2 = deciduous needle leaf, 1.1 = broad leaf evergreen, 1.2 = needle leaf evergreen 
 ALPHA   0.055                 //Canopy quantum efficiency (molC/molPAR) for P. sylvestris Landsberg et al., 2005, 0.0545 Makela et al., 2006, 0.05 Xenakis et al., 2007, 0.051 Peltionemi et al., 2012
 EPSILONgCMJ 0.62              //Light Use Efficiency (gC/molPAR)(used if ALPHA is not available) for P. sylvestris Peltionemi et al 2012 
+GAMMA_LIGHT           0.005    // Empirical parameter for Light modifiers see Makela et al., 2008 
 K   0.51                      //Extinction coefficient for absorption of PAR by canopy for P. sylvestris Landsberg et al., 2005 or 0.51 from Pietsch, 0.495 Tatarinov, 
 ALBEDO  0.10                  //averaged for P. sylvestris 0.15 (or 0.12) Otto et al., 2014 BGS, 0.093 from Breuer et al., 2003
 INT_COEFF  0.3                //precip interception coefficient for P. sylvestris from Pietsch
@@ -26,7 +27,7 @@ MAXAGE  300 //500             //Determines rate of "physiological decline" of fo
 RAGE    0.95                  //Relative Age to give fAGE = 0.5 for P. sylvestris 0.95 Landsberg et al., 2005
 NAGE    4                     //Power of relative Age in function for P. sylvestris Landsberg et al., 2005
 GROWTHTMIN  -6                //Minimum temperature for growth for P. sylvestris 0 Leverenz et al., 1987 -2 Landsberg et al., 2005, -5.93 Makela et al., 2006
-GROWTHTMAX  30                //Maximum temperature for growth for P. sylvestris 30 Leverenz et al., 1987;  25 Landsberg et al., 2005
+GROWTHTMAX  35                //Maximum temperature for growth for P. sylvestris 30 Leverenz et al., 1987;  25 Landsberg et al., 2005
 GROWTHTOPT  20                //Optimum temperature for growth for P. sylvestris 20 Medlyn et al., 2002; 15 Landsberg et al., 2005
 GROWTHSTART 200               //average temperature for starting growth in °C 
 MINDAYLENGTH    0             //minimum day length for deciduous

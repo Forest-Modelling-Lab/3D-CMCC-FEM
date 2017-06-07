@@ -105,6 +105,8 @@ void average_tree_pools(species_t *const s)
 	logger(g_debug_log, "\n*AVERAGE TREE POOLS*\n");
 	logger(g_debug_log,  "N_TREE = %d\n", s->counter[N_TREE]);
 
+	/* note: it takes into account previous biomass to remove if function is called twice in a day (e.g.
+
 	/* compute tree average C pools */
 	s->value[TREE_LEAF_C]                = (s->value[LEAF_C]             / (double)s->counter[N_TREE]);
 	s->value[TREE_STEM_C]                = (s->value[STEM_C]             / (double)s->counter[N_TREE]);
@@ -127,8 +129,8 @@ void average_tree_pools(species_t *const s)
 	s->value[TREE_CROOT_DEADWOOD_C]      = (s->value[CROOT_DEADWOOD_C]   / (double)s->counter[N_TREE]);
 	s->value[TREE_BRANCH_LIVEWOOD_C]     = (s->value[BRANCH_LIVEWOOD_C]  / (double)s->counter[N_TREE]);
 	s->value[TREE_BRANCH_DEADWOOD_C]     = (s->value[BRANCH_DEADWOOD_C]  / (double)s->counter[N_TREE]);
-	s->value[TREE_LIVEWOOD_C]            = (s->value[LIVEWOOD_C]  / (double)s->counter[N_TREE]);
-	s->value[TREE_DEADWOOD_C]            = (s->value[DEADWOOD_C]  / (double)s->counter[N_TREE]);
+	s->value[TREE_LIVEWOOD_C]            = (s->value[LIVEWOOD_C]         / (double)s->counter[N_TREE]);
+	s->value[TREE_DEADWOOD_C]            = (s->value[DEADWOOD_C]         / (double)s->counter[N_TREE]);
 
 	/* compute tree average N pools */
 	s->value[TREE_LEAF_N]                = (s->value[LEAF_N]             / (double)s->counter[N_TREE]);
@@ -219,7 +221,7 @@ void tree_biomass_remove (cell_t *const c, const int height, const int dbh, cons
 
 	s->value[C_BRANCH_HEARTWOOD_TO_CWD] += (s->value[TREE_BRANCH_HEARTWOOD_C] * tree_remove);
 
-	logger(g_debug_log, "Carbon biomass to remove\n");
+	logger(g_debug_log, "Carbon biomass to remove for trees = %d\n", tree_remove);
 	logger(g_debug_log, "C_LEAF_TO_LITR            = %f tC/cell\n", s->value[C_LEAF_TO_LITR]);
 	logger(g_debug_log, "C_FROOT_TO_LITR           = %f tC/cell\n", s->value[C_FROOT_TO_LITR]);
 	logger(g_debug_log, "C_TO_LITR                 = %f tC/cell\n", s->value[C_TO_LITR]);
@@ -267,6 +269,8 @@ void tree_biomass_remove (cell_t *const c, const int height, const int dbh, cons
 	s->value[N_BRANCH_TO_CWD]         += (s->value[TREE_RESERVE_N]    * tree_remove);
 
 	s->value[N_FRUIT_TO_CWD]          += (s->value[TREE_FRUIT_N]      * tree_remove);
+
+	s->value[N_RESERVE_TO_CWD]        += (s->value[TREE_RESERVE_N]    * tree_remove);
 
 	/* overall cwd */
 	s->value[N_TO_CWD]                += (s->value[N_STEM_TO_CWD] +

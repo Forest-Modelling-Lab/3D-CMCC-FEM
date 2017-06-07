@@ -25,6 +25,7 @@ enum {
 	PHENOLOGY,                           /* PHENOLOGY 0.1 = deciduous broadleaf, 0.2 = deciduous needle leaf, 1.1 = broad leaf evergreen, 1.2 = needle leaf evergreen*/
 	ALPHA,                               /* Canopy quantum efficiency (molC/molPAR) */
 	EPSILONgCMJ,                         /* Light Use Efficiency  (gC/MJ)(used if ALPHA is not available) */
+	GAMMA_LIGHT,                         /* Empirical parameter for Light modifiers (see Makela et al., 2008) (m2 mol-1) */
 	K,                                   /* Extinction coefficient for absorption of PAR by canopy */
 	ALBEDO,                              /* Canopy albedo */
 	INT_COEFF,                           /* Precipitation interception coefficient */
@@ -232,8 +233,11 @@ enum {
 	F_A_SUN,                            /* (DIM) ASSIMILATION modifier for Sun leaves (test) */
 	F_A_SHADE,                          /* (DIM) ASSIMILATION modifier for Shaded leaves (test) */
 	PHYS_MOD,                           /* (DIM) PHYSIOLOGICAL modifier */
-
 	F_LIGHT_VERT,
+
+	F_LIGHT_MAKELA,                            /* (DIM) LIGHT modifier */
+	F_LIGHT_SUN_MAKELA,                        /* (DIM) LIGHT modifier for Sun leaves */
+	F_LIGHT_SHADE_MAKELA,                      /* (DIM) LIGHT modifier for Shaded leaves */
 
 	/* water */
 	/* pools */

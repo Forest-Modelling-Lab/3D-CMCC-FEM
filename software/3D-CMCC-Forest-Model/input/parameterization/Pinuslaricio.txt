@@ -3,6 +3,7 @@ LIGHT_TOL	3
 PHENOLOGY	1.2
 ALPHA	0.05
 EPSILONgCMJ	-9999
+GAMMA_LIGHT             0.022   // Empirical parameter for Light modifiers see Bagnara et al., 2015 
 K	0.60 //0.495
 ALBEDO	0.12
 INT_COEFF	0.3

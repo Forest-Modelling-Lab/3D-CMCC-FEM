@@ -201,6 +201,7 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 										",BBAR"
 										",FCO2"
 										",FCO2_TR"
+										",FLIGHT"
 										",FAGE"
 										",FT"
 										",FVPD"
@@ -291,7 +292,7 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 							logger(g_daily_log,",%6.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,"
 									"%d,%d,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
 									",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
-									",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
+									",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
 									",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",
 									s->value[GPP],
 									s->value[TOTAL_GROWTH_RESP],
@@ -346,6 +347,7 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 									s->value[BRANCH_AUT_RESP],
 									s->value[F_CO2],
 									s->value[F_CO2_TR],
+									s->value[F_LIGHT_MAKELA],
 									s->value[F_AGE],
 									s->value[F_T],
 									s->value[F_VPD],

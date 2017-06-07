@@ -120,7 +120,6 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 	m_final       = s->value[F_LIGHT]       * s->value[F_SW] * s->value[F_T] * s->value[F_VPD] * s->value[F_AGE];
 	m_final_sun   = s->value[F_LIGHT_SUN]   * s->value[F_SW] * s->value[F_T] * s->value[F_VPD] * s->value[F_AGE];
 	m_final_shade = s->value[F_LIGHT_SHADE] * s->value[F_SW] * s->value[F_T] * s->value[F_VPD] * s->value[F_AGE];
-
 	logger(g_debug_log, "m_final       = %f \n",m_final);
 	logger(g_debug_log, "m_final_sun   = %f \n",m_final_sun);
 	logger(g_debug_log, "m_final_shade = %f \n",m_final_shade);
@@ -130,16 +129,13 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 	if (m_final_sun   < eps) m_final_sun   = eps;
 	if (m_final_shade < eps) m_final_shade = eps;
 
-	/** stomatal conductance **/
+	/** MAXIMUM stomatal conductance **/
 	/* correct maximum stomatal conductance for CO2 concentration */
 	gl_x = (s->value[F_CO2_TR] / 0.9116) * s->value[MAXCOND];
 	logger(g_debug_log, "gl_x = %f\n",gl_x);
 
-	/* following Jarvis 1997 approach (not more used) */
-	//gl_s_sun = s->value[MAXCOND] * m_final_sun * g_corr;
-	//gl_s_shade = s->value[MAXCOND] * m_final_shade * g_corr;
-
 	/* following Jarvis 1997 + Frank et al., 2013 + Hidy et al., 2016 GMD */
+
 	s->value[STOMATAL_CONDUCTANCE]       = gl_x * m_final       * g_corr;
 	s->value[STOMATAL_SUN_CONDUCTANCE]   = gl_x * m_final_sun   * g_corr;
 	s->value[STOMATAL_SHADE_CONDUCTANCE] = gl_x * m_final_shade * g_corr;
@@ -160,7 +156,6 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 		LAI.  This formula is derived from stomatal and cuticular conductances
 		in parallel with each other, and both in series with leaf boundary
 		layer conductance. */
-
 	s->value[LEAF_CONDUCTANCE]       = (gl_bl * (s->value[STOMATAL_CONDUCTANCE]       + gl_c)) / (gl_bl + s->value[STOMATAL_CONDUCTANCE]       + gl_c);
 	s->value[LEAF_SUN_CONDUCTANCE]   = (gl_bl * (s->value[STOMATAL_SUN_CONDUCTANCE]   + gl_c)) / (gl_bl + s->value[STOMATAL_SUN_CONDUCTANCE]   + gl_c);
 	s->value[LEAF_SHADE_CONDUCTANCE] = (gl_bl * (s->value[STOMATAL_SHADE_CONDUCTANCE] + gl_c)) / (gl_bl + s->value[STOMATAL_SHADE_CONDUCTANCE] + gl_c);
@@ -290,7 +285,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 				/* convert radiation to stomatal scale */
 				//fixme why??????????
 
-				net_rad = s->value[SW_RAD_ABS_SUN] / s->value[LAI_SUN_PROJ];
+				net_rad = ( s->value[SW_RAD_ABS_SUN] / s->value[LAI_SUN_PROJ] ) * s->value[F_LIGHT_SUN_MAKELA];
 				logger(g_debug_log, "sw rad for evaporation (LAI sun ) = %f W/m2\n", net_rad);
 
 				/* call Penman-Monteith function, returns e in kg/m2/s for transpiration and W/m2 for latent heat */
@@ -309,7 +304,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 				/* note: Net Rad is Short wave flux */
 				/* convert radiation to stomatal scale */
 				//fixme why??????????
-				net_rad = s->value[SW_RAD_ABS_SHADE] / s->value[LAI_SHADE_PROJ];
+				net_rad = ( s->value[SW_RAD_ABS_SHADE] / s->value[LAI_SHADE_PROJ] ) * s->value[F_LIGHT_SHADE_MAKELA];
 				logger(g_debug_log, "sw rad for evaporation (LAI shade) = %f W/m2\n", net_rad);
 
 				/* call Penman-Monteith function, returns e in kg/m2/s for transpiration and W/m2 for latent heat*/
@@ -378,7 +373,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 			/* note: Net Rad is Short wave flux */
 			/* convert radiation to stomatal scale */
 			//fixme why??????????
-			net_rad = s->value[SW_RAD_ABS_SUN] / s->value[LAI_SUN_PROJ];
+			net_rad = ( s->value[SW_RAD_ABS_SUN] / s->value[LAI_SUN_PROJ] ) * s->value[F_LIGHT_SUN_MAKELA] ;
 			logger(g_debug_log, "sw rad for evaporation (LAI sun) = %f W/m2\n", net_rad);
 
 			/* call Penman-Monteith function, returns e in kg/m2/s for transpiration and W/m2 for latent heat*/
@@ -396,7 +391,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 			/* note: Net Rad is Short wave flux */
 			/* convert radiation to stomatal scale */
 			//fixme why??????????
-			net_rad = s->value[SW_RAD_ABS_SHADE] / s->value[LAI_SHADE_PROJ];
+			net_rad = ( s->value[SW_RAD_ABS_SHADE] / s->value[LAI_SHADE_PROJ] ) * s->value[F_LIGHT_SHADE_MAKELA] ;
 			logger(g_debug_log, "sw rad for evaporation (LAI shade) = %f W/m2\n", net_rad);
 
 			/* call Penman-Monteith function, returns e in kg/m2/s for transpiration and W/m2 for latent heat*/

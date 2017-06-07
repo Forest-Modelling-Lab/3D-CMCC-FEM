@@ -1,10 +1,11 @@
 //Fagus_sylvatica parameterization file
 LIGHT_TOL   3                  //4 = very shade intolerant (cc = 90%), 3 = shade intolerant (cc = 100%), 2 = shade tolerant (cc = 110%), 1 = very shade tolerant (cc = 120%)
 PHENOLOGY   0.1                //PHENOLOGY 0.1 = deciduous broadleaf, 0.2 = deciduous needle leaf, 1.1 = broad leaf evergreen, 1.2 = needle leaf evergreen 
-ALPHA   0.055                  //Canopy quantum efficiency (molC/molPAR) (0.057) Peltionemi et al., 2012, (0.05) from Williams 199, (0.056) Rotzer et al., 2010
+ALPHA   0.057 //0.055                  //Canopy quantum efficiency (molC/molPAR) (0.057) Peltionemi et al., 2012, (0.05) from Williams 199, (0.056) Rotzer et al., 2010
 EPSILONgCMJ 0.69               //Light Use Efficiency  (gC/MJ)(used if ALPHA is not available) Peltionemi et al., 2012,
-K   0.60                       //0.54 Extinction coefficient for absorption of PAR by canopy 0.71 for F. sylvatica Vitale et al., 2012, 0.5 from Williams 1996, 0.65 Hoffmann 1995, 0.45 Forrester et al., 2014
-ALBEDO 0.15 // 0.2             //Albedo, 0.15 (varying from 0.13-0.17) from OTTO et al., BGS 2014
+GAMMA_LIGHT  0.0025            // Empirical parameter for Light modifiers 
+K   0.65 //0.60                       //0.54 Extinction coefficient for absorption of PAR by canopy 0.71 for F. sylvatica Vitale et al., 2012, 0.5 from Williams 1996, 0.65 Hoffmann 1995, 0.45 Forrester et al., 2014
+ALBEDO 0.13 //0.15                    //Albedo, 0.15 (varying from 0.13-0.17) from OTTO et al., BGS 2014
 INT_COEFF  0.3                 //precip interception coefficient for F. sylvatica fom Tatarinov
 SLA_AVG0 80 //60                    //Average Specific Leaf Area m^2/KgC (juvenile) sunlit/shaded leaves for Fagus s.60  Adriaenssens et al., 2011; 27.8 to 48 from Pietsch 2005, 35 for Tatarinov et al., 2006
 SLA_AVG1 30                    //Average Specific Leaf Area m^2/KgC (mature) sunlit/shaded leaves for Fagus s. Holscher et al., 2004; 27.8 to 48 from Pietsch 2005, 35 for Tatarinov et al., 2006
@@ -18,15 +19,15 @@ RHO0  0.64                     //Minimum Basic Density for young Trees tDM/m^3 0
 RHO1  0.64                     //Maximum Basic Density for young Trees tDM/m^3 0.79 Bouriaud et al., 2004, 0.64 ettore, 0.68 Seidl et al., 2012, 0.58 Bartelink 1997
 TRHO    100                    //Age at which rho = (RHOMIN + RHOMAX )/2
 FORM_FACTOR 0.433              //Form factor Seidl et al., 2012
-COEFFCOND   0.08   //0.06       //Define stomatal responsee to VPD in mbar see Pietsch et al., 2005
+COEFFCOND   0.08 //0.06       //Define stomatal responsee to VPD in mbar see Pietsch et al., 2005
 BLCOND  0.01                   //Canopy Boundary Layer conductance see 0.01 for stomatal Pietsch et al., 2005
-MAXCOND 0.003     //0.005      //Maximum Stomatal Conductance in m/sec 0,005 for Tatarinov et al., 2006, 0.006 Pietsch, 0.003 Breuer et al., 2003
+MAXCOND 0.005                  //Maximum Stomatal Conductance in m/sec 0,005 for Tatarinov et al., 2006, 0.006 Pietsch, 0.003 Breuer et al., 2003
 CUTCOND 6e-05                  //Cuticul conductance in m/sec for F sylvatica 0.000006 Tatarinov et al., 2006
 MAXAGE  400                    //Determines rate of "physiological decline" of forest
 RAGE    0.95                   //Relative Age to give fAGE = 0.5
 NAGE    10                     //Power of relative Age in function for Age
 GROWTHTMIN  0                  //Minimum temperature for growth 5  Rasse et al 2001 0 from Williams 1996, -2 Hoffmann 1995
-GROWTHTMAX  35                 //Maximum temperature for growth 40 from Williams 1996 35 from calibration
+GROWTHTMAX  40 //35                 //Maximum temperature for growth 40 from Williams 1996 35 from calibration
 GROWTHTOPT  20                 //Optimum temperature for growth 19.4 Rasse et al 2001, 20 from Lyr & Garbe, 1994, 22 Hoffmann 1995
 GROWTHSTART 100                //(5 °C)average temperature or (GDD) thermic sum for starting growth in °C 130 ettore with t base = 5°C, 130 from Hoffmann et al., 1995 
 MINDAYLENGTH    12             //minimum day length for fagus from ettore, 12 through satellite images
@@ -63,7 +64,7 @@ DBHDCMAX    0.50               //Low Density Condes & Sterba 2005
 DBHDCMIN    0.14               //High Density from ettore
 SAP_A  0.778 //0.674                   //a value 0.674 from Kostner, 0.778 Gebauer et al., 2008, for Fagus sylvatica
 SAP_B  1.917 //1.992                   //b value 1.992 from Kostner, 1.917 Gebauer et al., 2008,for Fagus sylvatica
-SAP_LEAF    5400 //  3410           //leaf area/sapwood max ratio in pipe model 5400 McDowell et al 2002, 1850 from Williams 1996, 3310. 3410 Bartelink 1997, 1998 , 2100 from Kostner, 3310 from ettore
+SAP_LEAF  4040 //5400          //leaf area/sapwood max ratio in pipe model 5400 McDowell et al 2002, 1850 from Williams 1996, 3310. 3410 Bartelink 1997, 1998 , 2100 from Kostner, 3310 from ettore
 SAP_WRES    0.11               //Sapwood-Reserve biomass ratio gTNC/100gDM 0.043 in January for fagus see Barbaroux 2002 0.11 for deciduous 0.05 for evergreen see Schwalm and Ek, 2004 Ecological Modelling
 STEMCONST_P 0.2837             //a parameter for F. sylvatica for allometric equation from ettore, 0.70 Seidl et al., 2012
 STEMPOWER_P 2.134              //b parameter for F. sylvatica for allometric equation from ettore, 3.00 Seidl et al., 2012

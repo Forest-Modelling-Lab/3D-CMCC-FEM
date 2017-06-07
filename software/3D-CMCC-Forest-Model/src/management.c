@@ -180,7 +180,7 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 						//fixme fixme ALESSIOR for harvesting use data from ISIMIP_harvesting.csv file
 
 						/* if class age matches with harvesting */
-						if (  a->value  == s->value[ROTATION] )
+						if ( ( a->value >= s->value[ROTATION] ) && ( c->years[year].year > g_settings->year_start_management ) )
 						{
 							int rsi;               /* replanted species index */
 
@@ -347,11 +347,17 @@ void prescribed_thinning (cell_t *const c, const int height, const int dbh, cons
 			{
 				if ( g_dataset->rows[row].n != c->heights[height].dbhs[dbh].ages[age].species[species].counter[N_TREE] )
 				{
+					int tree_remove;
+
 					CHECK_CONDITION(c->heights[height].dbhs[dbh].ages[age].species[species].counter[N_TREE], <, g_dataset->rows[row].n);
 
-					tree_biomass_remove(c, height, dbh, age, species
-						, c->heights[height].dbhs[dbh].ages[age].species[species].counter[N_TREE] - g_dataset->rows[row].n
-					); 
+					/* compute number of tree to remove */
+					tree_remove = c->heights[height].dbhs[dbh].ages[age].species[species].counter[N_TREE] - g_dataset->rows[row].n;
+
+					logger(g_debug_log, "\n** Management options: Prescribed Thinning **\n");
+
+					tree_biomass_remove(c, height, dbh, age, species, tree_remove);
+
 					c->heights[height].dbhs[dbh].ages[age].species[species].counter[N_TREE] = g_dataset->rows[row].n;
 				}
 			}
@@ -367,7 +373,7 @@ static int harvesting (cell_t *const c, const int height, const int dbh, const i
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 	/* at the moment it considers a complete harvesting for all classes (if considered) */
-	logger(g_debug_log, "\n\n\n\n\n** Management options: Harvesting ** \n\n\n\n\n");
+	logger(g_debug_log, "\n** Management options: Harvesting ** \n");
 
 	/* update C and N biomass */
 	tree_biomass_remove ( c, height, dbh, age, species, s->counter[N_TREE] );
