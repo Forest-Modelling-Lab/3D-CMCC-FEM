@@ -246,7 +246,6 @@ int growth_efficiency_mortality ( cell_t *const c, const int height, const int d
 			exit(1);
 		}
 		return 1;
-
 	}
 	return 0;
 }
