@@ -8,7 +8,7 @@ K                   0.54    //0.67    //Extinction coefficient for absorption of
 ALBEDO                  0.06    //averaged for P.abies, 0.06 Jarvis et al., 1976, 0.095 from Breuer et al., 2003
 INT_COEFF               0.25    //precip interception coefficient for Picea abies (0.3 see Tatarinov) (0.25 see Lawrence et al., 2007)
 SLA_AVG1                12      //Average Specific Leaf Area m^2/KgC (juvenile) sunlit/shaded leaves for Picea abies Konopka et al., 2014, (5.9) see Johansson, T. 1999
-SLA_AVG0                7.52    //Average Specific Leaf Area m^2/KgC (MATURE) sunlit/shaded leaves for Picea abies Mund et al., 2002, (5.9) see Johansson, T. 1999
+SLA_AVG0            5.9 //    7.52    //Average Specific Leaf Area m^2/KgC (MATURE) sunlit/shaded leaves for Picea abies 7.52 Mund et al., 2002, (5.9) see Johansson, T. 1999
 TSLA                    30      //Age at which SLA_AVG = (SLA_AVG1 + SLA_AVG0 )/2 Forrester et al., 2017
 SLA_RATIO               2       //(DIM) ratio of shaded to sunlit projected SLA for Picea abies (see Pietsch)
 LAI_RATIO               2.6     /(DIM) all-sided to projected leaf area ratio from Mollicone et al., 2002
@@ -34,8 +34,8 @@ MINDAYLENGTH            0       //minimum day length for deciduous
 SWPOPEN                -0.5     //in KPa for P. abies from Pietsch et al 2005
 SWPCLOSE               -2.5     //in KPa for P. abies from Pietsch et al 2005, -3.5 Pietsch et al., 2014
 OMEGA_CTEM              0.5     //ALLOCATION PARAMETER control the sensitivity of allocation to changes in water and light availability for Needlleleaf deciduous from Arora et al 2005
-S0CTEM                  0.40    //PARAMETER CONTROLLING ALLOCATION TO STEM/MINIMUM RATIO TO C TO STEM 
-R0CTEM                  0.30    //PARAMETER CONTROLLING ALLOCATION TO ROOT/MINIMUM RATIO TO C TO ROOTS
+S0CTEM                  0.35    //PARAMETER CONTROLLING ALLOCATION TO STEM/MINIMUM RATIO TO C TO STEM 
+R0CTEM                  0.35    //PARAMETER CONTROLLING ALLOCATION TO ROOT/MINIMUM RATIO TO C TO ROOTS
 F0CTEM                  0.30    //PARAMETER CONTROLLING ALLOCATION TO FOLIAGE/MINIMUM RATIO TO C TO STEM
 FRUIT_PERC              0.20    //fraction of NPP allocated for reproduction (0 for broadleaf) for P. sylvestris 0.15 from Xiao et al., 2003, 0.2 from Yuste et al., 2005, 
 CONES_LIFE_SPAN         3       //Life span for cones (yrs)

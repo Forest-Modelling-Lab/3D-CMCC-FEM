@@ -33,7 +33,7 @@ model_run=(Debug Release)
 SITEs=(Bily_Kriz Collelongo Hyytiala Kroof LeBray Peitz Solling_beech Solling_spruce Soroe All)
 
 #experiments
-EXPs=(LOCAL FT 2A 2B 2BLBC All)
+EXPs=(LOCAL FT 2A 2B 2BLBC)
 
 #declare ESMs or Repeated
 ESMs=(ESM1 ESM2 ESM3 ESM4 ESM5 ESM6 ESM7 ESM8 ESM9 ESM10 All)

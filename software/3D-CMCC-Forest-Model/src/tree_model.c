@@ -106,6 +106,9 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 
 	logger (g_debug_log, "\n********* TREE_MODEL_DAILY *********\n");
 
+	/* compute single tree average biomass */
+	average_tree_pools ( c );
+
 	/****************************************************************************/
 
 	if ( ! day && ! month )
@@ -289,7 +292,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							autotrophic_respiration ( c, layer, height, dbh, age, species, meteo_daily );
 
 							/* carbon fluxes */
-							carbon_fluxes           ( s );
+							carbon_fluxes           ( c, height, dbh, age, species );
 
 							/* C assimilation */
 							carbon_assimilation     ( c, height, dbh, age, species );

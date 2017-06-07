@@ -149,9 +149,6 @@ void carbon_allocation( cell_t *const c, const int height, const int dbh, const 
 			s->value[FRUIT_C]            +
 			s->value[RESERVE_C]          ;
 
-	/* single tree average tree pools */
-	average_tree_pools ( s );
-
 	/*** update cell level carbon fluxes (gC/m2/day)***/
 	c->daily_leaf_carbon        += (s->value[C_TO_LEAF]    * 1e6 / g_settings->sizeCell);
 	c->daily_froot_carbon       += (s->value[C_TO_FROOT]   * 1e6 / g_settings->sizeCell);

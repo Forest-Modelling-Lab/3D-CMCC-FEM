@@ -100,56 +100,76 @@ void abg_bgb_biomass(cell_t *const c, const int height, const int dbh, const int
 	logger(g_debug_log, "DELTA_TREE_BGB   = %f tC/tree/year\n", s->value[DELTA_TREE_BGB]);
 }
 
-void average_tree_pools(species_t *const s)
+void average_tree_pools(cell_t *const c)
 {
+	int height;
+	int dbh;
+	int age;
+	int species;
+
+	species_t *s;
+
 	logger(g_debug_log, "\n*AVERAGE TREE POOLS*\n");
-	logger(g_debug_log,  "N_TREE = %d\n", s->counter[N_TREE]);
+	for ( height = 0; height < c->heights_count ; ++height )
+	{
 
-	/* note: it takes into account previous biomass to remove if function is called twice in a day (e.g.
+		for ( dbh = 0; dbh < c->heights[height].dbhs_count; ++dbh )
+		{
+			for ( age = 0; age < c->heights[height].dbhs[dbh].ages_count ; ++age )
+			{
+				for ( species = 0; species < c->heights[height].dbhs[dbh].ages[age].species_count; ++species )
+				{
+					s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
-	/* compute tree average C pools */
-	s->value[TREE_LEAF_C]                = (s->value[LEAF_C]             / (double)s->counter[N_TREE]);
-	s->value[TREE_STEM_C]                = (s->value[STEM_C]             / (double)s->counter[N_TREE]);
-	s->value[TREE_FROOT_C]               = (s->value[FROOT_C]            / (double)s->counter[N_TREE]);
-	s->value[TREE_CROOT_C]               = (s->value[CROOT_C]            / (double)s->counter[N_TREE]);
-	s->value[TREE_RESERVE_C]             = (s->value[RESERVE_C]          / (double)s->counter[N_TREE]);
-	s->value[TREE_BRANCH_C]              = (s->value[BRANCH_C]           / (double)s->counter[N_TREE]);
-	s->value[TREE_FRUIT_C]               = (s->value[FRUIT_C]            / (double)s->counter[N_TREE]);
-	s->value[TREE_STEM_SAPWOOD_C]        = (s->value[STEM_SAPWOOD_C]     / (double)s->counter[N_TREE]);
-	s->value[TREE_STEM_HEARTWOOD_C]      = (s->value[STEM_HEARTWOOD_C]   / (double)s->counter[N_TREE]);
-	s->value[TREE_CROOT_SAPWOOD_C]       = (s->value[CROOT_SAPWOOD_C]    / (double)s->counter[N_TREE]);
-	s->value[TREE_CROOT_HEARTWOOD_C]     = (s->value[CROOT_HEARTWOOD_C]  / (double)s->counter[N_TREE]);
-	s->value[TREE_BRANCH_SAPWOOD_C]      = (s->value[BRANCH_SAPWOOD_C]   / (double)s->counter[N_TREE]);
-	s->value[TREE_BRANCH_HEARTWOOD_C]    = (s->value[BRANCH_HEARTWOOD_C] / (double)s->counter[N_TREE]);
-	s->value[TREE_SAPWOOD_C]             = (s->value[SAPWOOD_C]          / (double)s->counter[N_TREE]);
-	s->value[TREE_HEARTWOOD_C]           = (s->value[HEARTWOOD_C]        / (double)s->counter[N_TREE]);
-	s->value[TREE_STEM_LIVEWOOD_C]       = (s->value[STEM_LIVEWOOD_C]    / (double)s->counter[N_TREE]);
-	s->value[TREE_STEM_DEADWOOD_C]       = (s->value[STEM_DEADWOOD_C]    / (double)s->counter[N_TREE]);
-	s->value[TREE_CROOT_LIVEWOOD_C]      = (s->value[CROOT_LIVEWOOD_C]   / (double)s->counter[N_TREE]);
-	s->value[TREE_CROOT_DEADWOOD_C]      = (s->value[CROOT_DEADWOOD_C]   / (double)s->counter[N_TREE]);
-	s->value[TREE_BRANCH_LIVEWOOD_C]     = (s->value[BRANCH_LIVEWOOD_C]  / (double)s->counter[N_TREE]);
-	s->value[TREE_BRANCH_DEADWOOD_C]     = (s->value[BRANCH_DEADWOOD_C]  / (double)s->counter[N_TREE]);
-	s->value[TREE_LIVEWOOD_C]            = (s->value[LIVEWOOD_C]         / (double)s->counter[N_TREE]);
-	s->value[TREE_DEADWOOD_C]            = (s->value[DEADWOOD_C]         / (double)s->counter[N_TREE]);
+					logger(g_debug_log,  "N_TREE = %d\n", s->counter[N_TREE]);
 
-	/* compute tree average N pools */
-	s->value[TREE_LEAF_N]                = (s->value[LEAF_N]             / (double)s->counter[N_TREE]);
-	s->value[TREE_STEM_N]                = (s->value[STEM_N]             / (double)s->counter[N_TREE]);
-	s->value[TREE_FROOT_N]               = (s->value[FROOT_N]            / (double)s->counter[N_TREE]);
-	s->value[TREE_CROOT_N]               = (s->value[CROOT_N]            / (double)s->counter[N_TREE]);
-	s->value[TREE_BRANCH_N]              = (s->value[BRANCH_N]           / (double)s->counter[N_TREE]);
-	s->value[TREE_RESERVE_N]             = (s->value[RESERVE_N]          / (double)s->counter[N_TREE]);
-	s->value[TREE_FRUIT_N]               = (s->value[FRUIT_N]            / (double)s->counter[N_TREE]);
+					/* note: it takes into account previous biomass to remove if function is called twice in a day (e.g.
 
-	logger(g_debug_log, "TREE_LEAF_C    = %f tC/tree\n", s->value[TREE_LEAF_C]);
-	logger(g_debug_log, "TREE_STEM_C    = %f tC/tree\n", s->value[TREE_STEM_C]);
-	logger(g_debug_log, "TREE_FROOT_C   = %f tC/tree\n", s->value[TREE_FROOT_C]);
-	logger(g_debug_log, "TREE_CROOT_C   = %f tC/tree\n", s->value[TREE_CROOT_C]);
-	logger(g_debug_log, "TREE_RESERVE_C = %f tC/tree\n", s->value[TREE_RESERVE_C]);
-	logger(g_debug_log, "TREE_BRANCH_C  = %f tC/tree\n", s->value[TREE_BRANCH_C]);
-	logger(g_debug_log, "TREE_FRUIT_C   = %f tC/tree\n", s->value[TREE_FRUIT_C]);
+					/* compute tree average C pools */
+					s->value[TREE_LEAF_C]                = (s->value[LEAF_C]             / (double)s->counter[N_TREE]);
+					s->value[TREE_STEM_C]                = (s->value[STEM_C]             / (double)s->counter[N_TREE]);
+					s->value[TREE_FROOT_C]               = (s->value[FROOT_C]            / (double)s->counter[N_TREE]);
+					s->value[TREE_CROOT_C]               = (s->value[CROOT_C]            / (double)s->counter[N_TREE]);
+					s->value[TREE_RESERVE_C]             = (s->value[RESERVE_C]          / (double)s->counter[N_TREE]);
+					s->value[TREE_BRANCH_C]              = (s->value[BRANCH_C]           / (double)s->counter[N_TREE]);
+					s->value[TREE_FRUIT_C]               = (s->value[FRUIT_C]            / (double)s->counter[N_TREE]);
+					s->value[TREE_STEM_SAPWOOD_C]        = (s->value[STEM_SAPWOOD_C]     / (double)s->counter[N_TREE]);
+					s->value[TREE_STEM_HEARTWOOD_C]      = (s->value[STEM_HEARTWOOD_C]   / (double)s->counter[N_TREE]);
+					s->value[TREE_CROOT_SAPWOOD_C]       = (s->value[CROOT_SAPWOOD_C]    / (double)s->counter[N_TREE]);
+					s->value[TREE_CROOT_HEARTWOOD_C]     = (s->value[CROOT_HEARTWOOD_C]  / (double)s->counter[N_TREE]);
+					s->value[TREE_BRANCH_SAPWOOD_C]      = (s->value[BRANCH_SAPWOOD_C]   / (double)s->counter[N_TREE]);
+					s->value[TREE_BRANCH_HEARTWOOD_C]    = (s->value[BRANCH_HEARTWOOD_C] / (double)s->counter[N_TREE]);
+					s->value[TREE_SAPWOOD_C]             = (s->value[SAPWOOD_C]          / (double)s->counter[N_TREE]);
+					s->value[TREE_HEARTWOOD_C]           = (s->value[HEARTWOOD_C]        / (double)s->counter[N_TREE]);
+					s->value[TREE_STEM_LIVEWOOD_C]       = (s->value[STEM_LIVEWOOD_C]    / (double)s->counter[N_TREE]);
+					s->value[TREE_STEM_DEADWOOD_C]       = (s->value[STEM_DEADWOOD_C]    / (double)s->counter[N_TREE]);
+					s->value[TREE_CROOT_LIVEWOOD_C]      = (s->value[CROOT_LIVEWOOD_C]   / (double)s->counter[N_TREE]);
+					s->value[TREE_CROOT_DEADWOOD_C]      = (s->value[CROOT_DEADWOOD_C]   / (double)s->counter[N_TREE]);
+					s->value[TREE_BRANCH_LIVEWOOD_C]     = (s->value[BRANCH_LIVEWOOD_C]  / (double)s->counter[N_TREE]);
+					s->value[TREE_BRANCH_DEADWOOD_C]     = (s->value[BRANCH_DEADWOOD_C]  / (double)s->counter[N_TREE]);
+					s->value[TREE_LIVEWOOD_C]            = (s->value[LIVEWOOD_C]         / (double)s->counter[N_TREE]);
+					s->value[TREE_DEADWOOD_C]            = (s->value[DEADWOOD_C]         / (double)s->counter[N_TREE]);
 
+					/* compute tree average N pools */
+					s->value[TREE_LEAF_N]                = (s->value[LEAF_N]             / (double)s->counter[N_TREE]);
+					s->value[TREE_STEM_N]                = (s->value[STEM_N]             / (double)s->counter[N_TREE]);
+					s->value[TREE_FROOT_N]               = (s->value[FROOT_N]            / (double)s->counter[N_TREE]);
+					s->value[TREE_CROOT_N]               = (s->value[CROOT_N]            / (double)s->counter[N_TREE]);
+					s->value[TREE_BRANCH_N]              = (s->value[BRANCH_N]           / (double)s->counter[N_TREE]);
+					s->value[TREE_RESERVE_N]             = (s->value[RESERVE_N]          / (double)s->counter[N_TREE]);
+					s->value[TREE_FRUIT_N]               = (s->value[FRUIT_N]            / (double)s->counter[N_TREE]);
 
+					logger(g_debug_log, "TREE_LEAF_C    = %f tC/tree\n", s->value[TREE_LEAF_C]);
+					logger(g_debug_log, "TREE_STEM_C    = %f tC/tree\n", s->value[TREE_STEM_C]);
+					logger(g_debug_log, "TREE_FROOT_C   = %f tC/tree\n", s->value[TREE_FROOT_C]);
+					logger(g_debug_log, "TREE_CROOT_C   = %f tC/tree\n", s->value[TREE_CROOT_C]);
+					logger(g_debug_log, "TREE_RESERVE_C = %f tC/tree\n", s->value[TREE_RESERVE_C]);
+					logger(g_debug_log, "TREE_BRANCH_C  = %f tC/tree\n", s->value[TREE_BRANCH_C]);
+					logger(g_debug_log, "TREE_FRUIT_C   = %f tC/tree\n", s->value[TREE_FRUIT_C]);
+				}
+			}
+		}
+	}
 }
 
 
@@ -175,7 +195,7 @@ void tree_biomass_remove (cell_t *const c, const int height, const int dbh, cons
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 	/* compute single tree average biomass */
-	average_tree_pools ( s );
+	//average_tree_pools ( s );
 
 	logger(g_debug_log, "\n*TREE BIOMASS REMOVE*\n");
 

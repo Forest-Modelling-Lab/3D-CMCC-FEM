@@ -34,8 +34,6 @@ void photosynthesis(cell_t *const c, const int layer, const int height, const in
 
 	logger(g_debug_log, "VegUnveg = %d\n", s->counter[VEG_UNVEG]);
 
-	//note: photosynthesis in controlled by transpiration through the F_VPD modifier that also controls transpiration */
-
 	if (s->value[ALPHA] != NO_DATA)
 	{
 		/* compute effective light use efficiency */
@@ -76,6 +74,7 @@ void photosynthesis(cell_t *const c, const int layer, const int height, const in
 	}
 
 	/* Light Use Efficiency Actual and Potential */
+	/* new 07 June 2017 included APAR downregulation */
 	Lue           = s->value[APAR]       * Alpha_C;
 	Lue_max       = s->value[PAR]        * Alpha_C;
 	Lue_sun       = s->value[APAR_SUN]   * Alpha_C * s->value[F_LIGHT_SUN_MAKELA];
@@ -102,11 +101,6 @@ void photosynthesis(cell_t *const c, const int layer, const int height, const in
 		/* current Lue cannot exceeds Lue max */
 		Lue_shade = Lue_shade_max;
 	}
-
-	/* compute assimilation modifier (test) */
-	s->value[F_A_SUN]   = Lue_sun   / Lue_sun_max;
-	s->value[F_A_SHADE] = Lue_shade / Lue_shade_max;
-
 
 	/* GPP */
 	/* Daily GPP in molC/m^2/day */

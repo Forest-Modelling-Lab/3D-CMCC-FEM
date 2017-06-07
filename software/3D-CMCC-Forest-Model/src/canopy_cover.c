@@ -34,8 +34,8 @@ void dbhdc_function (cell_t *const c, const int layer, const int height, const i
 	double temp_crown_radius   = 0.;
 	double temp_crown_diameter = 0.;
 	double previous_dbhdc_eff  = 0.;
-	double max_dbhdc_incr      = 0.05;               /* fraction of maximum dbhdc increment */
-	double max_dbhdc_decr      = 0.05;               /* fraction of maximum dbhdc decrement */
+	double max_dbhdc_incr      = 0.001;               /* fraction of maximum dbhdc increment */
+	//double max_dbhdc_decr      = 0.001;               /* fraction of maximum dbhdc decrement */
 
 
 	dbh_t *d;

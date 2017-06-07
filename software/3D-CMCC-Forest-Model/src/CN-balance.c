@@ -73,11 +73,5 @@ void carbon_balance (cell_t *const c, const int height, const int dbh, const int
 	CHECK_CONDITION ( c->litrC,          < , ZERO );
 	CHECK_CONDITION ( c->cwdC,           < , ZERO );
 	/***************************************************************************************/
-
-	/* single tree average tree pools */
-	average_tree_pools ( s );
-
-	/***************************************************************************************/
-
 }
 

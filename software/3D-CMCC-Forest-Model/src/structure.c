@@ -193,7 +193,9 @@ int annual_forest_structure(cell_t* const c, const int year)
 						{
 							if( layer == c->heights[height].height_z )
 							{
-								c->tree_layers[layer].layer_n_trees += c->heights[height].dbhs[dbh].ages[age].species[species].counter[N_TREE];
+								s = &c->heights[height].dbhs[dbh].ages[age].species[species];
+
+								c->tree_layers[layer].layer_n_trees += s->counter[N_TREE];
 							}
 						}
 					}
@@ -339,9 +341,13 @@ int annual_forest_structure(cell_t* const c, const int year)
 							s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 							/*************** self-thinning ****************/
-							if ( s->value[DBHDC_EFF] <= s->value[DBHDCMIN] )
+							/* note: special case for ISIMIP, avoid self thinning when management is 'var' */
+							if ( ( c->years[year].year >= g_settings->year_start_management ) && ( MANAGEMENT_VAR == g_settings->management ) )
 							{
-								self_thinning_mortality ( c, layer, year );
+								if ( s->value[DBHDC_EFF] <= s->value[DBHDCMIN] )
+								{
+									self_thinning_mortality ( c, layer, year );
+								}
 							}
 						}
 					}

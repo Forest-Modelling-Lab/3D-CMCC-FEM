@@ -230,8 +230,6 @@ enum {
 	F_PSI,                              /* (DIM) SOIL WATER modifier using PSI, see Biome */
 	F_CO2,                              /* (DIM) CO2 soil fertilization effect */
 	F_CO2_TR,                           /* (DIM) CO2 reduction effect (for stomatal conductance) */
-	F_A_SUN,                            /* (DIM) ASSIMILATION modifier for Sun leaves (test) */
-	F_A_SHADE,                          /* (DIM) ASSIMILATION modifier for Shaded leaves (test) */
 	PHYS_MOD,                           /* (DIM) PHYSIOLOGICAL modifier */
 	F_LIGHT_VERT,
 

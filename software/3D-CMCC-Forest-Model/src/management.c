@@ -148,7 +148,7 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 
 						/*************************************** THINNING *************************************/
 						/* ISIMIP case: management forced by stand data */
-						if ( year && (MANAGEMENT_VAR == g_settings->management)  )
+						if ( year && ( MANAGEMENT_VAR == g_settings->management ) )
 						{
 							prescribed_thinning ( c, height, dbh, age, species, c->years[year].year );
 						}

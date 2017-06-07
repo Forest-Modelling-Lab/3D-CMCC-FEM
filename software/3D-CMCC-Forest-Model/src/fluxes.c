@@ -15,8 +15,11 @@
 
 extern logger_t* g_debug_log;
 
-void carbon_fluxes (species_t *const s)
+void carbon_fluxes (cell_t *const c, const int height, const int dbh, const int age, const int species)
 {
+	species_t *s;
+	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
+
 	/* compute carbon balance between photosynthesis and autotrophic respiration */
 
 	logger(g_debug_log, "\n**C-FLUXES**\n");
