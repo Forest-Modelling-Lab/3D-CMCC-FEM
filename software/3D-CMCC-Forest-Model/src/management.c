@@ -201,9 +201,6 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 			(THINNING_REGIME_ABOVE == g_settings->thinning_regime) ? sort_by_heights_asc : sort_by_heights_desc
 	);
 
-	//fixme to include once THINNING_REGIME is included
-	//	for ( layer = c->tree_layers_count - 1 ; layer >= 0; --layer )
-	//	{
 	/* loop on each heights starting from highest to lower */
 	for ( height = c->heights_count -1 ; height >= 0; --height )
 	{
@@ -270,7 +267,7 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 						}
 					}
 
-					// thinning
+					/* thinning */
 					if ( flag )
 					{
 						logger(g_debug_log,"**FOREST MANAGEMENT**\n");
@@ -280,29 +277,21 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 
 						/* reset counter */
 						s->counter[YEARS_THINNING] = 0;
-						
-						//c->management = 1;
 					}
 
 					/* increment counter */
 					++s->counter[YEARS_THINNING];
 
-					/* check */
-					CHECK_CONDITION( s->counter[YEARS_THINNING], >, s->value[ROTATION] );
-
 					/*************************************** HARVESTING *************************************/
-
-					//fixme fixme ALESSIOR for harvesting use data from ISIMIP_harvesting.csv file
-
-					/* if class age matches with harvesting */
-					//
-					//
 				
 					flag = 0;
 					if ( MANAGEMENT_ON == g_settings->management )
 					{
-						if ( ( a->value >= s->value[ROTATION] )
-							&& ( c->years[year].year > g_settings->year_start_management ) )
+						/* check */
+						CHECK_CONDITION( s->counter[YEARS_THINNING], >, s->value[ROTATION] );
+
+						/* check for harvesting */
+						if ( a->value == s->value[ROTATION] )
 						{
 							flag = 1;
 						}
@@ -362,12 +351,6 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 						CHECK_CONDITION (g_settings->replanted[rsi].height, <, 1.3);
 						CHECK_CONDITION (g_settings->replanted[rsi].avdbh,  <, ZERO);
 						CHECK_CONDITION (g_settings->replanted[rsi].age,    <, ZERO);
-						/*
-						CHECK_CONDITION (g_settings->replanted[rsi].n_tree, <, NO_DATA);
-						CHECK_CONDITION (g_settings->replanted[rsi].height, <, NO_DATA);
-						CHECK_CONDITION (g_settings->replanted[rsi].avdbh,  <, NO_DATA);
-						CHECK_CONDITION (g_settings->replanted[rsi].age,    <, NO_DATA);
-						*/
 
 						/* re-planting tree class */
 						if( g_settings->replanted[rsi].n_tree )
@@ -388,6 +371,7 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 							s->counter[YEARS_THINNING] = 1;
 						}
 						
+
 						c->management = 1;
 					}				
 				}
@@ -395,7 +379,6 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 		}
 	}
 	return 0;
-	//	}
 }
 
 /*****************************************************************************************************************************************/
