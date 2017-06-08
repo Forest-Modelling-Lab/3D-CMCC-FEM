@@ -1836,6 +1836,7 @@ int main(int argc, char *argv[]) {
 					/* reset annual variables once printed */
 					if ( matrix->cells[cell].doy == (leap_year ? 366 : 365)  )
 					{
+
 						/* print annual output */
 						EOY_print_output_cell_level( &matrix->cells[cell], year, years_of_simulation );
 						EOY_print_output_soil_cell_level( &matrix->cells[cell], year, years_of_simulation );
