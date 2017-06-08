@@ -351,7 +351,11 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 						}
 
 						/* note: RESET c->dos */
-						c->dos = 0;						
+						c->dos = 0;
+
+						/* compute single tree average biomass */
+						//fixme it should be also here!!!!
+						//average_tree_pools ( c );
 
 						/* check that all mandatory variables are filled */
 						CHECK_CONDITION (g_settings->replanted[rsi].n_tree, <, ZERO);
