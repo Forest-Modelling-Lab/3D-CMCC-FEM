@@ -339,7 +339,9 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 								break;
 							}
 						}
-						assert( rsi != g_settings->replanted_count );
+
+						/* species found ? */
+						CHECK_CONDITION(rsi, ==, g_settings->replanted_count );
 						
 						/* remove tree class */
 						if (  ! harvesting ( c, height, dbh, age, species, rsi ) )
