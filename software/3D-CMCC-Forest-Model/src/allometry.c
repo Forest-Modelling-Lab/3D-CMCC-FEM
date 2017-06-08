@@ -6,6 +6,7 @@
 #include "constants.h"
 #include "logger.h"
 #include "settings.h"
+#include "mortality.h"
 #include "common.h"
 
 extern logger_t* g_debug_log;

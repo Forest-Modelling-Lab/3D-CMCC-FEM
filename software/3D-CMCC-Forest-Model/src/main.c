@@ -42,6 +42,7 @@
 #include "soil_model.h"
 #include "litter_model.h"
 #include "compare.h"
+#include "management.h"
 
 //#define BENCHMARK_ONLY
 
@@ -65,6 +66,7 @@ soil_settings_t* g_soil_settings = NULL;
 topo_t* g_topo = NULL;
 settings_t* g_settings = NULL;
 dataset_t* g_dataset = NULL;
+management_t* g_management = NULL;
 
 /* DO NOT REMOVE INITIALIZATION TO NULL, IT IS REQUIRED !! */
 char	*g_sz_parameterization_path = NULL
@@ -242,6 +244,7 @@ static void clean_up(void)
 	if ( g_sz_topo_file ) free(g_sz_topo_file);
 	//if ( g_soil_settings ) free(g_soil_settings);
 	if ( g_sz_soil_file ) free(g_sz_soil_file);
+	if ( g_management ) management_free(g_management);
 	if ( g_dataset) dataset_free(g_dataset);
 	if ( g_settings ) settings_free(g_settings);
 	if ( g_sz_input_met_file ) free(g_sz_input_met_file);
@@ -328,7 +331,8 @@ static int parameterization_output_create(void) {
 			, g_sz_output_path
 			, FOLDER_DELIMITER
 	);
-	if ( i < 0 ) {
+	if ( i < 0 )
+	{
 		return 0;
 	}
 
@@ -1104,6 +1108,35 @@ int main(int argc, char *argv[]) {
 	if ( ! g_settings->Ndep_fixed && ! g_sz_ndep_file ) {
 		puts("ndep file not specified for ndep_fixed off");
 		goto err;
+	}
+
+	// load management ?
+	if ( MANAGEMENT_VAR == g_settings->management )
+	{
+		char *p;
+		char buffer[256];
+		
+		sprintf(buffer, "ISIMIP/%s_management_ISIMIP.txt", g_settings->sitename);
+
+		printf("import management file %s...", buffer);
+		if ( g_sz_input_path )
+		{
+			p = concatenate_path(g_sz_input_path, buffer); 
+			if ( ! p )
+			{
+				puts(sz_err_out_of_memory);
+				goto err;
+			}
+		}
+		else
+		{
+			p = buffer;
+		}
+		
+		g_management = management_load(p);
+		if ( g_sz_input_path ) free(p);
+		if ( ! g_management ) goto err;
+		puts(msg_ok);
 	}
 
 	printf("soil import...");

@@ -17,11 +17,169 @@
 #include "remove_tree_class.h"
 #include "biomass.h"
 
+extern management_t* g_management;
 extern settings_t* g_settings;
 extern logger_t* g_debug_log;
 extern dataset_t* g_dataset;
 
-static int harvesting (cell_t *const c, const int height, const int dbh, const int age, const int species, const int rsi);
+static int harvesting (cell_t *const c, const int height, const int dbh, const int age, const int species, const int rsi)
+{
+	species_t *s;
+	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
+
+	/* at the moment it considers a complete harvesting for all classes (if considered) */
+	logger(g_debug_log, "\n** Management options: Harvesting ** \n");
+
+	/* update C and N biomass */
+	tree_biomass_remove ( c, height, dbh, age, species, s->counter[N_TREE] );
+
+	/* remove completely all trees */
+	return tree_class_remove (c, height, dbh, age, species );
+}
+
+void management_free(management_t* p)
+{
+	if ( p )
+	{
+		if ( p->harvesting_years_count )
+		{
+			free(p->harvesting_years);
+		}
+
+		if  ( p->thinning_years_count )
+		{
+			free(p->thinning_years);
+		}
+
+		free(p);
+	}
+}
+
+management_t* management_load(const char* const filename)
+{
+#define BUFFER_SIZE 512
+	char* token;
+	char* p;
+	char buffer[BUFFER_SIZE]; // should be enough
+	int** p_years;
+	int* p_years_count;
+	int thinning_flag = 1;
+	FILE *f;
+	management_t* management; 
+
+	const char sz_delimiters[] = " ,\t\r\n";
+	const char sz_harvesting[] = "harvesting";
+	const char sz_thinning[] = "thinning";
+	
+	assert(filename);
+
+	f = fopen(filename, "r");
+	if ( ! f )
+	{
+		logger_error(g_debug_log, "file not found\n");
+		return NULL;
+	}
+
+	management = malloc(sizeof*management);
+	if ( ! management )
+	{
+		logger_error(g_debug_log, "out of memory\n");
+		fclose(f);
+		return NULL;
+	}
+	memset(management, 0, sizeof(management_t));
+	
+	while ( fgets(buffer, BUFFER_SIZE, f) )
+	{
+		// skip empty lines
+		if ( '\0' == buffer[0] )
+		{
+			continue;
+		}
+
+		token = string_tokenizer(buffer, sz_delimiters, &p);
+		if ( ! token ) continue; 
+
+		if ( ! string_compare_i(token, sz_harvesting) )
+		{
+			// parse harvesting
+			thinning_flag = 0;
+		}
+		else if ( ! string_compare_i(token, sz_thinning) )
+		{
+			// parse thinning
+			thinning_flag = 1;
+		}
+		else
+		{
+			// do nothing
+			continue;
+		}
+
+		// set pointers
+		if ( thinning_flag )
+		{
+			p_years = &management->thinning_years;
+			p_years_count = &management->thinning_years_count;
+		}
+		else
+		{
+			p_years = &management->harvesting_years;
+			p_years_count = &management->harvesting_years_count;
+		}
+
+		if ( *p_years_count )
+		{
+			logger_error(g_debug_log, "too many rows of %s specified\n"
+						, thinning_flag ? sz_thinning : sz_harvesting
+			);
+			management_free(management);
+			fclose(f);
+			return NULL;
+		}
+		
+		while ( token = string_tokenizer(NULL, sz_delimiters, &p) )
+		{
+			int err;
+			int* int_no_leak;
+			int year = convert_string_to_int(token, &err);
+			if ( err )
+			{
+				logger_error(g_debug_log, "unable to convert year '%s' for %s\n"
+							, token
+							, thinning_flag ? sz_thinning : sz_harvesting
+				);
+				management_free(management);
+				fclose(f);
+				return NULL;
+			}
+
+			int_no_leak = realloc(*p_years, (*p_years_count+1)*sizeof*int_no_leak);
+			if ( ! int_no_leak )
+			{
+				logger_error(g_debug_log, "out of memory\n");
+				management_free(management);
+				fclose(f);
+				return NULL;
+
+			}
+			*p_years = int_no_leak;
+			(*p_years)[*p_years_count] = year;
+			++*p_years_count;
+		}
+	}
+	fclose(f);
+
+	if ( ! management->harvesting_years_count && ! management->thinning_years_count )
+	{
+		logger_error(g_debug_log, "file is empty ?\n");
+		management_free(management);
+		management = NULL;
+	}
+
+	return management;
+#undef BUFFER_SIZE
+}
 
 int forest_management (cell_t *const c, const int day, const int month, const int year)
 {
@@ -35,71 +193,6 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 	dbh_t *d;
 	age_t *a;
 	species_t *s;
-/*
-	if ( strcmp(g_settings->sitename,"Bily_Kriz") == 0)
-	{
-		int thinning_year []   = { 2030 , 2045 , 2060 , 2075 , 2090 , 2117 , 2132 , 2147 , 2162 , 2177 , 2192 , 2207 , 2238 , 2253 , 2268 , 2283 , 2298 };
-		int harvesting_year [] = { 2102 , 2223 };
-		printf("sitename %s\n", g_settings->sitename);
-		printf("sitename %s\n", g_settings->sitename);getchar();
-	}
-	else if ( strcmp(g_settings->sitename,"Collelongo") == 0)
-	{
-		int thinning_year [] = {};
-		int harvesting_year [] = {};
-		printf("sitename %s\n", g_settings->sitename);getchar();
-	}
-	else if ( strcmp(g_settings->sitename,"Hyytiala") == 0)
-	{
-		int thinning_year [] = {};
-		int harvesting_year [] = {};
-		printf("sitename %s\n", g_settings->sitename);getchar();
-	}
-	else if ( strcmp(g_settings->sitename,"Kroof") == 0)
-	{
-		int thinning_year [] = {};
-		int harvesting_year [] = {};
-		printf("sitename %s\n", g_settings->sitename);getchar();
-	}
-	else if ( strcmp(g_settings->sitename,"LeBray") == 0)
-	{
-		int thinning_year [] = {};
-		int harvesting_year [] = {};
-		printf("sitename %s\n", g_settings->sitename);getchar();
-	}
-	else if ( strcmp(g_settings->sitename,"Peitz") == 0)
-	{
-		int thinning_year [] = {};
-		int harvesting_year [] = {};
-		printf("sitename %s\n", g_settings->sitename);getchar();
-	}
-	else if ( strcmp(g_settings->sitename,"Solling_beech") == 0)
-	{
-		int thinning_year [] = {};
-		int harvesting_year [] = {};
-		printf("sitename %s\n", g_settings->sitename);getchar();
-	}
-	else if ( strcmp(g_settings->sitename,"Solling_spruce") == 0)
-	{
-		int thinning_year [] = {};
-		int harvesting_year [] = {};
-		printf("sitename %s\n", g_settings->sitename);getchar();
-	}
-	else if ( strcmp(g_settings->sitename,"Soroe") == 0)
-	{
-		int thinning_year [] = {};
-		int harvesting_year [] = {};
-		printf("sitename %s\n", g_settings->sitename);getchar();
-	}
-	else
-	{
-		printf("Bad site choose!!!\n");
-		exit(1);
-	}
-*/
-
-
-
 
 	// sort by above or below ?
 	// ALESSIOR TO ALESSIOC FIXME
@@ -132,120 +225,165 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 				/* loop on each species class */
 				for ( species = 0; species < a->species_count; ++species )
 				{
+					int flag = 0;
+
 					/* assign shortcut */
 					s = &a->species[species];
 
-					if ( g_settings->management == MANAGEMENT_ON || g_settings->management == MANAGEMENT_VAR )
+					c->management = 0;
+					if ( MANAGEMENT_ON == g_settings->management )
 					{
-						/* this function handles all other management functions */
-
 						/* check at the beginning of simulation */
-						if( !year  && g_settings->management == MANAGEMENT_ON )
+						if( ! year )
 						{
 							CHECK_CONDITION ( c->years[year].year, >, g_settings->year_start_management );
 							CHECK_CONDITION ( (g_settings->year_start_management - g_settings->year_start), >, s->value[THINNING] );
 						}
-
-						/*************************************** THINNING *************************************/
-						/* ISIMIP case: management forced by stand data */
-						if ( year && ( MANAGEMENT_VAR == g_settings->management ) )
-						{
-							prescribed_thinning ( c, height, dbh, age, species, c->years[year].year );
-						}
-
-						//fixme fixme ALESSIOR for thinning use data from ISIMIP_thinning.csv file
 
 						if ( ( c->years[year].year == g_settings->year_start_management) ||
 							
 							(( c->years[year].year >= g_settings->year_start_management )
 							&& ( s->value[THINNING] == s->counter[YEARS_THINNING] )) )
 						{
-							logger(g_debug_log,"**FOREST MANAGEMENT**\n");
-							logger(g_debug_log,"**THINNING**\n");
-
-							thinning ( c, height, dbh, age, species, year );
-
-							/* reset counter */
-							s->counter[YEARS_THINNING] = 0;
+							flag = 1;
+						}
+					}
+					else if ( MANAGEMENT_VAR == g_settings->management )
+					{
+						/* ISIMIP case: management forced by stand data */
+						if ( year )
+						{
+							prescribed_thinning ( c, height, dbh, age, species, c->years[year].year );
 						}
 
-						/* increment counter */
-						++s->counter[YEARS_THINNING];
-
-						/* check */
-						CHECK_CONDITION( s->counter[YEARS_THINNING], >, s->value[ROTATION] );
-
-						/*************************************** HARVESTING *************************************/
-
-						//fixme fixme ALESSIOR for harvesting use data from ISIMIP_harvesting.csv file
-
-						/* if class age matches with harvesting */
-						if ( ( a->value >= s->value[ROTATION] ) && ( c->years[year].year > g_settings->year_start_management ) )
+						if ( g_management->thinning_years_count )
 						{
-							int rsi;               /* replanted species index */
-
-							logger(g_debug_log,"**FOREST MANAGEMENT**\n");
-							logger(g_debug_log,"**HARVESTING**\n");
-
-							/* get replanted_species_index */
-							for ( rsi = 0; rsi < g_settings->replanted_count; rsi++ )
+							int i;
+							for ( i = 0; i < g_management->thinning_years_count; i++ )
 							{
-								if ( ! string_compare_i(c->heights[height].dbhs[dbh].ages[age].species[species].name
-															, g_settings->replanted[rsi].species) )
+								if ( c->years[year].year == g_management->thinning_years[i] )
 								{
-									/* index found */
+									flag = 1;
 									break;
 								}
 							}
-							assert( rsi != g_settings->replanted_count );
-							
-							/* remove tree class */
-							if (  ! harvesting ( c, height, dbh, age, species, rsi ) )
+						}
+					}
+
+					// thinning
+					if ( flag )
+					{
+						logger(g_debug_log,"**FOREST MANAGEMENT**\n");
+						logger(g_debug_log,"**THINNING**\n");
+
+						thinning ( c, height, dbh, age, species, year );
+
+						/* reset counter */
+						s->counter[YEARS_THINNING] = 0;
+						
+						//c->management = 1;
+					}
+
+					/* increment counter */
+					++s->counter[YEARS_THINNING];
+
+					/* check */
+					CHECK_CONDITION( s->counter[YEARS_THINNING], >, s->value[ROTATION] );
+
+					/*************************************** HARVESTING *************************************/
+
+					//fixme fixme ALESSIOR for harvesting use data from ISIMIP_harvesting.csv file
+
+					/* if class age matches with harvesting */
+					//
+					//
+				
+					flag = 0;
+					if ( MANAGEMENT_ON == g_settings->management )
+					{
+						if ( ( a->value >= s->value[ROTATION] )
+							&& ( c->years[year].year > g_settings->year_start_management ) )
+						{
+							flag = 1;
+						}
+					}
+					else if ( MANAGEMENT_VAR == g_settings->management )
+					{
+						if ( g_management->harvesting_years_count )
+						{
+							int i;
+							for ( i = 0; i < g_management->harvesting_years_count; i++ )
 							{
-								logger_error(g_debug_log, "unable to harvesting! (exit)\n");
+								if ( c->years[year].year == g_management->harvesting_years[i] )
+								{
+									flag = 1;
+									break;
+								}
+							}						
+						}							
+					}
+					if ( flag )
+					{
+						int rsi;               /* replanted species index */
+
+						logger(g_debug_log,"**FOREST MANAGEMENT**\n");
+						logger(g_debug_log,"**HARVESTING**\n");
+
+						/* get replanted_species_index */
+						for ( rsi = 0; rsi < g_settings->replanted_count; rsi++ )
+						{
+							if ( ! string_compare_i(c->heights[height].dbhs[dbh].ages[age].species[species].name
+														, g_settings->replanted[rsi].species) )
+							{
+								/* index found */
+								break;
+							}
+						}
+						assert( rsi != g_settings->replanted_count );
+						
+						/* remove tree class */
+						if (  ! harvesting ( c, height, dbh, age, species, rsi ) )
+						{
+							logger_error(g_debug_log, "unable to harvesting! (exit)\n");
+							exit(1);
+						}
+
+						/* note: RESET c->dos */
+						c->dos = 0;						
+
+						/* check that all mandatory variables are filled */
+						CHECK_CONDITION (g_settings->replanted[rsi].n_tree, <, ZERO);
+						CHECK_CONDITION (g_settings->replanted[rsi].height, <, 1.3);
+						CHECK_CONDITION (g_settings->replanted[rsi].avdbh,  <, ZERO);
+						CHECK_CONDITION (g_settings->replanted[rsi].age,    <, ZERO);
+						/*
+						CHECK_CONDITION (g_settings->replanted[rsi].n_tree, <, NO_DATA);
+						CHECK_CONDITION (g_settings->replanted[rsi].height, <, NO_DATA);
+						CHECK_CONDITION (g_settings->replanted[rsi].avdbh,  <, NO_DATA);
+						CHECK_CONDITION (g_settings->replanted[rsi].age,    <, NO_DATA);
+						*/
+
+						/* re-planting tree class */
+						if( g_settings->replanted[rsi].n_tree )
+						{
+							if ( ! add_tree_class_for_replanting( c , day, month, year, rsi ) )
+							{
+								logger_error(g_debug_log, "unable to add new replanted class! (exit)\n");
 								exit(1);
 							}
 
-							/* note: RESET c->dos */
-							c->dos = 0;						
+							// indexes
+							h = &c->heights[height];
+							d = &h->dbhs[dbh];
+							a = &d->ages[age];
+							s = &a->species[species];
 
-							/* check that all mandatory variables are filled */
-							CHECK_CONDITION (g_settings->replanted[rsi].n_tree, <, ZERO);
-							CHECK_CONDITION (g_settings->replanted[rsi].height, <, 1.3);
-							CHECK_CONDITION (g_settings->replanted[rsi].avdbh,  <, ZERO);
-							CHECK_CONDITION (g_settings->replanted[rsi].age,    <, ZERO);
-							/*
-							CHECK_CONDITION (g_settings->replanted[rsi].n_tree, <, NO_DATA);
-							CHECK_CONDITION (g_settings->replanted[rsi].height, <, NO_DATA);
-							CHECK_CONDITION (g_settings->replanted[rsi].avdbh,  <, NO_DATA);
-							CHECK_CONDITION (g_settings->replanted[rsi].age,    <, NO_DATA);
-							*/
-
-							/* re-planting tree class */
-							if( g_settings->replanted[rsi].n_tree )
-							{
-								if ( ! add_tree_class_for_replanting( c , day, month, year, rsi ) )
-								{
-									logger_error(g_debug_log, "unable to add new replanted class! (exit)\n");
-									exit(1);
-								}
-
-								// indexes
-								h = &c->heights[height];
-								d = &h->dbhs[dbh];
-								a = &d->ages[age];
-								s = &a->species[species];
-
-								/* reset years_for_thinning */
-								s->counter[YEARS_THINNING] = 1;
-							}
-							c->management = 1;
+							/* reset years_for_thinning */
+							s->counter[YEARS_THINNING] = 1;
 						}
-						else
-						{
-							c->management = 0;
-						}
-					}
+						
+						c->management = 1;
+					}				
 				}
 			}
 		}
@@ -363,21 +501,4 @@ void prescribed_thinning (cell_t *const c, const int height, const int dbh, cons
 			}
 		}
 	}
-}
-
-/*****************************************************************************************************************************************/
-
-static int harvesting (cell_t *const c, const int height, const int dbh, const int age, const int species, const int rsi)
-{
-	species_t *s;
-	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
-
-	/* at the moment it considers a complete harvesting for all classes (if considered) */
-	logger(g_debug_log, "\n** Management options: Harvesting ** \n");
-
-	/* update C and N biomass */
-	tree_biomass_remove ( c, height, dbh, age, species, s->counter[N_TREE] );
-
-	/* remove completely all trees */
-	return tree_class_remove (c, height, dbh, age, species );
 }
