@@ -1,4 +1,4 @@
-SITENAME Peitz
+SITENAME Solling_beech
 VERSION f                           //Must be 'f' for FEM version or 'b', for BGC version for FOREST LANDUSE
 SPATIAL u                           //Must be 's' or 'u', spatial or unspatial
 TIME d                              //Must be 'm' or 'd', monthly or daily
@@ -8,12 +8,12 @@ DAILY_OUTPUT on                     //Must be 'on' or 'off'
 MONTHLY_OUTPUT off                   //Must be 'on' or 'off'
 ANNUAL_OUTPUT on                    //Must be 'on' or 'off'
 SOIL_OUTPUT off                     //Must be 'on' or 'off'
-YEAR_START 1948                     //Starting year simulation
+YEAR_START 1967                     //Starting year simulation
 YEAR_END 2099                       //Ending year simulation
 YEAR_RESTART off                    //Year to restart
 CO2_mod on                          //Must be 'on' or 'off'
-CO2_trans on                        //Must be 'on' or 'off'
-YEAR_START_CO2_FIXED -9999          //When Co2_trans = var, year at which fix [CO2]
+CO2_trans var                       //Must be 'on' or 'off'
+YEAR_START_CO2_FIXED 2005           //When Co2_trans = var, year at which fix [CO2]
 Ndep_fixed on                       //Must be 'on' or 'off'
 Resp_accl on                        //Q10 temperature acclimatation Must be 'on' or 'off'
 regeneration off                    //Must be 'on' or 'off'
@@ -27,11 +27,11 @@ CO2_INCR 0.01                       //1% increment
 INIT_FRAC_MAXASW 1                  //0.1 Minimum fraction of asw based on maxasw (wilting point) (unchanged)
 TREE_LAYER_LIMIT 3                  //define differences among tree heights in meters classes to define number of layers in unspatial version
 SOIL_LAYER 1                        //define soil layer/s to consider
-MAX_LAYER_COVER 1
+MAX_LAYER_COVER 1.2
 THINNING_REGIME  Above              // thinning regime (Above or Below)
-REPLANTED_SPECIES Pinussylvestris   // species name of replanted trees (mandatory)
-REPLANTED_MANAGEMENT T              // (T) management of replanted trees (should be only T)(mandatory)
-REPLANTED_TREE 9000                 // number of replanted trees (mandatory)
+REPLANTED_SPECIES Fagussylvatica    // species name of replanted trees (mandatory)
+REPLANTED_MANAGEMENT T              // (T) management of replated trees (should be only T)(mandatory)
+REPLANTED_TREE 6000                 // number of replanted trees (mandatory)
 REPLANTED_AGE 2                     // (yr) age of replanted trees (mandatory)
 REPLANTED_AVDBH 1                   // (cm) average dbh of replanted trees (mandatory)
 REPLANTED_LAI 0                     // (m2/m2) lai for replanted trees (mandatory for evergreen, useless for deciduous)

@@ -30,8 +30,8 @@ SOIL_LAYER 1                        //define soil layer/s to consider
 MAX_LAYER_COVER 1.2
 THINNING_REGIME  Above              // thinning regime (Above or Below)
 REPLANTED_SPECIES Fagussylvatica    // species name of replanted trees (mandatory)
-REPLANTED_MANAGEMENT T              // (T) management of replanted trees (should be only T)(mandatory)
-REPLANTED_TREE 6000                 // number of replanted trees (mandatory)
+REPLANTED_MANAGEMENT T              // (T) management of replated trees (should be only T)(mandatory)
+REPLANTED_TREE 10000                // number of replanted trees (mandatory)
 REPLANTED_AGE 4                     // (yr) age of replanted trees (mandatory)
 REPLANTED_AVDBH 1                   // (cm) average dbh of replanted trees (mandatory)
 REPLANTED_LAI 0                     // (m2/m2) lai for replanted trees (mandatory for evergreen, useless for deciduous)
