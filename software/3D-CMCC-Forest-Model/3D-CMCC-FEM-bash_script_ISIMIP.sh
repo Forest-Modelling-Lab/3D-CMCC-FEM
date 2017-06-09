@@ -738,13 +738,13 @@ for (( e = 0 ; e < $exp_counter ; ++e )) ; do
 	#FT_runs
 	
 	#3  simulation for '2A' experiment
-	#2A_runs
+	2A_runs
 	
 	#3  simulation for '2B' experiment
 	#2B_runs
 	
 	#4  simulation for '2BLBC' experiment
-	2BLBC_runs
+	#2BLBC_runs
 done
 
 

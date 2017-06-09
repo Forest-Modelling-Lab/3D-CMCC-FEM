@@ -296,6 +296,7 @@ void reset_daily_class_variables(cell_t *const c)
 					s = &a->species[species];
 
 					s->counter[DEAD_TREE] =                0;
+					s->counter[THINNING_HAPPENS] =         0;
 
 					s->value[DAILY_CANOPY_COVER_PROJ] =   0.;
 					s->value[DAILY_CANOPY_COVER_EXP] =    0.;

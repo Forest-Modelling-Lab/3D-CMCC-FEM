@@ -120,7 +120,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	/****************************************************************************/
 
 	/* annual forest structure (only the year after the first) */
-	if ( ( ! day && ! month && year ) && ( ! c->management ) )
+	if ( ( ! day && ! month && year ) && ( ! c->harvesting ) )
 	{
 		annual_forest_structure ( c, year );
 	}
@@ -402,6 +402,9 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 		logger(g_debug_log, "****************END OF HEIGHT CLASS***************\n");
 	}
 	logger(g_debug_log, "****************END OF LAYER CLASS***************\n");
+
+
+	//if (c->years[year].year == 2009 && month == 0 && day == 0) getchar();
 
 	/* ok */
 	return 1;

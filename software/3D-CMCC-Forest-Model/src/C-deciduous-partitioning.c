@@ -119,54 +119,64 @@ void daily_C_deciduous_partitioning (cell_t *const c, const int layer, const int
 	{
 	/************************************************************/
 	case 1:
-		logger(g_debug_log, "\n*BUDBURST*\n");
-		logger(g_debug_log, "Bud burst phase using both reserve pools and npp\n");
-		logger(g_debug_log, "LAI_PROJ = %g \n", s->value[LAI_PROJ]);
-		logger(g_debug_log, "Allocating only into foliage and fine root\n");
-		logger(g_debug_log, "++Remaining days for bud burst = %d\n", s->counter[BUD_BURST_COUNTER]);
 
-		/* test "This has recently been confirmed by Dyckmans et al. (2000)
-		who showed that only 44% of carbon in leaves came from
-		carbon reserves in beech trees" (Barbaroux et al., 2003) */
-
-		/* following Friedlingstein et al.,1998 and Krinner et al.,2005 during budburst model allocates to leaf and fine root */
-		/* following Campioli et al., 2008, Maillard et al., 1994, Barbaroux et al., 2003 */
-
-		/* compute amount of leaf carbon and relative growth respiration amount */
-		reserve_to_leaf_budburst   = ( s->value[MAX_LEAF_C] + ( s->value[MAX_LEAF_C] * s->value[EFF_GRPERC] ) ) / (s->value[BUD_BURST] - 1.);
-
-		/* compute amount of fine root carbon and relative growth respiration amount */
-		reserve_to_froot_budburst  = ( s->value[MAX_FROOT_C] + ( s->value[MAX_FROOT_C] * s->value[EFF_GRPERC] ) ) / (s->value[BUD_BURST] - 1.);
-
-		/* compute reserve needed for budburst */
-		reserve_to_budburst        = reserve_to_leaf_budburst + reserve_to_froot_budburst;
-
-		/* update carbon flux */
-		s->value[C_TO_LEAF]        = reserve_to_leaf_budburst;
-		s->value[C_TO_FROOT]       = reserve_to_froot_budburst;
-		s->value[C_TO_RESERVE]     = npp_to_alloc - reserve_to_budburst;
-
-		/**********************************************************************/
-		/* check for leaf C > max leaf C */
-		if ( ( ( s->value[C_TO_LEAF] * ( 1. - s->value[EFF_GRPERC] ) ) + s->value[LEAF_C]) > s->value[MAX_LEAF_C])
+		/* if management doens't happen (this to avoid problems in carbon balance) */
+		if ( !s->counter[THINNING_HAPPENS] )
 		{
-			double max_leafC;
+			logger(g_debug_log, "\n*BUDBURST*\n");
+			logger(g_debug_log, "Bud burst phase using both reserve pools and npp\n");
+			logger(g_debug_log, "LAI_PROJ = %g \n", s->value[LAI_PROJ]);
+			logger(g_debug_log, "Allocating only into foliage and fine root\n");
+			logger(g_debug_log, "++Remaining days for bud burst = %d\n", s->counter[BUD_BURST_COUNTER]);
 
-			max_leafC = s->value[MAX_LEAF_C] - s->value[LEAF_C];
+			/* test "This has recently been confirmed by Dyckmans et al. (2000)
+			who showed that only 44% of carbon in leaves came from
+			carbon reserves in beech trees" (Barbaroux et al., 2003) */
 
-			s->value[C_TO_LEAF]     = max_leafC + ( max_leafC * s->value[EFF_GRPERC] );
-			s->value[C_TO_RESERVE] += ( reserve_to_leaf_budburst - ( max_leafC + ( max_leafC * s->value[EFF_GRPERC] ) ) );
+			/* following Friedlingstein et al.,1998 and Krinner et al.,2005 during budburst model allocates to leaf and fine root */
+			/* following Campioli et al., 2008, Maillard et al., 1994, Barbaroux et al., 2003 */
+
+			/* compute amount of leaf carbon and relative growth respiration amount */
+			reserve_to_leaf_budburst   = ( s->value[MAX_LEAF_C] + ( s->value[MAX_LEAF_C] * s->value[EFF_GRPERC] ) ) / (s->value[BUD_BURST] - 1.);
+
+			/* compute amount of fine root carbon and relative growth respiration amount */
+			reserve_to_froot_budburst  = ( s->value[MAX_FROOT_C] + ( s->value[MAX_FROOT_C] * s->value[EFF_GRPERC] ) ) / (s->value[BUD_BURST] - 1.);
+
+			/* compute reserve needed for budburst */
+			reserve_to_budburst        = reserve_to_leaf_budburst + reserve_to_froot_budburst;
+
+			/* update carbon flux */
+			s->value[C_TO_LEAF]        = reserve_to_leaf_budburst;
+			s->value[C_TO_FROOT]       = reserve_to_froot_budburst;
+			s->value[C_TO_RESERVE]     = npp_to_alloc - reserve_to_budburst;
+
+			/**********************************************************************/
+			/* check for leaf C > max leaf C */
+			if ( ( ( s->value[C_TO_LEAF] * ( 1. - s->value[EFF_GRPERC] ) ) + s->value[LEAF_C]) > s->value[MAX_LEAF_C])
+			{
+				double max_leafC;
+
+				max_leafC = s->value[MAX_LEAF_C] - s->value[LEAF_C];
+
+				s->value[C_TO_LEAF]     = max_leafC + ( max_leafC * s->value[EFF_GRPERC] );
+				s->value[C_TO_RESERVE] += ( reserve_to_leaf_budburst - ( max_leafC + ( max_leafC * s->value[EFF_GRPERC] ) ) );
+			}
+
+			/* check for fine root C > max fine root C */
+			if ( ( (s->value[C_TO_FROOT] * ( 1. - s->value[EFF_GRPERC] ) ) + s->value[FROOT_C] ) > s->value[MAX_FROOT_C])
+			{
+				double max_frootC;
+
+				max_frootC = s->value[MAX_FROOT_C] - s->value[FROOT_C];
+
+				s->value[C_TO_FROOT]    = max_frootC + ( max_frootC * s->value[EFF_GRPERC] );
+				s->value[C_TO_RESERVE] += ( reserve_to_froot_budburst  - ( max_frootC + ( max_frootC * s->value[EFF_GRPERC] ) ) );
+			}
 		}
-
-		/* check for fine root C > max fine root C */
-		if ( ( (s->value[C_TO_FROOT] * ( 1. - s->value[EFF_GRPERC] ) ) + s->value[FROOT_C] ) > s->value[MAX_FROOT_C])
+		else
 		{
-			double max_frootC;
-
-			max_frootC = s->value[MAX_FROOT_C] - s->value[FROOT_C];
-
-			s->value[C_TO_FROOT]    = max_frootC + ( max_frootC * s->value[EFF_GRPERC] );
-			s->value[C_TO_RESERVE] += ( reserve_to_froot_budburst  - ( max_frootC + ( max_frootC * s->value[EFF_GRPERC] ) ) );
+			logger(g_debug_log, "Allocating only into reserve pool (special case thinning happens on)\n");
+			s->value[C_TO_RESERVE] = npp_to_alloc;
 		}
 		/**********************************************************************/
 

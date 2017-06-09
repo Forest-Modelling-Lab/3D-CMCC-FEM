@@ -699,6 +699,8 @@ enum {
 	MOS,                                /* (months) month of simulation */
 	YOS,                                /* (years) year of simulation */
 	YEARS_THINNING,
+	THINNING_HAPPENS,                   /* 0 = thinning off, 1 = thinning on */
+	HARVESTING_HAPPENS,                 /* 0 = harvesting off, 1 = harvesting on */
 
 	COUNTERS
 };
@@ -846,7 +848,7 @@ typedef struct
 	int doy;                                                              /* day of the year */
 	int dos;                                                              /* day of simulation */
 
-	int management;														 /* 0 = off, 1 = on */
+	int harvesting;                                                       /* 0 = off, 1 = on */
 
 	/* for logger */
 	int initial_tree_layers_count;

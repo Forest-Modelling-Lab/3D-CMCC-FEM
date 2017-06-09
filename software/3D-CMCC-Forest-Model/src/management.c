@@ -138,7 +138,7 @@ management_t* management_load(const char* const filename)
 			return NULL;
 		}
 		
-		while ( token = string_tokenizer(NULL, sz_delimiters, &p) )
+		while ( ( token = string_tokenizer(NULL, sz_delimiters, &p ) ) )
 		{
 			int err;
 			int* int_no_leak;
@@ -227,7 +227,10 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 					/* assign shortcut */
 					s = &a->species[species];
 
-					c->management = 0;
+					/* initilIze management */
+					s->counter[THINNING_HAPPENS] = 0;
+					c->harvesting                = 0;
+
 					if ( MANAGEMENT_ON == g_settings->management )
 					{
 						/* check at the beginning of simulation */
@@ -251,6 +254,8 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 						if ( year )
 						{
 							prescribed_thinning ( c, height, dbh, age, species, c->years[year].year );
+
+							s->counter[THINNING_HAPPENS] = 1;
 						}
 
 						if ( g_management->thinning_years_count )
@@ -274,6 +279,8 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 						logger(g_debug_log,"**THINNING**\n");
 
 						thinning ( c, height, dbh, age, species, year );
+
+						s->counter[THINNING_HAPPENS] = 1;
 
 						/* reset counter */
 						s->counter[YEARS_THINNING] = 0;
@@ -371,8 +378,8 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 							s->counter[YEARS_THINNING] = 1;
 						}
 						
-
-						c->management = 1;
+						s->counter[THINNING_HAPPENS] = 1;
+						c->harvesting                = 1;
 					}				
 				}
 			}

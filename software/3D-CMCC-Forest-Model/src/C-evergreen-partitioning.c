@@ -91,13 +91,14 @@ void daily_C_evergreen_partitioning (cell_t *const c, const int layer, const int
 	{
 		/* assign NPP to local variables and remove the maintenance respiration */
 		npp_to_alloc = s->value[GPP_tC] - s->value[TOTAL_MAINT_RESP_tC] ;
-		logger(g_debug_log, "npp_to_alloc = %g tC/sizecell/day\n", npp_to_alloc);
 	}
 	else
 	{
 		/* assign NPP to local variables and remove the prognostic respiration */
 		npp_to_alloc = s->value[GPP_tC] * ( 1. - g_settings->Fixed_Aut_Resp_rate );
 	}
+
+	logger(g_debug_log, "npp_to_alloc = %g tC/sizecell/day\n", npp_to_alloc);
 
 	/* note: none carbon pool is refilled if reserve is lower than minimum */
 	/* reserves have priority before all other pools!!! */
@@ -277,47 +278,64 @@ void daily_C_evergreen_partitioning (cell_t *const c, const int layer, const int
 
 			if ( month < JULY )
 			{
-				logger(g_debug_log, "Allocating only into leaf and fine root pools (positive NPP)\n");
-
-				/* update carbon flux */
-				s->value[C_TO_LEAF]      = npp_to_alloc * ( 1. - s->value[FROOT_LEAF_FRAC] );
-				s->value[C_TO_FROOT]     = npp_to_alloc * s->value[FROOT_LEAF_FRAC];
-
-				/********************************************************************************************************************************************/
-				/* check for leaf C > max leaf C */
-				if ( ( ( s->value[C_TO_LEAF] * ( 1. - s->value[EFF_GRPERC] ) ) + s->value[LEAF_C] ) > s->value[MAX_LEAF_C] )
+				/* if management doens't happen (this to avoid problems in carbon balance) */
+				if ( !s->counter[THINNING_HAPPENS] )
 				{
-					logger(g_debug_log, "..exceeding leaf carbon to other pools\n");
+					logger(g_debug_log, "Allocating only into leaf and fine root pools (positive NPP)\n");
 
-					max_leafC       = s->value[MAX_LEAF_C] - s->value[LEAF_C];
-					exceeding_leafC = ( ( npp_to_alloc * ( 1. - s->value[FROOT_LEAF_FRAC] ) ) - ( max_leafC + ( max_leafC * s->value[EFF_GRPERC] ) ) );
+					/* update carbon flux */
+					s->value[C_TO_LEAF]      = npp_to_alloc * ( 1. - s->value[FROOT_LEAF_FRAC] );
+					s->value[C_TO_FROOT]     = npp_to_alloc * s->value[FROOT_LEAF_FRAC];
 
-					s->value[C_TO_LEAF] = max_leafC + ( max_leafC * s->value[EFF_GRPERC] );
+					/********************************************************************************************************************************************/
+					/* check for leaf C > max leaf C */
+					if ( ( ( s->value[C_TO_LEAF] * ( 1. - s->value[EFF_GRPERC] ) ) + s->value[LEAF_C] ) > s->value[MAX_LEAF_C] )
+					{
+						logger(g_debug_log, "..exceeding leaf carbon to other pools\n");
+
+						max_leafC       = s->value[MAX_LEAF_C] - s->value[LEAF_C];
+						logger(g_debug_log, "max_leafC   = %f tC/cell\n", max_leafC);
+
+						exceeding_leafC = ( ( npp_to_alloc * ( 1. - s->value[FROOT_LEAF_FRAC] ) ) - ( max_leafC + ( max_leafC * s->value[EFF_GRPERC] ) ) );
+						logger(g_debug_log, "exceeding_leafC   = %f tC/cell\n", exceeding_leafC);
+
+						s->value[C_TO_LEAF] = max_leafC + ( max_leafC * s->value[EFF_GRPERC] );
+						logger(g_debug_log, "C_TO_LEAF   = %f tC/cell\n", s->value[C_TO_LEAF]);
+					}
+
+					/* check for fine root C > max fine root C */
+					if ( ( (s->value[C_TO_FROOT] * ( 1. - s->value[EFF_GRPERC] ) ) + s->value[FROOT_C] ) > s->value[MAX_FROOT_C])
+					{
+						logger(g_debug_log, "..exceeding fine root carbon to other pools\n");
+
+						max_frootC       = s->value[MAX_FROOT_C] - s->value[FROOT_C];
+						logger(g_debug_log, "max_frootC   = %f tC/cell\n", max_frootC);
+
+						exceeding_frootC = ( ( npp_to_alloc * s->value[FROOT_LEAF_FRAC] ) - ( max_frootC + ( max_frootC * s->value[EFF_GRPERC] ) ) );
+						logger(g_debug_log, "exceeding_frootC   = %f tC/cell\n", exceeding_frootC);
+
+						s->value[C_TO_FROOT] = max_frootC + ( max_frootC * s->value[EFF_GRPERC] );
+						logger(g_debug_log, "C_TO_FROOT  = %f tC/cell\n", s->value[C_TO_FROOT]);
+					}
+
+					/* exceeding carbon */
+					exceeding_C = exceeding_leafC + exceeding_frootC;
+
+					/* compute ratios */
+					pR1 = pR / ( pR + pS );
+					pS1 = 1. - pR1;
+					CHECK_CONDITION( fabs ( pR1 + pS1 ), >, 1 + eps );
+
+					/* to other carbon pools */
+					s->value[C_TO_CROOT]     = (exceeding_C * pR1);
+					s->value[C_TO_STEM]      = (exceeding_C * pS1) * (1. - s->value[FRACBB]);
+					s->value[C_TO_BRANCH]    = (exceeding_C * pS1) * s->value[FRACBB];
 				}
-
-				/* check for fine root C > max fine root C */
-				if ( ( (s->value[C_TO_FROOT] * ( 1. - s->value[EFF_GRPERC] ) ) + s->value[FROOT_C] ) > s->value[MAX_FROOT_C])
+				else
 				{
-					logger(g_debug_log, "..exceeding fine root carbon to other pools\n");
-
-					max_frootC       = s->value[MAX_FROOT_C] - s->value[FROOT_C];
-					exceeding_frootC = ( ( npp_to_alloc * s->value[FROOT_LEAF_FRAC] ) - ( max_frootC + ( max_frootC * s->value[EFF_GRPERC] ) ) );
-
-					s->value[C_TO_FROOT] = max_frootC + ( max_frootC * s->value[EFF_GRPERC] );
+					logger(g_debug_log, "Allocating only into reserve pool (special case thinning happens on)\n");
+					s->value[C_TO_RESERVE] = npp_to_alloc;
 				}
-
-				/* exceeding carbon */
-				exceeding_C = exceeding_leafC + exceeding_frootC;
-
-				/* compute ratios */
-				pR1 = pR / ( pR + pS );
-				pS1 = 1. - pR1;
-				CHECK_CONDITION( fabs ( pR1 + pS1 ), >, 1 + eps );
-
-				/* to other carbon pools */
-				s->value[C_TO_CROOT]     = (exceeding_C * pR1);
-				s->value[C_TO_STEM]      = (exceeding_C * pS1) * (1. - s->value[FRACBB]);
-				s->value[C_TO_BRANCH]    = (exceeding_C * pS1) * s->value[FRACBB];
 			}
 			else
 			{
@@ -456,6 +474,13 @@ void daily_C_evergreen_partitioning (cell_t *const c, const int layer, const int
 
 
 #endif
+
+	logger(g_debug_log, "C_TO_LEAF    = %f tC/cell\n", s->value[C_TO_LEAF]);
+	logger(g_debug_log, "C_TO_FROOT   = %f tC/cell\n", s->value[C_TO_FROOT]);
+	logger(g_debug_log, "C_TO_STEM    = %f tC/cell\n", s->value[C_TO_STEM]);
+	logger(g_debug_log, "C_TO_CROOT   = %f tC/cell\n", s->value[C_TO_CROOT]);
+	logger(g_debug_log, "C_TO_BRANCH  = %f tC/cell\n", s->value[C_TO_BRANCH]);
+	logger(g_debug_log, "C_TO_RESERVE = %f tC/cell\n", s->value[C_TO_RESERVE]);
 
 	/* leaf and fine root fall */
 	leaffall_evergreen ( c, height, dbh, age, species, year );

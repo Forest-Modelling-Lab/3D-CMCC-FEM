@@ -204,6 +204,40 @@ void leaffall (species_t *const s)
 	logger(g_debug_log, "N_TO_CWD           = %f\n", s->value[N_TO_CWD]);
 
 	/* check */
+	if ( s->value[LEAF_C] < s->value[LEAF_C_TO_REMOVE] )
+	{
+		s->value[LEAF_C]            = 0.;
+		s->value[LEAF_C_TO_REMOVE]  = 0.;
+	}
+	if ( s->value[FROOT_C] < s->value[FROOT_C_TO_REMOVE] )
+	{
+		s->value[FROOT_C]           = 0.;
+		s->value[FROOT_C_TO_REMOVE] = 0.;
+	}
+	if ( s->value[FRUIT_C] < s->value[FRUIT_C_TO_REMOVE] )
+	{
+		s->value[FRUIT_C]           = 0.;
+		s->value[FRUIT_C_TO_REMOVE] = 0.;
+	}
+
+	/* check */
+	if ( s->value[LEAF_N] < s->value[LEAF_N_TO_REMOVE] )
+	{
+		s->value[LEAF_N]            = 0.;
+		s->value[LEAF_N_TO_REMOVE]  = 0.;
+	}
+	if ( s->value[FROOT_N] < s->value[FROOT_N_TO_REMOVE] )
+	{
+		s->value[FROOT_N]           = 0.;
+		s->value[FROOT_N_TO_REMOVE] = 0.;
+	}
+	if ( s->value[FRUIT_N] < s->value[FRUIT_N_TO_REMOVE] )
+	{
+		s->value[FRUIT_N]           = 0.;
+		s->value[FRUIT_N_TO_REMOVE] = 0.;
+	}
+
+	/* check */
 	CHECK_CONDITION(s->value[LEAF_C],  <, s->value[LEAF_C_TO_REMOVE]);
 	CHECK_CONDITION(s->value[FROOT_C], <, s->value[FROOT_C_TO_REMOVE]);
 	CHECK_CONDITION(s->value[FRUIT_C], <, s->value[FRUIT_C_TO_REMOVE]);
