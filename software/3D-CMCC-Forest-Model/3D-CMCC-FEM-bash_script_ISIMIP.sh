@@ -33,7 +33,7 @@ model_run=(Debug Release)
 SITEs=(Bily_Kriz Collelongo Hyytiala Kroof LeBray Peitz Solling_beech Solling_spruce Soroe All)
 
 #experiments
-EXPs=(LOCAL FT 2A 2B 2BLBC)
+EXPs=(LOCAL FT 2A 2B 2BLBC 2Bpico 2BLBCpico)
 
 #declare ESMs or Repeated
 ESMs=(ESM1 ESM2 ESM3 ESM4 ESM5 ESM6 ESM7 ESM8 ESM9 ESM10 All)
@@ -658,6 +658,59 @@ function 2B_runs {
 		done
 	done
 }
+############################################### 2B pico ###################################################
+function 2Bpico_runs {
+	for (( b = 0 ; b < $site_counter ; ++b )) ; do
+		for (( c = 0 ; c < $esm_counter ; ++c )) ; do
+			for (( e = 0 ; e < $man_counter ; ++e )) ; do
+				
+				if (( $site_counter > 1 )) ; then site=${SITEs[$b]}; fi
+				if (( $esm_counter  > 1 )) ; then esm=${ESMs[$c]}; fi
+				if (( $man_counter  > 1 )) ; then man=${MANs[$e]}; fi
+					
+				echo "*****************************"
+				echo 'running for' "$exp"
+				echo 'running for' "$site"
+				echo 'running for' "$climate"
+				echo 'running for' "$esm"
+				echo 'running with management =' "$man" 
+				echo "*****************************"
+									
+				#add site name to current paths
+				SITE_PATH=input/"$site"
+				OUTPUT_PATH=output/ISIMIP_OUTPUT/2Bpico/"$site"
+				STAND_PATH=ISIMIP/"$site"_stand_ISIMIP.txt
+				TOPO_PATH=ISIMIP/"$site"_topo_ISIMIP.txt
+	
+				SETTING_PATH=ISIMIP/2Bpico/"$site"_settings_ISIMIP_Manag-"$man"_CO2-off.txt
+			
+				#add esm and rcp to meteo co2 and soil path
+				MET_PATH=ISIMIP/2Bpico/"$esm"/"$esm"_pico.txt
+				SOIL_PATH=ISIMIP/"$site"_soil_ISIMIP.txt
+				CO2_PATH=ISIMIP/CO2/CO2_hist.txt
+				
+				#log arguments paths
+				echo "*****************************"
+				echo "$launch$executable -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH"
+				echo "$MODEL $VERSION-ISIMIP arguments:"
+				echo "-i" $SITE_PATH
+				echo "-p" $PARAMETERIZATION_PATH
+				echo "-d" $STAND_PATH
+				echo "-s" $SOIL_PATH
+				echo "-t" $TOPO_PATH
+				echo "-m" $MET_PATH
+				echo "-k" $CO2_PATH
+				echo "-c" $SETTING_PATH
+				echo "-o" $OUTPUT_PATH
+				echo "*****************************"
+				
+				#add paths and arguments to executable and run
+				$launch$executable -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH #&
+
+			done
+		done
+	done
+}
 #########################################################################################################
 ############################################## 2BLB #####################################################
 #########################################################################################################
@@ -722,9 +775,61 @@ function 2BLBC_runs {
 		done
 	done
 }
-#########################################################################################################
+############################################### 2BLBC pico ###################################################
+function 2BLBCpico_runs {
+	for (( b = 0 ; b < $site_counter ; ++b )) ; do
+		for (( c = 0 ; c < $esm_counter ; ++c )) ; do
+			for (( e = 0 ; e < $man_counter ; ++e )) ; do
+				
+				if (( $site_counter > 1 )) ; then site=${SITEs[$b]}; fi
+				if (( $esm_counter  > 1 )) ; then esm=${ESMs[$c]}; fi
+				if (( $man_counter  > 1 )) ; then man=${MANs[$e]}; fi
 
+					
+					echo "*****************************"
+				echo 'running for' "$exp"
+				echo 'running for' "$site"
+				echo 'running for' "$climate"
+				echo 'running for' "$esm"
+				echo 'running with management =' "$man" 
+				echo "*****************************"
+									
+				#add site name to current paths
+				SITE_PATH=input/"$site"
+				OUTPUT_PATH=output/ISIMIP_OUTPUT/2BLBCpico/"$site"
+				STAND_PATH=ISIMIP/"$site"_stand_ISIMIP.txt
+				TOPO_PATH=ISIMIP/"$site"_topo_ISIMIP.txt
+	
+				SETTING_PATH=ISIMIP/2BLBCpico/"$site"_settings_ISIMIP_Manag-"$man"_CO2-off.txt
+			
+				#add esm and rcp to meteo co2 and soil path
+				MET_PATH=ISIMIP/2BLBCpico/"$esm"/"$esm"_pico.txt
+				SOIL_PATH=ISIMIP/"$site"_soil_ISIMIP.txt
+				CO2_PATH=ISIMIP/CO2/CO2_hist.txt
+				
+				#log arguments paths
+				echo "*****************************"
+				echo "$launch$executable -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH"
+				echo "$MODEL $VERSION-ISIMIP arguments:"
+				echo "-i" $SITE_PATH
+				echo "-p" $PARAMETERIZATION_PATH
+				echo "-d" $STAND_PATH
+				echo "-s" $SOIL_PATH
+				echo "-t" $TOPO_PATH
+				echo "-m" $MET_PATH
+				echo "-k" $CO2_PATH
+				echo "-c" $SETTING_PATH
+				echo "-o" $OUTPUT_PATH
+				echo "*****************************"
+				
+				#add paths and arguments to executable and run
+				$launch$executable -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH #&
 
+			done
+		done
+	done
+}
+##################################################################################################
 
 
 for (( e = 0 ; e < $exp_counter ; ++e )) ; do
@@ -742,9 +847,15 @@ for (( e = 0 ; e < $exp_counter ; ++e )) ; do
 	
 	#3  simulation for '2B' experiment
 	#2B_runs
+
+	#4 simulation for '2Bpico' experiment
+	#2Bpico_runs
 	
-	#4  simulation for '2BLBC' experiment
-	2BLBC_runs
+	#5  simulation for '2BLBC' experiment
+	#2BLBC_runs
+	
+	#6  simulation for '2BLBCpico' experiment
+	2BLBCpico_runs
 done
 
 #########################################################################################################
