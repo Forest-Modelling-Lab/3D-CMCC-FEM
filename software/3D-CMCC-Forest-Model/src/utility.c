@@ -295,7 +295,7 @@ void reset_daily_class_variables(cell_t *const c)
 				{
 					s = &a->species[species];
 
-					s->counter[DEAD_TREE] =                0;
+					//s->counter[DEAD_TREE] =                0;
 					s->counter[THINNING_HAPPENS] =         0;
 
 					s->value[DAILY_CANOPY_COVER_PROJ] =   0.;
@@ -309,6 +309,7 @@ void reset_daily_class_variables(cell_t *const c)
 					s->value[TRANSM_PAR] =                0.;
 					s->value[TRANSM_PAR_SUN] =            0.;
 					s->value[TRANSM_PAR_SHADE] =          0.;
+					s->value[fAPAR] =                     0.;
 					s->value[SW_RAD] =                    0.;
 					s->value[SW_RAD_ABS] =                0.;
 					s->value[SW_RAD_ABS_SUN] =            0.;

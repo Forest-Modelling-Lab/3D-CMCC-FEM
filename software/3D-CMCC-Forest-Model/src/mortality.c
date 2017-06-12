@@ -125,9 +125,9 @@ void self_thinning_mortality (cell_t *const c, const int layer, const int year)
 					tree_biomass_remove ( c, height, dbh, age, species, deadtree );
 
 					/* update live and dead tree (do not move above) */
-					s->counter[DEAD_TREE] = deadtree;
-					s->counter[N_TREE]    = livetree;
-					c->n_trees           -= deadtree;
+					s->counter[DEAD_TREE] += deadtree;
+					s->counter[N_TREE]     = livetree;
+					c->n_trees            -= deadtree;
 
 					deadtree = 0;
 					livetree = 0;
@@ -272,8 +272,8 @@ int annual_growth_efficiency_mortality ( cell_t *const c, const int height, cons
 		}
 
 		/* reset to zero n_trees */
-		s->counter[DEAD_TREE] = s->counter[N_TREE];
-		s->counter[N_TREE]    = 0;
+		s->counter[DEAD_TREE] += s->counter[N_TREE];
+		s->counter[N_TREE]     = 0;
 		c->n_trees -= s->counter[DEAD_TREE];
 
 		return 1;

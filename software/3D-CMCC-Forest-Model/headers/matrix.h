@@ -162,6 +162,7 @@ enum {
 	TRANSM_PAR,                         /* (molPAR/m2/day) Transmitted Photosynthetically Active Radiation */
 	TRANSM_PAR_SUN,                     /* (molPAR/m2/day) Transmitted Photosynthetically Active Radiation from sun leaves */
 	TRANSM_PAR_SHADE,                   /* (molPAR/m2/day) Transmitted Photosynthetically Active Radiation from shaded leaves */
+	fAPAR,                              /* (unitless) Fraction of absorbed Photosynthetically Active Radiation */
 
 	YEARLY_APAR,
 
@@ -683,6 +684,7 @@ enum {
 
 	N_TREE,                             /* (tree/cell) Live Tree per class */
 	DEAD_TREE,                          /* (tree/cell) Dead Tree per class */
+	THINNED_TREE,                       /* (tree/cell) Tree removed for thinning or harvesting */
 	N_STUMP,                            /* (stump/cell) Number of stumps for coppice per class */
 	N_SEED,                             /* (seeds/cell) Seeds number per class */
 	N_TREE_SAP,                         /* (saplings/cell) Numbers of Saplings per class */

@@ -86,6 +86,16 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 
 	logger(g_debug_log,"APAR = %f par/m2\n", s->value[APAR]);
 
+	/* compute fAPAR */
+	if ( s->value[PAR] )
+	{
+		s->value[fAPAR]            = s->value[APAR]/s->value[PAR];
+	}
+	else
+	{
+		s->value[fAPAR]            = 0.;
+	}
+
 	s->value[YEARLY_APAR]     += s->value[APAR];
 
 	/* check */

@@ -30,6 +30,9 @@ static int harvesting (cell_t *const c, const int height, const int dbh, const i
 	/* at the moment it considers a complete harvesting for all classes (if considered) */
 	logger(g_debug_log, "\n** Management options: Harvesting ** \n");
 
+	/* add harvested trees */
+	s->counter[THINNED_TREE]  += s->counter[N_TREE];
+
 	/* update C and N biomass */
 	tree_biomass_remove ( c, height, dbh, age, species, s->counter[N_TREE] );
 
@@ -429,6 +432,9 @@ void thinning (cell_t *const c, const int height, const int dbh, const int age, 
 	trees_to_remove = ROUND((s->value[THINNING_INTENSITY] / 100. ) * s->counter[N_TREE]);
 	logger(g_debug_log, "trees_to_remove            = %d\n", trees_to_remove);
 
+	/* added thinned trees */
+	s->counter[THINNED_TREE] += trees_to_remove;
+
 	if ( trees_to_remove < s->counter[N_TREE] )
 	{
 		/* update C and N biomass */
@@ -487,6 +493,9 @@ void prescribed_thinning (cell_t *const c, const int height, const int dbh, cons
 
 					/* compute number of tree to remove */
 					tree_remove = c->heights[height].dbhs[dbh].ages[age].species[species].counter[N_TREE] - g_dataset->rows[row].n;
+
+					/* added thinned trees */
+					c->heights[height].dbhs[dbh].ages[age].species[species].counter[THINNED_TREE] += tree_remove;
 
 					logger(g_debug_log, "\n** Management options: Prescribed Thinning **\n");
 

@@ -161,7 +161,9 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 										",DBHDC"
 										",CROWN_AREA_PROJ"
 										",CROWN_AREA_EXP"
+										",PAR"
 										",APAR"
+										",fAPAR"
 										",Ntree"
 										",VEG_D"
 										",C_INT"
@@ -246,7 +248,7 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 		}
 		/************************************************************************/
 		/* heading variables only at cell level */
-		logger(g_daily_log,",gpp,npp,ar,et,le,soil_evapo,snow_pack,asw,iWue,litrC,cwdC,soilC,litrN,soilN\n");
+		logger(g_daily_log,",gpp,npp,ar,et,le,soil_evapo,snow_pack,asw,iWue,litrC,cwdC,soilC,litrN,soilN,Tsoil,Daylength\n");
 	}
 	/*****************************************************************************************************/
 
@@ -289,7 +291,7 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 							logger(g_daily_log,",%c", sz_management[c->heights[height].dbhs[dbh].ages[age].species[species].management]);
 
 							/* print variables at layer-class level */
-							logger(g_daily_log,",%6.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,"
+							logger(g_daily_log,",%6.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,"
 									"%d,%d,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
 									",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
 									",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
@@ -307,7 +309,9 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 									s->value[DBHDC_EFF],
 									s->value[CROWN_AREA_PROJ],
 									s->value[CROWN_AREA_EXP],
+									s->value[PAR],
 									s->value[APAR],
+									s->value[fAPAR],
 									s->counter[N_TREE],
 									s->counter[VEG_DAYS],
 									s->value[CANOPY_INT_RAIN],
@@ -382,7 +386,7 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 	/************************************************************************/
 	/* printing variables only at cell level */
 
-	logger(g_daily_log, ",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f\n",
+	logger(g_daily_log, ",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f\n",
 			c->daily_gpp,
 			c->daily_npp,
 			c->daily_aut_resp,
@@ -396,7 +400,9 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 			c->cwdC,
 			c->soilC,
 			c->litrN,
-			c->soilN
+			c->soilN,
+			c->years[year].m[month].d[day].tsoil,
+			c->years[year].m[month].d[day].daylength
 	);
 	/************************************************************************/
 
@@ -752,7 +758,9 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 										",CROWN_HEIGHT"
 										",CROWN_AREA_PROJ"
 										",APAR"
-										",Ntree"
+										",LiveTree"
+										",DeadTree"
+										",ThinnedTree"
 										",VEG_D"
 										",FIRST_VEG_DAY"
 										",CTRANSP"
@@ -872,7 +880,7 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 								logger(g_annual_log,",%c", sz_management[c->heights[height].dbhs[dbh].ages[age].species[species].management]);
 
 								/* print variables at layer-class level */
-								logger(g_annual_log,",%6.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%d,%d,%d,%3.4f"
+								logger(g_annual_log,",%6.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%d,%d,%d,%d,%d,%3.4f"
 										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
 										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",
 										s->value[YEARLY_GPP],
@@ -892,6 +900,8 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 										s->value[CROWN_AREA_PROJ],
 										s->value[YEARLY_APAR],
 										s->counter[N_TREE],
+										s->counter[DEAD_TREE],
+										s->counter[THINNED_TREE],
 										s->counter[YEARLY_VEG_DAYS],
 										s->counter[FIRST_VEG_DAYS],
 										s->value[YEARLY_CANOPY_TRANSP],
