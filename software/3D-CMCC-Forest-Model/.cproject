@@ -49,7 +49,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="src/soil_dndc.c|src/old_scripts|src/treemodel.c|src/new_class.c|src/old_scripts/old_light.c|src/soil_rothC.c|src/cropmodel_daily.c|src/cropmodel.c|src/new_tree_class.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="src/soil_dndc.c|src/old_scripts|src/new_class.c|src/soil_rothC.c|src/cropmodel_daily.c|src/cropmodel.c|src/treemodel.c|src/old_scripts/old_light.c|src/new_tree_class.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -103,7 +103,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="src/soil_dndc.c|src/old_scripts|src/treemodel.c|src/new_class.c|src/old_scripts/old_light.c|src/soil_rothC.c|src/cropmodel.c|src/new_tree_class.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="src/soil_dndc.c|src/old_scripts|src/new_class.c|src/soil_rothC.c|src/cropmodel.c|src/treemodel.c|src/old_scripts/old_light.c|src/new_tree_class.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

@@ -33,7 +33,7 @@ model_run=(Debug Release)
 SITEs=(Bily_Kriz Collelongo Hyytiala Kroof LeBray Peitz Solling_beech Solling_spruce Soroe All)
 
 #experiments
-EXPs=(LOCAL FT 2A 2B 2BLBC 2Bpico 2BLBCpico)
+EXPs=(LOCAL FT 2A 2B 2BLBC 2Bpico 2BLBCpico All)
 
 #declare ESMs or Repeated
 ESMs=(ESM1 ESM2 ESM3 ESM4 ESM5 ESM6 ESM7 ESM8 ESM9 ESM10 All)
@@ -459,10 +459,13 @@ function FT_runs {
 					SETTING_PATH=ISIMIP/FT/"$site"_settings_ISIMIP_Manag-"$man"_CO2-"$co2".txt
 				
 					#add esm and rcp to meteo co2 and soil path
-					MET_PATH=ISIMIP/FT/"$esm"/"$esm"_"$rcp".txt
+					MET_PATH=ISIMIP/FT/"$esm"/FT_"$esm"_"$rcp".txt
 					SOIL_PATH=ISIMIP/"$site"_soil_ISIMIP.txt
 					CO2_PATH=ISIMIP/CO2/CO2_"$rcp".txt
 					
+					#add paths and arguments to executable and run
+					$launch$executable -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH #&
+
 					#log arguments paths
 					echo "*****************************"
 					echo "$launch$executable -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH"
@@ -477,9 +480,9 @@ function FT_runs {
 					echo "-c" $SETTING_PATH
 					echo "-o" $OUTPUT_PATH
 					echo "*****************************"
-					
-					#add paths and arguments to executable and run
-					$launch$executable -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH #&
+									
+					#find and in case remove empty files
+					find . -type f -size 0 -delete
 
 					done
 				done
@@ -513,10 +516,13 @@ function LOCAL_runs {
 			SETTING_PATH=ISIMIP/LOCAL/"$site"_settings_ISIMIP_Manag-"$man"_CO2-on.txt
 		
 			#add esm and rcp to meteo co2 and soil path
-			MET_PATH=ISIMIP/LOCAL/hist.txt
+			MET_PATH=ISIMIP/LOCAL/LOCAL_hist.txt
 			SOIL_PATH=ISIMIP/"$site"_soil_ISIMIP.txt
 			CO2_PATH=ISIMIP/CO2/CO2_hist.txt
 							
+			#add paths and arguments to executable and run
+			$launch$executable -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH #&
+	
 			#log arguments paths
 			echo "*****************************"
 			echo "$launch$executable -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH"
@@ -531,10 +537,9 @@ function LOCAL_runs {
 			echo "-c" $SETTING_PATH
 			echo "-o" $OUTPUT_PATH
 			echo "*****************************"
-			
-			#add paths and arguments to executable and run
-			$launch$executable -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH #&
-	
+							
+			#find and in case remove empty files
+			find . -type f -size 0 -delete
 		done		
 	done	
 }
@@ -568,10 +573,13 @@ function 2A_runs {
 				SETTING_PATH=ISIMIP/2A/"$site"_settings_ISIMIP_Manag-"$man"_CO2-on.txt
 			
 				#add esm and rcp to meteo co2 and soil path
-				MET_PATH=ISIMIP/2A/"$esm"/"$esm"_hist.txt
+				MET_PATH=ISIMIP/2A/"$esm"/2A_"$esm"_hist.txt
 				SOIL_PATH=ISIMIP/"$site"_soil_ISIMIP.txt
 				CO2_PATH=ISIMIP/CO2/CO2_hist.txt
 				
+				#add paths and arguments to executable and run
+				$launch$executable -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH #&
+
 				#log arguments paths
 				echo "*****************************"
 				echo "$launch$executable -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH"
@@ -587,9 +595,8 @@ function 2A_runs {
 				echo "-o" $OUTPUT_PATH
 				echo "*****************************"
 				
-				#add paths and arguments to executable and run
-				$launch$executable -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH #&
-
+				#find and in case remove empty files
+				find . -type f -size 0 -delete
 			done
 		done
 	done
@@ -631,7 +638,7 @@ function 2B_runs {
 						SETTING_PATH=ISIMIP/2B/"$site"_settings_ISIMIP_Manag-"$man"_CO2-"$co2".txt
 					
 						#add esm and rcp to meteo co2 and soil path
-						MET_PATH=ISIMIP/2B/"$esm"/"$esm"_"$rcp".txt
+						MET_PATH=ISIMIP/2B/"$esm"/2B_"$esm"_"$rcp".txt
 						SOIL_PATH=ISIMIP/"$site"_soil_ISIMIP.txt
 						CO2_PATH=ISIMIP/CO2/CO2_"$rcp".txt
 										
@@ -652,6 +659,10 @@ function 2B_runs {
 						echo "-c" $SETTING_PATH
 						echo "-o" $OUTPUT_PATH
 						echo "*****************************"
+						
+						#find and in case remove empty files
+						find . -type f -size 0 -delete
+						
 					done
 				done
 			done
@@ -685,10 +696,13 @@ function 2Bpico_runs {
 				SETTING_PATH=ISIMIP/2Bpico/"$site"_settings_ISIMIP_Manag-"$man"_CO2-off.txt
 			
 				#add esm and rcp to meteo co2 and soil path
-				MET_PATH=ISIMIP/2Bpico/"$esm"/"$esm"_pico.txt
+				MET_PATH=ISIMIP/2Bpico/"$esm"/2B_"$esm"_pico.txt
 				SOIL_PATH=ISIMIP/"$site"_soil_ISIMIP.txt
 				CO2_PATH=ISIMIP/CO2/CO2_hist.txt
 				
+				#add paths and arguments to executable and run
+				$launch$executable -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH #&
+
 				#log arguments paths
 				echo "*****************************"
 				echo "$launch$executable -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH"
@@ -704,9 +718,8 @@ function 2Bpico_runs {
 				echo "-o" $OUTPUT_PATH
 				echo "*****************************"
 				
-				#add paths and arguments to executable and run
-				$launch$executable -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH #&
-
+				#find and in case remove empty files
+				find . -type f -size 0 -delete
 			done
 		done
 	done
@@ -747,10 +760,13 @@ function 2BLBC_runs {
 					SETTING_PATH=ISIMIP/2BLBC/"$site"_settings_ISIMIP_Manag-"$man"_CO2-"$co2".txt
 				
 					#add esm and rcp to meteo co2 and soil path
-					MET_PATH=ISIMIP/2BLBC/"$esm"/"$esm"_"$rcp".txt
+					MET_PATH=ISIMIP/2BLBC/"$esm"/2BLBC_"$esm"_"$rcp".txt
 					SOIL_PATH=ISIMIP/"$site"_soil_ISIMIP.txt
 					CO2_PATH=ISIMIP/CO2/CO2_"$rcp".txt
 					
+					#add paths and arguments to executable and run
+					$launch$executable -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH #&
+
 					#log arguments paths
 					echo "*****************************"
 					echo "$launch$executable -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH"
@@ -766,9 +782,9 @@ function 2BLBC_runs {
 					echo "-o" $OUTPUT_PATH
 					echo "*****************************"
 					
-					#add paths and arguments to executable and run
-					$launch$executable -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH #&
-
+					#find and in case remove empty files
+					find . -type f -size 0 -delete
+					
 					done
 				done
 			done
@@ -786,7 +802,7 @@ function 2BLBCpico_runs {
 				if (( $man_counter  > 1 )) ; then man=${MANs[$e]}; fi
 
 					
-					echo "*****************************"
+				echo "*****************************"
 				echo 'running for' "$exp"
 				echo 'running for' "$site"
 				echo 'running for' "$climate"
@@ -803,10 +819,13 @@ function 2BLBCpico_runs {
 				SETTING_PATH=ISIMIP/2BLBCpico/"$site"_settings_ISIMIP_Manag-"$man"_CO2-off.txt
 			
 				#add esm and rcp to meteo co2 and soil path
-				MET_PATH=ISIMIP/2BLBCpico/"$esm"/"$esm"_pico.txt
+				MET_PATH=ISIMIP/2BLBCpico/"$esm"/2BLBC_"$esm"_pico.txt
 				SOIL_PATH=ISIMIP/"$site"_soil_ISIMIP.txt
 				CO2_PATH=ISIMIP/CO2/CO2_hist.txt
 				
+				#add paths and arguments to executable and run
+				$launch$executable -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH #&
+
 				#log arguments paths
 				echo "*****************************"
 				echo "$launch$executable -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH"
@@ -822,41 +841,68 @@ function 2BLBCpico_runs {
 				echo "-o" $OUTPUT_PATH
 				echo "*****************************"
 				
-				#add paths and arguments to executable and run
-				$launch$executable -i $SITE_PATH -o $OUTPUT_PATH -p $PARAMETERIZATION_PATH -d $STAND_PATH -m $MET_PATH -s $SOIL_PATH -t $TOPO_PATH -c $SETTING_PATH -k $CO2_PATH #&
-
+				#find and in case remove empty files
+				find . -type f -size 0 -delete
+				
 			done
 		done
 	done
 }
 ##################################################################################################
 
-
-for (( e = 0 ; e < $exp_counter ; ++e )) ; do
-	
-	if (( $exp_counter > 1 )) ; then exp=${EXPs[$e]}; fi
-	
+if [ "$exp" = "All" ] ; then
+		
 	#1 simulations for 'LOCAL' experiments
-	#LOCAL_runs
-	
+	LOCAL_runs
+		
 	#2 simulation for 'FAST TRACK' experimet
-	#FT_runs
-	
+	FT_runs
+		
 	#3  simulation for '2A' experiment
-	#2A_runs
-	
+	2A_runs
+		
 	#3  simulation for '2B' experiment
-	#2B_runs
-
+	2B_runs
+	
 	#4 simulation for '2Bpico' experiment
-	#2Bpico_runs
-	
+	2Bpico_runs
+		
 	#5  simulation for '2BLBC' experiment
-	#2BLBC_runs
-	
+	2BLBC_runs
+		
 	#6  simulation for '2BLBCpico' experiment
 	2BLBCpico_runs
-done
+fi
+
+##################################################################################################
+
+if [ "$exp" = "LOCAL" ] ; then
+	LOCAL_runs
+fi
+
+if [ "$exp" = "FT" ] ; then
+	FT_runs
+fi
+
+if [ "$exp" = "2A" ] ; then
+	2A_runs
+fi
+
+if [ "$exp" = "2B" ] ; then
+	2B_runs
+fi
+
+if [ "$exp" = "2Bpico" ] ; then
+	2Bpico_runs
+fi
+
+if [ "$exp" = "2BLBC" ] ; then
+	2BLBC_runs
+fi
+
+if [ "$exp" = "2BLBCpico" ] ; then
+	2BLBCpico_runs
+fi
 
 #########################################################################################################
 
