@@ -373,6 +373,7 @@ void self_pruning ( cell_t *const c, const int height, const int dbh, const int 
 	//fixme model crashes
 	//s->value[C_BRANCH_TO_RESERVE      ] += s->value[BRANCH_C_TO_REMOVE] * C_FRAC_TO_RETRANSL;
 	//s->value[C_BRANCH_TO_CWD]           += s->value[BRANCH_C_TO_REMOVE] * ( 1. - C_FRAC_TO_RETRANSL );
+	//note: in this way all reserve are assumed to be retranslocated
 	s->value[C_BRANCH_TO_CWD]           += s->value[BRANCH_C_TO_REMOVE];
 
 	/* adding BRANCH SAPWOOD and HEARTWOOD to CWD */
@@ -381,6 +382,7 @@ void self_pruning ( cell_t *const c, const int height, const int dbh, const int 
 
 	/* adding to reserve and CWD pool */
 	//fixme model crashes
+	//note: in this way all reserve are assumed to be retranslocated
 	//s->value[C_TO_RESERVE]              += s->value[C_BRANCH_TO_RESERVE];
 	s->value[C_TO_CWD]                  += s->value[C_BRANCH_TO_CWD];
 
@@ -406,6 +408,7 @@ void self_pruning ( cell_t *const c, const int height, const int dbh, const int 
 	//fixme model crashes
 	//s->value[C_CROOT_TO_RESERVE]        += s->value[CROOT_C_TO_REMOVE] * C_FRAC_TO_RETRANSL;
 	//s->value[C_CROOT_TO_CWD]            += s->value[CROOT_C_TO_REMOVE] * ( 1. - C_FRAC_TO_RETRANSL );
+	//note: in this way all reserve are assumed to be retranslocated
 	s->value[C_CROOT_TO_CWD]           += s->value[CROOT_C_TO_REMOVE];
 
 	/* adding CROOT_C SAPWOOD and HEARTWOOD to CWD */
@@ -414,6 +417,7 @@ void self_pruning ( cell_t *const c, const int height, const int dbh, const int 
 
 	/* adding to reserve and CWD pool */
 	//fixme model crashes
+	//note: in this way all reserve are assumed to be retranslocated
 	//s->value[C_TO_RESERVE]             += s->value[C_CROOT_TO_RESERVE];
 	s->value[C_TO_CWD]                 += s->value[C_CROOT_TO_CWD];
 
