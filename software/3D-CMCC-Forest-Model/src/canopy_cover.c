@@ -100,6 +100,14 @@ void dbhdc_function (cell_t *const c, const int layer, const int height, const i
 	}
 #endif
 
+	/* test: if dbhdc decreases than with the same proportion also branch and coarse root fractions decrease */
+	if ( s->counter[YOS] && ( previous_dbhdc_eff > s->value[DBHDC_EFF] ) )
+	{
+		/******** self pruning ********/
+		self_pruning ( c, height, dbh, age, species, previous_dbhdc_eff, s->value[DBHDC_EFF] );
+	}
+
+
 	logger(g_debug_log,"-DBHDC effective     = %f\n", s->value[DBHDC_EFF]);
 
 	/* check */
