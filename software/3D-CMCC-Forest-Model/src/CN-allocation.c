@@ -98,7 +98,7 @@ void carbon_allocation( cell_t *const c, const int height, const int dbh, const 
 	s->value[C_TO_FRUIT]   -= s->value[C_FRUIT_TO_CWD];
 	s->value[C_TO_RESERVE] -= s->value[C_RESERVE_TO_CWD];
 	s->value[C_TO_LITR]    += fabs(s->value[C_LEAF_TO_LITR] + s->value[C_FROOT_TO_LITR]);
-	s->value[C_TO_CWD]     += s->value[C_BRANCH_TO_CWD];
+	s->value[C_TO_CWD]     += s->value[C_STEM_TO_CWD] + s->value[C_BRANCH_TO_CWD] + s->value[C_CROOT_TO_CWD] + s->value[C_FRUIT_TO_CWD] + s->value[C_RESERVE_TO_CWD];
 
 	logger(g_debug_log, "C_TO_LEAF    = %f tC/cell\n", s->value[C_TO_LEAF]);
 	logger(g_debug_log, "C_TO_FROOT   = %f tC/cell\n", s->value[C_TO_FROOT]);

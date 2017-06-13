@@ -370,45 +370,51 @@ void self_pruning ( cell_t *const c, const int height, const int dbh, const int 
 	s->value[BRANCH_C_TO_REMOVE]        += ( s->value[BRANCH_C] * ( 1. - self_pruning_ratio ) );
 
 	/* adding to BRANCH C transfer pools */
-	s->value[C_BRANCH_TO_RESERVE      ] += s->value[BRANCH_C_TO_REMOVE] * C_FRAC_TO_RETRANSL;
-	s->value[C_BRANCH_TO_CWD]           += s->value[BRANCH_C_TO_REMOVE] * ( 1. - C_FRAC_TO_RETRANSL );
+	//fixme model crashes
+	//s->value[C_BRANCH_TO_RESERVE      ] += s->value[BRANCH_C_TO_REMOVE] * C_FRAC_TO_RETRANSL;
+	//s->value[C_BRANCH_TO_CWD]           += s->value[BRANCH_C_TO_REMOVE] * ( 1. - C_FRAC_TO_RETRANSL );
+	s->value[C_BRANCH_TO_CWD]           += s->value[BRANCH_C_TO_REMOVE];
 
 	/* adding BRANCH SAPWOOD and HEARTWOOD to CWD */
 	s->value[C_BRANCH_SAPWOOD_TO_CWD]   += ( s->value[BRANCH_SAPWOOD_C]   * ( 1. - self_pruning_ratio ) );
 	s->value[C_BRANCH_HEARTWOOD_TO_CWD] += ( s->value[BRANCH_HEARTWOOD_C] * ( 1. - self_pruning_ratio ) );
 
 	/* adding to reserve and CWD pool */
-	s->value[C_TO_RESERVE]              += s->value[C_BRANCH_TO_RESERVE];
+	//fixme model crashes
+	//s->value[C_TO_RESERVE]              += s->value[C_BRANCH_TO_RESERVE];
 	s->value[C_TO_CWD]                  += s->value[C_BRANCH_TO_CWD];
 
 	/** nitrogen **/
 
 	/* remove biomass from branch */
-	s->value[BRANCH_N_TO_REMOVE]         = ( s->value[BRANCH_N] * ( 1. - self_pruning_ratio ) );
+	s->value[BRANCH_N_TO_REMOVE]        = ( s->value[BRANCH_N] * ( 1. - self_pruning_ratio ) );
 
 	/* adding to BRANCH_N C transfer pools */
-	s->value[N_BRANCH_TO_RESERVE]       += s->value[BRANCH_N_TO_REMOVE] * N_FRAC_TO_RETRANSL;
-	s->value[N_BRANCH_TO_CWD]           += s->value[BRANCH_N_TO_REMOVE] * ( 1. - N_FRAC_TO_RETRANSL );
+	s->value[N_BRANCH_TO_RESERVE]      += s->value[BRANCH_N_TO_REMOVE] * N_FRAC_TO_RETRANSL;
+	s->value[N_BRANCH_TO_CWD]          += s->value[BRANCH_N_TO_REMOVE] * ( 1. - N_FRAC_TO_RETRANSL );
 
-	s->value[N_TO_RESERVE]              += s->value[N_BRANCH_TO_RESERVE];
-	s->value[N_TO_CWD]                  += s->value[N_BRANCH_TO_CWD];
+	s->value[N_TO_RESERVE]             += s->value[N_BRANCH_TO_RESERVE];
+	s->value[N_TO_CWD]                 += s->value[N_BRANCH_TO_CWD];
 
 	/*** coarse root self-pruning ***/
 	/** carbon **/
 
 	/* remove biomass from coarse root */
-	s->value[CROOT_C_TO_REMOVE]         += ( s->value[CROOT_C] * ( 1. - self_pruning_ratio ) );
+	s->value[CROOT_C_TO_REMOVE]        += ( s->value[CROOT_C] * ( 1. - self_pruning_ratio ) );
 
 	/* adding to CROOT_C transfer pools */
-	s->value[C_CROOT_TO_RESERVE]        += s->value[CROOT_C_TO_REMOVE] * C_FRAC_TO_RETRANSL;
-	s->value[C_CROOT_TO_CWD]            += s->value[CROOT_C_TO_REMOVE] * ( 1. - C_FRAC_TO_RETRANSL );
+	//fixme model crashes
+	//s->value[C_CROOT_TO_RESERVE]        += s->value[CROOT_C_TO_REMOVE] * C_FRAC_TO_RETRANSL;
+	//s->value[C_CROOT_TO_CWD]            += s->value[CROOT_C_TO_REMOVE] * ( 1. - C_FRAC_TO_RETRANSL );
+	s->value[C_CROOT_TO_CWD]           += s->value[CROOT_C_TO_REMOVE];
 
 	/* adding CROOT_C SAPWOOD and HEARTWOOD to CWD */
 	s->value[C_CROOT_SAPWOOD_TO_CWD]   += ( s->value[CROOT_SAPWOOD_C]   * ( 1. - self_pruning_ratio ) );
 	s->value[C_CROOT_HEARTWOOD_TO_CWD] += ( s->value[CROOT_HEARTWOOD_C] * ( 1. - self_pruning_ratio ) );
 
 	/* adding to reserve and CWD pool */
-	s->value[C_TO_RESERVE]             += s->value[C_CROOT_TO_RESERVE];
+	//fixme model crashes
+	//s->value[C_TO_RESERVE]             += s->value[C_CROOT_TO_RESERVE];
 	s->value[C_TO_CWD]                 += s->value[C_CROOT_TO_CWD];
 
 	/** nitrogen **/
