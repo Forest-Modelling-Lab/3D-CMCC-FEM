@@ -65,6 +65,7 @@ Year,x,y,Age,Species,Management,N,Stool,AvDBH,Height,Wf,Wrc,Wrf,Ws,Wbb,Wres,Lai
 2007,0,0,86,Fagussylvatica,T,288,0,28.07805556,22.82020833,0,0,0,0,0,0,0
 2008,0,0,87,Fagussylvatica,T,288,0,28.34027778,22.97670139,0,0,0,0,0,0,0
 2009,0,0,88,Fagussylvatica,T,288,0,28.63986111,23.12795139,0,0,0,0,0,0,0
-2009,0,0,89,Fagussylvatica,T,288,0,28.63986111,23.12795139,0,0,0,0,0,0,0
-2010,0,0,90,Fagussylvatica,T,288,0,28.9540625,23.28625,0,0,0,0,0,0,0
+2010,0,0,89,Fagussylvatica,T,288,0,28.9540625,23.28625,0,0,0,0,0,0,0 //modified cause eeror below
+//2009,0,0,89,Fagussylvatica,T,288,0,28.63986111,23.12795139,0,0,0,0,0,0,0 error in age from profound database
+//2010,0,0,90,Fagussylvatica,T,288,0,28.9540625,23.28625,0,0,0,0,0,0,0 error in age from profound database
 
