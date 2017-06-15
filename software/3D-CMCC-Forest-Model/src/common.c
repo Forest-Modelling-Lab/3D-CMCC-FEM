@@ -221,6 +221,28 @@ int path_exists(const char *const path) {
 	return 0;
 }
 
+int file_exists(const char *const file) {
+#if defined (_WIN32)
+	DWORD dwResult;
+#endif
+	if ( ! file ) {
+		return 0;
+	}
+#if defined (_WIN32)
+	dwResult = GetFileAttributes(file);
+	if (dwResult != INVALID_FILE_ATTRIBUTES && !(dwResult & FILE_ATTRIBUTE_DIRECTORY)) {
+		return 1;
+	}
+#elif defined (linux) || defined (_linux) || defined (__linux__)
+	if ( ! access(file, W_OK) ) {
+		return 1;
+	}
+#else
+	assert(1);
+#endif
+	return 0;
+}
+
 // returns -1 if file not found
 // returns -2 if out of memory
 // returns -3 if read error

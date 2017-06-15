@@ -550,8 +550,6 @@ char* path_copy(const char *const s) {
 	return NULL;
 }
 
-
-
 char* concatenate_path(char* s1, char* s2) {
 	char *p;
 	int i;
@@ -1017,6 +1015,68 @@ static int restart(const matrix_t*const m, int restart_year) {
 	return 1;
 }
 
+static int log_rename(void)
+{
+	char end_year[4+1] = { 0 };
+	int i;
+	logger_t* logs[LOG_TYPES_COUNT] =
+	{
+		g_debug_log
+		, g_daily_log
+		, g_monthly_log
+		, g_annual_log
+		, g_daily_soil_log
+		, g_monthly_soil_log
+		, g_annual_soil_log
+	};
+
+	sprintf(end_year, "%d", g_settings->year_end);
+
+	for ( i = 0; i < LOG_TYPES_COUNT; ++i )
+	{
+		if ( logs[i] && logs[i]->f )
+		{
+			char* p;
+			char* new_filename;
+			int ret;
+
+			new_filename = string_copy(logs[i]->filename);
+			if ( ! new_filename ) return 0;
+
+			p = strchr(new_filename, '(');
+			if ( ! p ) return 0;
+			p = strchr(p, '-');
+			if ( ! p ) return 0;
+			++p;
+
+			p[0] = end_year[0];
+			p[1] = end_year[1];
+			p[2] = end_year[2];
+			p[3] = end_year[3];
+
+			fclose(logs[i]->f);
+
+			if ( file_exists(new_filename) )
+			{
+				remove(new_filename);
+			}
+			
+			ret = rename(logs[i]->filename, new_filename);
+			if ( -1 == ret )
+			{
+				free(new_filename);
+				return 0;
+			}
+			free(logs[i]->filename);
+			logs[i]->filename = new_filename;		
+			logs[i]->f = fopen(logs[i]->filename, "a");
+			if ( ! logs[i]->f ) return 0;
+		}
+	}
+
+	return 1;
+}
+
 #if 1
 //note: 02/february/2017
 //now model runs for one day and then changes the cell
@@ -1333,6 +1393,16 @@ int main(int argc, char *argv[]) {
 				);
 				g_settings->year_end = matrix->cells[0].years[years_of_simulation-1].year;
 				ii = years_of_simulation-1;
+				logger_error(g_debug_log, "renaming logs...");
+				if ( ! log_rename() )
+				{
+					logger_error(g_debug_log, "error!\n");
+					goto err;
+				}
+				else
+				{
+					logger_error(g_debug_log, "ok\n");
+				}
 			}
 			/* i is year_end_index */
 			i = ii + 1;

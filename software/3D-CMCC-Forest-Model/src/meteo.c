@@ -24,7 +24,7 @@
 #define VPD_RANGE_MIN        0
 #define VPD_RANGE_MAX      150
 #define PRECIP_RANGE_MIN     0
-#define PRECIP_RANGE_MAX   250
+#define PRECIP_RANGE_MAX   400
 #define RH_RANGE_MIN         0
 #define RH_RANGE_MAX       100
 

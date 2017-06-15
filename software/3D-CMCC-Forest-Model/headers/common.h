@@ -109,6 +109,7 @@ int file_load_in_memory(const char* const filename, char** result);
 int file_copy(const char* const filename, const char* const path);
 const char* file_get_name_only(const char* const filename);
 int path_create(const char *const path);
+int file_exists(const char *const file);
 int has_path_delimiter(const char* const s);
 const char* datetime_current(void);
 void timer_init(void);

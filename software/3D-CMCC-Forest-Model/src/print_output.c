@@ -285,7 +285,7 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 							s  = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 							/* print species name */
-							logger(g_daily_log,",%.3s", c->heights[height].dbhs[dbh].ages[age].species[species].name);
+							logger(g_daily_log,",%s", c->heights[height].dbhs[dbh].ages[age].species[species].name);
 
 							/* print management */
 							logger(g_daily_log,",%c", sz_management[c->heights[height].dbhs[dbh].ages[age].species[species].management]);
@@ -570,7 +570,7 @@ void EOM_print_output_cell_level(cell_t *const c, const int month, const int yea
 							s  = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 							/* print species name */
-							logger(g_monthly_log,",%.3s", c->heights[height].dbhs[dbh].ages[age].species[species].name);
+							logger(g_monthly_log,",%s", c->heights[height].dbhs[dbh].ages[age].species[species].name);
 
 							/* print management */
 							logger(g_monthly_log,",%c", sz_management[c->heights[height].dbhs[dbh].ages[age].species[species].management]);
@@ -876,7 +876,7 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 								s  = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 								/* print species name */
-								logger(g_annual_log,",%.3s", c->heights[height].dbhs[dbh].ages[age].species[species].name);
+								logger(g_annual_log,",%s", c->heights[height].dbhs[dbh].ages[age].species[species].name);
 
 								/* print management */
 								logger(g_annual_log,",%c", sz_management[c->heights[height].dbhs[dbh].ages[age].species[species].management]);
