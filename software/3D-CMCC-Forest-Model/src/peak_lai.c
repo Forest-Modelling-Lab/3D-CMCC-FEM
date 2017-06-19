@@ -18,7 +18,7 @@ void peak_lai(species_t *const s, const int day, const int month, const int year
 
 	logger(g_debug_log, "\n**PEAK LAI**\n");
 
-	/* compute annual Peak Projected Lai (m2/m2) */
+	/* compute annual Peak Projected Lai (m2/m2) (tree level) */
 	s->value[PEAK_LAI_PROJ] = ( ( s->value[SAPWOOD_AREA] / 10000. ) * s->value[SAP_LEAF]) / s->value[CROWN_AREA_PROJ];
 	logger(g_debug_log, "PEAK_LAI_PROJ = %f m2/m2\n",s->value[PEAK_LAI_PROJ]);
 
