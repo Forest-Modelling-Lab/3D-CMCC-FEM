@@ -267,10 +267,11 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 	/** fraction of light transmitted through the canopy **/
 	/* note: we currently use approach for homogeneous canopies that improves representation when canopy is not closed: */
 	/* see method from Cannel and Grace, Can. J. For: Res. Vol. 23, 1993 [Eq.8]  */
+	/* see method from Duursma and Makela, Tree Phys: Vol. 27, 859-870, 2007 [Eq.4] */
 
-	Light_trasm_frac       = exp(- k * s->value[LAI_PROJ]);
-	Light_trasm_frac_sun   = exp(- k * s->value[LAI_SUN_PROJ]);
-	Light_trasm_frac_shade = exp(- k * s->value[LAI_SHADE_PROJ]);
+	Light_trasm_frac       = exp ( - k * s->value[LAI_PROJ]);
+	Light_trasm_frac_sun   = exp ( - k * s->value[LAI_SUN_PROJ]);
+	Light_trasm_frac_shade = exp ( - k * s->value[LAI_SHADE_PROJ]);
 
 	/** fraction of light absorbed by the canopy **/
 	Light_abs_frac       = 1. - Light_trasm_frac;
@@ -280,15 +281,15 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 	/** fraction of light reflected by the canopy **/
 	/* for Short Wave radiation and PAR */
 	/* following BIOME albedo for PAR is 1/3 of albedo. the absorbed PAR is */
-	/*calculated similarly to sw except that albedo is 1/3 for PAR because less */
+	/* calculated similarly to sw except that albedo is 1/3 for PAR because less */
 	/* PAR is reflected than sw_radiation (Jones 1992) */
 
 	Light_refl_sw_frac        = s->value[ALBEDO];
 	Light_refl_sw_frac_sun    = s->value[ALBEDO] * ( 1 - exp ( - k * s->value[LAI_SUN_PROJ]));
 	Light_refl_sw_frac_shade  = s->value[ALBEDO] * ( 1 - exp ( - k * s->value[LAI_SHADE_PROJ]));
-	Light_refl_par_frac       = (s->value[ALBEDO]/3.);
-	Light_refl_par_frac_sun   = (s->value[ALBEDO]/3.) * ( 1 - exp ( - k * s->value[LAI_SUN_PROJ]));
-	Light_refl_par_frac_shade = (s->value[ALBEDO]/3.) * ( 1 - exp ( - k * s->value[LAI_SHADE_PROJ]));
+	Light_refl_par_frac       = (s->value[ALBEDO] /3. );
+	Light_refl_par_frac_sun   = (s->value[ALBEDO] /3. ) * ( 1 - exp ( - k * s->value[LAI_SUN_PROJ]));
+	Light_refl_par_frac_shade = (s->value[ALBEDO] /3. ) * ( 1 - exp ( - k * s->value[LAI_SHADE_PROJ]));
 
 	logger(g_debug_log, "Light_trasm_frac          = %f\n", Light_trasm_frac);
 	logger(g_debug_log, "Light_trasm_frac_sun      = %f\n", Light_trasm_frac_sun);
