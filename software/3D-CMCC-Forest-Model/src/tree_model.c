@@ -379,9 +379,6 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							}
 							else
 							{
-								/* litter fluxes and pools */
-								littering             ( c, s );
-
 								//fixme here model should remove class just after have checked that the balances are closed
 								//so model has to include c fluxes that go out to litter and cwd
 								if ( height >= m->cells[cell].heights_count ) goto height_end;
