@@ -281,7 +281,7 @@ int tree_class_remove(cell_t *const c, const int height, const int dbh, const in
 				&& (c->heights[height].dbhs[0].ages_count <= 1)
 				&& (c->heights[height].dbhs[0].ages[0].species_count <= 1) )
 			) {
-				if ( ! height_remove(c, 0) ) return 0;
+				if ( ! height_remove(c, height) ) return 0;
 		}
 #endif
 	}
