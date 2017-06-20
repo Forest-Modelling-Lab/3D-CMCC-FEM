@@ -194,9 +194,6 @@ void tree_biomass_remove (cell_t *const c, const int height, const int dbh, cons
 	species_t *s;
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
-	/* compute single tree average biomass */
-	//average_tree_pools ( s );
-
 	logger(g_debug_log, "\n*TREE BIOMASS REMOVE*\n");
 
 	/* update class carbon pools */

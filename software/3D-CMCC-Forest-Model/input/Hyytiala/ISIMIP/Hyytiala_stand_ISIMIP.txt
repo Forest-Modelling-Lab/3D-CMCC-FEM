@@ -1,5 +1,5 @@
 Year,x,y,Age,Species,Management,N,Stool,AvDBH,Height,Lai
-//1995,0,0,34,Piceaabies,T,965,0,4.12,3.69,0.8
+1995,0,0,34,Piceaabies,T,965,0,4.12,3.69,0.8
 1995,0,0,34,Pinussylvestris,T,870,0,12.74,10.92,1.37
 
 //1996,0,0,35,Piceaabies,T,965,0,4.2,3.82,0.81

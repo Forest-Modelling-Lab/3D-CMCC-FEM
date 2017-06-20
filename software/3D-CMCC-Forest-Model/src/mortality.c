@@ -198,7 +198,7 @@ int growth_efficiency_mortality ( cell_t *const c, const int height, const int d
 
 	if( s->value[RESERVE_C] < 0 )
 	{
-		puts("growth efficiency mortality!!!\n");
+		printf("growth efficiency mortality species %s!!!\n", s->name);
 
 		/* reset to zero n_trees */
 		s->counter[DEAD_TREE] = s->counter[N_TREE];
@@ -206,12 +206,9 @@ int growth_efficiency_mortality ( cell_t *const c, const int height, const int d
 		c->n_trees -= s->counter[DEAD_TREE];
 
 		/* remove dead C and N biomass */
-		tree_biomass_remove ( c, height, dbh, age, species, s->counter[N_TREE] );
+		tree_biomass_remove ( c, height, dbh, age, species, s->counter[DEAD_TREE] );
 
-		//fixme
-		/*** update cell level carbon fluxes ***/
-		/* update cell level carbon fluxes (gC/m2/day) */
-		/* tree */
+		/*** update cell level carbon fluxes (gC/m2/day) ***/
 		c->daily_leaf_carbon        -= (s->value[C_LEAF_TO_LITR]  + s->value[C_LEAF_TO_RESERVE])    * 1e6 / g_settings->sizeCell;
 		c->daily_froot_carbon       -= (s->value[C_FROOT_TO_LITR] + s->value[C_FROOT_TO_RESERVE])   * 1e6 / g_settings->sizeCell;
 		c->daily_stem_carbon        -= (s->value[C_STEM_TO_CWD]    * 1e6 / g_settings->sizeCell);
@@ -220,8 +217,7 @@ int growth_efficiency_mortality ( cell_t *const c, const int height, const int d
 		c->daily_reserve_carbon     -= (s->value[C_RESERVE_TO_CWD] * 1e6 / g_settings->sizeCell);
 		c->daily_fruit_carbon       -= (s->value[C_FRUIT_TO_CWD]   * 1e6 / g_settings->sizeCell);
 
-		/*** update cell level carbon pools ***/
-		/* tree */
+		/*** update cell level carbon pools (tC/cell) ***/
 		c->leaf_carbon              -= (s->value[C_LEAF_TO_LITR]  + s->value[C_LEAF_TO_RESERVE])    * 1e6 / g_settings->sizeCell;
 		c->froot_carbon             -= (s->value[C_FROOT_TO_LITR] + s->value[C_FROOT_TO_RESERVE])   * 1e6 / g_settings->sizeCell;
 		c->stem_carbon              -= (s->value[C_STEM_TO_CWD]    * 1e6 / g_settings->sizeCell);
