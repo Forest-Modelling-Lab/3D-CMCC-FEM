@@ -35,26 +35,26 @@ void littering ( cell_t *const c, species_t *const s )
 	c->daily_branch_cwdC       += s->value[C_BRANCH_TO_CWD]  * 1e6 / g_settings->sizeCell;
 	c->daily_reserve_cwdC      += s->value[C_RESERVE_TO_CWD] * 1e6 / g_settings->sizeCell;
 	c->daily_fruit_cwdC        += s->value[C_FRUIT_TO_CWD]   * 1e6 / g_settings->sizeCell;
-	c->daily_cwdC              += ((s->value[C_STEM_TO_CWD] +
+	c->daily_cwdC              += (s->value[C_STEM_TO_CWD]  +
 			s->value[C_CROOT_TO_CWD]                        +
 			s->value[C_BRANCH_TO_CWD]                       +
 			s->value[C_RESERVE_TO_CWD]                      +
 			s->value[C_FRUIT_TO_CWD])                       *
-			(1e6 / g_settings->sizeCell));
+			1e6 / g_settings->sizeCell;
 
 	/* cell level soil carbon fluxes (gC/m2/day) */
 	c->daily_soilC             += 0. ;
 
 	/* cell level litter carbon pools (gC/m2) */
-	c->litrC                   += ((s->value[C_LEAF_TO_LITR] +
+	c->litrC                   += (s->value[C_LEAF_TO_LITR] +
 			s->value[C_FROOT_TO_LITR]) *
-			(1e6 / g_settings->sizeCell));
-	c->cwdC                    += ((s->value[C_STEM_TO_CWD] +
+			1e6 / g_settings->sizeCell;
+	c->cwdC                    += (s->value[C_STEM_TO_CWD]  +
 			s->value[C_CROOT_TO_CWD]                        +
 			s->value[C_BRANCH_TO_CWD]                       +
 			s->value[C_RESERVE_TO_CWD]                      +
 			s->value[C_FRUIT_TO_CWD])                       *
-			(1e6 / g_settings->sizeCell));
+			1e6 / g_settings->sizeCell;
 	c->soilC                   += 0. ;
 
 	/* leaf litter carbon fluxes */

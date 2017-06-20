@@ -55,31 +55,31 @@ int check_litter_carbon_flux_balance(cell_t *const c)
 
 	if ( ( fabs( balance ) > eps ) && ( c->dos > 1) )
 	{
-		error_log("DOY = %d\n", c->doy);
+		error_log("DOY                   = %d\n", c->doy);
 		error_log("\nin\n");
-		error_log("c->daily_litrC = %g gC/m2/day\n", c->daily_litrC);
-		error_log("c->daily_cwdC = %g gC/m2/day\n", c->daily_cwdC);
+		error_log("c->daily_litrC        = %f gC/m2/day\n", c->daily_litrC);
+		error_log("c->daily_cwdC         = %f gC/m2/day\n", c->daily_cwdC);
 		error_log("\nout\n");
-		error_log("c->daily_soilC = %g gC/m2/day\n",c->daily_soilC);
+		error_log("c->daily_soilC        = %f gC/m2/day\n", c->daily_soilC);
 		error_log("\nstore\n");
-		error_log("c->daily_leaf_litr1C = %g gC/m2/day\n",  c->daily_leaf_litr1C);
-		error_log("c->daily_leaf_litr2C = %g gC/m2/day\n",  c->daily_leaf_litr2C);
-		error_log("c->daily_leaf_litr3C = %g gC/m2/day\n",  c->daily_leaf_litr3C);
-		error_log("c->daily_leaf_litr4C = %g gC/m2/day\n",  c->daily_leaf_litr4C);
-		error_log("c->daily_froot_litr1C = %g gC/m2/day\n", c->daily_froot_litr1C);
-		error_log("c->daily_froot_litr2C = %g gC/m2/day\n", c->daily_froot_litr2C);
-		error_log("c->daily_leaf_litrC = %g gC/m2/day\n",   c->daily_froot_litr3C);
-		error_log("c->daily_froot_litr4C = %g gC/m2/day\n", c->daily_froot_litr4C);
-		error_log("c->daily_stem_cwdC = %g gC/m2/day\n",    c->daily_stem_cwdC);
-		error_log("c->daily_croot_cwdC = %g gC/m2/day\n",   c->daily_croot_cwdC);
-		error_log("c->daily_reserve_cwdC = %g gC/m2/day\n", c->daily_reserve_cwdC);
-		error_log("c->daily_branch_cwdC = %g gC/m2/day\n",  c->daily_branch_cwdC);
-		error_log("c->daily_fruit_litrC = %g gC/m2/day\n",  c->daily_fruit_cwdC);
+		error_log("c->daily_leaf_litr1C  = %f gC/m2/day\n", c->daily_leaf_litr1C);
+		error_log("c->daily_leaf_litr2C  = %f gC/m2/day\n", c->daily_leaf_litr2C);
+		error_log("c->daily_leaf_litr3C  = %f gC/m2/day\n", c->daily_leaf_litr3C);
+		error_log("c->daily_leaf_litr4C  = %f gC/m2/day\n", c->daily_leaf_litr4C);
+		error_log("c->daily_froot_litr1C = %f gC/m2/day\n", c->daily_froot_litr1C);
+		error_log("c->daily_froot_litr2C = %f gC/m2/day\n", c->daily_froot_litr2C);
+		error_log("c->daily_leaf_litrC   = %f gC/m2/day\n", c->daily_froot_litr3C);
+		error_log("c->daily_froot_litr4C = %f gC/m2/day\n", c->daily_froot_litr4C);
+		error_log("c->daily_stem_cwdC    = %f gC/m2/day\n", c->daily_stem_cwdC);
+		error_log("c->daily_croot_cwdC   = %f gC/m2/day\n", c->daily_croot_cwdC);
+		error_log("c->daily_reserve_cwdC = %f gC/m2/day\n", c->daily_reserve_cwdC);
+		error_log("c->daily_branch_cwdC  = %f gC/m2/day\n", c->daily_branch_cwdC);
+		error_log("c->daily_fruit_cwdC   = %f gC/m2/day\n", c->daily_fruit_cwdC);
 
-		error_log("\ncarbon in = %g gC/m2/day\n", in);
-		error_log("carbon out = %g gC/m2/day\n", out);
-		error_log("carbon store = %g gC/m2/day\n", store);
-		error_log("carbon_balance = %g gC/m2/day\n",balance);
+		error_log("\ncarbon in           = %f gC/m2/day\n", in);
+		error_log("carbon out            = %f gC/m2/day\n", out);
+		error_log("carbon store          = %f gC/m2/day\n", store);
+		error_log("carbon_balance        = %f gC/m2/day\n",balance);
 		error_log("...FATAL ERROR in 'Litter_ model_daily' carbon balance (exit)\n");
 		CHECK_CONDITION(fabs( balance ), > , eps);
 
@@ -124,27 +124,27 @@ int check_litter_carbon_mass_balance(cell_t *const c)
 	/* check for carbon mass balance closure */
 	if ( ( fabs( c->litr_carbon_balance ) > eps ) && ( c->dos > 1 ) )
 	{
-		error_log("DOS = %d\n", c->dos);
-		error_log("\nin = %g gC/m2/day\n", c->litr_carbon_in);
-		error_log("daily_litrC = %g gC/m2\n", c->daily_litrC);
-		error_log("daily_cwdC = %g gC/m2\n", c->daily_cwdC);
-		error_log("\nout = %g gC/m2/day\n", c->litr_carbon_out);
-		error_log("daily_het_resp = 0 gC/m2/day\n");
-		error_log("daily_soilC = 0 gC/m2/day\n");
+		error_log("DOS                = %d\n", c->dos);
+		error_log("\nin               = %f gC/m2/day\n", c->litr_carbon_in);
+		error_log("daily_litrC        = %f gC/m2\n", c->daily_litrC);
+		error_log("daily_cwdC         = %f gC/m2\n", c->daily_cwdC);
+		error_log("\nout              = %f gC/m2/day\n", c->litr_carbon_out);
+		error_log("daily_het_resp     = 0 gC/m2/day\n");
+		error_log("daily_soilC        = 0 gC/m2/day\n");
 		error_log("\nstore\n");
-		error_log("leaf_litr1C = %g gC/m2/day\n", c->leaf_litr1C);
-		error_log("leaf_litr2C = %g gC/m2/day\n", c->leaf_litr2C);
-		error_log("leaf_litr3C = %g gC/m2/day\n", c->leaf_litr3C);
-		error_log("leaf_litr4C = %g gC/m2/day\n", c->leaf_litr4C);
-		error_log("froot_litr1C = %g gC/m2/day\n", c->froot_litr1C);
-		error_log("froot_litr2C = %g gC/m2/day\n", c->froot_litr2C);
-		error_log("froot_litr3C = %g gC/m2/day\n",c->froot_litr3C);
-		error_log("froot_litr4C = %g gC/m2/day\n", c->froot_litr4C);
-		error_log("cwdC = %g gC/m2/day\n", c->cwdC);
-		error_log("\ncarbon in = %g gC/m2/day\n", c->litr_carbon_in);
-		error_log("carbon out = %g gC/m2/day\n", c->litr_carbon_out);
-		error_log("delta carbon store = %g gC/m2/day\n", c->litr_carbon_store - c->litr_carbon_old_store);
-		error_log("carbon_balance = %g gC/m2/day\n",c->litr_carbon_balance);
+		error_log("leaf_litr1C        = %f gC/m2/day\n", c->leaf_litr1C);
+		error_log("leaf_litr2C        = %f gC/m2/day\n", c->leaf_litr2C);
+		error_log("leaf_litr3C        = %f gC/m2/day\n", c->leaf_litr3C);
+		error_log("leaf_litr4C        = %f gC/m2/day\n", c->leaf_litr4C);
+		error_log("froot_litr1C       = %f gC/m2/day\n", c->froot_litr1C);
+		error_log("froot_litr2C       = %f gC/m2/day\n", c->froot_litr2C);
+		error_log("froot_litr3C       = %f gC/m2/day\n",c->froot_litr3C);
+		error_log("froot_litr4C       = %f gC/m2/day\n", c->froot_litr4C);
+		error_log("cwdC               = %f gC/m2/day\n", c->cwdC);
+		error_log("\ncarbon in        = %f gC/m2/day\n", c->litr_carbon_in);
+		error_log("carbon out         = %f gC/m2/day\n", c->litr_carbon_out);
+		error_log("delta carbon store = %f gC/m2/day\n", c->litr_carbon_store - c->litr_carbon_old_store);
+		error_log("carbon_balance     = %f gC/m2/day\n",c->litr_carbon_balance);
 		error_log("...FATAL ERROR in 'Litter_model_daily' carbon mass balance (gC/m2/day) (exit)\n");
 		CHECK_CONDITION(fabs( c->litr_carbon_balance ), > , eps);
 
@@ -201,30 +201,30 @@ int check_litter_nitrogen_flux_balance(cell_t *const c)
 
 	if ( ( fabs( balance ) > eps ) && ( c->dos > 1) )
 	{
-		error_log("DOY = %d\n", c->doy);
+		error_log("DOY                   = %d\n", c->doy);
 		error_log("\nin\n");
-		error_log("c->daily_litrC = %g gC/m2/day\n", c->daily_litrC);
-		error_log("c->daily_cwdN = %g gC/m2/day\n", c->daily_cwdN);
+		error_log("c->daily_litrC        = %f gC/m2/day\n", c->daily_litrC);
+		error_log("c->daily_cwdN         = %f gC/m2/day\n", c->daily_cwdN);
 		error_log("\nout\n");
-		error_log("c->daily_soilN = %g gC/m2/day\n",c->daily_soilN);
+		error_log("c->daily_soilN        = %f gC/m2/day\n",c->daily_soilN);
 		error_log("\nstore\n");
-		error_log("c->daily_leaf_litr1N = %g gN/m2/day\n",  c->daily_leaf_litr1N);
-		error_log("c->daily_leaf_litr2N = %g gN/m2/day\n",  c->daily_leaf_litr2N);
-		error_log("c->daily_leaf_litr3N = %g gN/m2/day\n",  c->daily_leaf_litr3N);
-		error_log("c->daily_leaf_litr4N = %g gN/m2/day\n",  c->daily_leaf_litr4N);
-		error_log("c->daily_froot_litr1N = %g gN/m2/day\n", c->daily_froot_litr1N);
-		error_log("c->daily_froot_litr2N = %g gN/m2/day\n", c->daily_froot_litr2N);
-		error_log("c->daily_leaf_litrN = %g gN/m2/day\n",   c->daily_froot_litr3N);
-		error_log("c->daily_froot_litr4N = %g gN/m2/day\n", c->daily_froot_litr4N);
-		error_log("c->daily_stem_cwdN = %g gN/m2/day\n",    c->daily_stem_cwdN);
-		error_log("c->daily_croot_cwdN = %g gN/m2/day\n",   c->daily_croot_cwdN);
-		error_log("c->daily_reserve_cwdN = %g gN/m2/day\n", c->daily_reserve_cwdN);
-		error_log("c->daily_branch_cwdN = %g gN/m2/day\n",  c->daily_branch_cwdN);
-		error_log("c->daily_fruit_litrN = %g gN/m2/day\n",  c->daily_fruit_cwdN);
-		error_log("\nnitrogen in = %g gC/m2/day\n", in);
-		error_log("nitrogen out = %g gC/m2/day\n", out);
-		error_log("nitrogen store = %g gC/m2/day\n", store);
-		error_log("nitrogen_balance = %g gC/m2/day\n",balance);
+		error_log("c->daily_leaf_litr1N  = %f gN/m2/day\n",  c->daily_leaf_litr1N);
+		error_log("c->daily_leaf_litr2N  = %f gN/m2/day\n",  c->daily_leaf_litr2N);
+		error_log("c->daily_leaf_litr3N  = %f gN/m2/day\n",  c->daily_leaf_litr3N);
+		error_log("c->daily_leaf_litr4N  = %f gN/m2/day\n",  c->daily_leaf_litr4N);
+		error_log("c->daily_froot_litr1N = %f gN/m2/day\n", c->daily_froot_litr1N);
+		error_log("c->daily_froot_litr2N = %f gN/m2/day\n", c->daily_froot_litr2N);
+		error_log("c->daily_leaf_litrN   = %f gN/m2/day\n",   c->daily_froot_litr3N);
+		error_log("c->daily_froot_litr4N = %f gN/m2/day\n", c->daily_froot_litr4N);
+		error_log("c->daily_stem_cwdN    = %f gN/m2/day\n",    c->daily_stem_cwdN);
+		error_log("c->daily_croot_cwdN   = %f gN/m2/day\n",   c->daily_croot_cwdN);
+		error_log("c->daily_reserve_cwdN = %f gN/m2/day\n", c->daily_reserve_cwdN);
+		error_log("c->daily_branch_cwdN  = %f gN/m2/day\n",  c->daily_branch_cwdN);
+		error_log("c->daily_fruit_litrN  = %f gN/m2/day\n",  c->daily_fruit_cwdN);
+		error_log("\nnitrogen in         = %f gN/m2/day\n", in);
+		error_log("nitrogen out          = %f gN/m2/day\n", out);
+		error_log("nitrogen store        = %f gN/m2/day\n", store);
+		error_log("nitrogen_balance      = %f gN/m2/day\n",balance);
 		error_log("...FATAL ERROR in 'Litter_ model_daily' nitrogen balance (exit)\n");
 		CHECK_CONDITION(fabs( balance ), > , eps);
 
@@ -270,27 +270,27 @@ int check_litter_nitrogen_mass_balance(cell_t *const c)
 	/* check for nitrogen mass balance closure */
 	if ( ( fabs( c->litr_nitrogen_balance ) > eps ) && ( c->dos > 1 ) )
 	{
-		error_log("DOS = %d\n", c->dos);
-		error_log("\nin = %g gC/m2/day\n", c->litr_nitrogen_in);
-		error_log("daily_litrC = %g gC/m2\n", c->daily_litrN);
-		error_log("daily_cwdN = %g gC/m2\n", c->daily_cwdN);
-		error_log("\nout = %g gC/m2/day\n", c->litr_nitrogen_out);
-		error_log("daily_het_resp = 0 gC/m2/day\n");
-		error_log("daily_soilC = 0 gC/m2/day\n");
+		error_log("DOS                  = %d\n", c->dos);
+		error_log("\nin                 = %f gC/m2/day\n", c->litr_nitrogen_in);
+		error_log("daily_litrC          = %f gC/m2\n", c->daily_litrN);
+		error_log("daily_cwdN           = %f gC/m2\n", c->daily_cwdN);
+		error_log("\nout                = %f gC/m2/day\n", c->litr_nitrogen_out);
+		error_log("daily_het_resp       = 0 gC/m2/day\n");
+		error_log("daily_soilC          = 0 gC/m2/day\n");
 		error_log("\nstore\n");
-		error_log("leaf_litr1N = %g gC/m2/day\n", c->leaf_litr1N);
-		error_log("leaf_litr2N = %g gC/m2/day\n", c->leaf_litr2N);
-		error_log("leaf_litr3N = %g gC/m2/day\n", c->leaf_litr3N);
-		error_log("leaf_litr4N = %g gC/m2/day\n", c->leaf_litr4N);
-		error_log("froot_litr1N = %g gC/m2/day\n", c->froot_litr1N);
-		error_log("froot_litr2N = %g gC/m2/day\n", c->froot_litr2N);
-		error_log("froot_litr3N = %g gC/m2/day\n",c->froot_litr3N);
-		error_log("froot_litr4N = %g gC/m2/day\n", c->froot_litr4N);
-		error_log("cwdN = %g gC/m2/day\n", c->cwdN);
-		error_log("\nnitrogen in = %g gC/m2/day\n", c->litr_nitrogen_in);
-		error_log("nitrogen out = %g gC/m2/day\n", c->litr_nitrogen_out);
-		error_log("delta nitrogen store = %g gC/m2/day\n", c->litr_nitrogen_store - c->litr_nitrogen_old_store);
-		error_log("nitrogen = %g gC/m2/day\n",c->litr_nitrogen_balance);
+		error_log("leaf_litr1N          = %f gC/m2/day\n", c->leaf_litr1N);
+		error_log("leaf_litr2N          = %f gC/m2/day\n", c->leaf_litr2N);
+		error_log("leaf_litr3N          = %f gC/m2/day\n", c->leaf_litr3N);
+		error_log("leaf_litr4N          = %f gC/m2/day\n", c->leaf_litr4N);
+		error_log("froot_litr1N         = %f gC/m2/day\n", c->froot_litr1N);
+		error_log("froot_litr2N         = %f gC/m2/day\n", c->froot_litr2N);
+		error_log("froot_litr3N         = %f gC/m2/day\n",c->froot_litr3N);
+		error_log("froot_litr4N         = %f gC/m2/day\n", c->froot_litr4N);
+		error_log("cwdN                 = %f gC/m2/day\n", c->cwdN);
+		error_log("\nnitrogen in        = %f gC/m2/day\n", c->litr_nitrogen_in);
+		error_log("nitrogen out         = %f gC/m2/day\n", c->litr_nitrogen_out);
+		error_log("delta nitrogen store = %f gC/m2/day\n", c->litr_nitrogen_store - c->litr_nitrogen_old_store);
+		error_log("nitrogen             = %f gC/m2/day\n",c->litr_nitrogen_balance);
 		error_log("...FATAL ERROR in 'Litter_model_daily' nitrogen mass balance (gC/m2/day) (exit)\n");
 		CHECK_CONDITION(fabs( c->litr_nitrogen_balance ), > , eps);
 
