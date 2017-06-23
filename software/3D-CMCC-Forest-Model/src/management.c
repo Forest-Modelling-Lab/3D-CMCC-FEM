@@ -33,6 +33,8 @@ static int harvesting (cell_t *const c, const int height, const int dbh, const i
 	/* add harvested trees */
 	s->counter[THINNED_TREE]  += s->counter[N_TREE];
 
+	s->counter[HARVESTING_HAPPENS] = 1;
+
 	/* update C and N biomass */
 	tree_biomass_remove ( c, height, dbh, age, species, s->counter[N_TREE] );
 
@@ -40,149 +42,6 @@ static int harvesting (cell_t *const c, const int height, const int dbh, const i
 	return tree_class_remove (c, height, dbh, age, species );
 }
 
-void management_free(management_t* p)
-{
-	if ( p )
-	{
-		if ( p->harvesting_years_count )
-		{
-			free(p->harvesting_years);
-		}
-
-		if  ( p->thinning_years_count )
-		{
-			free(p->thinning_years);
-		}
-
-		free(p);
-	}
-}
-
-management_t* management_load(const char* const filename)
-{
-#define BUFFER_SIZE 512
-	char* token;
-	char* p;
-	char buffer[BUFFER_SIZE]; // should be enough
-	int** p_years;
-	int* p_years_count;
-	int thinning_flag = 1;
-	FILE *f;
-	management_t* management; 
-
-	const char sz_delimiters[] = " ,\t\r\n";
-	const char sz_harvesting[] = "harvesting";
-	const char sz_thinning[] = "thinning";
-	
-	assert(filename);
-
-	f = fopen(filename, "r");
-	if ( ! f )
-	{
-		logger_error(g_debug_log, "file not found\n");
-		return NULL;
-	}
-
-	management = malloc(sizeof*management);
-	if ( ! management )
-	{
-		logger_error(g_debug_log, "out of memory\n");
-		fclose(f);
-		return NULL;
-	}
-	memset(management, 0, sizeof(management_t));
-	
-	while ( fgets(buffer, BUFFER_SIZE, f) )
-	{
-		// skip empty lines
-		if ( '\0' == buffer[0] )
-		{
-			continue;
-		}
-
-		token = string_tokenizer(buffer, sz_delimiters, &p);
-		if ( ! token ) continue; 
-
-		if ( ! string_compare_i(token, sz_harvesting) )
-		{
-			// parse harvesting
-			thinning_flag = 0;
-		}
-		else if ( ! string_compare_i(token, sz_thinning) )
-		{
-			// parse thinning
-			thinning_flag = 1;
-		}
-		else
-		{
-			// do nothing
-			continue;
-		}
-
-		// set pointers
-		if ( thinning_flag )
-		{
-			p_years = &management->thinning_years;
-			p_years_count = &management->thinning_years_count;
-		}
-		else
-		{
-			p_years = &management->harvesting_years;
-			p_years_count = &management->harvesting_years_count;
-		}
-
-		if ( *p_years_count )
-		{
-			logger_error(g_debug_log, "too many rows of %s specified\n"
-						, thinning_flag ? sz_thinning : sz_harvesting
-			);
-			management_free(management);
-			fclose(f);
-			return NULL;
-		}
-		
-		while ( ( token = string_tokenizer(NULL, sz_delimiters, &p ) ) )
-		{
-			int err;
-			int* int_no_leak;
-			int year = convert_string_to_int(token, &err);
-			if ( err )
-			{
-				logger_error(g_debug_log, "unable to convert year '%s' for %s\n"
-							, token
-							, thinning_flag ? sz_thinning : sz_harvesting
-				);
-				management_free(management);
-				fclose(f);
-				return NULL;
-			}
-
-			int_no_leak = realloc(*p_years, (*p_years_count+1)*sizeof*int_no_leak);
-			if ( ! int_no_leak )
-			{
-				logger_error(g_debug_log, "out of memory\n");
-				management_free(management);
-				fclose(f);
-				return NULL;
-
-			}
-			*p_years = int_no_leak;
-			(*p_years)[*p_years_count] = year;
-			++*p_years_count;
-		}
-	}
-	fclose(f);
-
-	if ( ! management->harvesting_years_count && ! management->thinning_years_count )
-	{
-		logger_error(g_debug_log, "file is empty ?\n");
-		management_free(management);
-		management = NULL;
-	}
-
-	return management;
-#undef BUFFER_SIZE
-}
 
 int forest_management (cell_t *const c, const int day, const int month, const int year)
 {
@@ -256,9 +115,9 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 						/* ISIMIP case: management forced by stand data */
 						if ( year )
 						{
-							prescribed_thinning ( c, height, dbh, age, species, c->years[year].year );
-
 							s->counter[THINNING_HAPPENS] = 1;
+
+							prescribed_thinning ( c, height, dbh, age, species, c->years[year].year );
 						}
 
 						if ( g_management->thinning_years_count )
@@ -281,9 +140,9 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 						logger(g_debug_log,"**FOREST MANAGEMENT**\n");
 						logger(g_debug_log,"**THINNING**\n");
 
-						thinning ( c, height, dbh, age, species, year );
-
 						s->counter[THINNING_HAPPENS] = 1;
+
+						thinning ( c, height, dbh, age, species, year );
 
 						/* reset counter */
 						s->counter[YEARS_THINNING] = 0;
@@ -506,4 +365,149 @@ void prescribed_thinning (cell_t *const c, const int height, const int dbh, cons
 			}
 		}
 	}
+}
+
+
+void management_free(management_t* p)
+{
+	if ( p )
+	{
+		if ( p->harvesting_years_count )
+		{
+			free(p->harvesting_years);
+		}
+
+		if  ( p->thinning_years_count )
+		{
+			free(p->thinning_years);
+		}
+
+		free(p);
+	}
+}
+
+management_t* management_load(const char* const filename)
+{
+#define BUFFER_SIZE 512
+	char* token;
+	char* p;
+	char buffer[BUFFER_SIZE]; // should be enough
+	int** p_years;
+	int* p_years_count;
+	int thinning_flag = 1;
+	FILE *f;
+	management_t* management;
+
+	const char sz_delimiters[] = " ,\t\r\n";
+	const char sz_harvesting[] = "harvesting";
+	const char sz_thinning[] = "thinning";
+
+	assert(filename);
+
+	f = fopen(filename, "r");
+	if ( ! f )
+	{
+		logger_error(g_debug_log, "file not found\n");
+		return NULL;
+	}
+
+	management = malloc(sizeof*management);
+	if ( ! management )
+	{
+		logger_error(g_debug_log, "out of memory\n");
+		fclose(f);
+		return NULL;
+	}
+	memset(management, 0, sizeof(management_t));
+
+	while ( fgets(buffer, BUFFER_SIZE, f) )
+	{
+		// skip empty lines
+		if ( '\0' == buffer[0] )
+		{
+			continue;
+		}
+
+		token = string_tokenizer(buffer, sz_delimiters, &p);
+		if ( ! token ) continue;
+
+		if ( ! string_compare_i(token, sz_harvesting) )
+		{
+			// parse harvesting
+			thinning_flag = 0;
+		}
+		else if ( ! string_compare_i(token, sz_thinning) )
+		{
+			// parse thinning
+			thinning_flag = 1;
+		}
+		else
+		{
+			// do nothing
+			continue;
+		}
+
+		// set pointers
+		if ( thinning_flag )
+		{
+			p_years = &management->thinning_years;
+			p_years_count = &management->thinning_years_count;
+		}
+		else
+		{
+			p_years = &management->harvesting_years;
+			p_years_count = &management->harvesting_years_count;
+		}
+
+		if ( *p_years_count )
+		{
+			logger_error(g_debug_log, "too many rows of %s specified\n"
+						, thinning_flag ? sz_thinning : sz_harvesting
+			);
+			management_free(management);
+			fclose(f);
+			return NULL;
+		}
+
+		while ( ( token = string_tokenizer(NULL, sz_delimiters, &p ) ) )
+		{
+			int err;
+			int* int_no_leak;
+			int year = convert_string_to_int(token, &err);
+			if ( err )
+			{
+				logger_error(g_debug_log, "unable to convert year '%s' for %s\n"
+							, token
+							, thinning_flag ? sz_thinning : sz_harvesting
+				);
+				management_free(management);
+				fclose(f);
+				return NULL;
+			}
+
+			int_no_leak = realloc(*p_years, (*p_years_count+1)*sizeof*int_no_leak);
+			if ( ! int_no_leak )
+			{
+				logger_error(g_debug_log, "out of memory\n");
+				management_free(management);
+				fclose(f);
+				return NULL;
+
+			}
+			*p_years = int_no_leak;
+			(*p_years)[*p_years_count] = year;
+			++*p_years_count;
+		}
+	}
+	fclose(f);
+
+	if ( ! management->harvesting_years_count && ! management->thinning_years_count )
+	{
+		logger_error(g_debug_log, "file is empty ?\n");
+		management_free(management);
+		management = NULL;
+	}
+
+	return management;
+#undef BUFFER_SIZE
 }

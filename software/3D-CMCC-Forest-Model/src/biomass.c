@@ -81,6 +81,9 @@ void abg_bgb_biomass(cell_t *const c, const int height, const int dbh, const int
 	s->value[BGB]            = s->value[FROOT_C] + s->value[CROOT_C];
 	logger(g_debug_log, "BGB              = %f tC/cell\n", s->value[BGB]);
 
+	s->value[STANDING_WOOD]  = s->value[STEM_C] + s->value[BRANCH_C] + s->value[CROOT_C];
+	logger(g_debug_log, "STANDING_WOOD    = %f tC/cell\n", s->value[STANDING_WOOD]);
+
 	s->value[DELTA_AGB]      = s->value[AGB] - old_agb;
 	logger(g_debug_log, "DELTA_AGB        = %f tC/cell/year\n", s->value[DELTA_AGB]);
 
@@ -254,7 +257,13 @@ void tree_biomass_remove (cell_t *const c, const int height, const int dbh, cons
 	logger(g_debug_log, "C_STEM_HEARTWOOD_TO_CWD   = %f tC/cell\n", s->value[C_STEM_HEARTWOOD_TO_CWD]);
 	logger(g_debug_log, "C_CROOT_HEARTWOOD_TO_CWD  = %f tC/cell\n", s->value[C_CROOT_HEARTWOOD_TO_CWD]);
 	logger(g_debug_log, "C_BRANCH_HEARTWOOD_TO_CWD = %f tC/cell\n", s->value[C_TO_CWD]);
-
+	/******************************************************************************************/
+	/* accounting for harvested/thinned wood products (HWP) */
+	if ( s->counter[THINNING_HAPPENS] == 1 || s->counter[HARVESTING_HAPPENS] == 1 )
+	{
+		s->value[C_HWP]     += s->value[C_STEM_TO_CWD] + s->value[C_CROOT_TO_CWD] + s->value[C_BRANCH_TO_CWD] ;
+		s->value[C_HWP]     += s->value[C_HWP];
+	}
 	/******************************************************************************************/
 
 	/* note: special case for turnover when mortality and thinning management happen */

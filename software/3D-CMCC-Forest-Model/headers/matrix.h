@@ -429,6 +429,11 @@ enum {
 	BRANCH_HEARTWOOD_C,                 /* (tC/cell) Current Branch heartwood carbon pool */
 	EFF_LIVE_TOTAL_WOOD_FRAC,           /* (DIM) Age-related fraction of Live biomass per Total biomass */
 	DAILY_LIVEWOOD_TURNOVER,            /* (tC/cell/day) Daily live wood turnover rate */
+	STANDING_WOOD,                      /* (tC/cell) standing wood biomass */
+
+	/* management C */
+	C_HWP,                              /* (tC/cell/yr) annual harvested woody product removed from stand */
+	CUM_C_HWP,                          /* (tC/cell) cumulated harvested woody product removed from stand */
 
 	/* per tree in tC */
 	TREE_LEAF_C,                        /* (tC/tree) Single Tree Leaf carbon pool */

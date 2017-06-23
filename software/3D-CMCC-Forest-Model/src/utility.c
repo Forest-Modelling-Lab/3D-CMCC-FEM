@@ -297,6 +297,7 @@ void reset_daily_class_variables(cell_t *const c)
 
 					//s->counter[DEAD_TREE] =                0;
 					s->counter[THINNING_HAPPENS] =         0;
+					s->counter[HARVESTING_HAPPENS] =       0;
 
 					s->value[DAILY_CANOPY_COVER_PROJ] =   0.;
 					s->value[DAILY_CANOPY_COVER_EXP] =    0.;
@@ -541,6 +542,8 @@ void reset_annual_class_variables(cell_t *const c)
 				for ( species = a->species_count - 1; species >= 0; species -- )
 				{
 					s = &a->species[species];
+
+					s->value[C_HWP] =                       0.;
 
 					s->value[PEAK_LAI_PROJ] =               0.;
 					s->value[MAX_LAI_PROJ] =                0.;

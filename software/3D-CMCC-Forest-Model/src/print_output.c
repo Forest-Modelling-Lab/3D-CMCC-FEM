@@ -783,6 +783,7 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 										",BRANCH_LIVE_C"
 										",BRANCH_DEAD_C"
 										",FRUIT_C"
+										",STANDING_WOOD"
 										",BASAL_AREA"
 										",TREE_CAI"
 										",TREE_MAI"
@@ -796,6 +797,7 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 										",BGB:AGB"
 										",DELTA_TREE_AGB"
 										",DELTA_TREE_BGB"
+										",C_HWP"
 										",STEM_RA"
 										",LEAF_RA"
 										",FROOT_RA"
@@ -884,7 +886,7 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 								/* print variables at layer-class level */
 								logger(g_annual_log,",%6.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%d,%d,%d,%d,%d,%3.4f"
 										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
-										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",
+										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",
 										s->value[YEARLY_GPP],
 										s->value[YEARLY_TOTAL_GROWTH_RESP],
 										s->value[YEARLY_TOTAL_MAINT_RESP],
@@ -926,6 +928,7 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 										s->value[BRANCH_LIVEWOOD_C],
 										s->value[BRANCH_DEADWOOD_C],
 										s->value[FRUIT_C],
+										s->value[STANDING_WOOD],
 										s->value[STAND_BASAL_AREA_m2],
 										s->value[TREE_CAI],
 										s->value[TREE_MAI],
@@ -939,6 +942,7 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 										s->value[BGB]/s->value[AGB],
 										s->value[DELTA_TREE_AGB],
 										s->value[DELTA_TREE_BGB],
+										s->value[C_HWP],
 										s->value[YEARLY_STEM_AUT_RESP],
 										s->value[YEARLY_LEAF_AUT_RESP],
 										s->value[YEARLY_FROOT_AUT_RESP],
