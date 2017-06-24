@@ -110,6 +110,15 @@ void carbon_allocation( cell_t *const c, const int height, const int dbh, const 
 	logger(g_debug_log, "C_TO_LITR    = %f tC/cell\n", s->value[C_TO_LITR]);
 	logger(g_debug_log, "C_TO_CWD     = %f tC/cell\n", s->value[C_TO_CWD]);
 
+	/* for stocking wood */
+	/* note: if here and NOT above model doesn't take into account dead parts */
+	if ( s->value[C_TO_STEM]   > 0. ) s->value[YEARLY_C_TO_WOOD]     += s->value[C_TO_STEM];
+	if ( s->value[C_TO_CROOT]  > 0. ) s->value[YEARLY_C_TO_WOOD]     += s->value[C_TO_BRANCH];
+	if ( s->value[C_TO_BRANCH] > 0. ) s->value[YEARLY_C_TO_WOOD]     += s->value[C_TO_CROOT];
+	if ( s->value[C_TO_STEM]   > 0. ) s->value[CUM_YEARLY_C_TO_WOOD] += s->value[C_TO_STEM];
+	if ( s->value[C_TO_CROOT]  > 0. ) s->value[CUM_YEARLY_C_TO_WOOD] += s->value[C_TO_BRANCH];
+	if ( s->value[C_TO_BRANCH] > 0. ) s->value[CUM_YEARLY_C_TO_WOOD] += s->value[C_TO_CROOT];
+
 	/*** update class level carbon mass pools ***/
 	s->value[LEAF_C]     += s->value[C_TO_LEAF];
 	s->value[FROOT_C]    += s->value[C_TO_FROOT];

@@ -784,6 +784,8 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 										",BRANCH_DEAD_C"
 										",FRUIT_C"
 										",STANDING_WOOD"
+										",DELTA_WOOD"
+										",CUM_DELTA_WOOD"
 										",BASAL_AREA"
 										",TREE_CAI"
 										",TREE_MAI"
@@ -885,8 +887,8 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 
 								/* print variables at layer-class level */
 								logger(g_annual_log,",%6.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%d,%d,%d,%d,%d,%3.4f"
-										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
-										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",
+										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
+										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",
 										s->value[YEARLY_GPP],
 										s->value[YEARLY_TOTAL_GROWTH_RESP],
 										s->value[YEARLY_TOTAL_MAINT_RESP],
@@ -929,6 +931,8 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 										s->value[BRANCH_DEADWOOD_C],
 										s->value[FRUIT_C],
 										s->value[STANDING_WOOD],
+										s->value[YEARLY_C_TO_WOOD],
+										s->value[CUM_YEARLY_C_TO_WOOD],
 										s->value[STAND_BASAL_AREA_m2],
 										s->value[TREE_CAI],
 										s->value[TREE_MAI],

@@ -394,6 +394,9 @@ enum {
 	YEARLY_C_TO_CROOT,                  /* (tC/cell/year) Annual Coarse root biomass for turnover */
 	YEARLY_C_TO_BRANCH,                 /* (tC/cell/year) Annual Branch biomass for turnover */
 
+	YEARLY_C_TO_WOOD,                   /* (tC/cell/year) Annual Carbon stocked into wood pool */
+	CUM_YEARLY_C_TO_WOOD,                   /* (tC/cell) Cumulated Annual Carbon stocked into wood pool */
+
 	/* carbon pools in tons of tC/sizeCell */
 	LEAF_C,                             /* (tC/cell) Current Leaf carbon pool */
 	MAX_LEAF_C,                         /* (tC/cell) Maximum Current Leaf carbon pool */

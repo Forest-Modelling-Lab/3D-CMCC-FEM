@@ -589,6 +589,7 @@ void reset_annual_class_variables(cell_t *const c)
 					s->value[YEARLY_CROOT_AUT_RESP] =       0.;
 					s->value[YEARLY_BRANCH_AUT_RESP] =      0.;
 					s->value[YEARLY_TOTAL_AUT_RESP] =       0.;
+					s->value[YEARLY_C_TO_WOOD] =            0.;
 					s->value[YEARLY_CANOPY_TRANSP] =        0.;
 					s->value[YEARLY_CANOPY_TRANSP_SUN] =    0.;
 					s->value[YEARLY_CANOPY_TRANSP_SHADE] =  0.;
