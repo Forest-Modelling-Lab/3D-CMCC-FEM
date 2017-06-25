@@ -544,6 +544,7 @@ void reset_annual_class_variables(cell_t *const c)
 					s = &a->species[species];
 
 					s->value[C_HWP] =                       0.;
+					s->value[VOLUME_HWP] =                  0.;
 
 					s->value[PEAK_LAI_PROJ] =               0.;
 					s->value[MAX_LAI_PROJ] =                0.;

@@ -126,7 +126,7 @@ void average_tree_pools(cell_t *const c)
 
 					logger(g_debug_log,  "N_TREE = %d\n", s->counter[N_TREE]);
 
-					/* note: it takes into account previous biomass to remove if function is called twice in a day (e.g.
+					/* note: it takes into account previous biomass to remove if function is called twice in a day */
 
 					/* compute tree average C pools */
 					s->value[TREE_LEAF_C]                = (s->value[LEAF_C]             / (double)s->counter[N_TREE]);
@@ -257,13 +257,20 @@ void tree_biomass_remove (cell_t *const c, const int height, const int dbh, cons
 	logger(g_debug_log, "C_STEM_HEARTWOOD_TO_CWD   = %f tC/cell\n", s->value[C_STEM_HEARTWOOD_TO_CWD]);
 	logger(g_debug_log, "C_CROOT_HEARTWOOD_TO_CWD  = %f tC/cell\n", s->value[C_CROOT_HEARTWOOD_TO_CWD]);
 	logger(g_debug_log, "C_BRANCH_HEARTWOOD_TO_CWD = %f tC/cell\n", s->value[C_TO_CWD]);
+
 	/******************************************************************************************/
+
 	/* accounting for harvested/thinned wood products (HWP) */
 	if ( s->counter[THINNING_HAPPENS] == 1 || s->counter[HARVESTING_HAPPENS] == 1 )
 	{
-		s->value[C_HWP]     += s->value[C_STEM_TO_CWD] + s->value[C_CROOT_TO_CWD] + s->value[C_BRANCH_TO_CWD] ;
-		s->value[C_HWP]     += s->value[C_HWP];
+		/* compute woody biomass removed (tC/ha/yr) */
+		s->value[C_HWP]          += s->value[C_STEM_TO_CWD] + s->value[C_CROOT_TO_CWD] + s->value[C_BRANCH_TO_CWD] ;
+		s->value[CUM_C_HWP]      += s->value[C_HWP];
+		/* compute strem volume removed (m3/ha/yr) */
+		s->value[VOLUME_HWP]     += s->value[TREE_VOLUME] * tree_remove;
+		s->value[CUM_VOLUME_HWP] += s->value[TREE_VOLUME] * tree_remove;
 	}
+
 	/******************************************************************************************/
 
 	/* note: special case for turnover when mortality and thinning management happen */

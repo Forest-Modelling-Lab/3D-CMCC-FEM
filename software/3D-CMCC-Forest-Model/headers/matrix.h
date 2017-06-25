@@ -435,8 +435,10 @@ enum {
 	STANDING_WOOD,                      /* (tC/cell) standing wood biomass */
 
 	/* management C */
-	C_HWP,                              /* (tC/cell/yr) annual harvested woody product removed from stand */
-	CUM_C_HWP,                          /* (tC/cell) cumulated harvested woody product removed from stand */
+	C_HWP,                              /* (tC/cell/yr) annual harvested woody products removed from stand */
+	CUM_C_HWP,                          /* (tC/cell) cumulated harvested woody products removed from stand */
+	VOLUME_HWP,                         /* (m3/cell/yr) annual volume harvested woody products removed from stand */
+	CUM_VOLUME_HWP,                     /* (m3/cell) annual volume harvested woody products removed from stand */
 
 	/* per tree in tC */
 	TREE_LEAF_C,                        /* (tC/tree) Single Tree Leaf carbon pool */

@@ -791,6 +791,7 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 										",TREE_MAI"
 										",MAI"
 										",VOLUME"
+										",TREE_VOLUME"
 										",DELTA_TREE_VOL(perc)"
 										",DELTA_AGB"
 										",DELTA_BGB"
@@ -800,6 +801,7 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 										",DELTA_TREE_AGB"
 										",DELTA_TREE_BGB"
 										",C_HWP"
+										",VOLUME_HWP"
 										",STEM_RA"
 										",LEAF_RA"
 										",FROOT_RA"
@@ -887,8 +889,8 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 
 								/* print variables at layer-class level */
 								logger(g_annual_log,",%6.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%d,%d,%d,%d,%d,%3.4f"
-										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
-										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",
+										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
+										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",
 										s->value[YEARLY_GPP],
 										s->value[YEARLY_TOTAL_GROWTH_RESP],
 										s->value[YEARLY_TOTAL_MAINT_RESP],
@@ -938,6 +940,7 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 										s->value[TREE_MAI],
 										s->value[MAI],
 										s->value[VOLUME],
+										s->value[TREE_VOLUME],
 										(s->value[TREE_CAI]/s->value[TREE_VOLUME])*100.,
 										s->value[DELTA_AGB],
 										s->value[DELTA_BGB],
@@ -947,6 +950,7 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 										s->value[DELTA_TREE_AGB],
 										s->value[DELTA_TREE_BGB],
 										s->value[C_HWP],
+										s->value[VOLUME_HWP],
 										s->value[YEARLY_STEM_AUT_RESP],
 										s->value[YEARLY_LEAF_AUT_RESP],
 										s->value[YEARLY_FROOT_AUT_RESP],
