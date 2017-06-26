@@ -62,6 +62,8 @@ typedef struct {
 	double cloud_cover_frac;                    /* (ratio) daily cloud cover fraction */
 	double cloud_cover_frac_corr;               /* (ratio) daily cloud cover fraction */
 	double Ndeposition;                         /* (gN/m2/day) nitrogen deposition scaled from annual */
+
+	double Net_rad_threePG;
 } meteo_daily_t;
 
 typedef struct {

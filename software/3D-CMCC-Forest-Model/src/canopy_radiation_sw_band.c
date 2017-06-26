@@ -89,11 +89,11 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 	/* compute fAPAR */
 	if ( s->value[PAR] )
 	{
-		s->value[fAPAR]            = s->value[APAR]/s->value[PAR];
+		s->value[fAPAR]        = s->value[APAR]/s->value[PAR];
 	}
 	else
 	{
-		s->value[fAPAR]            = 0.;
+		s->value[fAPAR]        = 0.;
 	}
 
 	s->value[YEARLY_APAR]     += s->value[APAR];
@@ -133,7 +133,6 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 	CHECK_CONDITION ( fabs ( ( s->value[SW_RAD_TRANSM_SUN] - s->value[SW_RAD_TRANSM_SHADE] ) - ( s->value[SW_RAD_REFL_SHADE] + s->value[SW_RAD_ABS_SHADE] ) ), >, eps );
 
 	/** overall canopy **/
-
 	s->value[SW_RAD_ABS]          = s->value[SW_RAD_ABS_SUN]  + s->value[SW_RAD_ABS_SHADE];
 	s->value[SW_RAD_REFL]         = s->value[SW_RAD_REFL_SUN] + s->value[SW_RAD_REFL_SHADE];
 	s->value[SW_RAD_TRANSM]       = s->value[SW_RAD_TRANSM_SHADE];
@@ -174,7 +173,6 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 	CHECK_CONDITION ( fabs ( ( s->value[PPFD_TRANSM_SUN] - s->value[PPFD_TRANSM_SHADE] ) - ( s->value[PPFD_REFL_SHADE] + s->value[PPFD_ABS_SHADE] ) ), >, eps );
 
 	/** overall canopy **/
-
 	s->value[PPFD_ABS]          = s->value[PPFD_ABS_SUN]  + s->value[PPFD_ABS_SHADE];
 	s->value[PPFD_REFL]         = s->value[PPFD_REFL_SUN] + s->value[PPFD_REFL_SHADE];
 	s->value[PPFD_TRANSM]       = s->value[PPFD_TRANSM_SHADE];
@@ -190,6 +188,49 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 	s->value[YEARLY_APAR] += s->value[APAR];
 
 	/***********************************************************************************************/
+	//test 25 June 2017
+#if 1
+	/* Net Radiation computation (W/m2 covered) */
+	logger(g_debug_log,"\n-Net Radiation-\n");
+
+	/** available Net Radiation **/
+	s->value[NET_RAD]              = meteo_daily->Net_rad_threePG * s->value[DAILY_CANOPY_COVER_PROJ];
+
+	/** sun leaves **/
+	s->value[NET_RAD_REFL_SUN]     = s->value[NET_RAD]     * Light_refl_sw_frac_sun;
+	s->value[NET_RAD_SUN]          = s->value[NET_RAD]     - s->value[NET_RAD_REFL_SUN];
+	s->value[NET_RAD_ABS_SUN]      = s->value[NET_RAD_SUN] * Light_abs_frac_sun;
+	s->value[NET_RAD_TRANSM_SUN]   = s->value[NET_RAD_SUN] - s->value[NET_RAD_ABS_SUN];
+
+	/* check Net Radiation balance for sun leaves */
+	CHECK_CONDITION ( fabs ( ( s->value[NET_RAD_SUN] - s->value[NET_RAD_TRANSM_SUN] ) - s->value[NET_RAD_ABS_SUN] ), >, eps );
+	CHECK_CONDITION ( fabs ( ( s->value[NET_RAD]     - s->value[NET_RAD_TRANSM_SUN] ) - ( s->value[NET_RAD_REFL_SUN] + s->value[NET_RAD_ABS_SUN] ) ), >, eps );
+
+	/** shaded leaves **/
+	s->value[NET_RAD_REFL_SHADE]   = s->value[NET_RAD_TRANSM_SUN] * Light_refl_sw_frac_shade;
+	s->value[NET_RAD_SHADE]        = s->value[NET_RAD_TRANSM_SUN] - s->value[NET_RAD_REFL_SHADE];
+	s->value[NET_RAD_ABS_SHADE]    = s->value[NET_RAD_SHADE]      * Light_abs_frac_shade;
+	s->value[NET_RAD_TRANSM_SHADE] = s->value[NET_RAD_SHADE]      - s->value[NET_RAD_ABS_SHADE];
+
+	/* check Net Radiation balance for shaded leaves */
+	CHECK_CONDITION ( fabs ( ( s->value[NET_RAD_SHADE]      - s->value[NET_RAD_TRANSM_SHADE] ) - s->value[NET_RAD_ABS_SHADE] ), >, eps );
+	CHECK_CONDITION ( fabs ( ( s->value[NET_RAD_TRANSM_SUN] - s->value[NET_RAD_TRANSM_SHADE] ) - ( s->value[NET_RAD_REFL_SHADE] + s->value[NET_RAD_ABS_SHADE] ) ), >, eps );
+
+	/** overall canopy **/
+	s->value[NET_RAD_ABS]          = s->value[NET_RAD_ABS_SUN]  + s->value[NET_RAD_ABS_SHADE];
+	s->value[NET_RAD_REFL]         = s->value[NET_RAD_REFL_SUN] + s->value[NET_RAD_REFL_SHADE];
+	s->value[NET_RAD_TRANSM]       = s->value[NET_RAD_TRANSM_SHADE];
+
+	logger(g_debug_log,"NET_RAD_ABS = %f W/m2\n", s->value[NET_RAD_ABS]);
+
+	/* check */
+	/*
+	CHECK_CONDITION(s->value[NET_RAD_ABS],    <, ZERO );
+	CHECK_CONDITION(s->value[NET_RAD_TRANSM], <, ZERO);
+	CHECK_CONDITION(s->value[NET_RAD_ABS] + s->value[NET_RAD_TRANSM], <, ZERO );
+	CHECK_CONDITION(fabs((s->value[NET_RAD_ABS] + s->value[NET_RAD_TRANSM] + s->value[NET_RAD_REFL] )-s->value[NET_RAD]), >, eps);
+	*/
+#endif
 
 	/* it follows rationale of BIOME-BGC to obtain m2 instead m2/m2 */
 	//fixme then recompute transmitted fraction!!!!!!!!!!!!
@@ -226,10 +267,15 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 	double Light_refl_sw_frac;                                             /* (ratio) fraction of Short Wave radiation reflected from the canopy */
 	double Light_refl_sw_frac_sun;                                         /* (ratio) fraction of Short Wave radiation reflected from sun leaves */
 	double Light_refl_sw_frac_shade;                                       /* (ratio) fraction of Short Wave radiation reflected from shaded leaves */
+	double Light_refl_net_rad_frac;                                             /* (ratio) fraction of Net radiation reflected from the canopy */
+	double Light_refl_net_rad_frac_sun;                                         /* (ratio) fraction of Net radiation reflected from sun leaves */
+	double Light_refl_net_rad_frac_shade;                                       /* (ratio) fraction of Net radiation reflected from shaded leaves */
 	static double temp_apar;                                               /* temporary absorbed PAR for layer */
 	static double temp_par_refl;                                           /* temporary reflected PAR for layer */
 	static double temp_sw_rad_abs;                                         /* temporary absorbed short wave for layer */
 	static double temp_sw_rad_refl;                                        /* temporary reflected short wave for layer */
+	static double temp_net_rad_abs;                                         /* temporary absorbed Net radiation for layer */
+	static double temp_net_rad_refl;                                        /* temporary reflected Net radiation for layer */
 	static double temp_ppfd_abs;                                           /* temporary absorbed PPFD for layer */
 	static double temp_ppfd_refl;                                          /* temporary reflected PPFD for layer */
 
@@ -287,6 +333,11 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 	Light_refl_sw_frac        = s->value[ALBEDO];
 	Light_refl_sw_frac_sun    = s->value[ALBEDO] * ( 1 - exp ( - k * s->value[LAI_SUN_PROJ]));
 	Light_refl_sw_frac_shade  = s->value[ALBEDO] * ( 1 - exp ( - k * s->value[LAI_SHADE_PROJ]));
+
+	Light_refl_net_rad_frac        = s->value[ALBEDO];
+	Light_refl_net_rad_frac_sun    = s->value[ALBEDO] * ( 1 - exp ( - k * s->value[LAI_SUN_PROJ]));
+	Light_refl_net_rad_frac_shade  = s->value[ALBEDO] * ( 1 - exp ( - k * s->value[LAI_SHADE_PROJ]));
+
 	Light_refl_par_frac       = (s->value[ALBEDO] /3. );
 	Light_refl_par_frac_sun   = (s->value[ALBEDO] /3. ) * ( 1 - exp ( - k * s->value[LAI_SUN_PROJ]));
 	Light_refl_par_frac_shade = (s->value[ALBEDO] /3. ) * ( 1 - exp ( - k * s->value[LAI_SHADE_PROJ]));
@@ -303,6 +354,10 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 	logger(g_debug_log, "Light_refl_sw_frac_sun    = %f\n", Light_refl_sw_frac_sun);
 	logger(g_debug_log, "Light_refl_sw_frac_shade  = %f\n", Light_refl_sw_frac_shade);
 
+	logger(g_debug_log, "Light_refl_net_rad_frac        = %f\n", Light_refl_net_rad_frac);
+	logger(g_debug_log, "Light_refl_net_rad_frac_sun    = %f\n", Light_refl_net_rad_frac_sun);
+	logger(g_debug_log, "Light_refl_net_rad_frac_shade  = %f\n", Light_refl_net_rad_frac_shade);
+
 	logger(g_debug_log, "Light_refl_par_frac       = %f\n", Light_refl_par_frac);
 	logger(g_debug_log, "Light_refl_par_frac_sun   = %f\n", Light_refl_par_frac_sun);
 	logger(g_debug_log, "Light_refl_par_frac_shade = %f\n", Light_refl_par_frac_shade);
@@ -316,12 +371,14 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 	if( !layer_height_class_counter && !cell_height_class_counter )
 	{
 		/* reset temporary values when the first height class in layer is processed */
-		temp_apar        = 0.;
-		temp_par_refl    = 0.;
-		temp_sw_rad_abs  = 0.;
-		temp_sw_rad_refl = 0.;
-		temp_ppfd_abs    = 0.;
-		temp_ppfd_refl   = 0.;
+		temp_apar         = 0.;
+		temp_par_refl     = 0.;
+		temp_sw_rad_abs   = 0.;
+		temp_sw_rad_refl  = 0.;
+		temp_net_rad_abs  = 0.;
+		temp_net_rad_refl = 0.;
+		temp_ppfd_abs     = 0.;
+		temp_ppfd_refl    = 0.;
 	}
 	/*****************************************************************************************************************/
 
@@ -358,6 +415,15 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 	c->sw_rad_refl   += s->value[SW_RAD_REFL];
 	logger(g_debug_log,"cum sw_rad_refl = %f\n", c->sw_rad_refl);
 
+	/* update temporary absorbed and transmitted net radiation lower layer */
+	temp_net_rad_abs += s->value[NET_RAD_ABS];
+	c->net_rad_abs   += s->value[NET_RAD_ABS];
+	logger(g_debug_log,"cum net_rad_abs = %f\n", c->net_rad_abs);
+
+	temp_net_rad_refl += s->value[NET_RAD_REFL];
+	c->net_rad_refl   += s->value[NET_RAD_REFL];
+	logger(g_debug_log,"cum net_rad_refl = %f\n", c->net_rad_refl);
+
 	/* update temporary absorbed and transmitted PPFD lower layer */
 	temp_ppfd_abs    += s->value[PPFD_ABS];
 	c->ppfd_abs      += s->value[PPFD_ABS];
@@ -382,21 +448,27 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 		/* compute Short Wave radiation for lower layesr */
 		meteo_daily->sw_downward_W -= (temp_sw_rad_abs + temp_sw_rad_refl);
 
+		/* compute Net radiation for lower layesr */
+		meteo_daily->Net_rad_threePG -= (temp_net_rad_abs + temp_net_rad_refl);
+
 		/* compute ppfd for lower layer */
 		meteo_daily->ppfd          -= (temp_ppfd_abs + temp_ppfd_refl);
 
 		logger(g_debug_log, "Radiation for lower layers\n");
-		logger(g_debug_log, "PAR        = %f molPAR/m2/day\n", meteo_daily->par);
-		logger(g_debug_log, "Short Wave = %f W/m2\n", meteo_daily->sw_downward_W);
-		logger(g_debug_log, "PPFD       = %f umol/m2/sec\n", meteo_daily->ppfd);
+		logger(g_debug_log, "PAR                   = %f molPAR/m2/day\n", meteo_daily->par);
+		logger(g_debug_log, "Short Wave            = %f W/m2\n", meteo_daily->sw_downward_W);
+		logger(g_debug_log, "Short Net_rad_threePG = %f W/m2\n", meteo_daily->Net_rad_threePG);
+		logger(g_debug_log, "PPFD                  = %f umol/m2/sec\n", meteo_daily->ppfd);
 
 		/* reset temporary values when the last height class in layer is processed */
-		temp_apar        = 0.;
-		temp_par_refl    = 0.;
-		temp_sw_rad_abs  = 0.;
-		temp_sw_rad_refl = 0.;
-		temp_ppfd_abs    = 0.;
-		temp_ppfd_refl   = 0.;
+		temp_apar         = 0.;
+		temp_par_refl     = 0.;
+		temp_sw_rad_abs   = 0.;
+		temp_sw_rad_refl  = 0.;
+		temp_net_rad_abs  = 0.;
+		temp_net_rad_refl = 0.;
+		temp_ppfd_abs     = 0.;
+		temp_ppfd_refl    = 0.;
 
 		/* reset counter */
 		layer_height_class_counter = 0;
@@ -411,9 +483,10 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 		logger(g_debug_log,"\n************************************\n");
 		logger(g_debug_log, "last height class in cell processed\n");
 		logger(g_debug_log, "Radiation for soil\n");
-		logger(g_debug_log, "PAR        = %f molPAR/m2/day\n", meteo_daily->par);
-		logger(g_debug_log, "Short Wave = %f W/m2\n", meteo_daily->sw_downward_W);
-		logger(g_debug_log, "PPFD       = %f umol/m2/sec\n", meteo_daily->ppfd);
+		logger(g_debug_log, "PAR                   = %f molPAR/m2/day\n", meteo_daily->par);
+		logger(g_debug_log, "Short Wave            = %f W/m2\n", meteo_daily->sw_downward_W);
+		logger(g_debug_log, "Net_rad_threePG       = %f W/m2\n", meteo_daily->Net_rad_threePG);
+		logger(g_debug_log, "PPFD                  = %f umol/m2/sec\n", meteo_daily->ppfd);
 		logger(g_debug_log,"\n***********************************\n");
 	}
 	/*****************************************************************************************************************/

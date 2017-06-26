@@ -32,7 +32,12 @@ void reset_daily_cell_variables(cell_t *const c)
 	c->sw_rad_abs =                     0.;
 	c->sw_rad_abs_soil =                0.;
 	c->sw_rad_abs_snow =                0.;
-	c->sw_rad_transm =                  0.;
+	c->net_rad_refl =                   0.;
+	c->net_rad_refl_soil =              0.;
+	c->net_rad_refl_snow =              0.;
+	c->net_rad_abs =                    0.;
+	c->net_rad_abs_soil =               0.;
+	c->net_rad_abs_snow =               0.;
 	c->ppfd_abs =                       0.;
 	c->ppfd_abs_soil =                  0.;
 	c->ppfd_abs_snow =                  0.;

@@ -1,4 +1,4 @@
-/*
+	/*
  * canopy_evapotranspiration.c
  *
  *  Created on: 23/mar/2016
@@ -284,8 +284,11 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 				/* note: Net Rad is Short wave flux */
 				/* convert radiation to stomatal scale */
 				//fixme why??????????
-
+#if 0
 				net_rad = ( s->value[SW_RAD_ABS_SUN] / s->value[LAI_SUN_PROJ] ) * s->value[F_LIGHT_SUN_MAKELA];
+#else
+				net_rad = ( s->value[NET_RAD_ABS_SUN] / s->value[LAI_SUN_PROJ] ) * s->value[F_LIGHT_SUN_MAKELA];
+#endif
 				logger(g_debug_log, "sw rad for evaporation (LAI sun ) = %f W/m2\n", net_rad);
 
 				/* call Penman-Monteith function, returns e in kg/m2/s for transpiration and W/m2 for latent heat */
@@ -304,8 +307,12 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 				/* note: Net Rad is Short wave flux */
 				/* convert radiation to stomatal scale */
 				//fixme why??????????
+#if 0
 				net_rad = ( s->value[SW_RAD_ABS_SHADE] / s->value[LAI_SHADE_PROJ] ) * s->value[F_LIGHT_SHADE_MAKELA];
-				logger(g_debug_log, "sw rad for evaporation (LAI shade) = %f W/m2\n", net_rad);
+#else
+				net_rad = ( s->value[NET_RAD_ABS_SHADE] / s->value[LAI_SHADE_PROJ] ) * s->value[F_LIGHT_SHADE_MAKELA];
+#endif
+				logger(g_debug_log, "sw rad for evaporation (LAI shade ) = %f W/m2\n", net_rad);
 
 				/* call Penman-Monteith function, returns e in kg/m2/s for transpiration and W/m2 for latent heat*/
 				//fixme use correct net radiation
@@ -373,8 +380,12 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 			/* note: Net Rad is Short wave flux */
 			/* convert radiation to stomatal scale */
 			//fixme why??????????
-			net_rad = ( s->value[SW_RAD_ABS_SUN] / s->value[LAI_SUN_PROJ] ) * s->value[F_LIGHT_SUN_MAKELA] ;
-			logger(g_debug_log, "sw rad for evaporation (LAI sun) = %f W/m2\n", net_rad);
+#if 0
+				net_rad = ( s->value[SW_RAD_ABS_SUN] / s->value[LAI_SUN_PROJ] ) * s->value[F_LIGHT_SUN_MAKELA];
+#else
+				net_rad = ( s->value[NET_RAD_ABS_SUN] / s->value[LAI_SUN_PROJ] ) * s->value[F_LIGHT_SUN_MAKELA];
+#endif
+				logger(g_debug_log, "sw rad for evaporation (LAI sun ) = %f W/m2\n", net_rad);
 
 			/* call Penman-Monteith function, returns e in kg/m2/s for transpiration and W/m2 for latent heat*/
 			//fixme use correct net radiation
@@ -391,8 +402,12 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 			/* note: Net Rad is Short wave flux */
 			/* convert radiation to stomatal scale */
 			//fixme why??????????
-			net_rad = ( s->value[SW_RAD_ABS_SHADE] / s->value[LAI_SHADE_PROJ] ) * s->value[F_LIGHT_SHADE_MAKELA] ;
-			logger(g_debug_log, "sw rad for evaporation (LAI shade) = %f W/m2\n", net_rad);
+#if 0
+				net_rad = ( s->value[SW_RAD_ABS_SHADE] / s->value[LAI_SHADE_PROJ] ) * s->value[F_LIGHT_SHADE_MAKELA];
+#else
+				net_rad = ( s->value[NET_RAD_ABS_SHADE] / s->value[LAI_SHADE_PROJ] ) * s->value[F_LIGHT_SHADE_MAKELA];
+#endif
+				logger(g_debug_log, "sw rad for evaporation (LAI shade ) = %f W/m2\n", net_rad);
 
 			/* call Penman-Monteith function, returns e in kg/m2/s for transpiration and W/m2 for latent heat*/
 			s->value[CANOPY_TRANSP_SHADE]  = Penman_Monteith (meteo_daily, rv, rh, net_rad);
@@ -473,6 +488,4 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 	/* update canopy water pool */
 	c->canopy_water_stored                += ( s->value[CANOPY_INT_RAIN] - s->value[CANOPY_EVAPO] );
 }
-
-
 

@@ -195,13 +195,17 @@ enum {
 
 	/* net radiation */
 	NET_RAD,                            /* (W/m2) Short Wave Radiation */
-	RAD_REFL,                           /* (W/m2) Reflected Radiation OVERALL CANOPY */
+	NET_RAD_SUN,
+	NET_RAD_SHADE,
+	NET_RAD_REFL,                       /* (W/m2) Reflected Radiation OVERALL CANOPY */
 	NET_RAD_ABS,                        /* (W/m2) Absorbed Net radiation */
 	NET_RAD_ABS_SUN,                    /* (W/m2) Absorbed Net Radiation for sun leaves */
 	NET_RAD_ABS_SHADE,                  /* (W/m2) Absorbed Net Radiation for shaded leaves */
 	NET_RAD_TRANSM,                     /* (W/m2) Transmitted Net Radiation */
 	NET_RAD_TRANSM_SUN,                 /* (W/m2) Transmitted Net Radiation for sun leaves */
-	NET_TRANSM_SHADE,                   /* (W/m2) Transmitted Net Radiation for shaded leaves */
+	NET_RAD_TRANSM_SHADE,               /* (W/m2) Transmitted Net Radiation for shaded leaves */
+	NET_RAD_REFL_SUN,
+	NET_RAD_REFL_SHADE,
 
 	/* PPFD */
 	PPFD,                               /* (umol/m2/sec) Photosynthetic Photon Flux Density  */
@@ -912,7 +916,13 @@ typedef struct
 	double sw_rad_abs;                                                    /* (W/m2) Short Wave radiation absorbed tree level */
 	double sw_rad_abs_soil;                                               /* (W/m2) Short Wave radiation absorbed soil level */
 	double sw_rad_abs_snow;                                               /* (W/m2) Short Wave radiation absorbed snow level */
-	double sw_rad_transm;                                                 /* (W/m2) Short Wave radiation transmitted */
+
+	double net_rad_abs;
+	double net_rad_refl;
+	double net_rad_refl_soil;
+	double net_rad_refl_snow;
+	double net_rad_abs_soil;
+	double net_rad_abs_snow;
 
 	/* long wave radiation */
 	double long_wave_radiation_upward_MJ;                                 /* (MJ/m2/day) Upward long wave radiation flux */

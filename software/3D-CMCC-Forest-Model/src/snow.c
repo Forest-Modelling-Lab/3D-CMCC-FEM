@@ -34,7 +34,11 @@ void snow_melt_subl(cell_t *const c, meteo_daily_t *meteo_daily)
 	t_melt = t_coeff * meteo_daily->tavg;
 
 	/* canopy transmitted radiation: convert from W/m2 --> KJ/m2/d */
+#if 0
 	incident_rad = (c->sw_rad_abs_snow * meteo_daily->daylength * 3600) * snow_abs * 0.001;
+#else
+	incident_rad = (c->net_rad_abs_snow * meteo_daily->daylength * 3600) * snow_abs * 0.001;
+#endif
 
 	/* temperature and radiation melt from snow pack */
 	if (meteo_daily->tavg > 0.0)

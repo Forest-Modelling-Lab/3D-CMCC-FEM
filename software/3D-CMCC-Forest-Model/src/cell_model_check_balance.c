@@ -102,7 +102,7 @@ int check_cell_radiation_flux_balance (cell_t *const c, const meteo_daily_t *con
 		error_log("c->sw_rad_for_soil_refl = %f W/m2\n", c->sw_rad_refl_snow);
 		error_log("\nstore\n");
 		error_log("c->sw_rad_abs           = %f W/m2\n", c->sw_rad_abs);
-		error_log("c->net_sw_rad_for_soil  = %f W/m2\n", c->sw_rad_abs_soil);
+		error_log("c->sw_rad_for_soil  = %f W/m2\n", c->sw_rad_abs_soil);
 		error_log("\nradiation in          = %f W/m2\n", in);
 		error_log("radiation out           = %f W/m2\n", out);
 		error_log("net radiation store     = %f W/m2\n", store);
