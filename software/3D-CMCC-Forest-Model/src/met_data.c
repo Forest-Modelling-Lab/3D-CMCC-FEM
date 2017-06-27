@@ -287,8 +287,12 @@ void Radiation (cell_t *const c, const int day, const int month, const int year)
 		/*****************************************************************************************/
 	}
 
+	/***************************************************************************************************************************************/
+
+	/* NET RADIATION */
+
 	/* net radiation based on 3-PG method */
-	met[month].d[day].Net_rad_threePG = QA + QB * (met[month].d[day].solar_rad * pow (10.0, 6)/(met[month].d[day].daylength*3600.));
+	met[month].d[day].Net_rad_threePG = QA + QB * ( met[month].d[day].solar_rad * pow ( 10., 6 ) / ( met[month].d[day].daylength * 3600. ) );
 	//printf("Net radiation using Qa and Qb = %g W/m2\n", met[month].d[day].Net_rad_threePG);
 	/***************************************************************************************************************************************/
 

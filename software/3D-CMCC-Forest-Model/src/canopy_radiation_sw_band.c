@@ -190,7 +190,7 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 	/***********************************************************************************************/
 	//test 25 June 2017
 #if 1
-	/* Net Radiation computation (W/m2 covered) */
+	/* Net Radiation computation (W/m2 covered) computed with 3-PG method */
 	logger(g_debug_log,"\n-Net Radiation-\n");
 
 	/** available Net Radiation **/

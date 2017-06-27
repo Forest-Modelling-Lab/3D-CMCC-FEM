@@ -480,6 +480,9 @@ function FT_runs {
 					echo "-c" $SETTING_PATH
 					echo "-o" $OUTPUT_PATH
 					echo "*****************************"
+					
+					#counter for simulations
+					let "counter_run++"
 									
 					#find and in case remove empty files
 					find . -type f -size 0 -delete
@@ -537,6 +540,8 @@ function LOCAL_runs {
 			echo "-c" $SETTING_PATH
 			echo "-o" $OUTPUT_PATH
 			echo "*****************************"
+			
+			let "counter_run++"
 							
 			#find and in case remove empty files
 			find . -type f -size 0 -delete
@@ -594,6 +599,8 @@ function 2A_runs {
 				echo "-c" $SETTING_PATH
 				echo "-o" $OUTPUT_PATH
 				echo "*****************************"
+				
+				let "counter_run++"
 				
 				#find and in case remove empty files
 				find . -type f -size 0 -delete
@@ -660,6 +667,8 @@ function 2B_runs {
 						echo "-o" $OUTPUT_PATH
 						echo "*****************************"
 						
+						let "counter_run++"
+						
 						#find and in case remove empty files
 						find . -type f -size 0 -delete
 						
@@ -717,6 +726,8 @@ function 2Bpico_runs {
 				echo "-c" $SETTING_PATH
 				echo "-o" $OUTPUT_PATH
 				echo "*****************************"
+				
+				let "counter_run++"
 				
 				#find and in case remove empty files
 				find . -type f -size 0 -delete
@@ -782,6 +793,8 @@ function 2BLBC_runs {
 					echo "-o" $OUTPUT_PATH
 					echo "*****************************"
 					
+					let "counter_run++"
+					
 					#find and in case remove empty files
 					find . -type f -size 0 -delete
 					
@@ -840,6 +853,8 @@ function 2BLBCpico_runs {
 				echo "-c" $SETTING_PATH
 				echo "-o" $OUTPUT_PATH
 				echo "*****************************"
+				
+				let "counter_run++"
 				
 				#find and in case remove empty files
 				find . -type f -size 0 -delete
@@ -916,6 +931,9 @@ if [[ "$OSTYPE" == "cygwin" ]]; then
 	echo "...removing netcdf dll from project directory"
 	rm -f $netcdf_dll
 fi
+
+#log number of runs
+echo "number of simulation(s):" $counter_run
 
 #log elapsed time
 #if [[ "$OSTYPE" == "linux-gnu" ]]; then
