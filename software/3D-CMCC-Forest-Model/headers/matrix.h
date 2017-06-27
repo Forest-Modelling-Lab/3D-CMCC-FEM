@@ -1269,7 +1269,7 @@ typedef struct
 	/* fluxes */
 	double daily_snow_melt;                                               /* (mm/m2/time) current amount of melted snow  */
 	double daily_snow_subl;                                               /* (mm/m2/time) current amount of sublimated snow */
-	double daily_out_flow;                                                /* (mm/m2/time) current amount of water outflow */
+	double daily_out_flow, monthly_out_flow, annual_out_flow;             /* (mm/m2/time) current amount of water outflow (runoff) */
 	double daily_canopy_rain_int, monthly_canopy_rain_int, annual_canopy_rain_int; /* (mm/m2/time) daily, monthly and canopy rain interception */
 	double daily_canopy_snow_int, monthly_canopy_snow_int, annual_canopy_snow_int; /* (mm/m2/time) daily, monthly and canopy snow interception */
 	double daily_canopy_transp, monthly_canopy_transp, annual_canopy_transp; /* (mm/m2/time) daily, monthly and canopy transpiration */

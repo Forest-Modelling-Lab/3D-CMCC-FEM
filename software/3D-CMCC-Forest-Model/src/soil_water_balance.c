@@ -44,6 +44,9 @@ void soil_water_balance(cell_t *c, const meteo_daily_t *const meteo_daily)
 		logger(g_debug_log, "daily_out_flow = %g\n", c->daily_out_flow);
 		logger(g_debug_log, "asw = %g\n", c->asw);
 		logger(g_debug_log, "max_asw_fc = %g\n", c->max_asw_fc);
+
+		c->monthly_out_flow += c->daily_out_flow;
+		c->annual_out_flow  += c->daily_out_flow;
 	}
 
 	/* from BIOME-BGC */

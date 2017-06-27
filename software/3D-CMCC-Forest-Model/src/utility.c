@@ -171,6 +171,7 @@ void reset_monthly_cell_variables(cell_t *const c)
 	c->monthly_et =                     0.;
 	c->monthly_lh_flux =                0.;
 	c->monthly_sh_flux =                0.;
+	c->monthly_out_flow =               0.;
 }
 
 void reset_annual_cell_variables(cell_t *const c)
@@ -212,6 +213,7 @@ void reset_annual_cell_variables(cell_t *const c)
 	c->volume =                         0.;
 	//c->dead_tree =                    0;
 	c->annual_soil_evapo =              0.;
+	c->annual_out_flow =                0.;
 }
 void reset_daily_layer_variables(cell_t *const c)
 {
