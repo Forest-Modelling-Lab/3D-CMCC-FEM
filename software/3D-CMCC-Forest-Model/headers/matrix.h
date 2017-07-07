@@ -399,7 +399,7 @@ enum {
 	YEARLY_C_TO_BRANCH,                 /* (tC/cell/year) Annual Branch biomass for turnover */
 
 	YEARLY_C_TO_WOOD,                   /* (tC/cell/year) Annual Carbon stocked into wood pool */
-	CUM_YEARLY_C_TO_WOOD,                   /* (tC/cell) Cumulated Annual Carbon stocked into wood pool */
+	CUM_YEARLY_C_TO_WOOD,               /* (tC/cell) Cumulated Annual Carbon stocked into wood pool */
 
 	/* carbon pools in tons of tC/sizeCell */
 	LEAF_C,                             /* (tC/cell) Current Leaf carbon pool */
@@ -904,6 +904,10 @@ typedef struct
 	double bgb;                                                           /* (tC/cell) current below ground biomass at cell level */
 	double volume;                                                        /* (m3/cell) current volume */
 	double cum_volume;                                                    /* (m3/cell) cumulated volume */
+	double standing_wood;                                                 /* (tC/cell) standing wood biomass */
+	double yearly_C_to_wood;                                              /* (tC/cell/year) Annual Carbon stocked into wood pool */
+	double cum_yearly_C_to_wood;                                          /* (tC/cell) Cumulated Annual Carbon stocked into wood pool */
+	double cum_npp;                                                       /* (tC/cell) Cumulated Annual npp */
 
 	/* radiation variables */
 	/* short wave radiation */

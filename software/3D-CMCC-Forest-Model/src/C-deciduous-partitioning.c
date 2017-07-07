@@ -192,6 +192,8 @@ void daily_C_deciduous_partitioning (cell_t *const c, const int layer, const int
 		if (npp_to_alloc > 0.0)
 		{
 			/* check if minimum reserve pool needs to be refilled */
+			/* see Litton et al., GCB, 2007 */
+
 			/* it doesn't need */
 			if( s->value[RESERVE_C] >= s->value[MIN_RESERVE_C] )
 			{
@@ -209,7 +211,7 @@ void daily_C_deciduous_partitioning (cell_t *const c, const int layer, const int
 					s->value[C_TO_FRUIT] = 0.;
 				}
 
-				logger(g_debug_log, "allocating into the three pools stem , branch coarse root and reserve\n");
+				logger(g_debug_log, "allocating into the three pools stem, branch, coarse root and reserve\n");
 
 				/* allocating into c pools */
 				/* note: for references see: Potter et al., 1993; Schwalm and Ek 2004 */
