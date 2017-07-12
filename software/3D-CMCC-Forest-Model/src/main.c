@@ -1077,6 +1077,61 @@ static int log_rename(void)
 	return 1;
 }
 
+void sort_all(matrix_t* m)
+{
+	int cell;
+	int i;
+
+	assert(m);
+
+	for ( cell = 0; cell < m->cells_count; ++cell )
+	{
+		int height;
+		for ( height = 0; height < m->cells[cell].heights_count; ++height )
+		{
+			int dbh;
+			for ( dbh = 0; dbh < m->cells[cell].heights[height].dbhs_count; ++dbh )
+			{
+				int age;
+				for ( age = 0; age < m->cells[cell].heights[height].dbhs[dbh].ages_count; ++age )
+				{
+					/*
+					int species;
+					for ( species = 0; species < m->cells[cell].heights[height].dbhs[dbh].ages[age].species_count; ++species )
+					{
+						// re-index species
+						m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species].index = species;
+					}
+					*/
+					// sort ages
+					qsort(m->cells[cell].heights[height].dbhs[dbh].ages, m->cells[cell].heights[height].dbhs[dbh].ages_count, sizeof(age_t),sort_by_ages_desc);
+					// re-index
+					for ( i = 0; i < m->cells[cell].heights[height].dbhs[dbh].ages_count; ++i )
+					{
+						m->cells[cell].heights[height].dbhs[dbh].ages[i].index = i;
+					}
+				}
+				// sort dbhs
+				qsort(m->cells[cell].heights[height].dbhs, m->cells[cell].heights[height].dbhs_count, sizeof(dbh_t), sort_by_dbhs_desc);
+				// re-index
+				for ( i = 0; i < m->cells[cell].heights[height].dbhs_count; ++i )
+				{
+					m->cells[cell].heights[height].dbhs[i].index = i;
+				}
+			}
+			// sort height
+			qsort(m->cells[cell].heights, m->cells[cell].heights_count, sizeof(height_t), sort_by_heights_desc);
+			// re-index
+			for ( i = 0; i < m->cells[cell].heights_count; ++i )
+			{
+				m->cells[cell].heights[i].index = i;
+			}
+		}
+	}
+}
+
+
+
 #if 1
 //note: 02/february/2017
 //now model runs for one day and then changes the cell
@@ -1458,6 +1513,11 @@ int main(int argc, char *argv[]) {
 
 	logger(g_debug_log, "Total years_of_simulation = %d\n", years_of_simulation);
 	logger(g_debug_log, "***************************************************\n\n");
+
+	// sort
+#ifdef USE_NEW_OUTPUT
+	sort_all(matrix);
+#endif
 
 	/* for monthly and yearly means */
 	for ( cell = 0; cell < matrix->cells_count; ++cell )

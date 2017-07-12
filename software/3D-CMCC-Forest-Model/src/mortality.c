@@ -57,7 +57,9 @@ void self_thinning_mortality (cell_t *const c, const int layer, const int year)
 	{
 		/* first of all sort by descending height */
 		/* model makes die before lower height in each later */
+	#ifndef USE_NEW_OUTPUT
 		qsort (c->heights, c->heights_count, sizeof (height_t), sort_by_heights_desc);
+	#endif
 
 		h = &c->heights[height];
 

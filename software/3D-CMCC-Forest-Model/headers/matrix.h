@@ -721,7 +721,8 @@ enum {
 	COUNTERS
 };
 
-typedef struct {
+typedef struct
+{
 	int year_stand;
 	int x;
 	int y;
@@ -741,12 +742,17 @@ typedef struct {
 	double lai;
 } row_t;
 
-typedef struct {
+typedef struct
+{
 	row_t* rows;
 	int rows_count;
+
 } dataset_t;
 
-typedef struct {
+typedef struct
+{
+	int index;
+
 	e_management management;
 
 	char *name;                         /** species name **/
@@ -757,6 +763,8 @@ typedef struct {
 
 typedef struct
 {
+	int index;
+
 	species_t *species;
 
 	int value;                          /** age value (year) **/
@@ -769,6 +777,8 @@ typedef struct
 
 typedef struct
 {
+	int index;
+
 	age_t* ages;
 
 	double value;                       /** dbh value (cm) **/
@@ -799,6 +809,8 @@ typedef struct
 
 typedef struct
 {
+	int index;
+
 	dbh_t *dbhs;
 
 	double value;                       /** height value (m) **/

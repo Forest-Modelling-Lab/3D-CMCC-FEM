@@ -58,10 +58,13 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 
 	// sort by above or below ?
 	// ALESSIOR TO ALESSIOC FIXME
+	// ALESSIOR commented on 10/07/2017
+#ifndef USE_NEW_OUTPUT
 	qsort ( c->heights, c->heights_count, sizeof (height_t),
 		
 			(THINNING_REGIME_ABOVE == g_settings->thinning_regime) ? sort_by_heights_asc : sort_by_heights_desc
 	);
+#endif
 
 	/* loop on each heights starting from highest to lower */
 	for ( height = c->heights_count -1 ; height >= 0; --height )

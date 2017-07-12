@@ -97,7 +97,9 @@ int annual_forest_structure(cell_t* const c, const int year)
 	logger(g_debug_log, "*compute height_z*\n");
 
 	/* note: it must starts from the lowest tree height class */
+#ifndef USE_NEW_OUTPUT
 	qsort(c->heights, c->heights_count, sizeof(height_t), sort_by_heights_asc);
+#endif
 
 	logger(g_debug_log, "*compute height_z*\n");
 
@@ -230,7 +232,9 @@ int annual_forest_structure(cell_t* const c, const int year)
 	{
 		logger(g_debug_log, "----------------------------------\n");
 
+#ifndef USE_NEW_OUTPUT
 		qsort (c->heights, c->heights_count, sizeof (height_t), sort_by_heights_desc);
+#endif
 
 		for ( height = 0; height < c->heights_count ; ++height )
 		{
@@ -326,7 +330,9 @@ int annual_forest_structure(cell_t* const c, const int year)
 		 */
 
 		/* start to reduce DBHDC_EFF from the lowest height class */
+#ifndef USE_NEW_OUTPUT
 		qsort (c->heights, c->heights_count, sizeof (height_t), sort_by_heights_asc);
+#endif
 
 		for ( height = 0; height < c->heights_count ; ++height )
 		{

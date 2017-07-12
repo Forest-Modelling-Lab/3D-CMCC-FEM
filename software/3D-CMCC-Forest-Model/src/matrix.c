@@ -994,7 +994,8 @@ static int fill_cell_from_species(age_t* const a, const row_t* const row) {
 		free(p);
 		return 0;
 	}
-
+	assert(a->species_count);
+	species.index = a->species_count-1 + a->species_avail;
 	a->species[a->species_count-1] = species;
 	a->species[a->species_count-1].management = row ? row->management : T;
 	a->species[a->species_count-1].name = p;
@@ -1023,6 +1024,8 @@ static int fill_cell_from_ages(dbh_t* const d, const row_t* const row)
 	{
 		return 0;
 	}
+	assert(d->ages_count);
+	age.index = d->ages_count-1 + d->ages_avail;
 	d->ages[d->ages_count-1] = age;
 
 	/* set values */
@@ -1044,6 +1047,8 @@ static int fill_cell_from_dbhs(height_t* const h, const row_t* const row)
 	{
 		return 0;
 	}
+	assert(h->dbhs_count);
+	dbh.index = h->dbhs_count-1 + h->dbhs_avail;
 	h->dbhs[h->dbhs_count-1] = dbh;
 
 	/* set values */
@@ -1065,6 +1070,8 @@ static int fill_cell_from_heights(cell_t *const c, const row_t *const row)
 	{
 		return 0;
 	}
+	assert(c->heights_count);
+	height.index = c->heights_count-1 + c->heights_avail;
 	c->heights[c->heights_count-1] = height;
 
 	/* set values */

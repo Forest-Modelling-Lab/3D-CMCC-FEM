@@ -137,7 +137,9 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	/***********************************************************************************************/
 
 	/* sort heights in descending order */
+#ifndef USE_NEW_OUTPUT
 	qsort ( c->heights, c->heights_count, sizeof (height_t), sort_by_heights_desc );
+#endif
 
 	/* loop on each cell layers starting from highest to lower */
 	for ( layer = c->tree_layers_count -1 ; layer >= 0; --layer )
@@ -158,8 +160,9 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 			h = &m->cells[cell].heights[height];
 
 			/* sort dbhs in descending order */
+		#ifndef USE_NEW_OUTPUT
 			qsort ( h->dbhs, h->dbhs_count, sizeof (dbh_t), sort_by_dbhs_desc );
-
+		#endif
 			//ALESSIOC FIXME
 			c->cell_heights_count ++;
 
@@ -177,7 +180,9 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 					d = &h->dbhs[dbh];
 
 					/* sort ages in descending order */
+				#ifndef USE_NEW_OUTPUT
 					qsort ( d->ages, d->ages_count, sizeof (age_t), sort_by_ages_desc );
+				#endif
 
 					logger(g_debug_log,"*****************************************************************************\n"
 							"                              dbh = %f                              \n"
