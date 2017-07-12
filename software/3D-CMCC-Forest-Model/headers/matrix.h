@@ -846,10 +846,9 @@ enum
 	SOIL_COUNT
 };
 
-typedef struct {
-
+typedef struct
+{
 	double value[SOIL_COUNT];
-
 
 } soil_layer_s;
 

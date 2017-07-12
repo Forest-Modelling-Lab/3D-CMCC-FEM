@@ -100,6 +100,70 @@ void print_model_settings(logger_t*const log)
 	}
 }
 
+static int check_height_index(const int index, const height_t* const heights, const int heights_count)
+{
+	int i;
+
+	assert(heights);
+
+	for ( i = 0; i < heights_count; ++i )
+	{
+		if ( index == heights[i].index )
+		{
+			return 1;
+		}
+	}
+	return 0;
+}
+
+static int check_dbh_index(const int index, const dbh_t* const dbhs, const int dbhs_count)
+{
+	int i;
+
+	assert(dbhs);
+
+	for ( i = 0; i < dbhs_count; ++i )
+	{
+		if ( index == dbhs[i].index )
+		{
+			return 1;
+		}
+	}
+	return 0;
+}
+
+static int check_age_index(const int index, const age_t* const ages, const int ages_count)
+{
+	int i;
+
+	assert(ages);
+
+	for ( i = 0; i < ages_count; ++i )
+	{
+		if ( index == ages[i].index )
+		{
+			return 1;
+		}
+	}
+	return 0;
+}
+
+static int check_species_index(const int index, const species_t* const species, const int species_count)
+{
+	int i;
+
+	assert(species);
+
+	for ( i = 0; i < species_count; ++i )
+	{
+		if ( index == species[i].index )
+		{
+			return 1;
+		}
+	}
+	return 0;
+}
+
 void EOD_print_output_cell_level(cell_t *const c, const int day, const int month, const int year, const int years_of_simulation )
 {
 	int layer;
@@ -122,28 +186,15 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 
 		for ( layer = c->tree_layers_count - 1; layer >= 0; --layer )
 		{
-			int flag;
+			/* heading for layers */
+			logger(g_daily_log, ",LAYER");
 
 			for ( height = 0; height < c->heights_count+c->heights_avail; ++height )
 			{
-				// ALESSIOR TO ALESSIOC: A COSA SERVE ??
-				//if( layer == c->heights[height].height_z )
-				{					
-					/* heading for layers */
-					logger(g_daily_log, ",LAYER");
-
-					flag = 0;
-					if ( height < c->heights_count )
-					{
-						if ( height == c->heights[height].index )
-						{
-							// print output
-							flag = 1;
-						}
-					}
-					
-					if ( flag )
-					{
+				if ( check_height_index(height, c->heights, c->heights_count) )
+				{
+					if( layer == c->heights[height].height_z )
+					{							
 						/* heading for heights value */
 						logger(g_daily_log,",HEIGHT");
 						
@@ -151,48 +202,18 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 						{							
 							logger(g_daily_log,",DBH");
 							
-							flag = 0;
-							if ( dbh < c->heights[height].dbhs_count )
-							{
-								if ( dbh == c->heights[height].dbhs[dbh].index )
-								{
-									// print output
-									flag = 1;
-								}
-							}
-							
-							if ( flag )
+							if ( check_dbh_index(dbh, c->heights[height].dbhs, c->heights[height].dbhs_count) )
 							{
 								for ( age = 0; age < c->heights[height].dbhs[dbh].ages_count+c->heights[height].dbhs[dbh].ages_avail; ++age )
 								{								
 									/* heading for ages */
 									logger(g_daily_log,",AGE");
-
-									flag = 0;
-									if ( age < c->heights[height].dbhs[dbh].ages_count )
-									{
-										if ( age == c->heights[height].dbhs[dbh].ages[age].index )
-										{
-											// print output
-											flag = 1;
-										}
-									}
 									
-									if ( flag )
+									if ( check_age_index(age, c->heights[height].dbhs[dbh].ages, c->heights[height].dbhs[dbh].ages_count) )
 									{									
 										for ( species = 0; species < c->heights[height].dbhs[dbh].ages[age].species_count+c->heights[height].dbhs[dbh].ages[age].species_avail; ++species )
-										{
-											flag = 0;
-											if ( species < c->heights[height].dbhs[dbh].ages[age].species_count )
-											{
-												if ( species == c->heights[height].dbhs[dbh].ages[age].species[species].index )
-												{
-													// print output
-													flag = 1;
-												}
-											}
-											
-											if ( flag )
+										{										
+											if ( check_species_index(species, c->heights[height].dbhs[dbh].ages[age].species, c->heights[height].dbhs[dbh].ages[age].species_count)  )
 											{
 												/* heading for species name */
 												logger(g_daily_log,",SPECIES");
@@ -302,30 +323,18 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 	/* print class level values */
 	for ( layer = c->tree_layers_count - 1; layer >= 0; --layer )
 	{
-		int flag;
-		//qsort(c->heights, c->heights_count, sizeof(height_t), sort_by_heights_desc);
+		int i;
+
+		/* print layer */
+		logger(g_daily_log,",%d", layer);
 
 		for ( height = 0; height < c->heights_count+c->heights_avail; ++height )
 		{
-			// ALESSIOR TO ALESSIOC: A COSA SERVE ??
-			//if( layer == c->heights[height].height_z )
-			{
-				/* print layer */
-				logger(g_daily_log,",%d", layer);
-
-				flag = 0;
-				if ( height < c->heights_count )
+			/* print height */
+			if ( check_height_index(height, c->heights, c->heights_count) )
+			{				
+				if( layer == c->heights[height].height_z )
 				{
-					if ( height == c->heights[height].index )
-					{
-						// print output
-						flag = 1;
-					}
-				}
-
-				/* print height */
-				if ( flag )
-				{				
 					logger(g_daily_log,",%g", c->heights[height].value);
 
 					// ALESSIOR commented on 10/07/2017
@@ -333,17 +342,7 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 
 					for ( dbh = 0; dbh < c->heights[height].dbhs_count+c->heights[height].dbhs_avail; ++dbh )
 					{
-						flag = 0;
-						if ( dbh < c->heights[height].dbhs_count )
-						{
-							if ( dbh == c->heights[height].dbhs[dbh].index )
-							{
-								// print output
-								flag = 1;
-							}
-						}
-
-						if ( flag )
+						if ( check_dbh_index(dbh, c->heights[height].dbhs, c->heights[height].dbhs_count) )
 						{							
 							/* print dbh */
 							logger(g_daily_log, ",%g", c->heights[height].dbhs[dbh].value);
@@ -353,17 +352,7 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 
 							for ( age = 0; age < c->heights[height].dbhs[dbh].ages_count+c->heights[height].dbhs[dbh].ages_avail; ++age )
 							{								
-								flag = 0;
-								if ( age < c->heights[height].dbhs[dbh].ages_count )
-								{
-									if ( age == c->heights[height].dbhs[dbh].ages[age].index )
-									{
-										// print output
-										flag = 1;
-									}
-								}
-
-								if ( flag )
+								if ( check_age_index(age, c->heights[height].dbhs[dbh].ages, c->heights[height].dbhs[dbh].ages_count) )
 								{								
 									/* print age */
 									logger(g_daily_log,",%d", c->heights[height].dbhs[dbh].ages[age].value);
@@ -372,18 +361,8 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 									//qsort(c->heights[height].dbhs[dbh].ages[age].species, c->heights[height].dbhs[dbh].ages[age].species_count, sizeof(species_t), sort_by_species_index_asc);
 
 									for ( species = 0; species < c->heights[height].dbhs[dbh].ages[age].species_count+c->heights[height].dbhs[dbh].ages[age].species_avail; ++species )
-									{
-										flag = 0;
-										if ( species < c->heights[height].dbhs[dbh].ages[age].species_count )
-										{
-											if ( species == c->heights[height].dbhs[dbh].ages[age].species[species].index )
-											{
-												// print output
-												flag = 1;
-											}
-										}
-										
-										if ( flag )
+									{									
+										if ( check_species_index(species, c->heights[height].dbhs[dbh].ages[age].species, c->heights[height].dbhs[dbh].ages[age].species_count)  )
 										{
 											s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
@@ -467,7 +446,7 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 										}
 										else
 										{
-											for ( flag = 0; flag < 66; ++flag )
+											for ( i = 0; i < 66; ++i )
 											{
 												logger(g_daily_log, ",%d", -9999);
 											}
@@ -476,7 +455,7 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 								}
 								else
 								{
-									for ( flag = 0; flag < 67; ++flag )
+									for ( i = 0; i < 67; ++i )
 									{
 										logger(g_daily_log, ",%d", -9999);
 									}
@@ -485,20 +464,20 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 						}
 						else
 						{
-							for ( flag = 0; flag < 68; ++flag )
+							for ( i = 0; i < 68; ++i )
 							{
 								logger(g_daily_log, ",%d", -9999);
 							}
 						}
 					}
 				}
-				else
+			}
+			else
+			{
+				for ( i = 0; i < 69; ++i )
 				{
-					for ( flag = 0; flag < 69; ++flag )
-					{
-						logger(g_daily_log,",%d", -9999);
-					}	
-				}
+					logger(g_daily_log,",%d", -9999);
+				}	
 			}
 		}
 	}
@@ -563,27 +542,14 @@ void EOM_print_output_cell_level(cell_t *const c, const int month, const int yea
 
 		for ( layer = c->tree_layers_count - 1; layer >= 0; --layer )
 		{
-			int flag;
+			/* heading for layers */
+			logger(g_monthly_log,",LAYER");
 			
 			for ( height = 0; height < c->heights_count+c->heights_avail; ++height )
 			{
-				// ALESSIOR TO ALESSIOC: A COSA SERVE ??
-				//if( layer == c->heights[height].height_z )
-				{
-					/* heading for layers */
-					logger(g_monthly_log,",LAYER");
-				
-					flag = 0;
-					if ( height < c->heights_count )
-					{
-						if ( height == c->heights[height].index )
-						{
-							// print output
-							flag = 1;
-						}
-					}
-					
-					if ( flag )
+				if ( check_height_index(height, c->heights, c->heights_count)  )
+				{							
+					if ( layer == c->heights[height].height_z )
 					{
 						/* heading for heights value */
 						logger(g_monthly_log,",HEIGHT");
@@ -593,48 +559,18 @@ void EOM_print_output_cell_level(cell_t *const c, const int month, const int yea
 							/* heading for dbhs value */
 							logger(g_monthly_log, ",DBH");
 							
-							flag = 0;
-							if ( dbh < c->heights[height].dbhs_count )
-							{
-								if ( dbh == c->heights[height].dbhs[dbh].index )
-								{
-									// print output
-									flag = 1;
-								}
-							}
-							
-							if ( flag )
+							if ( check_dbh_index(dbh, c->heights[height].dbhs, c->heights[height].dbhs_count)  )
 							{
 								for ( age = 0; age < c->heights[height].dbhs[dbh].ages_count+c->heights[height].dbhs[dbh].ages_avail; ++age )
 								{
 									/* heading for ages */
 									logger(g_monthly_log,",AGE");
 									
-									flag = 0;
-									if ( age < c->heights[height].dbhs[dbh].ages_count )
-									{
-										if ( age == c->heights[height].dbhs[dbh].ages[age].index )
-										{
-											// print output
-											flag = 1;
-										}
-									}
-									
-									if ( flag )
+									if ( check_age_index(age, c->heights[height].dbhs[dbh].ages, c->heights[height].dbhs[dbh].ages_count) )
 									{
 										for ( species = 0; species < c->heights[height].dbhs[dbh].ages[age].species_count+c->heights[height].dbhs[dbh].ages[age].species_avail; ++species )
 										{
-											flag = 0;
-											if ( species < c->heights[height].dbhs[dbh].ages[age].species_count )
-											{
-												if ( species == c->heights[height].dbhs[dbh].ages[age].species[species].index )
-												{
-													// print output
-													flag = 1;
-												}
-											}
-											
-											if ( flag )
+											if ( check_species_index(species, c->heights[height].dbhs[dbh].ages[age].species, c->heights[height].dbhs[dbh].ages[age].species_count)  )
 											{
 												/* heading for species name */
 												logger(g_monthly_log,",SPECIES");
@@ -703,78 +639,37 @@ void EOM_print_output_cell_level(cell_t *const c, const int month, const int yea
 	/* print class level values */
 	for ( layer = c->tree_layers_count - 1; layer >= 0; --layer )
 	{
-		int flag;
+		int i;
+
+		/* print layer */
+		logger(g_monthly_log,",%d", layer);
 
 		for ( height = 0; height < c->heights_count+c->heights_avail; ++height )
 		{
-			// ALESSIOR TO ALESSIOC: A COSA SERVE ??
-			//if( layer == c->heights[height].height_z )
-			{
-				/* print layer */
-				logger(g_monthly_log,",%d", layer);
-
-				flag = 0;
-				if ( height < c->heights_count )
-				{
-					if ( height == c->heights[height].index )
-					{
-						// print output
-						flag = 1;
-					}
-				}
-				
-				/* print height */
-				if ( flag )
+			if ( check_height_index(height, c->heights, c->heights_count) )
+			{			
+				if( layer == c->heights[height].height_z )
 				{					
+					/* print height */
 					logger(g_monthly_log,",%g", c->heights[height].value);
 
 					for ( dbh = 0; dbh < c->heights[height].dbhs_count+c->heights[height].dbhs_avail; ++dbh )
-					{
-						flag = 0;
-						if ( dbh < c->heights[height].dbhs_count )
-						{
-							if ( dbh == c->heights[height].dbhs[dbh].index )
-							{
-								// print output
-								flag = 1;
-							}
-						}
-						
+					{					
 						/* print dbh */
-						if ( flag )
+						if ( check_dbh_index(dbh, c->heights[height].dbhs, c->heights[height].dbhs_count) )
 						{						
 							logger(g_monthly_log,",%g", c->heights[height].dbhs[dbh].value);
 
 							for ( age = 0; age < c->heights[height].dbhs[dbh].ages_count+c->heights[height].dbhs[dbh].ages_avail; ++age )
 							{
-								flag = 0;
-								if ( age < c->heights[height].dbhs[dbh].ages_count )
-								{
-									if ( age == c->heights[height].dbhs[dbh].ages[age].index )
-									{
-										// print output
-										flag = 1;
-									}
-								}
-								
-								if ( flag )
+								if ( check_age_index(age, c->heights[height].dbhs[dbh].ages, c->heights[height].dbhs[dbh].ages_count) )
 								{								
 									/* print age */
 									logger(g_monthly_log,",%d", c->heights[height].dbhs[dbh].ages[age].value);
 
 									for ( species = 0; species < c->heights[height].dbhs[dbh].ages[age].species_count+c->heights[height].dbhs[dbh].ages[age].species_avail; ++species )
-									{
-										flag = 0;
-										if ( species < c->heights[height].dbhs[dbh].ages[age].species_count )
-										{
-											if ( species == c->heights[height].dbhs[dbh].ages[age].species[species].index )
-											{
-												// print output
-												flag = 1;
-											}
-										}
-										
-										if ( flag )
+									{									
+										if ( check_species_index(species, c->heights[height].dbhs[dbh].ages[age].species, c->heights[height].dbhs[dbh].ages[age].species_count) )
 										{
 											s  = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
@@ -816,7 +711,7 @@ void EOM_print_output_cell_level(cell_t *const c, const int month, const int yea
 										}
 										else
 										{
-											for ( flag = 0; flag < 28; ++flag )
+											for ( i = 0; i < 28; ++i )
 											{
 												logger(g_monthly_log, ",%d", -9999);
 											}										
@@ -826,7 +721,7 @@ void EOM_print_output_cell_level(cell_t *const c, const int month, const int yea
 								}
 								else
 								{
-									for ( flag = 0; flag < 29; ++flag )
+									for ( i = 0; i < 29; ++i )
 									{
 										logger(g_monthly_log, ",%d", -9999);
 									}
@@ -835,20 +730,19 @@ void EOM_print_output_cell_level(cell_t *const c, const int month, const int yea
 						}
 						else
 						{
-							for ( flag = 0; flag < 30; ++flag )
+							for ( i = 0; i < 30; ++i )
 							{
 								logger(g_monthly_log, ",%d", -9999);
 							}
 						}
 					}					
 				}
-				else
+			}
+			else
+			{
+				for ( i = 0; i < 31; ++i )
 				{
-					for ( flag = 0; flag < 31; ++flag )
-					{
-						logger(g_monthly_log, ",%d", -9999);
-					}
-					
+					logger(g_monthly_log, ",%d", -9999);
 				}
 			}
 		}
@@ -939,29 +833,16 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 	{
 		logger(g_annual_log, "%s", "YEAR");
 
+		/* heading for layers */
+		logger(g_annual_log,",LAYER");
+
 		for ( layer = c->tree_layers_count - 1; layer >= 0; --layer )
-		{
-			int flag;
-			
+		{		
 			for ( height = 0; height < c->heights_count+c->heights_avail; ++height )
 			{
-				// ALESSIOR TO ALESSIOC: A COSA SERVE ??
-				//if( layer == c->heights[height].height_z )
-				{
-					/* heading for layers */
-					logger(g_annual_log,",LAYER");
-					
-					flag = 0;
-					if ( height < c->heights_count )
-					{
-						if ( height == c->heights[height].index )
-						{
-							// print output
-							flag = 1;
-						}
-					}
-					
-					if ( flag )
+				if ( check_height_index(height, c->heights, c->heights_count) )
+				{								
+					if( layer == c->heights[height].height_z )
 					{
 						/* heading for heights value */
 						logger(g_annual_log,",HEIGHT");
@@ -970,49 +851,19 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 						{
 							/* heading for dbhs value */
 							logger(g_annual_log, ",DBH");
-							
-							flag = 0;
-							if ( dbh < c->heights[height].dbhs_count )
-							{
-								if ( dbh == c->heights[height].dbhs[dbh].index )
-								{
-									// print output
-									flag = 1;
-								}
-							}
-							
-							if ( flag )
+														
+							if ( check_dbh_index(height, c->heights[height].dbhs, c->heights[height].dbhs_count) )
 							{
 								for ( age = 0; age < c->heights[height].dbhs[dbh].ages_count+c->heights[height].dbhs[dbh].ages_avail; ++age )
 								{
 									/* heading for ages */
 									logger(g_annual_log,",AGE");
 									
-									flag = 0;
-									if ( age < c->heights[height].dbhs[dbh].ages_count )
-									{
-										if ( age == c->heights[height].dbhs[dbh].ages[age].index )
-										{
-											// print output
-											flag = 1;
-										}
-									}
-									
-									if ( flag )
+									if ( check_age_index(age, c->heights[height].dbhs[dbh].ages, c->heights[height].dbhs[dbh].ages_count)  )
 									{
 										for ( species = 0; species < c->heights[height].dbhs[dbh].ages[age].species_count+c->heights[height].dbhs[dbh].ages[age].species_avail; ++species )
-										{
-											flag = 0;
-											if ( species < c->heights[height].dbhs[dbh].ages[age].species_count )
-											{
-												if ( species == c->heights[height].dbhs[dbh].ages[age].species[species].index )
-												{
-													// print output
-													flag = 1;
-												}
-											}
-											
-											if ( flag )
+										{										
+											if ( check_species_index(species, c->heights[height].dbhs[dbh].ages[age].species, c->heights[height].dbhs[dbh].ages[age].species_count)  )
 											{
 											
 												/* heading for species name */
@@ -1113,7 +964,6 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 
 	/*****************************************************************************************************/
 
-
 	/* values */
 	logger(g_annual_log, "%d", c->years[year].year);
 
@@ -1122,84 +972,40 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 	{
 		for ( layer = c->tree_layers_count - 1; layer >= 0; --layer )
 		{
-			int flag;
+			int i;
+
+			/* print layer */
+			logger(g_annual_log,",%d", layer);
 			
 			// ALESSIOR commented on 10/07/2017
 			//qsort(c->heights, c->heights_count, sizeof(height_t), sort_by_heights_desc);
 
 			for ( height = 0; height <c->heights_count+c->heights_avail; ++height )
 			{
-				// ALESSIOR TO ALESSIOC: A COSA SERVE ??
-				//if( layer == c->heights[height].height_z )
-				{
-					/* print layer */
-					logger(g_annual_log,",%d", layer);
-					
-					flag = 0;
-					if ( height < c->heights_count )
-					{
-						if ( height == c->heights[height].index )
-						{
-							// print output
-							flag = 1;
-						}
-					}
-					
-					if ( flag )
+				if ( check_height_index(height, c->heights, c->heights_count) )
+				{									
+					if ( layer == c->heights[height].height_z )
 					{					
 						/* print height */
 						logger(g_annual_log,",%g", c->heights[height].value);
 
 						for ( dbh = 0; dbh < c->heights[height].dbhs_count+c->heights[height].dbhs_avail; ++dbh )
-						{
-							flag = 0;
-							if ( dbh < c->heights[height].dbhs_count )
-							{
-								if ( dbh == c->heights[height].dbhs[dbh].index )
-								{
-									// print output
-									flag = 1;
-								}
-							}
-							
-							if ( flag )
+						{							
+							if ( check_dbh_index(height, c->heights[height].dbhs, c->heights[height].dbhs_count) )
 							{								
 								/* print dbh */
 								logger(g_annual_log,",%g", c->heights[height].dbhs[dbh].value);
 
-								// ALESSIOR TO ALESSIOC
-								// SHOULD THIS BE CHANGED TO
-								// start from c->heights[height].dbhs[dbh].ages_count-1 ?
 								for ( age = 0; age < c->heights[height].dbhs[dbh].ages_count+c->heights[height].dbhs[dbh].ages_avail; ++age )
-								{
-									flag = 0;
-									if ( age < c->heights[height].dbhs[dbh].ages_count )
-									{
-										if ( age == c->heights[height].dbhs[dbh].ages[age].index )
-										{
-											// print output
-											flag = 1;
-										}
-									}
-									
-									if ( flag )
+								{									
+									if ( check_age_index(age, c->heights[height].dbhs[dbh].ages, c->heights[height].dbhs[dbh].ages_count) )
 									{							
 										/* print age */
 										logger(g_annual_log,",%d", c->heights[height].dbhs[dbh].ages[age].value);
 
 										for ( species = 0; species < c->heights[height].dbhs[dbh].ages[age].species_count+c->heights[height].dbhs[dbh].ages[age].species_avail; ++species )
-										{
-											flag = 0;
-											if ( species < c->heights[height].dbhs[dbh].ages[age].species_count )
-											{
-												if ( species == c->heights[height].dbhs[dbh].ages[age].species[species].index )
-												{
-													// print output
-													flag = 1;
-												}
-											}
-												
-											if ( flag )
+										{												
+											if ( check_species_index(species, c->heights[height].dbhs[dbh].ages[age].species, c->heights[height].dbhs[dbh].ages[age].species_count) )
 											{
 												s  = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
@@ -1283,7 +1089,7 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 											}
 											else
 											{
-												for ( flag = 0; flag < 68; ++flag )
+												for ( i = 0; i < 68; ++i )
 												{
 													logger(g_annual_log, ",%d", -9999);
 												}
@@ -1292,7 +1098,7 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 									}
 									else
 									{
-										for ( flag = 0; flag < 70; ++flag )
+										for ( i = 0; i < 70; ++i )
 										{
 											logger(g_annual_log, ",%d", -9999);
 										}
@@ -1301,19 +1107,19 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 							}
 							else
 							{
-								for ( flag = 0; flag < 71; ++flag )
+								for ( i = 0; i < 71; ++i )
 								{
 									logger(g_annual_log, ",%d", -9999);
 								}
 							}
 						}
 					}
-					else
-					{				
-						for ( flag = 0; flag < 72; ++flag )
-						{
-							logger(g_annual_log, ",%d", -9999);
-						}
+				}
+				else
+				{				
+					for ( i = 0; i < 72; ++i )
+					{
+						logger(g_annual_log, ",%d", -9999);
 					}
 				}
 			}

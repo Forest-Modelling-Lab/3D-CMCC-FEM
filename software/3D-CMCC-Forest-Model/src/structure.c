@@ -97,9 +97,7 @@ int annual_forest_structure(cell_t* const c, const int year)
 	logger(g_debug_log, "*compute height_z*\n");
 
 	/* note: it must starts from the lowest tree height class */
-#ifndef USE_NEW_OUTPUT
 	qsort(c->heights, c->heights_count, sizeof(height_t), sort_by_heights_asc);
-#endif
 
 	logger(g_debug_log, "*compute height_z*\n");
 
