@@ -833,11 +833,11 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 	{
 		logger(g_annual_log, "%s", "YEAR");
 
-		/* heading for layers */
-		logger(g_annual_log,",LAYER");
-
 		for ( layer = c->tree_layers_count - 1; layer >= 0; --layer )
 		{		
+			/* heading for layers */
+			logger(g_annual_log,",LAYER");
+
 			for ( height = 0; height < c->heights_count+c->heights_avail; ++height )
 			{
 				if ( check_height_index(height, c->heights, c->heights_count) )
@@ -852,7 +852,7 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 							/* heading for dbhs value */
 							logger(g_annual_log, ",DBH");
 														
-							if ( check_dbh_index(height, c->heights[height].dbhs, c->heights[height].dbhs_count) )
+							if ( check_dbh_index(dbh, c->heights[height].dbhs, c->heights[height].dbhs_count) )
 							{
 								for ( age = 0; age < c->heights[height].dbhs[dbh].ages_count+c->heights[height].dbhs[dbh].ages_avail; ++age )
 								{
@@ -991,7 +991,7 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 
 						for ( dbh = 0; dbh < c->heights[height].dbhs_count+c->heights[height].dbhs_avail; ++dbh )
 						{							
-							if ( check_dbh_index(height, c->heights[height].dbhs, c->heights[height].dbhs_count) )
+							if ( check_dbh_index(dbh, c->heights[height].dbhs, c->heights[height].dbhs_count) )
 							{								
 								/* print dbh */
 								logger(g_annual_log,",%g", c->heights[height].dbhs[dbh].value);
