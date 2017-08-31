@@ -110,6 +110,13 @@ enum {
 	THINNING_REGIME,                     /* thinning regime (0 = above, 1 = below) */
 	THINNING_INTENSITY,                  /* thinning intensity (% of Basal Area/N-tree to remove) */
 
+	MINSTOCKGROW,
+	THINNING_80,
+	THINNING_60_80,
+	THINNING_40_60,
+	THINNING_40_20,
+	THINNING_0,
+
 	/*********************************************STATE VARIABLES*********************************************/
 	/*********************************************************************************************************/
 

@@ -44,6 +44,7 @@ typedef struct {
 	char Resp_accl;                      /* acclimation of repiration must be 'on' or 'off' */
 	char regeneration;                   /* regeneration must be 'on' or 'off' */
 	char management;                     /* management must be 'on' of 'off' */
+	char management_type;                /* optional: 0 ( default ) for bau, 1 for local */
 	int year_start_management;           /* start year management (if management is on) */
 	char Prog_Aut_Resp;                  /* Prognostic autotrophic respiration */
 	char thinning_regime;                /* thinning regime above = A or below = B */

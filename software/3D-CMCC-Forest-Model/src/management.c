@@ -265,6 +265,7 @@ void thinning (cell_t *const c, const int height, const int dbh, const int age, 
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 
+
 	/* thinning function based on basal area */
 
 	//TODO
@@ -279,20 +280,66 @@ void thinning (cell_t *const c, const int height, const int dbh, const int age, 
 
 	logger(g_debug_log, "** Management options: Thinning ** \n");
 
-	logger(g_debug_log, "basal area before thinning = %f m2/class cell\n", s->value[STAND_BASAL_AREA_m2]);
-	logger(g_debug_log, "trees before thinning      = %d trees/cell\n", s->counter[N_TREE]);
+	/* BAU MANAGEMENT */
+	if ( 0 == g_settings->management_type ) 
+	{
+		logger(g_debug_log, "basal area before thinning = %f m2/class cell\n", s->value[STAND_BASAL_AREA_m2]);
+		logger(g_debug_log, "trees before thinning      = %d trees/cell\n", s->counter[N_TREE]);
 
-	/* compute basal area to remain */
-	stand_basal_area_to_remain = ( 1. - (s->value[THINNING_INTENSITY] / 100. ) ) * s->value[STAND_BASAL_AREA_m2];
-	logger(g_debug_log, "basal area to remain       = %f m2/class\n", stand_basal_area_to_remain);
+		/* compute basal area to remain */
+		stand_basal_area_to_remain = ( 1. - (s->value[THINNING_INTENSITY] / 100. ) ) * s->value[STAND_BASAL_AREA_m2];
+		logger(g_debug_log, "basal area to remain       = %f m2/class\n", stand_basal_area_to_remain);
 
-	/* compute basal area to remove */
-	stand_basal_area_to_remove = (s->value[THINNING_INTENSITY] / 100. ) * s->value[STAND_BASAL_AREA_m2];
-	logger(g_debug_log, "basal area to remove       = %f\n", stand_basal_area_to_remove);
+		/* compute basal area to remove */
+		stand_basal_area_to_remove = (s->value[THINNING_INTENSITY] / 100. ) * s->value[STAND_BASAL_AREA_m2];
+		logger(g_debug_log, "basal area to remove       = %f\n", stand_basal_area_to_remove);
 
-	/* compute integer number of trees to remove */
-	trees_to_remove = ROUND((s->value[THINNING_INTENSITY] / 100. ) * s->counter[N_TREE]);
-	logger(g_debug_log, "trees_to_remove            = %d\n", trees_to_remove);
+		/* compute integer number of trees to remove */
+		trees_to_remove = ROUND((s->value[THINNING_INTENSITY] / 100. ) * s->counter[N_TREE]);
+		logger(g_debug_log, "trees_to_remove            = %d\n", trees_to_remove);
+	}
+	else
+	{
+		/* LOCAL MANAGEMENT */
+		if ( ! IS_INVALID_VALUE(s->value[MINSTOCKGROW]) && ! IS_INVALID_VALUE(s->value[VOLUME]) )
+		{
+			int perc;
+			double v;
+
+			perc = 0;
+			v = (s->value[VOLUME] - s->value[MINSTOCKGROW]) * 100 / s->value[MINSTOCKGROW];
+
+			if ( v >= 80 )
+			{
+				perc = (int)s->value[THINNING_80];
+			}
+			else if ( (v >= 60) && (v < 80) )
+			{
+				perc = (int)s->value[THINNING_60_80];
+			}
+			else if ( (v >= 40) && (v < 60) )
+			{
+				perc = (int)s->value[THINNING_40_60];
+			}
+			else if ( (v >= 20) && (v < 40) )
+			{
+				perc = (int)s->value[THINNING_40_20];
+			}
+			else
+			{
+				perc = (int)s->value[THINNING_0];
+			}
+
+			if ( IS_INVALID_VALUE(perc) || ! perc )
+			{
+				trees_to_remove = 0;
+			}
+			else
+			{
+				trees_to_remove = s->counter[N_TREE] - s->counter[N_TREE] * trees_to_remove / 100;
+			}
+		}
+	}
 
 	/* added thinned trees */
 	s->counter[THINNED_TREE] += trees_to_remove;

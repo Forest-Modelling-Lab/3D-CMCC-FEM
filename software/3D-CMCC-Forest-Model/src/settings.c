@@ -31,6 +31,7 @@ enum {
 	, SETTINGS_RESP_ACCL
 	, SETTINGS_REGENERATION
 	, SETTINGS_MANAGEMENT
+	, SETTINGS_MANAGEMENT_TYPE
 	, SETTINGS_YEAR_START_MANAGEMENT
 	, SETTINGS_PROGN_AUT_RESP
 	, SETTINGS_SIZECELL
@@ -99,6 +100,7 @@ const char* sz_settings[SETTINGS_COUNT] = {
 	, "RESP_ACCL"
 	, "REGENERATION"
 	, "MANAGEMENT"
+	, "MANAGEMENT_TYPE"
 	, "YEAR_START_MANAGEMENT"
 	, "PROGN_AUT_RESP"
 	, "SIZECELL"
@@ -121,6 +123,7 @@ const char* sz_settings[SETTINGS_COUNT] = {
 
 const int optional[] = {
 	SETTINGS_YEAR_RESTART
+	, SETTINGS_MANAGEMENT_TYPE
 	, SETTINGS_REGENERATION_SPECIES
 	, SETTINGS_TBASE_RESP
 };
@@ -709,6 +712,10 @@ settings_t* settings_import(const char *const filename) {
 
 					case SETTINGS_YEAR_START_MANAGEMENT:
 						s->year_start_management = (int)value;
+					break;
+
+					case SETTINGS_MANAGEMENT_TYPE:
+						s->management_type = (int)value;
 					break;
 
 					case SETTINGS_SIZECELL:
