@@ -37,6 +37,8 @@ void initialization_forest_structure(cell_t *const c, const int day, const int m
 
 void initialization_forest_class_C (cell_t *const c, const int height, const int dbh, const int age, const int species)
 {
+	double Lai_sun_ratio;
+
 	height_t *h;
 	dbh_t *d;
 	age_t *a;
@@ -387,11 +389,22 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 			logger(g_debug_log, "Ok LAI..\n");
 		}
 	}
+
+	/* assuming the same proportion for LAI also for leaf carbon */
+	Lai_sun_ratio   = s->value[LAI_SUN_PROJ] / s->value[LAI_PROJ];
+
+	/* compute based on proportion Leaf carbon for sun and shaded leaves */
+	s->value[LEAF_SUN_C]   = s->value[LEAF_C] * Lai_sun_ratio;
+	s->value[LEAF_SHADE_C] = s->value[LEAF_C] - s->value[LEAF_SUN_C];
+
+	/* compute single tree leaf carbon amount */
 	s->value[TREE_LEAF_C] = s->value[LEAF_C] / s->counter[N_TREE];
 
-	logger(g_debug_log, "-Leaf Biomass = %f tC/tree\n",  s->value[TREE_LEAF_C]);
-	logger(g_debug_log, "-Leaf Biomass = %f tDM/cell\n", s->value[LEAF_DM]);
-	logger(g_debug_log, "-Leaf Biomass = %f tC/cell\n",  s->value[LEAF_C]);
+	logger(g_debug_log, "-Leaf Biomass       = %f tC/tree\n",  s->value[TREE_LEAF_C]);
+	logger(g_debug_log, "-Leaf Biomass       = %f tDM/cell\n", s->value[LEAF_DM]);
+	logger(g_debug_log, "-Leaf Biomass       = %f tC/cell\n",  s->value[LEAF_C]);
+	logger(g_debug_log, "-Leaf sun Biomass   = %f tC/cell\n",  s->value[LEAF_SUN_C]);
+	logger(g_debug_log, "-Leaf shade Biomass = %f tC/cell\n",  s->value[LEAF_SHADE_C]);
 
 	/* compute all-sided Leaf Area */
 	s->value[ALL_LAI_PROJ] = s->value[LAI_PROJ] * s->value[CANOPY_COVER_PROJ];
@@ -672,7 +685,9 @@ void initialization_forest_class_N (cell_t *const c, const int height, const int
 	logger(g_debug_log,"\n*******INITIALIZE FOREST CLASS NITROGEN POOLS (%s)*******\n", s->name);
 
 	/* leaf */
-	s->value[LEAF_N] = s->value[LEAF_C] / s->value[CN_LEAVES];
+	s->value[LEAF_N]       = s->value[LEAF_C]       / s->value[CN_LEAVES];
+	s->value[LEAF_SUN_N]   = s->value[LEAF_SUN_C]   / s->value[CN_LEAVES];
+	s->value[LEAF_SHADE_N] = s->value[LEAF_SHADE_C] / s->value[CN_LEAVES];
 
 	/* fine root */
 	s->value[FROOT_N] = s->value[FROOT_C] / s->value[CN_FINE_ROOTS];
@@ -693,6 +708,8 @@ void initialization_forest_class_N (cell_t *const c, const int height, const int
 	s->value[BRANCH_N]          = s->value[BRANCH_LIVEWOOD_N] + s->value[BRANCH_DEADWOOD_N];
 
 	logger(g_debug_log, "----LEAF_N             = %f tN/cell\n", s->value[LEAF_N]);
+	logger(g_debug_log, "----LEAF_SUN_N         = %f tN/cell\n", s->value[LEAF_SUN_N]);
+	logger(g_debug_log, "----LEAF_SHADE_N       = %f tN/cell\n", s->value[LEAF_SHADE_N]);
 	logger(g_debug_log, "----FROOT_N            = %f tN/cell\n", s->value[FROOT_N]);
 	logger(g_debug_log, "----STEM_LIVE_WOOD_N   = %f tN/cell\n", s->value[STEM_LIVEWOOD_N]);
 	logger(g_debug_log, "----STEM_DEAD_WOOD_N   = %f tN/cell\n", s->value[STEM_DEADWOOD_N]);

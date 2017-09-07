@@ -42,6 +42,8 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 
 	/* nitrogen pools in gN/m2 */
 	double leaf_N;
+	double leaf_sun_N;
+	double leaf_shade_N;
 	double froot_N;
 	double croot_N;
 	double stem_N;
@@ -105,6 +107,8 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 
 		/* Nitrogen content tN/cell --> gN/m2 */
 		leaf_N          = (s->value[LEAF_N]            * 1e6 /g_settings->sizeCell);
+		leaf_sun_N      = (s->value[LEAF_SUN_N]        * 1e6 /g_settings->sizeCell);
+		leaf_shade_N    = (s->value[LEAF_SHADE_N]      * 1e6 /g_settings->sizeCell);
 		froot_N         = (s->value[FROOT_N]           * 1e6 /g_settings->sizeCell);
 		stem_N          = (s->value[STEM_LIVEWOOD_N]   * 1e6 /g_settings->sizeCell);
 		croot_N         = (s->value[CROOT_LIVEWOOD_N]  * 1e6 /g_settings->sizeCell);
@@ -113,16 +117,24 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 		/* note: values are computed in gC/m2/day */
 
 		/*******************************************************************************************************************/
-		/* Leaf maintenance respiration is calculated separately for day and night */
+		/* Leaf maintenance respiration is calculated separately for day and night (gC m2 day) */
 
 		/* day time leaf maintenance respiration */
-		s->value[DAILY_LEAF_MAINT_RESP]   = ( leaf_N * MR_ref * pow(q10_tday, exponent_tday) * (meteo_daily->daylength / 24.));
+		s->value[DAILY_LEAF_MAINT_RESP]       = ( leaf_N * MR_ref * pow(q10_tday, exponent_tday) * (meteo_daily->daylength / 24.));
 
 		/* night time leaf maintenance respiration */
-		s->value[NIGHTLY_LEAF_MAINT_RESP] = ( leaf_N * MR_ref * pow(q10_tnight, exponent_tnight) * (1. - (meteo_daily->daylength/24.)));
+		s->value[NIGHTLY_LEAF_MAINT_RESP]     = ( leaf_N * MR_ref * pow(q10_tnight, exponent_tnight) * (1. - (meteo_daily->daylength/24.)));
 
 		/* total (all day) leaf maintenance respiration */
-		s->value[TOT_DAY_LEAF_MAINT_RESP] = s->value[DAILY_LEAF_MAINT_RESP] + s->value[NIGHTLY_LEAF_MAINT_RESP];
+		s->value[TOT_DAY_LEAF_MAINT_RESP]     = s->value[DAILY_LEAF_MAINT_RESP] + s->value[NIGHTLY_LEAF_MAINT_RESP];
+
+		/* for sun and shaded leaves */
+		s->value[DAILY_LEAF_SUN_MAINT_RESP]   = ( leaf_sun_N   * MR_ref * pow(q10_tday, exponent_tday) * (meteo_daily->daylength / 24.));
+		s->value[DAILY_LEAF_SHADE_MAINT_RESP] = ( leaf_shade_N * MR_ref * pow(q10_tday, exponent_tday) * (meteo_daily->daylength / 24.));
+
+		/* convert from mass to molar units, and from a daily rate to a rate per second (umolC sec) */
+		s->value[DAILY_LEAF_SUN_MAINT_RESP]   /= ( 86400. * 12.011e-9 );
+		s->value[DAILY_LEAF_SHADE_MAINT_RESP] /= ( 86400. * 12.011e-9 );
 
 		/*******************************************************************************************************************/
 		/* fine roots maintenance respiration */

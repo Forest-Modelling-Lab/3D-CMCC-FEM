@@ -29,6 +29,7 @@ void specific_leaf_area ( const age_t *const a, species_t *const s )
 void daily_lai (species_t *const s)
 {
 	double leaf_C;                             /* leaf carbon KgC/sizecell */
+	double Leaf_sun_ratio;
 
 	/* NOTE: it mainly follows rationale of TREEDYN 3, Bossel, 1996, Ecological Modelling (eq. 30) */
 	/* no consideration of leaf angle is taken into account at daily scale as described by Thornton (1998)
@@ -59,6 +60,13 @@ void daily_lai (species_t *const s)
 	/* assign max annual LAI */
 	s->value[MAX_LAI_PROJ]   = MAX(s->value[MAX_LAI_PROJ], s->value[LAI_PROJ]);
 	logger(g_debug_log, "MAX_LAI_PROJ   = %f m2/m2\n", s->value[MAX_LAI_PROJ]);
+
+	/* compute ratio between leaf sun and leaf shade */
+	Leaf_sun_ratio   = s->value[LAI_SUN_PROJ] / s->value[LAI_PROJ];
+
+	/* calculate Leaf sun and shade carbon amount */
+	s->value[LEAF_SUN_C]   = s->value[LEAF_C] * Leaf_sun_ratio;
+	s->value[LEAF_SHADE_C] = s->value[LEAF_C] - s->value[LEAF_SUN_C];
 
 	/**************************************************************************************************/
 

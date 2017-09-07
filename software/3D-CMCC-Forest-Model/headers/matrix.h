@@ -410,6 +410,8 @@ enum {
 
 	/* carbon pools in tons of tC/sizeCell */
 	LEAF_C,                             /* (tC/cell) Current Leaf carbon pool */
+	LEAF_SUN_C,                         /* (tC/cell) Current Leaf sun carbon pool */
+	LEAF_SHADE_C,                       /* (tC/cell) Current Leaf shade carbon pool */
 	MAX_LEAF_C,                         /* (tC/cell) Maximum Current Leaf carbon pool */
 	CROOT_C,                            /* (tC/cell) Current Coarse root carbon pool */
 	FROOT_C,                            /* (tC/cell) Current Fine root carbon pool */
@@ -523,6 +525,8 @@ enum {
 
 	/* Maintenance respiration */
 	DAILY_LEAF_MAINT_RESP,              /* (gC/m2/day) Daytime leaf maintenance respiration */
+	DAILY_LEAF_SUN_MAINT_RESP,          /* (umolC sec) Daytime leaf maintenance respiration */
+	DAILY_LEAF_SHADE_MAINT_RESP,        /* (umolC sec) Daytime leaf maintenance respiration */
 	NIGHTLY_LEAF_MAINT_RESP,            /* (gC/m2/day) Night time leaf maintenance respiration */
 	TOT_DAY_LEAF_MAINT_RESP,            /* (gC/m2/day) Leaf maintenance respiration */
 	FROOT_MAINT_RESP,                   /* (gC/m2/day) Fine root maintenance respiration */
@@ -611,6 +615,8 @@ enum {
 
 	/* nitrogen pools (tN/area) */
 	LEAF_N,                             /* (tN/cell) Current Leaf nitrogen pool */
+	LEAF_SUN_N,                         /* (tN/cell) Current Leaf sun nitrogen pool */
+	LEAF_SHADE_N,                       /* (tN/cell) Current Leaf shade nitrogen pool */
 	LEAF_FALLING_N,                     /* (tN/cell) Current Leaf falling nitrogen pool */
 	FROOT_N,                            /* (tN/cell) Current Fine root nitrogen pool */
 	CROOT_N,                            /* (tN/cell) Current Coarse root nitrogen pool */
