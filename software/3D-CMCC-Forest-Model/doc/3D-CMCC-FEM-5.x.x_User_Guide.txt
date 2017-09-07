@@ -175,7 +175,7 @@ Usage
 	Ndep_fixed on                       //Must be 'on' or 'off'
 	Q10_fixed off                        //Q10 temperature acclimatation Must be 'on' or 'off'
 	regeneration off                    //Must be 'on' or 'off'
-	management on                       //Must be 'on' or 'off' or 'var' (with 'var' model  gets stand density from stand data when available)
+	management on                       //Must be 'on' ,'off', 'var' (with 'var' model  gets stand density from stand data when available), 'var1' (with 'var1' model gets also changes in dbh and height)
 	management_type						//optional parameter. default is 0. 0 = BAU, 1 = local
 	YEAR_START_MANAGEMENT 2005          //First year of management
 	Progn_Aut_Resp on                   //Prognostic autotrophic respiration, Must be 'on' or 'off', if off Y values are used

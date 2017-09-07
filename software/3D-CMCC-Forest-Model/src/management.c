@@ -16,6 +16,9 @@
 #include "logger.h"
 #include "remove_tree_class.h"
 #include "biomass.h"
+#include "allometry.h"
+#include "structure.h"
+#include "initialization.h"
 
 extern management_t* g_management;
 extern settings_t* g_settings;
@@ -113,7 +116,7 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 							flag = 1;
 						}
 					}
-					else if ( MANAGEMENT_VAR == g_settings->management )
+					else if ( (MANAGEMENT_VAR == g_settings->management) || (MANAGEMENT_VAR1 == g_settings->management) )
 					{
 						/* ISIMIP case: management forced by stand data */
 						if ( year )
@@ -411,6 +414,45 @@ void prescribed_thinning (cell_t *const c, const int height, const int dbh, cons
 					tree_biomass_remove(c, height, dbh, age, species, tree_remove);
 
 					c->heights[height].dbhs[dbh].ages[age].species[species].counter[N_TREE] = g_dataset->rows[row].n;
+
+					// added on 7 September 2017
+					// with 'var1' model gets also changes in dbh and height
+					if ( MANAGEMENT_VAR1 == g_settings->management )
+					{
+						c->heights[height].value = g_dataset->rows[row].height;
+						c->heights[height].dbhs[dbh].value = g_dataset->rows[row].avdbh;
+						c->heights[height].dbhs[dbh].ages[age].value = g_dataset->rows[row].age;
+
+						/* initialize power function */
+						allometry_power_function (c);
+
+						/* initialize carbon pool fraction */
+						carbon_pool_fraction (c);
+
+						/* initialize forest structure */
+						annual_forest_structure ( c, year );
+
+						/* initialize class carbon pools */
+						initialization_forest_class_C           (c, height, dbh, age, species);
+
+						/* initialize cell carbon pools */
+						initialization_forest_C                 (c, height, dbh, age, species);
+
+						/* initialize class nitrogen pools */
+						initialization_forest_class_N           (c, height, dbh, age, species);
+
+						/* initialize cell nitrogen pools */
+						initialization_forest_N                 (c, height, dbh, age, species);
+
+						/* initialization forest class litter fractions */
+						initialization_forest_class_litter_soil (c, height, dbh, age, species);
+
+						/* initialization class litter fractions */
+						initialization_forest_class_litter_soil (c, height, dbh, age, species);
+
+						/* initialization cell litter fractions */
+						initialization_forest_litter_soil       (c, height, dbh, age, species);
+					}				
 				}
 			}
 		}
