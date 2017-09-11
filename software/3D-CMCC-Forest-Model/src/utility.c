@@ -341,6 +341,10 @@ void reset_daily_class_variables(cell_t *const c)
 					s->value[C_FLUX] =                    0.;
 					s->value[CUE] =                       0.;
 
+					s->value[ASSIMILATION] =              0.;
+					s->value[ASSIMILATION_SUN] =          0.;
+					s->value[ASSIMILATION_SHADE] =        0.;
+
 					/* reset daily water fluxes */
 					s->value[STOMATAL_CONDUCTANCE] =      0.;
 					s->value[STOMATAL_SUN_CONDUCTANCE] =  0.;
@@ -512,6 +516,10 @@ void reset_monthly_class_variables(cell_t *const c)
 					s->value[MONTHLY_CANOPY_INT] =           0.;
 					s->value[MONTHLY_CANOPY_EVAPO_TRANSP] =  0.;
 					s->value[MONTHLY_CANOPY_LATENT_HEAT] =   0.;
+
+					s->value[MONTHLY_ASSIMILATION] =         0.;
+					s->value[MONTHLY_ASSIMILATION_SUN] =     0.;
+					s->value[MONTHLY_ASSIMILATION_SHADE] =   0.;
 				}
 			}
 		}
@@ -608,6 +616,10 @@ void reset_annual_class_variables(cell_t *const c)
 					s->value[YEARLY_CANOPY_EVAPO_TRANSP] =  0.;
 					s->value[YEARLY_CANOPY_LATENT_HEAT] =   0.;
 					s->counter[N_TREE_SAP] =                0;
+
+					s->value[YEARLY_ASSIMILATION] =         0.;
+					s->value[YEARLY_ASSIMILATION_SUN] =     0.;
+					s->value[YEARLY_ASSIMILATION_SHADE] =   0.;
 				}
 			}
 		}

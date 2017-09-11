@@ -1,4 +1,4 @@
-	/*
+/*
  * canopy_evapotranspiration.c
  *
  *  Created on: 23/mar/2016
@@ -21,6 +21,51 @@
 extern logger_t* g_debug_log;
 
 #define TEST 0
+/*************************************************************************************************************************/
+
+void gs_Jarvis (species_t *const s, const double gl_x, const double g_corr)
+{
+	double m_final;
+	double m_final_sun;
+	double m_final_shade;
+
+	/* following Jarvis 1997 + Frank et al., 2013 + Hidy et al., 2016 GMD */
+
+	/* leaf stomatal conductance: first generate multipliers, then apply them to maximum stomatal conductance */
+	/* apply all multipliers to the maximum stomatal conductance */
+	/* differently from BIOME we use F_T that takes into account not only minimum temperature effects */
+	/* differently from BIOME we use also F_AGE */
+
+	/* original BIOME version (Jarvis method) */
+	m_final       = s->value[F_LIGHT]       * s->value[F_SW] * s->value[F_T] * s->value[F_VPD] * s->value[F_AGE];
+	m_final_sun   = s->value[F_LIGHT_SUN]   * s->value[F_SW] * s->value[F_T] * s->value[F_VPD] * s->value[F_AGE];
+	m_final_shade = s->value[F_LIGHT_SHADE] * s->value[F_SW] * s->value[F_T] * s->value[F_VPD] * s->value[F_AGE];
+	logger(g_debug_log, "m_final       = %f \n",m_final);
+	logger(g_debug_log, "m_final_sun   = %f \n",m_final_sun);
+	logger(g_debug_log, "m_final_shade = %f \n",m_final_shade);
+
+	/* check */
+	if (m_final       < eps) m_final       = eps;
+	if (m_final_sun   < eps) m_final_sun   = eps;
+	if (m_final_shade < eps) m_final_shade = eps;
+
+	s->value[STOMATAL_CONDUCTANCE]       = gl_x * m_final       * g_corr;
+	s->value[STOMATAL_SUN_CONDUCTANCE]   = gl_x * m_final_sun   * g_corr;
+	s->value[STOMATAL_SHADE_CONDUCTANCE] = gl_x * m_final_shade * g_corr;
+	logger(g_debug_log, "STOMATAL_CONDUCTANCE       = %f\n",s->value[STOMATAL_CONDUCTANCE]);
+	logger(g_debug_log, "STOMATAL_SUN_CONDUCTANCE   = %f\n",s->value[STOMATAL_SUN_CONDUCTANCE]);
+	logger(g_debug_log, "STOMATAL_SHADE_CONDUCTANCE = %f\n",s->value[STOMATAL_SHADE_CONDUCTANCE]);
+}
+
+/*************************************************************************************************************************/
+
+void gs_Ball_Berry (species_t *const s, const double gl_x, const double g_corr)
+{
+
+
+}
+
+/*************************************************************************************************************************/
 
 void canopy_evapotranspiration(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, meteo_daily_t *const meteo_daily)
 {
@@ -29,7 +74,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 	double gl_x;                                                          /* maximum stomatal conductance */
 	//double gl_s, gl_s_sun, gl_s_shade;
 	double gl_c;
-	double m_final, m_final_sun, m_final_shade;
+	//double m_final, m_final_sun, m_final_shade;
 	double gl_e_wv;
 	//double gl_t_wv, gl_t_wv_sun, gl_t_wv_shade;
 	double gl_sh;
@@ -111,37 +156,19 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 	gl_c = s->value[CUTCOND] * g_corr;
 	logger(g_debug_log, "gl_c          = %f \n",gl_c);
 
-	/* leaf stomatal conductance: first generate multipliers, then apply them to maximum stomatal conductance */
-	/* apply all multipliers to the maximum stomatal conductance */
-	/* differently from BIOME we use F_T that takes into account not only minimum temperature effects */
-	/* differently from BIOME we use also F_AGE */
 
-	/* original BIOME version (Jarvis method) */
-	m_final       = s->value[F_LIGHT]       * s->value[F_SW] * s->value[F_T] * s->value[F_VPD] * s->value[F_AGE];
-	m_final_sun   = s->value[F_LIGHT_SUN]   * s->value[F_SW] * s->value[F_T] * s->value[F_VPD] * s->value[F_AGE];
-	m_final_shade = s->value[F_LIGHT_SHADE] * s->value[F_SW] * s->value[F_T] * s->value[F_VPD] * s->value[F_AGE];
-	logger(g_debug_log, "m_final       = %f \n",m_final);
-	logger(g_debug_log, "m_final_sun   = %f \n",m_final_sun);
-	logger(g_debug_log, "m_final_shade = %f \n",m_final_shade);
-
-	/* check */
-	if (m_final       < eps) m_final       = eps;
-	if (m_final_sun   < eps) m_final_sun   = eps;
-	if (m_final_shade < eps) m_final_shade = eps;
-
-	/** MAXIMUM stomatal conductance **/
+	/** correction for [CO2] stomatal conductance **/
 	/* correct maximum stomatal conductance for CO2 concentration */
 	gl_x = (s->value[F_CO2_TR] / 0.9116) * s->value[MAXCOND];
 	logger(g_debug_log, "gl_x = %f\n",gl_x);
 
-	/* following Jarvis 1997 + Frank et al., 2013 + Hidy et al., 2016 GMD */
 
-	s->value[STOMATAL_CONDUCTANCE]       = gl_x * m_final       * g_corr;
-	s->value[STOMATAL_SUN_CONDUCTANCE]   = gl_x * m_final_sun   * g_corr;
-	s->value[STOMATAL_SHADE_CONDUCTANCE] = gl_x * m_final_shade * g_corr;
-	logger(g_debug_log, "STOMATAL_CONDUCTANCE       = %f\n",s->value[STOMATAL_CONDUCTANCE]);
-	logger(g_debug_log, "STOMATAL_SUN_CONDUCTANCE   = %f\n",s->value[STOMATAL_SUN_CONDUCTANCE]);
-	logger(g_debug_log, "STOMATAL_SHADE_CONDUCTANCE = %f\n",s->value[STOMATAL_SHADE_CONDUCTANCE]);
+	/** Jarvis effective stomatal conductance */
+	gs_Jarvis (s, gl_x, g_corr);
+
+	/** Ball-Woodrow-Berry effective stomatal conductance */
+	gs_Ball_Berry (s, gl_x, g_corr);
+
 
 	/* calculate leaf-and canopy-level conductances to water vapor and
 		sensible heat fluxes, to be used in Penman-Monteith calculations of
@@ -381,11 +408,11 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 			/* convert radiation to stomatal scale */
 			//fixme why??????????
 #if 0
-				net_rad = ( s->value[SW_RAD_ABS_SUN] / s->value[LAI_SUN_PROJ] ) * s->value[F_LIGHT_SUN_MAKELA];
+			net_rad = ( s->value[SW_RAD_ABS_SUN] / s->value[LAI_SUN_PROJ] ) * s->value[F_LIGHT_SUN_MAKELA];
 #else
-				net_rad = ( s->value[NET_RAD_ABS_SUN] / s->value[LAI_SUN_PROJ] ) * s->value[F_LIGHT_SUN_MAKELA];
+			net_rad = ( s->value[NET_RAD_ABS_SUN] / s->value[LAI_SUN_PROJ] ) * s->value[F_LIGHT_SUN_MAKELA];
 #endif
-				logger(g_debug_log, "sw rad for evaporation (LAI sun ) = %f W/m2\n", net_rad);
+			logger(g_debug_log, "sw rad for evaporation (LAI sun ) = %f W/m2\n", net_rad);
 
 			/* call Penman-Monteith function, returns e in kg/m2/s for transpiration and W/m2 for latent heat*/
 			//fixme use correct net radiation
@@ -403,11 +430,11 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 			/* convert radiation to stomatal scale */
 			//fixme why??????????
 #if 0
-				net_rad = ( s->value[SW_RAD_ABS_SHADE] / s->value[LAI_SHADE_PROJ] ) * s->value[F_LIGHT_SHADE_MAKELA];
+			net_rad = ( s->value[SW_RAD_ABS_SHADE] / s->value[LAI_SHADE_PROJ] ) * s->value[F_LIGHT_SHADE_MAKELA];
 #else
-				net_rad = ( s->value[NET_RAD_ABS_SHADE] / s->value[LAI_SHADE_PROJ] ) * s->value[F_LIGHT_SHADE_MAKELA];
+			net_rad = ( s->value[NET_RAD_ABS_SHADE] / s->value[LAI_SHADE_PROJ] ) * s->value[F_LIGHT_SHADE_MAKELA];
 #endif
-				logger(g_debug_log, "sw rad for evaporation (LAI shade ) = %f W/m2\n", net_rad);
+			logger(g_debug_log, "sw rad for evaporation (LAI shade ) = %f W/m2\n", net_rad);
 
 			/* call Penman-Monteith function, returns e in kg/m2/s for transpiration and W/m2 for latent heat*/
 			s->value[CANOPY_TRANSP_SHADE]  = Penman_Monteith (meteo_daily, rv, rh, net_rad);
