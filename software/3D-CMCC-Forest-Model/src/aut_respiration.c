@@ -132,7 +132,7 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 		s->value[DAILY_LEAF_SUN_MAINT_RESP]   = ( leaf_sun_N   * MR_ref * pow(q10_tday, exponent_tday) * (meteo_daily->daylength / 24.));
 		s->value[DAILY_LEAF_SHADE_MAINT_RESP] = ( leaf_shade_N * MR_ref * pow(q10_tday, exponent_tday) * (meteo_daily->daylength / 24.));
 
-		/* convert from mass to molar units, and from a daily rate to a rate per second (umolC sec) */
+		/* convert from mass to molar units, and from a daily rate to a rate per second (umol/m2/s) */
 		s->value[DAILY_LEAF_SUN_MAINT_RESP]   /= ( 86400. * 12.011e-9 );
 		s->value[DAILY_LEAF_SHADE_MAINT_RESP] /= ( 86400. * 12.011e-9 );
 

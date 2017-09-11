@@ -146,4 +146,6 @@ void photosynthesis(cell_t *const c, const int layer, const int height, const in
 		++s->counter[YEARLY_VEG_DAYS];
 	}
 
+	printf ("GPP = %g gC/m2/day \n", s->value[GPP]);
+
 }

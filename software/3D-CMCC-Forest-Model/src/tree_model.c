@@ -275,6 +275,9 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							/* canopy carbon assimilation */
 							photosynthesis ( c, layer, height, dbh, age, species, DaysInMonth[month], meteo_annual );
 
+							/* canopy carbon assimilation (BIOME-BGC) */
+							total_photosynthesis_biome ( c, height, dbh, age, species, meteo_daily, meteo_annual );
+
 							/* maintenance respiration */
 							maintenance_respiration ( c, layer, height, dbh, age, species, meteo_daily );
 

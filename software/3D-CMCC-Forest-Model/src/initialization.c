@@ -311,8 +311,10 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 		if ( ( s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2 ) && c->north == 0)
 		{
 			/* assuming no leaf at 1st of January */
-			s->value[LEAF_DM] = 0.;
-			s->value[LEAF_C]  = 0.;
+			s->value[LEAF_DM]      = 0.;
+			s->value[LEAF_C]       = 0.;
+			s->value[LEAF_SUN_C]   = 0.;
+			s->value[LEAF_SHADE_C] = 0.;
 		}
 		/* evergreen */
 		else
@@ -388,14 +390,15 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 		{
 			logger(g_debug_log, "Ok LAI..\n");
 		}
+
+		/* assuming the same proportion for LAI also for leaf carbon */
+		Lai_sun_ratio   = s->value[LAI_SUN_PROJ] / s->value[LAI_PROJ];
+
+		/* compute based on proportion Leaf carbon for sun and shaded leaves */
+		s->value[LEAF_SUN_C]   = s->value[LEAF_C] * Lai_sun_ratio;
+		s->value[LEAF_SHADE_C] = s->value[LEAF_C] - s->value[LEAF_SUN_C];
+
 	}
-
-	/* assuming the same proportion for LAI also for leaf carbon */
-	Lai_sun_ratio   = s->value[LAI_SUN_PROJ] / s->value[LAI_PROJ];
-
-	/* compute based on proportion Leaf carbon for sun and shaded leaves */
-	s->value[LEAF_SUN_C]   = s->value[LEAF_C] * Lai_sun_ratio;
-	s->value[LEAF_SHADE_C] = s->value[LEAF_C] - s->value[LEAF_SUN_C];
 
 	/* compute single tree leaf carbon amount */
 	s->value[TREE_LEAF_C] = s->value[LEAF_C] / s->counter[N_TREE];
@@ -685,12 +688,28 @@ void initialization_forest_class_N (cell_t *const c, const int height, const int
 	logger(g_debug_log,"\n*******INITIALIZE FOREST CLASS NITROGEN POOLS (%s)*******\n", s->name);
 
 	/* leaf */
-	s->value[LEAF_N]       = s->value[LEAF_C]       / s->value[CN_LEAVES];
-	s->value[LEAF_SUN_N]   = s->value[LEAF_SUN_C]   / s->value[CN_LEAVES];
-	s->value[LEAF_SHADE_N] = s->value[LEAF_SHADE_C] / s->value[CN_LEAVES];
+	if ( ! s->value[LEAF_C] )
+	{
+		s->value[LEAF_N]       = 0.;
+		s->value[LEAF_SUN_N]   = 0.;
+		s->value[LEAF_SHADE_N] = 0.;
+	}
+	else
+	{
+		s->value[LEAF_N]       = s->value[LEAF_C]       / s->value[CN_LEAVES];
+		s->value[LEAF_SUN_N]   = s->value[LEAF_SUN_C]   / s->value[CN_LEAVES];
+		s->value[LEAF_SHADE_N] = s->value[LEAF_SHADE_C] / s->value[CN_LEAVES];
+	}
 
 	/* fine root */
-	s->value[FROOT_N] = s->value[FROOT_C] / s->value[CN_FINE_ROOTS];
+	if ( ! s->value[FROOT_C] )
+	{
+		s->value[FROOT_N] = 0.;
+	}
+	else
+	{
+		s->value[FROOT_N] = s->value[FROOT_C] / s->value[CN_FINE_ROOTS];
+	}
 
 	/* stem */
 	s->value[STEM_LIVEWOOD_N]   = s->value[STEM_LIVEWOOD_C] / s->value[CN_LIVE_WOODS];

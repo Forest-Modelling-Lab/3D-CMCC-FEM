@@ -327,6 +327,11 @@ enum {
 	CANOPY_TEMP_K,                      /* (K) canopy temperature */
 	CANOPY_TEMP_K_OLD,                  /* (K) previous time canopy temperature */
 
+	/* assimilation Farqhuar (Biome) */
+	ASSIMILATION,
+	ASSIMILATION_SUN,
+	ASSIMILATION_SHADE,
+
 	/* carbon fluxes */
 	C_FLUX,
 	GPP,                                /* (gC/m2/day) Daily Gross Primary Production */

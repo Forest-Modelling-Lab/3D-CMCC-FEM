@@ -430,6 +430,8 @@ void reset_daily_class_variables(cell_t *const c)
 					s->value[DAILY_LEAF_MAINT_RESP] =     0.;
 					s->value[NIGHTLY_LEAF_MAINT_RESP] =   0.;
 					s->value[TOT_DAY_LEAF_MAINT_RESP] =   0.;
+					s->value[DAILY_LEAF_SUN_MAINT_RESP] = 0.;
+					s->value[DAILY_LEAF_SHADE_MAINT_RESP] = 0.;
 					s->value[FROOT_MAINT_RESP] =          0.;
 					s->value[STEM_MAINT_RESP] =           0.;
 					s->value[BRANCH_MAINT_RESP] =         0.;

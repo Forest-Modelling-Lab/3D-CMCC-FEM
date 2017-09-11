@@ -58,7 +58,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 
 		tairK = meteo_daily->tavg + TempAbs;
 
-		if (meteo_daily->tavg >= 15)
+		if ( meteo_daily->tavg >= 15 )
 		{
 			KmCO2 = A1 * exp(-Ea1/(Rgas*tairK));
 		}
