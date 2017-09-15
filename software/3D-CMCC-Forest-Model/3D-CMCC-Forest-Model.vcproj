@@ -408,6 +408,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\photosynthesis2.c"
+				>
+			</File>
+			<File
 				RelativePath=".\src\print.c"
 				>
 			</File>
