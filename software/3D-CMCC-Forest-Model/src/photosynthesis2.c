@@ -29,6 +29,8 @@ void total_photosynthesis_biome (cell_t *const c, const int height, const int db
 	species_t *s;
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
+	/* THESE FUNCTIONS ARE BASED ON BIOME.BGC (V.4.2) PHOTOSYNTHESIS.C FILE */
+
 
 	/* This function is a wrapper and replacement for the photosynthesis code which used to be in the central bgc.c code.  At Mott Jolly's request, all of the science code is being moved into funtions. */
 
