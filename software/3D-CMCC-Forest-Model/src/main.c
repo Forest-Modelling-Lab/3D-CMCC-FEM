@@ -288,7 +288,7 @@ static int output_path_create(void)
 		sprintf(date, "%04d_%s_%02d"
 				, ptm->tm_year + 1900
 				, szMonth[ptm->tm_mon]
-				, ptm->tm_mday
+				          , ptm->tm_mday
 		);
 	}
 
@@ -469,9 +469,9 @@ static int log_start(const char* const sitename)
 				*logs[i] = logger_new("%s%s%s%s%s"
 						, g_sz_output_path
 						, log_types[i]
-									, FOLDER_DELIMITER
-									, log_types[i]
-												, buffer
+						            , FOLDER_DELIMITER
+						            , log_types[i]
+						                        , buffer
 				);
 				if ( ! *logs[i] ) {
 					printf("Unable to create %s log!\n\n", log_types[i]);
@@ -1021,13 +1021,13 @@ static int log_rename(void)
 	int i;
 	logger_t* logs[LOG_TYPES_COUNT] =
 	{
-		g_debug_log
-		, g_daily_log
-		, g_monthly_log
-		, g_annual_log
-		, g_daily_soil_log
-		, g_monthly_soil_log
-		, g_annual_soil_log
+			g_debug_log
+			, g_daily_log
+			, g_monthly_log
+			, g_annual_log
+			, g_daily_soil_log
+			, g_monthly_soil_log
+			, g_annual_soil_log
 	};
 
 	sprintf(end_year, "%d", g_settings->year_end);
@@ -1060,7 +1060,7 @@ static int log_rename(void)
 			{
 				remove(new_filename);
 			}
-			
+
 			ret = rename(logs[i]->filename, new_filename);
 			if ( -1 == ret )
 			{
@@ -1102,7 +1102,7 @@ void sort_all(matrix_t* m)
 						// re-index species
 						m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species].index = species;
 					}
-					*/
+					 */
 					// sort ages
 					qsort(m->cells[cell].heights[height].dbhs[dbh].ages, m->cells[cell].heights[height].dbhs[dbh].ages_count, sizeof(age_t),sort_by_ages_desc);
 					// re-index
@@ -1230,7 +1230,7 @@ int main(int argc, char *argv[]) {
 	{
 		char *p;
 		char buffer[256];
-		
+
 		sprintf(buffer, "ISIMIP/%s_management_ISIMIP.txt", g_settings->sitename);
 
 		printf("import management file %s...", buffer);
@@ -1247,7 +1247,7 @@ int main(int argc, char *argv[]) {
 		{
 			p = buffer;
 		}
-		
+
 		g_management = management_load(p);
 		if ( g_sz_input_path ) free(p);
 		if ( ! g_management ) goto err;
@@ -1468,6 +1468,10 @@ int main(int argc, char *argv[]) {
 		/* move pointer for year */
 		matrix->cells[cell].years += g_year_start_index;
 
+		/* FIXME ALESSIOC TO ALESSIOR alloc memory for semihourly output netcdf vars (if any) */
+
+		/* FIXME ALESSIOC TO ALESSIOR alloc memory for hourly output netcdf vars (if any) */
+
 		/* alloc memory for daily output netcdf vars (if any) */
 		if ( output_vars && output_vars->daily_vars_count && ! output_vars->daily_vars_value ) {
 			int ii;
@@ -1518,6 +1522,10 @@ int main(int argc, char *argv[]) {
 #ifdef USE_NEW_OUTPUT
 	sort_all(matrix);
 #endif
+
+	//ALESSIOC TO ALESSIOR PLEASE INCLUDE MEANS FOR HOURLY (SEMIHOURLY (IF ANY)
+
+	//ALESSIOC TO ALESSIOR PLEASE INCLUDE MEANS FOR DAILY (FROM HOURLY AND SEMIHOURLY (IF ANY)
 
 	/* for monthly and yearly means */
 	for ( cell = 0; cell < matrix->cells_count; ++cell )
@@ -1617,7 +1625,14 @@ int main(int argc, char *argv[]) {
 
 				for ( cell = 0; cell < matrix->cells_count; ++cell )
 				{
-					/* compute daily climate variables not coming from met data */
+#if 0
+					if ( g_settings->time == 'd' )
+					{
+					}
+#else
+
+#endif
+/* compute daily climate variables not coming from met data */
 					Daily_avg_temperature       ( matrix->cells[cell].years[year].m, day, month );
 					Daylight_avg_temperature    ( matrix->cells[cell].years[year].m, day, month );
 					Nightime_avg_temperature    ( matrix->cells[cell].years[year].m, day, month );
@@ -1861,13 +1876,13 @@ int main(int argc, char *argv[]) {
 						 */
 						output_push_values(output_vars
 								, &matrix->cells[cell]
-												 , month
-												 , day
-												 , year
-												 , years_of_simulation
-												 , matrix->x_cells_count
-												 , matrix->y_cells_count
-												 , OUTPUT_TYPE_DAILY
+								                 , month
+								                 , day
+								                 , year
+								                 , years_of_simulation
+								                 , matrix->x_cells_count
+								                 , matrix->y_cells_count
+								                 , OUTPUT_TYPE_DAILY
 						);
 					}
 					/******************************************************************************/
@@ -1908,13 +1923,13 @@ int main(int argc, char *argv[]) {
 
 						output_push_values(output_vars
 								, &matrix->cells[cell]
-												 , month
-												 , day
-												 , year
-												 , years_of_simulation
-												 , matrix->x_cells_count
-												 , matrix->y_cells_count
-												 , OUTPUT_TYPE_MONTHLY
+								                 , month
+								                 , day
+								                 , year
+								                 , years_of_simulation
+								                 , matrix->x_cells_count
+								                 , matrix->y_cells_count
+								                 , OUTPUT_TYPE_MONTHLY
 						);
 					}
 
@@ -1953,13 +1968,13 @@ int main(int argc, char *argv[]) {
 						 */
 						output_push_values(output_vars
 								, &matrix->cells[cell]
-												 , month
-												 , day
-												 , year
-												 , years_of_simulation
-												 , matrix->x_cells_count
-												 , matrix->y_cells_count
-												 , OUTPUT_TYPE_YEARLY
+								                 , month
+								                 , day
+								                 , year
+								                 , years_of_simulation
+								                 , matrix->x_cells_count
+								                 , matrix->y_cells_count
+								                 , OUTPUT_TYPE_YEARLY
 						);
 					}
 
@@ -2135,7 +2150,7 @@ int main(int argc, char *argv[]) {
 		sprintf(sz_date, "%04d_%s_%02d"
 				, ptm->tm_year + 1900
 				, szMonth[ptm->tm_mon]
-						  , ptm->tm_mday
+				          , ptm->tm_mday
 		);
 	}
 
@@ -2618,13 +2633,13 @@ int main(int argc, char *argv[]) {
 						 */
 						output_push_values(output_vars
 								, &matrix->cells[cell]
-												 , month
-												 , day
-												 , year
-												 , years_of_simulation
-												 , matrix->x_cells_count
-												 , matrix->y_cells_count
-												 , OUTPUT_TYPE_DAILY
+								                 , month
+								                 , day
+								                 , year
+								                 , years_of_simulation
+								                 , matrix->x_cells_count
+								                 , matrix->y_cells_count
+								                 , OUTPUT_TYPE_DAILY
 						);
 					}
 					/******************************************************************************/
@@ -2666,13 +2681,13 @@ int main(int argc, char *argv[]) {
 					 */
 					output_push_values(output_vars
 							, &matrix->cells[cell]
-											 , month
-											 , day
-											 , year
-											 , years_of_simulation
-											 , matrix->x_cells_count
-											 , matrix->y_cells_count
-											 , OUTPUT_TYPE_MONTHLY
+							                 , month
+							                 , day
+							                 , year
+							                 , years_of_simulation
+							                 , matrix->x_cells_count
+							                 , matrix->y_cells_count
+							                 , OUTPUT_TYPE_MONTHLY
 					);
 				}
 				/******************************************************************************/
@@ -2711,13 +2726,13 @@ int main(int argc, char *argv[]) {
 				 */
 				output_push_values(output_vars
 						, &matrix->cells[cell]
-										 , month
-										 , day
-										 , year
-										 , years_of_simulation
-										 , matrix->x_cells_count
-										 , matrix->y_cells_count
-										 , OUTPUT_TYPE_YEARLY
+						                 , month
+						                 , day
+						                 , year
+						                 , years_of_simulation
+						                 , matrix->x_cells_count
+						                 , matrix->y_cells_count
+						                 , OUTPUT_TYPE_YEARLY
 				);
 			}
 			/******************************************************************************/

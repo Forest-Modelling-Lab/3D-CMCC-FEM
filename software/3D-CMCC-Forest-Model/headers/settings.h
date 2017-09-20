@@ -26,7 +26,7 @@ typedef struct {
 	char sitename[SETTINGS_SITENAME_MAX_SIZE];
 	char version;                        /* fixme to remove */
 	char spatial;	                     /* spatial or unspatial must be 's' or 'u' (not longer used) fixme to remove */
-	char time;		                     /* time scale simulation must be 'm' or 'd' (monthly or daily) */
+	char time;		                     /* time scale simulation must be 'm' (monthòy),'d' (daily), 'h' (hourly), 's' (semihourly) */
 	char screen_output;                  /* screen output must be 'on' or 'off' */
 	char debug_output;                   /* debug output must be 'on' or 'off' */
 	char daily_output;                   /* daily output must be 'on' or 'off' */

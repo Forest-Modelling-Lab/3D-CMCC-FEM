@@ -553,7 +553,7 @@ static dataset_t* dataset_import_nc(const char* const filename, int* const px_ce
 						break;
 
 						// ALESSIOR TEST IT!!
-						default:
+					default:
 						continue;
 					}
 
@@ -819,7 +819,7 @@ static dataset_t* dataset_import_txt(const char* const filename) {
 							row.lai = value;
 							break;
 
-						//default:
+							//default:
 							//printf(err_column_skipped, i);
 						}
 					}
@@ -841,23 +841,23 @@ static dataset_t* dataset_import_txt(const char* const filename) {
 
 		/* check for year */
 		//if ( row.year_stand == g_settings->year_start ) {
-			/* alloc memory */
-			rows_no_leak = realloc(dataset->rows, (dataset->rows_count+1)*sizeof*rows_no_leak);
-			if ( ! rows_no_leak ) {
-				puts(sz_err_out_of_memory);
-				free(row.species);
-				free(columns);
-				dataset_free(dataset);
-				fclose(f);
-				return NULL;
-			}
+		/* alloc memory */
+		rows_no_leak = realloc(dataset->rows, (dataset->rows_count+1)*sizeof*rows_no_leak);
+		if ( ! rows_no_leak ) {
+			puts(sz_err_out_of_memory);
+			free(row.species);
+			free(columns);
+			dataset_free(dataset);
+			fclose(f);
+			return NULL;
+		}
 
-			/* assign pointer */
-			dataset->rows = rows_no_leak;
-			dataset->rows[dataset->rows_count++] = row;
+		/* assign pointer */
+		dataset->rows = rows_no_leak;
+		dataset->rows[dataset->rows_count++] = row;
 		//} else {
-			//free(row.species);
-			//row.species = NULL;
+		//free(row.species);
+		//row.species = NULL;
 		//}
 	}
 	free(columns);
@@ -1553,7 +1553,23 @@ void simulation_summary (const matrix_t* const m)
 	{
 		logger(g_debug_log, "Model spatial = un-spatial \n");
 	}
-	logger(g_debug_log, "Temporal scale = daily \n");
+
+	if (g_settings->time == 's')
+	{
+		logger(g_debug_log, "Temporal scale = semihourly \n");
+	}
+	else if ((g_settings->time == 'h'))
+	{
+		logger(g_debug_log, "Temporal scale = hourly \n");
+	}
+	else if ((g_settings->time == 'd'))
+	{
+		logger(g_debug_log, "Temporal scale = daily \n");
+	}
+	else
+	{
+		logger(g_debug_log, "Temporal scale = monthly \n");
+	}
 }
 
 void site_summary(const matrix_t* const m)

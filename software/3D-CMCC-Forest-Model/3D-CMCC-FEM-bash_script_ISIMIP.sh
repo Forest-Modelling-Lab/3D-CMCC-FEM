@@ -39,7 +39,7 @@ EXPs=(LOCAL FT 2A 2B 2BLBC 2Bpico 2BLBCpico All)
 ESMs=(ESM1 ESM2 ESM3 ESM4 ESM5 ESM6 ESM7 ESM8 ESM9 ESM10 All)
 
 #declare RCPs
-RCPs=(rcp2p6 rcp4p5 rcp6p0 rcp8p5 All)
+RCPs=(rcp0p0 rcp2p6 rcp4p5 rcp6p0 rcp8p5 All)
 
 #declare Management
 MANs=(on off All)
