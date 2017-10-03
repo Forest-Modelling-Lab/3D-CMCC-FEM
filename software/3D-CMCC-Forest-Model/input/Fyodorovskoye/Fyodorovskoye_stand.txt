@@ -1,0 +1,6 @@
+Year,x,y,Landuse,Age,Species,Management,N,Stool,AvDBH,Height,Lai
+2011,0,0,F,196,Piceaabies,T,477,0,26.3,27.4,-9999
+2011,0,0,F,196,Betulapubescens,T,81,0,27.5,27.4,0
+//data from FLUXNET2015 BADM file
+
+
