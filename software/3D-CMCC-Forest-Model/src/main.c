@@ -252,14 +252,7 @@ static void clean_up(void)
 
 #ifdef _WIN32
 #ifdef _DEBUG
-	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
-	_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDOUT);
-	_CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_FILE);
-	_CrtSetReportFile(_CRT_ERROR, _CRTDBG_FILE_STDOUT);
-	_CrtSetReportMode(_CRT_ASSERT, _CRTDBG_MODE_FILE);
-	_CrtSetReportFile(_CRT_ASSERT, _CRTDBG_FILE_STDOUT);
 	_CrtDumpMemoryLeaks();
-
 	system("PAUSE");
 #endif
 #endif
@@ -408,7 +401,7 @@ static int log_start(const char* const sitename)
 	len += sprintf(buffer+len, "_Man_%s", p);
 
 	/* time */
-	len += sprintf(buffer+len, "_%c", g_settings->time);
+	len += sprintf(buffer+len, "_%c", METEO_TIME[g_settings->time]);
 
 	/* sizeCell */
 	len += sprintf(buffer+len, "_%d", (int)g_settings->sizeCell);
@@ -1141,6 +1134,10 @@ int main(int argc, char *argv[]) {
 	int year;
 	int month;
 	int day;
+	int hour;
+	int halfhour;
+	int hours_count;
+	int halfhours_count;
 	int cell;
 	int prog_ret;
 	int soil_settings_count;
@@ -1404,6 +1401,8 @@ int main(int argc, char *argv[]) {
 		if ( ! matrix->cells[cell].years ) goto err;
 		logger_error(g_debug_log, "ok\n");
 
+		matrix->cells[cell].years_count = years_of_simulation;
+
 		/* set start year index */
 		if ( -1 == g_year_start_index )
 		{
@@ -1519,6 +1518,24 @@ int main(int argc, char *argv[]) {
 	sort_all(matrix);
 #endif
 
+	hours_count = 1;
+	halfhours_count = 1;
+	if ( DAILY == g_settings->time )
+	{
+		hours_count = 1;
+		halfhours_count = 1;
+	}
+	else if ( HOURLY == g_settings->time )
+	{
+		hours_count = METEO_HOURS_COUNT;
+		halfhours_count = 1;
+	}
+	else if ( HALFHOURLY == g_settings->time )
+	{
+		hours_count = METEO_HOURS_COUNT;
+		halfhours_count = METEO_HALFHOURS_COUNT;
+	}
+	
 	/* for monthly and yearly means */
 	for ( cell = 0; cell < matrix->cells_count; ++cell )
 	{
@@ -1558,7 +1575,6 @@ int main(int argc, char *argv[]) {
 			}
 		}
 	}
-
 
 	for ( year = 0; year < years_of_simulation; ++year )
 	{
@@ -1617,56 +1633,69 @@ int main(int argc, char *argv[]) {
 
 				for ( cell = 0; cell < matrix->cells_count; ++cell )
 				{
-					/* compute daily climate variables not coming from met data */
-					Daily_avg_temperature       ( matrix->cells[cell].years[year].m, day, month );
-					Daylight_avg_temperature    ( matrix->cells[cell].years[year].m, day, month );
-					Nightime_avg_temperature    ( matrix->cells[cell].years[year].m, day, month );
-					Soil_temperature            ( &matrix->cells[cell], day, month, year );
-					Thermic_sum                 ( matrix->cells[cell].years[year].m, day, month, year );
-					Air_density                 ( matrix->cells[cell].years[year].m, day, month );
-					Day_Length                  ( &matrix->cells[cell], day, month, year );
-					Latent_heat                 ( matrix->cells[cell].years[year].m, day, month );
-					Air_pressure                ( matrix->cells[cell].years[year].m, day, month );
-					Psychrometric               ( matrix->cells[cell].years[year].m, day, month );
-					Sat_vapour_pressure         ( &matrix->cells[cell], day, month, year );
-					Dew_temperature             ( matrix->cells[cell].years[year].m, day, month );
-					Radiation                   ( &matrix->cells[cell], day, month, year );
-					Check_prcp                  ( &matrix->cells[cell], day, month, year );
-					Daily_Ndeposition           ( &matrix->cells[cell], day, month, year );
-					Averaged_temperature        ( &matrix->cells[cell], AVERAGED_TAVG, day, month, year );
-					Averaged_temperature        ( &matrix->cells[cell], AVERAGED_TDAY, day, month, year );
-					Averaged_temperature        ( &matrix->cells[cell], AVERAGED_TNIGHT, day, month, year );
-					Averaged_temperature        ( &matrix->cells[cell], AVERAGED_TSOIL, day, month, year );
-					Weighted_average_temperature( &matrix->cells[cell], WEIGHTED_MEAN_TAVG, day, month, year );
-					Weighted_average_temperature( &matrix->cells[cell], WEIGHTED_MEAN_TDAY, day, month, year );
-					Weighted_average_temperature( &matrix->cells[cell], WEIGHTED_MEAN_TNIGHT, day, month, year );
-					Weighted_average_temperature( &matrix->cells[cell], WEIGHTED_MEAN_TSOIL, day, month, year );
-
-					if ( LANDUSE_F == g_soil_settings->landuse )
-					{
-						/* compute annually the days for the growing season BEFORE any other process */
-						Veg_Days (&matrix->cells[cell], day, month, year);
-					}
-					else
-					{
-						/* include other land use ???? */
-					}
-
 					/* for monthly mean */
-					matrix->cells[cell].years[year].monthly_mean[month].solar_rad += matrix->cells[cell].years[year].m[month].d[day].solar_rad;
-					matrix->cells[cell].years[year].monthly_mean[month].tavg += matrix->cells[cell].years[year].m[month].d[day].tavg;
-					matrix->cells[cell].years[year].monthly_mean[month].tmax += matrix->cells[cell].years[year].m[month].d[day].tmax;
-					matrix->cells[cell].years[year].monthly_mean[month].tmin += matrix->cells[cell].years[year].m[month].d[day].tmin;
-					matrix->cells[cell].years[year].monthly_mean[month].tday += matrix->cells[cell].years[year].m[month].d[day].tday;
-					matrix->cells[cell].years[year].monthly_mean[month].tnight += matrix->cells[cell].years[year].m[month].d[day].tnight;
-					matrix->cells[cell].years[year].monthly_mean[month].vpd += matrix->cells[cell].years[year].m[month].d[day].vpd;
-					matrix->cells[cell].years[year].monthly_mean[month].prcp += matrix->cells[cell].years[year].m[month].d[day].prcp;
-					matrix->cells[cell].years[year].monthly_mean[month].tsoil += matrix->cells[cell].years[year].m[month].d[day].tsoil;
-					matrix->cells[cell].years[year].monthly_mean[month].rh_f += matrix->cells[cell].years[year].m[month].d[day].rh_f;
-					matrix->cells[cell].years[year].monthly_mean[month].incoming_par += matrix->cells[cell].years[year].m[month].d[day].incoming_par;
-					matrix->cells[cell].years[year].monthly_mean[month].par += matrix->cells[cell].years[year].m[month].d[day].par;
-					matrix->cells[cell].years[year].monthly_mean[month].incoming_ppfd += matrix->cells[cell].years[year].m[month].d[day].incoming_ppfd;
-					matrix->cells[cell].years[year].monthly_mean[month].ppfd += matrix->cells[cell].years[year].m[month].d[day].ppfd;	
+					if ( DAILY == g_settings->time )
+					{
+						meteo_d_t* m = METEO_DAILY(matrix->cells[cell].years[year].m);
+
+						/* compute daily climate variables not coming from met data */
+						Daily_avg_temperature       ( m, day, month );
+						Daylight_avg_temperature    ( m, day, month );
+						Daily_Nightime_avg_temperature    ( m, day, month );
+						Daily_Soil_temperature            ( &matrix->cells[cell], day, month, year );
+						Daily_Thermic_sum                 ( m, day, month, year );
+						Daily_Air_density                 ( m, day, month );
+						Daily_Day_Length				  ( &matrix->cells[cell], day, month, year );
+						Daily_Latent_heat                 ( m, day, month );
+						Daily_Air_pressure                ( m, day, month );
+						Daily_Psychrometric               ( m, day, month );
+						Daily_Sat_vapour_pressure         ( &matrix->cells[cell], day, month, year );
+						Daily_Dew_temperature             ( m, day, month );
+						Daily_Radiation                   ( &matrix->cells[cell], day, month, year );
+						Daily_Check_prcp                  ( &matrix->cells[cell], day, month, year );
+						Daily_Ndeposition				  ( &matrix->cells[cell], day, month, year );
+						Daily_Averaged_temperature        ( &matrix->cells[cell], AVERAGED_TAVG, day, month, year );
+						Daily_Averaged_temperature        ( &matrix->cells[cell], AVERAGED_TDAY, day, month, year );
+						Daily_Averaged_temperature        ( &matrix->cells[cell], AVERAGED_TNIGHT, day, month, year );
+						Daily_Averaged_temperature        ( &matrix->cells[cell], AVERAGED_TSOIL, day, month, year );
+						Daily_Weighted_average_temperature( &matrix->cells[cell], WEIGHTED_MEAN_TAVG, day, month, year );
+						Daily_Weighted_average_temperature( &matrix->cells[cell], WEIGHTED_MEAN_TDAY, day, month, year );
+						Daily_Weighted_average_temperature( &matrix->cells[cell], WEIGHTED_MEAN_TNIGHT, day, month, year );
+						Daily_Weighted_average_temperature( &matrix->cells[cell], WEIGHTED_MEAN_TSOIL, day, month, year );
+
+						if ( LANDUSE_F == g_soil_settings->landuse )
+						{
+							/* compute annually the days for the growing season BEFORE any other process */
+							Veg_Days (&matrix->cells[cell], day, month, year);
+						}
+						else
+						{
+							/* include other land use ???? */
+						}
+
+						matrix->cells[cell].years[year].monthly_mean[month].solar_rad += METEO_DAILY(matrix->cells[cell].years[year].m)[month].d[day].solar_rad;
+						matrix->cells[cell].years[year].monthly_mean[month].tavg += METEO_DAILY(matrix->cells[cell].years[year].m)[month].d[day].tavg;
+						matrix->cells[cell].years[year].monthly_mean[month].tmax += METEO_DAILY(matrix->cells[cell].years[year].m)[month].d[day].tmax;
+						matrix->cells[cell].years[year].monthly_mean[month].tmin += METEO_DAILY(matrix->cells[cell].years[year].m)[month].d[day].tmin;
+						matrix->cells[cell].years[year].monthly_mean[month].tday += METEO_DAILY(matrix->cells[cell].years[year].m)[month].d[day].tday;
+						matrix->cells[cell].years[year].monthly_mean[month].tnight += METEO_DAILY(matrix->cells[cell].years[year].m)[month].d[day].tnight;
+						matrix->cells[cell].years[year].monthly_mean[month].vpd += METEO_DAILY(matrix->cells[cell].years[year].m)[month].d[day].vpd;
+						matrix->cells[cell].years[year].monthly_mean[month].prcp += METEO_DAILY(matrix->cells[cell].years[year].m)[month].d[day].prcp;
+						matrix->cells[cell].years[year].monthly_mean[month].tsoil += METEO_DAILY(matrix->cells[cell].years[year].m)[month].d[day].tsoil;
+						matrix->cells[cell].years[year].monthly_mean[month].rh_f += METEO_DAILY(matrix->cells[cell].years[year].m)[month].d[day].rh_f;
+						matrix->cells[cell].years[year].monthly_mean[month].incoming_par += METEO_DAILY(matrix->cells[cell].years[year].m)[month].d[day].incoming_par;
+						matrix->cells[cell].years[year].monthly_mean[month].par += METEO_DAILY(matrix->cells[cell].years[year].m)[month].d[day].par;
+						matrix->cells[cell].years[year].monthly_mean[month].incoming_ppfd += METEO_DAILY(matrix->cells[cell].years[year].m)[month].d[day].incoming_ppfd;
+						matrix->cells[cell].years[year].monthly_mean[month].ppfd += METEO_DAILY(matrix->cells[cell].years[year].m)[month].d[day].ppfd;	
+					}
+					else if ( HOURLY == g_settings->time )
+					{
+						// TODO
+					}
+					else if ( HALFHOURLY == g_settings->time )
+					{
+						// TODO
+					}
 				}
 			}
 
@@ -1742,240 +1771,246 @@ int main(int argc, char *argv[]) {
 				{
 					break;
 				}
-
-				for ( cell = 0; cell < matrix->cells_count; ++cell )
+				
+				for ( hour = 0; hour < hours_count; ++hour )
 				{
-					/* counter "day of the year" */
-					if( !day && !month )matrix->cells[cell].doy = 1;
-					else ++matrix->cells[cell].doy;
-
-					/* counter "days of simulation" */
-					if( !day && !month && !year )matrix->cells[cell].dos = 1;
-					else ++matrix->cells[cell].dos;
-
-					/* print daily met data */
-					print_daily_met_data (&matrix->cells[cell], day, month, year);
-
-					/* print cell data */
-					print_daily_cell_data ( &matrix->cells[cell] );
-
-					/************************************************************************/
-
-					if ( g_sz_dataset_file )
+					for ( halfhour = 0; halfhour < halfhours_count; ++halfhour )
 					{
-						/* run tree model daily */
-						if ( (LANDUSE_F == g_soil_settings->landuse) && (matrix->cells[cell].heights_count != 0) )
+						for ( cell = 0; cell < matrix->cells_count; ++cell )
 						{
-							if ( 'f' == g_settings->version )
+							/* counter "day of the year" */
+							if( !day && !month )matrix->cells[cell].doy = 1;
+							else ++matrix->cells[cell].doy;
+
+							/* counter "days of simulation" */
+							if( !day && !month && !year )matrix->cells[cell].dos = 1;
+							else ++matrix->cells[cell].dos;
+
+							/* print daily met data */
+							print_daily_met_data (&matrix->cells[cell], day, month, year);
+
+							/* print cell data */
+							print_daily_cell_data ( &matrix->cells[cell] );
+
+							/************************************************************************/
+
+							if ( g_sz_dataset_file )
 							{
-								if ( matrix->cells[cell].n_trees > 0 )
+								/* run tree model daily */
+								if ( (LANDUSE_F == g_soil_settings->landuse) && (matrix->cells[cell].heights_count != 0) )
 								{
-									if ( !Tree_model_daily( matrix, cell, day, month, year ) )
+									if ( 'f' == g_settings->version )
 									{
-										logger(g_debug_log, "tree model daily failed!!!\n");
-										goto err;
-									}
-									else
-									{
-										printf("ok tree_model (%02d-%02d-%d)\n", day+1, month+1, year+g_settings->year_start);
+										if ( matrix->cells[cell].n_trees > 0 )
+										{
+											if ( !Tree_model( matrix, cell, halfhour, hour, day, month, year ) )
+											{
+												logger(g_debug_log, "tree model daily failed!!!\n");
+												goto err;
+											}
+											else
+											{
+												printf("ok tree_model (%02d-%02d-%d)\n", day+1, month+1, year+g_settings->year_start);
+											}
+										}
 									}
 								}
+								else
+								{
+									/* run for possible other Land Use versions */
+								}
 							}
-						}
-						else
-						{
-							/* run for possible other Land Use versions */
-						}
-					}
-					/************************************************************************/
-					/* run for litter model */
-					if ( !Litter_model_daily(matrix, cell, day, month, year) )
-					{
-						logger_error(g_debug_log, "litter model daily failed!!!\n");
-						goto err;
-					}
-					else
-					{
-						printf("ok litr_model (%02d-%02d-%d)\n", day+1, month+1, year+g_settings->year_start);
-					}
-					/************************************************************************/
-					/* run for soil model */
-					if ( !Soil_model_daily(matrix, cell, day, month, year) )
-					{
-						logger_error(g_debug_log, "soil model daily failed!!!\n");
-						goto err;
-					}
-					else
-					{
-						printf("ok soil_model (%02d-%02d-%d)\n", day+1, month+1, year+g_settings->year_start);
-					}
-					/************************************************************************/
-					/* run for cell model */
-					if ( !Cell_model_daily(matrix, cell, day, month, year) )
-					{
-						logger_error(g_debug_log, "cell model daily failed!!!\n");
-						goto err;
-					}
-					else
-					{
-						printf("ok cell_model (%02d-%02d-%d)\n", day+1, month+1, year+g_settings->year_start);
-					}
-					/*************************************************************************/
-
-					/* save values for put in output netcdf */
-					if ( output_vars && output_vars->daily_vars_count ) {
-						/*
-							la memoria è stata allocata come C*R*Y*X
-
-							C = colonne ( variabili )
-							R = righe ( anni di elaborazione * 366 )
-							Y = numero y celle
-							X = numero x celle
-
-							quindi il valore [v1][v2][v3][v4] è indicizzato a
-
-							[v1 * n1 * n2 *n3 + v2 * n2 * n3 + v3 * n3 + v4]
-
-							ossia
-
-							[v4 + n3 * (v3 + n2 * (v2 + n1 * v1))]
-						 */
-						/*
-						#define YS					(matrix->y_cells_count)
-						#define XS					(matrix->x_cells_count)
-						#define ROWS				(366*years_of_simulation)
-						#define VALUE_AT(x,y,r,c)	((x)+(XS)*((y)+(YS)*((r)+(ROWS)*(c))))
-							int i;
-							for ( i = 0; i < output_vars->daily_vars_count; ++i )
+							/************************************************************************/
+							/* run for litter model */
+							if ( !Litter_model(matrix, cell, day, month, year) )
 							{
-								int row = get_daily_row_from_date(matrix->cells[cell].years[year].year, month, day) + (year*366);
-								int index = VALUE_AT(matrix->cells[cell].x, matrix->cells[cell].y, row, i);
-								if ( AR_DAILY_OUT == output_vars->daily_vars[i] )	output_vars->daily_vars_value[index] = matrix->cells[cell].daily_aut_resp;
-								if ( GPP_DAILY_OUT == output_vars->daily_vars[i] )	output_vars->daily_vars_value[index] = matrix->cells[cell].daily_gpp;
-								if ( NPP_DAILY_OUT == output_vars->daily_vars[i] )	output_vars->daily_vars_value[index] = matrix->cells[cell].daily_npp_gC;
+								logger_error(g_debug_log, "litter model daily failed!!!\n");
+								goto err;
 							}
-						#undef VALUE_AT
-						#undef ROWS
-						#undef XS
-						#undef YS
-						 */
-						output_push_values(output_vars
-								, &matrix->cells[cell]
-												 , month
-												 , day
-												 , year
-												 , years_of_simulation
-												 , matrix->x_cells_count
-												 , matrix->y_cells_count
-												 , OUTPUT_TYPE_DAILY
-						);
-					}
-					/******************************************************************************/
-					/* print daily output */
-					EOD_print_output_cell_level (&matrix->cells[cell], day, month, year, years_of_simulation );
-					EOD_print_output_soil_cell_level (&matrix->cells[cell], day, month, year, years_of_simulation );
+							else
+							{
+								printf("ok litr_model (%02d-%02d-%d)\n", day+1, month+1, year+g_settings->year_start);
+							}
+							/************************************************************************/
+							/* run for soil model */
+							if ( !Soil_model(matrix, cell, day, month, year) )
+							{
+								logger_error(g_debug_log, "soil model daily failed!!!\n");
+								goto err;
+							}
+							else
+							{
+								printf("ok soil_model (%02d-%02d-%d)\n", day+1, month+1, year+g_settings->year_start);
+							}
+							/************************************************************************/
+							/* run for cell model */
+							if ( !Cell_model(matrix, cell, day, month, year) )
+							{
+								logger_error(g_debug_log, "cell model daily failed!!!\n");
+								goto err;
+							}
+							else
+							{
+								printf("ok cell_model (%02d-%02d-%d)\n", day+1, month+1, year+g_settings->year_start);
+							}
+							/*************************************************************************/
 
-					/* reset daily variables once printed */
-					reset_daily_class_variables ( &matrix->cells[cell] );
-					reset_daily_layer_variables ( &matrix->cells[cell] );
-					reset_daily_cell_variables  ( &matrix->cells[cell] );
+							/* save values for put in output netcdf */
+							if ( output_vars && output_vars->daily_vars_count ) {
+								/*
+									la memoria è stata allocata come C*R*Y*X
 
-					logger(g_debug_log, "******************* END OF DAY (%d) *******************\n\n\n", day + 1 );
+									C = colonne ( variabili )
+									R = righe ( anni di elaborazione * 366 )
+									Y = numero y celle
+									X = numero x celle
 
+									quindi il valore [v1][v2][v3][v4] è indicizzato a
 
-					/* save values for put in output netcdf */
-					if ( output_vars && output_vars->monthly_vars_count ) {
-						/*
-						#define YS					(matrix->y_cells_count)
-						#define XS					(matrix->x_cells_count)
-						#define ROWS				(12*years_of_simulation)
-						#define VALUE_AT(x,y,r,c)	((x)+(XS)*((y)+(YS)*((r)+(ROWS)*(c))))
-						int i;
-						for ( i = 0; i < output_vars->monthly_vars_count; ++i )
-						{
-							int row = month + (year*12);
-							int index = VALUE_AT(matrix->cells[cell].x, matrix->cells[cell].y, row, i);
-							if ( AR_MONTHLY_OUT == output_vars->monthly_vars[i] ) output_vars->monthly_vars_value[index] = matrix->cells[cell].monthly_aut_resp;
-							if ( GPP_MONTHLY_OUT == output_vars->monthly_vars[i] ) output_vars->monthly_vars_value[index] = matrix->cells[cell].monthly_gpp;
-							if ( NPP_MONTHLY_OUT == output_vars->monthly_vars[i] ) output_vars->monthly_vars_value[index] = matrix->cells[cell].monthly_npp_gC;
-						}
-						#undef VALUE_AT
-						#undef ROWS
-						#undef XS
-						#undef YS
-						 */
+									[v1 * n1 * n2 *n3 + v2 * n2 * n3 + v3 * n3 + v4]
 
+									ossia
 
-						output_push_values(output_vars
-								, &matrix->cells[cell]
-												 , month
-												 , day
-												 , year
-												 , years_of_simulation
-												 , matrix->x_cells_count
-												 , matrix->y_cells_count
-												 , OUTPUT_TYPE_MONTHLY
-						);
-					}
-
-					/* end of month */
-					if ( current_doy == matrix->cells[cell].doy )
-					{
-						/* print monthly output */
-						EOM_print_output_cell_level( &matrix->cells[cell], month, year, years_of_simulation );
-						EOM_print_output_soil_cell_level( &matrix->cells[cell], month, year, years_of_simulation );
-
-						reset_monthly_class_variables ( &matrix->cells[cell] );
-						reset_monthly_layer_variables ( &matrix->cells[cell] );
-						reset_monthly_cell_variables  ( &matrix->cells[cell] );
-
-						logger(g_debug_log, "******************* END OF MONTH (%d) *******************\n\n", month + 1 );
-					}
-
-					if ( output_vars && output_vars->yearly_vars_count ) {
-						/*
+									[v4 + n3 * (v3 + n2 * (v2 + n1 * v1))]
+								 */
+								/*
 								#define YS					(matrix->y_cells_count)
 								#define XS					(matrix->x_cells_count)
-								#define ROWS				(years_of_simulation)
+								#define ROWS				(366*years_of_simulation)
 								#define VALUE_AT(x,y,r,c)	((x)+(XS)*((y)+(YS)*((r)+(ROWS)*(c))))
 									int i;
-									for ( i = 0; i < output_vars->yearly_vars_count; ++i )
+									for ( i = 0; i < output_vars->daily_vars_count; ++i )
 									{
-										int index = VALUE_AT(matrix->cells[cell].x, matrix->cells[cell].y, year, i);
-										if ( AR_YEARLY_OUT == output_vars->yearly_vars[i] ) output_vars->yearly_vars_value[index] = matrix->cells[cell].annual_aut_resp;
-										if ( GPP_YEARLY_OUT == output_vars->yearly_vars[i] ) output_vars->yearly_vars_value[index] = matrix->cells[cell].annual_gpp;
-										if ( NPP_YEARLY_OUT == output_vars->yearly_vars[i] ) output_vars->yearly_vars_value[index] = matrix->cells[cell].annual_npp_gC;
+										int row = get_daily_row_from_date(matrix->cells[cell].years[year].year, month, day) + (year*366);
+										int index = VALUE_AT(matrix->cells[cell].x, matrix->cells[cell].y, row, i);
+										if ( AR_DAILY_OUT == output_vars->daily_vars[i] )	output_vars->daily_vars_value[index] = matrix->cells[cell].daily_aut_resp;
+										if ( GPP_DAILY_OUT == output_vars->daily_vars[i] )	output_vars->daily_vars_value[index] = matrix->cells[cell].daily_gpp;
+										if ( NPP_DAILY_OUT == output_vars->daily_vars[i] )	output_vars->daily_vars_value[index] = matrix->cells[cell].daily_npp_gC;
 									}
 								#undef VALUE_AT
 								#undef ROWS
 								#undef XS
 								#undef YS
-						 */
-						output_push_values(output_vars
-								, &matrix->cells[cell]
-												 , month
-												 , day
-												 , year
-												 , years_of_simulation
-												 , matrix->x_cells_count
-												 , matrix->y_cells_count
-												 , OUTPUT_TYPE_YEARLY
-						);
-					}
+								 */
+								output_push_values(output_vars
+										, &matrix->cells[cell]
+														 , month
+														 , day
+														 , year
+														 , years_of_simulation
+														 , matrix->x_cells_count
+														 , matrix->y_cells_count
+														 , OUTPUT_TYPE_DAILY
+								);
+							}
+							/******************************************************************************/
+							/* print daily output */
+							EOD_print_output_cell_level (&matrix->cells[cell], day, month, year, years_of_simulation );
+							EOD_print_output_soil_cell_level (&matrix->cells[cell], day, month, year, years_of_simulation );
 
-					/* reset annual variables once printed */
-					if ( matrix->cells[cell].doy == (leap_year ? 366 : 365)  )
-					{
+							/* reset daily variables once printed */
+							reset_daily_class_variables ( &matrix->cells[cell] );
+							reset_daily_layer_variables ( &matrix->cells[cell] );
+							reset_daily_cell_variables  ( &matrix->cells[cell] );
 
-						/* print annual output */
-						EOY_print_output_cell_level( &matrix->cells[cell], year, years_of_simulation );
-						EOY_print_output_soil_cell_level( &matrix->cells[cell], year, years_of_simulation );
+							logger(g_debug_log, "******************* END OF DAY (%d) *******************\n\n\n", day + 1 );
 
-						reset_annual_class_variables ( &matrix->cells[cell] );
-						reset_annual_layer_variables ( &matrix->cells[cell] );
-						reset_annual_cell_variables  ( &matrix->cells[cell] );
 
-						logger(g_debug_log, "******************* END OF YEAR (%d) *******************\n\n\n\n\n\n", matrix->cells[cell].years[year].year );
+							/* save values for put in output netcdf */
+							if ( output_vars && output_vars->monthly_vars_count ) {
+								/*
+								#define YS					(matrix->y_cells_count)
+								#define XS					(matrix->x_cells_count)
+								#define ROWS				(12*years_of_simulation)
+								#define VALUE_AT(x,y,r,c)	((x)+(XS)*((y)+(YS)*((r)+(ROWS)*(c))))
+								int i;
+								for ( i = 0; i < output_vars->monthly_vars_count; ++i )
+								{
+									int row = month + (year*12);
+									int index = VALUE_AT(matrix->cells[cell].x, matrix->cells[cell].y, row, i);
+									if ( AR_MONTHLY_OUT == output_vars->monthly_vars[i] ) output_vars->monthly_vars_value[index] = matrix->cells[cell].monthly_aut_resp;
+									if ( GPP_MONTHLY_OUT == output_vars->monthly_vars[i] ) output_vars->monthly_vars_value[index] = matrix->cells[cell].monthly_gpp;
+									if ( NPP_MONTHLY_OUT == output_vars->monthly_vars[i] ) output_vars->monthly_vars_value[index] = matrix->cells[cell].monthly_npp_gC;
+								}
+								#undef VALUE_AT
+								#undef ROWS
+								#undef XS
+								#undef YS
+								 */
+
+
+								output_push_values(output_vars
+										, &matrix->cells[cell]
+														 , month
+														 , day
+														 , year
+														 , years_of_simulation
+														 , matrix->x_cells_count
+														 , matrix->y_cells_count
+														 , OUTPUT_TYPE_MONTHLY
+								);
+							}
+
+							/* end of month */
+							if ( current_doy == matrix->cells[cell].doy )
+							{
+								/* print monthly output */
+								EOM_print_output_cell_level( &matrix->cells[cell], month, year, years_of_simulation );
+								EOM_print_output_soil_cell_level( &matrix->cells[cell], month, year, years_of_simulation );
+
+								reset_monthly_class_variables ( &matrix->cells[cell] );
+								reset_monthly_layer_variables ( &matrix->cells[cell] );
+								reset_monthly_cell_variables  ( &matrix->cells[cell] );
+
+								logger(g_debug_log, "******************* END OF MONTH (%d) *******************\n\n", month + 1 );
+							}
+
+							if ( output_vars && output_vars->yearly_vars_count ) {
+								/*
+										#define YS					(matrix->y_cells_count)
+										#define XS					(matrix->x_cells_count)
+										#define ROWS				(years_of_simulation)
+										#define VALUE_AT(x,y,r,c)	((x)+(XS)*((y)+(YS)*((r)+(ROWS)*(c))))
+											int i;
+											for ( i = 0; i < output_vars->yearly_vars_count; ++i )
+											{
+												int index = VALUE_AT(matrix->cells[cell].x, matrix->cells[cell].y, year, i);
+												if ( AR_YEARLY_OUT == output_vars->yearly_vars[i] ) output_vars->yearly_vars_value[index] = matrix->cells[cell].annual_aut_resp;
+												if ( GPP_YEARLY_OUT == output_vars->yearly_vars[i] ) output_vars->yearly_vars_value[index] = matrix->cells[cell].annual_gpp;
+												if ( NPP_YEARLY_OUT == output_vars->yearly_vars[i] ) output_vars->yearly_vars_value[index] = matrix->cells[cell].annual_npp_gC;
+											}
+										#undef VALUE_AT
+										#undef ROWS
+										#undef XS
+										#undef YS
+								 */
+								output_push_values(output_vars
+										, &matrix->cells[cell]
+														 , month
+														 , day
+														 , year
+														 , years_of_simulation
+														 , matrix->x_cells_count
+														 , matrix->y_cells_count
+														 , OUTPUT_TYPE_YEARLY
+								);
+							}
+
+							/* reset annual variables once printed */
+							if ( matrix->cells[cell].doy == (leap_year ? 366 : 365)  )
+							{
+
+								/* print annual output */
+								EOY_print_output_cell_level( &matrix->cells[cell], year, years_of_simulation );
+								EOY_print_output_soil_cell_level( &matrix->cells[cell], year, years_of_simulation );
+
+								reset_annual_class_variables ( &matrix->cells[cell] );
+								reset_annual_layer_variables ( &matrix->cells[cell] );
+								reset_annual_cell_variables  ( &matrix->cells[cell] );
+
+								logger(g_debug_log, "******************* END OF YEAR (%d) *******************\n\n\n\n\n\n", matrix->cells[cell].years[year].year );
+							}
+						}
 					}
 				}
 			}
@@ -1985,12 +2020,27 @@ int main(int argc, char *argv[]) {
 	for ( cell = 0; cell < matrix->cells_count; ++cell )
 	{
 		if ( ! matrix->cells_count ) break;
+	#if 1
+	{
+		int i;
+		if ( g_year_start_index != -1 ) {
+			matrix->cells[cell].years -= g_year_start_index;
+		}
 
+		for ( i = 0; i < matrix->cells[cell].years_count; ++i ) {
+			if ( matrix->cells[cell].years[i].m ) {
+				 free(matrix->cells[cell].years[i].m);
+			}
+		}
+		free (matrix->cells[cell].years);
+	}
+	#else
 		if ( g_year_start_index != -1 ) {
 			free(matrix->cells[cell].years-g_year_start_index);
 		} else {
 			free(matrix->cells[cell].years);
 		}
+	#endif
 		matrix->cells[cell].years = NULL; /* required */
 	}
 

@@ -10,6 +10,6 @@
 
 #include "matrix.h"
 
-int Cell_model_daily (matrix_t *const m, const int cell, const int day, const int month, const int year);
+int Cell_model(matrix_t *const m, const int cell, const int day, const int month, const int year);
 
 #endif /* HEADERS_CELL_MODEL_H_ */

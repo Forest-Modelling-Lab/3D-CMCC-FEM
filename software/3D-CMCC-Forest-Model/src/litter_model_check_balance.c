@@ -145,7 +145,7 @@ int check_litter_carbon_mass_balance(cell_t *const c)
 		error_log("carbon out         = %f gC/m2/day\n", c->litr_carbon_out);
 		error_log("delta carbon store = %f gC/m2/day\n", c->litr_carbon_store - c->litr_carbon_old_store);
 		error_log("carbon_balance     = %f gC/m2/day\n",c->litr_carbon_balance);
-		error_log("...FATAL ERROR in 'Litter_model_daily' carbon mass balance (gC/m2/day) (exit)\n");
+		error_log("...FATAL ERROR in 'Litter_model' carbon mass balance (gC/m2/day) (exit)\n");
 		CHECK_CONDITION(fabs( c->litr_carbon_balance ), > , eps);
 
 		return 0;
@@ -153,7 +153,7 @@ int check_litter_carbon_mass_balance(cell_t *const c)
 	else
 	{
 		c->litr_carbon_old_store = c->litr_carbon_store;
-		logger(g_debug_log, "...ok in 'Litter_model_daily' carbon mass balance (gC/m2/day)\n");
+		logger(g_debug_log, "...ok in 'Litter_model' carbon mass balance (gC/m2/day)\n");
 	}
 	/* ok */
 	return 1;
@@ -291,7 +291,7 @@ int check_litter_nitrogen_mass_balance(cell_t *const c)
 		error_log("nitrogen out         = %f gC/m2/day\n", c->litr_nitrogen_out);
 		error_log("delta nitrogen store = %f gC/m2/day\n", c->litr_nitrogen_store - c->litr_nitrogen_old_store);
 		error_log("nitrogen             = %f gC/m2/day\n",c->litr_nitrogen_balance);
-		error_log("...FATAL ERROR in 'Litter_model_daily' nitrogen mass balance (gC/m2/day) (exit)\n");
+		error_log("...FATAL ERROR in 'Litter_model' nitrogen mass balance (gC/m2/day) (exit)\n");
 		CHECK_CONDITION(fabs( c->litr_nitrogen_balance ), > , eps);
 
 		return 0;
@@ -299,7 +299,7 @@ int check_litter_nitrogen_mass_balance(cell_t *const c)
 	else
 	{
 		c->litr_nitrogen_old_store = c->litr_nitrogen_store;
-		logger(g_debug_log, "...ok in 'Litter_model_daily' nitrogen mass balance (gC/m2/day)\n");
+		logger(g_debug_log, "...ok in 'Litter_model' nitrogen mass balance (gC/m2/day)\n");
 	}
 	/* ok */
 	return 1;

@@ -315,6 +315,7 @@ static int settings_replanted_import(const char* const filename, settings_t* s)
 
 		if ( ! current )
 		{
+			fclose(f);
 			return 0;
 		}
 
@@ -530,7 +531,7 @@ settings_t* settings_import(const char *const filename) {
 		if ( ! token ) {
 			int flag;
 
-			printf("no value specified for %s", token);
+			printf("no value specified for %s", sz_settings[index]);
 			/* check if is an optional parameter */
 			flag = 0;
 			for ( i = 0; i < SIZE_OF_ARRAY(optional); ++i ) {
@@ -563,12 +564,29 @@ settings_t* settings_import(const char *const filename) {
 			break;
 
 			case SETTINGS_TIME:
-				s->time = *token;
-				if ( s->time != 'd' ) {
-					puts("uncorrect time step choiced!");
-					settings_free(s);
-					fclose(f);
-					return 0;
+				switch ( *token )
+				{
+					//case 'm':
+					//	s->time = MONTHLY;
+					//break;
+
+					case 'd':
+						s->time = DAILY;
+					break;
+
+					//case 'h':
+					//	s->time = HOURLY;
+					//break;
+
+					//case 's':
+					//	s->time = HALFHOURLY;
+					//break;
+
+					default:
+						puts("uncorrect time step choiced!");
+						settings_free(s);
+						fclose(f);
+						return 0;
 				}
 			break;
 
@@ -803,7 +821,7 @@ settings_t* settings_import(const char *const filename) {
 			}
 			else
 			{
-				printf(" optional.\n", sz_settings[i]);
+				printf("%s optional.\n", sz_settings[i]);
 			}
 		}
 	}

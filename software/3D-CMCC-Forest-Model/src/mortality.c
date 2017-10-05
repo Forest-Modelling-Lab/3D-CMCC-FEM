@@ -186,6 +186,7 @@ void self_thinning_mortality (cell_t *const c, const int layer, const int year)
 	logger(g_debug_log, "-Dead tree(s)     = %d trees\n", deadtree);
 
 	/* reset dead tree */
+	// alessior to alessioc ??? deadtree is local
 	deadtree = 0;
 
 }

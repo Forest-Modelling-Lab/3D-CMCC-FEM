@@ -159,7 +159,6 @@ void reset_monthly_cell_variables(cell_t *const c)
 	c->monthly_growth_resp =            0.;
 	c->monthly_r_eco =                  0.;
 	c->monthly_het_resp =               0.;
-	c->monthly_gpp =                    0.;
 	c->monthly_C_flux =                 0.;
 	c->monthly_nee =                    0.;
 	c->monthly_tot_w_flux =             0.;
@@ -203,7 +202,6 @@ void reset_annual_cell_variables(cell_t *const c)
 	c->annual_canopy_transp =           0.;
 	c->annual_canopy_evapo =            0.;
 	c->annual_canopy_et =               0.;
-	c->annual_soil_evapo =              0.;
 	c->annual_et =                      0.;
 	c->annual_lh_flux =                 0.;
 	c->annual_sh_flux =                 0.;

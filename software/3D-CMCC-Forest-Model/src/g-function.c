@@ -1,6 +1,7 @@
 /* g-function.c */
 #include <stdio.h>
 #include <math.h>
+#include <assert.h>
 #include "common.h"
 #include "soil_settings.h"
 #include "constants.h"
@@ -9,6 +10,7 @@
 #include "logger.h"
 #include "matrix.h"
 
+extern settings_t* g_settings;
 extern logger_t* g_debug_log;
 extern soil_settings_t *g_soil_settings;
 
@@ -221,10 +223,12 @@ void Veg_Days(cell_t *const c, const int day, const int month, const int year)
 	int age;
 	int species;
 
-	meteo_t *met;
+	meteo_d_t *met;
 	species_t *s;
 
-	met = c->years[year].m;
+	assert(DAILY == g_settings->time);
+
+	met = METEO_DAILY(c->years[year].m);
 
 	/* compute annual number of vegetative days */
 

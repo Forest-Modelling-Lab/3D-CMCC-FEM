@@ -15,41 +15,10 @@
 #define WEIGHTED_DAYS	10
 #define AVERAGED_DAYS	10
 
+extern settings_t* g_settings;
 extern soil_settings_t *g_soil_settings;
 extern topo_t *g_topo;
 extern logger_t* g_debug_log;
-
-void Sat_vapour_pressure(cell_t *const c, const int day, const int month, const int year)
-{
-	double e0max;                                    /* saturation vapour pressure at the maximum air temperature (KPa) */
-	double e0min;                                    /* saturation vapour pressure at the minimum air temperature (KPa) */
-	const double A = 17.27;
-	const double Tstroke = 36;
-	double TmaxK;
-	double TminK;
-
-	meteo_t *met;
-	met = (meteo_t*) c->years[year].m;
-
-	TmaxK = met[month].d[day].tmax + TempAbs;
-	TminK = met[month].d[day].tmin + TempAbs;
-
-	/* following Allen et al., 1998 */
-	/* compute saturation vapour pressure at the maximum and minimum air temperature (KPa) */
-	e0max = ESTAR * exp((A*met[month].d[day].tmax)/(TmaxK - Tstroke));
-	e0min = ESTAR * exp((A*met[month].d[day].tmin)/(TminK - Tstroke));
-
-	/* compute weighted mean saturation vapour pressure at the air temperature (KPa)*/
-	met[month].d[day].es = ((e0max*met[month].d[day].ni) + (e0min*(1.0-met[month].d[day].ni)));
-
-	/* compute actual vapour pressure derived from relative humidity data (KPa) */
-	met[month].d[day].ea = (met[month].d[day].rh_f/100.)*met[month].d[day].es;
-
-	if (met[month].d[day].ea < 0.)
-	{
-		met[month].d[day].ea = 0.;
-	}
-}
 
 static double get_daily_potential_radiation(const double latitude, const double longitude, const int d_, const double t_) {
 	double localstandardtime;
@@ -103,7 +72,41 @@ static double compute_potential_rad(const double lat, const double lon, const in
 #undef ROWS_PER_DAY
 }
 
-void compute_atm_lw_downward_W(cell_t *const c, const int day, const int month, const int year) {
+void Daily_Sat_vapour_pressure(cell_t *const c, const int day, const int month, const int year)
+{
+	double e0max;                                    /* saturation vapour pressure at the maximum air temperature (KPa) */
+	double e0min;                                    /* saturation vapour pressure at the minimum air temperature (KPa) */
+	const double A = 17.27;
+	const double Tstroke = 36;
+	double TmaxK;
+	double TminK;
+	meteo_d_t* met;
+
+	assert(DAILY == g_settings->time);
+		
+	met = METEO_DAILY(c->years[year].m);
+
+	TmaxK = met[month].d[day].tmax + TempAbs;
+	TminK = met[month].d[day].tmin + TempAbs;
+
+	/* following Allen et al., 1998 */
+	/* compute saturation vapour pressure at the maximum and minimum air temperature (KPa) */
+	e0max = ESTAR * exp((A*met[month].d[day].tmax)/(TmaxK - Tstroke));
+	e0min = ESTAR * exp((A*met[month].d[day].tmin)/(TminK - Tstroke));
+
+	/* compute weighted mean saturation vapour pressure at the air temperature (KPa)*/
+	met[month].d[day].es = ((e0max*met[month].d[day].ni) + (e0min*(1.0-met[month].d[day].ni)));
+
+	/* compute actual vapour pressure derived from relative humidity data (KPa) */
+	met[month].d[day].ea = (met[month].d[day].rh_f/100.)*met[month].d[day].es;
+
+	if (met[month].d[day].ea < 0.)
+	{
+		met[month].d[day].ea = 0.;
+	}
+}
+
+static void compute_atm_lw_downward_W(cell_t *const c, const int day, const int month, const int year) {
 
 	/*calculates longwave radiation from Vapour Pressure and Air Temp. and Radiation
 	-------------------------------------------------------------------------------
@@ -153,73 +156,86 @@ void compute_atm_lw_downward_W(cell_t *const c, const int day, const int month, 
 	double esat;                        /* saturation vapour pressure at the air temperature (KPa)*/
 	double TairK;
 
-	meteo_t *met;
-	met = (meteo_t*) c->years[year].m;
-
-	sw_in = met[month].d[day].sw_downward_W;
-	ta = met[month].d[day].tavg;
-	vpd = met[month].d[day].vpd;
-	sw_pot_in = met[month].d[day].sw_pot_downward_W;
-	esat = met[month].d[day].es;
-	TairK = ta + TempAbs;
-
-
-	fpar = 0.;
-	if ( ! (0. == sw_pot_in) && ! IS_INVALID_VALUE(sw_in) )
+	if ( DAILY == g_settings->time )
 	{
-		fpar = sw_in / sw_pot_in;
-		if ( fpar < 0. )
+		meteo_d_t *met;
+		met = METEO_DAILY(c->years[year].m);
+
+		sw_in = met[month].d[day].sw_downward_W;
+		ta = met[month].d[day].tavg;
+		vpd = met[month].d[day].vpd;
+		sw_pot_in = met[month].d[day].sw_pot_downward_W;
+		esat = met[month].d[day].es;
+		TairK = ta + TempAbs;
+
+
+		fpar = 0.;
+		if ( ! (0. == sw_pot_in) && ! IS_INVALID_VALUE(sw_in) )
 		{
-			fpar = 0.;
+			fpar = sw_in / sw_pot_in;
+			if ( fpar < 0. )
+			{
+				fpar = 0.;
+			}
+		}
+
+		/* Cloud cover and cloud correction factor Eq. (3) */
+		met[month].d[day].cloud_cover_frac = 1. - (fpar - 0.5) / 0.4;
+		if ( met[month].d[day].cloud_cover_frac > 1. )
+		{
+			met[month].d[day].cloud_cover_frac = 1.;
+		}
+		if ( met[month].d[day].cloud_cover_frac < 0. )
+		{
+			met[month].d[day].cloud_cover_frac = 0.;
+		}
+		met[month].d[day].cloud_cover_frac_corr = 1. + 0.22 * pow( met[month].d[day].cloud_cover_frac, 2. );
+
+		/* Saturation and actual Vapour pressure [3], and associated emissivity Eq. [2] */
+		/* convert esat kPa --> Pa */
+		esat *= 1000.0;
+
+		/* convert vpd hPa --> Pa */
+		vpd *= 100.0;
+
+		//fixme it is .ea
+		vp = esat - vpd;
+		if ( vp < 0.0 )
+		{
+			vp = 3.3546e-004;
+		}
+		met[month].d[day].emis_atm_clear_sky = 0.64 * pow( vp / TairK, 0.14285714 );
+
+		/* compute atmopsheric emissivity based on cloud cover corrected */
+		met[month].d[day].emis_atm = met[month].d[day].cloud_cover_frac_corr * met[month].d[day].emis_atm_clear_sky;
+
+		/* Atmospheric Longwave radiation flux downward Eq. [1] */
+		met[month].d[day].atm_lw_downward_W = met[month].d[day].emis_atm * SBC_W * pow(TairK, 4);
+		if ( (met[month].d[day].atm_lw_downward_W < 10.) || (met[month].d[day].atm_lw_downward_W > 1000.) )
+		{
+			met[month].d[day].atm_lw_downward_W = INVALID_VALUE;
 		}
 	}
-
-	/* Cloud cover and cloud correction factor Eq. (3) */
-	met[month].d[day].cloud_cover_frac = 1. - (fpar - 0.5) / 0.4;
-	if ( met[month].d[day].cloud_cover_frac > 1. )
+	else if ( HOURLY == g_settings->time )
 	{
-		met[month].d[day].cloud_cover_frac = 1.;
+		// TODO
 	}
-	if ( met[month].d[day].cloud_cover_frac < 0. )
+	else if ( HALFHOURLY == g_settings->time )
 	{
-		met[month].d[day].cloud_cover_frac = 0.;
-	}
-	met[month].d[day].cloud_cover_frac_corr = 1. + 0.22 * pow( met[month].d[day].cloud_cover_frac, 2. );
-
-	/* Saturation and actual Vapour pressure [3], and associated emissivity Eq. [2] */
-	/* convert esat kPa --> Pa */
-	esat *= 1000.0;
-
-	/* convert vpd hPa --> Pa */
-	vpd *= 100.0;
-
-	//fixme it is .ea
-	vp = esat - vpd;
-	if ( vp < 0.0 )
-	{
-		vp = 3.3546e-004;
-	}
-	met[month].d[day].emis_atm_clear_sky = 0.64 * pow( vp / TairK, 0.14285714 );
-
-	/* compute atmopsheric emissivity based on cloud cover corrected */
-	met[month].d[day].emis_atm = met[month].d[day].cloud_cover_frac_corr * met[month].d[day].emis_atm_clear_sky;
-
-	/* Atmospheric Longwave radiation flux downward Eq. [1] */
-	met[month].d[day].atm_lw_downward_W = met[month].d[day].emis_atm * SBC_W * pow(TairK, 4);
-	if ( (met[month].d[day].atm_lw_downward_W < 10.) || (met[month].d[day].atm_lw_downward_W > 1000.) )
-	{
-		met[month].d[day].atm_lw_downward_W = INVALID_VALUE;
+		// TODO
 	}
 }
 
-void Radiation (cell_t *const c, const int day, const int month, const int year)
+void Daily_Radiation(cell_t *const c, const int day, const int month, const int year)
 {
 	double a = 107.;                                           /* (W/m)  empirical constants for long wave radiation computation */
 	double b = 0.2;                                            /* (unit less) empirical constants for long wave radiation computation */
 	double TmaxK, TminK;
+	meteo_d_t *met;
 
-	meteo_t *met;
-	met = (meteo_t*) c->years[year].m;
+	assert(DAILY == g_settings->time);
+			
+	met = METEO_DAILY(c->years[year].m);
 
 	TmaxK = met[month].d[day].tmax + TempAbs;
 	TminK = met[month].d[day].tmin + TempAbs;
@@ -295,14 +311,15 @@ void Radiation (cell_t *const c, const int day, const int month, const int year)
 	met[month].d[day].Net_rad_threePG = QA + QB * ( met[month].d[day].solar_rad * pow ( 10., 6 ) / ( met[month].d[day].daylength * 3600. ) );
 	//printf("Net radiation using Qa and Qb = %g W/m2\n", met[month].d[day].Net_rad_threePG);
 	/***************************************************************************************************************************************/
-
-
 }
 
-void Check_prcp(cell_t *c, const int day, const int month, const int year)
+void Daily_Check_prcp(cell_t *c, const int day, const int month, const int year)
 {
-	meteo_t *met;
-	met = c->years[year].m;
+	meteo_d_t *met;
+
+	assert(DAILY == g_settings->time);
+
+	met = METEO_DAILY(c->years[year].m);
 	if(met[month].d[day].prcp > 0.)
 	{
 		if (met[month].d[day].tavg > 0.)
@@ -328,9 +345,8 @@ void Check_prcp(cell_t *c, const int day, const int month, const int year)
 	//if(c->snow_pack != 0) met[month].d[day].tsoil = 0.0;
 }
 
-void Day_Length(cell_t *c, const int day, const int month, const int year)
+void Daily_Day_Length(cell_t *c, const int day, const int month, const int year)
 {
-
 	double ampl;  //seasonal variation in Day Length from 12 h
 	static int doy;
 	//double adjust_latitude;
@@ -338,8 +354,11 @@ void Day_Length(cell_t *c, const int day, const int month, const int year)
 	/* BIOME-BGC version */
 	/* Running-Coughlan 1988, Ecological Modelling */
 
-	meteo_t *met;
-	met = c->years[year].m;
+	meteo_d_t *met;
+
+	assert(DAILY == g_settings->time);
+
+	met = METEO_DAILY(c->years[year].m);
 
 	/* compute doy for GeDdayLength function */
 	if (!day && month == JANUARY)
@@ -366,8 +385,10 @@ void Day_Length(cell_t *c, const int day, const int month, const int year)
 }
 
 /* following Running et al., 1987 */
-void Daily_avg_temperature(meteo_t *met, const int day, const int month)
+void Daily_avg_temperature(meteo_d_t *met, const int day, const int month)
 {
+	assert(DAILY == g_settings->time);
+
 	if ( NO_DATA == met[month].d[day].tavg )
 	{
 		if ( (NO_DATA == met[month].d[day].tmax) && (NO_DATA == met[month].d[day].tmin) )
@@ -379,16 +400,20 @@ void Daily_avg_temperature(meteo_t *met, const int day, const int month)
 	}
 }
 
-void Psychrometric(meteo_t *met, const int day, const int month)
+void Daily_Psychrometric(meteo_d_t *met, const int day, const int month)
 {
+	assert(DAILY == g_settings->time);
+
 	/* compute psychrometric (KPa/°C) constant as in Allen et al., 1998 */
 	met[month].d[day].psych = ( ( CP / 1e6 ) * ( met[month].d[day].air_pressure / 1e3 ) ) / ( MWratio * ( met[month].d[day].lh_vap / 1e6 ) );
 }
 
-void Daylight_avg_temperature(meteo_t *const met, const int day, const int month)
+void Daylight_avg_temperature(meteo_d_t *const met, const int day, const int month)
 {
 	/* BIOME-BGC version */
 	/* Running-Coughlan 1988, Ecological Modelling */
+
+	assert(DAILY == g_settings->time);
 
 	if ( met[month].d[day].tmax != NO_DATA && met[month].d[day].tmin != NO_DATA )
 	{
@@ -401,10 +426,12 @@ void Daylight_avg_temperature(meteo_t *const met, const int day, const int month
 	}
 }
 
-void Nightime_avg_temperature(meteo_t *const met, const int day, const int month)
+void Daily_Nightime_avg_temperature(meteo_d_t *const met, const int day, const int month)
 {
 	/* BIOME-BGC version */
 	/* Running-Coughlan 1988, Ecological Modelling */
+
+	assert(DAILY == g_settings->time);
 
 	if (met[month].d[day].tday != NO_DATA )
 	{
@@ -417,9 +444,11 @@ void Nightime_avg_temperature(meteo_t *const met, const int day, const int month
 	}
 }
 
-void Thermic_sum (meteo_t *met, const int day, const int month, const int year)
+void Daily_Thermic_sum (meteo_d_t *met, const int day, const int month, const int year)
 {
 	static double previous_thermic_sum;
+
+	assert(DAILY == g_settings->time);
 
 	if (!day && !month)
 	{
@@ -454,9 +483,11 @@ void Thermic_sum (meteo_t *met, const int day, const int month, const int year)
 	}
 }
 
-void Air_pressure(meteo_t *met, const int day, const int month)
+void Daily_Air_pressure(meteo_d_t *met, const int day, const int month)
 {
 	double t1, t2;
+
+	assert(DAILY == g_settings->time);
 
 	/* compute air pressure */
 	/* BIOME-BGC version */
@@ -474,7 +505,9 @@ void Air_pressure(meteo_t *met, const int day, const int month)
 }
 
 
-void Air_density (meteo_t *met, const int day, const int month) {
+void Daily_Air_density (meteo_d_t *met, const int day, const int month) {
+
+	assert(DAILY == g_settings->time);
 
 	/* compute density of air (in kg/m3) */
 	/* following Solantie R., 2004, Boreal Environmental Research, 9: 319-333, the model uses tday if available */
@@ -489,10 +522,12 @@ void Air_density (meteo_t *met, const int day, const int month) {
 	}
 }
 
-void Latent_heat(meteo_t *met, const int day, const int month)
+void Daily_Latent_heat(meteo_d_t *met, const int day, const int month)
 {
 	/*BIOME-BGC APPROACH*/
 	/*compute latent heat of vaporization (J/Kg)*/
+
+	assert(DAILY == g_settings->time);
 
 	met[month].d[day].lh_vap      = 2.5023e6 - 2430.54 * met[month].d[day].tavg;
 	met[month].d[day].lh_vap_soil = 2.5023e6 - 2430.54 * met[month].d[day].tsoil;
@@ -501,7 +536,7 @@ void Latent_heat(meteo_t *met, const int day, const int month)
 	/*latent heat of sublimation (KJ/Kg)*/
 	met[month].d[day].lh_sub      = 2845.;
 }
-void Soil_temperature(const cell_t *const c, int day, int month, int year)
+void Daily_Soil_temperature(const cell_t *const c, int day, int month, int year)
 {
 	int i;
 	int day_avg = WEIGHTED_DAYS;
@@ -510,6 +545,8 @@ void Soil_temperature(const cell_t *const c, int day, int month, int year)
 	int current_year_index = year;
 	double weighted_avg;
 	extern int days_per_month[];
+
+	assert(DAILY == g_settings->time);
 
 	/* following BIOME-bgc 4.2 */
 	/* for this version, an 10-day running weighted average of daily
@@ -541,7 +578,7 @@ void Soil_temperature(const cell_t *const c, int day, int month, int year)
 	do
 	{
 		i += day_avg;
-		weighted_avg += ( c->years[year].m[month].d[day].tavg * day_avg );
+		weighted_avg += ( METEO_DAILY(c->years[year].m)[month].d[day].tavg * day_avg );
 
 		if ( --day < 0 )
 		{
@@ -562,10 +599,10 @@ void Soil_temperature(const cell_t *const c, int day, int month, int year)
 		}
 		--day_avg;
 	} while ( day_avg > 0 );
-	c->years[current_year_index].m[current_month].d[current_day].tsoil = weighted_avg / i;
+	METEO_DAILY(c->years[current_year_index].m)[current_month].d[current_day].tsoil = weighted_avg / i;
 }
 
-void Weighted_average_temperature(const cell_t *const c, const e_weighted_average_var var, int day, int month, int year)
+void Daily_Weighted_average_temperature(const cell_t *const c, const e_weighted_average_var var, int day, int month, int year)
 {
 	int i;
 	int day_avg = WEIGHTED_DAYS;
@@ -575,6 +612,7 @@ void Weighted_average_temperature(const cell_t *const c, const e_weighted_averag
 	double weighted_avg;
 	extern int days_per_month[];
 
+	assert(DAILY == g_settings->time);
 	assert(((var >= 0) && (var < WEIGHTED_MEAN_COUNT)) && c);
 
 	i = 0;
@@ -587,19 +625,19 @@ void Weighted_average_temperature(const cell_t *const c, const e_weighted_averag
 
 		switch ( var ) {
 		case WEIGHTED_MEAN_TAVG:
-			v = c->years[year].m[month].d[day].tavg;
+			v = METEO_DAILY(c->years[year].m)[month].d[day].tavg;
 			break;
 
 		case WEIGHTED_MEAN_TDAY:
-			v = c->years[year].m[month].d[day].tday;
+			v = METEO_DAILY(c->years[year].m)[month].d[day].tday;
 			break;
 
 		case WEIGHTED_MEAN_TNIGHT:
-			v = c->years[year].m[month].d[day].tnight;
+			v = METEO_DAILY(c->years[year].m)[month].d[day].tnight;
 			break;
 
 		case WEIGHTED_MEAN_TSOIL:
-			v = c->years[year].m[month].d[day].tsoil;
+			v = METEO_DAILY(c->years[year].m)[month].d[day].tsoil;
 			break;
 		}
 
@@ -624,24 +662,24 @@ void Weighted_average_temperature(const cell_t *const c, const e_weighted_averag
 
 	switch ( var ) {
 	case WEIGHTED_MEAN_TAVG:
-		c->years[current_year_index].m[current_month].d[current_day].ten_day_weighted_avg_tavg = weighted_avg / i;
+		METEO_DAILY(c->years[current_year_index].m)[current_month].d[current_day].ten_day_weighted_avg_tavg = weighted_avg / i;
 		break;
 
 	case WEIGHTED_MEAN_TDAY:
-		c->years[current_year_index].m[current_month].d[current_day].ten_day_weighted_avg_tday = weighted_avg / i;
+		METEO_DAILY(c->years[current_year_index].m)[current_month].d[current_day].ten_day_weighted_avg_tday = weighted_avg / i;
 		break;
 
 	case WEIGHTED_MEAN_TNIGHT:
-		c->years[current_year_index].m[current_month].d[current_day].ten_day_weighted_avg_tnight = weighted_avg / i;
+		METEO_DAILY(c->years[current_year_index].m)[current_month].d[current_day].ten_day_weighted_avg_tnight = weighted_avg / i;
 		break;
 
 	case WEIGHTED_MEAN_TSOIL:
-		c->years[current_year_index].m[current_month].d[current_day].ten_day_weighted_avg_tsoil = weighted_avg / i;
+		METEO_DAILY(c->years[current_year_index].m)[current_month].d[current_day].ten_day_weighted_avg_tsoil = weighted_avg / i;
 		break;
 	}
 }
 
-void Averaged_temperature(const cell_t *const c, const e_averaged_var var, int day, int month, int year)
+void Daily_Averaged_temperature(const cell_t *const c, const e_averaged_var var, int day, int month, int year)
 {
 	int i;
 	int day_avg = AVERAGED_DAYS;
@@ -651,6 +689,7 @@ void Averaged_temperature(const cell_t *const c, const e_averaged_var var, int d
 	double averaged;
 	extern int days_per_month[];
 
+	assert(DAILY == g_settings->time);
 	assert(((var >= 0) && (var < AVERAGED_COUNT)) && c);
 
 	i = 0;
@@ -664,19 +703,19 @@ void Averaged_temperature(const cell_t *const c, const e_averaged_var var, int d
 
 		switch ( var ) {
 		case AVERAGED_TAVG:
-			v = c->years[year].m[month].d[day].tavg;
+			v = METEO_DAILY(c->years[year].m)[month].d[day].tavg;
 			break;
 
 		case AVERAGED_TDAY:
-			v = c->years[year].m[month].d[day].tday;
+			v = METEO_DAILY(c->years[year].m)[month].d[day].tday;
 			break;
 
 		case AVERAGED_TNIGHT:
-			v = c->years[year].m[month].d[day].tnight;
+			v = METEO_DAILY(c->years[year].m)[month].d[day].tnight;
 			break;
 
 		case AVERAGED_TSOIL:
-			v = c->years[year].m[month].d[day].tsoil;
+			v = METEO_DAILY(c->years[year].m)[month].d[day].tsoil;
 			break;
 		}
 
@@ -701,25 +740,27 @@ void Averaged_temperature(const cell_t *const c, const e_averaged_var var, int d
 
 	switch ( var ) {
 	case AVERAGED_TAVG:
-		c->years[current_year_index].m[current_month].d[current_day].ten_day_avg_tavg = averaged / i;
+		METEO_DAILY(c->years[current_year_index].m)[current_month].d[current_day].ten_day_avg_tavg = averaged / i;
 		break;
 
 	case AVERAGED_TDAY:
-		c->years[current_year_index].m[current_month].d[current_day].ten_day_avg_tday = averaged / i;
+		METEO_DAILY(c->years[current_year_index].m)[current_month].d[current_day].ten_day_avg_tday = averaged / i;
 		break;
 
 	case AVERAGED_TNIGHT:
-		c->years[current_year_index].m[current_month].d[current_day].ten_day_avg_tnight = averaged / i;
+		METEO_DAILY(c->years[current_year_index].m)[current_month].d[current_day].ten_day_avg_tnight = averaged / i;
 		break;
 
 	case AVERAGED_TSOIL:
-		c->years[current_year_index].m[current_month].d[current_day].ten_day_avg_tsoil = averaged / i;
+		METEO_DAILY(c->years[current_year_index].m)[current_month].d[current_day].ten_day_avg_tsoil = averaged / i;
 		break;
 	}
 }
 
-void Dew_temperature (meteo_t *const met, const int day, const int month)
+void Daily_Dew_temperature (meteo_d_t *const met, const int day, const int month)
 {
+	assert(DAILY == g_settings->time);
+
 	/* dew point temperature based on Allen et al., 1998; Bosen, 1958; Murray, 1967 */
 	met[month].d[day].tdew = (116.91 + 237.3 * log(met[month].d[day].ea))/(16.78 - log(met[month].d[day].ea));
 }
@@ -728,11 +769,12 @@ void Daily_Ndeposition (const cell_t *const c, int day, int month, int year)
 {
 	int doy;
 
+	assert(DAILY == g_settings->time);
+
 	if ( IS_LEAP_YEAR(c->years[year].year)) doy = 366;
 	else doy = 365;
 
-	c->years[year].m[month].d[day].Ndeposition = c->years[year].Ndep / doy;
-
+	METEO_DAILY(c->years[year].m)[month].d[day].Ndeposition = c->years[year].Ndep / doy;
 }
 
 

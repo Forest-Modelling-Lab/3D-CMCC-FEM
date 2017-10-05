@@ -1957,8 +1957,10 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 			c->soilC,
 			c->litrN,
 			c->soilN,
-			c->years[year].m[month].d[day].tsoil,
-			c->years[year].m[month].d[day].daylength
+			METEO_DAILY(c->years[year].m)[month].d[day].tsoil,
+			METEO_DAILY(c->years[year].m)[month].d[day].daylength
+			//c->years[year].m[month].d[day].tsoil,
+			//c->years[year].m[month].d[day].daylength
 	);
 	/************************************************************************/
 

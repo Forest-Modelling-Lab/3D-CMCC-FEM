@@ -20,9 +20,9 @@ void print_daily_met_data(cell_t *c, const int day, const int month, const int y
 {
 	static int doy;
 
-	meteo_t *met;
+	meteo_d_t *met;
 	meteo_annual_t *meteo_annual;
-	met = c->years[year].m;
+	met = METEO_DAILY(c->years[year].m);
 	meteo_annual = &c->years[year];
 
 	if (!day && !month)

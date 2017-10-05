@@ -5,6 +5,9 @@
 enum { CO2_TRANS_OFF, CO2_TRANS_ON, CO2_TRANS_VAR };
 enum { MANAGEMENT_OFF, MANAGEMENT_ON, MANAGEMENT_VAR, MANAGEMENT_VAR1 };
 enum { THINNING_REGIME_ABOVE, THINNING_REGIME_BELOW };
+enum { MONTHLY, DAILY, HOURLY, HALFHOURLY };
+
+#define METEO_TIME "MDHS"
 
 #define SETTINGS_SITENAME_MAX_SIZE					(255+1)
 #define SETTINGS_REPLANTED_SPECIES_MAX_SIZE			(32+1)
@@ -26,7 +29,7 @@ typedef struct {
 	char sitename[SETTINGS_SITENAME_MAX_SIZE];
 	char version;                        /* fixme to remove */
 	char spatial;	                     /* spatial or unspatial must be 's' or 'u' (not longer used) fixme to remove */
-	char time;		                     /* time scale simulation must be 'm' or 'd' (monthly or daily) */
+	char time;		                     /* time scale simulation must be 'm', 'd', 'h' or 's' (monthly, daily, hourly, halfhourly) */
 	char screen_output;                  /* screen output must be 'on' or 'off' */
 	char debug_output;                   /* debug output must be 'on' or 'off' */
 	char daily_output;                   /* daily output must be 'on' or 'off' */

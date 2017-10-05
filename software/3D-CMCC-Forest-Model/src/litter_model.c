@@ -17,19 +17,38 @@
 #include "settings.h"
 #include "decomposition.h"
 #include "check_balance.h"
+#include "meteo.h"
 
-int Litter_model_daily (matrix_t *const m, const int cell, const int day, const int month, const int year)
+extern settings_t* g_settings;
+
+int Litter_model(matrix_t *const m, const int cell, const int half_hour, const int hour, const int day, const int month, const int year)
 {
 	/* shortcuts */
 	cell_t *c;
 	meteo_daily_t *meteo_daily;
-
+	
+	assert(m);
+	
+	meteo_daily = NULL;
+	
 	/* assign shortcuts */
 	c = &m->cells[cell];
-	meteo_daily = &m->cells[cell].years[year].m[month].d[day];
+	if ( DAILY == g_settings->time )
+	{
+		meteo_daily = &METEO_DAILY(c->years[year].m)[month].d[day];
+		//meteo_daily = &m->cells[cell].years[year].m[month].d[day];
+	}
+	else if ( HOURLY == g_settings->time )
+	{
+		// TODO;
+	}
+	else if ( HALFHOURLY == g_settings->time )
+	{
+		// TODO
+	}
 
 	/* check parameters */
-	assert(m);
+	assert(m && meteo_daily);
 
 	/* decomposition */
 	decomposition ( c, meteo_daily );

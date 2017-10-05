@@ -10,7 +10,7 @@
 
 #include "matrix.h"
 
-int Soil_model_daily (matrix_t *const m, const int cell, const int day, const int month, const int year);
+int Soil_model(matrix_t *const m, const int cell, const int day, const int month, const int year);
 
 
 #endif /* HEADERS_SOIL_MODEL_H_ */

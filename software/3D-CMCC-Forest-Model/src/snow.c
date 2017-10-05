@@ -30,7 +30,7 @@ void snow_melt_subl(cell_t *const c, meteo_daily_t *meteo_daily)
 
 	logger(g_debug_log, "**SNOW POOL**\n");
 
-	t_melt = r_melt = r_sub = 0;
+	r_melt = r_sub = 0;
 	t_melt = t_coeff * meteo_daily->tavg;
 
 	/* canopy transmitted radiation: convert from W/m2 --> KJ/m2/d */

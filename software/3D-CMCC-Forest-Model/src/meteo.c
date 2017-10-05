@@ -33,6 +33,8 @@ enum {
 	YEAR = 0
 	, MONTH
 	, DAY
+	, HOUR
+	, HALFHOUR
 	, RG_F
 	, TA_F
 	, TMAX
@@ -73,6 +75,8 @@ static const char *sz_met_columns[MET_COLUMNS_COUNT+2] = {
 		"Year"
 		, "Month"
 		, "n_days"
+		, "hour"
+		, "halfhour"
 		, "Rg_f"
 		, "Ta_f"
 		, "Tmax"
@@ -180,57 +184,67 @@ static void yos_clear(meteo_annual_t *const meteo_annual) {
 		meteo_annual->co2Conc = INVALID_VALUE;
 		for ( i = 0; i < METEO_MONTHS_COUNT; ++i ) {
 			for ( y = 0; y < METEO_DAYS_COUNT; ++y ) {
-				meteo_annual->m[i].d[y].n_days = INVALID_VALUE;
-				meteo_annual->m[i].d[y].solar_rad = INVALID_VALUE;
-				meteo_annual->m[i].d[y].tavg = INVALID_VALUE;
-				meteo_annual->m[i].d[y].tmax = INVALID_VALUE;
-				meteo_annual->m[i].d[y].tmin = INVALID_VALUE;
-				meteo_annual->m[i].d[y].tday = INVALID_VALUE;
-				meteo_annual->m[i].d[y].tnight = INVALID_VALUE;
-				meteo_annual->m[i].d[y].vpd = INVALID_VALUE;
-				meteo_annual->m[i].d[y].ts_f = INVALID_VALUE;
-				meteo_annual->m[i].d[y].prcp = INVALID_VALUE;
-				meteo_annual->m[i].d[y].swc = INVALID_VALUE;
-				meteo_annual->m[i].d[y].ndvi_lai = INVALID_VALUE;
-				meteo_annual->m[i].d[y].daylength = INVALID_VALUE;
-				meteo_annual->m[i].d[y].thermic_sum = INVALID_VALUE;
-				meteo_annual->m[i].d[y].rho_air = INVALID_VALUE;
-				meteo_annual->m[i].d[y].tsoil = INVALID_VALUE;
-				meteo_annual->m[i].d[y].et = INVALID_VALUE;
-				meteo_annual->m[i].d[y].windspeed = INVALID_VALUE;
-				meteo_annual->m[i].d[y].rh_f = INVALID_VALUE;
-				meteo_annual->m[i].d[y].lh_vap = INVALID_VALUE;
-				meteo_annual->m[i].d[y].lh_vap_soil = INVALID_VALUE;
-				meteo_annual->m[i].d[y].lh_fus = INVALID_VALUE;
-				meteo_annual->m[i].d[y].lh_sub = INVALID_VALUE;
-				meteo_annual->m[i].d[y].air_pressure = INVALID_VALUE;
-				meteo_annual->m[i].d[y].ten_day_avg_tavg = INVALID_VALUE;
-				meteo_annual->m[i].d[y].ten_day_avg_tsoil = INVALID_VALUE;
-				meteo_annual->m[i].d[y].ten_day_avg_tday = INVALID_VALUE;
-				meteo_annual->m[i].d[y].ten_day_avg_tnight = INVALID_VALUE;
-				meteo_annual->m[i].d[y].ten_day_weighted_avg_tavg = INVALID_VALUE;
-				meteo_annual->m[i].d[y].ten_day_weighted_avg_tsoil = INVALID_VALUE;
-				meteo_annual->m[i].d[y].ten_day_weighted_avg_tday = INVALID_VALUE;
-				meteo_annual->m[i].d[y].ten_day_weighted_avg_tnight = INVALID_VALUE;
-				meteo_annual->m[i].d[y].es = INVALID_VALUE;
-				meteo_annual->m[i].d[y].ea = INVALID_VALUE;
-				meteo_annual->m[i].d[y].psych = INVALID_VALUE;
-				meteo_annual->m[i].d[y].sw_pot_downward_W = INVALID_VALUE;
-				meteo_annual->m[i].d[y].sw_downward_MJ = INVALID_VALUE;
-				meteo_annual->m[i].d[y].incoming_sw_downward_W = INVALID_VALUE;
-				meteo_annual->m[i].d[y].sw_downward_W = INVALID_VALUE;
-				meteo_annual->m[i].d[y].lw_downward_MJ = INVALID_VALUE;
-				meteo_annual->m[i].d[y].atm_lw_downward_W = INVALID_VALUE;
-				meteo_annual->m[i].d[y].lw_net_MJ = INVALID_VALUE;
-				meteo_annual->m[i].d[y].lw_net_W = INVALID_VALUE;
-				meteo_annual->m[i].d[y].incoming_par = INVALID_VALUE;
-				meteo_annual->m[i].d[y].par = INVALID_VALUE;
-				meteo_annual->m[i].d[y].incoming_ppfd = INVALID_VALUE;
-				meteo_annual->m[i].d[y].ppfd = INVALID_VALUE;
-				meteo_annual->m[i].d[y].emis_atm_clear_sky = INVALID_VALUE;
-				meteo_annual->m[i].d[y].emis_atm = INVALID_VALUE;
-				meteo_annual->m[i].d[y].cloud_cover_frac = INVALID_VALUE;
-				meteo_annual->m[i].d[y].cloud_cover_frac_corr = INVALID_VALUE;
+				if ( DAILY == g_settings->time ) {
+					METEO_DAILY(meteo_annual->m)[i].d[y].n_days = INVALID_VALUE;
+					METEO_DAILY(meteo_annual->m)[i].d[y].solar_rad = INVALID_VALUE;
+					METEO_DAILY(meteo_annual->m)[i].d[y].tavg = INVALID_VALUE;
+					METEO_DAILY(meteo_annual->m)[i].d[y].tmax = INVALID_VALUE;
+					METEO_DAILY(meteo_annual->m)[i].d[y].tmin = INVALID_VALUE;
+					METEO_DAILY(meteo_annual->m)[i].d[y].tday = INVALID_VALUE;
+					METEO_DAILY(meteo_annual->m)[i].d[y].tnight = INVALID_VALUE;
+					METEO_DAILY(meteo_annual->m)[i].d[y].vpd = INVALID_VALUE;
+					METEO_DAILY(meteo_annual->m)[i].d[y].ts_f = INVALID_VALUE;
+					METEO_DAILY(meteo_annual->m)[i].d[y].prcp = INVALID_VALUE;
+					METEO_DAILY(meteo_annual->m)[i].d[y].swc = INVALID_VALUE;
+					METEO_DAILY(meteo_annual->m)[i].d[y].ndvi_lai = INVALID_VALUE;
+					METEO_DAILY(meteo_annual->m)[i].d[y].daylength = INVALID_VALUE;
+					METEO_DAILY(meteo_annual->m)[i].d[y].thermic_sum = INVALID_VALUE;
+					METEO_DAILY(meteo_annual->m)[i].d[y].rho_air = INVALID_VALUE;
+					METEO_DAILY(meteo_annual->m)[i].d[y].tsoil = INVALID_VALUE;
+					METEO_DAILY(meteo_annual->m)[i].d[y].et = INVALID_VALUE;
+					METEO_DAILY(meteo_annual->m)[i].d[y].windspeed = INVALID_VALUE;
+					METEO_DAILY(meteo_annual->m)[i].d[y].rh_f = INVALID_VALUE;
+					METEO_DAILY(meteo_annual->m)[i].d[y].lh_vap = INVALID_VALUE;
+					METEO_DAILY(meteo_annual->m)[i].d[y].lh_vap_soil = INVALID_VALUE;
+					METEO_DAILY(meteo_annual->m)[i].d[y].lh_fus = INVALID_VALUE;
+					METEO_DAILY(meteo_annual->m)[i].d[y].lh_sub = INVALID_VALUE;
+					METEO_DAILY(meteo_annual->m)[i].d[y].air_pressure = INVALID_VALUE;
+					METEO_DAILY(meteo_annual->m)[i].d[y].ten_day_avg_tavg = INVALID_VALUE;
+					METEO_DAILY(meteo_annual->m)[i].d[y].ten_day_avg_tsoil = INVALID_VALUE;
+					METEO_DAILY(meteo_annual->m)[i].d[y].ten_day_avg_tday = INVALID_VALUE;
+					METEO_DAILY(meteo_annual->m)[i].d[y].ten_day_avg_tnight = INVALID_VALUE;
+					METEO_DAILY(meteo_annual->m)[i].d[y].ten_day_weighted_avg_tavg = INVALID_VALUE;
+					METEO_DAILY(meteo_annual->m)[i].d[y].ten_day_weighted_avg_tsoil = INVALID_VALUE;
+					METEO_DAILY(meteo_annual->m)[i].d[y].ten_day_weighted_avg_tday = INVALID_VALUE;
+					METEO_DAILY(meteo_annual->m)[i].d[y].ten_day_weighted_avg_tnight = INVALID_VALUE;
+					METEO_DAILY(meteo_annual->m)[i].d[y].es = INVALID_VALUE;
+					METEO_DAILY(meteo_annual->m)[i].d[y].ea = INVALID_VALUE;
+					METEO_DAILY(meteo_annual->m)[i].d[y].psych = INVALID_VALUE;
+					METEO_DAILY(meteo_annual->m)[i].d[y].sw_pot_downward_W = INVALID_VALUE;
+					METEO_DAILY(meteo_annual->m)[i].d[y].sw_downward_MJ = INVALID_VALUE;
+					METEO_DAILY(meteo_annual->m)[i].d[y].incoming_sw_downward_W = INVALID_VALUE;
+					METEO_DAILY(meteo_annual->m)[i].d[y].sw_downward_W = INVALID_VALUE;
+					METEO_DAILY(meteo_annual->m)[i].d[y].lw_downward_MJ = INVALID_VALUE;
+					METEO_DAILY(meteo_annual->m)[i].d[y].atm_lw_downward_W = INVALID_VALUE;
+					METEO_DAILY(meteo_annual->m)[i].d[y].lw_net_MJ = INVALID_VALUE;
+					METEO_DAILY(meteo_annual->m)[i].d[y].lw_net_W = INVALID_VALUE;
+					METEO_DAILY(meteo_annual->m)[i].d[y].incoming_par = INVALID_VALUE;
+					METEO_DAILY(meteo_annual->m)[i].d[y].par = INVALID_VALUE;
+					METEO_DAILY(meteo_annual->m)[i].d[y].incoming_ppfd = INVALID_VALUE;
+					METEO_DAILY(meteo_annual->m)[i].d[y].ppfd = INVALID_VALUE;
+					METEO_DAILY(meteo_annual->m)[i].d[y].emis_atm_clear_sky = INVALID_VALUE;
+					METEO_DAILY(meteo_annual->m)[i].d[y].emis_atm = INVALID_VALUE;
+					METEO_DAILY(meteo_annual->m)[i].d[y].cloud_cover_frac = INVALID_VALUE;
+					METEO_DAILY(meteo_annual->m)[i].d[y].cloud_cover_frac_corr = INVALID_VALUE;
+				}
+				else if ( HOURLY == g_settings->time )
+				{
+					// TODO
+				}
+				else if ( HALFHOURLY == g_settings->time )
+				{
+					// TODO
+				}
 			}
 			meteo_annual->monthly_mean[i].solar_rad = INVALID_VALUE;
 			meteo_annual->monthly_mean[i].tavg = INVALID_VALUE;
@@ -379,6 +393,408 @@ static void compute_rh(double *const values, const int rows_count, const int col
 #undef VALUE_AT
 }
 
+static int meteo_from_arr_daily(double *const values, const int rows_count, meteo_annual_t** p_yos, int *const yos_count
+								, const int year, const int month, const int day, const int row)
+{
+#define VALUE_AT(r,c)	((r)+((c)*rows_count))
+
+	meteo_annual_t *yos;
+
+	static double	previous_solar_rad
+					, previous_tavg
+					, previous_tmax
+					, previous_tmin
+					, previous_vpd
+					, previous_ts_f
+					, previous_prcp
+					, previous_swc
+					, previous_ndvi_lai
+	;
+
+	yos = *p_yos;
+
+	METEO_DAILY(yos[*yos_count-1].m)[month].d[day].n_days = day+1;
+	if ( METEO_DAILY(yos[*yos_count-1].m)[month].d[day].n_days > METEO_DAYS_COUNT)
+	{
+		logger_error(g_debug_log, "ERROR IN N_DAYS DATA!!\n");
+		//free(yos);
+		return 0;
+	}
+
+	/* case RG_F: //Rg_f - solar_rad -daily average solar radiation */
+	METEO_DAILY(yos[*yos_count-1].m)[month].d[day].solar_rad = values[VALUE_AT(row,RG_F)];
+	if ( IS_INVALID_VALUE (METEO_DAILY(yos[*yos_count-1].m)[month].d[day].solar_rad) && (!((day == 0) && (1 == *yos_count) && (month == 0))))
+	{
+
+		//the model gets the value of the day before
+		//Log ("* SOLAR RAD -NO DATA in year %d month %s, day %d!!!!\n", yos[*yos_count-1].year, MonthName[month], day);
+		//logger(g_debug_log, "Getting previous day values.. !!\n");
+		METEO_DAILY(yos[*yos_count-1].m)[month].d[day].solar_rad = previous_solar_rad;
+		//logger(g_debug_log, "..value of the previous day = %f\n", yos[*yos_count-1].m[month].d[day].solar_rad);
+		if ( IS_INVALID_VALUE (METEO_DAILY(yos[*yos_count-1].m)[month].d[day].solar_rad))
+		{
+			//Log ("********* SOLAR RAD -NO DATA- in previous day!!!!\n" );
+
+			//the model gets the value of the year before
+			if ( *yos_count > 1 ) {
+				METEO_DAILY(yos[*yos_count-1].m)[month].d[day].solar_rad = METEO_DAILY(yos[*yos_count-2].m)[month].d[day].solar_rad;
+				if (IS_INVALID_VALUE (METEO_DAILY(yos[*yos_count-1].m)[month].d[day].solar_rad))
+				{
+					//Log ("********* SOLAR RAD -NO DATA- in previous year!!!!\n" );
+					METEO_DAILY(yos[*yos_count-1].m)[month].d[day].solar_rad = NO_DATA;
+				}
+			} else {
+				METEO_DAILY(yos[*yos_count-1].m)[month].d[day].solar_rad = METEO_DAILY(yos[*yos_count-2].m)[month].d[day-1].solar_rad;
+				/*
+				if (IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day-1].solar_rad))
+				{
+					Log ("********* SOLAR RAD -NO DATA- in previous day!!!!\n" );
+					exit(1);
+				}
+				 */
+			}
+		}
+	}
+	/* check if values are outside ranges */
+	else if(METEO_DAILY(yos[*yos_count-1].m)[month].d[day].solar_rad < RG_RANGE_MIN || METEO_DAILY(yos[*yos_count-1].m)[month].d[day].solar_rad > RG_RANGE_MAX)
+	{
+		logger_error(g_debug_log,"BAD DATA FOR RG = %f in day = %d month = %d year = %d\n", METEO_DAILY(yos[*yos_count-1].m)[month].d[day].solar_rad, day+1, month+1, year);
+		exit(1);
+	}
+	else
+	{
+		previous_solar_rad = METEO_DAILY(yos[*yos_count-1].m)[month].d[day].solar_rad;
+	}
+
+	/* case TA_F: //Ta_f -  temperature average */
+	METEO_DAILY(yos[*yos_count-1].m)[month].d[day].tavg = values[VALUE_AT(row,TA_F)];
+	if (IS_INVALID_VALUE (METEO_DAILY(yos[*yos_count-1].m)[month].d[day].tavg) && (!((day == 0) && (*yos_count == 1) && (month == 0))))
+	{
+		//the model gets the value of the day before
+		//Log ("* TAVG -NO DATA in year %d month %s, day %d!!!!\n", yos[*yos_count-1].year, MonthName[month], day);
+
+		METEO_DAILY(yos[*yos_count-1].m)[month].d[day].tavg = previous_tavg;
+		if ( IS_INVALID_VALUE (METEO_DAILY(yos[*yos_count-1].m)[month].d[day].tavg))
+		{
+			//the model gets the value of the year before
+			METEO_DAILY(yos[*yos_count-1].m)[month].d[day].tavg = METEO_DAILY(yos[*yos_count-2].m)[month].d[day].tavg;
+
+			if (IS_INVALID_VALUE (METEO_DAILY(yos[*yos_count-1].m)[month].d[day].tavg))
+			{
+				//Log ("********* TAVG -NO DATA- in previous year!!!!\n" );
+				METEO_DAILY(yos[*yos_count-1].m)[month].d[day].tavg = NO_DATA;
+			}
+		}
+	}
+	/* check if values are outside ranges */
+	else if(METEO_DAILY(yos[*yos_count-1].m)[month].d[day].tavg < TA_RANGE_MIN || METEO_DAILY(yos[*yos_count-1].m)[month].d[day].tavg > TA_RANGE_MAX)
+	{
+		logger_error(g_debug_log, "BAD DATA FOR Tavg = %f in day = %d month = %d year = %d\n", METEO_DAILY(yos[*yos_count-1].m)[month].d[day].tavg, day+1, month+1, year);
+		exit(1);
+	}
+	else
+	{
+		previous_tavg = METEO_DAILY(yos[*yos_count-1].m)[month].d[day].tavg;
+	}
+
+	/* case TMAX: //TMAX -  maximum temperature */
+	METEO_DAILY(yos[*yos_count-1].m)[month].d[day].tmax = values[VALUE_AT(row,TMAX)];
+	if ( IS_INVALID_VALUE (METEO_DAILY(yos[*yos_count-1].m)[month].d[day].tmax) && (!((day == 0) && (*yos_count == 1)&& (month == 0))))
+	{
+		//the model gets the value of the day before
+		//Log ("* TMAX -NO DATA in year %d month %s, day %d!!!!\n", yos[*yos_count-1].year, MonthName[month], day);
+		//logger(g_debug_log, "Getting previous day values.. !!\n");
+		METEO_DAILY(yos[*yos_count-1].m)[month].d[day].tmax = METEO_DAILY(yos[*yos_count-1].m)[month].d[day].tavg;
+		//logger(g_debug_log, "..using tavg = %f\n", yos[*yos_count-1].m[month].d[day].tavg);
+		if ( IS_INVALID_VALUE (METEO_DAILY(yos[*yos_count-1].m)[month].d[day].tmax))
+		{
+			//the model gets the value of the year before
+			METEO_DAILY(yos[*yos_count-1].m)[month].d[day].tmax = METEO_DAILY(yos[*yos_count-2].m)[month].d[day].tmax;
+
+			if (IS_INVALID_VALUE (METEO_DAILY(yos[*yos_count-1].m)[month].d[day].tmax))
+			{
+				//Log ("********* TMAX -NO DATA- in previous year!!!!\n" );
+				METEO_DAILY(yos[*yos_count-1].m)[month].d[day].tmax = NO_DATA;
+			}
+		}
+	}
+	/* check if values are outside ranges */
+	else if(METEO_DAILY(yos[*yos_count-1].m)[month].d[day].tmax < TMAX_RANGE_MIN || METEO_DAILY(yos[*yos_count-1].m)[month].d[day].tmax > TMAX_RANGE_MAX)
+	{
+		logger_error(g_debug_log, "BAD DATA FOR Tmax = %f in day = %d month = %d year = %d\n", METEO_DAILY(yos[*yos_count-1].m)[month].d[day].tmax, day+1, month+1, year);
+		exit(1);
+	}
+	else
+	{
+		previous_tmax = METEO_DAILY(yos[*yos_count-1].m)[month].d[day].tmax;
+	}
+
+	//case TMIN: //TMIN -  minimum temperature
+	METEO_DAILY(yos[*yos_count-1].m)[month].d[day].tmin = values[VALUE_AT(row,TMIN)];
+	if ( IS_INVALID_VALUE (METEO_DAILY(yos[*yos_count-1].m)[month].d[day].tmin) && (!((day == 0) && (*yos_count == 1)&& (month == 0))))
+	{
+		//the model gets the value of the day before
+		//Log ("* TMIN -NO DATA in year %d month %s, day %d!!!!\n", yos[*yos_count-1].year, MonthName[month], day);
+		//logger(g_debug_log, "Getting previous day values.. !!\n");
+		METEO_DAILY(yos[*yos_count-1].m)[month].d[day].tmin = METEO_DAILY(yos[*yos_count-1].m)[month].d[day].tavg;
+		//logger(g_debug_log, "..using tavg = %f\n", yos[*yos_count-1].m[month].d[day].tavg);
+		if ( IS_INVALID_VALUE (METEO_DAILY(yos[*yos_count-1].m)[month].d[day].tmin))
+		{
+			//the model gets the value of the year before
+			METEO_DAILY(yos[*yos_count-1].m)[month].d[day].tmin = METEO_DAILY(yos[*yos_count-2].m)[month].d[day].tmin;
+
+			if (IS_INVALID_VALUE (METEO_DAILY(yos[*yos_count-1].m)[month].d[day].tmin))
+			{
+				//Log ("********* TMIN -NO DATA- in previous year!!!!\n" );
+				METEO_DAILY(yos[*yos_count-1].m)[month].d[day].tmin = NO_DATA;
+			}
+		}
+	}
+	/* check if values are outside ranges */
+	else if(METEO_DAILY(yos[*yos_count-1].m)[month].d[day].tmin < TMIN_RANGE_MIN || METEO_DAILY(yos[*yos_count-1].m)[month].d[day].tmin > TMIN_RANGE_MAX)
+	{
+		logger_error(g_debug_log, "BAD DATA FOR Tmin = %f in day = %d month = %d year = %d\n", METEO_DAILY(yos[*yos_count-1].m)[month].d[day].tmin, day+1, month+1, year);
+		exit(1);
+	}
+	else
+	{
+		previous_tmin = METEO_DAILY(yos[*yos_count-1].m)[month].d[day].tmin;
+	}
+
+	/* case VPD_F: //RH_f - RH */
+	METEO_DAILY(yos[*yos_count-1].m)[month].d[day].vpd = values[VALUE_AT(row,VPD_F)];
+	if ( IS_INVALID_VALUE (METEO_DAILY(yos[*yos_count-1].m)[month].d[day].vpd) && (!((day == 0) && (*yos_count == 1)&& (month == 0))))
+	{
+		//the model gets the value of the day before
+		//Log ("* VPD -NO DATA in year %d month %s, day %d!!!!\n", yos[*yos_count-1].year, MonthName[month], day);
+		//logger(g_debug_log, "Getting previous day values.. !!\n");
+		METEO_DAILY(yos[*yos_count-1].m)[month].d[day].vpd = previous_vpd;
+		//logger(g_debug_log, "..value of the previous day = %f\n", yos[*yos_count-1].m[month].d[day].vpd);
+		if ( IS_INVALID_VALUE (METEO_DAILY(METEO_DAILY(yos[*yos_count-1].m))[month].d[day].vpd))
+		{
+			//Log ("********* VPD -NO DATA- in previous year!!!!\n" );
+
+			//the model gets the value of the year before
+			METEO_DAILY(METEO_DAILY(yos[*yos_count-1].m))[month].d[day].vpd = METEO_DAILY(yos[*yos_count-2].m)[month].d[day].vpd;
+
+			if (IS_INVALID_VALUE (METEO_DAILY(METEO_DAILY(yos[*yos_count-1].m))[month].d[day].vpd))
+			{
+				//Log ("********* VPD -NO DATA- in previous year!!!!\n" );
+				METEO_DAILY(METEO_DAILY(yos[*yos_count-1].m))[month].d[day].vpd = NO_DATA;
+			}
+
+		}
+	}
+	/* check if values are outside ranges */
+	else if(METEO_DAILY(METEO_DAILY(yos[*yos_count-1].m))[month].d[day].vpd < VPD_RANGE_MIN || METEO_DAILY(METEO_DAILY(yos[*yos_count-1].m))[month].d[day].vpd > VPD_RANGE_MAX)
+	{
+		logger_error(g_debug_log, "BAD DATA FOR vpd = %f in day = %d month = %d year = %d\n", METEO_DAILY(yos[*yos_count-1].m)[month].d[day].vpd, day+1, month+1, year);
+		exit(1);
+	}
+	else
+	{
+		previous_vpd = METEO_DAILY(yos[*yos_count-1].m)[month].d[day].vpd;
+	}
+	//logger(g_debug_log, "%d-%s-vpd = %f\n",METEO_DAILY(yos[*yos_count-1].m)[month].d[day].n_days, MonthName[month], METEO_DAILY(yos[*yos_count-1].m)[month].d[day].vpd);
+
+	/* case TS_F: // ts_f   Soil temperature */
+	METEO_DAILY(yos[*yos_count-1].m)[month].d[day].ts_f = values[VALUE_AT(row,TS_F)];
+	if ( IS_INVALID_VALUE (METEO_DAILY(yos[*yos_count-1].m)[month].d[day].ts_f) && (!((day == 0) && (*yos_count == 1)&& (month == 0))))
+	{
+		//the model gets the value of the day before
+		//Log ("* TS_F -NO DATA in year %s month %s!!!!\n", year, MonthName[month] );
+		METEO_DAILY(yos[*yos_count-1].m)[month].d[day].ts_f = previous_ts_f;
+		/*
+		if ( IS_INVALID_VALUE (METEO_DAILY(yos[*yos_count-1].m)[month].d[day].ts_f))
+		{
+			//Log ("********* TS_F -NO DATA- in previous year!!!!\n" );
+
+			//the model gets the value of the year before
+			METEO_DAILY(yos[*yos_count-1].m)[month].d[day].ts_f = METEO_DAILY(yos[*yos_count-1].m)[month].d[day].ts_f;
+
+			if (IS_INVALID_VALUE (METEO_DAILY(yos[*yos_count-1].m)[month].d[day].ts_f))
+			{
+				//Log ("********* TS_F -NO DATA- in previous year!!!!\n" );
+				METEO_DAILY(yos[*yos_count-1].m)[month].d[day].ts_f = NO_DATA;
+			}
+		}
+		 */
+	}
+	else
+	{
+		previous_ts_f = METEO_DAILY(yos[*yos_count-1].m)[month].d[day].ts_f;
+	}
+
+	/* case PRECIP:  //Precip - rain */
+	METEO_DAILY(yos[*yos_count-1].m)[month].d[day].prcp = values[VALUE_AT(row,PRECIP)];
+	if ( IS_INVALID_VALUE (METEO_DAILY(yos[*yos_count-1].m)[month].d[day].prcp) && (!((day == 0) && (*yos_count == 1)&& (month == 0))))
+	{
+		//the model gets the value of the day before
+		//Log ("* PRECIPITATION -NO DATA in year %d month %s, day %d!!!!\n", yos[*yos_count-1].year, MonthName[month], day+1);
+		//logger(g_debug_log, "Getting previous day values.. !!\n");
+		METEO_DAILY(yos[*yos_count-1].m)[month].d[day].prcp = previous_prcp;
+		//logger(g_debug_log, "..value of the previous day = %f\n", METEO_DAILY(yos[*yos_count-1].m)[month].d[day].prcp);
+		if ( IS_INVALID_VALUE (METEO_DAILY(yos[*yos_count-1].m)[month].d[day].prcp))
+		{
+			logger(g_debug_log, "********* PRECIPITATION -NO DATA- in previous year!!!!\n" );
+
+			//the model gets the value of the year before
+			METEO_DAILY(yos[*yos_count-1].m)[month].d[day].prcp = METEO_DAILY(yos[*yos_count-2].m)[month].d[day].prcp;
+
+			if (IS_INVALID_VALUE (METEO_DAILY(yos[*yos_count-1].m)[month].d[day].prcp))
+			{
+				logger(g_debug_log, "********* RAIN -NO DATA- in previous year!!!!\n" );
+				METEO_DAILY(yos[*yos_count-1].m)[month].d[day].prcp = NO_DATA;
+			}
+
+		}
+		//logger(g_debug_log, "precipitation of previous year = %f mm\n", METEO_DAILY(yos[*yos_count-1].m)[month].rain);
+	}
+	/* check if values are outside ranges */
+	else if(METEO_DAILY(yos[*yos_count-1].m)[month].d[day].prcp < PRECIP_RANGE_MIN || METEO_DAILY(yos[*yos_count-1].m)[month].d[day].prcp > PRECIP_RANGE_MAX)
+	{
+		logger_error(g_debug_log, "BAD DATA FOR prcp = %f in day = %d month = %d year = %d\n", METEO_DAILY(yos[*yos_count-1].m)[month].d[day].prcp, day+1, month+1, year);
+		exit(1);
+	}
+	else
+	{
+		previous_prcp = METEO_DAILY(yos[*yos_count-1].m)[month].d[day].prcp;
+	}
+
+	/* case SWC: //Soil Water Content (%) */
+	METEO_DAILY(yos[*yos_count-1].m)[month].d[day].swc = values[VALUE_AT(row,SWC)];
+	/*if ( error_flag )
+	{
+		printf("unable to convert value \"%s\" at column %d for %s day %d\n", token2, column+1, MonthName[month], day);
+		logger(g_debug_log, "unable to convert value \"%s\" at column %d for %s day %d\n", token2, column+1, MonthName[month], day);
+		free(yos);
+		fclose(f);
+		return 0;
+	}*/
+	if ( IS_INVALID_VALUE (METEO_DAILY(yos[*yos_count-1].m)[month].d[day].swc) && (!((day == 0) && (*yos_count == 1)&& (month == 0))))
+	{
+		//the model gets the value of the day before
+		//Log ("********* SWC -NO DATA in year %s month %s!!!!\n", year, MonthName[month] );
+		//logger(g_debug_log, "Getting previous years values !!\n");
+		METEO_DAILY(yos[*yos_count-1].m)[month].d[day].swc = previous_swc;
+		/*
+		if ( IS_INVALID_VALUE (METEO_DAILY(yos[*yos_count-1].m)[month].d[day].swc))
+		{
+			//Log ("* SWC -NO DATA- in previous year!!!!\n" );
+			//the model gets the value of the year before
+			METEO_DAILY(yos[*yos_count-1].m)[month].d[day].swc = METEO_DAILY(yos[*yos_count-1].m)[month].d[day].swc;
+
+			if (IS_INVALID_VALUE (METEO_DAILY(yos[*yos_count-1].m)[month].d[day].swc))
+			{
+				//Log ("********* RAIN -NO DATA- in previous year!!!!\n" );
+				METEO_DAILY(yos[*yos_count-1].m)[month].d[day].swc = NO_DATA;
+			}
+		}
+		 */
+	}
+	else
+	{
+		previous_swc = METEO_DAILY(yos[*yos_count-1].m)[month].d[day].swc;
+	}
+
+	//logger(g_debug_log, "%d-%s-swc= %f\n",METEO_DAILY(yos[*yos_count-1].m)[month].d[day].n_days, MonthName[month], METEO_DAILY(yos[*yos_count-1].m)[month].d[day].swc);
+	//break;
+	//case NDVI_LAI: //Get LAI in spatial version
+	//todo to remove
+	if ( 's' == g_settings->spatial )
+	{
+		METEO_DAILY(yos[*yos_count-1].m)[month].d[day].ndvi_lai = values[VALUE_AT(row,NDVI_LAI)];
+		//if is not the first year the model get the previous year value
+		if (*yos_count > 1)
+		{
+
+			//control in lai data if is an invalid value
+			if ( IS_INVALID_VALUE (METEO_DAILY(yos[*yos_count-1].m)[month].d[day].ndvi_lai) && (!((day == 0) && (month == 0))))
+			{
+				//the model gets the value of the day before
+				//Log ("********* LAI -NO DATA in year %d month %s, day %d!!!!\n", yos[*yos_count-1].year, MonthName[month], day+1 );
+				//logger(g_debug_log, "Getting previous years values !!\n");
+				METEO_DAILY(yos[*yos_count-1].m)[month].d[day].ndvi_lai = previous_ndvi_lai;
+				if ( IS_INVALID_VALUE (METEO_DAILY(yos[*yos_count-1].m)[month].d[day].ndvi_lai))
+				{
+					//Log ("* LAI -NO DATA- in previous year!!!!\n" );
+					METEO_DAILY(yos[*yos_count-1].m)[month].d[day].ndvi_lai = NO_DATA;
+				}
+			}
+			else
+			{
+				previous_ndvi_lai = METEO_DAILY(yos[*yos_count-1].m)[month].d[day].ndvi_lai;
+			}
+		}
+	}
+
+	//case ET: //ET for stand alone RothC (todo remove)
+	METEO_DAILY(yos[*yos_count-1].m)[month].d[day].et = values[VALUE_AT(row,ET)];
+	if ( IS_INVALID_VALUE (METEO_DAILY(yos[*yos_count-1].m)[month].d[day].et) && (!((day == 0) && (*yos_count == 1)&& (month == 0))))
+	{
+		//the model gets the value of the day before
+		//Log ("* ET -NO DATA in year %s month %s, day %d!!!!\n", year, MonthName[month], day);
+	}
+	//logger(g_debug_log, "%d-%s-tavg = %f\n",METEO_DAILY(yos[*yos_count-1].m)[month].d[day].n_days, MonthName[month], METEO_DAILY(yos[*yos_count-1].m)[month].d[day].tavg);
+
+	//case WS_F: //windspeed
+	METEO_DAILY(yos[*yos_count-1].m)[month].d[day].windspeed = values[VALUE_AT(row,WS_F)];
+	if ( IS_INVALID_VALUE (METEO_DAILY(yos[*yos_count-1].m)[month].d[day].windspeed) && (!((day == 0) && (*yos_count == 1)&& (month == 0))))
+	{
+		//the model gets the value of the day before
+		//Log ("* windspeed -NO DATA in year %s month %s, day %d!!!!\n", yos[*yos_count-1].year, MonthName[month], day);
+	}
+	//logger(g_debug_log, "%d-%s-tavg = %f\n",METEO_DAILY(yos[*yos_count-1].m)[month].d[day].n_days, MonthName[month], METEO_DAILY(yos[*yos_count-1].m)[month].d[day].tavg);
+
+	// RH_f
+	METEO_DAILY(yos[*yos_count-1].m)[month].d[day].rh_f = values[VALUE_AT(row,RH_F)];
+
+	/* check */
+	if (METEO_DAILY(yos[*yos_count-1].m)[month].d[day].tmax < METEO_DAILY(yos[*yos_count-1].m)[month].d[day].tavg)
+	{
+		printf ("Tmax (%g) < Tavg (%g) at %d year, %d month, %d day\n",
+				METEO_DAILY(yos[*yos_count-1].m)[month].d[day].tmax,
+				METEO_DAILY(yos[*yos_count-1].m)[month].d[day].tavg,
+				*yos_count-1, month+1, day+1);
+	}
+	if (METEO_DAILY(yos[*yos_count-1].m)[month].d[day].tmax < METEO_DAILY(yos[*yos_count-1].m)[month].d[day].tmin)
+	{
+		printf ("Tmax (%g) < Tmin (%g) at %d year, %d month, %d day\n",
+				METEO_DAILY(yos[*yos_count-1].m)[month].d[day].tmax,
+				METEO_DAILY(yos[*yos_count-1].m)[month].d[day].tmin,
+				*yos_count-1, month+1, day+1);
+	}
+	if (METEO_DAILY(yos[*yos_count-1].m)[month].d[day].tavg < METEO_DAILY(yos[*yos_count-1].m)[month].d[day].tmin)
+	{
+		printf ("Tavg (%g) < Tmin (%g) at %d year, %d month, %d day\n",
+				METEO_DAILY(yos[*yos_count-1].m)[month].d[day].tavg,
+				METEO_DAILY(yos[*yos_count-1].m)[month].d[day].tmin,
+				*yos_count-1, month+1, day+1);
+	}
+	/*
+	CHECK_CONDITION(yos[*yos_count-1].m[month].d[day].tmax,<,yos[*yos_count-1].m[month].d[day].tavg);
+	CHECK_CONDITION(yos[*yos_count-1].m[month].d[day].tmax,<,yos[*yos_count-1].m[month].d[day].tmin);
+	CHECK_CONDITION(yos[*yos_count-1].m[month].d[day].tavg,<,yos[*yos_count-1].m[month].d[day].tmin);
+	*/
+	return 1;
+
+#undef VALUE_AT
+}
+
+// TODO
+static int meteo_from_arr_hourly(double *const values, const int rows_count, meteo_annual_t** p_yos, int *const yos_count
+								 , const int year, const int month, const int day, const int hour, const int row)
+{
+	return 0;
+}
+
+// TODO
+static int meteo_from_arr_halfhourly(double *const values, const int rows_count, meteo_annual_t** p_yos, int *const yos_count
+										, const int year, const int month, const int day, const int hour, const int halfhourly, const int row)
+{
+	return 0;
+}
+
 static int meteo_from_arr(double *const values, const int rows_count, const int columns_count, meteo_annual_t** p_yos, int *const yos_count) {
 #define VALUE_AT(r,c)	((r)+((c)*rows_count))
 	meteo_annual_t *yos_no_leak;
@@ -387,8 +803,11 @@ static int meteo_from_arr(double *const values, const int rows_count, const int 
 	int year;
 	int month;
 	int day;
+	int hour;
+	int halfhour;
 	int current_year;
 
+	/*
 	static double previous_solar_rad,
 	previous_tavg,
 	previous_tmax,
@@ -398,6 +817,7 @@ static int meteo_from_arr(double *const values, const int rows_count, const int 
 	previous_prcp,
 	previous_swc,
 	previous_ndvi_lai;
+	*/
 
 	assert(p_yos && yos_count);
 
@@ -405,7 +825,6 @@ static int meteo_from_arr(double *const values, const int rows_count, const int 
 	current_year = -1;
 	yos = *p_yos;
 
-	
 	/* check if dataset is complete */
 	{
 		int i;
@@ -418,7 +837,18 @@ static int meteo_from_arr(double *const values, const int rows_count, const int 
 
 		total_rows_count = 0;
 		for ( i = start_year; i <= end_year; ++i ) {
-			total_rows_count += IS_LEAP_YEAR(i) ? 366 : 365;
+			if ( DAILY == g_settings->time )
+			{
+				total_rows_count += IS_LEAP_YEAR(i) ? 366 : 365;
+			}
+			else if ( HOURLY == g_settings->time )
+			{
+				total_rows_count += IS_LEAP_YEAR(i) ? 8784 : 8760;
+			}
+			else if ( HALFHOURLY == g_settings->time )
+			{
+				total_rows_count += IS_LEAP_YEAR(i) ? 17568 : 17520;
+			}
 		}
 
 		if ( total_rows_count != rows_count ) {
@@ -432,19 +862,19 @@ static int meteo_from_arr(double *const values, const int rows_count, const int 
 		int row;
 		int column;
 		int *flag;
-		/* remove date, month and year from columns count */
-		flag = malloc((columns_count-3)*sizeof*flag);
+		/* remove day, month, year, hour and halfhour from columns count */
+		flag = malloc((columns_count-5)*sizeof*flag);
 		if ( ! flag ) {
 			logger_error(g_debug_log, sz_err_out_of_memory);
 			//free(yos);
 			return 0;
 		}
 
-		/* skip day, month and year */
-		for ( column = 0; column < columns_count-3; ++column ) {
+		/* skip day, month, year, hour and halfhour */
+		for ( column = 0; column < columns_count-5; ++column ) {
 			flag[column] = 0;
 			for ( row = 0; row < rows_count; ++row ) {
-				if ( IS_INVALID_VALUE(values[VALUE_AT(row, column+3)]) ) {
+				if ( IS_INVALID_VALUE(values[VALUE_AT(row, column+5)]) ) {
 					++flag[column];
 				}
 			}
@@ -456,14 +886,14 @@ static int meteo_from_arr(double *const values, const int rows_count, const int 
 		}
 
 		/* check for missing vars */
-		if ( flag[VPD_F-3] && flag[RH_F-3] ) {
+		if ( flag[VPD_F-5] && flag[RH_F-5] ) {
 			logger_error(g_debug_log, "VPD and RH columns are missing!\n");
 			free(flag);
 			//free(yos);
 			return 0;
 		}
 
-		if ( flag[TMIN-3] && flag[TMAX-3] ) {
+		if ( flag[TMIN-5] && flag[TMAX-5] ) {
 			logger_error(g_debug_log, "TMIN and TMAX columns are missing!\n");
 			free(flag);
 			//free(yos);
@@ -471,7 +901,7 @@ static int meteo_from_arr(double *const values, const int rows_count, const int 
 		}
 
 		/* compute ta */
-		if ( flag[TA_F-3] ) {
+		if ( flag[TA_F-5] ) {
 			for ( row = 0; row < rows_count; ++row ) {
 				if ( ! IS_INVALID_VALUE(values[VALUE_AT(row, TMAX)])
 					&& ! IS_INVALID_VALUE(values[VALUE_AT(row, TMIN)]) ) {
@@ -481,7 +911,7 @@ static int meteo_from_arr(double *const values, const int rows_count, const int 
 		}
 
 		/* rh out of range */
-		if ( ! flag[RH_F-3] ) {
+		if ( ! flag[RH_F-5] ) {
 			for ( row = 0; row < rows_count; ++row ) {
 				if ( ! IS_INVALID_VALUE(values[VALUE_AT(row, RH_F)]) ) {
 					if ( values[VALUE_AT(row, RH_F)] < RH_RANGE_MIN ) values[VALUE_AT(row, RH_F)] = RH_RANGE_MIN;
@@ -491,7 +921,7 @@ static int meteo_from_arr(double *const values, const int rows_count, const int 
 		}
 
 		/* vpd out of range */
-		if ( ! flag[VPD_F-3] ) {
+		if ( ! flag[VPD_F-5] ) {
 			for ( row = 0; row < rows_count; ++row ) {
 				if ( ! IS_INVALID_VALUE(values[VALUE_AT(row, VPD_F)]) ) {
 					if ( values[VALUE_AT(row, VPD_F)] < VPD_RANGE_MIN ) values[VALUE_AT(row, VPD_F)] = VPD_RANGE_MIN;
@@ -502,9 +932,9 @@ static int meteo_from_arr(double *const values, const int rows_count, const int 
 
 		/* compute vpd ? or rh ?*/
 		/* please note that we must have TA, so computing is done after computing TA (if needed) */
-		if ( flag[VPD_F-3] ) {
+		if ( flag[VPD_F-5] ) {
 			compute_vpd(values, rows_count, columns_count);
-		} else if ( flag[RH_F-3] ) {
+		} else if ( flag[RH_F-5] ) {
 			compute_rh(values, rows_count, columns_count);
 		}
 
@@ -536,6 +966,15 @@ static int meteo_from_arr(double *const values, const int rows_count, const int 
 		}
 		--day;
 
+		if ( HOURLY == g_settings->time)
+		{
+			// TODO
+		}
+		else if ( HALFHOURLY == g_settings->time)
+		{
+			// TODO
+		}
+
 		if ( current_year != year ) {
 			yos_no_leak = realloc(yos, (*yos_count+1)*sizeof*yos_no_leak);
 			if ( ! yos_no_leak )
@@ -545,377 +984,50 @@ static int meteo_from_arr(double *const values, const int rows_count, const int 
 				return 0;
 			}
 			yos = yos_no_leak;
-			yos_clear(&yos[*yos_count]);
+						
+			// alloc memory for meteo
+			if ( DAILY == g_settings->time)
+			{
+				yos[*yos_count].m = malloc(METEO_MONTHS_COUNT*sizeof(meteo_d_t));
+			}
+			else if ( HOURLY == g_settings->time)
+			{
+				yos[*yos_count].m = malloc(METEO_MONTHS_COUNT*sizeof(meteo_h_t));
+			}
+			else if ( HALFHOURLY == g_settings->time)
+			{
+				yos[*yos_count].m = malloc(METEO_MONTHS_COUNT*sizeof(meteo_hh_t));
+			}
 
+			if ( ! yos[*yos_count].m )
+			{
+				logger_error(g_debug_log, sz_err_out_of_memory);
+				//free(yos);
+				return 0;
+			}
+
+			yos_clear(&yos[*yos_count]);
 			yos[*yos_count].year = year;
 			++*yos_count;
 
 			current_year = year;
 		}
 
-		yos[*yos_count-1].m[month].d[day].n_days = day+1;
-		if (yos[*yos_count-1].m[month].d[day].n_days > METEO_DAYS_COUNT)
+		if ( DAILY == g_settings->time )
 		{
-			logger_error(g_debug_log, "ERROR IN N_DAYS DATA!!\n");
-			//free(yos);
-			return 0;
-		}
-
-		/* case RG_F: //Rg_f - solar_rad -daily average solar radiation */
-		yos[*yos_count-1].m[month].d[day].solar_rad = values[VALUE_AT(row,RG_F)];
-		if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].solar_rad) && (!((day == 0) && (1 == *yos_count) && (month == 0))))
-		{
-
-			//the model gets the value of the day before
-			//Log ("* SOLAR RAD -NO DATA in year %d month %s, day %d!!!!\n", yos[*yos_count-1].year, MonthName[month], day);
-			//logger(g_debug_log, "Getting previous day values.. !!\n");
-			yos[*yos_count-1].m[month].d[day].solar_rad = previous_solar_rad;
-			//logger(g_debug_log, "..value of the previous day = %f\n", yos[*yos_count-1].m[month].d[day].solar_rad);
-			if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].solar_rad))
+			if ( ! meteo_from_arr_daily(values, rows_count, &yos, yos_count, year, month, day, row) )
 			{
-				//Log ("********* SOLAR RAD -NO DATA- in previous day!!!!\n" );
-
-				//the model gets the value of the year before
-				if ( *yos_count > 1 ) {
-					yos[*yos_count-1].m[month].d[day].solar_rad = yos[*yos_count-2].m[month].d[day].solar_rad;
-					if (IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].solar_rad))
-					{
-						//Log ("********* SOLAR RAD -NO DATA- in previous year!!!!\n" );
-						yos[*yos_count-1].m[month].d[day].solar_rad = NO_DATA;
-					}
-				} else {
-					yos[*yos_count-1].m[month].d[day].solar_rad = yos[*yos_count-2].m[month].d[day-1].solar_rad;
-					/*
-					if (IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day-1].solar_rad))
-					{
-						Log ("********* SOLAR RAD -NO DATA- in previous day!!!!\n" );
-						exit(1);
-					}
-					 */
-				}
+				return 0;
 			}
 		}
-		/* check if values are outside ranges */
-		else if(yos[*yos_count-1].m[month].d[day].solar_rad < RG_RANGE_MIN || yos[*yos_count-1].m[month].d[day].solar_rad > RG_RANGE_MAX)
+		else if ( HOURLY == g_settings->time)
 		{
-			logger_error(g_debug_log,"BAD DATA FOR RG = %f in day = %d month = %d year = %d\n", yos[*yos_count-1].m[month].d[day].solar_rad, day+1, month+1, year);
-			exit(1);
+			// TODO
 		}
-		else
+		else if ( HALFHOURLY == g_settings->time)
 		{
-			previous_solar_rad = yos[*yos_count-1].m[month].d[day].solar_rad;
+			// TODO
 		}
-
-		/* case TA_F: //Ta_f -  temperature average */
-		yos[*yos_count-1].m[month].d[day].tavg = values[VALUE_AT(row,TA_F)];
-		if (IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].tavg) && (!((day == 0) && (*yos_count == 1) && (month == 0))))
-		{
-			//the model gets the value of the day before
-			//Log ("* TAVG -NO DATA in year %d month %s, day %d!!!!\n", yos[*yos_count-1].year, MonthName[month], day);
-
-			yos[*yos_count-1].m[month].d[day].tavg = previous_tavg;
-			if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].tavg))
-			{
-				//the model gets the value of the year before
-				yos[*yos_count-1].m[month].d[day].tavg = yos[*yos_count-2].m[month].d[day].tavg;
-
-				if (IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].tavg))
-				{
-					//Log ("********* TAVG -NO DATA- in previous year!!!!\n" );
-					yos[*yos_count-1].m[month].d[day].tavg = NO_DATA;
-				}
-			}
-		}
-		/* check if values are outside ranges */
-		else if(yos[*yos_count-1].m[month].d[day].tavg < TA_RANGE_MIN || yos[*yos_count-1].m[month].d[day].tavg > TA_RANGE_MAX)
-		{
-			logger_error(g_debug_log, "BAD DATA FOR Tavg = %f in day = %d month = %d year = %d\n", yos[*yos_count-1].m[month].d[day].tavg, day+1, month+1, year);
-			exit(1);
-		}
-		else
-		{
-			previous_tavg = yos[*yos_count-1].m[month].d[day].tavg;
-		}
-
-		/* case TMAX: //TMAX -  maximum temperature */
-		yos[*yos_count-1].m[month].d[day].tmax = values[VALUE_AT(row,TMAX)];
-		if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].tmax) && (!((day == 0) && (*yos_count == 1)&& (month == 0))))
-		{
-			//the model gets the value of the day before
-			//Log ("* TMAX -NO DATA in year %d month %s, day %d!!!!\n", yos[*yos_count-1].year, MonthName[month], day);
-			//logger(g_debug_log, "Getting previous day values.. !!\n");
-			yos[*yos_count-1].m[month].d[day].tmax = yos[*yos_count-1].m[month].d[day].tavg;
-			//logger(g_debug_log, "..using tavg = %f\n", yos[*yos_count-1].m[month].d[day].tavg);
-			if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].tmax))
-			{
-				//the model gets the value of the year before
-				yos[*yos_count-1].m[month].d[day].tmax = yos[*yos_count-2].m[month].d[day].tmax;
-
-				if (IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].tmax))
-				{
-					//Log ("********* TMAX -NO DATA- in previous year!!!!\n" );
-					yos[*yos_count-1].m[month].d[day].tmax = NO_DATA;
-				}
-			}
-		}
-		/* check if values are outside ranges */
-		else if(yos[*yos_count-1].m[month].d[day].tmax < TMAX_RANGE_MIN || yos[*yos_count-1].m[month].d[day].tmax > TMAX_RANGE_MAX)
-		{
-			logger_error(g_debug_log, "BAD DATA FOR Tmax = %f in day = %d month = %d year = %d\n", yos[*yos_count-1].m[month].d[day].tmax, day+1, month+1, year);
-			exit(1);
-		}
-		else
-		{
-			previous_tmax = yos[*yos_count-1].m[month].d[day].tmax;
-		}
-
-		//case TMIN: //TMIN -  minimum temperature
-		yos[*yos_count-1].m[month].d[day].tmin = values[VALUE_AT(row,TMIN)];
-		if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].tmin) && (!((day == 0) && (*yos_count == 1)&& (month == 0))))
-		{
-			//the model gets the value of the day before
-			//Log ("* TMIN -NO DATA in year %d month %s, day %d!!!!\n", yos[*yos_count-1].year, MonthName[month], day);
-			//logger(g_debug_log, "Getting previous day values.. !!\n");
-			yos[*yos_count-1].m[month].d[day].tmin = yos[*yos_count-1].m[month].d[day].tavg;
-			//logger(g_debug_log, "..using tavg = %f\n", yos[*yos_count-1].m[month].d[day].tavg);
-			if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].tmin))
-			{
-				//the model gets the value of the year before
-				yos[*yos_count-1].m[month].d[day].tmin = yos[*yos_count-2].m[month].d[day].tmin;
-
-				if (IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].tmin))
-				{
-					//Log ("********* TMIN -NO DATA- in previous year!!!!\n" );
-					yos[*yos_count-1].m[month].d[day].tmin = NO_DATA;
-				}
-			}
-		}
-		/* check if values are outside ranges */
-		else if(yos[*yos_count-1].m[month].d[day].tmin < TMIN_RANGE_MIN || yos[*yos_count-1].m[month].d[day].tmin > TMIN_RANGE_MAX)
-		{
-			logger_error(g_debug_log, "BAD DATA FOR Tmin = %f in day = %d month = %d year = %d\n", yos[*yos_count-1].m[month].d[day].tmin, day+1, month+1, year);
-			exit(1);
-		}
-		else
-		{
-			previous_tmin = yos[*yos_count-1].m[month].d[day].tmin;
-		}
-
-		/* case VPD_F: //RH_f - RH */
-		yos[*yos_count-1].m[month].d[day].vpd = values[VALUE_AT(row,VPD_F)];
-		if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].vpd) && (!((day == 0) && (*yos_count == 1)&& (month == 0))))
-		{
-			//the model gets the value of the day before
-			//Log ("* VPD -NO DATA in year %d month %s, day %d!!!!\n", yos[*yos_count-1].year, MonthName[month], day);
-			//logger(g_debug_log, "Getting previous day values.. !!\n");
-			yos[*yos_count-1].m[month].d[day].vpd = previous_vpd;
-			//logger(g_debug_log, "..value of the previous day = %f\n", yos[*yos_count-1].m[month].d[day].vpd);
-			if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].vpd))
-			{
-				//Log ("********* VPD -NO DATA- in previous year!!!!\n" );
-
-				//the model gets the value of the year before
-				yos[*yos_count-1].m[month].d[day].vpd = yos[*yos_count-2].m[month].d[day].vpd;
-
-				if (IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].vpd))
-				{
-					//Log ("********* VPD -NO DATA- in previous year!!!!\n" );
-					yos[*yos_count-1].m[month].d[day].vpd = NO_DATA;
-				}
-
-			}
-		}
-		/* check if values are outside ranges */
-		else if(yos[*yos_count-1].m[month].d[day].vpd < VPD_RANGE_MIN || yos[*yos_count-1].m[month].d[day].vpd > VPD_RANGE_MAX)
-		{
-			logger_error(g_debug_log, "BAD DATA FOR vpd = %f in day = %d month = %d year = %d\n", yos[*yos_count-1].m[month].d[day].vpd, day+1, month+1, year);
-			exit(1);
-		}
-		else
-		{
-			previous_vpd = yos[*yos_count-1].m[month].d[day].vpd;
-		}
-		//logger(g_debug_log, "%d-%s-vpd = %f\n",yos[*yos_count-1].m[month].d[day].n_days, MonthName[month], yos[*yos_count-1].m[month].d[day].vpd);
-
-		/* case TS_F: // ts_f   Soil temperature */
-		yos[*yos_count-1].m[month].d[day].ts_f = values[VALUE_AT(row,TS_F)];
-		if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].ts_f) && (!((day == 0) && (*yos_count == 1)&& (month == 0))))
-		{
-			//the model gets the value of the day before
-			//Log ("* TS_F -NO DATA in year %s month %s!!!!\n", year, MonthName[month] );
-			yos[*yos_count-1].m[month].d[day].ts_f = previous_ts_f;
-			/*
-			if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].ts_f))
-			{
-				//Log ("********* TS_F -NO DATA- in previous year!!!!\n" );
-
-				//the model gets the value of the year before
-				yos[*yos_count-1].m[month].d[day].ts_f = yos[*yos_count-1].m[month].d[day].ts_f;
-
-				if (IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].ts_f))
-				{
-					//Log ("********* TS_F -NO DATA- in previous year!!!!\n" );
-					yos[*yos_count-1].m[month].d[day].ts_f = NO_DATA;
-				}
-			}
-			 */
-		}
-		else
-		{
-			previous_ts_f = yos[*yos_count-1].m[month].d[day].ts_f;
-		}
-
-		/* case PRECIP:  //Precip - rain */
-		yos[*yos_count-1].m[month].d[day].prcp = values[VALUE_AT(row,PRECIP)];
-		if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].prcp) && (!((day == 0) && (*yos_count == 1)&& (month == 0))))
-		{
-			//the model gets the value of the day before
-			//Log ("* PRECIPITATION -NO DATA in year %d month %s, day %d!!!!\n", yos[*yos_count-1].year, MonthName[month], day+1);
-			//logger(g_debug_log, "Getting previous day values.. !!\n");
-			yos[*yos_count-1].m[month].d[day].prcp = previous_prcp;
-			//logger(g_debug_log, "..value of the previous day = %f\n", yos[*yos_count-1].m[month].d[day].prcp);
-			if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].prcp))
-			{
-				logger(g_debug_log, "********* PRECIPITATION -NO DATA- in previous year!!!!\n" );
-
-				//the model gets the value of the year before
-				yos[*yos_count-1].m[month].d[day].prcp = yos[*yos_count-2].m[month].d[day].prcp;
-
-				if (IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].prcp))
-				{
-					logger(g_debug_log, "********* RAIN -NO DATA- in previous year!!!!\n" );
-					yos[*yos_count-1].m[month].d[day].prcp = NO_DATA;
-				}
-
-			}
-			//logger(g_debug_log, "precipitation of previous year = %f mm\n", yos[*yos_count-1].m[month].rain);
-		}
-		/* check if values are outside ranges */
-		else if(yos[*yos_count-1].m[month].d[day].prcp < PRECIP_RANGE_MIN || yos[*yos_count-1].m[month].d[day].prcp > PRECIP_RANGE_MAX)
-		{
-			logger_error(g_debug_log, "BAD DATA FOR prcp = %f in day = %d month = %d year = %d\n", yos[*yos_count-1].m[month].d[day].prcp, day+1, month+1, year);
-			exit(1);
-		}
-		else
-		{
-			previous_prcp = yos[*yos_count-1].m[month].d[day].prcp;
-		}
-
-		/* case SWC: //Soil Water Content (%) */
-		yos[*yos_count-1].m[month].d[day].swc = values[VALUE_AT(row,SWC)];
-		/*if ( error_flag )
-		{
-			printf("unable to convert value \"%s\" at column %d for %s day %d\n", token2, column+1, MonthName[month], day);
-			logger(g_debug_log, "unable to convert value \"%s\" at column %d for %s day %d\n", token2, column+1, MonthName[month], day);
-			free(yos);
-			fclose(f);
-			return 0;
-		}*/
-		if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].swc) && (!((day == 0) && (*yos_count == 1)&& (month == 0))))
-		{
-			//the model gets the value of the day before
-			//Log ("********* SWC -NO DATA in year %s month %s!!!!\n", year, MonthName[month] );
-			//logger(g_debug_log, "Getting previous years values !!\n");
-			yos[*yos_count-1].m[month].d[day].swc = previous_swc;
-			/*
-			if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].swc))
-			{
-				//Log ("* SWC -NO DATA- in previous year!!!!\n" );
-				//the model gets the value of the year before
-				yos[*yos_count-1].m[month].d[day].swc = yos[*yos_count-1].m[month].d[day].swc;
-
-				if (IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].swc))
-				{
-					//Log ("********* RAIN -NO DATA- in previous year!!!!\n" );
-					yos[*yos_count-1].m[month].d[day].swc = NO_DATA;
-				}
-			}
-			 */
-		}
-		else
-		{
-			previous_swc = yos[*yos_count-1].m[month].d[day].swc;
-		}
-
-		//logger(g_debug_log, "%d-%s-swc= %f\n",yos[*yos_count-1].m[month].d[day].n_days, MonthName[month], yos[*yos_count-1].m[month].d[day].swc);
-		//break;
-		//case NDVI_LAI: //Get LAI in spatial version
-		//todo to remove
-		if ( 's' == g_settings->spatial )
-		{
-			yos[*yos_count-1].m[month].d[day].ndvi_lai = values[VALUE_AT(row,NDVI_LAI)];
-			//if is not the first year the model get the previous year value
-			if (*yos_count > 1)
-			{
-
-				//control in lai data if is an invalid value
-				if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].ndvi_lai) && (!((day == 0) && (month == 0))))
-				{
-					//the model gets the value of the day before
-					//Log ("********* LAI -NO DATA in year %d month %s, day %d!!!!\n", yos[*yos_count-1].year, MonthName[month], day+1 );
-					//logger(g_debug_log, "Getting previous years values !!\n");
-					yos[*yos_count-1].m[month].d[day].ndvi_lai = previous_ndvi_lai;
-					if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].ndvi_lai))
-					{
-						//Log ("* LAI -NO DATA- in previous year!!!!\n" );
-						yos[*yos_count-1].m[month].d[day].ndvi_lai = NO_DATA;
-					}
-				}
-				else
-				{
-					previous_ndvi_lai = yos[*yos_count-1].m[month].d[day].ndvi_lai;
-				}
-			}
-		}
-
-		//case ET: //ET for stand alone RothC (todo remove)
-		yos[*yos_count-1].m[month].d[day].et = values[VALUE_AT(row,ET)];
-		if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].et) && (!((day == 0) && (*yos_count == 1)&& (month == 0))))
-		{
-			//the model gets the value of the day before
-			//Log ("* ET -NO DATA in year %s month %s, day %d!!!!\n", year, MonthName[month], day);
-		}
-		//logger(g_debug_log, "%d-%s-tavg = %f\n",yos[*yos_count-1].m[month].d[day].n_days, MonthName[month], yos[*yos_count-1].m[month].d[day].tavg);
-
-		//case WS_F: //windspeed
-		yos[*yos_count-1].m[month].d[day].windspeed = values[VALUE_AT(row,WS_F)];
-		if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].windspeed) && (!((day == 0) && (*yos_count == 1)&& (month == 0))))
-		{
-			//the model gets the value of the day before
-			//Log ("* windspeed -NO DATA in year %s month %s, day %d!!!!\n", yos[*yos_count-1].year, MonthName[month], day);
-		}
-		//logger(g_debug_log, "%d-%s-tavg = %f\n",yos[*yos_count-1].m[month].d[day].n_days, MonthName[month], yos[*yos_count-1].m[month].d[day].tavg);
-
-		// RH_f
-		yos[*yos_count-1].m[month].d[day].rh_f = values[VALUE_AT(row,RH_F)];
-
-		/* check */
-		if (yos[*yos_count-1].m[month].d[day].tmax < yos[*yos_count-1].m[month].d[day].tavg)
-		{
-			printf ("Tmax (%g) < Tavg (%g) at %d year, %d month, %d day\n",
-					yos[*yos_count-1].m[month].d[day].tmax,
-					yos[*yos_count-1].m[month].d[day].tavg,
-					*yos_count-1, month+1, day+1);
-		}
-		if (yos[*yos_count-1].m[month].d[day].tmax < yos[*yos_count-1].m[month].d[day].tmin)
-		{
-			printf ("Tmax (%g) < Tmin (%g) at %d year, %d month, %d day\n",
-					yos[*yos_count-1].m[month].d[day].tmax,
-					yos[*yos_count-1].m[month].d[day].tmin,
-					*yos_count-1, month+1, day+1);
-		}
-		if (yos[*yos_count-1].m[month].d[day].tavg < yos[*yos_count-1].m[month].d[day].tmin)
-		{
-			printf ("Tavg (%g) < Tmin (%g) at %d year, %d month, %d day\n",
-					yos[*yos_count-1].m[month].d[day].tavg,
-					yos[*yos_count-1].m[month].d[day].tmin,
-					*yos_count-1, month+1, day+1);
-		}
-		/*
-		CHECK_CONDITION(yos[*yos_count-1].m[month].d[day].tmax,<,yos[*yos_count-1].m[month].d[day].tavg);
-		CHECK_CONDITION(yos[*yos_count-1].m[month].d[day].tmax,<,yos[*yos_count-1].m[month].d[day].tmin);
-		CHECK_CONDITION(yos[*yos_count-1].m[month].d[day].tavg,<,yos[*yos_count-1].m[month].d[day].tmin);
-		*/
 	}
 	*p_yos = yos;
 	return 1;
@@ -1181,7 +1293,7 @@ static int import_nc(const char* const filename, meteo_annual_t** pyos, int* con
 
 
 static int import_lst(const char *const filename, meteo_annual_t** p_yos, int *const yos_count, const int x_cell, const int y_cell) {
-#define VARS_COUNT		((MET_COLUMNS_COUNT)-3)	/* we remove first 3 columns: year, month and day */
+#define VARS_COUNT		((MET_COLUMNS_COUNT)-5)	/* we remove first 5 columns: year, month, day, hour and halfhour */
 #define COLUMN_AT(c)	((c)*rows_count)
 #define VALUE_AT(r,c)	((r)+(COLUMN_AT(c)))
 
@@ -1540,7 +1652,7 @@ static int import_lst(const char *const filename, meteo_annual_t** p_yos, int *c
 							ret = nc_get_vara_float(id_file, i, start, count, f_values);
 							if ( ret != NC_NOERR ) goto quit;
 							for ( z = 0; z < rows_count; ++z ) {
-								values[VALUE_AT(z, y + 3)] = f_values[z];
+								values[VALUE_AT(z, y + 5)] = f_values[z];
 							}
 						} else if ( NC_DOUBLE == type ) {
 							ret = nc_get_vara_double(id_file, i, start, count, &values[COLUMN_AT(y + 3)]);
@@ -1783,7 +1895,7 @@ static int import_txt(const char *const filename, meteo_annual_t** p_yos, int *c
 		p = buffer;
 		while ( isspace(*p) ) ++p;
 
-		if ( ('/r' != p[0]) && ('/n' != p[0]) && ('/' != p[0]) && ('/0' != p[0]) )
+		if ( ('\r' != p[0]) && ('\n' != p[0]) && ('/' != p[0]) && ('\0' != p[0]) )
 		{
 			++rows_count;
 		}	
@@ -1844,7 +1956,7 @@ static int import_txt(const char *const filename, meteo_annual_t** p_yos, int *c
 		while ( isspace(*p) ) ++p;
 
 		// skip empty lines and comments
-	} while ( ('/0' == p[0]) || ('/' == p[0]) );
+	} while ( ('\0' == p[0]) || ('/' == p[0]) );
 	if ( ! p || ! p[0] ) {
 		logger_error(g_debug_log, "empty met data file ?\n");
 		free(values);
@@ -1910,6 +2022,16 @@ static int import_txt(const char *const filename, meteo_annual_t** p_yos, int *c
 			else if ( ((VPD_F == i) && (-1 != columns[RH_F])) || ((RH_F == i) && (-1 != columns[VPD_F])) ) {
 				continue;
 			}
+
+			if ( DAILY == g_settings->time )
+			{
+				// not an error
+				if ( (HOUR == i) || (HALFHOUR == i) )
+				{
+					continue;
+				}
+			}
+
 			logger_error(g_debug_log, "met column %s not found.\n\n", sz_met_columns[i]);
 			free(values);
 			fclose(f);

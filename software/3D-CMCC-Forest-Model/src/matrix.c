@@ -732,7 +732,7 @@ static dataset_t* dataset_import_txt(const char* const filename) {
 						/* check management length */
 						if ( 1 != strlen(token) ) {
 							printf(err_bad_management_length, rows_count);
-							free(row.species);
+							if ( row.species ) free(row.species);
 							free(columns);
 							dataset_free(dataset);
 							fclose(f);
@@ -750,7 +750,7 @@ static dataset_t* dataset_import_txt(const char* const filename) {
 							row.management = N;
 						} else {
 							printf(err_bad_management, token[0], rows_count);
-							free(row.species);
+							if ( row.species ) free(row.species);
 							free(columns);
 							dataset_free(dataset);
 							fclose(f);
@@ -760,7 +760,7 @@ static dataset_t* dataset_import_txt(const char* const filename) {
 						value = convert_string_to_float(token, &error);
 						if ( error ) {
 							printf(err_conversion, token, rows_count, y+1);
-							free(row.species);
+							if ( row.species ) free(row.species);
 							free(columns);
 							dataset_free(dataset);
 							fclose(f);
@@ -832,7 +832,7 @@ static dataset_t* dataset_import_txt(const char* const filename) {
 		/* check columns */
 		if ( assigned != COLUMNS_TO_IMPORT ) {
 			puts("not all values has been imported!");
-			free(row.species);
+			if ( row.species ) free(row.species);
 			free(columns);
 			dataset_free(dataset);
 			fclose(f);
@@ -845,7 +845,7 @@ static dataset_t* dataset_import_txt(const char* const filename) {
 			rows_no_leak = realloc(dataset->rows, (dataset->rows_count+1)*sizeof*rows_no_leak);
 			if ( ! rows_no_leak ) {
 				puts(sz_err_out_of_memory);
-				free(row.species);
+				if ( row.species ) free(row.species);
 				free(columns);
 				dataset_free(dataset);
 				fclose(f);
@@ -1894,11 +1894,25 @@ void matrix_free(matrix_t *m)
 					}
 				}
 				if ( m->cells[cell].years ) {
+					int i;
+				#if 1
+					if ( g_year_start_index != -1 ) {
+						m->cells[cell].years -= g_year_start_index;
+					}
+
+					for ( i = 0; i < m->cells[cell].years_count; ++i ) {
+						if ( m->cells[cell].years[i].m ) {
+							 free(m->cells[cell].years[i].m);
+						}
+					}
+					free (m->cells[cell].years);
+				#else
 					if ( g_year_start_index != -1 ) {
 						free (m->cells[cell].years-g_year_start_index);
 					} else {
 						free (m->cells[cell].years);
 					}
+				#endif
 				}
 			}
 			free (m->cells);
