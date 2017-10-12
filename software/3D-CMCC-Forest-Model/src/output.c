@@ -39,7 +39,7 @@ output_t* output_import(const char *const filename) {
 
 	i = file_load_in_memory(filename, &buffer);
 	if ( i <= 0 ) {
-		char *err;
+		char *err = NULL;
 		printf("unable to import output filename '%s': ", filename);
 		switch ( i )
 		{
@@ -59,7 +59,7 @@ output_t* output_import(const char *const filename) {
 				err = "read error!";
 			break;
 		}
-		puts(err);
+		if ( err ) puts(err);
 		return NULL;
 	}
 
@@ -97,7 +97,7 @@ output_t* output_import(const char *const filename) {
 				printf("%s is an unknown output var. skipped\n", token);
 				continue;
 			}
-			
+
 			// get var name
 			if ( var - token ) {
 				printf("bad output var specified: %s. skipped\n", token);
@@ -305,7 +305,7 @@ static int output_write_nc(const output_t* const vars, const char *const path, c
 	X = numero x celle
 	Y = numero y celle
 
-	quindi il valore a [v1][v2][v3][v4] va indicizzato a 
+	quindi il valore a [v1][v2][v3][v4] va indicizzato a
 
 	[v1 * n1 * n2 *n3 + v2 * n2 * n3 + v3 * n3 + v4]
 
@@ -403,7 +403,7 @@ static int output_write_nc(const output_t* const vars, const char *const path, c
 			//free(time_rows);
 			//return 0;
 			assert(0);
-		
+
 		/* create file */
 		ret = nc_create(sz_buffer, NC_CLOBBER, &id_file);
 		if ( ret != NC_NOERR ) goto quit;
@@ -484,7 +484,7 @@ static int output_write_txt(const output_t* const vars, const char *const path, 
 	X = numero x celle
 	Y = numero y celle
 
-	quindi il valore a [v1][v2][v3][v4] va indicizzato a 
+	quindi il valore a [v1][v2][v3][v4] va indicizzato a
 
 	[v1 * n1 * n2 *n3 + v2 * n2 * n3 + v3 * n3 + v4]
 
@@ -500,7 +500,7 @@ static int output_write_txt(const output_t* const vars, const char *const path, 
 	if ( OUTPUT_TYPE_DAILY == type ) vars_count = vars->daily_vars_count;
 	else if ( OUTPUT_TYPE_MONTHLY == type ) vars_count = vars->monthly_vars_count;
 	else vars_count = vars->yearly_vars_count;
-	
+
 	/* loop each vars */
 	for ( var = 0; var < vars_count; ++var )
 	{
@@ -513,7 +513,7 @@ static int output_write_txt(const output_t* const vars, const char *const path, 
 		/* create output filename */
 		if ( OUTPUT_TYPE_DAILY == type )
 		{
-			sprintf(sz_buffer, "%s%s.txt", path, sz_output_vars[vars->daily_vars[var]]);			
+			sprintf(sz_buffer, "%s%s.txt", path, sz_output_vars[vars->daily_vars[var]]);
 		}
 		else if ( OUTPUT_TYPE_MONTHLY == type )
 		{
@@ -558,7 +558,7 @@ static int output_write_txt(const output_t* const vars, const char *const path, 
 
 				/* loop each year */
 				for ( year = year_start; year < year_start+years_count; ++year )
-				{		
+				{
 					if ( OUTPUT_TYPE_DAILY == type ) rows_count = 365 + IS_LEAP_YEAR(year);
 					else if ( OUTPUT_TYPE_MONTHLY == type ) rows_count = 12;
 					else rows_count = years_count;

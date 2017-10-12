@@ -47,7 +47,7 @@ soil_settings_t* import_txt(const char *const filename, int* const p_settings_co
 	int columns[SOIL_VARS_COUNT];
 	FILE *f;
 	soil_settings_t *ps;
-	soil_settings_t s;
+	soil_settings_t s = { 0 };
 	soil_settings_t *ps_no_leak;
 
 	const char delimiters[] = " ,/\t\r\n";
@@ -64,7 +64,7 @@ soil_settings_t* import_txt(const char *const filename, int* const p_settings_co
 		logger_error(g_debug_log, "unable to open %s, file not found.\n", filename);
 		return 0;
 	}
-	
+
 	/* get header ( skip comments ) */
 	do {
 		if ( ! fgets(buffer, SOIL_BUFFER_SIZE, f) ) {
@@ -121,7 +121,7 @@ soil_settings_t* import_txt(const char *const filename, int* const p_settings_co
 	while ( fgets(buffer, SOIL_BUFFER_SIZE, f) ) {
 		char* p2;
 		int y; /* keep track of imported values */
-		
+
 		/* remove initial spaces (if any) */
 		p2 = buffer;
 		while ( isspace(*p2) ) ++p2;
@@ -172,7 +172,7 @@ soil_settings_t* import_txt(const char *const filename, int* const p_settings_co
 				}
 				s.values[columns[i]] = value;
 			}
-			
+
 			// skip comments
 			if ( ++y == SOIL_VARS_COUNT )
 			{
@@ -226,7 +226,7 @@ soil_settings_t* import_txt(const char *const filename, int* const p_settings_co
 		{
 			ps[*p_settings_count].values[y] = s.values[y];
 		}
-		
+
 		++*p_settings_count;
 	}
 	fclose(f);
@@ -262,7 +262,7 @@ static soil_settings_t* import_nc(const char *const sz_filename, int*const p_set
 	int n_dims;
 	int ids[NC_MAX_VAR_DIMS];
 	size_t size;
-		
+
 	soil_settings_t *ps;
 	soil_settings_t *ps_no_leak;
 
@@ -278,7 +278,7 @@ static soil_settings_t* import_nc(const char *const sz_filename, int*const p_set
 	/* reset stuff */
 	ps = NULL; /* required! for realloc stuff */
 	*p_settings_count = 0;
-		
+
 	ret = nc_open(sz_filename, NC_NOWRITE, &id_file);
 	if ( ret != NC_NOERR ) goto quit;
 
@@ -318,7 +318,7 @@ static soil_settings_t* import_nc(const char *const sz_filename, int*const p_set
 				}
 				dims_size[y] = size;
 				if ( X_DIM == y ) x_id = i;
-				break;			
+				break;
 			}
 		}
 	}
@@ -350,7 +350,7 @@ static soil_settings_t* import_nc(const char *const sz_filename, int*const p_set
 			}
 		}
 	}
-	
+
 
 	/* get vars */
 	for ( x = 0; x < dims_size[X_DIM]; x++ ) {
@@ -375,7 +375,7 @@ static soil_settings_t* import_nc(const char *const sz_filename, int*const p_set
 				if ( x_id == ids[0] ) {
 					/* x first */
 					start[0] = x;
-					start[1] = y;			
+					start[1] = y;
 				} else {
 					/* y first */
 					start[0] = y;
@@ -429,7 +429,7 @@ static soil_settings_t* import_nc(const char *const sz_filename, int*const p_set
 			++*p_settings_count;
 		}
 	}
-	
+
 	nc_close(id_file);
 	return ps;
 

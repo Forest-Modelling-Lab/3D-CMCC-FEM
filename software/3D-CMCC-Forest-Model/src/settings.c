@@ -176,7 +176,7 @@ static int settings_replanted_import(const char* const filename, settings_t* s)
 	//int imported[REPLANTED_SETTINGS_COUNT] = { 0 };
 	replanted_temp_t* temp;
 	int temp_count;
-	
+
 	replanted_vars_t replanted = { 0 };
 	FILE* f;
 
@@ -221,7 +221,7 @@ static int settings_replanted_import(const char* const filename, settings_t* s)
 		for ( i = 0; i < REPLANTED_SETTINGS_COUNT; i++ )
 		{
 			if ( ! string_compare_i(token, sz_replanted_settings[i]) )
-			{ 
+			{
 				// token found, without index
 
 				current = get_current_by_index(temp, temp_count, 0);
@@ -307,7 +307,7 @@ static int settings_replanted_import(const char* const filename, settings_t* s)
 				}
 			}
 		}
-		
+
 		if ( REPLANTED_SETTINGS_COUNT == i )
 		{
 			continue;
@@ -454,7 +454,7 @@ static int settings_replanted_import(const char* const filename, settings_t* s)
 
 	return 1;
 
-#undef BUFFER_SIZE	
+#undef BUFFER_SIZE
 }
 
 settings_t* settings_import(const char *const filename) {
@@ -534,7 +534,7 @@ settings_t* settings_import(const char *const filename) {
 			printf("no value specified for %s", sz_settings[index]);
 			/* check if is an optional parameter */
 			flag = 0;
-			for ( i = 0; i < SIZE_OF_ARRAY(optional); ++i ) {
+			for ( i = 0; i < (int)SIZE_OF_ARRAY(optional); ++i ) {
 				if ( index == optional[i] ) {
 					flag = 1;
 					break;
@@ -743,7 +743,7 @@ settings_t* settings_import(const char *const filename) {
 						// ALESSIOC fill me
 						s->sizeCell *= s->sizeCell;
 					break;
-					
+
 					case SETTINGS_Y:
 						s->Fixed_Aut_Resp_rate = value;
 					break;
@@ -805,7 +805,7 @@ settings_t* settings_import(const char *const filename) {
 
 			/* check for optional parameter */
 			flag = 0;
-			for ( y = 0; y < SIZE_OF_ARRAY(optional); ++y ) {
+			for ( y = 0; y < (int)SIZE_OF_ARRAY(optional); ++y ) {
 				if ( i == optional[y] ) {
 					flag = 1;
 					break;

@@ -440,7 +440,7 @@ int daily_forest_structure ( cell_t *const c, const meteo_daily_t *const meteo_d
 
 	tree_layer_t *l;
 	height_t *h;
-	species_t *s;
+	species_t *s = NULL;
 
 	/* This function computes at class level and at daily scale :
 	 * -Canopy Cover Projected (based on daily LAI)

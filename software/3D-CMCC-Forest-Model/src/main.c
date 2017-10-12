@@ -1822,7 +1822,7 @@ int main(int argc, char *argv[]) {
 							}
 							/************************************************************************/
 							/* run for litter model */
-							if ( !Litter_model(matrix, cell, day, month, year) )
+							if ( ! Litter_model(matrix, cell, halfhour, hour, day, month, year) )
 							{
 								logger_error(g_debug_log, "litter model daily failed!!!\n");
 								goto err;
@@ -1831,6 +1831,7 @@ int main(int argc, char *argv[]) {
 							{
 								printf("ok litr_model (%02d-%02d-%d)\n", day+1, month+1, year+g_settings->year_start);
 							}
+
 							/************************************************************************/
 							/* run for soil model */
 							if ( !Soil_model(matrix, cell, day, month, year) )

@@ -103,7 +103,7 @@ static void timestamp_split(const double value, int *const YYYY, int *const MM, 
 
 // torna sempre un valore anche se non trova l'anno
 // (in pratica ritorna l'ultimo valore del file)
-// se non trova nulla, INVALID_VALUE 
+// se non trova nulla, INVALID_VALUE
 static double get_co2_conc(const int year, int*const err) {
 	char buf[256];
 	int _year;
@@ -182,6 +182,7 @@ static void yos_clear(meteo_annual_t *const meteo_annual) {
 		int y;
 		meteo_annual->year = 0;
 		meteo_annual->co2Conc = INVALID_VALUE;
+		meteo_annual->Ndep = INVALID_VALUE;
 		for ( i = 0; i < METEO_MONTHS_COUNT; ++i ) {
 			for ( y = 0; y < METEO_DAYS_COUNT; ++y ) {
 				if ( DAILY == g_settings->time ) {
@@ -410,6 +411,10 @@ static int meteo_from_arr_daily(double *const values, const int rows_count, mete
 					, previous_swc
 					, previous_ndvi_lai
 	;
+
+	assert(year >= 0);
+	assert(month >= 0 && month < 12);
+	assert(day >= 0 && day < 31);
 
 	yos = *p_yos;
 
@@ -984,19 +989,20 @@ static int meteo_from_arr(double *const values, const int rows_count, const int 
 				return 0;
 			}
 			yos = yos_no_leak;
-						
-			// alloc memory for meteo
-			if ( DAILY == g_settings->time)
+
+			switch ( g_settings->time )
 			{
-				yos[*yos_count].m = malloc(METEO_MONTHS_COUNT*sizeof(meteo_d_t));
-			}
-			else if ( HOURLY == g_settings->time)
-			{
-				yos[*yos_count].m = malloc(METEO_MONTHS_COUNT*sizeof(meteo_h_t));
-			}
-			else if ( HALFHOURLY == g_settings->time)
-			{
-				yos[*yos_count].m = malloc(METEO_MONTHS_COUNT*sizeof(meteo_hh_t));
+				case DAILY:
+					yos[*yos_count].m = malloc(METEO_MONTHS_COUNT*sizeof(meteo_d_t));
+				break;
+
+				case HOURLY:
+					yos[*yos_count].m = malloc(METEO_MONTHS_COUNT*sizeof(meteo_h_t));
+				break;
+
+				case HALFHOURLY:
+					yos[*yos_count].m = malloc(METEO_MONTHS_COUNT*sizeof(meteo_hh_t));
+				break;
 			}
 
 			if ( ! yos[*yos_count].m )
@@ -1888,7 +1894,7 @@ static int import_txt(const char *const filename, meteo_annual_t** p_yos, int *c
 	{
 		if ( ! fgets(buffer, BUFFER_SIZE, f) )
 		{
-			break;			
+			break;
 		}
 
 		// remove initial spaces and tabs (if any)
@@ -1898,12 +1904,12 @@ static int import_txt(const char *const filename, meteo_annual_t** p_yos, int *c
 		if ( ('\r' != p[0]) && ('\n' != p[0]) && ('/' != p[0]) && ('\0' != p[0]) )
 		{
 			++rows_count;
-		}	
+		}
 	}
 
 	// close file
 	fclose(f);
-	
+
 	if ( ! rows_count  )
 	{
 		logger_error(g_debug_log, "unable to import '%s': file is empty!", filename);
@@ -1918,7 +1924,7 @@ static int import_txt(const char *const filename, meteo_annual_t** p_yos, int *c
 		logger_error(g_debug_log, "unable to import '%s': data is missing!", filename);
 		return 0;
 	}
-	
+
 	// alloc memory for values
 	values = malloc(rows_count*MET_COLUMNS_COUNT*sizeof*values);
 	if ( ! values ) {
@@ -2054,7 +2060,7 @@ static int import_txt(const char *const filename, meteo_annual_t** p_yos, int *c
 		// remove initial spaces (if any)
 		p = buffer;
 		while ( isspace(*p) ) ++p;
-	
+
 		// skip empty lines or comment
 		if ( ('\0' == p[0]) || ('/' == p[0]) )
 		{
@@ -2130,7 +2136,7 @@ static int import_txt(const char *const filename, meteo_annual_t** p_yos, int *c
 			}
 		}
 		fputs("\n", f);
-			
+
 		for ( row = 0; row < rows_count; ++row ) {
 			for ( i = 0; i < MET_COLUMNS_COUNT; ++i ) {
 				fprintf(f, "%g", values[VALUE_AT(row,i)]);
@@ -2172,7 +2178,7 @@ static int import_txt(const char *const filename, meteo_annual_t** p_yos, int *c
 		}
 	}
 
-	if ( (-1 == columns[RH_F]) 
+	if ( (-1 == columns[RH_F])
 			&& (-1 == columns[VPD_F]) ) {
 		logger(g_debug_log, "rh and vpd not found!");
 		free(values);
@@ -2186,6 +2192,7 @@ static int import_txt(const char *const filename, meteo_annual_t** p_yos, int *c
 		compute_rh(values, rows_count, MET_COLUMNS_COUNT);
 	}
 #endif
+
 	if ( ! meteo_from_arr(values, rows_count, MET_COLUMNS_COUNT, p_yos, yos_count) ) {
 		free(values);
 		return 0;

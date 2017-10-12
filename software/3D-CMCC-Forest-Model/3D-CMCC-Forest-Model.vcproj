@@ -26,8 +26,6 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-				Description="Get previous commit hash (unused)"
-				CommandLine="git log -n 1 --pretty=&quot;format:#define COMMIT_HASH \&quot;%%H\&quot;&quot; &gt; $(ProjectDir)src\commit_hash.h"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -47,6 +45,7 @@
 				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="&quot;$(ProjectDir)headers&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS"
+				ExceptionHandling="2"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
@@ -67,9 +66,10 @@
 				AdditionalDependencies="netcdf.lib"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"
+				GenerateMapFile="true"
 				SubSystem="1"
-				OptimizeReferences="2"
-				EnableCOMDATFolding="2"
+				OptimizeReferences="0"
+				EnableCOMDATFolding="0"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -103,8 +103,6 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-				Description="Get previous commit hash (unused)"
-				CommandLine="git log -n 1 --pretty=&quot;format:#define COMMIT_HASH \&quot;%%H\&quot;&quot; &gt; $(ProjectDir)src\commit_hash.h"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"

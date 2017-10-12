@@ -27,6 +27,7 @@ void soil_evaporation(cell_t *const c, const meteo_daily_t *const meteo_daily)
 	double rr;
 	double rhr;
 
+	rh = 0.;
 
 	tairK  = meteo_daily->tavg + TempAbs;
 	tsoilK = meteo_daily->tsoil + TempAbs;

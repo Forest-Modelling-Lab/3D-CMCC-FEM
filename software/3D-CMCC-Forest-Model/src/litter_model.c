@@ -30,13 +30,14 @@ int Litter_model(matrix_t *const m, const int cell, const int half_hour, const i
 	assert(m);
 	
 	meteo_daily = NULL;
-	
+
 	/* assign shortcuts */
 	c = &m->cells[cell];
+
 	if ( DAILY == g_settings->time )
 	{
-		meteo_daily = &METEO_DAILY(c->years[year].m)[month].d[day];
-		//meteo_daily = &m->cells[cell].years[year].m[month].d[day];
+		//meteo_daily = &METEO_DAILY(c->years[year].m)[month].d[day];
+		meteo_daily = &METEO_DAILY(m->cells[cell].years[year].m)[month].d[day];		
 	}
 	else if ( HOURLY == g_settings->time )
 	{

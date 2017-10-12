@@ -83,7 +83,7 @@ void Daily_Sat_vapour_pressure(cell_t *const c, const int day, const int month, 
 	meteo_d_t* met;
 
 	assert(DAILY == g_settings->time);
-		
+
 	met = METEO_DAILY(c->years[year].m);
 
 	TmaxK = met[month].d[day].tmax + TempAbs;
@@ -234,7 +234,7 @@ void Daily_Radiation(cell_t *const c, const int day, const int month, const int 
 	meteo_d_t *met;
 
 	assert(DAILY == g_settings->time);
-			
+
 	met = METEO_DAILY(c->years[year].m);
 
 	TmaxK = met[month].d[day].tmax + TempAbs;
@@ -619,7 +619,7 @@ void Daily_Weighted_average_temperature(const cell_t *const c, const e_weighted_
 	weighted_avg = 0.;
 	do
 	{
-		double v;
+		double v = 0.;
 
 		i += day_avg;
 
@@ -697,7 +697,7 @@ void Daily_Averaged_temperature(const cell_t *const c, const e_averaged_var var,
 
 	do
 	{
-		double v;
+		double v = 0.;
 
 		++i;
 
