@@ -7,9 +7,9 @@
 #define METEO_HOURS_COUNT		24
 #define METEO_HALFHOURS_COUNT	2
 
-#define METEO_DAILY(x)				((meteo_d_t*)(x))
-#define METEO_HOURLY(x)				((meteo_h_t*)(x))
-#define METEO_HALFHOURLY(x)			((meteo_hh_t*)(x))
+#define METEO_DAILY(x)			((meteo_d_t*)(x))
+#define METEO_HOURLY(x)			((meteo_h_t*)(x))
+#define METEO_HALFHOURLY(x)		((meteo_hh_t*)(x))
 
 #define METEO_COMMON_MEMBERS																		\
 		int n_days;																					\
@@ -82,12 +82,16 @@ typedef struct {
 
 typedef struct {
 	METEO_COMMON_MEMBERS
-} meteo_h_hh;
+} meteo_h_hh_t;
+
+typedef struct {
+meteo_h_hh_t d[METEO_DAYS_COUNT];
+} meteo_daily_mean_t;
 
 /* hourly struct */
 
 typedef struct {
-	meteo_h_hh h[METEO_HOURS_COUNT];
+	meteo_h_hh_t h[METEO_HOURS_COUNT];
 } meteo_day_h_t;
 
 typedef struct {
@@ -97,7 +101,7 @@ typedef struct {
 /* halfhourly struct */
 
 typedef struct {
-	meteo_h_hh hh[METEO_HALFHOURS_COUNT];
+	meteo_h_hh_t hh[METEO_HALFHOURS_COUNT];
 } meteo_hour_t;
 
 typedef struct {
@@ -129,12 +133,14 @@ typedef struct {
 	int year;
 	double co2Conc;	                             /* (ppmv) annual atmospheric CO2 concentration */
 	double Ndep;	                             /* (kgN/m2/year) annual nitrogen deposition */
-
+	
 	void* m;
+	meteo_daily_mean_t* daily_mean;
 	meteo_mean_t monthly_mean[METEO_MONTHS_COUNT];
 	meteo_mean_t yearly_mean;
 } meteo_annual_t;
 
 meteo_annual_t* meteo_annual_import(const char *const file, int *const yos_count, const int x, const int y);
+void meteo_annual_free(meteo_annual_t* p, const int count);
 
 #endif /* METEO_H_ */

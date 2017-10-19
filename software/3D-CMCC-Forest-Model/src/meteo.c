@@ -76,7 +76,7 @@ static const char *sz_met_columns[MET_COLUMNS_COUNT+2] = {
 		, "Month"
 		, "n_days"
 		, "hour"
-		, "halfhour"
+		, "minute"
 		, "Rg_f"
 		, "Ta_f"
 		, "Tmax"
@@ -186,6 +186,7 @@ static void yos_clear(meteo_annual_t *const meteo_annual) {
 		for ( i = 0; i < METEO_MONTHS_COUNT; ++i ) {
 			for ( y = 0; y < METEO_DAYS_COUNT; ++y ) {
 				if ( DAILY == g_settings->time ) {
+					meteo_annual->daily_mean = NULL;
 					METEO_DAILY(meteo_annual->m)[i].d[y].n_days = INVALID_VALUE;
 					METEO_DAILY(meteo_annual->m)[i].d[y].solar_rad = INVALID_VALUE;
 					METEO_DAILY(meteo_annual->m)[i].d[y].tavg = INVALID_VALUE;
@@ -240,11 +241,126 @@ static void yos_clear(meteo_annual_t *const meteo_annual) {
 				}
 				else if ( HOURLY == g_settings->time )
 				{
-					// TODO
+					int h;
+
+					for ( h = 0; h < METEO_HOURS_COUNT; ++h )
+					{
+						METEO_HOURLY(meteo_annual->m)[i].d[y].h[h].n_days = INVALID_VALUE;
+						METEO_HOURLY(meteo_annual->m)[i].d[y].h[h].solar_rad = INVALID_VALUE;
+						METEO_HOURLY(meteo_annual->m)[i].d[y].h[h].tavg = INVALID_VALUE;
+						//METEO_HOURLY(meteo_annual->m)[i].d[y].h[h].tmax = INVALID_VALUE;
+						//METEO_HOURLY(meteo_annual->m)[i].d[y].h[h].tmin = INVALID_VALUE;
+						//METEO_HOURLY(meteo_annual->m)[i].d[y].h[h].tday = INVALID_VALUE;
+						//METEO_HOURLY(meteo_annual->m)[i].d[y].h[h].tnight = INVALID_VALUE;
+						METEO_HOURLY(meteo_annual->m)[i].d[y].h[h].vpd = INVALID_VALUE;
+						METEO_HOURLY(meteo_annual->m)[i].d[y].h[h].ts_f = INVALID_VALUE;
+						METEO_HOURLY(meteo_annual->m)[i].d[y].h[h].prcp = INVALID_VALUE;
+						METEO_HOURLY(meteo_annual->m)[i].d[y].h[h].swc = INVALID_VALUE;
+						//METEO_HOURLY(meteo_annual->m)[i].d[y].h[h].ndvi_lai = INVALID_VALUE;
+						//METEO_HOURLY(meteo_annual->m)[i].d[y].h[h].daylength = INVALID_VALUE;
+						//METEO_HOURLY(meteo_annual->m)[i].d[y].h[h].thermic_sum = INVALID_VALUE;
+						METEO_HOURLY(meteo_annual->m)[i].d[y].h[h].rho_air = INVALID_VALUE;
+						METEO_HOURLY(meteo_annual->m)[i].d[y].h[h].tsoil = INVALID_VALUE;
+						METEO_HOURLY(meteo_annual->m)[i].d[y].h[h].et = INVALID_VALUE;
+						METEO_HOURLY(meteo_annual->m)[i].d[y].h[h].windspeed = INVALID_VALUE;
+						METEO_HOURLY(meteo_annual->m)[i].d[y].h[h].rh_f = INVALID_VALUE;
+						METEO_HOURLY(meteo_annual->m)[i].d[y].h[h].lh_vap = INVALID_VALUE;
+						METEO_HOURLY(meteo_annual->m)[i].d[y].h[h].lh_vap_soil = INVALID_VALUE;
+						METEO_HOURLY(meteo_annual->m)[i].d[y].h[h].lh_fus = INVALID_VALUE;
+						METEO_HOURLY(meteo_annual->m)[i].d[y].h[h].lh_sub = INVALID_VALUE;
+						METEO_HOURLY(meteo_annual->m)[i].d[y].h[h].air_pressure = INVALID_VALUE;
+						//METEO_HOURLY(meteo_annual->m)[i].d[y].h[h].ten_day_avg_tavg = INVALID_VALUE;
+						//METEO_HOURLY(meteo_annual->m)[i].d[y].h[h].ten_day_avg_tsoil = INVALID_VALUE;
+						//METEO_HOURLY(meteo_annual->m)[i].d[y].h[h].ten_day_avg_tday = INVALID_VALUE;
+						//METEO_HOURLY(meteo_annual->m)[i].d[y].h[h].ten_day_avg_tnight = INVALID_VALUE;
+						//METEO_HOURLY(meteo_annual->m)[i].d[y].h[h].ten_day_weighted_avg_tavg = INVALID_VALUE;
+						//METEO_HOURLY(meteo_annual->m)[i].d[y].h[h].ten_day_weighted_avg_tsoil = INVALID_VALUE;
+						//METEO_HOURLY(meteo_annual->m)[i].d[y].h[h].ten_day_weighted_avg_tday = INVALID_VALUE;
+						//METEO_HOURLY(meteo_annual->m)[i].d[y].h[h].ten_day_weighted_avg_tnight = INVALID_VALUE;
+						METEO_HOURLY(meteo_annual->m)[i].d[y].h[h].es = INVALID_VALUE;
+						METEO_HOURLY(meteo_annual->m)[i].d[y].h[h].ea = INVALID_VALUE;
+						METEO_HOURLY(meteo_annual->m)[i].d[y].h[h].psych = INVALID_VALUE;
+						METEO_HOURLY(meteo_annual->m)[i].d[y].h[h].sw_pot_downward_W = INVALID_VALUE;
+						METEO_HOURLY(meteo_annual->m)[i].d[y].h[h].sw_downward_MJ = INVALID_VALUE;
+						METEO_HOURLY(meteo_annual->m)[i].d[y].h[h].incoming_sw_downward_W = INVALID_VALUE;
+						METEO_HOURLY(meteo_annual->m)[i].d[y].h[h].sw_downward_W = INVALID_VALUE;
+						METEO_HOURLY(meteo_annual->m)[i].d[y].h[h].lw_downward_MJ = INVALID_VALUE;
+						METEO_HOURLY(meteo_annual->m)[i].d[y].h[h].atm_lw_downward_W = INVALID_VALUE;
+						METEO_HOURLY(meteo_annual->m)[i].d[y].h[h].lw_net_MJ = INVALID_VALUE;
+						METEO_HOURLY(meteo_annual->m)[i].d[y].h[h].lw_net_W = INVALID_VALUE;
+						METEO_HOURLY(meteo_annual->m)[i].d[y].h[h].incoming_par = INVALID_VALUE;
+						METEO_HOURLY(meteo_annual->m)[i].d[y].h[h].par = INVALID_VALUE;
+						METEO_HOURLY(meteo_annual->m)[i].d[y].h[h].incoming_ppfd = INVALID_VALUE;
+						METEO_HOURLY(meteo_annual->m)[i].d[y].h[h].ppfd = INVALID_VALUE;
+						METEO_HOURLY(meteo_annual->m)[i].d[y].h[h].emis_atm_clear_sky = INVALID_VALUE;
+						METEO_HOURLY(meteo_annual->m)[i].d[y].h[h].emis_atm = INVALID_VALUE;
+						METEO_HOURLY(meteo_annual->m)[i].d[y].h[h].cloud_cover_frac = INVALID_VALUE;
+						METEO_HOURLY(meteo_annual->m)[i].d[y].h[h].cloud_cover_frac_corr = INVALID_VALUE;
+					}
 				}
 				else if ( HALFHOURLY == g_settings->time )
 				{
-					// TODO
+					int h;
+
+					for ( h = 0; h < METEO_HOURS_COUNT; ++h )
+					{
+						int s;
+
+						for ( s = 0; s < METEO_HALFHOURS_COUNT; ++s )
+						{
+							METEO_HALFHOURLY(meteo_annual->m)[i].d[y].h[h].hh[s].n_days = INVALID_VALUE;
+							METEO_HALFHOURLY(meteo_annual->m)[i].d[y].h[h].hh[s].solar_rad = INVALID_VALUE;
+							METEO_HALFHOURLY(meteo_annual->m)[i].d[y].h[h].hh[s].tavg = INVALID_VALUE;
+							//METEO_HALFHOURLY(meteo_annual->m)[i].d[y].h[h].hh[s].tmax = INVALID_VALUE;
+							//METEO_HALFHOURLY(meteo_annual->m)[i].d[y].h[h].hh[s].tmin = INVALID_VALUE;
+							//METEO_HALFHOURLY(meteo_annual->m)[i].d[y].h[h].hh[s].tday = INVALID_VALUE;
+							//METEO_HALFHOURLY(meteo_annual->m)[i].d[y].h[h].hh[s].tnight = INVALID_VALUE;
+							METEO_HALFHOURLY(meteo_annual->m)[i].d[y].h[h].hh[s].vpd = INVALID_VALUE;
+							METEO_HALFHOURLY(meteo_annual->m)[i].d[y].h[h].hh[s].ts_f = INVALID_VALUE;
+							METEO_HALFHOURLY(meteo_annual->m)[i].d[y].h[h].hh[s].prcp = INVALID_VALUE;
+							METEO_HALFHOURLY(meteo_annual->m)[i].d[y].h[h].hh[s].swc = INVALID_VALUE;
+							//METEO_HALFHOURLY(meteo_annual->m)[i].d[y].h[h].hh[s].ndvi_lai = INVALID_VALUE;
+							//METEO_HALFHOURLY(meteo_annual->m)[i].d[y].h[h].hh[s].daylength = INVALID_VALUE;
+							//METEO_HALFHOURLY(meteo_annual->m)[i].d[y].h[h].hh[s].thermic_sum = INVALID_VALUE;
+							METEO_HALFHOURLY(meteo_annual->m)[i].d[y].h[h].hh[s].rho_air = INVALID_VALUE;
+							METEO_HALFHOURLY(meteo_annual->m)[i].d[y].h[h].hh[s].tsoil = INVALID_VALUE;
+							METEO_HALFHOURLY(meteo_annual->m)[i].d[y].h[h].hh[s].et = INVALID_VALUE;
+							METEO_HALFHOURLY(meteo_annual->m)[i].d[y].h[h].hh[s].windspeed = INVALID_VALUE;
+							METEO_HALFHOURLY(meteo_annual->m)[i].d[y].h[h].hh[s].rh_f = INVALID_VALUE;
+							METEO_HALFHOURLY(meteo_annual->m)[i].d[y].h[h].hh[s].lh_vap = INVALID_VALUE;
+							METEO_HALFHOURLY(meteo_annual->m)[i].d[y].h[h].hh[s].lh_vap_soil = INVALID_VALUE;
+							METEO_HALFHOURLY(meteo_annual->m)[i].d[y].h[h].hh[s].lh_fus = INVALID_VALUE;
+							METEO_HALFHOURLY(meteo_annual->m)[i].d[y].h[h].hh[s].lh_sub = INVALID_VALUE;
+							METEO_HALFHOURLY(meteo_annual->m)[i].d[y].h[h].hh[s].air_pressure = INVALID_VALUE;
+							//METEO_HALFHOURLY(meteo_annual->m)[i].d[y].h[h].hh[s].ten_day_avg_tavg = INVALID_VALUE;
+							//METEO_HALFHOURLY(meteo_annual->m)[i].d[y].h[h].hh[s].ten_day_avg_tsoil = INVALID_VALUE;
+							//METEO_HALFHOURLY(meteo_annual->m)[i].d[y].h[h].hh[s].ten_day_avg_tday = INVALID_VALUE;
+							//METEO_HALFHOURLY(meteo_annual->m)[i].d[y].h[h].hh[s].ten_day_avg_tnight = INVALID_VALUE;
+							//METEO_HALFHOURLY(meteo_annual->m)[i].d[y].h[h].hh[s].ten_day_weighted_avg_tavg = INVALID_VALUE;
+							//METEO_HALFHOURLY(meteo_annual->m)[i].d[y].h[h].hh[s].ten_day_weighted_avg_tsoil = INVALID_VALUE;
+							//METEO_HALFHOURLY(meteo_annual->m)[i].d[y].h[h].hh[s].ten_day_weighted_avg_tday = INVALID_VALUE;
+							//METEO_HALFHOURLY(meteo_annual->m)[i].d[y].h[h].hh[s].ten_day_weighted_avg_tnight = INVALID_VALUE;
+							METEO_HALFHOURLY(meteo_annual->m)[i].d[y].h[h].hh[s].es = INVALID_VALUE;
+							METEO_HALFHOURLY(meteo_annual->m)[i].d[y].h[h].hh[s].ea = INVALID_VALUE;
+							METEO_HALFHOURLY(meteo_annual->m)[i].d[y].h[h].hh[s].psych = INVALID_VALUE;
+							METEO_HALFHOURLY(meteo_annual->m)[i].d[y].h[h].hh[s].sw_pot_downward_W = INVALID_VALUE;
+							METEO_HALFHOURLY(meteo_annual->m)[i].d[y].h[h].hh[s].sw_downward_MJ = INVALID_VALUE;
+							METEO_HALFHOURLY(meteo_annual->m)[i].d[y].h[h].hh[s].incoming_sw_downward_W = INVALID_VALUE;
+							METEO_HALFHOURLY(meteo_annual->m)[i].d[y].h[h].hh[s].sw_downward_W = INVALID_VALUE;
+							METEO_HALFHOURLY(meteo_annual->m)[i].d[y].h[h].hh[s].lw_downward_MJ = INVALID_VALUE;
+							METEO_HALFHOURLY(meteo_annual->m)[i].d[y].h[h].hh[s].atm_lw_downward_W = INVALID_VALUE;
+							METEO_HALFHOURLY(meteo_annual->m)[i].d[y].h[h].hh[s].lw_net_MJ = INVALID_VALUE;
+							METEO_HALFHOURLY(meteo_annual->m)[i].d[y].h[h].hh[s].lw_net_W = INVALID_VALUE;
+							METEO_HALFHOURLY(meteo_annual->m)[i].d[y].h[h].hh[s].incoming_par = INVALID_VALUE;
+							METEO_HALFHOURLY(meteo_annual->m)[i].d[y].h[h].hh[s].par = INVALID_VALUE;
+							METEO_HALFHOURLY(meteo_annual->m)[i].d[y].h[h].hh[s].incoming_ppfd = INVALID_VALUE;
+							METEO_HALFHOURLY(meteo_annual->m)[i].d[y].h[h].hh[s].ppfd = INVALID_VALUE;
+							METEO_HALFHOURLY(meteo_annual->m)[i].d[y].h[h].hh[s].emis_atm_clear_sky = INVALID_VALUE;
+							METEO_HALFHOURLY(meteo_annual->m)[i].d[y].h[h].hh[s].emis_atm = INVALID_VALUE;
+							METEO_HALFHOURLY(meteo_annual->m)[i].d[y].h[h].hh[s].cloud_cover_frac = INVALID_VALUE;
+							METEO_HALFHOURLY(meteo_annual->m)[i].d[y].h[h].hh[s].cloud_cover_frac_corr = INVALID_VALUE;
+						}
+					}
 				}
 			}
 			meteo_annual->monthly_mean[i].solar_rad = INVALID_VALUE;
@@ -800,6 +916,18 @@ static int meteo_from_arr_halfhourly(double *const values, const int rows_count,
 	return 0;
 }
 
+static int aggr_to_daily(meteo_daily_mean_t*const daily_mean, const double* const values, const int rows_count, const int hourly) {
+#define VALUE_AT(r,c)	((r)+((c)*rows_count))
+
+	assert(daily_mean);
+	assert(values);
+
+	// ok
+	return 1;
+
+#undef VALUE_AT
+}
+
 static int meteo_from_arr(double *const values, const int rows_count, const int columns_count, meteo_annual_t** p_yos, int *const yos_count) {
 #define VALUE_AT(r,c)	((r)+((c)*rows_count))
 	meteo_annual_t *yos_no_leak;
@@ -990,6 +1118,9 @@ static int meteo_from_arr(double *const values, const int rows_count, const int 
 			}
 			yos = yos_no_leak;
 
+			/* required */
+			yos[*yos_count].daily_mean = NULL;
+
 			switch ( g_settings->time )
 			{
 				case DAILY:
@@ -1011,6 +1142,29 @@ static int meteo_from_arr(double *const values, const int rows_count, const int 
 				//free(yos);
 				return 0;
 			}
+
+			/*
+			switch ( g_settings->time )
+			{
+				case HOURLY:
+				case HALFHOURLY:
+					yos[*yos_count].daily_mean = malloc(METEO_MONTHS_COUNT*sizeof(meteo_daily_mean_t));
+					if ( ! yos[*yos_count].daily_mean )
+					{
+						logger_error(g_debug_log, sz_err_out_of_memory);
+						//free(yos);
+						return 0;
+					}
+
+					// aggregate to daily
+					if ( ! aggr_to_daily(yos[*yos_count].daily_mean, values, rows_count, (HOURLY == g_settings->time)) )
+					{
+						return 0;
+					}
+				break;
+			}
+			*/
+			
 
 			yos_clear(&yos[*yos_count]);
 			yos[*yos_count].year = year;
@@ -1986,11 +2140,28 @@ static int import_txt(const char *const filename, meteo_annual_t** p_yos, int *c
 			{
 				if  ( -1 != columns[i] )
 				{
-					logger_error(g_debug_log, "met column %s already assigned.\n\n", token2);
+					logger_error(g_debug_log, "column '%s' already assigned.\n\n", token2);
 					free(values);
 					fclose(f);
 					return 0;
 				}
+
+				if ( (DAILY == g_settings->time) && ( (HOUR == i) || (HALFHOUR == i) ) )
+				{
+					logger_error(g_debug_log, "column '%s' found but DAILY specified in settings.\n\n", token2);
+					free(values);
+					fclose(f);
+					return 0;
+				}
+
+				if ( (HOURLY == g_settings->time) && (HALFHOUR == i) )
+				{
+					logger_error(g_debug_log, "column '%s' found but HOURLY specified in settings.\n\n", token2);
+					free(values);
+					fclose(f);
+					return 0;
+				}
+
 				columns[i] = column;
 				break;
 			}
@@ -2206,6 +2377,20 @@ static int import_txt(const char *const filename, meteo_annual_t** p_yos, int *c
 #undef VALUE_AT
 }
 
+void meteo_annual_free(meteo_annual_t* p, const int count)
+{
+	if ( count )
+	{
+		int i;
+		for (i = 0; i < count; ++i )
+		{
+			if ( p[i].m ) free(p[i].m);
+			if ( p[i].daily_mean ) free(p[i].daily_mean);
+		}
+		free(p);
+	}
+}
+
 /* file is the comma separated files list!!! not a single file, initially yos_count is equal to 0 */
 meteo_annual_t* meteo_annual_import(const char *const file, int *const yos_count, const int x, const int y) {
 	char *token;
@@ -2264,7 +2449,7 @@ meteo_annual_t* meteo_annual_import(const char *const file, int *const yos_count
 		}
 		if ( ! i ) {
 			free(temp);
-			free(meteo_annual);
+			meteo_annual_free(meteo_annual, *yos_count);
 			return NULL;
 		}
 	}
@@ -2289,7 +2474,7 @@ meteo_annual_t* meteo_annual_import(const char *const file, int *const yos_count
 
 			if ( ! g_sz_co2_conc_file ) {
 				logger_error(g_debug_log, "co2 concentration file not specified!");
-				free(meteo_annual);
+				meteo_annual_free(meteo_annual, *yos_count);
 				return NULL;
 			}
 
@@ -2301,7 +2486,7 @@ meteo_annual_t* meteo_annual_import(const char *const file, int *const yos_count
 					if ( meteo_annual[i].year >= g_settings->year_start_co2_fixed ) {
 						if ( -1 == year_start_co2_fixed_index ) {
 							logger_error(g_debug_log, "year_start_co2_fixed_index not found!");
-							free(meteo_annual);
+							meteo_annual_free(meteo_annual, *yos_count);
 							return NULL;
 						}
 						meteo_annual[i].co2Conc = meteo_annual[year_start_co2_fixed_index].co2Conc;
@@ -2310,7 +2495,7 @@ meteo_annual_t* meteo_annual_import(const char *const file, int *const yos_count
 
 				if ( /*err &&*/ IS_INVALID_VALUE(meteo_annual[i].co2Conc) ) {
 					logger_error(g_debug_log, "co2 concentration not found!!\n");
-					free(meteo_annual);
+					meteo_annual_free(meteo_annual, *yos_count);
 					return NULL;
 				}
 			}
@@ -2331,7 +2516,7 @@ meteo_annual_t* meteo_annual_import(const char *const file, int *const yos_count
 			meteo_annual[i].Ndep = get_ndep(meteo_annual[i].year, &err);
 			if ( err ) {
 				logger_error(g_debug_log, "Ndep not found for year %d on %s!!\n", meteo_annual[i].year, g_sz_ndep_file);
-				free(meteo_annual);
+				meteo_annual_free(meteo_annual, *yos_count);
 				return NULL;
 			}
 		}

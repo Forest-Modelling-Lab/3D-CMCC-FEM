@@ -16,6 +16,7 @@ enum {
 	// SETTINGS_SPINUP "on" or "off"
 	, SETTINGS_SCREEN_OUTPUT
 	, SETTINGS_DEBUG_OUTPUT
+	, SETTINGS_HALFHOURLY_OUTPUT
 	, SETTINGS_DAILY_OUTPUT
 	, SETTINGS_MONTHLY_OUTPUT
 	, SETTINGS_YEARLY_OUTPUT
@@ -85,6 +86,7 @@ const char* sz_settings[SETTINGS_COUNT] = {
 	, "TIME"
 	, "SCREEN_OUTPUT"
 	, "DEBUG_OUTPUT"
+	, "HALFHOURLY_OUTPUT"
 	, "DAILY_OUTPUT"
 	, "MONTHLY_OUTPUT"
 	, "ANNUAL_OUTPUT"
@@ -574,13 +576,13 @@ settings_t* settings_import(const char *const filename) {
 						s->time = DAILY;
 					break;
 
-					//case 'h':
-					//	s->time = HOURLY;
-					//break;
+					case 'h':
+						s->time = HOURLY;
+					break;
 
-					//case 's':
-					//	s->time = HALFHOURLY;
-					//break;
+					case 's':
+						s->time = HALFHOURLY;
+					break;
 
 					default:
 						puts("uncorrect time step choiced!");
@@ -599,6 +601,12 @@ settings_t* settings_import(const char *const filename) {
 			case SETTINGS_DEBUG_OUTPUT:
 				if ( ! string_compare_i(token, "on") ) {
 					s->debug_output = 1;
+				}
+			break;
+
+			case SETTINGS_HALFHOURLY_OUTPUT:
+				if ( ! string_compare_i(token, "on") ) {
+					s->halfhourly_output = 1;
 				}
 			break;
 

@@ -32,6 +32,7 @@ typedef struct {
 	char time;		                     /* time scale simulation must be 'm', 'd', 'h' or 's' (monthly, daily, hourly, halfhourly) */
 	char screen_output;                  /* screen output must be 'on' or 'off' */
 	char debug_output;                   /* debug output must be 'on' or 'off' */
+	char halfhourly_output;				 /* halfhourly output must be 'on' or 'off' */
 	char daily_output;                   /* daily output must be 'on' or 'off' */
 	char monthly_output;                 /* monthly output must be 'on' or 'off' */
 	char yearly_output;                  /* annual output must be 'on' or 'off' */
