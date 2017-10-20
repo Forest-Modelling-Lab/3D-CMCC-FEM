@@ -41,11 +41,11 @@ int Litter_model(matrix_t *const m, const int cell, const int half_hour, const i
 	}
 	else if ( HOURLY == g_settings->time )
 	{
-		// TODO;
+		meteo_daily = &METEO_HOURLY(m->cells[cell].years[year].m)[month].d[day];		
 	}
 	else if ( HALFHOURLY == g_settings->time )
 	{
-		// TODO
+		meteo_daily = &METEO_HALFHOURLY(m->cells[cell].years[year].m)[month].d[day];		
 	}
 
 	/* check parameters */

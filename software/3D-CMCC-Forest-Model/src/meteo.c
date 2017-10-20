@@ -35,6 +35,9 @@ enum {
 	, DAY
 	, HOUR
 	, HALFHOUR
+
+	// please note that RG_F must be first!
+	// used in aggr_to_daily
 	, RG_F
 	, TA_F
 	, TMAX
@@ -916,16 +919,183 @@ static int meteo_from_arr_halfhourly(double *const values, const int rows_count,
 	return 0;
 }
 
-static int aggr_to_daily(meteo_daily_mean_t*const daily_mean, const double* const values, const int rows_count, const int hourly) {
+static double aggr_value(const double* const values, const int rows_count, const int row_index, const int var, const int hourly) {
 #define VALUE_AT(r,c)	((r)+((c)*rows_count))
+
+	int i;
+	int n;
+	double d;
+	double value;
+
+	assert(values);
+
+	d = 0.;
+	n = 0;
+
+	// get first valid value for tmin/tmax
+	if ( (TMIN == var) || (TMAX == var) )
+	{
+		for ( i = row_index; i < row_index + (hourly ? 24 : 48); ++i )
+		{
+			d = values[VALUE_AT(i, var)];
+			if ( ! IS_INVALID_VALUE(d) )
+			{
+				break;
+			}
+		}
+
+		if ( IS_INVALID_VALUE(d) )
+		{
+			goto quit;
+		}
+	}
+		
+	for ( i = row_index; i < row_index + (hourly ? 24 : 48); ++i )
+	{
+		if ( (TMIN == var) || (TMAX == var) )
+		{
+			value = values[VALUE_AT(i, var)];
+
+			if ( ! IS_INVALID_VALUE(value) )
+			{
+				if ( TMIN == var )
+				{
+					if ( value < d )
+					{
+						d = value;
+					}
+				}
+				else // TMAX
+				{
+					if ( value > d )
+					{
+						d = value;
+					}
+				}
+			}
+		}
+		else
+		{
+			value = values[VALUE_AT(i, var)];
+			if ( ! IS_INVALID_VALUE(value) )
+			{
+				d += value;
+				++n;
+			}
+		}
+	}
+
+	if ( (TMIN == var) || (TMAX == var) || (PRECIP == var) )
+	{
+		goto quit;
+	}
+	else if ( n )
+	{
+		d /= n;
+	}
+	else
+	{
+		d = INVALID_VALUE;
+	}
+
+quit:
+	return d;
+
+#undef VALUE_AT
+}
+
+static int aggr_to_daily(meteo_daily_mean_t*const daily_mean, const double* const values, const int rows_count, const int year, const int hourly, int row_index) {
+	int month;
 
 	assert(daily_mean);
 	assert(values);
 
-	// ok
-	return 1;
+	for ( month = 0; month < METEO_MONTHS_COUNT; ++month )
+	{
+		int day;
+		int days;
 
-#undef VALUE_AT
+		days = days_per_month[month];
+		if ( IS_LEAP_YEAR(year) && (FEBRUARY == month) )
+		{
+			++days;
+		}
+
+		for ( day = 0; day < days; ++day )
+		{
+			int var;
+
+			for ( var = RG_F; var < MET_COLUMNS_COUNT; ++var )
+			{
+				double value;
+
+				// do not process NDVI_LAI
+				if ( NDVI_LAI == var )
+				{
+					continue;
+				}
+
+				value = aggr_value(values, rows_count, row_index, var, hourly);
+
+				switch ( var )
+				{
+					case RG_F:
+						daily_mean[month].d[day].solar_rad = value;
+					break;
+
+					case TA_F:
+						daily_mean[month].d[day].tavg = value;
+					break;
+
+					case TMAX:
+						daily_mean[month].d[day].tmax = value;
+					break;
+
+					case TMIN:
+						daily_mean[month].d[day].tmin = value;
+					break;
+
+					case TS_F:
+						daily_mean[month].d[day].ts_f = value;
+					break;
+
+					case VPD_F:
+						daily_mean[month].d[day].vpd = value;
+					break;
+
+					case PRECIP:
+						daily_mean[month].d[day].prcp = value;
+					break;
+
+					case SWC:
+						daily_mean[month].d[day].swc = value;
+					break;
+
+					//case NDVI_LAI:
+					//break;
+					
+					case ET:
+						daily_mean[month].d[day].et = value;
+					break;
+
+					case WS_F:
+						daily_mean[month].d[day].windspeed = value;
+					break;
+
+					case RH_F:
+						daily_mean[month].d[day].rh_f = value;
+					break;
+
+					default:
+						assert(1);
+				}
+			}
+
+			row_index += (hourly ? 24 : 48);
+		}
+	}
+
+	return 1;
 }
 
 static int meteo_from_arr(double *const values, const int rows_count, const int columns_count, meteo_annual_t** p_yos, int *const yos_count) {
@@ -1099,13 +1269,24 @@ static int meteo_from_arr(double *const values, const int rows_count, const int 
 		}
 		--day;
 
-		if ( HOURLY == g_settings->time)
+		if ( (HOURLY == g_settings->time) || (HALFHOURLY == g_settings->time) )
 		{
-			// TODO
+			hour = (int)values[VALUE_AT(row, HOUR)];
+			if ( (hour < 0) || hour > 23 ) {
+				logger_error(g_debug_log, "bad hour for %s %d %d\n\n", sz_month_names[month], day+1, year);
+				//free(yos);
+				return 0;
+			}			
 		}
-		else if ( HALFHOURLY == g_settings->time)
+
+		if ( HALFHOURLY == g_settings->time )
 		{
-			// TODO
+			halfhour = (int)values[VALUE_AT(row, HALFHOUR)];
+			if ( (halfhour < 0) || halfhour > 30 ) {
+				logger_error(g_debug_log, "bad halfhour for %s %d %d\n\n", sz_month_names[month], day+1, year);
+				//free(yos);
+				return 0;
+			}
 		}
 
 		if ( current_year != year ) {
@@ -1119,20 +1300,17 @@ static int meteo_from_arr(double *const values, const int rows_count, const int 
 			yos = yos_no_leak;
 
 			/* required */
-			yos[*yos_count].daily_mean = NULL;
+			yos[*yos_count].halfhourly = NULL;
+			yos[*yos_count].hourly = NULL;
 
-			switch ( g_settings->time )
+			if ( (HOURLY == g_settings->time) || (HALFHOURLY == g_settings->time) )
 			{
-				case DAILY:
-					yos[*yos_count].m = malloc(METEO_MONTHS_COUNT*sizeof(meteo_d_t));
-				break;
-
 				case HOURLY:
-					yos[*yos_count].m = malloc(METEO_MONTHS_COUNT*sizeof(meteo_h_t));
+					yos[*yos_count].hourly = malloc(METEO_MONTHS_COUNT*sizeof(meteo_h_t));
 				break;
 
 				case HALFHOURLY:
-					yos[*yos_count].m = malloc(METEO_MONTHS_COUNT*sizeof(meteo_hh_t));
+					yos[*yos_count].halfhourly = malloc(METEO_MONTHS_COUNT*sizeof(meteo_hh_t));
 				break;
 			}
 
@@ -1143,28 +1321,39 @@ static int meteo_from_arr(double *const values, const int rows_count, const int 
 				return 0;
 			}
 
-			/*
-			switch ( g_settings->time )
+			if ( (HOURLY == g_settings->time) || (HALFHOURLY == g_settings->time) )
 			{
-				case HOURLY:
-				case HALFHOURLY:
-					yos[*yos_count].daily_mean = malloc(METEO_MONTHS_COUNT*sizeof(meteo_daily_mean_t));
-					if ( ! yos[*yos_count].daily_mean )
-					{
-						logger_error(g_debug_log, sz_err_out_of_memory);
-						//free(yos);
-						return 0;
-					}
+				int i;
+				int row_index;
 
-					// aggregate to daily
-					if ( ! aggr_to_daily(yos[*yos_count].daily_mean, values, rows_count, (HOURLY == g_settings->time)) )
+				yos[*yos_count].daily_mean = malloc(METEO_MONTHS_COUNT*sizeof(meteo_daily_mean_t));
+				if ( ! yos[*yos_count].daily_mean )
+				{
+					logger_error(g_debug_log, sz_err_out_of_memory);
+					//free(yos);
+					return 0;
+				}
+
+				// compute row_index
+				row_index = 0;
+				for ( i = 0; i < *yos_count; ++i )
+				{
+					if ( IS_LEAP_YEAR(yos[i].year) )
 					{
-						return 0;
+						row_index += ((HOURLY == g_settings->time) ? 8784 : 17568);
 					}
-				break;
-			}
-			*/
-			
+					else
+					{
+						row_index += ((HOURLY == g_settings->time) ? 8760 : 17520);
+					}
+				}
+
+				// aggregate to daily
+				if ( ! aggr_to_daily(yos[*yos_count].daily_mean, values, rows_count, year, (HOURLY == g_settings->time), row_index) )
+				{
+					return 0;
+				}
+			}		
 
 			yos_clear(&yos[*yos_count]);
 			yos[*yos_count].year = year;
@@ -1190,6 +1379,128 @@ static int meteo_from_arr(double *const values, const int rows_count, const int 
 		}
 	}
 	*p_yos = yos;
+
+#ifdef _WIN32
+#ifdef _DEBUG
+	 if ( (HOURLY == g_settings->time) || (HALFHOURLY == g_settings->time) )
+	 {
+		char buf[32];
+		int i;
+		FILE *f;
+
+		sprintf(buf, "aggr_to_daily.csv", year);
+		f = fopen(buf, "w");
+		if ( ! f ) {
+			logger_error(g_debug_log, "unable to create %s file!", buf);
+			return 0;
+		}
+		/* write header */
+		for ( i = 0; i < MET_COLUMNS_COUNT; ++i ) {
+			if ( (HOURLY == g_settings->time) && (HALFHOUR == i) )
+			{
+				continue;
+			}
+			fprintf(f, "%s", sz_met_columns[i]);
+			if ( i < MET_COLUMNS_COUNT-1 ) {
+				fputs(",", f);
+			}
+		}
+		fputs("\n", f);
+
+		month = 0;
+		day = 0;
+		year = 0;
+		while ( 1 ) {
+			for ( i = 0; i < MET_COLUMNS_COUNT; ++i ) {
+				if ( NDVI_LAI == i )
+				{
+					continue;
+				}
+				switch ( i )
+				{
+					case YEAR:
+						fprintf(f, "%d", yos[year].year);
+					break;
+
+					case MONTH:
+						fprintf(f, "%d", month+1);
+					break;
+
+					case DAY:
+						fprintf(f, "%d", day+1);
+					break;
+
+					case RG_F:
+						fprintf(f, "%g", yos[year].daily_mean[month].d[day].solar_rad);
+					break;
+
+					case TA_F:
+						fprintf(f, "%g", yos[year].daily_mean[month].d[day].tavg);
+					break;
+
+					case TMAX:
+						fprintf(f, "%g", yos[year].daily_mean[month].d[day].tmax);
+					break;
+
+					case TMIN:
+						fprintf(f, "%g", yos[year].daily_mean[month].d[day].tmin);
+					break;
+
+					case VPD_F:
+						fprintf(f, "%g", yos[year].daily_mean[month].d[day].vpd);
+					break;
+
+					case TS_F:
+						fprintf(f, "%g", yos[year].daily_mean[month].d[day].ts_f);
+					break;
+
+					case PRECIP:
+						fprintf(f, "%g", yos[year].daily_mean[month].d[day].prcp);
+					break;
+
+					case SWC:
+						fprintf(f, "%g", yos[year].daily_mean[month].d[day].swc);
+					break;
+
+					//case NDVI_LAI:
+					//break;
+					
+					case ET:
+						fprintf(f, "%g", yos[year].daily_mean[month].d[day].et);
+					break;
+
+					case WS_F:
+						fprintf(f, "%g", yos[year].daily_mean[month].d[day].windspeed);
+					break;
+
+					case RH_F:
+						fprintf(f, "%g", yos[year].daily_mean[month].d[day].rh_f);
+					break;
+				}
+				if ( (i < MET_COLUMNS_COUNT-1) && (i != NDVI_LAI) && (i!= HOUR) && (i != HALFHOUR) )
+				{
+					fputs(",", f);
+				}
+			}
+			fputs("\n", f);
+
+			if ( ++day >= (days_per_month[month] + ((FEBRUARY==month) && IS_LEAP_YEAR(yos[year].year))) )
+			{
+				day = 0;
+				if ( ++month >= METEO_MONTHS_COUNT )
+				{
+					month = 0;
+					if ( ++year == *yos_count )
+					{
+						break;
+					}
+				}
+			}
+		}
+		fclose(f);
+	}
+#endif
+#endif
 	return 1;
 #undef VALUE_AT
 }
@@ -2208,8 +2519,16 @@ static int import_txt(const char *const filename, meteo_annual_t** p_yos, int *c
 					continue;
 				}
 			}
+			else if ( HOURLY == g_settings->time )
+			{
+				// not an error
+				if ( HALFHOUR == i )
+				{
+					continue;
+				}
+			}
 
-			logger_error(g_debug_log, "met column %s not found.\n\n", sz_met_columns[i]);
+			logger_error(g_debug_log, "column '%s' not found.\n\n", sz_met_columns[i]);
 			free(values);
 			fclose(f);
 			return 0;
@@ -2384,8 +2703,9 @@ void meteo_annual_free(meteo_annual_t* p, const int count)
 		int i;
 		for (i = 0; i < count; ++i )
 		{
-			if ( p[i].m ) free(p[i].m);
-			if ( p[i].daily_mean ) free(p[i].daily_mean);
+			if ( p[i].halfhourly ) free(p[i].halfhourly);
+			if ( p[i].hourly ) free(p[i].hourly);			
+			if ( p[i].daily ) free(p[i].daily);
 		}
 		free(p);
 	}

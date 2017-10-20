@@ -569,18 +569,22 @@ settings_t* settings_import(const char *const filename) {
 				switch ( *token )
 				{
 					//case 'm':
+					//case 'M':
 					//	s->time = MONTHLY;
 					//break;
 
 					case 'd':
+					case 'D':
 						s->time = DAILY;
 					break;
 
 					case 'h':
+					case 'H':
 						s->time = HOURLY;
 					break;
 
 					case 's':
+					case 'S':
 						s->time = HALFHOURLY;
 					break;
 

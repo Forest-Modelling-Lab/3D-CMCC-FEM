@@ -1894,12 +1894,10 @@ void matrix_free(matrix_t *m)
 					}
 				}
 				if ( m->cells[cell].years ) {
-					int i;
 				#if 1
 					if ( g_year_start_index != -1 ) {
 						m->cells[cell].years -= g_year_start_index;
 					}
-
 					meteo_annual_free(m->cells[cell].years, m->cells[cell].years_count);
 				#else
 					if ( g_year_start_index != -1 ) {

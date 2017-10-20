@@ -82,6 +82,8 @@ typedef struct {
 
 typedef struct {
 	METEO_COMMON_MEMBERS
+	double tmax;                                /* (deg C) daily maximum air temperature */
+	double tmin;                                /* (deg C) daily minimum air temperature */
 } meteo_h_hh_t;
 
 typedef struct {
@@ -135,9 +137,11 @@ typedef struct {
 	double Ndep;	                             /* (kgN/m2/year) annual nitrogen deposition */
 	
 	void* m;
-	meteo_daily_mean_t* daily_mean;
-	meteo_mean_t monthly_mean[METEO_MONTHS_COUNT];
-	meteo_mean_t yearly_mean;
+	meteo_hh_t* halfhourly;
+	meteo_h_t* hourly;
+	meteo_d_t daily[METEO_MONTHS_COUNT];
+	meteo_mean_t monthly[METEO_MONTHS_COUNT];
+	meteo_mean_t yearly;
 } meteo_annual_t;
 
 meteo_annual_t* meteo_annual_import(const char *const file, int *const yos_count, const int x, const int y);
