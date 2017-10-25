@@ -12,4 +12,6 @@ void net_ecosystem_exchange(cell_t *const c);
 
 void ecosystem_respiration (cell_t *const c);
 
+void net_ecosystem_productivity(cell_t *const c);
+
 #endif /* FLUXES_H_ */

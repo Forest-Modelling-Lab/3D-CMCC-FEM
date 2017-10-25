@@ -41,7 +41,7 @@ void water_fluxes(cell_t *const c, const meteo_daily_t *const meteo_daily)
 
 void ecosystem_respiration (cell_t *const c)
 {
-	c->daily_r_eco    = c->daily_aut_resp + c->daily_soil_resp;
+	c->daily_r_eco    = c->daily_aut_resp + c->daily_het_resp;
 	logger(g_debug_log, "daily_r_eco = %f gC/m2/day\n", c->daily_r_eco);
 
 	c->monthly_r_eco += c->daily_r_eco;
@@ -54,7 +54,7 @@ void ecosystem_respiration (cell_t *const c)
 
 void net_ecosystem_productivity(cell_t *const c)
 {
-	c->daily_nep     = c->daily_npp - c->daily_soil_resp;
+	c->daily_nep     = c->daily_npp - c->daily_het_resp;
 	logger(g_debug_log, "daily_nep = %f gC/m2/day\n", c->daily_nep);
 
 	c->monthly_nep  += c->daily_nep;
