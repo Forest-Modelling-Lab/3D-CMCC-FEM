@@ -2395,7 +2395,7 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 		}
 		/************************************************************************/
 		/* heading cell variables */
-		logger(g_annual_log,",gpp,npp,ar,rsoil,rsoilCO2,r_eco,nee,nep,et,le,soil-evapo,asw,iWue,vol,cum_vol,run_off");
+		logger(g_annual_log,",gpp,npp,ar,hr,rsoil,rsoilCO2,r_eco,nee,nep,et,le,soil-evapo,asw,iWue,vol,cum_vol,run_off");
 		/************************************************************************/
 		/* heading meteo variables */
 		logger(g_annual_log,",solar_rad,tavg,tmax,tmin,tday,tnight,vpd,prcp,tsoil,rh,[CO2]");
@@ -2552,10 +2552,11 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 	}
 	/************************************************************************/
 	/* printing variables at cell level only if there's more than one layer */
-	logger(g_annual_log, ",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f",
+	logger(g_annual_log, ",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f",
 			c->annual_gpp,
 			c->annual_npp,
 			c->annual_aut_resp,
+			c->annual_het_resp,
 			c->annual_soil_resp,
 			c->annual_soil_respCO2,
 			c->annual_r_eco,

@@ -15,6 +15,7 @@
 #include "logger.h"
 #include "soil_radiation_sw_band.h"
 #include "snow.h"
+#include "het_respiration.h"
 #include "soil_evaporation.h"
 #include "soil_respiration.h"
 #include "soil_water_balance.h"
@@ -78,8 +79,11 @@ int Soil_model_daily (matrix_t *const m, const int cell, const int day, const in
 		/* compute soil nitrogen balance */
 		//soil_nitrogen_balance();
 
-		/* compute soil respiration (not yet implemented) */
+		/* compute soil respiration */
 		soil_respiration ( c, meteo_daily );
+
+		/* compute heterotrophic respiration */
+		heterotrophic_respiration ( c );
 	}
 
 	/*******************************************************************************************************/
