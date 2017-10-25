@@ -1801,7 +1801,7 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 		}
 		/************************************************************************/
 		/* heading variables only at cell level */
-		logger(g_daily_log,",gpp,npp,ar,rsoil,reco,nee,nep,et,le,soil_evapo,snow_pack,asw,moist_ratio,iWue,litrC,cwdC,soilC,litrN,soilN,Tsoil,Daylength\n");
+		logger(g_daily_log,",gpp,npp,ar,hr,rsoil,reco,nee,nep,et,le,soil_evapo,snow_pack,asw,moist_ratio,iWue,litrC,cwdC,soilC,litrN,soilN,Tsoil,Daylength\n");
 	}
 	/*****************************************************************************************************/
 
@@ -1942,10 +1942,11 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 	/************************************************************************/
 	/* printing variables only at cell level */
 
-	logger(g_daily_log, ",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f\n",
+	logger(g_daily_log, ",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f\n",
 			c->daily_gpp,
 			c->daily_npp,
 			c->daily_aut_resp,
+			c->daily_het_resp,
 			c->daily_soil_resp,
 			c->daily_r_eco,
 			c->daily_nee,
