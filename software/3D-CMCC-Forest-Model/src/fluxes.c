@@ -39,8 +39,40 @@ void water_fluxes(cell_t *const c, const meteo_daily_t *const meteo_daily)
 //	logger(g_debug_log, "Daily_w_flux = %f \n", c->daily_tot_w_flux);
 }
 
+void ecosystem_respiration (cell_t *const c)
+{
+	c->daily_r_eco    = c->daily_aut_resp + c->daily_soil_resp;
+	logger(g_debug_log, "daily_r_eco = %f gC/m2/day\n", c->daily_r_eco);
+
+	c->monthly_r_eco += c->daily_r_eco;
+	logger(g_debug_log, "monthly_r_eco = %f gC/m2/month\n", c->monthly_r_eco);
+
+	c->annual_r_eco  += c->daily_r_eco;
+	logger(g_debug_log, "annual_r_eco = %f gC/m2/year\n", c->annual_r_eco);
+
+}
+
+void net_ecosystem_productivity(cell_t *const c)
+{
+	c->daily_nep     = c->daily_npp - c->daily_soil_resp;
+	logger(g_debug_log, "daily_nep = %f gC/m2/day\n", c->daily_nep);
+
+	c->monthly_nep  += c->daily_nep;
+	logger(g_debug_log, "monthly_nep = %f gC/m2/monthly\n", c->monthly_nep);
+
+	c->annual_nep   += c->daily_nep;
+	logger(g_debug_log, "annual_nep = %f gC/m2/annual\n", c->annual_nep);
+}
+
 void net_ecosystem_exchange(cell_t *const c)
 {
+	c->daily_nee     = c->daily_gpp - c->daily_r_eco;
+	logger(g_debug_log, "daily_nee = %f gC/m2/day\n", c->daily_nee);
 
+	c->monthly_nee  += c->daily_nee;
+	logger(g_debug_log, "monthly_nee = %f gC/m2/monthly\n", c->monthly_nee);
+
+	c->annual_nee   += c->daily_nee;
+	logger(g_debug_log, "annual_nee = %f gC/m2/annual\n", c->annual_nee);
 }
 

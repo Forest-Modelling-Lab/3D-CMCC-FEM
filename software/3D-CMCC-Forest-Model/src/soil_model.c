@@ -79,7 +79,7 @@ int Soil_model_daily (matrix_t *const m, const int cell, const int day, const in
 		//soil_nitrogen_balance();
 
 		/* compute soil respiration (not yet implemented) */
-		soil_respiration ( c );
+		soil_respiration ( c, meteo_daily );
 	}
 
 	/*******************************************************************************************************/

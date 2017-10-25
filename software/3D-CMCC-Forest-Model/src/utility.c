@@ -141,6 +141,11 @@ void reset_daily_cell_variables(cell_t *const c)
 	c->daily_soil_lh_flux =             0.;
 	c->daily_lh_flux =                  0.;
 	c->daily_sh_flux =                  0.;
+	c->daily_soil_resp =                0.;
+	c->daily_soil_respCO2 =             0.;
+	c->daily_r_eco =                    0.;
+	c->daily_nee =                      0.;
+	c->daily_nep =                      0.;
 }
 
 void reset_monthly_cell_variables(cell_t *const c)
@@ -172,6 +177,11 @@ void reset_monthly_cell_variables(cell_t *const c)
 	c->monthly_lh_flux =                0.;
 	c->monthly_sh_flux =                0.;
 	c->monthly_out_flow =               0.;
+	c->monthly_soil_resp =              0.;
+	c->monthly_soil_respCO2 =           0.;
+	c->monthly_r_eco =                  0.;
+	c->monthly_nee =                    0.;
+	c->monthly_nep =                    0.;
 }
 
 void reset_annual_cell_variables(cell_t *const c)
@@ -215,6 +225,11 @@ void reset_annual_cell_variables(cell_t *const c)
 	//c->dead_tree =                    0;
 	c->annual_soil_evapo =              0.;
 	c->annual_out_flow =                0.;
+	c->annual_soil_resp =               0.;
+	c->annual_soil_respCO2 =            0.;
+	c->annual_r_eco =                   0.;
+	c->annual_nee =                     0.;
+	c->annual_nep =                     0.;
 }
 void reset_daily_layer_variables(cell_t *const c)
 {

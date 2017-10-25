@@ -39,9 +39,14 @@ int Cell_model_daily (matrix_t *const m, const int cell, const int day, const in
 	logger (g_debug_log, "\n*********CELL_MODEL_DAILY*********\n");
 
 	/* OVERALL CELL */
+	/* compute cell level ecosystem respiration */
+	ecosystem_respiration ( c );
 
-	/* compute cell level carbon fluxes */
-	//carbon_fluxes        ( c );
+	/* compute cell level net ecosystem productivity */
+	net_ecosystem_productivity ( c );
+
+	/* compute cell level net ecosystem exchange */
+	net_ecosystem_exchange ( c );
 
 	/* compute cell level evapotranspiration */
 	evapotranspiration   ( c );

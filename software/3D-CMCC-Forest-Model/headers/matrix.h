@@ -867,6 +867,7 @@ enum
 	DAILYSOILLATENTHEATFLUX,
 	DAILYSOILSENSIBLEHEATFLUX,
 
+
 	SOIL_COUNT
 };
 
@@ -1009,10 +1010,7 @@ typedef struct
 	double daily_aut_resp_tC, monthly_aut_resp_tC, annual_aut_resp_tC;    /* (tC/m2/time) daily, monthly and annual aut resp at cell level */
 	double daily_maint_resp, monthly_maint_resp, annual_maint_resp;       /* (gC/m2/time) daily, monthly and annual maint resp at cell level */
 	double daily_growth_resp, monthly_growth_resp, annual_growth_resp;    /* (gC/m2/time) daily, monthly and annual growth resp at cell level */
-	double daily_r_eco, monthly_r_eco, annual_r_eco;                      /* (gC/m2/time) daily, monthly and annual ecosystem resp at cell level */
-	double daily_het_resp, monthly_het_resp, annual_het_resp;             /* (gC/m2/time) daily, monthly and annual heterotrophic resp at cell level */
 	double daily_C_flux, monthly_C_flux, annual_C_flux;                   /* (gC/m2/time) daily, monthly and annual carbon fluxes at cell level */
-	double daily_nee, monthly_nee, annual_nee;                            /* (gC/m2/time) daily, monthly and annual NEE at cell level */
 	double daily_leaf_carbon;                                             /* (gC/m2/day) daily carbon assimilated to c pool at cell level */
 	double daily_stem_carbon;                                             /* (gC/m2/day) daily carbon assimilated to c pool at cell level */
 	double daily_froot_carbon;                                            /* (gC/m2/day) daily carbon assimilated to c pool at cell level */
@@ -1320,7 +1318,13 @@ typedef struct
 	double daily_soil_evapo_watt;                                         /* (W/m2) current daily soil evaporation */
 	double daily_soil_lh_flux;                                            /* (W/m2) current daily soil latent heat flux */
 	double daily_soil_sh_flux;                                            /* (W/m2) current daily soil sensible heat flux */
+	double daily_soil_resp, monthly_soil_resp, annual_soil_resp;          /* (gC/m2/time) Soil respiration flux */
+	double daily_soil_respCO2, monthly_soil_respCO2,annual_soil_respCO2;  /* (gCO2/m2/time) Soil respiration flux */
+	double daily_r_eco, monthly_r_eco, annual_r_eco;                      /* (gC/m2/time) daily, monthly and annual ecosystem resp */
+	double daily_het_resp, monthly_het_resp, annual_het_resp;             /* (gC/m2/time) daily, monthly and annual heterotrophic resp */
 
+	double daily_nep, monthly_nep, annual_nep;                            /* (gC/m2/time) daily, monthly and annual net ecosystem production */
+	double daily_nee, monthly_nee, annual_nee;                            /* (gC/m2/time) daily, monthly and annual net ecosystem exchange */
 	/************************************************** BALANCES VARIABLES **************************************************/
 	/* cell */
 	double cell_carbon_in;                                                /* (gC/day/day) cell carbon balances in */

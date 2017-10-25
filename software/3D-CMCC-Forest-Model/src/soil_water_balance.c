@@ -64,6 +64,10 @@ void soil_water_balance(cell_t *c, const meteo_daily_t *const meteo_daily)
 		c->daily_canopy_transp   = 0.;
 	}
 
+	/* soil moist ratio (%vol.) */
+	c->soil_moist_ratio = c->asw / c->max_asw_fc;
+	logger(g_debug_log, "Soil moisture = %g %\n", c->soil_moist_ratio );
+
 	CHECK_CONDITION(c->asw,       <, ZERO);
 	CHECK_CONDITION(c->snow_pack, <, ZERO);
 
