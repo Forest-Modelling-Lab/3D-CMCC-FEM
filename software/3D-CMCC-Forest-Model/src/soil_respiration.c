@@ -28,9 +28,10 @@ void soil_respiration_reichstein ( cell_t *const c, const meteo_daily_t *const m
 	double f;
 	double Tsoil;                 /* soil temperature (°C) */
 	double daily_soil_resp_mol;   /* soil respiration, (umol m-2 s-1) */
-	double Rref;                  /* reference soil respiration (umol m-2 s-1) */
+	double Rref;                  /* reference soil respiration (at Tsoil = 18°C and non-limiting water) (umol m-2 s-1) */
 
 	/* note: following Reichstein et al., (2003), Global Biogeochemical Cycles  */
+	/* note: soil respiration includes both autotrophic and heterotrophic respiration */
 
 	a    = 52.4;    /* see Reichstein et al., (2003) */
 	b    = 285;     /* see Reichstein et al., (2003) */

@@ -52,7 +52,7 @@ void ecosystem_respiration (cell_t *const c)
 
 }
 
-void net_ecosystem_productivity(cell_t *const c)
+void net_ecosystem_productivity ( cell_t *const c )
 {
 	c->daily_nep     = c->daily_npp - c->daily_het_resp;
 	logger(g_debug_log, "daily_nep = %f gC/m2/day\n", c->daily_nep);
@@ -64,15 +64,19 @@ void net_ecosystem_productivity(cell_t *const c)
 	logger(g_debug_log, "annual_nep = %f gC/m2/annual\n", c->annual_nep);
 }
 
-void net_ecosystem_exchange(cell_t *const c)
+void net_ecosystem_exchange ( cell_t *const c )
 {
 	c->daily_nee     = c->daily_gpp - c->daily_r_eco;
 	logger(g_debug_log, "daily_nee = %f gC/m2/day\n", c->daily_nee);
+
+	/* note: change sign for convention (negative forest is CO2 sink, positive is CO2 source) */
+	c->daily_nee *= -1.;
 
 	c->monthly_nee  += c->daily_nee;
 	logger(g_debug_log, "monthly_nee = %f gC/m2/monthly\n", c->monthly_nee);
 
 	c->annual_nee   += c->daily_nee;
 	logger(g_debug_log, "annual_nee = %f gC/m2/annual\n", c->annual_nee);
+
 }
 
