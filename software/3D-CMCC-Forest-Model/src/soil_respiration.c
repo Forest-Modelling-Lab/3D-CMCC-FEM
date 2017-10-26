@@ -92,6 +92,7 @@ void soil_respiration_canoak ( cell_t *const c, const meteo_daily_t *const meteo
 	/* set the maximum and minimum values for water potential limits (MPa) */
 	min_psi = -10.;
 	max_psi = c->psi_sat;
+
 	if (c->psi < min_psi)
 	{
 		/* no decomp below the minimum soil water potential */
@@ -104,7 +105,7 @@ void soil_respiration_canoak ( cell_t *const c, const meteo_daily_t *const meteo
 	}
 	else
 	{
-		biome_water_scalar = log(min_psi/c->psi)/log(min_psi/max_psi);
+		biome_water_scalar = log ( min_psi / c->psi ) / log ( min_psi / max_psi );
 	}
 
 #if 0
