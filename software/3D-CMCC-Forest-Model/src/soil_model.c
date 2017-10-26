@@ -80,7 +80,8 @@ int Soil_model_daily (matrix_t *const m, const int cell, const int day, const in
 		//soil_nitrogen_balance();
 
 		/* compute soil respiration */
-		soil_respiration ( c, meteo_daily );
+		//soil_respiration_canoak     ( c, meteo_daily );
+		soil_respiration_reichstein ( c, meteo_daily );
 
 		/* compute heterotrophic respiration */
 		heterotrophic_respiration ( c );
