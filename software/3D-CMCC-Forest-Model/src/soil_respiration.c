@@ -38,7 +38,7 @@ void soil_respiration_reichstein ( cell_t *const c, const meteo_daily_t *const m
 	Tref = 18;      /* see Reichstein et al., (2003) */
 	Rref = 5.13;    /* see Nolè et al., (2014) */
 
-	//todo: ask Carlo how change dynamically Rref!!!
+	//todo: ask Carlo how change dynamically Rref!!!!
 
 	Tsoil = meteo_daily->tsoil;
 
