@@ -21,7 +21,7 @@ extern logger_t* g_debug_log;
 void heterotrophic_respiration(cell_t *const c)
 {
 
-	/* heterotrophic respiration computed as a differences soil_respiration - fine + corase root respiration */
+	/* heterotrophic respiration computed as a differences soil_respiration - fine + coarse root respiration */
 	c->daily_het_resp = c->daily_soil_resp - (c->daily_froot_aut_resp + c->daily_croot_aut_resp);
 	logger (g_debug_log, "c->daily_het_resp = %g gC/m^2/day\n", c->daily_het_resp);
 
