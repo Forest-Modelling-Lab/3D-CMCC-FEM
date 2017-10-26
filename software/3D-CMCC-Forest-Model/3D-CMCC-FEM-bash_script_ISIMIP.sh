@@ -158,8 +158,8 @@ fi
 #go to executable directory
 cd $folder_run
 
-#copy to previous directory executable
-cp $executable ../
+#copy to previous directory executable if not exists
+cp -n $executable ../
 
 #copy netcdf dll (only for windows build)
 if [[ "$OSTYPE" == "cygwin" ]]; then
