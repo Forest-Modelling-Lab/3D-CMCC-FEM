@@ -35,7 +35,7 @@ int Cell_model(matrix_t *const m, const int cell, const int day, const int month
 	{
 		/* assign shortcuts */
 		c = &m->cells[cell];
-		meteo_daily  = &METEO_DAILY(m->cells[cell].years[year].m)[month].d[day];
+		meteo_daily  = &m->cells[cell].years[year].daily[month].d[day];
 		//meteo_annual = &m->cells[cell].years[year];
 
 		/* check parameters */

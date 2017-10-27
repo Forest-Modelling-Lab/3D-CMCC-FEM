@@ -22,7 +22,7 @@ void print_daily_met_data(cell_t *c, const int day, const int month, const int y
 
 	meteo_d_t *met;
 	meteo_annual_t *meteo_annual;
-	met = METEO_DAILY(c->years[year].m);
+	met = c->years[year].daily;
 	meteo_annual = &c->years[year];
 
 	if (!day && !month)

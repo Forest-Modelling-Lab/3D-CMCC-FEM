@@ -228,7 +228,7 @@ void Veg_Days(cell_t *const c, const int day, const int month, const int year)
 
 	assert(DAILY == g_settings->time);
 
-	met = METEO_DAILY(c->years[year].m);
+	met = c->years[year].daily;
 
 	/* compute annual number of vegetative days */
 

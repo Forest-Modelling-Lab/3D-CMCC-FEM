@@ -42,7 +42,7 @@ int Soil_model(matrix_t *const m, const int cell, const int day, const int month
 
 	if ( DAILY == g_settings->time )
 	{
-		meteo_daily  = &METEO_DAILY(m->cells[cell].years[year].m)[month].d[day];
+		meteo_daily  = &m->cells[cell].years[year].daily[month].d[day];
 		//meteo_daily = &m->cells[cell].years[year].m[month].d[day];
 	
 		logger (g_debug_log, "**\n*******SOIL_MODEL_DAILY*********\n");

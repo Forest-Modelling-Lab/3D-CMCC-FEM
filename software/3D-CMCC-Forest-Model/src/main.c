@@ -1520,58 +1520,53 @@ int main(int argc, char *argv[]) {
 
 	hours_count = 1;
 	halfhours_count = 1;
-	if ( DAILY == g_settings->time )
-	{
-		hours_count = 1;
-		halfhours_count = 1;
+	switch ( g_settings->time ) {
+		case HOURLY:
+			hours_count = METEO_HOURS_COUNT;
+		break;
+
+		case HALFHOURLY:
+			hours_count = METEO_HOURS_COUNT;
+			halfhours_count = METEO_HALFHOURS_COUNT;
+		break;
 	}
-	else if ( HOURLY == g_settings->time )
-	{
-		hours_count = METEO_HOURS_COUNT;
-		halfhours_count = 1;
-	}
-	else if ( HALFHOURLY == g_settings->time )
-	{
-		hours_count = METEO_HOURS_COUNT;
-		halfhours_count = METEO_HALFHOURS_COUNT;
-	}
-	
+
 	/* for monthly and yearly means */
 	for ( cell = 0; cell < matrix->cells_count; ++cell )
 	{
 		for ( year = 0; year < years_of_simulation; ++year )
 		{
-			matrix->cells[cell].years[year].yearly_mean.solar_rad     = 0.;
-			matrix->cells[cell].years[year].yearly_mean.tavg          = 0.;
-			matrix->cells[cell].years[year].yearly_mean.tmax          = 0.;
-			matrix->cells[cell].years[year].yearly_mean.tmin          = 0.;
-			matrix->cells[cell].years[year].yearly_mean.tday          = 0.;
-			matrix->cells[cell].years[year].yearly_mean.tnight        = 0.;
-			matrix->cells[cell].years[year].yearly_mean.vpd           = 0.;
-			matrix->cells[cell].years[year].yearly_mean.prcp          = 0.;
-			matrix->cells[cell].years[year].yearly_mean.tsoil         = 0.;
-			matrix->cells[cell].years[year].yearly_mean.rh_f          = 0.;
-			matrix->cells[cell].years[year].yearly_mean.incoming_par  = 0.;
-			matrix->cells[cell].years[year].yearly_mean.par           = 0.;
-			matrix->cells[cell].years[year].yearly_mean.incoming_ppfd = 0.;
-			matrix->cells[cell].years[year].yearly_mean.ppfd          = 0.;
+			matrix->cells[cell].years[year].yearly.solar_rad     = 0.;
+			matrix->cells[cell].years[year].yearly.tavg          = 0.;
+			matrix->cells[cell].years[year].yearly.tmax          = 0.;
+			matrix->cells[cell].years[year].yearly.tmin          = 0.;
+			matrix->cells[cell].years[year].yearly.tday          = 0.;
+			matrix->cells[cell].years[year].yearly.tnight        = 0.;
+			matrix->cells[cell].years[year].yearly.vpd           = 0.;
+			matrix->cells[cell].years[year].yearly.prcp          = 0.;
+			matrix->cells[cell].years[year].yearly.tsoil         = 0.;
+			matrix->cells[cell].years[year].yearly.rh_f          = 0.;
+			matrix->cells[cell].years[year].yearly.incoming_par  = 0.;
+			matrix->cells[cell].years[year].yearly.par           = 0.;
+			matrix->cells[cell].years[year].yearly.incoming_ppfd = 0.;
+			matrix->cells[cell].years[year].yearly.ppfd          = 0.;
 
 			for ( month = 0; month < MONTHS_COUNT; ++month )
 			{
-				matrix->cells[cell].years[year].monthly_mean[month].solar_rad     = 0.;
-				matrix->cells[cell].years[year].monthly_mean[month].tavg          = 0.;
-				matrix->cells[cell].years[year].monthly_mean[month].tmax          = 0.;
-				matrix->cells[cell].years[year].monthly_mean[month].tmin          = 0.;
-				matrix->cells[cell].years[year].monthly_mean[month].tday          = 0.;
-				matrix->cells[cell].years[year].monthly_mean[month].tnight        = 0.;
-				matrix->cells[cell].years[year].monthly_mean[month].vpd           = 0.;
-				matrix->cells[cell].years[year].monthly_mean[month].prcp          = 0.;
-				matrix->cells[cell].years[year].monthly_mean[month].tsoil         = 0.;
-				matrix->cells[cell].years[year].monthly_mean[month].rh_f          = 0.;
-				matrix->cells[cell].years[year].monthly_mean[month].incoming_par  = 0.;
-				matrix->cells[cell].years[year].monthly_mean[month].par           = 0.;
-				matrix->cells[cell].years[year].monthly_mean[month].incoming_ppfd = 0.;
-				matrix->cells[cell].years[year].monthly_mean[month].ppfd          = 0.;
+				matrix->cells[cell].years[year].monthly[month].solar_rad     = 0.;
+				matrix->cells[cell].years[year].monthly[month].tavg          = 0.;
+				matrix->cells[cell].years[year].monthly[month].tmax          = 0.;
+				matrix->cells[cell].years[year].monthly[month].tmin          = 0.;
+				matrix->cells[cell].years[year].monthly[month].tday          = 0.;
+				matrix->cells[cell].years[year].monthly[month].tnight        = 0.;
+				matrix->cells[cell].years[year].monthly[month].vpd           = 0.;
+				matrix->cells[cell].years[year].monthly[month].prcp          = 0.;
+				matrix->cells[cell].years[year].monthly[month].tsoil         = 0.;
+				matrix->cells[cell].years[year].monthly[month].rh_f          = 0.;
+				matrix->cells[cell].years[year].monthly[month].incoming_par  = 0.;
+				matrix->cells[cell].years[year].monthly[month].par           = 0.;
+				matrix->cells[cell].years[year].monthly[month].incoming_ppfd = 0.;
+				matrix->cells[cell].years[year].monthly[month].ppfd          = 0.;
 			}
 		}
 	}
@@ -1636,7 +1631,7 @@ int main(int argc, char *argv[]) {
 					/* for monthly mean */
 					if ( DAILY == g_settings->time )
 					{
-						meteo_d_t* m = METEO_DAILY(matrix->cells[cell].years[year].m);
+						meteo_d_t* m = matrix->cells[cell].years[year].daily;
 
 						/* compute daily climate variables not coming from met data */
 						Daily_avg_temperature       ( m, day, month );
@@ -1673,20 +1668,20 @@ int main(int argc, char *argv[]) {
 							/* include other land use ???? */
 						}
 
-						matrix->cells[cell].years[year].monthly_mean[month].solar_rad += METEO_DAILY(matrix->cells[cell].years[year].m)[month].d[day].solar_rad;
-						matrix->cells[cell].years[year].monthly_mean[month].tavg += METEO_DAILY(matrix->cells[cell].years[year].m)[month].d[day].tavg;
-						matrix->cells[cell].years[year].monthly_mean[month].tmax += METEO_DAILY(matrix->cells[cell].years[year].m)[month].d[day].tmax;
-						matrix->cells[cell].years[year].monthly_mean[month].tmin += METEO_DAILY(matrix->cells[cell].years[year].m)[month].d[day].tmin;
-						matrix->cells[cell].years[year].monthly_mean[month].tday += METEO_DAILY(matrix->cells[cell].years[year].m)[month].d[day].tday;
-						matrix->cells[cell].years[year].monthly_mean[month].tnight += METEO_DAILY(matrix->cells[cell].years[year].m)[month].d[day].tnight;
-						matrix->cells[cell].years[year].monthly_mean[month].vpd += METEO_DAILY(matrix->cells[cell].years[year].m)[month].d[day].vpd;
-						matrix->cells[cell].years[year].monthly_mean[month].prcp += METEO_DAILY(matrix->cells[cell].years[year].m)[month].d[day].prcp;
-						matrix->cells[cell].years[year].monthly_mean[month].tsoil += METEO_DAILY(matrix->cells[cell].years[year].m)[month].d[day].tsoil;
-						matrix->cells[cell].years[year].monthly_mean[month].rh_f += METEO_DAILY(matrix->cells[cell].years[year].m)[month].d[day].rh_f;
-						matrix->cells[cell].years[year].monthly_mean[month].incoming_par += METEO_DAILY(matrix->cells[cell].years[year].m)[month].d[day].incoming_par;
-						matrix->cells[cell].years[year].monthly_mean[month].par += METEO_DAILY(matrix->cells[cell].years[year].m)[month].d[day].par;
-						matrix->cells[cell].years[year].monthly_mean[month].incoming_ppfd += METEO_DAILY(matrix->cells[cell].years[year].m)[month].d[day].incoming_ppfd;
-						matrix->cells[cell].years[year].monthly_mean[month].ppfd += METEO_DAILY(matrix->cells[cell].years[year].m)[month].d[day].ppfd;	
+						matrix->cells[cell].years[year].monthly[month].solar_rad += matrix->cells[cell].years[year].daily[month].d[day].solar_rad;
+						matrix->cells[cell].years[year].monthly[month].tavg += matrix->cells[cell].years[year].daily[month].d[day].tavg;
+						matrix->cells[cell].years[year].monthly[month].tmax += matrix->cells[cell].years[year].daily[month].d[day].tmax;
+						matrix->cells[cell].years[year].monthly[month].tmin += matrix->cells[cell].years[year].daily[month].d[day].tmin;
+						matrix->cells[cell].years[year].monthly[month].tday += matrix->cells[cell].years[year].daily[month].d[day].tday;
+						matrix->cells[cell].years[year].monthly[month].tnight += matrix->cells[cell].years[year].daily[month].d[day].tnight;
+						matrix->cells[cell].years[year].monthly[month].vpd += matrix->cells[cell].years[year].daily[month].d[day].vpd;
+						matrix->cells[cell].years[year].monthly[month].prcp += matrix->cells[cell].years[year].daily[month].d[day].prcp;
+						matrix->cells[cell].years[year].monthly[month].tsoil += matrix->cells[cell].years[year].daily[month].d[day].tsoil;
+						matrix->cells[cell].years[year].monthly[month].rh_f += matrix->cells[cell].years[year].daily[month].d[day].rh_f;
+						matrix->cells[cell].years[year].monthly[month].incoming_par += matrix->cells[cell].years[year].daily[month].d[day].incoming_par;
+						matrix->cells[cell].years[year].monthly[month].par += matrix->cells[cell].years[year].daily[month].d[day].par;
+						matrix->cells[cell].years[year].monthly[month].incoming_ppfd += matrix->cells[cell].years[year].daily[month].d[day].incoming_ppfd;
+						matrix->cells[cell].years[year].monthly[month].ppfd += matrix->cells[cell].years[year].daily[month].d[day].ppfd;	
 					}
 					else if ( HOURLY == g_settings->time )
 					{
@@ -1702,56 +1697,56 @@ int main(int argc, char *argv[]) {
 			for ( cell = 0; cell < matrix->cells_count; ++cell )
 			{
 				/* compute monthly mean */
-				matrix->cells[cell].years[year].monthly_mean[month].solar_rad /= days_per_month;
-				matrix->cells[cell].years[year].monthly_mean[month].tavg /= days_per_month;
-				matrix->cells[cell].years[year].monthly_mean[month].tmax /= days_per_month;
-				matrix->cells[cell].years[year].monthly_mean[month].tmin /= days_per_month;
-				matrix->cells[cell].years[year].monthly_mean[month].tday /= days_per_month;
-				matrix->cells[cell].years[year].monthly_mean[month].tnight /= days_per_month;
-				matrix->cells[cell].years[year].monthly_mean[month].vpd /= days_per_month;
-				//matrix->cells[cell].years[year].monthly_mean[month].prcp /= days_per_month; // we need accumul, not mean
-				matrix->cells[cell].years[year].monthly_mean[month].tsoil /= days_per_month;
-				matrix->cells[cell].years[year].monthly_mean[month].rh_f /= days_per_month;
-				matrix->cells[cell].years[year].monthly_mean[month].incoming_par /= days_per_month;
-				matrix->cells[cell].years[year].monthly_mean[month].par /= days_per_month;
-				matrix->cells[cell].years[year].monthly_mean[month].incoming_ppfd /= days_per_month;
-				matrix->cells[cell].years[year].monthly_mean[month].ppfd /= days_per_month;
+				matrix->cells[cell].years[year].monthly[month].solar_rad /= days_per_month;
+				matrix->cells[cell].years[year].monthly[month].tavg /= days_per_month;
+				matrix->cells[cell].years[year].monthly[month].tmax /= days_per_month;
+				matrix->cells[cell].years[year].monthly[month].tmin /= days_per_month;
+				matrix->cells[cell].years[year].monthly[month].tday /= days_per_month;
+				matrix->cells[cell].years[year].monthly[month].tnight /= days_per_month;
+				matrix->cells[cell].years[year].monthly[month].vpd /= days_per_month;
+				//matrix->cells[cell].years[year].monthly[month].prcp /= days_per_month; // we need accumul, not mean
+				matrix->cells[cell].years[year].monthly[month].tsoil /= days_per_month;
+				matrix->cells[cell].years[year].monthly[month].rh_f /= days_per_month;
+				matrix->cells[cell].years[year].monthly[month].incoming_par /= days_per_month;
+				matrix->cells[cell].years[year].monthly[month].par /= days_per_month;
+				matrix->cells[cell].years[year].monthly[month].incoming_ppfd /= days_per_month;
+				matrix->cells[cell].years[year].monthly[month].ppfd /= days_per_month;
 
 				/* for yearly mean */
-				matrix->cells[cell].years[year].yearly_mean.solar_rad += matrix->cells[cell].years[year].monthly_mean[month].solar_rad;
-				matrix->cells[cell].years[year].yearly_mean.tavg += matrix->cells[cell].years[year].monthly_mean[month].tavg;
-				matrix->cells[cell].years[year].yearly_mean.tmax += matrix->cells[cell].years[year].monthly_mean[month].tmax;
-				matrix->cells[cell].years[year].yearly_mean.tmin += matrix->cells[cell].years[year].monthly_mean[month].tmin;
-				matrix->cells[cell].years[year].yearly_mean.tday += matrix->cells[cell].years[year].monthly_mean[month].tday;
-				matrix->cells[cell].years[year].yearly_mean.tnight += matrix->cells[cell].years[year].monthly_mean[month].tnight;
-				matrix->cells[cell].years[year].yearly_mean.vpd += matrix->cells[cell].years[year].monthly_mean[month].vpd;
-				matrix->cells[cell].years[year].yearly_mean.prcp += matrix->cells[cell].years[year].monthly_mean[month].prcp;
-				matrix->cells[cell].years[year].yearly_mean.tsoil += matrix->cells[cell].years[year].monthly_mean[month].tsoil;
-				matrix->cells[cell].years[year].yearly_mean.rh_f += matrix->cells[cell].years[year].monthly_mean[month].rh_f;
-				matrix->cells[cell].years[year].yearly_mean.incoming_par += matrix->cells[cell].years[year].monthly_mean[month].incoming_par;
-				matrix->cells[cell].years[year].yearly_mean.par += matrix->cells[cell].years[year].monthly_mean[month].par;
-				matrix->cells[cell].years[year].yearly_mean.incoming_ppfd += matrix->cells[cell].years[year].monthly_mean[month].incoming_ppfd;
-				matrix->cells[cell].years[year].yearly_mean.ppfd += matrix->cells[cell].years[year].monthly_mean[month].ppfd;
+				matrix->cells[cell].years[year].yearly.solar_rad += matrix->cells[cell].years[year].monthly[month].solar_rad;
+				matrix->cells[cell].years[year].yearly.tavg += matrix->cells[cell].years[year].monthly[month].tavg;
+				matrix->cells[cell].years[year].yearly.tmax += matrix->cells[cell].years[year].monthly[month].tmax;
+				matrix->cells[cell].years[year].yearly.tmin += matrix->cells[cell].years[year].monthly[month].tmin;
+				matrix->cells[cell].years[year].yearly.tday += matrix->cells[cell].years[year].monthly[month].tday;
+				matrix->cells[cell].years[year].yearly.tnight += matrix->cells[cell].years[year].monthly[month].tnight;
+				matrix->cells[cell].years[year].yearly.vpd += matrix->cells[cell].years[year].monthly[month].vpd;
+				matrix->cells[cell].years[year].yearly.prcp += matrix->cells[cell].years[year].monthly[month].prcp;
+				matrix->cells[cell].years[year].yearly.tsoil += matrix->cells[cell].years[year].monthly[month].tsoil;
+				matrix->cells[cell].years[year].yearly.rh_f += matrix->cells[cell].years[year].monthly[month].rh_f;
+				matrix->cells[cell].years[year].yearly.incoming_par += matrix->cells[cell].years[year].monthly[month].incoming_par;
+				matrix->cells[cell].years[year].yearly.par += matrix->cells[cell].years[year].monthly[month].par;
+				matrix->cells[cell].years[year].yearly.incoming_ppfd += matrix->cells[cell].years[year].monthly[month].incoming_ppfd;
+				matrix->cells[cell].years[year].yearly.ppfd += matrix->cells[cell].years[year].monthly[month].ppfd;
 			}
 		}
 
 		for ( cell = 0; cell < matrix->cells_count; ++cell )
 		{
 			/* compute yearly mean */
-			matrix->cells[cell].years[year].yearly_mean.solar_rad /= MONTHS_COUNT;
-			matrix->cells[cell].years[year].yearly_mean.tavg /= MONTHS_COUNT;
-			matrix->cells[cell].years[year].yearly_mean.tmax /= MONTHS_COUNT;
-			matrix->cells[cell].years[year].yearly_mean.tmin /= MONTHS_COUNT;
-			matrix->cells[cell].years[year].yearly_mean.tday /= MONTHS_COUNT;
-			matrix->cells[cell].years[year].yearly_mean.tnight /= MONTHS_COUNT;
-			matrix->cells[cell].years[year].yearly_mean.vpd /= MONTHS_COUNT;
-			//matrix->cells[cell].years[year].yearly_mean.prcp /= MONTHS_COUNT; // we need accumul, not mean
-			matrix->cells[cell].years[year].yearly_mean.tsoil /= MONTHS_COUNT;
-			matrix->cells[cell].years[year].yearly_mean.rh_f /= MONTHS_COUNT;
-			matrix->cells[cell].years[year].yearly_mean.incoming_par /= MONTHS_COUNT;
-			matrix->cells[cell].years[year].yearly_mean.par /= MONTHS_COUNT;
-			matrix->cells[cell].years[year].yearly_mean.incoming_ppfd /= MONTHS_COUNT;
-			matrix->cells[cell].years[year].yearly_mean.ppfd /= MONTHS_COUNT;
+			matrix->cells[cell].years[year].yearly.solar_rad /= MONTHS_COUNT;
+			matrix->cells[cell].years[year].yearly.tavg /= MONTHS_COUNT;
+			matrix->cells[cell].years[year].yearly.tmax /= MONTHS_COUNT;
+			matrix->cells[cell].years[year].yearly.tmin /= MONTHS_COUNT;
+			matrix->cells[cell].years[year].yearly.tday /= MONTHS_COUNT;
+			matrix->cells[cell].years[year].yearly.tnight /= MONTHS_COUNT;
+			matrix->cells[cell].years[year].yearly.vpd /= MONTHS_COUNT;
+			//matrix->cells[cell].years[year].yearly.prcp /= MONTHS_COUNT; // we need accumul, not mean
+			matrix->cells[cell].years[year].yearly.tsoil /= MONTHS_COUNT;
+			matrix->cells[cell].years[year].yearly.rh_f /= MONTHS_COUNT;
+			matrix->cells[cell].years[year].yearly.incoming_par /= MONTHS_COUNT;
+			matrix->cells[cell].years[year].yearly.par /= MONTHS_COUNT;
+			matrix->cells[cell].years[year].yearly.incoming_ppfd /= MONTHS_COUNT;
+			matrix->cells[cell].years[year].yearly.ppfd /= MONTHS_COUNT;
 		}
 
 		for ( month = 0; month < MONTHS_COUNT; ++month )
@@ -2029,8 +2024,11 @@ int main(int argc, char *argv[]) {
 		}
 
 		for ( i = 0; i < matrix->cells[cell].years_count; ++i ) {
-			if ( matrix->cells[cell].years[i].m ) {
-				 free(matrix->cells[cell].years[i].m);
+			if ( matrix->cells[cell].years[i].hourly ) {
+				 free(matrix->cells[cell].years[i].hourly);
+			}
+			if ( matrix->cells[cell].years[i].halfhourly ) {
+				 free(matrix->cells[cell].years[i].halfhourly);
 			}
 		}
 		free (matrix->cells[cell].years);

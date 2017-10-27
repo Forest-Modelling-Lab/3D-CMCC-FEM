@@ -1146,16 +1146,16 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 	/************************************************************************/
 	/* print meteo variables at cell level */
 	logger(g_annual_log, ",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",
-			c->years[year].yearly_mean.solar_rad     ,
-			c->years[year].yearly_mean.tavg          ,
-			c->years[year].yearly_mean.tmax          ,
-			c->years[year].yearly_mean.tmin          ,
-			c->years[year].yearly_mean.tday          ,
-			c->years[year].yearly_mean.tnight        ,
-			c->years[year].yearly_mean.vpd           ,
-			c->years[year].yearly_mean.prcp          ,
-			c->years[year].yearly_mean.tsoil         ,
-			c->years[year].yearly_mean.rh_f          ,
+			c->years[year].yearly.solar_rad     ,
+			c->years[year].yearly.tavg          ,
+			c->years[year].yearly.tmax          ,
+			c->years[year].yearly.tmin          ,
+			c->years[year].yearly.tday          ,
+			c->years[year].yearly.tnight        ,
+			c->years[year].yearly.vpd           ,
+			c->years[year].yearly.prcp          ,
+			c->years[year].yearly.tsoil         ,
+			c->years[year].yearly.rh_f          ,
 			c->years[year].co2Conc);
 	/************************************************************************/
 	/* end print */
@@ -1957,8 +1957,8 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 			c->soilC,
 			c->litrN,
 			c->soilN,
-			METEO_DAILY(c->years[year].m)[month].d[day].tsoil,
-			METEO_DAILY(c->years[year].m)[month].d[day].daylength
+			c->years[year].daily[month].d[day].tsoil,
+			c->years[year].daily[month].d[day].daylength
 			//c->years[year].m[month].d[day].tsoil,
 			//c->years[year].m[month].d[day].daylength
 	);
@@ -2564,16 +2564,16 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 	/************************************************************************/
 	/* print meteo variables at cell level */
 	logger(g_annual_log, ",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",
-			c->years[year].yearly_mean.solar_rad     ,
-			c->years[year].yearly_mean.tavg          ,
-			c->years[year].yearly_mean.tmax          ,
-			c->years[year].yearly_mean.tmin          ,
-			c->years[year].yearly_mean.tday          ,
-			c->years[year].yearly_mean.tnight        ,
-			c->years[year].yearly_mean.vpd           ,
-			c->years[year].yearly_mean.prcp          ,
-			c->years[year].yearly_mean.tsoil         ,
-			c->years[year].yearly_mean.rh_f          ,
+			c->years[year].yearly.solar_rad     ,
+			c->years[year].yearly.tavg          ,
+			c->years[year].yearly.tmax          ,
+			c->years[year].yearly.tmin          ,
+			c->years[year].yearly.tday          ,
+			c->years[year].yearly.tnight        ,
+			c->years[year].yearly.vpd           ,
+			c->years[year].yearly.prcp          ,
+			c->years[year].yearly.tsoil         ,
+			c->years[year].yearly.rh_f          ,
 			c->years[year].co2Conc);
 	/************************************************************************/
 	/* end print */

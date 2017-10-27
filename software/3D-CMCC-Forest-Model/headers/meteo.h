@@ -7,10 +7,6 @@
 #define METEO_HOURS_COUNT		24
 #define METEO_HALFHOURS_COUNT	2
 
-#define METEO_DAILY(x)			((meteo_d_t*)(x))
-#define METEO_HOURLY(x)			((meteo_h_t*)(x))
-#define METEO_HALFHOURLY(x)		((meteo_hh_t*)(x))
-
 #define METEO_COMMON_MEMBERS																		\
 		int n_days;																					\
 		double solar_rad;						   /* (MJ/m2/day) incoming short wave radiation */ \
@@ -86,10 +82,6 @@ typedef struct {
 	double tmin;                                /* (deg C) daily minimum air temperature */
 } meteo_h_hh_t;
 
-typedef struct {
-meteo_h_hh_t d[METEO_DAYS_COUNT];
-} meteo_daily_mean_t;
-
 /* hourly struct */
 
 typedef struct {
@@ -136,7 +128,7 @@ typedef struct {
 	double co2Conc;	                             /* (ppmv) annual atmospheric CO2 concentration */
 	double Ndep;	                             /* (kgN/m2/year) annual nitrogen deposition */
 	
-	void* m;
+	//void* m;
 	meteo_hh_t* halfhourly;
 	meteo_h_t* hourly;
 	meteo_d_t daily[METEO_MONTHS_COUNT];

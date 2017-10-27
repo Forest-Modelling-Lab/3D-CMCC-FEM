@@ -36,20 +36,23 @@ int Litter_model(matrix_t *const m, const int cell, const int half_hour, const i
 
 	if ( DAILY == g_settings->time )
 	{
-		//meteo_daily = &METEO_DAILY(c->years[year].m)[month].d[day];
-		meteo_daily = &METEO_DAILY(m->cells[cell].years[year].m)[month].d[day];		
+		meteo_daily = &m->cells[cell].years[year].daily[month].d[day];
+		assert(meteo_daily);
+		decomposition ( c, meteo_daily );
 	}
 	else if ( HOURLY == g_settings->time )
 	{
-		meteo_daily = &METEO_HOURLY(m->cells[cell].years[year].m)[month].d[day];		
+		//meteo_daily = &m->cells[cell].years[year].hourly[month].d[day].h[hour];		
+		assert(1);
 	}
 	else if ( HALFHOURLY == g_settings->time )
 	{
-		meteo_daily = &METEO_HALFHOURLY(m->cells[cell].years[year].m)[month].d[day];		
+		//meteo_daily = m->cells[cell].years[year].halfhourly[month].d[day].h[hour].hh[half_hour];		
+		assert(1);
 	}
 
 	/* check parameters */
-	assert(m && meteo_daily);
+	assert(meteo_daily);
 
 	/* decomposition */
 	decomposition ( c, meteo_daily );

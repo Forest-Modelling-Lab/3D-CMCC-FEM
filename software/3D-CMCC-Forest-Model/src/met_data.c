@@ -84,7 +84,7 @@ void Daily_Sat_vapour_pressure(cell_t *const c, const int day, const int month, 
 
 	assert(DAILY == g_settings->time);
 
-	met = METEO_DAILY(c->years[year].m);
+	met = c->years[year].daily;
 
 	TmaxK = met[month].d[day].tmax + TempAbs;
 	TminK = met[month].d[day].tmin + TempAbs;
@@ -159,7 +159,7 @@ static void compute_atm_lw_downward_W(cell_t *const c, const int day, const int 
 	if ( DAILY == g_settings->time )
 	{
 		meteo_d_t *met;
-		met = METEO_DAILY(c->years[year].m);
+		met = c->years[year].daily;
 
 		sw_in = met[month].d[day].sw_downward_W;
 		ta = met[month].d[day].tavg;
@@ -235,7 +235,7 @@ void Daily_Radiation(cell_t *const c, const int day, const int month, const int 
 
 	assert(DAILY == g_settings->time);
 
-	met = METEO_DAILY(c->years[year].m);
+	met = c->years[year].daily;
 
 	TmaxK = met[month].d[day].tmax + TempAbs;
 	TminK = met[month].d[day].tmin + TempAbs;
@@ -319,7 +319,7 @@ void Daily_Check_prcp(cell_t *c, const int day, const int month, const int year)
 
 	assert(DAILY == g_settings->time);
 
-	met = METEO_DAILY(c->years[year].m);
+	met = c->years[year].daily;
 	if(met[month].d[day].prcp > 0.)
 	{
 		if (met[month].d[day].tavg > 0.)
@@ -358,7 +358,7 @@ void Daily_Day_Length(cell_t *c, const int day, const int month, const int year)
 
 	assert(DAILY == g_settings->time);
 
-	met = METEO_DAILY(c->years[year].m);
+	met = c->years[year].daily;
 
 	/* compute doy for GeDdayLength function */
 	if (!day && month == JANUARY)
@@ -578,7 +578,7 @@ void Daily_Soil_temperature(const cell_t *const c, int day, int month, int year)
 	do
 	{
 		i += day_avg;
-		weighted_avg += ( METEO_DAILY(c->years[year].m)[month].d[day].tavg * day_avg );
+		weighted_avg += ( c->years[year].daily[month].d[day].tavg * day_avg );
 
 		if ( --day < 0 )
 		{
@@ -599,7 +599,7 @@ void Daily_Soil_temperature(const cell_t *const c, int day, int month, int year)
 		}
 		--day_avg;
 	} while ( day_avg > 0 );
-	METEO_DAILY(c->years[current_year_index].m)[current_month].d[current_day].tsoil = weighted_avg / i;
+	c->years[current_year_index].daily[current_month].d[current_day].tsoil = weighted_avg / i;
 }
 
 void Daily_Weighted_average_temperature(const cell_t *const c, const e_weighted_average_var var, int day, int month, int year)
@@ -625,19 +625,19 @@ void Daily_Weighted_average_temperature(const cell_t *const c, const e_weighted_
 
 		switch ( var ) {
 		case WEIGHTED_MEAN_TAVG:
-			v = METEO_DAILY(c->years[year].m)[month].d[day].tavg;
+			v = c->years[year].daily[month].d[day].tavg;
 			break;
 
 		case WEIGHTED_MEAN_TDAY:
-			v = METEO_DAILY(c->years[year].m)[month].d[day].tday;
+			v = c->years[year].daily[month].d[day].tday;
 			break;
 
 		case WEIGHTED_MEAN_TNIGHT:
-			v = METEO_DAILY(c->years[year].m)[month].d[day].tnight;
+			v = c->years[year].daily[month].d[day].tnight;
 			break;
 
 		case WEIGHTED_MEAN_TSOIL:
-			v = METEO_DAILY(c->years[year].m)[month].d[day].tsoil;
+			v = c->years[year].daily[month].d[day].tsoil;
 			break;
 		}
 
@@ -662,19 +662,19 @@ void Daily_Weighted_average_temperature(const cell_t *const c, const e_weighted_
 
 	switch ( var ) {
 	case WEIGHTED_MEAN_TAVG:
-		METEO_DAILY(c->years[current_year_index].m)[current_month].d[current_day].ten_day_weighted_avg_tavg = weighted_avg / i;
+		c->years[current_year_index].daily[current_month].d[current_day].ten_day_weighted_avg_tavg = weighted_avg / i;
 		break;
 
 	case WEIGHTED_MEAN_TDAY:
-		METEO_DAILY(c->years[current_year_index].m)[current_month].d[current_day].ten_day_weighted_avg_tday = weighted_avg / i;
+		c->years[current_year_index].daily[current_month].d[current_day].ten_day_weighted_avg_tday = weighted_avg / i;
 		break;
 
 	case WEIGHTED_MEAN_TNIGHT:
-		METEO_DAILY(c->years[current_year_index].m)[current_month].d[current_day].ten_day_weighted_avg_tnight = weighted_avg / i;
+		c->years[current_year_index].daily[current_month].d[current_day].ten_day_weighted_avg_tnight = weighted_avg / i;
 		break;
 
 	case WEIGHTED_MEAN_TSOIL:
-		METEO_DAILY(c->years[current_year_index].m)[current_month].d[current_day].ten_day_weighted_avg_tsoil = weighted_avg / i;
+		c->years[current_year_index].daily[current_month].d[current_day].ten_day_weighted_avg_tsoil = weighted_avg / i;
 		break;
 	}
 }
@@ -703,19 +703,19 @@ void Daily_Averaged_temperature(const cell_t *const c, const e_averaged_var var,
 
 		switch ( var ) {
 		case AVERAGED_TAVG:
-			v = METEO_DAILY(c->years[year].m)[month].d[day].tavg;
+			v = c->years[year].daily[month].d[day].tavg;
 			break;
 
 		case AVERAGED_TDAY:
-			v = METEO_DAILY(c->years[year].m)[month].d[day].tday;
+			v = c->years[year].daily[month].d[day].tday;
 			break;
 
 		case AVERAGED_TNIGHT:
-			v = METEO_DAILY(c->years[year].m)[month].d[day].tnight;
+			v = c->years[year].daily[month].d[day].tnight;
 			break;
 
 		case AVERAGED_TSOIL:
-			v = METEO_DAILY(c->years[year].m)[month].d[day].tsoil;
+			v = c->years[year].daily[month].d[day].tsoil;
 			break;
 		}
 
@@ -740,19 +740,19 @@ void Daily_Averaged_temperature(const cell_t *const c, const e_averaged_var var,
 
 	switch ( var ) {
 	case AVERAGED_TAVG:
-		METEO_DAILY(c->years[current_year_index].m)[current_month].d[current_day].ten_day_avg_tavg = averaged / i;
+		c->years[current_year_index].daily[current_month].d[current_day].ten_day_avg_tavg = averaged / i;
 		break;
 
 	case AVERAGED_TDAY:
-		METEO_DAILY(c->years[current_year_index].m)[current_month].d[current_day].ten_day_avg_tday = averaged / i;
+		c->years[current_year_index].daily[current_month].d[current_day].ten_day_avg_tday = averaged / i;
 		break;
 
 	case AVERAGED_TNIGHT:
-		METEO_DAILY(c->years[current_year_index].m)[current_month].d[current_day].ten_day_avg_tnight = averaged / i;
+		c->years[current_year_index].daily[current_month].d[current_day].ten_day_avg_tnight = averaged / i;
 		break;
 
 	case AVERAGED_TSOIL:
-		METEO_DAILY(c->years[current_year_index].m)[current_month].d[current_day].ten_day_avg_tsoil = averaged / i;
+		c->years[current_year_index].daily[current_month].d[current_day].ten_day_avg_tsoil = averaged / i;
 		break;
 	}
 }
@@ -774,7 +774,7 @@ void Daily_Ndeposition (const cell_t *const c, int day, int month, int year)
 	if ( IS_LEAP_YEAR(c->years[year].year)) doy = 366;
 	else doy = 365;
 
-	METEO_DAILY(c->years[year].m)[month].d[day].Ndeposition = c->years[year].Ndep / doy;
+	c->years[year].daily[month].d[day].Ndeposition = c->years[year].Ndep / doy;
 }
 
 
