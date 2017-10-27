@@ -29,15 +29,25 @@ void soil_respiration_reichstein ( cell_t *const c, const meteo_daily_t *const m
 	double Tsoil;                 /* soil temperature (°C) */
 	double daily_soil_resp_mol;   /* soil respiration, (umol m-2 s-1) */
 	double Rref;                  /* reference soil respiration (at Tsoil = 18°C and non-limiting water) (umol m-2 s-1) */
+	double a_lai;
+	double b_lai;
+	double Rswc;                  /* water content at half-maximal respiration */
+
 
 	/* note: following Reichstein et al., (2003), Global Biogeochemical Cycles  */
 	/* note: soil respiration includes both autotrophic and heterotrophic respiration */
 
-	a    = 52.4;    /* see Reichstein et al., (2003) */
-	b    = 285;     /* see Reichstein et al., (2003) */
-	T0   = -46;     /* see Reichstein et al., (2003) */
-	Tref = 18;      /* see Reichstein et al., (2003) */
-	Rref = 5.13;    /* see Nolè et al., (2014) */
+	a     = 52.4;    /* see Reichstein et al., (2003) */
+	b     = 285;     /* see Reichstein et al., (2003) */
+	T0    = -46;     /* see Reichstein et al., (2003) */
+	Tref  = 18;      /* see Reichstein et al., (2003) */
+	a_lai = 0.6;     /* see Reichstein et al., (2003) */
+	b_lai = 1.29;    /* see Reichstein et al., (2003) */
+	Rswc  = 0.16;    /* see Reichstein et al., (2003) */
+
+
+	Rref  = a_lai + b_lai * c->max_lai_proj; /* see Reichstein et al., (2003) */
+
 
 	//todo: ask Carlo how change dynamically Rref!!!!
 
@@ -46,19 +56,19 @@ void soil_respiration_reichstein ( cell_t *const c, const meteo_daily_t *const m
 	/* compute activation energy */
 	E0 = a + b * c->soil_moist_ratio;
 
-	g = c->soil_moist_ratio / ( ( c->soil_moist_ratio / 2. ) + c->soil_moist_ratio );
+	g = c->soil_moist_ratio / ( Rswc + c->soil_moist_ratio );
 
-	f = exp( E0 * ( ( 1. / ( Tref - T0 )) - ( 1. / ( Tsoil - T0 ) ) ) );
+	f = exp( E0 * ( 1. / ( Tref - T0 )) - ( 1. / ( Tsoil - T0 ) ) );
 
 	/* soil respiration in umol m-2 s-1 */
 	daily_soil_resp_mol = Rref * f * g;
 
 	/* soil respiration from umol m-2 sec-1 to gC m-2 d-1 */
-	c->daily_soil_resp      = daily_soil_resp_mol *  GC_MOL  / 1e6 * 86400;
+	c->daily_soil_resp      = daily_soil_resp_mol *  GC_MOL  / 1e6 * 86400.;
 	logger (g_debug_log, "c->daily_soil_resp = %g gC/m^2/day\n", c->daily_soil_resp);
 
 	/* soil respiration flux from umol m-2 sec-1 to gCO2 m-2 day-1 */
-	c->daily_soil_respCO2   = daily_soil_resp_mol * GCO2_MOL / 1e6 * 86400;
+	c->daily_soil_respCO2   = daily_soil_resp_mol * GCO2_MOL / 1e6 * 86400.;
 	logger (g_debug_log, "c->daily_soil_respCO2 = %g gCO2/m^2/day\n", c->daily_soil_respCO2);
 
 	/* monthly */

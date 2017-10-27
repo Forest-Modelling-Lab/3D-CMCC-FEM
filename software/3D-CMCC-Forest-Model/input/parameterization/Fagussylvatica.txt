@@ -27,7 +27,7 @@ MAXAGE                   400  //Determines rate of "physiological decline" of fo
 RAGE                    0.95  //Relative Age to give fAGE = 0.5
 NAGE                      10  //Power of relative Age in function for Age
 GROWTHTMIN                 0  //Minimum temperature for growth 5  Rasse et al 2001 0 from Williams 1996, -2 Hoffmann 1995
-GROWTHTMAX           40 //35  //Maximum temperature for growth 40 from Williams 1996 35 from calibration
+GROWTHTMAX          35 // 40 (for ISIMIP) //35  //Maximum temperature for growth 40 from Williams 1996 35 from Forrester et al., 2017
 GROWTHTOPT                20  //Optimum temperature for growth 19.4 Rasse et al 2001, 20 from Lyr & Garbe, 1994, 22 Hoffmann 1995
 GROWTHSTART              100  //(5 °C)average temperature or (GDD) thermic sum for starting growth in °C 130 ettore with t base = 5°C, 130 from Hoffmann et al., 1995 
 MINDAYLENGTH              12  //minimum day length for fagus from ettore, 12 through satellite images
@@ -62,9 +62,9 @@ LEAF_FINEROOT_TURNOVER     1  //Average yearly fine root turnover rate Rasse et 
 LIVE_WOOD_TURNOVER       0.7  //Annual yearly live wood turnover rate 
 DBHDCMAX                0.50  //Low Density Condes & Sterba 2005
 DBHDCMIN                0.14  //High Density from ettore
-SAP_A          0.778 //0.674  //a value 0.674 from Kostner, 0.778 Gebauer et al., 2008, for Fagus sylvatica
-SAP_B          1.917 //1.992  //b value 1.992 from Kostner, 1.917 Gebauer et al., 2008,for Fagus sylvatica
-SAP_LEAF         4040 //5400  //leaf area/sapwood max ratio in pipe model 5400 McDowell et al 2002, 1850 from Williams 1996, 3310. 3410 Bartelink 1997, 1998 , 2100 from Kostner, 3310 from ettore
+SAP_A                  0.778  //a value 0.674 from Kostner, 0.778 Gebauer et al., 2008, for Fagus sylvatica
+SAP_B                  1.917  //b value 1.992 from Kostner, 1.917 Gebauer et al., 2008,for Fagus sylvatica
+SAP_LEAF        3310 // 4040 (for ISIMIP) //leaf area/sapwood max ratio in pipe model 5400 McDowell et al 2002, 1850 from Williams 1996, 3410 Bartelink 1997, 1998 , 2100 from Kostner, 3310 from ettore
 SAP_WRES                0.11  //Sapwood-Reserve biomass ratio gTNC/100gDM 0.043 in January for fagus see Barbaroux 2002 0.11 for deciduous 0.05 for evergreen see Schwalm and Ek, 2004 Ecological Modelling
 STEMCONST_P           0.2837  //a parameter for F. sylvatica for allometric equation from ettore, 0.70 Seidl et al., 2012
 STEMPOWER_P            2.134  //b parameter for F. sylvatica for allometric equation from ettore, 3.00 Seidl et al., 2012

@@ -26,7 +26,7 @@ void specific_leaf_area ( const age_t *const a, species_t *const s )
 	logger(g_debug_log, "SLA_AVG = %f (kgC/m2)\n", s->value[SLA_AVG]);
 }
 
-void daily_lai (species_t *const s)
+void daily_lai (cell_t *const c, species_t *const s)
 {
 	double leaf_C;                             /* leaf carbon KgC/sizecell */
 	double Leaf_sun_ratio;
@@ -114,6 +114,13 @@ void daily_lai (species_t *const s)
 	CHECK_CONDITION(s->value[ALL_LAI_PROJ],   <, ZERO);
 	CHECK_CONDITION(fabs((s->value[LAI_SUN_PROJ] + s->value[LAI_SHADE_PROJ]) - s->value[LAI_PROJ]), >, eps );
 	CHECK_CONDITION(s->value[LAI_PROJ], >, (s->value[PEAK_LAI_PROJ] + eps));
+
+
+	/* test: computing cell level max_lai */
+	//fixme in case of multi-class!!!!!
+
+	c->max_lai_proj = s->value[MAX_LAI_PROJ];
+
 }
 
 
