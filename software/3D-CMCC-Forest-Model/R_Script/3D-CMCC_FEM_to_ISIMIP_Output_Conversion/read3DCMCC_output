@@ -1,0 +1,54 @@
+read3DCMCC_output <- function(file_name) {
+  # funzione per importare i file prodotti dal modello
+  # INPUT:
+  #   file_name: path completa del nome del file da importare
+  # 
+  # OUTPUT
+  #   df: data.frame dei risultati del modello, se 
+  #   ck: 1 se il modello ha prodotto risultati senza problemi
+  #       0 se c'? qualche check condition o se il file ? vuoto
+  
+  cat(paste0('import file: ',file_name,'\n'))
+  
+  df = read.csv(file_name,comment.char = '#')
+  
+  if ( colnames(df)[1] != 'YEAR') {
+    cat(paste0('file empty: ',file_name,'\n'))
+    df = data.frame()
+    ck = 0
+    return(list(df,ck))
+  }
+  
+  # controllo se la colonna YEAR riporta errori
+  if ( is.factor(df$YEAR) ) {
+    # calcolo la riga dove finiscono i dati numerici
+    ck_year = 0
+    for ( zz in df$YEAR ) {
+      if ( !is.na(as.numeric(zz)) ) {
+        ck_year = ck_year + 1
+      } else {
+        break
+      }
+    }
+    cat(paste0(ck_year,' data rows in file : ',file_name,'\n'))
+  } else {
+    ck = 1
+    return(list(df,ck))
+  }
+  
+  # rileggo il file escludendo le righe con gli errori
+  df = read.csv(file_name,comment.char = '#',nrows = ck_year)
+  rm(ck_year)
+ 
+  if ( colnames(df)[1] != 'YEAR') {
+    cat(paste0('file empty: ',file_name,'\n'))
+    df = data.frame()
+    ck = 0
+    return(list(df,ck))
+  } else {
+    ck = 1
+  }
+  cat(paste0('import file: ',file_name,' ...OK\n'))
+  return(list(df,ck))
+  
+}
