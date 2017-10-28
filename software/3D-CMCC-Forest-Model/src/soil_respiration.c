@@ -45,7 +45,7 @@ void soil_respiration_reichstein ( cell_t *const c, const meteo_daily_t *const m
 	b_lai = 1.29;    /* see Reichstein et al., (2003) */
 	Rswc  = 0.16;    /* see Reichstein et al., (2003) */
 
-
+	/* Respiration references (based on LAI MAX) */
 	Rref  = a_lai + b_lai * c->max_lai_proj; /* see Reichstein et al., (2003) */
 
 
