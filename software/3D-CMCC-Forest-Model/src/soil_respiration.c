@@ -33,7 +33,6 @@ void soil_respiration_reichstein ( cell_t *const c, const meteo_daily_t *const m
 	double b_lai;
 	double Rswc;                  /* water content at half-maximal respiration */
 
-
 	/* note: following Reichstein et al., (2003), Global Biogeochemical Cycles  */
 	/* note: soil respiration includes both autotrophic and heterotrophic respiration */
 
@@ -48,7 +47,6 @@ void soil_respiration_reichstein ( cell_t *const c, const meteo_daily_t *const m
 	/* Respiration references (based on LAI MAX) */
 	Rref  = a_lai + b_lai * c->max_lai_proj; /* see Reichstein et al., (2003) */
 
-
 	//todo: ask Carlo how change dynamically Rref!!!!
 
 	Tsoil = meteo_daily->tsoil;
@@ -58,7 +56,7 @@ void soil_respiration_reichstein ( cell_t *const c, const meteo_daily_t *const m
 
 	g = c->soil_moist_ratio / ( Rswc + c->soil_moist_ratio );
 
-	f = exp( E0 * ( 1. / ( Tref - T0 )) - ( 1. / ( Tsoil - T0 ) ) );
+	f = exp( E0 * ( ( 1. / ( Tref - T0 ) ) - ( 1. / ( Tsoil - T0 ) ) ) );
 
 	/* soil respiration in umol m-2 s-1 */
 	daily_soil_resp_mol = Rref * f * g;
@@ -140,6 +138,8 @@ void soil_respiration_canoak ( cell_t *const c, const meteo_daily_t *const meteo
 	/* soil respiration flux from umol m-2 sec-1 to gCO2 m-2 day-1 */
 	c->daily_soil_respCO2   = daily_soil_resp_mol * GCO2_MOL / 1e6 * 86400;
 	logger (g_debug_log, "c->daily_soil_respCO2 = %g gCO2/m^2/day\n", c->daily_soil_respCO2);
+
+	printf("c->daily_soil_resp = %g gC/m^2/day\n", c->daily_soil_resp);getchar();
 
 	/* monthly */
 	c->monthly_soil_resp      += c->daily_soil_resp;
