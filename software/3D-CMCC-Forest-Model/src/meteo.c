@@ -27,6 +27,9 @@
 #define PRECIP_RANGE_MAX   400
 #define RH_RANGE_MIN         0
 #define RH_RANGE_MAX       100
+#define TSOIL_RANGE_MIN    -50
+#define TSOIL_RANGE_MAX     55
+
 
 /* do not change this order */
 enum {
@@ -759,6 +762,12 @@ static int meteo_from_arr(double *const values, const int rows_count, const int 
 				}
 			}
 			 */
+		}
+		/* check if values are outside ranges */
+		else if( ( yos[*yos_count-1].m[month].d[day].ts_f < TSOIL_RANGE_MIN && -9999 != yos[*yos_count-1].m[month].d[day].ts_f ) || yos[*yos_count-1].m[month].d[day].ts_f > TSOIL_RANGE_MAX)
+		{
+			logger_error(g_debug_log, "BAD DATA FOR Ts_f = %f in day = %d month = %d year = %d\n", yos[*yos_count-1].m[month].d[day].ts_f, day+1, month+1, year);
+			exit(1);
 		}
 		else
 		{
