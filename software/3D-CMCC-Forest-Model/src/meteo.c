@@ -30,7 +30,7 @@
 #define TSOIL_RANGE_MIN    -50
 #define TSOIL_RANGE_MAX     55
 #define SWC_RANGE_MIN        0
-#define SWC_RANGE_MAX        1
+#define SWC_RANGE_MAX      100
 
 
 /* do not change this order */
