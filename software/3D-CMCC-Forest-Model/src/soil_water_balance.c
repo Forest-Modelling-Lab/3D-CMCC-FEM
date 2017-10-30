@@ -65,7 +65,7 @@ void soil_water_balance(cell_t *c, const meteo_daily_t *const meteo_daily)
 	}
 
 	/* soil moist ratio (%vol.) */
-	//test
+	//test computing soil moist ratio or get it from met data (to possibly avoid)
 //	if ( -9999 == meteo_daily->swc )
 //	{
 		c->soil_moist_ratio = c->asw / c->max_asw_fc;
