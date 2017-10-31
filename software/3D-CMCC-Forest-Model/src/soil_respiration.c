@@ -145,11 +145,13 @@ void soil_respiration_biome ( cell_t *const c, const meteo_daily_t *const meteo_
 	decomp_rate     = KL1_BASE * temp_scalar * water_scalar;
 
 	//note: a much simplified approach that use all litter (as in Reichestein et al., 2003) instead the labile fraction as in biome
-	//FIXME to date balance is still NOT closed
+	//FIXME to date balance is still NOT closed and litter increase as well
+	//FIXME THIS FUNCTION DOESN'T WORK!!!!!
 
 	/* soil respiration gC m-2 d-1 */
 	c->daily_soil_resp      = c->litrN * decomp_rate;
 	logger (g_debug_log, "c->daily_soil_resp = %g gC/m^2/day\n", c->daily_soil_resp);
+
 
 	/* monthly */
 	c->monthly_soil_resp      += c->daily_soil_resp;
