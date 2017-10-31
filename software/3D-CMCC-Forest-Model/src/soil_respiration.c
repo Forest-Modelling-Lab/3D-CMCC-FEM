@@ -27,7 +27,6 @@ void soil_respiration_reichstein ( cell_t *const c, const meteo_daily_t *const m
 	double f;
 	double T0;                    /* the lower temperature limit for the soil respiration (°C) */
 	double Tref;                  /* reference temperature for respiration (°C) */
-	double temp_scalar;
 	double Tsoil;                 /* soil temperature (°C) */
 	double daily_soil_resp_mol;   /* soil respiration, (umol m-2 s-1) */
 	double Rref;                  /* reference soil respiration (at Tsoil = 18°C and non-limiting water) (umol m-2 s-1) */
