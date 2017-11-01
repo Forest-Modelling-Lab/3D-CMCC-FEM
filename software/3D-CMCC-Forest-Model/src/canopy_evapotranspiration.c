@@ -83,7 +83,6 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 	double net_rad;
 	double rv;
 	double rh;                                                             /* Leaf-Canopy resistance to sensible heat */
-	double daylength_sec;                                                  /* daylength in sec */
 	double evap_daylength_sec;
 	double transp_daylength_sec;
 	double evapo;
@@ -93,7 +92,6 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 	species_t *s;
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
-	daylength_sec = meteo_daily->daylength * 3600.0;
 
 	/* it mainly follows rationale and algorithms of BIOME-BGC v.4.2 */
 	/* it computes canopy interception, evaporation and transpiration */
@@ -243,7 +241,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 			logger(g_debug_log, "evap_daylength_sec = %f sec\n", evap_daylength_sec);
 
 			/* day not long enough to evap. all int. water */
-			if( evap_daylength_sec > daylength_sec )
+			if( evap_daylength_sec > meteo_daily->daylength_sec )
 			{
 				logger(g_debug_log, "day not long enough to evap all rain intercepted\n");
 
@@ -260,7 +258,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 				s->value[CANOPY_TRANSP] = 0.;
 
 				/* day length limits canopy evaporation */
-				evapo *= daylength_sec;
+				evapo *= meteo_daily->daylength_sec;
 				s->value[CANOPY_EVAPO] = evapo;
 				logger(g_debug_log, "Canopy evaporation = %f mm\n", s->value[CANOPY_EVAPO]);
 
@@ -291,9 +289,9 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 				logger(g_debug_log, "\n*CANOPY TRANSPIRATION (Partial Canopy Wet)*\n");
 
 				/* adjust day length for transpiration */
-				transp_daylength_sec   = daylength_sec - evap_daylength_sec;
+				transp_daylength_sec   = meteo_daily->daylength_sec - evap_daylength_sec;
 
-				s->value[CANOPY_FRAC_DAY_TRANSP] = transp_daylength_sec / daylength_sec;
+				s->value[CANOPY_FRAC_DAY_TRANSP] = transp_daylength_sec / meteo_daily->daylength_sec;
 				logger(g_debug_log, "transp_daylength_sec = %f\n", s->value[CANOPY_FRAC_DAY_TRANSP]);
 
 				/* Leaf-Canopy resistance to sensible heat */
@@ -385,7 +383,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 			logger(g_debug_log, "*CANOPY TRANSPIRATION (Canopy Dry)*\n");
 
 			/* all day transp */
-			transp_daylength_sec             = daylength_sec;
+			transp_daylength_sec             = meteo_daily->daylength_sec;
 			logger(g_debug_log, "transp_daylength_sec = %f\n",transp_daylength_sec);
 
 			s->value[CANOPY_FRAC_DAY_TRANSP] = 1.;

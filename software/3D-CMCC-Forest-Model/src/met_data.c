@@ -357,7 +357,12 @@ void Day_Length(cell_t *c, const int day, const int month, const int year)
 	//logger(g_debug_log, "with altitude = %f\n", met[month].d[day].daylength);
 
 	ampl = (exp (7.42 + (0.045 * g_soil_settings->values[SOIL_LAT]))) / 3600.;
-	met[month].d[day].daylength = ampl * (sin ((doy - 79.) * 0.01721)) + 12.;
+
+	/* compute daylength in hours */
+	met[month].d[day].daylength     = ampl * (sin ((doy - 79.) * 0.01721)) + 12.;
+
+	/* compute daylength in seconds */
+	met[month].d[day].daylength_sec = met[month].d[day].daylength * 3600.;
 
 
 	/* compute fraction of daytime */

@@ -40,34 +40,34 @@ void total_photosynthesis_biome (cell_t *const c, const int height, const int db
 	/* SUNLIT canopy fraction photosynthesis */
 
 	/* convert conductance from m/s --> umol/m2/s/Pa, and correct for CO2 vs. water vapor */
-	cond_corr                    = s->value[LEAF_SUN_CONDUCTANCE] * 1e6 / ( 1.6 * Rgas * ( meteo_daily->tday + 273.15 ) );
+	cond_corr                    = s->value[LEAF_SUN_CONDUCTANCE] * 1e6 / ( 1.6 * Rgas * ( meteo_daily->tday + TempAbs ) );
 	leafN                        = s->value[LEAF_SUN_N];
 	/* convert from mass to molar units, and from a daily rate to a rate per second (umol/m2/s) */
-	leaf_day_mresp               = s->value[DAILY_LEAF_SUN_MAINT_RESP] / ((meteo_daily->daylength * 3600.) * GC_MOL * 1e-6 );
+	leaf_day_mresp               = s->value[DAILY_LEAF_SUN_MAINT_RESP] / ( meteo_daily->daylength_sec * GC_MOL * 1e-6 );
 	ppfd                         = s->value[PPFD_ABS_SUN];
 
 	/* call Farquhar for sun leaves */
 	assimilation = Farquhar (c, height, dbh, age, species, meteo_daily, meteo_annual, cond_corr, leafN, ppfd, leaf_day_mresp);
 
 	/* converting umolC/sec --> gC/m2/day) */
-	s->value[ASSIMILATION_SUN]   = ( ( assimilation + leaf_day_mresp ) * s->value[LAI_SUN_PROJ] * (meteo_daily->daylength * 3600) * GC_MOL * 1e-6);
+	s->value[ASSIMILATION_SUN]   = ( assimilation + leaf_day_mresp ) * s->value[LAI_SUN_PROJ] * meteo_daily->daylength_sec * GC_MOL * 1e-6;
 
 	/****************************************************************************************/
 
 	/* SHADED canopy fraction photosynthesis */
 
 	/* convert conductance from m/s --> umol/m2/s/Pa, and correct for CO2 vs. water vapor */
-	cond_corr                    = s->value[LEAF_SHADE_CONDUCTANCE] * 1e6 / ( 1.6 * Rgas * ( meteo_daily->tday + 273.15 ) );
+	cond_corr                    = s->value[LEAF_SHADE_CONDUCTANCE] * 1e6 / ( 1.6 * Rgas * ( meteo_daily->tday + TempAbs ) );
 	leafN                        = s->value[LEAF_SHADE_N];
 	/* convert from mass to molar units, and from a daily rate to a rate per second (umol/m2/s) */
-	leaf_day_mresp               = s->value[DAILY_LEAF_SHADE_MAINT_RESP] / ((meteo_daily->daylength * 3600.) * GC_MOL * 1e-6 );
+	leaf_day_mresp               = s->value[DAILY_LEAF_SHADE_MAINT_RESP] / ( meteo_daily->daylength_sec * GC_MOL * 1e-6 );
 	ppfd                         = s->value[PPFD_ABS_SHADE];
 
 	/* call Farquhar for shade leaves */
 	assimilation = Farquhar (c, height, dbh, age, species, meteo_daily, meteo_annual, cond_corr, leafN, ppfd, leaf_day_mresp );
 
 	/* converting umolC/sec --> gC/m2/day) */
-	s->value[ASSIMILATION_SHADE] = ( ( assimilation + leaf_day_mresp ) * s->value[LAI_SHADE_PROJ] * (meteo_daily->daylength * 3600) * GC_MOL * 1e-6);
+	s->value[ASSIMILATION_SHADE] = ( assimilation + leaf_day_mresp ) * s->value[LAI_SHADE_PROJ] * meteo_daily->daylength_sec * GC_MOL * 1e-6 ;
 
 //	if (s->value[LAI_PROJ] > 3)
 //	{
@@ -98,7 +98,6 @@ double Farquhar (cell_t *const c, const int height, const int dbh, const int age
 	/*
 		The following variables are assumed to be defined in the psn struct
 		at the time of the function call:
-		c3         (flag) set to 1 for C3 model, 0 for C4 model
 		pa         (Pa) atmospheric pressure
 		co2        (ppm) atmospheric [CO2]
 		t          (deg C) air temperature
@@ -183,12 +182,12 @@ double Farquhar (cell_t *const c, const int height, const int dbh, const int age
 	/* set parameters for C3 */
 	ppe = 2.6;
 
-	/* calculate atmospheric O2 in Pa, assumes 21% O2 by volume */
+	/* calculate atmospheric O2 in Pa, assumes 20.9% O2 by volume */
 	O2  = (O2CONC / 100. ) * meteo_daily->air_pressure;
 
 	/* correct kinetic constants for temperature, and do unit conversions */
 	Ko  = Ko25 * pow ( q10Ko , ( meteo_daily->tavg - 25. ) / 10. );
-	Ko  = Ko * 100.;   /* mbar --> Pa */
+	Ko *= 100.;   /* mbar --> Pa */
 
 	if ( meteo_daily->tday > 15. )
 	{
@@ -201,18 +200,20 @@ double Farquhar (cell_t *const c, const int height, const int dbh, const int age
 		act = act25 * pow ( 1.8 * q10act, ( meteo_daily->tday - 15. ) / 10.) / q10act;
 	}
 
-	Kc  = Kc   * 0.1;           /* ubar --> Pa */
+	Kc *= 0.1;                  /* ubar --> Pa */
+	//fixme check for g Kg
 	act = act  * 1e6 / 60.;     /* umol/mg/min --> umol/kg/s */
 
-	/* calculate gamma (Pa), assumes Vomax/Vcmax = 0.21 */
+	/* calculate gamma (Pa) CO2 compensation point, in the absence of maint resp, assumes Vomax/Vcmax = 0.21 */
 	gamma = 0.5 * 0.21 * Kc * O2 / Ko;
 
-	/* calculate Vmax from leaf nitrogen data and Rubisco activity */
+	/* calculate Vmax (umol CO2/m2/s) max rate of carboxylation from leaf nitrogen data and Rubisco activity */
 	Vmax = leafN * flnr * fnr * act;
 
 	/* calculate Jmax = f(Vmax), reference:	Wullschleger, S.D., 1993.  Biochemical limitations to carbon assimilation in C3 plants -
 	 * A retrospective analysis of the A/Ci curves from	109 species. Journal of Experimental Botany, 44:907-920.
 	 */
+	/* compute (umol electrons/m2/s) max rate electron transport */
 	Jmax = 2.1 * Vmax;
 
 	/* calculate J = f(Jmax, ppfd), reference:
@@ -222,6 +223,8 @@ double Farquhar (cell_t *const c, const int height, const int dbh, const int age
 	var_a  = 0.7;
 	var_b  = -Jmax - (ppfd * pabs / ppe );
 	var_c  = Jmax  *  ppfd * pabs / ppe;
+
+	/* compute (umol RuBP/m2/s) rate of RuBP regeneration */
 	J      = ( -var_b - sqrt ( var_b * var_b - 4. * var_a * var_c ) ) / ( 2. * var_a );
 
 	/* solve for Av and Aj using the quadratic equation, substitution for Ci
@@ -246,6 +249,7 @@ double Farquhar (cell_t *const c, const int height, const int dbh, const int age
 	/* check condition */
 	CHECK_CONDITION( det , <, 0.0);
 
+	/* compute Av (umol CO2/m2/s) carboxylation limited assimilation */
 	Av = ( -var_b + sqrt( det ) ) / ( 2. * var_a );
 
 	/* quadratic solution for Aj */
@@ -257,8 +261,10 @@ double Farquhar (cell_t *const c, const int height, const int dbh, const int age
 	/* check condition */
 	CHECK_CONDITION( det , <, 0.0);
 
+	/* compute (umol CO2/m2/s) RuBP regen limited assimilation */
 	Aj = ( -var_b + sqrt( det ) ) / ( 2. * var_a );
 
+	/* compute (umol CO2/m2/s) final assimilation rate */
 	/* estimate A as the minimum of (Av,Aj) */
 	if ( Av < Aj ) A = Av;
 	else           A = Aj;
