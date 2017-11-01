@@ -536,8 +536,8 @@ enum {
 
 	/* Maintenance respiration */
 	DAILY_LEAF_MAINT_RESP,              /* (gC/m2/day) Daytime leaf maintenance respiration */
-	DAILY_LEAF_SUN_MAINT_RESP,          /* (umolC sec) Daytime leaf maintenance respiration */
-	DAILY_LEAF_SHADE_MAINT_RESP,        /* (umolC sec) Daytime leaf maintenance respiration */
+	DAILY_LEAF_SUN_MAINT_RESP,          /* (gC/m2/day) Daytime leaf maintenance respiration */
+	DAILY_LEAF_SHADE_MAINT_RESP,        /* (gC/m2/day) Daytime leaf maintenance respiration */
 	NIGHTLY_LEAF_MAINT_RESP,            /* (gC/m2/day) Night time leaf maintenance respiration */
 	TOT_DAY_LEAF_MAINT_RESP,            /* (gC/m2/day) Leaf maintenance respiration */
 	FROOT_MAINT_RESP,                   /* (gC/m2/day) Fine root maintenance respiration */
