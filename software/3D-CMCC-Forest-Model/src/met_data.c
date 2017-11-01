@@ -246,7 +246,7 @@ void Radiation (cell_t *const c, const int day, const int month, const int year)
 	met[month].d[day].par                    = met[month].d[day].incoming_par;
 	//logger(g_debug_log, "Par = %g molPAR/m^2 day\n", met[month].d[day].par);
 
-	/* convert incoming Short-Wave flux in PPFD from W/m2 to umol/m2/sec (Biome-BGC method) */
+	/* convert incoming Short-Wave flux in PPFD from W/m2 to umol/m2/sec */
 	met[month].d[day].incoming_ppfd          = met[month].d[day].sw_downward_W * RAD2PAR * EPAR;
 	met[month].d[day].ppfd                   = met[month].d[day].incoming_ppfd;
 	//logger(g_debug_log, "PPFD = %g umolPPFD/m2/sec\n", met[month].d[day].ppfd);

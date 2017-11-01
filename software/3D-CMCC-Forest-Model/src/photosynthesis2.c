@@ -25,6 +25,7 @@ void total_photosynthesis_biome (cell_t *const c, const int height, const int db
 	double leafN;            /* (kg Nleaf/m2) leaf N per unit leaf area */
 	double ppfd;             /* (umol/m2 covered/sec) photosynthetic Photon Flux Density  */
 	double leaf_day_mresp;   /* (umol/m2/s) day leaf m. resp, proj. area basis */
+	double assimilation;
 
 	species_t *s;
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
@@ -41,14 +42,15 @@ void total_photosynthesis_biome (cell_t *const c, const int height, const int db
 	/* convert conductance from m/s --> umol/m2/s/Pa, and correct for CO2 vs. water vapor */
 	cond_corr                    = s->value[LEAF_SUN_CONDUCTANCE] * 1e6 / ( 1.6 * Rgas * ( meteo_daily->tday + 273.15 ) );
 	leafN                        = s->value[LEAF_SUN_N];
-	leaf_day_mresp               = s->value[DAILY_LEAF_SUN_MAINT_RESP];
+	/* convert from mass to molar units, and from a daily rate to a rate per second (umol/m2/s) */
+	leaf_day_mresp               = s->value[DAILY_LEAF_SUN_MAINT_RESP] / ((meteo_daily->daylength * 3600.) * GC_MOL * 1e-6 );
 	ppfd                         = s->value[PPFD_ABS_SUN];
 
-	/* call photosynthesis_biome for sun leaves */
-	photosynthesis_biome (c, height, dbh, age, species, meteo_daily, meteo_annual, cond_corr, leafN, ppfd, leaf_day_mresp);
+	/* call Farquhar for sun leaves */
+	assimilation = Farquhar (c, height, dbh, age, species, meteo_daily, meteo_annual, cond_corr, leafN, ppfd, leaf_day_mresp);
 
 	/* converting umolC/sec --> gC/m2/day) */
-	s->value[ASSIMILATION_SUN]   = ( ( s->value[ASSIMILATION] + leaf_day_mresp ) * s->value[LAI_SUN_PROJ] * (meteo_daily->daylength * 3600) * 12.011e-9 ) * 1000. ;
+	s->value[ASSIMILATION_SUN]   = ( ( assimilation + leaf_day_mresp ) * s->value[LAI_SUN_PROJ] * (meteo_daily->daylength * 3600) * GC_MOL * 1e-6);
 
 	/****************************************************************************************/
 
@@ -57,14 +59,22 @@ void total_photosynthesis_biome (cell_t *const c, const int height, const int db
 	/* convert conductance from m/s --> umol/m2/s/Pa, and correct for CO2 vs. water vapor */
 	cond_corr                    = s->value[LEAF_SHADE_CONDUCTANCE] * 1e6 / ( 1.6 * Rgas * ( meteo_daily->tday + 273.15 ) );
 	leafN                        = s->value[LEAF_SHADE_N];
-	leaf_day_mresp               = s->value[DAILY_LEAF_SHADE_MAINT_RESP];
+	/* convert from mass to molar units, and from a daily rate to a rate per second (umol/m2/s) */
+	leaf_day_mresp               = s->value[DAILY_LEAF_SHADE_MAINT_RESP] / ((meteo_daily->daylength * 3600.) * GC_MOL * 1e-6 );
 	ppfd                         = s->value[PPFD_ABS_SHADE];
 
-	/* call photosynthesis_biome for shade leaves */
-	photosynthesis_biome (c, height, dbh, age, species, meteo_daily, meteo_annual, cond_corr, leafN, ppfd, leaf_day_mresp );
+	/* call Farquhar for shade leaves */
+	assimilation = Farquhar (c, height, dbh, age, species, meteo_daily, meteo_annual, cond_corr, leafN, ppfd, leaf_day_mresp );
 
 	/* converting umolC/sec --> gC/m2/day) */
-	s->value[ASSIMILATION_SHADE] = ( ( s->value[ASSIMILATION] + leaf_day_mresp ) * s->value[LAI_SHADE_PROJ] * (meteo_daily->daylength * 3600) * 12.011e-9 ) * 1000. ;
+	s->value[ASSIMILATION_SHADE] = ( ( assimilation + leaf_day_mresp ) * s->value[LAI_SHADE_PROJ] * (meteo_daily->daylength * 3600) * GC_MOL * 1e-6);
+
+//	if (s->value[LAI_PROJ] > 3)
+//	{
+//		printf("%g sun\n", s->value[PPFD_ABS_SUN]);
+//		printf("%g shade\n", s->value[PPFD_ABS_SHADE]);
+//		getchar();
+//	}
 
 	/****************************************************************************************/
 
@@ -82,7 +92,7 @@ void total_photosynthesis_biome (cell_t *const c, const int height, const int db
 
 }
 
-void photosynthesis_biome (cell_t *const c, const int height, const int dbh, const int age, const int species, const meteo_daily_t *const meteo_daily,
+double Farquhar (cell_t *const c, const int height, const int dbh, const int age, const int species, const meteo_daily_t *const meteo_daily,
 		const meteo_annual_t *const meteo_annual, const double cond_corr, const double leafN, const double ppfd, const double leaf_day_mresp )
 {
 	/*
@@ -253,11 +263,13 @@ void photosynthesis_biome (cell_t *const c, const int height, const int dbh, con
 	if ( Av < Aj ) A = Av;
 	else           A = Aj;
 
-	/* compute assimilation (umol/m2/s) */
-	s->value[ASSIMILATION] = A;
-
 	/* compute (Pa) intercellular [CO2] */
+	//fixme currently not used
 	Ci = Ca - ( A / cond_corr );
+
+	/* compute assimilation (umol/m2/s) */
+	return A;
+
 
 }
 
