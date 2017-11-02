@@ -26,7 +26,7 @@ void total_photosynthesis_biome (cell_t *const c, const int height, const int db
 	double leafN;            /* (gNleaf/m2) leaf N per unit leaf area */
 	double ppfd;             /* (umol/m2 covered/sec) photosynthetic Photon Flux Density  */
 	double leaf_day_mresp;   /* (umol/m2/s) day leaf m. resp, proj. area basis */
-	double assimilation;
+	double ps;               /* gross photosynthesis (gC/m2/day) */
 
 	species_t *s;
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
@@ -49,13 +49,14 @@ void total_photosynthesis_biome (cell_t *const c, const int height, const int db
 	ppfd                         = s->value[PPFD_ABS_SUN];
 
 	/* call Farquhar for sun leaves */
-	assimilation = Farquhar (c, height, dbh, age, species, meteo_daily, meteo_annual, cond_corr, leafN, ppfd, leaf_day_mresp);
+	ps = Farquhar (c, height, dbh, age, species, meteo_daily, meteo_annual, cond_corr, leafN, ppfd, leaf_day_mresp);
 
 	/* converting umolC/sec --> gC/m2/day) */
-	assimilation *= meteo_daily->daylength_sec * GC_MOL * 1e-6;
+	ps *= meteo_daily->daylength_sec * GC_MOL * 1e-6;
 
-	/* converting to projected lai */
-	s->value[ASSIMILATION_SUN]   = ( assimilation + leaf_day_mresp ) * s->value[LAI_SUN_PROJ];
+	/* net photosynthesis removing photorespiration and converting to projected lai */
+	//test was "+ leaf_day_mresp" not clear leaf_day_resp sign
+	s->value[ASSIMILATION_SUN]   = ( ps - leaf_day_mresp ) * s->value[LAI_SUN_PROJ];
 
 	/****************************************************************************************/
 
@@ -70,13 +71,14 @@ void total_photosynthesis_biome (cell_t *const c, const int height, const int db
 	ppfd                         = s->value[PPFD_ABS_SHADE];
 
 	/* call Farquhar for shade leaves */
-	assimilation = Farquhar (c, height, dbh, age, species, meteo_daily, meteo_annual, cond_corr, leafN, ppfd, leaf_day_mresp );
+	ps = Farquhar (c, height, dbh, age, species, meteo_daily, meteo_annual, cond_corr, leafN, ppfd, leaf_day_mresp );
 
 	/* converting umolC/sec --> gC/m2/day) */
-	assimilation *= meteo_daily->daylength_sec * GC_MOL * 1e-6;
+	ps *= meteo_daily->daylength_sec * GC_MOL * 1e-6;
 
-	/* converting to projected lai */
-	s->value[ASSIMILATION_SHADE] = ( assimilation + leaf_day_mresp ) * s->value[LAI_SHADE_PROJ];
+	/* net photosynthesis removing photorespiration and converting to projected lai */
+	//test was "+ leaf_day_mresp" not clear leaf_day_resp sign
+	s->value[ASSIMILATION_SHADE] = ( ps - leaf_day_mresp ) * s->value[LAI_SHADE_PROJ];
 
 
 	/****************************************************************************************/
