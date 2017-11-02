@@ -3,9 +3,11 @@
 # Carlo Trotta (trottacarlo@unitus.it)
 # Gaetano Pellicone (gaetano.pellicone@isafom.cnr.it)
 # starting date: 18 April 2017
+rm(list = ls())
 library(ggplot2)
 library(cowplot)
-
+library(lubridate)
+source("GetPlotResults_file.R")
 model<-"3D-CMCC-FEM"
 version="5.3.3-ISIMIP"
 
@@ -39,7 +41,7 @@ co2_list <-c("on")# , "on",off", "All")
 protocol_list<-c("FT")# ("2A","2B", "All") 
 
 if ( grepl('All', site_list) ) {
-    site_list = c("Soroe","Hyytiala, Collelongo")
+  site_list = c("Soroe","Hyytiala, Collelongo")
 }
 if ( grepl('All', esm_list) ) {
   esm_list = c("1","2","3","4","5")
@@ -61,121 +63,131 @@ if ( grepl('All', protocol_list) ) {
 start.time <- Sys.time()
 
 for (protocol in protocol_list) {
-    for (site in site_list) {
-        for ( esm in esm_list) {
-            for (rcp in rcp_list) {
-                for (man in man_list) {
-                    for (co2 in co2_list) {
-                        #  create arguments
-                        dir.create(paste0("./output/",output_folder,"-", version, "-", site,"-",protocol),showWarnings = FALSE)
-                        
-                        cat(paste0("\nstart", model," ",version," ","protocol: ",protocol, " site: ", site, 
-                                   " ESM: ", esm," RCP: ", rcp," Manag-", man, " CO2-", co2,'\n'))
-
-                        systemCall  <- paste0(build_list,'/3D_CMCC_Forest_Model', " ",
-                                              "-i"," ", "input/", site, " ",
-                                              "-p"," ", "input/parameterization", " ",
-                                              "-o"," ", "output/",output_folder,"-", version, "-", site,"-",protocol," ",
-                                              "-d"," ", "ISIMIP/", site,"_stand_ISIMIP.txt", " ",
-                                              "-m"," ", "ISIMIP/", protocol, "/ESM", esm,"/", protocol,"_","ESM", esm,"_", "rcp", rcp, ".txt", " ",
-                                              "-s"," ", "ISIMIP/", site,"_soil_ISIMIP.txt", " ",
-                                              "-t"," ", "ISIMIP/", site,"_topo_ISIMIP.txt", " ",
-                                              "-c"," ", "ISIMIP/", protocol, "/", site,"_settings_ISIMIP_Manag-", man, "_CO2-", co2,".txt", " ",
-                                              "-k"," ", "ISIMIP/", "/CO2/CO2_", "rcp",rcp, ".txt"
-                        )
-                        # launch execution
-                        system(systemCall)
-                        outputCMCC<- list()
-
-                        cat(paste0("start 3D-CMCC ",
-                                   "protocol: ",protocol, " site: ", site, 
-                                   " ESM: ", esm," RCP: ", rcp," Manag-", man, " CO2-", co2,' ... COMPLETE!\n'))
-                        
-                        # read start and end_year from setting file
-                        fid = file(paste0(getwd(),"/input/",site,"/ISIMIP/", protocol, "/", site,"_settings_ISIMIP_Manag-", 
-                                          man, "_CO2-", co2,".txt"),'r')
-                        settings = readLines(fid)
-                        close(fid)
-                        rm(fid)
-                        
-                        start_year = unlist(strsplit(settings[grep('^YEAR_START ',settings)],' '))[2]
-                        end_year = unlist(strsplit(settings[grep('^YEAR_END ',settings)],' '))[2]
-                        
-                        rm(settings)
-                        
-                        all_out_files = list.files(paste0("output/",output_folder,"-", version, "-", site,"-",protocol,"/"), 
-                                                   pattern = paste0(version,'_',site,'_',protocol,'_ESM',esm,'_rcp',rcp,
-                                                                    '.txt_'),
-                                                   recursive = TRUE, full.names = TRUE)
-                        
-                        list_time = c('annual','monthly','daily')
-                        
-                        for (cy_time in list_time) {
-                            for (f in all_out_files) {
-                                
-                                file_name = unlist(strsplit(f,'/'))
-                                file_name = file_name[length(file_name)]
-                                
-                                # plot only the last results
-                                ck_f = 0
-                                co2_1 = 'on'
-                                if (co2 == 'off') {
-                                  co2_1 = 'var'
-                                } 
-                                if ( paste0(cy_time,'_',version,'_',site,'_',protocol,'_ESM',esm,'_rcp',rcp,'.txt_(',start_year,'-',end_year,')_CO2_',toupper(co2_1),'_CO2_rcp',rcp,'.txt_Man_',toupper(man),'_d_10000_txt.txt') == file_name ) {
-                                    ck_f = 1
-                                }
-                                
-                                if (ck_f == 0) {
-                                    next
-                                }
-                                
-                                cat(paste0('\nImport file: ',f,'\n'))
-                                
-                                # read file
-                                outputCMCC <-read.csv(f,header=T,comment.char = "#")
-                                
-                                if ( grepl('^annual_',file_name) ) {
-                                    outputCMCC$Date <- paste0("01/01/",outputCMCC$YEAR)
-                                    outputCMCC$Date <- as.Date(outputCMCC$Date, format = "%d/%m/%Y")
-                                    start_col = 3
-                                }
-                                if ( grepl('^monthly_',file_name) ) {
-                                    outputCMCC$Date <- paste0("01/",outputCMCC$MONTH, "/",outputCMCC$YEAR)
-                                    outputCMCC$Date <- as.Date(outputCMCC$Date, format = "%d/%m/%Y")
-                                    start_col = 4
-                                }
-                                if ( grepl('^daily_',file_name) ) {
-                                    outputCMCC$Date <- paste0(outputCMCC$DAY,"/",outputCMCC$MONTH, "/",outputCMCC$YEAR)
-                                    outputCMCC$Date <- as.Date(outputCMCC$Date, format = "%d/%m/%Y")
-                                    start_col = 3
-                                }
-                                
-                                # plot output model 
-                                pdf(gsub('_txt.txt','_txt.pdf',f), onefile = T, width = 30,height = 24)
-                                par(mfrow=c(4,4))
-                                for (i in seq(start_col,length(outputCMCC)) ) {
-                                    plot(outputCMCC$Date, outputCMCC[,i], main=colnames(outputCMCC[i]), 
-                                         col="black", xlab = "year", ylab= "unit", type = "l", col.lab="red", cex.lab=2, cex.axis=2, cex.main=2, pch =30)
-                                } 
-                                dev.off()
-                                cat(paste0('\n',gsub('_txt.txt','_txt.pdf',f),'\n'))
-                                
-                                rm(file_name,outputCMCC,start_col)
-                            }
-                            rm(f)
-                        }
-                        rm(all_out_files,end_year,start_year,list_time,cy_time)
-                    }
-                    rm(co2)
+  for (site in site_list) {
+    for ( esm in esm_list) {
+      for (rcp in rcp_list) {
+        for (man in man_list) {
+          for (co2 in co2_list) {
+            #  create arguments
+            dir.create(paste0("./output/",output_folder,"-", version, "-", site,"-",protocol),showWarnings = FALSE)
+            
+            cat(paste0("\nstart", model," ",version," ","protocol: ",protocol, " site: ", site, 
+                       " ESM: ", esm," RCP: ", rcp," Manag-", man, " CO2-", co2,'\n'))
+            
+            systemCall  <- paste0(build_list,'/3D_CMCC_Forest_Model', " ",
+                                  "-i"," ", "input/", site, " ",
+                                  "-p"," ", "input/parameterization", " ",
+                                  "-o"," ", "output/",output_folder,"-", version, "-", site,"-",protocol," ",
+                                  "-d"," ", "ISIMIP/", site,"_stand_ISIMIP.txt", " ",
+                                  "-m"," ", "ISIMIP/", protocol, "/ESM", esm,"/", protocol,"_","ESM", esm,"_", "rcp", rcp, ".txt", " ",
+                                  "-s"," ", "ISIMIP/", site,"_soil_ISIMIP.txt", " ",
+                                  "-t"," ", "ISIMIP/", site,"_topo_ISIMIP.txt", " ",
+                                  "-c"," ", "ISIMIP/", protocol, "/", site,"_settings_ISIMIP_Manag-", man, "_CO2-", co2,".txt", " ",
+                                  "-k"," ", "ISIMIP/", "/CO2/CO2_", "rcp",rcp, ".txt"
+            )
+            # launch execution
+            system(systemCall)
+            outputCMCC<- list()
+            
+            cat(paste0("start 3D-CMCC ",
+                       "protocol: ",protocol, " site: ", site, 
+                       " ESM: ", esm," RCP: ", rcp," Manag-", man, " CO2-", co2,' ... COMPLETE!\n'))
+            
+            # read start and end_year from setting file
+            fid = file(paste0(getwd(),"/input/",site,"/ISIMIP/", protocol, "/", site,"_settings_ISIMIP_Manag-", 
+                              man, "_CO2-", co2,".txt"),'r')
+            settings = readLines(fid)
+            close(fid)
+            rm(fid)
+            
+            start_year = unlist(strsplit(settings[grep('^YEAR_START ',settings)],' '))[2]
+            end_year = unlist(strsplit(settings[grep('^YEAR_END ',settings)],' '))[2]
+            
+            rm(settings)
+            
+            list_time = c('annual','daily')
+            
+            for (cy_time in list_time) {
+              
+              # list of the files to plot
+              all_out_files = list.files(paste0("output/",output_folder,"-", version, "-", site,"-",protocol,"/"), 
+                                         pattern = paste0(version,'_',site,'_',protocol,'_ESM',esm),#,'_rcp',rcp, '.txt_'),
+                                         recursive = TRUE, full.names = TRUE)
+              all_out_files = all_out_files[grep(cy_time,all_out_files)]
+              # exclude all PDF files
+              if ( length( grep('.pdf',all_out_files) ) > 0 ) {
+                all_out_files = all_out_files[-1*grep('.pdf',all_out_files)]
+              }
+              
+              all_out_files2 = c()
+              
+              if ( sum(grepl('^Benchmark',basename(all_out_files))) == 0  ) {
+                pos = 1
+                file.rename(
+                  paste0(getwd(),'/',dirname(all_out_files[pos]),'/',basename(all_out_files[pos])),
+                  paste0(getwd(),'/',dirname(all_out_files[pos]),'/','Benchmark_',basename(all_out_files[pos]))
+                )
+                all_out_files2 = c(all_out_files2,paste0(dirname(all_out_files[pos]),'/','Benchmark_',basename(all_out_files[pos])))
+              } else {
+                pos = grep('^Benchmark',basename(all_out_files))
+                all_out_files2 = c(all_out_files2,all_out_files[pos])
+              }
+              
+              all_out_files = all_out_files[-1*pos]
+              
+              cnt = 0
+              while (length(all_out_files) > 0) {
+                cnt = cnt + 1
+                pos = grep(paste0('^',cnt,'_'),basename(all_out_files))
+                if ( length(pos) == 0 ) {
+                  pos = 1
+                  file.rename(
+                    paste0(getwd(),'/',dirname(all_out_files[pos]),'/',basename(all_out_files[pos])),
+                    paste0(getwd(),'/',dirname(all_out_files[pos]),'/',cnt,'_',basename(all_out_files[pos]))
+                  )
+                  all_out_files2 = c(all_out_files2,paste0(getwd(),'/',dirname(all_out_files[pos]),'/',cnt,'_',basename(all_out_files[pos])))
+                } else {
+                  all_out_files2 = c(all_out_files2,all_out_files[pos])
                 }
-                rm(man)
+                all_out_files = all_out_files[-1*pos]
+              }  
+
+              lista_p = GetPlotResults_file(all_out_files2,paste0(getwd(),'/',dirname(all_out_files2[1]),'/',cy_time,'_file_all.pdf'))
+              
+              pdf(paste0(getwd(),'/',dirname(all_out_files2[1]),'/',cy_time,'_file_all.pdf'),
+                  onefile = T, width = 30,height = 24)
+
+              cnt_p = 0
+              ref_plot = 12
+              while ( length(lista_p) > 0) {
+                if ( length(lista_p) < ref_plot ) {
+                  ref_plot_1 = length(lista_p2)
+                }
+                lista_p2 = lista_p[seq(1,ref_plot)]
+                if ( length(lista_p2) == ref_plot ) {
+                  mpt = plot_grid(plotlist = lista_p2,ncol = 3,align = 'hv')
+                  print(mpt)
+                  lista_p2 = list()
+                }
+                lista_p = lista_p[-1*seq(1,ref_plot)]
+              }
+              
+              dev.off()
+              
+              cat(paste0(paste0(getwd(),'/',dirname(all_out_files2[1]),'/',cy_time,'_file_all.pdf'),' created!\n'))
+              #rm(start_col)
             }
-            rm(rcp)
+            rm(all_out_files,end_year,start_year,list_time,cy_time)
+          }
+          rm(co2)
         }
-        rm(esm)
+        rm(man)
+      }
+      rm(rcp)
     }
-    rm(site)
+    rm(esm)
+  }
+  rm(site)
 }
 rm(protocol)
 end.time <- Sys.time()

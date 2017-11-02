@@ -1,7 +1,7 @@
 # Developed by:
 # Alessio Collalti (alessio.collalti@cmcc.it)
 # Carlo Trotta (trottacarlo@unitus.it)
-# Gaetano Pellicone (gaetano.pellicone@isafom.cnr.it)
+# Gaetano Pellicone (alessio.ribeca@cmcc.it)
 # starting date: 18 April 2017
 library(ggplot2)
 library(cowplot)
@@ -23,200 +23,160 @@ year=format(today, format="%Y")
 month=toupper(month)
 
 # workig directory
-# setwd('/home/alessio-cmcc/git/3D-CMCC-LAND/software/3D-CMCC-Forest-Model/')
-getwd()
+setwd('/home/alessio/git/3D-CMCC-LAND/software/3D-CMCC-Forest-Model/')
+
 
 #  output folder name
-output_folder="Test_output_Rstudio"
+output_folder="TEST_output_Rstudio"
 
 # multiple simulations
-build_list<-c('Release')#, 'Release')
-site_list<-c("Soroe")#,"Soroe","Hyytiala","All")
-esm_list <-c("2")# ("1","2","3","4","5", "All")
-rcp_list <-c("0p0")# ("0p0","2p6","4p5","6p0","8p5","All")
-man_list <-c("off")# ("on",'off', "All")
-co2_list <-c("on")# , "on",off", "All")
-protocol_list<-c("FT")# ("2A","2B", "All") 
-
-if ( grepl('All', site_list) ) {
-    site_list = c("Soroe","Hyytiala, Collelongo")
-}
-if ( grepl('All', esm_list) ) {
-  esm_list = c("1","2","3","4","5")
-}
-if( grepl('All', rcp_list) ) {
-  rcp_list = c("2p6","4p5","6p0","8p5")
-}
-if( grepl('All', man_list ) ) {
-  man_list = c("on",'off')
-}
-if( grepl('All', co2_list) ) {
-  co2_list = c("on",'off')
-}
-if ( grepl('All', protocol_list) ) {
-  protocol_list = c('1A','FT','2B')
-}
-
+site_list<-c("Soroe")#,"Hyytiala","All")
+esm_list <-c("1")#,"2","3","4","5")
+rcp_list <-c("0p0")#,"2p6","4p5","6p0","8p5")
+man_list <-c("on")#,'off')#,"All")
+co2_list <-c("on")#, "off")#,"All")
+protocol_list<-c("FT") 
 ## a way to time an R expression: system.time is preferred
-start.time <- Sys.time()
 
-for (protocol in protocol_list) {
-    for (site in site_list) {
-        for ( esm in esm_list) {
-            for (rcp in rcp_list) {
-                for (man in man_list) {
-                    for (co2 in co2_list) {
-                        #  create arguments
-                        dir.create(paste0("./output/",output_folder,"-", version, "-", site,"-",protocol),showWarnings = FALSE)
-                        
-                        cat(paste0("\nstart", model," ",version," ","protocol: ",protocol, " site: ", site, 
-                                   " ESM: ", esm," RCP: ", rcp," Manag-", man, " CO2-", co2,'\n'))
 
-                        systemCall  <- paste0(build_list,'/3D_CMCC_Forest_Model', " ",
-                                              "-i"," ", "input/", site, " ",
-                                              "-p"," ", "input/parameterization", " ",
-                                              "-o"," ", "output/",output_folder,"-", version, "-", site,"-",protocol," ",
-                                              "-d"," ", "ISIMIP/", site,"_stand_ISIMIP.txt", " ",
-                                              "-m"," ", "ISIMIP/", protocol, "/ESM", esm,"/", protocol,"_","ESM", esm,"_", "rcp", rcp, ".txt", " ",
-                                              "-s"," ", "ISIMIP/", site,"_soil_ISIMIP.txt", " ",
-                                              "-t"," ", "ISIMIP/", site,"_topo_ISIMIP.txt", " ",
-                                              "-c"," ", "ISIMIP/", protocol, "/", site,"_settings_ISIMIP_Manag-", man, "_CO2-", co2,".txt", " ",
-                                              "-k"," ", "ISIMIP/", "/CO2/CO2_", "rcp",rcp, ".txt"
-                        )
-                        # launch execution
-                        system(systemCall)
-                        outputCMCC<- list()
-
-                        cat(paste0("start 3D-CMCC ",
-                                   "protocol: ",protocol, " site: ", site, 
-                                   " ESM: ", esm," RCP: ", rcp," Manag-", man, " CO2-", co2,' ... COMPLETE!\n'))
-                        
-                        # read start and end_year from setting file
-                        fid = file(paste0(getwd(),"/input/",site,"/ISIMIP/", protocol, "/", site,"_settings_ISIMIP_Manag-", 
-                                          man, "_CO2-", co2,".txt"),'r')
-                        settings = readLines(fid)
-                        close(fid)
-                        rm(fid)
-                        
-                        start_year = unlist(strsplit(settings[grep('^YEAR_START ',settings)],' '))[2]
-                        end_year = unlist(strsplit(settings[grep('^YEAR_END ',settings)],' '))[2]
-                        
-                        rm(settings)
-                        
-                        all_out_files = list.files(paste0("output/",output_folder,"-", version, "-", site,"-",protocol,"/"), 
-                                                   pattern = paste0(version,'_',site,'_',protocol,'_ESM',esm,'_rcp',rcp,
-                                                                    '.txt_'),
-                                                   recursive = TRUE, full.names = TRUE)
-                        
-                        list_time = c('annual','monthly','daily')
-                        
-                        for (cy_time in list_time) {
-                            for (f in all_out_files) {
-                                
-                                file_name = unlist(strsplit(f,'/'))
-                                file_name = file_name[length(file_name)]
-                                
-                                # plot only the last results
-                                ck_f = 0
-                                co2_1 = 'on'
-                                if (co2 == 'off') {
-                                  co2_1 = 'var'
-                                } 
-                                if ( paste0(cy_time,'_',version,'_',site,'_',protocol,'_ESM',esm,'_rcp',rcp,'.txt_(',start_year,'-',end_year,')_CO2_',toupper(co2_1),'_CO2_rcp',rcp,'.txt_Man_',toupper(man),'_d_10000_txt.txt') == file_name ) {
-                                    ck_f = 1
-                                }
-                                
-                                if (ck_f == 0) {
-                                    next
-                                }
-                                
-                                cat(paste0('\nImport file: ',f,'\n'))
-                                
-                                # read file
-                                outputCMCC <-read.csv(f,header=T,comment.char = "#")
-                                
-                                if ( grepl('^annual_',file_name) ) {
-                                    outputCMCC$Date <- paste0("01/01/",outputCMCC$YEAR)
-                                    outputCMCC$Date <- as.Date(outputCMCC$Date, format = "%d/%m/%Y")
-                                    start_col = 3
-                                }
-                                if ( grepl('^monthly_',file_name) ) {
-                                    outputCMCC$Date <- paste0("01/",outputCMCC$MONTH, "/",outputCMCC$YEAR)
-                                    outputCMCC$Date <- as.Date(outputCMCC$Date, format = "%d/%m/%Y")
-                                    start_col = 4
-                                }
-                                if ( grepl('^daily_',file_name) ) {
-                                    outputCMCC$Date <- paste0(outputCMCC$DAY,"/",outputCMCC$MONTH, "/",outputCMCC$YEAR)
-                                    outputCMCC$Date <- as.Date(outputCMCC$Date, format = "%d/%m/%Y")
-                                    start_col = 3
-                                }
-                                
-                                # plot output model 
-                                pdf(gsub('_txt.txt','_txt.pdf',f), onefile = T, width = 30,height = 24)
-                                par(mfrow=c(4,4))
-                                for (i in seq(start_col,length(outputCMCC)) ) {
-                                    plot(outputCMCC$Date, outputCMCC[,i], main=colnames(outputCMCC[i]), 
-                                         col="black", xlab = "year", ylab= "unit", type = "l", col.lab="red", cex.lab=2, cex.axis=2, cex.main=2, pch =30)
-                                } 
-                                dev.off()
-                                cat(paste0('\n',gsub('_txt.txt','_txt.pdf',f),'\n'))
-                                
-                                rm(file_name,outputCMCC,start_col)
-                            }
-                            rm(f)
-                        }
-                        rm(all_out_files,end_year,start_year,list_time,cy_time)
-                    }
-                    rm(co2)
+for (protocol in protocol_list) 
+  {
+  for (site in site_list) 
+    {
+    for ( esm in esm_list) 
+      {
+      for (rcp in rcp_list) 
+        {
+        for (man in man_list) 
+          {
+          for (co2 in co2_list) 
+            {
+            #  create arguments
+            dir.create(paste0("./output/",output_folder,"-", version, "-", site,"-",protocol))
+            
+            cat(paste0("\nstart 3D-CMCC ",
+                       "protocol: ",protocol, " site: ", site, 
+                       " ESM: ", esm," RCP: ", rcp," Manag-", man, " CO2-", co2,'\n'))
+            
+            systemCall  <- paste0("Release/3D_CMCC_Forest_Model", " ",
+                                  "-i"," ", "input/", site, " ",
+                                  "-p"," ", "input/parameterization", " ",
+                                  "-o"," ", "output/",output_folder,"-", version, "-", site,"-",protocol," ",
+                                  "-d"," ", "ISIMIP/", site,"_stand_ISIMIP.txt", " ",
+                                  "-m"," ", "ISIMIP/", protocol, "/ESM", esm,"/", protocol,"_","ESM", esm,"_", "rcp", rcp, ".txt", " ",
+                                  "-s"," ", "ISIMIP/", site,"_soil_ISIMIP.txt", " ",
+                                  "-t"," ", "ISIMIP/", site,"_topo_ISIMIP.txt", " ",
+                                  "-c"," ", "ISIMIP/", protocol, "/", site,"_settings_ISIMIP_Manag-", man, "_CO2-", co2,".txt", " ",
+                                  "-k"," ", "ISIMIP/", "/CO2/CO2_", "rcp",rcp, ".txt"
+                                  )
+            # launch execution
+            system(systemCall)
+            outputCMCC<- list()
+            
+            cat(paste0("start 3D-CMCC ",
+                       "protocol: ",protocol, " site: ", site, 
+                       " ESM: ", esm," RCP: ", rcp," Manag-", man, " CO2-", co2,' ... COMPLETE!\n'))
+            
+            # read start and end_year from setting file
+            fid = file(paste0(getwd(),"/input/",site,"/ISIMIP/", protocol, "/", site,"_settings_ISIMIP_Manag-", 
+                              man, "_CO2-", co2,".txt"),'r')
+            settings = readLines(fid)
+            close(fid)
+            rm(fid)
+            
+            start_year = unlist(strsplit(settings[grep('^YEAR_START ',settings)],' '))[2]
+            end_year = unlist(strsplit(settings[grep('^YEAR_END ',settings)],' '))[2]
+            
+            rm(settings)
+        
+            all_out_files = list.files(paste0("output/",output_folder,"-", version, "-", site,"-",protocol,"/"), 
+                                       pattern = paste0(version,'_',site,'_GCM',esm,'_rcp',rcp,
+                                                        '.txt_'),
+                                       recursive = TRUE, full.names = TRUE)
+            
+            list_time = c('annual','daily')
+            
+            for (cy_time in list_time) {
+              for (f in all_out_files) {
+                
+                file_name = unlist(strsplit(f,'/'))
+                file_name = file_name[length(file_name)]
+                
+                # plot only the last results
+                ck_f = 0
+                if ( paste0(cy_time,'_',version,'_',site,'_GCM',esm,'_rcp',rcp,'.txt_(',start_year,'-',end_year,')_CO2_',toupper(co2),'_CO2_rcp',rcp,'.txt_Man_',toupper(man),'_d_10000_txt.txt') == file_name ) {
+                  ck_f = 1
                 }
-                rm(man)
+                
+                if (ck_f == 0) {
+                  next
+                }
+                
+                cat(paste0('\nImport file: ',f,'\n'))
+                
+                # read file
+                outputCMCC <-read.csv(f,header=T,comment.char = "#")
+                
+                if ( grepl('^annual_',file_name) ) {
+                  outputCMCC$Date <- paste0("01/01/",outputCMCC$YEAR)
+                  outputCMCC$Date <- as.Date(outputCMCC$Date, format = "%d/%m/%Y")
+                  start_col = 5
+                }
+                # if ( grepl('^monthly_',file_name) ) {
+                #   outputCMCC$Date <- paste0("01/",outputCMCC$MONTH, "/",outputCMCC$YEAR)
+                #   outputCMCC$Date <- as.Date(outputCMCC$Date, format = "%d/%m/%Y")
+                #   start_col = 4
+                # }
+                if ( grepl('^daily_',file_name) ) {
+                  outputCMCC$Date <- paste0(outputCMCC$DAY,"/",outputCMCC$MONTH, "/",outputCMCC$YEAR)
+                  outputCMCC$Date <- as.Date(outputCMCC$Date, format = "%d/%m/%Y")
+                  start_col = 3
+                }
+                
+                # plot output model 
+                pdf(gsub('_txt.txt','_txt.pdf',f), onefile = T, width = 30,height = 24)
+                par(mfrow=c(5,5))
+                for (i in seq(start_col,length(outputCMCC)) ) {
+                  plot(outputCMCC$Date, outputCMCC[,i], main=colnames(outputCMCC[i]), 
+                       col="black", xlab = "year", ylab= "unit", type = "l", col.lab="red", cex.lab=2, cex.axis=1.5, cex.main=2, pch =30)
+                } 
+                dev.off()
+                cat(paste0('\n',gsub('_txt.txt','_txt.pdf',f),'\n'))
+                
+                rm(file_name,outputCMCC,start_col)
+              }
+              rm(f)
             }
-            rm(rcp)
+            rm(all_out_files,end_year,start_year,list_time,cy_time)
+          }
+          rm(co2)
         }
-        rm(esm)
+        rm(man)
+      }
+      rm(rcp)
     }
-    rm(site)
+    rm(esm)
+  }
+  rm(site)
 }
 rm(protocol)
-end.time <- Sys.time()
-print(end.time - start.time)
 
 
-#     # # create annual GPP plot
-#     # dev.new()
-#     # plot(outputCMCC$annual$Date,outputCMCC$annual[,"GPP"], main = colnames(outputCMCC$annual[8]), col="red", xlab = "year", type = "l")
-#     # 
-#     # # create annual RA plot
-#     # dev.new()
-#     # plot(outputCMCC$annual$Date,outputCMCC$annual[,"RA"], main = colnames(outputCMCC$annual[11]), col="red", xlab = "year", type = "l")
-#     # 
-#     # # create annual NPP plot
-#     # dev.new()
-#     # plot(outputCMCC$annual$Date,outputCMCC$annual[,"NPP"], main = colnames(outputCMCC$annual[12]), col="red", xlab = "year", type = "l")
-#     # 
-#     # # create annual CUE plot
-#     # dev.new()
-#     # plot(outputCMCC$annual$Date,outputCMCC$annual[,"CUE"], main = colnames(outputCMCC$annual[13]), col="red", xlab = "year", type = "l")
-#     # 
-#     # # create annual LAI plot
-#     # dev.new()
-#     # plot(outputCMCC$annual$Date,outputCMCC$annual[,"PeakLAI"], main = colnames(outputCMCC$annual[15]), xlab = "year", type = "l")
-# )
-# pt = c()
-# 
-# p1 = ggplot(data=outputCMCC_tot)
-# g1 = ggdraw()
-# for (ip in outputCMCC_tot) {
-#   p1 = p1 + geom_line(aes(x=Date, y=ip, group = esm, colour = esm)) + ylab(colnames(ip))
-#   g1 = g1 + draw_plot(
-#     ggplot(data=outputCMCC_tot,aes(x=Date, y=ip, group = esm, colour = esm))
-#     + ylab(colnames(ip)) + geom_line(),0,0,)
-#   pt = c(pt,p1)
-# }
-# ggdraw() +
-#   
-# plot_grid(pt)
-# plot_grid(p1)
+    # pt = c()
+    # 
+    # p1 = ggplot(data=outputCMCC_tot)
+    # g1 = ggdraw()
+    # for (ip in outputCMCC_tot) {
+    #   p1 = p1 + geom_line(aes(x=Date, y=ip, group = esm, colour = esm)) + ylab(colnames(ip))
+    #   g1 = g1 + draw_plot(
+    #     ggplot(data=outputCMCC_tot,aes(x=Date, y=ip, group = esm, colour = esm))
+    #     + ylab(colnames(ip)) + geom_line(),0,0,)
+    #   pt = c(pt,p1)
+    # }
+    # ggdraw() +
+    #   
+    # plot_grid(pt)
+    # plot_grid(p1)
 #   }
 # }
 
@@ -249,21 +209,21 @@ print(end.time - start.time)
 #     #****************************************************************************************************************************************************************************
 #     
 #     #output model TREE DAILY
-#     pdf(paste0("./output/",output_folder, "-", version, "-", site,"-",protocol,"/output_", version,"_", year,"_", month,"_", day,"/daily/Daily_",site,"-ESM",esm,"-RCP-",rcp,"-Man-",man,"-Co2-",co2,".pdf"), onefile = T, width = 30,height = 24)
+#     pdf(paste0("./output/",output_folder, "-", version, "-", site,"-",protocol,"/output_", version,"_", year,"_", month,"_", day,"/daily/Daily_",site,"-GCM",esm,"-RCP-",rcp,"-Man-",man,"-Co2-",co2,".pdf"), onefile = T, width = 30,height = 24)
 #     par(mfrow=c(5,5))
 #     for (i in 5:length(outputCMCC$daily)) plot(outputCMCC$daily$Date, outputCMCC$daily[,i], main=colnames(outputCMCC$daily[i]), 
 #                                                col="black", xlab = "year", ylab= "unit", type = "l", col.lab="red", cex.lab=2, cex.axis=1.5, cex.main=2, pch =30)
 #     dev.off()
 #     
 #     #output model TREE MONTHLY
-#     pdf(paste0("./output/",output_folder, "-", version, "-", site,"-",protocol,"/output_", version, "_", year,"_", month,"_", day,"/monthly/Monthly_",site,"-ESM",esm,"-RCP-",rcp,"-Man-",man,"-Co2-",co2,".pdf"), onefile = T, width = 30,height = 24)
+#     pdf(paste0("./output/",output_folder, "-", version, "-", site,"-",protocol,"/output_", version, "_", year,"_", month,"_", day,"/monthly/Monthly_",site,"-GCM",esm,"-RCP-",rcp,"-Man-",man,"-Co2-",co2,".pdf"), onefile = T, width = 30,height = 24)
 #     par(mfrow=c(5,5))
 #     for (i in 4:length(outputCMCC$monthly)) plot(outputCMCC$monthly$Date,outputCMCC$monthly[,i], main=colnames(outputCMCC$monthly[i]),
 #                                                  col="black", xlab = "year", ylab= "unit", type = "l", col.lab="red", cex.lab=1.5, cex.axis=1.5, cex.main=2, pch =30)
 #     dev.off()
 #     
 #     #output model TREE ANNUAL
-#     pdf(paste0("./output/",output_folder, "-", version, "-", site,"-",protocol,"/output_", version, "_", year,"_", month,"_", day,"/annual/Annual_",site,"-ESM",esm,"-RCP-",rcp,"-Man-",man,"-Co2-",co2,".pdf"), onefile = T, width = 20,height = 16)
+#     pdf(paste0("./output/",output_folder, "-", version, "-", site,"-",protocol,"/output_", version, "_", year,"_", month,"_", day,"/annual/Annual_",site,"-GCM",esm,"-RCP-",rcp,"-Man-",man,"-Co2-",co2,".pdf"), onefile = T, width = 20,height = 16)
 #     par(mfrow=c(5,5))
 #     for (i in 3:length(outputCMCC$annual)) plot(outputCMCC$annual$Date,outputCMCC$annual[,i], main=colnames(outputCMCC$annual[i]), 
 #                                                 col="black", xlab = "year", ylab= "unit", type = "l", col.lab="red", cex.lab=1.5, cex.axis=1.5, cex.main=2, pch =30)
@@ -352,7 +312,7 @@ print(end.time - start.time)
 #                                               "-p"," ", "input/parameterization", " ",
 #                                               "-o"," ", "output/",output_folder, "-", version, "-", site_list[e],"-",protocol," ",
 #                                               "-d"," ", "PAPER/", site_list[e],"_stand_ISIMIP.txt", " ",
-#                                               "-m"," ", "PAPER/", "ESM", esm_list[f],"/", "ESM", esm_list[f],"_", "rcp", rcp_list[g], ".txt", " ",
+#                                               "-m"," ", "PAPER/", "GCM", esm_list[f],"/", "GCM", esm_list[f],"_", "rcp", rcp_list[g], ".txt", " ",
 #                                               "-s"," ", "PAPER/", site_list[e],"_soil_ISIMIP.txt", " ",
 #                                               "-t"," ", "PAPER/", site_list[e],"_topo_ISIMIP.txt", " ",
 #                                               "-c"," ", "PAPER/", site_list[e],"_settings_ISIMIP_Manag-", man_list[h], "_CO2-", co2_list[i],".txt", " ",
