@@ -47,9 +47,10 @@ void daily_C_deciduous_partitioning (cell_t *const c, const int layer, const int
 	a = &d->ages[age];
 	s = &a->species[species];
 
+
 	s0    = s->value[S0CTEM];        /* parameter controlling allocation to stem (minimum ratio to stem pool */
 	r0    = s->value[R0CTEM];        /* parameter controlling allocation to roots (minimum ratio to root pools */
-	omega = s->value[OMEGA_CTEM]; /* controls the sensitivity of allocation to changes in water and light availability */
+	omega = s->value[OMEGA_CTEM];    /* controls the sensitivity of allocation to changes in water and light availability */
 
 	//fixme it should takes into account above layers
 	Light_trasm = exp(- s->value[K] * s->value[LAI_PROJ]);

@@ -37,167 +37,204 @@ output_folder="Test_output_Rstudio"
 
 # single or multiple simulations
 build_list<-c('Release')#, 'Release')
-site_list<-c("LeBray")#,"Soroe","Hyytiala","All")
+site_list<-c("Solling_beech")#,"Soroe","Hyytiala","All")
 esm_list <-c("2")# ("1","2","3","4","5", "All")
-rcp_list <-c("All")# ("0p0","2p6","4p5","6p0","8p5","All")
-man_list <-c("All")# ("on",'off', "All")
+rcp_list <-c("0p0")# ("0p0","2p6","4p5","6p0","8p5","All")
+man_list <-c("off")# ("on",'off', "All")
 co2_list <-c("on")# , "on",off", "All")
 protocol_list<-c("FT")# ("2A","2B", "All") 
 
 if ( grepl('All', site_list) ) {
-  site_list = c("Soroe","Hyytiala, Collelongo","Bily_Kriz","Peitz","Solling_beech","Solling_spruce","LeBray")
+    site_list = c("Soroe","Collelongo","Solling_beech","Hyytiala","Bily_Kriz","Peitz","Solling_spruce","LeBray")
 }
 if ( grepl('All', esm_list) ) {
-  esm_list = c("1","2","3","4","5","6","7","8","9","10")
+    esm_list = c("1","2","3","4","5","6","7","8","9","10")
 }
 if( grepl('All', rcp_list) ) {
-  rcp_list = c("0p0","2p6","4p5","6p0","8p5")
+    rcp_list = c("0p0","2p6","4p5","6p0","8p5")
 }
 if( grepl('All', man_list ) ) {
-  man_list = c("on",'off')
+    man_list = c("on",'off')
 }
 if( grepl('All', co2_list) ) {
-  co2_list = c("on",'off')
+    co2_list = c("on",'off')
 }
 if ( grepl('All', protocol_list) ) {
-  protocol_list = c('LOCAL','FT','2A','2B',"2BLBC","2Bpico","2BLBCpico")
+    protocol_list = c('LOCAL','FT','2A','2B',"2BLBC","2Bpico","2BLBCpico")
 }
 
 ## a way to time an R expression: system.time is preferred
 start.time <- Sys.time()
 
 for (protocol in protocol_list) {
-  for (site in site_list) {
-    for ( esm in esm_list) {
-      for (rcp in rcp_list) {
-        for (man in man_list) {
-          for (co2 in co2_list) {
-            #  create arguments
-            dir.create(paste0("./output/",output_folder,"-", version, "-", site,"-",protocol),showWarnings = FALSE)
-            
-            cat(paste0("\nstart", model," ",version," ","protocol: ",protocol, " site: ", site, 
-                       " ESM: ", esm," RCP: ", rcp," Manag-", man, " CO2-", co2,'\n'))
-            
-            systemCall  <- paste0(build_list,'/3D_CMCC_Forest_Model', " ",
-                                  "-i"," ", "input/", site, " ",
-                                  "-p"," ", "input/parameterization", " ",
-                                  "-o"," ", "output/",output_folder,"-", version, "-", site,"-",protocol," ",
-                                  "-d"," ", "ISIMIP/", site,"_stand_ISIMIP.txt", " ",
-                                  "-m"," ", "ISIMIP/", protocol, "/ESM", esm,"/", protocol,"_","ESM", esm,"_", "rcp", rcp, ".txt", " ",
-                                  "-s"," ", "ISIMIP/", site,"_soil_ISIMIP.txt", " ",
-                                  "-t"," ", "ISIMIP/", site,"_topo_ISIMIP.txt", " ",
-                                  "-c"," ", "ISIMIP/", protocol, "/", site,"_settings_ISIMIP_Manag-", man, "_CO2-", co2,".txt", " ",
-                                  "-k"," ", "ISIMIP/", "/CO2/CO2_", "rcp",rcp, ".txt"
-            )
-            # launch execution
-            system(systemCall)
-            outputCMCC<- list()
-            
-            cat(paste0("start 3D-CMCC ",
-                       "protocol: ",protocol, " site: ", site, 
-                       " ESM: ", esm," RCP: ", rcp," Manag-", man, " CO2-", co2,' ... COMPLETE!\n'))
-            
-            # read start and end_year from setting file
-            fid = file(paste0(getwd(),"/input/",site,"/ISIMIP/", protocol, "/", site,"_settings_ISIMIP_Manag-", 
-                              man, "_CO2-", co2,".txt"),'r')
-            settings = readLines(fid)
-            close(fid)
-            rm(fid)
-            
-            start_year = unlist(strsplit(settings[grep('^YEAR_START ',settings)],' '))[2]
-            end_year = unlist(strsplit(settings[grep('^YEAR_END ',settings)],' '))[2]
-            
-            rm(settings)
-            
-            list_time = c('annual')#,'daily')
-            
-            for (cy_time in list_time) {
-              
-              # list of the files to plot
-              all_out_files = list.files(paste0("output/",output_folder,"-", version, "-", site,"-",protocol,"/"), 
-                                         pattern = paste0(version,'_',site,'_',protocol,'_ESM',esm),#,'_rcp',rcp, '.txt_'),
-                                         recursive = TRUE, full.names = TRUE)
-              all_out_files = all_out_files[grep(cy_time,all_out_files)]
-              # exclude all PDF files
-              if ( length( grep('.pdf',all_out_files) ) > 0 ) {
-                all_out_files = all_out_files[-1*grep('.pdf',all_out_files)]
-              }
-              
-              all_out_files2 = c()
-              
-              if ( sum(grepl('^Benchmark',basename(all_out_files))) == 0  ) {
-                pos = 1
-                file.rename(
-                  paste0(getwd(),'/',dirname(all_out_files[pos]),'/',basename(all_out_files[pos])),
-                  paste0(getwd(),'/',dirname(all_out_files[pos]),'/','Benchmark_',basename(all_out_files[pos]))
-                )
-                all_out_files2 = c(all_out_files2,paste0(dirname(all_out_files[pos]),'/','Benchmark_',basename(all_out_files[pos])))
-              } else {
-                pos = grep('^Benchmark',basename(all_out_files))
-                all_out_files2 = c(all_out_files2,all_out_files[pos])
-              }
-              
-              all_out_files = all_out_files[-1*pos]
-              
-              cnt = 0
-              while (length(all_out_files) > 0) {
-                cnt = cnt + 1
-                pos = grep(paste0('^',cnt,'_'),basename(all_out_files))
-                if ( length(pos) == 0 ) {
-                  pos = 1
-                  file.rename(
-                    paste0(getwd(),'/',dirname(all_out_files[pos]),'/',basename(all_out_files[pos])),
-                    paste0(getwd(),'/',dirname(all_out_files[pos]),'/',cnt,'_',basename(all_out_files[pos]))
-                  )
-                  all_out_files2 = c(all_out_files2,paste0(getwd(),'/',dirname(all_out_files[pos]),'/',cnt,'_',basename(all_out_files[pos])))
-                } else {
-                  all_out_files2 = c(all_out_files2,all_out_files[pos])
+    for (site in site_list) {
+        for ( esm in esm_list) {
+            for (rcp in rcp_list) {
+                for (man in man_list) {
+                    for (co2 in co2_list) {
+                        #  create arguments
+                        dir.create(paste0("./output/",output_folder,"-", version, "-", site,"-",protocol),showWarnings = FALSE)
+                        
+                        if(protocol == "LOCAL")
+                        {
+                            cat(paste0("\nstart", model," ",version," ","protocol: ",protocol, " site: ", site,'\n'))
+                            
+                            systemCall  <- paste0(build_list,'/3D_CMCC_Forest_Model', " ",
+                                                  "-i"," ", "input/", site, " ",
+                                                  "-p"," ", "input/parameterization", " ",
+                                                  "-o"," ", "output/",output_folder,"-", version, "-", site,"-",protocol," ",
+                                                  "-d"," ", "ISIMIP/", site,"_stand_ISIMIP.txt", " ",
+                                                  "-m"," ", "ISIMIP/", protocol,"/",protocol, "_hist.txt", " ",
+                                                  "-s"," ", "ISIMIP/", site,"_soil_ISIMIP.txt", " ",
+                                                  "-t"," ", "ISIMIP/", site,"_topo_ISIMIP.txt", " ",
+                                                  "-c"," ", "ISIMIP/", protocol, "/", site,"_settings_ISIMIP_Manag-", man, "_CO2-", co2,".txt", " ",
+                                                  "-k"," ", "ISIMIP/", "/CO2/CO2_hist.txt"
+                            )
+                        }
+                        else
+                        {
+                            cat(paste0("\nstart", model," ",version," ","protocol: ",protocol, " site: ", site, 
+                                       " ESM: ", esm," RCP: ", rcp," Manag-", man, " CO2-", co2,'\n'))
+                            
+                            systemCall  <- paste0(build_list,'/3D_CMCC_Forest_Model', " ",
+                                                  "-i"," ", "input/", site, " ",
+                                                  "-p"," ", "input/parameterization", " ",
+                                                  "-o"," ", "output/",output_folder,"-", version, "-", site,"-",protocol," ",
+                                                  "-d"," ", "ISIMIP/", site,"_stand_ISIMIP.txt", " ",
+                                                  "-m"," ", "ISIMIP/", protocol, "/ESM", esm,"/", protocol,"_","ESM", esm,"_", "rcp", rcp, ".txt", " ",
+                                                  "-s"," ", "ISIMIP/", site,"_soil_ISIMIP.txt", " ",
+                                                  "-t"," ", "ISIMIP/", site,"_topo_ISIMIP.txt", " ",
+                                                  "-c"," ", "ISIMIP/", protocol, "/", site,"_settings_ISIMIP_Manag-", man, "_CO2-", co2,".txt", " ",
+                                                  "-k"," ", "ISIMIP/", "/CO2/CO2_", "rcp",rcp, ".txt"
+                            )
+                        }
+                        # launch execution
+                        system(systemCall)
+                        outputCMCC<- list()
+                        
+                        if (protocol == "LOCAL")
+                        {
+                            cat(paste0("start 3D-CMCC ",
+                                       "protocol: ",protocol, " site: ", site, '... COMPLETE!\n'))
+                        }
+                        else
+                        {
+                            cat(paste0("start 3D-CMCC ",
+                                       "protocol: ",protocol, " site: ", site, 
+                                       " ESM: ", esm," RCP: ", rcp," Manag-", man, " CO2-", co2,' ... COMPLETE!\n'))
+                        }
+                        
+                        # read start and end_year from setting file
+                        fid = file(paste0(getwd(),"/input/",site,"/ISIMIP/", protocol, "/", site,"_settings_ISIMIP_Manag-", 
+                                          man, "_CO2-", co2,".txt"),'r')
+                        settings = readLines(fid)
+                        close(fid)
+                        rm(fid)
+                        
+                        start_year = unlist(strsplit(settings[grep('^YEAR_START ',settings)],' '))[2]
+                        end_year = unlist(strsplit(settings[grep('^YEAR_END ',settings)],' '))[2]
+                        
+                        rm(settings)
+                        
+                        list_time = c('annual')#,'daily')
+                        
+                        for (cy_time in list_time) {
+                            
+                            # list of the files to plot
+                            if (protocol == "LOCAL")
+                            {             
+                                all_out_files = list.files(paste0("output/",output_folder,"-", version, "-", site,"-",protocol,"/"), 
+                                                           pattern = paste0(version,'_',site,'_',protocol, '_hist'),#,'_rcp',rcp, '.txt_'),
+                                                           recursive = TRUE, full.names = TRUE)
+                            }
+                            else
+                            {
+                                all_out_files = list.files(paste0("output/",output_folder,"-", version, "-", site,"-",protocol,"/"), 
+                                                           pattern = paste0(version,'_',site,'_',protocol,'_ESM',esm),#,'_rcp',rcp, '.txt_'),
+                                                           recursive = TRUE, full.names = TRUE)
+                            }
+                            
+                            all_out_files = all_out_files[grep(cy_time,all_out_files)]
+                            # exclude all PDF files
+                            if ( length( grep('.pdf',all_out_files) ) > 0 ) {
+                                all_out_files = all_out_files[-1*grep('.pdf',all_out_files)]
+                            }
+                            
+                            all_out_files2 = c()
+                            
+                            if ( sum(grepl('^Benchmark',basename(all_out_files))) == 0  ) {
+                                pos = 1
+                                file.rename(
+                                    paste0(getwd(),'/',dirname(all_out_files[pos]),'/',basename(all_out_files[pos])),
+                                    paste0(getwd(),'/',dirname(all_out_files[pos]),'/','Benchmark_',basename(all_out_files[pos]))
+                                )
+                                all_out_files2 = c(all_out_files2,paste0(dirname(all_out_files[pos]),'/','Benchmark_',basename(all_out_files[pos])))
+                            } else {
+                                pos = grep('^Benchmark',basename(all_out_files))
+                                all_out_files2 = c(all_out_files2,all_out_files[pos])
+                            }
+                            
+                            all_out_files = all_out_files[-1*pos]
+                            
+                            cnt = 0
+                            while (length(all_out_files) > 0) {
+                                cnt = cnt + 1
+                                pos = grep(paste0('^',cnt,'_'),basename(all_out_files))
+                                if ( length(pos) == 0 ) {
+                                    pos = 1
+                                    file.rename(
+                                        paste0(getwd(),'/',dirname(all_out_files[pos]),'/',basename(all_out_files[pos])),
+                                        paste0(getwd(),'/',dirname(all_out_files[pos]),'/',cnt,'_',basename(all_out_files[pos]))
+                                    )
+                                    all_out_files2 = c(all_out_files2,paste0(getwd(),'/',dirname(all_out_files[pos]),'/',cnt,'_',basename(all_out_files[pos])))
+                                } else {
+                                    all_out_files2 = c(all_out_files2,all_out_files[pos])
+                                }
+                                all_out_files = all_out_files[-1*pos]
+                            }  
+                            
+                            #for now exclude plots for daily simulations
+                            # if (cy_time == 'annual')
+                            # {
+                            lista_p = GetPlotResults_file(all_out_files2,paste0(getwd(),'/',dirname(all_out_files2[1]),'/',cy_time,'_file_all.pdf'))
+                            
+                            pdf(paste0(getwd(),'/',dirname(all_out_files2[1]),'/',cy_time,"_",site_list,'_file_all.pdf'),
+                                onefile = T, width = 30,height = 24)
+                            
+                            cnt_p = 0
+                            ref_plot = nr_plot_per_page
+                            while ( length(lista_p) > 0) {
+                                if ( length(lista_p) < ref_plot ) {
+                                    ref_plot_1 = length(lista_p2)
+                                }
+                                lista_p2 = lista_p[seq(1,ref_plot)]
+                                if ( length(lista_p2) == ref_plot ) {
+                                    mpt = plot_grid(plotlist = lista_p2,ncol = nr_col_per_page,align = 'hv')
+                                    print(mpt)
+                                    lista_p2 = list()
+                                }
+                                lista_p = lista_p[-1*seq(1,ref_plot)]
+                            }
+                            # }
+                            
+                            dev.off()
+                            
+                            cat(paste0(paste0(getwd(),'/',dirname(all_out_files2[1]),'/',cy_time,'_file_all.pdf'),' created!\n'))
+                            
+                            print(paste0(cy_time,"_file created!"))
+                            #rm(start_col)
+                        }
+                        rm(all_out_files,end_year,start_year,list_time,cy_time)
+                    }
+                    rm(co2)
                 }
-                all_out_files = all_out_files[-1*pos]
-              }  
-
-              #for now exclude plots for daily simulations
-              # if (cy_time == 'annual')
-              # {
-                lista_p = GetPlotResults_file(all_out_files2,paste0(getwd(),'/',dirname(all_out_files2[1]),'/',cy_time,'_file_all.pdf'))
-                
-                pdf(paste0(getwd(),'/',dirname(all_out_files2[1]),'/',cy_time,"_",site_list,'_file_all.pdf'),
-                    onefile = T, width = 30,height = 24)
-                
-                cnt_p = 0
-                ref_plot = nr_plot_per_page
-                while ( length(lista_p) > 0) {
-                  if ( length(lista_p) < ref_plot ) {
-                    ref_plot_1 = length(lista_p2)
-                  }
-                  lista_p2 = lista_p[seq(1,ref_plot)]
-                  if ( length(lista_p2) == ref_plot ) {
-                    mpt = plot_grid(plotlist = lista_p2,ncol = nr_col_per_page,align = 'hv')
-                    print(mpt)
-                    lista_p2 = list()
-                  }
-                  lista_p = lista_p[-1*seq(1,ref_plot)]
-                }
-              # }
-              
-              dev.off()
-              
-              cat(paste0(paste0(getwd(),'/',dirname(all_out_files2[1]),'/',cy_time,'_file_all.pdf'),' created!\n'))
-              
-              print(paste0(cy_time,"_file created!"))
-              #rm(start_col)
+                rm(man)
             }
-            rm(all_out_files,end_year,start_year,list_time,cy_time)
-          }
-          rm(co2)
+            rm(rcp)
         }
-        rm(man)
-      }
-      rm(rcp)
+        rm(esm)
     }
-    rm(esm)
-  }
-  rm(site)
+    rm(site)
 }
 rm(protocol)
 end.time <- Sys.time()

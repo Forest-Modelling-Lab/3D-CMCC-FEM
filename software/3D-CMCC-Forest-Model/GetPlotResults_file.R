@@ -86,15 +86,16 @@ GetPlotResults_file <- function(all_out_files2,out_pdf,lista_v = c('YEAR','LAYER
     }
 
     mpt = ggplot(df_single_value) +
-      geom_line(aes(x = Date, y = v1, color = file_name),size = 1) +
+      geom_line(aes(x = Date, y = v1, color = file_name),size = 1.5) +
       ylab(colnames(df_t[i])) +
       theme(legend.position = "top",
-            axis.title = element_text(size = 15),
-            axis.text = element_text(size = 15),
-            plot.title = element_text(15),
+            axis.title = element_text(size = 20),
+            axis.text = element_text(size = 20),
+            plot.title = element_text(20),
+            legend.text=element_text(size=20),
             legend.title = element_blank())
     xlab('year')
-    lista_p[[length(lista_p)+1]] = mpt
+    lista_p[[length(lista_p)+1.5]] = mpt
   }
   return(lista_p)
   
