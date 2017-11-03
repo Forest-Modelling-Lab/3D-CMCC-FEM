@@ -28,26 +28,30 @@ month=toupper(month)
 # setwd('/home/alessio-cmcc/git/3D-CMCC-LAND/software/3D-CMCC-Forest-Model/')
 getwd()
 
+# number of plot for each pdf page
+nr_plot_per_page = 24
+nr_col_per_page = 4
+
 #  output folder name
 output_folder="Test_output_Rstudio"
 
-# multiple simulations
+# single or multiple simulations
 build_list<-c('Release')#, 'Release')
-site_list<-c("Soroe")#,"Soroe","Hyytiala","All")
+site_list<-c("LeBray")#,"Soroe","Hyytiala","All")
 esm_list <-c("2")# ("1","2","3","4","5", "All")
-rcp_list <-c("0p0")# ("0p0","2p6","4p5","6p0","8p5","All")
-man_list <-c("off")# ("on",'off', "All")
+rcp_list <-c("All")# ("0p0","2p6","4p5","6p0","8p5","All")
+man_list <-c("All")# ("on",'off', "All")
 co2_list <-c("on")# , "on",off", "All")
 protocol_list<-c("FT")# ("2A","2B", "All") 
 
 if ( grepl('All', site_list) ) {
-  site_list = c("Soroe","Hyytiala, Collelongo")
+  site_list = c("Soroe","Hyytiala, Collelongo","Bily_Kriz","Peitz","Solling_beech","Solling_spruce","LeBray")
 }
 if ( grepl('All', esm_list) ) {
-  esm_list = c("1","2","3","4","5")
+  esm_list = c("1","2","3","4","5","6","7","8","9","10")
 }
 if( grepl('All', rcp_list) ) {
-  rcp_list = c("2p6","4p5","6p0","8p5")
+  rcp_list = c("0p0","2p6","4p5","6p0","8p5")
 }
 if( grepl('All', man_list ) ) {
   man_list = c("on",'off')
@@ -56,7 +60,7 @@ if( grepl('All', co2_list) ) {
   co2_list = c("on",'off')
 }
 if ( grepl('All', protocol_list) ) {
-  protocol_list = c('1A','FT','2B')
+  protocol_list = c('LOCAL','FT','2A','2B',"2BLBC","2Bpico","2BLBCpico")
 }
 
 ## a way to time an R expression: system.time is preferred
@@ -105,7 +109,7 @@ for (protocol in protocol_list) {
             
             rm(settings)
             
-            list_time = c('annual','daily')
+            list_time = c('annual')#,'daily')
             
             for (cy_time in list_time) {
               
@@ -152,29 +156,35 @@ for (protocol in protocol_list) {
                 all_out_files = all_out_files[-1*pos]
               }  
 
-              lista_p = GetPlotResults_file(all_out_files2,paste0(getwd(),'/',dirname(all_out_files2[1]),'/',cy_time,'_file_all.pdf'))
-              
-              pdf(paste0(getwd(),'/',dirname(all_out_files2[1]),'/',cy_time,'_file_all.pdf'),
-                  onefile = T, width = 30,height = 24)
-
-              cnt_p = 0
-              ref_plot = 12
-              while ( length(lista_p) > 0) {
-                if ( length(lista_p) < ref_plot ) {
-                  ref_plot_1 = length(lista_p2)
+              #for now exclude plots for daily simulations
+              # if (cy_time == 'annual')
+              # {
+                lista_p = GetPlotResults_file(all_out_files2,paste0(getwd(),'/',dirname(all_out_files2[1]),'/',cy_time,'_file_all.pdf'))
+                
+                pdf(paste0(getwd(),'/',dirname(all_out_files2[1]),'/',cy_time,"_",site_list,'_file_all.pdf'),
+                    onefile = T, width = 30,height = 24)
+                
+                cnt_p = 0
+                ref_plot = nr_plot_per_page
+                while ( length(lista_p) > 0) {
+                  if ( length(lista_p) < ref_plot ) {
+                    ref_plot_1 = length(lista_p2)
+                  }
+                  lista_p2 = lista_p[seq(1,ref_plot)]
+                  if ( length(lista_p2) == ref_plot ) {
+                    mpt = plot_grid(plotlist = lista_p2,ncol = nr_col_per_page,align = 'hv')
+                    print(mpt)
+                    lista_p2 = list()
+                  }
+                  lista_p = lista_p[-1*seq(1,ref_plot)]
                 }
-                lista_p2 = lista_p[seq(1,ref_plot)]
-                if ( length(lista_p2) == ref_plot ) {
-                  mpt = plot_grid(plotlist = lista_p2,ncol = 3,align = 'hv')
-                  print(mpt)
-                  lista_p2 = list()
-                }
-                lista_p = lista_p[-1*seq(1,ref_plot)]
-              }
+              # }
               
               dev.off()
               
               cat(paste0(paste0(getwd(),'/',dirname(all_out_files2[1]),'/',cy_time,'_file_all.pdf'),' created!\n'))
+              
+              print(paste0(cy_time,"_file created!"))
               #rm(start_col)
             }
             rm(all_out_files,end_year,start_year,list_time,cy_time)

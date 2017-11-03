@@ -1,5 +1,5 @@
 
-GetPlotResults_file <- function(all_out_files2,out_pdf,lista_v = c('SPECIES','MANAGEMENT','filename','Date')) {
+GetPlotResults_file <- function(all_out_files2,out_pdf,lista_v = c('YEAR','LAYER','SPECIES','MANAGEMENT','filename','Date')) {
   # funzione per creare i plot di tutte le variabili prodotte dal modello
   # i colori definiscono i file
   # n.b.: i nomi sulla legenda usano la prima parte del file
@@ -34,22 +34,26 @@ GetPlotResults_file <- function(all_out_files2,out_pdf,lista_v = c('SPECIES','MA
     outputCMCC <-read.csv(f,header=T,comment.char = "#")
     
     if ( grepl('annual_',file_name) ) {
+      time = c('annual')
       outputCMCC$Date <- paste0("01/01/",outputCMCC$YEAR)
       outputCMCC$Date <- as.Date(outputCMCC$Date, format = "%d/%m/%Y")
-      start_col = 3
+      # start_col = 6# ecco l'errore, lui skippa le prime sei colonne.....
+      
     }
     if ( grepl('monthly_',file_name) ) {
+      time = c('monthly')
       outputCMCC$Date <- paste0("01/",outputCMCC$MONTH, "/",outputCMCC$YEAR)
       outputCMCC$Date <- as.Date(outputCMCC$Date, format = "%d/%m/%Y")
-      start_col = 4
+      # start_col = 6
     }
     if ( grepl('daily_',file_name) ) {
+      time = c('daily')
       outputCMCC$Date <- paste0(outputCMCC$DAY,"/",outputCMCC$MONTH, "/",outputCMCC$YEAR)
       outputCMCC$Date <- as.Date(outputCMCC$Date, format = "%d/%m/%Y")
-      start_col = 3
+      # start_col = 6
     }
     
-    cat(paste0('\nImport file: ',f,' OK\n'))
+    cat(paste0('\nImport_', time, '_file: ',f,' OK\n'))
     
     outputCMCC$filename = unlist(strsplit(file_name,'_'))[1]
     
@@ -68,7 +72,7 @@ GetPlotResults_file <- function(all_out_files2,out_pdf,lista_v = c('SPECIES','MA
   # 
   lista_p = list()
 
-  for (i in seq(start_col,length(df_t)) ) {
+  for (i in seq(1,length(df_t)) ) {
     if ( sum(grepl(colnames(df_t[i]),lista_v)) > 0 ) {
       next
     }
@@ -82,12 +86,12 @@ GetPlotResults_file <- function(all_out_files2,out_pdf,lista_v = c('SPECIES','MA
     }
 
     mpt = ggplot(df_single_value) +
-      geom_line(aes(x = Date, y = v1, color = file_name),size = 2) +
+      geom_line(aes(x = Date, y = v1, color = file_name),size = 1) +
       ylab(colnames(df_t[i])) +
       theme(legend.position = "top",
-            axis.title = element_text(size = 20),
-            axis.text = element_text(size = 20),
-            plot.title = element_text(size = 20),
+            axis.title = element_text(size = 15),
+            axis.text = element_text(size = 15),
+            plot.title = element_text(15),
             legend.title = element_blank())
     xlab('year')
     lista_p[[length(lista_p)+1]] = mpt
