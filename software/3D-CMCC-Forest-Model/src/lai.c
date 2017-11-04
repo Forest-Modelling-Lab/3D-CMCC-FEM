@@ -28,7 +28,7 @@ void specific_leaf_area ( const age_t *const a, species_t *const s )
 
 void daily_lai (cell_t *const c, species_t *const s)
 {
-	double leaf_C;                             /* leaf carbon KgC/sizecell */
+	double leaf_DM;                             /* leaf carbon KgDM/sizecell */
 	double Leaf_sun_ratio;
 
 	/* NOTE: it mainly follows rationale of TREEDYN 3, Bossel, 1996, Ecological Modelling (eq. 30) */
@@ -37,10 +37,10 @@ void daily_lai (cell_t *const c, species_t *const s)
 
 	logger(g_debug_log, "\n**LEAF AREA INDEX**\n");
 
-	/* convert tC/cell to KgC/m^2 */
-	leaf_C = s->value[LEAF_C] * 1000.;
-	logger(g_debug_log, "Leaf Biomass      = %f KgC/cell\n", leaf_C);
-	logger(g_debug_log, "SLA_AVG           = %f kgC/m2\n",   s->value[SLA_AVG]);
+	/* convert tC/cell to KgDM/m^2 */
+	leaf_DM = s->value[LEAF_C] * 1e3 * GC_GDM;
+	logger(g_debug_log, "Leaf Biomass      = %f Kg/cell\n",  leaf_DM);
+	logger(g_debug_log, "SLA_AVG           = %f kg/m2\n",    s->value[SLA_AVG]);
 	logger(g_debug_log, "CANOPY_COVER_PROJ = %f \n",         s->value[CANOPY_COVER_PROJ]);
 
 	/**************************************************************************************************/
@@ -48,7 +48,7 @@ void daily_lai (cell_t *const c, species_t *const s)
 	/* compute LAI for Projected Area */
 	/* see Campbell and Norman, Environmental Biophysics 2nd Edition pg 259 */
 
-	s->value[LAI_PROJ]       = ( leaf_C * s->value[SLA_AVG] ) / ( s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell );
+	s->value[LAI_PROJ]       = ( leaf_DM * s->value[SLA_AVG] ) / ( s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell );
 	s->value[LAI_SUN_PROJ]   = 1. - exp ( - s->value[LAI_PROJ] );
 	s->value[LAI_SHADE_PROJ] = s->value[LAI_PROJ] - s->value[LAI_SUN_PROJ];
 
@@ -73,7 +73,7 @@ void daily_lai (cell_t *const c, species_t *const s)
 	/* compute LAI for Exposed Area */
 
 	/* note: is partially based on: Jackson & Palmer, 1979, 1981, 1983; Cannell and Grace 1993, Duursma and Makela 2007 */
-	s->value[LAI_EXP]        = ( leaf_C * s->value[SLA_AVG] ) / ( s->value[CANOPY_COVER_EXP] * g_settings->sizeCell );
+	s->value[LAI_EXP]        = ( leaf_DM * s->value[SLA_AVG] ) / ( s->value[CANOPY_COVER_EXP] * g_settings->sizeCell );
 	s->value[LAI_SUN_EXP]    = 1. - exp ( - s->value[LAI_EXP] );
 	s->value[LAI_SHADE_EXP]  = s->value[LAI_EXP] - s->value[LAI_SUN_EXP];
 

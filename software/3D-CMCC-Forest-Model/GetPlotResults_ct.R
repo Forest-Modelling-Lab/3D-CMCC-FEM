@@ -37,30 +37,30 @@ output_folder="Test_output_Rstudio"
 
 # single or multiple simulations
 build_list<-c('Release')#, 'Release')
-site_list<-c("Solling_beech")#,"Soroe","Hyytiala","All")
+site_list<-c("Collelongo")#,"Hyytiala","All"),"Soroe"
 esm_list <-c("2")# ("1","2","3","4","5", "All")
 rcp_list <-c("0p0")# ("0p0","2p6","4p5","6p0","8p5","All")
 man_list <-c("off")# ("on",'off', "All")
 co2_list <-c("on")# , "on",off", "All")
-protocol_list<-c("FT")# ("2A","2B", "All") 
+protocol_list<-c("LOCAL")# ("2A","2B", "All") 
 
 if ( grepl('All', site_list) ) {
-    site_list = c("Soroe","Collelongo","Solling_beech","Hyytiala","Bily_Kriz","Peitz","Solling_spruce","LeBray")
+ site_list = c("Soroe","Collelongo","Solling_beech","Hyytiala","Bily_Kriz","Peitz","Solling_spruce","LeBray")
 }
 if ( grepl('All', esm_list) ) {
-    esm_list = c("1","2","3","4","5","6","7","8","9","10")
+ esm_list = c("1","2","3","4","5","6","7","8","9","10")
 }
 if( grepl('All', rcp_list) ) {
-    rcp_list = c("0p0","2p6","4p5","6p0","8p5")
+ rcp_list = c("0p0","2p6","4p5","6p0","8p5")
 }
 if( grepl('All', man_list ) ) {
-    man_list = c("on",'off')
+ man_list = c("on",'off')
 }
 if( grepl('All', co2_list) ) {
-    co2_list = c("on",'off')
+ co2_list = c("on",'off')
 }
 if ( grepl('All', protocol_list) ) {
-    protocol_list = c('LOCAL','FT','2A','2B',"2BLBC","2Bpico","2BLBCpico")
+ protocol_list = c('LOCAL','FT','2A','2B',"2BLBC","2Bpico","2BLBCpico")
 }
 
 ## a way to time an R expression: system.time is preferred
@@ -196,30 +196,34 @@ for (protocol in protocol_list) {
                             #for now exclude plots for daily simulations
                             # if (cy_time == 'annual')
                             # {
-                            lista_p = GetPlotResults_file(all_out_files2,paste0(getwd(),'/',dirname(all_out_files2[1]),'/',cy_time,'_file_all.pdf'))
+                            lista_p = GetPlotResults_file(all_out_files2,paste0(getwd(),'/',dirname(all_out_files2[1]),'/',cy_time,'_file_all.pdf'),
+                                                          c('YEAR','LAYER','SPECIES','MANAGEMENT','filename','Date'))
+                            # 
+                            # f = all_out_files2[1]
+                            # outputCMCC <-read.csv(f,header=T,comment.char = "#")
                             
-                            pdf(paste0(getwd(),'/',dirname(all_out_files2[1]),'/',cy_time,"_",site_list,'_file_all.pdf'),
+                            pdf(paste0(getwd(),'/',dirname(all_out_files2[1]),'/',cy_time,"_",site,'_file_all.pdf'),
                                 onefile = T, width = 30,height = 24)
                             
-                            cnt_p = 0
                             ref_plot = nr_plot_per_page
                             while ( length(lista_p) > 0) {
+                                cat(paste0('number of variables to plot... ',length(lista_p),'\n'))
                                 if ( length(lista_p) < ref_plot ) {
-                                    ref_plot_1 = length(lista_p2)
+                                    ref_plot = length(lista_p2)
                                 }
                                 lista_p2 = lista_p[seq(1,ref_plot)]
-                                if ( length(lista_p2) == ref_plot ) {
-                                    mpt = plot_grid(plotlist = lista_p2,ncol = nr_col_per_page,align = 'hv')
-                                    print(mpt)
-                                    lista_p2 = list()
-                                }
+
+                                mpt = plot_grid(plotlist = lista_p2,ncol = nr_col_per_page,align = 'hv')
+                                print(mpt)
+                            
                                 lista_p = lista_p[-1*seq(1,ref_plot)]
+                                
                             }
                             # }
                             
                             dev.off()
-                            
-                            cat(paste0(paste0(getwd(),'/',dirname(all_out_files2[1]),'/',cy_time,'_file_all.pdf'),' created!\n'))
+                            rm(lista_p2)
+                            cat(paste0(getwd(),'/',dirname(all_out_files2[1]),'/',cy_time,"_",site,'_file_all.pdf created!\n'))
                             
                             print(paste0(cy_time,"_file created!"))
                             #rm(start_col)

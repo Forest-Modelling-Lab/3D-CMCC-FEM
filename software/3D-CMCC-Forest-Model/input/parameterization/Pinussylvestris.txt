@@ -7,8 +7,8 @@ GAMMA_LIGHT           0.005   // Empirical parameter for Light modifiers see Mak
 K   0.51                      //Extinction coefficient for absorption of PAR by canopy for P. sylvestris Landsberg et al., 2005 or 0.51 from Pietsch, 0.495 Tatarinov, 0.38 Forrester et al., 2017
 ALBEDO  0.10                  //averaged for P. sylvestris 0.15 (or 0.12) Otto et al., 2014 BGS, 0.093 from Breuer et al., 2003
 INT_COEFF  0.3                //precip interception coefficient for P. sylvestris from Pietsch
-SLA_AVG0  14.7                //Average Specific Leaf Area m^2/KgC (juvenile) sunlit/shaded leaves for P. sylvestris 14.7 Van Nevel 2015, 9.0 Landsberg et al., 2005, 13.0 from Pietsch 9.5 Tatarinov, 5.50 Mencuccini and Bonosi 2001
-SLA_AVG1  7.46                //Average Specific Leaf Area m^2/KgC (mature) sunlit/shaded leaves for P. sylvestris Mencuccini & Bonosi 2001, Landsberg et al., 2005, 5.5 Mencuccini Bonosi 2003, 13.0 from Pietsch 9.5 Tatarinov, 5.50 Mencuccini and Bonosi 2001
+SLA_AVG0  14.7                //Average Specific Leaf Area m^2/Kg (juvenile) sunlit/shaded leaves for P. sylvestris 14.7 Van Nevel 2015, 9.0 Landsberg et al., 2005, 13.0 from Pietsch 9.5 Tatarinov, 5.50 Mencuccini and Bonosi 2001
+SLA_AVG1  4.49 //ISIMIP 7.46  //Average Specific Leaf Area m^2/Kg (mature) sunlit/shaded leaves for P. sylvestris Mencuccini & Bonosi 2001, Landsberg et al., 2005, 5.5 Mencuccini Bonosi 2003, 13.0 from Pietsch 9.5 Tatarinov, 5.50 Mencuccini and Bonosi 2001
 TSLA      10                  //Age at which SLA_AVG = (SLA_AVG1 + SLA_AVG0 )/2 Landsberg et al., 2005
 SLA_RATIO   2                 //(DIM) ratio of shaded to sunlit projected SLA for P. sylvestris from Pietsch
 LAI_RATIO   2.6               //(DIM) all-sided to projected leaf area ratio for P. sylvestris from Pietsch

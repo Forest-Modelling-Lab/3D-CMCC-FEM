@@ -7,9 +7,9 @@ GAMMA_LIGHT           0.0025  // Empirical parameter for Light modifiers
 K                       0.65  //Extinction coefficient for absorption of PAR by canopy 0.71 for F. sylvatica Vitale et al., 2012, 0.5 from Williams 1996, 0.65 Hoffmann 1995, 0.45 Forrester et al., 2014
 ALBEDO                  0.13  //Albedo, 0.15 (varying from 0.13-0.17) from OTTO et al., BGS 2014
 INT_COEFF                0.3  //precip interception coefficient for F. sylvatica fom Tatarinov
-SLA_AVG0    80 //  60 //ISIMIP  80 //60 // ISIMIP  80 //60  //Average Specific Leaf Area m^2/KgC (juvenile) sunlit/shaded leaves for Fagus s.60  Adriaenssens et al., 2011; 27.8 to 48 from Pietsch 2005, 35 for Tatarinov et al., 2006
-SLA_AVG1    30 //  20 //ISIMIP 30  //Average Specific Leaf Area m^2/KgC (mature) sunlit/shaded leaves for Fagus s. Holscher et al., 2004; 27.8 to 48 from Pietsch 2005, 35 for Tatarinov et al., 2006
-TSLA       150 // 100 //ISIMIP 150 //Age at which SLA_AVG = (SLA_AVG1 + SLA_AVG0 )/2 for Fagus s. Forrester et al., 2017
+SLA_AVG0                  40  //Average Specific Leaf Area m^2/Kg (juvenile) sunlit/shaded leaves for Fagus s.60  Adriaenssens et al., 2011; 27.8 to 48 from Pietsch 2005, 35 for Tatarinov et al., 2006
+SLA_AVG1                  20  //Average Specific Leaf Area m^2/Kg (mature) sunlit/shaded leaves for Fagus s. Holscher et al., 2004; 27.8 to 48 from Pietsch 2005, 35 for Tatarinov et al., 2006
+TSLA                      35  //Age at which SLA_AVG = (SLA_AVG1 + SLA_AVG0 )/2 for 35 Fagus s. Forrester et al., 2017
 SLA_RATIO                  2  //(DIM) ratio of shaded to sunlit projected SLA  for F. sylvatyica from Mollicone et al., 2002 , 2.0 from Pietsch 2005
 LAI_RATIO                  2  //(DIM) all-sided to projected leaf area ratio for F. sylvatyica from Mollicone et al., 2002 , 2.0 from Pietsch 2005
 FRACBB0                 0.20  //Branch and Bark fraction at age 0

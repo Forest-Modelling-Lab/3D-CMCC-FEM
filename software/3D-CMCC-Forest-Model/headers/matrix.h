@@ -29,8 +29,8 @@ enum {
 	K,                                   /* Extinction coefficient for absorption of PAR by canopy */
 	ALBEDO,                              /* Canopy albedo */
 	INT_COEFF,                           /* Precipitation interception coefficient */
-	SLA_AVG0,                            /* AVERAGE Specific Leaf Area m2/KgC for sunlit/shaded leaves (juvenile) */
-	SLA_AVG1,                            /* AVERAGE Specific Leaf Area m2/KgC for sunlit/shaded leaves (mature) */
+	SLA_AVG0,                            /* AVERAGE Specific Leaf Area m2/Kg for sunlit/shaded leaves (juvenile) */
+	SLA_AVG1,                            /* AVERAGE Specific Leaf Area m2/Kg for sunlit/shaded leaves (mature) */
 	TSLA,                                /* Age at which SLA_AVG = (SLA_AVG1 + SLA_AVG0 )/2 */
 	SLA_RATIO,                           /* (DIM) ratio of shaded to sunlit projected SLA */
 	LAI_RATIO,                           /* (DIM) all-sided to projected leaf area ratio */
@@ -310,7 +310,7 @@ enum {
 	gsWUE_SHADE,                        /* daily intrinsic Water Use Efficiency (stomatal) for shade leaves */
 
 	/* LAI */
-	SLA_AVG,                            /* (kgC/m2) Age-related Average Specific Leaf Area */
+	SLA_AVG,                            /* (kg/m2) Age-related Average Specific Leaf Area */
 	LAI_PROJ,                           /* (m2/m2) LAI for Projected Area covered (at zenith angle) */
 	LAI_SUN_PROJ,                       /* (m2/m2) LAI for sun leaves for Projected Area covered (at zenith angle) */
 	LAI_SHADE_PROJ,                     /* (m2/m2) LAI for shaded leaves for Projected Area covered (at zenith angle) */

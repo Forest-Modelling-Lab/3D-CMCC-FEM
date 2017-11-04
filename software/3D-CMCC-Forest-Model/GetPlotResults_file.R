@@ -1,5 +1,5 @@
 
-GetPlotResults_file <- function(all_out_files2,out_pdf,lista_v = c('YEAR','LAYER','SPECIES','MANAGEMENT','filename','Date')) {
+GetPlotResults_file <- function(all_out_files2,out_pdf,lista_v) {
   # funzione per creare i plot di tutte le variabili prodotte dal modello
   # i colori definiscono i file
   # n.b.: i nomi sulla legenda usano la prima parte del file
@@ -73,9 +73,14 @@ GetPlotResults_file <- function(all_out_files2,out_pdf,lista_v = c('YEAR','LAYER
   lista_p = list()
 
   for (i in seq(1,length(df_t)) ) {
-    if ( sum(grepl(colnames(df_t[i]),lista_v)) > 0 ) {
+      # cat(colnames(df_t[i]))
+      
+    if ( length(which(lista_v == colnames(df_t[i]))) > 0 ) {
+        # cat(' SKIPPED!!!!\n')
       next
     }
+    # cat('\n')
+    
     df_single_value = data.frame('Date' = ymd(df_t$Date),
                                  'var_name' = colnames(df_t[i]),
                                  'file_name' = df_t$filename)
