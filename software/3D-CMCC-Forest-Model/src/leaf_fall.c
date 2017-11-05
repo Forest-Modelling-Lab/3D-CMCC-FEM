@@ -110,6 +110,7 @@ void leaffall_deciduous ( cell_t *const c, const int height, const int dbh, cons
 		s->value[N_TO_LITR]          = (s->value[LEAF_N] + s->value[FROOT_N]);
 		s->value[N_TO_CWD]           = s->value[FRUIT_N];
 	}
+
 }
 
 void leaffall_evergreen ( cell_t *const c, const int height, const int dbh, const int age, const int species, const int year )
@@ -148,6 +149,7 @@ void leaffall_evergreen ( cell_t *const c, const int height, const int dbh, cons
 
 	/* reconcile leaf and fine root */
 	leaffall ( s );
+
 }
 
 void leaffall (species_t *const s)

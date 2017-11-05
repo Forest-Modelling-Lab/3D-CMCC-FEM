@@ -37,7 +37,7 @@ output_folder="Test_output_Rstudio"
 
 # single or multiple simulations
 build_list<-c('Release')#, 'Release')
-site_list<-c("Collelongo")#,"Hyytiala","All"),"Soroe"
+site_list<-c("Soroe")#,"Hyytiala","All"),"Soroe"
 esm_list <-c("2")# ("1","2","3","4","5", "All")
 rcp_list <-c("0p0")# ("0p0","2p6","4p5","6p0","8p5","All")
 man_list <-c("off")# ("on",'off', "All")

@@ -2563,6 +2563,7 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 	{
 		//ALESSIOC TO ALLESSIOR PRINT EMPTY SPACES WHEN N_TREE = 0
 	}
+
 	/************************************************************************/
 	/* printing variables at cell level only if there's more than one layer */
 	logger(g_annual_log, ",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f",
