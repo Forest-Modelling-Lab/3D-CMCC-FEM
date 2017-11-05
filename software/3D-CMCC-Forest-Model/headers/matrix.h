@@ -423,16 +423,17 @@ enum {
 	LEAF_C,                             /* (tC/cell) Current Leaf carbon pool */
 	LEAF_SUN_C,                         /* (tC/cell) Current Leaf sun carbon pool */
 	LEAF_SHADE_C,                       /* (tC/cell) Current Leaf shade carbon pool */
-	MAX_LEAF_C,                         /* (tC/cell) Maximum Current Leaf carbon pool */
+	MAX_LEAF_C,                         /* (tC/cell/year) Maximum Leaf carbon pool */
 	CROOT_C,                            /* (tC/cell) Current Coarse root carbon pool */
 	FROOT_C,                            /* (tC/cell) Current Fine root carbon pool */
-	MAX_FROOT_C,                        /* (tC/cell) Maximum Current Fine root carbon pool */
+	MAX_FROOT_C,                        /* (tC/cell/year) Maximum Fine root carbon pool */
 	MAX_BUD_BURST_C,                    /* (tC/cell) Maximum Current Leaf carbon pool for BudBurst */
 	STEM_C,                             /* (tC/cell) Current Stem carbon pool */
 	BRANCH_C,                           /* (tC/cell) Current Branch carbon pool */
 	MIN_RESERVE_C,                      /* (tC/cell) Current Minimum reserve carbon pool */
 	RESERVE_C,                          /* (tC/cell) Current Reserve carbon pool */
 	FRUIT_C,                            /* (tC/cell) Current Fruit carbon pool */
+	MAX_FRUIT_C,                        /* (tC/cell/year) Annual Fruit carbon pool */
 	LITR_C,                             /* (tC/cell) Current Litter carbon pool */
 	SOIL_C,                             /* (tC/cell) Current Soil carbon pool */
 	CWD_C,                              /* (tC/cell) Current Coarse Woody Debris carbon pool */

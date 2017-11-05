@@ -12,6 +12,7 @@
 #include "biomass.h"
 #include "lai.h"
 #include "aut_respiration.h"
+#include "test.h"
 
 extern settings_t *g_settings;
 extern logger_t* g_debug_log;
@@ -19,7 +20,6 @@ extern soil_settings_t *g_soil_settings;
 
 extern const char sz_err_out_of_memory[];
 
-#define TEST_RESP 0
 
 void initialization_forest_structure(cell_t *const c, const int day, const int month, const int year)
 {

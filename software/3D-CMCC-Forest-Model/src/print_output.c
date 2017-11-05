@@ -2338,17 +2338,22 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 										",STEM_C"
 										",STEM_SAP_C"
 										",STEM_HEA_C"
+										",STEM_SAP_PERC"
 										",STEM_LIVE_C"
 										",STEM_DEAD_C"
+										",STEM_LIVE_PERC"
 										",MAX_LEAF_C"
 										",MAX_FROOT_C"
 										",CROOT_C"
 										",CROOT_LIVE_C"
 										",CROOT_DEAD_C"
+										",CROOT_LIVE_PERC"
 										",BRANCH_C"
 										",BRANCH_LIVE_C"
 										",BRANCH_DEAD_C"
+										",BRANCH_LIVE_PERC"
 										",FRUIT_C"
+										",MAX_FRUIT_C"
 										",STANDING_WOOD"
 										",DELTA_WOOD"
 										",CUM_DELTA_WOOD"
@@ -2456,8 +2461,8 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 
 								/* print variables at layer-class level */
 								logger(g_annual_log,",%6.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%d,%d,%d,%d,%d,%3.4f"
-										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
-										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",
+										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
+										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",
 										s->value[YEARLY_GPP],
 										s->value[YEARLY_ASSIMILATION],
 										s->value[YEARLY_TOTAL_GROWTH_RESP],
@@ -2490,17 +2495,22 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 										s->value[STEM_C],
 										s->value[STEM_SAPWOOD_C],
 										s->value[STEM_HEARTWOOD_C],
+										(s->value[STEM_SAPWOOD_C]*100.)/s->value[STEM_C],
 										s->value[STEM_LIVEWOOD_C],
 										s->value[STEM_DEADWOOD_C],
+										(s->value[STEM_LIVEWOOD_C]*100.)/s->value[STEM_C],
 										s->value[MAX_LEAF_C],
 										s->value[MAX_FROOT_C],
 										s->value[CROOT_C],
 										s->value[CROOT_LIVEWOOD_C],
 										s->value[CROOT_DEADWOOD_C],
+										(s->value[CROOT_LIVEWOOD_C]*100.)/s->value[CROOT_C],
 										s->value[BRANCH_C],
 										s->value[BRANCH_LIVEWOOD_C],
 										s->value[BRANCH_DEADWOOD_C],
+										(s->value[BRANCH_LIVEWOOD_C]*100.)/s->value[BRANCH_C],
 										s->value[FRUIT_C],
+										s->value[MAX_FRUIT_C],
 										s->value[STANDING_WOOD],
 										s->value[YEARLY_C_TO_WOOD],
 										s->value[CUM_YEARLY_C_TO_WOOD],
@@ -2511,7 +2521,7 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 										s->value[MAI],
 										s->value[VOLUME],
 										s->value[TREE_VOLUME],
-										(s->value[TREE_CAI]/s->value[TREE_VOLUME])*100.,
+										(s->value[TREE_CAI]*100.)/s->value[TREE_VOLUME],
 										s->value[DELTA_AGB],
 										s->value[DELTA_BGB],
 										s->value[AGB],

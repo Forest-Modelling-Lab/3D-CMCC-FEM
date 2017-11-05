@@ -48,6 +48,10 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 	double croot_N;
 	double stem_N;
 	double branch_N;
+	double light_inhib;                       /* (ratio) light inhibition in day-time leaf resp, see Dufrene et al., 2005 */
+	double live_stemC_frac;                   /* fraction of live stem into live stem carbon */
+	double live_branchC_frac;                 /* fraction of live branch into live branch carbon */
+	double live_crootC_frac;                  /* fraction of live croot into live coarse root carbon */
 
 	/* NOTE: No respiration happens for reserve pool (see Schwalm and Ek 2004) */
 
@@ -66,6 +70,7 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 
 	logger(g_debug_log, "\n**MAINTENANCE_RESPIRATION**\n");
 
+	/* if Prog_Aut_Resp = "on" */
 	if ( g_settings->Prog_Aut_Resp )
 	{
 		/** maintenance respiration routine **/
@@ -83,6 +88,7 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 		in kgC/day per kg of tissue N is:
 		MR_ref = 0.218 (kgC/kgN/d)
 		 */
+
 		/*** temperature dependent changes in Q10 function ***/
 
 		/* based on:
@@ -114,72 +120,99 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 		stem_N          = (s->value[STEM_LIVEWOOD_N]   * 1e6 / g_settings->sizeCell);
 		croot_N         = (s->value[CROOT_LIVEWOOD_N]  * 1e6 / g_settings->sizeCell);
 		branch_N        = (s->value[BRANCH_LIVEWOOD_N] * 1e6 / g_settings->sizeCell);
+
 #else
+		//fixme to move into species.txt in case used
+		live_stemC_frac   = 0.21; /* for Fagus sylvatica from Dufrene et al., 2005 */
+		live_branchC_frac = 0.37; /* for Fagus sylvatica from Dufrene et al., 2005 */
+		live_crootC_frac  = 0.21; /* for Fagus sylvatica from Dufrene et al., 2005 */
+
 		//test from; E. Dufrene et al., Ecological Modelling 185 (2005) 407–436
 		//if accepted then move computation of live fractions into the correct source file
 		//test: better if used with lower LIVE_WOOD_TURNOVER (e.g. 0.85)
 #if 0
 		//CANIF PARAMETERIZATION FOR FAGUS
-		leaf_N          = ((s->value[LEAF_C]                     / 24.19)       * 1e6 / g_settings->sizeCell);
-		leaf_sun_N      = ((s->value[LEAF_SUN_C]                 / 24.19)       * 1e6 / g_settings->sizeCell);
-		leaf_shade_N    = ((s->value[LEAF_SHADE_C]               / 24.19)       * 1e6 / g_settings->sizeCell);
-		froot_N         = ((s->value[FROOT_C]                    / 37.33)       * 1e6 / g_settings->sizeCell);
-		stem_N          = ((s->value[STEM_C]            * 0.21   / 446.2)       * 1e6 / g_settings->sizeCell);
-		croot_N         = ((s->value[CROOT_C]           * 0.21   / 294.8)       * 1e6 / g_settings->sizeCell);
-		branch_N        = ((s->value[BRANCH_C]          * 0.37   / 136.6)       * 1e6 / g_settings->sizeCell);
+		leaf_N          = ((s->value[LEAF_C]                       / 24.19)     * 1e6 / g_settings->sizeCell);
+		leaf_sun_N      = ((s->value[LEAF_SUN_C]                   / 24.19)     * 1e6 / g_settings->sizeCell);
+		leaf_shade_N    = ((s->value[LEAF_SHADE_C]                 / 24.19)     * 1e6 / g_settings->sizeCell);
+		froot_N         = ((s->value[FROOT_C]                      / 37.33)     * 1e6 / g_settings->sizeCell);
+		stem_N          = ((s->value[STEM_C]   * live_stemC_frac   / 446.2)     * 1e6 / g_settings->sizeCell);
+		croot_N         = ((s->value[CROOT_C]  * live_crootC_frac  / 294.8)     * 1e6 / g_settings->sizeCell);
+		branch_N        = ((s->value[BRANCH_C] * live_branchC_frac / 136.6)     * 1e6 / g_settings->sizeCell);
 #else
 		//CASTANEA PARAMETERIZATION FOR FAGUS
-		leaf_N          = ((s->value[LEAF_C]                     / 20.66)       * 1e6 / g_settings->sizeCell);
-		leaf_sun_N      = ((s->value[LEAF_SUN_C]                 / 20.66)       * 1e6 / g_settings->sizeCell);
-		leaf_shade_N    = ((s->value[LEAF_SHADE_C]               / 20.66)       * 1e6 / g_settings->sizeCell);
-		froot_N         = ((s->value[FROOT_C]                    / 50.50)       * 1e6 / g_settings->sizeCell);
-		stem_N          = ((s->value[STEM_C]            * 0.21   / 416.6)       * 1e6 / g_settings->sizeCell);
-		croot_N         = ((s->value[CROOT_C]           * 0.21   / 416.6)       * 1e6 / g_settings->sizeCell);
-		branch_N        = ((s->value[BRANCH_C]          * 0.37   / 90.90)       * 1e6 / g_settings->sizeCell);
-#endif
+		leaf_N          = ((s->value[LEAF_C]                       / 20.66)     * 1e6 / g_settings->sizeCell);
+		leaf_sun_N      = ((s->value[LEAF_SUN_C]                   / 20.66)     * 1e6 / g_settings->sizeCell);
+		leaf_shade_N    = ((s->value[LEAF_SHADE_C]                 / 20.66)     * 1e6 / g_settings->sizeCell);
+		froot_N         = ((s->value[FROOT_C]                      / 50.50)     * 1e6 / g_settings->sizeCell);
+		stem_N          = ((s->value[STEM_C]   * live_stemC_frac   / 416.6)     * 1e6 / g_settings->sizeCell);
+		croot_N         = ((s->value[CROOT_C]  * live_crootC_frac  / 416.6)     * 1e6 / g_settings->sizeCell);
+		branch_N        = ((s->value[BRANCH_C] * live_branchC_frac / 90.90)     * 1e6 / g_settings->sizeCell);
 #endif
 
-		/* note: values are computed in gC/m2/day */
+#endif
+
+		//new 05/11/2017
+		/* assign day-time light inhibition for leaf resp */
+		/* During the day, light is assumed to inhibit this respiration according to a constant ratio 'light_inhib'.
+		 * The degree of inhibition ranges between 17 and 66% depending on species
+		 * (Sharp et al., 1984; Brooks and Farquhar, 1985; Kirschbaum and Farquhar,1987).
+		Villar et al. (1995) give a mean rate of 51% for evergreen tree species and 62% for deciduous tree species.*/
+#if 1
+		if ( s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2 )
+		{
+			light_inhib = 0.62; /* for deciduous */
+		}
+		else
+		{
+			light_inhib = 0.51; /* for evergreen */
+		}
+#else
+		light_inhib = 1.;
+#endif
+
+		/* note: respiration values are computed in gC/m2/day */
 
 		/*******************************************************************************************************************/
-		/* Leaf maintenance respiration is calculated separately for day and night (gC m2 day) */
+
+		/* Leaf maintenance respiration is calculated separately for day and night */
 
 		/* day time leaf maintenance respiration */
-		s->value[DAILY_LEAF_MAINT_RESP]       = ( leaf_N * MR_ref * pow(q10_tday, exponent_tday) * (meteo_daily->daylength / 24.));
+		s->value[DAILY_LEAF_MAINT_RESP]       = ( leaf_N * MR_ref * pow(q10_tday, exponent_tday) * (meteo_daily->daylength / 24.)) * light_inhib;
 
 		/* night time leaf maintenance respiration */
 		s->value[NIGHTLY_LEAF_MAINT_RESP]     = ( leaf_N * MR_ref * pow(q10_tnight, exponent_tnight) * (1. - (meteo_daily->daylength/24.)));
 
+		/* for sun and shaded leaves */
+		s->value[DAILY_LEAF_SUN_MAINT_RESP]   = ( leaf_sun_N   * MR_ref * pow(q10_tday, exponent_tday) * (meteo_daily->daylength / 24.)) * light_inhib;
+		s->value[DAILY_LEAF_SHADE_MAINT_RESP] = ( leaf_shade_N * MR_ref * pow(q10_tday, exponent_tday) * (meteo_daily->daylength / 24.)) * light_inhib;
+
 		/* total (all day) leaf maintenance respiration */
 		s->value[TOT_DAY_LEAF_MAINT_RESP]     = s->value[DAILY_LEAF_MAINT_RESP] + s->value[NIGHTLY_LEAF_MAINT_RESP];
 
-		/* for sun and shaded leaves */
-		s->value[DAILY_LEAF_SUN_MAINT_RESP]   = ( leaf_sun_N   * MR_ref * pow(q10_tday, exponent_tday) * (meteo_daily->daylength / 24.));
-		s->value[DAILY_LEAF_SHADE_MAINT_RESP] = ( leaf_shade_N * MR_ref * pow(q10_tday, exponent_tday) * (meteo_daily->daylength / 24.));
-
 		/*******************************************************************************************************************/
-		/* fine roots maintenance respiration */
 
+		/* fine roots maintenance respiration */
 		s->value[FROOT_MAINT_RESP]  = froot_N * MR_ref * pow(q10_tsoil, exponent_tsoil);
 
 		/*******************************************************************************************************************/
-		/* live coarse root maintenance respiration */
 
+		/* live coarse root maintenance respiration */
 		s->value[CROOT_MAINT_RESP]  = croot_N * MR_ref * pow(q10_tsoil, exponent_tsoil);
 
 		/*******************************************************************************************************************/
-		/* live stem maintenance respiration */
 
+		/* live stem maintenance respiration */
 		s->value[STEM_MAINT_RESP]   = stem_N * MR_ref *  pow(q10_tavg, exponent_tavg);
 
 		/*******************************************************************************************************************/
-		/* live branch maintenance respiration */
 
+		/* live branch maintenance respiration */
 		s->value[BRANCH_MAINT_RESP] = branch_N * MR_ref * pow(q10_tavg, exponent_tavg);
 
 		/*******************************************************************************************************************/
-		/* if acclimation for autotrophic respiration = "on" */
 
+		/* if acclimation for autotrophic respiration = "on" */
 		if ( g_settings->Resp_accl )
 		{
 			/*** NOTE: Type II acclimation (Atkin & Tjoelker 2003; Atkin et al., 2005, Smith and Dukes, 2013) ***/
@@ -194,27 +227,31 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 			/* night time leaf maintenance respiration */
 			s->value[NIGHTLY_LEAF_MAINT_RESP] *= pow ( 10., ( acc_const * ( meteo_daily->ten_day_avg_tnight - Q10_temp ) ) );
 
+			/* for sun and shaded leaves */
+			s->value[DAILY_LEAF_SUN_MAINT_RESP]   = ( leaf_sun_N   * MR_ref * pow(q10_tday, exponent_tday) * (meteo_daily->daylength / 24.));
+			s->value[DAILY_LEAF_SHADE_MAINT_RESP] = ( leaf_shade_N * MR_ref * pow(q10_tday, exponent_tday) * (meteo_daily->daylength / 24.));
+
 			/* total (all day) leaf maintenance respiration */
 			s->value[TOT_DAY_LEAF_MAINT_RESP]  = s->value[DAILY_LEAF_MAINT_RESP] + s->value[NIGHTLY_LEAF_MAINT_RESP];
 
 			/*******************************************************************************************************************/
-			/* fine roots maintenance respiration */
 
+			/* fine roots maintenance respiration */
 			s->value[FROOT_MAINT_RESP]        *= pow ( 10., ( acc_const * ( meteo_daily->ten_day_avg_tsoil - Q10_temp ) ) );
 
 			/*******************************************************************************************************************/
-			/* live coarse root maintenance respiration */
 
+			/* live coarse root maintenance respiration */
 			s->value[CROOT_MAINT_RESP]        *= pow (10., ( acc_const * ( meteo_daily->ten_day_avg_tsoil - Q10_temp ) ) );
 
 			/*******************************************************************************************************************/
-			/* live stem maintenance respiration */
 
+			/* live stem maintenance respiration */
 			s->value[STEM_MAINT_RESP]         *= pow ( 10., ( acc_const * ( meteo_daily->ten_day_avg_tavg - Q10_temp ) ) );
 
 			/*******************************************************************************************************************/
-			/* live branch maintenance respiration */
 
+			/* live branch maintenance respiration */
 			s->value[BRANCH_MAINT_RESP]       *= pow ( 10., ( acc_const * ( meteo_daily->ten_day_avg_tavg - Q10_temp ) ) );
 
 			/*******************************************************************************************************************/
@@ -229,6 +266,7 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 		s->value[TOTAL_MAINT_RESP_tC] = (s->value[TOTAL_MAINT_RESP] / 1e6 * g_settings->sizeCell);
 
 		/***********************************************************************************************************************/
+
 		/* cell level */
 		c->daily_leaf_maint_resp   += s->value[TOT_DAY_LEAF_MAINT_RESP];
 		c->daily_stem_maint_resp   += s->value[STEM_MAINT_RESP];
