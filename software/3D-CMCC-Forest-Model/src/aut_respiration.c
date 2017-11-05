@@ -107,35 +107,35 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 
 		/* Nitrogen content tN/cell --> gN/m2 */
 #if 1
-		leaf_N          = (s->value[LEAF_N]            * 1e6 /g_settings->sizeCell);
-		leaf_sun_N      = (s->value[LEAF_SUN_N]        * 1e6 /g_settings->sizeCell);
-		leaf_shade_N    = (s->value[LEAF_SHADE_N]      * 1e6 /g_settings->sizeCell);
-		froot_N         = (s->value[FROOT_N]           * 1e6 /g_settings->sizeCell);
-		stem_N          = (s->value[STEM_LIVEWOOD_N]   * 1e6 /g_settings->sizeCell);
-		croot_N         = (s->value[CROOT_LIVEWOOD_N]  * 1e6 /g_settings->sizeCell);
-		branch_N        = (s->value[BRANCH_LIVEWOOD_N] * 1e6 /g_settings->sizeCell);
+		leaf_N          = (s->value[LEAF_N]            * 1e6 / g_settings->sizeCell);
+		leaf_sun_N      = (s->value[LEAF_SUN_N]        * 1e6 / g_settings->sizeCell);
+		leaf_shade_N    = (s->value[LEAF_SHADE_N]      * 1e6 / g_settings->sizeCell);
+		froot_N         = (s->value[FROOT_N]           * 1e6 / g_settings->sizeCell);
+		stem_N          = (s->value[STEM_LIVEWOOD_N]   * 1e6 / g_settings->sizeCell);
+		croot_N         = (s->value[CROOT_LIVEWOOD_N]  * 1e6 / g_settings->sizeCell);
+		branch_N        = (s->value[BRANCH_LIVEWOOD_N] * 1e6 / g_settings->sizeCell);
 #else
 		//test from; E. Dufrene et al., Ecological Modelling 185 (2005) 407–436
 		//if accepted then move computation of live fractions into the correct source file
 		//test: better if used with lower LIVE_WOOD_TURNOVER (e.g. 0.85)
 #if 0
 		//CANIF PARAMETERIZATION FOR FAGUS
-		leaf_N          = ((s->value[LEAF_C]                     / 24.19)       * 1e6 /g_settings->sizeCell);
-		leaf_sun_N      = ((s->value[LEAF_SUN_C]                 / 24.19)       * 1e6 /g_settings->sizeCell);
-		leaf_shade_N    = ((s->value[LEAF_SHADE_C]               / 24.19)       * 1e6 /g_settings->sizeCell);
-		froot_N         = ((s->value[FROOT_N]                    / 37.33)       * 1e6 /g_settings->sizeCell);
-		stem_N          = ((s->value[STEM_C]            * 0.21   / 446.2)       * 1e6 /g_settings->sizeCell);
-		croot_N         = ((s->value[CROOT_C]           * 0.21   / 294.8)       * 1e6 /g_settings->sizeCell);
-		branch_N        = ((s->value[BRANCH_C]          * 0.37   / 136.6)       * 1e6 /g_settings->sizeCell);
+		leaf_N          = ((s->value[LEAF_C]                     / 24.19)       * 1e6 / g_settings->sizeCell);
+		leaf_sun_N      = ((s->value[LEAF_SUN_C]                 / 24.19)       * 1e6 / g_settings->sizeCell);
+		leaf_shade_N    = ((s->value[LEAF_SHADE_C]               / 24.19)       * 1e6 / g_settings->sizeCell);
+		froot_N         = ((s->value[FROOT_C]                    / 37.33)       * 1e6 / g_settings->sizeCell);
+		stem_N          = ((s->value[STEM_C]            * 0.21   / 446.2)       * 1e6 / g_settings->sizeCell);
+		croot_N         = ((s->value[CROOT_C]           * 0.21   / 294.8)       * 1e6 / g_settings->sizeCell);
+		branch_N        = ((s->value[BRANCH_C]          * 0.37   / 136.6)       * 1e6 / g_settings->sizeCell);
 #else
 		//CASTANEA PARAMETERIZATION FOR FAGUS
-		leaf_N          = ((s->value[LEAF_C]                     / 20.66)       * 1e6 /g_settings->sizeCell);
-		leaf_sun_N      = ((s->value[LEAF_SUN_C]                 / 20.66)       * 1e6 /g_settings->sizeCell);
-		leaf_shade_N    = ((s->value[LEAF_SHADE_C]               / 20.66)       * 1e6 /g_settings->sizeCell);
-		froot_N         = ((s->value[FROOT_N]                    / 50.50)       * 1e6 /g_settings->sizeCell);
-		stem_N          = ((s->value[STEM_C]            * 0.21   / 416.6)       * 1e6 /g_settings->sizeCell);
-		croot_N         = ((s->value[CROOT_C]           * 0.21   / 416.6)       * 1e6 /g_settings->sizeCell);
-		branch_N        = ((s->value[BRANCH_C]          * 0.37   / 90.90)       * 1e6 /g_settings->sizeCell);
+		leaf_N          = ((s->value[LEAF_C]                     / 20.66)       * 1e6 / g_settings->sizeCell);
+		leaf_sun_N      = ((s->value[LEAF_SUN_C]                 / 20.66)       * 1e6 / g_settings->sizeCell);
+		leaf_shade_N    = ((s->value[LEAF_SHADE_C]               / 20.66)       * 1e6 / g_settings->sizeCell);
+		froot_N         = ((s->value[FROOT_C]                    / 50.50)       * 1e6 / g_settings->sizeCell);
+		stem_N          = ((s->value[STEM_C]            * 0.21   / 416.6)       * 1e6 / g_settings->sizeCell);
+		croot_N         = ((s->value[CROOT_C]           * 0.21   / 416.6)       * 1e6 / g_settings->sizeCell);
+		branch_N        = ((s->value[BRANCH_C]          * 0.37   / 90.90)       * 1e6 / g_settings->sizeCell);
 #endif
 #endif
 
