@@ -1,5 +1,5 @@
 
-GetPlotResults_file <- function(all_out_files2,out_pdf,lista_v) {
+GetPlotResults_file <- function(all_out_files2,lista_v) {
   # funzione per creare i plot di tutte le variabili prodotte dal modello
   # i colori definiscono i file
   # n.b.: i nomi sulla legenda usano la prima parte del file
