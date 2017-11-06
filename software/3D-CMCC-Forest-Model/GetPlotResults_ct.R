@@ -1,7 +1,6 @@
 # Developed by:
 # Alessio Collalti (alessio.collalti@cmcc.it)
 # Carlo Trotta (trottacarlo@unitus.it)
-# Gaetano Pellicone (gaetano.pellicone@isafom.cnr.it)
 # starting date: 18 April 2017
 rm(list = ls())
 library(ggplot2)
@@ -15,52 +14,58 @@ print("*******************************************************")
 print(paste0("* ", model, " version: ", version, " R script *"))
 print("*******************************************************")
 
-Sys.setlocale(category = "LC_TIME", locale="en_GB.UTF-8") 
+# Sys.setlocale(category = "LC_TIME", locale="en_GB.UTF-8") 
+# 
+# #  date
+# today <- Sys.Date()
+# day=format(today, format="%d")
+# month=format(today, format="%B")
+# year=format(today, format="%Y")
+# month=toupper(month)
 
-#  date
-today <- Sys.Date()
-day=format(today, format="%d")
-month=format(today, format="%B")
-year=format(today, format="%Y")
-month=toupper(month)
-
-# workig directory
+# working directory
 # setwd('/home/alessio-cmcc/git/3D-CMCC-LAND/software/3D-CMCC-Forest-Model/')
-getwd()
+setwd(getwd())
 
 # number of plot for each pdf page
 nr_plot_per_page = 24
 nr_col_per_page = 4
 
 #  output folder name
-output_folder="Test_output_Rstudio"
+output_folder="Test_output_Rstudio_ct"
+# list to rename output files
+time_list_output = c('annual','monthly','daily')
 
 # single or multiple simulations
 build_list<-c('Release')#, 'Release')
-site_list<-c("Hyytiala")#,"Hyytiala","All"),"Soroe"
+site_list<-c("Soroe","Collelongo","Solling_beech")#,"Soroe")#,"Hyytiala","All"),"Soroe"
 esm_list <-c("2")# ("1","2","3","4","5", "All")
 rcp_list <-c("0p0")# ("0p0","2p6","4p5","6p0","8p5","All")
-man_list <-c("off")# ("on",'off', "All")
+man_list <-c("All")# ("on",'off', "All")
 co2_list <-c("on")# , "on",off", "All")
 protocol_list<-c("FT")# ("2A","2B", "All") 
-
-if ( grepl('All', site_list) ) {
- site_list = c("Soroe","Collelongo","Solling_beech","Hyytiala","Bily_Kriz","Peitz","Solling_spruce","LeBray")
+time_list = c('annual')
+ 
+if ( length(which(site_list == 'All')) > 0 ) {
+  site_list = c("Soroe","Collelongo","Solling_beech","Hyytiala","Bily_Kriz","Peitz","Solling_spruce","LeBray")
 }
-if ( grepl('All', esm_list) ) {
- esm_list = c("1","2","3","4","5","6","7","8","9","10")
+if ( length(which(esm_list == 'All')) > 0 ) {
+  esm_list = c("1","2","3","4","5","6","7","8","9","10")
 }
-if( grepl('All', rcp_list) ) {
- rcp_list = c("0p0","2p6","4p5","6p0","8p5")
+if ( length(which(rcp_list == 'All')) > 0 ) {
+  rcp_list = c("0p0","2p6","4p5","6p0","8p5")
 }
-if( grepl('All', man_list ) ) {
- man_list = c("on",'off')
+if ( length(which(man_list == 'All')) > 0 ) {
+  man_list = c("on",'off')
 }
-if( grepl('All', co2_list) ) {
- co2_list = c("on",'off')
+if ( length(which(co2_list == 'All')) > 0 ) {
+  co2_list = c("on",'off')
 }
-if ( grepl('All', protocol_list) ) {
- protocol_list = c('LOCAL','FT','2A','2B',"2BLBC","2Bpico","2BLBCpico")
+if ( length(which(protocol_list == 'All')) > 0 ) {
+  protocol_list = c('LOCAL','FT','2A','2B',"2BLBC","2Bpico","2BLBCpico")
+}
+if ( length(which(time_list == 'All')) > 0 ) {
+  time_list = c('annual','monthly','daily')
 }
 
 ## a way to time an R expression: system.time is preferred
@@ -123,58 +128,58 @@ for (protocol in protocol_list) {
                                        "protocol: ",protocol, " site: ", site, 
                                        " ESM: ", esm," RCP: ", rcp," Manag-", man, " CO2-", co2,' ... COMPLETE!\n'))
                         }
-                        
-                        # read start and end_year from setting file
-                        fid = file(paste0(getwd(),"/input/",site,"/ISIMIP/", protocol, "/", site,"_settings_ISIMIP_Manag-", 
-                                          man, "_CO2-", co2,".txt"),'r')
-                        settings = readLines(fid)
-                        close(fid)
-                        rm(fid)
-                        
-                        start_year = unlist(strsplit(settings[grep('^YEAR_START ',settings)],' '))[2]
-                        end_year = unlist(strsplit(settings[grep('^YEAR_END ',settings)],' '))[2]
-                        
-                        rm(settings)
-                        
-                        list_time = c('annual')#,'daily')
-                        
-                        for (cy_time in list_time) {
-                            
+
+                        for (cy_time in time_list_output) {
+
                             # list of the files to plot
                             if (protocol == "LOCAL")
-                            {             
-                                all_out_files = list.files(paste0("output/",output_folder,"-", version, "-", site,"-",protocol,"/"), 
+                            {
+                                all_out_files = list.files(paste0("output/",output_folder,"-", version, "-", site,"-",protocol,"/"),
                                                            pattern = paste0(version,'_',site,'_',protocol, '_hist'),#,'_rcp',rcp, '.txt_'),
                                                            recursive = TRUE, full.names = TRUE)
                             }
                             else
                             {
-                                all_out_files = list.files(paste0("output/",output_folder,"-", version, "-", site,"-",protocol,"/"), 
+                                all_out_files = list.files(paste0("output/",output_folder,"-", version, "-", site,"-",protocol,"/"),
                                                            pattern = paste0(version,'_',site,'_',protocol,'_ESM',esm),#,'_rcp',rcp, '.txt_'),
                                                            recursive = TRUE, full.names = TRUE)
                             }
-                            
+                            if ( length(all_out_files) == 0) {
+                              next
+                            }
+                          
                             all_out_files = all_out_files[grep(cy_time,all_out_files)]
+                            
                             # exclude all PDF files
                             if ( length( grep('.pdf',all_out_files) ) > 0 ) {
                                 all_out_files = all_out_files[-1*grep('.pdf',all_out_files)]
                             }
-                            
+
                             all_out_files2 = c()
+
+                            if ( length(all_out_files) == 0) {
+                              next
+                            }
                             
                             if ( sum(grepl('^Benchmark',basename(all_out_files))) == 0  ) {
-                                pos = 1
+                              pos = 1
+                              if( file.exists(paste0(getwd(),'/',dirname(all_out_files[pos]),'/',basename(all_out_files[pos]))) ) {
                                 file.rename(
-                                    paste0(getwd(),'/',dirname(all_out_files[pos]),'/',basename(all_out_files[pos])),
-                                    paste0(getwd(),'/',dirname(all_out_files[pos]),'/','Benchmark_',basename(all_out_files[pos]))
+                                  paste0(getwd(),'/',dirname(all_out_files[pos]),'/',basename(all_out_files[pos])),
+                                  paste0(getwd(),'/',dirname(all_out_files[pos]),'/','Benchmark_',basename(all_out_files[pos]))
                                 )
                                 all_out_files2 = c(all_out_files2,paste0(dirname(all_out_files[pos]),'/','Benchmark_',basename(all_out_files[pos])))
+                              }
                             } else {
                                 pos = grep('^Benchmark',basename(all_out_files))
                                 all_out_files2 = c(all_out_files2,all_out_files[pos])
                             }
-                            
                             all_out_files = all_out_files[-1*pos]
+                            rm(pos)
+
+                            if ( length(all_out_files) == 0) {
+                              next
+                            }
                             
                             cnt = 0
                             while (length(all_out_files) > 0) {
@@ -186,49 +191,16 @@ for (protocol in protocol_list) {
                                         paste0(getwd(),'/',dirname(all_out_files[pos]),'/',basename(all_out_files[pos])),
                                         paste0(getwd(),'/',dirname(all_out_files[pos]),'/',cnt,'_',basename(all_out_files[pos]))
                                     )
-                                    all_out_files2 = c(all_out_files2,paste0(getwd(),'/',dirname(all_out_files[pos]),'/',cnt,'_',basename(all_out_files[pos])))
+                                    all_out_files2 = c(all_out_files2,paste0(dirname(all_out_files[pos]),'/',cnt,'_',basename(all_out_files[pos])))
                                 } else {
                                     all_out_files2 = c(all_out_files2,all_out_files[pos])
                                 }
                                 all_out_files = all_out_files[-1*pos]
-                            }  
-                            
-                            #for now exclude plots for daily simulations
-                            # if (cy_time == 'annual')
-                            # {
-                            lista_p = GetPlotResults_file(all_out_files2,paste0(getwd(),'/',dirname(all_out_files2[1]),'/',cy_time,'_file_all.pdf'),
-                                                          c('YEAR','LAYER','SPECIES','MANAGEMENT','filename','Date'))
-                            # 
-                            # f = all_out_files2[1]
-                            # outputCMCC <-read.csv(f,header=T,comment.char = "#")
-                            
-                            pdf(paste0(getwd(),'/',dirname(all_out_files2[1]),'/',cy_time,"_",site,'_file_all.pdf'),
-                                onefile = T, width = 30,height = 24)
-                            
-                            ref_plot = nr_plot_per_page
-                            while ( length(lista_p) > 0) {
-                                cat(paste0('number of variables to plot... ',length(lista_p),'\n'))
-                                if ( length(lista_p) < ref_plot ) {
-                                    ref_plot = length(lista_p2)
-                                }
-                                lista_p2 = lista_p[seq(1,ref_plot)]
-
-                                mpt = plot_grid(plotlist = lista_p2,ncol = nr_col_per_page,align = 'hv')
-                                print(mpt)
-                            
-                                lista_p = lista_p[-1*seq(1,ref_plot)]
-                                
+                                rm(pos)
                             }
-                            # }
-                            
-                            dev.off()
-                            rm(lista_p2)
-                            cat(paste0(getwd(),'/',dirname(all_out_files2[1]),'/',cy_time,"_",site,'_file_test.pdf created!\n'))
-
-                            print(paste0(cy_time,"_file created!"))
-                            #rm(start_col)
+                            rm(cnt,all_out_files,all_out_files2)
                         }
-                        rm(all_out_files,end_year,start_year,list_time,cy_time)
+                        rm(cy_time)
                     }
                     rm(co2)
                 }
@@ -243,6 +215,61 @@ for (protocol in protocol_list) {
 rm(protocol)
 end.time <- Sys.time()
 print(end.time - start.time)
+
+# create the comparison plots ----
+
+for (protocol in protocol_list) {
+  
+  for (site in site_list) {
+    for(cy_time in time_list) {
+      lf = list.files(paste0(getwd(),"/output/",output_folder,"-", version, "-", site,"-",protocol),recursive=T,full.names = T,pattern = cy_time)
+      
+      if ( length(lf) == 0 ) {
+        next
+      }
+      
+      if ( length(grep('.pdf',lf)) > 0 ) {
+        lf = lf[-1*grep('.pdf',lf)]
+      }
+      
+      if ( length(lf) == 0 ) {
+        next
+      }
+      
+      lista_p = GetPlotResults_file(lf,
+                     c('YEAR','LAYER','SPECIES','MANAGEMENT','filename','Date'))
+      
+      pdf(paste0(getwd(),"/output/",output_folder,"-", version, "-", site,"-",protocol,'/',cy_time,"_",version, "-", site,"-",protocol,'_file_all.pdf'),
+          onefile = T, width = 30,height = 24)
+
+      ref_plot = nr_plot_per_page
+      while ( length(lista_p) > 0) {
+          cat(paste0('number of variables to plot... ',length(lista_p),'\n'))
+          if ( length(lista_p) < ref_plot ) {
+              ref_plot = length(lista_p2)
+          }
+          lista_p2 = lista_p[seq(1,ref_plot)]
+
+          mpt = plot_grid(plotlist = lista_p2,ncol = nr_col_per_page,align = 'hv')
+          print(mpt)
+
+          lista_p = lista_p[-1*seq(1,ref_plot)]
+
+      }
+
+      dev.off()
+      rm(lista_p2)
+      cat(paste0(getwd(),"/output/",output_folder,"-", version, "-", site,"-",protocol,'/',cy_time,"_",version, "-", site,"-",protocol,'_file_all.pdf created!\n'))
+
+      rm(lf,ref_plot)
+    }
+    rm(cy_time)
+  }
+  rm(site)
+}
+rm(protocol)
+
+
 
 
 #     # # create annual GPP plot
