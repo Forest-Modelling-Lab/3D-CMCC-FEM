@@ -13,21 +13,6 @@
 #include <assert.h>
 #include <math.h>
 
-#define RG_RANGE_MIN         0
-#define RG_RANGE_MAX        50
-#define TA_RANGE_MIN       -50
-#define TA_RANGE_MAX        50
-#define TMAX_RANGE_MIN     -50
-#define TMAX_RANGE_MAX      55
-#define TMIN_RANGE_MIN     -50
-#define TMIN_RANGE_MAX      50
-#define VPD_RANGE_MIN        0
-#define VPD_RANGE_MAX      150
-#define PRECIP_RANGE_MIN     0
-#define PRECIP_RANGE_MAX   400
-#define RH_RANGE_MIN         0
-#define RH_RANGE_MAX       100
-
 /* do not change this order */
 enum {
 	YEAR = 0
@@ -52,6 +37,50 @@ enum {
 	, RH_F
 
 	, MET_COLUMNS_COUNT
+};
+
+/*
+#define RG_RANGE_MIN         0
+#define RG_RANGE_MAX        50
+#define TA_RANGE_MIN       -50
+#define TA_RANGE_MAX        50
+#define TMAX_RANGE_MIN     -50
+#define TMAX_RANGE_MAX      55
+#define TMIN_RANGE_MIN     -50
+#define TMIN_RANGE_MAX      50
+#define VPD_RANGE_MIN        0
+#define VPD_RANGE_MAX      150
+#define PRECIP_RANGE_MIN     0
+#define PRECIP_RANGE_MAX   400
+#define RH_RANGE_MIN         0
+#define RH_RANGE_MAX       100
+*/
+
+// DO NOT CHANGE THIS ORDER
+double oor[MET_COLUMNS_COUNT][2] = // oor = out of range
+{
+	{ 0 }			// YEAR, NOT USED
+	, { 0 }			// MONTH, NOT USED
+	, { 0 }			// DAY, NOT USED
+	, { 0 }			// HOUR, NOT USED
+	, { 0 }			// HALFHOUR, NOT USED
+
+	, { 0, 50 }		// RG
+	, { -50, 50 }	// TA
+	, { -50, 55 }	// TMAX
+	, { -50, 50 }	// TMIN
+	, { 0, 150 }	// VPD
+
+	, { 0 }			// TS, NOT USED
+
+	, {0, 400 }		// PRECIP
+
+	, { 0 }			// SWC, NOT USED
+	, { 0 }			// NDVI_LAI, NOT USED
+	, { 0 }			// ET, NOT USED
+	, { 0 }			// WS_F, NOT USED
+
+	, { 0, 100 }	// RH_F
 };
 
 
@@ -419,7 +448,8 @@ static void compute_vpd(double *const values, const int rows_count, const int co
 
 			/* check range */
 			if ( ! IS_INVALID_VALUE(value) ) {
-				if ( value < VPD_RANGE_MIN || value > VPD_RANGE_MAX ) {
+				//if ( value < VPD_RANGE_MIN || value > VPD_RANGE_MAX ) {
+				if ( value < oor[VPD_F][0] || value > oor[VPD_F][1] ) {
 					value = INVALID_VALUE;
 				}
 			}
@@ -492,8 +522,10 @@ static void compute_rh(double *const values, const int rows_count, const int col
 			value = rel_hum;
 			//printf("rel_hum = %g %%\n", rel_hum);
 
-			CHECK_CONDITION(rel_hum, <, RH_RANGE_MIN);
-			CHECK_CONDITION(rel_hum, >, RH_RANGE_MAX);
+			//CHECK_CONDITION(rel_hum, <, RH_RANGE_MIN);
+			//CHECK_CONDITION(rel_hum, >, RH_RANGE_MAX);
+			CHECK_CONDITION(rel_hum, <, oor[RH_F][0]);
+			CHECK_CONDITION(rel_hum, >, oor[RH_F][1]);
 
 			/* convert NaN to invalid value */
 			if ( value != value ) {
@@ -502,7 +534,8 @@ static void compute_rh(double *const values, const int rows_count, const int col
 
 			/* check range */
 			if ( ! IS_INVALID_VALUE(value) ) {
-				if ( value < RH_RANGE_MIN || value > RH_RANGE_MAX ) {
+				//if ( value < RH_RANGE_MIN || value > RH_RANGE_MAX ) {
+				if ( value < oor[RH_F][0] || value > oor[RH_F][1] ) {
 					value = INVALID_VALUE;
 				}
 			}
@@ -514,36 +547,20 @@ static void compute_rh(double *const values, const int rows_count, const int col
 
 // alessior
 // create an array ?
+
 int get_year_rows_by_time(const int year)
 {
-	if ( IS_LEAP_YEAR(year) )
+	const int rows_by_time[2][4] = 
 	{
-		switch ( g_settings->time )
-		{
-			case HALFHOURLY:
-			return 17568;
+		// MONTHLY, DAILY, HOURLY, HALFHOURLY
+		{ 0, 365, 8760, 17520 }
+		// LEAP MONTHLY, LEAP DAILY, LEAP HOURLY, LEAP HALFHOURLY
+		, { 0, 366, 8784, 17568 }
+	};
 
-			case HOURLY:
-			return 8784;
+	assert((g_settings->time >= 0) && (g_settings->time < TIMERES_COUNT));
 
-			case DAILY:
-			return 366;					
-		}
-	}
-	else
-	{
-		switch ( g_settings->time )
-		{
-			case HALFHOURLY:
-			return 17520;
-
-			case HOURLY:
-			return 8760;
-
-			case DAILY:
-			return 365;					
-		}
-	}
+	return rows_by_time[IS_LEAP_YEAR(year)][g_settings->time];
 }
 
 static int get_previous_row_value(double *const values, const int rows_count, int current_row, const int var, double* const previous_value)
@@ -596,10 +613,6 @@ static int get_previous_year_row_value(double *const values, const int rows_coun
 static int check_meteo_values(double *const values, const int rows_count, const int columns_count)
 {
 #define VALUE_AT(r,c)	((r)+((c)*rows_count))
-
-	int row;
-	int current_year;
-	int current_year_rows_count;
 
 	/* check if dataset is complete */
 	{
@@ -691,8 +704,10 @@ static int check_meteo_values(double *const values, const int rows_count, const 
 		if ( ! flag[RH_F-5] ) {
 			for ( row = 0; row < rows_count; ++row ) {
 				if ( ! IS_INVALID_VALUE(values[VALUE_AT(row, RH_F)]) ) {
-					if ( values[VALUE_AT(row, RH_F)] < RH_RANGE_MIN ) values[VALUE_AT(row, RH_F)] = RH_RANGE_MIN;
-					else if ( values[VALUE_AT(row, RH_F)] > RH_RANGE_MAX ) values[VALUE_AT(row, RH_F)] = RH_RANGE_MAX;
+					//if ( values[VALUE_AT(row, RH_F)] < RH_RANGE_MIN ) values[VALUE_AT(row, RH_F)] = RH_RANGE_MIN;
+					//else if ( values[VALUE_AT(row, RH_F)] > RH_RANGE_MAX ) values[VALUE_AT(row, RH_F)] = RH_RANGE_MAX;
+					if ( values[VALUE_AT(row, RH_F)] < oor[RH_F][0] ) values[VALUE_AT(row, RH_F)] = oor[RH_F][0];
+					else if ( values[VALUE_AT(row, RH_F)] > oor[RH_F][1] ) values[VALUE_AT(row, RH_F)] = oor[RH_F][1];
 				}
 			}
 		}
@@ -701,8 +716,10 @@ static int check_meteo_values(double *const values, const int rows_count, const 
 		if ( ! flag[VPD_F-5] ) {
 			for ( row = 0; row < rows_count; ++row ) {
 				if ( ! IS_INVALID_VALUE(values[VALUE_AT(row, VPD_F)]) ) {
-					if ( values[VALUE_AT(row, VPD_F)] < VPD_RANGE_MIN ) values[VALUE_AT(row, VPD_F)] = VPD_RANGE_MIN;
-					else if ( values[VALUE_AT(row, VPD_F)] > VPD_RANGE_MAX ) values[VALUE_AT(row, VPD_F)] = VPD_RANGE_MAX;
+					//if ( values[VALUE_AT(row, VPD_F)] < VPD_RANGE_MIN ) values[VALUE_AT(row, VPD_F)] = VPD_RANGE_MIN;
+					//else if ( values[VALUE_AT(row, VPD_F)] > VPD_RANGE_MAX ) values[VALUE_AT(row, VPD_F)] = VPD_RANGE_MAX;
+					if ( values[VALUE_AT(row, VPD_F)] < oor[VPD_F][0] ) values[VALUE_AT(row, VPD_F)] = oor[VPD_F][0];
+					else if ( values[VALUE_AT(row, VPD_F)] > oor[VPD_F][1] ) values[VALUE_AT(row, VPD_F)] = oor[VPD_F][1];
 				}
 			}
 		}
@@ -737,7 +754,7 @@ static int check_meteo_values(double *const values, const int rows_count, const 
 				double *value;
 
 				value = &values[VALUE_AT(row, var)];
-				if ( IS_INVALID_VALUE(value) )
+				if ( IS_INVALID_VALUE(*value) )
 				{
 					switch ( var )
 					{
@@ -768,70 +785,32 @@ static int check_meteo_values(double *const values, const int rows_count, const 
 				}
 
 				// check for out of ranges
-				if ( ! IS_INVALID_VALUE(value) )
+				if ( ! IS_INVALID_VALUE(*value) )
 				{
-					// alessior:
-					// TODO: put out of range in array!
 					switch ( var )
 					{
-						case RG_F:
-							if ( (*value < RG_RANGE_MIN) || (*value > RG_RANGE_MAX) )
-							{
-								printf("out of range for RG %f, at year %d, row %d\n", *value, current_year, row-z);
-								exit(1);
-							}
-						break;
-
+						case RG_F:						
 						case TA_F:
-							if ( (value < TA_RANGE_MIN) || (value > TA_RANGE_MAX) )
-							{
-								printf("out of range for TA at year %d, row %d\n", current_year, row-z);
-								exit(1);
-							}
-						break;
-
 						case TMAX:
-							if ( (value < TMAX_RANGE_MIN) || (value > TMAX_RANGE_MAX) )
-							{
-								printf("out of range for TMAX at year %d, row %d\n", current_year, row-z);
-								exit(1);
-							}
-						break;
-
 						case TMIN:
-							if ( (value < TMIN_RANGE_MIN) || (value > TMIN_RANGE_MAX) )
-							{
-								printf("out of range for TMIN at year %d, row %d\n", current_year, row-z);
-								exit(1);
-							}
-						break;
-
 						case VPD_F:
-							if ( (value < VPD_RANGE_MIN) || (value > VPD_RANGE_MAX) )
-							{
-								printf("out of range for VPD at year %d, row %d\n", current_year, row-z);
-								exit(1);
-							}
-						break;
-
 						case PRECIP:
-							if ( (value < PRECIP_RANGE_MIN) || (value > PRECIP_RANGE_MAX) )
-							{
-								printf("out of range for PRECIP at year %d, row %d\n", current_year, row-z);
-								exit(1);
-							}
-						break;
-
 						case RH_F:
-							if ( (value < RH_RANGE_MIN) || (value > RH_RANGE_MAX) )
+							if ( (*value < oor[var][0]) || (*value > oor[var][1]) )
 							{
-								printf("out of range for RH at year %d, row %d\n", current_year, row-z);
+								printf("out of range for %s: %g (%g, %g) at year %d, row %d\n"
+											, sz_met_columns[var]
+											, *value
+											, oor[var][0]
+											, oor[var][1]
+											, current_year
+											, row-z
+								);
 								exit(1);
 							}
 						break;
-
 					}
-				}			
+				}	
 			}
 
 			// pass year
@@ -842,77 +821,6 @@ static int check_meteo_values(double *const values, const int rows_count, const 
 				current_year_rows_count = get_year_rows_by_time(current_year);
 			}
 		}
-	}
-
-#undef VALUE_AT
-}
-
-
-static int meteo_from_arr_daily(double *const values, const int rows_count, meteo_annual_t** p_yos, int *const yos_count
-								, const int year, const int month, const int day, const int row)
-{
-#define VALUE_AT(r,c)	((r)+((c)*rows_count))
-
-	meteo_annual_t *yos;
-
-	static double	previous_solar_rad
-					, previous_tavg
-					, previous_tmax
-					, previous_tmin
-					, previous_vpd
-					, previous_ts_f
-					, previous_prcp
-					, previous_swc
-					, previous_ndvi_lai
-	;
-
-	assert(year >= 0);
-	assert(month >= 0 && month < 12);
-	assert(day >= 0 && day < 31);
-
-	yos = *p_yos;
-
-	yos[*yos_count-1].daily[month].d[day].n_days = day+1;
-	if ( yos[*yos_count-1].daily[month].d[day].n_days > METEO_DAYS_COUNT)
-	{
-		logger_error(g_debug_log, "ERROR IN N_DAYS DATA!!\n");
-		//free(yos);
-		return 0;
-	}
-
-	yos[*yos_count-1].daily[month].d[day].solar_rad = values[VALUE_AT(row,RG_F)];
-	yos[*yos_count-1].daily[month].d[day].tavg = values[VALUE_AT(row,TA_F)];
-	yos[*yos_count-1].daily[month].d[day].tmax = values[VALUE_AT(row,TMAX)];
-	yos[*yos_count-1].daily[month].d[day].tmin = values[VALUE_AT(row,TMIN)];
-	yos[*yos_count-1].daily[month].d[day].vpd = values[VALUE_AT(row,VPD_F)];
-	yos[*yos_count-1].daily[month].d[day].ts_f = values[VALUE_AT(row,TS_F)];
-	yos[*yos_count-1].daily[month].d[day].prcp = values[VALUE_AT(row,PRECIP)];
-	yos[*yos_count-1].daily[month].d[day].swc = values[VALUE_AT(row,SWC)];
-	yos[*yos_count-1].daily[month].d[day].et = values[VALUE_AT(row,ET)];
-	yos[*yos_count-1].daily[month].d[day].windspeed = values[VALUE_AT(row,WS_F)];
-	yos[*yos_count-1].daily[month].d[day].rh_f = values[VALUE_AT(row,RH_F)];
-
-	/* check */
-	if (yos[*yos_count-1].daily[month].d[day].tmax < yos[*yos_count-1].daily[month].d[day].tavg)
-	{
-		printf ("Tmax (%g) < Tavg (%g) at %d year, %d month, %d day\n",
-				yos[*yos_count-1].daily[month].d[day].tmax,
-				yos[*yos_count-1].daily[month].d[day].tavg,
-				*yos_count-1, month+1, day+1);
-	}
-	if (yos[*yos_count-1].daily[month].d[day].tmax < yos[*yos_count-1].daily[month].d[day].tmin)
-	{
-		printf ("Tmax (%g) < Tmin (%g) at %d year, %d month, %d day\n",
-				yos[*yos_count-1].daily[month].d[day].tmax,
-				yos[*yos_count-1].daily[month].d[day].tmin,
-				*yos_count-1, month+1, day+1);
-	}
-	if (yos[*yos_count-1].daily[month].d[day].tavg < yos[*yos_count-1].daily[month].d[day].tmin)
-	{
-		printf ("Tavg (%g) < Tmin (%g) at %d year, %d month, %d day\n",
-				yos[*yos_count-1].daily[month].d[day].tavg,
-				yos[*yos_count-1].daily[month].d[day].tmin,
-				*yos_count-1, month+1, day+1);
 	}
 
 	return 1;
@@ -1204,14 +1112,16 @@ static int aggr_to_daily(meteo_d_t*const daily, const double* const values, cons
 }
 
 static int meteo_from_arr(double *const values, const int rows_count, const int columns_count, meteo_annual_t** p_yos, int *const yos_count) {
-	meteo_annual_t *yos_no_leak;
+#define VALUE_AT(r,c)	((r)+((c)*rows_count))
+
 	meteo_annual_t *yos;
+	meteo_annual_t *yos_no_leak;
 	int row;
-	int year;
+	int halfhour;
+	int hour;
 	int month;
 	int day;
-	int hour;
-	int halfhour;
+	int year;
 	int current_year;
 
 	assert(p_yos && yos_count);
@@ -1225,9 +1135,6 @@ static int meteo_from_arr(double *const values, const int rows_count, const int 
 		return 0;
 	}
 
-
-	// REMOVE THIS!
-#if 0
 	for ( row = 0; row < rows_count; ++row ) {
 		year = (int)values[VALUE_AT(row, YEAR)];
 		if ( ! year ) {
@@ -1282,14 +1189,15 @@ static int meteo_from_arr(double *const values, const int rows_count, const int 
 				return 0;
 			}
 			yos = yos_no_leak;
+			++*yos_count;
 
 			/* required */
-			yos[*yos_count].halfhourly = NULL;
-			yos[*yos_count].hourly = NULL;
+			yos[*yos_count-1].halfhourly = NULL;
+			yos[*yos_count-1].hourly = NULL;
 
 			if ( (HOURLY == g_settings->time) || (HALFHOURLY == g_settings->time) ) {
-				yos[*yos_count].hourly = malloc(METEO_MONTHS_COUNT*sizeof(meteo_h_t));
-				if ( ! yos[*yos_count].hourly )
+				yos[*yos_count-1].hourly = malloc(METEO_MONTHS_COUNT*sizeof(meteo_h_t));
+				if ( ! yos[*yos_count-1].hourly )
 				{
 					logger_error(g_debug_log, sz_err_out_of_memory);
 					//free(yos);
@@ -1298,8 +1206,8 @@ static int meteo_from_arr(double *const values, const int rows_count, const int 
 			}
 
 			if ( HALFHOURLY == g_settings->time) {
-				yos[*yos_count].halfhourly = malloc(METEO_MONTHS_COUNT*sizeof(meteo_hh_t));
-				if ( ! yos[*yos_count].halfhourly )
+				yos[*yos_count-1].halfhourly = malloc(METEO_MONTHS_COUNT*sizeof(meteo_hh_t));
+				if ( ! yos[*yos_count-1].halfhourly )
 				{
 					logger_error(g_debug_log, sz_err_out_of_memory);
 					//free(yos);
@@ -1326,7 +1234,7 @@ static int meteo_from_arr(double *const values, const int rows_count, const int 
 					}
 
 					// aggregate to hourly
-					if ( ! aggr_to_hourly(yos[*yos_count].hourly, values, rows_count, year, row_index) )
+					if ( ! aggr_to_hourly(yos[*yos_count-1].hourly, values, rows_count, year, row_index) )
 					{
 						return 0;
 					}
@@ -1353,31 +1261,59 @@ static int meteo_from_arr(double *const values, const int rows_count, const int 
 				}
 
 				// aggregate to daily
-				if ( ! aggr_to_daily(yos[*yos_count].daily, values, rows_count, year, (HOURLY == g_settings->time), row_index) )
+				if ( ! aggr_to_daily(yos[*yos_count-1].daily, values, rows_count, year, (HOURLY == g_settings->time), row_index) )
 				{
 					return 0;
 				}
 			}		
 
-			yos_clear(&yos[*yos_count]);
-			yos[*yos_count].year = year;
-			++*yos_count;
-
+			yos_clear(&yos[*yos_count-1]);
+			yos[*yos_count-1].year = year;
 			current_year = year;
 		}
 
-		if ( HALFHOURLY == g_settings->time) {
-			// TODO
-			assert(0);
-		} else if ( HOURLY == g_settings->time) {
-			// TODO
-			assert(0);
-		} else {
-			if ( ! meteo_from_arr_daily(values, rows_count, &yos, yos_count, year, month, day, row) )
-			{
-				return 0;
-			}		
-		}		
+		yos[*yos_count-1].daily[month].d[day].n_days = day+1;
+		if ( yos[*yos_count-1].daily[month].d[day].n_days > METEO_DAYS_COUNT)
+		{
+			logger_error(g_debug_log, "ERROR IN N_DAYS DATA!!\n");
+			//free(yos);
+			return 0;
+		}
+
+		yos[*yos_count-1].daily[month].d[day].solar_rad = values[VALUE_AT(row,RG_F)];
+		yos[*yos_count-1].daily[month].d[day].tavg = values[VALUE_AT(row,TA_F)];
+		yos[*yos_count-1].daily[month].d[day].tmax = values[VALUE_AT(row,TMAX)];
+		yos[*yos_count-1].daily[month].d[day].tmin = values[VALUE_AT(row,TMIN)];
+		yos[*yos_count-1].daily[month].d[day].vpd = values[VALUE_AT(row,VPD_F)];
+		yos[*yos_count-1].daily[month].d[day].ts_f = values[VALUE_AT(row,TS_F)];
+		yos[*yos_count-1].daily[month].d[day].prcp = values[VALUE_AT(row,PRECIP)];
+		yos[*yos_count-1].daily[month].d[day].swc = values[VALUE_AT(row,SWC)];
+		yos[*yos_count-1].daily[month].d[day].et = values[VALUE_AT(row,ET)];
+		yos[*yos_count-1].daily[month].d[day].windspeed = values[VALUE_AT(row,WS_F)];
+		yos[*yos_count-1].daily[month].d[day].rh_f = values[VALUE_AT(row,RH_F)];
+
+		/* check */
+		if (yos[*yos_count-1].daily[month].d[day].tmax < yos[*yos_count-1].daily[month].d[day].tavg)
+		{
+			printf ("Tmax (%g) < Tavg (%g) at %d year, %d month, %d day\n",
+					yos[*yos_count-1].daily[month].d[day].tmax,
+					yos[*yos_count-1].daily[month].d[day].tavg,
+					*yos_count-1, month+1, day+1);
+		}
+		if (yos[*yos_count-1].daily[month].d[day].tmax < yos[*yos_count-1].daily[month].d[day].tmin)
+		{
+			printf ("Tmax (%g) < Tmin (%g) at %d year, %d month, %d day\n",
+					yos[*yos_count-1].daily[month].d[day].tmax,
+					yos[*yos_count-1].daily[month].d[day].tmin,
+					*yos_count-1, month+1, day+1);
+		}
+		if (yos[*yos_count-1].daily[month].d[day].tavg < yos[*yos_count-1].daily[month].d[day].tmin)
+		{
+			printf ("Tavg (%g) < Tmin (%g) at %d year, %d month, %d day\n",
+					yos[*yos_count-1].daily[month].d[day].tavg,
+					yos[*yos_count-1].daily[month].d[day].tmin,
+					*yos_count-1, month+1, day+1);
+		}
 	}
 	*p_yos = yos;
 
@@ -1622,8 +1558,6 @@ static int meteo_from_arr(double *const values, const int rows_count, const int 
 #endif
 #endif
 
-//
-#endif //remove this
 	return 1;
 #undef VALUE_AT
 }
@@ -2806,15 +2740,10 @@ static int import_txt(const char *const filename, meteo_annual_t** p_yos, int *c
 	}
 #endif
 
-	if ( ! meteo_from_arr(values, rows_count, MET_COLUMNS_COUNT, p_yos, yos_count) ) {
-		free(values);
-		return 0;
-	}
-
+	i = meteo_from_arr(values, rows_count, MET_COLUMNS_COUNT, p_yos, yos_count);
 	free(values);
-
-	/* ok */
-	return 1;
+	
+	return i;
 #undef BUFFER_SIZE
 #undef VALUE_AT
 }
@@ -2897,6 +2826,9 @@ meteo_annual_t* meteo_annual_import(const char *const file, int *const yos_count
 		}
 	}
 	free(temp);
+
+	// yos_count cannot be 0
+	assert(*yos_count);
 
 	// get year_start_co2_fixed_index
 	year_start_co2_fixed_index = -1;

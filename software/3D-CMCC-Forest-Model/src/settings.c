@@ -830,10 +830,8 @@ settings_t* settings_import(const char *const filename) {
 				puts("");
 				settings_free(s);
 				return 0;
-			}
-			else
-			{
-				printf("%s optional.\n", sz_settings[i]);
+			} else {
+				puts(" optional.");
 			}
 		}
 	}
