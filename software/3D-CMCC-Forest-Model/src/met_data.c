@@ -20,6 +20,39 @@ extern soil_settings_t *g_soil_settings;
 extern topo_t *g_topo;
 extern logger_t* g_debug_log;
 
+void Daily_Sat_vapour_pressure(cell_t *const c, const int day, const int month, const int year)
+{
+	double e0max;                                    /* saturation vapour pressure at the maximum air temperature (KPa) */
+	double e0min;                                    /* saturation vapour pressure at the minimum air temperature (KPa) */
+	const double A = 17.27;
+	const double Tstroke = 36;
+	double TmaxK;
+	double TminK;
+	meteo_d_t* met;
+
+	assert(DAILY == g_settings->time);
+
+	met = c->years[year].daily;
+
+	TmaxK = met[month].d[day].tmax + TempAbs;
+	TminK = met[month].d[day].tmin + TempAbs;
+
+	/* following Allen et al., 1998 */
+	/* compute saturation vapour pressure at the maximum and minimum air temperature (KPa) */
+	e0max = ESTAR * exp((A*met[month].d[day].tmax)/(TmaxK - Tstroke));
+	e0min = ESTAR * exp((A*met[month].d[day].tmin)/(TminK - Tstroke));
+
+	/* compute weighted mean saturation vapour pressure at the air temperature (KPa)*/
+	met[month].d[day].es = ((e0max*met[month].d[day].ni) + (e0min*(1.0-met[month].d[day].ni)));
+
+	/* compute actual vapour pressure derived from relative humidity data (KPa) */
+	met[month].d[day].ea = (met[month].d[day].rh_f/100.)*met[month].d[day].es;
+
+	if (met[month].d[day].ea < 0.)
+	{
+		met[month].d[day].ea = 0.;
+	}
+}
 static double get_daily_potential_radiation(const double latitude, const double longitude, const int d_, const double t_) {
 	double localstandardtime;
 	double localapparentsolartime;
@@ -70,40 +103,6 @@ static double compute_potential_rad(const double lat, const double lon, const in
 	return rpot;
 
 #undef ROWS_PER_DAY
-}
-
-void Daily_Sat_vapour_pressure(cell_t *const c, const int day, const int month, const int year)
-{
-	double e0max;                                    /* saturation vapour pressure at the maximum air temperature (KPa) */
-	double e0min;                                    /* saturation vapour pressure at the minimum air temperature (KPa) */
-	const double A = 17.27;
-	const double Tstroke = 36;
-	double TmaxK;
-	double TminK;
-	meteo_d_t* met;
-
-	assert(DAILY == g_settings->time);
-
-	met = c->years[year].daily;
-
-	TmaxK = met[month].d[day].tmax + TempAbs;
-	TminK = met[month].d[day].tmin + TempAbs;
-
-	/* following Allen et al., 1998 */
-	/* compute saturation vapour pressure at the maximum and minimum air temperature (KPa) */
-	e0max = ESTAR * exp((A*met[month].d[day].tmax)/(TmaxK - Tstroke));
-	e0min = ESTAR * exp((A*met[month].d[day].tmin)/(TminK - Tstroke));
-
-	/* compute weighted mean saturation vapour pressure at the air temperature (KPa)*/
-	met[month].d[day].es = ((e0max*met[month].d[day].ni) + (e0min*(1.0-met[month].d[day].ni)));
-
-	/* compute actual vapour pressure derived from relative humidity data (KPa) */
-	met[month].d[day].ea = (met[month].d[day].rh_f/100.)*met[month].d[day].es;
-
-	if (met[month].d[day].ea < 0.)
-	{
-		met[month].d[day].ea = 0.;
-	}
 }
 
 static void compute_atm_lw_downward_W(cell_t *const c, const int day, const int month, const int year) {
@@ -262,7 +261,7 @@ void Daily_Radiation(cell_t *const c, const int day, const int month, const int 
 	met[month].d[day].par                    = met[month].d[day].incoming_par;
 	//logger(g_debug_log, "Par = %g molPAR/m^2 day\n", met[month].d[day].par);
 
-	/* convert incoming Short-Wave flux in PPFD from W/m2 to umol/m2/sec (Biome-BGC method) */
+	/* convert incoming Short-Wave flux in PPFD from W/m2 to umol/m2/sec */
 	met[month].d[day].incoming_ppfd          = met[month].d[day].sw_downward_W * RAD2PAR * EPAR;
 	met[month].d[day].ppfd                   = met[month].d[day].incoming_ppfd;
 	//logger(g_debug_log, "PPFD = %g umolPPFD/m2/sec\n", met[month].d[day].ppfd);
@@ -376,7 +375,12 @@ void Daily_Day_Length(cell_t *c, const int day, const int month, const int year)
 	//logger(g_debug_log, "with altitude = %f\n", met[month].d[day].daylength);
 
 	ampl = (exp (7.42 + (0.045 * g_soil_settings->values[SOIL_LAT]))) / 3600.;
-	met[month].d[day].daylength = ampl * (sin ((doy - 79.) * 0.01721)) + 12.;
+
+	/* compute daylength in hours */
+	met[month].d[day].daylength     = ampl * (sin ((doy - 79.) * 0.01721)) + 12.;
+
+	/* compute daylength in seconds */
+	met[month].d[day].daylength_sec = met[month].d[day].daylength * 3600.;
 
 
 	/* compute fraction of daytime */
@@ -556,7 +560,7 @@ void Daily_Soil_temperature(const cell_t *const c, int day, int month, int year)
 	There are no corrections for snowpack or vegetation cover.
 	 */
 
-	//TODO CHECK SOIL TEMPÈRATURE CORRECTION FROM BIOME
+	//TODO CHECK SOIL TEMPERATURE CORRECTION FROM BIOME
 	/* soil temperature correction using difference from annual average tair */
 	/*file bgc.c*/
 	/* original biome_bgc version */

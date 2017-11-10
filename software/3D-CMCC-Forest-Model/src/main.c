@@ -1467,6 +1467,10 @@ int main(int argc, char *argv[]) {
 		/* move pointer for year */
 		matrix->cells[cell].years += g_year_start_index;
 
+		/* FIXME ALESSIOC TO ALESSIOR alloc memory for semihourly output netcdf vars (if any) */
+
+		/* FIXME ALESSIOC TO ALESSIOR alloc memory for hourly output netcdf vars (if any) */
+
 		/* alloc memory for daily output netcdf vars (if any) */
 		if ( output_vars && output_vars->daily_vars_count && ! output_vars->daily_vars_value ) {
 			int ii;

@@ -12,6 +12,7 @@
 #include "biomass.h"
 #include "lai.h"
 #include "aut_respiration.h"
+#include "test.h"
 
 extern settings_t *g_settings;
 extern logger_t* g_debug_log;
@@ -19,7 +20,6 @@ extern soil_settings_t *g_soil_settings;
 
 extern const char sz_err_out_of_memory[];
 
-#define TEST_RESP 0
 
 void initialization_forest_structure(cell_t *const c, const int day, const int month, const int year)
 {
@@ -53,6 +53,19 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 	CHECK_CONDITION(h->value, <=, 0);
 	CHECK_CONDITION(d->value, <=, 0);
 	CHECK_CONDITION(a->value, <=, 0);
+
+	/* check parameters values */
+	CHECK_CONDITION (s->value[SLA_AVG0],               <, s->value[SLA_AVG1]);
+	CHECK_CONDITION (s->value[FRACBB0],                <, s->value[FRACBB1]);
+	CHECK_CONDITION (s->value[GROWTHTMIN],             >, s->value[GROWTHTOPT]);
+	CHECK_CONDITION (s->value[GROWTHTMIN],             >, s->value[GROWTHTMAX]);
+	CHECK_CONDITION (s->value[GROWTHTOPT],             >, s->value[GROWTHTMAX]);
+	CHECK_CONDITION (s->value[SWPOPEN],                <, s->value[SWPCLOSE]);
+	CHECK_CONDITION (s->value[FRUIT_PERC],             >, 1.);
+	CHECK_CONDITION (s->value[LEAF_FALL_FRAC_GROWING], >, 1.);
+	CHECK_CONDITION (s->value[LEAF_FROOT_TURNOVER],    >, 1.);
+	CHECK_CONDITION (s->value[LIVEWOOD_TURNOVER],      >, 1.);
+	CHECK_CONDITION (s->value[S0CTEM] + s->value[R0CTEM] + s->value[F0CTEM], !=, 1);
 
 	/* compute growth respiration fraction */
 	growth_respiration_frac ( a, s );
@@ -328,22 +341,17 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 				logger_error(g_debug_log,"No Leaf Biomass nor LAI values from initialization file (recompute it using sapwood)!!!!\n");
 
 				/* compute LAI (assuming at peak value) */
-				s->value[LAI_PROJ] = ( ( s->value[SAPWOOD_AREA] / 10000. ) * s->value[SAP_LEAF]) / s->value[CROWN_AREA_PROJ];
+				s->value[LAI_PROJ] = ( ( s->value[SAPWOOD_AREA] / 1e5 ) * s->value[SAP_LEAF]) / s->value[CROWN_AREA_PROJ];
 				logger(g_debug_log, "PEAK_LAI_PROJ = %f m2/m2\n",s->value[PEAK_LAI_PROJ]);
-
-				/* compute leaf carbon to PEAK LAI down-scaled to canopy cover */
-				/* convert to tons of C and to cell cell */
-				s->value[LEAF_C]   = (s->value[LAI_PROJ] / s->value[SLA_AVG]) / 1e3 * (s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell);
-			}
-			/* otherwise use LAI */
-			else
-			{
-				/* compute leaf carbon to LAI down-scaled to canopy cover */
-				/* convert to tons of C and to cell cell */
-				s->value[LEAF_C]   = (s->value[LAI_PROJ] / s->value[SLA_AVG]) / 1e3 * (s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell);
 			}
 
-			s->value[LEAF_DM]      = s->value[LEAF_C] * GC_GDM;
+			/* compute leaf carbon to PEAK LAI down-scaled to canopy cover */
+			s->value[LEAF_DM]   = (s->value[LAI_PROJ] / s->value[SLA_AVG] ) / 1e3 * ( s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell );
+			logger(g_debug_log, "LEAF_DM        = %f tDM/cell\n", s->value[LEAF_DM]);
+
+			/* convert tDM/cell to tC/cell */
+			s->value[LEAF_C]      = s->value[LEAF_DM] / GC_GDM;
+			logger(g_debug_log, "LEAF_C         = %f tC/cell\n", s->value[LEAF_C]);
 
 			/* Calculate projected LAI for sunlit and shaded canopy portions */
 			s->value[LAI_SUN_PROJ]   = 1. - exp(-s->value[LAI_PROJ]);
@@ -354,6 +362,7 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 			logger(g_debug_log, "LAI_SHADE_PROJ = %f m2/m2\n", s->value[LAI_SHADE_PROJ]);
 
 			/* compute total LAI for Exposed Area */
+			//fixme error
 			s->value[LAI_EXP]       = (s->value[LAI_PROJ] / s->value[SLA_AVG]) / 1e3 * ( s->value[CANOPY_COVER_EXP] * g_settings->sizeCell );
 			s->value[LAI_SUN_EXP]   = 1. - exp ( -s->value[LAI_EXP] );
 			s->value[LAI_SHADE_EXP] = s->value[LAI_EXP] - s->value[LAI_SUN_EXP];

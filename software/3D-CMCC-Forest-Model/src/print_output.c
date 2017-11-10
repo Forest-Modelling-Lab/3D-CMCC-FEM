@@ -1801,7 +1801,7 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 		}
 		/************************************************************************/
 		/* heading variables only at cell level */
-		logger(g_daily_log,",gpp,npp,ar,et,le,soil_evapo,snow_pack,asw,iWue,litrC,cwdC,soilC,litrN,soilN,Tsoil,Daylength\n");
+		logger(g_daily_log,",gpp,npp,ar,hr,rsoil,reco,nee,nep,et,le,soil_evapo,snow_pack,asw,moist_ratio,iWue,litrC,cwdC,soilC,litrN,soilN,Tsoil,Daylength\n");
 	}
 	/*****************************************************************************************************/
 
@@ -1942,15 +1942,21 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 	/************************************************************************/
 	/* printing variables only at cell level */
 
-	logger(g_daily_log, ",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f\n",
+	logger(g_daily_log, ",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f\n",
 			c->daily_gpp,
 			c->daily_npp,
 			c->daily_aut_resp,
+			c->daily_het_resp,
+			c->daily_soil_resp,
+			c->daily_r_eco,
+			c->daily_nee,
+			c->daily_nep,
 			c->daily_et,
 			c->daily_lh_flux,
 			c->daily_soil_evapo,
 			c->snow_pack,
 			c->asw,
+			c->soil_moist_ratio,
 			c->daily_iwue,
 			c->litrC,
 			c->cwdC,
@@ -2312,6 +2318,7 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 										",Y(perc)"
 										",PeakLAI"
 										",MaxLAI"
+										",SLA"
 										",SAPWOOD-AREA"
 										",CC-Proj"
 										",DBHDC"
@@ -2333,17 +2340,22 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 										",STEM_C"
 										",STEM_SAP_C"
 										",STEM_HEA_C"
+										",STEM_SAP_PERC"
 										",STEM_LIVE_C"
 										",STEM_DEAD_C"
+										",STEM_LIVE_PERC"
 										",MAX_LEAF_C"
 										",MAX_FROOT_C"
 										",CROOT_C"
 										",CROOT_LIVE_C"
 										",CROOT_DEAD_C"
+										",CROOT_LIVE_PERC"
 										",BRANCH_C"
 										",BRANCH_LIVE_C"
 										",BRANCH_DEAD_C"
+										",BRANCH_LIVE_PERC"
 										",FRUIT_C"
+										",MAX_FRUIT_C"
 										",STANDING_WOOD"
 										",DELTA_WOOD"
 										",CUM_DELTA_WOOD"
@@ -2392,7 +2404,7 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 		}
 		/************************************************************************/
 		/* heading cell variables */
-		logger(g_annual_log,",gpp,npp,ar,et,le,soil-evapo,asw,iWue,vol,cum_vol,run_off");
+		logger(g_annual_log,",gpp,npp,ar,hr,rsoil,rsoilCO2,reco,nee,nep,et,le,soil-evapo,asw,iWue,vol,cum_vol,run_off");
 		/************************************************************************/
 		/* heading meteo variables */
 		logger(g_annual_log,",solar_rad,tavg,tmax,tmin,tday,tnight,vpd,prcp,tsoil,rh,[CO2]");
@@ -2450,9 +2462,9 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 								logger(g_annual_log,",%c", sz_management[c->heights[height].dbhs[dbh].ages[age].species[species].management]);
 
 								/* print variables at layer-class level */
-								logger(g_annual_log,",%6.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%d,%d,%d,%d,%d,%3.4f"
-										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
-										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",
+								logger(g_annual_log,",%6.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%d,%d,%d,%d,%d,%3.4f"
+										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
+										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",
 										s->value[YEARLY_GPP],
 										s->value[YEARLY_ASSIMILATION],
 										s->value[YEARLY_TOTAL_GROWTH_RESP],
@@ -2463,6 +2475,7 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 										s->value[YEARLY_TOTAL_AUT_RESP]/s->value[YEARLY_GPP]*100.,
 										s->value[PEAK_LAI_PROJ],
 										s->value[MAX_LAI_PROJ],
+										s->value[SLA_AVG],
 										s->value[SAPWOOD_AREA],
 										s->value[CANOPY_COVER_PROJ],
 										s->value[DBHDC_EFF],
@@ -2484,17 +2497,22 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 										s->value[STEM_C],
 										s->value[STEM_SAPWOOD_C],
 										s->value[STEM_HEARTWOOD_C],
+										(s->value[STEM_SAPWOOD_C]*100.)/s->value[STEM_C],
 										s->value[STEM_LIVEWOOD_C],
 										s->value[STEM_DEADWOOD_C],
+										(s->value[STEM_LIVEWOOD_C]*100.)/s->value[STEM_C],
 										s->value[MAX_LEAF_C],
 										s->value[MAX_FROOT_C],
 										s->value[CROOT_C],
 										s->value[CROOT_LIVEWOOD_C],
 										s->value[CROOT_DEADWOOD_C],
+										(s->value[CROOT_LIVEWOOD_C]*100.)/s->value[CROOT_C],
 										s->value[BRANCH_C],
 										s->value[BRANCH_LIVEWOOD_C],
 										s->value[BRANCH_DEADWOOD_C],
+										(s->value[BRANCH_LIVEWOOD_C]*100.)/s->value[BRANCH_C],
 										s->value[FRUIT_C],
+										s->value[MAX_FRUIT_C],
 										s->value[STANDING_WOOD],
 										s->value[YEARLY_C_TO_WOOD],
 										s->value[CUM_YEARLY_C_TO_WOOD],
@@ -2505,7 +2523,7 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 										s->value[MAI],
 										s->value[VOLUME],
 										s->value[TREE_VOLUME],
-										(s->value[TREE_CAI]/s->value[TREE_VOLUME])*100.,
+										(s->value[TREE_CAI]*100.)/s->value[TREE_VOLUME],
 										s->value[DELTA_AGB],
 										s->value[DELTA_BGB],
 										s->value[AGB],
@@ -2547,12 +2565,19 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 	{
 		//ALESSIOC TO ALLESSIOR PRINT EMPTY SPACES WHEN N_TREE = 0
 	}
+
 	/************************************************************************/
 	/* printing variables at cell level only if there's more than one layer */
-	logger(g_annual_log, ",%3.4f,%3.4f,%3.4f,%3.4f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f",
+	logger(g_annual_log, ",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f",
 			c->annual_gpp,
 			c->annual_npp,
 			c->annual_aut_resp,
+			c->annual_het_resp,
+			c->annual_soil_resp,
+			c->annual_soil_respCO2,
+			c->annual_r_eco,
+			c->annual_nee,
+			c->annual_nep,
 			c->annual_et,
 			c->annual_lh_flux,
 			c->annual_soil_evapo,

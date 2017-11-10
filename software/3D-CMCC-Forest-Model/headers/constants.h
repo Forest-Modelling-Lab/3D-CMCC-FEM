@@ -31,12 +31,14 @@ enum {
 #define GLUCOSE_C                0.4      /* fraction of Carbon in glucose reserve (Barbaroux et al., 2002) */
 #define MOLPAR_MJ                2.3      /* Conversion of Solar Radiation to PAR - CONVERT MJ TO MOLPAR -- 1 MJ = 2.3 molPAR */
 #define GDM_MOL                   24      /* Molecular weight of dry matter - CONVERT molC TO gDM (12 Molecular weight of C * 2 to have DM)(IPCC guidelines 1996) */
-#define GC_MOL                    12      /* Convert molC to grams of C */
+#define GC_MOL                12.011      /* Convert molC to grams of C */
+#define GCO2_MOL                  44.     /* molecular weight of CO2, g mole-1 */
 #define MJ_TO_W         11.574074074      /* Convert MJ/m2/day to W/m2 */
 #define W_TO_MJ               0.0864      /* Convert W/m2 to MJ/m2/day */
 #define W_MJ                 1000000      /* Convert Watt to MegaJoule/sec m^2 */
 #define SBC_W              5.6696e-8      /* (W/(m^2 K^4)) Stefan-Boltzmann constant */
 #define SBC_MJ              4.903e-9      /* (MJ/K^4/m^2/day) Stefan-Boltzmann constant in MJ day */
+#define GCO2_MOL                  44.     /* molecular weight of CO2, g mole-1 */
 #define KARM                    0.41      /* von Karman's constant (dimensionless) */
 #define CP                    1010.0      /* (J/kg K) specific heat of air */
 #define G_STD                9.80665      /* (m/s2) standard gravitational accel. */
@@ -77,7 +79,7 @@ enum {
 #define MAX_N_TREE_LAYER           3      /* define the maximum number for tree layers (todo move into setting.txt) */
 #define C_FRAC_TO_RETRANSL       0.1      /* fraction of C to re-translocate (see Bossell et al., 2006 and Campioli et al., 2013; 0.2 Hoffmann 1995 */
 #define N_FRAC_TO_RETRANSL       0.1      /* fraction of N to re-translocate (see Bossell et al., 2006 and Campioli et al., 2013; 0.2 Hoffmann 1995 */
-#define MAX_PEAK_LAI_PROJ        6.5      /* Maximum Peak Lai (m2/m2) */
+#define MAX_PEAK_LAI_PROJ          6 //ISIMIP 6.5      /* Maximum Peak Lai (m2/m2) */
 #define WATER_STRESS_LIMIT       0.3      /* Minimum imposed water stress limit to soil water modifier */
 
 

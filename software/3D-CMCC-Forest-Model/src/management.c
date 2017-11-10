@@ -366,7 +366,6 @@ void thinning (cell_t *const c, const int height, const int dbh, const int age, 
 	}
 
 	/* check */
-	// alessior to alessioc s->counter[N_TREE] is int and ZERO is double
 	CHECK_CONDITION(s->counter[N_TREE], <, ZERO );
 
 	/*********************************************************************************************************************************************************************/

@@ -310,6 +310,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\het_respiration.c"
+				>
+			</File>
+			<File
 				RelativePath=".\src\initialization.c"
 				>
 			</File>

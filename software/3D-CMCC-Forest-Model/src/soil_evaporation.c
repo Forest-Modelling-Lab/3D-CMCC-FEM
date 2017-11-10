@@ -27,7 +27,6 @@ void soil_evaporation(cell_t *const c, const meteo_daily_t *const meteo_daily)
 	double rr;
 	double rhr;
 
-	rh = 0.;
 
 	tairK  = meteo_daily->tavg + TempAbs;
 	tsoilK = meteo_daily->tsoil + TempAbs;
@@ -75,7 +74,7 @@ void soil_evaporation(cell_t *const c, const meteo_daily_t *const meteo_daily)
 		logger(g_debug_log, "Potential soil evaporation = %g mm/m2/sec\n", pot_soil_evap);
 
 		/* covert to daily total kg/m2 */
-		pot_soil_evap *= (meteo_daily->daylength * 3600.0);
+		pot_soil_evap *= meteo_daily->daylength_sec;
 
 		if ( meteo_daily->rain >= pot_soil_evap )
 		{

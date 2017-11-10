@@ -11,6 +11,6 @@
 
 #include "matrix.h"
 
-void heterotrophic_respiration(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, const meteo_daily_t *const meteo_daily);
+void heterotrophic_respiration(cell_t *const c);
 
 #endif /* HET_RESPIRATION_H_ */

@@ -1139,14 +1139,14 @@ static int meteo_from_arr(double *const values, const int rows_count, const int 
 		year = (int)values[VALUE_AT(row, YEAR)];
 		if ( ! year ) {
 			logger_error(g_debug_log, "year cannot be zero!\n");
-			//free(yos);
+			*p_yos = yos;
 			return 0;
 		}
 
 		month = (int)values[VALUE_AT(row, MONTH)];
 		if ( month < 1 || month > METEO_MONTHS_COUNT ) {
 			logger_error(g_debug_log, "bad month for year %d\n\n", year);
-			//free(yos);
+			*p_yos = yos;
 			return 0;
 
 		}
@@ -1155,7 +1155,7 @@ static int meteo_from_arr(double *const values, const int rows_count, const int 
 		day = (int)values[VALUE_AT(row, DAY)];
 		if ( (day <= 0) || day > days_per_month[month] + (((1 == month) && IS_LEAP_YEAR(year)) ? 1 :0 ) ) {
 			logger_error(g_debug_log, "bad n_day for %s %d\n\n", sz_month_names[month], year);
-			//free(yos);
+			*p_yos = yos;
 			return 0;
 		}
 		--day;
@@ -1165,7 +1165,7 @@ static int meteo_from_arr(double *const values, const int rows_count, const int 
 			hour = (int)values[VALUE_AT(row, HOUR)];
 			if ( (hour < 0) || hour > 23 ) {
 				logger_error(g_debug_log, "bad hour for %s %d %d\n\n", sz_month_names[month], day+1, year);
-				//free(yos);
+				*p_yos = yos;
 				return 0;
 			}			
 		}
@@ -1175,7 +1175,7 @@ static int meteo_from_arr(double *const values, const int rows_count, const int 
 			halfhour = (int)values[VALUE_AT(row, HALFHOUR)];
 			if ( (halfhour < 0) || halfhour > 30 ) {
 				logger_error(g_debug_log, "bad halfhour for %s %d %d\n\n", sz_month_names[month], day+1, year);
-				//free(yos);
+				*p_yos = yos;
 				return 0;
 			}
 		}
@@ -1185,7 +1185,7 @@ static int meteo_from_arr(double *const values, const int rows_count, const int 
 			if ( ! yos_no_leak )
 			{
 				logger_error(g_debug_log, sz_err_out_of_memory);
-				//free(yos);
+				*p_yos = yos;
 				return 0;
 			}
 			yos = yos_no_leak;
@@ -1200,7 +1200,7 @@ static int meteo_from_arr(double *const values, const int rows_count, const int 
 				if ( ! yos[*yos_count-1].hourly )
 				{
 					logger_error(g_debug_log, sz_err_out_of_memory);
-					//free(yos);
+					*p_yos = yos;
 					return 0;
 				}
 			}
@@ -1210,7 +1210,7 @@ static int meteo_from_arr(double *const values, const int rows_count, const int 
 				if ( ! yos[*yos_count-1].halfhourly )
 				{
 					logger_error(g_debug_log, sz_err_out_of_memory);
-					//free(yos);
+					*p_yos = yos;
 					return 0;
 				}
 
@@ -1263,6 +1263,7 @@ static int meteo_from_arr(double *const values, const int rows_count, const int 
 				// aggregate to daily
 				if ( ! aggr_to_daily(yos[*yos_count-1].daily, values, rows_count, year, (HOURLY == g_settings->time), row_index) )
 				{
+					*p_yos = yos;
 					return 0;
 				}
 			}		
@@ -1276,7 +1277,7 @@ static int meteo_from_arr(double *const values, const int rows_count, const int 
 		if ( yos[*yos_count-1].daily[month].d[day].n_days > METEO_DAYS_COUNT)
 		{
 			logger_error(g_debug_log, "ERROR IN N_DAYS DATA!!\n");
-			//free(yos);
+			*p_yos = yos;
 			return 0;
 		}
 
@@ -2750,14 +2751,13 @@ static int import_txt(const char *const filename, meteo_annual_t** p_yos, int *c
 
 void meteo_annual_free(meteo_annual_t* p, const int count)
 {
-	if ( count )
+	if ( p )
 	{
 		int i;
-		for (i = 0; i < count; ++i )
+		for ( i = 0; i < count; ++i )
 		{
 			if ( p[i].halfhourly ) free(p[i].halfhourly);
 			if ( p[i].hourly ) free(p[i].hourly);			
-			if ( p[i].daily ) free(p[i].daily);
 		}
 		free(p);
 	}

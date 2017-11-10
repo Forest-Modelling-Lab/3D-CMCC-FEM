@@ -41,12 +41,17 @@ int Cell_model(matrix_t *const m, const int cell, const int day, const int month
 		/* check parameters */
 		assert(m);
 
-		logger (g_debug_log, "\n*********CELL_MODEL*********\n");
+		logger (g_debug_log, "\n*********CELL_MODEL_DAILY*********\n");
 
 		/* OVERALL CELL */
+		/* compute cell level ecosystem respiration */
+		ecosystem_respiration ( c );
 
-		/* compute cell level carbon fluxes */
-		//carbon_fluxes        ( c );
+		/* compute cell level net ecosystem productivity */
+		net_ecosystem_productivity ( c );
+
+		/* compute cell level net ecosystem exchange */
+		net_ecosystem_exchange ( c );
 
 		/* compute cell level evapotranspiration */
 		evapotranspiration   ( c );
@@ -62,8 +67,6 @@ int Cell_model(matrix_t *const m, const int cell, const int day, const int month
 
 		/* cell water use efficiency */
 		cell_water_use_efficiency (c, day, month, year);
-
-		/*******************************************************************************************************/
 
 		/* CHECK FOR BALANCE CLOSURE */
 
@@ -84,8 +87,6 @@ int Cell_model(matrix_t *const m, const int cell, const int day, const int month
 
 		/* CHECK FOR NITROGEN MASS BALANCE CLOSURE */
 		/* 6 */ //fixme if ( ! check_cell_nitrogen_mass_balance    ( c, meteo_annual ) ) return 0;
-
-		/*******************************************************************************************************/
 	}
 	else if ( HOURLY == g_settings->time )
 	{

@@ -16,11 +16,19 @@
 #include "logger.h"
 
 //extern settings_t* g_settings;
-//extern logger_t* g_debug_log;
+extern logger_t* g_debug_log;
 
-void heterotrophic_respiration(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, const meteo_daily_t *const meteo_daily)
+void heterotrophic_respiration(cell_t *const c)
 {
 
+	/* heterotrophic respiration computed as a differences soil_respiration - fine + coarse root respiration */
+	c->daily_het_resp = c->daily_soil_resp - (c->daily_froot_aut_resp + c->daily_croot_aut_resp);
+	logger (g_debug_log, "c->daily_het_resp = %g gC/m^2/day\n", c->daily_het_resp);
 
+	/* monthly */
+	c->monthly_het_resp += c->daily_het_resp;
+
+	/* annual */
+	c->annual_het_resp += c->daily_het_resp;
 
 }

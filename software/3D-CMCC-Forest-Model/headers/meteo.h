@@ -55,6 +55,7 @@ typedef struct {
 	double tday;                                /* (deg C) daylight  daily air temperature */
 	double tnight;                              /* (deg C) nightime average daily air temperature */
 	double daylength;                           /* (hours) day length */
+	double daylength_sec;						/* (seconds) day length */
 	double ni;                                  /* (ratio) fraction of day length */
 	double thermic_sum;                         /* (deg C) daily thermic sum */
 	double ndvi_lai;                            /* (m2/m2) daily LAI from data file */

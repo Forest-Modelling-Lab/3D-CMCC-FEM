@@ -341,7 +341,7 @@ int Tree_model(matrix_t *const m, const int cell, const int halfhour, const int 
 								water_use_efficiency  ( c, height, dbh, age, species, day, month, year );
 
 								/* update Leaf Area Index */
-								daily_lai             ( s );
+								daily_lai             ( c, s );
 
 								/* N assimilation */
 								nitrogen_assimilation ( s );
