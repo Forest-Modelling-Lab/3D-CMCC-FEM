@@ -259,6 +259,11 @@ void annual_minimum_reserve (species_t *const s)
 
 	/* compute total sapwood biomass */
 	/* note: since SAP_WRES is parameterized for DryMatter it must be converted into DryMatter */
+	/* Generally values range from:
+	 * FOR BRANCH: 5.8 (+-0.6 s.d.) % of total DM (evergreen) and 12.8 (+-0.6 s.d.) (deciduous)
+	 * FOR STEM:  1.8 (+-0.1 s.d.) % of total DM (evergreen) and 4.7 (+-0.1 s.d.) (deciduous)
+	 * see: Hoch G. et al., (2003), Plant Cell and Environment (26: 1067-1081) */
+
 	s->value[SAPWOOD_DM] = s->value[SAPWOOD_C] * GC_GDM;
 	logger(g_debug_log, "--WTOT_sap_tDM = %f tDM/class \n", s->value[SAPWOOD_DM]);
 

@@ -49,9 +49,9 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 	double stem_N;
 	double branch_N;
 	double light_inhib;                       /* (ratio) light inhibition in day-time leaf resp, see Dufrene et al., 2005 */
-	double live_stemC_frac;                   /* fraction of live stem into live stem carbon */
-	double live_branchC_frac;                 /* fraction of live branch into live branch carbon */
-	double live_crootC_frac;                  /* fraction of live croot into live coarse root carbon */
+	double live_stemC_frac;                   /* fraction of live stem into stem carbon */
+	double live_branchC_frac;                 /* fraction of live branch into branch carbon */
+	double live_crootC_frac;                  /* fraction of live croot into coarse root carbon */
 
 
 	//fixme to remove once imported into species.txt

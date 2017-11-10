@@ -122,7 +122,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(ProjectDir)headers&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
@@ -312,6 +312,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\het_respiration.c"
+				>
+			</File>
+			<File
 				RelativePath=".\src\initialization.c"
 				>
 			</File>
@@ -405,6 +409,10 @@
 			</File>
 			<File
 				RelativePath=".\src\photosynthesis.c"
+				>
+			</File>
+			<File
+				RelativePath=".\src\photosynthesis2.c"
 				>
 			</File>
 			<File

@@ -456,7 +456,6 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 		s->value[CANOPY_WATER]        = 0.;
 		s->value[CANOPY_TRANSP]       = 0.;
 		s->value[CANOPY_TRANSP_SHADE] = 0.;
-		s->value[CANOPY_TRANSP_SHADE] = 0.;
 		s->value[CANOPY_EVAPO]        = 0.;
 		s->value[CANOPY_EVAPO_TRANSP] = 0.;
 	}
