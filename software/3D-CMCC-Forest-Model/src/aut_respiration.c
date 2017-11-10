@@ -122,6 +122,8 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 
 		/* Nitrogen content tN/cell --> gN/m2 */
 #if 1
+		//test OLD method:
+
 		leaf_N          = (s->value[LEAF_N]            * 1e6 / g_settings->sizeCell);
 		leaf_sun_N      = (s->value[LEAF_SUN_N]        * 1e6 / g_settings->sizeCell);
 		leaf_shade_N    = (s->value[LEAF_SHADE_N]      * 1e6 / g_settings->sizeCell);
@@ -131,29 +133,59 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 		branch_N        = (s->value[BRANCH_LIVEWOOD_N] * 1e6 / g_settings->sizeCell);
 
 #else
-		//fixme to move into species.txt in case used
-		live_stemC_frac   = 0.21; /* for Fagus sylvatica from Dufrene et al., 2005 */
-		live_branchC_frac = 0.37; /* for Fagus sylvatica from Dufrene et al., 2005 */
-		live_crootC_frac  = 0.21; /* for Fagus sylvatica from Dufrene et al., 2005 */
+		//test NEW method:
+		//note: differently from the old one it can (activating or NOT each single comment):
+		//1 use different values for parameters
+		//2 use for each live respiring C-N pools a specific-pool CN ratio
+		//3 recompute live respiring pools and the related N amount
 
-		//test from; E. Dufrene et al., Ecological Modelling 185 (2005) 407–436
-		//if accepted then move computation of live fractions into the correct source file
+		/* from; E. Dufrene et al., Ecological Modelling 185 (2005) 407–436 */
+		//todo: if accepted then move computation of live fractions into the correct source file
 		//test: better if used with lower LIVE_WOOD_TURNOVER (e.g. 0.85)
-#if 0
-		//CANIF PARAMETERIZATION FOR FAGUS
+#if 1
+		//test: for Fagus sylvatica (from CANIF)
 		leaf_CN    = 24.19;
 		froot_CN   = 37.33;
 		stem_CN    = 446.2;
 		croot_CN   = 294.8;
 		branch_CN  = 136.6;
 #else
-		//CASTANEA PARAMETERIZATION FOR FAGUS
+		//test: for Fagus sylvatica (from CASTANEA model)
 		leaf_CN    = 20.66;
 		froot_CN   = 50.50;
 		stem_CN    = 416.6;
 		croot_CN   = 416.6;
 		branch_CN  = 90.90;
 #endif
+
+		//test: for Pinus sylvestris (to move once decided into species.txt)
+		/*
+		leaf_CN    = 36;
+		froot_CN   = 49;
+		stem_CN    = 682.00; //from 448 to 765 Hellstaen et a., 2013
+		croot_CN   = 586.66; //from 445 to 761 Hellstaen et a., 2013
+		branch_CN  = 454.54; //from Hyyvonen et al, 2000
+		*/
+
+		//test: for Picea abies (to move once decided into species.txt)
+		/*
+		leaf_CN    = 58.8;
+		froot_CN   = 58.0;
+		stem_CN    = 572.33; //from 448 to 765 Hellstaen et a., 2013
+		croot_CN   = 400.66; //from 445 to 761 Hellstaen et a., 2013
+		branch_CN  = 526.30; //from Hyyvonen et al, 2000
+		*/
+
+#if 0
+
+		//test using new parameters (divided into stem, croot and branch) with new LIVE pools (computed using CASTANEA param on TOTAL pools)
+
+		//fixme to move into species.txt in case used
+		live_stemC_frac   = 0.21; /* for Fagus sylvatica from Dufrene et al., 2005 */
+		live_branchC_frac = 0.37; /* for Fagus sylvatica from Dufrene et al., 2005 */
+		live_crootC_frac  = 0.21; /* for Fagus sylvatica from Dufrene et al., 2005 */
+
+		/*compute nitrogen fraction */
 		leaf_N          = ((s->value[LEAF_C]                       / leaf_CN)   * 1e6 / g_settings->sizeCell);
 		leaf_sun_N      = ((s->value[LEAF_SUN_C]                   / leaf_CN)   * 1e6 / g_settings->sizeCell);
 		leaf_shade_N    = ((s->value[LEAF_SHADE_C]                 / leaf_CN)   * 1e6 / g_settings->sizeCell);
@@ -161,7 +193,26 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 		stem_N          = ((s->value[STEM_C]   * live_stemC_frac   / stem_CN)   * 1e6 / g_settings->sizeCell);
 		croot_N         = ((s->value[CROOT_C]  * live_crootC_frac  / croot_CN)  * 1e6 / g_settings->sizeCell);
 		branch_N        = ((s->value[BRANCH_C] * live_branchC_frac / branch_CN) * 1e6 / g_settings->sizeCell);
+
+#else
+
+		//test using new parameters (divided into stem, croot and branch) but with old LIVE pools
+
+		/*compute nitrogen fraction */
+		leaf_N          = (s->value[LEAF_C]            / leaf_CN)   * 1e6 / g_settings->sizeCell;
+		leaf_sun_N      = (s->value[LEAF_SUN_C]        / leaf_CN)   * 1e6 / g_settings->sizeCell;
+		leaf_shade_N    = (s->value[LEAF_SHADE_C]      / leaf_CN)   * 1e6 / g_settings->sizeCell;
+		froot_N         = (s->value[FROOT_C]           / froot_CN)  * 1e6 / g_settings->sizeCell;
+		stem_N          = (s->value[STEM_LIVEWOOD_C]   / stem_CN)   * 1e6 / g_settings->sizeCell;
+		croot_N         = (s->value[CROOT_LIVEWOOD_C]  / croot_CN)  * 1e6 / g_settings->sizeCell;
+		branch_N        = (s->value[BRANCH_LIVEWOOD_C] / branch_CN) * 1e6 / g_settings->sizeCell;
+
 #endif
+#endif
+
+
+#if 1
+		//test NEW considering day-time light inhibition for leaf respiration
 
 		//new 05/11/2017
 		/* assign day-time light inhibition for leaf resp */
@@ -169,7 +220,7 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 		 * The degree of inhibition ranges between 17 and 66% depending on species
 		 * (Sharp et al., 1984; Brooks and Farquhar, 1985; Kirschbaum and Farquhar,1987).
 		Villar et al. (1995) give a mean rate of 51% for evergreen tree species and 62% for deciduous tree species.*/
-#if 1
+
 		if ( s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2 )
 		{
 			light_inhib = 0.62; /* for deciduous */
@@ -179,6 +230,8 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 			light_inhib = 0.51; /* for evergreen */
 		}
 #else
+		//test OLD
+
 		light_inhib = 1.;
 #endif
 

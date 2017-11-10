@@ -398,6 +398,9 @@ void Daylight_avg_temperature(meteo_t *const met, const int day, const int month
 	if ( met[month].d[day].tmax != NO_DATA && met[month].d[day].tmin != NO_DATA )
 	{
 		met[month].d[day].tday = 0.45 * ( met[month].d[day].tmax - met[month].d[day].tavg ) + met[month].d[day].tavg;
+
+		/* but see also Running et al., (1987) as in CenW Kirschbaum model */
+		//met[month].d[day].tday = ( 0.606 * met[month].d[day].tmax ) + ( 0.394 * met[month].d[day].tmin );
 	}
 	else
 	{

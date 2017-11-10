@@ -39,8 +39,8 @@ void soil_respiration_reichstein ( cell_t *const c, const meteo_daily_t *const m
 
 	a     = 52.4;    /* see Reichstein et al., (2003) */
 	b     = 285;     /* see Reichstein et al., (2003) */
-	T0    = -46;     /* see Reichstein et al., (2003) */
-	Tref  = 18;      /* see Reichstein et al., (2003) */
+	T0    = -46;     /* see Reichstein et al., (2003), Lloyd and Taylor (1994)  */
+	Tref  = 20;      /* test 18 °C see Reichstein et al., (2003) */
 	a_lai = 0.6;     /* see Reichstein et al., (2003) */
 	b_lai = 1.29;    /* see Reichstein et al., (2003) */
 	Rswc  = 0.16;    /* see Reichstein et al., (2003) */
