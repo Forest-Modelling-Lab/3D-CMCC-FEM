@@ -588,6 +588,7 @@ void reset_annual_class_variables(cell_t *const c)
 					s->value[MAX_LAI_EXP] =                 0.;
 					s->value[MAX_LEAF_C] =                  0.;
 					s->value[MAX_FROOT_C] =                 0.;
+					s->value[MAX_FRUIT_C] =                 0.;
 					s->value[MAX_LAI_LEAFFALL_PROJ] =       0.;
 					s->value[CANOPY_COVER_EXP] =            0.;
 					s->value[CROWN_AREA] =                  0.;

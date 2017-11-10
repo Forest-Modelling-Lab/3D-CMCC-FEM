@@ -4,12 +4,12 @@ PHENOLOGY                0.1  //PHENOLOGY 0.1 = deciduous broadleaf, 0.2 = decid
 ALPHA                  0.057  //Canopy quantum efficiency (molC/molPAR) (0.057) Peltionemi et al., 2012, (0.05) from Williams 199, (0.056) Rotzer et al., 2010
 EPSILONgCMJ             0.69  //Light Use Efficiency  (gC/MJ)(used if ALPHA is not available) Peltionemi et al., 2012,
 GAMMA_LIGHT           0.0025  // Empirical parameter for Light modifiers 
-K                0.65 //0.60  //Extinction coefficient for absorption of PAR by canopy 0.71 for F. sylvatica Vitale et al., 2012, 0.5 from Williams 1996, 0.65 Hoffmann 1995, 0.45 Forrester et al., 2014
-ALBEDO           0.13 //0.15  //Albedo, 0.15 (varying from 0.13-0.17) from OTTO et al., BGS 2014
+K                       0.65  //Extinction coefficient for absorption of PAR by canopy 0.71 for F. sylvatica Vitale et al., 2012, 0.5 from Williams 1996, 0.65 Hoffmann 1995, 0.45 Forrester et al., 2014
+ALBEDO                  0.13  //Albedo, 0.15 (varying from 0.13-0.17) from OTTO et al., BGS 2014
 INT_COEFF                0.3  //precip interception coefficient for F. sylvatica fom Tatarinov
-SLA_AVG0             80 //60  //Average Specific Leaf Area m^2/KgC (juvenile) sunlit/shaded leaves for Fagus s.60  Adriaenssens et al., 2011; 27.8 to 48 from Pietsch 2005, 35 for Tatarinov et al., 2006
-SLA_AVG1                  30  //Average Specific Leaf Area m^2/KgC (mature) sunlit/shaded leaves for Fagus s. Holscher et al., 2004; 27.8 to 48 from Pietsch 2005, 35 for Tatarinov et al., 2006
-TSLA                     150  //Age at which SLA_AVG = (SLA_AVG1 + SLA_AVG0 )/2 for Fagus s. Forrester et al., 2017
+SLA_AVG0                  40  //Average Specific Leaf Area m^2/Kg (juvenile) sunlit/shaded leaves for Fagus s.60  Adriaenssens et al., 2011; 27.8 to 48 from Pietsch 2005, 35 for Tatarinov et al., 2006
+SLA_AVG1                  20  //Average Specific Leaf Area m^2/Kg (mature) sunlit/shaded leaves for Fagus s. Holscher et al., 2004; 27.8 to 48 from Pietsch 2005, 35 for Tatarinov et al., 2006
+TSLA                      35  //Age at which SLA_AVG = (SLA_AVG1 + SLA_AVG0 )/2 for 35 Fagus s. Forrester et al., 2017
 SLA_RATIO                  2  //(DIM) ratio of shaded to sunlit projected SLA  for F. sylvatyica from Mollicone et al., 2002 , 2.0 from Pietsch 2005
 LAI_RATIO                  2  //(DIM) all-sided to projected leaf area ratio for F. sylvatyica from Mollicone et al., 2002 , 2.0 from Pietsch 2005
 FRACBB0                 0.20  //Branch and Bark fraction at age 0
@@ -19,7 +19,7 @@ RHO0                    0.64  //Minimum Basic Density for young Trees tDM/m^3 0.
 RHO1                    0.64  //Maximum Basic Density for young Trees tDM/m^3 0.79 Bouriaud et al., 2004, 0.64 ettore, 0.68 Seidl et al., 2012, 0.58 Bartelink 1997
 TRHO                     100  //Age at which rho = (RHOMIN + RHOMAX )/2
 FORM_FACTOR            0.433  //Form factor Seidl et al., 2012
-COEFFCOND        0.08 //0.06  //Define stomatal responsee to VPD in mbar see Pietsch et al., 2005
+COEFFCOND               0.08  //Define stomatal responsee to VPD in mbar see Pietsch et al., 2005
 BLCOND                  0.01  //Canopy Boundary Layer conductance see 0.01 for stomatal Pietsch et al., 2005
 MAXCOND                0.005  //Maximum Stomatal Conductance in m/sec 0,005 for Tatarinov et al., 2006, 0.006 Pietsch, 0.003 Breuer et al., 2003
 CUTCOND                6e-05  //Cuticul conductance in m/sec for F sylvatica 0.000006 Tatarinov et al., 2006
@@ -34,15 +34,15 @@ MINDAYLENGTH              12  //minimum day length for fagus from ettore, 12 thr
 SWPOPEN                -0.34  //Leaf water potential: start of reduction for Fagus sylvatica -0.6 Mollicone et al., 2002, -0.34 Tatarinov et al., 2006
 SWPCLOSE                -2.2  //Leaf water potential: complete reduction for Fagus sylvatica -2.3 Mollicone et al., 2002, -2.2 Tatarinov et al., 2006
 OMEGA_CTEM               0.8  //ALLOCATION PARAMETER control the sensitivity of allocation to changes in water and light availability
-S0CTEM         0.35 //  0.40 //0.45  //PARAMETER CONTROLLING ALLOCATION TO STEM/MINIMUM RATIO TO C TO STEM
-R0CTEM         0.35 //  0.30 //0.25  //PARAMETER CONTROLLING ALLOCATION TO ROOT/MINIMUM RATIO TO C TO ROOTS
+S0CTEM                  0.35  //PARAMETER CONTROLLING ALLOCATION TO STEM/MINIMUM RATIO TO C TO STEM
+R0CTEM                  0.35  //PARAMETER CONTROLLING ALLOCATION TO ROOT/MINIMUM RATIO TO C TO ROOTS
 F0CTEM                  0.30  //PARAMETER CONTROLLING ALLOCATION TO FOLIAGE
 FRUIT_PERC             0.025  //fraction of annual NPP allocated for reproduction see 0.05 Fernandez-Martinez et al., 2016
 CONES_LIFE_SPAN            0  //Life span for cones (yr)
 FINE_ROOT_LEAF         0.545  //allocation new fine root C:new leaf (ratio) 1.4 see Mollicone et al 2002, 0.545 see Pietsch et al 2005, 1.1 Tatarinov
 STEM_LEAF                3.8  //allocation new stem C:new leaf (ratio) 3.8 pietsch - 1 see Mollicone et al 2002, 2.71 Tatarinov
-COARSE_ROOT_STEM       0.115  //allocation new coarse root C:new stem (ratio) 0.36 see Mollicone et al 2002 0.15 Tatarinov
-LIVE_TOTAL_WOOD  0.13 //0.15  //new live C:new total wood (ratio) 0.15 for deciduous P. Thornton pers. comm. (about 13%), 0.154 from Pietsch et al., 2015 20% Proportion of living cells in trunks for F. sylvatica from Dufrene et al., 2005, 20.6% Ceschia etal 2002
+COARSE_ROOT_STEM       0.36 // ISIMIP 0.115  //allocation new coarse root C:new stem (ratio) 0.36 see Mollicone et al 2002 0.15 Tatarinov
+LIVE_TOTAL_WOOD         0.13  //new live C:new total wood (ratio) 0.15 for deciduous P. Thornton pers. comm. (about 13%), 0.154 from Pietsch et al., 2015 20% Proportion of living cells in trunks for F. sylvatica from Dufrene et al., 2005, 20.6% Ceschia etal 2002
 CN_LEAVES                 27  //CN of leaves (kgC/kgN) 27 for Tatarinov et al., 2006 20.3 for F. sylvatica from Mollicone et al., 2002, 19.52 ettore, 18.6 Campioli, 19.67 Guidolotti
 CN_FALLING_LEAVES         44  //CN of leaf litter (kgC/kgN) 38 for F. sylvatica from Mollicone et al., 2002, 
 CN_FINE_ROOTS             72  //CN of fine roots (kgC/kgN) 72 for Tatarinov et al., 2006 112 for F. sylvatica from Mollicone et al., 2002, 38.28 ettore, 9., 45 Campioli
@@ -62,9 +62,9 @@ LEAF_FINEROOT_TURNOVER     1  //Average yearly fine root turnover rate Rasse et 
 LIVE_WOOD_TURNOVER       0.7  //Annual yearly live wood turnover rate 
 DBHDCMAX                0.50  //Low Density Condes & Sterba 2005
 DBHDCMIN                0.14  //High Density from ettore
-SAP_A          0.778 //0.674  //a value 0.674 from Kostner, 0.778 Gebauer et al., 2008, for Fagus sylvatica
-SAP_B          1.917 //1.992  //b value 1.992 from Kostner, 1.917 Gebauer et al., 2008,for Fagus sylvatica
-SAP_LEAF         4040 //5400  //leaf area/sapwood max ratio in pipe model 5400 McDowell et al 2002, 1850 from Williams 1996, 3310. 3410 Bartelink 1997, 1998 , 2100 from Kostner, 3310 from ettore
+SAP_A                   0.778 //a value 0.674 from Kostner, 0.778 Gebauer et al., 2008, for Fagus sylvatica
+SAP_B                   1.917 //b value 1.992 from Kostner, 1.917 Gebauer et al., 2008,for Fagus sylvatica
+SAP_LEAF                 4040 //leaf area/sapwood max ratio in pipe model 5400 McDowell et al 2002, 1850 from Williams 1996, 3310. 3410 Bartelink 1997, 1998 , 2100 from Kostner, 3310 from ettore
 SAP_WRES                0.11  //Sapwood-Reserve biomass ratio gTNC/100gDM 0.043 in January for fagus see Barbaroux 2002 0.11 for deciduous 0.05 for evergreen see Schwalm and Ek, 2004 Ecological Modelling
 STEMCONST_P           0.2837  //a parameter for F. sylvatica for allometric equation from ettore, 0.70 Seidl et al., 2012
 STEMPOWER_P            2.134  //b parameter for F. sylvatica for allometric equation from ettore, 3.00 Seidl et al., 2012

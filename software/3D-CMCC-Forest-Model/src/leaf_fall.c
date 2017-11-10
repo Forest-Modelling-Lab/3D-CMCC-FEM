@@ -53,8 +53,8 @@ void leaffall_deciduous ( cell_t *const c, const int height, const int dbh, cons
 		CHECK_CONDITION(previousLai, <, currentLai);
 
 		/* determine Leaf Area Index from leaf carbon */
-		previousLeafC = previousLai * (s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell) / (s->value[SLA_AVG] * 1e3);
-		currentLeafC  = currentLai  * (s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell) / (s->value[SLA_AVG] * 1e3);
+		previousLeafC = ( previousLai * (s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell) / (s->value[SLA_AVG] * 1e3) / GC_GDM );
+		currentLeafC  = ( currentLai  * (s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell) / (s->value[SLA_AVG] * 1e3) / GC_GDM );
 
 		previousLeafN = previousLeafC / s->value[CN_LEAVES];
 		currentLeafN  = currentLeafC  / s->value[CN_LEAVES];
@@ -110,6 +110,7 @@ void leaffall_deciduous ( cell_t *const c, const int height, const int dbh, cons
 		s->value[N_TO_LITR]          = (s->value[LEAF_N] + s->value[FROOT_N]);
 		s->value[N_TO_CWD]           = s->value[FRUIT_N];
 	}
+
 }
 
 void leaffall_evergreen ( cell_t *const c, const int height, const int dbh, const int age, const int species, const int year )
@@ -148,6 +149,7 @@ void leaffall_evergreen ( cell_t *const c, const int height, const int dbh, cons
 
 	/* reconcile leaf and fine root */
 	leaffall ( s );
+
 }
 
 void leaffall (species_t *const s)

@@ -158,7 +158,7 @@ fi
 #go to executable directory
 cd $folder_run
 
-#copy to previous directory executable
+#copy to previous directory executable if not exists
 cp $executable ../
 
 #copy netcdf dll (only for windows build)

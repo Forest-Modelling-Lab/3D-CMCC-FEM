@@ -7,8 +7,8 @@ GAMMA_LIGHT             0.02   // Empirical parameter for Light modifiers see Pe
 K                   0.54    //0.67    //Extinction coefficient for absorption of PAR by canopy for Picea abies Pietsch et al., 2005 ,0.54 from Pietsch et al., 2005,  0.54 from Mollicone, 0.4241 Forrester et al., 2014
 ALBEDO                  0.06    //averaged for P.abies, 0.06 Jarvis et al., 1976, 0.095 from Breuer et al., 2003
 INT_COEFF               0.25    //precip interception coefficient for Picea abies (0.3 see Tatarinov) (0.25 see Lawrence et al., 2007)
-SLA_AVG1                12      //Average Specific Leaf Area m^2/KgC (juvenile) sunlit/shaded leaves for Picea abies Konopka et al., 2014, (5.9) see Johansson, T. 1999
-SLA_AVG0            5.9 //    7.52    //Average Specific Leaf Area m^2/KgC (MATURE) sunlit/shaded leaves for Picea abies 7.52 Mund et al., 2002, (5.9) see Johansson, T. 1999
+SLA_AVG0        12  //ISIMIP  5.9 //Average Specific Leaf Area m^2/Kg (MATURE) sunlit/shaded leaves for Picea abies 7.52 Mund et al., 2002, (5.9) see Johansson, T. 1999
+SLA_AVG1        5.9 //ISIMIP  12  //Average Specific Leaf Area m^2/Kg (juvenile) sunlit/shaded leaves for Picea abies Konopka et al., 2014, (5.9) see Johansson, T. 1999
 TSLA                    30      //Age at which SLA_AVG = (SLA_AVG1 + SLA_AVG0 )/2 Forrester et al., 2017
 SLA_RATIO               2       //(DIM) ratio of shaded to sunlit projected SLA for Picea abies (see Pietsch)
 LAI_RATIO               2.6     /(DIM) all-sided to projected leaf area ratio from Mollicone et al., 2002
@@ -27,7 +27,7 @@ MAXAGE                  300     //Determines rate of "physiological decline" of 
 RAGE                    0.95    //Relative Age to give fAGE = 0.5 0.95 for Picea abies Seidl et al., 2012
 NAGE                    4       //Power of relative Age in function for Age for Picea abies Seidl et al., 2012
 GROWTHTMIN              -4      //Minimum temperature for growth 0 for Picea abies from p.c. Seidl, -4 from Bossel 1996
-GROWTHTMAX              35 //30      //Maximum temperature for growth 35 for Picea abies from p.c. Seidl 
+GROWTHTMAX              35 //30      //Maximum temperature for growth 35 for Picea abies from p.c. Seidl, 40 CANIF
 GROWTHTOPT              18      //Optimum temperature for growth 17.5 for Picea abies from p.c. Seidl, 18 from Bossel 1996
 GROWTHSTART             200     //average temperature for starting growth in °C 
 MINDAYLENGTH            0       //minimum day length for deciduous
@@ -37,7 +37,7 @@ OMEGA_CTEM              0.5     //ALLOCATION PARAMETER control the sensitivity o
 S0CTEM                  0.35    //PARAMETER CONTROLLING ALLOCATION TO STEM/MINIMUM RATIO TO C TO STEM 
 R0CTEM                  0.35    //PARAMETER CONTROLLING ALLOCATION TO ROOT/MINIMUM RATIO TO C TO ROOTS
 F0CTEM                  0.30    //PARAMETER CONTROLLING ALLOCATION TO FOLIAGE/MINIMUM RATIO TO C TO STEM
-FRUIT_PERC              0.20    //fraction of NPP allocated for reproduction (0 for broadleaf) for P. sylvestris 0.15 from Xiao et al., 2003, 0.2 from Yuste et al., 2005, 
+FRUIT_PERC              0.10    //fraction of NPP allocated for reproduction (0 for broadleaf) for P. sylvestris 0.15 from Xiao et al., 2003, 0.2 from Yuste et al., 2005, 
 CONES_LIFE_SPAN         3       //Life span for cones (yrs)
 FINE_ROOT_LEAF          0.622   //allocation new fine root C:new leaf (ratio) for Picea abies from 1.4 Mollicone et al. 2002 for Picea abies (see Pietsch)
 STEM_LEAF               3.03    //allocation new stem C:new leaf (ratio) for Picea abies from Mollicone et al. 2002, varying from 1.43 to 3.42 see White et al., 1999, for Picea abies (see Pietsch)
@@ -81,7 +81,7 @@ CROWN_B                 0.5503  //1       //Crown exponential with tree height f
 MAXSEED                -9999    //TO BE CHECKED           //numero massimo semi prodotti dalla pianta
 MASTSEED                5       //ricorrenza anni di pasciona (da TREEMIG) FOR Quercus sp (Bernetti)
 WEIGHTSEED              7       //peso frutto in g 
-SEXAGE                  30      //Age at Sexual Maturity FOR Quercus sp (per Bernetti 75)
+SEXAGE                  30      //Age at Sexual Maturity 
 GERMCAPACITY            0.70    //Geminability (Lischke H. & Loffler T. J.)
 ROTATION                120     //Forest Rotation for harvesting for P. abies ISIMIP protocol
 THINNING                15      //Thinning regime for P. abies ISIMIP protocol

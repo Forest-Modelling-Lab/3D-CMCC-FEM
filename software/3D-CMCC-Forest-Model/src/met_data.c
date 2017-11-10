@@ -246,7 +246,7 @@ void Radiation (cell_t *const c, const int day, const int month, const int year)
 	met[month].d[day].par                    = met[month].d[day].incoming_par;
 	//logger(g_debug_log, "Par = %g molPAR/m^2 day\n", met[month].d[day].par);
 
-	/* convert incoming Short-Wave flux in PPFD from W/m2 to umol/m2/sec (Biome-BGC method) */
+	/* convert incoming Short-Wave flux in PPFD from W/m2 to umol/m2/sec */
 	met[month].d[day].incoming_ppfd          = met[month].d[day].sw_downward_W * RAD2PAR * EPAR;
 	met[month].d[day].ppfd                   = met[month].d[day].incoming_ppfd;
 	//logger(g_debug_log, "PPFD = %g umolPPFD/m2/sec\n", met[month].d[day].ppfd);
@@ -357,7 +357,12 @@ void Day_Length(cell_t *c, const int day, const int month, const int year)
 	//logger(g_debug_log, "with altitude = %f\n", met[month].d[day].daylength);
 
 	ampl = (exp (7.42 + (0.045 * g_soil_settings->values[SOIL_LAT]))) / 3600.;
-	met[month].d[day].daylength = ampl * (sin ((doy - 79.) * 0.01721)) + 12.;
+
+	/* compute daylength in hours */
+	met[month].d[day].daylength     = ampl * (sin ((doy - 79.) * 0.01721)) + 12.;
+
+	/* compute daylength in seconds */
+	met[month].d[day].daylength_sec = met[month].d[day].daylength * 3600.;
 
 
 	/* compute fraction of daytime */
@@ -511,19 +516,28 @@ void Soil_temperature(const cell_t *const c, int day, int month, int year)
 	double weighted_avg;
 	extern int days_per_month[];
 
-	/* following BIOME-bgc 4.2 */
-	/* for this version, an 10-day running weighted average of daily
+
+	meteo_t *met;
+	met = (meteo_t*) c->years[year].m;
+
+	/* compute Tsoil only if Tsoil from met data is not available */
+
+	if ( -9999 == met[month].d[day].ts_f )
+	{
+
+		/* following BIOME-bgc 4.2 */
+		/* for this version, an 10-day running weighted average of daily
 	average temperature is used as the soil temperature at 10 cm.
 	For days 1-10, a 1-10 day running weighted average is used instead.
 	The tail of the running average is weighted linearly from 1 to 11.
 	There are no corrections for snowpack or vegetation cover.
-	 */
+		 */
 
-	//TODO CHECK SOIL TEMPÈRATURE CORRECTION FROM BIOME
-	/* soil temperature correction using difference from annual average tair */
-	/*file bgc.c*/
-	/* original biome_bgc version */
-	/* *
+		//TODO CHECK SOIL TEMPERATURE CORRECTION FROM BIOME
+		/* soil temperature correction using difference from annual average tair */
+		/*file bgc.c*/
+		/* original biome_bgc version */
+		/* *
 		tdiff = tair_avg - metv.tsoil;
 		if (ws.snoww)
 		{
@@ -533,36 +547,44 @@ void Soil_temperature(const cell_t *const c, int day, int month, int year)
 		{
 			metv.tsoil += 0.2 * tdiff;
 		}
-	 */
+		 */
 
-	assert(c);
-	i = 0;
-	weighted_avg = 0.;
-	do
-	{
-		i += day_avg;
-		weighted_avg += ( c->years[year].m[month].d[day].tavg * day_avg );
 
-		if ( --day < 0 )
+		assert(c);
+
+		i = 0;
+		weighted_avg = 0.;
+		do
 		{
-			if ( --month < 0 )
+			i += day_avg;
+			weighted_avg += ( c->years[year].m[month].d[day].tavg * day_avg );
+
+			if ( --day < 0 )
 			{
-				if ( --year < 0 )
+				if ( --month < 0 )
 				{
-					break;
+					if ( --year < 0 )
+					{
+						break;
+					}
+					month = 11; // zero based index
 				}
-				month = 11; // zero based index
+				day = days_per_month[month];
+				if ( IS_LEAP_YEAR(c->years[year].year) && (1 == month) )
+				{
+					++day;
+				}
+				--day; // zero based index
 			}
-			day = days_per_month[month];
-			if ( IS_LEAP_YEAR(c->years[year].year) && (1 == month) )
-			{
-				++day;
-			}
-			--day; // zero based index
-		}
-		--day_avg;
-	} while ( day_avg > 0 );
-	c->years[current_year_index].m[current_month].d[current_day].tsoil = weighted_avg / i;
+			--day_avg;
+		} while ( day_avg > 0 );
+		c->years[current_year_index].m[current_month].d[current_day].tsoil = weighted_avg / i;
+	}
+	else
+	{
+		c->years[current_year_index].m[current_month].d[current_day].tsoil = met[month].d[day].ts_f;
+	}
+
 }
 
 void Weighted_average_temperature(const cell_t *const c, const e_weighted_average_var var, int day, int month, int year)

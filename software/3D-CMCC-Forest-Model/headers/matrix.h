@@ -29,8 +29,8 @@ enum {
 	K,                                   /* Extinction coefficient for absorption of PAR by canopy */
 	ALBEDO,                              /* Canopy albedo */
 	INT_COEFF,                           /* Precipitation interception coefficient */
-	SLA_AVG0,                            /* AVERAGE Specific Leaf Area m2/KgC for sunlit/shaded leaves (juvenile) */
-	SLA_AVG1,                            /* AVERAGE Specific Leaf Area m2/KgC for sunlit/shaded leaves (mature) */
+	SLA_AVG0,                            /* AVERAGE Specific Leaf Area m2/Kg for sunlit/shaded leaves (juvenile) */
+	SLA_AVG1,                            /* AVERAGE Specific Leaf Area m2/Kg for sunlit/shaded leaves (mature) */
 	TSLA,                                /* Age at which SLA_AVG = (SLA_AVG1 + SLA_AVG0 )/2 */
 	SLA_RATIO,                           /* (DIM) ratio of shaded to sunlit projected SLA */
 	LAI_RATIO,                           /* (DIM) all-sided to projected leaf area ratio */
@@ -310,7 +310,7 @@ enum {
 	gsWUE_SHADE,                        /* daily intrinsic Water Use Efficiency (stomatal) for shade leaves */
 
 	/* LAI */
-	SLA_AVG,                            /* (kgC/m2) Age-related Average Specific Leaf Area */
+	SLA_AVG,                            /* (kg/m2) Age-related Average Specific Leaf Area */
 	LAI_PROJ,                           /* (m2/m2) LAI for Projected Area covered (at zenith angle) */
 	LAI_SUN_PROJ,                       /* (m2/m2) LAI for sun leaves for Projected Area covered (at zenith angle) */
 	LAI_SHADE_PROJ,                     /* (m2/m2) LAI for shaded leaves for Projected Area covered (at zenith angle) */
@@ -423,16 +423,17 @@ enum {
 	LEAF_C,                             /* (tC/cell) Current Leaf carbon pool */
 	LEAF_SUN_C,                         /* (tC/cell) Current Leaf sun carbon pool */
 	LEAF_SHADE_C,                       /* (tC/cell) Current Leaf shade carbon pool */
-	MAX_LEAF_C,                         /* (tC/cell) Maximum Current Leaf carbon pool */
+	MAX_LEAF_C,                         /* (tC/cell/year) Maximum Leaf carbon pool */
 	CROOT_C,                            /* (tC/cell) Current Coarse root carbon pool */
 	FROOT_C,                            /* (tC/cell) Current Fine root carbon pool */
-	MAX_FROOT_C,                        /* (tC/cell) Maximum Current Fine root carbon pool */
+	MAX_FROOT_C,                        /* (tC/cell/year) Maximum Fine root carbon pool */
 	MAX_BUD_BURST_C,                    /* (tC/cell) Maximum Current Leaf carbon pool for BudBurst */
 	STEM_C,                             /* (tC/cell) Current Stem carbon pool */
 	BRANCH_C,                           /* (tC/cell) Current Branch carbon pool */
 	MIN_RESERVE_C,                      /* (tC/cell) Current Minimum reserve carbon pool */
 	RESERVE_C,                          /* (tC/cell) Current Reserve carbon pool */
 	FRUIT_C,                            /* (tC/cell) Current Fruit carbon pool */
+	MAX_FRUIT_C,                        /* (tC/cell/year) Annual Fruit carbon pool */
 	LITR_C,                             /* (tC/cell) Current Litter carbon pool */
 	SOIL_C,                             /* (tC/cell) Current Soil carbon pool */
 	CWD_C,                              /* (tC/cell) Current Coarse Woody Debris carbon pool */
@@ -536,8 +537,8 @@ enum {
 
 	/* Maintenance respiration */
 	DAILY_LEAF_MAINT_RESP,              /* (gC/m2/day) Daytime leaf maintenance respiration */
-	DAILY_LEAF_SUN_MAINT_RESP,          /* (umolC sec) Daytime leaf maintenance respiration */
-	DAILY_LEAF_SHADE_MAINT_RESP,        /* (umolC sec) Daytime leaf maintenance respiration */
+	DAILY_LEAF_SUN_MAINT_RESP,          /* (gC/m2/day) Daytime leaf maintenance respiration */
+	DAILY_LEAF_SHADE_MAINT_RESP,        /* (gC/m2/day) Daytime leaf maintenance respiration */
 	NIGHTLY_LEAF_MAINT_RESP,            /* (gC/m2/day) Night time leaf maintenance respiration */
 	TOT_DAY_LEAF_MAINT_RESP,            /* (gC/m2/day) Leaf maintenance respiration */
 	FROOT_MAINT_RESP,                   /* (gC/m2/day) Fine root maintenance respiration */
@@ -944,6 +945,10 @@ typedef struct
 	double yearly_C_to_wood;                                              /* (tC/cell/year) Annual Carbon stocked into wood pool */
 	double cum_yearly_C_to_wood;                                          /* (tC/cell) Cumulated Annual Carbon stocked into wood pool */
 	double cum_npp;                                                       /* (tC/cell) Cumulated Annual npp */
+
+
+	double lai;                                                           //fixme
+	double max_lai_proj;                                                  //fixme
 
 	/* radiation variables */
 	/* short wave radiation */

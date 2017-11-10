@@ -1,0 +1,88 @@
+list_file <- function (dir_in,des_time) {
+  # INPUT
+  #   dir_in: directory principale dei risultati
+  #   des_time: desinenza temporale (annual o daily o monthly)
+  # 
+  # creo un data.frame in cui riporto tutti i file elaborati dal modello
+  # nel data.frame avr?:
+  #   una colonna con esperimento(exp)
+  #   
+  # rm(list = ls())
+  setwd('/home/corrado/Desktop/ISIMIP_reco/')
+  source('read3DCMCC_output.R')
+  
+  dir_in = '/home/corrado/Desktop/ISIMIP_reco/ISIMIP_OUTPUT_26_ott_2017/'
+  
+  lf = list.files(path = dir_in, pattern = des_time,recursive = 'T')
+  
+  exp = c()
+  site = c()
+  esm = c()
+  rcp = c()
+  co2 = c()
+  man = c()
+  path_tot = c()
+  file_name = c()
+  
+  for ( cyf in lf ) {
+    
+    tmp = unlist(strsplit(cyf,'/'))
+    
+    exp = c(exp,tmp[1])
+    site = c(site,tmp[2])
+    path_tot = c(path_tot, paste0(dir_in,cyf) )
+    
+    nome_file = tmp[length(tmp)]
+    
+    file_name = c(file_name,nome_file)
+    
+    nome_file = unlist(strsplit(nome_file,'_'))
+    
+    nome_file = nome_file[-1*seq(1,2)]
+    
+    pos_esm = grep('^ESM',nome_file)
+    
+    if (length(pos_esm) == 0 ) {
+      pos_esm = grep('^hist',nome_file)[1]
+      rcp = c(rcp,gsub('.txt','',nome_file[pos_esm]))
+    } else {
+      rcp = c(rcp,gsub('.txt','',nome_file[pos_esm+1]))
+    }
+    
+    esm = c(esm,gsub('.txt','',nome_file[pos_esm]) )
+    
+    pos_esm = grep('^CO2',nome_file)
+    
+    co2 = c(co2, nome_file[pos_esm[1]+1] )
+    
+    pos_esm = grep('^Man',nome_file)
+    
+    man = c(man, nome_file[pos_esm+1] )
+    
+    rm(pos_esm,nome_file,tmp)
+    
+  }
+  rm(cyf,lf)
+  df_file_list = data.frame(
+    exp,
+    site,
+    esm,
+    rcp,
+    co2,
+    man,
+    path_tot,
+    file_name
+  )
+  
+  rm(exp,
+     site,
+     esm,
+     rcp,
+     co2,
+     man,
+     path_tot,
+     file_name)
+  
+  return(df_file_list)
+  
+}

@@ -53,7 +53,7 @@ int Soil_model_daily (matrix_t *const m, const int cell, const int day, const in
 		logger (g_debug_log, "soil_layer = %d\n", soil_layer);
 
 		/* run on only for the highest soil layer */
-		if ( soil_layer == c->soil_layers_count -1)
+		if ( soil_layer == c->soil_layers_count -1 )
 		{
 			/* add Nitrogen to top soil pool from atmospheric deposition */
 			c->daily_soilN += meteo_daily->Ndeposition;
@@ -80,7 +80,8 @@ int Soil_model_daily (matrix_t *const m, const int cell, const int day, const in
 		//soil_nitrogen_balance();
 
 		/* compute soil respiration */
-		//soil_respiration_canoak     ( c, meteo_daily );
+		//soil_respiration_canoak ( c, meteo_daily );
+		//soil_respiration_biome ( c, meteo_daily );
 		soil_respiration_reichstein ( c, meteo_daily );
 
 		/* compute heterotrophic respiration */

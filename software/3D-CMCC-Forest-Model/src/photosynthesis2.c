@@ -16,15 +16,17 @@
 #include "logger.h"
 
 extern logger_t* g_debug_log;
+extern settings_t* g_settings;
 
 
 void total_photosynthesis_biome (cell_t *const c, const int height, const int dbh, const int age, const int species, const meteo_daily_t *const meteo_daily, const meteo_annual_t *const meteo_annual)
 {
 
 	double cond_corr;        /* (umol/m2/s/Pa) leaf conductance corrected for CO2 vs. water vapor */
-	double leafN;            /* (kg Nleaf/m2) leaf N per unit leaf area */
+	double leafN;            /* (gNleaf/m2) leaf N per unit leaf area */
 	double ppfd;             /* (umol/m2 covered/sec) photosynthetic Photon Flux Density  */
 	double leaf_day_mresp;   /* (umol/m2/s) day leaf m. resp, proj. area basis */
+	double ps;               /* gross photosynthesis (gC/m2/day) */
 
 	species_t *s;
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
@@ -39,32 +41,45 @@ void total_photosynthesis_biome (cell_t *const c, const int height, const int db
 	/* SUNLIT canopy fraction photosynthesis */
 
 	/* convert conductance from m/s --> umol/m2/s/Pa, and correct for CO2 vs. water vapor */
-	cond_corr                    = s->value[LEAF_SUN_CONDUCTANCE] * 1e6 / ( 1.6 * Rgas * ( meteo_daily->tday + 273.15 ) );
-	leafN                        = s->value[LEAF_SUN_N];
-	leaf_day_mresp               = s->value[DAILY_LEAF_SUN_MAINT_RESP];
+	cond_corr                    = s->value[LEAF_SUN_CONDUCTANCE] * 1e6 / ( 1.6 * Rgas * ( meteo_daily->tday + TempAbs ) );
+	/* convert Leaf Nitrogen from tN/cell --> to gN/m2 */
+	leafN                        = s->value[LEAF_SUN_N] * 1e6 / g_settings->sizeCell;
+	/* convert from mass to molar units, and from a daily rate to a rate per second (umol/m2/s) */
+	leaf_day_mresp               = s->value[DAILY_LEAF_SUN_MAINT_RESP] / ( meteo_daily->daylength_sec * GC_MOL * 1e-6 );
 	ppfd                         = s->value[PPFD_ABS_SUN];
 
-	/* call photosynthesis_biome for sun leaves */
-	photosynthesis_biome (c, height, dbh, age, species, meteo_daily, meteo_annual, cond_corr, leafN, ppfd, leaf_day_mresp);
+	/* call Farquhar for sun leaves */
+	ps = Farquhar (c, height, dbh, age, species, meteo_daily, meteo_annual, cond_corr, leafN, ppfd, leaf_day_mresp);
 
 	/* converting umolC/sec --> gC/m2/day) */
-	s->value[ASSIMILATION_SUN]   = ( ( s->value[ASSIMILATION] + leaf_day_mresp ) * s->value[LAI_SUN_PROJ] * (meteo_daily->daylength * 3600) * 12.011e-9 ) * 1000. ;
+	ps *= meteo_daily->daylength_sec * GC_MOL * 1e-6;
+
+	/* net photosynthesis removing photorespiration and converting to projected lai */
+	//test was "+ leaf_day_mresp" not clear leaf_day_resp sign
+	s->value[ASSIMILATION_SUN]   = ( ps - leaf_day_mresp ) * s->value[LAI_SUN_PROJ];
 
 	/****************************************************************************************/
 
 	/* SHADED canopy fraction photosynthesis */
 
 	/* convert conductance from m/s --> umol/m2/s/Pa, and correct for CO2 vs. water vapor */
-	cond_corr                    = s->value[LEAF_SHADE_CONDUCTANCE] * 1e6 / ( 1.6 * Rgas * ( meteo_daily->tday + 273.15 ) );
-	leafN                        = s->value[LEAF_SHADE_N];
-	leaf_day_mresp               = s->value[DAILY_LEAF_SHADE_MAINT_RESP];
+	cond_corr                    = s->value[LEAF_SHADE_CONDUCTANCE] * 1e6 / ( 1.6 * Rgas * ( meteo_daily->tday + TempAbs ) );
+	/* convert Leaf Nitrogen from tN/cell --> to gN/m2 */
+	leafN                        = s->value[LEAF_SHADE_N] * 1e6 / g_settings->sizeCell;
+	/* convert from mass to molar units, and from a daily rate to a rate per second (umol/m2/s) */
+	leaf_day_mresp               = s->value[DAILY_LEAF_SHADE_MAINT_RESP] / ( meteo_daily->daylength_sec * GC_MOL * 1e-6 );
 	ppfd                         = s->value[PPFD_ABS_SHADE];
 
-	/* call photosynthesis_biome for shade leaves */
-	photosynthesis_biome (c, height, dbh, age, species, meteo_daily, meteo_annual, cond_corr, leafN, ppfd, leaf_day_mresp );
+	/* call Farquhar for shade leaves */
+	ps = Farquhar (c, height, dbh, age, species, meteo_daily, meteo_annual, cond_corr, leafN, ppfd, leaf_day_mresp );
 
 	/* converting umolC/sec --> gC/m2/day) */
-	s->value[ASSIMILATION_SHADE] = ( ( s->value[ASSIMILATION] + leaf_day_mresp ) * s->value[LAI_SHADE_PROJ] * (meteo_daily->daylength * 3600) * 12.011e-9 ) * 1000. ;
+	ps *= meteo_daily->daylength_sec * GC_MOL * 1e-6;
+
+	/* net photosynthesis removing photorespiration and converting to projected lai */
+	//test was "+ leaf_day_mresp" not clear leaf_day_resp sign
+	s->value[ASSIMILATION_SHADE] = ( ps - leaf_day_mresp ) * s->value[LAI_SHADE_PROJ];
+
 
 	/****************************************************************************************/
 
@@ -82,21 +97,18 @@ void total_photosynthesis_biome (cell_t *const c, const int height, const int db
 
 }
 
-void photosynthesis_biome (cell_t *const c, const int height, const int dbh, const int age, const int species, const meteo_daily_t *const meteo_daily,
+double Farquhar (cell_t *const c, const int height, const int dbh, const int age, const int species, const meteo_daily_t *const meteo_daily,
 		const meteo_annual_t *const meteo_annual, const double cond_corr, const double leafN, const double ppfd, const double leaf_day_mresp )
 {
 	/*
 		The following variables are assumed to be defined in the psn struct
 		at the time of the function call:
-		c3         (flag) set to 1 for C3 model, 0 for C4 model
 		pa         (Pa) atmospheric pressure
 		co2        (ppm) atmospheric [CO2]
 		t          (deg C) air temperature
-		lnc        (kg Nleaf/m2) leaf N concentration, per unit projected LAI
 		flnr       (kg NRub/kg Nleaf) fraction of leaf N in Rubisco
 		ppfd       (umol photons/m2/s) PAR flux density, per unit projected LAI
 		g          (umol CO2/m2/s/Pa) leaf-scale conductance to CO2, proj area basis
-		dlmr       (umol CO2/m2/s) day leaf maint resp, on projected leaf area basis
 
 		The following variables in psn struct are defined upon function return:
 		Ci         (Pa) intercellular [CO2]
@@ -115,7 +127,6 @@ void photosynthesis_biome (cell_t *const c, const int height, const int dbh, con
 
 	/* the weight proportion of Rubisco to its nitrogen content, fnr, is calculated from the relative proportions of the basic amino acids
 		that make up the enzyme, as listed in the Handbook of Biochemistry, Proteins, Vol III, p. 510, which references: Kuehn and McFadden, Biochemistry, 8:2403, 1969 */
-	static double fnr = 7.16;      /* kg Rub/kg NRub */
 
 	/* the following enzyme kinetic constants are from:
 		Woodrow, I.E., and J.A. Berry, 1980. Enzymatic regulation of photosynthetic
@@ -131,18 +142,19 @@ void photosynthesis_biome (cell_t *const c, const int height, const int dbh, con
 		All other parameters, including the q10's for Kc and Ko are the same
 		as in Woodrow and Berry. */
 
-	static double Kc25   = 404;    /* (ubar) MM const carboxylase, 25 deg C */
+	static double Kc25   = 404;    /* (ubar) michaelis-menten const carboxylase, 25 deg C */
 	static double q10Kc  = 2.1;    /* (DIM) Q_10 for Kc */
-	static double Ko25   = 248.0;  /* (mbar) MM const oxygenase, 25 deg C */
+	static double Ko25   = 248.0;  /* (mbar) michaelis-menten const oxygenase, 25 deg C */
 	static double q10Ko  = 1.2;    /* (DIM) Q_10 for Ko */
-	static double act25  = 3.6;    /* (umol/mgRubisco/min) Rubisco activity */
+	static double act25  = 3.6;    /* (umol/mgRubisco/min) Rubisco activity at 25 C */
 	static double q10act = 2.4;    /* (DIM) Q_10 for Rubisco activity */
 	static double pabs   = 0.85;   /* (DIM) fPAR effectively absorbed by PSII */
+	static double fnr    = 7.16;   /* g Rubisco/gN Rubisco weight proportion of rubisco relative to its N content*/
 
 	/* local variables */
-	double Kc;                     /* (Pa) MM constant for carboxylase reaction */
-	double Ko;                     /* (Pa) MM constant for oxygenase reaction */
-	double act;                    /* (umol CO2/kgRubisco/s) Rubisco activity */
+	double Kc;                     /* (Pa) michaelis-menten constant for carboxylase reaction */
+	double Ko;                     /* (Pa) michaelis-menten constant for oxygenase reaction */
+	double act;                    /* (umol CO2/kgRubisco/s) Rubisco activity scaled by temperature and [O2 ] and [CO2] */
 	double Jmax;                   /* (umol/m2/s) max rate electron transport */
 	double ppe;                    /* (mol/mol) photons absorbed by PSII per e- transported */
 	double Vmax;                   /* (umol/m2/s) max rate carboxylation */
@@ -159,13 +171,15 @@ void photosynthesis_biome (cell_t *const c, const int height, const int dbh, con
 
 
 	//todo move in species.txt (this should be the only variable for all photosynthesis)
-	double flnr = 0.1; /* (kg NRub/kg Nleaf) fract. of leaf N in Rubisco */
+	double flnr = 0.1; /* (g NRub/g Nleaf) fract. of leaf N in Rubisco */
 
 	species_t *s;
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 	/* begin by assigning local variables */
-	Rd = leaf_day_mresp;                /* (umol/m2/s) day leaf m. resp, proj. area basis */
+
+	/* (umol/m2/s) day leaf m. resp, proj. area basis */
+	Rd = leaf_day_mresp;
 
 	/* convert atmospheric CO2 from ppmV --> Pa */
 	Ca = meteo_annual->co2Conc * meteo_daily->air_pressure / 1e6;
@@ -173,12 +187,12 @@ void photosynthesis_biome (cell_t *const c, const int height, const int dbh, con
 	/* set parameters for C3 */
 	ppe = 2.6;
 
-	/* calculate atmospheric O2 in Pa, assumes 21% O2 by volume */
+	/* calculate atmospheric O2 in Pa, assumes 20.9% O2 by volume */
 	O2  = (O2CONC / 100. ) * meteo_daily->air_pressure;
 
 	/* correct kinetic constants for temperature, and do unit conversions */
-	Ko  = Ko25 * pow ( q10Ko , ( meteo_daily->tavg - 25. ) / 10. );
-	Ko  = Ko * 100.;   /* mbar --> Pa */
+	Ko  = Ko25 * pow ( q10Ko , ( meteo_daily->tday - 25. ) / 10. );
+	Ko *= 100.;   /* mbar --> Pa */
 
 	if ( meteo_daily->tday > 15. )
 	{
@@ -191,18 +205,22 @@ void photosynthesis_biome (cell_t *const c, const int height, const int dbh, con
 		act = act25 * pow ( 1.8 * q10act, ( meteo_daily->tday - 15. ) / 10.) / q10act;
 	}
 
-	Kc  = Kc   * 0.1;           /* ubar --> Pa */
-	act = act  * 1e6 / 60.;     /* umol/mg/min --> umol/kg/s */
+	Kc *= 0.1;                  /* ubar --> Pa */
 
-	/* calculate gamma (Pa), assumes Vomax/Vcmax = 0.21 */
+	/* Convert rubisco activity units from umol/mgRubisco/min -> umol/gRubisco/s */
+	act = act  * 1e3 / 60.;
+	//1 Nov 2017 changed from umol/mgRubisco/min -> umol/KgRubisco/s:
+	//act = act  * 1e6 / 60.;
+
+	/* calculate gamma (Pa) CO2 compensation point, in the absence of maint resp, assumes Vomax/Vcmax = 0.21 */
 	gamma = 0.5 * 0.21 * Kc * O2 / Ko;
 
-	/* calculate Vmax from leaf nitrogen data and Rubisco activity */
+	/* calculate Vmax (umol CO2/m2/s) max rate of carboxylation from leaf nitrogen data and Rubisco activity */
 	Vmax = leafN * flnr * fnr * act;
 
 	/* calculate Jmax = f(Vmax), reference:	Wullschleger, S.D., 1993.  Biochemical limitations to carbon assimilation in C3 plants -
-	 * A retrospective analysis of the A/Ci curves from	109 species. Journal of Experimental Botany, 44:907-920.
-	 */
+	 * A retrospective analysis of the A/Ci curves from	109 species. Journal of Experimental Botany, 44:907-920. */
+	/* compute (umol electrons/m2/s) max rate electron transport */
 	Jmax = 2.1 * Vmax;
 
 	/* calculate J = f(Jmax, ppfd), reference:
@@ -212,6 +230,8 @@ void photosynthesis_biome (cell_t *const c, const int height, const int dbh, con
 	var_a  = 0.7;
 	var_b  = -Jmax - (ppfd * pabs / ppe );
 	var_c  = Jmax  *  ppfd * pabs / ppe;
+
+	/* compute (umol RuBP/m2/s) rate of RuBP regeneration */
 	J      = ( -var_b - sqrt ( var_b * var_b - 4. * var_a * var_c ) ) / ( 2. * var_a );
 
 	/* solve for Av and Aj using the quadratic equation, substitution for Ci
@@ -236,6 +256,7 @@ void photosynthesis_biome (cell_t *const c, const int height, const int dbh, con
 	/* check condition */
 	CHECK_CONDITION( det , <, 0.0);
 
+	/* compute Av (umol CO2/m2/s) carboxylation limited assimilation */
 	Av = ( -var_b + sqrt( det ) ) / ( 2. * var_a );
 
 	/* quadratic solution for Aj */
@@ -247,17 +268,21 @@ void photosynthesis_biome (cell_t *const c, const int height, const int dbh, con
 	/* check condition */
 	CHECK_CONDITION( det , <, 0.0);
 
+	/* compute (umol CO2/m2/s) RuBP regen limited assimilation */
 	Aj = ( -var_b + sqrt( det ) ) / ( 2. * var_a );
 
+	/* compute (umol CO2/m2/s) final assimilation rate */
 	/* estimate A as the minimum of (Av,Aj) */
 	if ( Av < Aj ) A = Av;
 	else           A = Aj;
 
-	/* compute assimilation (umol/m2/s) */
-	s->value[ASSIMILATION] = A;
-
 	/* compute (Pa) intercellular [CO2] */
+	//fixme currently not used
 	Ci = Ca - ( A / cond_corr );
+
+	/* compute assimilation (umol/m2/s) */
+	return A;
+
 
 }
 
