@@ -1241,6 +1241,20 @@ int fill_species_from_file(species_t *const s) {
 	}
 	s->value[MAX_SPECIES_COVER] = (int)s->value[LIGHT_TOL];
 
+	/* check parameters values */
+	CHECK_CONDITION (s->value[SLA_AVG0],               <, s->value[SLA_AVG1]);
+	CHECK_CONDITION (s->value[FRACBB0],                <, s->value[FRACBB1]);
+	CHECK_CONDITION (s->value[RHO0],	               <, s->value[RHO1]);
+	CHECK_CONDITION (s->value[GROWTHTMIN],             >, s->value[GROWTHTOPT]);
+	CHECK_CONDITION (s->value[GROWTHTMIN],             >, s->value[GROWTHTMAX]);
+	CHECK_CONDITION (s->value[GROWTHTOPT],             >, s->value[GROWTHTMAX]);
+	CHECK_CONDITION (s->value[SWPOPEN],                <, s->value[SWPCLOSE]);
+	CHECK_CONDITION (s->value[FRUIT_PERC],             >, 1.);
+	CHECK_CONDITION (s->value[LEAF_FALL_FRAC_GROWING], >, 1.);
+	CHECK_CONDITION (s->value[LEAF_FROOT_TURNOVER],    >, 1.);
+	CHECK_CONDITION (s->value[LIVEWOOD_TURNOVER],      >, 1.);
+	CHECK_CONDITION (s->value[S0CTEM] + s->value[R0CTEM] + s->value[F0CTEM], !=, 1);
+	
 	/* copy file */
 	if ( ! species_copy_file(g_sz_parameterization_output_path, filename) ) {
 		printf("error: unable to copy species to %s\n", g_sz_parameterization_output_path);

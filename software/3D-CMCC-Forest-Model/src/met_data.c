@@ -540,6 +540,7 @@ void Daily_Latent_heat(meteo_d_t *met, const int day, const int month)
 	/*latent heat of sublimation (KJ/Kg)*/
 	met[month].d[day].lh_sub      = 2845.;
 }
+
 void Daily_Soil_temperature(const cell_t *const c, int day, int month, int year)
 {
 	int i;
