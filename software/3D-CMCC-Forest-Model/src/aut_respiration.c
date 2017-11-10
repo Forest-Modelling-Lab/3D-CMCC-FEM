@@ -53,6 +53,15 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 	double live_branchC_frac;                 /* fraction of live branch into live branch carbon */
 	double live_crootC_frac;                  /* fraction of live croot into live coarse root carbon */
 
+
+	//fixme to remove once imported into species.txt
+	/* CN ratios */
+	double leaf_CN;
+	double croot_CN;
+	double stem_CN;
+	double branch_CN;
+	double froot_CN;
+
 	/* NOTE: No respiration happens for reserve pool (see Schwalm and Ek 2004) */
 
 	species_t *s;
@@ -132,24 +141,26 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 		//test: better if used with lower LIVE_WOOD_TURNOVER (e.g. 0.85)
 #if 0
 		//CANIF PARAMETERIZATION FOR FAGUS
-		leaf_N          = ((s->value[LEAF_C]                       / 24.19)     * 1e6 / g_settings->sizeCell);
-		leaf_sun_N      = ((s->value[LEAF_SUN_C]                   / 24.19)     * 1e6 / g_settings->sizeCell);
-		leaf_shade_N    = ((s->value[LEAF_SHADE_C]                 / 24.19)     * 1e6 / g_settings->sizeCell);
-		froot_N         = ((s->value[FROOT_C]                      / 37.33)     * 1e6 / g_settings->sizeCell);
-		stem_N          = ((s->value[STEM_C]   * live_stemC_frac   / 446.2)     * 1e6 / g_settings->sizeCell);
-		croot_N         = ((s->value[CROOT_C]  * live_crootC_frac  / 294.8)     * 1e6 / g_settings->sizeCell);
-		branch_N        = ((s->value[BRANCH_C] * live_branchC_frac / 136.6)     * 1e6 / g_settings->sizeCell);
+		leaf_CN    = 24.19;
+		froot_CN   = 37.33;
+		stem_CN    = 446.2;
+		croot_CN   = 294.8;
+		branch_CN  = 136.6;
 #else
 		//CASTANEA PARAMETERIZATION FOR FAGUS
-		leaf_N          = ((s->value[LEAF_C]                       / 20.66)     * 1e6 / g_settings->sizeCell);
-		leaf_sun_N      = ((s->value[LEAF_SUN_C]                   / 20.66)     * 1e6 / g_settings->sizeCell);
-		leaf_shade_N    = ((s->value[LEAF_SHADE_C]                 / 20.66)     * 1e6 / g_settings->sizeCell);
-		froot_N         = ((s->value[FROOT_C]                      / 50.50)     * 1e6 / g_settings->sizeCell);
-		stem_N          = ((s->value[STEM_C]   * live_stemC_frac   / 416.6)     * 1e6 / g_settings->sizeCell);
-		croot_N         = ((s->value[CROOT_C]  * live_crootC_frac  / 416.6)     * 1e6 / g_settings->sizeCell);
-		branch_N        = ((s->value[BRANCH_C] * live_branchC_frac / 90.90)     * 1e6 / g_settings->sizeCell);
+		leaf_CN    = 20.66;
+		froot_CN   = 50.50;
+		stem_CN    = 416.6;
+		croot_CN   = 416.6;
+		branch_CN  = 90.90;
 #endif
-
+		leaf_N          = ((s->value[LEAF_C]                       / leaf_CN)   * 1e6 / g_settings->sizeCell);
+		leaf_sun_N      = ((s->value[LEAF_SUN_C]                   / leaf_CN)   * 1e6 / g_settings->sizeCell);
+		leaf_shade_N    = ((s->value[LEAF_SHADE_C]                 / leaf_CN)   * 1e6 / g_settings->sizeCell);
+		froot_N         = ((s->value[FROOT_C]                      / froot_CN)  * 1e6 / g_settings->sizeCell);
+		stem_N          = ((s->value[STEM_C]   * live_stemC_frac   / stem_CN)   * 1e6 / g_settings->sizeCell);
+		croot_N         = ((s->value[CROOT_C]  * live_crootC_frac  / croot_CN)  * 1e6 / g_settings->sizeCell);
+		branch_N        = ((s->value[BRANCH_C] * live_branchC_frac / branch_CN) * 1e6 / g_settings->sizeCell);
 #endif
 
 		//new 05/11/2017
