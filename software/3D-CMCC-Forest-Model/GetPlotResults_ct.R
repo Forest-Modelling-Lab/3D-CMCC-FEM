@@ -38,9 +38,9 @@ time_list_output = c('annual','monthly','daily')
 
 # single or multiple simulations
 build_list<-c('Release')#, 'Release')
-site_list<-c("Collelongo")#,"Soroe")#,"Hyytiala","All"),"Soroe"
+site_list<-c("Soroe")#,"Soroe")#,"Hyytiala","All"),"Soroe"
 esm_list <-c("4")# ("1","2","3","4","5", "All")
-rcp_list <-c("All")# ("0p0","2p6","4p5","6p0","8p5","All")
+rcp_list <-c("0p0")# ("0p0","2p6","4p5","6p0","8p5","All")
 man_list <-c("off")# ("on",'off', "All")
 co2_list <-c("on")# , "on",off", "All")
 protocol_list<-c("FT")# ("2A","2B", "All") 

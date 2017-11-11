@@ -2405,7 +2405,7 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 		logger(g_annual_log,",gpp,npp,ar,hr,rsoil,rsoilCO2,reco,nee,nep,et,le,soil-evapo,asw,iWue,vol,cum_vol,run_off");
 		/************************************************************************/
 		/* heading meteo variables */
-		logger(g_annual_log,",solar_rad,tavg,tmax,tmin,tday,tnight,vpd,prcp,tsoil,rh,[CO2]");
+		logger(g_annual_log,",solar_rad,tavg,tmax,tmin,tday,tnight,vpd,prcp,tsoil,rh,avg_asw,[CO2]");
 		/************************************************************************/
 		/* end heading */
 		logger(g_annual_log,"\n");
@@ -2586,7 +2586,7 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 			c->annual_out_flow);
 	/************************************************************************/
 	/* print meteo variables at cell level */
-	logger(g_annual_log, ",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",
+	logger(g_annual_log, ",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",
 			c->years[year].yearly_mean.solar_rad     ,
 			c->years[year].yearly_mean.tavg          ,
 			c->years[year].yearly_mean.tmax          ,
@@ -2597,6 +2597,7 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 			c->years[year].yearly_mean.prcp          ,
 			c->years[year].yearly_mean.tsoil         ,
 			c->years[year].yearly_mean.rh_f          ,
+			c->years[year].yearly_mean.asw           ,
 			c->years[year].co2Conc);
 	/************************************************************************/
 	/* end print */

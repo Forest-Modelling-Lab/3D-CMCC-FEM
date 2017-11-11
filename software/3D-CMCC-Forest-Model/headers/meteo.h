@@ -82,6 +82,7 @@ typedef struct {
 	double par;
 	double incoming_ppfd;
 	double ppfd;
+	double asw;
 } meteo_mean_t;
 
 typedef struct {

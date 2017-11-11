@@ -74,7 +74,7 @@ int Soil_model_daily (matrix_t *const m, const int cell, const int day, const in
 		}
 
 		/* compute soil water balance */
-		soil_water_balance ( c, meteo_daily );
+		soil_water_balance ( c, meteo_daily, year );
 
 		/* compute soil nitrogen balance */
 		//soil_nitrogen_balance();
