@@ -181,7 +181,7 @@ int check_soil_carbon_flux_balance(cell_t *const c)
 	{
 		error_log("DOY = %d\n", c->doy);
 		error_log("\nin\n");
-		error_log("c->daily_litrC_to_soilC = %g gC/m2/day\n", c->daily_soilC);
+		error_log("c->daily_soilC = %g gC/m2/day\n", c->daily_soilC);
 		error_log("\nout\n");
 		error_log("c->daily_het_resp = %g gC/m2/day\n",c->daily_het_resp);
 		error_log("\nstore\n");

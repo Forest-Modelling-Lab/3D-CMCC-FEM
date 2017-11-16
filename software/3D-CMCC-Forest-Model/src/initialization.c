@@ -417,6 +417,13 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 	/* compute leaf litter (assuming that at year zero litter is composed by the amount of peak lai of the previous year */
 	s->value[LEAF_LITTER_C] = ( ( s->value[PEAK_LAI_PROJ] / s->value[SLA_AVG] ) / 1e3 * ( s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell ) ) / GC_GDM;
 
+	if ( s->value[PHENOLOGY] == 1.1 || s->value[PHENOLOGY] == 1.2 )
+	{
+		/* note: if evergreen we assume that only a fraction of previous year leaf carbon */
+		/*(based on species leaf fall turnover rate) (not simulated) has gone to the litter carbon pool */
+		s->value[LEAF_LITTER_C] *= s->value[LEAF_FROOT_TURNOVER];
+	}
+
 	/* compute single tree leaf carbon amount */
 	s->value[TREE_LEAF_C] = s->value[LEAF_C] / s->counter[N_TREE];
 
@@ -896,7 +903,7 @@ void initialization_forest_litter_soil (cell_t *const c, const int height, const
 
 	//fixme todo
 	//test test test test test test
-	c->litrC = s->value[LEAF_LITTER_C];
+	c->litrC = s->value[LEAF_LITTER_C] * 1e6 / g_settings->sizeCell;
 	c->soilC = 0.;
 }
 
