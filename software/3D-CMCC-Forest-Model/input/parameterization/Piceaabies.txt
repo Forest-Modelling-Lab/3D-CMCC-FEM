@@ -12,16 +12,16 @@ SLA_AVG1        5.9 //ISIMIP  12  //Average Specific Leaf Area m^2/Kg (juvenile)
 TSLA                    30      //Age at which SLA_AVG = (SLA_AVG1 + SLA_AVG0 )/2 Forrester et al., 2017
 SLA_RATIO               2       //(DIM) ratio of shaded to sunlit projected SLA for Picea abies (see Pietsch)
 LAI_RATIO               2.6     /(DIM) all-sided to projected leaf area ratio from Mollicone et al., 2002
-FRACBB0                 0.30    //Branch and Bark fraction at age 0 for P. sylvestris, from Xenakis et al., 2008, 0.29 deducted for P. sylvestris from Yuste et al., 2005, 0.29 from Lehtonen et al., 2004 For Eco Manag, 0.71 from xiao and Ceulemans
+FRACBB0     0.6 //ISIMIP    0.30    //Branch and Bark fraction at age 0 for P. sylvestris, from Xenakis et al., 2008, 0.29 deducted for P. sylvestris from Yuste et al., 2005, 0.29 from Lehtonen et al., 2004 For Eco Manag, 0.71 from xiao and Ceulemans
 FRACBB1                 0.1     //Branch and Bark fraction for mature stands for P. sylvestris, from Xenakis et al., 2008, 0.29 deducted for P. sylvestris from Yuste et al., 2005, 0.29 from Lehtonen et al., 2004 For Eco Manag, 0.18 from Jenssen et al 1999, 0.77 from xiao and Ceulemans
-TBB                     10      //Age at which fracBB = (FRACBB0 + FRACBB1 )/ 2 for P. sylvestris, from Xenakis et al., 2008
+TBB         0.3 //ISIMIP    10      //Age at which fracBB = (FRACBB0 + FRACBB1 )/ 2 for P. sylvestris, from Xenakis et al., 2008
 RHO0                    0.425   //Minimum Basic Density for young Trees t/m^3 for Picea abies Kantola and Makela 2006, 0.43 Seidl et al., 2012, 0.45 Pilli et al., 2006
 RHO1                    0.374   //Maximum Basic Density for old Trees t/m^3 for Picea abies Kantola and Makela 2006, 0.43 Seidl et al., 20120, 0.45 Pilli et al., 2006
 TRHO                    50      //Age at which rho = (RHOMIN + RHOMAX )/2
 FORM_FACTOR             0.423   //Form factor Seidl et al., 2012
 COEFFCOND               0.06    //Define stomatal responsee to VPD in mbar for Picea abies
 BLCOND                  0.009   //Canopy Boundary Layer conductance  for Picea abies 
-MAXCOND                 0.0015   //Maximum Stomatal Conductance in m/sec for Picea abies (see Pietsch) 0.0015 for Breuer et al., 
+MAXCOND                 0.0015   //Maximum Stomatal Conductance in m/sec for Picea abies (see Pietsch) 0.0015 for Breuer et al., 0.006 Hibbard et al., 2005
 CUTCOND                 0.00006 //Cuticul conductance in m/sec for Picea abies (see Pietsch)
 MAXAGE                  300     //Determines rate of "physiological decline" of forest for Picea abies Seidl et al., 2012 (TO CHECK !!!!!)
 RAGE                    0.95    //Relative Age to give fAGE = 0.5 0.95 for Picea abies Seidl et al., 2012

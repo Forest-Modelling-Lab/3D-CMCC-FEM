@@ -86,6 +86,7 @@ int Soil_model_daily (matrix_t *const m, const int cell, const int day, const in
 
 		/* compute heterotrophic respiration */
 		heterotrophic_respiration ( c );
+		//heterotrophic_respiration_biome ( c, meteo_daily );
 	}
 
 	/*******************************************************************************************************/
