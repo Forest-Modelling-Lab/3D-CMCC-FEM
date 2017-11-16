@@ -40,10 +40,16 @@ void heterotrophic_respiration_biome ( cell_t *const c, const meteo_daily_t *con
 	double rate_scalar;           /* final rate scalar as the product of the temperature and water scalars */
 	double min_psi, max_psi;
 	double TsoilK;
-	double decomp_rate;
+	double decomp_rate1;
+	double decomp_rate2;
+	double decomp_rate3;
+	double decomp_rate4;
 	double E0;                    /* activation-energy-type parameter of Lloyd and Taylor [1994] (K-1) */
 	double T0;                    /* the lower temperature limit for the soil respiration (K) */
-	double litrC_lost;            /* daily litter carbon lost (gC/m2/day) */
+	double litr1C_lost;            /* daily litter carbon lost (gC/m2/day) */
+	double litr2C_lost;            /* daily litter carbon lost (gC/m2/day) */
+	double litr3C_lost;            /* daily litter carbon lost (gC/m2/day) */
+	double litr4C_lost;            /* daily litter carbon lost (gC/m2/day) */
 
 	E0 = 308.56;
 	T0 = 227.13;
@@ -104,26 +110,32 @@ void heterotrophic_respiration_biome ( cell_t *const c, const meteo_daily_t *con
 	rate_scalar     = temp_scalar * water_scalar;
 
 	/* soil decomposition rate */
-	decomp_rate     = KL1_BASE * rate_scalar;
+	decomp_rate1     = KL1_BASE * rate_scalar;
+	decomp_rate2     = KL2_BASE * rate_scalar;
+	decomp_rate3     = KL2_BASE * rate_scalar;
+	decomp_rate4     = KL4_BASE * rate_scalar;
 
 	/* compute carbon lost */
-	litrC_lost      = c->litrC * decomp_rate;
+	litr1C_lost      = c->litr1C * decomp_rate1;
+	litr2C_lost      = c->litr2C * decomp_rate2;
+	litr3C_lost      = c->litr3C * decomp_rate3;
+	litr4C_lost      = c->litr4C * decomp_rate4;
 
 	/* remove from daily litter carbon flux carbon lost for decomposition */
-	c->daily_litrC -= litrC_lost;
+	//c->daily_litrC -= litrC_lost;
 
 	/* remove from litter carbon pool daily litter carbon fluxes */
-	c->litrC       -= c->daily_litrC;
+	//c->litrC       -= litrC_lost;
 
 	//note: a much simplified approach that use all litter (as in Reichestein et al., 2003) instead the labile fraction as in BIOME-BGC
-	//FIXME to date balance is still NOT closed and litter increase as well
-	//FIXME THIS FUNCTION DOESN'T WORK!!!!!
-
+	//fixme fixme fixme fixme fixme
 	/* litter heterotrophic respiration gC/m2/day */
-	c->daily_litr_het_resp    = litrC_lost * RFL1S1;
+	c->daily_litr_het_resp    = (litr1C_lost * RFL1S1) + (litr2C_lost * RFL2S2) + (litr3C_lost * RFL2S2) + (litr1C_lost * RFL4S3);
+
+
 
 	/* fraction of un-decomposed litter that goes to soil pool */
-	c->daily_soilC           += litrC_lost * ( 1. - RFL1S1 );
+	//c->daily_soilC           += litrC_lost * ( 1. - RFL1S1 );
 
 	/* add to soil carbon pool daily litter carbon fluxes */
 	c->soilC                 += c->daily_soilC;

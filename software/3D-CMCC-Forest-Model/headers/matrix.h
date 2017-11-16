@@ -631,6 +631,7 @@ enum {
 	LEAF_SUN_N,                         /* (tN/cell) Current Leaf sun nitrogen pool */
 	LEAF_SHADE_N,                       /* (tN/cell) Current Leaf shade nitrogen pool */
 	LEAF_FALLING_N,                     /* (tN/cell) Current Leaf falling nitrogen pool */
+	LEAF_LITTER_N,                      /* (tN/cell) First year Leaf litter nitrogen pool */
 	FROOT_N,                            /* (tN/cell) Current Fine root nitrogen pool */
 	CROOT_N,                            /* (tN/cell) Current Coarse root nitrogen pool */
 	CROOT_LIVEWOOD_N,                   /* (tN/cell) Current Live Coarse root nitrogen pool */

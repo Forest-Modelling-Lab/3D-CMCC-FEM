@@ -338,16 +338,16 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 		{
 			logger(g_debug_log, "\nNo Leaf Biomass Data are available for model initialization \n");
 			logger(g_debug_log, "...Generating input Leaf Biomass data from LAI\n");
-//
-//			/* check */
-//			if( ! s->value[LAI_PROJ] || s->value[LAI_PROJ] == NO_DATA )
-//			{
-//				logger_error(g_debug_log,"No Leaf Biomass nor LAI values from initialization file (recompute it using sapwood)!!!!\n");
-//
-//				/* compute LAI (assuming at peak value) */
-//				s->value[LAI_PROJ] = ( ( s->value[SAPWOOD_AREA] / 1e4 ) * s->value[SAP_LEAF]) / s->value[CROWN_AREA_PROJ];
-//				logger(g_debug_log, "PEAK_LAI_PROJ = %f m2/m2\n",s->value[PEAK_LAI_PROJ]);
-//			}
+			//
+			//			/* check */
+			//			if( ! s->value[LAI_PROJ] || s->value[LAI_PROJ] == NO_DATA )
+			//			{
+			//				logger_error(g_debug_log,"No Leaf Biomass nor LAI values from initialization file (recompute it using sapwood)!!!!\n");
+			//
+			//				/* compute LAI (assuming at peak value) */
+			//				s->value[LAI_PROJ] = ( ( s->value[SAPWOOD_AREA] / 1e4 ) * s->value[SAP_LEAF]) / s->value[CROWN_AREA_PROJ];
+			//				logger(g_debug_log, "PEAK_LAI_PROJ = %f m2/m2\n",s->value[PEAK_LAI_PROJ]);
+			//			}
 
 			/* compute leaf carbon to PEAK LAI down-scaled to canopy cover */
 			s->value[LEAF_DM]   = (s->value[PEAK_LAI_PROJ] / s->value[SLA_AVG] ) / 1e3 * ( s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell );
@@ -367,13 +367,13 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 
 			/* compute total LAI for Exposed Area */
 			//fixme error
-//			s->value[LAI_EXP]       = (s->value[LAI_PROJ] / s->value[SLA_AVG]) / 1e3 * ( s->value[CANOPY_COVER_EXP] * g_settings->sizeCell );
-//			s->value[LAI_SUN_EXP]   = 1. - exp ( -s->value[LAI_EXP] );
-//			s->value[LAI_SHADE_EXP] = s->value[LAI_EXP] - s->value[LAI_SUN_EXP];
-//
-//			logger(g_debug_log, "LAI_EXP        = %f m2/m2\n", s->value[LAI_EXP]);
-//			logger(g_debug_log, "LAI_SUN_EXP    = %f m2/m2\n", s->value[LAI_SUN_EXP]);
-//			logger(g_debug_log, "LAI_SHADE_EXP  = %f m2/m2\n", s->value[LAI_SHADE_EXP]);
+			//			s->value[LAI_EXP]       = (s->value[LAI_PROJ] / s->value[SLA_AVG]) / 1e3 * ( s->value[CANOPY_COVER_EXP] * g_settings->sizeCell );
+			//			s->value[LAI_SUN_EXP]   = 1. - exp ( -s->value[LAI_EXP] );
+			//			s->value[LAI_SHADE_EXP] = s->value[LAI_EXP] - s->value[LAI_SUN_EXP];
+			//
+			//			logger(g_debug_log, "LAI_EXP        = %f m2/m2\n", s->value[LAI_EXP]);
+			//			logger(g_debug_log, "LAI_SUN_EXP    = %f m2/m2\n", s->value[LAI_SUN_EXP]);
+			//			logger(g_debug_log, "LAI_SHADE_EXP  = %f m2/m2\n", s->value[LAI_SHADE_EXP]);
 		}
 	}
 	else
@@ -414,14 +414,22 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 	}
 
 
-	/* compute leaf litter (assuming that at year zero litter is composed by the amount of peak lai of the previous year */
-	s->value[LEAF_LITTER_C] = ( ( s->value[PEAK_LAI_PROJ] / s->value[SLA_AVG] ) / 1e3 * ( s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell ) ) / GC_GDM;
-
-	if ( s->value[PHENOLOGY] == 1.1 || s->value[PHENOLOGY] == 1.2 )
+	if ( ! g_soil_settings->values[LITTERC] || g_soil_settings->values[LITTERC] == NO_DATA )
 	{
-		/* note: if evergreen we assume that only a fraction of previous year leaf carbon */
-		/*(based on species leaf fall turnover rate) (not simulated) has gone to the litter carbon pool */
-		s->value[LEAF_LITTER_C] *= s->value[LEAF_FROOT_TURNOVER];
+		/* compute leaf litter (assuming that at year zero litter is composed by the amount of peak lai of the previous year */
+		s->value[LEAF_LITTER_C] = ( ( s->value[PEAK_LAI_PROJ] / s->value[SLA_AVG] ) / 1e3 * ( s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell ) ) / GC_GDM;
+
+		if ( s->value[PHENOLOGY] == 1.1 || s->value[PHENOLOGY] == 1.2 )
+		{
+			/* note: if evergreen we assume that only a fraction of previous year leaf carbon */
+			/*(based on species leaf fall turnover rate) (not simulated) has gone to the litter carbon pool */
+			s->value[LEAF_LITTER_C] *= s->value[LEAF_FROOT_TURNOVER];
+		}
+	}
+	else
+	{
+		/* get data from soil setting file */
+		s->value[LEAF_LITTER_C] = g_soil_settings->values[LITTERC];
 	}
 
 	/* compute single tree leaf carbon amount */
@@ -725,6 +733,8 @@ void initialization_forest_class_N (cell_t *const c, const int height, const int
 		s->value[LEAF_SHADE_N] = s->value[LEAF_SHADE_C] / s->value[CN_LEAVES];
 	}
 
+	s->value[LEAF_LITTER_N]    = s->value[LEAF_LITTER_C] / s->value[CN_FALLING_LEAVES];
+
 	/* fine root */
 	if ( ! s->value[FROOT_C] )
 	{
@@ -829,6 +839,7 @@ void initialization_forest_class_litter_soil (cell_t *const c, const int height,
 	CHECK_CONDITION ( fabs (s->value[DEAD_WOOD_CEL_FRAC] + s->value[DEAD_WOOD_LIGN_FRAC]), >, 1 + eps);
 
 
+	/******************************************************************************************************************************************************************/
 	/** calculate shielded and unshielded cellulose fraction **/
 
 	/*** compute leaf litter fractions ***/
@@ -852,7 +863,32 @@ void initialization_forest_class_litter_soil (cell_t *const c, const int height,
 		s->value[LEAF_LITR_SCEL_FRAC]   = 0.8 * s->value[LEAF_LITR_CEL_FRAC];
 		s->value[LEAF_LITR_USCEL_FRAC]  = 0.2 * s->value[LEAF_LITR_CEL_FRAC];
 	}
+	/* check */
+	CHECK_CONDITION ( fabs ( s->value[LEAF_LITR_LAB_FRAC] + s->value[LEAF_LITR_SCEL_FRAC] + s->value[LEAF_LITR_USCEL_FRAC] + s->value[LEAF_LITR_LIGN_FRAC] ), >, 1 + eps);
 
+	/*** compute leaf litter carbon pools ****/
+	s->value[LITR1C] = s->value[LEAF_LITTER_C] * s->value[LEAF_LITR_LAB_FRAC];
+	s->value[LITR2C] = s->value[LEAF_LITTER_C] * s->value[LEAF_LITR_USCEL_FRAC];
+	s->value[LITR3C] = s->value[LEAF_LITTER_C] * s->value[LEAF_LITR_SCEL_FRAC];
+	s->value[LITR4C] = s->value[LEAF_LITTER_C] * s->value[LEAF_LITR_LIGN_FRAC];
+
+	/* check */
+	CHECK_CONDITION ( fabs ( s->value[LITR1C] + s->value[LITR2C] + s->value[LITR3C] + s->value[LITR4C]), >, s->value[LEAF_LITTER_C] + eps);
+
+	/*** compute leaf litter nitrogen pools ****/
+	s->value[LITR1N] = s->value[LEAF_LITTER_N] * s->value[LEAF_LITR_LAB_FRAC];
+	s->value[LITR2N] = s->value[LEAF_LITTER_N] * s->value[LEAF_LITR_USCEL_FRAC];
+	s->value[LITR3N] = s->value[LEAF_LITTER_N] * s->value[LEAF_LITR_SCEL_FRAC];
+	s->value[LITR4N] = s->value[LEAF_LITTER_N] * s->value[LEAF_LITR_LIGN_FRAC];
+
+	/* check */
+	CHECK_CONDITION ( fabs ( s->value[LITR1N] + s->value[LITR2N] + s->value[LITR3N] + s->value[LITR4N]), >, s->value[LEAF_LITTER_N] + eps);
+	/******************************************************************************************************************************************************************/
+
+
+
+
+#if 0
 	/*** compute fine root litter fractions ***/
 
 	/* partitioning fine root litter carbon cellulose into shielded and unshielded pools */
@@ -895,16 +931,56 @@ void initialization_forest_class_litter_soil (cell_t *const c, const int height,
 		s->value[DEAD_WOOD_SCEL_FRAC]  = 0.8 * s->value[DEAD_WOOD_CEL_FRAC];
 		s->value[DEAD_WOOD_USCEL_FRAC] = 0.2 * s->value[DEAD_WOOD_CEL_FRAC];
 	}
+#endif
 }
 void initialization_forest_litter_soil (cell_t *const c, const int height, const int dbh, const int age, const int species)
 {
 	species_t *s;
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
-	//fixme todo
-	//test test test test test test
-	c->litrC = s->value[LEAF_LITTER_C] * 1e6 / g_settings->sizeCell;
-	c->soilC = 0.;
+	/******************************************************************************************************************************************************************/
+	c->leaf_litrC  = s->value[LEAF_LITTER_C] * 1e6 / g_settings->sizeCell;
+	c->leaf_litr1C = s->value[LITR1C]        * 1e6 / g_settings->sizeCell;
+	c->leaf_litr1C = s->value[LITR2C]        * 1e6 / g_settings->sizeCell;
+	c->leaf_litr1C = s->value[LITR3C]        * 1e6 / g_settings->sizeCell;
+	c->leaf_litr1C = s->value[LITR4C]        * 1e6 / g_settings->sizeCell;
+
+	/* check */
+	CHECK_CONDITION ( fabs ( c->leaf_litr1C + c->leaf_litr2C + c->leaf_litr3C + c->leaf_litr4C ) , > , c->leaf_litrC + eps );
+
+	/* cumulate */
+	c->litrC = c->leaf_litrC;
+	//FIXME for now assume no soilC
+	c->soilC      = 0.;
+
+	c->leaf_litrN  = s->value[LEAF_LITTER_N] * 1e6 / g_settings->sizeCell;
+	c->leaf_litr1N = s->value[LITR1N]        * 1e6 / g_settings->sizeCell;
+	c->leaf_litr1N = s->value[LITR2N]        * 1e6 / g_settings->sizeCell;
+	c->leaf_litr1N = s->value[LITR3N]        * 1e6 / g_settings->sizeCell;
+	c->leaf_litr1N = s->value[LITR4N]        * 1e6 / g_settings->sizeCell;
+
+	/* check */
+	CHECK_CONDITION ( fabs ( c->leaf_litr1N + c->leaf_litr2N + c->leaf_litr3N + c->leaf_litr4N ) , > , c->leaf_litrN + eps );
+
+	/* cumulate */
+	c->litrN = c->leaf_litrN;
+	//FIXME for now assume no soilN
+	c->soilN      = 0.;
+	/******************************************************************************************************************************************************************/
+
+	//fixme add other pools to litter
+	c->litr1C = c->leaf_litr1C;
+	c->litr2C = c->leaf_litr2C;
+	c->litr3C = c->leaf_litr3C;
+	c->litr4C = c->leaf_litr4C;
+
+	c->litr1N = c->leaf_litr1N;
+	c->litr2N = c->leaf_litr2N;
+	c->litr3N = c->leaf_litr3N;
+	c->litr4N = c->leaf_litr4N;
+
+
+
 }
 
 void initialization_soil_physic(cell_t *const c)
