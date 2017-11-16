@@ -3,10 +3,35 @@
 # Carlo Trotta (trottacarlo@unitus.it)
 # starting date: 18 April 2017
 rm(list = ls())
+
+# working directory
+# setwd('/home/alessio-cmcc/git/3D-CMCC-LAND/software/3D-CMCC-Forest-Model/')
+# setwd(getwd())
+setwd('/home/alessio/git/3D-CMCC-LAND/software/3D-CMCC-Forest-Model/')
+
 library(ggplot2)
 library(cowplot)
 library(lubridate)
+library(gridExtra)
+library(matrixStats)
+library(scales)
 source("GetPlotResults_file.R")
+source('import_all_out.R')
+source('plot_ts.R')
+source('plot_multi_lm.R')
+source('removeInf.R')
+source('colSums2.R')
+source('flux_validation.R')
+
+dir_in_ec = paste0(getwd(),'/eddy_validation/')
+soglia_qc = 0.6
+# file delle corrispondenze tra i nomi delle variabili del modello
+# e quelle del db profound
+file_db_corrisp = paste0(getwd(),'/stand_mod_vs_stand_profound.txt')
+# file di stand di validazione
+# file_stand = 'c:/Users/CMCC/Desktop/profound/extract2/STAND.csv'
+file_stand = paste0(getwd(),'/STAND.csv')
+
 model<-"3D-CMCC-FEM"
 version="5.3.3-ISIMIP"
 
@@ -22,11 +47,11 @@ print("*******************************************************")
 # month=format(today, format="%B")
 # year=format(today, format="%Y")
 # month=toupper(month)
-
-# working directory
-# setwd('/home/alessio-cmcc/git/3D-CMCC-LAND/software/3D-CMCC-Forest-Model/')
-# setwd(getwd())
-setwd('/home/alessio/git/3D-CMCC-LAND/software/3D-CMCC-Forest-Model/')
+# 
+# # working directory
+# # setwd('/home/alessio-cmcc/git/3D-CMCC-LAND/software/3D-CMCC-Forest-Model/')
+# # setwd(getwd())
+# setwd('/home/alessio/git/3D-CMCC-LAND/software/3D-CMCC-Forest-Model/')
 
 # number of plot for each pdf page
 nr_plot_per_page = 24
@@ -39,10 +64,10 @@ time_list_output = c('annual','monthly','daily')
 
 # single or multiple simulations
 build_list<-c('Release')#, 'Release')
-site_list<-c("Soroe","Bily_Kriz")#,"Soroe")#,"Hyytiala","All"),"Soroe"
-esm_list <-c("1","2","4")# ("1","2","3","4","5", "All")
-rcp_list <-c("0p0","2p6")# ("0p0","2p6","4p5","6p0","8p5","All")
-man_list <-c("All")# ("on",'off', "All")
+site_list<-c("Peitz")#,"Soroe")#,"Hyytiala","All"),"Soroe"
+esm_list <-c("1")# ("1","2","3","4","5", "All")
+rcp_list <-c("0p0")# ("0p0","2p6","4p5","6p0","8p5","All")
+man_list <-c("off")# ("on",'off', "All")
 co2_list <-c("on")# , "on",off", "All")
 protocol_list<-c("FT")# ("2A","2B", "All") 
 time_list = c('annual')
@@ -309,9 +334,8 @@ print(end.time - start.time)
 
 
 # create the comparison plots ----
-# 
-# for (protocol in protocol_list) {
-#   
+
+
 for (site in site_list) {
   for(cy_time in time_list) {
     
@@ -330,40 +354,294 @@ for (site in site_list) {
     if ( length(lf) == 0 ) {
       next
     }
-    
-    lista_p = GetPlotResults_file(lf,
-                   c('YEAR','LAYER','SPECIES','MANAGEMENT','filename','Date'))
-    
-    pdf(paste0(getwd(),"/output/",output_folder,"-", version, "-", site,'/',cy_time,"_",version, "-", site,'_file_all.pdf'),
-        onefile = T, width = 30,height = 24)
-
-    ref_plot = nr_plot_per_page
-    while ( length(lista_p) > 0) {
-        cat(paste0('number of variables to plot... ',length(lista_p),'\n'))
-        if ( length(lista_p) < ref_plot ) {
-            ref_plot = length(lista_p2)
-        }
-        lista_p2 = lista_p[seq(1,ref_plot)]
-
-        mpt = plot_grid(plotlist = lista_p2,ncol = nr_col_per_page,align = 'hv')
-        print(mpt)
-
-        lista_p = lista_p[-1*seq(1,ref_plot)]
-
+    if ( exists('df_t') ) {
+      rm(df_t)
     }
-
-    dev.off()
-    rm(lista_p2)
-    cat(paste0(getwd(),"/output/",output_folder,"-", version, "-", site,'/',cy_time,"_",version, "-", site,'_file_all.pdf created!\n'))
-
-    rm(lf,ref_plot)
+    df_t = import_all_out(paste0(getwd(),"/output/",output_folder,"-", version, "-", site),'annual')
+    file_name2 = c()
+    for (cy_r in as.character(df_t$filename)) {
+      file_name2 = c(file_name2,unlist(strsplit(cy_r,'_'))[1])
+    }
+    df_t$filename2 = file_name2
+    rm(file_name2,cy_r)
+    
+    GetPlotResults_file(df_t,color_variable = 'filename2',
+                  var_to_skip = c('YEAR','MONTH','DAY','LAYER','SPECIES',
+                                  'MANAGEMENT','filename',
+                                  'filename2','Date','TIME'),
+                  paste0(getwd(),"/output/",output_folder,"-", version, "-", site,'/',cy_time,'_',site,'_file_all.pdf'))
+    
+    rm(df_t)
     
     
   }
   rm(cy_time)
 }
 rm(site)
+rm(lf)
 
+# db con i nomi e gli ID dei siti
+df_siti = read.csv('sites_isimip.csv')
+lista_time = c('annual')
+
+for (cy_time in lista_time) {
+  for (cy_s in site_list) {
+    dir_in_gen = paste0(getwd(),"/output/",output_folder,"-", version, "-", cy_s,'/')
+    dir_in = list.dirs(dir_in_gen,recursive = F)
+    dir_in = dir_in[grep(cy_s,dir_in)]
+    dir_out = dir_in_gen
+    # import all dataset output in site folder ----
+    if (exists('df_t')) {
+      rm(df_t)
+    }
+    df_t = import_all_out(dir_in,cy_time)
+    
+    filename2 = c()
+    for ( cy_fn in df_t$filename ) {
+      filename2 = c(filename2,
+                    unlist(strsplit(cy_fn,'_'))[1]
+      )
+    }
+    df_t$filename2 = filename2
+    rm(filename2,cy_fn)
+    
+    site_id = df_siti$site_id[df_siti$model_name == cy_s]
+    site_sp = as.character(df_siti$species[df_siti$model_name == cy_s])
+    
+    # # plot all variables in df_t ----
+    
+    # validazione delle variabili stand e flussi solo sui LOCAL----
+    
+    df_t = df_t[grep('LOCAL',df_t$filename),]
+    
+    for (cy_valid in c('STAND') ) {#'FLUX_DT','FLUX_NT',
+      if (cy_valid == 'STAND') {
+        # importo il file con le corrispondenze delle variabili tra modello e profound
+        cat(sprintf('import file: %s\n',file_db_corrisp))
+        db_var_corr = read.csv(file_db_corrisp,comment.char = '#')
+        cat(sprintf('import file: %s OK\n',file_db_corrisp))
+        
+        # importo il file stand da profound e uso solo alcune righe
+        cat(sprintf('import file: %s\n',file_stand))
+        db_valid = read.csv(file_stand,comment.char = '#')
+        cat(sprintf('import file: %s OK\n',file_stand))
+        # uso solo le righe della specie e del sito
+        db_valid = db_valid[db_valid$site_id == site_id,]
+        db_valid = db_valid[as.character(db_valid$species_id) == site_sp,]
+        
+        # corrispondenze tra nome del modello e nome del db
+        db_var_corr = data.frame(
+          'model.variable' = db_var_corr$model.variable,
+          'profound.variable' = db_var_corr$profound.variable
+        )
+      }
+      if (cy_valid == 'FLUX_DT') {
+        
+        # importo il file stand da profound e uso solo alcune righe
+        cat(sprintf('import file: %s\n',paste0('FLUX_',site_id,'_',cy_time,'.csv')))
+        db_valid = read.csv(paste0(file_flux,'FLUX_',site_id,'_',cy_time,'.csv'),comment.char = '#')
+        cat(sprintf('import file: %s OK\n',paste0('FLUX_',site_id,'_',cy_time,'.csv')))
+        
+        # corrispondenze tra nome del modello e nome del db
+        db_var_corr = data.frame(
+          'model.variable' = c("YEAR","gpp","reco","nee"),
+          'profound.variable' = c('year','gppDtCutRef_gCm2d1','recoDtCutRef_gCm2d1',
+                                  'neeCutRef_gCm2d1')
+        )
+      }
+      if (cy_valid == 'FLUX_NT') {
+        
+        # importo il file stand da profound e uso solo alcune righe
+        cat(sprintf('import file: %s\n',paste0('FLUX_',site_id,'_',cy_time,'.csv')))
+        db_valid = read.csv(paste0(file_flux,'FLUX_',site_id,'_',cy_time,'.csv'),comment.char = '#')
+        cat(sprintf('import file: %s OK\n',paste0('FLUX_',site_id,'_',cy_time,'.csv')))
+        
+        # corrispondenze tra nome del modello e nome del db
+        db_var_corr = data.frame(
+          'model.variable' = c("YEAR","gpp","reco","nee"),
+          'profound.variable' = c('year','gppNtCutRef_gCm2d1','recoNtCutRef_gCm2d1',
+                                  'neeCutRef_gCm2d1')
+        )
+      }
+      # aggiungo la colonna TIME
+      db_valid$TIME = ymd((db_valid$year*10000) + (0101))
+      
+      db_valid$filename2 = 'Meas'
+      
+      # sincronizzo le serie temporali usando solo i file LOCAL
+      pos_year = c()
+      for (cy_year_st in db_valid$year) {
+        pos_tmp = which(df_t$YEAR == cy_year_st)
+        if ( length(pos_tmp) > 0 ) {
+          pos_year = c(pos_year,pos_tmp)
+        }
+        rm(pos_tmp)
+      } 
+      rm(cy_year_st)
+      pos_year2 = c()
+      for (cy_year_st in df_t$YEAR) {
+        pos_tmp = which(db_valid$year == cy_year_st)
+        if ( length(pos_tmp) > 0 ) {
+          pos_year2 = c(pos_year2,pos_tmp)
+        }
+        rm(pos_tmp)
+      } 
+      rm(cy_year_st)
+      
+      if ( (length(pos_year) * length(pos_year2))  > 0 ) {
+        
+        df_t2 = df_t[pos_year,]
+        db_valid2 = db_valid[pos_year2,]
+        
+        # faccio i plot per le singole variabili
+        list_plot_stand_valid = list()
+        
+        for ( cy_v in seq(1,length(db_var_corr$model.variable)) ) {
+          if ( as.character(db_var_corr$model.variable[cy_v]) == 'YEAR' ) {
+            next
+          }
+          if ( as.character(db_var_corr$model.variable[cy_v]) == 'SPECIES' ) {
+            next
+          }
+          df_plot_tmp = data.frame(
+            'TIME' = df_t2$TIME,
+            'v1' = df_t2[,as.character(db_var_corr$model.variable[cy_v])],
+            'legend_name' = df_t2$filename2
+          )
+          
+          df_plot_tmp = rbind(df_plot_tmp,
+                              data.frame(
+                                'TIME' = db_valid2$TIME,
+                                'v1' = db_valid2[,as.character(db_var_corr$profound.variable[cy_v])],
+                                'legend_name' = 'Meas'
+                              ))
+          
+          plot1 = plot_ts(df_plot_tmp,
+                          yvar_name = as.character(db_var_corr$model.variable[cy_v]),
+                          xvar_name = 'YEAR',ribbon = 'N')
+          
+          rm(df_plot_tmp)
+          for (cy_vv in unique(df_t2$filename2)) {
+            pos_v = which(df_t2$filename2 == cy_vv)
+            if ( exists('df_plot_tmp') ) {
+              df_plot_tmp = rbind(df_plot_tmp,data.frame(
+                'v1' = df_t2[pos_v,as.character(db_var_corr$model.variable[cy_v])],
+                'v2' = db_valid2[,as.character(db_var_corr$profound.variable[cy_v])],
+                'legend_name' = cy_vv
+              ))
+            } else {
+              df_plot_tmp = data.frame(
+                'v1' = df_t2[pos_v,as.character(db_var_corr$model.variable[cy_v])],
+                'v2' = db_valid2[,as.character(db_var_corr$profound.variable[cy_v])],
+                'legend_name' = cy_vv
+              )
+            }
+            rm(pos_v)
+          }
+          rm(cy_vv)
+          
+          plot_lr = plot_multi_lm(df_plot_tmp,
+                                  yvar_name = as.character(db_var_corr$model.variable[cy_v]),
+                                  xvar_name = as.character(db_var_corr$profound.variable[cy_v]))
+          
+          # plot_lr[[1]] = plot_lr[[1]] + theme(legend.position = 'top')
+          plot1 = plot1 + theme(legend.position = 'top')
+          
+          list_plot_stand_valid[[length(list_plot_stand_valid)+1]] = 
+            plot_grid(plot1,plot_lr[[1]],plot_lr[[2]],ncol = 3,rel_widths = c(1,1,2))
+          
+          rm(plot_lr,plot1)
+          rm(df_plot_tmp)
+        }
+        rm(cy_v)
+        
+        if ( length(list_plot_stand_valid) > 0 ) {
+          
+          pdf(paste0(dir_out,'/',cy_valid,'_validation_',cy_s,'.pdf'),
+              onefile = T, width = 20,height = 15)
+          nr_plot_per_page = 5
+          while (length(list_plot_stand_valid) > 0) {
+            if ( length(list_plot_stand_valid) < 5 ) {
+              nr_plot_per_page = length(list_plot_stand_valid)
+            }
+            print(
+              plot_grid(plotlist = list_plot_stand_valid[1:nr_plot_per_page],nrow = 5))
+            list_plot_stand_valid = list_plot_stand_valid[-1*(1:nr_plot_per_page)]
+          }
+          
+          dev.off()
+          
+          cat(paste0(dir_out,'/',cy_valid,'_validation_',cy_s,'.pdf created!\n'))
+          
+          rm(nr_plot_per_page)
+        }
+        
+        rm(list_plot_stand_valid)
+        rm(df_t2,db_valid2,db_var_corr)
+      }
+      rm(pos_year,pos_year2)
+    }
+    rm(cy_valid)
+  }
+}
+rm(dir_in_gen)
+# validazione dei flussi ----
+
+for (cy_s in site_list) {
+  dir_in_gen = paste0(getwd(),"/output/",output_folder,"-", version, "-", cy_s,'/')
+  site_code = as.character(df_siti$fluxnet_code[df_siti$model_name == cy_s])
+  
+  # importo i dati fluxnet DD ----
+  lista_files = list.files(dir_in_ec,pattern = paste0('_FULLSET_','DD','_'),
+                           recursive = T,full.names = T)
+  lista_files = lista_files[grep(paste0('FLX_',as.character(site_code)),lista_files)]
+  
+  if (length(lista_files) == 0 ) {
+    stop(sprintf('file: %s\n NOT FOUND',
+                 paste0('FLX_',site_code)))
+  }
+  file_ec = lista_files
+  
+  dir_in = list.dirs(dir_in_gen,recursive = F)
+  dir_in = dir_in[grep(cy_s,dir_in)]
+  dir_in = dir_in[grep('LOCAL',dir_in)]
+
+  ls_file_md = list.files(dir_in,pattern = 'daily',recursive = T,full.names = T)
+  
+  list_p = list()
+  
+  for (file_mod in ls_file_md) {
+    
+    list_p[[length(list_p)+1]] = flux_validation(file_mod,
+                                                 cy_s,
+                                                 file_ec)
+    list_p[[length(list_p)+1]] = flux_validation(file_mod,
+                                                 cy_s,
+                                                 file_ec,
+                                                 var_md = c('reco','gpp'),
+                                                 var_eddy = c('RECO_NT_CUT_USTAR50','GPP_NT_CUT_USTAR50'),
+                                                 var_eddy_qc = c('NEE_CUT_USTAR50_QC','NEE_CUT_USTAR50_QC'),
+                                                 var_eddy_unc_max = c('RECO_NT_CUT_95','GPP_NT_CUT_95'),
+                                                 var_eddy_unc_min = c('RECO_NT_CUT_05','GPP_NT_CUT_05'))
+  }
+  rm(file_mod,ls_file_md)
+  
+  pdf(paste0(dir_in_gen,'validation_flux.pdf'),
+      onefile = T, width = 20,height = 15)
+  
+  for ( cy_p in seq(1,length(list_p)) ) {
+    for (cy_p2 in seq(1,length(list_p[[cy_p]]))) {
+      mpt = plot_grid(plotlist = list_p[[cy_p]][cy_p2])
+      print(mpt)
+      rm(mpt)
+    }
+  }
+  rm(cy_p,cy_p2)
+  dev.off()
+  rm(list_p)
+  
+}
+rm(cy_s)
 
 
 
