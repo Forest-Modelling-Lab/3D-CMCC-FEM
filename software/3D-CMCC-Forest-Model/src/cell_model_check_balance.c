@@ -214,7 +214,7 @@ int check_cell_carbon_flux_balance(cell_t *const c)
 	in = c->daily_gpp;
 
 	/* sum of carbon sinks */
-	out = c->daily_maint_resp + c->daily_growth_resp;
+	out = c->daily_maint_resp + c->daily_growth_resp /* + c->daily_het_resp */;
 
 	/* sum of current carbon storage */
 	store = c->daily_leaf_carbon   + c->daily_stem_carbon +
@@ -225,15 +225,16 @@ int check_cell_carbon_flux_balance(cell_t *const c)
 
 	balance = in - out - store;
 
-	logger(g_debug_log, "\nCELL CARBON FLUX BALANCE\n");
-
 	if ( fabs( balance ) > eps )
 	{
+		logger(g_debug_log, "\nCELL CARBON FLUX BALANCE\n");
+
 		error_log("DOY = %d\n", c->doy);
 		error_log("\nin\n");
 		error_log("c->daily_gpp                = %f gC/m2/day\n", c->daily_gpp);
 		error_log("\nout\n");
 		error_log("c->daily_tot_aut_resp       = %f gC/m2/day\n", c->daily_maint_resp + c->daily_growth_resp);
+		error_log("c->daily_tot_het_resp       = %f gC/m2/day\n", c->daily_het_resp);
 		error_log("\nstore\n");
 		error_log("c->daily_leaf_carbon        = %f gC/m2/day\n", c->daily_leaf_carbon);
 		error_log("c->daily_stem_carbon        = %f gC/m2/day\n", c->daily_stem_carbon);
@@ -271,8 +272,7 @@ int check_cell_carbon_mass_balance(cell_t *const c)
 	c->cell_carbon_in    = c->daily_gpp;
 
 	/* sum of sinks */
-	c->cell_carbon_out   = c->daily_growth_resp +
-			c->daily_maint_resp /* + c->daily_het_resp */;
+	c->cell_carbon_out   = c->daily_growth_resp + c->daily_maint_resp /* + c->daily_het_resp */;
 
 	/* sum of current storage */
 	c->cell_carbon_store = c->leaf_carbon +
@@ -289,16 +289,17 @@ int check_cell_carbon_mass_balance(cell_t *const c)
 	/* check carbon pool balance */
 	c->cell_carbon_balance = c->cell_carbon_in - c->cell_carbon_out - ( c->cell_carbon_store - c->cell_carbon_old_store );
 
-	logger(g_debug_log, "\nCELL LEVEL CARBON MASS BALANCE\n");
-
 	/* check for carbon mass balance closure */
 	if ( ( fabs( c->cell_carbon_balance ) > eps ) && ( c->dos > 1 ) )
 	{
+		logger(g_debug_log, "\nCELL LEVEL CARBON MASS BALANCE\n");
+
 		error_log("DOS = %d\n", c->dos);
 		error_log("\nin\n");
 		error_log("daily_gpp_carbon   = %f gC/m2\n",     c->daily_gpp);
 		error_log("\nout\n");
 		error_log("daily_aut_resp     = %f gC/m2/day\n", c->daily_aut_resp);
+		error_log("daily_het_resp     = %f gC/m2/day\n", c->daily_het_resp);
 		error_log("\nstore\n");
 		error_log("leaf_carbon        = %f gC/m2/day\n", c->leaf_carbon);
 		error_log("froot_carbon       = %f gC/m2/day\n", c->froot_carbon);

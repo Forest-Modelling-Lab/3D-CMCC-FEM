@@ -11,6 +11,9 @@
 
 #include "matrix.h"
 
-void heterotrophic_respiration(cell_t *const c);
+void heterotrophic_respiration_reichstein(cell_t *const c);
+
+void heterotrophic_respiration_biome (cell_t *const c, const meteo_daily_t *const meteo_daily);
+
 
 #endif /* HET_RESPIRATION_H_ */

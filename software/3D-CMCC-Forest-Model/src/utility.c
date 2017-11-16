@@ -102,6 +102,8 @@ void reset_daily_cell_variables(cell_t *const c)
 	c->daily_fruit_cwdC =               0.;
 	c->daily_cwdC =                     0.;
 	c->daily_soilC =                    0.;
+	c->daily_litr_het_resp =            0.;
+	c->daily_soil_het_resp =            0.;
 
 	/* nitrogen litter fluxes */
 	c->daily_litrN =                    0.;

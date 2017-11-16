@@ -424,6 +424,7 @@ enum {
 	LEAF_SUN_C,                         /* (tC/cell) Current Leaf sun carbon pool */
 	LEAF_SHADE_C,                       /* (tC/cell) Current Leaf shade carbon pool */
 	MAX_LEAF_C,                         /* (tC/cell/year) Maximum Leaf carbon pool */
+	LEAF_LITTER_C,                      /* (tC/cell) AMOUNT Leaf carbon pool TO LITTER IN INIT */
 	CROOT_C,                            /* (tC/cell) Current Coarse root carbon pool */
 	FROOT_C,                            /* (tC/cell) Current Fine root carbon pool */
 	MAX_FROOT_C,                        /* (tC/cell/year) Maximum Fine root carbon pool */
@@ -1263,14 +1264,16 @@ typedef struct
 	double kl4;                                                           /* decay rate of lignin litter */
 
 	/* heterotrophic soil */
-	double litr1_rh;                                                      /* (kgC/m2/day) heterotrophic respiration for litter labile carbon */
-	double litr2_rh;                                                      /* (kgC/m2/day) heterotrophic respiration for litter unshielded cellulose carbon */
-	double litr3_rh;                                                      /* (kgC/m2/day) heterotrophic respiration for litter shielded cellulose carbon */
-	double litr4_rh;                                                      /* (kgC/m2/day) heterotrophic respiration for litter lignin carbon */
-	double soil1_rh;                                                      /* (kgC/m2/day) heterotrophic respiration for microbial recycling pool carbon (fast) */
-	double soil2_rh;                                                      /* (kgC/m2/day) heterotrophic respiration for microbial recycling pool carbon (medium) */
-	double soil3_rh;                                                      /* (kgC/m2/day) heterotrophic respiration for microbial recycling pool carbon (slow) */
-	double soil4_rh;                                                      /* (kgC/m2/day) heterotrophic respiration for recalcitrant SOM carbon (humus, slowest) */
+	double daily_litr_het_resp;                                           /* (gC/m2/day) heterotrophic respiration for total litter carbon */
+	double daily_litr1_het_resp;                                          /* (gC/m2/day) heterotrophic respiration for litter labile carbon */
+	double daily_litr2_het_resp;                                          /* (gC/m2/day) heterotrophic respiration for litter unshielded cellulose carbon */
+	double daily_litr3_het_resp;                                          /* (gC/m2/day) heterotrophic respiration for litter shielded cellulose carbon */
+	double daily_litr4_het_resp;                                          /* (gC/m2/day) heterotrophic respiration for litter lignin carbon */
+	double daily_soil_het_resp;                                           /* (gC/m2/day) heterotrophic respiration for total soil carbon */
+	double daily_soil1_het_resp;                                          /* (gC/m2/day) heterotrophic respiration for microbial recycling pool carbon (fast) */
+	double daily_soil2_het_resp;                                          /* (gC/m2/day) heterotrophic respiration for microbial recycling pool carbon (medium) */
+	double daily_soil3_het_resp;                                          /* (gC/m2/day) heterotrophic respiration for microbial recycling pool carbon (slow) */
+	double daily_soil4_het_resp;                                          /* (gC/m2/day) heterotrophic respiration for recalcitrant SOM carbon (humus, slowest) */
 
 	/* soil fraction */
 	double leaf_litt_scel_frac;                                           /* (DIM) leaf litter shielded cellulose fraction */

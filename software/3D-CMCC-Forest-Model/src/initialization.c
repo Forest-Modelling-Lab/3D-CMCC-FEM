@@ -316,6 +316,10 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 	logger(g_debug_log, "-Minimum reserve = %f tC/cell\n", s->value[MIN_RESERVE_C]);
 	logger(g_debug_log, "-Minimum reserve = %f tC/tree\n", s->value[TREE_MIN_RESERVE_C]);
 
+	/* compute maximum LAI at peak value) */
+	s->value[PEAK_LAI_PROJ] = ( ( s->value[SAPWOOD_AREA] / 1e4 ) * s->value[SAP_LEAF]) / s->value[CROWN_AREA_PROJ];
+	logger(g_debug_log, "PEAK_LAI_PROJ = %f m2/m2\n",s->value[PEAK_LAI_PROJ]);
+
 
 	/* leaf */
 	if ( ! s->value[LEAF_DM] || s->value[LEAF_DM] == NO_DATA )
@@ -334,19 +338,19 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 		{
 			logger(g_debug_log, "\nNo Leaf Biomass Data are available for model initialization \n");
 			logger(g_debug_log, "...Generating input Leaf Biomass data from LAI\n");
-
-			/* check */
-			if( ! s->value[LAI_PROJ] || s->value[LAI_PROJ] == NO_DATA )
-			{
-				logger_error(g_debug_log,"No Leaf Biomass nor LAI values from initialization file (recompute it using sapwood)!!!!\n");
-
-				/* compute LAI (assuming at peak value) */
-				s->value[LAI_PROJ] = ( ( s->value[SAPWOOD_AREA] / 1e4 ) * s->value[SAP_LEAF]) / s->value[CROWN_AREA_PROJ];
-				logger(g_debug_log, "PEAK_LAI_PROJ = %f m2/m2\n",s->value[PEAK_LAI_PROJ]);
-			}
+//
+//			/* check */
+//			if( ! s->value[LAI_PROJ] || s->value[LAI_PROJ] == NO_DATA )
+//			{
+//				logger_error(g_debug_log,"No Leaf Biomass nor LAI values from initialization file (recompute it using sapwood)!!!!\n");
+//
+//				/* compute LAI (assuming at peak value) */
+//				s->value[LAI_PROJ] = ( ( s->value[SAPWOOD_AREA] / 1e4 ) * s->value[SAP_LEAF]) / s->value[CROWN_AREA_PROJ];
+//				logger(g_debug_log, "PEAK_LAI_PROJ = %f m2/m2\n",s->value[PEAK_LAI_PROJ]);
+//			}
 
 			/* compute leaf carbon to PEAK LAI down-scaled to canopy cover */
-			s->value[LEAF_DM]   = (s->value[LAI_PROJ] / s->value[SLA_AVG] ) / 1e3 * ( s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell );
+			s->value[LEAF_DM]   = (s->value[PEAK_LAI_PROJ] / s->value[SLA_AVG] ) / 1e3 * ( s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell );
 			logger(g_debug_log, "LEAF_DM        = %f tDM/cell\n", s->value[LEAF_DM]);
 
 			/* convert tDM/cell to tC/cell */
@@ -354,22 +358,22 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 			logger(g_debug_log, "LEAF_C         = %f tC/cell\n", s->value[LEAF_C]);
 
 			/* Calculate projected LAI for sunlit and shaded canopy portions */
-			s->value[LAI_SUN_PROJ]   = 1. - exp(-s->value[LAI_PROJ]);
-			s->value[LAI_SHADE_PROJ] = s->value[LAI_PROJ] - s->value[LAI_SUN_PROJ];
+			s->value[LAI_SUN_PROJ]   = 1. - exp(-s->value[PEAK_LAI_PROJ]);
+			s->value[LAI_SHADE_PROJ] = s->value[PEAK_LAI_PROJ] - s->value[LAI_SUN_PROJ];
 
-			logger(g_debug_log, "LAI_PROJ       = %f m2/m2\n", s->value[LAI_PROJ]);
-			logger(g_debug_log, "LAI_SUN_PROJ   = %f m2/m2\n", s->value[LAI_SUN_PROJ]);
-			logger(g_debug_log, "LAI_SHADE_PROJ = %f m2/m2\n", s->value[LAI_SHADE_PROJ]);
+			logger(g_debug_log, "PEAK_LAI_PROJ       = %f m2/m2\n", s->value[PEAK_LAI_PROJ]);
+			logger(g_debug_log, "PEAK_LAI_SUN_PROJ   = %f m2/m2\n", s->value[LAI_SUN_PROJ]);
+			logger(g_debug_log, "PEAK_LAI_SHADE_PROJ = %f m2/m2\n", s->value[LAI_SHADE_PROJ]);
 
 			/* compute total LAI for Exposed Area */
 			//fixme error
-			s->value[LAI_EXP]       = (s->value[LAI_PROJ] / s->value[SLA_AVG]) / 1e3 * ( s->value[CANOPY_COVER_EXP] * g_settings->sizeCell );
-			s->value[LAI_SUN_EXP]   = 1. - exp ( -s->value[LAI_EXP] );
-			s->value[LAI_SHADE_EXP] = s->value[LAI_EXP] - s->value[LAI_SUN_EXP];
-
-			logger(g_debug_log, "LAI_EXP        = %f m2/m2\n", s->value[LAI_EXP]);
-			logger(g_debug_log, "LAI_SUN_EXP    = %f m2/m2\n", s->value[LAI_SUN_EXP]);
-			logger(g_debug_log, "LAI_SHADE_EXP  = %f m2/m2\n", s->value[LAI_SHADE_EXP]);
+//			s->value[LAI_EXP]       = (s->value[LAI_PROJ] / s->value[SLA_AVG]) / 1e3 * ( s->value[CANOPY_COVER_EXP] * g_settings->sizeCell );
+//			s->value[LAI_SUN_EXP]   = 1. - exp ( -s->value[LAI_EXP] );
+//			s->value[LAI_SHADE_EXP] = s->value[LAI_EXP] - s->value[LAI_SUN_EXP];
+//
+//			logger(g_debug_log, "LAI_EXP        = %f m2/m2\n", s->value[LAI_EXP]);
+//			logger(g_debug_log, "LAI_SUN_EXP    = %f m2/m2\n", s->value[LAI_SUN_EXP]);
+//			logger(g_debug_log, "LAI_SHADE_EXP  = %f m2/m2\n", s->value[LAI_SHADE_EXP]);
 		}
 	}
 	else
@@ -408,6 +412,10 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 		s->value[LEAF_SHADE_C] = s->value[LEAF_C] - s->value[LEAF_SUN_C];
 
 	}
+
+
+	/* compute leaf litter (assuming that at year zero litter is composed by the amount of peak lai of the previous year */
+	s->value[LEAF_LITTER_C] = ( ( s->value[PEAK_LAI_PROJ] / s->value[SLA_AVG] ) / 1e3 * ( s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell ) ) / GC_GDM;
 
 	/* compute single tree leaf carbon amount */
 	s->value[TREE_LEAF_C] = s->value[LEAF_C] / s->counter[N_TREE];
@@ -883,8 +891,13 @@ void initialization_forest_class_litter_soil (cell_t *const c, const int height,
 }
 void initialization_forest_litter_soil (cell_t *const c, const int height, const int dbh, const int age, const int species)
 {
-	//fixme todo
+	species_t *s;
+	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
+	//fixme todo
+	//test test test test test test
+	c->litrC = s->value[LEAF_LITTER_C];
+	c->soilC = 0.;
 }
 
 void initialization_soil_physic(cell_t *const c)
