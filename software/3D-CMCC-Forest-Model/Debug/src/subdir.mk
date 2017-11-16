@@ -56,6 +56,7 @@ C_SRCS += \
 ../src/peak_lai.c \
 ../src/phenology.c \
 ../src/photosynthesis.c \
+../src/photosynthesis2.c \
 ../src/print.c \
 ../src/print_output.c \
 ../src/regeneration.c \
@@ -132,6 +133,7 @@ OBJS += \
 ./src/peak_lai.o \
 ./src/phenology.o \
 ./src/photosynthesis.o \
+./src/photosynthesis2.o \
 ./src/print.o \
 ./src/print_output.o \
 ./src/regeneration.o \
@@ -208,6 +210,7 @@ C_DEPS += \
 ./src/peak_lai.d \
 ./src/phenology.d \
 ./src/photosynthesis.d \
+./src/photosynthesis2.d \
 ./src/print.d \
 ./src/print_output.d \
 ./src/regeneration.d \
