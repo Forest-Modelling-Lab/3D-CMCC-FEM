@@ -31,7 +31,7 @@ int Cell_model(matrix_t *const m, const int cell, const int day, const int month
 	meteo_daily_t  *meteo_daily;
 	//meteo_annual_t *meteo_annual;
 
-	if ( DAILY == g_settings->time )
+	//if ( DAILY == g_settings->time )
 	{
 		/* assign shortcuts */
 		c = &m->cells[cell];
@@ -88,6 +88,7 @@ int Cell_model(matrix_t *const m, const int cell, const int day, const int month
 		/* CHECK FOR NITROGEN MASS BALANCE CLOSURE */
 		/* 6 */ //fixme if ( ! check_cell_nitrogen_mass_balance    ( c, meteo_annual ) ) return 0;
 	}
+#if 0
 	else if ( HOURLY == g_settings->time )
 	{
 		// TODO
@@ -96,6 +97,7 @@ int Cell_model(matrix_t *const m, const int cell, const int day, const int month
 	{
 		// TODO
 	}
+#endif
 
 	/* ok */
 	return 1;

@@ -1524,6 +1524,7 @@ int main(int argc, char *argv[]) {
 
 	hours_count = 1;
 	halfhours_count = 1;
+#if 0
 	switch ( g_settings->time ) {
 		case HOURLY:
 			hours_count = METEO_HOURS_COUNT;
@@ -1534,6 +1535,7 @@ int main(int argc, char *argv[]) {
 			halfhours_count = METEO_HALFHOURS_COUNT;
 		break;
 	}
+#endif
 
 	/* for monthly and yearly means */
 	for ( cell = 0; cell < matrix->cells_count; ++cell )
@@ -1633,7 +1635,7 @@ int main(int argc, char *argv[]) {
 				for ( cell = 0; cell < matrix->cells_count; ++cell )
 				{
 					/* for monthly mean */
-					if ( DAILY == g_settings->time )
+					//if ( DAILY == g_settings->time )
 					{
 						meteo_d_t* m = matrix->cells[cell].years[year].daily;
 
@@ -1687,6 +1689,7 @@ int main(int argc, char *argv[]) {
 						matrix->cells[cell].years[year].monthly[month].incoming_ppfd += matrix->cells[cell].years[year].daily[month].d[day].incoming_ppfd;
 						matrix->cells[cell].years[year].monthly[month].ppfd += matrix->cells[cell].years[year].daily[month].d[day].ppfd;	
 					}
+				#if 0
 					else if ( HOURLY == g_settings->time )
 					{
 						// TODO
@@ -1695,6 +1698,7 @@ int main(int argc, char *argv[]) {
 					{
 						// TODO
 					}
+				#endif
 				}
 			}
 

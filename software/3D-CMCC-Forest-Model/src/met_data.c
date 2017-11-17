@@ -30,7 +30,7 @@ void Daily_Sat_vapour_pressure(cell_t *const c, const int day, const int month, 
 	double TminK;
 	meteo_d_t* met;
 
-	assert(DAILY == g_settings->time);
+	//assert(DAILY == g_settings->time);
 
 	met = c->years[year].daily;
 
@@ -155,7 +155,7 @@ static void compute_atm_lw_downward_W(cell_t *const c, const int day, const int 
 	double esat;                        /* saturation vapour pressure at the air temperature (KPa)*/
 	double TairK;
 
-	if ( DAILY == g_settings->time )
+	//if ( DAILY == g_settings->time )
 	{
 		meteo_d_t *met;
 		met = c->years[year].daily;
@@ -215,6 +215,7 @@ static void compute_atm_lw_downward_W(cell_t *const c, const int day, const int 
 			met[month].d[day].atm_lw_downward_W = INVALID_VALUE;
 		}
 	}
+#if 0
 	else if ( HOURLY == g_settings->time )
 	{
 		// TODO
@@ -223,6 +224,7 @@ static void compute_atm_lw_downward_W(cell_t *const c, const int day, const int 
 	{
 		// TODO
 	}
+#endif
 }
 
 void Daily_Radiation(cell_t *const c, const int day, const int month, const int year)
@@ -232,7 +234,7 @@ void Daily_Radiation(cell_t *const c, const int day, const int month, const int 
 	double TmaxK, TminK;
 	meteo_d_t *met;
 
-	assert(DAILY == g_settings->time);
+	//assert(DAILY == g_settings->time);
 
 	met = c->years[year].daily;
 
@@ -316,7 +318,7 @@ void Daily_Check_prcp(cell_t *c, const int day, const int month, const int year)
 {
 	meteo_d_t *met;
 
-	assert(DAILY == g_settings->time);
+	//assert(DAILY == g_settings->time);
 
 	met = c->years[year].daily;
 	if(met[month].d[day].prcp > 0.)
@@ -355,7 +357,7 @@ void Daily_Day_Length(cell_t *c, const int day, const int month, const int year)
 
 	meteo_d_t *met;
 
-	assert(DAILY == g_settings->time);
+	//assert(DAILY == g_settings->time);
 
 	met = c->years[year].daily;
 
@@ -391,7 +393,7 @@ void Daily_Day_Length(cell_t *c, const int day, const int month, const int year)
 /* following Running et al., 1987 */
 void Daily_avg_temperature(meteo_d_t *met, const int day, const int month)
 {
-	assert(DAILY == g_settings->time);
+	//assert(DAILY == g_settings->time);
 
 	if ( NO_DATA == met[month].d[day].tavg )
 	{
@@ -406,7 +408,7 @@ void Daily_avg_temperature(meteo_d_t *met, const int day, const int month)
 
 void Daily_Psychrometric(meteo_d_t *met, const int day, const int month)
 {
-	assert(DAILY == g_settings->time);
+	//assert(DAILY == g_settings->time);
 
 	/* compute psychrometric (KPa/°C) constant as in Allen et al., 1998 */
 	met[month].d[day].psych = ( ( CP / 1e6 ) * ( met[month].d[day].air_pressure / 1e3 ) ) / ( MWratio * ( met[month].d[day].lh_vap / 1e6 ) );
@@ -417,7 +419,7 @@ void Daylight_avg_temperature(meteo_d_t *const met, const int day, const int mon
 	/* BIOME-BGC version */
 	/* Running-Coughlan 1988, Ecological Modelling */
 
-	assert(DAILY == g_settings->time);
+	//assert(DAILY == g_settings->time);
 
 	if ( met[month].d[day].tmax != NO_DATA && met[month].d[day].tmin != NO_DATA )
 	{
@@ -435,7 +437,7 @@ void Daily_Nightime_avg_temperature(meteo_d_t *const met, const int day, const i
 	/* BIOME-BGC version */
 	/* Running-Coughlan 1988, Ecological Modelling */
 
-	assert(DAILY == g_settings->time);
+	//assert(DAILY == g_settings->time);
 
 	if (met[month].d[day].tday != NO_DATA )
 	{
@@ -452,7 +454,7 @@ void Daily_Thermic_sum (meteo_d_t *met, const int day, const int month, const in
 {
 	static double previous_thermic_sum;
 
-	assert(DAILY == g_settings->time);
+	//assert(DAILY == g_settings->time);
 
 	if (!day && !month)
 	{
@@ -491,7 +493,7 @@ void Daily_Air_pressure(meteo_d_t *met, const int day, const int month)
 {
 	double t1, t2;
 
-	assert(DAILY == g_settings->time);
+	//assert(DAILY == g_settings->time);
 
 	/* compute air pressure */
 	/* BIOME-BGC version */
@@ -511,7 +513,7 @@ void Daily_Air_pressure(meteo_d_t *met, const int day, const int month)
 
 void Daily_Air_density (meteo_d_t *met, const int day, const int month) {
 
-	assert(DAILY == g_settings->time);
+	//assert(DAILY == g_settings->time);
 
 	/* compute density of air (in kg/m3) */
 	/* following Solantie R., 2004, Boreal Environmental Research, 9: 319-333, the model uses tday if available */
@@ -531,7 +533,7 @@ void Daily_Latent_heat(meteo_d_t *met, const int day, const int month)
 	/*BIOME-BGC APPROACH*/
 	/*compute latent heat of vaporization (J/Kg)*/
 
-	assert(DAILY == g_settings->time);
+	//assert(DAILY == g_settings->time);
 
 	met[month].d[day].lh_vap      = 2.5023e6 - 2430.54 * met[month].d[day].tavg;
 	met[month].d[day].lh_vap_soil = 2.5023e6 - 2430.54 * met[month].d[day].tsoil;
@@ -551,7 +553,7 @@ void Daily_Soil_temperature(const cell_t *const c, int day, int month, int year)
 	double weighted_avg;
 	extern int days_per_month[];
 
-	assert(DAILY == g_settings->time);
+	//assert(DAILY == g_settings->time);
 
 	/* following BIOME-bgc 4.2 */
 	/* for this version, an 10-day running weighted average of daily
@@ -617,7 +619,7 @@ void Daily_Weighted_average_temperature(const cell_t *const c, const e_weighted_
 	double weighted_avg;
 	extern int days_per_month[];
 
-	assert(DAILY == g_settings->time);
+	//assert(DAILY == g_settings->time);
 	assert(((var >= 0) && (var < WEIGHTED_MEAN_COUNT)) && c);
 
 	i = 0;
@@ -694,7 +696,7 @@ void Daily_Averaged_temperature(const cell_t *const c, const e_averaged_var var,
 	double averaged;
 	extern int days_per_month[];
 
-	assert(DAILY == g_settings->time);
+	//assert(DAILY == g_settings->time);
 	assert(((var >= 0) && (var < AVERAGED_COUNT)) && c);
 
 	i = 0;
@@ -764,7 +766,7 @@ void Daily_Averaged_temperature(const cell_t *const c, const e_averaged_var var,
 
 void Daily_Dew_temperature (meteo_d_t *const met, const int day, const int month)
 {
-	assert(DAILY == g_settings->time);
+	//assert(DAILY == g_settings->time);
 
 	/* dew point temperature based on Allen et al., 1998; Bosen, 1958; Murray, 1967 */
 	met[month].d[day].tdew = (116.91 + 237.3 * log(met[month].d[day].ea))/(16.78 - log(met[month].d[day].ea));
@@ -774,7 +776,7 @@ void Daily_Ndeposition (const cell_t *const c, int day, int month, int year)
 {
 	int doy;
 
-	assert(DAILY == g_settings->time);
+	//assert(DAILY == g_settings->time);
 
 	if ( IS_LEAP_YEAR(c->years[year].year)) doy = 366;
 	else doy = 365;

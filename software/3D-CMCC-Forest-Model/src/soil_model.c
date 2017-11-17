@@ -41,7 +41,7 @@ int Soil_model(matrix_t *const m, const int cell, const int day, const int month
 	/* assign shortcuts */
 	c = &m->cells[cell];
 
-	if ( DAILY == g_settings->time )
+	//if ( DAILY == g_settings->time )
 	{
 		meteo_daily  = &m->cells[cell].years[year].daily[month].d[day];
 		//meteo_daily = &m->cells[cell].years[year].m[month].d[day];
@@ -110,6 +110,7 @@ int Soil_model(matrix_t *const m, const int cell, const int day, const int month
 
 		/*******************************************************************************************************/
 	}
+#if 0
 	else if ( HOURLY == g_settings->time )
 	{
 		// TODO;
@@ -118,6 +119,7 @@ int Soil_model(matrix_t *const m, const int cell, const int day, const int month
 	{
 		// TODO
 	}
+#endif
 
 	/* ok */
 	return 1;

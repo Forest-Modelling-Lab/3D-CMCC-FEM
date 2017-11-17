@@ -226,7 +226,7 @@ void Veg_Days(cell_t *const c, const int day, const int month, const int year)
 	meteo_d_t *met;
 	species_t *s;
 
-	assert(DAILY == g_settings->time);
+	//assert(DAILY == g_settings->time);
 
 	met = c->years[year].daily;
 
