@@ -19,7 +19,7 @@ void soil_heterotrophic_respiration_biome (cell_t *const c, const meteo_daily_t 
 
 double heterotrophic_respiration_biome (cell_t *const c, const meteo_daily_t *const meteo_daily);
 
-void heterotrophic_respiration (cell_t *const c, const meteo_daily_t *const meteo_daily);
+void heterotrophic_respiration (cell_t *const c);
 
 
 #endif /* HET_RESPIRATION_H_ */

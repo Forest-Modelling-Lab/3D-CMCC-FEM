@@ -168,7 +168,7 @@ void litter_heterotrophic_respiration_biome ( cell_t *const c, const meteo_daily
 	/* release of shielded cellulose litter, tied to the decay rate of lignin litter */
 	if ( c->litr3C > 0. )
 	{
-		//fixme miss competition (see biome)
+		//fixme fixme fixme fixme miss competition (see biome)
 		c->daily_litr3C_to_litr2C = litt_decomp_rate4 * c->litr3C;
 	}
 
@@ -195,6 +195,10 @@ void litter_heterotrophic_respiration_biome ( cell_t *const c, const meteo_daily
 	c->daily_litr_to_soilN = c->daily_litr1N_to_soil1N + c->daily_litr2N_to_soil2N + c->daily_litr4N_to_soil3N;
 	logger (g_debug_log, "c->daily_litr_to_soilN = %g gN/m^2/day\n", c->daily_litr_to_soilN);
 
+
+	/* call heterotrophic_respiration */
+	heterotrophic_respiration ( c );
+
 	/*******************************************************************************************************************************/
 }
 
@@ -214,12 +218,10 @@ void soil_heterotrophic_respiration_biome ( cell_t *const c, const meteo_daily_t
 //	soil_decomp_rate3     = KS3_BASE * rate_scalar;
 //	soil_decomp_rate4     = KS4_BASE * rate_scalar;
 
-
-
-	//FIXME FIXME FIXME FIXME FIXME FIXME FIXME MISS SOIL CARBON
+	//heterotrophic_respiration ( c );
 }
 
-void heterotrophic_respiration ( cell_t *const c, const meteo_daily_t *const meteo_daily )
+void heterotrophic_respiration ( cell_t *const c )
 {
 
 	/*******************************************************************************************************************************/

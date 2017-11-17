@@ -7,9 +7,9 @@
 *~
 
 # ignore these directories  
-/Debug/
-/Release/
-/output/
+/Debug
+/Release
+/output
 
 # ignore eclipse settings file
 /.settings/
