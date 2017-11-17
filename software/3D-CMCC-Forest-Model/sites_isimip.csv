@@ -1,0 +1,11 @@
+"model_name","isimip_name","site_id","species","fluxnet_code"
+"Bily_Kriz","bily_kriz",3,"piab",CZ-BK1
+"Collelongo","collelongo",5,"fasy",IT-Col
+"Hyytiala","hyytiala",12,"pisy",FI-Hyy
+"Kroof","kroof",13,"fasy, piab, acpl,lade, pisy, quro",NA
+"LeBray","le_bray",14,"pipi",FR-LBr
+"Peitz","peitz",16,"pisy",NA
+"Solling_beech","solling_beech",20,"fasy",NA
+"Solling_spruce","solling_spruce",25,"piab",NA
+"Soroe","soro",21,"fasy",DK-Sor
+

@@ -130,7 +130,7 @@ void heterotrophic_respiration_biome ( cell_t *const c, const meteo_daily_t *con
 	//note: a much simplified approach that use all litter (as in Reichestein et al., 2003) instead the labile fraction as in BIOME-BGC
 	//fixme fixme fixme fixme fixme
 	/* litter heterotrophic respiration gC/m2/day */
-	c->daily_litr_het_resp    = (litr1C_lost * RFL1S1) + (litr2C_lost * RFL2S2) + (litr3C_lost * RFL2S2) + (litr1C_lost * RFL4S3);
+	c->daily_litr_het_resp    = (litr1C_lost * RFL1S1) + (litr2C_lost * RFL2S2) + (litr3C_lost * RFL2S2) + (litr4C_lost * RFL4S3);
 
 
 
