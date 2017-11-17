@@ -1164,6 +1164,8 @@ typedef struct
 	double daily_soil3C_to_soil4C;                                        /* (gC/m2/day) daily decomposition fluxes soil to soil */
 
 	/* litter and soil nitrogen fluxes */
+	double daily_N_miner;                                                 /*(gN/m2/day) daily nitrogen mineralized */
+	double daily_N_pot_imm;                                               /*(gN/m2/day) daily nitrogen immobilized */
 	/* litter */
 	double daily_to_litrN;                                                /* (gN/m2/day) daily leaf + fine root to litter nitrogen pool at cell level */
 	double daily_leaf_to_litrN;                                           /* (gN/m2/day) daily leaf to litter nitrogen pool at cell level */

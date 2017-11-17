@@ -80,9 +80,6 @@ void daily_C_deciduous_partitioning (cell_t *const c, const int layer, const int
 	//logger(g_debug_log, "Reserve CTEM ratio = %g %%\n", pL * 100. );
 	CHECK_CONDITION( fabs ( pR + pS + pL ), >, 1 + eps );
 
-	/* fine root vs. coarse root ratio */
-	s->value[FINE_COARSE_ROOT] = (s->value[FINE_ROOT_LEAF] / s->value[COARSE_ROOT_STEM]) * ( 1. / s->value[STEM_LEAF]);
-
 	if (s->counter[VEG_DAYS] == 1)
 	{
 		s->counter[BUD_BURST_COUNTER] = (int)s->value[BUD_BURST];

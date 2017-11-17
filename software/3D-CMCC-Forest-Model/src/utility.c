@@ -85,6 +85,10 @@ void reset_daily_cell_variables(cell_t *const c)
 
 	/* carbon litter fluxes */
 	c->daily_litrC =                    0.;
+	c->daily_litr1C =                   0.;
+	c->daily_litr2C =                   0.;
+	c->daily_litr3C =                   0.;
+	c->daily_litr4C =                   0.;
 	c->daily_leaf_to_litrC =            0.;
 	c->daily_leaf_to_litr1C =           0.;
 	c->daily_leaf_to_litr2C =           0.;
@@ -95,10 +99,6 @@ void reset_daily_cell_variables(cell_t *const c)
 	c->daily_froot_to_litr2C =          0.;
 	c->daily_froot_to_litr3C =          0.;
 	c->daily_froot_to_litr4C =          0.;
-	c->daily_litr1C =                   0.;
-	c->daily_litr2C =                   0.;
-	c->daily_litr3C =                   0.;
-	c->daily_litr4C =                   0.;
 	c->daily_soil1C =                   0.;
 	c->daily_soil2C =                   0.;
 	c->daily_soil3C =                   0.;
@@ -115,6 +115,10 @@ void reset_daily_cell_variables(cell_t *const c)
 
 	/* nitrogen litter fluxes */
 	c->daily_litrN =                    0.;
+	c->daily_litr1N =                   0.;
+	c->daily_litr2N =                   0.;
+	c->daily_litr3N =                   0.;
+	c->daily_litr4N =                   0.;
 	c->daily_leaf_to_litrN =            0.;
 	c->daily_leaf_to_litr1N =           0.;
 	c->daily_leaf_to_litr2N =           0.;
@@ -125,6 +129,10 @@ void reset_daily_cell_variables(cell_t *const c)
 	c->daily_froot_to_litr2N =          0.;
 	c->daily_froot_to_litr3N =          0.;
 	c->daily_froot_to_litr4N =          0.;
+	c->daily_soil1N =                   0.;
+	c->daily_soil2N =                   0.;
+	c->daily_soil3N =                   0.;
+	c->daily_soil4N =                   0.;
 	c->daily_stem_cwdN =                0.;
 	c->daily_croot_cwdN =               0.;
 	c->daily_reserve_cwdN =             0.;

@@ -459,7 +459,7 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 	{
 		/* compute leaf litter (assuming that at year zero litter is composed by the amount of peak lai of the previous year */
 		s->value[LEAF_LITTER_C]  = ( ( s->value[PEAK_LAI_PROJ] / s->value[SLA_AVG] ) / 1e3 * ( s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell ) ) / GC_GDM;
-		s->value[FROOT_LITTER_C] = s->value[LEAF_LITTER_C] * s->value[FINE_ROOT_LEAF];
+		s->value[FROOT_LITTER_C] = s->value[LEAF_LITTER_C] * ( 1. - s->value[FROOT_LEAF_FRAC] );
 
 		if ( s->value[PHENOLOGY] == 1.1 || s->value[PHENOLOGY] == 1.2 )
 		{
@@ -472,8 +472,8 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 	else
 	{
 		/* get data from soil setting file */
-		s->value[LEAF_LITTER_C]  = g_soil_settings->values[LITTERC] * (1. - s->value[FINE_ROOT_LEAF]);
-		s->value[FROOT_LITTER_C] = g_soil_settings->values[LITTERC] * s->value[FINE_ROOT_LEAF];
+		s->value[LEAF_LITTER_C]  = g_soil_settings->values[LITTERC] * s->value[FROOT_LEAF_FRAC];
+		s->value[FROOT_LITTER_C] = g_soil_settings->values[LITTERC] * ( 1. - s->value[FINE_ROOT_LEAF]);
 	}
 
 	/***** COMPUTE LIVE DEAD BIOMASS *****/
@@ -741,7 +741,6 @@ void initialization_forest_class_N (cell_t *const c, const int height, const int
 
 	s->value[LEAF_LITTER_N]    = s->value[LEAF_LITTER_C]  / s->value[CN_FALLING_LEAVES];
 
-
 	/* fine root */
 	if ( ! s->value[FROOT_C] )
 	{
@@ -934,7 +933,7 @@ void initialization_forest_class_litter_soil (cell_t *const c, const int height,
 	s->value[FROOT_LITR3N] = ( s->value[FROOT_LITTER_N] * s->value[FROOT_LITR_SCEL_FRAC]  );
 	s->value[FROOT_LITR4N] = ( s->value[FROOT_LITTER_N] * s->value[FROOT_LITR_LIGN_FRAC]  );
 	/* check */
-	CHECK_CONDITION ( fabs ( s->value[FROOT_LITR1C] + s->value[FROOT_LITR2C] + s->value[FROOT_LITR3C] + s->value[FROOT_LITR4C]), >,  s->value[FROOT_LITTER_C] + eps);
+	CHECK_CONDITION ( fabs ( s->value[FROOT_LITR1N] + s->value[FROOT_LITR2N] + s->value[FROOT_LITR3N] + s->value[FROOT_LITR4N]), >,  s->value[FROOT_LITTER_N] + eps);
 
 
 #if 0

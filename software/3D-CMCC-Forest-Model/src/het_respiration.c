@@ -108,6 +108,7 @@ void litter_heterotrophic_respiration_biome ( cell_t *const c, const meteo_daily
 	double cn_litr1;              /* CN ratio of labile litter */
 	double cn_litr2;              /* CN ratio of cellulose litter */
 	double cn_litr4;              /* CN ratio of lignin litter */
+	double ratio;
 
 	rate_scalar = heterotrophic_respiration_biome ( c, meteo_daily );
 
@@ -143,7 +144,12 @@ void litter_heterotrophic_respiration_biome ( cell_t *const c, const meteo_daily
 	if (c->litr2N > 0.) cn_litr2 = c->litr2C / c->litr2N;
 	if (c->litr4N > 0.) cn_litr4 = c->litr4C / c->litr4N;
 
-	/* labile litter fluxes */
+	/* calculate the non-nitrogen limited fluxes between litter and
+	soil compartments. These will be ammended for N limitation if it turns
+	out the potential gross immobilization is greater than potential gross
+	mineralization. */
+
+	/* 1 labile litter fluxes */
 	if ( c->litr1C > 0. )
 	{
 		/* carbon */
