@@ -25,15 +25,11 @@ void litter_nitrogen_balance (cell_t *const c)
 	/* nitrogen fluxes balance of labile litter pool */
 	c->daily_litr1N       = ( c->daily_leaf_to_litr1N + c->daily_froot_to_litr1N) - ( c->daily_litr1N_to_soil1N );
 
-	printf("daily_litr1N_to_soil1N %f\n", c->daily_litr1N_to_soil1N);
-
 	/* nitrogen mass of labile litter pool */
 	c->litr1N            += c->daily_litr1N;
 
 	/* nitrogen fluxes balance of cellulose litter pool */
 	c->daily_litr2N       = ( c->daily_leaf_to_litr2N + c->daily_litr3N_to_litr2N + c->daily_froot_to_litr2N) - ( c->daily_litr2N_to_soil2N );
-
-	printf("daily_litr2N_to_soil2N %f\n", c->daily_litr2N_to_soil2N);
 
 	/* nitrogen mass of cellulose litter pool */
 	c->litr2N            += c->daily_litr2N;
@@ -47,17 +43,12 @@ void litter_nitrogen_balance (cell_t *const c)
 	/* nitrogen fluxes balance of lignin litter pool */
 	c->daily_litr4N       = ( c->daily_leaf_to_litr4N + c->daily_froot_to_litr4N) - ( c->daily_litr4N_to_soil3N );
 
-	printf("daily_litr4N_to_soil3N %f\n", c->daily_litr4N_to_soil3N);
-
 	/* nitrogen mass of lignin litter pool */
 	c->litr4N            += c->daily_litr4N;
 
 	/* total */
 	c->daily_to_litrN        = c->daily_litr1N + c->daily_litr2N + c->daily_litr3N + c->daily_litr4N;
 	c->litrN                 = c->litr1N + c->litr2N + c->litr3N + c->litr4N;
-
-	printf("litrN %f\n", c->litrN);
-	getchar();
 
 	/* move from litter to soil pools (this need to be done here to close litter balance) */
 	c->daily_soil1N      += c->daily_litr1N_to_soil1N;

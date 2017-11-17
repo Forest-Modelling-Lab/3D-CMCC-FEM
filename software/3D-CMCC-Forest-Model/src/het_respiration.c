@@ -108,7 +108,6 @@ void litter_heterotrophic_respiration_biome ( cell_t *const c, const meteo_daily
 	double cn_litr1;              /* CN ratio of labile litter */
 	double cn_litr2;              /* CN ratio of cellulose litter */
 	double cn_litr4;              /* CN ratio of lignin litter */
-	double ratio;
 
 	rate_scalar = heterotrophic_respiration_biome ( c, meteo_daily );
 
@@ -156,7 +155,7 @@ void litter_heterotrophic_respiration_biome ( cell_t *const c, const meteo_daily
 		c->daily_litr1_het_resp   = pot_litr1C_loss * RFL1S1;
 		c->daily_litr1C_to_soil1C = pot_litr1C_loss * ( 1. - RFL1S1 );
 		/* nitrogen */
-		if ( c->litr1N > 0. ) c->daily_litr1N_to_soil1N = pot_litr1C_loss * cn_litr1;
+		if ( c->litr1N > 0. ) c->daily_litr1N_to_soil1N = pot_litr1C_loss / cn_litr1;
 		else c->daily_litr1N_to_soil1N = 0.;
 	}
 
@@ -167,7 +166,7 @@ void litter_heterotrophic_respiration_biome ( cell_t *const c, const meteo_daily
 		c->daily_litr2_het_resp   = pot_litr2C_loss * RFL2S2;
 		c->daily_litr2C_to_soil2C = pot_litr2C_loss * ( 1. - RFL2S2 );
 		/* nitrogen */
-		if ( c->litr2N > 0. ) c->daily_litr2N_to_soil2N = pot_litr2C_loss * cn_litr2;
+		if ( c->litr2N > 0. ) c->daily_litr2N_to_soil2N = pot_litr2C_loss / cn_litr2;
 		else c->daily_litr2N_to_soil2N = 0.;
 	}
 
@@ -185,7 +184,7 @@ void litter_heterotrophic_respiration_biome ( cell_t *const c, const meteo_daily
 		c->daily_litr4_het_resp   = pot_litr4C_loss * RFL4S3;
 		c->daily_litr4C_to_soil3C = pot_litr4C_loss * ( 1. - RFL4S3 );
 		/* nitrogen */
-		if ( c->litr4N > 0. ) c->daily_litr4N_to_soil3N = pot_litr4C_loss * cn_litr4;
+		if ( c->litr4N > 0. ) c->daily_litr4N_to_soil3N = pot_litr4C_loss / cn_litr4;
 		else c->daily_litr4N_to_soil3N = 0.;
 	}
 
