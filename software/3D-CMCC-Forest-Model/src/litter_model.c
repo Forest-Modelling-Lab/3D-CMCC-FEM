@@ -15,6 +15,9 @@
 #include "constants.h"
 #include "logger.h"
 #include "settings.h"
+#include "het_respiration.h"
+#include "litter_carbon_balance.h"
+#include "litter_nitrogen_balance.h"
 #include "decomposition.h"
 #include "check_balance.h"
 
@@ -31,24 +34,32 @@ int Litter_model_daily (matrix_t *const m, const int cell, const int day, const 
 	/* check parameters */
 	assert(m);
 
-	/* decomposition */
-	decomposition ( c, meteo_daily );
+	/* compute heterotrophic respiration from litter pool */
+	litter_heterotrophic_respiration_biome ( c, meteo_daily );
+
+	/* compute soil carbon balance */
+	litter_carbon_balance ( c );
+
+	/* compute soil nitrogen balance */
+	litter_nitrogen_balance ( c );
+
+
 
 	/*******************************************************************************************************/
 
 	/* CHECK FOR BALANCE CLOSURE */
 
 	/* CHECK FOR CARBON FLUX BALANCE CLOSURE */
-	/* 1 */ //fixme if ( ! check_litter_carbon_flux_balance    ( c ) ) return 0;
+	/* 1 */ if ( ! check_litter_carbon_flux_balance    ( c ) ) return 0;
 
 	/* CHECK FOR CARBON MASS BALANCE CLOSURE */
-	/* 2 */ //fixme if ( ! check_litter_carbon_mass_balance    ( c ) ) return 0;
+	/* 2 */ if ( ! check_litter_carbon_mass_balance    ( c ) ) return 0;
 
 	/* CHECK FOR NITROGEN FLUX BALANCE CLOSURE */
-	/* 1 */ //fixme if ( ! check_litter_nitrogen_flux_balance  ( c ) ) return 0;
+	/* 1 */ if ( ! check_litter_nitrogen_flux_balance  ( c ) ) return 0;
 
 	/* CHECK FOR NITROGEN MASS BALANCE CLOSURE */
-	/* 2 */ //fixme if ( ! check_litter_nitrogen_mass_balance  ( c ) ) return 0;
+	/* 2 */ if ( ! check_litter_nitrogen_mass_balance  ( c ) ) return 0;
 
 	/*******************************************************************************************************/
 

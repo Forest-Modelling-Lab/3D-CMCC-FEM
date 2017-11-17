@@ -220,7 +220,7 @@ int check_cell_carbon_flux_balance(cell_t *const c)
 	store = c->daily_leaf_carbon   + c->daily_stem_carbon +
 			c->daily_froot_carbon  + c->daily_croot_carbon +
 			c->daily_branch_carbon + c->daily_reserve_carbon +
-			c->daily_fruit_carbon  + c->daily_litrC +
+			c->daily_fruit_carbon  + c->daily_to_litrC +
 			c->daily_soilC         + c->daily_cwdC;
 
 	balance = in - out - store;
@@ -242,7 +242,7 @@ int check_cell_carbon_flux_balance(cell_t *const c)
 		error_log("c->daily_coarse_root_carbon = %f gC/m2/day\n", c->daily_croot_carbon);
 		error_log("c->daily_branch_carbon      = %f gC/m2/day\n", c->daily_branch_carbon);
 		error_log("c->daily_reserve_carbon     = %f gC/m2/day\n", c->daily_reserve_carbon);
-		error_log("c->daily_litrC              = %f gC/m2/day\n", c->daily_litrC);
+		error_log("c->daily_litrC              = %f gC/m2/day\n", c->daily_to_litrC);
 		error_log("c->daily_cwdC               = %f gC/m2/day\n", c->daily_cwdC);
 		error_log("c->daily_soilC              = %f gC/m2/day\n", c->daily_soilC);
 		error_log("\ncarbon in                 = %f gC/m2/day\n", in);

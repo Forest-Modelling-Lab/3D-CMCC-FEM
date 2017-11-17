@@ -16,11 +16,14 @@
 #include "logger.h"
 #include "soil_model.h"
 
+extern logger_t* g_debug_log;
+
 void soil_nitrogen_balance (cell_t *const c)
 {
-#if 0
+
 	logger(g_debug_log, "\n**SOIL NITROGEN BALANCE**\n");
 
+#if 0
 
 	//fixme to include in cel struct as a sum of tree model NPP demand
 	c->soilN -= c->NPP_gN_demand;
@@ -29,5 +32,7 @@ void soil_nitrogen_balance (cell_t *const c)
 	c->soilN += c->N_decomp;
 
 #endif
+
+
 
 }

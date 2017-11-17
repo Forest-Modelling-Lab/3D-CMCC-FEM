@@ -39,8 +39,10 @@ C_SRCS += \
 ../src/initialization.c \
 ../src/lai.c \
 ../src/leaf_fall.c \
+../src/litter_carbon_balance.c \
 ../src/litter_model.c \
 ../src/litter_model_check_balance.c \
+../src/litter_nitrogen_balance.c \
 ../src/littering.c \
 ../src/logger.c \
 ../src/main.c \
@@ -63,6 +65,7 @@ C_SRCS += \
 ../src/remove_tree_class.c \
 ../src/settings.c \
 ../src/snow.c \
+../src/soil_carbon_balance.c \
 ../src/soil_evaporation.c \
 ../src/soil_model.c \
 ../src/soil_model_check_balance.c \
@@ -116,8 +119,10 @@ OBJS += \
 ./src/initialization.o \
 ./src/lai.o \
 ./src/leaf_fall.o \
+./src/litter_carbon_balance.o \
 ./src/litter_model.o \
 ./src/litter_model_check_balance.o \
+./src/litter_nitrogen_balance.o \
 ./src/littering.o \
 ./src/logger.o \
 ./src/main.o \
@@ -140,6 +145,7 @@ OBJS += \
 ./src/remove_tree_class.o \
 ./src/settings.o \
 ./src/snow.o \
+./src/soil_carbon_balance.o \
 ./src/soil_evaporation.o \
 ./src/soil_model.o \
 ./src/soil_model_check_balance.o \
@@ -193,8 +199,10 @@ C_DEPS += \
 ./src/initialization.d \
 ./src/lai.d \
 ./src/leaf_fall.d \
+./src/litter_carbon_balance.d \
 ./src/litter_model.d \
 ./src/litter_model_check_balance.d \
+./src/litter_nitrogen_balance.d \
 ./src/littering.d \
 ./src/logger.d \
 ./src/main.d \
@@ -217,6 +225,7 @@ C_DEPS += \
 ./src/remove_tree_class.d \
 ./src/settings.d \
 ./src/snow.d \
+./src/soil_carbon_balance.d \
 ./src/soil_evaporation.d \
 ./src/soil_model.d \
 ./src/soil_model_check_balance.d \

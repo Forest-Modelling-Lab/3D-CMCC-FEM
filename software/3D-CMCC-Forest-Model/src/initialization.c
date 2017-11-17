@@ -941,9 +941,9 @@ void initialization_forest_litter_soil (cell_t *const c, const int height, const
 	/******************************************************************************************************************************************************************/
 	c->leaf_litrC  = s->value[LEAF_LITTER_C] * 1e6 / g_settings->sizeCell;
 	c->leaf_litr1C = s->value[LITR1C]        * 1e6 / g_settings->sizeCell;
-	c->leaf_litr1C = s->value[LITR2C]        * 1e6 / g_settings->sizeCell;
-	c->leaf_litr1C = s->value[LITR3C]        * 1e6 / g_settings->sizeCell;
-	c->leaf_litr1C = s->value[LITR4C]        * 1e6 / g_settings->sizeCell;
+	c->leaf_litr2C = s->value[LITR2C]        * 1e6 / g_settings->sizeCell;
+	c->leaf_litr3C = s->value[LITR3C]        * 1e6 / g_settings->sizeCell;
+	c->leaf_litr4C = s->value[LITR4C]        * 1e6 / g_settings->sizeCell;
 
 	/* check */
 	CHECK_CONDITION ( fabs ( c->leaf_litr1C + c->leaf_litr2C + c->leaf_litr3C + c->leaf_litr4C ) , > , c->leaf_litrC + eps );
@@ -955,9 +955,9 @@ void initialization_forest_litter_soil (cell_t *const c, const int height, const
 
 	c->leaf_litrN  = s->value[LEAF_LITTER_N] * 1e6 / g_settings->sizeCell;
 	c->leaf_litr1N = s->value[LITR1N]        * 1e6 / g_settings->sizeCell;
-	c->leaf_litr1N = s->value[LITR2N]        * 1e6 / g_settings->sizeCell;
-	c->leaf_litr1N = s->value[LITR3N]        * 1e6 / g_settings->sizeCell;
-	c->leaf_litr1N = s->value[LITR4N]        * 1e6 / g_settings->sizeCell;
+	c->leaf_litr2N = s->value[LITR2N]        * 1e6 / g_settings->sizeCell;
+	c->leaf_litr3N = s->value[LITR3N]        * 1e6 / g_settings->sizeCell;
+	c->leaf_litr4N = s->value[LITR4N]        * 1e6 / g_settings->sizeCell;
 
 	/* check */
 	CHECK_CONDITION ( fabs ( c->leaf_litr1N + c->leaf_litr2N + c->leaf_litr3N + c->leaf_litr4N ) , > , c->leaf_litrN + eps );

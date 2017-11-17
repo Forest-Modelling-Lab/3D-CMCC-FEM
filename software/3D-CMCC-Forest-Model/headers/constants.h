@@ -104,7 +104,7 @@ enum {
 #define KL2_BASE               0.07       /* cellulose litter pool */
 #define KL4_BASE              0.014       /* lignin litter pool */
 #define KS1_BASE               0.07       /* fast microbial recycling pool */
-#define KS2_BASE              0.014       /* medium microbial recycling pool */
+#define KS2_BASE              0.014       /* fast microbial recycling pool */
 #define KS3_BASE             0.0014       /* slow microbial recycling pool */
 #define KS4_BASE             0.0001       /* recalcitrant SOM (humus) pool */
 #define KFRAG_BASE            0.001       /* physical fragmentation of coarse woody debris */

@@ -19,6 +19,7 @@
 #include "soil_evaporation.h"
 #include "soil_respiration.h"
 #include "soil_water_balance.h"
+#include "soil_carbon_balance.h"
 #include "soil_nitrogen_balance.h"
 #include "settings.h"
 #include "check_balance.h"
@@ -76,30 +77,18 @@ int Soil_model_daily (matrix_t *const m, const int cell, const int day, const in
 		/* compute soil water balance */
 		soil_water_balance ( c, meteo_daily, year );
 
+		/* compute heterotrophic respiration */
+		soil_heterotrophic_respiration_biome ( c, meteo_daily );
+
+		/* compute soil carbon balance */
+		soil_carbon_balance ( c );
+
 		/* compute soil nitrogen balance */
-		//soil_nitrogen_balance();
-#if 1
-		/*****************************************************/
-		//test 1
+		soil_nitrogen_balance ( c );
 
-		/* (1) compute soil respiration */
-		//soil_respiration_canoak ( c, meteo_daily );
-		soil_respiration_reichstein ( c, meteo_daily );
-
-		/* (2) scale heterotrophic respiration from soil respiration + autotrophic respiration */
-		heterotrophic_respiration_reichstein ( c );
-		/*****************************************************/
-#else
-		/*****************************************************/
-		//test 2
-
-		/* (1) compute heterotrophic respiration */
-		heterotrophic_respiration_biome ( c, meteo_daily );
-
-		/* (2) scale soil respiration from heterotrophic + autotrophic respiration */
+		/* compute soil respiration */
 		soil_respiration_biome ( c );
-		/*****************************************************/
-#endif
+
 	}
 
 	/*******************************************************************************************************/
