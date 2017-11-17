@@ -6,8 +6,8 @@ rm(list = ls())
 
 # working directory
 # setwd('/home/alessio-cmcc/git/3D-CMCC-LAND/software/3D-CMCC-Forest-Model/')
-# setwd(getwd())
-setwd('/home/alessio/git/3D-CMCC-LAND/software/3D-CMCC-Forest-Model/')
+setwd(getwd())
+#setwd('/home/alessio-cmcc/git/3D-CMCC-LAND/software/3D-CMCC-Forest-Model/')
 
 library(ggplot2)
 library(cowplot)
@@ -67,7 +67,7 @@ build_list<-c('Release')#, 'Release')
 site_list<-c("Soroe")#,"Soroe")#,"Hyytiala","All"),"Soroe"
 esm_list <-c("1")# ("1","2","3","4","5", "All")
 rcp_list <-c("0p0")# ("0p0","2p6","4p5","6p0","8p5","All")
-man_list <-c("off")# ("on",'off', "All")
+man_list <-c("on")# ("on",'off', "All")
 co2_list <-c("on")# , "on",off", "All")
 protocol_list<-c("FT")# ("2A","2B", "All") 
 time_list = c('annual')

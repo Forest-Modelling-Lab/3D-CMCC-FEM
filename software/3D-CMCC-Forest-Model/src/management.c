@@ -451,7 +451,10 @@ void prescribed_thinning (cell_t *const c, const int height, const int dbh, cons
 						initialization_forest_class_litter_soil (c, height, dbh, age, species);
 
 						/* initialization cell litter fractions */
-						initialization_forest_litter_soil       (c, height, dbh, age, species);
+						initialization_forest_litter            (c, height, dbh, age, species);
+
+						/* initialization cell soil fractions */
+						initialization_forest_soil              (c, height, dbh, age, species);
 					}				
 				}
 			}

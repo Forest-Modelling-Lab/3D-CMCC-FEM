@@ -187,9 +187,13 @@ void litter_heterotrophic_respiration_biome ( cell_t *const c, const meteo_daily
 	c->daily_litr_het_resp = c->daily_litr1_het_resp + c->daily_litr2_het_resp + c->daily_litr4_het_resp;
 	logger (g_debug_log, "c->daily_litr_het_resp = %g gC/m^2/day\n", c->daily_litr_het_resp);
 
-	/* summarize litter to soil */
+	/* summarize carbon litter to soil */
 	c->daily_litr_to_soilC = c->daily_litr1C_to_soil1C + c->daily_litr2C_to_soil2C + c->daily_litr4C_to_soil3C;
 	logger (g_debug_log, "c->daily_litr_to_soilC = %g gC/m^2/day\n", c->daily_litr_to_soilC);
+
+	/* summarize nitrogen litter to soil */
+	c->daily_litr_to_soilN = c->daily_litr1N_to_soil1N + c->daily_litr2N_to_soil2N + c->daily_litr4N_to_soil3N;
+	logger (g_debug_log, "c->daily_litr_to_soilN = %g gN/m^2/day\n", c->daily_litr_to_soilN);
 
 	/*******************************************************************************************************************************/
 }
