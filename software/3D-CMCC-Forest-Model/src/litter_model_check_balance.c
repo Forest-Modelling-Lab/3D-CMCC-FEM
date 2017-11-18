@@ -29,7 +29,7 @@ int check_litter_carbon_flux_balance(cell_t *const c)
 	/* check complete litter and cwd level carbon flux balance */
 
 	/* sum of carbon sources */
-	in      = c->daily_leaf_to_litrC + c->daily_froot_to_litrC ;
+	in      = c->daily_leaf_to_litrC + c->daily_froot_to_litrC + c->daily_cwd_to_litrC;
 
 	/* sum of carbon sinks */
 	out     = c->daily_litr_het_resp + c->daily_litr_to_soilC;
@@ -50,6 +50,7 @@ int check_litter_carbon_flux_balance(cell_t *const c)
 		error_log("\nin\n");
 		error_log("c->daily_leaf_to_litrC = %f gC/m2/day\n", c->daily_leaf_to_litrC);
 		error_log("c->daily_froot_to_litrC= %f gC/m2/day\n", c->daily_froot_to_litrC);
+		error_log("c->daily_cwd_to_litrC  = %f gC/m2/day\n", c->daily_cwd_to_litrC);
 		error_log("\nout\n");
 		error_log("c->daily_litr_to_soilC = %f gC/m2/day\n", c->daily_litr_to_soilC);
 		error_log("c->daily_litr_het_resp = %f gC/m2/day\n", c->daily_litr_het_resp);
@@ -82,7 +83,7 @@ int check_litter_carbon_mass_balance(cell_t *const c)
 	/* check complete litter level carbon mass balance */
 
 	/* sum of sources */
-	c->litr_carbon_in    = c->daily_leaf_to_litrC + c->daily_froot_to_litrC;
+	c->litr_carbon_in    = c->daily_leaf_to_litrC + c->daily_froot_to_litrC + c->daily_cwd_to_litrC;
 
 	/* sum of sinks */
 	c->litr_carbon_out   = c->daily_litr_het_resp + c->daily_litr_to_soilC;
@@ -107,6 +108,7 @@ int check_litter_carbon_mass_balance(cell_t *const c)
 		error_log("in                  = %f gC/m2/day\n", c->litr_carbon_in);
 		error_log("daily_leaf_to_litrC = %f gC/m2\n",     c->daily_leaf_to_litrC);
 		error_log("daily_froot_to_litrC= %f gC/m2\n",     c->daily_froot_to_litrC);
+		error_log("daily_froot_to_litrC= %f gC/m2/day\n", c->daily_cwd_to_litrC);
 		error_log("\nout\n");
 		error_log("out                 = %f gC/m2/day\n", c->litr_carbon_out);
 		error_log("daily_het_resp      = %f gC/m2/day\n", c->daily_litr_het_resp);

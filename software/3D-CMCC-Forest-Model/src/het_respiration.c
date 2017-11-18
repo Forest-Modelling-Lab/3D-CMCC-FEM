@@ -99,6 +99,7 @@ double heterotrophic_respiration_biome ( cell_t *const c, const meteo_daily_t *c
 void litter_heterotrophic_respiration_biome ( cell_t *const c, const meteo_daily_t *const meteo_daily )
 {
 	double rate_scalar;
+	double cwd_decomp_rate;       /* cwd litter decomposition rate */
 	double litt_decomp_rate1;     /* labile litter decomposition rate */
 	double litt_decomp_rate2;     /* cellulose litter decomposition rate */
 	double litt_decomp_rate4;     /* lignin litter decomposition rate */
@@ -108,8 +109,38 @@ void litter_heterotrophic_respiration_biome ( cell_t *const c, const meteo_daily
 	double cn_litr1;              /* CN ratio of labile litter */
 	double cn_litr2;              /* CN ratio of cellulose litter */
 	double cn_litr4;              /* CN ratio of lignin litter */
+	double cn_cwd2;               /* CN ratio for unshielded cellulose cwd */
+	double cn_cwd3;               /* CN ratio for shielded cellulose cwd */
+	double cn_cwd4;               /* CN ratio for lignin cellulose cwd */
 
 	rate_scalar = heterotrophic_respiration_biome ( c, meteo_daily );
+
+
+	//FIXME MAYBE MOVE ALL OF THIS PART INTO DECOMPOSITION.C SOURCE FILE
+
+	/* calculate C:N ratios */
+	if ( c->cwd_litr2N > 0. ) cn_cwd2  = c->cwd_litr2C / c->cwd_litr2N;
+	if ( c->cwd_litr3N > 0. ) cn_cwd3  = c->cwd_litr3C / c->cwd_litr3N;
+	if ( c->cwd_litr4N > 0. ) cn_cwd4  = c->cwd_litr4C / c->cwd_litr4N;
+	if ( c->litr1N > 0. )     cn_litr1 = c->litr1C     / c->litr1N;
+	if ( c->litr2N > 0. )     cn_litr2 = c->litr2C     / c->litr2N;
+	if ( c->litr4N > 0. )     cn_litr4 = c->litr4C     / c->litr4N;
+
+	/******************************************************************************************************************/
+	/* calculate the flux from CWD to litter lignin and cellulose compartments, due to physical fragmentation */
+	cwd_decomp_rate             = KFRAG_BASE * rate_scalar;
+
+	/* coarse woody debris carbon to carbon litter poool */
+	c->daily_cwd_to_litr2C      = c->cwd_litr2C * cwd_decomp_rate;
+	c->daily_cwd_to_litr3C      = c->cwd_litr3C * cwd_decomp_rate;
+	c->daily_cwd_to_litr4C      = c->cwd_litr4C * cwd_decomp_rate;
+
+	/* coarse woody debris nitrogen to nitrogen litter poool */
+	c->daily_cwd_to_litr2N      = c->cwd_litr2C / cn_cwd2;
+	c->daily_cwd_to_litr3N      = c->cwd_litr3C / cn_cwd3;
+	c->daily_cwd_to_litr4N      = c->cwd_litr4C / cn_cwd4;
+
+	/******************************************************************************************************************/
 
 	/* litter decomposition rate */
 	litt_decomp_rate1     = KL1_BASE * rate_scalar;
@@ -137,11 +168,6 @@ void litter_heterotrophic_respiration_biome ( cell_t *const c, const meteo_daily
 	{
 		pot_litr4C_loss      = c->litr4C * litt_decomp_rate4;
 	}
-
-	/* calculate C:N ratios */
-	if (c->litr1N > 0.) cn_litr1 = c->litr1C / c->litr1N;
-	if (c->litr2N > 0.) cn_litr2 = c->litr2C / c->litr2N;
-	if (c->litr4N > 0.) cn_litr4 = c->litr4C / c->litr4N;
 
 	/* calculate the non-nitrogen limited fluxes between litter and
 	soil compartments. These will be ammended for N limitation if it turns
@@ -190,15 +216,15 @@ void litter_heterotrophic_respiration_biome ( cell_t *const c, const meteo_daily
 
 	/* summarize litter heterotrophic respiration */
 	c->daily_litr_het_resp = c->daily_litr1_het_resp + c->daily_litr2_het_resp + c->daily_litr4_het_resp;
-	logger (g_debug_log, "c->daily_litr_het_resp = %g gC/m^2/day\n", c->daily_litr_het_resp);
+	logger (g_debug_log, "c->daily_litr_het_resp = %g gC/m2/day\n", c->daily_litr_het_resp);
 
 	/* summarize carbon litter to soil */
 	c->daily_litr_to_soilC = c->daily_litr1C_to_soil1C + c->daily_litr2C_to_soil2C + c->daily_litr4C_to_soil3C;
-	logger (g_debug_log, "c->daily_litr_to_soilC = %g gC/m^2/day\n", c->daily_litr_to_soilC);
+	logger (g_debug_log, "c->daily_litr_to_soilC = %g gC/m2/day\n", c->daily_litr_to_soilC);
 
 	/* summarize nitrogen litter to soil */
 	c->daily_litr_to_soilN = c->daily_litr1N_to_soil1N + c->daily_litr2N_to_soil2N + c->daily_litr4N_to_soil3N;
-	logger (g_debug_log, "c->daily_litr_to_soilN = %g gN/m^2/day\n", c->daily_litr_to_soilN);
+	logger (g_debug_log, "c->daily_litr_to_soilN = %g gN/m2/day\n", c->daily_litr_to_soilN);
 
 
 	/* call heterotrophic_respiration */

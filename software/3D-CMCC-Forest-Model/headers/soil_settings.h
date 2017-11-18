@@ -24,7 +24,7 @@ enum {
 	, LITTERN                           /* Litter in tons of Nitrogen / SizeCell */
 	, SOILC                             /* Soil in tons of Carbon / SizeCell */
 	, SOILN                             /* Soil in tons of Nitrogen / SizeCell */
-	, LITTERCWDC                        /* Coarse woody debris in tons of Carbon / SizeCell */
+	, DEADWOODC                        /* Coarse woody debris in tons of Carbon / SizeCell */
 
 	/* please keep it here! */
 	, SOIL_LANDUSE                      /* Cell landuse */

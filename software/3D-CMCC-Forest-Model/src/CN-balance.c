@@ -71,7 +71,7 @@ void carbon_balance (cell_t *const c, const int height, const int dbh, const int
 	CHECK_CONDITION ( c->croot_carbon,   < , ZERO );
 	CHECK_CONDITION ( c->fruit_carbon,   < , ZERO );
 	CHECK_CONDITION ( c->litrC,          < , ZERO );
-	CHECK_CONDITION ( c->cwdC,           < , ZERO );
+	CHECK_CONDITION ( c->cwd_litrC,      < , ZERO );
 	/***************************************************************************************/
 }
 

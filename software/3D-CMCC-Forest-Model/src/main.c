@@ -926,10 +926,10 @@ static int check_soil_values(void)
 		logger_error(g_debug_log, "NO SOIL DATA AVAILABLE (Nitrogen litter value)\n");
 	}
 	/* litter coarse woody debris carbon */
-	if (IS_INVALID_VALUE(g_soil_settings->values[LITTERCWDC]))
+	if (IS_INVALID_VALUE(g_soil_settings->values[DEADWOODC]))
 	{
 		/* initialize to zero value */
-		g_soil_settings->values[LITTERCWDC] = 0.;
+		g_soil_settings->values[DEADWOODC] = 0.;
 		logger_error(g_debug_log, "NO SOIL DATA AVAILABLE (Coarse woody debris carbon value)\n");
 	}
 	/* soil carbon */

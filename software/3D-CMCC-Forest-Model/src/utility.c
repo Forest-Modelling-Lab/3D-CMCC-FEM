@@ -99,6 +99,9 @@ void reset_daily_cell_variables(cell_t *const c)
 	c->daily_froot_to_litr2C =          0.;
 	c->daily_froot_to_litr3C =          0.;
 	c->daily_froot_to_litr4C =          0.;
+	c->daily_cwd_to_litr2C =            0.;
+	c->daily_cwd_to_litr3C =            0.;
+	c->daily_cwd_to_litr4C =            0.;
 	c->daily_soil1C =                   0.;
 	c->daily_soil2C =                   0.;
 	c->daily_soil3C =                   0.;
@@ -108,7 +111,7 @@ void reset_daily_cell_variables(cell_t *const c)
 	c->daily_reserve_cwdC =             0.;
 	c->daily_branch_cwdC =              0.;
 	c->daily_fruit_cwdC =               0.;
-	c->daily_cwdC =                     0.;
+	c->daily_cwd_to_litrC =             0.;
 	c->daily_soilC =                    0.;
 	c->daily_litr_het_resp =            0.;
 	c->daily_soil_het_resp =            0.;
@@ -129,6 +132,9 @@ void reset_daily_cell_variables(cell_t *const c)
 	c->daily_froot_to_litr2N =          0.;
 	c->daily_froot_to_litr3N =          0.;
 	c->daily_froot_to_litr4N =          0.;
+	c->daily_cwd_to_litr2N =            0.;
+	c->daily_cwd_to_litr3N =            0.;
+	c->daily_cwd_to_litr4N =            0.;
 	c->daily_soil1N =                   0.;
 	c->daily_soil2N =                   0.;
 	c->daily_soil3N =                   0.;
@@ -138,7 +144,7 @@ void reset_daily_cell_variables(cell_t *const c)
 	c->daily_reserve_cwdN =             0.;
 	c->daily_fruit_cwdN =               0.;
 	c->daily_branch_cwdN =              0.;
-	c->daily_cwdN =                     0.;
+	c->daily_cwd_to_litrN =             0.;
 	c->daily_soilN =                    0.;
 
 	/*reset daily water variables*/

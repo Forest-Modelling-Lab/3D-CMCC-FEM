@@ -44,7 +44,6 @@ int Litter_model_daily (matrix_t *const m, const int cell, const int day, const 
 	litter_nitrogen_balance ( c );
 
 
-
 	/*******************************************************************************************************/
 
 	/* CHECK FOR BALANCE CLOSURE */

@@ -221,7 +221,7 @@ int check_cell_carbon_flux_balance(cell_t *const c)
 			c->daily_froot_carbon  + c->daily_croot_carbon +
 			c->daily_branch_carbon + c->daily_reserve_carbon +
 			c->daily_fruit_carbon  + c->daily_to_litrC +
-			c->daily_soilC         + c->daily_cwdC;
+			c->daily_soilC;
 
 	balance = in - out - store;
 
@@ -243,7 +243,6 @@ int check_cell_carbon_flux_balance(cell_t *const c)
 		error_log("c->daily_branch_carbon      = %f gC/m2/day\n", c->daily_branch_carbon);
 		error_log("c->daily_reserve_carbon     = %f gC/m2/day\n", c->daily_reserve_carbon);
 		error_log("c->daily_litrC              = %f gC/m2/day\n", c->daily_to_litrC);
-		error_log("c->daily_cwdC               = %f gC/m2/day\n", c->daily_cwdC);
 		error_log("c->daily_soilC              = %f gC/m2/day\n", c->daily_soilC);
 		error_log("\ncarbon in                 = %f gC/m2/day\n", in);
 		error_log("carbon out                  = %f gC/m2/day\n", out);
@@ -283,7 +282,7 @@ int check_cell_carbon_mass_balance(cell_t *const c)
 			c->reserve_carbon +
 			c->fruit_carbon   +
 			c->litrC          +
-			c->cwdC           +
+			c->cwd_litrC      +
 			c->soilC          ;
 
 	/* check carbon pool balance */
@@ -309,7 +308,7 @@ int check_cell_carbon_mass_balance(cell_t *const c)
 		error_log("reserve_carbon     = %f gC/m2\n", c->reserve_carbon);
 		error_log("fruit_carbon       = %f gC/m2\n", c->fruit_carbon);
 		error_log("litr_carbon        = %f gC/m2\n", c->litrC);
-		error_log("cwd_carbon         = %f gC/m2\n", c->cwdC);
+		error_log("cwd_carbon         = %f gC/m2\n", c->cwd_litrC);
 		error_log("soil_carbon        = %f gC/m2\n", c->soilC);
 		error_log("\ncarbon in        = %f gC/m2\n", c->cell_carbon_in);
 		error_log("carbon out         = %f gC/m2\n", c->cell_carbon_out);
@@ -465,7 +464,7 @@ int check_cell_nitrogen_mass_balance(cell_t *const c, const meteo_daily_t *const
 			c->reserve_nitrogen +
 			c->fruit_nitrogen   +
 			c->litrN            +
-			c->cwdN             +
+			c->cwd_litrN        +
 			c->soilN            ;
 
 	/* check nitrogen pool balance */
@@ -492,7 +491,7 @@ int check_cell_nitrogen_mass_balance(cell_t *const c, const meteo_daily_t *const
 		error_log("reserve_nitrogen = %f gN/m2/day\n",     reserve - c->reserve_nitrogen);
 		error_log("fruit_nitrogen = %f gN/m2/day\n",       fruit - c->fruit_nitrogen);
 		error_log("litr_nitrogen = %f gN/m2/day\n",        litr - c->litrN);
-		error_log("cwd_nitrogen = %f gN/m2/day\n",         cwd - c->cwdN);
+		error_log("cwd_nitrogen = %f gN/m2/day\n",         cwd - c->cwd_litrN);
 		error_log("soil_nitrogen = %f gN/m2/day\n",        soil - c->soilN);
 		error_log("\nnitrogen in = %f gN/m2/day\n",        c->cell_nitrogen_in);
 		error_log("nitrogen out = %f gN/m2/day\n",         c->cell_nitrogen_out);
@@ -505,16 +504,16 @@ int check_cell_nitrogen_mass_balance(cell_t *const c, const meteo_daily_t *const
 	}
 	else
 	{
-		leaf = c->leaf_nitrogen;
-		froot = c->froot_nitrogen;
-		croot = c->croot_nitrogen;
-		branch = c->branch_nitrogen;
+		leaf    = c->leaf_nitrogen;
+		froot   = c->froot_nitrogen;
+		croot   = c->croot_nitrogen;
+		branch  = c->branch_nitrogen;
 		reserve = c->reserve_nitrogen;
-		stem = c->stem_nitrogen;
-		fruit = c->fruit_nitrogen;
-		litr = c->litrC;
-		cwd = c->cwdC;
-		soil = c->soilC;
+		stem    = c->stem_nitrogen;
+		fruit   = c->fruit_nitrogen;
+		litr    = c->litrC;
+		cwd     = c->cwd_litrC;
+		soil    = c->soilC;
 
 		c->cell_nitrogen_old_store = c->cell_nitrogen_store;
 		logger(g_debug_log, "...ok in 'Cell_model_daily' nitrogen mass balance (gC/m2/day)\n");
@@ -552,19 +551,19 @@ int check_cell_water_flux_balance(cell_t *const c, const meteo_daily_t *const me
 		error_log("meteo_daily->prcp      = %f\n", meteo_daily->prcp);
 		error_log("\nout\n");
 		error_log("c->daily_canopy_transp = %f\n", c->daily_canopy_transp);
-		error_log("c->daily_canopy_evapo  = %f\n",  c->daily_canopy_evapo);
-		error_log("c->soil_evaporation    = %f\n",    c->daily_soil_evapo);
-		error_log("c->daily_snow_subl     = %f\n",     c->daily_snow_subl);
-		error_log("c->out_flow            = %f\n",            c->daily_out_flow);
+		error_log("c->daily_canopy_evapo  = %f\n", c->daily_canopy_evapo);
+		error_log("c->soil_evaporation    = %f\n", c->daily_soil_evapo);
+		error_log("c->daily_snow_subl     = %f\n", c->daily_snow_subl);
+		error_log("c->out_flow            = %f\n", c->daily_out_flow);
 		error_log("\nstore\n");
 		error_log("c->canopy_water_stored = %f\n", c->canopy_water_stored);
-		error_log("c->asw                 = %f\n",                 c->asw);
-		error_log("c->snow_pack           = %f\n",           c->snow_pack);
-		error_log("soil water in          = %f\n",          c->cell_water_in);
-		error_log("soil water out         = %f\n",         c->cell_water_out  );
-		error_log("soil water store       = %f\n",       c->cell_water_store);
+		error_log("c->asw                 = %f\n", c->asw);
+		error_log("c->snow_pack           = %f\n", c->snow_pack);
+		error_log("soil water in          = %f\n", c->cell_water_in);
+		error_log("soil water out         = %f\n", c->cell_water_out  );
+		error_log("soil water store       = %f\n", c->cell_water_store);
 		error_log("delta soil water store = %f\n", c->cell_water_store - c->cell_water_old_store);
-		error_log("soil water balance     = %f\n",     c->cell_water_balance);
+		error_log("soil water balance     = %f\n", c->cell_water_balance);
 		error_log("...FATAL ERROR IN 'Cell_model_daily' soil water balance (exit)\n");
 		CHECK_CONDITION(fabs( c->cell_water_balance ), > , eps);
 
@@ -604,10 +603,10 @@ int check_cell_water_flux_balance(cell_t *const c, const meteo_daily_t *const me
 		error_log("c->daily_snow_subl = %f\n", c->daily_snow_subl);
 		error_log("c->daily_snow_melt = %f\n", c->daily_snow_melt);
 		error_log("\nstore (as a difference between old and current)\n");
-		error_log("delta c->asw       = %f\n",       c->snow_pack);
-		error_log("soil water in      = %f\n",      c->cell_snow_in);
-		error_log("soil water out     = %f\n",     c->cell_snow_out);
-		error_log("soil water store   = %f\n",   c->cell_snow_store);
+		error_log("delta c->asw       = %f\n", c->snow_pack);
+		error_log("soil water in      = %f\n", c->cell_snow_in);
+		error_log("soil water out     = %f\n", c->cell_snow_out);
+		error_log("soil water store   = %f\n", c->cell_snow_store);
 		error_log("soil water balance = %f\n", c->cell_snow_balance);
 		error_log("...FATAL ERROR IN 'Cell_model_daily' snow water balance (exit)\n");
 		CHECK_CONDITION(fabs( c->cell_snow_balance ), > , eps);

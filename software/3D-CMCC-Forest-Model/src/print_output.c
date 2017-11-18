@@ -1959,7 +1959,7 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 			c->soil_moist_ratio,
 			c->daily_iwue,
 			c->litrC,
-			c->cwdC,
+			c->cwd_litrC,
 			c->soilC,
 			c->litrN,
 			c->soilN,
@@ -2585,7 +2585,7 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 			c->cum_volume,
 			c->annual_out_flow,
 			c->litrC,
-			c->cwdC,
+			c->cwd_litrC,
 			c->soilC,
 			c->litrN,
 			c->soilN);
