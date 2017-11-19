@@ -35,10 +35,10 @@ int check_litter_carbon_flux_balance(cell_t *const c)
 	out     = c->daily_litr_het_resp + c->daily_litr_to_soilC;
 
 	/* sum of current carbon storage */
-	store   = c->daily_litr1C +
-			c->daily_litr2C   +
-			c->daily_litr3C   +
-			c->daily_litr4C;
+	store   = c->daily_to_litr1C +
+			c->daily_to_litr2C   +
+			c->daily_to_litr3C   +
+			c->daily_to_litr4C;
 
 	balance = in - out - store;
 
@@ -55,10 +55,10 @@ int check_litter_carbon_flux_balance(cell_t *const c)
 		error_log("c->daily_litr_to_soilC = %f gC/m2/day\n", c->daily_litr_to_soilC);
 		error_log("c->daily_litr_het_resp = %f gC/m2/day\n", c->daily_litr_het_resp);
 		error_log("\nstore\n");
-		error_log("c->daily_litr1C        = %f gC/m2/day\n", c->daily_litr1C);
-		error_log("c->daily_litr2C        = %f gC/m2/day\n", c->daily_litr2C);
-		error_log("c->daily_litr3C        = %f gC/m2/day\n", c->daily_litr3C);
-		error_log("c->daily_litr4C        = %f gC/m2/day\n", c->daily_litr4C);
+		error_log("c->daily_to_litr1C     = %f gC/m2/day\n", c->daily_to_litr1C);
+		error_log("c->daily_to_litr2C     = %f gC/m2/day\n", c->daily_to_litr2C);
+		error_log("c->daily_to_litr3C     = %f gC/m2/day\n", c->daily_to_litr3C);
+		error_log("c->daily_to_litr4C     = %f gC/m2/day\n", c->daily_to_litr4C);
 		error_log("\nbalance\n");
 		error_log("carbon in              = %f gC/m2/day\n", in);
 		error_log("carbon out             = %f gC/m2/day\n", out);
@@ -153,7 +153,7 @@ int check_litter_nitrogen_flux_balance(cell_t *const c)
 	/* check complete litter level nitrogen flux balance */
 
 	/* sum of nitrogen sources */
-	in      = c->daily_leaf_to_litrN + c->daily_froot_to_litrN/*+ c->daily_cwdN*//* fixme include Ndepostiion daily NOT here but in the soil balance */;
+	in      = c->daily_leaf_to_litrN + c->daily_froot_to_litrN + c->daily_cwd_to_litrN /* fixme include Ndepostiion daily NOT here but in the soil balance */;
 
 	/* sum of nitrogen sinks */
 	out     = c->daily_litr_to_soilN /* fixme include N plants demand */;
@@ -174,6 +174,7 @@ int check_litter_nitrogen_flux_balance(cell_t *const c)
 		error_log("\nin\n");
 		error_log("c->daily_leaf_to_litrN = %f gN/m2/day\n", c->daily_leaf_to_litrN);
 		error_log("c->daily_froot_to_litrN= %f gN/m2/day\n", c->daily_froot_to_litrN);
+		error_log("c->daily_cwd_to_litrN  = %f gN/m2/day\n", c->daily_cwd_to_litrN);
 		error_log("\nout\n");
 		error_log("c->daily_litr_to_soilN = %f gN/m2/day\n", c->daily_litr_to_soilN);
 		error_log("\nstore\n");
@@ -205,7 +206,7 @@ int check_litter_nitrogen_mass_balance(cell_t *const c)
 	/* check complete litter level nitrogen mass balance */
 
 	/* sum of sources */
-	c->litr_nitrogen_in    = c->daily_leaf_to_litrN + c->daily_froot_to_litrN /*+ c->daily_cwdN*//* fixme include Ndepostiion daily */;
+	c->litr_nitrogen_in    = c->daily_leaf_to_litrN + c->daily_froot_to_litrN + c->daily_cwd_to_litrN /* fixme include Ndepostiion daily */;
 
 	//fixme
 	/* sum of sinks */
@@ -230,6 +231,7 @@ int check_litter_nitrogen_mass_balance(cell_t *const c)
 		error_log("\nin                   = %f gN/m2/day\n", c->litr_nitrogen_in);
 		error_log("daily_leaf_to_litrN    = %f gN/m2\n",     c->daily_leaf_to_litrN);
 		error_log("c->daily_froot_to_litrN= %f gN/m2/day\n", c->daily_froot_to_litrN);
+		error_log("c->daily_cwd_to_litrN  = %f gN/m2/day\n", c->daily_cwd_to_litrN);
 		error_log("\nout                  = %f gN/m2/day\n", c->litr_nitrogen_out);
 		error_log("daily_litr_to_soilN    = %f gN/m2/day\n", c->daily_litr_to_soilN);
 		error_log("\nstore\n");

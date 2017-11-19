@@ -27,6 +27,10 @@ extern dataset_t* g_dataset;
 
 static int harvesting (cell_t *const c, const int height, const int dbh, const int age, const int species, const int rsi)
 {
+	int nat_man;   /* natural or managed mortality 0 = natural; 1 = managed */
+
+	nat_man = 1;
+
 	species_t *s;
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
@@ -39,7 +43,7 @@ static int harvesting (cell_t *const c, const int height, const int dbh, const i
 	s->counter[HARVESTING_HAPPENS] = 1;
 
 	/* update C and N biomass */
-	tree_biomass_remove ( c, height, dbh, age, species, s->counter[N_TREE] );
+	tree_biomass_remove ( c, height, dbh, age, species, s->counter[N_TREE], nat_man );
 
 	/* remove completely all trees */
 	return tree_class_remove (c, height, dbh, age, species );
@@ -263,6 +267,9 @@ void thinning (cell_t *const c, const int height, const int dbh, const int age, 
 	int trees_to_remove = 0;
 	double stand_basal_area_to_remain;
 	double stand_basal_area_to_remove;
+	int nat_man;   /* natural or managed mortality 0 = natural; 1 = managed */
+
+	nat_man = 1;
 
 	species_t *s;
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
@@ -310,7 +317,7 @@ void thinning (cell_t *const c, const int height, const int dbh, const int age, 
 			double v;
 
 			perc = 0;
-			v = (s->value[VOLUME] - s->value[MINSTOCKGROW]) * 100 / s->value[MINSTOCKGROW];
+			v = (s->value[VOLUME] - s->value[MINSTOCKGROW]) * 100. / s->value[MINSTOCKGROW];
 
 			if ( v >= 80 )
 			{
@@ -339,7 +346,7 @@ void thinning (cell_t *const c, const int height, const int dbh, const int age, 
 			}
 			else
 			{
-				trees_to_remove = s->counter[N_TREE] - s->counter[N_TREE] * trees_to_remove / 100;
+				trees_to_remove = s->counter[N_TREE] - s->counter[N_TREE] * trees_to_remove / 100.;
 			}
 		}
 	}
@@ -350,7 +357,7 @@ void thinning (cell_t *const c, const int height, const int dbh, const int age, 
 	if ( trees_to_remove < s->counter[N_TREE] )
 	{
 		/* update C and N biomass */
-		tree_biomass_remove ( c, height, dbh, age, species, trees_to_remove );
+		tree_biomass_remove ( c, height, dbh, age, species, trees_to_remove, nat_man );
 
 		/* remove trees */
 		s->counter[N_TREE] -= trees_to_remove;
@@ -359,7 +366,7 @@ void thinning (cell_t *const c, const int height, const int dbh, const int age, 
 	else
 	{
 		/* update C and N biomass */
-		tree_biomass_remove ( c, height, dbh, age, species, s->counter[N_TREE] );
+		tree_biomass_remove ( c, height, dbh, age, species, s->counter[N_TREE], nat_man );
 
 		/* remove completely all trees */
 		tree_class_remove (c, height, dbh, age, species );
@@ -388,6 +395,9 @@ void thinning (cell_t *const c, const int height, const int dbh, const int age, 
 void prescribed_thinning (cell_t *const c, const int height, const int dbh, const int age, const int species, const int year)
 {
 	int row;
+	int nat_man;   /* natural or managed mortality 0 = natural; 1 = managed */
+
+	nat_man = 1;
 
 	assert(g_dataset);
 
@@ -411,7 +421,7 @@ void prescribed_thinning (cell_t *const c, const int height, const int dbh, cons
 
 					logger(g_debug_log, "\n** Management options: Prescribed Thinning **\n");
 
-					tree_biomass_remove(c, height, dbh, age, species, tree_remove);
+					tree_biomass_remove(c, height, dbh, age, species, tree_remove, nat_man);
 
 					c->heights[height].dbhs[dbh].ages[age].species[species].counter[N_TREE] = g_dataset->rows[row].n;
 

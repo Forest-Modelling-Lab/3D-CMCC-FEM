@@ -940,18 +940,18 @@ void initialization_forest_class_litter_soil (cell_t *const c, const int height,
 	/*** compute coarse woody debris carbon pools ****/
 	if ( ! g_soil_settings->values[DEADWOODC] || g_soil_settings->values[DEADWOODC] != NO_DATA )
 	{
-		s->value[CWD_LITR2C] = ( g_soil_settings->values[DEADWOODC] * s->value[DEAD_WOOD_USCEL_FRAC]);
-		s->value[CWD_LITR3C] = ( g_soil_settings->values[DEADWOODC] * s->value[DEAD_WOOD_SCEL_FRAC]) ;
-		s->value[CWD_LITR4C] = ( g_soil_settings->values[DEADWOODC] * s->value[DEAD_WOOD_LIGN_FRAC]) ;
+		s->value[DEADWOOD_LITR2C] = ( g_soil_settings->values[DEADWOODC] * s->value[DEAD_WOOD_USCEL_FRAC]);
+		s->value[DEADWOOD_LITR3C] = ( g_soil_settings->values[DEADWOODC] * s->value[DEAD_WOOD_SCEL_FRAC]) ;
+		s->value[DEADWOOD_LITR4C] = ( g_soil_settings->values[DEADWOODC] * s->value[DEAD_WOOD_LIGN_FRAC]) ;
 	}
 	else
 	{
-		s->value[CWD_LITR2C] = 0.;
-		s->value[CWD_LITR3C] = 0.;
-		s->value[CWD_LITR4C] = 0.;
+		s->value[DEADWOOD_LITR2C] = 0.;
+		s->value[DEADWOOD_LITR3C] = 0.;
+		s->value[DEADWOOD_LITR4C] = 0.;
 	}
 	/* check */
-	CHECK_CONDITION ( fabs ( s->value[CWD_LITR2C] + s->value[CWD_LITR3C] + s->value[CWD_LITR4C] ), >, g_soil_settings->values[DEADWOODC] + eps);
+	CHECK_CONDITION ( fabs ( s->value[DEADWOOD_LITR2C] + s->value[DEADWOOD_LITR3C] + s->value[DEADWOOD_LITR4C] ), >, g_soil_settings->values[DEADWOODC] + eps);
 
 	/*** compute leaf litter carbon pools ****/
 	s->value[LEAF_LITR1C] = ( s->value[LEAF_LITTER_C] * s->value[LEAF_LITR_LAB_FRAC]   );
@@ -974,12 +974,12 @@ void initialization_forest_class_litter_soil (cell_t *const c, const int height,
 	/******************************************************************************************************************************************************************/
 
 	/*** compute coarse woody debris nitrogen pools ****/
-	s->value[CWD_LITR2N] = ( s->value[DEADWOODN] * s->value[DEAD_WOOD_USCEL_FRAC]);
-	s->value[CWD_LITR3N] = ( s->value[DEADWOODN] * s->value[DEAD_WOOD_SCEL_FRAC]) ;
-	s->value[CWD_LITR4N] = ( s->value[DEADWOODN] * s->value[DEAD_WOOD_LIGN_FRAC]) ;
+	s->value[DEADWOOD_LITR2N] = ( s->value[DEADWOODN] * s->value[DEAD_WOOD_USCEL_FRAC]);
+	s->value[DEADWOOD_LITR3N] = ( s->value[DEADWOODN] * s->value[DEAD_WOOD_SCEL_FRAC]) ;
+	s->value[DEADWOOD_LITR4N] = ( s->value[DEADWOODN] * s->value[DEAD_WOOD_LIGN_FRAC]) ;
 
 	/* check */
-	CHECK_CONDITION ( fabs ( s->value[CWD_LITR2N] + s->value[CWD_LITR3N] + s->value[CWD_LITR4N]), >, s->value[DEADWOODN] + eps);
+	CHECK_CONDITION ( fabs ( s->value[DEADWOOD_LITR2N] + s->value[DEADWOOD_LITR3N] + s->value[DEADWOOD_LITR4N]), >, s->value[DEADWOODN] + eps);
 
 	/*** compute leaf litter nitrogen pools ****/
 	s->value[LEAF_LITR1N] = ( s->value[LEAF_LITTER_N] * s->value[LEAF_LITR_LAB_FRAC]   );
@@ -1011,9 +1011,9 @@ void initialization_forest_litter (cell_t *const c, const int height, const int 
 
 	/*** compute coarse woody debris carbon pools (gC/m2) ***/
 	c->cwd_litrC    = g_soil_settings->values[DEADWOODC];
-	c->cwd_litr2C   = s->value[CWD_LITR2C]         * 1e6 / g_settings->sizeCell;
-	c->cwd_litr3C   = s->value[CWD_LITR3C]         * 1e6 / g_settings->sizeCell;
-	c->cwd_litr4C   = s->value[CWD_LITR4C]         * 1e6 / g_settings->sizeCell;
+	c->cwd_litr2C   = s->value[DEADWOOD_LITR2C]    * 1e6 / g_settings->sizeCell;
+	c->cwd_litr3C   = s->value[DEADWOOD_LITR3C]    * 1e6 / g_settings->sizeCell;
+	c->cwd_litr4C   = s->value[DEADWOOD_LITR4C]    * 1e6 / g_settings->sizeCell;
 
 	/* check */
 	CHECK_CONDITION ( fabs ( c->cwd_litr2C + c->cwd_litr3C + c->cwd_litr4C ) , > , c->cwd_litrC + eps );
@@ -1048,9 +1048,9 @@ void initialization_forest_litter (cell_t *const c, const int height, const int 
 
 	/*** compute coarse woody debris nitrogen pools (gN/m2) ***/
 	c->cwd_litrN    = g_soil_settings->values[DEADWOODN];
-	c->cwd_litr2N   = s->value[CWD_LITR2N]         * 1e6 / g_settings->sizeCell;
-	c->cwd_litr3N   = s->value[CWD_LITR3N]         * 1e6 / g_settings->sizeCell;
-	c->cwd_litr4N   = s->value[CWD_LITR4N]         * 1e6 / g_settings->sizeCell;
+	c->cwd_litr2N   = s->value[DEADWOOD_LITR2N]   * 1e6 / g_settings->sizeCell;
+	c->cwd_litr3N   = s->value[DEADWOOD_LITR3N]   * 1e6 / g_settings->sizeCell;
+	c->cwd_litr4N   = s->value[DEADWOOD_LITR4N]   * 1e6 / g_settings->sizeCell;
 	/* check */
 	CHECK_CONDITION ( fabs ( c->cwd_litr2N + c->cwd_litr3N + c->cwd_litr4N ) , > , c->cwd_litrN + eps );
 

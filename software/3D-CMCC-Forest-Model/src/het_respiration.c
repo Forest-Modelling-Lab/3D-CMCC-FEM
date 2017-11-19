@@ -126,6 +126,10 @@ void litter_heterotrophic_respiration_biome ( cell_t *const c, const meteo_daily
 	if ( c->litr2N > 0. )     cn_litr2 = c->litr2C     / c->litr2N;
 	if ( c->litr4N > 0. )     cn_litr4 = c->litr4C     / c->litr4N;
 
+	printf("%f \n", c->daily_cwd_to_litr2C);
+	printf("%f \n", c->daily_cwd_to_litr3C);
+	printf("%f \n", c->daily_cwd_to_litr4C);
+
 	/******************************************************************************************************************/
 	/* calculate the flux from CWD to litter lignin and cellulose compartments, due to physical fragmentation */
 	cwd_decomp_rate             = KFRAG_BASE * rate_scalar;
@@ -139,6 +143,10 @@ void litter_heterotrophic_respiration_biome ( cell_t *const c, const meteo_daily
 	c->daily_cwd_to_litr2N      = c->cwd_litr2C / cn_cwd2;
 	c->daily_cwd_to_litr3N      = c->cwd_litr3C / cn_cwd3;
 	c->daily_cwd_to_litr4N      = c->cwd_litr4C / cn_cwd4;
+
+	printf("%f \n", c->daily_cwd_to_litr2C);
+	printf("%f \n", c->daily_cwd_to_litr3C);
+	printf("%f \n", c->daily_cwd_to_litr4C);
 
 	/******************************************************************************************************************/
 

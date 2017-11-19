@@ -26,18 +26,18 @@ void carbon_balance (cell_t *const c, const int height, const int dbh, const int
 	/*** update class level carbon mass pools ***/
 	s->value[LEAF_C]     -= (s->value[C_LEAF_TO_LITR]  + s->value[C_LEAF_TO_RESERVE]);
 	s->value[FROOT_C]    -= (s->value[C_FROOT_TO_LITR] + s->value[C_FROOT_TO_RESERVE]);
-	s->value[STEM_C]     -= (s->value[C_STEM_TO_CWD]);
-	s->value[CROOT_C]    -= (s->value[C_CROOT_TO_CWD]);
-	s->value[BRANCH_C]   -= (s->value[C_BRANCH_TO_CWD]);
-	s->value[RESERVE_C]  -= (s->value[C_RESERVE_TO_CWD]);
-	s->value[FRUIT_C]    -= (s->value[C_FRUIT_TO_CWD]);
-	s->value[LITR_C]     += (s->value[C_LEAF_TO_LITR] +
+	s->value[STEM_C]     -= (s->value[C_STEM_TO_DEADWOOD]);
+	s->value[CROOT_C]    -= (s->value[C_CROOT_TO_DEADWOOD]);
+	s->value[BRANCH_C]   -= (s->value[C_BRANCH_TO_DEADWOOD]);
+	s->value[RESERVE_C]  -= (s->value[C_RESERVE_TO_DEADWOOD]);
+	s->value[FRUIT_C]    -= (s->value[C_FRUIT_TO_DEADWOOD]);
+	s->value[LITR_C]     += (s->value[C_LEAF_TO_LITR]     +
 			s->value[C_FROOT_TO_LITR]);
-	s->value[CWD_C]      += (s->value[C_STEM_TO_CWD] +
-			s->value[C_CROOT_TO_CWD]                 +
-			s->value[C_BRANCH_TO_CWD]                +
-			s->value[C_RESERVE_TO_CWD]               +
-			s->value[C_FRUIT_TO_CWD]);
+	s->value[CWD_C]      += (s->value[C_STEM_TO_DEADWOOD] +
+			s->value[C_CROOT_TO_DEADWOOD]                 +
+			s->value[C_BRANCH_TO_DEADWOOD]                +
+			s->value[C_RESERVE_TO_DEADWOOD]               +
+			s->value[C_FRUIT_TO_DEADWOOD]);
 
 	/* check */
 	CHECK_CONDITION ( s->value[LEAF_C],     < , ZERO );
@@ -52,13 +52,13 @@ void carbon_balance (cell_t *const c, const int height, const int dbh, const int
 	/*** update cell level carbon pools ***/
 
 	/* tree */
-	c->leaf_carbon              -= (s->value[C_LEAF_TO_LITR]  * 1e6 / g_settings->sizeCell);
-	c->froot_carbon             -= (s->value[C_FROOT_TO_LITR] * 1e6 / g_settings->sizeCell);
-	c->stem_carbon              -= (s->value[C_STEM_TO_CWD]   * 1e6 / g_settings->sizeCell);
-	c->branch_carbon            -= (s->value[C_CROOT_TO_CWD]  * 1e6 / g_settings->sizeCell);
-	c->croot_carbon             -= (s->value[C_BRANCH_TO_CWD] * 1e6 / g_settings->sizeCell);
-	c->reserve_carbon           -= (s->value[C_BRANCH_TO_CWD] * 1e6 / g_settings->sizeCell);
-	c->fruit_carbon             -= (s->value[C_FRUIT_TO_CWD]  * 1e6 / g_settings->sizeCell);
+	c->leaf_carbon              -= (s->value[C_LEAF_TO_LITR]       * 1e6 / g_settings->sizeCell);
+	c->froot_carbon             -= (s->value[C_FROOT_TO_LITR]      * 1e6 / g_settings->sizeCell);
+	c->stem_carbon              -= (s->value[C_STEM_TO_DEADWOOD]   * 1e6 / g_settings->sizeCell);
+	c->branch_carbon            -= (s->value[C_CROOT_TO_DEADWOOD]  * 1e6 / g_settings->sizeCell);
+	c->croot_carbon             -= (s->value[C_BRANCH_TO_DEADWOOD] * 1e6 / g_settings->sizeCell);
+	c->reserve_carbon           -= (s->value[C_BRANCH_TO_DEADWOOD] * 1e6 / g_settings->sizeCell);
+	c->fruit_carbon             -= (s->value[C_FRUIT_TO_DEADWOOD]  * 1e6 / g_settings->sizeCell);
 	//computed in littering.c
 	//c->litrC                    += (s->value[C_TO_LITR]    * 1e6 / g_settings->sizeCell);
 	//c->cwdC                     += (s->value[C_TO_CWD]     * 1e6 / g_settings->sizeCell);

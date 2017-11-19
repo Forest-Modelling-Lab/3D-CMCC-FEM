@@ -31,6 +31,9 @@ void self_thinning_mortality (cell_t *const c, const int layer, const int year)
 	int species;
 	int deadtree;
 	int livetree;
+	int nat_man;   /* natural or managed mortality 0 = natural; 1 = managed */
+
+	nat_man = 0;
 
 
 	height_t *h;
@@ -125,7 +128,7 @@ void self_thinning_mortality (cell_t *const c, const int layer, const int year)
 
 					//fixme this is not correct for multilayer
 					/* remove dead C and N biomass */
-					tree_biomass_remove ( c, height, dbh, age, species, deadtree );
+					tree_biomass_remove ( c, height, dbh, age, species, deadtree, nat_man );
 
 					/* update live and dead tree (do not move above) */
 					s->counter[DEAD_TREE] += deadtree;
@@ -196,6 +199,10 @@ int growth_efficiency_mortality ( cell_t *const c, const int height, const int d
 	 * go under zero assuming that reserve pool hasn't be refilled during the day
 	 * and make the tree class die */
 
+	int nat_man;   /* natural or managed mortality 0 = natural; 1 = managed */
+
+	nat_man = 0;
+
 	species_t* s;
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
@@ -209,32 +216,32 @@ int growth_efficiency_mortality ( cell_t *const c, const int height, const int d
 		c->n_trees -= s->counter[DEAD_TREE];
 
 		/* remove dead C and N biomass */
-		tree_biomass_remove ( c, height, dbh, age, species, s->counter[DEAD_TREE] );
+		tree_biomass_remove ( c, height, dbh, age, species, s->counter[DEAD_TREE], nat_man);
 
 		/*** update cell level carbon fluxes (gC/m2/day) ***/
-		c->daily_leaf_carbon        -= (s->value[C_LEAF_TO_LITR]   * 1e6 / g_settings->sizeCell);
-		c->daily_froot_carbon       -= (s->value[C_FROOT_TO_LITR]  * 1e6 / g_settings->sizeCell);
-		c->daily_stem_carbon        -= (s->value[C_STEM_TO_CWD]    * 1e6 / g_settings->sizeCell);
-		c->daily_croot_carbon       -= (s->value[C_CROOT_TO_CWD]   * 1e6 / g_settings->sizeCell);
-		c->daily_branch_carbon      -= (s->value[C_BRANCH_TO_CWD]  * 1e6 / g_settings->sizeCell);
-		c->daily_reserve_carbon     -= (s->value[C_RESERVE_TO_CWD] * 1e6 / g_settings->sizeCell);
-		c->daily_fruit_carbon       -= (s->value[C_FRUIT_TO_CWD]   * 1e6 / g_settings->sizeCell);
+		c->daily_leaf_carbon        -= (s->value[C_LEAF_TO_LITR]        * 1e6 / g_settings->sizeCell);
+		c->daily_froot_carbon       -= (s->value[C_FROOT_TO_LITR]       * 1e6 / g_settings->sizeCell);
+		c->daily_stem_carbon        -= (s->value[C_STEM_TO_DEADWOOD]    * 1e6 / g_settings->sizeCell);
+		c->daily_croot_carbon       -= (s->value[C_CROOT_TO_DEADWOOD]   * 1e6 / g_settings->sizeCell);
+		c->daily_branch_carbon      -= (s->value[C_BRANCH_TO_DEADWOOD]  * 1e6 / g_settings->sizeCell);
+		c->daily_reserve_carbon     -= (s->value[C_RESERVE_TO_DEADWOOD] * 1e6 / g_settings->sizeCell);
+		c->daily_fruit_carbon       -= (s->value[C_FRUIT_TO_DEADWOOD]   * 1e6 / g_settings->sizeCell);
 		//c->daily_litrC              += (s->value[C_LEAF_TO_LITR]   + s->value[C_FROOT_TO_LITR] ) * 1e6 / g_settings->sizeCell;
-		//c->daily_cwdC               += (s->value[C_STEM_TO_CWD]    +
-		//		s->value[C_CROOT_TO_CWD]   +
-		//		s->value[C_BRANCH_TO_CWD]  +
-		//		s->value[C_RESERVE_TO_CWD] +
-		//		s->value[C_FRUIT_TO_CWD] ) *
+		//c->daily_cwdC               += (s->value[C_STEM_TO_DEADWOOD]    +
+		//		s->value[C_CROOT_TO_DEADWOOD]   +
+		//		s->value[C_BRANCH_TO_DEADWOOD]  +
+		//		s->value[C_RESERVE_TO_DEADWOOD] +
+		//		s->value[C_FRUIT_TO_DEADWOOD] ) *
 		//		1e6 / g_settings->sizeCell;
 
 		/*** update cell level carbon pools (tC/cell) ***/
-		c->leaf_carbon              -= (s->value[C_LEAF_TO_LITR]   * 1e6 / g_settings->sizeCell);
-		c->froot_carbon             -= (s->value[C_FROOT_TO_LITR]  * 1e6 / g_settings->sizeCell);
-		c->stem_carbon              -= (s->value[C_STEM_TO_CWD]    * 1e6 / g_settings->sizeCell);
-		c->branch_carbon            -= (s->value[C_BRANCH_TO_CWD]  * 1e6 / g_settings->sizeCell);
-		c->croot_carbon             -= (s->value[C_CROOT_TO_CWD]   * 1e6 / g_settings->sizeCell);
-		c->reserve_carbon           -= (s->value[C_RESERVE_TO_CWD] * 1e6 / g_settings->sizeCell);
-		c->fruit_carbon             -= (s->value[C_FRUIT_TO_CWD]   * 1e6 / g_settings->sizeCell);
+		c->leaf_carbon              -= (s->value[C_LEAF_TO_LITR]        * 1e6 / g_settings->sizeCell);
+		c->froot_carbon             -= (s->value[C_FROOT_TO_LITR]       * 1e6 / g_settings->sizeCell);
+		c->stem_carbon              -= (s->value[C_STEM_TO_DEADWOOD]    * 1e6 / g_settings->sizeCell);
+		c->branch_carbon            -= (s->value[C_BRANCH_TO_DEADWOOD]  * 1e6 / g_settings->sizeCell);
+		c->croot_carbon             -= (s->value[C_CROOT_TO_DEADWOOD]   * 1e6 / g_settings->sizeCell);
+		c->reserve_carbon           -= (s->value[C_RESERVE_TO_DEADWOOD] * 1e6 / g_settings->sizeCell);
+		c->fruit_carbon             -= (s->value[C_FRUIT_TO_DEADWOOD]   * 1e6 / g_settings->sizeCell);
 		//c->litrC                    += (s->value[C_LEAF_TO_LITR]   + s->value[C_FROOT_TO_LITR] ) * 1e6 / g_settings->sizeCell;
 		//c->cwdC                     += (s->value[C_STEM_TO_CWD]    +
 		//		s->value[C_CROOT_TO_CWD]   +
@@ -272,13 +279,17 @@ int annual_growth_efficiency_mortality ( cell_t *const c, const int height, cons
 	 * go under zero assuming that reserve pool hasn't be refilled during the year
 	 * and make the tree class die */
 
+	int nat_man;   /* natural or managed mortality 0 = natural; 1 = managed */
+
+	nat_man = 0;
+
 	species_t* s;
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 	if( s->value[RESERVE_C] < 0 )
 	{
 		/* remove dead C and N biomass */
-		tree_biomass_remove ( c, height, dbh, age, species, s->counter[N_TREE] );
+		tree_biomass_remove ( c, height, dbh, age, species, s->counter[N_TREE], nat_man );
 
 		/* call remove_tree_class */
 		if ( ! tree_class_remove(c, height, dbh, age, species) )
@@ -305,6 +316,9 @@ void age_mortality (cell_t *const c, const int height, const int dbh, const int 
 	double mort_factor = 3;     /* age mortality factor 3 as in Smith et al., (LPJ-Guess) */
 	double mort_log    = 0.001; /* age mortality log 0.001 as in Smith et al., (LPJ-Guess) */
 	double age_mort;
+	int nat_man;   /* natural or managed mortality 0 = natural; 1 = managed */
+
+	nat_man = 0;
 
 	age_t *a;
 	species_t *s;
@@ -329,7 +343,7 @@ void age_mortality (cell_t *const c, const int height, const int dbh, const int 
 		if ( livetree > deadtree)
 		{
 			/* update C and N biomass */
-			tree_biomass_remove ( c, height, dbh, age, species, deadtree );
+			tree_biomass_remove ( c, height, dbh, age, species, deadtree, nat_man );
 		}
 		else
 		{
@@ -383,24 +397,24 @@ void self_pruning ( cell_t *const c, const int height, const int dbh, const int 
 	/** carbon **/
 
 	/* remove biomass from branch */
-	s->value[BRANCH_C_TO_REMOVE]        += ( s->value[BRANCH_C] * ( 1. - self_pruning_ratio ) );
+	s->value[BRANCH_C_TO_REMOVE]             += ( s->value[BRANCH_C] * ( 1. - self_pruning_ratio ) );
 
 	/* adding to BRANCH C transfer pools */
 	//fixme model crashes
 	//s->value[C_BRANCH_TO_RESERVE      ] += s->value[BRANCH_C_TO_REMOVE] * C_FRAC_TO_RETRANSL;
 	//s->value[C_BRANCH_TO_CWD]           += s->value[BRANCH_C_TO_REMOVE] * ( 1. - C_FRAC_TO_RETRANSL );
 	//note: in this way all reserve are assumed to be retranslocated
-	s->value[C_BRANCH_TO_CWD]           += s->value[BRANCH_C_TO_REMOVE];
+	s->value[C_BRANCH_TO_DEADWOOD]           += s->value[BRANCH_C_TO_REMOVE];
 
 	/* adding BRANCH SAPWOOD and HEARTWOOD to CWD */
-	s->value[C_BRANCH_SAPWOOD_TO_CWD]   += ( s->value[BRANCH_SAPWOOD_C]   * ( 1. - self_pruning_ratio ) );
-	s->value[C_BRANCH_HEARTWOOD_TO_CWD] += ( s->value[BRANCH_HEARTWOOD_C] * ( 1. - self_pruning_ratio ) );
+	s->value[C_BRANCH_SAPWOOD_TO_DEADWOOD]   += ( s->value[BRANCH_SAPWOOD_C]   * ( 1. - self_pruning_ratio ) );
+	s->value[C_BRANCH_HEARTWOOD_TO_DEADWOOD] += ( s->value[BRANCH_HEARTWOOD_C] * ( 1. - self_pruning_ratio ) );
 
 	/* adding to reserve and CWD pool */
 	//fixme model crashes
 	//note: in this way all reserve are assumed to be retranslocated
 	//s->value[C_TO_RESERVE]              += s->value[C_BRANCH_TO_RESERVE];
-	s->value[C_TO_CWD]                  += s->value[C_BRANCH_TO_CWD];
+	s->value[C_TO_DEADWOOD]                  += s->value[C_BRANCH_TO_DEADWOOD];
 
 	/** nitrogen **/
 
@@ -409,10 +423,10 @@ void self_pruning ( cell_t *const c, const int height, const int dbh, const int 
 
 	/* adding to BRANCH_N C transfer pools */
 	s->value[N_BRANCH_TO_RESERVE]      += s->value[BRANCH_N_TO_REMOVE] * N_FRAC_TO_RETRANSL;
-	s->value[N_BRANCH_TO_CWD]          += s->value[BRANCH_N_TO_REMOVE] * ( 1. - N_FRAC_TO_RETRANSL );
+	s->value[N_BRANCH_TO_DEADWOOD]     += s->value[BRANCH_N_TO_REMOVE] * ( 1. - N_FRAC_TO_RETRANSL );
 
 	s->value[N_TO_RESERVE]             += s->value[N_BRANCH_TO_RESERVE];
-	s->value[N_TO_CWD]                 += s->value[N_BRANCH_TO_CWD];
+	s->value[N_TO_DEADWOOD]            += s->value[N_BRANCH_TO_DEADWOOD];
 
 	/*** coarse root self-pruning ***/
 	/** carbon **/
@@ -425,17 +439,17 @@ void self_pruning ( cell_t *const c, const int height, const int dbh, const int 
 	//s->value[C_CROOT_TO_RESERVE]        += s->value[CROOT_C_TO_REMOVE] * C_FRAC_TO_RETRANSL;
 	//s->value[C_CROOT_TO_CWD]            += s->value[CROOT_C_TO_REMOVE] * ( 1. - C_FRAC_TO_RETRANSL );
 	//note: in this way all reserve are assumed to be retranslocated
-	s->value[C_CROOT_TO_CWD]           += s->value[CROOT_C_TO_REMOVE];
+	s->value[C_CROOT_TO_DEADWOOD]           += s->value[CROOT_C_TO_REMOVE];
 
 	/* adding CROOT_C SAPWOOD and HEARTWOOD to CWD */
-	s->value[C_CROOT_SAPWOOD_TO_CWD]   += ( s->value[CROOT_SAPWOOD_C]   * ( 1. - self_pruning_ratio ) );
-	s->value[C_CROOT_HEARTWOOD_TO_CWD] += ( s->value[CROOT_HEARTWOOD_C] * ( 1. - self_pruning_ratio ) );
+	s->value[C_CROOT_SAPWOOD_TO_DEADWOOD]   += ( s->value[CROOT_SAPWOOD_C]   * ( 1. - self_pruning_ratio ) );
+	s->value[C_CROOT_HEARTWOOD_TO_DEADWOOD] += ( s->value[CROOT_HEARTWOOD_C] * ( 1. - self_pruning_ratio ) );
 
 	/* adding to reserve and CWD pool */
 	//fixme model crashes
 	//note: in this way all reserve are assumed to be retranslocated
 	//s->value[C_TO_RESERVE]             += s->value[C_CROOT_TO_RESERVE];
-	s->value[C_TO_CWD]                 += s->value[C_CROOT_TO_CWD];
+	s->value[C_TO_DEADWOOD]                 += s->value[C_CROOT_TO_DEADWOOD];
 
 	/** nitrogen **/
 
@@ -444,10 +458,10 @@ void self_pruning ( cell_t *const c, const int height, const int dbh, const int 
 
 	/* adding to CROOT transfer pools */
 	s->value[N_CROOT_TO_RESERVE]      += s->value[CROOT_N_TO_REMOVE] * N_FRAC_TO_RETRANSL;
-	s->value[N_CROOT_TO_CWD]          += s->value[CROOT_N_TO_REMOVE] * ( 1. - N_FRAC_TO_RETRANSL );
+	s->value[N_CROOT_TO_DEADWOOD]     += s->value[CROOT_N_TO_REMOVE] * ( 1. - N_FRAC_TO_RETRANSL );
 
 	s->value[N_TO_RESERVE]            += s->value[N_CROOT_TO_RESERVE];
-	s->value[N_TO_CWD]                += s->value[N_CROOT_TO_CWD];
+	s->value[N_TO_DEADWOOD]           += s->value[N_CROOT_TO_DEADWOOD];
 
 }
 
