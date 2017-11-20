@@ -34,8 +34,11 @@ int Litter_model_daily (matrix_t *const m, const int cell, const int day, const 
 	/* check parameters */
 	assert(m);
 
+	/* compute litter decomposition */
+	litter_decomposition ( c, meteo_daily );
+
 	/* compute heterotrophic respiration from litter pool */
-	litter_heterotrophic_respiration_biome ( c, meteo_daily );
+	litter_heterotrophic_respiration ( c, meteo_daily );
 
 	/* compute soil carbon balance */
 	litter_carbon_balance ( c );

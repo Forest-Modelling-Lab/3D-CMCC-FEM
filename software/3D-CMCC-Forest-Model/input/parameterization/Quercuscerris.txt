@@ -46,16 +46,16 @@ LIVE_TOTAL_WOOD	0.15          //new live C:new total wood ratio for deciduous P.
 CN_LEAVES   25                //CN of leaves (kgC/kgN) for Q. cerris from Chiesi et al., 2007
 CN_FALLING_LEAVES   55        //CN of leaf litter (kgC/kgN) for Q. cerris from Chiesi et al., 2007
 CN_FINE_ROOTS   48            //CN of fine roots (kgC/kgN) for Q. cerris from Chiesi et al., 2007
-CN_LIVE_WOODS   48            //CN of live woods (kgC/kgN) for Q. cerris from Chiesi et al., 2007
-CN_DEAD_WOODS   550           //CN of dead woods (kgC/kgN) for Q. cerris from Chiesi et al., 2007
+CN_LIVEWOOD     48            //CN of live woods (kgC/kgN) for Q. cerris from Chiesi et al., 2007
+CN_DEADWOOD     550           //CN of dead woods (kgC/kgN) for Q. cerris from Chiesi et al., 2007
 LEAF_LITT_LAB_FRAC   0.38     //leaf litter labile fraction for Quercus cerris from Chiesi et al., 2007, 0.20 Pietsch 2005
 LEAF_LITT_CEL_FRAC   0.44     //leaf litter cellulose fraction for Quercus cerris from Chiesi et al., 2007, 0.56 Pietsch 2005
 LEAF_LITT_LIGN_FRAC  0.18     //leaf litter lignin fraction for Quercus cerris from Chiesi et al., 2007, 0.24 Pietsch 2005
 FROOT_LITT_LAB_FRAC  0.34     //fine root litter labile fraction for Quercus cerris from Chiesi et al., 2007, 
 FROOT_LITT_CEL_FRAC  0.44     //fine root litter cellulose fraction for Quercus cerris from Chiesi et al., 2007
 FROOT_LITT_LIGN_FRAC 0.22     //fine root litter lignin fraction for Quercus cerris from Chiesi et al., 2007
-DEAD_WOOD_CEL_FRAC   0.77     //dead wood litter cellulose fraction for Quercus cerris from Chiesi et al., 2007, 0.75 Pietsch 2005
-DEAD_WOOD_LIGN_FRAC  0.23     //dead wood litter lignin fraction for Quercus cerris from Chiesi et al., 2007, 0.25 Pietsch 2005
+DEADWOOD_CEL_FRAC    0.77     //dead wood litter cellulose fraction for Quercus cerris from Chiesi et al., 2007, 0.75 Pietsch 2005
+DEADWOOD_LIGN_FRAC   0.23     //dead wood litter lignin fraction for Quercus cerris from Chiesi et al., 2007, 0.25 Pietsch 2005
 BUD_BURST	30                //days of bud burst at the beginning of growing season (only for deciduous)
 LEAF_FALL_FRAC_GROWING	0.2   //proportions of the growing season of leaf fall
 LEAF_FINEROOT_TURNOVER	1     //Average yearly fine root turnover rate

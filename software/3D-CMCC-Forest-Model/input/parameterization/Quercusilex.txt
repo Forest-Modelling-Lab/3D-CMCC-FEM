@@ -46,16 +46,16 @@ LIVE_TOTAL_WOOD 0.071       //new live C:new total wood (ratio) for DNF from Pie
 CN_LEAVES   42              //CN of leaves (kgC/kgN) for Q. ilex from Chiesi et al., 2007
 CN_FALLING_LEAVES   49      //CN of leaf litter (kgC/kgN) for Q. ilex from Chiesi et al., 2007
 CN_FINE_ROOTS   42          //CN of fine roots (kgC/kgN) for Q. ilex from Chiesi et al., 2007
-CN_LIVE_WOODS   42          //CN of live woods (kgC/kgN) for Q. ilex from Chiesi et al., 2007
-CN_DEAD_WOODS   300         //CN of dead woods (kgC/kgN) for Q. ilex from Chiesi et al., 2007
+CN_LIVEWOOD          42     //CN of live woods (kgC/kgN) for Q. ilex from Chiesi et al., 2007
+CN_DEADWOOD          300    //CN of dead woods (kgC/kgN) for Q. ilex from Chiesi et al., 2007
 LEAF_LITT_LAB_FRAC   0.32   //leaf litter labile fraction for Quercus ilex from Chiesi et al., 2007
 LEAF_LITT_CEL_FRAC   0.44   //leaf litter cellulose fraction for Quercus ilex from Chiesi et al., 2007
 LEAF_LITT_LIGN_FRAC  0.24   //leaf litter lignin fraction for Quercus ilex from Chiesi et al., 2007
 FROOT_LITT_LAB_FRAC  0.34   //fine root litter labile fraction for Quercus ilex from Chiesi et al., 2007
 FROOT_LITT_CEL_FRAC  0.44   //fine root litter cellulose fraction for Quercus ilex from Chiesi et al., 2007
 FROOT_LITT_LIGN_FRAC 0.22   //fine root litter lignin fraction for Quercus ilex from Chiesi et al., 2007
-DEAD_WOOD_CEL_FRAC   0.76   //dead wood litter cellulose fraction for Quercus ilex from Chiesi et al., 2007
-DEAD_WOOD_LIGN_FRAC  0.24   //dead wood litter lignin fraction for Quercus ilex from Chiesi et al., 2007
+DEADWOOD_CEL_FRAC    0.76   //dead wood litter cellulose fraction for Quercus ilex from Chiesi et al., 2007
+DEADWOOD_LIGN_FRAC   0.24   //dead wood litter lignin fraction for Quercus ilex from Chiesi et al., 2007
 BUD_BURST   0               //days of bud burst at the beginning of growing season (only for deciduous)
 LEAF_FALL_FRAC_GROWING  0.2 //proportions of the growing season of leaf fall
 LEAF_FINEROOT_TURNOVER  0.5 //Average yearly fine root turnover rate for Q. ilex from Chiesi et al., 2007

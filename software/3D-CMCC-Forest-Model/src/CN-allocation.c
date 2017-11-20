@@ -279,15 +279,15 @@ void nitrogen_allocation ( cell_t *const c, species_t *const s )
 	/* stem */
 	if (s->value[C_TO_STEM] > 0.)
 	{
-		s->value[N_TO_STEM] = s->value[C_TO_STEM] / s->value[CN_LIVE_WOODS];
+		s->value[N_TO_STEM] = s->value[C_TO_STEM] / s->value[CN_LIVEWOOD];
 
 		n_to_stem  = s->value[N_TO_STEM];
 
 	}
 	else
 	{
-		s->value[N_TO_STEM] = (s->value[C_TO_STEM] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC] / s->value[CN_LIVE_WOODS]) +
-				(s->value[C_TO_STEM] * ( 1. - s->value[EFF_LIVE_TOTAL_WOOD_FRAC]) / s->value[CN_DEAD_WOODS]);
+		s->value[N_TO_STEM] = (s->value[C_TO_STEM] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC] / s->value[CN_LIVEWOOD]) +
+				(s->value[C_TO_STEM] * ( 1. - s->value[EFF_LIVE_TOTAL_WOOD_FRAC]) / s->value[CN_DEADWOOD]);
 
 		n_to_stem   = 0.;
 	}
@@ -295,15 +295,15 @@ void nitrogen_allocation ( cell_t *const c, species_t *const s )
 	/* coarse root */
 	if (s->value[C_TO_CROOT] > 0.)
 	{
-		s->value[N_TO_CROOT] = s->value[C_TO_CROOT] / s->value[CN_LIVE_WOODS];
+		s->value[N_TO_CROOT] = s->value[C_TO_CROOT] / s->value[CN_LIVEWOOD];
 
 		n_to_croot   = s->value[N_TO_CROOT];
 
 	}
 	else
 	{
-		s->value[N_TO_CROOT] = (s->value[C_TO_CROOT] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC] / s->value[CN_LIVE_WOODS]) +
-				(s->value[C_TO_CROOT] * ( 1. - s->value[EFF_LIVE_TOTAL_WOOD_FRAC]) / s->value[CN_DEAD_WOODS]);
+		s->value[N_TO_CROOT] = (s->value[C_TO_CROOT] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC] / s->value[CN_LIVEWOOD]) +
+				(s->value[C_TO_CROOT] * ( 1. - s->value[EFF_LIVE_TOTAL_WOOD_FRAC]) / s->value[CN_DEADWOOD]);
 
 		n_to_croot   = 0.;
 	}
@@ -311,15 +311,15 @@ void nitrogen_allocation ( cell_t *const c, species_t *const s )
 	/* branch */
 	if (s->value[C_TO_BRANCH] > 0.)
 	{
-		s->value[N_TO_BRANCH] = s->value[C_TO_BRANCH] / s->value[CN_LIVE_WOODS];
+		s->value[N_TO_BRANCH] = s->value[C_TO_BRANCH] / s->value[CN_LIVEWOOD];
 
 		n_to_branch   = s->value[N_TO_BRANCH];
 
 	}
 	else
 	{
-		s->value[N_TO_BRANCH] = (s->value[C_TO_BRANCH] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC] / s->value[CN_LIVE_WOODS]) +
-				(s->value[C_TO_BRANCH] * ( 1. - s->value[EFF_LIVE_TOTAL_WOOD_FRAC]) / s->value[CN_DEAD_WOODS]);
+		s->value[N_TO_BRANCH] = (s->value[C_TO_BRANCH] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC] / s->value[CN_LIVEWOOD]) +
+				(s->value[C_TO_BRANCH] * ( 1. - s->value[EFF_LIVE_TOTAL_WOOD_FRAC]) / s->value[CN_DEADWOOD]);
 
 		n_to_branch   = 0.;
 	}

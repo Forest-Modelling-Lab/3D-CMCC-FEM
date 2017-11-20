@@ -46,16 +46,16 @@ LIVE_TOTAL_WOOD         0.13  //new live C:new total wood (ratio) 0.15 for decid
 CN_LEAVES                 27  //CN of leaves (kgC/kgN) 27 for Tatarinov et al., 2006 20.3 for F. sylvatica from Mollicone et al., 2002, 19.52 ettore, 18.6 Campioli, 19.67 Guidolotti
 CN_FALLING_LEAVES         44  //CN of leaf litter (kgC/kgN) 38 for F. sylvatica from Mollicone et al., 2002, 
 CN_FINE_ROOTS             72  //CN of fine roots (kgC/kgN) 72 for Tatarinov et al., 2006 112 for F. sylvatica from Mollicone et al., 2002, 38.28 ettore, 45 Campioli, 48 Hibbard et al., 2005
-CN_LIVE_WOODS             70  //CN of live woods (kgC/kgN) 70 for Tatarinov et al., 2006 48.2 for F. sylvatica from Mollicone et 92,5 for dbl Bond Lamberty 2006
-CN_DEAD_WOODS            550  //CN of dead woods (kgC/kgN)  for F. sylvatica from Pietsch et al., 2005 112 ettore
+CN_LIVEWOOD               70  //CN of live woods (kgC/kgN) 70 for Tatarinov et al., 2006 48.2 for F. sylvatica from Mollicone et 92,5 for dbl Bond Lamberty 2006
+CN_DEADWOOD              550  //CN of dead woods (kgC/kgN)  for F. sylvatica from Pietsch et al., 2005 112 ettore
 LEAF_LITT_LAB_FRAC      0.12  //leaf litter labile fraction for F. sylvatica from Cenciala & Tatarinov 2006
 LEAF_LITT_CEL_FRAC      0.56  //leaf litter cellulose fraction for F. sylvatica from Cenciala & Tatarinov 2006
 LEAF_LITT_LIGN_FRAC     0.32  //leaf litter lignin fraction for F. sylvatica from Cenciala & Tatarinov 2006
 FROOT_LITT_LAB_FRAC     0.30  //fine root litter labile fraction for F. sylvatica from Cenciala & Tatarinov 2006
 FROOT_LITT_CEL_FRAC     0.45  //fine root litter cellulose fraction for F. sylvatica from Cenciala & Tatarinov 2006
 FROOT_LITT_LIGN_FRAC    0.25  //fine root litter lignin fraction for F. sylvatica from Cenciala & Tatarinov 2006
-DEAD_WOOD_CEL_FRAC      0.75  //dead wood litter cellulose fraction for F. sylvatica from Cenciala & Tatarinov 2006
-DEAD_WOOD_LIGN_FRAC     0.25  //dead wood litter lignin fraction for F. sylvatica from Cenciala & Tatarinov 2006
+DEADWOOD_CEL_FRAC       0.75  //dead wood litter cellulose fraction for F. sylvatica from Cenciala & Tatarinov 2006
+DEADWOOD_LIGN_FRAC      0.25  //dead wood litter lignin fraction for F. sylvatica from Cenciala & Tatarinov 2006
 BUD_BURST                 15  //days of bud burst at the beginning of growing season (only for deciduous)
 LEAF_FALL_FRAC_GROWING   0.2  //proportions of the growing season of leaf fall from Pietsch et al., 2005
 LEAF_FINEROOT_TURNOVER     1  //Average yearly fine root turnover rate Rasse et al 2001

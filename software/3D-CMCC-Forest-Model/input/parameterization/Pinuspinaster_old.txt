@@ -46,16 +46,16 @@ LIVE_TOTAL_WOOD 0.05          //new live C:new total wood (ratio) for P. sylvest
 CN_LEAVES   40                //CN of leaves (kgC/kgN) for P. pinaster Portè and Loustau 1998
 CN_FALLING_LEAVES   132       //CN of leaf litter (kgC/kgN) for P. sylvestris from Pietsch, 122 from Tatarinov 
 CN_FINE_ROOTS   49.0          //CN of fine roots (kgC/kgN) for P. sylvestris 38 from Pietsch 49 from Tatarinov
-CN_LIVE_WOODS   58.0          //CN of live woods (kgC/kgN)for P. sylvestris 50 from Pietsch 58 tatarinov
-CN_DEAD_WOODS   1400          //CN of dead woods (kgC/kgN) for P. sylvestris 1400 from Pietsch 730 from tatarinov
+CN_LIVEWOOD     58.0          //CN of live woods (kgC/kgN)for P. sylvestris 50 from Pietsch 58 tatarinov
+CN_DEADWOOD     1400          //CN of dead woods (kgC/kgN) for P. sylvestris 1400 from Pietsch 730 from tatarinov
 LEAF_LITT_LAB_FRAC   0.26     //leaf litter labile fraction for Pinus from Cenciala & Tatarinov 2006, 0.257 Pietsch 2005
 LEAF_LITT_CEL_FRAC   0.49     //leaf litter cellulose fraction for Pinus from Cenciala & Tatarinov 2006, 0.493 Pietsch 2005
 LEAF_LITT_LIGN_FRAC  0.25     //leaf litter lignin fraction for Pinus from Cenciala & Tatarinov 2006, 0.25 Pietsch 2005
 FROOT_LITT_LAB_FRAC  0.23     //fine root litter labile fraction for Pinus from Cenciala & Tatarinov 2006, 0.252 Pietsch 2005
 FROOT_LITT_CEL_FRAC  0.41     //fine root litter cellulose fraction for Pinus from Cenciala & Tatarinov 2006, 0.495 Pietsch 2005
 FROOT_LITT_LIGN_FRAC 0.36     //fine root litter lignin fraction for Pinus from Cenciala & Tatarinov 2006, 0.253 Pietsch 2005
-DEAD_WOOD_CEL_FRAC   0.70     //dead wood litter cellulose fraction for Pinus from Cenciala & Tatarinov 2006,0.71 Pietsch 2005
-DEAD_WOOD_LIGN_FRAC  0.30     //dead wood litter lignin fraction for Pinus from Cenciala & Tatarinov 2006, 0.29 Pietsch 2005
+DEADWOOD_CEL_FRAC    0.70     //dead wood litter cellulose fraction for Pinus from Cenciala & Tatarinov 2006,0.71 Pietsch 2005
+DEADWOOD_LIGN_FRAC   0.30     //dead wood litter lignin fraction for Pinus from Cenciala & Tatarinov 2006, 0.29 Pietsch 2005
 BUD_BURST 0.3                 //days of bud burst at the beginning of growing season for P. sylvestris from Tatarinov
 LEAF_FALL_FRAC_GROWING  0     //proportions of the growing season of leaf fall 
 LEAF_FINEROOT_TURNOVER  0.25  //Average YEARLY leaves and fine root turnover rate for P. pinaster Moro et al., 1996 Annals of Botany, for sylvestris 0.18 from Pietsch, 0.39 Tatarinov, 0.25 Makela et al., 1997

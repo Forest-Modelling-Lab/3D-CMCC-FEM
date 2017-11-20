@@ -929,16 +929,16 @@ static const char *sz_species_values[] =
 		"CN_LEAVES",                  /* CN of leaves (kgC/kgN) */
 		"CN_FALLING_LEAVES",          /* CN of leaf litter (kgC/kgN) */
 		"CN_FINE_ROOTS",              /* CN of fine roots (kgC/kgN) */
-		"CN_LIVE_WOODS",              /* CN of live woods (kgC/kgN) */
-		"CN_DEAD_WOODS",              /* CN of dead woods (kgC/kgN) */
+		"CN_LIVEWOOD",                /* CN of live woods (kgC/kgN) */
+		"CN_DEADWOOD",                /* CN of dead woods (kgC/kgN) */
 		"LEAF_LITT_LAB_FRAC",         /* (DIM) leaf litter labile fraction */
 		"LEAF_LITT_CEL_FRAC",         /* (DIM) leaf litter cellulose fraction */
 		"LEAF_LITT_LIGN_FRAC",        /* (DIM) leaf litter lignin fraction */
 		"FROOT_LITT_LAB_FRAC",        /* (DIM) fine root litter labile fraction */
 		"FROOT_LITT_CEL_FRAC",        /* (DIM) fine root litter cellulose fraction */
 		"FROOT_LITT_LIGN_FRAC",       /* (DIM) fine root litter lignin fraction */
-		"DEAD_WOOD_CEL_FRAC",         /* (DIM) dead wood litter cellulose fraction */
-		"DEAD_WOOD_LIGN_FRAC",        /* (DIM) dead wood litter lignin fraction */
+		"DEADWOOD_CEL_FRAC",          /* (DIM) dead wood litter cellulose fraction */
+		"DEADWOOD_LIGN_FRAC",         /* (DIM) dead wood litter lignin fraction */
 		"BUD_BURST",                  /* days of bud burst at the beginning of growing season (only for deciduous) */
 		"LEAF_FALL_FRAC_GROWING",     /* proportions of the growing season of leaf fall */
 		"LEAF_FINEROOT_TURNOVER",     /* Average yearly leaves and fine root turnover rate */

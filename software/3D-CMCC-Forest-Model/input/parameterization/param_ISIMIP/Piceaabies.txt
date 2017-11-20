@@ -46,16 +46,16 @@ LIVE_TOTAL_WOOD         0.076   //new live C:new total wood (ratio) for Picea ab
 CN_LEAVES               58.8    //CN of leaves (kgC/kgN) for Picea abies 42.73 from Mollicone et al. 2002, 42 from Pietsch et al., 2005, varying from 28.1 to 58.8 see White et al., 1999
 CN_FALLING_LEAVES       116     //CN of leaf litter (kgC/kgN) for Picea abies from Mollicone et al. 2002, 87.7 from Pietsch et al., 2005, varying from 50.5 to 116 see White et al., 1999
 CN_FINE_ROOTS           58.0    //CN of fine roots (kgC/kgN) for 36.44 Picea abies from Mollicone et al. 2002, 42.4 Pietsch et al., 2005, varying from 27.6 to 46.7 see White et al., 1999
-CN_LIVE_WOODS           50.0    //CN of live woods (kgC/kgN) for 36.44 Picea abies from Mollicone et al. 2002, 50 from Pietsch et al., 2005
-CN_DEAD_WOODS           535     //CN of dead woods (kgC/kgN) for Picea abies from Pietsch et al., 2005
+CN_LIVEWOOD             50.0    //CN of live woods (kgC/kgN) for 36.44 Picea abies from Mollicone et al. 2002, 50 from Pietsch et al., 2005
+CN_DEADWOOD             535     //CN of dead woods (kgC/kgN) for Picea abies from Pietsch et al., 2005
 LEAF_LITT_LAB_FRAC      0.28    //leaf litter labile fraction for Picea abies from Cenciala & Tatarinov 2006
 LEAF_LITT_CEL_FRAC      0.38    //leaf litter cellulose fraction for Picea abies from Cenciala & Tatarinov 2006
 LEAF_LITT_LIGN_FRAC     0.34    //leaf litter lignin fraction for Picea abies from Cenciala & Tatarinov 2006
 FROOT_LITT_LAB_FRAC     0.23    //fine root litter labile fraction for Picea abies from Cenciala & Tatarinov 2006
 FROOT_LITT_CEL_FRAC     0.41    //fine root litter cellulose fraction for Picea abies from Cenciala & Tatarinov 2006
 FROOT_LITT_LIGN_FRAC    0.36    //fine root litter lignin fraction for Picea abies from Cenciala & Tatarinov 2006
-DEAD_WOOD_CEL_FRAC      0.70    //dead wood litter cellulose fraction for Picea abies from Cenciala & Tatarinov 2006
-DEAD_WOOD_LIGN_FRAC     0.30    //dead wood litter lignin fraction for Picea abies from Cenciala & Tatarinov 2006
+DEADWOOD_CEL_FRAC       0.70    //dead wood litter cellulose fraction for Picea abies from Cenciala & Tatarinov 2006
+DEADWOOD_LIGN_FRAC      0.30    //dead wood litter lignin fraction for Picea abies from Cenciala & Tatarinov 2006
 BUD_BURST               0       //days of bud burst at the beginning of growing season (only for deciduous)
 LEAF_FALL_FRAC_GROWING  0       //proportions of the growing season of leaf fall 
 LEAF_FINEROOT_TURNOVER  0.195   //Average YEARLY leaves and fine root turnover rate for Picea abies from Pietsch et al., 2005, 0.11 for Picea abies Seidl et al., 2012

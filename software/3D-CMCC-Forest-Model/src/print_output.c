@@ -1801,7 +1801,7 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 		}
 		/************************************************************************/
 		/* heading variables only at cell level */
-		logger(g_daily_log,",gpp,npp,ar,hr,rsoil,reco,nee,nep,et,le,soil_evapo,snow_pack,asw,moist_ratio,iWue,litrC,cwdC,soilC,litrN,soilN,Tsoil,Daylength\n");
+		logger(g_daily_log,",gpp,npp,ar,hr,rsoil,reco,nee,nep,et,le,soil_evapo,snow_pack,asw,moist_ratio,iWue,litrC,deadwoodC,soilC,litrN,soilN,Tsoil,Daylength\n");
 	}
 	/*****************************************************************************************************/
 
@@ -1959,7 +1959,7 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 			c->soil_moist_ratio,
 			c->daily_iwue,
 			c->litrC,
-			c->cwd_litrC,
+			c->deadwood_C,
 			c->soilC,
 			c->litrN,
 			c->soilN,
@@ -2402,7 +2402,7 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 		}
 		/************************************************************************/
 		/* heading cell variables */
-		logger(g_annual_log,",gpp,npp,ar,hr,rsoil,rsoilCO2,reco,nee,nep,et,le,soil-evapo,asw,iWue,vol,cum_vol,run_off,litrC,cwdC,soilC,litrN,soilN");
+		logger(g_annual_log,",gpp,npp,ar,hr,rsoil,rsoilCO2,reco,nee,nep,et,le,soil-evapo,asw,iWue,vol,cum_vol,run_off,litrC,deadwood_C,soilC,litrN,soilN");
 		/************************************************************************/
 		/* heading meteo variables */
 		logger(g_annual_log,",solar_rad,tavg,tmax,tmin,tday,tnight,vpd,prcp,tsoil,rh,avg_asw,[CO2]");
@@ -2585,7 +2585,7 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 			c->cum_volume,
 			c->annual_out_flow,
 			c->litrC,
-			c->cwd_litrC,
+			c->deadwood_C,
 			c->soilC,
 			c->litrN,
 			c->soilN);

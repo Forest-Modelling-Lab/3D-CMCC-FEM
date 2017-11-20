@@ -57,7 +57,7 @@ int Soil_model_daily (matrix_t *const m, const int cell, const int day, const in
 		if ( soil_layer == c->soil_layers_count -1 )
 		{
 			/* add Nitrogen to top soil pool from atmospheric deposition */
-			c->daily_soilN += meteo_daily->Ndeposition;
+			c->daily_to_soilN += meteo_daily->Ndeposition;
 
 			/* soil radiative balance */
 			soil_radiation_sw_band ( c, meteo_daily );
@@ -78,7 +78,7 @@ int Soil_model_daily (matrix_t *const m, const int cell, const int day, const in
 		soil_water_balance ( c, meteo_daily, year );
 
 		/* compute heterotrophic respiration */
-		soil_heterotrophic_respiration_biome ( c, meteo_daily );
+		soil_heterotrophic_respiration ( c, meteo_daily );
 
 		/* compute soil carbon balance */
 		soil_carbon_balance ( c );
