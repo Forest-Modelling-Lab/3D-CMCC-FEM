@@ -1012,9 +1012,9 @@ void initialization_forest_litter (cell_t *const c, const int height, const int 
 	/*** create deadwood carbon pools fractions (gC/m2) ***/
 	//fixme it should sum throughout all classes...
 	c->deadwood_C    = g_soil_settings->values[DEADWOODC];
-	c->deadwood_2C   = s->value[DEADWOOD_2C] * 1e6 / g_settings->sizeCell;
-	c->deadwood_3C   = s->value[DEADWOOD_3C] * 1e6 / g_settings->sizeCell;
-	c->deadwood_4C   = s->value[DEADWOOD_4C] * 1e6 / g_settings->sizeCell;
+	c->deadwood_2C   = s->value[DEADWOOD_2C]       * 1e6 / g_settings->sizeCell;
+	c->deadwood_3C   = s->value[DEADWOOD_3C]       * 1e6 / g_settings->sizeCell;
+	c->deadwood_4C   = s->value[DEADWOOD_4C]       * 1e6 / g_settings->sizeCell;
 
 	/* check */
 	CHECK_CONDITION ( fabs ( c->deadwood_2C + c->deadwood_3C + c->deadwood_4C ) , > , c->deadwood_C + eps );
@@ -1056,9 +1056,9 @@ void initialization_forest_litter (cell_t *const c, const int height, const int 
 	/*** create deadwood nitrogen pools fractions (gN/m2) ***/
 	//fixme it should sum throghout all classes...
 	c->deadwood_N    = g_soil_settings->values[DEADWOODN];
-	c->deadwood_2N   = s->value[DEADWOOD_2N] * 1e6 / g_settings->sizeCell;
-	c->deadwood_3N   = s->value[DEADWOOD_3N] * 1e6 / g_settings->sizeCell;
-	c->deadwood_4N   = s->value[DEADWOOD_4N] * 1e6 / g_settings->sizeCell;
+	c->deadwood_2N   = s->value[DEADWOOD_2N]       * 1e6 / g_settings->sizeCell;
+	c->deadwood_3N   = s->value[DEADWOOD_3N]       * 1e6 / g_settings->sizeCell;
+	c->deadwood_4N   = s->value[DEADWOOD_4N]       * 1e6 / g_settings->sizeCell;
 	/* check */
 	CHECK_CONDITION ( fabs ( c->deadwood_2N + c->deadwood_3N + c->deadwood_4N ) , > , c->deadwood_N + eps );
 
