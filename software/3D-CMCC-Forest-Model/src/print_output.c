@@ -1801,7 +1801,10 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 		}
 		/************************************************************************/
 		/* heading variables only at cell level */
-		logger(g_daily_log,",gpp,npp,ar,hr,rsoil,reco,nee,nep,et,le,soil_evapo,snow_pack,asw,moist_ratio,iWue,litrC,deadwoodC,soilC,litrN,soilN,Tsoil,Daylength\n");
+		logger(g_daily_log,",gpp,npp,ar,hr,rsoil,reco,nee,nep,et,le,soil_evapo,snow_pack,asw,moist_ratio,iWue,"
+				"litrC,litr1C,litr2C,litr3C,litr4C,deadwoodC,deadwood2C,deadwood3C,deadwood4C,soilC,soil1C,soil2C,soil3C,soil4C,"
+				"litrN,litr1N,litr2N,litr3N,litr4N,deadwoodN,deadwood2N,deadwood3N,deadwood4N,soilN,soil1N,soil2N,soil3N,soil4N,"
+				"Tsoil,Daylength\n");
 	}
 	/*****************************************************************************************************/
 
@@ -1942,7 +1945,8 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 	/************************************************************************/
 	/* printing variables only at cell level */
 
-	logger(g_daily_log, ",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f\n",
+	logger(g_daily_log, ",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3."
+			"4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f\n",
 			c->daily_gpp,
 			c->daily_npp,
 			c->daily_aut_resp,
@@ -1959,10 +1963,33 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 			c->soil_moist_ratio,
 			c->daily_iwue,
 			c->litrC,
+			c->litr1C,
+			c->litr2C,
+			c->litr3C,
+			c->litr4C,
 			c->deadwood_C,
+			c->deadwood_2C,
+			c->deadwood_3C,
+			c->deadwood_4C,
 			c->soilC,
+			c->soil1C,
+			c->soil2C,
+			c->soil3C,
+			c->soil4C,
 			c->litrN,
+			c->litr1N,
+			c->litr2N,
+			c->litr3N,
+			c->litr4N,
+			c->deadwood_N,
+			c->deadwood_2N,
+			c->deadwood_3N,
+			c->deadwood_4N,
 			c->soilN,
+			c->soil1N,
+			c->soil2N,
+			c->soil3N,
+			c->soil4N,
 			c->years[year].m[month].d[day].tsoil,
 			c->years[year].m[month].d[day].daylength
 	);
@@ -2402,7 +2429,9 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 		}
 		/************************************************************************/
 		/* heading cell variables */
-		logger(g_annual_log,",gpp,npp,ar,hr,rsoil,rsoilCO2,reco,nee,nep,et,le,soil-evapo,asw,iWue,vol,cum_vol,run_off,litrC,deadwood_C,soilC,litrN,soilN");
+		logger(g_annual_log,",gpp,npp,ar,hr,rsoil,rsoilCO2,reco,nee,nep,et,le,soil-evapo,asw,iWue,vol,cum_vol,run_off,"
+				"litrC,litr1C,litr2C,litr3C,litr4C,deadwood_C,deadwood_2C,deadwood_3C,deadwood_4C,soilC,soil1C,soil2C,soil3C,soil4C,"
+				"litrN,litr1N,litr2N,litr3N,litr4N,deadwood_N,deadwood_2N,deadwood_3N,deadwood_4N,soilN,soil1N,soil2N,soil3N,soil4N");
 		/************************************************************************/
 		/* heading meteo variables */
 		logger(g_annual_log,",solar_rad,tavg,tmax,tmin,tday,tnight,vpd,prcp,tsoil,rh,avg_asw,[CO2]");
@@ -2566,7 +2595,8 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 
 	/************************************************************************/
 	/* printing variables at cell level only if there's more than one layer */
-	logger(g_annual_log, ",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f",
+	logger(g_annual_log, ",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f"
+			",%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f",
 			c->annual_gpp,
 			c->annual_npp,
 			c->annual_aut_resp,
@@ -2585,10 +2615,33 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 			c->cum_volume,
 			c->annual_out_flow,
 			c->litrC,
+			c->litr1C,
+			c->litr2C,
+			c->litr3C,
+			c->litr4C,
 			c->deadwood_C,
+			c->deadwood_2C,
+			c->deadwood_3C,
+			c->deadwood_4C,
 			c->soilC,
+			c->soil1C,
+			c->soil2C,
+			c->soil3C,
+			c->soil4C,
 			c->litrN,
-			c->soilN);
+			c->litr1N,
+			c->litr2N,
+			c->litr3N,
+			c->litr4N,
+			c->deadwood_N,
+			c->deadwood_2N,
+			c->deadwood_3N,
+			c->deadwood_4N,
+			c->soilN,
+			c->soil1N,
+			c->soil2N,
+			c->soil3N,
+			c->soil4N);
 	/************************************************************************/
 	/* print meteo variables at cell level */
 	logger(g_annual_log, ",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",

@@ -234,12 +234,12 @@ int check_litter_nitrogen_mass_balance(cell_t *const c)
 		error_log("c->daily_deadwood_to_litrN= %f gN/m2/day\n", c->daily_deadwood_to_litrN);
 		error_log("\nout                     = %f gN/m2/day\n", c->litr_nitrogen_out);
 		error_log("daily_litr_to_soilN       = %f gN/m2/day\n", c->daily_litr_to_soilN);
-		error_log("\nstore\n");
+		error_log("\nstore                   = %f gN/m2/day\n", c->litr_nitrogen_store);
 		error_log("leaf_litr1N               = %f gN/m2/day\n", c->litr1N);
 		error_log("leaf_litr2N               = %f gN/m2/day\n", c->litr2N);
 		error_log("leaf_litr3N               = %f gN/m2/day\n", c->litr3N);
 		error_log("leaf_litr4N               = %f gN/m2/day\n", c->litr4N);
-		error_log("\nbalance\n");
+		error_log("\nbalance                 = %f gN/m2/day\n", c->litr_nitrogen_balance);
 		error_log("nitrogen in               = %f gN/m2/day\n", c->litr_nitrogen_in);
 		error_log("nitrogen out              = %f gN/m2/day\n", c->litr_nitrogen_out);
 		error_log("delta nitrogen store      = %f gN/m2/day\n", c->litr_nitrogen_store - c->litr_nitrogen_old_store);

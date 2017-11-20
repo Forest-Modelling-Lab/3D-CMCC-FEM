@@ -24,6 +24,10 @@ void littering ( cell_t *const c, species_t *const s )
 	/*********************************************************************************************************************************/
 	/*** deadwood carbon ***/
 
+	//CORRADO fixme fixme fixme fixme fixme fixme fixme fixme fixme
+	//set to zero for bugs!!!
+	s->value[C_TO_DEADWOOD] = 0.;
+
 	/*** compute class-level deadwood carbon pools (tC/sizecell) ****/
 	s->value[DEADWOOD_2C]               = ( s->value[C_TO_DEADWOOD] * s->value[DEADWOOD_USCEL_FRAC]);
 	s->value[DEADWOOD_3C]               = ( s->value[C_TO_DEADWOOD] * s->value[DEADWOOD_SCEL_FRAC]) ;
@@ -81,6 +85,10 @@ void littering ( cell_t *const c, species_t *const s )
 
 	/*********************************************************************************************************************************/
 	/*** fine root litter carbon ***/
+
+	//CORRADO fixme fixme fixme fixme fixme fixme fixme fixme fixme
+	//set to zero for bugs!!!
+	s->value[N_TO_DEADWOOD] = 0.;
 
 	/*** compute class-level fine root carbon pools (tC/sizecell) ****/
 	s->value[FROOT_LITR1C]              = ( s->value[C_FROOT_TO_LITR] * s->value[FROOT_LITR_LAB_FRAC]   );

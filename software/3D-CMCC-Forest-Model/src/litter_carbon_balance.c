@@ -26,7 +26,8 @@ void litter_carbon_balance (cell_t *const c)
 	/*********************************************************************************************************/
 
 	/* update mass of deadwood */
-	c->deadwood_C           -= (c->daily_deadwood_to_litr2C + c->daily_deadwood_to_litr3C + c->daily_deadwood_to_litr4C);
+	c->deadwood_C           += ( c->deadwood_2C + c->deadwood_3C + c->deadwood_4C )
+			-(c->daily_deadwood_to_litr2C + c->daily_deadwood_to_litr3C + c->daily_deadwood_to_litr4C);
 
 	/*********************************************************************************************************/
 
