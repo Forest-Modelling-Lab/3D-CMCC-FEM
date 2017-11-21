@@ -2,6 +2,9 @@
 *.o
 *.d
 *.mk
+*.xml
+*.prefs
+
 
 # ignore temporary files
 *~

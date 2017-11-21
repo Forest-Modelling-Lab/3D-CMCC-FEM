@@ -17,15 +17,17 @@
 
 extern logger_t* g_debug_log;
 
-void litter_nitrogen_balance (cell_t *const c)
+void litter_nitrogen_balance (cell_t *const c, const int year )
 {
-
 	logger(g_debug_log, "\n**LITTER NITROGEN BALANCE**\n");
 	/*********************************************************************************************************/
 
 	/* update mass of deadwood */
-	c->deadwood_N               = ( c->deadwood_2N + c->deadwood_3N + c->deadwood_4N )
-			- ( c->daily_deadwood_to_litr2N + c->daily_deadwood_to_litr3N + c->daily_deadwood_to_litr4N );
+	c->deadwood_2N          -= c->daily_deadwood_to_litr2N;
+
+	c->deadwood_3N          -= c->daily_deadwood_to_litr3N;
+
+	c->deadwood_4N          -= c->daily_deadwood_to_litr4N;
 
 	/*********************************************************************************************************/
 
@@ -43,6 +45,7 @@ void litter_nitrogen_balance (cell_t *const c)
 
 	/* nitrogen mass of cellulose litter pool */
 	c->litr2N                  += c->daily_to_litr2N;
+
 	/*********************************************************************************************************/
 
 	/* nitrogen fluxes balance of unshielded cellulose pools */
@@ -68,7 +71,10 @@ void litter_nitrogen_balance (cell_t *const c)
 	c->daily_to_litrN           = c->daily_to_litr1N       + c->daily_to_litr2N          + c->daily_to_litr3N          + c->daily_to_litr4N;
 
 	/* total mass */
-	c->litrN                    = c->litr1N + c->litr2N + c->litr3N + c->litr4N;
+	c->deadwood_N               =             c->deadwood_2N + c->deadwood_3N + c->deadwood_4N;
+	c->litrN                    = c->litr1N + c->litr2N      + c->litr3N      + c->litr4N;
+
+	printf ("%f \n", c->litrN );
 
 	/* move from litter to soil pools (this need to be done here to close litter balance) */
 	c->daily_to_soil1N          = c->daily_litr1N_to_soil1N;

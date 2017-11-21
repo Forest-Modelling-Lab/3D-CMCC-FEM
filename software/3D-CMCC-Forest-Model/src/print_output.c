@@ -2430,8 +2430,8 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 		/************************************************************************/
 		/* heading cell variables */
 		logger(g_annual_log,",gpp,npp,ar,hr,rsoil,rsoilCO2,reco,nee,nep,et,le,soil-evapo,asw,iWue,vol,cum_vol,run_off,"
-				"litrC,litr1C,litr2C,litr3C,litr4C,deadwood_C,deadwood_2C,deadwood_3C,deadwood_4C,soilC,soil1C,soil2C,soil3C,soil4C,"
-				"litrN,litr1N,litr2N,litr3N,litr4N,deadwood_N,deadwood_2N,deadwood_3N,deadwood_4N,soilN,soil1N,soil2N,soil3N,soil4N");
+				"litrC,litr1C,litr2C,litr3C,litr4C,deadwoodC,deadwood2C,deadwood3C,deadwood4C,soilC,soil1C,soil2C,soil3C,soil4C,"
+				"litrN,litr1N,litr2N,litr3N,litr4N,deadwoodN,deadwood2N,deadwood3N,deadwood4N,soilN,soil1N,soil2N,soil3N,soil4N");
 		/************************************************************************/
 		/* heading meteo variables */
 		logger(g_annual_log,",solar_rad,tavg,tmax,tmin,tday,tnight,vpd,prcp,tsoil,rh,avg_asw,[CO2]");

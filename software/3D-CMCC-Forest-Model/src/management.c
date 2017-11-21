@@ -446,25 +446,22 @@ void prescribed_thinning (cell_t *const c, const int height, const int dbh, cons
 						initialization_forest_class_C           (c, height, dbh, age, species);
 
 						/* initialize cell carbon pools */
-						initialization_forest_C                 (c, height, dbh, age, species);
+						initialization_forest_cell_C            (c, height, dbh, age, species);
 
 						/* initialize class nitrogen pools */
 						initialization_forest_class_N           (c, height, dbh, age, species);
 
 						/* initialize cell nitrogen pools */
-						initialization_forest_N                 (c, height, dbh, age, species);
+						initialization_forest_cell_N            (c, height, dbh, age, species);
 
 						/* initialization forest class litter fractions */
 						initialization_forest_class_litter_soil (c, height, dbh, age, species);
 
-						/* initialization class litter fractions */
-						initialization_forest_class_litter_soil (c, height, dbh, age, species);
-
 						/* initialization cell litter fractions */
-						initialization_forest_litter            (c, height, dbh, age, species);
+						initialization_forest_cell_litter       (c, height, dbh, age, species);
 
 						/* initialization cell soil fractions */
-						initialization_forest_soil              (c, height, dbh, age, species);
+						initialization_forest_cell_soil         (c, height, dbh, age, species);
 					}				
 				}
 			}

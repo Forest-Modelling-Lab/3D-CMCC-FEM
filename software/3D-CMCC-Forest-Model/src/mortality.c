@@ -95,7 +95,7 @@ void self_thinning_mortality (cell_t *const c, const int layer, const int year)
 						--livetree;
 
 						/* impose DBHDC_EFF = DBHDCMIN */
-						//s->value[DBHDC_EFF] = s->value[DBHDCMIN];getchar();
+						//s->value[DBHDC_EFF] = s->value[DBHDCMIN];
 
 						/* update at cell level */
 						++c->daily_dead_tree;
@@ -452,14 +452,6 @@ void self_pruning ( cell_t *const c, const int height, const int dbh, const int 
 
 	s->value[N_TO_RESERVE]                  += s->value[N_CROOT_TO_RESERVE];
 	s->value[N_TO_DEADWOOD]                 += s->value[N_CROOT_TO_DEADWOOD];
-
-	if ( c->doy == 1)
-		{
-		printf("self_pruning %g \n",s->value[C_BRANCH_TO_DEADWOOD] );
-		printf("self_pruning %g \n",s->value[C_CROOT_TO_DEADWOOD] );
-		printf("self_pruning %g \n",s->value[C_TO_DEADWOOD] );//getchar();
-		}
-
 }
 
 

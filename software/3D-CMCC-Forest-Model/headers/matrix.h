@@ -413,11 +413,11 @@ enum {
 	LEAF_SUN_C,                         /* (tC/cell) Current Leaf sun carbon pool */
 	LEAF_SHADE_C,                       /* (tC/cell) Current Leaf shade carbon pool */
 	MAX_LEAF_C,                         /* (tC/cell/year) Maximum Leaf carbon pool */
-	LEAF_LITTER_C,                      /* (tC/cell) AMOUNT Leaf carbon pool TO LITTER IN INIT */
+	LEAF_LITR_C,                         /* (tC/cell) AMOUNT Leaf carbon pool TO LITTER IN INIT */
 	CROOT_C,                            /* (tC/cell) Current Coarse root carbon pool */
 	FROOT_C,                            /* (tC/cell) Current Fine root carbon pool */
 	MAX_FROOT_C,                        /* (tC/cell/year) Maximum Fine root carbon pool */
-	FROOT_LITTER_C,                     /* (tC/cell) AMOUNT froot carbon pool TO LITTER IN INIT */
+	FROOT_LITR_C,                     /* (tC/cell) AMOUNT froot carbon pool TO LITTER IN INIT */
 	MAX_BUD_BURST_C,                    /* (tC/cell) Maximum Current Leaf carbon pool for BudBurst */
 	STEM_C,                             /* (tC/cell) Current Stem carbon pool */
 	BRANCH_C,                           /* (tC/cell) Current Branch carbon pool */
@@ -623,9 +623,9 @@ enum {
 	LEAF_SUN_N,                         /* (tN/cell) Current Leaf sun nitrogen pool */
 	LEAF_SHADE_N,                       /* (tN/cell) Current Leaf shade nitrogen pool */
 	LEAF_FALLING_N,                     /* (tN/cell) Current Leaf falling nitrogen pool */
-	LEAF_LITTER_N,                      /* (tN/cell) First year Leaf litter nitrogen pool */
+	LEAF_LITR_N,                        /* (tN/cell) First year Leaf litter nitrogen pool */
 	FROOT_N,                            /* (tN/cell) Current Fine root nitrogen pool */
-	FROOT_LITTER_N,                     /* (tN/cell) Current Fine root falling nitrogen pool */
+	FROOT_LITR_N,                       /* (tN/cell) Current Fine root falling nitrogen pool */
 	DEADWOODN,                          /* (tN/cell) Current Coarse woody debris falling nitrogen pool */
 	CROOT_N,                            /* (tN/cell) Current Coarse root nitrogen pool */
 	CROOT_LIVEWOOD_N,                   /* (tN/cell) Current Live Coarse root nitrogen pool */
@@ -657,38 +657,65 @@ enum {
 	TREE_RESERVE_N,                     /* (tN/tree) Single Tree Reserve nitrogen pool */
 	TREE_FRUIT_N,                       /* (tN/tree) Single Tree Fruit nitrogen pool */
 
+	/* litter and soil flux */
+	LEAF_TO_LITRC,                      /* (tC/cell/day) leaf litter  C flux */
+	LEAF_TO_LITR1C,                     /* (tC/cell/day) leaf litter labile C flux */
+	LEAF_TO_LITR2C,                     /* (tC/cell/day) leaf litter unshielded cell/dayulose C flux */
+	LEAF_TO_LITR3C,                     /* (tC/cell/day) leaf litter shielded cell/dayulose C flux */
+	LEAF_TO_LITR4C,                     /* (tC/cell/day) leaf litter lignin C flux */
+	LEAF_TO_LITRN,                      /* (tN/cell/day) leaf litter  N flux */
+	LEAF_TO_LITR1N,                     /* (tN/cell/day) leaf litter labile N flux */
+	LEAF_TO_LITR2N,                     /* (tN/cell/day) leaf litter unshielded Cellulose N flux */
+	LEAF_TO_LITR3N,                     /* (tN/cell/day) leaf litter shielded Cellulose N flux */
+	LEAF_TO_LITR4N,                     /* (tN/cell/day) leaf litter lignin N flux */
+	FROOT_TO_LITRC,                     /* (tC/cell/day) froot litter labile C flux */
+	FROOT_TO_LITR1C,                    /* (tC/cell/day) froot litter labile C flux */
+	FROOT_TO_LITR2C,                    /* (tC/cell/day) froot litter unshielded cell/dayulose C flux */
+	FROOT_TO_LITR3C,                    /* (tC/cell/day) froot litter shielded cell/dayulose C flux */
+	FROOT_TO_LITR4C,                    /* (tC/cell/day) froot litter lignin C flux */
+	FROOT_TO_LITRN,                     /* (tN/cell/day) froot litter labile N flux */
+	FROOT_TO_LITR1N,                    /* (tN/cell/day) froot litter labile N flux */
+	FROOT_TO_LITR2N,                    /* (tN/cell/day) froot litter unshielded Cellulose N flux */
+	FROOT_TO_LITR3N,                    /* (tN/cell/day) froot litter shielded Cellulose N flux */
+	FROOT_TO_LITR4N,                    /* (tN/cell/day) froot litter lignin N flux */
+	DEADWOOD_TO_LITRC,                  /* (tC/cell/day) deadwood flux */
+	DEADWOOD_TO_LITR2C,                 /* (tC/cell/day) deadwood unshielded flux */
+	DEADWOOD_TO_LITR3C,                 /* (tC/cell/day) deadwood shielded flux */
+	DEADWOOD_TO_LITR4C,                 /* (tC/cell/day) deadwood lignin flux */
+	DEADWOOD_TO_LITRN ,                 /* (tN/cell/day) deadwood flux */
+	DEADWOOD_TO_LITR2N,                 /* (tN/cell/day) deadwood unshielded flux */
+	DEADWOOD_TO_LITR3N,                 /* (tN/cell/day) deadwood shielded flux */
+	DEADWOOD_TO_LITR4N,                 /* (tN/cell/day) deadwood lignin flux */
+
 	/* litter and soil pools */
-	CWDC,                               /* (tC/cell) coarse woody debris C */
-	LEAF_LITR1C,                        /* (tC/cell) leaf litter labile C */
-	LEAF_LITR2C,                        /* (tC/cell) leaf litter unshielded cellulose C */
-	LEAF_LITR3C,                        /* (tC/cell) leaf litter shielded cellulose C */
-	LEAF_LITR4C,                        /* (tC/cell) leaf litter lignin C */
-	LEAF_LITR1N,                        /* (tN/cell) leaf litter labile N */
-	LEAF_LITR2N,                        /* (tN/cell) leaf litter unshielded Cellulose N */
-	LEAF_LITR3N,                        /* (tN/cell) leaf litter shielded Cellulose N */
-	LEAF_LITR4N,                        /* (tN/cell) leaf litter lignin N */
-	FROOT_LITR1C,                       /* (tC/cell) froot litter labile C */
-	FROOT_LITR2C,                       /* (tC/cell) froot litter unshielded cellulose C */
-	FROOT_LITR3C,                       /* (tC/cell) froot litter shielded cellulose C */
-	FROOT_LITR4C,                       /* (tC/cell) froot litter lignin C */
-	FROOT_LITR1N,                       /* (tN/cell) froot litter labile N */
-	FROOT_LITR2N,                       /* (tN/cell) froot litter unshielded Cellulose N */
-	FROOT_LITR3N,                       /* (tN/cell) froot litter shielded Cellulose N */
-	FROOT_LITR4N,                       /* (tN/cell) froot litter lignin N */
-	DEADWOOD_2C,                        /* (tC/cell) deadwood unshielded poool */
-	DEADWOOD_3C,                        /* (tC/cell) deadwood shielded poool */
-	DEADWOOD_4C,                        /* (tC/cell) deadwood lignin poool */
-	DEADWOOD_2N,                        /* (tN/cell) deadwood unshielded poool */
-	DEADWOOD_3N,                        /* (tN/cell) deadwood shielded poool */
-	DEADWOOD_4N,                        /* (tN/cell) deadwood lignin poool */
-	SOIL1C,                             /* (tC/cell) microbial recycling pool C (fast) */
-	SOIL2C,                             /* (tC/cell) microbial recycling pool C (medium) */
-	SOIL3C,                             /* (tC/cell) microbial recycling pool C (slow) */
-	SOIL4C,                             /* (tC/cell) recalcitrant SOM C (humus, slowest) */
-	SOIL1N,                             /* (tN/cell) microbial recycling pool N (fast) */
-	SOIL2N,                             /* (tN/cell) microbial recycling pool N (medium) */
-	SOIL3N,                             /* (tN/cell) microbial recycling pool N (slow) */
-	SOIL4N,                             /* (tN/cell) recalcitrant SOM N (humus, slowest) */
+	LEAF_LITRC,                         /* (tC/cell) leaf litter C pool */
+	LEAF_LITR1C,                        /* (tC/cell) leaf litter labile C pool */
+	LEAF_LITR2C,                        /* (tC/cell) leaf litter unshielded cellulose C pool */
+	LEAF_LITR3C,                        /* (tC/cell) leaf litter shielded cellulose C pool */
+	LEAF_LITR4C,                        /* (tC/cell) leaf litter lignin C pool */
+	LEAF_LITRN,                         /* (tN/cell) leaf litter N pool */
+	LEAF_LITR1N,                        /* (tN/cell) leaf litter labile N pool */
+	LEAF_LITR2N,                        /* (tN/cell) leaf litter unshielded Cellulose N pool */
+	LEAF_LITR3N,                        /* (tN/cell) leaf litter shielded Cellulose N pool */
+	LEAF_LITR4N,                        /* (tN/cell) leaf litter lignin N pool */
+	FROOT_LITRC,                        /* (tC/cell) froot litter C pool */
+	FROOT_LITR1C,                       /* (tC/cell) froot litter labile C pool */
+	FROOT_LITR2C,                       /* (tC/cell) froot litter unshielded cellulose C pool */
+	FROOT_LITR3C,                       /* (tC/cell) froot litter shielded cellulose C pool */
+	FROOT_LITR4C,                       /* (tC/cell) froot litter lignin C pool */
+	FROOT_LITRN,                        /* (tN/cell) froot litter N pool */
+	FROOT_LITR1N,                       /* (tN/cell) froot litter labile N pool */
+	FROOT_LITR2N,                       /* (tN/cell) froot litter unshielded Cellulose N pool */
+	FROOT_LITR3N,                       /* (tN/cell) froot litter shielded Cellulose N pool */
+	FROOT_LITR4N,                       /* (tN/cell) froot litter lignin N pool */
+	DEADWOOD_LITRC ,                    /* (tC/cell) deadwood pool */
+	DEADWOOD_LITR2C,                    /* (tC/cell) deadwood unshielded pool */
+	DEADWOOD_LITR3C,                    /* (tC/cell) deadwood shielded pool */
+	DEADWOOD_LITR4C,                    /* (tC/cell) deadwood lignin pool */
+	DEADWOOD_LITRN,                     /* (tN/cell) deadwood pool */
+	DEADWOOD_LITR2N,                    /* (tN/cell) deadwood unshielded pool */
+	DEADWOOD_LITR3N,                    /* (tN/cell) deadwood shielded pool */
+	DEADWOOD_LITR4N,                    /* (tN/cell) deadwood lignin pool */
 
 	/* fractions */
 	LEAF_LITR_SCEL_FRAC,                /* (DIM) leaf litter shielded cellulose fraction */

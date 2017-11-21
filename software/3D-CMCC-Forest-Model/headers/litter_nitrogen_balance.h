@@ -8,6 +8,6 @@
 #ifndef HEADERS_LITTER_NITROGEN_BALANCE_H_
 #define HEADERS_LITTER_NITROGEN_BALANCE_H_
 
-void litter_nitrogen_balance (cell_t *const c);
+void litter_nitrogen_balance (cell_t *const c, const int year);
 
 #endif /* HEADERS_LITTER_NITROGEN_BALANCE_H_ */

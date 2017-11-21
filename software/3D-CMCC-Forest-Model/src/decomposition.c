@@ -41,7 +41,7 @@ void litter_decomposition (cell_t *const c, const meteo_daily_t *const meteo_dai
 	double litt_decomp_rate4;     /* lignin litter decomposition rate */
 	double pot_litr1C_loss;       /* potential labile litter loss */
 	double pot_litr2C_loss;       /* potential unshielded litter loss */
-	double pot_litr3C_loss;       /* potential shielded litter loss */
+//	double pot_litr3C_loss;       /* potential shielded litter loss */
 	double pot_litr4C_loss;       /* potential lignin litter loss */
 
 	/************************************************************************************************/
@@ -118,20 +118,24 @@ void litter_decomposition (cell_t *const c, const meteo_daily_t *const meteo_dai
 	if ( c->litr4N      > 0. ) cn_litr4     = c->litr4C      / c->litr4N;
 
 	/******************************************************************************************************************/
-	/* calculate the flux from CWD to litter lignin and cellulose compartments, due to physical fragmentation */
-	deadwood_fragm_rate             = KFRAG_BASE * rate_scalar;
+	/* calculate the flux from deadwood to litter lignin and cellulose compartments, due to physical fragmentation */
+	deadwood_fragm_rate              = KFRAG_BASE     * rate_scalar;
 
-	pot_deadwood_loss = c->deadwood_C * deadwood_fragm_rate;
+	/* compute potential carbon loss */
+	pot_deadwood_loss                = c->deadwood_C  * deadwood_fragm_rate;
 
 	/* coarse woody debris carbon to carbon litter poool */
 	c->daily_deadwood_to_litr2C      = c->deadwood_2C * pot_deadwood_loss;
 	c->daily_deadwood_to_litr3C      = c->deadwood_3C * pot_deadwood_loss;
 	c->daily_deadwood_to_litr4C      = c->deadwood_4C * pot_deadwood_loss;
 
+	/* check */
+	CHECK_CONDITION ( c->daily_deadwood_to_litr2C + c->daily_deadwood_to_litr2C + c->daily_deadwood_to_litr2C, > , c->deadwood_C );
+
 	/* coarse woody debris nitrogen to nitrogen litter poool */
-	c->daily_deadwood_to_litr2N      = ( c->daily_deadwood_to_litr2C / cn_cwd2 );
-	c->daily_deadwood_to_litr3N      = ( c->daily_deadwood_to_litr3C / cn_cwd3 );
-	c->daily_deadwood_to_litr4N      = ( c->daily_deadwood_to_litr4C / cn_cwd4 );
+	if ( cn_cwd2 > 0. ) c->daily_deadwood_to_litr2N      = ( c->daily_deadwood_to_litr2C / cn_cwd2 );
+	if ( cn_cwd3 > 0. ) c->daily_deadwood_to_litr3N      = ( c->daily_deadwood_to_litr3C / cn_cwd3 );
+	if ( cn_cwd4 > 0. ) c->daily_deadwood_to_litr4N      = ( c->daily_deadwood_to_litr4C / cn_cwd4 );
 
 	/******************************************************************************************************************/
 

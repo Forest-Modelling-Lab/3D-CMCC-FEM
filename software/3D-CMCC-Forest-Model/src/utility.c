@@ -432,6 +432,20 @@ void reset_daily_class_variables(cell_t *const c)
 					s->value[C_STEM_SAPWOOD_TO_DEADWOOD] =0.;
 					s->value[C_CROOT_SAPWOOD_TO_DEADWOOD] =0.;
 					s->value[C_BRANCH_SAPWOOD_TO_DEADWOOD] =0.;
+					s->value[LEAF_TO_LITRC] =             0.;
+					s->value[LEAF_TO_LITR1C] =            0.;
+					s->value[LEAF_TO_LITR2C] =            0.;
+					s->value[LEAF_TO_LITR3C] =            0.;
+					s->value[LEAF_TO_LITR4C] =            0.;
+					s->value[FROOT_TO_LITRC] =            0.;
+					s->value[FROOT_TO_LITR1C] =           0.;
+					s->value[FROOT_TO_LITR2C] =           0.;
+					s->value[FROOT_TO_LITR3C] =           0.;
+					s->value[FROOT_TO_LITR4C] =           0.;
+					s->value[DEADWOOD_TO_LITRC] =         0.;
+					s->value[DEADWOOD_TO_LITR2C] =        0.;
+					s->value[DEADWOOD_TO_LITR3C] =        0.;
+					s->value[DEADWOOD_TO_LITR4C] =        0.;
 
 					/* reset daily nitrogen fluxes */
 					s->value[NPP_gN] =                    0.;
@@ -459,7 +473,20 @@ void reset_daily_class_variables(cell_t *const c)
 					s->value[N_BRANCH_TO_DEADWOOD] =      0.;
 					s->value[N_RESERVE_TO_DEADWOOD] =     0.;
 					s->value[N_FRUIT_TO_DEADWOOD] =       0.;
-
+					s->value[LEAF_TO_LITRN] =             0.;
+					s->value[LEAF_TO_LITR1N] =            0.;
+					s->value[LEAF_TO_LITR2N] =            0.;
+					s->value[LEAF_TO_LITR3N] =            0.;
+					s->value[LEAF_TO_LITR4N] =            0.;
+					s->value[FROOT_TO_LITRN] =            0.;
+					s->value[FROOT_TO_LITR1N] =           0.;
+					s->value[FROOT_TO_LITR2N] =           0.;
+					s->value[FROOT_TO_LITR3N] =           0.;
+					s->value[FROOT_TO_LITR4N] =           0.;
+					s->value[DEADWOOD_TO_LITRN] =         0.;
+					s->value[DEADWOOD_TO_LITR2N] =        0.;
+					s->value[DEADWOOD_TO_LITR3N] =        0.;
+					s->value[DEADWOOD_TO_LITR4N] =        0.;
 					/****************************************/
 
 					/* reset daily maintenance, growth and total respiration */

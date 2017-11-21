@@ -211,15 +211,15 @@ void tree_biomass_remove (cell_t *const c, const int height, const int dbh, cons
 			s->value[C_FROOT_TO_LITR];
 
 	/* carbon to cwd fluxes */
-	s->value[C_STEM_TO_DEADWOOD]           += (s->value[TREE_STEM_C]    * tree_remove);
+	s->value[C_STEM_TO_DEADWOOD]      += (s->value[TREE_STEM_C]    * tree_remove);
 
-	s->value[C_CROOT_TO_DEADWOOD]          += (s->value[TREE_CROOT_C]   * tree_remove);
+	s->value[C_CROOT_TO_DEADWOOD]     += (s->value[TREE_CROOT_C]   * tree_remove);
 
-	s->value[C_BRANCH_TO_DEADWOOD]         += (s->value[TREE_BRANCH_C]  * tree_remove);
+	s->value[C_BRANCH_TO_DEADWOOD]    += (s->value[TREE_BRANCH_C]  * tree_remove);
 
-	s->value[C_RESERVE_TO_DEADWOOD]        += (s->value[TREE_RESERVE_C] * tree_remove);
+	s->value[C_RESERVE_TO_DEADWOOD]   += (s->value[TREE_RESERVE_C] * tree_remove);
 
-	s->value[C_FRUIT_TO_DEADWOOD]          += (s->value[TREE_FRUIT_C]   * tree_remove);
+	s->value[C_FRUIT_TO_DEADWOOD]     += (s->value[TREE_FRUIT_C]   * tree_remove);
 
 	if ( ! nat_man )
 	{
@@ -240,6 +240,37 @@ void tree_biomass_remove (cell_t *const c, const int height, const int dbh, cons
 				s->value[C_BRANCH_TO_DEADWOOD] +
 				s->value[C_RESERVE_TO_DEADWOOD]+
 				s->value[C_FRUIT_TO_DEADWOOD]) ;
+	}
+
+	if ( s->counter[HARVESTING_HAPPENS] == 1 )
+	{
+		/*** compute class-level deadwood carbon fluxes (tC/sizecell/day) ****/
+		s->value[DEADWOOD_TO_LITRC]         = s->value[C_TO_DEADWOOD];
+		s->value[DEADWOOD_TO_LITR2C]        = s->value[C_TO_DEADWOOD] * s->value[DEADWOOD_USCEL_FRAC];
+		s->value[DEADWOOD_TO_LITR3C]        = s->value[C_TO_DEADWOOD] * s->value[DEADWOOD_SCEL_FRAC];
+		s->value[DEADWOOD_TO_LITR4C]        = s->value[C_TO_DEADWOOD] * s->value[DEADWOOD_LIGN_FRAC];
+		/* check */
+		CHECK_CONDITION ( s->value[DEADWOOD_TO_LITR2C] + s->value[DEADWOOD_TO_LITR3C] + s->value[DEADWOOD_TO_LITR4C], == , s->value[DEADWOOD_TO_LITRC] + eps );
+
+		/*** compute class-level deadwood carbon pools (tC/sizecell) ****/
+		s->value[DEADWOOD_LITRC]           += s->value[C_TO_DEADWOOD];
+		s->value[DEADWOOD_LITR2C]          += s->value[DEADWOOD_TO_LITR2C];
+		s->value[DEADWOOD_LITR3C]          += s->value[DEADWOOD_TO_LITR3C];
+		s->value[DEADWOOD_LITR4C]          += s->value[DEADWOOD_TO_LITR4C];
+		/* check */
+		CHECK_CONDITION ( s->value[DEADWOOD_LITR2C] + s->value[DEADWOOD_LITR3C] + s->value[DEADWOOD_LITR4C], == , s->value[DEADWOOD_LITRC] + eps );
+
+		/*** update cell-level deadwood carbon fluxes (gC/m2/day) ****/
+		c->daily_deadwood_to_litrC         += s->value[DEADWOOD_LITRC]  * 1e6 / g_settings->sizeCell;
+		c->daily_deadwood_to_litr2C        += s->value[DEADWOOD_LITR2C] * 1e6 / g_settings->sizeCell;
+		c->daily_deadwood_to_litr3C        += s->value[DEADWOOD_LITR3C] * 1e6 / g_settings->sizeCell;
+		c->daily_deadwood_to_litr4C        += s->value[DEADWOOD_LITR4C] * 1e6 / g_settings->sizeCell;
+
+		/*** compute cell-level deadwood carbon pools (gC/m2) ***/
+		c->deadwood_C                      += s->value[DEADWOOD_LITRC]  * 1e6 / g_settings->sizeCell;
+		c->deadwood_2C                     += s->value[DEADWOOD_LITR2C] * 1e6 / g_settings->sizeCell;
+		c->deadwood_3C                     += s->value[DEADWOOD_LITR3C] * 1e6 / g_settings->sizeCell;
+		c->deadwood_4C                     += s->value[DEADWOOD_LITR4C] * 1e6 / g_settings->sizeCell;
 	}
 
 	/* sapwood and heartwood */
@@ -318,12 +349,54 @@ void tree_biomass_remove (cell_t *const c, const int height, const int dbh, cons
 
 	s->value[N_RESERVE_TO_DEADWOOD]   += (s->value[TREE_RESERVE_N]    * tree_remove);
 
-	/* overall cwd */
-	s->value[N_TO_DEADWOOD]            += (s->value[N_STEM_TO_DEADWOOD] +
-			s->value[N_CROOT_TO_DEADWOOD]  +
-			s->value[N_BRANCH_TO_DEADWOOD] +
-			s->value[N_BRANCH_TO_DEADWOOD] +
-			s->value[N_FRUIT_TO_DEADWOOD]) ;
+	if ( ! nat_man )
+	{
+		/* natural mortality */
+		/* overall cwd */
+		s->value[N_TO_DEADWOOD]                += (s->value[N_STEM_TO_DEADWOOD] +
+				s->value[N_CROOT_TO_DEADWOOD]  +
+				s->value[N_BRANCH_TO_DEADWOOD] +
+				s->value[N_RESERVE_TO_DEADWOOD]+
+				s->value[N_FRUIT_TO_DEADWOOD]) ;
+	}
+	else
+	{
+		/* managed mortality */
+		/* note: we consider that just tree stems are removed from stand during management */
+		/* overall cwd */
+		s->value[N_TO_DEADWOOD]                += (s->value[N_CROOT_TO_DEADWOOD]  +
+				s->value[N_BRANCH_TO_DEADWOOD] +
+				s->value[N_RESERVE_TO_DEADWOOD]+
+				s->value[N_FRUIT_TO_DEADWOOD]) ;
+	}
+	if ( s->counter[HARVESTING_HAPPENS] == 1 )
+	{
+		/*** compute class-level deadwood nitrogen fluxes (tN/sizecell/day) ****/
+		s->value[DEADWOOD_TO_LITRN]         = s->value[N_TO_DEADWOOD];
+		s->value[DEADWOOD_TO_LITR2N]        = s->value[N_TO_DEADWOOD] * s->value[DEADWOOD_USCEL_FRAC];
+		s->value[DEADWOOD_TO_LITR3N]        = s->value[N_TO_DEADWOOD] * s->value[DEADWOOD_SCEL_FRAC];
+		s->value[DEADWOOD_TO_LITR4N]        = s->value[N_TO_DEADWOOD] * s->value[DEADWOOD_LIGN_FRAC];
+		/* check */
+		CHECK_CONDITION ( s->value[DEADWOOD_TO_LITR2N] + s->value[DEADWOOD_TO_LITR3N] + s->value[DEADWOOD_TO_LITR4N], == , s->value[DEADWOOD_TO_LITRN] + eps );
+
+		/*** compute class-level deadwood nitrogen pools (tN/sizecell) ****/
+		s->value[DEADWOOD_LITRN]           += s->value[N_TO_DEADWOOD];
+		s->value[DEADWOOD_LITR2N]          += s->value[DEADWOOD_TO_LITR2N];
+		s->value[DEADWOOD_LITR3N]          += s->value[DEADWOOD_TO_LITR3N];
+		s->value[DEADWOOD_LITR4N]          += s->value[DEADWOOD_TO_LITR4N];
+		/* check */
+		CHECK_CONDITION ( s->value[DEADWOOD_LITR2N] + s->value[DEADWOOD_LITR3N] + s->value[DEADWOOD_LITR4N], == , s->value[DEADWOOD_LITRN] + eps );
+
+		/*** update cell-level deadwood nitrogen fluxes (gN/m2/day) ****/
+		c->daily_deadwood_to_litr2N        += s->value[DEADWOOD_LITR2N]     * 1e6 / g_settings->sizeCell;
+		c->daily_deadwood_to_litr3N        += s->value[DEADWOOD_LITR3N]     * 1e6 / g_settings->sizeCell;
+		c->daily_deadwood_to_litr4N        += s->value[DEADWOOD_LITR4N]     * 1e6 / g_settings->sizeCell;
+
+		/*** compute cell-level deadwood nitrogen pools (gN/m2) ***/
+		c->deadwood_2N                     += s->value[DEADWOOD_LITR2N]     * 1e6 / g_settings->sizeCell;
+		c->deadwood_3N                     += s->value[DEADWOOD_LITR3N]     * 1e6 / g_settings->sizeCell;
+		c->deadwood_4N                     += s->value[DEADWOOD_LITR4N]     * 1e6 / g_settings->sizeCell;
+	}
 
 	logger(g_debug_log, "Nitrogen biomass to remove\n");
 	logger(g_debug_log, "N_LEAF_TO_LITR        = %f tN/cell\n", s->value[N_LEAF_TO_LITR]);

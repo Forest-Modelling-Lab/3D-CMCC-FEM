@@ -63,8 +63,8 @@ output_folder="Test_output_Rstudio_ct"
 time_list_output = c('annual','monthly','daily')
 
 # single or multiple simulations
-build_list<-c('Release')#, 'Release')
-site_list<-c("Soroe")#,"Soroe")#,"Hyytiala","All"),"Soroe"
+build_list<-c('Debug')#, 'Release')
+site_list<-c("Hyytiala")#,"Soroe")#,"Hyytiala","All"),"Soroe"
 esm_list <-c("1")# ("1","2","3","4","5", "All")
 rcp_list <-c("0p0")# ("0p0","2p6","4p5","6p0","8p5","All")
 man_list <-c("on")# ("on",'off', "All")

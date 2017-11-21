@@ -12,13 +12,13 @@ void initialization_forest_class_N (cell_t *const c, const int height, const int
 
 void initialization_forest_class_litter_soil(cell_t *const c, const int height, const int dbh, const int age, const int species);
 
-void initialization_forest_C (cell_t *const c, const int height, const int dbh, const int age, const int species);
+void initialization_forest_cell_C (cell_t *const c, const int height, const int dbh, const int age, const int species);
 
-void initialization_forest_N (cell_t *const c, const int height, const int dbh, const int age, const int species);
+void initialization_forest_cell_N (cell_t *const c, const int height, const int dbh, const int age, const int species);
 
-void initialization_forest_litter(cell_t *const c, const int height, const int dbh, const int age, const int species);
+void initialization_forest_cell_litter(cell_t *const c, const int height, const int dbh, const int age, const int species);
 
-void initialization_forest_soil(cell_t *const c, const int height, const int dbh, const int age, const int species);
+void initialization_forest_cell_soil(cell_t *const c, const int height, const int dbh, const int age, const int species);
 
 void initialization_soil_physic(cell_t *const c);
 

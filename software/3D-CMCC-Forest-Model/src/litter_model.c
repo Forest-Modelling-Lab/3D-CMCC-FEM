@@ -41,10 +41,10 @@ int Litter_model_daily (matrix_t *const m, const int cell, const int day, const 
 	litter_heterotrophic_respiration ( c, meteo_daily );
 
 	/* compute soil carbon balance */
-	litter_carbon_balance ( c );
+	litter_carbon_balance ( c, year );
 
 	/* compute soil nitrogen balance */
-	litter_nitrogen_balance ( c );
+	litter_nitrogen_balance ( c, year  );
 
 
 	/*******************************************************************************************************/

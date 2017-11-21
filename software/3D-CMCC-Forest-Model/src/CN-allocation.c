@@ -131,8 +131,8 @@ void carbon_allocation( cell_t *const c, const int height, const int dbh, const 
 	logger(g_debug_log, "C_TO_BRANCH   = %f tC/cell\n", s->value[C_TO_BRANCH]);
 	logger(g_debug_log, "C_TO_FRUIT    = %f tC/cell\n", s->value[C_TO_FRUIT]);
 	logger(g_debug_log, "C_TO_RESERVE  = %f tC/cell\n", s->value[C_TO_RESERVE]);
-	logger(g_debug_log, "C_TO_LITR     = %f tC/cell\n", s->value[C_TO_LITR]);
-	logger(g_debug_log, "C_TO_DEADWOOD = %f tC/cell\n", s->value[C_TO_DEADWOOD]);
+//	logger(g_debug_log, "C_TO_LITR     = %f tC/cell\n", s->value[C_TO_LITR]);
+//	logger(g_debug_log, "C_TO_DEADWOOD = %f tC/cell\n", s->value[C_TO_DEADWOOD]);
 
 	/***************************************************************************************/
 

@@ -8,6 +8,6 @@
 #ifndef HEADERS_LITTER_CARBON_BALANCE_H_
 #define HEADERS_LITTER_CARBON_BALANCE_H_
 
-void litter_carbon_balance (cell_t *const c);
+void litter_carbon_balance (cell_t *const c, const int year);
 
 #endif /* HEADERS_LITTER_CARBON_BALANCE_H_ */
