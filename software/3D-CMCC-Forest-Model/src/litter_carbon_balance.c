@@ -22,12 +22,14 @@ void litter_carbon_balance (cell_t *const c)
 
 	logger(g_debug_log, "\n**LITTER CARBON BALANCE**\n");
 
-
 	/*********************************************************************************************************/
 
 	/* update mass of deadwood */
-	c->deadwood_C           += ( c->deadwood_2C + c->deadwood_3C + c->deadwood_4C )
-			-(c->daily_deadwood_to_litr2C + c->daily_deadwood_to_litr3C + c->daily_deadwood_to_litr4C);
+	c->deadwood_2C          -= c->daily_deadwood_to_litr2C;
+
+	c->deadwood_3C          -= c->daily_deadwood_to_litr3C;
+
+	c->deadwood_4C          -= c->daily_deadwood_to_litr4C;
 
 	/*********************************************************************************************************/
 
@@ -70,6 +72,7 @@ void litter_carbon_balance (cell_t *const c)
 	c->daily_to_litrC           = c->daily_to_litr1C       + c->daily_to_litr2C          + c->daily_to_litr3C          + c->daily_to_litr4C;
 
 	/* total mass */
+	c->deadwood_C               = c->daily_deadwood_to_litr2C + c->daily_deadwood_to_litr3C + c->daily_deadwood_to_litr4C;
 	c->litrC                    = c->litr1C + c->litr2C + c->litr3C + c->litr4C;
 
 	/* move from litter to soil pools (this need to be done here to close litter balance) */

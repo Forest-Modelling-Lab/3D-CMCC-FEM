@@ -24,7 +24,7 @@ void litter_nitrogen_balance (cell_t *const c)
 	/*********************************************************************************************************/
 
 	/* update mass of deadwood */
-	c->deadwood_N           += ( c->deadwood_2N + c->deadwood_3N + c->deadwood_4N )
+	c->deadwood_N               = ( c->deadwood_2N + c->deadwood_3N + c->deadwood_4N )
 			- ( c->daily_deadwood_to_litr2N + c->daily_deadwood_to_litr3N + c->daily_deadwood_to_litr4N );
 
 	/*********************************************************************************************************/

@@ -17,6 +17,8 @@
 extern settings_t* g_settings;
 extern logger_t* g_debug_log;
 
+#define BUGS 0
+
 void littering ( cell_t *const c, species_t *const s )
 {
 	logger(g_debug_log, "\nLITTERING\n");
@@ -24,9 +26,11 @@ void littering ( cell_t *const c, species_t *const s )
 	/*********************************************************************************************************************************/
 	/*** deadwood carbon ***/
 
+#if BUGS
 	//CORRADO fixme fixme fixme fixme fixme fixme fixme fixme fixme
 	//set to zero for bugs!!!
 	s->value[C_TO_DEADWOOD] = 0.;
+#endif
 
 	/*** compute class-level deadwood carbon pools (tC/sizecell) ****/
 	s->value[DEADWOOD_2C]               = ( s->value[C_TO_DEADWOOD] * s->value[DEADWOOD_USCEL_FRAC]);
@@ -86,9 +90,11 @@ void littering ( cell_t *const c, species_t *const s )
 	/*********************************************************************************************************************************/
 	/*** fine root litter carbon ***/
 
+#if BUGS
 	//CORRADO fixme fixme fixme fixme fixme fixme fixme fixme fixme
 	//set to zero for bugs!!!
 	s->value[N_TO_DEADWOOD] = 0.;
+#endif
 
 	/*** compute class-level fine root carbon pools (tC/sizecell) ****/
 	s->value[FROOT_LITR1C]              = ( s->value[C_FROOT_TO_LITR] * s->value[FROOT_LITR_LAB_FRAC]   );
