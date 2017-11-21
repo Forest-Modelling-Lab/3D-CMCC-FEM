@@ -41,7 +41,6 @@ void litter_decomposition (cell_t *const c, const meteo_daily_t *const meteo_dai
 	double litt_decomp_rate4;     /* lignin litter decomposition rate */
 	double pot_litr1C_loss;       /* potential labile litter loss */
 	double pot_litr2C_loss;       /* potential unshielded litter loss */
-//	double pot_litr3C_loss;       /* potential shielded litter loss */
 	double pot_litr4C_loss;       /* potential lignin litter loss */
 
 	/************************************************************************************************/
@@ -118,6 +117,7 @@ void litter_decomposition (cell_t *const c, const meteo_daily_t *const meteo_dai
 	if ( c->litr4N      > 0. ) cn_litr4     = c->litr4C      / c->litr4N;
 
 	/******************************************************************************************************************/
+
 	/* calculate the flux from deadwood to litter lignin and cellulose compartments, due to physical fragmentation */
 	deadwood_fragm_rate              = KFRAG_BASE     * rate_scalar;
 
@@ -133,9 +133,9 @@ void litter_decomposition (cell_t *const c, const meteo_daily_t *const meteo_dai
 	CHECK_CONDITION ( c->daily_deadwood_to_litr2C + c->daily_deadwood_to_litr2C + c->daily_deadwood_to_litr2C, > , c->deadwood_C );
 
 	/* coarse woody debris nitrogen to nitrogen litter poool */
-	if ( cn_cwd2 > 0. ) c->daily_deadwood_to_litr2N      = ( c->daily_deadwood_to_litr2C / cn_cwd2 );
-	if ( cn_cwd3 > 0. ) c->daily_deadwood_to_litr3N      = ( c->daily_deadwood_to_litr3C / cn_cwd3 );
-	if ( cn_cwd4 > 0. ) c->daily_deadwood_to_litr4N      = ( c->daily_deadwood_to_litr4C / cn_cwd4 );
+	if ( cn_cwd2 > 0. ) c->daily_deadwood_to_litr2N = c->daily_deadwood_to_litr2C / cn_cwd2;
+	if ( cn_cwd3 > 0. ) c->daily_deadwood_to_litr3N = c->daily_deadwood_to_litr3C / cn_cwd3;
+	if ( cn_cwd4 > 0. ) c->daily_deadwood_to_litr4N = c->daily_deadwood_to_litr4C / cn_cwd4;
 
 	/******************************************************************************************************************/
 
@@ -145,8 +145,9 @@ void litter_decomposition (cell_t *const c, const meteo_daily_t *const meteo_dai
 	litt_decomp_rate4     = KL4_BASE * rate_scalar;
 
 	/* compute potential carbon loss */
-	/* calculate the non-nitrogen limited fluxes between litter and	soil compartments. These will be ammended for N limitation if it turns
-			out the potential gross immobilization is greater than potential gross	mineralization. */
+	/* calculate the non-nitrogen limited fluxes between litter and	soil compartments.
+	 * These will be ammended for N limitation if it turns out the potential gross immobilization
+	 * is greater than potential gross	mineralization. */
 
 	/* 1. labile litter to fast microbial recycling pool */
 	if ( c->litr1C > 0. )

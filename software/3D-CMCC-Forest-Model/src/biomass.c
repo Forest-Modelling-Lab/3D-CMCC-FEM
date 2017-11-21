@@ -150,8 +150,8 @@ void average_tree_pools(cell_t *const c)
 					s->value[TREE_CROOT_DEADWOOD_C]      = (s->value[CROOT_DEADWOOD_C]   / (double)s->counter[N_TREE]);
 					s->value[TREE_BRANCH_LIVEWOOD_C]     = (s->value[BRANCH_LIVEWOOD_C]  / (double)s->counter[N_TREE]);
 					s->value[TREE_BRANCH_DEADWOOD_C]     = (s->value[BRANCH_DEADWOOD_C]  / (double)s->counter[N_TREE]);
-					s->value[TREE_LIVEWOOD_C]            = (s->value[LIVEWOOD_C]         / (double)s->counter[N_TREE]);
-					s->value[TREE_DEADWOOD_C]            = (s->value[DEADWOOD_C]         / (double)s->counter[N_TREE]);
+					s->value[TREE_TOT_LIVEWOOD_C]        = (s->value[TOT_LIVEWOOD_C]     / (double)s->counter[N_TREE]);
+					s->value[TREE_TOT_DEADWOOD_C]        = (s->value[TOT_DEADWOOD_C]     / (double)s->counter[N_TREE]);
 
 					/* compute tree average N pools */
 					s->value[TREE_LEAF_N]                = (s->value[LEAF_N]             / (double)s->counter[N_TREE]);

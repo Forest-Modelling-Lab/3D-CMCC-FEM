@@ -413,11 +413,9 @@ enum {
 	LEAF_SUN_C,                         /* (tC/cell) Current Leaf sun carbon pool */
 	LEAF_SHADE_C,                       /* (tC/cell) Current Leaf shade carbon pool */
 	MAX_LEAF_C,                         /* (tC/cell/year) Maximum Leaf carbon pool */
-	LEAF_LITR_C,                         /* (tC/cell) AMOUNT Leaf carbon pool TO LITTER IN INIT */
 	CROOT_C,                            /* (tC/cell) Current Coarse root carbon pool */
 	FROOT_C,                            /* (tC/cell) Current Fine root carbon pool */
 	MAX_FROOT_C,                        /* (tC/cell/year) Maximum Fine root carbon pool */
-	FROOT_LITR_C,                     /* (tC/cell) AMOUNT froot carbon pool TO LITTER IN INIT */
 	MAX_BUD_BURST_C,                    /* (tC/cell) Maximum Current Leaf carbon pool for BudBurst */
 	STEM_C,                             /* (tC/cell) Current Stem carbon pool */
 	BRANCH_C,                           /* (tC/cell) Current Branch carbon pool */
@@ -428,8 +426,8 @@ enum {
 	LITR_C,                             /* (tC/cell) Current Litter carbon pool */
 	SOIL_C,                             /* (tC/cell) Current Soil carbon pool */
 	CWD_C,                              /* (tC/cell) Current Coarse Woody Debris carbon pool */
-	LIVEWOOD_C,                         /* (tC/cell) Current Live wood carbon pool */
-	DEADWOOD_C,                         /* (tC/cell) Current Dead wood carbon pool */
+	TOT_LIVEWOOD_C,                     /* (tC/cell) Current Live wood carbon pool */
+	TOT_DEADWOOD_C,                     /* (tC/cell) Current Dead wood carbon pool */
 	TOT_WOOD_C,                         /* (tC/cell) Current Total wood carbon pool */
 	TOTAL_C,                            /* (tC/cell) Current Total carbon pool */
 	STEM_LIVEWOOD_C,                    /* (tC/cell) Current Stem live wood carbon pool */
@@ -449,7 +447,6 @@ enum {
 	EFF_LIVE_TOTAL_WOOD_FRAC,           /* (DIM) Age-related fraction of Live biomass per Total biomass */
 	DAILY_LIVEWOOD_TURNOVER,            /* (tC/cell/day) Daily live wood turnover rate */
 	STANDING_WOOD,                      /* (tC/cell) standing wood carbon */
-	DEADWOOD_LITTER_C,                  /* (tC/cell) deadwood litter carbon */
 
 	/* management C */
 	C_HWP,                              /* (tC/cell/yr) annual harvested woody products removed from stand */
@@ -478,8 +475,8 @@ enum {
 	TREE_BRANCH_HEARTWOOD_C,            /* (tC/tree) Single Tree Heartwood Branch carbon pool */
 	TREE_BRANCH_LIVEWOOD_C,             /* (tC/tree) Single Tree Live Branch carbon pool */
 	TREE_BRANCH_DEADWOOD_C,             /* (tC/tree) Single Tree Dead Stem carbon pool */
-	TREE_LIVEWOOD_C,                    /* (tC/tree) Single Tree Live Wood carbon pool */
-	TREE_DEADWOOD_C,                    /* (tC/tree) Single Tree Dead Wood carbon pool */
+	TREE_TOT_LIVEWOOD_C,                /* (tC/tree) Single Tree Live Wood carbon pool */
+	TREE_TOT_DEADWOOD_C,                /* (tC/tree) Single Tree Dead Wood carbon pool */
 	TREE_TOT_WOOD_C,                    /* (tC/tree) Single Tree Total Wood carbon pool */
 	TREE_SAPWOOD_C,                     /* (tC/tree) Single Tree Sapwood carbon pool */
 	TREE_HEARTWOOD_C,                   /* (tC/tree) Single Tree Heartwood carbon pool */
@@ -500,8 +497,8 @@ enum {
 	CROOT_HEARTWOOD_DM,                 /* (tDM/cell) Current Dead Coarse root dry matter pool */
 	BRANCH_SAPWOOD_DM,                  /* (tDM/cell) Current Live Branch dry matter pool */
 	BRANCH_HEARTWOOD_DM,                /* (tDM/cell) Current Dead Branch dry matter pool */
-	LIVEWOOD_DM,                        /* (tDM/cell) Current Live Wood dry matter pool */
-	DEADWOOD_DM,                        /* (tDM/cell) Current Dead Wood dry matter pool */
+	TOT_LIVEWOOD_DM,                    /* (tDM/cell) Current Live Wood dry matter pool */
+	TOT_DEADWOOD_DM,                    /* (tDM/cell) Current Dead Wood dry matter pool */
 	STEM_LIVEWOOD_DM,                   /* (tDM/cell) Current Live Stem dry matter pool */
 	STEM_DEADWOOD_DM,                   /* (tDM/cell) Current Dead Stem dry matter pool */
 	CROOT_LIVEWOOD_DM,                  /* (tDM/cell) Current Live Coarse root dry matter pool */
@@ -623,9 +620,7 @@ enum {
 	LEAF_SUN_N,                         /* (tN/cell) Current Leaf sun nitrogen pool */
 	LEAF_SHADE_N,                       /* (tN/cell) Current Leaf shade nitrogen pool */
 	LEAF_FALLING_N,                     /* (tN/cell) Current Leaf falling nitrogen pool */
-	LEAF_LITR_N,                        /* (tN/cell) First year Leaf litter nitrogen pool */
 	FROOT_N,                            /* (tN/cell) Current Fine root nitrogen pool */
-	FROOT_LITR_N,                       /* (tN/cell) Current Fine root falling nitrogen pool */
 	DEADWOODN,                          /* (tN/cell) Current Coarse woody debris falling nitrogen pool */
 	CROOT_N,                            /* (tN/cell) Current Coarse root nitrogen pool */
 	CROOT_LIVEWOOD_N,                   /* (tN/cell) Current Live Coarse root nitrogen pool */
