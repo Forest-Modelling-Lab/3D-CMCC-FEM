@@ -1808,7 +1808,7 @@ void forest_summary(const matrix_t* const m, const int day, const int month, con
 						initialization_forest_cell_litter       (&m->cells[cell], height, dbh, age, species);
 
 						/* initialization cell soil fractions */
-						initialization_forest_cell_soil         (&m->cells[cell], height, dbh, age, species);
+						initialization_forest_cell_soil         (&m->cells[cell]);
 					}
 				}
 			}

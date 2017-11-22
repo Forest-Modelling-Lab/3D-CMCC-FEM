@@ -1764,7 +1764,6 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 										",FSW"
 										",LITR_C"
 										",CWD_C"
-										",SOIL_C"
 								);
 
 							}
@@ -1851,7 +1850,7 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 									"%d,%d,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
 									",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
 									",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
-									",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",
+									",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",
 									s->value[GPP],
 									s->value[ASSIMILATION],
 									s->value[ASSIMILATION_SUN],
@@ -1917,9 +1916,7 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 									s->value[F_NUTR],
 									s->value[F_SW],
 									s->value[LITR_C],
-									s->value[CWD_C],
-									s->value[SOIL_C]
-							);
+									s->value[CWD_C]);
 						}
 
 						if ( c->heights[height].dbhs[dbh].ages[age].species_count > 1 ) {

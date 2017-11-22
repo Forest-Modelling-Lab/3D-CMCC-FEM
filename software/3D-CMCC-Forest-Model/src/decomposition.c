@@ -27,6 +27,7 @@ void litter_decomposition (cell_t *const c, const meteo_daily_t *const meteo_dai
 	double E0;                    /* activation-energy-type parameter of Lloyd and Taylor [1994] (K-1) */
 	double T0;                    /* the lower temperature limit for the soil respiration (K) */
 
+	double cn_cwd;
 	double cn_cwd2;
 	double cn_cwd3;
 	double cn_cwd4;
@@ -35,7 +36,6 @@ void litter_decomposition (cell_t *const c, const meteo_daily_t *const meteo_dai
 	double cn_litr4;
 
 	double deadwood_fragm_rate;   /* deadwood physical fragmentation */
-	double pot_deadwood_loss;     /* potential deadwood loss for physical fragmentation */
 	double litt_decomp_rate1;     /* labile litter decomposition rate */
 	double litt_decomp_rate2;     /* cellulose litter decomposition rate */
 	double litt_decomp_rate4;     /* lignin litter decomposition rate */
@@ -70,6 +70,8 @@ void litter_decomposition (cell_t *const c, const meteo_daily_t *const meteo_dai
 		TsoilK      = meteo_daily->tsoil + TempAbs;
 		temp_scalar = exp ( E0 * ( ( 1. / 71.02 ) - ( 1. / ( TsoilK - T0 ) ) ) );
 	}
+	//fixme bug in original biome
+	if ( temp_scalar > 1 ) temp_scalar = 1.;
 
 	/* calculate the rate constant scalar for soil water content.
 		Uses the log relationship with water potential given in
@@ -106,9 +108,15 @@ void litter_decomposition (cell_t *const c, const meteo_daily_t *const meteo_dai
 	/* calculate the final rate scalar as the product of the temperature and water scalars */
 	rate_scalar     = temp_scalar * water_scalar;
 
+	/* check */
+	CHECK_CONDITION (temp_scalar , > , 1);
+	CHECK_CONDITION (water_scalar, > , 1);
+	CHECK_CONDITION (rate_scalar , > , 1);
+
 	/******************************************************************************************************************/
 
 	/* calculate C:N ratios */
+	if ( c->deadwood_N  > 0. ) cn_cwd       = c->deadwood_C  / c->deadwood_N;
 	if ( c->deadwood_2N > 0. ) cn_cwd2      = c->deadwood_2C / c->deadwood_2N;
 	if ( c->deadwood_3N > 0. ) cn_cwd3      = c->deadwood_3C / c->deadwood_3N;
 	if ( c->deadwood_4N > 0. ) cn_cwd4      = c->deadwood_4C / c->deadwood_4N;
@@ -121,18 +129,20 @@ void litter_decomposition (cell_t *const c, const meteo_daily_t *const meteo_dai
 	/* calculate the flux from deadwood to litter lignin and cellulose compartments, due to physical fragmentation */
 	deadwood_fragm_rate              = KFRAG_BASE     * rate_scalar;
 
-	/* compute potential carbon loss */
-	pot_deadwood_loss                = c->deadwood_C  * deadwood_fragm_rate;
+	/* check */
+	CHECK_CONDITION ( ( c->deadwood_2C + c->deadwood_3C + c->deadwood_4C ) - c->deadwood_C, > , eps);
 
 	/* coarse woody debris carbon to carbon litter poool */
-	c->daily_deadwood_to_litr2C      = c->deadwood_2C * pot_deadwood_loss;
-	c->daily_deadwood_to_litr3C      = c->deadwood_3C * pot_deadwood_loss;
-	c->daily_deadwood_to_litr4C      = c->deadwood_4C * pot_deadwood_loss;
+	c->daily_deadwood_to_litrC       = c->deadwood_C  * deadwood_fragm_rate;
+	c->daily_deadwood_to_litr2C      = c->deadwood_2C * deadwood_fragm_rate;
+	c->daily_deadwood_to_litr3C      = c->deadwood_3C * deadwood_fragm_rate;
+	c->daily_deadwood_to_litr4C      = c->deadwood_4C * deadwood_fragm_rate;
 
 	/* check */
-	CHECK_CONDITION ( c->daily_deadwood_to_litr2C + c->daily_deadwood_to_litr2C + c->daily_deadwood_to_litr2C, > , c->deadwood_C );
+	//CHECK_CONDITION ( c->daily_deadwood_to_litr2C + c->daily_deadwood_to_litr2C + c->daily_deadwood_to_litr2C, > , c->daily_deadwood_to_litrC + eps);
 
-	/* coarse woody debris nitrogen to nitrogen litter poool */
+	/* coarse woody debris nitrogen to nitrogen litter pool */
+	if ( cn_cwd  > 0. ) c->daily_deadwood_to_litrN  = c->daily_deadwood_to_litrC  / cn_cwd;
 	if ( cn_cwd2 > 0. ) c->daily_deadwood_to_litr2N = c->daily_deadwood_to_litr2C / cn_cwd2;
 	if ( cn_cwd3 > 0. ) c->daily_deadwood_to_litr3N = c->daily_deadwood_to_litr3C / cn_cwd3;
 	if ( cn_cwd4 > 0. ) c->daily_deadwood_to_litr4N = c->daily_deadwood_to_litr4C / cn_cwd4;
@@ -180,7 +190,7 @@ void litter_decomposition (cell_t *const c, const meteo_daily_t *const meteo_dai
 		c->daily_litr1C_to_soil1C = pot_litr1C_loss * ( 1. - RFL1S1 );
 		/* nitrogen */
 		if ( c->litr1N > 0. ) c->daily_litr1N_to_soil1N = pot_litr1C_loss / cn_litr1;
-		else c->daily_litr1N_to_soil1N = 0.;
+		else                  c->daily_litr1N_to_soil1N = 0.;
 	}
 
 	/* cellulose litter fluxes */
@@ -191,7 +201,7 @@ void litter_decomposition (cell_t *const c, const meteo_daily_t *const meteo_dai
 		c->daily_litr2C_to_soil2C = pot_litr2C_loss * ( 1. - RFL2S2 );
 		/* nitrogen */
 		if ( c->litr2N > 0. ) c->daily_litr2N_to_soil2N = pot_litr2C_loss / cn_litr2;
-		else c->daily_litr2N_to_soil2N = 0.;
+		else                  c->daily_litr2N_to_soil2N = 0.;
 	}
 
 	/* release of shielded cellulose litter, tied to the decay rate of lignin litter */
@@ -209,6 +219,6 @@ void litter_decomposition (cell_t *const c, const meteo_daily_t *const meteo_dai
 		c->daily_litr4C_to_soil3C = pot_litr4C_loss * ( 1. - RFL4S3 );
 		/* nitrogen */
 		if ( c->litr4N > 0. ) c->daily_litr4N_to_soil3N = pot_litr4C_loss / cn_litr4;
-		else c->daily_litr4N_to_soil3N = 0.;
+		else                  c->daily_litr4N_to_soil3N = 0.;
 	}
 }

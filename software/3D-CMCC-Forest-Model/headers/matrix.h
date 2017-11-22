@@ -424,7 +424,6 @@ enum {
 	FRUIT_C,                            /* (tC/cell) Current Fruit carbon pool */
 	MAX_FRUIT_C,                        /* (tC/cell/year) Annual Fruit carbon pool */
 	LITR_C,                             /* (tC/cell) Current Litter carbon pool */
-	SOIL_C,                             /* (tC/cell) Current Soil carbon pool */
 	CWD_C,                              /* (tC/cell) Current Coarse Woody Debris carbon pool */
 	TOT_LIVEWOOD_C,                     /* (tC/cell) Current Live wood carbon pool */
 	TOT_DEADWOOD_C,                     /* (tC/cell) Current Dead wood carbon pool */
@@ -635,7 +634,6 @@ enum {
 	FRUIT_N,                            /* (tN/cell) Current Fruit nitrogen pool */
 	TREE_N_DEMAND,                      /* (tN/cell) Current Nitrogen demand for new plant tissues */
 	LITR_N,                             /* (tN/cell) Current Litter nitrogen pool */
-	SOIL_N,                             /* (tN/cell) Current soil nitrogen pool */
 	CWD_N,                              /* (tN/cell) Current Coarse Woody Debris nitrogen pool */
 	TOT_STEM_N,                         /* (tN/cell) Current Total Stem nitrogen pool */
 	TOT_ROOT_N,                         /* (tN/cell) Current Total root nitrogen pool */
@@ -719,16 +717,6 @@ enum {
 	FROOT_LITR_USCEL_FRAC,              /* (DIM) fine root litter unshielded fraction */
 	DEADWOOD_SCEL_FRAC,                 /* (DIM) dead wood litter shielded cellulose fraction */
 	DEADWOOD_USCEL_FRAC,                /* (DIM) dead wood litter unshielded fraction */
-
-	/* heterotrophic soil pools */
-	LITR1_RH,                           /* (kgC/m2/d) heterotrophic respiration for litter labile */
-	LITR2_RH,                           /* (kgC/m2/d) heterotrophic respiration for litter unshielded cellulose */
-	LITR3_RH,                           /* (kgC/m2/d) heterotrophic respiration for litter shielded cellulose */
-	LITR4_RH,                           /* (kgC/m2/d) heterotrophic respiration for litter lignin */
-	SOIL1_RH,                           /* (kgC/m2/d) heterotrophic respiration for microbial recycling pool (fast) */
-	SOIL2_RH,                           /* (kgC/m2/d) heterotrophic respiration for microbial recycling pool (medium) */
-	SOIL3_RH,                           /* (kgC/m2/d) heterotrophic respiration for microbial recycling pool (slow) */
-	SOIL4_RH,                           /* (kgC/m2/d) heterotrophic respiration for recalcitrant SOM (humus, slowest) */
 
 	/*** BALANCES VALUES ***/
 	TREEC_IN,                           /* tree carbon balance in */

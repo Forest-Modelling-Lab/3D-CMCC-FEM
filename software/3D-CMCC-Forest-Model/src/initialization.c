@@ -1076,10 +1076,23 @@ void initialization_forest_cell_litter (cell_t *const c, const int height, const
 	c->litr4N        = c->leaf_litr4N + c->froot_litr4N + c->deadwood_4N;
 
 }
-void initialization_forest_cell_soil (cell_t *const c, const int height, const int dbh, const int age, const int species)
+void initialization_forest_cell_soil (cell_t *const c)
 {
-	//	species_t *s;
-	//	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
+	/* initialize soil carbon */
+	c->soilC            = 0.001;
+	c->soil1C           = 0.001;
+	c->soil2C           = 0.001;
+	c->soil3C           = 0.001;
+	c->soil4C           = 0.001;
+
+	/* initialize soil nitrogen */
+	c->soilN            = 0.001;
+	c->soil1N           = 0.001;
+	c->soil2N           = 0.001;
+	c->soil3N           = 0.001;
+	c->soil4N           = 0.001;
+
+
 }
 
 void initialization_soil_physic(cell_t *const c)

@@ -74,8 +74,6 @@ void litter_nitrogen_balance (cell_t *const c, const int year )
 	c->deadwood_N               =             c->deadwood_2N + c->deadwood_3N + c->deadwood_4N;
 	c->litrN                    = c->litr1N + c->litr2N      + c->litr3N      + c->litr4N;
 
-	printf ("%f \n", c->litrN );
-
 	/* move from litter to soil pools (this need to be done here to close litter balance) */
 	c->daily_to_soil1N          = c->daily_litr1N_to_soil1N;
 	c->daily_to_soil2N          = c->daily_litr2N_to_soil2N;
