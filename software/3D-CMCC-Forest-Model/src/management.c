@@ -339,7 +339,7 @@ void thinning (cell_t *const c, const int height, const int dbh, const int age, 
 			}
 			else
 			{
-				trees_to_remove = s->counter[N_TREE] - s->counter[N_TREE] * trees_to_remove / 100;
+				trees_to_remove = s->counter[N_TREE] * perc / 100;
 			}
 		}
 	}
