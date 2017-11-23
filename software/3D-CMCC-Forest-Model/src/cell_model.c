@@ -63,6 +63,7 @@ int Cell_model_daily (matrix_t *const m, const int cell, const int day, const in
 	/* cell water use efficiency */
 	cell_water_use_efficiency  ( c, day, month, year );
 
+
 	/*******************************************************************************************************/
 
 	/* CHECK FOR BALANCE CLOSURE */
@@ -77,7 +78,7 @@ int Cell_model_daily (matrix_t *const m, const int cell, const int day, const in
 	/* 3 */ //fixme if ( ! check_cell_nitrogen_flux_balance    ( c, meteo_daily ) ) return 0;
 
 	/* CHECK FOR CARBON MASS BALANCE CLOSURE */
-	/* 4 */ //fixme if ( ! check_cell_carbon_mass_balance    ( c ) ) return 0;
+	/* 4 */ //fixme if ( ! check_cell_carbon_mass_balance      ( c ) ) return 0;
 
 	/* CHECK FOR NITROGEN MASS BALANCE CLOSURE */
 	/* 5 */ //fixme if ( ! check_cell_nitrogen_mass_balance    ( c, meteo_annual ) ) return 0;
