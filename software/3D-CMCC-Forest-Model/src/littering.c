@@ -17,8 +17,6 @@
 extern settings_t* g_settings;
 extern logger_t* g_debug_log;
 
-#define BUGS 0
-
 void littering ( cell_t *const c, species_t *const s )
 {
 	logger(g_debug_log, "\nLITTERING\n");

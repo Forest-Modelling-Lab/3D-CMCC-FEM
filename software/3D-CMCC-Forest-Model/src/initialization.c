@@ -38,6 +38,8 @@ void initialization_forest_structure(cell_t *const c, const int day, const int m
 void initialization_forest_class_C (cell_t *const c, const int height, const int dbh, const int age, const int species)
 {
 	double Lai_sun_ratio;
+	double r1;
+	double temp_var;                                /* temporary variable */
 
 	height_t *h;
 	dbh_t *d;
@@ -340,7 +342,7 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 			logger(g_debug_log, "...Generating input Leaf Biomass data from LAI\n");
 
 			/* compute leaf carbon to PEAK LAI down-scaled to canopy cover */
-			s->value[LEAF_DM]   = (s->value[PEAK_LAI_PROJ] / s->value[SLA_AVG] ) / 1e3 * ( s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell );
+			s->value[LEAF_DM]        = (s->value[PEAK_LAI_PROJ] / s->value[SLA_AVG] ) / 1e3 * ( s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell );
 			logger(g_debug_log, "LEAF_DM        = %f tDM/cell\n", s->value[LEAF_DM]);
 
 			/* convert tDM/cell to tC/cell */
@@ -348,10 +350,12 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 			logger(g_debug_log, "LEAF_C         = %f tC/cell\n", s->value[LEAF_C]);
 
 			/* Calculate projected LAI for sunlit and shaded canopy portions */
+			/* note: assume that at the beginning of simulations LAI = PEAK_LAI */
+			s->value[LAI_PROJ]       = s->value[PEAK_LAI_PROJ];
 			s->value[LAI_SUN_PROJ]   = 1. - exp(-s->value[PEAK_LAI_PROJ]);
 			s->value[LAI_SHADE_PROJ] = s->value[PEAK_LAI_PROJ] - s->value[LAI_SUN_PROJ];
 
-			logger(g_debug_log, "PEAK_LAI_PROJ       = %f m2/m2\n", s->value[PEAK_LAI_PROJ]);
+			logger(g_debug_log, "LAI_PROJ            = %f m2/m2\n", s->value[LAI_PROJ]);
 			logger(g_debug_log, "PEAK_LAI_SUN_PROJ   = %f m2/m2\n", s->value[LAI_SUN_PROJ]);
 			logger(g_debug_log, "PEAK_LAI_SHADE_PROJ = %f m2/m2\n", s->value[LAI_SHADE_PROJ]);
 		}
@@ -622,6 +626,90 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 	logger(g_debug_log, "-Yearly Class AGB = %f tC/tree\n", s->value[TREE_AGB]);
 	logger(g_debug_log, "-Yearly Class BGB = %f tC/tree\n", s->value[TREE_BGB]);
 
+	/* check */
+		CHECK_CONDITION ( fabs (s->value[LEAF_LITR_LAB_FRAC]  + s->value[LEAF_LITR_CEL_FRAC]  + s->value[LEAF_LITR_LIGN_FRAC]),  >, 1 + eps);
+		CHECK_CONDITION ( fabs (s->value[FROOT_LITR_LAB_FRAC] + s->value[FROOT_LITR_CEL_FRAC] + s->value[FROOT_LITR_LIGN_FRAC]), >, 1 + eps);
+		CHECK_CONDITION ( fabs (s->value[DEADWOOD_CEL_FRAC]   + s->value[DEADWOOD_LIGN_FRAC]), >, 1 + eps);
+
+		/******************************************************************************************************************************************************************/
+		/*** compute coarse woody debris litter fractions ***/
+
+		/* partitioning coarse woody debris litter carbon cellulose into shielded and unshielded pools */
+		r1 = s->value[DEADWOOD_LIGN_FRAC] / s->value[DEADWOOD_CEL_FRAC];
+
+		if ( r1 <= 0.45 )
+		{
+			s->value[DEADWOOD_SCEL_FRAC]  = 0.;
+			s->value[DEADWOOD_USCEL_FRAC] = s->value[DEADWOOD_CEL_FRAC];
+		}
+		else if ( r1 > 0.45 && r1 < 0.7 )
+		{
+			temp_var = ( r1 - 0.45 ) * 3.2;
+			s->value[DEADWOOD_SCEL_FRAC]  = temp_var * s->value[DEADWOOD_CEL_FRAC];
+			s->value[DEADWOOD_USCEL_FRAC] = (1. - temp_var) * s->value[DEADWOOD_CEL_FRAC];
+		}
+		else
+		{
+			s->value[DEADWOOD_SCEL_FRAC]  = 0.8 * s->value[DEADWOOD_CEL_FRAC];
+			s->value[DEADWOOD_USCEL_FRAC] = 0.2 * s->value[DEADWOOD_CEL_FRAC];
+		}
+
+		/******************************************************************************************************************************************************************/
+		/** calculate shielded and unshielded cellulose fraction for froot pool **/
+
+		/*** compute leaf litter fractions ***/
+
+		/* partitioning leaf litter carbon cellulose into shielded and unshielded pools */
+		r1 = s->value[LEAF_LITR_LIGN_FRAC] / s->value[LEAF_LITR_LAB_FRAC];
+
+		if ( r1 <= 0.45 )
+		{
+			s->value[LEAF_LITR_SCEL_FRAC]   = 0.;
+			s->value[LEAF_LITR_USCEL_FRAC]  = s->value[LEAF_LITR_CEL_FRAC];
+		}
+		else if ( r1 > 0.45 && r1 < 0.7 )
+		{
+			temp_var = ( r1 - 0.45 ) * 3.2;
+			s->value[LEAF_LITR_SCEL_FRAC]   = temp_var * s->value[LEAF_LITR_CEL_FRAC];
+			s->value[LEAF_LITR_USCEL_FRAC]  = ( 1. - temp_var ) * s->value[LEAF_LITR_CEL_FRAC];
+		}
+		else
+		{
+			s->value[LEAF_LITR_SCEL_FRAC]   = 0.8 * s->value[LEAF_LITR_CEL_FRAC];
+			s->value[LEAF_LITR_USCEL_FRAC]  = 0.2 * s->value[LEAF_LITR_CEL_FRAC];
+		}
+		/* check */
+		CHECK_CONDITION ( fabs ( s->value[LEAF_LITR_LAB_FRAC] + s->value[LEAF_LITR_SCEL_FRAC] + s->value[LEAF_LITR_USCEL_FRAC] + s->value[LEAF_LITR_LIGN_FRAC] ), >, 1 + eps);
+
+		/******************************************************************************************************************************************************************/
+		/** calculate shielded and unshielded cellulose fraction for leaf pool **/
+
+		/*** compute fine root litter fractions ***/
+
+		/* partitioning fine root litter carbon cellulose into shielded and unshielded pools */
+		r1 = s->value[FROOT_LITR_LIGN_FRAC] / s->value[FROOT_LITR_LAB_FRAC];
+
+		if ( r1 <= 0.45 )
+		{
+			s->value[FROOT_LITR_SCEL_FRAC]   = 0.;
+			s->value[FROOT_LITR_USCEL_FRAC]  = s->value[FROOT_LITR_CEL_FRAC];
+		}
+		else if ( r1 > 0.45 && r1 < 0.7 )
+		{
+			temp_var = ( r1 - 0.45 ) * 3.2;
+			s->value[FROOT_LITR_SCEL_FRAC]   = temp_var * s->value[FROOT_LITR_CEL_FRAC];
+			s->value[FROOT_LITR_USCEL_FRAC]  = ( 1. - temp_var ) * s->value[FROOT_LITR_CEL_FRAC];
+		}
+		else
+		{
+			s->value[FROOT_LITR_SCEL_FRAC]   = 0.8 * s->value[FROOT_LITR_CEL_FRAC];
+			s->value[FROOT_LITR_USCEL_FRAC]  = 0.2 * s->value[FROOT_LITR_CEL_FRAC];
+		}
+		/* check */
+		CHECK_CONDITION ( fabs ( s->value[FROOT_LITR_LAB_FRAC] + s->value[FROOT_LITR_SCEL_FRAC] + s->value[FROOT_LITR_USCEL_FRAC] + s->value[FROOT_LITR_LIGN_FRAC] ), >, 1 + eps);
+
+		/******************************************************************************************************************************************************************/
+
 	/* ONLY for evergreen */
 	if ( s->value[PHENOLOGY] == 1.1 || s->value[PHENOLOGY] == 1.2 )
 	{
@@ -825,97 +913,12 @@ void initialization_forest_cell_N (cell_t *const c, const int height, const int 
 
 }
 
-void initialization_forest_class_litter_soil (cell_t *const c, const int height, const int dbh, const int age, const int species)
+void initialization_forest_class_litter (cell_t *const c, const int height, const int dbh, const int age, const int species)
 {
-	double r1;
-	double temp_var;                                /* temporary variable */
-
 	species_t *s;
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
-	/* check */
-	CHECK_CONDITION ( fabs (s->value[LEAF_LITR_LAB_FRAC]  + s->value[LEAF_LITR_CEL_FRAC]  + s->value[LEAF_LITR_LIGN_FRAC]),  >, 1 + eps);
-	CHECK_CONDITION ( fabs (s->value[FROOT_LITR_LAB_FRAC] + s->value[FROOT_LITR_CEL_FRAC] + s->value[FROOT_LITR_LIGN_FRAC]), >, 1 + eps);
-	CHECK_CONDITION ( fabs (s->value[DEADWOOD_CEL_FRAC]   + s->value[DEADWOOD_LIGN_FRAC]), >, 1 + eps);
 
-	/******************************************************************************************************************************************************************/
-	/*** compute coarse woody debris litter fractions ***/
-
-	/* partitioning coarse woody debris litter carbon cellulose into shielded and unshielded pools */
-	r1 = s->value[DEADWOOD_LIGN_FRAC] / s->value[DEADWOOD_CEL_FRAC];
-
-	if ( r1 <= 0.45 )
-	{
-		s->value[DEADWOOD_SCEL_FRAC]  = 0.;
-		s->value[DEADWOOD_USCEL_FRAC] = s->value[DEADWOOD_CEL_FRAC];
-	}
-	else if ( r1 > 0.45 && r1 < 0.7 )
-	{
-		temp_var = ( r1 - 0.45 ) * 3.2;
-		s->value[DEADWOOD_SCEL_FRAC]  = temp_var * s->value[DEADWOOD_CEL_FRAC];
-		s->value[DEADWOOD_USCEL_FRAC] = (1. - temp_var) * s->value[DEADWOOD_CEL_FRAC];
-	}
-	else
-	{
-		s->value[DEADWOOD_SCEL_FRAC]  = 0.8 * s->value[DEADWOOD_CEL_FRAC];
-		s->value[DEADWOOD_USCEL_FRAC] = 0.2 * s->value[DEADWOOD_CEL_FRAC];
-	}
-
-	/******************************************************************************************************************************************************************/
-	/** calculate shielded and unshielded cellulose fraction for froot pool **/
-
-	/*** compute leaf litter fractions ***/
-
-	/* partitioning leaf litter carbon cellulose into shielded and unshielded pools */
-	r1 = s->value[LEAF_LITR_LIGN_FRAC] / s->value[LEAF_LITR_LAB_FRAC];
-
-	if ( r1 <= 0.45 )
-	{
-		s->value[LEAF_LITR_SCEL_FRAC]   = 0.;
-		s->value[LEAF_LITR_USCEL_FRAC]  = s->value[LEAF_LITR_CEL_FRAC];
-	}
-	else if ( r1 > 0.45 && r1 < 0.7 )
-	{
-		temp_var = ( r1 - 0.45 ) * 3.2;
-		s->value[LEAF_LITR_SCEL_FRAC]   = temp_var * s->value[LEAF_LITR_CEL_FRAC];
-		s->value[LEAF_LITR_USCEL_FRAC]  = ( 1. - temp_var ) * s->value[LEAF_LITR_CEL_FRAC];
-	}
-	else
-	{
-		s->value[LEAF_LITR_SCEL_FRAC]   = 0.8 * s->value[LEAF_LITR_CEL_FRAC];
-		s->value[LEAF_LITR_USCEL_FRAC]  = 0.2 * s->value[LEAF_LITR_CEL_FRAC];
-	}
-	/* check */
-	CHECK_CONDITION ( fabs ( s->value[LEAF_LITR_LAB_FRAC] + s->value[LEAF_LITR_SCEL_FRAC] + s->value[LEAF_LITR_USCEL_FRAC] + s->value[LEAF_LITR_LIGN_FRAC] ), >, 1 + eps);
-
-	/******************************************************************************************************************************************************************/
-	/** calculate shielded and unshielded cellulose fraction for leaf pool **/
-
-	/*** compute fine root litter fractions ***/
-
-	/* partitioning fine root litter carbon cellulose into shielded and unshielded pools */
-	r1 = s->value[FROOT_LITR_LIGN_FRAC] / s->value[FROOT_LITR_LAB_FRAC];
-
-	if ( r1 <= 0.45 )
-	{
-		s->value[FROOT_LITR_SCEL_FRAC]   = 0.;
-		s->value[FROOT_LITR_USCEL_FRAC]  = s->value[FROOT_LITR_CEL_FRAC];
-	}
-	else if ( r1 > 0.45 && r1 < 0.7 )
-	{
-		temp_var = ( r1 - 0.45 ) * 3.2;
-		s->value[FROOT_LITR_SCEL_FRAC]   = temp_var * s->value[FROOT_LITR_CEL_FRAC];
-		s->value[FROOT_LITR_USCEL_FRAC]  = ( 1. - temp_var ) * s->value[FROOT_LITR_CEL_FRAC];
-	}
-	else
-	{
-		s->value[FROOT_LITR_SCEL_FRAC]   = 0.8 * s->value[FROOT_LITR_CEL_FRAC];
-		s->value[FROOT_LITR_USCEL_FRAC]  = 0.2 * s->value[FROOT_LITR_CEL_FRAC];
-	}
-	/* check */
-	CHECK_CONDITION ( fabs ( s->value[FROOT_LITR_LAB_FRAC] + s->value[FROOT_LITR_SCEL_FRAC] + s->value[FROOT_LITR_USCEL_FRAC] + s->value[FROOT_LITR_LIGN_FRAC] ), >, 1 + eps);
-
-	/******************************************************************************************************************************************************************/
 
 	/*** compute coarse woody debris carbon pools ****/
 	if ( ! g_soil_settings->values[DEADWOODC] || g_soil_settings->values[DEADWOODC] == NO_DATA )
@@ -927,172 +930,198 @@ void initialization_forest_class_litter_soil (cell_t *const c, const int height,
 	{
 		s->value[DEADWOOD_LITRC]  =   g_soil_settings->values[DEADWOODC];
 	}
-	s->value[DEADWOOD_LITR2C] = s->value[DEADWOOD_LITRC] * s->value[DEADWOOD_USCEL_FRAC];
-	s->value[DEADWOOD_LITR3C] = s->value[DEADWOOD_LITRC] * s->value[DEADWOOD_SCEL_FRAC] ;
-	s->value[DEADWOOD_LITR4C] = s->value[DEADWOOD_LITRC] * s->value[DEADWOOD_LIGN_FRAC] ;
+	s->value[DEADWOOD_LITR2C]    = s->value[DEADWOOD_LITRC]    * s->value[DEADWOOD_USCEL_FRAC];
+	s->value[DEADWOOD_LITR3C]    = s->value[DEADWOOD_LITRC]    * s->value[DEADWOOD_SCEL_FRAC] ;
+	s->value[DEADWOOD_LITR4C]    = s->value[DEADWOOD_LITRC]    * s->value[DEADWOOD_LIGN_FRAC] ;
 	/* check */
 	CHECK_CONDITION ( fabs ( s->value[DEADWOOD_LITR2C] + s->value[DEADWOOD_LITR3C] + s->value[DEADWOOD_LITR4C] ), >, s->value[DEADWOOD_LITRC] + eps);
 
-	/*** compute leaf litter carbon pools ****/
-	s->value[LEAF_LITR1C] = s->value[LEAF_LITRC] * s->value[LEAF_LITR_LAB_FRAC]  ;
-	s->value[LEAF_LITR2C] = s->value[LEAF_LITRC] * s->value[LEAF_LITR_USCEL_FRAC];
-	s->value[LEAF_LITR3C] = s->value[LEAF_LITRC] * s->value[LEAF_LITR_SCEL_FRAC] ;
-	s->value[LEAF_LITR4C] = s->value[LEAF_LITRC] * s->value[LEAF_LITR_LIGN_FRAC] ;
-
+	c->daily_deadwood_to_litrC  += s->value[DEADWOOD_LITRC]    * 1e6 / g_settings->sizeCell;
+	c->daily_deadwood_to_litr2C += s->value[DEADWOOD_LITR2C]   * 1e6 / g_settings->sizeCell;
+	c->daily_deadwood_to_litr3C += s->value[DEADWOOD_LITR3C]   * 1e6 / g_settings->sizeCell;
+	c->daily_deadwood_to_litr4C += s->value[DEADWOOD_LITR4C]   * 1e6 / g_settings->sizeCell;
 	/* check */
-	CHECK_CONDITION ( fabs ( s->value[LEAF_LITR1C] + s->value[LEAF_LITR2C] + s->value[LEAF_LITR3C] + s->value[LEAF_LITR4C]), >,  s->value[LEAF_LITRC] + eps);
+	CHECK_CONDITION ( fabs ( c->daily_deadwood_to_litr2C + c->daily_deadwood_to_litr3C + c->daily_deadwood_to_litr4C ), >, c->daily_deadwood_to_litrC+ eps);
+
+	/*** compute leaf litter carbon pools ****/
+	s->value[LEAF_LITR1C]        = s->value[LEAF_LITRC]        * s->value[LEAF_LITR_LAB_FRAC]  ;
+	s->value[LEAF_LITR2C]        = s->value[LEAF_LITRC]        * s->value[LEAF_LITR_USCEL_FRAC];
+	s->value[LEAF_LITR3C]        = s->value[LEAF_LITRC]        * s->value[LEAF_LITR_SCEL_FRAC] ;
+	s->value[LEAF_LITR4C]        = s->value[LEAF_LITRC]        * s->value[LEAF_LITR_LIGN_FRAC] ;
+	/* check */
+	CHECK_CONDITION ( fabs ( s->value[LEAF_LITR1C] + s->value[LEAF_LITR2C] + s->value[LEAF_LITR3C] + s->value[LEAF_LITR4C] ), >, s->value[LEAF_LITRC] + eps);
+
+	c->daily_leaf_to_litrC      += s->value[LEAF_LITRC]        * 1e6 / g_settings->sizeCell;
+	c->daily_leaf_to_litr1C     += s->value[LEAF_LITR1C]       * 1e6 / g_settings->sizeCell;
+	c->daily_leaf_to_litr2C     += s->value[LEAF_LITR2C]       * 1e6 / g_settings->sizeCell;
+	c->daily_leaf_to_litr3C     += s->value[LEAF_LITR3C]       * 1e6 / g_settings->sizeCell;
+	c->daily_leaf_to_litr4C     += s->value[LEAF_LITR4C]       * 1e6 / g_settings->sizeCell;
+	/* check */
+	CHECK_CONDITION ( fabs ( c->daily_leaf_to_litr1C + c->daily_leaf_to_litr2C + c->daily_leaf_to_litr3C + c->daily_leaf_to_litr4C ), >, c->daily_leaf_to_litrC+ eps);
 
 	/*** compute froot litter carbon pools ****/
-	s->value[FROOT_LITR1C] = s->value[FROOT_LITRC] * s->value[FROOT_LITR_LAB_FRAC]  ;
-	s->value[FROOT_LITR2C] = s->value[FROOT_LITRC] * s->value[FROOT_LITR_USCEL_FRAC];
-	s->value[FROOT_LITR3C] = s->value[FROOT_LITRC] * s->value[FROOT_LITR_SCEL_FRAC] ;
-	s->value[FROOT_LITR4C] = s->value[FROOT_LITRC] * s->value[FROOT_LITR_LIGN_FRAC] ;
-
+	s->value[FROOT_LITR1C]       = s->value[FROOT_LITRC]       * s->value[FROOT_LITR_LAB_FRAC]  ;
+	s->value[FROOT_LITR2C]       = s->value[FROOT_LITRC]       * s->value[FROOT_LITR_USCEL_FRAC];
+	s->value[FROOT_LITR3C]       = s->value[FROOT_LITRC]       * s->value[FROOT_LITR_SCEL_FRAC] ;
+	s->value[FROOT_LITR4C]       = s->value[FROOT_LITRC]       * s->value[FROOT_LITR_LIGN_FRAC] ;
 	/* check */
 	CHECK_CONDITION ( fabs ( s->value[FROOT_LITR1C] + s->value[FROOT_LITR2C] + s->value[FROOT_LITR3C] + s->value[FROOT_LITR4C]), >,  s->value[FROOT_LITRC] + eps);
+
+	c->daily_froot_to_litrC     += s->value[FROOT_LITRC]       * 1e6 / g_settings->sizeCell;
+	c->daily_froot_to_litr1C    += s->value[FROOT_LITR1C]      * 1e6 / g_settings->sizeCell;
+	c->daily_froot_to_litr2C    += s->value[FROOT_LITR2C]      * 1e6 / g_settings->sizeCell;
+	c->daily_froot_to_litr3C    += s->value[FROOT_LITR3C]      * 1e6 / g_settings->sizeCell;
+	c->daily_froot_to_litr4C    += s->value[FROOT_LITR4C]      * 1e6 / g_settings->sizeCell;
+	/* check */
+	CHECK_CONDITION ( fabs ( c->daily_froot_to_litr1C + c->daily_froot_to_litr2C + c->daily_froot_to_litr3C + c->daily_froot_to_litr4C ), >, c->daily_froot_to_litrC+ eps);
 
 	/******************************************************************************************************************************************************************/
 
 	/*** compute coarse woody debris nitrogen pools ****/
 
-	s->value[DEADWOOD_LITRN]  = s->value[DEADWOOD_LITRC] / s->value[CN_DEADWOOD];
-	s->value[DEADWOOD_LITR2N] = s->value[DEADWOOD_LITRN] * s->value[DEADWOOD_USCEL_FRAC];
-	s->value[DEADWOOD_LITR3N] = s->value[DEADWOOD_LITRN] * s->value[DEADWOOD_SCEL_FRAC] ;
-	s->value[DEADWOOD_LITR4N] = s->value[DEADWOOD_LITRN] * s->value[DEADWOOD_LIGN_FRAC] ;
+	s->value[DEADWOOD_LITRN]     = s->value[DEADWOOD_LITRC]    / s->value[CN_DEADWOOD];
+	s->value[DEADWOOD_LITR2N]    = s->value[DEADWOOD_LITRN]    * s->value[DEADWOOD_USCEL_FRAC];
+	s->value[DEADWOOD_LITR3N]    = s->value[DEADWOOD_LITRN]    * s->value[DEADWOOD_SCEL_FRAC] ;
+	s->value[DEADWOOD_LITR4N]    = s->value[DEADWOOD_LITRN]    * s->value[DEADWOOD_LIGN_FRAC] ;
 	/* check */
 	CHECK_CONDITION ( fabs ( s->value[DEADWOOD_LITR2N] + s->value[DEADWOOD_LITR3N] + s->value[DEADWOOD_LITR4N]), >, s->value[DEADWOOD_LITRN] + eps);
 
-	/*** compute leaf litter nitrogen pools ****/
-	s->value[LEAF_LITR1N]     = s->value[LEAF_LITRN] * s->value[LEAF_LITR_LAB_FRAC]  ;
-	s->value[LEAF_LITR2N]     = s->value[LEAF_LITRN] * s->value[LEAF_LITR_USCEL_FRAC];
-	s->value[LEAF_LITR3N]     = s->value[LEAF_LITRN] * s->value[LEAF_LITR_SCEL_FRAC] ;
-	s->value[LEAF_LITR4N]     = s->value[LEAF_LITRN] * s->value[LEAF_LITR_LIGN_FRAC] ;
-
+	c->daily_deadwood_to_litrN  += s->value[DEADWOOD_LITRN]    * 1e6 / g_settings->sizeCell;
+	c->daily_deadwood_to_litr2N += s->value[DEADWOOD_LITR2N]   * 1e6 / g_settings->sizeCell;
+	c->daily_deadwood_to_litr3N += s->value[DEADWOOD_LITR3N]   * 1e6 / g_settings->sizeCell;
+	c->daily_deadwood_to_litr4N += s->value[DEADWOOD_LITR4N]   * 1e6 / g_settings->sizeCell;
 	/* check */
-	CHECK_CONDITION ( fabs ( s->value[LEAF_LITR1N] + s->value[LEAF_LITR2N] + s->value[LEAF_LITR3N] + s->value[LEAF_LITR4N]), >, s->value[LEAF_LITRN] + eps);
+	CHECK_CONDITION ( fabs ( c->daily_deadwood_to_litr2C + c->daily_deadwood_to_litr3C + c->daily_deadwood_to_litr4C ), >, c->daily_deadwood_to_litrC+ eps);
+
+	/*** compute leaf litter nitrogen pools ****/
+	s->value[LEAF_LITR1N]        = s->value[LEAF_LITRN]        * s->value[LEAF_LITR_LAB_FRAC]  ;
+	s->value[LEAF_LITR2N]        = s->value[LEAF_LITRN]        * s->value[LEAF_LITR_USCEL_FRAC];
+	s->value[LEAF_LITR3N]        = s->value[LEAF_LITRN]        * s->value[LEAF_LITR_SCEL_FRAC] ;
+	s->value[LEAF_LITR4N]        = s->value[LEAF_LITRN]        * s->value[LEAF_LITR_LIGN_FRAC] ;
+	/* check */
+	CHECK_CONDITION ( fabs ( s->value[LEAF_LITR1N] + s->value[LEAF_LITR2N] + s->value[LEAF_LITR3N] + s->value[LEAF_LITR4N] ), >, s->value[LEAF_LITRN] + eps);
+
+	c->daily_leaf_to_litrN      += s->value[LEAF_LITRN]        * 1e6 / g_settings->sizeCell;
+	c->daily_leaf_to_litr1N     += s->value[LEAF_LITR1N]       * 1e6 / g_settings->sizeCell;
+	c->daily_leaf_to_litr2N     += s->value[LEAF_LITR2N]       * 1e6 / g_settings->sizeCell;
+	c->daily_leaf_to_litr3N     += s->value[LEAF_LITR3N]       * 1e6 / g_settings->sizeCell;
+	c->daily_leaf_to_litr4N     += s->value[LEAF_LITR4N]       * 1e6 / g_settings->sizeCell;
+	/* check */
+	CHECK_CONDITION ( fabs ( c->daily_leaf_to_litr1C + c->daily_leaf_to_litr2C + c->daily_leaf_to_litr3C + c->daily_leaf_to_litr4C ), >, c->daily_leaf_to_litrC+ eps);
 
 	/*** compute froot litter nitrogen pools ****/
-	s->value[FROOT_LITR1N]    = s->value[FROOT_LITRN] * s->value[FROOT_LITR_LAB_FRAC]  ;
-	s->value[FROOT_LITR2N]    = s->value[FROOT_LITRN] * s->value[FROOT_LITR_USCEL_FRAC];
-	s->value[FROOT_LITR3N]    = s->value[FROOT_LITRN] * s->value[FROOT_LITR_SCEL_FRAC] ;
-	s->value[FROOT_LITR4N]    = s->value[FROOT_LITRN] * s->value[FROOT_LITR_LIGN_FRAC] ;
-
+	s->value[FROOT_LITR1N]       = s->value[FROOT_LITRN]       * s->value[FROOT_LITR_LAB_FRAC]  ;
+	s->value[FROOT_LITR2N]       = s->value[FROOT_LITRN]       * s->value[FROOT_LITR_USCEL_FRAC];
+	s->value[FROOT_LITR3N]       = s->value[FROOT_LITRN]       * s->value[FROOT_LITR_SCEL_FRAC] ;
+	s->value[FROOT_LITR4N]       = s->value[FROOT_LITRN]       * s->value[FROOT_LITR_LIGN_FRAC] ;
 	/* check */
 	CHECK_CONDITION ( fabs ( s->value[FROOT_LITR1N] + s->value[FROOT_LITR2N] + s->value[FROOT_LITR3N] + s->value[FROOT_LITR4N]), >,  s->value[FROOT_LITRN] + eps);
+
+	c->daily_froot_to_litrN     += s->value[FROOT_LITRN]       * 1e6 / g_settings->sizeCell;
+	c->daily_froot_to_litr1N    += s->value[FROOT_LITR1N]      * 1e6 / g_settings->sizeCell;
+	c->daily_froot_to_litr2N    += s->value[FROOT_LITR2N]      * 1e6 / g_settings->sizeCell;
+	c->daily_froot_to_litr3N    += s->value[FROOT_LITR3N]      * 1e6 / g_settings->sizeCell;
+	c->daily_froot_to_litr4N    += s->value[FROOT_LITR4N]      * 1e6 / g_settings->sizeCell;
+	/* check */
+	CHECK_CONDITION ( fabs ( c->daily_froot_to_litr1N + c->daily_froot_to_litr2N + c->daily_froot_to_litr3N + c->daily_froot_to_litr4N ), >, c->daily_froot_to_litrN+ eps);
 
 	/******************************************************************************************************************************************************************/
 
 }
-void initialization_forest_cell_litter (cell_t *const c, const int height, const int dbh, const int age, const int species)
+void initialization_forest_cell_litter ( cell_t *const c )
 {
-	species_t *s;
-	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
-
 	/******************************************************************************************************************************************************************/
 
 	/*** create deadwood carbon pools fractions (gC/m2) ***/
 	//fixme it should sum throughout all classes...
-	c->deadwood_C    = s->value[DEADWOOD_LITRC]    * 1e6 / g_settings->sizeCell;
-	c->deadwood_2C   = s->value[DEADWOOD_LITR2C]   * 1e6 / g_settings->sizeCell;
-	c->deadwood_3C   = s->value[DEADWOOD_LITR3C]   * 1e6 / g_settings->sizeCell;
-	c->deadwood_4C   = s->value[DEADWOOD_LITR4C]   * 1e6 / g_settings->sizeCell;
-
+	c->deadwood_C    += c->daily_deadwood_to_litrC;
+	c->deadwood_2C   += c->daily_deadwood_to_litr2C;
+	c->deadwood_3C   += c->daily_deadwood_to_litr3C;
+	c->deadwood_4C   += c->daily_deadwood_to_litr4C;
 	/* check */
 	CHECK_CONDITION ( fabs ( c->deadwood_2C + c->deadwood_3C + c->deadwood_4C ) , > , c->deadwood_C + eps );
 
 	/*** create leaf litter carbon pools fractions (gC/m2) ****/
-	c->leaf_litrC  += s->value[LEAF_LITRC]         * 1e6 / g_settings->sizeCell;
-	c->leaf_litr1C += s->value[LEAF_LITR1C]        * 1e6 / g_settings->sizeCell;
-	c->leaf_litr2C += s->value[LEAF_LITR2C]        * 1e6 / g_settings->sizeCell;
-	c->leaf_litr3C += s->value[LEAF_LITR3C]        * 1e6 / g_settings->sizeCell;
-	c->leaf_litr4C += s->value[LEAF_LITR4C]        * 1e6 / g_settings->sizeCell;
-
+	c->leaf_litrC    += c->daily_leaf_to_litrC;
+	c->leaf_litr1C   += c->daily_leaf_to_litr1C;
+	c->leaf_litr2C   += c->daily_leaf_to_litr2C;
+	c->leaf_litr3C   += c->daily_leaf_to_litr3C;
+	c->leaf_litr4C   += c->daily_leaf_to_litr4C;
 	/* check */
 	CHECK_CONDITION ( fabs ( c->leaf_litr1C + c->leaf_litr2C + c->leaf_litr3C + c->leaf_litr4C ) , > , c->leaf_litrC + eps );
 
 	/*** create froot litter carbon pools fractions (gN/m2) ****/
-	c->froot_litrC  += s->value[FROOT_LITRC]       * 1e6 / g_settings->sizeCell;
-	c->froot_litr1C += s->value[FROOT_LITR1C]      * 1e6 / g_settings->sizeCell;
-	c->froot_litr2C += s->value[FROOT_LITR2C]      * 1e6 / g_settings->sizeCell;
-	c->froot_litr3C += s->value[FROOT_LITR3C]      * 1e6 / g_settings->sizeCell;
-	c->froot_litr4C += s->value[FROOT_LITR4C]      * 1e6 / g_settings->sizeCell;
-
+	c->froot_litrC   += c->daily_froot_to_litrC;
+	c->froot_litr1C  += c->daily_froot_to_litr1C;
+	c->froot_litr2C  += c->daily_froot_to_litr2C;
+	c->froot_litr3C  += c->daily_froot_to_litr3C;
+	c->froot_litr4C  += c->daily_froot_to_litr4C;
 	/* check */
 	CHECK_CONDITION ( fabs ( c->froot_litr1C + c->froot_litr2C + c->froot_litr3C + c->froot_litr4C ) , > , c->froot_litrC + eps );
 
 	/* cumulate overall */
-	c->litrC      = c->leaf_litrC + c->froot_litrC + c->deadwood_C;
-
-	//FIXME for now assume no soilC
-	c->soilC      = 0.;
+	c->litrC          = c->leaf_litrC + c->froot_litrC + c->deadwood_C;
 
 	/* cumulate carbon pools */
-	c->litr1C     = c->leaf_litr1C + c->froot_litr1C;
-	c->litr2C     = c->leaf_litr2C + c->froot_litr2C + c->deadwood_2C;
-	c->litr3C     = c->leaf_litr3C + c->froot_litr3C + c->deadwood_3C;
-	c->litr4C     = c->leaf_litr4C + c->froot_litr4C + c->deadwood_4C;
+	c->litr1C         = c->leaf_litr1C + c->froot_litr1C;
+	c->litr2C         = c->leaf_litr2C + c->froot_litr2C + c->deadwood_2C;
+	c->litr3C         = c->leaf_litr3C + c->froot_litr3C + c->deadwood_3C;
+	c->litr4C         = c->leaf_litr4C + c->froot_litr4C + c->deadwood_4C;
 
 	/******************************************************************************************************************************************************************/
 
 	/*** create deadwood nitrogen pools fractions (gN/m2) ***/
 	//fixme it should sum throghout all classes...
-	c->deadwood_N    = s->value[DEADWOOD_LITRN]    * 1e6 / g_settings->sizeCell;
-	c->deadwood_2N   = s->value[DEADWOOD_LITR2N]   * 1e6 / g_settings->sizeCell;
-	c->deadwood_3N   = s->value[DEADWOOD_LITR3N]   * 1e6 / g_settings->sizeCell;
-	c->deadwood_4N   = s->value[DEADWOOD_LITR4N]   * 1e6 / g_settings->sizeCell;
+	c->deadwood_N    += c->daily_deadwood_to_litrN;
+	c->deadwood_2N   += c->daily_deadwood_to_litr2N;;
+	c->deadwood_3N   += c->daily_deadwood_to_litr3N;;
+	c->deadwood_4N   += c->daily_deadwood_to_litr4N;;
 	/* check */
 	CHECK_CONDITION ( fabs ( c->deadwood_2N + c->deadwood_3N + c->deadwood_4N ) , > , c->deadwood_N + eps );
 
 	/*** create leaf litter nitrogen pools fractions (gN/m2) ****/
-	c->leaf_litrN    = s->value[LEAF_LITRN]        * 1e6 / g_settings->sizeCell;
-	c->leaf_litr1N   = s->value[LEAF_LITR1N]       * 1e6 / g_settings->sizeCell;
-	c->leaf_litr2N   = s->value[LEAF_LITR2N]       * 1e6 / g_settings->sizeCell;
-	c->leaf_litr3N   = s->value[LEAF_LITR3N]       * 1e6 / g_settings->sizeCell;
-	c->leaf_litr4N   = s->value[LEAF_LITR4N]       * 1e6 / g_settings->sizeCell;
-
+	c->leaf_litrN    += c->daily_leaf_to_litrN;
+	c->leaf_litr1N   += c->daily_leaf_to_litr1N;
+	c->leaf_litr2N   += c->daily_leaf_to_litr2N;
+	c->leaf_litr3N   += c->daily_leaf_to_litr3N;
+	c->leaf_litr4N   += c->daily_leaf_to_litr4N;
 	/* check */
 	CHECK_CONDITION ( fabs ( c->leaf_litr1N + c->leaf_litr2N + c->leaf_litr3N + c->leaf_litr4N ) , > , c->leaf_litrN + eps );
 
 	/*** create froot litter nitrogen pools fractions (gN/m2) ****/
-	c->froot_litrN  += s->value[FROOT_LITRN]       * 1e6 / g_settings->sizeCell;
-	c->froot_litr1N += s->value[FROOT_LITR1N]      * 1e6 / g_settings->sizeCell;
-	c->froot_litr2N += s->value[FROOT_LITR2N]      * 1e6 / g_settings->sizeCell;
-	c->froot_litr3N += s->value[FROOT_LITR3N]      * 1e6 / g_settings->sizeCell;
-	c->froot_litr4N += s->value[FROOT_LITR4N]      * 1e6 / g_settings->sizeCell;
-
+	c->froot_litrN   += c->daily_froot_to_litrN;
+	c->froot_litr1N  += c->daily_froot_to_litr1N;
+	c->froot_litr2N  += c->daily_froot_to_litr2N;
+	c->froot_litr3N  += c->daily_froot_to_litr3N;
+	c->froot_litr4N  += c->daily_froot_to_litr4N;
 	/* check */
 	CHECK_CONDITION ( fabs ( c->froot_litr1N + c->froot_litr2N + c->froot_litr3N + c->froot_litr4N ) , > , c->froot_litrN + eps );
 
 	/* cumulate overall */
-	c->litrN         = c->leaf_litrN + c->froot_litrN + c->deadwood_N;
-
-	//FIXME for now assume no soilN
-	c->soilN         = 0.;
+	c->litrN          = c->leaf_litrN + c->froot_litrN + c->deadwood_N;
 
 	/* cumulate nitrogen pools */
-	c->litr1N        = c->leaf_litr1N + c->froot_litr1N;
-	c->litr2N        = c->leaf_litr2N + c->froot_litr2N + c->deadwood_2N;
-	c->litr3N        = c->leaf_litr3N + c->froot_litr3N + c->deadwood_3N;
-	c->litr4N        = c->leaf_litr4N + c->froot_litr4N + c->deadwood_4N;
+	c->litr1N         = c->leaf_litr1N + c->froot_litr1N;
+	c->litr2N         = c->leaf_litr2N + c->froot_litr2N + c->deadwood_2N;
+	c->litr3N         = c->leaf_litr3N + c->froot_litr3N + c->deadwood_3N;
+	c->litr4N         = c->leaf_litr4N + c->froot_litr4N + c->deadwood_4N;
 
 }
 void initialization_forest_cell_soil (cell_t *const c)
 {
 	/* initialize soil carbon */
-	c->soilC            = 0.001;
-	c->soil1C           = 0.001;
-	c->soil2C           = 0.001;
-	c->soil3C           = 0.001;
-	c->soil4C           = 0.001;
+	c->soilC          = 0.001;
+	c->soil1C         = 0.001;
+	c->soil2C         = 0.001;
+	c->soil3C         = 0.001;
+	c->soil4C         = 0.001;
 
 	/* initialize soil nitrogen */
-	c->soilN            = 0.001;
-	c->soil1N           = 0.001;
-	c->soil2N           = 0.001;
-	c->soil3N           = 0.001;
-	c->soil4N           = 0.001;
-
-
+	c->soilN          = 0.001;
+	c->soil1N         = 0.001;
+	c->soil2N         = 0.001;
+	c->soil3N         = 0.001;
+	c->soil4N         = 0.001;
 }
 
 void initialization_soil_physic(cell_t *const c)
@@ -1125,7 +1154,7 @@ void initialization_soil_physic(cell_t *const c)
 	logger(g_debug_log, "BIOME soil characteristics\n");
 
 	/* (DIM) Clapp-Hornberger "b" parameter */
-	c->soil_b = -(3.10 + 0.157*g_soil_settings->values[SOIL_CLAY_PERC] - 0.003*g_soil_settings->values[SOIL_SAND_PERC]); /* ok for schwalm*/
+	c->soil_b = -( 3.10 + 0.157 * g_soil_settings->values[SOIL_CLAY_PERC] - 0.003 * g_soil_settings->values[SOIL_SAND_PERC] ); /* ok for schwalm*/
 	logger(g_debug_log, "soil_b = %f (DIM)\n", c->soil_b);
 
 	//test
@@ -1136,25 +1165,25 @@ void initialization_soil_physic(cell_t *const c)
 	/* calculate the soil pressure-volume coefficients from texture data */
 	/* Uses the multivariate regressions from Cosby et al., 1984 */
 	/* (DIM) Soil volumetric water content at saturation */
-	c->vwc_sat = (50.5 - 0.142*g_soil_settings->values[SOIL_SAND_PERC] - 0.037*g_soil_settings->values[SOIL_CLAY_PERC])/100.0; /* ok for schwalm*/
+	c->vwc_sat = ( 50.5 - 0.142 * g_soil_settings->values[SOIL_SAND_PERC] - 0.037 * g_soil_settings->values[SOIL_CLAY_PERC] ) / 100.; /* ok for schwalm*/
 	logger(g_debug_log, "volumetric water content at saturation (BIOME) = %f %%(vol)\n", c->vwc_sat);
 	/* (MPa) soil matric potential at saturation */
-	c->psi_sat = -(exp((1.54 - 0.0095*g_soil_settings->values[SOIL_SAND_PERC] + 0.0063*g_soil_settings->values[SOIL_SILT_PERC])*log(10.0))*9.8e-5); /* ok for schwalm*/
+	c->psi_sat = -( exp ( ( 1.54 - 0.0095 * g_soil_settings->values[SOIL_SAND_PERC] + 0.0063 * g_soil_settings->values[SOIL_SILT_PERC] ) * log ( 10.) ) * 9.8e-5 ); /* ok for schwalm*/
 	logger(g_debug_log, "psi_sat = %f MPa \n", c->psi_sat);
 	/* Clapp-Hornenberger function 1978 (DIM) Soil Field Capacity Volumetric Water Content at field capacity ( = -0.015 MPa) */
-	c->vwc_fc = c->vwc_sat * pow((-0.015/c->psi_sat),(1.0/c->soil_b));
+	c->vwc_fc = c->vwc_sat * pow ( ( -0.015 / c->psi_sat ) , ( 1. / c->soil_b ) );
 	logger(g_debug_log, "volumetric water content at field capacity (BIOME) = %f %%(vol) \n", c->vwc_fc);
 
 	/* define maximum soilwater content, for outflow calculation */
 	/* converts volumetric water content (m3/m3) --> (kg/m2) */
 
 	/* (kgH2O/m2) soil water at field capacity */
-	c->soilw_fc = (g_soil_settings->values[SOIL_DEPTH] / 100) * c->vwc_fc * 1e3;
+	c->soilw_fc = ( g_soil_settings->values[SOIL_DEPTH] / 100. ) * c->vwc_fc * 1e3;
 	logger(g_debug_log, "soilw_fc BIOME (MAXASW FC BIOME)= %f (kgH2O/m2)\n", c->soilw_fc);
 	//equal to MAXASW
 
 	/* (kgH2O/m2) soil water at saturation */
-	c->soilw_sat = (g_soil_settings->values[SOIL_DEPTH] / 100) * c->vwc_sat * 1e3;
+	c->soilw_sat = ( g_soil_settings->values[SOIL_DEPTH] / 100. ) * c->vwc_sat * 1e3;
 	logger(g_debug_log, "soilw_sat BIOME (MAXASW SAT BIOME)= %f (kgH2O/m2)\n", c->soilw_sat);
 
 	/* (kgH2O/m2) maximum soil water at field capacity */
@@ -1172,7 +1201,7 @@ void initialization_soil_physic(cell_t *const c)
 	logger(g_debug_log, "CENTURY soil characteristics\n");
 	acoeff = (float)exp(-4.396 - 0.0715 * g_soil_settings->values[SOIL_CLAY_PERC] - 4.88e-4 * pow(g_soil_settings->values[SOIL_SAND_PERC],2) - 4.285e-5 * pow(g_soil_settings->values[SOIL_SAND_PERC],2)*g_soil_settings->values[SOIL_CLAY_PERC]);
 	bcoeff = (float)(-3.14 - 0.00222 * pow(g_soil_settings->values[SOIL_CLAY_PERC],2) - 3.484e-5 * pow(g_soil_settings->values[SOIL_SAND_PERC],2) * g_soil_settings->values[SOIL_CLAY_PERC]);
-	sat = (float)(0.332 - 7.251e-4 * g_soil_settings->values[SOIL_SAND_PERC] + 0.1276 * log10(g_soil_settings->values[SOIL_CLAY_PERC]));
+	sat    = (float)(0.332 - 7.251e-4 * g_soil_settings->values[SOIL_SAND_PERC] + 0.1276 * log10(g_soil_settings->values[SOIL_CLAY_PERC]));
 
 	/* volumetric percentage for wilting point */
 	volumetric_wilting_point = (float)pow((15.0/acoeff), (1.0/bcoeff));
@@ -1188,22 +1217,22 @@ void initialization_soil_physic(cell_t *const c)
 	volumetric_wilting_point += (float)(-0.15 * volumetric_wilting_point);
 	logger(g_debug_log, "volumetric water content at wilting point (CENTURY) = %f %%(vol)\n", volumetric_wilting_point);
 	/* (kgH2O/m2) soil water at wilting point */
-	c->wilting_point = (g_soil_settings->values[SOIL_DEPTH] / 100) * volumetric_wilting_point * 1e3;
+	c->wilting_point = ( g_soil_settings->values[SOIL_DEPTH] / 100. ) * volumetric_wilting_point * 1e3;
 	logger(g_debug_log, "Wilting point (CENTURY) = %f mm/m2\n", c->wilting_point);
 
 	/* volumetric percentage field capacity */
 	volumetric_field_capacity += (float)(0.07 * volumetric_field_capacity);
 	logger(g_debug_log, "volumetric water content at field capacity (CENTURY) = %f %%(vol)\n", volumetric_field_capacity);
 	/* (kgH2O/m2) soil water at field capacity */
-	c->field_capacity = (g_soil_settings->values[SOIL_DEPTH] / 100) * volumetric_field_capacity * 1e3;
+	c->field_capacity = ( g_soil_settings->values[SOIL_DEPTH] / 100. ) * volumetric_field_capacity * 1e3;
 	logger(g_debug_log, "Field capacity (CENTURY) = %f mm/m2\n", c->field_capacity);
 
 	/* volumetric percentage saturated hydraulic conductivity */
-	volumetric_saturated_hydraulic_conductivity /= 1500.0;
+	volumetric_saturated_hydraulic_conductivity /= 1500.;
 	logger(g_debug_log, "volumetric water content at saturated hydraulic conductance (CENTURY) = %f %%(vol)\n", volumetric_saturated_hydraulic_conductivity);
 
 	/* (kgH2O/m2) soil water at saturated hydraulic conductivity */
-	c->sat_hydr_conduct = (g_soil_settings->values[SOIL_DEPTH] / 100) * volumetric_saturated_hydraulic_conductivity * 1e3;
+	c->sat_hydr_conduct = (g_soil_settings->values[SOIL_DEPTH] / 100.) * volumetric_saturated_hydraulic_conductivity * 1e3;
 	logger(g_debug_log, "Saturated hydraulic conductivity (CENTURY) = %f mm/m2\n", c->sat_hydr_conduct);
 
 	/* bulk density g/cm3 */
@@ -1212,281 +1241,4 @@ void initialization_soil_physic(cell_t *const c)
 	logger(g_debug_log, "***************************************************\n\n");
 
 }
-
-//void initialization_soil_biogeochemistry (cell_t *const c)
-//{
-//	//todo create variables related to percentage of presence for each single species (also at the initialization phase?)
-//
-//	double r1;
-//	double temp_var;
-//	double deadwood_litter_cellulose;
-//
-//	/* fractions */
-//	double leaf_froot_frac = 1.;                                          /* (dim) leaf fine root fraction */
-//	double leaf_litt_scel_frac;                                           /* (dim) leaf litter shielded cellulose fraction */
-//	double leaf_litt_uscel_frac;                                          /* (dim) leaf litter unshielded cellulose fraction */
-//	double froot_litt_scel_frac;                                          /* (dim) fine root litter shielded cellulose fraction */
-//	double froot_litt_uscel_frac;                                         /* (dim) fine root litter unshielded fraction */
-//	double deadwood_scel_frac;                                            /* (dim) dead wood litter shielded cellulose fraction */
-//	double deadwood_uscel_frac;                                           /* (dim) dead wood litter unshielded fraction */
-//
-//	/* todo: if cell is monospecific than use values of species level instead generic */
-//	/* assumption: arbitrary values for fractions (assuming averaged values among species) */
-//	double leaf_litter_labile_frac        = 0.20;
-//	double leaf_litter_cellulose_frac     = 0.50;
-//	double leaf_litter_lignin_frac        = 0.30;
-//	double froot_litter_labile_frac       = 0.30;
-//	double froot_litter_cellulose_frac    = 0.40;
-//	double froot_litter_lignin_frac       = 0.30;
-//	double deadwood_litter_cellulose_frac = 0.75;
-//	double deadwood_litter_lignin_frac    = 0.25;
-//
-//	/* assumption: arbitrary values for C:N ratio (assuming averaged values among species) */
-//	double leaf_litter_CN_frac            = 100.;
-//	double froot_litter_CN_frac           = 60.;
-//	double deadwood_litter_CN_frac        = 600.;
-//
-//	/* carbon pools */
-//	double leaf_litterC;
-//	double froot_litterC;
-//	double cwd_litterC;
-//	double litterC;
-//
-//	/* nitrogen pools */
-//	double leaf_litterN;
-//	double froot_litterN;
-//	double cwd_litterN;
-//	double litterN;
-//
-//	/*************************************** CARBON POOLS ***************************************/
-//	/* note: BIOME-BGC method for fractions of pools */
-//
-//	/* share litter carbon among leaf and fine root tC/sizecell -> KgC/m2 */
-//	//assumption: litter is shared based on "leaf_froot_frac" between leaf and fine root litter pools
-//
-//	/* compute carbon pools */
-//	litterC       = g_soil_settings->values[LITTERC] * (1000 / g_settings->sizeCell);
-//	leaf_litterC  = litterC * ( leaf_froot_frac / 2. );
-//	froot_litterC = litterC - leaf_litterC;
-//
-//	/****************** compute leaf litter pool ******************/
-//
-//	/* check for litter fractions sum to 1.0 */
-//	CHECK_CONDITION (fabs(leaf_litter_labile_frac + leaf_litter_cellulose_frac + leaf_litter_lignin_frac-1.), > , eps);
-//
-//	/* leaf litter carbon labile pool */
-//	c->leaf_litr1C = leaf_litterC * leaf_litter_labile_frac;
-//
-//	/* leaf litter carbon lignin pool */
-//	c->leaf_litr4C = leaf_litterC * leaf_litter_lignin_frac;
-//
-//	/*** compute leaf litter fractions ***/
-//
-//	/* partitioning leaf litter carbon cellulose into shielded and unshielded pools */
-//	r1 = leaf_litter_lignin_frac / leaf_litter_labile_frac;
-//
-//	if ( r1 <= 0.45 )
-//	{
-//		leaf_litt_scel_frac  = 0.;
-//		leaf_litt_uscel_frac = leaf_litter_cellulose_frac;
-//	}
-//	else if ( r1 > 0.45 && r1 < 0.7 )
-//	{
-//		temp_var             = ( r1 - 0.45 ) * 3.2;
-//		leaf_litt_scel_frac  = temp_var * leaf_litter_cellulose_frac;
-//		leaf_litt_uscel_frac = ( 1. - temp_var ) * leaf_litter_cellulose_frac;
-//	}
-//	else
-//	{
-//		leaf_litt_scel_frac  = 0.8 * leaf_litter_cellulose_frac;
-//		leaf_litt_uscel_frac = 0.2 * leaf_litter_cellulose_frac;
-//	}
-//
-//	/* compute remaining pools */
-//	/* leaf litter litter unshielded cellulose C */
-//	c->leaf_litr2C = leaf_litterC * leaf_litt_uscel_frac;
-//
-//	/* leaf litter litter shielded cellulose C */
-//	c->leaf_litr3C = leaf_litterC * leaf_litt_scel_frac;
-//
-//	/* check */
-//	CHECK_CONDITION ( fabs(c->leaf_litr1C + c->leaf_litr2C + c->leaf_litr3C + c->leaf_litr4C - leaf_litterC), > , eps);
-//
-//	/****************** compute fine root litter pool ******************/
-//
-//	/* check for fine root fractions sum to 1.0 */
-//	CHECK_CONDITION (fabs(froot_litter_labile_frac + froot_litter_cellulose_frac + froot_litter_lignin_frac-1.), > , eps);
-//
-//	/* litter fine root carbon labile pool */
-//	c->froot_litr1C = froot_litterC * froot_litter_labile_frac;
-//
-//	/* litter fine root carbon lignin pool */
-//	c->froot_litr4C = froot_litterC * froot_litter_lignin_frac;
-//
-//	/*** compute fine root litter fractions ***/
-//
-//	/* partitioning fine root litter carbon cellulose into shielded and unshielded pools */
-//	r1 = froot_litter_lignin_frac / froot_litter_labile_frac;
-//
-//	if ( r1 <= 0.45 )
-//	{
-//		froot_litt_scel_frac  = 0.;
-//		froot_litt_uscel_frac = froot_litter_cellulose_frac;
-//	}
-//	else if ( r1 > 0.45 && r1 < 0.7 )
-//	{
-//		temp_var              = ( r1 - 0.45 ) * 3.2;
-//		froot_litt_scel_frac  = temp_var * froot_litter_cellulose_frac;
-//		froot_litt_uscel_frac = ( 1. - temp_var ) * froot_litter_cellulose_frac;
-//	}
-//	else
-//	{
-//		froot_litt_scel_frac  = 0.8 * froot_litter_cellulose_frac;
-//		froot_litt_uscel_frac = 0.2 * froot_litter_cellulose_frac;
-//	}
-//
-//	/* compute remaining pools */
-//	/* fine root litter litter unshielded cellulose C */
-//	c->froot_litr2C = froot_litterC * froot_litt_uscel_frac;
-//
-//	/* fine root litter litter shielded cellulose C */
-//	c->froot_litr3C = froot_litterC * froot_litt_scel_frac;
-//
-//	/* check */
-//	CHECK_CONDITION ( fabs(c->froot_litr1C + c->froot_litr2C + c->froot_litr3C + c->froot_litr4C - froot_litterC), > , eps);
-//
-//	/****************** coarse woody debris litter pool ******************/
-//
-//	/* check for coarse woody debris fractions sum to 1.0 */
-//	CHECK_CONDITION (fabs(deadwood_litter_cellulose_frac + deadwood_litter_lignin_frac-1.), > , eps);
-//
-//	/* coarse woody debris carbon cellulose pool tC/sizecell -> kgC/m2 */
-//	cwd_litterC = g_soil_settings->values[DEADWOODC] * (1000 / g_settings->sizeCell);
-//	deadwood_litter_cellulose = cwd_litterC * deadwood_litter_cellulose_frac;
-//
-//	/* coarse woody debris carbon lignin pool */
-//	c->deadwood_litr4C = cwd_litterC - deadwood_litter_cellulose;
-//
-//	/*** compute coarse woody debris litter fractions ***/
-//
-//	/* partitioning coarse woody debris litter carbon cellulose into shielded and unshielded pools */
-//	r1 = deadwood_litter_lignin_frac / deadwood_litter_cellulose;
-//	if ( r1 <= 0.45 )
-//	{
-//		deadwood_scel_frac  = 0.0;
-//		deadwood_uscel_frac = deadwood_litter_cellulose_frac;
-//	}
-//	else if ( r1 > 0.45 && r1 < 0.7 )
-//	{
-//		temp_var            = ( r1 - 0.45 ) * 3.2;
-//		deadwood_scel_frac  = temp_var * deadwood_litter_cellulose_frac;
-//		deadwood_uscel_frac = (1.0 - temp_var) * deadwood_litter_cellulose_frac;
-//	}
-//	else
-//	{
-//		deadwood_scel_frac  = 0.8 * deadwood_litter_cellulose_frac;
-//		deadwood_uscel_frac = 0.2 * deadwood_litter_cellulose_frac;
-//	}
-//
-//	/* compute remaining pools */
-//	/* coarse_woody debris litter litter unshielded cellulose C */
-//	c->deadwood_litr2C = cwd_litterC * deadwood_uscel_frac;
-//
-//	/* coarse_woody debris litter litter shielded cellulose C */
-//	c->deadwood_litr3C = cwd_litterC * deadwood_scel_frac;
-//
-//	/* check */
-//	CHECK_CONDITION ( fabs( c->deadwood_litr2C + c->deadwood_litr3C + c->deadwood_litr4C - cwd_litterC ), > , eps);
-//
-//
-//	/****************** SUM ALL OVER CARBON POOLS ******************/
-//	/* compute litter total (litter + cwd) carbon pool */
-//	c->litrC   = litterC;
-//
-//	/* compute litter total labile carbon pool */
-//	c->litr1C = c->leaf_litr1C + c->froot_litr1C;
-//
-//	/* compute litter total unshielded cellulose carbon pool */
-//	c->litr2C = c->leaf_litr2C + c->froot_litr2C + c->deadwood_litr2C;
-//
-//	/* compute litter total shielded cellulose carbon pool */
-//	c->litr3C = c->leaf_litr3C + c->froot_litr3C + c->deadwood_litr3C;
-//
-//	/* compute litter total lignin carbon pool */
-//	c->litr4C = c->leaf_litr4C + c->froot_litr4C + c->deadwood_litr4C;
-//
-//	c->cwdC   = cwd_litterC;
-//
-//	/* check */
-//	CHECK_CONDITION ( fabs((c->litr1C + c->litr2C + c->litr3C + c->litr4C) - (c->litrC)), > , eps);
-//
-//
-//	/*************************************** NITROGEN POOLS ***************************************/
-//
-//	//todo check when litterN != 0 (-9999)
-//
-//	//this case when litterN = 0 (-9999)
-//
-//	/* compute nitrogen pools */
-//	leaf_litterN  = leaf_litterC / leaf_litter_CN_frac;
-//	froot_litterN = froot_litterC / froot_litter_CN_frac;
-//	cwd_litterN   = cwd_litterC / deadwood_litter_CN_frac;
-//	litterN       = leaf_litterN + froot_litterN;
-//
-//	/*** compute leaf litter nitrogen pool ***/
-//	/* compute leaf litter total labile nitrogen pool */
-//	c->leaf_litr1N = leaf_litterN * leaf_litter_labile_frac;
-//
-//	/* leaf litter litter unshielded cellulose nitrogen pool */
-//	c->leaf_litr2N = leaf_litterN * leaf_litt_uscel_frac;
-//
-//	/* leaf litter litter shielded cellulose nitrogen pool */
-//	c->leaf_litr3N = leaf_litterN * leaf_litt_scel_frac;
-//
-//	/* leaf litter lignin nitrogen pool */
-//	c->leaf_litr4N = leaf_litterN * leaf_litter_lignin_frac;
-//
-//	/*** compute fine root litter nitrogen pool ***/
-//	/* compute fine root litter total labile nitrogen pool */
-//	c->froot_litr1N = froot_litterN * froot_litter_labile_frac;
-//
-//	/* fine root litter litter unshielded cellulose nitrogen pool */
-//	c->froot_litr2N = froot_litterN * froot_litt_uscel_frac;
-//
-//	/* fine root litter litter shielded cellulose nitrogen pool */
-//	c->froot_litr3N = froot_litterN * froot_litt_scel_frac;
-//
-//	/* fine root litter lignin nitrogen pool */
-//	c->froot_litr4N = froot_litterN * froot_litter_lignin_frac;
-//
-//	/*** compute coarse woody debris litter nitrogen pool ***/
-//	/* coarse_woody debris litter litter unshielded cellulose nitrogen pool */
-//	c->deadwood_litr2N = cwd_litterN * deadwood_uscel_frac;
-//
-//	/* fine root litter litter shielded cellulose nitrogen pool */
-//	c->deadwood_litr3N = cwd_litterN * deadwood_scel_frac;
-//
-//	/* coarse woody debris carbon lignin nitrogen pool */
-//	c->deadwood_litr4N = cwd_litterN - deadwood_litter_cellulose;
-//
-//	/****************** SUM ALL OVER NITROGEN POOLS ******************/
-//	/* compute litter total (litter + cwd) nitrogen pool */
-//	c->litrN  = litterN;
-//
-//	/* compute litter total labile nitrogen pool */
-//	c->litr1N = c->leaf_litr1N + c->froot_litr1N;
-//
-//	/* compute litter total unshielded cellulose nitrogen pool */
-//	c->litr2N = c->leaf_litr2N + c->froot_litr2N + c->deadwood_litr2N;
-//
-//	/* compute litter total shielded cellulose nitrogen pool */
-//	c->litr3N = c->leaf_litr3N + c->froot_litr3N + c->deadwood_litr3N;
-//
-//	/* compute litter total lignin nitrogen pool */
-//	c->litr4N = c->leaf_litr4N + c->froot_litr4N + c->deadwood_litr4N;
-//
-//	/* check */
-//	CHECK_CONDITION ( fabs((c->litr1N + c->litr2N + c->litr3N + c->litr4N) - (c->litrN)), > , eps);
-//}
-
 

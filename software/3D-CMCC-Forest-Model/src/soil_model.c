@@ -23,6 +23,7 @@
 #include "soil_nitrogen_balance.h"
 #include "settings.h"
 #include "check_balance.h"
+#include "decomposition.h"
 
 extern logger_t* g_debug_log;
 extern settings_t* g_settings;
@@ -65,7 +66,7 @@ int Soil_model_daily (matrix_t *const m, const int cell, const int day, const in
 			if ( c->snow_pack )
 			{
 				/* compute snow melt, snow sublimation */
-				snow_melt_subl ( c, meteo_daily );
+				snow_melt_subl   ( c, meteo_daily );
 			}
 			else
 			{
@@ -75,19 +76,22 @@ int Soil_model_daily (matrix_t *const m, const int cell, const int day, const in
 		}
 
 		/* compute soil water balance */
-		soil_water_balance ( c, meteo_daily, year );
+		soil_water_balance             ( c, meteo_daily, year );
+
+		/* compute soil decomposition */
+		soil_decomposition             ( c, meteo_daily );
 
 		/* compute heterotrophic respiration */
 		soil_heterotrophic_respiration ( c, meteo_daily );
 
 		/* compute soil carbon balance */
-		soil_carbon_balance ( c );
+		soil_carbon_balance            ( c );
 
 		/* compute soil nitrogen balance */
-		soil_nitrogen_balance ( c );
+		soil_nitrogen_balance          ( c );
 
 		/* compute soil respiration */
-		soil_respiration_biome ( c );
+		soil_respiration_biome         ( c );
 
 	}
 
@@ -99,13 +103,19 @@ int Soil_model_daily (matrix_t *const m, const int cell, const int day, const in
 	/* 1 */ if ( ! check_soil_radiation_flux_balance ( c, meteo_daily ) ) return 0;
 
 	/* CHECK FOR CARBON FLUX BALANCE CLOSURE */
-	/* 2 */ //fixme if ( ! check_soil_carbon_flux_balance    ( c ) ) return 0;
+	/* 2 */ if ( ! check_soil_carbon_flux_balance    ( c ) ) return 0;
 
 	/* CHECK FOR CARBON MASS BALANCE CLOSURE */
-	/* 3 */ //fixme if ( ! check_soil_carbon_mass_balance    ( c ) ) return 0;
+	/* 3 */ if ( ! check_soil_carbon_mass_balance    ( c ) ) return 0;
+
+	/* CHECK FOR NITROGEN FLUX BALANCE CLOSURE */
+	/* 4 */ //fixme if ( ! check_soil_nitrogen_flux_balance    ( c ) ) return 0;
+
+	/* CHECK FOR NITROGEN MASS BALANCE CLOSURE */
+	/* 5 */ //fixme if ( ! check_soil_nitrogen_mass_balance    ( c ) ) return 0;
 
 	/* CHECK FOR WATER FLUX BALANCE CLOSURE */
-	/* 4 */ if ( ! check_soil_water_flux_balance     ( c, meteo_daily ) ) return 0;
+	/* 6 */ if ( ! check_soil_water_flux_balance     ( c, meteo_daily ) ) return 0;
 
 	/*******************************************************************************************************/
 

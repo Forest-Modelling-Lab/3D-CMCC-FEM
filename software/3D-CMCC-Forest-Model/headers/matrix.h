@@ -1201,7 +1201,8 @@ typedef struct
 	double daily_to_soil4N;                                               /* (gN/m2/day) daily balance of carbon to litter lignin carbon pool at cell level */
 	double daily_soil1N_to_soil2N;                                        /* (gN/m2/day) daily decomposition fluxes soil to soil */
 	double daily_soil2N_to_soil3N;                                        /* (gN/m2/day) daily decomposition fluxes soil to soil */
-	double soil3N_to_soil4N;                                              /* (gN/m2/day) daily decomposition fluxes soil to soil */
+	double daily_soil3N_to_soil4N;                                        /* (gN/m2/day) daily decomposition fluxes soil to soil */
+	double daily_soil4N_to_soilMinN;                                      /* (gN/m2/day) daily decomposition fluxes soil to mineralized */
 
 	/* litter and soil carbon pools */
 	double deadwood_C;                                                    /* (gC/m2) deadwood cwd carbon */
@@ -1265,6 +1266,8 @@ typedef struct
 	double Nfix;                                                          /* (gN/m2) SUM of biological nitrogen fixation */
 	double Nleach;                                                        /* (gN/m2) SUM of nitrogen lost for leacheing */
 	double Nvol;                                                          /* (gN/m2) SUM of nitrogen lost for volatilization  */
+	double NPP_gN_demand;
+
 
 	/* temporary nitrogen variables for reconciliation of decomposition
 	immobilization fluxes and plant growth N demands */

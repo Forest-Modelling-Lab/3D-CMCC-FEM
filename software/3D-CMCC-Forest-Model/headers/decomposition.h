@@ -8,6 +8,10 @@
 #ifndef HEADERS_DECOMPOSITION_H_
 #define HEADERS_DECOMPOSITION_H_
 
+double decomposition      (cell_t *const c, const meteo_daily_t *const meteo_daily);
+
 void litter_decomposition (cell_t *const c, const meteo_daily_t *const meteo_daily);
+
+void soil_decomposition   (cell_t *const c, const meteo_daily_t *const meteo_daily);
 
 #endif /* HEADERS_DECOMPOSITION_H_ */

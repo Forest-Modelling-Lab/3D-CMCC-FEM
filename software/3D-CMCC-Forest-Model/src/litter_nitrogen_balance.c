@@ -23,11 +23,11 @@ void litter_nitrogen_balance (cell_t *const c, const int year )
 	/*********************************************************************************************************/
 
 	/* update mass of deadwood */
-	c->deadwood_2N          -= c->daily_deadwood_to_litr2N;
+	c->deadwood_2N             -= c->daily_deadwood_to_litr2N;
 
-	c->deadwood_3N          -= c->daily_deadwood_to_litr3N;
+	c->deadwood_3N             -= c->daily_deadwood_to_litr3N;
 
-	c->deadwood_4N          -= c->daily_deadwood_to_litr4N;
+	c->deadwood_4N             -= c->daily_deadwood_to_litr4N;
 
 	/*********************************************************************************************************/
 
@@ -75,9 +75,8 @@ void litter_nitrogen_balance (cell_t *const c, const int year )
 	c->litrN                    = c->litr1N + c->litr2N      + c->litr3N      + c->litr4N;
 
 	/* move from litter to soil pools (this need to be done here to close litter balance) */
+	c->daily_to_soilN           = c->daily_litr1N_to_soil1N + c->daily_litr2N_to_soil2N + c->daily_litr4N_to_soil3N;
 	c->daily_to_soil1N          = c->daily_litr1N_to_soil1N;
 	c->daily_to_soil2N          = c->daily_litr2N_to_soil2N;
 	c->daily_to_soil3N          = c->daily_litr4N_to_soil3N;
-	c->daily_to_soilN           = c->daily_to_soil1N + c->daily_to_soil2N + c->daily_to_soil3N;
-	c->soilN                    = c->daily_to_soilN;
 }

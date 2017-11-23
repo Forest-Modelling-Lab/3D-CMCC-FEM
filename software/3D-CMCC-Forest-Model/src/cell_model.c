@@ -40,50 +40,50 @@ int Cell_model_daily (matrix_t *const m, const int cell, const int day, const in
 
 	/* OVERALL CELL */
 	/* compute cell level ecosystem respiration */
-	ecosystem_respiration ( c );
+	ecosystem_respiration      ( c );
 
 	/* compute cell level net ecosystem productivity */
 	net_ecosystem_productivity ( c );
 
 	/* compute cell level net ecosystem exchange */
-	net_ecosystem_exchange ( c );
+	net_ecosystem_exchange     ( c );
 
 	/* compute cell level evapotranspiration */
-	evapotranspiration   ( c );
+	evapotranspiration         ( c );
 
 	/* compute cell level latent heat fluxes */
-	latent_heat_fluxes   ( c, meteo_daily );
+	latent_heat_fluxes         ( c, meteo_daily );
 
 	/* compute cell level sensible heat fluxes */
-	sensible_heat_fluxes ( c, meteo_daily );
+	sensible_heat_fluxes       ( c, meteo_daily );
 
 	/* compute cell level water fluxes */
-	water_fluxes         ( c, meteo_daily );
+	water_fluxes               ( c, meteo_daily );
 
 	/* cell water use efficiency */
-	cell_water_use_efficiency (c, day, month, year);
+	cell_water_use_efficiency  ( c, day, month, year );
 
 	/*******************************************************************************************************/
 
 	/* CHECK FOR BALANCE CLOSURE */
 
 	/* CHECK FOR RADIATIVE FLUX BALANCE CLOSURE */
-	/* 1 */ if ( ! check_cell_radiation_flux_balance ( c, meteo_daily ) ) return 0;
+	/* 1 */ if ( ! check_cell_radiation_flux_balance   ( c, meteo_daily ) ) return 0;
 
 	/* CHECK FOR CARBON FLUX BALANCE CLOSURE */
-	/* 2 */ //fixme if ( ! check_cell_carbon_flux_balance    ( c ) ) return 0;
+	/* 2 */ if ( ! check_cell_carbon_flux_balance      ( c ) ) return 0;
 
 	/* CHECK FOR NITROGEN FLUX BALANCE CLOSURE */
-	/* 3 */ //fixme if ( ! check_cell_nitrogen_flux_balance    ( c ) ) return 0;
+	/* 3 */ //fixme if ( ! check_cell_nitrogen_flux_balance    ( c, meteo_daily ) ) return 0;
 
 	/* CHECK FOR CARBON MASS BALANCE CLOSURE */
 	/* 4 */ //fixme if ( ! check_cell_carbon_mass_balance    ( c ) ) return 0;
 
-	/* CHECK FOR WATER FLUX BALANCE CLOSURE */
-	/* 5 */ if ( ! check_cell_water_flux_balance     ( c, meteo_daily ) ) return 0;
-
 	/* CHECK FOR NITROGEN MASS BALANCE CLOSURE */
-	/* 6 */ //fixme if ( ! check_cell_nitrogen_mass_balance    ( c, meteo_annual ) ) return 0;
+	/* 5 */ //fixme if ( ! check_cell_nitrogen_mass_balance    ( c, meteo_annual ) ) return 0;
+
+	/* CHECK FOR WATER FLUX BALANCE CLOSURE */
+	/* 6 */ if ( ! check_cell_water_flux_balance       ( c, meteo_daily ) ) return 0;
 
 	/*******************************************************************************************************/
 

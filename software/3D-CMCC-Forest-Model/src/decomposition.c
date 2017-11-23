@@ -16,8 +16,7 @@
 #include "settings.h"
 #include "logger.h"
 
-
-void litter_decomposition (cell_t *const c, const meteo_daily_t *const meteo_daily)
+double decomposition (cell_t *const c, const meteo_daily_t *const meteo_daily)
 {
 	double temp_scalar;           /* soil temperature scalar */
 	double water_scalar;          /* soil water scalar */
@@ -26,22 +25,6 @@ void litter_decomposition (cell_t *const c, const meteo_daily_t *const meteo_dai
 	double TsoilK;
 	double E0;                    /* activation-energy-type parameter of Lloyd and Taylor [1994] (K-1) */
 	double T0;                    /* the lower temperature limit for the soil respiration (K) */
-
-	double cn_cwd;
-	double cn_cwd2;
-	double cn_cwd3;
-	double cn_cwd4;
-	double cn_litr1;
-	double cn_litr2;
-	double cn_litr4;
-
-	double deadwood_fragm_rate;   /* deadwood physical fragmentation */
-	double litt_decomp_rate1;     /* labile litter decomposition rate */
-	double litt_decomp_rate2;     /* cellulose litter decomposition rate */
-	double litt_decomp_rate4;     /* lignin litter decomposition rate */
-	double pot_litr1C_loss;       /* potential labile litter loss */
-	double pot_litr2C_loss;       /* potential unshielded litter loss */
-	double pot_litr4C_loss;       /* potential lignin litter loss */
 
 	/************************************************************************************************/
 
@@ -113,6 +96,33 @@ void litter_decomposition (cell_t *const c, const meteo_daily_t *const meteo_dai
 	CHECK_CONDITION (water_scalar, > , 1);
 	CHECK_CONDITION (rate_scalar , > , 1);
 
+	return (rate_scalar);
+}
+
+
+void litter_decomposition (cell_t *const c, const meteo_daily_t *const meteo_daily)
+{
+	double rate_scalar;
+	double cn_cwd;
+	double cn_cwd2;
+	double cn_cwd3;
+	double cn_cwd4;
+	double cn_litr1;
+	double cn_litr2;
+	double cn_litr4;
+
+	double deadwood_fragm_rate;   /* deadwood physical fragmentation */
+	double litt_decomp_rate1;     /* labile litter decomposition rate */
+	double litt_decomp_rate2;     /* cellulose litter decomposition rate */
+	double litt_decomp_rate4;     /* lignin litter decomposition rate */
+	double pot_litr1C_loss;       /* potential labile litter loss */
+	double pot_litr2C_loss;       /* potential unshielded litter loss */
+	double pot_litr4C_loss;       /* potential lignin litter loss */
+
+
+	/* calculate the final rate scalar as the product of the temperature and water scalars */
+	rate_scalar     = decomposition ( c, meteo_daily );
+
 	/******************************************************************************************************************/
 
 	/* calculate C:N ratios */
@@ -154,10 +164,7 @@ void litter_decomposition (cell_t *const c, const meteo_daily_t *const meteo_dai
 	litt_decomp_rate2     = KL2_BASE * rate_scalar;
 	litt_decomp_rate4     = KL4_BASE * rate_scalar;
 
-	/* compute potential carbon loss */
-	/* calculate the non-nitrogen limited fluxes between litter and	soil compartments.
-	 * These will be ammended for N limitation if it turns out the potential gross immobilization
-	 * is greater than potential gross	mineralization. */
+	/* compute litter potential carbon loss */
 
 	/* 1. labile litter to fast microbial recycling pool */
 	if ( c->litr1C > 0. )
@@ -222,3 +229,97 @@ void litter_decomposition (cell_t *const c, const meteo_daily_t *const meteo_dai
 		else                  c->daily_litr4N_to_soil3N = 0.;
 	}
 }
+
+void soil_decomposition (cell_t *const c, const meteo_daily_t *const meteo_daily)
+{
+	double rate_scalar;
+	double soil_decomp_rate1;     /* labile soil decomposition rate */
+	double soil_decomp_rate2;     /* cellulose unshielded soil decomposition rate */
+	double soil_decomp_rate3;     /* cellulose schielded soil decomposition rate */
+	double soil_decomp_rate4;     /* lignin soil decomposition rate */
+	double pot_soil1C_loss;       /* potential labile soil loss */
+	double pot_soil2C_loss;       /* potential unshielded soil loss */
+	double pot_soil3C_loss;       /* potential shielded soil loss */
+	double pot_soil4C_loss;       /* potential lignin soil loss */
+
+	/* calculate the final rate scalar as the product of the temperature and water scalars */
+	rate_scalar     = decomposition ( c, meteo_daily );
+
+	/* soil decomposition rate */
+	soil_decomp_rate1     = KS1_BASE * rate_scalar;
+	soil_decomp_rate2     = KS2_BASE * rate_scalar;
+	soil_decomp_rate3     = KS3_BASE * rate_scalar;
+	soil_decomp_rate4     = KS4_BASE * rate_scalar;
+
+	/* compute soil potential carbon loss */
+
+	/* 1. fast microbial recycling pool to medium microbial recycling pool */
+	if ( c->soil1C > 0.)
+	{
+		pot_soil1C_loss = soil_decomp_rate1 * c->soil1C;
+		//pmnf_s1s2       = ( pot_soil1C_loss * (1. - RFS1S2 - ( SOIL2_CN / SOIL1_CN ) ) ) / SOIL2_CN;
+	}
+
+	/* 2. medium microbial recycling pool to slow microbial recycling pool */
+	if ( c->soil2C > 0. )
+	{
+		pot_soil2C_loss = soil_decomp_rate2 * c->soil2C;
+		//pmnf_s2s3       = (pot_soil2C_loss * ( 1. - RFS2S3 - ( SOIL3_CN / SOIL2_CN ) ) ) / SOIL3_CN;
+	}
+
+	/* 3. slow microbial recycling pool to recalcitrant SOM pool */
+	if ( c->soil3C > 0. )
+	{
+		pot_soil3C_loss = soil_decomp_rate3 * c->soil3C;
+		//pmnf_s3s4       = (pot_soil3C_loss * ( 1. - RFS3S4 - ( SOIL4_CN / SOIL3_CN ) ) ) / SOIL4_CN;
+	}
+
+	/* 4. mineralization of recalcitrant SOM */
+	if ( c->soil4C > 0. )
+	{
+		pot_soil4C_loss = soil_decomp_rate4 * c->soil4C;
+		//pmnf_s4 = -pot_soil4C_loss / SOIL4_CN;
+	}
+
+	/***********************************************/
+
+	/* fast microbial recycling pool */
+	if ( c->soil1C > 0. )
+	{
+		/* carbon */
+		c->daily_soil1_het_resp   = pot_soil1C_loss * RFS1S2;
+		c->daily_soil1C_to_soil2C = pot_soil1C_loss * ( 1. - RFS1S2 );
+		/* nitrogen */
+		c->daily_soil1N_to_soil2N = pot_soil1C_loss / SOIL1_CN;
+	}
+
+	/* medium microbial recycling pool */
+	if ( c->soil2C > 0. )
+	{
+		/* carbon */
+		c->daily_soil2_het_resp   = pot_soil2C_loss * RFS2S3;
+		c->daily_soil2C_to_soil3C = pot_soil2C_loss * ( 1. - RFS2S3 );
+		/* nitrogen */
+		c->daily_soil2N_to_soil3N = pot_soil2C_loss / SOIL2_CN;
+	}
+
+	/* medium microbial recycling pool */
+	if ( c->soil3C > 0. )
+	{
+		/* carbon */
+		c->daily_soil2_het_resp   = pot_soil2C_loss * RFS2S3;
+		c->daily_soil3C_to_soil4C = pot_soil2C_loss * ( 1. - RFS2S3 );
+		/* nitrogen */
+		c->daily_soil3N_to_soil4N = pot_soil3C_loss / SOIL3_CN;
+	}
+
+	/* recalcitrant SOM pool (rf = 1.0, always mineralizing) */
+	if ( c->soil4C > 0. )
+	{
+		/* carbon */
+		c->daily_soil4_het_resp     = pot_soil4C_loss;
+		/* nitrogen */
+		c->daily_soil4N_to_soilMinN = pot_soil4C_loss / SOIL4_CN;
+	}
+}
+

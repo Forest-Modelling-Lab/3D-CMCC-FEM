@@ -340,7 +340,7 @@ void thinning (cell_t *const c, const int height, const int dbh, const int age, 
 			}
 			else
 			{
-				trees_to_remove = s->counter[N_TREE] - s->counter[N_TREE] * trees_to_remove / 100.;
+				trees_to_remove = s->counter[N_TREE] * perc / 100.;
 			}
 		}
 	}
@@ -431,22 +431,22 @@ void prescribed_thinning (cell_t *const c, const int height, const int dbh, cons
 						annual_forest_structure                 ( c, year );
 
 						/* initialize class carbon pools */
-						initialization_forest_class_C           (c, height, dbh, age, species);
+						initialization_forest_class_C           ( c, height, dbh, age, species );
 
 						/* initialize cell carbon pools */
-						initialization_forest_cell_C            (c, height, dbh, age, species);
+						initialization_forest_cell_C            ( c, height, dbh, age, species );
 
 						/* initialize class nitrogen pools */
-						initialization_forest_class_N           (c, height, dbh, age, species);
+						initialization_forest_class_N           ( c, height, dbh, age, species );
 
 						/* initialize cell nitrogen pools */
-						initialization_forest_cell_N            (c, height, dbh, age, species);
+						initialization_forest_cell_N            ( c, height, dbh, age, species );
 
-						/* initialization forest class litter fractions */
-						initialization_forest_class_litter_soil (c, height, dbh, age, species);
-
-						/* initialization cell litter fractions */
-						initialization_forest_cell_litter       (c, height, dbh, age, species);
+//						/* initialization forest class litter fractions */
+//						initialization_forest_class_litter      ( c, height, dbh, age, species );
+//
+//						/* initialization cell litter fractions */
+//						initialization_forest_cell_litter       ( c);
 
 					}				
 				}

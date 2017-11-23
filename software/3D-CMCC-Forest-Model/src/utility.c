@@ -109,7 +109,14 @@ void reset_daily_cell_variables(cell_t *const c)
 	c->daily_to_soil4C =                0.;
 	c->daily_to_soilC =                 0.;
 	c->daily_litr_het_resp =            0.;
+	c->daily_litr1_het_resp =           0.;
+	c->daily_litr2_het_resp =           0.;
+	c->daily_litr4_het_resp =           0.;
 	c->daily_soil_het_resp =            0.;
+	c->daily_soil1_het_resp =           0.;
+	c->daily_soil2_het_resp =           0.;
+	c->daily_soil3_het_resp =           0.;
+	c->daily_soil4_het_resp =           0.;
 
 	/* nitrogen litter fluxes */
 	c->daily_to_litrN =                 0.;
