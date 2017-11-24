@@ -162,13 +162,6 @@ void average_tree_pools(cell_t *const c)
 					s->value[TREE_RESERVE_N]             = (s->value[RESERVE_N]          / (double)s->counter[N_TREE]);
 					s->value[TREE_FRUIT_N]               = (s->value[FRUIT_N]            / (double)s->counter[N_TREE]);
 
-					logger(g_debug_log, "TREE_LEAF_C    = %f tC/tree\n", s->value[TREE_LEAF_C]);
-					logger(g_debug_log, "TREE_STEM_C    = %f tC/tree\n", s->value[TREE_STEM_C]);
-					logger(g_debug_log, "TREE_FROOT_C   = %f tC/tree\n", s->value[TREE_FROOT_C]);
-					logger(g_debug_log, "TREE_CROOT_C   = %f tC/tree\n", s->value[TREE_CROOT_C]);
-					logger(g_debug_log, "TREE_RESERVE_C = %f tC/tree\n", s->value[TREE_RESERVE_C]);
-					logger(g_debug_log, "TREE_BRANCH_C  = %f tC/tree\n", s->value[TREE_BRANCH_C]);
-					logger(g_debug_log, "TREE_FRUIT_C   = %f tC/tree\n", s->value[TREE_FRUIT_C]);
 				}
 			}
 		}
@@ -320,22 +313,6 @@ void tree_biomass_remove (cell_t *const c, const int height, const int dbh, cons
 
 	s->value[C_BRANCH_HEARTWOOD_TO_DEADWOOD] += (s->value[TREE_BRANCH_HEARTWOOD_C] * tree_remove);
 
-	logger(g_debug_log, "Carbon biomass to remove for trees = %d\n", tree_remove);
-	logger(g_debug_log, "C_LEAF_TO_LITR                     = %f tC/cell\n", s->value[C_LEAF_TO_LITR]);
-	logger(g_debug_log, "C_FROOT_TO_LITR                    = %f tC/cell\n", s->value[C_FROOT_TO_LITR]);
-	logger(g_debug_log, "C_TO_LITR                          = %f tC/cell\n", s->value[C_TO_LITR]);
-	logger(g_debug_log, "C_STEM_TO_DEADWOOD                 = %f tC/cell\n", s->value[C_STEM_TO_DEADWOOD]);
-	logger(g_debug_log, "C_CROOT_TO_DEADWOOD                = %f tC/cell\n", s->value[C_CROOT_TO_DEADWOOD]);
-	logger(g_debug_log, "C_BRANCH_TO_DEADWOOD               = %f tC/cell\n", s->value[C_BRANCH_TO_DEADWOOD]);
-	logger(g_debug_log, "C_FRUIT_TO_DEADWOOD                = %f tC/cell\n", s->value[C_FRUIT_TO_DEADWOOD]);
-	logger(g_debug_log, "C_TO_DEADWOOD                      = %f tC/cell\n", s->value[C_TO_DEADWOOD]);
-	logger(g_debug_log, "C_STEM_SAPWOOD_TO_DEADWOOD         = %f tC/cell\n", s->value[C_STEM_SAPWOOD_TO_DEADWOOD]);
-	logger(g_debug_log, "C_CROOT_SAPWOOD_TO_DEADWOOD        = %f tC/cell\n", s->value[C_CROOT_SAPWOOD_TO_DEADWOOD]);
-	logger(g_debug_log, "C_BRANCH_SAPWOOD_TO_DEADWOOD       = %f tC/cell\n", s->value[C_TO_DEADWOOD]);
-	logger(g_debug_log, "C_STEM_HEARTWOOD_TO_DEADWOOD       = %f tC/cell\n", s->value[C_STEM_HEARTWOOD_TO_DEADWOOD]);
-	logger(g_debug_log, "C_CROOT_HEARTWOOD_TO_DEADWOOD      = %f tC/cell\n", s->value[C_CROOT_HEARTWOOD_TO_DEADWOOD]);
-	logger(g_debug_log, "C_BRANCH_HEARTWOOD_TO_DEADWOOD     = %f tC/cell\n", s->value[C_TO_DEADWOOD]);
-
 	/******************************************************************************************/
 
 	/* accounting for harvested/thinned wood products (HWP) */
@@ -344,7 +321,7 @@ void tree_biomass_remove (cell_t *const c, const int height, const int dbh, cons
 		/* compute woody biomass removed (tC/ha/yr) */
 		s->value[C_HWP]          += s->value[C_STEM_TO_DEADWOOD] + s->value[C_CROOT_TO_DEADWOOD] + s->value[C_BRANCH_TO_DEADWOOD] ;
 		s->value[CUM_C_HWP]      += s->value[C_HWP];
-		/* compute strem volume removed (m3/ha/yr) */
+		/* compute stem volume removed (m3/ha/yr) */
 		s->value[VOLUME_HWP]     += s->value[TREE_VOLUME] * tree_remove;
 		s->value[CUM_VOLUME_HWP] += s->value[TREE_VOLUME] * tree_remove;
 	}
@@ -468,16 +445,5 @@ void tree_biomass_remove (cell_t *const c, const int height, const int dbh, cons
 		/* check */
 		CHECK_CONDITION ( c->deadwood_2N + c->deadwood_3N + c->deadwood_4N , == , c->deadwood_N + eps );
 	}
-
-	logger(g_debug_log, "Nitrogen biomass to remove\n");
-	logger(g_debug_log, "N_LEAF_TO_LITR        = %f tN/cell\n", s->value[N_LEAF_TO_LITR]);
-	logger(g_debug_log, "N_FROOT_TO_LITR       = %f tN/cell\n", s->value[N_FROOT_TO_LITR]);
-	logger(g_debug_log, "N_TO_LITR             = %f tN/cell\n", s->value[N_TO_LITR]);
-	logger(g_debug_log, "N_STEM_TO_DEADWOOD    = %f tN/cell\n", s->value[N_STEM_TO_DEADWOOD]);
-	logger(g_debug_log, "N_CROOT_TO_DEADWOOD   = %f tN/cell\n", s->value[N_CROOT_TO_DEADWOOD]);
-	logger(g_debug_log, "N_BRANCH_TO_DEADWOOD  = %f tN/cell\n", s->value[N_BRANCH_TO_DEADWOOD]);
-	logger(g_debug_log, "N_BRANCH_TO_DEADWOOD  = %f tN/cell\n", s->value[N_BRANCH_TO_DEADWOOD]);
-	logger(g_debug_log, "N_FRUIT_TO_DEADWOOD   = %f tN/cell\n", s->value[N_FRUIT_TO_DEADWOOD]);
-	logger(g_debug_log, "N_TO_DEADWOOD         = %f tN/cell\n", s->value[N_TO_DEADWOOD]);
 
 }

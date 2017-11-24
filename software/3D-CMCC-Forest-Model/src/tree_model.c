@@ -221,17 +221,17 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							/**********************************/
 
 							/* beginning of simulation (every year included the first one) */
-							if ( ( g_soil_settings->values[SOIL_LAT] > 0 && c->doy == 1)  ||
-									( g_soil_settings->values[SOIL_LAT] < 0 && c->doy == 180) )
+							if ( ( g_soil_settings->values[SOIL_LAT]    > 0. && c->doy == 1 )  ||
+									( g_soil_settings->values[SOIL_LAT] < 0. && c->doy == 180 ) )
 							{
 								/* compute annual minimum reserve for incoming year */
 								annual_minimum_reserve( s );
 
 								/* compute age-related sla */
-								specific_leaf_area ( a, s);
+								specific_leaf_area      ( a, s );
 
 								/* compute annual potential Maximum LAI */
-								peak_lai( s, day, month, year );
+								peak_lai                ( s, day, month, year );
 
 								/* compute growth respiration fraction */
 								growth_respiration_frac ( a, s );
@@ -256,7 +256,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							canopy_radiation_lw_band ( c, layer, height, dbh, age, species, meteo_daily );
 
 							/* net radiation */
-							canopy_net_radiation ( c, layer, height, dbh, age, species );
+							canopy_net_radiation     ( c, layer, height, dbh, age, species );
 
 							/**********************************************************************/
 
@@ -383,7 +383,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 								/* 5 */ if ( ! check_tree_class_carbon_mass_balance    ( c, layer, height, dbh, age, species ) ) return 0;
 
 								/* check for nitrogen mass balance closure */
-								/* 6 */ //fixme if ( ! check_tree_class_nitrogen_mass_balance  ( c, layer, height, dbh, age, species ) ) return 0;
+								/* 6 */  //fixme if ( ! check_tree_class_nitrogen_mass_balance  ( c, layer, height, dbh, age, species ) ) return 0;
 							}
 							else
 							{

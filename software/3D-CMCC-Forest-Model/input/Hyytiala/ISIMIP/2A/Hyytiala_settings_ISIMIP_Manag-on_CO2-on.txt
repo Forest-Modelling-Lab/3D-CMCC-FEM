@@ -2,6 +2,8 @@ SITENAME Hyytiala
 VERSION f                           //Must be 'f' for FEM version or 'b', for BGC version for FOREST LANDUSE
 SPATIAL u                           //Must be 's' or 'u', spatial or unspatial
 TIME d                              //Must be 'm' or 'd', monthly or daily
+SPINUP off                          //Must be 'on' or 'off'
+SPINUP_YEARS 6000                   //Number of years for spinup
 SCREEN_OUTPUT off                   //Must be  'on' or 'off'
 DEBUG_OUTPUT off                    //Must be 'on' or 'off'
 DAILY_OUTPUT on                     //Must be 'on' or 'off'
@@ -12,7 +14,7 @@ YEAR_START 1995                     //Starting year simulation
 YEAR_END 2099                       //Ending year simulation
 YEAR_RESTART off                    //Year to restart
 CO2_mod on                          //Must be 'on' or 'off'
-CO2_trans on                       //Must be 'on' or 'off'
+CO2_trans on                        //Must be 'on' or 'off'
 YEAR_START_CO2_FIXED 2000           //When Co2_trans = var, year at which fix [CO2]
 Ndep_fixed on                       //Must be 'on' or 'off'
 Resp_accl on                        //Q10 temperature acclimatation Must be 'on' or 'off'
