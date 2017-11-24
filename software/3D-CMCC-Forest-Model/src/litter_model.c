@@ -20,6 +20,9 @@
 #include "litter_nitrogen_balance.h"
 #include "decomposition.h"
 #include "check_balance.h"
+#include "littering.h"
+
+extern settings_t* g_settings;
 
 int Litter_model_daily (matrix_t *const m, const int cell, const int day, const int month, const int year)
 {
@@ -34,17 +37,23 @@ int Litter_model_daily (matrix_t *const m, const int cell, const int day, const 
 	/* check parameters */
 	assert(m);
 
+	/* if spinup on than does littering */
+	if ( g_settings->spinup )
+	{
+		spinup_littering ( c );
+	}
+
 	/* compute litter decomposition */
-	litter_decomposition ( c, meteo_daily );
+	litter_decomposition             ( c, meteo_daily );
 
 	/* compute heterotrophic respiration from litter pool */
 	litter_heterotrophic_respiration ( c, meteo_daily );
 
 	/* compute soil carbon balance */
-	litter_carbon_balance ( c, year );
+	litter_carbon_balance            ( c, year );
 
 	/* compute soil nitrogen balance */
-	litter_nitrogen_balance ( c, year  );
+	litter_nitrogen_balance          ( c, year );
 
 
 	/*******************************************************************************************************/

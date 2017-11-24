@@ -1616,25 +1616,10 @@ void soil_summary(const matrix_t* const m, const cell_t* const cell)
 	logger(g_debug_log, "-Litter = %g tN/ha\n", g_soil_settings->values[LITTERN]);
 	logger(g_debug_log, "-Soil = %g tC/ha\n", g_soil_settings->values[SOILC]);
 	logger(g_debug_log, "-Soil = %g tN/ha\n", g_soil_settings->values[SOILN]);
-
-
-	/********** initialize soil *********/
-	/** soil bio-physic initialization **/
-	initialization_soil_physic (m->cells);
-
-	/** soil bio-geo-chemistry initialization **/
-	if ( ! g_soil_settings->values[LITTERC] ||
-			! g_soil_settings->values[LITTERN] ||
-			! g_soil_settings->values[SOILC] ||
-			! g_soil_settings->values[SOILN])
-	{
-		//fixme initialization_soil_biogeochemistry (m->cells);
-	}
-
 	logger(g_debug_log, "***************************************************\n\n");
 }
 
-void forest_summary(const matrix_t* const m, const int day, const int month, const int year)
+void forest_initialization ( const matrix_t* const m, const int day, const int month, const int year )
 {
 	int cell;
 	int species;
@@ -1753,30 +1738,23 @@ void forest_summary(const matrix_t* const m, const int day, const int month, con
 						/* IF NO BIOMASS INITIALIZATION DATA ARE AVAILABLE FOR STAND BUT JUST
 						 * DENDROMETRIC VARIABLES (i.e. AVDBH, HEIGHT, THESE ARE MANDATORY) */
 						/* initialize class carbon pools */
-						initialization_forest_class_C           (&m->cells[cell], height, dbh, age, species);
+						initialization_forest_class_C           ( &m->cells[cell], height, dbh, age, species );
 
 						/* initialize class nitrogen pools */
-						initialization_forest_class_N           (&m->cells[cell], height, dbh, age, species);
+						initialization_forest_class_N           ( &m->cells[cell], height, dbh, age, species );
 
 						/* initialization forest class litter fractions */
-						initialization_forest_class_litter      (&m->cells[cell], height, dbh, age, species);
-
-						/* initialization cell litter fractions */
-						initialization_forest_cell_litter       (&m->cells[cell]);
-
-						/* initialization cell soil fractions */
-						initialization_forest_cell_soil         (&m->cells[cell]);
+						initialization_forest_class_litter      ( &m->cells[cell], height, dbh, age, species );
 
 						/* initialize cell carbon pools */
-						initialization_forest_cell_C            (&m->cells[cell], height, dbh, age, species);
+						initialization_forest_cell_C            ( &m->cells[cell], height, dbh, age, species );
 
 						/* initialize cell nitrogen pools */
-						initialization_forest_cell_N            (&m->cells[cell], height, dbh, age, species);
+						initialization_forest_cell_N            ( &m->cells[cell], height, dbh, age, species );
 					}
 				}
 			}
 		}
-
 
 		logger(g_debug_log, "\n*******FOREST POOLS*******\n");
 		logger(g_debug_log, "***FOREST CELL POOLS (CARBON)***\n");
@@ -1809,6 +1787,32 @@ void forest_summary(const matrix_t* const m, const int day, const int month, con
 		logger(g_debug_log, "----fruit_nitrogen            = %f gN/m2\n", m->cells[cell].fruit_nitrogen);
 	}
 }
+void litter_initialization ( const matrix_t* const m, const int day, const int month, const int year )
+{
+	int cell;
+
+	assert (m);
+	for ( cell = 0; cell < m->cells_count; ++cell )
+	{
+		/* initialization cell litter pools */
+		initialization_cell_litter_biochem  ( &m->cells[cell] );
+	}
+}
+
+void soil_initialization ( const matrix_t* const m, const int day, const int month, const int year )
+{
+	int cell;
+
+	assert (m);
+	for ( cell = 0; cell < m->cells_count; ++cell )
+	{
+		/* initialization cell soil physical pools */
+		initialization_cell_soil_physic     ( &m->cells[cell] );
+
+		/* initialization cell soil biogeochemical pools */
+		initialization_cell_soil_biochem    ( &m->cells[cell] );
+	}
+}
 
 void matrix_free(matrix_t *m)
 {
@@ -1826,7 +1830,7 @@ void matrix_free(matrix_t *m)
 		if ( m->cells_count )
 		{
 			for ( cell = 0 ; cell < m->cells_count; ++cell )
-			{			
+			{
 				for ( height = 0; height < m->cells[cell].heights_count; ++height )
 				{
 					if ( m->cells[cell].tree_layers_count || m->cells[cell].t_layers_avail )

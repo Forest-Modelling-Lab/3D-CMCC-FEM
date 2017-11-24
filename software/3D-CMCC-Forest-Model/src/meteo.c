@@ -2095,7 +2095,7 @@ static int import_txt(const char *const filename, meteo_annual_t** p_yos, int *c
 }
 
 /* file is the comma separated files list!!! not a single file, initially yos_count is equal to 0 */
-meteo_annual_t* meteo_annual_import(const char *const file, int *const yos_count, const int x, const int y) {
+meteo_annual_t* import_meteo_data(const char *const file, int *const yos_count, const int x, const int y) {
 	char *token;
 	char *p;
 	char *p2;

@@ -15,6 +15,9 @@
 #include "constants.h"
 #include "settings.h"
 #include "logger.h"
+#include "littering.h"
+
+extern settings_t* g_settings;
 
 double decomposition (cell_t *const c, const meteo_daily_t *const meteo_daily)
 {
@@ -28,7 +31,7 @@ double decomposition (cell_t *const c, const meteo_daily_t *const meteo_daily)
 
 	/************************************************************************************************/
 
-	/*** decompostion ***/
+	/*** decomposition ***/
 
 	E0 = 308.56;
 	T0 = 227.13;
@@ -119,11 +122,16 @@ void litter_decomposition (cell_t *const c, const meteo_daily_t *const meteo_dai
 	double pot_litr2C_loss;       /* potential unshielded litter loss */
 	double pot_litr4C_loss;       /* potential lignin litter loss */
 
+	/******************************************************************************************************************/
+
+	/* when spinup is on */
+	/* recompute deadwood + litter fractions */
+	if ( g_settings->spinup ) spinup_littering ( c );
+
+	/******************************************************************************************************************/
 
 	/* calculate the final rate scalar as the product of the temperature and water scalars */
 	rate_scalar     = decomposition ( c, meteo_daily );
-
-	/******************************************************************************************************************/
 
 	/* calculate C:N ratios */
 	if ( c->deadwood_N  > 0. ) cn_cwd       = c->deadwood_C  / c->deadwood_N;

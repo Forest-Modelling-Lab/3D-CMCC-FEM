@@ -265,8 +265,6 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 void thinning (cell_t *const c, const int height, const int dbh, const int age, const int species, const int year)
 {
 	int trees_to_remove = 0;
-	double stand_basal_area_to_remain;
-	double stand_basal_area_to_remove;
 	int nat_man;   /* natural or managed mortality 0 = natural; 1 = managed */
 
 	nat_man = 1;
@@ -293,12 +291,6 @@ void thinning (cell_t *const c, const int height, const int dbh, const int age, 
 	/* BAU MANAGEMENT */
 	if ( 0 == g_settings->management_type ) 
 	{
-		/* compute basal area to remain */
-		stand_basal_area_to_remain = ( 1. - (s->value[THINNING_INTENSITY] / 100. ) ) * s->value[STAND_BASAL_AREA_m2];
-
-		/* compute basal area to remove */
-		stand_basal_area_to_remove = (s->value[THINNING_INTENSITY] / 100. ) * s->value[STAND_BASAL_AREA_m2];
-
 		/* compute integer number of trees to remove */
 		trees_to_remove = ROUND((s->value[THINNING_INTENSITY] / 100. ) * s->counter[N_TREE]);
 	}
@@ -441,13 +433,6 @@ void prescribed_thinning (cell_t *const c, const int height, const int dbh, cons
 
 						/* initialize cell nitrogen pools */
 						initialization_forest_cell_N            ( c, height, dbh, age, species );
-
-//						/* initialization forest class litter fractions */
-//						initialization_forest_class_litter      ( c, height, dbh, age, species );
-//
-//						/* initialization cell litter fractions */
-//						initialization_forest_cell_litter       ( c);
-
 					}				
 				}
 			}
