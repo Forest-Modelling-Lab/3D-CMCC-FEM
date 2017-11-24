@@ -236,19 +236,19 @@ void spinup_littering ( cell_t *const c )
 	deadwood_cell_frac   = 0.75;
 	deadwood_lign_frac   = 0.25;
 	/* check */
-	CHECK_CONDITION ( deadwood_cell_frac + deadwood_lign_frac , != , 1. + eps );
+	CHECK_CONDITION ( fabs ( deadwood_cell_frac + deadwood_lign_frac ) - 1. , > ,  eps );
 
 	leaf_litr_lab_frac   = 0.2;
 	leaf_ltr_cell_frac   = 0.5;
 	leaf_litr_lign_frac  = 0.3;
 	/* check */
-	CHECK_CONDITION ( leaf_litr_lab_frac + leaf_ltr_cell_frac + leaf_litr_lign_frac , != , 1. + eps );
+	CHECK_CONDITION ( fabs ( leaf_litr_lab_frac + leaf_ltr_cell_frac + leaf_litr_lign_frac ) -1 , > , eps );
 
 	froot_litr_lab_frac  = 0.3;
 	froot_ltr_cell_frac  = 0.4;
 	froot_litr_lign_frac = 0.3;
 	/* check */
-	CHECK_CONDITION ( froot_litr_lab_frac + froot_ltr_cell_frac + froot_litr_lign_frac , != , 1. + eps );
+	CHECK_CONDITION ( fabs (froot_litr_lab_frac + froot_ltr_cell_frac + froot_litr_lign_frac) -1.0 , > , eps );
 
 	/******************************************************************************************************************************************************************/
 
