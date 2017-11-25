@@ -28,13 +28,15 @@ double decomposition (cell_t *const c, const meteo_daily_t *const meteo_daily)
 	double TsoilK;
 	double E0;                    /* activation-energy-type parameter of Lloyd and Taylor [1994] (K-1) */
 	double T0;                    /* the lower temperature limit for the soil respiration (K) */
+	double Tbase;
 
 	/************************************************************************************************/
 
 	/*** decomposition ***/
 
-	E0 = 308.56;
-	T0 = 227.13;
+	E0    = 308.56;
+	T0    = 227.13;
+	Tbase = 71.02;   /* for Biome it is 71.02 but for Lloyd and Taylor it was 56.02 */
 
 	/* calculate the rate constant scalar for soil temperature,
 		assuming that the base rate constants are assigned for non-moisture
@@ -54,7 +56,7 @@ double decomposition (cell_t *const c, const meteo_daily_t *const meteo_daily)
 	else
 	{
 		TsoilK      = meteo_daily->tsoil + TempAbs;
-		temp_scalar = exp ( E0 * ( ( 1. / 71.02 ) - ( 1. / ( TsoilK - T0 ) ) ) );
+		temp_scalar = exp ( E0 * ( ( 1. / Tbase ) - ( 1. / ( TsoilK - T0 ) ) ) );
 	}
 	//fixme bug in original biome
 	if ( temp_scalar > 1 ) temp_scalar = 1.;
@@ -157,7 +159,7 @@ void litter_decomposition (cell_t *const c, const meteo_daily_t *const meteo_dai
 	c->daily_deadwood_to_litr4C      = c->deadwood_4C * deadwood_fragm_rate;
 
 	/* check */
-	//CHECK_CONDITION ( c->daily_deadwood_to_litr2C + c->daily_deadwood_to_litr2C + c->daily_deadwood_to_litr2C, > , c->daily_deadwood_to_litrC + eps);
+	CHECK_CONDITION ( c->daily_deadwood_to_litr2C + c->daily_deadwood_to_litr3C + c->daily_deadwood_to_litr4C, > , c->daily_deadwood_to_litrC + eps);
 
 	/* coarse woody debris nitrogen to nitrogen litter pool */
 	if ( cn_cwd  > 0. ) c->daily_deadwood_to_litrN  = c->daily_deadwood_to_litrC  / cn_cwd;
