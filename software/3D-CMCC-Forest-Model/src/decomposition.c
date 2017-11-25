@@ -115,7 +115,6 @@ void litter_decomposition (cell_t *const c, const meteo_daily_t *const meteo_dai
 	double cn_litr1;
 	double cn_litr2;
 	double cn_litr4;
-
 	double deadwood_fragm_rate;   /* deadwood physical fragmentation */
 	double litt_decomp_rate1;     /* labile litter decomposition rate */
 	double litt_decomp_rate2;     /* cellulose litter decomposition rate */
