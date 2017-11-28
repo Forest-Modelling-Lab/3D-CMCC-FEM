@@ -115,6 +115,7 @@ void litter_decomposition (cell_t *const c, const meteo_daily_t *const meteo_dai
 	double cn_litr1;
 	double cn_litr2;
 	double cn_litr4;
+
 	double deadwood_fragm_rate;   /* deadwood physical fragmentation */
 	double litt_decomp_rate1;     /* labile litter decomposition rate */
 	double litt_decomp_rate2;     /* cellulose litter decomposition rate */
@@ -122,6 +123,18 @@ void litter_decomposition (cell_t *const c, const meteo_daily_t *const meteo_dai
 	double pot_litr1C_loss;       /* potential labile litter loss */
 	double pot_litr2C_loss;       /* potential unshielded litter loss */
 	double pot_litr4C_loss;       /* potential lignin litter loss */
+
+	double pot_min_litr1_soil1;   /* potential mineralization rate */
+	double pot_min_litr2_soil2;   /* potential mineralization rate */
+	double pot_min_litr4_soil3;   /* potential mineralization rate */
+	double pot_min_soil1_soil2;   /* potential mineralization rate */
+	double pot_min_soil2_soil3;   /* potential mineralization rate */
+	double pot_min_soil3_soil4;   /* potential mineralization rate */
+	double pot_min_soil4;         /* potential mineralization rate */
+	double pot_immobilization;
+	double mineralized;
+	double Nlimit;
+
 
 	/******************************************************************************************************************/
 
