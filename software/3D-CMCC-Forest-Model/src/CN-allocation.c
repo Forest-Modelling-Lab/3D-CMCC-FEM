@@ -247,7 +247,6 @@ void nitrogen_allocation ( cell_t *const c, species_t *const s )
 
 	/*** update class level carbon Nitrogen pools ***/
 
-
 	/* leaf */
 	s->value[N_TO_LEAF]   = s->value[C_TO_LEAF]   / s->value[CN_LEAVES];
 
