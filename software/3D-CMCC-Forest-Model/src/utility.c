@@ -473,6 +473,8 @@ void reset_daily_class_variables(cell_t *const c)
 					s->value[N_TO_DEADWOOD] =             0.;
 					s->value[N_LEAF_TO_RESERVE] =         0.;
 					s->value[N_FROOT_TO_RESERVE] =        0.;
+					s->value[N_CROOT_TO_RESERVE] =        0.;
+					s->value[N_BRANCH_TO_RESERVE] =       0.;
 					s->value[N_LEAF_TO_LITR] =            0.;
 					s->value[N_FROOT_TO_LITR] =           0.;
 					s->value[N_STEM_TO_DEADWOOD] =        0.;

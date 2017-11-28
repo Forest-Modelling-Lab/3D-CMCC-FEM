@@ -240,7 +240,6 @@ void nitrogen_allocation ( cell_t *const c, species_t *const s )
 	double n_to_croot;
 	double n_to_branch;
 	double n_to_fruit;
-	double n_to_reserve;
 
 	/* it allocates Daily assimilated Nitrogen for both deciduous and evergreen and compute Nitrogen demand */
 
@@ -253,25 +252,22 @@ void nitrogen_allocation ( cell_t *const c, species_t *const s )
 	s->value[N_TO_LEAF]   = s->value[C_TO_LEAF]   / s->value[CN_LEAVES];
 
 	if ( s->value[N_TO_LEAF]   > 0. ) n_to_leaf   = s->value[N_TO_LEAF];
-	else n_to_leaf     = 0.;
+	else                              n_to_leaf   = 0.;
 
 	/* fine root */
 	s->value[N_TO_FROOT]  = s->value[C_TO_FROOT]  / s->value[CN_FINE_ROOTS];
 
 	if ( s->value[N_TO_FROOT]  > 0. ) n_to_froot  = s->value[N_TO_FROOT];
-	else n_to_froot    = 0.;
-
-	/* reserve */
-	s->value[N_TO_RESERVE] = 0. /* s->value[N_LEAF_TO_RESERVE] */;//FIXME
-
-	if ( s->value[N_TO_RESERVE]  > 0. ) n_to_reserve  = s->value[N_TO_RESERVE];
-	else n_to_reserve  = 0.;
+	else                              n_to_froot  = 0.;
 
 	/* fruit */
 	s->value[N_TO_FRUIT]   = s->value[C_TO_FRUIT] / s->value[CN_LEAVES];//FIXME IT USES CN_LEAVES INSTEAD A CN_FRUITS
 
 	if ( s->value[N_TO_FRUIT]  > 0. ) n_to_fruit  = s->value[N_TO_FRUIT];
-	else n_to_fruit    = 0.;
+	else                              n_to_fruit  = 0.;
+
+	/* note: special case reserve */
+	s->value[N_TO_RESERVE] = s->value[N_LEAF_TO_RESERVE] + s->value[N_FROOT_TO_RESERVE] + s->value[N_CROOT_TO_RESERVE] + s->value[N_BRANCH_TO_RESERVE];
 
 	//note: if carbon transfer fluxes are positive than carbon and nitrogen to move are considered as "live tissues"
 	//note: otherwise e.g. they need to be considered in their live and dead wood parts
@@ -324,12 +320,13 @@ void nitrogen_allocation ( cell_t *const c, species_t *const s )
 		n_to_branch   = 0.;
 	}
 
+
 	/*****************************************************************************************************************************/
 
 	/*** compute daily nitrogen demand ***/
 
 	/* daily nitrogen demand */
-	s->value[NPP_tN_DEMAND] = n_to_leaf + n_to_froot + n_to_stem + n_to_croot + n_to_branch + n_to_fruit + n_to_reserve;
+	s->value[NPP_tN_DEMAND] = n_to_leaf + n_to_froot + n_to_stem + n_to_croot + n_to_branch + n_to_fruit /*+ n_to_reserve*/;
 
 	/* tN/Cell/day -> gC/m2/day */
 	s->value[NPP_gN_DEMAND] = s->value[NPP_tN_DEMAND] * 1e6 / g_settings->sizeCell;
@@ -350,7 +347,4 @@ void nitrogen_allocation ( cell_t *const c, species_t *const s )
 	logger(g_debug_log, "N_TO_RESERVE = %f tN/cell/day\n", s->value[N_TO_RESERVE]);
 	logger(g_debug_log, "N_TO_BRANCH  = %f tN/cell/day\n", s->value[N_TO_BRANCH]);
 	logger(g_debug_log, "N_TO_FRUIT   = %f tN/cell/day\n", s->value[N_TO_FRUIT]);
-
-
-
 }

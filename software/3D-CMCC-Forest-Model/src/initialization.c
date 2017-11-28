@@ -817,12 +817,12 @@ void initialization_forest_class_N (cell_t *const c, const int height, const int
 		s->value[FROOT_N]       = s->value[FROOT_C] / s->value[CN_FINE_ROOTS];
 	}
 
-	s->value[DEADWOODN] = g_soil_settings->values[DEADWOODC] / s->value[CN_DEADWOOD];
+	s->value[DEADWOODN]         = g_soil_settings->values[DEADWOODC] / s->value[CN_DEADWOOD];
 
 	if ( ! g_soil_settings->values[LITTERN] || g_soil_settings->values[LITTERN] == NO_DATA )
 	{
-		s->value[LEAF_LITRN]    = s->value[LEAF_LITRC]  / s->value[CN_FALLING_LEAVES];
-		s->value[FROOT_LITRN]   = s->value[FROOT_LITRC] / s->value[CN_FINE_ROOTS];
+		s->value[LEAF_LITRN]    = (s->value[LEAF_LITRC]  / s->value[CN_LEAVES])    * (1. - N_FRAC_TO_RETRANSL);
+		s->value[FROOT_LITRN]   = s->value[FROOT_LITRC]  / s->value[CN_FINE_ROOTS] * (1. - N_FRAC_TO_RETRANSL);
 	}
 	else
 	{
@@ -964,7 +964,7 @@ void initialization_forest_class_litter (cell_t *const c, const int height, cons
 		s->value[DEADWOOD_LITR3C]     = s->value[DEADWOOD_LITRC]    * s->value[DEADWOOD_SCEL_FRAC] ;
 		s->value[DEADWOOD_LITR4C]     = s->value[DEADWOOD_LITRC]    * s->value[DEADWOOD_LIGN_FRAC] ;
 		/* check */
-		CHECK_CONDITION ( fabs ( s->value[DEADWOOD_LITR2C] + s->value[DEADWOOD_LITR3C] + s->value[DEADWOOD_LITR4C] ), >, s->value[DEADWOOD_LITRC] + eps);
+		CHECK_CONDITION ( fabs ( s->value[DEADWOOD_LITR2C] + s->value[DEADWOOD_LITR3C] + s->value[DEADWOOD_LITR4C] ), > , s->value[DEADWOOD_LITRC] + eps);
 
 		deadwood_litrC                = s->value[DEADWOOD_LITRC];
 		deadwood_litr2C               = s->value[DEADWOOD_LITR2C];

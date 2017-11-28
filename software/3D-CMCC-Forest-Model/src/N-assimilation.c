@@ -41,15 +41,18 @@ void nitrogen_assimilation(species_t *const s)
 	{
 		s->value[FROOT_N]           = s->value[FROOT_C]           / s->value[CN_FINE_ROOTS];
 	}
-	//s->value[LEAF_FALLING_N]  = s->value[LEAF_FALLING_C]    / s->value[CN_FALLING_LEAVES];
-	s->value[STEM_LIVEWOOD_N]   = s->value[STEM_LIVEWOOD_C]   / s->value[CN_LIVEWOOD];
-	s->value[STEM_DEADWOOD_N]   = s->value[STEM_DEADWOOD_C]   / s->value[CN_DEADWOOD];
-	s->value[STEM_N]            = s->value[STEM_LIVEWOOD_N]   + s->value[STEM_DEADWOOD_N];
-	s->value[CROOT_LIVEWOOD_N]  = s->value[CROOT_LIVEWOOD_C]  / s->value[CN_LIVEWOOD];
-	s->value[CROOT_DEADWOOD_N]  = s->value[CROOT_DEADWOOD_C]  / s->value[CN_DEADWOOD];
-	s->value[CROOT_N]           = s->value[CROOT_LIVEWOOD_N]  + s->value[CROOT_DEADWOOD_N];
-	s->value[BRANCH_LIVEWOOD_N] = s->value[BRANCH_LIVEWOOD_C] / s->value[CN_LIVEWOOD];
-	s->value[BRANCH_DEADWOOD_N] = s->value[BRANCH_DEADWOOD_C] / s->value[CN_DEADWOOD];
-	s->value[BRANCH_N]          = s->value[BRANCH_LIVEWOOD_N] + s->value[BRANCH_DEADWOOD_N];
+	//s->value[LEAF_FALLING_N]  = s->value[LEAF_FALLING_C]        / s->value[CN_FALLING_LEAVES];
+	s->value[STEM_LIVEWOOD_N]   = s->value[STEM_LIVEWOOD_C]       / s->value[CN_LIVEWOOD];
+	s->value[STEM_DEADWOOD_N]   = s->value[STEM_DEADWOOD_C]       / s->value[CN_DEADWOOD];
+	s->value[STEM_N]            = s->value[STEM_LIVEWOOD_N]       + s->value[STEM_DEADWOOD_N];
+	s->value[CROOT_LIVEWOOD_N]  = s->value[CROOT_LIVEWOOD_C]      / s->value[CN_LIVEWOOD];
+	s->value[CROOT_DEADWOOD_N]  = s->value[CROOT_DEADWOOD_C]      / s->value[CN_DEADWOOD];
+	s->value[CROOT_N]           = s->value[CROOT_LIVEWOOD_N]      + s->value[CROOT_DEADWOOD_N];
+	s->value[BRANCH_LIVEWOOD_N] = s->value[BRANCH_LIVEWOOD_C]     / s->value[CN_LIVEWOOD];
+	s->value[BRANCH_DEADWOOD_N] = s->value[BRANCH_DEADWOOD_C]     / s->value[CN_DEADWOOD];
+	s->value[BRANCH_N]          = s->value[BRANCH_LIVEWOOD_N]     + s->value[BRANCH_DEADWOOD_N];
+
+	/* note: special case reserve */
+	s->value[RESERVE_N]        += s->value[N_TO_RESERVE];
 
 }
