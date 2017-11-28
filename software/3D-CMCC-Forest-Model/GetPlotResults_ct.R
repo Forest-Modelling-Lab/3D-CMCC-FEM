@@ -22,6 +22,7 @@ source('plot_multi_lm.R')
 source('removeInf.R')
 source('colSums2.R')
 source('flux_validation.R')
+source('output_validation.R')
 
 dir_in_ec = paste0(getwd(),'/eddy_validation/')
 soglia_qc = 0.6
@@ -303,96 +304,6 @@ if ( length(error_list) > 0 ) {
   rm(tt)
 }
 
-
-#                         #  create arguments
-#                       
-#                         dir.create(paste0("./output/",output_folder,"-", version, "-", site),showWarnings = FALSE)
-#                        
-# 
-#                         for (cy_time in time_list_output) {
-# 
-#                             # list of the files to plot
-#                             if (protocol == "LOCAL")
-#                             {
-#                                 all_out_files = list.files(paste0("output/",output_folder,"-", version, "-", site,"/",protocol,"/"),
-#                                                            pattern = paste0(version,'_',site,'_',protocol, '_hist'),#,'_rcp',rcp, '.txt_'),
-#                                                            recursive = TRUE, full.names = TRUE)
-#                             }
-#                             else
-#                             {
-#                                 all_out_files = list.files(paste0("output/",output_folder,"-", version, "-", site,"/",protocol,"/"),
-#                                                            pattern = paste0(version,'_',site,'_',protocol),#,'_ESM',esm ,'_rcp',rcp, '.txt_'),
-#                                                            recursive = TRUE, full.names = TRUE)
-#                             }
-#                             if ( length(all_out_files) == 0) {
-#                               next
-#                             }
-#                           
-#                             all_out_files = all_out_files[grep(cy_time,all_out_files)]
-#                             
-#                             # exclude all PDF files
-#                             if ( length( grep('.pdf',all_out_files) ) > 0 ) {
-#                                 all_out_files = all_out_files[-1*grep('.pdf',all_out_files)]
-#                             }
-# 
-#                             all_out_files2 = c()
-# 
-#                             if ( length(all_out_files) == 0) {
-#                               next
-#                             }
-#                             
-#                             if ( sum(grepl('^Benchmark',basename(all_out_files))) == 0  ) {
-#                               pos = 1
-#                               if( file.exists(paste0(getwd(),'/',dirname(all_out_files[pos]),'/',basename(all_out_files[pos]))) ) {
-#                                 file.rename(
-#                                   paste0(getwd(),'/',dirname(all_out_files[pos]),'/',basename(all_out_files[pos])),
-#                                   paste0(getwd(),'/',dirname(all_out_files[pos]),'/','Benchmark_',basename(all_out_files[pos]))
-#                                 )
-#                                 all_out_files2 = c(all_out_files2,paste0(dirname(all_out_files[pos]),'/','Benchmark_',basename(all_out_files[pos])))
-#                               }
-#                             } else {
-#                                 pos = grep('^Benchmark',basename(all_out_files))
-#                                 all_out_files2 = c(all_out_files2,all_out_files[pos])
-#                             }
-#                             all_out_files = all_out_files[-1*pos]
-#                             rm(pos)
-# 
-#                             if ( length(all_out_files) == 0) {
-#                               next
-#                             }
-#                             
-#                             cnt = 0
-#                             while (length(all_out_files) > 0) {
-#                                 cnt = cnt + 1
-#                                 pos = grep(paste0('^',cnt,'_'),basename(all_out_files))
-#                                 if ( length(pos) == 0 ) {
-#                                     pos = 1
-#                                     file.rename(
-#                                         paste0(getwd(),'/',dirname(all_out_files[pos]),'/',basename(all_out_files[pos])),
-#                                         paste0(getwd(),'/',dirname(all_out_files[pos]),'/',cnt,'_',basename(all_out_files[pos]))
-#                                     )
-#                                     all_out_files2 = c(all_out_files2,paste0(dirname(all_out_files[pos]),'/',cnt,'_',basename(all_out_files[pos])))
-#                                 } else {
-#                                     all_out_files2 = c(all_out_files2,all_out_files[pos])
-#                                 }
-#                                 all_out_files = all_out_files[-1*pos]
-#                                 rm(pos)
-#                             }
-#                             rm(cnt,all_out_files,all_out_files2)
-#                         }
-#                         rm(cy_time)
-#                     }
-#                     rm(co2)
-#                 }
-#                 rm(man)
-#             }
-#             rm(rcp)
-#         }
-#         rm(esm)
-#     }
-#     rm(site)
-# }
-# rm(protocol)
 end.time <- Sys.time()
 print(end.time - start.time)
 
@@ -400,7 +311,6 @@ print(end.time - start.time)
 
 
 # create the comparison plots ----
-
 
 for (site in site_list) {
   for(cy_time in time_list) {
@@ -709,6 +619,57 @@ for (cy_s in site_list) {
 }
 rm(cy_s)
 
+
+# validazione di tutti gli output ----
+
+for (cy_s in site_list) {
+  dir_in_gen = paste0(getwd(),"/output/",output_folder,"-", version, "-", cy_s,'/')
+  site_code = as.character(df_siti$fluxnet_code[df_siti$model_name == cy_s])
+  
+  # importo i dati fluxnet DD ----
+  lista_files = list.files(dir_in_ec,pattern = paste0('_FULLSET_','DD','_'),
+                           recursive = T,full.names = T)
+  lista_files = lista_files[grep(paste0('FLX_',as.character(site_code)),lista_files)]
+  
+  if (length(lista_files) == 0 ) {
+    stop(sprintf('file: %s\n NOT FOUND',
+                 paste0('FLX_',site_code)))
+  }
+  file_ec = lista_files
+  
+  dir_in = list.dirs(dir_in_gen,recursive = F)
+  dir_in = dir_in[grep(cy_s,dir_in)]
+  dir_in = dir_in[grep('LOCAL',dir_in)]
+  
+  
+  ls_file_md = list.files(dir_in,pattern = 'daily',recursive = T,full.names = T)
+  
+  list_p = list()
+  
+  for (file_mod in ls_file_md) {
+    
+    list_p[[length(list_p)+1]] = output_validation(file_mod,
+                                                 cy_s)
+                                                 
+  }
+  rm(file_mod,ls_file_md)
+  
+  pdf(paste0(dir_in_gen,'validation_output_',cy_s,'.pdf'),
+      onefile = T, width = 15,height = 12)
+  
+  for ( cy_p in seq(1,length(list_p)) ) {
+    for (cy_p2 in seq(1,length(list_p[[cy_p]]))) {
+      mpt = plot_grid(plotlist = list_p[[cy_p]][cy_p2])
+      print(mpt)
+      rm(mpt)
+    }
+  }
+  rm(cy_p,cy_p2)
+  dev.off()
+  rm(list_p)
+  
+}
+rm(cy_s)
 
 
 #     # # create annual GPP plot
