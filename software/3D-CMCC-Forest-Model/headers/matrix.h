@@ -358,10 +358,10 @@ enum {
 	YEARLY_NPP_tC,                      /* (tC/cell/day) Yearly Net Primary Production */
 
 	/* nitrogen fluxes */
-	NPP_gN,                             /* (gN/m2/day) Daily Net Primary Production demand */
+	NPP_gN_DEMAND,                      /* (gN/m2/day) Daily Net Primary Production demand */
 	MONTHLY_NPP_gN,                     /* (gN/m2/month) Monthly Net Primary Production demand */
 	YEARLY_NPP_gN,                      /* (gN/m2/year) Yearly Net Primary Production demand */
-	NPP_tN,                             /* (tNC/cell/day) Daily Net Primary Production demand */
+	NPP_tN_DEMAND,                      /* (tNC/cell/day) Daily Net Primary Production demand */
 	MONTHLY_NPP_tN,                     /* (tNC/cell/month) Monthly Net Primary Production demand */
 	YEARLY_NPP_tN,                      /* (tNC/cell/year) Yearly Net Primary Production demand */
 

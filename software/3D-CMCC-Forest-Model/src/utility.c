@@ -455,8 +455,8 @@ void reset_daily_class_variables(cell_t *const c)
 					s->value[DEADWOOD_TO_LITR4C] =        0.;
 
 					/* reset daily nitrogen fluxes */
-					s->value[NPP_gN] =                    0.;
-					s->value[NPP_tN] =                    0.;
+					s->value[NPP_gN_DEMAND] =             0.;
+					s->value[NPP_tN_DEMAND] =             0.;
 
 					/* reset daily nitrogen fluxes among pools */
 					s->value[N_TO_LEAF] =                 0.;

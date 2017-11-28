@@ -359,7 +359,7 @@ int check_tree_class_nitrogen_flux_balance ( cell_t *const c, const int layer, c
 	printf("%d \n", s->counter[N_TREE]);
 
 	/* sum of sources */
-	in      = s->value[NPP_tN];
+	in      = s->value[NPP_tN_DEMAND];
 
 	/* sum of sinks */
 	out     =  s->value[N_LEAF_TO_LITR]     +
@@ -389,7 +389,7 @@ int check_tree_class_nitrogen_flux_balance ( cell_t *const c, const int layer, c
 	{
 		error_log("DOY                   = %d\n",             c->doy);
 		error_log("\nin                  = %f tN/cell/day\n", in);
-		error_log("NPP_tN                = %f tN/cell/day\n", s->value[NPP_tN]);
+		error_log("NPP_tN                = %f tN/cell/day\n", s->value[NPP_tN_DEMAND]);
 		error_log("\nout                 = %f tN/cell/day\n", out);
 		error_log("N_LEAF_TO_LITR        = %f tN/cell/day\n", s->value[N_LEAF_TO_LITR]);
 		error_log("N_FROOT_TO_LITR       = %f tN/cell/day\n", s->value[N_FROOT_TO_LITR]);

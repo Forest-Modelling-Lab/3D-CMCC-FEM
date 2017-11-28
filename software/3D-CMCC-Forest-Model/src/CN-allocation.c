@@ -329,16 +329,16 @@ void nitrogen_allocation ( cell_t *const c, species_t *const s )
 	/*** compute daily nitrogen demand ***/
 
 	/* daily nitrogen demand */
-	s->value[NPP_tN]        = n_to_leaf + n_to_froot + n_to_stem + n_to_croot + n_to_branch + n_to_fruit + n_to_reserve;
+	s->value[NPP_tN_DEMAND] = n_to_leaf + n_to_froot + n_to_stem + n_to_croot + n_to_branch + n_to_fruit + n_to_reserve;
 
 	/* tN/Cell/day -> gC/m2/day */
-	s->value[NPP_gN]        = s->value[NPP_tN] * 1e6 / g_settings->sizeCell;
+	s->value[NPP_gN_DEMAND] = s->value[NPP_tN_DEMAND] * 1e6 / g_settings->sizeCell;
 
 	/* daily Nitrogen demand */
-	s->value[TREE_N_DEMAND] = s->value[NPP_gN];
+	s->value[TREE_N_DEMAND] = s->value[NPP_gN_DEMAND];
 
 	//fixme
-	if (s->value[NPP_gN] > c->soilN)
+	if (s->value[NPP_gN_DEMAND] > c->soilN)
 	{
 		//todo back to partitioning-allocation routine and recompute both NPP in gC and NPP in gN based on the available soil nitrogen content
 	}
