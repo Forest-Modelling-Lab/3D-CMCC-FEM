@@ -285,7 +285,7 @@ flux_validation <- function(file_md,
     
     # calcolo l'anno medio eddy e calcolo le differenze tra questi valori e tutti gli altri
     df_plot_yy$anom_ec = df_plot_yy$EC - mean(df_plot_yy$EC,na.rm = T)
-    df_plot_yy$anom_md = df_plot_yy$MD - mean(df_plot_yy$EC,na.rm = T)
+    df_plot_yy$anom_md = df_plot_yy$MD - mean(df_plot_yy$MD,na.rm = T)
     df_plot_bar = data.frame('TIME' = c(df_plot_yy$YEAR,df_plot_yy$YEAR),
                              'anom' = c(df_plot_yy$anom_ec,df_plot_yy$anom_md),
                              'tipo' = c(rep('EC',length(df_plot_yy$anom_ec)),
