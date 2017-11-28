@@ -59,9 +59,6 @@ void carbon_balance (cell_t *const c, const int height, const int dbh, const int
 	c->croot_carbon             -= (s->value[C_BRANCH_TO_DEADWOOD] * 1e6 / g_settings->sizeCell);
 	c->reserve_carbon           -= (s->value[C_BRANCH_TO_DEADWOOD] * 1e6 / g_settings->sizeCell);
 	c->fruit_carbon             -= (s->value[C_FRUIT_TO_DEADWOOD]  * 1e6 / g_settings->sizeCell);
-	//computed in littering.c
-	//c->litrC                    += (s->value[C_TO_LITR]    * 1e6 / g_settings->sizeCell);
-	//c->cwdC                     += (s->value[C_TO_CWD]     * 1e6 / g_settings->sizeCell);
 
 	/* check */
 	CHECK_CONDITION ( c->leaf_carbon,    < , ZERO );

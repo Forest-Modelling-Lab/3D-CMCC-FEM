@@ -226,13 +226,6 @@ int growth_efficiency_mortality ( cell_t *const c, const int height, const int d
 		c->daily_branch_carbon      -= (s->value[C_BRANCH_TO_DEADWOOD]  * 1e6 / g_settings->sizeCell);
 		c->daily_reserve_carbon     -= (s->value[C_RESERVE_TO_DEADWOOD] * 1e6 / g_settings->sizeCell);
 		c->daily_fruit_carbon       -= (s->value[C_FRUIT_TO_DEADWOOD]   * 1e6 / g_settings->sizeCell);
-		//c->daily_litrC              += (s->value[C_LEAF_TO_LITR]   + s->value[C_FROOT_TO_LITR] ) * 1e6 / g_settings->sizeCell;
-		//c->daily_cwdC               += (s->value[C_STEM_TO_DEADWOOD]    +
-		//		s->value[C_CROOT_TO_DEADWOOD]   +
-		//		s->value[C_BRANCH_TO_DEADWOOD]  +
-		//		s->value[C_RESERVE_TO_DEADWOOD] +
-		//		s->value[C_FRUIT_TO_DEADWOOD] ) *
-		//		1e6 / g_settings->sizeCell;
 
 		/*** update cell level carbon pools (tC/cell) ***/
 		c->leaf_carbon              -= (s->value[C_LEAF_TO_LITR]        * 1e6 / g_settings->sizeCell);
@@ -242,13 +235,6 @@ int growth_efficiency_mortality ( cell_t *const c, const int height, const int d
 		c->croot_carbon             -= (s->value[C_CROOT_TO_DEADWOOD]   * 1e6 / g_settings->sizeCell);
 		c->reserve_carbon           -= (s->value[C_RESERVE_TO_DEADWOOD] * 1e6 / g_settings->sizeCell);
 		c->fruit_carbon             -= (s->value[C_FRUIT_TO_DEADWOOD]   * 1e6 / g_settings->sizeCell);
-		//c->litrC                    += (s->value[C_LEAF_TO_LITR]   + s->value[C_FROOT_TO_LITR] ) * 1e6 / g_settings->sizeCell;
-		//c->cwdC                     += (s->value[C_STEM_TO_CWD]    +
-		//		s->value[C_CROOT_TO_CWD]   +
-		//		s->value[C_BRANCH_TO_CWD]  +
-		//		s->value[C_RESERVE_TO_CWD] +
-		//		s->value[C_FRUIT_TO_CWD] ) *
-		//		1e6 / g_settings->sizeCell;
 
 		/* check */
 		CHECK_CONDITION ( c->leaf_carbon,    < , ZERO );
