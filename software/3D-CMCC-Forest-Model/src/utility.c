@@ -78,10 +78,19 @@ void reset_daily_cell_variables(cell_t *const c)
 	c->daily_stem_carbon =              0.;
 	c->daily_froot_carbon =             0.;
 	c->daily_croot_carbon =             0.;
-	c->daily_root_carbon =              0.;
 	c->daily_branch_carbon =            0.;
 	c->daily_reserve_carbon =           0.;
 	c->daily_fruit_carbon =             0.;
+
+	/* nitrogen fluxes */
+	c->daily_leaf_nitrogen =            0.;
+	c->daily_stem_nitrogen =            0.;
+	c->daily_froot_nitrogen =           0.;
+	c->daily_croot_nitrogen =           0.;
+	c->daily_root_nitrogen =            0.;
+	c->daily_branch_nitrogen =          0.;
+	c->daily_reserve_nitrogen =         0.;
+	c->daily_fruit_nitrogen =           0.;
 
 	/* carbon litter fluxes */
 	c->daily_to_litrC =                 0.;
@@ -678,6 +687,7 @@ void reset_annual_class_variables(cell_t *const c)
 					s->value[YEARLY_BRANCH_AUT_RESP] =      0.;
 					s->value[YEARLY_TOTAL_AUT_RESP] =       0.;
 					s->value[YEARLY_C_TO_WOOD] =            0.;
+					s->value[YEARLY_N_TO_WOOD] =            0.;
 					s->value[YEARLY_CANOPY_TRANSP] =        0.;
 					s->value[YEARLY_CANOPY_TRANSP_SUN] =    0.;
 					s->value[YEARLY_CANOPY_TRANSP_SHADE] =  0.;

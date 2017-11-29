@@ -10,7 +10,6 @@
 #include <math.h>
 #include <assert.h>
 #include <new_forest_tree_class.h>
-#include <N-assimilation.h>
 #include "constants.h"
 #include "common.h"
 #include "print_output.h"
@@ -33,7 +32,6 @@
 #include "canopy_net_radiation.h"
 #include "canopy_temperature.h"
 #include "modifiers.h"
-#include "N-assimilation.h"
 #include "canopy_evapotranspiration.h"
 #include "photosynthesis.h"
 #include "aut_respiration.h"
@@ -326,7 +324,6 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							/* note: when it happens the overall class is removed */
 							if ( ! growth_efficiency_mortality ( c, height, dbh, age, species ) )
 							{
-
 								/* turnover */
 								turnover ( c, a, s, day, month, year );
 
@@ -339,9 +336,6 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 								/* update Leaf Area Index */
 								daily_lai             ( c, s );
 
-								/* N assimilation */
-								nitrogen_assimilation ( s );
-
 								/* litter fluxes and pools */
 								littering             ( c, s );
 
@@ -352,7 +346,6 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 								/* last day of the year */
 								if ( c->doy == ( IS_LEAP_YEAR ( c->years[year].year ) ? 366 : 365) )
 								{
-
 									/* above ground-below ground stocks */
 									abg_bgb_biomass ( c, height, dbh, age, species );
 

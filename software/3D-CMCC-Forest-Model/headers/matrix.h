@@ -614,6 +614,9 @@ enum {
 	N_CROOT_LIVE_WOOD_TO_DEADWOOD,      /* (tN/cell/day) Daily tN from Coarse live wood pool to Coarse dead wood */
 	N_BRANCH_LIVE_WOOD_TO_DEAD_WOOD,    /* (tN/cell/day) Daily tN from Branch live wood pool to Branch dead wood */
 
+	YEARLY_N_TO_WOOD,                   /* (tN/cell/year) Annual Nitrogen stocked into wood pool */
+	CUM_YEARLY_N_TO_WOOD,               /* (tN/cell) Cumulated Annual Nitrogen stocked into wood pool */
+
 	/* nitrogen pools (tN/area) */
 	LEAF_N,                             /* (tN/cell) Current Leaf nitrogen pool */
 	LEAF_SUN_N,                         /* (tN/cell) Current Leaf sun nitrogen pool */
@@ -632,12 +635,14 @@ enum {
 	BRANCH_DEADWOOD_N,                  /* (tN/cell) Current Dead Branch nitrogen pool */
 	RESERVE_N,                          /* (tN/cell) Current Reserve nitrogen pool */
 	FRUIT_N,                            /* (tN/cell) Current Fruit nitrogen pool */
+	MAX_FRUIT_N,                        /* (tN/cell/year) Annual Fruit nitrogen pool */
 	TREE_N_DEMAND,                      /* (tN/cell) Current Nitrogen demand for new plant tissues */
 	LITR_N,                             /* (tN/cell) Current Litter nitrogen pool */
 	CWD_N,                              /* (tN/cell) Current Coarse Woody Debris nitrogen pool */
 	TOT_STEM_N,                         /* (tN/cell) Current Total Stem nitrogen pool */
 	TOT_ROOT_N,                         /* (tN/cell) Current Total root nitrogen pool */
 	DEADWOOD_LITTER_N,                  /* (tN/cell) Current deadwood litter nitrogen pool */
+	TOTAL_N,                            /* (tN/cell) Current Total nitrogen pool */
 
 	/* per tree in tN */
 	TREE_LEAF_N,                        /* (tN/tree) Single Tree Leaf nitrogen pool */
@@ -1041,7 +1046,6 @@ typedef struct
 	double daily_stem_carbon;                                             /* (gC/m2/day) daily carbon assimilated to c pool at cell level */
 	double daily_froot_carbon;                                            /* (gC/m2/day) daily carbon assimilated to c pool at cell level */
 	double daily_croot_carbon;                                            /* (gC/m2/day) daily carbon assimilated to c pool at cell level */
-	double daily_root_carbon;                                             /* (gC/m2/day) daily carbon assimilated to c pool at cell level */
 	double daily_branch_carbon;                                           /* (gC/m2/day) daily carbon assimilated to c pool at cell level */
 	double daily_reserve_carbon;                                          /* (gC/m2/day) daily carbon assimilated to c pool at cell level */
 	double daily_fruit_carbon;                                            /* (gC/m2/day) daily carbon assimilated to fruit c pool at cell level */
@@ -1078,6 +1082,16 @@ typedef struct
 	double branch_dead_wood_carbon;                                       /* (gC/m2) branch dead wood carbon at cell level */
 	double reserve_carbon;                                                /* (gC/m2) reserve at cell level */
 	double fruit_carbon;                                                  /* (gC/m2) fruit at cell level */
+
+	/* nitrogen fluxes */
+	double daily_leaf_nitrogen;                                             /* (gN/m2/day) daily nitrogen assimilated to c pool at cell level */
+	double daily_stem_nitrogen;                                             /* (gN/m2/day) daily nitrogen assimilated to c pool at cell level */
+	double daily_froot_nitrogen;                                            /* (gN/m2/day) daily nitrogen assimilated to c pool at cell level */
+	double daily_croot_nitrogen;                                            /* (gN/m2/day) daily nitrogen assimilated to c pool at cell level */
+	double daily_root_nitrogen;                                             /* (gN/m2/day) daily nitrogen assimilated to c pool at cell level */
+	double daily_branch_nitrogen;                                           /* (gN/m2/day) daily nitrogen assimilated to c pool at cell level */
+	double daily_reserve_nitrogen;                                          /* (gN/m2/day) daily nitrogen assimilated to c pool at cell level */
+	double daily_fruit_nitrogen;                                            /* (gN/m2/day) daily nitrogen assimilated to fruit c pool at cell level */
 
 	/* tree nitrogen pools */
 	double leaf_nitrogen;                                                 /* (gN/m2) leaf carbon at cell level */

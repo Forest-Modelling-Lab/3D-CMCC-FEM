@@ -45,10 +45,10 @@ void carbon_allocation ( cell_t *const c, species_t *const s, const int day, con
 	s->value[STEM_SAPWOOD_C]          += s->value[C_TO_STEM] - s->value[C_STEM_SAPWOOD_TO_DEADWOOD];
 	s->value[STEM_HEARTWOOD_C]         = s->value[STEM_C] - s->value[STEM_SAPWOOD_C];
 
-	/* respiring stem */
+	/* live stem */
 	s->value[STEM_LIVEWOOD_C]          = s->value[STEM_SAPWOOD_C] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
 
-	/* not respiring stem */
+	/* not live stem */
 	s->value[STEM_DEADWOOD_C]          = s->value[STEM_C] - s->value[STEM_LIVEWOOD_C];
 
 	/* to avoid that self-thinning mortality happens to remove too much biomass */
@@ -60,10 +60,10 @@ void carbon_allocation ( cell_t *const c, species_t *const s, const int day, con
 	s->value[CROOT_SAPWOOD_C]         += s->value[C_TO_CROOT] - s->value[C_CROOT_SAPWOOD_TO_DEADWOOD];
 	s->value[CROOT_HEARTWOOD_C]        = s->value[CROOT_C] - s->value[CROOT_SAPWOOD_C];
 
-	/* respiring coarse root */
+	/* live coarse root */
 	s->value[CROOT_LIVEWOOD_C]         = s->value[CROOT_SAPWOOD_C] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
 
-	/* not respiring coarse root */
+	/* not live coarse root */
 	s->value[CROOT_DEADWOOD_C]         = s->value[CROOT_C] - s->value[CROOT_LIVEWOOD_C];
 
 	/* to avoid that self-thinning mortality happens to remove too much biomass */
@@ -74,10 +74,10 @@ void carbon_allocation ( cell_t *const c, species_t *const s, const int day, con
 	s->value[BRANCH_SAPWOOD_C]        += s->value[C_TO_BRANCH] - s->value[C_BRANCH_SAPWOOD_TO_DEADWOOD];
 	s->value[BRANCH_HEARTWOOD_C]       = s->value[BRANCH_C] - s->value[BRANCH_SAPWOOD_C];
 
-	/* respiring branch */
+	/* live branch */
 	s->value[BRANCH_LIVEWOOD_C]        = s->value[BRANCH_SAPWOOD_C] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
 
-	/* not respiring branch */
+	/* not live branch */
 	s->value[BRANCH_DEADWOOD_C]        = s->value[BRANCH_C] - s->value[BRANCH_LIVEWOOD_C];
 
 	/* to avoid that self-thinning mortality happens to remove too much biomass */
@@ -178,12 +178,12 @@ void carbon_allocation ( cell_t *const c, species_t *const s, const int day, con
 
 void nitrogen_allocation ( cell_t *const c, species_t *const s, const int day, const int month, const int year )
 {
-//	double n_to_leaf;
-//	double n_to_froot;
-//	double n_to_stem;
-//	double n_to_croot;
-//	double n_to_branch;
-//	double n_to_fruit;
+	double n_to_leaf;
+	double n_to_froot;
+	double n_to_stem;
+	double n_to_croot;
+	double n_to_branch;
+	double n_to_fruit;
 
 	//TODO IT SHOULD ALLOCATE NITROGEN ONCE EFFECTIVE NITROGEN AVAILABILITY IS COMPUTED
 
@@ -198,24 +198,24 @@ void nitrogen_allocation ( cell_t *const c, species_t *const s, const int day, c
 	/* leaf */
 	s->value[N_TO_LEAF]   = s->value[C_TO_LEAF]   / s->value[CN_LEAVES];
 
-//	if ( s->value[N_TO_LEAF]   > 0. ) n_to_leaf   = s->value[N_TO_LEAF];
-//	else                              n_to_leaf   = 0.;
+	if ( s->value[N_TO_LEAF]   > 0. ) n_to_leaf   = s->value[N_TO_LEAF];
+	else                              n_to_leaf   = 0.;
 
 	/*************************************************************************/
 
 	/* fine root */
 	s->value[N_TO_FROOT]  = s->value[C_TO_FROOT]  / s->value[CN_FINE_ROOTS];
 
-//	if ( s->value[N_TO_FROOT]  > 0. ) n_to_froot  = s->value[N_TO_FROOT];
-//	else                              n_to_froot  = 0.;
+	if ( s->value[N_TO_FROOT]  > 0. ) n_to_froot  = s->value[N_TO_FROOT];
+	else                              n_to_froot  = 0.;
 
 	/*************************************************************************/
 
 	/* fruit */
 	s->value[N_TO_FRUIT]   = s->value[C_TO_FRUIT] / s->value[CN_LEAVES];//FIXME IT USES CN_LEAVES INSTEAD A CN_FRUITS
 
-//	if ( s->value[N_TO_FRUIT]  > 0. ) n_to_fruit  = s->value[N_TO_FRUIT];
-//	else                              n_to_fruit  = 0.;
+	if ( s->value[N_TO_FRUIT]  > 0. ) n_to_fruit  = s->value[N_TO_FRUIT];
+	else                              n_to_fruit  = 0.;
 
 	/*************************************************************************/
 
@@ -236,7 +236,7 @@ void nitrogen_allocation ( cell_t *const c, species_t *const s, const int day, c
 	{
 		s->value[N_TO_STEM] = s->value[C_TO_STEM] / s->value[CN_LIVEWOOD];
 
-//		n_to_stem  = s->value[N_TO_STEM];
+		n_to_stem  = s->value[N_TO_STEM];
 
 	}
 	else
@@ -244,7 +244,7 @@ void nitrogen_allocation ( cell_t *const c, species_t *const s, const int day, c
 		s->value[N_TO_STEM] = (s->value[C_TO_STEM] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC] / s->value[CN_LIVEWOOD]) +
 				(s->value[C_TO_STEM] * ( 1. - s->value[EFF_LIVE_TOTAL_WOOD_FRAC]) / s->value[CN_DEADWOOD]);
 
-//		n_to_stem   = 0.;
+		//		n_to_stem   = 0.;
 	}
 
 	/*************************************************************************/
@@ -254,7 +254,7 @@ void nitrogen_allocation ( cell_t *const c, species_t *const s, const int day, c
 	{
 		s->value[N_TO_CROOT] = s->value[C_TO_CROOT] / s->value[CN_LIVEWOOD];
 
-//		n_to_croot   = s->value[N_TO_CROOT];
+		n_to_croot   = s->value[N_TO_CROOT];
 
 	}
 	else
@@ -262,7 +262,7 @@ void nitrogen_allocation ( cell_t *const c, species_t *const s, const int day, c
 		s->value[N_TO_CROOT] = (s->value[C_TO_CROOT] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC] / s->value[CN_LIVEWOOD]) +
 				(s->value[C_TO_CROOT] * ( 1. - s->value[EFF_LIVE_TOTAL_WOOD_FRAC]) / s->value[CN_DEADWOOD]);
 
-//		n_to_croot   = 0.;
+		//		n_to_croot   = 0.;
 	}
 
 	/*************************************************************************/
@@ -272,7 +272,7 @@ void nitrogen_allocation ( cell_t *const c, species_t *const s, const int day, c
 	{
 		s->value[N_TO_BRANCH] = s->value[C_TO_BRANCH] / s->value[CN_LIVEWOOD];
 
-//		n_to_branch   = s->value[N_TO_BRANCH];
+		n_to_branch   = s->value[N_TO_BRANCH];
 
 	}
 	else
@@ -280,112 +280,67 @@ void nitrogen_allocation ( cell_t *const c, species_t *const s, const int day, c
 		s->value[N_TO_BRANCH] = (s->value[C_TO_BRANCH] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC] / s->value[CN_LIVEWOOD]) +
 				(s->value[C_TO_BRANCH] * ( 1. - s->value[EFF_LIVE_TOTAL_WOOD_FRAC]) / s->value[CN_DEADWOOD]);
 
-//		n_to_branch   = 0.;
+		n_to_branch   = 0.;
 	}
 
 
-	/*****************************************************************************************************************************/
-#if 0
-	/***************************************************************************************/
+	//TODO REMOVE ONCE MODIFIED
+	//TODO 2 UPDATE NITROGEN POOLS
 
-	/*** removing dead pools from nitrogen flux pools ***/
-	s->value[N_TO_LEAF]    -= s->value[N_LEAF_TO_LITR]  + s->value[N_LEAF_TO_RESERVE];
-	s->value[N_TO_FROOT]   -= s->value[N_FROOT_TO_LITR] + s->value[N_FROOT_TO_RESERVE];
-	s->value[N_TO_STEM]    -= s->value[N_STEM_TO_DEADWOOD];
-	s->value[N_TO_CROOT]   -= s->value[N_CROOT_TO_DEADWOOD];
-	s->value[N_TO_BRANCH]  -= s->value[N_BRANCH_TO_DEADWOOD];
-	s->value[N_TO_FRUIT]   -= s->value[N_FRUIT_TO_DEADWOOD];
-	s->value[N_TO_RESERVE] -= s->value[N_RESERVE_TO_DEADWOOD];
+	/*** compute daily nitrogen demand ***/
 
-	/***************************************************************************************/
+	/* daily nitrogen demand */
+	s->value[NPP_tN_DEMAND] = n_to_leaf + n_to_froot + n_to_stem + n_to_croot + n_to_branch + n_to_fruit /*+ n_to_reserve*/;
 
-	/* for stocking wood */
-	/* note: if here and NOT above model doesn't take into account dead parts */
-	if ( s->value[N_TO_STEM]   > 0. ) s->value[YEARLY_N_TO_WOOD]     += s->value[N_TO_STEM];
-	if ( s->value[N_TO_CROOT]  > 0. ) s->value[YEARLY_N_TO_WOOD]     += s->value[N_TO_BRANCH];
-	if ( s->value[N_TO_BRANCH] > 0. ) s->value[YEARLY_N_TO_WOOD]     += s->value[N_TO_CROOT];
-	if ( s->value[N_TO_STEM]   > 0. ) s->value[CUM_YEARLY_N_TO_WOOD] += s->value[N_TO_STEM];
-	if ( s->value[N_TO_CROOT]  > 0. ) s->value[CUM_YEARLY_N_TO_WOOD] += s->value[N_TO_BRANCH];
-	if ( s->value[N_TO_BRANCH] > 0. ) s->value[CUM_YEARLY_N_TO_WOOD] += s->value[N_TO_CROOT];
+	/* tN/Cell/day -> gC/m2/day */
+	s->value[NPP_gN_DEMAND] = s->value[NPP_tN_DEMAND] * 1e6 / g_settings->sizeCell;
 
-	/***************************************************************************************/
+	/* daily Nitrogen demand */
+	s->value[TREE_N_DEMAND] = s->value[NPP_gN_DEMAND];
 
-	/*** update class level nitrogen mass pools ***/
-	s->value[LEAF_N]      += s->value[N_TO_LEAF];
-	s->value[FROOT_N]     += s->value[N_TO_FROOT];
-	s->value[STEM_N]      += s->value[N_TO_STEM];
-	s->value[CROOT_N]     += s->value[N_TO_CROOT];
-	s->value[BRANCH_N]    += s->value[N_TO_BRANCH];
-	s->value[RESERVE_N]   += s->value[N_TO_RESERVE];
-	s->value[FRUIT_N]     += s->value[N_TO_FRUIT];
-
-	/* check */
-	CHECK_CONDITION ( s->value[LEAF_N],     < , ZERO );
-	CHECK_CONDITION ( s->value[FROOT_N],    < , ZERO );
-	CHECK_CONDITION ( s->value[STEM_N],     < , ZERO );
-	CHECK_CONDITION ( s->value[BRANCH_N],   < , ZERO );
-	CHECK_CONDITION ( s->value[CROOT_N],    < , ZERO );
-	CHECK_CONDITION ( s->value[FRUIT_N],    < , ZERO );
-
-	s->value[TOTAL_N] = s->value[LEAF_N] +
-			s->value[FROOT_N]            +
-			s->value[STEM_N]             +
-			s->value[BRANCH_N]           +
-			s->value[CROOT_N]            +
-			s->value[FRUIT_N]            +
-			s->value[RESERVE_N]          ;
-
-	/* compute maximum annual amount to fruit */
-	if ( s->value[N_TO_FRUIT] > 0. )
+	//fixme
+	if (s->value[NPP_gN_DEMAND] > c->soilN)
 	{
-		/* special case for fruit */
-		s->value[MAX_FRUIT_N] += s->value[N_TO_FRUIT];
+		//todo back to partitioning-allocation routine and recompute both NPP in gC and NPP in gN based on the available soil nitrogen content
 	}
 
-	/*** update cell level nitrogen fluxes (gC/m2/day)***/
-	c->daily_leaf_nitrogen        += (s->value[N_TO_LEAF]    * 1e6 / g_settings->sizeCell);
-	c->daily_froot_nitrogen       += (s->value[N_TO_FROOT]   * 1e6 / g_settings->sizeCell);
-	c->daily_stem_nitrogen        += (s->value[N_TO_STEM]    * 1e6 / g_settings->sizeCell);
-	c->daily_croot_nitrogen       += (s->value[N_TO_CROOT]   * 1e6 / g_settings->sizeCell);
-	c->daily_branch_nitrogen      += (s->value[N_TO_BRANCH]  * 1e6 / g_settings->sizeCell);
-	c->daily_reserve_nitrogen     += (s->value[N_TO_RESERVE] * 1e6 / g_settings->sizeCell);
-	c->daily_fruit_nitrogen       += (s->value[N_TO_FRUIT]   * 1e6 / g_settings->sizeCell);
+	/* computing Nitrogen pools (tC/ha) */
 
-	/*** update cell level nitrogen pools (gC/m2)***/
-	c->leaf_nitrogen              += (s->value[N_TO_LEAF]    * 1e6 / g_settings->sizeCell);
-	c->froot_nitrogen             += (s->value[N_TO_FROOT]   * 1e6 / g_settings->sizeCell);
-	c->stem_nitrogen              += (s->value[N_TO_STEM]    * 1e6 / g_settings->sizeCell);
-	c->branch_nitrogen            += (s->value[N_TO_BRANCH]  * 1e6 / g_settings->sizeCell);
-	c->croot_nitrogen             += (s->value[N_TO_CROOT]   * 1e6 / g_settings->sizeCell);
-	c->reserve_nitrogen           += (s->value[N_TO_RESERVE] * 1e6 / g_settings->sizeCell);
-	c->fruit_nitrogen             += (s->value[N_TO_FRUIT]   * 1e6 / g_settings->sizeCell);
+	if ( ! s->value[LEAF_C] )
+	{
+		s->value[LEAF_N]            = 0.;
+		s->value[LEAF_SUN_N]        = 0.;
+		s->value[LEAF_SHADE_N]      = 0.;
 
-	/* check */
-	CHECK_CONDITION ( c->leaf_nitrogen,    < , ZERO );
-	CHECK_CONDITION ( c->froot_nitrogen,   < , ZERO );
-	CHECK_CONDITION ( c->stem_nitrogen,    < , ZERO );
-	CHECK_CONDITION ( c->branch_nitrogen,  < , ZERO );
-	CHECK_CONDITION ( c->croot_nitrogen,   < , ZERO );
-	CHECK_CONDITION ( c->fruit_nitrogen,   < , ZERO );
-#endif
-	//
-	//	//TODO REMOVE ONCE MODIFIED
-	//	//TODO 2 UPDATE NITROGEN POOLS
-	//
-	//	/*** compute daily nitrogen demand ***/
-	//
-	//	/* daily nitrogen demand */
-	//	s->value[NPP_tN_DEMAND] = n_to_leaf + n_to_froot + n_to_stem + n_to_croot + n_to_branch + n_to_fruit /*+ n_to_reserve*/;
-	//
-	//	/* tN/Cell/day -> gC/m2/day */
-	//	s->value[NPP_gN_DEMAND] = s->value[NPP_tN_DEMAND] * 1e6 / g_settings->sizeCell;
-	//
-	//	/* daily Nitrogen demand */
-	//	s->value[TREE_N_DEMAND] = s->value[NPP_gN_DEMAND];
-	//
-	//	//fixme
-	//	if (s->value[NPP_gN_DEMAND] > c->soilN)
-	//	{
-	//		//todo back to partitioning-allocation routine and recompute both NPP in gC and NPP in gN based on the available soil nitrogen content
-	//	}
+	}
+	else
+	{
+		s->value[LEAF_N]            = s->value[LEAF_C]            / s->value[CN_LEAVES];
+		s->value[LEAF_SUN_N]        = s->value[LEAF_SUN_C]        / s->value[CN_LEAVES];
+		s->value[LEAF_SHADE_N]      = s->value[LEAF_SHADE_C]      / s->value[CN_LEAVES];
+	}
+
+	if ( ! s->value[FROOT_C] )
+	{
+		s->value[FROOT_N]           = 0.;
+	}
+	else
+	{
+		s->value[FROOT_N]           = s->value[FROOT_C]           / s->value[CN_FINE_ROOTS];
+	}
+	//s->value[LEAF_FALLING_N]  = s->value[LEAF_FALLING_C]        / s->value[CN_FALLING_LEAVES];
+	s->value[STEM_LIVEWOOD_N]   = s->value[STEM_LIVEWOOD_C]       / s->value[CN_LIVEWOOD];
+	s->value[STEM_DEADWOOD_N]   = s->value[STEM_DEADWOOD_C]       / s->value[CN_DEADWOOD];
+	s->value[STEM_N]            = s->value[STEM_LIVEWOOD_N]       + s->value[STEM_DEADWOOD_N];
+	s->value[CROOT_LIVEWOOD_N]  = s->value[CROOT_LIVEWOOD_C]      / s->value[CN_LIVEWOOD];
+	s->value[CROOT_DEADWOOD_N]  = s->value[CROOT_DEADWOOD_C]      / s->value[CN_DEADWOOD];
+	s->value[CROOT_N]           = s->value[CROOT_LIVEWOOD_N]      + s->value[CROOT_DEADWOOD_N];
+	s->value[BRANCH_LIVEWOOD_N] = s->value[BRANCH_LIVEWOOD_C]     / s->value[CN_LIVEWOOD];
+	s->value[BRANCH_DEADWOOD_N] = s->value[BRANCH_DEADWOOD_C]     / s->value[CN_DEADWOOD];
+	s->value[BRANCH_N]          = s->value[BRANCH_LIVEWOOD_N]     + s->value[BRANCH_DEADWOOD_N];
+
+	/* note: special case reserve */
+	s->value[RESERVE_N]        += s->value[N_TO_RESERVE];
+
+
 }

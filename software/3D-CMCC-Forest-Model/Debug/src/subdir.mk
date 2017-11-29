@@ -10,7 +10,6 @@ C_SRCS += \
 ../src/C-fruit-partitioning.c \
 ../src/CN-allocation.c \
 ../src/CN-balance.c \
-../src/N-assimilation.c \
 ../src/Penman_Monteith.c \
 ../src/allometry.c \
 ../src/aut_respiration.c \
@@ -90,7 +89,6 @@ OBJS += \
 ./src/C-fruit-partitioning.o \
 ./src/CN-allocation.o \
 ./src/CN-balance.o \
-./src/N-assimilation.o \
 ./src/Penman_Monteith.o \
 ./src/allometry.o \
 ./src/aut_respiration.o \
@@ -170,7 +168,6 @@ C_DEPS += \
 ./src/C-fruit-partitioning.d \
 ./src/CN-allocation.d \
 ./src/CN-balance.d \
-./src/N-assimilation.d \
 ./src/Penman_Monteith.d \
 ./src/allometry.d \
 ./src/aut_respiration.d \
@@ -248,7 +245,7 @@ C_DEPS += \
 src/%.o: ../src/%.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
-	gcc -I"/home/alessio/git/3D-CMCC-LAND/software/3D-CMCC-Forest-Model/headers" -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
+	gcc -I"/home/alessio-cmcc/git/3D-CMCC-LAND/software/3D-CMCC-Forest-Model/headers" -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 

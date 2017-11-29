@@ -848,20 +848,6 @@ void initialization_forest_class_N (cell_t *const c, const int height, const int
 	s->value[BRANCH_DEADWOOD_N] = s->value[BRANCH_DEADWOOD_C] / s->value[CN_DEADWOOD];
 	s->value[BRANCH_N]          = s->value[BRANCH_LIVEWOOD_N] + s->value[BRANCH_DEADWOOD_N];
 
-	logger(g_debug_log, "----LEAF_N             = %f tN/cell\n", s->value[LEAF_N]);
-	logger(g_debug_log, "----LEAF_SUN_N         = %f tN/cell\n", s->value[LEAF_SUN_N]);
-	logger(g_debug_log, "----LEAF_SHADE_N       = %f tN/cell\n", s->value[LEAF_SHADE_N]);
-	logger(g_debug_log, "----FROOT_N            = %f tN/cell\n", s->value[FROOT_N]);
-	logger(g_debug_log, "----STEM_LIVE_WOOD_N   = %f tN/cell\n", s->value[STEM_LIVEWOOD_N]);
-	logger(g_debug_log, "----STEM_DEAD_WOOD_N   = %f tN/cell\n", s->value[STEM_DEADWOOD_N]);
-	logger(g_debug_log, "----STEM_N             = %f tN/cell\n", s->value[STEM_N]);
-	logger(g_debug_log, "----CROOT_LIVE_WOOD_N  = %f tN/cell\n", s->value[CROOT_LIVEWOOD_N]);
-	logger(g_debug_log, "----CROOT_DEAD_WOOD_N  = %f tN/cell\n", s->value[CROOT_DEADWOOD_N]);
-	logger(g_debug_log, "----CROOT_N            = %f tN/cell\n", s->value[CROOT_N]);
-	logger(g_debug_log, "----BRANCH_LIVE_WOOD_N = %f tN/cell\n", s->value[BRANCH_LIVEWOOD_N]);
-	logger(g_debug_log, "----BRANCH_DEAD_WOOD_N = %f tN/cell\n", s->value[BRANCH_DEADWOOD_N]);
-	logger(g_debug_log, "----BRANCH_N           = %f tN/cell\n", s->value[BRANCH_N]);
-
 	/* check that all mandatory variables are initialized */
 	CHECK_CONDITION(s->value[STEM_N],          <=, ZERO);
 	CHECK_CONDITION(s->value[CROOT_N],         <=, ZERO);
