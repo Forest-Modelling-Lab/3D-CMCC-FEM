@@ -311,18 +311,15 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 								if ( c->years[year].year > g_settings->year_start_management && g_settings->management != MANAGEMENT_VAR)
 								{
 									/* Mortality based on tree Age (LPJ) */
-									age_mortality ( c, height, dbh, age, species);
+									age_mortality ( c, height, dbh, age, species );
 								}
 							}
 
 							/* allocate daily carbon */
-							carbon_allocation       ( c, height, dbh, age, species, day, month, year );
-
-							/* potential N assimilation */
-							//potential_nitrogen_assimilation    ( c, s );
+							carbon_allocation       ( c, s, day, month, year );
 
 							/* allocate daily nitrogen */
-							nitrogen_allocation     ( c, s );
+							nitrogen_allocation     ( c, s, day, month, year );
 
 							/* MORTALITY */
 							/* Mortality based on growth efficiency */

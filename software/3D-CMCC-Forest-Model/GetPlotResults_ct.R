@@ -70,7 +70,7 @@ esm_list <-c("1")# ("1","2","3","4","5", "All")
 rcp_list <-c("0p0")# ("0p0","2p6","4p5","6p0","8p5","All")
 man_list <-c("on")# ("on",'off', "All")
 co2_list <-c("on")# , "on",off", "All")
-protocol_list<-c("FT")# ("2A","2B", "All") 
+protocol_list<-c("LOCAL")# ("2A","2B", "All") 
 time_list = c('annual')
  
 if ( length(which(site_list == 'All')) > 0 ) {
@@ -158,6 +158,9 @@ for (site in site_list) {
       }
       
       for (protocol in protocol_list) {
+        if (protocol == 'LOCAL') {
+          next
+        }
         for ( esm in esm_list) {
           for (rcp in rcp_list) {
             
@@ -619,23 +622,10 @@ for (cy_s in site_list) {
 }
 rm(cy_s)
 
-
 # validazione di tutti gli output ----
 
 for (cy_s in site_list) {
   dir_in_gen = paste0(getwd(),"/output/",output_folder,"-", version, "-", cy_s,'/')
-  site_code = as.character(df_siti$fluxnet_code[df_siti$model_name == cy_s])
-  
-  # importo i dati fluxnet DD ----
-  lista_files = list.files(dir_in_ec,pattern = paste0('_FULLSET_','DD','_'),
-                           recursive = T,full.names = T)
-  lista_files = lista_files[grep(paste0('FLX_',as.character(site_code)),lista_files)]
-  
-  if (length(lista_files) == 0 ) {
-    stop(sprintf('file: %s\n NOT FOUND',
-                 paste0('FLX_',site_code)))
-  }
-  file_ec = lista_files
   
   dir_in = list.dirs(dir_in_gen,recursive = F)
   dir_in = dir_in[grep(cy_s,dir_in)]
@@ -671,7 +661,31 @@ for (cy_s in site_list) {
 }
 rm(cy_s)
 
+file_md = paste0('/home/alessio/git/3D-CMCC-LAND/software/3D-CMCC-Forest-Model/output/Test_output_Rstudio_ct-5.4-Collelongo/LOCAL/output_5.4_2017_NOVEMBER_28/daily/',
+                 'Benchmark_daily_5.4_Collelongo_LOCAL_hist.txt_(1997-2014)_CO2_ON_CO2_hist.txt_Man_VAR_d_10000_txt.txt')
+cat(sprintf('import file: %s\n',file_md))
+df_mod2 = read.csv(file_md,comment.char = '#')
+cat(sprintf('import file: %s OK\n',file_md))
 
+var_md = colnames(df_mod2)
+var_md = var_md[-1* which(var_md == 'YEAR')]
+var_md = var_md[-1* which(var_md == 'MONTH')]
+var_md = var_md[-1* which(var_md == 'DAY')]
+
+# rimuovo alcune colonne dal file perchè sono factor
+var_md = c()
+for (cy_var_md in colnames(df_mod2) ) {
+  if ( is.factor(df_mod2[,cy_var_md]) ) {
+    next
+  }
+  var_md = c(var_md,cy_var_md)
+}
+
+var_md = var_md[-1* which(var_md == 'YEAR')]
+var_md = var_md[-1* which(var_md == 'MONTH')]
+var_md = var_md[-1* which(var_md == 'DAY')]
+
+df_md = df_mod2[,var_md]
 #     # # create annual GPP plot
 #     # dev.new()
 #     # plot(outputCMCC$annual$Date,outputCMCC$annual[,"GPP"], main = colnames(outputCMCC$annual[8]), col="red", xlab = "year", type = "l")

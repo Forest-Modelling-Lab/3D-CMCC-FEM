@@ -35,8 +35,6 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	double tairK;
 	double v1, v2;
 
-	double gamma_light = 0.0025; //0.01;
-
 	age_t *a;
 	species_t *s;
 
@@ -60,15 +58,16 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 
 		if ( meteo_daily->tavg >= 15 )
 		{
-			KmCO2 = A1 * exp(-Ea1/(Rgas*tairK));
+			KmCO2 = A1 * exp( - Ea1 / ( Rgas * tairK ) );
 		}
 		else
 		{
-			KmCO2 = A2 * exp (-Ea2/(Rgas*tairK));
+			KmCO2 = A2 * exp ( - Ea2 / ( Rgas * tairK ) );
 		}
-		KO2 = AKO2 * exp (-EaKO2/(Rgas*tairK));
 
-		tau = Atau * exp (-Eatau/(Rgas*(tairK)));
+		KO2 = AKO2 * exp ( - EaKO2 / ( Rgas * tairK ) );
+
+		tau = Atau * exp ( - Eatau / ( Rgas * tairK) );
 
 		v1 = ( meteo_annual->co2Conc -( O2CONC / ( 2. * tau ) ) ) / ( g_settings->co2Conc - ( O2CONC / ( 2. * tau ) ) );
 		v2 = ( KmCO2 * ( 1 + ( O2CONC / KO2 ) ) + g_settings->co2Conc ) / ( KmCO2 * ( 1. + ( O2CONC / KO2 ) ) + meteo_annual->co2Conc );
@@ -102,9 +101,9 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 
 	/* LIGHT MODIFIER */
 	/* (Following Makela et al. , 2008, Peltioniemi et al. 2012) */
-	s->value[F_LIGHT_MAKELA]        = 1. / ( ( s->value[GAMMA_LIGHT] * s->value[APAR])       + 1.);
-	s->value[F_LIGHT_SUN_MAKELA]    = 1. / ( ( s->value[GAMMA_LIGHT] * s->value[APAR_SUN])   + 1.);
-	s->value[F_LIGHT_SHADE_MAKELA]  = 1. / ( ( s->value[GAMMA_LIGHT] * s->value[APAR_SHADE]) + 1.);
+	s->value[F_LIGHT_MAKELA]        = 1. / ( ( s->value[GAMMA_LIGHT] * s->value[APAR])       + 1. );
+	s->value[F_LIGHT_SUN_MAKELA]    = 1. / ( ( s->value[GAMMA_LIGHT] * s->value[APAR_SUN])   + 1. );
+	s->value[F_LIGHT_SHADE_MAKELA]  = 1. / ( ( s->value[GAMMA_LIGHT] * s->value[APAR_SHADE]) + 1. );
 
 	/* LIGHT MODIFIER (BIOME METHOD) */
 	/* following Biome-BGC */
@@ -170,7 +169,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	//1 hPa = 1 mbar
 	//s->value[F_VPD] = exp (- s->value[COEFFCOND] * vpd) * 10);
 	//convert also COEFFCOND multiply it for
-	s->value[F_VPD] = exp (- s->value[COEFFCOND] * meteo_daily->vpd);
+	s->value[F_VPD] = exp ( - s->value[COEFFCOND] * meteo_daily->vpd );
 	logger(g_debug_log, "fVPD = %f\n", s->value[F_VPD]);
 
 	/* check */
@@ -197,24 +196,11 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 
 	if ( a->value != 0 )
 	{
-		if ( (s->management == T) || (s->management == N) )
-		{
-			/* for TIMBER */
-			/* AGE FOR TIMBER IS THE EFFECTIVE AGE */
-			RelAge = (double)a->value / s->value[MAXAGE];
-			s->value[F_AGE] = ( 1 / ( 1 + pow ((RelAge / (double)s->value[RAGE]), (double)s->value[NAGE])));
-			logger(g_debug_log, "fAge = %f\n", s->value[F_AGE]);
-		}
-#if 0
-		else if ( s->management == C )
-		{
-			/* for SHOOTS */
-			/* AGE FOR COPPICE IS THE AGE FROM THE COPPICING */
-			RelAge = (double)a->value / s->value[MAXAGE_S];
-			s->value[F_AGE] = ( 1 / ( 1 + pow ((RelAge / (double)s->value[RAGE_S]), (double)s->value[NAGE_S])));
-			logger(g_debug_log, "fAge = %f\n", s->value[F_AGE]);
-		}
-#endif
+		/* for TIMBER */
+		/* AGE FOR TIMBER IS THE EFFECTIVE AGE */
+		RelAge = (double)a->value / s->value[MAXAGE];
+		s->value[F_AGE] = ( 1. / ( 1. + pow ( ( RelAge / (double)s->value[RAGE] ), (double)s->value[NAGE] ) ) );
+		logger(g_debug_log, "fAge = %f\n", s->value[F_AGE]);
 	}
 	else
 	{
@@ -229,28 +215,27 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	/********************************************************************************************/
 
 	/* SOIL NUTRIENT MODIFIER */
-	s->value[F_NUTR] = 1.  - ( 1. - g_soil_settings->values[SOIL_FN0]) * pow ((1.0 - g_soil_settings->values[SOIL_FR]), g_soil_settings->values[SOIL_FNN]);
+	s->value[F_NUTR] = 1. - ( 1. - g_soil_settings->values[SOIL_FN0] ) * pow ( ( 1. - g_soil_settings->values[SOIL_FR]), g_soil_settings->values[SOIL_FNN] );
 	logger(g_debug_log, "fNutr = %f\n", s->value[F_NUTR]);
 
 	/* check */
-	CHECK_CONDITION(s->value[F_NUTR], >, 1);
-	CHECK_CONDITION(s->value[F_NUTR], <, ZERO);
+	CHECK_CONDITION( s->value[F_NUTR], >, 1 );
+	CHECK_CONDITION( s->value[F_NUTR], <, ZERO );
 
 	//test 25 nov 2016
-	//test move FN0, FNN to species.txt
 #if 0
 	/* SOIL NUTRIENT MODIFIER */
 
 	/* compute fertility rate based on N available and N demand */
-	s->values[F_NUTR] = c->soilN / s->value[NPP_gN];
+	s->values[F_NUTR] = c->soilN / s->value[NPP_gN_DEMAND];
 
 	/* check */
 	if ( s->values[F_NUTR] > 1.) s->values[F_NUTR] = 1.;
 	logger(g_debug_log, "fNutr = %f\n", s->value[F_NUTR]);
 
 	/* check */
-	CHECK_CONDITION(s->value[F_NUTR], >, 1);
-	CHECK_CONDITION(s->value[F_NUTR], <, ZERO);
+	CHECK_CONDITION( s->value[F_NUTR] , > , 1);
+	CHECK_CONDITION( s->value[F_NUTR] , < , ZERO);
 #endif
 	/********************************************************************************************/
 	/* (MPa) water potential of soil and leaves */
@@ -280,10 +265,10 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	/* partial water stress */
 	else
 	{
-		s->value[F_PSI] = (s->value[SWPCLOSE] - c->psi)/(s->value[SWPCLOSE] - s->value[SWPOPEN]);
+		s->value[F_PSI] = ( s->value[SWPCLOSE] - c->psi ) / ( s->value[SWPCLOSE] - s->value[SWPOPEN] );
 
 		/* for consistency with complete stress values */
-		if(s->value[F_PSI]< WATER_STRESS_LIMIT) s->value[F_PSI] = WATER_STRESS_LIMIT;
+		if(s->value[F_PSI] < WATER_STRESS_LIMIT) s->value[F_PSI] = WATER_STRESS_LIMIT;
 	}
 
 	s->value[F_SW] = s->value[F_PSI];
