@@ -14,4 +14,5 @@ void carbon_allocation( cell_t *const c, const int height, const int dbh, const 
 
 void nitrogen_allocation( cell_t *const c, species_t *const s );
 
+
 #endif /*CN_ALLOCATION_H_ */

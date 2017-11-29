@@ -294,16 +294,16 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							}
 
 							/* growth respiration */
-							growth_respiration      ( c, layer, height, dbh, age, species );
+							growth_respiration                 ( c, layer, height, dbh, age, species );
 
 							/* autotrophic respiration */
-							autotrophic_respiration ( c, layer, height, dbh, age, species, meteo_daily );
+							autotrophic_respiration            ( c, layer, height, dbh, age, species, meteo_daily );
 
 							/* carbon fluxes */
-							carbon_fluxes           ( c, height, dbh, age, species );
+							carbon_fluxes                      ( c, height, dbh, age, species );
 
 							/* C assimilation */
-							carbon_assimilation     ( c, height, dbh, age, species );
+							carbon_assimilation                ( c, height, dbh, age, species );
 
 							if ( c->doy == ( IS_LEAP_YEAR ( c->years[year].year ) ? 366 : 365) )
 							{
@@ -317,6 +317,9 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 
 							/* allocate daily carbon */
 							carbon_allocation       ( c, height, dbh, age, species, day, month, year );
+
+							/* potential N assimilation */
+							//potential_nitrogen_assimilation    ( c, s );
 
 							/* allocate daily nitrogen */
 							nitrogen_allocation     ( c, s );

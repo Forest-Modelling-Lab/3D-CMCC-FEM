@@ -42,12 +42,6 @@ void carbon_allocation( cell_t *const c, const int height, const int dbh, const 
 	s->value[C_TO_CROOT]   -= (s->value[CROOT_GROWTH_RESP]  / 1e6 * g_settings->sizeCell);
 	s->value[C_TO_BRANCH]  -= (s->value[BRANCH_GROWTH_RESP] / 1e6 * g_settings->sizeCell);
 
-	logger(g_debug_log, "C_TO_LEAF   = %f tC/cell\n", s->value[C_TO_LEAF]);
-	logger(g_debug_log, "C_TO_FROOT  = %f tC/cell\n", s->value[C_TO_FROOT]);
-	logger(g_debug_log, "C_TO_STEM   = %f tC/cell\n", s->value[C_TO_STEM]);
-	logger(g_debug_log, "C_TO_CROOT  = %f tC/cell\n", s->value[C_TO_CROOT]);
-	logger(g_debug_log, "C_TO_BRANCH = %f tC/cell\n", s->value[C_TO_BRANCH]);
-
 	/***************************************************************************************/
 	/* stem */
 	s->value[STEM_SAPWOOD_C]          += s->value[C_TO_STEM] - s->value[C_STEM_SAPWOOD_TO_DEADWOOD];
@@ -59,7 +53,7 @@ void carbon_allocation( cell_t *const c, const int height, const int dbh, const 
 	/* not respiring stem */
 	s->value[STEM_DEADWOOD_C]          = s->value[STEM_C] - s->value[STEM_LIVEWOOD_C];
 
-	/* to avoid that self-thinning mortality happens to remove to much biomass */
+	/* to avoid that self-thinning mortality happens to remove too much biomass */
 	if ( day && month ) s->value[YEARLY_C_TO_STEM] += s->value[C_TO_STEM];
 
 	/***************************************************************************************/
@@ -74,7 +68,7 @@ void carbon_allocation( cell_t *const c, const int height, const int dbh, const 
 	/* not respiring coarse root */
 	s->value[CROOT_DEADWOOD_C]         = s->value[CROOT_C] - s->value[CROOT_LIVEWOOD_C];
 
-	/* to avoid that self-thinning mortality happens to remove to much biomass */
+	/* to avoid that self-thinning mortality happens to remove too much biomass */
 	if ( day && month ) s->value[YEARLY_C_TO_CROOT] += s->value[C_TO_CROOT];
 
 	/***************************************************************************************/
@@ -88,7 +82,7 @@ void carbon_allocation( cell_t *const c, const int height, const int dbh, const 
 	/* not respiring branch */
 	s->value[BRANCH_DEADWOOD_C]        = s->value[BRANCH_C] - s->value[BRANCH_LIVEWOOD_C];
 
-	/* to avoid that self-thinning mortality happens to remove to much biomass */
+	/* to avoid that self-thinning mortality happens to remove too much biomass */
 	if ( day && month ) s->value[YEARLY_C_TO_BRANCH]      += s->value[C_TO_BRANCH];
 
 	/***************************************************************************************/
@@ -100,19 +94,6 @@ void carbon_allocation( cell_t *const c, const int height, const int dbh, const 
 
 	/***************************************************************************************/
 
-	/* for stocking wood */
-	/* note: if here and NOT below model takes into account dead parts */
-	/*
-	if ( s->value[C_TO_STEM]   > 0. ) s->value[YEARLY_C_TO_WOOD]     += s->value[C_TO_STEM];
-	if ( s->value[C_TO_CROOT]  > 0. ) s->value[YEARLY_C_TO_WOOD]     += s->value[C_TO_BRANCH];
-	if ( s->value[C_TO_BRANCH] > 0. ) s->value[YEARLY_C_TO_WOOD]     += s->value[C_TO_CROOT];
-	if ( s->value[C_TO_STEM]   > 0. ) s->value[CUM_YEARLY_C_TO_WOOD] += s->value[C_TO_STEM];
-	if ( s->value[C_TO_CROOT]  > 0. ) s->value[CUM_YEARLY_C_TO_WOOD] += s->value[C_TO_BRANCH];
-	if ( s->value[C_TO_BRANCH] > 0. ) s->value[CUM_YEARLY_C_TO_WOOD] += s->value[C_TO_CROOT];
-	*/
-
-	/***************************************************************************************/
-
 	/*** removing dead pools from carbon flux pools ***/
 	s->value[C_TO_LEAF]    -= s->value[C_LEAF_TO_LITR]  + s->value[C_LEAF_TO_RESERVE];
 	s->value[C_TO_FROOT]   -= s->value[C_FROOT_TO_LITR] + s->value[C_FROOT_TO_RESERVE];
@@ -121,18 +102,6 @@ void carbon_allocation( cell_t *const c, const int height, const int dbh, const 
 	s->value[C_TO_BRANCH]  -= s->value[C_BRANCH_TO_DEADWOOD];
 	s->value[C_TO_FRUIT]   -= s->value[C_FRUIT_TO_DEADWOOD];
 	s->value[C_TO_RESERVE] -= s->value[C_RESERVE_TO_DEADWOOD];
-//	s->value[C_TO_LITR]    += fabs(s->value[C_LEAF_TO_LITR] + s->value[C_FROOT_TO_LITR]);
-//	s->value[C_TO_CWD]     += s->value[C_STEM_TO_CWD] + s->value[C_BRANCH_TO_CWD] + s->value[C_CROOT_TO_CWD] + s->value[C_FRUIT_TO_CWD] + s->value[C_RESERVE_TO_CWD];
-
-	logger(g_debug_log, "C_TO_LEAF     = %f tC/cell\n", s->value[C_TO_LEAF]);
-	logger(g_debug_log, "C_TO_FROOT    = %f tC/cell\n", s->value[C_TO_FROOT]);
-	logger(g_debug_log, "C_TO_STEM     = %f tC/cell\n", s->value[C_TO_STEM]);
-	logger(g_debug_log, "C_TO_CROOT    = %f tC/cell\n", s->value[C_TO_CROOT]);
-	logger(g_debug_log, "C_TO_BRANCH   = %f tC/cell\n", s->value[C_TO_BRANCH]);
-	logger(g_debug_log, "C_TO_FRUIT    = %f tC/cell\n", s->value[C_TO_FRUIT]);
-	logger(g_debug_log, "C_TO_RESERVE  = %f tC/cell\n", s->value[C_TO_RESERVE]);
-//	logger(g_debug_log, "C_TO_LITR     = %f tC/cell\n", s->value[C_TO_LITR]);
-//	logger(g_debug_log, "C_TO_DEADWOOD = %f tC/cell\n", s->value[C_TO_DEADWOOD]);
 
 	/***************************************************************************************/
 
@@ -155,18 +124,6 @@ void carbon_allocation( cell_t *const c, const int height, const int dbh, const 
 	s->value[BRANCH_C]    += s->value[C_TO_BRANCH];
 	s->value[RESERVE_C]   += s->value[C_TO_RESERVE];
 	s->value[FRUIT_C]     += s->value[C_TO_FRUIT];
-//	s->value[LITR_C]      += s->value[C_TO_LITR];
-//	s->value[CWD_C]       += s->value[C_TO_CWD];
-
-	logger(g_debug_log, "LEAF_C    = %f tC/cell\n", s->value[LEAF_C]);
-	logger(g_debug_log, "FROOT_C   = %f tC/cell\n", s->value[FROOT_C]);
-	logger(g_debug_log, "STEM_C    = %f tC/cell\n", s->value[STEM_C]);
-	logger(g_debug_log, "CROOT_C   = %f tC/cell\n", s->value[CROOT_C]);
-	logger(g_debug_log, "BRANCH_C  = %f tC/cell\n", s->value[BRANCH_C]);
-	logger(g_debug_log, "RESERVE_C = %f tC/cell\n", s->value[RESERVE_C]);
-	logger(g_debug_log, "FRUIT_C   = %f tC/cell\n", s->value[FRUIT_C]);
-//	logger(g_debug_log, "LITR_C    = %f tC/cell\n", s->value[LITR_C]);
-//	logger(g_debug_log, "CWD_C     = %f tC/cell\n", s->value[CWD_C]);
 
 	/* check */
 	CHECK_CONDITION ( s->value[LEAF_C],     < , ZERO );
@@ -175,8 +132,6 @@ void carbon_allocation( cell_t *const c, const int height, const int dbh, const 
 	CHECK_CONDITION ( s->value[BRANCH_C],   < , ZERO );
 	CHECK_CONDITION ( s->value[CROOT_C],    < , ZERO );
 	CHECK_CONDITION ( s->value[FRUIT_C],    < , ZERO );
-//	CHECK_CONDITION ( s->value[LITR_C],     < , ZERO );
-//	CHECK_CONDITION ( s->value[CWD_C],      < , ZERO );
 
 	s->value[TOTAL_C] = s->value[LEAF_C] +
 			s->value[FROOT_C]            +
@@ -201,9 +156,6 @@ void carbon_allocation( cell_t *const c, const int height, const int dbh, const 
 	c->daily_branch_carbon      += (s->value[C_TO_BRANCH]  * 1e6 / g_settings->sizeCell);
 	c->daily_reserve_carbon     += (s->value[C_TO_RESERVE] * 1e6 / g_settings->sizeCell);
 	c->daily_fruit_carbon       += (s->value[C_TO_FRUIT]   * 1e6 / g_settings->sizeCell);
-	//computed in littering.c
-	//c->daily_litrC              += (s->value[C_TO_LITR]    * 1e6 / g_settings->sizeCell);
-	//c->daily_cwdC               += (s->value[C_TO_CWD]     * 1e6 / g_settings->sizeCell);
 
 	/*** update cell level carbon pools (gC/m2)***/
 	c->leaf_carbon              += (s->value[C_TO_LEAF]    * 1e6 / g_settings->sizeCell);
@@ -213,9 +165,6 @@ void carbon_allocation( cell_t *const c, const int height, const int dbh, const 
 	c->croot_carbon             += (s->value[C_TO_CROOT]   * 1e6 / g_settings->sizeCell);
 	c->reserve_carbon           += (s->value[C_TO_RESERVE] * 1e6 / g_settings->sizeCell);
 	c->fruit_carbon             += (s->value[C_TO_FRUIT]   * 1e6 / g_settings->sizeCell);
-	//computed in littering.c
-	//c->litrC                    += (s->value[C_TO_LITR]    * 1e6 / g_settings->sizeCell);
-	//c->cwdC                     += (s->value[C_TO_CWD]     * 1e6 / g_settings->sizeCell);
 
 	/* check */
 	CHECK_CONDITION ( c->leaf_carbon,    < , ZERO );
@@ -224,9 +173,6 @@ void carbon_allocation( cell_t *const c, const int height, const int dbh, const 
 	CHECK_CONDITION ( c->branch_carbon,  < , ZERO );
 	CHECK_CONDITION ( c->croot_carbon,   < , ZERO );
 	CHECK_CONDITION ( c->fruit_carbon,   < , ZERO );
-//	CHECK_CONDITION ( c->litrC,          < , ZERO );
-//	CHECK_CONDITION ( c->cwd_litrC,      < , ZERO );
-
 
 }
 
@@ -240,6 +186,8 @@ void nitrogen_allocation ( cell_t *const c, species_t *const s )
 	double n_to_croot;
 	double n_to_branch;
 	double n_to_fruit;
+
+	//TODO IT SHOULD ALLOCATE NITROGEN ONCE EFFECTIVE NITROGEN AVAILABILITY IS COMPUTED
 
 	/* it allocates Daily assimilated Nitrogen for both deciduous and evergreen and compute Nitrogen demand */
 
@@ -322,6 +270,9 @@ void nitrogen_allocation ( cell_t *const c, species_t *const s )
 
 	/*****************************************************************************************************************************/
 
+	//TODO REMOVE ONCE MODIFIED
+	//TODO 2 UPDATE NITROGEN POOLS
+
 	/*** compute daily nitrogen demand ***/
 
 	/* daily nitrogen demand */
@@ -338,12 +289,4 @@ void nitrogen_allocation ( cell_t *const c, species_t *const s )
 	{
 		//todo back to partitioning-allocation routine and recompute both NPP in gC and NPP in gN based on the available soil nitrogen content
 	}
-
-	logger(g_debug_log, "N_TO_LEAF    = %f tN/cell/day\n", s->value[N_TO_LEAF]);
-	logger(g_debug_log, "N_TO_FROOT   = %f tN/cell/day\n", s->value[N_TO_FROOT]);
-	logger(g_debug_log, "N_TO_CROOT   = %f tN/cell/day\n", s->value[N_TO_CROOT]);
-	logger(g_debug_log, "N_TO_STEM    = %f tN/cell/day\n", s->value[N_TO_STEM]);
-	logger(g_debug_log, "N_TO_RESERVE = %f tN/cell/day\n", s->value[N_TO_RESERVE]);
-	logger(g_debug_log, "N_TO_BRANCH  = %f tN/cell/day\n", s->value[N_TO_BRANCH]);
-	logger(g_debug_log, "N_TO_FRUIT   = %f tN/cell/day\n", s->value[N_TO_FRUIT]);
 }

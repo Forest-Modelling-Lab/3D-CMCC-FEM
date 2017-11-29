@@ -6,4 +6,6 @@
 
 void nitrogen_assimilation(species_t *const s);
 
+void potential_nitrogen_allocation( cell_t *const c, species_t *const s );
+
 #endif /* N_ASSIMILATION_H_ */
