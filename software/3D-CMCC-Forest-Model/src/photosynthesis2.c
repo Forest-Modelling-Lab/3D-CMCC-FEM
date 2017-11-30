@@ -15,7 +15,7 @@
 #include "settings.h"
 #include "logger.h"
 
-extern logger_t* g_debug_log;
+//extern logger_t* g_debug_log;
 extern settings_t* g_settings;
 
 
@@ -31,32 +31,32 @@ void total_photosynthesis_biome (cell_t *const c, const int height, const int db
 	species_t *s;
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
-
+#if 0
 	/* This function is a wrapper and replacement for the photosynthesis code which used to be in the central bgc.c code.  At Mott Jolly's request, all of the science code is being moved into funtions. */
 
 	/* psn_struct psn_sun, psn_shade; */
-
 	/****************************************************************************************/
 
 	/* SUNLIT canopy fraction photosynthesis */
 
 	/* convert conductance from m/s --> umol/m2/s/Pa, and correct for CO2 vs. water vapor */
 	cond_corr                    = s->value[LEAF_SUN_CONDUCTANCE] * 1e6 / ( 1.6 * Rgas * ( meteo_daily->tday + TempAbs ) );
+
 	/* convert Leaf Nitrogen from tN/cell --> to gN/m2 */
-	leafN                        = s->value[LEAF_SUN_N] * 1e6 / g_settings->sizeCell;
+	//fixme not clear why 1 /
+	leafN                        = 1. / ( s->value[LEAF_SUN_N] * 1e6 / g_settings->sizeCell );
+
 	/* convert from mass to molar units, and from a daily rate to a rate per second (umol/m2/s) */
-	leaf_day_mresp               = s->value[DAILY_LEAF_SUN_MAINT_RESP] / ( meteo_daily->daylength_sec * GC_MOL * 1e-6 );
+	//fixme not clear why 1 /
+	leaf_day_mresp               = 1. / ( s->value[DAILY_LEAF_SUN_MAINT_RESP] / ( 86400. * GC_MOL * 1e-6 ) ) ;
 	ppfd                         = s->value[PPFD_ABS_SUN];
 
 	/* call Farquhar for sun leaves */
 	ps = Farquhar (c, height, dbh, age, species, meteo_daily, meteo_annual, cond_corr, leafN, ppfd, leaf_day_mresp);
 
-	/* converting umolC/sec --> gC/m2/day) */
-	ps *= meteo_daily->daylength_sec * GC_MOL * 1e-6;
-
 	/* net photosynthesis removing photorespiration and converting to projected lai */
-	//test was "+ leaf_day_mresp" not clear leaf_day_resp sign
-	s->value[ASSIMILATION_SUN]   = ( ps - leaf_day_mresp ) * s->value[LAI_SUN_PROJ];
+	s->value[ASSIMILATION_SUN]   = ( ps + leaf_day_mresp ) * s->value[LAI_SUN_PROJ]*
+			meteo_daily->daylength_sec * GC_MOL * 1e-6;
 
 	/****************************************************************************************/
 
@@ -64,28 +64,30 @@ void total_photosynthesis_biome (cell_t *const c, const int height, const int db
 
 	/* convert conductance from m/s --> umol/m2/s/Pa, and correct for CO2 vs. water vapor */
 	cond_corr                    = s->value[LEAF_SHADE_CONDUCTANCE] * 1e6 / ( 1.6 * Rgas * ( meteo_daily->tday + TempAbs ) );
+
 	/* convert Leaf Nitrogen from tN/cell --> to gN/m2 */
-	leafN                        = s->value[LEAF_SHADE_N] * 1e6 / g_settings->sizeCell;
+	//fixme not clear why 1 /
+	leafN                        = 1. / ( s->value[LEAF_SHADE_N] * 1e6 / g_settings->sizeCell );
+
 	/* convert from mass to molar units, and from a daily rate to a rate per second (umol/m2/s) */
-	leaf_day_mresp               = s->value[DAILY_LEAF_SHADE_MAINT_RESP] / ( meteo_daily->daylength_sec * GC_MOL * 1e-6 );
+	//fixme not clear why 1 /
+	leaf_day_mresp               = 1. / ( s->value[DAILY_LEAF_SHADE_MAINT_RESP] / ( 86400. * GC_MOL * 1e-6 ));
 	ppfd                         = s->value[PPFD_ABS_SHADE];
 
 	/* call Farquhar for shade leaves */
 	ps = Farquhar (c, height, dbh, age, species, meteo_daily, meteo_annual, cond_corr, leafN, ppfd, leaf_day_mresp );
 
-	/* converting umolC/sec --> gC/m2/day) */
-	ps *= meteo_daily->daylength_sec * GC_MOL * 1e-6;
-
 	/* net photosynthesis removing photorespiration and converting to projected lai */
-	//test was "+ leaf_day_mresp" not clear leaf_day_resp sign
-	s->value[ASSIMILATION_SHADE] = ( ps - leaf_day_mresp ) * s->value[LAI_SHADE_PROJ];
-
+	s->value[ASSIMILATION_SHADE] = ( ps + leaf_day_mresp ) * s->value[LAI_SHADE_PROJ]*
+			meteo_daily->daylength_sec * GC_MOL * 1e-6;
 
 	/****************************************************************************************/
 
 	/* total assimilation */
 	s->value[ASSIMILATION] = s->value[ASSIMILATION_SUN] + s->value[ASSIMILATION_SHADE];
 	logger(g_debug_log, "ASSIMILATION = %g gC/m^2/day\n", s->value[ASSIMILATION]);
+
+	/****************************************************************************************/
 
 	s->value[MONTHLY_ASSIMILATION]       += s->value[ASSIMILATION];
 	s->value[MONTHLY_ASSIMILATION_SUN]   += s->value[ASSIMILATION_SUN];
@@ -94,6 +96,77 @@ void total_photosynthesis_biome (cell_t *const c, const int height, const int db
 	s->value[YEARLY_ASSIMILATION]        += s->value[ASSIMILATION];
 	s->value[YEARLY_ASSIMILATION_SUN]    += s->value[ASSIMILATION_SUN];
 	s->value[YEARLY_ASSIMILATION_SHADE]  += s->value[ASSIMILATION_SHADE];
+
+	s->value[GPP_SUN]   = s->value[ASSIMILATION_SUN];
+	s->value[GPP_SHADE] = s->value[ASSIMILATION_SHADE];
+	s->value[GPP]       = s->value[GPP_SUN] + s->value[GPP_SHADE];
+
+	s->value[MONTHLY_GPP_SUN]   += s->value[GPP_SUN];
+	s->value[MONTHLY_GPP_SHADE] += s->value[GPP_SHADE];
+
+	s->value[YEARLY_GPP_SUN]    += s->value[GPP_SUN];
+	s->value[YEARLY_GPP_SHADE]  += s->value[GPP_SHADE];
+
+#else
+
+	/****************************************************************************************/
+
+	/* canopy fraction photosynthesis */
+
+	/* convert conductance from m/s --> umol/m2/s/Pa, and correct for CO2 vs. water vapor */
+	cond_corr                    = s->value[LEAF_CONDUCTANCE] * 1e6 / ( 1.6 * Rgas * ( meteo_daily->tday + TempAbs ) );
+
+	/* convert Leaf Nitrogen from tN/cell --> to gN/m2 */
+	//fixme not clear why 1 /
+	leafN                        = 1. / ( s->value[LEAF_N] * 1e6 / g_settings->sizeCell );
+
+	/* convert from mass to molar units, and from a daily rate to a rate per second (umol/m2/s) */
+	//fixme not clear why 1 /
+	leaf_day_mresp               = 1. / ( s->value[DAILY_LEAF_MAINT_RESP] / ( 86400. * GC_MOL * 1e-6 ));
+	ppfd                         = s->value[PPFD_ABS];
+
+	/* call Farquhar for shade leaves */
+	ps = Farquhar (c, height, dbh, age, species, meteo_daily, meteo_annual, cond_corr, leafN, ppfd, leaf_day_mresp );
+
+	/* net photosynthesis removing photorespiration and converting to projected lai */
+	s->value[ASSIMILATION] = ( ps + leaf_day_mresp ) * s->value[LAI_PROJ]*
+			meteo_daily->daylength_sec * GC_MOL * 1e-6;
+//
+//	s->value[GPP]          = s->value[ASSIMILATION];
+
+	/****************************************************************************************/
+
+#endif
+//
+//	if (s->value[LAI_PROJ]>3)
+//	{
+//		printf("%g \n", s->value[GPP]);
+//		getchar();
+//	}
+//	logger(g_debug_log, "GPP_gC = %g gC/m^2/day\n", s->value[GPP]);
+//
+//	/* gC/m2/day --> tC/cell/day */
+//	s->value[GPP_tC]             = s->value[GPP] / 1e6 * g_settings->sizeCell ;
+//
+//	/* class level */
+//	s->value[MONTHLY_GPP]       += s->value[GPP];
+//	s->value[YEARLY_GPP]        += s->value[GPP];
+//
+//
+//	/* cell level */
+//	c->daily_gpp                += s->value[GPP];
+//	c->monthly_gpp              += s->value[GPP];
+//	c->annual_gpp               += s->value[GPP];
+//
+//	c->daily_gpp_tC             += s->value[GPP_tC];
+//	c->monthly_gpp_tC           += s->value[GPP_tC];
+//	c->annual_gpp_tC            += s->value[GPP_tC];
+//
+//	/* yearly veg days counter */
+//	if ( s->value[GPP] > 0. )
+//	{
+//		++s->counter[YEARLY_VEG_DAYS];
+//	}
 
 }
 
@@ -170,11 +243,11 @@ double Farquhar (cell_t *const c, const int height, const int dbh, const int age
 	double var_a, var_b, var_c, det;
 
 
-	//todo move in species.txt (this should be the only variable for all photosynthesis)
+	//todo todo todo todo todo move in species.txt (this should be the only variable for all photosynthesis)
 	double flnr = 0.1; /* (g NRub/g Nleaf) fract. of leaf N in Rubisco */
 
-	species_t *s;
-	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
+	//	species_t *s;
+	//	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 	/* begin by assigning local variables */
 
@@ -223,10 +296,7 @@ double Farquhar (cell_t *const c, const int height, const int dbh, const int age
 	/* compute (umol electrons/m2/s) max rate electron transport */
 	Jmax = 2.1 * Vmax;
 
-	/* calculate J = f(Jmax, ppfd), reference:
-		de Pury and Farquhar 1997
-		Plant Cell and Env.
-	 */
+	/* calculate J = f(Jmax, ppfd), reference: de Pury and Farquhar 1997 Plant Cell and Env. */
 	var_a  = 0.7;
 	var_b  = -Jmax - (ppfd * pabs / ppe );
 	var_c  = Jmax  *  ppfd * pabs / ppe;
@@ -257,7 +327,7 @@ double Farquhar (cell_t *const c, const int height, const int dbh, const int age
 	CHECK_CONDITION( det , <, 0.0);
 
 	/* compute Av (umol CO2/m2/s) carboxylation limited assimilation */
-	Av = ( -var_b + sqrt( det ) ) / ( 2. * var_a );
+	Av    = ( -var_b + sqrt( det ) ) / ( 2. * var_a );
 
 	/* quadratic solution for Aj */
 	var_a = -4.5 / cond_corr;

@@ -311,6 +311,8 @@ enum {
 
 	/* LAI */
 	SLA_AVG,                            /* (kg/m2) Age-related Average Specific Leaf Area */
+	SLA_SUN_PROJ,                       /* (m2/Kg) Age-related Porjected Average Specific Leaf Area for sun leaves*/
+	SLA_SHADE_PROJ,                     /* (m2/Kg) Age-related Porjected Average Specific Leaf Area for shaded leaves*/
 	LAI_PROJ,                           /* (m2/m2) LAI for Projected Area covered (at zenith angle) */
 	LAI_SUN_PROJ,                       /* (m2/m2) LAI for sun leaves for Projected Area covered (at zenith angle) */
 	LAI_SHADE_PROJ,                     /* (m2/m2) LAI for shaded leaves for Projected Area covered (at zenith angle) */

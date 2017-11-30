@@ -18,13 +18,15 @@
 #include "littering.h"
 
 extern settings_t* g_settings;
+extern soil_settings_t *g_soil_settings;
 
-#define BIOME 1 /* 0 is off and uses CENTURY approach */
+#define BIOME 0 /* 0 is off and uses CENTURY approach */
 
 double decomposition ( cell_t *const c, const meteo_daily_t *const meteo_daily, int flag )
 {
 	double temp_scalar;           /* soil temperature scalar */
 	double water_scalar;          /* soil water scalar */
+	double soil_scalar;           /* soil physic scalar (only for soil layer and when using century method) */
 	double rate_scalar;           /* final rate scalar as the product of the temperature and water scalars */
 	double min_psi, max_psi;
 	double TsoilK;
@@ -112,20 +114,35 @@ double decomposition ( cell_t *const c, const meteo_daily_t *const meteo_daily, 
 		water_scalar = log ( min_psi / c->psi ) / log ( min_psi / max_psi );
 	}
 
+	soil_scalar = 1.;
+
 #else
 
 	/* following Parton et al., 1987 and Epron et al., 2001 effects of temperature on litter and soil decomposition rate */
 	water_scalar = 1. / ( 1. + 30. * exp ( -8.5 * ( c->asw / c->max_asw_fc ) ) );
 
+
+	/* soil physic scalar for soil pool as in Parton et al., 1987 and Epron et al., 2001 */
+	/*litter */
+	if ( flag == 0 )
+	{
+		/* no soil physic scalar for litter pool */
+		soil_scalar = 1.;
+	}
+	else
+	{
+		soil_scalar = ( 1. - 0.75 * ( ( g_soil_settings->values[SOIL_CLAY_PERC] / 100. ) + ( g_soil_settings->values[SOIL_SILT_PERC] / 100. ) ) );
+	}
+
 #endif
 
 	/* calculate the final rate scalar as the product of the temperature and water scalars */
-	rate_scalar     = temp_scalar * water_scalar;
-
+	rate_scalar     = temp_scalar * water_scalar * soil_scalar;
 
 	/* check */
 	CHECK_CONDITION (temp_scalar , > , 1);
 	CHECK_CONDITION (water_scalar, > , 1);
+	CHECK_CONDITION (soil_scalar , > , 1);
 	CHECK_CONDITION (rate_scalar , > , 1);
 
 	return (rate_scalar);

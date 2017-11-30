@@ -248,8 +248,8 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 		s->value[NIGHTLY_LEAF_MAINT_RESP]     = ( leaf_N * MR_ref * pow(q10_tnight, exponent_tnight) * (1. - (meteo_daily->daylength/24.)));
 
 		/* for sun and shaded leaves */
-		s->value[DAILY_LEAF_SUN_MAINT_RESP]   = ( leaf_sun_N   * MR_ref * pow(q10_tday, exponent_tday) * (meteo_daily->daylength / 24.)) * light_inhib;
-		s->value[DAILY_LEAF_SHADE_MAINT_RESP] = ( leaf_shade_N * MR_ref * pow(q10_tday, exponent_tday) * (meteo_daily->daylength / 24.)) * light_inhib;
+		s->value[DAILY_LEAF_SUN_MAINT_RESP]   = ( leaf_sun_N   * MR_ref * pow(q10_tday, exponent_tday) * meteo_daily->daylength_sec) * light_inhib;
+		s->value[DAILY_LEAF_SHADE_MAINT_RESP] = ( leaf_shade_N * MR_ref * pow(q10_tday, exponent_tday) * meteo_daily->daylength_sec) * light_inhib;
 
 		/* total (all day) leaf maintenance respiration */
 		s->value[TOT_DAY_LEAF_MAINT_RESP]     = s->value[DAILY_LEAF_MAINT_RESP] + s->value[NIGHTLY_LEAF_MAINT_RESP];
