@@ -19,7 +19,9 @@
 
 extern settings_t* g_settings;
 
-double decomposition (cell_t *const c, const meteo_daily_t *const meteo_daily)
+#define BIOME 1 /* 0 is off and uses CENTURY approach */
+
+double decomposition ( cell_t *const c, const meteo_daily_t *const meteo_daily, int flag )
 {
 	double temp_scalar;           /* soil temperature scalar */
 	double water_scalar;          /* soil water scalar */
@@ -33,6 +35,8 @@ double decomposition (cell_t *const c, const meteo_daily_t *const meteo_daily)
 	/************************************************************************************************/
 
 	/*** decomposition ***/
+
+#if BIOME
 
 	E0    = 308.56;
 	T0    = 227.13;
@@ -48,6 +52,7 @@ double decomposition (cell_t *const c, const meteo_daily_t *const meteo_daily)
 		used to get the base decomp rates were controlled at 25 C.
 		note: this implies to change value value from 56.02 to 71.02 K */
 
+
 	if ( meteo_daily->tsoil < -10. )
 	{
 		/* no decomposition processes for tsoil < -10.0 C */
@@ -58,8 +63,26 @@ double decomposition (cell_t *const c, const meteo_daily_t *const meteo_daily)
 		TsoilK      = meteo_daily->tsoil + TempAbs;
 		temp_scalar = exp ( E0 * ( ( 1. / Tbase ) - ( 1. / ( TsoilK - T0 ) ) ) );
 	}
-	//fixme bug in original biome
+	//fixme bug in original BIOME-BGC CODE
 	if ( temp_scalar > 1 ) temp_scalar = 1.;
+
+#else
+
+	/* litter */
+	/* following Parton et al., 1987 and Epron et al., 2001 effects of temperature on litter and soil decomposition rate */
+	if ( flag == 0 )
+	{
+		temp_scalar = pow((( 45. - meteo_daily->tsoil ) / 20. ) , 0.2 ) * exp (0.076 * ( 1. - pow((( 45. - meteo_daily->tsoil ) / 20. ) , 4.9 ) ) );
+	}
+	/* soil */
+	else
+	{
+		temp_scalar = pow((( 45. - meteo_daily->tsoil ) / 10. ) , 0.2 ) * exp (0.076 * ( 1. - pow((( 45. - meteo_daily->tsoil ) / 10. ) , 2.63 ) ) );
+	}
+
+#endif
+
+#if BIOME
 
 	/* calculate the rate constant scalar for soil water content.
 		Uses the log relationship with water potential given in
@@ -89,12 +112,16 @@ double decomposition (cell_t *const c, const meteo_daily_t *const meteo_daily)
 		water_scalar = log ( min_psi / c->psi ) / log ( min_psi / max_psi );
 	}
 
-#if 0
-	water_scalar = c->soil_moist_ratio;
+#else
+
+	/* following Parton et al., 1987 and Epron et al., 2001 effects of temperature on litter and soil decomposition rate */
+	water_scalar = 1. / ( 1. + 30. * exp ( -8.5 * ( c->asw / c->max_asw_fc ) ) );
+
 #endif
 
 	/* calculate the final rate scalar as the product of the temperature and water scalars */
 	rate_scalar     = temp_scalar * water_scalar;
+
 
 	/* check */
 	CHECK_CONDITION (temp_scalar , > , 1);
@@ -145,7 +172,7 @@ void litter_decomposition (cell_t *const c, const meteo_daily_t *const meteo_dai
 	/******************************************************************************************************************/
 
 	/* calculate the final rate scalar as the product of the temperature and water scalars */
-	rate_scalar     = decomposition ( c, meteo_daily );
+	rate_scalar     = decomposition ( c, meteo_daily, 0 );
 
 	/* calculate C:N ratios */
 	if ( c->deadwood_N  > 0. ) cn_cwd       = c->deadwood_C  / c->deadwood_N;
@@ -265,7 +292,7 @@ void soil_decomposition (cell_t *const c, const meteo_daily_t *const meteo_daily
 	double pot_soil4C_loss;       /* potential lignin soil loss */
 
 	/* calculate the final rate scalar as the product of the temperature and water scalars */
-	rate_scalar     = decomposition ( c, meteo_daily );
+	rate_scalar     = decomposition ( c, meteo_daily, 1 );
 
 	/* soil decomposition rate */
 	soil_decomp_rate1     = KS1_BASE * rate_scalar;

@@ -310,10 +310,9 @@ if ( length(error_list) > 0 ) {
 end.time <- Sys.time()
 print(end.time - start.time)
 
-# create validation plots ----
-
-
 # create the comparison plots ----
+
+print("\n\nCOMPARSION PLOTS START....\n\n")
 
 for (site in site_list) {
   for(cy_time in time_list) {
@@ -359,6 +358,12 @@ for (site in site_list) {
 rm(site)
 rm(lf)
 
+print("\n\nCOMPARSION PLOTS COMPLETE\n\n")
+
+
+# validazione degli stand ----
+
+print("\n\nCOMPARSION PLOTS STAND START....\n\n")
 # db con i nomi e gli ID dei siti
 df_siti = read.csv('sites_isimip.csv')
 lista_time = c('annual')
@@ -482,6 +487,16 @@ for (cy_time in lista_time) {
           if ( as.character(db_var_corr$model.variable[cy_v]) == 'SPECIES' ) {
             next
           }
+          
+          cat(sprintf('\t create plot for variable: %s\n',as.character(db_var_corr$model.variable[cy_v])))
+          
+          if ( sum(grepl(as.character(db_var_corr$model.variable[cy_v]),
+                         colnames(df_t2)) ) == 0
+          ) {
+            cat(sprintf('\t\t variable: %s MISSING\n\n',as.character(db_var_corr$model.variable[cy_v])))
+            next
+          }
+          
           df_plot_tmp = data.frame(
             'TIME' = df_t2$TIME,
             'v1' = df_t2[,as.character(db_var_corr$model.variable[cy_v])],
@@ -526,6 +541,8 @@ for (cy_time in lista_time) {
           # plot_lr[[1]] = plot_lr[[1]] + theme(legend.position = 'top')
           plot1 = plot1 + theme(legend.position = 'top')
           
+          cat(sprintf('\t create plot for variable: %s COMPLETE\n',as.character(db_var_corr$model.variable[cy_v])))
+          
           list_plot_stand_valid[[length(list_plot_stand_valid)+1]] = 
             plot_grid(plot1,plot_lr[[1]],plot_lr[[2]],ncol = 3,rel_widths = c(1,1,2))
           
@@ -564,7 +581,12 @@ for (cy_time in lista_time) {
   }
 }
 rm(dir_in_gen)
+
+cat(sprintf("\n\nCOMPARSION PLOTS STAND COMPLETE\n\n"))
+
 # validazione dei flussi ----
+
+cat(sprintf("\n\nFLUX VALIDATION PLOTS START.....\n\n"))
 
 for (cy_s in site_list) {
   dir_in_gen = paste0(getwd(),"/output/",output_folder,"-", version, "-", cy_s,'/')
@@ -605,7 +627,7 @@ for (cy_s in site_list) {
   }
   rm(file_mod,ls_file_md)
   
-  pdf(paste0(dir_in_gen,'validation_flux.pdf'),
+  pdf(paste0(dir_in_gen,'validation_flux_',cy_s,'.pdf'),
       onefile = T, width = 20,height = 15)
   
   for ( cy_p in seq(1,length(list_p)) ) {
@@ -619,11 +641,16 @@ for (cy_s in site_list) {
   dev.off()
   rm(list_p)
   
+  cat(sprintf('\ncreate file: %s\n',paste0(dir_in_gen,'validation_flux_',cy_s,'.pdf')))
+  
 }
 rm(cy_s)
 
+cat(sprintf("\n\nFLUX VALIDATION PLOTS COMPLETE\n\n"))
+
 # validazione di tutti gli output ----
 
+cat(sprintf("\n\nALL SEASONAL PLOTS START...\n\n"))
 for (cy_s in site_list) {
   dir_in_gen = paste0(getwd(),"/output/",output_folder,"-", version, "-", cy_s,'/')
   
@@ -644,7 +671,7 @@ for (cy_s in site_list) {
   }
   rm(file_mod,ls_file_md)
   
-  pdf(paste0(dir_in_gen,'validation_output_',cy_s,'.pdf'),
+  pdf(paste0(dir_in_gen,'SEASONAL_output_',cy_s,'.pdf'),
       onefile = T, width = 15,height = 12)
   
   for ( cy_p in seq(1,length(list_p)) ) {
@@ -661,31 +688,9 @@ for (cy_s in site_list) {
 }
 rm(cy_s)
 
-file_md = paste0('/home/alessio/git/3D-CMCC-LAND/software/3D-CMCC-Forest-Model/output/Test_output_Rstudio_ct-5.4-Collelongo/LOCAL/output_5.4_2017_NOVEMBER_28/daily/',
-                 'Benchmark_daily_5.4_Collelongo_LOCAL_hist.txt_(1997-2014)_CO2_ON_CO2_hist.txt_Man_VAR_d_10000_txt.txt')
-cat(sprintf('import file: %s\n',file_md))
-df_mod2 = read.csv(file_md,comment.char = '#')
-cat(sprintf('import file: %s OK\n',file_md))
+cat(sprintf("\n\nALL SEASONAL PLOTS COMPLETE\n\n"))
 
-var_md = colnames(df_mod2)
-var_md = var_md[-1* which(var_md == 'YEAR')]
-var_md = var_md[-1* which(var_md == 'MONTH')]
-var_md = var_md[-1* which(var_md == 'DAY')]
 
-# rimuovo alcune colonne dal file perchè sono factor
-var_md = c()
-for (cy_var_md in colnames(df_mod2) ) {
-  if ( is.factor(df_mod2[,cy_var_md]) ) {
-    next
-  }
-  var_md = c(var_md,cy_var_md)
-}
-
-var_md = var_md[-1* which(var_md == 'YEAR')]
-var_md = var_md[-1* which(var_md == 'MONTH')]
-var_md = var_md[-1* which(var_md == 'DAY')]
-
-df_md = df_mod2[,var_md]
 #     # # create annual GPP plot
 #     # dev.new()
 #     # plot(outputCMCC$annual$Date,outputCMCC$annual[,"GPP"], main = colnames(outputCMCC$annual[8]), col="red", xlab = "year", type = "l")

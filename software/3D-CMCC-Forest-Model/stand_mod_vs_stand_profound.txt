@@ -7,7 +7,7 @@
 "MaxLAI","Maximum of LAI (maximum reached LAI) (m^2/m^2)","STAND","lai","REAL","adimensional","Leaf Area Index","local site data provider"
 "STEM_C","Stem carbon pool (tC/cell)","STAND","stemBiomass_kgha","REAL","kg ha-1","Stem biomass","NA","local site data provider"
 "AGB","Aboveground Biomass pool (tC/cell)","STAND","aboveGroundBiomass_kgha","REAL","kg ha-1","Above ground biomass","NA","local site data provider"
-"LiveTree","Number of trees (n tree /sizecell)","STAND","density_treeha","REAL","tree ha-1","Number of tree per ha","NA","local site data provider"
+"LIVETREE","Number of trees (n tree /sizecell)","STAND","density_treeha","REAL","tree ha-1","Number of tree per ha","NA","local site data provider"
 "BRANCH_C","Branch carbon pool (tC/cell)","STAND","branchesBiomass_kgha","REAL","kg ha-1","Branches biomass","NA","local site data provider"
 "MAX_LEAF_C","Maximum Current Leaf carbon pool (tC/cell)","STAND","foliageBiomass_kgha","REAL","kg ha-1","Foliage biomass","NA","local site data provider"
 "BGB","Belowground Biomass pool (tC/cell)","STAND","rootBiomass_kgha","REAL","kg ha-1","Root biomass","NA","local site data provider"
