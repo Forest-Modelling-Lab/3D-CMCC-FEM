@@ -43,6 +43,7 @@ FINE_ROOT_LEAF  0.523         //allocation new fine root C:new leaf (ratio) 0.52
 STEM_LEAF   2.5               //allocation new stem C:new leaf (ratio) 2.5 for P. sylvestris from Pietsch 2.2 from Tatarinov
 COARSE_ROOT_STEM   0.29       //allocation new coarse root C:new stem (ratio) 0.29 for P. sylvestris from Pietsch 0.44 from Tatarinov
 LIVE_TOTAL_WOOD 0.076         //new live C:new total wood (ratio) for P. sylvestris 0.59 from Pietsch, 0.076 from Tatarinov
+N_RUBISCO               0.01  //Fraction of leaf N in Rubisco (ratio)
 CN_LEAVES   36                //CN of leaves (kgC/kgN) for P. sylvestris 33.1 from Pietsch 36 from Tatarinov
 CN_FALLING_LEAVES   122       //CN of leaf litter (kgC/kgN) for P. sylvestris from Pietsch, 122 from Tatarinov 
 CN_FINE_ROOTS   49.0          //CN of fine roots (kgC/kgN) for P. sylvestris 38 from Pietsch 49 from Tatarinov

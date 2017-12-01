@@ -81,6 +81,7 @@ double decomposition ( cell_t *const c, const meteo_daily_t *const meteo_daily, 
 	{
 		temp_scalar = pow((( 45. - meteo_daily->tsoil ) / 10. ) , 0.2 ) * exp (0.076 * ( 1. - pow((( 45. - meteo_daily->tsoil ) / 10. ) , 2.63 ) ) );
 	}
+	if ( temp_scalar > 1 ) temp_scalar = 1.;
 
 #endif
 
@@ -120,6 +121,7 @@ double decomposition ( cell_t *const c, const meteo_daily_t *const meteo_daily, 
 
 	/* following Parton et al., 1987 and Epron et al., 2001 effects of temperature on litter and soil decomposition rate */
 	water_scalar = 1. / ( 1. + 30. * exp ( -8.5 * ( c->asw / c->max_asw_fc ) ) );
+	if ( water_scalar > 1 ) water_scalar = 1.;
 
 
 	/* soil physic scalar for soil pool as in Parton et al., 1987 and Epron et al., 2001 */
@@ -133,6 +135,7 @@ double decomposition ( cell_t *const c, const meteo_daily_t *const meteo_daily, 
 	{
 		soil_scalar = ( 1. - 0.75 * ( ( g_soil_settings->values[SOIL_CLAY_PERC] / 100. ) + ( g_soil_settings->values[SOIL_SILT_PERC] / 100. ) ) );
 	}
+	if ( soil_scalar > 1 ) soil_scalar = 1.;
 
 #endif
 

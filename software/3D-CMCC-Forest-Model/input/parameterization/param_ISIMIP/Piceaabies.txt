@@ -43,6 +43,7 @@ FINE_ROOT_LEAF          0.622   //allocation new fine root C:new leaf (ratio) fo
 STEM_LEAF               3.03    //allocation new stem C:new leaf (ratio) for Picea abies from Mollicone et al. 2002, varying from 1.43 to 3.42 see White et al., 1999, for Picea abies (see Pietsch)
 COARSE_ROOT_STEM        0.19    //allocation new coarse root C:new stem (ratio) for Picea abies from Mollicone et al. 2002, varying from 0.159 to 0.230 see White et al., 1999, for Picea abies (see Pietsch)
 LIVE_TOTAL_WOOD         0.076   //new live C:new total wood (ratio) for Picea abies 0.071 from Mollicone et al. 2002, for Picea abies (see Pietsch)
+N_RUBISCO               0.055   //Fraction of leaf N in Rubisco (ratio)
 CN_LEAVES               58.8    //CN of leaves (kgC/kgN) for Picea abies 42.73 from Mollicone et al. 2002, 42 from Pietsch et al., 2005, varying from 28.1 to 58.8 see White et al., 1999
 CN_FALLING_LEAVES       116     //CN of leaf litter (kgC/kgN) for Picea abies from Mollicone et al. 2002, 87.7 from Pietsch et al., 2005, varying from 50.5 to 116 see White et al., 1999
 CN_FINE_ROOTS           58.0    //CN of fine roots (kgC/kgN) for 36.44 Picea abies from Mollicone et al. 2002, 42.4 Pietsch et al., 2005, varying from 27.6 to 46.7 see White et al., 1999

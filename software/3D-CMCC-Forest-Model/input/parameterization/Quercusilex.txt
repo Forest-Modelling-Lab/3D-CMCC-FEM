@@ -43,6 +43,7 @@ FINE_ROOT_LEAF  1           //allocation new fine root C:new leaf (ratio) see Mo
 STEM_LEAF   1               //allocation new stem C:new leaf (ratio) see Mollicone et al 2002
 COARSE_ROOT_STEM    0.3     //allocation new coarse root C:new stem (ratio) see Mollicone et al 2002
 LIVE_TOTAL_WOOD 0.071       //new live C:new total wood (ratio) for DNF from Pietsch
+N_RUBISCO            0.088  //Fraction of leaf N in Rubisco (ratio)
 CN_LEAVES   42              //CN of leaves (kgC/kgN) for Q. ilex from Chiesi et al., 2007
 CN_FALLING_LEAVES   49      //CN of leaf litter (kgC/kgN) for Q. ilex from Chiesi et al., 2007
 CN_FINE_ROOTS   42          //CN of fine roots (kgC/kgN) for Q. ilex from Chiesi et al., 2007

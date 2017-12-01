@@ -52,7 +52,7 @@ void total_photosynthesis_biome (cell_t *const c, const int height, const int db
 		ppfd                         = s->value[PPFD_ABS_SUN] / s->value[LAI_SUN_PROJ];
 
 		/* call Farquhar for sun leaves */
-		ps = Farquhar (c, height, dbh, age, species, meteo_daily, meteo_annual, cond_corr, leafN, ppfd, leaf_day_mresp);
+		ps = Farquhar (c, s, meteo_daily, meteo_annual, cond_corr, leafN, ppfd, leaf_day_mresp);
 
 		/* net photosynthesis and converting from umol/m2 leaf/sec gC/m2/day */
 		s->value[ASSIMILATION_SUN]   = ( ps + leaf_day_mresp ) * s->value[LAI_SUN_PROJ] * meteo_daily->daylength_sec * GC_MOL * 1e-6;
@@ -77,7 +77,7 @@ void total_photosynthesis_biome (cell_t *const c, const int height, const int db
 		ppfd                         = s->value[PPFD_ABS_SHADE] / s->value[LAI_SHADE_PROJ];
 
 		/* call Farquhar for shade leaves */
-		ps = Farquhar (c, height, dbh, age, species, meteo_daily, meteo_annual, cond_corr, leafN, ppfd, leaf_day_mresp );
+		ps = Farquhar (c, s, meteo_daily, meteo_annual, cond_corr, leafN, ppfd, leaf_day_mresp );
 
 		/* net photosynthesis and converting from umol/m2 leaf/sec gC/m2/day */
 		s->value[ASSIMILATION_SHADE] = ( ps + leaf_day_mresp ) * s->value[LAI_SHADE_PROJ] * meteo_daily->daylength_sec * GC_MOL * 1e-6;
@@ -106,9 +106,11 @@ void total_photosynthesis_biome (cell_t *const c, const int height, const int db
 	/* gC/m2/day --> tC/cell/day */
 	s->value[GPP_tC]                      = s->value[GPP] / 1e6 * g_settings->sizeCell ;
 
+	s->value[MONTHLY_GPP]                += s->value[GPP];
 	s->value[MONTHLY_GPP_SUN]            += s->value[GPP_SUN];
 	s->value[MONTHLY_GPP_SHADE]          += s->value[GPP_SHADE];
 
+	s->value[YEARLY_GPP]                 += s->value[GPP];
 	s->value[YEARLY_GPP_SUN]             += s->value[GPP_SUN];
 	s->value[YEARLY_GPP_SHADE]           += s->value[GPP_SHADE];
 
@@ -130,8 +132,8 @@ void total_photosynthesis_biome (cell_t *const c, const int height, const int db
 
 }
 
-double Farquhar (cell_t *const c, const int height, const int dbh, const int age, const int species, const meteo_daily_t *const meteo_daily,
-		const meteo_annual_t *const meteo_annual, const double cond_corr, const double leafN, const double ppfd, const double leaf_day_mresp )
+double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const meteo_daily, const meteo_annual_t *const meteo_annual,
+		const double cond_corr, const double leafN, const double ppfd, const double leaf_day_mresp )
 {
 	/*
 		The following variables are assumed to be defined in the psn struct
@@ -199,17 +201,11 @@ double Farquhar (cell_t *const c, const int height, const int dbh, const int age
 	double Aj;                     /* (umol/m2/s) RuBP regeneration limited assimilation */
 	double A;                      /* (umol/m2/s) final assimilation rate */
 	double Ci;                     /* (Pa) intercellular [CO2] */
-	double Rd;                     /* (umol/m2/s) day leaf dark maintenance respiration, proj. area basis */
+	double Rd;                     /* (umol/m2/s) (umol/m2/s) day leaf m. resp, proj. area basis */
 	double var_a, var_b, var_c, det;
-	double beta;                   /* ratio between Vcmax and Jmax */
-
 
 	//todo todo todo todo todo move in species.txt (this should be the only variable for all photosynthesis)
-	double flnr = 0.1; /* (g NRub/g Nleaf) fract. of leaf N in Rubisco */
-	double beta = 2.1; /* for fagus see Liozon et al., (2000) and Castanea */
-
-	//	species_t *s;
-	//	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
+	double beta = 2.1; /* ratio between Vcmax and Jmax for fagus see Liozon et al., (2000) and Castanea */
 
 	/* begin by assigning local variables */
 
@@ -248,8 +244,17 @@ double Farquhar (cell_t *const c, const int height, const int dbh, const int age
 	/* calculate gamma (Pa) CO2 compensation point, in the absence of maint resp, assumes Vomax/Vcmax = 0.21 */
 	gamma = 0.5 * 0.21 * Kc * O2 / Ko;
 
+	/* calculate Vmax from leaf nitrogen data and Rubisco activity */
+
+	/* kg Nleaf   kg NRub    kg Rub      umol            umol
+	   -------- X -------  X ------- X ---------   =   --------
+	      m2      kg Nleaf   kg NRub   kg RUB * s       m2 * s
+
+	     (lnc)  X  (flnr)  X  (fnr)  X   (act)     =    (Vmax)
+	*/
+
 	/* calculate Vcmax (umol CO2/m2/s) max rate of carboxylation from leaf nitrogen data and Rubisco activity */
-	Vcmax = leafN * flnr * fnr * act;
+	Vcmax = leafN * s->value[N_RUBISCO] * fnr * act;
 
 	/* calculate Jmax = f(Vmax), reference:	Wullschleger, S.D., 1993.  Biochemical limitations to carbon assimilation in C3 plants -
 	 * A retrospective analysis of the A/Ci curves from	109 species. Journal of Experimental Botany, 44:907-920. */
@@ -303,11 +308,10 @@ double Farquhar (cell_t *const c, const int height, const int dbh, const int age
 
 	/* compute (umol CO2/m2/s) final assimilation rate */
 	/* estimate A as the minimum of (Av,Aj) */
-	if ( Av < Aj ) A = Av;
-	else           A = Aj;
+	A = MIN (Av, Aj);
 
 	/* compute (Pa) intercellular [CO2] */
-	//fixme currently not used
+	//fixme currently not used ?
 	Ci = Ca - ( A / cond_corr );
 
 	/* compute assimilation (umol/m2/s) */

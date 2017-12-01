@@ -3,25 +3,25 @@ LIGHT_TOL               3       //4 = very shade intolerant 3 = shade intolerant
 PHENOLOGY               1.2     //PHENOLOGY 0.1 = deciduous broadleaf, 0.2 = deciduous needle leaf, 1.1 = broad leaf evergreen, 1.2 = needle leaf evergreen 
 ALPHA                   0.054   //Canopy quantum efficiency (molC/molPAR) converted from 1.8 gCMJ for Picea abies (0.065) Seidl et al., 2005, (0.048) Rotzer et al., 2010, 0.051 Peltionemi et al., 2012
 EPSILONgCMJ             0.61    //Light Use Efficiency (gC/molPAR)(used if ALPHA is not available) 0.61 Peltionemi et al., 2012
-GAMMA_LIGHT             0.02   // Empirical parameter for Light modifiers see Peltionemi et al., 2012 
-K                   0.54    //0.67    //Extinction coefficient for absorption of PAR by canopy for Picea abies Pietsch et al., 2005 ,0.54 from Pietsch et al., 2005,  0.54 from Mollicone, 0.4241 Forrester et al., 2014
+GAMMA_LIGHT             0.02    // Empirical parameter for Light modifiers see Peltionemi et al., 2012 
+K                       0.67    //Extinction coefficient for absorption of PAR by canopy for Picea abies Pietsch et al., 2005 ,0.54 from Pietsch et al., 2005,  0.54 from Mollicone, 0.4241 Forrester et al., 2014
 ALBEDO                  0.06    //averaged for P.abies, 0.06 Jarvis et al., 1976, 0.095 from Breuer et al., 2003
 INT_COEFF               0.25    //precip interception coefficient for Picea abies (0.3 see Tatarinov) (0.25 see Lawrence et al., 2007)
-SLA_AVG0        12  //ISIMIP  5.9 //Average Specific Leaf Area m^2/Kg (MATURE) sunlit/shaded leaves for Picea abies 7.52 Mund et al., 2002, (5.9) see Johansson, T. 1999
-SLA_AVG1        5.9 //ISIMIP  12  //Average Specific Leaf Area m^2/Kg (juvenile) sunlit/shaded leaves for Picea abies Konopka et al., 2014, (5.9) see Johansson, T. 1999
+SLA_AVG0               7.52     //Average Specific Leaf Area m^2/Kg (MATURE) sunlit/shaded leaves for Picea abies 7.52 Mund et al., 2002, (5.9) see Johansson, T. 1999
+SLA_AVG1                3.9     //Average Specific Leaf Area m^2/Kg (juvenile) sunlit/shaded leaves for Picea abies Konopka et al., 2014, (5.9) see Johansson, T. 1999
 TSLA                    30      //Age at which SLA_AVG = (SLA_AVG1 + SLA_AVG0 )/2 Forrester et al., 2017
 SLA_RATIO               2       //(DIM) ratio of shaded to sunlit projected SLA for Picea abies (see Pietsch)
 LAI_RATIO               2.6     /(DIM) all-sided to projected leaf area ratio from Mollicone et al., 2002
-FRACBB0     0.6 //ISIMIP    0.30    //Branch and Bark fraction at age 0 for P. sylvestris, from Xenakis et al., 2008, 0.29 deducted for P. sylvestris from Yuste et al., 2005, 0.29 from Lehtonen et al., 2004 For Eco Manag, 0.71 from xiao and Ceulemans
+FRACBB0                 0.6     //Branch and Bark fraction at age 0 for P. sylvestris, from Xenakis et al., 2008, 0.29 deducted for P. sylvestris from Yuste et al., 2005, 0.29 from Lehtonen et al., 2004 For Eco Manag, 0.71 from xiao and Ceulemans
 FRACBB1                 0.1     //Branch and Bark fraction for mature stands for P. sylvestris, from Xenakis et al., 2008, 0.29 deducted for P. sylvestris from Yuste et al., 2005, 0.29 from Lehtonen et al., 2004 For Eco Manag, 0.18 from Jenssen et al 1999, 0.77 from xiao and Ceulemans
-TBB         0.3 //ISIMIP    10      //Age at which fracBB = (FRACBB0 + FRACBB1 )/ 2 for P. sylvestris, from Xenakis et al., 2008
+TBB                     0.3     //Age at which fracBB = (FRACBB0 + FRACBB1 )/ 2 for P. sylvestris, from Xenakis et al., 2008
 RHO0                    0.425   //Minimum Basic Density for young Trees t/m^3 for Picea abies Kantola and Makela 2006, 0.43 Seidl et al., 2012, 0.45 Pilli et al., 2006
 RHO1                    0.374   //Maximum Basic Density for old Trees t/m^3 for Picea abies Kantola and Makela 2006, 0.43 Seidl et al., 20120, 0.45 Pilli et al., 2006
 TRHO                    50      //Age at which rho = (RHOMIN + RHOMAX )/2
 FORM_FACTOR             0.423   //Form factor Seidl et al., 2012
 COEFFCOND               0.06    //Define stomatal responsee to VPD in mbar for Picea abies
 BLCOND                  0.009   //Canopy Boundary Layer conductance  for Picea abies 
-MAXCOND                 0.0015   //Maximum Stomatal Conductance in m/sec for Picea abies (see Pietsch) 0.0015 for Breuer et al., 0.006 Hibbard et al., 2005
+MAXCOND                 0.002   //Maximum Stomatal Conductance in m/sec for Picea abies (see Pietsch) 0.002 Tatarinov, 2005; 0.0015 for Breuer et al., 0.006 Hibbard et al., 2005
 CUTCOND                 0.00006 //Cuticul conductance in m/sec for Picea abies (see Pietsch)
 MAXAGE                  300     //Determines rate of "physiological decline" of forest for Picea abies Seidl et al., 2012 (TO CHECK !!!!!)
 RAGE                    0.95    //Relative Age to give fAGE = 0.5 0.95 for Picea abies Seidl et al., 2012
@@ -43,7 +43,8 @@ FINE_ROOT_LEAF          0.622   //allocation new fine root C:new leaf (ratio) fo
 STEM_LEAF               3.03    //allocation new stem C:new leaf (ratio) for Picea abies from Mollicone et al. 2002, varying from 1.43 to 3.42 see White et al., 1999, for Picea abies (see Pietsch)
 COARSE_ROOT_STEM        0.19    //allocation new coarse root C:new stem (ratio) for Picea abies from Mollicone et al. 2002, varying from 0.159 to 0.230 see White et al., 1999, for Picea abies (see Pietsch)
 LIVE_TOTAL_WOOD         0.076   //new live C:new total wood (ratio) for Picea abies 0.071 from Mollicone et al. 2002, for Picea abies (see Pietsch)
-CN_LEAVES               58.8    //CN of leaves (kgC/kgN) for Picea abies 42.73 from Mollicone et al. 2002, 42 from Pietsch et al., 2005, varying from 28.1 to 58.8 see White et al., 1999
+N_RUBISCO               0.055   //Fraction of leaf N in Rubisco (ratio)
+CN_LEAVES               42      //CN of leaves (kgC/kgN) for Picea abies 42.73 from Mollicone et al. 2002, 42 from Pietsch et al., 2005, varying from 28.1 to 58.8 see White et al., 1999
 CN_FALLING_LEAVES       116     //CN of leaf litter (kgC/kgN) for Picea abies from Mollicone et al. 2002, 87.7 from Pietsch et al., 2005, varying from 50.5 to 116 see White et al., 1999
 CN_FINE_ROOTS           58.0    //CN of fine roots (kgC/kgN) for 36.44 Picea abies from Mollicone et al. 2002, 42.4 Pietsch et al., 2005, varying from 27.6 to 46.7 see White et al., 1999
 CN_LIVEWOOD             50.0    //CN of live woods (kgC/kgN) for 36.44 Picea abies from Mollicone et al. 2002, 50 from Pietsch et al., 2005

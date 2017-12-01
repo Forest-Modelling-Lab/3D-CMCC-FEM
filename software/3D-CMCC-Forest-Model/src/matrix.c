@@ -926,6 +926,7 @@ static const char *sz_species_values[] =
 		"STEM_LEAF",                  /* allocation new stem C:new leaf (ratio) */
 		"COARSE_ROOT_STEM",           /* allocation new coarse root C:new stem (ratio) */
 		"LIVE_TOTAL_WOOD",            /* allocation new live wood C:new total wood C (ratio) */
+		"N_RUBISCO",                  /* Fraction of leaf N in Rubisco (ratio) */
 		"CN_LEAVES",                  /* CN of leaves (kgC/kgN) */
 		"CN_FALLING_LEAVES",          /* CN of leaf litter (kgC/kgN) */
 		"CN_FINE_ROOTS",              /* CN of fine roots (kgC/kgN) */
