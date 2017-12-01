@@ -199,12 +199,14 @@ double Farquhar (cell_t *const c, const int height, const int dbh, const int age
 	double Aj;                     /* (umol/m2/s) RuBP regeneration limited assimilation */
 	double A;                      /* (umol/m2/s) final assimilation rate */
 	double Ci;                     /* (Pa) intercellular [CO2] */
-	double Rd;                     /* (umol/m2/s) day leaf m. resp, proj. area basis */
+	double Rd;                     /* (umol/m2/s) day leaf dark maintenance respiration, proj. area basis */
 	double var_a, var_b, var_c, det;
+	double beta;                   /* ratio between Vcmax and Jmax */
 
 
 	//todo todo todo todo todo move in species.txt (this should be the only variable for all photosynthesis)
 	double flnr = 0.1; /* (g NRub/g Nleaf) fract. of leaf N in Rubisco */
+	double beta = 2.1; /* for fagus see Liozon et al., (2000) and Castanea */
 
 	//	species_t *s;
 	//	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
@@ -242,19 +244,17 @@ double Farquhar (cell_t *const c, const int height, const int dbh, const int age
 
 	/* Convert rubisco activity units from umol/mgRubisco/min -> umol/gRubisco/s */
 	act = act  * 1e3 / 60.;
-	//1 Nov 2017 changed from umol/mgRubisco/min -> umol/KgRubisco/s:
-	//act = act  * 1e6 / 60.;
 
 	/* calculate gamma (Pa) CO2 compensation point, in the absence of maint resp, assumes Vomax/Vcmax = 0.21 */
 	gamma = 0.5 * 0.21 * Kc * O2 / Ko;
 
-	/* calculate Vmax (umol CO2/m2/s) max rate of carboxylation from leaf nitrogen data and Rubisco activity */
+	/* calculate Vcmax (umol CO2/m2/s) max rate of carboxylation from leaf nitrogen data and Rubisco activity */
 	Vcmax = leafN * flnr * fnr * act;
 
 	/* calculate Jmax = f(Vmax), reference:	Wullschleger, S.D., 1993.  Biochemical limitations to carbon assimilation in C3 plants -
 	 * A retrospective analysis of the A/Ci curves from	109 species. Journal of Experimental Botany, 44:907-920. */
 	/* compute (umol electrons/m2/s) max rate electron transport */
-	Jmax = 2.1 * Vcmax;
+	Jmax = beta * Vcmax;
 
 	/* calculate J = f(Jmax, ppfd), reference: de Pury and Farquhar 1997 Plant Cell and Env. */
 	var_a  = 0.7;
