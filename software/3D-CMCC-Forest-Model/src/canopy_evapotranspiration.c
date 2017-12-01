@@ -302,7 +302,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 				/** LAI SUN **/
 				logger(g_debug_log, "\n--Transpiration for LAI sun--\n");
 
-				/* for sun canopy fraction */
+				/* resistance for sun canopy fraction */
 				rv = 1. / s->value[LEAF_SUN_CONDUCTANCE];
 				logger(g_debug_log, "Leaf sun resistance = %f \n",rv);
 
@@ -310,7 +310,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 				/* convert radiation to stomatal scale */
 				//fixme why??????????
 #if 0
-				net_rad = ( s->value[SW_RAD_ABS_SUN] / s->value[LAI_SUN_PROJ] ) * s->value[F_LIGHT_SUN_MAKELA];
+				net_rad = ( s->value[SW_RAD_ABS_SUN]  / s->value[LAI_SUN_PROJ] ) * s->value[F_LIGHT_SUN_MAKELA];
 #else
 				net_rad = ( s->value[NET_RAD_ABS_SUN] / s->value[LAI_SUN_PROJ] ) * s->value[F_LIGHT_SUN_MAKELA];
 #endif
@@ -325,7 +325,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 				/** LAI SHADE **/
 				logger(g_debug_log, "\n--Transpiration for LAI shade--\n");
 
-				/* for shaded canopy fraction */
+				/* resistance for shaded canopy fraction */
 				rv = 1. / s->value[LEAF_SHADE_CONDUCTANCE];
 				logger(g_debug_log, "Leaf shade resistance = %f \n",rv);
 
@@ -333,7 +333,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 				/* convert radiation to stomatal scale */
 				//fixme why??????????
 #if 0
-				net_rad = ( s->value[SW_RAD_ABS_SHADE] / s->value[LAI_SHADE_PROJ] ) * s->value[F_LIGHT_SHADE_MAKELA];
+				net_rad = ( s->value[SW_RAD_ABS_SHADE]  / s->value[LAI_SHADE_PROJ] ) * s->value[F_LIGHT_SHADE_MAKELA];
 #else
 				net_rad = ( s->value[NET_RAD_ABS_SHADE] / s->value[LAI_SHADE_PROJ] ) * s->value[F_LIGHT_SHADE_MAKELA];
 #endif
@@ -399,6 +399,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 			/** LAI SUN **/
 			logger(g_debug_log, "\n--Transpiration for LAI sun--\n");
 
+			/* resistance for sun canopy fraction */
 			rv = 1. / s->value[LEAF_SUN_CONDUCTANCE];
 			logger(g_debug_log, "Leaf sun resistance = %f \n",rv);
 
@@ -421,6 +422,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 			/** LAI SHADE **/
 			logger(g_debug_log, "\n--Transpiration for LAI shade--\n");
 
+			/* resistance for shaded canopy fraction */
 			rv = 1. / s->value[LEAF_SHADE_CONDUCTANCE];
 			logger(g_debug_log, "Leaf shade resistance = %f \n",rv);
 

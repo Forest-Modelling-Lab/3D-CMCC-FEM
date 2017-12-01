@@ -27,7 +27,6 @@ extern logger_t* g_debug_log;
 
 void carbon_allocation ( cell_t *const c, species_t *const s, const int day, const int month, const int year )
 {
-	double Leaf_sun_ratio;
 
 	/* it allocates daily assimilated carbon for both deciduous and evergreen daily
 	 * and removes the respired and dead parts */
@@ -124,15 +123,20 @@ void carbon_allocation ( cell_t *const c, species_t *const s, const int day, con
 	s->value[RESERVE_C]   += s->value[C_TO_RESERVE];
 	s->value[FRUIT_C]     += s->value[C_TO_FRUIT];
 
+	/* computing leaf sun and shaded Carbon pools (tC/ha) */
+	if ( ! s->value[LEAF_C] )
+	{
+		s->value[LEAF_SUN_C]        = 0.;
+		s->value[LEAF_SHADE_C]      = 0.;
+	}
+	else
+	{
+		s->value[LEAF_SUN_C]        = s->value[LEAF_C] * ( s->value[LAI_SUN_PROJ] / s->value[LAI_PROJ] ) ;
+		s->value[LEAF_SHADE_C]      = s->value[LEAF_C] - s->value[LEAF_SUN_C];
+	}
 
-	/* compute ratio between leaf sun and leaf shade */
-	Leaf_sun_ratio   = s->value[LAI_SUN_PROJ] / s->value[LAI_PROJ];
 
-	/* calculate Leaf sun and shade carbon amount */
-	s->value[LEAF_SUN_C]   = s->value[LEAF_C] * Leaf_sun_ratio;
-	s->value[LEAF_SHADE_C] = s->value[LEAF_C] - s->value[LEAF_SUN_C];
-	/* check */
-	CHECK_CONDITION ( fabs ( s->value[LEAF_SUN_C] + s->value[LEAF_SHADE_C]) - s->value[LEAF_C], > , eps );
+
 
 	/* check */
 	CHECK_CONDITION ( s->value[LEAF_C],     < , ZERO );
@@ -315,22 +319,19 @@ void nitrogen_allocation ( cell_t *const c, species_t *const s, const int day, c
 		//todo back to partitioning-allocation routine and recompute both NPP in gC and NPP in gN based on the available soil nitrogen content
 	}
 
-	/* computing Nitrogen pools (tC/ha) */
+	/* computing leaf sun and shaded Nitrogen pools (tN/ha) */
 	if ( ! s->value[LEAF_C] )
 	{
 		s->value[LEAF_N]            = 0.;
 		s->value[LEAF_SUN_N]        = 0.;
 		s->value[LEAF_SHADE_N]      = 0.;
-
 	}
 	else
 	{
-		s->value[LEAF_N]            = s->value[LEAF_C]            / s->value[CN_LEAVES];
-		s->value[LEAF_SUN_N]        = s->value[LEAF_SUN_C]        / s->value[CN_LEAVES];
-		s->value[LEAF_SHADE_N]      = s->value[LEAF_SHADE_C]      / s->value[CN_LEAVES];
+		s->value[LEAF_N]            = s->value[LEAF_C] / s->value[CN_LEAVES];
+		s->value[LEAF_SUN_N]        = ( s->value[LEAF_C] * (s->value[LAI_SUN_PROJ] / s->value[LAI_PROJ] ) ) / s->value[CN_LEAVES];
+		s->value[LEAF_SHADE_N]      = s->value[LEAF_N] - s->value[LEAF_SUN_N];
 	}
-	/* check */
-	CHECK_CONDITION ( fabs ( s->value[LEAF_SUN_N] + s->value[LEAF_SHADE_N] ) - s->value[LEAF_N], > , eps);
 
 	if ( ! s->value[FROOT_C] )
 	{
