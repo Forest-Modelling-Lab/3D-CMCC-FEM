@@ -43,6 +43,7 @@ FINE_ROOT_LEAF          1.26  //allocation new fine root C:new leaf (ratio) for 
 STEM_LEAF                2.2  //allocation new stem C:new leaf (ratio) for Betula pubescens Mollicone et al., 2002
 COARSE_ROOT_STEM        0.22  //allocation new coarse root C:new stem (ratio) for Betula pubescens Mollicone et al., 2002
 LIVE_TOTAL_WOOD         0.16  //new live C:new total wood (ratio) for Betula pubescens Mollicone et al., 2002
+N_RUBISCO                0.1  //Fraction of leaf N in Rubisco (ratio)
 CN_LEAVES                 21  //CN of leaves (kgC/kgN) for Betula ssp Kurbatova et al., 2008
 CN_FALLING_LEAVES       57.7  //CN of leaf litter (kgC/kgN) for Betula pubescens Mollicone et al., 2002
 CN_FINE_ROOTS             48  //CN of fine roots (kgC/kgN) for Betula pubescens Mollicone et al., 2002

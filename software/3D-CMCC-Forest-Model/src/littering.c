@@ -25,28 +25,28 @@ void littering ( cell_t *const c, species_t *const s )
 	/*** deadwood carbon ***/
 
 	/*** compute class-level deadwood carbon fluxes (tC/sizecell/day) ****/
-	s->value[DEADWOOD_TO_LITRC]         = s->value[C_TO_DEADWOOD];
-	s->value[DEADWOOD_TO_LITR2C]        = s->value[C_TO_DEADWOOD]       * s->value[DEADWOOD_USCEL_FRAC];
-	s->value[DEADWOOD_TO_LITR3C]        = s->value[C_TO_DEADWOOD]       * s->value[DEADWOOD_SCEL_FRAC];
-	s->value[DEADWOOD_TO_LITR4C]        = s->value[C_TO_DEADWOOD]       * s->value[DEADWOOD_LIGN_FRAC];
+	s->value[CWD_TO_LITRC]         = s->value[C_TO_CWD];
+	s->value[CWD_TO_LITR2C]        = s->value[C_TO_CWD]       * s->value[DEADWOOD_USCEL_FRAC];
+	s->value[CWD_TO_LITR3C]        = s->value[C_TO_CWD]       * s->value[DEADWOOD_SCEL_FRAC];
+	s->value[CWD_TO_LITR4C]        = s->value[C_TO_CWD]       * s->value[DEADWOOD_LIGN_FRAC];
 	/* check */
-	CHECK_CONDITION ( s->value[DEADWOOD_TO_LITR2C] + s->value[DEADWOOD_TO_LITR3C] + s->value[DEADWOOD_TO_LITR4C] , == , s->value[DEADWOOD_TO_LITRC] + eps );
+	CHECK_CONDITION ( s->value[CWD_TO_LITR2C] + s->value[CWD_TO_LITR3C] + s->value[CWD_TO_LITR4C] , == , s->value[CWD_TO_LITRC] + eps );
 
-	/*** update cell-level deadwood carbon fluxes (gC/m2/day) ****/
-	c->daily_deadwood_to_litrC         += s->value[DEADWOOD_TO_LITRC]   * 1e6 / g_settings->sizeCell;
-	c->daily_deadwood_to_litr2C        += s->value[DEADWOOD_TO_LITR2C]  * 1e6 / g_settings->sizeCell;
-	c->daily_deadwood_to_litr3C        += s->value[DEADWOOD_TO_LITR3C]  * 1e6 / g_settings->sizeCell;
-	c->daily_deadwood_to_litr4C        += s->value[DEADWOOD_TO_LITR4C]  * 1e6 / g_settings->sizeCell;
+	/*** update cell-level cwd carbon fluxes (gC/m2/day) ****/
+	c->daily_cwd_to_litrC         += s->value[CWD_TO_LITRC]   * 1e6 / g_settings->sizeCell;
+	c->daily_cwd_to_litr2C        += s->value[CWD_TO_LITR2C]  * 1e6 / g_settings->sizeCell;
+	c->daily_cwd_to_litr3C        += s->value[CWD_TO_LITR3C]  * 1e6 / g_settings->sizeCell;
+	c->daily_cwd_to_litr4C        += s->value[CWD_TO_LITR4C]  * 1e6 / g_settings->sizeCell;
 	/* check */
-	CHECK_CONDITION ( c->daily_deadwood_to_litr2C + c->daily_deadwood_to_litr3C + c->daily_deadwood_to_litr4C , == , c->daily_deadwood_to_litrC + eps );
+	CHECK_CONDITION ( c->daily_cwd_to_litr2C + c->daily_cwd_to_litr3C + c->daily_cwd_to_litr4C , == , c->daily_cwd_to_litrC + eps );
 
-	/*** compute cell-level deadwood carbon pools (gC/m2) ***/
-	c->deadwood_C                      += s->value[DEADWOOD_TO_LITRC]   * 1e6 / g_settings->sizeCell;
-	c->deadwood_2C                     += s->value[DEADWOOD_TO_LITR2C]  * 1e6 / g_settings->sizeCell;
-	c->deadwood_3C                     += s->value[DEADWOOD_TO_LITR3C]  * 1e6 / g_settings->sizeCell;
-	c->deadwood_4C                     += s->value[DEADWOOD_TO_LITR4C]  * 1e6 / g_settings->sizeCell;
+	/*** compute cell-level cwd carbon pools (gC/m2) ***/
+	c->cwd_C                      += s->value[CWD_TO_LITRC]   * 1e6 / g_settings->sizeCell;
+	c->cwd_2C                     += s->value[CWD_TO_LITR2C]  * 1e6 / g_settings->sizeCell;
+	c->cwd_3C                     += s->value[CWD_TO_LITR3C]  * 1e6 / g_settings->sizeCell;
+	c->cwd_4C                     += s->value[CWD_TO_LITR4C]  * 1e6 / g_settings->sizeCell;
 	/* check */
-	CHECK_CONDITION ( c->deadwood_2C + c->deadwood_3C + c->deadwood_4C , == , c->deadwood_C + eps );
+	CHECK_CONDITION ( c->cwd_2C + c->cwd_3C + c->cwd_4C , == , c->cwd_C + eps );
 
 	/*********************************************************************************************************************************/
 	/*** leaf litter carbon ***/
@@ -112,29 +112,29 @@ void littering ( cell_t *const c, species_t *const s )
 	/*** deadwood nitrogen ***/
 
 	/*** compute class-level deadwood nitrogen fluxes (tN/sizecell/day) ****/
-	s->value[DEADWOOD_TO_LITRN]         = s->value[N_TO_DEADWOOD];
-	s->value[DEADWOOD_TO_LITR2N]        = s->value[N_TO_DEADWOOD]       * s->value[DEADWOOD_USCEL_FRAC];
-	s->value[DEADWOOD_TO_LITR3N]        = s->value[N_TO_DEADWOOD]       * s->value[DEADWOOD_SCEL_FRAC];
-	s->value[DEADWOOD_TO_LITR4N]        = s->value[N_TO_DEADWOOD]       * s->value[DEADWOOD_LIGN_FRAC];
+	s->value[CWD_TO_LITRN]         = s->value[N_TO_CWD];
+	s->value[CWD_TO_LITR2N]        = s->value[N_TO_CWD]       * s->value[DEADWOOD_USCEL_FRAC];
+	s->value[CWD_TO_LITR3N]        = s->value[N_TO_CWD]       * s->value[DEADWOOD_SCEL_FRAC];
+	s->value[CWD_TO_LITR4N]        = s->value[N_TO_CWD]       * s->value[DEADWOOD_LIGN_FRAC];
 	/* check */
-	CHECK_CONDITION ( s->value[DEADWOOD_TO_LITR2N] + s->value[DEADWOOD_TO_LITR3N] + s->value[DEADWOOD_TO_LITR4N], == , s->value[DEADWOOD_TO_LITRN] + eps );
+	CHECK_CONDITION ( s->value[CWD_TO_LITR2N] + s->value[CWD_TO_LITR3N] + s->value[CWD_TO_LITR4N], == , s->value[CWD_TO_LITRN] + eps );
 
-	/*** update cell-level deadwood nitrogen fluxes (gN/m2/day) ****/
-	c->daily_deadwood_to_litrN         += s->value[DEADWOOD_TO_LITRN]   * 1e6 / g_settings->sizeCell;
-	c->daily_deadwood_to_litr2N        += s->value[DEADWOOD_TO_LITR2N]  * 1e6 / g_settings->sizeCell;
-	c->daily_deadwood_to_litr3N        += s->value[DEADWOOD_TO_LITR3N]  * 1e6 / g_settings->sizeCell;
-	c->daily_deadwood_to_litr4N        += s->value[DEADWOOD_TO_LITR4N]  * 1e6 / g_settings->sizeCell;
+	/*** update cell-level cwd nitrogen fluxes (gN/m2/day) ****/
+	c->daily_cwd_to_litrN         += s->value[CWD_TO_LITRN]   * 1e6 / g_settings->sizeCell;
+	c->daily_cwd_to_litr2N        += s->value[CWD_TO_LITR2N]  * 1e6 / g_settings->sizeCell;
+	c->daily_cwd_to_litr3N        += s->value[CWD_TO_LITR3N]  * 1e6 / g_settings->sizeCell;
+	c->daily_cwd_to_litr4N        += s->value[CWD_TO_LITR4N]  * 1e6 / g_settings->sizeCell;
 	/* check */
-	CHECK_CONDITION ( c->daily_deadwood_to_litr2N + c->daily_deadwood_to_litr3N + c->daily_deadwood_to_litr4N , == , c->daily_deadwood_to_litrN + eps );
+	CHECK_CONDITION ( c->daily_cwd_to_litr2N + c->daily_cwd_to_litr3N + c->daily_cwd_to_litr4N , == , c->daily_cwd_to_litrN + eps );
 
-	/*** compute cell-level deadwood nitrogen pools (gN/m2) ***/
-	c->deadwood_N                      += s->value[DEADWOOD_TO_LITRN]   * 1e6 / g_settings->sizeCell;
-	c->deadwood_2N                     += s->value[DEADWOOD_TO_LITR2N]  * 1e6 / g_settings->sizeCell;
-	c->deadwood_3N                     += s->value[DEADWOOD_TO_LITR3N]  * 1e6 / g_settings->sizeCell;
-	c->deadwood_4N                     += s->value[DEADWOOD_TO_LITR4N]  * 1e6 / g_settings->sizeCell;
+	/*** compute cell-level cwd nitrogen pools (gN/m2) ***/
+	c->cwd_N                      += s->value[CWD_TO_LITRN]   * 1e6 / g_settings->sizeCell;
+	c->cwd_2N                     += s->value[CWD_TO_LITR2N]  * 1e6 / g_settings->sizeCell;
+	c->cwd_3N                     += s->value[CWD_TO_LITR3N]  * 1e6 / g_settings->sizeCell;
+	c->cwd_4N                     += s->value[CWD_TO_LITR4N]  * 1e6 / g_settings->sizeCell;
 
 	/* check */
-	CHECK_CONDITION ( c->deadwood_2N + c->deadwood_3N + c->deadwood_4N , == , c->deadwood_N + eps );
+	CHECK_CONDITION ( c->cwd_2N + c->cwd_3N + c->cwd_4N , == , c->cwd_N + eps );
 
 	/*********************************************************************************************************************************/
 	/*** leaf litter nitrogen ***/
@@ -216,16 +216,16 @@ void spinup_littering ( cell_t *const c )
 	double froot_litr_uscel_frac;
 	double froot_litr_scel_frac;
 	double froot_litr_lign_frac;
-	double annual_C_to_deadwood  , annual_N_to_deadwood;
+	double annual_C_to_cwd , annual_N_to_cwd;
 	double annual_C_to_leaf_litr , annual_N_to_leaf_litr;
 	double annual_C_to_froot_litr, annual_N_to_froot_litr;
-	double C_to_deadwood   , N_to_deadwood;
+	double C_to_cwd, N_to_cwd;
 	double C_to_leaf_litr  , N_to_leaf_litr;
 	double C_to_froot_litr , N_to_froot_litr;
-	double deadwood_to_litrC, deadwood_to_litr2C, deadwood_to_litr3C, deadwood_to_litr4C;
+	double cwd_to_litrC, cwd_to_litr2C, cwd_to_litr3C, cwd_to_litr4C;
 	double leaf_to_litrC, leaf_to_litr1C, leaf_to_litr2C, leaf_to_litr3C, leaf_to_litr4C;
 	double froot_to_litrC, froot_to_litr1C, froot_to_litr2C, froot_to_litr3C, froot_to_litr4C;
-	double deadwood_to_litrN, deadwood_to_litr2N, deadwood_to_litr3N, deadwood_to_litr4N;
+	double cwd_to_litrN, cwd_to_litr2N, cwd_to_litr3N, cwd_to_litr4N;
 	double leaf_to_litrN, leaf_to_litr1N, leaf_to_litr2N, leaf_to_litr3N, leaf_to_litr4N;
 	double froot_to_litrN, froot_to_litr1N, froot_to_litr2N, froot_to_litr3N, froot_to_litr4N;
 
@@ -254,12 +254,12 @@ void spinup_littering ( cell_t *const c )
 
 	/* note assume general incoming fluxes of carbon values (tC/sizeCell/year) */
 	/* annual daily values for littering */
-	annual_C_to_deadwood     = 1.;
+	annual_C_to_cwd          = 1.;
 	annual_C_to_leaf_litr    = 1.5;
 	annual_C_to_froot_litr   = 1.5;
 
 	/* convert to daily values */
-	C_to_deadwood            = annual_C_to_deadwood   / 365.;
+	C_to_cwd                 = annual_C_to_cwd        / 365.;
 	C_to_leaf_litr           = annual_C_to_leaf_litr  / 365.;
 	C_to_froot_litr          = annual_C_to_froot_litr / 365.;
 
@@ -271,12 +271,12 @@ void spinup_littering ( cell_t *const c )
 	cn_froot_litr            = 60;
 
 	/* calculate Nitrogen pools */
-	annual_N_to_deadwood     = annual_C_to_deadwood   /  cn_deadwood;
+	annual_N_to_cwd          = annual_C_to_cwd        /  cn_deadwood;
 	annual_N_to_leaf_litr    = annual_C_to_leaf_litr  /  cn_leaf_litr;
 	annual_N_to_froot_litr   = annual_C_to_froot_litr /  cn_froot_litr;
 
 	/* convert to daily values */
-	N_to_deadwood            = annual_N_to_deadwood   / 365.;
+	N_to_cwd                 = annual_N_to_cwd        / 365.;
 	N_to_leaf_litr           = annual_N_to_leaf_litr  / 365.;
 	N_to_froot_litr          = annual_N_to_froot_litr / 365.;
 
@@ -365,54 +365,54 @@ void spinup_littering ( cell_t *const c )
 	/*** deadwood carbon ***/
 
 	/*** compute class-level deadwood carbon fluxes (tC/sizecell/day) ****/
-	deadwood_to_litrC                  = C_to_deadwood;
-	deadwood_to_litr2C                 = C_to_deadwood       * deadwood_uscel_frac;
-	deadwood_to_litr3C                 = C_to_deadwood       * deadwood_scel_frac;
-	deadwood_to_litr4C                 = C_to_deadwood       * deadwood_lign_frac;
+	cwd_to_litrC                  = C_to_cwd;
+	cwd_to_litr2C                 = C_to_cwd       * deadwood_uscel_frac;
+	cwd_to_litr3C                 = C_to_cwd       * deadwood_scel_frac;
+	cwd_to_litr4C                 = C_to_cwd       * deadwood_lign_frac;
 	/* check */
-	CHECK_CONDITION ( deadwood_to_litr2C + deadwood_to_litr3C + deadwood_to_litr4C , == , deadwood_to_litrC + eps );
+	CHECK_CONDITION ( cwd_to_litr2C + cwd_to_litr3C + cwd_to_litr4C , == , cwd_to_litrC + eps );
 
-	/*** update cell-level deadwood carbon fluxes (gC/m2/day) ****/
-	c->daily_deadwood_to_litrC         = deadwood_to_litrC    * 1e6 / g_settings->sizeCell;
-	c->daily_deadwood_to_litr2C        = deadwood_to_litr2C   * 1e6 / g_settings->sizeCell;
-	c->daily_deadwood_to_litr3C        = deadwood_to_litr3C   * 1e6 / g_settings->sizeCell;
-	c->daily_deadwood_to_litr4C        = deadwood_to_litr4C   * 1e6 / g_settings->sizeCell;
+	/*** update cell-level cwd carbon fluxes (gC/m2/day) ****/
+	c->daily_cwd_to_litrC         = cwd_to_litrC    * 1e6 / g_settings->sizeCell;
+	c->daily_cwd_to_litr2C        = cwd_to_litr2C   * 1e6 / g_settings->sizeCell;
+	c->daily_cwd_to_litr3C        = cwd_to_litr3C   * 1e6 / g_settings->sizeCell;
+	c->daily_cwd_to_litr4C        = cwd_to_litr4C   * 1e6 / g_settings->sizeCell;
 	/* check */
-	CHECK_CONDITION ( c->daily_deadwood_to_litr2C + c->daily_deadwood_to_litr3C + c->daily_deadwood_to_litr4C , == , c->daily_deadwood_to_litrC + eps );
+	CHECK_CONDITION ( c->daily_cwd_to_litr2C + c->daily_cwd_to_litr3C + c->daily_cwd_to_litr4C , == , c->daily_cwd_to_litrC + eps );
 
-	/*** compute cell-level deadwood carbon pools (gC/m2) ***/
-	c->deadwood_C                      += c->daily_deadwood_to_litrC;
-	c->deadwood_2C                     += c->daily_deadwood_to_litr2C;
-	c->deadwood_3C                     += c->daily_deadwood_to_litr3C;
-	c->deadwood_4C                     += c->daily_deadwood_to_litr4C;
+	/*** compute cell-level cwd carbon pools (gC/m2) ***/
+	c->cwd_C                      += c->daily_cwd_to_litrC;
+	c->cwd_2C                     += c->daily_cwd_to_litr2C;
+	c->cwd_3C                     += c->daily_cwd_to_litr3C;
+	c->cwd_4C                     += c->daily_cwd_to_litr4C;
 	/* check */
-	CHECK_CONDITION ( c->deadwood_2C + c->deadwood_3C + c->deadwood_4C , == , c->deadwood_C + eps );
+	CHECK_CONDITION ( c->cwd_2C + c->cwd_3C + c->cwd_4C , == , c->cwd_C + eps );
 
 	/*** deadwood nitrogen ***/
 
 	/*** compute class-level deadwood nitrogen fluxes (tN/sizecell/day) ****/
-	deadwood_to_litrN                  = N_to_deadwood;
-	deadwood_to_litr2N                 = N_to_deadwood       * deadwood_uscel_frac;
-	deadwood_to_litr3N                 = N_to_deadwood       * deadwood_scel_frac;
-	deadwood_to_litr4N                 = N_to_deadwood       * deadwood_lign_frac;
+	cwd_to_litrN                  = N_to_cwd;
+	cwd_to_litr2N                 = N_to_cwd       * deadwood_uscel_frac;
+	cwd_to_litr3N                 = N_to_cwd       * deadwood_scel_frac;
+	cwd_to_litr4N                 = N_to_cwd       * deadwood_lign_frac;
 	/* check */
-	CHECK_CONDITION ( deadwood_to_litr2N + deadwood_to_litr3N + deadwood_to_litr4N , == , deadwood_to_litrN + eps );
+	CHECK_CONDITION ( cwd_to_litr2N + cwd_to_litr3N + cwd_to_litr4N , == , cwd_to_litrN + eps );
 
-	/*** update cell-level deadwood nitrogen fluxes (gN/m2/day) ****/
-	c->daily_deadwood_to_litrN         = deadwood_to_litrN    * 1e6 / g_settings->sizeCell;
-	c->daily_deadwood_to_litr2N        = deadwood_to_litr2N   * 1e6 / g_settings->sizeCell;
-	c->daily_deadwood_to_litr3N        = deadwood_to_litr3N   * 1e6 / g_settings->sizeCell;
-	c->daily_deadwood_to_litr4N        = deadwood_to_litr4N   * 1e6 / g_settings->sizeCell;
+	/*** update cell-level cwd nitrogen fluxes (gN/m2/day) ****/
+	c->daily_cwd_to_litrN         = cwd_to_litrN    * 1e6 / g_settings->sizeCell;
+	c->daily_cwd_to_litr2N        = cwd_to_litr2N   * 1e6 / g_settings->sizeCell;
+	c->daily_cwd_to_litr3N        = cwd_to_litr3N   * 1e6 / g_settings->sizeCell;
+	c->daily_cwd_to_litr4N        = cwd_to_litr4N   * 1e6 / g_settings->sizeCell;
 	/* check */
-	CHECK_CONDITION ( c->daily_deadwood_to_litr2N + c->daily_deadwood_to_litr3N + c->daily_deadwood_to_litr4N , == , c->daily_deadwood_to_litrN + eps );
+	CHECK_CONDITION ( c->daily_cwd_to_litr2N + c->daily_cwd_to_litr3N + c->daily_cwd_to_litr4N , == , c->daily_cwd_to_litrN + eps );
 
-	/*** compute cell-level deadwood nitrogen pools (gN/m2) ***/
-	c->deadwood_N                      += c->daily_deadwood_to_litrN;
-	c->deadwood_2N                     += c->daily_deadwood_to_litr2N;
-	c->deadwood_3N                     += c->daily_deadwood_to_litr3N;
-	c->deadwood_4N                     += c->daily_deadwood_to_litr4N;
+	/*** compute cell-level cwd nitrogen pools (gN/m2) ***/
+	c->cwd_N                      += c->daily_cwd_to_litrN;
+	c->cwd_2N                     += c->daily_cwd_to_litr2N;
+	c->cwd_3N                     += c->daily_cwd_to_litr3N;
+	c->cwd_4N                     += c->daily_cwd_to_litr4N;
 	/* check */
-	CHECK_CONDITION ( c->deadwood_2N + c->deadwood_3N + c->deadwood_4N , == , c->deadwood_N + eps );
+	CHECK_CONDITION ( c->cwd_2N + c->cwd_3N + c->cwd_4N , == , c->cwd_N + eps );
 
 	/*********************************************************************************************************************************/
 

@@ -143,7 +143,7 @@ void leaffall (species_t *const s)
 	s->value[C_FROOT_TO_RESERVE]  += s->value[FROOT_C_TO_REMOVE]  * C_FRAC_TO_RETRANSL;
 	s->value[C_LEAF_TO_LITR]      += s->value[LEAF_C_TO_REMOVE]   * ( 1. - C_FRAC_TO_RETRANSL );
 	s->value[C_FROOT_TO_LITR]     += s->value[FROOT_C_TO_REMOVE]  * ( 1. - C_FRAC_TO_RETRANSL );
-	s->value[C_FRUIT_TO_DEADWOOD] += s->value[FRUIT_C_TO_REMOVE];
+	s->value[C_FRUIT_TO_CWD]      += s->value[FRUIT_C_TO_REMOVE];
 
 	/* carbon litter transfer fluxes to carbon litter pool and reserves */
 	s->value[C_TO_RESERVE]        += (s->value[C_LEAF_TO_RESERVE] + s->value[C_FROOT_TO_RESERVE]);
@@ -160,7 +160,7 @@ void leaffall (species_t *const s)
 	s->value[N_FROOT_TO_RESERVE]  += s->value[FROOT_N_TO_REMOVE]  * N_FRAC_TO_RETRANSL;
 	s->value[N_LEAF_TO_LITR]      += s->value[LEAF_N_TO_REMOVE]   * ( 1. - N_FRAC_TO_RETRANSL );
 	s->value[N_FROOT_TO_LITR]     += s->value[FROOT_N_TO_REMOVE]  * ( 1. - N_FRAC_TO_RETRANSL );
-	s->value[N_FRUIT_TO_DEADWOOD] += s->value[FRUIT_N_TO_REMOVE];
+	s->value[N_FRUIT_TO_CWD]      += s->value[FRUIT_N_TO_REMOVE];
 
 	/* nitrogen litter transfer fluxes to nitrogen litter pool and reserves */
 	s->value[N_TO_RESERVE]        += (s->value[N_LEAF_TO_RESERVE] + s->value[N_FROOT_TO_RESERVE]);

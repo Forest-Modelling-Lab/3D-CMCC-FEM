@@ -42,7 +42,7 @@ void carbon_allocation ( cell_t *const c, species_t *const s, const int day, con
 
 	/***************************************************************************************/
 	/* stem */
-	s->value[STEM_SAPWOOD_C]          += s->value[C_TO_STEM] - s->value[C_STEM_SAPWOOD_TO_DEADWOOD];
+	s->value[STEM_SAPWOOD_C]          += s->value[C_TO_STEM] - s->value[C_STEM_SAPWOOD_TO_CWD];
 	s->value[STEM_HEARTWOOD_C]         = s->value[STEM_C] - s->value[STEM_SAPWOOD_C];
 
 	/* live stem */
@@ -57,7 +57,7 @@ void carbon_allocation ( cell_t *const c, species_t *const s, const int day, con
 	/***************************************************************************************/
 
 	/* coarse root */
-	s->value[CROOT_SAPWOOD_C]         += s->value[C_TO_CROOT] - s->value[C_CROOT_SAPWOOD_TO_DEADWOOD];
+	s->value[CROOT_SAPWOOD_C]         += s->value[C_TO_CROOT] - s->value[C_CROOT_SAPWOOD_TO_CWD];
 	s->value[CROOT_HEARTWOOD_C]        = s->value[CROOT_C] - s->value[CROOT_SAPWOOD_C];
 
 	/* live coarse root */
@@ -71,7 +71,7 @@ void carbon_allocation ( cell_t *const c, species_t *const s, const int day, con
 
 	/***************************************************************************************/
 	/* branch */
-	s->value[BRANCH_SAPWOOD_C]        += s->value[C_TO_BRANCH] - s->value[C_BRANCH_SAPWOOD_TO_DEADWOOD];
+	s->value[BRANCH_SAPWOOD_C]        += s->value[C_TO_BRANCH] - s->value[C_BRANCH_SAPWOOD_TO_CWD];
 	s->value[BRANCH_HEARTWOOD_C]       = s->value[BRANCH_C] - s->value[BRANCH_SAPWOOD_C];
 
 	/* live branch */
@@ -95,11 +95,11 @@ void carbon_allocation ( cell_t *const c, species_t *const s, const int day, con
 	/*** removing dead pools from carbon flux pools ***/
 	s->value[C_TO_LEAF]    -= s->value[C_LEAF_TO_LITR]  + s->value[C_LEAF_TO_RESERVE];
 	s->value[C_TO_FROOT]   -= s->value[C_FROOT_TO_LITR] + s->value[C_FROOT_TO_RESERVE];
-	s->value[C_TO_STEM]    -= s->value[C_STEM_TO_DEADWOOD];
-	s->value[C_TO_CROOT]   -= s->value[C_CROOT_TO_DEADWOOD];
-	s->value[C_TO_BRANCH]  -= s->value[C_BRANCH_TO_DEADWOOD];
-	s->value[C_TO_FRUIT]   -= s->value[C_FRUIT_TO_DEADWOOD];
-	s->value[C_TO_RESERVE] -= s->value[C_RESERVE_TO_DEADWOOD];
+	s->value[C_TO_STEM]    -= s->value[C_STEM_TO_CWD];
+	s->value[C_TO_CROOT]   -= s->value[C_CROOT_TO_CWD];
+	s->value[C_TO_BRANCH]  -= s->value[C_BRANCH_TO_CWD];
+	s->value[C_TO_FRUIT]   -= s->value[C_FRUIT_TO_CWD];
+	s->value[C_TO_RESERVE] -= s->value[C_RESERVE_TO_CWD];
 
 	/***************************************************************************************/
 

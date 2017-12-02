@@ -195,11 +195,11 @@ int check_tree_class_carbon_flux_balance(cell_t *const c, const int layer, const
 			s->value[TOTAL_GROWTH_RESP_tC]  +
 			s->value[C_LEAF_TO_LITR]        +
 			s->value[C_FROOT_TO_LITR]       +
-			s->value[C_STEM_TO_DEADWOOD]    +
-			s->value[C_CROOT_TO_DEADWOOD]   +
-			s->value[C_BRANCH_TO_DEADWOOD]  +
-			s->value[C_RESERVE_TO_DEADWOOD] +
-			s->value[C_FRUIT_TO_DEADWOOD]   ;
+			s->value[C_STEM_TO_CWD]         +
+			s->value[C_CROOT_TO_CWD]        +
+			s->value[C_BRANCH_TO_CWD]       +
+			s->value[C_RESERVE_TO_CWD]      +
+			s->value[C_FRUIT_TO_CWD]        ;
 
 	/* sum of current storage */
 	store   = s->value[C_TO_LEAF]  +
@@ -226,11 +226,11 @@ int check_tree_class_carbon_flux_balance(cell_t *const c, const int layer, const
 		error_log("TOTAL_GROWTH_RESP = %g tC/cell/day\n",     s->value[TOTAL_GROWTH_RESP_tC]);
 		error_log("C_LEAF_TO_LITR = %g tC/cell/day\n",        s->value[C_LEAF_TO_LITR]);
 		error_log("C_FROOT_TO_LITR = %g tC/cell/day\n",       s->value[C_FROOT_TO_LITR]);
-		error_log("C_STEM_TO_DEADWOOD = %g tC/cell/day\n",    s->value[C_STEM_TO_DEADWOOD]);
-		error_log("C_CROOT_TO_DEADWOOD = %g tC/cell/day\n",   s->value[C_CROOT_TO_DEADWOOD]);
-		error_log("C_BRANCH_TO_DEADWOOD = %g tC/cell/day\n",  s->value[C_BRANCH_TO_DEADWOOD]);
-		error_log("C_RESERVE_TO_DEADWOOD = %g tC/cell/day\n", s->value[C_RESERVE_TO_DEADWOOD]);
-		error_log("C_FRUIT_TO_DEADWOOD = %g tC/cell/day\n",   s->value[C_FRUIT_TO_DEADWOOD]);
+		error_log("C_STEM_TO_CWD  = %g tC/cell/day\n",        s->value[C_STEM_TO_CWD]);
+		error_log("C_CROOT_TO_CWD = %g tC/cell/day\n",        s->value[C_CROOT_TO_CWD]);
+		error_log("C_BRANCH_TO_CWD = %g tC/cell/day\n",       s->value[C_BRANCH_TO_CWD]);
+		error_log("C_RESERVE_TO_CWD = %g tC/cell/day\n",      s->value[C_RESERVE_TO_CWD]);
+		error_log("C_FRUIT_TO_CWD = %g tC/cell/day\n",        s->value[C_FRUIT_TO_CWD]);
 		error_log("\nstore = %g tC/cell/day\n",               store);
 		error_log("C_TO_LEAF = %g tC/cell/day\n",             s->value[C_TO_LEAF]);
 		error_log("C_TO_FROOT = %g tC/cell/day\n",            s->value[C_TO_FROOT]);
@@ -269,12 +269,12 @@ int check_tree_class_carbon_mass_balance ( cell_t *const c, const int layer, con
 			s->value[TOTAL_GROWTH_RESP_tC]                +
 			s->value[C_LEAF_TO_LITR]                      +
 			s->value[C_FROOT_TO_LITR]                     +
-			s->value[C_BRANCH_TO_DEADWOOD]                +
-			s->value[C_STEM_TO_DEADWOOD]                  +
-			s->value[C_CROOT_TO_DEADWOOD]                 +
-			s->value[C_RESERVE_TO_DEADWOOD]               +
-			s->value[C_FRUIT_TO_DEADWOOD]                 ;
-#if 1
+			s->value[C_BRANCH_TO_CWD]                     +
+			s->value[C_STEM_TO_CWD]                       +
+			s->value[C_CROOT_TO_CWD]                      +
+			s->value[C_RESERVE_TO_CWD]                    +
+			s->value[C_FRUIT_TO_CWD]                      ;
+
 	/* sum of current storage */
 	s->value[TREEC_STORE] = s->value[LEAF_C] +
 			s->value[FROOT_C]                +
@@ -283,19 +283,6 @@ int check_tree_class_carbon_mass_balance ( cell_t *const c, const int layer, con
 			s->value[BRANCH_C]               +
 			s->value[RESERVE_C]              +
 			s->value[FRUIT_C]                ;
-#else
-	s->value[TREEC_STORE] = s->value[LEAF_C] +
-			s->value[FROOT_C]                +
-			s->value[CROOT_C]                +
-			s->value[STEM_C]                 +
-			s->value[BRANCH_C]               +
-			s->value[RESERVE_C]              +
-			s->value[FRUIT_C]                +
-			s->value[LITR_C]                 +
-			s->value[CWD_C]                  ;
-#endif
-
-
 
 	/* check carbon pool balance */
 	s->value[TREEC_BALANCE] = s->value[TREEC_IN] - s->value[TREEC_OUT] - (s->value[TREEC_STORE] - s->value[TREEC_OLDSTORE]);
@@ -313,11 +300,11 @@ int check_tree_class_carbon_mass_balance ( cell_t *const c, const int layer, con
 		error_log("TOTAL_GROWTH_RESP_tC = %g tC/cell/day\n",  s->value[TOTAL_GROWTH_RESP_tC]);
 		error_log("C_LEAF_TO_LITR = %g tC/cell/day\n",        s->value[C_LEAF_TO_LITR]);
 		error_log("C_FROOT_TO_LITR = %g tC/cell/day\n",       s->value[C_FROOT_TO_LITR]);
-		error_log("DEAD_STEM_C = %g tC/cell/day\n",           s->value[C_STEM_TO_DEADWOOD]);
-		error_log("C_STEM_TO_DEADWOOD = %g tC/cell/day\n",    s->value[C_BRANCH_TO_DEADWOOD]);
-		error_log("C_CROOT_TO_DEADWOOD = %g tC/cell/day\n",   s->value[C_CROOT_TO_DEADWOOD]);
-		error_log("C_RESERVE_TO_DEADWOOD = %g tC/cell/day\n", s->value[C_RESERVE_TO_DEADWOOD]);
-		error_log("C_FRUIT_TO_DEADWOOD = %g tC/cell/day\n",   s->value[C_FRUIT_TO_DEADWOOD]);
+		error_log("C_STEM_TO_CWD = %g tC/cell/day\n",         s->value[C_STEM_TO_CWD]);
+		error_log("C_BRANCH_TO_CWD = %g tC/cell/day\n",       s->value[C_BRANCH_TO_CWD]);
+		error_log("C_CROOT_TO_CWD = %g tC/cell/day\n",        s->value[C_CROOT_TO_CWD]);
+		error_log("C_RESERVE_TO_CWD = %g tC/cell/day\n",      s->value[C_RESERVE_TO_CWD]);
+		error_log("C_FRUIT_TO_CWD = %g tC/cell/day\n",        s->value[C_FRUIT_TO_CWD]);
 		error_log("\nold_store = %g tC/cell\n",               s->value[TREEC_OLDSTORE]);
 		error_log("store = %g tC/cell\n",                     s->value[TREEC_STORE]);
 		error_log("store - old_store = %g tC/cell\n",         s->value[TREEC_STORE] - s->value[TREEC_OLDSTORE]);
@@ -364,11 +351,11 @@ int check_tree_class_nitrogen_flux_balance ( cell_t *const c, const int layer, c
 	/* sum of sinks */
 	out     =  s->value[N_LEAF_TO_LITR]     +
 			s->value[N_FROOT_TO_LITR]       +
-			s->value[N_STEM_TO_DEADWOOD]    +
-			s->value[N_CROOT_TO_DEADWOOD]   +
-			s->value[N_BRANCH_TO_DEADWOOD]  +
-			s->value[N_RESERVE_TO_DEADWOOD] +
-			s->value[N_FRUIT_TO_DEADWOOD]   ;
+			s->value[N_STEM_TO_CWD]    +
+			s->value[N_CROOT_TO_CWD]   +
+			s->value[N_BRANCH_TO_CWD]  +
+			s->value[N_RESERVE_TO_CWD] +
+			s->value[N_FRUIT_TO_CWD]   ;
 
 	/* sum of current storage */
 	store   = s->value[N_TO_LEAF] +
@@ -393,11 +380,11 @@ int check_tree_class_nitrogen_flux_balance ( cell_t *const c, const int layer, c
 		error_log("\nout                 = %f tN/cell/day\n", out);
 		error_log("N_LEAF_TO_LITR        = %f tN/cell/day\n", s->value[N_LEAF_TO_LITR]);
 		error_log("N_FROOT_TO_LITR       = %f tN/cell/day\n", s->value[N_FROOT_TO_LITR]);
-		error_log("N_STEM_TO_DEADWOOD    = %f tN/cell/day\n", s->value[N_STEM_TO_DEADWOOD]);
-		error_log("N_BRANCH_TO_DEADWOOD  = %f tN/cell/day\n", s->value[N_BRANCH_TO_DEADWOOD]);
-		error_log("N_CROOT_TO_DEADWOOD   = %f tN/cell/day\n", s->value[N_CROOT_TO_DEADWOOD]);
-		error_log("N_RESERVE_TO_DEADWOOD = %f tN/cell/day\n", s->value[N_RESERVE_TO_DEADWOOD]);
-		error_log("N_FRUIT_TO_DEADWOOD   = %f tN/cell/day\n", s->value[N_FRUIT_TO_DEADWOOD]);
+		error_log("N_STEM_TO_CWD         = %f tN/cell/day\n", s->value[N_STEM_TO_CWD]);
+		error_log("N_BRANCH_TO_CWD       = %f tN/cell/day\n", s->value[N_BRANCH_TO_CWD]);
+		error_log("N_CROOT_TO_CWD        = %f tN/cell/day\n", s->value[N_CROOT_TO_CWD]);
+		error_log("N_RESERVE_TO_CWD      = %f tN/cell/day\n", s->value[N_RESERVE_TO_CWD]);
+		error_log("N_FRUIT_TO_CWD        = %f tN/cell/day\n", s->value[N_FRUIT_TO_CWD]);
 		error_log("\nstore               = %f tN/cell/day\n", store);
 		error_log("N_TO_LEAF             = %f tN/cell/day\n", s->value[N_TO_LEAF]);
 		error_log("N_TO_FROOT            = %f tN/cell/day\n", s->value[N_TO_FROOT]);
@@ -433,11 +420,11 @@ int check_tree_class_nitrogen_mass_balance ( cell_t *const c, const int layer, c
 	/* sum of sinks */
 	s->value[TREEN_OUT]   = s->value[N_LEAF_TO_LITR] +
 			s->value[N_FROOT_TO_LITR]        +
-			s->value[N_STEM_TO_DEADWOOD]     +
-			s->value[N_CROOT_TO_DEADWOOD]    +
-			s->value[N_BRANCH_TO_DEADWOOD]   +
-			s->value[N_RESERVE_TO_DEADWOOD]  +
-			s->value[N_FRUIT_TO_DEADWOOD]    ;
+			s->value[N_STEM_TO_CWD]     +
+			s->value[N_CROOT_TO_CWD]    +
+			s->value[N_BRANCH_TO_CWD]   +
+			s->value[N_RESERVE_TO_CWD]  +
+			s->value[N_FRUIT_TO_CWD]    ;
 
 	/* sum of current storage */
 	s->value[TREEC_STORE] = s->value[LEAF_N] +
@@ -461,11 +448,11 @@ int check_tree_class_nitrogen_mass_balance ( cell_t *const c, const int layer, c
 		error_log("\nout                 = %f tN/cell/day\n", s->value[TREEN_OUT]);
 		error_log("N_LEAF_TO_LITR        = %f tN/cell/day\n", s->value[N_LEAF_TO_LITR]);
 		error_log("N_FROOT_TO_LITR       = %f tN/cell/day\n", s->value[N_FROOT_TO_LITR]);
-		error_log("N_STEM_TO_DEADWOOD    = %f tN/cell/day\n", s->value[N_STEM_TO_DEADWOOD]);
-		error_log("N_BRANCH_TO_DEADWOOD  = %f tN/cell/day\n", s->value[N_BRANCH_TO_DEADWOOD]);
-		error_log("N_CROOT_TO_DEADWOOD   = %f tN/cell/day\n", s->value[N_CROOT_TO_DEADWOOD]);
-		error_log("N_RESERVE_TO_DEADWOOD = %f tN/cell/day\n", s->value[N_RESERVE_TO_DEADWOOD]);
-		error_log("N_FRUIT_TO_DEADWOOD   = %f tN/cell/day\n", s->value[N_FRUIT_TO_DEADWOOD]);
+		error_log("N_STEM_TO_CWD         = %f tN/cell/day\n", s->value[N_STEM_TO_CWD]);
+		error_log("N_BRANCH_TO_CWD       = %f tN/cell/day\n", s->value[N_BRANCH_TO_CWD]);
+		error_log("N_CROOT_TO_CWD        = %f tN/cell/day\n", s->value[N_CROOT_TO_CWD]);
+		error_log("N_RESERVE_TO_CWD      = %f tN/cell/day\n", s->value[N_RESERVE_TO_CWD]);
+		error_log("N_FRUIT_TO_CWD        = %f tN/cell/day\n", s->value[N_FRUIT_TO_CWD]);
 		error_log("\nold_store           = %f tN/cell\n",     s->value[TREEN_OLDSTORE]);
 		error_log("store                 = %f tN/cell\n",     s->value[TREEN_STORE]);
 		error_log("store - old_store     = %f tN/cell\n",     s->value[TREEN_STORE] - s->value[TREEN_OLDSTORE]);

@@ -5,7 +5,7 @@
 # starting date: 13 November 2016
 
 MODEL="3D-CMCC-CNR FEM"
-VERSION="v.5.3.3"
+VERSION="v.5.4"
 PROJECT="ISIMIP"
 
 echo "***************************************************************"

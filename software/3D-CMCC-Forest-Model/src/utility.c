@@ -108,10 +108,10 @@ void reset_daily_cell_variables(cell_t *const c)
 	c->daily_froot_to_litr2C =          0.;
 	c->daily_froot_to_litr3C =          0.;
 	c->daily_froot_to_litr4C =          0.;
-	c->daily_deadwood_to_litrC =        0.;
-	c->daily_deadwood_to_litr2C =       0.;
-	c->daily_deadwood_to_litr3C =       0.;
-	c->daily_deadwood_to_litr4C =       0.;
+	c->daily_cwd_to_litrC =             0.;
+	c->daily_cwd_to_litr2C =            0.;
+	c->daily_cwd_to_litr3C =            0.;
+	c->daily_cwd_to_litr4C =            0.;
 	c->daily_to_soil1C =                0.;
 	c->daily_to_soil2C =                0.;
 	c->daily_to_soil3C =                0.;
@@ -143,10 +143,10 @@ void reset_daily_cell_variables(cell_t *const c)
 	c->daily_froot_to_litr2N =          0.;
 	c->daily_froot_to_litr3N =          0.;
 	c->daily_froot_to_litr4N =          0.;
-	c->daily_deadwood_to_litrN =        0.;
-	c->daily_deadwood_to_litr2N =       0.;
-	c->daily_deadwood_to_litr3N =       0.;
-	c->daily_deadwood_to_litr4N =       0.;
+	c->daily_cwd_to_litrN =             0.;
+	c->daily_cwd_to_litr2N =            0.;
+	c->daily_cwd_to_litr3N =            0.;
+	c->daily_cwd_to_litr4N =            0.;
 	c->daily_to_soil1N =                0.;
 	c->daily_to_soil2N =                0.;
 	c->daily_to_soil3N =                0.;
@@ -433,21 +433,21 @@ void reset_daily_class_variables(cell_t *const c)
 					s->value[C_TO_RESERVE] =              0.;
 					s->value[C_TO_FRUIT] =                0.;
 					s->value[C_TO_LITR] =                 0.;
-					s->value[C_TO_DEADWOOD] =             0.;
+					s->value[C_TO_CWD] =                  0.;
 					s->value[C_LEAF_TO_RESERVE] =         0.;
 					s->value[C_FROOT_TO_RESERVE] =        0.;
 					s->value[C_BRANCH_TO_RESERVE] =       0.;
 					s->value[C_CROOT_TO_RESERVE] =        0.;
 					s->value[C_LEAF_TO_LITR] =            0.;
 					s->value[C_FROOT_TO_LITR] =           0.;
-					s->value[C_STEM_TO_DEADWOOD] =        0.;
-					s->value[C_CROOT_TO_DEADWOOD] =       0.;
-					s->value[C_BRANCH_TO_DEADWOOD] =      0.;
-					s->value[C_RESERVE_TO_DEADWOOD] =     0.;
-					s->value[C_FRUIT_TO_DEADWOOD] =       0.;
-					s->value[C_STEM_SAPWOOD_TO_DEADWOOD] =0.;
-					s->value[C_CROOT_SAPWOOD_TO_DEADWOOD] =0.;
-					s->value[C_BRANCH_SAPWOOD_TO_DEADWOOD] =0.;
+					s->value[C_STEM_TO_CWD] =             0.;
+					s->value[C_CROOT_TO_CWD] =            0.;
+					s->value[C_BRANCH_TO_CWD] =           0.;
+					s->value[C_RESERVE_TO_CWD] =          0.;
+					s->value[C_FRUIT_TO_CWD] =            0.;
+					s->value[C_STEM_SAPWOOD_TO_CWD] =     0.;
+					s->value[C_CROOT_SAPWOOD_TO_CWD] =    0.;
+					s->value[C_BRANCH_SAPWOOD_TO_CWD] =   0.;
 					s->value[LEAF_TO_LITRC] =             0.;
 					s->value[LEAF_TO_LITR1C] =            0.;
 					s->value[LEAF_TO_LITR2C] =            0.;
@@ -458,10 +458,10 @@ void reset_daily_class_variables(cell_t *const c)
 					s->value[FROOT_TO_LITR2C] =           0.;
 					s->value[FROOT_TO_LITR3C] =           0.;
 					s->value[FROOT_TO_LITR4C] =           0.;
-					s->value[DEADWOOD_TO_LITRC] =         0.;
-					s->value[DEADWOOD_TO_LITR2C] =        0.;
-					s->value[DEADWOOD_TO_LITR3C] =        0.;
-					s->value[DEADWOOD_TO_LITR4C] =        0.;
+					s->value[CWD_TO_LITRC] =              0.;
+					s->value[CWD_TO_LITR2C] =             0.;
+					s->value[CWD_TO_LITR3C] =             0.;
+					s->value[CWD_TO_LITR4C] =             0.;
 
 					/* reset daily nitrogen fluxes */
 					s->value[NPP_gN_DEMAND] =             0.;
@@ -479,18 +479,18 @@ void reset_daily_class_variables(cell_t *const c)
 					s->value[N_TO_FRUIT] =                0.;
 					s->value[N_TO_LITTER] =               0.;
 					s->value[N_TO_LITR] =                 0.;
-					s->value[N_TO_DEADWOOD] =             0.;
+					s->value[N_TO_CWD] =                  0.;
 					s->value[N_LEAF_TO_RESERVE] =         0.;
 					s->value[N_FROOT_TO_RESERVE] =        0.;
 					s->value[N_CROOT_TO_RESERVE] =        0.;
 					s->value[N_BRANCH_TO_RESERVE] =       0.;
 					s->value[N_LEAF_TO_LITR] =            0.;
 					s->value[N_FROOT_TO_LITR] =           0.;
-					s->value[N_STEM_TO_DEADWOOD] =        0.;
-					s->value[N_CROOT_TO_DEADWOOD] =       0.;
-					s->value[N_BRANCH_TO_DEADWOOD] =      0.;
-					s->value[N_RESERVE_TO_DEADWOOD] =     0.;
-					s->value[N_FRUIT_TO_DEADWOOD] =       0.;
+					s->value[N_STEM_TO_CWD] =             0.;
+					s->value[N_CROOT_TO_CWD] =            0.;
+					s->value[N_BRANCH_TO_CWD] =           0.;
+					s->value[N_RESERVE_TO_CWD] =          0.;
+					s->value[N_FRUIT_TO_CWD] =            0.;
 					s->value[LEAF_TO_LITRN] =             0.;
 					s->value[LEAF_TO_LITR1N] =            0.;
 					s->value[LEAF_TO_LITR2N] =            0.;
@@ -501,10 +501,10 @@ void reset_daily_class_variables(cell_t *const c)
 					s->value[FROOT_TO_LITR2N] =           0.;
 					s->value[FROOT_TO_LITR3N] =           0.;
 					s->value[FROOT_TO_LITR4N] =           0.;
-					s->value[DEADWOOD_TO_LITRN] =         0.;
-					s->value[DEADWOOD_TO_LITR2N] =        0.;
-					s->value[DEADWOOD_TO_LITR3N] =        0.;
-					s->value[DEADWOOD_TO_LITR4N] =        0.;
+					s->value[CWD_TO_LITRN] =              0.;
+					s->value[CWD_TO_LITR2N] =             0.;
+					s->value[CWD_TO_LITR3N] =             0.;
+					s->value[CWD_TO_LITR4N] =             0.;
 					/****************************************/
 
 					/* reset daily maintenance, growth and total respiration */

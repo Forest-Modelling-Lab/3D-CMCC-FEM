@@ -195,10 +195,10 @@ void litter_decomposition (cell_t *const c, const meteo_daily_t *const meteo_dai
 	rate_scalar     = decomposition ( c, meteo_daily, 0 );
 
 	/* calculate C:N ratios */
-	if ( c->deadwood_N  > 0. ) cn_cwd       = c->deadwood_C  / c->deadwood_N;
-	if ( c->deadwood_2N > 0. ) cn_cwd2      = c->deadwood_2C / c->deadwood_2N;
-	if ( c->deadwood_3N > 0. ) cn_cwd3      = c->deadwood_3C / c->deadwood_3N;
-	if ( c->deadwood_4N > 0. ) cn_cwd4      = c->deadwood_4C / c->deadwood_4N;
+	if ( c->cwd_N  > 0. ) cn_cwd       = c->cwd_C  / c->cwd_N;
+	if ( c->cwd_2N > 0. ) cn_cwd2      = c->cwd_2C / c->cwd_2N;
+	if ( c->cwd_3N > 0. ) cn_cwd3      = c->cwd_3C / c->cwd_3N;
+	if ( c->cwd_4N > 0. ) cn_cwd4      = c->cwd_4C / c->cwd_4N;
 	if ( c->litr1N      > 0. ) cn_litr1     = c->litr1C      / c->litr1N;
 	if ( c->litr2N      > 0. ) cn_litr2     = c->litr2C      / c->litr2N;
 	if ( c->litr4N      > 0. ) cn_litr4     = c->litr4C      / c->litr4N;
@@ -209,22 +209,22 @@ void litter_decomposition (cell_t *const c, const meteo_daily_t *const meteo_dai
 	deadwood_fragm_rate              = KFRAG_BASE     * rate_scalar;
 
 	/* check */
-	CHECK_CONDITION ( ( c->deadwood_2C + c->deadwood_3C + c->deadwood_4C ) - c->deadwood_C, > , eps);
+	CHECK_CONDITION ( ( c->cwd_2C + c->cwd_3C + c->cwd_4C ) - c->cwd_C, > , eps);
 
 	/* coarse woody debris carbon to carbon litter poool */
-	c->daily_deadwood_to_litrC       = c->deadwood_C  * deadwood_fragm_rate;
-	c->daily_deadwood_to_litr2C      = c->deadwood_2C * deadwood_fragm_rate;
-	c->daily_deadwood_to_litr3C      = c->deadwood_3C * deadwood_fragm_rate;
-	c->daily_deadwood_to_litr4C      = c->deadwood_4C * deadwood_fragm_rate;
+	c->daily_cwd_to_litrC       = c->cwd_C  * deadwood_fragm_rate;
+	c->daily_cwd_to_litr2C      = c->cwd_2C * deadwood_fragm_rate;
+	c->daily_cwd_to_litr3C      = c->cwd_3C * deadwood_fragm_rate;
+	c->daily_cwd_to_litr4C      = c->cwd_4C * deadwood_fragm_rate;
 
 	/* check */
-	CHECK_CONDITION ( c->daily_deadwood_to_litr2C + c->daily_deadwood_to_litr3C + c->daily_deadwood_to_litr4C, > , c->daily_deadwood_to_litrC + eps);
+	CHECK_CONDITION ( c->daily_cwd_to_litr2C + c->daily_cwd_to_litr3C + c->daily_cwd_to_litr4C, > , c->daily_cwd_to_litrC + eps);
 
 	/* coarse woody debris nitrogen to nitrogen litter pool */
-	if ( cn_cwd  > 0. ) c->daily_deadwood_to_litrN  = c->daily_deadwood_to_litrC  / cn_cwd;
-	if ( cn_cwd2 > 0. ) c->daily_deadwood_to_litr2N = c->daily_deadwood_to_litr2C / cn_cwd2;
-	if ( cn_cwd3 > 0. ) c->daily_deadwood_to_litr3N = c->daily_deadwood_to_litr3C / cn_cwd3;
-	if ( cn_cwd4 > 0. ) c->daily_deadwood_to_litr4N = c->daily_deadwood_to_litr4C / cn_cwd4;
+	if ( cn_cwd  > 0. ) c->daily_cwd_to_litrN  = c->daily_cwd_to_litrC  / cn_cwd;
+	if ( cn_cwd2 > 0. ) c->daily_cwd_to_litr2N = c->daily_cwd_to_litr2C / cn_cwd2;
+	if ( cn_cwd3 > 0. ) c->daily_cwd_to_litr3N = c->daily_cwd_to_litr3C / cn_cwd3;
+	if ( cn_cwd4 > 0. ) c->daily_cwd_to_litr4N = c->daily_cwd_to_litr4C / cn_cwd4;
 
 	/******************************************************************************************************************/
 

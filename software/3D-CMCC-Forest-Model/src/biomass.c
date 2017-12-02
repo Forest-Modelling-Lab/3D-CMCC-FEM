@@ -204,15 +204,15 @@ void tree_biomass_remove (cell_t *const c, const int height, const int dbh, cons
 			s->value[C_FROOT_TO_LITR];
 
 	/* carbon to cwd fluxes */
-	s->value[C_STEM_TO_DEADWOOD]      += (s->value[TREE_STEM_C]    * tree_remove);
+	s->value[C_STEM_TO_CWD]      += (s->value[TREE_STEM_C]    * tree_remove);
 
-	s->value[C_CROOT_TO_DEADWOOD]     += (s->value[TREE_CROOT_C]   * tree_remove);
+	s->value[C_CROOT_TO_CWD]     += (s->value[TREE_CROOT_C]   * tree_remove);
 
-	s->value[C_BRANCH_TO_DEADWOOD]    += (s->value[TREE_BRANCH_C]  * tree_remove);
+	s->value[C_BRANCH_TO_CWD]    += (s->value[TREE_BRANCH_C]  * tree_remove);
 
-	s->value[C_RESERVE_TO_DEADWOOD]   += (s->value[TREE_RESERVE_C] * tree_remove);
+	s->value[C_RESERVE_TO_CWD]   += (s->value[TREE_RESERVE_C] * tree_remove);
 
-	s->value[C_FRUIT_TO_DEADWOOD]     += (s->value[TREE_FRUIT_C]   * tree_remove);
+	s->value[C_FRUIT_TO_CWD]     += (s->value[TREE_FRUIT_C]   * tree_remove);
 
 	if ( ! nat_man )
 	{
@@ -222,20 +222,20 @@ void tree_biomass_remove (cell_t *const c, const int height, const int dbh, cons
 		if ( s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2 )
 		{
 			/* deciduous */
-			s->value[C_TO_DEADWOOD]                += s->value[C_STEM_TO_DEADWOOD] +
-					s->value[C_CROOT_TO_DEADWOOD]  +
-					s->value[C_BRANCH_TO_DEADWOOD] +
-					s->value[C_RESERVE_TO_DEADWOOD]+
-					s->value[C_FRUIT_TO_DEADWOOD]  ;
+			s->value[C_TO_CWD]                += s->value[C_STEM_TO_CWD] +
+					s->value[C_CROOT_TO_CWD]       +
+					s->value[C_BRANCH_TO_CWD]      +
+					s->value[C_RESERVE_TO_CWD]     +
+					s->value[C_FRUIT_TO_CWD]       ;
 		}
 		else
 		{
 			/* evergreen */
-			s->value[C_TO_DEADWOOD]                += s->value[C_STEM_TO_DEADWOOD] +
-					s->value[C_CROOT_TO_DEADWOOD]  +
-					s->value[C_BRANCH_TO_DEADWOOD] +
-					s->value[C_RESERVE_TO_DEADWOOD]+
-					s->value[C_FRUIT_TO_DEADWOOD]  +
+			s->value[C_TO_CWD]                += s->value[C_STEM_TO_CWD] +
+					s->value[C_CROOT_TO_CWD]       +
+					s->value[C_BRANCH_TO_CWD]      +
+					s->value[C_RESERVE_TO_CWD]     +
+					s->value[C_FRUIT_TO_CWD]       +
 					s->value[C_LEAF_TO_LITR]       +
 					s->value[C_FROOT_TO_LITR]      ;
 		}
@@ -248,70 +248,70 @@ void tree_biomass_remove (cell_t *const c, const int height, const int dbh, cons
 		if ( s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2 )
 		{
 			/* deciduous */
-			s->value[C_TO_DEADWOOD]                += s->value[C_CROOT_TO_DEADWOOD]  +
-					s->value[C_BRANCH_TO_DEADWOOD] +
-					s->value[C_RESERVE_TO_DEADWOOD]+
-					s->value[C_FRUIT_TO_DEADWOOD] ;
+			s->value[C_TO_CWD]                += s->value[C_CROOT_TO_CWD]  +
+					s->value[C_BRANCH_TO_CWD] +
+					s->value[C_RESERVE_TO_CWD]+
+					s->value[C_FRUIT_TO_CWD] ;
 		}
 		else
 		{
 			/* evergreen */
-			s->value[C_TO_DEADWOOD]                += s->value[C_CROOT_TO_DEADWOOD]  +
-					s->value[C_BRANCH_TO_DEADWOOD] +
-					s->value[C_RESERVE_TO_DEADWOOD]+
-					s->value[C_FRUIT_TO_DEADWOOD]  +
-					s->value[C_LEAF_TO_LITR]       +
-					s->value[C_FROOT_TO_LITR]      ;
+			s->value[C_TO_CWD]                += s->value[C_CROOT_TO_CWD]  +
+					s->value[C_BRANCH_TO_CWD] +
+					s->value[C_RESERVE_TO_CWD]+
+					s->value[C_FRUIT_TO_CWD]  +
+					s->value[C_LEAF_TO_LITR]  +
+					s->value[C_FROOT_TO_LITR] ;
 		}
 	}
 
 	if ( s->counter[HARVESTING_HAPPENS] == 1 )
 	{
-		/*** compute class-level deadwood carbon fluxes (tC/sizecell/day) ****/
-		s->value[DEADWOOD_TO_LITRC]           = s->value[C_TO_DEADWOOD];
-		s->value[DEADWOOD_TO_LITR2C]          = s->value[C_TO_DEADWOOD] * s->value[DEADWOOD_USCEL_FRAC];
-		s->value[DEADWOOD_TO_LITR3C]          = s->value[C_TO_DEADWOOD] * s->value[DEADWOOD_SCEL_FRAC];
-		s->value[DEADWOOD_TO_LITR4C]          = s->value[C_TO_DEADWOOD] * s->value[DEADWOOD_LIGN_FRAC];
+		/*** compute class-level Coarse Woody Debris carbon fluxes (tC/sizecell/day) ****/
+		s->value[CWD_TO_LITRC]           = s->value[C_TO_CWD];
+		s->value[CWD_TO_LITR2C]          = s->value[C_TO_CWD] * s->value[DEADWOOD_USCEL_FRAC];
+		s->value[CWD_TO_LITR3C]          = s->value[C_TO_CWD] * s->value[DEADWOOD_SCEL_FRAC];
+		s->value[CWD_TO_LITR4C]          = s->value[C_TO_CWD] * s->value[DEADWOOD_LIGN_FRAC];
 		/* check */
-		CHECK_CONDITION ( s->value[DEADWOOD_TO_LITR2C] + s->value[DEADWOOD_TO_LITR3C] + s->value[DEADWOOD_TO_LITR4C] , == , s->value[DEADWOOD_TO_LITRC] + eps );
+		CHECK_CONDITION ( s->value[CWD_TO_LITR2C] + s->value[CWD_TO_LITR3C] + s->value[CWD_TO_LITR4C] , == , s->value[CWD_TO_LITRC] + eps );
 
-		/*** compute class-level deadwood carbon pools (tC/sizecell) ****/
-		s->value[DEADWOOD_LITRC]             += s->value[C_TO_DEADWOOD];
-		s->value[DEADWOOD_LITR2C]            += s->value[DEADWOOD_TO_LITR2C];
-		s->value[DEADWOOD_LITR3C]            += s->value[DEADWOOD_TO_LITR3C];
-		s->value[DEADWOOD_LITR4C]            += s->value[DEADWOOD_TO_LITR4C];
+		/*** compute class-level Coarse Woody Debris carbon pools (tC/sizecell) ****/
+		s->value[CWD_LITRC]             += s->value[C_TO_CWD];
+		s->value[CWD_LITR2C]            += s->value[CWD_TO_LITR2C];
+		s->value[CWD_LITR3C]            += s->value[CWD_TO_LITR3C];
+		s->value[CWD_LITR4C]            += s->value[CWD_TO_LITR4C];
 		/* check */
-		CHECK_CONDITION ( s->value[DEADWOOD_LITR2C] + s->value[DEADWOOD_LITR3C] + s->value[DEADWOOD_LITR4C] , == , s->value[DEADWOOD_LITRC] + eps );
+		CHECK_CONDITION ( s->value[CWD_LITR2C] + s->value[CWD_LITR3C] + s->value[CWD_LITR4C] , == , s->value[CWD_LITRC] + eps );
 
-		/*** update cell-level deadwood carbon fluxes (gC/m2/day) ****/
-		c->daily_deadwood_to_litrC           += s->value[DEADWOOD_LITRC]  * 1e6 / g_settings->sizeCell;
-		c->daily_deadwood_to_litr2C          += s->value[DEADWOOD_LITR2C] * 1e6 / g_settings->sizeCell;
-		c->daily_deadwood_to_litr3C          += s->value[DEADWOOD_LITR3C] * 1e6 / g_settings->sizeCell;
-		c->daily_deadwood_to_litr4C          += s->value[DEADWOOD_LITR4C] * 1e6 / g_settings->sizeCell;
+		/*** update cell-level Coarse Woody Debris carbon fluxes (gC/m2/day) ****/
+		c->daily_cwd_to_litrC           += s->value[CWD_LITRC]  * 1e6 / g_settings->sizeCell;
+		c->daily_cwd_to_litr2C          += s->value[CWD_LITR2C] * 1e6 / g_settings->sizeCell;
+		c->daily_cwd_to_litr3C          += s->value[CWD_LITR3C] * 1e6 / g_settings->sizeCell;
+		c->daily_cwd_to_litr4C          += s->value[CWD_LITR4C] * 1e6 / g_settings->sizeCell;
 		/* check */
-		CHECK_CONDITION ( c->daily_deadwood_to_litr2C + c->daily_deadwood_to_litr3C + c->daily_deadwood_to_litr4C , == , c->daily_deadwood_to_litrC + eps );
+		CHECK_CONDITION ( c->daily_cwd_to_litr2C + c->daily_cwd_to_litr3C + c->daily_cwd_to_litr4C , == , c->daily_cwd_to_litrC + eps );
 
-		/*** compute cell-level deadwood carbon pools (gC/m2) ***/
-		c->deadwood_C                        += s->value[DEADWOOD_LITRC]  * 1e6 / g_settings->sizeCell;
-		c->deadwood_2C                       += s->value[DEADWOOD_LITR2C] * 1e6 / g_settings->sizeCell;
-		c->deadwood_3C                       += s->value[DEADWOOD_LITR3C] * 1e6 / g_settings->sizeCell;
-		c->deadwood_4C                       += s->value[DEADWOOD_LITR4C] * 1e6 / g_settings->sizeCell;
+		/*** compute cell-level Coarse Woody Debris carbon pools (gC/m2) ***/
+		c->cwd_C                        += s->value[CWD_LITRC]  * 1e6 / g_settings->sizeCell;
+		c->cwd_2C                       += s->value[CWD_LITR2C] * 1e6 / g_settings->sizeCell;
+		c->cwd_3C                       += s->value[CWD_LITR3C] * 1e6 / g_settings->sizeCell;
+		c->cwd_4C                       += s->value[CWD_LITR4C] * 1e6 / g_settings->sizeCell;
 		/* check */
-		CHECK_CONDITION ( c->deadwood_2C + c->deadwood_3C + c->deadwood_4C , == , c->deadwood_C + eps );
+		CHECK_CONDITION ( c->cwd_2C + c->cwd_3C + c->cwd_4C , == , c->cwd_C + eps );
 	}
 
 	/* sapwood and heartwood */
-	s->value[C_STEM_SAPWOOD_TO_DEADWOOD]     += (s->value[TREE_STEM_SAPWOOD_C]     * tree_remove);
+	s->value[C_STEM_SAPWOOD_TO_CWD]     += (s->value[TREE_STEM_SAPWOOD_C]     * tree_remove);
 
-	s->value[C_CROOT_SAPWOOD_TO_DEADWOOD]    += (s->value[TREE_CROOT_SAPWOOD_C]    * tree_remove);
+	s->value[C_CROOT_SAPWOOD_TO_CWD]    += (s->value[TREE_CROOT_SAPWOOD_C]    * tree_remove);
 
-	s->value[C_BRANCH_SAPWOOD_TO_DEADWOOD]   += (s->value[TREE_BRANCH_SAPWOOD_C]   * tree_remove);
+	s->value[C_BRANCH_SAPWOOD_TO_CWD]   += (s->value[TREE_BRANCH_SAPWOOD_C]   * tree_remove);
 
-	s->value[C_STEM_HEARTWOOD_TO_DEADWOOD]   += (s->value[TREE_STEM_HEARTWOOD_C]   * tree_remove);
+	s->value[C_STEM_HEARTWOOD_TO_CWD]   += (s->value[TREE_STEM_HEARTWOOD_C]   * tree_remove);
 
-	s->value[C_CROOT_HEARTWOOD_TO_DEADWOOD]  += (s->value[TREE_CROOT_HEARTWOOD_C]  * tree_remove);
+	s->value[C_CROOT_HEARTWOOD_TO_CWD]  += (s->value[TREE_CROOT_HEARTWOOD_C]  * tree_remove);
 
-	s->value[C_BRANCH_HEARTWOOD_TO_DEADWOOD] += (s->value[TREE_BRANCH_HEARTWOOD_C] * tree_remove);
+	s->value[C_BRANCH_HEARTWOOD_TO_CWD] += (s->value[TREE_BRANCH_HEARTWOOD_C] * tree_remove);
 
 	/******************************************************************************************/
 
@@ -319,7 +319,7 @@ void tree_biomass_remove (cell_t *const c, const int height, const int dbh, cons
 	if ( s->counter[THINNING_HAPPENS] == 1 || s->counter[HARVESTING_HAPPENS] == 1 )
 	{
 		/* compute woody biomass removed (tC/ha/yr) */
-		s->value[C_HWP]          += s->value[C_STEM_TO_DEADWOOD] + s->value[C_CROOT_TO_DEADWOOD] + s->value[C_BRANCH_TO_DEADWOOD] ;
+		s->value[C_HWP]          += s->value[C_STEM_TO_CWD] + s->value[C_CROOT_TO_CWD] + s->value[C_BRANCH_TO_CWD] ;
 		s->value[CUM_C_HWP]      += s->value[C_HWP];
 		/* compute stem volume removed (m3/ha/yr) */
 		s->value[VOLUME_HWP]     += s->value[TREE_VOLUME] * tree_remove;
@@ -348,17 +348,17 @@ void tree_biomass_remove (cell_t *const c, const int height, const int dbh, cons
 	s->value[LITR_N]                  += s->value[N_TO_LITR];
 
 	/* nitrogen to cwd fluxes */
-	s->value[N_STEM_TO_DEADWOOD]      += (s->value[TREE_STEM_N]       * tree_remove);
+	s->value[N_STEM_TO_CWD]      += (s->value[TREE_STEM_N]       * tree_remove);
 
-	s->value[N_CROOT_TO_DEADWOOD]     += (s->value[TREE_CROOT_N]      * tree_remove);
+	s->value[N_CROOT_TO_CWD]     += (s->value[TREE_CROOT_N]      * tree_remove);
 
-	s->value[N_BRANCH_TO_DEADWOOD]    += (s->value[TREE_BRANCH_N]     * tree_remove);
+	s->value[N_BRANCH_TO_CWD]    += (s->value[TREE_BRANCH_N]     * tree_remove);
 
-	s->value[N_BRANCH_TO_DEADWOOD]    += (s->value[TREE_RESERVE_N]    * tree_remove);
+	s->value[N_BRANCH_TO_CWD]    += (s->value[TREE_RESERVE_N]    * tree_remove);
 
-	s->value[N_FRUIT_TO_DEADWOOD]     += (s->value[TREE_FRUIT_N]      * tree_remove);
+	s->value[N_FRUIT_TO_CWD]     += (s->value[TREE_FRUIT_N]      * tree_remove);
 
-	s->value[N_RESERVE_TO_DEADWOOD]   += (s->value[TREE_RESERVE_N]    * tree_remove);
+	s->value[N_RESERVE_TO_CWD]   += (s->value[TREE_RESERVE_N]    * tree_remove);
 
 	if ( ! nat_man )
 	{
@@ -368,20 +368,20 @@ void tree_biomass_remove (cell_t *const c, const int height, const int dbh, cons
 		if ( s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2 )
 		{
 			/* deciduous */
-			s->value[N_TO_DEADWOOD]                += s->value[N_STEM_TO_DEADWOOD] +
-					s->value[N_CROOT_TO_DEADWOOD]  +
-					s->value[N_BRANCH_TO_DEADWOOD] +
-					s->value[N_RESERVE_TO_DEADWOOD]+
-					s->value[N_FRUIT_TO_DEADWOOD]  ;
+			s->value[N_TO_CWD]                += s->value[N_STEM_TO_CWD] +
+					s->value[N_CROOT_TO_CWD]  +
+					s->value[N_BRANCH_TO_CWD] +
+					s->value[N_RESERVE_TO_CWD]+
+					s->value[N_FRUIT_TO_CWD]  ;
 		}
 		else
 		{
 			/* evergreen */
-			s->value[N_TO_DEADWOOD]                += s->value[N_STEM_TO_DEADWOOD] +
-					s->value[N_CROOT_TO_DEADWOOD]  +
-					s->value[N_BRANCH_TO_DEADWOOD] +
-					s->value[N_RESERVE_TO_DEADWOOD]+
-					s->value[N_FRUIT_TO_DEADWOOD]  +
+			s->value[N_TO_CWD]                += s->value[N_STEM_TO_CWD] +
+					s->value[N_CROOT_TO_CWD]  +
+					s->value[N_BRANCH_TO_CWD] +
+					s->value[N_RESERVE_TO_CWD]+
+					s->value[N_FRUIT_TO_CWD]  +
 					s->value[N_LEAF_TO_LITR]       +
 					s->value[N_FROOT_TO_LITR]      ;
 		}
@@ -394,18 +394,18 @@ void tree_biomass_remove (cell_t *const c, const int height, const int dbh, cons
 		if ( s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2 )
 		{
 			/* deciduous */
-			s->value[N_TO_DEADWOOD]                += s->value[N_CROOT_TO_DEADWOOD]  +
-					s->value[N_BRANCH_TO_DEADWOOD] +
-					s->value[N_RESERVE_TO_DEADWOOD]+
-					s->value[N_FRUIT_TO_DEADWOOD] ;
+			s->value[N_TO_CWD]                += s->value[N_CROOT_TO_CWD]  +
+					s->value[N_BRANCH_TO_CWD] +
+					s->value[N_RESERVE_TO_CWD]+
+					s->value[N_FRUIT_TO_CWD] ;
 		}
 		else
 		{
 			/* evergreen */
-			s->value[N_TO_DEADWOOD]                += s->value[N_CROOT_TO_DEADWOOD]  +
-					s->value[N_BRANCH_TO_DEADWOOD] +
-					s->value[N_RESERVE_TO_DEADWOOD]+
-					s->value[N_FRUIT_TO_DEADWOOD]  +
+			s->value[N_TO_CWD]                += s->value[N_CROOT_TO_CWD]  +
+					s->value[N_BRANCH_TO_CWD] +
+					s->value[N_RESERVE_TO_CWD]+
+					s->value[N_FRUIT_TO_CWD]  +
 					s->value[N_LEAF_TO_LITR]       +
 					s->value[N_FROOT_TO_LITR]      ;
 		}
@@ -414,36 +414,36 @@ void tree_biomass_remove (cell_t *const c, const int height, const int dbh, cons
 	if ( s->counter[HARVESTING_HAPPENS] == 1 )
 	{
 		/*** compute class-level deadwood nitrogen fluxes (tN/sizecell/day) ****/
-		s->value[DEADWOOD_TO_LITRN]           = s->value[N_TO_DEADWOOD];
-		s->value[DEADWOOD_TO_LITR2N]          = s->value[N_TO_DEADWOOD] * s->value[DEADWOOD_USCEL_FRAC];
-		s->value[DEADWOOD_TO_LITR3N]          = s->value[N_TO_DEADWOOD] * s->value[DEADWOOD_SCEL_FRAC];
-		s->value[DEADWOOD_TO_LITR4N]          = s->value[N_TO_DEADWOOD] * s->value[DEADWOOD_LIGN_FRAC];
+		s->value[CWD_TO_LITRN]           = s->value[N_TO_CWD];
+		s->value[CWD_TO_LITR2N]          = s->value[N_TO_CWD] * s->value[DEADWOOD_USCEL_FRAC];
+		s->value[CWD_TO_LITR3N]          = s->value[N_TO_CWD] * s->value[DEADWOOD_SCEL_FRAC];
+		s->value[CWD_TO_LITR4N]          = s->value[N_TO_CWD] * s->value[DEADWOOD_LIGN_FRAC];
 		/* check */
-		CHECK_CONDITION ( s->value[DEADWOOD_TO_LITR2N] + s->value[DEADWOOD_TO_LITR3N] + s->value[DEADWOOD_TO_LITR4N] , == , s->value[DEADWOOD_TO_LITRN] + eps );
+		CHECK_CONDITION ( s->value[CWD_TO_LITR2N] + s->value[CWD_TO_LITR3N] + s->value[CWD_TO_LITR4N] , == , s->value[CWD_TO_LITRN] + eps );
 
 		/*** compute class-level deadwood nitrogen pools (tN/sizecell) ****/
-		s->value[DEADWOOD_LITRN]             += s->value[N_TO_DEADWOOD];
-		s->value[DEADWOOD_LITR2N]            += s->value[DEADWOOD_TO_LITR2N];
-		s->value[DEADWOOD_LITR3N]            += s->value[DEADWOOD_TO_LITR3N];
-		s->value[DEADWOOD_LITR4N]            += s->value[DEADWOOD_TO_LITR4N];
+		s->value[CWD_LITRN]             += s->value[N_TO_CWD];
+		s->value[CWD_LITR2N]            += s->value[CWD_TO_LITR2N];
+		s->value[CWD_LITR3N]            += s->value[CWD_TO_LITR3N];
+		s->value[CWD_LITR4N]            += s->value[CWD_TO_LITR4N];
 		/* check */
-		CHECK_CONDITION ( s->value[DEADWOOD_LITR2N] + s->value[DEADWOOD_LITR3N] + s->value[DEADWOOD_LITR4N] , == , s->value[DEADWOOD_LITRN] + eps );
+		CHECK_CONDITION ( s->value[CWD_LITR2N] + s->value[CWD_LITR3N] + s->value[CWD_LITR4N] , == , s->value[CWD_LITRN] + eps );
 
-		/*** update cell-level deadwood nitrogen fluxes (gN/m2/day) ****/
-		c->daily_deadwood_to_litrN           += s->value[DEADWOOD_LITRN]  * 1e6 / g_settings->sizeCell;
-		c->daily_deadwood_to_litr2N          += s->value[DEADWOOD_LITR2N] * 1e6 / g_settings->sizeCell;
-		c->daily_deadwood_to_litr3N          += s->value[DEADWOOD_LITR3N] * 1e6 / g_settings->sizeCell;
-		c->daily_deadwood_to_litr4N          += s->value[DEADWOOD_LITR4N] * 1e6 / g_settings->sizeCell;
+		/*** update cell-level cwd nitrogen fluxes (gN/m2/day) ****/
+		c->daily_cwd_to_litrN           += s->value[CWD_LITRN]  * 1e6 / g_settings->sizeCell;
+		c->daily_cwd_to_litr2N          += s->value[CWD_LITR2N] * 1e6 / g_settings->sizeCell;
+		c->daily_cwd_to_litr3N          += s->value[CWD_LITR3N] * 1e6 / g_settings->sizeCell;
+		c->daily_cwd_to_litr4N          += s->value[CWD_LITR4N] * 1e6 / g_settings->sizeCell;
 		/* check */
-		CHECK_CONDITION ( c->daily_deadwood_to_litr2N + c->daily_deadwood_to_litr3N + c->daily_deadwood_to_litr4N , == , c->daily_deadwood_to_litrN + eps );
+		CHECK_CONDITION ( c->daily_cwd_to_litr2N + c->daily_cwd_to_litr3N + c->daily_cwd_to_litr4N , == , c->daily_cwd_to_litrN + eps );
 
-		/*** compute cell-level deadwood nitrogen pools (gN/m2) ***/
-		c->deadwood_N                        += s->value[DEADWOOD_LITRN]  * 1e6 / g_settings->sizeCell;
-		c->deadwood_2N                       += s->value[DEADWOOD_LITR2N] * 1e6 / g_settings->sizeCell;
-		c->deadwood_3N                       += s->value[DEADWOOD_LITR3N] * 1e6 / g_settings->sizeCell;
-		c->deadwood_4N                       += s->value[DEADWOOD_LITR4N] * 1e6 / g_settings->sizeCell;
+		/*** compute cell-level cwd nitrogen pools (gN/m2) ***/
+		c->cwd_N                        += s->value[CWD_LITRN]  * 1e6 / g_settings->sizeCell;
+		c->cwd_2N                       += s->value[CWD_LITR2N] * 1e6 / g_settings->sizeCell;
+		c->cwd_3N                       += s->value[CWD_LITR3N] * 1e6 / g_settings->sizeCell;
+		c->cwd_4N                       += s->value[CWD_LITR4N] * 1e6 / g_settings->sizeCell;
 		/* check */
-		CHECK_CONDITION ( c->deadwood_2N + c->deadwood_3N + c->deadwood_4N , == , c->deadwood_N + eps );
+		CHECK_CONDITION ( c->cwd_2N + c->cwd_3N + c->cwd_4N , == , c->cwd_N + eps );
 	}
 
 }

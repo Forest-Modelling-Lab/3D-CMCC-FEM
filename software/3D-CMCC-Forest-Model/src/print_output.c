@@ -2003,10 +2003,10 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 			c->litr2C,
 			c->litr3C,
 			c->litr4C,
-			c->deadwood_C,
-			c->deadwood_2C,
-			c->deadwood_3C,
-			c->deadwood_4C,
+			c->cwd_C,
+			c->cwd_2C,
+			c->cwd_3C,
+			c->cwd_4C,
 			c->soilC,
 			c->soil1C,
 			c->soil2C,
@@ -2017,10 +2017,10 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 			c->litr2N,
 			c->litr3N,
 			c->litr4N,
-			c->deadwood_N,
-			c->deadwood_2N,
-			c->deadwood_3N,
-			c->deadwood_4N,
+			c->cwd_N,
+			c->cwd_2N,
+			c->cwd_3N,
+			c->cwd_4N,
 			c->soilN,
 			c->soil1N,
 			c->soil2N,
@@ -2477,8 +2477,8 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 		/************************************************************************/
 		/* heading cell variables */
 		logger(g_annual_log,",gpp,npp,ar,hr,rsoil,rsoilCO2,reco,nee,nep,et,le,soil-evapo,asw,iWue,vol,cum_vol,run_off,"
-				"litrC,litr1C,litr2C,litr3C,litr4C,deadwoodC,deadwood2C,deadwood3C,deadwood4C,soilC,soil1C,soil2C,soil3C,soil4C,"
-				"litrN,litr1N,litr2N,litr3N,litr4N,deadwoodN,deadwood2N,deadwood3N,deadwood4N,soilN,soil1N,soil2N,soil3N,soil4N");
+				"litrC,litr1C,litr2C,litr3C,litr4C,cwdC,cwd2C,cwd3C,cwd4C,soilC,soil1C,soil2C,soil3C,soil4C,"
+				"litrN,litr1N,litr2N,litr3N,litr4N,cwdN,cwd2N,cwd3N,cwd4N,soilN,soil1N,soil2N,soil3N,soil4N");
 		/************************************************************************/
 		/* heading meteo variables */
 		logger(g_annual_log,",solar_rad,tavg,tmax,tmin,tday,tnight,vpd,prcp,tsoil,rh,avg_asw,[CO2]");
@@ -2677,10 +2677,10 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 			c->litr2C,
 			c->litr3C,
 			c->litr4C,
-			c->deadwood_C,
-			c->deadwood_2C,
-			c->deadwood_3C,
-			c->deadwood_4C,
+			c->cwd_C,
+			c->cwd_2C,
+			c->cwd_3C,
+			c->cwd_4C,
 			c->soilC,
 			c->soil1C,
 			c->soil2C,
@@ -2691,10 +2691,10 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 			c->litr2N,
 			c->litr3N,
 			c->litr4N,
-			c->deadwood_N,
-			c->deadwood_2N,
-			c->deadwood_3N,
-			c->deadwood_4N,
+			c->cwd_N,
+			c->cwd_2N,
+			c->cwd_3N,
+			c->cwd_4N,
 			c->soilN,
 			c->soil1N,
 			c->soil2N,
