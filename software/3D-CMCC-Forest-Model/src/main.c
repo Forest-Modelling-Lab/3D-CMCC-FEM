@@ -1540,8 +1540,6 @@ int main(int argc, char *argv[]) {
 			matrix->cells[cell].years[year].yearly_mean.rh_f          = 0.;
 			matrix->cells[cell].years[year].yearly_mean.incoming_par  = 0.;
 			matrix->cells[cell].years[year].yearly_mean.par           = 0.;
-			matrix->cells[cell].years[year].yearly_mean.incoming_ppfd = 0.;
-			matrix->cells[cell].years[year].yearly_mean.ppfd          = 0.;
 
 			for ( month = 0; month < MONTHS_COUNT; ++month )
 			{
@@ -1557,8 +1555,6 @@ int main(int argc, char *argv[]) {
 				matrix->cells[cell].years[year].monthly_mean[month].rh_f          = 0.;
 				matrix->cells[cell].years[year].monthly_mean[month].incoming_par  = 0.;
 				matrix->cells[cell].years[year].monthly_mean[month].par           = 0.;
-				matrix->cells[cell].years[year].monthly_mean[month].incoming_ppfd = 0.;
-				matrix->cells[cell].years[year].monthly_mean[month].ppfd          = 0.;
 			}
 		}
 	}
@@ -1687,8 +1683,6 @@ int main(int argc, char *argv[]) {
 					matrix->cells[cell].years[year].monthly_mean[month].rh_f          += matrix->cells[cell].years[year].m[month].d[day].rh_f;
 					matrix->cells[cell].years[year].monthly_mean[month].incoming_par  += matrix->cells[cell].years[year].m[month].d[day].incoming_par;
 					matrix->cells[cell].years[year].monthly_mean[month].par           += matrix->cells[cell].years[year].m[month].d[day].par;
-					matrix->cells[cell].years[year].monthly_mean[month].incoming_ppfd += matrix->cells[cell].years[year].m[month].d[day].incoming_ppfd;
-					matrix->cells[cell].years[year].monthly_mean[month].ppfd          += matrix->cells[cell].years[year].m[month].d[day].ppfd;
 				}
 			}
 
@@ -1707,8 +1701,6 @@ int main(int argc, char *argv[]) {
 				matrix->cells[cell].years[year].monthly_mean[month].rh_f          /= days_per_month;
 				matrix->cells[cell].years[year].monthly_mean[month].incoming_par  /= days_per_month;
 				matrix->cells[cell].years[year].monthly_mean[month].par           /= days_per_month;
-				matrix->cells[cell].years[year].monthly_mean[month].incoming_ppfd /= days_per_month;
-				matrix->cells[cell].years[year].monthly_mean[month].ppfd /= days_per_month;
 
 				/* for yearly mean */
 				matrix->cells[cell].years[year].yearly_mean.solar_rad += matrix->cells[cell].years[year].monthly_mean[month].solar_rad;
@@ -1723,8 +1715,6 @@ int main(int argc, char *argv[]) {
 				matrix->cells[cell].years[year].yearly_mean.rh_f += matrix->cells[cell].years[year].monthly_mean[month].rh_f;
 				matrix->cells[cell].years[year].yearly_mean.incoming_par += matrix->cells[cell].years[year].monthly_mean[month].incoming_par;
 				matrix->cells[cell].years[year].yearly_mean.par += matrix->cells[cell].years[year].monthly_mean[month].par;
-				matrix->cells[cell].years[year].yearly_mean.incoming_ppfd += matrix->cells[cell].years[year].monthly_mean[month].incoming_ppfd;
-				matrix->cells[cell].years[year].yearly_mean.ppfd += matrix->cells[cell].years[year].monthly_mean[month].ppfd;
 			}
 		}
 
@@ -1743,8 +1733,6 @@ int main(int argc, char *argv[]) {
 			matrix->cells[cell].years[year].yearly_mean.rh_f /= MONTHS_COUNT;
 			matrix->cells[cell].years[year].yearly_mean.incoming_par /= MONTHS_COUNT;
 			matrix->cells[cell].years[year].yearly_mean.par /= MONTHS_COUNT;
-			matrix->cells[cell].years[year].yearly_mean.incoming_ppfd /= MONTHS_COUNT;
-			matrix->cells[cell].years[year].yearly_mean.ppfd /= MONTHS_COUNT;
 		}
 
 		for ( month = 0; month < MONTHS_COUNT; ++month )

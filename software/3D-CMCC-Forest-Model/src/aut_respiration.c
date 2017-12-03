@@ -433,11 +433,11 @@ void autotrophic_respiration(cell_t *const c, const int layer, const int height,
 		logger(g_debug_log, "\n**AUTOTROPHIC_RESPIRATION**\n");
 
 		/* class level among pools */
-		s->value[LEAF_AUT_RESP]   = (s->value[TOT_DAY_LEAF_MAINT_RESP] + s->value[LEAF_GROWTH_RESP]);
-		s->value[FROOT_AUT_RESP]  = (s->value[FROOT_MAINT_RESP]        + s->value[FROOT_GROWTH_RESP]);
-		s->value[STEM_AUT_RESP]   = (s->value[STEM_MAINT_RESP]         + s->value[STEM_GROWTH_RESP]);
-		s->value[CROOT_AUT_RESP]  = (s->value[CROOT_MAINT_RESP]        + s->value[CROOT_GROWTH_RESP]);
-		s->value[BRANCH_AUT_RESP] = (s->value[BRANCH_MAINT_RESP]       + s->value[BRANCH_GROWTH_RESP]);
+		s->value[LEAF_AUT_RESP]            = (s->value[TOT_DAY_LEAF_MAINT_RESP] + s->value[LEAF_GROWTH_RESP]);
+		s->value[FROOT_AUT_RESP]           = (s->value[FROOT_MAINT_RESP]        + s->value[FROOT_GROWTH_RESP]);
+		s->value[STEM_AUT_RESP]            = (s->value[STEM_MAINT_RESP]         + s->value[STEM_GROWTH_RESP]);
+		s->value[CROOT_AUT_RESP]           = (s->value[CROOT_MAINT_RESP]        + s->value[CROOT_GROWTH_RESP]);
+		s->value[BRANCH_AUT_RESP]          = (s->value[BRANCH_MAINT_RESP]       + s->value[BRANCH_GROWTH_RESP]);
 
 		/* monthly */
 		s->value[MONTHLY_LEAF_AUT_RESP]   += s->value[LEAF_AUT_RESP];
@@ -456,29 +456,29 @@ void autotrophic_respiration(cell_t *const c, const int layer, const int height,
 		/***************************************************************************************/
 
 		/* cell level among pools */
-		c->daily_leaf_aut_resp   += (s->value[TOT_DAY_LEAF_MAINT_RESP] + s->value[LEAF_GROWTH_RESP]);
-		c->daily_stem_aut_resp   += (s->value[STEM_MAINT_RESP]         + s->value[STEM_GROWTH_RESP]);
-		c->daily_branch_aut_resp += (s->value[BRANCH_MAINT_RESP]       + s->value[BRANCH_GROWTH_RESP]);
-		c->daily_froot_aut_resp  += (s->value[FROOT_MAINT_RESP]        + s->value[FROOT_GROWTH_RESP]);
-		c->daily_croot_aut_resp  += (s->value[CROOT_MAINT_RESP]        + s->value[CROOT_GROWTH_RESP]);
+		c->daily_leaf_aut_resp            += (s->value[TOT_DAY_LEAF_MAINT_RESP] + s->value[LEAF_GROWTH_RESP]);
+		c->daily_stem_aut_resp            += (s->value[STEM_MAINT_RESP]         + s->value[STEM_GROWTH_RESP]);
+		c->daily_branch_aut_resp          += (s->value[BRANCH_MAINT_RESP]       + s->value[BRANCH_GROWTH_RESP]);
+		c->daily_froot_aut_resp           += (s->value[FROOT_MAINT_RESP]        + s->value[FROOT_GROWTH_RESP]);
+		c->daily_croot_aut_resp           += (s->value[CROOT_MAINT_RESP]        + s->value[CROOT_GROWTH_RESP]);
 	}
 
 	/* total */
-	s->value[TOTAL_AUT_RESP]          = ( s->value[TOTAL_GROWTH_RESP] + s->value[TOTAL_MAINT_RESP] );
-	s->value[TOTAL_AUT_RESP_tC]       = ( s->value[TOTAL_AUT_RESP] / 1e6 * g_settings->sizeCell );
-	s->value[MONTHLY_TOTAL_AUT_RESP] += s->value[TOTAL_AUT_RESP];
-	s->value[YEARLY_TOTAL_AUT_RESP]  += s->value[TOTAL_AUT_RESP];
+	s->value[TOTAL_AUT_RESP]               = ( s->value[TOTAL_GROWTH_RESP] + s->value[TOTAL_MAINT_RESP] );
+	s->value[TOTAL_AUT_RESP_tC]            = ( s->value[TOTAL_AUT_RESP] / 1e6 * g_settings->sizeCell );
+	s->value[MONTHLY_TOTAL_AUT_RESP]      += s->value[TOTAL_AUT_RESP];
+	s->value[YEARLY_TOTAL_AUT_RESP]       += s->value[TOTAL_AUT_RESP];
 
 	logger(g_debug_log, "daily total autotrophic respiration (%s) = %g gC/m2/day\n",   s->name, s->value[TOTAL_AUT_RESP]);
 	logger(g_debug_log, "daily total autotrophic respiration (%s) = %g tC/cell/day\n", s->name, s->value[TOTAL_AUT_RESP_tC]);
 
 	/* cell level */
-	c->daily_aut_resp            += s->value[TOTAL_AUT_RESP];
-	c->monthly_aut_resp          += s->value[TOTAL_AUT_RESP];
-	c->annual_aut_resp           += s->value[TOTAL_AUT_RESP];
-	c->daily_aut_resp_tC         += (s->value[TOTAL_AUT_RESP] / 1e6 * g_settings->sizeCell);
-	c->monthly_aut_resp_tC       += (s->value[TOTAL_AUT_RESP] / 1e6 * g_settings->sizeCell);
-	c->annual_aut_resp_tC        += (s->value[TOTAL_AUT_RESP] / 1e6 * g_settings->sizeCell);
+	c->daily_aut_resp                     += s->value[TOTAL_AUT_RESP];
+	c->monthly_aut_resp                   += s->value[TOTAL_AUT_RESP];
+	c->annual_aut_resp                    += s->value[TOTAL_AUT_RESP];
+	c->daily_aut_resp_tC                  += (s->value[TOTAL_AUT_RESP] / 1e6 * g_settings->sizeCell);
+	c->monthly_aut_resp_tC                += (s->value[TOTAL_AUT_RESP] / 1e6 * g_settings->sizeCell);
+	c->annual_aut_resp_tC                 += (s->value[TOTAL_AUT_RESP] / 1e6 * g_settings->sizeCell);
 
 	/* check */
 	CHECK_CONDITION( s->value[TOTAL_AUT_RESP], < , ZERO );

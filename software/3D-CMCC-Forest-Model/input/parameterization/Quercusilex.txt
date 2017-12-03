@@ -67,8 +67,8 @@ SAP_A   0.674               //a value from Kostner for Q. petreae in cm
 SAP_B   1.992               //b value from Kostner for Q. petreae in cm
 SAP_LEAF    2600            //sapwood_max leaf area ratio in pipe model  for Q petreae    
 SAP_WRES    0.05            //Sapwood-Reserve biomass ratio used if no Wres data are available 0.11 for deciduous 0.05 for evergreen  see Schwalm and Ek, 2004 Ecological Modelling
-STEMCONST_P -9999           //
-STEMPOWER_P -9999           //
+STEMCONST_P       0.1916    //a parameter for Q. Ilex Rambal et al 2004 GCB
+STEMPOWER_P       2.171     //b parameter for Q. Ilex Rambal et al 2004 GCB
 CRA 34.597                  //
 CRB 0.038                   //
 CRC 1.104                   //

@@ -110,15 +110,15 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	/* photosynthetic photon flux density conductance control */
 
 	/* for overall leaves */
-	s->value[F_LIGHT]       = s->value[PPFD_ABS]       / (PPFD50 + s->value[PPFD_ABS]);
+	s->value[F_LIGHT]       = s->value[APAR]        / ( PARD50 + s->value[APAR] );
 	logger(g_debug_log, "fLIGHT       = %f \n", s->value[F_LIGHT]);
 
 	/* for sun leaves */
-	s->value[F_LIGHT_SUN]   = s->value[PPFD_ABS_SUN]   / (PPFD50 + s->value[PPFD_ABS_SUN]);
+	s->value[F_LIGHT_SUN]   =  s->value[APAR_SUN]   / ( PARD50 + s->value[APAR_SUN] );
 	logger(g_debug_log, "fLIGHT_SUN   = %f \n", s->value[F_LIGHT_SUN]);
 
 	/* for shaded leaves */
-	s->value[F_LIGHT_SHADE] = s->value[PPFD_ABS_SHADE] / (PPFD50 + s->value[PPFD_ABS_SHADE]);
+	s->value[F_LIGHT_SHADE] =  s->value[APAR_SHADE] / ( PARD50 + s->value[APAR_SHADE] );
 	logger(g_debug_log, "fLIGHT_SHADE = %f \n", s->value[F_LIGHT_SHADE]);
 
 	/********************************************************************************************/

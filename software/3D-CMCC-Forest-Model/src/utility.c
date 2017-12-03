@@ -38,13 +38,6 @@ void reset_daily_cell_variables(cell_t *const c)
 	c->net_rad_abs =                    0.;
 	c->net_rad_abs_soil =               0.;
 	c->net_rad_abs_snow =               0.;
-	c->ppfd_abs =                       0.;
-	c->ppfd_abs_soil =                  0.;
-	c->ppfd_abs_snow =                  0.;
-	c->ppfd_transm =                    0.;
-	c->ppfd_refl =                      0.;
-	c->ppfd_refl_soil =                 0.;
-	c->ppfd_refl_snow =                 0.;
 	c->canopy_temp_k =                  0.;
 
 	/*reset daily carbon variables*/
@@ -374,13 +367,6 @@ void reset_daily_class_variables(cell_t *const c)
 					s->value[SW_RAD_TRANSM] =             0.;
 					s->value[SW_RAD_TRANSM_SUN] =         0.;
 					s->value[SW_RAD_TRANSM_SHADE] =       0.;
-					s->value[PPFD] =                      0.;
-					s->value[PPFD_ABS] =                  0.;
-					s->value[PPFD_ABS_SUN] =              0.;
-					s->value[PPFD_ABS_SHADE] =            0.;
-					s->value[PPFD_TRANSM] =               0.;
-					s->value[PPFD_TRANSM_SUN] =           0.;
-					s->value[PPFD_TRANSM_SHADE] =         0.;
 
 					/* reset daily carbon fluxes */
 					s->value[GPP] =                       0.;

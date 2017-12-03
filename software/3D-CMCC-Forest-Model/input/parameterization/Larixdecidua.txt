@@ -42,7 +42,7 @@ FINE_ROOT_LEAF  1 //allocation new fine root C:new leaf (ratio) for Larix d. see
 STEM_LEAF   2.2  //allocation new stem C:new leaf (ratio) for Larix d. see Piestch etal 2005
 COARSE_ROOT_STEM    0.23    //allocation new coarse root C:new stem (ratio)for Larix d. see Piestch etal 2005
 LIVE_TOTAL_WOOD 0.05    //new live C:new total wood (ratio) for coniferous P. Thornton pers. comm.
-N_RUBISCO               0.055  //Fraction of leaf N in Rubisco (ratio)
+N_RUBISCO               0.075  //Fraction of leaf N in Rubisco (ratio) Piestch et al., 
 CN_LEAVES   25.8  //CN of leaves (kgC/kgN) for Larix d. see Piestch etal 2005
 CN_FALLING_LEAVES   111.9  //CN of leaf litter (kgC/kgN) for Larix d. see Piestch etal 2005
 CN_FINE_ROOTS   42  // CN of fine roots (kgC/kgN) for Larix d. see Piestch etal 2005

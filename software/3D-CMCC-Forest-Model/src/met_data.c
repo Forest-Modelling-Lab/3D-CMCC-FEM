@@ -231,25 +231,16 @@ void Radiation (cell_t *const c, const int day, const int month, const int year)
 
 	/* compute downward Short-Wave radiation */
 	met[month].d[day].sw_downward_MJ         = met[month].d[day].solar_rad;
-	//logger(g_debug_log, "Short_wave_radiation (downward) = %g MJ/m^2 day\n", met[month].d[day].sw_downward_MJ);
 
 	/* convert into W/m2 */
 	met[month].d[day].incoming_sw_downward_W = met[month].d[day].sw_downward_MJ * MJ_TO_W;
 	met[month].d[day].sw_downward_W          = met[month].d[day].incoming_sw_downward_W ;
-	//logger(g_debug_log, "Short wave radiation (downward) = %g W/m2\n", met[month].d[day].sw_downward_W);
 
 	met[month].d[day].sw_pot_downward_W      = compute_potential_rad(g_soil_settings->values[SOIL_LAT], g_soil_settings->values[SOIL_LON], day);
-	//logger(g_debug_log, "sw_pot_downward_W = %g W/m2\n", met[month].d[day].sw_pot_downward_W);
 
 	/* convert incoming Short-Wave flux in PAR from MJ/m2/day to molPAR/m2/day (Biome-BGC method) */
-	met[month].d[day].incoming_par           = (met[month].d[day].sw_downward_MJ * RAD2PAR * EPAR);
+	met[month].d[day].incoming_par           = met[month].d[day].sw_downward_MJ * RAD2PAR * EPAR;
 	met[month].d[day].par                    = met[month].d[day].incoming_par;
-	//logger(g_debug_log, "Par = %g molPAR/m^2 day\n", met[month].d[day].par);
-
-	/* convert incoming Short-Wave flux in PPFD from W/m2 to umol/m2/sec */
-	met[month].d[day].incoming_ppfd          = met[month].d[day].sw_downward_W * RAD2PAR * EPAR;
-	met[month].d[day].ppfd                   = met[month].d[day].incoming_ppfd;
-	//logger(g_debug_log, "PPFD = %g umolPPFD/m2/sec\n", met[month].d[day].ppfd);
 
 	/***************************************************************************************************************************************/
 
@@ -267,11 +258,11 @@ void Radiation (cell_t *const c, const int day, const int month, const int year)
 		/* following Allen et al., 1998 */
 		/* it represents the outgoing part of long wave radiation */
 		met[month].d[day].lw_net_MJ = SBC_MJ * ( pow ( ( ( TmaxK + TminK ) / 2.) , 4 ) ) * ( 0.34 - 0.14 * ( sqrt(met[month].d[day].ea ) ) ) * met[month].d[day].cloud_cover_frac;
-		//logger(g_debug_log, "Net Long wave radiation (Allen)= %g MJ/m^2 day\n", met[month].d[day].lw_net_MJ);
+
 
 		/* convert into W/m2 */
 		met[month].d[day].lw_net_W = met[month].d[day].lw_net_MJ * MJ_TO_W;
-		//logger(g_debug_log, "Net Long wave radiation (Allen)= %g W/m2\n", met[month].d[day].lw_net_W);
+
 		/*****************************************************************************************/
 	}
 	else
@@ -279,11 +270,10 @@ void Radiation (cell_t *const c, const int day, const int month, const int year)
 		//todo check it Prentice says "net upward long-wave flux"
 		/* following Prentice et al., 1993 */
 		met[month].d[day].lw_net_W = ( b + ( 1. - b ) * met[month].d[day].ni ) * ( a - met[month].d[day].tavg );
-		//logger(g_debug_log, "Net Long wave radiation (Prentice)= %g W/m2\n", met[month].d[day].lw_net_W);
 
 		/* convert into MJ/m^2 day */
 		met[month].d[day].lw_net_MJ = met[month].d[day].lw_net_W * W_TO_MJ;
-		//logger(g_debug_log, "Net Long wave radiation (Prentice)= %g MJ/m^2 day\n", met[month].d[day].lw_net_MJ);
+
 		/*****************************************************************************************/
 	}
 
@@ -293,7 +283,7 @@ void Radiation (cell_t *const c, const int day, const int month, const int year)
 
 	/* net radiation based on 3-PG method */
 	met[month].d[day].Net_rad_threePG = QA + QB * ( met[month].d[day].solar_rad * pow ( 10., 6 ) / ( met[month].d[day].daylength * 3600. ) );
-	//printf("Net radiation using Qa and Qb = %g W/m2\n", met[month].d[day].Net_rad_threePG);
+
 	/***************************************************************************************************************************************/
 
 

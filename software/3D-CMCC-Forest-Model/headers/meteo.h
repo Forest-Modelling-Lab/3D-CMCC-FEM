@@ -56,8 +56,6 @@ typedef struct {
 	double lw_net_W;                            /* (W/m2) daily net long wave radiation */
 	double incoming_par;                        /* (molPAR/m2/day) incoming PAR */
 	double par;                                 /* (molPAR/m2/day) PAR */
-	double incoming_ppfd;                       /* (umol/m2/sec) incoming PPFD */
-	double ppfd;                                /* (umol/m2/sec) PPFD */
 	double emis_atm_clear_sky;                  /* (ratio) atmospheric emissivity with clear sky */
 	double emis_atm;                            /* (ratio) atmospheric emissivity corrected for cloud cover */
 	double cloud_cover_frac;                    /* (ratio) daily cloud cover fraction */
@@ -80,8 +78,6 @@ typedef struct {
 	double rh_f;
 	double incoming_par;
 	double par;
-	double incoming_ppfd;
-	double ppfd;
 	double asw;
 } meteo_mean_t;
 

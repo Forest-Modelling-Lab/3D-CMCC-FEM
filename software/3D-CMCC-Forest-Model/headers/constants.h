@@ -51,6 +51,7 @@ enum {
 #define EPS                   0.6219      /* (MW/MA) unitless ratio of molec weights */
 #define ESTAR                0.61076      /* to compute saturation vapour pressure at the air temperature (KPa) */
 #define PPFD50                  75.0      /* (umol/m2/s) PPFD for 1/2 stomatal closure */
+#define PARD50                  6.48      /* (mol/m2/day) PARD for 1/2 stomatal closure */
 #define EPAR                    4.55      /* (umol/J OR mol/MJ) PAR photon energy ratio */
 #define SLAMKG                   0.1	  /* Convert SLA IN cm ^2/gC in m^2/KgC */
 #define E20                      2.2      /* rate of change of saturated VPD with T at 20C */
@@ -71,7 +72,7 @@ enum {
 #define DBH_ref                  1.3      /* reference DBH value */
 #define GRPERC                   0.3      /* (DIM) percentage of growth resp per unit of C grown see BIOME, 0.25 for LPJ */
 #define GRPERCMIN               0.25      /* (DIM) MINIMUM percentage of growth resp per unit of C grown see Ryan et al., */
-#define GRPERCMAX               0.35      /* (DIM) MAXIMUM percentage of growth resp per unit of C grown see Ryan et al., */
+#define GRPERCMAX             0.30 //  0.35      /* (DIM) MAXIMUM percentage of growth resp per unit of C grown see Ryan et al., */
 #define O2CONC                  20.9      /* % of [O2] see Verustraete 1994, 2002 */
 #define STEMPOWER_A	            2.08      /* Power in the Stem Mass v. diameter relationship for DBH < 9 cm */
 #define STEMPOWER_B	            2.64      /* Power in the Stem Mass v. diameter relationship for 9 < DBH < 15 cm */
@@ -79,7 +80,7 @@ enum {
 #define MAX_N_TREE_LAYER           3      /* define the maximum number for tree layers (todo move into setting.txt) */
 #define C_FRAC_TO_RETRANSL       0.1      /* fraction of C to re-translocate (see Bossell et al., 2006 and Campioli et al., 2013; 0.2 Hoffmann 1995 */
 #define N_FRAC_TO_RETRANSL       0.1      /* fraction of N to re-translocate (see Bossell et al., 2006 and Campioli et al., 2013; 0.2 Hoffmann 1995 */
-#define MAX_PEAK_LAI_PROJ          6 //ISIMIP 6.5      /* Maximum Peak Lai (m2/m2) */
+#define MAX_PEAK_LAI_PROJ          6   //ISIMIP 6.5      /* Maximum Peak Lai (m2/m2) */
 #define WATER_STRESS_LIMIT       0.3      /* Minimum imposed water stress limit to soil water modifier */
 
 

@@ -230,8 +230,6 @@ static void yos_clear(meteo_annual_t *const meteo_annual) {
 				meteo_annual->m[i].d[y].lw_net_W = INVALID_VALUE;
 				meteo_annual->m[i].d[y].incoming_par = INVALID_VALUE;
 				meteo_annual->m[i].d[y].par = INVALID_VALUE;
-				meteo_annual->m[i].d[y].incoming_ppfd = INVALID_VALUE;
-				meteo_annual->m[i].d[y].ppfd = INVALID_VALUE;
 				meteo_annual->m[i].d[y].emis_atm_clear_sky = INVALID_VALUE;
 				meteo_annual->m[i].d[y].emis_atm = INVALID_VALUE;
 				meteo_annual->m[i].d[y].cloud_cover_frac = INVALID_VALUE;
@@ -249,8 +247,6 @@ static void yos_clear(meteo_annual_t *const meteo_annual) {
 			meteo_annual->monthly_mean[i].rh_f = INVALID_VALUE;
 			meteo_annual->monthly_mean[i].incoming_par = INVALID_VALUE;
 			meteo_annual->monthly_mean[i].par = INVALID_VALUE;
-			meteo_annual->monthly_mean[i].incoming_ppfd = INVALID_VALUE;
-			meteo_annual->monthly_mean[i].ppfd = INVALID_VALUE;
 		}
 		meteo_annual->yearly_mean.solar_rad = INVALID_VALUE;
 		meteo_annual->yearly_mean.tavg = INVALID_VALUE;
@@ -264,8 +260,6 @@ static void yos_clear(meteo_annual_t *const meteo_annual) {
 		meteo_annual->yearly_mean.rh_f = INVALID_VALUE;
 		meteo_annual->yearly_mean.incoming_par = INVALID_VALUE;
 		meteo_annual->yearly_mean.par = INVALID_VALUE;
-		meteo_annual->yearly_mean.incoming_ppfd = INVALID_VALUE;
-		meteo_annual->yearly_mean.ppfd = INVALID_VALUE;
 	}
 }
 

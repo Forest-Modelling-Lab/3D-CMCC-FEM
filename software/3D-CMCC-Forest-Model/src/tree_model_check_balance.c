@@ -99,39 +99,7 @@ int check_tree_class_radiation_flux_balance(cell_t *const c, const int layer, co
 	{
 		logger(g_debug_log, "...ok in 'Tree_model_daily' Short Wave radiation balance \n");
 	}
-	/****************************************************************************************************************/
-	/* PPFD balance */
-	/* sum of sources */
-	in      = s->value[PPFD];
 
-	/* sum of sinks */
-	out     = s->value[PPFD_REFL] +  s->value[PPFD_TRANSM];
-
-	/* sum of current storage */
-	store   = s->value[PPFD_ABS_SUN] + s->value[PPFD_ABS_SHADE];
-
-	/* check canopy water pool balance */
-	balance = in - out - store;
-
-	logger(g_debug_log, "\nCLASS LEVEL PPFD BALANCE\n");
-
-	/* check for PPFD balance closure*/
-	if ( fabs( balance ) > eps )
-	{
-		error_log("DOY = %d\n", c->doy);
-		error_log("PPFD in = %g\n", in);
-		error_log("PPFD out = %g\n", out);
-		error_log("PPFD store = %g\n", store);
-		error_log("PPFD balance = %g\n", balance);
-		error_log("...FATAL ERROR in 'Tree_model_daily' PPFD balance (exit)\n");
-		CHECK_CONDITION(fabs( balance ), > , eps);
-
-		return 0;
-	}
-	else
-	{
-		logger(g_debug_log, "...ok in 'Tree_model_daily' PPFD balance\n");
-	}
 	/* ok */
 	return 1;
 }

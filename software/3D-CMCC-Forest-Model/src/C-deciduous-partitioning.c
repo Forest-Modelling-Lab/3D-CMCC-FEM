@@ -140,9 +140,10 @@ void daily_C_deciduous_partitioning (cell_t *const c, const int layer, const int
 			/* days for budburst */
 			days_for_budburst = s->value[BUD_BURST] - 1.;
 
-#if 0
+#if 1
 			//test: 2 Dec 2017 Carbon "injection" function
-			//TODO IF ACCEPTED THEN MOVE MOST OF THE VARIABLES TO CLASS SCALE
+			//TODO IF ACCEPTED THEN MOVE MOST OF THE VARIABLES TO "CLASS SCALE"
+			//fixme somehow there's a time lag by which model reduces allocation before to finish to allocate
 			if ( ! budburst_day_counter)
 			{
 				test_a = 0;

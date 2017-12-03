@@ -215,19 +215,19 @@ enum {
 	NET_RAD_REFL_SUN,
 	NET_RAD_REFL_SHADE,
 
-	/* PPFD */
-	PPFD,                               /* (umol/m2/sec) Photosynthetic Photon Flux Density  */
-	PPFD_SUN,                           /* (umol/m2/sec) Photosynthetic Photon Flux Density for sun leaves */
-	PPFD_SHADE,                         /* (umol/m2/sec) Photosynthetic Photon Flux Density for shaded leaves */
-	PPFD_REFL,                          /* (umol/m2/sec) Transmitted Photosynthetic Photon Flux Density */
-	PPFD_REFL_SUN,                      /* (umol/m2/sec) Transmitted Photosynthetic Photon Flux Density for sun leaves */
-	PPFD_REFL_SHADE,                    /* (umol/m2/sec) Transmitted Photosynthetic Photon Flux Density for shaded leaves */
-	PPFD_ABS,                           /* (umol/m2/sec) Absorbed Photosynthetic Photon Flux Density */
-	PPFD_ABS_SUN,                       /* (umol/m2/sec) Absorbed Photosynthetic Photon Flux Density for sun leaves */
-	PPFD_ABS_SHADE,                     /* (umol/m2/sec) Absorbed Photosynthetic Photon Flux Density for shaded leaves */
-	PPFD_TRANSM,                        /* (umol/m2/sec) Transmitted Photosynthetic Photon Flux Density */
-	PPFD_TRANSM_SUN,                    /* (umol/m2/sec) Transmitted Photosynthetic Photon Flux Density from sun leaves */
-	PPFD_TRANSM_SHADE,                  /* (umol/m2/sec) Transmitted Photosynthetic Photon Flux Density from shaded leaves */
+//	/* PPFD */
+//	PPFD,                               /* (umol/m2/sec) Photosynthetic Photon Flux Density  */
+//	PPFD_SUN,                           /* (umol/m2/sec) Photosynthetic Photon Flux Density for sun leaves */
+//	PPFD_SHADE,                         /* (umol/m2/sec) Photosynthetic Photon Flux Density for shaded leaves */
+//	PPFD_REFL,                          /* (umol/m2/sec) Transmitted Photosynthetic Photon Flux Density */
+//	PPFD_REFL_SUN,                      /* (umol/m2/sec) Transmitted Photosynthetic Photon Flux Density for sun leaves */
+//	PPFD_REFL_SHADE,                    /* (umol/m2/sec) Transmitted Photosynthetic Photon Flux Density for shaded leaves */
+//	PPFD_ABS,                           /* (umol/m2/sec) Absorbed Photosynthetic Photon Flux Density */
+//	PPFD_ABS_SUN,                       /* (umol/m2/sec) Absorbed Photosynthetic Photon Flux Density for sun leaves */
+//	PPFD_ABS_SHADE,                     /* (umol/m2/sec) Absorbed Photosynthetic Photon Flux Density for shaded leaves */
+//	PPFD_TRANSM,                        /* (umol/m2/sec) Transmitted Photosynthetic Photon Flux Density */
+//	PPFD_TRANSM_SUN,                    /* (umol/m2/sec) Transmitted Photosynthetic Photon Flux Density from sun leaves */
+//	PPFD_TRANSM_SHADE,                  /* (umol/m2/sec) Transmitted Photosynthetic Photon Flux Density from shaded leaves */
 
 	/* modifiers */
 	F_VPD,                              /* (DIM) VPD modifier */
@@ -1017,15 +1017,6 @@ typedef struct
 	double par_refl;                                                      /* (molPAR/m2/day) cumulated reflected PAR at cell level */
 	double par_refl_soil;                                                 /* (molPAR/m2/day) reflected PAR by the soil */
 	double par_refl_snow;                                                 /* (molPAR/m2/day) reflected PAR by the snow */
-
-	/* PPFD radiation */
-	double ppfd_abs;                                                      /* (umol/m2/sec) Absorbed Photosynthetic photon flux density tree level  */
-	double ppfd_abs_soil;                                                 /* (umol/m2/sec) Absorbed Photosynthetic photon flux density soil level */
-	double ppfd_abs_snow;                                                 /* (umol/m2/sec) Absorbed Photosynthetic photon flux density snow level */
-	double ppfd_transm;                                                   /* (umol/m2/sec) Transmitted Photosynthetic photon flux density */
-	double ppfd_refl;                                                     /* (umol/m2/sec) Reflected Photosynthetic photon flux density */
-	double ppfd_refl_soil;                                                /* (umol/m2/sec) PPFD reflected by the soil */
-	double ppfd_refl_snow;                                                /* (umol/m2/sec) PPFD reflected by the snow */
 
 	/************************************************** forest trees **************************************************/
 

@@ -24,7 +24,7 @@ void total_photosynthesis_biome (cell_t *const c, const int height, const int db
 
 	double cond_corr;        /* (umol/m2/s/Pa) leaf conductance corrected for CO2 vs. water vapor */
 	double leafN;            /* (gNleaf/m2) leaf N per unit leaf area */
-	double ppfd;             /* (umol/m2 covered/sec) photosynthetic Photon Flux Density  */
+	double par_abs;          /* (umol/m2 covered/sec) absorbed par */
 	double leaf_day_mresp;   /* (umol/m2/s) day leaf m. resp, proj. area basis */
 	double ps;               /* gross photosynthesis (gC/m2/day) */
 
@@ -48,11 +48,11 @@ void total_photosynthesis_biome (cell_t *const c, const int height, const int db
 		/* convert from mass to molar units, and from a daily rate to a rate per second (umol/m2/s) */
 		leaf_day_mresp               = ( s->value[DAILY_LEAF_SUN_MAINT_RESP] / ( 86400. * GC_MOL * 1e-6 ) ) / s->value[LAI_SUN_PROJ];
 
-		/* convert absorbed ppfd per projected lai */
-		ppfd                         = s->value[PPFD_ABS_SUN] / s->value[LAI_SUN_PROJ];
+		/* convert absorbed par per projected lai molPAR/m2/day --> umol/m2/sec */
+		par_abs                      = ( s->value[APAR_SUN] * 1e6 / 86400. ) / s->value[LAI_SUN_PROJ];
 
 		/* call Farquhar for sun leaves */
-		ps = Farquhar (c, s, meteo_daily, meteo_annual, cond_corr, leafN, ppfd, leaf_day_mresp);
+		ps = Farquhar (c, s, meteo_daily, meteo_annual, cond_corr, leafN, par_abs, leaf_day_mresp);
 
 		/* net photosynthesis and converting from umol/m2 leaf/sec gC/m2/day */
 		s->value[ASSIMILATION_SUN]   = ( ps + leaf_day_mresp ) * s->value[LAI_SUN_PROJ] * meteo_daily->daylength_sec * GC_MOL * 1e-6;
@@ -71,13 +71,13 @@ void total_photosynthesis_biome (cell_t *const c, const int height, const int db
 		leafN                        = ( s->value[LEAF_SHADE_N] * 1e6 / g_settings->sizeCell ) / s->value[LAI_SHADE_PROJ];
 
 		/* convert from mass to molar units, and from a daily rate to a rate per second (umol/m2/s) */
-		leaf_day_mresp               = ( s->value[DAILY_LEAF_SHADE_MAINT_RESP] / ( 86400. * GC_MOL * 1e-6 ) ) / s->value[LAI_SHADE_PROJ];
+		leaf_day_mresp               = ( s->value[DAILY_LEAF_SHADE_MAINT_RESP] / ( meteo_daily->daylength_sec * GC_MOL * 1e-6 ) ) / s->value[LAI_SHADE_PROJ];
 
-		/* convert absorbed ppfd per projected lai */
-		ppfd                         = s->value[PPFD_ABS_SHADE] / s->value[LAI_SHADE_PROJ];
+		/* convert absorbed par per projected lai molPAR/m2/day --> umol/m2/sec */
+		par_abs                      = ( s->value[APAR_SHADE] * 1e6 / 86400. ) / s->value[LAI_SHADE_PROJ];
 
 		/* call Farquhar for shade leaves */
-		ps = Farquhar (c, s, meteo_daily, meteo_annual, cond_corr, leafN, ppfd, leaf_day_mresp );
+		ps = Farquhar (c, s, meteo_daily, meteo_annual, cond_corr, leafN, par_abs, leaf_day_mresp );
 
 		/* net photosynthesis and converting from umol/m2 leaf/sec gC/m2/day */
 		s->value[ASSIMILATION_SHADE] = ( ps + leaf_day_mresp ) * s->value[LAI_SHADE_PROJ] * meteo_daily->daylength_sec * GC_MOL * 1e-6;
@@ -133,32 +133,8 @@ void total_photosynthesis_biome (cell_t *const c, const int height, const int db
 }
 
 double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const meteo_daily, const meteo_annual_t *const meteo_annual,
-		const double cond_corr, const double leafN, const double ppfd, const double leaf_day_mresp )
+		const double cond_corr, const double leafN, const double par_abs, const double leaf_day_mresp )
 {
-	/*
-		The following variables are assumed to be defined in the psn struct
-		at the time of the function call:
-		pa         (Pa) atmospheric pressure
-		co2        (ppm) atmospheric [CO2]
-		t          (deg C) air temperature
-		flnr       (kg NRub/kg Nleaf) fraction of leaf N in Rubisco
-		ppfd       (umol photons/m2/s) PAR flux density, per unit projected LAI
-		g          (umol CO2/m2/s/Pa) leaf-scale conductance to CO2, proj area basis
-
-		The following variables in psn struct are defined upon function return:
-		Ci         (Pa) intercellular [CO2]
-		Ca         (Pa) atmospheric [CO2]
-		O2         (Pa) atmospheric [O2]
-		gamma      (Pa) CO2 compensation point, in the absence of maint resp.
-		Kc         (Pa) MM constant for carboxylation
-		Ko         (Pa) MM constant for oxygenation
-		Vmax       (umol CO2/m2/s) max rate of carboxylation
-		Jmax       (umol electrons/m2/s) max rate electron transport
-		J          (umol RuBP/m2/s) rate of RuBP regeneration
-		Av         (umol CO2/m2/s) carboxylation limited assimilation
-		Aj         (umol CO2/m2/s) RuBP regeneration limited assimilation
-		A          (umol CO2/m2/s) final assimilation rate
-	 */
 
 	/* the weight proportion of Rubisco to its nitrogen content, fnr, is calculated from the relative proportions of the basic amino acids
 		that make up the enzyme, as listed in the Handbook of Biochemistry, Proteins, Vol III, p. 510, which references: Kuehn and McFadden, Biochemistry, 8:2403, 1969 */
@@ -183,8 +159,8 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	static double q10Ko  = 1.2;    /* (DIM) Q_10 for Ko */
 	static double act25  = 3.6;    /* (umol/mgRubisco/min) Rubisco activity at 25 C */
 	static double q10act = 2.4;    /* (DIM) Q_10 for Rubisco activity */
-	static double pabs   = 0.85;   /* (DIM) fPAR effectively absorbed by PSII */
-	static double fnr    = 7.16;   /* g Rubisco/gN Rubisco weight proportion of rubisco relative to its N content*/
+	static double pabs   = 0.85;   /* (DIM) fraction of PAR effectively absorbed by PSII */
+	static double fnr    = 7.16;   /* g Rubisco/gN Rubisco weight proportion of rubisco relative to its N content Kuehn and McFadden 1969 */
 
 	/* local variables */
 	double Kc;                     /* (Pa) michaelis-menten constant for carboxylase reaction */
@@ -210,10 +186,10 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	/* begin by assigning local variables */
 
 	/* (umol/m2/s) day leaf m. resp, proj. area basis */
-	Rd = leaf_day_mresp;
+	Rd  = leaf_day_mresp;
 
 	/* convert atmospheric CO2 from ppmV --> Pa */
-	Ca = meteo_annual->co2Conc * meteo_daily->air_pressure / 1e6;
+	Ca  = meteo_annual->co2Conc * meteo_daily->air_pressure / 1e6;
 
 	/* set parameters for C3 */
 	ppe = 2.6;
@@ -263,8 +239,8 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 
 	/* calculate J = f(Jmax, ppfd), reference: de Pury and Farquhar 1997 Plant Cell and Env. */
 	var_a  = 0.7;
-	var_b  = -Jmax - (ppfd * pabs / ppe );
-	var_c  = Jmax  *  ppfd * pabs / ppe;
+	var_b  = -Jmax - (par_abs * pabs / ppe );
+	var_c  = Jmax  *  par_abs * pabs / ppe;
 
 	/* compute (umol RuBP/m2/s) rate of RuBP regeneration */
 	J      = ( -var_b - sqrt ( var_b * var_b - 4. * var_a * var_c ) ) / ( 2. * var_a );

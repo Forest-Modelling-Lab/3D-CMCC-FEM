@@ -117,46 +117,6 @@ int check_cell_radiation_flux_balance (cell_t *const c, const meteo_daily_t *con
 		logger(g_debug_log, "...ok Short Wave Radiation radiative balance\n");
 	}
 
-	/*******************************************************************************************************************************************/
-
-	/* PPFD RADIATIVE BALANCE */
-	/* sum of sources */
-	in = meteo_daily->incoming_ppfd;
-
-	/* sum of sinks */
-	out = c->ppfd_refl + c->ppfd_refl_soil + c->ppfd_refl_snow;
-
-	/* sum of current storage */
-	store = c->ppfd_abs + c->ppfd_abs_soil + c->ppfd_abs_snow;
-
-	balance = in - out -store;
-
-	logger(g_debug_log, "\nCELL RADIATIVE BALANCE (PPFD)\n");
-
-	if ( fabs( balance ) > eps )
-	{
-		error_log("DOY = %d\n", c->doy);
-		error_log("\nin\n");
-		error_log("incoming PPFD     = %f umol/m2/sec\n", meteo_daily->incoming_ppfd);
-		error_log("\nout\n");
-		error_log("c->ppfd_refl      = %f umol/m2/sec\n", c->ppfd_refl);
-		error_log("c->ppfd_refl_soil = %f umol/m2/sec\n", c->ppfd_refl_soil);
-		error_log("\nstore\n");
-		error_log("c->ppfd_abs       = %f umol/m2/sec\n", c->ppfd_abs);
-		error_log("c->ppfd_for_soil  = %f umol/m2/sec\n", c->ppfd_abs_soil);
-		error_log("\nPPFD in         = %f umol/m2/sec\n", in);
-		error_log("PPFD out          = %f umol/m2/sec\n", out);
-		error_log("PPFD store        = %f umol/m2/sec\n", store);
-		error_log("PPFD balance      = %f umol/m2/sec\n", balance);
-		error_log("...FATAL ERROR IN PPFD radiative balance (exit)\n");
-		CHECK_CONDITION(fabs( balance ), > , eps);
-
-		return 0;
-	}
-	else
-	{
-		logger(g_debug_log, "...ok PPFD radiative balance\n");
-	}
 	/* ok */
 	return 1;
 }

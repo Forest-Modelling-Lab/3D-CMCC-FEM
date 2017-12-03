@@ -68,7 +68,7 @@ extern settings_t* g_settings;
 //extern const char *szMonth[MONTHS_COUNT];
 
 /* Days in Months */
-extern int DaysInMonth[];
+//extern int DaysInMonth[];
 
 /* Last cumulative days in months */
 //extern int MonthLength [];
