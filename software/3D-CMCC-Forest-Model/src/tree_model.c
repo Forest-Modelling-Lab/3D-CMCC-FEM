@@ -63,6 +63,8 @@ extern logger_t* g_debug_log;
 extern soil_settings_t* g_soil_settings;
 extern settings_t* g_settings;
 
+#define PHOTOSYNTHESIS 0 /* 0 for Farquhar von Caemmerer approach; 1 for Monteith (LUE) approach */
+
 //extern const char sz_err_out_of_memory[];
 
 //extern const char *szMonth[MONTHS_COUNT];
@@ -269,7 +271,8 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 
 							/* note: following Piao et al., 2010 */
 							/* (Maint Resp)->(Growth Resp = (GPP - Maint Resp) * eff_grperc)->(NPP) */
-#if 0
+#if PHOTOSYNTHESIS
+
 							/**********************************************************************/
 							/* canopy carbon assimilation ( Monteith approach ) */
 							photosynthesis ( c, layer, height, dbh, age, species, meteo_annual );
@@ -279,6 +282,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							/**********************************************************************/
 
 #else
+
 							/**********************************************************************/
 							/* maintenance respiration */
 							maintenance_respiration ( c, layer, height, dbh, age, species, meteo_daily );
@@ -309,8 +313,8 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							/* carbon fluxes */
 							carbon_fluxes                      ( c, height, dbh, age, species );
 
-							/* C assimilation */
-							carbon_assimilation                ( c, height, dbh, age, species );
+							/* C productivity */
+							carbon_productivity                ( c, height, dbh, age, species );
 
 							if ( c->doy == ( IS_LEAP_YEAR ( c->years[year].year ) ? 366 : 365) )
 							{

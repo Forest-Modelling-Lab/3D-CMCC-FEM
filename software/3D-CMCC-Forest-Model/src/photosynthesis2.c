@@ -33,7 +33,7 @@ void total_photosynthesis_biome (cell_t *const c, const int height, const int db
 
 	/* This function is a wrapper and replacement for the photosynthesis code which used to be in the central bgc.c code.  At Mott Jolly's request, all of the science code is being moved into funtions. */
 
-	/****************************************************************************************/
+	/************************************************************************************************************************************/
 
 	if ( s->value[LEAF_SUN_N] > 0. )
 	{
@@ -52,14 +52,18 @@ void total_photosynthesis_biome (cell_t *const c, const int height, const int db
 		/* convert absorbed par per projected lai molPAR/m2/day --> umol/m2/sec */
 		par_abs                      = ( s->value[APAR_SUN] * 1e6 / 86400. ) / s->value[LAI_SUN_PROJ];
 
-		/* call Farquhar for sun leaves */
+		/* call Farquhar for sun leaves leaves gross photosynthesis */
 		ps = Farquhar (c, s, meteo_daily, meteo_annual, cond_corr, leafN, par_abs, leaf_day_mresp);
 
-		/* net photosynthesis and converting from umol/m2 leaf/sec gC/m2/day */
-		s->value[ASSIMILATION_SUN]   = ( ps + leaf_day_mresp ) * s->value[LAI_SUN_PROJ] * meteo_daily->daylength_sec * GC_MOL * 1e-6;
+		/* gross assimilation and converting from umol/m2 leaf/sec gC/m2/day and to LAI for canopy computation */
+		s->value[GROSS_ASSIMILATION_SUN]   = ( ps + leaf_day_mresp ) * s->value[LAI_SUN_PROJ] * meteo_daily->daylength_sec * GC_MOL * 1e-6;
+
+		/* net assimilation and converting from umol/m2 leaf/sec gC/m2/day and to LAI for canopy computation */
+		s->value[NET_ASSIMILATION_SUN]     = ( ps - leaf_day_mresp ) * s->value[LAI_SUN_PROJ] * meteo_daily->daylength_sec * GC_MOL * 1e-6;
+
 	}
 
-	/****************************************************************************************/
+	/************************************************************************************************************************************/
 
 	if ( s->value[LEAF_SHADE_N] > 0. )
 	{
@@ -78,31 +82,53 @@ void total_photosynthesis_biome (cell_t *const c, const int height, const int db
 		/* convert absorbed par per projected lai molPAR/m2/day --> umol/m2/sec */
 		par_abs                      = ( s->value[APAR_SHADE] * 1e6 / 86400. ) / s->value[LAI_SHADE_PROJ];
 
-		/* call Farquhar for shade leaves */
+		/* call Farquhar for shade leaves gross photosynthesis */
 		ps = Farquhar (c, s, meteo_daily, meteo_annual, cond_corr, leafN, par_abs, leaf_day_mresp );
 
-		/* net photosynthesis and converting from umol/m2 leaf/sec gC/m2/day */
-		s->value[ASSIMILATION_SHADE] = ( ps + leaf_day_mresp ) * s->value[LAI_SHADE_PROJ] * meteo_daily->daylength_sec * GC_MOL * 1e-6;
+		/* gross assimilation (photosynthesis) and converting from umol/m2 leaf/sec gC/m2/day and to LAI for canopy computation */
+		s->value[GROSS_ASSIMILATION_SHADE] = ( ps + leaf_day_mresp ) * s->value[LAI_SHADE_PROJ] * meteo_daily->daylength_sec * GC_MOL * 1e-6;
+
+		/* net assimilation (photosynthesis) and converting from umol/m2 leaf/sec gC/m2/day and to LAI for canopy computation */
+		s->value[NET_ASSIMILATION_SHADE]   = ( ps - leaf_day_mresp ) * s->value[LAI_SHADE_PROJ] * meteo_daily->daylength_sec * GC_MOL * 1e-6;
+
 	}
 
-	/****************************************************************************************/
+	/************************************************************************************************************************************/
 
-	/* total assimilation */
-	s->value[ASSIMILATION] = s->value[ASSIMILATION_SUN] + s->value[ASSIMILATION_SHADE];
+	/* as In Wohlfahrt & Gu 2015 Plant Cell and Environment */
+	/* "GPP is intended as an integration of apparent photosynthesis (true photosynthesis minus photorespiration), NOT
+	gross (true) photosynthesis" */
+	/* note: to avoid double accounting in leaf respiration gross and net assimilations are decoupled into the model */
 
-	/****************************************************************************************/
+	/* total gross assimilation */
+	s->value[GROSS_ASSIMILATION] = s->value[GROSS_ASSIMILATION_SUN] + s->value[GROSS_ASSIMILATION_SHADE];
 
-	s->value[MONTHLY_ASSIMILATION]       += s->value[ASSIMILATION];
-	s->value[MONTHLY_ASSIMILATION_SUN]   += s->value[ASSIMILATION_SUN];
-	s->value[MONTHLY_ASSIMILATION_SHADE] += s->value[ASSIMILATION_SHADE];
+	/* total net assimilation */
+	s->value[NET_ASSIMILATION]   = s->value[NET_ASSIMILATION_SUN] + s->value[NET_ASSIMILATION_SHADE];
 
-	s->value[YEARLY_ASSIMILATION]        += s->value[ASSIMILATION];
-	s->value[YEARLY_ASSIMILATION_SUN]    += s->value[ASSIMILATION_SUN];
-	s->value[YEARLY_ASSIMILATION_SHADE]  += s->value[ASSIMILATION_SHADE];
+	/************************************************************************************************************************************/
+
+	s->value[MONTHLY_GROSS_ASSIMILATION]       += s->value[GROSS_ASSIMILATION];
+	s->value[MONTHLY_GROSS_ASSIMILATION_SUN]   += s->value[GROSS_ASSIMILATION_SUN];
+	s->value[MONTHLY_GROSS_ASSIMILATION_SHADE] += s->value[GROSS_ASSIMILATION_SHADE];
+
+	s->value[YEARLY_GROSS_ASSIMILATION]        += s->value[GROSS_ASSIMILATION];
+	s->value[YEARLY_GROSS_ASSIMILATION_SUN]    += s->value[GROSS_ASSIMILATION_SUN];
+	s->value[YEARLY_GROSS_ASSIMILATION_SHADE]  += s->value[GROSS_ASSIMILATION_SHADE];
+
+	s->value[MONTHLY_NET_ASSIMILATION]         += s->value[NET_ASSIMILATION];
+	s->value[MONTHLY_NET_ASSIMILATION_SUN]     += s->value[NET_ASSIMILATION_SUN];
+	s->value[MONTHLY_NET_ASSIMILATION_SHADE]   += s->value[NET_ASSIMILATION_SHADE];
+
+	s->value[YEARLY_NET_ASSIMILATION]          += s->value[NET_ASSIMILATION];
+	s->value[YEARLY_NET_ASSIMILATION_SUN]      += s->value[NET_ASSIMILATION_SUN];
+	s->value[YEARLY_NET_ASSIMILATION_SHADE]    += s->value[NET_ASSIMILATION_SHADE];
+
+	/************************************************************************************************************************************/
 
 	/* gpp */
-	s->value[GPP_SUN]                     = s->value[ASSIMILATION_SUN];
-	s->value[GPP_SHADE]                   = s->value[ASSIMILATION_SHADE];
+	s->value[GPP_SUN]                     = s->value[GROSS_ASSIMILATION_SUN];
+	s->value[GPP_SHADE]                   = s->value[GROSS_ASSIMILATION_SHADE];
 	s->value[GPP]                         = s->value[GPP_SUN] + s->value[GPP_SHADE];
 
 	/* gC/m2/day --> tC/cell/day */
@@ -137,6 +163,7 @@ void total_photosynthesis_biome (cell_t *const c, const int height, const int db
 double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const meteo_daily, const meteo_annual_t *const meteo_annual,
 		const double cond_corr, const double leafN, const double par_abs, const double leaf_day_mresp )
 {
+	/* Farquhar, von Caemmerer and Berry (1980) Planta. 149: 78-90. */
 
 	/* the weight proportion of Rubisco to its nitrogen content, fnr, is calculated from the relative proportions of the basic amino acids
 		that make up the enzyme, as listed in the Handbook of Biochemistry, Proteins, Vol III, p. 510, which references: Kuehn and McFadden, Biochemistry, 8:2403, 1969 */
@@ -219,7 +246,7 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	/* Convert rubisco activity units from umol/mgRubisco/min -> umol/gRubisco/s */
 	act = act  * 1e3 / 60.;
 
-	/* calculate gamma (Pa) CO2 compensation point, in the absence of maint resp, assumes Vomax/Vcmax = 0.21 */
+	/* calculate gamma (Pa) CO2 compensation point due to photorespiration, in the absence of maint resp, assumes Vomax/Vcmax = 0.21 */
 	gamma = 0.5 * 0.21 * Kc * O2 / Ko;
 
 	/* calculate Vmax from leaf nitrogen data and Rubisco activity */

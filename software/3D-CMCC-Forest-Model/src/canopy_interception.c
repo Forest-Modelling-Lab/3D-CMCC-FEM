@@ -78,7 +78,7 @@ void canopy_interception(cell_t *const c, const int layer, const int height, con
 			//test 01 june 2017
 			/* following Jiao et al., 2016, Water Eq. [8] pg. 9 */
 		{
-			double Int_max_rain;                           /* maximum intercepted rain (mm/m2)*/
+			double Int_max_rain;                           /* maximum intercepted rain (mm/m2) */
 
 			Int_max_rain = 0.284 + 0.092 * s->value[LAI_PROJ] * ( 1. - exp ( -0.231 * meteo_daily->rain ) );
 			logger(g_debug_log, "Int_max_rain = %f mm/m2/day\n", Int_max_rain);
