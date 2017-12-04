@@ -270,18 +270,22 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							/* note: following Piao et al., 2010 */
 							/* (Maint Resp)->(Growth Resp = (GPP - Maint Resp) * eff_grperc)->(NPP) */
 #if 0
+							/**********************************************************************/
 							/* canopy carbon assimilation ( Monteith approach ) */
-							photosynthesis ( c, layer, height, dbh, age, species, DaysInMonth[month], meteo_annual );
+							photosynthesis ( c, layer, height, dbh, age, species, meteo_annual );
 
 							/* maintenance respiration */
 							maintenance_respiration ( c, layer, height, dbh, age, species, meteo_daily );
+							/**********************************************************************/
 
 #else
+							/**********************************************************************/
 							/* maintenance respiration */
 							maintenance_respiration ( c, layer, height, dbh, age, species, meteo_daily );
 
 							/* canopy carbon assimilation ( Farquhar Von Caemmerer approach ) */
 							total_photosynthesis_biome ( c, height, dbh, age, species, meteo_daily, meteo_annual );
+							/**********************************************************************/
 
 #endif
 							/* C-N-partitioning */

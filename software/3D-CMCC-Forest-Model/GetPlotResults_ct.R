@@ -65,7 +65,7 @@ time_list_output = c('annual','monthly','daily')
 
 # single or multiple simulations
 build_list<-c('Debug')#, 'Release')
-site_list<-c("Bily_Kriz")
+site_list<-c("Soroe")
 esm_list <-c("1")# ("1","2","3","4","5", "All")
 rcp_list <-c("0p0")# ("0p0","2p6","4p5","6p0","8p5","All")
 man_list <-c("on")# ("on",'off', "All")
@@ -587,7 +587,7 @@ cat(sprintf("\n\nCOMPARSION PLOTS STAND COMPLETE\n\n"))
 # validazione dei flussi ----
 
 cat(sprintf("\n\nFLUX VALIDATION PLOTS START.....\n\n"))
-
+cy_s = site_list[1]
 for (cy_s in site_list) {
   dir_in_gen = paste0(getwd(),"/output/",output_folder,"-", version, "-", cy_s,'/')
   site_code = as.character(df_siti$fluxnet_code[df_siti$model_name == cy_s])
@@ -610,10 +610,14 @@ for (cy_s in site_list) {
   ls_file_md = list.files(dir_in,pattern = 'daily',recursive = T,full.names = T)
   
   list_p = list()
-  
+  source('flux_validation.R')
+  list_p[[length(list_p)+1]] = flux_validation(ls_file_md,
+                  cy_s,
+                  file_ec)
+  mpt = plot_grid(plotlist = list_p[[1]][1])
   for (file_mod in ls_file_md) {
     
-    list_p[[length(list_p)+1]] = flux_validation(file_mod,
+    list_p[[length(list_p)+1]] = flux_validation(ls_file_md,
                                                  cy_s,
                                                  file_ec)
     list_p[[length(list_p)+1]] = flux_validation(file_mod,
@@ -649,46 +653,46 @@ rm(cy_s)
 cat(sprintf("\n\nFLUX VALIDATION PLOTS COMPLETE\n\n"))
 
 # validazione di tutti gli output ----
-
-cat(sprintf("\n\nALL SEASONAL PLOTS START...\n\n"))
-for (cy_s in site_list) {
-  dir_in_gen = paste0(getwd(),"/output/",output_folder,"-", version, "-", cy_s,'/')
-  
-  dir_in = list.dirs(dir_in_gen,recursive = F)
-  dir_in = dir_in[grep(cy_s,dir_in)]
-  dir_in = dir_in[grep('LOCAL',dir_in)]
-  
-  
-  ls_file_md = list.files(dir_in,pattern = 'daily',recursive = T,full.names = T)
-  
-  list_p = list()
-  
-  for (file_mod in ls_file_md) {
-    
-    list_p[[length(list_p)+1]] = output_validation(file_mod,
-                                                 cy_s)
-                                                 
-  }
-  rm(file_mod,ls_file_md)
-  
-  pdf(paste0(dir_in_gen,'SEASONAL_output_',cy_s,'.pdf'),
-      onefile = T, width = 15,height = 12)
-  
-  for ( cy_p in seq(1,length(list_p)) ) {
-    for (cy_p2 in seq(1,length(list_p[[cy_p]]))) {
-      mpt = plot_grid(plotlist = list_p[[cy_p]][cy_p2])
-      print(mpt)
-      rm(mpt)
-    }
-  }
-  rm(cy_p,cy_p2)
-  dev.off()
-  rm(list_p)
-  
-}
-rm(cy_s)
-
-cat(sprintf("\n\nALL SEASONAL PLOTS COMPLETE\n\n"))
+# 
+# cat(sprintf("\n\nALL SEASONAL PLOTS START...\n\n"))
+# for (cy_s in site_list) {
+#   dir_in_gen = paste0(getwd(),"/output/",output_folder,"-", version, "-", cy_s,'/')
+#   
+#   dir_in = list.dirs(dir_in_gen,recursive = F)
+#   dir_in = dir_in[grep(cy_s,dir_in)]
+#   dir_in = dir_in[grep('LOCAL',dir_in)]
+#   
+#   
+#   ls_file_md = list.files(dir_in,pattern = 'daily',recursive = T,full.names = T)
+#   
+#   list_p = list()
+#   
+#   for (file_mod in ls_file_md) {
+#     
+#     list_p[[length(list_p)+1]] = output_validation(file_mod,
+#                                                  cy_s)
+#                                                  
+#   }
+#   rm(file_mod,ls_file_md)
+#   
+#   pdf(paste0(dir_in_gen,'SEASONAL_output_',cy_s,'.pdf'),
+#       onefile = T, width = 15,height = 12)
+#   
+#   for ( cy_p in seq(1,length(list_p)) ) {
+#     for (cy_p2 in seq(1,length(list_p[[cy_p]]))) {
+#       mpt = plot_grid(plotlist = list_p[[cy_p]][cy_p2])
+#       print(mpt)
+#       rm(mpt)
+#     }
+#   }
+#   rm(cy_p,cy_p2)
+#   dev.off()
+#   rm(list_p)
+#   
+# }
+# rm(cy_s)
+# 
+# cat(sprintf("\n\nALL SEASONAL PLOTS COMPLETE\n\n"))
 
 
 #     # # create annual GPP plot

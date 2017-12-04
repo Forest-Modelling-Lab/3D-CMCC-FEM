@@ -46,6 +46,7 @@ void total_photosynthesis_biome (cell_t *const c, const int height, const int db
 		leafN                        = ( s->value[LEAF_SUN_N] * 1e6 / g_settings->sizeCell ) / s->value[LAI_SUN_PROJ];
 
 		/* convert from mass to molar units, and from a daily rate to a rate per second (umol/m2/s) */
+		//note: since absorbed radiation is scaled to the 24 hours also leaf day resp should be scaled to 24 hours
 		leaf_day_mresp               = ( s->value[DAILY_LEAF_SUN_MAINT_RESP] / ( 86400. * GC_MOL * 1e-6 ) ) / s->value[LAI_SUN_PROJ];
 
 		/* convert absorbed par per projected lai molPAR/m2/day --> umol/m2/sec */
@@ -71,7 +72,8 @@ void total_photosynthesis_biome (cell_t *const c, const int height, const int db
 		leafN                        = ( s->value[LEAF_SHADE_N] * 1e6 / g_settings->sizeCell ) / s->value[LAI_SHADE_PROJ];
 
 		/* convert from mass to molar units, and from a daily rate to a rate per second (umol/m2/s) */
-		leaf_day_mresp               = ( s->value[DAILY_LEAF_SHADE_MAINT_RESP] / ( meteo_daily->daylength_sec * GC_MOL * 1e-6 ) ) / s->value[LAI_SHADE_PROJ];
+		//note: since absorbed radiation is scaled to the 24 hours also leaf day resp should be scaled to 24 hours
+		leaf_day_mresp               = ( s->value[DAILY_LEAF_SHADE_MAINT_RESP] / ( 86400. * GC_MOL * 1e-6 ) ) / s->value[LAI_SHADE_PROJ];
 
 		/* convert absorbed par per projected lai molPAR/m2/day --> umol/m2/sec */
 		par_abs                      = ( s->value[APAR_SHADE] * 1e6 / 86400. ) / s->value[LAI_SHADE_PROJ];

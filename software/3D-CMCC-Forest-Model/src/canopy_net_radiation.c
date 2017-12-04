@@ -28,7 +28,8 @@ void canopy_net_radiation(cell_t *const c, const int layer, const int height, co
 
 	/* compute net radiation */
 	s->value[NET_RAD] = s->value[SW_RAD] + s->value[NET_LW_RAD];
+
 	logger(g_debug_log, "Net SW Radiation for canopy = %g W/m2\n", s->value[SW_RAD]);
 	logger(g_debug_log, "Net LW Radiation for canopy = %g W/m2\n", s->value[NET_LW_RAD]);
-	logger(g_debug_log, "Net Radiation for canopy = %g W/m2\n", s->value[NET_RAD]);
+	logger(g_debug_log, "Net Radiation for canopy    = %g W/m2\n", s->value[NET_RAD]);
 }
