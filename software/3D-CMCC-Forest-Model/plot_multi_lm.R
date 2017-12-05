@@ -1,5 +1,5 @@
 plot_multi_lm <- function(dt,yvar_name = NULL,xvar_name = NULL) {
-  # plot delle regressioni lineari tra più variabili
+  # plot delle regressioni lineari tra pi? variabili
   # INPUT
   #   df: dataframe che contiene le seguenti colonne:
   #     [,1]: valori per asse X (reference)

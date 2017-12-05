@@ -65,7 +65,7 @@ time_list_output = c('annual','monthly','daily')
 
 # single or multiple simulations
 build_list<-c('Debug')#, 'Release')
-site_list<-c("Collelongo")
+site_list<-c("Soroe")
 esm_list <-c("1")# ("1","2","3","4","5", "All")
 rcp_list <-c("0p0")# ("0p0","2p6","4p5","6p0","8p5","All")
 man_list <-c("on")# ("on",'off', "All")
@@ -588,6 +588,7 @@ cat(sprintf("\n\nCOMPARSION PLOTS STAND COMPLETE\n\n"))
 
 cat(sprintf("\n\nFLUX VALIDATION PLOTS START.....\n\n"))
 cy_s = site_list[1]
+df_siti = read.csv('sites_isimip.csv')
 for (cy_s in site_list) {
   dir_in_gen = paste0(getwd(),"/output/",output_folder,"-", version, "-", cy_s,'/')
   site_code = as.character(df_siti$fluxnet_code[df_siti$model_name == cy_s])

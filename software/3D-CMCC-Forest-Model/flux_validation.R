@@ -30,897 +30,460 @@ flux_validation <- function(ls_file_md,
   # source('read3DCMCC_output.R')
   source('removeInf.R')
   source('colSums2.R')
+# ciclo per le variabili da validare ----
   
-  if ( exists('df_season_tot') ) {
-    rm(df_season_tot,df_season_mm_tot,df_plot_tot)
-    rm(df_plot_mm_tot,df_plot_yy_tot)
+for (cyv in seq(1,length(var_md)) ) {
+  if ( exists('df_plot_yy_tot') ) {
+    rm(df_plot_tot,df_plot_yy_tot,df_plot_mm_tot,
+    df_season_tot,df_season_mm_tot,df_plot_bar_tot)
   }
-  for (file_md in ls_file_md) {
-    cat(sprintf('import file: %s\n',file_md))
-    df_mod2 = read.csv(file_md,comment.char = '#')
-    cat(sprintf('import file: %s OK\n',file_md))
-    df_mod2$filename = basename(file_md)
-    filename2 = c()
-    for ( cy_fn in df_mod2$filename ) {
-      filename2 = c(filename2,
-                    unlist(strsplit(cy_fn,'_'))[1]
-      )
+  
+for (file_md in ls_file_md) {
+  
+  # importo il file EC ----
+  
+  cat(sprintf('import file: %s\n',file_ec))
+  
+  df_ec = read.csv(file_ec)
+  
+  cat(sprintf('import file: %s OK\n',file_ec))
+  
+  # sostituisco i -9999 con NA
+  for(cy_ck in colnames(df_ec) ) {
+    pos_menonove = which(df_ec[,cy_ck] < -9990)
+    if ( length(pos_menonove) > 0 ) {
+      df_ec[pos_menonove,cy_ck] = NA
     }
-    df_mod2$filename2 = filename2
-    rm(filename2,cy_fn)
-    
-    cat(sprintf('import file: %s\n',file_ec))
-    
-    df_ec1 = read.csv(file_ec)
-    
-    cat(sprintf('import file: %s OK\n',file_ec))
-    
-    # sostituisco i -9999 con NA
-    for(cy_ck in colnames(df_ec) ) {
-      pos_menonove = which(df_ec[,cy_ck] < -9990)
-      if ( length(pos_menonove) > 0 ) {
-        df_ec[pos_menonove,cy_ck] = NA
-      }
-      rm(pos_menonove)
-    }
-    rm(cy_ck)
-    
-    # per le variabili da plottare applico i qc
-    for (cy_ck in seq(1,length(var_eddy)) ) {
-      pos_qc = which(df_ec[,var_eddy_qc[cy_ck]] < soglia_qc)
-      if ( length(pos_qc) > 0 ) {
-        df_ec[pos_qc,var_eddy[cy_ck]] = NA
-      }
-      rm(pos_qc)
-    }
-    rm(cy_ck)
-    
-    # aggiungo la colonna TIME ed YEAR
-    df_ec$TIME = ymd(df_ec$TIMESTAMP)
-    df_ec$YEAR = year(df_ec$TIME)
-    
-    # sincronizzo le serie temporali
-    min_year = max(c(min(df_mod2$YEAR),min(df_ec$YEAR)))
-    max_year = min(c(max(df_mod2$YEAR),max(df_ec$YEAR)))
-    
-    pos_year = which(df_mod2$YEAR < min_year)
-    if ( length(pos_year) > 0) {
-      df_mod2 = df_mod2[-1*pos_year,]
-    }
-    rm(pos_year)
-    #
-    pos_year = which(df_mod2$YEAR > max_year)
-    if ( length(pos_year) > 0) {
-      df_mod2 = df_mod2[-1*pos_year,]
-    }
-    rm(pos_year)
-    #
-    pos_year = which(df_ec$YEAR < min_year)
-    if ( length(pos_year) > 0) {
-      df_ec = df_ec[-1*pos_year,]
-    }
-    rm(pos_year)
-    #
-    pos_year = which(df_ec$YEAR > max_year)
-    if ( length(pos_year) > 0) {
-      df_ec = df_ec[-1*pos_year,]
-    }
-    rm(pos_year)
-    rm(min_year,max_year)
-    TIME = df_ec$TIME
-    
-    for (cyv in seq(1,length(var_md)) ) {
-      
-      # creo i df dei dati
-      df_plot = data.frame(
-        'TIME' = TIME,
-        'YEAR' = year(TIME),
-        'MD' = df_mod2[,var_md[cyv]],
-        'EC' = df_ec[,var_eddy[cyv]],
-        'EC_qc' = df_ec[,var_eddy_qc[cyv]],
-        'EC_max' = df_ec[,var_eddy_unc_max[cyv]],
-        'EC_min' = df_ec[,var_eddy_unc_min[cyv]],
-        'col_var' = df_mod2$filename2
-      )
-      
-      y_lab = var_md[cyv]
-      
-      # applico la soglia dei dati eddy
-      TIME2 = df_plot$TIME
-      pos_qc = which(df_plot$EC_qc < soglia_qc)
-      if ( length(pos_qc) > 0 ) {
-        df_plot[pos_qc,] = NA
-      }
-      df_plot$TIME = TIME2
-      rm(TIME2,pos_qc)
-      
-      # sincronizzo in base ai NA
-      TIME2 = df_plot$TIME
-      for (cy_ck in seq(1,length(df_plot)) ) {
-        pos_na = which(is.na(df_plot[,cy_ck]) == 1)
-        if ( length(pos_na) > 0 ) {
-          df_plot[pos_na,] = NA
-        }
-        rm(pos_na)
-      }
-      df_plot$TIME = TIME2
-      rm(cy_ck,TIME2)
-      
-      # per ragioni di calcolo estraggo la colonna TIME e calcolo i valori annuali e mensili
-      TIME2 = df_plot$TIME
-      col_var = df_plot$col_var
-      df_tmp = df_plot
-      df_tmp = df_tmp[,-1*which(colnames(df_tmp) == 'TIME')]
-      df_tmp = df_tmp[,-1*which(colnames(df_tmp) == 'col_var')]
-      # calcolo le somme annuali e i valori max e min
-      unique_year = sort(unique(year(TIME2)))
-      df_plot_yy = df_tmp[1,]
-      df_plot_mm = df_tmp[1,]
-      month = c()
-      year_mon = c()
-      for (cy_year in unique_year) {
-        for (cy_mon in seq(1,12)) {
-          pos_year = which(year(TIME2) == cy_year & month(TIME2) == cy_mon)
-          if ( length(pos_year) > 0 ) {
-            
-            df_plot_mm = rbind(df_plot_mm,colSums2(df_tmp[pos_year,]))
-            
-            month = c(month,cy_mon)
-            year_mon = c(year_mon,cy_year)
-          }
-          rm(pos_year)
-        }
-        rm(cy_mon)
-        
-        pos_year = which(year(TIME2) == cy_year) 
-        df_plot_yy = rbind(df_plot_yy,colSums2(df_tmp[pos_year,]))
-        
-        rm(pos_year)
-      }
-      rm(cy_year)
-      
-      df_plot_yy = df_plot_yy[-1,]
-      df_plot_mm = df_plot_mm[-1,]
-      df_plot_yy$YEAR = unique_year
-      df_plot_mm$YEAR = year_mon
-      df_plot_mm$MONTH = month
-      rm(TIME2,df_tmp,month,year_mon,unique_year)
-      
-      # sincronizzo in base ai NA
-      TIME2 = df_plot_yy$YEAR
-      for (cy_ck in seq(1,length(df_plot_yy)) ) {
-        pos_na = which(is.na(df_plot_yy[,cy_ck]) == 1)
-        if ( length(pos_na) > 0 ) {
-          df_plot_yy[pos_na,] = NA
-        }
-        rm(pos_na)
-      }
-      rm(cy_ck)
-      df_plot_yy$YEAR = TIME2
-      rm(TIME2)
-      
-      # sincronizzo in base ai NA
-      TIME2 = df_plot_mm$YEAR
-      TIME3 = df_plot_mm$MONTH
-      for (cy_ck in seq(1,length(df_plot_mm)) ) {
-        pos_na = which(is.na(df_plot_mm[,cy_ck]) == 1)
-        if ( length(pos_na) > 0 ) {
-          df_plot_mm[pos_na,] = NA
-        }
-        rm(pos_na)
-      }
-      df_plot_mm$YEAR = TIME2
-      df_plot_mm$MONTH = TIME3
-      rm(TIME2,TIME3,cy_ck)
-      
-      # calcolo i valori per il plot seasonal daily
-      df_tmp = df_plot
-      df_tmp = df_tmp[,-1*grep('TIME',colnames(df_tmp))]
-      df_tmp = df_tmp[,-1*grep('col_var',colnames(df_tmp))]
-      df_season = df_tmp[1,]
-      doy = c()
-      max_ec = c()
-      min_ec = c()
-      max_md = c()
-      min_md = c()
-      for (cy_mon in seq(1,12)) {
-        for (cy_day in seq(1,31)) {
-          pos_ym = which(month(df_plot$TIME) == cy_mon &
-                           day(df_plot$TIME) == cy_day)
-          if ( length(pos_ym) == 0 ) {
-            next
-          }
-          df_season = rbind(df_season,
-                            colMeans(df_tmp[pos_ym,],na.rm = T))
-          doy = c(doy,length(doy)+1)
-          max_ec = c(max_ec,max(df_tmp$EC[pos_ym],na.rm = T))
-          min_ec = c(min_ec,min(df_tmp$EC[pos_ym],na.rm = T))
-          max_md = c(max_md,max(df_tmp$MD[pos_ym],na.rm = T))
-          min_md = c(min_md,min(df_tmp$MD[pos_ym],na.rm = T))
-        }
-        rm(cy_day,pos_ym)
-      }
-      rm(cy_mon)
-      df_season = df_season[-1,]
-      df_season = data.frame('TIME' = doy,
-                             'EC' = df_season$EC,
-                             'MD' = df_season$MD,
-                             'EC_max' = max_ec,
-                             'EC_min' = min_ec,
-                             'MD_max' = max_md,
-                             'MD_min' = min_md
-      )
-      rm(df_tmp,doy,min_md,max_md,min_ec,max_ec)
-      
-      df_season = removeInf(df_season)
-      
-      # calcolo i valori per il plot seasonal monthly
-      df_tmp = df_plot_mm
-      df_season_mm = df_tmp[1,]
-      max_ec = c()
-      min_ec = c()
-      max_md = c()
-      min_md = c()
-      for (cy_mon in seq(1,12)) {
-        pos_ym = which(df_tmp$MONTH == cy_mon)
-        if ( length(pos_ym) > 0 ) {
-          df_season_mm = rbind(df_season_mm,
-                               colMeans(df_tmp[pos_ym,],na.rm = T))
-          
-          max_ec = c(max_ec,max(df_tmp$EC[pos_ym],na.rm = T))
-          min_ec = c(min_ec,min(df_tmp$EC[pos_ym],na.rm = T))
-          max_md = c(max_md,max(df_tmp$MD[pos_ym],na.rm = T))
-          min_md = c(min_md,min(df_tmp$MD[pos_ym],na.rm = T))
-        }
-      }
-      rm(cy_mon,pos_ym)
-      df_season_mm = df_season_mm[-1,]
-      df_season_mm$EC_max = max_ec
-      df_season_mm$EC_min = min_ec
-      df_season_mm$MD_max = max_md
-      df_season_mm$MD_min = min_md
-      rm(df_tmp,min_md,max_md,min_ec,max_ec)
-      
-      df_season_mm = removeInf(df_season_mm)
-      
-      # calcolo l'anno medio eddy e calcolo le differenze tra questi valori e tutti gli altri
-      df_plot_yy$anom_ec = df_plot_yy$EC - mean(df_plot_yy$EC,na.rm = T)
-      df_plot_yy$anom_md = df_plot_yy$MD - mean(df_plot_yy$MD,na.rm = T)
-      df_plot_bar = data.frame('TIME' = c(df_plot_yy$YEAR,df_plot_yy$YEAR),
-                               'anom' = c(df_plot_yy$anom_ec,df_plot_yy$anom_md),
-                               'tipo' = c(rep('EC',length(df_plot_yy$anom_ec)),
-                                          rep('MD',length(df_plot_yy$anom_md)))
-      )
-      
-      df_season$filename2 = df_mod2$filename2[1]
-      df_season$col_var = y_lab
-      df_season_mm$filename2 = df_mod2$filename2[1]
-      df_season_mm$col_var = y_lab
-      df_plot$filename2 = df_mod2$filename2[1]
-      df_plot$col_var = y_lab
-      df_plot_mm$filename2 = df_mod2$filename2[1]
-      df_plot_mm$col_var = y_lab
-      df_plot_yy$filename2 = df_mod2$filename2[1]
-      df_plot_yy$col_var = y_lab
-      
-      if ( exists('df_season_tot') == 0 ) {
-        df_season_tot = cbind(df_season[,c('TIME','EC','EC_max','EC_min','col_var')],rep('EC',length(df_season[,1])))
-        colnames(df_season_tot) = c('TIME','v1','v1_max','v1_min','col_var','filename2')
-        
-        df_season_mm_tot = cbind(df_season_mm[,c('YEAR','EC','EC_qc','EC_max','EC_min','MONTH','col_var')],rep('EC',length(df_season_mm[,1])))
-        colnames(df_season_mm_tot) = c('YEAR','v1','v1_qc','v1_max','v1_min','MONTH','col_var','filename2')
-        
-        df_plot_tot = cbind(df_plot[,c('TIME','YEAR','EC','EC_qc','EC_max','EC_min','col_var')],rep('EC',length(df_plot[,1])))
-        colnames(df_plot_tot) = c('TIME','YEAR','v1','v1_qc','v1_max','v1_min','col_var','filename2')
-        
-        df_plot_mm_tot = cbind(df_plot_mm[,c('YEAR','EC','EC_qc','EC_max','EC_min','col_var')],rep('EC',length(df_plot_mm[,1])))
-        colnames(df_plot_mm_tot) = c('YEAR','v1','v1_qc','v1_max','v1_min','col_var','filename2')
-        
-        df_plot_yy_tot = cbind(df_plot_yy[,c('YEAR','EC','EC_qc','EC_max','EC_min','anom_ec','col_var')],rep('EC',length(df_plot_yy[,1])))
-        colnames(df_plot_yy_tot) = c('YEAR','v1','v1_qc','v1_max','v1_min','anom_v1','col_var','filename2')
-      } else {
-        df_tmp = cbind(df_season[,c('TIME','EC','EC_max','EC_min','col_var')],rep('EC',length(df_season[,1])))
-        colnames(df_tmp) = c('TIME','v1','v1_max','v1_min','col_var','filename2')
-        df_season_tot = rbind(df_season_tot,df_tmp)
-        rm(df_tmp)
-        
-        df_tmp = cbind(df_season_mm[,c('YEAR','EC','EC_qc','EC_max','EC_min','MONTH','col_var')],rep('EC',length(df_season_mm[,1])))
-        colnames(df_tmp) = c('YEAR','v1','v1_qc','v1_max','v1_min','MONTH','col_var','filename2')
-        df_season_mm_tot = rbind(df_season_mm_tot,df_tmp)
-        rm(df_tmp)
-        
-        df_tmp = cbind(df_plot[,c('TIME','YEAR','EC','EC_qc','EC_max','EC_min','col_var')],rep('EC',length(df_plot[,1])))
-        colnames(df_tmp) = c('TIME','YEAR','v1','v1_qc','v1_max','v1_min','col_var','filename2')
-        df_plot_tot = rbind(df_plot_tot,df_tmp)
-        rm(df_tmp)
-        
-        df_tmp = cbind(df_plot_mm[,c('YEAR','EC','EC_qc','EC_max','EC_min','col_var')],rep('EC',length(df_plot_mm[,1])))
-        colnames(df_tmp) = c('YEAR','v1','v1_qc','v1_max','v1_min','col_var','filename2')
-        df_plot_mm_tot = rbind(df_plot_mm_tot,df_tmp)
-        rm(df_tmp)
-        
-        df_tmp = cbind(df_plot_yy[,c('YEAR','EC','EC_qc','EC_max','EC_min','anom_ec','col_var')],rep('EC',length(df_plot_yy[,1])))
-        colnames(df_tmp) = c('YEAR','v1','v1_qc','v1_max','v1_min','anom_v1','col_var','filename2')
-        df_plot_yy_tot = rbind(df_plot_yy,df_tmp)
-        rm(df_tmp)
-      }
-      df_tmp = df_season[,c('TIME','MD','MD_max','MD_min','col_var','filename2')]
-      colnames(df_tmp) = c('TIME','v1','v1_max','v1_min','col_var','filename2')
-      df_season_tot = rbind(df_season_tot,df_tmp)
-      rm(df_tmp)
-      
-      df_tmp = df_season_mm[,c('YEAR','MD')]
-      df_tmp = cbind(df_tmp,NA)#qc
-      df_tmp = cbind(df_tmp,NA)#max
-      df_tmp = cbind(df_tmp,NA)#min
-      df_tmp = cbind(df_tmp,df_season_mm[,c('MONTH','col_var','filename2')])
-      colnames(df_tmp) = c('YEAR','v1','v1_qc','v1_max','v1_min','MONTH','col_var','filename2')
-      df_season_mm_tot = rbind(df_season_mm_tot,df_tmp)
-      rm(df_tmp)
-      
-      df_tmp = df_plot[,c('TIME','YEAR','MD')]
-      df_tmp = cbind(df_tmp,NA)#qc
-      df_tmp = cbind(df_tmp,NA)#max
-      df_tmp = cbind(df_tmp,NA)#min
-      df_tmp = cbind(df_tmp,df_plot[,c('col_var','filename2')])#min
-      colnames(df_tmp) = c('TIME','YEAR','v1','v1_qc','v1_max','v1_min','col_var','filename2')
-      df_plot_tot = rbind(df_plot_tot,df_tmp)
-      rm(df_tmp)
-      
-      df_tmp = df_plot_mm[,c('YEAR','MD')]
-      df_tmp = cbind(df_tmp,NA)#qc
-      df_tmp = cbind(df_tmp,NA)#max
-      df_tmp = cbind(df_tmp,NA)#min
-      df_tmp = cbind(df_tmp,df_plot_mm[,c('col_var','filename2')])
-      colnames(df_tmp) = c('YEAR','v1','v1_qc','v1_max','v1_min','col_var','filename2')
-      df_plot_mm_tot = rbind(df_plot_mm_tot,df_tmp)
-      rm(df_tmp)
-      
-      df_tmp = df_plot_yy[,c('YEAR','MD')]
-      df_tmp = cbind(df_tmp,NA)#qc
-      df_tmp = cbind(df_tmp,NA)#max
-      df_tmp = cbind(df_tmp,NA)#min
-      df_tmp = cbind(df_tmp,df_plot_yy[,c('anom_md','col_var','filename2')])
-      colnames(df_tmp) = c('YEAR','v1','v1_qc','v1_max','v1_min','anom_v1','col_var','filename2')
-      df_plot_yy_tot = rbind(df_plot_yy_tot,df_tmp)
-      rm(df_tmp)
-      
-      rm(df_season,df_season_mm,df_plot,df_plot_mm,df_plot_yy)
-    }
-    rm(cyv)
+    rm(pos_menonove)
   }
-  rm(file_md)
+  rm(cy_ck)
   
-      # # salvo i dataset delle serie temporali(anno medio)
-      # write.csv(df_season,paste0(dir_out,
-      #        as.character(lista_siti$nome_fluxnet[cy_s]),"_",
-      #        var_eddy[var_md == y_lab],"_valid_season_DD.csv"),quote = F,row.names = F)
-      # write.csv(df_season_mm,paste0(dir_out,
-      #        as.character(lista_siti$nome_fluxnet[cy_s]),"_",
-      #        var_eddy[var_md == y_lab],"_valid_season_MM.csv"),quote = F,row.names = F)
-      # write.csv(df_plot,paste0(dir_out,
-      #        as.character(lista_siti$nome_fluxnet[cy_s]),"_",
-      #        var_eddy[var_md == y_lab],"_valid_DD.csv"),quote = F,row.names = F)
-      # write.csv(df_plot_mm,paste0(dir_out,
-      #         as.character(lista_siti$nome_fluxnet[cy_s]),"_",
-      #         var_eddy[var_md == y_lab],"_valid_MM.csv"),quote = F,row.names = F)
-      # write.csv(df_plot_yy,paste0(dir_out,
-      #         as.character(lista_siti$nome_fluxnet[cy_s]),"_",
-      #         var_eddy[var_md == y_lab],"_valid_YY.csv"),quote = F,row.names = F)
-      # 
-      # plot di validazione serie temporali
-      
-      # plot seasonal (anno medio)
-      anno_medio = ggplot(df_season_tot) +
-        geom_ribbon(aes(x = TIME,ymax = EC_max, ymin = EC_min,fill = filename2),alpha = 0.4) +
-        geom_ribbon(aes(x = TIME,ymax = MD_max, ymin = MD_min,fill = filename2),alpha = 0.4) +
-        geom_line(aes(x = TIME,y = EC,color = 'EC')) +
-        geom_line(aes(x = TIME,y = MD,color = 'MD')) +
-        scale_color_manual(labels = c('EC' = var_eddy[cyv],'MD' = as.character(df_mod2$filename2[1])), values = c('red','blue')) +
-        scale_fill_manual(labels = c('EC' = var_eddy[cyv],'MD' = as.character(df_mod2$filename2[1])), values = c('red', 'blue')) +
-        theme(legend.title = element_blank(),axis.title.x = element_blank(),
-              legend.position="top") +
-        ggtitle(paste(nome_sito,'Daily')) +
-        ylab(y_lab)
-      
-        geom_ribbon(aes(x = TIME,ymax = EC_max, ymin = EC_min,fill = 'EC'),alpha = 0.4) +
-        geom_ribbon(aes(x = TIME,ymax = MD_max, ymin = MD_min,fill = 'MD'),alpha = 0.4) +
-        geom_line(aes(x = TIME,y = EC,color = 'EC')) +
-        geom_line(aes(x = TIME,y = MD,color = 'MD')) +
-        scale_color_manual(labels = c('EC' = var_eddy[cyv],'MD' = as.character(df_mod2$filename2[1])), values = c('red','blue')) +
-        scale_fill_manual(labels = c('EC' = var_eddy[cyv],'MD' = as.character(df_mod2$filename2[1])), values = c('red', 'blue')) +
-        theme(legend.title = element_blank(),axis.title.x = element_blank(),
-              legend.position="top") +
-        ggtitle(paste(nome_sito,'Daily')) +
-        ylab(y_lab)
-      
-      # plot seasonal (mese medio)
-      mese_medio = ggplot(df_season_mm) +
-        geom_ribbon(aes(x = MONTH,ymax = EC_max, ymin = EC_min,fill = 'EC'),alpha = 0.4) +
-        geom_ribbon(aes(x = MONTH,ymax = MD_max, ymin = MD_min,fill = 'MD'),alpha = 0.4) +
-        geom_line(aes(x = MONTH,y = EC,color = 'EC')) +
-        geom_line(aes(x = MONTH,y = MD,color = 'MD')) +
-        scale_color_manual(labels = c('EC' = var_eddy[cyv],'MD' = as.character(df_mod2$filename2[1])), values = c('red','blue')) +
-        scale_fill_manual(labels = c('EC' = var_eddy[cyv],'MD' = as.character(df_mod2$filename2[1])), values = c('red', 'blue')) +
-        scale_x_continuous(breaks = seq(1,12),labels=c("J","F","M","A","M","J","J","A","S",'O','N','D')) +
-        theme(legend.title = element_blank(),axis.title.x = element_blank(),
-              legend.position="top") +
-        ggtitle(paste(nome_sito,'Monthly')) +
-        ylab(y_lab)
-      
-      # plot anomalie annuali 
-      anom = ggplot(df_plot_bar) +
-        geom_bar( aes(x=TIME, y=anom, fill = tipo),stat="identity",
-                  position=position_dodge()) +
-        scale_color_manual(labels = c('EC' = var_eddy[cyv],'MD' = as.character(df_mod2$filename2[1])), values = c('red','blue')) +
-        scale_fill_manual(labels = c('EC' = var_eddy[cyv],'MD' = as.character(df_mod2$filename2[1])), values = c('red', 'blue')) +
-        theme(legend.title = element_blank(),axis.title.x = element_blank(),
-              legend.position="top") +
-        ggtitle(paste(nome_sito,'Annual')) +
-        ylab(y_lab)
-      
-      # plot delle serie temporali
-      serie_time = ggplot(df_plot) +
-        geom_ribbon(aes(x = TIME,ymax = EC_max, ymin = EC_min),alpha = 0.4) +
-        geom_point(aes(x = TIME,y = EC,color = 'EC')) +
-        geom_point(aes(x = TIME,y = MD,color = 'MD'),shape = 1) +
-        scale_color_manual(values = c('EC' = 'red', 'MD' = 'blue')) +
-        theme(legend.title = element_blank(),axis.title.x = element_blank(),
-              legend.position="none") +
-        # ggtitle(paste(as.character(lista_siti$nome_fluxnet[cy_s]),'Daily')) +
-        ylab(y_lab)
-      
-      df_plot_mm$TIME = ymd((df_plot_mm$YEAR*10000) + (df_plot_mm$MONTH*100) +1)
-      
-      serie_time_mm = ggplot(df_plot_mm) +
-        geom_ribbon(aes(x = TIME,ymax = EC_max, ymin = EC_min),alpha = 0.4) +
-        geom_point(aes(x = TIME,y = EC,color = 'EC')) +
-        geom_point(aes(x = TIME,y = MD,color = 'MD')) +
-        scale_color_manual(values = c('EC' = 'red', 'MD' = 'blue')) +
-        theme(legend.title = element_blank(),axis.title.x = element_blank(),
-              legend.position="none") +
-        scale_x_date(labels = date_format("%m-%Y")) +
-        # ggtitle(paste(as.character(lista_siti$nome_fluxnet[cy_s]),'Annual')) +
-        ylab(y_lab)
-      
-      serie_time_yy = ggplot(df_plot_yy) +
-        geom_ribbon(aes(x = YEAR,ymax = EC_max, ymin = EC_min),alpha = 0.4) +
-        geom_point(aes(x = YEAR,y = EC,color = 'EC')) +
-        geom_point(aes(x = YEAR,y = MD,color = 'MD')) +
-        scale_color_manual(values = c('EC' = 'red', 'MD' = 'blue')) +
-        theme(legend.title = element_blank(),axis.title.x = element_blank(),
-              legend.position="none") +
-        # ggtitle(paste(as.character(lista_siti$nome_fluxnet[cy_s]),'Annual')) +
-        ylab(y_lab)
-      
-      # plot di validazione regressioni
-      nr_dati = length(df_plot[,1])
-      nr_dati_mm = length(df_plot_mm[,1])
-      nr_dati_yy = length(df_plot_yy[,1])
-      
-      # sincronizzo in base ai NA
-      for (cy_ck in seq(1,length(df_plot_yy)) ) {
-        pos_na = which(is.na(df_plot_yy[,cy_ck]) == 1)
-        if ( length(pos_na) > 0 ) {
-          df_plot_yy = df_plot_yy[-1*pos_na,]
-        }
-        rm(pos_na)
-      }
-      rm(cy_ck)
-      # sincronizzo in base ai NA
-      for (cy_ck in seq(1,length(df_plot_mm)) ) {
-        pos_na = which(is.na(df_plot_mm[,cy_ck]) == 1)
-        if ( length(pos_na) > 0 ) {
-          df_plot_mm = df_plot_mm[-1*pos_na,]
-        }
-        rm(pos_na)
-      }
-      rm(cy_ck)
-      
-      # sincronizzo in base ai NA
-      for (cy_ck in seq(1,length(df_plot)) ) {
-        pos_na = which(is.na(df_plot[,cy_ck]) == 1)
-        if ( length(pos_na) > 0 ) {
-          df_plot = df_plot[-1*pos_na,]
-        }
-        rm(pos_na)
-      }
-      rm(cy_ck)
-      
-      # regressione lineare daily
-      model_lm <- lm(MD ~ EC, data = df_plot)
-      
-      df_plot$LM = model_lm$fitted.values
-      
-      text_df = data.frame('pos_x' = min(df_plot$EC),'pos_y' = max(df_plot$LM)*0.99,
-                           'testo' = 
-                             sprintf("MD = %.2f EC %+.2f ; r2 = %.2f",
-                                     coef(model_lm)[2],
-                                     coef(model_lm)[1],summary.lm(model_lm)$r.squared)
-      )
-      p1 = 
-        ggplot() +
-        geom_point(data = df_plot,aes(x = EC,y = MD),size=0.5) +
-        ggtitle(sprintf('MD: mean = %.2f gC m-2 day-1 (sd: %.2f) (n = %.0f%%)\nEC: mean = %.2f gC m-2 d-1 (sd: %.2f) (n = %.0f%%)',
-                        mean(df_plot$MD),sd(df_plot$MD),100*(length(df_plot$MD)/nr_dati),
-                        mean(df_plot$EC),sd(df_plot$EC),100*(length(df_plot$EC)/nr_dati)),
-                subtitle = sprintf('RMSE: %.2f; %s',sqrt(mean((df_plot$EC - df_plot$MD)^2)),text_df$testo)
-        )+
-        geom_line(data = df_plot,aes(x = EC,y = LM),color='red',size = 1) +
-        # geom_text(data = text_df,aes(x = pos_x, y = pos_y, label = testo),hjust=-0.01) +
-        xlab('Measured') +
-        ylab('Simulated') +
-        theme(plot.title = element_text(size = 10,hjust = 0.5),
-              plot.subtitle = element_text(size=9,hjust=0.5),
-              axis.title = element_text(size = 9),
-              axis.text = element_text(size=9),
-              legend.title = element_blank(),legend.position="none",
-              legend.direction="horizontal")
-      
-      # regressione lineare monthly
-      model_lm_mm <- lm(MD ~ EC, data = df_plot_mm)
-      
-      df_plot_mm$LM = model_lm_mm$fitted.values
-      text_df = data.frame('pos_x' = min(df_plot_mm$EC),'pos_y' = max(df_plot_mm$LM)*0.99,
-                           'testo' = 
-                             sprintf("MD = %.2f EC %+.2f ; r2 = %.2f",
-                                     coef(model_lm_mm)[2],
-                                     coef(model_lm_mm)[1],summary.lm(model_lm_mm)$r.squared)
-      )
-      p1_mm = 
-        ggplot() +
-        geom_point(data = df_plot_mm,aes(x = EC,y = MD),size=0.5) +
-        ggtitle(sprintf('MD: mean = %.2f gC m-2 month-1 (sd: %.2f) (n = %.0f%%)\nEC: mean = %.2f gC m-2 d-1 (sd: %.2f) (n = %.0f%%)',
-                        mean(df_plot_mm$MD),sd(df_plot_mm$MD),100*(length(df_plot_mm$MD)/nr_dati_mm),
-                        mean(df_plot_mm$EC),sd(df_plot_mm$EC),100*(length(df_plot_mm$EC)/nr_dati_mm)),
-                subtitle = sprintf('RMSE: %.2f; %s',sqrt(mean((df_plot_mm$EC - df_plot_mm$MD)^2)),text_df$testo)
-        )+
-        geom_line(data = df_plot_mm,aes(x = EC,y = LM),color='red',size = 1) +
-        # geom_text(data = text_df,aes(x = pos_x, y = pos_y, label = testo),hjust=-0.01) +
-        xlab('Measured') +
-        ylab('Simulated') +
-        theme(plot.title = element_text(size = 10,hjust = 0.5),
-              plot.subtitle = element_text(size=9,hjust=0.5),
-              axis.title = element_text(size = 9),
-              axis.text = element_text(size=9),
-              legend.title = element_blank(),legend.position="none",
-              legend.direction="horizontal")
-      
-      # regressione lineare annual
-      model_lm_yy <- lm(MD ~ EC, data = df_plot_yy)
-      
-      df_plot_yy$LM = model_lm_yy$fitted.values
-      
-      text_df = data.frame('pos_x' = min(df_plot_yy$EC),'pos_y' = max(df_plot_yy$LM)*1.04,
-                           'testo' = 
-                             sprintf("MD = %.2f EC %+.2f ; r2 = %.2f",
-                                     coef(model_lm_yy)[2],
-                                     coef(model_lm_yy)[1],summary.lm(model_lm_yy)$r.squared)
-      )
-      p1_yy = ggplot(df_plot_yy) +
-        geom_point(aes(x = EC,y = MD),size=0.5) +
-        ggtitle(sprintf('MD: mean = %.2f gC m-2 year-1 (sd: %.2f) (n = %.0f%%)\nEC: mean = %.2f gC m-2 d-1 (sd: %.2f) (n = %.0f%%)',
-                        mean(df_plot_yy$MD),sd(df_plot_yy$MD),100*(length(df_plot_yy$MD)/nr_dati_yy),
-                        mean(df_plot_yy$EC),sd(df_plot_yy$EC),100*(length(df_plot_yy$EC)/nr_dati_yy)
-        ),subtitle = sprintf('RMSE: %.2f; %s',
-                             sqrt(mean((df_plot_yy$EC - df_plot_yy$MD)^2)),text_df$testo))+
-        geom_line(aes(x = EC,y = LM),color='red',size = 1) +
-        # geom_text(data = text_df,aes(x = pos_x, y = pos_y, label = testo),hjust=-0.01) +
-        xlab('Measured') +
-        ylab('Simulated') +
-        theme(plot.title = element_text(size = 10,hjust = 0.5),
-              plot.subtitle = element_text(size=9,hjust=0.5),
-              axis.title = element_text(size = 9),
-              axis.text = element_text(size=9),
-              legend.title = element_blank(),legend.position="none",
-              legend.direction="horizontal")
-      
-      mp_t = plot_grid(plotlist = list(anno_medio,mese_medio,anom,
-                                       serie_time,serie_time_mm,serie_time_yy,
-                                       p1,p1_mm,p1_yy),
-                       ncol = 3,align = 'v',labels = 'AUTO')
-      
-      lista_plot[[length(lista_plot)+1]] = mp_t
-      
-      rm(df_plot_yy,df_plot,y_lab,p1,serie_time,p1_yy,serie_time_yy,mp_t)
-      rm(model_lm,model_lm_yy,text_df,df_plot_bar)
-    }
-    rm(cyv,TIME,df_ec,df_mod2)
-    
-  # for (file_md in ls_file_md) {
-  #   cat(sprintf('import file: %s\n',file_md))
-  #   df_mod2 = read.csv(file_md,comment.char = '#')
-  #   cat(sprintf('import file: %s OK\n',file_md))
-  #   df_mod2$filename = basename(file_md)
-  #   filename2 = c()
-  #   for ( cy_fn in df_mod2$filename ) {
-  #     filename2 = c(filename2,
-  #                   unlist(strsplit(cy_fn,'_'))[1]
-  #     )
-  #   }
-  #   df_mod2$filename2 = filename2
-  #   rm(filename2,cy_fn)
-    
-    if ( exists('df_mod_t') ) {
-      df_mod_t = rbind(df_mod_t,df_mod2)
-      df_ec = rbind(df_ec,df_ec1)
-    } else {
-      df_mod_t = df_mod2
-      df_ec = df_ec1
-    }
-    rm(df_mod2)
-  }
-  rm(file_md)
-  
-  df_mod2 = df_mod_t
-  
-  # validazione 
-  lista_plot = list()
-  
-  for (cyv in seq(1,length(var_md)) ) {
-    
-    # creo i df dei dati
-    df_plot = data.frame(
-      'TIME' = TIME,
-      'YEAR' = year(TIME),
-      'MD' = df_mod2[,var_md[cyv]],
-      'EC' = df_ec[,var_eddy[cyv]],
-      'EC_qc' = df_ec[,var_eddy_qc[cyv]],
-      'EC_max' = df_ec[,var_eddy_unc_max[cyv]],
-      'EC_min' = df_ec[,var_eddy_unc_min[cyv]],
-      'col_var' = df_mod2$filename2
-    )
-    
-    y_lab = var_md[cyv]
-    
-    # applico la soglia dei dati eddy
-    TIME2 = df_plot$TIME
-    pos_qc = which(df_plot$EC_qc < soglia_qc)
+  # per le variabili da plottare applico i qc
+  for (cy_ck in seq(1,length(var_eddy)) ) {
+    pos_qc = which(df_ec[,var_eddy_qc[cy_ck]] < soglia_qc)
     if ( length(pos_qc) > 0 ) {
-      df_plot[pos_qc,] = NA
+      df_ec[pos_qc,var_eddy[cy_ck]] = NA
     }
-    df_plot$TIME = TIME2
-    rm(TIME2,pos_qc)
+    rm(pos_qc)
+  }
+  rm(cy_ck)
+  
+  # aggiungo la colonna TIME ed YEAR
+  df_ec$TIME = ymd(df_ec$TIMESTAMP)
+  df_ec$YEAR = year(df_ec$TIME)
+  
+  # importo il file MD ----
+  cat(sprintf('import file: %s\n',file_md))
+  df_mod2 = read.csv(file_md,comment.char = '#')
+  cat(sprintf('import file: %s OK\n',file_md))
+  df_mod2$filename = basename(file_md)
+  filename2 = c()
+  for ( cy_fn in df_mod2$filename ) {
+    filename2 = c(filename2,
+                  unlist(strsplit(cy_fn,'_'))[1]
+    )
+  }
+  df_mod2$filename2 = filename2
+  rm(filename2,cy_fn)
+  
+  # sincronizzo le serie temporali ----
+  min_year = max(c(min(df_mod2$YEAR),min(df_ec$YEAR)))
+  max_year = min(c(max(df_mod2$YEAR),max(df_ec$YEAR)))
+  
+  pos_year = which(df_mod2$YEAR < min_year)
+  if ( length(pos_year) > 0) {
+    df_mod2 = df_mod2[-1*pos_year,]
+  }
+  rm(pos_year)
+  #
+  pos_year = which(df_mod2$YEAR > max_year)
+  if ( length(pos_year) > 0) {
+    df_mod2 = df_mod2[-1*pos_year,]
+  }
+  rm(pos_year)
+  #
+  pos_year = which(df_ec$YEAR < min_year)
+  if ( length(pos_year) > 0) {
+    df_ec = df_ec[-1*pos_year,]
+  }
+  rm(pos_year)
+  #
+  pos_year = which(df_ec$YEAR > max_year)
+  if ( length(pos_year) > 0) {
+    df_ec = df_ec[-1*pos_year,]
+  }
+  rm(pos_year)
+  rm(min_year,max_year)
+  TIME = df_ec$TIME
+  
+  
+  # creo i df dei dati
+  df_plot = data.frame(
+    'TIME' = TIME,
+    'YEAR' = year(TIME),
+    'MD' = df_mod2[,var_md[cyv]],
+    'EC' = df_ec[,var_eddy[cyv]],
+    'EC_qc' = df_ec[,var_eddy_qc[cyv]],
+    'EC_max' = df_ec[,var_eddy_unc_max[cyv]],
+    'EC_min' = df_ec[,var_eddy_unc_min[cyv]],
+    'col_var' = df_mod2$filename2
+  )
+  
+  # applico la soglia dei dati eddy
+  TIME2 = df_plot$TIME
+  pos_qc = which(df_plot$EC_qc < soglia_qc)
+  if ( length(pos_qc) > 0 ) {
+    df_plot[pos_qc,] = NA
+  }
+  df_plot$TIME = TIME2
+  rm(TIME2,pos_qc)
     
-    # sincronizzo in base ai NA
-    TIME2 = df_plot$TIME
-    for (cy_ck in seq(1,length(df_plot)) ) {
-      pos_na = which(is.na(df_plot[,cy_ck]) == 1)
-      if ( length(pos_na) > 0 ) {
-        df_plot[pos_na,] = NA
-      }
-      rm(pos_na)
+  # sincronizzo in base ai NA
+  TIME2 = df_plot$TIME
+  for (cy_ck in seq(1,length(df_plot)) ) {
+    pos_na = which(is.na(df_plot[,cy_ck]) == 1)
+    if ( length(pos_na) > 0 ) {
+      df_plot[pos_na,] = NA
     }
-    df_plot$TIME = TIME2
-    rm(cy_ck,TIME2)
-    
-    # per ragioni di calcolo estraggo la colonna TIME e calcolo i valori annuali e mensili
-    TIME2 = df_plot$TIME
-    col_var = df_plot$col_var
-    df_tmp = df_plot
-    df_tmp = df_tmp[,-1*which(colnames(df_tmp) == 'TIME')]
-    df_tmp = df_tmp[,-1*which(colnames(df_tmp) == 'col_var')]
-    # calcolo le somme annuali e i valori max e min
-    unique_year = sort(unique(year(TIME2)))
-    df_plot_yy = df_tmp[1,]
-    df_plot_mm = df_tmp[1,]
-    month = c()
-    year_mon = c()
-    for (cy_year in unique_year) {
-      for (cy_mon in seq(1,12)) {
-        pos_year = which(year(TIME2) == cy_year & month(TIME2) == cy_mon)
-        if ( length(pos_year) > 0 ) {
-          
-          df_plot_mm = rbind(df_plot_mm,colSums2(df_tmp[pos_year,]))
-          
-          month = c(month,cy_mon)
-          year_mon = c(year_mon,cy_year)
-        }
-        rm(pos_year)
+    rm(pos_na)
+  }
+  df_plot$TIME = TIME2
+  rm(cy_ck,TIME2)
+  
+  y_lab = var_md[cyv]
+  
+  
+  # calcolo le somme annuali e mensili e i valori max e min (df_plot_yy,df_plot_mm)----
+  # per ragioni di calcolo estraggo la colonna TIME e calcolo i valori annuali e mensili
+  df_tmp = df_plot
+  TIME2 = df_tmp$TIME
+  col_var = df_tmp$col_var
+  
+  df_tmp = df_tmp[,-1*which(colnames(df_tmp) == 'TIME')]
+  df_tmp = df_tmp[,-1*which(colnames(df_tmp) == 'col_var')]
+  
+  unique_year = sort(unique(year(TIME2)))
+  df_plot_yy = df_tmp[1,]
+  df_plot_mm = df_tmp[1,]
+  month = c()
+  year_mon = c()
+  for (cy_year in unique_year) {
+    for (cy_mon in seq(1,12)) {
+      pos_year = which(year(TIME2) == cy_year & month(TIME2) == cy_mon)
+      if ( length(pos_year) > 0 ) {
+        
+        df_plot_mm = rbind(df_plot_mm,colSums2(df_tmp[pos_year,]))
+        
+        month = c(month,cy_mon)
+        year_mon = c(year_mon,cy_year)
       }
-      rm(cy_mon)
-      
-      pos_year = which(year(TIME2) == cy_year) 
-      df_plot_yy = rbind(df_plot_yy,colSums2(df_tmp[pos_year,]))
-      
       rm(pos_year)
     }
-    rm(cy_year)
-    
-    df_plot_yy = df_plot_yy[-1,]
-    df_plot_mm = df_plot_mm[-1,]
-    df_plot_yy$YEAR = unique_year
-    df_plot_mm$YEAR = year_mon
-    df_plot_mm$MONTH = month
-    rm(TIME2,df_tmp,month,year_mon,unique_year)
-    
-    # sincronizzo in base ai NA
-    TIME2 = df_plot_yy$YEAR
-    for (cy_ck in seq(1,length(df_plot_yy)) ) {
-      pos_na = which(is.na(df_plot_yy[,cy_ck]) == 1)
-      if ( length(pos_na) > 0 ) {
-        df_plot_yy[pos_na,] = NA
-      }
-      rm(pos_na)
-    }
-    rm(cy_ck)
-    df_plot_yy$YEAR = TIME2
-    rm(TIME2)
-    
-    # sincronizzo in base ai NA
-    TIME2 = df_plot_mm$YEAR
-    TIME3 = df_plot_mm$MONTH
-    for (cy_ck in seq(1,length(df_plot_mm)) ) {
-      pos_na = which(is.na(df_plot_mm[,cy_ck]) == 1)
-      if ( length(pos_na) > 0 ) {
-        df_plot_mm[pos_na,] = NA
-      }
-      rm(pos_na)
-    }
-    df_plot_mm$YEAR = TIME2
-    df_plot_mm$MONTH = TIME3
-    rm(TIME2,TIME3,cy_ck)
-    
-    # calcolo i valori per il plot seasonal daily
-    df_tmp = df_plot
-    df_tmp = df_tmp[,-1*grep('TIME',colnames(df_tmp))]
-    df_tmp = df_tmp[,-1*grep('col_var',colnames(df_tmp))]
-    df_season = df_tmp[1,]
-    doy = c()
-    max_ec = c()
-    min_ec = c()
-    max_md = c()
-    min_md = c()
-    for (cy_mon in seq(1,12)) {
-      for (cy_day in seq(1,31)) {
-        pos_ym = which(month(df_plot$TIME) == cy_mon &
-                         day(df_plot$TIME) == cy_day)
-        if ( length(pos_ym) == 0 ) {
-          next
-        }
-        df_season = rbind(df_season,
-                          colMeans(df_tmp[pos_ym,],na.rm = T))
-        doy = c(doy,length(doy)+1)
-        max_ec = c(max_ec,max(df_tmp$EC[pos_ym],na.rm = T))
-        min_ec = c(min_ec,min(df_tmp$EC[pos_ym],na.rm = T))
-        max_md = c(max_md,max(df_tmp$MD[pos_ym],na.rm = T))
-        min_md = c(min_md,min(df_tmp$MD[pos_ym],na.rm = T))
-      }
-      rm(cy_day,pos_ym)
-    }
     rm(cy_mon)
-    df_season = df_season[-1,]
-    df_season = data.frame('TIME' = doy,
-                           'EC' = df_season$EC,
-                           'MD' = df_season$MD,
-                           'EC_max' = max_ec,
-                           'EC_min' = min_ec,
-                           'MD_max' = max_md,
-                           'MD_min' = min_md
-    )
-    rm(df_tmp,doy,min_md,max_md,min_ec,max_ec)
     
-    df_season = removeInf(df_season)
+    pos_year = which(year(TIME2) == cy_year) 
+    df_plot_yy = rbind(df_plot_yy,colSums2(df_tmp[pos_year,]))
     
-    # calcolo i valori per il plot seasonal monthly
-    df_tmp = df_plot_mm
-    df_season_mm = df_tmp[1,]
-    max_ec = c()
-    min_ec = c()
-    max_md = c()
-    min_md = c()
-    for (cy_mon in seq(1,12)) {
-      pos_ym = which(df_tmp$MONTH == cy_mon)
-      if ( length(pos_ym) > 0 ) {
-        df_season_mm = rbind(df_season_mm,
-                             colMeans(df_tmp[pos_ym,],na.rm = T))
-        
-        max_ec = c(max_ec,max(df_tmp$EC[pos_ym],na.rm = T))
-        min_ec = c(min_ec,min(df_tmp$EC[pos_ym],na.rm = T))
-        max_md = c(max_md,max(df_tmp$MD[pos_ym],na.rm = T))
-        min_md = c(min_md,min(df_tmp$MD[pos_ym],na.rm = T))
-      }
+    rm(pos_year)
+  }
+  rm(cy_year)
+  
+  df_plot_yy = df_plot_yy[-1,]
+  df_plot_mm = df_plot_mm[-1,]
+  df_plot_yy$YEAR = unique_year
+  df_plot_mm$YEAR = year_mon
+  df_plot_mm$MONTH = month
+  rm(TIME2,df_tmp,month,year_mon,unique_year)
+  
+  # sincronizzo in base ai NA
+  TIME2 = df_plot_yy$YEAR
+  for (cy_ck in seq(1,length(df_plot_yy)) ) {
+    pos_na = which(is.na(df_plot_yy[,cy_ck]) == 1)
+    if ( length(pos_na) > 0 ) {
+      df_plot_yy[pos_na,] = NA
     }
-    rm(cy_mon,pos_ym)
-    df_season_mm = df_season_mm[-1,]
-    df_season_mm$EC_max = max_ec
-    df_season_mm$EC_min = min_ec
-    df_season_mm$MD_max = max_md
-    df_season_mm$MD_min = min_md
-    rm(df_tmp,min_md,max_md,min_ec,max_ec)
+    rm(pos_na)
+  }
+  rm(cy_ck)
+  df_plot_yy$YEAR = TIME2
+  rm(TIME2)
+  
+  # sincronizzo in base ai NA
+  TIME2 = df_plot_mm$YEAR
+  TIME3 = df_plot_mm$MONTH
+  for (cy_ck in seq(1,length(df_plot_mm)) ) {
+    pos_na = which(is.na(df_plot_mm[,cy_ck]) == 1)
+    if ( length(pos_na) > 0 ) {
+      df_plot_mm[pos_na,] = NA
+    }
+    rm(pos_na)
+  }
+  df_plot_mm$YEAR = TIME2
+  df_plot_mm$MONTH = TIME3
+  rm(TIME2,TIME3,cy_ck)
+  
+  # calcolo i valori per il plot seasonal daily (df_season) ----
+  df_tmp = df_plot
+  df_tmp = df_tmp[,-1*grep('TIME',colnames(df_tmp))]
+  df_tmp = df_tmp[,-1*grep('col_var',colnames(df_tmp))]
+  df_season = df_tmp[1,]
+  doy = c()
+  max_ec = c()
+  min_ec = c()
+  max_md = c()
+  min_md = c()
+  for (cy_mon in seq(1,12)) {
+    for (cy_day in seq(1,31)) {
+      pos_ym = which(month(df_plot$TIME) == cy_mon &
+                       day(df_plot$TIME) == cy_day)
+      if ( length(pos_ym) == 0 ) {
+        next
+      }
+      df_season = rbind(df_season,
+                        colMeans(df_tmp[pos_ym,],na.rm = T))
+      doy = c(doy,length(doy)+1)
+      max_ec = c(max_ec,max(df_tmp$EC[pos_ym],na.rm = T))
+      min_ec = c(min_ec,min(df_tmp$EC[pos_ym],na.rm = T))
+      max_md = c(max_md,max(df_tmp$MD[pos_ym],na.rm = T))
+      min_md = c(min_md,min(df_tmp$MD[pos_ym],na.rm = T))
+    }
+    rm(cy_day,pos_ym)
+  }
+  rm(cy_mon)
+  df_season = df_season[-1,]
+  df_season = data.frame('TIME' = doy,
+                         'EC' = df_season$EC,
+                         'MD' = df_season$MD,
+                         'EC_max' = max_ec,
+                         'EC_min' = min_ec,
+                         'MD_max' = max_md,
+                         'MD_min' = min_md
+  )
+  rm(df_tmp,doy,min_md,max_md,min_ec,max_ec)
+  
+  df_season = removeInf(df_season)
+  
+  
+  
+  # calcolo i valori per il plot seasonal monthly (df_season_mm) ----
+  df_tmp = df_plot_mm
+  df_season_mm = df_tmp[1,]
+  max_ec = c()
+  min_ec = c()
+  max_md = c()
+  min_md = c()
+  for (cy_mon in seq(1,12)) {
+    pos_ym = which(df_tmp$MONTH == cy_mon)
+    if ( length(pos_ym) > 0 ) {
+      df_season_mm = rbind(df_season_mm,
+                           colMeans(df_tmp[pos_ym,],na.rm = T))
+      
+      max_ec = c(max_ec,max(df_tmp$EC[pos_ym],na.rm = T))
+      min_ec = c(min_ec,min(df_tmp$EC[pos_ym],na.rm = T))
+      max_md = c(max_md,max(df_tmp$MD[pos_ym],na.rm = T))
+      min_md = c(min_md,min(df_tmp$MD[pos_ym],na.rm = T))
+    }
+  }
+  rm(cy_mon,pos_ym)
+  df_season_mm = df_season_mm[-1,]
+  df_season_mm$EC_max = max_ec
+  df_season_mm$EC_min = min_ec
+  df_season_mm$MD_max = max_md
+  df_season_mm$MD_min = min_md
+  rm(df_tmp,min_md,max_md,min_ec,max_ec)
+  
+  df_season_mm = removeInf(df_season_mm)
+  
+  # calcolo l'anno medio eddy e calcolo le differenze tra questi valori e tutti gli altri (df_plot_yy,df_plot_bar) ----
+  df_plot_yy$anom_ec = df_plot_yy$EC - mean(df_plot_yy$EC,na.rm = T)
+  df_plot_yy$anom_md = df_plot_yy$MD - mean(df_plot_yy$MD,na.rm = T)
+  
+  df_plot_bar = data.frame('TIME' = c(df_plot_yy$YEAR,df_plot_yy$YEAR),
+                           'anom' = c(df_plot_yy$anom_ec,df_plot_yy$anom_md),
+                           'tipo' = c(rep('EC',length(df_plot_yy$anom_ec)),
+                                      rep(levels(df_plot$col_var),length(df_plot_yy$anom_md))),
+                           'col_var' = y_lab
+  )
+  
+  df_season$col_var = df_mod2$filename2[1]
+  # salvo tutti i risultati ----
+  if ( exists('df_plot_yy_tot') ) {
     
-    df_season_mm = removeInf(df_season_mm)
+    df_plot_tot = rbind(df_plot_tot,df_plot)
     
-    # calcolo l'anno medio eddy e calcolo le differenze tra questi valori e tutti gli altri
-    df_plot_yy$anom_ec = df_plot_yy$EC - mean(df_plot_yy$EC,na.rm = T)
-    df_plot_yy$anom_md = df_plot_yy$MD - mean(df_plot_yy$MD,na.rm = T)
-    df_plot_bar = data.frame('TIME' = c(df_plot_yy$YEAR,df_plot_yy$YEAR),
-                             'anom' = c(df_plot_yy$anom_ec,df_plot_yy$anom_md),
-                             'tipo' = c(rep('EC',length(df_plot_yy$anom_ec)),
-                                        rep('MD',length(df_plot_yy$anom_md)))
-    )
+    df_tmp1 = cbind(df_plot_yy[,c('YEAR','EC','EC_qc','EC_max','EC_min','anom_ec')],rep(y_lab,length(df_plot_yy[,1])),rep('EC',length(df_plot_yy[,1])))
+    colnames(df_tmp1) = c('YEAR','v1','v1_qc','v1_max','v1_min','anom_v1','col_var','filename2')
+    df_tmp = df_plot_yy[,c('YEAR','MD')]
+    df_tmp$EC_qc = NA
+    df_tmp$EC_max = NA
+    df_tmp$EC_min = NA
+    df_tmp$anom_md = df_plot_yy[,c('anom_md')]
+    df_tmp$col_var = rep(y_lab,length(df_plot_yy[,1]))
+    df_tmp$filename2 = rep(rep(levels(df_plot$col_var),length(df_plot_yy[,1])))
+    colnames(df_tmp) = c('YEAR','v1','v1_qc','v1_max','v1_min','anom_v1','col_var','filename2')
+    df_plot_yy_tot = rbind(df_plot_yy_tot,df_tmp1,df_tmp)
+    rm(df_tmp,df_tmp1)
     
-    # # salvo i dataset delle serie temporali(anno medio)
-    # write.csv(df_season,paste0(dir_out,
-    #        as.character(lista_siti$nome_fluxnet[cy_s]),"_",
-    #        var_eddy[var_md == y_lab],"_valid_season_DD.csv"),quote = F,row.names = F)
-    # write.csv(df_season_mm,paste0(dir_out,
-    #        as.character(lista_siti$nome_fluxnet[cy_s]),"_",
-    #        var_eddy[var_md == y_lab],"_valid_season_MM.csv"),quote = F,row.names = F)
-    # write.csv(df_plot,paste0(dir_out,
-    #        as.character(lista_siti$nome_fluxnet[cy_s]),"_",
-    #        var_eddy[var_md == y_lab],"_valid_DD.csv"),quote = F,row.names = F)
-    # write.csv(df_plot_mm,paste0(dir_out,
-    #         as.character(lista_siti$nome_fluxnet[cy_s]),"_",
-    #         var_eddy[var_md == y_lab],"_valid_MM.csv"),quote = F,row.names = F)
-    # write.csv(df_plot_yy,paste0(dir_out,
-    #         as.character(lista_siti$nome_fluxnet[cy_s]),"_",
-    #         var_eddy[var_md == y_lab],"_valid_YY.csv"),quote = F,row.names = F)
+    df_tmp1 = cbind(df_plot_mm[,c('YEAR','MONTH','EC','EC_qc','EC_max','EC_min')],rep(y_lab,length(df_plot_mm[,1])),rep('EC',length(df_plot_mm[,1])))
+    colnames(df_tmp1) = c('YEAR','MONTH','v1','v1_qc','v1_max','v1_min','col_var','filename2')
+    df_tmp = df_plot_mm[,c('YEAR','MONTH','MD')]
+    df_tmp$EC_qc = NA
+    df_tmp$EC_max = NA
+    df_tmp$EC_min = NA
+    df_tmp$col_var = rep(y_lab,length(df_plot_mm[,1]))
+    df_tmp$filename2 = rep(rep(levels(df_plot$col_var),length(df_plot_mm[,1])))
+    colnames(df_tmp) = c('YEAR','MONTH','v1','v1_qc','v1_max','v1_min','col_var','filename2')
+    df_plot_mm_tot = rbind(df_plot_mm_tot,df_tmp1,df_tmp)
+    rm(df_tmp,df_tmp1)
+    
+    df_season_tot = rbind(df_season_tot,df_season)
+    # df_tmp1 = cbind(df_season[,c('TIME','EC','EC_max','EC_min')],rep(y_lab,length(df_season[,1])),rep('EC',length(df_season[,1])))
+    # colnames(df_tmp1) = c('TIME','v1','v1_max','v1_min','col_var','filename2')
+    # df_tmp = df_season[,c('TIME','MD','MD_max','MD_min')]
+    # df_tmp$col_var = rep(y_lab,length(df_season[,1]))
+    # df_tmp$filename2 = rep(rep(levels(df_plot$col_var),length(df_season[,1])))
+    # colnames(df_tmp) = c('TIME','v1','v1_max','v1_min','col_var','filename2')
+    # df_season_tot = rbind(df_season_tot,df_tmp1,df_tmp)
+    # rm(df_tmp,df_tmp1)
     # 
-    # plot di validazione serie temporali
     
-    # plot seasonal (anno medio)
-    anno_medio = ggplot(df_season) +
-      geom_ribbon(aes(x = TIME,ymax = EC_max, ymin = EC_min,fill = 'EC'),alpha = 0.4) +
-      geom_ribbon(aes(x = TIME,ymax = MD_max, ymin = MD_min,fill = 'MD'),alpha = 0.4) +
-      geom_line(aes(x = TIME,y = EC,color = 'EC')) +
-      geom_line(aes(x = TIME,y = MD,color = 'MD')) +
-      scale_color_manual(labels = c('EC' = var_eddy[cyv],'MD' = as.character(df_mod2$filename2[1])), values = c('red','blue')) +
-      scale_fill_manual(labels = c('EC' = var_eddy[cyv],'MD' = as.character(df_mod2$filename2[1])), values = c('red', 'blue')) +
-      theme(legend.title = element_blank(),axis.title.x = element_blank(),
-            legend.position="top") +
-      ggtitle(paste(nome_sito,'Daily')) +
-      ylab(y_lab)
+    df_season_mm_tot = rbind(df_season_mm_tot,df_season_mm)
     
-    # plot seasonal (mese medio)
-    mese_medio = ggplot(df_season_mm) +
-      geom_ribbon(aes(x = MONTH,ymax = EC_max, ymin = EC_min,fill = 'EC'),alpha = 0.4) +
-      geom_ribbon(aes(x = MONTH,ymax = MD_max, ymin = MD_min,fill = 'MD'),alpha = 0.4) +
-      geom_line(aes(x = MONTH,y = EC,color = 'EC')) +
-      geom_line(aes(x = MONTH,y = MD,color = 'MD')) +
-      scale_color_manual(labels = c('EC' = var_eddy[cyv],'MD' = as.character(df_mod2$filename2[1])), values = c('red','blue')) +
-      scale_fill_manual(labels = c('EC' = var_eddy[cyv],'MD' = as.character(df_mod2$filename2[1])), values = c('red', 'blue')) +
-      scale_x_continuous(breaks = seq(1,12),labels=c("J","F","M","A","M","J","J","A","S",'O','N','D')) +
-      theme(legend.title = element_blank(),axis.title.x = element_blank(),
-            legend.position="top") +
-      ggtitle(paste(nome_sito,'Monthly')) +
-      ylab(y_lab)
+    # df_tmp1 = cbind(df_season_mm[,c('YEAR','MONTH','EC','EC_qc','EC_max','EC_min')],rep(y_lab,length(df_season_mm[,1])),rep('EC',length(df_season_mm[,1])))
+    # colnames(df_tmp1) = c('YEAR','MONTH','v1','v1_qc','v1_max','v1_min','col_var','filename2')
+    # df_tmp = df_season_mm[,c('YEAR','MONTH','MD')]
+    # df_tmp$EC_qc = NA
+    # df_tmp$EC_max = df_season_mm$MD_max
+    # df_tmp$EC_min = df_season_mm$MD_min
+    # df_tmp$col_var = rep(y_lab,length(df_season_mm[,1]))
+    # df_tmp$filename2 = rep(rep(levels(df_plot$col_var),length(df_season_mm[,1])))
+    # colnames(df_tmp) = c('YEAR','MONTH','v1','v1_qc','v1_max','v1_min','col_var','filename2')
+    # df_season_mm_tot = rbind(df_season_mm_tot,df_tmp1,df_tmp)
+    # rm(df_tmp,df_tmp1)
     
-    # plot anomalie annuali 
-    anom = ggplot(df_plot_bar) +
-      geom_bar( aes(x=TIME, y=anom, fill = tipo),stat="identity",
-                position=position_dodge()) +
-      scale_color_manual(labels = c('EC' = var_eddy[cyv],'MD' = as.character(df_mod2$filename2[1])), values = c('red','blue')) +
-      scale_fill_manual(labels = c('EC' = var_eddy[cyv],'MD' = as.character(df_mod2$filename2[1])), values = c('red', 'blue')) +
-      theme(legend.title = element_blank(),axis.title.x = element_blank(),
-            legend.position="top") +
-      ggtitle(paste(nome_sito,'Annual')) +
-      ylab(y_lab)
+    df_plot_bar_tot = rbind(df_plot_bar_tot,df_plot_bar)
     
-    # plot delle serie temporali
-    serie_time = ggplot(df_plot) +
-      geom_ribbon(aes(x = TIME,ymax = EC_max, ymin = EC_min),alpha = 0.4) +
-      geom_point(aes(x = TIME,y = EC,color = 'EC')) +
-      geom_point(aes(x = TIME,y = MD,color = 'MD'),shape = 1) +
-      scale_color_manual(values = c('EC' = 'red', 'MD' = 'blue')) +
-      theme(legend.title = element_blank(),axis.title.x = element_blank(),
-            legend.position="none") +
-      # ggtitle(paste(as.character(lista_siti$nome_fluxnet[cy_s]),'Daily')) +
-      ylab(y_lab)
+  } else {
     
-    df_plot_mm$TIME = ymd((df_plot_mm$YEAR*10000) + (df_plot_mm$MONTH*100) +1)
+    df_plot_tot = df_plot
     
-    serie_time_mm = ggplot(df_plot_mm) +
-      geom_ribbon(aes(x = TIME,ymax = EC_max, ymin = EC_min),alpha = 0.4) +
-      geom_point(aes(x = TIME,y = EC,color = 'EC')) +
-      geom_point(aes(x = TIME,y = MD,color = 'MD')) +
-      scale_color_manual(values = c('EC' = 'red', 'MD' = 'blue')) +
-      theme(legend.title = element_blank(),axis.title.x = element_blank(),
-            legend.position="none") +
-      scale_x_date(labels = date_format("%m-%Y")) +
-      # ggtitle(paste(as.character(lista_siti$nome_fluxnet[cy_s]),'Annual')) +
-      ylab(y_lab)
+    df_tmp1 = cbind(df_plot_yy[,c('YEAR','EC','EC_qc','EC_max','EC_min','anom_ec')],rep(y_lab,length(df_plot_yy[,1])),rep('EC',length(df_plot_yy[,1])))
+    colnames(df_tmp1) = c('YEAR','v1','v1_qc','v1_max','v1_min','anom_v1','col_var','filename2')
+    df_tmp = df_plot_yy[,c('YEAR','MD')]
+    df_tmp$EC_qc = NA
+    df_tmp$EC_max = NA
+    df_tmp$EC_min = NA
+    df_tmp$anom_md = df_plot_yy[,c('anom_md')]
+    df_tmp$col_var = rep(y_lab,length(df_plot_yy[,1]))
+    df_tmp$filename2 = rep(rep(levels(df_plot$col_var),length(df_plot_yy[,1])))
+    colnames(df_tmp) = c('YEAR','v1','v1_qc','v1_max','v1_min','anom_v1','col_var','filename2')
+    df_plot_yy_tot = rbind(df_tmp1,df_tmp)
+    rm(df_tmp,df_tmp1)
     
+    df_tmp1 = cbind(df_plot_mm[,c('YEAR','MONTH','EC','EC_qc','EC_max','EC_min')],rep(y_lab,length(df_plot_mm[,1])),rep('EC',length(df_plot_mm[,1])))
+    colnames(df_tmp1) = c('YEAR','MONTH','v1','v1_qc','v1_max','v1_min','col_var','filename2')
+    df_tmp = df_plot_mm[,c('YEAR','MONTH','MD')]
+    df_tmp$EC_qc = NA
+    df_tmp$EC_max = NA
+    df_tmp$EC_min = NA
+    df_tmp$col_var = rep(y_lab,length(df_plot_mm[,1]))
+    df_tmp$filename2 = rep(rep(levels(df_plot$col_var),length(df_plot_mm[,1])))
+    colnames(df_tmp) = c('YEAR','MONTH','v1','v1_qc','v1_max','v1_min','col_var','filename2')
+    df_plot_mm_tot = rbind(df_tmp1,df_tmp)
+    rm(df_tmp,df_tmp1)
+    
+    
+    df_season_tot = df_season
+    # df_tmp1 = cbind(df_season[,c('TIME','EC','EC_max','EC_min')],rep(y_lab,length(df_season[,1])),rep('EC',length(df_season[,1])))
+    # colnames(df_tmp1) = c('TIME','v1','v1_max','v1_min','col_var','filename2')
+    # df_tmp = df_season[,c('TIME','MD','MD_max','MD_min')]
+    # df_tmp$col_var = rep(y_lab,length(df_season[,1]))
+    # df_tmp$filename2 = rep(rep(levels(df_plot$col_var),length(df_season[,1])))
+    # colnames(df_tmp) = c('TIME','v1','v1_max','v1_min','col_var','filename2')
+    # df_season_tot = rbind(df_tmp1,df_tmp)
+    # rm(df_tmp,df_tmp1)
+    
+    df_season_mm_tot = df_season_mm
+    # df_tmp1 = cbind(df_season_mm[,c('YEAR','MONTH','EC','EC_qc','EC_max','EC_min')],rep(y_lab,length(df_season_mm[,1])),rep('EC',length(df_season_mm[,1])))
+    # colnames(df_tmp1) = c('YEAR','MONTH','v1','v1_qc','v1_max','v1_min','col_var','filename2')
+    # df_tmp = df_season_mm[,c('YEAR','MONTH','MD')]
+    # df_tmp$EC_qc = NA
+    # df_tmp$EC_max = df_season_mm$MD_max
+    # df_tmp$EC_min = df_season_mm$MD_min
+    # df_tmp$col_var = rep(y_lab,length(df_season_mm[,1]))
+    # df_tmp$filename2 = rep(rep(levels(df_plot$col_var),length(df_season_mm[,1])))
+    # colnames(df_tmp) = c('YEAR','MONTH','v1','v1_qc','v1_max','v1_min','col_var','filename2')
+    # df_season_mm_tot = rbind(df_tmp1,df_tmp)
+    # rm(df_tmp,df_tmp1)
+    
+    df_plot_bar_tot = df_plot_bar
+
+  }
+  
+  }
+  rm(file_md)
+ 
+  # plot seasonal (anno medio)
+  df_season_tot1 = df_season_tot
+  df_season_tot1 = df_season_tot1[which(as.character(df_season_tot1$col_var) == y_lab),]
+  anno_medio = ggplot(df_season_tot1) +
+    geom_ribbon(aes(x = TIME,ymax = v1_max, ymin = v1_min,fill = filename2),alpha = 0.4) +
+    geom_line(aes(x = TIME,y = v1,color = filename2)) +
+    theme(legend.title = element_blank(),axis.title.x = element_blank(),
+          legend.position="top") +
+    ggtitle(paste(nome_sito,'Daily')) +
+    ylab(y_lab)
+  anno_medio
+  
+  # plot seasonal (mese medio)
+  df_season_mm_tot1 = df_season_mm_tot
+  df_season_mm_tot1 = df_season_mm_tot1[which(as.character(df_season_mm_tot1$col_var) == y_lab),]
+  mese_medio = ggplot(df_season_mm_tot1) +
+    geom_ribbon(aes(x = MONTH,ymax = v1_max, ymin = v1_min,fill = filename2),alpha = 0.4) +
+    geom_line(aes(x = MONTH,y = v1,color = filename2)) +
+    scale_x_continuous(breaks = seq(1,12),labels=c("J","F","M","A","M","J","J","A","S",'O','N','D')) +
+    theme(legend.title = element_blank(),axis.title.x = element_blank(),
+          legend.position="top") +
+    ggtitle(paste(nome_sito,'Monthly')) +
+    ylab(y_lab)
+  
+  # plot anomalie annuali
+  df_plot_bar_tot1 = df_plot_bar_tot
+  df_plot_bar_tot1 = df_plot_bar_tot1[which(as.character(df_plot_bar_tot1$col_var) == y_lab),]
+  anom = ggplot(df_plot_bar_tot1) +
+    geom_bar( aes(x=TIME, y=anom, fill = tipo),stat="identity",
+              position=position_dodge()) +
+    geom_hline(yintercept = 0) +
+    theme(legend.title = element_blank(),axis.title.x = element_blank(),
+          legend.position="top") +
+    ggtitle(paste(nome_sito,'Annual')) +
+    ylab(y_lab)
+  
+  # plot delle serie temporali
+
+  serie_time = ggplot(df_plot) +
+    geom_ribbon(aes(x = TIME,ymax = EC_max, ymin = EC_min),alpha = 0.4) +
+    geom_point(aes(x = TIME,y = EC,color = 'EC')) +
+    geom_point(aes(x = TIME,y = MD,color = 'MD'),shape = 1) +
+    scale_color_manual(values = c('EC' = 'red', 'MD' = 'blue')) +
+    theme(legend.title = element_blank(),axis.title.x = element_blank(),
+          legend.position="none") +
+    # ggtitle(paste(as.character(lista_siti$nome_fluxnet[cy_s]),'Daily')) +
+    ylab(y_lab)
+
+  df_plot_mm$TIME = ymd((df_plot_mm$YEAR*10000) + (df_plot_mm$MONTH*100) +1)
+
+  serie_time_mm = ggplot(df_plot_mm) +
+    geom_ribbon(aes(x = TIME,ymax = EC_max, ymin = EC_min),alpha = 0.4) +
+    geom_point(aes(x = TIME,y = EC,color = 'EC')) +
+    geom_point(aes(x = TIME,y = MD,color = 'MD')) +
+    scale_color_manual(values = c('EC' = 'red', 'MD' = 'blue')) +
+    theme(legend.title = element_blank(),axis.title.x = element_blank(),
+          legend.position="none") +
+    scale_x_date(labels = date_format("%m-%Y")) +
+    # ggtitle(paste(as.character(lista_siti$nome_fluxnet[cy_s]),'Annual')) +
+    ylab(y_lab)
+
     serie_time_yy = ggplot(df_plot_yy) +
       geom_ribbon(aes(x = YEAR,ymax = EC_max, ymin = EC_min),alpha = 0.4) +
       geom_point(aes(x = YEAR,y = EC,color = 'EC')) +
@@ -931,147 +494,605 @@ flux_validation <- function(ls_file_md,
       # ggtitle(paste(as.character(lista_siti$nome_fluxnet[cy_s]),'Annual')) +
       ylab(y_lab)
     
-    # plot di validazione regressioni
-    nr_dati = length(df_plot[,1])
-    nr_dati_mm = length(df_plot_mm[,1])
-    nr_dati_yy = length(df_plot_yy[,1])
-    
-    # sincronizzo in base ai NA
-    for (cy_ck in seq(1,length(df_plot_yy)) ) {
-      pos_na = which(is.na(df_plot_yy[,cy_ck]) == 1)
-      if ( length(pos_na) > 0 ) {
-        df_plot_yy = df_plot_yy[-1*pos_na,]
-      }
-      rm(pos_na)
-    }
-    rm(cy_ck)
-    # sincronizzo in base ai NA
-    for (cy_ck in seq(1,length(df_plot_mm)) ) {
-      pos_na = which(is.na(df_plot_mm[,cy_ck]) == 1)
-      if ( length(pos_na) > 0 ) {
-        df_plot_mm = df_plot_mm[-1*pos_na,]
-      }
-      rm(pos_na)
-    }
-    rm(cy_ck)
-    
-    # sincronizzo in base ai NA
-    for (cy_ck in seq(1,length(df_plot)) ) {
-      pos_na = which(is.na(df_plot[,cy_ck]) == 1)
-      if ( length(pos_na) > 0 ) {
-        df_plot = df_plot[-1*pos_na,]
-      }
-      rm(pos_na)
-    }
-    rm(cy_ck)
-    
-    # regressione lineare daily
-    model_lm <- lm(MD ~ EC, data = df_plot)
-    
-    df_plot$LM = model_lm$fitted.values
-    
-    text_df = data.frame('pos_x' = min(df_plot$EC),'pos_y' = max(df_plot$LM)*0.99,
-                         'testo' = 
-                           sprintf("MD = %.2f EC %+.2f ; r2 = %.2f",
-                                   coef(model_lm)[2],
-                                   coef(model_lm)[1],summary.lm(model_lm)$r.squared)
-    )
-    p1 = 
-      ggplot() +
-      geom_point(data = df_plot,aes(x = EC,y = MD),size=0.5) +
-      ggtitle(sprintf('MD: mean = %.2f gC m-2 day-1 (sd: %.2f) (n = %.0f%%)\nEC: mean = %.2f gC m-2 d-1 (sd: %.2f) (n = %.0f%%)',
-                      mean(df_plot$MD),sd(df_plot$MD),100*(length(df_plot$MD)/nr_dati),
-                      mean(df_plot$EC),sd(df_plot$EC),100*(length(df_plot$EC)/nr_dati)),
-              subtitle = sprintf('RMSE: %.2f; %s',sqrt(mean((df_plot$EC - df_plot$MD)^2)),text_df$testo)
-      )+
-      geom_line(data = df_plot,aes(x = EC,y = LM),color='red',size = 1) +
-      # geom_text(data = text_df,aes(x = pos_x, y = pos_y, label = testo),hjust=-0.01) +
-      xlab('Measured') +
-      ylab('Simulated') +
-      theme(plot.title = element_text(size = 10,hjust = 0.5),
-            plot.subtitle = element_text(size=9,hjust=0.5),
-            axis.title = element_text(size = 9),
-            axis.text = element_text(size=9),
-            legend.title = element_blank(),legend.position="none",
-            legend.direction="horizontal")
-    
-    # regressione lineare monthly
-    model_lm_mm <- lm(MD ~ EC, data = df_plot_mm)
-    
-    df_plot_mm$LM = model_lm_mm$fitted.values
-    text_df = data.frame('pos_x' = min(df_plot_mm$EC),'pos_y' = max(df_plot_mm$LM)*0.99,
-                         'testo' = 
-                           sprintf("MD = %.2f EC %+.2f ; r2 = %.2f",
-                                   coef(model_lm_mm)[2],
-                                   coef(model_lm_mm)[1],summary.lm(model_lm_mm)$r.squared)
-    )
-    p1_mm = 
-      ggplot() +
-      geom_point(data = df_plot_mm,aes(x = EC,y = MD),size=0.5) +
-      ggtitle(sprintf('MD: mean = %.2f gC m-2 month-1 (sd: %.2f) (n = %.0f%%)\nEC: mean = %.2f gC m-2 d-1 (sd: %.2f) (n = %.0f%%)',
-                      mean(df_plot_mm$MD),sd(df_plot_mm$MD),100*(length(df_plot_mm$MD)/nr_dati_mm),
-                      mean(df_plot_mm$EC),sd(df_plot_mm$EC),100*(length(df_plot_mm$EC)/nr_dati_mm)),
-              subtitle = sprintf('RMSE: %.2f; %s',sqrt(mean((df_plot_mm$EC - df_plot_mm$MD)^2)),text_df$testo)
-      )+
-      geom_line(data = df_plot_mm,aes(x = EC,y = LM),color='red',size = 1) +
-      # geom_text(data = text_df,aes(x = pos_x, y = pos_y, label = testo),hjust=-0.01) +
-      xlab('Measured') +
-      ylab('Simulated') +
-      theme(plot.title = element_text(size = 10,hjust = 0.5),
-            plot.subtitle = element_text(size=9,hjust=0.5),
-            axis.title = element_text(size = 9),
-            axis.text = element_text(size=9),
-            legend.title = element_blank(),legend.position="none",
-            legend.direction="horizontal")
-    
-    # regressione lineare annual
-    model_lm_yy <- lm(MD ~ EC, data = df_plot_yy)
-    
-    df_plot_yy$LM = model_lm_yy$fitted.values
-    
-    text_df = data.frame('pos_x' = min(df_plot_yy$EC),'pos_y' = max(df_plot_yy$LM)*1.04,
-                         'testo' = 
-                           sprintf("MD = %.2f EC %+.2f ; r2 = %.2f",
-                                   coef(model_lm_yy)[2],
-                                   coef(model_lm_yy)[1],summary.lm(model_lm_yy)$r.squared)
-    )
-    p1_yy = ggplot(df_plot_yy) +
-      geom_point(aes(x = EC,y = MD),size=0.5) +
-      ggtitle(sprintf('MD: mean = %.2f gC m-2 year-1 (sd: %.2f) (n = %.0f%%)\nEC: mean = %.2f gC m-2 d-1 (sd: %.2f) (n = %.0f%%)',
-                      mean(df_plot_yy$MD),sd(df_plot_yy$MD),100*(length(df_plot_yy$MD)/nr_dati_yy),
-                      mean(df_plot_yy$EC),sd(df_plot_yy$EC),100*(length(df_plot_yy$EC)/nr_dati_yy)
-      ),subtitle = sprintf('RMSE: %.2f; %s',
-                           sqrt(mean((df_plot_yy$EC - df_plot_yy$MD)^2)),text_df$testo))+
-      geom_line(aes(x = EC,y = LM),color='red',size = 1) +
-      # geom_text(data = text_df,aes(x = pos_x, y = pos_y, label = testo),hjust=-0.01) +
-      xlab('Measured') +
-      ylab('Simulated') +
-      theme(plot.title = element_text(size = 10,hjust = 0.5),
-            plot.subtitle = element_text(size=9,hjust=0.5),
-            axis.title = element_text(size = 9),
-            axis.text = element_text(size=9),
-            legend.title = element_blank(),legend.position="none",
-            legend.direction="horizontal")
-    
-    mp_t = plot_grid(plotlist = list(anno_medio,mese_medio,anom,
-                                     serie_time,serie_time_mm,serie_time_yy,
-                                     p1,p1_mm,p1_yy),
-                     ncol = 3,align = 'v',labels = 'AUTO')
-    
-    lista_plot[[length(lista_plot)+1]] = mp_t
-    
-    rm(df_plot_yy,df_plot,y_lab,p1,serie_time,p1_yy,serie_time_yy,mp_t)
-    rm(model_lm,model_lm_yy,text_df,df_plot_bar)
-  }
-  rm(cyv,TIME,df_ec,df_mod2)
-
-  return(lista_plot)
-    
+  # plot di validazione regressioni DAILY
+  lista_p_lr_dd = plot_multi_lm(df_plot[,c('EC','MD','col_var')],yvar_name = paste(y_lab,'MD'),xvar_name = paste(y_lab,'EC'))
+  # plot di validazione regressioni MONTHLY
+  lista_p_lr_mm = plot_multi_lm(df_plot_mm_tot[,c('EC','MD','filename2')],yvar_name = paste(y_lab,'MD'),xvar_name = paste(y_lab,'EC'))
+    plot_grid(plotlist = lista_p_lr_mm,ncol = 2)
+  
+  
 }
+rm(cyv)
+  
+    
+    
+    
+  
+  }#end function
 
-#   }
-#   rm(cy_s,var_eddy_unc_max,var_eddy_unc_min)
-#   rm(var_eddy,var_eddy_qc)
-#   
+ 
+#   #     
+#   #     
+#   #     
+#   #     # plot di validazione regressioni
+#   #     nr_dati = length(df_plot[,1])
+#   #     nr_dati_mm = length(df_plot_mm[,1])
+#   #     nr_dati_yy = length(df_plot_yy[,1])
+#   #     
+#   #     # sincronizzo in base ai NA
+#   #     for (cy_ck in seq(1,length(df_plot_yy)) ) {
+#   #       pos_na = which(is.na(df_plot_yy[,cy_ck]) == 1)
+#   #       if ( length(pos_na) > 0 ) {
+#   #         df_plot_yy = df_plot_yy[-1*pos_na,]
+#   #       }
+#   #       rm(pos_na)
+#   #     }
+#   #     rm(cy_ck)
+#   #     # sincronizzo in base ai NA
+#   #     for (cy_ck in seq(1,length(df_plot_mm)) ) {
+#   #       pos_na = which(is.na(df_plot_mm[,cy_ck]) == 1)
+#   #       if ( length(pos_na) > 0 ) {
+#   #         df_plot_mm = df_plot_mm[-1*pos_na,]
+#   #       }
+#   #       rm(pos_na)
+#   #     }
+#   #     rm(cy_ck)
+#   #     
+#   #     # sincronizzo in base ai NA
+#   #     for (cy_ck in seq(1,length(df_plot)) ) {
+#   #       pos_na = which(is.na(df_plot[,cy_ck]) == 1)
+#   #       if ( length(pos_na) > 0 ) {
+#   #         df_plot = df_plot[-1*pos_na,]
+#   #       }
+#   #       rm(pos_na)
+#   #     }
+#   #     rm(cy_ck)
+#   #     
+#   #     # regressione lineare daily
+#   #     model_lm <- lm(MD ~ EC, data = df_plot)
+#   #     
+#   #     df_plot$LM = model_lm$fitted.values
+#   #     
+#   #     text_df = data.frame('pos_x' = min(df_plot$EC),'pos_y' = max(df_plot$LM)*0.99,
+#   #                          'testo' = 
+#   #                            sprintf("MD = %.2f EC %+.2f ; r2 = %.2f",
+#   #                                    coef(model_lm)[2],
+#   #                                    coef(model_lm)[1],summary.lm(model_lm)$r.squared)
+#   #     )
+#   #     p1 = 
+#   #       ggplot() +
+#   #       geom_point(data = df_plot,aes(x = EC,y = MD),size=0.5) +
+#   #       ggtitle(sprintf('MD: mean = %.2f gC m-2 day-1 (sd: %.2f) (n = %.0f%%)\nEC: mean = %.2f gC m-2 d-1 (sd: %.2f) (n = %.0f%%)',
+#   #                       mean(df_plot$MD),sd(df_plot$MD),100*(length(df_plot$MD)/nr_dati),
+#   #                       mean(df_plot$EC),sd(df_plot$EC),100*(length(df_plot$EC)/nr_dati)),
+#   #               subtitle = sprintf('RMSE: %.2f; %s',sqrt(mean((df_plot$EC - df_plot$MD)^2)),text_df$testo)
+#   #       )+
+#   #       geom_line(data = df_plot,aes(x = EC,y = LM),color='red',size = 1) +
+#   #       # geom_text(data = text_df,aes(x = pos_x, y = pos_y, label = testo),hjust=-0.01) +
+#   #       xlab('Measured') +
+#   #       ylab('Simulated') +
+#   #       theme(plot.title = element_text(size = 10,hjust = 0.5),
+#   #             plot.subtitle = element_text(size=9,hjust=0.5),
+#   #             axis.title = element_text(size = 9),
+#   #             axis.text = element_text(size=9),
+#   #             legend.title = element_blank(),legend.position="none",
+#   #             legend.direction="horizontal")
+#   #     
+#   #     # regressione lineare monthly
+#   #     model_lm_mm <- lm(MD ~ EC, data = df_plot_mm)
+#   #     
+#   #     df_plot_mm$LM = model_lm_mm$fitted.values
+#   #     text_df = data.frame('pos_x' = min(df_plot_mm$EC),'pos_y' = max(df_plot_mm$LM)*0.99,
+#   #                          'testo' = 
+#   #                            sprintf("MD = %.2f EC %+.2f ; r2 = %.2f",
+#   #                                    coef(model_lm_mm)[2],
+#   #                                    coef(model_lm_mm)[1],summary.lm(model_lm_mm)$r.squared)
+#   #     )
+#   #     p1_mm = 
+#   #       ggplot() +
+#   #       geom_point(data = df_plot_mm,aes(x = EC,y = MD),size=0.5) +
+#   #       ggtitle(sprintf('MD: mean = %.2f gC m-2 month-1 (sd: %.2f) (n = %.0f%%)\nEC: mean = %.2f gC m-2 d-1 (sd: %.2f) (n = %.0f%%)',
+#   #                       mean(df_plot_mm$MD),sd(df_plot_mm$MD),100*(length(df_plot_mm$MD)/nr_dati_mm),
+#   #                       mean(df_plot_mm$EC),sd(df_plot_mm$EC),100*(length(df_plot_mm$EC)/nr_dati_mm)),
+#   #               subtitle = sprintf('RMSE: %.2f; %s',sqrt(mean((df_plot_mm$EC - df_plot_mm$MD)^2)),text_df$testo)
+#   #       )+
+#   #       geom_line(data = df_plot_mm,aes(x = EC,y = LM),color='red',size = 1) +
+#   #       # geom_text(data = text_df,aes(x = pos_x, y = pos_y, label = testo),hjust=-0.01) +
+#   #       xlab('Measured') +
+#   #       ylab('Simulated') +
+#   #       theme(plot.title = element_text(size = 10,hjust = 0.5),
+#   #             plot.subtitle = element_text(size=9,hjust=0.5),
+#   #             axis.title = element_text(size = 9),
+#   #             axis.text = element_text(size=9),
+#   #             legend.title = element_blank(),legend.position="none",
+#   #             legend.direction="horizontal")
+#   #     
+#   #     # regressione lineare annual
+#   #     model_lm_yy <- lm(MD ~ EC, data = df_plot_yy)
+#   #     
+#   #     df_plot_yy$LM = model_lm_yy$fitted.values
+#   #     
+#   #     text_df = data.frame('pos_x' = min(df_plot_yy$EC),'pos_y' = max(df_plot_yy$LM)*1.04,
+#   #                          'testo' = 
+#   #                            sprintf("MD = %.2f EC %+.2f ; r2 = %.2f",
+#   #                                    coef(model_lm_yy)[2],
+#   #                                    coef(model_lm_yy)[1],summary.lm(model_lm_yy)$r.squared)
+#   #     )
+#   #     p1_yy = ggplot(df_plot_yy) +
+#   #       geom_point(aes(x = EC,y = MD),size=0.5) +
+#   #       ggtitle(sprintf('MD: mean = %.2f gC m-2 year-1 (sd: %.2f) (n = %.0f%%)\nEC: mean = %.2f gC m-2 d-1 (sd: %.2f) (n = %.0f%%)',
+#   #                       mean(df_plot_yy$MD),sd(df_plot_yy$MD),100*(length(df_plot_yy$MD)/nr_dati_yy),
+#   #                       mean(df_plot_yy$EC),sd(df_plot_yy$EC),100*(length(df_plot_yy$EC)/nr_dati_yy)
+#   #       ),subtitle = sprintf('RMSE: %.2f; %s',
+#   #                            sqrt(mean((df_plot_yy$EC - df_plot_yy$MD)^2)),text_df$testo))+
+#   #       geom_line(aes(x = EC,y = LM),color='red',size = 1) +
+#   #       # geom_text(data = text_df,aes(x = pos_x, y = pos_y, label = testo),hjust=-0.01) +
+#   #       xlab('Measured') +
+#   #       ylab('Simulated') +
+#   #       theme(plot.title = element_text(size = 10,hjust = 0.5),
+#   #             plot.subtitle = element_text(size=9,hjust=0.5),
+#   #             axis.title = element_text(size = 9),
+#   #             axis.text = element_text(size=9),
+#   #             legend.title = element_blank(),legend.position="none",
+#   #             legend.direction="horizontal")
+#   #     
+#   #     mp_t = plot_grid(plotlist = list(anno_medio,mese_medio,anom,
+#   #                                      serie_time,serie_time_mm,serie_time_yy,
+#   #                                      p1,p1_mm,p1_yy),
+#   #                      ncol = 3,align = 'v',labels = 'AUTO')
+#   #     
+#   #     lista_plot[[length(lista_plot)+1]] = mp_t
+#   #     
+#   #     rm(df_plot_yy,df_plot,y_lab,p1,serie_time,p1_yy,serie_time_yy,mp_t)
+#   #     rm(model_lm,model_lm_yy,text_df,df_plot_bar)
+#   #   }
+#   #   rm(cyv,TIME,df_ec,df_mod2)
+#   #   
+#   # # for (file_md in ls_file_md) {
+#   # #   cat(sprintf('import file: %s\n',file_md))
+#   # #   df_mod2 = read.csv(file_md,comment.char = '#')
+#   # #   cat(sprintf('import file: %s OK\n',file_md))
+#   # #   df_mod2$filename = basename(file_md)
+#   # #   filename2 = c()
+#   # #   for ( cy_fn in df_mod2$filename ) {
+#   # #     filename2 = c(filename2,
+#   # #                   unlist(strsplit(cy_fn,'_'))[1]
+#   # #     )
+#   # #   }
+#   # #   df_mod2$filename2 = filename2
+#   # #   rm(filename2,cy_fn)
+#   #   
+#   #   if ( exists('df_mod_t') ) {
+#   #     df_mod_t = rbind(df_mod_t,df_mod2)
+#   #     df_ec = rbind(df_ec,df_ec1)
+#   #   } else {
+#   #     df_mod_t = df_mod2
+#   #     df_ec = df_ec1
+#   #   }
+#   #   rm(df_mod2)
+#   # }
+#   # rm(file_md)
+#   # 
+#   # df_mod2 = df_mod_t
+#   # 
+#   # # validazione 
+#   # lista_plot = list()
+#   # 
+#   # for (cyv in seq(1,length(var_md)) ) {
+#   #   
+#   #   # creo i df dei dati
+#   #   df_plot = data.frame(
+#   #     'TIME' = TIME,
+#   #     'YEAR' = year(TIME),
+#   #     'MD' = df_mod2[,var_md[cyv]],
+#   #     'EC' = df_ec[,var_eddy[cyv]],
+#   #     'EC_qc' = df_ec[,var_eddy_qc[cyv]],
+#   #     'EC_max' = df_ec[,var_eddy_unc_max[cyv]],
+#   #     'EC_min' = df_ec[,var_eddy_unc_min[cyv]],
+#   #     'col_var' = df_mod2$filename2
+#   #   )
+#   #   
+#   #   y_lab = var_md[cyv]
+#   #   
+#   #   # applico la soglia dei dati eddy
+#   #   TIME2 = df_plot$TIME
+#   #   pos_qc = which(df_plot$EC_qc < soglia_qc)
+#   #   if ( length(pos_qc) > 0 ) {
+#   #     df_plot[pos_qc,] = NA
+#   #   }
+#   #   df_plot$TIME = TIME2
+#   #   rm(TIME2,pos_qc)
+#   #   
+#   #   # sincronizzo in base ai NA
+#   #   TIME2 = df_plot$TIME
+#   #   for (cy_ck in seq(1,length(df_plot)) ) {
+#   #     pos_na = which(is.na(df_plot[,cy_ck]) == 1)
+#   #     if ( length(pos_na) > 0 ) {
+#   #       df_plot[pos_na,] = NA
+#   #     }
+#   #     rm(pos_na)
+#   #   }
+#   #   df_plot$TIME = TIME2
+#   #   rm(cy_ck,TIME2)
+#   #   
+#   #   # per ragioni di calcolo estraggo la colonna TIME e calcolo i valori annuali e mensili
+#   #   TIME2 = df_plot$TIME
+#   #   col_var = df_plot$col_var
+#   #   df_tmp = df_plot
+#   #   df_tmp = df_tmp[,-1*which(colnames(df_tmp) == 'TIME')]
+#   #   df_tmp = df_tmp[,-1*which(colnames(df_tmp) == 'col_var')]
+#   #   # calcolo le somme annuali e i valori max e min
+#   #   unique_year = sort(unique(year(TIME2)))
+#   #   df_plot_yy = df_tmp[1,]
+#   #   df_plot_mm = df_tmp[1,]
+#   #   month = c()
+#   #   year_mon = c()
+#   #   for (cy_year in unique_year) {
+#   #     for (cy_mon in seq(1,12)) {
+#   #       pos_year = which(year(TIME2) == cy_year & month(TIME2) == cy_mon)
+#   #       if ( length(pos_year) > 0 ) {
+#   #         
+#   #         df_plot_mm = rbind(df_plot_mm,colSums2(df_tmp[pos_year,]))
+#   #         
+#   #         month = c(month,cy_mon)
+#   #         year_mon = c(year_mon,cy_year)
+#   #       }
+#   #       rm(pos_year)
+#   #     }
+#   #     rm(cy_mon)
+#   #     
+#   #     pos_year = which(year(TIME2) == cy_year) 
+#   #     df_plot_yy = rbind(df_plot_yy,colSums2(df_tmp[pos_year,]))
+#   #     
+#   #     rm(pos_year)
+#   #   }
+#   #   rm(cy_year)
+#   #   
+#   #   df_plot_yy = df_plot_yy[-1,]
+#   #   df_plot_mm = df_plot_mm[-1,]
+#   #   df_plot_yy$YEAR = unique_year
+#   #   df_plot_mm$YEAR = year_mon
+#   #   df_plot_mm$MONTH = month
+#   #   rm(TIME2,df_tmp,month,year_mon,unique_year)
+#   #   
+#   #   # sincronizzo in base ai NA
+#   #   TIME2 = df_plot_yy$YEAR
+#   #   for (cy_ck in seq(1,length(df_plot_yy)) ) {
+#   #     pos_na = which(is.na(df_plot_yy[,cy_ck]) == 1)
+#   #     if ( length(pos_na) > 0 ) {
+#   #       df_plot_yy[pos_na,] = NA
+#   #     }
+#   #     rm(pos_na)
+#   #   }
+#   #   rm(cy_ck)
+#   #   df_plot_yy$YEAR = TIME2
+#   #   rm(TIME2)
+#   #   
+#   #   # sincronizzo in base ai NA
+#   #   TIME2 = df_plot_mm$YEAR
+#   #   TIME3 = df_plot_mm$MONTH
+#   #   for (cy_ck in seq(1,length(df_plot_mm)) ) {
+#   #     pos_na = which(is.na(df_plot_mm[,cy_ck]) == 1)
+#   #     if ( length(pos_na) > 0 ) {
+#   #       df_plot_mm[pos_na,] = NA
+#   #     }
+#   #     rm(pos_na)
+#   #   }
+#   #   df_plot_mm$YEAR = TIME2
+#   #   df_plot_mm$MONTH = TIME3
+#   #   rm(TIME2,TIME3,cy_ck)
+#   #   
+#   #   # calcolo i valori per il plot seasonal daily
+#   #   df_tmp = df_plot
+#   #   df_tmp = df_tmp[,-1*grep('TIME',colnames(df_tmp))]
+#   #   df_tmp = df_tmp[,-1*grep('col_var',colnames(df_tmp))]
+#   #   df_season = df_tmp[1,]
+#   #   doy = c()
+#   #   max_ec = c()
+#   #   min_ec = c()
+#   #   max_md = c()
+#   #   min_md = c()
+#   #   for (cy_mon in seq(1,12)) {
+#   #     for (cy_day in seq(1,31)) {
+#   #       pos_ym = which(month(df_plot$TIME) == cy_mon &
+#   #                        day(df_plot$TIME) == cy_day)
+#   #       if ( length(pos_ym) == 0 ) {
+#   #         next
+#   #       }
+#   #       df_season = rbind(df_season,
+#   #                         colMeans(df_tmp[pos_ym,],na.rm = T))
+#   #       doy = c(doy,length(doy)+1)
+#   #       max_ec = c(max_ec,max(df_tmp$EC[pos_ym],na.rm = T))
+#   #       min_ec = c(min_ec,min(df_tmp$EC[pos_ym],na.rm = T))
+#   #       max_md = c(max_md,max(df_tmp$MD[pos_ym],na.rm = T))
+#   #       min_md = c(min_md,min(df_tmp$MD[pos_ym],na.rm = T))
+#   #     }
+#   #     rm(cy_day,pos_ym)
+#   #   }
+#   #   rm(cy_mon)
+#   #   df_season = df_season[-1,]
+#   #   df_season = data.frame('TIME' = doy,
+#   #                          'EC' = df_season$EC,
+#   #                          'MD' = df_season$MD,
+#   #                          'EC_max' = max_ec,
+#   #                          'EC_min' = min_ec,
+#   #                          'MD_max' = max_md,
+#   #                          'MD_min' = min_md
+#   #   )
+#   #   rm(df_tmp,doy,min_md,max_md,min_ec,max_ec)
+#   #   
+#   #   df_season = removeInf(df_season)
+#   #   
+#   #   # calcolo i valori per il plot seasonal monthly
+#   #   df_tmp = df_plot_mm
+#   #   df_season_mm = df_tmp[1,]
+#   #   max_ec = c()
+#   #   min_ec = c()
+#   #   max_md = c()
+#   #   min_md = c()
+#   #   for (cy_mon in seq(1,12)) {
+#   #     pos_ym = which(df_tmp$MONTH == cy_mon)
+#   #     if ( length(pos_ym) > 0 ) {
+#   #       df_season_mm = rbind(df_season_mm,
+#   #                            colMeans(df_tmp[pos_ym,],na.rm = T))
+#   #       
+#   #       max_ec = c(max_ec,max(df_tmp$EC[pos_ym],na.rm = T))
+#   #       min_ec = c(min_ec,min(df_tmp$EC[pos_ym],na.rm = T))
+#   #       max_md = c(max_md,max(df_tmp$MD[pos_ym],na.rm = T))
+#   #       min_md = c(min_md,min(df_tmp$MD[pos_ym],na.rm = T))
+#   #     }
+#   #   }
+#   #   rm(cy_mon,pos_ym)
+#   #   df_season_mm = df_season_mm[-1,]
+#   #   df_season_mm$EC_max = max_ec
+#   #   df_season_mm$EC_min = min_ec
+#   #   df_season_mm$MD_max = max_md
+#   #   df_season_mm$MD_min = min_md
+#   #   rm(df_tmp,min_md,max_md,min_ec,max_ec)
+#   #   
+#   #   df_season_mm = removeInf(df_season_mm)
+#   #   
+#   #   # calcolo l'anno medio eddy e calcolo le differenze tra questi valori e tutti gli altri
+#   #   df_plot_yy$anom_ec = df_plot_yy$EC - mean(df_plot_yy$EC,na.rm = T)
+#   #   df_plot_yy$anom_md = df_plot_yy$MD - mean(df_plot_yy$MD,na.rm = T)
+#   #   df_plot_bar = data.frame('TIME' = c(df_plot_yy$YEAR,df_plot_yy$YEAR),
+#   #                            'anom' = c(df_plot_yy$anom_ec,df_plot_yy$anom_md),
+#   #                            'tipo' = c(rep('EC',length(df_plot_yy$anom_ec)),
+#   #                                       rep('MD',length(df_plot_yy$anom_md)))
+#   #   )
+#   #   
+#   #   # # salvo i dataset delle serie temporali(anno medio)
+#   #   # write.csv(df_season,paste0(dir_out,
+#   #   #        as.character(lista_siti$nome_fluxnet[cy_s]),"_",
+#   #   #        var_eddy[var_md == y_lab],"_valid_season_DD.csv"),quote = F,row.names = F)
+#   #   # write.csv(df_season_mm,paste0(dir_out,
+#   #   #        as.character(lista_siti$nome_fluxnet[cy_s]),"_",
+#   #   #        var_eddy[var_md == y_lab],"_valid_season_MM.csv"),quote = F,row.names = F)
+#   #   # write.csv(df_plot,paste0(dir_out,
+#   #   #        as.character(lista_siti$nome_fluxnet[cy_s]),"_",
+#   #   #        var_eddy[var_md == y_lab],"_valid_DD.csv"),quote = F,row.names = F)
+#   #   # write.csv(df_plot_mm,paste0(dir_out,
+#   #   #         as.character(lista_siti$nome_fluxnet[cy_s]),"_",
+#   #   #         var_eddy[var_md == y_lab],"_valid_MM.csv"),quote = F,row.names = F)
+#   #   # write.csv(df_plot_yy,paste0(dir_out,
+#   #   #         as.character(lista_siti$nome_fluxnet[cy_s]),"_",
+#   #   #         var_eddy[var_md == y_lab],"_valid_YY.csv"),quote = F,row.names = F)
+#   #   # 
+#   #   # plot di validazione serie temporali
+#   #   
+#   #   # plot seasonal (anno medio)
+#   #   anno_medio = ggplot(df_season) +
+#   #     geom_ribbon(aes(x = TIME,ymax = EC_max, ymin = EC_min,fill = 'EC'),alpha = 0.4) +
+#   #     geom_ribbon(aes(x = TIME,ymax = MD_max, ymin = MD_min,fill = 'MD'),alpha = 0.4) +
+#   #     geom_line(aes(x = TIME,y = EC,color = 'EC')) +
+#   #     geom_line(aes(x = TIME,y = MD,color = 'MD')) +
+#   #     scale_color_manual(labels = c('EC' = var_eddy[cyv],'MD' = as.character(df_mod2$filename2[1])), values = c('red','blue')) +
+#   #     scale_fill_manual(labels = c('EC' = var_eddy[cyv],'MD' = as.character(df_mod2$filename2[1])), values = c('red', 'blue')) +
+#   #     theme(legend.title = element_blank(),axis.title.x = element_blank(),
+#   #           legend.position="top") +
+#   #     ggtitle(paste(nome_sito,'Daily')) +
+#   #     ylab(y_lab)
+#   #   
+#   #   # plot seasonal (mese medio)
+#   #   mese_medio = ggplot(df_season_mm) +
+#   #     geom_ribbon(aes(x = MONTH,ymax = EC_max, ymin = EC_min,fill = 'EC'),alpha = 0.4) +
+#   #     geom_ribbon(aes(x = MONTH,ymax = MD_max, ymin = MD_min,fill = 'MD'),alpha = 0.4) +
+#   #     geom_line(aes(x = MONTH,y = EC,color = 'EC')) +
+#   #     geom_line(aes(x = MONTH,y = MD,color = 'MD')) +
+#   #     scale_color_manual(labels = c('EC' = var_eddy[cyv],'MD' = as.character(df_mod2$filename2[1])), values = c('red','blue')) +
+#   #     scale_fill_manual(labels = c('EC' = var_eddy[cyv],'MD' = as.character(df_mod2$filename2[1])), values = c('red', 'blue')) +
+#   #     scale_x_continuous(breaks = seq(1,12),labels=c("J","F","M","A","M","J","J","A","S",'O','N','D')) +
+#   #     theme(legend.title = element_blank(),axis.title.x = element_blank(),
+#   #           legend.position="top") +
+#   #     ggtitle(paste(nome_sito,'Monthly')) +
+#   #     ylab(y_lab)
+#   #   
+#   #   # plot anomalie annuali 
+#   #   anom = ggplot(df_plot_bar) +
+#   #     geom_bar( aes(x=TIME, y=anom, fill = tipo),stat="identity",
+#   #               position=position_dodge()) +
+#   #     scale_color_manual(labels = c('EC' = var_eddy[cyv],'MD' = as.character(df_mod2$filename2[1])), values = c('red','blue')) +
+#   #     scale_fill_manual(labels = c('EC' = var_eddy[cyv],'MD' = as.character(df_mod2$filename2[1])), values = c('red', 'blue')) +
+#   #     theme(legend.title = element_blank(),axis.title.x = element_blank(),
+#   #           legend.position="top") +
+#   #     ggtitle(paste(nome_sito,'Annual')) +
+#   #     ylab(y_lab)
+#   #   
+#   #   # plot delle serie temporali
+#   #   serie_time = ggplot(df_plot) +
+#   #     geom_ribbon(aes(x = TIME,ymax = EC_max, ymin = EC_min),alpha = 0.4) +
+#   #     geom_point(aes(x = TIME,y = EC,color = 'EC')) +
+#   #     geom_point(aes(x = TIME,y = MD,color = 'MD'),shape = 1) +
+#   #     scale_color_manual(values = c('EC' = 'red', 'MD' = 'blue')) +
+#   #     theme(legend.title = element_blank(),axis.title.x = element_blank(),
+#   #           legend.position="none") +
+#   #     # ggtitle(paste(as.character(lista_siti$nome_fluxnet[cy_s]),'Daily')) +
+#   #     ylab(y_lab)
+#   #   
+#   #   df_plot_mm$TIME = ymd((df_plot_mm$YEAR*10000) + (df_plot_mm$MONTH*100) +1)
+#   #   
+#   #   serie_time_mm = ggplot(df_plot_mm) +
+#   #     geom_ribbon(aes(x = TIME,ymax = EC_max, ymin = EC_min),alpha = 0.4) +
+#   #     geom_point(aes(x = TIME,y = EC,color = 'EC')) +
+#   #     geom_point(aes(x = TIME,y = MD,color = 'MD')) +
+#   #     scale_color_manual(values = c('EC' = 'red', 'MD' = 'blue')) +
+#   #     theme(legend.title = element_blank(),axis.title.x = element_blank(),
+#   #           legend.position="none") +
+#   #     scale_x_date(labels = date_format("%m-%Y")) +
+#   #     # ggtitle(paste(as.character(lista_siti$nome_fluxnet[cy_s]),'Annual')) +
+#   #     ylab(y_lab)
+#   #   
+#   #   serie_time_yy = ggplot(df_plot_yy) +
+#   #     geom_ribbon(aes(x = YEAR,ymax = EC_max, ymin = EC_min),alpha = 0.4) +
+#   #     geom_point(aes(x = YEAR,y = EC,color = 'EC')) +
+#   #     geom_point(aes(x = YEAR,y = MD,color = 'MD')) +
+#   #     scale_color_manual(values = c('EC' = 'red', 'MD' = 'blue')) +
+#   #     theme(legend.title = element_blank(),axis.title.x = element_blank(),
+#   #           legend.position="none") +
+#   #     # ggtitle(paste(as.character(lista_siti$nome_fluxnet[cy_s]),'Annual')) +
+#   #     ylab(y_lab)
+#   #   
+#   #   # plot di validazione regressioni
+#   #   nr_dati = length(df_plot[,1])
+#   #   nr_dati_mm = length(df_plot_mm[,1])
+#   #   nr_dati_yy = length(df_plot_yy[,1])
+#   #   
+#   #   # sincronizzo in base ai NA
+#   #   for (cy_ck in seq(1,length(df_plot_yy)) ) {
+#   #     pos_na = which(is.na(df_plot_yy[,cy_ck]) == 1)
+#   #     if ( length(pos_na) > 0 ) {
+#   #       df_plot_yy = df_plot_yy[-1*pos_na,]
+#   #     }
+#   #     rm(pos_na)
+#   #   }
+#   #   rm(cy_ck)
+#   #   # sincronizzo in base ai NA
+#   #   for (cy_ck in seq(1,length(df_plot_mm)) ) {
+#   #     pos_na = which(is.na(df_plot_mm[,cy_ck]) == 1)
+#   #     if ( length(pos_na) > 0 ) {
+#   #       df_plot_mm = df_plot_mm[-1*pos_na,]
+#   #     }
+#   #     rm(pos_na)
+#   #   }
+#   #   rm(cy_ck)
+#   #   
+#   #   # sincronizzo in base ai NA
+#   #   for (cy_ck in seq(1,length(df_plot)) ) {
+#   #     pos_na = which(is.na(df_plot[,cy_ck]) == 1)
+#   #     if ( length(pos_na) > 0 ) {
+#   #       df_plot = df_plot[-1*pos_na,]
+#   #     }
+#   #     rm(pos_na)
+#   #   }
+#   #   rm(cy_ck)
+#   #   
+#   #   # regressione lineare daily
+#   #   model_lm <- lm(MD ~ EC, data = df_plot)
+#   #   
+#   #   df_plot$LM = model_lm$fitted.values
+#   #   
+#   #   text_df = data.frame('pos_x' = min(df_plot$EC),'pos_y' = max(df_plot$LM)*0.99,
+#   #                        'testo' = 
+#   #                          sprintf("MD = %.2f EC %+.2f ; r2 = %.2f",
+#   #                                  coef(model_lm)[2],
+#   #                                  coef(model_lm)[1],summary.lm(model_lm)$r.squared)
+#   #   )
+#   #   p1 = 
+#   #     ggplot() +
+#   #     geom_point(data = df_plot,aes(x = EC,y = MD),size=0.5) +
+#   #     ggtitle(sprintf('MD: mean = %.2f gC m-2 day-1 (sd: %.2f) (n = %.0f%%)\nEC: mean = %.2f gC m-2 d-1 (sd: %.2f) (n = %.0f%%)',
+#   #                     mean(df_plot$MD),sd(df_plot$MD),100*(length(df_plot$MD)/nr_dati),
+#   #                     mean(df_plot$EC),sd(df_plot$EC),100*(length(df_plot$EC)/nr_dati)),
+#   #             subtitle = sprintf('RMSE: %.2f; %s',sqrt(mean((df_plot$EC - df_plot$MD)^2)),text_df$testo)
+#   #     )+
+#   #     geom_line(data = df_plot,aes(x = EC,y = LM),color='red',size = 1) +
+#   #     # geom_text(data = text_df,aes(x = pos_x, y = pos_y, label = testo),hjust=-0.01) +
+#   #     xlab('Measured') +
+#   #     ylab('Simulated') +
+#   #     theme(plot.title = element_text(size = 10,hjust = 0.5),
+#   #           plot.subtitle = element_text(size=9,hjust=0.5),
+#   #           axis.title = element_text(size = 9),
+#   #           axis.text = element_text(size=9),
+#   #           legend.title = element_blank(),legend.position="none",
+#   #           legend.direction="horizontal")
+#   #   
+#   #   # regressione lineare monthly
+#   #   model_lm_mm <- lm(MD ~ EC, data = df_plot_mm)
+#   #   
+#   #   df_plot_mm$LM = model_lm_mm$fitted.values
+#   #   text_df = data.frame('pos_x' = min(df_plot_mm$EC),'pos_y' = max(df_plot_mm$LM)*0.99,
+#   #                        'testo' = 
+#   #                          sprintf("MD = %.2f EC %+.2f ; r2 = %.2f",
+#   #                                  coef(model_lm_mm)[2],
+#   #                                  coef(model_lm_mm)[1],summary.lm(model_lm_mm)$r.squared)
+#   #   )
+#   #   p1_mm = 
+#   #     ggplot() +
+#   #     geom_point(data = df_plot_mm,aes(x = EC,y = MD),size=0.5) +
+#   #     ggtitle(sprintf('MD: mean = %.2f gC m-2 month-1 (sd: %.2f) (n = %.0f%%)\nEC: mean = %.2f gC m-2 d-1 (sd: %.2f) (n = %.0f%%)',
+#   #                     mean(df_plot_mm$MD),sd(df_plot_mm$MD),100*(length(df_plot_mm$MD)/nr_dati_mm),
+#   #                     mean(df_plot_mm$EC),sd(df_plot_mm$EC),100*(length(df_plot_mm$EC)/nr_dati_mm)),
+#   #             subtitle = sprintf('RMSE: %.2f; %s',sqrt(mean((df_plot_mm$EC - df_plot_mm$MD)^2)),text_df$testo)
+#   #     )+
+#   #     geom_line(data = df_plot_mm,aes(x = EC,y = LM),color='red',size = 1) +
+#   #     # geom_text(data = text_df,aes(x = pos_x, y = pos_y, label = testo),hjust=-0.01) +
+#   #     xlab('Measured') +
+#   #     ylab('Simulated') +
+#   #     theme(plot.title = element_text(size = 10,hjust = 0.5),
+#   #           plot.subtitle = element_text(size=9,hjust=0.5),
+#   #           axis.title = element_text(size = 9),
+#   #           axis.text = element_text(size=9),
+#   #           legend.title = element_blank(),legend.position="none",
+#   #           legend.direction="horizontal")
+#   #   
+#   #   # regressione lineare annual
+#   #   model_lm_yy <- lm(MD ~ EC, data = df_plot_yy)
+#   #   
+#   #   df_plot_yy$LM = model_lm_yy$fitted.values
+#   #   
+#   #   text_df = data.frame('pos_x' = min(df_plot_yy$EC),'pos_y' = max(df_plot_yy$LM)*1.04,
+#   #                        'testo' = 
+#   #                          sprintf("MD = %.2f EC %+.2f ; r2 = %.2f",
+#   #                                  coef(model_lm_yy)[2],
+#   #                                  coef(model_lm_yy)[1],summary.lm(model_lm_yy)$r.squared)
+#   #   )
+#   #   p1_yy = ggplot(df_plot_yy) +
+#   #     geom_point(aes(x = EC,y = MD),size=0.5) +
+#   #     ggtitle(sprintf('MD: mean = %.2f gC m-2 year-1 (sd: %.2f) (n = %.0f%%)\nEC: mean = %.2f gC m-2 d-1 (sd: %.2f) (n = %.0f%%)',
+#   #                     mean(df_plot_yy$MD),sd(df_plot_yy$MD),100*(length(df_plot_yy$MD)/nr_dati_yy),
+#   #                     mean(df_plot_yy$EC),sd(df_plot_yy$EC),100*(length(df_plot_yy$EC)/nr_dati_yy)
+#   #     ),subtitle = sprintf('RMSE: %.2f; %s',
+#   #                          sqrt(mean((df_plot_yy$EC - df_plot_yy$MD)^2)),text_df$testo))+
+#   #     geom_line(aes(x = EC,y = LM),color='red',size = 1) +
+#   #     # geom_text(data = text_df,aes(x = pos_x, y = pos_y, label = testo),hjust=-0.01) +
+#   #     xlab('Measured') +
+#   #     ylab('Simulated') +
+#   #     theme(plot.title = element_text(size = 10,hjust = 0.5),
+#   #           plot.subtitle = element_text(size=9,hjust=0.5),
+#   #           axis.title = element_text(size = 9),
+#   #           axis.text = element_text(size=9),
+#   #           legend.title = element_blank(),legend.position="none",
+#   #           legend.direction="horizontal")
+#   #   
+#   #   mp_t = plot_grid(plotlist = list(anno_medio,mese_medio,anom,
+#   #                                    serie_time,serie_time_mm,serie_time_yy,
+#   #                                    p1,p1_mm,p1_yy),
+#   #                    ncol = 3,align = 'v',labels = 'AUTO')
+#   #   
+#   #   lista_plot[[length(lista_plot)+1]] = mp_t
+#   #   
+#   #   rm(df_plot_yy,df_plot,y_lab,p1,serie_time,p1_yy,serie_time_yy,mp_t)
+#   #   rm(model_lm,model_lm_yy,text_df,df_plot_bar)
+#   # }
+#   # rm(cyv,TIME,df_ec,df_mod2)
+#   # 
+#   # return(lista_plot)
+#     
 # }
-# rm(cy_ec_mth,var_md,soglia_qc)
+# 
+# #   }
+# #   rm(cy_s,var_eddy_unc_max,var_eddy_unc_min)
+# #   rm(var_eddy,var_eddy_qc)
+# #   
+# # }
+# # rm(cy_ec_mth,var_md,soglia_qc)
