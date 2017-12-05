@@ -1699,9 +1699,9 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 
 								logger(g_daily_log,
 										",GPP"
-										",Gross_Assimil"
-										",Gross_Assimil_sun"
-										",Gross_Assimil_shade"
+										",ALPHA_EFF"
+										",ALPHA_EFF_SUN"
+										",ALPHA_EFF_SHADE"
 										",RG"
 										",RM"
 										",RA"
@@ -1871,9 +1871,9 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 									",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
 									",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",
 									s->value[GPP],
-									s->value[GROSS_ASSIMILATION],
-									s->value[GROSS_ASSIMILATION_SUN],
-									s->value[GROSS_ASSIMILATION_SHADE],
+									s->value[ALPHA_EFF],
+									s->value[ALPHA_EFF_SUN],
+									s->value[ALPHA_EFF_SHADE],
 									s->value[TOTAL_GROWTH_RESP],
 									s->value[TOTAL_MAINT_RESP],
 									s->value[TOTAL_AUT_RESP],

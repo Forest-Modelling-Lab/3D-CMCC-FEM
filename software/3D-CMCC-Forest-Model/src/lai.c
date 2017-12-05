@@ -45,7 +45,7 @@ void daily_lai (cell_t *const c, species_t *const s)
 
 	/**************************************************************************************************/
 
-	/* compute LAI for Projected Area */
+	/* compute LAI for Projected Area "Big-leaf sun/shade-model" as in DePury and Farquhar (1997)*/
 	/* see Campbell and Norman, Environmental Biophysics 2nd Edition pg 259 */
 
 	s->value[LAI_PROJ]       = ( leaf_DM * s->value[SLA_AVG] ) / ( s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell );

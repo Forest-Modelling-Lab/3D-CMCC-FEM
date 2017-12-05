@@ -26,7 +26,8 @@ void total_photosynthesis_biome (cell_t *const c, const int height, const int db
 	double leafN;            /* (gNleaf/m2) leaf N per unit leaf area */
 	double par_abs;          /* (umol/m2 covered/sec) absorbed par */
 	double leaf_day_mresp;   /* (umol/m2/s) day leaf m. resp, proj. area basis */
-	double ps;               /* gross photosynthesis (gC/m2/day) */
+	double ps;               /* photosynthesis (gC/m2/day) */
+	int sun_shade;           /* 0 for sun 1 for shaded */
 
 	species_t *s;
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
@@ -38,6 +39,7 @@ void total_photosynthesis_biome (cell_t *const c, const int height, const int db
 	if ( s->value[LEAF_SUN_N] > 0. )
 	{
 		/* SUNLIT canopy fraction photosynthesis per unit area */
+		sun_shade = 0;
 
 		/* convert conductance from m/s --> umol/m2/s/Pa, and correct for CO2 vs. water vapor */
 		cond_corr                    = s->value[LEAF_SUN_CONDUCTANCE] * 1e6 / ( 1.6 * Rgas * ( meteo_daily->tday + TempAbs ) );
@@ -52,8 +54,8 @@ void total_photosynthesis_biome (cell_t *const c, const int height, const int db
 		/* convert absorbed par per projected lai molPAR/m2/day --> umol/m2/sec */
 		par_abs                      = ( s->value[APAR_SUN] * 1e6 / 86400. ) / s->value[LAI_SUN_PROJ];
 
-		/* call Farquhar for sun leaves leaves gross photosynthesis */
-		ps = Farquhar (c, s, meteo_daily, meteo_annual, cond_corr, leafN, par_abs, leaf_day_mresp);
+		/* call Farquhar for sun leaves leaves photosynthesis */
+		ps = Farquhar (c, s, meteo_daily, meteo_annual, cond_corr, leafN, par_abs, leaf_day_mresp, sun_shade);
 
 		/* gross assimilation and converting from umol/m2 leaf/sec gC/m2/day and to LAI for canopy computation */
 		s->value[GROSS_ASSIMILATION_SUN]   = ( ps + leaf_day_mresp ) * s->value[LAI_SUN_PROJ] * meteo_daily->daylength_sec * GC_MOL * 1e-6;
@@ -68,6 +70,7 @@ void total_photosynthesis_biome (cell_t *const c, const int height, const int db
 	if ( s->value[LEAF_SHADE_N] > 0. )
 	{
 		/* SHADED canopy fraction photosynthesis per unit area */
+		sun_shade = 1;
 
 		/* convert conductance from m/s --> umol/m2/s/Pa, and correct for CO2 vs. water vapor */
 		cond_corr                    = s->value[LEAF_SHADE_CONDUCTANCE] * 1e6 / ( 1.6 * Rgas * ( meteo_daily->tday + TempAbs ) );
@@ -82,8 +85,8 @@ void total_photosynthesis_biome (cell_t *const c, const int height, const int db
 		/* convert absorbed par per projected lai molPAR/m2/day --> umol/m2/sec */
 		par_abs                      = ( s->value[APAR_SHADE] * 1e6 / 86400. ) / s->value[LAI_SHADE_PROJ];
 
-		/* call Farquhar for shade leaves gross photosynthesis */
-		ps = Farquhar (c, s, meteo_daily, meteo_annual, cond_corr, leafN, par_abs, leaf_day_mresp );
+		/* call Farquhar for shade leaves photosynthesis */
+		ps = Farquhar (c, s, meteo_daily, meteo_annual, cond_corr, leafN, par_abs, leaf_day_mresp, sun_shade );
 
 		/* gross assimilation (photosynthesis) and converting from umol/m2 leaf/sec gC/m2/day and to LAI for canopy computation */
 		s->value[GROSS_ASSIMILATION_SHADE] = ( ps + leaf_day_mresp ) * s->value[LAI_SHADE_PROJ] * meteo_daily->daylength_sec * GC_MOL * 1e-6;
@@ -98,13 +101,12 @@ void total_photosynthesis_biome (cell_t *const c, const int height, const int db
 	/* as In Wohlfahrt & Gu 2015 Plant Cell and Environment */
 	/* "GPP is intended as an integration of apparent photosynthesis (true photosynthesis minus photorespiration), NOT
 	gross (true) photosynthesis" */
-	/* note: to avoid double accounting in leaf respiration gross and net assimilations are decoupled into the model */
 
 	/* total gross assimilation */
 	s->value[GROSS_ASSIMILATION] = s->value[GROSS_ASSIMILATION_SUN] + s->value[GROSS_ASSIMILATION_SHADE];
 
 	/* total net assimilation */
-	s->value[NET_ASSIMILATION]   = s->value[NET_ASSIMILATION_SUN] + s->value[NET_ASSIMILATION_SHADE];
+	s->value[NET_ASSIMILATION]   = s->value[NET_ASSIMILATION_SUN]   + s->value[NET_ASSIMILATION_SHADE];
 
 	/************************************************************************************************************************************/
 
@@ -158,10 +160,23 @@ void total_photosynthesis_biome (cell_t *const c, const int height, const int db
 		++s->counter[YEARLY_VEG_DAYS];
 	}
 
+	/************************************************************************************************************************************/
+
+	/* compute actual quantum canopy efficiency (molC/molphotons PAR) */
+
+	if ( s->value[NET_ASSIMILATION]       > 0. ) s->value[ALPHA_EFF]          = ( s->value[NET_ASSIMILATION]       / GC_MOL ) / s->value[PAR];
+	else                                         s->value[ALPHA_EFF]          = 0.;
+	if ( s->value[NET_ASSIMILATION_SUN]   > 0. ) s->value[ALPHA_EFF_SUN]      = ( s->value[NET_ASSIMILATION_SUN]   / GC_MOL ) / s->value[PAR_SUN];
+	else                                         s->value[ALPHA_EFF_SUN]      = 0.;
+	if ( s->value[NET_ASSIMILATION_SHADE] > 0. ) s->value[ALPHA_EFF_SHADE]    = ( s->value[NET_ASSIMILATION_SHADE] / GC_MOL ) / s->value[PAR_SHADE];
+	else                                         s->value[ALPHA_EFF_SHADE]    = 0.;
+
+	/************************************************************************************************************************************/
+
 }
 
 double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const meteo_daily, const meteo_annual_t *const meteo_annual,
-		const double cond_corr, const double leafN, const double par_abs, const double leaf_day_mresp )
+		const double cond_corr, const double leafN, const double par_abs, const double leaf_day_mresp, const int sun_shade )
 {
 	/* Farquhar, von Caemmerer and Berry (1980) Planta. 149: 78-90. */
 
@@ -189,12 +204,12 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	static double act25  = 3.6;    /* (umol/mgRubisco/min) Rubisco activity at 25 C */
 	static double q10act = 2.4;    /* (DIM) Q_10 for Rubisco activity */
 	static double pabs   = 0.85;   /* (DIM) fraction of PAR effectively absorbed by PSII */
-	static double fnr    = 7.16;   /* g Rubisco/gN Rubisco weight proportion of rubisco relative to its N content Kuehn and McFadden 1969 */
+	static double fnr    = 7.16;   /* g Rubisco/gN Rubisco weight proportion of rubisco relative to its N content Kuehn and McFadden (1969) */
 
 	/* local variables */
 	double Kc;                     /* (Pa) michaelis-menten constant for carboxylase reaction */
 	double Ko;                     /* (Pa) michaelis-menten constant for oxygenase reaction */
-	double act;                    /* (umol CO2/kgRubisco/s) Rubisco activity scaled by temperature and [O2 ] and [CO2] */
+	double act;                    /* (umol CO2/kgRubisco/s) Rubisco activity scaled by temperature and [O2] and [CO2] */
 	double Jmax;                   /* (umol/m2/s) max rate electron transport */
 	double ppe;                    /* (mol/mol) photons absorbed by PSII per e- transported */
 	double Vcmax;                  /* (umol/m2/s) max rate carboxylation */
@@ -202,7 +217,7 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	double gamma;                  /* (Pa) CO2 compensation point, no Rd */
 	double Ca;                     /* (Pa) atmospheric [CO2] pressure */
 	double O2;                     /* (Pa) atmospheric [O2] */
-	double Av;                     /* (umol/m2/s) carboxylation limited assimilation */
+	double Av;                     /* (umol/m2/s) carboxylation rate for limited assimilation (synonym of Vc) */
 	double Aj;                     /* (umol/m2/s) RuBP regeneration limited assimilation */
 	double A;                      /* (umol/m2/s) final assimilation rate */
 	double Ci;                     /* (Pa) intercellular [CO2] */
@@ -211,6 +226,18 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 
 	//todo todo todo todo todo move in species.txt (this should be the only variable for all photosynthesis)
 	double beta = 2.1; /* ratio between Vcmax and Jmax for fagus see Liozon et al., (2000) and Castanea */
+	double test_Vcmax = 55 ; /* (umol/m2/sec) Vcmax for fagus see Deckmyn et al., 2004 GCB */
+	double test_Jmax  = 100; /* (umol/m2/sec) Jmax for fagus see Deckmyn et al., 2004 GCB */
+	/*
+	 * some parameter values (to be included in species.txt):
+	 * Vcmax = 55 (umol/m2/sec) for fagus see Deckmyn et al., 2004 GCB
+	 * Jmax  = 100 (umol/m2/sec) for fagus see Deckmyn et al., 2004 GCB
+	 * Vcmax = 72 (mmol/m2/sec) for p. sylvestris see Sampson et al., 2001
+	 * beta  = 2.48 for p. sylvestris see Samspon et al., (2006)
+	 * beta  = 2.42 for Q. robur see Samspon et al., (2006)
+	 * Vcmax = 26.66 (umolCO2/m2/sec) for p. sylvestris see Sampson et al., (2006)
+	 * Vcmax = 33.7 (umolCO2/m2/sec) for q. robur see Samspon et al. (2006
+	 */
 
 	/* begin by assigning local variables */
 
@@ -258,13 +285,60 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	     (lnc)  X  (flnr)  X  (fnr)  X   (act)     =    (Vmax)
 	*/
 
+	/******************************************************************************************************************************/
+
 	/* calculate Vcmax (umol CO2/m2/s) max rate of carboxylation from leaf nitrogen data and Rubisco activity */
+	/* see: Woodrow and Berry (1988) */
+
+#if 0
+	//note: modified version of the BIOME-BGC original code
+	if ( /*s->value[VCMAX]*/ test_Vcmax != NO_DATA )
+	{
+		Vcmax = leafN * s->value[N_RUBISCO] * fnr * act;
+
+		if ( Vcmax > /*s->value[VCMAX]*/ test_Vcmax )
+		{
+			Vcmax = /*s->value[VCMAX]*/ test_Vcmax;
+		}
+	}
+	else
+	{
+		Vcmax = leafN * s->value[N_RUBISCO] * fnr * act;
+	}
+#else
+	//note: original version of the BIOME-BGC original code
 	Vcmax = leafN * s->value[N_RUBISCO] * fnr * act;
+#endif
+
+	/******************************************************************************************************************************/
 
 	/* calculate Jmax = f(Vmax), reference:	Wullschleger, S.D., 1993.  Biochemical limitations to carbon assimilation in C3 plants -
 	 * A retrospective analysis of the A/Ci curves from	109 species. Journal of Experimental Botany, 44:907-920. */
 	/* compute (umol electrons/m2/s) max rate electron transport */
+
+#if 0
+	//note: modified version of the BIOME-BGC original code
+	if ( /* s->value[JMAX] */ test_Jmax != NO_DATA )
+	{
+		Jmax = beta * Vcmax;
+
+		if (Jmax > /*s->value[JMAX]*/ test_Jmax)
+		{
+			Jmax = /*s->value[JMAX]*/test_Jmax;
+		}
+	}
+	else
+	{
+		Jmax = beta * Vcmax;
+	}
+#else
+	//note: original version of the BIOME-BGC original code
+	/* a simplifying assumption that empirically relates the maximum rate of electron transport to maximum carboxylation velocity see Wullschleger 1993 */
 	Jmax = beta * Vcmax;
+#endif
+
+	/******************************************************************************************************************************/
+
 
 	/* calculate J = f(Jmax, ppfd), reference: de Pury and Farquhar 1997 Plant Cell and Env. */
 	var_a  = 0.7;
@@ -296,7 +370,7 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	/* check condition */
 	CHECK_CONDITION( det , <, 0.0);
 
-	/* compute Av (umol CO2/m2/s) carboxylation limited assimilation */
+	/* compute Av (or Vc) (umol CO2/m2/s) carboxylation rate for limited assimilation */
 	Av    = ( -var_b + sqrt( det ) ) / ( 2. * var_a );
 
 	/* quadratic solution for Aj */

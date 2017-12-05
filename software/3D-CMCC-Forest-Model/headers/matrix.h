@@ -338,6 +338,9 @@ enum {
 
 	/* carbon fluxes */
 	C_FLUX,
+	ALPHA_EFF,                          /* (molC/molPAR) Effective quantum canopy efficiency */
+	ALPHA_EFF_SUN,                      /* (molC/molPAR) Effective quantum canopy efficiency */
+	ALPHA_EFF_SHADE,                    /* (molC/molPAR) Effective quantum canopy efficiency */
 	GPP,                                /* (gC/m2/day) Daily Gross Primary Production */
 	GPP_SUN,                            /* (gC/m2/day) Daily Sun Leaves Gross Primary Production */
 	GPP_SHADE,                          /* (gC/m2/day) Daily Shade Leaves Gross Primary Production */

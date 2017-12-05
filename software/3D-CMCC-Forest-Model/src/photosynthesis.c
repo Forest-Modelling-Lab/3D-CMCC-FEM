@@ -109,19 +109,17 @@ void photosynthesis(cell_t *const c, const int layer, const int height, const in
 	GPP_shade_molC = Lue_shade /* FIXME it should accounts for shade transp * s->value[CANOPY_SHADE_FRAC_DAY_TRANSP]*/;
 
 	/* check */
-	CHECK_CONDITION( GPPmolC, <, ZERO);
+	CHECK_CONDITION( GPPmolC , < , ZERO );
 
-	/* Daily GPP in gC/m2/day */
+	/* Daily GPP (gC/m2/day) */
 	/* molC/m2/day --> gC/m2/day */
 
-	s->value[GPP_SUN]   = GPP_sun_molC   * GC_MOL;
-	s->value[GPP_SHADE] = GPP_shade_molC * GC_MOL;
-	s->value[GPP]       = s->value[GPP_SUN] + s->value[GPP_SHADE];
-
-	logger(g_debug_log, "GPP_gC = %g gC/m^2/day\n", s->value[GPP]);
+	s->value[GPP_SUN]            = GPP_sun_molC   * GC_MOL;
+	s->value[GPP_SHADE]          = GPP_shade_molC * GC_MOL;
+	s->value[GPP]                = s->value[GPP_SUN] + s->value[GPP_SHADE];
 
 	/* gC/m2/day --> tC/cell/day */
-	s->value[GPP_tC]          = s->value[GPP] / 1e6 * g_settings->sizeCell ;
+	s->value[GPP_tC]             = s->value[GPP] / 1e6 * g_settings->sizeCell ;
 
 	/* class level */
 	s->value[MONTHLY_GPP]       += s->value[GPP];
@@ -136,14 +134,26 @@ void photosynthesis(cell_t *const c, const int layer, const int height, const in
 	c->monthly_gpp              += s->value[GPP];
 	c->annual_gpp               += s->value[GPP];
 
-	c->daily_gpp_tC          += s->value[GPP_tC];
-	c->monthly_gpp_tC        += s->value[GPP_tC];
-	c->annual_gpp_tC         += s->value[GPP_tC];
+	c->daily_gpp_tC             += s->value[GPP_tC];
+	c->monthly_gpp_tC           += s->value[GPP_tC];
+	c->annual_gpp_tC            += s->value[GPP_tC];
 
 	/* yearly veg days counter */
 	if ( s->value[GPP] > 0. )
 	{
 		++s->counter[YEARLY_VEG_DAYS];
 	}
+
+	/************************************************************************************************************************************/
+
+	/* compute actual quantum canopy efficiency (molC/molphotons PAR) */
+	if ( Lue       > 0. ) s->value[ALPHA_EFF]          = Lue       / s->value[PAR];
+	else                  s->value[ALPHA_EFF]          = 0.;
+	if ( Lue_sun   > 0. ) s->value[ALPHA_EFF_SUN]      = Lue_sun   / s->value[PAR_SUN];
+	else                  s->value[ALPHA_EFF_SUN]      = 0.;
+	if ( Lue_shade > 0. ) s->value[ALPHA_EFF_SHADE]    = Lue_shade / s->value[PAR_SHADE];
+	else                  s->value[ALPHA_EFF_SHADE]    = 0.;
+
+	/************************************************************************************************************************************/
 
 }

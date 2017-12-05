@@ -8,7 +8,8 @@ void photosynthesis (cell_t *const c, const int layer, const int height, const i
 
 void total_photosynthesis_biome (cell_t *const c, const int height, const int dbh, const int age, const int species, const meteo_daily_t *const meteo_daily, const meteo_annual_t *const meteo_annual);
 
-double Farquhar (cell_t *const c, species_t *const s, const meteo_daily_t *const meteo_daily, const meteo_annual_t *const meteo_annual, const double cond_corr, const double leafN, const double ppfd, const double leaf_day_mresp );
+double Farquhar (cell_t *const c, species_t *const s, const meteo_daily_t *const meteo_daily, const meteo_annual_t *const meteo_annual, const double cond_corr,
+		const double leafN, const double ppfd, const double leaf_day_mresp, const int sun_shade );
 
 
 #endif /* PHOTOSYNTHESIS_H_ */

@@ -7,8 +7,8 @@ GAMMA_LIGHT             0.02    // Empirical parameter for Light modifiers see P
 K                       0.67    //Extinction coefficient for absorption of PAR by canopy for Picea abies Pietsch et al., 2005 ,0.54 from Pietsch et al., 2005,  0.54 from Mollicone, 0.4241 Forrester et al., 2014
 ALBEDO                  0.06    //averaged for P.abies, 0.06 Jarvis et al., 1976, 0.095 from Breuer et al., 2003
 INT_COEFF               0.25    //precip interception coefficient for Picea abies (0.3 see Tatarinov) (0.25 see Lawrence et al., 2007)
-SLA_AVG0               7.52     //Average Specific Leaf Area m^2/Kg (MATURE) sunlit/shaded leaves for Picea abies 7.52 Mund et al., 2002, (5.9) see Johansson, T. 1999
-SLA_AVG1                3.9     //Average Specific Leaf Area m^2/Kg (juvenile) sunlit/shaded leaves for Picea abies Konopka et al., 2014, (5.9) see Johansson, T. 1999
+SLA_AVG0               7.52     //Average Specific Leaf Area m^2/KgDM (MATURE) sunlit/shaded leaves for Picea abies 8 Rötzer et al., (2010), 7.52 Mund et al., 2002, (5.9) see Johansson, T. 1999
+SLA_AVG1                3.9     //Average Specific Leaf Area m^2/KgDM (juvenile) sunlit/shaded leaves for Picea abies 2 Rötzer et al., (2010), Konopka et al., 2014, (5.9) see Johansson, T. 1999
 TSLA                    30      //Age at which SLA_AVG = (SLA_AVG1 + SLA_AVG0 )/2 Forrester et al., 2017
 SLA_RATIO               2       //(DIM) ratio of shaded to sunlit projected SLA for Picea abies (see Pietsch)
 LAI_RATIO               2.6     /(DIM) all-sided to projected leaf area ratio from Mollicone et al., 2002
