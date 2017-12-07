@@ -65,7 +65,7 @@ time_list_output = c('annual','monthly','daily')
 
 # single or multiple simulations
 build_list<-c('Debug')#, 'Release')
-site_list<-c("Soroe")
+site_list<-c("Soroe","Collelongo")
 esm_list <-c("1")# ("1","2","3","4","5", "All")
 rcp_list <-c("0p0")# ("0p0","2p6","4p5","6p0","8p5","All")
 man_list <-c("on")# ("on",'off', "All")
@@ -610,41 +610,34 @@ for (cy_s in site_list) {
 
   ls_file_md = list.files(dir_in,pattern = 'daily',recursive = T,full.names = T)
   
-  list_p = list()
-  source('flux_validation.R')
-  list_p[[length(list_p)+1]] = flux_validation(ls_file_md,
+  
+  lista_p = flux_validation(ls_file_md,
                   cy_s,
                   file_ec)
-  mpt = plot_grid(plotlist = list_p[[1]][1])
-  for (file_mod in ls_file_md) {
-    
-    list_p[[length(list_p)+1]] = flux_validation(ls_file_md,
-                                                 cy_s,
-                                                 file_ec)
-    list_p[[length(list_p)+1]] = flux_validation(file_mod,
-                                                 cy_s,
-                                                 file_ec,
-                                                 var_md = c('reco','gpp'),
-                                                 var_eddy = c('RECO_NT_CUT_USTAR50','GPP_NT_CUT_USTAR50'),
-                                                 var_eddy_qc = c('NEE_CUT_USTAR50_QC','NEE_CUT_USTAR50_QC'),
-                                                 var_eddy_unc_max = c('RECO_NT_CUT_95','GPP_NT_CUT_95'),
-                                                 var_eddy_unc_min = c('RECO_NT_CUT_05','GPP_NT_CUT_05'))
-  }
+  
+  lista_p2 = flux_validation(ls_file_md,
+                 cy_s,
+                 file_ec,
+                 var_md = c('reco','gpp'),
+                 var_eddy = c('RECO_NT_CUT_USTAR50','GPP_NT_CUT_USTAR50'),
+                 var_eddy_qc = c('NEE_CUT_USTAR50_QC','NEE_CUT_USTAR50_QC'),
+                 var_eddy_unc_max = c('RECO_NT_CUT_95','GPP_NT_CUT_95'),
+                 var_eddy_unc_min = c('RECO_NT_CUT_05','GPP_NT_CUT_05'))
+  
   rm(file_mod,ls_file_md)
   
   pdf(paste0(dir_in_gen,'validation_flux_',cy_s,'.pdf'),
       onefile = T, width = 20,height = 15)
   
-  for ( cy_p in seq(1,length(list_p)) ) {
-    for (cy_p2 in seq(1,length(list_p[[cy_p]]))) {
-      mpt = plot_grid(plotlist = list_p[[cy_p]][cy_p2])
-      print(mpt)
-      rm(mpt)
-    }
-  }
-  rm(cy_p,cy_p2)
+  print(plot_grid(lista_p[[1]]))
+  print(plot_grid(lista_p[[2]]))
+  print(plot_grid(lista_p2[[1]]))
+  print(plot_grid(lista_p2[[2]]))
+  print(plot_grid(lista_p2[[3]]))
+  print(plot_grid(lista_p2[[4]]))
+  
   dev.off()
-  rm(list_p)
+  rm(list_p,lista_p2)
   
   cat(sprintf('\ncreate file: %s\n',paste0(dir_in_gen,'validation_flux_',cy_s,'.pdf')))
   
