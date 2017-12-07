@@ -926,19 +926,20 @@ static const char *sz_species_values[] =
 		"STEM_LEAF",                  /* allocation new stem C:new leaf (ratio) */
 		"COARSE_ROOT_STEM",           /* allocation new coarse root C:new stem (ratio) */
 		"LIVE_TOTAL_WOOD",            /* allocation new live wood C:new total wood C (ratio) */
+		"N_RUBISCO",                  /* Fraction of leaf N in Rubisco (ratio) */
 		"CN_LEAVES",                  /* CN of leaves (kgC/kgN) */
 		"CN_FALLING_LEAVES",          /* CN of leaf litter (kgC/kgN) */
 		"CN_FINE_ROOTS",              /* CN of fine roots (kgC/kgN) */
-		"CN_LIVE_WOODS",              /* CN of live woods (kgC/kgN) */
-		"CN_DEAD_WOODS",              /* CN of dead woods (kgC/kgN) */
+		"CN_LIVEWOOD",                /* CN of live woods (kgC/kgN) */
+		"CN_DEADWOOD",                /* CN of dead woods (kgC/kgN) */
 		"LEAF_LITT_LAB_FRAC",         /* (DIM) leaf litter labile fraction */
 		"LEAF_LITT_CEL_FRAC",         /* (DIM) leaf litter cellulose fraction */
 		"LEAF_LITT_LIGN_FRAC",        /* (DIM) leaf litter lignin fraction */
 		"FROOT_LITT_LAB_FRAC",        /* (DIM) fine root litter labile fraction */
 		"FROOT_LITT_CEL_FRAC",        /* (DIM) fine root litter cellulose fraction */
 		"FROOT_LITT_LIGN_FRAC",       /* (DIM) fine root litter lignin fraction */
-		"DEAD_WOOD_CEL_FRAC",         /* (DIM) dead wood litter cellulose fraction */
-		"DEAD_WOOD_LIGN_FRAC",        /* (DIM) dead wood litter lignin fraction */
+		"DEADWOOD_CEL_FRAC",          /* (DIM) dead wood litter cellulose fraction */
+		"DEADWOOD_LIGN_FRAC",         /* (DIM) dead wood litter lignin fraction */
 		"BUD_BURST",                  /* days of bud burst at the beginning of growing season (only for deciduous) */
 		"LEAF_FALL_FRAC_GROWING",     /* proportions of the growing season of leaf fall */
 		"LEAF_FINEROOT_TURNOVER",     /* Average yearly leaves and fine root turnover rate */
@@ -1241,20 +1242,6 @@ int fill_species_from_file(species_t *const s) {
 	}
 	s->value[MAX_SPECIES_COVER] = (int)s->value[LIGHT_TOL];
 
-	/* check parameters values */
-	CHECK_CONDITION (s->value[SLA_AVG0],               <, s->value[SLA_AVG1]);
-	CHECK_CONDITION (s->value[FRACBB0],                <, s->value[FRACBB1]);
-	CHECK_CONDITION (s->value[RHO0],	               <, s->value[RHO1]);
-	CHECK_CONDITION (s->value[GROWTHTMIN],             >, s->value[GROWTHTOPT]);
-	CHECK_CONDITION (s->value[GROWTHTMIN],             >, s->value[GROWTHTMAX]);
-	CHECK_CONDITION (s->value[GROWTHTOPT],             >, s->value[GROWTHTMAX]);
-	CHECK_CONDITION (s->value[SWPOPEN],                <, s->value[SWPCLOSE]);
-	CHECK_CONDITION (s->value[FRUIT_PERC],             >, 1.);
-	CHECK_CONDITION (s->value[LEAF_FALL_FRAC_GROWING], >, 1.);
-	CHECK_CONDITION (s->value[LEAF_FROOT_TURNOVER],    >, 1.);
-	CHECK_CONDITION (s->value[LIVEWOOD_TURNOVER],      >, 1.);
-	CHECK_CONDITION (s->value[S0CTEM] + s->value[R0CTEM] + s->value[F0CTEM], !=, 1);
-	
 	/* copy file */
 	if ( ! species_copy_file(g_sz_parameterization_output_path, filename) ) {
 		printf("error: unable to copy species to %s\n", g_sz_parameterization_output_path);
@@ -1567,7 +1554,23 @@ void simulation_summary (const matrix_t* const m)
 	{
 		logger(g_debug_log, "Model spatial = un-spatial \n");
 	}
-	logger(g_debug_log, "Temporal scale = daily \n");
+
+	if (g_settings->time == 's')
+	{
+		logger(g_debug_log, "Temporal scale = semihourly \n");
+	}
+	else if ((g_settings->time == 'h'))
+	{
+		logger(g_debug_log, "Temporal scale = hourly \n");
+	}
+	else if ((g_settings->time == 'd'))
+	{
+		logger(g_debug_log, "Temporal scale = daily \n");
+	}
+	else
+	{
+		logger(g_debug_log, "Temporal scale = monthly \n");
+	}
 }
 
 void site_summary(const matrix_t* const m)
@@ -1614,25 +1617,10 @@ void soil_summary(const matrix_t* const m, const cell_t* const cell)
 	logger(g_debug_log, "-Litter = %g tN/ha\n", g_soil_settings->values[LITTERN]);
 	logger(g_debug_log, "-Soil = %g tC/ha\n", g_soil_settings->values[SOILC]);
 	logger(g_debug_log, "-Soil = %g tN/ha\n", g_soil_settings->values[SOILN]);
-
-
-	/********** initialize soil *********/
-	/** soil bio-physic initialization **/
-	initialization_soil_physic (m->cells);
-
-	/** soil bio-geo-chemistry initialization **/
-	if ( ! g_soil_settings->values[LITTERC] ||
-			! g_soil_settings->values[LITTERN] ||
-			! g_soil_settings->values[SOILC] ||
-			! g_soil_settings->values[SOILN])
-	{
-		//fixme initialization_soil_biogeochemistry (m->cells);
-	}
-
 	logger(g_debug_log, "***************************************************\n\n");
 }
 
-void forest_summary(const matrix_t* const m, const int day, const int month, const int year)
+void forest_initialization ( const matrix_t* const m, const int day, const int month, const int year )
 {
 	int cell;
 	int species;
@@ -1739,43 +1727,6 @@ void forest_summary(const matrix_t* const m, const int day, const int month, con
 		initialization_forest_structure (&m->cells[cell], day, month, year);
 
 		/* initialize pools */
-#if 0
-		for ( height = 0; height < m->cells[cell].heights_count; ++height )
-		{
-			for ( dbh = 0; dbh < m->cells[cell].heights[height].dbhs_count; ++dbh )
-			{
-				for ( age = 0; age < m->cells[cell].heights[height].dbhs[dbh].ages_count; ++age )
-				{
-					for ( species = 0; species < m->cells[cell].heights[height].dbhs[dbh].ages[age].species_count; ++species )
-					{
-
-						/* IF NO BIOMASS INITIALIZATION DATA ARE AVAILABLE FOR STAND BUT JUST
-						 * DENDROMETRIC VARIABLES (i.e. AVDBH, HEIGHT, THESE ARE MANDATORY) */
-						/* initialize class carbon pools */
-						initialization_forest_class_C (&m->cells[cell], height, dbh, age, species);
-
-						/* initialize cell carbon pools */
-						initialization_forest_C       (&m->cells[cell], height, dbh, age, species);
-
-						/* initialize class nitrogen pools */
-						initialization_forest_class_N (&m->cells[cell], height, dbh, age, species);
-
-						/* initialize cell nitrogen pools */
-						initialization_forest_N       (&m->cells[cell], height, dbh, age, species);
-
-						/* initialization forest class litter fractions */
-						initialization_forest_class_litter_soil (&m->cells[cell], height, dbh, age, species);
-
-						/* initialization class litter fractions */
-						initialization_forest_class_litter_soil (&m->cells[cell], height, dbh, age, species);
-
-						/* initialization cell litter fractions */
-						initialization_forest_litter_soil (&m->cells[cell], height, dbh, age, species);
-					}
-				}
-			}
-		}
-#else
 		for ( height = m->cells[cell].heights_count - 1; height >= 0; --height )
 		{
 			for ( dbh = m->cells[cell].heights[height].dbhs_count - 1; dbh >= 0; --dbh )
@@ -1788,30 +1739,23 @@ void forest_summary(const matrix_t* const m, const int day, const int month, con
 						/* IF NO BIOMASS INITIALIZATION DATA ARE AVAILABLE FOR STAND BUT JUST
 						 * DENDROMETRIC VARIABLES (i.e. AVDBH, HEIGHT, THESE ARE MANDATORY) */
 						/* initialize class carbon pools */
-						initialization_forest_class_C           (&m->cells[cell], height, dbh, age, species);
-
-						/* initialize cell carbon pools */
-						initialization_forest_C                 (&m->cells[cell], height, dbh, age, species);
+						initialization_forest_class_C           ( &m->cells[cell], height, dbh, age, species );
 
 						/* initialize class nitrogen pools */
-						initialization_forest_class_N           (&m->cells[cell], height, dbh, age, species);
-
-						/* initialize cell nitrogen pools */
-						initialization_forest_N                 (&m->cells[cell], height, dbh, age, species);
+						initialization_forest_class_N           ( &m->cells[cell], height, dbh, age, species );
 
 						/* initialization forest class litter fractions */
-						initialization_forest_class_litter_soil (&m->cells[cell], height, dbh, age, species);
+						initialization_forest_class_litter      ( &m->cells[cell], height, dbh, age, species );
 
-						/* initialization class litter fractions */
-						initialization_forest_class_litter_soil (&m->cells[cell], height, dbh, age, species);
+						/* initialize cell carbon pools */
+						initialization_forest_cell_C            ( &m->cells[cell], height, dbh, age, species );
 
-						/* initialization cell litter fractions */
-						initialization_forest_litter_soil       (&m->cells[cell], height, dbh, age, species);
+						/* initialize cell nitrogen pools */
+						initialization_forest_cell_N            ( &m->cells[cell], height, dbh, age, species );
 					}
 				}
 			}
 		}
-#endif
 
 		logger(g_debug_log, "\n*******FOREST POOLS*******\n");
 		logger(g_debug_log, "***FOREST CELL POOLS (CARBON)***\n");
@@ -1842,6 +1786,32 @@ void forest_summary(const matrix_t* const m, const int day, const int month, con
 		logger(g_debug_log, "----branch_dead_wood_nitrogen = %f gN/m2\n", m->cells[cell].branch_dead_wood_nitrogen);
 		logger(g_debug_log, "----reserve_nitrogen          = %f gN/m2\n", m->cells[cell].reserve_nitrogen);
 		logger(g_debug_log, "----fruit_nitrogen            = %f gN/m2\n", m->cells[cell].fruit_nitrogen);
+	}
+}
+void litter_initialization ( const matrix_t* const m, const int day, const int month, const int year )
+{
+	int cell;
+
+	assert (m);
+	for ( cell = 0; cell < m->cells_count; ++cell )
+	{
+		/* initialization cell litter pools */
+		initialization_cell_litter_biochem  ( &m->cells[cell] );
+	}
+}
+
+void soil_initialization ( const matrix_t* const m, const int day, const int month, const int year )
+{
+	int cell;
+
+	assert (m);
+	for ( cell = 0; cell < m->cells_count; ++cell )
+	{
+		/* initialization cell soil physical pools */
+		initialization_cell_soil_physic     ( &m->cells[cell] );
+
+		/* initialization cell soil biogeochemical pools */
+		initialization_cell_soil_biochem    ( &m->cells[cell] );
 	}
 }
 
@@ -1908,18 +1878,11 @@ void matrix_free(matrix_t *m)
 					}
 				}
 				if ( m->cells[cell].years ) {
-				#if 1
-					if ( g_year_start_index != -1 ) {
-						m->cells[cell].years -= g_year_start_index;
-					}
-					meteo_annual_free(m->cells[cell].years, m->cells[cell].years_count);
-				#else
 					if ( g_year_start_index != -1 ) {
 						free (m->cells[cell].years-g_year_start_index);
 					} else {
 						free (m->cells[cell].years);
 					}
-				#endif
 				}
 			}
 			free (m->cells);

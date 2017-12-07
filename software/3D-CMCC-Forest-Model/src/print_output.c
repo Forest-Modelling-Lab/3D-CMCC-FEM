@@ -1633,7 +1633,23 @@ void print_model_settings(logger_t*const log)
 	}
 	logger(log, "#Resp accl = %s\n", g_settings->Resp_accl ? "on" : "off");
 	logger(log, "#regeneration = %s\n", g_settings->regeneration ? "on" : "off");
-	logger(log, "#Management = %s\n", (MANAGEMENT_VAR == g_settings->management) ? "var" : (MANAGEMENT_ON == g_settings->management) ? "on" : "off");
+	{
+		char* p = "off";
+		switch ( g_settings->management ) {
+			case MANAGEMENT_ON:
+				p = "on";
+			break;
+
+			case MANAGEMENT_VAR:
+				p = "var";
+			break;
+
+			case MANAGEMENT_VAR1:
+				p = "var1";
+			break;
+		}
+		logger(log, "#Management = %s\n", p);
+	}
 	if ( g_settings->management )
 	{
 		logger(log, "#Year Start Management = %d\n", g_settings->year_start_management);
@@ -1699,9 +1715,9 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 
 								logger(g_daily_log,
 										",GPP"
-										",Assimil"
-										",Assimil_sun"
-										",Assimil_shade"
+										",ALPHA_EFF"
+										",ALPHA_EFF_SUN"
+										",ALPHA_EFF_SHADE"
 										",RG"
 										",RM"
 										",RA"
@@ -1717,43 +1733,63 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 										",PAR"
 										",APAR"
 										",fAPAR"
-										",Ntree"
+										",NTREE"
 										",VEG_D"
-										",C_INT"
-										",C_WAT"
-										",C_EVA"
-										",C_TRA"
-										",C_ET"
-										",C_LE"
+										",INT"
+										",WAT"
+										",EVA"
+										",TRA"
+										",ET"
+										",LE"
 										",WUE"
-										",WRes"
-										",WS"
-										",WSsap"
-										",WSL"
-										",WSD"
-										",WL"
-										",WFR"
-										",WCR"
-										",WCRsap"
-										",WCRL"
-										",WCRD"
-										",WBB"
-										",WBBsap"
-										",WBBL"
-										",WBBD"
-										",WFru"
-										",dWRes"
-										",dWS"
-										",dWL"
-										",dWFR"
-										",dWCR"
-										",dWBB"
-										",dFRUIT"
-										",SAR"
-										",LAR"
-										",FRAR"
-										",CRAR"
-										",BBAR"
+										",RESERVE_C"
+										",STEM_C"
+										",STEMSAP_C"
+										",STEMLIVE_C"
+										",STEMDEAD_C"
+										",LEAF_C"
+										",FROOT_C"
+										",CROOT_C"
+										",CROOTSAP_C"
+										",CROOTLIVE_C"
+										",CROOTDEAD_C"
+										",BRANCH_C"
+										",BRANCH_C"
+										",BRANCHLIVE_C"
+										",BRANCHDEAD_C"
+										",FRUIT_C"
+										",DELTARESERVE_C"
+										",DELTA_STEM_C"
+										",DELTA_LEAF_C"
+										",DELTA_FROOT_C"
+										",DELTA_CROOT_C"
+										",DELTA_BRANCH_C"
+										",DELTA_FRUIT_C"
+										",RESERVE_N"
+										",STEM_N"
+										",STEMLIVE_N"
+										",STEMDEAD_N"
+										",LEAF_N"
+										",FROOT_N"
+										",CROOT_N"
+										",CROOTLIVE_N"
+										",CROOTDEAD_N"
+										",BRANCH_N"
+										",BRANCHLIVE_N"
+										",BRANCHDEAD_N"
+										",FRUIT_N"
+										",DELTA_RESERVE_N"
+										",DELTA_STEM_N"
+										",DELTA_LEAF_N"
+										",DELTA_FROOT_N"
+										",DELTA_CROOT_N"
+										",DELTA_BRANCH_N"
+										",DELTA_FRUIT_N"
+										",STEM_AR"
+										",LEAF_AR"
+										",FROOT_AR"
+										",CROOT_AR"
+										",BRANCH_AR"
 										",FCO2"
 										",FCO2_TR"
 										",FLIGHT"
@@ -1764,7 +1800,6 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 										",FSW"
 										",LITR_C"
 										",CWD_C"
-										",SOIL_C"
 								);
 
 							}
@@ -1801,7 +1836,10 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 		}
 		/************************************************************************/
 		/* heading variables only at cell level */
-		logger(g_daily_log,",gpp,npp,ar,hr,rsoil,reco,nee,nep,et,le,soil_evapo,snow_pack,asw,moist_ratio,iWue,litrC,cwdC,soilC,litrN,soilN,Tsoil,Daylength\n");
+		logger(g_daily_log,",gpp,npp,ar,hr,rsoil,reco,nee,nep,et,le,soil_evapo,snow_pack,asw,moist_ratio,iWue,"
+				"litrC,litr1C,litr2C,litr3C,litr4C,deadwoodC,deadwood2C,deadwood3C,deadwood4C,soilC,soil1C,soil2C,soil3C,soil4C,"
+				"litrN,litr1N,litr2N,litr3N,litr4N,deadwoodN,deadwood2N,deadwood3N,deadwood4N,soilN,soil1N,soil2N,soil3N,soil4N,"
+				"Tsoil,Daylength\n");
 	}
 	/*****************************************************************************************************/
 
@@ -1845,14 +1883,13 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 
 							/* print variables at layer-class level */
 							logger(g_daily_log,",%6.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,"
-									"%d,%d,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
-									",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
-									",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
-									",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",
+									"%d,%d,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
+									",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
+									",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",
 									s->value[GPP],
-									s->value[ASSIMILATION],
-									s->value[ASSIMILATION_SUN],
-									s->value[ASSIMILATION_SHADE],
+									s->value[ALPHA_EFF],
+									s->value[ALPHA_EFF_SUN],
+									s->value[ALPHA_EFF_SHADE],
 									s->value[TOTAL_GROWTH_RESP],
 									s->value[TOTAL_MAINT_RESP],
 									s->value[TOTAL_AUT_RESP],
@@ -1900,6 +1937,26 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 									s->value[C_TO_CROOT],
 									s->value[C_TO_BRANCH],
 									s->value[C_TO_FRUIT],
+									s->value[RESERVE_N],
+									s->value[STEM_N],
+									s->value[STEM_LIVEWOOD_N],
+									s->value[STEM_DEADWOOD_N],
+									s->value[LEAF_N],
+									s->value[FROOT_N],
+									s->value[CROOT_N],
+									s->value[CROOT_LIVEWOOD_N],
+									s->value[CROOT_DEADWOOD_N],
+									s->value[BRANCH_N],
+									s->value[BRANCH_LIVEWOOD_N],
+									s->value[BRANCH_DEADWOOD_N],
+									s->value[FRUIT_N],
+									s->value[N_TO_RESERVE],
+									s->value[N_TO_STEM],
+									s->value[N_TO_LEAF],
+									s->value[N_TO_FROOT],
+									s->value[N_TO_CROOT],
+									s->value[N_TO_BRANCH],
+									s->value[N_TO_FRUIT],
 									s->value[STEM_AUT_RESP],
 									s->value[LEAF_AUT_RESP],
 									s->value[FROOT_AUT_RESP],
@@ -1914,9 +1971,7 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 									s->value[F_NUTR],
 									s->value[F_SW],
 									s->value[LITR_C],
-									s->value[CWD_C],
-									s->value[SOIL_C]
-							);
+									s->value[CWD_C]);
 						}
 
 						if ( c->heights[height].dbhs[dbh].ages[age].species_count > 1 ) {
@@ -1942,7 +1997,8 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 	/************************************************************************/
 	/* printing variables only at cell level */
 
-	logger(g_daily_log, ",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f\n",
+	logger(g_daily_log, ",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,"
+			"%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f\n",
 			c->daily_gpp,
 			c->daily_npp,
 			c->daily_aut_resp,
@@ -1959,14 +2015,35 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 			c->soil_moist_ratio,
 			c->daily_iwue,
 			c->litrC,
-			c->cwdC,
+			c->litr1C,
+			c->litr2C,
+			c->litr3C,
+			c->litr4C,
+			c->cwd_C,
+			c->cwd_2C,
+			c->cwd_3C,
+			c->cwd_4C,
 			c->soilC,
+			c->soil1C,
+			c->soil2C,
+			c->soil3C,
+			c->soil4C,
 			c->litrN,
+			c->litr1N,
+			c->litr2N,
+			c->litr3N,
+			c->litr4N,
+			c->cwd_N,
+			c->cwd_2N,
+			c->cwd_3N,
+			c->cwd_4N,
 			c->soilN,
+			c->soil1N,
+			c->soil2N,
+			c->soil3N,
+			c->soil4N,
 			c->years[year].daily[month].d[day].tsoil,
 			c->years[year].daily[month].d[day].daylength
-			//c->years[year].m[month].d[day].tsoil,
-			//c->years[year].m[month].d[day].daylength
 	);
 	/************************************************************************/
 
@@ -2038,7 +2115,7 @@ void EOM_print_output_cell_level(cell_t *const c, const int month, const int yea
 
 								logger(g_monthly_log,
 										",GPP"
-										",ASS"
+										",GROSS_ASS"
 										",RA"
 										",NPP"
 										",CUE"
@@ -2144,7 +2221,7 @@ void EOM_print_output_cell_level(cell_t *const c, const int month, const int yea
 							logger(g_monthly_log,",%6.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%d,%3.4f,%3.4f,%3.4f,%3.4f"
 									",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",
 									s->value[MONTHLY_GPP],
-									s->value[MONTHLY_ASSIMILATION],
+									s->value[MONTHLY_GROSS_ASSIMILATION],
 									s->value[MONTHLY_TOTAL_AUT_RESP],
 									s->value[MONTHLY_NPP],
 									s->value[MONTHLY_CUE],
@@ -2309,7 +2386,7 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 
 								logger(g_annual_log,
 										",GPP"
-										",ASS"
+										",GROSS_ASS"
 										",GR"
 										",MR"
 										",RA"
@@ -2326,9 +2403,9 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 										",CROWN_HEIGHT"
 										",CROWN_AREA_PROJ"
 										",APAR"
-										",LiveTree"
-										",DeadTree"
-										",ThinnedTree"
+										",LIVETREE"
+										",DEADTREE"
+										",THINNEDTREE"
 										",VEG_D"
 										",FIRST_VEG_DAY"
 										",CTRANSP"
@@ -2338,24 +2415,35 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 										",MIN_RESERVE_C"
 										",RESERVE_C"
 										",STEM_C"
-										",STEM_SAP_C"
-										",STEM_HEA_C"
-										",STEM_SAP_PERC"
-										",STEM_LIVE_C"
-										",STEM_DEAD_C"
-										",STEM_LIVE_PERC"
+										",STEMSAP_C"
+										",STEMHEART_C"
+										",STEMSAP_PERC"
+										",STEMLIVE_C"
+										",STEMDEAD_C"
+										",STEMLIVE_PERC"
 										",MAX_LEAF_C"
 										",MAX_FROOT_C"
 										",CROOT_C"
-										",CROOT_LIVE_C"
-										",CROOT_DEAD_C"
-										",CROOT_LIVE_PERC"
+										",CROOTLIVE_C"
+										",CROOTDEAD_C"
+										",CROOTLIVE_PERC"
 										",BRANCH_C"
-										",BRANCH_LIVE_C"
-										",BRANCH_DEAD_C"
-										",BRANCH_LIVE_PERC"
+										",BRANCHLIVE_C"
+										",BRANCHDEAD_C"
+										",BRANCHLIVE_PERC"
 										",FRUIT_C"
 										",MAX_FRUIT_C"
+										",RESERVE_N"
+										",STEM_N"
+										",STEMLIVE_N"
+										",STEMDEAD_N"
+										",CROOT_N"
+										",CROOTLIVE_N"
+										",CROOTDEAD_N"
+										",BRANCH_N"
+										",BRANCHLIVE_N"
+										",BRANCHDEAD_N"
+										",FRUIT_N"
 										",STANDING_WOOD"
 										",DELTA_WOOD"
 										",CUM_DELTA_WOOD"
@@ -2404,10 +2492,12 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 		}
 		/************************************************************************/
 		/* heading cell variables */
-		logger(g_annual_log,",gpp,npp,ar,hr,rsoil,rsoilCO2,reco,nee,nep,et,le,soil-evapo,asw,iWue,vol,cum_vol,run_off");
+		logger(g_annual_log,",gpp,npp,ar,hr,rsoil,rsoilCO2,reco,nee,nep,et,le,soil-evapo,asw,iWue,vol,cum_vol,run_off,"
+				"litrC,litr1C,litr2C,litr3C,litr4C,cwdC,cwd2C,cwd3C,cwd4C,soilC,soil1C,soil2C,soil3C,soil4C,"
+				"litrN,litr1N,litr2N,litr3N,litr4N,cwdN,cwd2N,cwd3N,cwd4N,soilN,soil1N,soil2N,soil3N,soil4N");
 		/************************************************************************/
 		/* heading meteo variables */
-		logger(g_annual_log,",solar_rad,tavg,tmax,tmin,tday,tnight,vpd,prcp,tsoil,rh,[CO2]");
+		logger(g_annual_log,",solar_rad,tavg,tmax,tmin,tday,tnight,vpd,prcp,tsoil,rh,avg_asw,[CO2]");
 		/************************************************************************/
 		/* end heading */
 		logger(g_annual_log,"\n");
@@ -2464,9 +2554,10 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 								/* print variables at layer-class level */
 								logger(g_annual_log,",%6.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%d,%d,%d,%d,%d,%3.4f"
 										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
-										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",
+										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
+										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",
 										s->value[YEARLY_GPP],
-										s->value[YEARLY_ASSIMILATION],
+										s->value[YEARLY_GROSS_ASSIMILATION],
 										s->value[YEARLY_TOTAL_GROWTH_RESP],
 										s->value[YEARLY_TOTAL_MAINT_RESP],
 										s->value[YEARLY_TOTAL_AUT_RESP],
@@ -2497,22 +2588,33 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 										s->value[STEM_C],
 										s->value[STEM_SAPWOOD_C],
 										s->value[STEM_HEARTWOOD_C],
-										(s->value[STEM_SAPWOOD_C]*100.)/s->value[STEM_C],
+										(s->value[STEM_SAPWOOD_C] * 100. ) / s->value[STEM_C],
 										s->value[STEM_LIVEWOOD_C],
 										s->value[STEM_DEADWOOD_C],
-										(s->value[STEM_LIVEWOOD_C]*100.)/s->value[STEM_C],
+										(s->value[STEM_LIVEWOOD_C] * 100. ) / s->value[STEM_C],
 										s->value[MAX_LEAF_C],
 										s->value[MAX_FROOT_C],
 										s->value[CROOT_C],
 										s->value[CROOT_LIVEWOOD_C],
 										s->value[CROOT_DEADWOOD_C],
-										(s->value[CROOT_LIVEWOOD_C]*100.)/s->value[CROOT_C],
+										(s->value[CROOT_LIVEWOOD_C] * 100. ) / s->value[CROOT_C],
 										s->value[BRANCH_C],
 										s->value[BRANCH_LIVEWOOD_C],
 										s->value[BRANCH_DEADWOOD_C],
-										(s->value[BRANCH_LIVEWOOD_C]*100.)/s->value[BRANCH_C],
+										(s->value[BRANCH_LIVEWOOD_C] * 100. ) / s->value[BRANCH_C],
 										s->value[FRUIT_C],
 										s->value[MAX_FRUIT_C],
+										s->value[RESERVE_N],
+										s->value[STEM_N],
+										s->value[STEM_LIVEWOOD_N],
+										s->value[STEM_DEADWOOD_N],
+										s->value[CROOT_N],
+										s->value[CROOT_LIVEWOOD_N],
+										s->value[CROOT_DEADWOOD_N],
+										s->value[BRANCH_N],
+										s->value[BRANCH_LIVEWOOD_N],
+										s->value[BRANCH_DEADWOOD_N],
+										s->value[FRUIT_N],
 										s->value[STANDING_WOOD],
 										s->value[YEARLY_C_TO_WOOD],
 										s->value[CUM_YEARLY_C_TO_WOOD],
@@ -2565,10 +2667,10 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 	{
 		//ALESSIOC TO ALLESSIOR PRINT EMPTY SPACES WHEN N_TREE = 0
 	}
-
 	/************************************************************************/
 	/* printing variables at cell level only if there's more than one layer */
-	logger(g_annual_log, ",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f",
+	logger(g_annual_log, ",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f"
+			",%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f",
 			c->annual_gpp,
 			c->annual_npp,
 			c->annual_aut_resp,
@@ -2585,10 +2687,38 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 			c->annual_iwue,
 			c->volume,
 			c->cum_volume,
-			c->annual_out_flow);
+			c->annual_out_flow,
+			c->litrC,
+			c->litr1C,
+			c->litr2C,
+			c->litr3C,
+			c->litr4C,
+			c->cwd_C,
+			c->cwd_2C,
+			c->cwd_3C,
+			c->cwd_4C,
+			c->soilC,
+			c->soil1C,
+			c->soil2C,
+			c->soil3C,
+			c->soil4C,
+			c->litrN,
+			c->litr1N,
+			c->litr2N,
+			c->litr3N,
+			c->litr4N,
+			c->cwd_N,
+			c->cwd_2N,
+			c->cwd_3N,
+			c->cwd_4N,
+			c->soilN,
+			c->soil1N,
+			c->soil2N,
+			c->soil3N,
+			c->soil4N);
 	/************************************************************************/
 	/* print meteo variables at cell level */
-	logger(g_annual_log, ",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",
+	logger(g_annual_log, ",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",
 			c->years[year].yearly.solar_rad     ,
 			c->years[year].yearly.tavg          ,
 			c->years[year].yearly.tmax          ,
@@ -2599,6 +2729,7 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 			c->years[year].yearly.prcp          ,
 			c->years[year].yearly.tsoil         ,
 			c->years[year].yearly.rh_f          ,
+			c->years[year].yearly.asw           ,
 			c->years[year].co2Conc);
 	/************************************************************************/
 	/* end print */
@@ -2989,5 +3120,5 @@ void EOY_print_output_soil_cell_level(cell_t *const c, const int year, const int
 		logger(g_annual_log, "#output file = %s\n", g_annual_soil_log->filename);
 		print_model_settings(g_annual_soil_log);
 	}
-} 
+}
 #endif

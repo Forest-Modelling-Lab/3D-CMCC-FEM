@@ -38,13 +38,6 @@ void reset_daily_cell_variables(cell_t *const c)
 	c->net_rad_abs =                    0.;
 	c->net_rad_abs_soil =               0.;
 	c->net_rad_abs_snow =               0.;
-	c->ppfd_abs =                       0.;
-	c->ppfd_abs_soil =                  0.;
-	c->ppfd_abs_snow =                  0.;
-	c->ppfd_transm =                    0.;
-	c->ppfd_refl =                      0.;
-	c->ppfd_refl_soil =                 0.;
-	c->ppfd_refl_snow =                 0.;
 	c->canopy_temp_k =                  0.;
 
 	/*reset daily carbon variables*/
@@ -78,50 +71,80 @@ void reset_daily_cell_variables(cell_t *const c)
 	c->daily_stem_carbon =              0.;
 	c->daily_froot_carbon =             0.;
 	c->daily_croot_carbon =             0.;
-	c->daily_root_carbon =              0.;
 	c->daily_branch_carbon =            0.;
 	c->daily_reserve_carbon =           0.;
 	c->daily_fruit_carbon =             0.;
 
+	/* nitrogen fluxes */
+	c->daily_leaf_nitrogen =            0.;
+	c->daily_stem_nitrogen =            0.;
+	c->daily_froot_nitrogen =           0.;
+	c->daily_croot_nitrogen =           0.;
+	c->daily_root_nitrogen =            0.;
+	c->daily_branch_nitrogen =          0.;
+	c->daily_reserve_nitrogen =         0.;
+	c->daily_fruit_nitrogen =           0.;
+
 	/* carbon litter fluxes */
-	c->daily_litrC =                    0.;
-	c->daily_leaf_litrC =               0.;
-	c->daily_leaf_litr1C =              0.;
-	c->daily_leaf_litr2C =              0.;
-	c->daily_leaf_litr3C =              0.;
-	c->daily_leaf_litr4C =              0.;
-	c->daily_froot_litrC =              0.;
-	c->daily_froot_litr1C =             0.;
-	c->daily_froot_litr2C =             0.;
-	c->daily_froot_litr3C =             0.;
-	c->daily_froot_litr4C =             0.;
-	c->daily_stem_cwdC =                0.;
-	c->daily_croot_cwdC =               0.;
-	c->daily_reserve_cwdC =             0.;
-	c->daily_branch_cwdC =              0.;
-	c->daily_fruit_cwdC =               0.;
-	c->daily_cwdC =                     0.;
-	c->daily_soilC =                    0.;
+	c->daily_to_litrC =                 0.;
+	c->daily_to_litr1C =                0.;
+	c->daily_to_litr2C =                0.;
+	c->daily_to_litr3C =                0.;
+	c->daily_to_litr4C =                0.;
+	c->daily_leaf_to_litrC =            0.;
+	c->daily_leaf_to_litr1C =           0.;
+	c->daily_leaf_to_litr2C =           0.;
+	c->daily_leaf_to_litr3C =           0.;
+	c->daily_leaf_to_litr4C =           0.;
+	c->daily_froot_to_litrC =           0.;
+	c->daily_froot_to_litr1C =          0.;
+	c->daily_froot_to_litr2C =          0.;
+	c->daily_froot_to_litr3C =          0.;
+	c->daily_froot_to_litr4C =          0.;
+	c->daily_cwd_to_litrC =             0.;
+	c->daily_cwd_to_litr2C =            0.;
+	c->daily_cwd_to_litr3C =            0.;
+	c->daily_cwd_to_litr4C =            0.;
+	c->daily_to_soil1C =                0.;
+	c->daily_to_soil2C =                0.;
+	c->daily_to_soil3C =                0.;
+	c->daily_to_soil4C =                0.;
+	c->daily_to_soilC =                 0.;
+	c->daily_litr_het_resp =            0.;
+	c->daily_litr1_het_resp =           0.;
+	c->daily_litr2_het_resp =           0.;
+	c->daily_litr4_het_resp =           0.;
+	c->daily_soil_het_resp =            0.;
+	c->daily_soil1_het_resp =           0.;
+	c->daily_soil2_het_resp =           0.;
+	c->daily_soil3_het_resp =           0.;
+	c->daily_soil4_het_resp =           0.;
 
 	/* nitrogen litter fluxes */
-	c->daily_litrN =                    0.;
-	c->daily_leaf_litrN =               0.;
-	c->daily_leaf_litr1N =              0.;
-	c->daily_leaf_litr2N =              0.;
-	c->daily_leaf_litr3N =              0.;
-	c->daily_leaf_litr4N =              0.;
-	c->daily_froot_litrN =              0.;
-	c->daily_froot_litr1N =             0.;
-	c->daily_froot_litr2N =             0.;
-	c->daily_froot_litr3N =             0.;
-	c->daily_froot_litr4N =             0.;
-	c->daily_stem_cwdN =                0.;
-	c->daily_croot_cwdN =               0.;
-	c->daily_reserve_cwdN =             0.;
-	c->daily_fruit_cwdN =               0.;
-	c->daily_branch_cwdN =              0.;
-	c->daily_cwdN =                     0.;
-	c->daily_soilN =                    0.;
+	c->daily_to_litrN =                 0.;
+	c->daily_to_litr1N =                0.;
+	c->daily_to_litr2N =                0.;
+	c->daily_to_litr3N =                0.;
+	c->daily_to_litr4N =                0.;
+	c->daily_leaf_to_litrN =            0.;
+	c->daily_leaf_to_litr1N =           0.;
+	c->daily_leaf_to_litr2N =           0.;
+	c->daily_leaf_to_litr3N =           0.;
+	c->daily_leaf_to_litr4N =           0.;
+	c->daily_froot_to_litrN =           0.;
+	c->daily_froot_to_litr1N =          0.;
+	c->daily_froot_to_litr2N =          0.;
+	c->daily_froot_to_litr3N =          0.;
+	c->daily_froot_to_litr4N =          0.;
+	c->daily_cwd_to_litrN =             0.;
+	c->daily_cwd_to_litr2N =            0.;
+	c->daily_cwd_to_litr3N =            0.;
+	c->daily_cwd_to_litr4N =            0.;
+	c->daily_to_soil1N =                0.;
+	c->daily_to_soil2N =                0.;
+	c->daily_to_soil3N =                0.;
+	c->daily_to_soil4N =                0.;
+	c->daily_to_soilN =                 0.;
 
 	/*reset daily water variables*/
 	c->daily_snow_melt =                0.;
@@ -344,13 +367,6 @@ void reset_daily_class_variables(cell_t *const c)
 					s->value[SW_RAD_TRANSM] =             0.;
 					s->value[SW_RAD_TRANSM_SUN] =         0.;
 					s->value[SW_RAD_TRANSM_SHADE] =       0.;
-					s->value[PPFD] =                      0.;
-					s->value[PPFD_ABS] =                  0.;
-					s->value[PPFD_ABS_SUN] =              0.;
-					s->value[PPFD_ABS_SHADE] =            0.;
-					s->value[PPFD_TRANSM] =               0.;
-					s->value[PPFD_TRANSM_SUN] =           0.;
-					s->value[PPFD_TRANSM_SHADE] =         0.;
 
 					/* reset daily carbon fluxes */
 					s->value[GPP] =                       0.;
@@ -359,9 +375,9 @@ void reset_daily_class_variables(cell_t *const c)
 					s->value[C_FLUX] =                    0.;
 					s->value[CUE] =                       0.;
 
-					s->value[ASSIMILATION] =              0.;
-					s->value[ASSIMILATION_SUN] =          0.;
-					s->value[ASSIMILATION_SHADE] =        0.;
+					s->value[GROSS_ASSIMILATION] =        0.;
+					s->value[GROSS_ASSIMILATION_SUN] =    0.;
+					s->value[GROSS_ASSIMILATION_SHADE] =  0.;
 
 					/* reset daily water fluxes */
 					s->value[STOMATAL_CONDUCTANCE] =      0.;
@@ -418,10 +434,24 @@ void reset_daily_class_variables(cell_t *const c)
 					s->value[C_STEM_SAPWOOD_TO_CWD] =     0.;
 					s->value[C_CROOT_SAPWOOD_TO_CWD] =    0.;
 					s->value[C_BRANCH_SAPWOOD_TO_CWD] =   0.;
+					s->value[LEAF_TO_LITRC] =             0.;
+					s->value[LEAF_TO_LITR1C] =            0.;
+					s->value[LEAF_TO_LITR2C] =            0.;
+					s->value[LEAF_TO_LITR3C] =            0.;
+					s->value[LEAF_TO_LITR4C] =            0.;
+					s->value[FROOT_TO_LITRC] =            0.;
+					s->value[FROOT_TO_LITR1C] =           0.;
+					s->value[FROOT_TO_LITR2C] =           0.;
+					s->value[FROOT_TO_LITR3C] =           0.;
+					s->value[FROOT_TO_LITR4C] =           0.;
+					s->value[CWD_TO_LITRC] =              0.;
+					s->value[CWD_TO_LITR2C] =             0.;
+					s->value[CWD_TO_LITR3C] =             0.;
+					s->value[CWD_TO_LITR4C] =             0.;
 
 					/* reset daily nitrogen fluxes */
-					s->value[NPP_gN] =                    0.;
-					s->value[NPP_tN] =                    0.;
+					s->value[NPP_gN_DEMAND] =             0.;
+					s->value[NPP_tN_DEMAND] =             0.;
 
 					/* reset daily nitrogen fluxes among pools */
 					s->value[N_TO_LEAF] =                 0.;
@@ -438,6 +468,8 @@ void reset_daily_class_variables(cell_t *const c)
 					s->value[N_TO_CWD] =                  0.;
 					s->value[N_LEAF_TO_RESERVE] =         0.;
 					s->value[N_FROOT_TO_RESERVE] =        0.;
+					s->value[N_CROOT_TO_RESERVE] =        0.;
+					s->value[N_BRANCH_TO_RESERVE] =       0.;
 					s->value[N_LEAF_TO_LITR] =            0.;
 					s->value[N_FROOT_TO_LITR] =           0.;
 					s->value[N_STEM_TO_CWD] =             0.;
@@ -445,7 +477,20 @@ void reset_daily_class_variables(cell_t *const c)
 					s->value[N_BRANCH_TO_CWD] =           0.;
 					s->value[N_RESERVE_TO_CWD] =          0.;
 					s->value[N_FRUIT_TO_CWD] =            0.;
-
+					s->value[LEAF_TO_LITRN] =             0.;
+					s->value[LEAF_TO_LITR1N] =            0.;
+					s->value[LEAF_TO_LITR2N] =            0.;
+					s->value[LEAF_TO_LITR3N] =            0.;
+					s->value[LEAF_TO_LITR4N] =            0.;
+					s->value[FROOT_TO_LITRN] =            0.;
+					s->value[FROOT_TO_LITR1N] =           0.;
+					s->value[FROOT_TO_LITR2N] =           0.;
+					s->value[FROOT_TO_LITR3N] =           0.;
+					s->value[FROOT_TO_LITR4N] =           0.;
+					s->value[CWD_TO_LITRN] =              0.;
+					s->value[CWD_TO_LITR2N] =             0.;
+					s->value[CWD_TO_LITR3N] =             0.;
+					s->value[CWD_TO_LITR4N] =             0.;
 					/****************************************/
 
 					/* reset daily maintenance, growth and total respiration */
@@ -535,9 +580,9 @@ void reset_monthly_class_variables(cell_t *const c)
 					s->value[MONTHLY_CANOPY_EVAPO_TRANSP] =  0.;
 					s->value[MONTHLY_CANOPY_LATENT_HEAT] =   0.;
 
-					s->value[MONTHLY_ASSIMILATION] =         0.;
-					s->value[MONTHLY_ASSIMILATION_SUN] =     0.;
-					s->value[MONTHLY_ASSIMILATION_SHADE] =   0.;
+					s->value[MONTHLY_GROSS_ASSIMILATION] =   0.;
+					s->value[MONTHLY_GROSS_ASSIMILATION_SUN] = 0.;
+					s->value[MONTHLY_GROSS_ASSIMILATION_SHADE] = 0.;
 				}
 			}
 		}
@@ -628,6 +673,7 @@ void reset_annual_class_variables(cell_t *const c)
 					s->value[YEARLY_BRANCH_AUT_RESP] =      0.;
 					s->value[YEARLY_TOTAL_AUT_RESP] =       0.;
 					s->value[YEARLY_C_TO_WOOD] =            0.;
+					s->value[YEARLY_N_TO_WOOD] =            0.;
 					s->value[YEARLY_CANOPY_TRANSP] =        0.;
 					s->value[YEARLY_CANOPY_TRANSP_SUN] =    0.;
 					s->value[YEARLY_CANOPY_TRANSP_SHADE] =  0.;
@@ -636,9 +682,9 @@ void reset_annual_class_variables(cell_t *const c)
 					s->value[YEARLY_CANOPY_LATENT_HEAT] =   0.;
 					s->counter[N_TREE_SAP] =                0;
 
-					s->value[YEARLY_ASSIMILATION] =         0.;
-					s->value[YEARLY_ASSIMILATION_SUN] =     0.;
-					s->value[YEARLY_ASSIMILATION_SHADE] =   0.;
+					s->value[YEARLY_GROSS_ASSIMILATION] =   0.;
+					s->value[YEARLY_GROSS_ASSIMILATION_SUN] = 0.;
+					s->value[YEARLY_GROSS_ASSIMILATION_SHADE] = 0.;
 				}
 			}
 		}

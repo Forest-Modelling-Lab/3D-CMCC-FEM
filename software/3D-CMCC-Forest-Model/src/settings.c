@@ -13,7 +13,8 @@ enum {
 	, SETTINGS_VERSION
 	, SETTINGS_SPATIAL
 	, SETTINGS_TIME
-	// SETTINGS_SPINUP "on" or "off"
+	, SETTINGS_SPINUP
+	, SETTINGS_SPINUP_YEARS
 	, SETTINGS_SCREEN_OUTPUT
 	, SETTINGS_DEBUG_OUTPUT
 	, SETTINGS_HALFHOURLY_OUTPUT
@@ -84,6 +85,8 @@ const char* sz_settings[SETTINGS_COUNT] = {
 	, "VERSION"
 	, "SPATIAL"
 	, "TIME"
+	, "SPINUP"
+	, "SPINUP_YEARS"
 	, "SCREEN_OUTPUT"
 	, "DEBUG_OUTPUT"
 	, "HALFHOURLY_OUTPUT"
@@ -596,6 +599,12 @@ settings_t* settings_import(const char *const filename) {
 				}
 			break;
 
+			case SETTINGS_SPINUP:
+				if ( ! string_compare_i(token, "on") ) {
+					s->spinup = 1;
+				}
+			break;
+
 			case SETTINGS_SCREEN_OUTPUT:
 				if ( ! string_compare_i(token, "on") ) {
 					s->screen_output = 1;
@@ -722,6 +731,10 @@ settings_t* settings_import(const char *const filename) {
 					}
 				}
 				switch ( index ) {
+					case SETTINGS_SPINUP_YEARS:
+						s->spinup_years = (int)value;
+					break;
+
 					case SETTINGS_YEAR_START:
 						s->year_start = (int)value;
 					break;

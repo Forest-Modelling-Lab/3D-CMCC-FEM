@@ -38,7 +38,6 @@ void print_daily_met_data(cell_t *c, const int day, const int month, const int y
 			"-solar_rad = %f MJ/m^2/day\n"
 			"-PAR = %f molPAR/m^2/day\n"
 			"-s-wave downward = %f W/m2\n"
-			"-PPFD = %f umolPAR/m^2/sec\n"
 			"-atm l-wave downward (computed) = %f W/m2\n"
 			"-tavg = %f °C\n"
 			"-tmax = %f °C\n"
@@ -66,7 +65,6 @@ void print_daily_met_data(cell_t *c, const int day, const int month, const int y
 			met[month].d[day].solar_rad,
 			met[month].d[day].par,
 			met[month].d[day].solar_rad* MJ_TO_W,
-			met[month].d[day].ppfd,
 			met[month].d[day].atm_lw_downward_W,
 			met[month].d[day].tavg,
 			met[month].d[day].tmax,

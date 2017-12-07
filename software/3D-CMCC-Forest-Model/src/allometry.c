@@ -58,7 +58,6 @@ void crown_allometry (cell_t *const c, const int height, const int dbh, const in
 		self_pruning ( c, height, dbh, age, species, old_crown_proj, s->value[CROWN_AREA_PROJ] );
 	}
 
-
 	/* Crown Height */
 	/* it mainly follows SORTIE-ND approach in the form of x = a*tree height^c */
 	/* note when b = 1 the function is prettily a linear function */

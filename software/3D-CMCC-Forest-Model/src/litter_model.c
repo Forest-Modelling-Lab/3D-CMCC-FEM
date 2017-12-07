@@ -15,8 +15,12 @@
 #include "constants.h"
 #include "logger.h"
 #include "settings.h"
+#include "het_respiration.h"
+#include "litter_carbon_balance.h"
+#include "litter_nitrogen_balance.h"
 #include "decomposition.h"
 #include "check_balance.h"
+#include "littering.h"
 #include "meteo.h"
 
 extern settings_t* g_settings;
@@ -34,33 +38,26 @@ int Litter_model(matrix_t *const m, const int cell, const int half_hour, const i
 	/* assign shortcuts */
 	c = &m->cells[cell];
 
-#if 1
 	meteo_daily = &m->cells[cell].years[year].daily[month].d[day];
 	assert(meteo_daily);
-	decomposition ( c, meteo_daily );
-#else
-	if ( DAILY == g_settings->time )
+	/* if spinup on than does littering */
+	if ( g_settings->spinup )
 	{
-		meteo_daily = &m->cells[cell].years[year].daily[month].d[day];
-		assert(meteo_daily);
-		decomposition ( c, meteo_daily );
+		spinup_littering ( c );
 	}
-	else if ( HOURLY == g_settings->time )
-	{
-		//meteo_daily = &m->cells[cell].years[year].hourly[month].d[day].h[hour];		
-		assert(1);
-	}
-	else if ( HALFHOURLY == g_settings->time )
-	{
-		//meteo_daily = m->cells[cell].years[year].halfhourly[month].d[day].h[hour].hh[half_hour];		
-		assert(1);
-	}
-#endif
-	/* check parameters */
-	assert(meteo_daily);
 
-	/* decomposition */
-	decomposition ( c, meteo_daily );
+	/* compute litter decomposition */
+	litter_decomposition             ( c, meteo_daily );
+
+	/* compute heterotrophic respiration from litter pool */
+	litter_heterotrophic_respiration ( c, meteo_daily );
+
+	/* compute soil carbon balance */
+	litter_carbon_balance            ( c, year );
+
+	/* compute soil nitrogen balance */
+	litter_nitrogen_balance          ( c, year );
+
 
 	/*******************************************************************************************************/
 

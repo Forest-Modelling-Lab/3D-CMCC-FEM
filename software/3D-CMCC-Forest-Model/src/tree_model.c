@@ -10,7 +10,6 @@
 #include <math.h>
 #include <assert.h>
 #include <new_forest_tree_class.h>
-#include <N-assimilation.h>
 #include "constants.h"
 #include "common.h"
 #include "print_output.h"
@@ -33,7 +32,6 @@
 #include "canopy_net_radiation.h"
 #include "canopy_temperature.h"
 #include "modifiers.h"
-#include "N-assimilation.h"
 #include "canopy_evapotranspiration.h"
 #include "photosynthesis.h"
 #include "aut_respiration.h"
@@ -64,6 +62,8 @@
 extern logger_t* g_debug_log;
 extern soil_settings_t* g_soil_settings;
 extern settings_t* g_settings;
+
+#define PHOTOSYNTHESIS 0 /* 0 for Farquhar von Caemmerer approach; 1 for Monteith (LUE) approach */
 
 //extern const char sz_err_out_of_memory[];
 
@@ -275,15 +275,27 @@ int Tree_model(matrix_t *const m, const int cell, const int halfhour, const int 
 
 							/* note: following Piao et al., 2010 */
 							/* (Maint Resp)->(Growth Resp = (GPP - Maint Resp) * eff_grperc)->(NPP) */
+#if PHOTOSYNTHESIS
 
-							/* canopy carbon assimilation */
-							photosynthesis ( c, layer, height, dbh, age, species, DaysInMonth[month], meteo_annual );
-
-							/* canopy carbon assimilation (BIOME-BGC) */
-							total_photosynthesis_biome ( c, height, dbh, age, species, meteo_daily, meteo_annual );
+							/**********************************************************************/
+							/* canopy carbon assimilation ( Monteith approach ) */
+							photosynthesis ( c, layer, height, dbh, age, species, meteo_annual );
 
 							/* maintenance respiration */
 							maintenance_respiration ( c, layer, height, dbh, age, species, meteo_daily );
+							/**********************************************************************/
+
+#else
+
+							/**********************************************************************/
+							/* maintenance respiration */
+							maintenance_respiration ( c, layer, height, dbh, age, species, meteo_daily );
+
+							/* canopy carbon assimilation ( Farquhar Von Caemmerer approach ) */
+							total_photosynthesis_biome ( c, height, dbh, age, species, meteo_daily, meteo_annual );
+							/**********************************************************************/
+
+#endif
 
 							/* C-N-partitioning */
 							if ( s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2 )
@@ -306,8 +318,8 @@ int Tree_model(matrix_t *const m, const int cell, const int halfhour, const int 
 							/* carbon fluxes */
 							carbon_fluxes           ( c, height, dbh, age, species );
 
-							/* C assimilation */
-							carbon_assimilation     ( c, height, dbh, age, species );
+							/* C productivity */
+							carbon_productivity                ( c, height, dbh, age, species );
 
 							if ( c->doy == ( IS_LEAP_YEAR ( c->years[year].year ) ? 366 : 365) )
 							{
@@ -320,10 +332,10 @@ int Tree_model(matrix_t *const m, const int cell, const int halfhour, const int 
 							}
 
 							/* allocate daily carbon */
-							carbon_allocation       ( c, height, dbh, age, species, day, month, year );
+							carbon_allocation       ( c, s, day, month, year );
 
 							/* allocate daily nitrogen */
-							nitrogen_allocation     ( c, s );
+							nitrogen_allocation     ( c, s, day, month, year );
 
 							/* MORTALITY */
 							/* Mortality based on growth efficiency */
@@ -343,9 +355,6 @@ int Tree_model(matrix_t *const m, const int cell, const int halfhour, const int 
 								/* update Leaf Area Index */
 								daily_lai             ( c, s );
 
-								/* N assimilation */
-								nitrogen_assimilation ( s );
-
 								/* litter fluxes and pools */
 								littering             ( c, s );
 
@@ -356,7 +365,6 @@ int Tree_model(matrix_t *const m, const int cell, const int halfhour, const int 
 								/* last day of the year */
 								if ( c->doy == ( IS_LEAP_YEAR ( c->years[year].year ) ? 366 : 365) )
 								{
-
 									/* above ground-below ground stocks */
 									abg_bgb_biomass ( c, height, dbh, age, species );
 

@@ -83,6 +83,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 	double net_rad;
 	double rv;
 	double rh;                                                             /* Leaf-Canopy resistance to sensible heat */
+	double leaf_transp;
 	double evap_daylength_sec;
 	double transp_daylength_sec;
 	double evapo;
@@ -302,7 +303,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 				/** LAI SUN **/
 				logger(g_debug_log, "\n--Transpiration for LAI sun--\n");
 
-				/* for sun canopy fraction */
+				/* resistance for sun canopy fraction */
 				rv = 1. / s->value[LEAF_SUN_CONDUCTANCE];
 				logger(g_debug_log, "Leaf sun resistance = %f \n",rv);
 
@@ -310,7 +311,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 				/* convert radiation to stomatal scale */
 				//fixme why??????????
 #if 0
-				net_rad = ( s->value[SW_RAD_ABS_SUN] / s->value[LAI_SUN_PROJ] ) * s->value[F_LIGHT_SUN_MAKELA];
+				net_rad = ( s->value[SW_RAD_ABS_SUN]  / s->value[LAI_SUN_PROJ] ) * s->value[F_LIGHT_SUN_MAKELA];
 #else
 				net_rad = ( s->value[NET_RAD_ABS_SUN] / s->value[LAI_SUN_PROJ] ) * s->value[F_LIGHT_SUN_MAKELA];
 #endif
@@ -318,14 +319,14 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 
 				/* call Penman-Monteith function, returns e in kg/m2/s for transpiration and W/m2 for latent heat */
 				//fixme use correct net radiation
-				s->value[CANOPY_TRANSP_SUN]  = Penman_Monteith (meteo_daily, rv, rh, net_rad);
-				s->value[CANOPY_TRANSP_SUN] *= ( transp_daylength_sec * s->value[LAI_SUN_PROJ] * s->value[DAILY_CANOPY_COVER_PROJ] );
+				leaf_transp                 = Penman_Monteith (meteo_daily, rv, rh, net_rad);
+				s->value[CANOPY_TRANSP_SUN] = leaf_transp *  ( transp_daylength_sec * s->value[LAI_SUN_PROJ] * s->value[DAILY_CANOPY_COVER_PROJ] );
 				logger(g_debug_log, "transp_sun = %f mm/m2/day\n", s->value[CANOPY_TRANSP_SUN]);
 
 				/** LAI SHADE **/
 				logger(g_debug_log, "\n--Transpiration for LAI shade--\n");
 
-				/* for shaded canopy fraction */
+				/* resistance for shaded canopy fraction */
 				rv = 1. / s->value[LEAF_SHADE_CONDUCTANCE];
 				logger(g_debug_log, "Leaf shade resistance = %f \n",rv);
 
@@ -333,7 +334,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 				/* convert radiation to stomatal scale */
 				//fixme why??????????
 #if 0
-				net_rad = ( s->value[SW_RAD_ABS_SHADE] / s->value[LAI_SHADE_PROJ] ) * s->value[F_LIGHT_SHADE_MAKELA];
+				net_rad = ( s->value[SW_RAD_ABS_SHADE]  / s->value[LAI_SHADE_PROJ] ) * s->value[F_LIGHT_SHADE_MAKELA];
 #else
 				net_rad = ( s->value[NET_RAD_ABS_SHADE] / s->value[LAI_SHADE_PROJ] ) * s->value[F_LIGHT_SHADE_MAKELA];
 #endif
@@ -341,8 +342,8 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 
 				/* call Penman-Monteith function, returns e in kg/m2/s for transpiration and W/m2 for latent heat*/
 				//fixme use correct net radiation
-				s->value[CANOPY_TRANSP_SHADE]  = Penman_Monteith (meteo_daily, rv, rh, net_rad);
-				s->value[CANOPY_TRANSP_SHADE] *= ( transp_daylength_sec * s->value[LAI_SHADE_PROJ] * s->value[DAILY_CANOPY_COVER_PROJ] );
+				leaf_transp                   = Penman_Monteith (meteo_daily, rv, rh, net_rad);
+				s->value[CANOPY_TRANSP_SHADE] = leaf_transp * ( transp_daylength_sec * s->value[LAI_SHADE_PROJ] * s->value[DAILY_CANOPY_COVER_PROJ] );
 				logger(g_debug_log, "transp_shade = %f mm/m2/day\n", s->value[CANOPY_TRANSP_SHADE]);
 
 				/************************************************************************************/
@@ -399,6 +400,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 			/** LAI SUN **/
 			logger(g_debug_log, "\n--Transpiration for LAI sun--\n");
 
+			/* resistance for sun canopy fraction */
 			rv = 1. / s->value[LEAF_SUN_CONDUCTANCE];
 			logger(g_debug_log, "Leaf sun resistance = %f \n",rv);
 
@@ -414,13 +416,14 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 
 			/* call Penman-Monteith function, returns e in kg/m2/s for transpiration and W/m2 for latent heat*/
 			//fixme use correct net radiation
-			s->value[CANOPY_TRANSP_SUN]  = Penman_Monteith (meteo_daily, rv, rh, net_rad);
-			s->value[CANOPY_TRANSP_SUN] *= ( transp_daylength_sec * s->value[LAI_SUN_PROJ] * s->value[DAILY_CANOPY_COVER_PROJ] );
+			leaf_transp                 = Penman_Monteith (meteo_daily, rv, rh, net_rad);
+			s->value[CANOPY_TRANSP_SUN] = leaf_transp * ( transp_daylength_sec * s->value[LAI_SUN_PROJ] * s->value[DAILY_CANOPY_COVER_PROJ] );
 			logger(g_debug_log, "transp_sun = %f mm/m2/day\n", s->value[CANOPY_TRANSP_SUN]);
 
 			/** LAI SHADE **/
 			logger(g_debug_log, "\n--Transpiration for LAI shade--\n");
 
+			/* resistance for shaded canopy fraction */
 			rv = 1. / s->value[LEAF_SHADE_CONDUCTANCE];
 			logger(g_debug_log, "Leaf shade resistance = %f \n",rv);
 
@@ -435,8 +438,8 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 			logger(g_debug_log, "sw rad for evaporation (LAI shade ) = %f W/m2\n", net_rad);
 
 			/* call Penman-Monteith function, returns e in kg/m2/s for transpiration and W/m2 for latent heat*/
-			s->value[CANOPY_TRANSP_SHADE]  = Penman_Monteith (meteo_daily, rv, rh, net_rad);
-			s->value[CANOPY_TRANSP_SHADE] *= ( transp_daylength_sec * s->value[LAI_SHADE_PROJ] * s->value[DAILY_CANOPY_COVER_PROJ] );
+			leaf_transp                   = Penman_Monteith (meteo_daily, rv, rh, net_rad);
+			s->value[CANOPY_TRANSP_SHADE] = leaf_transp * ( transp_daylength_sec * s->value[LAI_SHADE_PROJ] * s->value[DAILY_CANOPY_COVER_PROJ] );
 			logger(g_debug_log, "transp_shade = %f mm/m2/day\n", s->value[CANOPY_TRANSP_SHADE]);
 
 			/************************************************************************************/
@@ -455,7 +458,6 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 		s->value[CANOPY_INT_RAIN]     = 0.;
 		s->value[CANOPY_WATER]        = 0.;
 		s->value[CANOPY_TRANSP]       = 0.;
-		s->value[CANOPY_TRANSP_SHADE] = 0.;
 		s->value[CANOPY_TRANSP_SHADE] = 0.;
 		s->value[CANOPY_EVAPO]        = 0.;
 		s->value[CANOPY_EVAPO_TRANSP] = 0.;

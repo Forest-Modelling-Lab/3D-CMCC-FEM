@@ -31,7 +31,7 @@ void carbon_balance (cell_t *const c, const int height, const int dbh, const int
 	s->value[BRANCH_C]   -= (s->value[C_BRANCH_TO_CWD]);
 	s->value[RESERVE_C]  -= (s->value[C_RESERVE_TO_CWD]);
 	s->value[FRUIT_C]    -= (s->value[C_FRUIT_TO_CWD]);
-	s->value[LITR_C]     += (s->value[C_LEAF_TO_LITR] +
+	s->value[LITR_C]     += (s->value[C_LEAF_TO_LITR]     +
 			s->value[C_FROOT_TO_LITR]);
 	s->value[CWD_C]      += (s->value[C_STEM_TO_CWD] +
 			s->value[C_CROOT_TO_CWD]                 +
@@ -59,9 +59,6 @@ void carbon_balance (cell_t *const c, const int height, const int dbh, const int
 	c->croot_carbon             -= (s->value[C_BRANCH_TO_CWD] * 1e6 / g_settings->sizeCell);
 	c->reserve_carbon           -= (s->value[C_BRANCH_TO_CWD] * 1e6 / g_settings->sizeCell);
 	c->fruit_carbon             -= (s->value[C_FRUIT_TO_CWD]  * 1e6 / g_settings->sizeCell);
-	//computed in littering.c
-	//c->litrC                    += (s->value[C_TO_LITR]    * 1e6 / g_settings->sizeCell);
-	//c->cwdC                     += (s->value[C_TO_CWD]     * 1e6 / g_settings->sizeCell);
 
 	/* check */
 	CHECK_CONDITION ( c->leaf_carbon,    < , ZERO );
@@ -71,7 +68,7 @@ void carbon_balance (cell_t *const c, const int height, const int dbh, const int
 	CHECK_CONDITION ( c->croot_carbon,   < , ZERO );
 	CHECK_CONDITION ( c->fruit_carbon,   < , ZERO );
 	CHECK_CONDITION ( c->litrC,          < , ZERO );
-	CHECK_CONDITION ( c->cwdC,           < , ZERO );
+	CHECK_CONDITION ( c->cwd_C,          < , ZERO );
 	/***************************************************************************************/
 }
 

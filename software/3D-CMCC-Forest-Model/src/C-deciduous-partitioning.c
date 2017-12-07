@@ -30,9 +30,19 @@ void daily_C_deciduous_partitioning (cell_t *const c, const int layer, const int
 	double pR;
 	double pL;
 	double Light_trasm;
-	static double reserve_to_leaf_budburst;
-	static double reserve_to_froot_budburst;
-	static double reserve_to_budburst;
+
+	//fixme fixme fixme this must be class specific
+	static double daily_reserve_to_leaf_budburst;
+	static double daily_reserve_to_froot_budburst;
+	static double tot_reserve_to_leaf_budburst;
+	static double tot_reserve_to_froot_budburst;
+	static double daily_reserve_to_budburst;
+	static int days_for_budburst;
+	static int budburst_day_counter;
+	int i;
+	static int budburst_weight;
+	static int test_a;
+	static int test_b;
 
 	/* for check */
 	double npp_to_alloc;
@@ -47,9 +57,10 @@ void daily_C_deciduous_partitioning (cell_t *const c, const int layer, const int
 	a = &d->ages[age];
 	s = &a->species[species];
 
+
 	s0    = s->value[S0CTEM];        /* parameter controlling allocation to stem (minimum ratio to stem pool */
 	r0    = s->value[R0CTEM];        /* parameter controlling allocation to roots (minimum ratio to root pools */
-	omega = s->value[OMEGA_CTEM]; /* controls the sensitivity of allocation to changes in water and light availability */
+	omega = s->value[OMEGA_CTEM];    /* controls the sensitivity of allocation to changes in water and light availability */
 
 	//fixme it should takes into account above layers
 	Light_trasm = exp(- s->value[K] * s->value[LAI_PROJ]);
@@ -78,9 +89,6 @@ void daily_C_deciduous_partitioning (cell_t *const c, const int layer, const int
 	pL = (1. - pS - pR);
 	//logger(g_debug_log, "Reserve CTEM ratio = %g %%\n", pL * 100. );
 	CHECK_CONDITION( fabs ( pR + pS + pL ), >, 1 + eps );
-
-	/* fine root vs. coarse root ratio */
-	s->value[FINE_COARSE_ROOT] = (s->value[FINE_ROOT_LEAF] / s->value[COARSE_ROOT_STEM]) * ( 1. / s->value[STEM_LEAF]);
 
 	if (s->counter[VEG_DAYS] == 1)
 	{
@@ -121,7 +129,7 @@ void daily_C_deciduous_partitioning (cell_t *const c, const int layer, const int
 	case 1:
 
 		/* if management doens't happen (this to avoid problems in carbon balance) */
-		if ( !s->counter[THINNING_HAPPENS] )
+		if ( ! s->counter[THINNING_HAPPENS] )
 		{
 			logger(g_debug_log, "\n*BUDBURST*\n");
 			logger(g_debug_log, "Bud burst phase using both reserve pools and npp\n");
@@ -129,6 +137,41 @@ void daily_C_deciduous_partitioning (cell_t *const c, const int layer, const int
 			logger(g_debug_log, "Allocating only into foliage and fine root\n");
 			logger(g_debug_log, "++Remaining days for bud burst = %d\n", s->counter[BUD_BURST_COUNTER]);
 
+			/* days for budburst */
+			days_for_budburst = s->value[BUD_BURST] - 1.;
+
+#if 1
+			//test: 2 Dec 2017 Carbon "injection" function
+			//TODO IF ACCEPTED THEN MOVE MOST OF THE VARIABLES TO "CLASS SCALE"
+			//fixme somehow there's a time lag by which model reduces allocation before to finish to allocate
+			if ( ! budburst_day_counter)
+			{
+				test_a = 0;
+				test_b = 0;
+				budburst_weight = 0;
+
+				for ( i = 0; i < days_for_budburst; ++i )
+				{
+					test_a +=1;
+					test_b += test_a;
+					budburst_weight += test_b;
+				}
+				test_a = 0;
+				test_b = 0;
+
+				tot_reserve_to_leaf_budburst  = ( s->value[MAX_LEAF_C]   + ( s->value[MAX_LEAF_C]  * s->value[EFF_GRPERC] ) );
+				tot_reserve_to_froot_budburst = ( s->value[MAX_FROOT_C]  + ( s->value[MAX_FROOT_C] * s->value[EFF_GRPERC] ) );
+			}
+
+			test_a +=1;
+			test_b += test_a;
+
+			daily_reserve_to_leaf_budburst   = tot_reserve_to_leaf_budburst  * ( test_b / (double)budburst_weight );
+			daily_reserve_to_froot_budburst  = tot_reserve_to_froot_budburst * ( test_b / (double)budburst_weight );
+
+			budburst_day_counter ++;
+
+#else
 			/* test "This has recently been confirmed by Dyckmans et al. (2000)
 			who showed that only 44% of carbon in leaves came from
 			carbon reserves in beech trees" (Barbaroux et al., 2003) */
@@ -137,29 +180,30 @@ void daily_C_deciduous_partitioning (cell_t *const c, const int layer, const int
 			/* following Campioli et al., 2008, Maillard et al., 1994, Barbaroux et al., 2003 */
 
 			/* compute amount of leaf carbon and relative growth respiration amount */
-			reserve_to_leaf_budburst   = ( s->value[MAX_LEAF_C] + ( s->value[MAX_LEAF_C] * s->value[EFF_GRPERC] ) ) / (s->value[BUD_BURST] - 1.);
+			daily_reserve_to_leaf_budburst   = ( s->value[MAX_LEAF_C]   + ( s->value[MAX_LEAF_C]  * s->value[EFF_GRPERC] ) )  / days_for_budburst;
 
 			/* compute amount of fine root carbon and relative growth respiration amount */
-			reserve_to_froot_budburst  = ( s->value[MAX_FROOT_C] + ( s->value[MAX_FROOT_C] * s->value[EFF_GRPERC] ) ) / (s->value[BUD_BURST] - 1.);
+			daily_reserve_to_froot_budburst  = ( s->value[MAX_FROOT_C]  + ( s->value[MAX_FROOT_C] * s->value[EFF_GRPERC] ) )  / days_for_budburst;
 
+#endif
 			/* compute reserve needed for budburst */
-			reserve_to_budburst        = reserve_to_leaf_budburst + reserve_to_froot_budburst;
+			daily_reserve_to_budburst        = daily_reserve_to_leaf_budburst + daily_reserve_to_froot_budburst;
 
 			/* update carbon flux */
-			s->value[C_TO_LEAF]        = reserve_to_leaf_budburst;
-			s->value[C_TO_FROOT]       = reserve_to_froot_budburst;
-			s->value[C_TO_RESERVE]     = npp_to_alloc - reserve_to_budburst;
+			s->value[C_TO_LEAF]        = daily_reserve_to_leaf_budburst;
+			s->value[C_TO_FROOT]       = daily_reserve_to_froot_budburst;
+			s->value[C_TO_RESERVE]     = npp_to_alloc - daily_reserve_to_budburst;
 
 			/**********************************************************************/
 			/* check for leaf C > max leaf C */
-			if ( ( ( s->value[C_TO_LEAF] * ( 1. - s->value[EFF_GRPERC] ) ) + s->value[LEAF_C]) > s->value[MAX_LEAF_C])
+			if ( ( ( s->value[C_TO_LEAF] * ( 1. - s->value[EFF_GRPERC] ) ) + s->value[LEAF_C]) > s->value[MAX_LEAF_C] )
 			{
 				double max_leafC;
 
 				max_leafC = s->value[MAX_LEAF_C] - s->value[LEAF_C];
 
 				s->value[C_TO_LEAF]     = max_leafC + ( max_leafC * s->value[EFF_GRPERC] );
-				s->value[C_TO_RESERVE] += ( reserve_to_leaf_budburst - ( max_leafC + ( max_leafC * s->value[EFF_GRPERC] ) ) );
+				s->value[C_TO_RESERVE] += ( daily_reserve_to_leaf_budburst - ( max_leafC + ( max_leafC * s->value[EFF_GRPERC] ) ) );
 			}
 
 			/* check for fine root C > max fine root C */
@@ -170,7 +214,7 @@ void daily_C_deciduous_partitioning (cell_t *const c, const int layer, const int
 				max_frootC = s->value[MAX_FROOT_C] - s->value[FROOT_C];
 
 				s->value[C_TO_FROOT]    = max_frootC + ( max_frootC * s->value[EFF_GRPERC] );
-				s->value[C_TO_RESERVE] += ( reserve_to_froot_budburst  - ( max_frootC + ( max_frootC * s->value[EFF_GRPERC] ) ) );
+				s->value[C_TO_RESERVE] += ( daily_reserve_to_froot_budburst  - ( max_frootC + ( max_frootC * s->value[EFF_GRPERC] ) ) );
 			}
 		}
 		else
@@ -186,6 +230,9 @@ void daily_C_deciduous_partitioning (cell_t *const c, const int layer, const int
 	case 2:
 		logger(g_debug_log, "\n*NORMAL GROWTH*\n");
 		logger(g_debug_log, "(LAI == PEAK LAI)\n");
+
+		/* reset budburst day counter */
+		budburst_day_counter = 0;
 
 		/* see Barbaroux et al., 2002, Scartazza et al., 2013 */
 

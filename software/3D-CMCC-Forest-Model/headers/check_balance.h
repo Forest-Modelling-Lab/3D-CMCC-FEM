@@ -30,6 +30,7 @@ int check_soil_nitrogen_flux_balance        ( cell_t *const c );
 int check_soil_water_flux_balance           ( cell_t *const c, const meteo_daily_t *const meteo_daily );
 /* mass */
 int check_soil_carbon_mass_balance          ( cell_t *const c );
+int check_soil_nitrogen_mass_balance        ( cell_t *const c );
 
 /** cell level **/
 /* fluxes */

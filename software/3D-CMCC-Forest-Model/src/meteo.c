@@ -272,8 +272,6 @@ static void yos_clear(meteo_annual_t *const meteo_annual) {
 					meteo_annual->daily[i].d[y].lw_net_W = INVALID_VALUE;
 					meteo_annual->daily[i].d[y].incoming_par = INVALID_VALUE;
 					meteo_annual->daily[i].d[y].par = INVALID_VALUE;
-					meteo_annual->daily[i].d[y].incoming_ppfd = INVALID_VALUE;
-					meteo_annual->daily[i].d[y].ppfd = INVALID_VALUE;
 					meteo_annual->daily[i].d[y].emis_atm_clear_sky = INVALID_VALUE;
 					meteo_annual->daily[i].d[y].emis_atm = INVALID_VALUE;
 					meteo_annual->daily[i].d[y].cloud_cover_frac = INVALID_VALUE;
@@ -331,8 +329,6 @@ static void yos_clear(meteo_annual_t *const meteo_annual) {
 						meteo_annual->hourly[i].d[y].h[h].lw_net_W = INVALID_VALUE;
 						meteo_annual->hourly[i].d[y].h[h].incoming_par = INVALID_VALUE;
 						meteo_annual->hourly[i].d[y].h[h].par = INVALID_VALUE;
-						meteo_annual->hourly[i].d[y].h[h].incoming_ppfd = INVALID_VALUE;
-						meteo_annual->hourly[i].d[y].h[h].ppfd = INVALID_VALUE;
 						meteo_annual->hourly[i].d[y].h[h].emis_atm_clear_sky = INVALID_VALUE;
 						meteo_annual->hourly[i].d[y].h[h].emis_atm = INVALID_VALUE;
 						meteo_annual->hourly[i].d[y].h[h].cloud_cover_frac = INVALID_VALUE;
@@ -395,8 +391,6 @@ static void yos_clear(meteo_annual_t *const meteo_annual) {
 							meteo_annual->halfhourly[i].d[y].h[h].hh[s].lw_net_W = INVALID_VALUE;
 							meteo_annual->halfhourly[i].d[y].h[h].hh[s].incoming_par = INVALID_VALUE;
 							meteo_annual->halfhourly[i].d[y].h[h].hh[s].par = INVALID_VALUE;
-							meteo_annual->halfhourly[i].d[y].h[h].hh[s].incoming_ppfd = INVALID_VALUE;
-							meteo_annual->halfhourly[i].d[y].h[h].hh[s].ppfd = INVALID_VALUE;
 							meteo_annual->halfhourly[i].d[y].h[h].hh[s].emis_atm_clear_sky = INVALID_VALUE;
 							meteo_annual->halfhourly[i].d[y].h[h].hh[s].emis_atm = INVALID_VALUE;
 							meteo_annual->halfhourly[i].d[y].h[h].hh[s].cloud_cover_frac = INVALID_VALUE;
@@ -417,8 +411,7 @@ static void yos_clear(meteo_annual_t *const meteo_annual) {
 			meteo_annual->monthly[i].rh_f = INVALID_VALUE;
 			meteo_annual->monthly[i].incoming_par = INVALID_VALUE;
 			meteo_annual->monthly[i].par = INVALID_VALUE;
-			meteo_annual->monthly[i].incoming_ppfd = INVALID_VALUE;
-			meteo_annual->monthly[i].ppfd = INVALID_VALUE;
+			meteo_annual->monthly[i].asw = INVALID_VALUE;
 		}
 		meteo_annual->yearly.solar_rad = INVALID_VALUE;
 		meteo_annual->yearly.tavg = INVALID_VALUE;
@@ -432,8 +425,7 @@ static void yos_clear(meteo_annual_t *const meteo_annual) {
 		meteo_annual->yearly.rh_f = INVALID_VALUE;
 		meteo_annual->yearly.incoming_par = INVALID_VALUE;
 		meteo_annual->yearly.par = INVALID_VALUE;
-		meteo_annual->yearly.incoming_ppfd = INVALID_VALUE;
-		meteo_annual->yearly.ppfd = INVALID_VALUE;
+		meteo_annual->yearly.asw = INVALID_VALUE;
 	}
 }
 
@@ -2781,7 +2773,7 @@ void meteo_annual_free(meteo_annual_t* p, const int count)
 }
 
 /* file is the comma separated files list!!! not a single file, initially yos_count is equal to 0 */
-meteo_annual_t* meteo_annual_import(const char *const file, int *const yos_count, const int x, const int y) {
+meteo_annual_t* import_meteo_data(const char *const file, int *const yos_count, const int x, const int y) {
 	char *token;
 	char *p;
 	char *p2;

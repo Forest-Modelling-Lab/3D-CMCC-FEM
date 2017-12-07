@@ -132,25 +132,25 @@ int add_tree_class_for_replanting (cell_t *const c, const int day, const int mon
 	}
 
 	/* initialize new power function */
-	allometry_power_function ( c );
+	allometry_power_function           ( c );
 
 	/* initialize new carbon pool fraction */
-	carbon_pool_fraction ( c );
+	carbon_pool_fraction               ( c );
 
 	/* initialize new forest structure */
-	initialization_forest_structure (c , day, month, year);
+	initialization_forest_structure    (c , day, month, year);
 
 	/* initialize new forest class pools */
-	initialization_forest_class_C ( c, height, dbh, age, species );
+	initialization_forest_class_C      ( c, height, dbh, age, species );
 
 	/* initialize new nitrogen pools */
-	initialization_forest_class_N ( c, height, dbh, age, species );
+	initialization_forest_class_N      ( c, height, dbh, age, species );
 
 	/* initialize new litter pools */
-	initialization_forest_class_litter_soil ( c, height, dbh, age, species );
+	initialization_forest_class_litter ( c, height, dbh, age, species );
 
 	/* print new forest class dataset */
-	print_new_daily_forest_class_data( c, height, dbh, age, species );
+	print_new_daily_forest_class_data  ( c, height, dbh, age, species );
 
 	return 1;
 }
@@ -211,18 +211,18 @@ static int fill_cell_for_regeneration( cell_t *const c )
 	p = string_copy(g_settings->regeneration_species);
 	if ( ! p ) return 0;
 
-	a->species[a->species_count-1] = species;
-	a->species[a->species_count-1].management = T;
-	a->species[a->species_count-1].name = p;
-	a->species[a->species_count-1].counter[N_TREE] = (int)g_settings->regeneration_n_tree;
+	a->species[a->species_count-1]                  = species;
+	a->species[a->species_count-1].management       = T;
+	a->species[a->species_count-1].name             = p;
+	a->species[a->species_count-1].counter[N_TREE]  = (int)g_settings->regeneration_n_tree;
 	a->species[a->species_count-1].counter[N_STUMP] = 0;
-	a->species[a->species_count-1].value[LAI_PROJ] = g_settings->regeneration_lai;
+	a->species[a->species_count-1].value[LAI_PROJ]  = g_settings->regeneration_lai;
 	logger(g_debug_log, "-height = %f\n", c->heights[c->heights_count-1].value);
-	logger(g_debug_log, "-dbh = %f\n", h->dbhs[h->dbhs_count-1].value);
-	logger(g_debug_log, "-age = %d\n", d->ages[d->ages_count-1].value);
-	logger(g_debug_log, "-name = %s\n", a->species[a->species_count-1].name);
+	logger(g_debug_log, "-dbh    = %f\n", h->dbhs[h->dbhs_count-1].value);
+	logger(g_debug_log, "-age    = %d\n", d->ages[d->ages_count-1].value);
+	logger(g_debug_log, "-name   = %s\n", a->species[a->species_count-1].name);
 	logger(g_debug_log, "-N-tree = %d\n", a->species[a->species_count-1].counter[N_TREE]);
-	logger(g_debug_log, "-lai = %f\n", a->species[a->species_count-1].value[LAI_PROJ]);
+	logger(g_debug_log, "-lai    = %f\n", a->species[a->species_count-1].value[LAI_PROJ]);
 
 
 	return 1;
@@ -242,22 +242,19 @@ int add_tree_class_for_regeneration ( cell_t *const c )
 	}
 
 	/* initialize power function */
-	allometry_power_function ( c );
+	allometry_power_function           ( c );
 
 	/* initialize carbon pool fraction */
-	carbon_pool_fraction ( c );
+	carbon_pool_fraction               ( c );
 
 	/* initialize new forest class pools */
-	initialization_forest_class_C ( c, c->heights_count-1, 0, 0, 0 );
+	initialization_forest_class_C      ( c, c->heights_count-1, 0, 0, 0 );
 
 	/* initialize nitrogen pools */
-	initialization_forest_class_N ( c, c->heights_count-1, 0, 0, 0 );
-
-	/* initialize litter and soil pools */
-	initialization_forest_class_litter_soil ( c, c->heights_count-1, 0, 0, 0 );
+	initialization_forest_class_N      ( c, c->heights_count-1, 0, 0, 0 );
 
 	/* print new forest class dataset */
-	print_new_daily_forest_class_data( c, c->heights_count-1, 0, 0, 0 );
+	print_new_daily_forest_class_data  ( c, c->heights_count-1, 0, 0, 0 );
 
 	return 1;
 }

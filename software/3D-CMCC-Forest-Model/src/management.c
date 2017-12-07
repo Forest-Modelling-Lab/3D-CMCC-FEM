@@ -27,7 +27,11 @@ extern dataset_t* g_dataset;
 
 static int harvesting (cell_t *const c, const int height, const int dbh, const int age, const int species, const int rsi)
 {
+	int nat_man;   /* natural or managed mortality 0 = natural; 1 = managed */
 	species_t *s;
+
+	nat_man = 1;
+	
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 	/* at the moment it considers a complete harvesting for all classes (if considered) */
@@ -39,7 +43,7 @@ static int harvesting (cell_t *const c, const int height, const int dbh, const i
 	s->counter[HARVESTING_HAPPENS] = 1;
 
 	/* update C and N biomass */
-	tree_biomass_remove ( c, height, dbh, age, species, s->counter[N_TREE] );
+	tree_biomass_remove ( c, height, dbh, age, species, s->counter[N_TREE], nat_man );
 
 	/* remove completely all trees */
 	return tree_class_remove (c, height, dbh, age, species );
@@ -261,13 +265,12 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 void thinning (cell_t *const c, const int height, const int dbh, const int age, const int species, const int year)
 {
 	int trees_to_remove = 0;
-	double stand_basal_area_to_remain;
-	double stand_basal_area_to_remove;
-
+	int nat_man;   /* natural or managed mortality 0 = natural; 1 = managed */
 	species_t *s;
+
+	nat_man = 1;
+
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
-
-
 
 	/* thinning function based on basal area */
 
@@ -286,20 +289,8 @@ void thinning (cell_t *const c, const int height, const int dbh, const int age, 
 	/* BAU MANAGEMENT */
 	if ( 0 == g_settings->management_type ) 
 	{
-		logger(g_debug_log, "basal area before thinning = %f m2/class cell\n", s->value[STAND_BASAL_AREA_m2]);
-		logger(g_debug_log, "trees before thinning      = %d trees/cell\n", s->counter[N_TREE]);
-
-		/* compute basal area to remain */
-		stand_basal_area_to_remain = ( 1. - (s->value[THINNING_INTENSITY] / 100. ) ) * s->value[STAND_BASAL_AREA_m2];
-		logger(g_debug_log, "basal area to remain       = %f m2/class\n", stand_basal_area_to_remain);
-
-		/* compute basal area to remove */
-		stand_basal_area_to_remove = (s->value[THINNING_INTENSITY] / 100. ) * s->value[STAND_BASAL_AREA_m2];
-		logger(g_debug_log, "basal area to remove       = %f\n", stand_basal_area_to_remove);
-
 		/* compute integer number of trees to remove */
 		trees_to_remove = ROUND((s->value[THINNING_INTENSITY] / 100. ) * s->counter[N_TREE]);
-		logger(g_debug_log, "trees_to_remove            = %d\n", trees_to_remove);
 	}
 	else
 	{
@@ -310,7 +301,7 @@ void thinning (cell_t *const c, const int height, const int dbh, const int age, 
 			double v;
 
 			perc = 0;
-			v = (s->value[VOLUME] - s->value[MINSTOCKGROW]) * 100 / s->value[MINSTOCKGROW];
+			v = (s->value[VOLUME] - s->value[MINSTOCKGROW]) * 100. / s->value[MINSTOCKGROW];
 
 			if ( v >= 80 )
 			{
@@ -339,7 +330,7 @@ void thinning (cell_t *const c, const int height, const int dbh, const int age, 
 			}
 			else
 			{
-				trees_to_remove = s->counter[N_TREE] - s->counter[N_TREE] * trees_to_remove / 100;
+				trees_to_remove = s->counter[N_TREE] * perc / 100.;
 			}
 		}
 	}
@@ -350,19 +341,18 @@ void thinning (cell_t *const c, const int height, const int dbh, const int age, 
 	if ( trees_to_remove < s->counter[N_TREE] )
 	{
 		/* update C and N biomass */
-		tree_biomass_remove ( c, height, dbh, age, species, trees_to_remove );
+		tree_biomass_remove ( c, height, dbh, age, species, trees_to_remove, nat_man );
 
 		/* remove trees */
 		s->counter[N_TREE] -= trees_to_remove;
-		logger(g_debug_log, "Number of trees after management = %d trees/cell\n", s->counter[N_TREE]);
 	}
 	else
 	{
 		/* update C and N biomass */
-		tree_biomass_remove ( c, height, dbh, age, species, s->counter[N_TREE] );
+		tree_biomass_remove ( c, height, dbh, age, species, s->counter[N_TREE], nat_man );
 
 		/* remove completely all trees */
-		tree_class_remove (c, height, dbh, age, species );
+		tree_class_remove   (c, height, dbh, age, species );
 	}
 
 	/* check */
@@ -370,13 +360,8 @@ void thinning (cell_t *const c, const int height, const int dbh, const int age, 
 
 	/*********************************************************************************************************************************************************************/
 
-	/* adding coarse and fine root and leaf to litter pool */
-	//fixme
-	//c->daily_litr_carbon   += include biomass  ;
-
 	/* Total class C at the end */
-	s->value[TOTAL_C]   = s->value[LEAF_C] + s->value[CROOT_C] + s->value[FROOT_C] + s->value[STEM_C] + s->value[BRANCH_C] + s->value[RESERVE_C];
-	logger(g_debug_log, "Total Biomass = %f tC/ha\n", s->value[TOTAL_C]);
+	s->value[TOTAL_C]    = s->value[LEAF_C] + s->value[CROOT_C] + s->value[FROOT_C] + s->value[STEM_C] + s->value[BRANCH_C] + s->value[RESERVE_C];
 
 	/* update stand trees */
 	c->n_trees          -= trees_to_remove;
@@ -388,6 +373,9 @@ void thinning (cell_t *const c, const int height, const int dbh, const int age, 
 void prescribed_thinning (cell_t *const c, const int height, const int dbh, const int age, const int species, const int year)
 {
 	int row;
+	int nat_man;   /* natural or managed mortality 0 = natural; 1 = managed */
+
+	nat_man = 1;
 
 	assert(g_dataset);
 
@@ -411,7 +399,7 @@ void prescribed_thinning (cell_t *const c, const int height, const int dbh, cons
 
 					logger(g_debug_log, "\n** Management options: Prescribed Thinning **\n");
 
-					tree_biomass_remove(c, height, dbh, age, species, tree_remove);
+					tree_biomass_remove(c, height, dbh, age, species, tree_remove, nat_man);
 
 					c->heights[height].dbhs[dbh].ages[age].species[species].counter[N_TREE] = g_dataset->rows[row].n;
 
@@ -424,34 +412,25 @@ void prescribed_thinning (cell_t *const c, const int height, const int dbh, cons
 						c->heights[height].dbhs[dbh].ages[age].value = g_dataset->rows[row].age;
 
 						/* initialize power function */
-						allometry_power_function (c);
+						allometry_power_function                ( c );
 
 						/* initialize carbon pool fraction */
-						carbon_pool_fraction (c);
+						carbon_pool_fraction                    ( c );
 
 						/* initialize forest structure */
-						annual_forest_structure ( c, year );
+						annual_forest_structure                 ( c, year );
 
 						/* initialize class carbon pools */
-						initialization_forest_class_C           (c, height, dbh, age, species);
+						initialization_forest_class_C           ( c, height, dbh, age, species );
 
 						/* initialize cell carbon pools */
-						initialization_forest_C                 (c, height, dbh, age, species);
+						initialization_forest_cell_C            ( c, height, dbh, age, species );
 
 						/* initialize class nitrogen pools */
-						initialization_forest_class_N           (c, height, dbh, age, species);
+						initialization_forest_class_N           ( c, height, dbh, age, species );
 
 						/* initialize cell nitrogen pools */
-						initialization_forest_N                 (c, height, dbh, age, species);
-
-						/* initialization forest class litter fractions */
-						initialization_forest_class_litter_soil (c, height, dbh, age, species);
-
-						/* initialization class litter fractions */
-						initialization_forest_class_litter_soil (c, height, dbh, age, species);
-
-						/* initialization cell litter fractions */
-						initialization_forest_litter_soil       (c, height, dbh, age, species);
+						initialization_forest_cell_N            ( c, height, dbh, age, species );
 					}				
 				}
 			}

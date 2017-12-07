@@ -122,6 +122,8 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 
 		/* Nitrogen content tN/cell --> gN/m2 */
 #if 1
+		//test OLD method:
+
 		leaf_N          = (s->value[LEAF_N]            * 1e6 / g_settings->sizeCell);
 		leaf_sun_N      = (s->value[LEAF_SUN_N]        * 1e6 / g_settings->sizeCell);
 		leaf_shade_N    = (s->value[LEAF_SHADE_N]      * 1e6 / g_settings->sizeCell);
@@ -131,29 +133,59 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 		branch_N        = (s->value[BRANCH_LIVEWOOD_N] * 1e6 / g_settings->sizeCell);
 
 #else
-		//fixme to move into species.txt in case used
-		live_stemC_frac   = 0.21; /* for Fagus sylvatica from Dufrene et al., 2005 */
-		live_branchC_frac = 0.37; /* for Fagus sylvatica from Dufrene et al., 2005 */
-		live_crootC_frac  = 0.21; /* for Fagus sylvatica from Dufrene et al., 2005 */
+		//test NEW method:
+		//note: differently from the old one it can (activating or NOT each single comment):
+		//1 use different values for parameters
+		//2 use for each live respiring C-N pools a specific-pool CN ratio
+		//3 recompute live respiring pools and the related N amount
 
-		//test from; E. Dufrene et al., Ecological Modelling 185 (2005) 407–436
-		//if accepted then move computation of live fractions into the correct source file
+		/* from; E. Dufrene et al., Ecological Modelling 185 (2005) 407–436 */
+		//todo: if accepted then move computation of live fractions into the correct source file
 		//test: better if used with lower LIVE_WOOD_TURNOVER (e.g. 0.85)
-#if 0
-		//CANIF PARAMETERIZATION FOR FAGUS
+#if 1
+		//test: for Fagus sylvatica (from CANIF)
 		leaf_CN    = 24.19;
 		froot_CN   = 37.33;
 		stem_CN    = 446.2;
 		croot_CN   = 294.8;
 		branch_CN  = 136.6;
 #else
-		//CASTANEA PARAMETERIZATION FOR FAGUS
+		//test: for Fagus sylvatica (from CASTANEA model)
 		leaf_CN    = 20.66;
 		froot_CN   = 50.50;
 		stem_CN    = 416.6;
 		croot_CN   = 416.6;
 		branch_CN  = 90.90;
 #endif
+
+		//test: for Pinus sylvestris (to move once decided into species.txt)
+		/*
+		leaf_CN    = 36;
+		froot_CN   = 49;
+		stem_CN    = 682.00; //from 448 to 765 Hellstaen et a., 2013
+		croot_CN   = 586.66; //from 445 to 761 Hellstaen et a., 2013
+		branch_CN  = 454.54; //from Hyyvonen et al, 2000
+		*/
+
+		//test: for Picea abies (to move once decided into species.txt)
+		/*
+		leaf_CN    = 58.8;
+		froot_CN   = 58.0;
+		stem_CN    = 572.33; //from 448 to 765 Hellstaen et a., 2013
+		croot_CN   = 400.66; //from 445 to 761 Hellstaen et a., 2013
+		branch_CN  = 526.30; //from Hyyvonen et al, 2000
+		*/
+
+#if 0
+
+		//test using new parameters (divided into stem, croot and branch) with new LIVE pools (computed using CASTANEA param on TOTAL pools)
+
+		//fixme to move into species.txt in case used
+		live_stemC_frac   = 0.21; /* for Fagus sylvatica from Dufrene et al., 2005 */
+		live_branchC_frac = 0.37; /* for Fagus sylvatica from Dufrene et al., 2005 */
+		live_crootC_frac  = 0.21; /* for Fagus sylvatica from Dufrene et al., 2005 */
+
+		/*compute nitrogen fraction */
 		leaf_N          = ((s->value[LEAF_C]                       / leaf_CN)   * 1e6 / g_settings->sizeCell);
 		leaf_sun_N      = ((s->value[LEAF_SUN_C]                   / leaf_CN)   * 1e6 / g_settings->sizeCell);
 		leaf_shade_N    = ((s->value[LEAF_SHADE_C]                 / leaf_CN)   * 1e6 / g_settings->sizeCell);
@@ -161,7 +193,26 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 		stem_N          = ((s->value[STEM_C]   * live_stemC_frac   / stem_CN)   * 1e6 / g_settings->sizeCell);
 		croot_N         = ((s->value[CROOT_C]  * live_crootC_frac  / croot_CN)  * 1e6 / g_settings->sizeCell);
 		branch_N        = ((s->value[BRANCH_C] * live_branchC_frac / branch_CN) * 1e6 / g_settings->sizeCell);
+
+#else
+
+		//test using new parameters (divided into stem, croot and branch) but with old LIVE pools
+
+		/*compute nitrogen fraction */
+		leaf_N          = (s->value[LEAF_C]            / leaf_CN)   * 1e6 / g_settings->sizeCell;
+		leaf_sun_N      = (s->value[LEAF_SUN_C]        / leaf_CN)   * 1e6 / g_settings->sizeCell;
+		leaf_shade_N    = (s->value[LEAF_SHADE_C]      / leaf_CN)   * 1e6 / g_settings->sizeCell;
+		froot_N         = (s->value[FROOT_C]           / froot_CN)  * 1e6 / g_settings->sizeCell;
+		stem_N          = (s->value[STEM_LIVEWOOD_C]   / stem_CN)   * 1e6 / g_settings->sizeCell;
+		croot_N         = (s->value[CROOT_LIVEWOOD_C]  / croot_CN)  * 1e6 / g_settings->sizeCell;
+		branch_N        = (s->value[BRANCH_LIVEWOOD_C] / branch_CN) * 1e6 / g_settings->sizeCell;
+
 #endif
+#endif
+
+
+#if 1
+		//test NEW considering day-time light inhibition for leaf respiration
 
 		//new 05/11/2017
 		/* assign day-time light inhibition for leaf resp */
@@ -169,7 +220,7 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 		 * The degree of inhibition ranges between 17 and 66% depending on species
 		 * (Sharp et al., 1984; Brooks and Farquhar, 1985; Kirschbaum and Farquhar,1987).
 		Villar et al. (1995) give a mean rate of 51% for evergreen tree species and 62% for deciduous tree species.*/
-#if 1
+
 		if ( s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2 )
 		{
 			light_inhib = 0.62; /* for deciduous */
@@ -179,6 +230,8 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 			light_inhib = 0.51; /* for evergreen */
 		}
 #else
+		//test OLD
+
 		light_inhib = 1.;
 #endif
 
@@ -189,14 +242,14 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 		/* Leaf maintenance respiration is calculated separately for day and night */
 
 		/* day time leaf maintenance respiration */
-		s->value[DAILY_LEAF_MAINT_RESP]       = ( leaf_N * MR_ref * pow(q10_tday, exponent_tday) * (meteo_daily->daylength / 24.)) * light_inhib;
+		s->value[DAILY_LEAF_MAINT_RESP]       = ( leaf_N * MR_ref * pow(q10_tday, exponent_tday) * ( meteo_daily->daylength_sec / 86400. )) * light_inhib;
 
 		/* night time leaf maintenance respiration */
-		s->value[NIGHTLY_LEAF_MAINT_RESP]     = ( leaf_N * MR_ref * pow(q10_tnight, exponent_tnight) * (1. - (meteo_daily->daylength/24.)));
+		s->value[NIGHTLY_LEAF_MAINT_RESP]     = ( leaf_N * MR_ref * pow(q10_tnight, exponent_tnight) * (1. - ( meteo_daily->daylength_sec / 86400. )));
 
 		/* for sun and shaded leaves */
-		s->value[DAILY_LEAF_SUN_MAINT_RESP]   = ( leaf_sun_N   * MR_ref * pow(q10_tday, exponent_tday) * (meteo_daily->daylength / 24.)) * light_inhib;
-		s->value[DAILY_LEAF_SHADE_MAINT_RESP] = ( leaf_shade_N * MR_ref * pow(q10_tday, exponent_tday) * (meteo_daily->daylength / 24.)) * light_inhib;
+		s->value[DAILY_LEAF_SUN_MAINT_RESP]   = ( leaf_sun_N   * MR_ref * pow(q10_tday, exponent_tday) * meteo_daily->daylength_sec) * light_inhib;
+		s->value[DAILY_LEAF_SHADE_MAINT_RESP] = ( leaf_shade_N * MR_ref * pow(q10_tday, exponent_tday) * meteo_daily->daylength_sec) * light_inhib;
 
 		/* total (all day) leaf maintenance respiration */
 		s->value[TOT_DAY_LEAF_MAINT_RESP]     = s->value[DAILY_LEAF_MAINT_RESP] + s->value[NIGHTLY_LEAF_MAINT_RESP];
@@ -239,8 +292,8 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 			s->value[NIGHTLY_LEAF_MAINT_RESP] *= pow ( 10., ( acc_const * ( meteo_daily->ten_day_avg_tnight - Q10_temp ) ) );
 
 			/* for sun and shaded leaves */
-			s->value[DAILY_LEAF_SUN_MAINT_RESP]   = ( leaf_sun_N   * MR_ref * pow(q10_tday, exponent_tday) * (meteo_daily->daylength / 24.));
-			s->value[DAILY_LEAF_SHADE_MAINT_RESP] = ( leaf_shade_N * MR_ref * pow(q10_tday, exponent_tday) * (meteo_daily->daylength / 24.));
+			s->value[DAILY_LEAF_SUN_MAINT_RESP]   = ( leaf_sun_N   * MR_ref * pow(q10_tday, exponent_tday) * ( meteo_daily->daylength_sec / 86400. ));
+			s->value[DAILY_LEAF_SHADE_MAINT_RESP] = ( leaf_shade_N * MR_ref * pow(q10_tday, exponent_tday) * ( meteo_daily->daylength_sec / 86400. ));
 
 			/* total (all day) leaf maintenance respiration */
 			s->value[TOT_DAY_LEAF_MAINT_RESP]  = s->value[DAILY_LEAF_MAINT_RESP] + s->value[NIGHTLY_LEAF_MAINT_RESP];
@@ -380,11 +433,11 @@ void autotrophic_respiration(cell_t *const c, const int layer, const int height,
 		logger(g_debug_log, "\n**AUTOTROPHIC_RESPIRATION**\n");
 
 		/* class level among pools */
-		s->value[LEAF_AUT_RESP]   = (s->value[TOT_DAY_LEAF_MAINT_RESP] + s->value[LEAF_GROWTH_RESP]);
-		s->value[FROOT_AUT_RESP]  = (s->value[FROOT_MAINT_RESP]        + s->value[FROOT_GROWTH_RESP]);
-		s->value[STEM_AUT_RESP]   = (s->value[STEM_MAINT_RESP]         + s->value[STEM_GROWTH_RESP]);
-		s->value[CROOT_AUT_RESP]  = (s->value[CROOT_MAINT_RESP]        + s->value[CROOT_GROWTH_RESP]);
-		s->value[BRANCH_AUT_RESP] = (s->value[BRANCH_MAINT_RESP]       + s->value[BRANCH_GROWTH_RESP]);
+		s->value[LEAF_AUT_RESP]            = (s->value[TOT_DAY_LEAF_MAINT_RESP] + s->value[LEAF_GROWTH_RESP]);
+		s->value[FROOT_AUT_RESP]           = (s->value[FROOT_MAINT_RESP]        + s->value[FROOT_GROWTH_RESP]);
+		s->value[STEM_AUT_RESP]            = (s->value[STEM_MAINT_RESP]         + s->value[STEM_GROWTH_RESP]);
+		s->value[CROOT_AUT_RESP]           = (s->value[CROOT_MAINT_RESP]        + s->value[CROOT_GROWTH_RESP]);
+		s->value[BRANCH_AUT_RESP]          = (s->value[BRANCH_MAINT_RESP]       + s->value[BRANCH_GROWTH_RESP]);
 
 		/* monthly */
 		s->value[MONTHLY_LEAF_AUT_RESP]   += s->value[LEAF_AUT_RESP];
@@ -403,29 +456,29 @@ void autotrophic_respiration(cell_t *const c, const int layer, const int height,
 		/***************************************************************************************/
 
 		/* cell level among pools */
-		c->daily_leaf_aut_resp   += (s->value[TOT_DAY_LEAF_MAINT_RESP] + s->value[LEAF_GROWTH_RESP]);
-		c->daily_stem_aut_resp   += (s->value[STEM_MAINT_RESP]         + s->value[STEM_GROWTH_RESP]);
-		c->daily_branch_aut_resp += (s->value[BRANCH_MAINT_RESP]       + s->value[BRANCH_GROWTH_RESP]);
-		c->daily_froot_aut_resp  += (s->value[FROOT_MAINT_RESP]        + s->value[FROOT_GROWTH_RESP]);
-		c->daily_croot_aut_resp  += (s->value[CROOT_MAINT_RESP]        + s->value[CROOT_GROWTH_RESP]);
+		c->daily_leaf_aut_resp            += (s->value[TOT_DAY_LEAF_MAINT_RESP] + s->value[LEAF_GROWTH_RESP]);
+		c->daily_stem_aut_resp            += (s->value[STEM_MAINT_RESP]         + s->value[STEM_GROWTH_RESP]);
+		c->daily_branch_aut_resp          += (s->value[BRANCH_MAINT_RESP]       + s->value[BRANCH_GROWTH_RESP]);
+		c->daily_froot_aut_resp           += (s->value[FROOT_MAINT_RESP]        + s->value[FROOT_GROWTH_RESP]);
+		c->daily_croot_aut_resp           += (s->value[CROOT_MAINT_RESP]        + s->value[CROOT_GROWTH_RESP]);
 	}
 
 	/* total */
-	s->value[TOTAL_AUT_RESP]          = ( s->value[TOTAL_GROWTH_RESP] + s->value[TOTAL_MAINT_RESP] );
-	s->value[TOTAL_AUT_RESP_tC]       = ( s->value[TOTAL_AUT_RESP] / 1e6 * g_settings->sizeCell );
-	s->value[MONTHLY_TOTAL_AUT_RESP] += s->value[TOTAL_AUT_RESP];
-	s->value[YEARLY_TOTAL_AUT_RESP]  += s->value[TOTAL_AUT_RESP];
+	s->value[TOTAL_AUT_RESP]               = ( s->value[TOTAL_GROWTH_RESP] + s->value[TOTAL_MAINT_RESP] );
+	s->value[TOTAL_AUT_RESP_tC]            = ( s->value[TOTAL_AUT_RESP] / 1e6 * g_settings->sizeCell );
+	s->value[MONTHLY_TOTAL_AUT_RESP]      += s->value[TOTAL_AUT_RESP];
+	s->value[YEARLY_TOTAL_AUT_RESP]       += s->value[TOTAL_AUT_RESP];
 
 	logger(g_debug_log, "daily total autotrophic respiration (%s) = %g gC/m2/day\n",   s->name, s->value[TOTAL_AUT_RESP]);
 	logger(g_debug_log, "daily total autotrophic respiration (%s) = %g tC/cell/day\n", s->name, s->value[TOTAL_AUT_RESP_tC]);
 
 	/* cell level */
-	c->daily_aut_resp            += s->value[TOTAL_AUT_RESP];
-	c->monthly_aut_resp          += s->value[TOTAL_AUT_RESP];
-	c->annual_aut_resp           += s->value[TOTAL_AUT_RESP];
-	c->daily_aut_resp_tC         += (s->value[TOTAL_AUT_RESP] / 1e6 * g_settings->sizeCell);
-	c->monthly_aut_resp_tC       += (s->value[TOTAL_AUT_RESP] / 1e6 * g_settings->sizeCell);
-	c->annual_aut_resp_tC        += (s->value[TOTAL_AUT_RESP] / 1e6 * g_settings->sizeCell);
+	c->daily_aut_resp                     += s->value[TOTAL_AUT_RESP];
+	c->monthly_aut_resp                   += s->value[TOTAL_AUT_RESP];
+	c->annual_aut_resp                    += s->value[TOTAL_AUT_RESP];
+	c->daily_aut_resp_tC                  += (s->value[TOTAL_AUT_RESP] / 1e6 * g_settings->sizeCell);
+	c->monthly_aut_resp_tC                += (s->value[TOTAL_AUT_RESP] / 1e6 * g_settings->sizeCell);
+	c->annual_aut_resp_tC                 += (s->value[TOTAL_AUT_RESP] / 1e6 * g_settings->sizeCell);
 
 	/* check */
 	CHECK_CONDITION( s->value[TOTAL_AUT_RESP], < , ZERO );

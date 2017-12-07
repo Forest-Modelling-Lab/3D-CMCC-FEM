@@ -394,6 +394,10 @@ static int log_start(const char* const sitename)
 		p = "VAR";
 		break;
 
+	case MANAGEMENT_VAR1:
+		p = "VAR1";
+		break;
+
 	default:
 		puts("bad management value in settings file!\n");
 		return 0;
@@ -919,10 +923,10 @@ static int check_soil_values(void)
 		logger_error(g_debug_log, "NO SOIL DATA AVAILABLE (Nitrogen litter value)\n");
 	}
 	/* litter coarse woody debris carbon */
-	if (IS_INVALID_VALUE(g_soil_settings->values[LITTERCWDC]))
+	if (IS_INVALID_VALUE(g_soil_settings->values[DEADWOODC]))
 	{
 		/* initialize to zero value */
-		g_soil_settings->values[LITTERCWDC] = 0.;
+		g_soil_settings->values[DEADWOODC] = 0.;
 		logger_error(g_debug_log, "NO SOIL DATA AVAILABLE (Coarse woody debris carbon value)\n");
 	}
 	/* soil carbon */
@@ -1396,7 +1400,7 @@ int main(int argc, char *argv[]) {
 		logger(g_debug_log, "input_met_path = %s\n", g_sz_input_met_file);
 		logger_error(g_debug_log, "importing met data...");
 
-		matrix->cells[cell].years = meteo_annual_import(g_sz_input_met_file, &years_of_simulation, matrix->cells[cell].x, matrix->cells[cell].y);
+		matrix->cells[cell].years = import_meteo_data(g_sz_input_met_file, &years_of_simulation, matrix->cells[cell].x, matrix->cells[cell].y);
 
 		if ( ! matrix->cells[cell].years ) goto err;
 		logger_error(g_debug_log, "ok\n");
@@ -1554,8 +1558,6 @@ int main(int argc, char *argv[]) {
 			matrix->cells[cell].years[year].yearly.rh_f          = 0.;
 			matrix->cells[cell].years[year].yearly.incoming_par  = 0.;
 			matrix->cells[cell].years[year].yearly.par           = 0.;
-			matrix->cells[cell].years[year].yearly.incoming_ppfd = 0.;
-			matrix->cells[cell].years[year].yearly.ppfd          = 0.;
 
 			for ( month = 0; month < MONTHS_COUNT; ++month )
 			{
@@ -1571,8 +1573,6 @@ int main(int argc, char *argv[]) {
 				matrix->cells[cell].years[year].monthly[month].rh_f          = 0.;
 				matrix->cells[cell].years[year].monthly[month].incoming_par  = 0.;
 				matrix->cells[cell].years[year].monthly[month].par           = 0.;
-				matrix->cells[cell].years[year].monthly[month].incoming_ppfd = 0.;
-				matrix->cells[cell].years[year].monthly[month].ppfd          = 0.;
 			}
 		}
 	}
@@ -1621,15 +1621,25 @@ int main(int argc, char *argv[]) {
 					/* summary on soil data */
 					soil_summary(matrix, matrix->cells);
 
-					if( LANDUSE_F == g_soil_settings->landuse )
+					/* if spin up on */
+					if ( ! g_settings->spinup )
 					{
-						/* forest summary */
-						forest_summary(matrix, day, month, year);
+						if( LANDUSE_F == g_soil_settings->landuse )
+						{
+							/* forest initialization */
+							forest_initialization ( matrix, day, month, year );
+						}
+						else
+						{
+							/* include initialization for other land uses */
+						}
 					}
-					else
-					{
-						/* include summary for other land uses */
-					}
+
+					/* litter initialization */
+					litter_initialization ( matrix, day, month, year );
+
+					/* soil initialization */
+					soil_initialization   ( matrix, day, month, year );
 				}
 
 				for ( cell = 0; cell < matrix->cells_count; ++cell )
@@ -1646,7 +1656,7 @@ int main(int argc, char *argv[]) {
 						Daily_Soil_temperature            ( &matrix->cells[cell], day, month, year );
 						Daily_Thermic_sum                 ( m, day, month, year );
 						Daily_Air_density                 ( m, day, month );
-						Daily_Day_Length				  ( &matrix->cells[cell], day, month, year );
+						Day_Length						  ( &matrix->cells[cell], day, month, year );
 						Daily_Latent_heat                 ( m, day, month );
 						Daily_Air_pressure                ( m, day, month );
 						Daily_Psychrometric               ( m, day, month );
@@ -1686,8 +1696,6 @@ int main(int argc, char *argv[]) {
 						matrix->cells[cell].years[year].monthly[month].rh_f += matrix->cells[cell].years[year].daily[month].d[day].rh_f;
 						matrix->cells[cell].years[year].monthly[month].incoming_par += matrix->cells[cell].years[year].daily[month].d[day].incoming_par;
 						matrix->cells[cell].years[year].monthly[month].par += matrix->cells[cell].years[year].daily[month].d[day].par;
-						matrix->cells[cell].years[year].monthly[month].incoming_ppfd += matrix->cells[cell].years[year].daily[month].d[day].incoming_ppfd;
-						matrix->cells[cell].years[year].monthly[month].ppfd += matrix->cells[cell].years[year].daily[month].d[day].ppfd;	
 					}
 				#if 0
 					else if ( HOURLY == g_settings->time )
@@ -1717,8 +1725,6 @@ int main(int argc, char *argv[]) {
 				matrix->cells[cell].years[year].monthly[month].rh_f /= days_per_month;
 				matrix->cells[cell].years[year].monthly[month].incoming_par /= days_per_month;
 				matrix->cells[cell].years[year].monthly[month].par /= days_per_month;
-				matrix->cells[cell].years[year].monthly[month].incoming_ppfd /= days_per_month;
-				matrix->cells[cell].years[year].monthly[month].ppfd /= days_per_month;
 
 				/* for yearly mean */
 				matrix->cells[cell].years[year].yearly.solar_rad += matrix->cells[cell].years[year].monthly[month].solar_rad;
@@ -1733,8 +1739,6 @@ int main(int argc, char *argv[]) {
 				matrix->cells[cell].years[year].yearly.rh_f += matrix->cells[cell].years[year].monthly[month].rh_f;
 				matrix->cells[cell].years[year].yearly.incoming_par += matrix->cells[cell].years[year].monthly[month].incoming_par;
 				matrix->cells[cell].years[year].yearly.par += matrix->cells[cell].years[year].monthly[month].par;
-				matrix->cells[cell].years[year].yearly.incoming_ppfd += matrix->cells[cell].years[year].monthly[month].incoming_ppfd;
-				matrix->cells[cell].years[year].yearly.ppfd += matrix->cells[cell].years[year].monthly[month].ppfd;
 			}
 		}
 
@@ -1753,8 +1757,6 @@ int main(int argc, char *argv[]) {
 			matrix->cells[cell].years[year].yearly.rh_f /= MONTHS_COUNT;
 			matrix->cells[cell].years[year].yearly.incoming_par /= MONTHS_COUNT;
 			matrix->cells[cell].years[year].yearly.par /= MONTHS_COUNT;
-			matrix->cells[cell].years[year].yearly.incoming_ppfd /= MONTHS_COUNT;
-			matrix->cells[cell].years[year].yearly.ppfd /= MONTHS_COUNT;
 		}
 
 		for ( month = 0; month < MONTHS_COUNT; ++month )
@@ -2394,7 +2396,7 @@ int main(int argc, char *argv[]) {
 		}
 
 		logger_error(g_debug_log, "importing met data...");
-		matrix->cells[cell].years = meteo_annual_import(g_sz_input_met_file, &years_of_simulation, matrix->cells[cell].x, matrix->cells[cell].y);
+		matrix->cells[cell].years = import_meteo_data(g_sz_input_met_file, &years_of_simulation, matrix->cells[cell].x, matrix->cells[cell].y);
 		if ( ! matrix->cells[cell].years ) goto err;
 		logger_error(g_debug_log, "ok\n");
 
@@ -2527,8 +2529,8 @@ int main(int argc, char *argv[]) {
 						if( LANDUSE_F == g_soil_settings->landuse )
 						{
 							/* note: this happens just the first day of simulation */
-							/* forest summary */
-							forest_summary(matrix, day, month, year);
+							/* forest initialization */
+							forest_initialization(matrix, day, month, year);
 						}
 						else
 						{

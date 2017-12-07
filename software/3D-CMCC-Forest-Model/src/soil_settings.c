@@ -33,7 +33,7 @@ static const char *sz_vars[SOIL_VARS_COUNT] =
 	, "LITTERN"
 	, "SOILC"
 	, "SOILN"
-	, "LITTERCWDC"
+	, "DEADWOODC"
 
 	, "LANDUSE"
 };

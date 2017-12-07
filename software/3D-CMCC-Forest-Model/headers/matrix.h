@@ -65,19 +65,20 @@ enum {
 	STEM_LEAF,                           /* allocation new stem C:new leaf (ratio) */
 	COARSE_ROOT_STEM,                    /* allocation new coarse root C:new stem (ratio) */
 	LIVE_TOTAL_WOOD,                     /* allocation new live wood C:new total wood C (ratio) */
+	N_RUBISCO,                           /* Fraction of leaf N in Rubisco (ratio) */
 	CN_LEAVES,                           /* CN of leaves (kgC/kgN) */
 	CN_FALLING_LEAVES,                   /* CN of leaf litter (kgC/kgN) */
 	CN_FINE_ROOTS,                       /* CN of fine roots (kgC/kgN) */
-	CN_LIVE_WOODS,                       /* CN of live woods (kgC/kgN) */
-	CN_DEAD_WOODS,                       /* CN of dead woods (kgC/kgN) */
+	CN_LIVEWOOD,                         /* CN of live woods (kgC/kgN) */
+	CN_DEADWOOD,                         /* CN of dead woods (kgC/kgN) */
 	LEAF_LITR_LAB_FRAC,                  /* (DIM) leaf litter labile fraction */
 	LEAF_LITR_CEL_FRAC,                  /* (DIM) leaf litter cellulose fraction */
 	LEAF_LITR_LIGN_FRAC,                 /* (DIM) leaf litter lignin fraction */
 	FROOT_LITR_LAB_FRAC,                 /* (DIM) fine root litter labile fraction */
 	FROOT_LITR_CEL_FRAC,                 /* (DIM) fine root litter cellulose fraction */
 	FROOT_LITR_LIGN_FRAC,                /* (DIM) fine root litter lignin fraction */
-	DEAD_WOOD_CEL_FRAC,                  /* (DIM) dead wood litter cellulose fraction */
-	DEAD_WOOD_LIGN_FRAC,                 /* (DIM) dead wood litter lignin fraction */
+	DEADWOOD_CEL_FRAC,                   /* (DIM) dead wood litter cellulose fraction */
+	DEADWOOD_LIGN_FRAC,                  /* (DIM) dead wood litter lignin fraction */
 	BUD_BURST,                           /* days of bud burst at the beginning of growing season (only for deciduous) */
 	LEAF_FALL_FRAC_GROWING,              /* proportions of the growing season of leaf fall */
 	LEAF_FROOT_TURNOVER,                 /* Average yearly leaves and fine root turnover rate */
@@ -214,20 +215,6 @@ enum {
 	NET_RAD_REFL_SUN,
 	NET_RAD_REFL_SHADE,
 
-	/* PPFD */
-	PPFD,                               /* (umol/m2/sec) Photosynthetic Photon Flux Density  */
-	PPFD_SUN,                           /* (umol/m2/sec) Photosynthetic Photon Flux Density for sun leaves */
-	PPFD_SHADE,                         /* (umol/m2/sec) Photosynthetic Photon Flux Density for shaded leaves */
-	PPFD_REFL,                          /* (umol/m2/sec) Transmitted Photosynthetic Photon Flux Density */
-	PPFD_REFL_SUN,                      /* (umol/m2/sec) Transmitted Photosynthetic Photon Flux Density for sun leaves */
-	PPFD_REFL_SHADE,                    /* (umol/m2/sec) Transmitted Photosynthetic Photon Flux Density for shaded leaves */
-	PPFD_ABS,                           /* (umol/m2/sec) Absorbed Photosynthetic Photon Flux Density */
-	PPFD_ABS_SUN,                       /* (umol/m2/sec) Absorbed Photosynthetic Photon Flux Density for sun leaves */
-	PPFD_ABS_SHADE,                     /* (umol/m2/sec) Absorbed Photosynthetic Photon Flux Density for shaded leaves */
-	PPFD_TRANSM,                        /* (umol/m2/sec) Transmitted Photosynthetic Photon Flux Density */
-	PPFD_TRANSM_SUN,                    /* (umol/m2/sec) Transmitted Photosynthetic Photon Flux Density from sun leaves */
-	PPFD_TRANSM_SHADE,                  /* (umol/m2/sec) Transmitted Photosynthetic Photon Flux Density from shaded leaves */
-
 	/* modifiers */
 	F_VPD,                              /* (DIM) VPD modifier */
 	F_LIGHT,                            /* (DIM) LIGHT modifier */
@@ -311,6 +298,8 @@ enum {
 
 	/* LAI */
 	SLA_AVG,                            /* (kg/m2) Age-related Average Specific Leaf Area */
+	SLA_SUN_PROJ,                       /* (m2/Kg) Age-related Porjected Average Specific Leaf Area for sun leaves*/
+	SLA_SHADE_PROJ,                     /* (m2/Kg) Age-related Porjected Average Specific Leaf Area for shaded leaves*/
 	LAI_PROJ,                           /* (m2/m2) LAI for Projected Area covered (at zenith angle) */
 	LAI_SUN_PROJ,                       /* (m2/m2) LAI for sun leaves for Projected Area covered (at zenith angle) */
 	LAI_SHADE_PROJ,                     /* (m2/m2) LAI for shaded leaves for Projected Area covered (at zenith angle) */
@@ -327,19 +316,31 @@ enum {
 	CANOPY_TEMP_K,                      /* (K) canopy temperature */
 	CANOPY_TEMP_K_OLD,                  /* (K) previous time canopy temperature */
 
-	/* assimilation Farqhuar (Biome) */
-	ASSIMILATION,
-	ASSIMILATION_SUN,
-	ASSIMILATION_SHADE,
-	MONTHLY_ASSIMILATION,
-	MONTHLY_ASSIMILATION_SUN,
-	MONTHLY_ASSIMILATION_SHADE,
-	YEARLY_ASSIMILATION,
-	YEARLY_ASSIMILATION_SUN,
-	YEARLY_ASSIMILATION_SHADE,
+	/* assimilation Farqhuar */
+	GROSS_ASSIMILATION,                 /* (gC/m2/day) Daily Gross Assimilation (carboxylation) (which include dark respiration */
+	GROSS_ASSIMILATION_SUN,             /* (gC/m2/day) Daily Gross Assimilation (carboxylation) for sun leaves (which include dark respiration */
+	GROSS_ASSIMILATION_SHADE,           /* (gC/m2/day) Daily Gross Assimilation (carboxylation) for shaded leaves (which include dark respiration */
+	MONTHLY_GROSS_ASSIMILATION,         /* (gC/m2/month) Daily Gross Assimilation (carboxylation) (which include dark respiration */
+	MONTHLY_GROSS_ASSIMILATION_SUN,     /* (gC/m2/month) Daily Gross Assimilation (carboxylation) for sun leaves (which include dark respiration */
+	MONTHLY_GROSS_ASSIMILATION_SHADE,   /* (gC/m2/month) Daily Gross Assimilation (carboxylation) for shaded leaves (which include dark respiration */
+	YEARLY_GROSS_ASSIMILATION,          /* (gC/m2/year) Daily Gross Assimilation (carboxylation) (which include dark respiration */
+	YEARLY_GROSS_ASSIMILATION_SUN,      /* (gC/m2/year) Daily Gross Assimilation (carboxylation) for sun leaves (which include dark respiration */
+	YEARLY_GROSS_ASSIMILATION_SHADE,    /* (gC/m2/year) Daily Gross Assimilation (carboxylation) for shaded leaves (which include dark respiration */
+	NET_ASSIMILATION,                 /* (gC/m2/day) Daily Net Assimilation   (which exclude dark respiration */
+	NET_ASSIMILATION_SUN,             /* (gC/m2/day) Daily Net Assimilation  for sun leaves (which exclude dark respiration */
+	NET_ASSIMILATION_SHADE,           /* (gC/m2/day) Daily Net Assimilation   for shaded leaves (which exclude dark respiration */
+	MONTHLY_NET_ASSIMILATION,         /* (gC/m2/month) Daily Net Assimilation   (which exclude dark respiration */
+	MONTHLY_NET_ASSIMILATION_SUN,     /* (gC/m2/month) Daily Net Assimilation   for sun leaves (which exclude dark respiration */
+	MONTHLY_NET_ASSIMILATION_SHADE,   /* (gC/m2/month) Daily Net Assimilation   for shaded leaves (which exclude dark respiration */
+	YEARLY_NET_ASSIMILATION,          /* (gC/m2/year) Daily Net Assimilation   (which exclude dark respiration */
+	YEARLY_NET_ASSIMILATION_SUN,      /* (gC/m2/year) Daily Net Assimilation  for sun leaves (which exclude dark respiration */
+	YEARLY_NET_ASSIMILATION_SHADE,    /* (gC/m2/year) Daily Net Assimilation for shaded leaves (which exclude dark respiration */
 
 	/* carbon fluxes */
 	C_FLUX,
+	ALPHA_EFF,                          /* (molC/molPAR) Effective quantum canopy efficiency */
+	ALPHA_EFF_SUN,                      /* (molC/molPAR) Effective quantum canopy efficiency */
+	ALPHA_EFF_SHADE,                    /* (molC/molPAR) Effective quantum canopy efficiency */
 	GPP,                                /* (gC/m2/day) Daily Gross Primary Production */
 	GPP_SUN,                            /* (gC/m2/day) Daily Sun Leaves Gross Primary Production */
 	GPP_SHADE,                          /* (gC/m2/day) Daily Shade Leaves Gross Primary Production */
@@ -358,10 +359,10 @@ enum {
 	YEARLY_NPP_tC,                      /* (tC/cell/day) Yearly Net Primary Production */
 
 	/* nitrogen fluxes */
-	NPP_gN,                             /* (gN/m2/day) Daily Net Primary Production demand */
+	NPP_gN_DEMAND,                      /* (gN/m2/day) Daily Net Primary Production demand */
 	MONTHLY_NPP_gN,                     /* (gN/m2/month) Monthly Net Primary Production demand */
 	YEARLY_NPP_gN,                      /* (gN/m2/year) Yearly Net Primary Production demand */
-	NPP_tN,                             /* (tNC/cell/day) Daily Net Primary Production demand */
+	NPP_tN_DEMAND,                      /* (tNC/cell/day) Daily Net Primary Production demand */
 	MONTHLY_NPP_tN,                     /* (tNC/cell/month) Monthly Net Primary Production demand */
 	YEARLY_NPP_tN,                      /* (tNC/cell/year) Yearly Net Primary Production demand */
 
@@ -400,17 +401,6 @@ enum {
 	C_STEM_LIVEWOOD_TO_DEADWOOD,        /* (tC/cell/day) Daily tC from Stem live wood pool to Stem dead wood */
 	C_CROOT_LIVEWOOD_TO_DEADWOOD,       /* (tC/cell/day) Daily tC from Coarse live wood pool to Coarse dead wood */
 	C_BRANCH_LIVEWOOD_TO_DEADWOOD,      /* (tC/cell/day) Daily tC from Branch live wood pool to Branch dead wood */
-	C_LEAF_TO_LITR1C,                   /* (tC/cell/day) Daily Leaf Litter Carbon to Litter labile carbon pool */
-	C_LEAF_TO_LITR2C,                   /* (tC/cell/day) Daily Leaf Litter Carbon to Litter unshielded cellulose carbon pool */
-	C_LEAF_TO_LITR3C,                   /* (tC/cell/day) Daily Leaf Litter Carbon to Litter shielded cellulose carbon pool */
-	C_LEAF_TO_LITR4C,                   /* (tC/cell/day) Daily Leaf Litter Carbon to Litter lignin carbon pool */
-	C_FROOT_TO_LITR1C,                  /* (tC/cell/day) Daily Fine Root Litter Carbon to Litter labile carbon pool */
-	C_FROOT_TO_LITR2C,                  /* (tC/cell/day) Daily Fine Root Litter Carbon to Litter unshielded cellulose carbon pool */
-	C_FROOT_TO_LITR3C,                  /* (tC/cell/day) Daily Fine Root Litter Carbon to Litter shielded cellulose carbon pool */
-	C_FROOT_TO_LITR4C,                  /* (tC/cell/day) Daily Fine Root Litter Carbon to Litter lignin carbon pool */
-	C_CWDC_TO_LITR2C,                   /* (tC/cell/day) Daily Coarse Woody Debris Carbon to Litter unshielded cellulose carbon pool */
-	C_CWDC_TO_LITR3C,                   /* (tC/cell/day) Daily Coarse Woody Debris Carbon to Litter shielded cellulose carbon pool */
-	C_CWDC_TO_LITR4C,                   /* (tC/cell/day) Daily Coarse Woody Debris Carbon to Litter lignin carbon pool */
 
 	YEARLY_C_TO_STEM,                   /* (tC/cell/year) Annual Stem biomass for turnover */
 	YEARLY_C_TO_CROOT,                  /* (tC/cell/year) Annual Coarse root biomass for turnover */
@@ -435,10 +425,9 @@ enum {
 	FRUIT_C,                            /* (tC/cell) Current Fruit carbon pool */
 	MAX_FRUIT_C,                        /* (tC/cell/year) Annual Fruit carbon pool */
 	LITR_C,                             /* (tC/cell) Current Litter carbon pool */
-	SOIL_C,                             /* (tC/cell) Current Soil carbon pool */
 	CWD_C,                              /* (tC/cell) Current Coarse Woody Debris carbon pool */
-	LIVEWOOD_C,                         /* (tC/cell) Current Live wood carbon pool */
-	DEADWOOD_C,                         /* (tC/cell) Current Dead wood carbon pool */
+	TOT_LIVEWOOD_C,                     /* (tC/cell) Current Live wood carbon pool */
+	TOT_DEADWOOD_C,                     /* (tC/cell) Current Dead wood carbon pool */
 	TOT_WOOD_C,                         /* (tC/cell) Current Total wood carbon pool */
 	TOTAL_C,                            /* (tC/cell) Current Total carbon pool */
 	STEM_LIVEWOOD_C,                    /* (tC/cell) Current Stem live wood carbon pool */
@@ -457,7 +446,7 @@ enum {
 	BRANCH_HEARTWOOD_C,                 /* (tC/cell) Current Branch heartwood carbon pool */
 	EFF_LIVE_TOTAL_WOOD_FRAC,           /* (DIM) Age-related fraction of Live biomass per Total biomass */
 	DAILY_LIVEWOOD_TURNOVER,            /* (tC/cell/day) Daily live wood turnover rate */
-	STANDING_WOOD,                      /* (tC/cell) standing wood biomass */
+	STANDING_WOOD,                      /* (tC/cell) standing wood carbon */
 
 	/* management C */
 	C_HWP,                              /* (tC/cell/yr) annual harvested woody products removed from stand */
@@ -486,36 +475,36 @@ enum {
 	TREE_BRANCH_HEARTWOOD_C,            /* (tC/tree) Single Tree Heartwood Branch carbon pool */
 	TREE_BRANCH_LIVEWOOD_C,             /* (tC/tree) Single Tree Live Branch carbon pool */
 	TREE_BRANCH_DEADWOOD_C,             /* (tC/tree) Single Tree Dead Stem carbon pool */
-	TREE_LIVEWOOD_C,                    /* (tC/tree) Single Tree Live Wood carbon pool */
-	TREE_DEADWOOD_C,                    /* (tC/tree) Single Tree Dead Wood carbon pool */
+	TREE_TOT_LIVEWOOD_C,                /* (tC/tree) Single Tree Live Wood carbon pool */
+	TREE_TOT_DEADWOOD_C,                /* (tC/tree) Single Tree Dead Wood carbon pool */
 	TREE_TOT_WOOD_C,                    /* (tC/tree) Single Tree Total Wood carbon pool */
 	TREE_SAPWOOD_C,                     /* (tC/tree) Single Tree Sapwood carbon pool */
 	TREE_HEARTWOOD_C,                   /* (tC/tree) Single Tree Heartwood carbon pool */
 
 	/* carbon biomass pools in tDM/sizeCell */
-	LEAF_DM,                            /* (tDM/cell) Current Leaf carbon pool */
-	FROOT_DM,                           /* (tDM/cell) Current Fine root carbon pool */
-	STEM_DM,                            /* (tDM/cell) Current Stem carbon pool */
-	CROOT_DM,                           /* (tDM/cell) Current Coarse root carbon pool */
-	BRANCH_DM,                          /* (tDM/cell) Current Branch carbon pool */
-	RESERVE_DM,                         /* (tDM/cell) Current Reserve carbon pool */
-	FRUIT_DM,                           /* (tDM/cell) Current Fruit carbon pool */
-	SAPWOOD_DM,                         /* (tDM/cell) Current Sapwood carbon pool */
-	HEARTWOOD_DM,                       /* (tDM/cell) Current Heartwood carbon pool */
-	STEM_SAPWOOD_DM,                    /* (tDM/cell) Current Live Stem carbon pool */
-	STEM_HEARTWOOD_DM,                  /* (tDM/cell) Current Dead Stem carbon pool */
-	CROOT_SAPWOOD_DM,                   /* (tDM/cell) Current Live Coarse root carbon pool */
-	CROOT_HEARTWOOD_DM,                 /* (tDM/cell) Current Dead Coarse root carbon pool */
-	BRANCH_SAPWOOD_DM,                  /* (tDM/cell) Current Live Branch carbon pool */
-	BRANCH_HEARTWOOD_DM,                /* (tDM/cell) Current Dead Branch carbon pool */
-	LIVEWOOD_DM,                        /* (tDM/cell) Current Live Wood carbon pool */
-	DEADWOOD_DM,                        /* (tDM/cell) Current Dead Wood carbon pool */
-	STEM_LIVEWOOD_DM,                   /* (tDM/cell) Current Live Stem carbon pool */
-	STEM_DEADWOOD_DM,                   /* (tDM/cell) Current Dead Stem carbon pool */
-	CROOT_LIVEWOOD_DM,                  /* (tDM/cell) Current Live Coarse root carbon pool */
-	CROOT_DEADWOOD_DM,                  /* (tDM/cell) Current Dead Coarse root carbon pool */
-	BRANCH_LIVEWOOD_DM,                 /* (tDM/cell) Current Live Branch carbon pool */
-	BRANCH_DEADWOOD_DM,                 /* (tDM/cell) Current Dead Branch carbon pool */
+	LEAF_DM,                            /* (tDM/cell) Current Leaf dry matter pool */
+	FROOT_DM,                           /* (tDM/cell) Current Fine root dry matter pool */
+	STEM_DM,                            /* (tDM/cell) Current Stem dry matter pool */
+	CROOT_DM,                           /* (tDM/cell) Current Coarse root dry matter pool */
+	BRANCH_DM,                          /* (tDM/cell) Current Branch dry matter pool */
+	RESERVE_DM,                         /* (tDM/cell) Current Reserve dry matter pool */
+	FRUIT_DM,                           /* (tDM/cell) Current Fruit dry matter pool */
+	SAPWOOD_DM,                         /* (tDM/cell) Current Sapwood dry matter pool */
+	HEARTWOOD_DM,                       /* (tDM/cell) Current Heartwood dry matter pool */
+	STEM_SAPWOOD_DM,                    /* (tDM/cell) Current Live Stem dry matter pool */
+	STEM_HEARTWOOD_DM,                  /* (tDM/cell) Current Dead Stem dry matter pool */
+	CROOT_SAPWOOD_DM,                   /* (tDM/cell) Current Live Coarse root dry matter pool */
+	CROOT_HEARTWOOD_DM,                 /* (tDM/cell) Current Dead Coarse root dry matter pool */
+	BRANCH_SAPWOOD_DM,                  /* (tDM/cell) Current Live Branch dry matter pool */
+	BRANCH_HEARTWOOD_DM,                /* (tDM/cell) Current Dead Branch dry matter pool */
+	TOT_LIVEWOOD_DM,                    /* (tDM/cell) Current Live Wood dry matter pool */
+	TOT_DEADWOOD_DM,                    /* (tDM/cell) Current Dead Wood dry matter pool */
+	STEM_LIVEWOOD_DM,                   /* (tDM/cell) Current Live Stem dry matter pool */
+	STEM_DEADWOOD_DM,                   /* (tDM/cell) Current Dead Stem dry matter pool */
+	CROOT_LIVEWOOD_DM,                  /* (tDM/cell) Current Live Coarse root dry matter pool */
+	CROOT_DEADWOOD_DM,                  /* (tDM/cell) Current Dead Coarse root dry matter pool */
+	BRANCH_LIVEWOOD_DM,                 /* (tDM/cell) Current Live Branch dry matter pool */
+	BRANCH_DEADWOOD_DM,                 /* (tDM/cell) Current Dead Branch dry matter pool */
 
 	/* Above and Below Ground Biomass */
 	AGB,                                /* (tC/cell) Above Ground Biomass pool */
@@ -625,12 +614,16 @@ enum {
 	N_CROOT_LIVE_WOOD_TO_DEADWOOD,      /* (tN/cell/day) Daily tN from Coarse live wood pool to Coarse dead wood */
 	N_BRANCH_LIVE_WOOD_TO_DEAD_WOOD,    /* (tN/cell/day) Daily tN from Branch live wood pool to Branch dead wood */
 
+	YEARLY_N_TO_WOOD,                   /* (tN/cell/year) Annual Nitrogen stocked into wood pool */
+	CUM_YEARLY_N_TO_WOOD,               /* (tN/cell) Cumulated Annual Nitrogen stocked into wood pool */
+
 	/* nitrogen pools (tN/area) */
 	LEAF_N,                             /* (tN/cell) Current Leaf nitrogen pool */
 	LEAF_SUN_N,                         /* (tN/cell) Current Leaf sun nitrogen pool */
 	LEAF_SHADE_N,                       /* (tN/cell) Current Leaf shade nitrogen pool */
 	LEAF_FALLING_N,                     /* (tN/cell) Current Leaf falling nitrogen pool */
 	FROOT_N,                            /* (tN/cell) Current Fine root nitrogen pool */
+	DEADWOODN,                          /* (tN/cell) Current Coarse woody debris falling nitrogen pool */
 	CROOT_N,                            /* (tN/cell) Current Coarse root nitrogen pool */
 	CROOT_LIVEWOOD_N,                   /* (tN/cell) Current Live Coarse root nitrogen pool */
 	CROOT_DEADWOOD_N,                   /* (tN/cell) Current Dead Coarse root nitrogen pool */
@@ -642,12 +635,14 @@ enum {
 	BRANCH_DEADWOOD_N,                  /* (tN/cell) Current Dead Branch nitrogen pool */
 	RESERVE_N,                          /* (tN/cell) Current Reserve nitrogen pool */
 	FRUIT_N,                            /* (tN/cell) Current Fruit nitrogen pool */
+	MAX_FRUIT_N,                        /* (tN/cell/year) Annual Fruit nitrogen pool */
 	TREE_N_DEMAND,                      /* (tN/cell) Current Nitrogen demand for new plant tissues */
 	LITR_N,                             /* (tN/cell) Current Litter nitrogen pool */
-	SOIL_N,                             /* (tN/cell) Current soil nitrogen pool */
 	CWD_N,                              /* (tN/cell) Current Coarse Woody Debris nitrogen pool */
 	TOT_STEM_N,                         /* (tN/cell) Current Total Stem nitrogen pool */
 	TOT_ROOT_N,                         /* (tN/cell) Current Total root nitrogen pool */
+	DEADWOOD_LITTER_N,                  /* (tN/cell) Current deadwood litter nitrogen pool */
+	TOTAL_N,                            /* (tN/cell) Current Total nitrogen pool */
 
 	/* per tree in tN */
 	TREE_LEAF_N,                        /* (tN/tree) Single Tree Leaf nitrogen pool */
@@ -660,42 +655,73 @@ enum {
 	TREE_RESERVE_N,                     /* (tN/tree) Single Tree Reserve nitrogen pool */
 	TREE_FRUIT_N,                       /* (tN/tree) Single Tree Fruit nitrogen pool */
 
+	/* litter and soil flux */
+	LEAF_TO_LITRC,                      /* (tC/cell/day) leaf litter  C flux */
+	LEAF_TO_LITR1C,                     /* (tC/cell/day) leaf litter labile C flux */
+	LEAF_TO_LITR2C,                     /* (tC/cell/day) leaf litter unshielded cell/dayulose C flux */
+	LEAF_TO_LITR3C,                     /* (tC/cell/day) leaf litter shielded cell/dayulose C flux */
+	LEAF_TO_LITR4C,                     /* (tC/cell/day) leaf litter lignin C flux */
+	LEAF_TO_LITRN,                      /* (tN/cell/day) leaf litter  N flux */
+	LEAF_TO_LITR1N,                     /* (tN/cell/day) leaf litter labile N flux */
+	LEAF_TO_LITR2N,                     /* (tN/cell/day) leaf litter unshielded Cellulose N flux */
+	LEAF_TO_LITR3N,                     /* (tN/cell/day) leaf litter shielded Cellulose N flux */
+	LEAF_TO_LITR4N,                     /* (tN/cell/day) leaf litter lignin N flux */
+	FROOT_TO_LITRC,                     /* (tC/cell/day) froot litter labile C flux */
+	FROOT_TO_LITR1C,                    /* (tC/cell/day) froot litter labile C flux */
+	FROOT_TO_LITR2C,                    /* (tC/cell/day) froot litter unshielded celluse C flux */
+	FROOT_TO_LITR3C,                    /* (tC/cell/day) froot litter shielded cell/dayulose C flux */
+	FROOT_TO_LITR4C,                    /* (tC/cell/day) froot litter lignin C flux */
+	FROOT_TO_LITRN,                     /* (tN/cell/day) froot litter labile N flux */
+	FROOT_TO_LITR1N,                    /* (tN/cell/day) froot litter labile N flux */
+	FROOT_TO_LITR2N,                    /* (tN/cell/day) froot litter unshielded Cellulose N flux */
+	FROOT_TO_LITR3N,                    /* (tN/cell/day) froot litter shielded Cellulose N flux */
+	FROOT_TO_LITR4N,                    /* (tN/cell/day) froot litter lignin N flux */
+	CWD_TO_LITRC,                       /* (tC/cell/day) Coarse Woody Debris flux */
+	CWD_TO_LITR2C,                      /* (tC/cell/day) Coarse Woody Debris unshielded flux */
+	CWD_TO_LITR3C,                      /* (tC/cell/day) Coarse Woody Debris shielded flux */
+	CWD_TO_LITR4C,                      /* (tC/cell/day) Coarse Woody Debris lignin flux */
+	CWD_TO_LITRN ,                      /* (tN/cell/day) Coarse Woody Debris flux */
+	CWD_TO_LITR2N,                      /* (tN/cell/day) Coarse Woody Debris unshielded flux */
+	CWD_TO_LITR3N,                      /* (tN/cell/day) Coarse Woody Debris shielded flux */
+	CWD_TO_LITR4N,                      /* (tN/cell/day) Coarse Woody Debris lignin flux */
+
 	/* litter and soil pools */
-	CWDC,                               /* (tC/cell) coarse woody debris C */
-	LITR1C,                             /* (tC/cell) litter labile C */
-	LITR2C,                             /* (tC/cell) litter unshielded cellulose C */
-	LITR3C,                             /* (tC/cell) litter shielded cellulose C */
-	LITR4C,                             /* (tC/cell) litter lignin C */
-	LITR1N,                             /* (tN/cell) litter labile N */
-	LITR2N,                             /* (tN/cell) litter unshielded Cellulose N */
-	LITR3N,                             /* (tN/cell) litter shielded Cellulose N */
-	LITR4N,                             /* (tN/cell) litter lignin N */
-	SOIL1C,                             /* (tC/cell) microbial recycling pool C (fast) */
-	SOIL2C,                             /* (tC/cell) microbial recycling pool C (medium) */
-	SOIL3C,                             /* (tC/cell) microbial recycling pool C (slow) */
-	SOIL4C,                             /* (tC/cell) recalcitrant SOM C (humus, slowest) */
-	SOIL1N,                             /* (tN/cell) microbial recycling pool N (fast) */
-	SOIL2N,                             /* (tN/cell) microbial recycling pool N (medium) */
-	SOIL3N,                             /* (tN/cell) microbial recycling pool N (slow) */
-	SOIL4N,                             /* (tN/cell) recalcitrant SOM N (humus, slowest) */
+	LEAF_LITRC,                         /* (tC/cell) leaf litter C pool */
+	LEAF_LITR1C,                        /* (tC/cell) leaf litter labile C pool */
+	LEAF_LITR2C,                        /* (tC/cell) leaf litter unshielded cellulose C pool */
+	LEAF_LITR3C,                        /* (tC/cell) leaf litter shielded cellulose C pool */
+	LEAF_LITR4C,                        /* (tC/cell) leaf litter lignin C pool */
+	LEAF_LITRN,                         /* (tN/cell) leaf litter N pool */
+	LEAF_LITR1N,                        /* (tN/cell) leaf litter labile N pool */
+	LEAF_LITR2N,                        /* (tN/cell) leaf litter unshielded Cellulose N pool */
+	LEAF_LITR3N,                        /* (tN/cell) leaf litter shielded Cellulose N pool */
+	LEAF_LITR4N,                        /* (tN/cell) leaf litter lignin N pool */
+	FROOT_LITRC,                        /* (tC/cell) froot litter C pool */
+	FROOT_LITR1C,                       /* (tC/cell) froot litter labile C pool */
+	FROOT_LITR2C,                       /* (tC/cell) froot litter unshielded cellulose C pool */
+	FROOT_LITR3C,                       /* (tC/cell) froot litter shielded cellulose C pool */
+	FROOT_LITR4C,                       /* (tC/cell) froot litter lignin C pool */
+	FROOT_LITRN,                        /* (tN/cell) froot litter N pool */
+	FROOT_LITR1N,                       /* (tN/cell) froot litter labile N pool */
+	FROOT_LITR2N,                       /* (tN/cell) froot litter unshielded Cellulose N pool */
+	FROOT_LITR3N,                       /* (tN/cell) froot litter shielded Cellulose N pool */
+	FROOT_LITR4N,                       /* (tN/cell) froot litter lignin N pool */
+	CWD_LITRC ,                         /* (tC/cell) Coarse Woody Debris pool */
+	CWD_LITR2C,                         /* (tC/cell) Coarse Woody Debris unshielded pool */
+	CWD_LITR3C,                         /* (tC/cell) Coarse Woody Debris shielded pool */
+	CWD_LITR4C,                         /* (tC/cell) Coarse Woody Debris lignin pool */
+	CWD_LITRN,                          /* (tN/cell) Coarse Woody Debris pool */
+	CWD_LITR2N,                         /* (tN/cell) Coarse Woody Debris unshielded pool */
+	CWD_LITR3N,                         /* (tN/cell) Coarse Woody Debris shielded pool */
+	CWD_LITR4N,                         /* (tN/cell) Coarse Woody Debris lignin pool */
 
 	/* fractions */
 	LEAF_LITR_SCEL_FRAC,                /* (DIM) leaf litter shielded cellulose fraction */
 	LEAF_LITR_USCEL_FRAC,               /* (DIM) leaf litter unshielded cellulose fraction */
 	FROOT_LITR_SCEL_FRAC,               /* (DIM) fine root litter shielded cellulose fraction */
 	FROOT_LITR_USCEL_FRAC,              /* (DIM) fine root litter unshielded fraction */
-	DEAD_WOOD_SCEL_FRAC,                /* (DIM) dead wood litter shielded cellulose fraction */
-	DEAD_WOOD_USCEL_FRAC,               /* (DIM) dead wood litter unshielded fraction */
-
-	/* heterotrophic soil pools */
-	LITR1_RH,                           /* (kgC/m2/d) heterotrophic respiration for litter labile */
-	LITR2_RH,                           /* (kgC/m2/d) heterotrophic respiration for litter unshielded cellulose */
-	LITR3_RH,                           /* (kgC/m2/d) heterotrophic respiration for litter shielded cellulose */
-	LITR4_RH,                           /* (kgC/m2/d) heterotrophic respiration for litter lignin */
-	SOIL1_RH,                           /* (kgC/m2/d) heterotrophic respiration for microbial recycling pool (fast) */
-	SOIL2_RH,                           /* (kgC/m2/d) heterotrophic respiration for microbial recycling pool (medium) */
-	SOIL3_RH,                           /* (kgC/m2/d) heterotrophic respiration for microbial recycling pool (slow) */
-	SOIL4_RH,                           /* (kgC/m2/d) heterotrophic respiration for recalcitrant SOM (humus, slowest) */
+	DEADWOOD_SCEL_FRAC,                 /* (DIM) dead wood litter shielded cellulose fraction */
+	DEADWOOD_USCEL_FRAC,                /* (DIM) dead wood litter unshielded fraction */
 
 	/*** BALANCES VALUES ***/
 	TREEC_IN,                           /* tree carbon balance in */
@@ -990,15 +1016,6 @@ typedef struct
 	double par_refl_soil;                                                 /* (molPAR/m2/day) reflected PAR by the soil */
 	double par_refl_snow;                                                 /* (molPAR/m2/day) reflected PAR by the snow */
 
-	/* PPFD radiation */
-	double ppfd_abs;                                                      /* (umol/m2/sec) Absorbed Photosynthetic photon flux density tree level  */
-	double ppfd_abs_soil;                                                 /* (umol/m2/sec) Absorbed Photosynthetic photon flux density soil level */
-	double ppfd_abs_snow;                                                 /* (umol/m2/sec) Absorbed Photosynthetic photon flux density snow level */
-	double ppfd_transm;                                                   /* (umol/m2/sec) Transmitted Photosynthetic photon flux density */
-	double ppfd_refl;                                                     /* (umol/m2/sec) Reflected Photosynthetic photon flux density */
-	double ppfd_refl_soil;                                                /* (umol/m2/sec) PPFD reflected by the soil */
-	double ppfd_refl_snow;                                                /* (umol/m2/sec) PPFD reflected by the snow */
-
 	/************************************************** forest trees **************************************************/
 
 	double canopy_temp;                                                   /* (°C) daily canopy temperature */
@@ -1020,7 +1037,6 @@ typedef struct
 	double daily_stem_carbon;                                             /* (gC/m2/day) daily carbon assimilated to c pool at cell level */
 	double daily_froot_carbon;                                            /* (gC/m2/day) daily carbon assimilated to c pool at cell level */
 	double daily_croot_carbon;                                            /* (gC/m2/day) daily carbon assimilated to c pool at cell level */
-	double daily_root_carbon;                                             /* (gC/m2/day) daily carbon assimilated to c pool at cell level */
 	double daily_branch_carbon;                                           /* (gC/m2/day) daily carbon assimilated to c pool at cell level */
 	double daily_reserve_carbon;                                          /* (gC/m2/day) daily carbon assimilated to c pool at cell level */
 	double daily_fruit_carbon;                                            /* (gC/m2/day) daily carbon assimilated to fruit c pool at cell level */
@@ -1057,6 +1073,16 @@ typedef struct
 	double branch_dead_wood_carbon;                                       /* (gC/m2) branch dead wood carbon at cell level */
 	double reserve_carbon;                                                /* (gC/m2) reserve at cell level */
 	double fruit_carbon;                                                  /* (gC/m2) fruit at cell level */
+
+	/* nitrogen fluxes */
+	double daily_leaf_nitrogen;                                             /* (gN/m2/day) daily nitrogen assimilated to c pool at cell level */
+	double daily_stem_nitrogen;                                             /* (gN/m2/day) daily nitrogen assimilated to c pool at cell level */
+	double daily_froot_nitrogen;                                            /* (gN/m2/day) daily nitrogen assimilated to c pool at cell level */
+	double daily_croot_nitrogen;                                            /* (gN/m2/day) daily nitrogen assimilated to c pool at cell level */
+	double daily_root_nitrogen;                                             /* (gN/m2/day) daily nitrogen assimilated to c pool at cell level */
+	double daily_branch_nitrogen;                                           /* (gN/m2/day) daily nitrogen assimilated to c pool at cell level */
+	double daily_reserve_nitrogen;                                          /* (gN/m2/day) daily nitrogen assimilated to c pool at cell level */
+	double daily_fruit_nitrogen;                                            /* (gN/m2/day) daily nitrogen assimilated to fruit c pool at cell level */
 
 	/* tree nitrogen pools */
 	double leaf_nitrogen;                                                 /* (gN/m2) leaf carbon at cell level */
@@ -1109,72 +1135,85 @@ typedef struct
 	double fpi;                                                           /* (DIM) fraction of potential immobilization */
 
 	/* litter and soil decomposition carbon fluxes */
-	/* litter */
-	double daily_litrC;                                                   /* (gC/m2/day) daily litter carbon pool at cell level */
-	double daily_leaf_litrC;                                              /* (gC/m2/day) daily leaf to litter carbon pool at cell level */
-	double daily_leaf_litr1C;                                             /* (gC/m2/day) daily leaf to litter labile carbon pool at cell level */
-	double daily_leaf_litr2C;                                             /* (gC/m2/day) daily leaf to litter unshelded cellulose carbon pool at cell level */
-	double daily_leaf_litr3C;                                             /* (gC/m2/day) daily leaf to litter  shelded cellulose carbon pool at cell level */
-	double daily_leaf_litr4C;                                             /* (gC/m2/day) daily leaf to litter lignin carbon pool at cell level */
-	double daily_froot_litrC;                                             /* (gC/m2/day) daily fine root to litter carbon pool at cell level */
-	double daily_froot_litr1C;                                            /* (gC/m2/day) daily fine root to litter labile carbon pool at cell level */
-	double daily_froot_litr2C;                                            /* (gC/m2/day) daily fine root to litter unshelded cellulose carbon pool at cell level */
-	double daily_froot_litr3C;                                            /* (gC/m2/day) daily fine root to litter shelded cellulose carbon pool at cell level */
-	double daily_froot_litr4C;                                            /* (gC/m2/day) daily fine root to litter lignin carbon pool at cell level */
+	/* cwd + litter */
+	double daily_cwd_to_litrC;                                            /* (gC/m2/day) daily cwd carbon to litter carbon pool cell level */
+	double daily_cwd_to_litr2C;                                           /* (gC/m2/day) daily decomposition fluxes cwd to litter */
+	double daily_cwd_to_litr3C;                                           /* (gC/m2/day) daily decomposition fluxes cwd to litter */
+	double daily_cwd_to_litr4C;                                           /* (gC/m2/day) daily decomposition fluxes cwd to litter */
+	double daily_leaf_to_litrC;                                           /* (gC/m2/day) daily leaf to litter carbon pool at cell level */
+	double daily_leaf_to_litr1C;                                          /* (gC/m2/day) daily leaf to litter labile carbon pool at cell level */
+	double daily_leaf_to_litr2C;                                          /* (gC/m2/day) daily leaf to litter unshelded cellulose carbon pool at cell level */
+	double daily_leaf_to_litr3C;                                          /* (gC/m2/day) daily leaf to litter  shelded cellulose carbon pool at cell level */
+	double daily_leaf_to_litr4C;                                          /* (gC/m2/day) daily leaf to litter lignin carbon pool at cell level */
+	double daily_froot_to_litrC;                                          /* (gC/m2/day) daily fine root to litter carbon pool at cell level */
+	double daily_froot_to_litr1C;                                         /* (gC/m2/day) daily fine root to litter labile carbon pool at cell level */
+	double daily_froot_to_litr2C;                                         /* (gC/m2/day) daily fine root to litter unshelded cellulose carbon pool at cell level */
+	double daily_froot_to_litr3C;                                         /* (gC/m2/day) daily fine root to litter shelded cellulose carbon pool at cell level */
+	double daily_froot_to_litr4C;                                         /* (gC/m2/day) daily fine root to litter lignin carbon pool at cell level */
+	double daily_to_litrC;                                                /* (gC/m2/day) daily balance of carbon to litter carbon pool at cell level */
+	double daily_to_litr1C;                                               /* (gC/m2/day) daily balance of carbon to litter labile carbon pool at cell level */
+	double daily_to_litr2C;                                               /* (gC/m2/day) daily balance of carbon to litter unshelded cellulose carbon pool at cell level */
+	double daily_to_litr3C;                                               /* (gC/m2/day) daily balance of carbon to litter shelded cellulose carbon pool at cell level */
+	double daily_to_litr4C;                                               /* (gC/m2/day) daily balance of carbon to litter lignin carbon pool at cell level */
+	double daily_litr_to_soilC;                                           /* (gC/m2/day) daily litter carbon pool to soil pool */
 	double daily_litr1C_to_soil1C;                                        /* (gC/m2/day) daily decomposition fluxes litter to soil */
 	double daily_litr2C_to_soil2C;                                        /* (gC/m2/day) daily decomposition fluxes litter to soil */
 	double daily_litr3C_to_litr2C;                                        /* (gC/m2/day) daily decomposition fluxes litter to soil */
 	double daily_litr4C_to_soil3C;                                        /* (gC/m2/day) daily decomposition fluxes litter to soil */
-	/* cwd */
-	double daily_cwdC;                                                    /* (gC/m2/day) daily cwd carbon pool at cell level */
-	double daily_stem_cwdC;                                               /* (gC/m2/day) daily stem carbon to Coarse Woody Debris */
-	double daily_croot_cwdC;                                              /* (gC/m2/day) daily croot carbon to Coarse Woody Debris */
-	double daily_reserve_cwdC;                                            /* (gC/m2/day) daily reserve carbon to Coarse Woody Debris */
-	double daily_branch_cwdC;                                             /* (gC/m2/day) daily branch carbon to Coarse Woody Debris */
-	double daily_fruit_cwdC;                                              /* (gC/m2/day) daily fruit to CWD lignin carbon pool at cell level */
-	double daily_cwdc_to_litr2C;                                          /* (gC/m2/day) daily decomposition fluxes cwd to litter */
-	double daily_cwdc_to_litr3C;                                          /* (gC/m2/day) daily decomposition fluxes cwd to litter */
-	double daily_cwdc_to_litr4C;                                          /* (gC/m2/day) daily decomposition fluxes cwd to litter */
 	/* soil */
-	double daily_soilC;                                                   /* (gC/m2/day) daily litter carbon to soil */
+	double daily_to_soilC;                                                /* (gC/m2/day) daily litter carbon to soil */
+	double daily_to_soil1C;                                               /* (gC/m2/day) daily microbial recycling pool C (fast) */
+	double daily_to_soil2C;                                               /* (gC/m2/day) daily microbial recycling pool C (medium) */
+	double daily_to_soil3C;                                               /* (gC/m2/day) daily microbial recycling pool C (slow) */
+	double daily_to_soil4C;                                               /* (gC/m2/day) daily recalcitrant SOM C (humus, slowest) */
 	double daily_soil1C_to_soil2C;                                        /* (gC/m2/day) daily decomposition fluxes soil to soil */
 	double daily_soil2C_to_soil3C;                                        /* (gC/m2/day) daily decomposition fluxes soil to soil */
 	double daily_soil3C_to_soil4C;                                        /* (gC/m2/day) daily decomposition fluxes soil to soil */
 
 	/* litter and soil nitrogen fluxes */
+	double daily_N_miner;                                                 /*(gN/m2/day) daily nitrogen mineralized */
+	double daily_N_pot_imm;                                               /*(gN/m2/day) daily nitrogen immobilized */
 	/* litter */
-	double daily_litrN;                                                   /* (gN/m2/day) daily leaf + fine root to litter nitrogen pool at cell level */
-	double daily_leaf_litrN;                                              /* (gN/m2/day) daily leaf to litter nitrogen pool at cell level */
-	double daily_leaf_litr1N;                                             /* (gN/m2/day) daily leaf to litter labile nitrogen pool at cell level */
-	double daily_leaf_litr2N;                                             /* (gN/m2/day) daily leaf to litter unshelded cellulose nitrogen pool at cell level */
-	double daily_leaf_litr3N;                                             /* (gN/m2/day) daily leaf to litter  shelded cellulose nitrogen pool at cell level */
-	double daily_leaf_litr4N;                                             /* (gN/m2/day) daily leaf to litter lignin nitrogen pool at cell level */
-	double daily_froot_litrN;                                             /* (gN/m2/day) daily fine root to litter nitrogen pool at cell level */
-	double daily_froot_litr1N;                                            /* (gN/m2/day) daily fine root to litter labile nitrogen pool at cell level */
-	double daily_froot_litr2N;                                            /* (gN/m2/day) daily fine root to litter unshelded cellulose nitrogen pool at cell level */
-	double daily_froot_litr3N;                                            /* (gN/m2/day) daily fine root to litter shelded cellulose nitrogen pool at cell level */
-	double daily_froot_litr4N;                                            /* (gN/m2/day) daily fine root to litter lignin nitrogen pool at cell level */
+	double daily_to_litrN;                                                /* (gN/m2/day) daily nitrogen to litter carbon pool at cell level */
+	double daily_to_litr1N;                                               /* (gN/m2/day) daily nitrogen to litter labile carbon pool at cell level */
+	double daily_to_litr2N;                                               /* (gN/m2/day) daily nitrogen to litter unshelded cellulose carbon pool at cell level */
+	double daily_to_litr3N;                                               /* (gN/m2/day) daily nitrogen to litter shelded cellulose carbon pool at cell level */
+	double daily_to_litr4N;                                               /* (gN/m2/day) daily nitrogen to litter lignin carbon pool at cell level */
+	double daily_cwd_to_litrN;                                            /* (gN/m2/day) daily cwd to litter nitrogen pool at cell level */
+	double daily_cwd_to_litr2N;                                           /* (gN/m2/day) daily decomposition fluxes cwd to litter */
+	double daily_cwd_to_litr3N;                                           /* (gN/m2/day) daily decomposition fluxes cwd to litter */
+	double daily_cwd_to_litr4N;                                           /* (gN/m2/day) daily decomposition fluxes cwd to litter */
+	double daily_leaf_to_litrN;                                           /* (gN/m2/day) daily leaf to litter nitrogen pool at cell level */
+	double daily_leaf_to_litr1N;                                          /* (gN/m2/day) daily leaf to litter labile nitrogen pool at cell level */
+	double daily_leaf_to_litr2N;                                          /* (gN/m2/day) daily leaf to litter unshelded cellulose nitrogen pool at cell level */
+	double daily_leaf_to_litr3N;                                          /* (gN/m2/day) daily leaf to litter  shelded cellulose nitrogen pool at cell level */
+	double daily_leaf_to_litr4N;                                          /* (gN/m2/day) daily leaf to litter lignin nitrogen pool at cell level */
+	double daily_froot_to_litrN;                                          /* (gN/m2/day) daily fine root to litter nitrogen pool at cell level */
+	double daily_froot_to_litr1N;                                         /* (gN/m2/day) daily fine root to litter labile nitrogen pool at cell level */
+	double daily_froot_to_litr2N;                                         /* (gN/m2/day) daily fine root to litter unshelded cellulose nitrogen pool at cell level */
+	double daily_froot_to_litr3N;                                         /* (gN/m2/day) daily fine root to litter shelded cellulose nitrogen pool at cell level */
+	double daily_froot_to_litr4N;                                         /* (gN/m2/day) daily fine root to litter lignin nitrogen pool at cell level */
+	double daily_litr_to_soilN;                                           /* (gN/m2/day) daily litter nitrogen pool to soil pool */
 	double daily_litr1N_to_soil1N;                                        /* (gN/m2/day) daily decomposition fluxes litter to soil */
 	double daily_litr2N_to_soil2N;                                        /* (gN/m2/day) daily decomposition fluxes litter to soil */
 	double daily_litr3N_to_litr2N;                                        /* (gN/m2/day) daily decomposition fluxes litter to soil */
 	double daily_litr4N_to_soil3N;                                        /* (gN/m2/day) daily decomposition fluxes litter to soil */
-	/* cwd */
-	double daily_cwdN;                                                    /* (gN/m2/day) daily cwd nitrogen pool at cell level */
-	double daily_stem_cwdN;                                               /* (gN/m2/day) daily stem nitrogen to Coarse Woody Debris */
-	double daily_croot_cwdN;                                              /* (gN/m2/day) daily croot nitrogen to Coarse Woody Debris */
-	double daily_reserve_cwdN;                                            /* (gN/m2/day) daily reserve nitrogen to Coarse Woody Debris */
-	double daily_branch_cwdN;                                             /* (gN/m2/day) daily branch nitrogen to Coarse Woody Debris */
-	double daily_fruit_cwdN;                                              /* (gN/m2/day) daily fruit to cwd nitrogen pool at cell level */
-	double daily_cwdc_to_litr2N;                                          /* (gN/m2/day) daily decomposition fluxes cwd to litter */
-	double daily_cwdc_to_litr3N;                                          /* (gN/m2/day) daily decomposition fluxes cwd to litter */
-	double daily_cwdc_to_litr4N;                                          /* (gN/m2/day) daily decomposition fluxes cwd to litter */
 	/* soil */
-	double daily_soilN;                                                   /* (gN/m2/day) daily litter nitrogen to soil */
+	double daily_to_soilN;                                                /* (gN/m2/day) daily litter nitrogen to soil */
+	double daily_to_soil1N;                                               /* (gN/m2/day) daily balance of microbial recycling pool nitrogen (fast) */
+	double daily_to_soil2N;                                               /* (gN/m2/day) daily balance of microbial recycling pool nitrogen (medium) */
+	double daily_to_soil3N;                                               /* (gN/m2/day) daily balance of microbial recycling pool nitrogen (slow) */
+	double daily_to_soil4N;                                               /* (gN/m2/day) daily balance of carbon to litter lignin carbon pool at cell level */
 	double daily_soil1N_to_soil2N;                                        /* (gN/m2/day) daily decomposition fluxes soil to soil */
 	double daily_soil2N_to_soil3N;                                        /* (gN/m2/day) daily decomposition fluxes soil to soil */
-	double soil3N_to_soil4N;                                              /* (gN/m2/day) daily decomposition fluxes soil to soil */
+	double daily_soil3N_to_soil4N;                                        /* (gN/m2/day) daily decomposition fluxes soil to soil */
+	double daily_soil4N_to_soilMinN;                                      /* (gN/m2/day) daily decomposition fluxes soil to mineralized */
 
 	/* litter and soil carbon pools */
+	double cwd_C;                                                         /* (gC/m2) cwd cwd carbon */
+	double cwd_2C;                                                        /* (gC/m2) cwd cwd unshielded carbon */
+	double cwd_3C;                                                        /* (gC/m2) cwd cwd shielded carbon */
+	double cwd_4C;                                                        /* (gC/m2) cwd cwd lignin carbon */
 	double litrC;                                                         /* (gC/m2) litter carbon */
 	double litr1C;                                                        /* (gC/m2) litter labile carbon */
 	double litr2C;                                                        /* (gC/m2) litter unshielded cellulose carbon */
@@ -1190,16 +1229,6 @@ typedef struct
 	double froot_litr2C;                                                  /* (gC/m2) fine root litter unshielded cellulose carbon */
 	double froot_litr3C;                                                  /* (gC/m2) fine root litter shielded cellulose carbon */
 	double froot_litr4C;                                                  /* (gC/m2) fine root litter lignin carbon */
-	double cwdC;                                                          /* (gC/m2) cwd carbon */
-	double stem_cwdC;                                                     /* (gC/m2) stem total cwd carbon */
-	double croot_cwdC;                                                    /* (gC/m2) croot total cwd carbon */
-	double reserve_cwdC;                                                  /* (gC/m2) reserve total cwd carbon */
-	double branch_cwdC;                                                   /* (gC/m2) branch total cwd carbon */
-	double fruit_cwdC;                                                    /* (gC/m2) fruit total cwd carbon */
-	double deadwood_litr1C;                                               /* (gC/m2) deadwood litter labile carbon */
-	double deadwood_litr2C;                                               /* (gC/m2) deadwood litter unshielded cellulose carbon */
-	double deadwood_litr3C;                                               /* (gC/m2) deadwood litter shielded cellulose carbon */
-	double deadwood_litr4C;                                               /* (gC/m2) deadwood litter lignin carbon */
 	double soilC;                                                         /* (gC/m2) Soil at cell level */
 	double soil1C;                                                        /* (gC/m2) microbial recycling pool carbon (fast) */
 	double soil2C;                                                        /* (gC/m2) microbial recycling pool carbon (medium) */
@@ -1222,16 +1251,10 @@ typedef struct
 	double froot_litr2N;                                                  /* (gN/m2) fine root litter unshielded cellulose nitrogen */
 	double froot_litr3N;                                                  /* (gN/m2) fine root litter shielded cellulonitrogenN */
 	double froot_litr4N;                                                  /* (gN/m2) fine root litter lignin nitrogen */
-	double cwdN;                                                          /* (gN/m2) coarse woody debris nitrogen */
-	double stem_cwdN;                                                     /* (gN/m2) stem total cwd nitrogen */
-	double croot_cwdN;                                                    /* (gN/m2) croot total cwd nitrogen */
-	double reserve_cwdN;                                                  /* (gN/m2) reserve total cwd nitrogen */
-	double branch_cwdN;                                                   /* (gN/m2) branch total cwd nitrogen */
-	double fruit_cwdN;                                                    /* (gN/m2) fruit total cwd nitrogen */
-	double deadwood_litr1N;                                               /* (gN/m2) deadwood litter labile nitrogen */
-	double deadwood_litr2N;                                               /* (gN/m2) deadwood litter unshielded cellulose nitrogen */
-	double deadwood_litr3N;                                               /* (gN/m2) deadwood litter shielded cellulose nitrogen */
-	double deadwood_litr4N;                                               /* (gN/m2) deadwood litter lignin nitrogen */
+	double cwd_N;                                                         /* (gN/m2) cwd nitrogen */
+	double cwd_2N;                                                        /* (gC/m2) cwd unshielded nitrogen */
+	double cwd_3N;                                                        /* (gC/m2) cwd shielded nitrogen */
+	double cwd_4N;                                                        /* (gC/m2) cwd lignin nitrogen */
 	double soilN;                                                         /* (gN/m2) soil nitrogen */
 	double soil1N;                                                        /* (gN/m2) microbial recycling pool nitrogen (fast) */
 	double soil2N;                                                        /* (gN/m2) microbial recycling pool nitrogen (medium) */
@@ -1242,9 +1265,12 @@ typedef struct
 	double Nfix;                                                          /* (gN/m2) SUM of biological nitrogen fixation */
 	double Nleach;                                                        /* (gN/m2) SUM of nitrogen lost for leacheing */
 	double Nvol;                                                          /* (gN/m2) SUM of nitrogen lost for volatilization  */
+	double NPP_gN_demand;
+
 
 	/* temporary nitrogen variables for reconciliation of decomposition
 	immobilization fluxes and plant growth N demands */
+	//fixme to used to remove
 	double mineralized;
 	double potential_immob;
 	double plitr1c_loss;                                                  /* litter carbon labile decomposition */
@@ -1263,22 +1289,23 @@ typedef struct
 	double kl4;                                                           /* decay rate of lignin litter */
 
 	/* heterotrophic soil */
-	double litr1_rh;                                                      /* (kgC/m2/day) heterotrophic respiration for litter labile carbon */
-	double litr2_rh;                                                      /* (kgC/m2/day) heterotrophic respiration for litter unshielded cellulose carbon */
-	double litr3_rh;                                                      /* (kgC/m2/day) heterotrophic respiration for litter shielded cellulose carbon */
-	double litr4_rh;                                                      /* (kgC/m2/day) heterotrophic respiration for litter lignin carbon */
-	double soil1_rh;                                                      /* (kgC/m2/day) heterotrophic respiration for microbial recycling pool carbon (fast) */
-	double soil2_rh;                                                      /* (kgC/m2/day) heterotrophic respiration for microbial recycling pool carbon (medium) */
-	double soil3_rh;                                                      /* (kgC/m2/day) heterotrophic respiration for microbial recycling pool carbon (slow) */
-	double soil4_rh;                                                      /* (kgC/m2/day) heterotrophic respiration for recalcitrant SOM carbon (humus, slowest) */
+	double daily_litr_het_resp;                                           /* (gC/m2/day) heterotrophic respiration for total litter carbon */
+	double daily_litr1_het_resp;                                          /* (gC/m2/day) heterotrophic respiration for litter labile carbon */
+	double daily_litr2_het_resp;                                          /* (gC/m2/day) heterotrophic respiration for litter unshielded cellulose carbon */
+	double daily_litr4_het_resp;                                          /* (gC/m2/day) heterotrophic respiration for litter lignin carbon */
+	double daily_soil_het_resp;                                           /* (gC/m2/day) heterotrophic respiration for total soil carbon */
+	double daily_soil1_het_resp;                                          /* (gC/m2/day) heterotrophic respiration for microbial recycling pool carbon (fast) */
+	double daily_soil2_het_resp;                                          /* (gC/m2/day) heterotrophic respiration for microbial recycling pool carbon (medium) */
+	double daily_soil3_het_resp;                                          /* (gC/m2/day) heterotrophic respiration for microbial recycling pool carbon (slow) */
+	double daily_soil4_het_resp;                                          /* (gC/m2/day) heterotrophic respiration for recalcitrant SOM carbon (humus, slowest) */
 
 	/* soil fraction */
 	double leaf_litt_scel_frac;                                           /* (DIM) leaf litter shielded cellulose fraction */
 	double leaf_litt_uscel_frac;                                          /* (DIM) leaf litter unshielded cellulose fraction */
 	double froot_litt_scel_frac;                                          /* (DIM) fine root litter shielded cellulose fraction */
 	double froot_litt_uscel_frac;                                         /* (DIM) fine root litter unshielded fraction */
-	double dead_wood_scel_frac;                                           /* (DIM) dead wood litter shielded cellulose fraction */
-	double dead_wood_uscel_frac;                                          /* (DIM) dead wood litter unshielded fraction */
+	double deadwood_scel_frac;                                            /* (DIM) dead wood litter shielded cellulose fraction */
+	double deadwood_uscel_frac;                                           /* (DIM) dead wood litter unshielded fraction */
 
 	/* soil */
 	//ALESSIOR TO MOVE INTO SOIL LAYER STRUCTURE
@@ -1404,13 +1431,15 @@ typedef struct {
 } matrix_t;
 
 matrix_t* matrix_create(const soil_settings_t*const s, const int count, const char* const filename, dataset_t** dataset);
-void matrix_free(matrix_t *m);
-void dataset_free(dataset_t *p);
-void simulation_summary(const matrix_t* const m);
-void site_summary(const matrix_t* const m);
-void topo_summary(const matrix_t* const m);
-void soil_summary(const matrix_t* const m, const cell_t* const cell);
-void forest_summary(const matrix_t* const m, const int day, const int month, const int year);
-int layer_add(cell_t* const c);
-int fill_species_from_file(species_t *const s);
+void matrix_free           ( matrix_t *m);
+void dataset_free          ( dataset_t *p);
+void simulation_summary    ( const matrix_t* const m);
+void site_summary          ( const matrix_t* const m);
+void topo_summary          ( const matrix_t* const m);
+void soil_summary          ( const matrix_t* const m, const cell_t* const cell);
+void forest_initialization ( const matrix_t* const m, const int day, const int month, const int year);
+void litter_initialization ( const matrix_t* const m, const int day, const int month, const int year);
+void soil_initialization   ( const matrix_t* const m, const int day, const int month, const int year);
+int layer_add              ( cell_t* const c);
+int fill_species_from_file ( species_t *const s);
 #endif /* MATRIX_H_ */

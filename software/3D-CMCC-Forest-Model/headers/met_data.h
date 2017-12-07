@@ -3,6 +3,7 @@
 #define MET_DATA_H_
 
 #include "matrix.h"
+#include "meteo.h"
 
 typedef enum {
 	WEIGHTED_MEAN_TAVG
@@ -28,7 +29,7 @@ void Daily_Nightime_avg_temperature(meteo_d_t *const met, const int day, const i
 void Daily_Thermic_sum (meteo_d_t *met, const int day, const int month, const int year);
 void Daily_Air_pressure(meteo_d_t *met, const int day, const int month);
 void Daily_Air_density (meteo_d_t *met, const int day, const int month);
-void Daily_Day_Length(cell_t *c, const int day, const int month, const int year);
+void Day_Length(cell_t *c, const int day, const int month, const int year);
 void Daily_Latent_heat(meteo_d_t *met, const int day, const int month);
 void Daily_Psychrometric(meteo_d_t *met, const int day, const int month);
 void Daily_Sat_vapour_pressure(cell_t *const c, const int day, const int month, const int year);
