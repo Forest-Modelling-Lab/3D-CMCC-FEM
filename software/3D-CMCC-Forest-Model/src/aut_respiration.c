@@ -220,6 +220,9 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 		 * The degree of inhibition ranges between 17 and 66% depending on species
 		 * (Sharp et al., 1984; Brooks and Farquhar, 1985; Kirschbaum and Farquhar,1987).
 		Villar et al. (1995) give a mean rate of 51% for evergreen tree species and 62% for deciduous tree species.*/
+		/* "the large discrepancy between daytime and night-time ecosystem respiration in the
+		 * first half of the growing season suggests inhibition of leaf respiration by light, known as the Kok effect"
+		 * but just "during the first half of the growing season only" R. Wehr, Nature 2016 */
 
 		if ( s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2 )
 		{
