@@ -127,11 +127,18 @@ void total_photosynthesis_biome (cell_t *const c, const int height, const int db
 	s->value[YEARLY_NET_ASSIMILATION_SHADE]    += s->value[NET_ASSIMILATION_SHADE];
 
 	/************************************************************************************************************************************/
-
+#if 0
 	/* gpp */
 	s->value[GPP_SUN]                     = s->value[NET_ASSIMILATION_SUN];
 	s->value[GPP_SHADE]                   = s->value[NET_ASSIMILATION_SHADE];
 	s->value[GPP]                         = s->value[GPP_SUN] + s->value[GPP_SHADE];
+#else
+	/* gpp */
+	s->value[GPP_SUN]                     = s->value[GROSS_ASSIMILATION_SUN];
+	s->value[GPP_SHADE]                   = s->value[GROSS_ASSIMILATION_SHADE];
+	s->value[GPP]                         = s->value[GPP_SUN] + s->value[GPP_SHADE];
+
+#endif
 
 	/* gC/m2/day --> tC/cell/day */
 	s->value[GPP_tC]                      = s->value[GPP] / 1e6 * g_settings->sizeCell ;

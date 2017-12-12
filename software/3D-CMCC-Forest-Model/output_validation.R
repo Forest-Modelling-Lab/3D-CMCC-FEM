@@ -159,6 +159,7 @@ output_validation <- function(file_md,
     }
     rm(cy_mon)
     df_season = df_season[-1,]
+    
     df_season = data.frame('TIME' = doy,
                            'MD' = df_season$MD,
                            'MD_max' = max_md,

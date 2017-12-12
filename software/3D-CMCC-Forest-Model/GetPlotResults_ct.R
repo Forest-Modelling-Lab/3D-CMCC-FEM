@@ -65,16 +65,16 @@ time_list_output = c('annual','monthly','daily')
 
 # single or multiple simulations
 build_list<-c('Debug')#, 'Release')
-site_list<-c("Soroe","Collelongo")
-esm_list <-c("1")# ("1","2","3","4","5", "All")
-rcp_list <-c("0p0")# ("0p0","2p6","4p5","6p0","8p5","All")
-man_list <-c("on")# ("on",'off', "All")
+site_list<-c("All")
+esm_list <-c("All")# ("1","2","3","4","5", "All")
+rcp_list <-c("All")# ("0p0","2p6","4p5","6p0","8p5","All")
+man_list <-c("off")# ("on",'off', "All")
 co2_list <-c("on")# , "on",off", "All")
-protocol_list<-c("LOCAL")# ("2A","2B", "All") 
+protocol_list<-c("FT")# ("2A","2B", "All") 
 time_list = c('annual')
  
 if ( length(which(site_list == 'All')) > 0 ) {
-  site_list = c("Soroe","Collelongo") #,"Hyytiala","Bily_Kriz","LeBray")#,"Solling_beech","Peitz","Solling_spruce")
+  site_list = c("Soroe","Collelongo","Hyytiala","Bily_Kriz","LeBray")#,"Solling_beech","Peitz","Solling_spruce")
 }
 if ( length(which(esm_list == 'All')) > 0 ) {
   esm_list = c("1","2","3","4","5","6","7","8","9","10")
@@ -148,7 +148,8 @@ for (site in site_list) {
                             "-s"," ", "ISIMIP/", site,"_soil_ISIMIP.txt", " ",
                             "-t"," ", "ISIMIP/", site,"_topo_ISIMIP.txt", " ",
                             "-c"," ", "ISIMIP/", protocol, "/", site,"_settings_ISIMIP_Manag-", man, "_CO2-", co2,".txt", " ",
-                            "-k"," ", "ISIMIP/", "/CO2/CO2_hist.txt"
+                            "-k"," ", "ISIMIP/", "/CO2/CO2_hist.txt",
+                            ">output/",output_folder,"-", version, "-", site,"/",protocol,"_log_",site,"_",protocol,"_Manag-", man, "_CO2-", co2,".txt"
                             )
         # launch execution
         system(systemCall)
@@ -205,7 +206,9 @@ for (site in site_list) {
                                     "-s"," ", "ISIMIP/", site,"_soil_ISIMIP.txt", " ",
                                     "-t"," ", "ISIMIP/", site,"_topo_ISIMIP.txt", " ",
                                     "-c"," ", "ISIMIP/", protocol, "/", site,"_settings_ISIMIP_Manag-", man, "_CO2-", co2,".txt", " ",
-                                    "-k"," ", "ISIMIP/", "/CO2/CO2_", "rcp",rcp, ".txt"
+                                    "-k"," ", "ISIMIP/", "/CO2/CO2_", "rcp",rcp, ".txt",
+                                    ">output/",output_folder,"-", version, "-", site,"/",protocol,"_log_",site,"_",protocol,
+                                    "_ESM_", esm,"_RCP_", rcp,"_Manag-", man, "_CO2-", co2,".txt"
               )
               
               # launch execution
