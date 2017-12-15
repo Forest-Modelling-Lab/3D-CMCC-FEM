@@ -45,13 +45,13 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 
 	/********************************************************************************************/
 
+	/* if CO2 modifiers are "ON" */
 	if ( g_settings->CO2_mod )
 	{
 		/***************************************************************/
 		/* CO2 MODIFIER AND ACCLIMATION FOR ASSIMILATION  */
 		/* fertilization effect with rising CO2 from: Veroustraete 1994,
 		 * Veroustraete et al., 2002, Remote Sensing of Environment
-		 * (Michaelis-Menthen)
 		 */
 
 		tairK = meteo_daily->tavg + TempAbs;
@@ -93,8 +93,6 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 
 		s->value[F_CO2_TR] = 1.;
 	}
-	logger(g_debug_log, "fCO2 modifier for assimilation  = %f\n", s->value[F_CO2]);
-	logger(g_debug_log, "fCO2 modifier for transpiration = %f\n", s->value[F_CO2_TR]);
 
 	/********************************************************************************************/
 
@@ -282,16 +280,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 
 	/* PHYSIOLOGICAL MODIFIER */
 	s->value[PHYS_MOD] = MIN (s->value[F_VPD], (s->value[F_SW] * s->value[F_AGE]));
-	logger(g_debug_log, "PhysMod = %f\n", s->value[PHYS_MOD]);
-	if (s->value[F_VPD] < (s->value[F_SW] * s->value[F_AGE]))
-	{
-		logger(g_debug_log, "PHYSMOD uses F_VPD = %f\n", s->value[F_VPD]);
-	}
-	else
-	{
-		logger(g_debug_log, "PHYSMOD uses F_SW * F_AGE = %f\n", s->value[F_SW] * s->value[F_AGE]);
-	}
-
+	
 	/* check */
 	CHECK_CONDITION(s->value[PHYS_MOD], >, 1.);
 	CHECK_CONDITION(s->value[PHYS_MOD], <, ZERO);

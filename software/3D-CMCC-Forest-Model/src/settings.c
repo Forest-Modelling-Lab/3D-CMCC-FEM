@@ -536,7 +536,7 @@ settings_t* settings_import(const char *const filename) {
 		if ( ! token ) {
 			int flag;
 
-			printf("no value specified for %s", sz_settings[index]);
+			printf("no value specified for %s\n", sz_settings[index]);
 			/* check if is an optional parameter */
 			flag = 0;
 			for ( i = 0; i < (int)SIZE_OF_ARRAY(optional); ++i ) {

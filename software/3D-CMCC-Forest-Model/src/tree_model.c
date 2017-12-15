@@ -63,7 +63,7 @@ extern logger_t* g_debug_log;
 extern soil_settings_t* g_soil_settings;
 extern settings_t* g_settings;
 
-#define PHOTOSYNTHESIS 0 /* 0 for Farquhar von Caemmerer approach; 1 for Monteith (LUE) approach */
+#define PHOTOSYNTHESIS 1 /* 0 for Farquhar von Caemmerer approach; 1 for Monteith (LUE) approach */
 
 //extern const char sz_err_out_of_memory[];
 

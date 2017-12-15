@@ -127,11 +127,18 @@ void total_photosynthesis_biome (cell_t *const c, const int height, const int db
 	s->value[YEARLY_NET_ASSIMILATION_SHADE]    += s->value[NET_ASSIMILATION_SHADE];
 
 	/************************************************************************************************************************************/
-
+#if 0
 	/* gpp */
 	s->value[GPP_SUN]                     = s->value[NET_ASSIMILATION_SUN];
 	s->value[GPP_SHADE]                   = s->value[NET_ASSIMILATION_SHADE];
 	s->value[GPP]                         = s->value[GPP_SUN] + s->value[GPP_SHADE];
+#else
+	/* gpp */
+	s->value[GPP_SUN]                     = s->value[GROSS_ASSIMILATION_SUN];
+	s->value[GPP_SHADE]                   = s->value[GROSS_ASSIMILATION_SHADE];
+	s->value[GPP]                         = s->value[GPP_SUN] + s->value[GPP_SHADE];
+
+#endif
 
 	/* gC/m2/day --> tC/cell/day */
 	s->value[GPP_tC]                      = s->value[GPP] / 1e6 * g_settings->sizeCell ;
@@ -213,19 +220,20 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	double Jmax;                   /* (umol/m2/s) max rate electron transport */
 	double ppe;                    /* (mol/mol) photons absorbed by PSII per e- transported */
 	double Vcmax;                  /* (umol/m2/s) max rate carboxylation */
-	double J;                      /* (umol/m2/s) rate of RuBP regeneration */
+	double J;                      /* (umol/m2/s) rate of RuBP (ribulose-1,5-bisphosphate) regeneration */
 	double gamma;                  /* (Pa) CO2 compensation point, no Rd */
 	double Ca;                     /* (Pa) atmospheric [CO2] pressure */
 	double O2;                     /* (Pa) atmospheric [O2] */
 	double Av;                     /* (umol/m2/s) carboxylation rate for limited assimilation (synonym of Vc) */
-	double Aj;                     /* (umol/m2/s) RuBP regeneration limited assimilation */
+	double Aj;                     /* (umol/m2/s) RuBP (ribulose-1,5-bisphosphate) regeneration limited assimilation */
 	double A;                      /* (umol/m2/s) final assimilation rate */
 	double Ci;                     /* (Pa) intercellular [CO2] */
 	double Rd;                     /* (umol/m2/s) (umol/m2/s) day leaf m. resp, proj. area basis */
 	double var_a, var_b, var_c, det;
 
 	//todo todo todo todo todo move in species.txt (this should be the only variable for all photosynthesis)
-	double beta = 2.1; /* ratio between Vcmax and Jmax for fagus see Liozon et al., (2000) and Castanea */
+	// double beta = 1.67; /* Jmax:Vcmax note: in Medlyn et al., 2002*/
+	double beta       = 2.1; /* ratio between Vcmax and Jmax for fagus see Liozon et al., (2000) and Castanea */
 	double test_Vcmax = 55 ; /* (umol/m2/sec) Vcmax for fagus see Deckmyn et al., 2004 GCB */
 	double test_Jmax  = 100; /* (umol/m2/sec) Jmax for fagus see Deckmyn et al., 2004 GCB */
 	/*
@@ -273,7 +281,7 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	/* Convert rubisco activity units from umol/mgRubisco/min -> umol/gRubisco/s */
 	act = act  * 1e3 / 60.;
 
-	/* calculate gamma (Pa) CO2 compensation point due to photorespiration, in the absence of maint resp, assumes Vomax/Vcmax = 0.21 */
+	/* calculate gamma (Pa) CO2 compensation point due to photorespiration, in the absence of maint resp, assumes Vomax/Vcmax = 0.21; Badger & Andrews (1974) */
 	gamma = 0.5 * 0.21 * Kc * O2 / Ko;
 
 	/* calculate Vmax from leaf nitrogen data and Rubisco activity */
@@ -345,7 +353,7 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	var_b  = -Jmax - (par_abs * pabs / ppe );
 	var_c  = Jmax  *  par_abs * pabs / ppe;
 
-	/* compute (umol RuBP/m2/s) rate of RuBP regeneration */
+	/* compute (umol RuBP/m2/s) rate of RuBP (ribulose-1,5-bisphosphate) regeneration */
 	J      = ( -var_b - sqrt ( var_b * var_b - 4. * var_a * var_c ) ) / ( 2. * var_a );
 
 	/* solve for Av and Aj using the quadratic equation, substitution for Ci
@@ -370,7 +378,8 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	/* check condition */
 	CHECK_CONDITION( det , <, 0.0);
 
-	/* compute Av (or Vc) (umol CO2/m2/s) carboxylation rate for limited assimilation */
+	/* compute photosynthesis when Av (or Vc) (umol CO2/m2/s) carboxylation rate for limited assimilation
+	 * (gross photosynthesis rate when Rubisco activity is limiting) */
 	Av    = ( -var_b + sqrt( det ) ) / ( 2. * var_a );
 
 	/* quadratic solution for Aj */
@@ -382,7 +391,8 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	/* check condition */
 	CHECK_CONDITION( det , <, 0.0);
 
-	/* compute (umol CO2/m2/s) RuBP regen limited assimilation */
+	/* compute photosynthesis when (umol CO2/m2/s) RuBP (ribulose-1,5-bisphosphate) regeneration limited assimilation
+	 * (gross photosynthesis rate when RuBP (ribulose-1,5-bisphosphate)-regeneration is limiting) */
 	Aj = ( -var_b + sqrt( det ) ) / ( 2. * var_a );
 
 	/* compute (umol CO2/m2/s) final assimilation rate */
