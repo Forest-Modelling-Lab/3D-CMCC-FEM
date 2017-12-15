@@ -452,7 +452,7 @@ function FT_runs {
 										
 					#add site name to current paths
 					SITE_PATH=input/"$site"
-					OUTPUT_PATH=output/ISIMIP_OUTPUT/FT/"$site"
+					OUTPUT_PATH=output/ISIMIP_OUTPUT_"$VERSION"/FT/"$site"
 					STAND_PATH=ISIMIP/"$site"_stand_ISIMIP.txt
 					TOPO_PATH=ISIMIP/"$site"_topo_ISIMIP.txt
 		
@@ -512,7 +512,7 @@ function LOCAL_runs {
 								
 			#add site name to current paths
 			SITE_PATH=input/"$site"
-			OUTPUT_PATH=output/ISIMIP_OUTPUT/LOCAL/"$site"
+			OUTPUT_PATH=output/ISIMIP_OUTPUT_"$VERSION"/LOCAL/"$site"
 			STAND_PATH=ISIMIP/"$site"_stand_ISIMIP.txt
 			TOPO_PATH=ISIMIP/"$site"_topo_ISIMIP.txt
 
@@ -571,7 +571,7 @@ function 2A_runs {
 									
 				#add site name to current paths
 				SITE_PATH=input/"$site"
-				OUTPUT_PATH=output/ISIMIP_OUTPUT/2A/"$site"
+				OUTPUT_PATH=output/ISIMIP_OUTPUT_"$VERSION"/2A/"$site"
 				STAND_PATH=ISIMIP/"$site"_stand_ISIMIP.txt
 				TOPO_PATH=ISIMIP/"$site"_topo_ISIMIP.txt
 	
@@ -638,7 +638,7 @@ function 2B_runs {
 											
 						#add site name to current paths
 						SITE_PATH=input/"$site"
-						OUTPUT_PATH=output/ISIMIP_OUTPUT/2B/"$site"
+						OUTPUT_PATH=output/ISIMIP_OUTPUT_"$VERSION"/2B/"$site"
 						STAND_PATH=ISIMIP/"$site"_stand_ISIMIP.txt
 						TOPO_PATH=ISIMIP/"$site"_topo_ISIMIP.txt
 			
@@ -698,7 +698,7 @@ function 2Bpico_runs {
 									
 				#add site name to current paths
 				SITE_PATH=input/"$site"
-				OUTPUT_PATH=output/ISIMIP_OUTPUT/2Bpico/"$site"
+				OUTPUT_PATH=output/ISIMIP_OUTPUT_"$VERSION"/2Bpico/"$site"
 				STAND_PATH=ISIMIP/"$site"_stand_ISIMIP.txt
 				TOPO_PATH=ISIMIP/"$site"_topo_ISIMIP.txt
 	
@@ -764,7 +764,7 @@ function 2BLBC_runs {
 										
 					#add site name to current paths
 					SITE_PATH=input/"$site"
-					OUTPUT_PATH=output/ISIMIP_OUTPUT/2BLBC/"$site"
+					OUTPUT_PATH=output/ISIMIP_OUTPUT_"$VERSION"/2BLBC/"$site"
 					STAND_PATH=ISIMIP/"$site"_stand_ISIMIP.txt
 					TOPO_PATH=ISIMIP/"$site"_topo_ISIMIP.txt
 		
@@ -825,7 +825,7 @@ function 2BLBCpico_runs {
 									
 				#add site name to current paths
 				SITE_PATH=input/"$site"
-				OUTPUT_PATH=output/ISIMIP_OUTPUT/2BLBCpico/"$site"
+				OUTPUT_PATH=output/ISIMIP_OUTPUT_"$VERSION"/2BLBCpico/"$site"
 				STAND_PATH=ISIMIP/"$site"_stand_ISIMIP.txt
 				TOPO_PATH=ISIMIP/"$site"_topo_ISIMIP.txt
 	

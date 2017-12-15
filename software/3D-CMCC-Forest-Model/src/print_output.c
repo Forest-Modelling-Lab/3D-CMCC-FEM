@@ -1578,8 +1578,10 @@ extern const char sz_launched[];
 
 extern int MonthLength [];
 extern int MonthLength_Leap [];
+extern int PHOTOSYNTHESIS;
 
 static const char sz_management[] = "TCN";
+
 
 static const char* get_filename(const char *const s)
 {
@@ -1623,6 +1625,7 @@ void print_model_settings(logger_t*const log)
 	logger(log, "#--model settings--\n");
 	logger(log, "#CO2_mod = %s\n", g_settings->CO2_mod ? "on" : "off");
 	logger(log, "#CO2 trans = %s\n", (CO2_TRANS_VAR == g_settings->CO2_trans) ? "var" : (CO2_TRANS_ON == g_settings->CO2_trans) ? "on" : "off");
+
 	if ( CO2_TRANS_OFF == g_settings->CO2_trans )
 	{
 		logger(log, "#fixed co2 concentration = %g ppmv\n", g_settings->co2Conc);
@@ -1631,6 +1634,16 @@ void print_model_settings(logger_t*const log)
 	{
 		logger(log, "#year %d at which co2 concentration is fixed at value = %g ppmv\n", g_settings->year_start_co2_fixed, g_settings->co2Conc);
 	}
+
+	if ( !PHOTOSYNTHESIS )
+	{
+		logger(log, "#Photosynthesis used = Faquhar von Caemmerer and Berry (FvCB)\n");
+	}
+	else
+	{
+		logger(log, "#Photosynthesis used = Monteith (LUE)\n");
+	}
+
 	logger(log, "#Resp accl = %s\n", g_settings->Resp_accl ? "on" : "off");
 	logger(log, "#regeneration = %s\n", g_settings->regeneration ? "on" : "off");
 	logger(log, "#Management = %s\n", (MANAGEMENT_VAR == g_settings->management) ? "var" : (MANAGEMENT_ON == g_settings->management) ? "on" : "off");
@@ -1646,6 +1659,8 @@ void print_model_settings(logger_t*const log)
 	{
 		logger(log, "#Year restart = off\n");
 	}
+
+
 }
 
 void EOD_print_output_cell_level(cell_t *const c, const int day, const int month, const int year, const int years_of_simulation )
