@@ -58,23 +58,25 @@ print("*******************************************************")
 nr_plot_per_page = 24
 nr_col_per_page  = 4
 
-#  output folder name
-output_folder="Test_output_Rstudio_ct"
+
 # list to rename output files
 time_list_output = c('annual','monthly','daily')
 
 # single or multiple simulations
 build_list<-c('Debug')#, 'Release')
 site_list<-c("Soroe")
-esm_list <-c("1")# ("1","2","3","4","5", "All")
+esm_list <-c("All")# ("1","2","3","4","5", "All")
 rcp_list <-c("All")# ("0p0","2p6","4p5","6p0","8p5","All")
 man_list <-c("off")# ("on",'off', "All")
 co2_list <-c("on")# , "on",off", "All")
 protocol_list<-c("FT")# ("2A","2B", "All") 
 time_list = c('annual')
- 
+
+#  output folder name
+output_folder = paste0("Test_output_Rstudio_ct_photosynthesis_Farquhar_TEST_", protocol_list)
+
 if ( length(which(site_list == 'All')) > 0 ) {
-  site_list = c("Soroe","Collelongo","Hyytiala","Bily_Kriz","LeBray")#,"Solling_beech","Peitz","Solling_spruce")
+  site_list = c("Soroe","Hyytiala","Bily_Kriz","LeBray")#,"Solling_beech","Peitz","Solling_spruce")
 }
 if ( length(which(esm_list == 'All')) > 0 ) {
   esm_list = c("1","2","3","4","5","6","7","8","9","10")
@@ -122,7 +124,7 @@ if ( run_model == 1 ) {
         for ( zz in files_to_check ) {
           file_name_tmp = paste0(getwd(),'/input/',site,"/ISIMIP/",zz)
           list_ck = list.files(path = dirname(file_name_tmp),pattern = basename(file_name_tmp))
-          rm(file_name_tmp)
+          
           if ( length(list_ck) == 0 ) {
             str = sprintf('LOCAL experiment; missing file : %s\n',
                           file_name_tmp)
@@ -132,6 +134,7 @@ if ( run_model == 1 ) {
             rm(str)
             break
           }
+          rm(file_name_tmp)
         }
         
         if ( files_to_check_id == 0 ) {
@@ -139,7 +142,7 @@ if ( run_model == 1 ) {
           dir.create(paste0(getwd(),"/output/"),showWarnings = FALSE)
           dir.create(paste0(getwd(),"/output/",output_folder,"-", version, "-", site),showWarnings = FALSE)
           dir.create(paste0(getwd(),"/output/",output_folder,"-", version, "-", site,"/",protocol),showWarnings = FALSE)
-
+          
           cat(paste0("\nstart", model," ",version," ","protocol: ",protocol, " site: ", site,'\n'))
           
           systemCall  <- paste0(build_list,'/3D_CMCC_Forest_Model', " ",
@@ -180,7 +183,7 @@ if ( run_model == 1 ) {
               for ( zz in files_to_check ) {
                 file_name_tmp = paste0(getwd(),'/input/',site,"/ISIMIP/",zz)
                 list_ck = list.files(path = dirname(file_name_tmp),pattern = basename(file_name_tmp))
-                rm(file_name_tmp)
+                
                 if ( length(list_ck) == 0 ) {
                   str = sprintf('%s experiment; missing file : %s\n',
                                 protocol,
@@ -191,6 +194,7 @@ if ( run_model == 1 ) {
                   rm(str)
                   break
                 }
+                rm(file_name_tmp)
               }
               
               if ( files_to_check_id2 == 0 ) {
@@ -198,7 +202,7 @@ if ( run_model == 1 ) {
                 dir.create(paste0(getwd(),"/output/"),showWarnings = FALSE)
                 dir.create(paste0(getwd(),"/output/",output_folder,"-", version, "-", site),showWarnings = FALSE)
                 dir.create(paste0(getwd(),"/output/",output_folder,"-", version, "-", site,"/",protocol),showWarnings = FALSE)
-
+                
                 cat(paste0("\nstart", model," ",version," ","protocol: ",protocol, " site: ", site, 
                            " ESM: ", esm," RCP: ", rcp," Manag-", man, " CO2-", co2,'\n'))
                 
@@ -223,6 +227,37 @@ if ( run_model == 1 ) {
                 cat(paste0("start 3D-CMCC ",
                            "protocol: ",protocol, " site: ", site, 
                            " ESM: ", esm," RCP: ", rcp," Manag-", man, " CO2-", co2,' ... COMPLETE!\n'))
+                
+                if ( rcp == '0p0' && co2 == 'on' )
+                {
+                  for (rcp2 in rcp_list)
+                  {
+                    cat(paste0("\nstart", model," ",version," ","protocol: ",protocol, " site: ", site, 
+                               " ESM: ", esm," RCP: ", rcp," Manag-", man, " CO2-", co2,'\n'))
+                    
+                    systemCall  <- paste0(build_list,'/3D_CMCC_Forest_Model', " ",
+                                          "-i"," ", "input/", site, " ",
+                                          "-p"," ", "input/parameterization", " ",
+                                          "-o"," ", "output/",output_folder,"-", version, "-", site,"/",protocol," ",
+                                          "-d"," ", "ISIMIP/", site,"_stand_ISIMIP.txt", " ",
+                                          "-m"," ", "ISIMIP/", protocol, "/ESM", esm,"/", protocol,"_","ESM", esm,"_", "rcp", rcp, ".txt", " ",
+                                          "-s"," ", "ISIMIP/", site,"_soil_ISIMIP.txt", " ",
+                                          "-t"," ", "ISIMIP/", site,"_topo_ISIMIP.txt", " ",
+                                          "-c"," ", "ISIMIP/", protocol, "/", site,"_settings_ISIMIP_Manag-", man, "_CO2-", co2,".txt", " ",
+                                          "-k"," ", "ISIMIP/", "/CO2/CO2_", "rcp",rcp2, ".txt",
+                                          ">output/",output_folder,"-", version, "-", site,"/",protocol,"_log_",site,"_",protocol,
+                                          "_ESM_", esm,"_RCP_", rcp,"_CO2_",rcp2,"_Manag-", man, "_CO2-", co2,".txt"
+                    )
+                    
+                    # launch execution
+                    system(systemCall)
+                    outputCMCC<- list()
+                    
+                    cat(paste0("start 3D-CMCC ",
+                               "protocol: ",protocol, " site: ", site, 
+                               " ESM: ", esm," RCP: ", rcp," Manag-", man, " CO2-", co2,' ... COMPLETE!\n'))
+                  }
+                }
               }
             }
             rm(rcp)
@@ -354,10 +389,10 @@ for (site in site_list) {
     rm(file_name2,cy_r)
     
     GetPlotResults_file(df_t,color_variable = 'filename2',
-                  var_to_skip = c('YEAR','MONTH','DAY','LAYER','SPECIES',
-                                  'MANAGEMENT','filename',
-                                  'filename2','Date','TIME'),
-                  paste0(getwd(),"/output/",output_folder,"-", version, "-", site,'/',cy_time,'_',site,'_file_all.pdf'))
+                        var_to_skip = c('YEAR','MONTH','DAY','LAYER','SPECIES',
+                                        'MANAGEMENT','filename',
+                                        'filename2','Date','TIME'),
+                        paste0(getwd(),"/output/",output_folder,"-", version, "-", site,'/',cy_time,'_',site,'_file_all.pdf'))
     
     rm(df_t)
     
@@ -617,22 +652,22 @@ for (cy_s in site_list) {
   dir_in = list.dirs(dir_in_gen,recursive = F)
   dir_in = dir_in[grep(cy_s,dir_in)]
   dir_in = dir_in[grep('LOCAL',dir_in)]
-
+  
   ls_file_md = list.files(dir_in,pattern = 'daily',recursive = T,full.names = T)
   
   
   lista_p = flux_validation(ls_file_md,
-                  cy_s,
-                  file_ec)
+                            cy_s,
+                            file_ec)
   
   lista_p2 = flux_validation(ls_file_md,
-                 cy_s,
-                 file_ec,
-                 var_md = c('reco','gpp'),
-                 var_eddy = c('RECO_NT_CUT_USTAR50','GPP_NT_CUT_USTAR50'),
-                 var_eddy_qc = c('NEE_CUT_USTAR50_QC','NEE_CUT_USTAR50_QC'),
-                 var_eddy_unc_max = c('RECO_NT_CUT_95','GPP_NT_CUT_95'),
-                 var_eddy_unc_min = c('RECO_NT_CUT_05','GPP_NT_CUT_05'))
+                             cy_s,
+                             file_ec,
+                             var_md = c('reco','gpp'),
+                             var_eddy = c('RECO_NT_CUT_USTAR50','GPP_NT_CUT_USTAR50'),
+                             var_eddy_qc = c('NEE_CUT_USTAR50_QC','NEE_CUT_USTAR50_QC'),
+                             var_eddy_unc_max = c('RECO_NT_CUT_95','GPP_NT_CUT_95'),
+                             var_eddy_unc_min = c('RECO_NT_CUT_05','GPP_NT_CUT_05'))
   
   lista_p3 = flux_validation(ls_file_md,
                              cy_s,
