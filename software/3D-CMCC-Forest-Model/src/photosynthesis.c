@@ -37,7 +37,7 @@ void photosynthesis(cell_t *const c, const int layer, const int height, const in
 	if (s->value[ALPHA] != NO_DATA)
 	{
 		/* compute effective light use efficiency */
-		Alpha_C = s->value[ALPHA] * s->value[F_CO2] * s->value[F_NUTR] * s->value[F_T] * s->value[PHYS_MOD];
+		Alpha_C = s->value[ALPHA] * s->value[F_CO2_VER] * s->value[F_NUTR] * s->value[F_T] * s->value[PHYS_MOD];
 
 		/* molC/molPAR/m2/day --> gC/MJ/m2/day */
 		Epsilon_C = Alpha_C * MOLPAR_MJ * GC_MOL;
@@ -45,7 +45,7 @@ void photosynthesis(cell_t *const c, const int layer, const int height, const in
 	else
 	{
 		/* compute effective light use efficiency */
-		Epsilon_C = s->value[EPSILONgCMJ] * s->value[F_CO2] * s->value[F_NUTR] * s->value[F_T] * s->value[PHYS_MOD];
+		Epsilon_C = s->value[EPSILONgCMJ] * s->value[F_CO2_VER] * s->value[F_NUTR] * s->value[F_T] * s->value[PHYS_MOD];
 
 		/* gC/MJ/m2/day --> molC/molPAR/m2/day */
 		Alpha_C = Epsilon_C / (MOLPAR_MJ * GC_MOL);

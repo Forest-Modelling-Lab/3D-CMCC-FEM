@@ -20,7 +20,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 		const meteo_annual_t *const meteo_annual)
 {
 	double RelAge;
-	/*variables for CO2 modifier computation*/
+	/*variables for Veroustraete's CO2 modifier computation*/
 	double KmCO2;	                       /* affinity coefficients temperature dependent according to Arrhenius relationship */
 	double Ea1   = 59400.0;                /* KJ mol^-1 */
 	double A1    = 2.419 * pow(10,13);
@@ -35,6 +35,24 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	double tairK;
 	double v1, v2;
 
+	/* constants for Wang et al., 2016 Nature Plants CO2 modifiers computation */
+	static double beta   = 240.;   /* (units ??) definition ? */
+	static double ni     = 0.89;   /* (units ??) vicosity of water relative to its value at 25 °C */
+	static double ci     = 0.41;   /* carbon cost unit for the maintenance of electron transport capacity */
+	static double Kc25   = 404;    /* (ubar) michaelis-menten const carboxylase, 25 deg C */
+	static double q10Kc  = 2.1;    /* (DIM) Q_10 for Kc */
+	static double Ko25   = 248.0;  /* (mbar) michaelis-menten const oxygenase, 25 deg C */
+	static double q10Ko  = 1.2;    /* (DIM) Q_10 for Ko */
+
+	/* variables for Wang et al., 2016 Nature Plants CO2 modifiers computation */
+	double Kc;           /* (Pa) effective Michaelis-Menten coefficienct for Rubisco */
+	double gamma;        /* (Pa) Photorespiratory compensation point */
+	double O2;           /* (Pa) atmospheric [O2] */
+	double Ko;           /* (Pa) michaelis-menten constant for oxygenase reaction */
+	double m0;
+	double vpd;          /* (Pa) vpd */
+	double co2;          /*(ppmv) co2 atmospheric concentration */
+
 	age_t *a;
 	species_t *s;
 
@@ -48,7 +66,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	/* if CO2 modifiers are "on" */
 	if ( g_settings->CO2_mod )
 	{
-		/***************************************************************/
+		/************************VEROUSTRAETE'S VERSION ********************************/
 		/* CO2 MODIFIER AND ACCLIMATION FOR ASSIMILATION  */
 		/* fertilization effect with rising CO2 from: Veroustraete 1994,
 		 * Veroustraete et al., 2002, Remote Sensing of Environment
@@ -73,9 +91,47 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 		v2 = ( KmCO2 * ( 1 + ( O2CONC / KO2 ) ) + g_settings->co2Conc ) / ( KmCO2 * ( 1. + ( O2CONC / KO2 ) ) + meteo_annual->co2Conc );
 
 		/* CO2 assimilation modifier */
-		s->value[F_CO2] = v1*v2;
+		s->value[F_CO2_VER] = v1*v2;
+
+#if 0
+		/*****************************WANG'S VERSION ***********************************/
+		/* CO2 MODIFIER AND ACCLIMATION FOR ASSIMILATION */
+		/* For reference see Wang et al., 2016 Nature Plants */
+
+		/* convert vpd from hPa to Pa */
+		vpd = meteo_daily->vpd / 100.;
+
+		co2 = meteo_annual->co2Conc;
+
+		/* calculate atmospheric O2 in Pa, assumes 20.9% O2 by volume */
+		O2  = (O2CONC / 100. ) * meteo_daily->air_pressure;
+
+		/* correct kinetic constants for temperature, and do unit conversions */
+		Ko  = Ko25 * pow ( q10Ko , ( meteo_daily->tday - 25. ) / 10. );
+		Ko *= 100.;   /* mbar --> Pa */
+
+		/* compute effective Michaelis-Menten coefficienct for Rubisco */
+		if ( meteo_daily->tday > 15. )
+		{
+			Kc  = Kc25  * pow ( q10Kc , ( meteo_daily->tday - 25. ) / 10. );
+		}
+		else
+		{
+			Kc  = Kc25  * pow ( 1.8 * q10Kc, ( meteo_daily->tday - 15. ) / 10.) / q10Kc;
+		}
+
+		Kc *= 0.1;                  /* ubar --> Pa */
+
+		/* calculate gamma (Pa) CO2 compensation point due to photorespiration, in the absence of maint resp, assumes Vomax/Vcmax = 0.21; Badger & Andrews (1974) */
+		gamma = 0.5 * 0.21 * Kc * O2 / Ko;
+
+		m0 = (co2 / gamma) / (co2 + (2 * gamma) + (3 * gamma) * sqrt((1.6 * vpd * ni )/(beta * (Kc + gamma))));
+
+		/* compute FCO2 modifier to apply to intrinsic quantum yield (gC mol-1) and PPFD (mol m-2 sec-1) absorbed */
+		s->value[F_CO2_WANG] = m0 * sqrt(1. - pow( (ci / m0) ,(2. / 3.)));
 
 		/**********************************************************************************/
+#endif
 
 		/* CO2 MODIFIER FOR TRANSPIRATION  */
 		/* limitation effects on maximum stomatal conductance from:
@@ -89,7 +145,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	}
 	else
 	{
-		s->value[F_CO2]    = 1.;
+		s->value[F_CO2_VER]    = 1.;
 
 		s->value[F_CO2_TR] = 1.;
 	}

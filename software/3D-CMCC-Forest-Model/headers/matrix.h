@@ -227,7 +227,8 @@ enum {
 	F_SW,                               /* (DIM) SOIL WATER modifier */
 	F_DROUGHT,                          /* (DIM) SOIL DROUGHT modifier (see Duursma et al., 2008) */
 	F_PSI,                              /* (DIM) SOIL WATER modifier using PSI, see Biome */
-	F_CO2,                              /* (DIM) CO2 soil fertilization effect */
+	F_CO2_VER,                          /* (DIM) CO2 fertilization effect (Veroustraete's version) */
+	F_CO2_WANG,                         /* (DIM) CO2 fertilization effect (Wang et al's version) */
 	F_CO2_TR,                           /* (DIM) CO2 reduction effect (for stomatal conductance) */
 	PHYS_MOD,                           /* (DIM) PHYSIOLOGICAL modifier */
 	F_LIGHT_VERT,

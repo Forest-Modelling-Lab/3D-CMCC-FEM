@@ -399,7 +399,8 @@ void reset_daily_class_variables(cell_t *const c)
 					s->value[iWUE_SHADE] =                0.;
 
 					/* reset daily multipliers */
-					s->value[F_CO2] =                     0.;
+					s->value[F_CO2_VER] =                 0.;
+					s->value[F_CO2_WANG] =                0.;
 					s->value[F_LIGHT] =                   0.;
 					s->value[F_T] =                       0.;
 					s->value[F_VPD] =                     0.;

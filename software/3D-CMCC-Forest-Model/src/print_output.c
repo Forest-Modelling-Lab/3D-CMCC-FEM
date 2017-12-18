@@ -1789,7 +1789,7 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 										",FROOT_AR"
 										",CROOT_AR"
 										",BRANCH_AR"
-										",FCO2"
+										",F_CO2_VER"
 										",FCO2_TR"
 										",FLIGHT"
 										",FAGE"
@@ -1961,7 +1961,7 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 									s->value[FROOT_AUT_RESP],
 									s->value[CROOT_AUT_RESP],
 									s->value[BRANCH_AUT_RESP],
-									s->value[F_CO2],
+									s->value[F_CO2_VER],
 									s->value[F_CO2_TR],
 									s->value[F_LIGHT_MAKELA],
 									s->value[F_AGE],
