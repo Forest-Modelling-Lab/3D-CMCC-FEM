@@ -22,17 +22,17 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	double RelAge;
 
 	/* constants and variables for Veroustraete's CO2 modifier computation */
-	double KmCO2;	                       /* affinity coefficients temperature dependent according to Arrhenius relationship */
-	double Ea1   = 59400.0;                /* KJ mol^-1 */
-	double A1    = 2.419 * pow(10,13);
-	double Ea2   = 109600.0;	           /* KJ mol^-1 */
-	double A2    = 1.976 * pow(10,22);
-	double KO2;	                           /* Inhibition constant for 02 */
-	double EaKO2 = 13913.5;                /* KJ mol^-1 */
-	double AKO2  = 8240;
+	double KmCO2;	                       /* (ppmv CO2) affinity coefficients temperature dependent according to Arrhenius relationship */
+	double Ea1   = 59400.0;                /* (J mol-1) Activation energy for CO2 fixation (KmCO2 temp dependence)   */
+	double A1    = 2.419 * pow(10,13);     /* (ppmv) Arrhenius constant for KmCO2 tø dependence in ppm for t>=15  */
+	double Ea2   = 109600.0;	           /* (J mol-1) Activation energy for CO2 fixation for t<15 C */
+	double A2    = 1.976 * pow(10,22);     /* (ppmv) Arrhenius constant for KmCO2 tø dependence in ppm for t<15 C */
+	double KO2;	                           /* (% O2) Inhibition constant for 02 */
+	double EaKO2 = 13913.5;                /* (J mol-1) Activation energy for O2 inhibition */
+	double AKO2  = 8240;                   /* Arrhenius constant */
 	double tau;	                           /* CO2/O2 specifity ratio */
-	double Eatau = -42896.9;
-	double Atau  = 7.87 * pow(10,-5);
+	double Eatau = -42896.9;               /* (J mol-1) Activation energy for CO2/O2 specificity */
+	double Atau  = 7.87 * pow(10,-5);      /* (dimensionless) Arrhenius constant */
 	double tairK;
 	double v1, v2;
 
@@ -76,6 +76,8 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 		tairK = meteo_daily->tavg + TempAbs;
 
 		/* compute effective Arrhenius coefficienct for Rubisco */
+		/* Dependence of KmCO2 on temperature data from Badger and Collatz (1976) */
+
 		if ( meteo_daily->tavg >= 15 )
 		{
 			KmCO2 = A1 * exp( - Ea1 / ( Rgas * tairK ) );
@@ -87,13 +89,14 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 
 		KO2 = AKO2 * exp ( - EaKO2 / ( Rgas * tairK ) );
 
+		/* dependence of assimilation rate on atmospheric carbon dioxyde concentration and competition by O2, 'photorespiration' */
 		tau = Atau * exp ( - Eatau / ( Rgas * tairK) );
 
 		v1 = ( meteo_annual->co2Conc -( O2CONC / ( 2. * tau ) ) ) / ( g_settings->co2Conc - ( O2CONC / ( 2. * tau ) ) );
 		v2 = ( KmCO2 * ( 1 + ( O2CONC / KO2 ) ) + g_settings->co2Conc ) / ( KmCO2 * ( 1. + ( O2CONC / KO2 ) ) + meteo_annual->co2Conc );
 
 		/* CO2 assimilation modifier */
-		s->value[F_CO2_VER] = v1*v2;
+		s->value[F_CO2_VER] = v1 * v2;
 
 		/*****************************WANG'S VERSION ***********************************/
 		/* CO2 MODIFIER AND ACCLIMATION FOR ASSIMILATION */
@@ -109,7 +112,9 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 
 		/* correct kinetic constants for temperature, and do unit conversions */
 		Ko  = Ko25 * pow ( q10Ko , ( meteo_daily->tday - 25. ) / 10. );
-		Ko *= 100.;   /* mbar --> Pa */
+
+		/* convert mbar --> Pa */
+		Ko *= 100.;
 
 		/* compute effective Michaelis-Menten coefficienct for Rubisco */
 		if ( meteo_daily->tday > 15. )
