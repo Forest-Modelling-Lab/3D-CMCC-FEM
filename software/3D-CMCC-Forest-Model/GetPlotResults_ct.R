@@ -75,7 +75,7 @@ local_list<-c('off')
 time_list = c('annual')
 
 #  output folder name
-output_folder = paste0("Test_output_Rstudio_ct_photosynthesis_Monteith_TEST_", protocol_list)
+output_folder = paste0("Test_output_Rstudio_ct_photosynthesis_Monteith_TEST_ni", protocol_list)
 
 if ( length(which(site_list == 'All')) > 0 ) {
   site_list = c("Soroe","Hyytiala","Bily_Kriz","LeBray")#,"Solling_beech","Peitz","Solling_spruce")

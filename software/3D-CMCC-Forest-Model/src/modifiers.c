@@ -37,9 +37,9 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	double v1, v2;
 
 	/* constants for Wang et al., 2016 Nature Plants CO2 modifiers computation */
-	static double beta   = 240.;   /* (units ??) definition ? */
-	static double ni     = 0.89;   /* (units ??) vicosity of water relative to its value at 25 °C */
-	static double ci     = 0.41;   /* carbon cost unit for the maintenance of electron transport capacity */
+	static double beta   = 240.;   /* (dimensionless) definition ? */
+	static double ni     = 0.89;   /* (dimensionless) vicosity of water relative to its value at 25 °C */
+	static double ci     = 0.41;   /* (dimensionless) carbon cost unit for the maintenance of electron transport capacity */
 	static double Kc25   = 404;    /* (ubar) michaelis-menten const carboxylase, 25 deg C */
 	static double q10Kc  = 2.1;    /* (DIM) Q_10 for Kc */
 	static double Ko25   = 248.0;  /* (mbar) michaelis-menten const oxygenase, 25 deg C */
@@ -75,6 +75,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 
 		tairK = meteo_daily->tavg + TempAbs;
 
+		/* compute effective Arrhenius coefficienct for Rubisco */
 		if ( meteo_daily->tavg >= 15 )
 		{
 			KmCO2 = A1 * exp( - Ea1 / ( Rgas * tairK ) );
