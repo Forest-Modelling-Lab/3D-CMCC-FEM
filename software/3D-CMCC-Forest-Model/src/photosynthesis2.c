@@ -244,7 +244,7 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	 * beta  = 2.48 for p. sylvestris see Samspon et al., (2006)
 	 * beta  = 2.42 for Q. robur see Samspon et al., (2006)
 	 * Vcmax = 26.66 (umolCO2/m2/sec) for p. sylvestris see Sampson et al., (2006)
-	 * Vcmax = 33.7 (umolCO2/m2/sec) for q. robur see Samspon et al. (2006
+	 * Vcmax = 33.7 (umolCO2/m2/sec) for q. robur see Samspon et al. (2006)
 	 */
 
 	/* begin by assigning local variables */
@@ -261,10 +261,13 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	/* calculate atmospheric O2 in Pa, assumes 20.9% O2 by volume */
 	O2  = (O2CONC / 100. ) * meteo_daily->air_pressure;
 
+	/*******************************************************************************/
+
 	/* correct kinetic constants for temperature, and do unit conversions */
 	Ko  = Ko25 * pow ( q10Ko , ( meteo_daily->tday - 25. ) / 10. );
 	Ko *= 100.;   /* mbar --> Pa */
 
+	/* Michaelis Menten approach */
 	if ( meteo_daily->tday > 15. )
 	{
 		Kc  = Kc25  * pow ( q10Kc , ( meteo_daily->tday - 25. ) / 10. );
@@ -276,7 +279,15 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 		act = act25 * pow ( 1.8 * q10act, ( meteo_daily->tday - 15. ) / 10.) / q10act;
 	}
 
+
 	Kc *= 0.1;                  /* ubar --> Pa */
+
+	/*******************************************************************************/
+
+	//test try with Arrhenius
+	/* Arrhenius approach */
+
+	/*******************************************************************************/
 
 	/* Convert rubisco activity units from umol/mgRubisco/min -> umol/gRubisco/s */
 	act = act  * 1e3 / 60.;
