@@ -1578,7 +1578,6 @@ extern const char sz_launched[];
 
 extern int MonthLength [];
 extern int MonthLength_Leap [];
-extern int PHOTOSYNTHESIS;
 
 static const char sz_management[] = "TCN";
 
@@ -1635,14 +1634,23 @@ void print_model_settings(logger_t*const log)
 		logger(log, "#year %d at which co2 concentration is fixed at value = %g ppmv\n", g_settings->year_start_co2_fixed, g_settings->co2Conc);
 	}
 
-	if ( !PHOTOSYNTHESIS )
-	{
-		logger(log, "#Photosynthesis used = Faquhar von Caemmerer and Berry (FvCB)\n");
-	}
-	else
-	{
-		logger(log, "#Photosynthesis used = Monteith (LUE)\n");
-	}
+//	if ( !PHOTOSYNTHESIS )
+//	{
+//		logger(log, "#Photosynthesis used = Faquhar von Caemmerer and Berry (FvCB)\n");
+//	}
+//	else
+//	{
+//		logger(log, "#Photosynthesis used = Monteith (LUE)\n");
+//	}
+
+//	if ( !CO2_MODIFIER )
+//	{
+//		logger(log, "#F_CO2 modifier used = Wang version\n");
+//	}
+//	else
+//	{
+//		logger(log, "#F_CO2 modifier used = Veroustraete version\n");
+//	}
 
 	logger(log, "#Resp accl = %s\n", g_settings->Resp_accl ? "on" : "off");
 	logger(log, "#regeneration = %s\n", g_settings->regeneration ? "on" : "off");

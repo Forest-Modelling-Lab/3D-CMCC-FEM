@@ -64,16 +64,18 @@ time_list_output = c('annual','monthly','daily')
 
 # single or multiple simulations
 build_list<-c('Debug')#, 'Release')
-site_list<-c("Hyytiala")
-esm_list <-c("All")# ("1","2","3","4","5", "All")
-rcp_list <-c("All")# ("0p0","2p6","4p5","6p0","8p5","All")
-man_list <-c("on")# ("on",'off', "All")
+site_list<-c("Soroe")
+esm_list <-c("1")# ("1","2","3","4","5", "All")
+rcp_list <-c("8p5")# ("0p0","2p6","4p5","6p0","8p5","All")
+man_list <-c("off")# ("on",'off', "All")
 co2_list <-c("on")# , "on",off", "All")
 protocol_list<-c("LOCAL")# ("2A","2B", "All") 
+local_list<-c('off')
+
 time_list = c('annual')
 
 #  output folder name
-output_folder = paste0("Test_output_Rstudio_ct_photosynthesis_Farquhar_TEST_", protocol_list)
+output_folder = paste0("Test_output_Rstudio_ct_photosynthesis_Monteith_TEST_", protocol_list)
 
 if ( length(which(site_list == 'All')) > 0 ) {
   site_list = c("Soroe","Hyytiala","Bily_Kriz","LeBray")#,"Solling_beech","Peitz","Solling_spruce")
@@ -110,58 +112,61 @@ if ( run_model == 1 ) {
         protocol = 'LOCAL'
         # LOCAL simulation run in all cases
         
-        # check if ALL input files exists
-        files_to_check_id = 0
-        files_to_check = c(
-          paste0(site,"_stand_ISIMIP.txt"),
-          paste0( site,"_stand_ISIMIP.txt"),
-          paste0( protocol,"/",protocol, "_hist.txt"),
-          paste0( site,"_soil_ISIMIP.txt"),
-          paste0( site,"_topo_ISIMIP.txt"),
-          paste0( protocol, "/", site,"_settings_ISIMIP_Manag-", man, "_CO2-", co2,".txt"),
-          paste0( "/CO2/CO2_hist.txt")
-        )
-        for ( zz in files_to_check ) {
-          file_name_tmp = paste0(getwd(),'/input/',site,"/ISIMIP/",zz)
-          list_ck = list.files(path = dirname(file_name_tmp),pattern = basename(file_name_tmp))
-          
-          if ( length(list_ck) == 0 ) {
-            str = sprintf('LOCAL experiment; missing file : %s\n',
-                          file_name_tmp)
-            
-            error_list = c(error_list,str)
-            files_to_check_id = 1
-            rm(str)
-            break
-          }
-          rm(file_name_tmp)
-        }
-        
-        if ( files_to_check_id == 0 ) {
-          
-          dir.create(paste0(getwd(),"/output/"),showWarnings = FALSE)
-          dir.create(paste0(getwd(),"/output/",output_folder,"-", version, "-", site),showWarnings = FALSE)
-          dir.create(paste0(getwd(),"/output/",output_folder,"-", version, "-", site,"/",protocol),showWarnings = FALSE)
-          
-          cat(paste0("\nstart", model," ",version," ","protocol: ",protocol, " site: ", site,'\n'))
-          
-          systemCall  <- paste0(build_list,'/3D_CMCC_Forest_Model', " ",
-                                "-i"," ", "input/", site, " ",
-                                "-p"," ", "input/parameterization", " ",
-                                "-o"," ", "output/",output_folder,"-", version, "-", site,"/",protocol," ",
-                                "-d"," ", "ISIMIP/", site,"_stand_ISIMIP.txt", " ",
-                                "-m"," ", "ISIMIP/", protocol,"/",protocol, "_hist.txt", " ",
-                                "-s"," ", "ISIMIP/", site,"_soil_ISIMIP.txt", " ",
-                                "-t"," ", "ISIMIP/", site,"_topo_ISIMIP.txt", " ",
-                                "-c"," ", "ISIMIP/", protocol, "/", site,"_settings_ISIMIP_Manag-", man, "_CO2-", co2,".txt", " ",
-                                "-k"," ", "ISIMIP/", "/CO2/CO2_hist.txt",
-                                ">output/",output_folder,"-", version, "-", site,"/",protocol,"_log_",site,"_",protocol,"_Manag-", man, "_CO2-", co2,".txt"
+        if (local_list == 'on' || protocol_list == 'LOCAL')
+        {
+          # check if ALL input files exists
+          files_to_check_id = 0
+          files_to_check = c(
+            paste0(site,"_stand_ISIMIP.txt"),
+            paste0( site,"_stand_ISIMIP.txt"),
+            paste0( protocol,"/",protocol, "_hist.txt"),
+            paste0( site,"_soil_ISIMIP.txt"),
+            paste0( site,"_topo_ISIMIP.txt"),
+            paste0( protocol, "/", site,"_settings_ISIMIP_Manag-", man, "_CO2-", co2,".txt"),
+            paste0( "/CO2/CO2_hist.txt")
           )
-          # launch execution
-          system(systemCall)
-          outputCMCC<- list()
-          cat(paste0("start 3D-CMCC ",
-                     "protocol: ",protocol, " site: ", site, '... COMPLETE!\n'))
+          for ( zz in files_to_check ) {
+            file_name_tmp = paste0(getwd(),'/input/',site,"/ISIMIP/",zz)
+            list_ck = list.files(path = dirname(file_name_tmp),pattern = basename(file_name_tmp))
+            
+            if ( length(list_ck) == 0 ) {
+              str = sprintf('LOCAL experiment; missing file : %s\n',
+                            file_name_tmp)
+              
+              error_list = c(error_list,str)
+              files_to_check_id = 1
+              rm(str)
+              break
+            }
+            rm(file_name_tmp)
+          }
+          
+          if ( files_to_check_id == 0 ) {
+            
+            dir.create(paste0(getwd(),"/output/"),showWarnings = FALSE)
+            dir.create(paste0(getwd(),"/output/",output_folder,"-", version, "-", site),showWarnings = FALSE)
+            dir.create(paste0(getwd(),"/output/",output_folder,"-", version, "-", site,"/",protocol),showWarnings = FALSE)
+            
+            cat(paste0("\nstart", model," ",version," ","protocol: ",protocol, " site: ", site,'\n'))
+            
+            systemCall  <- paste0(build_list,'/3D_CMCC_Forest_Model', " ",
+                                  "-i"," ", "input/", site, " ",
+                                  "-p"," ", "input/parameterization", " ",
+                                  "-o"," ", "output/",output_folder,"-", version, "-", site,"/",protocol," ",
+                                  "-d"," ", "ISIMIP/", site,"_stand_ISIMIP.txt", " ",
+                                  "-m"," ", "ISIMIP/", protocol,"/",protocol, "_hist.txt", " ",
+                                  "-s"," ", "ISIMIP/", site,"_soil_ISIMIP.txt", " ",
+                                  "-t"," ", "ISIMIP/", site,"_topo_ISIMIP.txt", " ",
+                                  "-c"," ", "ISIMIP/", protocol, "/", site,"_settings_ISIMIP_Manag-", man, "_CO2-", co2,".txt", " ",
+                                  "-k"," ", "ISIMIP/", "/CO2/CO2_hist.txt",
+                                  ">output/",output_folder,"-", version, "-", site,"/",protocol,"_log_",site,"_",protocol,"_Manag-", man, "_CO2-", co2,".txt"
+            )
+            # launch execution
+            system(systemCall)
+            outputCMCC<- list()
+            cat(paste0("start 3D-CMCC ",
+                       "protocol: ",protocol, " site: ", site, '... COMPLETE!\n'))
+          }
         }
         
         for (protocol in protocol_list) {
@@ -289,11 +294,14 @@ if ( run_model == 1 ) {
             next
           }
           # local simulation are the first in the file list
-          files_hist = all_out_files[grep('_hist',all_out_files)]
-          all_out_files = all_out_files[-1*grep('_hist',all_out_files)]
+          if ( length(grep('_hist',all_out_files)) > 0 ) {
+            files_hist = all_out_files[grep('_hist',all_out_files)]
+            all_out_files = all_out_files[-1*grep('_hist',all_out_files)]
+            all_out_files = c(files_hist,all_out_files)
+            rm(files_hist)
+          }
+
           
-          all_out_files = c(files_hist,all_out_files)
-          rm(files_hist)
           
           if ( sum(grepl('^Benchmark',basename(all_out_files))) == 0  ) {
             pos = 1
@@ -335,7 +343,6 @@ if ( run_model == 1 ) {
           rm(cnt,all_out_files,all_out_files2)
         }
         rm(cy_time)
-        
       }
       rm(co2)
     }

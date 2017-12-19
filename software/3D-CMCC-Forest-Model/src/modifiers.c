@@ -20,7 +20,8 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 		const meteo_annual_t *const meteo_annual)
 {
 	double RelAge;
-	/*variables for Veroustraete's CO2 modifier computation*/
+
+	/* constants and variables for Veroustraete's CO2 modifier computation */
 	double KmCO2;	                       /* affinity coefficients temperature dependent according to Arrhenius relationship */
 	double Ea1   = 59400.0;                /* KJ mol^-1 */
 	double A1    = 2.419 * pow(10,13);
@@ -93,7 +94,6 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 		/* CO2 assimilation modifier */
 		s->value[F_CO2_VER] = v1*v2;
 
-#if 0
 		/*****************************WANG'S VERSION ***********************************/
 		/* CO2 MODIFIER AND ACCLIMATION FOR ASSIMILATION */
 		/* For reference see Wang et al., 2016 Nature Plants */
@@ -104,7 +104,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 		co2 = meteo_annual->co2Conc;
 
 		/* calculate atmospheric O2 in Pa, assumes 20.9% O2 by volume */
-		O2  = (O2CONC / 100. ) * meteo_daily->air_pressure;
+		O2  = ( O2CONC / 100. ) * meteo_daily->air_pressure;
 
 		/* correct kinetic constants for temperature, and do unit conversions */
 		Ko  = Ko25 * pow ( q10Ko , ( meteo_daily->tday - 25. ) / 10. );
@@ -117,21 +117,21 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 		}
 		else
 		{
-			Kc  = Kc25  * pow ( 1.8 * q10Kc, ( meteo_daily->tday - 15. ) / 10.) / q10Kc;
+			Kc  = Kc25  * pow ( 1.8 * q10Kc , ( meteo_daily->tday - 15. ) / 10.) / q10Kc;
 		}
 
-		Kc *= 0.1;                  /* ubar --> Pa */
+		/* convert ubar --> Pa */
+		Kc *= 0.1;
 
 		/* calculate gamma (Pa) CO2 compensation point due to photorespiration, in the absence of maint resp, assumes Vomax/Vcmax = 0.21; Badger & Andrews (1974) */
 		gamma = 0.5 * 0.21 * Kc * O2 / Ko;
 
-		m0 = (co2 / gamma) / (co2 + (2 * gamma) + (3 * gamma) * sqrt((1.6 * vpd * ni )/(beta * (Kc + gamma))));
+		m0 = (co2 - gamma) / (co2 + (2 * gamma) + (3 * gamma) * sqrt((1.6 * vpd * ni )/(beta * (Kc + gamma))));
 
 		/* compute FCO2 modifier to apply to intrinsic quantum yield (gC mol-1) and PPFD (mol m-2 sec-1) absorbed */
 		s->value[F_CO2_WANG] = m0 * sqrt(1. - pow( (ci / m0) ,(2. / 3.)));
 
 		/**********************************************************************************/
-#endif
 
 		/* CO2 MODIFIER FOR TRANSPIRATION  */
 		/* limitation effects on maximum stomatal conductance from:
@@ -147,7 +147,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	{
 		s->value[F_CO2_VER]    = 1.;
 
-		s->value[F_CO2_TR] = 1.;
+		s->value[F_CO2_TR]     = 1.;
 	}
 
 	/********************************************************************************************/

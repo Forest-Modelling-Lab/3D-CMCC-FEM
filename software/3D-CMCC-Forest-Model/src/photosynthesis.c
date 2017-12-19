@@ -12,6 +12,8 @@
 extern logger_t* g_debug_log;
 extern settings_t* g_settings;
 
+#define CO2_MODIFIER  0 /* 0 for Wang et al., 2016 CO2 modifier, 1 for Veroustraete CO2 modifier */
+
 
 void photosynthesis(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, const meteo_annual_t *const meteo_annual)
 {
@@ -34,6 +36,7 @@ void photosynthesis(cell_t *const c, const int layer, const int height, const in
 
 	logger(g_debug_log, "VegUnveg = %d\n", s->counter[VEG_UNVEG]);
 
+# if CO2_MODIFIER
 	if (s->value[ALPHA] != NO_DATA)
 	{
 		/* compute effective light use efficiency */
@@ -64,6 +67,12 @@ void photosynthesis(cell_t *const c, const int layer, const int height, const in
 			Alpha_C *=  s->value[F_SW];
 		}
 	}
+#else
+	//test new 18 Dec 2017
+	/* compute effective light use efficiency */
+	Alpha_C = s->value[ALPHA] * s->value[F_CO2_WANG];
+
+#endif
 
 	/* check if current Alpha exceeds (saturates) maximum Alpha */
 	/* (canopy saturation at 600 ppmv see Medlyn, 1996; Medlyn et al., 2011) */
