@@ -12,7 +12,7 @@
 extern logger_t* g_debug_log;
 extern settings_t* g_settings;
 
-#define CO2_MODIFIER  0 /* 0 for Wang et al., 2016 CO2 modifier, 1 for Veroustraete CO2 modifier */
+#define CO2_MODIFIER  1 /* 0 for Wang et al., 2016 CO2 modifier, 1 for Veroustraete CO2 modifier */
 
 
 void photosynthesis(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, const meteo_annual_t *const meteo_annual)
