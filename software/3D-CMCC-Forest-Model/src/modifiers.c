@@ -64,97 +64,86 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 
 	/********************************************************************************************/
 
-	/* if CO2 modifiers are "on" */
-	if ( g_settings->CO2_mod )
+	/************************VEROUSTRAETE'S VERSION ********************************/
+	/* CO2 MODIFIER AND ACCLIMATION FOR ASSIMILATION  */
+	/* fertilization effect with rising CO2 from: Veroustraete 1994,
+	 * Veroustraete et al., 2002, Remote Sensing of Environment
+	 */
+
+	tairK = meteo_daily->tavg + TempAbs;
+
+	/* compute effective Arrhenius coefficienct for Rubisco */
+	/* Dependence of KmCO2 on temperature data from Badger and Collatz (1976) */
+
+	if ( meteo_daily->tavg >= 15 )
 	{
-		/************************VEROUSTRAETE'S VERSION ********************************/
-		/* CO2 MODIFIER AND ACCLIMATION FOR ASSIMILATION  */
-		/* fertilization effect with rising CO2 from: Veroustraete 1994,
-		 * Veroustraete et al., 2002, Remote Sensing of Environment
-		 */
-
-		tairK = meteo_daily->tavg + TempAbs;
-
-		/* compute effective Arrhenius coefficienct for Rubisco */
-		/* Dependence of KmCO2 on temperature data from Badger and Collatz (1976) */
-
-		if ( meteo_daily->tavg >= 15 )
-		{
-			KmCO2 = A1 * exp( - Ea1 / ( Rgas * tairK ) );
-		}
-		else
-		{
-			KmCO2 = A2 * exp ( - Ea2 / ( Rgas * tairK ) );
-		}
-
-		KO2 = AKO2 * exp ( - EaKO2 / ( Rgas * tairK ) );
-
-		/* dependence of assimilation rate on atmospheric carbon dioxyde concentration and competition by O2, 'photorespiration' */
-		tau = Atau * exp ( - Eatau / ( Rgas * tairK) );
-
-		v1 = ( meteo_annual->co2Conc -( O2CONC / ( 2. * tau ) ) ) / ( g_settings->co2Conc - ( O2CONC / ( 2. * tau ) ) );
-		v2 = ( KmCO2 * ( 1 + ( O2CONC / KO2 ) ) + g_settings->co2Conc ) / ( KmCO2 * ( 1. + ( O2CONC / KO2 ) ) + meteo_annual->co2Conc );
-
-		/* CO2 assimilation modifier */
-		s->value[F_CO2_VER] = v1 * v2;
-
-		/*****************************WANG'S VERSION ***********************************/
-		/* CO2 MODIFIER AND ACCLIMATION FOR ASSIMILATION */
-		/* For reference see Wang et al., 2016 Nature Plants */
-
-		/* convert vpd from hPa to Pa */
-		vpd = meteo_daily->vpd / 100.;
-
-		co2 = meteo_annual->co2Conc;
-
-		/* calculate atmospheric O2 in Pa, assumes 20.9% O2 by volume */
-		O2  = ( O2CONC / 100. ) * meteo_daily->air_pressure;
-
-		/* correct kinetic constants for temperature, and do unit conversions */
-		Ko  = Ko25 * pow ( q10Ko , ( meteo_daily->tday - 25. ) / 10. );
-
-		/* convert mbar --> Pa */
-		Ko *= 100.;
-
-		/* compute effective Michaelis-Menten coefficienct for Rubisco */
-		if ( meteo_daily->tday > 15. )
-		{
-			Kc  = Kc25  * pow ( q10Kc , ( meteo_daily->tday - 25. ) / 10. );
-		}
-		else
-		{
-			Kc  = Kc25  * pow ( 1.8 * q10Kc , ( meteo_daily->tday - 15. ) / 10.) / q10Kc;
-		}
-
-		/* convert ubar --> Pa */
-		Kc *= 0.1;
-
-		/* calculate gamma (Pa) CO2 compensation point due to photorespiration, in the absence of maint resp, assumes Vomax/Vcmax = 0.21; Badger & Andrews (1974) */
-		gamma = 0.5 * 0.21 * Kc * O2 / Ko;
-
-		m0 = (co2 - gamma) / (co2 + (2 * gamma) + (3 * gamma) * sqrt((1.6 * vpd * ni )/(beta * (Kc + gamma))));
-
-		/* compute FCO2 modifier to apply to intrinsic quantum yield (gC mol-1) and PPFD (mol m-2 sec-1) absorbed */
-		s->value[F_CO2_WANG] = m0 * sqrt(1. - pow( (ci / m0) ,(2. / 3.)));
-
-		/**********************************************************************************/
-
-		/* CO2 MODIFIER FOR TRANSPIRATION  */
-		/* limitation effects on maximum stomatal conductance from:
-		 * Frank et al., 2013 New Phytologist
-		 * Hidy et al., 2016 Geosc. Model Dev.
-		 */
-
-		s->value[F_CO2_TR] = 39.43 * pow(meteo_annual->co2Conc, -0.64);
-
-
+		KmCO2 = A1 * exp( - Ea1 / ( Rgas * tairK ) );
 	}
 	else
 	{
-		s->value[F_CO2_VER]    = 1.;
-
-		s->value[F_CO2_TR]     = 1.;
+		KmCO2 = A2 * exp ( - Ea2 / ( Rgas * tairK ) );
 	}
+
+	KO2 = AKO2 * exp ( - EaKO2 / ( Rgas * tairK ) );
+
+	/* dependence of assimilation rate on atmospheric carbon dioxyde concentration and competition by O2, 'photorespiration' */
+	tau = Atau * exp ( - Eatau / ( Rgas * tairK) );
+
+	v1 = ( meteo_annual->co2Conc -( O2CONC / ( 2. * tau ) ) ) / ( g_settings->co2Conc - ( O2CONC / ( 2. * tau ) ) );
+	v2 = ( KmCO2 * ( 1 + ( O2CONC / KO2 ) ) + g_settings->co2Conc ) / ( KmCO2 * ( 1. + ( O2CONC / KO2 ) ) + meteo_annual->co2Conc );
+
+	/* CO2 assimilation modifier */
+	s->value[F_CO2_VER] = v1 * v2;
+
+	/*****************************WANG'S VERSION ***********************************/
+	/* CO2 MODIFIER AND ACCLIMATION FOR ASSIMILATION */
+	/* For reference see Wang et al., 2016 Nature Plants */
+
+	/* convert vpd from hPa to Pa */
+	vpd = meteo_daily->vpd / 100.;
+
+	co2 = meteo_annual->co2Conc;
+
+	/* calculate atmospheric O2 in Pa, assumes 20.9% O2 by volume */
+	O2  = ( O2CONC / 100. ) * meteo_daily->air_pressure;
+
+	/* correct kinetic constants for temperature, and do unit conversions */
+	Ko  = Ko25 * pow ( q10Ko , ( meteo_daily->tday - 25. ) / 10. );
+
+	/* convert mbar --> Pa */
+	Ko *= 100.;
+
+	/* compute effective Michaelis-Menten coefficienct for Rubisco */
+	if ( meteo_daily->tday > 15. )
+	{
+		Kc  = Kc25  * pow ( q10Kc , ( meteo_daily->tday - 25. ) / 10. );
+	}
+	else
+	{
+		Kc  = Kc25  * pow ( 1.8 * q10Kc , ( meteo_daily->tday - 15. ) / 10.) / q10Kc;
+	}
+
+	/* convert ubar --> Pa */
+	Kc *= 0.1;
+
+	/* calculate gamma (Pa) CO2 compensation point due to photorespiration, in the absence of maint resp, assumes Vomax/Vcmax = 0.21; Badger & Andrews (1974) */
+	gamma = 0.5 * 0.21 * Kc * O2 / Ko;
+
+	m0 = (co2 - gamma) / (co2 + (2 * gamma) + (3 * gamma) * sqrt((1.6 * vpd * ni )/(beta * (Kc + gamma))));
+
+	/* compute FCO2 modifier to apply to intrinsic quantum yield (gC mol-1) and PPFD (mol m-2 sec-1) absorbed */
+	s->value[F_CO2_WANG] = m0 * sqrt(1. - pow( (ci / m0) ,(2. / 3.)));
+
+	/**********************************************************************************/
+
+	/* CO2 MODIFIER FOR TRANSPIRATION  */
+	/* limitation effects on maximum stomatal conductance from:
+	 * Frank et al., 2013 New Phytologist
+	 * Hidy et al., 2016 Geosc. Model Dev.
+	 */
+
+	s->value[F_CO2_TR] = 39.43 * pow(meteo_annual->co2Conc, -0.64);
+
 
 	/********************************************************************************************/
 

@@ -135,7 +135,7 @@ static double get_co2_conc(const int year, int*const err) {
 
 	if ( ! flag ) *err = 1;
 
-quit:
+	quit:
 	if ( f )fclose(f);
 
 	return co2_conc;
@@ -171,7 +171,7 @@ static double get_ndep(const int year, int*const err) {
 
 	if ( ! flag ) *err = 1;
 
-quit:
+	quit:
 	if ( f )fclose(f);
 
 	return ndep;
@@ -404,7 +404,7 @@ static int meteo_from_arr(double *const values, const int rows_count, const int 
 	current_year = -1;
 	yos = *p_yos;
 
-	
+
 	/* check if dataset is complete */
 	{
 		int i;
@@ -473,8 +473,8 @@ static int meteo_from_arr(double *const values, const int rows_count, const int 
 		if ( flag[TA_F-3] ) {
 			for ( row = 0; row < rows_count; ++row ) {
 				if ( ! IS_INVALID_VALUE(values[VALUE_AT(row, TMAX)])
-					&& ! IS_INVALID_VALUE(values[VALUE_AT(row, TMIN)]) ) {
-						values[VALUE_AT(row, TA_F)] = (0.606 * values[VALUE_AT(row, TMAX)]) + (0.394 * values[VALUE_AT(row, TMIN)]);
+						&& ! IS_INVALID_VALUE(values[VALUE_AT(row, TMIN)]) ) {
+					values[VALUE_AT(row, TA_F)] = (0.606 * values[VALUE_AT(row, TMAX)]) + (0.394 * values[VALUE_AT(row, TMIN)]);
 				}
 			}
 		}
@@ -926,7 +926,7 @@ static int meteo_from_arr(double *const values, const int rows_count, const int 
 		CHECK_CONDITION(yos[*yos_count-1].m[month].d[day].tmax,<,yos[*yos_count-1].m[month].d[day].tavg);
 		CHECK_CONDITION(yos[*yos_count-1].m[month].d[day].tmax,<,yos[*yos_count-1].m[month].d[day].tmin);
 		CHECK_CONDITION(yos[*yos_count-1].m[month].d[day].tavg,<,yos[*yos_count-1].m[month].d[day].tmin);
-		*/
+		 */
 	}
 	*p_yos = yos;
 	return 1;
@@ -1150,20 +1150,20 @@ static int import_nc(const char* const filename, meteo_annual_t** pyos, int* con
 						, values[VALUE_AT(0,0,row,WS)]
 					 */
 					(int)values[VALUE_AT(row,YEAR)]
-					, (int)values[VALUE_AT(row,MONTH)]
-					, (int)values[VALUE_AT(row,DAY)]
-					, values[VALUE_AT(row,RG_F)]
-					, values[VALUE_AT(row,TA_F)]
-					, values[VALUE_AT(row,TMAX)]
-					, values[VALUE_AT(row,TMIN)]
-					, values[VALUE_AT(row,VPD_F)]
-					, values[VALUE_AT(row,TS_F)]
-					, values[VALUE_AT(row,PRECIP)]
-					, values[VALUE_AT(row,SWC)]
-					, values[VALUE_AT(row,NDVI_LAI)]
-					, values[VALUE_AT(row,ET)]
-					/* ALESSIOC */
-					, values[VALUE_AT(row,WS_F)]
+					            , (int)values[VALUE_AT(row,MONTH)]
+					                          , (int)values[VALUE_AT(row,DAY)]
+					                                        , values[VALUE_AT(row,RG_F)]
+					                                                 , values[VALUE_AT(row,TA_F)]
+					                                                          , values[VALUE_AT(row,TMAX)]
+					                                                                   , values[VALUE_AT(row,TMIN)]
+					                                                                            , values[VALUE_AT(row,VPD_F)]
+					                                                                                     , values[VALUE_AT(row,TS_F)]
+					                                                                                              , values[VALUE_AT(row,PRECIP)]
+					                                                                                                       , values[VALUE_AT(row,SWC)]
+					                                                                                                                , values[VALUE_AT(row,NDVI_LAI)]
+					                                                                                                                         , values[VALUE_AT(row,ET)]
+					                                                                                                                                  /* ALESSIOC */
+					                                                                                                                                  , values[VALUE_AT(row,WS_F)]
 			);
 		}
 		fclose(f);
@@ -1224,17 +1224,17 @@ static int import_lst(const char *const filename, meteo_annual_t** p_yos, int *c
 	const char *sz_time = "time";
 	const char *sz_dims[DIMS_COUNT] = { "x", "y", "time", "height_2m" }; /* DO NOT CHANGE THIS ORDER...please see above */
 	const char *sz_vars[VARS_COUNT] = { "RADS"
-										, "T_2M"
-										, "TMAX_2M"
-										, "TMIN_2M"
-										, "VPD"
-										, "TSOIL"
-										, "TOT_PREC"
-										, "SWC"
-										, "LAI"
-										, "ET"
-										, "WS_F"
-										, "RH"
+			, "T_2M"
+			, "TMAX_2M"
+			, "TMIN_2M"
+			, "VPD"
+			, "TSOIL"
+			, "TOT_PREC"
+			, "SWC"
+			, "LAI"
+			, "ET"
+			, "WS_F"
+			, "RH"
 	};
 
 	int y;
@@ -1358,7 +1358,7 @@ static int import_lst(const char *const filename, meteo_annual_t** p_yos, int *c
 			x_cells_count = dims_size[X_DIM];
 			y_cells_count = dims_size[Y_DIM];
 		}
-		*/
+		 */
 
 		/* check if y_cell is >= y_dim */
 		if ( y_cell >= dims_size[Y_DIM] ) {
@@ -1593,38 +1593,38 @@ static int import_lst(const char *const filename, meteo_annual_t** p_yos, int *c
 	/* check for missing vars */
 	for ( i = 0; i < VARS_COUNT; ++i ) {
 		switch ( i ) {
-			case VPD_F-3:
-			case RH_F-3:
-			if ( ! vars[VPD_F-3] && ! vars[RH_F-3] ) {
-				logger(g_debug_log, "VPD and RH columns are missing!\n\n");
+		case VPD_F-3:
+		case RH_F-3:
+		if ( ! vars[VPD_F-3] && ! vars[RH_F-3] ) {
+			logger(g_debug_log, "VPD and RH columns are missing!\n\n");
+			free(values);
+			return 0;
+		}
+		break;
+
+		case TA_F-3:
+		if ( ! vars[i] && ! vars[TMIN-3] && ! vars[TMAX-3] ) {
+			logger(g_debug_log, "TA, TMIN and TMAX columns are missing!\n\n");
+			free(values);
+			return 0;
+		}
+		break;
+
+		case TMIN-3:
+		case TMAX-3:
+		if ( ! vars[i] && ! vars[TA_F-3]) {
+			logger(g_debug_log, "%s is missing!\n\n", sz_vars[i]);
+			free(values);
+			return 0;
+		}
+		break;
+
+		default:
+			if ( ! vars[i] ) {
+				logger(g_debug_log, "met columns %s is missing!\n\n", sz_vars[i]);
 				free(values);
 				return 0;
 			}
-			break;
-
-			case TA_F-3:
-			if ( ! vars[i] && ! vars[TMIN-3] && ! vars[TMAX-3] ) {
-				logger(g_debug_log, "TA, TMIN and TMAX columns are missing!\n\n");
-				free(values);
-				return 0;
-			}
-			break;
-
-			case TMIN-3:
-			case TMAX-3:
-			if ( ! vars[i] && ! vars[TA_F-3]) {
-				logger(g_debug_log, "%s is missing!\n\n", sz_vars[i]);
-				free(values);
-				return 0;
-			}
-			break;
-
-			default:
-				if ( ! vars[i] ) {
-					logger(g_debug_log, "met columns %s is missing!\n\n", sz_vars[i]);
-					free(values);
-					return 0;
-				}
 		}
 	}
 
@@ -1712,18 +1712,18 @@ static int import_lst(const char *const filename, meteo_annual_t** p_yos, int *c
 					, lat
 					, lon
 					,(int)values[VALUE_AT(row,DAY)]
-					, (int)values[VALUE_AT(row,MONTH)]
-					, (int)values[VALUE_AT(row,YEAR)]
-					, values[VALUE_AT(row,ET)]
-					, values[VALUE_AT(row,NDVI_LAI)]
-					, values[VALUE_AT(row,RG_F)]
-					, values[VALUE_AT(row,SWC)]
-					, values[VALUE_AT(row,TMAX)]
-					, values[VALUE_AT(row,TMIN)]
-					, values[VALUE_AT(row,PRECIP)]
-					, values[VALUE_AT(row,TS_F)]
-					, values[VALUE_AT(row,VPD_F)]
-					, values[VALUE_AT(row,WS_F)]
+					             , (int)values[VALUE_AT(row,MONTH)]
+					                           , (int)values[VALUE_AT(row,YEAR)]
+					                                         , values[VALUE_AT(row,ET)]
+					                                                  , values[VALUE_AT(row,NDVI_LAI)]
+					                                                           , values[VALUE_AT(row,RG_F)]
+					                                                                    , values[VALUE_AT(row,SWC)]
+					                                                                             , values[VALUE_AT(row,TMAX)]
+					                                                                                      , values[VALUE_AT(row,TMIN)]
+					                                                                                               , values[VALUE_AT(row,PRECIP)]
+					                                                                                                        , values[VALUE_AT(row,TS_F)]
+					                                                                                                                 , values[VALUE_AT(row,VPD_F)]
+					                                                                                                                          , values[VALUE_AT(row,WS_F)]
 
 			);
 		}
@@ -1736,9 +1736,9 @@ static int import_lst(const char *const filename, meteo_annual_t** p_yos, int *c
 	free(values);
 	return i;
 
-quit:
+	quit:
 	logger_error(g_debug_log, nc_strerror(ret));
-quit_no_nc_err:
+	quit_no_nc_err:
 	nc_close(id_file);
 	if ( f_values ) free(f_values);
 	if ( values ) free(values);
@@ -1802,7 +1802,7 @@ static int import_txt(const char *const filename, meteo_annual_t** p_yos, int *c
 
 	// close file
 	fclose(f);
-	
+
 	if ( ! rows_count  )
 	{
 		logger_error(g_debug_log, "unable to import '%s': file is empty!", filename);
@@ -1817,7 +1817,7 @@ static int import_txt(const char *const filename, meteo_annual_t** p_yos, int *c
 		logger_error(g_debug_log, "unable to import '%s': data is missing!", filename);
 		return 0;
 	}
-	
+
 	// alloc memory for values
 	values = malloc(rows_count*MET_COLUMNS_COUNT*sizeof*values);
 	if ( ! values ) {
@@ -1943,7 +1943,7 @@ static int import_txt(const char *const filename, meteo_annual_t** p_yos, int *c
 		// remove initial spaces (if any)
 		p = buffer;
 		while ( isspace(*p) ) ++p;
-	
+
 		// skip empty lines or comment
 		if ( ('\0' == p[0]) || ('/' == p[0]) )
 		{
@@ -2019,7 +2019,7 @@ static int import_txt(const char *const filename, meteo_annual_t** p_yos, int *c
 			}
 		}
 		fputs("\n", f);
-			
+
 		for ( row = 0; row < rows_count; ++row ) {
 			for ( i = 0; i < MET_COLUMNS_COUNT; ++i ) {
 				fprintf(f, "%g", values[VALUE_AT(row,i)]);
@@ -2164,45 +2164,45 @@ meteo_annual_t* import_meteo_data(const char *const file, int *const yos_count, 
 	}
 
 	/* import co2 conc */
-	if ( g_settings->CO2_mod ) {
-		if ( (CO2_TRANS_ON == g_settings->CO2_trans) || (CO2_TRANS_VAR == g_settings->CO2_trans) )
-		{
-			int err;
 
-			if ( ! g_sz_co2_conc_file ) {
-				logger_error(g_debug_log, "co2 concentration file not specified!");
+	if ( (CO2_TRANS_ON == g_settings->CO2_trans) || (CO2_TRANS_VAR == g_settings->CO2_trans) )
+	{
+		int err;
+
+		if ( ! g_sz_co2_conc_file ) {
+			logger_error(g_debug_log, "co2 concentration file not specified!");
+			free(meteo_annual);
+			return NULL;
+		}
+
+		for ( i = 0; i < *yos_count; ++i ) {
+
+			meteo_annual[i].co2Conc = get_co2_conc(meteo_annual[i].year, &err);
+
+			if ( CO2_TRANS_VAR == g_settings->CO2_trans ) {
+				if ( meteo_annual[i].year >= g_settings->year_start_co2_fixed ) {
+					if ( -1 == year_start_co2_fixed_index ) {
+						logger_error(g_debug_log, "year_start_co2_fixed_index not found!");
+						free(meteo_annual);
+						return NULL;
+					}
+					meteo_annual[i].co2Conc = meteo_annual[year_start_co2_fixed_index].co2Conc;
+				}
+			}
+
+			if ( /*err &&*/ IS_INVALID_VALUE(meteo_annual[i].co2Conc) ) {
+				logger_error(g_debug_log, "co2 concentration not found!!\n");
 				free(meteo_annual);
 				return NULL;
 			}
-
-			for ( i = 0; i < *yos_count; ++i ) {
-
-				meteo_annual[i].co2Conc = get_co2_conc(meteo_annual[i].year, &err);
-
-				if ( CO2_TRANS_VAR == g_settings->CO2_trans ) {
-					if ( meteo_annual[i].year >= g_settings->year_start_co2_fixed ) {
-						if ( -1 == year_start_co2_fixed_index ) {
-							logger_error(g_debug_log, "year_start_co2_fixed_index not found!");
-							free(meteo_annual);
-							return NULL;
-						}
-						meteo_annual[i].co2Conc = meteo_annual[year_start_co2_fixed_index].co2Conc;
-					}
-				}
-
-				if ( /*err &&*/ IS_INVALID_VALUE(meteo_annual[i].co2Conc) ) {
-					logger_error(g_debug_log, "co2 concentration not found!!\n");
-					free(meteo_annual);
-					return NULL;
-				}
-			}
-		}
-		else {
-			for ( i = 0; i < *yos_count; ++i ) {
-				meteo_annual[i].co2Conc = g_settings->co2Conc;
-			}
 		}
 	}
+	else {
+		for ( i = 0; i < *yos_count; ++i ) {
+			meteo_annual[i].co2Conc = g_settings->co2Conc;
+		}
+	}
+
 
 	/* import ndep ? */
 	if ( ! g_settings->Ndep_fixed )

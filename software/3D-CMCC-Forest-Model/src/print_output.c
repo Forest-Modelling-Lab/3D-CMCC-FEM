@@ -1622,7 +1622,15 @@ void print_model_settings(logger_t*const log)
 	//assert(log);
 
 	logger(log, "#--model settings--\n");
-	logger(log, "#CO2_mod = %s\n", g_settings->CO2_mod ? "on" : "off");
+
+	if ( !g_settings->PSN_mod )
+	{
+		logger(log, "#PSN_mod = Faquhar von Caemmerer and Berry (FvCB)\n");
+	}
+	else
+	{
+		logger(log, "#PSN_mod = Monteith (LUE)\n");
+	}
 	logger(log, "#CO2 trans = %s\n", (CO2_TRANS_VAR == g_settings->CO2_trans) ? "var" : (CO2_TRANS_ON == g_settings->CO2_trans) ? "on" : "off");
 
 	if ( CO2_TRANS_OFF == g_settings->CO2_trans )
@@ -1634,14 +1642,7 @@ void print_model_settings(logger_t*const log)
 		logger(log, "#year %d at which co2 concentration is fixed at value = %g ppmv\n", g_settings->year_start_co2_fixed, g_settings->co2Conc);
 	}
 
-//	if ( !PHOTOSYNTHESIS )
-//	{
-//		logger(log, "#Photosynthesis used = Faquhar von Caemmerer and Berry (FvCB)\n");
-//	}
-//	else
-//	{
-//		logger(log, "#Photosynthesis used = Monteith (LUE)\n");
-//	}
+
 
 //	if ( !CO2_MODIFIER )
 //	{

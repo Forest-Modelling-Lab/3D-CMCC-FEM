@@ -24,7 +24,7 @@ enum {
 	, SETTINGS_YEAR_START
 	, SETTINGS_YEAR_END
 	, SETTINGS_YEAR_RESTART
-	, SETTINGS_CO2_MOD
+	, SETTINGS_PSN_MOD
 	, SETTINGS_CO2_TRANS
 	, SETTINGS_YEAR_START_CO2_FIXED
 	, SETTINGS_NDEP_FIXED
@@ -95,7 +95,7 @@ const char* sz_settings[SETTINGS_COUNT] = {
 	, "YEAR_START"
 	, "YEAR_END"
 	, "YEAR_RESTART"
-	, "CO2_MOD"
+	, "PSN_MOD"
 	, "CO2_TRANS"
 	, "YEAR_START_CO2_FIXED"
 	, "NDEP_FIXED"
@@ -617,12 +617,6 @@ settings_t* settings_import(const char *const filename) {
 				}
 			break;
 
-			case SETTINGS_CO2_MOD:
-				if ( ! string_compare_i(token, "on") ) {
-					s->CO2_mod = 1;
-				}
-			break;
-
 			case SETTINGS_CO2_TRANS:
 				if ( ! string_compare_i(token, "on") ) {
 					s->CO2_trans = CO2_TRANS_ON;
@@ -715,6 +709,10 @@ settings_t* settings_import(const char *const filename) {
 
 					case SETTINGS_YEAR_RESTART:
 						s->year_restart = (int)value;
+					break;
+
+					case SETTINGS_PSN_MOD:
+						s->PSN_mod = (int)value;
 					break;
 
 					case SETTINGS_YEAR_START_CO2_FIXED:

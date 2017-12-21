@@ -63,8 +63,6 @@ extern logger_t* g_debug_log;
 extern soil_settings_t* g_soil_settings;
 extern settings_t* g_settings;
 
-#define PHOTOSYNTHESIS  0 /* 0 for Farquhar, von Caemmerer and Berry (FvCB) approach; 1 for Monteith (LUE) approach */
-
 
 //extern const char sz_err_out_of_memory[];
 
@@ -161,9 +159,9 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 			h = &m->cells[cell].heights[height];
 
 			/* sort dbhs in descending order */
-		#ifndef USE_NEW_OUTPUT
+#ifndef USE_NEW_OUTPUT
 			qsort ( h->dbhs, h->dbhs_count, sizeof (dbh_t), sort_by_dbhs_desc );
-		#endif
+#endif
 			//ALESSIOC FIXME
 			c->cell_heights_count ++;
 
@@ -181,9 +179,9 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 					d = &h->dbhs[dbh];
 
 					/* sort ages in descending order */
-				#ifndef USE_NEW_OUTPUT
+#ifndef USE_NEW_OUTPUT
 					qsort ( d->ages, d->ages_count, sizeof (age_t), sort_by_ages_desc );
-				#endif
+#endif
 
 					logger(g_debug_log,"*****************************************************************************\n"
 							"                              dbh = %f                              \n"
@@ -272,27 +270,28 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 
 							/* note: following Piao et al., 2010 */
 							/* (Maint Resp)->(Growth Resp = (GPP - Maint Resp) * eff_grperc)->(NPP) */
-#if PHOTOSYNTHESIS
 
-							/**********************************************************************/
-							/* canopy carbon assimilation ( Monteith approach ) */
-							photosynthesis ( c, layer, height, dbh, age, species, meteo_annual );
+							if ( ! g_settings->PSN_mod )
+							{
+								/**********************************************************************/
+								/* maintenance respiration */
+								maintenance_respiration    ( c, layer, height, dbh, age, species, meteo_daily );
 
-							/* maintenance respiration */
-							maintenance_respiration ( c, layer, height, dbh, age, species, meteo_daily );
-							/**********************************************************************/
+								/* canopy carbon assimilation ( Farquhar Von Caemmerer and Berry - FvCB - approach ) */
+								total_photosynthesis_biome ( c, height, dbh, age, species, meteo_daily, meteo_annual );
+								/**********************************************************************/
+							}
+							else
+							{
+								/**********************************************************************/
+								/* canopy carbon assimilation ( Monteith - LUE - approach ) */
+								photosynthesis          ( c, layer, height, dbh, age, species, meteo_annual );
 
-#else
+								/* maintenance respiration */
+								maintenance_respiration ( c, layer, height, dbh, age, species, meteo_daily );
+								/**********************************************************************/
+							}
 
-							/**********************************************************************/
-							/* maintenance respiration */
-							maintenance_respiration ( c, layer, height, dbh, age, species, meteo_daily );
-
-							/* canopy carbon assimilation ( Farquhar Von Caemmerer approach ) */
-							total_photosynthesis_biome ( c, height, dbh, age, species, meteo_daily, meteo_annual );
-							/**********************************************************************/
-
-#endif
 							/* C-N-partitioning */
 							if ( s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2 )
 							{
@@ -406,14 +405,14 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 						}
 						logger(g_debug_log, "****************END OF SPECIES CLASS***************\n");
 					}
-				age_end:
+					age_end:
 					logger(g_debug_log, "****************END OF AGES CLASS***************\n");
 				}
-			dbh_end:
+				dbh_end:
 				logger(g_debug_log, "****************END OF DBH CLASS***************\n");
 			}
 		}
-	height_end:
+		height_end:
 		logger(g_debug_log, "****************END OF HEIGHT CLASS***************\n");
 	}
 	logger(g_debug_log, "****************END OF LAYER CLASS***************\n");
