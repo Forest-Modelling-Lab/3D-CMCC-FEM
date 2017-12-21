@@ -1581,7 +1581,7 @@ extern int MonthLength_Leap [];
 
 static const char sz_management[] = "TCN";
 
-extern const int CO2_MODIFIER;
+//extern const int CO2_MODIFIER;
 
 
 static const char* get_filename(const char *const s)
@@ -1633,14 +1633,14 @@ void print_model_settings(logger_t*const log)
 	{
 		logger(log, "#PSN_mod = Monteith (LUE)\n");
 
-		if (!CO2_MODIFIER)
-		{
-			logger(log, "#CO2 modifier = Wang et al' method\n");
-		}
-		else
-		{
-			logger(log, "#CO2 modifier = Veroustraete et al' method\n");
-		}
+//		if ( !c->CO2_modifier )
+//		{
+//			logger(log, "#CO2 modifier = Wang et al' method\n");
+//		}
+//		else
+//		{
+//			logger(log, "#CO2 modifier = Veroustraete et al' method\n");
+//		}
 	}
 	logger(log, "#CO2 trans = %s\n", (CO2_TRANS_VAR == g_settings->CO2_trans) ? "var" : (CO2_TRANS_ON == g_settings->CO2_trans) ? "on" : "off");
 
@@ -1652,17 +1652,6 @@ void print_model_settings(logger_t*const log)
 	{
 		logger(log, "#year %d at which co2 concentration is fixed at value = %g ppmv\n", g_settings->year_start_co2_fixed, g_settings->co2Conc);
 	}
-
-
-
-//	if ( !CO2_MODIFIER )
-//	{
-//		logger(log, "#F_CO2 modifier used = Wang version\n");
-//	}
-//	else
-//	{
-//		logger(log, "#F_CO2 modifier used = Veroustraete version\n");
-//	}
 
 	logger(log, "#Resp accl = %s\n", g_settings->Resp_accl ? "on" : "off");
 	logger(log, "#regeneration = %s\n", g_settings->regeneration ? "on" : "off");

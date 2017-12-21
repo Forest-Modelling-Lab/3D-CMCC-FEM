@@ -973,7 +973,6 @@ typedef struct
 	double cum_yearly_C_to_wood;                                          /* (tC/cell) Cumulated Annual Carbon stocked into wood pool */
 	double cum_npp;                                                       /* (tC/cell) Cumulated Annual npp */
 
-
 	double lai;                                                           //fixme
 	double max_lai_proj;                                                  //fixme
 
