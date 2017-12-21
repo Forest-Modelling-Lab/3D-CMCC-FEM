@@ -33,7 +33,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	double tau;	                           /* CO2/O2 specifity ratio */
 	double Eatau = -42896.9;               /* (J mol-1) Activation energy for CO2/O2 specificity */
 	double Atau  = 7.87 * pow(10,-5);      /* (dimensionless) Arrhenius constant */
-	double tairK;
+	double tairK;                          /* (K) daily air temperature */
 	double v1, v2;
 
 	/* constants for Wang et al., 2016 Nature Plants CO2 modifiers computation */
@@ -64,11 +64,11 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 
 	/********************************************************************************************/
 
-	/************************VEROUSTRAETE'S VERSION ********************************/
+	/***************************VEROUSTRAETE'S VERSION ********************************/
+	/**********************************************************************************/
 	/* CO2 MODIFIER AND ACCLIMATION FOR ASSIMILATION  */
 	/* fertilization effect with rising CO2 from: Veroustraete 1994,
-	 * Veroustraete et al., 2002, Remote Sensing of Environment
-	 */
+	 * Veroustraete et al., 2002, Remote Sensing of Environment */
 
 	tairK = meteo_daily->tavg + TempAbs;
 
@@ -84,6 +84,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 		KmCO2 = A2 * exp ( - Ea2 / ( Rgas * tairK ) );
 	}
 
+	/* Dependence of KO2 on temperature data */
 	KO2 = AKO2 * exp ( - EaKO2 / ( Rgas * tairK ) );
 
 	/* dependence of assimilation rate on atmospheric carbon dioxyde concentration and competition by O2, 'photorespiration' */
@@ -95,7 +96,9 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	/* CO2 assimilation modifier */
 	s->value[F_CO2_VER] = v1 * v2;
 
-	/*****************************WANG'S VERSION ***********************************/
+	/********************************WANG'S VERSION ***********************************/
+	/**********************************************************************************/
+
 	/* CO2 MODIFIER AND ACCLIMATION FOR ASSIMILATION */
 	/* For reference see Wang et al., 2016 Nature Plants */
 
@@ -114,6 +117,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	Ko *= 100.;
 
 	/* compute effective Michaelis-Menten coefficienct for Rubisco */
+
 	if ( meteo_daily->tday > 15. )
 	{
 		Kc  = Kc25  * pow ( q10Kc , ( meteo_daily->tday - 25. ) / 10. );
@@ -135,6 +139,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	s->value[F_CO2_WANG] = m0 * sqrt(1. - pow( (ci / m0) ,(2. / 3.)));
 
 	/**********************************************************************************/
+	/**********************************************************************************/
 
 	/* CO2 MODIFIER FOR TRANSPIRATION  */
 	/* limitation effects on maximum stomatal conductance from:
@@ -144,9 +149,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 
 	s->value[F_CO2_TR] = 39.43 * pow(meteo_annual->co2Conc, -0.64);
 
-
 	/********************************************************************************************/
-
 
 	/* LIGHT MODIFIER */
 	/* (Following Makela et al. , 2008, Peltioniemi et al. 2012) */

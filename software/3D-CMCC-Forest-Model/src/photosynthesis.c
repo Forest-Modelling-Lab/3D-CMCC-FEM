@@ -9,10 +9,9 @@
 #include "settings.h"
 #include "logger.h"
 
-extern logger_t* g_debug_log;
 extern settings_t* g_settings;
 
-#define CO2_MODIFIER  1 /* 0 for Wang et al., 2016 CO2 modifier, 1 for Veroustraete CO2 modifier */
+const int CO2_MODIFIER = 0; /* 0 for Wang et al., 2016 CO2 modifier, 1 for Veroustraete CO2 modifier */
 
 
 void photosynthesis(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, const meteo_annual_t *const meteo_annual)
@@ -32,47 +31,46 @@ void photosynthesis(cell_t *const c, const int layer, const int height, const in
 	species_t *s;
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
-	logger(g_debug_log, "\n**PHOTOSYNTHESIS**\n");
-
-	logger(g_debug_log, "VegUnveg = %d\n", s->counter[VEG_UNVEG]);
-
-# if CO2_MODIFIER
-	if (s->value[ALPHA] != NO_DATA)
+	if (CO2_MODIFIER == 1)
 	{
-		/* compute effective light use efficiency */
-		Alpha_C = s->value[ALPHA] * s->value[F_CO2_VER] * s->value[F_NUTR] * s->value[F_T] * s->value[PHYS_MOD];
-
-		/* molC/molPAR/m2/day --> gC/MJ/m2/day */
-		Epsilon_C = Alpha_C * MOLPAR_MJ * GC_MOL;
-	}
-	else
-	{
-		/* compute effective light use efficiency */
-		Epsilon_C = s->value[EPSILONgCMJ] * s->value[F_CO2_VER] * s->value[F_NUTR] * s->value[F_T] * s->value[PHYS_MOD];
-
-		/* gC/MJ/m2/day --> molC/molPAR/m2/day */
-		Alpha_C = Epsilon_C / (MOLPAR_MJ * GC_MOL);
-	}
-
-	/* note: special case when fSW <= WATER_STRESS_LIMIT for coupling with canopy transpiration */
-	/* to be fixed once */
-	if ( s->value[F_SW] <= WATER_STRESS_LIMIT )
-	{
-		if ( ! s->value[CANOPY_TRANSP] )
+		if (s->value[ALPHA] != NO_DATA)
 		{
-			Alpha_C = 0.;
+			/* compute effective light use efficiency */
+			Alpha_C = s->value[ALPHA] * s->value[F_CO2_VER] * s->value[F_NUTR] * s->value[F_T] * s->value[PHYS_MOD];
+
+			/* molC/molPAR/m2/day --> gC/MJ/m2/day */
+			Epsilon_C = Alpha_C * MOLPAR_MJ * GC_MOL;
 		}
 		else
 		{
-			Alpha_C *=  s->value[F_SW];
+			/* compute effective light use efficiency */
+			Epsilon_C = s->value[EPSILONgCMJ] * s->value[F_CO2_VER] * s->value[F_NUTR] * s->value[F_T] * s->value[PHYS_MOD];
+
+			/* gC/MJ/m2/day --> molC/molPAR/m2/day */
+			Alpha_C = Epsilon_C / (MOLPAR_MJ * GC_MOL);
+		}
+
+		/* note: special case when fSW <= WATER_STRESS_LIMIT for coupling with canopy transpiration */
+		/* to be fixed once */
+		if ( s->value[F_SW] <= WATER_STRESS_LIMIT )
+		{
+			if ( ! s->value[CANOPY_TRANSP] )
+			{
+				Alpha_C = 0.;
+			}
+			else
+			{
+				Alpha_C *=  s->value[F_SW];
+			}
 		}
 	}
-#else
-	//test new 18 Dec 2017
-	/* compute effective light use efficiency */
-	Alpha_C = s->value[ALPHA] * s->value[F_CO2_WANG];
+	else
+	{
+		//test new 18 Dec 2017
+		/* compute effective light use efficiency */
+		Alpha_C = s->value[ALPHA] * s->value[F_CO2_WANG];
+	}
 
-#endif
 
 	/* check if current Alpha exceeds (saturates) maximum Alpha */
 	/* (canopy saturation at 600 ppmv see Medlyn, 1996; Medlyn et al., 2011) */

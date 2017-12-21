@@ -1581,6 +1581,8 @@ extern int MonthLength_Leap [];
 
 static const char sz_management[] = "TCN";
 
+extern const int CO2_MODIFIER;
+
 
 static const char* get_filename(const char *const s)
 {
@@ -1630,6 +1632,15 @@ void print_model_settings(logger_t*const log)
 	else
 	{
 		logger(log, "#PSN_mod = Monteith (LUE)\n");
+
+		if (!CO2_MODIFIER)
+		{
+			logger(log, "#CO2 modifier = Wang et al' method\n");
+		}
+		else
+		{
+			logger(log, "#CO2 modifier = Veroustraete et al' method\n");
+		}
 	}
 	logger(log, "#CO2 trans = %s\n", (CO2_TRANS_VAR == g_settings->CO2_trans) ? "var" : (CO2_TRANS_ON == g_settings->CO2_trans) ? "on" : "off");
 

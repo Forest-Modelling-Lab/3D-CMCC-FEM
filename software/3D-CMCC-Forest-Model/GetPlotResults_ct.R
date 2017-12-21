@@ -64,7 +64,7 @@ time_list_output = c('annual','monthly','daily')
 
 # single or multiple simulations
 build_list<-c('Debug')#, 'Release')
-site_list<-c("All")
+site_list<-c("LeBray")
 esm_list <-c("All")# ("1","2","3","4","5", "All")
 rcp_list <-c("All")# ("0p0","2p6","4p5","6p0","8p5","All")
 man_list <-c("off")# ("on",'off', "All")
@@ -75,7 +75,7 @@ local_list<-c('on')
 time_list = c('annual')
 
 #  output folder name
-output_folder = paste0("Test_output_Rstudio_ct_photosynthesis_LUE_Veroustraete_TEST_", protocol_list,'_',co2_list)
+output_folder = paste0("Test_output_Rstudio_ct_photosynthesis_LUE-Wang_TEST_", protocol_list,'_',co2_list)
 
 if ( length(which(site_list == 'All')) > 0 ) {
   site_list = c("Soroe","Hyytiala","Bily_Kriz","LeBray")#,"Solling_beech","Peitz","Solling_spruce")
@@ -122,7 +122,7 @@ if ( run_model == 1 ) {
             paste0( protocol,"/",protocol, "_hist.txt"),
             paste0( site,"_soil_ISIMIP.txt"),
             paste0( site,"_topo_ISIMIP.txt"),
-            paste0( protocol, "/", site,"_settings_ISIMIP_Manag-", man, "_CO2-", co2,".txt"),
+            paste0( protocol, "/", site,"_settings_ISIMIP_Manag-on_CO2-", co2,".txt"),
             paste0( "/CO2/CO2_hist.txt")
           )
           for ( zz in files_to_check ) {
@@ -157,9 +157,9 @@ if ( run_model == 1 ) {
                                   "-m"," ", "ISIMIP/", protocol,"/",protocol, "_hist.txt", " ",
                                   "-s"," ", "ISIMIP/", site,"_soil_ISIMIP.txt", " ",
                                   "-t"," ", "ISIMIP/", site,"_topo_ISIMIP.txt", " ",
-                                  "-c"," ", "ISIMIP/", protocol, "/", site,"_settings_ISIMIP_Manag-", man, "_CO2-", co2,".txt", " ",
+                                  "-c"," ", "ISIMIP/", protocol, "/", site,"_settings_ISIMIP_Manag-on_CO2-", co2,".txt", " ",
                                   "-k"," ", "ISIMIP/", "/CO2/CO2_hist.txt",
-                                  ">output/",output_folder,"-", version, "-", site,"/",protocol,"_log_",site,"_",protocol,"_Manag-", man, "_CO2-", co2,".txt"
+                                  ">output/",output_folder,"-", version, "-", site,"/",protocol,"_log_",site,"_LOCAL_Manag-on_CO2-", co2,".txt"
             )
             # launch execution
             system(systemCall)
@@ -208,8 +208,9 @@ if ( run_model == 1 ) {
                 dir.create(paste0(getwd(),"/output/",output_folder,"-", version, "-", site),showWarnings = FALSE)
                 dir.create(paste0(getwd(),"/output/",output_folder,"-", version, "-", site,"/",protocol),showWarnings = FALSE)
                 
-                cat(paste0("\nstart", model," ",version," ","protocol: ",protocol, " site: ", site, 
-                           " ESM: ", esm," RCP: ", rcp," Manag-", man, " CO2-", co2,'\n'))
+                cat(paste0("start 3D-CMCC ",
+                           "protocol: ",protocol, " site: ", site, 
+                           " ESM: ", esm," RCP: ", rcp," CO2 RCP: ", rcp," Manag-", man, " CO2-", co2,'\n'))
                 
                 systemCall  <- paste0(build_list,'/3D_CMCC_Forest_Model', " ",
                                       "-i"," ", "input/", site, " ",
@@ -222,7 +223,7 @@ if ( run_model == 1 ) {
                                       "-c"," ", "ISIMIP/", protocol, "/", site,"_settings_ISIMIP_Manag-", man, "_CO2-", co2,".txt", " ",
                                       "-k"," ", "ISIMIP/", "/CO2/CO2_", "rcp",rcp, ".txt",
                                       ">output/",output_folder,"-", version, "-", site,"/",protocol,"_log_",site,"_",protocol,
-                                      "_ESM_", esm,"_RCP_", rcp,"_Manag-", man, "_CO2-", co2,".txt"
+                                      "_ESM_", esm,"_RCP_", rcp,"_CO2_RCP_", rcp,"_Manag-", man, "_CO2-", co2,".txt"
                 )
                 
                 # launch execution
@@ -231,14 +232,15 @@ if ( run_model == 1 ) {
                 
                 cat(paste0("start 3D-CMCC ",
                            "protocol: ",protocol, " site: ", site, 
-                           " ESM: ", esm," RCP: ", rcp," Manag-", man, " CO2-", co2,' ... COMPLETE!\n'))
+                           " ESM: ", esm," RCP: ", rcp," CO2 RCP: ", rcp," Manag-", man, " CO2-", co2,' ... COMPLETE!\n'))
                 
                 if ( rcp == '0p0' && co2 == 'on' )
                 {
                   for (rcp2 in rcp_list)
                   {
-                    cat(paste0("\nstart", model," ",version," ","protocol: ",protocol, " site: ", site, 
-                               " ESM: ", esm," RCP: ", rcp," Manag-", man, " CO2-", co2,'\n'))
+                    cat(paste0("start 3D-CMCC ",
+                               "protocol: ",protocol, " site: ", site, 
+                               " ESM: ", esm," RCP: ", rcp," CO2 RCP: ", rcp2," Manag-", man, " CO2-", co2,'\n'))
                     
                     systemCall  <- paste0(build_list,'/3D_CMCC_Forest_Model', " ",
                                           "-i"," ", "input/", site, " ",
@@ -251,7 +253,7 @@ if ( run_model == 1 ) {
                                           "-c"," ", "ISIMIP/", protocol, "/", site,"_settings_ISIMIP_Manag-", man, "_CO2-", co2,".txt", " ",
                                           "-k"," ", "ISIMIP/", "/CO2/CO2_", "rcp",rcp2, ".txt",
                                           ">output/",output_folder,"-", version, "-", site,"/",protocol,"_log_",site,"_",protocol,
-                                          "_ESM_", esm,"_RCP_", rcp,"_CO2_",rcp2,"_Manag-", man, "_CO2-", co2,".txt"
+                                          "_ESM_", esm,"_RCP_",rcp,"_CO2_RCP_",rcp2,"_Manag-", man, "_CO2-", co2,".txt"
                     )
                     
                     # launch execution
@@ -260,7 +262,7 @@ if ( run_model == 1 ) {
                     
                     cat(paste0("start 3D-CMCC ",
                                "protocol: ",protocol, " site: ", site, 
-                               " ESM: ", esm," RCP: ", rcp," Manag-", man, " CO2-", co2,' ... COMPLETE!\n'))
+                               " ESM: ", esm," RCP: ", rcp," CO2 RCP: ", rcp2," Manag-", man, " CO2-", co2,' ... COMPLETE!\n'))
                   }
                 }
               }

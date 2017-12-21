@@ -11,6 +11,7 @@ air_pressure = 100845
 # constants for Wang et al., 2016 Nature Plants CO2 modifiers computation 
 #note: constants not described into Wang et al., 2016 are taken from the BIOME-BGC 
 
+#Michealis Menten kinetic
 beta   = 240.;   # (units ??) definition ? 
 ni     = 0.89;   # (units ??) vicosity of water relative to its value at 25 °C 
 ci     = 0.103;   # carbon cost unit for the maintenance of electron transport capacity 
@@ -18,6 +19,19 @@ Kc25   = 404;    # (ubar) michaelis-menten const carboxylase, 25 deg C
 q10Kc  = 2.1;    # (DIM) Q_10 for Kc 
 Ko25   = 248.0;  # (mbar) michaelis-menten const oxygenase, 25 deg C 
 q10Ko  = 1.2;    # (DIM) Q_10 for Ko 
+
+#Arrehnius kinetic
+A1     = 2.419 * (10^13);   # (ppmv) Arrhenius constant for KmCO2 tø dependence in ppm for t>=15
+A2     = 1.976 * (10^22);   # (ppmv) Arrhenius constant for KmCO2 tø dependence in ppm for t<15 C 
+Ea1    = 59400.0;              # (J mol-1) Activation energy for CO2 fixation (KmCO2 temp dependence) 
+Ea2    = 109600.0;	           # (J mol-1) Activation energy for CO2 fixation for t<15 C 
+Rgas   = 8.3144                # gas constant
+AK02   = 8240;                 # Arrhenius constant
+EaKO2  = 13913.5;              # (J mol-1) Activation energy for O2 inhibition 
+
+#convert Tair C° -> K
+tairK  = tday + 273.13;
+
 
 # variables for Wang et al., 2016 Nature Plants CO2 modifiers computation 
 # double Kc;           # (Pa) effective Michaelis-Menten coefficienct for Rubisco */
@@ -37,24 +51,29 @@ q10Ko  = 1.2;    # (DIM) Q_10 for Ko
 #/* calculate atmospheric O2 in Pa, assumes 20.9% O2 by volume */
 O2  = O2CONC * air_pressure;
 
-#/* correct kinetic constants for temperature, and do unit conversions */
+# Michaelis Menten correct kinetic constants for temperature, and do unit conversions */
 Ko  = Ko25 * ( q10Ko ^ ( tday - 25. ) / 10. );
 Ko  = Ko * 100.; 
+
+
   
-  #/* compute effective Michaelis-Menten coefficienct for Rubisco (tday in °C) */
 if ( tday > 15. )
 {
+  # compute effective Michaelis-Menten coefficienct for Rubisco (tday in °C) */
   Kc  = Kc25  * ( q10Kc ^ ( tday - 25. ) / 10. );
 }else
 {
+  # compute effective Michaelis-Menten coefficienct for Rubisco (tday in °C) */
   Kc  = Kc25  *  ( 1.8 * q10Kc ^  ( tday - 15. ) / 10.) / q10Kc;
 }
 
 #/* convert from ubar --> Pa */
-Kc = Kc * 0.1;                  
+Kc = Kc * 0.1;   
+
 
 #/* calculate gamma (Pa) CO2 compensation point due to photorespiration, in the absence of maint resp, assumes Vomax/Vcmax = 0.21; Badger & Andrews (1974) */
 gamma = 0.5 * 0.21 * Kc * O2 / Ko;
+
 
 m0 = (co2 - gamma) / ((co2 + (2 * gamma) + (3 * gamma) * sqrt((1.6 * vpd * ni )/(beta * (Kc + gamma)))));
 
