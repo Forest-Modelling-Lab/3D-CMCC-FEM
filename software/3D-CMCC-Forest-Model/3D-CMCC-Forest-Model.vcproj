@@ -482,6 +482,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\spinup.c"
+				>
+			</File>
+			<File
 				RelativePath=".\src\structure.c"
 				>
 			</File>

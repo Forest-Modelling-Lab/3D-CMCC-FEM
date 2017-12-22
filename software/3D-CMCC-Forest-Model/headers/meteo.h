@@ -124,6 +124,24 @@ typedef struct {
 } meteo_mean_t;
 
 typedef struct {
+	double solar_rad;
+	double tavg;
+	double tmax;
+	double tmin;
+	double rh_f;
+	double ts_f;
+	double prcp;
+	double swc;
+	double ndvi_lai;
+	double et;
+	double windspeed;
+} meteo_seasonal_daily_t;
+
+typedef struct {
+	meteo_seasonal_daily_t d[METEO_DAYS_COUNT];
+} meteo_seasonal_month_t;
+
+typedef struct {
 	int year;
 	double co2Conc;	                             /* (ppmv) annual atmospheric CO2 concentration */
 	double Ndep;	                             /* (kgN/m2/year) annual nitrogen deposition */

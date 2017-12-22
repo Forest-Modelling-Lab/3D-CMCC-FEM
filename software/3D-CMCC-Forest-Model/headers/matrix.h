@@ -923,6 +923,8 @@ typedef struct
 
 	int years_count;
 	meteo_annual_t *years;
+	// TODO ALESSIOR: make it dynamic
+	meteo_seasonal_month_t meteo_spinup[METEO_MONTHS_COUNT];
 
 	int doy;                                                              /* day of the year */
 	int dos;                                                              /* day of simulation */

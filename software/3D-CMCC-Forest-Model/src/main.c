@@ -43,6 +43,7 @@
 #include "litter_model.h"
 #include "compare.h"
 #include "management.h"
+#include "spinup.h"
 
 //#define BENCHMARK_ONLY
 
@@ -1516,6 +1517,86 @@ int main(int argc, char *argv[]) {
 				output_vars->yearly_vars_value[ii] = INVALID_VALUE;
 			}
 		}
+
+		// clear spinup seasonal matrix
+		if ( g_settings->spinup )
+		{
+			int i;
+			int y;
+
+			for ( i = 0; i < METEO_MONTHS_COUNT; ++i )
+			{
+				for ( y = 0; y < METEO_DAYS_COUNT; ++y )
+				{
+					// meteo values cannot be invalid
+					// so we can initialize it to 0
+					matrix->cells[cell].meteo_spinup[i].d[y].solar_rad = 0.;
+					matrix->cells[cell].meteo_spinup[i].d[y].tavg = 0.;
+					matrix->cells[cell].meteo_spinup[i].d[y].tmax = 0.;
+					matrix->cells[cell].meteo_spinup[i].d[y].tmin = 0.;
+					matrix->cells[cell].meteo_spinup[i].d[y].rh_f = 0.;
+					matrix->cells[cell].meteo_spinup[i].d[y].ts_f = 0.;
+					matrix->cells[cell].meteo_spinup[i].d[y].prcp = 0.;
+					matrix->cells[cell].meteo_spinup[i].d[y].swc = 0.;
+					matrix->cells[cell].meteo_spinup[i].d[y].ndvi_lai = 0.;
+					matrix->cells[cell].meteo_spinup[i].d[y].et = 0.;
+					matrix->cells[cell].meteo_spinup[i].d[y].windspeed = 0.;
+				}
+			}
+		}
+	}
+
+	// compute seasonal means
+	if ( g_settings->spinup )
+	{
+		int days_per_month;
+
+		for ( cell = 0; cell < matrix->cells_count; ++cell )
+		{
+			for ( month = 0; month < METEO_MONTHS_COUNT; ++month )
+			{
+				days_per_month = DaysInMonth[month];
+				if ( (FEBRUARY == month) && IS_LEAP_YEAR(matrix->cells[cell].years[year].year) )
+				{
+					++days_per_month;
+				}
+
+				for ( day = 0; day < METEO_DAYS_COUNT; ++day )
+				{
+					if ( day >= days_per_month )
+					{
+						break;
+					}
+
+					for ( year = 0; year < matrix->cells[cell].years_count; ++year )
+					{
+						matrix->cells[cell].meteo_spinup[month].d[day].solar_rad += matrix->cells[cell].years[year].daily[month].d[day].solar_rad;
+						matrix->cells[cell].meteo_spinup[month].d[day].tavg += matrix->cells[cell].years[year].daily[month].d[day].tavg;
+						matrix->cells[cell].meteo_spinup[month].d[day].tmax += matrix->cells[cell].years[year].daily[month].d[day].tmax;
+						matrix->cells[cell].meteo_spinup[month].d[day].tmin += matrix->cells[cell].years[year].daily[month].d[day].tmin;
+						matrix->cells[cell].meteo_spinup[month].d[day].rh_f += matrix->cells[cell].years[year].daily[month].d[day].rh_f;
+						matrix->cells[cell].meteo_spinup[month].d[day].ts_f += matrix->cells[cell].years[year].daily[month].d[day].ts_f;
+						matrix->cells[cell].meteo_spinup[month].d[day].prcp += matrix->cells[cell].years[year].daily[month].d[day].prcp;
+						matrix->cells[cell].meteo_spinup[month].d[day].swc += matrix->cells[cell].years[year].daily[month].d[day].swc;
+						matrix->cells[cell].meteo_spinup[month].d[day].ndvi_lai += matrix->cells[cell].years[year].daily[month].d[day].ndvi_lai;
+						matrix->cells[cell].meteo_spinup[month].d[day].et += matrix->cells[cell].years[year].daily[month].d[day].et;
+						matrix->cells[cell].meteo_spinup[month].d[day].windspeed += matrix->cells[cell].years[year].daily[month].d[day].windspeed;
+					}
+
+					matrix->cells[cell].meteo_spinup[month].d[day].solar_rad /= days_per_month;
+					matrix->cells[cell].meteo_spinup[month].d[day].tavg /= days_per_month;
+					matrix->cells[cell].meteo_spinup[month].d[day].tmax /= days_per_month;
+					matrix->cells[cell].meteo_spinup[month].d[day].tmin /= days_per_month;
+					matrix->cells[cell].meteo_spinup[month].d[day].rh_f /= days_per_month;
+					matrix->cells[cell].meteo_spinup[month].d[day].ts_f /= days_per_month;
+					matrix->cells[cell].meteo_spinup[month].d[day].prcp /= days_per_month;
+					matrix->cells[cell].meteo_spinup[month].d[day].swc /= days_per_month;
+					matrix->cells[cell].meteo_spinup[month].d[day].ndvi_lai /= days_per_month;
+					matrix->cells[cell].meteo_spinup[month].d[day].et /= days_per_month;
+					matrix->cells[cell].meteo_spinup[month].d[day].windspeed /= days_per_month;
+				}
+			}
+		}
 	}
 
 	logger(g_debug_log, "Total years_of_simulation = %d\n", years_of_simulation);
@@ -1540,6 +1621,26 @@ int main(int argc, char *argv[]) {
 		break;
 	}
 #endif
+
+	/* spinup */
+	if ( g_settings->spinup ) // OSSIA SE SPINUP DIVERSO DA ZERO
+	{
+		/* check for spinup years */
+		if ( g_settings->spinup_years <= 0 )
+		{
+			logger_error(g_debug_log, "spinup_years in settings must be a valid value. spinup not computed");
+			// USCIRE ?
+			//goto err;
+		}
+		else
+		{
+			if ( ! spinup(matrix, g_settings->spinup_years) ) // OSSIA SE RITORNA ZERO, OVVERO ERRORE
+			{
+				// USCIRE ?
+				//goto err;
+			}
+		}
+	}
 
 	/* for monthly and yearly means */
 	for ( cell = 0; cell < matrix->cells_count; ++cell )
