@@ -1556,47 +1556,141 @@ int main(int argc, char *argv[]) {
 			for ( month = 0; month < METEO_MONTHS_COUNT; ++month )
 			{
 				days_per_month = DaysInMonth[month];
-				if ( (FEBRUARY == month) && IS_LEAP_YEAR(matrix->cells[cell].years[year].year) )
+				if ( FEBRUARY == month )
 				{
+					// we made all years as leap years
 					++days_per_month;
 				}
 
 				for ( day = 0; day < METEO_DAYS_COUNT; ++day )
 				{
+					int years_count;
+
 					if ( day >= days_per_month )
 					{
 						break;
 					}
 
+					// we compare against 28
+					// instead of 29 'cause we start from 0
+					if ( (FEBRUARY == month) && ( 28 == day ))
+					{
+						years_count = 0;
+					}
+					else
+					{
+						years_count =  matrix->cells[cell].years_count;
+					}
 					for ( year = 0; year < matrix->cells[cell].years_count; ++year )
 					{
-						matrix->cells[cell].meteo_spinup[month].d[day].solar_rad += matrix->cells[cell].years[year].daily[month].d[day].solar_rad;
-						matrix->cells[cell].meteo_spinup[month].d[day].tavg += matrix->cells[cell].years[year].daily[month].d[day].tavg;
-						matrix->cells[cell].meteo_spinup[month].d[day].tmax += matrix->cells[cell].years[year].daily[month].d[day].tmax;
-						matrix->cells[cell].meteo_spinup[month].d[day].tmin += matrix->cells[cell].years[year].daily[month].d[day].tmin;
-						matrix->cells[cell].meteo_spinup[month].d[day].rh_f += matrix->cells[cell].years[year].daily[month].d[day].rh_f;
-						matrix->cells[cell].meteo_spinup[month].d[day].ts_f += matrix->cells[cell].years[year].daily[month].d[day].ts_f;
-						matrix->cells[cell].meteo_spinup[month].d[day].prcp += matrix->cells[cell].years[year].daily[month].d[day].prcp;
-						matrix->cells[cell].meteo_spinup[month].d[day].swc += matrix->cells[cell].years[year].daily[month].d[day].swc;
-						matrix->cells[cell].meteo_spinup[month].d[day].ndvi_lai += matrix->cells[cell].years[year].daily[month].d[day].ndvi_lai;
-						matrix->cells[cell].meteo_spinup[month].d[day].et += matrix->cells[cell].years[year].daily[month].d[day].et;
-						matrix->cells[cell].meteo_spinup[month].d[day].windspeed += matrix->cells[cell].years[year].daily[month].d[day].windspeed;
+						if ( (FEBRUARY == month)
+								&& ( 28 == day )
+								&& IS_LEAP_YEAR(matrix->cells[cell].years[year].year) )
+						{
+							++years_count;
+						}
+
+						if ( ! IS_INVALID_VALUE(matrix->cells[cell].years[year].daily[month].d[day].solar_rad) )
+								matrix->cells[cell].meteo_spinup[month].d[day].solar_rad += matrix->cells[cell].years[year].daily[month].d[day].solar_rad;
+
+						if ( ! IS_INVALID_VALUE(matrix->cells[cell].years[year].daily[month].d[day].tavg) )
+							matrix->cells[cell].meteo_spinup[month].d[day].tavg += matrix->cells[cell].years[year].daily[month].d[day].tavg;
+
+						if ( ! IS_INVALID_VALUE(matrix->cells[cell].years[year].daily[month].d[day].tmax) )
+							matrix->cells[cell].meteo_spinup[month].d[day].tmax += matrix->cells[cell].years[year].daily[month].d[day].tmax;
+
+						if ( ! IS_INVALID_VALUE(matrix->cells[cell].years[year].daily[month].d[day].tmin) )
+							matrix->cells[cell].meteo_spinup[month].d[day].tmin += matrix->cells[cell].years[year].daily[month].d[day].tmin;
+
+						if ( ! IS_INVALID_VALUE(matrix->cells[cell].years[year].daily[month].d[day].rh_f) )
+							matrix->cells[cell].meteo_spinup[month].d[day].rh_f += matrix->cells[cell].years[year].daily[month].d[day].rh_f;
+
+						if ( ! IS_INVALID_VALUE(matrix->cells[cell].years[year].daily[month].d[day].ts_f) )
+							matrix->cells[cell].meteo_spinup[month].d[day].ts_f += matrix->cells[cell].years[year].daily[month].d[day].ts_f;
+
+						if ( ! IS_INVALID_VALUE(matrix->cells[cell].years[year].daily[month].d[day].prcp) )
+							matrix->cells[cell].meteo_spinup[month].d[day].prcp += matrix->cells[cell].years[year].daily[month].d[day].prcp;
+
+						if ( ! IS_INVALID_VALUE(matrix->cells[cell].years[year].daily[month].d[day].swc) )
+							matrix->cells[cell].meteo_spinup[month].d[day].swc += matrix->cells[cell].years[year].daily[month].d[day].swc;
+
+						if ( ! IS_INVALID_VALUE(matrix->cells[cell].years[year].daily[month].d[day].ndvi_lai) )
+							matrix->cells[cell].meteo_spinup[month].d[day].ndvi_lai += matrix->cells[cell].years[year].daily[month].d[day].ndvi_lai;
+
+						if ( ! IS_INVALID_VALUE(matrix->cells[cell].years[year].daily[month].d[day].et) )
+							matrix->cells[cell].meteo_spinup[month].d[day].et += matrix->cells[cell].years[year].daily[month].d[day].et;
+
+						if ( ! IS_INVALID_VALUE(matrix->cells[cell].years[year].daily[month].d[day].windspeed) )
+							matrix->cells[cell].meteo_spinup[month].d[day].windspeed += matrix->cells[cell].years[year].daily[month].d[day].windspeed;
 					}
 
-					matrix->cells[cell].meteo_spinup[month].d[day].solar_rad /= days_per_month;
-					matrix->cells[cell].meteo_spinup[month].d[day].tavg /= days_per_month;
-					matrix->cells[cell].meteo_spinup[month].d[day].tmax /= days_per_month;
-					matrix->cells[cell].meteo_spinup[month].d[day].tmin /= days_per_month;
-					matrix->cells[cell].meteo_spinup[month].d[day].rh_f /= days_per_month;
-					matrix->cells[cell].meteo_spinup[month].d[day].ts_f /= days_per_month;
-					matrix->cells[cell].meteo_spinup[month].d[day].prcp /= days_per_month;
-					matrix->cells[cell].meteo_spinup[month].d[day].swc /= days_per_month;
-					matrix->cells[cell].meteo_spinup[month].d[day].ndvi_lai /= days_per_month;
-					matrix->cells[cell].meteo_spinup[month].d[day].et /= days_per_month;
-					matrix->cells[cell].meteo_spinup[month].d[day].windspeed /= days_per_month;
+					// dataset can have no leap years
+					// so prevent division by zero error!
+					if ( years_count )
+					{
+						matrix->cells[cell].meteo_spinup[month].d[day].solar_rad /= years_count;
+						matrix->cells[cell].meteo_spinup[month].d[day].tavg /= years_count;
+						matrix->cells[cell].meteo_spinup[month].d[day].tmax /= years_count;
+						matrix->cells[cell].meteo_spinup[month].d[day].tmin /= years_count;
+						matrix->cells[cell].meteo_spinup[month].d[day].rh_f /= years_count;
+						matrix->cells[cell].meteo_spinup[month].d[day].ts_f /= years_count;
+						matrix->cells[cell].meteo_spinup[month].d[day].prcp /= years_count;
+						matrix->cells[cell].meteo_spinup[month].d[day].swc /= years_count;
+						matrix->cells[cell].meteo_spinup[month].d[day].ndvi_lai /= years_count;
+						matrix->cells[cell].meteo_spinup[month].d[day].et /= years_count;
+						matrix->cells[cell].meteo_spinup[month].d[day].windspeed /= years_count;
+					}
 				}
 			}
 		}
+	#ifdef _WIN32
+	#ifdef _DEBUG
+		{
+			FILE *f;
+			f = fopen("debug_spinup_seasonal_means.csv", "w");
+			if ( ! f ) {
+				logger_error(g_debug_log, "unable to create debug_spinup_seasonal_means.csv");
+				goto err;
+			}
+			/* write header */
+			fputs("CELL,MONTH,DAY,RAD,TAVG,TMAX,TMIN,RH,TS,P,SWC,LAI,ET,WS\n", f);
+
+			for ( cell = 0; cell < matrix->cells_count; ++cell )
+			{
+				for ( month = 0; month < METEO_MONTHS_COUNT; ++month )
+				{
+					days_per_month = DaysInMonth[month];
+					if ( FEBRUARY == month )
+					{
+						// we made all years as leap years
+						++days_per_month;
+					}
+
+					for ( day = 0; day < days_per_month; ++day )
+					{
+						fprintf(f, "%d,%d,%d,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g\n"
+										, cell
+										, month + 1
+										, day + 1
+										, matrix->cells[cell].meteo_spinup[month].d[day].solar_rad
+										, matrix->cells[cell].meteo_spinup[month].d[day].tavg
+										, matrix->cells[cell].meteo_spinup[month].d[day].tmax
+										, matrix->cells[cell].meteo_spinup[month].d[day].tmin
+										, matrix->cells[cell].meteo_spinup[month].d[day].rh_f
+										, matrix->cells[cell].meteo_spinup[month].d[day].ts_f
+										, matrix->cells[cell].meteo_spinup[month].d[day].prcp
+										, matrix->cells[cell].meteo_spinup[month].d[day].swc
+										, matrix->cells[cell].meteo_spinup[month].d[day].ndvi_lai
+										, matrix->cells[cell].meteo_spinup[month].d[day].et
+										, matrix->cells[cell].meteo_spinup[month].d[day].windspeed
+						);
+					}
+				}
+			}
+			fclose(f);
+		}
+	#endif
+	#endif
 	}
 
 	logger(g_debug_log, "Total years_of_simulation = %d\n", years_of_simulation);
