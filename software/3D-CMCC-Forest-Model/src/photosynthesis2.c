@@ -307,7 +307,11 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	/******************************************************************************************************************************/
 
 	/* calculate Vcmax (umol CO2/m2/s) max rate of carboxylation from leaf nitrogen data and Rubisco activity */
-	/* see: Woodrow and Berry (1988) */
+	/* see:
+	 * Woodrow and Berry (1988)
+	 * Field (1983)
+	 * Harley et al., (1992)
+	 * Medlyn et al., (1999)*/
 
 #if 0
 	//note: modified version of the BIOME-BGC original code
@@ -352,7 +356,15 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	}
 #else
 	//note: original version of the BIOME-BGC original code
-	/* a simplifying assumption that empirically relates the maximum rate of electron transport to maximum carboxylation velocity see Wullschleger 1993 */
+	/* a simplifying assumption that empirically relates the maximum rate of electron transport to maximum carboxylation velocity
+	 * see:
+	 * Wullschleger (1993)
+	 * Field (1983)
+	 * Harley et al., (1992)
+	 * Medlyn et al., (1999)
+	 * Peterson et al., (1999)
+	 * Liozon et al., (2000)*/
+
 	Jmax = beta * Vcmax;
 #endif
 

@@ -40,9 +40,6 @@ void gs_Jarvis (species_t *const s, const double gl_x, const double g_corr)
 	m_final       = s->value[F_LIGHT]       * s->value[F_SW] * s->value[F_T] * s->value[F_VPD] * s->value[F_AGE];
 	m_final_sun   = s->value[F_LIGHT_SUN]   * s->value[F_SW] * s->value[F_T] * s->value[F_VPD] * s->value[F_AGE];
 	m_final_shade = s->value[F_LIGHT_SHADE] * s->value[F_SW] * s->value[F_T] * s->value[F_VPD] * s->value[F_AGE];
-	logger(g_debug_log, "m_final       = %f \n",m_final);
-	logger(g_debug_log, "m_final_sun   = %f \n",m_final_sun);
-	logger(g_debug_log, "m_final_shade = %f \n",m_final_shade);
 
 	/* check */
 	if (m_final       < eps) m_final       = eps;
@@ -52,9 +49,6 @@ void gs_Jarvis (species_t *const s, const double gl_x, const double g_corr)
 	s->value[STOMATAL_CONDUCTANCE]       = gl_x * m_final       * g_corr;
 	s->value[STOMATAL_SUN_CONDUCTANCE]   = gl_x * m_final_sun   * g_corr;
 	s->value[STOMATAL_SHADE_CONDUCTANCE] = gl_x * m_final_shade * g_corr;
-	logger(g_debug_log, "STOMATAL_CONDUCTANCE       = %f\n",s->value[STOMATAL_CONDUCTANCE]);
-	logger(g_debug_log, "STOMATAL_SUN_CONDUCTANCE   = %f\n",s->value[STOMATAL_SUN_CONDUCTANCE]);
-	logger(g_debug_log, "STOMATAL_SHADE_CONDUCTANCE = %f\n",s->value[STOMATAL_SHADE_CONDUCTANCE]);
 }
 
 /*************************************************************************************************************************/
