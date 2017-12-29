@@ -210,7 +210,7 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	static double q10Ko  = 1.2;    /* (DIM) Q_10 for Ko */
 	static double act25  = 3.6;    /* (umol/mgRubisco/min) Rubisco activity at 25 C */
 	static double q10act = 2.4;    /* (DIM) Q_10 for Rubisco activity */
-	static double pabs   = 0.85;   /* (DIM) fraction of PAR effectively absorbed by PSII */
+	static double pabs   = 0.85;   /* (DIM) fraction of PAR effectively absorbed by photosytem II */
 	static double fnr    = 7.16;   /* g Rubisco/gN Rubisco weight proportion of rubisco relative to its N content Kuehn and McFadden (1969) */
 
 	/* local variables */
@@ -221,9 +221,9 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	double ppe;                    /* (mol/mol) photons absorbed by PSII per e- transported */
 	double Vcmax;                  /* (umol/m2/s) max rate carboxylation */
 	double J;                      /* (umol/m2/s) rate of RuBP (ribulose-1,5-bisphosphate) regeneration */
-	double gamma;                  /* (Pa) CO2 compensation point, no Rd */
+	double gamma;                  /* (Pa) CO2 compensation point without dark respiration */
 	double Ca;                     /* (Pa) atmospheric [CO2] pressure */
-	double O2;                     /* (Pa) atmospheric [O2] */
+	double O2;                     /* (Pa) intercellular O2 partial pressure, taken to be 0·21 (mol mol-1) see Medlyn et al., 1999 */
 	double Av;                     /* (umol/m2/s) carboxylation rate for limited assimilation (synonym of Vc) */
 	double Aj;                     /* (umol/m2/s) RuBP (ribulose-1,5-bisphosphate) regeneration limited assimilation */
 	double A;                      /* (umol/m2/s) final assimilation rate */
@@ -292,7 +292,8 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	/* Convert rubisco activity units from umol/mgRubisco/min -> umol/gRubisco/s */
 	act = act  * 1e3 / 60.;
 
-	/* calculate gamma (Pa) CO2 compensation point due to photorespiration, in the absence of maint resp, assumes Vomax/Vcmax = 0.21; Badger & Andrews (1974) */
+	/* calculate gamma (Pa) CO2 compensation point due to photorespiration, in the absence of maint (or dark?) respiration */
+	/* it assumes Vomax/Vcmax = 0.21; Badger & Andrews (1974) */
 	gamma = 0.5 * 0.21 * Kc * O2 / Ko;
 
 	/* calculate Vmax from leaf nitrogen data and Rubisco activity */
@@ -420,7 +421,7 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 
 	/* compute (umol CO2/m2/s) final assimilation rate */
 	/* estimate A as the minimum of (Av,Aj) */
-	A = MIN (Av, Aj);
+	A = MIN ( Av, Aj );
 
 	/* compute (Pa) intercellular [CO2] */
 	//fixme currently not used ?
