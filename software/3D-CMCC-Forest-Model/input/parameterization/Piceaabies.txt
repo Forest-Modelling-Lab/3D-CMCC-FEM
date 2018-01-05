@@ -7,7 +7,7 @@ GAMMA_LIGHT             0.02    // Empirical parameter for Light modifiers see P
 K                       0.67    //Extinction coefficient for absorption of PAR by canopy for Picea abies Pietsch et al., 2005 ,0.54 from Pietsch et al., 2005,  0.54 from Mollicone, 0.4241 Forrester et al., 2014
 ALBEDO                  0.06    //averaged for P.abies, 0.06 Jarvis et al., 1976, 0.095 from Breuer et al., 2003
 INT_COEFF               0.25    //precip interception coefficient for Picea abies (0.3 see Tatarinov) (0.25 see Lawrence et al., 2007)
-SLA_AVG0               7.52     //Average Specific Leaf Area m^2/KgDM (MATURE) sunlit/shaded leaves for Picea abies 8 Rötzer et al., (2010), 7.52 Mund et al., 2002, (5.9) see Johansson, T. 1999
+SLA_AVG0                7.52    //Average Specific Leaf Area m^2/KgDM (MATURE) sunlit/shaded leaves for Picea abies 8 Rötzer et al., (2010), 7.52 Mund et al., 2002, (5.9) see Johansson, T. 1999
 SLA_AVG1                3.9     //Average Specific Leaf Area m^2/KgDM (juvenile) sunlit/shaded leaves for Picea abies 2 Rötzer et al., (2010), Konopka et al., 2014, (5.9) see Johansson, T. 1999
 TSLA                    30      //Age at which SLA_AVG = (SLA_AVG1 + SLA_AVG0 )/2 Forrester et al., 2017
 SLA_RATIO               2       //(DIM) ratio of shaded to sunlit projected SLA for Picea abies (see Pietsch)
@@ -27,7 +27,7 @@ MAXAGE                  300     //Determines rate of "physiological decline" of 
 RAGE                    0.95    //Relative Age to give fAGE = 0.5 0.95 for Picea abies Seidl et al., 2012
 NAGE                    4       //Power of relative Age in function for Age for Picea abies Seidl et al., 2012
 GROWTHTMIN              -4      //Minimum temperature for growth 0 for Picea abies from p.c. Seidl, -4 from Bossel 1996
-GROWTHTMAX              35 //30      //Maximum temperature for growth 35 for Picea abies from p.c. Seidl, 40 CANIF
+GROWTHTMAX              35      //Maximum temperature for growth 35 for Picea abies from p.c. Seidl, 40 CANIF
 GROWTHTOPT              18      //Optimum temperature for growth 17.5 for Picea abies from p.c. Seidl, 18 from Bossel 1996
 GROWTHSTART             200     //average temperature for starting growth in °C 
 MINDAYLENGTH            0       //minimum day length for deciduous
@@ -61,7 +61,7 @@ BUD_BURST               0       //days of bud burst at the beginning of growing 
 LEAF_FALL_FRAC_GROWING  0       //proportions of the growing season of leaf fall 
 LEAF_FINEROOT_TURNOVER  0.195   //Average YEARLY leaves and fine root turnover rate for Picea abies from Pietsch et al., 2005, 0.11 for Picea abies Seidl et al., 2012
 LIVE_WOOD_TURNOVER      0.7     //Annual yearly live wood turnover rate for Picea abies from Pietsch et al., 2005
-DBHDCMAX                0.40 //0.24    //Low Density for Picea abies 0.255 Seidl et al., 2012, 0.18 from Kalliovirta and Tokola 2005, 0.25 Bossel 1996, 0.20 Urban et al., 2012
+DBHDCMAX                0.40    //Low Density for Picea abies 0.255 Seidl et al., 2012, 0.18 from Kalliovirta and Tokola 2005, 0.25 Bossel 1996, 0.20 Urban et al., 2012
 DBHDCMIN                0.14    //High Density for P. sylvestris from Ameztegui et al., 2012 0.14, 0.2 from Grote 2001, 0.14 Urban et al., 2012
 SAP_A        0.851              //a value for Picea abies 0.851 deducted from  p.c. Kostner and Clausnitzer et al., 2011 CHECK IT!!!!!!!!!
 SAP_B        1.684              //b value for Picea abies 1.684 deducted from p.c. Kostner and Clausnitzer et al., 2011

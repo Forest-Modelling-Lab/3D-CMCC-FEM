@@ -151,7 +151,6 @@ void total_photosynthesis_biome (cell_t *const c, const int height, const int db
 	s->value[YEARLY_GPP_SUN]             += s->value[GPP_SUN];
 	s->value[YEARLY_GPP_SHADE]           += s->value[GPP_SHADE];
 
-
 	/* cell level */
 	c->daily_gpp                         += s->value[GPP];
 	c->monthly_gpp                       += s->value[GPP];
@@ -169,7 +168,7 @@ void total_photosynthesis_biome (cell_t *const c, const int height, const int db
 
 	/************************************************************************************************************************************/
 
-	/* compute actual quantum canopy efficiency (molC/molphotons PAR) */
+	/* test: compute actual quantum canopy efficiency (molC/molphotons PAR) */
 
 	if ( s->value[NET_ASSIMILATION]       > 0. ) s->value[ALPHA_EFF]          = ( s->value[NET_ASSIMILATION]       / GC_MOL ) / s->value[PAR];
 	else                                         s->value[ALPHA_EFF]          = 0.;
@@ -204,14 +203,14 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 		All other parameters, including the q10's for Kc and Ko are the same
 		as in Woodrow and Berry. */
 
-	static double Kc25   = 404;    /* (ubar) michaelis-menten const carboxylase, 25 deg C */
-	static double q10Kc  = 2.1;    /* (DIM) Q_10 for Kc */
-	static double Ko25   = 248.0;  /* (mbar) michaelis-menten const oxygenase, 25 deg C */
-	static double q10Ko  = 1.2;    /* (DIM) Q_10 for Ko */
-	static double act25  = 3.6;    /* (umol/mgRubisco/min) Rubisco activity at 25 C */
-	static double q10act = 2.4;    /* (DIM) Q_10 for Rubisco activity */
-	static double pabs   = 0.85;   /* (DIM) fraction of PAR effectively absorbed by photosytem II */
-	static double fnr    = 7.16;   /* g Rubisco/gN Rubisco weight proportion of rubisco relative to its N content Kuehn and McFadden (1969) */
+	static double Kc25          = 404;    /* (ubar) michaelis-menten const carboxylase, 25 deg C */
+	static double q10Kc         = 2.1;    /* (DIM) Q_10 for Kc */
+	static double Ko25          = 248.0;  /* (mbar) michaelis-menten const oxygenase, 25 deg C */
+	static double q10Ko         = 1.2;    /* (DIM) Q_10 for Ko */
+	static double act25         = 3.6;    /* (umol/mgRubisco/min) Rubisco activity at 25 C */
+	static double q10act        = 2.4;    /* (DIM) Q_10 for Rubisco activity */
+	static double pabsII_frac   = 0.85;   /* (DIM) fraction of PAR effectively absorbed by photosytem II */
+	static double fnr           = 7.16;   /* (DIM) g Rubisco/gN Rubisco weight proportion of rubisco relative to its N content Kuehn and McFadden (1969) */
 
 	/* local variables */
 	double Kc;                     /* (Pa) michaelis-menten constant for carboxylase reaction */
@@ -250,6 +249,9 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	/* begin by assigning local variables */
 
 	/* (umol/m2/s) day leaf m. resp, proj. area basis */
+	//note: BIOME-BGC assumes leaf main respiration during daylight as dark respiration
+	//note: 3D-CMCC following Dufrene et al. considers light inhibition phenomenon in the
+	//      daylight respiration routine
 	Rd  = leaf_day_mresp;
 
 	/* convert atmospheric CO2 from ppmV --> Pa */
@@ -374,8 +376,8 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 
 	/* calculate J = f(Jmax, ppfd), reference: de Pury and Farquhar 1997 Plant Cell and Env. */
 	var_a  = 0.7;
-	var_b  = -Jmax - (par_abs * pabs / ppe );
-	var_c  = Jmax  *  par_abs * pabs / ppe;
+	var_b  = -Jmax - (par_abs * pabsII_frac / ppe );
+	var_c  = Jmax  *  par_abs * pabsII_frac / ppe;
 
 	/* compute (umol RuBP/m2/s) rate of RuBP (ribulose-1,5-bisphosphate) regeneration */
 	J      = ( -var_b - sqrt ( var_b * var_b - 4. * var_a * var_c ) ) / ( 2. * var_a );

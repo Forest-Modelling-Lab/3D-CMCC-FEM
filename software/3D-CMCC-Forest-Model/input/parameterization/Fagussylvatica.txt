@@ -21,15 +21,15 @@ TRHO                     100  //Age at which rho = (RHOMIN + RHOMAX )/2
 FORM_FACTOR            0.433  //Form factor Seidl et al., 2012
 COEFFCOND               0.08  //Define stomatal responsee to VPD in mbar see Pietsch et al., 2005
 BLCOND                  0.01  //Canopy Boundary Layer conductance see 0.01 for stomatal Pietsch et al., 2005
-MAXCOND                0.005  //Maximum Stomatal Conductance in m/sec 0,005 for Tatarinov et al., 2006, 0.006 Pietsch, 0.003 Breuer et al., 2003
-CUTCOND                6e-05  //Cuticul conductance in m/sec for F sylvatica 0.000006 Tatarinov et al., 2006
+MAXCOND         0.006 //0.005  //Maximum Stomatal Conductance in m/sec 0,005 for Tatarinov et al., 2006, 0.006 Pietsch, 0.003 Breuer et al., 2003
+CUTCOND                6e-05  //Cuticular conductance in m/sec for F sylvatica 0.000006 Tatarinov et al., 2006
 MAXAGE                   400  //Determines rate of "physiological decline" of forest
 RAGE                    0.95  //Relative Age to give fAGE = 0.5
 NAGE                      10  //Power of relative Age in function for Age
 GROWTHTMIN                 0  //Minimum temperature for growth 5  Rasse et al 2001 0 from Williams 1996, -2 Hoffmann 1995
 GROWTHTMAX           40 //35  //Maximum temperature for growth 40 from Williams 1996 35 from calibration
 GROWTHTOPT                20  //Optimum temperature for growth 19.4 Rasse et al 2001, 20 from Lyr & Garbe, 1994, 22 Hoffmann 1995
-GROWTHSTART        80 // 100  //(5 °C)average temperature or (GDD) thermic sum for starting growth in °C 130 ettore with t base = 5°C, 130 from Hoffmann et al., 1995 
+GROWTHSTART     60 //80 //100  //(5 °C)average temperature or (GDD) thermic sum for starting growth in °C 130 ettore with t base = 5°C, 130 from Hoffmann et al., 1995 
 MINDAYLENGTH              12  //minimum day length for fagus from ettore, 12 through satellite images
 SWPOPEN                -0.34  //Leaf water potential: start of reduction for Fagus sylvatica -0.6 Mollicone et al., 2002, -0.34 Tatarinov et al., 2006
 SWPCLOSE                -2.2  //Leaf water potential: complete reduction for Fagus sylvatica -2.3 Mollicone et al., 2002, -2.2 Tatarinov et al., 2006
@@ -43,7 +43,7 @@ FINE_ROOT_LEAF         0.545  //allocation new fine root C:new leaf (ratio) 1.4 
 STEM_LEAF                3.8  //allocation new stem C:new leaf (ratio) 3.8 pietsch - 1 see Mollicone et al 2002, 2.71 Tatarinov
 COARSE_ROOT_STEM       0.36   //allocation new coarse root C:new stem (ratio) 0.36 see Mollicone et al 2002 0.15 Tatarinov
 LIVE_TOTAL_WOOD         0.13  //new live C:new total wood (ratio) 0.15 for deciduous P. Thornton pers. comm. (about 13%), 0.154 from Pietsch et al., 2015 20% Proportion of living cells in trunks for F. sylvatica from Dufrene et al., 2005, 20.6% Ceschia etal 2002
-N_RUBISCO                0.1  //Fraction of leaf N in Rubisco (ratio) Tatarinov, 0.162 Pietsch
+N_RUBISCO                0.162  //Fraction of leaf N in Rubisco (ratio) 0.1 Tatarinov, 0.162 Pietsch
 CN_LEAVES            20 //27  //CN of leaves (kgC/kgN) 27 for Tatarinov et al., 2006 20.3 for F. sylvatica from Mollicone et al., 2002, 19.52 ettore, 18.6 Campioli, 19.67 Guidolotti
 CN_FALLING_LEAVES         44  //CN of leaf litter (kgC/kgN) 38 for F. sylvatica from Mollicone et al., 2002, 
 CN_FINE_ROOTS             72  //CN of fine roots  (kgC/kgN) 72 for Tatarinov et al., 2006 112 for F. sylvatica from Mollicone et al., 2002, 38.28 ettore, 45 Campioli, 48 Hibbard et al., 2005
