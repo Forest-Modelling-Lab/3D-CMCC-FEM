@@ -58,7 +58,7 @@ void total_photosynthesis_biome (cell_t *const c, const int height, const int db
 		ps = Farquhar (c, s, meteo_daily, meteo_annual, cond_corr, leafN, par_abs, leaf_day_mresp, sun_shade);
 
 		/* gross assimilation and converting from umol/m2 leaf/sec gC/m2/day and to LAI for canopy computation */
-		/* note (from Biome-BGC): "for the final flux assignment, the assimilation output needs to have the maintenance respiration rate added..."
+		/* note (from Biome-BGC): "for the final flux assignment, the assimilation output needs to have the maintenance respiration rate added..." */
 		s->value[GROSS_ASSIMILATION_SUN]   = ( ps + leaf_day_mresp ) * s->value[LAI_SUN_PROJ] * meteo_daily->daylength_sec * GC_MOL * 1e-6;
 
 		/* net assimilation and converting from umol/m2 leaf/sec gC/m2/day and to LAI for canopy computation */
@@ -90,7 +90,7 @@ void total_photosynthesis_biome (cell_t *const c, const int height, const int db
 		ps = Farquhar (c, s, meteo_daily, meteo_annual, cond_corr, leafN, par_abs, leaf_day_mresp, sun_shade );
 
 		/* gross assimilation (photosynthesis) and converting from umol/m2 leaf/sec gC/m2/day and to LAI for canopy computation */
-		/* note (from Biome-BGC): "for the final flux assignment, the assimilation output needs to have the maintenance respiration rate added..."
+		/* note (from Biome-BGC): "for the final flux assignment, the assimilation output needs to have the maintenance respiration rate added..." */
 		s->value[GROSS_ASSIMILATION_SHADE] = ( ps + leaf_day_mresp ) * s->value[LAI_SHADE_PROJ] * meteo_daily->daylength_sec * GC_MOL * 1e-6;
 
 		/* net assimilation (photosynthesis) and converting from umol/m2 leaf/sec gC/m2/day and to LAI for canopy computation */
