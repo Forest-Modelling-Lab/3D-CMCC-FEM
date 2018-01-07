@@ -32,7 +32,9 @@ void total_photosynthesis_biome (cell_t *const c, const int height, const int db
 	species_t *s;
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
-	/* This function is a wrapper and replacement for the photosynthesis code which used to be in the central bgc.c code.  At Mott Jolly's request, all of the science code is being moved into funtions. */
+	/* This function is a wrapper and replacement for the photosynthesis code which used to be in the central bgc.c code */
+	/* note: the basis of this photosynthesis code is the DePury and Farquhar two-leaf model of photosynthesis
+	 * (Farquhar, Caemmerer et al. 1980; De Pury and Farquhar 1997).*/
 
 	/************************************************************************************************************************************/
 
@@ -41,7 +43,8 @@ void total_photosynthesis_biome (cell_t *const c, const int height, const int db
 		/* SUNLIT canopy fraction photosynthesis per unit area */
 		sun_shade = 0;
 
-		/* convert conductance from m/s --> umol/m2/s/Pa, and correct for CO2 vs. water vapor */
+		/* convert conductance from m/s --> umol/m2/s/Pa, and correct for CO2 vs. water vapor
+		(see for correction also Nobel 1991; Jones 1992 and Landsberg and Sands book pg 54) */
 		cond_corr                    = s->value[LEAF_SUN_CONDUCTANCE] * 1e6 / ( 1.6 * Rgas * ( meteo_daily->tday + TempAbs ) );
 
 		/* convert Leaf Nitrogen from tN/cell --> to gN/m2 */
@@ -74,7 +77,8 @@ void total_photosynthesis_biome (cell_t *const c, const int height, const int db
 		/* SHADED canopy fraction photosynthesis per unit area */
 		sun_shade = 1;
 
-		/* convert conductance from m/s --> umol/m2/s/Pa, and correct for CO2 vs. water vapor */
+		/* convert conductance from m/s --> umol/m2/s/Pa, and correct for CO2 vs. water vapor
+		(see for correction also Nobel 1991; Jones 1992 and Landsberg and Sands book pg 54) */
 		cond_corr                    = s->value[LEAF_SHADE_CONDUCTANCE] * 1e6 / ( 1.6 * Rgas * ( meteo_daily->tday + TempAbs ) );
 
 		/* convert Leaf Nitrogen from tN/cell --> to gN/m2 */
@@ -209,7 +213,7 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 
 	static double Kc25          = 404;    /* (ubar) michaelis-menten const carboxylase, 25 deg C */
 	static double q10Kc         = 2.1;    /* (DIM) Q_10 for Kc */
-	static double Ko25          = 248.0;  /* (mbar) michaelis-menten const oxygenase, 25 deg C */
+	static double Ko25          = 248;   /* (mbar) michaelis-menten const oxygenase, 25 deg C */
 	static double q10Ko         = 1.2;    /* (DIM) Q_10 for Ko */
 	static double act25         = 3.6;    /* (umol/mgRubisco/min) Rubisco activity at 25 C */
 	static double q10act        = 2.4;    /* (DIM) Q_10 for Rubisco activity */
@@ -268,6 +272,7 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	O2  = (O2CONC / 100. ) * meteo_daily->air_pressure;
 
 	/*******************************************************************************/
+	/* the enzyme kinetics built into this model are based on Woodrow and Berry (1988) */
 
 	/* correct kinetic constants for temperature, and do unit conversions */
 	Ko  = Ko25 * pow ( q10Ko , ( meteo_daily->tday - 25. ) / 10. );
@@ -336,7 +341,7 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 		Vcmax = leafN * s->value[N_RUBISCO] * fnr * act;
 	}
 #else
-	//note: original version of the BIOME-BGC original code
+	//note: original version of the BIOME-BGC code
 	Vcmax = leafN * s->value[N_RUBISCO] * fnr * act;
 #endif
 
@@ -362,7 +367,7 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 		Jmax = beta * Vcmax;
 	}
 #else
-	//note: original version of the BIOME-BGC original code
+	//note: original version of the BIOME-BGC code
 	/* a simplifying assumption that empirically relates the maximum rate of electron transport to maximum carboxylation velocity
 	 * see:
 	 * Wullschleger (1993)
