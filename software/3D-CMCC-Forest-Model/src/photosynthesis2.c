@@ -54,13 +54,13 @@ void total_photosynthesis_biome (cell_t *const c, const int height, const int db
 		//note: since absorbed radiation is scaled to the 24 hours also leaf day resp should be scaled to 24 hours
 		leaf_day_mresp               = ( s->value[DAILY_LEAF_SUN_MAINT_RESP] / ( 86400. * GC_MOL * 1e-6 ) ) / s->value[LAI_SUN_PROJ];
 
-		/* convert absorbed par per projected lai molPAR/m2/day --> umol/m2/sec */
+		/* convert absorbed par per projected LAI molPAR/m2/day --> umol/m2/sec */
 		par_abs                      = ( s->value[APAR_SUN] * 1e6 / 86400. ) / s->value[LAI_SUN_PROJ];
 
 		/* call Farquhar for sun leaves leaves photosynthesis */
 		psn = Farquhar (c, s, meteo_daily, meteo_annual, cond_corr, leafN, par_abs, leaf_day_mresp, sun_shade);
 
-		/* gross assimilation and converting from umol/m2 leaf/sec gC/m2/day and to LAI for canopy computation */
+		/* Canopy gross assimilation and converting from umol/m2 leaf/sec gC/m2/day and to LAI for canopy computation */
 		/* note (from Biome-BGC): "for the final flux assignment, the assimilation output needs to have the maintenance respiration rate added..." */
 		s->value[GROSS_ASSIMILATION_SUN]   = ( psn + leaf_day_mresp ) * s->value[LAI_SUN_PROJ] * meteo_daily->daylength_sec * GC_MOL * 1e-6;
 
@@ -88,13 +88,13 @@ void total_photosynthesis_biome (cell_t *const c, const int height, const int db
 		//note: since absorbed radiation is scaled to the 24 hours also leaf day resp should be scaled to 24 hours
 		leaf_day_mresp               = ( s->value[DAILY_LEAF_SHADE_MAINT_RESP] / ( 86400. * GC_MOL * 1e-6 ) ) / s->value[LAI_SHADE_PROJ];
 
-		/* convert absorbed par per projected lai molPAR/m2/day --> umol/m2/sec */
+		/* convert absorbed par per projected LAI molPAR/m2/day --> umol/m2/sec */
 		par_abs                      = ( s->value[APAR_SHADE] * 1e6 / 86400. ) / s->value[LAI_SHADE_PROJ];
 
 		/* call Farquhar for shade leaves photosynthesis */
 		psn = Farquhar (c, s, meteo_daily, meteo_annual, cond_corr, leafN, par_abs, leaf_day_mresp, sun_shade );
 
-		/* gross assimilation (photosynthesis) and converting from umol/m2 leaf/sec gC/m2/day and to LAI for canopy computation */
+		/* Canopy gross assimilation (photosynthesis) and converting from umol/m2 leaf/sec gC/m2/day and to LAI for canopy computation */
 		/* note (from Biome-BGC): "for the final flux assignment, the assimilation output needs to have the maintenance respiration rate added..." */
 		s->value[GROSS_ASSIMILATION_SHADE] = ( psn + leaf_day_mresp ) * s->value[LAI_SHADE_PROJ] * meteo_daily->daylength_sec * GC_MOL * 1e-6;
 
@@ -217,8 +217,9 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	static double q10Ko         = 1.2;    /* (DIM) Q_10 for Ko */
 	static double act25         = 3.6;    /* (umol/mgRubisco/min) Rubisco activity at 25 C */
 	static double q10act        = 2.4;    /* (DIM) Q_10 for Rubisco activity */
-	static double pabsII_frac   = 0.85;   /* (DIM) fraction of PAR effectively absorbed by photosytem II */
+	static double pabsII_frac   = 0.85;   /* (DIM) fraction of PAR effectively absorbed by photosytem II (leaf absorptance) */
 	static double fnr           = 7.16;   /* (DIM) g Rubisco/gN Rubisco weight proportion of rubisco relative to its N content Kuehn and McFadden (1969) */
+	static double curv_resp     = 0.7;    /* curvature of the response of the electron transport to irradiance (DePury and Farquhar, 1997) */
 
 	/* local variables */
 	double Kc;                     /* (Pa) michaelis-menten constant for carboxylase reaction */
@@ -246,12 +247,16 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	/*
 	 * some parameter values (to be included in species.txt):
 	 * Vcmax = 55 (umol/m2/sec) for fagus see Deckmyn et al., 2004 GCB
-	 * Jmax  = 100 (umol/m2/sec) for fagus see Deckmyn et al., 2004 GCB
-	 * Vcmax = 72 (mmol/m2/sec) for p. sylvestris see Sampson et al., 2001
-	 * beta  = 2.48 for p. sylvestris see Samspon et al., (2006)
-	 * beta  = 2.42 for Q. robur see Samspon et al., (2006)
+	 * Vcmax = 36.21 (umol/m2/sec) for fagus see Scartazza et al., 2015
 	 * Vcmax = 26.66 (umolCO2/m2/sec) for p. sylvestris see Sampson et al., (2006)
 	 * Vcmax = 33.7 (umolCO2/m2/sec) for q. robur see Samspon et al. (2006)
+	 * Vcmax = 72 (mmol/m2/sec) for p. sylvestris see Sampson et al., 2001
+	 * Jmax  = 100 (umol/m2/sec) for fagus see Deckmyn et al., 2004 GCB
+	 * Jmax  = 104 (umol/m2/sec) for fagus see Scartazza et al., 2015
+	 * beta  = 2.48 for p. sylvestris see Samspon et al., (2006)
+	 * beta  = 2.42 for Q. robur see Samspon et al., (2006)
+	 * beta  = 2.8 for F. sylvatica see Scartazza et al., 2015
+
 	 */
 
 	/* begin by assigning local variables */
@@ -373,6 +378,8 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	 * Wullschleger (1993)
 	 * Field (1983)
 	 * Harley et al., (1992)
+	 * Watanabe et al., (1994)
+	 * DePury and Farquhar (1997)
 	 * Medlyn et al., (1999)
 	 * Peterson et al., (1999)
 	 * Liozon et al., (2000)*/
@@ -382,11 +389,11 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 
 	/******************************************************************************************************************************/
 
-
+	/* irradiance dependence of electron transport */
 	/* calculate J = f(Jmax, ppfd), reference: de Pury and Farquhar 1997 Plant Cell and Env. */
-	var_a  = 0.7;
+	var_a  = curv_resp;
 	var_b  = -Jmax - (par_abs * pabsII_frac / ppe );
-	var_c  = Jmax  *  par_abs * pabsII_frac / ppe;
+	var_c  =  Jmax *  par_abs * pabsII_frac / ppe;
 
 	/* compute (umol RuBP/m2/s) rate of RuBP (ribulose-1,5-bisphosphate) regeneration */
 	J      = ( -var_b - sqrt ( var_b * var_b - 4. * var_a * var_c ) ) / ( 2. * var_a );
