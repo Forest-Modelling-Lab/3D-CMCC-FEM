@@ -217,17 +217,18 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	static double q10Ko         = 1.2;    /* (DIM) Q_10 for Ko */
 	static double act25         = 3.6;    /* (umol/mgRubisco/min) Rubisco activity at 25 C */
 	static double q10act        = 2.4;    /* (DIM) Q_10 for Rubisco activity */
-	static double pabsII_frac   = 0.85;   /* (DIM) fraction of PAR effectively absorbed by photosytem II (leaf absorptance) */
+	static double pabsII_frac   = 0.85;   /* (DIM) fraction of PAR effectively absorbed by photosytem II (leaf absorptance); 0.8 for Bonan et al., 2011 */
 	static double fnr           = 7.16;   /* (DIM) g Rubisco/gN Rubisco weight proportion of rubisco relative to its N content Kuehn and McFadden (1969) */
-	static double curv_resp     = 0.7;    /* curvature of the response of the electron transport to irradiance (DePury and Farquhar, 1997) */
+	static double omega         = 0.7;    /* (DIM) curvature of the response of the electron transport to irradiance (DePury and Farquhar, 1997, Bonan et al., 2011) */
 
 	/* local variables */
 	double Kc;                     /* (Pa) michaelis-menten constant for carboxylase reaction */
 	double Ko;                     /* (Pa) michaelis-menten constant for oxygenase reaction */
 	double act;                    /* (umol CO2/kgRubisco/s) Rubisco activity scaled by temperature and [O2] and [CO2] */
 	double Jmax;                   /* (umol/m2/s) max rate electron transport */
-	double ppe;                    /* (mol/mol) photons absorbed by PSII per e- transported */
+	double ppe;                    /* (mol e- /mol photons) photons absorbed by PSII per e- transported (quantum yield of electron transport) */
 	double Vcmax;                  /* (umol/m2/s) max rate carboxylation */
+	double pabsII;                 /* (molPAR/m2/sec) PAR effectively absorbed by the phosystemII */
 	double J;                      /* (umol/m2/s) rate of RuBP (ribulose-1,5-bisphosphate) regeneration */
 	double gamma;                  /* (Pa) CO2 compensation point without dark respiration */
 	double Ca;                     /* (Pa) atmospheric [CO2] pressure */
@@ -241,7 +242,7 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 
 	//todo todo todo todo todo move in species.txt (this should be the only variable for all photosynthesis)
 	// double beta = 1.67; /* Jmax:Vcmax note: in Medlyn et al., 2002*/
-	double beta       = 2.1; /* ratio between Vcmax and Jmax for fagus see Liozon et al., (2000) and Castanea */
+	double beta       = 2.1; /* ratio between Vcmax and Jmax see dePury and Farquhar 1997; for fagus see Liozon et al., (2000) and Castanea */
 	double test_Vcmax = 55 ; /* (umol/m2/sec) Vcmax for fagus see Deckmyn et al., 2004 GCB */
 	double test_Jmax  = 100; /* (umol/m2/sec) Jmax for fagus see Deckmyn et al., 2004 GCB */
 	/*
@@ -270,8 +271,8 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	/* convert atmospheric CO2 from ppmV --> Pa */
 	Ca  = meteo_annual->co2Conc * meteo_daily->air_pressure / 1e6;
 
-	/* set parameters for C3 */
-	ppe = 2.6;
+	/* set quantum yield for electron transport for C3 as in DePury and Farquhar 1997 */
+	ppe = 2.6; /* is equivalent to 0.38 (mol electrons mol-1 photons) */
 
 	/* calculate atmospheric O2 in Pa, assumes 20.9% O2 by volume */
 	O2  = (O2CONC / 100. ) * meteo_daily->air_pressure;
@@ -295,22 +296,19 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 		act = act25 * pow ( 1.8 * q10act, ( meteo_daily->tday - 15. ) / 10.) / q10act;
 	}
 
+	/* convert Kc ubar --> Pa */
+	Kc *= 0.1;
 
-	Kc *= 0.1;                  /* ubar --> Pa */
-
-	/*******************************************************************************/
-
-	//test try with Arrhenius
-	/* Arrhenius approach */
-
-	/*******************************************************************************/
-
-	/* Convert rubisco activity units from umol/mgRubisco/min -> umol/gRubisco/s */
+	/* convert rubisco activity units from umol/mgRubisco/min -> umol/gRubisco/s */
 	act = act  * 1e3 / 60.;
+
+	/******************************************************************************************************************************/
 
 	/* calculate gamma (Pa) CO2 compensation point due to photorespiration, in the absence of maint (or dark?) respiration */
 	/* it assumes Vomax/Vcmax = 0.21; Badger & Andrews (1974) */
 	gamma = 0.5 * 0.21 * Kc * O2 / Ko;
+
+	/******************************************************************************************************************************/
 
 	/* calculate Vmax from leaf nitrogen data and Rubisco activity */
 
@@ -320,8 +318,6 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 
 	     (lnc)  X  (flnr)  X  (fnr)  X   (act)     =    (Vmax)
 	*/
-
-	/******************************************************************************************************************************/
 
 	/* calculate Vcmax (umol CO2/m2/s) max rate of carboxylation from leaf nitrogen data and Rubisco activity */
 	/* see:
@@ -382,7 +378,9 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	 * DePury and Farquhar (1997)
 	 * Medlyn et al., (1999)
 	 * Peterson et al., (1999)
-	 * Liozon et al., (2000)*/
+	 * Liozon et al., (2000)
+	 * Leuning et al., (2002)
+	 * Bonan et al., (2011)*/
 
 	Jmax = beta * Vcmax;
 #endif
@@ -390,13 +388,26 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	/******************************************************************************************************************************/
 
 	/* irradiance dependence of electron transport */
-	/* calculate J = f(Jmax, ppfd), reference: de Pury and Farquhar 1997 Plant Cell and Env. */
-	var_a  = curv_resp;
-	var_b  = -Jmax - (par_abs * pabsII_frac / ppe );
-	var_c  =  Jmax *  par_abs * pabsII_frac / ppe;
+	/* from the equation of de Pury and Farquhar (1997) Plant Cell and Env.*/
+	/*
+	 *
+	   omega J^2 - (pabsII + Jmax) J + pabsII Jmax = 0
+
+	*/
+
+	/* compute PAR effectively absorbed by photosystem II */
+	pabsII = par_abs * pabsII_frac / ppe;
+
+	/* calculate J = f(Jmax, ppfd) */
+	/* smaller root of the quadratic solution to the following equation */
+	var_a  = omega;
+	var_b  = -Jmax - pabsII;
+	var_c  =  Jmax * pabsII;
 
 	/* compute (umol RuBP/m2/s) rate of RuBP (ribulose-1,5-bisphosphate) regeneration */
 	J      = ( -var_b - sqrt ( var_b * var_b - 4. * var_a * var_c ) ) / ( 2. * var_a );
+
+	/******************************************************************************************************************************/
 
 	/* solve for Av and Aj using the quadratic equation, substitution for Ci
 		from A = g(Ca-Ci) into the equations from Farquhar and von Caemmerer:
@@ -442,7 +453,6 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	A = MIN ( Av, Aj );
 
 	/* compute (Pa) intercellular [CO2] */
-	//fixme currently not used ?
 	Ci = Ca - ( A / cond_corr );
 
 	/* compute assimilation (umol/m2/s) */
