@@ -11,7 +11,7 @@ SLA_AVG0                7.52    //Average Specific Leaf Area m^2/KgDM (MATURE) s
 SLA_AVG1                3.9     //Average Specific Leaf Area m^2/KgDM (juvenile) sunlit/shaded leaves for Picea abies 2 Rötzer et al., (2010), Konopka et al., 2014, (5.9) see Johansson, T. 1999
 TSLA                    30      //Age at which SLA_AVG = (SLA_AVG1 + SLA_AVG0 )/2 Forrester et al., 2017
 SLA_RATIO               2       //(DIM) ratio of shaded to sunlit projected SLA for Picea abies (see Pietsch)
-LAI_RATIO               2.6     /(DIM) all-sided to projected leaf area ratio from Mollicone et al., 2002
+LAI_RATIO               2.6     //(DIM) all-sided to projected leaf area ratio from Mollicone et al., 2002
 FRACBB0                 0.6     //Branch and Bark fraction at age 0 for P. sylvestris, from Xenakis et al., 2008, 0.29 deducted for P. sylvestris from Yuste et al., 2005, 0.29 from Lehtonen et al., 2004 For Eco Manag, 0.71 from xiao and Ceulemans
 FRACBB1                 0.1     //Branch and Bark fraction for mature stands for P. sylvestris, from Xenakis et al., 2008, 0.29 deducted for P. sylvestris from Yuste et al., 2005, 0.29 from Lehtonen et al., 2004 For Eco Manag, 0.18 from Jenssen et al 1999, 0.77 from xiao and Ceulemans
 TBB                     0.3     //Age at which fracBB = (FRACBB0 + FRACBB1 )/ 2 for P. sylvestris, from Xenakis et al., 2008
@@ -63,8 +63,8 @@ LEAF_FINEROOT_TURNOVER  0.195   //Average YEARLY leaves and fine root turnover r
 LIVE_WOOD_TURNOVER      0.7     //Annual yearly live wood turnover rate for Picea abies from Pietsch et al., 2005
 DBHDCMAX                0.40    //Low Density for Picea abies 0.255 Seidl et al., 2012, 0.18 from Kalliovirta and Tokola 2005, 0.25 Bossel 1996, 0.20 Urban et al., 2012
 DBHDCMIN                0.14    //High Density for P. sylvestris from Ameztegui et al., 2012 0.14, 0.2 from Grote 2001, 0.14 Urban et al., 2012
-SAP_A        0.851              //a value for Picea abies 0.851 deducted from  p.c. Kostner and Clausnitzer et al., 2011 CHECK IT!!!!!!!!!
-SAP_B        1.684              //b value for Picea abies 1.684 deducted from p.c. Kostner and Clausnitzer et al., 2011
+SAP_A                   0.851   //a value for Picea abies 0.851 deducted from  p.c. Kostner and Clausnitzer et al., 2011 CHECK IT!!!!!!!!!
+SAP_B                   1.684   //b value for Picea abies 1.684 deducted from p.c. Kostner and Clausnitzer et al., 2011
 SAP_LEAF                3500    //sapwood_max leaf area ratio in pipe model for Picea abies varying from 2600 to 4800 from Kostner et al., 2002 Tree Phys CHECK IT!!!!!!!!!
 SAP_WRES                0.05    //Sapwood-Reserve biomass ratio used if no Wres data are available 0.11 for deciduous 0.05 for evergreen see Schwalm and Ek, 2004 Ecological Modelling
 STEMCONST_P             0.127   //a parameter for allometric equation for P. abies from Siedl et al., 2012, 0.04 for P. abies from Pokorny & Tomaskova 2007

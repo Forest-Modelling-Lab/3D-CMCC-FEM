@@ -47,14 +47,14 @@ void total_photosynthesis_biome (cell_t *const c, const int height, const int db
 		(see for correction also Nobel 1991; Jones 1992 and Landsberg and Sands book pg 54) */
 		cond_corr                    = s->value[LEAF_SUN_CONDUCTANCE] * 1e6 / ( 1.6 * Rgas * ( meteo_daily->tday + TempAbs ) );
 
-		/* convert Leaf Nitrogen from tN/cell --> to gN/m2 */
+		/* convert Leaf Nitrogen from tN/cell --> to gN m-2 one-sided leaf area */
 		leafN                        = ( s->value[LEAF_SUN_N] * 1e6 / g_settings->sizeCell ) / s->value[LAI_SUN_PROJ];
 
 		/* convert from mass to molar units, and from a daily rate to a rate per second (umol/m2/s) */
 		//note: since absorbed radiation is scaled to the 24 hours also leaf day resp should be scaled to 24 hours
 		leaf_day_mresp               = ( s->value[DAILY_LEAF_SUN_MAINT_RESP] / ( 86400. * GC_MOL * 1e-6 ) ) / s->value[LAI_SUN_PROJ];
 
-		/* convert absorbed par per projected LAI molPAR/m2/day --> umol/m2/sec */
+		/* convert absorbed par per projected LAI molPAR/m2/day --> umol/m-2 one-sided leaf area/sec */
 		par_abs                      = ( s->value[APAR_SUN] * 1e6 / 86400. ) / s->value[LAI_SUN_PROJ];
 
 		/* call Farquhar for sun leaves leaves photosynthesis */
@@ -81,14 +81,14 @@ void total_photosynthesis_biome (cell_t *const c, const int height, const int db
 		(see for correction also Nobel 1991; Jones 1992 and Landsberg and Sands book pg 54) */
 		cond_corr                    = s->value[LEAF_SHADE_CONDUCTANCE] * 1e6 / ( 1.6 * Rgas * ( meteo_daily->tday + TempAbs ) );
 
-		/* convert Leaf Nitrogen from tN/cell --> to gN/m2 */
+		/* convert Leaf Nitrogen from tN/cell --> to gN m-2 one-sided leaf area */
 		leafN                        = ( s->value[LEAF_SHADE_N] * 1e6 / g_settings->sizeCell ) / s->value[LAI_SHADE_PROJ];
 
 		/* convert from mass to molar units, and from a daily rate to a rate per second (umol/m2/s) */
 		//note: since absorbed radiation is scaled to the 24 hours also leaf day resp should be scaled to 24 hours
 		leaf_day_mresp               = ( s->value[DAILY_LEAF_SHADE_MAINT_RESP] / ( 86400. * GC_MOL * 1e-6 ) ) / s->value[LAI_SHADE_PROJ];
 
-		/* convert absorbed par per projected LAI molPAR/m2/day --> umol/m2/sec */
+		/* convert absorbed par per projected LAI molPAR/m2/day --> umol/m-2 one-sided leaf area/sec */
 		par_abs                      = ( s->value[APAR_SHADE] * 1e6 / 86400. ) / s->value[LAI_SHADE_PROJ];
 
 		/* call Farquhar for shade leaves photosynthesis */
@@ -211,15 +211,15 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 		All other parameters, including the q10's for Kc and Ko are the same
 		as in Woodrow and Berry. */
 
-	static double Kc25          = 404;    /* (ubar) michaelis-menten const carboxylase, 25 deg C */
-	static double q10Kc         = 2.1;    /* (DIM) Q_10 for Kc */
-	static double Ko25          = 248;   /* (mbar) michaelis-menten const oxygenase, 25 deg C */
+	static double Kc25          = 404;    /* (ubar) michaelis-menten const carboxylase, 25 deg C  Badger and Collatz value*/
+	static double q10Kc         = 2.1;    /* (DIM) Q_10 for Kc Badger and Collatz value */
+	static double Ko25          = 248;    /* (mbar) michaelis-menten const oxygenase, 25 deg C Badger and Collatz value */
 	static double q10Ko         = 1.2;    /* (DIM) Q_10 for Ko */
-	static double act25         = 3.6;    /* (umol/mgRubisco/min) Rubisco activity at 25 C */
-	static double q10act        = 2.4;    /* (DIM) Q_10 for Rubisco activity */
+	static double act25         = 3.6;    /* (umol/mgRubisco/min) Rubisco activity at 25 C Badger and Collatz value */
+	static double q10act        = 2.4;    /* (DIM) Q_10 for Rubisco activity Badger and Collatz value */
 	static double pabsII_frac   = 0.85;   /* (DIM) fraction of PAR effectively absorbed by photosytem II (leaf absorptance); 0.8 for Bonan et al., 2011 */
 	static double fnr           = 7.16;   /* (DIM) g Rubisco/gN Rubisco weight proportion of rubisco relative to its N content Kuehn and McFadden (1969) */
-	static double omega         = 0.7;    /* (DIM) curvature of the response of the electron transport to irradiance (DePury and Farquhar, 1997, Bonan et al., 2011) */
+	static double theta         = 0.7;    /* (DIM) curvature of the light-response curve of electron transport (DePury and Farquhar, 1997, Bonan et al., 2011) */
 
 	/* local variables */
 	double Kc;                     /* (Pa) michaelis-menten constant for carboxylase reaction */
@@ -227,7 +227,7 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	double act;                    /* (umol CO2/kgRubisco/s) Rubisco activity scaled by temperature and [O2] and [CO2] */
 	double Jmax;                   /* (umol/m2/s) max rate electron transport */
 	double ppe;                    /* (mol e- /mol photons) photons absorbed by PSII per e- transported (quantum yield of electron transport) */
-	double Vcmax;                  /* (umol/m2/s) max rate carboxylation */
+	double Vcmax;                  /* (umol/m2/s) Leaf-scale maximum carboxylation rate, 25°C */
 	double pabsII;                 /* (molPAR/m2/sec) PAR effectively absorbed by the phosystemII */
 	double J;                      /* (umol/m2/s) rate of RuBP (ribulose-1,5-bisphosphate) regeneration */
 	double gamma;                  /* (Pa) CO2 compensation point without dark respiration */
@@ -306,6 +306,7 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 
 	/* calculate gamma (Pa) CO2 compensation point due to photorespiration, in the absence of maint (or dark?) respiration */
 	/* it assumes Vomax/Vcmax = 0.21; Badger & Andrews (1974) */
+	/* 0.5 because with 1 mol of oxygenations assumed to release 0.5 molCO2 by glycine decarboxilation (Farquhar and Busch 2017) */
 	gamma = 0.5 * 0.21 * Kc * O2 / Ko;
 
 	/******************************************************************************************************************************/
@@ -324,9 +325,10 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	 * Woodrow and Berry (1988)
 	 * Field (1983)
 	 * Harley et al., (1992)
-	 * Medlyn et al., (1999)*/
+	 * Medlyn et al., (1999)
+	 * */
 
-#if 0
+#if 0 //not currently used
 	//note: modified version of the BIOME-BGC original code
 	if ( /*s->value[VCMAX]*/ test_Vcmax != NO_DATA )
 	{
@@ -342,7 +344,11 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 		Vcmax = leafN * s->value[N_RUBISCO] * fnr * act;
 	}
 #else
-	//note: original version of the BIOME-BGC code
+	/* "V cmax is more realistically formulated as a dynamic quantity that depends on the leaf area–based concentration of Rubisco and the enzyme activity"
+	 * references:
+	 * Niinemets and Tenhunen 1997
+	 * Thornton and Zimmermann 2007
+	 * */
 	Vcmax = leafN * s->value[N_RUBISCO] * fnr * act;
 #endif
 
@@ -353,6 +359,7 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	/* compute (umol electrons/m2/s) max rate electron transport */
 
 #if 0
+	//not currently used
 	//note: modified version of the BIOME-BGC original code
 	if ( /* s->value[JMAX] */ test_Jmax != NO_DATA )
 	{
@@ -387,11 +394,11 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 
 	/******************************************************************************************************************************/
 
-	/* irradiance dependence of electron transport */
+	/* irradiance dependence of electron transport (the "non-rectangular hyperbola") */
 	/* from the equation of de Pury and Farquhar (1997) Plant Cell and Env.*/
 	/*
 	 *
-	   omega J^2 - (pabsII + Jmax) J + pabsII Jmax = 0
+	   theta J^2 - (pabsII + Jmax) J + pabsII Jmax = 0
 
 	*/
 
@@ -400,7 +407,7 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 
 	/* calculate J = f(Jmax, ppfd) */
 	/* smaller root of the quadratic solution to the following equation */
-	var_a  = omega;
+	var_a  = theta;
 	var_b  = -Jmax - pabsII;
 	var_c  =  Jmax * pabsII;
 
@@ -424,7 +431,7 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 
 	/* quadratic solution for Av */
 	var_a =  -1. / cond_corr;
-	var_b = Ca + ( Vcmax - Rd ) / cond_corr + Kc * (1. + O2 / Ko );
+	var_b = Ca + ( Vcmax - Rd ) / cond_corr + Kc * ( 1. + O2 / Ko );
 	var_c = Vcmax * ( gamma - Ca ) + Rd * ( Ca + Kc * ( 1. + O2 / Ko ) );
 	det   = var_b * var_b - 4. * var_a * var_c;
 
@@ -437,8 +444,8 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 
 	/* quadratic solution for Aj */
 	var_a = -4.5 / cond_corr;
-	var_b = 4.5 * Ca + 10.5 * gamma + J/cond_corr - 4.5 * Rd / cond_corr;
-	var_c = J * ( gamma - Ca ) + Rd * ( 4.5 * Ca + 10.5 * gamma);
+	var_b = 4.5 * Ca + 10.5 * gamma + J / cond_corr - 4.5 * Rd / cond_corr;
+	var_c = J * ( gamma - Ca ) + Rd * ( 4.5 * Ca + 10.5 * gamma );
 	det   = var_b * var_b - 4. * var_a * var_c;
 
 	/* check condition */
