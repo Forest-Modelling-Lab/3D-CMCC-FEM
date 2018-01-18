@@ -2394,10 +2394,10 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 
 								logger(g_annual_log,
 										",GPP"
-										",A_SUN/Av_SUN"
-										",A_SUN/Aj_SUN"
-										",A_SHADE/Av_SHADE"
-										",A_SHADE/Aj_SHADE"
+										",Av_SUN:A_SUN"
+										",Aj_SUN:A_SUN"
+										",Av_SHADE:A_SHADE"
+										",Aj_SHADE:A_SHADE"
 										",GR"
 										",MR"
 										",RA"
