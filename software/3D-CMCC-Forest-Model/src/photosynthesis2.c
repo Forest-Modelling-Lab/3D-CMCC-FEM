@@ -445,8 +445,9 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	var_a = -4.5 / cond_corr;
 	var_b = 4.5 * Ca + 10.5 * gamma + J / cond_corr - 4.5 * Rd / cond_corr;
 	var_c = J * ( gamma - Ca ) + Rd * ( 4.5 * Ca + 10.5 * gamma );
-	det   = var_b * var_b - 4. * var_a * var_c;
 
+
+	det   = var_b * var_b - 4. * var_a * var_c;
 	/* check condition */
 	CHECK_CONDITION( det , <, 0.0);
 
