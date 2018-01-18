@@ -374,7 +374,6 @@ void reset_daily_class_variables(cell_t *const c)
 					s->value[NPP_tC] =                    0.;
 					s->value[C_FLUX] =                    0.;
 					s->value[CUE] =                       0.;
-
 					s->value[GROSS_ASSIMILATION] =        0.;
 					s->value[GROSS_ASSIMILATION_SUN] =    0.;
 					s->value[GROSS_ASSIMILATION_SHADE] =  0.;
@@ -650,6 +649,14 @@ void reset_annual_class_variables(cell_t *const c)
 					s->value[FRUIT_N_TO_REMOVE] =           0.;
 					s->value[CROOT_N_TO_REMOVE] =           0.;
 					s->value[BRANCH_N_TO_REMOVE] =          0.;
+
+
+					s->value[YEARLY_A_SUN] =                0.;
+					s->value[YEARLY_Av_SUN] =               0.;
+					s->value[YEARLY_Aj_SUN] =               0.;
+					s->value[YEARLY_A_SHADE] =              0.;
+					s->value[YEARLY_Av_SHADE] =             0.;
+					s->value[YEARLY_Aj_SHADE] =             0.;
 
 					/*reset cumulative values*/
 					s->counter[LEAF_FALL_COUNTER] =         0;

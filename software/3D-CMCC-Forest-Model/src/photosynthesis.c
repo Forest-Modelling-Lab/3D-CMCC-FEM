@@ -11,9 +11,6 @@
 
 extern settings_t* g_settings;
 
-#define CO2_MODIFIER  1 /* 0 for Wang et al., 2016 CO2 modifier, 1 for Veroustraete CO2 modifier */
-
-
 void photosynthesis(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, const meteo_annual_t *const meteo_annual)
 {
 	double Alpha_C;
@@ -27,17 +24,33 @@ void photosynthesis(cell_t *const c, const int layer, const int height, const in
 	double Lue_sun_max;
 	double Lue_shade;
 	double Lue_shade_max;
+	static int modifier_list;
 
 	species_t *s;
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
-#if CO2_MODIFIER
+	modifier_list = 1; /* 0 for Veroustraete; 1 for Franks */
 
-	if (s->value[ALPHA] != NO_DATA)
+	/* selection for CO2 modifier to be used */
+	switch( modifier_list )
+	{
+	case 0:
+
+		s->value[F_CO2] = s->value[F_CO2_VER];
+		break;
+	case 1:
+
+		s->value[F_CO2] = s->value[F_CO2_FRANKS];
+
+		break;
+	}
+
+
+	if ( s->value[ALPHA] != NO_DATA )
 	{
 		/* compute effective light use efficiency */
 		//fixme use or not s->value[F_CO2_TR]???????
-		Alpha_C   = s->value[ALPHA] * s->value[F_CO2_VER] * s->value[F_NUTR] * s->value[F_T] * s->value[PHYS_MOD] /* * s->value[F_CO2_TR] */;
+		Alpha_C   = s->value[ALPHA] * s->value[F_CO2] * s->value[F_NUTR] * s->value[F_T] * s->value[PHYS_MOD] /* * s->value[F_CO2_TR] */;
 
 		/* molC/molPAR/m2/day --> gC/MJ/m2/day */
 		Epsilon_C = Alpha_C * MOLPAR_MJ * GC_MOL;
@@ -46,7 +59,7 @@ void photosynthesis(cell_t *const c, const int layer, const int height, const in
 	{
 		/* compute effective light use efficiency */
 		//fixme use or not s->value[F_CO2_TR]???????
-		Epsilon_C = s->value[EPSILONgCMJ] * s->value[F_CO2_VER] * s->value[F_NUTR] * s->value[F_T] * s->value[PHYS_MOD] /* * s->value[F_CO2_TR] */;
+		Epsilon_C = s->value[EPSILONgCMJ] * s->value[F_CO2] * s->value[F_NUTR] * s->value[F_T] * s->value[PHYS_MOD] /* * s->value[F_CO2_TR] */;
 
 		/* gC/MJ/m2/day --> molC/molPAR/m2/day */
 		Alpha_C   = Epsilon_C / (MOLPAR_MJ * GC_MOL);
@@ -66,12 +79,11 @@ void photosynthesis(cell_t *const c, const int layer, const int height, const in
 		}
 	}
 
-#else
 
+	/*** WANG ET AL MODIFIER ***/
 	//test new 18 Dec 2017
 	/* compute effective light use efficiency */
-	Alpha_C = s->value[ALPHA] * s->value[F_CO2_WANG];
-#endif
+	//Alpha_C = s->value[ALPHA] * CO2_modifier;
 
 
 
@@ -94,19 +106,19 @@ void photosynthesis(cell_t *const c, const int layer, const int height, const in
 
 	/* check */
 	/* overall canopy */
-	if (Lue > Lue_max)
+	if ( Lue > Lue_max )
 	{
 		/* current Lue cannot exceeds Lue max */
 		Lue = Lue_max;
 	}
 	/* canopy sun */
-	if (Lue_sun > Lue_sun_max)
+	if ( Lue_sun > Lue_sun_max )
 	{
 		/* current Lue cannot exceeds Lue max */
 		Lue_sun = Lue_sun_max;
 	}
 	/*canopy shade */
-	if (Lue_shade > Lue_shade_max)
+	if ( Lue_shade > Lue_shade_max )
 	{
 		/* current Lue cannot exceeds Lue max */
 		Lue_shade = Lue_shade_max;

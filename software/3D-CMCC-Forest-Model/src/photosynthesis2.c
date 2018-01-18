@@ -257,8 +257,7 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	 * beta  = 2.48 for p. sylvestris see Samspon et al., (2006)
 	 * beta  = 2.42 for Q. robur see Samspon et al., (2006)
 	 * beta  = 2.8 for F. sylvatica see Scartazza et al., 2015
-
-	 */
+	*/
 
 	/* begin by assigning local variables */
 
@@ -439,7 +438,7 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	CHECK_CONDITION( det , <, 0.0);
 
 	/* compute photosynthesis when Av (or Vc) (umol CO2/m2/s) carboxylation rate for limited assimilation
-	 * (gross photosynthesis rate when Rubisco activity is limiting) */
+	 * (net photosynthesis rate when Rubisco activity is limiting) */
 	Av    = ( -var_b + sqrt( det ) ) / ( 2. * var_a );
 
 	/* quadratic solution for Aj */
@@ -452,17 +451,40 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	CHECK_CONDITION( det , <, 0.0);
 
 	/* compute photosynthesis when (umol CO2/m2/s) RuBP (ribulose-1,5-bisphosphate) regeneration limited assimilation
-	 * (gross photosynthesis rate when RuBP (ribulose-1,5-bisphosphate)-regeneration is limiting) */
+	 * (net photosynthesis rate when RuBP (ribulose-1,5-bisphosphate)-regeneration is limiting) */
 	Aj = ( -var_b + sqrt( det ) ) / ( 2. * var_a );
 
 	/* compute (umol CO2/m2/s) final assimilation rate */
 	/* estimate A as the minimum of (Av,Aj) */
-	A = MIN ( Av, Aj );
+	A = MIN ( Av , Aj );
 
 	/* compute (Pa) intercellular [CO2] */
 	Ci = Ca - ( A / cond_corr );
 
-	/* compute assimilation (umol/m2/s) */
+	/* test */
+	if ( sun_shade == 0 )
+	{
+		s->value[A_SUN]            = A;
+		s->value[Av_SUN]           = Av;
+		s->value[Aj_SUN]           = Aj;
+
+		s->value[YEARLY_A_SUN]    += A;
+		if ( Av < Aj ) s->value[YEARLY_Av_SUN]   += Av;
+		else           s->value[YEARLY_Aj_SUN]   += Aj;
+		CHECK_CONDITION ( fabs ( s->value[YEARLY_A_SUN] - ( s->value[YEARLY_Av_SUN] + s->value[YEARLY_Aj_SUN] ) ) , > , eps );
+	}
+	else
+	{
+		s->value[A_SHADE]          = A;
+		s->value[Av_SHADE]         = Av;
+		s->value[Aj_SHADE]         = Aj;
+
+		s->value[YEARLY_A_SHADE]  += A;
+		if ( Av < Aj ) s->value[YEARLY_Av_SHADE]   += Av;
+		else           s->value[YEARLY_Aj_SHADE]   += Aj;
+		CHECK_CONDITION ( fabs ( s->value[YEARLY_A_SHADE] - ( s->value[YEARLY_Av_SHADE] + s->value[YEARLY_Aj_SHADE] ) ) , > , eps );
+	}
+
 	return A;
 
 

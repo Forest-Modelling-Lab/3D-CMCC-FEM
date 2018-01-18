@@ -52,7 +52,8 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	double Ko;           /* (Pa) michaelis-menten constant for oxygenase reaction */
 	double m0;
 	double vpd;          /* (Pa) vpd */
-	double co2;          /*(ppmv) co2 atmospheric concentration */
+	double Ca;           /* (ppmv) CO2 atmospheric concentration */
+	double Ca_ref;       /* (ppmv) CO2 atmospheric concentration */
 
 	age_t *a;
 	species_t *s;
@@ -62,15 +63,18 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 
 	logger(g_debug_log, "\n**DAILY_MODIFIERS**\n");
 
-	/********************************************************************************************/
 
-	/***************************VEROUSTRAETE'S VERSION ********************************/
+	Ca     = meteo_annual->co2Conc;
+	Ca_ref = g_settings->co2Conc;
+	tairK  = meteo_daily->tavg + TempAbs;
+
+	/*************************** ASSIMILATION CO2 MODIFIERS ***************************/
+
+	/*****************************VEROUSTRAETE'S VERSION ******************************/
 	/**********************************************************************************/
-	/* CO2 MODIFIER AND ACCLIMATION FOR ASSIMILATION  */
+	/* CO2 MODIFIER FOR ASSIMILATION  */
 	/* fertilization effect with rising CO2 from: Veroustraete 1994,
 	 * Veroustraete et al., 2002, Remote Sensing of Environment */
-
-	tairK = meteo_daily->tavg + TempAbs;
 
 	/* compute effective Arrhenius coefficienct for Rubisco */
 	/* Dependence of KmCO2 on temperature data from Badger and Collatz (1976) */
@@ -87,25 +91,21 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	/* Dependence of KO2 on temperature data */
 	KO2 = AKO2 * exp ( - EaKO2 / ( Rgas * tairK ) );
 
-	/* dependence of assimilation rate on atmospheric carbon dioxyde concentration and competition by O2, 'photorespiration' */
+	/* dependence of assimilation rate on atmospheric carbon dioxyde concentration and competition by O2 */
 	tau = Atau * exp ( - Eatau / ( Rgas * tairK) );
 
-	v1 = ( meteo_annual->co2Conc -( O2CONC / ( 2. * tau ) ) ) / ( g_settings->co2Conc - ( O2CONC / ( 2. * tau ) ) );
-	v2 = ( KmCO2 * ( 1 + ( O2CONC / KO2 ) ) + g_settings->co2Conc ) / ( KmCO2 * ( 1. + ( O2CONC / KO2 ) ) + meteo_annual->co2Conc );
+	v1 = ( Ca - ( O2CONC / ( 2. * tau ) ) ) / ( Ca_ref - ( O2CONC / ( 2. * tau ) ) );
+	v2 = ( KmCO2 * ( 1 + ( O2CONC / KO2 ) ) + Ca_ref ) / ( KmCO2 * ( 1. + ( O2CONC / KO2 ) ) + Ca );
 
 	/* CO2 assimilation modifier */
 	s->value[F_CO2_VER] = v1 * v2;
 
-	/********************************WANG'S VERSION ***********************************/
 	/**********************************************************************************/
 
-	/* CO2 MODIFIER AND ACCLIMATION FOR ASSIMILATION */
-	/* For reference see Wang et al., 2016 Nature Plants */
+	/* CO2 MODIFIER FOR ASSIMILATION */
 
 	/* convert vpd from hPa to Pa */
 	vpd = meteo_daily->vpd / 100.;
-
-	co2 = meteo_annual->co2Conc;
 
 	/* calculate atmospheric O2 in Pa, assumes 20.9% O2 by volume */
 	O2  = ( O2CONC / 100. ) * meteo_daily->air_pressure;
@@ -133,13 +133,31 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	/* calculate gamma (Pa) CO2 compensation point due to photorespiration, in the absence of maint resp, assumes Vomax/Vcmax = 0.21; Badger & Andrews (1974) */
 	gamma = 0.5 * 0.21 * Kc * O2 / Ko;
 
-	m0 = (co2 - gamma) / (co2 + (2 * gamma) + (3 * gamma) * sqrt((1.6 * vpd * ni )/(beta * (Kc + gamma))));
+	/******************************** WANG ET AL' VERSION **********************************/
+	/***************************************************************************************/
+	/* CO2 MODIFIER FOR ASSIMILATION  */
+	/* see Wang's et al (2016), Nature Plants */
 
-	/* compute FCO2 modifier to apply to intrinsic quantum yield (gC mol-1) and PPFD (mol m-2 sec-1) absorbed */
+	m0 = (Ca - gamma) / (Ca + (2 * gamma) + (3 * gamma) * sqrt((1.6 * vpd * ni )/(beta * (Kc + gamma))));
+
+	/* compute FCO2 modifier */
 	s->value[F_CO2_WANG] = m0 * sqrt(1. - pow( (ci / m0) ,(2. / 3.)));
 
-	/**********************************************************************************/
-	/**********************************************************************************/
+
+	/******************************** FRANKS ET AL' VERSION ***********************************/
+	/******************************************************************************************/
+	/* CO2 MODIFIER FOR ASSIMILATION  */
+	/* see Franks et al., (2013) NPhyt Eq 5 */
+
+	/* convert gamma from Pa to ppm */
+	gamma /= (meteo_daily->air_pressure / 1e6);
+
+	/* compute FCO2 modifier */
+	s->value[F_CO2_FRANKS] = ( ( Ca - gamma ) * ( Ca_ref + 2. * gamma ) ) / ( ( Ca + 2. * gamma) * ( Ca_ref - gamma ) );
+
+	/****************************************************************************************************************/
+
+	/************************** TRANSPIRATION CO2 MODIFIERS ***************************/
 
 	/* CO2 MODIFIER FOR TRANSPIRATION  */
 	/* limitation effects on maximum stomatal conductance from:
@@ -147,9 +165,9 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	 * Hidy et al., 2016 Geosc. Model Dev.
 	 */
 
-	s->value[F_CO2_TR] = 39.43 * pow(meteo_annual->co2Conc, -0.64);
+	s->value[F_CO2_TR] = 39.43 * pow( Ca , -0.64 );
 
-	/********************************************************************************************/
+	/****************************************************************************************************************/
 
 	/* LIGHT MODIFIER */
 	/* (Following Makela et al. , 2008, Peltioniemi et al. 2012) */

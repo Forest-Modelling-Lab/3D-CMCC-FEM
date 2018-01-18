@@ -227,8 +227,10 @@ enum {
 	F_SW,                               /* (DIM) SOIL WATER modifier */
 	F_DROUGHT,                          /* (DIM) SOIL DROUGHT modifier (see Duursma et al., 2008) */
 	F_PSI,                              /* (DIM) SOIL WATER modifier using PSI, see Biome */
+	F_CO2,                              /* (DIM) CO2 fertilization effect (as choiced in script) */
 	F_CO2_VER,                          /* (DIM) CO2 fertilization effect (Veroustraete's version) */
 	F_CO2_WANG,                         /* (DIM) CO2 fertilization effect (Wang et al's version) */
+	F_CO2_FRANKS,                       /* (DIM) CO2 fertilization effect (Franks et al's version) */
 	F_CO2_TR,                           /* (DIM) CO2 reduction effect (for stomatal conductance) */
 	PHYS_MOD,                           /* (DIM) PHYSIOLOGICAL modifier */
 	F_LIGHT_VERT,
@@ -318,6 +320,22 @@ enum {
 	CANOPY_TEMP_K_OLD,                  /* (K) previous time canopy temperature */
 
 	/* assimilation Farqhuar */
+	A_SUN,
+	Av_SUN,
+	Aj_SUN,
+	YEARLY_A_SUN,
+	YEARLY_Av_SUN,
+	YEARLY_Aj_SUN,
+	A_SHADE,
+	Av_SHADE,
+	Aj_SHADE,
+	YEARLY_A_SHADE,
+	YEARLY_Av_SHADE,
+	YEARLY_Aj_SHADE,
+
+
+
+
 	GROSS_ASSIMILATION,                 /* (gC/m2/day) Daily Gross Assimilation (carboxylation) (which include dark respiration */
 	GROSS_ASSIMILATION_SUN,             /* (gC/m2/day) Daily Gross Assimilation (carboxylation) for sun leaves (which include dark respiration */
 	GROSS_ASSIMILATION_SHADE,           /* (gC/m2/day) Daily Gross Assimilation (carboxylation) for shaded leaves (which include dark respiration */
@@ -327,15 +345,15 @@ enum {
 	YEARLY_GROSS_ASSIMILATION,          /* (gC/m2/year) Daily Gross Assimilation (carboxylation) (which include dark respiration */
 	YEARLY_GROSS_ASSIMILATION_SUN,      /* (gC/m2/year) Daily Gross Assimilation (carboxylation) for sun leaves (which include dark respiration */
 	YEARLY_GROSS_ASSIMILATION_SHADE,    /* (gC/m2/year) Daily Gross Assimilation (carboxylation) for shaded leaves (which include dark respiration */
-	NET_ASSIMILATION,                 /* (gC/m2/day) Daily Net Assimilation   (which exclude dark respiration */
-	NET_ASSIMILATION_SUN,             /* (gC/m2/day) Daily Net Assimilation  for sun leaves (which exclude dark respiration */
-	NET_ASSIMILATION_SHADE,           /* (gC/m2/day) Daily Net Assimilation   for shaded leaves (which exclude dark respiration */
-	MONTHLY_NET_ASSIMILATION,         /* (gC/m2/month) Daily Net Assimilation   (which exclude dark respiration */
-	MONTHLY_NET_ASSIMILATION_SUN,     /* (gC/m2/month) Daily Net Assimilation   for sun leaves (which exclude dark respiration */
-	MONTHLY_NET_ASSIMILATION_SHADE,   /* (gC/m2/month) Daily Net Assimilation   for shaded leaves (which exclude dark respiration */
-	YEARLY_NET_ASSIMILATION,          /* (gC/m2/year) Daily Net Assimilation   (which exclude dark respiration */
-	YEARLY_NET_ASSIMILATION_SUN,      /* (gC/m2/year) Daily Net Assimilation  for sun leaves (which exclude dark respiration */
-	YEARLY_NET_ASSIMILATION_SHADE,    /* (gC/m2/year) Daily Net Assimilation for shaded leaves (which exclude dark respiration */
+	NET_ASSIMILATION,                   /* (gC/m2/day) Daily Net Assimilation   (which exclude dark respiration */
+	NET_ASSIMILATION_SUN,               /* (gC/m2/day) Daily Net Assimilation  for sun leaves (which exclude dark respiration */
+	NET_ASSIMILATION_SHADE,             /* (gC/m2/day) Daily Net Assimilation   for shaded leaves (which exclude dark respiration */
+	MONTHLY_NET_ASSIMILATION,           /* (gC/m2/month) Daily Net Assimilation   (which exclude dark respiration */
+	MONTHLY_NET_ASSIMILATION_SUN,       /* (gC/m2/month) Daily Net Assimilation   for sun leaves (which exclude dark respiration */
+	MONTHLY_NET_ASSIMILATION_SHADE,     /* (gC/m2/month) Daily Net Assimilation   for shaded leaves (which exclude dark respiration */
+	YEARLY_NET_ASSIMILATION,            /* (gC/m2/year) Daily Net Assimilation   (which exclude dark respiration */
+	YEARLY_NET_ASSIMILATION_SUN,        /* (gC/m2/year) Daily Net Assimilation  for sun leaves (which exclude dark respiration */
+	YEARLY_NET_ASSIMILATION_SHADE,      /* (gC/m2/year) Daily Net Assimilation for shaded leaves (which exclude dark respiration */
 
 	/* carbon fluxes */
 	C_FLUX,
