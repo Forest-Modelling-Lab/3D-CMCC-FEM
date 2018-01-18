@@ -464,26 +464,39 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	/* test */
 	if ( sun_shade == 0 )
 	{
-		s->value[A_SUN]            = A;
-		s->value[Av_SUN]           = Av;
-		s->value[Aj_SUN]           = Aj;
+		/* sun leaves */
+		s->value[A_SUN]                  = A;
+		if ( Av < Aj )s->value[Av_SUN]   = Av;
+		else          s->value[Aj_SUN]   = Aj;
 
 		s->value[YEARLY_A_SUN]    += A;
-		if ( Av < Aj ) s->value[YEARLY_Av_SUN]   += Av;
-		else           s->value[YEARLY_Aj_SUN]   += Aj;
+		s->value[YEARLY_Av_SUN]   += s->value[Av_SUN];
+		s->value[YEARLY_Aj_SUN]   += s->value[Aj_SUN];
 		CHECK_CONDITION ( fabs ( s->value[YEARLY_A_SUN] - ( s->value[YEARLY_Av_SUN] + s->value[YEARLY_Aj_SUN] ) ) , > , eps );
 	}
 	else
 	{
-		s->value[A_SHADE]          = A;
-		s->value[Av_SHADE]         = Av;
-		s->value[Aj_SHADE]         = Aj;
+		/* shaded leaves */
+		s->value[A_SHADE]                  = A;
+		if ( Av < Aj )s->value[Av_SHADE]   = Av;
+		else          s->value[Aj_SHADE]   = Aj;
 
-		s->value[YEARLY_A_SHADE]  += A;
-		if ( Av < Aj ) s->value[YEARLY_Av_SHADE]   += Av;
-		else           s->value[YEARLY_Aj_SHADE]   += Aj;
+		s->value[YEARLY_A_SHADE]    += A;
+		s->value[YEARLY_Av_SHADE]   += s->value[Av_SHADE];
+		s->value[YEARLY_Aj_SHADE]   += s->value[Aj_SHADE];
 		CHECK_CONDITION ( fabs ( s->value[YEARLY_A_SHADE] - ( s->value[YEARLY_Av_SHADE] + s->value[YEARLY_Aj_SHADE] ) ) , > , eps );
 	}
+
+	/* total leaves */
+	s->value[A_TOT]  = s->value[A_SUN]  + s->value[A_SHADE];
+	s->value[Av_TOT] = s->value[Av_SUN] + s->value[Av_SHADE];
+	s->value[Aj_TOT] = s->value[Aj_SUN] + s->value[Aj_SHADE];
+
+	s->value[YEARLY_A_TOT]  += s->value[A_SUN]  + s->value[A_SHADE];
+	s->value[YEARLY_Av_TOT] += s->value[Av_SUN] + s->value[Av_SHADE];
+	s->value[YEARLY_Aj_TOT] += s->value[Aj_SUN] + s->value[Aj_SHADE];
+	CHECK_CONDITION ( fabs ( s->value[YEARLY_A_TOT] - ( s->value[YEARLY_Av_TOT] + s->value[YEARLY_Aj_TOT] ) ) , > , eps );
+
 
 	return A;
 

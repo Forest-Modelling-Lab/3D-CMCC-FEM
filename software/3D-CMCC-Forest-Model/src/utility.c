@@ -378,6 +378,18 @@ void reset_daily_class_variables(cell_t *const c)
 					s->value[GROSS_ASSIMILATION_SUN] =    0.;
 					s->value[GROSS_ASSIMILATION_SHADE] =  0.;
 
+					s->value[A_SUN] =                     0.;
+					s->value[Av_SUN] =                    0.;
+					s->value[Aj_SUN] =                    0.;
+
+					s->value[A_SHADE] =                   0.;
+					s->value[Av_SHADE] =                  0.;
+					s->value[Aj_SHADE] =                  0.;
+
+					s->value[A_TOT] =                     0.;
+					s->value[Av_TOT] =                    0.;
+					s->value[Aj_TOT] =                    0.;
+
 					/* reset daily water fluxes */
 					s->value[STOMATAL_CONDUCTANCE] =      0.;
 					s->value[STOMATAL_SUN_CONDUCTANCE] =  0.;
@@ -657,6 +669,9 @@ void reset_annual_class_variables(cell_t *const c)
 					s->value[YEARLY_A_SHADE] =              0.;
 					s->value[YEARLY_Av_SHADE] =             0.;
 					s->value[YEARLY_Aj_SHADE] =             0.;
+					s->value[YEARLY_A_TOT] =                0.;
+					s->value[YEARLY_Av_TOT] =               0.;
+					s->value[YEARLY_Aj_TOT] =               0.;
 
 					/*reset cumulative values*/
 					s->counter[LEAF_FALL_COUNTER] =         0;
