@@ -66,7 +66,7 @@ void total_photosynthesis_biome (cell_t *const c, const int height, const int db
 
 		/* net assimilation and converting from umol/m2 leaf/sec gC/m2/day and to LAI for canopy computation */
 		/* note (in Biome-BGC) assimilation (assim_sun variable) doesn't take into account leaf resp */
-		s->value[NET_ASSIMILATION_SUN]     = ( psn - leaf_day_mresp ) * s->value[LAI_SUN_PROJ] * meteo_daily->daylength_sec * GC_MOL * 1e-6;
+		s->value[NET_ASSIMILATION_SUN]     = psn * s->value[LAI_SUN_PROJ] * meteo_daily->daylength_sec * GC_MOL * 1e-6;
 
 	}
 
@@ -100,7 +100,7 @@ void total_photosynthesis_biome (cell_t *const c, const int height, const int db
 
 		/* net assimilation (photosynthesis) and converting from umol/m2 leaf/sec gC/m2/day and to LAI for canopy computation */
 		/* note (in Biome-BGC) assimilation (assim_shade variable) doesn't take into account leaf resp */
-		s->value[NET_ASSIMILATION_SHADE]   = ( psn - leaf_day_mresp ) * s->value[LAI_SHADE_PROJ] * meteo_daily->daylength_sec * GC_MOL * 1e-6;
+		s->value[NET_ASSIMILATION_SHADE]   = psn * s->value[LAI_SHADE_PROJ] * meteo_daily->daylength_sec * GC_MOL * 1e-6;
 
 	}
 

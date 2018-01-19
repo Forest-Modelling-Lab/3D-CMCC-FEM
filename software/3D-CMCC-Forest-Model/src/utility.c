@@ -679,6 +679,8 @@ void reset_annual_class_variables(cell_t *const c)
 					s->counter[YEARLY_VEG_DAYS] =           0;
 					s->counter[FIRST_VEG_DAYS] =            0;
 					s->value[YEARLY_GPP] =                  0.;
+					s->value[YEARLY_GPP_SUN] =              0.;
+					s->value[YEARLY_GPP_SHADE] =            0.;
 					s->value[YEARLY_NPP] =                  0.;
 					s->value[YEARLY_NPP_tC] =               0.;
 					s->value[YEARLY_CUE] =                  0.;
