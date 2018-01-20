@@ -320,7 +320,6 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	gamma *= (meteo_daily->air_pressure / 1e6);
 #endif
 
-
 	/******************************************************************************************************************************/
 
 	/* calculate Vmax from leaf nitrogen data and Rubisco activity */
