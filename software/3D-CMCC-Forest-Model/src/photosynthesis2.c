@@ -212,11 +212,11 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 		as in Woodrow and Berry. */
 
 	static double Kc25          = 404;    /* (ubar) michaelis-menten const carboxylase, 25 deg C  Badger and Collatz value*/
-	static double q10Kc         = 2.1;    /* (DIM) Q_10 for Kc Badger and Collatz value */
+	static double q10Kc         = 2.1;    /* (DIM) Q_10 for Kc Badger and Collatz and Collatz et al., (2001) */
 	static double Ko25          = 248;    /* (mbar) michaelis-menten const oxygenase, 25 deg C Badger and Collatz value */
-	static double q10Ko         = 1.2;    /* (DIM) Q_10 for Ko */
+	static double q10Ko         = 1.2;    /* (DIM) inhibition constant for O2 Collatz et al., (1991) */
 	static double act25         = 3.6;    /* (umol/mgRubisco/min) Rubisco activity at 25 C Badger and Collatz value */
-	static double q10act        = 2.4;    /* (DIM) Q_10 for Rubisco activity Badger and Collatz value */
+	static double q10act        = 2.4;    /* (DIM) Q_10 for Rubisco activity Badger and Collatz value Collatz et al., (1991) */
 	static double pabsII_frac   = 0.85;   /* (DIM) fraction of PAR effectively absorbed by photosytem II (leaf absorptance); 0.8 for Bonan et al., 2011 */
 	static double fnr           = 7.16;   /* (DIM) g Rubisco/gN Rubisco weight proportion of rubisco relative to its N content Kuehn and McFadden (1969) */
 	static double theta         = 0.7;    /* (DIM) curvature of the light-response curve of electron transport (DePury and Farquhar, 1997, Bonan et al., 2011) */
@@ -277,7 +277,7 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	O2  = (O2CONC / 100. ) * meteo_daily->air_pressure;
 
 	/*******************************************************************************/
-	/* the enzyme kinetics built into this model are based on Woodrow and Berry (1988) */
+	/* the enzyme kinetics built into this model are based on Woodrow and Berry (1988) and Collatz et al., (1991) */
 
 	/* correct kinetic constants for temperature, and do unit conversions */
 	Ko  = Ko25 * pow ( q10Ko , ( meteo_daily->tday - 25. ) / 10. );
@@ -304,9 +304,22 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	/******************************************************************************************************************************/
 
 	/* calculate gamma (Pa) CO2 compensation point due to photorespiration, in the absence of maint (or dark?) respiration */
+#if 1
+
+	/* note: BIOME-BGC method */
 	/* it assumes Vomax/Vcmax = 0.21; Badger & Andrews (1974) */
 	/* 0.5 because with 1 mol of oxygenations assumed to release 0.5 molCO2 by glycine decarboxilation (Farquhar and Busch 2017) */
 	gamma = 0.5 * 0.21 * Kc * O2 / Ko;
+
+#else
+
+	/* note: dePury and Farquhar 1997 method */
+	gamma = 36.9 + 1.88 * ( meteo_daily->tday - 25. ) + 0.036 * ( pow ( ( meteo_daily->tday - 25. ) , 2. ) );
+
+	//fixme why?
+	gamma *= (meteo_daily->air_pressure / 1e6);
+#endif
+
 
 	/******************************************************************************************************************************/
 
@@ -445,7 +458,6 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	var_a = -4.5 / cond_corr;
 	var_b = 4.5 * Ca + 10.5 * gamma + J / cond_corr - 4.5 * Rd / cond_corr;
 	var_c = J * ( gamma - Ca ) + Rd * ( 4.5 * Ca + 10.5 * gamma );
-
 
 	det   = var_b * var_b - 4. * var_a * var_c;
 	/* check condition */

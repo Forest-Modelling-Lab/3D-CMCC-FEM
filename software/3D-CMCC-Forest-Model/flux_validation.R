@@ -129,6 +129,9 @@ for (cyv in seq(1,length(var_md)) ) {
       'EC_max' = df_ec[,var_eddy_unc_max[cyv]],
       'EC_min' = df_ec[,var_eddy_unc_min[cyv]]
     )
+    ggplot(df_plot) +
+      geom_line(aes(x = TIME, y = MD),color = 'red') +
+      geom_line(aes(x = TIME, y = EC),color = 'blue') 
     
     # applico la soglia dei dati eddy
     TIME2 = df_plot$TIME

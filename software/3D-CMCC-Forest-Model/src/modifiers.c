@@ -116,7 +116,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	/* convert mbar --> Pa */
 	Ko *= 100.;
 
-	/* compute effective Michaelis-Menten coefficienct for Rubisco */
+	/* compute effective Michaelis-Menten coefficient for Rubisco as in Collatz et al., (1991) */
 
 	if ( meteo_daily->tday > 15. )
 	{
@@ -130,7 +130,9 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	/* convert ubar --> Pa */
 	Kc *= 0.1;
 
-	/* calculate gamma (Pa) CO2 compensation point due to photorespiration, in the absence of maint resp, assumes Vomax/Vcmax = 0.21; Badger & Andrews (1974) */
+	/* calculate gamma (Pa) CO2 compensation point due to photorespiration, in the absence of maint (or dark?) respiration */
+	/* it assumes Vomax/Vcmax = 0.21; Badger & Andrews (1974) */
+	/* 0.5 because with 1 mol of oxygenations assumed to release 0.5 molCO2 by glycine decarboxilation (Farquhar and Busch 2017) */
 	gamma = 0.5 * 0.21 * Kc * O2 / Ko;
 
 	/******************************** WANG ET AL' VERSION **********************************/

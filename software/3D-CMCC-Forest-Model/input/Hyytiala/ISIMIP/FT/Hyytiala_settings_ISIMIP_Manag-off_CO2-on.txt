@@ -10,7 +10,7 @@ DAILY_OUTPUT on                     //Must be 'on' or 'off'
 MONTHLY_OUTPUT off                   //Must be 'on' or 'off'
 ANNUAL_OUTPUT on                    //Must be 'on' or 'off'
 SOIL_OUTPUT off                     //Must be 'on' or 'off'
-YEAR_START 1995                     //Starting year simulation
+YEAR_START 1996                     //Starting year simulation
 YEAR_END 2099                       //Ending year simulation
 YEAR_RESTART off                    //Year to restart
 PSN_mod 0                           //Must be '0' (FvCB) or '1' (LUE) for photosynthesis approach

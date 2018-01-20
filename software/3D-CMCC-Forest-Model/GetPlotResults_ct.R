@@ -70,13 +70,13 @@ rcp_list <-c("8p5")# ("0p0","2p6","4p5","6p0","8p5","All")
 man_list <-c("off")# ("on",'off', "All")
 co2_list <-c("on")# , "on",off", "All")
 protocol_list<-c("FT")# ("2A","2B", "All") 
-local_list<-c('off')
-climate_off_list<-c('off') # for climate off and co2 on
+local_list<-c('on')
+climate_off_list<-c('on') # for climate off and co2 on
 
 time_list = c('annual')
 
 #  output folder name
-output_folder = paste0("Test_output_Rstudio_ct_photosynthesis_FvCB_Av-Aj_TEST_", protocol_list,'_',co2_list)
+output_folder = paste0("Test_output_Rstudio_ct_photosynthesis_TEST_", protocol_list,'_',co2_list)
 
 if ( length(which(site_list == 'All')) > 0 ) {
   site_list = c("Soroe","Hyytiala","Bily_Kriz","LeBray")#,"Solling_beech","Peitz","Solling_spruce")
@@ -645,6 +645,7 @@ cat(sprintf("\n\nCOMPARSION PLOTS STAND COMPLETE\n\n"))
 cat(sprintf("\n\nFLUX VALIDATION PLOTS START.....\n\n"))
 
 df_siti = read.csv('sites_isimip.csv')
+
 for (cy_s in site_list) {
   dir_in_gen = paste0(getwd(),"/output/",output_folder,"-", version, "-", cy_s,'/')
   site_code = as.character(df_siti$fluxnet_code[df_siti$model_name == cy_s])
@@ -665,7 +666,6 @@ for (cy_s in site_list) {
   dir_in = dir_in[grep('LOCAL',dir_in)]
   
   ls_file_md = list.files(dir_in,pattern = 'daily',recursive = T,full.names = T)
-  
   
   lista_p = flux_validation(ls_file_md,
                             cy_s,
