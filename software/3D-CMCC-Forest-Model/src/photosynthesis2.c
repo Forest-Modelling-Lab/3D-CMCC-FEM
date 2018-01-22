@@ -18,6 +18,7 @@
 //extern logger_t* g_debug_log;
 extern settings_t* g_settings;
 
+#define TEST 0
 
 void total_photosynthesis_biome (cell_t *const c, const int height, const int dbh, const int age, const int species, const meteo_daily_t *const meteo_daily, const meteo_annual_t *const meteo_annual)
 {
@@ -211,22 +212,22 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 		All other parameters, including the q10's for Kc and Ko are the same
 		as in Woodrow and Berry. */
 
-	static double Kc25          = 404;    /* (ubar) michaelis-menten const carboxylase, 25 deg C  Badger and Collatz value*/
-	static double q10Kc         = 2.1;    /* (DIM) Q_10 for Kc Badger and Collatz and Collatz et al., (2001) */
-	static double Ko25          = 248;    /* (mbar) michaelis-menten const oxygenase, 25 deg C Badger and Collatz value */
+	static double Kc25          = 404.9;  /* (ubar) michaelis-menten const carboxylase, 25 deg C  Badger and Collatz value*/
+	static double q10Kc         = 2.1;    /* (DIM) Q_10 for Kc Badger and Collatz and Collatz et al., (1991) */
+	static double Ko25          = 248.;   /* (mbar) Michaelis-Menten const oxygenase, 25 deg C 248 Badger and Collatz, 278.4 Bernacchi et al., 2001 */
 	static double q10Ko         = 1.2;    /* (DIM) inhibition constant for O2 Collatz et al., (1991) */
 	static double act25         = 3.6;    /* (umol/mgRubisco/min) Rubisco activity at 25 C Badger and Collatz value */
 	static double q10act        = 2.4;    /* (DIM) Q_10 for Rubisco activity Badger and Collatz value Collatz et al., (1991) */
-	static double pabsII_frac   = 0.85;   /* (DIM) fraction of PAR effectively absorbed by photosytem II (leaf absorptance); 0.8 for Bonan et al., 2011 */
+	static double phiII         = 0.85;   /* (DIM) fraction of PAR effectively absorbed by photosytem II (leaf absorptance); 0.8 for Bonan et al., 2011 */
 	static double fnr           = 7.16;   /* (DIM) g Rubisco/gN Rubisco weight proportion of rubisco relative to its N content Kuehn and McFadden (1969) */
-	static double theta         = 0.7;    /* (DIM) curvature of the light-response curve of electron transport (DePury and Farquhar, 1997, Bonan et al., 2011) */
+	static double thetaII       = 0.7;    /* (DIM) curvature of the light-response curve of electron transport (DePury and Farquhar, 1997, Bonan et al., 2011) */
+	static double ppe           = 2.6;     /* (mol e- /mol photons) photons absorbed by PSII per e- transported (quantum yield of electron transport) dePury and Farquhar 1997*/
 
 	/* local variables */
 	double Kc;                     /* (Pa) michaelis-menten constant for carboxylase reaction */
 	double Ko;                     /* (Pa) michaelis-menten constant for oxygenase reaction */
 	double act;                    /* (umol CO2/kgRubisco/s) Rubisco activity scaled by temperature and [O2] and [CO2] */
 	double Jmax;                   /* (umol/m2/s) max rate electron transport */
-	double ppe;                    /* (mol e- /mol photons) photons absorbed by PSII per e- transported (quantum yield of electron transport) */
 	double Vcmax;                  /* (umol/m2/s) Leaf-scale maximum carboxylation rate, 25°C */
 	double pabsII;                 /* (molPAR/m2/sec) PAR effectively absorbed by the phosystemII */
 	double J;                      /* (umol/m2/s) rate of RuBP (ribulose-1,5-bisphosphate) regeneration */
@@ -238,6 +239,7 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	double A;                      /* (umol/m2/s) final assimilation rate */
 	double Ci;                     /* (Pa) intercellular [CO2] */
 	double Rd;                     /* (umol/m2/s) (umol/m2/s) day leaf m. resp, proj. area basis */
+	double tleaf_K;                /* (Kelvin) leaf temperature (assumed equal to Tair) */
 	double var_a, var_b, var_c, det;
 
 	//todo todo todo todo todo move in species.txt (this should be the only variable for all photosynthesis)
@@ -257,24 +259,21 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	 * beta  = 2.48 for p. sylvestris see Samspon et al., (2006)
 	 * beta  = 2.42 for Q. robur see Samspon et al., (2006)
 	 * beta  = 2.8 for F. sylvatica see Scartazza et al., 2015
-	*/
-
-	/* begin by assigning local variables */
+	 */
 
 	/* (umol/m2/s) day leaf m. resp, proj. area basis */
 	//note: BIOME-BGC assumes leaf main respiration during daylight as dark respiration
-	//note: 3D-CMCC following Dufrene et al. considers light inhibition phenomenon in the
-	//      daylight respiration routine
+	//note: 3D-CMCC following Dufrene et al. considers light inhibition phenomenon in the daylight respiration routine
 	Rd  = leaf_day_mresp;
 
 	/* convert atmospheric CO2 from ppmV --> Pa */
 	Ca  = meteo_annual->co2Conc * meteo_daily->air_pressure / 1e6;
 
-	/* set quantum yield for electron transport for C3 as in DePury and Farquhar 1997 */
-	ppe = 2.6; /* is equivalent to 0.38 (mol electrons mol-1 photons) */
-
 	/* calculate atmospheric O2 in Pa, assumes 20.9% O2 by volume */
 	O2  = (O2CONC / 100. ) * meteo_daily->air_pressure;
+
+	/* calculate leaf temperature */
+	tleaf_K = meteo_daily->tday + TempAbs;
 
 	/*******************************************************************************/
 	/* the enzyme kinetics built into this model are based on Woodrow and Berry (1988) and Collatz et al., (1991) */
@@ -305,23 +304,42 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 
 	/* calculate gamma (Pa) CO2 compensation point due to photorespiration, in the absence of maint (or dark?) respiration */
 #if 1
-
 	/* note: BIOME-BGC method */
-	/* it assumes Vomax/Vcmax = 0.21; Badger & Andrews (1974) */
+	/* see also Bernacchi et al., 2001 */
+	/* it assumes Vomax/Vcmax = 0.21; Badger & Andrews (1974), Medlyn et al., (2002) */
 	/* 0.5 because with 1 mol of oxygenations assumed to release 0.5 molCO2 by glycine decarboxilation (Farquhar and Busch 2017) */
-	gamma = 0.5 * 0.21 * Kc * O2 / Ko;
+	/*
+	 *
+	             Kc * Vomax * O
+	   gamma* = -----------------
+	             (2 * K0 * Vcmax)
+
+	*/
+	gamma = 0.5 * O2 * 0.21 * Kc / Ko;
 
 #else
-
+	//not currently used
 	/* note: dePury and Farquhar 1997 method */
-	gamma = 36.9 + 1.88 * ( meteo_daily->tday - 25. ) + 0.036 * ( pow ( ( meteo_daily->tday - 25. ) , 2. ) );
-
+	//gamma = 36.9 + 1.88 * ( meteo_daily->tday - 25. ) + 0.036 * ( pow ( ( meteo_daily->tday - 25. ) , 2. ) );
 	//fixme why?
-	gamma *= (meteo_daily->air_pressure / 1e6);
+	//gamma *= (meteo_daily->air_pressure / 1e6);
+
+	/* note: Bernacchi et al., 2001 method (in umol/mol)*/
+	gamma = 42.75 * exp ( ( 37830 * ( tleaf_K + 298. ) ) / ( 298. * Rgas * tleaf_K ) );
+
 #endif
 
 	/******************************************************************************************************************************/
 
+#if TEST
+	//not currently used
+	//note: modified version of the BIOME-BGC original code
+	//note: if accepted move to species.txt
+
+	/* assign Vcmax from species.txt parameter value */
+	Vcmax = /*s->value[VCMAX]*/ test_Vcmax;
+
+#else
 	/* calculate Vmax from leaf nitrogen data and Rubisco activity */
 
 	/* kg Nleaf   kg NRub    kg Rub      umol            umol
@@ -329,7 +347,7 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	      m2      kg Nleaf   kg NRub   kg RUB * s       m2 * s
 
 	     (lnc)  X  (flnr)  X  (fnr)  X   (act)     =    (Vmax)
-	*/
+	 */
 
 	/* calculate Vcmax (umol CO2/m2/s) max rate of carboxylation from leaf nitrogen data and Rubisco activity */
 	/* see:
@@ -339,53 +357,59 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	 * Medlyn et al., (1999)
 	 * */
 
-#if 0 //not currently used
-	//note: modified version of the BIOME-BGC original code
-	if ( /*s->value[VCMAX]*/ test_Vcmax != NO_DATA )
-	{
-		Vcmax = leafN * s->value[N_RUBISCO] * fnr * act;
-
-		if ( Vcmax > /*s->value[VCMAX]*/ test_Vcmax )
-		{
-			Vcmax = /*s->value[VCMAX]*/ test_Vcmax;
-		}
-	}
-	else
-	{
-		Vcmax = leafN * s->value[N_RUBISCO] * fnr * act;
-	}
-#else
-	/* "V cmax is more realistically formulated as a dynamic quantity that depends on the leaf area–based concentration of Rubisco and the enzyme activity"
+	/* "Vcmax is more realistically formulated as a dynamic quantity that depends on the leaf area–based concentration of Rubisco and the enzyme activity"
 	 * references:
 	 * Niinemets and Tenhunen 1997
 	 * Thornton and Zimmermann 2007
 	 * */
+
+	/* compute Vcmax */
 	Vcmax = leafN * s->value[N_RUBISCO] * fnr * act;
+
+	//	if (s->value[LAI_PROJ]> 4.5)
+	//	{
+	//		printf("\n\n\n\n");
+	//
+	//		if (sun_shade == 0)
+	//		{
+	//			printf("LAI_SUN_PROJ %g \n", s->value[LAI_SUN_PROJ]);
+	//			printf("LEAF_SUN_C %g \n", s->value[LEAF_SUN_C]);
+	//			printf("LEAF_SUN_N %g \n", s->value[LEAF_SUN_N]);
+	//			printf("fnr %g \n", fnr);
+	//			printf("act %g \n", act);
+	//			printf("leafN %g \n", leafN);
+	//			printf("Vcmax %g \n", Vcmax);
+	//		}
+	//		else
+	//		{
+	//			printf("LAI_SHADE_PROJ %g \n", s->value[LAI_SHADE_PROJ]);
+	//			printf("LEAF_SHADE_C %g \n", s->value[LEAF_SHADE_C]);
+	//			printf("LEAF_SHADE_N %g \n", s->value[LEAF_SHADE_N]);
+	//			printf("fnr %g \n", fnr);
+	//			printf("act %g \n", act);
+	//			printf("leafN %g \n", leafN);
+	//			printf("Vcmax %g \n", Vcmax);
+	//
+	//			getchar();
+	//		}
+	//	}
 #endif
 
 	/******************************************************************************************************************************/
 
+#if TEST
+	//not currently used
+	//note: modified version of the BIOME-BGC original code
+	//note: if accepted move to species.txt
+
+	/* assign Jmax from species.txt parameter value */
+	Jmax = /*s->value[JMAX]*/test_Jmax;
+
+#else
 	/* calculate Jmax = f(Vmax), reference:	Wullschleger, S.D., 1993.  Biochemical limitations to carbon assimilation in C3 plants -
 	 * A retrospective analysis of the A/Ci curves from	109 species. Journal of Experimental Botany, 44:907-920. */
 	/* compute (umol electrons/m2/s) max rate electron transport */
 
-#if 0
-	//not currently used
-	//note: modified version of the BIOME-BGC original code
-	if ( /* s->value[JMAX] */ test_Jmax != NO_DATA )
-	{
-		Jmax = beta * Vcmax;
-
-		if (Jmax > /*s->value[JMAX]*/ test_Jmax)
-		{
-			Jmax = /*s->value[JMAX]*/test_Jmax;
-		}
-	}
-	else
-	{
-		Jmax = beta * Vcmax;
-	}
-#else
 	//note: original version of the BIOME-BGC code
 	/* a simplifying assumption that empirically relates the maximum rate of electron transport to maximum carboxylation velocity
 	 * see:
@@ -400,25 +424,26 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	 * Leuning et al., (2002)
 	 * Bonan et al., (2011)*/
 
+	/* compute Jmax */
 	Jmax = beta * Vcmax;
+
 #endif
 
 	/******************************************************************************************************************************/
 
 	/* irradiance dependence of electron transport (the "non-rectangular hyperbola") */
-	/* from the equation of de Pury and Farquhar (1997) Plant Cell and Env.*/
+	/* from the equation of de Pury and Farquhar (1997) Plant Cell and Env. and Bernacchi et al., (2003) Plant Cell and Env. */
 	/*
-	 *
 	   theta J^2 - (pabsII + Jmax) J + pabsII Jmax = 0
 
 	*/
 
 	/* compute PAR effectively absorbed by photosystem II */
-	pabsII = par_abs * pabsII_frac / ppe;
+	pabsII = ( par_abs * phiII ) / ppe;
 
 	/* calculate J = f(Jmax, ppfd) */
 	/* smaller root of the quadratic solution to the following equation */
-	var_a  = theta;
+	var_a  = thetaII;
 	var_b  = -Jmax - pabsII;
 	var_c  =  Jmax * pabsII;
 
@@ -428,7 +453,8 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	/******************************************************************************************************************************/
 
 	/* solve for Av and Aj using the quadratic equation, substitution for Ci
-		from A = g(Ca-Ci) into the equations from Farquhar and von Caemmerer:
+		from A = g(Ca-Ci) into the equations from Farquhar, von Caemmerer and Berry (1980)
+		and Bernacchi et al (2003) (for values 4.5 and 10.5) :
 
 		       Vmax (Ci - gamma)
 		Av =  -------------------   -   Rd
@@ -446,8 +472,6 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	var_c = Vcmax * ( gamma - Ca ) + Rd * ( Ca + Kc * ( 1. + O2 / Ko ) );
 	det   = var_b * var_b - 4. * var_a * var_c;
 
-	/* check condition */
-	CHECK_CONDITION( det , <, 0.0);
 
 	/* compute photosynthesis when Av (or Vc) (umol CO2/m2/s) carboxylation rate for limited assimilation
 	 * (net photosynthesis rate when Rubisco activity is limiting) */

@@ -1723,9 +1723,9 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 
 								logger(g_daily_log,
 										",GPP"
-										",ALPHA_EFF"
-										",ALPHA_EFF_SUN"
-										",ALPHA_EFF_SHADE"
+										",Av_TOT"
+										",Aj_TOT"
+										",A_TOT"
 										",RG"
 										",RM"
 										",RA"
@@ -1798,7 +1798,9 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 										",FROOT_AR"
 										",CROOT_AR"
 										",BRANCH_AR"
+										",F_CO2"
 										",F_CO2_VER"
+										",F_CO2_FRA"
 										",FCO2_TR"
 										",FLIGHT"
 										",FAGE"
@@ -1893,11 +1895,11 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 							logger(g_daily_log,",%6.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,"
 									"%d,%d,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
 									",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
-									",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",
+									",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",
 									s->value[GPP],
-									s->value[ALPHA_EFF],
-									s->value[ALPHA_EFF_SUN],
-									s->value[ALPHA_EFF_SHADE],
+									s->value[Av_TOT],
+									s->value[Aj_TOT],
+									s->value[A_TOT],
 									s->value[TOTAL_GROWTH_RESP],
 									s->value[TOTAL_MAINT_RESP],
 									s->value[TOTAL_AUT_RESP],
@@ -1970,7 +1972,9 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 									s->value[FROOT_AUT_RESP],
 									s->value[CROOT_AUT_RESP],
 									s->value[BRANCH_AUT_RESP],
+									s->value[F_CO2],
 									s->value[F_CO2_VER],
+									s->value[F_CO2_FRANKS],
 									s->value[F_CO2_TR],
 									s->value[F_LIGHT_MAKELA],
 									s->value[F_AGE],

@@ -23,7 +23,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 
 	/* constants and variables for Veroustraete's CO2 modifier computation */
 	double KmCO2;	                       /* (ppmv CO2) affinity coefficients temperature dependent according to Arrhenius relationship */
-	double Ea1   = 59400.0;                /* (J mol-1) Activation energy for CO2 fixation (KmCO2 temp dependence)   */
+	double Ea1   = 59400.0;                /* (J mol-1) Activation energy for CO2 fixation (KmCO2 temp dependence)  Badger and Collatz 1977 */
 	double A1    = 2.419 * pow(10,13);     /* (ppmv) Arrhenius constant for KmCO2 tø dependence in ppm for t>=15  */
 	double Ea2   = 109600.0;	           /* (J mol-1) Activation energy for CO2 fixation for t<15 C */
 	double A2    = 1.976 * pow(10,22);     /* (ppmv) Arrhenius constant for KmCO2 tø dependence in ppm for t<15 C */
@@ -66,7 +66,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 
 	Ca     = meteo_annual->co2Conc;
 	Ca_ref = g_settings->co2Conc;
-	tairK  = meteo_daily->tavg + TempAbs;
+	tairK  = meteo_daily->tday + TempAbs;
 
 	/*************************** ASSIMILATION CO2 MODIFIERS ***************************/
 
