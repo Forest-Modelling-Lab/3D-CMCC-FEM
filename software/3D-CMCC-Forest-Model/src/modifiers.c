@@ -22,17 +22,22 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	double RelAge;
 
 	/* constants and variables for Veroustraete's CO2 modifier computation */
+	/* CO2 dependence */
 	double KmCO2;	                       /* (ppmv CO2) affinity coefficients temperature dependent according to Arrhenius relationship */
 	double Ea1   = 59400.0;                /* (J mol-1) Activation energy for CO2 fixation (KmCO2 temp dependence)  Badger and Collatz 1977 */
 	double A1    = 2.419 * pow(10,13);     /* (ppmv) Arrhenius constant for KmCO2 tø dependence in ppm for t>=15  */
 	double Ea2   = 109600.0;	           /* (J mol-1) Activation energy for CO2 fixation for t<15 C */
 	double A2    = 1.976 * pow(10,22);     /* (ppmv) Arrhenius constant for KmCO2 tø dependence in ppm for t<15 C */
+	/* O2 dependence */
 	double KO2;	                           /* (% O2) Inhibition constant for 02 */
 	double EaKO2 = 13913.5;                /* (J mol-1) Activation energy for O2 inhibition */
-	double AKO2  = 8240;                   /* Arrhenius constant */
+	double AKO2  = 8240;                   /* Arrhenius constantfor KO2 to dependence */
+
+	/* CO2/O2 dependence */
 	double tau;	                           /* CO2/O2 specifity ratio */
 	double Eatau = -42896.9;               /* (J mol-1) Activation energy for CO2/O2 specificity */
 	double Atau  = 7.87 * pow(10,-5);      /* (dimensionless) Arrhenius constant */
+
 	double tairK;                          /* (K) daily air temperature */
 	double v1, v2;
 

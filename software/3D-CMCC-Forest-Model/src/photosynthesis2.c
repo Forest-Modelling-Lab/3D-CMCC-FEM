@@ -231,7 +231,7 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	double Vcmax;                  /* (umol/m2/s) Leaf-scale maximum carboxylation rate, 25°C */
 	double pabsII;                 /* (molPAR/m2/sec) PAR effectively absorbed by the phosystemII */
 	double J;                      /* (umol/m2/s) rate of RuBP (ribulose-1,5-bisphosphate) regeneration */
-	double gamma;                  /* (Pa) CO2 compensation point without dark respiration */
+	double gamma_star;             /* (Pa) CO2 compensation point without dark respiration */
 	double Ca;                     /* (Pa) atmospheric [CO2] pressure */
 	double O2;                     /* (Pa) intercellular O2 partial pressure, taken to be 0·21 (mol mol-1) see Medlyn et al., 1999 */
 	double Av;                     /* (umol/m2/s) carboxylation rate for limited assimilation (synonym of Vc) */
@@ -278,10 +278,6 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	/*******************************************************************************/
 	/* the enzyme kinetics built into this model are based on Woodrow and Berry (1988) and Collatz et al., (1991) */
 
-	/* correct kinetic constants for temperature, and do unit conversions */
-	Ko  = Ko25 * pow ( q10Ko , ( meteo_daily->tday - 25. ) / 10. );
-	Ko *= 100.;   /* mbar --> Pa */
-
 	/* Michaelis Menten approach */
 	if ( meteo_daily->tday > 15. )
 	{
@@ -300,6 +296,10 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	/* convert rubisco activity units from umol/mgRubisco/min -> umol/gRubisco/s */
 	act = act  * 1e3 / 60.;
 
+	/* correct kinetic constants for temperature, and do unit conversions */
+	Ko  = Ko25 * pow ( q10Ko , ( meteo_daily->tday - 25. ) / 10. );
+	Ko *= 100.;   /* mbar --> Pa */
+
 	/******************************************************************************************************************************/
 
 	/* calculate gamma (Pa) CO2 compensation point due to photorespiration, in the absence of maint (or dark?) respiration */
@@ -315,17 +315,17 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	             (2 * K0 * Vcmax)
 
 	*/
-	gamma = 0.5 * O2 * 0.21 * Kc / Ko;
+	gamma_star = 0.5 * O2 * 0.21 * Kc / Ko;
 
 #else
 	//not currently used
 	/* note: dePury and Farquhar 1997 method */
-	//gamma = 36.9 + 1.88 * ( meteo_daily->tday - 25. ) + 0.036 * ( pow ( ( meteo_daily->tday - 25. ) , 2. ) );
+	//gamma_star = 36.9 + 1.88 * ( meteo_daily->tday - 25. ) + 0.036 * ( pow ( ( meteo_daily->tday - 25. ) , 2. ) );
 	//fixme why?
-	//gamma *= (meteo_daily->air_pressure / 1e6);
+	//gamma_star *= (meteo_daily->air_pressure / 1e6);
 
 	/* note: Bernacchi et al., 2001 method (in umol/mol)*/
-	gamma = 42.75 * exp ( ( 37830 * ( tleaf_K + 298. ) ) / ( 298. * Rgas * tleaf_K ) );
+	gamma_star = 42.75 * exp ( ( 37830 * ( tleaf_K + 298. ) ) / ( 298. * Rgas * tleaf_K ) );
 
 #endif
 
@@ -469,8 +469,11 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	/* quadratic solution for Av */
 	var_a =  -1. / cond_corr;
 	var_b = Ca + ( Vcmax - Rd ) / cond_corr + Kc * ( 1. + O2 / Ko );
-	var_c = Vcmax * ( gamma - Ca ) + Rd * ( Ca + Kc * ( 1. + O2 / Ko ) );
+	var_c = Vcmax * ( gamma_star - Ca ) + Rd * ( Ca + Kc * ( 1. + O2 / Ko ) );
+
 	det   = var_b * var_b - 4. * var_a * var_c;
+	/* check condition */
+	CHECK_CONDITION( det , <, 0.0);
 
 
 	/* compute photosynthesis when Av (or Vc) (umol CO2/m2/s) carboxylation rate for limited assimilation
@@ -479,8 +482,8 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 
 	/* quadratic solution for Aj */
 	var_a = -4.5 / cond_corr;
-	var_b = 4.5 * Ca + 10.5 * gamma + J / cond_corr - 4.5 * Rd / cond_corr;
-	var_c = J * ( gamma - Ca ) + Rd * ( 4.5 * Ca + 10.5 * gamma );
+	var_b = 4.5 * Ca + 10.5 * gamma_star + J / cond_corr - 4.5 * Rd / cond_corr;
+	var_c = J * ( gamma_star - Ca ) + Rd * ( 4.5 * Ca + 10.5 * gamma_star );
 
 	det   = var_b * var_b - 4. * var_a * var_c;
 	/* check condition */
