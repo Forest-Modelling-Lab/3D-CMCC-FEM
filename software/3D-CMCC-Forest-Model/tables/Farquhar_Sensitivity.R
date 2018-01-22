@@ -9,7 +9,9 @@ library(ggplot2)
 library(ggrepel)
 
 # Create directory output to save the plot
-dir_out = '/home/corrado/Desktop/Farquhar_Plot/'
+dir_in = paste0(gsub('tables','output',getwd()),'/')
+dir.create(dir_in,showWarnings = F)
+dir_out = paste0(dir_in,'/Farquhar_Plot/')
 dir.create(dir_out,showWarnings = F)
 
 # Costant variables
@@ -42,22 +44,11 @@ leaf_day_mresp = c(0.08, 0.07, 0.15)
 
 # Calculating other variables
 
-df_tot         = data.frame(seq(1:30))
+if (exists('df_tot')) rm(df_tot)
+
+par_abs = seq(0,1500,by = 50)
 
 for (j in seq(1:3)) {
-  
-par_abs        = 0
-A              = c()
-Av             = c()
-Aj             = c()
-temp_Av        = c()
-temp_Aj        = c()
-temp_A         = c()
-df             = c()
-
-for (i in seq(from = 0, to = 30)) { # for cycle (par_abs from 0 to 1500 with a step of 50)
-  
-  par_abs = par_abs + 50
   
   # calculate Rd (umol/m2/s) day leaf m. resp, proj. area basis
   Rd          = leaf_day_mresp[j]
@@ -104,7 +95,7 @@ for (i in seq(from = 0, to = 30)) { # for cycle (par_abs from 0 to 1500 with a s
   # calculate Vcmax (umol CO2/m2/s) max rate of carboxylation from leaf nitrogen data and Rubisco activity
   
   #  kg Nleaf   kg NRub    kg Rub      umol            umol
-  #  -------- X -------  X ------- X ---------   =   --------
+  #  -------- X -------  X ------- X ---------   =   --
   #    m2      kg Nleaf   kg NRub   kg RUB * s       m2 * s
   
   #  (lnc)    X  (flnr)  X  (fnr)  X   (act)     =    (Vmax)
@@ -144,7 +135,7 @@ for (i in seq(from = 0, to = 30)) { # for cycle (par_abs from 0 to 1500 with a s
   
   # compute photosynthesis when Av (or Vc) (umol CO2/m2/s) carboxylation rate for limited assimilation 
   #(net photosynthesis rate when Rubisco activity is limiting)
-  temp_Av[i]  = ( -var_b + sqrt( det ) ) / ( 2 * var_a )
+  temp_Av  = ( -var_b + sqrt( det ) ) / ( 2 * var_a )
   
   # quadratic solution for Aj
   var_a       = -4.5 / cond_corr
@@ -155,29 +146,30 @@ for (i in seq(from = 0, to = 30)) { # for cycle (par_abs from 0 to 1500 with a s
   
   # compute photosynthesis when (umol CO2/m2/s) RuBP (ribulose-1,5-bisphosphate) regeneration limited assimilation
   #(net photosynthesis rate when RuBP (ribulose-1,5-bisphosphate)-regeneration is limiting)
-  temp_Aj[i]  = ( -var_b + sqrt( det ) ) / ( 2 * var_a )
+  temp_Aj  = ( -var_b + sqrt( det ) ) / ( 2 * var_a )
   
   # compute (umol CO2/m2/s) final assimilation rate; estimate A as the minimum of (Av,Aj)
-  temp_A[i]   = min ( temp_Av[i] , temp_Aj[i] )
+  temp_A   = c()
+  for (cy_minimo in temp_Aj ) {
+    if (cy_minimo < temp_Av) {
+      temp_A = c(temp_A,cy_minimo)
+    } else {
+      temp_A = c(temp_A,temp_Av)
+    }
+  }
+  rm(cy_minimo)
+
+  if (exists('df_tot')) {
+    df_tot = cbind(df_tot,data.frame(temp_A,temp_Av,temp_Aj))
+  } else {
+    df_tot = data.frame(temp_A,temp_Av,temp_Aj)
+  }
   
-  # compute (Pa) intercellular [CO2]
-  Ci          = Ca - ( A / cond_corr )
-  
-  Av          = append(Av,temp_Av[i])
-  Aj          = append(Aj,temp_Aj[i])
-  A           = append(A,temp_A[i])
-  
-} #ending for cycle (par_abs)
+} #ending for cycle (j)
 
-df            = data.frame(A,Av,Aj)
-df_tot        = data.frame(append(df_tot,df))
 
-  } #ending for cycle (j)
-
-par_abs = data.frame(seq(from=0, to=1450,by=50))
-
-df_tot            = data.frame(append(par_abs,df_tot))
-colnames(df_tot)  = c('PAR','seq','A(sunl)','Av(sunl)','Aj(sunl)','A(shl)','Av(shl)','Aj(shl)','A','Av','Aj')
+df_tot            = cbind(par_abs,df_tot)
+colnames(df_tot)  = c('PAR','A(sunl)','Av(sunl)','Aj(sunl)','A(shl)','Av(shl)','Aj(shl)','A','Av','Aj')
 
 # organizzo la tabella dei dati per il plot
 if (exists('df_plot')) rm(df_plot)
@@ -234,22 +226,26 @@ df_plot$v1_name = factor(df_plot$v1_name)
 df_plot$v1_name <- factor(df_plot$v1_name, levels = c("Aj", "Aj(sunl)", "Aj(shl)",
                                                       "Av", "Av(sunl)", "Av(shl)",
                                                       "A" , "A(sunl)" , "A(shl)"
-                                                      ))
- mp2 =
-  ggplot()                                                                          +
-  geom_line(data = df_plot,aes(x=PAR,y = v1,color=v1_name))                                               +
-  geom_point(data = df_plot,aes(x=PAR,y = v1,color=v1_name,shape = type))                                 +
+))
+mp2 =
+  ggplot()                                                                                   +
+  geom_line(data = df_plot,aes(x=PAR,y = v1,color=v1_name))                                  +
+  geom_point(data = df_plot,aes(x=PAR,y = v1,color=v1_name,shape = type))                    +
   geom_text_repel(data = df_label_av, aes(x = PAR, y = v1, label = etichetta),size = 2,
                   box.padding = unit(0.35, "lines"),point.padding = unit(0.5, "lines"))      +
   scale_color_manual(values = c('Av' = 'blue' ,'Av(sunl)'  = 'blue' ,'Av(shl)'  = 'blue' ,
                                 'Aj' = 'green','Aj(sunl)'  = 'green','Aj(shl)'  = 'green',
-                                'A'  = 'red'  ,'A(sunl)'   = 'red'  ,'A(shl)'   = 'red'))  +
+                                'A'  = 'red'  ,'A(sunl)'   = 'red'  ,'A(shl)'   = 'red'))    +
   scale_shape_manual(values = c('SUNL' = 1,
                                 'SHL' = 0 ,
-                                'NA' = 2 ))                                                +
-  xlab('PAR photon flux (umol/m2/s)')                                                      +
-  ylab('netCO2 flux (umolCO2/m2/s)')                                                       +
+                                'NA' = 2 ))                                                  +  
+  xlab('PAR photon flux (umol/m2/s)')                                                        +
+  ylab('netCO2 flux (umolCO2/m2/s)')                                                         +
   theme(axis.title.x = element_text(size = 8), axis.title.y = element_text(size = 8), 
         legend.text=element_text(size=6),legend.title=element_blank(),
-        panel.grid.minor = element_line(colour = "white", size = 0.01 ),)
-ggsave(paste(dir_out,'.png',sep = '_',collapse = ''),plot = mp2,width = 5, height = 5)
+        panel.grid.minor = element_line(colour="white", size=0.5)) +
+  scale_x_continuous(minor_breaks = seq(0 , 1500, 100), breaks = seq(0, 1500, 100))
+ggsave(paste(dir_out,'.png',sep = '_',collapse = ''),plot = mp2,width = 8, height = 5)
+
+
+
