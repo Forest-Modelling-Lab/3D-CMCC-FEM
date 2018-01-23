@@ -247,6 +247,8 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	double beta       = 2.1; /* ratio between Vcmax and Jmax see dePury and Farquhar 1997; for fagus see Liozon et al., (2000) and Castanea */
 	double test_Vcmax = 55 ; /* (umol/m2/sec) Vcmax for fagus see Deckmyn et al., 2004 GCB */
 	double test_Jmax  = 100; /* (umol/m2/sec) Jmax for fagus see Deckmyn et al., 2004 GCB */
+
+	static int test_assimilation = 0; /* 0 uses min (Av, Aj), 1 only Av, 2 only Aj */
 	/*
 	 * some parameter values (to be included in species.txt):
 	 * Vcmax = 55 (umol/m2/sec) for fagus see Deckmyn et al., 2004 GCB
@@ -278,7 +280,7 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	/*******************************************************************************/
 	/* the enzyme kinetics built into this model are based on Woodrow and Berry (1988) and Collatz et al., (1991) */
 
-	/* Michaelis Menten approach */
+	/* Michaelis Menten coefficient for Rubisco as in Collatz et al., (1991)see von Caemmerer 2000 "Biochemical model of leaf photosynthesis" */
 	if ( meteo_daily->tday > 15. )
 	{
 		Kc  = Kc25  * pow ( q10Kc , ( meteo_daily->tday - 25. ) / 10. );
@@ -314,7 +316,7 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	   gamma* = -----------------
 	             (2 * K0 * Vcmax)
 
-	*/
+	 */
 	gamma_star = 0.5 * O2 * 0.21 * Kc / Ko;
 
 #else
@@ -366,33 +368,6 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	/* compute Vcmax */
 	Vcmax = leafN * s->value[N_RUBISCO] * fnr * act;
 
-	//	if (s->value[LAI_PROJ]> 4.5)
-	//	{
-	//		printf("\n\n\n\n");
-	//
-	//		if (sun_shade == 0)
-	//		{
-	//			printf("LAI_SUN_PROJ %g \n", s->value[LAI_SUN_PROJ]);
-	//			printf("LEAF_SUN_C %g \n", s->value[LEAF_SUN_C]);
-	//			printf("LEAF_SUN_N %g \n", s->value[LEAF_SUN_N]);
-	//			printf("fnr %g \n", fnr);
-	//			printf("act %g \n", act);
-	//			printf("leafN %g \n", leafN);
-	//			printf("Vcmax %g \n", Vcmax);
-	//		}
-	//		else
-	//		{
-	//			printf("LAI_SHADE_PROJ %g \n", s->value[LAI_SHADE_PROJ]);
-	//			printf("LEAF_SHADE_C %g \n", s->value[LEAF_SHADE_C]);
-	//			printf("LEAF_SHADE_N %g \n", s->value[LEAF_SHADE_N]);
-	//			printf("fnr %g \n", fnr);
-	//			printf("act %g \n", act);
-	//			printf("leafN %g \n", leafN);
-	//			printf("Vcmax %g \n", Vcmax);
-	//
-	//			getchar();
-	//		}
-	//	}
 #endif
 
 	/******************************************************************************************************************************/
@@ -436,7 +411,7 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	/*
 	   theta J^2 - (pabsII + Jmax) J + pabsII Jmax = 0
 
-	*/
+	 */
 
 	/* compute PAR effectively absorbed by photosystem II */
 	pabsII = ( par_abs * phiII ) / ppe;
@@ -494,8 +469,26 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	Aj = ( -var_b + sqrt( det ) ) / ( 2. * var_a );
 
 	/* compute (umol CO2/m2/s) final assimilation rate */
-	/* estimate A as the minimum of (Av,Aj) */
-	A = MIN ( Av , Aj );
+	switch (test_assimilation)
+	{
+	case 0:
+
+		/* estimate A as the minimum of (Av,Aj) */
+		A = MIN ( Av, Aj );
+
+		break;
+	case 1:
+
+		/* estimate A as Av */
+		A = Av;
+
+		break;
+	case 2:
+		/* estimate A as Aj */
+		A = Aj;
+
+		break;
+	}
 
 	/* compute (Pa) intercellular [CO2] */
 	Ci = Ca - ( A / cond_corr );

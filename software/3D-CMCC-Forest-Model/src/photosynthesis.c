@@ -31,18 +31,20 @@ void photosynthesis(cell_t *const c, const int layer, const int height, const in
 
 	/******************************************************************/
 
-	modifier = 0; /* 0 for Veroustraete; 1 for Franks */
+	modifier = 1; /* 0 for Veroustraete; 1 for Franks */
 
 	/* selection for CO2 modifier to be used */
-	switch( modifier )
+	switch ( modifier )
 	{
 	case 0:
 
 		s->value[F_CO2] = s->value[F_CO2_VER];
+
 		break;
 	case 1:
 
 		s->value[F_CO2] = s->value[F_CO2_FRANKS];
+
 		break;
 	}
 

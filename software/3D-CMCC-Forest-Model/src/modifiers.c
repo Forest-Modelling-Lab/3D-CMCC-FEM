@@ -45,20 +45,23 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	static double beta   = 240.;   /* (dimensionless) definition ? */
 	static double ni     = 0.89;   /* (dimensionless) vicosity of water relative to its value at 25 °C */
 	static double ci     = 0.41;   /* (dimensionless) carbon cost unit for the maintenance of electron transport capacity */
-	static double Kc25   = 404;    /* (ubar) michaelis-menten const carboxylase, 25 deg C */
+	static double Kc25   = 404.9;  /* (ubar) michaelis-menten const carboxylase, 25 deg C */
 	static double q10Kc  = 2.1;    /* (DIM) Q_10 for Kc */
-	static double Ko25   = 248.0;  /* (mbar) michaelis-menten const oxygenase, 25 deg C */
+	static double Ko25   = 248.;   /* (mbar) michaelis-menten const oxygenase, 25 deg C */
 	static double q10Ko  = 1.2;    /* (DIM) Q_10 for Ko */
 
 	/* variables for Wang et al., 2016 Nature Plants CO2 modifiers computation */
 	double Kc;           /* (Pa) effective Michaelis-Menten coefficienct for Rubisco */
-	double gamma;        /* (Pa) Photorespiratory compensation point */
+	double gamma_star;   /* (Pa) Photorespiratory compensation point */
 	double O2;           /* (Pa) atmospheric [O2] */
 	double Ko;           /* (Pa) michaelis-menten constant for oxygenase reaction */
 	double m0;
 	double vpd;          /* (Pa) vpd */
 	double Ca;           /* (ppmv) CO2 atmospheric concentration */
 	double Ca_ref;       /* (ppmv) CO2 atmospheric concentration */
+
+	double Av_rel, Aj_rel;
+	static int test_assimilation = 0;
 
 	age_t *a;
 	species_t *s;
@@ -121,7 +124,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	/* convert mbar --> Pa */
 	Ko *= 100.;
 
-	/* compute effective Michaelis-Menten coefficient for Rubisco as in Collatz et al., (1991) */
+	/* compute effective Michaelis-Menten coefficient for Rubisco as in Collatz et al., (1991) see von Caemmerer 2000 "Biochemical model of leaf photosynthesis" */
 
 	if ( meteo_daily->tday > 15. )
 	{
@@ -138,14 +141,14 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	/* calculate gamma (Pa) CO2 compensation point due to photorespiration, in the absence of maint (or dark?) respiration */
 	/* it assumes Vomax/Vcmax = 0.21; Badger & Andrews (1974) */
 	/* 0.5 because with 1 mol of oxygenations assumed to release 0.5 molCO2 by glycine decarboxilation (Farquhar and Busch 2017) */
-	gamma = 0.5 * 0.21 * Kc * O2 / Ko;
+	gamma_star = 0.5 * O2 * 0.21 * Kc / Ko;
 
 	/******************************** WANG ET AL' VERSION **********************************/
 	/***************************************************************************************/
 	/* CO2 MODIFIER FOR ASSIMILATION  */
 	/* see Wang's et al (2016), Nature Plants */
 
-	m0 = (Ca - gamma) / (Ca + (2 * gamma) + (3 * gamma) * sqrt((1.6 * vpd * ni )/(beta * (Kc + gamma))));
+	m0 = (Ca - gamma_star) / (Ca + (2 * gamma_star) + (3 * gamma_star) * sqrt((1.6 * vpd * ni )/(beta * (Kc + gamma_star))));
 
 	/* compute FCO2 modifier */
 	s->value[F_CO2_WANG] = m0 * sqrt(1. - pow( (ci / m0) ,(2. / 3.)));
@@ -157,10 +160,68 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	/* see Franks et al., (2013) NPhyt Eq 5 */
 
 	/* convert gamma from Pa to ppm */
-	gamma /= (meteo_daily->air_pressure / 1e6);
+	gamma_star /= (meteo_daily->air_pressure / 1e6);
 
-	/* compute FCO2 modifier */
-	s->value[F_CO2_FRANKS] = ( ( Ca - gamma ) * ( Ca_ref + 2. * gamma ) ) / ( ( Ca + 2. * gamma) * ( Ca_ref - gamma ) );
+#if 0
+	/* compute FCO2 modifier (Aj_rel) */
+	s->value[F_CO2_FRANKS] = ( ( Ca - gamma_star ) * ( Ca_ref + 2. * gamma_star ) ) / ( ( Ca + 2. * gamma_star) * ( Ca_ref - gamma_star ) );
+
+
+	/******************************************************************************************/
+#else
+	/******************************** NEW VERSION ***********************************/
+	/******************************************************************************************/
+
+	/* solve for Av and Aj using the quadratic equation, substitution for Ci
+		from A = g(Ca-Ci) into the equations from Farquhar, von Caemmerer and Berry (1980)
+		and Bernacchi et al (2003) (for values 4.5 and 10.5) :
+
+		       Vmax (Ci - gamma)
+		Av =  -------------------   -   Rd
+		      Ci + Kc (1 + O2/Ko)
+
+
+		         J (Ci - gamma)
+		Aj  =  -------------------  -   Rd
+	           4.5 Ci + 10.5 gamma
+	 */
+
+	/* compute FCO2 modifier (Aj_rel) */
+
+	/*note: original Franks et al., (2013) */
+	Aj_rel = ( ( Ca - gamma_star ) * ( Ca_ref + 2. * gamma_star ) ) / ( ( Ca + 2. * gamma_star) * ( Ca_ref - gamma_star ) );
+
+	/* note Following parameterization from Bernacchi et al., (2001) and applied to Franks et al., (2013) */
+	//Aj_rel = ( ( Ca - gamma_star ) * ( ( 4.5 * Ca_ref ) + ( 10.5 * gamma_star ) ) ) / ( ( ( 4.5 * Ca )  + ( 10.5 * gamma_star ) ) * ( Ca_ref - gamma_star ) );
+
+	/* compute F CO2 modifier (Av_rel) */
+	Av_rel = ( ( Ca - gamma_star ) * ( Ca_ref + Kc * ( 1. + ( O2 / Ko ) ) ) ) / ( ( Ca + Kc * ( 1. + ( O2 / Ko ) ) ) * ( Ca_ref - gamma_star ) );
+
+	switch ( test_assimilation )
+	{
+	case 0:
+
+		/* estimate A as the minimum of (Av,Aj) */
+		s->value[F_CO2_FRANKS] = MIN ( Av_rel, Aj_rel );
+
+		break;
+	case 1:
+
+		/* estimate A as Av */
+		s->value[F_CO2_FRANKS] = Av_rel;
+
+		break;
+	case 2:
+		/* estimate A as Aj */
+		s->value[F_CO2_FRANKS] = Aj_rel;
+
+		break;
+	}
+
+
+	/******************************************************************************************/
+
+#endif
 
 	/****************************************************************************************************************/
 
