@@ -20,7 +20,7 @@ extern settings_t* g_settings;
 
 #define TEST 0
 
-void total_photosynthesis_biome (cell_t *const c, const int height, const int dbh, const int age, const int species, const meteo_daily_t *const meteo_daily, const meteo_annual_t *const meteo_annual)
+void photosynthesis_FvCB (cell_t *const c, const int height, const int dbh, const int age, const int species, const meteo_daily_t *const meteo_daily, const meteo_annual_t *const meteo_annual)
 {
 
 	double cond_corr;        /* (umol/m2/s/Pa) leaf conductance corrected for CO2 vs. water vapor */
@@ -212,25 +212,30 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 		All other parameters, including the q10's for Kc and Ko are the same
 		as in Woodrow and Berry. */
 
-	static double Kc25          = 404.9;  /* (ubar) michaelis-menten const carboxylase, 25 deg C  Badger and Collatz value*/
+	static double Kc25          = 404.9;  /* (ubar or umol mol-1) Michaelis-Menten const carboxylase, 25 deg C  Badger and Collatz value*/
 	static double q10Kc         = 2.1;    /* (DIM) Q_10 for Kc Badger and Collatz and Collatz et al., (1991) */
-	static double Ko25          = 248.;   /* (mbar) Michaelis-Menten const oxygenase, 25 deg C 248 Badger and Collatz, 278.4 Bernacchi et al., 2001 */
+	static double Ko25          = 278.4;  /* (mbar or mmol mol-1) Michaelis-Menten const oxygenase, 25 deg C 248 Badger and Collatz, 278.4 Bernacchi et al., 2001 */
 	static double q10Ko         = 1.2;    /* (DIM) inhibition constant for O2 Collatz et al., (1991) */
 	static double act25         = 3.6;    /* (umol/mgRubisco/min) Rubisco activity at 25 C Badger and Collatz value */
 	static double q10act        = 2.4;    /* (DIM) Q_10 for Rubisco activity Badger and Collatz value Collatz et al., (1991) */
 	static double phiII         = 0.85;   /* (DIM) fraction of PAR effectively absorbed by photosytem II (leaf absorptance); 0.8 for Bonan et al., 2011 */
 	static double fnr           = 7.16;   /* (DIM) g Rubisco/gN Rubisco weight proportion of rubisco relative to its N content Kuehn and McFadden (1969) */
 	static double thetaII       = 0.7;    /* (DIM) curvature of the light-response curve of electron transport (DePury and Farquhar, 1997, Bonan et al., 2011) */
-	static double ppe           = 2.6;     /* (mol e- /mol photons) photons absorbed by PSII per e- transported (quantum yield of electron transport) dePury and Farquhar 1997*/
+	static double ppe           = 2.6;    /* (mol e- /mol photons) photons absorbed by PSII per e- transported (quantum yield of electron transport) dePury and Farquhar 1997*/
+	static double Ea_Kc         = 59400;  /* (kJ mol-1) Activation energy for carboxylase */
+	static double Ea_Ko         = 36000;  /* (kJ mol-1) Activation energy for oxygenase */
+	//static double Ea_Rub        = ?????;  /* (kJ mol-1) Activation energy for Rubisco */
 
 	/* local variables */
 	double Kc;                     /* (Pa) michaelis-menten constant for carboxylase reaction */
 	double Ko;                     /* (Pa) michaelis-menten constant for oxygenase reaction */
 	double act;                    /* (umol CO2/kgRubisco/s) Rubisco activity scaled by temperature and [O2] and [CO2] */
-	double Jmax;                   /* (umol/m2/s) max rate electron transport */
-	double Vcmax;                  /* (umol/m2/s) Leaf-scale maximum carboxylation rate, 25°C */
+	double Vcmax25;                /* (umol/m2/s) Leaf-scale maximum carboxylation rate, 25°C */
+	double Vcmax;                  /* (umol/m2/s) Actual Leaf-scale maximum carboxylation rate */
 	double pabsII;                 /* (molPAR/m2/sec) PAR effectively absorbed by the phosystemII */
-	double J;                      /* (umol/m2/s) rate of RuBP (ribulose-1,5-bisphosphate) regeneration */
+	double Jmax25;                 /* (umol/m2/s) Maximum rate of RuBP (ribulose-1,5-bisphosphate) regeneration, 25 °C */
+	double Jmax;                   /* (umol/m2/s) rate of RuBP (ribulose-1,5-bisphosphate) regeneration */
+	double J;                      /* (umol/m2/s) Current rate of RuBP (ribulose-1,5-bisphosphate) regeneration */
 	double gamma_star;             /* (Pa) CO2 compensation point without dark respiration */
 	double Ca;                     /* (Pa) atmospheric [CO2] pressure */
 	double O2;                     /* (Pa) intercellular O2 partial pressure, taken to be 0·21 (mol mol-1) see Medlyn et al., 1999 */
@@ -239,7 +244,10 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	double A;                      /* (umol/m2/s) final assimilation rate */
 	double Ci;                     /* (Pa) intercellular [CO2] */
 	double Rd;                     /* (umol/m2/s) (umol/m2/s) day leaf m. resp, proj. area basis */
+	double tleaf;                  /* (°C) leaf temperature (assumed equal to Tair) */
 	double tleaf_K;                /* (Kelvin) leaf temperature (assumed equal to Tair) */
+	double temp_corr;              /* temperature function */
+	double high_temp_corr;         /* high temperature inhibition */
 	double var_a, var_b, var_c, det;
 
 	//todo todo todo todo todo move in species.txt (this should be the only variable for all photosynthesis)
@@ -275,37 +283,81 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	O2  = (O2CONC / 100. ) * meteo_daily->air_pressure;
 
 	/* calculate leaf temperature */
+	tleaf   = meteo_daily->tday;
 	tleaf_K = meteo_daily->tday + TempAbs;
 
+#if 0
+
+	/*************************** MICHAELIS MENTEN KINETICS *************************/
 	/*******************************************************************************/
 	/* the enzyme kinetics built into this model are based on Woodrow and Berry (1988) and Collatz et al., (1991) */
+
+	/* correct kinetic constants for temperature  */
+	Ko  = Ko25 * pow ( q10Ko , ( meteo_daily->tday - 25. ) / 10. );
+
 
 	/* Michaelis Menten coefficient for Rubisco as in Collatz et al., (1991)see von Caemmerer 2000 "Biochemical model of leaf photosynthesis" */
 	if ( meteo_daily->tday > 15. )
 	{
-		Kc  = Kc25  * pow ( q10Kc , ( meteo_daily->tday - 25. ) / 10. );
-		act = act25 * pow ( q10act, ( meteo_daily->tday - 25. ) / 10. );
+		Kc  = Kc25  * pow ( q10Kc , ( tleaf - 25. ) / 10. );
+		act = act25 * pow ( q10act, ( tleaf - 25. ) / 10. );
 	}
 	else
 	{
-		Kc  = Kc25  * pow ( 1.8 * q10Kc,  ( meteo_daily->tday - 15. ) / 10.) / q10Kc;
-		act = act25 * pow ( 1.8 * q10act, ( meteo_daily->tday - 15. ) / 10.) / q10act;
+		Kc  = Kc25  * pow ( 1.8 * q10Kc,  ( tleaf - 15. ) / 10.) / q10Kc;
+		act = act25 * pow ( 1.8 * q10act, ( tleaf - 15. ) / 10.) / q10act;
 	}
+
+#else
+
+	/****************************** ARRHENIUS KINETICS *****************************/
+	/*******************************************************************************/
+	/* the enzyme kinetics built into this model are based on Medlyn (1999) */
+
+	/* correct kinetic constants for temperature */
+	Ko  = Ko25 * exp ( Ea_Ko * ( tleaf - 25. ) / ( 298. * Rgas * ( tleaf + TempAbs ) ) );
+
+	/* Arrhenius coefficient for Rubisco as in Collatz et al., (1991)see von Caemmerer 2000 "Biochemical model of leaf photosynthesis" */
+	Kc  = Kc25 * exp ( Ea_Kc * ( tleaf - 25. ) / ( 298. * Rgas * ( tleaf + TempAbs ) ) );
+
+	/* note: assuming that activity of rubisco follows F_T */
+	//act = * exp ( Ea_Rub * ( meteo_daily->tday - 25. ) / ( 298. * Rgas * ( meteo_daily->tday + TempAbs ) ) );
+
+	//fixme fixme fixme
+	if ( tleaf > 15. )
+	{
+		act = act25 * pow ( q10act, ( tleaf - 25. ) / 10. );
+	}
+	else
+	{
+		act = act25 * pow ( 1.8 * q10act, ( tleaf - 15. ) / 10.) / q10act;
+	}
+
+#endif
+
+	/*******************************************************************************/
+
+	/* conversions */
+
+	/* convert mbar --> Pa */
+	Ko *= 100.;
 
 	/* convert Kc ubar --> Pa */
 	Kc *= 0.1;
 
+	/*******************************************************************************/
+
+	/****************************** RUBISCO ACTIVITY *******************************/
+
 	/* convert rubisco activity units from umol/mgRubisco/min -> umol/gRubisco/s */
 	act = act  * 1e3 / 60.;
 
-	/* correct kinetic constants for temperature, and do unit conversions */
-	Ko  = Ko25 * pow ( q10Ko , ( meteo_daily->tday - 25. ) / 10. );
-	Ko *= 100.;   /* mbar --> Pa */
-
-	/******************************************************************************************************************************/
+	/*******************************************************************************/
 
 	/* calculate gamma (Pa) CO2 compensation point due to photorespiration, in the absence of maint (or dark?) respiration */
+
 #if 1
+
 	/* note: BIOME-BGC method */
 	/* see also Bernacchi et al., 2001 */
 	/* it assumes Vomax/Vcmax = 0.21; Badger & Andrews (1974), Medlyn et al., (2002) */
@@ -320,6 +372,7 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	gamma_star = 0.5 * O2 * 0.21 * Kc / Ko;
 
 #else
+
 	//not currently used
 	/* note: dePury and Farquhar 1997 method */
 	//gamma_star = 36.9 + 1.88 * ( meteo_daily->tday - 25. ) + 0.036 * ( pow ( ( meteo_daily->tday - 25. ) , 2. ) );
@@ -331,9 +384,10 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 
 #endif
 
-	/******************************************************************************************************************************/
+	/*******************************************************************************/
 
 #if TEST
+
 	//not currently used
 	//note: modified version of the BIOME-BGC original code
 	//note: if accepted move to species.txt
@@ -342,7 +396,7 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	Vcmax = /*s->value[VCMAX]*/ test_Vcmax;
 
 #else
-	/* calculate Vmax from leaf nitrogen data and Rubisco activity */
+	/* calculate Vcmax from leaf nitrogen data and Rubisco activity */
 
 	/* kg Nleaf   kg NRub    kg Rub      umol            umol
 	   -------- X -------  X ------- X ---------   =   --------
@@ -352,27 +406,27 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	 */
 
 	/* calculate Vcmax (umol CO2/m2/s) max rate of carboxylation from leaf nitrogen data and Rubisco activity */
-	/* see:
-	 * Woodrow and Berry (1988)
-	 * Field (1983)
-	 * Harley et al., (1992)
-	 * Medlyn et al., (1999)
-	 * */
+	/* see: Woodrow and Berry (1988); Field (1983); Harley et al., (1992); Medlyn et al., (1999) */
 
 	/* "Vcmax is more realistically formulated as a dynamic quantity that depends on the leaf area–based concentration of Rubisco and the enzyme activity"
-	 * references:
-	 * Niinemets and Tenhunen 1997
-	 * Thornton and Zimmermann 2007
-	 * */
+	 * references: Niinemets and Tenhunen 1997; Thornton and Zimmermann 2007 */
 
-	/* compute Vcmax */
-	Vcmax = leafN * s->value[N_RUBISCO] * fnr * act;
+	/* compute Vcmax25 at 25 °C Bonan et al., (2011) */
+	Vcmax25   = leafN * s->value[N_RUBISCO] * fnr * act;
+
+	/* temperature corrector factor dePury and Farquhar (1997) */
+	temp_corr = exp ( 64.8 * ( tleaf - 25.) / ( 298. * Rgas * ( tleaf * TempAbs ) ) );
+
+	/* correct Vcmax25 for temperature Medlyn et al., (1999) with F_SW from Bonan et al., (2011) */
+	Vcmax     = Vcmax25 * temp_corr * s->value[F_SW];
+
 
 #endif
 
-	/******************************************************************************************************************************/
+	/*******************************************************************************/
 
 #if TEST
+
 	//not currently used
 	//note: modified version of the BIOME-BGC original code
 	//note: if accepted move to species.txt
@@ -381,30 +435,30 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	Jmax = /*s->value[JMAX]*/test_Jmax;
 
 #else
+
 	/* calculate Jmax = f(Vmax), reference:	Wullschleger, S.D., 1993.  Biochemical limitations to carbon assimilation in C3 plants -
 	 * A retrospective analysis of the A/Ci curves from	109 species. Journal of Experimental Botany, 44:907-920. */
+
 	/* compute (umol electrons/m2/s) max rate electron transport */
-
-	//note: original version of the BIOME-BGC code
 	/* a simplifying assumption that empirically relates the maximum rate of electron transport to maximum carboxylation velocity
-	 * see:
-	 * Wullschleger (1993)
-	 * Field (1983)
-	 * Harley et al., (1992)
-	 * Watanabe et al., (1994)
-	 * DePury and Farquhar (1997)
-	 * Medlyn et al., (1999)
-	 * Peterson et al., (1999)
-	 * Liozon et al., (2000)
-	 * Leuning et al., (2002)
-	 * Bonan et al., (2011)*/
+	 * see: Wullschleger (1993); Field (1983); Harley et al., (1992); Watanabe et al., (1994); DePury and Farquhar (1997); Medlyn et al., (1999)
+	 * Peterson et al., (1999);  Liozon et al., (2000);  Leuning et al., (2002); Bonan et al., (2011)*/
 
-	/* compute Jmax */
-	Jmax = beta * Vcmax;
+	/* temperature corrector factor dePury and Farquhar (1997) */
+	temp_corr      = exp( 37. * ( tleaf_K - 298. ) / ( 298. * Rgas * tleaf_K ) );
+
+	/* high temperature inihibition factor dePury and Farquhar (1997) */
+	high_temp_corr = ( 1. + exp ( ( 0.71 * 298. - 220. ) / ( Rgas * 298. ) ) ) / ( 1. + exp ( ( 0.71 * tleaf_K - 220. ) / ( Rgas * tleaf_K ) ) ) ;
+
+	/* compute Jmax at 25 °C Bonan et al., (2011) */
+	Jmax25         = beta * Vcmax25;
+
+	/* correct Jmax25 for temperature dePury and Farquhar (1997) with F_SW from Bonan et al., (2011) */
+	Jmax           = Jmax25 * temp_corr * high_temp_corr * s->value[F_SW];
 
 #endif
 
-	/******************************************************************************************************************************/
+	/*******************************************************************************/
 
 	/* irradiance dependence of electron transport (the "non-rectangular hyperbola") */
 	/* from the equation of de Pury and Farquhar (1997) Plant Cell and Env. and Bernacchi et al., (2003) Plant Cell and Env. */
@@ -425,7 +479,7 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	/* compute (umol RuBP/m2/s) rate of RuBP (ribulose-1,5-bisphosphate) regeneration */
 	J      = ( -var_b - sqrt ( var_b * var_b - 4. * var_a * var_c ) ) / ( 2. * var_a );
 
-	/******************************************************************************************************************************/
+	/*******************************************************************************/
 
 	/* solve for Av and Aj using the quadratic equation, substitution for Ci
 		from A = g(Ca-Ci) into the equations from Farquhar, von Caemmerer and Berry (1980)
@@ -439,7 +493,9 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 		         J (Ci - gamma)
 		Aj  =  -------------------  -   Rd
 	           4.5 Ci + 10.5 gamma
-	 */
+	*/
+
+	/*******************************************************************************/
 
 	/* quadratic solution for Av */
 	var_a =  -1. / cond_corr;
@@ -450,10 +506,11 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	/* check condition */
 	CHECK_CONDITION( det , <, 0.0);
 
-
 	/* compute photosynthesis when Av (or Vc) (umol CO2/m2/s) carboxylation rate for limited assimilation
 	 * (net photosynthesis rate when Rubisco activity is limiting) */
 	Av    = ( -var_b + sqrt( det ) ) / ( 2. * var_a );
+
+	/*******************************************************************************/
 
 	/* quadratic solution for Aj */
 	var_a = -4.5 / cond_corr;
@@ -468,8 +525,10 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	 * (net photosynthesis rate when RuBP (ribulose-1,5-bisphosphate)-regeneration is limiting) */
 	Aj = ( -var_b + sqrt( det ) ) / ( 2. * var_a );
 
+	/*******************************************************************************/
+
 	/* compute (umol CO2/m2/s) final assimilation rate */
-	switch (test_assimilation)
+	switch ( test_assimilation )
 	{
 	case 0:
 
@@ -489,6 +548,8 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 
 		break;
 	}
+
+	/*******************************************************************************/
 
 	/* compute (Pa) intercellular [CO2] */
 	Ci = Ca - ( A / cond_corr );

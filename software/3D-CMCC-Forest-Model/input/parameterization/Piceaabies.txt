@@ -1,11 +1,11 @@
 //Picea abies parameterization
 LIGHT_TOL               3       //4 = very shade intolerant 3 = shade intolerant 2 = shade tolerant 1 = very shade tolerant
 PHENOLOGY               1.2     //PHENOLOGY 0.1 = deciduous broadleaf, 0.2 = deciduous needle leaf, 1.1 = broad leaf evergreen, 1.2 = needle leaf evergreen 
-ALPHA                   0.054   //Canopy quantum efficiency (molC/molPAR) converted from 1.8 gCMJ for Picea abies (0.065) Seidl et al., 2005, (0.048) Rotzer et al., 2010, 0.051 Peltionemi et al., 2012
-EPSILONgCMJ             0.61    //Light Use Efficiency (gC/molPAR)(used if ALPHA is not available) 0.61 Peltionemi et al., 2012
-GAMMA_LIGHT             0.02    // Empirical parameter for Light modifiers see Peltionemi et al., 2012 
-K                       0.67    //Extinction coefficient for absorption of PAR by canopy for Picea abies Pietsch et al., 2005 ,0.54 from Pietsch et al., 2005,  0.54 from Mollicone, 0.4241 Forrester et al., 2014
-ALBEDO                  0.06    //averaged for P.abies, 0.06 Jarvis et al., 1976, 0.095 from Breuer et al., 2003
+ALPHA        0.048 //    0.054   //Canopy quantum efficiency (molC/molPAR) converted from 1.8 gCMJ for Picea abies (0.065) Seidl et al., 2005, (0.048) Rotzer et al., 2010, 0.05 Peltionemi et al., 2012
+EPSILONgCMJ             0.61    //Light Use Efficiency (gC/molPAR)(used if ALPHA is not available) 
+GAMMA_LIGHT       0 //      0.02    // Empirical parameter for Light modifiers see Peltionemi et al., 2012 
+K                0.67    //Extinction coefficient for absorption of PAR by canopy for Picea abies Pietsch et al., 2005 ,0.54 from Pietsch et al., 2005,  0.54 from Mollicone, 0.4241 Forrester et al., 2014
+ALBEDO           0.06    //averaged for P.abies, 0.06 Jarvis et al., 1976, 0.095 from Breuer et al., 2003
 INT_COEFF               0.25    //precip interception coefficient for Picea abies (0.3 see Tatarinov) (0.25 see Lawrence et al., 2007)
 SLA_AVG0                7.52    //Average Specific Leaf Area m^2/KgDM (MATURE) sunlit/shaded leaves for Picea abies 8 Rötzer et al., (2010), 7.52 Mund et al., 2002, (5.9) see Johansson, T. 1999
 SLA_AVG1                3.9     //Average Specific Leaf Area m^2/KgDM (juvenile) sunlit/shaded leaves for Picea abies 2 Rötzer et al., (2010), Konopka et al., 2014, (5.9) see Johansson, T. 1999
@@ -23,7 +23,7 @@ COEFFCOND               0.06    //Define stomatal responsee to VPD in mbar for P
 BLCOND                  0.009   //Canopy Boundary Layer conductance  for Picea abies 
 MAXCOND                 0.002   //Maximum Stomatal Conductance in m/sec for Picea abies (see Pietsch) 0.002 Tatarinov, 2005; 0.0015 for Breuer et al., 0.006 Hibbard et al., 2005
 CUTCOND                 0.00006 //Cuticul conductance in m/sec for Picea abies (see Pietsch)
-MAXAGE                  300     //Determines rate of "physiological decline" of forest for Picea abies Seidl et al., 2012 (TO CHECK !!!!!)
+MAXAGE            400 //      300     //Determines rate of "physiological decline" of forest for Picea abies Seidl et al., 2012 (TO CHECK !!!!!)
 RAGE                    0.95    //Relative Age to give fAGE = 0.5 0.95 for Picea abies Seidl et al., 2012
 NAGE                    4       //Power of relative Age in function for Age for Picea abies Seidl et al., 2012
 GROWTHTMIN              -4      //Minimum temperature for growth 0 for Picea abies from p.c. Seidl, -4 from Bossel 1996

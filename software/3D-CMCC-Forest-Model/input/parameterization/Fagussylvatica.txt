@@ -3,7 +3,7 @@ LIGHT_TOL                  3  //4 = very shade intolerant (cc = 90%), 3 = shade 
 PHENOLOGY                0.1  //PHENOLOGY 0.1 = deciduous broadleaf, 0.2 = deciduous needle leaf, 1.1 = broad leaf evergreen, 1.2 = needle leaf evergreen 
 ALPHA                  0.057  //Canopy quantum efficiency (molC/molPAR) (0.057) Peltionemi et al., 2012, (0.05) from Williams 199, (0.056) Rotzer et al., 2010
 EPSILONgCMJ             0.69  //Light Use Efficiency  (gC/MJ)(used if ALPHA is not available) Peltionemi et al., 2012,
-GAMMA_LIGHT           0.0025  //Empirical parameter for Light modifiers 
+GAMMA_LIGHT      0 //     0.0025  //Empirical parameter for Light modifiers 
 K                       0.65  //Extinction coefficient for absorption of PAR by canopy 0.71 for F. sylvatica Vitale et al., 2012, 0.5 from Williams 1996, 0.65 Hoffmann 1995, 0.45 Forrester et al., 2014
 ALBEDO                  0.13  //Albedo, 0.15 (varying from 0.13-0.17) from OTTO et al., BGS 2014
 INT_COEFF                0.3  //precip interception coefficient for F. sylvatica fom Tatarinov
@@ -27,7 +27,7 @@ MAXAGE                   400  //Determines rate of "physiological decline" of fo
 RAGE                    0.95  //Relative Age to give fAGE = 0.5
 NAGE                      10  //Power of relative Age in function for Age
 GROWTHTMIN                 0  //Minimum temperature for growth 5  Rasse et al 2001 0 from Williams 1996, -2 Hoffmann 1995
-GROWTHTMAX           40 //35  //Maximum temperature for growth 40 from Williams 1996 35 from calibration
+GROWTHTMAX           40 //35  //Maximum temperature for growth 40 from Williams 1996 
 GROWTHTOPT                20  //Optimum temperature for growth 19.4 Rasse et al 2001, 20 from Lyr & Garbe, 1994, 22 Hoffmann 1995
 GROWTHSTART     60 //80 //100  //(5 °C)average temperature or (GDD) thermic sum for starting growth in °C 130 ettore with t base = 5°C, 130 from Hoffmann et al., 1995 
 MINDAYLENGTH              12  //minimum day length for fagus from ettore, 12 through satellite images

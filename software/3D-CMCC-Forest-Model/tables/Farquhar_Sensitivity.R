@@ -40,7 +40,7 @@ co2Conc        = 400    #(ppmv) Co2 concentration
 
 tday           = 25     #(°C) daily temperature 
 air_pressure   = 100854 #(Pa) air pressure
-N_RUBISCO      = 0.16   #(ratio) Fraction of Rubisco per Leaf Nitrogen ground area
+N_RUBISCO      = 0.162  #(ratio) Fraction of Rubisco per Leaf Nitrogen ground area
 cond_corr      = 0.52   #(umol/m2/s/Pa)
 leafN          = c(1.5, 1.4, 2.9) #Lean nitrogen content per ground area (sun, shadedd, total leaves)
 leaf_day_mresp = c(0.08, 0.07, 0.15) #Daytime leaf maint respiration per ground area (sun, shadedd, total leaves)
@@ -160,10 +160,13 @@ for (j in seq(1:3)) {
     #(net photosynthesis rate when Rubisco activity is limiting)
     temp_Av  = ( -var_b + sqrt( det ) ) / ( 2 * var_a )
     
+    par_a = 4.5
+    par_b = 10.5
+    
     # quadratic solution for Aj
-    var_a       = -4.5 / cond_corr
-    var_b       = 4.5 * Ca + 10.5 * gamma + J / cond_corr - 4.5 * Rd / cond_corr
-    var_c       = J * ( gamma - Ca ) + Rd * ( 4.5 * Ca + 10.5 * gamma )
+    var_a       = -par_a / cond_corr
+    var_b       = par_a * Ca + par_b * gamma + J / cond_corr - par_a * Rd / cond_corr
+    var_c       = J * ( gamma - Ca ) + Rd * ( par_a * Ca + par_b * gamma )
     
     det         = var_b * var_b - 4 * var_a * var_c
     

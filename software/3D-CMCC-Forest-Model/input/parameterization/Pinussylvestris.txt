@@ -3,12 +3,12 @@ LIGHT_TOL   3                 //4 = very shade intolerant 3 = shade intolerant 2
 PHENOLOGY   1.2               //PHENOLOGY 0.1 = deciduous broadleaf, 0.2 = deciduous needle leaf, 1.1 = broad leaf evergreen, 1.2 = needle leaf evergreen 
 ALPHA           0.055         //Canopy quantum efficiency (molC/molPAR) for P. sylvestris Landsberg et al., 2005, 0.0545 Makela et al., 2006, 0.05 Xenakis et al., 2007, 0.051 Peltionemi et al., 2012, 0.049 Forrester et al., 2017
 EPSILONgCMJ 0.62              //Light Use Efficiency (gC/molPAR)(used if ALPHA is not available) for P. sylvestris Peltionemi et al 2012 
-GAMMA_LIGHT      0.0 //     0.005   // Empirical parameter for Light modifiers see Makela et al., 2008 
+GAMMA_LIGHT      0 //     0.005   // Empirical parameter for Light modifiers see Makela et al., 2008 
 K   0.51                      //Extinction coefficient for absorption of PAR by canopy for P. sylvestris Landsberg et al., 2005 or 0.51 from Pietsch, 0.495 Tatarinov, 0.38 Forrester et al., 2017
-ALBEDO  0.10                  //averaged for P. sylvestris 0.15 (or 0.12) Otto et al., 2014 BGS, 0.093 from Breuer et al., 2003
+ALBEDO  0.093 //0.10                  //averaged for P. sylvestris 0.15 (or 0.12) Otto et al., 2014 BGS, 0.093 from Breuer et al., 2003
 INT_COEFF  0.3                //precip interception coefficient for P. sylvestris from Pietsch
 SLA_AVG0  14.7                //Average Specific Leaf Area m^2/KgDM (juvenile) sunlit/shaded leaves for P. sylvestris 14.7 Van Nevel 2015, 9.0 Landsberg et al., 2005, 13.0 from Pietsch 9.5 Tatarinov, 5.50 Mencuccini and Bonosi 2001
-SLA_AVG1  4.49 //ISIMIP 7.46  //Average Specific Leaf Area m^2/KgDM (mature) sunlit/shaded leaves for P. sylvestris Mencuccini & Bonosi 2001, Landsberg et al., 2005, 5.5 Mencuccini Bonosi 2003, 13.0 from Pietsch 9.5 Tatarinov, 5.50 Mencuccini and Bonosi 2001
+SLA_AVG1  4.49                //Average Specific Leaf Area m^2/KgDM (mature) sunlit/shaded leaves for P. sylvestris Mencuccini & Bonosi 2001, Landsberg et al., 2005, 5.5 Mencuccini Bonosi 2003, 13.0 from Pietsch 9.5 Tatarinov, 5.50 Mencuccini and Bonosi 2001
 TSLA      10                  //Age at which SLA_AVG = (SLA_AVG1 + SLA_AVG0 )/2 Landsberg et al., 2005
 SLA_RATIO   2                 //(DIM) ratio of shaded to sunlit projected SLA for P. sylvestris from Pietsch
 LAI_RATIO   2.6               //(DIM) all-sided to projected leaf area ratio for P. sylvestris from Pietsch
@@ -26,9 +26,9 @@ CUTCOND 0.000075              //Cuticul conductance in m/sec for P. sylvestris 0
 MAXAGE  300                   //Determines rate of "physiological decline" of forest 500 for P. sylvestris Landsberg et al., 2005, 350 Forrester et al., 2017
 RAGE    0.95                  //Relative Age to give fAGE = 0.5 for P. sylvestris 0.95 Landsberg et al., 2005, Forrester et al., 2017
 NAGE    4                     //Power of relative Age in function for P. sylvestris Landsberg et al., 2005, Forrester et al., 2017
-GROWTHTMIN -2 // -6                //Minimum temperature for growth for P. sylvestris 0 Leverenz et al., 1987 -2 Landsberg et al., 2005, -5.93 Makela et al., 2006, -5 Forrester et al., 2017
-GROWTHTMAX  30 //35                //Maximum temperature for growth for P. sylvestris 30 Leverenz et al., 1987;  25 Landsberg et al., 2005, 35 Forrester et al., 2017
-GROWTHTOPT  20                //Optimum temperature for growth for P. sylvestris 20 Medlyn et al., 2002; 15 Landsberg et al., 2005, 15 Forrester et al., 2017
+GROWTHTMIN -6                 //Minimum temperature for growth for P. sylvestris 0 Leverenz et al., 1987 -2 Landsberg et al., 2005, -5.93 Makela et al., 2006, -5 Forrester et al., 2017
+GROWTHTMAX  40 //35                //Maximum temperature for growth for P. sylvestris 30 Leverenz et al., 1987; 25 Landsberg et al., 2005, 35 Forrester et al., 2017
+GROWTHTOPT  22.5 //20                //Optimum temperature for growth for P. sylvestris 20 Medlyn et al., 2002; 15 Landsberg et al., 2005, 15 Forrester et al., 2017
 GROWTHSTART 200               //average temperature for starting growth in °C 
 MINDAYLENGTH    0             //minimum day length for deciduous
 SWPOPEN -0.5                  //in KPa for P. sylvestris from Pietsch et al 2005, -0.5 for Tatarinov et al., 2006

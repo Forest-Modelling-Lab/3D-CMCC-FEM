@@ -11,7 +11,7 @@
 
 extern settings_t* g_settings;
 
-void photosynthesis(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, const meteo_annual_t *const meteo_annual)
+void photosynthesis_LUE(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, const meteo_annual_t *const meteo_annual)
 {
 	double Alpha_C;
 	double Epsilon_C;

@@ -275,17 +275,17 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							{
 								/**********************************************************************/
 								/* maintenance respiration */
-								maintenance_respiration    ( c, layer, height, dbh, age, species, meteo_daily );
+								maintenance_respiration ( c, layer, height, dbh, age, species, meteo_daily );
 
 								/* canopy carbon assimilation ( Farquhar Von Caemmerer and Berry - FvCB - approach ) */
-								total_photosynthesis_biome ( c, height, dbh, age, species, meteo_daily, meteo_annual );
+								photosynthesis_FvCB     ( c, height, dbh, age, species, meteo_daily, meteo_annual );
 								/**********************************************************************/
 							}
 							else
 							{
 								/**********************************************************************/
 								/* canopy carbon assimilation ( Monteith - LUE - approach ) */
-								photosynthesis          ( c, layer, height, dbh, age, species, meteo_annual );
+								photosynthesis_LUE      ( c, layer, height, dbh, age, species, meteo_annual );
 
 								/* maintenance respiration */
 								maintenance_respiration ( c, layer, height, dbh, age, species, meteo_daily );
