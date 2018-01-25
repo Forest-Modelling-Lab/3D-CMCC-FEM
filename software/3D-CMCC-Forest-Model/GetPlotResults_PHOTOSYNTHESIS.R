@@ -72,8 +72,8 @@ site_list<-c("All")
 esm_list <-c("3")           # ("1","2","3","4","5", "All")
 rcp_list <-c("8p5")           # ("0p0","2p6","4p5","6p0","8p5","All")
 man_list <-c("off")           # ("on",off","All")
-co2_list <-c("off")            # ("on",off","All")
-protocol_list<-c("LOCAL")        # ("2A","2B","All") 
+co2_list <-c("on")            # ("on",off","All")
+protocol_list<-c("FT")        # ("2A","2B","All") 
 local_list<-c('off')          # ("on","off") to include local simulation of not under FT protocol
 climate_off_list<-c('off')    # ("on",off","All") for climate off and co2 on
 photosynthesis_list<-c('All') #("FvCB",'LUE') for photosyhtesis approach
@@ -170,7 +170,7 @@ if ( run_model == 1 ) {
                                   "-m"," ", "ISIMIP/", protocol,"/",protocol, "_hist.txt", " ",
                                   "-s"," ", "ISIMIP/", site,"_soil_ISIMIP.txt", " ",
                                   "-t"," ", "ISIMIP/", site,"_topo_ISIMIP.txt", " ",
-                                  "-c"," ", "ISIMIP/", protocol, "/PHOTOSYNTHESIS/", site,"_settings_ISIMIP_",photosynthesis,"_Manag-on_CO2-", co2,".txt", " ",
+                                  "-c"," ", "ISIMIP/", protocol, "/PHOTOSYNTHESIS/", site,"_settings_ISIMIP_",photosynthesis,"_Manag-on_CO2-on.txt", " ",
                                   "-k"," ", "ISIMIP/", "/CO2/CO2_hist.txt",
                                   ">output/",output_folder,"-", version, "-", site,"/",protocol,"_log_",site,"_LOCAL_",photosynthesis,"_Manag-on_CO2-", co2,".txt"
             )

@@ -112,7 +112,6 @@ void photosynthesis_FvCB (cell_t *const c, const int height, const int dbh, cons
 
 	/* check condition */
 	CHECK_CONDITION( s->value[ASSIMILATION] , <, 0.0);
-
 	/************************************************************************************************************************************/
 
 	s->value[MONTHLY_ASSIMILATION]       += s->value[ASSIMILATION];
@@ -207,17 +206,19 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	static double thetaII       = 0.7;    /* (DIM) curvature of the light-response curve of electron transport (DePury and Farquhar, 1997, Bonan et al., 2011) */
 	static double ppe           = 2.6;    /* (mol e- /mol photons) photons absorbed by PSII per e- transported (quantum yield of electron transport) dePury and Farquhar 1997*/
 
+#if 0
 	/* Badger and Collatz 1977 */
 	static double Kc25          = 404;    /* (ubar or umol mol-1) Michaelis-Menten const carboxylase, 25 deg C  Badger and Collatz value*/
 	static double Ea_Kc         = 59400;  /* (J mol-1) Activation energy for carboxylase */
 	static double Ko25          = 248000; /* (ubar or umol mol-1) Michaelis-Menten const oxygenase, 25 deg C 248 Badger and Collatz, 278.4 Bernacchi et al., 2001 */
 	static double Ea_Ko         = 36000;  /* (J mol-1) Activation energy for oxygenase */
-
-	//	/* Bernacchi et al., 2001 */
-	//	static double Kc25          = 404.9;  /* (ubar or umol mol-1) Michaelis-Menten const carboxylase, 25 deg C  Badger and Collatz value*/
-	//	static double Ea_Kc         = 79430;  /* (J mol-1) Activation energy for carboxylase */
-	//	static double Ko25          = 278400; /* (ubar or umol mol-1) Michaelis-Menten const oxygenase, 25 deg C 248 Badger and Collatz, 278.4 Bernacchi et al., 2001 */
-	//	static double Ea_Ko         = 36380;  /* (J mol-1) Activation energy for oxygenase */
+#else
+	/* Bernacchi et al., 2001 */
+	static double Kc25          = 404.9;  /* (ubar or umol mol-1) Michaelis-Menten const carboxylase, 25 deg C  Badger and Collatz value*/
+	static double Ea_Kc         = 79430;  /* (J mol-1) Activation energy for carboxylase */
+	static double Ko25          = 278400; /* (ubar or umol mol-1) Michaelis-Menten const oxygenase, 25 deg C 248 Badger and Collatz, 278.4 Bernacchi et al., 2001 */
+	static double Ea_Ko         = 36380;  /* (J mol-1) Activation energy for oxygenase */
+#endif
 
 	/* temperature control */
 	static double Ea_V          = 51560;  /* (J mol-1) Activation energy for J see Maespa */
@@ -424,13 +425,13 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	Vcmax25   = leafN * s->value[N_RUBISCO] * fnr * act;
 
 	/* temperature corrector factor */
-	temp_corr = exp ( Ea_V * ( tleaf - 25.) / ( ( 25. + TempAbs ) * Rgas * ( tleaf + TempAbs ) ) );
+	temp_corr      = exp ( Ea_V * ( tleaf - 25. ) / ( Rgas * tleaf_K * 298.) );
 
 	/* high temperature inhibition factor */
 	if ( tleaf > 0.)
 	{
 		high_temp_corr = ( 1. + exp ( ( S_V * 298. - H_V ) / ( Rgas * tleaf_K ) ) )
-				/ ( 1. + exp ( ( S_V * tleaf_K - H_V ) / ( Rgas * tleaf_K ) ) );
+						/ ( 1. + exp ( ( S_V * tleaf_K - H_V ) / ( Rgas * tleaf_K ) ) );
 	}
 	else
 	{
@@ -442,7 +443,7 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	CHECK_CONDITION( high_temp_corr , <, 0.0);
 
 	/* correct Vcmax25 for temperature Medlyn et al., (1999) with F_SW from Bonan et al., (2011) */
-	Vcmax     = Vcmax25 * temp_corr * /* high_temp_corr */ s->value[F_SW];
+	Vcmax     = Vcmax25 * temp_corr * high_temp_corr * s->value[F_SW];
 
 	/* check condition */
 	CHECK_CONDITION( Vcmax , <, 0.0);
@@ -474,13 +475,13 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	Jmax25         = beta * Vcmax25;
 
 	/* temperature corrector factor */
-	temp_corr      = exp( Ea_J * ( tleaf_K - 298.) ) / ( Rgas * tleaf_K * 298. );
+	temp_corr      = exp ( Ea_J * ( tleaf - 25. ) / ( Rgas * tleaf_K * 298.) );
 
 	/* high temperature inhibition factor */
 	if ( tleaf > 0.)
 	{
 		high_temp_corr = ( 1. + exp ( ( S_J * 298. - H_J ) / ( Rgas * 298. ) ) )
-						/ ( 1. + exp ( ( S_J * tleaf_K - H_J ) / ( Rgas * tleaf_K ) ) );
+								/ ( 1. + exp ( ( S_J * tleaf_K - H_J ) / ( Rgas * tleaf_K ) ) );
 	}
 	else
 	{
@@ -552,6 +553,8 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	 * (net photosynthesis rate when Rubisco activity is limiting) */
 	Av    = ( -var_b + sqrt( det ) ) / ( 2. * var_a );
 
+	//if (Av < 0) Av = 0.;
+
 	/*******************************************************************************/
 
 	/* quadratic solution for Aj */
@@ -566,6 +569,8 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	/* compute photosynthesis when (umol CO2/m2/s) RuBP (ribulose-1,5-bisphosphate) regeneration limited assimilation
 	 * (net photosynthesis rate when RuBP (ribulose-1,5-bisphosphate)-regeneration is limiting) */
 	Aj = ( -var_b + sqrt( det ) ) / ( 2. * var_a );
+
+	//if (Aj < 0) Aj = 0.;
 
 	/*******************************************************************************/
 
