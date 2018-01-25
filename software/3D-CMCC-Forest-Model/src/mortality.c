@@ -33,13 +33,12 @@ void self_thinning_mortality (cell_t *const c, const int layer, const int year)
 	int livetree;
 	int nat_man;   /* natural or managed mortality 0 = natural; 1 = managed */
 
-	nat_man = 0;
-
-
 	height_t *h;
 	dbh_t *d;
 	age_t *a;
 	species_t *s;
+
+	nat_man = 0;
 
 	/* "First, large plants suppress small plants.
 	 * The result is a “hierarchy of dominance and suppression” in which the smaller plants
@@ -201,9 +200,10 @@ int growth_efficiency_mortality ( cell_t *const c, const int height, const int d
 
 	int nat_man;   /* natural or managed mortality 0 = natural; 1 = managed */
 
-	nat_man = 0;
-
 	species_t* s;
+
+	nat_man = 0;
+	
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 	if( s->value[RESERVE_C] < 0 )
@@ -266,10 +266,10 @@ int annual_growth_efficiency_mortality ( cell_t *const c, const int height, cons
 	 * and make the tree class die */
 
 	int nat_man;   /* natural or managed mortality 0 = natural; 1 = managed */
+	species_t* s;
 
 	nat_man = 0;
-
-	species_t* s;
+	
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 	if( s->value[RESERVE_C] < 0 )
@@ -304,10 +304,10 @@ void age_mortality (cell_t *const c, const int height, const int dbh, const int 
 	double age_mort;
 	int nat_man;   /* natural or managed mortality 0 = natural; 1 = managed */
 
-	nat_man = 0;
-
 	age_t *a;
 	species_t *s;
+
+	nat_man = 0;
 
 	a = &c->heights[height].dbhs[dbh].ages[age];
 	// ALESSIOR

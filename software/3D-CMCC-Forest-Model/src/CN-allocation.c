@@ -193,12 +193,12 @@ void carbon_allocation ( cell_t *const c, species_t *const s, const int day, con
 
 void nitrogen_allocation ( cell_t *const c, species_t *const s, const int day, const int month, const int year )
 {
-	double n_to_leaf;
-	double n_to_froot;
-	double n_to_stem;
-	double n_to_croot;
-	double n_to_branch;
-	double n_to_fruit;
+	double n_to_leaf = 0.;
+	double n_to_froot = 0.;
+	double n_to_stem = 0.;
+	double n_to_croot = 0.;
+	double n_to_branch = 0.;
+	double n_to_fruit = 0.;
 
 	//TODO IT SHOULD ALLOCATE NITROGEN ONCE EFFECTIVE NITROGEN AVAILABILITY IS COMPUTED
 

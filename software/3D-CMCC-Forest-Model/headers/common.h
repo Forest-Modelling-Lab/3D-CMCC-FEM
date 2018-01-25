@@ -52,11 +52,28 @@ extern logger_t* g_monthly_log;
 extern logger_t* g_annual_log;
 //extern logger_t* g_soil_log;
 
+/*
+#ifndef isnan
+	# define isnan(x) \
+	  (sizeof (x) == sizeof (long double) ? isnan_ld (x) \
+	   : sizeof (x) == sizeof (double) ? isnan_d (x) \
+	   : isnan_f (x))
+#endif
 
-
+#ifndef isinf
+	# define isinf(x) \
+	  (sizeof (x) == sizeof (long double) ? isinf_ld (x) \
+	   : sizeof (x) == sizeof (double) ? isinf_d (x) \
+	   : isinf_f (x))
+#endif
+*/
 
 #define CHECK_CONDITION(x,c,y) {					\
-		if ( (x)c(y) ) { 							\
+		if ( is_inf((x)) ) {						\
+			printf(XSTR(x) " is INF\n");			\
+		} else if ( is_nan((x)) ) {					\
+			printf(XSTR(x) " is NAN\n");			\
+		} else if ( (x)c(y) ) { 					\
 			char buf[256]; 							\
 			sprintf(buf, "\n#error:\n#condition \"%s %s %s\" is true\n#value of %s is %g\n#value of %s is %g\n#in %s on line %d\n"	\
 							, XSTR(x)				\
@@ -115,5 +132,7 @@ const char* datetime_current(void);
 void timer_init(void);
 double timer_get(void);
 int istab(const int c);
+int is_nan(double x);
+int is_inf(double x);
 
 #endif /* COMMON_H */

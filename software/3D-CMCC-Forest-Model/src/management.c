@@ -28,10 +28,11 @@ extern dataset_t* g_dataset;
 static int harvesting (cell_t *const c, const int height, const int dbh, const int age, const int species, const int rsi)
 {
 	int nat_man;   /* natural or managed mortality 0 = natural; 1 = managed */
+	species_t *s;
 
 	nat_man = 1;
 
-	species_t *s;
+	
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 	/* at the moment it considers a complete harvesting for all classes (if considered) */
@@ -267,9 +268,10 @@ void thinning (cell_t *const c, const int height, const int dbh, const int age, 
 	int trees_to_remove = 0;
 	int nat_man;   /* natural or managed mortality 0 = natural; 1 = managed */
 
-	nat_man = 1;
-
 	species_t *s;
+
+	nat_man = 1;
+	
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 
