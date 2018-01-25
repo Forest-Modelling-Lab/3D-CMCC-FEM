@@ -197,9 +197,8 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 		All other parameters, including the q10's for Kc and Ko are the same
 		as in Woodrow and Berry. */
 
-	static double Kc25          = 404.9;  /* (ubar or umol mol-1) Michaelis-Menten const carboxylase, 25 deg C  Badger and Collatz value*/
+
 	static double q10Kc         = 2.1;    /* (DIM) Q_10 for Kc Badger and Collatz and Collatz et al., (1991) */
-	static double Ko25          = 278.4;  /* (mbar or mmol mol-1) Michaelis-Menten const oxygenase, 25 deg C 248 Badger and Collatz, 278.4 Bernacchi et al., 2001 */
 	static double q10Ko         = 1.2;    /* (DIM) inhibition constant for O2 Collatz et al., (1991) */
 	static double act25         = 3.6;    /* (umol/mgRubisco/min) Rubisco activity at 25 C Badger and Collatz value */
 	static double q10act        = 2.4;    /* (DIM) Q_10 for Rubisco activity Badger and Collatz value Collatz et al., (1991) */
@@ -207,11 +206,26 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	static double fnr           = 7.16;   /* (DIM) g Rubisco/gN Rubisco weight proportion of rubisco relative to its N content Kuehn and McFadden (1969) */
 	static double thetaII       = 0.7;    /* (DIM) curvature of the light-response curve of electron transport (DePury and Farquhar, 1997, Bonan et al., 2011) */
 	static double ppe           = 2.6;    /* (mol e- /mol photons) photons absorbed by PSII per e- transported (quantum yield of electron transport) dePury and Farquhar 1997*/
-	static double Ea_Kc         = 59400;  /* (kJ mol-1) Activation energy for carboxylase */
-	static double Ea_Ko         = 36000;  /* (kJ mol-1) Activation energy for oxygenase */
-	static double Ea_J          = 37000;  /* (KJ mol-1) Activation energy for J */
-	static double S             = 710 ;   /* (JK-1 mol) electron-transport temperature response parameter */
-	static double H             = 220000; /* (J mol-1) curvature parameter of J */
+
+	/* Badger and Collatz 1977 */
+	static double Kc25          = 404;    /* (ubar or umol mol-1) Michaelis-Menten const carboxylase, 25 deg C  Badger and Collatz value*/
+	static double Ea_Kc         = 59400;  /* (J mol-1) Activation energy for carboxylase */
+	static double Ko25          = 248000; /* (ubar or umol mol-1) Michaelis-Menten const oxygenase, 25 deg C 248 Badger and Collatz, 278.4 Bernacchi et al., 2001 */
+	static double Ea_Ko         = 36000;  /* (J mol-1) Activation energy for oxygenase */
+
+	//	/* Bernacchi et al., 2001 */
+	//	static double Kc25          = 404.9;  /* (ubar or umol mol-1) Michaelis-Menten const carboxylase, 25 deg C  Badger and Collatz value*/
+	//	static double Ea_Kc         = 79430;  /* (J mol-1) Activation energy for carboxylase */
+	//	static double Ko25          = 278400; /* (ubar or umol mol-1) Michaelis-Menten const oxygenase, 25 deg C 248 Badger and Collatz, 278.4 Bernacchi et al., 2001 */
+	//	static double Ea_Ko         = 36380;  /* (J mol-1) Activation energy for oxygenase */
+
+	/* temperature control */
+	static double Ea_V          = 51560;  /* (J mol-1) Activation energy for J see Maespa */
+	static double S_V           = 472.;   /* (JK-1 mol) Vmax temperature response parameter */
+	static double H_V           = 144568; /* (J mol-1) Vmax curvature parameter */
+	static double Ea_J          = 43790; //37000;  /* (J mol-1) Activation energy for J see Maespa */
+	static double S_J           = 710 ;   /* (JK-1 mol) electron-transport temperature response parameter */
+	static double H_J           = 220000; /* (J mol-1) curvature parameter of J */
 	//static double Ea_Rub        = ?????;  /* (kJ mol-1) Activation energy for Rubisco */
 
 	/* local variables */
@@ -220,7 +234,7 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	double act;                    /* (umol CO2/kgRubisco/s) Rubisco activity scaled by temperature and [O2] and [CO2] */
 	double Vcmax25;                /* (umol/m2/s) Leaf-scale maximum carboxylation rate, 25°C */
 	double Vcmax;                  /* (umol/m2/s) Actual Leaf-scale maximum carboxylation rate */
-	double pabsII;                 /* (molPAR/m2/sec) PAR effectively absorbed by the phosystemII */
+	double pabsII;                 /* (molPAR/m2/s) PAR effectively absorbed by the phosystemII */
 	double Jmax25;                 /* (umol/m2/s) Maximum rate of RuBP (ribulose-1,5-bisphosphate) regeneration, 25 °C */
 	double Jmax;                   /* (umol/m2/s) rate of RuBP (ribulose-1,5-bisphosphate) regeneration */
 	double J;                      /* (umol/m2/s) Current rate of RuBP (ribulose-1,5-bisphosphate) regeneration */
@@ -276,9 +290,9 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 
 #if 0
 
-	/*************************** MICHAELIS MENTEN KINETICS *************************/
+	/********************************** Q10 KINETICS *******************************/
 	/*******************************************************************************/
-	/* the enzyme kinetics built into this model are based on Woodrow and Berry (1988) and Collatz et al., (1991) */
+	/* the enzyme kinetics built into this model are based q10 Woodrow and Berry (1988) and Collatz et al., (1991) */
 
 	/* correct kinetic constants for temperature  */
 	Ko  = Ko25 * pow ( q10Ko , ( meteo_daily->tday - 25. ) / 10. );
@@ -325,12 +339,10 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 
 	/*******************************************************************************/
 
-	/* conversions */
+	/* convert Ko ubar umol --> Pa */
+	Ko *= 0.1;
 
-	/* convert mbar --> Pa */
-	Ko *= 100.;
-
-	/* convert Kc ubar --> Pa */
+	/* convert Kc ubar umol --> Pa */
 	Kc *= 0.1;
 
 	/*******************************************************************************/
@@ -341,7 +353,7 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 
 	/*******************************************************************************/
 
-	/* calculate gamma (Pa) CO2 compensation point due to photorespiration, in the absence of maint (or dark?) respiration */
+	/* calculate gamma (Pa) CO2 compensation point due to photorespiration, in the absence of respiration */
 
 #if 1
 
@@ -355,33 +367,42 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	   gamma* = -----------------
 	             (2 * K0 * Vcmax)
 
-	*/
+	 */
 
+	/* compute gamma_star (Pa) */
 	gamma_star = 0.5 * 0.21 * O2 * Kc / Ko;
 
 #else
 
-	//not currently used
-	/* note: dePury and Farquhar 1997 method */
-	//gamma_star = 36.9 + 1.88 * ( meteo_daily->tday - 25. ) + 0.036 * ( pow ( ( meteo_daily->tday - 25. ) , 2. ) );
-	//fixme why?
-	//gamma_star *= (meteo_daily->air_pressure / 1e6);
+	if ( tleaf < -1. )
+	{
+		/* note:  Maespa */
+		//gamma_star = 36.9 + 1.88*(-26.0) + 0.036*(-26.0)*(-26.0);
+	}
+	else
+	{
+		/* note: dePury and Farquhar 1997 method */
+		//gamma_star = 36.9 + 1.88 * ( tleaf - 25. ) + 0.036 * pow( ( tleaf - 25. ) ) , 2. );
+	}
 
 	/* note: Bernacchi et al., 2001 method (in umol/mol)*/
-	gamma_star = 42.75 * exp ( ( 37830 * ( tleaf_K + 298. ) ) / ( 298. * Rgas * tleaf_K ) );
+	gamma_star = 42.75 * exp (37830 * ( tleaf - 25.) / ( Rgas *(tleaf + TempAbs)*(25 + TempAbs)));
+
+	/* convert from umol --> Pa */
+	gamma_star *= FIXME THIS VALUE MUST BE CONVERTED FROM umol to Pa
 
 #endif
 
-	/*******************************************************************************/
+			/*******************************************************************************/
 
 #if TEST
 
-	//not currently used
-	//note: modified version of the BIOME-BGC original code
-	//note: if accepted move to species.txt
+			//not currently used
+			//note: modified version of the BIOME-BGC original code
+			//note: if accepted move to species.txt
 
-	/* assign Vcmax from species.txt parameter value */
-	Vcmax = /*s->value[VCMAX]*/ test_Vcmax;
+			/* assign Vcmax from species.txt parameter value */
+			Vcmax = /*s->value[VCMAX]*/ test_Vcmax;
 
 #else
 	/* calculate Vcmax from leaf nitrogen data and Rubisco activity */
@@ -402,14 +423,26 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	/* compute Vcmax25 at 25 °C Bonan et al., (2011) */
 	Vcmax25   = leafN * s->value[N_RUBISCO] * fnr * act;
 
-	/* temperature corrector factor dePury and Farquhar (1997) */
-	temp_corr = exp ( 64.8 * ( tleaf - 25.) / ( 298. * Rgas * ( tleaf + TempAbs ) ) );
+	/* temperature corrector factor */
+	temp_corr = exp ( Ea_V * ( tleaf - 25.) / ( ( 25. + TempAbs ) * Rgas * ( tleaf + TempAbs ) ) );
+
+	/* high temperature inhibition factor */
+	if ( tleaf > 0.)
+	{
+		high_temp_corr = ( 1. + exp ( ( S_V * 298. - H_V ) / ( Rgas * tleaf_K ) ) )
+				/ ( 1. + exp ( ( S_V * tleaf_K - H_V ) / ( Rgas * tleaf_K ) ) );
+	}
+	else
+	{
+		high_temp_corr =  1.;
+	}
 
 	/* check condition */
-	CHECK_CONDITION( temp_corr , <, 0.0);
+	CHECK_CONDITION( temp_corr      , <, 0.0);
+	CHECK_CONDITION( high_temp_corr , <, 0.0);
 
 	/* correct Vcmax25 for temperature Medlyn et al., (1999) with F_SW from Bonan et al., (2011) */
-	Vcmax     = Vcmax25 * temp_corr * s->value[F_SW];
+	Vcmax     = Vcmax25 * temp_corr * /* high_temp_corr */ s->value[F_SW];
 
 	/* check condition */
 	CHECK_CONDITION( Vcmax , <, 0.0);
@@ -437,20 +470,26 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	 * see: Wullschleger (1993); Field (1983); Harley et al., (1992); Watanabe et al., (1994); DePury and Farquhar (1997); Medlyn et al., (1999)
 	 * Peterson et al., (1999);  Liozon et al., (2000);  Leuning et al., (2002); Bonan et al., (2011)*/
 
-	/* temperature corrector factor dePury and Farquhar (1997), Medlyn et al., (1999) */
-	temp_corr      = exp( ( ( tleaf_K - 298.) * Ea_J ) / ( Rgas * tleaf_K * 298. ) );
-
-	/* check condition */
-	CHECK_CONDITION( temp_corr , <, 0.0);
-
-	/* high temperature inhibition factor dePury and Farquhar (1997) */
-	high_temp_corr = ( ( 1. + exp ( ( S * 298. - H ) ) / ( Rgas * 298. ) ) ) / ( ( 1. + exp ( ( S * tleaf_K - H ) ) / ( Rgas * tleaf_K ) ) ) ;
-
-	/* check condition */
-	CHECK_CONDITION( high_temp_corr , <, 0.0);
-
 	/* compute Jmax at 25 °C Bonan et al., (2011) */
 	Jmax25         = beta * Vcmax25;
+
+	/* temperature corrector factor */
+	temp_corr      = exp( Ea_J * ( tleaf_K - 298.) ) / ( Rgas * tleaf_K * 298. );
+
+	/* high temperature inhibition factor */
+	if ( tleaf > 0.)
+	{
+		high_temp_corr = ( 1. + exp ( ( S_J * 298. - H_J ) / ( Rgas * 298. ) ) )
+						/ ( 1. + exp ( ( S_J * tleaf_K - H_J ) / ( Rgas * tleaf_K ) ) );
+	}
+	else
+	{
+		high_temp_corr = 1.;
+	}
+
+	/* check condition */
+	CHECK_CONDITION( temp_corr      , <, 0.0);
+	CHECK_CONDITION( high_temp_corr , <, 0.0);
 
 	/* correct Jmax25 for temperature dePury and Farquhar (1997) with F_SW from Bonan et al., (2011) */
 	Jmax           = Jmax25 * temp_corr * high_temp_corr * s->value[F_SW];
@@ -482,6 +521,7 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	J      = ( -var_b - sqrt ( var_b * var_b - 4. * var_a * var_c ) ) / ( 2. * var_a );
 
 	/*******************************************************************************/
+	/* note: all variables are in Pa */
 
 	/* solve for Av and Aj using the quadratic equation, substitution for Ci
 		from A = g(Ca-Ci) into the equations from Farquhar, von Caemmerer and Berry (1980)
@@ -495,7 +535,7 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 		         J (Ci - gamma)
 		Aj  =  -------------------  -   Rd
 	           4.5 Ci + 10.5 gamma
-	*/
+	 */
 
 	/*******************************************************************************/
 

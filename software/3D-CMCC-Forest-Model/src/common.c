@@ -20,7 +20,6 @@
 static WIN32_FIND_DATA wfd;
 static HANDLE handle;
 static double g_timer_period;
-typedef unsigned __int64 uint64;
 #elif defined (linux) || defined (_linux) || defined (__linux__)
 #include <unistd.h>
 #include <dirent.h>
@@ -28,9 +27,6 @@ typedef unsigned __int64 uint64;
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/time.h>
-#ifndef uint64
-typedef uint64_t uint64;
-#endif
 #endif
 
 /* external error strings */
@@ -537,19 +533,4 @@ int has_path_delimiter(const char* const s) {
 
 int istab(const int c) {
 	return ('\t' == c);
-}
-
-int is_nan(double x) {
-    union { uint64 u; double f; } ieee754;
-    ieee754.f = x;
-    return ( (unsigned)(ieee754.u >> 32) & 0x7fffffff ) +
-           ( (unsigned)ieee754.u != 0 ) > 0x7ff00000;
-}
-
-
-int is_inf(double x) {
-    union { uint64 u; double f; } ieee754;
-    ieee754.f = x;
-    return ( (unsigned)(ieee754.u >> 32) & 0x7fffffff ) == 0x7ff00000 &&
-           ( (unsigned)ieee754.u == 0 );
 }

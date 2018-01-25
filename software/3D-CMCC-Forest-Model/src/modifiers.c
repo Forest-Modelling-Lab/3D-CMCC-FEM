@@ -46,12 +46,20 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	static double beta   = 240.;   /* (dimensionless) definition ? */
 	static double ni     = 0.89;   /* (dimensionless) vicosity of water relative to its value at 25 °C */
 	static double ci     = 0.41;   /* (dimensionless) carbon cost unit for the maintenance of electron transport capacity */
-	static double Kc25   = 404.9;  /* (ubar) michaelis-menten const carboxylase, 25 deg C */
 	static double q10Kc  = 2.1;    /* (DIM) Q_10 for Kc */
-	static double Ko25   = 278.4;  /* (mbar) michaelis-menten const oxygenase, 25 deg C */
 	static double q10Ko  = 1.2;    /* (DIM) Q_10 for Ko */
-	static double Ea_Kc  = 59400;  /* (kJ mol-1) Activation energy for carboxylase */
-	static double Ea_Ko  = 36000;  /* (kJ mol-1) Activation energy for oxygenase */
+
+	/* Badger and Collatz 1977 */
+	static double Kc25          = 404;    /* (ubar or umol mol-1) Michaelis-Menten const carboxylase, 25 deg C  Badger and Collatz value*/
+	static double Ea_Kc         = 59400;  /* (J mol-1) Activation energy for carboxylase */
+	static double Ko25          = 248000; /* (ubar or umol mol-1) Michaelis-Menten const oxygenase, 25 deg C 248 Badger and Collatz, 278.4 Bernacchi et al., 2001 */
+	static double Ea_Ko         = 36000;  /* (J mol-1) Activation energy for oxygenase */
+
+//	/* Bernacchi et al., 2001 */
+//	static double Kc25          = 404.9;  /* (ubar or umol mol-1) Michaelis-Menten const carboxylase, 25 deg C  Badger and Collatz value*/
+//	static double Ea_Kc         = 79430;  /* (kJ mol-1) Activation energy for carboxylase */
+//	static double Ko25          = 278400; /* (ubar or umol mol-1) Michaelis-Menten const oxygenase, 25 deg C 248 Badger and Collatz, 278.4 Bernacchi et al., 2001 */
+//	static double Ea_Ko         = 36380;  /* (J mol-1) Activation energy for oxygenase */
 
 	/* variables for Wang et al., 2016 Nature Plants CO2 modifiers computation */
 	double Kc;           /* (ppm) effective Michaelis-Menten coefficienct for Rubisco */
@@ -157,12 +165,10 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 #endif
 	/*******************************************************************************/
 
-	/* conversions */
+	/* convert ubar umol --> Pa */
+	Ko *= 0.1;
 
-	/* convert mbar --> Pa */
-	Ko *= 100.;
-
-	/* convert ubar --> Pa */
+	/* convert ubar umol --> Pa */
 	Kc *= 0.1;
 
 	/* fixme  conversions */
@@ -177,12 +183,37 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 
 	/*******************************************************************************/
 
-	/* calculate gamma (ppm) CO2 compensation point due to photorespiration, in the absence of maint (or dark?) respiration */
+	/* calculate gamma (ppm) CO2 compensation point due to photorespiration, in the absence of respiration */
+
+#if 1
 	/* it assumes Vomax/Vcmax = 0.21; Badger & Andrews (1974) */
 	/* 0.5 because with 1 mol of oxygenations assumed to release 0.5 molCO2 by glycine decarboxilation (Farquhar and Busch, 2017) */
+
 	gamma_star = 0.5 * 0.21 * O2 * Kc / Ko;
 
-	/******************************** FRANKS ET AL' VERSION ************************/
+#else
+
+	if ( tleaf < -1. )
+	{
+		/* note:  Maespa */
+		gamma_star = 36.9 + 1.88*(-26.0) + 0.036*(-26.0)*(-26.0);
+	}
+	else
+	{
+		/* note: dePury and Farquhar 1997 method */
+		gamma_star = 36.9 + 1.88 * ( tleaf - 25. ) + 0.036 * pow( ( tleaf - 25. ) , 2. );
+	}
+
+	/* note: Bernacchi et al., 2001 method (in umol/mol)*/
+	gamma_star = 42.75 * exp ( 37830 * ( tleaf - 25.) / ( Rgas * ( tleaf + TempAbs ) * ( 25. + TempAbs ) ) );
+
+	/* convert from umol --> Pa -->  ppm */
+	gamma_star *=  0.1;
+	gamma_star /= ( meteo_daily->air_pressure / 1e6 );
+
+#endif
+
+	/****************************** 'FRANKS ET AL' VERSION *************************/
 	/*******************************************************************************/
 	/* CO2 MODIFIER FOR ASSIMILATION  */
 	/* see Franks et al., (2013) NewPhytologist Eq 5 */
@@ -202,6 +233,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	 */
 
 	/*******************************************************************************/
+	/* note: all variables are in ppm */
 
 	/* compute FCO2 modifier (Aj_rel) */
 
