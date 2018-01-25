@@ -2233,7 +2233,7 @@ void EOM_print_output_cell_level(cell_t *const c, const int month, const int yea
 							logger(g_monthly_log,",%6.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%d,%3.4f,%3.4f,%3.4f,%3.4f"
 									",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",
 									s->value[MONTHLY_GPP],
-									s->value[MONTHLY_GROSS_ASSIMILATION],
+									s->value[MONTHLY_ASSIMILATION],
 									s->value[MONTHLY_TOTAL_AUT_RESP],
 									s->value[MONTHLY_NPP],
 									s->value[MONTHLY_CUE],

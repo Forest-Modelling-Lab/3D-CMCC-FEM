@@ -54,17 +54,19 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	static double Ea_Ko  = 36000;  /* (kJ mol-1) Activation energy for oxygenase */
 
 	/* variables for Wang et al., 2016 Nature Plants CO2 modifiers computation */
-	double Kc;           /* (Pa) effective Michaelis-Menten coefficienct for Rubisco */
-	double gamma_star;   /* (Pa) Photorespiratory compensation point */
+	double Kc;           /* (ppm) effective Michaelis-Menten coefficienct for Rubisco */
+	double gamma_star;   /* (ppm) Photorespiratory compensation point */
 	double O2;           /* (Pa) atmospheric [O2] */
-	double Ko;           /* (Pa) michaelis-menten constant for oxygenase reaction */
+	double Ko;           /* (ppm) michaelis-menten constant for oxygenase reaction */
 	double m0;
 	double vpd;          /* (Pa) vpd */
 	double Ca;           /* (ppmv) CO2 atmospheric concentration */
 	double Ca_ref;       /* (ppmv) CO2 atmospheric concentration */
 
 	double Av_rel, Aj_rel;
-	static int test_assimilation = 0;
+
+	static int modifier;
+	static int test_assimilation = 2;
 
 	age_t *a;
 	species_t *s;
@@ -80,10 +82,17 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	tleaf    = meteo_daily->tday;
 	tleaf_K  = meteo_daily->tday + TempAbs;
 
+	/* convert vpd from hPa to Pa */
+	vpd = meteo_daily->vpd / 100.;
+
+	/* calculate atmospheric O2 in ppm, assumes 20.9% O2 by volume */
+	O2  = O2CONC * 10000;
+
 	/************************** ASSIMILATION CO2 MODIFIERS *************************/
 
 	/***************************** VEROUSTRAETE'S VERSION **************************/
 	/*******************************************************************************/
+
 	/* CO2 MODIFIER FOR ASSIMILATION  */
 	/* fertilization effect with rising CO2 from: Veroustraete 1994,
 	 * Veroustraete et al., 2002, Remote Sensing of Environment */
@@ -111,16 +120,6 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 
 	/* CO2 assimilation modifier */
 	s->value[F_CO2_VER] = v1 * v2;
-
-	/*******************************************************************************/
-
-	/* CO2 MODIFIER FOR ASSIMILATION */
-
-	/* convert vpd from hPa to Pa */
-	vpd = meteo_daily->vpd / 100.;
-
-	/* calculate atmospheric O2 in Pa, assumes 20.9% O2 by volume */
-	O2  = ( O2CONC / 100. ) * meteo_daily->air_pressure;
 
 	/*******************************************************************************/
 
@@ -163,47 +162,30 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	/* convert mbar --> Pa */
 	Ko *= 100.;
 
-	/* convert Kc ubar --> Pa */
+	/* convert ubar --> Pa */
 	Kc *= 0.1;
 
-	/*******************************************************************************/
+	/* fixme  conversions */
+
+	/* convert Pa --> ppm */
+	Ko /= ( meteo_daily->air_pressure / 1e6 );
+
+	/* convert Pa --> ppm */
+	Kc /= ( meteo_daily->air_pressure / 1e6 );
 
 	/*******************************************************************************/
 
-	/* calculate gamma (Pa) CO2 compensation point due to photorespiration, in the absence of maint (or dark?) respiration */
+	/*******************************************************************************/
+
+	/* calculate gamma (ppm) CO2 compensation point due to photorespiration, in the absence of maint (or dark?) respiration */
 	/* it assumes Vomax/Vcmax = 0.21; Badger & Andrews (1974) */
-	/* 0.5 because with 1 mol of oxygenations assumed to release 0.5 molCO2 by glycine decarboxilation (Farquhar and Busch 2017) */
-	gamma_star = 0.5 * O2 * 0.21 * Kc / Ko;
-
-	/******************************** WANG ET AL' VERSION **************************/
-	/*******************************************************************************/
-
-	//	/* CO2 MODIFIER FOR ASSIMILATION  */
-	//	/* see Wang's et al (2016), Nature Plants */
-	//
-	//	m0 = (Ca - gamma_star) / (Ca + (2 * gamma_star) + (3 * gamma_star) * sqrt((1.6 * vpd * ni )/(beta * (Kc + gamma_star))));
-	//
-	//	/* compute FCO2 modifier */
-	//	s->value[F_CO2_WANG] = m0 * sqrt(1. - pow( (ci / m0) ,(2. / 3.)));
-
+	/* 0.5 because with 1 mol of oxygenations assumed to release 0.5 molCO2 by glycine decarboxilation (Farquhar and Busch, 2017) */
+	gamma_star = 0.5 * 0.21 * O2 * Kc / Ko;
 
 	/******************************** FRANKS ET AL' VERSION ************************/
 	/*******************************************************************************/
 	/* CO2 MODIFIER FOR ASSIMILATION  */
 	/* see Franks et al., (2013) NewPhytologist Eq 5 */
-
-	/* convert gamma from Pa to ppm */
-	gamma_star /= (meteo_daily->air_pressure / 1e6);
-
-#if 0
-	/* compute FCO2 modifier (Aj_rel) */
-	s->value[F_CO2_FRANKS] = ( ( Ca - gamma_star ) * ( Ca_ref + 2. * gamma_star ) ) / ( ( Ca + 2. * gamma_star) * ( Ca_ref - gamma_star ) );
-
-
-	/******************************************************************************************/
-#else
-	/******************************** NEW VERSION ***********************************/
-	/******************************************************************************************/
 
 	/* solve for Av and Aj using the quadratic equation, substitution for Ci
 		from A = g(Ca-Ci) into the equations from Farquhar, von Caemmerer and Berry (1980)
@@ -219,42 +201,59 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	           4.5 Ci + 10.5 gamma
 	 */
 
+	/*******************************************************************************/
+
 	/* compute FCO2 modifier (Aj_rel) */
 
 	/* note: original Franks et al., (2013) */
-	Aj_rel = ( ( Ca - gamma_star ) * ( Ca_ref + 2. * gamma_star ) ) / ( ( Ca + 2. * gamma_star) * ( Ca_ref - gamma_star ) );
+	Aj_rel = ( ( Ca - gamma_star ) * ( Ca_ref + 2 * gamma_star ) ) / ( ( Ca + 2. * gamma_star ) * ( Ca_ref - gamma_star ) );
 
 	/* note Following parameterization from Bernacchi et al., (2001) and applied to Franks et al., (2013) */
 	//Aj_rel = ( ( Ca - gamma_star ) * ( ( 4.5 * Ca_ref ) + ( 10.5 * gamma_star ) ) ) / ( ( ( 4.5 * Ca )  + ( 10.5 * gamma_star ) ) * ( Ca_ref - gamma_star ) );
 
+	/*******************************************************************************/
+
 	/* compute F CO2 modifier (Av_rel) */
+
 	Av_rel = ( ( Ca - gamma_star ) * ( Ca_ref + Kc * ( 1. + ( O2 / Ko ) ) ) ) / ( ( Ca + Kc * ( 1. + ( O2 / Ko ) ) ) * ( Ca_ref - gamma_star ) );
+
+	/*******************************************************************************/
 
 	switch ( test_assimilation )
 	{
 	case 0:
-
 		/* estimate A as the minimum of (Av,Aj) */
-		s->value[F_CO2_FRANKS] = MIN ( Av_rel, Aj_rel );
 
+		s->value[F_CO2_FRANKS] = MIN ( Av_rel, Aj_rel );
 		break;
 	case 1:
-
 		/* estimate A as Av */
-		s->value[F_CO2_FRANKS] = Av_rel;
 
+		s->value[F_CO2_FRANKS] = Av_rel;
 		break;
 	case 2:
 		/* estimate A as Aj */
-		s->value[F_CO2_FRANKS] = Aj_rel;
 
+		s->value[F_CO2_FRANKS] = Aj_rel;
 		break;
 	}
 
 
 	/******************************************************************************************/
 
-#endif
+	modifier = 1; /* 0 for Veroustraete; 1 for Franks */
+
+	/* selection for CO2 modifier to be used */
+	switch ( modifier )
+	{
+	case 0:
+		s->value[F_CO2] = s->value[F_CO2_VER];
+		break;
+	case 1:
+
+		s->value[F_CO2] = s->value[F_CO2_FRANKS];
+		break;
+	}
 
 	/****************************************************************************************************************/
 

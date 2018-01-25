@@ -24,29 +24,9 @@ void photosynthesis_LUE(cell_t *const c, const int layer, const int height, cons
 	double Lue_sun_max;
 	double Lue_shade;
 	double Lue_shade_max;
-	static int modifier;
 
 	species_t *s;
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
-
-	/******************************************************************/
-
-	modifier = 1; /* 0 for Veroustraete; 1 for Franks */
-
-	/* selection for CO2 modifier to be used */
-	switch ( modifier )
-	{
-	case 0:
-
-		s->value[F_CO2] = s->value[F_CO2_VER];
-
-		break;
-	case 1:
-
-		s->value[F_CO2] = s->value[F_CO2_FRANKS];
-
-		break;
-	}
 
 	/******************************************************************/
 
@@ -82,14 +62,6 @@ void photosynthesis_LUE(cell_t *const c, const int layer, const int height, cons
 			Alpha_C *=  s->value[F_SW];
 		}
 	}
-
-
-	/*** WANG ET AL MODIFIER ***/
-	//test new 18 Dec 2017
-	/* compute effective light use efficiency */
-	//Alpha_C = s->value[ALPHA] * s->value[F_CO2_WANG];
-
-
 
 	/* check if current Alpha exceeds (saturates) maximum Alpha */
 	/* (canopy saturation at 600 ppmv see Medlyn, 1996; Medlyn et al., 2011) */

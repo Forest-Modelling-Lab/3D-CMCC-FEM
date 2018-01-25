@@ -63,12 +63,10 @@ void photosynthesis_FvCB (cell_t *const c, const int height, const int dbh, cons
 
 		/* Canopy gross assimilation and converting from umol/m2 leaf/sec gC/m2/day and to LAI for canopy computation */
 		/* note (from Biome-BGC): "for the final flux assignment, the assimilation output needs to have the maintenance respiration rate added..." */
-		s->value[GROSS_ASSIMILATION_SUN]   = ( psn + leaf_day_mresp ) * s->value[LAI_SUN_PROJ] * meteo_daily->daylength_sec * GC_MOL * 1e-6;
+		s->value[ASSIMILATION_SUN]   = ( psn + leaf_day_mresp ) * s->value[LAI_SUN_PROJ] * meteo_daily->daylength_sec * GC_MOL * 1e-6;
 
-		/* net assimilation and converting from umol/m2 leaf/sec gC/m2/day and to LAI for canopy computation */
-		/* note (in Biome-BGC) assimilation (assim_sun variable) doesn't take into account leaf resp */
-		s->value[NET_ASSIMILATION_SUN]     = psn * s->value[LAI_SUN_PROJ] * meteo_daily->daylength_sec * GC_MOL * 1e-6;
-
+		/* check */
+		if ( psn <= 0 ) s->value[ASSIMILATION_SUN] = 0.;
 	}
 
 	/************************************************************************************************************************************/
@@ -95,14 +93,12 @@ void photosynthesis_FvCB (cell_t *const c, const int height, const int dbh, cons
 		/* call Farquhar for shade leaves photosynthesis */
 		psn = Farquhar (c, s, meteo_daily, meteo_annual, cond_corr, leafN, par_abs, leaf_day_mresp, sun_shade );
 
-		/* Canopy gross assimilation (photosynthesis) and converting from umol/m2 leaf/sec gC/m2/day and to LAI for canopy computation */
+		/* Canopy assimilation (photosynthesis) and converting from umol/m2 leaf/sec gC/m2/day and to LAI for canopy computation */
 		/* note (from Biome-BGC): "for the final flux assignment, the assimilation output needs to have the maintenance respiration rate added..." */
-		s->value[GROSS_ASSIMILATION_SHADE] = ( psn + leaf_day_mresp ) * s->value[LAI_SHADE_PROJ] * meteo_daily->daylength_sec * GC_MOL * 1e-6;
+		s->value[ASSIMILATION_SHADE] = ( psn + leaf_day_mresp ) * s->value[LAI_SHADE_PROJ] * meteo_daily->daylength_sec * GC_MOL * 1e-6;
 
-		/* net assimilation (photosynthesis) and converting from umol/m2 leaf/sec gC/m2/day and to LAI for canopy computation */
-		/* note (in Biome-BGC) assimilation (assim_shade variable) doesn't take into account leaf resp */
-		s->value[NET_ASSIMILATION_SHADE]   = psn * s->value[LAI_SHADE_PROJ] * meteo_daily->daylength_sec * GC_MOL * 1e-6;
-
+		/* check */
+		if ( psn <= 0 ) s->value[ASSIMILATION_SHADE] = 0.;
 	}
 
 	/************************************************************************************************************************************/
@@ -112,42 +108,31 @@ void photosynthesis_FvCB (cell_t *const c, const int height, const int dbh, cons
 	gross (true) photosynthesis" */
 
 	/* total gross assimilation */
-	s->value[GROSS_ASSIMILATION] = s->value[GROSS_ASSIMILATION_SUN] + s->value[GROSS_ASSIMILATION_SHADE];
+	s->value[ASSIMILATION] = s->value[ASSIMILATION_SUN] + s->value[ASSIMILATION_SHADE];
 
-	/* total net assimilation */
-	s->value[NET_ASSIMILATION]   = s->value[NET_ASSIMILATION_SUN]   + s->value[NET_ASSIMILATION_SHADE];
-
-	/************************************************************************************************************************************/
-
-	s->value[MONTHLY_GROSS_ASSIMILATION]       += s->value[GROSS_ASSIMILATION];
-	s->value[MONTHLY_GROSS_ASSIMILATION_SUN]   += s->value[GROSS_ASSIMILATION_SUN];
-	s->value[MONTHLY_GROSS_ASSIMILATION_SHADE] += s->value[GROSS_ASSIMILATION_SHADE];
-
-	s->value[YEARLY_GROSS_ASSIMILATION]        += s->value[GROSS_ASSIMILATION];
-	s->value[YEARLY_GROSS_ASSIMILATION_SUN]    += s->value[GROSS_ASSIMILATION_SUN];
-	s->value[YEARLY_GROSS_ASSIMILATION_SHADE]  += s->value[GROSS_ASSIMILATION_SHADE];
-
-	s->value[MONTHLY_NET_ASSIMILATION]         += s->value[NET_ASSIMILATION];
-	s->value[MONTHLY_NET_ASSIMILATION_SUN]     += s->value[NET_ASSIMILATION_SUN];
-	s->value[MONTHLY_NET_ASSIMILATION_SHADE]   += s->value[NET_ASSIMILATION_SHADE];
-
-	s->value[YEARLY_NET_ASSIMILATION]          += s->value[NET_ASSIMILATION];
-	s->value[YEARLY_NET_ASSIMILATION_SUN]      += s->value[NET_ASSIMILATION_SUN];
-	s->value[YEARLY_NET_ASSIMILATION_SHADE]    += s->value[NET_ASSIMILATION_SHADE];
+	/* check condition */
+	CHECK_CONDITION( s->value[ASSIMILATION] , <, 0.0);
 
 	/************************************************************************************************************************************/
-#if 0
+
+	s->value[MONTHLY_ASSIMILATION]       += s->value[ASSIMILATION];
+	s->value[MONTHLY_ASSIMILATION_SUN]   += s->value[ASSIMILATION_SUN];
+	s->value[MONTHLY_ASSIMILATION_SHADE] += s->value[ASSIMILATION_SHADE];
+
+	s->value[YEARLY_ASSIMILATION]        += s->value[ASSIMILATION];
+	s->value[YEARLY_ASSIMILATION_SUN]    += s->value[ASSIMILATION_SUN];
+	s->value[YEARLY_ASSIMILATION_SHADE]  += s->value[ASSIMILATION_SHADE];
+
+	/************************************************************************************************************************************/
 	/* gpp */
-	s->value[GPP_SUN]                     = s->value[NET_ASSIMILATION_SUN];
-	s->value[GPP_SHADE]                   = s->value[NET_ASSIMILATION_SHADE];
-	s->value[GPP]                         = s->value[GPP_SUN] + s->value[GPP_SHADE];
-#else
-	/* gpp */
-	s->value[GPP_SUN]                     = s->value[GROSS_ASSIMILATION_SUN];
-	s->value[GPP_SHADE]                   = s->value[GROSS_ASSIMILATION_SHADE];
+	s->value[GPP_SUN]                     = s->value[ASSIMILATION_SUN];
+	s->value[GPP_SHADE]                   = s->value[ASSIMILATION_SHADE];
 	s->value[GPP]                         = s->value[GPP_SUN] + s->value[GPP_SHADE];
 
-#endif
+	/* check condition */
+	CHECK_CONDITION( s->value[GPP]       , <, 0.0);
+	CHECK_CONDITION( s->value[GPP_SUN]   , <, 0.0);
+	CHECK_CONDITION( s->value[GPP_SHADE] , <, 0.0);
 
 	/* gC/m2/day --> tC/cell/day */
 	s->value[GPP_tC]                      = s->value[GPP] / 1e6 * g_settings->sizeCell ;
@@ -179,11 +164,11 @@ void photosynthesis_FvCB (cell_t *const c, const int height, const int dbh, cons
 
 	/* test: compute actual quantum canopy efficiency (molC/molphotons PAR) */
 
-	if ( s->value[NET_ASSIMILATION]       > 0. ) s->value[ALPHA_EFF]          = ( s->value[NET_ASSIMILATION]       / GC_MOL ) / s->value[PAR];
+	if ( s->value[ASSIMILATION]       > 0. ) s->value[ALPHA_EFF]          = ( s->value[ASSIMILATION]       / GC_MOL ) / s->value[PAR];
 	else                                         s->value[ALPHA_EFF]          = 0.;
-	if ( s->value[NET_ASSIMILATION_SUN]   > 0. ) s->value[ALPHA_EFF_SUN]      = ( s->value[NET_ASSIMILATION_SUN]   / GC_MOL ) / s->value[PAR_SUN];
+	if ( s->value[ASSIMILATION_SUN]   > 0. ) s->value[ALPHA_EFF_SUN]      = ( s->value[ASSIMILATION_SUN]   / GC_MOL ) / s->value[PAR_SUN];
 	else                                         s->value[ALPHA_EFF_SUN]      = 0.;
-	if ( s->value[NET_ASSIMILATION_SHADE] > 0. ) s->value[ALPHA_EFF_SHADE]    = ( s->value[NET_ASSIMILATION_SHADE] / GC_MOL ) / s->value[PAR_SHADE];
+	if ( s->value[ASSIMILATION_SHADE] > 0. ) s->value[ALPHA_EFF_SHADE]    = ( s->value[ASSIMILATION_SHADE] / GC_MOL ) / s->value[PAR_SHADE];
 	else                                         s->value[ALPHA_EFF_SHADE]    = 0.;
 
 	/************************************************************************************************************************************/
@@ -224,6 +209,9 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	static double ppe           = 2.6;    /* (mol e- /mol photons) photons absorbed by PSII per e- transported (quantum yield of electron transport) dePury and Farquhar 1997*/
 	static double Ea_Kc         = 59400;  /* (kJ mol-1) Activation energy for carboxylase */
 	static double Ea_Ko         = 36000;  /* (kJ mol-1) Activation energy for oxygenase */
+	static double Ea_J          = 37000;  /* (KJ mol-1) Activation energy for J */
+	static double S             = 710 ;   /* (JK-1 mol) electron-transport temperature response parameter */
+	static double H             = 220000; /* (J mol-1) curvature parameter of J */
 	//static double Ea_Rub        = ?????;  /* (kJ mol-1) Activation energy for Rubisco */
 
 	/* local variables */
@@ -252,9 +240,9 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 
 	//todo todo todo todo todo move in species.txt (this should be the only variable for all photosynthesis)
 	// double beta = 1.67; /* Jmax:Vcmax note: in Medlyn et al., 2002*/
-	double beta       = 2.1; /* ratio between Vcmax and Jmax see dePury and Farquhar 1997; for fagus see Liozon et al., (2000) and Castanea */
-	double test_Vcmax = 55 ; /* (umol/m2/sec) Vcmax for fagus see Deckmyn et al., 2004 GCB */
-	double test_Jmax  = 100; /* (umol/m2/sec) Jmax for fagus see Deckmyn et al., 2004 GCB */
+	static double beta       = 2.1; /* ratio between Vcmax and Jmax see dePury and Farquhar 1997; for fagus see Liozon et al., (2000) and Castanea */
+	static double test_Vcmax = 55 ; /* (umol/m2/sec) Vcmax for fagus see Deckmyn et al., 2004 GCB */
+	static double test_Jmax  = 100; /* (umol/m2/sec) Jmax for fagus see Deckmyn et al., 2004 GCB */
 
 	static int test_assimilation = 0; /* 0 uses min (Av, Aj), 1 only Av, 2 only Aj */
 	/*
@@ -346,7 +334,6 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	Kc *= 0.1;
 
 	/*******************************************************************************/
-
 	/****************************** RUBISCO ACTIVITY *******************************/
 
 	/* convert rubisco activity units from umol/mgRubisco/min -> umol/gRubisco/s */
@@ -363,13 +350,14 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	/* it assumes Vomax/Vcmax = 0.21; Badger & Andrews (1974), Medlyn et al., (2002) */
 	/* 0.5 because with 1 mol of oxygenations assumed to release 0.5 molCO2 by glycine decarboxilation (Farquhar and Busch 2017) */
 	/*
-	 *
+
 	             Kc * Vomax * O
 	   gamma* = -----------------
 	             (2 * K0 * Vcmax)
 
-	 */
-	gamma_star = 0.5 * O2 * 0.21 * Kc / Ko;
+	*/
+
+	gamma_star = 0.5 * 0.21 * O2 * Kc / Ko;
 
 #else
 
@@ -402,7 +390,7 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	   -------- X -------  X ------- X ---------   =   --------
 	      m2      kg Nleaf   kg NRub   kg RUB * s       m2 * s
 
-	     (lnc)  X  (flnr)  X  (fnr)  X   (act)     =    (Vmax)
+	     (leafN)  X  (flnr)  X  (fnr)  X   (act)   =    (Vcmax)
 	 */
 
 	/* calculate Vcmax (umol CO2/m2/s) max rate of carboxylation from leaf nitrogen data and Rubisco activity */
@@ -415,11 +403,16 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	Vcmax25   = leafN * s->value[N_RUBISCO] * fnr * act;
 
 	/* temperature corrector factor dePury and Farquhar (1997) */
-	temp_corr = exp ( 64.8 * ( tleaf - 25.) / ( 298. * Rgas * ( tleaf * TempAbs ) ) );
+	temp_corr = exp ( 64.8 * ( tleaf - 25.) / ( 298. * Rgas * ( tleaf + TempAbs ) ) );
+
+	/* check condition */
+	CHECK_CONDITION( temp_corr , <, 0.0);
 
 	/* correct Vcmax25 for temperature Medlyn et al., (1999) with F_SW from Bonan et al., (2011) */
 	Vcmax     = Vcmax25 * temp_corr * s->value[F_SW];
 
+	/* check condition */
+	CHECK_CONDITION( Vcmax , <, 0.0);
 
 #endif
 
@@ -444,17 +437,26 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	 * see: Wullschleger (1993); Field (1983); Harley et al., (1992); Watanabe et al., (1994); DePury and Farquhar (1997); Medlyn et al., (1999)
 	 * Peterson et al., (1999);  Liozon et al., (2000);  Leuning et al., (2002); Bonan et al., (2011)*/
 
-	/* temperature corrector factor dePury and Farquhar (1997) */
-	temp_corr      = exp( 37. * ( tleaf_K - 298. ) / ( 298. * Rgas * tleaf_K ) );
+	/* temperature corrector factor dePury and Farquhar (1997), Medlyn et al., (1999) */
+	temp_corr      = exp( ( ( tleaf_K - 298.) * Ea_J ) / ( Rgas * tleaf_K * 298. ) );
 
-	/* high temperature inihibition factor dePury and Farquhar (1997) */
-	high_temp_corr = ( 1. + exp ( ( 0.71 * 298. - 220. ) / ( Rgas * 298. ) ) ) / ( 1. + exp ( ( 0.71 * tleaf_K - 220. ) / ( Rgas * tleaf_K ) ) ) ;
+	/* check condition */
+	CHECK_CONDITION( temp_corr , <, 0.0);
+
+	/* high temperature inhibition factor dePury and Farquhar (1997) */
+	high_temp_corr = ( ( 1. + exp ( ( S * 298. - H ) ) / ( Rgas * 298. ) ) ) / ( ( 1. + exp ( ( S * tleaf_K - H ) ) / ( Rgas * tleaf_K ) ) ) ;
+
+	/* check condition */
+	CHECK_CONDITION( high_temp_corr , <, 0.0);
 
 	/* compute Jmax at 25 °C Bonan et al., (2011) */
 	Jmax25         = beta * Vcmax25;
 
 	/* correct Jmax25 for temperature dePury and Farquhar (1997) with F_SW from Bonan et al., (2011) */
 	Jmax           = Jmax25 * temp_corr * high_temp_corr * s->value[F_SW];
+
+	/* check condition */
+	CHECK_CONDITION( Jmax , <, 0.0);
 
 #endif
 
@@ -554,6 +556,8 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	/* compute (Pa) intercellular [CO2] */
 	Ci = Ca - ( A / cond_corr );
 
+	/*******************************************************************************/
+
 	/* test */
 	if ( sun_shade == 0 )
 	{
@@ -589,7 +593,6 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	s->value[YEARLY_Av_TOT] += s->value[Av_SUN] + s->value[Av_SHADE];
 	s->value[YEARLY_Aj_TOT] += s->value[Aj_SUN] + s->value[Aj_SHADE];
 	CHECK_CONDITION ( fabs ( s->value[YEARLY_A_TOT] - ( s->value[YEARLY_Av_TOT] + s->value[YEARLY_Aj_TOT] ) ) , > , eps );
-
 
 	return A;
 
