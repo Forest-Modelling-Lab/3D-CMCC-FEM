@@ -224,7 +224,7 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	static double Ea_V          = 51560;  /* (J mol-1) Activation energy for J see Maespa */
 	static double S_V           = 472.;   /* (JK-1 mol) Vmax temperature response parameter */
 	static double H_V           = 144568; /* (J mol-1) Vmax curvature parameter */
-	static double Ea_J          = 43790; //37000;  /* (J mol-1) Activation energy for J see Maespa */
+	static double Ea_J          = 43790;  /* (J mol-1) Activation energy for J see Maespa */
 	static double S_J           = 710 ;   /* (JK-1 mol) electron-transport temperature response parameter */
 	static double H_J           = 220000; /* (J mol-1) curvature parameter of J */
 	//static double Ea_Rub        = ?????;  /* (kJ mol-1) Activation energy for Rubisco */
@@ -235,10 +235,10 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	double act;                    /* (umol CO2/kgRubisco/s) Rubisco activity scaled by temperature and [O2] and [CO2] */
 	double Vcmax25;                /* (umol/m2/s) Leaf-scale maximum carboxylation rate, 25°C */
 	double Vcmax;                  /* (umol/m2/s) Actual Leaf-scale maximum carboxylation rate */
-	double pabsII;                 /* (molPAR/m2/s) PAR effectively absorbed by the phosystemII */
 	double Jmax25;                 /* (umol/m2/s) Maximum rate of RuBP (ribulose-1,5-bisphosphate) regeneration, 25 °C */
 	double Jmax;                   /* (umol/m2/s) rate of RuBP (ribulose-1,5-bisphosphate) regeneration */
 	double J;                      /* (umol/m2/s) Current rate of RuBP (ribulose-1,5-bisphosphate) regeneration */
+	double pabsII;                 /* (molPAR/m2/s) PAR effectively absorbed by the phosystemII */
 	double gamma_star;             /* (Pa) CO2 compensation point without dark respiration */
 	double Ca;                     /* (Pa) atmospheric [CO2] pressure */
 	double O2;                     /* (Pa) intercellular O2 partial pressure, taken to be 0·21 (mol mol-1) see Medlyn et al., 1999 */
@@ -378,19 +378,20 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	if ( tleaf < -1. )
 	{
 		/* note:  Maespa */
-		//gamma_star = 36.9 + 1.88*(-26.0) + 0.036*(-26.0)*(-26.0);
+		gamma_star = 36.9 + 1.88*(-26.0) + 0.036*(-26.0)*(-26.0);
 	}
 	else
 	{
 		/* note: dePury and Farquhar 1997 method */
-		//gamma_star = 36.9 + 1.88 * ( tleaf - 25. ) + 0.036 * pow( ( tleaf - 25. ) ) , 2. );
+		gamma_star = 36.9 + 1.88 * ( tleaf - 25. ) + 0.036 * pow( ( tleaf - 25. ) ) , 2. );
 	}
 
 	/* note: Bernacchi et al., 2001 method (in umol/mol)*/
 	gamma_star = 42.75 * exp (37830 * ( tleaf - 25.) / ( Rgas *(tleaf + TempAbs)*(25 + TempAbs)));
 
-	/* convert from umol --> Pa */
-	gamma_star *= FIXME THIS VALUE MUST BE CONVERTED FROM umol to Pa
+	/* convert from umol --> Pa -->  ppm */
+	gamma_star *=  0.1;
+	gamma_star /= ( meteo_daily->air_pressure / 1e6 );
 
 #endif
 
@@ -469,7 +470,7 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	/* compute (umol electrons/m2/s) max rate electron transport */
 	/* a simplifying assumption that empirically relates the maximum rate of electron transport to maximum carboxylation velocity
 	 * see: Wullschleger (1993); Field (1983); Harley et al., (1992); Watanabe et al., (1994); DePury and Farquhar (1997); Medlyn et al., (1999)
-	 * Peterson et al., (1999);  Liozon et al., (2000);  Leuning et al., (2002); Bonan et al., (2011)*/
+	 * Peterson et al., (1999);  Liozon et al., (2000); Leuning et al., (2002); Bonan et al., (2011)*/
 
 	/* compute Jmax at 25 °C Bonan et al., (2011) */
 	Jmax25         = beta * Vcmax25;
@@ -553,8 +554,6 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	 * (net photosynthesis rate when Rubisco activity is limiting) */
 	Av    = ( -var_b + sqrt( det ) ) / ( 2. * var_a );
 
-	//if (Av < 0) Av = 0.;
-
 	/*******************************************************************************/
 
 	/* quadratic solution for Aj */
@@ -568,13 +567,11 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 
 	/* compute photosynthesis when (umol CO2/m2/s) RuBP (ribulose-1,5-bisphosphate) regeneration limited assimilation
 	 * (net photosynthesis rate when RuBP (ribulose-1,5-bisphosphate)-regeneration is limiting) */
-	Aj = ( -var_b + sqrt( det ) ) / ( 2. * var_a );
-
-	//if (Aj < 0) Aj = 0.;
+	Aj    = ( -var_b + sqrt( det ) ) / ( 2. * var_a );
 
 	/*******************************************************************************/
 
-	/* compute (umol CO2/m2/s) final assimilation rate */
+	/* compute (umol/m2/s) final assimilation rate */
 	switch ( test_assimilation )
 	{
 	case 0:
@@ -639,6 +636,7 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	s->value[YEARLY_Aj_TOT] += s->value[Aj_SUN] + s->value[Aj_SHADE];
 	CHECK_CONDITION ( fabs ( s->value[YEARLY_A_TOT] - ( s->value[YEARLY_Av_TOT] + s->value[YEARLY_Aj_TOT] ) ) , > , eps );
 
+	/* return assimilation rate (umol/m2/s) */
 	return A;
 
 
