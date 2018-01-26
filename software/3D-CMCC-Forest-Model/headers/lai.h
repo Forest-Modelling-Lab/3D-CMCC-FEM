@@ -6,6 +6,6 @@
 
 void specific_leaf_area ( const age_t *const a, species_t *const s );
 
-void daily_lai          (cell_t *const c, species_t *const s);
+void daily_lai          (cell_t *const c, age_t *const a, species_t *const s);
 
 #endif /* LAI_H_ */

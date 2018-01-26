@@ -890,9 +890,9 @@ static const char *sz_species_values[] =
 		"K",                          /* Extinction coefficient for absorption of PAR by canopy */
 		"ALBEDO",                     /* Canopy albedo */
 		"INT_COEFF",                  /* Precipitation interception coefficient */
-		"SLA_AVG0",                   /* AVERAGE Specific Leaf Area m^2/KgC for sunlit/shaded leaves (juvenile) */
-		"SLA_AVG1",                   /* AVERAGE Specific Leaf Area m^2/KgC for sunlit/shaded leaves (mature) */
-		"TSLA",                       /* Age at which SLA_AVG = (SLA_AVG1 + SLA_AVG0 )/2 */
+		"SLA_AVG0",                   /* AVERAGE Specific Leaf Area m^2/KgDM for sunlit/shaded leaves (juvenile) */
+		"SLA_AVG1",                   /* AVERAGE Specific Leaf Area m^2/KgDM for sunlit/shaded leaves (mature) */
+		"TSLA",                       /* Age at which SLA_PROJ = (SLA_AVG1 + SLA_AVG0 )/2 */
 		"SLA_RATIO",                  /* (DIM) ratio of shaded to sunlit projected SLA */
 		"LAI_RATIO",                  /* (DIM) all-sided to projected leaf area ratio */
 		"FRACBB0",                    /* Branch and Bark fraction at age 0 (m^2/kg) */

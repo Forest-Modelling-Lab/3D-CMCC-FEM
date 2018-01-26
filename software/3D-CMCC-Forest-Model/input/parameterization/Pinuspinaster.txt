@@ -10,7 +10,7 @@ INT_COEFF  0.3                //precip interception coefficient for P. sylvestri
 SLA_AVG0  9.56                //Average Specific Leaf Area m^2/Kg (juvenile) sunlit/shaded leaves for P. pinaster Sànchez-Gomez et al.,2006, 21.13 Dezi PhD thesis
 SLA_AVG1  5                   //Average Specific Leaf Area m^2/Kg (mature) sunlit/shaded leaves for P. pinaster 2 Mediavilla et al., 2011
 TSLA      20                  //Age at which SLA_AVG = (SLA_AVG1 + SLA_AVG0 )/2 Forrester et al., 2017
-SLA_RATIO	2                 //(DIM) ratio of shaded to sunlit projected SLA 
+SLA_RATIO	2.52 // 2           //(DIM) ratio of shaded to sunlit projected SLA 
 LAI_RATIO	2.6               //(DIM) all-sided to projected leaf area ratio 
 FRACBB0 0.33                  //Branch and Bark fraction at age 0 for P. pinaster Portè et al., 2002
 FRACBB1 0.11                  //Branch and Bark fraction for mature stands for P. pinaster Portè et al., 2002

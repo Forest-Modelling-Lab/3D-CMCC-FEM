@@ -15,25 +15,43 @@ dir_out = paste0(dir_in,'/Farquhar_Plot/')
 dir.create(dir_out,showWarnings = F)
 
 # Costant variables
+act25         = 3.6;    # (umol/mgRubisco/min) Rubisco activity at 25 C Badger and Collatz value */
 
-Kc25           = 404.9  #(ubar) michaelis-menten const carboxylase, 25 deg C  Badger and Collatz value
-q10Kc          = 2.1    #(DIM) Q_10 for Kc Badger and Collatz and Collatz et al., (2001)
-Ko25           = 248    #(mbar) michaelis-menten const oxygenase, 25 deg C Badger and Collatz value
+# Badger and Collatz values
+Kc25          = 404;    # (ubar or umol mol-1) Michaelis-Menten const carboxylase, 25 deg C  Badger and Collatz value*/
+Ea_Kc         = 59400;  #  (J mol-1) Activation energy for carboxylase */
+Ko25          = 248000; #  (ubar or umol mol-1) Michaelis-Menten const oxygenase, 25 deg C 248 Badger and Collatz, 278.4 Bernacchi et al., 2001 */
+Ea_Ko         = 36000;  #  (J mol-1) Activation energy for oxygenase */
+
+# Bernacchi et al values 
+Kc25          = 404.9;  # (ubar or umol mol-1) Michaelis-Menten const carboxylase, 25 deg C  Badger and Collatz value*/
+Ea_Kc         = 79430;  # (J mol-1) Activation energy for carboxylase */
+Ko25          = 278400; # (ubar or umol mol-1) Michaelis-Menten const oxygenase, 25 deg C 248 Badger and Collatz, 278.4 Bernacchi et al., 2001 */
+Ea_Ko         = 36380;  # (J mol-1) Activation energy for oxygenase */
+
+# temperature control
+Ea_V          = 51560;  # (J mol-1) Activation energy for J see Maespa */
+S_V           = 472.;   # (JK-1 mol) Vmax temperature response parameter */
+H_V           = 144568; # (J mol-1) Vmax curvature parameter */
+Ea_J          = 43790;  # (J mol-1) Activation energy for J see Maespa */
+S_J           = 710 ;   # (JK-1 mol) electron-transport temperature response parameter */
+H_J           = 220000; # (J mol-1) curvature parameter of J */
+
+# if using instead Arrhenius a Q10 function
 q10Ko          = 1.2    #(DIM) inhibition constant for O2 Collatz et al., (1991)
-act25          = 3.6    #(umol/mgRubisco/min) Rubisco activity at 25 C Badger and Collatz value
+q10Kc          = 2.1    #(DIM) Q_10 for Kc Badger and Collatz and Collatz et al., (2001)
 q10act         = 2.4    #(DIM) Q_10 for Rubisco activity Badger and Collatz value Collatz et al., (1991)
+
 phiII          = 0.85   #(DIM) fraction of PAR effectively absorbed by photosytem II (leaf absorptance); 0.8 for Bonan et al., 2011 */
 fnr            = 7.16   #(DIM) g Rubisco/gN Rubisco weight proportion of rubisco relative to its N content Kuehn and McFadden (1969)
 thetaII        = 0.7    #(DIM) curvature of the light-response curve of electron transport (DePury and Farquhar, 1997, Bonan et al., 2011)
+ppe            = 2.6    #(mol e- /mol photons) photons absorbed by PSII per e- transported (quantum yield of electron transport)
 Rgas           = 8.3144 #Gas constant
-Ea_Kc         = 59400;  #(kJ mol-1) Activation energy for carboxylase
-Ea_Ko         = 36000;  #(kJ mol-1) Activation energy for oxygenase
 
 beta           = 2.1    #ratio between Vcmax and Jmax see dePury and Farquhar 1997; for fagus see Liozon et al., (2000) and Castanea */
 test_Vcmax     = 55     #(umol/m2/sec) Vcmax for fagus see Deckmyn et al., 2004 GCB */
 test_Jmax      = 100    #(umol/m2/sec) Jmax for fagus see Deckmyn et al., 2004 GCB */
 
-ppe            = 2.6    #(mol e- /mol photons) photons absorbed by PSII per e- transported (quantum yield of electron transport)
 O2CONC         = 20.9   #(ratio) % of [O2]
 
 
@@ -42,9 +60,9 @@ co2Conc        = 400    #(ppmv) Co2 concentration
 
 tday           = 25     #(°C) daily temperature 
 air_pressure   = 100854 #(Pa) air pressure
-N_RUBISCO      = 0.162  #(ratio) Fraction of Rubisco per Leaf Nitrogen ground area
+N_RUBISCO      = 0.25   #(ratio) Fraction of Rubisco per Leaf Nitrogen ground area
 cond_corr      = 0.52   #(umol/m2/s/Pa)
-leafN          = c(1.5, 1.4, 2.9) #Lean nitrogen content per ground area (sun, shadedd, total leaves)
+leafN          = c(0.93, 0.65, 1.58) #Lean nitrogen content per ground area (sun, shadedd, total leaves)
 leaf_day_mresp = c(0.08, 0.07, 0.15) #Daytime leaf maint respiration per ground area (sun, shadedd, total leaves)
 F_SW           = 1      #soil water modifier
 
@@ -114,7 +132,7 @@ for (j in seq(1:3)) {
   
   # unit conversion
   Kc          = Kc * 0.1        # convert Kc ubar --> Pa
-  Ko          = Ko * 100         #mbar --> Pa
+  Ko          = Ko * 0.1         #mbar --> Pa
   
   ########################################################################################
   
@@ -125,16 +143,19 @@ for (j in seq(1:3)) {
   
   # see also Bernacchi et al., 2001
   # it assumes Vomax/Vcmax = 0.21; Badger & Andrews (1974), Medlyn et al., (2002) */
-  # 0.5 because with 1 mol of oxygenations assumed to release 0.5 molCO2 by glycine decarboxilation (Farquhar and Busch 2017) */
-  # 
+  # 0.5 because with 1 mol of oxygenations assumed to release 0.5 molCO2 by glycine decarboxilation (Farquhar and Busch 2017) 
   #       
   #              Kc * Vomax * O
   #   gamma* = -----------------
   #             (2 * K0 * Vcmax)
 
-  #gamma = 36.9 + 1.88 * (25-25) + 0.036 * ( ( 25-25 )^2) 
-  
   gamma       = 0.5 * 0.21 * Kc * O2 / Ko
+  
+  # note: Bernacchi et al., 2001 method (in umol/mol)
+  gamma = 42.75 * exp (37830 * ( tleaf - 25.) / ( Rgas *(tleaf + TempAbs)*(25 + TempAbs)));
+  
+  # convert from umol --> Pa -->  ppm
+  gamma = gamma *  0.1;
 
   ########################################################################################
   
@@ -145,30 +166,39 @@ for (j in seq(1:3)) {
   #    m2      kg Nleaf   kg NRub   kg RUB * s       m2 * s
   
   #  (leafN[j])    X  (flnr)  X  (fnr)  X   (act)     =    (Vmax)
-  
-  
-  tleaf = 40
-  tleaf_K = tleaf + 273.13
-  
+
   # compute Vcmax25 at 25 °C Bonan et al., (2011) 
   Vcmax25   = leafN[j] * N_RUBISCO * fnr * act
+  #Vcmax25   = test_Vcmax
   
   # temperature corrector factor dePury and Farquhar (1997)
-  temp_corr = exp ( ( 64.8 * ( tleaf - 25.) ) / ( 298. * 8.314 * ( tleaf + 273 ) ) );
+  temp_corr = exp ( Ea_V * ( tleaf - 25. ) / ( Rgas * tleaf_K * 298.) )
+  
+  # high temperature inhibition factor
+    if ( tleaf > 0.)    {
+      high_temp_corr = ( 1. + exp ( ( S_V * 298. - H_V ) / ( Rgas * tleaf_K ) ) ) / ( 1. + exp ( ( S_V * tleaf_K - H_V ) / ( Rgas * tleaf_K ) ) )
+    } else {
+    high_temp_corr =  1.
+  }
   
   # correct Vcmax25 for temperature Medlyn et al., (1999) with F_SW from Bonan et al., (2011)
-  Vcmax     = Vcmax25 * temp_corr * F_SW;
+  Vcmax     = Vcmax25 * temp_corr * high_temp_corr * F_SW;
   
   ########################################################################################
-
-  # temperature corrector factor dePury and Farquhar (1997) 
-  temp_corr      = exp( ( 37 * ( tleaf - 298. ) ) / ( 298. * 8.314 * tleaf ) );
-  
-  # high temperature inihibition factor dePury and Farquhar (1997) 
-  high_temp_corr = ( ( 1. + exp ( ( 0.71 * 298. - 220. ) ) / ( 8.314 * 298. ) ) ) / ( ( 1. + exp ( ( 0.71 * tleaf - 220. ) ) / ( 8.314 * tleaf ) ) ) ;
   
   # compute Jmax at 25 °C Bonan et al., (2011) 
   Jmax25         = beta * Vcmax25;
+  #Jmax25         = test_Jmax
+
+  # temperature corrector factor dePury and Farquhar (1997) 
+  temp_corr      = exp ( Ea_J * ( tleaf - 25. ) / ( Rgas * tleaf_K * 298.) )
+  
+  # high temperature inihibition factor dePury and Farquhar (1997) 
+  if ( tleaf > 0.) {
+    high_temp_corr = ( 1. + exp ( ( S_J * 298. - H_J ) / ( Rgas * 298. ) ) ) / ( 1. + exp ( ( S_J * tleaf_K - H_J ) / ( Rgas * tleaf_K ) ) )
+  } else {
+    high_temp_corr = 1.
+  }
   
   # correct Jmax25 for temperature dePury and Farquhar (1997) with F_SW from Bonan et al., (2011) */
   Jmax           = Jmax25 * temp_corr * high_temp_corr * F_SW;

@@ -25,7 +25,7 @@ extern settings_t* g_settings;
 extern logger_t* g_debug_log;
 
 
-void carbon_allocation ( cell_t *const c, species_t *const s, const int day, const int month, const int year )
+void carbon_allocation ( cell_t *const c, age_t *const a, species_t *const s, const int day, const int month, const int year )
 {
 
 	/* it allocates daily assimilated carbon for both deciduous and evergreen daily
@@ -113,6 +113,26 @@ void carbon_allocation ( cell_t *const c, species_t *const s, const int day, con
 	if ( s->value[C_TO_BRANCH] > 0. ) s->value[CUM_YEARLY_C_TO_WOOD] += s->value[C_TO_CROOT];
 
 	/***************************************************************************************/
+//
+//	/* update Leaf Area Index */
+//	daily_lai             ( c, a, s );
+//
+//	/***************************************************************************************/
+//
+//	/* computing leaf sun and shaded Carbon pools (tC/ha) */
+//	if ( ! s->value[LEAF_C] )
+//	{
+//		s->value[LEAF_SUN_C]   = 0.;
+//		s->value[LEAF_SHADE_C] = 0.;
+//	}
+//	else
+//	{
+//		/* compute based on SLA Leaf carbon for sun and shaded leaves */
+//		s->value[LEAF_SUN_C]   = ( ( s->value[LAI_SUN_PROJ]   * ( s->value[CANOPY_COVER_EXP] * g_settings->sizeCell ) ) / s->value[SLA_SUN_PROJ] )   / 1e3;
+//		s->value[LEAF_SHADE_C] = ( ( s->value[LAI_SHADE_PROJ] * ( s->value[CANOPY_COVER_EXP] * g_settings->sizeCell ) ) / s->value[SLA_SHADE_PROJ] ) / 1e3;
+//	}
+
+	/***************************************************************************************/
 
 	/*** update class level carbon mass pools ***/
 	s->value[LEAF_C]      += s->value[C_TO_LEAF];
@@ -122,21 +142,6 @@ void carbon_allocation ( cell_t *const c, species_t *const s, const int day, con
 	s->value[BRANCH_C]    += s->value[C_TO_BRANCH];
 	s->value[RESERVE_C]   += s->value[C_TO_RESERVE];
 	s->value[FRUIT_C]     += s->value[C_TO_FRUIT];
-
-	/* computing leaf sun and shaded Carbon pools (tC/ha) */
-	if ( ! s->value[LEAF_C] )
-	{
-		s->value[LEAF_SUN_C]        = 0.;
-		s->value[LEAF_SHADE_C]      = 0.;
-	}
-	else
-	{
-		s->value[LEAF_SUN_C]        = s->value[LEAF_C] * ( s->value[LAI_SUN_PROJ] / s->value[LAI_PROJ] ) ;
-		s->value[LEAF_SHADE_C]      = s->value[LEAF_C] - s->value[LEAF_SUN_C];
-	}
-
-
-
 
 	/* check */
 	CHECK_CONDITION ( s->value[LEAF_C],     < , ZERO );
@@ -323,14 +328,10 @@ void nitrogen_allocation ( cell_t *const c, species_t *const s, const int day, c
 	if ( ! s->value[LEAF_C] )
 	{
 		s->value[LEAF_N]            = 0.;
-		s->value[LEAF_SUN_N]        = 0.;
-		s->value[LEAF_SHADE_N]      = 0.;
 	}
 	else
 	{
 		s->value[LEAF_N]            = s->value[LEAF_C] / s->value[CN_LEAVES];
-		s->value[LEAF_SUN_N]        = ( s->value[LEAF_C] * (s->value[LAI_SUN_PROJ] / s->value[LAI_PROJ] ) ) / s->value[CN_LEAVES];
-		s->value[LEAF_SHADE_N]      = s->value[LEAF_N] - s->value[LEAF_SUN_N];
 	}
 
 	if ( ! s->value[FROOT_C] )

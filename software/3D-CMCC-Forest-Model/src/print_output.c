@@ -2592,7 +2592,7 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 										s->value[YEARLY_TOTAL_AUT_RESP]/s->value[YEARLY_GPP]*100.,
 										s->value[PEAK_LAI_PROJ],
 										s->value[MAX_LAI_PROJ],
-										s->value[SLA_AVG],
+										s->value[SLA_PROJ],
 										s->value[SAPWOOD_AREA],
 										s->value[CANOPY_COVER_PROJ],
 										s->value[DBHDC_EFF],

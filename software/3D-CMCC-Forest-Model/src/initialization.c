@@ -37,7 +37,6 @@ void initialization_forest_structure(cell_t *const c, const int day, const int m
 
 void initialization_forest_class_C (cell_t *const c, const int height, const int dbh, const int age, const int species)
 {
-	double Lai_sun_ratio;
 	double r1;
 	double temp_var;                                /* temporary variable */
 
@@ -176,7 +175,7 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 		}
 		else
 		{
-			s->value[FRACBB]    = s->value[FRACBB1] + (s->value[FRACBB0] - s->value[FRACBB1])* exp(-LN2 * (h->value / s->value[TBB]));
+			s->value[FRACBB]    = s->value[FRACBB1] + (s->value[FRACBB0] - s->value[FRACBB1]) * exp(-LN2 * (h->value / s->value[TBB]));
 			s->value[BRANCH_DM] = s->value[STEM_DM] * s->value[FRACBB];
 			s->value[BRANCH_C]  = s->value[STEM_C] * s->value[FRACBB];
 		}
@@ -306,28 +305,17 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 
 	s->value[TREE_RESERVE_C]    = s->value[RESERVE_C] / (double)s->counter[N_TREE];
 
-	logger(g_debug_log, "-Reserve = %f tC/tree\n",   s->value[TREE_RESERVE_C]);
-	logger(g_debug_log, "-Reserve = %f tC/cell \n",  s->value[RESERVE_C]);
-	logger(g_debug_log, "-Reserve = %f KgC/cell \n", s->value[RESERVE_C] * 1e3);
-	logger(g_debug_log, "-Reserve = %f gC/tree \n",  s->value[RESERVE_C] * 1e6 / (double)s->counter[N_TREE]);
-
 	/* compute minimum reserve pool */
 	s->value[MIN_RESERVE_C]      = s->value[RESERVE_C];
 	s->value[TREE_MIN_RESERVE_C] = s->value[MIN_RESERVE_C] / (double)s->counter[N_TREE];
 
-	logger(g_debug_log, "-Minimum reserve = %f tC/cell\n", s->value[MIN_RESERVE_C]);
-	logger(g_debug_log, "-Minimum reserve = %f tC/tree\n", s->value[TREE_MIN_RESERVE_C]);
+	/*************************************************************************************************************************************************/
 
-	/* compute maximum LAI at peak value) */
-	s->value[PEAK_LAI_PROJ] = ( ( s->value[SAPWOOD_AREA] / 1e4 ) * s->value[SAP_LEAF]) / s->value[CROWN_AREA_PROJ];
-	logger(g_debug_log, "PEAK_LAI_PROJ = %f m2/m2\n",s->value[PEAK_LAI_PROJ]);
-
-
-	/* leaf */
+	/* LEAF */
 	if ( ! s->value[LEAF_DM] || s->value[LEAF_DM] == NO_DATA )
 	{
 		/* deciduous */
-		if ( ( s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2 ) && c->north == 0)
+		if ( s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2 )
 		{
 			/* assuming no leaf at 1st of January */
 			s->value[LEAF_DM]      = 0.;
@@ -338,86 +326,74 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 		/* evergreen */
 		else
 		{
-			logger(g_debug_log, "\nNo Leaf Biomass Data are available for model initialization \n");
-			logger(g_debug_log, "...Generating input Leaf Biomass data from LAI\n");
+			/* compute maximum LAI at peak value */
+			s->value[PEAK_LAI_PROJ]  = ( ( s->value[SAPWOOD_AREA] / 1e4 ) * s->value[SAP_LEAF]) / s->value[CROWN_AREA_PROJ];
 
 			/* compute leaf carbon to PEAK LAI down-scaled to canopy cover */
-			s->value[LEAF_DM]        = (s->value[PEAK_LAI_PROJ] / s->value[SLA_AVG] ) / 1e3 * ( s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell );
-			logger(g_debug_log, "LEAF_DM        = %f tDM/cell\n", s->value[LEAF_DM]);
+			s->value[LEAF_C]         = ( ( s->value[PEAK_LAI_PROJ] / s->value[SLA_AVG] ) / 1e3 ) * ( s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell );
 
-			/* convert tDM/cell to tC/cell */
-			s->value[LEAF_C]         = s->value[LEAF_DM] / GC_GDM;
-			logger(g_debug_log, "LEAF_C         = %f tC/cell\n", s->value[LEAF_C]);
-
-			/* Calculate projected LAI for sunlit and shaded canopy portions */
+			/* Calculate projected LAI */
 			/* note: assume that at the beginning of simulations LAI = PEAK_LAI */
 			s->value[LAI_PROJ]       = s->value[PEAK_LAI_PROJ];
-			s->value[LAI_SUN_PROJ]   = 1. - exp(-s->value[PEAK_LAI_PROJ]);
-			s->value[LAI_SHADE_PROJ] = s->value[PEAK_LAI_PROJ] - s->value[LAI_SUN_PROJ];
-
-			logger(g_debug_log, "LAI_PROJ            = %f m2/m2\n", s->value[LAI_PROJ]);
-			logger(g_debug_log, "PEAK_LAI_SUN_PROJ   = %f m2/m2\n", s->value[LAI_SUN_PROJ]);
-			logger(g_debug_log, "PEAK_LAI_SHADE_PROJ = %f m2/m2\n", s->value[LAI_SHADE_PROJ]);
 		}
 	}
 	else
 	{
-		s->value[LEAF_C] = s->value[LEAF_DM] / GC_GDM;
-
-		logger(g_debug_log, "Ok Leaf biomass..\n");
-
 		/* if no values for LAI are available */
-		if ( !s->value[LAI_PROJ] )
+		if ( ! s->value[LAI_PROJ] )
 		{
-			logger(g_debug_log, "\nNo LAI Data are available for model initialization \n");
-			logger(g_debug_log, "...Generating input LAI data from Leaf Biomass\n");
-
-			logger(g_debug_log, "CANOPY_COVER_PROJ = %f\n", s->value[CANOPY_COVER_PROJ]);
-
-			/* Calculate projected LAI for tot and for sunlit and shaded canopy portions*/
-			s->value[LAI_PROJ]       = ( ( s->value[LEAF_C] * 1e3 ) * s->value[SLA_AVG] ) / ( s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell );
-			s->value[LAI_SUN_PROJ]   = 1. - exp(-s->value[LAI_PROJ]);
-			s->value[LAI_SHADE_PROJ] = s->value[LAI_PROJ] - s->value[LAI_SUN_PROJ];
-
-			logger(g_debug_log, "LAI_PROJ  = %f\n", s->value[LAI_PROJ]);
-			logger(g_debug_log, "LAI SUN   = %f\n", s->value[LAI_SUN_PROJ]);
-			logger(g_debug_log, "LAI SHADE = %f\n", s->value[LAI_SHADE_PROJ]);
+			/* Calculate projected LAI */
+			s->value[LAI_PROJ]       = ( ( s->value[LEAF_C]  * s->value[SLA_AVG] ) * 1e3 ) / ( s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell );
 		}
-		else
-		{
-			logger(g_debug_log, "Ok LAI..\n");
-		}
-
-		/* assuming the same proportion for LAI also for leaf carbon */
-		Lai_sun_ratio   = s->value[LAI_SUN_PROJ] / s->value[LAI_PROJ];
-
-		/* compute based on proportion Leaf carbon for sun and shaded leaves */
-		s->value[LEAF_SUN_C]   = s->value[LEAF_C] * Lai_sun_ratio;
-		s->value[LEAF_SHADE_C] = s->value[LEAF_C] - s->value[LEAF_SUN_C];
-
 	}
 
+	/* Calculate projected LAI for sun and shaded leaves */
+	/* sun */
+	s->value[LAI_SUN_PROJ]   = 1. - exp( - s->value[LAI_PROJ] );
+
+	/* shade */
+	s->value[LAI_SHADE_PROJ] = s->value[LAI_PROJ] - s->value[LAI_SUN_PROJ];
+
+
+	/*************************************************************************************/
+
+	/* compute specific leaf area projected for sun and shaded (m2/kgC) */
+	if ( s->value[LEAF_C] > 0. )
+	{
+		/* for total leaves */
+		s->value[SLA_PROJ]           =  ( s->value[LAI_PROJ] * ( s->value[CANOPY_COVER_EXP] * g_settings->sizeCell ) ) / ( s->value[LEAF_C] * 1e3 ) ;
+
+		/* sun leaves */
+		s->value[SLA_SUN_PROJ]       = ( ( s->value[LAI_SUN_PROJ] + ( s->value[LAI_SHADE_PROJ] / s->value[SLA_RATIO] ) ) * ( s->value[CANOPY_COVER_EXP] * g_settings->sizeCell ) ) / ( s->value[LEAF_C] * 1e3 );
+
+		/* shaded leaves */
+		s->value[SLA_SHADE_PROJ]     = s->value[SLA_SUN_PROJ] * s->value[SLA_RATIO];
+
+		/* compute based on SLA Leaf carbon for sun and shaded leaves */
+		s->value[LEAF_SUN_C]   = ( ( s->value[LAI_SUN_PROJ]   * ( s->value[CANOPY_COVER_EXP] * g_settings->sizeCell ) ) / s->value[SLA_SUN_PROJ] )   / 1e3;
+		s->value[LEAF_SHADE_C] = s->value[LEAF_C] - s->value[LEAF_SUN_C];
+
+		/* check */
+		CHECK_CONDITION  (fabs( ( s->value[LEAF_SUN_C] + s->value[LEAF_SHADE_C] ) - s->value[LEAF_C]) , > , eps);
+	}
+
+	/*************************************************************************************/
+
+	/* convert tC/cell to tCDM/cell */
+	s->value[LEAF_DM]        = s->value[LEAF_DM] * GC_GDM;
 
 	/* compute single tree leaf carbon amount */
 	s->value[TREE_LEAF_C] = s->value[LEAF_C] / s->counter[N_TREE];
 
-	logger(g_debug_log, "-Leaf Biomass       = %f tC/tree\n",  s->value[TREE_LEAF_C]);
-	logger(g_debug_log, "-Leaf Biomass       = %f tDM/cell\n", s->value[LEAF_DM]);
-	logger(g_debug_log, "-Leaf Biomass       = %f tC/cell\n",  s->value[LEAF_C]);
-	logger(g_debug_log, "-Leaf sun Biomass   = %f tC/cell\n",  s->value[LEAF_SUN_C]);
-	logger(g_debug_log, "-Leaf shade Biomass = %f tC/cell\n",  s->value[LEAF_SHADE_C]);
-
 	/* compute all-sided Leaf Area */
 	s->value[ALL_LAI_PROJ] = s->value[LAI_PROJ] * s->value[CANOPY_COVER_PROJ];
-	logger(g_debug_log, "ALL_LAI_PROJ = %f (m2)\n", s->value[ALL_LAI_PROJ]);
-	logger(g_debug_log,"*****************************\n");
+
+	/*************************************************************************************************************************************************/
 
 	/* note: model assumes that if no fine-root biomass are available the same ratio foliage-fine roots is used */
 	if (( s->value[FROOT_DM] == 0.0 || s->value[FROOT_DM] == NO_DATA)
 			&& (s->value[PHENOLOGY] == 1.1 || s->value[PHENOLOGY] == 1.2))
 	{
-		logger(g_debug_log, "\nNo Fine root Biomass Data are available for model initialization \n");
-
 		s->value[FROOT_DM] = s->value[LEAF_DM] * s->value[FINE_ROOT_LEAF];
 		s->value[FROOT_C]  = s->value[LEAF_C] * s->value[FINE_ROOT_LEAF];
 	}
@@ -426,15 +402,10 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 		/* assuming no fine root at 1st of January */
 		s->value[FROOT_DM]     = 0.;
 		s->value[FROOT_C]      = 0.;
-
-		logger(g_debug_log, "Ok fine root biomass..\n");
 	}
 
 	s->value[TREE_FROOT_C]    = s->value[FROOT_C] / (double)s->counter[N_TREE];
 
-	logger(g_debug_log, "-Fine root Biomass = %f tC/tree\n",  s->value[TREE_FROOT_C]);
-	logger(g_debug_log, "-Fine Root Biomass = %f tC/cell\n",  s->value[FROOT_C]);
-	logger(g_debug_log, "-Fine Root Biomass = %f tDM/cell\n", s->value[FROOT_DM]);
 
 	/***** INITIALIZE LITTER POOL *****/
 
@@ -497,12 +468,6 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 	CHECK_CONDITION(fabs((s->value[STEM_C]) -(s->value[STEM_LIVEWOOD_C]  + s->value[STEM_DEADWOOD_C])),  >,eps);
 
 #endif
-
-	logger(g_debug_log, "-Stem Biomass       = %f tC/cell\n", s->value[STEM_C]);
-	logger(g_debug_log, "-Live Stem Biomass  = %f tC/cell\n", s->value[STEM_LIVEWOOD_C]);
-	logger(g_debug_log, "-Dead Stem Biomass  = %f tC/cell\n", s->value[STEM_DEADWOOD_C]);
-	logger(g_debug_log, "-Live Stem Biomass  = %f tC/tree\n", s->value[TREE_STEM_LIVEWOOD_C]);
-	logger(g_debug_log, "-Dead Stem Biomass  = %f tC/tree\n", s->value[TREE_STEM_DEADWOOD_C]);
 
 
 #if TEST_RESP
@@ -852,6 +817,7 @@ void initialization_forest_class_N (cell_t *const c, const int height, const int
 	CHECK_CONDITION(s->value[STEM_N],          <=, ZERO);
 	CHECK_CONDITION(s->value[CROOT_N],         <=, ZERO);
 	CHECK_CONDITION(s->value[BRANCH_N],        <=, ZERO);
+	CHECK_CONDITION(fabs( ( s->value[LEAF_SUN_N] + s->value[LEAF_SHADE_N] ) - s->value[LEAF_N]) , > , eps);
 
 	/* just for evergreen */
 	if ( s->value[PHENOLOGY] == 1.1 || s->value[PHENOLOGY] == 1.2 )

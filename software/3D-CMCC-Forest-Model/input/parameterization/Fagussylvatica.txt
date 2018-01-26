@@ -10,7 +10,7 @@ INT_COEFF                0.3  //precip interception coefficient for F. sylvatica
 SLA_AVG0                  40  //Average Specific Leaf Area m^2/KgDM (juvenile) sunlit/shaded leaves for Fagus s. 45 Rötzer et al., (2010), 60  Adriaenssens et al., 2011; 27.8 to 48 from Pietsch 2005, 35 for Tatarinov et al., 2006
 SLA_AVG1                  20  //Average Specific Leaf Area m^2/KgDM (mature) sunlit/shaded leaves for Fagus s. 9 Rötzer et al., (2010), Holscher et al., 2004; 27.8 to 48 from Pietsch 2005, 35 for Tatarinov et al., 2006
 TSLA                      35  //Age at which SLA_AVG = (SLA_AVG1 + SLA_AVG0 )/2 for 35 Fagus s. Forrester et al., 2017
-SLA_RATIO                  2  //(DIM) ratio of shaded to sunlit projected SLA  for F. sylvatyica from Mollicone et al., 2002 , 2.0 from Pietsch 2005
+SLA_RATIO            2.3 //      2  //(DIM) ratio of shaded to sunlit projected SLA  for F. sylvatyica from Mollicone et al., 2002 , 2.0 from Pietsch 2005
 LAI_RATIO                  2  //(DIM) all-sided to projected leaf area ratio for F. sylvatyica from Mollicone et al., 2002 , 2.0 from Pietsch 2005
 FRACBB0                 0.20  //Branch and Bark fraction at age 0
 FRACBB1                0.125  //Branch and Bark fraction for mature stands (0.125 from Damesin et al., 2003)(0.1 from Hoffmann 1995)

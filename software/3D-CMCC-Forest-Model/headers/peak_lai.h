@@ -4,6 +4,6 @@
 
 #include "matrix.h"
 
-void peak_lai(species_t *const, const int day, const int month, const int years);
+void peak_lai (age_t *const, species_t *const, const int day, const int month, const int years);
 
 #endif /* PEAK_LAI_H_ */

@@ -226,11 +226,8 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 								/* compute annual minimum reserve for incoming year */
 								annual_minimum_reserve( s );
 
-								/* compute age-related sla */
-								specific_leaf_area      ( a, s );
-
 								/* compute annual potential Maximum LAI */
-								peak_lai                ( s, day, month, year );
+								peak_lai                ( a, s, day, month, year );
 
 								/* compute growth respiration fraction */
 								growth_respiration_frac ( a, s );
@@ -327,7 +324,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							}
 
 							/* allocate daily carbon */
-							carbon_allocation       ( c, s, day, month, year );
+							carbon_allocation       ( c, a, s, day, month, year );
 
 							/* allocate daily nitrogen */
 							nitrogen_allocation     ( c, s, day, month, year );
@@ -347,7 +344,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 								water_use_efficiency  ( c, height, dbh, age, species, day, month, year );
 
 								/* update Leaf Area Index */
-								daily_lai             ( c, s );
+								daily_lai             ( c, a, s );
 
 								/* litter fluxes and pools */
 								littering             ( c, s );

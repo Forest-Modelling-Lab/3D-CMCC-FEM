@@ -389,9 +389,8 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	/* note: Bernacchi et al., 2001 method (in umol/mol)*/
 	gamma_star = 42.75 * exp (37830 * ( tleaf - 25.) / ( Rgas *(tleaf + TempAbs)*(25 + TempAbs)));
 
-	/* convert from umol --> Pa -->  ppm */
+	/* convert from umol --> Pa */
 	gamma_star *=  0.1;
-	gamma_star /= ( meteo_daily->air_pressure / 1e6 );
 
 #endif
 
@@ -469,8 +468,8 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 
 	/* compute (umol electrons/m2/s) max rate electron transport */
 	/* a simplifying assumption that empirically relates the maximum rate of electron transport to maximum carboxylation velocity
-	 * see: Wullschleger (1993); Field (1983); Harley et al., (1992); Watanabe et al., (1994); DePury and Farquhar (1997); Medlyn et al., (1999)
-	 * Peterson et al., (1999);  Liozon et al., (2000); Leuning et al., (2002); Bonan et al., (2011)*/
+	 * see: Wullschleger (1993); Field (1983); Harley et al., (1992); Watanabe et al., (1994); DePury and Farquhar (1997);
+	 * Medlyn et al., (1999); Peterson et al., (1999); Liozon et al., (2000); Leuning et al., (2002); Bonan et al., (2011)*/
 
 	/* compute Jmax at 25 °C Bonan et al., (2011) */
 	Jmax25         = beta * Vcmax25;

@@ -53,8 +53,8 @@ void leaffall_deciduous ( cell_t *const c, const int height, const int dbh, cons
 		CHECK_CONDITION(previousLai, <, currentLai);
 
 		/* determine Leaf Area Index from leaf carbon */
-		previousLeafC = ( previousLai * (s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell) / (s->value[SLA_AVG] * 1e3) / GC_GDM );
-		currentLeafC  = ( currentLai  * (s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell) / (s->value[SLA_AVG] * 1e3) / GC_GDM );
+		previousLeafC = previousLai * (s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell) / (s->value[SLA_AVG] * 1e3);
+		currentLeafC  = currentLai  * (s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell) / (s->value[SLA_AVG] * 1e3);
 
 		previousLeafN = previousLeafC / s->value[CN_LEAVES];
 		currentLeafN  = currentLeafC  / s->value[CN_LEAVES];

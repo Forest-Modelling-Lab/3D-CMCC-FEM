@@ -6,7 +6,7 @@
 #include <time.h>
 #include <errno.h>
 #include <assert.h>
-#include "math.h"
+#include <math.h>
 #include "common.h"
 
 /* os dependant */
@@ -27,6 +27,7 @@ typedef unsigned __int64 uint64;
 #elif defined (linux) || defined (_linux) || defined (__linux__)
 #include <unistd.h>
 #include <dirent.h>
+#include <stdint.h>
 #include <sys/param.h>
 #include <sys/types.h>
 #include <sys/stat.h>
