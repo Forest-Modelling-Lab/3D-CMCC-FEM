@@ -61,7 +61,7 @@ void daily_lai (cell_t *const c, age_t *const a, species_t *const s)
 	/* compute all-sided Leaf Area */
 	s->value[ALL_LAI_PROJ] = s->value[LAI_PROJ] * s->value[CANOPY_COVER_PROJ];
 
-	/* controls it should anyway never happens */
+	/* control it should anyway never happens */
 	if ( s->value[LAI_PROJ] > s->value[PEAK_LAI_PROJ] )
 	{
 		s->value[LAI_PROJ]       =  s->value[PEAK_LAI_PROJ];
@@ -89,7 +89,7 @@ void daily_lai (cell_t *const c, age_t *const a, species_t *const s)
 
 	/**************************************************************************************************/
 
-	/* computing leaf sun and shaded Carbon and Nitrogen pools (tC-tN/ha) */
+	/* computing Leaf sun and shaded Carbon and Nitrogen pools (tC-tN/ha) */
 	if ( ! s->value[LEAF_C] )
 	{
 		s->value[LEAF_SUN_C]   = 0.;
@@ -100,7 +100,6 @@ void daily_lai (cell_t *const c, age_t *const a, species_t *const s)
 	}
 	else
 	{
-		/* compute based on SLA Leaf carbon and nitrogen for sun and shaded leaves */
 		s->value[LEAF_SUN_C]   = ( ( s->value[LAI_SUN_PROJ]   * ( s->value[CANOPY_COVER_EXP] * g_settings->sizeCell ) ) / s->value[SLA_SUN_PROJ] ) / 1e3;
 		s->value[LEAF_SHADE_C] = s->value[LEAF_C] - s->value[LEAF_SUN_C];
 

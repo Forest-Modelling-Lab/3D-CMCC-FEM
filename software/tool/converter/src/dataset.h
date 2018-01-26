@@ -218,11 +218,11 @@ dataset_t* dataset_import(const char* const filename)
 	}
 
 	// check type
-	if ( ! _strnicmp(filename + has_path, "annual", strlen("annual")) )
+	if ( ! strncasecmp(filename + has_path, "annual", strlen("annual")) )
 	{
 		type = ANNUAL_DATASET_TYPE;
 	}
-	else if ( ! _strnicmp(filename + has_path, "daily", strlen("daily")) )
+	else if ( ! strncasecmp(filename + has_path, "daily", strlen("daily")) )
 	{
 		type = DAILY_DATASET_TYPE;
 	}

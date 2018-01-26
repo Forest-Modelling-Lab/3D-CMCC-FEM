@@ -3,29 +3,12 @@
 // written by A. Ribeca
 //
 
-// os dependant stuff
-#ifdef _WIN32
-#ifndef STRICT
-#define STRICT
-#endif
-#ifndef WIN32_MEAN_AND_LEAN
-#define WIN32_MEAN_AND_LEAN
-#endif
-#ifndef _CRT_SECURE_NO_WARNINGS
-#define _CRT_SECURE_NO_WARNINGS
-#endif
-#include <windows.h>
-// for memory leak
-#ifdef _DEBUG
-#define _CRTDBG_MAP_ALLOC
-#include <stdlib.h>
-#include <crtdbg.h>
-#endif /* _DEBUG */
-#pragma comment(lib, "kernel32.lib")
-#else
-#include <dirent.h>
-#endif
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+#include <dirent.h>
+#include <unistd.h>
 #include "netcdf.h"
 #include <assert.h>
 
@@ -50,16 +33,6 @@ const char err_invalid_input_folder[] = "error - invalid input folder specified:
 #include "files.h"
 #include "dataset.h"
 #include "nc.h"
-
-void clean_up(void)
-{
-#ifdef _WIN32
-#ifdef _DEBUG
-	_CrtDumpMemoryLeaks();
-	//system("PAUSE");
-#endif
-#endif
-}
 			
 int main(int argc, char* argv[])
 {
@@ -81,12 +54,6 @@ int main(int argc, char* argv[])
 	{
 		// get folder name
 		folder = argv[1];
-	}
-
-	// register clean_up func
-	if ( -1 == atexit(clean_up) )
-	{
-		puts(err_unable_to_register_cleanup_func);
 	}
 
 	// check if folder exists
