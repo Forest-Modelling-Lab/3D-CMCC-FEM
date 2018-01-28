@@ -90,7 +90,7 @@ for (j in seq(1:3)) {
   tleaf   = tday;
   tleaf_K = tday + TempAbs;
   
-  #**************************** MICHAELIS MENTEN KINETICS *****************************/
+  #**************************** MICHAELIS MENTEN KINETICS USING Q10 *****************************/
   
   # calculate:
   # Kc (michaelis-menten constant for carboxylase reaction)
@@ -108,7 +108,7 @@ for (j in seq(1:3)) {
   #   act       = act25 * ((1.8 * q10act) ^ ((tleaf - 15) / 10 ))/ q10act
   # }
   
-  #***************************** ARRHENIUS KINETICS *****************************/
+  #**************************** MICHAELIS MENTEN KINETICS USING  ARRHENIUS ***********************/
   
   #the enzyme kinetics built into this model are based on Medlyn (1999)
   
@@ -152,10 +152,10 @@ for (j in seq(1:3)) {
   gamma       = 0.5 * 0.21 * Kc * O2 / Ko
   
   # note: Bernacchi et al., 2001 method (in umol/mol)
-  gamma = 42.75 * exp (37830 * ( tleaf - 25.) / ( Rgas *(tleaf + TempAbs)*(25 + TempAbs)));
+  #gamma = 42.75 * exp (37830 * ( tleaf - 25.) / ( Rgas *(tleaf + TempAbs)*(25 + TempAbs)));
   
   # convert from umol --> Pa -->  ppm
-  gamma = gamma *  0.1;
+  #gamma = gamma *  0.1;
 
   ########################################################################################
   
