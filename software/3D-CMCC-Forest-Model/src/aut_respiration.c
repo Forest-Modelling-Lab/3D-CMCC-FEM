@@ -165,7 +165,7 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 		stem_CN    = 682.00; //from 448 to 765 Hellstaen et a., 2013
 		croot_CN   = 586.66; //from 445 to 761 Hellstaen et a., 2013
 		branch_CN  = 454.54; //from Hyyvonen et al, 2000
-		*/
+		 */
 
 		//test: for Picea abies (to move once decided into species.txt)
 		/*
@@ -174,7 +174,7 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 		stem_CN    = 572.33; //from 448 to 765 Hellstaen et a., 2013
 		croot_CN   = 400.66; //from 445 to 761 Hellstaen et a., 2013
 		branch_CN  = 526.30; //from Hyyvonen et al, 2000
-		*/
+		 */
 
 #if 0
 
@@ -255,7 +255,7 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 		s->value[DAILY_LEAF_SHADE_MAINT_RESP] = ( leaf_shade_N * MR_ref * pow(q10_tday, exponent_tday) * meteo_daily->daylength_sec) * light_inhib;
 
 		/* total (all day) leaf maintenance respiration */
-		s->value[TOT_DAY_LEAF_MAINT_RESP]     = s->value[DAILY_LEAF_MAINT_RESP] + s->value[NIGHTLY_LEAF_MAINT_RESP];
+		s->value[TOT_LEAF_MAINT_RESP]     = s->value[DAILY_LEAF_MAINT_RESP] + s->value[NIGHTLY_LEAF_MAINT_RESP];
 
 		/*******************************************************************************************************************/
 
@@ -299,7 +299,7 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 			s->value[DAILY_LEAF_SHADE_MAINT_RESP] = ( leaf_shade_N * MR_ref * pow(q10_tday, exponent_tday) * ( meteo_daily->daylength_sec / 86400. ));
 
 			/* total (all day) leaf maintenance respiration */
-			s->value[TOT_DAY_LEAF_MAINT_RESP]  = s->value[DAILY_LEAF_MAINT_RESP] + s->value[NIGHTLY_LEAF_MAINT_RESP];
+			s->value[TOT_LEAF_MAINT_RESP]  = s->value[DAILY_LEAF_MAINT_RESP] + s->value[NIGHTLY_LEAF_MAINT_RESP];
 
 			/*******************************************************************************************************************/
 
@@ -325,7 +325,7 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 		}
 
 		/* compute total maintenance respiration */
-		s->value[TOTAL_MAINT_RESP] = (s->value[TOT_DAY_LEAF_MAINT_RESP]+
+		s->value[TOTAL_MAINT_RESP] = (s->value[TOT_LEAF_MAINT_RESP]    +
 				s->value[FROOT_MAINT_RESP]                             +
 				s->value[STEM_MAINT_RESP]                              +
 				s->value[CROOT_MAINT_RESP]                             +
@@ -335,7 +335,7 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 		/***********************************************************************************************************************/
 
 		/* cell level */
-		c->daily_leaf_maint_resp   += s->value[TOT_DAY_LEAF_MAINT_RESP];
+		c->daily_leaf_maint_resp   += s->value[TOT_LEAF_MAINT_RESP];
 		c->daily_stem_maint_resp   += s->value[STEM_MAINT_RESP];
 		c->daily_froot_maint_resp  += s->value[FROOT_MAINT_RESP];
 		c->daily_branch_maint_resp += s->value[BRANCH_MAINT_RESP];
@@ -436,7 +436,7 @@ void autotrophic_respiration(cell_t *const c, const int layer, const int height,
 		logger(g_debug_log, "\n**AUTOTROPHIC_RESPIRATION**\n");
 
 		/* class level among pools */
-		s->value[LEAF_AUT_RESP]            = (s->value[TOT_DAY_LEAF_MAINT_RESP] + s->value[LEAF_GROWTH_RESP]);
+		s->value[LEAF_AUT_RESP]            = (s->value[TOT_LEAF_MAINT_RESP]     + s->value[LEAF_GROWTH_RESP]);
 		s->value[FROOT_AUT_RESP]           = (s->value[FROOT_MAINT_RESP]        + s->value[FROOT_GROWTH_RESP]);
 		s->value[STEM_AUT_RESP]            = (s->value[STEM_MAINT_RESP]         + s->value[STEM_GROWTH_RESP]);
 		s->value[CROOT_AUT_RESP]           = (s->value[CROOT_MAINT_RESP]        + s->value[CROOT_GROWTH_RESP]);
@@ -459,7 +459,7 @@ void autotrophic_respiration(cell_t *const c, const int layer, const int height,
 		/***************************************************************************************/
 
 		/* cell level among pools */
-		c->daily_leaf_aut_resp            += (s->value[TOT_DAY_LEAF_MAINT_RESP] + s->value[LEAF_GROWTH_RESP]);
+		c->daily_leaf_aut_resp            += (s->value[TOT_LEAF_MAINT_RESP]     + s->value[LEAF_GROWTH_RESP]);
 		c->daily_stem_aut_resp            += (s->value[STEM_MAINT_RESP]         + s->value[STEM_GROWTH_RESP]);
 		c->daily_branch_aut_resp          += (s->value[BRANCH_MAINT_RESP]       + s->value[BRANCH_GROWTH_RESP]);
 		c->daily_froot_aut_resp           += (s->value[FROOT_MAINT_RESP]        + s->value[FROOT_GROWTH_RESP]);

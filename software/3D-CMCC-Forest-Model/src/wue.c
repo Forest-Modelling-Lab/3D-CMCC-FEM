@@ -75,11 +75,11 @@ void water_use_efficiency( cell_t *const c, const int height, const int dbh, con
 	//note: this is based on tree level computation than uses gpp and canopy transpiration
 
 	/* daily iWUE */
-	if( s->value[GPP] > 0. && s->value[CANOPY_TRANSP] > 0. )
+	if( s->value[ASSIMILATION] > 0. && s->value[CANOPY_TRANSP] > 0. )
 	{
-		s->value[iWUE]       = s->value[GPP]       / s->value[CANOPY_TRANSP];
-		s->value[iWUE_SUN]   = s->value[GPP_SUN]   / s->value[CANOPY_TRANSP_SUN];
-		s->value[iWUE_SHADE] = s->value[GPP_SHADE] / s->value[CANOPY_TRANSP_SHADE];
+		s->value[iWUE]       = s->value[ASSIMILATION]       / s->value[CANOPY_TRANSP];
+		s->value[iWUE_SUN]   = s->value[ASSIMILATION_SUN]   / s->value[CANOPY_TRANSP_SUN];
+		s->value[iWUE_SHADE] = s->value[ASSIMILATION_SHADE] / s->value[CANOPY_TRANSP_SHADE];
 	}
 	else
 	{
@@ -91,11 +91,11 @@ void water_use_efficiency( cell_t *const c, const int height, const int dbh, con
 	/* last day of the month */
 	if ( ( IS_LEAP_YEAR ( c->years[year].year ) ? ( MonthLength_Leap[month] ) : ( MonthLength[month] ) ) == c->doy )
 	{
-		if( s->value[MONTHLY_GPP] > 0. && s->value[MONTHLY_CANOPY_TRANSP] > 0. )
+		if( s->value[MONTHLY_ASSIMILATION] > 0. && s->value[MONTHLY_CANOPY_TRANSP] > 0. )
 		{
-			s->value[MONTHLY_iWUE]       = s->value[MONTHLY_GPP]       / s->value[MONTHLY_CANOPY_TRANSP];
-			s->value[MONTHLY_iWUE_SUN]   = s->value[MONTHLY_GPP_SUN]   / s->value[MONTHLY_CANOPY_TRANSP_SUN];
-			s->value[MONTHLY_iWUE_SHADE] = s->value[MONTHLY_GPP_SHADE] / s->value[MONTHLY_CANOPY_TRANSP_SHADE];
+			s->value[MONTHLY_iWUE]       = s->value[MONTHLY_ASSIMILATION]       / s->value[MONTHLY_CANOPY_TRANSP];
+			s->value[MONTHLY_iWUE_SUN]   = s->value[MONTHLY_ASSIMILATION_SUN]   / s->value[MONTHLY_CANOPY_TRANSP_SUN];
+			s->value[MONTHLY_iWUE_SHADE] = s->value[MONTHLY_ASSIMILATION_SHADE] / s->value[MONTHLY_CANOPY_TRANSP_SHADE];
 		}
 		else
 		{
@@ -108,11 +108,11 @@ void water_use_efficiency( cell_t *const c, const int height, const int dbh, con
 	/* last day of the year */
 	if ( c->doy == ( IS_LEAP_YEAR( c->years[year].year ) ? 366 : 365) )
 	{
-		if( s->value[YEARLY_GPP] > 0. && s->value[YEARLY_CANOPY_TRANSP] > 0. )
+		if( s->value[YEARLY_ASSIMILATION] > 0. && s->value[YEARLY_CANOPY_TRANSP] > 0. )
 		{
-			s->value[YEARLY_iWUE]       = s->value[YEARLY_GPP]       / s->value[YEARLY_CANOPY_TRANSP];
-			s->value[YEARLY_iWUE_SUN]   = s->value[YEARLY_GPP_SUN]   / s->value[YEARLY_CANOPY_TRANSP_SUN];
-			s->value[YEARLY_iWUE_SHADE] = s->value[YEARLY_GPP_SHADE] / s->value[YEARLY_CANOPY_TRANSP_SHADE];
+			s->value[YEARLY_iWUE]       = s->value[YEARLY_ASSIMILATION]       / s->value[YEARLY_CANOPY_TRANSP];
+			s->value[YEARLY_iWUE_SUN]   = s->value[YEARLY_ASSIMILATION_SUN]   / s->value[YEARLY_CANOPY_TRANSP_SUN];
+			s->value[YEARLY_iWUE_SHADE] = s->value[YEARLY_ASSIMILATION_SHADE] / s->value[YEARLY_CANOPY_TRANSP_SHADE];
 		}
 		else
 		{
@@ -126,11 +126,11 @@ void water_use_efficiency( cell_t *const c, const int height, const int dbh, con
 	//note: this is based on tree level computation than uses gpp and stomatal conductance
 
 	/* daily gsWUE */
-	if( s->value[GPP] > 0. && s->value[STOMATAL_CONDUCTANCE] > 0. )
+	if( s->value[ASSIMILATION] > 0. && s->value[STOMATAL_CONDUCTANCE] > 0. )
 	{
-		s->value[gsWUE]       = s->value[GPP]       / s->value[STOMATAL_CONDUCTANCE];
-		s->value[gsWUE_SUN]   = s->value[GPP_SUN]   / s->value[STOMATAL_SUN_CONDUCTANCE];
-		s->value[gsWUE_SHADE] = s->value[GPP_SHADE] / s->value[STOMATAL_SHADE_CONDUCTANCE];
+		s->value[gsWUE]       = s->value[ASSIMILATION]       / s->value[STOMATAL_CONDUCTANCE];
+		s->value[gsWUE_SUN]   = s->value[ASSIMILATION_SUN]   / s->value[STOMATAL_SUN_CONDUCTANCE];
+		s->value[gsWUE_SHADE] = s->value[ASSIMILATION_SHADE] / s->value[STOMATAL_SHADE_CONDUCTANCE];
 	}
 	else
 	{
@@ -146,9 +146,9 @@ void cell_water_use_efficiency ( cell_t *const c, const int day, const int month
 	//note: this is based on cell level computation than uses cell evapotranspiration
 
 	/* daily iWUE */
-	if( c->daily_gpp > 0 && c->daily_et > 0.0 )
+	if( c->daily_ass > 0 && c->daily_et > 0.0 )
 	{
-		c->daily_iwue = c->daily_gpp / c->daily_et;
+		c->daily_iwue = c->daily_ass / c->daily_et;
 	}
 	else
 	{
@@ -159,9 +159,9 @@ void cell_water_use_efficiency ( cell_t *const c, const int day, const int month
 	/* last day of the month */
 	if ( ( IS_LEAP_YEAR( c->years[year].year ) ? (MonthLength_Leap[month] ) : (MonthLength[month] )) == c->doy )
 	{
-		if( c->monthly_gpp > 0 && c->monthly_et > 0.0 )
+		if( c->monthly_ass > 0 && c->monthly_et > 0.0 )
 		{
-			c->monthly_iwue = c->monthly_gpp / c->monthly_et;
+			c->monthly_iwue = c->monthly_ass / c->monthly_et;
 		}
 		else
 		{
@@ -173,9 +173,9 @@ void cell_water_use_efficiency ( cell_t *const c, const int day, const int month
 	/* last day of the year */
 	if ( c->doy == ( IS_LEAP_YEAR( c->years[year].year ) ? 366 : 365) )
 	{
-		if( c->annual_gpp > 0 && c->annual_et > 0.0 )
+		if( c->annual_ass > 0 && c->annual_et > 0.0 )
 		{
-			c->annual_iwue = c->annual_gpp / c->annual_et;
+			c->annual_iwue = c->annual_ass / c->annual_et;
 		}
 		else
 		{

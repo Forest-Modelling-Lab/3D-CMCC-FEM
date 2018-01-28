@@ -1896,7 +1896,7 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 									"%d,%d,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
 									",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
 									",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",
-									s->value[GPP],
+									s->value[ASSIMILATION],
 									s->value[Av_TOT],
 									s->value[Aj_TOT],
 									s->value[A_TOT],
@@ -2011,7 +2011,7 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 
 	logger(g_daily_log, ",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,"
 			"%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f\n",
-			c->daily_gpp,
+			c->daily_ass,
 			c->daily_npp,
 			c->daily_aut_resp,
 			c->daily_het_resp,
@@ -2575,7 +2575,7 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
 										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
 										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",
-										s->value[YEARLY_GPP],
+										s->value[YEARLY_ASSIMILATION],
 										s->value[YEARLY_GPP_SUN]  /s->value[YEARLY_GPP],
 										s->value[YEARLY_GPP_SHADE]/s->value[YEARLY_GPP],
 										s->value[YEARLY_Av_SUN]   /s->value[YEARLY_A_SUN],
@@ -2697,7 +2697,7 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 	/* printing variables at cell level only if there's more than one layer */
 	logger(g_annual_log, ",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f"
 			",%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f",
-			c->annual_gpp,
+			c->annual_ass,
 			c->annual_npp,
 			c->annual_aut_resp,
 			c->annual_het_resp,

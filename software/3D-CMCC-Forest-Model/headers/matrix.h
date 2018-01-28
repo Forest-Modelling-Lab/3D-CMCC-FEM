@@ -544,7 +544,7 @@ enum {
 	DAILY_LEAF_SUN_MAINT_RESP,          /* (gC/m2/day) Daytime leaf maintenance respiration */
 	DAILY_LEAF_SHADE_MAINT_RESP,        /* (gC/m2/day) Daytime leaf maintenance respiration */
 	NIGHTLY_LEAF_MAINT_RESP,            /* (gC/m2/day) Night time leaf maintenance respiration */
-	TOT_DAY_LEAF_MAINT_RESP,            /* (gC/m2/day) Leaf maintenance respiration */
+	TOT_LEAF_MAINT_RESP,                /* (gC/m2/day) Leaf maintenance respiration */
 	FROOT_MAINT_RESP,                   /* (gC/m2/day) Fine root maintenance respiration */
 	STEM_MAINT_RESP,                    /* (gC/m2/day) Stem maintenance respiration */
 	CROOT_MAINT_RESP,                   /* (gC/m2/day) Coarse root maintenance respiration */
@@ -1038,6 +1038,7 @@ typedef struct
 
 	/* carbon fluxes */
 	double daily_gpp, monthly_gpp, annual_gpp;                            /* (gC/m2/time) daily, monthly and annual GPP at cell level */
+	double daily_ass, monthly_ass, annual_ass;                            /* (gC/m2/time) daily, monthly and annual assimilation at cell level */
 	double daily_gpp_tC, monthly_gpp_tC, annual_gpp_tC;                   /* (tC/m2/time) daily, monthly and annual GPP at cell level */
 	double daily_npp, monthly_npp, annual_npp;                            /* (gC/m2/time) daily, monthly and annual NPP at cell level */
 	double daily_npp_tC, monthly_npp_tC, annual_npp_tC;                   /* (tC/m2/time) daily, monthly and annual NPP at cell level */

@@ -18,7 +18,7 @@
 //extern logger_t* g_debug_log;
 extern settings_t* g_settings;
 
-#define TEST 0
+#define TEST 0 /* 0 old; 1 new */
 
 void photosynthesis_FvCB (cell_t *const c, const int height, const int dbh, const int age, const int species, const meteo_daily_t *const meteo_daily, const meteo_annual_t *const meteo_annual)
 {
@@ -61,9 +61,8 @@ void photosynthesis_FvCB (cell_t *const c, const int height, const int dbh, cons
 		/* call Farquhar for sun leaves leaves photosynthesis */
 		psn = Farquhar (c, s, meteo_daily, meteo_annual, cond_corr, leafN, par_abs, leaf_day_mresp, sun_shade);
 
-		/* Canopy gross assimilation and converting from umol/m2 leaf/sec gC/m2/day and to LAI for canopy computation */
-		/* note (from Biome-BGC): "for the final flux assignment, the assimilation output needs to have the maintenance respiration rate added..." */
-		s->value[ASSIMILATION_SUN]   = ( psn + leaf_day_mresp ) * s->value[LAI_SUN_PROJ] * meteo_daily->daylength_sec * GC_MOL * 1e-6;
+		/* Canopy net assimilation and converting from umol/m2 leaf/sec gC/m2/day and to LAI for canopy computation */
+		s->value[ASSIMILATION_SUN]   = psn * s->value[LAI_SUN_PROJ] * meteo_daily->daylength_sec * GC_MOL * 1e-6;
 
 		/* check */
 		if ( psn <= 0 ) s->value[ASSIMILATION_SUN] = 0.;
@@ -93,39 +92,36 @@ void photosynthesis_FvCB (cell_t *const c, const int height, const int dbh, cons
 		/* call Farquhar for shade leaves photosynthesis */
 		psn = Farquhar (c, s, meteo_daily, meteo_annual, cond_corr, leafN, par_abs, leaf_day_mresp, sun_shade );
 
-		/* Canopy assimilation (photosynthesis) and converting from umol/m2 leaf/sec gC/m2/day and to LAI for canopy computation */
-		/* note (from Biome-BGC): "for the final flux assignment, the assimilation output needs to have the maintenance respiration rate added..." */
-		s->value[ASSIMILATION_SHADE] = ( psn + leaf_day_mresp ) * s->value[LAI_SHADE_PROJ] * meteo_daily->daylength_sec * GC_MOL * 1e-6;
+		/* Canopy net assimilation (photosynthesis) and converting from umol/m2 leaf/sec gC/m2/day and to LAI for canopy computation */
+		s->value[ASSIMILATION_SHADE] = psn * s->value[LAI_SHADE_PROJ] * meteo_daily->daylength_sec * GC_MOL * 1e-6;
 
 		/* check */
 		if ( psn <= 0 ) s->value[ASSIMILATION_SHADE] = 0.;
 	}
 
 	/************************************************************************************************************************************/
-
 	/* as In Wohlfahrt & Gu 2015 Plant Cell and Environment */
 	/* "GPP is intended as an integration of apparent photosynthesis (true photosynthesis minus photorespiration), NOT
 	gross (true) photosynthesis" */
 
-	/* total gross assimilation */
+	/* total net assimilation */
 	s->value[ASSIMILATION] = s->value[ASSIMILATION_SUN] + s->value[ASSIMILATION_SHADE];
 
 	/* check condition */
 	CHECK_CONDITION( s->value[ASSIMILATION] , <, 0.0);
-	/************************************************************************************************************************************/
-
-	s->value[MONTHLY_ASSIMILATION]       += s->value[ASSIMILATION];
-	s->value[MONTHLY_ASSIMILATION_SUN]   += s->value[ASSIMILATION_SUN];
-	s->value[MONTHLY_ASSIMILATION_SHADE] += s->value[ASSIMILATION_SHADE];
-
-	s->value[YEARLY_ASSIMILATION]        += s->value[ASSIMILATION];
-	s->value[YEARLY_ASSIMILATION_SUN]    += s->value[ASSIMILATION_SUN];
-	s->value[YEARLY_ASSIMILATION_SHADE]  += s->value[ASSIMILATION_SHADE];
 
 	/************************************************************************************************************************************/
 	/* gpp */
-	s->value[GPP_SUN]                     = s->value[ASSIMILATION_SUN];
-	s->value[GPP_SHADE]                   = s->value[ASSIMILATION_SHADE];
+
+	/* note: for the final flux assignment, the assimilation output needs to have the maintenance respiration rate added... */
+	s->value[GPP_SUN]                     = s->value[ASSIMILATION_SUN]   + s->value[DAILY_LEAF_SUN_MAINT_RESP];
+	s->value[GPP_SHADE]                   = s->value[ASSIMILATION_SHADE] + s->value[DAILY_LEAF_SHADE_MAINT_RESP];
+
+	/* to avoid negative values when Rd > Assimilation */
+	if (s->value[GPP_SUN]  < 0.) s->value[GPP_SUN]   = 0.;
+	if (s->value[GPP_SHADE]< 0.) s->value[GPP_SHADE] = 0.;
+
+	/* total gpp */
 	s->value[GPP]                         = s->value[GPP_SUN] + s->value[GPP_SHADE];
 
 	/* check condition */
@@ -135,6 +131,17 @@ void photosynthesis_FvCB (cell_t *const c, const int height, const int dbh, cons
 
 	/* gC/m2/day --> tC/cell/day */
 	s->value[GPP_tC]                      = s->value[GPP] / 1e6 * g_settings->sizeCell ;
+
+	/************************************************************************************************************************************/
+
+	/* class level */
+	s->value[MONTHLY_ASSIMILATION]       += s->value[ASSIMILATION];
+	s->value[MONTHLY_ASSIMILATION_SUN]   += s->value[ASSIMILATION_SUN];
+	s->value[MONTHLY_ASSIMILATION_SHADE] += s->value[ASSIMILATION_SHADE];
+
+	s->value[YEARLY_ASSIMILATION]        += s->value[ASSIMILATION];
+	s->value[YEARLY_ASSIMILATION_SUN]    += s->value[ASSIMILATION_SUN];
+	s->value[YEARLY_ASSIMILATION_SHADE]  += s->value[ASSIMILATION_SHADE];
 
 	s->value[MONTHLY_GPP]                += s->value[GPP];
 	s->value[MONTHLY_GPP_SUN]            += s->value[GPP_SUN];
@@ -148,6 +155,10 @@ void photosynthesis_FvCB (cell_t *const c, const int height, const int dbh, cons
 	c->daily_gpp                         += s->value[GPP];
 	c->monthly_gpp                       += s->value[GPP];
 	c->annual_gpp                        += s->value[GPP];
+
+	c->daily_ass                         += s->value[ASSIMILATION];
+	c->monthly_ass                       += s->value[ASSIMILATION];
+	c->annual_ass                        += s->value[ASSIMILATION];
 
 	c->daily_gpp_tC                      += s->value[GPP_tC];
 	c->monthly_gpp_tC                    += s->value[GPP_tC];
@@ -396,7 +407,7 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 
 			/*******************************************************************************/
 
-#if TEST
+#if 0
 
 			//not currently used
 			//note: modified version of the BIOME-BGC original code
@@ -452,7 +463,7 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 
 	/*******************************************************************************/
 
-#if TEST
+#if 0
 
 	//not currently used
 	//note: modified version of the BIOME-BGC original code

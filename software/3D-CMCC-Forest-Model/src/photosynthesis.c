@@ -109,11 +109,18 @@ void photosynthesis_LUE(cell_t *const c, const int layer, const int height, cons
 	/* check */
 	CHECK_CONDITION( GPPmolC , < , ZERO );
 
-	/* Daily GPP (gC/m2/day) */
+	/* Daily assimilation (gC/m2/day) */
 	/* molC/m2/day --> gC/m2/day */
+	s->value[ASSIMILATION_SUN]   = GPP_sun_molC   * GC_MOL;
+	s->value[ASSIMILATION_SHADE] = GPP_shade_molC * GC_MOL;
 
-	s->value[GPP_SUN]            = GPP_sun_molC   * GC_MOL;
-	s->value[GPP_SHADE]          = GPP_shade_molC * GC_MOL;
+	/* total net assimilation */
+	s->value[ASSIMILATION]       = s->value[ASSIMILATION_SUN] + s->value[ASSIMILATION_SHADE];
+
+	s->value[GPP_SUN]            = s->value[ASSIMILATION_SUN];
+	s->value[GPP_SHADE]          = s->value[ASSIMILATION_SHADE];
+
+	/* total gpp */
 	s->value[GPP]                = s->value[GPP_SUN] + s->value[GPP_SHADE];
 
 	/* gC/m2/day --> tC/cell/day */
@@ -123,14 +130,28 @@ void photosynthesis_LUE(cell_t *const c, const int layer, const int height, cons
 	s->value[MONTHLY_GPP]       += s->value[GPP];
 	s->value[MONTHLY_GPP_SUN]   += s->value[GPP_SUN];
 	s->value[MONTHLY_GPP_SHADE] += s->value[GPP_SHADE];
+
 	s->value[YEARLY_GPP]        += s->value[GPP];
 	s->value[YEARLY_GPP_SUN]    += s->value[GPP_SUN];
 	s->value[YEARLY_GPP_SHADE]  += s->value[GPP_SHADE];
+
+
+	s->value[MONTHLY_ASSIMILATION]       += s->value[ASSIMILATION];
+	s->value[MONTHLY_ASSIMILATION_SUN]   += s->value[ASSIMILATION_SUN];
+	s->value[MONTHLY_ASSIMILATION_SHADE] += s->value[ASSIMILATION_SHADE];
+
+	s->value[YEARLY_ASSIMILATION]        += s->value[ASSIMILATION];
+	s->value[YEARLY_ASSIMILATION_SUN]    += s->value[ASSIMILATION_SUN];
+	s->value[YEARLY_ASSIMILATION_SHADE]  += s->value[ASSIMILATION_SHADE];
 
 	/* cell level */
 	c->daily_gpp                += s->value[GPP];
 	c->monthly_gpp              += s->value[GPP];
 	c->annual_gpp               += s->value[GPP];
+
+	c->daily_ass                += s->value[ASSIMILATION];
+	c->monthly_ass              += s->value[ASSIMILATION];
+	c->annual_ass               += s->value[ASSIMILATION];
 
 	c->daily_gpp_tC             += s->value[GPP_tC];
 	c->monthly_gpp_tC           += s->value[GPP_tC];
