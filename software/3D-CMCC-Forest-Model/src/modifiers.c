@@ -74,7 +74,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	double Av_rel, Aj_rel;
 
 	static int modifier;
-	static int test_assimilation = 2;
+	static int test_assimilation;
 
 	age_t *a;
 	species_t *s;
@@ -238,10 +238,10 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	/* compute FCO2 modifier (Aj_rel) */
 
 	/* note: original Franks et al., (2013) */
-	Aj_rel = ( ( Ca - gamma_star ) * ( Ca_ref + 2 * gamma_star ) ) / ( ( Ca + 2. * gamma_star ) * ( Ca_ref - gamma_star ) );
+	//Aj_rel = ( ( Ca - gamma_star ) * ( Ca_ref + 2 * gamma_star ) ) / ( ( Ca + 2. * gamma_star ) * ( Ca_ref - gamma_star ) );
 
 	/* note Following parameterization from Bernacchi et al., (2001) and applied to Franks et al., (2013) */
-	//Aj_rel = ( ( Ca - gamma_star ) * ( ( 4.5 * Ca_ref ) + ( 10.5 * gamma_star ) ) ) / ( ( ( 4.5 * Ca )  + ( 10.5 * gamma_star ) ) * ( Ca_ref - gamma_star ) );
+	Aj_rel = ( ( Ca - gamma_star ) * ( ( 4.5 * Ca_ref ) + ( 10.5 * gamma_star ) ) ) / ( ( ( 4.5 * Ca )  + ( 10.5 * gamma_star ) ) * ( Ca_ref - gamma_star ) );
 
 	/*******************************************************************************/
 
@@ -250,6 +250,8 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	Av_rel = ( ( Ca - gamma_star ) * ( Ca_ref + Kc * ( 1. + ( O2 / Ko ) ) ) ) / ( ( Ca + Kc * ( 1. + ( O2 / Ko ) ) ) * ( Ca_ref - gamma_star ) );
 
 	/*******************************************************************************/
+
+	test_assimilation = 0;
 
 	switch ( test_assimilation )
 	{
