@@ -28,7 +28,7 @@ RAGE    0.95                  //Relative Age to give fAGE = 0.5 for P. sylvestri
 NAGE    4                     //Power of relative Age in function for P. sylvestris Landsberg et al., 2005, Forrester et al., 2017
 GROWTHTMIN -6                 //Minimum temperature for growth for P. sylvestris 0 Leverenz et al., 1987 -2 Landsberg et al., 2005, -5.93 Makela et al., 2006, -5 Forrester et al., 2017
 GROWTHTMAX  40 //35                //Maximum temperature for growth for P. sylvestris 30 Leverenz et al., 1987; 25 Landsberg et al., 2005, 35 Forrester et al., 2017
-GROWTHTOPT  22.5 //20                //Optimum temperature for growth for P. sylvestris 20 Medlyn et al., 2002; 15 Landsberg et al., 2005, 15 Forrester et al., 2017
+GROWTHTOPT  20                //Optimum temperature for growth for P. sylvestris 20 Medlyn et al., 2002; 15 Landsberg et al., 2005, 15 Forrester et al., 2017
 GROWTHSTART 200               //average temperature for starting growth in °C 
 MINDAYLENGTH    0             //minimum day length for deciduous
 SWPOPEN -0.5                  //in KPa for P. sylvestris from Pietsch et al 2005, -0.5 for Tatarinov et al., 2006

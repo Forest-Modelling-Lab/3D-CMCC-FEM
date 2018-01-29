@@ -265,8 +265,9 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	double var_a, var_b, var_c, det;
 
 	//todo todo todo todo todo move in species.txt (this should be the only variable for all photosynthesis)
-	// double beta = 1.67; /* Jmax:Vcmax note: in Medlyn et al., 2002*/
-	static double beta       = 2.1; /* ratio between Vcmax and Jmax see dePury and Farquhar 1997; for fagus see Liozon et al., (2000) and Castanea */
+	static double beta       = 1.67; /* Jmax:Vcmax note: in Medlyn et al., 2002*/
+	//static double beta       = 2.1; /* ratio between Vcmax and Jmax see dePury and Farquhar 1997; for fagus see Liozon et al., (2000) and Castanea */
+
 	static double test_Vcmax = 55 ; /* (umol/m2/sec) Vcmax for fagus see Deckmyn et al., 2004 GCB */
 	static double test_Jmax  = 100; /* (umol/m2/sec) Jmax for fagus see Deckmyn et al., 2004 GCB */
 
@@ -417,7 +418,7 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 			Vcmax = /*s->value[VCMAX]*/ test_Vcmax;
 
 #else
-	/* calculate Vcmax from leaf nitrogen data and Rubisco activity */
+	/* calculate Vcmax from leaf nitrogen data and Rubisco activity see Harrison et al., 2009 PCE */
 
 	/* kg Nleaf   kg NRub    kg Rub      umol            umol
 	   -------- X -------  X ------- X ---------   =   --------
@@ -453,8 +454,8 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	CHECK_CONDITION( temp_corr      , <, 0.0);
 	CHECK_CONDITION( high_temp_corr , <, 0.0);
 
-	/* correct Vcmax25 for temperature Medlyn et al., (1999) with F_SW from Bonan et al., (2011) */
-	Vcmax     = Vcmax25 * temp_corr * high_temp_corr * s->value[F_SW];
+	/* correct Vcmax25 for temperature Medlyn et al., (1999) with F_SW from Bonan et al., (2011) and F_NUTR as in Bonan et al., (2012) */
+	Vcmax     = Vcmax25 * temp_corr * high_temp_corr * s->value[F_SW] /** s->value[F_NUTR]*/;
 
 	/* check condition */
 	CHECK_CONDITION( Vcmax , <, 0.0);
@@ -503,8 +504,8 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	CHECK_CONDITION( temp_corr      , <, 0.0);
 	CHECK_CONDITION( high_temp_corr , <, 0.0);
 
-	/* correct Jmax25 for temperature dePury and Farquhar (1997) with F_SW from Bonan et al., (2011) */
-	Jmax           = Jmax25 * temp_corr * high_temp_corr * s->value[F_SW];
+	/* correct Jmax25 for temperature dePury and Farquhar (1997) */
+	Jmax           = Jmax25 * temp_corr * high_temp_corr;
 
 	/* check condition */
 	CHECK_CONDITION( Jmax , <, 0.0);

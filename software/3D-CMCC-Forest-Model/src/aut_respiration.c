@@ -211,6 +211,7 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 #endif
 
 
+		/*******************************************************************************************************************/
 #if 1
 		//test NEW considering day-time light inhibition for leaf respiration ("Kok effect")
 
@@ -223,6 +224,8 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 		/* "the large discrepancy between daytime and night-time ecosystem respiration in the
 		 * first half of the growing season suggests inhibition of leaf respiration by light, known as the Kok effect"
 		 * but just "during the first half of the growing season only" R. Wehr, Nature 2016 */
+
+		/* NOTE: MAESPA USES 0.6 FOR LIGHT INHIBITION */
 
 		if ( s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2 )
 		{
@@ -239,9 +242,6 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 #endif
 
 		/* note: respiration values are computed in gC/m2/day */
-
-		/*******************************************************************************************************************/
-
 		/* Leaf maintenance respiration is calculated separately for day and night */
 
 		/* day time leaf maintenance respiration */

@@ -32,7 +32,7 @@ void photosynthesis_LUE(cell_t *const c, const int layer, const int height, cons
 
 	if ( s->value[ALPHA] != NO_DATA )
 	{
-		/* compute effective light use efficiency */
+		/* compute actual light use efficiency from potential one */
 		//fixme use or not s->value[F_CO2_TR]???????
 		Alpha_C   = s->value[ALPHA] * s->value[F_CO2] * s->value[F_NUTR] * s->value[F_T] * s->value[PHYS_MOD] /* * s->value[F_CO2_TR] */;
 
@@ -41,7 +41,7 @@ void photosynthesis_LUE(cell_t *const c, const int layer, const int height, cons
 	}
 	else
 	{
-		/* compute effective light use efficiency */
+		/* compute actual light use efficiency from potential one */
 		//fixme use or not s->value[F_CO2_TR]???????
 		Epsilon_C = s->value[EPSILONgCMJ] * s->value[F_CO2] * s->value[F_NUTR] * s->value[F_T] * s->value[PHYS_MOD] /* * s->value[F_CO2_TR] */;
 
@@ -90,21 +90,21 @@ void photosynthesis_LUE(cell_t *const c, const int layer, const int height, cons
 	/* canopy sun */
 	if ( Lue_sun > Lue_sun_max )
 	{
-		/* current Lue cannot exceeds Lue max */
+		/* Actual Lue cannot exceed Lue max */
 		Lue_sun = Lue_sun_max;
 	}
 	/*canopy shade */
 	if ( Lue_shade > Lue_shade_max )
 	{
-		/* current Lue cannot exceeds Lue max */
+		/* Actual Lue cannot exceed Lue max */
 		Lue_shade = Lue_shade_max;
 	}
 
 	/* GPP */
 	/* Daily GPP in molC/m^2/day */
-	GPPmolC        = Lue       /* FIXME it should accounts for transp * s->value[CANOPY_FRAC_DAY_TRANSP]*/;
-	GPP_sun_molC   = Lue_sun   /* FIXME it should accounts for sun transp * s->value[CANOPY_SUN_FRAC_DAY_TRANSP]*/;
-	GPP_shade_molC = Lue_shade /* FIXME it should accounts for shade transp * s->value[CANOPY_SHADE_FRAC_DAY_TRANSP]*/;
+	GPPmolC        = Lue       /* FIXME it should account for transp * s->value[CANOPY_FRAC_DAY_TRANSP]*/;
+	GPP_sun_molC   = Lue_sun   /* FIXME it should account for sun transp * s->value[CANOPY_SUN_FRAC_DAY_TRANSP]*/;
+	GPP_shade_molC = Lue_shade /* FIXME it should account for shade transp * s->value[CANOPY_SHADE_FRAC_DAY_TRANSP]*/;
 
 	/* check */
 	CHECK_CONDITION( GPPmolC , < , ZERO );

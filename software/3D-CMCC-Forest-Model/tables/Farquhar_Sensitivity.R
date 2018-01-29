@@ -48,7 +48,7 @@ thetaII        = 0.7    #(DIM) curvature of the light-response curve of electron
 ppe            = 2.6    #(mol e- /mol photons) photons absorbed by PSII per e- transported (quantum yield of electron transport)
 Rgas           = 8.3144 #Gas constant
 
-beta           = 2.1    #ratio between Vcmax and Jmax see dePury and Farquhar 1997; for fagus see Liozon et al., (2000) and Castanea */
+beta           = 1.67 #2.1    #ratio between Vcmax and Jmax see dePury and Farquhar 1997; for fagus see Liozon et al., (2000) and Castanea */
 test_Vcmax     = 55     #(umol/m2/sec) Vcmax for fagus see Deckmyn et al., 2004 GCB */
 test_Jmax      = 100    #(umol/m2/sec) Jmax for fagus see Deckmyn et al., 2004 GCB */
 
