@@ -3,12 +3,34 @@
 // written by A. Ribeca
 //
 
+// os dependant stuff
+#ifdef _WIN32
+#ifndef STRICT
+#define STRICT
+#endif
+#ifndef WIN32_MEAN_AND_LEAN
+#define WIN32_MEAN_AND_LEAN
+#endif
+#ifndef _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS
+#endif
+#include <windows.h>
+#include <direct.h>
+// for memory leak
+#ifdef _DEBUG
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
+#endif /* _DEBUG */
+#pragma comment(lib, "kernel32.lib")
+#else
+#include <dirent.h>
+#include <unistd.h>
+#endif
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include <dirent.h>
-#include <unistd.h>
 #include "netcdf.h"
 #include <assert.h>
 
@@ -33,42 +55,99 @@ const char err_invalid_input_folder[] = "error - invalid input folder specified:
 #include "files.h"
 #include "dataset.h"
 #include "nc.h"
+
+void clean_up(void)
+{
+#ifdef _WIN32
+#ifdef _DEBUG
+	_CrtDumpMemoryLeaks();
+#endif
+#endif
+}
 			
 int main(int argc, char* argv[])
 {
-	const char* folder;
+	const char* input_folder;
+	const char* output_folder;
 	int ret;
+	int is_file;
 	files_t* files;
 
-	folder = NULL;
+	input_folder = NULL;
+	output_folder = NULL;
 	files = NULL;
+	is_file = 0;
 	ret = 1; // defaults to err
+
+	//_CrtSetBreakAlloc();
 
 	// show banner
 	printf(banner, nc_inq_libvers());
 
 #if 1
 	// parse args
-	folder = "..";
+	input_folder = "..";
 	if  ( argc >= 2 )
 	{
 		// get folder name
-		folder = argv[1];
+		input_folder = argv[1];
+		if ( argc > 2 )
+		{
+			output_folder = argv[2];
+		}
+	}
+
+	// register clean_up func
+	if ( -1 == atexit(clean_up) )
+	{
+		puts(err_unable_to_register_cleanup_func);
 	}
 
 	// check if folder exists
-	if ( folder && ! path_exists(folder) )
+	if ( input_folder && ! path_exists(input_folder) )
 	{
-		printf(err_invalid_input_folder, folder);
-		goto quit;
+		// check if is a file
+		if ( file_exists(input_folder) )
+		{
+			is_file = 1;
+		}
+		else
+		{
+			printf(err_invalid_input_folder, input_folder);
+			goto quit;
+		}
+	}
+
+	if ( output_folder )
+	{
+		if ( ! path_exists(output_folder) )
+		{
+		#if defined(_WIN32)
+			_mkdir(output_folder);
+		#else 
+			mkdir(output_folder, 0777);
+		#endif
+		}
 	}
 
 	// scan folder
-	files = files_get(folder, "txt", NULL);
-	if ( ! files )
+	if ( is_file )
 	{
-		printf("nothing found on %s\n", folder);
-		goto quit;
+		files = files_new_ex(NULL, input_folder);
+		if ( ! files )
+		{
+			puts(err_out_of_memory);
+			goto quit;
+		}
+	}
+	else
+	{
+		files = files_get(input_folder, "txt", NULL);
+		if ( ! files )
+		{
+			printf("nothing found on %s\n", input_folder);
+			goto quit;
+		}
 	}
 
 	// process
@@ -88,8 +167,9 @@ int main(int argc, char* argv[])
 			printf("processing %s...", files->filename[i]);
 			d = dataset_import(files->filename[i]);
 			if ( ! d ) continue;
-			if ( ! nc_conv(d) ) continue;
+			if ( ! nc_conv(d, output_folder) ) continue;
 			puts("ok");
+			dataset_free(d);
 			++processed;
 		}
 
@@ -116,5 +196,3 @@ quit:
 	if ( files ) files_free(files);
 	return ret;
 }
-
-//ISIMIP_OUTPUT_v.5.4-FvCB-22-Dec-2017/FT/Soroe/output_5.4_2017_DECEMBER_22/annual/

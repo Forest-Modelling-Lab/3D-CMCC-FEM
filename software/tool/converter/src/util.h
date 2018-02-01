@@ -125,14 +125,46 @@ char* strstr_i(char* str1, const char* str2)
     return *p2 == 0 ? r : 0;
 }
 
+int file_exists(const char *const filename)
+{
+	assert(filename);
+#ifdef _WIN32
+	{
+		DWORD dwResult;
+
+		dwResult = GetFileAttributes(filename);
+		if ( (dwResult != INVALID_FILE_ATTRIBUTES) && ! (dwResult & FILE_ATTRIBUTE_DEVICE) )
+		{
+			return 1;
+		}
+	}
+#else
+	if ( ! access(filename, W_OK) )
+	{
+		return 1;
+	}
+#endif
+	return 0;
+}
+
 int path_exists(const char *const path)
 {
 	assert(path);
+#ifdef _WIN32
+	{
+		DWORD dwResult;
 
+		dwResult = GetFileAttributes(path);
+		if ( (dwResult != INVALID_FILE_ATTRIBUTES) && (dwResult & FILE_ATTRIBUTE_DIRECTORY) )
+		{
+			return 1;
+		}
+	}
+#else
 	if ( ! access(path, W_OK) )
 	{
 		return 1;
 	}
-
+#endif
 	return 0;
 }
