@@ -163,6 +163,7 @@ void photosynthesis_LUE(cell_t *const c, const int layer, const int height, cons
 		++s->counter[YEARLY_VEG_DAYS];
 	}
 
+
 	/************************************************************************************************************************************/
 
 	/* compute actual quantum canopy efficiency (molC/molphotons PAR) */
