@@ -37,6 +37,65 @@ void files_free(files_t* files)
 	free(files);
 }
 
+// internal do not use
+int add_file(files_t* files, const char*const path, const char* const filename)
+{
+	char** char_no_leak;
+	char buf[PATH_SIZE];
+	int ret;
+
+	assert(files);
+	assert(filename);
+
+	ret = 0; // defaults to err
+
+	char_no_leak = realloc(files->filename, (files->count+1)*sizeof*char_no_leak);
+	if ( ! char_no_leak ) goto quit;
+
+	if ( path )
+		sprintf(buf, "%s/%s", path, filename);
+	else
+		strncpy(buf, filename, PATH_SIZE);
+
+	files->filename = char_no_leak;
+	files->filename[files->count] = string_copy(buf);
+	if ( ! files->filename[files->count] ) goto quit;
+	++files->count;
+
+	ret = 1; // ok
+
+quit:
+	return ret;
+}
+
+#define files_new()		\
+		files_new_ex(NULL,NULL)
+files_t* files_new_ex(const char*const path, const char* const filename)
+{
+	files_t* files;
+
+	files = malloc(sizeof*files);
+	if ( ! files )
+	{
+		puts(err_out_of_memory);
+		goto quit;
+	}
+	memset(files, 0, sizeof*files);
+
+	if ( filename )
+	{
+		if ( ! add_file(files, path, filename) )
+		{
+			puts(err_out_of_memory);
+			files_free(files);
+			files = NULL;
+		}
+	}
+
+quit:
+	return files;
+}
+
 files_t* files_get(const char *const path, const char*const ext, files_t* files)
 {
 	int flag;
@@ -50,9 +109,13 @@ files_t* files_get(const char *const path, const char*const ext, files_t* files)
 	flag = 0;
 	if ( ! files )
 	{
+		/*
 		files = malloc(sizeof(files_t));
 		if ( ! files ) return NULL;
 		memset(files, 0, sizeof(files_t));
+		*/
+		files = files_new();
+		if ( ! files ) return NULL;
 		flag = 1; // needed for free memory on error
 	}
 
@@ -69,10 +132,10 @@ files_t* files_get(const char *const path, const char*const ext, files_t* files)
 
     while ( entry = readdir(dir) )
 	{
-		char buf[PATH_SIZE];
-
 		if ( DT_DIR == entry->d_type )
 		{
+			char buf[PATH_SIZE];
+
             if ( ! string_compare_i(entry->d_name, ".") || ! string_compare_i(entry->d_name, "..") )
 			{
                 continue;
@@ -82,8 +145,6 @@ files_t* files_get(const char *const path, const char*const ext, files_t* files)
         }
 		else
 		{
-			char** char_no_leak;
-
 			if ( ext )
 			{
 				char* p;
@@ -97,9 +158,7 @@ files_t* files_get(const char *const path, const char*const ext, files_t* files)
 					}
 				}
 			}
-
-			char_no_leak = realloc(files->filename, (files->count+1)*sizeof*char_no_leak);
-			if ( ! char_no_leak )
+			if ( ! add_file(files, path, entry->d_name) )
 			{
 				if ( flag )
 				{
@@ -108,20 +167,6 @@ files_t* files_get(const char *const path, const char*const ext, files_t* files)
 				}
 				goto quit;
 			}
-			sprintf(buf, "%s/%s", path, entry->d_name);
-
-			files->filename = char_no_leak;
-			files->filename[files->count] = string_copy(buf);
-			if ( ! files->filename[files->count] )
-			{
-				if ( flag )
-				{
-					files_free(files);
-					files = NULL;
-				}
-				goto quit;
-			}
-			++files->count;
         }
     }
     

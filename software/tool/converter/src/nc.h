@@ -6,7 +6,7 @@
 //
 
 // <modelname>_<obs>_<clim_scenario>_<socio-econ-scenario>_<sens-scenarios>_<variable>_<region>_<timestep>_<start-year>_<end-year>.nc4
-int nc_conv(dataset_t* dataset)
+int nc_conv(dataset_t* dataset, const char*const folder)
 {
 #define BUF_SIZE			(256)	// should be enough
 #define NC_MISSING_VALUE	(1.e+20f)
@@ -77,13 +77,19 @@ int nc_conv(dataset_t* dataset)
 	// DAILY_DATASET_TYPE
 	else
 	{
+		int day;
+		int year;
+
+		day = 0;
+		year = dataset->start_year;
 		for ( i = 0; i < dataset->rows_count; ++i )
 		{
-			if ( i > IS_LEAP_YEAR(dataset->start_year + i) )
+			if ( ++day > (IS_LEAP_YEAR(year) ? 366 : 365) )
 			{
-				i = 0;
+				day = 1;
+				++year;
 			}
-			index[i] = i+1;
+			index[i] = day;
 		}
 	}
 
@@ -108,14 +114,24 @@ int nc_conv(dataset_t* dataset)
 		int lon_id, lat_id, time_id, var_id;
 		int var_dim_ids[3];
 
-		//const int NX = 1;
-		//const int NY = dataset->rows_count;
-
 		// get var name
 		var = (ANNUAL_DATASET_TYPE == dataset->type) ? annual_vars[i] : daily_vars[i];
 
 		// compute filename
-		sprintf(buf, "%s%s_%s_%s.nc4", dataset->path ? dataset->path : "", modelname, gcms[dataset->esm-1], var); 
+		if ( folder )
+		{
+			sprintf(buf, "%s/%s_%s_%s_%s.nc4", folder
+							, modelname, gcms[dataset->esm-1], var
+							, (ANNUAL_DATASET_TYPE == dataset->type) ? "annual" : "daily"
+			);
+		}
+		else
+		{
+			sprintf(buf, "%s%s_%s_%s_%s.nc4", dataset->path ? dataset->path : ""
+							, modelname, gcms[dataset->esm-1], var
+							, (ANNUAL_DATASET_TYPE == dataset->type) ? "annual" : "daily"
+			); 
+		}
 		
 		// convert INVALID_VALUE TO NC_MISSING_VALUE
 		for ( j = 0; j < dataset->rows_count; ++j )
@@ -174,6 +190,7 @@ int nc_conv(dataset_t* dataset)
 
 		puts("ok");
 	}
+	if ( index ) free(index);
 	return 1;
 
 err:

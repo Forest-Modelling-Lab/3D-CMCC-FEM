@@ -14,22 +14,21 @@ typedef enum
 
 typedef enum
 {
-							// index order
-	ANNUAL_HEIGHT = 0		// 2
-	, ANNUAL_DBH			// 3
-	, ANNUAL_AGE			// 4
-	, ANNUAL_LIVE_TREE		// 25
-	, ANNUAL_DEAD_TREE		// 26
-	, ANNUAL_THINNED_TREE	// 27
-	, ANNUAL_STEM_C			// 36
-	, ANNUAL_MAX_LEAF_C		// 43
-	, ANNUAL_MAX_FROOT_C	// 44
-	, ANNUAL_CROOT_C		// 45
-	, ANNUAL_BRANCH_C		// 49
-	, ANNUAL_FRUIT_C		// 53
-	, ANNUAL_BASAL_AREA		// 69
-	, ANNUAL_MAI			// 73
-	, ANNUAL_VOLUME			// 74
+	ANNUAL_HEIGHT = 0
+	, ANNUAL_DBH
+	, ANNUAL_AGE
+	, ANNUAL_LIVETREE
+	, ANNUAL_DEADTREE
+	, ANNUAL_THINNEDTREE
+	, ANNUAL_STEM_C
+	, ANNUAL_MAX_LEAF_C
+	, ANNUAL_MAX_FROOT_C
+	, ANNUAL_CROOT_C
+	, ANNUAL_BRANCH_C
+	, ANNUAL_FRUIT_C
+	, ANNUAL_BASAL_AREA
+	, ANNUAL_MAI
+	, ANNUAL_VOLUME
 		
 	, ANNUAL_IMPORT_VARS_COUNT
 
@@ -48,21 +47,20 @@ typedef enum
 	, DAILY_RA
 	, DAILY_FAPAR
 	, DAILY_ET
-	, DAILY_C_INT
-	, DAILY_SOIL_EVALPO
-	, DAILY_C_TRA
+	, DAILY_INT
+	, DAILY_SOIL_EVAPO
+	, DAILY_TRA
 	, DAILY_ASW
-	, DAILY_DWL
-	, DAILY_DWFR
+	, DAILY_DELTA_LEAF_C
+	, DAILY_DELTA_FROOT_C
 
-	, DAILY_DWS
-	, DAILY_DWBB
-	, DAILY_DFRUIT
-	, DAILY_NWFR
-	, DAILY_DWCR
+	, DAILY_DELTA_STEM_C
+	, DAILY_DELTA_BRANCH_C
+	, DAILY_DELTA_FRUIT_C
+	, DAILY_DELTA_CROOT_C
 
-	, DAILY_FRAR
-	, DAILY_CRAR
+	, DAILY_FROOT_AR
+	, DAILY_CROOT_AR
 	, DAILY_TSOIL
 
 	, DAILY_IMPORT_VARS_COUNT
@@ -96,9 +94,9 @@ const char *annual_vars[ANNUAL_VARS_COUNT] =
 	"HEIGHT"
 	, "DBH"
 	, "AGE"
-	, "LIVE_TREE"
-	, "DEAD_TREE"
-	, "THINNED_TREE"
+	, "LIVETREE"
+	, "DEADTREE"
+	, "THINNEDTREE"
 	, "STEM_C"
 	, "MAX_LEAF_C"
 	, "MAX_FROOT_C"
@@ -108,6 +106,7 @@ const char *annual_vars[ANNUAL_VARS_COUNT] =
 	, "BASAL_AREA"
 	, "MAI"
 	, "VOLUME"
+
 	, "CMVB"
 	, "CMW"
 	, "CMR"
@@ -120,20 +119,20 @@ const char *daily_vars[DAILY_VARS_COUNT] =
 	, "RA"
 	, "FAPAR"
 	, "ET"
-	, "C_INT"
-	, "SOIL_EVALPO"
-	, "C_TRA"
+	, "INT"
+	, "SOIL_EVAPO"
+	, "TRA"
 	, "ASW"
-	, "DWL"
-	, "DWFR"
-	, "DWS"
-	, "DWBB"
-	, "DFRUIT"
-	, "NWFR"
-	, "DWCR"
-	, "FRAR"
-	, "CRAR"
+	, "DELTA_LEAF_C"
+	, "DELTA_FROOT_C"
+	, "DELTA_STEM_C"
+	, "DELTA_BRANCH_C"
+	, "DELTA_FRUIT_C"
+	, "DELTA_CROOT_C"
+	, "FROOT_AR"
+	, "CROOT_AR"
 	, "TSOIL"
+
 	, "NPPAB"
 	, "NPPBB"
 	, "RAR"
@@ -185,23 +184,26 @@ dataset_t* dataset_import(const char* const filename)
 	char co2_type[8];		// should be enough
 	char co2_file[16];		// should be enough
 	char man[8];			// should be enough
+	int* columns;
+	int columns_count;
+
+	char* p;
+	char* token;
 	
 	int i;
 	int has_path;
 	FILE* f;
 	dataset_t* dataset;
 
-	const int annual_vars_index[ANNUAL_IMPORT_VARS_COUNT] = { 2, 3, 4, 25, 26, 27, 36, 43, 44, 45, 49, 53, 69, 73, 74 };
-	const int daily_vars_index[DAILY_IMPORT_VARS_COUNT] = { 0 }; // TODO
+	const char delimiters[] = ",\r\n";
 
-	const char* clim_scenarios[] = { "hist", "pico", "rcp2p6", "rcp4p5", "rcp6p0", "rcp8p5" };
-	
-	const char annual_import_header[] = "YEAR,LAYER,HEIGHT,DBH,AGE,SPECIES,MANAGEMENT,GPP,GROSS_ASS,GR,MR,RA,NPP,CUE,Y(perc),PeakLAI,MaxLAI,SLA,SAPWOOD-AREA,CC-Proj,DBHDC,CROWN_DIAMETER,CROWN_HEIGHT,CROWN_AREA_PROJ,APAR,LIVETREE,DEADTREE,THINNEDTREE,VEG_D,FIRST_VEG_DAY,CTRANSP,CINT,CLE,WUE,MIN_RESERVE_C,RESERVE_C,STEM_C,STEMSAP_C,STEMHEART_C,STEMSAP_PERC,STEMLIVE_C,STEMDEAD_C,STEMLIVE_PERC,MAX_LEAF_C,MAX_FROOT_C,CROOT_C,CROOTLIVE_C,CROOTDEAD_C,CROOTLIVE_PERC,BRANCH_C,BRANCHLIVE_C,BRANCHDEAD_C,BRANCHLIVE_PERC,FRUIT_C,MAX_FRUIT_C,RESERVE_N,STEM_N,STEMLIVE_N,STEMDEAD_N,CROOT_N,CROOTLIVE_N,CROOTDEAD_N,BRANCH_N,BRANCHLIVE_N,BRANCHDEAD_N,FRUIT_N,STANDING_WOOD,DELTA_WOOD,CUM_DELTA_WOOD,BASAL_AREA,TREE_CAI,TREE_MAI,CAI,MAI,VOLUME,TREE_VOLUME,DELTA_TREE_VOL(perc),DELTA_AGB,DELTA_BGB,AGB,BGB,BGB:AGB,DELTA_TREE_AGB,DELTA_TREE_BGB,C_HWP,VOLUME_HWP,STEM_RA,LEAF_RA,FROOT_RA,CROOT_RA,BRANCH_RA,gpp,npp,ar,hr,rsoil,rsoilCO2,reco,nee,nep,et,le,soil-evapo,asw,iWue,vol,cum_vol,run_off,litrC,litr1C,litr2C,litr3C,litr4C,cwdC,cwd2C,cwd3C,cwd4C,soilC,soil1C,soil2C,soil3C,soil4C,litrN,litr1N,litr2N,litr3N,litr4N,cwdN,cwd2N,cwd3N,cwd4N,soilN,soil1N,soil2N,soil3N,soil4N,solar_rad,tavg,tmax,tmin,tday,tnight,vpd,prcp,tsoil,rh,avg_asw,[CO2]";
-	const char daily_import_header[] = "YEAR,MONTH,DAY,LAYER,HEIGHT,DBH,AGE,SPECIES,MANAGEMENT,GPP,ALPHA_EFF,ALPHA_EFF_SUN,ALPHA_EFF_SHADE,RG,RM,RA,NPP,CUE,LAI_PROJ,PEAK-LAI_PROJ,LAI_EXP,D-CC_P,DBHDC,CROWN_AREA_PROJ,CROWN_AREA_EXP,PAR,APAR,fAPAR,NTREE,VEG_D,INT,WAT,EVA,TRA,ET,LE,WUE,RESERVE_C,STEM_C,STEMSAP_C,STEMLIVE_C,STEMDEAD_C,LEAF_C,FROOT_C,CROOT_C,CROOTSAP_C,CROOTLIVE_C,CROOTDEAD_C,BRANCH_C,BRANCH_C,BRANCHLIVE_C,BRANCHDEAD_C,FRUIT_C,DELTARESERVE_C,DELTA_STEM_C,DELTA_LEAF_C,DELTA_FROOT_C,DELTA_CROOT_C,DELTA_BRANCH_C,DELTA_FRUIT_C,RESERVE_N,STEM_N,STEMLIVE_N,STEMDEAD_N,LEAF_N,FROOT_N,CROOT_N,CROOTLIVE_N,CROOTDEAD_N,BRANCH_N,BRANCHLIVE_N,BRANCHDEAD_N,FRUIT_N,DELTA_RESERVE_N,DELTA_STEM_N,DELTA_LEAF_N,DELTA_FROOT_N,DELTA_CROOT_N,DELTA_BRANCH_N,DELTA_FRUIT_N,STEM_AR,LEAF_AR,FROOT_AR,CROOT_AR,BRANCH_AR,F_CO2_VER,FCO2_TR,FLIGHT,FAGE,FT,FVPD,FN,FSW,LITR_C,CWD_C,gpp,npp,ar,hr,rsoil,reco,nee,nep,et,le,soil_evapo,snow_pack,asw,moist_ratio,iWue,litrC,litr1C,litr2C,litr3C,litr4C,deadwoodC,deadwood2C,deadwood3C,deadwood4C,soilC,soil1C,soil2C,soil3C,soil4C,litrN,litr1N,litr2N,litr3N,litr4N,deadwoodN,deadwood2N,deadwood3N,deadwood4N,soilN,soil1N,soil2N,soil3N,soil4N,Tsoil,Daylength";
+	const char* clim_scenarios[] = { "hist", "pico"
+									, "rcp2p6", "rcp4p5", "rcp6p0", "rcp8p5" };
 
 	assert(filename);
 
 	dataset = NULL;
+	columns = NULL;
 	f = NULL;
 
 	// check for path
@@ -214,15 +216,16 @@ dataset_t* dataset_import(const char* const filename)
 		p = strrchr(filename, '\\'); 
 		p2 = strrchr(filename, '/');
 		if ( p2 > p ) p = p2;
-		has_path = p - filename + 1;
+		if (  p )
+			has_path = p - filename + 1;
 	}
 
 	// check type
-	if ( ! strncasecmp(filename + has_path, "annual", strlen("annual")) )
+	if ( ! _strnicmp(filename + has_path, "annual", strlen("annual")) )
 	{
 		type = ANNUAL_DATASET_TYPE;
 	}
-	else if ( ! strncasecmp(filename + has_path, "daily", strlen("daily")) )
+	else if ( ! _strnicmp(filename + has_path, "daily", strlen("daily")) )
 	{
 		type = DAILY_DATASET_TYPE;
 	}
@@ -307,16 +310,64 @@ dataset_t* dataset_import(const char* const filename)
 		goto quit;
 	}
 
-	// remove line endings
-	buf[strcspn(buf, "\r\n")] = '\0';
-
-	// check for header
-	if ( string_compare_i(buf, (ANNUAL_DATASET_TYPE == type) ? annual_import_header :  daily_import_header) )
+	// get column
+	columns_count = (ANNUAL_DATASET_TYPE == type) ?
+						ANNUAL_IMPORT_VARS_COUNT : DAILY_IMPORT_VARS_COUNT;
+	columns = malloc(columns_count*sizeof*columns);
+	if ( ! columns )
 	{
-		puts("invalid header");
+		puts(err_out_of_memory);
 		goto quit;
 	}
 
+	for ( i = 0; i < columns_count; ++i )
+	{
+		columns[i] = -1;
+	}
+
+	for ( i = 0, token = string_tokenizer(buf, delimiters, &p); token; token = string_tokenizer(NULL, delimiters, &p), ++i )
+	{
+		int j;
+
+		if ( ! token || ! token[0] ) continue;
+
+		for ( j = 0; j < columns_count; ++j )
+		{
+			if ( ! string_compare_i(token, (ANNUAL_DATASET_TYPE == type) ? annual_vars[j] : daily_vars[j]) )
+			{
+				if ( columns[j] != -1 ) 
+				{
+					// fix for gpp, npp
+					if ( DAILY_DATASET_TYPE == type )
+					{
+						if ( ! strcmp(token, "gpp")
+							|| ! strcmp(token, "npp")
+							|| ! strcmp(token, "et")
+							)
+						{
+							continue;
+						}
+					}
+
+					printf("duplicated var: %s already found on column %d\n", token, columns[j]); 
+					goto quit;
+				}
+
+				columns[j] = i;
+				// do not break so we can check for duplicated names
+			}
+		}
+	}
+
+	for ( i = 0; i < columns_count; ++i )
+	{
+		if ( -1 == columns[i] )
+		{
+			printf("var %s not found\n", (ANNUAL_DATASET_TYPE == type) ? annual_vars[i] : daily_vars[i]);
+			goto quit;
+		}
+	}
+	
 	// alloc memory
 	dataset = malloc(sizeof*dataset);
 	if ( ! dataset )
@@ -369,7 +420,7 @@ dataset_t* dataset_import(const char* const filename)
 		int year;
 
 		dataset->rows_count = 0;
-		for ( year = start_year; year < end_year; ++year )
+		for ( year = start_year; year <= end_year; ++year )
 		{
 			dataset->rows_count += IS_LEAP_YEAR(year) ? 366 : 365;
 		}
@@ -398,211 +449,310 @@ dataset_t* dataset_import(const char* const filename)
 			dataset = NULL;
 			goto quit;
 		}
-
 	}
 
-
 	// import values
+{
+	int row; // keep track of current row
+
+	row = 0;
+	while ( fgets(buf, BUF_SIZE, f) )
 	{
-		int row; // keep track of current row
-		const int* indexes;
-		int indexes_count;
-		
-		if ( ANNUAL_DATASET_TYPE == dataset->type )
+		char* token;
+		char* p;
+		int column;
+
+		// break on empty row
+		// it means we have reach end of values to import
+		if ( ('\r' == buf[0]) || ('\n' == buf[0]) )
 		{
-			indexes = annual_vars_index;
-			indexes_count = ANNUAL_IMPORT_VARS_COUNT;
-		}
-		else // daily
-		{
-			indexes = daily_vars_index;
-			indexes_count = DAILY_IMPORT_VARS_COUNT;
+			break;
 		}
 
-		row = 0;
-		while ( fgets(buf, BUF_SIZE, f) )
+		column = 0;
+		for ( i = 0, token = string_tokenizer(buf, delimiters, &p); token; token = string_tokenizer(NULL, delimiters, &p), ++i )
 		{
-			char* token;
-			char* p;
-			int column;
+			int j;
 
-			const char delimiters[] = ",\r\n";
-
-			// break on empty row
-			// it means we have reach end of values to import
-			if ( ('\r' == buf[0]) || ('\n' == buf[0]) )
+			for ( j = 0; j < columns_count; ++j )
 			{
-				break;
-			}
-
-			column = 0;
-			for ( i = 0, token = string_tokenizer(buf, delimiters, &p); token; token = string_tokenizer(NULL, delimiters, &p), ++i )
-			{
-				int j;
-
-				for ( j = 0; j < indexes_count; ++j )
+				if ( i == columns[j] )
 				{
-					if ( i == indexes[j] )
-					{
-						int err;
-						double value;
+					int err;
+					double value;
 
-						value = convert_string_to_float(token, &err);
-						if ( err )
-						{
-							printf("unable to convert %s at row %d\n", token, row+1);
-							dataset_free(dataset);
-							dataset = NULL;
-							goto quit;
-						}
-						dataset->vars[j][row] = value;
-						++column;
-						break;
+					value = convert_string_to_float(token, &err);
+					if ( err )
+					{
+						printf("unable to convert %s at row %d\n", token, row+1);
+						dataset_free(dataset);
+						dataset = NULL;
+						goto quit;
 					}
+					dataset->vars[j][row] = value;
+					++column;
+					break;
 				}
 			}
-
-			if ( column != indexes_count )
-			{
-				printf("imported %d columns instead of %d\n", column, dataset->columns_count);
-				free(dataset);
-				dataset = NULL;
-				goto quit;
-			}
-
-			++row;
 		}
 
-		// count imported rows
-		if ( row != dataset->rows_count )
+		if ( column != columns_count )
 		{
-			printf("imported %d rows instead of %d\n", row, dataset->rows_count);
+			printf("imported %d columns instead of %d\n", column, dataset->columns_count);
 			free(dataset);
 			dataset = NULL;
 			goto quit;
 		}
 
-		// compute vars
-		for ( i = 0; i < dataset->rows_count; ++i )
+		++row;
+	}
+
+	// count imported rows
+	if ( row != dataset->rows_count )
+	{
+		printf("imported %d rows instead of %d\n", row, dataset->rows_count);
+		free(dataset);
+		dataset = NULL;
+		goto quit;
+	}
+
+	// compute vars
+	for ( i = 0; i < dataset->rows_count; ++i )
+	{
+		if ( ANNUAL_DATASET_TYPE == type )
 		{
-			if ( ANNUAL_DATASET_TYPE == type )
+			double cmvb;
+			double cmw;
+			double cmr;
+
+			double stem_c;
+			double max_leaf_c;
+			double max_froot_c;
+			double croot_c;
+			double branch_c;
+			double fruit_c;
+
+			cmvb = INVALID_VALUE;
+			cmw = INVALID_VALUE;
+			cmr = INVALID_VALUE;
+
+			stem_c = dataset->vars[ANNUAL_STEM_C][i];
+			max_leaf_c = dataset->vars[ANNUAL_MAX_LEAF_C][i];
+			max_froot_c = dataset->vars[ANNUAL_MAX_FROOT_C][i];
+			croot_c = dataset->vars[ANNUAL_CROOT_C][i];
+			branch_c = dataset->vars[ANNUAL_BRANCH_C][i];
+			fruit_c = dataset->vars[ANNUAL_FRUIT_C][i];
+
+			if ( ! IS_INVALID_VALUE(croot_c) )
 			{
-				double cmvb;
-				double cmw;
-				double cmr;
-
-				double stem_c;
-				double max_leaf_c;
-				double max_froot_c;
-				double croot_c;
-				double branch_c;
-				double fruit_c;
-
-				cmvb = INVALID_VALUE;
-				cmw = INVALID_VALUE;
-				cmr = INVALID_VALUE;
-
-				stem_c = dataset->vars[ANNUAL_STEM_C][i];
-				max_leaf_c = dataset->vars[ANNUAL_MAX_LEAF_C][i];
-				max_froot_c = dataset->vars[ANNUAL_MAX_FROOT_C][i];
-				croot_c = dataset->vars[ANNUAL_CROOT_C][i];
-				branch_c = dataset->vars[ANNUAL_BRANCH_C][i];
-				fruit_c = dataset->vars[ANNUAL_FRUIT_C][i];
-
-				if ( ! IS_INVALID_VALUE(croot_c) )
+				if ( ! IS_INVALID_VALUE(max_froot_c) )
 				{
-					if ( ! IS_INVALID_VALUE(max_froot_c) )
-					{
-						cmr = max_froot_c + croot_c;
-					}
-
-					if ( ! IS_INVALID_VALUE(stem_c) && ! IS_INVALID_VALUE(branch_c) )
-					{
-						cmw = stem_c + branch_c + croot_c;
-
-						if ( ! IS_INVALID_VALUE(max_leaf_c) && ! IS_INVALID_VALUE(fruit_c) && ! IS_INVALID_VALUE(max_froot_c) )
-						{
-							cmvb = stem_c + max_leaf_c + max_froot_c + croot_c + branch_c + fruit_c;
-						}
-					}
+					cmr = max_froot_c + croot_c;
 				}
 
-				dataset->vars[ANNUAL_CMR][i] = cmr;
-				dataset->vars[ANNUAL_CMW][i] = cmw;
-				dataset->vars[ANNUAL_CMVB][i] = cmvb;
+				if ( ! IS_INVALID_VALUE(stem_c) && ! IS_INVALID_VALUE(branch_c) )
+				{
+					cmw = stem_c + branch_c + croot_c;
+
+					if ( ! IS_INVALID_VALUE(max_leaf_c) && ! IS_INVALID_VALUE(fruit_c) && ! IS_INVALID_VALUE(max_froot_c) )
+					{
+						cmvb = stem_c + max_leaf_c + max_froot_c + croot_c + branch_c + fruit_c;
+					}
+				}
+			}
+
+			dataset->vars[ANNUAL_CMR][i] = cmr;
+			dataset->vars[ANNUAL_CMW][i] = cmw;
+			dataset->vars[ANNUAL_CMVB][i] = cmvb;
+
+			/* apply conversion */
+			if ( ! IS_INVALID_VALUE(dataset->vars[ANNUAL_CMVB][i]) )
+				dataset->vars[ANNUAL_CMVB][i] /= 10.;
+			if ( ! IS_INVALID_VALUE(dataset->vars[ANNUAL_MAX_LEAF_C][i]) )
+				dataset->vars[ANNUAL_MAX_LEAF_C][i] /= 10.;
+			if ( ! IS_INVALID_VALUE(dataset->vars[ANNUAL_CMW][i]) )
+				dataset->vars[ANNUAL_CMW][i] /= 10.;
+			if ( ! IS_INVALID_VALUE(dataset->vars[ANNUAL_CMR][i]) )
+				dataset->vars[ANNUAL_CMR][i] /= 10.;
+		}
+		else // daily
+		{
+			double dws;
+			double dwl;
+			double dwbb;
+			double dfruit;
+			double dwfr;
+			double dwcr;
+			double frar;
+			double crar;
+
+			double nppab;
+			double nppbb;
+			double rar;
+
+			nppab = INVALID_VALUE;
+			nppbb = INVALID_VALUE;
+			rar = INVALID_VALUE;
+
+			dws = dataset->vars[DAILY_DELTA_STEM_C][i];
+			dwl = dataset->vars[DAILY_DELTA_LEAF_C][i];
+			dwbb = dataset->vars[DAILY_DELTA_BRANCH_C][i];
+			dfruit = dataset->vars[DAILY_DELTA_FRUIT_C][i];
+			dwfr = dataset->vars[DAILY_DELTA_FROOT_C][i];
+			dwcr = dataset->vars[DAILY_DELTA_CROOT_C][i];
+			frar = dataset->vars[DAILY_FROOT_AR][i];
+			crar = dataset->vars[DAILY_CROOT_AR][i];
+
+			if ( ! IS_INVALID_VALUE(frar) && ! IS_INVALID_VALUE(crar) )
+			{
+				rar = frar + crar;
+			}
+
+			if ( ! IS_INVALID_VALUE(dwfr) && ! IS_INVALID_VALUE(dwcr) )
+			{
+				nppbb = dwfr + dwcr;
+			}
+
+			if ( ! IS_INVALID_VALUE(dws)
+					&& ! IS_INVALID_VALUE(dwl)
+					&& ! IS_INVALID_VALUE(dwbb)
+					&& ! IS_INVALID_VALUE(dfruit) )
+			{
+				nppab = dws + dwl + dwbb + dfruit;
+			}
+
+			dataset->vars[DAILY_RAR][i] = rar;
+			dataset->vars[DAILY_NPPBB][i] = nppbb;
+			dataset->vars[DAILY_NPPAB][i] = nppab;
+
+			/* apply conversion */
+			if ( ! IS_INVALID_VALUE(dataset->vars[DAILY_GPP][i]) )
+				dataset->vars[DAILY_GPP][i] /= (1000*86400);
+			if ( ! IS_INVALID_VALUE(dataset->vars[DAILY_NPP][i]) )
+				dataset->vars[DAILY_NPP][i] /= (1000*86400);
+			if ( ! IS_INVALID_VALUE(dataset->vars[DAILY_RA][i]) )
+				dataset->vars[DAILY_RA][i] /= (1000*86400);
+			if ( ! IS_INVALID_VALUE(dataset->vars[DAILY_ET][i]) )
+				dataset->vars[DAILY_ET][i] /= 86400;
+			if ( ! IS_INVALID_VALUE(dataset->vars[DAILY_INT][i]) )
+				dataset->vars[DAILY_INT][i] /= 86400;
+			if ( ! IS_INVALID_VALUE(dataset->vars[DAILY_SOIL_EVAPO][i]) )
+				dataset->vars[DAILY_SOIL_EVAPO][i] /= 86400;	
+			if ( ! IS_INVALID_VALUE(dataset->vars[DAILY_TRA][i]) )
+				dataset->vars[DAILY_TRA][i] /= 86400;
+			if ( ! IS_INVALID_VALUE(dataset->vars[DAILY_DELTA_LEAF_C][i]) )
+				dataset->vars[DAILY_DELTA_LEAF_C][i] /= (10 * 86400);
+			if ( ! IS_INVALID_VALUE(dataset->vars[DAILY_DELTA_FROOT_C][i]) )
+				dataset->vars[DAILY_DELTA_FROOT_C][i] /= (10 * 86400);
+			if ( ! IS_INVALID_VALUE(dataset->vars[DAILY_NPPAB][i]) )
+				dataset->vars[DAILY_NPPAB][i] /= (10 * 86400);
+			if ( ! IS_INVALID_VALUE(dataset->vars[DAILY_NPPBB][i]) )
+				dataset->vars[DAILY_NPPBB][i] /= (10 * 86400);
+			if ( ! IS_INVALID_VALUE(dataset->vars[DAILY_RAR][i]) )
+				dataset->vars[DAILY_RAR][i] /= (1000 * 86400);
+			if ( ! IS_INVALID_VALUE(dataset->vars[DAILY_TSOIL][i]) )
+				dataset->vars[DAILY_TSOIL][i] += 273.13;
+
+			
+
+		}
+	}
+#if 0
+	// dump dataset
+	{
+		FILE *s;
+
+		s = fopen("debug_import.csv", "w");
+		if ( s )
+		{
+			// write header
+			if ( ANNUAL_DATASET_TYPE == dataset->type )
+			{
+				fputs("YEAR,", s);
+				for ( i = 0; i < SIZEOF_ARRAY(annual_vars); ++i )
+				{
+					fputs(annual_vars[i], s);
+					if ( i < SIZEOF_ARRAY(annual_vars)-1 )
+					{
+						fputs(",", s);
+					}
+				}
 			}
 			else // daily
 			{
+				for ( i = 0; i < SIZEOF_ARRAY(daily_vars); ++i )
+				{
+					fputs(daily_vars[i], s);
+					if ( i < SIZEOF_ARRAY(daily_vars)-1 )
+					{
+						fputs(",", s);
+					}
+				}
 			}
-		}
-#if 0
-		// dump dataset
-		{
-			FILE *s;
+			fputs("\n", s);
 
-			s = fopen("debug_import.csv", "w");
-			if ( s )
+			if ( ANNUAL_DATASET_TYPE == dataset->type )
 			{
-				// write header
-				if ( ANNUAL_DATASET_TYPE == dataset->type )
-				{
-					fputs("YEAR,", s);
-					for ( i = 0; i < SIZEOF_ARRAY(annual_vars); ++i )
-					{
-						fputs(annual_vars[i], s);
-						if ( i < SIZEOF_ARRAY(annual_vars)-1 )
-						{
-							fputs(",", s);
-						}
-					}
-				}
-				else // daily
-				{
-					for ( i = 0; i < SIZEOF_ARRAY(daily_vars); ++i )
-					{
-						fputs(daily_vars[i], s);
-						if ( i < SIZEOF_ARRAY(daily_vars)-1 )
-						{
-							fputs(",", s);
-						}
-					}
-				}
-				fputs("\n", s);
-
 				for ( i = 0; i < dataset->rows_count; ++i )
 				{
-					if ( ANNUAL_DATASET_TYPE == dataset->type )
-					{
-						int j;
+					int j;
 
-						fprintf(s, "%d,", start_year+i);
-						for ( j = 0; j < dataset->columns_count; ++j )
+					fprintf(s, "%d,", start_year+i);
+					for ( j = 0; j < dataset->columns_count; ++j )
+					{
+						fprintf(s, "%f", dataset->vars[j][i]);
+
+						if ( j < dataset->columns_count - 1 )
 						{
-							fprintf(s, "%f", dataset->vars[j][i]);
-
-							if ( j < dataset->columns_count - 1 )
-							{
-								fputs(",", s);
-							}
+							fputs(",", s);
 						}
-						fputs("\n", s);
 					}
-					else // daily
-					{
-						// TODO
-					}
+					fputs("\n", s);
 				}
-				fclose(s);
 			}
 			else
 			{
-				puts("unable to create debug file!");
+				int day;
+				int year;
+
+				day = 0;
+				year = start_year;
+				for ( i = 0; i < dataset->rows_count; ++i )
+				{
+					int j;
+
+					if ( ++day > (IS_LEAP_YEAR(year) ? 366 : 365) )
+					{
+						day = 1;
+						++year;
+					}
+
+					fprintf(s, "%d,%d,", year, day);
+					for ( j = 0; j < dataset->columns_count; ++j )
+					{
+						fprintf(s, "%f", dataset->vars[j][i]);
+
+						if ( j < dataset->columns_count - 1 )
+						{
+							fputs(",", s);
+						}
+					}
+					fputs("\n", s);
+				}
 			}
+			fclose(s);
 		}
-#endif
+		else
+		{
+			puts("unable to create debug file!");
+		}
 	}
+#endif
+
+}
 
 quit:
+	if ( columns ) free(columns);
 	if ( f ) fclose(f);
 	return dataset;
 
