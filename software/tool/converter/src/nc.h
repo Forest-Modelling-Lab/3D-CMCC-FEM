@@ -11,6 +11,7 @@ int nc_conv(dataset_t* dataset, const char*const folder)
 #define BUF_SIZE			(256)	// should be enough
 #define NC_MISSING_VALUE	(1.e+20f)
 	char* sitename;
+	char* var;
 	char buf[BUF_SIZE];
 	int i;
 	int ret;
@@ -67,6 +68,15 @@ int nc_conv(dataset_t* dataset, const char*const folder)
 		return 0;
 	}
 
+#if 1
+	for ( i = 0; i < dataset->rows_count; ++i )
+	{
+		index[i] = ((ANNUAL_DATASET_TYPE == dataset->type) ? 
+							dataset->start_year : 0) + 
+						i
+		;
+	}
+#else
 	if ( ANNUAL_DATASET_TYPE == dataset->type )
 	{
 		for ( i = 0; i < dataset->rows_count; ++i )
@@ -92,7 +102,7 @@ int nc_conv(dataset_t* dataset, const char*const folder)
 			index[i] = day;
 		}
 	}
-
+#endif
 	// get sitename
 	sitename = dataset->sitename;
 	for ( i = 0; i < SIZEOF_ARRAY(sites); ++i )
@@ -108,14 +118,51 @@ int nc_conv(dataset_t* dataset, const char*const folder)
 
 	for ( i = 0; i < dataset->columns_count; ++i )
 	{
-		const char* var;
 		int j;
 		int nc_id, lon_dim_id, lat_dim_id, time_dim_id;
 		int lon_id, lat_id, time_id, var_id;
 		int var_dim_ids[3];
 
+		// skip var
+		if ( ANNUAL_DATASET_TYPE == dataset->type )
+		{
+			if (	(ANNUAL_STEM_C == i)
+					|| (ANNUAL_MAX_FROOT_C == i)
+					|| (ANNUAL_CROOT_C == i)
+					|| (ANNUAL_BRANCH_C == i)
+					|| (ANNUAL_FRUIT_C == i)
+				)
+			{
+				continue;
+			}			
+		}
+		// DAILY_DATASET_TYPE
+		else
+		{
+			if (	
+					(DAILY_LAI == i)
+					|| (DAILY_DELTA_STEM_C == i)
+					|| (DAILY_DELTA_BRANCH_C == i)
+					|| (DAILY_DELTA_FRUIT_C == i)
+					|| (DAILY_DELTA_CROOT_C == i)
+					|| (DAILY_FROOT_AR == i)
+					|| (DAILY_CROOT_AR == i)
+				)
+			{
+				continue;
+			}
+		}
+
 		// get var name
-		var = (ANNUAL_DATASET_TYPE == dataset->type) ? annual_vars[i] : daily_vars[i];
+		var = string_copy(((ANNUAL_DATASET_TYPE == dataset->type) ? annual_vars[i] : daily_vars[i]));
+		if ( ! var )
+		{
+			puts(err_out_of_memory);
+			goto err;
+		}
+
+		// change _ to -
+		underscore_fix(var);
 
 		// compute filename
 		if ( folder )
@@ -132,6 +179,7 @@ int nc_conv(dataset_t* dataset, const char*const folder)
 							, (ANNUAL_DATASET_TYPE == dataset->type) ? "annual" : "daily"
 			); 
 		}
+		lowercase(buf);
 		
 		// convert INVALID_VALUE TO NC_MISSING_VALUE
 		for ( j = 0; j < dataset->rows_count; ++j )
@@ -189,12 +237,148 @@ int nc_conv(dataset_t* dataset, const char*const folder)
 			goto err;
 
 		puts("ok");
+
+		// create monthly LAI_PROJ on last loop
+		// so we can reuse vars !
+		if (	(i == dataset->columns_count-1)
+				&& (DAILY_DATASET_TYPE == dataset->type) )
+		{
+			int rows_count;
+
+			rows_count = (dataset->end_year - dataset->start_year + 1) * 12;
+
+			free(var);
+			var = string_copy(daily_vars[DAILY_LAI]);
+			if ( ! var )
+			{
+				puts(err_out_of_memory);
+				goto err;
+			}
+			underscore_fix(var);
+
+			if ( folder )
+			{
+				sprintf(buf, "%s/%s_%s_%s_monthly.nc4", folder
+								, modelname, gcms[dataset->esm-1], var
+				);
+			}
+			else
+			{
+				sprintf(buf, "%s%s_%s_%s_monthly.nc4", dataset->path ? dataset->path : ""
+								, modelname, gcms[dataset->esm-1], var
+				); 
+			}
+			lowercase(buf);
+
+			// compute mean re-using a dataset var
+		{	
+			int year;
+			
+			j = 0; // index
+			for ( year = 0; year < rows_count; ++year ) 
+			{
+				int month;
+
+				for ( month = 0; month < 12; ++month )
+				{
+					int days;
+					int row;
+					int n;
+					double mean;
+
+					const int days_per_month[] =
+							{ 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+
+					days = days_per_month[month];
+
+					// fix for leap february
+					if ( (1 == month) && IS_LEAP_YEAR(dataset->start_year + year) )
+					{
+						++days;
+					}
+
+					mean = 0.;
+					n = 0;
+					for ( row = 0; row < days; ++row, ++j )
+					{
+						if ( ! IS_INVALID_VALUE(dataset->vars[DAILY_LAI][j]) )
+						{
+							mean += dataset->vars[DAILY_LAI][j];
+							++n;
+						}
+					}
+
+					if ( n )
+					{
+						mean /= n;
+					}
+					else
+					{
+						mean = NC_MISSING_VALUE;
+					}
+					dataset->vars[DAILY_RAR][(year*12)+month] = mean;
+				}
+			}
+		}
+			
+			printf("- creating %s...", buf);		
+
+			// create nc file
+			if ( (ret = nc_create(buf, NC_CLOBBER, &nc_id)) )
+				goto err;
+
+			// define dims
+			if ( (ret = nc_def_dim(nc_id, "lat", 1, &lat_dim_id)) )
+				goto err;
+			if ( (ret = nc_def_dim(nc_id, "lon", 1, &lon_dim_id)) )
+				goto err;
+			if ( (ret = nc_def_dim(nc_id, "time", rows_count, &time_dim_id)) )
+				goto err;
+			
+			// define vars
+			if ( (ret = nc_def_var(nc_id, "lat", NC_DOUBLE, 1, &lat_dim_id, &lat_id)) )
+				goto err;
+			if ( (ret = nc_def_var(nc_id, "lon", NC_DOUBLE, 1, &lon_dim_id, &lon_id)) )
+				goto err;
+			if ( (ret = nc_def_var(nc_id, "time", NC_DOUBLE, 1, &time_dim_id, &time_id)) )
+				goto err;
+
+			var_dim_ids[0] = time_dim_id; // time goes first
+			var_dim_ids[1] = lat_dim_id;
+			var_dim_ids[2] = lon_dim_id;
+			if ( (ret = nc_def_var(nc_id, var, NC_DOUBLE, 3, var_dim_ids, &var_id)) )
+				goto err;
+
+			// end "define" mode
+			if ( (ret = nc_enddef(nc_id)) )
+				goto err;
+
+			// put data
+			if ( (ret = nc_put_var1_double(nc_id, lat_id, latlon_index, &sites[site_index].lat)) )
+				goto err;
+			if ( (ret = nc_put_var1_double(nc_id, lon_id, latlon_index, &sites[site_index].lon)) )
+				goto err;
+			if ( (ret = nc_put_var_double(nc_id, time_id, index)) )
+				goto err;
+			if ( (ret = nc_put_var_double(nc_id, var_id, dataset->vars[DAILY_RAR])) )
+				goto err;
+
+			// close file
+			if ( (ret = nc_close(nc_id)) )
+				goto err;
+
+			puts("ok");
+		}
+		if ( var ) free(var);
+		var = NULL;
 	}
+
 	if ( index ) free(index);
 	return 1;
 
 err:
 	printf("error - %s\n", nc_strerror(ret));
+	if ( var ) free(var);
 	if ( index ) free(index);
 	return 0;
 #undef NC_MISSING_VALUE

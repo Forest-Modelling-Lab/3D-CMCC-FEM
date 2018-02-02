@@ -168,3 +168,30 @@ int path_exists(const char *const path)
 #endif
 	return 0;
 }
+
+void lowercase(char *s)
+{
+	int i;
+
+	assert(s);
+
+	for ( i = 0; s[i]; ++i )
+	{
+		s[i] = tolower(s[i]);
+	}
+}
+
+void underscore_fix(char* s)
+{
+	int i;
+
+	assert(s);
+
+	for ( i = 0; s[i]; ++i )
+	{
+		if ( '_' == s[i] ) 
+		{
+			s[i] = '-';
+		}
+	}
+}

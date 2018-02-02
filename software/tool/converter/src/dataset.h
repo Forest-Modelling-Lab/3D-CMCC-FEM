@@ -42,7 +42,8 @@ typedef enum
 
 typedef enum
 {
-	DAILY_GPP = 0
+	DAILY_LAI = 0
+	, DAILY_GPP
 	, DAILY_NPP
 	, DAILY_RA
 	, DAILY_FAPAR
@@ -114,7 +115,8 @@ const char *annual_vars[ANNUAL_VARS_COUNT] =
 
 const char *daily_vars[DAILY_VARS_COUNT] =
 {
-	"GPP"
+	"LAI_PROJ"
+	, "GPP"
 	, "NPP"
 	, "RA"
 	, "FAPAR"
