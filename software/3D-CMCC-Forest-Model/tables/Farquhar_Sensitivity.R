@@ -168,7 +168,7 @@ for (j in seq(1:3)) {
   #  (leafN[j])    X  (flnr)  X  (fnr)  X   (act)     =    (Vmax)
 
   # compute Vcmax25 at 25 °C Bonan et al., (2011) 
-  Vcmax25   = leafN[j] * N_RUBISCO * fnr * act
+  Vcmax25   = leafN[j] * N_RUBISCO * fnr * 60
   #Vcmax25   = test_Vcmax
   
   # temperature corrector factor dePury and Farquhar (1997)

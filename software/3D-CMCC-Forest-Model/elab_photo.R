@@ -17,14 +17,14 @@ source('readOutput_model.R')
 # dir_valid_eddy = '/home/carlo/git/3D-CMCC-LAND/software/3D-CMCC-Forest-Model/eddy_validation/'
 dir_valid_eddy ='/home/alessio/git/3D-CMCC-LAND/software/3D-CMCC-Forest-Model/eddy_validation/'
 dir_in_main = '/home/alessio/git/3D-CMCC-LAND/software/3D-CMCC-Forest-Model/output/'#/media/carlo/8CB8D0E1B8D0CABA/Photo-approach/'#'/media/carlo/8CB8D0E1B8D0CABA/risultati_colin/output/'
-dir_out_main = '/media/carlo/8CB8D0E1B8D0CABA/Photo-approach/results_new/'
-dir_out_main = '/home/alessio/git/3D-CMCC-LAND/software/3D-CMCC-Forest-Model/output/result_27_gen_2018/'
+#dir_out_main = '/media/carlo/8CB8D0E1B8D0CABA/Photo-approach/results_new/'
+dir_out_main = '/home/alessio/git/3D-CMCC-LAND/software/3D-CMCC-Forest-Model/output/result_29_gen_2018/'
 dir.create(dir_out_main,showWarnings = F)
 
 list_var = c('gpp','npp','MaxLAI')
 # list_var = c("solar_rad","tavg","tmax","tmin","vpd","prcp","tsoil","rh","avg_asw","X.CO2.","gpp","npp","MaxLAI")
 
-# lista dei file LOCAL DAILY e ANNUAL ----
+# importa i dataset dai file LOCAL DAILY e ANNUAL ----
 
 for ( cy_time in c('annual','daily') ) {
   
@@ -885,7 +885,7 @@ for (cy_time in c('annual','daily')) {
   
   # calcolo le medie,max e min tra diversi ESM (con e senza parametri)----
   
-  calc_stat = 0
+  calc_stat = 1
   
   if ( calc_stat == 1) {
     for ( cy_meth_unc in lista_meth_unc ) {
@@ -1083,425 +1083,6 @@ for (cy_time in c('annual','daily')) {
 }
 rm(cy_time)
 
-# plot di seasonal per i risultati FT CU,NF,FF ----
-
-dir_out1 = paste0(dir_out_main,'seasonal_FT/')
-dir.create(dir_out1,showWarnings = F) 
-cy_sito = lista_sito[1]
-cy_exp = lista_exp[1]
-cy_co2 = lista_co2[1]
-cy_man = lista_man[1]
-      
-for (cy_sito in lista_sito) {
-  for ( cy_exp in lista_exp ) {
-    for( cy_co2 in lista_co2 ) {
-      for ( cy_man in lista_man ) {
-        if ( exists('df_t_mean') ) {
-          rm(df_t_mean,df_t_max,df_t_min)
-        }
-        for (cy_co2_rcp in lista_co2_rcp) {
-          for (cy_esm_rcp in lista_esm_rcp) {
-            for (cy_meth in lista_meth) {
-              if (!file.exists(paste0(dir_out_main,'mean_opt_daily/',cy_sito,'_',cy_exp,'_CO2_',cy_co2,'_',cy_co2_rcp,
-                                      '_ESM_',cy_esm_rcp,'_Man_',cy_man,'_',cy_meth,'.csv')) ) {
-                next
-              }
-              
-            }
-            rm(cy_meth)
-          }
-          rm(cy_esm_rcp)
-        }
-        rm(cy_co2_rcp)
-      }
-      rm(cy_man)
-    }
-    rm(cy_co2)
-  }
-  rm(cy_exp)
-}
-rm(cy_sito)
-
-  # importo il file giornaliero mediato per gli ESM
-  lf_md = list.files(paste0(dir_out_main,'mean_opt_daily/'),pattern = cys)
-  for ( cy_mt in c('FvCB','LUE') ) {
-     
-    lf_md_mth_opt = lf_md[grep(cy_mt,lf_md)]
-    #
-    # lf_md_less = lf_md[grep('less',lf_md)]
-    # lf_md_mth_less = lf_md_less[grep(cy_mt,lf_md_less)]
-    #
-    # lf_md_plus = lf_md[grep('plus',lf_md)]
-    # lf_md_mth_plus = lf_md_plus[grep(cy_mt,lf_md_plus)]
-    #
-    if ( exists('df_t') ) rm(df_t)
-    for ( cy_qq in lf_md_mth_opt ) {
-      df_opt = read.csv(paste0(dir_out_main,'mean_opt_daily/',cy_qq))
-      df_opt$file_name = cy_qq
-      df_opt$meth = cy_mt
-      if ( exists('df_t') ) {
-        df_t = rbind(df_t,df_opt)
-      } else {
-        df_t = df_opt
-      }
-      rm(df_opt)
-    }
-    rm(cy_qq,lf_md_mth_opt)
-
-    # df_less = read.csv(paste0(dir_out_main,'extract_LOCAL_daily/',lf_md_mth_less))
-    # df_plus = read.csv(paste0(dir_out_main,'extract_LOCAL_daily/',lf_md_mth_plus))
-
-    if (cy_mt == 'FvCB') {
-      df_FvCB_opt = df_t
-      # df_FvCB_less = df_less
-      # df_FvCB_plus = df_plus
-    }
-    if (cy_mt == 'LUE') {
-      df_Fra_opt = df_t
-      # df_Fra_less = df_less
-      # df_Fra_plus = df_plus
-    }
-    rm(df_t)
-    # if (cy_mt == 'LUE-Ver') {
-    #   df_Ver_opt = df_opt
-    #   df_Ver_less = df_less
-    #   df_Ver_plus = df_plus
-    # }
-    # rm(df_opt,lf_md_opt,lf_md_mth_opt)
-    # rm(df_less,lf_md_less,lf_md_mth_less)
-    # rm(df_plus,lf_md_plus,lf_md_mth_plus)
-  }
-  rm(cy_mt)
-
-  # sincronizzo le serie temporali
-  range_year = c(
-    min(c(df_FvCB_opt$YEAR, df_Fra_opt$YEAR#, df_Ver_opt$YEAR
-          #df_eddy$YEAR,df_FvCB_less$YEAR,df_Ver_less$YEAR,df_Fra_less$YEAR,
-          #df_eddy$YEAR,df_FvCB_plus$YEAR,df_Ver_plus$YEAR,df_Fra_plus$YEAR
-    ),na.rm = T),
-    max(c(df_FvCB_opt$YEAR, df_Fra_opt$YEAR#, df_Ver_opt$YEAR
-          #df_eddy$YEAR,df_FvCB_less$YEAR,df_Ver_less$YEAR,df_Fra_less$YEAR,
-          #df_eddy$YEAR,df_FvCB_plus$YEAR,df_Ver_plus$YEAR,df_Fra_plus$YEAR
-    ),na.rm = T)
-  )
-  time_serie = seq( ymd(101+(range_year[1]*10000)),ymd(1231+(range_year[2]*10000)),by = 1)
-  time_serie = data.frame('YEAR' = year(time_serie), 'MONTH' = month(time_serie), 'DAY' = day(time_serie))
-
-  #sincronizzo i dati del modello
-  for ( zz in seq(1,2) ) {
-    if ( zz == 1 ) df = df_FvCB_opt
-    # if ( zz == 2 ) df = df_Ver_opt
-    if ( zz == 2 ) df = df_Fra_opt
-    # if ( zz == 4 ) df = df_FvCB_less
-    # if ( zz == 5 ) df = df_Ver_less
-    # if ( zz == 6 ) df = df_Fra_less
-    # if ( zz == 7 ) df = df_FvCB_plus
-    # if ( zz == 8 ) df = df_Ver_plus
-    # if ( zz == 9 ) df = df_Fra_plus
-    gpp_tmp = c()
-    gpp_tmp_max = c()
-    gpp_tmp_min = c()
-    for ( cyt in seq(1,length(time_serie[,1])) ) {
-      pos_time = which(df$YEAR == time_serie$YEAR[cyt] &
-                         df$MONTH == time_serie$MONTH[cyt] &
-                         df$DAY == time_serie$DAY[cyt]
-      )
-      if ( length(pos_time) == 0 ) {
-        gpp_tmp = c(gpp_tmp,NA)
-        gpp_tmp_max = c(gpp_tmp_max,NA)
-        gpp_tmp_min = c(gpp_tmp_min,NA)
-      } else {
-        gpp_tmp = c(gpp_tmp,mean(df$gpp[pos_time]))
-        gpp_tmp_max = c(gpp_tmp_max,max(df$gpp[pos_time]))
-        gpp_tmp_min = c(gpp_tmp_min,min(df$gpp[pos_time]))
-      }
-      rm(pos_time)
-    }
-    rm(cyt)
-    if ( zz == 1 ) {
-      GPP_FvCB_OPT = gpp_tmp
-      GPP_FvCB_LESS = gpp_tmp_min
-      GPP_FvCB_PLUS = gpp_tmp_max
-    }
-    # if ( zz == 2 ) GPP_Ver_OPT = gpp_tmp
-    if ( zz == 2 ) {
-      GPP_Fra_OPT = gpp_tmp
-      GPP_Fra_LESS = gpp_tmp_min
-      GPP_Fra_PLUS = gpp_tmp_max
-    }
-    # if ( zz == 4 ) GPP_FvCB_LESS = gpp_tmp
-    # if ( zz == 5 ) GPP_Ver_LESS = gpp_tmp
-    # if ( zz == 6 ) GPP_Fra_LESS = gpp_tmp
-    # if ( zz == 7 ) GPP_FvCB_PLUS = gpp_tmp
-    # if ( zz == 8 ) GPP_Ver_PLUS = gpp_tmp
-    # if ( zz == 9 ) GPP_Fra_PLUS = gpp_tmp
-    rm(gpp_tmp,gpp_tmp_min,gpp_tmp_max)
-  }
-  rm(zz)
-
-  # creo il df per il plot
-  df_plot = data.frame(
-    'YEAR' = time_serie$YEAR,
-    'MONTH' = time_serie$MONTH,
-    'DAY' = time_serie$DAY,
-    GPP_FvCB_OPT,GPP_FvCB_LESS,GPP_FvCB_PLUS,
-    # GPP_Ver_OPT,GPP_Ver_LESS,GPP_Ver_PLUS,
-    GPP_Fra_OPT,GPP_Fra_LESS,GPP_Fra_PLUS
-  )
-
-#   # salvo i valori medi, max e min delle medie dei vari ESM
-#   write.csv(df_plot, file = paste0(dir_out1,cys,'_mean_max_min_gpp.csv'))
-# }
-# 
-#   rm(GPP_DT_CUT_USTAR50,GPP_DT_CUT_05,GPP_DT_CUT_95)
-#   rm(GPP_FvCB_OPT)#,GPP_FvCB_LESS,GPP_FvCB_PLUS)
-#   # rm(GPP_Ver_OPT,GPP_Ver_LESS,GPP_Ver_PLUS)
-#   rm(GPP_Fra_OPT)#,GPP_Fra_LESS,GPP_Fra_PLUS)
-#   rm(df_FvCB_opt)#,df_FvCB_plus,df_FvCB_less)
-#   # rm(df_Ver_opt,df_Ver_plus,df_Ver_less)
-#   rm(df_Fra_opt)#,df_Fra_plus,df_Fra_less)
-#   rm(time_serie)
-#   # elimino le righe che hanno valori NA
-#   for(cyc in colnames(df_plot)) {
-#     pos_na = which(is.na(df_plot[,cyc]) == 1)
-#     if ( length(pos_na) > 0 ) {
-#       df_plot = df_plot[-1*pos_na,]
-#     }
-#     rm(pos_na)
-#   }
-#   rm(cyc)
-#   
-#   # salvo i dati per le validazioni
-#   write.csv(x = df_plot,file = paste0(dir_out1,cys,'_daily_validation.txt'),row.names = F)
-#   
-#   # calcolo la somma mensile
-#   df_plot_m = df_plot[1,]
-#   unique_year = sort(unique(df_plot$YEAR))
-#   tmp_year = c()
-#   tmp_month = c()
-#   for (cyy in unique_year) {
-#     for (cym in seq(1,12)) {
-#       pos_my = which(df_plot$YEAR == cyy & df_plot$MONTH == cym)
-#       if (length(pos_my) == 0) next
-#       tmp_year = c(tmp_year,cyy)
-#       tmp_month = c(tmp_month,cym)
-#       df_plot_m = rbind(df_plot_m,colSums(df_plot[pos_my,],na.rm = T))
-#     }
-#     rm(cym,pos_my)
-#   }
-#   rm(unique_year)
-#   df_plot_m = df_plot_m[-1,]
-#   df_plot_m$YEAR = tmp_year
-#   df_plot_m$MONTH = tmp_month
-#   rm(tmp_year,tmp_month)
-#   
-#   # calcolo il mese medio
-#   df_plot_m2 = df_plot_m[1,]
-#   tmp_FvCB_unc_max = c()
-#   tmp_FvCB_unc_min = c()
-#   tmp_Ver_unc_max = c()
-#   tmp_Ver_unc_min = c()
-#   tmp_Fra_unc_max = c()
-#   tmp_Fra_unc_min = c()
-#   tmp_ec_unc_max = c()
-#   tmp_ec_unc_min = c()
-#   for (cym in seq(1,12)) {
-#     pos_my = which(df_plot_m$MONTH == cym)
-#     if (length(pos_my) == 0) next
-#     # tmp_FvCB_unc_max = c(tmp_FvCB_unc_max,colMaxs(as.matrix(df_plot_m$GPP_FvCB_PLUS[pos_my]),na.rm = T))
-#     # tmp_FvCB_unc_min = c(tmp_FvCB_unc_min,colMins(as.matrix(df_plot_m$GPP_FvCB_LESS[pos_my]),na.rm = T))
-#     # tmp_Ver_unc_max = c(tmp_Ver_unc_max,colMaxs(as.matrix(df_plot_m$GPP_Ver_PLUS[pos_my]),na.rm = T))
-#     # tmp_Ver_unc_min = c(tmp_Ver_unc_min,colMins(as.matrix(df_plot_m$GPP_Ver_LESS[pos_my]),na.rm = T))
-#     # tmp_Fra_unc_max = c(tmp_Fra_unc_max,colMaxs(as.matrix(df_plot_m$GPP_Fra_PLUS[pos_my]),na.rm = T))
-#     # tmp_Fra_unc_min = c(tmp_Fra_unc_min,colMins(as.matrix(df_plot_m$GPP_Fra_LESS[pos_my]),na.rm = T))
-#     tmp_ec_unc_max =  c(tmp_ec_unc_max,colMaxs(as.matrix(df_plot_m$GPP_DT_CUT_95[pos_my]),na.rm = T))
-#     tmp_ec_unc_min =  c(tmp_ec_unc_min,colMins(as.matrix(df_plot_m$GPP_DT_CUT_05[pos_my]),na.rm = T))
-#     df_plot_m2 = rbind(df_plot_m2,
-#                        colMeans(df_plot_m[pos_my,],na.rm = T))
-#   }
-#   rm(cym,pos_my)
-#   df_plot_m2 = df_plot_m2[-1,]
-#   
-#   # df_plot_m2$GPP_FvCB_PLUS = tmp_FvCB_unc_max
-#   # df_plot_m2$GPP_FvCB_LESS = tmp_FvCB_unc_min
-#   # df_plot_m2$GPP_Ver_PLUS = tmp_Ver_unc_max
-#   # df_plot_m2$GPP_Ver_LESS = tmp_Ver_unc_min
-#   # df_plot_m2$GPP_Fra_PLUS = tmp_Fra_unc_max
-#   # df_plot_m2$GPP_Fra_LESS = tmp_Fra_unc_min
-#   df_plot_m2$GPP_DT_CUT_05 = tmp_ec_unc_min
-#   df_plot_m2$GPP_DT_CUT_95 = tmp_ec_unc_max
-#   
-#   # rm(tmp_FvCB_unc_max,tmp_FvCB_unc_min,tmp_Ver_unc_max,tmp_Ver_unc_min,tmp_Fra_unc_max,tmp_Fra_unc_min)
-#   rm(tmp_ec_unc_max,tmp_ec_unc_min)
-#   
-#   # traccio i plot di validazione
-#   mp1 = ggplot(df_plot_m2) +
-#     geom_ribbon(aes(x = MONTH, ymax = GPP_DT_CUT_95, ymin = GPP_DT_CUT_05, fill='EC-Uncertainty'),alpha = 0.4) +
-#     # geom_ribbon(aes(x = MONTH, ymax = GPP_Ver_PLUS, ymin = GPP_Ver_LESS,fill='Ver-Uncertainty'),alpha = 0.4) +
-#     # geom_ribbon(aes(x = MONTH, ymax = GPP_Fra_PLUS, ymin = GPP_Fra_LESS,fill='Fra-Uncertainty'),alpha = 0.4) +
-#     # geom_ribbon(aes(x = MONTH, ymax = GPP_FvCB_PLUS, ymin = GPP_FvCB_LESS,fill='FvCB-Uncertainty'),alpha = 0.4) +
-#     # geom_line(aes(x = MONTH, y = GPP_Ver_OPT,color = 'LUE-Opt-Ver')) +
-#     geom_line(aes(x = MONTH, y = GPP_Fra_OPT,color = 'LUE-Opt-Fra')) +
-#     geom_line(aes(x = MONTH, y = GPP_DT_CUT_USTAR50,color = 'EC')) +
-#     geom_line(aes(x = MONTH, y = GPP_FvCB_OPT,color = 'FvCB-Optimized')) +
-#     scale_color_manual(values = c('FvCB-Optimized' = 'red','LUE-Opt-Ver' = 'blue','LUE-Opt-Fra' = 'green','EC' ='black')) +
-#     scale_fill_manual(values =  c('FvCB-Uncertainty' = 'red','Ver-Uncertainty' = 'blue',
-#                                   'Fra-Uncertainty' = 'green','EC-Uncertainty' ='black')) +
-#     ggtitle(cys) +
-#     scale_x_continuous(breaks = seq(1,12),labels = c('J','F','M','A','M','J','J','A','S','O','N','D')) +
-#     theme_bw() +
-#     theme (panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
-#            legend.title = element_blank(),legend.position = c(0.07,0.85),axis.title.x = element_blank(),
-#            panel.border = element_rect(linetype = 'solid',
-#                                        fill = NA, color='black',size=0.5))+
-#     ylab('GPP (gC m-2 month-1)') +
-#     guides(color = guide_legend(order=1),
-#            fill = guide_legend(order=2))
-#   
-#   ggsave(
-#     filename = paste0(dir_out1,cys,'_validation.png'),
-#     plot = mp1,
-#     scale=1.8,
-#     width = 30,
-#     height = 15,
-#     units = "cm",
-#     device = 'png',
-#     dpi = 300
-#   )
-#   rm(df_plot,df_plot_m,df_plot_m2,mp1)
-#   rm(range_year,cyy,des_eddy)
-# }
-# rm(cys)
-
-# plot di verifica tra valori del modello e la media calcolata (test NO USARE)----
-# 
-# lf = list.files(paste0(dir_out_main,'valori_per_medie_opt/'),pattern = 'Soroe_FT_CO2_ON_rcp8p5_ESM_rcp8p5_')
-# while ( length(lf) > 0 ) {
-#   # costruisco il nome togliendo la desinenza del metodo
-#   nome_com = unlist(strsplit(basename(lf[1]),'_'))
-#   nome_com = nome_com[seq(1,(length(nome_com)-1))]
-#   nome_com = paste(nome_com,collapse = '_')
-#   des_cmp = grep(nome_com,lf)
-#   # importo i file
-#   if (exists('df_t')) rm(df_t)
-#   for (cy_des_cmp in des_cmp) {
-#     df = read.csv(paste0(dir_out_main,'valori_per_medie_opt/',lf[cy_des_cmp]))
-#     df$mth = gsub('_','',gsub('.csv','',gsub(nome_com,'',lf[cy_des_cmp])))
-#     if (exists('df_t')) {
-#       df_t = rbind(df_t,df)
-#     } else {
-#       df_t = df
-#     }
-#     rm(df)
-#   }
-#   rm(cy_des_cmp)
-#   
-#   # importo il file con la media
-#   lf_medie = list.files(paste0(dir_out_main,'mean_opt/'),pattern = nome_com)
-#   if (exists('df_t_medie')) rm(df_t_medie)
-#   for (cy_des_cmp in lf_medie) {
-#     df = read.csv(paste0(dir_out_main,'mean_opt/',cy_des_cmp))
-#     df$mth = gsub('_','',gsub('.csv','',gsub(nome_com,'',cy_des_cmp)))
-#     if (exists('df_t_medie')) {
-#       df_t_medie = rbind(df_t_medie,df)
-#     } else {
-#       df_t_medie = df
-#     }
-#     rm(df)
-#   }
-#   rm(cy_des_cmp)
-#   #faccio i plot di confronto
-#   df_t$mth = factor(df_t$mth)
-#   df_plot = data.frame(
-#     'xv' = df_t$YEAR,
-#     'yv' = df_t$gpp,
-#     'mth' = df_t$mth,
-#     'esm' = df_t$esm,
-#     'stat' = 'orig'
-#   )
-#   df_t$mth = factor(df_t$mth)
-#   df_plot = rbind(df_plot,
-#     data.frame(
-#       'xv' = df_t_medie$YEAR,
-#       'yv' = df_t_medie$gpp,
-#       'mth' = df_t_medie$mth,
-#       'esm' = 'all',
-#       'stat' = 'mean')
-#   )
-#   
-#   mp1 = ggplot() +
-#     geom_point(data = df_plot[which(df_plot$stat == 'orig'),],aes(x = xv, y = yv, color = mth)) +
-#     geom_line(data = df_plot[which(df_plot$stat == 'mean'),],aes(x = xv, y = yv, color = mth),size = 2) +
-#     theme(legend.title = element_blank(),axis.title.x = element_blank()) +
-#     ggtitle(paste(nome_com, 'OPT')) +
-#     scale_color_manual(values = c('FvCB' = 'red','LUE-Fra' = 'blue','LUE-Ver' = 'green')) +
-#     ylab('gpp') + ylim(710,4300)
-#   
-#   mp2 = ggplot() +
-#     geom_point(data = df_plot[which(df_plot$stat == 'orig' & df_plot$mth == 'FvCB'),],aes(x = xv, y = yv, color = esm)) +
-#     geom_line(data = df_plot[which(df_plot$stat == 'mean' & df_plot$mth == 'FvCB'),],aes(x = xv, y = yv, color = esm),size = 2) +
-#     theme(legend.title = element_blank(),axis.title.x = element_blank()) +
-#     ggtitle(paste(nome_com, 'OPT')) +
-#     # scale_color_manual(values = c('FvCB' = 'red','LUE-Fra' = 'blue','LUE-Ver' = 'green')) +
-#     ylab('gpp') + ylim(710,4300)
-#   
-#   mp3 = ggplot() +
-#     geom_point(data = df_plot[which(df_plot$stat == 'orig' & df_plot$mth == 'LUE-Fra'),],aes(x = xv, y = yv, color = esm)) +
-#     geom_line(data = df_plot[which(df_plot$stat == 'mean' & df_plot$mth == 'LUE-Fra'),],aes(x = xv, y = yv, color = esm),size = 2) +
-#     theme(legend.title = element_blank(),axis.title.x = element_blank()) +
-#     ggtitle(paste(nome_com, 'OPT')) +
-#     # scale_color_manual(values = c('FvCB' = 'red','LUE-Fra' = 'blue','LUE-Ver' = 'green')) +
-#     ylab('gpp') + ylim(710,4300)
-#   
-#   mp4 = ggplot() +
-#     geom_point(data = df_plot[which(df_plot$stat == 'orig' & df_plot$mth == 'LUE-Ver'),],aes(x = xv, y = yv, color = esm)) +
-#     geom_line(data = df_plot[which(df_plot$stat == 'mean' & df_plot$mth == 'LUE-Ver'),],aes(x = xv, y = yv, color = esm),size = 2) +
-#     theme(legend.title = element_blank(),axis.title.x = element_blank()) +
-#     ggtitle(paste(nome_com, 'OPT')) +
-#     # scale_color_manual(values = c('FvCB' = 'red','LUE-Fra' = 'blue','LUE-Ver' = 'green')) +
-#     ylab('gpp') + ylim(710,4300)
-#     
-#   plot_grid(mp1,mp2,mp3,mp4,nrow = 2)
-#   
-#   
-#   mp1 = ggplot() +
-#     geom_point(data = df_plot[which(df_plot$stat == 'orig'),],aes(x = xv, y = yv, color = mth)) +
-#     geom_line(data = df_plot[which(df_plot$stat == 'mean'),],aes(x = xv, y = yv, color = mth),size = 2) +
-#     theme(legend.title = element_blank(),axis.title.x = element_blank()) +
-#     ggtitle(paste(nome_com, 'OPT')) +
-#     scale_color_manual(values = c('FvCB' = 'red','LUE-Fra' = 'blue','LUE-Ver' = 'green')) +
-#     ylab('gpp') + ylim(710,4300)
-#   
-#   mp2 = ggplot() +
-#     geom_point(data = df_plot[which(df_plot$stat == 'orig' & df_plot$mth == 'FvCB'),],aes(x = xv, y = yv, color = mth)) +
-#     geom_line(data = df_plot[which(df_plot$stat == 'mean' & df_plot$mth == 'FvCB'),],aes(x = xv, y = yv, color = mth),size = 2) +
-#     theme(legend.title = element_blank(),axis.title.x = element_blank()) +
-#     ggtitle(paste(nome_com, 'OPT')) +
-#     scale_color_manual(values = c('FvCB' = 'red','LUE-Fra' = 'blue','LUE-Ver' = 'green')) +
-#     ylab('gpp') + ylim(710,4300)
-#   
-#   mp3 = ggplot() +
-#     geom_point(data = df_plot[which(df_plot$stat == 'orig' & df_plot$mth == 'LUE-Fra'),],aes(x = xv, y = yv, color = mth)) +
-#     geom_line(data = df_plot[which(df_plot$stat == 'mean' & df_plot$mth == 'LUE-Fra'),],aes(x = xv, y = yv, color = mth),size = 2) +
-#     theme(legend.title = element_blank(),axis.title.x = element_blank()) +
-#     ggtitle(paste(nome_com, 'OPT')) +
-#     scale_color_manual(values = c('FvCB' = 'red','LUE-Fra' = 'blue','LUE-Ver' = 'green')) +
-#     ylab('gpp') + ylim(710,4300)
-#   
-#   mp4 = ggplot() +
-#     geom_point(data = df_plot[which(df_plot$stat == 'orig' & df_plot$mth == 'LUE-Ver'),],aes(x = xv, y = yv, color = mth)) +
-#     geom_line(data = df_plot[which(df_plot$stat == 'mean' & df_plot$mth == 'LUE-Ver'),],aes(x = xv, y = yv, color = mth),size = 2) +
-#     theme(legend.title = element_blank(),axis.title.x = element_blank()) +
-#     ggtitle(paste(nome_com, 'OPT')) +
-#     scale_color_manual(values = c('FvCB' = 'red','LUE-Fra' = 'blue','LUE-Ver' = 'green')) +
-#     ylab('gpp') + ylim(710,4300)
-#   
-#   plot_grid(mp1,mp2,mp3,mp4,nrow = 2)
-#   
-# }
-# rm(lf)
-#     
-  
 # faccio i plot delle medie, max e min (usando i parametri) per il MaxLAI----
 
 dir_out1 = paste0(dir_out_main,'plot_ts_max_min_mean_MaxLAI/')
@@ -1609,7 +1190,7 @@ for ( cy_sito in lista_sito ) {
 }
 rm(cy_sito)
 
-  
+
 # faccio i plot delle medie, max e min (usando i parametri)----
 
 dir_out1 = paste0(dir_out_main,'plot_ts_max_min_mean/')
@@ -1737,11 +1318,11 @@ for ( cy_exp in lista_exp ) {
     var_lim = c()
     
     for (cy_lim in seq(1,2)) {
-    
+      
       # if ( cy_sito == "Peitz" | cy_sito == "Solling_beech" | cy_sito == "Solling_spruce") {
       #   next
       # }
-    
+      
       if ( exists('df_t_mean_t') ) {
         rm(df_t_mean_t)
       }
@@ -1857,7 +1438,7 @@ for ( cy_exp in lista_exp ) {
         rm(pos_1)
         
         # faccio i plot
-      
+        
         lista_p1 = list()
         lista_p1_no_unc = list()
         data1_des = c('CLIMATE ON, CO2 OFF','CLIMATE OFF, CO2 ON','CLIMATE ON, CO2 ON')
@@ -2006,7 +1587,7 @@ for ( cy_exp in lista_exp ) {
               theme (panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
                      legend.title = element_blank(),
                      panel.border = element_rect(linetype = 'solid',
-                                 fill = NA, color='black',size=0.5))
+                                                 fill = NA, color='black',size=0.5))
             mpX_no_unc = mpX_no_unc +
               geom_line(data =regr11_no_unc, aes(x = x11, y = y11),color = 'black') +
               theme (panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
@@ -2017,7 +1598,7 @@ for ( cy_exp in lista_exp ) {
             rm(regr11,axis_lim)
             rm(regr11_no_unc,axis_lim_no_unc)
           }
-  
+          
           lista_p1[[length(lista_p1)+1]] = mpX
           lista_p1_no_unc[[length(lista_p1_no_unc)+1]] = mpX_no_unc
           rm(mpX,data1,mpX_no_unc)
@@ -2025,7 +1606,7 @@ for ( cy_exp in lista_exp ) {
           rm(data1_ellisse)
         }
         rm(zzyy,data1_des)
-      
+        
         mpt = plot_grid(plotlist = lista_p1,ncol = 1)
         mpt_no_unc = plot_grid(plotlist = lista_p1_no_unc,ncol = 1)
         
@@ -2035,7 +1616,7 @@ for ( cy_exp in lista_exp ) {
         rm(lista_p1,mpt,mpt_no_unc)
       }
       rm(cy_var)
-    
+      
       mpt2 = plot_grid(plotlist = lista_p,ncol = 2)
       mpt2_no_unc = plot_grid(plotlist = lista_p_no_unc,ncol = 2)
       ggsave(
@@ -2070,6 +1651,425 @@ for ( cy_exp in lista_exp ) {
 rm(cy_exp)
 
 
+# plot di seasonal per i risultati FT CU,NF,FF (TODO) ----
+#
+# dir_out1 = paste0(dir_out_main,'seasonal_FT/')
+# dir.create(dir_out1,showWarnings = F)
+# cy_sito = lista_sito[1]
+# cy_exp = lista_exp[1]
+# cy_co2 = lista_co2[1]
+# cy_man = lista_man[1]
+#
+# for (cy_sito in lista_sito) {
+#   for ( cy_exp in lista_exp ) {
+#     for( cy_co2 in lista_co2 ) {
+#       for ( cy_man in lista_man ) {
+#         if ( exists('df_t_mean') ) {
+#           rm(df_t_mean,df_t_max,df_t_min)
+#         }
+#         for (cy_co2_rcp in lista_co2_rcp) {
+#           for (cy_esm_rcp in lista_esm_rcp) {
+#             for (cy_meth in lista_meth) {
+#               if (!file.exists(paste0(dir_out_main,'mean_opt_daily/',cy_sito,'_',cy_exp,'_CO2_',cy_co2,'_',cy_co2_rcp,
+#                                       '_ESM_',cy_esm_rcp,'_Man_',cy_man,'_',cy_meth,'.csv')) ) {
+#                 next
+#               }
+#
+#             }
+#             rm(cy_meth)
+#           }
+#           rm(cy_esm_rcp)
+#         }
+#         rm(cy_co2_rcp)
+#       }
+#       rm(cy_man)
+#     }
+#     rm(cy_co2)
+#   }
+#   rm(cy_exp)
+# }
+# rm(cy_sito)
+#
+#   # importo il file giornaliero mediato per gli ESM
+#   lf_md = list.files(paste0(dir_out_main,'mean_opt_daily/'),pattern = cys)
+#   for ( cy_mt in c('FvCB','LUE') ) {
+#
+#     lf_md_mth_opt = lf_md[grep(cy_mt,lf_md)]
+#     #
+#     # lf_md_less = lf_md[grep('less',lf_md)]
+#     # lf_md_mth_less = lf_md_less[grep(cy_mt,lf_md_less)]
+#     #
+#     # lf_md_plus = lf_md[grep('plus',lf_md)]
+#     # lf_md_mth_plus = lf_md_plus[grep(cy_mt,lf_md_plus)]
+#     #
+#     if ( exists('df_t') ) rm(df_t)
+#     for ( cy_qq in lf_md_mth_opt ) {
+#       df_opt = read.csv(paste0(dir_out_main,'mean_opt_daily/',cy_qq))
+#       df_opt$file_name = cy_qq
+#       df_opt$meth = cy_mt
+#       if ( exists('df_t') ) {
+#         df_t = rbind(df_t,df_opt)
+#       } else {
+#         df_t = df_opt
+#       }
+#       rm(df_opt)
+#     }
+#     rm(cy_qq,lf_md_mth_opt)
+#
+#     # df_less = read.csv(paste0(dir_out_main,'extract_LOCAL_daily/',lf_md_mth_less))
+#     # df_plus = read.csv(paste0(dir_out_main,'extract_LOCAL_daily/',lf_md_mth_plus))
+#
+#     if (cy_mt == 'FvCB') {
+#       df_FvCB_opt = df_t
+#       # df_FvCB_less = df_less
+#       # df_FvCB_plus = df_plus
+#     }
+#     if (cy_mt == 'LUE') {
+#       df_Fra_opt = df_t
+#       # df_Fra_less = df_less
+#       # df_Fra_plus = df_plus
+#     }
+#     rm(df_t)
+#     # if (cy_mt == 'LUE-Ver') {
+#     #   df_Ver_opt = df_opt
+#     #   df_Ver_less = df_less
+#     #   df_Ver_plus = df_plus
+#     # }
+#     # rm(df_opt,lf_md_opt,lf_md_mth_opt)
+#     # rm(df_less,lf_md_less,lf_md_mth_less)
+#     # rm(df_plus,lf_md_plus,lf_md_mth_plus)
+#   }
+#   rm(cy_mt)
+#
+#   # sincronizzo le serie temporali
+#   range_year = c(
+#     min(c(df_FvCB_opt$YEAR, df_Fra_opt$YEAR#, df_Ver_opt$YEAR
+#           #df_eddy$YEAR,df_FvCB_less$YEAR,df_Ver_less$YEAR,df_Fra_less$YEAR,
+#           #df_eddy$YEAR,df_FvCB_plus$YEAR,df_Ver_plus$YEAR,df_Fra_plus$YEAR
+#     ),na.rm = T),
+#     max(c(df_FvCB_opt$YEAR, df_Fra_opt$YEAR#, df_Ver_opt$YEAR
+#           #df_eddy$YEAR,df_FvCB_less$YEAR,df_Ver_less$YEAR,df_Fra_less$YEAR,
+#           #df_eddy$YEAR,df_FvCB_plus$YEAR,df_Ver_plus$YEAR,df_Fra_plus$YEAR
+#     ),na.rm = T)
+#   )
+#   time_serie = seq( ymd(101+(range_year[1]*10000)),ymd(1231+(range_year[2]*10000)),by = 1)
+#   time_serie = data.frame('YEAR' = year(time_serie), 'MONTH' = month(time_serie), 'DAY' = day(time_serie))
+#
+#   #sincronizzo i dati del modello
+#   for ( zz in seq(1,2) ) {
+#     if ( zz == 1 ) df = df_FvCB_opt
+#     # if ( zz == 2 ) df = df_Ver_opt
+#     if ( zz == 2 ) df = df_Fra_opt
+#     # if ( zz == 4 ) df = df_FvCB_less
+#     # if ( zz == 5 ) df = df_Ver_less
+#     # if ( zz == 6 ) df = df_Fra_less
+#     # if ( zz == 7 ) df = df_FvCB_plus
+#     # if ( zz == 8 ) df = df_Ver_plus
+#     # if ( zz == 9 ) df = df_Fra_plus
+#     gpp_tmp = c()
+#     gpp_tmp_max = c()
+#     gpp_tmp_min = c()
+#     for ( cyt in seq(1,length(time_serie[,1])) ) {
+#       pos_time = which(df$YEAR == time_serie$YEAR[cyt] &
+#                          df$MONTH == time_serie$MONTH[cyt] &
+#                          df$DAY == time_serie$DAY[cyt]
+#       )
+#       if ( length(pos_time) == 0 ) {
+#         gpp_tmp = c(gpp_tmp,NA)
+#         gpp_tmp_max = c(gpp_tmp_max,NA)
+#         gpp_tmp_min = c(gpp_tmp_min,NA)
+#       } else {
+#         gpp_tmp = c(gpp_tmp,mean(df$gpp[pos_time]))
+#         gpp_tmp_max = c(gpp_tmp_max,max(df$gpp[pos_time]))
+#         gpp_tmp_min = c(gpp_tmp_min,min(df$gpp[pos_time]))
+#       }
+#       rm(pos_time)
+#     }
+#     rm(cyt)
+#     if ( zz == 1 ) {
+#       GPP_FvCB_OPT = gpp_tmp
+#       GPP_FvCB_LESS = gpp_tmp_min
+#       GPP_FvCB_PLUS = gpp_tmp_max
+#     }
+#     # if ( zz == 2 ) GPP_Ver_OPT = gpp_tmp
+#     if ( zz == 2 ) {
+#       GPP_Fra_OPT = gpp_tmp
+#       GPP_Fra_LESS = gpp_tmp_min
+#       GPP_Fra_PLUS = gpp_tmp_max
+#     }
+#     # if ( zz == 4 ) GPP_FvCB_LESS = gpp_tmp
+#     # if ( zz == 5 ) GPP_Ver_LESS = gpp_tmp
+#     # if ( zz == 6 ) GPP_Fra_LESS = gpp_tmp
+#     # if ( zz == 7 ) GPP_FvCB_PLUS = gpp_tmp
+#     # if ( zz == 8 ) GPP_Ver_PLUS = gpp_tmp
+#     # if ( zz == 9 ) GPP_Fra_PLUS = gpp_tmp
+#     rm(gpp_tmp,gpp_tmp_min,gpp_tmp_max)
+#   }
+#   rm(zz)
+#
+#   # creo il df per il plot
+#   df_plot = data.frame(
+#     'YEAR' = time_serie$YEAR,
+#     'MONTH' = time_serie$MONTH,
+#     'DAY' = time_serie$DAY,
+#     GPP_FvCB_OPT,GPP_FvCB_LESS,GPP_FvCB_PLUS,
+#     # GPP_Ver_OPT,GPP_Ver_LESS,GPP_Ver_PLUS,
+#     GPP_Fra_OPT,GPP_Fra_LESS,GPP_Fra_PLUS
+#   )
+#
+# #   # salvo i valori medi, max e min delle medie dei vari ESM
+# #   write.csv(df_plot, file = paste0(dir_out1,cys,'_mean_max_min_gpp.csv'))
+# # }
+# #
+# #   rm(GPP_DT_CUT_USTAR50,GPP_DT_CUT_05,GPP_DT_CUT_95)
+# #   rm(GPP_FvCB_OPT)#,GPP_FvCB_LESS,GPP_FvCB_PLUS)
+# #   # rm(GPP_Ver_OPT,GPP_Ver_LESS,GPP_Ver_PLUS)
+# #   rm(GPP_Fra_OPT)#,GPP_Fra_LESS,GPP_Fra_PLUS)
+# #   rm(df_FvCB_opt)#,df_FvCB_plus,df_FvCB_less)
+# #   # rm(df_Ver_opt,df_Ver_plus,df_Ver_less)
+# #   rm(df_Fra_opt)#,df_Fra_plus,df_Fra_less)
+# #   rm(time_serie)
+# #   # elimino le righe che hanno valori NA
+# #   for(cyc in colnames(df_plot)) {
+# #     pos_na = which(is.na(df_plot[,cyc]) == 1)
+# #     if ( length(pos_na) > 0 ) {
+# #       df_plot = df_plot[-1*pos_na,]
+# #     }
+# #     rm(pos_na)
+# #   }
+# #   rm(cyc)
+# #
+# #   # salvo i dati per le validazioni
+# #   write.csv(x = df_plot,file = paste0(dir_out1,cys,'_daily_validation.txt'),row.names = F)
+# #
+# #   # calcolo la somma mensile
+# #   df_plot_m = df_plot[1,]
+# #   unique_year = sort(unique(df_plot$YEAR))
+# #   tmp_year = c()
+# #   tmp_month = c()
+# #   for (cyy in unique_year) {
+# #     for (cym in seq(1,12)) {
+# #       pos_my = which(df_plot$YEAR == cyy & df_plot$MONTH == cym)
+# #       if (length(pos_my) == 0) next
+# #       tmp_year = c(tmp_year,cyy)
+# #       tmp_month = c(tmp_month,cym)
+# #       df_plot_m = rbind(df_plot_m,colSums(df_plot[pos_my,],na.rm = T))
+# #     }
+# #     rm(cym,pos_my)
+# #   }
+# #   rm(unique_year)
+# #   df_plot_m = df_plot_m[-1,]
+# #   df_plot_m$YEAR = tmp_year
+# #   df_plot_m$MONTH = tmp_month
+# #   rm(tmp_year,tmp_month)
+# #
+# #   # calcolo il mese medio
+# #   df_plot_m2 = df_plot_m[1,]
+# #   tmp_FvCB_unc_max = c()
+# #   tmp_FvCB_unc_min = c()
+# #   tmp_Ver_unc_max = c()
+# #   tmp_Ver_unc_min = c()
+# #   tmp_Fra_unc_max = c()
+# #   tmp_Fra_unc_min = c()
+# #   tmp_ec_unc_max = c()
+# #   tmp_ec_unc_min = c()
+# #   for (cym in seq(1,12)) {
+# #     pos_my = which(df_plot_m$MONTH == cym)
+# #     if (length(pos_my) == 0) next
+# #     # tmp_FvCB_unc_max = c(tmp_FvCB_unc_max,colMaxs(as.matrix(df_plot_m$GPP_FvCB_PLUS[pos_my]),na.rm = T))
+# #     # tmp_FvCB_unc_min = c(tmp_FvCB_unc_min,colMins(as.matrix(df_plot_m$GPP_FvCB_LESS[pos_my]),na.rm = T))
+# #     # tmp_Ver_unc_max = c(tmp_Ver_unc_max,colMaxs(as.matrix(df_plot_m$GPP_Ver_PLUS[pos_my]),na.rm = T))
+# #     # tmp_Ver_unc_min = c(tmp_Ver_unc_min,colMins(as.matrix(df_plot_m$GPP_Ver_LESS[pos_my]),na.rm = T))
+# #     # tmp_Fra_unc_max = c(tmp_Fra_unc_max,colMaxs(as.matrix(df_plot_m$GPP_Fra_PLUS[pos_my]),na.rm = T))
+# #     # tmp_Fra_unc_min = c(tmp_Fra_unc_min,colMins(as.matrix(df_plot_m$GPP_Fra_LESS[pos_my]),na.rm = T))
+# #     tmp_ec_unc_max =  c(tmp_ec_unc_max,colMaxs(as.matrix(df_plot_m$GPP_DT_CUT_95[pos_my]),na.rm = T))
+# #     tmp_ec_unc_min =  c(tmp_ec_unc_min,colMins(as.matrix(df_plot_m$GPP_DT_CUT_05[pos_my]),na.rm = T))
+# #     df_plot_m2 = rbind(df_plot_m2,
+# #                        colMeans(df_plot_m[pos_my,],na.rm = T))
+# #   }
+# #   rm(cym,pos_my)
+# #   df_plot_m2 = df_plot_m2[-1,]
+# #
+# #   # df_plot_m2$GPP_FvCB_PLUS = tmp_FvCB_unc_max
+# #   # df_plot_m2$GPP_FvCB_LESS = tmp_FvCB_unc_min
+# #   # df_plot_m2$GPP_Ver_PLUS = tmp_Ver_unc_max
+# #   # df_plot_m2$GPP_Ver_LESS = tmp_Ver_unc_min
+# #   # df_plot_m2$GPP_Fra_PLUS = tmp_Fra_unc_max
+# #   # df_plot_m2$GPP_Fra_LESS = tmp_Fra_unc_min
+# #   df_plot_m2$GPP_DT_CUT_05 = tmp_ec_unc_min
+# #   df_plot_m2$GPP_DT_CUT_95 = tmp_ec_unc_max
+# #
+# #   # rm(tmp_FvCB_unc_max,tmp_FvCB_unc_min,tmp_Ver_unc_max,tmp_Ver_unc_min,tmp_Fra_unc_max,tmp_Fra_unc_min)
+# #   rm(tmp_ec_unc_max,tmp_ec_unc_min)
+# #
+# #   # traccio i plot di validazione
+# #   mp1 = ggplot(df_plot_m2) +
+# #     geom_ribbon(aes(x = MONTH, ymax = GPP_DT_CUT_95, ymin = GPP_DT_CUT_05, fill='EC-Uncertainty'),alpha = 0.4) +
+# #     # geom_ribbon(aes(x = MONTH, ymax = GPP_Ver_PLUS, ymin = GPP_Ver_LESS,fill='Ver-Uncertainty'),alpha = 0.4) +
+# #     # geom_ribbon(aes(x = MONTH, ymax = GPP_Fra_PLUS, ymin = GPP_Fra_LESS,fill='Fra-Uncertainty'),alpha = 0.4) +
+# #     # geom_ribbon(aes(x = MONTH, ymax = GPP_FvCB_PLUS, ymin = GPP_FvCB_LESS,fill='FvCB-Uncertainty'),alpha = 0.4) +
+# #     # geom_line(aes(x = MONTH, y = GPP_Ver_OPT,color = 'LUE-Opt-Ver')) +
+# #     geom_line(aes(x = MONTH, y = GPP_Fra_OPT,color = 'LUE-Opt-Fra')) +
+# #     geom_line(aes(x = MONTH, y = GPP_DT_CUT_USTAR50,color = 'EC')) +
+# #     geom_line(aes(x = MONTH, y = GPP_FvCB_OPT,color = 'FvCB-Optimized')) +
+# #     scale_color_manual(values = c('FvCB-Optimized' = 'red','LUE-Opt-Ver' = 'blue','LUE-Opt-Fra' = 'green','EC' ='black')) +
+# #     scale_fill_manual(values =  c('FvCB-Uncertainty' = 'red','Ver-Uncertainty' = 'blue',
+# #                                   'Fra-Uncertainty' = 'green','EC-Uncertainty' ='black')) +
+# #     ggtitle(cys) +
+# #     scale_x_continuous(breaks = seq(1,12),labels = c('J','F','M','A','M','J','J','A','S','O','N','D')) +
+# #     theme_bw() +
+# #     theme (panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+# #            legend.title = element_blank(),legend.position = c(0.07,0.85),axis.title.x = element_blank(),
+# #            panel.border = element_rect(linetype = 'solid',
+# #                                        fill = NA, color='black',size=0.5))+
+# #     ylab('GPP (gC m-2 month-1)') +
+# #     guides(color = guide_legend(order=1),
+# #            fill = guide_legend(order=2))
+# #
+# #   ggsave(
+# #     filename = paste0(dir_out1,cys,'_validation.png'),
+# #     plot = mp1,
+# #     scale=1.8,
+# #     width = 30,
+# #     height = 15,
+# #     units = "cm",
+# #     device = 'png',
+# #     dpi = 300
+# #   )
+# #   rm(df_plot,df_plot_m,df_plot_m2,mp1)
+# #   rm(range_year,cyy,des_eddy)
+# # }
+# # rm(cys)
+
+# plot di verifica tra valori del modello e la media calcolata (test NO USARE)----
+#
+# lf = list.files(paste0(dir_out_main,'valori_per_medie_opt/'),pattern = 'Soroe_FT_CO2_ON_rcp8p5_ESM_rcp8p5_')
+# while ( length(lf) > 0 ) {
+#   # costruisco il nome togliendo la desinenza del metodo
+#   nome_com = unlist(strsplit(basename(lf[1]),'_'))
+#   nome_com = nome_com[seq(1,(length(nome_com)-1))]
+#   nome_com = paste(nome_com,collapse = '_')
+#   des_cmp = grep(nome_com,lf)
+#   # importo i file
+#   if (exists('df_t')) rm(df_t)
+#   for (cy_des_cmp in des_cmp) {
+#     df = read.csv(paste0(dir_out_main,'valori_per_medie_opt/',lf[cy_des_cmp]))
+#     df$mth = gsub('_','',gsub('.csv','',gsub(nome_com,'',lf[cy_des_cmp])))
+#     if (exists('df_t')) {
+#       df_t = rbind(df_t,df)
+#     } else {
+#       df_t = df
+#     }
+#     rm(df)
+#   }
+#   rm(cy_des_cmp)
+#
+#   # importo il file con la media
+#   lf_medie = list.files(paste0(dir_out_main,'mean_opt/'),pattern = nome_com)
+#   if (exists('df_t_medie')) rm(df_t_medie)
+#   for (cy_des_cmp in lf_medie) {
+#     df = read.csv(paste0(dir_out_main,'mean_opt/',cy_des_cmp))
+#     df$mth = gsub('_','',gsub('.csv','',gsub(nome_com,'',cy_des_cmp)))
+#     if (exists('df_t_medie')) {
+#       df_t_medie = rbind(df_t_medie,df)
+#     } else {
+#       df_t_medie = df
+#     }
+#     rm(df)
+#   }
+#   rm(cy_des_cmp)
+#   #faccio i plot di confronto
+#   df_t$mth = factor(df_t$mth)
+#   df_plot = data.frame(
+#     'xv' = df_t$YEAR,
+#     'yv' = df_t$gpp,
+#     'mth' = df_t$mth,
+#     'esm' = df_t$esm,
+#     'stat' = 'orig'
+#   )
+#   df_t$mth = factor(df_t$mth)
+#   df_plot = rbind(df_plot,
+#     data.frame(
+#       'xv' = df_t_medie$YEAR,
+#       'yv' = df_t_medie$gpp,
+#       'mth' = df_t_medie$mth,
+#       'esm' = 'all',
+#       'stat' = 'mean')
+#   )
+#
+#   mp1 = ggplot() +
+#     geom_point(data = df_plot[which(df_plot$stat == 'orig'),],aes(x = xv, y = yv, color = mth)) +
+#     geom_line(data = df_plot[which(df_plot$stat == 'mean'),],aes(x = xv, y = yv, color = mth),size = 2) +
+#     theme(legend.title = element_blank(),axis.title.x = element_blank()) +
+#     ggtitle(paste(nome_com, 'OPT')) +
+#     scale_color_manual(values = c('FvCB' = 'red','LUE-Fra' = 'blue','LUE-Ver' = 'green')) +
+#     ylab('gpp') + ylim(710,4300)
+#
+#   mp2 = ggplot() +
+#     geom_point(data = df_plot[which(df_plot$stat == 'orig' & df_plot$mth == 'FvCB'),],aes(x = xv, y = yv, color = esm)) +
+#     geom_line(data = df_plot[which(df_plot$stat == 'mean' & df_plot$mth == 'FvCB'),],aes(x = xv, y = yv, color = esm),size = 2) +
+#     theme(legend.title = element_blank(),axis.title.x = element_blank()) +
+#     ggtitle(paste(nome_com, 'OPT')) +
+#     # scale_color_manual(values = c('FvCB' = 'red','LUE-Fra' = 'blue','LUE-Ver' = 'green')) +
+#     ylab('gpp') + ylim(710,4300)
+#
+#   mp3 = ggplot() +
+#     geom_point(data = df_plot[which(df_plot$stat == 'orig' & df_plot$mth == 'LUE-Fra'),],aes(x = xv, y = yv, color = esm)) +
+#     geom_line(data = df_plot[which(df_plot$stat == 'mean' & df_plot$mth == 'LUE-Fra'),],aes(x = xv, y = yv, color = esm),size = 2) +
+#     theme(legend.title = element_blank(),axis.title.x = element_blank()) +
+#     ggtitle(paste(nome_com, 'OPT')) +
+#     # scale_color_manual(values = c('FvCB' = 'red','LUE-Fra' = 'blue','LUE-Ver' = 'green')) +
+#     ylab('gpp') + ylim(710,4300)
+#
+#   mp4 = ggplot() +
+#     geom_point(data = df_plot[which(df_plot$stat == 'orig' & df_plot$mth == 'LUE-Ver'),],aes(x = xv, y = yv, color = esm)) +
+#     geom_line(data = df_plot[which(df_plot$stat == 'mean' & df_plot$mth == 'LUE-Ver'),],aes(x = xv, y = yv, color = esm),size = 2) +
+#     theme(legend.title = element_blank(),axis.title.x = element_blank()) +
+#     ggtitle(paste(nome_com, 'OPT')) +
+#     # scale_color_manual(values = c('FvCB' = 'red','LUE-Fra' = 'blue','LUE-Ver' = 'green')) +
+#     ylab('gpp') + ylim(710,4300)
+#
+#   plot_grid(mp1,mp2,mp3,mp4,nrow = 2)
+#
+#
+#   mp1 = ggplot() +
+#     geom_point(data = df_plot[which(df_plot$stat == 'orig'),],aes(x = xv, y = yv, color = mth)) +
+#     geom_line(data = df_plot[which(df_plot$stat == 'mean'),],aes(x = xv, y = yv, color = mth),size = 2) +
+#     theme(legend.title = element_blank(),axis.title.x = element_blank()) +
+#     ggtitle(paste(nome_com, 'OPT')) +
+#     scale_color_manual(values = c('FvCB' = 'red','LUE-Fra' = 'blue','LUE-Ver' = 'green')) +
+#     ylab('gpp') + ylim(710,4300)
+#
+#   mp2 = ggplot() +
+#     geom_point(data = df_plot[which(df_plot$stat == 'orig' & df_plot$mth == 'FvCB'),],aes(x = xv, y = yv, color = mth)) +
+#     geom_line(data = df_plot[which(df_plot$stat == 'mean' & df_plot$mth == 'FvCB'),],aes(x = xv, y = yv, color = mth),size = 2) +
+#     theme(legend.title = element_blank(),axis.title.x = element_blank()) +
+#     ggtitle(paste(nome_com, 'OPT')) +
+#     scale_color_manual(values = c('FvCB' = 'red','LUE-Fra' = 'blue','LUE-Ver' = 'green')) +
+#     ylab('gpp') + ylim(710,4300)
+#
+#   mp3 = ggplot() +
+#     geom_point(data = df_plot[which(df_plot$stat == 'orig' & df_plot$mth == 'LUE-Fra'),],aes(x = xv, y = yv, color = mth)) +
+#     geom_line(data = df_plot[which(df_plot$stat == 'mean' & df_plot$mth == 'LUE-Fra'),],aes(x = xv, y = yv, color = mth),size = 2) +
+#     theme(legend.title = element_blank(),axis.title.x = element_blank()) +
+#     ggtitle(paste(nome_com, 'OPT')) +
+#     scale_color_manual(values = c('FvCB' = 'red','LUE-Fra' = 'blue','LUE-Ver' = 'green')) +
+#     ylab('gpp') + ylim(710,4300)
+#
+#   mp4 = ggplot() +
+#     geom_point(data = df_plot[which(df_plot$stat == 'orig' & df_plot$mth == 'LUE-Ver'),],aes(x = xv, y = yv, color = mth)) +
+#     geom_line(data = df_plot[which(df_plot$stat == 'mean' & df_plot$mth == 'LUE-Ver'),],aes(x = xv, y = yv, color = mth),size = 2) +
+#     theme(legend.title = element_blank(),axis.title.x = element_blank()) +
+#     ggtitle(paste(nome_com, 'OPT')) +
+#     scale_color_manual(values = c('FvCB' = 'red','LUE-Fra' = 'blue','LUE-Ver' = 'green')) +
+#     ylab('gpp') + ylim(710,4300)
+#
+#   plot_grid(mp1,mp2,mp3,mp4,nrow = 2)
+#
+# }
+# rm(lf)
+#
+
 # faccio i plot delle medie, max e min LUE vs FvCB con barre di errore (parametro)----
 
 # faccio l'analisi fattoriale per i dati prodotti dal modello (NF e FF) ----
@@ -2082,9 +2082,9 @@ if ( exists('mean_ff') ) {
   rm(mean_nf, mean_ff)
 }
 for ( cyf in seq(1,length(df_file[,1])) ) {
-  
+
   cat(sprintf('factorial analisys: %d/%d\n',cyf,length(df_file[,1])))
-      
+
   df = read.csv(as.character(df_file$file_extr[cyf]))
   if ( !exists('mean_ff') ) {
     mean_nf = df[1,]
@@ -2103,7 +2103,7 @@ for ( cyf in seq(1,length(df_file[,1])) ) {
                     colMeans(as.matrix(df[seq(pos_nf1,pos_nf2),]))
       )
   }
-  
+
   pos_ff = which(df$YEAR > 2070)
   if ( length(pos_ff) == 0 ) {
     df_empty = df[1,]
@@ -2128,23 +2128,23 @@ if ( exists('mean_ff') ) {
 for ( cys in lista_sito ) {
   for (cy_var in list_var) {
     for (cytime in c('NF','FF')) {
-      
+
       pos_sito = which(df_file$sito == cys)
-      
+
       df_file2 = df_file[pos_sito,]
-      
+
       if ( cytime == 'NF' ) df_file2$v1 = mean_nf[pos_sito,cy_var]
       if ( cytime == 'FF' ) df_file2$v1 = mean_ff[pos_sito,cy_var]
-      
+
       df_file2 = droplevels(df_file2)
-      
+
       fit <- aov(v1 ~ meth * meth_unc * esm * esm_rcp * co2 * co2_rcp, data=df_file2) # same thing
-      
+
       table_fit = summary(fit)
-      
+
       table_fit[[1]]$`Sum Sq perc`  = (table_fit[[1]]$`Sum Sq` / sum(table_fit[[1]]$`Sum Sq`))*100
       table_fit[[1]]$`Mean Sq perc` = (table_fit[[1]]$`Mean Sq` / sum(table_fit[[1]]$`Mean Sq`))*100
-      
+
       capture.output(table_nf,file=paste0(dir_out1,cys,"_",cy_var,"_anova_",cytime,".txt"))
       rm(fit,df_file2,table_fit)
     }
@@ -2165,12 +2165,12 @@ for ( cy_sito in lista_sito ) {
   if ( cy_sito == "Peitz" | cy_sito == "Solling_beech" | cy_sito == "Solling_spruce") {
     next
   }
-  
+
   for ( cy_exp in lista_exp ) {
     if ( exists('df_t_mean_lue') ) {
       rm(df_t_mean_lue,df_t_mean_FvCB)
     }
-    
+
     for (cy_meth in lista_meth) {
       if ( exists('df_t_mean') ) {
         rm(df_t_mean)#,df_t_max,df_t_min)
@@ -2179,18 +2179,18 @@ for ( cy_sito in lista_sito ) {
         for ( cy_man in lista_man ) {
           for (cy_co2_rcp in lista_co2_rcp) {
             for (cy_esm_rcp in lista_esm_rcp) {
-              
+
               if (!file.exists(paste0(dir_out_main,'mean_rcp/',cy_sito,'_',cy_exp,'_CO2_',cy_co2,'_',cy_co2_rcp,
                                       '_ESM_',cy_esm_rcp,'_Man_',cy_man,'_',cy_meth,'.csv')) ) {
                 next
               }
-              
+
               df_mean = read.csv(paste0(dir_out_main,'mean_rcp/',cy_sito,'_',cy_exp,'_CO2_',cy_co2,'_',cy_co2_rcp,
                                         '_ESM_',cy_esm_rcp,'_Man_',cy_man,'_',cy_meth,'.csv'))
               df_mean$rcp = paste0('ESM_',cy_esm_rcp,'_CO2_',cy_co2_rcp)
               df_mean$meth = cy_meth
               df_mean$co2 = cy_co2
-              
+
               if ( exists('df_t_mean') ) {
                 df_t_mean = rbind(df_t_mean,df_mean)
               } else {
@@ -2207,61 +2207,61 @@ for ( cy_sito in lista_sito ) {
       rm(cy_co2)
       if (cy_meth == "FvCB") {
         df_t_mean_FvCB = df_t_mean
-      } 
+      }
       if (cy_meth == "LUE-Veroustraete" ) {
         df_t_mean_lue = df_t_mean
       }
       rm(df_t_mean)
     }
     rm(cy_meth)
-    
+
     lista_p = list()
     cy_var = list_var[1]
     for (cy_var in list_var) {
       if ( exists('df_plot') ) {
         rm(df_plot)
       }
-      
+
       df_plot = df_t_mean_FvCB[,c(cy_var,'rcp','co2','YEAR')]
       df_plot = cbind(df_t_mean_lue[,cy_var],df_plot)
       colnames(df_plot)[1] = 'LUE'
       colnames(df_plot)[2] = 'FvCB'
-      
+
       df_plot = df_plot[-1*grep("ESM_rcp0p0.txt_CO2_rcp0p0.txt",df_plot$rcp),]
-      
+
       df_plot$rcp = gsub('.txt','',df_plot$rcp)
-      
+
       df_plot$facet = 'CLIMATE ON, CO2 ON'
-      
+
       pos_1 = grep("rcp0p0",df_plot$rcp)
       df_plot$facet[pos_1] = 'CLIMATE OFF, CO2 ON'
-      
+
       pos_1 = grep('VAR',df_plot$co2)
       df_plot$facet[pos_1] = 'CLIMATE ON, CO2 OFF'
-      
+
       mp1 = ggplot(data = df_plot[grep('CLIMATE OFF, CO2 ON',df_plot$facet),],aes(x = LUE, y = FvCB,color = rcp)) +
         geom_point() +
         geom_text_repel(aes(label=YEAR), nudge_x = 0.25, nudge_y = 0.25) +
         ggtitle(sprintf('%s var: %s site: %s','CLIMATE OFF, CO2 ON',cy_var,cy_sito)) +
         xlab(paste0('LUE ',cy_var,' (gC m-2 yr-1)')) +
         ylab(paste0('FvCB ',cy_var,' (gC m-2 yr-1)'))
-      
+
       mp2 = ggplot(data = df_plot[grep('CLIMATE ON, CO2 OFF',df_plot$facet),],aes(x = LUE, y = FvCB,color = rcp)) +
-        geom_errorbar(aes(ymin = FvCB_min,ymax = FvCB_max)) + 
+        geom_errorbar(aes(ymin = FvCB_min,ymax = FvCB_max)) +
         geom_errorbarh(aes(xmin = LUE_min, xmax = LUE_max)) +
         geom_point() +
         ggtitle(sprintf('%s var: %s site: %s','CLIMATE ON, CO2 OFF',cy_var,cy_sito)) +
         xlab(paste0('LUE ',cy_var,' (gC m-2 yr-1)')) +
         ylab(paste0('FvCB ',cy_var,' (gC m-2 yr-1)'))
-      
+
       mp3 = ggplot(data = df_plot[grep('CLIMATE ON, CO2 ON',df_plot$facet),],aes(x = LUE, y = FvCB,color = rcp)) +
-        geom_errorbar(aes(ymin = FvCB_min,ymax = FvCB_max)) + 
+        geom_errorbar(aes(ymin = FvCB_min,ymax = FvCB_max)) +
         geom_errorbarh(aes(xmin = LUE_min, xmax = LUE_max)) +
         geom_point() +
         ggtitle(sprintf('%s var: %s site: %s','CLIMATE ON, CO2 ON',cy_var,cy_sito)) +
         xlab(paste0('LUE ',cy_var,' (gC m-2 yr-1)')) +
         ylab(paste0('FvCB ',cy_var,' (gC m-2 yr-1)'))
-      
+
       x_lim1 = c(ggplot_build(mp1)$layout$panel_ranges[[1]]$x.range[1],
                  ggplot_build(mp1)$layout$panel_ranges[[1]]$x.range[2])
       y_lim1 = c(ggplot_build(mp1)$layout$panel_ranges[[1]]$y.range[1],
@@ -2274,16 +2274,16 @@ for ( cy_sito in lista_sito ) {
                  ggplot_build(mp3)$layout$panel_ranges[[1]]$x.range[2])
       y_lim3 = c(ggplot_build(mp3)$layout$panel_ranges[[1]]$y.range[1],
                  ggplot_build(mp3)$layout$panel_ranges[[1]]$y.range[2])
-      
+
       axis_lim = c(
         min(c(x_lim1[1],y_lim1[1],x_lim2[1],y_lim2[1],x_lim3[1],y_lim3[1])),
         max(c(x_lim1[2],y_lim1[2],x_lim2[2],y_lim2[2],x_lim3[2],y_lim3[2]))
       )
-      
+
       mp1 = mp1 + xlim(axis_lim) + ylim(axis_lim)
       mp2 = mp2 + xlim(axis_lim) + ylim(axis_lim)
       mp3 = mp3 + xlim(axis_lim) + ylim(axis_lim)
-      
+
       regr11 = data.frame('x11' = axis_lim,'y11' = axis_lim)
       mp1 = mp1 +
         geom_line(data =regr11, aes(x = x11, y = y11),color = 'black') +
@@ -2294,14 +2294,14 @@ for ( cy_sito in lista_sito ) {
       mp3 = mp3 +
         geom_line(data =regr11, aes(x = x11, y = y11),color = 'black') +
         theme (legend.title = element_blank())
-      
+
       mpt = plot_grid(mp1,mp2,mp3,ncol = 1)
-      
+
       lista_p[[length(lista_p)+1]] = mpt
     }
-    
+
     mpt2 = plot_grid(plotlist = lista_p,ncol = 2)
-    
+
     ggsave(
       filename = paste0(dir_out1,cy_sito,'_',cy_exp,'_FvCB_vs_LUE.png'),
       plot = mpt2,
@@ -2315,7 +2315,7 @@ for ( cy_sito in lista_sito ) {
     rm(mpt,mp1,mp2,mp3,df_plot,regr11,mpt2,lista_p)
     rm(x_lim1,y_lim1,x_lim2,y_lim2,x_lim3,y_lim3)
     rm(pos_1,axis_lim)
-    
+
   }
   rm(cy_exp)
 }
