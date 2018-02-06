@@ -422,8 +422,8 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	}
 
 	/* check condition */
-	CHECK_CONDITION( temp_corr      , <, 0.0);
-	CHECK_CONDITION( high_temp_corr , <, 0.0);
+	CHECK_CONDITION( temp_corr      , < , 0.0 );
+	CHECK_CONDITION( high_temp_corr , < , 0.0 );
 
 	/* correct Vcmax25 for temperature Medlyn et al., (1999) with F_SW from Bonan et al., (2011) */
 	Vcmax     = Vcmax25 * temp_corr * high_temp_corr * s->value[F_SW];
@@ -461,7 +461,7 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 
 	/** acclimation for temperature as in Kattge and Knorr (2007) and CLM5.0 version **/
 	/* acclimation for Jmax25 as in Kattge and Knorr (2007) */
-	Jmax25_accl    = (2.59 - 0.035 * ( tleaf10_K - TempAbs ) ) * Vcmax25;
+	Jmax25_accl    = ( 2.59 - 0.035 * ( tleaf10_K - TempAbs ) ) * Vcmax25;
 
 	Jmax25         = Jmax25_accl;
 

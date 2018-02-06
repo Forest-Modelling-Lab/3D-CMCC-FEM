@@ -19,7 +19,7 @@ RHO0  0.50                    //Minimum Basic Density for young Trees t/m^3 for 
 RHO1  0.40                    //Maximum Basic Density for mature Trees t/m^3 for P. pinaster Portè et al., 2002
 TRHO    4                     //Age at which rho = (RHO0 + RHO1 )/2
 FORM_FACTOR 0.435             //Form factor Seidl et al., 2012 
-COEFFCOND    0.01             //Define stomatal responsee to VPD in mbar 
+COEFFCOND    0.05             //Define stomatal responsee to VPD in mbar 
 BLCOND      0.01 //0.009      //Canopy Boundary Layer conductance for P. sylvestris 0.009 from Pietsch, 0.01 for Tatarinov
 MAXCOND 0.006 //0.005         //Maximum Stomatal Conductance in m/sec for P. pinaster from 0.0014 to 0.0046 David et al., 1997 Oecologia
 CUTCOND 0.000075 //0.00006    //Cuticul conductance in m/sec for P. sylvestris 0.00001 from Pietsch  0,00006 for Tatarinov, 0.000075 Makela et al., 2006
@@ -43,7 +43,7 @@ FINE_ROOT_LEAF  0.523         //allocation new fine root C:new leaf (ratio) 0.52
 STEM_LEAF   2.5               //allocation new stem C:new leaf (ratio) 2.5 for P. sylvestris from Pietsch 2.2 from Tatarinov
 COARSE_ROOT_STEM   0.29       //allocation new coarse root C:new stem (ratio) 0.29 for P. sylvestris from Pietsch 0.44 from Tatarinov
 LIVE_TOTAL_WOOD 0.05          //new live C:new total wood (ratio) for P. sylvestris 0.59 from Pietsch, 0.076 from Tatarinov
-N_RUBISCO            0.30 //  0.2    //Fraction of leaf N in Rubisco (ratio) for Pinus pinaster (varying from 9 to 31%) see Warren and Adams 2001 (Plant Cell and Env)
+N_RUBISCO       0.15 //  0.055       //Fraction of leaf N in Rubisco (ratio) for Pinus pinaster (varying from 9 to 31%) see Warren and Adams 2001 (Plant Cell and Env)
 CN_LEAVES   40                //CN of leaves (kgC/kgN) for P. pinaster Portè and Loustau 1998
 CN_FALLING_LEAVES   132       //CN of leaf litter (kgC/kgN) for P. sylvestris from Pietsch, 122 from Tatarinov 
 CN_FINE_ROOTS   49.0          //CN of fine roots (kgC/kgN) for P. sylvestris 38 from Pietsch 49 from Tatarinov

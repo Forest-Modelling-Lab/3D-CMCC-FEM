@@ -2,11 +2,11 @@ flux_validation <- function(ls_file_md,
          nome_sito,
          file_ec,
          soglia_qc = 0.6,
-         var_md = c('nee','reco','gpp'),
-         var_eddy = c('NEE_CUT_USTAR50','RECO_DT_CUT_USTAR50','GPP_DT_CUT_USTAR50'),
+         var_md = c('gpp','reco','nee'),
+         var_eddy = c('GPP_DT_CUT_USTAR50','RECO_DT_CUT_USTAR50','NEE_CUT_USTAR50'),
          var_eddy_qc = c('NEE_CUT_USTAR50_QC','NEE_CUT_USTAR50_QC','NEE_CUT_USTAR50_QC'),
-         var_eddy_unc_max = c('NEE_CUT_95','RECO_DT_CUT_95','GPP_DT_CUT_95'),
-         var_eddy_unc_min = c('NEE_CUT_05','RECO_DT_CUT_05','GPP_DT_CUT_05')
+         var_eddy_unc_max = c('GPP_DT_CUT_05','RECO_DT_CUT_95','NEE_CUT_95'),
+         var_eddy_unc_min = c('GPP_DT_CUT_95','RECO_DT_CUT_05','NEE_CUT_05')
          ) {
   # validazione dei dati di flusso del modello
   # INPUT

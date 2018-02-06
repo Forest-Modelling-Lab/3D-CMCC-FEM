@@ -68,12 +68,12 @@ time_list_output = c('annual','monthly','daily')
 
 # single or multiple simulations
 build_list<-c('Debug')        #, 'Release')
-site_list<-c("Soroe")
+site_list<-c("LeBray")
 esm_list <-c("2")             # ("1","2","3","4","5", "All")
 rcp_list <-c("8p5")           # ("0p0","2p6","4p5","6p0","8p5","All")
 man_list <-c("off")           # ("on",off","All")
 co2_list <-c("on")            # ("on",off","All")
-protocol_list<-c("FT")        # ("2A","2B","All") 
+protocol_list<-c("LOCAL")        # ("2A","2B","All") 
 local_list<-c('off')          # ("on","off") to include local simulation of not under FT protocol
 climate_off_list<-c('off')    # ("on",off","All") for climate off and co2 on
 photosynthesis_list<-c('FvCB') #("FvCB",'LUE') for photosyhtesis approach
@@ -81,7 +81,7 @@ photosynthesis_list<-c('FvCB') #("FvCB",'LUE') for photosyhtesis approach
 time_list = c('annual')
 
 #  output folder name
-output_folder = paste0("Test_output_Rstudio_ct_photosynthesis_26_Gen_TEST_", protocol_list,'_',co2_list)
+output_folder = paste0("Test_output_Rstudio_ct_photosynthesis_TEST_", protocol_list,'_',co2_list)
 
 if ( length(which(site_list == 'All')) > 0 ) {
   site_list = c("Soroe","Hyytiala","Bily_Kriz","LeBray")#,"Solling_beech","Peitz","Solling_spruce")
@@ -685,11 +685,11 @@ for (cy_s in site_list) {
   lista_p2 = flux_validation(ls_file_md,
                              cy_s,
                              file_ec,
-                             var_md = c('reco','gpp'),
-                             var_eddy = c('RECO_NT_CUT_USTAR50','GPP_NT_CUT_USTAR50'),
+                             var_md = c('gpp','reco'),
+                             var_eddy = c('GPP_NT_CUT_USTAR50','RECO_NT_CUT_USTAR50'),
                              var_eddy_qc = c('NEE_CUT_USTAR50_QC','NEE_CUT_USTAR50_QC'),
-                             var_eddy_unc_max = c('RECO_NT_CUT_95','GPP_NT_CUT_95'),
-                             var_eddy_unc_min = c('RECO_NT_CUT_05','GPP_NT_CUT_05'))
+                             var_eddy_unc_max = c('GPP_NT_CUT_95','RECO_NT_CUT_95'),
+                             var_eddy_unc_min = c('GPP_NT_CUT_05','RECO_NT_CUT_05'))
   
   lista_p3 = flux_validation(ls_file_md,
                              cy_s,

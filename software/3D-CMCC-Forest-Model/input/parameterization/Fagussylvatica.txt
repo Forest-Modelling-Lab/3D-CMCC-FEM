@@ -4,8 +4,8 @@ PHENOLOGY                0.1  //PHENOLOGY 0.1 = deciduous broadleaf, 0.2 = decid
 ALPHA                  0.057  //Canopy quantum efficiency (molC/molPAR) (0.057) Peltionemi et al., 2012, (0.05) from Williams 199, (0.056) Rotzer et al., 2010
 EPSILONgCMJ             0.69  //Light Use Efficiency  (gC/MJ)(used if ALPHA is not available) Peltionemi et al., 2012,
 GAMMA_LIGHT      0 //     0.0025  //Empirical parameter for Light modifiers 
-K                       0.65  //Extinction coefficient for absorption of PAR by canopy 0.71 for F. sylvatica Vitale et al., 2012, 0.5 from Williams 1996, 0.65 Hoffmann 1995, 0.45 Forrester et al., 2014
-ALBEDO                  0.13  //Albedo, 0.15 (varying from 0.13-0.17) from OTTO et al., BGS 2014
+K                  0.5 //     0.65  //Extinction coefficient for absorption of PAR by canopy 0.71 for F. sylvatica Vitale et al., 2012, 0.5 from Williams 1996, 0.65 Hoffmann 1995, 0.45 Forrester et al., 2014
+ALBEDO            0.15 //      0.13  //Albedo, 0.15 (varying from 0.13-0.17) from OTTO et al., BGS 2014
 INT_COEFF                0.3  //precip interception coefficient for F. sylvatica fom Tatarinov
 SLA_AVG0                  40  //Average Specific Leaf Area m^2/KgDM (juvenile) sunlit/shaded leaves for Fagus s. 45 Rötzer et al., (2010), 60  Adriaenssens et al., 2011; 27.8 to 48 from Pietsch 2005, 35 for Tatarinov et al., 2006
 SLA_AVG1                  20  //Average Specific Leaf Area m^2/KgDM (mature) sunlit/shaded leaves for Fagus s. 9 Rötzer et al., (2010), Holscher et al., 2004; 27.8 to 48 from Pietsch 2005, 35 for Tatarinov et al., 2006
@@ -21,7 +21,7 @@ TRHO                     100  //Age at which rho = (RHOMIN + RHOMAX )/2
 FORM_FACTOR            0.433  //Form factor Seidl et al., 2012
 COEFFCOND               0.08  //Define stomatal responsee to VPD in mbar see Pietsch et al., 2005
 BLCOND                  0.01  //Canopy Boundary Layer conductance see 0.01 for stomatal Pietsch et al., 2005
-MAXCOND         0.006 //0.005  //Maximum Stomatal Conductance in m/sec 0,005 for Tatarinov et al., 2006, 0.006 Pietsch, 0.003 Breuer et al., 2003
+MAXCOND        0.005 // 0.006 //0.005  //Maximum Stomatal Conductance in m/sec 0,005 for Tatarinov et al., 2006, 0.006 Pietsch, 0.003 Breuer et al., 2003
 CUTCOND                6e-05  //Cuticular conductance in m/sec for F sylvatica 0.000006 Tatarinov et al., 2006
 MAXAGE                   400  //Determines rate of "physiological decline" of forest
 RAGE                    0.95  //Relative Age to give fAGE = 0.5
@@ -43,8 +43,8 @@ FINE_ROOT_LEAF         0.545  //allocation new fine root C:new leaf (ratio) 1.4 
 STEM_LEAF                3.8  //allocation new stem C:new leaf (ratio) 3.8 pietsch - 1 see Mollicone et al 2002, 2.71 Tatarinov
 COARSE_ROOT_STEM       0.36   //allocation new coarse root C:new stem (ratio) 0.36 see Mollicone et al 2002 0.15 Tatarinov
 LIVE_TOTAL_WOOD         0.13  //new live C:new total wood (ratio) 0.15 for deciduous P. Thornton pers. comm. (about 13%), 0.154 from Pietsch et al., 2015 20% Proportion of living cells in trunks for F. sylvatica from Dufrene et al., 2005, 20.6% Ceschia etal 2002
-N_RUBISCO          0.25 //   0.162  //Fraction of leaf N in Rubisco (ratio) 0.1 Tatarinov, 0.162 Pietsch 0.253 Scartazza et al., 2015
-CN_LEAVES            20 //27  //CN of leaves (kgC/kgN) 27 for Tatarinov et al., 2006 20.3 for F. sylvatica from Mollicone et al., 2002, 19.52 ettore, 18.6 Campioli, 19.67 Guidolotti
+N_RUBISCO       0.162 // 0.20 // 0.25 // 0.162  //Fraction of leaf N in Rubisco (ratio) 0.1 Tatarinov, 0.162 Pietsch 0.253 Scartazza et al., 2015
+CN_LEAVES         27 //   20 //27  //CN of leaves (kgC/kgN) 27 for Tatarinov et al., 2006 20.3 for F. sylvatica from Mollicone et al., 2002, 19.52 ettore, 18.6 Campioli, 19.67 Guidolotti
 CN_FALLING_LEAVES         44  //CN of leaf litter (kgC/kgN) 38 for F. sylvatica from Mollicone et al., 2002, 
 CN_FINE_ROOTS             72  //CN of fine roots  (kgC/kgN) 72 for Tatarinov et al., 2006 112 for F. sylvatica from Mollicone et al., 2002, 38.28 ettore, 45 Campioli, 48 Hibbard et al., 2005
 CN_LIVEWOOD               70  //CN of live woods  (kgC/kgN) 70 for Tatarinov et al., 2006 48.2 for F. sylvatica from Mollicone et 92,5 for dbl Bond Lamberty 2006
