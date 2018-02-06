@@ -18,7 +18,7 @@
 //extern logger_t* g_debug_log;
 extern settings_t* g_settings;
 
-#define TEST 0 /* 0 old; 1 new */
+#define TEST_ACCLIMATION 1 /* no acclimation */
 
 void photosynthesis_FvCB (cell_t *const c, const int height, const int dbh, const int age, const int species, const meteo_daily_t *const meteo_daily, const meteo_annual_t *const meteo_annual)
 {
@@ -238,27 +238,33 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	//static double Ea_Rub        = ?????;  /* (kJ mol-1) Activation energy for Rubisco */
 
 	/* local variables */
-	double Kc;                     /* (Pa) Michaelis-Menten constant for carboxylase reaction */
-	double Ko;                     /* (Pa) Michaelis-Menten constant for oxygenase reaction */
-	double Vcmax25;                /* (umol/m2/s) Leaf-scale maximum carboxylation rate, 25°C */
-	double Vcmax;                  /* (umol/m2/s) Actual Leaf-scale maximum carboxylation rate */
-	double Jmax25;                 /* (umol/m2/s) Maximum rate of RuBP (ribulose-1,5-bisphosphate) regeneration, 25 °C */
-	double Jmax;                   /* (umol/m2/s) rate of RuBP (ribulose-1,5-bisphosphate) regeneration */
-	double J;                      /* (umol/m2/s) Current rate of RuBP (ribulose-1,5-bisphosphate) regeneration */
-	double pabsII;                 /* (molPAR/m2/s) PAR effectively absorbed by the phosystemII */
-	double gamma_star;             /* (Pa) CO2 compensation point without dark respiration */
-	double Ca;                     /* (Pa) atmospheric [CO2] pressure */
-	double O2;                     /* (Pa) intercellular O2 partial pressure, taken to be 0·21 (mol mol-1) see Medlyn et al., 1999 */
-	double Av;                     /* (umol/m2/s) carboxylation rate for limited assimilation (synonym of Vc) */
-	double Aj;                     /* (umol/m2/s) RuBP (ribulose-1,5-bisphosphate) regeneration limited assimilation */
-	double A;                      /* (umol/m2/s) final assimilation rate */
-	double Ci;                     /* (Pa) intercellular [CO2] */
-	double Rd;                     /* (umol/m2/s) (umol/m2/s) day leaf m. resp, proj. area basis */
-	double tleaf;                  /* (°C) leaf temperature (assumed equal to Tair) */
-	double tleaf_K;                /* (Kelvin) leaf temperature (assumed equal to Tair) */
-	double temp_corr;              /* temperature function */
-	double high_temp_corr;         /* high temperature inhibition */
+	double Kc;                            /* (Pa) Michaelis-Menten constant for carboxylase reaction */
+	double Ko;                            /* (Pa) Michaelis-Menten constant for oxygenase reaction */
+	double Vcmax25;                       /* (umol/m2/s) Leaf-scale maximum carboxylation rate, 25°C */
+	double Vcmax;                         /* (umol/m2/s) Actual Leaf-scale maximum carboxylation rate */
+	double Jmax25;                        /* (umol/m2/s) Maximum rate of RuBP (ribulose-1,5-bisphosphate) regeneration, 25 °C */
+	double Jmax25_accl;                   /* (umol/m2/s) Maximum rate of RuBP (ribulose-1,5-bisphosphate) regeneration, 25 °C (acclimated */
+	double Jmax;                          /* (umol/m2/s) rate of RuBP (ribulose-1,5-bisphosphate) regeneration */
+	double J;                             /* (umol/m2/s) Current rate of RuBP (ribulose-1,5-bisphosphate) regeneration */
+	double pabsII;                        /* (molPAR/m2/s) PAR effectively absorbed by the phosystemII */
+	double gamma_star;                    /* (Pa) CO2 compensation point without dark respiration */
+	double Ca;                            /* (Pa) atmospheric [CO2] pressure */
+	double O2;                            /* (Pa) intercellular O2 partial pressure, taken to be 0·21 (mol mol-1) see Medlyn et al., 1999 */
+	double Av;                            /* (umol/m2/s) carboxylation rate for limited assimilation (synonym of Vc) */
+	double Aj;                            /* (umol/m2/s) RuBP (ribulose-1,5-bisphosphate) regeneration limited assimilation */
+	double A;                             /* (umol/m2/s) final assimilation rate */
+	double Ci;                            /* (Pa) intercellular [CO2] */
+	double Rd;                            /* (umol/m2/s) (umol/m2/s) day leaf m. resp, proj. area basis */
+	double tleaf;                         /* (°C) leaf temperature (assumed equal to Tair) */
+	double tleaf_K;                       /* (Kelvin) leaf temperature (assumed equal to Tair) */
+	double tleaf10;                       /* (°C) 10 day mean leaf temperature (assumed equal to Tair) */
+	double tleaf10_K;                     /* (Kelvin) 10 day mean leaf temperature (assumed equal to Tair) */
+	double temp_corr;                     /* temperature function */
+	double high_temp_corr;                /* high temperature inhibition */
+	double S_V_accl;                      /* (JK-1 mol) Vmax temperature response parameter (acclimated) */
+	double S_J_accl;                      /* (JK-1 mol) electron-transport temperature response parameter (acclimated) */
 	double var_a, var_b, var_c, det;
+
 
 	//todo todo todo todo todo move in species.txt (this should be the only variable for all photosynthesis)
 	static double beta       = 1.67; /* Jmax:Vcmax note: in Medlyn et al., 2002*/
@@ -294,8 +300,11 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	O2  = (O2CONC / 100. ) * meteo_daily->air_pressure;
 
 	/* calculate leaf temperature */
-	tleaf   = meteo_daily->tday;
-	tleaf_K = meteo_daily->tday + TempAbs;
+	tleaf     = meteo_daily->tday;
+	tleaf_K   = meteo_daily->tday + TempAbs;
+
+	tleaf10   = meteo_daily->ten_day_avg_tday;
+	tleaf10_K = meteo_daily->ten_day_avg_tday + TempAbs;
 
 
 	/****************************** ARRHENIUS KINETICS *****************************/
@@ -356,18 +365,19 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 
 #endif
 
-			/*******************************************************************************/
+	/*******************************************************************************/
 
 #if 0
 
-			//not currently used
-			//note: modified version of the BIOME-BGC original code
-			//note: if accepted move to species.txt
+	//not currently used
+	//note: modified version of the BIOME-BGC original code
+	//note: if accepted move to species.txt
 
-			/* assign Vcmax from species.txt parameter value */
-			Vcmax = /*s->value[VCMAX]*/ test_Vcmax;
+	/* assign Vcmax from species.txt parameter value */
+	Vcmax = /*s->value[VCMAX]*/ test_Vcmax;
 
 #else
+	/*******************************************************************************/
 
 	/* calculate Vcmax from leaf nitrogen data and Rubisco activity see Harrison et al., 2009 PCE */
 
@@ -390,11 +400,21 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	/* temperature corrector factor */
 	temp_corr      = exp ( Ea_V * ( tleaf - 25. ) / ( Rgas * tleaf_K * 298.) );
 
+#if TEST_ACCLIMATION
+
+	/** acclimation for temperature as in Kattge and Knorr (2007) and CLM5.0 version **/
+	/* for Vcmax */
+	S_V_accl = 668.39 - 1.07 * ( tleaf10_K - TempAbs );
+
+	S_V      = S_V_accl;
+
+#endif
+
 	/* high temperature inhibition factor */
 	if ( tleaf > 0.)
 	{
 		high_temp_corr = ( 1. + exp ( ( S_V * 298. - H_V ) / ( Rgas * tleaf_K ) ) )
-						/ ( 1. + exp ( ( S_V * tleaf_K - H_V ) / ( Rgas * tleaf_K ) ) );
+								/ ( 1. + exp ( ( S_V * tleaf_K - H_V ) / ( Rgas * tleaf_K ) ) );
 	}
 	else
 	{
@@ -437,14 +457,36 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	/* compute Jmax at 25 °C Bonan et al., (2011) */
 	Jmax25         = beta * Vcmax25;
 
+#if TEST_ACCLIMATION
+
+	/** acclimation for temperature as in Kattge and Knorr (2007) and CLM5.0 version **/
+	/* acclimation for Jmax25 as in Kattge and Knorr (2007) */
+	Jmax25_accl    = (2.59 - 0.035 * ( tleaf10_K - TempAbs ) ) * Vcmax25;
+
+	Jmax25         = Jmax25_accl;
+
+#endif
+
+	/*******************************************************************************/
+
 	/* temperature corrector factor */
 	temp_corr      = exp ( Ea_J * ( tleaf - 25. ) / ( Rgas * tleaf_K * 298.) );
+
+#if TEST_ACCLIMATION
+
+	/** acclimation for temperature as in Kattge and Knorr (2007) and CLM5.0 version **/
+	/* for Jmax */
+	S_J_accl = 659.70 - 0.75 * ( tleaf10_K - TempAbs );
+
+	S_J      = S_J_accl;
+
+#endif
 
 	/* high temperature inhibition factor */
 	if ( tleaf > 0.)
 	{
 		high_temp_corr = ( 1. + exp ( ( S_J * 298. - H_J ) / ( Rgas * 298. ) ) )
-								/ ( 1. + exp ( ( S_J * tleaf_K - H_J ) / ( Rgas * tleaf_K ) ) );
+										/ ( 1. + exp ( ( S_J * tleaf_K - H_J ) / ( Rgas * tleaf_K ) ) );
 	}
 	else
 	{

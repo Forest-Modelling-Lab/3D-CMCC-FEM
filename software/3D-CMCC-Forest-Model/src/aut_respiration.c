@@ -330,7 +330,6 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 				s->value[STEM_MAINT_RESP]                              +
 				s->value[CROOT_MAINT_RESP]                             +
 				s->value[BRANCH_MAINT_RESP])                           ;
-		s->value[TOTAL_MAINT_RESP_tC] = (s->value[TOTAL_MAINT_RESP] / 1e6 * g_settings->sizeCell);
 
 		/***********************************************************************************************************************/
 
@@ -343,13 +342,12 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 	}
 	else
 	{
-		/* compute total maintenance respiration */
-		s->value[TOTAL_MAINT_RESP]    = s->value[GPP] * ( 1. - g_settings->Fixed_Aut_Resp_rate ) * (1. - GRPERC);
-		s->value[TOTAL_MAINT_RESP_tC] = s->value[TOTAL_MAINT_RESP] / 1e6 * g_settings->sizeCell;
+		/** compute total maintenance respiration as a fixed value of gross productivity **/
+		s->value[TOTAL_MAINT_RESP]     = s->value[GPP] * ( 1. - g_settings->Fixed_Aut_Resp_rate ) * ( 1. - GRPERC );
 	}
 
-	logger(g_debug_log, "daily total maintenance respiration (%s) = %g gC/m2/day\n",   s->name, s->value[TOTAL_MAINT_RESP]);
-	logger(g_debug_log, "daily total maintenance respiration (%s) = %g tC/cell/day\n", s->name, s->value[TOTAL_MAINT_RESP_tC]);
+	/* from gC/m2/day -> tC/cell/day */
+	s->value[TOTAL_MAINT_RESP_tC] = s->value[TOTAL_MAINT_RESP] / 1e6 * g_settings->sizeCell;
 
 	/* cumulate */
 	s->value[MONTHLY_TOTAL_MAINT_RESP] += s->value[TOTAL_MAINT_RESP];
@@ -361,13 +359,13 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 	c->annual_maint_resp               += s->value[TOTAL_MAINT_RESP];
 
 	/* check */
-	CHECK_CONDITION(s->value[DAILY_LEAF_MAINT_RESP],   <, ZERO );
-	CHECK_CONDITION(s->value[NIGHTLY_LEAF_MAINT_RESP], <, ZERO );
-	CHECK_CONDITION(s->value[FROOT_MAINT_RESP],        <, ZERO );
-	CHECK_CONDITION(s->value[STEM_MAINT_RESP],         <, ZERO );
-	CHECK_CONDITION(s->value[CROOT_MAINT_RESP],        <, ZERO );
-	CHECK_CONDITION(s->value[BRANCH_MAINT_RESP],       <, ZERO );
-	CHECK_CONDITION(s->value[TOTAL_MAINT_RESP],        <, ZERO );
+	CHECK_CONDITION(s->value[DAILY_LEAF_MAINT_RESP],   < , ZERO );
+	CHECK_CONDITION(s->value[NIGHTLY_LEAF_MAINT_RESP], < , ZERO );
+	CHECK_CONDITION(s->value[FROOT_MAINT_RESP],        < , ZERO );
+	CHECK_CONDITION(s->value[STEM_MAINT_RESP],         < , ZERO );
+	CHECK_CONDITION(s->value[CROOT_MAINT_RESP],        < , ZERO );
+	CHECK_CONDITION(s->value[BRANCH_MAINT_RESP],       < , ZERO );
+	CHECK_CONDITION(s->value[TOTAL_MAINT_RESP],        < , ZERO );
 }
 
 void growth_respiration(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species)
@@ -394,7 +392,6 @@ void growth_respiration(cell_t *const c, const int layer, const int height, cons
 				s->value[STEM_GROWTH_RESP]                        +
 				s->value[CROOT_GROWTH_RESP]                       +
 				s->value[BRANCH_GROWTH_RESP])                     ;
-		s->value[TOTAL_GROWTH_RESP_tC] = (s->value[TOTAL_GROWTH_RESP] / 1e6 * g_settings->sizeCell);
 
 		/* pools */
 		c->daily_leaf_growth_resp   += s->value[LEAF_GROWTH_RESP];
@@ -405,12 +402,13 @@ void growth_respiration(cell_t *const c, const int layer, const int height, cons
 	}
 	else
 	{
-		/* compute total growth respiration */
+		/** compute total growth respiration as a fixed value of gross productivity **/
 		s->value[TOTAL_GROWTH_RESP] = s->value[GPP] * ( 1. - g_settings->Fixed_Aut_Resp_rate ) * GRPERC;
 	}
 
-	logger(g_debug_log, "daily total growth respiration = %g gC/m2/day\n"  , s->value[TOTAL_GROWTH_RESP]);
-	logger(g_debug_log, "daily total growth respiration = %g tC/cell/day\n", s->value[TOTAL_GROWTH_RESP_tC]);
+	/* from gC/m2/day -> tC/cell/day */
+	s->value[TOTAL_GROWTH_RESP_tC] = (s->value[TOTAL_GROWTH_RESP] / 1e6 * g_settings->sizeCell);
+
 
 	/* cumulate */
 	s->value[MONTHLY_TOTAL_GROWTH_RESP] += s->value[TOTAL_GROWTH_RESP];

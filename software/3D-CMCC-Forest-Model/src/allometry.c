@@ -53,7 +53,6 @@ void crown_allometry (cell_t *const c, const int height, const int dbh, const in
 	/* check if current canopy cover has been reduced */
 	if ( s->counter[YOS] && ( old_crown_proj > s->value[CROWN_AREA_PROJ] ) )
 	{
-		//FIXME it basically rarely happens since crown area proj never descreases...
 		/******** self pruning ********/
 		self_pruning ( c, height, dbh, age, species, old_crown_proj, s->value[CROWN_AREA_PROJ] );
 	}
