@@ -68,7 +68,7 @@ time_list_output = c('annual','monthly','daily')
 
 # single or multiple simulations
 build_list<-c('Debug')        #, 'Release')
-site_list<-c("LeBray")
+site_list<-c("Hyytiala")
 esm_list <-c("2")             # ("1","2","3","4","5", "All")
 rcp_list <-c("8p5")           # ("0p0","2p6","4p5","6p0","8p5","All")
 man_list <-c("off")           # ("on",off","All")
