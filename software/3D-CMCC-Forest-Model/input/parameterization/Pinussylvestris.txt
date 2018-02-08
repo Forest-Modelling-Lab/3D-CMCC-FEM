@@ -1,90 +1,90 @@
 ﻿//Pinus sylvestris parameterization file
-LIGHT_TOL   3                 //4 = very shade intolerant 3 = shade intolerant 2 = shade tolerant 1 = very shade tolerant
-PHENOLOGY   1.2               //PHENOLOGY 0.1 = deciduous broadleaf, 0.2 = deciduous needle leaf, 1.1 = broad leaf evergreen, 1.2 = needle leaf evergreen 
-ALPHA           0.055         //Canopy quantum efficiency (molC/molPAR) for P. sylvestris Landsberg et al., 2005, 0.0545 Makela et al., 2006, 0.05 Xenakis et al., 2007, 0.051 Peltionemi et al., 2012, 0.049 Forrester et al., 2017
-EPSILONgCMJ 0.62              //Light Use Efficiency (gC/molPAR)(used if ALPHA is not available) for P. sylvestris Peltionemi et al 2012 
-GAMMA_LIGHT      0 //     0.005   // Empirical parameter for Light modifiers see Makela et al., 2008 
-K   0.51                      //Extinction coefficient for absorption of PAR by canopy for P. sylvestris Landsberg et al., 2005 or 0.51 from Pietsch, 0.495 Tatarinov, 0.38 Forrester et al., 2017
-ALBEDO  0.12 //0.093 //0.10                  //averaged for P. sylvestris 0.15 (or 0.12) Otto et al., 2014 BGS, 0.093 from Breuer et al., 2003
-INT_COEFF  0.3                //precip interception coefficient for P. sylvestris from Pietsch
-SLA_AVG0  14.7                //Average Specific Leaf Area m^2/KgDM (juvenile) sunlit/shaded leaves for P. sylvestris 14.7 Van Nevel 2015, 9.0 Landsberg et al., 2005, 13.0 from Pietsch 9.5 Tatarinov, 5.50 Mencuccini and Bonosi 2001
-SLA_AVG1  4.49                //Average Specific Leaf Area m^2/KgDM (mature) sunlit/shaded leaves for P. sylvestris Mencuccini & Bonosi 2001, Landsberg et al., 2005, 5.5 Mencuccini Bonosi 2003, 13.0 from Pietsch 9.5 Tatarinov, 5.50 Mencuccini and Bonosi 2001
-TSLA      10                  //Age at which SLA_AVG = (SLA_AVG1 + SLA_AVG0 )/2 Landsberg et al., 2005
-SLA_RATIO   2.52 //2                 //(DIM) ratio of shaded to sunlit projected SLA for P. sylvestris from Pietsch
-LAI_RATIO   2.6               //(DIM) all-sided to projected leaf area ratio for P. sylvestris from Pietsch
-FRACBB0 0.30                  //Branch and Bark fraction at age 0 for P. sylvestris, from Xenakis et al., 2008, 0.641 Vanninen 1995; 0.29 deducted for P. sylvestris from Yuste et al., 2005, 0.29 from Lehtonen et al., 2004, 0.71 from Xiao and Ceulemans 2004
-FRACBB1 0.1                   //Branch and Bark fraction for mature stands for P. sylvestris, from Xenakis et al., 2008, 0.29 deducted for P. sylvestris from Yuste et al., 2005, 0.29 from Lehtonen et al., 2004 For Eco Manag, 0.18 from Jenssen et al 1999, 0.77 from Xiao and Ceulemans 2004
-TBB 10                        //Age at which fracBB = (FRACBB0 + FRACBB1 )/ 2 for P. sylvestris, from Xenakis et al., 2008
-RHO0  0.40                    //Minimum Basic Density for young Trees t/m^3 for P. sylvestris Landsberg et al., 2005, 0.49 Seidl et al., 2012, 0.395 Forrester et al., 2017
-RHO1  0.39                    //Maximum Basic Density for young Trees t/m^3 for P. sylvestris Landsberg et al., 2005, 0.49 Seidl et al., 2012, 0.395 Forrester et al., 2017
-TRHO    4                     //Age at which rho = (RHO0 + RHO1 )/2
-FORM_FACTOR 0.435             //Form factor Seidl et al., 2012 
-COEFFCOND   0.05              //Define stomatal responsee to VPD in mbar for P. sylvestris Landsberg et al., 2005
-BLCOND  0.01                  //Canopy Boundary Layer conductance for P. sylvestris 0.009 from Pietsch, 0.01 for Tatarinov
-MAXCOND 0.00175 //.0025 //0.005                 //Maximum Stomatal Conductance in m/sec for P. sylvestris 0.001 from Pietsch, 0.0025 for Tatarinov, 0.005 Makela et al., 2006
-CUTCOND 0.000075              //Cuticul conductance in m/sec for P. sylvestris 0.00001 from Pietsch  0,00006 for Tatarinov, 0.000075 Makela et al., 2006
-MAXAGE  300                   //Determines rate of "physiological decline" of forest 500 for P. sylvestris Landsberg et al., 2005, 350 Forrester et al., 2017
-RAGE    0.95                  //Relative Age to give fAGE = 0.5 for P. sylvestris 0.95 Landsberg et al., 2005, Forrester et al., 2017
-NAGE    4                     //Power of relative Age in function for P. sylvestris Landsberg et al., 2005, Forrester et al., 2017
-GROWTHTMIN  -2   //-6         //Minimum temperature for growth for P. sylvestris 0 Leverenz et al., 1987 -2 Landsberg et al., 2005, -5.93 Makela et al., 2006, -5 Forrester et al., 2017
-GROWTHTMAX  35   //40         //Maximum temperature for growth for P. sylvestris 30 Leverenz et al., 1987; 25 Landsberg et al., 2005, 35 Forrester et al., 2017
-GROWTHTOPT  17.5 //20         //Optimum temperature for growth for P. sylvestris 20 Medlyn et al., 2002; 15 Landsberg et al., 2005, 15 Forrester et al., 2017
-GROWTHSTART 200               //average temperature for starting growth in °C 
-MINDAYLENGTH    0             //minimum day length for deciduous
-SWPOPEN -0.5                  //in KPa for P. sylvestris from Pietsch et al 2005, -0.5 for Tatarinov et al., 2006
-SWPCLOSE    -2.2              //in KPa for P. sylvestris from Pietsch et al 2005, -2.5 for Tatarinov et al., 2006
-OMEGA_CTEM  0.5               //ALLOCATION PARAMETER control the sensitivity of allocation to changes in water and light availability for Needlleleaf deciduous from Arora et al 2005
-S0CTEM  0.40                  //PARAMETER CONTROLLING ALLOCATION TO STEM/MINIMUM RATIO TO C TO STEM for Needleleaf deciduous from Arora et al 2005
-R0CTEM  0.30                  //PARAMETER CONTROLLING ALLOCATION TO ROOT/MINIMUM RATIO TO C TO ROOTS for Needleleaf deciduous from Arora et al 2005 
-F0CTEM  0.30                  //PARAMETER CONTROLLING ALLOCATION TO FOLIAGE/MINIMUM RATIO TO C TO STEM for Needleleaf deciduous from Arora et al 2005
-FRUIT_PERC  0.15              //fraction of NPP allocated for reproduction for P. sylvestris 0.15 from Xiao et al., 2003, 0.2 from Yuste et al., 2005, 
-CONES_LIFE_SPAN 3             //Life span for cones (yrs)
-FINE_ROOT_LEAF  0.523         //allocation new fine root C:new leaf (ratio) 0.523 for P. sylvestris from Pietsch 1 from Tatarinov
-STEM_LEAF   2.5               //allocation new stem C:new leaf (ratio) 2.5 for P. sylvestris from Pietsch 2.2 from Tatarinov
-COARSE_ROOT_STEM   0.29       //allocation new coarse root C:new stem (ratio) 0.29 for P. sylvestris from Pietsch 0.44 from Tatarinov
-LIVE_TOTAL_WOOD 0.076         //new live C:new total wood (ratio) for P. sylvestris 0.59 from Pietsch, 0.076 from Tatarinov
-N_RUBISCO           0.0457    //Fraction of leaf N in Rubisco (ratio) Tatarinov, 0.0457 Pietsch, 0.3 Warren et al., 2003
-CN_LEAVES   36                //CN of leaves (kgC/kgN) for P. sylvestris 33.1 from Pietsch 36 from Tatarinov
-CN_FALLING_LEAVES   122       //CN of leaf litter (kgC/kgN) for P. sylvestris from Pietsch, 122 from Tatarinov 
-CN_FINE_ROOTS   49.0          //CN of fine roots (kgC/kgN) for P. sylvestris 38 from Pietsch 49 from Tatarinov
-CN_LIVEWOOD     58.0          //CN of live woods (kgC/kgN)for P. sylvestris 50 from Pietsch 58 tatarinov
-CN_DEADWOOD     730           //CN of dead woods (kgC/kgN) for P. sylvestris 1400 from Pietsch 730 from tatarinov
-LEAF_LITT_LAB_FRAC   0.26     //leaf litter labile fraction for Pinus from Cenciala & Tatarinov 2006, 0.257 Pietsch 2005
-LEAF_LITT_CEL_FRAC   0.49     //leaf litter cellulose fraction for Pinus from Cenciala & Tatarinov 2006, 0.493 Pietsch 2005
-LEAF_LITT_LIGN_FRAC  0.25     //leaf litter lignin fraction for Pinus from Cenciala & Tatarinov 2006, 0.25 Pietsch 2005
-FROOT_LITT_LAB_FRAC  0.23     //fine root litter labile fraction for Pinus from Cenciala & Tatarinov 2006, 0.252 Pietsch 2005
-FROOT_LITT_CEL_FRAC  0.41     //fine root litter cellulose fraction for Pinus from Cenciala & Tatarinov 2006, 0.495 Pietsch 2005
-FROOT_LITT_LIGN_FRAC 0.36     //fine root litter lignin fraction for Pinus from Cenciala & Tatarinov 2006, 0.253 Pietsch 2005
-DEADWOOD_CEL_FRAC    0.70     //dead wood litter cellulose fraction for Pinus from Cenciala & Tatarinov 2006,0.71 Pietsch 2005
-DEADWOOD_LIGN_FRAC   0.30     //dead wood litter lignin fraction for Pinus from Cenciala & Tatarinov 2006, 0.29 Pietsch 2005
-BUD_BURST 0.3                 //days of bud burst at the beginning of growing season for P. sylvestris from Tatarinov
-LEAF_FALL_FRAC_GROWING  0     //proportions of the growing season of leaf fall 
-LEAF_FINEROOT_TURNOVER  0.25  //Average YEARLY leaves and fine root turnover rate for P. sylvestris 0.18 from Pietsch, 0.39 Tatarinov, 0.25 Makela et al., 1997
-LIVE_WOOD_TURNOVER  0.7       //Annual yearly live wood turnover rate for P. sylvestris from Pietsch
-DBHDCMAX  0.45                //Low Density for P. sylvestris 0.45 Condes & Sterba 2005, deducted from Rautianen and Stenberg 2005,  0.255 Seidl et al., 2012, 0.18 from Kalliovirta and Tokola 2005, 0.34 from Grote 2001
-DBHDCMIN  0.14                //High Density for P. sylvestris deducted from Rautianen and Stenberg 2005 from Ameztegui et al., 2012 0.14, 0.15 from Kalliovirta and Tokola 2005
-SAP_A   0.974                 //a value for Pinus sylvestris 0.7731 from Xiao & Ceulemans 2004, 3.119 from Verbeek et al., 2007, 0.974 summing up Xiao + Veerbeck 
-SAP_B   1.7979                //b value for Pinus sylvestris 1.9174 from Xiao & Ceulemans 2004 1.4544 from Verbeek et al., 2007, 1.7979 summing up Xiao + Veerbeck
-SAP_LEAF    1800              //sapwood_max leaf area ratio in pipe model for Pinus sylvestris 1480 Mencuccini Bonosi, 2001; 1020 Makela et al., 1995; from 1300 to 1800 Veerbeck et al., 2007, up to 2000 McDowell et al., 2002
-SAP_WRES    0.05              //Sapwood-Reserve biomass ratio used if no Wres data are available 0.11 for deciduous 0.05 for evergreen see Schwalm and Ek, 2004 Ecological Modelling
-STEMCONST_P 0.127             //a parameter for allometric equation 0.06552  E. Cienciala et al., 2006 For P. sylvestrisM; from Yuste et al 2005 0.1227, 0.084 from Xiao and Ceulemans, 0.7 Seidl et al., 2012, 0.027 Landsberg and Sands, 0.046 Landsberg et al., 2005
-STEMPOWER_P 2.30              //b parameter for allometric equation 2.50626 E. Cienciala et al., 2006 For P. sylvestris; from Yuste et al 2005 2.3272, 1.985 from Xiao and Ceulemans, 3.0 Seidl et al., 2012, 2.86 Landsberg and Sands, 2.6496 Landsberg et al., 2005
-CRA 32                        //for P. sylvestris 32 from Rupsys et al., 2010, 23.2674 Cannell 1982, 40.2947 Vaninen et al., 1996 (Pilli et al., 2016)
-CRB 0.04                      //for P. sylvestris 0.04 from Rupsys et al., 2010, 0.09025 Cannell 1982, 0.04163 Vaninen et al., 1996 (Pilli et al., 2016)
-CRC 0.99                      //for P. sylvestris 0.99 from Rupsys et al., 2010, 2.18562 Cannell 1982, 1.92688 Vaninen et al., 1996 (Pilli et al., 2016)
-HDMAX_A 148.1                 //A parameter for Height (m) to Base diameter (m) ratio MAX Seidl et al., 2012
-HDMAX_B -0.165                //B parameter for Height (m) to Base diameter (m) ratio MAX Seidl et al., 2012
-HDMIN_A 76.3                  //A parameter for Height (m) to Base diameter (m) ratio MIN Seidl et al., 2012
-HDMIN_B -0.129                //B parameter for Height (m) to Base diameter (m) ratio MIN Seidl et al., 2012
-CROWN_FORM_FACTOR 3           //Crown form factor (0 = cylinder, 1 = cone, 2 = sphere, 3 = ellipsoid)
-CROWN_A     0.7141            //Crown relationship with tree height for Pinus sylvestris deducted from Rautianinen and Stember 2005
-CROWN_B     0.8846            //Crown exponential with tree height for Pinus sylvestris  deducted from Rautianinen and Stember 2005
-MAXSEED 20000                 //numero massimo semi prodotti dalla pianta
-MASTSEED    5                 //ricorrenza anni di pasciona
-WEIGHTSEED  7                 //peso frutto in g 
-SEXAGE  30                    //Age at Sexual Maturity 
-GERMCAPACITY    0.70          //Geminability (Lischke H. & Loffler T. J.)
-ROTATION    140               //Forest Rotation for harvesting for P. sylvestris ISIMIP protocol
-THINNING    15                //Thinning regime for P. sylvestris ISIMIP protocol for P. sylvestris ISIMIP protocol
-THINNING_REGIME    1          //Thinning regime (0 = above, 1 = below) for P. sylvestris ISIMIP protocol
-THINNING_INTENSITY  20        //Thinning intensity (% of Basal Area/N-tree to remove) for P. sylvestris ISIMIP protocol
+LIGHT_TOL                   3 //4 = very shade intolerant 3 = shade intolerant 2 = shade tolerant 1 = very shade tolerant
+PHENOLOGY                 1.2 //PHENOLOGY 0.1 = deciduous broadleaf, 0.2 = deciduous needle leaf, 1.1 = broad leaf evergreen, 1.2 = needle leaf evergreen 
+ALPHA                   0.055 //Canopy quantum efficiency (molC/molPAR) for P. sylvestris Landsberg et al., 2005, 0.0545 Makela et al., 2006, 0.05 Xenakis et al., 2007, 0.051 Peltionemi et al., 2012, 0.049 Forrester et al., 2017
+EPSILONgCMJ              0.62 //Light Use Efficiency (gC/molPAR)(used if ALPHA is not available) for P. sylvestris Peltionemi et al 2012 
+GAMMA_LIGHT                 0 // Empirical parameter for Light modifiers see Makela et al., 2008 
+K                        0.51 //Extinction coefficient for absorption of PAR by canopy for P. sylvestris Landsberg et al., 2005 or 0.51 from Pietsch, 0.495 Tatarinov, 0.38 Forrester et al., 2017
+ALBEDO                   0.12 //averaged for P. sylvestris 0.15 (or 0.12) Otto et al., 2014 BGS, 0.093 from Breuer et al., 2003
+INT_COEFF                 0.3 //precip interception coefficient for P. sylvestris from Pietsch
+SLA_AVG0                 14.7 //Average Specific Leaf Area m^2/KgDM (juvenile) sunlit/shaded leaves for P. sylvestris 14.7 Van Nevel 2015, 9.0 Landsberg et al., 2005, 13.0 from Pietsch 9.5 Tatarinov, 5.50 Mencuccini and Bonosi 2001
+SLA_AVG1                 4.49 //Average Specific Leaf Area m^2/KgDM (mature) sunlit/shaded leaves for P. sylvestris Mencuccini & Bonosi 2001, Landsberg et al., 2005, 5.5 Mencuccini Bonosi 2003, 13.0 from Pietsch 9.5 Tatarinov, 5.50 Mencuccini and Bonosi 2001
+TSLA                       10 //Age at which SLA_AVG = (SLA_AVG1 + SLA_AVG0 )/2 Landsberg et al., 2005
+SLA_RATIO                2.52 //2   //(DIM) ratio of shaded to sunlit projected SLA for P. sylvestris from Pietsch
+LAI_RATIO                 2.6 //(DIM) all-sided to projected leaf area ratio for P. sylvestris from Pietsch
+FRACBB0                  0.30 //Branch and Bark fraction at age 0 for P. sylvestris, from Xenakis et al., 2008, 0.641 Vanninen 1995; 0.29 deducted for P. sylvestris from Yuste et al., 2005, 0.29 from Lehtonen et al., 2004, 0.71 from Xiao and Ceulemans 2004
+FRACBB1                   0.1 //Branch and Bark fraction for mature stands for P. sylvestris, from Xenakis et al., 2008, 0.29 deducted for P. sylvestris from Yuste et al., 2005, 0.29 from Lehtonen et al., 2004 For Eco Manag, 0.18 from Jenssen et al 1999, 0.77 from Xiao and Ceulemans 2004
+TBB                        10 //Age at which fracBB = (FRACBB0 + FRACBB1 )/ 2 for P. sylvestris, from Xenakis et al., 2008
+RHO0                     0.40 //Minimum Basic Density for young Trees t/m^3 for P. sylvestris Landsberg et al., 2005, 0.49 Seidl et al., 2012, 0.395 Forrester et al., 2017
+RHO1                     0.39 //Maximum Basic Density for young Trees t/m^3 for P. sylvestris Landsberg et al., 2005, 0.49 Seidl et al., 2012, 0.395 Forrester et al., 2017
+TRHO                        4 //Age at which rho = (RHO0 + RHO1 )/2
+FORM_FACTOR             0.435 //Form factor Seidl et al., 2012 
+COEFFCOND                0.05 //Define stomatal responsee to VPD in mbar for P. sylvestris Landsberg et al., 2005
+BLCOND                   0.01 //Canopy Boundary Layer conductance for P. sylvestris 0.009 from Pietsch, 0.01 for Tatarinov
+MAXCOND           0.0025 //    0.00175 //Maximum Stomatal Conductance in m/sec for P. sylvestris 0.001 from Pietsch, 0.0025 for Tatarinov, 0.005 Makela et al., 2006
+CUTCOND              0.000075 //Cuticul conductance in m/sec for P. sylvestris 0.00001 from Pietsch  0,00006 for Tatarinov, 0.000075 Makela et al., 2006
+MAXAGE                    300 //Determines rate of "physiological decline" of forest 500 for P. sylvestris Landsberg et al., 2005, 350 Forrester et al., 2017
+RAGE                     0.95 //Relative Age to give fAGE = 0.5 for P. sylvestris 0.95 Landsberg et al., 2005, Forrester et al., 2017
+NAGE                        4 //Power of relative Age in function for P. sylvestris Landsberg et al., 2005, Forrester et al., 2017
+GROWTHTMIN                 -2 //-6         //Minimum temperature for growth for P. sylvestris 0 Leverenz et al., 1987 -2 Landsberg et al., 2005, -5.93 Makela et al., 2006, -5 Forrester et al., 2017
+GROWTHTMAX                 35 //40         //Maximum temperature for growth for P. sylvestris 30 Leverenz et al., 1987; 25 Landsberg et al., 2005, 35 Forrester et al., 2017
+GROWTHTOPT               17.5 //20         //Optimum temperature for growth for P. sylvestris 20 Medlyn et al., 2002; 15 Landsberg et al., 2005, 15 Forrester et al., 2017
+GROWTHSTART               200 //average temperature for starting growth in °C 
+MINDAYLENGTH                0 //minimum day length for deciduous
+SWPOPEN                  -0.5 //in KPa for P. sylvestris from Pietsch et al 2005, -0.5 for Tatarinov et al., 2006
+SWPCLOSE                 -2.2 //in KPa for P. sylvestris from Pietsch et al 2005, -2.5 for Tatarinov et al., 2006
+OMEGA_CTEM                0.5 //ALLOCATION PARAMETER control the sensitivity of allocation to changes in water and light availability for Needlleleaf deciduous from Arora et al 2005
+S0CTEM                   0.15 //PARAMETER CONTROLLING ALLOCATION TO STEM/MINIMUM RATIO TO C TO STEM for Needleleaf deciduous from Arora et al 2005
+R0CTEM                   0.55 //PARAMETER CONTROLLING ALLOCATION TO ROOT/MINIMUM RATIO TO C TO ROOTS for Needleleaf deciduous from Arora et al 2005 
+F0CTEM                   0.30 //PARAMETER CONTROLLING ALLOCATION TO FOLIAGE/MINIMUM RATIO TO C TO STEM for Needleleaf deciduous from Arora et al 2005
+FRUIT_PERC                0.2 // 0.15   //fraction of NPP allocated for reproduction for P. sylvestris 0.15 from Xiao et al., 2003, 0.2 from Yuste et al., 2005, 
+CONES_LIFE_SPAN             3 //Life span for cones (yrs)
+FINE_ROOT_LEAF              1 // 0.523  //allocation new fine root C:new leaf (ratio) 0.523 for P. sylvestris from Pietsch 1 from Tatarinov
+STEM_LEAF                 2.5 //allocation new stem C:new leaf (ratio) 2.5 for P. sylvestris from Pietsch 2.2 from Tatarinov
+COARSE_ROOT_STEM         0.29 //allocation new coarse root C:new stem (ratio) 0.29 for P. sylvestris from Pietsch 0.44 from Tatarinov
+LIVE_TOTAL_WOOD         0.076 //new live C:new total wood (ratio) for P. sylvestris 0.59 from Pietsch, 0.076 from Tatarinov
+N_RUBISCO              0.055  //Fraction of leaf N in Rubisco (ratio) Tatarinov, 0.0457 Pietsch, 0.3 Warren et al., 2003
+CN_LEAVES                  36 //CN of leaves (kgC/kgN) for P. sylvestris 33.1 from Pietsch 36 from Tatarinov
+CN_FALLING_LEAVES         122 //CN of leaf litter (kgC/kgN) for P. sylvestris from Pietsch, 122 from Tatarinov 
+CN_FINE_ROOTS            49.0 //CN of fine roots (kgC/kgN) for P. sylvestris 38 from Pietsch 49 from Tatarinov
+CN_LIVEWOOD              58.0 //CN of live woods (kgC/kgN)for P. sylvestris 50 from Pietsch 58 tatarinov
+CN_DEADWOOD               730 //CN of dead woods (kgC/kgN) for P. sylvestris 1400 from Pietsch 730 from tatarinov
+LEAF_LITT_LAB_FRAC       0.26 //leaf litter labile fraction for Pinus from Cenciala & Tatarinov 2006, 0.257 Pietsch 2005
+LEAF_LITT_CEL_FRAC       0.49 //leaf litter cellulose fraction for Pinus from Cenciala & Tatarinov 2006, 0.493 Pietsch 2005
+LEAF_LITT_LIGN_FRAC      0.25 //leaf litter lignin fraction for Pinus from Cenciala & Tatarinov 2006, 0.25 Pietsch 2005
+FROOT_LITT_LAB_FRAC      0.23 //fine root litter labile fraction for Pinus from Cenciala & Tatarinov 2006, 0.252 Pietsch 2005
+FROOT_LITT_CEL_FRAC      0.41 //fine root litter cellulose fraction for Pinus from Cenciala & Tatarinov 2006, 0.495 Pietsch 2005
+FROOT_LITT_LIGN_FRAC     0.36 //fine root litter lignin fraction for Pinus from Cenciala & Tatarinov 2006, 0.253 Pietsch 2005
+DEADWOOD_CEL_FRAC        0.70 //dead wood litter cellulose fraction for Pinus from Cenciala & Tatarinov 2006,0.71 Pietsch 2005
+DEADWOOD_LIGN_FRAC       0.30 //dead wood litter lignin fraction for Pinus from Cenciala & Tatarinov 2006, 0.29 Pietsch 2005
+BUD_BURST                 0.3 //days of bud burst at the beginning of growing season for P. sylvestris from Tatarinov
+LEAF_FALL_FRAC_GROWING      0 //proportions of the growing season of leaf fall 
+LEAF_FINEROOT_TURNOVER   0.25 //Average YEARLY leaves and fine root turnover rate for P. sylvestris 0.18 from Pietsch, 0.39 Tatarinov, 0.25 Makela et al., 1997
+LIVE_WOOD_TURNOVER        0.7 //Annual yearly live wood turnover rate for P. sylvestris from Pietsch
+DBHDCMAX                 0.45 //Low Density for P. sylvestris 0.45 Condes & Sterba 2005, deducted from Rautianen and Stenberg 2005,  0.255 Seidl et al., 2012, 0.18 from Kalliovirta and Tokola 2005, 0.34 from Grote 2001
+DBHDCMIN                 0.14 //High Density for P. sylvestris deducted from Rautianen and Stenberg 2005 from Ameztegui et al., 2012 0.14, 0.15 from Kalliovirta and Tokola 2005
+SAP_A                   0.974 //a value for Pinus sylvestris 0.7731 from Xiao & Ceulemans 2004, 3.119 from Verbeek et al., 2007, 0.974 summing up Xiao + Veerbeck 
+SAP_B                  1.7979 //b value for Pinus sylvestris 1.9174 from Xiao & Ceulemans 2004 1.4544 from Verbeek et al., 2007, 1.7979 summing up Xiao + Veerbeck
+SAP_LEAF          1480 //   1020 //    1800 //sapwood_max leaf area ratio in pipe model for Pinus sylvestris 1480 Mencuccini Bonosi, 2001; 1020 Makela et al., 1995; from 1300 to 1800 Veerbeck et al., 2007, up to 2000 McDowell et al., 2002
+SAP_WRES                 0.05 //Sapwood-Reserve biomass ratio used if no Wres data are available 0.11 for deciduous 0.05 for evergreen see Schwalm and Ek, 2004 Ecological Modelling
+STEMCONST_P             0.127 //a parameter for allometric equation 0.06552  E. Cienciala et al., 2006 For P. sylvestrisM; from Yuste et al 2005 0.1227, 0.084 from Xiao and Ceulemans, 0.7 Seidl et al., 2012, 0.027 Landsberg and Sands, 0.046 Landsberg et al., 2005
+STEMPOWER_P              2.30 //b parameter for allometric equation 2.50626 E. Cienciala et al., 2006 For P. sylvestris; from Yuste et al 2005 2.3272, 1.985 from Xiao and Ceulemans, 3.0 Seidl et al., 2012, 2.86 Landsberg and Sands, 2.6496 Landsberg et al., 2005
+CRA                        32 //for P. sylvestris 32 from Rupsys et al., 2010, 23.2674 Cannell 1982, 40.2947 Vaninen et al., 1996 (Pilli et al., 2016)
+CRB                      0.04 //for P. sylvestris 0.04 from Rupsys et al., 2010, 0.09025 Cannell 1982, 0.04163 Vaninen et al., 1996 (Pilli et al., 2016)
+CRC                      0.99 //for P. sylvestris 0.99 from Rupsys et al., 2010, 2.18562 Cannell 1982, 1.92688 Vaninen et al., 1996 (Pilli et al., 2016)
+HDMAX_A                 148.1 //A parameter for Height (m) to Base diameter (m) ratio MAX Seidl et al., 2012
+HDMAX_B                -0.165 //B parameter for Height (m) to Base diameter (m) ratio MAX Seidl et al., 2012
+HDMIN_A                  76.3 //A parameter for Height (m) to Base diameter (m) ratio MIN Seidl et al., 2012
+HDMIN_B                -0.129 //B parameter for Height (m) to Base diameter (m) ratio MIN Seidl et al., 2012
+CROWN_FORM_FACTOR           3 //Crown form factor (0 = cylinder, 1 = cone, 2 = sphere, 3 = ellipsoid)
+CROWN_A                0.7141 //Crown relationship with tree height for Pinus sylvestris deducted from Rautianinen and Stember 2005
+CROWN_B                0.8846 //Crown exponential with tree height for Pinus sylvestris  deducted from Rautianinen and Stember 2005
+MAXSEED                 20000 //numero massimo semi prodotti dalla pianta
+MASTSEED                    5 //ricorrenza anni di pasciona
+WEIGHTSEED                  7 //peso frutto in g 
+SEXAGE                     30 //Age at Sexual Maturity 
+GERMCAPACITY             0.70 //Geminability (Lischke H. & Loffler T. J.)
+ROTATION                  140 //Forest Rotation for harvesting for P. sylvestris ISIMIP protocol
+THINNING                   15 //Thinning regime for P. sylvestris ISIMIP protocol for P. sylvestris ISIMIP protocol
+THINNING_REGIME             1 //Thinning regime (0 = above, 1 = below) for P. sylvestris ISIMIP protocol
+THINNING_INTENSITY         20 //Thinning intensity (% of Basal Area/N-tree to remove) for P. sylvestris ISIMIP protocol

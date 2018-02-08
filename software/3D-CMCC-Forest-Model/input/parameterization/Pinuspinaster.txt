@@ -23,7 +23,7 @@ COEFFCOND    0.05             //Define stomatal responsee to VPD in mbar
 BLCOND      0.01 //0.009      //Canopy Boundary Layer conductance for P. sylvestris 0.009 from Pietsch, 0.01 for Tatarinov
 MAXCOND 0.006 //0.005         //Maximum Stomatal Conductance in m/sec for P. pinaster from 0.0014 to 0.0046 David et al., 1997 Oecologia
 CUTCOND 0.000075 //0.00006    //Cuticul conductance in m/sec for P. sylvestris 0.00001 from Pietsch  0,00006 for Tatarinov, 0.000075 Makela et al., 2006
-MAXAGE            300 // 200  //Determines rate of "physiological decline" of forest for P. nigra Navarro-Cerrillo 2016
+MAXAGE               150 //    200  //Determines rate of "physiological decline" of forest for P. nigra Navarro-Cerrillo 2016
 RAGE    0.95                  //Relative Age to give fAGE = 0.5 for P. nigra Navarro-Cerrillo 2016
 NAGE    4                     //Power of relative Age in function for P. nigra Navarro-Cerrillo 2016
 GROWTHTMIN	0                 //Minimum temperature for growth 
@@ -37,7 +37,7 @@ OMEGA_CTEM  0.5               //ALLOCATION PARAMETER control the sensitivity of 
 S0CTEM  0.45                  //PARAMETER CONTROLLING ALLOCATION TO STEM/MINIMUM RATIO TO C TO STEM for Needleleaf deciduous from Arora et al 2005
 R0CTEM  0.25                  //PARAMETER CONTROLLING ALLOCATION TO ROOT/MINIMUM RATIO TO C TO ROOTS for Needleleaf deciduous from Arora et al 2005 
 F0CTEM  0.30                  //PARAMETER CONTROLLING ALLOCATION TO FOLIAGE/MINIMUM RATIO TO C TO STEM for Needleleaf deciduous from Arora et al 2005
-FRUIT_PERC  0.15              //fraction of NPP allocated for reproduction for P. sylvestris 0.15 from Xiao et al., 2003, 0.2 from Yuste et al., 2005, 
+FRUIT_PERC  0.2              //fraction of NPP allocated for reproduction for P. sylvestris 0.15 from Xiao et al., 2003, 0.2 from Yuste et al., 2005, 
 CONES_LIFE_SPAN 3             //Life span for cones (yrs)
 FINE_ROOT_LEAF  0.523         //allocation new fine root C:new leaf (ratio) 0.523 for P. sylvestris from Pietsch 1 from Tatarinov
 STEM_LEAF   2.5               //allocation new stem C:new leaf (ratio) 2.5 for P. sylvestris from Pietsch 2.2 from Tatarinov

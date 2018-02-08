@@ -34,12 +34,12 @@ MINDAYLENGTH              12  //minimum day length for fagus from ettore, 12 thr
 SWPOPEN                -0.34  //Leaf water potential: start of reduction for Fagus sylvatica -0.6 Mollicone et al., 2002, -0.34 Tatarinov et al., 2006
 SWPCLOSE                -2.2  //Leaf water potential: complete reduction for Fagus sylvatica -2.3 Mollicone et al., 2002, -2.2 Tatarinov et al., 2006
 OMEGA_CTEM               0.8  //ALLOCATION PARAMETER control the sensitivity of allocation to changes in water and light availability
-S0CTEM                  0.35  //PARAMETER CONTROLLING ALLOCATION TO STEM/MINIMUM RATIO TO C TO STEM
-R0CTEM                  0.35  //PARAMETER CONTROLLING ALLOCATION TO ROOT/MINIMUM RATIO TO C TO ROOTS
-F0CTEM                  0.30  //PARAMETER CONTROLLING ALLOCATION TO LEAVES
-FRUIT_PERC             0.025  //fraction of annual NPP allocated for reproduction see 0.05 Fernandez-Martinez et al., 2016
+S0CTEM                   0.10 //0.35 //PARAMETER CONTROLLING ALLOCATION TO STEM/MINIMUM RATIO TO C TO STEM see Arora and Boer 2005
+R0CTEM                   0.55 //0.35 //PARAMETER CONTROLLING ALLOCATION TO ROOT/MINIMUM RATIO TO C TO ROOTS see Arora and Boer 2005
+F0CTEM                   0.35 //PARAMETER CONTROLLING ALLOCATION TO LEAVES see Arora and Boer 2005
+FRUIT_PERC               0.2  //0.025 //fraction of NPP allocated for reproduction during the prescribed seasonal period 
 CONES_LIFE_SPAN            0  //Life span for cones (yr)
-FINE_ROOT_LEAF         0.545  //allocation new fine root C:new leaf (ratio) 1.4 see Mollicone et al 2002, 0.545 see Pietsch et al 2005, 1.1 Tatarinov, 1.2 Hibbard et al., 2005
+FINE_ROOT_LEAF         1.2 //0.545  //allocation new fine root C:new leaf (ratio) 1.4 see Mollicone et al 2002, 0.545 see Pietsch et al 2005, 1.1 Tatarinov, 1.2 Hibbard et al., 2005
 STEM_LEAF                3.8  //allocation new stem C:new leaf (ratio) 3.8 pietsch - 1 see Mollicone et al 2002, 2.71 Tatarinov
 COARSE_ROOT_STEM       0.36   //allocation new coarse root C:new stem (ratio) 0.36 see Mollicone et al 2002 0.15 Tatarinov
 LIVE_TOTAL_WOOD         0.13  //new live C:new total wood (ratio) 0.15 for deciduous P. Thornton pers. comm. (about 13%), 0.154 from Pietsch et al., 2015 20% Proportion of living cells in trunks for F. sylvatica from Dufrene et al., 2005, 20.6% Ceschia etal 2002
@@ -63,9 +63,9 @@ LEAF_FINEROOT_TURNOVER     1  //Average yearly fine root turnover rate Rasse et 
 LIVE_WOOD_TURNOVER       0.7  //Annual yearly live wood turnover rate 
 DBHDCMAX                0.50  //Low Density Condes & Sterba 2005
 DBHDCMIN                0.14  //High Density from ettore
-SAP_A                   0.778 //a value 0.674 from Kostner, 0.778 Gebauer et al., 2008, for Fagus sylvatica
-SAP_B                   1.917 //b value 1.992 from Kostner, 1.917 Gebauer et al., 2008,for Fagus sylvatica
-SAP_LEAF                 4040 //leaf area/sapwood max ratio in pipe model 5400 McDowell et al 2002, 1850 from Williams 1996, 3310. 3410 Bartelink 1997, 1998 , 2100 from Kostner, 3310 from ettore
+SAP_A                  0.778  //a value 0.674 from Kostner, 0.778 Gebauer et al., 2008, for Fagus sylvatica
+SAP_B                  1.917  //b value 1.992 from Kostner, 1.917 Gebauer et al., 2008,for Fagus sylvatica
+SAP_LEAF             5400 //   4040  //leaf area/sapwood max ratio in pipe model 5400 McDowell et al 2002, 1850 from Williams 1996, 3310. 3410 Bartelink 1997, 1998 , 2100 from Kostner, 3310 from ettore
 SAP_WRES                0.11  //Sapwood-Reserve biomass ratio gTNC/100gDM 0.043 in January for fagus see Barbaroux 2002 0.11 for deciduous 0.05 for evergreen see Schwalm and Ek, 2004 Ecological Modelling
 STEMCONST_P           0.2837  //a parameter for F. sylvatica for allometric equation from ettore, 0.70 Seidl et al., 2012
 STEMPOWER_P            2.134  //b parameter for F. sylvatica for allometric equation from ettore, 3.00 Seidl et al., 2012

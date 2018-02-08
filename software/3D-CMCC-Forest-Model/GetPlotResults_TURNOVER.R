@@ -36,7 +36,7 @@ file_db_corrisp = paste0(getwd(),'/stand_mod_vs_stand_profound.txt')
 # file_stand = 'c:/Users/CMCC/Desktop/profound/extract2/STAND.csv'
 file_stand = paste0(getwd(),'/STAND.csv')
 
-model<-"3D-CMCC-FEM vs. BGC"
+model<-"3D-CMCC-BGC"
 version="5.4"
 
 print("*******************************************************")
@@ -66,11 +66,11 @@ time_list_output = c('annual','monthly','daily')
 
 # single or multiple simulations
 build_list<-c('Debug')        #, 'Release')
-site_list<-c("Bily_Kriz")
-esm_list <-c("3",'2')             # ("1","2","3","4","5", "All")
-rcp_list <-c("0p0","8p5")           # ("0p0","2p6","4p5","6p0","8p5","All")
-man_list <-c("off")           # ("on",off","All")
-co2_list <-c("on")            # ("on",off","All")
+site_list<-c("All")
+esm_list <-c("All")             # ("1","2","3","4","5", "All")
+rcp_list <-c("All")           # ("0p0","2p6","4p5","6p0","8p5","All")
+man_list <-c("All")           # ("on",off","All")
+co2_list <-c("All")            # ("on",off","All")
 protocol_list<-c("FT")        # ("2A","2B","All") 
 local_list<-c('on')          # ("on","off") to include local simulation of not under FT protocol
 climate_off_list<-c('off')    # ("on",off","All") for climate off and co2 on
@@ -83,7 +83,7 @@ turnover_list = seq(0.7,1,by = 0.1)
 output_folder = paste0("TURNOVER_TEST_",co2_list)
 
 if ( length(which(site_list == 'All')) > 0 ) {
-  site_list = c("Soroe","Hyytiala","Bily_Kriz","LeBray")#,"Solling_beech","Peitz","Solling_spruce")
+  site_list = c("Soroe","Hyytiala","Bily_Kriz","LeBray","Solling_beech","Peitz","Solling_spruce")
 }
 if ( length(which(esm_list == 'All')) > 0 ) {
   esm_list = c("1","2","3","4","5","6","7","8","9","10")

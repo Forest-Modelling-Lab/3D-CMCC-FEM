@@ -65,13 +65,13 @@ time_list_output = c('annual','monthly','daily')
 # single or multiple simulations
 build_list<-c('Debug')#, 'Release')
 site_list<-c("LeBray")
-esm_list <-c("All")# ("1","2","3","4","5", "All")
-rcp_list <-c("All")# ("0p0","2p6","4p5","6p0","8p5","All")
+esm_list <-c("3")# ("1","2","3","4","5", "All")
+rcp_list <-c("0p0")# ("0p0","2p6","4p5","6p0","8p5","All")
 man_list <-c("off")# ("on",'off', "All")
-co2_list <-c("All")# , "on",off", "All")
+co2_list <-c("on")# , "on",off", "All")
 protocol_list<-c("LOCAL")# ("2A","2B", "All") 
-local_list<-c('on')
-climate_off_list<-c('on') # for climate off and co2 on
+local_list<-c('off')
+climate_off_list<-c('off') # for climate off and co2 on
 
 time_list = c('annual')
 
@@ -79,7 +79,7 @@ time_list = c('annual')
 output_folder = paste0("Test_output_Rstudio_ct_photosynthesis_TEST_", protocol_list,'_',co2_list)
 
 if ( length(which(site_list == 'All')) > 0 ) {
-  site_list = c("Soroe","Hyytiala","Bily_Kriz","LeBray")#,"Solling_beech","Peitz","Solling_spruce")
+  site_list = c("Soroe","Hyytiala","Bily_Kriz","LeBray","Solling_beech","Peitz","Solling_spruce")
 }
 if ( length(which(esm_list == 'All')) > 0 ) {
   esm_list = c("1","2","3","4","5","6","7","8","9","10")
@@ -307,17 +307,17 @@ if ( run_model == 1 ) {
 
           
           
-          if ( sum(grepl('^Benchmark',basename(all_out_files))) == 0  ) {
+          if ( sum(grepl('^Bench_',basename(all_out_files))) == 0  ) {
             pos = 1
             if( file.exists(paste0(getwd(),'/',dirname(all_out_files[pos]),'/',basename(all_out_files[pos]))) ) {
               file.rename(
                 paste0(getwd(),'/',dirname(all_out_files[pos]),'/',basename(all_out_files[pos])),
-                paste0(getwd(),'/',dirname(all_out_files[pos]),'/','Benchmark_',basename(all_out_files[pos]))
+                paste0(getwd(),'/',dirname(all_out_files[pos]),'/','Bench_',basename(all_out_files[pos]))
               )
-              all_out_files2 = c(all_out_files2,paste0(dirname(all_out_files[pos]),'/','Benchmark_',basename(all_out_files[pos])))
+              all_out_files2 = c(all_out_files2,paste0(dirname(all_out_files[pos]),'/','Bench_',basename(all_out_files[pos])))
             }
           } else {
-            pos = grep('^Benchmark',basename(all_out_files))
+            pos = grep('^Bench_',basename(all_out_files))
             all_out_files2 = c(all_out_files2,all_out_files[pos])
           }
           all_out_files = all_out_files[-1*pos]
