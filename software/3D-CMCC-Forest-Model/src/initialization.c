@@ -74,7 +74,6 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 	/* compute age-related specific leaf area */
 	specific_leaf_area ( a, s);
 
-
 	/**************************************************************************************************/
 
 	/* note: special case, model recomputes tree height based on its parameterizations to avoid differences between

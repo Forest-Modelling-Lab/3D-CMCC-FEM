@@ -124,6 +124,7 @@ enum {
 	DBHDC_EFF,                           /* Crown Projected Diameter from DBH in function of density*/
 	DENMAX,                              /* (trees/cell) maximum stand density  */
 	DENMIN,                              /* (trees/cell) minimum stand density */
+	MAX_LAYER_COVER,                     /* (fraction) maximum fraction of layer covered */
 	CROWN_RADIUS,                        /* (m) Crown Projected Radius */
 	CROWN_DIAMETER,                      /* (m) Crown Projected Diameter */
 	CROWN_HEIGHT,                        /* (m) Crown height */

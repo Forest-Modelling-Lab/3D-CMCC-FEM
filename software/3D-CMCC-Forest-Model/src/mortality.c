@@ -138,7 +138,7 @@ void self_thinning_mortality (cell_t *const c, const int layer, const int year)
 					livetree = 0;
 
 					/* check */
-					CHECK_CONDITION( s->value[CANOPY_COVER_PROJ] ,  > , g_settings->max_layer_cover + eps );
+					CHECK_CONDITION( s->value[CANOPY_COVER_PROJ] ,  > , s->value[CANOPY_COVER_PROJ] + eps );
 				}
 			}
 		}

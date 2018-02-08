@@ -1,5 +1,5 @@
 //parameterization file for Pinus pinaster
-LIGHT_TOL	3                 //4 = very shade intolerant (cc = 90%), 3 = shade intolerant (cc = 100%), 2 = shade tolerant (cc = 110%), 1 = very shade tolerant (cc = 120%)
+LIGHT_TOL	4                 //4 = very shade intolerant (cc = 90%), 3 = shade intolerant (cc = 100%), 2 = shade tolerant (cc = 110%), 1 = very shade tolerant (cc = 120%)
 PHENOLOGY	1.2               //PHENOLOGY 0.1 = deciduous broadleaf, 0.2 = deciduous needle leaf, 1.1 = broad leaf evergreen, 1.2 = needle leaf evergreen
 ALPHA          0.048          //Canopy quantum efficiency (molC/molPAR) for P. pinaster (LeBray site) Peltionemi et al., 2012
 EPSILONgCMJ 0.58              //Light Use Efficiency (gC/molPAR)(used if ALPHA is not available) for P. pinaster (LeBray site) Peltionemi et al., 2012

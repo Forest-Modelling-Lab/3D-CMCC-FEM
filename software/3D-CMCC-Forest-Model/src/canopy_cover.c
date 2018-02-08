@@ -57,7 +57,7 @@ void dbhdc_function (cell_t *const c, const int layer, const int height, const i
 	previous_dbhdc_eff  = s->value[DBHDC_EFF];
 	logger(g_debug_log,"-DBHDC (old)         = %f\n", s->value[DBHDC_EFF]);
 
-	temp_crown_area     = ( g_settings->max_layer_cover * g_settings->sizeCell ) / ( c->tree_layers[layer].layer_density * g_settings->sizeCell );
+	temp_crown_area     = ( s->value[MAX_LAYER_COVER] * g_settings->sizeCell ) / ( c->tree_layers[layer].layer_density * g_settings->sizeCell );
 	logger(g_debug_log,"-temp_crown_area     = %f\n", temp_crown_area);
 
 
@@ -130,7 +130,7 @@ void canopy_cover (cell_t *const c, const int height, const int dbh, const int a
 	logger(g_debug_log, "-Canopy Projected Cover   = %f %%\n", s->value[CANOPY_COVER_PROJ] * 100.);
 
 	/* check */
-	CHECK_CONDITION( s->value[CANOPY_COVER_PROJ] ,  > , g_settings->max_layer_cover + eps );
+	CHECK_CONDITION( s->value[CANOPY_COVER_PROJ] ,  > , s->value[CANOPY_COVER_PROJ] + eps );
 
 	/* Canopy cover able to absorb light (integrated all over all viewing angles) */
 	s->value[CANOPY_COVER_EXP] = (s->value[CROWN_AREA_EXP] * s->counter[N_TREE]) / g_settings->sizeCell ;
