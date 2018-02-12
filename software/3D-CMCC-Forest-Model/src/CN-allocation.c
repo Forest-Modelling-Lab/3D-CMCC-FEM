@@ -184,6 +184,7 @@ void carbon_allocation ( cell_t *const c, age_t *const a, species_t *const s, co
 	c->reserve_carbon           += (s->value[C_TO_RESERVE] * 1e6 / g_settings->sizeCell);
 	c->fruit_carbon             += (s->value[C_TO_FRUIT]   * 1e6 / g_settings->sizeCell);
 
+
 	/* check */
 	CHECK_CONDITION ( c->leaf_carbon,    < , ZERO );
 	CHECK_CONDITION ( c->froot_carbon,   < , ZERO );
