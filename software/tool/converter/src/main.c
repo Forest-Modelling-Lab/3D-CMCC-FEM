@@ -2,6 +2,10 @@
 //
 // written by A. Ribeca
 //
+// TODO
+// dividere il file in 10 anni ?
+// aggiungere il tipo nella descrizione del netcdf
+// finire monthly
 
 // os dependant stuff
 #ifdef _WIN32
@@ -160,6 +164,7 @@ int main(int argc, char* argv[])
 		processed = 0;
 		for ( i = 0; i < files->count; ++i )
 		{
+			int r;
 			dataset_t* d;
 
 			++parsed;
@@ -167,9 +172,10 @@ int main(int argc, char* argv[])
 			printf("processing %s...", files->filename[i]);
 			d = dataset_import(files->filename[i]);
 			if ( ! d ) continue;
-			if ( ! nc_conv(d, output_folder) ) continue;
-			puts("ok");
+			r = nc_conv(d, output_folder);
 			dataset_free(d);
+			if ( ! r ) continue;
+			puts("ok");
 			++processed;
 		}
 
