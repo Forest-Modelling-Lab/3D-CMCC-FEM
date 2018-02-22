@@ -2,10 +2,6 @@
 //
 // written by A. Ribeca
 //
-// TODO
-// dividere il file in 10 anni ?
-// aggiungere il tipo nella descrizione del netcdf
-// finire monthly
 
 // os dependant stuff
 #ifdef _WIN32
@@ -35,7 +31,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include "netcdf.h"
+#include <netcdf.h>
 #include <assert.h>
 
 #ifdef _MSC_VER

@@ -87,7 +87,7 @@ typedef struct
 	int end_year;
 	int rows_count;
 	int columns_count;
-	double** vars;
+	float** vars;
 
 	char* path;
 
@@ -153,8 +153,8 @@ daily_vars[DAILY_VARS_COUNT] =
 	, { "CROOT_AR" } // NOT EXPORTED
 	, { "TSOIL", "tsl", "Temperature Of Soil", "k", 0 }
 
-	, { "NPPAB", "npp-abovegroundwood", "Net Primary Production Allocated To Above Ground Wood Biomass", "kg m-2", 1 }
-	, { "NPPBB", "npp-belowgroundwood", "Net Primary Production Allocated To Below Ground Wood Biomass", "kg m-2", 1 }
+	, { "NPPAB", "npp_abovegroundwood", "Net Primary Production Allocated To Above Ground Wood Biomass", "kg m-2", 1 }
+	, { "NPPBB", "npp_belowgroundwood", "Net Primary Production Allocated To Below Ground Wood Biomass", "kg m-2", 1 }
 	, { "RAR", "rr", "Root Autotrophic Respiration", "kg m-2", 1 }
 };
 
@@ -563,9 +563,9 @@ dataset_t* dataset_import(const char* const filename)
 				if ( i == columns[j] )
 				{
 					int err;
-					double value;
+					float value;
 
-					value = convert_string_to_float(token, &err);
+					value =(float) convert_string_to_float(token, &err);
 					if ( err )
 					{
 						printf("unable to convert %s at row %d\n", token, row+1);
@@ -605,16 +605,16 @@ dataset_t* dataset_import(const char* const filename)
 	{
 		if ( ANNUAL_DATASET_TYPE == type )
 		{
-			double cmvb;
-			double cmw;
-			double cmr;
+			float cmvb;
+			float cmw;
+			float cmr;
 
-			double stem_c;
-			double max_leaf_c;
-			double max_froot_c;
-			double croot_c;
-			double branch_c;
-			double fruit_c;
+			float stem_c;
+			float max_leaf_c;
+			float max_froot_c;
+			float croot_c;
+			float branch_c;
+			float fruit_c;
 
 			cmvb = INVALID_VALUE;
 			cmw = INVALID_VALUE;
@@ -661,18 +661,18 @@ dataset_t* dataset_import(const char* const filename)
 		}
 		else // daily
 		{
-			double dws;
-			double dwl;
-			double dwbb;
-			double dfruit;
-			double dwfr;
-			double dwcr;
-			double frar;
-			double crar;
+			float dws;
+			float dwl;
+			float dwbb;
+			float dfruit;
+			float dwfr;
+			float dwcr;
+			float frar;
+			float crar;
 
-			double nppab;
-			double nppbb;
-			double rar;
+			float nppab;
+			float nppbb;
+			float rar;
 
 			nppab = INVALID_VALUE;
 			nppbb = INVALID_VALUE;
@@ -735,7 +735,7 @@ dataset_t* dataset_import(const char* const filename)
 			if ( ! IS_INVALID_VALUE(dataset->vars[DAILY_RAR][i]) )
 				dataset->vars[DAILY_RAR][i] /= (1000 * 86400);
 			if ( ! IS_INVALID_VALUE(dataset->vars[DAILY_TSOIL][i]) )
-				dataset->vars[DAILY_TSOIL][i] += 273.13;
+				dataset->vars[DAILY_TSOIL][i] += 273.13f;
 
 			
 
