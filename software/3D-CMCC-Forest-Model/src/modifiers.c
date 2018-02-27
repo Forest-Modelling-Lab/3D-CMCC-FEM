@@ -272,7 +272,6 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 		break;
 	}
 
-
 	/******************************************************************************************/
 
 	modifier = 1; /* 0 for Veroustraete; 1 for Franks */
