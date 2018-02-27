@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include "common.h"
+#include "settings.h"
 #include "canopy_evapotranspiration.h"
 #include "canopy_interception.h"
 #include "constants.h"
@@ -19,6 +20,7 @@
 #include "heat_fluxes.h"
 
 extern logger_t* g_debug_log;
+extern settings_t* g_settings;
 
 #define TEST 0
 /*************************************************************************************************************************/
@@ -157,10 +159,10 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 
 
 	/** Jarvis effective stomatal conductance */
-	gs_Jarvis (s, gl_x, g_corr);
+	if ( ! g_settings->PSN_mod  ) gs_Jarvis (s, gl_x, g_corr);
 
 	/** Ball-Woodrow-Berry effective stomatal conductance */
-	gs_Ball_Berry (s, gl_x, g_corr);
+	if ( g_settings->PSN_mod == 2 ) gs_Ball_Berry (s, gl_x, g_corr);
 
 
 	/* calculate leaf-and canopy-level conductances to water vapor and

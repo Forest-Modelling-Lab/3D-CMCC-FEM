@@ -44,8 +44,8 @@ enum {
 #define G_STD                9.80665      /* (m/s2) standard gravitational accel. */
 #define P_STD               101325.0      /* (Pa) standard pressure at 0.0 m elevation */
 #define T_STD                 288.15      /* (K) standard temp at 0.0 m elevation  */
-#define MA                28.9644e-3      /* (kg/mol) molecular weight of air */
-#define MW                18.0148e-3      /* (kg/mol) molecular weight of water */
+#define AIRMASS           28.9644e-3      /* (kg/mol) molecular weight of air */
+#define WATERMASS         18.0148e-3      /* (kg/mol) molecular weight of water */
 #define LR_STD                0.0065      /* (-K/m) standard temperature lapse rate */
 #define Rgas                  8.3144      /* (m3 Pa/ mol K) gas law constant */
 #define EPS                   0.6219      /* (MW/MA) unitless ratio of molec weights */

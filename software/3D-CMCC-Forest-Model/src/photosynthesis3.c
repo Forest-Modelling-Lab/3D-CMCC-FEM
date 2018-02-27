@@ -1,8 +1,8 @@
 /*
- * photosynthesis2.c
+ * photosynthesis3.c
  *
- *  Created on: 11 set 2017
- *      Author: alessio
+ *  Created on: 27/feb/2018
+ *      Author: alessio-cmcc
  */
 
 #include <stdio.h>
@@ -20,7 +20,7 @@ extern settings_t* g_settings;
 
 #define TEST_ACCLIMATION 1 /* no acclimation */
 
-void photosynthesis_FvCB (cell_t *const c, const int height, const int dbh, const int age, const int species, const meteo_daily_t *const meteo_daily, const meteo_annual_t *const meteo_annual)
+void photosynthesis_FvCB_BB (cell_t *const c, const int height, const int dbh, const int age, const int species, const meteo_daily_t *const meteo_daily, const meteo_annual_t *const meteo_annual)
 {
 
 	double cond_corr;        /* (umol/m2/s/Pa) leaf conductance corrected for CO2 vs. water vapor */
@@ -185,7 +185,7 @@ void photosynthesis_FvCB (cell_t *const c, const int height, const int dbh, cons
 
 }
 
-double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const meteo_daily, const meteo_annual_t *const meteo_annual,
+double Farquhar_BB (cell_t *const c, species_t *const s,const meteo_daily_t *const meteo_daily, const meteo_annual_t *const meteo_annual,
 		const double cond_corr, const double leafN, const double par_abs, const double leaf_day_mresp, const int sun_shade )
 {
 	/* Farquhar, von Caemmerer and Berry (1980) Planta. 149: 78-90. */
@@ -265,9 +265,15 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	double S_J_accl;                      /* (JK-1 mol) electron-transport temperature response parameter (acclimated) */
 	double var_a, var_b, var_c, det;
 
+	double g0;
+	double g1; //fixme include in species.txt
+	double gsdiva;
+	double gamma_unstar;
+	double cic;
+	double cij;
 
 	//todo todo todo todo todo move in species.txt (this should be the only variable for all photosynthesis)
-	static double beta       = 1.67; /* Jmax:Vcmax note: in Medlyn et al., 2002*/
+	static double beta       = 1.67; /* Jmax:Vcmax note: in Medlyn et al., 2002 */
 	//static double beta       = 2.1; /* ratio between Vcmax and Jmax see dePury and Farquhar 1997; for fagus see Liozon et al., (2000) and Castanea */
 
 	static double test_Vcmax = 55 ; /* (umol/m2/sec) Vcmax for fagus see Deckmyn et al., 2004 GCB */
@@ -414,7 +420,7 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	if ( tleaf > 0.)
 	{
 		high_temp_corr = ( 1. + exp ( ( S_V * 298. - H_V ) / ( Rgas * tleaf_K ) ) )
-																/ ( 1. + exp ( ( S_V * tleaf_K - H_V ) / ( Rgas * tleaf_K ) ) );
+												/ ( 1. + exp ( ( S_V * tleaf_K - H_V ) / ( Rgas * tleaf_K ) ) );
 	}
 	else
 	{
@@ -486,7 +492,7 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	if ( tleaf > 0.)
 	{
 		high_temp_corr = ( 1. + exp ( ( S_J * 298. - H_J ) / ( Rgas * 298. ) ) )
-																		/ ( 1. + exp ( ( S_J * tleaf_K - H_J ) / ( Rgas * tleaf_K ) ) );
+																/ ( 1. + exp ( ( S_J * tleaf_K - H_J ) / ( Rgas * tleaf_K ) ) );
 	}
 	else
 	{
@@ -545,33 +551,52 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 
 	/*******************************************************************************/
 
-	/* quadratic solution for Av */
-	var_a =  -1. / cond_corr;
-	var_b = Ca + ( Vcmax - Rd ) / cond_corr + Kc * ( 1. + O2 / Ko );
-	var_c = Vcmax * ( gamma_star - Ca ) + Rd * ( Ca + Kc * ( 1. + O2 / Ko ) );
+	/* Solution when Rubisco activity is limiting */
 
-	det   = var_b * var_b - 4. * var_a * var_c;
-	/* check condition */
-	CHECK_CONDITION( det , <, 0.0);
+	/* compute gamma */
+	gamma_unstar = CP * AIRMASS * meteo_daily->air_pressure / meteo_daily->lh_vap;
 
-	/* compute photosynthesis when Av (or Vc) (umol CO2/m2/s) carboxylation rate for limited assimilation
-	 * (net photosynthesis rate when Rubisco activity is limiting) */
-	Av    = ( -var_b + sqrt( det ) ) / ( 2. * var_a );
+	//fixme Cs == Ca????
+
+	/* Ball-Berry */
+	gsdiva = g1 * meteo_daily->rh_f / ( Ca - gamma_unstar ) * s->value[F_SW];
+
+	/*****************************************************************************/
+
+	/* Following calculations are used for  Ball and Berry model */
+
+	/* Solution when Rubisco activity is limiting */
+
+	var_a = g0 + gsdiva * ( Vcmax - Rd );
+	var_b = ( 1. - Ca * gsdiva) * ( Vcmax - Rd ) + g0 * ( Kc - Ca )- gsdiva * ( Vcmax * gamma_star + Kc * Rd );
+	var_c = -(1. - Ca * gsdiva) * ( Vcmax  *gamma_star + Kc * Rd ) - g0 * Kc * Ca;
+
+	//cic = quadratic_solution ( var_a, var_b, var_c );
+
+	Av = Vcmax * ( cic - gamma_star ) / ( cic + Kc );
+
 
 	/*******************************************************************************/
 
-	/* quadratic solution for Aj */
-	var_a = -4.5 / cond_corr;
-	var_b = 4.5 * Ca + 10.5 * gamma_star + J / cond_corr - 4.5 * Rd / cond_corr;
-	var_c = J * ( gamma_star - Ca ) + Rd * ( 4.5 * Ca + 10.5 * gamma_star );
+	/* Following calculations are used for  Ball and Berry model */
 
-	det   = var_b * var_b - 4. * var_a * var_c;
-	/* check condition */
-	CHECK_CONDITION( det , <, 0.0);
+	/* Solution when electron transport rate is limiting */
 
-	/* compute photosynthesis when (umol CO2/m2/s) RuBP (ribulose-1,5-bisphosphate) regeneration limited assimilation
-	 * (net photosynthesis rate when RuBP (ribulose-1,5-bisphosphate)-regeneration is limiting) */
-	Aj    = ( -var_b + sqrt( det ) ) / ( 2. * var_a );
+	var_a = g0 + gsdiva * ( J - Rd );
+	var_b = ( 1. - Ca * gsdiva ) * ( J - Rd ) + g0 * ( 2. * gamma_star - Ca ) - gsdiva * (J * gamma_star + 2.* gamma_star * Rd );
+	var_c = -(1. - Ca * gsdiva ) * gamma_star * ( J + 2. * Rd ) - g0 * 2. * gamma_star * Ca;
+
+	//cij = quadratic_solution ( var_a, var_b, var_c );
+
+	Aj = J * ( cij - gamma_star ) / ( cij + 2. * gamma_star );
+
+	if ( Aj - Rd < 1e-6 )
+	{
+		/* Below light compensation point */
+		cij = Ca;
+
+		Aj = J * ( cij - gamma_star ) / ( cij + 2. * gamma_star );
+	}
 
 	/*******************************************************************************/
 
@@ -599,8 +624,114 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 
 	/*******************************************************************************/
 
-	/* compute (Pa) intercellular [CO2] */
-	Ci = Ca - ( A / cond_corr );
+	if ( ! sun_shade )
+	{
+		s->value[STOMATAL_SUN_CONDUCTANCE] = g0 + gsdiva * A;
+
+		/* Set nearly zero conductance (for numerical reasons) */
+		if ( s->value[STOMATAL_SUN_CONDUCTANCE] < 1e-9 ) s->value[STOMATAL_SUN_CONDUCTANCE] = 1e-9;
+
+		/* Set at maximum value if current conductance exceeds maximum value */
+		if ( s->value[STOMATAL_SUN_CONDUCTANCE] > s->value[MAXCOND] )
+		{
+			s->value[STOMATAL_SUN_CONDUCTANCE] = s->value[MAXCOND];
+
+			/* Now that GS is known, solve for CI and A as in the Jarvis model */
+
+			/* Solution when Rubisco activity is limiting */
+			var_a = 1. / s->value[STOMATAL_SUN_CONDUCTANCE];
+			var_b = ( Rd - Vcmax ) / s->value[STOMATAL_SUN_CONDUCTANCE] - Ca - Kc;
+			var_c = Vcmax * ( Ca - gamma_star ) - Rd * ( Ca + Kc );
+
+			//Av = quadratic_solution ( var_a, var_b, var_c );
+
+			/* Solution when electron transport rate is limiting */
+			var_a = 1. / s->value[STOMATAL_SUN_CONDUCTANCE];
+			var_b = ( Rd - J ) / s->value[STOMATAL_SUN_CONDUCTANCE] - Ca - 2. * gamma_star;
+			var_c = J * ( Ca - gamma_star ) - Rd * ( Ca + 2. * gamma_star);
+
+			//Aj = quadratic_solution ( var_a, var_b, var_c );
+
+			/* compute (umol/m2/s) final assimilation rate */
+			switch ( test_assimilation )
+			{
+			case 0:
+
+				/* estimate A as the minimum of (Av,Aj) */
+				A = MIN ( Av, Aj );
+
+				break;
+			case 1:
+
+				/* estimate A as Av */
+				A = Av;
+
+				break;
+			case 2:
+				/* estimate A as Aj */
+				A = Aj;
+
+				break;
+			}
+
+			Ci = Ca - A / s->value[STOMATAL_SUN_CONDUCTANCE];
+
+		}
+	}
+	else
+	{
+		s->value[STOMATAL_SHADE_CONDUCTANCE] = g0 + gsdiva * A;
+
+		/* Set nearly zero conductance (for numerical reasons) */
+		if ( s->value[STOMATAL_SHADE_CONDUCTANCE] < 1e-9 ) s->value[STOMATAL_SUN_CONDUCTANCE] = 1e-9;
+
+		/* Set at maximum value if current conductance exceeds maximum value */
+		if ( s->value[STOMATAL_SHADE_CONDUCTANCE] > s->value[MAXCOND] )
+		{
+			s->value[STOMATAL_SHADE_CONDUCTANCE] = s->value[MAXCOND];
+
+			/* Now that GS is known, solve for CI and A as in the Jarvis model */
+
+			/* Solution when Rubisco activity is limiting */
+			var_a = 1. / s->value[STOMATAL_SHADE_CONDUCTANCE];
+			var_b = ( Rd - Vcmax ) / s->value[STOMATAL_SHADE_CONDUCTANCE] - Ca - Kc;
+			var_c = Vcmax * ( Ca - gamma_star ) - Rd * ( Ca + Kc );
+
+			//Av = quadratic_solution ( var_a, var_b, var_c );
+
+			/* Solution when electron transport rate is limiting */
+			var_a = 1. / s->value[STOMATAL_SHADE_CONDUCTANCE];
+			var_b = ( Rd - J ) / s->value[STOMATAL_SHADE_CONDUCTANCE] - Ca - 2. * gamma_star;
+			var_c = J * ( Ca - gamma_star ) - Rd * ( Ca + 2. * gamma_star);
+
+			//Aj = quadratic_solution ( var_a, var_b, var_c );
+
+			/* compute (umol/m2/s) final assimilation rate */
+			switch ( test_assimilation )
+			{
+			case 0:
+
+				/* estimate A as the minimum of (Av,Aj) */
+				A = MIN ( Av, Aj );
+
+				break;
+			case 1:
+
+				/* estimate A as Av */
+				A = Av;
+
+				break;
+			case 2:
+				/* estimate A as Aj */
+				A = Aj;
+
+				break;
+			}
+
+			Ci = Ca - A / s->value[STOMATAL_SHADE_CONDUCTANCE];
+
+		}
+	}
 
 	/*******************************************************************************/
 
@@ -644,42 +775,4 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	return A;
 
 }
-
-//double Quadratic_solution ( const double a, const double b, const double c )
-//{
-//	double quadp;
-//
-//	/* Solves the quadratic equation - finds larger root. */
-//
-//	if ( ( b * b - 4. * a * c ) > 0. )
-//	{
-//		puts("Warning:imaginary roots in quadratic");
-//		exit (1);
-//	}
-//	else
-//	{
-//		if ( ! a )
-//		{
-//			if ( ! b )
-//			{
-//				quadp = 0.;
-//
-//				if ( c )
-//				{
-//					puts("Warning:imaginary roots in quadratic");
-//					exit (1);
-//				}
-//			}
-//			else
-//			{
-//				quadp = -c / b;
-//			}
-//		}
-//		else
-//		{
-//			quadp = (- b + sqrt ( b * b - 4 * a * c ) ) / ( 2. * a );
-//		}
-//		return quadp;
-//	}
-//}
 

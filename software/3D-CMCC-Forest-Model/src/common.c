@@ -40,6 +40,44 @@ typedef uint64_t uint64;
 /* external error strings */
 const char sz_err_out_of_memory[] = "out of memory";
 
+double Quadratic_solution ( const double a, const double b, const double c)
+{
+	double quadp;
+
+	/* Solves the quadratic equation - finds larger root. */
+
+	if ( ( b * b - 4. * a * c ) > 0. )
+	{
+		puts("Warning:imaginary roots in quadratic");
+		exit (1);
+	}
+	else
+	{
+		if ( ! a )
+		{
+			if ( ! b )
+			{
+				quadp = 0.;
+
+				if ( c )
+				{
+					puts("Warning:imaginary roots in quadratic");
+					exit (1);
+				}
+			}
+			else
+			{
+				quadp = -c / b;
+			}
+		}
+		else
+		{
+			quadp = (- b + sqrt ( b * b - 4 * a * c ) ) / ( 2. * a );
+		}
+		return quadp;
+	}
+}
+
 double convert_string_to_float(const char* const string, int* const err) {
 	char *p;
 	double value;

@@ -262,30 +262,58 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							/* daily modifier */
 							modifiers ( c, layer, height, dbh, age, species, meteo_daily, meteo_annual );
 
-							/* canopy water fluxes */
-							canopy_evapotranspiration ( c, layer, height, dbh, age, species, meteo_daily );
-
-							/* note: following Piao et al., 2010 */
-							/* (Maint Resp)->(Growth Resp = (GPP - Maint Resp) * eff_grperc)->(NPP) */
-
 							if ( ! g_settings->PSN_mod )
 							{
 								/**********************************************************************/
+								/** FvCB + Jarvis **/
+
+								/* note: following Piao et al., 2010 */
+								/* (Maint Resp)->(Growth Resp = (GPP - Maint Resp) * eff_grperc)->(NPP) */
+
+								/* maintenance respiration */
+								maintenance_respiration ( c, layer, height, dbh, age, species, meteo_daily );
+
+								/* canopy water fluxes */
+								canopy_evapotranspiration ( c, layer, height, dbh, age, species, meteo_daily );
+
+								/* canopy carbon assimilation ( Farquhar Von Caemmerer and Berry - FvCB - approach ) */
+								photosynthesis_FvCB     ( c, height, dbh, age, species, meteo_daily, meteo_annual );
+
+								/**********************************************************************/
+							}
+							else if ( g_settings->PSN_mod == 2 )
+							{
+								/**********************************************************************/
+								/** FvCB + Ball Berry */
+
+								/* note: following Piao et al., 2010 */
+								/* (Maint Resp)->(Growth Resp = (GPP - Maint Resp) * eff_grperc)->(NPP) */
+
 								/* maintenance respiration */
 								maintenance_respiration ( c, layer, height, dbh, age, species, meteo_daily );
 
 								/* canopy carbon assimilation ( Farquhar Von Caemmerer and Berry - FvCB - approach ) */
 								photosynthesis_FvCB     ( c, height, dbh, age, species, meteo_daily, meteo_annual );
+
+								/* canopy water fluxes */
+								canopy_evapotranspiration ( c, layer, height, dbh, age, species, meteo_daily );
+
 								/**********************************************************************/
 							}
 							else
 							{
 								/**********************************************************************/
+								/** LUE + Jarvis **/
+
+								/* canopy water fluxes */
+								canopy_evapotranspiration ( c, layer, height, dbh, age, species, meteo_daily );
+
 								/* canopy carbon assimilation ( Monteith - LUE - approach ) */
 								photosynthesis_LUE      ( c, layer, height, dbh, age, species, meteo_annual );
 
 								/* maintenance respiration */
 								maintenance_respiration ( c, layer, height, dbh, age, species, meteo_daily );
+
 								/**********************************************************************/
 							}
 
@@ -353,6 +381,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 								dendrometry_old       ( c, layer, height, dbh, age, species, year );
 
 								/** END OF YEAR **/
+
 								/* last day of the year */
 								if ( c->doy == ( IS_LEAP_YEAR ( c->years[year].year ) ? 366 : 365) )
 								{
