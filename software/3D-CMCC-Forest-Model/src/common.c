@@ -40,26 +40,26 @@ typedef uint64_t uint64;
 /* external error strings */
 const char sz_err_out_of_memory[] = "out of memory";
 
-double QuadM ( const double a, const double b, const double c)
+double QuadM ( const double var_a, const double var_b, const double var_c )
 {
 	double quadp;
 
 	/* Solves the quadratic equation - finds SMALLER root. */
 
-	if ( ( b * b - 4. * a * c ) > 0. )
+	if ( ( var_b * var_b - 4. * var_a * var_c ) > 0. )
 	{
 		puts("Warning:imaginary roots in quadratic");
 		exit (1);
 	}
 	else
 	{
-		if ( ! a )
+		if ( ! var_a )
 		{
-			if ( ! b )
+			if ( ! var_b )
 			{
 				quadp = 0.;
 
-				if ( c )
+				if ( var_c )
 				{
 					puts("Warning:imaginary roots in quadratic");
 					exit (1);
@@ -67,37 +67,37 @@ double QuadM ( const double a, const double b, const double c)
 			}
 			else
 			{
-				quadp = -c / b;
+				quadp = -var_c / var_b;
 			}
 		}
 		else
 		{
-			quadp = (- b - sqrt ( b * b - 4 * a * c ) ) / ( 2. * a );
+			quadp = (- var_b - sqrt ( var_b * var_b - 4. * var_a * var_c ) ) / ( 2. * var_a );
 		}
 		return quadp;
 	}
 }
 
-double QuadP ( const double a, const double b, const double c)
+double QuadP ( const double var_a, const double var_b, const double var_c )
 {
 	double quadp;
 
 	/* Solves the quadratic equation - finds LARGER root. */
 
-	if ( ( b * b - 4. * a * c ) > 0. )
+	if ( ( var_b * var_b - 4. * var_a * var_c ) > 0. )
 	{
 		puts("Warning:imaginary roots in quadratic");
 		exit (1);
 	}
 	else
 	{
-		if ( ! a )
+		if ( ! var_a )
 		{
-			if ( ! b )
+			if ( ! var_b )
 			{
 				quadp = 0.;
 
-				if ( c )
+				if ( var_c )
 				{
 					puts("Warning:imaginary roots in quadratic");
 					exit (1);
@@ -105,12 +105,12 @@ double QuadP ( const double a, const double b, const double c)
 			}
 			else
 			{
-				quadp = -c / b;
+				quadp = -var_c / var_b;
 			}
 		}
 		else
 		{
-			quadp = (- b + sqrt ( b * b - 4 * a * c ) ) / ( 2. * a );
+			quadp = (- var_b + sqrt ( var_b * var_b - 4. * var_a * var_c ) ) / ( 2. * var_a );
 		}
 		return quadp;
 	}
