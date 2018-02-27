@@ -54,8 +54,6 @@ double convert_string_to_float(const char* const string, int* const err)
 	return value;
 }
 
-
-
 char *string_copy(const char*const s)
 {
 	if ( s )

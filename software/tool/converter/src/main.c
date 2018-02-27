@@ -31,7 +31,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include "netcdf.h"
+#include <netcdf.h>
 #include <assert.h>
 
 #ifdef _MSC_VER
@@ -160,6 +160,7 @@ int main(int argc, char* argv[])
 		processed = 0;
 		for ( i = 0; i < files->count; ++i )
 		{
+			int r;
 			dataset_t* d;
 
 			++parsed;
@@ -167,9 +168,10 @@ int main(int argc, char* argv[])
 			printf("processing %s...", files->filename[i]);
 			d = dataset_import(files->filename[i]);
 			if ( ! d ) continue;
-			if ( ! nc_conv(d, output_folder) ) continue;
-			puts("ok");
+			r = nc_conv(d, output_folder);
 			dataset_free(d);
+			if ( ! r ) continue;
+			puts("ok");
 			++processed;
 		}
 

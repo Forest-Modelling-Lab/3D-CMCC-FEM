@@ -78,71 +78,104 @@ typedef struct
 {
 	char* sitename;
 	char* clim_scenario;
+	char* co2_type;
+	char* co2_file;
+	char* exp;
 	e_dataset_type type;
 	int esm;
 	int start_year;
 	int end_year;
 	int rows_count;
 	int columns_count;
-	double** vars;
+	float** vars;
 
 	char* path;
 
 } dataset_t;
 
-const char *annual_vars[ANNUAL_VARS_COUNT] =
+struct
 {
-	"HEIGHT"
-	, "DBH"
-	, "AGE"
-	, "LIVETREE"
-	, "DEADTREE"
-	, "THINNEDTREE"
-	, "STEM_C"
-	, "MAX_LEAF_C"
-	, "MAX_FROOT_C"
-	, "CROOT_C"
-	, "BRANCH_C"
-	, "FRUIT_C"
-	, "BASAL_AREA"
-	, "MAI"
-	, "VOLUME"
+	char* name;
+	char* standard_name;
+	char* long_name;
+	char* unit;
+}
+annual_vars[ANNUAL_VARS_COUNT] =
+{
+	{ "HEIGHT", "height", "Stand Height", "m" }
+	, { "DBH", "dbh", "Mean DBH", "cm" }
+	, { "AGE", "age", "Tree Age By Dbh Class", "years" }
+	, { "LIVETREE", "density", "Stand Density", "trees ha-1" }
+	, { "DEADTREE", "mortstemno", "Removed Stem Numbers By Size Class By Natural Mortality", "trees ha-1" }
+	, { "THINNEDTREE", "harvstemno", "Removed Stem Numbers BY Size Class By Management", "trees ha-1" }
+	, { "STEM_C" } // NOT EXPORTED
+	, { "MAX_LEAF_C", "cleaf", "Carbon Mass In Leaves", "kg m-2" }
+	, { "MAX_FROOT_C" }  // NOT EXPORTED
+	, { "CROOT_C" }  // NOT EXPORTED
+	, { "BRANCH_C" }  // NOT EXPORTED
+	, { "FRUIT_C" }  // NOT EXPORTED
+	, { "BASAL_AREA", "ba", "Basal Area", "m2 ha-1" }
+	, { "MAI", "mai", "Mean Annual Increment", "m3 ha-1" }
+	, { "VOLUME", "vol", "Stand Volume", "m3 ha-1" }
 
-	, "CMVB"
-	, "CMW"
-	, "CMR"
+	, { "CMVB", "cveg", "Carbon Mass In Vegetation Biomass", "kg m-2" }
+	, { "CMW", "cwood", "Carbon Mass In Wood", "kg m-2" }
+	, { "CMR", "croot", "Carbon Mass in Roots", "kg m-2" }
 };
 
-const char *daily_vars[DAILY_VARS_COUNT] =
+struct
 {
-	"LAI_PROJ"
-	, "GPP"
-	, "NPP"
-	, "RA"
-	, "FAPAR"
-	, "ET"
-	, "INT"
-	, "SOIL_EVAPO"
-	, "TRA"
-	, "ASW"
-	, "DELTA_LEAF_C"
-	, "DELTA_FROOT_C"
-	, "DELTA_STEM_C"
-	, "DELTA_BRANCH_C"
-	, "DELTA_FRUIT_C"
-	, "DELTA_CROOT_C"
-	, "FROOT_AR"
-	, "CROOT_AR"
-	, "TSOIL"
+	char* name;
+	char* standard_name;
+	char* long_name;
+	char* unit;
+	int add_species;
+}
+daily_vars[DAILY_VARS_COUNT] =
+{
+	{ "LAI_PROJ", "lai", "Leaf Area Index", "m2 m-2", 1 } // monthly
+	, { "GPP", "gpp", "Gross Primary Production", "kg m-2 s-1", 1 }
+	, { "NPP", "npp", "Net Primary Production", "kg m-2 s-1", 1 }
+	, { "RA", "ra", "Autotrophic (Plant) Respiration", "kg m-2 s-1", 1 }
+	, { "FAPAR", "fapar", "Fraction Of Absorbed Photosynthetically Active Radiation", "%", 1 }
+	, { "ET", "evap", "Total Evapotranspiration", "kg m-2 s-1", 0 }
+	, { "INT", "intercept", "Evaporation From Canopy (Interception)", "kg m-2 s-1", 1 }
+	, { "SOIL_EVAPO", "esoil", "Water Evaporation From Soil", "kg m-2 s-1", 0 }
+	, { "TRA", "trans", "Transpiration", "kg m-2 s-1", 1 }
+	, { "ASW", "soilmost", "Soil Mosture", "kg m-2", 0 }
+	, { "DELTA_LEAF_C", "npp-landleaf", "Net Primary Production Allocated To Leaf Biomass", "kg m-2", 1 }
+	, { "DELTA_FROOT_C", "npp-landroot", "Net Primary Production Allocated To Fine Root Biomass", "kg m-2", 1 }
+	, { "DELTA_STEM_C" }  // NOT EXPORTED
+	, { "DELTA_BRANCH_C"} // NOT EXPORTED
+	, { "DELTA_FRUIT_C" } // NOT EXPORTED
+	, { "DELTA_CROOT_C" } // NOT EXPORTED
+	, { "FROOT_AR" } // NOT EXPORTED
+	, { "CROOT_AR" } // NOT EXPORTED
+	, { "TSOIL", "tsl", "Temperature Of Soil", "k", 0 }
 
-	, "NPPAB"
-	, "NPPBB"
-	, "RAR"
+	, { "NPPAB", "npp_abovegroundwood", "Net Primary Production Allocated To Above Ground Wood Biomass", "kg m-2", 1 }
+	, { "NPPBB", "npp_belowgroundwood", "Net Primary Production Allocated To Below Ground Wood Biomass", "kg m-2", 1 }
+	, { "RAR", "rr", "Root Autotrophic Respiration", "kg m-2", 1 }
 };
 
 void dataset_free(dataset_t* dataset)
 {
 	assert(dataset);
+
+	if ( dataset->exp )
+	{
+		free(dataset->exp);
+	}
+
+	if ( dataset->co2_type )
+	{
+		free(dataset->co2_type);
+	}
+
+	if ( dataset->co2_file )
+	{
+		free(dataset->co2_file);
+	}
 
 	if ( dataset->vars )
 	{
@@ -179,7 +212,7 @@ dataset_t* dataset_import(const char* const filename)
 	e_dataset_type type;
 	char site[32];			// should be enough
 	char exp[16];			// should be enough
-	int esm;				// should be enough
+	int esm;
 	char clim_scenario[16];	// should be enough
 	int start_year;
 	int end_year;
@@ -260,28 +293,52 @@ dataset_t* dataset_import(const char* const filename)
 		}
 	}
 
-	// get stuff
-	if ( 8 != sscanf(filename + has_path + i, "%[^_]_ESM%d_%[^.].txt_(%d-%d)_CO2_%[^_]_%[^.].txt_Man_%[^_]_"
-														, exp
-														, &esm
-														, clim_scenario
-														, &start_year
-														, &end_year
-														, co2_type
-														, co2_file
-														, man
-														) )
+	// check for local
+	if ( ! _strnicmp(filename + has_path + i, "local", 5) )
 	{
-		puts("unable to parse filename");
-		goto quit;
+		strcpy(exp, "local");
+		esm = 11;
+
+		// get stuff
+		if ( 6 != sscanf(filename + has_path + i + 5 + 1, "%[^.].txt_(%d-%d)_CO2_%[^_]_%[^.].txt_Man_%[^_]_"
+															, clim_scenario
+															, &start_year
+															, &end_year
+															, co2_type
+															, co2_file
+															, man
+															) )
+		{
+			puts("unable to parse filename");
+			goto quit;
+		}
+	}
+	else
+	{
+		// get stuff
+		if ( 8 != sscanf(filename + has_path + i, "%[^_]_ESM%d_%[^.].txt_(%d-%d)_CO2_%[^_]_%[^.].txt_Man_%[^_]_"
+															, exp
+															, &esm
+															, clim_scenario
+															, &start_year
+															, &end_year
+															, co2_type
+															, co2_file
+															, man
+															) )
+		{
+			puts("unable to parse filename");
+			goto quit;
+		}
+
+		if ( (esm < 1) || (esm > 10) )
+		{
+			puts("invalid esm. range is 1-10");
+			goto quit;
+		}
 	}
 
-	// check esm
-	if ( (esm < 1) || (esm > 10) )
-	{
-		puts("invalid esm. range is 1-10");
-		goto quit;
-	}
+	--esm; // zero based index
 
 	// check scenario
 	for ( i = 0; i < SIZEOF_ARRAY(clim_scenarios); ++i )
@@ -335,7 +392,7 @@ dataset_t* dataset_import(const char* const filename)
 
 		for ( j = 0; j < columns_count; ++j )
 		{
-			if ( ! string_compare_i(token, (ANNUAL_DATASET_TYPE == type) ? annual_vars[j] : daily_vars[j]) )
+			if ( ! string_compare_i(token, (ANNUAL_DATASET_TYPE == type) ? annual_vars[j].name : daily_vars[j].name) )
 			{
 				if ( columns[j] != -1 ) 
 				{
@@ -365,7 +422,7 @@ dataset_t* dataset_import(const char* const filename)
 	{
 		if ( -1 == columns[i] )
 		{
-			printf("var %s not found\n", (ANNUAL_DATASET_TYPE == type) ? annual_vars[i] : daily_vars[i]);
+			printf("var %s not found\n", (ANNUAL_DATASET_TYPE == type) ? annual_vars[i].name : daily_vars[i].name);
 			goto quit;
 		}
 	}
@@ -394,6 +451,31 @@ dataset_t* dataset_import(const char* const filename)
 		dataset = NULL;
 		goto quit;
 	}
+	dataset->exp = string_copy(exp);
+	if ( ! dataset->exp )
+	{
+		puts(err_out_of_memory);
+		free(dataset);
+		dataset = NULL;
+		goto quit;
+	}
+	dataset->co2_type = string_copy(co2_type);
+	if ( ! dataset->co2_type )
+	{
+		puts(err_out_of_memory);
+		free(dataset);
+		dataset = NULL;
+		goto quit;
+	}
+	dataset->co2_file = string_copy(co2_file);
+	if ( ! dataset->co2_file )
+	{
+		puts(err_out_of_memory);
+		free(dataset);
+		dataset = NULL;
+		goto quit;
+	}
+
 	dataset->type = type;
 	dataset->esm = esm;
 	dataset->start_year = start_year;
@@ -481,9 +563,9 @@ dataset_t* dataset_import(const char* const filename)
 				if ( i == columns[j] )
 				{
 					int err;
-					double value;
+					float value;
 
-					value = convert_string_to_float(token, &err);
+					value =(float) convert_string_to_float(token, &err);
 					if ( err )
 					{
 						printf("unable to convert %s at row %d\n", token, row+1);
@@ -523,16 +605,16 @@ dataset_t* dataset_import(const char* const filename)
 	{
 		if ( ANNUAL_DATASET_TYPE == type )
 		{
-			double cmvb;
-			double cmw;
-			double cmr;
+			float cmvb;
+			float cmw;
+			float cmr;
 
-			double stem_c;
-			double max_leaf_c;
-			double max_froot_c;
-			double croot_c;
-			double branch_c;
-			double fruit_c;
+			float stem_c;
+			float max_leaf_c;
+			float max_froot_c;
+			float croot_c;
+			float branch_c;
+			float fruit_c;
 
 			cmvb = INVALID_VALUE;
 			cmw = INVALID_VALUE;
@@ -579,18 +661,18 @@ dataset_t* dataset_import(const char* const filename)
 		}
 		else // daily
 		{
-			double dws;
-			double dwl;
-			double dwbb;
-			double dfruit;
-			double dwfr;
-			double dwcr;
-			double frar;
-			double crar;
+			float dws;
+			float dwl;
+			float dwbb;
+			float dfruit;
+			float dwfr;
+			float dwcr;
+			float frar;
+			float crar;
 
-			double nppab;
-			double nppbb;
-			double rar;
+			float nppab;
+			float nppbb;
+			float rar;
 
 			nppab = INVALID_VALUE;
 			nppbb = INVALID_VALUE;
@@ -653,7 +735,7 @@ dataset_t* dataset_import(const char* const filename)
 			if ( ! IS_INVALID_VALUE(dataset->vars[DAILY_RAR][i]) )
 				dataset->vars[DAILY_RAR][i] /= (1000 * 86400);
 			if ( ! IS_INVALID_VALUE(dataset->vars[DAILY_TSOIL][i]) )
-				dataset->vars[DAILY_TSOIL][i] += 273.13;
+				dataset->vars[DAILY_TSOIL][i] += 273.13f;
 
 			
 

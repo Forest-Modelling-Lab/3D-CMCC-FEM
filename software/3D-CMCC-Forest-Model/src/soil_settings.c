@@ -47,7 +47,7 @@ soil_settings_t* import_txt(const char *const filename, int* const p_settings_co
 	int columns[SOIL_VARS_COUNT];
 	FILE *f;
 	soil_settings_t *ps;
-	soil_settings_t s;
+	soil_settings_t s = { 0 };
 	soil_settings_t *ps_no_leak;
 
 	const char delimiters[] = " ,/\t\r\n";
@@ -95,13 +95,14 @@ soil_settings_t* import_txt(const char *const filename, int* const p_settings_co
 			if ( ! string_compare_i(token, sz_vars[y]) )
 			{
 				/* check if column is not already assigned */
-				if ( columns[i] != -1 )
+				if ( columns[y] != -1 )
 				{
 					logger_error(g_debug_log, "%s already assigned at column %d in %s\n", sz_vars[y], columns[y], filename);
 					fclose(f);
 					return NULL;
 				}
-				columns[i] = y;
+				columns[y] = i;
+				break;
 			}
 		}
 	}
@@ -136,11 +137,25 @@ soil_settings_t* import_txt(const char *const filename, int* const p_settings_co
 		y = 0;
 		for ( i = 0, token = string_tokenizer(p2, delimiters, &p); token; token = string_tokenizer(NULL, delimiters, &p), ++i )
 		{
+			int k;
 			int err;
 			double value;
 
+			for ( k = 0; k < SOIL_VARS_COUNT; ++k )
+			{
+				if ( i == columns[k] )
+				{
+					break;
+				}
+			}
+
+			if ( k == SOIL_VARS_COUNT )
+			{
+				continue;
+			}
+
 			// check landuse
-			if ( SOIL_LANDUSE == columns[i] ) {
+			if ( SOIL_LANDUSE == k ) {
 				/* check landuse length */
 				if ( 1 != strlen(token) ) {
 					printf(err_bad_landuse_length, *p_settings_count + 1);
@@ -165,12 +180,12 @@ soil_settings_t* import_txt(const char *const filename, int* const p_settings_co
 				value = convert_string_to_float(token, &err);
 				if ( err )
 				{
-					logger_error(g_debug_log, "unable to convert '%s' at columm %d in %s\n", token, y, filename);
+					logger_error(g_debug_log, "unable to convert '%s' for %s columm in %s\n", token, sz_vars[k], filename);
 					if ( ps ) free(ps);
 					fclose(f);
 					return NULL;
 				}
-				s.values[columns[i]] = value;
+				s.values[k] = value;
 			}
 			
 			// skip comments
