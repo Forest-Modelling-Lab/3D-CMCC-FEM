@@ -265,8 +265,8 @@ double Farquhar_BB (cell_t *const c, species_t *const s,const meteo_daily_t *con
 	double S_J_accl;                      /* (JK-1 mol) electron-transport temperature response parameter (acclimated) */
 	double var_a, var_b, var_c, det;
 
-	double g0;
-	double g1; //fixme include in species.txt
+	double g0 = 0.0496;
+	double g1 = 8.456; //fixme include in species.txt
 	double gsdiva;
 	double gamma_unstar;
 	double cic;
@@ -530,7 +530,8 @@ double Farquhar_BB (cell_t *const c, species_t *const s,const meteo_daily_t *con
 	var_c  =  Jmax * pabsII;
 
 	/* compute (umol RuBP/m2/s) rate of RuBP (ribulose-1,5-bisphosphate) regeneration */
-	J      = QuadM (var_a, var_b, var_c);
+	/* Solves the quadratic equation - finds SMALLER root. */
+	J      = ( -var_b - sqrt ( var_b * var_b - 4. * var_a * var_c ) ) / ( 2. * var_a );
 
 	/*******************************************************************************/
 	/* note: all variables are in Pa */
@@ -571,7 +572,8 @@ double Farquhar_BB (cell_t *const c, species_t *const s,const meteo_daily_t *con
 	var_b = ( 1. - Ca * gsdiva) * ( Vcmax - Rd ) + g0 * ( Kc - Ca )- gsdiva * ( Vcmax * gamma_star + Kc * Rd );
 	var_c = -(1. - Ca * gsdiva) * ( Vcmax  *gamma_star + Kc * Rd ) - g0 * Kc * Ca;
 
-	cic = QuadP ( var_a, var_b, var_c );
+	/* Solves the quadratic equation - finds LARGER root. */
+	cic = ( -var_b + sqrt ( var_b * var_b - 4. * var_a * var_c ) ) / ( 2. * var_a );
 
 	Av = Vcmax * ( cic - gamma_star ) / ( cic + Kc );
 
@@ -586,7 +588,8 @@ double Farquhar_BB (cell_t *const c, species_t *const s,const meteo_daily_t *con
 	var_b = ( 1. - Ca * gsdiva ) * ( J - Rd ) + g0 * ( 2. * gamma_star - Ca ) - gsdiva * (J * gamma_star + 2.* gamma_star * Rd );
 	var_c = -(1. - Ca * gsdiva ) * gamma_star * ( J + 2. * Rd ) - g0 * 2. * gamma_star * Ca;
 
-	cij = QuadP ( var_a, var_b, var_c );
+	/* Solves the quadratic equation - finds LARGER root. */
+	cij = ( -var_b + sqrt ( var_b * var_b - 4. * var_a * var_c ) ) / ( 2. * var_a );
 
 	Aj = J * ( cij - gamma_star ) / ( cij + 2. * gamma_star );
 
@@ -624,6 +627,8 @@ double Farquhar_BB (cell_t *const c, species_t *const s,const meteo_daily_t *con
 
 	/*******************************************************************************/
 
+	//FIXME SHOULD i INCLUDE g_corr with MAXCOND?????
+
 	if ( ! sun_shade )
 	{
 		s->value[STOMATAL_SUN_CONDUCTANCE] = g0 + gsdiva * A;
@@ -643,14 +648,16 @@ double Farquhar_BB (cell_t *const c, species_t *const s,const meteo_daily_t *con
 			var_b = ( Rd - Vcmax ) / s->value[STOMATAL_SUN_CONDUCTANCE] - Ca - Kc;
 			var_c = Vcmax * ( Ca - gamma_star ) - Rd * ( Ca + Kc );
 
-			Av = QuadM ( var_a, var_b, var_c );
+			/* Solves the quadratic equation - finds SMALLER root. */
+			Av = ( -var_b - sqrt ( var_b * var_b - 4. * var_a * var_c ) ) / ( 2. * var_a );
 
 			/* Solution when electron transport rate is limiting */
 			var_a = 1. / s->value[STOMATAL_SUN_CONDUCTANCE];
 			var_b = ( Rd - J ) / s->value[STOMATAL_SUN_CONDUCTANCE] - Ca - 2. * gamma_star;
 			var_c = J * ( Ca - gamma_star ) - Rd * ( Ca + 2. * gamma_star);
 
-			Aj = QuadM ( var_a, var_b, var_c );
+			/* Solves the quadratic equation - finds SMALLER root. */
+			Aj = ( -var_b - sqrt ( var_b * var_b - 4. * var_a * var_c ) ) / ( 2. * var_a );
 
 			/* compute (umol/m2/s) final assimilation rate */
 			switch ( test_assimilation )
@@ -697,14 +704,16 @@ double Farquhar_BB (cell_t *const c, species_t *const s,const meteo_daily_t *con
 			var_b = ( Rd - Vcmax ) / s->value[STOMATAL_SHADE_CONDUCTANCE] - Ca - Kc;
 			var_c = Vcmax * ( Ca - gamma_star ) - Rd * ( Ca + Kc );
 
-			Av = QuadM ( var_a, var_b, var_c );
+			/* Solves the quadratic equation - finds SMALLER root. */
+			Av = ( -var_b - sqrt ( var_b * var_b - 4. * var_a * var_c ) ) / ( 2. * var_a );
 
 			/* Solution when electron transport rate is limiting */
 			var_a = 1. / s->value[STOMATAL_SHADE_CONDUCTANCE];
 			var_b = ( Rd - J ) / s->value[STOMATAL_SHADE_CONDUCTANCE] - Ca - 2. * gamma_star;
 			var_c = J * ( Ca - gamma_star ) - Rd * ( Ca + 2. * gamma_star);
 
-			Aj = QuadM ( var_a, var_b, var_c );
+			/* Solves the quadratic equation - finds SMALLER root. */
+			Aj = ( -var_b - sqrt ( var_b * var_b - 4. * var_a * var_c ) ) / ( 2. * var_a );
 
 			/* compute (umol/m2/s) final assimilation rate */
 			switch ( test_assimilation )

@@ -42,14 +42,14 @@ const char sz_err_out_of_memory[] = "out of memory";
 
 double QuadM ( const double var_a, const double var_b, const double var_c )
 {
-	double quadp;
+	double quadm;
 
 	/* Solves the quadratic equation - finds SMALLER root. */
 
-	if ( ( var_b * var_b - 4. * var_a * var_c ) > 0. )
+	if ( ( var_b * var_b - 4. * var_a * var_c ) < 0. )
 	{
 		puts("Warning:imaginary roots in quadratic");
-		exit (1);
+		quadm = 0.;
 	}
 	else
 	{
@@ -57,25 +57,26 @@ double QuadM ( const double var_a, const double var_b, const double var_c )
 		{
 			if ( ! var_b )
 			{
-				quadp = 0.;
+				quadm = 0.;
 
 				if ( var_c )
 				{
-					puts("Warning:imaginary roots in quadratic");
+					puts("ERROR: CANT SOLVE QUADRATIC");
 					exit (1);
 				}
 			}
 			else
 			{
-				quadp = -var_c / var_b;
+				quadm = -var_c / var_b;
 			}
 		}
 		else
 		{
-			quadp = (- var_b - sqrt ( var_b * var_b - 4. * var_a * var_c ) ) / ( 2. * var_a );
+			quadm = (-var_b - sqrt ( var_b * var_b - 4. * var_a * var_c ) ) / ( 2. * var_a );
+
 		}
-		return quadp;
 	}
+	return quadm;
 }
 
 double QuadP ( const double var_a, const double var_b, const double var_c )
@@ -84,10 +85,10 @@ double QuadP ( const double var_a, const double var_b, const double var_c )
 
 	/* Solves the quadratic equation - finds LARGER root. */
 
-	if ( ( var_b * var_b - 4. * var_a * var_c ) > 0. )
+	if ( ( var_b * var_b - 4. * var_a * var_c ) < 0. )
 	{
 		puts("Warning:imaginary roots in quadratic");
-		exit (1);
+		quadp = 0.;
 	}
 	else
 	{
@@ -99,7 +100,7 @@ double QuadP ( const double var_a, const double var_b, const double var_c )
 
 				if ( var_c )
 				{
-					puts("Warning:imaginary roots in quadratic");
+					puts("ERROR: CANT SOLVE QUADRATIC");
 					exit (1);
 				}
 			}
@@ -112,8 +113,8 @@ double QuadP ( const double var_a, const double var_b, const double var_c )
 		{
 			quadp = (- var_b + sqrt ( var_b * var_b - 4. * var_a * var_c ) ) / ( 2. * var_a );
 		}
-		return quadp;
 	}
+	return quadp;
 }
 
 double convert_string_to_float(const char* const string, int* const err) {
