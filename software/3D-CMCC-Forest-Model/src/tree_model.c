@@ -304,8 +304,6 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							/* growth respiration */
 							growth_respiration                 ( c, layer, height, dbh, age, species );
 
-
-
 							/* autotrophic respiration */
 							autotrophic_respiration            ( c, layer, height, dbh, age, species, meteo_daily );
 

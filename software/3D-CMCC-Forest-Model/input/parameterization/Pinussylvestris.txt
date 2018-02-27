@@ -19,7 +19,7 @@ RHO0                     0.40 //Minimum Basic Density for young Trees t/m^3 for 
 RHO1                     0.39 //Maximum Basic Density for young Trees t/m^3 for P. sylvestris Landsberg et al., 2005, 0.49 Seidl et al., 2012, 0.395 Forrester et al., 2017
 TRHO                        4 //Age at which rho = (RHO0 + RHO1 )/2
 FORM_FACTOR             0.435 //Form factor Seidl et al., 2012 
-COEFFCOND                0.05 //Define stomatal responsee to VPD in mbar for P. sylvestris Landsberg et al., 2005
+COEFFCOND                0.05 //Define stomatal responsee to VPD in mbar for P. sylvestris Landsberg et al., 2005, Forrester et al., 2017
 BLCOND                   0.01 //Canopy Boundary Layer conductance for P. sylvestris 0.009 from Pietsch, 0.01 for Tatarinov
 MAXCOND           0.0025 //    0.00175 //Maximum Stomatal Conductance in m/sec for P. sylvestris 0.001 from Pietsch, 0.0025 for Tatarinov, 0.005 Makela et al., 2006
 CUTCOND              0.000075 //Cuticul conductance in m/sec for P. sylvestris 0.00001 from Pietsch  0,00006 for Tatarinov, 0.000075 Makela et al., 2006

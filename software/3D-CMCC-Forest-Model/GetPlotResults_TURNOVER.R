@@ -71,7 +71,7 @@ esm_list <-c("All")             # ("1","2","3","4","5", "All")
 rcp_list <-c("All")           # ("0p0","2p6","4p5","6p0","8p5","All")
 man_list <-c("All")           # ("on",off","All")
 co2_list <-c("All")            # ("on",off","All")
-protocol_list<-c("FT")        # ("2A","2B","All") 
+protocol_list<-c("LOCAL")        # ("2A","2B","All") 
 local_list<-c('on')          # ("on","off") to include local simulation of not under FT protocol
 climate_off_list<-c('off')    # ("on",off","All") for climate off and co2 on
 photosynthesis_list<-c('FvCB') #("FvCB",'LUE') for photosyhtesis approach

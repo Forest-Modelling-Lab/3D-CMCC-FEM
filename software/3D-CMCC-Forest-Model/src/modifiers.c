@@ -386,9 +386,9 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	/* vapor pressure deficit multiplier, vpd in Pa */
 #if 0
 	if (meteo_daily->vpd < vpd_open)    /* no vpd effect */
-		s->value[F_VPD] = 1.0;
+		s->value[F_VPD] = 1.;
 	else if (meteo_daily->vpd > vpd_close)   /* full vpd effect */
-		s->value[F_VPD] = 0.0;
+		s->value[F_VPD] = 0.;
 	else                   /* partial vpd effect */
 		s->value[F_VPD] = (vpd_close - meteo_daily->vpd) / (vpd_close - vpd_open);
 #endif
