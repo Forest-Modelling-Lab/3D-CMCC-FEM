@@ -530,7 +530,7 @@ double Farquhar_BB (cell_t *const c, species_t *const s,const meteo_daily_t *con
 	var_c  =  Jmax * pabsII;
 
 	/* compute (umol RuBP/m2/s) rate of RuBP (ribulose-1,5-bisphosphate) regeneration */
-	J      = ( -var_b - sqrt ( var_b * var_b - 4. * var_a * var_c ) ) / ( 2. * var_a );
+	J      = QuadM (var_a, var_b, var_c);
 
 	/*******************************************************************************/
 	/* note: all variables are in Pa */
@@ -571,7 +571,7 @@ double Farquhar_BB (cell_t *const c, species_t *const s,const meteo_daily_t *con
 	var_b = ( 1. - Ca * gsdiva) * ( Vcmax - Rd ) + g0 * ( Kc - Ca )- gsdiva * ( Vcmax * gamma_star + Kc * Rd );
 	var_c = -(1. - Ca * gsdiva) * ( Vcmax  *gamma_star + Kc * Rd ) - g0 * Kc * Ca;
 
-	//cic = quadratic_solution ( var_a, var_b, var_c );
+	cic = QuadP ( var_a, var_b, var_c );
 
 	Av = Vcmax * ( cic - gamma_star ) / ( cic + Kc );
 
@@ -586,7 +586,7 @@ double Farquhar_BB (cell_t *const c, species_t *const s,const meteo_daily_t *con
 	var_b = ( 1. - Ca * gsdiva ) * ( J - Rd ) + g0 * ( 2. * gamma_star - Ca ) - gsdiva * (J * gamma_star + 2.* gamma_star * Rd );
 	var_c = -(1. - Ca * gsdiva ) * gamma_star * ( J + 2. * Rd ) - g0 * 2. * gamma_star * Ca;
 
-	//cij = quadratic_solution ( var_a, var_b, var_c );
+	cij = QuadP ( var_a, var_b, var_c );
 
 	Aj = J * ( cij - gamma_star ) / ( cij + 2. * gamma_star );
 
@@ -643,14 +643,14 @@ double Farquhar_BB (cell_t *const c, species_t *const s,const meteo_daily_t *con
 			var_b = ( Rd - Vcmax ) / s->value[STOMATAL_SUN_CONDUCTANCE] - Ca - Kc;
 			var_c = Vcmax * ( Ca - gamma_star ) - Rd * ( Ca + Kc );
 
-			//Av = quadratic_solution ( var_a, var_b, var_c );
+			Av = QuadM ( var_a, var_b, var_c );
 
 			/* Solution when electron transport rate is limiting */
 			var_a = 1. / s->value[STOMATAL_SUN_CONDUCTANCE];
 			var_b = ( Rd - J ) / s->value[STOMATAL_SUN_CONDUCTANCE] - Ca - 2. * gamma_star;
 			var_c = J * ( Ca - gamma_star ) - Rd * ( Ca + 2. * gamma_star);
 
-			//Aj = quadratic_solution ( var_a, var_b, var_c );
+			Aj = QuadM ( var_a, var_b, var_c );
 
 			/* compute (umol/m2/s) final assimilation rate */
 			switch ( test_assimilation )
@@ -697,14 +697,14 @@ double Farquhar_BB (cell_t *const c, species_t *const s,const meteo_daily_t *con
 			var_b = ( Rd - Vcmax ) / s->value[STOMATAL_SHADE_CONDUCTANCE] - Ca - Kc;
 			var_c = Vcmax * ( Ca - gamma_star ) - Rd * ( Ca + Kc );
 
-			//Av = quadratic_solution ( var_a, var_b, var_c );
+			Av = QuadM ( var_a, var_b, var_c );
 
 			/* Solution when electron transport rate is limiting */
 			var_a = 1. / s->value[STOMATAL_SHADE_CONDUCTANCE];
 			var_b = ( Rd - J ) / s->value[STOMATAL_SHADE_CONDUCTANCE] - Ca - 2. * gamma_star;
 			var_c = J * ( Ca - gamma_star ) - Rd * ( Ca + 2. * gamma_star);
 
-			//Aj = quadratic_solution ( var_a, var_b, var_c );
+			Aj = QuadM ( var_a, var_b, var_c );
 
 			/* compute (umol/m2/s) final assimilation rate */
 			switch ( test_assimilation )
