@@ -152,18 +152,20 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 	logger(g_debug_log, "gl_c          = %f \n",gl_c);
 
 
-	/** correction for [CO2] stomatal conductance **/
-	/* correct maximum stomatal conductance for CO2 concentration */
-	gl_x = (s->value[F_CO2_TR] / 0.9116) * s->value[MAXCOND];
-	logger(g_debug_log, "gl_x = %f\n",gl_x);
+	if ( g_settings->PSN_mod != 2 )
+	{
+		/** correction for [CO2] stomatal conductance **/
+		/* correct maximum stomatal conductance for CO2 concentration */
+		gl_x = (s->value[F_CO2_TR] / 0.9116) * s->value[MAXCOND];
 
-
-	/** Jarvis effective stomatal conductance */
-	if ( ! g_settings->PSN_mod  ) gs_Jarvis (s, gl_x, g_corr);
-
-	/** Ball-Woodrow-Berry effective stomatal conductance */
-	if ( g_settings->PSN_mod == 2 ) gs_Ball_Berry (s, gl_x, g_corr);
-
+		/** Jarvis effective stomatal conductance */
+		gs_Jarvis (s, gl_x, g_corr);
+	}
+	else
+	{
+		/** Ball-Woodrow-Berry effective stomatal conductance */
+		gs_Ball_Berry (s, gl_x, g_corr);
+	}
 
 	/* calculate leaf-and canopy-level conductances to water vapor and
 		sensible heat fluxes, to be used in Penman-Monteith calculations of
