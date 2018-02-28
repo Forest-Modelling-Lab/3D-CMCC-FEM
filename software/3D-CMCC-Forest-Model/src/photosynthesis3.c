@@ -46,7 +46,7 @@ void photosynthesis_FvCB_BB (cell_t *const c, const int height, const int dbh, c
 
 		/* convert conductance from m/s --> umol/m2/s/Pa, and correct for CO2 vs. water vapor
 		(see for correction also Nobel 1991; Jones 1992 and Landsberg and Sands book pg 54) */
-		cond_corr                    = s->value[LEAF_SUN_CONDUCTANCE] * 1e6 / ( 1.6 * Rgas * ( meteo_daily->tday + TempAbs ) );
+		cond_corr                    = 0.; /* not used if Ball Berry */
 
 		/* convert Leaf Nitrogen from tN/cell --> to gN m-2 one-sided leaf area */
 		leafN                        = ( s->value[LEAF_SUN_N] * 1e6 / g_settings->sizeCell ) / s->value[LAI_SUN_PROJ];
@@ -59,7 +59,7 @@ void photosynthesis_FvCB_BB (cell_t *const c, const int height, const int dbh, c
 		par_abs                      = ( s->value[APAR_SUN] * 1e6 / 86400. ) / s->value[LAI_SUN_PROJ];
 
 		/* call Farquhar for sun leaves leaves photosynthesis */
-		psn = Farquhar (c, s, meteo_daily, meteo_annual, cond_corr, leafN, par_abs, leaf_day_mresp, sun_shade);
+		psn = Farquhar_BB (c, s, meteo_daily, meteo_annual, cond_corr, leafN, par_abs, leaf_day_mresp, sun_shade);
 
 		/* Canopy net assimilation and converting from umol/m2 leaf/sec gC/m2/day and to LAI for canopy computation */
 		s->value[ASSIMILATION_SUN]   = psn * s->value[LAI_SUN_PROJ] * meteo_daily->daylength_sec * GC_MOL * 1e-6;
@@ -77,7 +77,7 @@ void photosynthesis_FvCB_BB (cell_t *const c, const int height, const int dbh, c
 
 		/* convert conductance from m/s --> umol/m2/s/Pa, and correct for CO2 vs. water vapor
 		(see for correction also Nobel 1991; Jones 1992 and Landsberg and Sands book pg 54) */
-		cond_corr                    = s->value[LEAF_SHADE_CONDUCTANCE] * 1e6 / ( 1.6 * Rgas * ( meteo_daily->tday + TempAbs ) );
+		cond_corr                    = 0.; /* not used if Ball Berry */
 
 		/* convert Leaf Nitrogen from tN/cell --> to gN m-2 one-sided leaf area */
 		leafN                        = ( s->value[LEAF_SHADE_N] * 1e6 / g_settings->sizeCell ) / s->value[LAI_SHADE_PROJ];
@@ -90,7 +90,7 @@ void photosynthesis_FvCB_BB (cell_t *const c, const int height, const int dbh, c
 		par_abs                      = ( s->value[APAR_SHADE] * 1e6 / 86400. ) / s->value[LAI_SHADE_PROJ];
 
 		/* call Farquhar for shade leaves photosynthesis */
-		psn = Farquhar (c, s, meteo_daily, meteo_annual, cond_corr, leafN, par_abs, leaf_day_mresp, sun_shade );
+		psn = Farquhar_BB (c, s, meteo_daily, meteo_annual, cond_corr, leafN, par_abs, leaf_day_mresp, sun_shade );
 
 		/* Canopy net assimilation (photosynthesis) and converting from umol/m2 leaf/sec gC/m2/day and to LAI for canopy computation */
 		s->value[ASSIMILATION_SHADE] = psn * s->value[LAI_SHADE_PROJ] * meteo_daily->daylength_sec * GC_MOL * 1e-6;
@@ -238,8 +238,9 @@ double Farquhar_BB (cell_t *const c, species_t *const s,const meteo_daily_t *con
 	//static double Ea_Rub        = ?????;  /* (kJ mol-1) Activation energy for Rubisco */
 
 	/* local variables */
-	double Kc;                            /* (Pa) Michaelis-Menten constant for carboxylase reaction */
-	double Ko;                            /* (Pa) Michaelis-Menten constant for oxygenase reaction */
+	double Kc;                            /* (umol/mol) Michaelis-Menten constant for carboxylase reaction */
+	double Ko;                            /* (umol/mol) Michaelis-Menten constant for oxygenase reaction */
+	double Kmfn;                          /* (umol/mol) Effective Michaelis-Menten coefficient of Rubisco activity */
 	double Vcmax25;                       /* (umol/m2/s) Leaf-scale maximum carboxylation rate, 25°C */
 	double Vcmax;                         /* (umol/m2/s) Actual Leaf-scale maximum carboxylation rate */
 	double Jmax25;                        /* (umol/m2/s) Maximum rate of RuBP (ribulose-1,5-bisphosphate) regeneration, 25 °C */
@@ -247,9 +248,10 @@ double Farquhar_BB (cell_t *const c, species_t *const s,const meteo_daily_t *con
 	double Jmax;                          /* (umol/m2/s) rate of RuBP (ribulose-1,5-bisphosphate) regeneration */
 	double J;                             /* (umol/m2/s) Current rate of RuBP (ribulose-1,5-bisphosphate) regeneration */
 	double pabsII;                        /* (molPAR/m2/s) PAR effectively absorbed by the phosystemII */
-	double gamma_star;                    /* (Pa) CO2 compensation point without dark respiration */
+	double gamma_star;                    /* (umol/mol) CO2 compensation point without dark respiration */
+	double gamma_unstar;                  /* (umol/mol) CO2 compensation point */
 	double Ca;                            /* (Pa) atmospheric [CO2] pressure */
-	double O2;                            /* (Pa) intercellular O2 partial pressure, taken to be 0·21 (mol mol-1) see Medlyn et al., 1999 */
+	double O2umol;                        /* (umol/mol) Oxygen partial pressure (umol mol-1) */
 	double Av;                            /* (umol/m2/s) carboxylation rate for limited assimilation (synonym of Vc) */
 	double Aj;                            /* (umol/m2/s) RuBP (ribulose-1,5-bisphosphate) regeneration limited assimilation */
 	double A;                             /* (umol/m2/s) final assimilation rate */
@@ -259,16 +261,21 @@ double Farquhar_BB (cell_t *const c, species_t *const s,const meteo_daily_t *con
 	double tleaf_K;                       /* (Kelvin) leaf temperature (assumed equal to Tair) */
 	double tleaf10;                       /* (°C) 10 day mean leaf temperature (assumed equal to Tair) */
 	double tleaf10_K;                     /* (Kelvin) 10 day mean leaf temperature (assumed equal to Tair) */
+	double rel_hum;                       /* (fraction) relative humidity at leaf surface */
 	double temp_corr;                     /* temperature function */
 	double high_temp_corr;                /* high temperature inhibition */
 	double S_V_accl;                      /* (JK-1 mol) Vmax temperature response parameter (acclimated) */
 	double S_J_accl;                      /* (JK-1 mol) electron-transport temperature response parameter (acclimated) */
-	double var_a, var_b, var_c, det;
+	double var_a, var_b, var_c;
 
-	double g0 = 0.0496;
-	double g1 = 8.456; //fixme include in species.txt
-	double gsdiva;
-	double gamma_unstar;
+	double g0 = 0.0496;                   /* () stomatal conductance when A = 0 at the light compensation point */
+	double g1 = 4;                        /* () empirical coefficient */
+	double gsdiva;                        /* gs divided A */
+	double gs;                            /* (umol/m2/s) stomatal conductance to umolCO2 */
+	double gsmin;                         /* (umol/m2/sec) minimum stomatal conductance to umolCO2 */
+	double gsmax;                         /* (umol/m2/sec) maximum stomatal conductance to umolCO2 */
+	double gl_bl;                         /* (umol/m2/sec) boundary layer conductance */
+	double gl_c;                          /* (umol/m2/sec) cuticular conductance */
 	double cic;
 	double cij;
 
@@ -297,13 +304,37 @@ double Farquhar_BB (cell_t *const c, species_t *const s,const meteo_daily_t *con
 	/* (umol/m2/s) day leaf m. resp, proj. area basis */
 	//note: BIOME-BGC assumes leaf main respiration during daylight as dark respiration
 	//note: 3D-CMCC following Dufrene et al. considers light inhibition phenomenon in the daylight respiration routine
-	Rd  = leaf_day_mresp;
+	Rd        = leaf_day_mresp;
 
-	/* convert atmospheric CO2 from ppmV --> Pa */
-	Ca  = meteo_annual->co2Conc * meteo_daily->air_pressure / 1e6;
+	/* assign defualt value to gsmin */
+	gsmin     = 1e-9;
 
-	/* calculate atmospheric O2 in Pa, assumes 20.9% O2 by volume */
-	O2  = (O2CONC / 100. ) * meteo_daily->air_pressure;
+	/* convert maximum stomatal conductance from m/sec to umol/m2/sec and correct to CO2 from water vapor */
+	gsmax     = ( s->value[MAXCOND] * pow( ( meteo_daily->tday + TempAbs ) / 293.15, 1.75) * 101300. / meteo_daily->air_pressure) *
+			1e6 / ( GCtoGW * Rgas * ( meteo_daily->tday + TempAbs ) );
+
+	//gsmax     = ( s->value[MAXCOND] / GCtoGW );
+
+	/* convert boundary layer conductance from m/sec to umol/m2/sec and correct to CO2 from water vapor */
+	gl_bl     = ( s->value[BLCOND] * pow( ( meteo_daily->tday + TempAbs ) / 293.15, 1.75) * 101300. / meteo_daily->air_pressure) *
+			1e6 / ( GCtoGW * Rgas * ( meteo_daily->tday + TempAbs ) );
+
+	//gl_bl     = ( s->value[BLCOND] / GCtoGW );
+
+	/* convert cuticular conductance from m/sec to umol/m2/sec and correct to CO2 from water vapor */
+	gl_c      = ( s->value[CUTCOND] * pow( ( meteo_daily->tday + TempAbs ) / 293.15, 1.75) * 101300. / meteo_daily->air_pressure) *
+			1e6 / ( GCtoGW * Rgas * ( meteo_daily->tday + TempAbs ) );
+
+	//gl_c     = ( s->value[CUTCOND] / GCtoGW );
+
+	/* convert atmospheric CO2 from ppmV*/
+	Ca        = meteo_annual->co2Conc;
+
+	/* Oxygen partial pressure (umol mol-1) */
+	O2umol    = O2CONC * 1e4;
+
+	/* relative humidity at leaf surface */
+	rel_hum   = meteo_daily->rh_f / 100.;
 
 	/* calculate leaf temperature */
 	tleaf     = meteo_daily->tday;
@@ -315,61 +346,28 @@ double Farquhar_BB (cell_t *const c, species_t *const s,const meteo_daily_t *con
 
 	/****************************** ARRHENIUS KINETICS *****************************/
 	/*******************************************************************************/
+
 	/* the enzyme kinetics built into this model are based on Medlyn (1999) */
 
-	/* correct kinetic constants for temperature */
-	Ko  = Ko25 * exp ( Ea_Ko * ( tleaf - 25. ) / ( 298. * Rgas * ( tleaf + TempAbs ) ) );
+	/* correct kinetic constants for temperature (umol/mol) */
+	Ko   = Ko25 * exp ( Ea_Ko * ( tleaf - 25. ) / ( 298. * Rgas * ( tleaf + TempAbs ) ) );
 
-	/* Arrhenius coefficient for Rubisco as in Collatz et al., (1991)see von Caemmerer 2000 "Biochemical model of leaf photosynthesis" */
-	Kc  = Kc25 * exp ( Ea_Kc * ( tleaf - 25. ) / ( 298. * Rgas * ( tleaf + TempAbs ) ) );
+	/* Arrhenius coefficient for Rubisco for temperature (umol/mol) */
+	Kc   = Kc25 * exp ( Ea_Kc * ( tleaf - 25. ) / ( 298. * Rgas * ( tleaf + TempAbs ) ) );
 
-	/* convert Ko ubar umol --> Pa */
-	Ko *= 0.1;
-
-	/* convert Kc ubar umol --> Pa */
-	Kc *= 0.1;
+	/* effective Michaelis-Menten coefficient of Rubisco activity (umol/mol) */
+	Kmfn = Kc * ( 1. + O2umol / Ko );
 
 	/*******************************************************************************/
 
-	/* calculate gamma (Pa) CO2 compensation point due to photorespiration, in the absence of respiration */
+	/* compute gamma CO2 compensation point (umol/mol) */
+	gamma_unstar = CP * AIRMASS * meteo_daily->air_pressure / ( meteo_daily->lh_vap * WATERMASS);
 
-#if 1
+	/* calculate gamma_star (Pa) CO2 compensation point due to photorespiration, in the absence of respiration */
 
-	/* note: BIOME-BGC method */
-	/* see also Bernacchi et al., 2001 */
-	/* it assumes Vomax/Vcmax = 0.21; Badger & Andrews (1974), Medlyn et al., (2002) */
-	/* 0.5 because with 1 mol of oxygenations assumed to release 0.5 molCO2 by glycine decarboxilation (Farquhar and Busch 2017) */
-	/*
+	/* note: Bernacchi et al., 2001 method (umol/mol) */
+	gamma_star = 42.75 * exp ( 37830 * ( tleaf - 25.) / ( Rgas *( tleaf + TempAbs ) * ( 25 + TempAbs ) ) );
 
-	             Kc * Vomax * O
-	   gamma* = -----------------
-	             (2 * K0 * Vcmax)
-
-	 */
-
-	/* compute gamma_star (Pa) */
-	gamma_star = 0.5 * 0.21 * O2 * Kc / Ko;
-
-#else
-
-	if ( tleaf < -1. )
-	{
-		/* note:  Maespa */
-		gamma_star = 36.9 + 1.88*(-26.0) + 0.036*(-26.0)*(-26.0);
-	}
-	else
-	{
-		/* note: dePury and Farquhar 1997 method */
-		gamma_star = 36.9 + 1.88 * ( tleaf - 25. ) + 0.036 * pow( ( tleaf - 25. ) ) , 2. );
-	}
-
-	/* note: Bernacchi et al., 2001 method (in umol/mol)*/
-	gamma_star = 42.75 * exp (37830 * ( tleaf - 25.) / ( Rgas *(tleaf + TempAbs)*(25 + TempAbs)));
-
-	/* convert from umol --> Pa */
-	gamma_star *=  0.1;
-
-#endif
 
 	/*******************************************************************************/
 
@@ -419,8 +417,8 @@ double Farquhar_BB (cell_t *const c, species_t *const s,const meteo_daily_t *con
 	/* high temperature inhibition factor */
 	if ( tleaf > 0.)
 	{
-		high_temp_corr = ( 1. + exp ( ( S_V * 298. - H_V ) / ( Rgas * tleaf_K ) ) )
-												/ ( 1. + exp ( ( S_V * tleaf_K - H_V ) / ( Rgas * tleaf_K ) ) );
+		high_temp_corr = ( 1. + exp ( ( S_V * 298. - H_V ) / ( Rgas * tleaf_K ) ) ) /
+				( 1. + exp ( ( S_V * tleaf_K - H_V ) / ( Rgas * tleaf_K ) ) );
 	}
 	else
 	{
@@ -491,8 +489,8 @@ double Farquhar_BB (cell_t *const c, species_t *const s,const meteo_daily_t *con
 	/* high temperature inhibition factor */
 	if ( tleaf > 0.)
 	{
-		high_temp_corr = ( 1. + exp ( ( S_J * 298. - H_J ) / ( Rgas * 298. ) ) )
-																/ ( 1. + exp ( ( S_J * tleaf_K - H_J ) / ( Rgas * tleaf_K ) ) );
+		high_temp_corr = ( 1. + exp ( ( S_J * 298. - H_J ) / ( Rgas * 298. ) ) ) /
+				( 1. + exp ( ( S_J * tleaf_K - H_J ) / ( Rgas * tleaf_K ) ) );
 	}
 	else
 	{
@@ -500,14 +498,14 @@ double Farquhar_BB (cell_t *const c, species_t *const s,const meteo_daily_t *con
 	}
 
 	/* check condition */
-	CHECK_CONDITION( temp_corr      , <, 0.0);
-	CHECK_CONDITION( high_temp_corr , <, 0.0);
+	CHECK_CONDITION( temp_corr      , < , 0.0);
+	CHECK_CONDITION( high_temp_corr , < , 0.0);
 
 	/* correct Jmax25 for temperature dePury and Farquhar (1997) */
 	Jmax           = Jmax25 * temp_corr * high_temp_corr;
 
 	/* check condition */
-	CHECK_CONDITION( Jmax , <, 0.0);
+	CHECK_CONDITION( Jmax , < , 0.0);
 
 #endif
 
@@ -534,64 +532,52 @@ double Farquhar_BB (cell_t *const c, species_t *const s,const meteo_daily_t *con
 	J      = ( -var_b - sqrt ( var_b * var_b - 4. * var_a * var_c ) ) / ( 2. * var_a );
 
 	/*******************************************************************************/
-	/* note: all variables are in Pa */
 
-	/* solve for Av and Aj using the quadratic equation, substitution for Ci
-		from A = g(Ca-Ci) into the equations from Farquhar, von Caemmerer and Berry (1980)
-		and Bernacchi et al (2003) (for values 4.5 and 10.5) :
-
-		       Vmax (Ci - gamma)
-		Av =  -------------------   -   Rd
-		      Ci + Kc (1 + O2/Ko)
-
-
-		         J (Ci - gamma)
-		Aj  =  -------------------  -   Rd
-	           4.5 Ci + 10.5 gamma
+	/* Ball and Berry 1990 */
+	/*
+	 * as in the form described in Leuning 1990 (Aust J Plant Phys)
+	               g1 A hs
+		gs = g0 ---------------
+	            Ca - gamma_unstar
 	 */
 
-	/*******************************************************************************/
+	/* stomatal conductance divided by Assimilation in units of H2O */
+	gsdiva  = g1 * rel_hum/ ( Ca - gamma_unstar ) * s->value[F_SW];
 
-	/* Solution when Rubisco activity is limiting */
+	/* gsdiva must be converted to CO2 */
+	gsdiva /= GCtoGW;
 
-	/* compute gamma */
-	gamma_unstar = CP * AIRMASS * meteo_daily->air_pressure / meteo_daily->lh_vap;
+	/* accounting for leaf cuticular and boundary layer conductances */
+	gsdiva  = (gl_bl * (gsdiva + gl_c)) / (gl_bl + gsdiva + gl_c);
 
-	//fixme Cs == Ca????
-
-	/* Ball-Berry */
-	gsdiva = g1 * meteo_daily->rh_f / ( Ca - gamma_unstar ) * s->value[F_SW];
+	/* G0 must be converted to CO2 */
+	g0     /= GCtoGW;
 
 	/*****************************************************************************/
 
-	/* Following calculations are used for  Ball and Berry model */
-
-	/* Solution when Rubisco activity is limiting */
+	/* Simultaneous solution when Rubisco activity is limiting */
 
 	var_a = g0 + gsdiva * ( Vcmax - Rd );
-	var_b = ( 1. - Ca * gsdiva) * ( Vcmax - Rd ) + g0 * ( Kc - Ca )- gsdiva * ( Vcmax * gamma_star + Kc * Rd );
-	var_c = -(1. - Ca * gsdiva) * ( Vcmax  *gamma_star + Kc * Rd ) - g0 * Kc * Ca;
+	var_b =  ( 1. - Ca * gsdiva) * ( Vcmax - Rd ) + g0 * ( Kmfn - Ca ) - gsdiva * ( Vcmax * gamma_star + Kmfn * Rd );
+	var_c = -( 1. - Ca * gsdiva) * ( Vcmax  * gamma_star + Kmfn * Rd ) - g0 * Kmfn * Ca;
 
 	/* Solves the quadratic equation - finds LARGER root. */
-	cic = ( -var_b + sqrt ( var_b * var_b - 4. * var_a * var_c ) ) / ( 2. * var_a );
+	cic   = ( -var_b + sqrt ( var_b * var_b - 4. * var_a * var_c ) ) / ( 2. * var_a );
 
-	Av = Vcmax * ( cic - gamma_star ) / ( cic + Kc );
-
+	Av    = Vcmax * ( cic - gamma_star ) / ( cic + Kmfn );
 
 	/*******************************************************************************/
 
-	/* Following calculations are used for  Ball and Berry model */
-
-	/* Solution when electron transport rate is limiting */
+	/* Simultaneous solution when electron transport rate is limiting */
 
 	var_a = g0 + gsdiva * ( J - Rd );
-	var_b = ( 1. - Ca * gsdiva ) * ( J - Rd ) + g0 * ( 2. * gamma_star - Ca ) - gsdiva * (J * gamma_star + 2.* gamma_star * Rd );
-	var_c = -(1. - Ca * gsdiva ) * gamma_star * ( J + 2. * Rd ) - g0 * 2. * gamma_star * Ca;
+	var_b =  ( 1. - Ca * gsdiva ) * ( J - Rd ) + g0 * ( 2. * gamma_star - Ca ) - gsdiva * ( J * gamma_star + 2.* gamma_star * Rd );
+	var_c = -( 1. - Ca * gsdiva ) * gamma_star * ( J + 2. * Rd ) - g0 * 2. * gamma_star * Ca;
 
 	/* Solves the quadratic equation - finds LARGER root. */
-	cij = ( -var_b + sqrt ( var_b * var_b - 4. * var_a * var_c ) ) / ( 2. * var_a );
+	cij  = ( -var_b + sqrt ( var_b * var_b - 4. * var_a * var_c ) ) / ( 2. * var_a );
 
-	Aj = J * ( cij - gamma_star ) / ( cij + 2. * gamma_star );
+	Aj   = J * ( cij - gamma_star ) / ( cij + 2. * gamma_star );
 
 	if ( Aj - Rd < 1e-6 )
 	{
@@ -604,142 +590,59 @@ double Farquhar_BB (cell_t *const c, species_t *const s,const meteo_daily_t *con
 	/*******************************************************************************/
 
 	/* compute (umol/m2/s) final assimilation rate */
-	switch ( test_assimilation )
-	{
-	case 0:
-
-		/* estimate A as the minimum of (Av,Aj) */
-		A = MIN ( Av, Aj );
-
-		break;
-	case 1:
-
-		/* estimate A as Av */
-		A = Av;
-
-		break;
-	case 2:
-		/* estimate A as Aj */
-		A = Aj;
-
-		break;
-	}
+	/* estimate A as the minimum of (Av,Aj) */
+	A = MIN ( Av, Aj );
 
 	/*******************************************************************************/
 
-	//FIXME SHOULD i INCLUDE g_corr with MAXCOND?????
+	/* compute actual stomatal conductance (umol/m2/s) */
+	gs = g0 + gsdiva * A;
+
+	/* Set nearly zero conductance (for numerical reasons) */
+	if ( gs < gsmin ) gs = gsmin;
+
+	/* Set at maximum value if current conductance exceeds maximum value */
+	if ( gs > gsmax )
+	{
+		gs = gsmax;
+
+		/* Now that GS is known, solve for CI and A as in the Jarvis model */
+
+		/* Solution when Rubisco activity is limiting */
+		var_a = 1. / gs;
+		var_b = ( Rd - Vcmax ) / gs - Ca - Kc;
+		var_c = Vcmax * ( Ca - gamma_star ) - Rd * ( Ca + Kc );
+
+		/* Solves the quadratic equation - finds SMALLER root. */
+		Av = ( -var_b - sqrt ( var_b * var_b - 4. * var_a * var_c ) ) / ( 2. * var_a );
+
+		/* Solution when electron transport rate is limiting */
+		var_a = 1. / gs;
+		var_b = ( Rd - J ) / gs - Ca - 2. * gamma_star;
+		var_c = J * ( Ca - gamma_star ) - Rd * ( Ca + 2. * gamma_star);
+
+		/* Solves the quadratic equation - finds SMALLER root. */
+		Aj = ( -var_b - sqrt ( var_b * var_b - 4. * var_a * var_c ) ) / ( 2. * var_a );
+
+		/* compute (umol/m2/s) final assimilation rate */
+		/* estimate A as the minimum of (Av,Aj) */
+		A = MIN ( Av, Aj );
+
+	}
 
 	if ( ! sun_shade )
 	{
-		s->value[STOMATAL_SUN_CONDUCTANCE] = g0 + gsdiva * A;
+		/* convert stomatal conductance from umol/m2/s to m/s and converted to H20 */
+		s->value[STOMATAL_SUN_CONDUCTANCE] = gs / 1e6 * ( GCtoGW * Rgas * ( meteo_daily->tday + TempAbs ) );
 
-		/* Set nearly zero conductance (for numerical reasons) */
-		if ( s->value[STOMATAL_SUN_CONDUCTANCE] < 1e-9 ) s->value[STOMATAL_SUN_CONDUCTANCE] = 1e-9;
-
-		/* Set at maximum value if current conductance exceeds maximum value */
-		if ( s->value[STOMATAL_SUN_CONDUCTANCE] > s->value[MAXCOND] )
-		{
-			s->value[STOMATAL_SUN_CONDUCTANCE] = s->value[MAXCOND];
-
-			/* Now that GS is known, solve for CI and A as in the Jarvis model */
-
-			/* Solution when Rubisco activity is limiting */
-			var_a = 1. / s->value[STOMATAL_SUN_CONDUCTANCE];
-			var_b = ( Rd - Vcmax ) / s->value[STOMATAL_SUN_CONDUCTANCE] - Ca - Kc;
-			var_c = Vcmax * ( Ca - gamma_star ) - Rd * ( Ca + Kc );
-
-			/* Solves the quadratic equation - finds SMALLER root. */
-			Av = ( -var_b - sqrt ( var_b * var_b - 4. * var_a * var_c ) ) / ( 2. * var_a );
-
-			/* Solution when electron transport rate is limiting */
-			var_a = 1. / s->value[STOMATAL_SUN_CONDUCTANCE];
-			var_b = ( Rd - J ) / s->value[STOMATAL_SUN_CONDUCTANCE] - Ca - 2. * gamma_star;
-			var_c = J * ( Ca - gamma_star ) - Rd * ( Ca + 2. * gamma_star);
-
-			/* Solves the quadratic equation - finds SMALLER root. */
-			Aj = ( -var_b - sqrt ( var_b * var_b - 4. * var_a * var_c ) ) / ( 2. * var_a );
-
-			/* compute (umol/m2/s) final assimilation rate */
-			switch ( test_assimilation )
-			{
-			case 0:
-
-				/* estimate A as the minimum of (Av,Aj) */
-				A = MIN ( Av, Aj );
-
-				break;
-			case 1:
-
-				/* estimate A as Av */
-				A = Av;
-
-				break;
-			case 2:
-				/* estimate A as Aj */
-				A = Aj;
-
-				break;
-			}
-
-			Ci = Ca - A / s->value[STOMATAL_SUN_CONDUCTANCE];
-
-		}
+		Ci = Ca - A / s->value[STOMATAL_SUN_CONDUCTANCE];
 	}
 	else
 	{
-		s->value[STOMATAL_SHADE_CONDUCTANCE] = g0 + gsdiva * A;
+		/* convert stomatal conductance from umol/m2/s to m/s and converted to H20 */
+		s->value[STOMATAL_SHADE_CONDUCTANCE] = gs / 1e6 * ( GCtoGW * Rgas * ( meteo_daily->tday + TempAbs ) );
 
-		/* Set nearly zero conductance (for numerical reasons) */
-		if ( s->value[STOMATAL_SHADE_CONDUCTANCE] < 1e-9 ) s->value[STOMATAL_SUN_CONDUCTANCE] = 1e-9;
-
-		/* Set at maximum value if current conductance exceeds maximum value */
-		if ( s->value[STOMATAL_SHADE_CONDUCTANCE] > s->value[MAXCOND] )
-		{
-			s->value[STOMATAL_SHADE_CONDUCTANCE] = s->value[MAXCOND];
-
-			/* Now that GS is known, solve for CI and A as in the Jarvis model */
-
-			/* Solution when Rubisco activity is limiting */
-			var_a = 1. / s->value[STOMATAL_SHADE_CONDUCTANCE];
-			var_b = ( Rd - Vcmax ) / s->value[STOMATAL_SHADE_CONDUCTANCE] - Ca - Kc;
-			var_c = Vcmax * ( Ca - gamma_star ) - Rd * ( Ca + Kc );
-
-			/* Solves the quadratic equation - finds SMALLER root. */
-			Av = ( -var_b - sqrt ( var_b * var_b - 4. * var_a * var_c ) ) / ( 2. * var_a );
-
-			/* Solution when electron transport rate is limiting */
-			var_a = 1. / s->value[STOMATAL_SHADE_CONDUCTANCE];
-			var_b = ( Rd - J ) / s->value[STOMATAL_SHADE_CONDUCTANCE] - Ca - 2. * gamma_star;
-			var_c = J * ( Ca - gamma_star ) - Rd * ( Ca + 2. * gamma_star);
-
-			/* Solves the quadratic equation - finds SMALLER root. */
-			Aj = ( -var_b - sqrt ( var_b * var_b - 4. * var_a * var_c ) ) / ( 2. * var_a );
-
-			/* compute (umol/m2/s) final assimilation rate */
-			switch ( test_assimilation )
-			{
-			case 0:
-
-				/* estimate A as the minimum of (Av,Aj) */
-				A = MIN ( Av, Aj );
-
-				break;
-			case 1:
-
-				/* estimate A as Av */
-				A = Av;
-
-				break;
-			case 2:
-				/* estimate A as Aj */
-				A = Aj;
-
-				break;
-			}
-
-			Ci = Ca - A / s->value[STOMATAL_SHADE_CONDUCTANCE];
-
-		}
+		Ci = Ca - A / s->value[STOMATAL_SHADE_CONDUCTANCE];
 	}
 
 	/*******************************************************************************/

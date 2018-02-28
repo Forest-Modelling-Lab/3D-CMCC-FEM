@@ -46,7 +46,7 @@ void photosynthesis_FvCB (cell_t *const c, const int height, const int dbh, cons
 
 		/* convert conductance from m/s --> umol/m2/s/Pa, and correct for CO2 vs. water vapor
 		(see for correction also Nobel 1991; Jones 1992 and Landsberg and Sands book pg 54) */
-		cond_corr                    = s->value[LEAF_SUN_CONDUCTANCE] * 1e6 / ( 1.6 * Rgas * ( meteo_daily->tday + TempAbs ) );
+		cond_corr                    = s->value[LEAF_SUN_CONDUCTANCE] * 1e6 / ( GCtoGW * Rgas * ( meteo_daily->tday + TempAbs ) );
 
 		/* convert Leaf Nitrogen from tN/cell --> to gN m-2 one-sided leaf area */
 		leafN                        = ( s->value[LEAF_SUN_N] * 1e6 / g_settings->sizeCell ) / s->value[LAI_SUN_PROJ];
@@ -77,7 +77,7 @@ void photosynthesis_FvCB (cell_t *const c, const int height, const int dbh, cons
 
 		/* convert conductance from m/s --> umol/m2/s/Pa, and correct for CO2 vs. water vapor
 		(see for correction also Nobel 1991; Jones 1992 and Landsberg and Sands book pg 54) */
-		cond_corr                    = s->value[LEAF_SHADE_CONDUCTANCE] * 1e6 / ( 1.6 * Rgas * ( meteo_daily->tday + TempAbs ) );
+		cond_corr                    = s->value[LEAF_SHADE_CONDUCTANCE] * 1e6 / ( GCtoGW * Rgas * ( meteo_daily->tday + TempAbs ) );
 
 		/* convert Leaf Nitrogen from tN/cell --> to gN m-2 one-sided leaf area */
 		leafN                        = ( s->value[LEAF_SHADE_N] * 1e6 / g_settings->sizeCell ) / s->value[LAI_SHADE_PROJ];
@@ -240,6 +240,7 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	/* local variables */
 	double Kc;                            /* (Pa) Michaelis-Menten constant for carboxylase reaction */
 	double Ko;                            /* (Pa) Michaelis-Menten constant for oxygenase reaction */
+	double Kmfn;                          /* (Pa) effective Michaelis-Menten coefficient of Rubisco activity */
 	double Vcmax25;                       /* (umol/m2/s) Leaf-scale maximum carboxylation rate, 25°C */
 	double Vcmax;                         /* (umol/m2/s) Actual Leaf-scale maximum carboxylation rate */
 	double Jmax25;                        /* (umol/m2/s) Maximum rate of RuBP (ribulose-1,5-bisphosphate) regeneration, 25 °C */
@@ -322,6 +323,9 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 
 	/* convert Kc ubar umol --> Pa */
 	Kc *= 0.1;
+
+	/* effective Michaelis-Menten coefficient of Rubisco activity */
+	Kmfn = Kc * ( 1. + O2 / Ko );
 
 	/*******************************************************************************/
 
@@ -535,7 +539,7 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 
 		       Vmax (Ci - gamma)
 		Av =  -------------------   -   Rd
-		      Ci + Kc (1 + O2/Ko)
+		         Ci + Kmfn
 
 
 		         J (Ci - gamma)
@@ -547,8 +551,8 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 
 	/* quadratic solution for Av */
 	var_a =  -1. / cond_corr;
-	var_b = Ca + ( Vcmax - Rd ) / cond_corr + Kc * ( 1. + O2 / Ko );
-	var_c = Vcmax * ( gamma_star - Ca ) + Rd * ( Ca + Kc * ( 1. + O2 / Ko ) );
+	var_b = Ca + ( Vcmax - Rd ) / cond_corr + Kmfn;
+	var_c = Vcmax * ( gamma_star - Ca ) + Rd * ( Ca + Kmfn );
 
 	det   = var_b * var_b - 4. * var_a * var_c;
 	/* check condition */

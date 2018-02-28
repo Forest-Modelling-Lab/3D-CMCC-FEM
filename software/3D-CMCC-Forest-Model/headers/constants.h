@@ -55,6 +55,7 @@ enum {
 #define EPAR                    4.55      /* (umol/J OR mol/MJ) PAR photon energy ratio */
 #define SLAMKG                   0.1	  /* Convert SLA IN cm ^2/gC in m^2/KgC */
 #define E20                      2.2      /* rate of change of saturated VPD with T at 20C */
+#define GCtoGW                  1.57      /* conversion from conductance to CO2 to H2O */
 #define VPDCONV             0.000622      /* convert VPD to saturation deficit = 18/29/1000 */
 #define EVAPOCOEFF              1.32      /* Priestley Taylor Coefficient (Hobbins et al., 2001) */
 #define MWratio                0.622      /* ratio molecular weight of water vapour air */

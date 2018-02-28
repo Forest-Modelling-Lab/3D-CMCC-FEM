@@ -283,6 +283,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							}
 							else if ( g_settings->PSN_mod == 2 )
 							{
+								//test
 								/**********************************************************************/
 								/** FvCB + Ball Berry */
 
@@ -290,10 +291,10 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 								/* (Maint Resp)->(Growth Resp = (GPP - Maint Resp) * eff_grperc)->(NPP) */
 
 								/* maintenance respiration */
-								maintenance_respiration ( c, layer, height, dbh, age, species, meteo_daily );
+								maintenance_respiration  ( c, layer, height, dbh, age, species, meteo_daily );
 
 								/* canopy carbon assimilation ( Farquhar Von Caemmerer and Berry - FvCB - approach ) */
-								photosynthesis_FvCB     ( c, height, dbh, age, species, meteo_daily, meteo_annual );
+								photosynthesis_FvCB_BB    ( c, height, dbh, age, species, meteo_daily, meteo_annual );
 
 								/* canopy water fluxes */
 								canopy_evapotranspiration ( c, layer, height, dbh, age, species, meteo_daily );

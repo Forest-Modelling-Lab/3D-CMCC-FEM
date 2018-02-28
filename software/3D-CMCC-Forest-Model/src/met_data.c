@@ -468,7 +468,6 @@ void Air_pressure(meteo_t *met, const int day, const int month)
 	t1 = 1. - ( LR_STD * g_topo->values[TOPO_ELEV] ) / T_STD;
 	t2 = G_STD / ( LR_STD * ( Rgas / AIRMASS ) );
 	met[month].d[day].air_pressure = P_STD * pow ( t1, t2 );
-	//logger(g_debug_log, "Air pressure = %f Pa\n", met[month].d[day].air_pressure);
 }
 
 
