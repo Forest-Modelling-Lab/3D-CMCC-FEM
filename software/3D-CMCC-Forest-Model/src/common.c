@@ -40,26 +40,26 @@ typedef uint64_t uint64;
 /* external error strings */
 const char sz_err_out_of_memory[] = "out of memory";
 
-double QuadM ( const double var_a, const double var_b, const double var_c )
+double QuadM ( const double a, const double b, const double c )
 {
 	double quadm;
 
 	/* Solves the quadratic equation - finds SMALLER root. */
 
-	if ( ( var_b * var_b - 4. * var_a * var_c ) < 0. )
+	if ( ( b * b - 4. * a * c ) < 0. )
 	{
 		puts("Warning:imaginary roots in quadratic");
 		quadm = 0.;
 	}
 	else
 	{
-		if ( ! var_a )
+		if ( 0. == a )
 		{
-			if ( ! var_b )
+			if ( 0. ==  b )
 			{
 				quadm = 0.;
 
-				if ( var_c )
+				if ( 0. != c )
 				{
 					puts("ERROR: CANT SOLVE QUADRATIC");
 					exit (1);
@@ -67,38 +67,38 @@ double QuadM ( const double var_a, const double var_b, const double var_c )
 			}
 			else
 			{
-				quadm = -var_c / var_b;
+				quadm = -c / b;
 			}
 		}
 		else
 		{
-			quadm = (-var_b - sqrt ( var_b * var_b - 4. * var_a * var_c ) ) / ( 2. * var_a );
+			quadm = ( -b - sqrt ( b * b - 4. * a * c ) ) / ( 2. * a );
 
 		}
 	}
 	return quadm;
 }
 
-double QuadP ( const double var_a, const double var_b, const double var_c )
+double QuadP ( const double a, const double b, const double c )
 {
 	double quadp;
 
 	/* Solves the quadratic equation - finds LARGER root. */
 
-	if ( ( var_b * var_b - 4. * var_a * var_c ) < 0. )
+	if ( ( b * b - 4. * a * c ) < 0. )
 	{
 		puts("Warning:imaginary roots in quadratic");
 		quadp = 0.;
 	}
 	else
 	{
-		if ( ! var_a )
+		if ( 0. == a )
 		{
-			if ( ! var_b )
+			if ( 0. == b )
 			{
 				quadp = 0.;
 
-				if ( var_c )
+				if ( 0. != c )
 				{
 					puts("ERROR: CANT SOLVE QUADRATIC");
 					exit (1);
@@ -106,12 +106,12 @@ double QuadP ( const double var_a, const double var_b, const double var_c )
 			}
 			else
 			{
-				quadp = -var_c / var_b;
+				quadp = -c / b;
 			}
 		}
 		else
 		{
-			quadp = (- var_b + sqrt ( var_b * var_b - 4. * var_a * var_c ) ) / ( 2. * var_a );
+			quadp = (- b + sqrt ( b * b - 4. * a * c ) ) / ( 2. * a );
 		}
 	}
 	return quadp;

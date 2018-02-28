@@ -109,7 +109,8 @@ char* string_copy(const char *const string);
 char* string_tokenizer(char *string, const char *delimiters, char **p);
 char* strstr_i(char* str1, const char* str2);
 char* get_current_path(void);
-double quadratic_solution(const double a, const double b, const double c);
+double QuadM (const double a, const double b, const double c);
+double QuadP (const double a, const double b, const double c);
 
 int file_get_rows_count(const char* const filename);
 int file_load_in_memory(const char* const filename, char** result);

@@ -285,7 +285,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							{
 								//test
 								/**********************************************************************/
-								/** FvCB + Ball Berry */
+								/** FvCB + Ball Berry / Medlyn */
 
 								/* note: following Piao et al., 2010 */
 								/* (Maint Resp)->(Growth Resp = (GPP - Maint Resp) * eff_grperc)->(NPP) */
