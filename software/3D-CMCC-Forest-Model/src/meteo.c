@@ -277,7 +277,7 @@ static void compute_vpd(double *const values, const int rows_count, const int co
 		if ( ! IS_INVALID_VALUE(ta) && ! IS_INVALID_VALUE(rh) ) {
 
 			/* deal with extreme cases */
-			if ( 100. == rh ) {
+			if ( rh >= 100. ) {
 				rh = 99.99;
 			}
 

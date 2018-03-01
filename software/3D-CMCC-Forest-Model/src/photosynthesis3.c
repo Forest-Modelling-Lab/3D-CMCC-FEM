@@ -290,6 +290,18 @@ double Farquhar_BB (cell_t *const c, species_t *const s,const meteo_daily_t *con
 	static double test_Jmax  = 100; /* (umol/m2/sec) Jmax for fagus see Deckmyn et al., 2004 GCB */
 
 	static int test_assimilation = 0; /* 0 uses min (Av, Aj), 1 only Av, 2 only Aj */
+
+	if ( ! string_compare_i(s->name, "Fagussylvatica") )
+	{
+		g1 = 6.99;
+	}
+	/*
+
+
+
+	*/
+
+
 	/*
 	 * some parameter values (to be included in species.txt):
 	 * Vcmax = 55 (umol/m2/sec) for fagus see Deckmyn et al., 2004 GCB
