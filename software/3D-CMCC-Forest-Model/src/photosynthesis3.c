@@ -207,6 +207,8 @@ double Farquhar_BB (cell_t *const c, species_t *const s,const meteo_daily_t *con
 		All other parameters, including the q10's for Kc and Ko are the same
 		as in Woodrow and Berry. */
 
+	int err;
+
 
 #if 0
 	/* Badger and Collatz 1977 */
@@ -270,7 +272,7 @@ double Farquhar_BB (cell_t *const c, species_t *const s,const meteo_daily_t *con
 	double var_a, var_b, var_c;
 
 	double g0 = 0;                        /* (mol/m2/s) stomatal conductance when A = 0 at the light compensation point */
-	double g1 = 6.99;                        /* () empirical coefficient */
+	double g1 = 2; //6.99;                     /* () empirical coefficient */
 	double gsdiva;                        /* gs divided A */
 	double gs;                            /* (mol/m2/s) stomatal conductance to umolCO2 */
 	double gsmin;                         /* (mol/m2/sec) minimum stomatal conductance to umolCO2 */
@@ -562,7 +564,7 @@ double Farquhar_BB (cell_t *const c, species_t *const s,const meteo_daily_t *con
 
 	/* compute (umol RuBP/m2/s) rate of RuBP (ribulose-1,5-bisphosphate) regeneration */
 	/* Solves the quadratic equation - finds SMALLER root. */
-	J      = QuadM ( var_a, var_b, var_c );
+	J      = QuadM ( var_a, var_b, var_c, &err );
 
 	/* RuBP regeneration rate */
 	J     /= 4.;
@@ -576,9 +578,11 @@ double Farquhar_BB (cell_t *const c, species_t *const s,const meteo_daily_t *con
 	var_c = -( 1. - Ca * gsdiva) * ( Vcmax  * gamma_star + Kmfn * Rd ) - g0 * Kmfn * Ca;
 
 	/* Solves the quadratic equation - finds LARGER root. */
-	cic   = QuadP ( var_a, var_b, var_c );
+	cic   = QuadP ( var_a, var_b, var_c, &err );
 
-	if ( cic < 0. || cic > Ca ) Av = 0.;
+	printf("cic %g\n", cic);
+
+	if ( err == 1 || cic < 0. || cic > Ca ) Av = 0.;
 	else Av    = Vcmax * ( cic - gamma_star ) / ( cic + Kmfn );
 
 	/*******************************************************************************/
@@ -590,7 +594,9 @@ double Farquhar_BB (cell_t *const c, species_t *const s,const meteo_daily_t *con
 	var_c = -( 1. - Ca * gsdiva ) * gamma_star * ( J + 2. * Rd ) - g0 * 2. * gamma_star * Ca;
 
 	/* Solves the quadratic equation - finds LARGER root. */
-	cij  = QuadP ( var_a, var_b, var_c );
+	cij  = QuadP ( var_a, var_b, var_c, &err );
+
+	printf("cij %g\n", cij);
 
 	Aj   = J * ( cij - gamma_star ) / ( cij + 2. * gamma_star );
 
@@ -608,6 +614,8 @@ double Farquhar_BB (cell_t *const c, species_t *const s,const meteo_daily_t *con
 	/* estimate A as the minimum of (Av,Aj) */
 	A = MIN ( Av, Aj );
 
+	printf("Av %g\n", Av);
+	printf("Aj %g\n", Aj);
 	printf("A %g\n", A);
 
 	/*******************************************************************************/
@@ -634,7 +642,7 @@ double Farquhar_BB (cell_t *const c, species_t *const s,const meteo_daily_t *con
 		var_c = Vcmax * ( Ca - gamma_star ) - Rd * ( Ca + Kc );
 
 		/* Solves the quadratic equation - finds SMALLER root. */
-		Av = QuadM ( var_a, var_b, var_c );
+		Av = QuadM ( var_a, var_b, var_c, &err );
 
 		/* Solution when electron transport rate is limiting */
 		var_a = 1. / gs;
@@ -642,7 +650,7 @@ double Farquhar_BB (cell_t *const c, species_t *const s,const meteo_daily_t *con
 		var_c = J * ( Ca - gamma_star ) - Rd * ( Ca + 2. * gamma_star);
 
 		/* Solves the quadratic equation - finds SMALLER root. */
-		Aj = QuadM ( var_a, var_b, var_c );
+		Aj = QuadM ( var_a, var_b, var_c, &err );
 
 		/* compute (umol/m2/s) final assimilation rate */
 		/* estimate A as the minimum of (Av,Aj) */

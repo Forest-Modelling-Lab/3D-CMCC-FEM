@@ -40,9 +40,11 @@ typedef uint64_t uint64;
 /* external error strings */
 const char sz_err_out_of_memory[] = "out of memory";
 
-double QuadM ( const double a, const double b, const double c )
+double QuadM ( const double a, const double b, const double c, int* const err)
 {
 	double quadm;
+
+	*err = 0;
 
 	/* Solves the quadratic equation - finds SMALLER root. */
 
@@ -50,6 +52,7 @@ double QuadM ( const double a, const double b, const double c )
 	{
 		puts("Warning:imaginary roots in quadratic");
 		quadm = 0.;
+		*err  = 1;
 	}
 	else
 	{
@@ -79,9 +82,11 @@ double QuadM ( const double a, const double b, const double c )
 	return quadm;
 }
 
-double QuadP ( const double a, const double b, const double c )
+double QuadP ( const double a, const double b, const double c, int* const err )
 {
 	double quadp;
+
+	*err = 0;
 
 	/* Solves the quadratic equation - finds LARGER root. */
 
@@ -89,6 +94,7 @@ double QuadP ( const double a, const double b, const double c )
 	{
 		puts("Warning:imaginary roots in quadratic");
 		quadp = 0.;
+		*err  = 1;
 	}
 	else
 	{
@@ -111,7 +117,7 @@ double QuadP ( const double a, const double b, const double c )
 		}
 		else
 		{
-			quadp = (- b + sqrt ( b * b - 4. * a * c ) ) / ( 2. * a );
+			quadp = ( - b + sqrt ( b * b - 4. * a * c ) ) / ( 2. * a );
 		}
 	}
 	return quadp;

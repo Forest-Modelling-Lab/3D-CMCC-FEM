@@ -54,10 +54,10 @@ extern logger_t* g_annual_log;
 
 #define CHECK_CONDITION(x,c,y) {					\
 		if ( is_nan((x)) ) {						\
-			puts(XSTR(x)" is NAN");					\
+			puts(XSTR(x)" is NAN in " XSTR(__FILE__) " in " XSTR(__LINE__));					\
 			exit(1);								\
 		} else if ( is_inf((x)) ) {					\
-			puts(XSTR(x)" is INF");					\
+			puts(XSTR(x)" is INF in " XSTR(__FILE__) " in " XSTR(__LINE__));					\
 			exit(1);								\
 		} else if ( (x)c(y) ) { 					\
 			char buf[256]; 							\
@@ -109,8 +109,8 @@ char* string_copy(const char *const string);
 char* string_tokenizer(char *string, const char *delimiters, char **p);
 char* strstr_i(char* str1, const char* str2);
 char* get_current_path(void);
-double QuadM (const double a, const double b, const double c);
-double QuadP (const double a, const double b, const double c);
+double QuadM (const double a, const double b, const double c, int* const err);
+double QuadP (const double a, const double b, const double c, int* const err);
 
 int file_get_rows_count(const char* const filename);
 int file_load_in_memory(const char* const filename, char** result);
