@@ -328,11 +328,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\litter_carbon_balance.c"
+				>
+			</File>
+			<File
 				RelativePath=".\src\litter_model.c"
 				>
 			</File>
 			<File
 				RelativePath=".\src\litter_model_check_balance.c"
+				>
+			</File>
+			<File
+				RelativePath=".\src\litter_nitrogen_balance.c"
 				>
 			</File>
 			<File
@@ -380,10 +388,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\N-assimilation.c"
-				>
-			</File>
-			<File
 				RelativePath=".\src\nc.c"
 				>
 			</File>
@@ -416,6 +420,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\photosynthesis3.c"
+				>
+			</File>
+			<File
 				RelativePath=".\src\print.c"
 				>
 			</File>
@@ -440,6 +448,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\soil_carbon_balance.c"
+				>
+			</File>
+			<File
 				RelativePath=".\src\soil_evaporation.c"
 				>
 			</File>
@@ -449,6 +461,10 @@
 			</File>
 			<File
 				RelativePath=".\src\soil_model_check_balance.c"
+				>
+			</File>
+			<File
+				RelativePath=".\src\soil_nitrogen_balance.c"
 				>
 			</File>
 			<File

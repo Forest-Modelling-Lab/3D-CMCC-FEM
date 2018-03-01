@@ -164,7 +164,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 	else
 	{
 		/** Ball-Woodrow-Berry effective stomatal conductance */
-		gs_Ball_Berry (s, gl_x, g_corr);
+		//gs_Ball_Berry (s, gl_x, g_corr);
 	}
 
 	/* calculate leaf-and canopy-level conductances to water vapor and

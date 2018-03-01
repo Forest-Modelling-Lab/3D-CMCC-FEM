@@ -275,6 +275,12 @@ static void compute_vpd(double *const values, const int rows_count, const int co
 		value = INVALID_VALUE;
 
 		if ( ! IS_INVALID_VALUE(ta) && ! IS_INVALID_VALUE(rh) ) {
+
+			/* deal with extreme cases */
+			if ( 100. == rh ) {
+				rh = 99.99;
+			}
+
 			/* 6.1076 is for hPa */
 			value = 6.1076 * exp(17.26938818 * ta / (237.3 + ta));
 			value *= (1 - rh / 100.0);

@@ -84,7 +84,7 @@ char	*g_sz_parameterization_path = NULL
 		;
 
 int g_year_start_index;
-char g_sz_parameterization_output_path[256];
+char g_sz_input_data_path[256];
 char g_sz_output_fullpath[256];
 
 static int years_of_simulation;	// default is none
@@ -326,8 +326,8 @@ static int output_path_create(void)
 static int parameterization_output_create(void) {
 	int i;
 
-	i = sprintf(g_sz_parameterization_output_path
-			, "%sparameterization%s"
+	i = sprintf(g_sz_input_data_path
+			, "%sinput_data%s"
 			, g_sz_output_path
 			, FOLDER_DELIMITER
 	);
@@ -336,7 +336,7 @@ static int parameterization_output_create(void) {
 		return 0;
 	}
 
-	return path_create(g_sz_parameterization_output_path);
+	return path_create(g_sz_input_data_path);
 }
 
 static int log_start(const char* const sitename)
@@ -442,7 +442,7 @@ static int log_start(const char* const sitename)
 	/* extension */
 	sprintf(buffer+len, ".txt");
 
-	/* create log files and parameterization folder */
+	/* create log files and input_data folder */
 	{
 		int i;
 		int log_flag[LOG_TYPES_COUNT];
@@ -1276,6 +1276,27 @@ int main(int argc, char *argv[]) {
 	matrix = matrix_create(s, soil_settings_count, g_sz_dataset_file, &g_dataset);
 	if ( ! matrix ) goto err;
 	puts(msg_ok);
+
+	// save input data files
+	if ( ! file_copy(g_sz_dataset_file, g_sz_input_data_path) )
+	{
+		printf("warning: unable to copy dataset file %s to %s\n", g_sz_dataset_file, g_sz_input_data_path);
+	}
+
+	if ( ! file_copy(g_sz_settings_file, g_sz_input_data_path) )
+	{
+		printf("warning: unable to copy settings file %s to %s\n", g_sz_settings_file, g_sz_input_data_path);
+	}
+
+	if ( ! file_copy(g_sz_soil_file, g_sz_input_data_path) )
+	{
+		printf("warning: unable to copy soil file %s to %s\n", g_sz_soil_file, g_sz_input_data_path);
+	}
+
+	if ( ! file_copy(g_sz_topo_file, g_sz_input_data_path) )
+	{
+		printf("warning: unable to copy topo file %s to %s\n", g_sz_topo_file, g_sz_input_data_path);
+	}
 
 	g_year_start_index = -1;
 

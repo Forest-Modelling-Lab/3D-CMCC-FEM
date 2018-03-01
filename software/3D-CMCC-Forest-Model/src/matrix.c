@@ -22,7 +22,7 @@ extern settings_t* g_settings;
 extern soil_settings_t *g_soil_settings;
 extern topo_t *g_topo;
 extern char *g_sz_parameterization_path;
-extern char g_sz_parameterization_output_path[];
+extern char g_sz_input_data_path[];
 extern int g_year_start_index;
 
 /** ---------- dataset stuff ---------- **/
@@ -1243,8 +1243,8 @@ int fill_species_from_file(species_t *const s) {
 	s->value[MAX_SPECIES_COVER] = (int)s->value[LIGHT_TOL];
 
 	/* copy file */
-	if ( ! species_copy_file(g_sz_parameterization_output_path, filename) ) {
-		printf("error: unable to copy species to %s\n", g_sz_parameterization_output_path);
+	if ( ! species_copy_file(g_sz_input_data_path, filename) ) {
+		printf("error: unable to copy species to %s\n", g_sz_input_data_path);
 		return 0;
 	}
 
