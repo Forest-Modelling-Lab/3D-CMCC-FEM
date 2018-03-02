@@ -272,13 +272,14 @@ double Farquhar_BB (cell_t *const c, species_t *const s,const meteo_daily_t *con
 	double var_a, var_b, var_c;
 
 	double g0 = 0;                        /* (mol/m2/s) stomatal conductance when A = 0 at the light compensation point */
-	double g1 = 2; //6.99;                     /* () empirical coefficient */
+	double g1;                            /* () empirical coefficient */
 	double gsdiva;                        /* gs divided A */
 	double gs;                            /* (mol/m2/s) stomatal conductance to umolCO2 */
-	double gsmin;                         /* (mol/m2/sec) minimum stomatal conductance to umolCO2 */
-	double gsmax;                         /* (mol/m2/sec) maximum stomatal conductance to umolCO2 */
-	double gl_bl;                         /* (mol/m2/sec) boundary layer conductance */
-	double gl_c;                          /* (mol/m2/sec) cuticular conductance */
+	double gsmin;                         /* (mol/m2/s) minimum stomatal conductance to umolCO2 */
+	double gsmax;                         /* (mol/m2/s) maximum stomatal conductance to umolCO2 */
+	double gl;                            /**/
+	double gl_bl;                         /* (mol/m2/s) boundary layer conductance */
+	double gl_c;                          /* (mol/m2/s) cuticular conductance */
 	double cic;
 	double cij;
 
@@ -291,15 +292,46 @@ double Farquhar_BB (cell_t *const c, species_t *const s,const meteo_daily_t *con
 
 	static int test_assimilation = 0; /* 0 uses min (Av, Aj), 1 only Av, 2 only Aj */
 
+	double conv;                           /* conversion factor for conductance from m/s to mol/m/sec Chen et al., 1999 */
+
+
+	/* conversion factor for conductance from m/s to mol/m/sec Chen et al., 1999 */
+	conv = ( meteo_daily->air_pressure / 1e3 ) / ( Rgas * ( meteo_daily->tday + TempAbs ) );
+
+
 	if ( ! string_compare_i(s->name, "Fagussylvatica") )
 	{
-		g1 = 6.99;
+		g1 = 4; // 6.99;
+
+		//fixme
+		s->value[MAXCOND]   = 0.005;
+		s->value[N_RUBISCO] = 0.1;
+
 	}
-	/*
+	else if ( ! string_compare_i(s->name, "Pinusylvestris") )
+	{
+		g1 = 1.8;
 
+		//fixme
+		s->value[MAXCOND]   = 0.002;
+		s->value[N_RUBISCO] = 0.055;
+	}
+	else if ( ! string_compare_i(s->name, "Piceaabies") )
+	{
+		g1 = 2;
 
+		//fixme
+		s->value[MAXCOND]   = 0.002;
+		s->value[N_RUBISCO] = 0.035;
+	}
+	else if ( ! string_compare_i(s->name, "Pinuspinaster") )
+	{
+		g1 = 1.8;
 
-	*/
+		//fixme
+		s->value[MAXCOND]   = 0.002;
+		s->value[N_RUBISCO] = 0.055;
+	}
 
 
 	/*
@@ -324,16 +356,16 @@ double Farquhar_BB (cell_t *const c, species_t *const s,const meteo_daily_t *con
 	/* assign defualt value to gsmin */
 	gsmin     = 1e-9;
 
-	/* convert maximum stomatal conductance from m/sec to mol/m2/sec */
-	gsmax     = s->value[MAXCOND] * 1e3 ;
+	/* conversion maximum stomatal conductance m/sec to mmol/m2/sec see Korner et al., 1979 */
+	gsmax     = s->value[MAXCOND] * 1e3 * conv;
 
-	/* convert boundary layer conductance from m/sec to mol/m2/sec */
-	gl_bl     = s->value[BLCOND]  * 1e3 ;
+	/* conversion boundary layer conductance m/sec to mmol/m2/sec see Korner et al., 1979 */
+	gl_bl     = s->value[BLCOND] * 1e3 * conv;
 
-	/* convert cuticular conductance from m/sec to mol/m2/sec */
-	gl_c      = s->value[CUTCOND] * 1e3 ;
+	/* conversion cuticular conductance m/sec to mmol/m2/sec see Korner et al., 1979 */
+	gl_c      = s->value[CUTCOND] * 1e3 * conv;
 
-	/* convert atmospheric CO2 from ppmV*/
+	/* convert atmospheric CO2 from ppmV */
 	Ca        = meteo_annual->co2Conc;
 
 	/* Oxygen partial pressure (umol mol-1) */
@@ -352,6 +384,12 @@ double Farquhar_BB (cell_t *const c, species_t *const s,const meteo_daily_t *con
 	tleaf10   = meteo_daily->ten_day_avg_tday;
 	tleaf10_K = meteo_daily->ten_day_avg_tday + TempAbs;
 
+
+	printf("%g\n", conv);
+	printf("%g\n", gsmax);
+	//exit(1);
+
+
 	/****************************** ARRHENIUS KINETICS *****************************/
 	/*******************************************************************************/
 
@@ -368,12 +406,12 @@ double Farquhar_BB (cell_t *const c, species_t *const s,const meteo_daily_t *con
 
 	/*******************************************************************************/
 
-	/* compute gamma (umol/mol) CO2 compensation point in the presence of respiration*/
+	/* compute gamma (umol/mol) CO2 compensation point due to photorespiration, in the presence of respiration*/
 	gamma_unstar = CP * AIRMASS * meteo_daily->air_pressure / ( meteo_daily->lh_vap * WATERMASS);
 
 	/* calculate gamma_star (umol/mol) CO2 compensation point due to photorespiration, in the absence of respiration */
 	/* note: Bernacchi et al., 2001 method (umol/mol) */
-	gamma_star = 42.75 * exp ( 37830 * ( tleaf - 25.) / ( Rgas * ( tleaf + TempAbs ) * ( 25 + TempAbs ) ) );
+	gamma_star = 42.75 * exp ( 37830. * ( tleaf - 25.) / ( Rgas * ( tleaf + TempAbs ) * ( 25. + TempAbs ) ) );
 
 	/*******************************************************************************/
 
@@ -592,8 +630,6 @@ double Farquhar_BB (cell_t *const c, species_t *const s,const meteo_daily_t *con
 	/* Solves the quadratic equation - finds LARGER root. */
 	cic   = QuadP ( var_a, var_b, var_c, &err );
 
-	printf("cic %g\n", cic);
-
 	if ( err == 1 || cic < 0. || cic > Ca ) Av = 0.;
 	else Av    = Vcmax * ( cic - gamma_star ) / ( cic + Kmfn );
 
@@ -607,8 +643,6 @@ double Farquhar_BB (cell_t *const c, species_t *const s,const meteo_daily_t *con
 
 	/* Solves the quadratic equation - finds LARGER root. */
 	cij  = QuadP ( var_a, var_b, var_c, &err );
-
-	printf("cij %g\n", cij);
 
 	Aj   = J * ( cij - gamma_star ) / ( cij + 2. * gamma_star );
 
@@ -626,23 +660,17 @@ double Farquhar_BB (cell_t *const c, species_t *const s,const meteo_daily_t *con
 	/* estimate A as the minimum of (Av,Aj) */
 	A = MIN ( Av, Aj );
 
-	printf("Av %g\n", Av);
-	printf("Aj %g\n", Aj);
-	printf("A %g\n", A);
-
 	/*******************************************************************************/
 
-	/* compute actual stomatal conductance (umol/m2/s) */
+	/* compute actual stomatal conductance (mol/m2/s) */
 	gs = g0 + gsdiva * A;
-
-	printf("gs %g\n", gs);
-	printf("gsmax %g\n", gsmax);
 
 	/* Set nearly zero conductance (for numerical reasons) */
 	if ( gs < gsmin ) gs = gsmin;
 
 	/* Set at maximum value if current conductance exceeds maximum value */
-	if ( gs > gsmax )
+	//note: to compare with gsmax which is is H20 rate gs has to be converted too in H20 rate
+	if ( ( gs * GCtoGW ) > gsmax )
 	{
 		gs = gsmax;
 

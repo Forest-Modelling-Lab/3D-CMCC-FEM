@@ -111,7 +111,6 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 
 	/* leaf aerodynamic-boundary-layer conductance */
 	gl_bl = s->value[BLCOND] * g_corr;
-	logger(g_debug_log, "gl_bl NOT corrected for wind speed = %f mm\n",gl_bl);
 
 #if 0
 	/**************************************************************************/
