@@ -168,10 +168,11 @@ int main(int argc, char* argv[])
 			printf("processing %s...", files->filename[i]);
 			d = dataset_import(files->filename[i]);
 			if ( ! d ) continue;
+			puts("ok");
 			r = nc_conv(d, output_folder);
 			dataset_free(d);
 			if ( ! r ) continue;
-			puts("ok");
+			puts("");
 			++processed;
 		}
 
