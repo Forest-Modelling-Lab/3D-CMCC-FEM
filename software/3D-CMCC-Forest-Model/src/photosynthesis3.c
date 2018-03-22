@@ -439,6 +439,7 @@ double Farquhar_BB (cell_t *const c, species_t *const s,const meteo_daily_t *con
 	/*****************************************************************************/
 
 	/* Medlyn et al., 2011 Stomatal optmization model */
+
 	/*
 	                            g1         An
 	 	 gs = g0 + 1.6 (1 + ----------) * ----
