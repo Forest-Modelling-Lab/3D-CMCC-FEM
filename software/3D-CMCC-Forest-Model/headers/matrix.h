@@ -257,6 +257,8 @@ enum {
 	CANOPY_INT_RAIN,                    /* (mm/day) canopy interception of rainfall */
 	CANOPY_INT_SNOW,                    /* (mm/day) canopy interception of snow */
 	CANOPY_EVAPO,                       /* (mm/day) canopy evaporation */
+	CANOPY_SUBLI,                       /* (mm/day) canopy sublimation */
+	CANOPY_MELT,                        /* (mm/day) canopy melting */
 	CANOPY_TRANSP,                      /* (mm/day) canopy transpiration */
 	CANOPY_TRANSP_SUN,                  /* (mm/day) canopy transpiration for sun leaves */
 	CANOPY_TRANSP_SHADE,                /* (mm/day) canopy transpiration for shade leaves */

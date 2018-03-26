@@ -81,8 +81,11 @@ void snow_melt_subl(cell_t *const c, meteo_daily_t *meteo_daily)
 			if (r_sub > c->snow_pack)
 			{
 				logger(g_debug_log, "Snow sublimation!!\n");
+
 				r_sub = c->snow_pack;
+
 				c->daily_snow_subl = r_sub;
+
 				logger(g_debug_log, "Snow sublimated = %f mm\n", c->daily_snow_subl);
 
 				/*check for balance*/
@@ -93,6 +96,7 @@ void snow_melt_subl(cell_t *const c, meteo_daily_t *meteo_daily)
 				else
 				{
 					/*snow pack sublimate partially*/
+
 					logger(g_debug_log, "a fraction of Snow sublimates!!\n");
 				}
 			}

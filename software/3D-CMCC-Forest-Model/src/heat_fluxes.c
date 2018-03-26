@@ -49,7 +49,7 @@ void latent_heat_fluxes (cell_t *const c, const meteo_daily_t *const meteo_daily
 	/*in case of snow sublimation*/
 	if(c->daily_snow_subl != 0.0)
 	{
-		c->daily_lh_flux += c->daily_snow_subl * (meteo_daily->lh_sub * 1000.0) / 86400.0;
+		c->daily_lh_flux += c->daily_snow_subl * ( meteo_daily->lh_sub * 1000. ) / 86400.;
 		logger(g_debug_log, "Daily total latent heat flux with sublimation = %g W/m\n", c->daily_lh_flux);
 	}
 	else
