@@ -509,7 +509,7 @@ int check_cell_water_flux_balance(cell_t *const c, const meteo_daily_t *const me
 	c->cell_water_out     = c->daily_canopy_transp + c->daily_canopy_evapo + c->daily_soil_evapo + c->daily_snow_subl + c->daily_out_flow;
 
 	/* sum of current storage in cell pools */
-	c->cell_water_store   = ( c->asw + c->canopy_water_stored + c->snow_pack );
+	c->cell_water_store   = ( c->asw + c->canopy_water_stored + c->canopy_snow_stored + c->snow_pack );
 
 	/* check soil pool water balance */
 	c->cell_water_balance = c->cell_water_in - c->cell_water_out - ( c->cell_water_store - c->cell_water_old_store );
@@ -530,6 +530,7 @@ int check_cell_water_flux_balance(cell_t *const c, const meteo_daily_t *const me
 		error_log("c->out_flow            = %f\n", c->daily_out_flow);
 		error_log("\nstore\n");
 		error_log("c->canopy_water_stored = %f\n", c->canopy_water_stored);
+		error_log("c->canopy_snow_stored  = %f\n", c->canopy_snow_stored);
 		error_log("c->asw                 = %f\n", c->asw);
 		error_log("c->snow_pack           = %f\n", c->snow_pack);
 		error_log("soil water in          = %f\n", c->cell_water_in);

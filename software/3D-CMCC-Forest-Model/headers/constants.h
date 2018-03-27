@@ -83,6 +83,7 @@ enum {
 #define N_FRAC_TO_RETRANSL       0.1      /* fraction of N to re-translocate (see Bossell et al., 2006 and Campioli et al., 2013; 0.2 Hoffmann 1995 */
 #define MAX_PEAK_LAI_PROJ          6   //ISIMIP 6.5      /* Maximum Peak Lai (m2/m2) */
 #define WATER_STRESS_LIMIT       0.3      /* Minimum imposed water stress limit to soil water modifier */
+#define SNOW_ABS                 0.6      /* Absorptivity of snow */
 
 
 /* soil constants (BIOME-BGC method) */

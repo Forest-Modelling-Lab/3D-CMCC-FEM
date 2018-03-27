@@ -1354,6 +1354,7 @@ typedef struct
 	double max_asw_sat;                                                   /* (mmKgH2O/m3) max available soil water at field capacity */
 	double snow_pack;                                                     /* (Kg/m2)current amount of snow */
 	double canopy_water_stored;                                           /* (mm/m2) canopy water stored at cell level */
+	double canopy_snow_stored;                                            /* (mm/m2) canopy snow stored at cell level */
 
 	/* fluxes */
 	double daily_snow_melt;                                               /* (mm/m2/time) current amount of melted snow  */
