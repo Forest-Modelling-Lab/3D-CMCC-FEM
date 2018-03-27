@@ -32,11 +32,10 @@ static int harvesting (cell_t *const c, const int height, const int dbh, const i
 
 	nat_man = 1;
 
-	
+
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 	/* at the moment it considers a complete harvesting for all classes (if considered) */
-	logger(g_debug_log, "\n** Management options: Harvesting ** \n");
 
 	/* add harvested trees */
 	s->counter[THINNED_TREE]  += s->counter[N_TREE];
@@ -69,7 +68,7 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 	// ALESSIOR commented on 10/07/2017
 #ifndef USE_NEW_OUTPUT
 	qsort ( c->heights, c->heights_count, sizeof (height_t),
-		
+
 			(THINNING_REGIME_ABOVE == g_settings->thinning_regime) ? sort_by_heights_asc : sort_by_heights_desc
 	);
 #endif
@@ -114,9 +113,9 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 						}
 
 						if ( ( c->years[year].year == g_settings->year_start_management) ||
-							
-							(( c->years[year].year >= g_settings->year_start_management )
-							&& ( s->value[THINNING] == s->counter[YEARS_THINNING] )) )
+
+								(( c->years[year].year >= g_settings->year_start_management )
+										&& ( s->value[THINNING] == s->counter[YEARS_THINNING] )) )
 						{
 							flag = 1;
 						}
@@ -145,15 +144,21 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 						}
 					}
 
-					/* thinning */
+					/* thinning or pruning */
 					if ( flag )
 					{
-						logger(g_debug_log,"**FOREST MANAGEMENT**\n");
-						logger(g_debug_log,"**THINNING**\n");
-
 						s->counter[THINNING_HAPPENS] = 1;
 
-						thinning ( c, height, dbh, age, species, year );
+						if ( ! string_compare_i ( s->name, "Oleaeuropaea" ) )
+						{
+							/* Pruning for Olive trees */
+							olive_pruning ( c, height, dbh, age, species, year );
+						}
+						else
+						{
+							/* Thinning */
+							thinning ( c, height, dbh, age, species, year );
+						}
 
 						/* reset counter */
 						s->counter[YEARS_THINNING] = 0;
@@ -163,12 +168,12 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 					++s->counter[YEARS_THINNING];
 
 					/*************************************** HARVESTING *************************************/
-				
+
 					flag = 0;
 					if ( MANAGEMENT_ON == g_settings->management )
 					{
 						/* check */
-						CHECK_CONDITION( s->counter[YEARS_THINNING], >, s->value[ROTATION] );
+						CHECK_CONDITION( s->counter[YEARS_THINNING], > , s->value[ROTATION] );
 
 						/* check for harvesting */
 						if ( a->value == s->value[ROTATION] )
@@ -195,14 +200,14 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 					{
 						int rsi;               /* replanted species index */
 
-						logger(g_debug_log,"**FOREST MANAGEMENT**\n");
-						logger(g_debug_log,"**HARVESTING**\n");
+						/** FOREST MANAGEMENT **/
+						/** HARVESTING **/
 
 						/* get replanted_species_index */
 						for ( rsi = 0; rsi < g_settings->replanted_count; rsi++ )
 						{
 							if ( ! string_compare_i(c->heights[height].dbhs[dbh].ages[age].species[species].name
-														, g_settings->replanted[rsi].species) )
+									, g_settings->replanted[rsi].species) )
 							{
 								/* index found */
 								break;
@@ -211,7 +216,7 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 
 						/* species found ? */
 						CHECK_CONDITION(rsi, ==, g_settings->replanted_count );
-						
+
 						/* remove tree class */
 						if (  ! harvesting ( c, height, dbh, age, species, rsi ) )
 						{
@@ -228,7 +233,7 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 
 						/* check that all mandatory variables are filled */
 						CHECK_CONDITION (g_settings->replanted[rsi].n_tree, <, ZERO);
-						CHECK_CONDITION (g_settings->replanted[rsi].height, <, 1.3);
+						CHECK_CONDITION (g_settings->replanted[rsi].height, <, DBH_ref);
 						CHECK_CONDITION (g_settings->replanted[rsi].avdbh,  <, ZERO);
 						CHECK_CONDITION (g_settings->replanted[rsi].age,    <, ZERO);
 
@@ -250,7 +255,7 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 							/* reset years_for_thinning */
 							s->counter[YEARS_THINNING] = 1;
 						}
-						
+
 						s->counter[THINNING_HAPPENS] = 1;
 						c->harvesting                = 1;
 					}				
@@ -271,10 +276,8 @@ void thinning (cell_t *const c, const int height, const int dbh, const int age, 
 	species_t *s;
 
 	nat_man = 1;
-	
+
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
-
-
 
 	/* thinning function based on basal area */
 
@@ -288,9 +291,9 @@ void thinning (cell_t *const c, const int height, const int dbh, const int age, 
 
 	}
 
-	logger(g_debug_log, "** Management options: Thinning ** \n");
+	/* Management options: Thinning */
 
-	/* BAU MANAGEMENT */
+	/* Business As Usual MANAGEMENT */
 	if ( 0 == g_settings->management_type ) 
 	{
 		/* compute integer number of trees to remove */
@@ -401,7 +404,7 @@ void prescribed_thinning (cell_t *const c, const int height, const int dbh, cons
 					/* added thinned trees */
 					c->heights[height].dbhs[dbh].ages[age].species[species].counter[THINNED_TREE] += tree_remove;
 
-					logger(g_debug_log, "\n** Management options: Prescribed Thinning **\n");
+					/* Management options: Prescribed Thinning */
 
 					tree_biomass_remove(c, height, dbh, age, species, tree_remove, nat_man);
 
@@ -440,6 +443,62 @@ void prescribed_thinning (cell_t *const c, const int height, const int dbh, cons
 			}
 		}
 	}
+}
+
+void olive_pruning ( cell_t *const c, const int height, const int dbh, const int age, const int species, const int year )
+{
+	/* created 27 mar 2018 for Olive4Climate Project */
+	static int irrigation;        /* no irrigated; 1 = irrigated */
+	double tree_biomass_removal;  /* (tDM/tree) single tree drymatter biomass removal */
+	double biomass_removal;       /* (tDM/area) stand drymatter biomass removal */
+
+	age_t *a;
+	dbh_t *d;
+	height_t *h;
+	species_t *s;
+
+
+	h = &c->heights[height];
+	d = &c->heights[height].dbhs[dbh];
+	a = &c->heights[height].dbhs[dbh].ages[age];
+	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
+
+	if ( s->value[THINNING] == 1 )
+	{
+		/* compute annual biomass removal */
+		tree_biomass_removal = 1.036 + 0.2064 * pow( ( s->value[FRUIT_C] * 2 ), 2.) - 0.535 * ( ( s->value[FRUIT_C] * 2.) * s->value[CROWN_DIAMETER] )
+				+ 1.431 * s->value[CROWN_DIAMETER] * h->value - 0.769 * pow( h->value, 2. );
+	}
+	else if ( s->value[THINNING] == 2 )
+	{
+		/* compute biannual biomass removal */
+		tree_biomass_removal = -2.033 + 0.109 * s->value[CROWN_AREA] - 0.065 * s->value[CROWN_AREA] * irrigation
+				+ 0.003 * s->value[CROWN_AREA] * a->value + 1.477 * irrigation * h->value + 0.089 * a->value * h->value;
+	}
+	else
+	{
+
+	}
+
+	/* convert from kgDM to tons DM */
+	tree_biomass_removal /= 1e3;
+	/* convert from tons DM to tons Carbon */
+	tree_biomass_removal /= 2.;
+
+	//todo:
+	//1 remove from branch biomass
+	//2 remove proportionally to branch biomass removed the leaf biomass
+
+
+
+
+
+
+
+
+
+
+
 }
 
 
@@ -537,7 +596,7 @@ management_t* management_load(const char* const filename)
 		if ( *p_years_count )
 		{
 			logger_error(g_debug_log, "too many rows of %s specified\n"
-						, thinning_flag ? sz_thinning : sz_harvesting
+					, thinning_flag ? sz_thinning : sz_harvesting
 			);
 			management_free(management);
 			fclose(f);
@@ -552,8 +611,8 @@ management_t* management_load(const char* const filename)
 			if ( err )
 			{
 				logger_error(g_debug_log, "unable to convert year '%s' for %s\n"
-							, token
-							, thinning_flag ? sz_thinning : sz_harvesting
+						, token
+						, thinning_flag ? sz_thinning : sz_harvesting
 				);
 				management_free(management);
 				fclose(f);

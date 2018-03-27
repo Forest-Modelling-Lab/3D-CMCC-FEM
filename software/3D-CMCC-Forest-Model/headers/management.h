@@ -27,6 +27,8 @@ void thinning (cell_t *const c, const int height, const int dbh, const int age, 
 
 void prescribed_thinning (cell_t *const c, const int height, const int dbh, const int age, const int species, const int year);
 
+void olive_pruning ( cell_t *const c, const int height, const int dbh, const int age, const int species, const int year );
+
 //void harvesting (cell_t *const c, const int height, const int dbh, const int age, const int species);
 
 void clearcut_coppice(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species);
