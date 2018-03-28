@@ -1,0 +1,9 @@
+Year,x,y,Age,Species,Management,N,Stool,AvDBH,Height,Lai
+1972,0,0,27,Fagussylvatica,T,7518,0,6.8,5.6,0
+1982,0,0,37,Fagussylvatica,T,6846,0,8.4,11.5,0
+1992,0,0,47,Fagussylvatica,T,3920,0,11.5,15.1,0
+2002,0,0,57,Fagussylvatica,T,2580,0,15.0,18.0,0
+2012,0,0,67,Fagussylvatica,T,2046,0,17.3,19.8,0
+
+
+
