@@ -14,7 +14,7 @@
 #include <math.h>
 
 #define RG_RANGE_MIN         0
-#define RG_RANGE_MAX        50
+#define RG_RANGE_MAX        60
 #define TA_RANGE_MIN       -50
 #define TA_RANGE_MAX        50
 #define TMAX_RANGE_MIN     -50
