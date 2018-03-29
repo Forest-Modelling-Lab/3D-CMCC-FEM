@@ -1250,7 +1250,7 @@ int main(int argc, char *argv[]) {
 
 		g_management = management_load(p);
 		if ( g_sz_input_path ) free(p);
-		if ( ! g_management ) goto err;
+		//if ( ! g_management ) goto err;
 		puts(msg_ok);
 	}
 
@@ -1438,7 +1438,7 @@ int main(int argc, char *argv[]) {
 				}
 			}
 			if ( -1 == g_year_start_index ) {
-				logger_error(g_debug_log, "start year (%d) not found. range is %d-%d\n"
+				logger_error(g_debug_log, "start year (%d) not found. range is %d-%d.\n"
 						, g_settings->year_start
 						, matrix->cells[0].years[0].year
 						, matrix->cells[0].years[years_of_simulation-1].year
