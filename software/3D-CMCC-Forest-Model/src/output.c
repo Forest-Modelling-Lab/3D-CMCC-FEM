@@ -9,6 +9,13 @@
 #include "output.h"
 #include "netcdf.h"
 
+
+#ifdef _WIN32
+#define string_compare_n _strnicmp
+#else
+#define string_compare_n strncasecmp
+#endif
+
 extern logger_t* g_debug_log;
 extern const char sz_err_out_of_memory[];
 extern const char* log_types[];
@@ -267,11 +274,11 @@ static reimported_dataset_t* reimport_dataset(const char* const filename)
 	}
 
 	// check type
-	if ( ! _strnicmp(filename + has_path, "annual", strlen("annual")) )
+	if ( ! string_compare_n (filename + has_path, "annual", strlen("annual")) )
 	{
 		type = ANNUAL_DATASET_TYPE;
 	}
-	else if ( ! _strnicmp(filename + has_path, "daily", strlen("daily")) )
+	else if ( ! string_compare_n(filename + has_path, "daily", strlen("daily")) )
 	{
 		type = DAILY_DATASET_TYPE;
 	}
@@ -305,7 +312,7 @@ static reimported_dataset_t* reimport_dataset(const char* const filename)
 	}
 
 	// check for local
-	if ( ! _strnicmp(filename + has_path + i, "local", 5) )
+	if ( ! string_compare_n(filename + has_path + i, "local", 5) )
 	{
 		strcpy(exp, "local");
 		esm = 11;
