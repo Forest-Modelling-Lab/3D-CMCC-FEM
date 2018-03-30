@@ -182,7 +182,6 @@ static const char msg_usage[]					=	"\nusage:\n"
 		"    -c settings filename stored into input directory (i.e.: -c settings.txt)\n"
 		"    -k co2 concentration file (i.e.: -k co2_conc.txt)\n"
 		"    -n ndep file (i.e.: -n ndep.txt)\n"
-		"    -r output vars list (i.e.: -r output_vars.lst)\n"
 		"    -u benchmark path\n"
 		"    -h print this help\n"
 		;
@@ -1137,7 +1136,6 @@ void sort_all(matrix_t* m)
 //now model runs for one day and then changes the cell
 
 int main(int argc, char *argv[]) {
-	int ret;
 	int year;
 	int month;
 	int day;
@@ -1149,7 +1147,6 @@ int main(int argc, char *argv[]) {
 	double start_timer;
 	double end_timer;
 	matrix_t* matrix;
-	output_t* output_vars;
 	soil_settings_t* s;
 	topo_t* t;
 
@@ -1158,7 +1155,6 @@ int main(int argc, char *argv[]) {
 
 	/* initialize */
 	matrix = NULL;
-	output_vars = NULL;
 	t = NULL;
 	s = NULL;
 	prog_ret = 1;
@@ -1190,18 +1186,6 @@ int main(int argc, char *argv[]) {
 	if ( ! parameterization_output_create() ) {
 		puts("Unable to create parameterization output path\n");
 		return 0;
-	}
-
-	/* import output vars file ? */
-	if ( g_sz_output_vars_file ) {
-		printf("import output file...");
-		output_vars = output_import(g_sz_output_vars_file);
-		free(g_sz_output_vars_file);
-		g_sz_output_vars_file = NULL;
-		if ( ! output_vars ) {
-			return 1;
-		}
-		puts(msg_ok);
 	}
 
 	if ( g_sz_benchmark_path && ! g_sz_output_path ) {
@@ -1488,52 +1472,6 @@ int main(int argc, char *argv[]) {
 
 		/* move pointer for year */
 		matrix->cells[cell].years += g_year_start_index;
-
-		/* FIXME ALESSIOC TO ALESSIOR alloc memory for semihourly output netcdf vars (if any) */
-
-		/* FIXME ALESSIOC TO ALESSIOR alloc memory for hourly output netcdf vars (if any) */
-
-		/* alloc memory for daily output netcdf vars (if any) */
-		if ( output_vars && output_vars->daily_vars_count && ! output_vars->daily_vars_value ) {
-			int ii;
-			int rows_count = matrix->cells_count*years_of_simulation*366*output_vars->daily_vars_count;
-			output_vars->daily_vars_value = malloc(rows_count*sizeof*output_vars->daily_vars_value);
-			if ( ! output_vars->daily_vars_value ) {
-				logger_error(g_debug_log, sz_err_out_of_memory);
-				goto err;
-			}
-			for ( ii = 0; ii < rows_count; ++ii ) {
-				output_vars->daily_vars_value[ii] = INVALID_VALUE;
-			}
-		}
-
-		/* alloc memory for monthly output netcdf vars (if any) */
-		if ( output_vars && output_vars->monthly_vars_count && ! output_vars->monthly_vars_value ) {
-			int ii;
-			int rows_count = matrix->cells_count*years_of_simulation*12*output_vars->monthly_vars_count;
-			output_vars->monthly_vars_value = malloc(rows_count*sizeof*output_vars->monthly_vars_value);
-			if ( ! output_vars->monthly_vars_value ) {
-				logger_error(g_debug_log, sz_err_out_of_memory);
-				goto err;
-			}
-			for ( ii = 0; ii < rows_count; ++ii ) {
-				output_vars->monthly_vars_value[ii] = INVALID_VALUE;
-			}
-		}
-
-		/* alloc memory for yearly output netcdf vars (if any) */
-		if ( output_vars && output_vars->yearly_vars_count && ! output_vars->yearly_vars_value ) {
-			int ii;
-			int rows_count = matrix->cells_count*years_of_simulation*output_vars->yearly_vars_count;
-			output_vars->yearly_vars_value = malloc(rows_count*sizeof*output_vars->yearly_vars_value);
-			if ( ! output_vars->yearly_vars_value ) {
-				logger_error(g_debug_log, sz_err_out_of_memory);
-				goto err;
-			}
-			for ( ii = 0; ii < rows_count; ++ii ) {
-				output_vars->yearly_vars_value[ii] = INVALID_VALUE;
-			}
-		}
 	}
 
 	logger(g_debug_log, "Total years_of_simulation = %d\n", years_of_simulation);
@@ -1856,54 +1794,6 @@ int main(int argc, char *argv[]) {
 					}
 					/*************************************************************************/
 
-					/* save values for put in output netcdf */
-					if ( output_vars && output_vars->daily_vars_count ) {
-						/*
-							la memoria è stata allocata come C*R*Y*X
-
-							C = colonne ( variabili )
-							R = righe ( anni di elaborazione * 366 )
-							Y = numero y celle
-							X = numero x celle
-
-							quindi il valore [v1][v2][v3][v4] è indicizzato a
-
-							[v1 * n1 * n2 *n3 + v2 * n2 * n3 + v3 * n3 + v4]
-
-							ossia
-
-							[v4 + n3 * (v3 + n2 * (v2 + n1 * v1))]
-						 */
-						/*
-						#define YS					(matrix->y_cells_count)
-						#define XS					(matrix->x_cells_count)
-						#define ROWS				(366*years_of_simulation)
-						#define VALUE_AT(x,y,r,c)	((x)+(XS)*((y)+(YS)*((r)+(ROWS)*(c))))
-							int i;
-							for ( i = 0; i < output_vars->daily_vars_count; ++i )
-							{
-								int row = get_daily_row_from_date(matrix->cells[cell].years[year].year, month, day) + (year*366);
-								int index = VALUE_AT(matrix->cells[cell].x, matrix->cells[cell].y, row, i);
-								if ( AR_DAILY_OUT == output_vars->daily_vars[i] )	output_vars->daily_vars_value[index] = matrix->cells[cell].daily_aut_resp;
-								if ( GPP_DAILY_OUT == output_vars->daily_vars[i] )	output_vars->daily_vars_value[index] = matrix->cells[cell].daily_gpp;
-								if ( NPP_DAILY_OUT == output_vars->daily_vars[i] )	output_vars->daily_vars_value[index] = matrix->cells[cell].daily_npp_gC;
-							}
-						#undef VALUE_AT
-						#undef ROWS
-						#undef XS
-						#undef YS
-						 */
-						output_push_values(output_vars
-								, &matrix->cells[cell]
-												 , month
-												 , day
-												 , year
-												 , years_of_simulation
-												 , matrix->x_cells_count
-												 , matrix->y_cells_count
-												 , OUTPUT_TYPE_DAILY
-						);
-					}
 					/******************************************************************************/
 					/* print daily output */
 					EOD_print_output_cell_level (&matrix->cells[cell], day, month, year, years_of_simulation );
@@ -1915,42 +1805,6 @@ int main(int argc, char *argv[]) {
 					reset_daily_cell_variables  ( &matrix->cells[cell] );
 
 					logger(g_debug_log, "******************* END OF DAY (%d) *******************\n\n\n", day + 1 );
-
-
-					/* save values for put in output netcdf */
-					if ( output_vars && output_vars->monthly_vars_count ) {
-						/*
-						#define YS					(matrix->y_cells_count)
-						#define XS					(matrix->x_cells_count)
-						#define ROWS				(12*years_of_simulation)
-						#define VALUE_AT(x,y,r,c)	((x)+(XS)*((y)+(YS)*((r)+(ROWS)*(c))))
-						int i;
-						for ( i = 0; i < output_vars->monthly_vars_count; ++i )
-						{
-							int row = month + (year*12);
-							int index = VALUE_AT(matrix->cells[cell].x, matrix->cells[cell].y, row, i);
-							if ( AR_MONTHLY_OUT == output_vars->monthly_vars[i] ) output_vars->monthly_vars_value[index] = matrix->cells[cell].monthly_aut_resp;
-							if ( GPP_MONTHLY_OUT == output_vars->monthly_vars[i] ) output_vars->monthly_vars_value[index] = matrix->cells[cell].monthly_gpp;
-							if ( NPP_MONTHLY_OUT == output_vars->monthly_vars[i] ) output_vars->monthly_vars_value[index] = matrix->cells[cell].monthly_npp_gC;
-						}
-						#undef VALUE_AT
-						#undef ROWS
-						#undef XS
-						#undef YS
-						 */
-
-
-						output_push_values(output_vars
-								, &matrix->cells[cell]
-												 , month
-												 , day
-												 , year
-												 , years_of_simulation
-												 , matrix->x_cells_count
-												 , matrix->y_cells_count
-												 , OUTPUT_TYPE_MONTHLY
-						);
-					}
 
 					/* end of month */
 					if ( current_doy == matrix->cells[cell].doy )
@@ -1964,37 +1818,6 @@ int main(int argc, char *argv[]) {
 						reset_monthly_cell_variables  ( &matrix->cells[cell] );
 
 						logger(g_debug_log, "******************* END OF MONTH (%d) *******************\n\n", month + 1 );
-					}
-
-					if ( output_vars && output_vars->yearly_vars_count ) {
-						/*
-								#define YS					(matrix->y_cells_count)
-								#define XS					(matrix->x_cells_count)
-								#define ROWS				(years_of_simulation)
-								#define VALUE_AT(x,y,r,c)	((x)+(XS)*((y)+(YS)*((r)+(ROWS)*(c))))
-									int i;
-									for ( i = 0; i < output_vars->yearly_vars_count; ++i )
-									{
-										int index = VALUE_AT(matrix->cells[cell].x, matrix->cells[cell].y, year, i);
-										if ( AR_YEARLY_OUT == output_vars->yearly_vars[i] ) output_vars->yearly_vars_value[index] = matrix->cells[cell].annual_aut_resp;
-										if ( GPP_YEARLY_OUT == output_vars->yearly_vars[i] ) output_vars->yearly_vars_value[index] = matrix->cells[cell].annual_gpp;
-										if ( NPP_YEARLY_OUT == output_vars->yearly_vars[i] ) output_vars->yearly_vars_value[index] = matrix->cells[cell].annual_npp_gC;
-									}
-								#undef VALUE_AT
-								#undef ROWS
-								#undef XS
-								#undef YS
-						 */
-						output_push_values(output_vars
-								, &matrix->cells[cell]
-												 , month
-												 , day
-												 , year
-												 , years_of_simulation
-												 , matrix->x_cells_count
-												 , matrix->y_cells_count
-												 , OUTPUT_TYPE_YEARLY
-						);
 					}
 
 					/* reset annual variables once printed */
@@ -2028,42 +1851,29 @@ int main(int argc, char *argv[]) {
 		matrix->cells[cell].years = NULL; /* required */
 	}
 
-	/* NETCDF output */
-	if ( output_vars && output_vars->daily_vars_value ) {
-		ret = output_write(output_vars, g_sz_output_path, g_settings->year_start, years_of_simulation, matrix->x_cells_count, matrix->y_cells_count, 0);
-		//free(path);
-		if ( ! ret ) {
-			logger(g_debug_log, sz_err_out_of_memory);
-			goto err;
-		}
-		free(output_vars->daily_vars_value);
-		output_vars->daily_vars_value = NULL;
-	}
-
-	if ( output_vars && output_vars->monthly_vars_value ) {
-		ret = output_write(output_vars, g_sz_output_path, g_settings->year_start, years_of_simulation, matrix->x_cells_count, matrix->y_cells_count, 1);
-		//free(path);
-		if ( ! ret ) {
-			logger(g_debug_log, sz_err_out_of_memory);
-			goto err;
-		}
-		free(output_vars->monthly_vars_value);
-		output_vars->monthly_vars_value = NULL;
-	}
-
-	if ( output_vars && output_vars->yearly_vars_value ) {
-		ret = output_write(output_vars, g_sz_output_path, g_settings->year_start, years_of_simulation, matrix->x_cells_count, matrix->y_cells_count, 2);
-		//free(path);
-		if ( ! ret ) {
-			logger(g_debug_log, sz_err_out_of_memory);
-			goto err;
-		}
-		free(output_vars->yearly_vars_value);
-		output_vars->yearly_vars_value = NULL;
-	}
-
 	/* free memory */
 	matrix_free(matrix); matrix = NULL;
+
+	/* create nc files */
+#if 0
+	if ( g_daily_log && 1 ) {
+		printf("creating nc daily files...");
+		logger_flush(g_daily_log);
+		if ( ! convert_to_nc(g_daily_log->filename) ) {
+			goto err;
+		}
+		puts("ok");
+	}
+
+	if ( g_annual_log && 1 ) { // fix
+		printf("creating nc annual files...");
+		logger_flush(g_annual_log);
+		if ( ! convert_to_nc(g_annual_log->filename) ) {
+			goto err;
+		}
+		puts("ok");
+	}
+#endif
 
 	/* ok ! */
 	prog_ret = 0;
@@ -2071,13 +1881,6 @@ int main(int argc, char *argv[]) {
 #ifdef BENCHMARK_ONLY
 	benchmark:
 #endif
-
-	// TODO: FIX THIS
-	/* close logger */
-	//logger_close(g_soil_log); g_soil_log = NULL;
-	//logger_close(g_annual_log); g_annual_log = NULL;
-	//logger_close(g_monthly_log); g_monthly_log = NULL;
-	//logger_close(g_daily_log); g_daily_log = NULL;
 
 	/* benchmark ? */
 	if ( g_sz_benchmark_path ) {
@@ -2105,7 +1908,6 @@ int main(int argc, char *argv[]) {
 	/* free memory */
 	if ( t ) free(t);
 	if ( s ) free(s);
-	if ( output_vars ) output_free(output_vars);
 	if ( matrix ) matrix_free(matrix);
 
 	free(g_sz_input_met_file); g_sz_input_met_file = NULL;
@@ -2427,48 +2229,6 @@ int main(int argc, char *argv[]) {
 		/* move pointer for year */
 		matrix->cells[cell].years += g_year_start_index;
 
-		/* alloc memory for daily output netcdf vars (if any) */
-		if ( output_vars && output_vars->daily_vars_count && ! output_vars->daily_vars_value ) {
-			int ii;
-			int rows_count = matrix->cells_count*years_of_simulation*366*output_vars->daily_vars_count;
-			output_vars->daily_vars_value = malloc(rows_count*sizeof*output_vars->daily_vars_value);
-			if ( ! output_vars->daily_vars_value ) {
-				logger_error(g_debug_log, sz_err_out_of_memory);
-				goto err;
-			}
-			for ( ii = 0; ii < rows_count; ++ii ) {
-				output_vars->daily_vars_value[ii] = INVALID_VALUE;
-			}
-		}
-
-		/* alloc memory for monthly output netcdf vars (if any) */
-		if ( output_vars && output_vars->monthly_vars_count && ! output_vars->monthly_vars_value ) {
-			int ii;
-			int rows_count = matrix->cells_count*years_of_simulation*12*output_vars->monthly_vars_count;
-			output_vars->monthly_vars_value = malloc(rows_count*sizeof*output_vars->monthly_vars_value);
-			if ( ! output_vars->monthly_vars_value ) {
-				logger_error(g_debug_log, sz_err_out_of_memory);
-				goto err;
-			}
-			for ( ii = 0; ii < rows_count; ++ii ) {
-				output_vars->monthly_vars_value[ii] = INVALID_VALUE;
-			}
-		}
-
-		/* alloc memory for yearly output netcdf vars (if any) */
-		if ( output_vars && output_vars->yearly_vars_count && ! output_vars->yearly_vars_value ) {
-			int ii;
-			int rows_count = matrix->cells_count*years_of_simulation*output_vars->yearly_vars_count;
-			output_vars->yearly_vars_value = malloc(rows_count*sizeof*output_vars->yearly_vars_value);
-			if ( ! output_vars->yearly_vars_value ) {
-				logger_error(g_debug_log, sz_err_out_of_memory);
-				goto err;
-			}
-			for ( ii = 0; ii < rows_count; ++ii ) {
-				output_vars->yearly_vars_value[ii] = INVALID_VALUE;
-			}
-		}
-
 		logger(g_debug_log, "Total years_of_simulation = %d\n", years_of_simulation);
 		logger(g_debug_log, "***************************************************\n\n");
 
@@ -2613,54 +2373,6 @@ int main(int argc, char *argv[]) {
 					}
 					/*************************************************************************/
 
-					// save values for put in output netcdf
-					if ( output_vars && output_vars->daily_vars_count ) {
-						/*
-							la memoria è stata allocata come C*R*Y*X
-
-							C = colonne ( variabili )
-							R = righe ( anni di elaborazione * 366 )
-							Y = numero y celle
-							X = numero x celle
-
-							quindi il valore [v1][v2][v3][v4] è indicizzato a
-
-							[v1 * n1 * n2 *n3 + v2 * n2 * n3 + v3 * n3 + v4]
-
-							ossia
-
-							[v4 + n3 * (v3 + n2 * (v2 + n1 * v1))]
-						 */
-						/*
-						#define YS					(matrix->y_cells_count)
-						#define XS					(matrix->x_cells_count)
-						#define ROWS				(366*years_of_simulation)
-						#define VALUE_AT(x,y,r,c)	((x)+(XS)*((y)+(YS)*((r)+(ROWS)*(c))))
-							int i;
-							for ( i = 0; i < output_vars->daily_vars_count; ++i )
-							{
-								int row = get_daily_row_from_date(matrix->cells[cell].years[year].year, month, day) + (year*366);
-								int index = VALUE_AT(matrix->cells[cell].x, matrix->cells[cell].y, row, i);
-								if ( AR_DAILY_OUT == output_vars->daily_vars[i] )	output_vars->daily_vars_value[index] = matrix->cells[cell].daily_aut_resp;
-								if ( GPP_DAILY_OUT == output_vars->daily_vars[i] )	output_vars->daily_vars_value[index] = matrix->cells[cell].daily_gpp;
-								if ( NPP_DAILY_OUT == output_vars->daily_vars[i] )	output_vars->daily_vars_value[index] = matrix->cells[cell].daily_npp_gC;
-							}
-						#undef VALUE_AT
-						#undef ROWS
-						#undef XS
-						#undef YS
-						 */
-						output_push_values(output_vars
-								, &matrix->cells[cell]
-												 , month
-												 , day
-												 , year
-												 , years_of_simulation
-												 , matrix->x_cells_count
-												 , matrix->y_cells_count
-												 , OUTPUT_TYPE_DAILY
-						);
-					}
 					/******************************************************************************/
 					/* print daily output */
 					EOD_print_output_cell_level (&matrix->cells[cell], day, month, year, years_of_simulation );
@@ -2677,38 +2389,6 @@ int main(int argc, char *argv[]) {
 					logger(g_debug_log, "****************END OF DAY (%d)*******************\n\n\n", day + 1 );
 				}
 
-				/* save values for put in output netcdf */
-				if ( output_vars && output_vars->monthly_vars_count ) {
-					/*
-				#define YS					(matrix->y_cells_count)
-				#define XS					(matrix->x_cells_count)
-				#define ROWS				(12*years_of_simulation)
-				#define VALUE_AT(x,y,r,c)	((x)+(XS)*((y)+(YS)*((r)+(ROWS)*(c))))
-					int i;
-					for ( i = 0; i < output_vars->monthly_vars_count; ++i )
-					{
-						int row = month + (year*12);
-						int index = VALUE_AT(matrix->cells[cell].x, matrix->cells[cell].y, row, i);
-						if ( AR_MONTHLY_OUT == output_vars->monthly_vars[i] ) output_vars->monthly_vars_value[index] = matrix->cells[cell].monthly_aut_resp;
-						if ( GPP_MONTHLY_OUT == output_vars->monthly_vars[i] ) output_vars->monthly_vars_value[index] = matrix->cells[cell].monthly_gpp;
-						if ( NPP_MONTHLY_OUT == output_vars->monthly_vars[i] ) output_vars->monthly_vars_value[index] = matrix->cells[cell].monthly_npp_gC;
-					}
-				#undef VALUE_AT
-				#undef ROWS
-				#undef XS
-				#undef YS
-					 */
-					output_push_values(output_vars
-							, &matrix->cells[cell]
-											 , month
-											 , day
-											 , year
-											 , years_of_simulation
-											 , matrix->x_cells_count
-											 , matrix->y_cells_count
-											 , OUTPUT_TYPE_MONTHLY
-					);
-				}
 				/******************************************************************************/
 				/* print monthly output */
 				EOM_print_output_cell_level( &matrix->cells[cell], month, year, years_of_simulation );
@@ -2723,37 +2403,6 @@ int main(int argc, char *argv[]) {
 				logger(g_debug_log, "****************END OF MONTH (%d)*******************\n\n", month + 1 );
 			}
 
-			// save values for put in output netcdf
-			if ( output_vars && output_vars->yearly_vars_count ) {
-				/*
-			#define YS					(matrix->y_cells_count)
-			#define XS					(matrix->x_cells_count)
-			#define ROWS				(years_of_simulation)
-			#define VALUE_AT(x,y,r,c)	((x)+(XS)*((y)+(YS)*((r)+(ROWS)*(c))))
-				int i;
-				for ( i = 0; i < output_vars->yearly_vars_count; ++i )
-				{
-					int index = VALUE_AT(matrix->cells[cell].x, matrix->cells[cell].y, year, i);
-					if ( AR_YEARLY_OUT == output_vars->yearly_vars[i] ) output_vars->yearly_vars_value[index] = matrix->cells[cell].annual_aut_resp;
-					if ( GPP_YEARLY_OUT == output_vars->yearly_vars[i] ) output_vars->yearly_vars_value[index] = matrix->cells[cell].annual_gpp;
-					if ( NPP_YEARLY_OUT == output_vars->yearly_vars[i] ) output_vars->yearly_vars_value[index] = matrix->cells[cell].annual_npp_gC;
-				}
-			#undef VALUE_AT
-			#undef ROWS
-			#undef XS
-			#undef YS
-				 */
-				output_push_values(output_vars
-						, &matrix->cells[cell]
-										 , month
-										 , day
-										 , year
-										 , years_of_simulation
-										 , matrix->x_cells_count
-										 , matrix->y_cells_count
-										 , OUTPUT_TYPE_YEARLY
-				);
-			}
 			/******************************************************************************/
 			/* print annual output */
 			EOY_print_output_cell_level( &matrix->cells[cell], year, years_of_simulation );
@@ -2776,40 +2425,6 @@ int main(int argc, char *argv[]) {
 			free(matrix->cells[cell].years);
 		}
 		matrix->cells[cell].years = NULL; /* required */
-	}
-
-	/* NETCDF output */
-	if ( output_vars && output_vars->daily_vars_value ) {
-		ret = output_write(output_vars, g_sz_output_path, g_settings->year_start, years_of_simulation, matrix->x_cells_count, matrix->y_cells_count, 0);
-		//free(path);
-		if ( ! ret ) {
-			logger(g_debug_log, sz_err_out_of_memory);
-			goto err;
-		}
-		free(output_vars->daily_vars_value);
-		output_vars->daily_vars_value = NULL;
-	}
-
-	if ( output_vars && output_vars->monthly_vars_value ) {
-		ret = output_write(output_vars, g_sz_output_path, g_settings->year_start, years_of_simulation, matrix->x_cells_count, matrix->y_cells_count, 1);
-		//free(path);
-		if ( ! ret ) {
-			logger(g_debug_log, sz_err_out_of_memory);
-			goto err;
-		}
-		free(output_vars->monthly_vars_value);
-		output_vars->monthly_vars_value = NULL;
-	}
-
-	if ( output_vars && output_vars->yearly_vars_value ) {
-		ret = output_write(output_vars, g_sz_output_path, g_settings->year_start, years_of_simulation, matrix->x_cells_count, matrix->y_cells_count, 2);
-		//free(path);
-		if ( ! ret ) {
-			logger(g_debug_log, sz_err_out_of_memory);
-			goto err;
-		}
-		free(output_vars->yearly_vars_value);
-		output_vars->yearly_vars_value = NULL;
 	}
 
 	/* free memory */
