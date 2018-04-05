@@ -1855,8 +1855,7 @@ int main(int argc, char *argv[]) {
 	matrix_free(matrix); matrix = NULL;
 
 	/* create nc files */
-#if 0
-	if ( g_daily_log && 1 ) {
+	if ( g_daily_log && g_settings->netcdf_output ) {
 		printf("creating nc daily files...");
 		logger_flush(g_daily_log);
 		if ( ! convert_to_nc(g_daily_log->filename) ) {
@@ -1865,7 +1864,7 @@ int main(int argc, char *argv[]) {
 		puts("ok");
 	}
 
-	if ( g_annual_log && 1 ) { // fix
+	if ( g_annual_log && g_settings->netcdf_output ) {
 		printf("creating nc annual files...");
 		logger_flush(g_annual_log);
 		if ( ! convert_to_nc(g_annual_log->filename) ) {
@@ -1873,7 +1872,6 @@ int main(int argc, char *argv[]) {
 		}
 		puts("ok");
 	}
-#endif
 
 	/* ok ! */
 	prog_ret = 0;

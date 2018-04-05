@@ -35,6 +35,7 @@ typedef struct {
 	char monthly_output;                 /* monthly output must be 'on' or 'off' */
 	char yearly_output;                  /* annual output must be 'on' or 'off' */
 	char soil_output;                    /* soil output must be 'on' or 'off' */
+	char netcdf_output;                  /* netcdf output must be 'on' or 'off' */
 	int year_start;                      /* starting year of simulation */
 	int year_end;                        /* ending year of simulation */
 	int year_restart;                    /* year to restart simulation */

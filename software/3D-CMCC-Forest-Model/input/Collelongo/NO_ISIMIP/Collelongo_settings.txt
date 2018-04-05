@@ -12,6 +12,7 @@ ANNUAL_OUTPUT on              //Must be 'on' or 'off'
 YEAR_START 1997               //Starting year simulation
 YEAR_END 2014                 //Ending year simulation
 SOIL_OUTPUT off               //Must be 'on' or 'off'
+NETCDF_OUTPUT off
 YEAR_RESTART off              //Year to restart
 PSN_mod 0                           //Must be '0' (FvCB) or '1' (LUE) for photosynthesis approach
 CO2_trans on                  //Must be 'on' or 'off'

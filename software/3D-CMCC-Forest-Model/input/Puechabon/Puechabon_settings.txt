@@ -9,6 +9,7 @@ DAILY_OUTPUT "on"                //Must be 'on' or 'off'
 MONTHLY_OUTPUT "on"              //Must be 'on' or 'off'
 ANNUAL_OUTPUT "on"               //Must be 'on' or 'off'
 SOIL_OUTPUT "off"                //Must be 'on' or 'off'
+NETCDF_OUTPUT "off"                //Must be 'on' or 'off'
 PSN_mod 0                           //Must be '0' (FvCB) or '1' (LUE) for photosynthesis approach
 CO2_trans off                        //Must be 'on' or 'off'
 YEAR_START_CO2_FIXED 2000     //When Co2_trans = var, year at which fix [CO2]

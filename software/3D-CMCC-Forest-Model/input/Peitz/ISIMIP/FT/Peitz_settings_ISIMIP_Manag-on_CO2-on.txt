@@ -10,6 +10,7 @@ DAILY_OUTPUT on                     //Must be 'on' or 'off'
 MONTHLY_OUTPUT off                  //Must be 'on' or 'off'
 ANNUAL_OUTPUT on                    //Must be 'on' or 'off'
 SOIL_OUTPUT off                     //Must be 'on' or 'off'
+NETCDF_OUTPUT "off"                //Must be 'on' or 'off'
 YEAR_START 1952                     //Starting year simulation
 YEAR_END 2099                       //Ending year simulation
 YEAR_RESTART off                    //Year to restart
