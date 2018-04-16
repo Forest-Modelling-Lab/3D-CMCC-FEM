@@ -68,9 +68,20 @@ void canopy_interception(cell_t *const c, const int layer, const int height, con
 			/* compute maximum water storage (interception) (mm/m2 area covered) */
 
 #if 0
-			/* compute interception for dry canopy (Lawrence et al., 2006) */
-
+			/* (1) compute rain interception for dry canopy (Lawrence et al., 2006) */
 			s->value[CANOPY_INT]      = s->value[INT_COEFF] * meteo_daily->rain * ( 1. - exp(-0.5 * s->value[LAI_PROJ])) * s->value[DAILY_CANOPY_COVER_PROJ];
+
+			/* (2) compute rain interception for dry canopy (Tatarinov et al., 2007) */
+			Int_max_rain              = 0.3 * s->value[ALL_LAI_PROJ];
+			if ( meteo_daily->prcp <= Int_max_rain )          /* all intercepted */
+			{
+				s->value[CANOPY_INT = meteo_daily->prcp;
+			}
+			else                                         /* canopy limits interception */
+			{
+				s->value[CANOPY_INT = Int_max_rain;
+			}
+
 #else
 			//test 01 june 2017
 			/* following Jiao et al., 2016, Water Eq. [8] pg. 9 */
