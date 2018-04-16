@@ -73,14 +73,7 @@ void canopy_interception(cell_t *const c, const int layer, const int height, con
 
 			/* (2) compute rain interception for dry canopy (Tatarinov et al., 2007) */
 			Int_max_rain              = 0.3 * s->value[ALL_LAI_PROJ];
-			if ( meteo_daily->prcp <= Int_max_rain )          /* all intercepted */
-			{
-				s->value[CANOPY_INT = meteo_daily->prcp;
-			}
-			else                                         /* canopy limits interception */
-			{
-				s->value[CANOPY_INT = Int_max_rain;
-			}
+			s->value[CANOPY_INT_RAIN] = MIN( Int_max_rain , meteo_daily->rain );
 
 #else
 			//test 01 june 2017
@@ -89,7 +82,6 @@ void canopy_interception(cell_t *const c, const int layer, const int height, con
 				double Int_max_rain;    /* maximum intercepted rain (mm/m2) */
 
 				Int_max_rain = 0.284 + 0.092 * s->value[LAI_PROJ] * ( 1. - exp ( -0.231 * meteo_daily->rain ) );
-
 				s->value[CANOPY_INT_RAIN] = MIN( Int_max_rain , meteo_daily->rain );
 			}
 
