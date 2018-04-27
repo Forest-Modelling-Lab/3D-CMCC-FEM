@@ -78,6 +78,7 @@ typedef struct
 {
 	char* sitename;
 	char* clim_scenario;
+	char* man;
 	char* co2_type;
 	char* co2_file;
 	char* exp;
@@ -165,6 +166,11 @@ void dataset_free(dataset_t* dataset)
 	if ( dataset->exp )
 	{
 		free(dataset->exp);
+	}
+
+	if ( dataset->man )
+	{
+		free(dataset->man);
 	}
 
 	if ( dataset->co2_type )
@@ -297,7 +303,8 @@ dataset_t* dataset_import(const char* const filename)
 	if ( ! _strnicmp(filename + has_path + i, "local", 5) )
 	{
 		strcpy(exp, "local");
-		esm = 11;
+		// TODO remove const value
+		esm = 10; //SIZEOF_ARRAY(gcms);
 
 		// get stuff
 		if ( 6 != sscanf(filename + has_path + i + 5 + 1, "%[^.].txt_(%d-%d)_CO2_%[^_]_%[^.].txt_Man_%[^_]_"
@@ -439,7 +446,7 @@ dataset_t* dataset_import(const char* const filename)
 	if ( ! dataset->sitename )
 	{
 		puts(err_out_of_memory);
-		free(dataset);
+		dataset_free(dataset);
 		dataset = NULL;
 		goto quit;
 	}
@@ -447,15 +454,24 @@ dataset_t* dataset_import(const char* const filename)
 	if ( ! dataset->clim_scenario )
 	{
 		puts(err_out_of_memory);
-		free(dataset);
+		dataset_free(dataset);
 		dataset = NULL;
 		goto quit;
 	}
+	dataset->man = string_copy(man);
+	if ( ! dataset->man )
+	{
+		puts(err_out_of_memory);
+		dataset_free(dataset);
+		dataset = NULL;
+		goto quit;
+	}
+
 	dataset->exp = string_copy(exp);
 	if ( ! dataset->exp )
 	{
 		puts(err_out_of_memory);
-		free(dataset);
+		dataset_free(dataset);
 		dataset = NULL;
 		goto quit;
 	}
@@ -463,7 +479,7 @@ dataset_t* dataset_import(const char* const filename)
 	if ( ! dataset->co2_type )
 	{
 		puts(err_out_of_memory);
-		free(dataset);
+		dataset_free(dataset);
 		dataset = NULL;
 		goto quit;
 	}
@@ -471,7 +487,7 @@ dataset_t* dataset_import(const char* const filename)
 	if ( ! dataset->co2_file )
 	{
 		puts(err_out_of_memory);
-		free(dataset);
+		dataset_free(dataset);
 		dataset = NULL;
 		goto quit;
 	}
@@ -516,7 +532,7 @@ dataset_t* dataset_import(const char* const filename)
 	if ( ! dataset->vars )
 	{
 		puts(err_out_of_memory);
-		free(dataset);
+		dataset_free(dataset);
 		dataset = NULL;
 		goto quit;
 	}
@@ -583,7 +599,7 @@ dataset_t* dataset_import(const char* const filename)
 		if ( column != columns_count )
 		{
 			printf("imported %d columns instead of %d\n", column, dataset->columns_count);
-			free(dataset);
+			dataset_free(dataset);
 			dataset = NULL;
 			goto quit;
 		}
@@ -595,7 +611,7 @@ dataset_t* dataset_import(const char* const filename)
 	if ( row != dataset->rows_count )
 	{
 		printf("imported %d rows instead of %d\n", row, dataset->rows_count);
-		free(dataset);
+		dataset_free(dataset);
 		dataset = NULL;
 		goto quit;
 	}
@@ -735,10 +751,7 @@ dataset_t* dataset_import(const char* const filename)
 			if ( ! IS_INVALID_VALUE(dataset->vars[DAILY_RAR][i]) )
 				dataset->vars[DAILY_RAR][i] /= (1000 * 86400);
 			if ( ! IS_INVALID_VALUE(dataset->vars[DAILY_TSOIL][i]) )
-				dataset->vars[DAILY_TSOIL][i] += 273.13f;
-
-			
-
+				dataset->vars[DAILY_TSOIL][i] += 273.15f;
 		}
 	}
 #if 0

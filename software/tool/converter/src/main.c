@@ -84,9 +84,7 @@ int main(int argc, char* argv[])
 	// show banner
 	printf(banner, nc_inq_libvers());
 
-#if 1
 	// parse args
-	input_folder = "..";
 	if  ( argc >= 2 )
 	{
 		// get folder name
@@ -95,6 +93,16 @@ int main(int argc, char* argv[])
 		{
 			output_folder = argv[2];
 		}
+	}
+	else
+	{
+	#ifdef _WIN32
+	#ifndef _DEBUG
+		input_folder = _getcwd(NULL, 0);
+	#else
+		input_folder = getcwd(NULL, 0);
+	#endif
+	#endif
 	}
 
 	// register clean_up func
@@ -178,21 +186,7 @@ int main(int argc, char* argv[])
 
 		printf("\nparsed %d files, processed %d files\n\n", parsed, processed);
 	}
-#else
-	{
-		dataset_t* d;
 
-		const char filename[] = "annual_5.4_Solling_beech_2A_ESM10_hist.txt_(1967-2010)_CO2_ON_CO2_hist.txt_Man_OFF_d_10000_txt.txt";
-
-		printf("importing %s...", filename);
-		d = dataset_import(filename);
-		if ( ! d ) goto quit;
-		puts("ok");
-
-		// convert to nc4
-		if ( ! nc_conv(d) ) goto quit;	
-	}
-#endif
 	ret = 0; // ok
 
 quit:
