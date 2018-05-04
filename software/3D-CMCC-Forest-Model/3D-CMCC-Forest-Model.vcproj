@@ -386,10 +386,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\N-assimilation.c"
-				>
-			</File>
-			<File
 				RelativePath=".\src\nc.c"
 				>
 			</File>
@@ -419,6 +415,10 @@
 			</File>
 			<File
 				RelativePath=".\src\photosynthesis2.c"
+				>
+			</File>
+			<File
+				RelativePath=".\src\photosynthesis3.c"
 				>
 			</File>
 			<File
@@ -479,10 +479,6 @@
 			</File>
 			<File
 				RelativePath=".\src\soil_water_balance.c"
-				>
-			</File>
-			<File
-				RelativePath=".\src\spinup.c"
 				>
 			</File>
 			<File
