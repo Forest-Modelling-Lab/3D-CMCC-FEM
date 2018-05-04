@@ -42,6 +42,7 @@ void reset_daily_cell_variables(cell_t *const c)
 
 	/*reset daily carbon variables*/
 	c->daily_gpp =                      0.;
+	c->daily_ass =                      0.;
 	c->daily_gpp_tC =                   0.;
 	c->daily_npp =                      0.;
 	c->daily_npp_tC =                   0.;
@@ -178,6 +179,7 @@ void reset_monthly_cell_variables(cell_t *const c)
 
 	/*reset cell level variables*/
 	c->monthly_gpp =                    0.;
+	c->monthly_ass =                    0.;
 	c->monthly_gpp_tC =                 0.;
 	c->monthly_npp =                    0.;
 	c->monthly_npp_tC =                 0.;
@@ -224,6 +226,7 @@ void reset_annual_cell_variables(cell_t *const c)
 	c->cell_cover_proj =                0;
 	c->doy =                            0;
 	c->annual_gpp =                     0.;
+	c->annual_ass =                     0.;
 	c->annual_gpp_tC =                  0.;
 	c->annual_npp =                     0.;
 	c->annual_npp_tC =                  0.;
@@ -374,10 +377,21 @@ void reset_daily_class_variables(cell_t *const c)
 					s->value[NPP_tC] =                    0.;
 					s->value[C_FLUX] =                    0.;
 					s->value[CUE] =                       0.;
+					s->value[ASSIMILATION] =              0.;
+					s->value[ASSIMILATION_SUN] =          0.;
+					s->value[ASSIMILATION_SHADE] =        0.;
 
-					s->value[GROSS_ASSIMILATION] =        0.;
-					s->value[GROSS_ASSIMILATION_SUN] =    0.;
-					s->value[GROSS_ASSIMILATION_SHADE] =  0.;
+					s->value[A_SUN] =                     0.;
+					s->value[Av_SUN] =                    0.;
+					s->value[Aj_SUN] =                    0.;
+
+					s->value[A_SHADE] =                   0.;
+					s->value[Av_SHADE] =                  0.;
+					s->value[Aj_SHADE] =                  0.;
+
+					s->value[A_TOT] =                     0.;
+					s->value[Av_TOT] =                    0.;
+					s->value[Aj_TOT] =                    0.;
 
 					/* reset daily water fluxes */
 					s->value[STOMATAL_CONDUCTANCE] =      0.;
@@ -399,7 +413,8 @@ void reset_daily_class_variables(cell_t *const c)
 					s->value[iWUE_SHADE] =                0.;
 
 					/* reset daily multipliers */
-					s->value[F_CO2] =                     0.;
+					s->value[F_CO2_VER] =                 0.;
+					s->value[F_CO2_WANG] =                0.;
 					s->value[F_LIGHT] =                   0.;
 					s->value[F_T] =                       0.;
 					s->value[F_VPD] =                     0.;
@@ -496,7 +511,7 @@ void reset_daily_class_variables(cell_t *const c)
 					/* reset daily maintenance, growth and total respiration */
 					s->value[DAILY_LEAF_MAINT_RESP] =     0.;
 					s->value[NIGHTLY_LEAF_MAINT_RESP] =   0.;
-					s->value[TOT_DAY_LEAF_MAINT_RESP] =   0.;
+					s->value[TOT_LEAF_MAINT_RESP] =       0.;
 					s->value[DAILY_LEAF_SUN_MAINT_RESP] = 0.;
 					s->value[DAILY_LEAF_SHADE_MAINT_RESP] = 0.;
 					s->value[FROOT_MAINT_RESP] =          0.;
@@ -580,9 +595,9 @@ void reset_monthly_class_variables(cell_t *const c)
 					s->value[MONTHLY_CANOPY_EVAPO_TRANSP] =  0.;
 					s->value[MONTHLY_CANOPY_LATENT_HEAT] =   0.;
 
-					s->value[MONTHLY_GROSS_ASSIMILATION] =   0.;
-					s->value[MONTHLY_GROSS_ASSIMILATION_SUN] = 0.;
-					s->value[MONTHLY_GROSS_ASSIMILATION_SHADE] = 0.;
+					s->value[MONTHLY_ASSIMILATION]  =        0.;
+					s->value[MONTHLY_ASSIMILATION_SUN] =     0.;
+					s->value[MONTHLY_ASSIMILATION_SHADE] =   0.;
 				}
 			}
 		}
@@ -650,12 +665,25 @@ void reset_annual_class_variables(cell_t *const c)
 					s->value[CROOT_N_TO_REMOVE] =           0.;
 					s->value[BRANCH_N_TO_REMOVE] =          0.;
 
+
+					s->value[YEARLY_A_SUN] =                0.;
+					s->value[YEARLY_Av_SUN] =               0.;
+					s->value[YEARLY_Aj_SUN] =               0.;
+					s->value[YEARLY_A_SHADE] =              0.;
+					s->value[YEARLY_Av_SHADE] =             0.;
+					s->value[YEARLY_Aj_SHADE] =             0.;
+					s->value[YEARLY_A_TOT] =                0.;
+					s->value[YEARLY_Av_TOT] =               0.;
+					s->value[YEARLY_Aj_TOT] =               0.;
+
 					/*reset cumulative values*/
 					s->counter[LEAF_FALL_COUNTER] =         0;
 					s->counter[VEG_DAYS] =                  0;
 					s->counter[YEARLY_VEG_DAYS] =           0;
 					s->counter[FIRST_VEG_DAYS] =            0;
 					s->value[YEARLY_GPP] =                  0.;
+					s->value[YEARLY_GPP_SUN] =              0.;
+					s->value[YEARLY_GPP_SHADE] =            0.;
 					s->value[YEARLY_NPP] =                  0.;
 					s->value[YEARLY_NPP_tC] =               0.;
 					s->value[YEARLY_CUE] =                  0.;
@@ -682,9 +710,9 @@ void reset_annual_class_variables(cell_t *const c)
 					s->value[YEARLY_CANOPY_LATENT_HEAT] =   0.;
 					s->counter[N_TREE_SAP] =                0;
 
-					s->value[YEARLY_GROSS_ASSIMILATION] =   0.;
-					s->value[YEARLY_GROSS_ASSIMILATION_SUN] = 0.;
-					s->value[YEARLY_GROSS_ASSIMILATION_SHADE] = 0.;
+					s->value[YEARLY_ASSIMILATION] =         0.;
+					s->value[YEARLY_ASSIMILATION_SUN] =     0.;
+					s->value[YEARLY_ASSIMILATION_SHADE] =   0.;
 				}
 			}
 		}

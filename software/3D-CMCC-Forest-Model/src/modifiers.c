@@ -20,20 +20,61 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 		const meteo_annual_t *const meteo_annual)
 {
 	double RelAge;
-	/*variables for CO2 modifier computation*/
-	double KmCO2;	                       /* affinity coefficients temperature dependent according to Arrhenius relationship */
-	double Ea1   = 59400.0;                /* KJ mol^-1 */
-	double A1    = 2.419 * pow(10,13);
-	double Ea2   = 109600.0;	           /* KJ mol^-1 */
-	double A2    = 1.976 * pow(10,22);
-	double KO2;	                           /* Inhibition constant for 02 */
-	double EaKO2 = 13913.5;                /* KJ mol^-1 */
-	double AKO2  = 8240;
+
+	/* constants and variables for Veroustraete's CO2 modifier computation */
+	/* CO2 dependence */
+	double KmCO2;	                       /* (ppmv CO2) affinity coefficients temperature dependent according to Arrhenius relationship */
+	double Ea1   = 59400.0;                /* (J mol-1) Activation energy for CO2 fixation (KmCO2 temp dependence)  Badger and Collatz 1977 */
+	double A1    = 2.419 * pow(10,13);     /* (ppmv) Arrhenius constant for KmCO2 tø dependence in ppm for t>=15  */
+	double Ea2   = 109600.0;	           /* (J mol-1) Activation energy for CO2 fixation for t<15 C */
+	double A2    = 1.976 * pow(10,22);     /* (ppmv) Arrhenius constant for KmCO2 tø dependence in ppm for t<15 C */
+	/* O2 dependence */
+	double KO2;	                           /* (% O2) Inhibition constant for 02 */
+	double EaKO2 = 13913.5;                /* (J mol-1) Activation energy for O2 inhibition */
+	double AKO2  = 8240;                   /* Arrhenius constantfor KO2 to dependence */
+
+	/* CO2/O2 dependence */
 	double tau;	                           /* CO2/O2 specifity ratio */
-	double Eatau = -42896.9;
-	double Atau  = 7.87 * pow(10,-5);
-	double tairK;
+	double Eatau = -42896.9;               /* (J mol-1) Activation energy for CO2/O2 specificity */
+	double Atau  = 7.87 * pow(10,-5);      /* (dimensionless) Arrhenius constant */
+
+	double tleaf;                          /* (°C) daily leaf temperature */
+	double tleaf_K;                        /* (K) daily leaf temperature */
 	double v1, v2;
+
+	/* constants for Wang et al., 2016 Nature Plants CO2 modifiers computation */
+	static double beta   = 240.;   /* (dimensionless) definition ? */
+	static double ni     = 0.89;   /* (dimensionless) vicosity of water relative to its value at 25 °C */
+	static double ci     = 0.41;   /* (dimensionless) carbon cost unit for the maintenance of electron transport capacity */
+	static double q10Kc  = 2.1;    /* (DIM) Q_10 for Kc */
+	static double q10Ko  = 1.2;    /* (DIM) Q_10 for Ko */
+
+	/* Badger and Collatz 1977 */
+	static double Kc25          = 404;    /* (ubar or umol mol-1) Michaelis-Menten const carboxylase, 25 deg C  Badger and Collatz value*/
+	static double Ea_Kc         = 59400;  /* (J mol-1) Activation energy for carboxylase */
+	static double Ko25          = 248000; /* (ubar or umol mol-1) Michaelis-Menten const oxygenase, 25 deg C 248 Badger and Collatz, 278.4 Bernacchi et al., 2001 */
+	static double Ea_Ko         = 36000;  /* (J mol-1) Activation energy for oxygenase */
+
+//	/* Bernacchi et al., 2001 */
+//	static double Kc25          = 404.9;  /* (ubar or umol mol-1) Michaelis-Menten const carboxylase, 25 deg C  Badger and Collatz value*/
+//	static double Ea_Kc         = 79430;  /* (kJ mol-1) Activation energy for carboxylase */
+//	static double Ko25          = 278400; /* (ubar or umol mol-1) Michaelis-Menten const oxygenase, 25 deg C 248 Badger and Collatz, 278.4 Bernacchi et al., 2001 */
+//	static double Ea_Ko         = 36380;  /* (J mol-1) Activation energy for oxygenase */
+
+	/* variables for Wang et al., 2016 Nature Plants CO2 modifiers computation */
+	double Kc;           /* (ppm) effective Michaelis-Menten coefficienct for Rubisco */
+	double gamma_star;   /* (ppm) Photorespiratory compensation point */
+	double O2;           /* (Pa) atmospheric [O2] */
+	double Ko;           /* (ppm) michaelis-menten constant for oxygenase reaction */
+	double m0;
+	double vpd;          /* (Pa) vpd */
+	double Ca;           /* (ppmv) CO2 atmospheric concentration */
+	double Ca_ref;       /* (ppmv) CO2 atmospheric concentration */
+
+	double Av_rel, Aj_rel;
+
+	static int modifier;
+	static int test_assimilation;
 
 	age_t *a;
 	species_t *s;
@@ -43,59 +84,223 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 
 	logger(g_debug_log, "\n**DAILY_MODIFIERS**\n");
 
-	/********************************************************************************************/
+	Ca     = meteo_annual->co2Conc;
+	Ca_ref = g_settings->co2Conc;
 
-	/* if CO2 modifiers are "ON" */
-	if ( g_settings->CO2_mod )
+	tleaf    = meteo_daily->tday;
+	tleaf_K  = meteo_daily->tday + TempAbs;
+
+	/* convert vpd from hPa to Pa */
+	vpd = meteo_daily->vpd / 100.;
+
+	/* calculate atmospheric O2 in ppm, assumes 20.9% O2 by volume */
+	O2  = O2CONC * 10000;
+
+	/************************** ASSIMILATION CO2 MODIFIERS *************************/
+
+	/***************************** VEROUSTRAETE'S VERSION **************************/
+	/*******************************************************************************/
+
+	/* CO2 MODIFIER FOR ASSIMILATION  */
+	/* fertilization effect with rising CO2 from: Veroustraete 1994,
+	 * Veroustraete et al., 2002, Remote Sensing of Environment */
+
+	/* compute effective Arrhenius coefficienct for Rubisco */
+	/* Dependence of KmCO2 on temperature data from Badger and Collatz (1976) */
+
+	if ( tleaf >= 15 )
 	{
-		/***************************************************************/
-		/* CO2 MODIFIER AND ACCLIMATION FOR ASSIMILATION  */
-		/* fertilization effect with rising CO2 from: Veroustraete 1994,
-		 * Veroustraete et al., 2002, Remote Sensing of Environment
-		 */
-
-		tairK = meteo_daily->tavg + TempAbs;
-
-		if ( meteo_daily->tavg >= 15 )
-		{
-			KmCO2 = A1 * exp( - Ea1 / ( Rgas * tairK ) );
-		}
-		else
-		{
-			KmCO2 = A2 * exp ( - Ea2 / ( Rgas * tairK ) );
-		}
-
-		KO2 = AKO2 * exp ( - EaKO2 / ( Rgas * tairK ) );
-
-		tau = Atau * exp ( - Eatau / ( Rgas * tairK) );
-
-		v1 = ( meteo_annual->co2Conc -( O2CONC / ( 2. * tau ) ) ) / ( g_settings->co2Conc - ( O2CONC / ( 2. * tau ) ) );
-		v2 = ( KmCO2 * ( 1 + ( O2CONC / KO2 ) ) + g_settings->co2Conc ) / ( KmCO2 * ( 1. + ( O2CONC / KO2 ) ) + meteo_annual->co2Conc );
-
-		/* CO2 assimilation modifier */
-		s->value[F_CO2] = v1*v2;
-
-		/**********************************************************************************/
-
-		/* CO2 MODIFIER FOR TRANSPIRATION  */
-		/* limitation effects on maximum stomatal conductance from:
-		 * Frank et al., 2013 New Phytologist
-		 * Hidy et al., 2016 Geosc. Model Dev.
-		 */
-
-		s->value[F_CO2_TR] = 39.43 * pow(meteo_annual->co2Conc, -0.64);
-
-
+		KmCO2 = A1 * exp( - Ea1 / ( Rgas * tleaf_K ) );
 	}
 	else
 	{
-		s->value[F_CO2]    = 1.;
-
-		s->value[F_CO2_TR] = 1.;
+		KmCO2 = A2 * exp ( - Ea2 / ( Rgas * tleaf_K ) );
 	}
 
-	/********************************************************************************************/
+	/* Dependence of KO2 on temperature data */
+	KO2 = AKO2 * exp ( - EaKO2 / ( Rgas * tleaf_K ) );
 
+	/* dependence of assimilation rate on atmospheric carbon dioxyde concentration and competition by O2 */
+	tau = Atau * exp ( - Eatau / ( Rgas * tleaf_K) );
+
+	v1  = ( Ca - ( O2CONC / ( 2. * tau ) ) ) / ( Ca_ref - ( O2CONC / ( 2. * tau ) ) );
+	v2  = ( KmCO2 * ( 1 + ( O2CONC / KO2 ) ) + Ca_ref ) / ( KmCO2 * ( 1. + ( O2CONC / KO2 ) ) + Ca );
+
+	/* CO2 assimilation modifier */
+	s->value[F_CO2_VER] = v1 * v2;
+
+	/*******************************************************************************/
+
+#if 0
+	/*************************** MICHAELIS MENTEN KINETICS *************************/
+	/*******************************************************************************/
+
+	/* correct kinetic constants for temperature, and do unit conversions */
+	Ko  = Ko25 * pow ( q10Ko , ( tleaf - 25. ) / 10. );
+
+	/* compute effective Michaelis-Menten coefficient for Rubisco as in Collatz et al., (1991) see von Caemmerer 2000 "Biochemical model of leaf photosynthesis" */
+
+	if ( tleaf > 15. )
+	{
+		Kc  = Kc25  * pow ( q10Kc , ( tleaf - 25. ) / 10. );
+	}
+	else
+	{
+		Kc  = Kc25  * pow ( 1.8 * q10Kc , ( tleaf - 15. ) / 10.) / q10Kc;
+	}
+
+	/*******************************************************************************/
+#else
+
+	/****************************** ARRHENIUS KINETICS *****************************/
+	/*******************************************************************************/
+	/* the enzyme kinetics built into this model are based on Medlyn (1999) */
+
+	/* correct oxygenase kinetic constants for temperature */
+	Ko  = Ko25 * exp ( Ea_Ko * ( tleaf - 25. ) / ( 298. * Rgas * ( tleaf + TempAbs ) ) );
+
+	/* correct carboxylase kinetic constants for temperature */
+	Kc  = Kc25 * exp ( Ea_Kc * ( tleaf - 25. ) / ( 298. * Rgas * ( tleaf + TempAbs ) ) );
+
+#endif
+	/*******************************************************************************/
+
+	/* convert ubar umol --> Pa */
+	Ko *= 0.1;
+
+	/* convert ubar umol --> Pa */
+	Kc *= 0.1;
+
+	/* fixme  conversions */
+
+	/* convert Pa --> ppm */
+	Ko /= ( meteo_daily->air_pressure / 1e6 );
+
+	/* convert Pa --> ppm */
+	Kc /= ( meteo_daily->air_pressure / 1e6 );
+
+	/*******************************************************************************/
+
+	/*******************************************************************************/
+
+	/* calculate gamma (ppm) CO2 compensation point due to photorespiration, in the absence of respiration */
+
+#if 1
+	/* it assumes Vomax/Vcmax = 0.21; Badger & Andrews (1974) */
+	/* 0.5 because with 1 mol of oxygenations assumed to release 0.5 molCO2 by glycine decarboxilation (Farquhar and Busch, 2017) */
+
+	gamma_star = 0.5 * 0.21 * O2 * Kc / Ko;
+
+#else
+
+	if ( tleaf < -1. )
+	{
+		/* note:  Maespa */
+		gamma_star = 36.9 + 1.88*(-26.0) + 0.036*(-26.0)*(-26.0);
+	}
+	else
+	{
+		/* note: dePury and Farquhar 1997 method */
+		gamma_star = 36.9 + 1.88 * ( tleaf - 25. ) + 0.036 * pow( ( tleaf - 25. ) , 2. );
+	}
+
+	/* note: Bernacchi et al., 2001 method (in umol/mol)*/
+	gamma_star = 42.75 * exp ( 37830 * ( tleaf - 25.) / ( Rgas * ( tleaf + TempAbs ) * ( 25. + TempAbs ) ) );
+
+	/* convert from umol --> Pa -->  ppm */
+	gamma_star *=  0.1;
+	gamma_star /= ( meteo_daily->air_pressure / 1e6 );
+
+#endif
+
+	/****************************** 'FRANKS ET AL' VERSION *************************/
+	/*******************************************************************************/
+	/* CO2 MODIFIER FOR ASSIMILATION  */
+	/* see Franks et al., (2013) NewPhytologist Eq 5 */
+
+	/* solve for Av and Aj using the quadratic equation, substitution for Ci
+		from A = g(Ca-Ci) into the equations from Farquhar, von Caemmerer and Berry (1980)
+		and Bernacchi et al (2003) (for values 4.5 and 10.5) :
+
+		       Vmax (Ci - gamma)
+		Av =  -------------------   -   Rd
+		      Ci + Kc (1 + O2/Ko)
+
+
+		         J (Ci - gamma)
+		Aj  =  -------------------  -   Rd
+	           4.5 Ci + 10.5 gamma
+	 */
+
+	/*******************************************************************************/
+	/* note: all variables are in ppm */
+
+	/* compute FCO2 modifier (Aj_rel) */
+
+	/* note: original Franks et al., (2013) */
+	//Aj_rel = ( ( Ca - gamma_star ) * ( Ca_ref + 2 * gamma_star ) ) / ( ( Ca + 2. * gamma_star ) * ( Ca_ref - gamma_star ) );
+
+	/* note Following parameterization from Bernacchi et al., (2001) and applied to Franks et al., (2013) */
+	Aj_rel = ( ( Ca - gamma_star ) * ( ( 4.5 * Ca_ref ) + ( 10.5 * gamma_star ) ) ) / ( ( ( 4.5 * Ca )  + ( 10.5 * gamma_star ) ) * ( Ca_ref - gamma_star ) );
+
+	/*******************************************************************************/
+
+	/* compute F CO2 modifier (Av_rel) */
+
+	Av_rel = ( ( Ca - gamma_star ) * ( Ca_ref + Kc * ( 1. + ( O2 / Ko ) ) ) ) / ( ( Ca + Kc * ( 1. + ( O2 / Ko ) ) ) * ( Ca_ref - gamma_star ) );
+
+	/*******************************************************************************/
+
+	test_assimilation = 0;
+
+	switch ( test_assimilation )
+	{
+	case 0:
+		/* estimate A as the minimum of (Av,Aj) */
+
+		s->value[F_CO2_FRANKS] = MIN ( Av_rel, Aj_rel );
+		break;
+	case 1:
+		/* estimate A as Av */
+
+		s->value[F_CO2_FRANKS] = Av_rel;
+		break;
+	case 2:
+		/* estimate A as Aj */
+
+		s->value[F_CO2_FRANKS] = Aj_rel;
+		break;
+	}
+
+	/******************************************************************************************/
+
+	modifier = 1; /* 0 for Veroustraete; 1 for Franks */
+
+	/* selection for CO2 modifier to be used */
+	switch ( modifier )
+	{
+	case 0:
+		s->value[F_CO2] = s->value[F_CO2_VER];
+		break;
+	case 1:
+
+		s->value[F_CO2] = s->value[F_CO2_FRANKS];
+		break;
+	}
+
+	/****************************************************************************************************************/
+
+	/************************** TRANSPIRATION CO2 MODIFIERS ***************************/
+
+	/* CO2 MODIFIER FOR TRANSPIRATION  */
+	/* limitation effects on maximum stomatal conductance from:
+	 * Frank et al., 2013 New Phytologist
+	 * Hidy et al., 2016 Geosc. Model Dev.
+	 */
+
+	s->value[F_CO2_TR] = 39.43 * pow ( Ca , -0.64 );
+
+	/****************************************************************************************************************/
 
 	/* LIGHT MODIFIER */
 	/* (Following Makela et al. , 2008, Peltioniemi et al. 2012) */
@@ -180,9 +385,9 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	/* vapor pressure deficit multiplier, vpd in Pa */
 #if 0
 	if (meteo_daily->vpd < vpd_open)    /* no vpd effect */
-		s->value[F_VPD] = 1.0;
+		s->value[F_VPD] = 1.;
 	else if (meteo_daily->vpd > vpd_close)   /* full vpd effect */
-		s->value[F_VPD] = 0.0;
+		s->value[F_VPD] = 0.;
 	else                   /* partial vpd effect */
 		s->value[F_VPD] = (vpd_close - meteo_daily->vpd) / (vpd_close - vpd_open);
 #endif
@@ -280,7 +485,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 
 	/* PHYSIOLOGICAL MODIFIER */
 	s->value[PHYS_MOD] = MIN (s->value[F_VPD], (s->value[F_SW] * s->value[F_AGE]));
-	
+
 	/* check */
 	CHECK_CONDITION(s->value[PHYS_MOD], >, 1.);
 	CHECK_CONDITION(s->value[PHYS_MOD], <, ZERO);

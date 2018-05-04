@@ -223,7 +223,7 @@ static dataset_comp_t* dataset_import(const char*const filename) {
 
 	// get EOD
 	file_data_end = ftell(f);
-
+	
 	// rewind
 	fseek(f, file_data_start, 0);
 
@@ -321,7 +321,7 @@ static dataset_comp_t* dataset_import(const char*const filename) {
 						fprintf(f, "%s", d->values[VALUE_AT(d,i,y)].s);
 					} else {
 						fprintf(f, "%g", d->values[VALUE_AT(d,i,y)].v);
-					}
+					}					
 					if ( y < d->columns_count-1 ) {
 						fputs(",", f);
 					}
@@ -329,7 +329,7 @@ static dataset_comp_t* dataset_import(const char*const filename) {
 				fputs("\n", f);
 			}
 			fclose(f);
-		}
+		}	
 	}
 	*/
 
@@ -347,13 +347,13 @@ int diff(const char* const input1, const char* const input2) {
 	int col;
 	dataset_comp_t* d1;
 	dataset_comp_t* d2;
-
+	
 	assert(input1 && input2);
 
 	// defaults to err
 	ret = 0;
 
-	//
+	// 
 	d1 = NULL;
 	d2 = NULL;
 	d1 = dataset_import(input1);
@@ -447,7 +447,7 @@ int diff(const char* const input1, const char* const input2) {
 				}
 			}
 			fputs("\n", f);
-		}
+		}	
 		fclose(f);
 	}
 
@@ -496,9 +496,6 @@ int compare(const char* const input1, const char* const input2) {
 		char path2[1024];
 		int i;
 		int len;
-#if 0
-        struct stat statbuf;
-#endif
 
 		// skip current folder, previous folder, parameterization folder and diff files!
     	if ( 	! strcmp(entry->d_name, ".")
@@ -528,12 +525,7 @@ int compare(const char* const input1, const char* const input2) {
 		path2[len] = '\0';
 
 		// is a directory ?
-#if 1
 		if ( DT_DIR == entry->d_type ) {
-#else
-		// this one is better
-		if ( (stat(path2, &statbuf) != 0) && S_ISDIR(statbuf.st_mode) ) {
-#endif
 			// check if path2 exists!
 			if ( TYPE_DIRECTORY != get_type(path2) ) {
 				logger_error(g_debug_log, "%s not found in %s. skipped.\n", path1, path2);

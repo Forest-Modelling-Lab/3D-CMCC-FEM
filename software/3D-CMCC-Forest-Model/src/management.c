@@ -130,7 +130,7 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 							prescribed_thinning ( c, height, dbh, age, species, c->years[year].year );
 						}
 
-						if ( g_management->thinning_years_count )
+						if ( g_management && g_management->thinning_years_count )
 						{
 							int i;
 							for ( i = 0; i < g_management->thinning_years_count; i++ )
@@ -177,7 +177,7 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 					}
 					else if ( MANAGEMENT_VAR == g_settings->management )
 					{
-						if ( g_management->harvesting_years_count )
+						if ( g_management && g_management->harvesting_years_count )
 						{
 							int i;
 							for ( i = 0; i < g_management->harvesting_years_count; i++ )

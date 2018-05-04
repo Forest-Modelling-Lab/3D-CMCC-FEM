@@ -22,7 +22,7 @@ extern settings_t* g_settings;
 extern soil_settings_t *g_soil_settings;
 extern topo_t *g_topo;
 extern char *g_sz_parameterization_path;
-extern char g_sz_parameterization_output_path[];
+extern char g_sz_input_data_path[];
 extern int g_year_start_index;
 
 /** ---------- dataset stuff ---------- **/
@@ -553,7 +553,7 @@ static dataset_t* dataset_import_nc(const char* const filename, int* const px_ce
 						break;
 
 						// ALESSIOR TEST IT!!
-						default:
+					default:
 						continue;
 					}
 
@@ -732,7 +732,7 @@ static dataset_t* dataset_import_txt(const char* const filename) {
 						/* check management length */
 						if ( 1 != strlen(token) ) {
 							printf(err_bad_management_length, rows_count);
-							if ( row.species ) free(row.species);
+							free(row.species);
 							free(columns);
 							dataset_free(dataset);
 							fclose(f);
@@ -750,7 +750,7 @@ static dataset_t* dataset_import_txt(const char* const filename) {
 							row.management = N;
 						} else {
 							printf(err_bad_management, token[0], rows_count);
-							if ( row.species ) free(row.species);
+							free(row.species);
 							free(columns);
 							dataset_free(dataset);
 							fclose(f);
@@ -760,7 +760,7 @@ static dataset_t* dataset_import_txt(const char* const filename) {
 						value = convert_string_to_float(token, &error);
 						if ( error ) {
 							printf(err_conversion, token, rows_count, y+1);
-							if ( row.species ) free(row.species);
+							free(row.species);
 							free(columns);
 							dataset_free(dataset);
 							fclose(f);
@@ -819,7 +819,7 @@ static dataset_t* dataset_import_txt(const char* const filename) {
 							row.lai = value;
 							break;
 
-						//default:
+							//default:
 							//printf(err_column_skipped, i);
 						}
 					}
@@ -832,7 +832,7 @@ static dataset_t* dataset_import_txt(const char* const filename) {
 		/* check columns */
 		if ( assigned != COLUMNS_TO_IMPORT ) {
 			puts("not all values has been imported!");
-			if ( row.species ) free(row.species);
+			free(row.species);
 			free(columns);
 			dataset_free(dataset);
 			fclose(f);
@@ -841,23 +841,23 @@ static dataset_t* dataset_import_txt(const char* const filename) {
 
 		/* check for year */
 		//if ( row.year_stand == g_settings->year_start ) {
-			/* alloc memory */
-			rows_no_leak = realloc(dataset->rows, (dataset->rows_count+1)*sizeof*rows_no_leak);
-			if ( ! rows_no_leak ) {
-				puts(sz_err_out_of_memory);
-				if ( row.species ) free(row.species);
-				free(columns);
-				dataset_free(dataset);
-				fclose(f);
-				return NULL;
-			}
+		/* alloc memory */
+		rows_no_leak = realloc(dataset->rows, (dataset->rows_count+1)*sizeof*rows_no_leak);
+		if ( ! rows_no_leak ) {
+			puts(sz_err_out_of_memory);
+			free(row.species);
+			free(columns);
+			dataset_free(dataset);
+			fclose(f);
+			return NULL;
+		}
 
-			/* assign pointer */
-			dataset->rows = rows_no_leak;
-			dataset->rows[dataset->rows_count++] = row;
+		/* assign pointer */
+		dataset->rows = rows_no_leak;
+		dataset->rows[dataset->rows_count++] = row;
 		//} else {
-			//free(row.species);
-			//row.species = NULL;
+		//free(row.species);
+		//row.species = NULL;
 		//}
 	}
 	free(columns);
@@ -890,9 +890,9 @@ static const char *sz_species_values[] =
 		"K",                          /* Extinction coefficient for absorption of PAR by canopy */
 		"ALBEDO",                     /* Canopy albedo */
 		"INT_COEFF",                  /* Precipitation interception coefficient */
-		"SLA_AVG0",                   /* AVERAGE Specific Leaf Area m^2/KgC for sunlit/shaded leaves (juvenile) */
-		"SLA_AVG1",                   /* AVERAGE Specific Leaf Area m^2/KgC for sunlit/shaded leaves (mature) */
-		"TSLA",                       /* Age at which SLA_AVG = (SLA_AVG1 + SLA_AVG0 )/2 */
+		"SLA_AVG0",                   /* AVERAGE Specific Leaf Area m^2/KgDM for sunlit/shaded leaves (juvenile) */
+		"SLA_AVG1",                   /* AVERAGE Specific Leaf Area m^2/KgDM for sunlit/shaded leaves (mature) */
+		"TSLA",                       /* Age at which SLA_PROJ = (SLA_AVG1 + SLA_AVG0 )/2 */
 		"SLA_RATIO",                  /* (DIM) ratio of shaded to sunlit projected SLA */
 		"LAI_RATIO",                  /* (DIM) all-sided to projected leaf area ratio */
 		"FRACBB0",                    /* Branch and Bark fraction at age 0 (m^2/kg) */
@@ -1243,8 +1243,8 @@ int fill_species_from_file(species_t *const s) {
 	s->value[MAX_SPECIES_COVER] = (int)s->value[LIGHT_TOL];
 
 	/* copy file */
-	if ( ! species_copy_file(g_sz_parameterization_output_path, filename) ) {
-		printf("error: unable to copy species to %s\n", g_sz_parameterization_output_path);
+	if ( ! species_copy_file(g_sz_input_data_path, filename) ) {
+		printf("error: unable to copy species to %s\n", g_sz_input_data_path);
 		return 0;
 	}
 
@@ -1831,7 +1831,7 @@ void matrix_free(matrix_t *m)
 		if ( m->cells_count )
 		{
 			for ( cell = 0 ; cell < m->cells_count; ++cell )
-			{			
+			{
 				for ( height = 0; height < m->cells[cell].heights_count; ++height )
 				{
 					if ( m->cells[cell].tree_layers_count || m->cells[cell].t_layers_avail )

@@ -138,7 +138,7 @@ void self_thinning_mortality (cell_t *const c, const int layer, const int year)
 					livetree = 0;
 
 					/* check */
-					CHECK_CONDITION( s->value[CANOPY_COVER_PROJ] ,  > , g_settings->max_layer_cover + eps );
+					CHECK_CONDITION( s->value[CANOPY_COVER_PROJ] ,  > , s->value[CANOPY_COVER_PROJ] + eps );
 				}
 			}
 		}
@@ -199,10 +199,11 @@ int growth_efficiency_mortality ( cell_t *const c, const int height, const int d
 	 * and make the tree class die */
 
 	int nat_man;   /* natural or managed mortality 0 = natural; 1 = managed */
+
 	species_t* s;
 
 	nat_man = 0;
-
+	
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 	if( s->value[RESERVE_C] < 0 )
@@ -268,7 +269,7 @@ int annual_growth_efficiency_mortality ( cell_t *const c, const int height, cons
 	species_t* s;
 
 	nat_man = 0;
-
+	
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 	if( s->value[RESERVE_C] < 0 )
@@ -302,6 +303,7 @@ void age_mortality (cell_t *const c, const int height, const int dbh, const int 
 	double mort_log    = 0.001; /* age mortality log 0.001 as in Smith et al., (LPJ-Guess) */
 	double age_mort;
 	int nat_man;   /* natural or managed mortality 0 = natural; 1 = managed */
+
 	age_t *a;
 	species_t *s;
 

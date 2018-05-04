@@ -46,15 +46,14 @@ int check_tree_class_radiation_flux_balance(cell_t *const c, const int layer, co
 	/* check canopy water pool balance */
 	balance = in - out - store;
 
-	logger(g_debug_log, "\nCLASS LEVEL PAR BALANCE\n");
-
 	/* check for PAR balance closure*/
 	if ( fabs( balance ) > eps )
 	{
-		error_log("DOY = %d\n", c->doy);
-		error_log("PAR in = %g\n", in);
-		error_log("PAR out = %g\n", out);
-		error_log("PAR store = %g\n", store);
+		error_log("\nCLASS LEVEL PAR BALANCE\n");
+		error_log("DOY         = %d\n", c->doy);
+		error_log("PAR in      = %g\n", in);
+		error_log("PAR out     = %g\n", out);
+		error_log("PAR store   = %g\n", store);
 		error_log("PAR balance = %g\n", balance);
 		error_log("...FATAL ERROR in 'Tree_model_daily' PAR balance (exit)\n");
 		CHECK_CONDITION(fabs( balance ), > , eps);
@@ -80,15 +79,14 @@ int check_tree_class_radiation_flux_balance(cell_t *const c, const int layer, co
 	/* check canopy water pool balance */
 	balance = in - out - store;
 
-	logger(g_debug_log, "\nCLASS LEVEL Short Wave BALANCE\n");
-
 	/* check for NET_RAD balance closure*/
 	if ( fabs( balance ) > eps )
 	{
-		error_log("DOY = %d\n", c->doy);
-		error_log("NET_SW_RAD in = %g\n", in);
-		error_log("NET_RAD out = %g\n", out);
-		error_log("NET_RAD store = %g\n", store);
+		error_log("\nCLASS LEVEL Short Wave BALANCE\n");
+		error_log("DOY             = %d\n", c->doy);
+		error_log("NET_SW_RAD in   = %g\n", in);
+		error_log("NET_RAD out     = %g\n", out);
+		error_log("NET_RAD store   = %g\n", store);
 		error_log("NET_RAD balance = %g\n", balance);
 		error_log("...FATAL ERROR AT CLASS LEVEL NET_RAD balance (exit)\n");
 		CHECK_CONDITION(fabs( balance ), > , eps);
@@ -129,19 +127,18 @@ int check_tree_class_carbon_flux_balance(cell_t *const c, const int layer, const
 	/* check carbon flux balance */
 	balance = in - out - store;
 
-	logger(g_debug_log, "\nCLASS LEVEL CARBON FLUX BALANCE (first)\n");
-
 	/* check for carbon flux balance closure */
 	if ( fabs( balance ) > eps )
 	{
-		error_log("DOY = %d\n",                      c->doy);
-		error_log("\nin = %g gC/m2/day\n",           in);
-		error_log("GPP = %g gC/m2/day\n",            s->value[GPP]);
-		error_log("\nout = %g gC/m2/day\n",          out);
+		error_log("\nCLASS LEVEL CARBON FLUX BALANCE (first)\n");
+		error_log("DOY            = %d\n",           c->doy);
+		error_log("\nin           = %g gC/m2/day\n", in);
+		error_log("GPP            = %g gC/m2/day\n", s->value[GPP]);
+		error_log("\nout          = %g gC/m2/day\n", out);
 		error_log("TOTAL_AUT_RESP = %g gC/m2/day\n", s->value[TOTAL_AUT_RESP]);
-		error_log("\nstore = %g gC/m2/day\n",        store);
-		error_log("NPP = %g gC/m2/day\n",            s->value[NPP]);
-		error_log("\nbalance = %g gC/m2/day\n",      balance);
+		error_log("\nstore        = %g gC/m2/day\n", store);
+		error_log("NPP            = %g gC/m2/day\n", s->value[NPP]);
+		error_log("\nbalance      = %g gC/m2/day\n", balance);
 		error_log("...FATAL ERROR in 'Tree_model_daily' carbon flux balance (first) (exit)\n");
 		CHECK_CONDITION(fabs( balance ), > , eps);
 
@@ -181,33 +178,32 @@ int check_tree_class_carbon_flux_balance(cell_t *const c, const int layer, const
 	/* check carbon flux balance */
 	balance = in - out - store;
 
-	logger(g_debug_log, "\nCLASS LEVEL CARBON FLUX BALANCE (second)\n");
-
 	/* check for carbon flux balance closure */
-	if ( fabs( balance ) > eps )
+	if ( fabs( balance ) > eps  && c->doy != 1)
 	{
-		error_log("DOY = %d\n",                               c->doy);
-		error_log("\nin = %g tC/cell/day\n",                  in);
-		error_log("GPP_gC = %g tC/cell/day\n",                s->value[GPP_tC]);
-		error_log("\nout = %g tC/cell/day\n",                 out);
-		error_log("TOTAL_MAINT_RESP = %g tC/cell/day\n",      s->value[TOTAL_MAINT_RESP_tC]);
-		error_log("TOTAL_GROWTH_RESP = %g tC/cell/day\n",     s->value[TOTAL_GROWTH_RESP_tC]);
-		error_log("C_LEAF_TO_LITR = %g tC/cell/day\n",        s->value[C_LEAF_TO_LITR]);
-		error_log("C_FROOT_TO_LITR = %g tC/cell/day\n",       s->value[C_FROOT_TO_LITR]);
-		error_log("C_STEM_TO_CWD  = %g tC/cell/day\n",        s->value[C_STEM_TO_CWD]);
-		error_log("C_CROOT_TO_CWD = %g tC/cell/day\n",        s->value[C_CROOT_TO_CWD]);
-		error_log("C_BRANCH_TO_CWD = %g tC/cell/day\n",       s->value[C_BRANCH_TO_CWD]);
-		error_log("C_RESERVE_TO_CWD = %g tC/cell/day\n",      s->value[C_RESERVE_TO_CWD]);
-		error_log("C_FRUIT_TO_CWD = %g tC/cell/day\n",        s->value[C_FRUIT_TO_CWD]);
-		error_log("\nstore = %g tC/cell/day\n",               store);
-		error_log("C_TO_LEAF = %g tC/cell/day\n",             s->value[C_TO_LEAF]);
-		error_log("C_TO_FROOT = %g tC/cell/day\n",            s->value[C_TO_FROOT]);
-		error_log("C_TO_STEM = %g tC/cell/day\n",             s->value[C_TO_STEM]);
-		error_log("C_TO_CROOT = %g tC/cell/day\n",            s->value[C_TO_CROOT]);
-		error_log("C_TO_BRANCH = %g tC/cell/day\n",           s->value[C_TO_BRANCH]);
-		error_log("C_TO_RESERVE = %g tC/cell/day\n",          s->value[C_TO_RESERVE]);
-		error_log("C_TO_FRUIT = %g tC/cell/day\n",            s->value[C_TO_FRUIT]);
-		error_log("\nbalance = %g tC/cell/day\n",             balance);
+		error_log("\nCLASS LEVEL CARBON FLUX BALANCE (second)\n");
+		error_log("DOY               = %d\n",             c->doy);
+		error_log("\nin              = %g tC/cell/day\n", in);
+		error_log("GPP_gC            = %g tC/cell/day\n", s->value[GPP_tC]);
+		error_log("\nout             = %g tC/cell/day\n", out);
+		error_log("TOTAL_MAINT_RESP  = %g tC/cell/day\n", s->value[TOTAL_MAINT_RESP_tC]);
+		error_log("TOTAL_GROWTH_RESP = %g tC/cell/day\n", s->value[TOTAL_GROWTH_RESP_tC]);
+		error_log("C_LEAF_TO_LITR    = %g tC/cell/day\n", s->value[C_LEAF_TO_LITR]);
+		error_log("C_FROOT_TO_LITR   = %g tC/cell/day\n", s->value[C_FROOT_TO_LITR]);
+		error_log("C_STEM_TO_CWD     = %g tC/cell/day\n", s->value[C_STEM_TO_CWD]);
+		error_log("C_CROOT_TO_CWD    = %g tC/cell/day\n", s->value[C_CROOT_TO_CWD]);
+		error_log("C_BRANCH_TO_CWD   = %g tC/cell/day\n", s->value[C_BRANCH_TO_CWD]);
+		error_log("C_RESERVE_TO_CWD  = %g tC/cell/day\n", s->value[C_RESERVE_TO_CWD]);
+		error_log("C_FRUIT_TO_CWD    = %g tC/cell/day\n", s->value[C_FRUIT_TO_CWD]);
+		error_log("\nstore           = %g tC/cell/day\n", store);
+		error_log("C_TO_LEAF         = %g tC/cell/day\n", s->value[C_TO_LEAF]);
+		error_log("C_TO_FROOT        = %g tC/cell/day\n", s->value[C_TO_FROOT]);
+		error_log("C_TO_STEM         = %g tC/cell/day\n", s->value[C_TO_STEM]);
+		error_log("C_TO_CROOT        = %g tC/cell/day\n", s->value[C_TO_CROOT]);
+		error_log("C_TO_BRANCH       = %g tC/cell/day\n", s->value[C_TO_BRANCH]);
+		error_log("C_TO_RESERVE      = %g tC/cell/day\n", s->value[C_TO_RESERVE]);
+		error_log("C_TO_FRUIT        = %g tC/cell/day\n", s->value[C_TO_FRUIT]);
+		error_log("\nbalance         = %g tC/cell/day\n", balance);
 		error_log("...FATAL ERROR in 'Tree_model_daily'  carbon flux balance (second) (exit)\n");
 		CHECK_CONDITION(fabs( balance ), > , eps);
 
@@ -253,37 +249,37 @@ int check_tree_class_carbon_mass_balance ( cell_t *const c, const int layer, con
 			s->value[FRUIT_C]                ;
 
 	/* check carbon pool balance */
-	s->value[TREEC_BALANCE] = s->value[TREEC_IN] - s->value[TREEC_OUT] - (s->value[TREEC_STORE] - s->value[TREEC_OLDSTORE]);
-
-	logger(g_debug_log, "\nCLASS LEVEL CARBON MASS BALANCE\n");
+	s->value[TREEC_BALANCE] = s->value[TREEC_IN] - s->value[TREEC_OUT] - ( s->value[TREEC_STORE] - s->value[TREEC_OLDSTORE] );
 
 	/* check for carbon mass balance closure */
-	if ( ( fabs( s->value[TREEC_BALANCE] ) > eps ) && ( s->counter[DOS] > 1 ) )
+	if ( ( fabs( s->value[TREEC_BALANCE] ) > eps ) && s->counter[DOS] > 1 && c->doy != 1 )
 	{
-		error_log("TREE DOS = %d\n",                          s->counter[DOS]);
-		error_log("\nin = %g tC/cell/day\n",                  s->value[TREEC_IN]);
-		error_log("GPP = %g tC/cell\n",                       s->value[GPP_tC]);
-		error_log("\nout = %g tC/cell/day\n",                 s->value[TREEC_OUT]);
-		error_log("TOTAL_MAINT_RESP_tC = %g tC/cell/day\n",   s->value[TOTAL_MAINT_RESP_tC]);
-		error_log("TOTAL_GROWTH_RESP_tC = %g tC/cell/day\n",  s->value[TOTAL_GROWTH_RESP_tC]);
-		error_log("C_LEAF_TO_LITR = %g tC/cell/day\n",        s->value[C_LEAF_TO_LITR]);
-		error_log("C_FROOT_TO_LITR = %g tC/cell/day\n",       s->value[C_FROOT_TO_LITR]);
-		error_log("C_STEM_TO_CWD = %g tC/cell/day\n",         s->value[C_STEM_TO_CWD]);
-		error_log("C_BRANCH_TO_CWD = %g tC/cell/day\n",       s->value[C_BRANCH_TO_CWD]);
-		error_log("C_CROOT_TO_CWD = %g tC/cell/day\n",        s->value[C_CROOT_TO_CWD]);
-		error_log("C_RESERVE_TO_CWD = %g tC/cell/day\n",      s->value[C_RESERVE_TO_CWD]);
-		error_log("C_FRUIT_TO_CWD = %g tC/cell/day\n",        s->value[C_FRUIT_TO_CWD]);
-		error_log("\nold_store = %g tC/cell\n",               s->value[TREEC_OLDSTORE]);
-		error_log("store = %g tC/cell\n",                     s->value[TREEC_STORE]);
-		error_log("store - old_store = %g tC/cell\n",         s->value[TREEC_STORE] - s->value[TREEC_OLDSTORE]);
-		error_log("LEAF_C = %g tC/cell/day\n",                s->value[LEAF_C]);
-		error_log("FROOT_C = %g tC/cell/day\n",               s->value[FROOT_C]);
-		error_log("CROOT_C = %g tC/cell/day\n",               s->value[CROOT_C]);
-		error_log("STEM_C = %g tC/cell/day\n",                s->value[STEM_C]);
-		error_log("BRANCH_C = %g tC/cell/day\n",              s->value[BRANCH_C]);
-		error_log("RESERVE_C = %g tC/cell/day\n",             s->value[RESERVE_C]);
-		error_log("FRUIT_C = %g tC/cell/day\n",               s->value[FRUIT_C]);
-		error_log("\nbalance = %g tC/cell\n",                 s->value[TREEC_BALANCE]);
+		error_log("\nCLASS LEVEL CARBON MASS BALANCE\n");
+		error_log("DOY                  = %d\n",             c->doy);
+		error_log("TREE DOS             = %d\n",             s->counter[DOS]);
+		error_log("\nin                 = %g tC/cell/day\n", s->value[TREEC_IN]);
+		error_log("GPP                  = %g tC/cell\n",     s->value[GPP_tC]);
+		error_log("\nout                = %g tC/cell/day\n", s->value[TREEC_OUT]);
+		error_log("TOTAL_MAINT_RESP_tC  = %g tC/cell/day\n", s->value[TOTAL_MAINT_RESP_tC]);
+		error_log("TOTAL_GROWTH_RESP_tC = %g tC/cell/day\n", s->value[TOTAL_GROWTH_RESP_tC]);
+		error_log("C_LEAF_TO_LITR       = %g tC/cell/day\n", s->value[C_LEAF_TO_LITR]);
+		error_log("C_FROOT_TO_LITR      = %g tC/cell/day\n", s->value[C_FROOT_TO_LITR]);
+		error_log("C_STEM_TO_CWD        = %g tC/cell/day\n", s->value[C_STEM_TO_CWD]);
+		error_log("C_BRANCH_TO_CWD      = %g tC/cell/day\n", s->value[C_BRANCH_TO_CWD]);
+		error_log("C_CROOT_TO_CWD       = %g tC/cell/day\n", s->value[C_CROOT_TO_CWD]);
+		error_log("C_RESERVE_TO_CWD     = %g tC/cell/day\n", s->value[C_RESERVE_TO_CWD]);
+		error_log("C_FRUIT_TO_CWD       = %g tC/cell/day\n", s->value[C_FRUIT_TO_CWD]);
+		error_log("\nold_store          = %g tC/cell\n",     s->value[TREEC_OLDSTORE]);
+		error_log("store                = %g tC/cell\n",     s->value[TREEC_STORE]);
+		error_log("store - old_store    = %g tC/cell\n",     s->value[TREEC_STORE] - s->value[TREEC_OLDSTORE]);
+		error_log("LEAF_C               = %g tC/cell/day\n", s->value[LEAF_C]);
+		error_log("FROOT_C              = %g tC/cell/day\n", s->value[FROOT_C]);
+		error_log("CROOT_C              = %g tC/cell/day\n", s->value[CROOT_C]);
+		error_log("STEM_C               = %g tC/cell/day\n", s->value[STEM_C]);
+		error_log("BRANCH_C             = %g tC/cell/day\n", s->value[BRANCH_C]);
+		error_log("RESERVE_C            = %g tC/cell/day\n", s->value[RESERVE_C]);
+		error_log("FRUIT_C              = %g tC/cell/day\n", s->value[FRUIT_C]);
+		error_log("\nbalance            = %g tC/cell\n",     s->value[TREEC_BALANCE]);
 		error_log("...FATAL ERROR in 'Tree_model_daily' carbon mass balance (exit)\n");
 		CHECK_CONDITION(fabs( s->value[TREEC_BALANCE] ), > , eps);
 
@@ -337,11 +333,10 @@ int check_tree_class_nitrogen_flux_balance ( cell_t *const c, const int layer, c
 	/* check nitrogen flux balance */
 	balance = in - out - store;
 
-	logger(g_debug_log, "\nCLASS LEVEL NITROGEN FLUX BALANCE\n");
-
 	/* check for nitrogen flux balance closure */
 	if ( fabs( balance ) > eps )
 	{
+		error_log("\nCLASS LEVEL NITROGEN FLUX BALANCE\n");
 		error_log("DOY                   = %d\n",             c->doy);
 		error_log("\nin                  = %f tN/cell/day\n", in);
 		error_log("NPP_tN                = %f tN/cell/day\n", s->value[NPP_tN_DEMAND]);
@@ -406,11 +401,10 @@ int check_tree_class_nitrogen_mass_balance ( cell_t *const c, const int layer, c
 	/* check nitrogen pool balance */
 	s->value[TREEN_BALANCE] = s->value[TREEN_IN] - s->value[TREEN_OUT] - (s->value[TREEN_STORE] - s->value[TREEN_OLDSTORE]);
 
-	logger(g_debug_log, "\nCLASS LEVEL CARBON MASS BALANCE\n");
-
 	/* check for nitrogen mass balance closure */
 	if ( ( fabs( s->value[TREEN_BALANCE] ) > eps ) && ( s->counter[DOS] > 1 ) )
 	{
+		error_log("\nCLASS LEVEL NITROGEN MASS BALANCE\n");
 		error_log("TREE DOS              = %d\n",             s->counter[DOS]);
 		error_log("\nin                  = %f tN/cell/day\n", s->value[TREEN_IN]);
 		error_log("\nout                 = %f tN/cell/day\n", s->value[TREEN_OUT]);
@@ -454,21 +448,20 @@ int check_tree_class_water_flux_balance ( cell_t *const c, const int layer, cons
 	/* DAILY CHECK ON CLASS LEVEL CANOPY POOL-ATMOSPHERE WATER BALANCE */
 
 	/* sum of sources */
-	s->value[TREEW_IN]      = s->value[CANOPY_INT_RAIN];
+	s->value[TREEW_IN]      = s->value[CANOPY_INT_RAIN] + s->value[CANOPY_INT_SNOW];
 
 	/* sum of sinks */
 	s->value[TREEW_OUT]     = s->value[CANOPY_EVAPO];
 
 	/* sum of current storage */
-	s->value[TREEW_STORE]   = s->value[CANOPY_WATER];
+	s->value[TREEW_STORE]   = s->value[CANOPY_WATER] + s->value[CANOPY_SNOW];
 
 	/* check canopy water pool balance */
 	s->value[TREEW_BALANCE] = s->value[TREEW_IN] - s->value[TREEW_OUT] - ( s->value[TREEW_STORE] - s->value[TREEW_OLDSTORE] );
 
-	logger(g_debug_log, "\nCLASS LEVEL WATER BALANCE\n");
-
 	if ( ( fabs( s->value[TREEW_BALANCE] ) > eps ) && ( s->counter[DOS] > 1 ) )
 	{
+		error_log("\nCLASS LEVEL WATER BALANCE\n");
 		error_log("TREE DOS = %d\n",             s->counter[DOS]);
 		error_log("canopy water in = %g\n",      s->value[TREEW_IN]);
 		error_log("canopy water out = %g\n",     s->value[TREEW_OUT]);

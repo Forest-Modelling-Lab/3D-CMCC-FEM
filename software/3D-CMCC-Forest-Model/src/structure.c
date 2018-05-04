@@ -61,6 +61,7 @@ int annual_forest_structure(cell_t* const c, const int year)
 	int dbh;
 	int age;
 	int species;
+	int light_tol;
 	int zeta_count = 0;
 
 	species_t *s;
@@ -76,6 +77,7 @@ int annual_forest_structure(cell_t* const c, const int year)
 	 * -cell cover
 	 * */
 
+
 	logger(g_debug_log, "\n***ANNUAL FOREST STRUCTURE***\n");
 
 	assert( ! c->tree_layers_count );
@@ -83,6 +85,43 @@ int annual_forest_structure(cell_t* const c, const int year)
 	for ( height = 0; height < c->heights_count; ++height )
 	{
 		assert( ! c->heights[height].height_z );
+	}
+
+	/***************************************************************************************************************/
+
+	for ( height = 0; height < c->heights_count ; ++height )
+	{
+		for ( dbh = 0; dbh < c->heights[height].dbhs_count; ++dbh )
+		{
+			for ( age = 0; age < c->heights[height].dbhs[dbh].ages_count ; ++age )
+			{
+				for ( species = 0; species < c->heights[height].dbhs[dbh].ages[age].species_count; ++species )
+				{
+
+					light_tol = (int)c->heights[height].dbhs[dbh].ages[age].species[species].value[LIGHT_TOL];
+
+					switch ( light_tol )
+					{
+					case 1:
+						/* very shade tolerant */
+						c->heights[height].dbhs[dbh].ages[age].species[species].value[MAX_LAYER_COVER] = 1.1;
+						break;
+					case 2:
+						/* shade tolerant */
+						c->heights[height].dbhs[dbh].ages[age].species[species].value[MAX_LAYER_COVER] = 1.0;
+						break;
+					case 3:
+						/* shade intolerant */
+						c->heights[height].dbhs[dbh].ages[age].species[species].value[MAX_LAYER_COVER] = 0.9;
+						break;
+					case 4:
+						/* very shade intolerant */
+						c->heights[height].dbhs[dbh].ages[age].species[species].value[MAX_LAYER_COVER] = 0.8;
+						break;
+					}
+				}
+			}
+		}
 	}
 
 	/*********************************************************************************************************/
@@ -439,7 +478,7 @@ int daily_forest_structure ( cell_t *const c, const meteo_daily_t *const meteo_d
 
 	tree_layer_t *l;
 	height_t *h;
-	species_t *s = NULL;
+	species_t *s;
 
 	/* This function computes at class level and at daily scale :
 	 * -Canopy Cover Projected (based on daily LAI)

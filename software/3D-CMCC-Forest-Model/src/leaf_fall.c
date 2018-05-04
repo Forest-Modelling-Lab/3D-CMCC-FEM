@@ -53,8 +53,8 @@ void leaffall_deciduous ( cell_t *const c, const int height, const int dbh, cons
 		CHECK_CONDITION(previousLai, <, currentLai);
 
 		/* determine Leaf Area Index from leaf carbon */
-		previousLeafC = ( previousLai * (s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell) / (s->value[SLA_AVG] * 1e3) / GC_GDM );
-		currentLeafC  = ( currentLai  * (s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell) / (s->value[SLA_AVG] * 1e3) / GC_GDM );
+		previousLeafC = previousLai * (s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell) / (s->value[SLA_AVG] * 1e3);
+		currentLeafC  = currentLai  * (s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell) / (s->value[SLA_AVG] * 1e3);
 
 		previousLeafN = previousLeafC / s->value[CN_LEAVES];
 		currentLeafN  = currentLeafC  / s->value[CN_LEAVES];
@@ -85,6 +85,7 @@ void leaffall_deciduous ( cell_t *const c, const int height, const int dbh, cons
 		s->value[FROOT_C_TO_REMOVE]   = s->value[FROOT_C];
 		s->value[FROOT_N_TO_REMOVE]   = s->value[FROOT_N];
 
+		/* last day of leaf fall remove all fruits */
 		s->value[FRUIT_C_TO_REMOVE]   = s->value[FRUIT_C];
 		s->value[FRUIT_C_TO_REMOVE]   = s->value[FRUIT_N];
 	}
@@ -126,6 +127,12 @@ void leaffall_evergreen ( cell_t *const c, const int height, const int dbh, cons
 			s->value[FRUIT_C_TO_REMOVE]   = (s->value[FRUIT_C] * (1. / s->value[CONES_LIFE_SPAN])) / days_for_leaffall;
 			s->value[FRUIT_N_TO_REMOVE]   = (s->value[FRUIT_N] * (1. / s->value[CONES_LIFE_SPAN])) / days_for_leaffall;
 		}
+	}
+
+	//fixme
+	if (s->value[FRUIT_C_TO_REMOVE] > s->value[FRUIT_C])
+	{
+		s->value[FRUIT_C_TO_REMOVE] = s->value[FRUIT_C];
 	}
 
 	/*************************************************************************************************************/

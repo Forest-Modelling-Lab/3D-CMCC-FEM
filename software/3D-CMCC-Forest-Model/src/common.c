@@ -6,6 +6,7 @@
 #include <time.h>
 #include <errno.h>
 #include <assert.h>
+#include <math.h>
 #include "common.h"
 
 /* os dependant */
@@ -20,17 +21,107 @@
 static WIN32_FIND_DATA wfd;
 static HANDLE handle;
 static double g_timer_period;
+#ifndef uint64
+typedef unsigned __int64 uint64;
+#endif
 #elif defined (linux) || defined (_linux) || defined (__linux__)
 #include <unistd.h>
 #include <dirent.h>
+#include <stdint.h>
 #include <sys/param.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/time.h>
+#ifndef uint64
+typedef uint64_t uint64;
+#endif
 #endif
 
 /* external error strings */
 const char sz_err_out_of_memory[] = "out of memory";
+
+double QuadM ( const double a, const double b, const double c, int* const err)
+{
+	double quadm;
+
+	*err = 0;
+
+	/* Solves the quadratic equation - finds SMALLER root. */
+
+	if ( ( b * b - 4. * a * c ) < 0. )
+	{
+		puts("Warning:imaginary roots in quadratic");
+		quadm = 0.;
+		*err  = 1;
+	}
+	else
+	{
+		if ( 0. == a )
+		{
+			if ( 0. ==  b )
+			{
+				quadm = 0.;
+
+				if ( 0. != c )
+				{
+					puts("ERROR: CANT SOLVE QUADRATIC");
+					exit (1);
+				}
+			}
+			else
+			{
+				quadm = -c / b;
+			}
+		}
+		else
+		{
+			quadm = ( -b - sqrt ( b * b - 4. * a * c ) ) / ( 2. * a );
+
+		}
+	}
+	return quadm;
+}
+
+double QuadP ( const double a, const double b, const double c, int* const err )
+{
+	double quadp;
+
+	*err = 0;
+
+	/* Solves the quadratic equation - finds LARGER root. */
+
+	if ( ( b * b - 4. * a * c ) < 0. )
+	{
+		puts("Warning:imaginary roots in quadratic");
+		quadp = 0.;
+		*err  = 1;
+	}
+	else
+	{
+		if ( 0. == a )
+		{
+			if ( 0. == b )
+			{
+				quadp = 0.;
+
+				if ( 0. != c )
+				{
+					puts("ERROR: CANT SOLVE QUADRATIC");
+					exit (1);
+				}
+			}
+			else
+			{
+				quadp = -c / b;
+			}
+		}
+		else
+		{
+			quadp = ( - b + sqrt ( b * b - 4. * a * c ) ) / ( 2. * a );
+		}
+	}
+	return quadp;
+}
 
 double convert_string_to_float(const char* const string, int* const err) {
 	char *p;
@@ -533,4 +624,20 @@ int has_path_delimiter(const char* const s) {
 
 int istab(const int c) {
 	return ('\t' == c);
+}
+
+int is_nan(double x)
+{
+    union { uint64 u; double f; } ieee754;
+    ieee754.f = x;
+    return ( (unsigned)(ieee754.u >> 32) & 0x7fffffff ) +
+           ( (unsigned)ieee754.u != 0 ) > 0x7ff00000;
+}
+
+int is_inf(double x)
+{
+    union { uint64 u; double f; } ieee754;
+    ieee754.f = x;
+    return ( (unsigned)(ieee754.u >> 32) & 0x7fffffff ) == 0x7ff00000 &&
+           ( (unsigned)ieee754.u == 0 );
 }

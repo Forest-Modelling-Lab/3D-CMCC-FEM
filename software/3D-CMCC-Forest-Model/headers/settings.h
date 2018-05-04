@@ -39,10 +39,11 @@ typedef struct {
 	char monthly_output;                 /* monthly output must be 'on' or 'off' */
 	char yearly_output;                  /* annual output must be 'on' or 'off' */
 	char soil_output;                    /* soil output must be 'on' or 'off' */
+	char netcdf_output;                  /* netcdf output must be 'on' or 'off' */
 	int year_start;                      /* starting year of simulation */
 	int year_end;                        /* ending year of simulation */
 	int year_restart;                    /* year to restart simulation */
-	char CO2_mod;                        /* CO2 modifier for photosynthesis and conductance must be 'on' or 'off' */
+	int PSN_mod;                         /* photosynthesis (0 = FvCB; 1 = LUE) */
 	char CO2_trans;                      /* CO2 transient must be 'on' or 'off' or 'var' */
 	int year_start_co2_fixed;            /* for CO2_trans = var, year at which CO2 is fixed */
 	char Ndep_fixed;                     /* fixed Nitrogen deposition must be 'on' or 'off' */

@@ -179,7 +179,7 @@ soil_settings_t* import_txt(const char *const filename, int* const p_settings_co
 				value = convert_string_to_float(token, &err);
 				if ( err )
 				{
-					logger_error(g_debug_log, "unable to convert '%s' fos %s columm in %s\n", token, sz_vars[k], filename);
+					logger_error(g_debug_log, "unable to convert '%s' for %s columm in %s\n", token, sz_vars[k], filename);
 					if ( ps ) free(ps);
 					fclose(f);
 					return NULL;

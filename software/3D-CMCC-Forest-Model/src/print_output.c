@@ -1621,7 +1621,25 @@ void print_model_settings(logger_t*const log)
 	//assert(log);
 
 	logger(log, "#--model settings--\n");
-	logger(log, "#CO2_mod = %s\n", g_settings->CO2_mod ? "on" : "off");
+	
+	if ( !g_settings->PSN_mod )
+	{
+		logger(log, "#PSN_mod = Faquhar von Caemmerer and Berry (FvCB)\n");
+	}
+	else
+	{
+		logger(log, "#PSN_mod = Monteith (LUE)\n");
+
+//		if ( !c->CO2_modifier )
+//		{
+//			logger(log, "#CO2 modifier = Wang et al' method\n");
+//		}
+//		else
+//		{
+//			logger(log, "#CO2 modifier = Veroustraete et al' method\n");
+//		}
+	}
+
 	logger(log, "#CO2 trans = %s\n", (CO2_TRANS_VAR == g_settings->CO2_trans) ? "var" : (CO2_TRANS_ON == g_settings->CO2_trans) ? "on" : "off");
 	if ( CO2_TRANS_OFF == g_settings->CO2_trans )
 	{
@@ -1633,6 +1651,10 @@ void print_model_settings(logger_t*const log)
 	}
 	logger(log, "#Resp accl = %s\n", g_settings->Resp_accl ? "on" : "off");
 	logger(log, "#regeneration = %s\n", g_settings->regeneration ? "on" : "off");
+#if 1
+	logger(log, "#Management = %s\n", (MANAGEMENT_VAR == g_settings->management) ? "var" : (MANAGEMENT_ON == g_settings->management) ? "on" : "off");
+#else
+	// var1 is disable on v5.4
 	{
 		char* p = "off";
 		switch ( g_settings->management ) {
@@ -1650,6 +1672,7 @@ void print_model_settings(logger_t*const log)
 		}
 		logger(log, "#Management = %s\n", p);
 	}
+#endif
 	if ( g_settings->management )
 	{
 		logger(log, "#Year Start Management = %d\n", g_settings->year_start_management);
@@ -1715,9 +1738,9 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 
 								logger(g_daily_log,
 										",GPP"
-										",ALPHA_EFF"
-										",ALPHA_EFF_SUN"
-										",ALPHA_EFF_SHADE"
+										",Av_TOT"
+										",Aj_TOT"
+										",A_TOT"
 										",RG"
 										",RM"
 										",RA"
@@ -1790,7 +1813,9 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 										",FROOT_AR"
 										",CROOT_AR"
 										",BRANCH_AR"
-										",FCO2"
+										",F_CO2"
+										",F_CO2_VER"
+										",F_CO2_FRA"
 										",FCO2_TR"
 										",FLIGHT"
 										",FAGE"
@@ -1885,11 +1910,11 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 							logger(g_daily_log,",%6.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,"
 									"%d,%d,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
 									",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
-									",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",
+									",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",
 									s->value[GPP],
-									s->value[ALPHA_EFF],
-									s->value[ALPHA_EFF_SUN],
-									s->value[ALPHA_EFF_SHADE],
+									s->value[Av_TOT],
+									s->value[Aj_TOT],
+									s->value[A_TOT],
 									s->value[TOTAL_GROWTH_RESP],
 									s->value[TOTAL_MAINT_RESP],
 									s->value[TOTAL_AUT_RESP],
@@ -1963,6 +1988,8 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 									s->value[CROOT_AUT_RESP],
 									s->value[BRANCH_AUT_RESP],
 									s->value[F_CO2],
+									s->value[F_CO2_VER],
+									s->value[F_CO2_FRANKS],
 									s->value[F_CO2_TR],
 									s->value[F_LIGHT_MAKELA],
 									s->value[F_AGE],
@@ -2115,7 +2142,7 @@ void EOM_print_output_cell_level(cell_t *const c, const int month, const int yea
 
 								logger(g_monthly_log,
 										",GPP"
-										",GROSS_ASS"
+										",NET_ASS"
 										",RA"
 										",NPP"
 										",CUE"
@@ -2221,7 +2248,7 @@ void EOM_print_output_cell_level(cell_t *const c, const int month, const int yea
 							logger(g_monthly_log,",%6.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%d,%3.4f,%3.4f,%3.4f,%3.4f"
 									",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",
 									s->value[MONTHLY_GPP],
-									s->value[MONTHLY_GROSS_ASSIMILATION],
+									s->value[MONTHLY_ASSIMILATION],
 									s->value[MONTHLY_TOTAL_AUT_RESP],
 									s->value[MONTHLY_NPP],
 									s->value[MONTHLY_CUE],
@@ -2386,7 +2413,14 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 
 								logger(g_annual_log,
 										",GPP"
-										",GROSS_ASS"
+										",GPP_SUN:GPP"
+										",GPP_SHADE:GPP"
+										",Av_SUN:A_SUN"
+										",Aj_SUN:A_SUN"
+										",Av_SHADE:A_SHADE"
+										",Aj_SHADE:A_SHADE"
+										",Av_TOT:A_TOT"
+										",Aj_TOT:A_TOT"
 										",GR"
 										",MR"
 										",RA"
@@ -2552,12 +2586,19 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 								logger(g_annual_log,",%c", sz_management[c->heights[height].dbhs[dbh].ages[age].species[species].management]);
 
 								/* print variables at layer-class level */
-								logger(g_annual_log,",%6.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%d,%d,%d,%d,%d,%3.4f"
+								logger(g_annual_log,",%6.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%d,%d,%d,%d,%d,%3.4f"
 										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
 										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
 										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",
 										s->value[YEARLY_GPP],
-										s->value[YEARLY_GROSS_ASSIMILATION],
+										s->value[YEARLY_GPP_SUN]  /s->value[YEARLY_GPP],
+										s->value[YEARLY_GPP_SHADE]/s->value[YEARLY_GPP],
+										s->value[YEARLY_Av_SUN]   /s->value[YEARLY_A_SUN],
+										s->value[YEARLY_Aj_SUN]   /s->value[YEARLY_A_SUN],
+										s->value[YEARLY_Av_SHADE] /s->value[YEARLY_A_SHADE],
+										s->value[YEARLY_Aj_SHADE] /s->value[YEARLY_A_SHADE],
+										s->value[YEARLY_Av_TOT]   /s->value[YEARLY_A_TOT],
+										s->value[YEARLY_Aj_TOT]   /s->value[YEARLY_A_TOT],
 										s->value[YEARLY_TOTAL_GROWTH_RESP],
 										s->value[YEARLY_TOTAL_MAINT_RESP],
 										s->value[YEARLY_TOTAL_AUT_RESP],
@@ -2566,7 +2607,7 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 										s->value[YEARLY_TOTAL_AUT_RESP]/s->value[YEARLY_GPP]*100.,
 										s->value[PEAK_LAI_PROJ],
 										s->value[MAX_LAI_PROJ],
-										s->value[SLA_AVG],
+										s->value[SLA_PROJ],
 										s->value[SAPWOOD_AREA],
 										s->value[CANOPY_COVER_PROJ],
 										s->value[DBHDC_EFF],

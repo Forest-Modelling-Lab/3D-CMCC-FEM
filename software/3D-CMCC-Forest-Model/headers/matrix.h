@@ -124,6 +124,7 @@ enum {
 	DBHDC_EFF,                           /* Crown Projected Diameter from DBH in function of density*/
 	DENMAX,                              /* (trees/cell) maximum stand density  */
 	DENMIN,                              /* (trees/cell) minimum stand density */
+	MAX_LAYER_COVER,                     /* (fraction) maximum fraction of layer covered */
 	CROWN_RADIUS,                        /* (m) Crown Projected Radius */
 	CROWN_DIAMETER,                      /* (m) Crown Projected Diameter */
 	CROWN_HEIGHT,                        /* (m) Crown height */
@@ -227,7 +228,10 @@ enum {
 	F_SW,                               /* (DIM) SOIL WATER modifier */
 	F_DROUGHT,                          /* (DIM) SOIL DROUGHT modifier (see Duursma et al., 2008) */
 	F_PSI,                              /* (DIM) SOIL WATER modifier using PSI, see Biome */
-	F_CO2,                              /* (DIM) CO2 soil fertilization effect */
+	F_CO2,                              /* (DIM) CO2 fertilization effect (as choiced in script) */
+	F_CO2_VER,                          /* (DIM) CO2 fertilization effect (Veroustraete's version) */
+	F_CO2_WANG,                         /* (DIM) CO2 fertilization effect (Wang et al's version) */
+	F_CO2_FRANKS,                       /* (DIM) CO2 fertilization effect (Franks et al's version) */
 	F_CO2_TR,                           /* (DIM) CO2 reduction effect (for stomatal conductance) */
 	PHYS_MOD,                           /* (DIM) PHYSIOLOGICAL modifier */
 	F_LIGHT_VERT,
@@ -253,6 +257,8 @@ enum {
 	CANOPY_INT_RAIN,                    /* (mm/day) canopy interception of rainfall */
 	CANOPY_INT_SNOW,                    /* (mm/day) canopy interception of snow */
 	CANOPY_EVAPO,                       /* (mm/day) canopy evaporation */
+	CANOPY_SUBLI,                       /* (mm/day) canopy sublimation */
+	CANOPY_MELT,                        /* (mm/day) canopy melting */
 	CANOPY_TRANSP,                      /* (mm/day) canopy transpiration */
 	CANOPY_TRANSP_SUN,                  /* (mm/day) canopy transpiration for sun leaves */
 	CANOPY_TRANSP_SHADE,                /* (mm/day) canopy transpiration for shade leaves */
@@ -297,9 +303,10 @@ enum {
 	gsWUE_SHADE,                        /* daily intrinsic Water Use Efficiency (stomatal) for shade leaves */
 
 	/* LAI */
-	SLA_AVG,                            /* (kg/m2) Age-related Average Specific Leaf Area */
-	SLA_SUN_PROJ,                       /* (m2/Kg) Age-related Porjected Average Specific Leaf Area for sun leaves*/
-	SLA_SHADE_PROJ,                     /* (m2/Kg) Age-related Porjected Average Specific Leaf Area for shaded leaves*/
+	SLA_AVG,                            /* (m2/KgC) Age-related Average Specific Leaf Area */
+	SLA_PROJ,                           /* (m2/KgC) Current Age-related Average Specific Leaf Area */
+	SLA_SUN_PROJ,                       /* (m2/KgC) Current Age-related Porjected Average Specific Leaf Area for sun leaves*/
+	SLA_SHADE_PROJ,                     /* (m2/KgC) Current Age-related Porjected Average Specific Leaf Area for shaded leaves*/
 	LAI_PROJ,                           /* (m2/m2) LAI for Projected Area covered (at zenith angle) */
 	LAI_SUN_PROJ,                       /* (m2/m2) LAI for sun leaves for Projected Area covered (at zenith angle) */
 	LAI_SHADE_PROJ,                     /* (m2/m2) LAI for shaded leaves for Projected Area covered (at zenith angle) */
@@ -317,24 +324,35 @@ enum {
 	CANOPY_TEMP_K_OLD,                  /* (K) previous time canopy temperature */
 
 	/* assimilation Farqhuar */
-	GROSS_ASSIMILATION,                 /* (gC/m2/day) Daily Gross Assimilation (carboxylation) (which include dark respiration */
-	GROSS_ASSIMILATION_SUN,             /* (gC/m2/day) Daily Gross Assimilation (carboxylation) for sun leaves (which include dark respiration */
-	GROSS_ASSIMILATION_SHADE,           /* (gC/m2/day) Daily Gross Assimilation (carboxylation) for shaded leaves (which include dark respiration */
-	MONTHLY_GROSS_ASSIMILATION,         /* (gC/m2/month) Daily Gross Assimilation (carboxylation) (which include dark respiration */
-	MONTHLY_GROSS_ASSIMILATION_SUN,     /* (gC/m2/month) Daily Gross Assimilation (carboxylation) for sun leaves (which include dark respiration */
-	MONTHLY_GROSS_ASSIMILATION_SHADE,   /* (gC/m2/month) Daily Gross Assimilation (carboxylation) for shaded leaves (which include dark respiration */
-	YEARLY_GROSS_ASSIMILATION,          /* (gC/m2/year) Daily Gross Assimilation (carboxylation) (which include dark respiration */
-	YEARLY_GROSS_ASSIMILATION_SUN,      /* (gC/m2/year) Daily Gross Assimilation (carboxylation) for sun leaves (which include dark respiration */
-	YEARLY_GROSS_ASSIMILATION_SHADE,    /* (gC/m2/year) Daily Gross Assimilation (carboxylation) for shaded leaves (which include dark respiration */
-	NET_ASSIMILATION,                 /* (gC/m2/day) Daily Net Assimilation   (which exclude dark respiration */
-	NET_ASSIMILATION_SUN,             /* (gC/m2/day) Daily Net Assimilation  for sun leaves (which exclude dark respiration */
-	NET_ASSIMILATION_SHADE,           /* (gC/m2/day) Daily Net Assimilation   for shaded leaves (which exclude dark respiration */
-	MONTHLY_NET_ASSIMILATION,         /* (gC/m2/month) Daily Net Assimilation   (which exclude dark respiration */
-	MONTHLY_NET_ASSIMILATION_SUN,     /* (gC/m2/month) Daily Net Assimilation   for sun leaves (which exclude dark respiration */
-	MONTHLY_NET_ASSIMILATION_SHADE,   /* (gC/m2/month) Daily Net Assimilation   for shaded leaves (which exclude dark respiration */
-	YEARLY_NET_ASSIMILATION,          /* (gC/m2/year) Daily Net Assimilation   (which exclude dark respiration */
-	YEARLY_NET_ASSIMILATION_SUN,      /* (gC/m2/year) Daily Net Assimilation  for sun leaves (which exclude dark respiration */
-	YEARLY_NET_ASSIMILATION_SHADE,    /* (gC/m2/year) Daily Net Assimilation for shaded leaves (which exclude dark respiration */
+	A_SUN,
+	Av_SUN,
+	Aj_SUN,
+	YEARLY_A_SUN,
+	YEARLY_Av_SUN,
+	YEARLY_Aj_SUN,
+	A_SHADE,
+	Av_SHADE,
+	Aj_SHADE,
+	YEARLY_A_SHADE,
+	YEARLY_Av_SHADE,
+	YEARLY_Aj_SHADE,
+	A_TOT,
+	Av_TOT,
+	Aj_TOT,
+	YEARLY_A_TOT,
+	YEARLY_Av_TOT,
+	YEARLY_Aj_TOT,
+
+
+	ASSIMILATION,                       /* (gC/m2/day) Daily Gross Assimilation (carboxylation) (which include dark respiration */
+	ASSIMILATION_SUN,                   /* (gC/m2/day) Daily Gross Assimilation (carboxylation) for sun leaves (which include dark respiration */
+	ASSIMILATION_SHADE,                 /* (gC/m2/day) Daily Gross Assimilation (carboxylation) for shaded leaves (which include dark respiration */
+	MONTHLY_ASSIMILATION,               /* (gC/m2/month) Daily Gross Assimilation (carboxylation) (which include dark respiration */
+	MONTHLY_ASSIMILATION_SUN,           /* (gC/m2/month) Daily Gross Assimilation (carboxylation) for sun leaves (which include dark respiration */
+	MONTHLY_ASSIMILATION_SHADE,         /* (gC/m2/month) Daily Gross Assimilation (carboxylation) for shaded leaves (which include dark respiration */
+	YEARLY_ASSIMILATION,                /* (gC/m2/year) Daily Gross Assimilation (carboxylation) (which include dark respiration */
+	YEARLY_ASSIMILATION_SUN,            /* (gC/m2/year) Daily Gross Assimilation (carboxylation) for sun leaves (which include dark respiration */
+	YEARLY_ASSIMILATION_SHADE,          /* (gC/m2/year) Daily Gross Assimilation (carboxylation) for shaded leaves (which include dark respiration */
 
 	/* carbon fluxes */
 	C_FLUX,
@@ -529,7 +547,7 @@ enum {
 	DAILY_LEAF_SUN_MAINT_RESP,          /* (gC/m2/day) Daytime leaf maintenance respiration */
 	DAILY_LEAF_SHADE_MAINT_RESP,        /* (gC/m2/day) Daytime leaf maintenance respiration */
 	NIGHTLY_LEAF_MAINT_RESP,            /* (gC/m2/day) Night time leaf maintenance respiration */
-	TOT_DAY_LEAF_MAINT_RESP,            /* (gC/m2/day) Leaf maintenance respiration */
+	TOT_LEAF_MAINT_RESP,                /* (gC/m2/day) Leaf maintenance respiration */
 	FROOT_MAINT_RESP,                   /* (gC/m2/day) Fine root maintenance respiration */
 	STEM_MAINT_RESP,                    /* (gC/m2/day) Stem maintenance respiration */
 	CROOT_MAINT_RESP,                   /* (gC/m2/day) Coarse root maintenance respiration */
@@ -923,8 +941,6 @@ typedef struct
 
 	int years_count;
 	meteo_annual_t *years;
-	// TODO ALESSIOR: make it dynamic
-	meteo_seasonal_month_t meteo_spinup[METEO_MONTHS_COUNT];
 
 	int doy;                                                              /* day of the year */
 	int dos;                                                              /* day of simulation */
@@ -973,7 +989,6 @@ typedef struct
 	double yearly_C_to_wood;                                              /* (tC/cell/year) Annual Carbon stocked into wood pool */
 	double cum_yearly_C_to_wood;                                          /* (tC/cell) Cumulated Annual Carbon stocked into wood pool */
 	double cum_npp;                                                       /* (tC/cell) Cumulated Annual npp */
-
 
 	double lai;                                                           //fixme
 	double max_lai_proj;                                                  //fixme
@@ -1026,6 +1041,7 @@ typedef struct
 
 	/* carbon fluxes */
 	double daily_gpp, monthly_gpp, annual_gpp;                            /* (gC/m2/time) daily, monthly and annual GPP at cell level */
+	double daily_ass, monthly_ass, annual_ass;                            /* (gC/m2/time) daily, monthly and annual assimilation at cell level */
 	double daily_gpp_tC, monthly_gpp_tC, annual_gpp_tC;                   /* (tC/m2/time) daily, monthly and annual GPP at cell level */
 	double daily_npp, monthly_npp, annual_npp;                            /* (gC/m2/time) daily, monthly and annual NPP at cell level */
 	double daily_npp_tC, monthly_npp_tC, annual_npp_tC;                   /* (tC/m2/time) daily, monthly and annual NPP at cell level */
@@ -1237,6 +1253,8 @@ typedef struct
 	double soil3C;                                                        /* (gC/m2) microbial recycling pool carbon (slow) */
 	double soil4C;                                                        /* (gC/m2) recalcitrant SOM carbon (humus, slowest) */
 
+
+
 	/* litter and soil nitrogen pools */
 	double litrN;                                                         /* (gN/m2) litter nitrogen */
 	double litr1N;                                                        /* (gN/m2) litter labile nitrogen */
@@ -1336,6 +1354,7 @@ typedef struct
 	double max_asw_sat;                                                   /* (mmKgH2O/m3) max available soil water at field capacity */
 	double snow_pack;                                                     /* (Kg/m2)current amount of snow */
 	double canopy_water_stored;                                           /* (mm/m2) canopy water stored at cell level */
+	double canopy_snow_stored;                                            /* (mm/m2) canopy snow stored at cell level */
 
 	/* fluxes */
 	double daily_snow_melt;                                               /* (mm/m2/time) current amount of melted snow  */

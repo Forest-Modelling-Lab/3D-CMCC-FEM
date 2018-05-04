@@ -279,9 +279,8 @@ void daily_C_evergreen_partitioning (cell_t *const c, const int layer, const int
 			if ( month < JULY )
 			{
 				/* if management doens't happen (this to avoid problems in carbon balance) */
-				if ( !s->counter[THINNING_HAPPENS] )
+				if ( ! s->counter[THINNING_HAPPENS] )
 				{
-					logger(g_debug_log, "Allocating only into leaf and fine root pools (positive NPP)\n");
 
 					/* update carbon flux */
 					s->value[C_TO_LEAF]      = npp_to_alloc * ( 1. - s->value[FROOT_LEAF_FRAC] );
@@ -291,31 +290,23 @@ void daily_C_evergreen_partitioning (cell_t *const c, const int layer, const int
 					/* check for leaf C > max leaf C */
 					if ( ( ( s->value[C_TO_LEAF] * ( 1. - s->value[EFF_GRPERC] ) ) + s->value[LEAF_C] ) > s->value[MAX_LEAF_C] )
 					{
-						logger(g_debug_log, "..exceeding leaf carbon to other pools\n");
 
 						max_leafC       = s->value[MAX_LEAF_C] - s->value[LEAF_C];
-						logger(g_debug_log, "max_leafC   = %f tC/cell\n", max_leafC);
 
 						exceeding_leafC = ( ( npp_to_alloc * ( 1. - s->value[FROOT_LEAF_FRAC] ) ) - ( max_leafC + ( max_leafC * s->value[EFF_GRPERC] ) ) );
-						logger(g_debug_log, "exceeding_leafC   = %f tC/cell\n", exceeding_leafC);
 
 						s->value[C_TO_LEAF] = max_leafC + ( max_leafC * s->value[EFF_GRPERC] );
-						logger(g_debug_log, "C_TO_LEAF   = %f tC/cell\n", s->value[C_TO_LEAF]);
 					}
 
 					/* check for fine root C > max fine root C */
 					if ( ( (s->value[C_TO_FROOT] * ( 1. - s->value[EFF_GRPERC] ) ) + s->value[FROOT_C] ) > s->value[MAX_FROOT_C])
 					{
-						logger(g_debug_log, "..exceeding fine root carbon to other pools\n");
 
 						max_frootC       = s->value[MAX_FROOT_C] - s->value[FROOT_C];
-						logger(g_debug_log, "max_frootC   = %f tC/cell\n", max_frootC);
 
 						exceeding_frootC = ( ( npp_to_alloc * s->value[FROOT_LEAF_FRAC] ) - ( max_frootC + ( max_frootC * s->value[EFF_GRPERC] ) ) );
-						logger(g_debug_log, "exceeding_frootC   = %f tC/cell\n", exceeding_frootC);
 
 						s->value[C_TO_FROOT] = max_frootC + ( max_frootC * s->value[EFF_GRPERC] );
-						logger(g_debug_log, "C_TO_FROOT  = %f tC/cell\n", s->value[C_TO_FROOT]);
 					}
 
 					/* exceeding carbon */
@@ -333,7 +324,6 @@ void daily_C_evergreen_partitioning (cell_t *const c, const int layer, const int
 				}
 				else
 				{
-					logger(g_debug_log, "Allocating only into reserve pool (special case thinning happens on)\n");
 					s->value[C_TO_RESERVE] = npp_to_alloc;
 				}
 			}

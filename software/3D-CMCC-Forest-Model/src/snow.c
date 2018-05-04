@@ -35,75 +35,60 @@ void snow_melt_subl(cell_t *const c, meteo_daily_t *meteo_daily)
 
 	/* canopy transmitted radiation: convert from W/m2 --> KJ/m2/d */
 #if 0
-	incident_rad = (c->sw_rad_abs_snow * meteo_daily->daylength_sec) * snow_abs * 0.001;
+	incident_rad = (c->sw_rad_abs_snow * meteo_daily->daylength_sec) * SNOW_ABS * 0.001;
 #else
-	incident_rad = (c->net_rad_abs_snow * meteo_daily->daylength_sec) * snow_abs * 0.001;
+	incident_rad = ( c->net_rad_abs_snow * meteo_daily->daylength_sec) * SNOW_ABS * 0.001 ;
 #endif
 
 	/* temperature and radiation melt from snow pack */
-	if (meteo_daily->tavg > 0.0)
+	if ( meteo_daily->tavg > 0. )
 	{
-		if (c->snow_pack > 0.0)
+		if ( c->snow_pack > 0. )
 		{
-			logger(g_debug_log, "tavg = %f\n", meteo_daily->tavg);
-			logger(g_debug_log, "snow pack = %f cm\n", c->snow_pack);
-			logger(g_debug_log, "Snow melts!!\n");
+			/* Snow melts */
 
-			r_melt = incident_rad / meteo_daily->lh_fus;
+			r_melt             = incident_rad / meteo_daily->lh_fus;
 			c->daily_snow_melt = t_melt + r_melt;
 
-			if (c->daily_snow_melt > c->snow_pack)
+			if ( c->daily_snow_melt > c->snow_pack )
 			{
-				/*all snow pack melts*/
+				/* all snow pack melts */
 				c->daily_snow_melt = c->snow_pack;
-				logger(g_debug_log, "ALL Snow melt!!\n");
 			}
 			else
 			{
 				/*snow pack melts partially*/
-
-				logger(g_debug_log, "a fraction of Snow melts!!\n");
 			}
-			logger(g_debug_log, "snow melt %f\n", c->daily_snow_melt);
-		}
-		else
-		{
-			logger(g_debug_log, "NO snow pack to melt\n");
 		}
 	}
 	else
 	{
 		r_sub = incident_rad / meteo_daily->lh_sub;
 
-		if (c->snow_pack > 0.0)
+		if ( c->snow_pack > 0. )
 		{
 			/*snow sublimation*/
-			if (r_sub > c->snow_pack)
+			if ( r_sub > c->snow_pack )
 			{
-				logger(g_debug_log, "Snow sublimation!!\n");
-				r_sub = c->snow_pack;
+				/* Snow sublimation */
+
+				r_sub              = c->snow_pack;
 				c->daily_snow_subl = r_sub;
-				logger(g_debug_log, "Snow sublimated = %f mm\n", c->daily_snow_subl);
 
 				/*check for balance*/
-				if (c->daily_snow_subl > c->snow_pack)
+				if ( c->daily_snow_subl > c->snow_pack )
 				{
 					c->daily_snow_subl = c->snow_pack;
 				}
 				else
 				{
 					/*snow pack sublimate partially*/
-					logger(g_debug_log, "a fraction of Snow sublimates!!\n");
 				}
 			}
 			else
 			{
-				c->daily_snow_subl = 0.0;
+				c->daily_snow_subl = 0.;
 			}
-		}
-		else
-		{
-			logger(g_debug_log, "NO snow pack to sublimate\n");
 		}
 	}
 

@@ -44,8 +44,8 @@ enum {
 #define G_STD                9.80665      /* (m/s2) standard gravitational accel. */
 #define P_STD               101325.0      /* (Pa) standard pressure at 0.0 m elevation */
 #define T_STD                 288.15      /* (K) standard temp at 0.0 m elevation  */
-#define MA                28.9644e-3      /* (kg/mol) molecular weight of air */
-#define MW                18.0148e-3      /* (kg/mol) molecular weight of water */
+#define AIRMASS           28.9644e-3      /* (kg/mol) molecular weight of air */
+#define WATERMASS         18.0148e-3      /* (kg/mol) molecular weight of water */
 #define LR_STD                0.0065      /* (-K/m) standard temperature lapse rate */
 #define Rgas                  8.3144      /* (m3 Pa/ mol K) gas law constant */
 #define EPS                   0.6219      /* (MW/MA) unitless ratio of molec weights */
@@ -55,6 +55,7 @@ enum {
 #define EPAR                    4.55      /* (umol/J OR mol/MJ) PAR photon energy ratio */
 #define SLAMKG                   0.1	  /* Convert SLA IN cm ^2/gC in m^2/KgC */
 #define E20                      2.2      /* rate of change of saturated VPD with T at 20C */
+#define GCtoGW                  1.57      /* conversion from conductance to CO2 to H2O */
 #define VPDCONV             0.000622      /* convert VPD to saturation deficit = 18/29/1000 */
 #define EVAPOCOEFF              1.32      /* Priestley Taylor Coefficient (Hobbins et al., 2001) */
 #define MWratio                0.622      /* ratio molecular weight of water vapour air */
@@ -73,7 +74,7 @@ enum {
 #define GRPERC                   0.3      /* (DIM) percentage of growth resp per unit of C grown see BIOME, 0.25 for LPJ */
 #define GRPERCMIN               0.25      /* (DIM) MINIMUM percentage of growth resp per unit of C grown see Ryan et al., */
 #define GRPERCMAX             0.30 //  0.35      /* (DIM) MAXIMUM percentage of growth resp per unit of C grown see Ryan et al., */
-#define O2CONC                  20.9      /* % of [O2] see Verustraete 1994, 2002 */
+#define O2CONC                  20.946    /* % of [O2] see Verustraete 1994, 2002 */
 #define STEMPOWER_A	            2.08      /* Power in the Stem Mass v. diameter relationship for DBH < 9 cm */
 #define STEMPOWER_B	            2.64      /* Power in the Stem Mass v. diameter relationship for 9 < DBH < 15 cm */
 #define STEMPOWER_C	            2.51      /* Power in the Stem Mass v. diameter relationship for DBH > 15 cm */
@@ -82,6 +83,7 @@ enum {
 #define N_FRAC_TO_RETRANSL       0.1      /* fraction of N to re-translocate (see Bossell et al., 2006 and Campioli et al., 2013; 0.2 Hoffmann 1995 */
 #define MAX_PEAK_LAI_PROJ          6   //ISIMIP 6.5      /* Maximum Peak Lai (m2/m2) */
 #define WATER_STRESS_LIMIT       0.3      /* Minimum imposed water stress limit to soil water modifier */
+#define SNOW_ABS                 0.6      /* Absorptivity of snow */
 
 
 /* soil constants (BIOME-BGC method) */

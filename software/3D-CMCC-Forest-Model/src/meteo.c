@@ -447,7 +447,13 @@ static void compute_vpd(double *const values, const int rows_count, const int co
 		double rh = values[VALUE_AT(i, RH_F)];
 		value = INVALID_VALUE;
 
-		if ( ! IS_INVALID_VALUE(ta) && ! IS_INVALID_VALUE(rh) ) {
+		if ( ! IS_INVALID_VALUE(ta) && ! IS_INVALID_VALUE(rh) ) {	
+			
+			/* deal with extreme cases */
+			if ( rh >= 100. ) {
+				rh = 99.99;
+			}
+
 			/* 6.1076 is for hPa */
 			value = 6.1076 * exp(17.26938818 * ta / (237.3 + ta));
 			value *= (1 - rh / 100.0);
@@ -2851,43 +2857,41 @@ meteo_annual_t* import_meteo_data(const char *const file, int *const yos_count, 
 	}
 
 	/* import co2 conc */
-	if ( g_settings->CO2_mod ) {
-		if ( (CO2_TRANS_ON == g_settings->CO2_trans) || (CO2_TRANS_VAR == g_settings->CO2_trans) )
-		{
-			int err;
+	if ( (CO2_TRANS_ON == g_settings->CO2_trans) || (CO2_TRANS_VAR == g_settings->CO2_trans) )
+	{
+		int err;
 
-			if ( ! g_sz_co2_conc_file ) {
-				logger_error(g_debug_log, "co2 concentration file not specified!");
+		if ( ! g_sz_co2_conc_file ) {
+			logger_error(g_debug_log, "co2 concentration file not specified!");
+			meteo_annual_free(meteo_annual, *yos_count);
+			return NULL;
+		}
+
+		for ( i = 0; i < *yos_count; ++i ) {
+
+			meteo_annual[i].co2Conc = get_co2_conc(meteo_annual[i].year, &err);
+
+			if ( CO2_TRANS_VAR == g_settings->CO2_trans ) {
+				if ( meteo_annual[i].year >= g_settings->year_start_co2_fixed ) {
+					if ( -1 == year_start_co2_fixed_index ) {
+						logger_error(g_debug_log, "year_start_co2_fixed_index not found!");
+						meteo_annual_free(meteo_annual, *yos_count);
+						return NULL;
+					}
+					meteo_annual[i].co2Conc = meteo_annual[year_start_co2_fixed_index].co2Conc;
+				}
+			}
+
+			if ( /*err &&*/ IS_INVALID_VALUE(meteo_annual[i].co2Conc) ) {
+				logger_error(g_debug_log, "co2 concentration not found!!\n");
 				meteo_annual_free(meteo_annual, *yos_count);
 				return NULL;
 			}
-
-			for ( i = 0; i < *yos_count; ++i ) {
-
-				meteo_annual[i].co2Conc = get_co2_conc(meteo_annual[i].year, &err);
-
-				if ( CO2_TRANS_VAR == g_settings->CO2_trans ) {
-					if ( meteo_annual[i].year >= g_settings->year_start_co2_fixed ) {
-						if ( -1 == year_start_co2_fixed_index ) {
-							logger_error(g_debug_log, "year_start_co2_fixed_index not found!");
-							meteo_annual_free(meteo_annual, *yos_count);
-							return NULL;
-						}
-						meteo_annual[i].co2Conc = meteo_annual[year_start_co2_fixed_index].co2Conc;
-					}
-				}
-
-				if ( /*err &&*/ IS_INVALID_VALUE(meteo_annual[i].co2Conc) ) {
-					logger_error(g_debug_log, "co2 concentration not found!!\n");
-					meteo_annual_free(meteo_annual, *yos_count);
-					return NULL;
-				}
-			}
 		}
-		else {
-			for ( i = 0; i < *yos_count; ++i ) {
-				meteo_annual[i].co2Conc = g_settings->co2Conc;
-			}
+	}
+	else {
+		for ( i = 0; i < *yos_count; ++i ) {
+			meteo_annual[i].co2Conc = g_settings->co2Conc;
 		}
 	}
 

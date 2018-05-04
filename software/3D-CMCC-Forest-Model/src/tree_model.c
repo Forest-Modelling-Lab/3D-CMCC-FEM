@@ -63,14 +63,12 @@ extern logger_t* g_debug_log;
 extern soil_settings_t* g_soil_settings;
 extern settings_t* g_settings;
 
-#define PHOTOSYNTHESIS 1 /* 0 for Farquhar von Caemmerer approach; 1 for Monteith (LUE) approach */
-
 //extern const char sz_err_out_of_memory[];
 
 //extern const char *szMonth[MONTHS_COUNT];
 
 /* Days in Months */
-extern int DaysInMonth[];
+//extern int DaysInMonth[];
 
 /* Last cumulative days in months */
 //extern int MonthLength [];
@@ -225,17 +223,14 @@ int Tree_model(matrix_t *const m, const int cell, const int halfhour, const int 
 							/**********************************/
 
 							/* beginning of simulation (every year included the first one) */
-							if ( ( g_soil_settings->values[SOIL_LAT] > 0 && c->doy == 1)  ||
-									( g_soil_settings->values[SOIL_LAT] < 0 && c->doy == 180) )
+							if ( ( g_soil_settings->values[SOIL_LAT]    > 0. && c->doy == 1 )  ||
+									( g_soil_settings->values[SOIL_LAT] < 0. && c->doy == 180 ) )
 							{
 								/* compute annual minimum reserve for incoming year */
 								annual_minimum_reserve( s );
-
-								/* compute age-related sla */
-								specific_leaf_area ( a, s);
-
+								
 								/* compute annual potential Maximum LAI */
-								peak_lai( s, day, month, year );
+								peak_lai(a,  s, day, month, year );
 
 								/* compute growth respiration fraction */
 								growth_respiration_frac ( a, s );
@@ -270,32 +265,61 @@ int Tree_model(matrix_t *const m, const int cell, const int halfhour, const int 
 							/* daily modifier */
 							modifiers ( c, layer, height, dbh, age, species, meteo_daily, meteo_annual );
 
-							/* canopy water fluxes */
-							canopy_evapotranspiration ( c, layer, height, dbh, age, species, meteo_daily );
+														if ( ! g_settings->PSN_mod )
+							{
+								/**********************************************************************/
+								/** FvCB + Jarvis **/
 
-							/* note: following Piao et al., 2010 */
-							/* (Maint Resp)->(Growth Resp = (GPP - Maint Resp) * eff_grperc)->(NPP) */
-#if PHOTOSYNTHESIS
+								/* note: following Piao et al., 2010 */
+								/* (Maint Resp)->(Growth Resp = (GPP - Maint Resp) * eff_grperc)->(NPP) */
 
-							/**********************************************************************/
-							/* canopy carbon assimilation ( Monteith approach ) */
-							photosynthesis ( c, layer, height, dbh, age, species, meteo_annual );
+								/* maintenance respiration */
+								maintenance_respiration ( c, layer, height, dbh, age, species, meteo_daily );
 
-							/* maintenance respiration */
-							maintenance_respiration ( c, layer, height, dbh, age, species, meteo_daily );
-							/**********************************************************************/
+								/* canopy water fluxes */
+								canopy_evapotranspiration ( c, layer, height, dbh, age, species, meteo_daily );
 
-#else
+								/* canopy carbon assimilation ( Farquhar Von Caemmerer and Berry - FvCB - approach ) */
+								photosynthesis_FvCB     ( c, height, dbh, age, species, meteo_daily, meteo_annual );
 
-							/**********************************************************************/
-							/* maintenance respiration */
-							maintenance_respiration ( c, layer, height, dbh, age, species, meteo_daily );
+								/**********************************************************************/
+							}
+							else if ( g_settings->PSN_mod == 1 )
+							{
+								/**********************************************************************/
+								/** LUE + Jarvis **/
 
-							/* canopy carbon assimilation ( Farquhar Von Caemmerer approach ) */
-							total_photosynthesis_biome ( c, height, dbh, age, species, meteo_daily, meteo_annual );
-							/**********************************************************************/
+								/* canopy water fluxes */
+								canopy_evapotranspiration ( c, layer, height, dbh, age, species, meteo_daily );
 
-#endif
+								/* canopy carbon assimilation ( Monteith - LUE - approach ) */
+								photosynthesis_LUE      ( c, layer, height, dbh, age, species, meteo_annual );
+
+								/* maintenance respiration */
+								maintenance_respiration ( c, layer, height, dbh, age, species, meteo_daily );
+
+								/**********************************************************************/
+							}
+							else
+							{
+								//test
+								/**********************************************************************/
+								/** FvCB + Ball Berry / Medlyn */
+
+								/* note: following Piao et al., 2010 */
+								/* (Maint Resp)->(Growth Resp = (GPP - Maint Resp) * eff_grperc)->(NPP) */
+
+								/* maintenance respiration */
+								maintenance_respiration  ( c, layer, height, dbh, age, species, meteo_daily );
+
+								/* canopy carbon assimilation ( Farquhar Von Caemmerer and Berry - FvCB - approach ) */
+								photosynthesis_FvCB_BB    ( c, height, dbh, age, species, meteo_daily, meteo_annual );
+
+								/* canopy water fluxes */
+								canopy_evapotranspiration ( c, layer, height, dbh, age, species, meteo_daily );
+
+								/**********************************************************************/
+							}
 
 							/* C-N-partitioning */
 							if ( s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2 )
@@ -310,13 +334,13 @@ int Tree_model(matrix_t *const m, const int cell, const int halfhour, const int 
 							}
 
 							/* growth respiration */
-							growth_respiration      ( c, layer, height, dbh, age, species );
+							growth_respiration                 ( c, layer, height, dbh, age, species );
 
 							/* autotrophic respiration */
-							autotrophic_respiration ( c, layer, height, dbh, age, species, meteo_daily );
+							autotrophic_respiration            ( c, layer, height, dbh, age, species, meteo_daily );
 
 							/* carbon fluxes */
-							carbon_fluxes           ( c, height, dbh, age, species );
+							carbon_fluxes                      ( c, height, dbh, age, species );
 
 							/* C productivity */
 							carbon_productivity                ( c, height, dbh, age, species );
@@ -327,12 +351,12 @@ int Tree_model(matrix_t *const m, const int cell, const int halfhour, const int 
 								if ( c->years[year].year > g_settings->year_start_management && g_settings->management != MANAGEMENT_VAR)
 								{
 									/* Mortality based on tree Age (LPJ) */
-									age_mortality ( c, height, dbh, age, species);
+									age_mortality ( c, height, dbh, age, species );
 								}
 							}
 
 							/* allocate daily carbon */
-							carbon_allocation       ( c, s, day, month, year );
+							carbon_allocation       ( c, a, s, day, month, year );
 
 							/* allocate daily nitrogen */
 							nitrogen_allocation     ( c, s, day, month, year );
@@ -353,7 +377,7 @@ int Tree_model(matrix_t *const m, const int cell, const int halfhour, const int 
 								water_use_efficiency  ( c, height, dbh, age, species, day, month, year );
 
 								/* update Leaf Area Index */
-								daily_lai             ( c, s );
+								daily_lai             ( c, a, s );
 
 								/* litter fluxes and pools */
 								littering             ( c, s );
