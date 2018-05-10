@@ -90,6 +90,8 @@ typedef struct
 	int columns_count;
 	float** vars;
 
+	int truncated;
+
 	char* path;
 
 } dataset_t;
@@ -154,8 +156,8 @@ daily_vars[DAILY_VARS_COUNT] =
 	, { "CROOT_AR" } // NOT EXPORTED
 	, { "TSOIL", "tsl", "Temperature Of Soil", "k", 0 }
 
-	, { "NPPAB", "npp_abovegroundwood", "Net Primary Production Allocated To Above Ground Wood Biomass", "kg m-2", 1 }
-	, { "NPPBB", "npp_belowgroundwood", "Net Primary Production Allocated To Below Ground Wood Biomass", "kg m-2", 1 }
+	, { "NPPAB", "npp-abovegroundwood", "Net Primary Production Allocated To Above Ground Wood Biomass", "kg m-2", 1 }
+	, { "NPPBB", "npp-belowgroundwood", "Net Primary Production Allocated To Below Ground Wood Biomass", "kg m-2", 1 }
 	, { "RAR", "rr", "Root Autotrophic Respiration", "kg m-2", 1 }
 };
 
@@ -403,7 +405,8 @@ dataset_t* dataset_import(const char* const filename)
 			{
 				if ( columns[j] != -1 ) 
 				{
-					// fix for gpp, npp
+					// fix for gpp, npp and et
+					// that are duplicates in dataset
 					if ( DAILY_DATASET_TYPE == type )
 					{
 						if ( ! strcmp(token, "gpp")
@@ -541,6 +544,8 @@ dataset_t* dataset_import(const char* const filename)
 	// alloc memory for values on each var
 	for ( i = 0; i < dataset->columns_count; ++i )
 	{
+		int y;
+
 		dataset->vars[i] = malloc(dataset->rows_count*sizeof*dataset->vars[i]);
 		if ( ! dataset->vars[i] )
 		{
@@ -548,6 +553,13 @@ dataset_t* dataset_import(const char* const filename)
 			dataset_free(dataset);
 			dataset = NULL;
 			goto quit;
+		}
+
+		// fill all values with INVALID_VALUE
+		// because we can have an incomplete dataset due error
+		for ( y = 0; y < dataset->rows_count; ++y )
+		{
+			dataset->vars[i][y] = INVALID_VALUE;
 		}
 	}
 
@@ -610,10 +622,13 @@ dataset_t* dataset_import(const char* const filename)
 	// count imported rows
 	if ( row != dataset->rows_count )
 	{
+		dataset->truncated = start_year + row;
+		/*
 		printf("imported %d rows instead of %d\n", row, dataset->rows_count);
 		dataset_free(dataset);
 		dataset = NULL;
 		goto quit;
+		*/
 	}
 
 	// compute vars

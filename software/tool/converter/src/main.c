@@ -191,5 +191,6 @@ int main(int argc, char* argv[])
 
 quit:
 	if ( files ) files_free(files);
+	if ( argc < 2 ) free((void*)input_folder);
 	return ret;
 }
