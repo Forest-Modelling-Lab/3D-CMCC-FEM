@@ -717,6 +717,7 @@ static reimported_dataset_t* reimport_dataset(const char* const filename)
 			dataset->vars[DAILY_NPPAB][i] = nppab;
 
 			/* apply conversion */
+			// ALESSIOR: 86400 is for daily, change itfor other time resolution...
 			if ( ! IS_INVALID_VALUE(dataset->vars[DAILY_GPP][i]) )
 				dataset->vars[DAILY_GPP][i] /= (1000*86400);
 			if ( ! IS_INVALID_VALUE(dataset->vars[DAILY_NPP][i]) )

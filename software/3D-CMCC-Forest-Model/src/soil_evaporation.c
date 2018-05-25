@@ -134,6 +134,7 @@ void soil_evaporation(cell_t *const c, const meteo_daily_t *const meteo_daily)
 	logger(g_debug_log, "Annual Soil Evaporation = %g mm/m2/year\n", c->annual_soil_evapo);
 
 	/* compute a energy balance evaporation from soil */
+	// ALESSIOR: 86400 is for daily, change itfor other time resolution...
 	c->daily_soil_evapo_watt       = c->daily_soil_evapo * meteo_daily->lh_vap_soil / 86400.0;
 	c->daily_soil_lh_flux          = c->daily_soil_evapo_watt;
 	logger(g_debug_log, "Daily Latent heat soil evaporation = %g W/m^2\n", c->daily_soil_lh_flux);
@@ -184,6 +185,7 @@ void Soil_evaporation_old(cell_t *const c, const meteo_daily_t *const meteo_dail
 
 		//FIXME SHOULD ADD PART OF NET RAD TRASMITTED THORUGH THE CANOPIES
 		/* converting W/m^2 in Joule/m^2/day */
+		// ALESSIOR: 86400 is for daily, change itfor other time resolution...
 		PotEvap = (sat / (sat + gamma )) * (meteo_daily->sw_downward_W * 86400) / meteo_daily->lh_vap_soil;
 		logger(g_debug_log, "Soil Potential Evaporation = %g mm+Kg/day\n", PotEvap);
 		if(PotEvap <0)
@@ -216,6 +218,7 @@ void Soil_evaporation_old(cell_t *const c, const meteo_daily_t *const meteo_dail
 	logger(g_debug_log, "Annual Soil Evaporation = %g mm/year\n", c->annual_soil_evapo);
 
 	/*compute a energy balance evaporation from soil*/
+	// ALESSIOR: 86400 is for daily, change itfor other time resolution...
 	c->daily_soil_evapo_watt = c->daily_soil_evapo * meteo_daily->lh_vap_soil / 86400.0;
 	logger(g_debug_log, "Latent heat soil evaporation = %g W/m^2\n", c->daily_soil_evapo_watt);
 

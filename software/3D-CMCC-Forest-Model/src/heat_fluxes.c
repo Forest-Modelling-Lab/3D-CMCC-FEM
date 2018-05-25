@@ -14,6 +14,7 @@ void Canopy_latent_heat_fluxes (species_t *const s, const meteo_daily_t *const m
 	logger(g_debug_log, "\n**CANOPY_LATENT_HEAT**\n");
 
 	/* canopy canopy level latent heat fluxes (W/m2) */
+	// ALESSIOR: 86400 is for daily, change itfor other time resolution...
 	s->value[CANOPY_LATENT_HEAT] = s->value[CANOPY_EVAPO_TRANSP] * meteo_daily->lh_vap / 86400;
 	logger(g_debug_log, "CANOPY LATENT HEAT FLUX = %g W/m2\n", s->value[CANOPY_LATENT_HEAT]);
 
@@ -31,6 +32,7 @@ void latent_heat_fluxes (cell_t *const c, const meteo_daily_t *const meteo_daily
 	logger(g_debug_log, "\n**CELL LATENT HEAT**\n");
 
 	/*compute latent heat from canopy*/
+	// ALESSIOR: 86400 is for daily, change itfor other time resolution...
 	c->daily_canopy_evapo_watt  = c->daily_canopy_evapo  * meteo_daily->lh_vap / 86400.0;
 	c->daily_canopy_transp_watt = c->daily_canopy_transp * meteo_daily->lh_vap / 86400.0;
 	c->daily_canopy_et_watt     = c->daily_canopy_evapo_watt + c->daily_canopy_transp_watt;
@@ -49,6 +51,7 @@ void latent_heat_fluxes (cell_t *const c, const meteo_daily_t *const meteo_daily
 	/*in case of snow sublimation*/
 	if(c->daily_snow_subl != 0.0)
 	{
+		// ALESSIOR: 86400 is for daily, change itfor other time resolution...
 		c->daily_lh_flux += c->daily_snow_subl * ( meteo_daily->lh_sub * 1000. ) / 86400.;
 		logger(g_debug_log, "Daily total latent heat flux with sublimation = %g W/m\n", c->daily_lh_flux);
 	}

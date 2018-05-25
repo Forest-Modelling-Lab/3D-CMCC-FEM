@@ -2,13 +2,16 @@ SITENAME Castelporziano
 VERSION "f"		//Must be 'f' for FEM version or 'b', for BGC version for FOREST LANDUSE
 SPATIAL "u"		//Must be 's' or 'u', spatial or unspatial
 TIME "d"		//Must be 'm' or 'd', monthly or daily
+SPINUP off                          //Must be 'on' or 'off'
+SPINUP_YEARS 6000                   //Number of years for spinup
 SCREEN_OUTPUT "off"	//Must be  'on' or 'off'
 DEBUG_OUTPUT "off"                //Must be 'on' or 'off'
 DAILY_OUTPUT "on"                //Must be 'on' or 'off'
 MONTHLY_OUTPUT "on"              //Must be 'on' or 'off'
 ANNUAL_OUTPUT "on"               //Must be 'on' or 'off'
 SOIL_OUTPUT "off"                //Must be 'on' or 'off'
-CO2_mod "off"	//Must be  'on' or 'off'
+NETCDF_OUTPUT off
+PSN_mod 0                           //Must be '0' (FvCB) or '1' (LUE) for photosynthesis approach
 CO2_trans off                        //Must be 'on' or 'off'
 YEAR_START_CO2_FIXED 2000           //When Co2_trans = var, year at which fix [CO2]
 Ndep_fixed "on"   //Must be 'on' or 'off'

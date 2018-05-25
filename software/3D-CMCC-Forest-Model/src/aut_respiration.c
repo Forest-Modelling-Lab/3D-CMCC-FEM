@@ -245,9 +245,12 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 		/* Leaf maintenance respiration is calculated separately for day and night */
 
 		/* day time leaf maintenance respiration */
+		// TODO
+		// ALESSIOR: 86400 is for daily, change itfor other time resolution...
 		s->value[DAILY_LEAF_MAINT_RESP]       = ( leaf_N * MR_ref * pow(q10_tday, exponent_tday) * ( meteo_daily->daylength_sec / 86400. )) * light_inhib;
 
 		/* night time leaf maintenance respiration */
+		// ALESSIOR: 86400 is for daily, change itfor other time resolution...
 		s->value[NIGHTLY_LEAF_MAINT_RESP]     = ( leaf_N * MR_ref * pow(q10_tnight, exponent_tnight) * (1. - ( meteo_daily->daylength_sec / 86400. )));
 
 		/* for sun and shaded leaves */
@@ -295,6 +298,7 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 			s->value[NIGHTLY_LEAF_MAINT_RESP] *= pow ( 10., ( acc_const * ( meteo_daily->ten_day_avg_tnight - Q10_temp ) ) );
 
 			/* for sun and shaded leaves */
+			// ALESSIOR: 86400 is for daily, change itfor other time resolution...
 			s->value[DAILY_LEAF_SUN_MAINT_RESP]   = ( leaf_sun_N   * MR_ref * pow(q10_tday, exponent_tday) * ( meteo_daily->daylength_sec / 86400. ));
 			s->value[DAILY_LEAF_SHADE_MAINT_RESP] = ( leaf_shade_N * MR_ref * pow(q10_tday, exponent_tday) * ( meteo_daily->daylength_sec / 86400. ));
 

@@ -146,9 +146,9 @@ void cell_water_use_efficiency ( cell_t *const c, const int day, const int month
 	//note: this is based on cell level computation than uses cell evapotranspiration
 
 	/* daily iWUE */
-	if( c->daily_gpp > 0 && c->daily_et > 0.0 )
+	if( c->daily_ass > 0 && c->daily_et > 0.0 )
 	{
-		c->daily_iwue = c->daily_gpp / c->daily_et;
+		c->daily_iwue = c->daily_ass / c->daily_et;
 	}
 	else
 	{
@@ -159,9 +159,9 @@ void cell_water_use_efficiency ( cell_t *const c, const int day, const int month
 	/* last day of the month */
 	if ( ( IS_LEAP_YEAR( c->years[year].year ) ? (MonthLength_Leap[month] ) : (MonthLength[month] )) == c->doy )
 	{
-		if( c->monthly_gpp > 0 && c->monthly_et > 0.0 )
+		if( c->monthly_ass > 0 && c->monthly_et > 0.0 )
 		{
-			c->monthly_iwue = c->monthly_gpp / c->monthly_et;
+			c->monthly_iwue = c->monthly_ass / c->monthly_et;
 		}
 		else
 		{
@@ -173,9 +173,9 @@ void cell_water_use_efficiency ( cell_t *const c, const int day, const int month
 	/* last day of the year */
 	if ( c->doy == ( IS_LEAP_YEAR( c->years[year].year ) ? 366 : 365) )
 	{
-		if( c->annual_gpp > 0 && c->annual_et > 0.0 )
+		if( c->annual_ass > 0 && c->annual_et > 0.0 )
 		{
-			c->annual_iwue = c->annual_gpp / c->annual_et;
+			c->annual_iwue = c->annual_ass / c->annual_et;
 		}
 		else
 		{

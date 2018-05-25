@@ -1,14 +1,14 @@
 //parameterization file for Quercus cerris
-LIGHT_TOL	3   	          //4 = very shade intolerant, 3 = shade intolerant,2 = shade tolerant,1 = very shade tolerant
+LIGHT_TOL	2   	          //4 = very shade intolerant, 3 = shade intolerant,2 = shade tolerant,1 = very shade tolerant
 PHENOLOGY	0.1               //PHENOLOGY 0.1 = deciduous broadleaf, 0.2 = deciduous needle leaf, 1.1 = broad leaf evergreen, 1.2 = needle leaf evergreen 
 ALPHA	0.0297		          // Canopy quantum efficiency (molC/molPAR) 0.036 Vitale et al., 2012
 EPSILONgCMJ	0                 // Light Use Efficiency  (gC/MJ)(used if ALPHA is not available) 
-GAMMA_LIGHT             ????  // Empirical parameter for Light modifiers see Bagnara et al., 2015 
+GAMMA_LIGHT             0     // Empirical parameter for Light modifiers see Bagnara et al., 2015 
 K	0.60		              //0.54 Extinction coefficient for absorption of PAR by canopy (for Q. cerris Chiesi et al 2007), 0.60 for F. sylvatica Vitale et al., 2012
-ALBEDO	0.2                   //0.15 from OTTO et al., BGS 2014
+ALBEDO	0.15                  //0.15 from OTTO et al., BGS 2014
 INT_COEFF  0.3                //precip interception coefficient from Tatarinov
 SLA_AVG0 40.88                //Average Specific Leaf Area m^2/KgC (juvenile) sunlit/shaded leaves Giertych et al., 2015
-SLA_AVG0 24.2                 //Average Specific Leaf Area m^2/KgC (mature) sunlit/shaded leaves Holscher et al., 2004
+SLA_AVG1 24.2                 //Average Specific Leaf Area m^2/KgC (mature) sunlit/shaded leaves Holscher et al., 2004
 TSLA     80                   //Age at which SLA_AVG = (SLA_AVG1 + SLA_AVG0 )/2 for Q. robur Forrester et al., 2017
 SLA_RATIO	2                 //(DIM) ratio of shaded to sunlit projected SLA  for Q. cerris from Mollicone et al., 2002 	
 LAI_RATIO   2                 //(DIM) (DIM) all-sided to projected leaf area ratio				
@@ -27,15 +27,15 @@ MAXAGE	120                   //Determines rate of "physiological decline" of for
 RAGE	0.75                  //Relative Age to give fAGE = 0.5
 NAGE	4                     //Power of relative Age in function for Age
 GROWTHTMIN	0                 //Minimum temperature for growth
-GROWTHTMAX	30                //Maximum temperature for growth
+GROWTHTMAX	35                //Maximum temperature for growth
 GROWTHTOPT	20                //Optimum temperature for growth 15.05 for Roccarespampani see Horn and Shulze 2011
-GROWTHSTART	2                 //average temperature for starting growth in °C (for Quercus cerris Cermak et al 2008), GDD 1900for q. pubescens, 1100for q. robur from Hickler et al 2012
+GROWTHSTART	60                //average temperature for starting growth in °C (for Quercus cerris Cermak et al 2008), GDD 1900for q. pubescens, 1100for q. robur from Hickler et al 2012
 MINDAYLENGTH	11            //minimum day length for deciduous
 SWPOPEN	-0.6                  //for For Q cerris Mollicone et al., 2002
 SWPCLOSE	-2.3              //For Q cerris Mollicone et al., 2002
 OMEGA_CTEM	0.8               //ALLOCATION PARAMETER control the sensitivity of allocation to changes in water and light availability
-S0CTEM	0.45                  //PARAMETER CONTROLLING ALLOCATION TO STEM/MINIMUM RATIO TO C TO STEM
-R0CTEM	0.30                  //PARAMETER CONTROLLING ALLOCATION TO ROOT/MINIMUM RATIO TO C TO ROOTS
+S0CTEM	0.1                   //PARAMETER CONTROLLING ALLOCATION TO STEM/MINIMUM RATIO TO C TO STEM
+R0CTEM	0.55                  //PARAMETER CONTROLLING ALLOCATION TO ROOT/MINIMUM RATIO TO C TO ROOTS
 F0CTEM	0.35                  //PARAMETER CONTROLLING ALLOCATION TO FOLIAGE
 FRUIT_PERC  0                 //fraction of NPP allocated for reproduction (0 for broadleaf)
 CONES_LIFE_SPAN 0             //Life span for cones (yr)
@@ -43,31 +43,32 @@ FINE_ROOT_LEAF	1.2	          //allocation new fine root C:new leaf (ratio) see C
 STEM_LEAF 2.2	              //allocation new stem C:new leaf (ratio) see Chiesi et al., 2007
 COARSE_ROOT_STEM 0.22	      //allocation new coarse root C:new stem (ratio) see Chiesi et al., 2007 
 LIVE_TOTAL_WOOD	0.15          //new live C:new total wood ratio for deciduous P. Thornton pers. comm.
-CN_LEAVES   25                //CN of leaves (kgC/kgN) for Q. cerris from Chiesi et al., 2007
+N_RUBISCO              0.088  //Fraction of leaf N in Rubisco (ratio)
+CN_LEAVES   27.2              //CN of leaves (kgC/kgN) for Q. cerris from Chiesi et al., 2007
 CN_FALLING_LEAVES   55        //CN of leaf litter (kgC/kgN) for Q. cerris from Chiesi et al., 2007
-CN_FINE_ROOTS   48            //CN of fine roots (kgC/kgN) for Q. cerris from Chiesi et al., 2007
-CN_LIVE_WOODS   48            //CN of live woods (kgC/kgN) for Q. cerris from Chiesi et al., 2007
-CN_DEAD_WOODS   550           //CN of dead woods (kgC/kgN) for Q. cerris from Chiesi et al., 2007
+CN_FINE_ROOTS   73.5          //CN of fine roots (kgC/kgN) for Q. cerris from Chiesi et al., 2007
+CN_LIVEWOOD     73.5          //CN of live woods (kgC/kgN) for Q. cerris from Chiesi et al., 2007
+CN_DEADWOOD     550           //CN of dead woods (kgC/kgN) for Q. cerris from Chiesi et al., 2007
 LEAF_LITT_LAB_FRAC   0.38     //leaf litter labile fraction for Quercus cerris from Chiesi et al., 2007, 0.20 Pietsch 2005
 LEAF_LITT_CEL_FRAC   0.44     //leaf litter cellulose fraction for Quercus cerris from Chiesi et al., 2007, 0.56 Pietsch 2005
 LEAF_LITT_LIGN_FRAC  0.18     //leaf litter lignin fraction for Quercus cerris from Chiesi et al., 2007, 0.24 Pietsch 2005
 FROOT_LITT_LAB_FRAC  0.34     //fine root litter labile fraction for Quercus cerris from Chiesi et al., 2007, 
 FROOT_LITT_CEL_FRAC  0.44     //fine root litter cellulose fraction for Quercus cerris from Chiesi et al., 2007
 FROOT_LITT_LIGN_FRAC 0.22     //fine root litter lignin fraction for Quercus cerris from Chiesi et al., 2007
-DEAD_WOOD_CEL_FRAC   0.77     //dead wood litter cellulose fraction for Quercus cerris from Chiesi et al., 2007, 0.75 Pietsch 2005
-DEAD_WOOD_LIGN_FRAC  0.23     //dead wood litter lignin fraction for Quercus cerris from Chiesi et al., 2007, 0.25 Pietsch 2005
+DEADWOOD_CEL_FRAC    0.77     //dead wood litter cellulose fraction for Quercus cerris from Chiesi et al., 2007, 0.75 Pietsch 2005
+DEADWOOD_LIGN_FRAC   0.23     //dead wood litter lignin fraction for Quercus cerris from Chiesi et al., 2007, 0.25 Pietsch 2005
 BUD_BURST	30                //days of bud burst at the beginning of growing season (only for deciduous)
 LEAF_FALL_FRAC_GROWING	0.2   //proportions of the growing season of leaf fall
 LEAF_FINEROOT_TURNOVER	1     //Average yearly fine root turnover rate
 LIVE_WOOD_TURNOVER	0.7       //Annual yearly live wood turnover rate 
-DBHDCMAX	0.24  //0.45 Condes & Sterba 2005              //Low Density
+DBHDCMAX     0.45             //Condes & Sterba 2005              //Low Density
 DBHDCMIN	0.16              //High Density
 SAP_A	0.674                 //a value from Kostner for Q. petreae in cm
 SAP_B	1.992                 //b value from Kostner for Q. petreae in cm
 SAP_LEAF	2600              //sapwood_max leaf area ratio in pipe model  for Q petreae    
 SAP_WRES	0.11              //Sapwood-Reserve biomass ratio used if no Wres data are available 
-STEMCONST_P -9999             //
-STEMPOWER_P -9999             //
+STEMCONST_P 0.095             //
+STEMPOWER_P 2.69             //
 CRA	34.597                    //
 CRB	0.038                     //
 CRC	1.104                     //

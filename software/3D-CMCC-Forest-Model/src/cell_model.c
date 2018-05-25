@@ -71,22 +71,22 @@ int Cell_model(matrix_t *const m, const int cell, const int day, const int month
 		/* CHECK FOR BALANCE CLOSURE */
 
 		/* CHECK FOR RADIATIVE FLUX BALANCE CLOSURE */
-		/* 1 */ if ( ! check_cell_radiation_flux_balance ( c, meteo_daily ) ) return 0;
+		/* 1 */ if ( ! check_cell_radiation_flux_balance   ( c, meteo_daily ) ) return 0;
 
 		/* CHECK FOR CARBON FLUX BALANCE CLOSURE */
-		/* 2 */ if ( ! check_cell_carbon_flux_balance    ( c ) ) return 0;
+		/* 2 */ if ( ! check_cell_carbon_flux_balance      ( c ) ) return 0;
 
 		/* CHECK FOR NITROGEN FLUX BALANCE CLOSURE */
-		/* 3 */ //fixme if ( ! check_cell_nitrogen_flux_balance    ( c ) ) return 0;
+		/* 3 */ //fixme if ( ! check_cell_nitrogen_flux_balance    ( c, meteo_daily ) ) return 0;
 
 		/* CHECK FOR CARBON MASS BALANCE CLOSURE */
-		/* 4 */ if ( ! check_cell_carbon_mass_balance    ( c ) ) return 0;
-
-		/* CHECK FOR WATER FLUX BALANCE CLOSURE */
-		/* 5 */ if ( ! check_cell_water_flux_balance     ( c, meteo_daily ) ) return 0;
+		/* 4 */ //fixme if ( ! check_cell_carbon_mass_balance      ( c ) ) return 0;
 
 		/* CHECK FOR NITROGEN MASS BALANCE CLOSURE */
-		/* 6 */ //fixme if ( ! check_cell_nitrogen_mass_balance    ( c, meteo_annual ) ) return 0;
+		/* 5 */ //fixme if ( ! check_cell_nitrogen_mass_balance    ( c, meteo_annual ) ) return 0;
+
+		/* CHECK FOR WATER FLUX BALANCE CLOSURE */
+		/* 6 */ if ( ! check_cell_water_flux_balance       ( c, meteo_daily ) ) return 0;
 	}
 #if 0
 	else if ( HOURLY == g_settings->time )

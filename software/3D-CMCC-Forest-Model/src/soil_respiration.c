@@ -86,10 +86,12 @@ void soil_respiration_canoak ( cell_t *const c, const meteo_daily_t *const meteo
 	daily_soil_resp_mol     = KL1_BASE * temp_scalar * water_scalar;
 
 	/* soil respiration from umol m-2 sec-1 to gC m-2 d-1 */
+	// ALESSIOR: 86400 is for daily, change itfor other time resolution...
 	c->daily_soil_resp      = daily_soil_resp_mol *  GC_MOL  / 1e6 * 86400;
 	logger (g_debug_log, "c->daily_soil_resp = %g gC/m^2/day\n", c->daily_soil_resp);
 
 	/* soil respiration flux from umol m-2 sec-1 to gCO2 m-2 day-1 */
+	// ALESSIOR: 86400 is for daily, change itfor other time resolution...
 	c->daily_soil_respCO2   = daily_soil_resp_mol * GCO2_MOL / 1e6 * 86400;
 	logger (g_debug_log, "c->daily_soil_respCO2 = %g gCO2/m^2/day\n", c->daily_soil_respCO2);
 
@@ -162,10 +164,12 @@ void soil_respiration_reichstein ( cell_t *const c, const meteo_daily_t *const m
 	daily_soil_resp_mol     = Rref * temp_scalar * water_scalar;
 
 	/* soil respiration from umol m-2 sec-1 to gC m-2 d-1 */
+	// ALESSIOR: 86400 is for daily, change itfor other time resolution...
 	c->daily_soil_resp      = daily_soil_resp_mol *  GC_MOL  / 1e6 * 86400.;
 	logger (g_debug_log, "c->daily_soil_resp = %g gC/m^2/day\n", c->daily_soil_resp);
 
 	/* soil respiration flux from umol m-2 sec-1 to gCO2 m-2 day-1 */
+	// ALESSIOR: 86400 is for daily, change itfor other time resolution...
 	c->daily_soil_respCO2   = daily_soil_resp_mol * GCO2_MOL / 1e6 * 86400.;
 	logger (g_debug_log, "c->daily_soil_respCO2 = %g gCO2/m^2/day\n", c->daily_soil_respCO2);
 

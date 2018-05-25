@@ -1143,7 +1143,6 @@ void sort_all(matrix_t* m)
 //now model runs for one day and then changes the cell
 
 int main(int argc, char *argv[]) {
-	int ret;
 	int year;
 	int month;
 	int day;
@@ -1170,6 +1169,10 @@ int main(int argc, char *argv[]) {
 	t = NULL;
 	s = NULL;
 	prog_ret = 1;
+
+	// do not remove
+	// for debugging under windows!
+	//_CrtSetBreakAlloc();
 
 	/* start timer */
 	timer_init();
@@ -1418,12 +1421,9 @@ int main(int argc, char *argv[]) {
 		logger_error(g_debug_log, "importing met data...");
 
 		matrix->cells[cell].years = import_meteo_data(g_sz_input_met_file, &years_of_simulation, matrix->cells[cell].x, matrix->cells[cell].y);
-
 		if ( ! matrix->cells[cell].years ) goto err;
+		matrix->cells[cell].years_count = years_of_simulation;
 		logger_error(g_debug_log, "ok\n");
-
-		// not in v5.4
-		//matrix->cells[cell].years_count = years_of_simulation;
 
 		/* set start year index */
 		if ( -1 == g_year_start_index )
@@ -2085,11 +2085,15 @@ int main(int argc, char *argv[]) {
 		free (matrix->cells[cell].years);
 	}
 	#else
+	{
+		meteo_annual_t* p;
+			
+		p = matrix->cells[cell].years;
 		if ( g_year_start_index != -1 ) {
-			free(matrix->cells[cell].years-g_year_start_index);
-		} else {
-			free(matrix->cells[cell].years);
+			p -= g_year_start_index;
 		}
+		meteo_annual_free(p, matrix->cells[cell].years_count);
+	}
 	#endif
 		matrix->cells[cell].years = NULL; /* required */
 	}
@@ -2133,9 +2137,10 @@ int main(int argc, char *argv[]) {
 
 	err:
 
-	/* cleanup memory...
-		do not remove null pointer to prevent
-		double free with clean_up func
+	/*
+		cleanup memory...
+		please do not remove assign to null pointer
+		it prevent doubled free with clean_up func
 	 */
 
 	/* close logger */

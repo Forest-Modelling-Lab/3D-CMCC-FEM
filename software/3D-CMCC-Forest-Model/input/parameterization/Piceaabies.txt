@@ -1,34 +1,34 @@
 //Picea abies parameterization
-LIGHT_TOL               3       //4 = very shade intolerant 3 = shade intolerant 2 = shade tolerant 1 = very shade tolerant
+LIGHT_TOL               4       //4 = very shade intolerant 3 = shade intolerant 2 = shade tolerant 1 = very shade tolerant
 PHENOLOGY               1.2     //PHENOLOGY 0.1 = deciduous broadleaf, 0.2 = deciduous needle leaf, 1.1 = broad leaf evergreen, 1.2 = needle leaf evergreen 
-ALPHA                   0.054   //Canopy quantum efficiency (molC/molPAR) converted from 1.8 gCMJ for Picea abies (0.065) Seidl et al., 2005, (0.048) Rotzer et al., 2010, 0.051 Peltionemi et al., 2012
-EPSILONgCMJ             0.61    //Light Use Efficiency (gC/molPAR)(used if ALPHA is not available) 0.61 Peltionemi et al., 2012
-GAMMA_LIGHT             0.02   // Empirical parameter for Light modifiers see Peltionemi et al., 2012 
-K                   0.54    //0.67    //Extinction coefficient for absorption of PAR by canopy for Picea abies Pietsch et al., 2005 ,0.54 from Pietsch et al., 2005,  0.54 from Mollicone, 0.4241 Forrester et al., 2014
-ALBEDO                  0.06    //averaged for P.abies, 0.06 Jarvis et al., 1976, 0.095 from Breuer et al., 2003
+ALPHA          0.048 // 0.054   //Canopy quantum efficiency (molC/molPAR) converted from 1.8 gCMJ for Picea abies (0.065) Seidl et al., 2005, (0.048) Rotzer et al., 2010, 0.05 Peltionemi et al., 2012
+EPSILONgCMJ             0.61    //Light Use Efficiency (gC/molPAR)(used if ALPHA is not available) 
+GAMMA_LIGHT           0 // 0.02 // Empirical parameter for Light modifiers see Peltionemi et al., 2012 
+K                  0.54 // 0.67 //Extinction coefficient for absorption of PAR by canopy for Picea abies Pietsch et al., 2005 ,0.54 from Pietsch et al., 2005,  0.54 from Mollicone, 0.4241 Forrester et al., 2014
+ALBEDO            0.06 // 0.095 //averaged for P.abies, 0.06 Jarvis et al., 1976, 0.095 from Breuer et al., 2003
 INT_COEFF               0.25    //precip interception coefficient for Picea abies (0.3 see Tatarinov) (0.25 see Lawrence et al., 2007)
-SLA_AVG1                12      //Average Specific Leaf Area m^2/KgC (juvenile) sunlit/shaded leaves for Picea abies Konopka et al., 2014, (5.9) see Johansson, T. 1999
-SLA_AVG0            5.9 //    7.52    //Average Specific Leaf Area m^2/KgC (MATURE) sunlit/shaded leaves for Picea abies 7.52 Mund et al., 2002, (5.9) see Johansson, T. 1999
+SLA_AVG0                7.52    //Average Specific Leaf Area m^2/KgDM (MATURE) sunlit/shaded leaves for Picea abies 8 Rötzer et al., (2010), 7.52 Mund et al., 2002, (5.9) see Johansson, T. 1999
+SLA_AVG1                3.9     //Average Specific Leaf Area m^2/KgDM (juvenile) sunlit/shaded leaves for Picea abies 2 Rötzer et al., (2010), Konopka et al., 2014, (5.9) see Johansson, T. 1999
 TSLA                    30      //Age at which SLA_AVG = (SLA_AVG1 + SLA_AVG0 )/2 Forrester et al., 2017
 SLA_RATIO               2       //(DIM) ratio of shaded to sunlit projected SLA for Picea abies (see Pietsch)
-LAI_RATIO               2.6     /(DIM) all-sided to projected leaf area ratio from Mollicone et al., 2002
-FRACBB0                 0.30    //Branch and Bark fraction at age 0 for P. sylvestris, from Xenakis et al., 2008, 0.29 deducted for P. sylvestris from Yuste et al., 2005, 0.29 from Lehtonen et al., 2004 For Eco Manag, 0.71 from xiao and Ceulemans
+LAI_RATIO               2.6     //(DIM) all-sided to projected leaf area ratio from Mollicone et al., 2002
+FRACBB0                 0.6     //Branch and Bark fraction at age 0 for P. sylvestris, from Xenakis et al., 2008, 0.29 deducted for P. sylvestris from Yuste et al., 2005, 0.29 from Lehtonen et al., 2004 For Eco Manag, 0.71 from xiao and Ceulemans
 FRACBB1                 0.1     //Branch and Bark fraction for mature stands for P. sylvestris, from Xenakis et al., 2008, 0.29 deducted for P. sylvestris from Yuste et al., 2005, 0.29 from Lehtonen et al., 2004 For Eco Manag, 0.18 from Jenssen et al 1999, 0.77 from xiao and Ceulemans
-TBB                     10      //Age at which fracBB = (FRACBB0 + FRACBB1 )/ 2 for P. sylvestris, from Xenakis et al., 2008
+TBB                     0.3     //Age at which fracBB = (FRACBB0 + FRACBB1 )/ 2 for P. sylvestris, from Xenakis et al., 2008
 RHO0                    0.425   //Minimum Basic Density for young Trees t/m^3 for Picea abies Kantola and Makela 2006, 0.43 Seidl et al., 2012, 0.45 Pilli et al., 2006
 RHO1                    0.374   //Maximum Basic Density for old Trees t/m^3 for Picea abies Kantola and Makela 2006, 0.43 Seidl et al., 20120, 0.45 Pilli et al., 2006
 TRHO                    50      //Age at which rho = (RHOMIN + RHOMAX )/2
 FORM_FACTOR             0.423   //Form factor Seidl et al., 2012
-COEFFCOND               0.06    //Define stomatal responsee to VPD in mbar for Picea abies
+COEFFCOND           0.05 //    0.06    //Define stomatal responsee to VPD in mbar for Picea abies
 BLCOND                  0.009   //Canopy Boundary Layer conductance  for Picea abies 
-MAXCOND                 0.0015   //Maximum Stomatal Conductance in m/sec for Picea abies (see Pietsch) 0.0015 for Breuer et al., 
+MAXCOND       0.0015 // 0.002   //Maximum Stomatal Conductance in m/sec for Picea abies (see Pietsch) 0.002 Tatarinov, 2005; 0.0015 for Breuer et al., 0.006 Hibbard et al., 2005
 CUTCOND                 0.00006 //Cuticul conductance in m/sec for Picea abies (see Pietsch)
-MAXAGE                  300     //Determines rate of "physiological decline" of forest for Picea abies Seidl et al., 2012 (TO CHECK !!!!!)
+MAXAGE            400 // 300    //Determines rate of "physiological decline" of forest for Picea abies Seidl et al., 2012 (TO CHECK !!!!!)
 RAGE                    0.95    //Relative Age to give fAGE = 0.5 0.95 for Picea abies Seidl et al., 2012
 NAGE                    4       //Power of relative Age in function for Age for Picea abies Seidl et al., 2012
 GROWTHTMIN              -4      //Minimum temperature for growth 0 for Picea abies from p.c. Seidl, -4 from Bossel 1996
-GROWTHTMAX              35 //30      //Maximum temperature for growth 35 for Picea abies from p.c. Seidl 
-GROWTHTOPT              18      //Optimum temperature for growth 17.5 for Picea abies from p.c. Seidl, 18 from Bossel 1996
+GROWTHTMAX              35      //Maximum temperature for growth 35 for Picea abies from p.c. Seidl, 40 CANIF
+GROWTHTOPT       17.5 //  18      //Optimum temperature for growth 17.5 for Picea abies from p.c. Seidl, 18 from Bossel 1996
 GROWTHSTART             200     //average temperature for starting growth in °C 
 MINDAYLENGTH            0       //minimum day length for deciduous
 SWPOPEN                -0.5     //in KPa for P. abies from Pietsch et al 2005
@@ -37,34 +37,35 @@ OMEGA_CTEM              0.5     //ALLOCATION PARAMETER control the sensitivity o
 S0CTEM                  0.35    //PARAMETER CONTROLLING ALLOCATION TO STEM/MINIMUM RATIO TO C TO STEM 
 R0CTEM                  0.35    //PARAMETER CONTROLLING ALLOCATION TO ROOT/MINIMUM RATIO TO C TO ROOTS
 F0CTEM                  0.30    //PARAMETER CONTROLLING ALLOCATION TO FOLIAGE/MINIMUM RATIO TO C TO STEM
-FRUIT_PERC              0.20    //fraction of NPP allocated for reproduction (0 for broadleaf) for P. sylvestris 0.15 from Xiao et al., 2003, 0.2 from Yuste et al., 2005, 
+FRUIT_PERC              0.10    //fraction of NPP allocated for reproduction (0 for broadleaf) for P. sylvestris 0.15 from Xiao et al., 2003, 0.2 from Yuste et al., 2005, 
 CONES_LIFE_SPAN         3       //Life span for cones (yrs)
 FINE_ROOT_LEAF          0.622   //allocation new fine root C:new leaf (ratio) for Picea abies from 1.4 Mollicone et al. 2002 for Picea abies (see Pietsch)
 STEM_LEAF               3.03    //allocation new stem C:new leaf (ratio) for Picea abies from Mollicone et al. 2002, varying from 1.43 to 3.42 see White et al., 1999, for Picea abies (see Pietsch)
 COARSE_ROOT_STEM        0.19    //allocation new coarse root C:new stem (ratio) for Picea abies from Mollicone et al. 2002, varying from 0.159 to 0.230 see White et al., 1999, for Picea abies (see Pietsch)
 LIVE_TOTAL_WOOD         0.076   //new live C:new total wood (ratio) for Picea abies 0.071 from Mollicone et al. 2002, for Picea abies (see Pietsch)
-CN_LEAVES               58.8    //CN of leaves (kgC/kgN) for Picea abies 42.73 from Mollicone et al. 2002, 42 from Pietsch et al., 2005, varying from 28.1 to 58.8 see White et al., 1999
+N_RUBISCO          0.055 //     0.055   //Fraction of leaf N in Rubisco (ratio), 0.035-0.0457 Pietsch, 0.20 Stinziano et al., 2015
+CN_LEAVES               42      //CN of leaves (kgC/kgN) for Picea abies 42.73 from Mollicone et al. 2002, 42 from Pietsch et al., 2005, varying from 28.1 to 58.8 see White et al., 1999
 CN_FALLING_LEAVES       116     //CN of leaf litter (kgC/kgN) for Picea abies from Mollicone et al. 2002, 87.7 from Pietsch et al., 2005, varying from 50.5 to 116 see White et al., 1999
 CN_FINE_ROOTS           58.0    //CN of fine roots (kgC/kgN) for 36.44 Picea abies from Mollicone et al. 2002, 42.4 Pietsch et al., 2005, varying from 27.6 to 46.7 see White et al., 1999
-CN_LIVE_WOODS           50.0    //CN of live woods (kgC/kgN) for 36.44 Picea abies from Mollicone et al. 2002, 50 from Pietsch et al., 2005
-CN_DEAD_WOODS           535     //CN of dead woods (kgC/kgN) for Picea abies from Pietsch et al., 2005
+CN_LIVEWOOD             50.0    //CN of live woods (kgC/kgN) for 36.44 Picea abies from Mollicone et al. 2002, 50 from Pietsch et al., 2005
+CN_DEADWOOD             535     //CN of dead woods (kgC/kgN) for Picea abies from Pietsch et al., 2005
 LEAF_LITT_LAB_FRAC      0.28    //leaf litter labile fraction for Picea abies from Cenciala & Tatarinov 2006
 LEAF_LITT_CEL_FRAC      0.38    //leaf litter cellulose fraction for Picea abies from Cenciala & Tatarinov 2006
 LEAF_LITT_LIGN_FRAC     0.34    //leaf litter lignin fraction for Picea abies from Cenciala & Tatarinov 2006
 FROOT_LITT_LAB_FRAC     0.23    //fine root litter labile fraction for Picea abies from Cenciala & Tatarinov 2006
 FROOT_LITT_CEL_FRAC     0.41    //fine root litter cellulose fraction for Picea abies from Cenciala & Tatarinov 2006
 FROOT_LITT_LIGN_FRAC    0.36    //fine root litter lignin fraction for Picea abies from Cenciala & Tatarinov 2006
-DEAD_WOOD_CEL_FRAC      0.70    //dead wood litter cellulose fraction for Picea abies from Cenciala & Tatarinov 2006
-DEAD_WOOD_LIGN_FRAC     0.30    //dead wood litter lignin fraction for Picea abies from Cenciala & Tatarinov 2006
+DEADWOOD_CEL_FRAC       0.70    //dead wood litter cellulose fraction for Picea abies from Cenciala & Tatarinov 2006
+DEADWOOD_LIGN_FRAC      0.30    //dead wood litter lignin fraction for Picea abies from Cenciala & Tatarinov 2006
 BUD_BURST               0       //days of bud burst at the beginning of growing season (only for deciduous)
 LEAF_FALL_FRAC_GROWING  0       //proportions of the growing season of leaf fall 
 LEAF_FINEROOT_TURNOVER  0.195   //Average YEARLY leaves and fine root turnover rate for Picea abies from Pietsch et al., 2005, 0.11 for Picea abies Seidl et al., 2012
 LIVE_WOOD_TURNOVER      0.7     //Annual yearly live wood turnover rate for Picea abies from Pietsch et al., 2005
-DBHDCMAX                0.40 //0.24    //Low Density for Picea abies 0.255 Seidl et al., 2012, 0.18 from Kalliovirta and Tokola 2005, 0.25 Bossel 1996, 0.20 Urban et al., 2012
+DBHDCMAX                0.40    //Low Density for Picea abies 0.255 Seidl et al., 2012, 0.18 from Kalliovirta and Tokola 2005, 0.25 Bossel 1996, 0.20 Urban et al., 2012
 DBHDCMIN                0.14    //High Density for P. sylvestris from Ameztegui et al., 2012 0.14, 0.2 from Grote 2001, 0.14 Urban et al., 2012
-SAP_A        0.851              //a value for Picea abies 0.851 deducted from  p.c. Kostner and Clausnitzer et al., 2011 CHECK IT!!!!!!!!!
-SAP_B        1.684              //b value for Picea abies 1.684 deducted from p.c. Kostner and Clausnitzer et al., 2011
-SAP_LEAF                3500    //sapwood_max leaf area ratio in pipe model for Picea abies varying from 2600 to 4800 from Kostner et al., 2002 Tree Phys CHECK IT!!!!!!!!!
+SAP_A                   0.851   //a value for Picea abies 0.851 deducted from  p.c. Kostner and Clausnitzer et al., 2011 CHECK IT!!!!!!!!!
+SAP_B                   1.684   //b value for Picea abies 1.684 deducted from p.c. Kostner and Clausnitzer et al., 2011
+SAP_LEAF            2600 //    3500    //sapwood_max leaf area ratio in pipe model for Picea abies varying from 2600 to 4800 from Kostner et al., 2002 Tree Phys CHECK IT!!!!!!!!!
 SAP_WRES                0.05    //Sapwood-Reserve biomass ratio used if no Wres data are available 0.11 for deciduous 0.05 for evergreen see Schwalm and Ek, 2004 Ecological Modelling
 STEMCONST_P             0.127   //a parameter for allometric equation for P. abies from Siedl et al., 2012, 0.04 for P. abies from Pokorny & Tomaskova 2007
 STEMPOWER_P             2.3     //b parameter for allometric equation for P. abies from Siedl et al., 2012, 2.4696 for P. abies from Pokorny & Tomaskova 2007
@@ -81,7 +82,7 @@ CROWN_B                 0.5503  //1       //Crown exponential with tree height f
 MAXSEED                -9999    //TO BE CHECKED           //numero massimo semi prodotti dalla pianta
 MASTSEED                5       //ricorrenza anni di pasciona (da TREEMIG) FOR Quercus sp (Bernetti)
 WEIGHTSEED              7       //peso frutto in g 
-SEXAGE                  30      //Age at Sexual Maturity FOR Quercus sp (per Bernetti 75)
+SEXAGE                  30      //Age at Sexual Maturity 
 GERMCAPACITY            0.70    //Geminability (Lischke H. & Loffler T. J.)
 ROTATION                120     //Forest Rotation for harvesting for P. abies ISIMIP protocol
 THINNING                15      //Thinning regime for P. abies ISIMIP protocol
