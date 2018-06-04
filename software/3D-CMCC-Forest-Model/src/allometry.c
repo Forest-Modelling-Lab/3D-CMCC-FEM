@@ -119,12 +119,12 @@ void crown_allometry (cell_t *const c, const int height, const int dbh, const in
 	/* crown area exposed */
 	/* (ORIGINAL) Canopy Projected Cover (integrated all over all viewing angles) */
 	/* following Cauchy's theorems Duursma et al., 2012, Tree Phys) */
-	s->value[CROWN_AREA_EXP] = s->value[CROWN_AREA] / 4 ;
+	//s->value[CROWN_AREA_EXP] = s->value[CROWN_AREA] / 4 ;
 
 	/****************************************************************************/
 
 	logger(g_debug_log, "-Crown Area               = %f m2\n", s->value[CROWN_AREA]);
-	logger(g_debug_log, "-Crown Area (exp)         = %f m2\n", s->value[CROWN_AREA_EXP]);
+	//logger(g_debug_log, "-Crown Area (exp)         = %f m2\n", s->value[CROWN_AREA_EXP]);
 	logger(g_debug_log, "-Crown Volume             = %f m3\n", s->value[CROWN_VOLUME]);
 
 	/* Crown density (NOT USED) */

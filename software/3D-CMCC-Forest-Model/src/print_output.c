@@ -1737,7 +1737,6 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 										",D-CC_P"
 										",DBHDC"
 										",CROWN_AREA_PROJ"
-										",CROWN_AREA_EXP"
 										",PAR"
 										",APAR"
 										",fAPAR"
@@ -1894,7 +1893,7 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 							/* print variables at layer-class level */
 							logger(g_daily_log,",%6.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,"
 									"%d,%d,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
-									",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
+									",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
 									",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",
 									s->value[GPP],
 									s->value[Av_TOT],
@@ -1911,7 +1910,6 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 									s->value[DAILY_CANOPY_COVER_PROJ],
 									s->value[DBHDC_EFF],
 									s->value[CROWN_AREA_PROJ],
-									s->value[CROWN_AREA_EXP],
 									s->value[PAR],
 									s->value[APAR],
 									s->value[fAPAR],

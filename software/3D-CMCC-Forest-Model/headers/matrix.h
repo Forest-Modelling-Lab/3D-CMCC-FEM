@@ -130,11 +130,11 @@ enum {
 	CROWN_HEIGHT,                        /* (m) Crown height */
 	CROWN_AREA,                          /* (m2) Crown Area */
 	CROWN_AREA_PROJ,                     /* (m2) Crown Projected Area (at zenith angle) */
-	CROWN_AREA_EXP,                      /* (m2) Crown Exposed Area (considered as the area that can intercepts light) */
+	//CROWN_AREA_EXP,                      /* (m2) Crown Exposed Area (considered as the area that can intercepts light) */
 	CROWN_VOLUME,                        /* (m3) Crown Volume */
 	CROWN_DENSITY,                       /* (m) Crown density */
 	CANOPY_COVER_PROJ,                   /* (DIM) Canopy Projected Cover % of pixel covered (at zenith angle) */
-	CANOPY_COVER_EXP,                    /* (DIM) Canopy Exposed Cover % of pixel exposed (integrated all over all viewing angles) */
+	//CANOPY_COVER_EXP,                    /* (DIM) Canopy Exposed Cover % of pixel exposed (integrated all over all viewing angles) */
 	DAILY_CANOPY_COVER_PROJ,             /* (DIM) Daily Canopy Projected Cover % of pixel covered (at zenith angle) */
 	DAILY_CANOPY_COVER_EXP,              /* (DIM) Daily Canopy Exposed Cover % of pixel exposed (integrated all over the daylength) */
 	HD_EFF,                              /* (DIM) Effective Height/Diameter ratio */
@@ -870,7 +870,7 @@ typedef struct
 	double layer_cover_proj;            /* layer canopy cover projected per layer */
 	double layer_cover_exp;             /* layer canopy cover exposed per layer */
 	double daily_layer_cover_proj;      /* layer canopy cover projected per layer */
-	double daily_layer_cover_exp;       /* layer canopy cover exposed per layer */
+	//double daily_layer_cover_exp;       /* layer canopy cover exposed per layer */
 	double layer_avg_tree_height;       /* average tree layer height */
 	double layer_tree_height_modifier;  /* layer level tree height modifier (see Wallace et al., 1991; Cannell & Grace 1993) */
 

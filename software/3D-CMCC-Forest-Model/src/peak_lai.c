@@ -33,7 +33,7 @@ void peak_lai( age_t *const a, species_t *const s, const int day, const int mont
 	/***************************************************************************************************************/
 
 	/* compute annual Peak Exposed Lai (m2/m2) */
-	s->value[PEAK_LAI_EXP] = ( ( s->value[SAPWOOD_AREA] / 10000. ) * s->value[SAP_LEAF]) / s->value[CROWN_AREA_EXP];
+	s->value[PEAK_LAI_EXP] = ( ( s->value[SAPWOOD_AREA] / 10000. ) * s->value[SAP_LEAF]) / s->value[CROWN_AREA_PROJ];
 
 	/***************************************************************************************************************/
 	/* note: special case for evergreen */

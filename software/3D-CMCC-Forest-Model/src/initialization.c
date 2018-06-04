@@ -368,16 +368,16 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 	if ( s->value[LEAF_C] > 0. )
 	{
 		/* for total leaves */
-		s->value[SLA_PROJ]           =  ( s->value[LAI_PROJ] * ( s->value[CANOPY_COVER_EXP] * g_settings->sizeCell ) ) / ( s->value[LEAF_C] * 1e3 ) ;
+		s->value[SLA_PROJ]           =  ( s->value[LAI_PROJ] * ( s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell ) ) / ( s->value[LEAF_C] * 1e3 ) ;
 
 		/* sun leaves */
-		s->value[SLA_SUN_PROJ]       = ( ( s->value[LAI_SUN_PROJ] + ( s->value[LAI_SHADE_PROJ] / s->value[SLA_RATIO] ) ) * ( s->value[CANOPY_COVER_EXP] * g_settings->sizeCell ) ) / ( s->value[LEAF_C] * 1e3 );
+		s->value[SLA_SUN_PROJ]       = ( ( s->value[LAI_SUN_PROJ] + ( s->value[LAI_SHADE_PROJ] / s->value[SLA_RATIO] ) ) * ( s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell ) ) / ( s->value[LEAF_C] * 1e3 );
 
 		/* shaded leaves */
 		s->value[SLA_SHADE_PROJ]     = s->value[SLA_SUN_PROJ] * s->value[SLA_RATIO];
 
 		/* compute based on SLA Leaf carbon for sun and shaded leaves */
-		s->value[LEAF_SUN_C]   = ( ( s->value[LAI_SUN_PROJ]   * ( s->value[CANOPY_COVER_EXP] * g_settings->sizeCell ) ) / s->value[SLA_SUN_PROJ] )   / 1e3;
+		s->value[LEAF_SUN_C]   = ( ( s->value[LAI_SUN_PROJ]   * ( s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell ) ) / s->value[SLA_SUN_PROJ] )   / 1e3;
 		s->value[LEAF_SHADE_C] = s->value[LEAF_C] - s->value[LEAF_SUN_C];
 
 		/* check */

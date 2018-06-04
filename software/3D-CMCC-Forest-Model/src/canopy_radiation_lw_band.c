@@ -75,7 +75,7 @@ void canopy_radiation_lw_band(cell_t *const c, const int layer, const int height
 
 	/* compute canopy upward and net long wave radiation */
 	/* upward long wave fluxes to atmosphere */
-	s->value[LW_RAD_EMIT] = (LW_emis_canopy_frac * SBC_W * pow(s->value[CANOPY_TEMP_K], 4.)) * /*leaf_cell_cover_eff*/ s->value[CANOPY_COVER_EXP];
+	s->value[LW_RAD_EMIT] = (LW_emis_canopy_frac * SBC_W * pow(s->value[CANOPY_TEMP_K], 4.)) * /*leaf_cell_cover_eff*/ s->value[CANOPY_COVER_PROJ];
 	logger(g_debug_log, "canopy emitted long wave fluxes to atmosphere = %g (W/m2)\n", s->value[LW_RAD_EMIT]);
 
 	/* soil long wave emitted (general formula) */
@@ -96,8 +96,8 @@ void canopy_radiation_lw_band(cell_t *const c, const int layer, const int height
 	//note: equation has been modified for canopy coverage
 	s->value[LW_RAD_TRANSM] = (((1. - LW_emis_canopy_frac) * meteo_daily->atm_lw_downward_W) +
 			s->value[LW_RAD_EMIT]  + (4. * LW_emis_canopy_frac * SBC_W * pow (s->value[CANOPY_TEMP_K], 3.) *
-			(s->value[CANOPY_TEMP_K_OLD] - s->value[CANOPY_TEMP_K])) * /*leaf_cell_cover_eff*/ s->value[CANOPY_COVER_EXP]) +
-			(meteo_daily->atm_lw_downward_W * (1. - /*leaf_cell_cover_eff*/ s->value[CANOPY_COVER_EXP]));
+			(s->value[CANOPY_TEMP_K_OLD] - s->value[CANOPY_TEMP_K])) * /*leaf_cell_cover_eff*/ s->value[CANOPY_COVER_PROJ]) +
+			(meteo_daily->atm_lw_downward_W * (1. - /*leaf_cell_cover_eff*/ s->value[CANOPY_COVER_PROJ]));
 	logger(g_debug_log, "long wave fluxes below the canopy (CLM 4.5) = %g (W/m2)\n", s->value[LW_RAD_TRANSM]);
 
 	/* compute soil net long wave radiation CLM 4.5 (eq. 4.17) */
