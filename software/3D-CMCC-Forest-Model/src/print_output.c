@@ -182,7 +182,7 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 	/* heading */
 	if ( ! day && ! month && ! year )
 	{
-		logger(g_daily_log, "YEAR,MONTH,DAY");
+		logger(g_daily_log, "X,Y,YEAR,MONTH,DAY");
 
 		for ( layer = c->tree_layers_count - 1; layer >= 0; --layer )
 		{
@@ -315,7 +315,7 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 	/*****************************************************************************************************/
 
 	/* values */
-	logger(g_daily_log, "%d,%d,%d", c->years[year].year, month + 1, day + 1);
+	logger(g_daily_log, "%d,%d,%d,%d,%d", c->x, c->y, c->years[year].year, month + 1, day + 1);
 
 	// ALESSIOR commented on 10/07/2017
 	//qsort(c->heights, c->heights_count, sizeof(height_t), sort_by_heights_index_asc);
@@ -538,7 +538,7 @@ void EOM_print_output_cell_level(cell_t *const c, const int month, const int yea
 	/* heading */
 	if ( !month && !year )
 	{
-		logger(g_monthly_log, "YEAR,MONTH");
+		logger(g_monthly_log, "X,Y,YEAR,MONTH");
 
 		for ( layer = c->tree_layers_count - 1; layer >= 0; --layer )
 		{
@@ -634,7 +634,7 @@ void EOM_print_output_cell_level(cell_t *const c, const int month, const int yea
 
 	/************************************************************************/
 	/* values */
-	logger ( g_monthly_log, "%d,%d", c->years[year].year, month +1 );
+	logger ( g_monthly_log, "%d,%d,%d,%d", c->x, c->y, c->years[year].year, month +1 );
 
 	/* print class level values */
 	for ( layer = c->tree_layers_count - 1; layer >= 0; --layer )
@@ -831,7 +831,7 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 	/* heading */
 	if ( ! year )
 	{
-		logger(g_annual_log, "%s", "YEAR");
+		logger(g_annual_log, "X,Y,YEAR");
 
 		for ( layer = c->tree_layers_count - 1; layer >= 0; --layer )
 		{
@@ -965,7 +965,7 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 	/*****************************************************************************************************/
 
 	/* values */
-	logger(g_annual_log, "%d", c->years[year].year);
+	logger(g_annual_log, "%d,%d,%d", c->x, c->y, c->years[year].year);
 
 	/* print class level values */
 	if ( c->heights_count )
@@ -1189,7 +1189,7 @@ void EOD_print_output_soil_cell_level(cell_t *const c, const int day, const int 
 	/* heading */
 	if ( !day && !month && !year )
 	{
-		logger(g_daily_soil_log, "YEAR,MONTH,DAY");
+		logger(g_daily_soil_log, "X,Y,YEAR,MONTH,DAY");
 
 		/************************************************************************/
 		/* heading variables at cell level only if there's more than one layer */
@@ -1240,7 +1240,7 @@ void EOD_print_output_soil_cell_level(cell_t *const c, const int day, const int 
 	}
 
 	/* values */
-	logger(g_daily_soil_log, "%d,%d,%d", c->years[year].year, month + 1, day + 1);
+	logger(g_daily_soil_log, "%d,%d,%d,%d,%d", c->x, c->y, c->years[year].year, month + 1, day + 1);
 
 	/************************************************************************/
 
@@ -1312,7 +1312,7 @@ void EOM_print_output_soil_cell_level(cell_t *const c, const int month, const in
 	/* heading */
 	if ( !month && !year )
 	{
-		logger(g_monthly_soil_log, "YEAR,MONTH");
+		logger(g_monthly_soil_log, "X,Y,YEAR,MONTH");
 
 		/************************************************************************/
 		/* heading variables at cell level only if there's more than one layer */
@@ -1363,7 +1363,7 @@ void EOM_print_output_soil_cell_level(cell_t *const c, const int month, const in
 	}
 
 	/* values */
-	logger (g_monthly_soil_log, "%d,%d", c->years[year].year, month +1 );
+	logger (g_monthly_soil_log, "%d,%d,%d,%d", c->years[year].year, month +1 );
 
 	/************************************************************************/
 
@@ -1435,7 +1435,7 @@ void EOY_print_output_soil_cell_level(cell_t *const c, const int year, const int
 	/* heading */
 	if ( ! year )
 	{
-		logger(g_annual_soil_log, "%s", "YEAR");
+		logger(g_annual_soil_log, "X,Y,YEAR");
 
 		/************************************************************************/
 		/* heading variables at cell level only if there's more than one layer */
@@ -1487,7 +1487,7 @@ void EOY_print_output_soil_cell_level(cell_t *const c, const int year, const int
 	/*****************************************************************************************************/
 
 	/* values */
-	logger(g_annual_soil_log, "%d", c->years[year].year);
+	logger(g_annual_soil_log, "%d,%d,%d", c->x, c->y, c->years[year].year);
 
 	/************************************************************************/
 
@@ -1690,7 +1690,7 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 	/* heading */
 	if ( !day && !month && !year )
 	{
-		logger(g_daily_log, "YEAR,MONTH,DAY");
+		logger(g_daily_log, "X,Y,YEAR,MONTH,DAY");
 
 		for ( layer = c->tree_layers_count - 1; layer >= 0; --layer )
 		{
@@ -1853,7 +1853,7 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 	/*****************************************************************************************************/
 
 	/* values */
-	logger(g_daily_log, "%d,%d,%d", c->years[year].year, month + 1, day + 1);
+	logger(g_daily_log, "%d,%d,%d,%d,%d", c->x, c->y, c->years[year].year, month + 1, day + 1);
 
 	/* print class level values */
 	for ( layer = c->tree_layers_count - 1; layer >= 0; --layer )
@@ -2091,7 +2091,7 @@ void EOM_print_output_cell_level(cell_t *const c, const int month, const int yea
 	/* heading */
 	if ( !month && !year )
 	{
-		logger(g_monthly_log, "YEAR,MONTH");
+		logger(g_monthly_log, "X,Y,YEAR,MONTH");
 
 		for ( layer = c->tree_layers_count - 1; layer >= 0; --layer )
 		{
@@ -2192,7 +2192,7 @@ void EOM_print_output_cell_level(cell_t *const c, const int month, const int yea
 
 	/************************************************************************/
 	/* values */
-	logger ( g_monthly_log, "%d,%d", c->years[year].year, month +1 );
+	logger ( g_monthly_log, "%d,%d,%d,%d", c->x, c->y, c->years[year].year, month +1 );
 
 	/* print class level values */
 	for ( layer = c->tree_layers_count - 1; layer >= 0; --layer )
@@ -2362,7 +2362,7 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 	/* heading */
 	if ( !year )
 	{
-		logger(g_annual_log, "%s", "YEAR");
+		logger(g_annual_log, "X,Y,YEAR");
 
 		for ( layer = c->tree_layers_count - 1; layer >= 0; --layer )
 		{
@@ -2526,7 +2526,7 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 
 
 	/* values */
-	logger(g_annual_log, "%d", c->years[year].year);
+	logger(g_annual_log, "%d,%d,%d", c->x, c->y, c->years[year].year);
 
 	/* print class level values */
 	if ( c->heights_count )
@@ -2787,7 +2787,7 @@ void EOD_print_output_soil_cell_level(cell_t *const c, const int day, const int 
 	/* heading */
 	if ( !day && !month && !year )
 	{
-		logger(g_daily_soil_log, "YEAR,MONTH,DAY");
+		logger(g_daily_soil_log, "X,Y,YEAR,MONTH,DAY");
 
 		/************************************************************************/
 		/* heading variables at cell level only if there's more than one layer */
@@ -2838,7 +2838,7 @@ void EOD_print_output_soil_cell_level(cell_t *const c, const int day, const int 
 	}
 
 	/* values */
-	logger(g_daily_soil_log, "%d,%d,%d", c->years[year].year, month + 1, day + 1);
+	logger(g_daily_soil_log, "%d,%d,%d,%d,%d", c->x, c->y, c->years[year].year, month + 1, day + 1);
 
 	/************************************************************************/
 
@@ -2910,7 +2910,7 @@ void EOM_print_output_soil_cell_level(cell_t *const c, const int month, const in
 	/* heading */
 	if ( !month && !year )
 	{
-		logger(g_monthly_soil_log, "YEAR,MONTH");
+		logger(g_monthly_soil_log, "X,Y,YEAR,MONTH");
 
 		/************************************************************************/
 		/* heading variables at cell level only if there's more than one layer */
@@ -2961,7 +2961,7 @@ void EOM_print_output_soil_cell_level(cell_t *const c, const int month, const in
 	}
 
 	/* values */
-	logger (g_monthly_soil_log, "%d,%d", c->years[year].year, month +1 );
+	logger (g_monthly_soil_log, "%d,%d,%d,%d", c->x, c->y, c->years[year].year, month +1 );
 
 	/************************************************************************/
 
@@ -3033,7 +3033,7 @@ void EOY_print_output_soil_cell_level(cell_t *const c, const int year, const int
 	/* heading */
 	if ( ! year )
 	{
-		logger(g_annual_soil_log, "%s", "YEAR");
+		logger(g_annual_soil_log, "X,Y,YEAR");
 
 		/************************************************************************/
 		/* heading variables at cell level only if there's more than one layer */
@@ -3085,7 +3085,7 @@ void EOY_print_output_soil_cell_level(cell_t *const c, const int year, const int
 	/*****************************************************************************************************/
 
 	/* values */
-	logger(g_annual_soil_log, "%d", c->years[year].year);
+	logger(g_annual_soil_log, "%d,%d,%d", c->x, c->y, c->years[year].year);
 
 	/************************************************************************/
 
