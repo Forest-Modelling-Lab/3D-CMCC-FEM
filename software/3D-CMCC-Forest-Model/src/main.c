@@ -1469,6 +1469,10 @@ int main(int argc, char *argv[]) {
 
 			years_of_simulation = i - g_year_start_index;
 		}
+		else
+		{
+			years_of_simulation -= g_year_start_index;
+		}
 
 		/* move pointer for year */
 		matrix->cells[cell].years += g_year_start_index;
@@ -1838,6 +1842,13 @@ int main(int argc, char *argv[]) {
 			}
 		}
 	}
+
+	EOD_cell_msg();
+	EOD_soil_msg();
+	EOM_cell_msg();
+	EOM_soil_msg();
+	EOY_cell_msg();
+	EOY_soil_msg();
 
 	for ( cell = 0; cell < matrix->cells_count; ++cell )
 	{

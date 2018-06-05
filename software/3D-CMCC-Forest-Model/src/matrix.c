@@ -1451,8 +1451,8 @@ matrix_t* matrix_create(const soil_settings_t*const s, const int count, const ch
 				/* check against x and y */
 				flag = 0;
 				for ( i = 0; i < m->cells_count; ++i ) {
-					if ( (d->rows[row].x == m->cells[i].x)
-							&& (d->rows[row].y == m->cells[i].y) ) {
+					if ( (d->rows[row].x == m->cells[i].x) && (d->rows[row].y == m->cells[i].y) )
+					{
 
 						if ( ! fill_cell_from_heights(&m->cells[i], &d->rows[row]) ) {
 							matrix_free(m);

@@ -332,8 +332,7 @@ int check_soil_water_flux_balance(cell_t *const c, const meteo_daily_t *const me
 	double out;
 	double store;
 	double balance;
-	static double old_store;
-
+	
 	logger(g_debug_log, "\n*********CHECK SOIL WATER BALANCE************\n");
 	/* DAILY CHECK ON SOIL POOL-ATMOSPHERE WATER BALANCE */
 	/* it takes into account soil-atmosphere fluxes */
@@ -348,7 +347,7 @@ int check_soil_water_flux_balance(cell_t *const c, const meteo_daily_t *const me
 	store   = c->asw;
 
 	/* check soil pool water balance */
-	balance = in - out - ( store - old_store );
+	balance = in - out - ( store - c->old_water_store );
 
 	logger(g_debug_log, "\nSOIL POOL WATER BALANCE\n");
 
@@ -356,6 +355,7 @@ int check_soil_water_flux_balance(cell_t *const c, const meteo_daily_t *const me
 	if ( ( fabs( balance ) > eps ) && ( c->dos > 1 ) )
 	{
 		error_log("DOS = %d\n", c->dos);
+		error_log("x,y = %d,%d\n", c->x, c->y);
 		error_log("\nin\n");
 		error_log("meteo_daily->rain = %g\n", meteo_daily->rain);
 		error_log("c->daily_snow_melt = %g\n", c->daily_snow_melt);
@@ -368,14 +368,14 @@ int check_soil_water_flux_balance(cell_t *const c, const meteo_daily_t *const me
 		error_log("soil water in = %g\n", in);
 		error_log("soil water out = %g\n", out);
 		error_log("soil water store = %g\n", store);
-		error_log("delta soil water balance = %g\n", store - old_store );
+		error_log("delta soil water balance = %g\n", store - c->old_water_store );
 		error_log("...FATAL ERROR IN 'Soil_model_daily' soil water balance (exit)\n");
 
 		return 0;
 	}
 	else
 	{
-		old_store = store;
+		c->old_water_store = store;
 		logger(g_debug_log, "...ok 'Soil_model_daily' soil water balance\n");
 	}
 	/* ok */

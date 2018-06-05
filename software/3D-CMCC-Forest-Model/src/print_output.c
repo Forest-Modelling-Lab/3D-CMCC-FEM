@@ -1668,8 +1668,6 @@ void print_model_settings(logger_t*const log)
 	{
 		logger(log, "#Year restart = off\n");
 	}
-
-
 }
 
 void EOD_print_output_cell_level(cell_t *const c, const int day, const int month, const int year, const int years_of_simulation )
@@ -1680,7 +1678,7 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 	int age;
 	int species;
 
-	static int years_counter;
+	static int print_header = 0;
 
 	species_t *s;
 
@@ -1688,8 +1686,10 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 	if ( ! g_daily_log ) return;
 
 	/* heading */
-	if ( !day && !month && !year )
+	if ( ! print_header )
 	{
+		print_header = 1;
+
 		logger(g_daily_log, "X,Y,YEAR,MONTH,DAY");
 
 		for ( layer = c->tree_layers_count - 1; layer >= 0; --layer )
@@ -2056,20 +2056,17 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 			c->years[year].m[month].d[day].daylength
 	);
 	/************************************************************************/
+}
 
-	if ( c->doy == ( IS_LEAP_YEAR( c->years[year].year ) ? 366 : 365 ) )
+void EOD_cell_msg(void)
+{
+	if ( g_daily_log )
 	{
-		++years_counter;
-
-		if ( years_counter ==  years_of_simulation)
-		{
-			logger(g_daily_log, sz_launched, netcdf_get_version(), datetime_current());
-			print_model_paths(g_daily_log);
-			//const char* p;
-			//p = file_get_name_only(g_daily_log->filename);
-			logger(g_daily_log, "#output file = %s\n", g_daily_log->filename);
-			print_model_settings(g_daily_log);
-		}
+		print_model_paths(g_daily_log);
+		//const char* p;
+		//p = file_get_name_only(g_daily_log->filename);
+		logger(g_daily_log, "#output file = %s\n", g_daily_log->filename);
+		print_model_settings(g_daily_log);
 	}
 }
 
@@ -2081,7 +2078,7 @@ void EOM_print_output_cell_level(cell_t *const c, const int month, const int yea
 	int age;
 	int species;
 
-	static int years_counter;
+	static int print_header = 0;
 
 	species_t *s;
 
@@ -2089,8 +2086,10 @@ void EOM_print_output_cell_level(cell_t *const c, const int month, const int yea
 	if ( ! g_monthly_log ) return;
 
 	/* heading */
-	if ( !month && !year )
+	if ( ! print_header )
 	{
+		print_header = 1;
+
 		logger(g_monthly_log, "X,Y,YEAR,MONTH");
 
 		for ( layer = c->tree_layers_count - 1; layer >= 0; --layer )
@@ -2300,23 +2299,18 @@ void EOM_print_output_cell_level(cell_t *const c, const int month, const int yea
 			c->monthly_lh_flux,
 			c->asw,
 			c->monthly_iwue);
+}
 
-	/************************************************************************/
-
-
-	if ( ( IS_LEAP_YEAR( c->years[year].year ) ? (MonthLength_Leap[11]) : (MonthLength[11] )) == c->doy )
+void EOM_cell_msg(void)
+{
+	if ( g_monthly_log )
 	{
-		++years_counter;
-
-		if ( years_counter ==  years_of_simulation)
-		{
-			logger(g_monthly_log, sz_launched, netcdf_get_version(), datetime_current());
-			print_model_paths(g_monthly_log);
-			//const char* p;
-			//p = file_get_name_only(g_monthly_log->filename);
-			logger(g_monthly_log, "#output file = %s\n", g_monthly_log->filename);
-			print_model_settings(g_monthly_log);
-		}
+		logger(g_monthly_log, sz_launched, netcdf_get_version(), datetime_current());
+		print_model_paths(g_monthly_log);
+		//const char* p;
+		//p = file_get_name_only(g_monthly_log->filename);
+		logger(g_monthly_log, "#output file = %s\n", g_monthly_log->filename);
+		print_model_settings(g_monthly_log);
 	}
 }
 
@@ -2328,7 +2322,7 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 	int age;
 	int species;
 
-	static int years_counter;
+	static int print_header = 0;
 
 	species_t *s;
 
@@ -2360,8 +2354,10 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 	 */
 
 	/* heading */
-	if ( !year )
+	if ( ! print_header )
 	{
+		print_header = 1;
+
 		logger(g_annual_log, "X,Y,YEAR");
 
 		for ( layer = c->tree_layers_count - 1; layer >= 0; --layer )
@@ -2758,11 +2754,11 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 	/************************************************************************/
 	/* end print */
 	logger(g_annual_log,"\n");
-	/************************************************************************/
+}
 
-	++years_counter;
-
-	if ( years_counter ==  years_of_simulation)
+void EOY_cell_msg(void)
+{
+	if  ( g_annual_log )
 	{
 		g_annual_log->std_output = 1;
 		logger(g_annual_log, sz_launched, netcdf_get_version(), datetime_current());
@@ -2779,14 +2775,16 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 
 void EOD_print_output_soil_cell_level(cell_t *const c, const int day, const int month, const int year, const int years_of_simulation )
 {
-	static int years_counter;
+	static int print_header = 0;
 
 	/* return if monthly logging is off*/
 	if ( ! g_daily_soil_log ) return;
 
 	/* heading */
-	if ( !day && !month && !year )
+	if ( ! print_header )
 	{
+		print_header = 1;
+
 		logger(g_daily_soil_log, "X,Y,YEAR,MONTH,DAY");
 
 		/************************************************************************/
@@ -2883,33 +2881,33 @@ void EOD_print_output_soil_cell_level(cell_t *const c, const int day, const int 
 			c->soil2N,
 			c->soil3N,
 			c->soil4N);
+}
 
-	if ( c->doy == ( IS_LEAP_YEAR( c->years[year].year ) ? 366 : 365 ) )
+void EOD_soil_msg(void)
+{
+	if ( g_daily_soil_log )
 	{
-		++years_counter;
-
-		if ( years_counter ==  years_of_simulation)
-		{
-			logger(g_daily_soil_log, sz_launched, netcdf_get_version(), datetime_current());
-			print_model_paths(g_daily_soil_log);
-			//const char* p;
-			//p = file_get_name_only(g_daily_soil_log->filename);
-			logger(g_daily_soil_log, "#output file = %s\n", g_daily_soil_log->filename);
-			print_model_settings(g_daily_soil_log);
-		}
+		logger(g_daily_soil_log, sz_launched, netcdf_get_version(), datetime_current());
+		print_model_paths(g_daily_soil_log);
+		//const char* p;
+		//p = file_get_name_only(g_daily_soil_log->filename);
+		logger(g_daily_soil_log, "#output file = %s\n", g_daily_soil_log->filename);
+		print_model_settings(g_daily_soil_log);
 	}
 }
 
 void EOM_print_output_soil_cell_level(cell_t *const c, const int month, const int year, const int years_of_simulation )
 {
-	static int years_counter;
+	static int print_header = 0;
 
 	/* return if monthly logging is off*/
 	if ( ! g_monthly_soil_log ) return;
 
 	/* heading */
-	if ( !month && !year )
+	if ( ! print_header )
 	{
+		print_header = 1;
+
 		logger(g_monthly_soil_log, "X,Y,YEAR,MONTH");
 
 		/************************************************************************/
@@ -3006,33 +3004,33 @@ void EOM_print_output_soil_cell_level(cell_t *const c, const int month, const in
 			c->soil2N,
 			c->soil3N,
 			c->soil4N);
+}
 
-	if ( ( IS_LEAP_YEAR( c->years[year].year ) ? (MonthLength_Leap[11]) : (MonthLength[11] )) == c->doy )
+void EOM_soil_msg(void)
+{
+	if ( g_monthly_soil_log )
 	{
-		++years_counter;
-
-		if ( years_counter ==  years_of_simulation)
-		{
-			logger(g_monthly_soil_log, sz_launched, netcdf_get_version(), datetime_current());
-			print_model_paths(g_monthly_soil_log);
-			//const char* p;
-			//p = file_get_name_only(g_monthly_soil_log->filename);
-			logger(g_monthly_soil_log, "#output file = %s\n", g_monthly_soil_log->filename);
-			print_model_settings(g_monthly_soil_log);
-		}
+		logger(g_monthly_soil_log, sz_launched, netcdf_get_version(), datetime_current());
+		print_model_paths(g_monthly_soil_log);
+		//const char* p;
+		//p = file_get_name_only(g_monthly_soil_log->filename);
+		logger(g_monthly_soil_log, "#output file = %s\n", g_monthly_soil_log->filename);
+		print_model_settings(g_monthly_soil_log);
 	}
 }
 
 void EOY_print_output_soil_cell_level(cell_t *const c, const int year, const int years_of_simulation )
 {
-	static int years_counter;
+	static int print_header = 0;
 
 	/* return if annual logging is off*/
 	if ( ! g_annual_soil_log ) return;
 
 	/* heading */
-	if ( ! year )
+	if ( ! print_header )
 	{
+		print_header = 1;
+
 		logger(g_annual_soil_log, "X,Y,YEAR");
 
 		/************************************************************************/
@@ -3129,12 +3127,11 @@ void EOY_print_output_soil_cell_level(cell_t *const c, const int year, const int
 			c->soil2N,
 			c->soil3N,
 			c->soil4N);
+}
 
-	/************************************************************************/
-
-	++years_counter;
-
-	if ( years_counter == years_of_simulation )
+void EOY_soil_msg(void)
+{
+	if ( g_annual_soil_log )
 	{
 		g_annual_soil_log->std_output = 1;
 		logger(g_annual_soil_log, sz_launched, netcdf_get_version(), datetime_current());
@@ -3145,4 +3142,5 @@ void EOY_print_output_soil_cell_level(cell_t *const c, const int year, const int
 		print_model_settings(g_annual_soil_log);
 	}
 }
+
 #endif

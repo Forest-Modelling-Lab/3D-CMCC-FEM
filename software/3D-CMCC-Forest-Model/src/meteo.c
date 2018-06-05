@@ -2233,23 +2233,36 @@ meteo_annual_t* import_meteo_data(const char *const file, int *const yos_count, 
 #if 0
 	/* save imported yos for debugging purposes */
 	{
-		char buffer[64];
 		int i;
 		int month;
 		int z;
 		FILE *f;
 
+		f = fopen("debug_met_daily.csv", "w");
+		if ( ! f ) {
+			puts("unable to create debug_met_daily.csv");
+			free(meteo_annual);
+			return NULL;
+		}
+		fputs("year,month,day,co2_conc,n_days,solar_rad,tavg,tmax,tmin,tday,tnight,vpd,ts_f"
+				",rain,swc,ndvi_lai,daylength,thermic_sum"
+				",rho_air,tsoil,et,windspeed\n", f);
+
 		for ( i = 0; i < *yos_count; ++i ) {
-			sprintf(buffer, "debug_met_daily_%d.csv", yos[i].year);
+			/*
+			char buffer[64];
+
+			sprintf(buffer, "debug_met_daily_%d.csv", meteo_annual[i].year);
 			f = fopen(buffer, "w");
 			if ( ! f ) {
 				printf("unable to create %s\n", buffer);
-				free(yos);
+				free(meteo_annual);
 				return NULL;
 			}
 			fputs("year,month,day,co2_conc,n_days,solar_rad,tavg,tmax,tmin,tday,tnight,vpd,ts_f"
 					",rain,swc,ndvi_lai,daylength,thermic_sum"
 					",rho_air,tsoil,et,windspeed\n", f);
+					*/
 
 			for ( month = 0; month < 12; ++month ) {
 				for ( z = 0; z < 31; ++z ) {
@@ -2257,11 +2270,13 @@ meteo_annual_t* import_meteo_data(const char *const file, int *const yos_count, 
 					{
 						break;
 					}
-					fprintf(f, "%d,%d,%d,%g,%d,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g\n"
+					fprintf(f, "%d,%d,%d,"
+								//"%g,"
+								"%d,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g\n"
 							, meteo_annual[i].year
 							, month+1
 							, z+1
-							, meteo_annual[i].co2_conc
+							//, meteo_annual[i].co2_conc
 							, meteo_annual[i].m[month].d[z].n_days
 							, meteo_annual[i].m[month].d[z].solar_rad
 							, meteo_annual[i].m[month].d[z].tavg
