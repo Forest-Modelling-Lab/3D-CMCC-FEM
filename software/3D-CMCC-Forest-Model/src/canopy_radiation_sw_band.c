@@ -213,9 +213,6 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 
 void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species,  meteo_daily_t *const meteo_daily)
 {
-	static int cell_height_class_counter;
-	static int layer_height_class_counter;
-
 	double Light_abs_frac, Light_abs_frac_sun, Light_abs_frac_shade;       /* (ratio) fraction of PAR and Short Wave radiation absorbed */
 	double Light_trasm_frac, Light_trasm_frac_sun, Light_trasm_frac_shade; /* (ratio) fraction of PAR and Short Wave radiation transmitted */
 
@@ -225,16 +222,9 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 	double Light_refl_sw_frac;                                             /* (ratio) fraction of Short Wave radiation reflected from the canopy */
 	double Light_refl_sw_frac_sun;                                         /* (ratio) fraction of Short Wave radiation reflected from sun leaves */
 	double Light_refl_sw_frac_shade;                                       /* (ratio) fraction of Short Wave radiation reflected from shaded leaves */
-	double Light_refl_net_rad_frac;                                             /* (ratio) fraction of Net radiation reflected from the canopy */
-	double Light_refl_net_rad_frac_sun;                                         /* (ratio) fraction of Net radiation reflected from sun leaves */
-	double Light_refl_net_rad_frac_shade;                                       /* (ratio) fraction of Net radiation reflected from shaded leaves */
-	static double temp_apar;                                               /* temporary absorbed PAR for layer */
-	static double temp_par_refl;                                           /* temporary reflected PAR for layer */
-	static double temp_sw_rad_abs;                                         /* temporary absorbed short wave for layer */
-	static double temp_sw_rad_refl;                                        /* temporary reflected short wave for layer */
-	static double temp_net_rad_abs;                                         /* temporary absorbed Net radiation for layer */
-	static double temp_net_rad_refl;                                        /* temporary reflected Net radiation for layer */
-
+	double Light_refl_net_rad_frac;                                        /* (ratio) fraction of Net radiation reflected from the canopy */
+	double Light_refl_net_rad_frac_sun;                                    /* (ratio) fraction of Net radiation reflected from sun leaves */
+	double Light_refl_net_rad_frac_shade;                                  /* (ratio) fraction of Net radiation reflected from shaded leaves */
 	double k;
 	//double k_eff;
 
@@ -298,50 +288,28 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 	Light_refl_par_frac_sun   = (s->value[ALBEDO] /3. ) * ( 1 - exp ( - k * s->value[LAI_SUN_PROJ]));
 	Light_refl_par_frac_shade = (s->value[ALBEDO] /3. ) * ( 1 - exp ( - k * s->value[LAI_SHADE_PROJ]));
 
-	logger(g_debug_log, "Light_trasm_frac          = %f\n", Light_trasm_frac);
-	logger(g_debug_log, "Light_trasm_frac_sun      = %f\n", Light_trasm_frac_sun);
-	logger(g_debug_log, "Light_trasm_frac_shade    = %f\n", Light_trasm_frac_shade);
-
-	logger(g_debug_log, "Light_abs_frac            = %f\n", Light_abs_frac);
-	logger(g_debug_log, "Light_abs_frac_sun        = %f\n", Light_abs_frac_sun);
-	logger(g_debug_log, "Light_abs_frac_shade      = %f\n", Light_abs_frac_shade);
-
-	logger(g_debug_log, "Light_refl_sw_frac        = %f\n", Light_refl_sw_frac);
-	logger(g_debug_log, "Light_refl_sw_frac_sun    = %f\n", Light_refl_sw_frac_sun);
-	logger(g_debug_log, "Light_refl_sw_frac_shade  = %f\n", Light_refl_sw_frac_shade);
-
-	logger(g_debug_log, "Light_refl_net_rad_frac        = %f\n", Light_refl_net_rad_frac);
-	logger(g_debug_log, "Light_refl_net_rad_frac_sun    = %f\n", Light_refl_net_rad_frac_sun);
-	logger(g_debug_log, "Light_refl_net_rad_frac_shade  = %f\n", Light_refl_net_rad_frac_shade);
-
-	logger(g_debug_log, "Light_refl_par_frac       = %f\n", Light_refl_par_frac);
-	logger(g_debug_log, "Light_refl_par_frac_sun   = %f\n", Light_refl_par_frac_sun);
-	logger(g_debug_log, "Light_refl_par_frac_shade = %f\n", Light_refl_par_frac_shade);
-
 	//fixme set that if gapcover is bigger then 0.5 albedo should be considered also in dominated layer!!!!
 	//fixme following MAESPA (Duursma et al.,) and from Campbell & Norman (2000, p. 259) dominated layers should have just shaded leaves
 
 	/* RADIATION */
 	/*****************************************************************************************************************/
 	/* first height class in the cell is processed */
-	if( !layer_height_class_counter && !cell_height_class_counter )
+	if( ! l->layer_height_class_counter && ! c->cell_height_class_counter )
 	{
 		/* reset temporary values when the first height class in layer is processed */
-		temp_apar         = 0.;
-		temp_par_refl     = 0.;
-		temp_sw_rad_abs   = 0.;
-		temp_sw_rad_refl  = 0.;
-		temp_net_rad_abs  = 0.;
-		temp_net_rad_refl = 0.;
+		c->temp_apar         = 0.;
+		c->temp_par_refl     = 0.;
+		c->temp_sw_rad_abs   = 0.;
+		c->temp_sw_rad_refl  = 0.;
+		c->temp_net_rad_abs  = 0.;
+		c->temp_net_rad_refl = 0.;
 	}
 	/*****************************************************************************************************************/
 
 	/* shared functions among all class/layers */
 	/* counters */
-	++layer_height_class_counter;
-	++cell_height_class_counter;
-
-	logger(g_debug_log, "layer_height_class_counter = %d\n", layer_height_class_counter);
+	++l->layer_height_class_counter;
+	++c->cell_height_class_counter;
 
 	/*************************************************************************/
 	/* compute reflected, absorbed and transmitted Par, Short Wave radiation and PPFD class level */
@@ -352,35 +320,35 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 	/* temporary absorbed and reflected values */
 
 	/* update temporary absorbed and reflected PAR for lower layer */
-	temp_apar       += s->value[APAR];
-	c->apar         += s->value[APAR];
+	c->temp_apar       += s->value[APAR];
+	c->apar            += s->value[APAR];
 	logger(g_debug_log,"cum apar = %f\n", c->apar);
 
-	temp_par_refl   += s->value[PAR_REFL];
-	c->par_refl     += s->value[PAR_REFL];
+	c->temp_par_refl   += s->value[PAR_REFL];
+	c->par_refl        += s->value[PAR_REFL];
 	logger(g_debug_log,"cum par_refl = %f\n", c->par_refl);
 
 	/* update temporary absorbed and transmitted Short Wave radiation lower layer */
-	temp_sw_rad_abs  += s->value[SW_RAD_ABS];
-	c->sw_rad_abs    += s->value[SW_RAD_ABS];
+	c->temp_sw_rad_abs  += s->value[SW_RAD_ABS];
+	c->sw_rad_abs       += s->value[SW_RAD_ABS];
 	logger(g_debug_log,"cum sw_rad_abs = %f\n", c->sw_rad_abs);
 
-	temp_sw_rad_refl += s->value[SW_RAD_REFL];
-	c->sw_rad_refl   += s->value[SW_RAD_REFL];
+	c->temp_sw_rad_refl += s->value[SW_RAD_REFL];
+	c->sw_rad_refl      += s->value[SW_RAD_REFL];
 	logger(g_debug_log,"cum sw_rad_refl = %f\n", c->sw_rad_refl);
 
 	/* update temporary absorbed and transmitted net radiation lower layer */
-	temp_net_rad_abs += s->value[NET_RAD_ABS];
-	c->net_rad_abs   += s->value[NET_RAD_ABS];
+	c->temp_net_rad_abs += s->value[NET_RAD_ABS];
+	c->net_rad_abs      += s->value[NET_RAD_ABS];
 	logger(g_debug_log,"cum net_rad_abs = %f\n", c->net_rad_abs);
 
-	temp_net_rad_refl += s->value[NET_RAD_REFL];
-	c->net_rad_refl   += s->value[NET_RAD_REFL];
+	c->temp_net_rad_refl += s->value[NET_RAD_REFL];
+	c->net_rad_refl      += s->value[NET_RAD_REFL];
 	logger(g_debug_log,"cum net_rad_refl = %f\n", c->net_rad_refl);
 
 	/*****************************************************************************************************************/
 	/* when it matches the last height class in the layer is processed */
-	if ( l->layer_n_height_class == layer_height_class_counter )
+	if ( l->layer_n_height_class == l->layer_height_class_counter )
 	{
 		logger(g_debug_log,"\n************************************\n");
 		logger(g_debug_log,"last height class in layer processed\n");
@@ -388,13 +356,13 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 
 		/* compute values for lower layer when last height class in layer is processed */
 		/* compute par for lower layer */
-		meteo_daily->par           -= (temp_apar + temp_par_refl);
+		meteo_daily->par           -= (c->temp_apar + c->temp_par_refl);
 
 		/* compute Short Wave radiation for lower layesr */
-		meteo_daily->sw_downward_W -= (temp_sw_rad_abs + temp_sw_rad_refl);
+		meteo_daily->sw_downward_W -= (c->temp_sw_rad_abs + c->temp_sw_rad_refl);
 
 		/* compute Net radiation for lower layesr */
-		meteo_daily->Net_rad_threePG -= (temp_net_rad_abs + temp_net_rad_refl);
+		meteo_daily->Net_rad_threePG -= (c->temp_net_rad_abs + c->temp_net_rad_refl);
 
 		logger(g_debug_log, "Radiation for lower layers\n");
 		logger(g_debug_log, "PAR                   = %f molPAR/m2/day\n", meteo_daily->par);
@@ -402,22 +370,22 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 		logger(g_debug_log, "Short Net_rad_threePG = %f W/m2\n", meteo_daily->Net_rad_threePG);
 
 		/* reset temporary values when the last height class in layer is processed */
-		temp_apar         = 0.;
-		temp_par_refl     = 0.;
-		temp_sw_rad_abs   = 0.;
-		temp_sw_rad_refl  = 0.;
-		temp_net_rad_abs  = 0.;
-		temp_net_rad_refl = 0.;
+		c->temp_apar         = 0.;
+		c->temp_par_refl     = 0.;
+		c->temp_sw_rad_abs   = 0.;
+		c->temp_sw_rad_refl  = 0.;
+		c->temp_net_rad_abs  = 0.;
+		c->temp_net_rad_refl = 0.;
 
 		/* reset counter */
-		layer_height_class_counter = 0;
+		l->layer_height_class_counter = 0;
 	}
 
 	/*************************************************************************/
 	/* when matches the last height class in the cell is processed */
 	//fixme sometimes it doesn't go in caused by the a jump in "cell_height_class_counter"
 	//as it is now is used just for print data but it should be fixed
-	if ( c->heights_count == cell_height_class_counter )
+	if ( c->heights_count == c->cell_height_class_counter )
 	{
 		logger(g_debug_log,"\n************************************\n");
 		logger(g_debug_log, "last height class in cell processed\n");
