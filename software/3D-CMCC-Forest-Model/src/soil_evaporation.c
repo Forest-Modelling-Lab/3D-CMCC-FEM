@@ -165,7 +165,7 @@ void soil_evaporation(cell_t *const c, const meteo_daily_t *const meteo_daily)
 
 void Soil_evaporation_old(cell_t *const c, const meteo_daily_t *const meteo_daily)
 {
-	static double PotEvap;            //Potential evapotranspiration
+	double PotEvap;            //Potential evapotranspiration
 	double cc = 0.;
 	double sat, gamma;
 
@@ -184,7 +184,7 @@ void Soil_evaporation_old(cell_t *const c, const meteo_daily_t *const meteo_dail
 
 		//FIXME SHOULD ADD PART OF NET RAD TRASMITTED THORUGH THE CANOPIES
 		/* converting W/m^2 in Joule/m^2/day */
-		PotEvap = (sat / (sat + gamma )) * (meteo_daily->sw_downward_W * 86400) / meteo_daily->lh_vap_soil;
+		PotEvap = ( sat / ( sat + gamma ) ) * ( meteo_daily->sw_downward_W * 86400. ) / meteo_daily->lh_vap_soil;
 		logger(g_debug_log, "Soil Potential Evaporation = %g mm+Kg/day\n", PotEvap);
 		if(PotEvap <0)
 		{

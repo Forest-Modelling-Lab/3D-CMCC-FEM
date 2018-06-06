@@ -18,18 +18,10 @@ extern logger_t* g_debug_log;
 
 void print_daily_met_data(cell_t *c, const int day, const int month, const int year)
 {
-	static int doy;
-
 	meteo_t *met;
 	meteo_annual_t *meteo_annual;
 	met = c->years[year].m;
 	meteo_annual = &c->years[year];
-
-	if (!day && !month)
-	{
-		doy = 0;
-	}
-	doy += 1;
 
 	logger(g_debug_log, "***************\n");
 	logger(g_debug_log, "**Daily MET DATA day %d month %d, year %d (yos %d)**\n", day + 1, month + 1, c->years[year].year, year + 1);
@@ -88,7 +80,7 @@ void print_daily_met_data(cell_t *c, const int day, const int month, const int y
 			met[month].d[day].es,
 			met[month].d[day].ea,
 			met[month].d[day].psych,
-			doy
+			c->doy
 	);
 
 	logger(g_debug_log,"-co2 concentration (variable) = %f ppmv\n", meteo_annual->co2Conc);

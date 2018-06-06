@@ -393,7 +393,7 @@ int annual_forest_structure(cell_t* const c, const int year)
 
 							/*************** self-thinning ****************/
 							/* note: special case for ISIMIP, avoid self thinning when management is 'var' */
-							if ( ( c->years[year].year >= g_settings->year_start_management ) && ( MANAGEMENT_VAR == g_settings->management ) )
+							if ( ( ( c->years[year].year >= g_settings->year_start_management ) && ( MANAGEMENT_VAR == g_settings->management ) )  || ( MANAGEMENT_OFF == g_settings->management ) )
 							{
 								if ( s->value[DBHDC_EFF] <= s->value[DBHDCMIN] )
 								{

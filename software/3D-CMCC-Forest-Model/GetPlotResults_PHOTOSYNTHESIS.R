@@ -68,12 +68,12 @@ time_list_output = c('annual','monthly','daily')
 
 # single or multiple simulations
 build_list<-c('Debug')        #, 'Release')
-site_list<-c("Soroe")
+site_list<-c("All")
 esm_list <-c("2")             # ("1","2","3","4","5", "All")
 rcp_list <-c("All")           # ("0p0","2p6","4p5","6p0","8p5","All")
 man_list <-c("off")           # ("on",off","All")
 co2_list <-c("on")            # ("on",off","All")
-protocol_list<-c("FT")        # ("2A","2B","All") 
+protocol_list<-c("LOCAL")        # ("2A","2B","All") 
 local_list<-c('off')          # ("on","off") to include local simulation of not under FT protocol
 climate_off_list<-c('off')    # ("on",off","All") for climate off and co2 on
 photosynthesis_list<-c('FvCB') #("FvCB",'LUE') for photosyhtesis approach
@@ -659,6 +659,14 @@ df_siti = read.csv('sites_isimip.csv')
 
 for (cy_s in site_list) {
   dir_in_gen = paste0(getwd(),"/output/",output_folder,"-", version, "-", cy_s,'/')
+  if ( is.na(df_siti$fluxnet_code[df_siti$model_name == cy_s]) ) {
+    if (length(lista_files) == 0 ) {
+      cat(sprintf('\n\nfile: %s NOT FOUND\n\n',
+                  paste0('FLX_',cy_s)))
+      next
+    }
+  }
+  
   site_code = as.character(df_siti$fluxnet_code[df_siti$model_name == cy_s])
   
   # importo i dati fluxnet DD ----
@@ -667,8 +675,9 @@ for (cy_s in site_list) {
   lista_files = lista_files[grep(paste0('FLX_',as.character(site_code)),lista_files)]
   
   if (length(lista_files) == 0 ) {
-    stop(sprintf('file: %s\n NOT FOUND',
+    cat(sprintf('\n\nfile: %s NOT FOUND\n\n',
                  paste0('FLX_',site_code)))
+    next
   }
   file_ec = lista_files
   

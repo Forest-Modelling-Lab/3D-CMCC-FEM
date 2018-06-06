@@ -984,6 +984,19 @@ typedef struct
 	int y;                                                                /* cell index within the matrix */
 	double elev;                                                          /* cell elevation (m) */
 	int north;                                                            /* northern hemisphere north = 0, south hemisphere south = 1 */
+	int doy_daylength;
+
+	//fixme ALESSIOR move to meteo struct!
+	double previous_thermic_sum;
+	double previous_solar_rad;
+	double doubleprevious_tavg;
+	double previous_tmax;
+	double previous_tmin;
+	double previous_vpd;
+	double previous_ts_f;
+	double previous_prcp;
+	double previous_swc;
+	double previous_ndvi_lai;
 
 	/* annual met values */
 	double abscission_daylength;                                          /* (hrs/day) day length for starting abscission (not used) */

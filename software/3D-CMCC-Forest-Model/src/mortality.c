@@ -89,10 +89,12 @@ void self_thinning_mortality (cell_t *const c, const int layer, const int year)
 //					{
 					while (s->value[DBHDC_EFF] <  s->value[DBHDCMIN] )
 					{
+
 						/* remove one single tree at each run */
 						++deadtree;
 						--livetree;
 
+						/* check */
 						CHECK_CONDITION(livetree, ==, 0);
 
 						/* impose DBHDC_EFF = DBHDCMIN */

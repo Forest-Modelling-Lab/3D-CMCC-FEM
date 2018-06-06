@@ -212,32 +212,32 @@ double Farquhar_BB (cell_t *const c, species_t *const s,const meteo_daily_t *con
 
 #if 0
 	/* Badger and Collatz 1977 */
-	static double Kc25          = 404;    /* (ubar or umol mol-1) Michaelis-Menten const carboxylase, 25 deg C  Badger and Collatz value*/
-	static double Ea_Kc         = 59400;  /* (J mol-1) Activation energy for carboxylase */
-	static double Ko25          = 248000; /* (ubar or umol mol-1) Michaelis-Menten const oxygenase, 25 deg C 248 Badger and Collatz, 278.4 Bernacchi et al., 2001 */
-	static double Ea_Ko         = 36000;  /* (J mol-1) Activation energy for oxygenase */
+	const double Kc25          = 404;    /* (ubar or umol mol-1) Michaelis-Menten const carboxylase, 25 deg C  Badger and Collatz value*/
+	const double Ea_Kc         = 59400;  /* (J mol-1) Activation energy for carboxylase */
+	const double Ko25          = 248000; /* (ubar or umol mol-1) Michaelis-Menten const oxygenase, 25 deg C 248 Badger and Collatz, 278.4 Bernacchi et al., 2001 */
+	const double Ea_Ko         = 36000;  /* (J mol-1) Activation energy for oxygenase */
 #else
 	/* Bernacchi et al., 2001 */
-	static double Kc25          = 404.9;  /* (ubar or umol mol-1) Michaelis-Menten const carboxylase, 25 deg C  Badger and Collatz value*/
-	static double Ea_Kc         = 79430;  /* (J mol-1) Activation energy for carboxylase */
-	static double Ko25          = 278400; /* (ubar or umol mol-1) Michaelis-Menten const oxygenase, 25 deg C 248 Badger and Collatz, 278.4 Bernacchi et al., 2001 */
-	static double Ea_Ko         = 36380;  /* (J mol-1) Activation energy for oxygenase */
+	const double Kc25          = 404.9;  /* (ubar or umol mol-1) Michaelis-Menten const carboxylase, 25 deg C  Badger and Collatz value*/
+	const double Ea_Kc         = 79430;  /* (J mol-1) Activation energy for carboxylase */
+	const double Ko25          = 278400; /* (ubar or umol mol-1) Michaelis-Menten const oxygenase, 25 deg C 248 Badger and Collatz, 278.4 Bernacchi et al., 2001 */
+	const double Ea_Ko         = 36380;  /* (J mol-1) Activation energy for oxygenase */
 #endif
 
-	static double act25         = 60;     /* (umol CO2 g-1 Rubisco s-1) specific activity of Rubisco at 25 °C */
-	static double phiII         = 0.85;   /* (DIM) fraction of PAR effectively absorbed by photosytem II (leaf absorptance); 0.8 for Bonan et al., 2011 */
-	static double fnr           = 7.16;   /* (DIM) g Rubisco/gN Rubisco weight proportion of rubisco relative to its N content Kuehn and McFadden (1969) */
-	static double thetaII       = 0.7;    /* (DIM) curvature of the light-response curve of electron transport (DePury and Farquhar, 1997, Bonan et al., 2011) */
-	static double ppe           = 2.6;    /* (mol e- /mol photons) photons absorbed by PSII per e- transported (quantum yield of electron transport) dePury and Farquhar 1997*/
+	const double act25         = 60;     /* (umol CO2 g-1 Rubisco s-1) specific activity of Rubisco at 25 °C */
+	const double phiII         = 0.85;   /* (DIM) fraction of PAR effectively absorbed by photosytem II (leaf absorptance); 0.8 for Bonan et al., 2011 */
+	const double fnr           = 7.16;   /* (DIM) g Rubisco/gN Rubisco weight proportion of rubisco relative to its N content Kuehn and McFadden (1969) */
+	const double thetaII       = 0.7;    /* (DIM) curvature of the light-response curve of electron transport (DePury and Farquhar, 1997, Bonan et al., 2011) */
+	const double ppe           = 2.6;    /* (mol e- /mol photons) photons absorbed by PSII per e- transported (quantum yield of electron transport) dePury and Farquhar 1997*/
 
 	/* temperature control */
-	static double Ea_V          = 51560;  /* (J mol-1) Activation energy for J see Maespa */
-	static double S_V           = 472.;   /* (JK-1 mol) Vmax temperature response parameter */
-	static double H_V           = 144568; /* (J mol-1) Vmax curvature parameter */
-	static double Ea_J          = 43790;  /* (J mol-1) Activation energy for J see Maespa */
-	static double S_J           = 710 ;   /* (JK-1 mol) electron-transport temperature response parameter */
-	static double H_J           = 220000; /* (J mol-1) curvature parameter of J */
-	//static double Ea_Rub        = ?????;  /* (kJ mol-1) Activation energy for Rubisco */
+	const double Ea_V          = 51560;  /* (J mol-1) Activation energy for J see Maespa */
+	double S_V           = 472.;   /* (JK-1 mol) Vmax temperature response parameter */
+	const double H_V           = 144568; /* (J mol-1) Vmax curvature parameter */
+	const double Ea_J          = 43790;  /* (J mol-1) Activation energy for J see Maespa */
+	double S_J           = 710 ;   /* (JK-1 mol) electron-transport temperature response parameter */
+	const double H_J           = 220000; /* (J mol-1) curvature parameter of J */
+	//const double Ea_Rub        = ?????;  /* (kJ mol-1) Activation energy for Rubisco */
 
 	/* local variables */
 	double Kc;                            /* (umol/mol) Michaelis-Menten constant for carboxylase reaction */
@@ -284,13 +284,13 @@ double Farquhar_BB (cell_t *const c, species_t *const s,const meteo_daily_t *con
 	double cij;
 
 	//todo todo todo todo todo move in species.txt (this should be the only variable for all photosynthesis)
-	static double beta       = 1.67; /* Jmax:Vcmax note: in Medlyn et al., 2002 */
-	//static double beta       = 2.1; /* ratio between Vcmax and Jmax see dePury and Farquhar 1997; for fagus see Liozon et al., (2000) and Castanea */
+	const double beta       = 1.67; /* Jmax:Vcmax note: in Medlyn et al., 2002 */
+	//const double beta       = 2.1; /* ratio between Vcmax and Jmax see dePury and Farquhar 1997; for fagus see Liozon et al., (2000) and Castanea */
 
-	static double test_Vcmax = 55 ; /* (umol/m2/sec) Vcmax for fagus see Deckmyn et al., 2004 GCB */
-	static double test_Jmax  = 100; /* (umol/m2/sec) Jmax for fagus see Deckmyn et al., 2004 GCB */
+	const double test_Vcmax = 55 ; /* (umol/m2/sec) Vcmax for fagus see Deckmyn et al., 2004 GCB */
+	const double test_Jmax  = 100; /* (umol/m2/sec) Jmax for fagus see Deckmyn et al., 2004 GCB */
 
-	static int test_assimilation = 0; /* 0 uses min (Av, Aj), 1 only Av, 2 only Aj */
+	const int test_assimilation = 0; /* 0 uses min (Av, Aj), 1 only Av, 2 only Aj */
 
 	double conv;                           /* conversion factor for conductance from m/s to mol/m/sec Chen et al., 1999 */
 

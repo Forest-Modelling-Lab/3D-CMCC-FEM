@@ -322,7 +322,7 @@ void Day_Length(cell_t *c, const int day, const int month, const int year)
 {
 
 	double ampl;  //seasonal variation in Day Length from 12 h
-	static int doy;
+
 	//double adjust_latitude;
 
 	/* BIOME-BGC version */
@@ -331,12 +331,13 @@ void Day_Length(cell_t *c, const int day, const int month, const int year)
 	meteo_t *met;
 	met = c->years[year].m;
 
-	/* compute doy for GeDdayLength function */
-	if (!day && month == JANUARY)
+	/* compute doy for DayLength function */
+	if ( ! day && month == JANUARY )
 	{
-		doy = 0;
+		c->doy_daylength = 0;
 	}
-	doy +=1;
+	++c->doy_daylength;
+
 
 	//4/apr/2016
 	//test following Schwalm & Ek 2004 instead of only geographical latitude adjusted latitude is used
@@ -346,17 +347,17 @@ void Day_Length(cell_t *c, const int day, const int month, const int year)
 	//	met[month].d[day].daylength = ampl * (sin ((doy - 79) * 0.01721)) + 12;
 	//logger(g_debug_log, "with altitude = %f\n", met[month].d[day].daylength);
 
-	ampl = (exp (7.42 + (0.045 * g_soil_settings->values[SOIL_LAT]))) / 3600.;
+	ampl = ( exp ( 7.42 + ( 0.045 * g_soil_settings->values[SOIL_LAT] ) ) ) / 3600.;
 
 	/* compute daylength in hours */
-	met[month].d[day].daylength     = ampl * (sin ((doy - 79.) * 0.01721)) + 12.;
+	met[month].d[day].daylength     = ampl * ( sin ( ( c->doy_daylength - 79. ) * 0.01721 ) ) + 12.;
 
 	/* compute daylength in seconds */
 	met[month].d[day].daylength_sec = met[month].d[day].daylength * 3600.;
 
 
 	/* compute fraction of daytime */
-	met[month].d[day].ni = met[month].d[day].daylength/24.0;
+	met[month].d[day].ni = met[month].d[day].daylength / 24.;
 
 }
 
@@ -415,23 +416,22 @@ void Nightime_avg_temperature(meteo_t *const met, const int day, const int month
 	}
 }
 
-void Thermic_sum (meteo_t *met, const int day, const int month, const int year)
+void Thermic_sum (cell_t * c, meteo_t *met, const int day, const int month, const int year)
 {
-	static double previous_thermic_sum;
 
-	if (!day && !month)
+	if ( !day && !month )
 	{
 		met[month].d[day].thermic_sum = 0.;
 
 		if(met[month].d[day].tavg > GDD_BASIS)
 		{
 			met[month].d[day].thermic_sum = met[month].d[day].tavg - GDD_BASIS;
-			previous_thermic_sum = met[month].d[day].thermic_sum;
+			c->previous_thermic_sum = met[month].d[day].thermic_sum;
 		}
 		else
 		{
 			met[month].d[day].thermic_sum = 0.;
-			previous_thermic_sum          = 0.;
+			c->previous_thermic_sum          = 0.;
 		}
 		if (met[month].d[day].tavg == NO_DATA)
 			logger(g_debug_log, "tavg NO_DATA!!\n");
@@ -440,12 +440,12 @@ void Thermic_sum (meteo_t *met, const int day, const int month, const int year)
 	{
 		if(met[month].d[day].tavg > GDD_BASIS)
 		{
-			met[month].d[day].thermic_sum = previous_thermic_sum + (met[month].d[day].tavg - GDD_BASIS);
-			previous_thermic_sum = met[month].d[day].thermic_sum;
+			met[month].d[day].thermic_sum = c->previous_thermic_sum + (met[month].d[day].tavg - GDD_BASIS);
+			c->previous_thermic_sum = met[month].d[day].thermic_sum;
 		}
 		else
 		{
-			met[month].d[day].thermic_sum = previous_thermic_sum;
+			met[month].d[day].thermic_sum = c->previous_thermic_sum;
 		}
 		if (met[month].d[day].tavg == NO_DATA)
 			logger(g_debug_log, "tavg NO_DATA!!\n");
