@@ -75,8 +75,6 @@ void self_thinning_mortality (cell_t *const c, const int layer, const int year)
 
 				for ( species = 0; species < a->species_count; ++species )
 				{
-					int test_counter;
-
 					s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 					logger(g_debug_log, "MORTALITY BASED ON HIGH CANOPY COVER height %f species %s dbh %f !!!\n", h->value, s->name, d->value);
@@ -89,13 +87,13 @@ void self_thinning_mortality (cell_t *const c, const int layer, const int year)
 					//FIXME FOR MULTICLASS IN THE SAME LAYER POURPOSES
 //					while ( c->tree_layers[layer].layer_cover_proj >= g_settings->max_layer_cover )
 //					{
-
-					test_counter = 0;
 					while (s->value[DBHDC_EFF] <  s->value[DBHDCMIN] )
 					{
 						/* remove one single tree at each run */
 						++deadtree;
 						--livetree;
+
+						CHECK_CONDITION(livetree, ==, 0);
 
 						/* impose DBHDC_EFF = DBHDCMIN */
 						//s->value[DBHDC_EFF] = s->value[DBHDCMIN];
@@ -126,8 +124,6 @@ void self_thinning_mortality (cell_t *const c, const int layer, const int year)
 							/* check for recompued canopy cover */
 							c->tree_layers[layer].layer_cover_proj += s->value[CANOPY_COVER_PROJ];
 						}
-
-						CHECK_CONDITION(++test_counter, >=, livetree);
 					}
 
 					//fixme this is not correct for multilayer
