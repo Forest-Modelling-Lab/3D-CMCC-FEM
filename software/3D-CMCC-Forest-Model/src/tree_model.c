@@ -78,11 +78,11 @@ extern settings_t* g_settings;
 /*****************************************************************************************************************/
 int Tree_model_daily (matrix_t *const m, const int cell, const int day, const int month, const int year)
 {
-	static int layer;
-	static int height;
+	int layer;
+	int height;
 	int dbh;
-	static int age;
-	static int species;
+	int age;
+	int species;
 	//int management = 0;
 
 	/* shortcuts */

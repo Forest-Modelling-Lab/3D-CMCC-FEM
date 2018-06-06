@@ -1752,7 +1752,11 @@ int main(int argc, char *argv[]) {
 										}
 										else
 										{
-											printf("ok tree_model (%02d-%02d-%d)\n", day+1, month+1, year+g_settings->year_start);
+											printf("ok tree_model (x=%d,y=%d) (%02d-%02d-%d)\n"
+														, matrix->cells[cell].x
+														, matrix->cells[cell].y
+														, day+1, month+1, year+g_settings->year_start
+											);
 										}
 									}
 								}
@@ -1772,7 +1776,11 @@ int main(int argc, char *argv[]) {
 					}
 					else
 					{
-						printf("ok litr_model (%02d-%02d-%d)\n", day+1, month+1, year+g_settings->year_start);
+						printf("ok litr_model (x=%d,y=%d) (%02d-%02d-%d)\n"
+									, matrix->cells[cell].x
+									, matrix->cells[cell].y
+									, day+1, month+1, year+g_settings->year_start
+						);
 					}
 					/************************************************************************/
 					/* run for soil model */
@@ -1783,7 +1791,11 @@ int main(int argc, char *argv[]) {
 					}
 					else
 					{
-						printf("ok soil_model (%02d-%02d-%d)\n", day+1, month+1, year+g_settings->year_start);
+						printf("ok soil_model (x=%d,y=%d) (%02d-%02d-%d)\n"
+									, matrix->cells[cell].x
+									, matrix->cells[cell].y
+									, day+1, month+1, year+g_settings->year_start
+						);
 					}
 					/************************************************************************/
 					/* run for cell model */
@@ -1794,7 +1806,11 @@ int main(int argc, char *argv[]) {
 					}
 					else
 					{
-						printf("ok cell_model (%02d-%02d-%d)\n", day+1, month+1, year+g_settings->year_start);
+						printf("ok cell_model (x=%d,y=%d) (%02d-%02d-%d)\n"
+									, matrix->cells[cell].x
+									, matrix->cells[cell].y
+									, day+1, month+1, year+g_settings->year_start
+						);
 					}
 					/*************************************************************************/
 

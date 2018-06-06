@@ -2062,6 +2062,8 @@ void EOD_cell_msg(void)
 {
 	if ( g_daily_log )
 	{
+		g_daily_log->std_output = 1;
+		logger(g_daily_log, sz_launched, netcdf_get_version(), datetime_current());
 		print_model_paths(g_daily_log);
 		//const char* p;
 		//p = file_get_name_only(g_daily_log->filename);
@@ -2305,6 +2307,7 @@ void EOM_cell_msg(void)
 {
 	if ( g_monthly_log )
 	{
+		g_monthly_log->std_output = 1;
 		logger(g_monthly_log, sz_launched, netcdf_get_version(), datetime_current());
 		print_model_paths(g_monthly_log);
 		//const char* p;
@@ -2887,6 +2890,7 @@ void EOD_soil_msg(void)
 {
 	if ( g_daily_soil_log )
 	{
+		g_daily_soil_log->std_output = 1;
 		logger(g_daily_soil_log, sz_launched, netcdf_get_version(), datetime_current());
 		print_model_paths(g_daily_soil_log);
 		//const char* p;
@@ -3010,6 +3014,7 @@ void EOM_soil_msg(void)
 {
 	if ( g_monthly_soil_log )
 	{
+		g_monthly_soil_log->std_output = 1;
 		logger(g_monthly_soil_log, sz_launched, netcdf_get_version(), datetime_current());
 		print_model_paths(g_monthly_soil_log);
 		//const char* p;
