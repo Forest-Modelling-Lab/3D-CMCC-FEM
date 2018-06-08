@@ -209,6 +209,7 @@ void tree_biomass_remove (cell_t *const c, const int height, const int dbh, cons
 
 	s->value[C_FRUIT_TO_CWD]     += (s->value[TREE_FRUIT_C]   * tree_remove);
 
+
 	if ( ! nat_man )
 	{
 		/* natural mortality */

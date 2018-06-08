@@ -215,6 +215,12 @@ void print_new_daily_forest_class_data (cell_t* const c, const int height, const
 	logger(g_debug_log, "+ fine root         = %f tC/area\n", s->value[FROOT_C]);
 	logger(g_debug_log, "+ reserve           = %f tC/area\n", s->value[RESERVE_C]);
 	logger(g_debug_log, "+ fruit             = %f tC/area\n", s->value[FRUIT_C]);
+	logger(g_debug_log, "+ stem sapwood      = %f tC/area\n", s->value[STEM_SAPWOOD_C]);
+	logger(g_debug_log, "+ stem heartwood    = %f tC/area\n", s->value[STEM_HEARTWOOD_C]);
+	logger(g_debug_log, "+ coarse sapwood    = %f tC/area\n", s->value[CROOT_SAPWOOD_C]);
+	logger(g_debug_log, "+ coarse heartwood  = %f tC/area\n", s->value[CROOT_HEARTWOOD_C]);
+	logger(g_debug_log, "+ branch sapwood    = %f tC/area\n", s->value[BRANCH_SAPWOOD_C]);
+	logger(g_debug_log, "+ branch heartwood  = %f tC/area\n", s->value[BRANCH_HEARTWOOD_C]);
 	logger(g_debug_log, "+ stem live         = %f tC/area\n", s->value[STEM_LIVEWOOD_C]);
 	logger(g_debug_log, "+ coarse live       = %f tC/area\n", s->value[CROOT_LIVEWOOD_C]);
 	logger(g_debug_log, "+ branch live       = %f tC/area\n", s->value[BRANCH_LIVEWOOD_C]);

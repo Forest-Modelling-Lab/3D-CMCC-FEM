@@ -228,7 +228,7 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 	logger(g_debug_log, "-Total wood = %f tC/tree\n",s->value[TREE_TOT_WOOD_C]);
 
 	/* basal area */
-	s->value[BASAL_AREA]          = ((pow((d->value / 2.), 2.)) * Pi);
+	s->value[BASAL_AREA]          = ( ( pow ( ( d->value / 2.), 2. ) ) * Pi);
 	s->value[BASAL_AREA_m2]       = s->value[BASAL_AREA] * 0.0001;
 	s->value[STAND_BASAL_AREA]    = s->value[BASAL_AREA] * s->counter[N_TREE];
 	s->value[STAND_BASAL_AREA_m2] = s->value[BASAL_AREA_m2] * s->counter[N_TREE];
@@ -239,13 +239,17 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 	logger(g_debug_log, "-Stand level class basal cell     = %f cm2/class\n", s->value[STAND_BASAL_AREA]);
 
 	/* sapwood and heartwood area are based on  Vertessy  et  al.  (1995)  and  Meinzer  et  al.(2001, 2005)*/
-	s->value[SAPWOOD_AREA]           = s->value[SAP_A] * pow (d->value, s->value[SAP_B]);
+	s->value[SAPWOOD_AREA]           = s->value[SAP_A] * pow ( d->value, s->value[SAP_B] );
+
+	//fixme special case
+	if( s->value[SAPWOOD_AREA] > s->value[BASAL_AREA] ) s->value[SAPWOOD_AREA] = s->value[BASAL_AREA];
+
 	s->value[HEARTWOOD_AREA]         = s->value[BASAL_AREA] -  s->value[SAPWOOD_AREA];
 	s->value[SAPWOOD_PERC]           = s->value[SAPWOOD_AREA] / s->value[BASAL_AREA];
 
 	logger(g_debug_log, "-Sapwood_area                     = %f cm^2\n",       s->value[SAPWOOD_AREA]);
-	logger(g_debug_log, "-Heart_wood_area                  = %f cm^2\n",       s->value[HEARTWOOD_AREA]);
-	logger(g_debug_log, "-Sapwood perc                     = %f %%\n",         s->value[SAPWOOD_PERC]*100);
+	logger(g_debug_log, "-Heartwood_area                   = %f cm^2\n",       s->value[HEARTWOOD_AREA]);
+	logger(g_debug_log, "-Sapwood perc                     = %f %%\n",         s->value[SAPWOOD_PERC] * 100. );
 
 	/* sapwood and heartwood biomass */
 	/* stem */
@@ -294,7 +298,7 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 	logger(g_debug_log, "-Total Heartwood biomass per tree = %f KgC/tree\n", (s->value[HEARTWOOD_C] / (double)s->counter[N_TREE]) * 1e3);
 
 	/*reserve*/
-	if (s->value[RESERVE_DM] == 0 || s->value[RESERVE_DM] == NO_DATA)
+	if ( s->value[RESERVE_DM] == 0 || s->value[RESERVE_DM] == NO_DATA )
 	{
 		logger(g_debug_log, "\nNo Reserve Biomass Data are available for model initialization \n");
 		logger(g_debug_log, "...Generating input Reserve Biomass biomass data\n");
@@ -714,6 +718,9 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 	CHECK_CONDITION(s->value[STEM_SAPWOOD_C],          <=, ZERO);
 	CHECK_CONDITION(s->value[CROOT_SAPWOOD_C],         <=, ZERO);
 	CHECK_CONDITION(s->value[BRANCH_SAPWOOD_C],        <=, ZERO);
+	CHECK_CONDITION(s->value[STEM_HEARTWOOD_C],          <=, ZERO);
+	CHECK_CONDITION(s->value[CROOT_HEARTWOOD_C],         <=, ZERO);
+	CHECK_CONDITION(s->value[BRANCH_HEARTWOOD_C],        <=, ZERO);
 	CHECK_CONDITION(s->value[SAPWOOD_C],               <=, ZERO);
 	CHECK_CONDITION(s->value[STEM_LIVEWOOD_C],         <=, ZERO);
 	CHECK_CONDITION(s->value[STEM_DEADWOOD_C],         <=, ZERO);

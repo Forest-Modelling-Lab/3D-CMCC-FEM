@@ -160,26 +160,19 @@ void dendrometry_old(cell_t *const c, const int layer, const int height, const i
 	s->value[TOT_SAPWOOD_C]    = s->value[STEM_SAPWOOD_C] + s->value[CROOT_SAPWOOD_C] + s->value[BRANCH_SAPWOOD_C];
 #endif
 
-	if ( s->value[SAPWOOD_AREA] >  s->value[BASAL_AREA] )
-	{
-		puts("Error Sapwood area > Basal Area\n");
-
-		s->value[SAPWOOD_AREA]   = s->value[BASAL_AREA];
-		s->value[HEARTWOOD_AREA] = 0.;
-	}
 
 	/* check */
-	CHECK_CONDITION( s->value[SAPWOOD_AREA]   , > , s->value[BASAL_AREA]);
-	CHECK_CONDITION( s->value[HEARTWOOD_AREA] , > , s->value[BASAL_AREA]);
+	CHECK_CONDITION( s->value[SAPWOOD_AREA]   , > , s->value[BASAL_AREA] + eps3);
+	CHECK_CONDITION( s->value[HEARTWOOD_AREA] , > , s->value[BASAL_AREA] + eps3);
 	CHECK_CONDITION( (fabs(s->value[SAPWOOD_AREA] + s->value[HEARTWOOD_AREA]) - s->value[BASAL_AREA]), > , eps);
 
 
-	logger(g_debug_log, " SAPWOOD_AREA     = %f cm^2\n",    s->value[SAPWOOD_AREA]);
-	logger(g_debug_log, " HEART_WOOD_AREA  = %f cm^2\n",    s->value[HEARTWOOD_AREA]);
-	logger(g_debug_log, " SAPWOOD_PERC     = %f%%\n",       s->value[SAPWOOD_PERC] * 100.);
-	logger(g_debug_log, " CROOT_SAPWOOD_C  = %f tC cell\n", s->value[CROOT_SAPWOOD_C]);
-	logger(g_debug_log, " BRANCH_SAPWOOD_C = %f tC cell\n", s->value[BRANCH_SAPWOOD_C]);
-	logger(g_debug_log, " TOT_SAPWOOD_C    = %f tc cell\n", s->value[SAPWOOD_C]);
+	logger(g_debug_log, "SAPWOOD_AREA     = %f cm^2\n",    s->value[SAPWOOD_AREA]);
+	logger(g_debug_log, "HEART_WOOD_AREA  = %f cm^2\n",    s->value[HEARTWOOD_AREA]);
+	logger(g_debug_log, "SAPWOOD_PERC     = %f%%\n",       s->value[SAPWOOD_PERC] * 100.);
+	logger(g_debug_log, "CROOT_SAPWOOD_C  = %f tC cell\n", s->value[CROOT_SAPWOOD_C]);
+	logger(g_debug_log, "BRANCH_SAPWOOD_C = %f tC cell\n", s->value[BRANCH_SAPWOOD_C]);
+	logger(g_debug_log, "TOT_SAPWOOD_C    = %f tc cell\n", s->value[SAPWOOD_C]);
 }
 
 

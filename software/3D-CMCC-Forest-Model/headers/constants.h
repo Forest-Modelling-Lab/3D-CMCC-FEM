@@ -66,6 +66,7 @@ enum {
 #define EMSOIL                  0.95      /* Emissivity of thermal radiation by soil (see MAESPA) */
 #define Pi               3.141592654      /* Pi greek */
 #define LN2              0.693147181      /* logarithm constant */
+#define eps3                    1e-3      /* differences in comparison */
 #define eps                     1e-6      /* differences in comparison */
 #define ZERO                  -1e-10      /* power limit of state variables before they are set to 0.0 to control rounding and overflow errors */
 #define CRIT_PREC              1e-20      /* precision control */
