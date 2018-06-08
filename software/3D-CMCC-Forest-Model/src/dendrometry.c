@@ -124,7 +124,7 @@ void dendrometry_old(cell_t *const c, const int layer, const int height, const i
 	logger(g_debug_log, "\n**Basal Area and sapwood-heartwood area**\n");
 
 	/* basal area */
-	s->value[BASAL_AREA]          = ((pow((d->value / 2.), 2.0)) * Pi);
+	s->value[BASAL_AREA]          = ( ( pow( ( d->value / 2.), 2. ) ) * Pi);
 	s->value[BASAL_AREA_m2]       = s->value[BASAL_AREA]    * 0.0001;
 	s->value[STAND_BASAL_AREA]    = s->value[BASAL_AREA]    * s->counter[N_TREE];
 	s->value[STAND_BASAL_AREA_m2] = s->value[BASAL_AREA_m2] * s->counter[N_TREE];

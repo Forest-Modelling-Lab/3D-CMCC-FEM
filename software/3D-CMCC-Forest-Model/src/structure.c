@@ -187,12 +187,7 @@ int annual_forest_structure(cell_t* const c, const int year)
 		{
 			c->heights[height].height_z = zeta_count;
 		}
-		logger(g_debug_log, "*value %f z = %d*\n\n", c->heights[height].value, c->heights[height].height_z);
 	}
-
-	logger(g_debug_log, "-Number of height classes = %d per cell\n", c->heights_count);
-	logger(g_debug_log, "-Number of layers         = %d per cell\n\n", c->tree_layers_count);
-	logger(g_debug_log,"***********************************\n");
 
 	/* check */
 	CHECK_CONDITION(c->tree_layers_count, <, 1);
@@ -393,7 +388,8 @@ int annual_forest_structure(cell_t* const c, const int year)
 
 							/*************** self-thinning ****************/
 							/* note: special case for ISIMIP, avoid self thinning when management is 'var' */
-							if ( ( ( c->years[year].year >= g_settings->year_start_management ) && ( MANAGEMENT_VAR == g_settings->management ) )  || ( MANAGEMENT_OFF == g_settings->management ) )
+							if ( ( ( c->years[year].year >= g_settings->year_start_management ) && ( MANAGEMENT_VAR == g_settings->management ) )
+									|| ( MANAGEMENT_OFF == g_settings->management ) )
 							{
 								if ( s->value[DBHDC_EFF] <= s->value[DBHDCMIN] )
 								{

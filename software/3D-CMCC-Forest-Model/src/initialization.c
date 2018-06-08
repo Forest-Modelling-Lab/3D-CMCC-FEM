@@ -280,7 +280,6 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 	s->value[TREE_SAPWOOD_C]          = s->value[TREE_SAPWOOD_C] / (double)s->counter[N_TREE];
 	s->value[TREE_HEARTWOOD_C]        = (s->value[TREE_TOT_WOOD_C] - s->value[TREE_SAPWOOD_C]) / (double)s->counter[N_TREE];
 
-
 	logger(g_debug_log, "-Sapwood stem biomass             = %f tC/cell\n",  s->value[STEM_SAPWOOD_C]);
 	logger(g_debug_log, "-Heartwood stem biomass           = %f tC/cell\n",  s->value[STEM_HEARTWOOD_C]);
 	logger(g_debug_log, "-Sapwood coarse root biomass      = %f tC/cell\n",  s->value[CROOT_SAPWOOD_C]);
@@ -325,10 +324,13 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 		if ( s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2 )
 		{
 			/* assuming no leaf at 1st of January */
-			s->value[LEAF_DM]      = 0.;
-			s->value[LEAF_C]       = 0.;
-			s->value[LEAF_SUN_C]   = 0.;
-			s->value[LEAF_SHADE_C] = 0.;
+			s->value[LEAF_DM]        = 0.;
+			s->value[LEAF_C]         = 0.;
+			s->value[LEAF_SUN_C]     = 0.;
+			s->value[LEAF_SHADE_C]   = 0.;
+			s->value[LAI_PROJ]       = 0.;
+			s->value[LAI_SUN_PROJ]   = 0.;
+			s->value[LAI_SHADE_PROJ] = 0.;
 		}
 		/* evergreen */
 		else
@@ -342,25 +344,37 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 			/* Calculate projected LAI */
 			/* note: assume that at the beginning of simulations LAI = PEAK_LAI */
 			s->value[LAI_PROJ]       = s->value[PEAK_LAI_PROJ];
+
+			/* Calculate projected LAI for sun and shaded leaves */
+			/* sun */
+			s->value[LAI_SUN_PROJ]   = 1. - exp( - s->value[LAI_PROJ] );
+
+			/* shade */
+			s->value[LAI_SHADE_PROJ] = s->value[LAI_PROJ] - s->value[LAI_SUN_PROJ];
 		}
 	}
 	else
 	{
 		/* if no values for LAI are available */
-		if ( ! s->value[LAI_PROJ] )
+		if ( ! s->value[LAI_PROJ] && ( s->value[PHENOLOGY] == 1.1 || s->value[PHENOLOGY] == 1.2 ) )
 		{
 			/* Calculate projected LAI */
 			s->value[LAI_PROJ]       = ( ( s->value[LEAF_C]  * s->value[SLA_AVG] ) * 1e3 ) / ( s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell );
+
+			/* Calculate projected LAI for sun and shaded leaves */
+			/* sun */
+			s->value[LAI_SUN_PROJ]   = 1. - exp( - s->value[LAI_PROJ] );
+
+			/* shade */
+			s->value[LAI_SHADE_PROJ] = s->value[LAI_PROJ] - s->value[LAI_SUN_PROJ];
+		}
+		else
+		{
+			s->value[LAI_PROJ]       = 0.;
+			s->value[LAI_SUN_PROJ]   = 0.;
+			s->value[LAI_SHADE_PROJ] = 0.;
 		}
 	}
-
-	/* Calculate projected LAI for sun and shaded leaves */
-	/* sun */
-	s->value[LAI_SUN_PROJ]   = 1. - exp( - s->value[LAI_PROJ] );
-
-	/* shade */
-	s->value[LAI_SHADE_PROJ] = s->value[LAI_PROJ] - s->value[LAI_SUN_PROJ];
-
 
 	/*************************************************************************************/
 
