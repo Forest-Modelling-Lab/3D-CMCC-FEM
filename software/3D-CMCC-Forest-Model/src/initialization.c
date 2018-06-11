@@ -297,7 +297,7 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 	logger(g_debug_log, "-Total Heartwood biomass per tree = %f tC/tree\n",  s->value[HEARTWOOD_C]  / (double)s->counter[N_TREE]);
 	logger(g_debug_log, "-Total Heartwood biomass per tree = %f KgC/tree\n", (s->value[HEARTWOOD_C] / (double)s->counter[N_TREE]) * 1e3);
 
-	/*reserve*/
+	/* reserve */
 	if ( s->value[RESERVE_DM] == 0 || s->value[RESERVE_DM] == NO_DATA )
 	{
 		logger(g_debug_log, "\nNo Reserve Biomass Data are available for model initialization \n");
@@ -305,6 +305,8 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 
 		/* note: these values are taken from: Schwalm and Ek, 2004 Ecological Modelling */
 		//see if change with the ratio reported from Barbaroux et al., 2002 (using DryMatter)
+		/* NSC are initialized at the minimum annual value at the beginning of simulation 
+		   see Woodruff and Meinzer 2011, Plant Cell and Environment */
 
 		/* IMPORTANT! reserve computation if not in initialized is computed from DryMatter */
 		s->value[RESERVE_DM] = s->value[SAPWOOD_DM] * s->value[SAP_WRES];

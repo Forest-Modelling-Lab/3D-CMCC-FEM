@@ -1404,9 +1404,7 @@ int main(int argc, char *argv[]) {
 		logger(g_debug_log, "input_met_path = %s\n", g_sz_input_met_file);
 		logger_error(g_debug_log, "importing met data...");
 
-		matrix->cells[cell].years = import_meteo_data(g_sz_input_met_file, &years_of_simulation, matrix->cells[cell].x, matrix->cells[cell].y);
-
-		if ( ! matrix->cells[cell].years ) goto err;
+		if ( ! import_meteo_data(g_sz_input_met_file, &years_of_simulation, &matrix->cells[cell]) ) goto err;
 		logger_error(g_debug_log, "ok\n");
 
 		/* set start year index */

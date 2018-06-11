@@ -989,7 +989,7 @@ typedef struct
 	//fixme ALESSIOR move to meteo struct!
 	double previous_thermic_sum;
 	double previous_solar_rad;
-	double doubleprevious_tavg;
+	double previous_tavg;
 	double previous_tmax;
 	double previous_tmin;
 	double previous_vpd;

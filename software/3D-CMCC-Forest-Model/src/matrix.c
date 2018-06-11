@@ -1444,10 +1444,14 @@ matrix_t* matrix_create(const soil_settings_t*const s, const int count, const ch
 
 	if ( d ) {
 		int flag;
+		int flag2;
 
+		flag2 = 0;
 		for ( row = 0; row < d->rows_count; ++row ) {
 			if ( d->rows[row].year_stand == g_settings->year_start )
 			{
+				flag2 = 1;
+
 				/* check against x and y */
 				flag = 0;
 				for ( i = 0; i < m->cells_count; ++i ) {
@@ -1471,6 +1475,12 @@ matrix_t* matrix_create(const soil_settings_t*const s, const int count, const ch
 			}
 		}
 		*dataset = d;
+
+		if ( ! flag2 ) {
+			logger_error(g_debug_log, "year_start = %d not found in %s\n", d->rows[0].year_stand, filename);
+			matrix_free(m);
+			return NULL;
+		}
 	}
 
 	/* fill with species values */
