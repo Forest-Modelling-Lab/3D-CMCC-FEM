@@ -34,6 +34,9 @@ void carbon_productivity(cell_t *const c, const int height, const int dbh, const
 	s->value[MONTHLY_NPP_tC] += s->value[NPP_tC];
 	s->value[YEARLY_NPP_tC]  += s->value[NPP_tC];
 
+	s->value[MONTHLY_BP]     += s->value[BP];
+	s->value[YEARLY_BP]      += s->value[BP];
+
 	/* cell level */
 	c->daily_npp             += s->value[NPP];
 	c->monthly_npp           += s->value[NPP];

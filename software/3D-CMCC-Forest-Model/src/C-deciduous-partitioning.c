@@ -243,6 +243,9 @@ void daily_C_deciduous_partitioning (cell_t *const c, const int layer, const int
 				s->value[C_TO_CROOT]     = (npp_to_alloc * pR);
 				s->value[C_TO_STEM]      = (npp_to_alloc * pS) * ( 1. - s->value[FRACBB] );
 				s->value[C_TO_BRANCH]    = (npp_to_alloc * pS) * s->value[FRACBB];
+
+				/* biomass production */
+				s->value[BP] += ( ( s->value[C_TO_CROOT] + s->value[C_TO_STEM] + s->value[C_TO_BRANCH] + s->value[C_TO_FRUIT]) * 1e6 / g_settings->sizeCell );
 			}
 			/* it needs */
 			else
@@ -260,7 +263,6 @@ void daily_C_deciduous_partitioning (cell_t *const c, const int layer, const int
 				logger(g_debug_log, "Consuming reserve pool (negative NPP)\n");
 
 				/* consuming reserve carbon pools */
-
 				s->value[C_TO_RESERVE]     = npp_to_alloc;
 			}
 			else
@@ -340,6 +342,7 @@ void daily_C_deciduous_partitioning (cell_t *const c, const int layer, const int
 		/**********************************************************************/
 	}
 
+	s->value[BP] *= (1. - s->value[EFF_GRPERC]);
 
 	/* update live_total wood fraction based on age */
 	live_total_wood_age ( a, s );

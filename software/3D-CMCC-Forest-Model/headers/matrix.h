@@ -284,6 +284,10 @@ enum {
 	CUE,                                /* (gCNPP/gCGPP) daily Carbon Use Efficiency */
 	MONTHLY_CUE,                        /* (gCNPP/gCGPP) monthly Carbon Use Efficiency */
 	YEARLY_CUE,                         /* (gCNPP/gCGPP) annual Carbon Use Efficiency */
+	/* biomass production efficiency */
+	BPE,                                /* (gCBP/gCGPP) biomass production Efficiency */
+	MONTHLY_BPE,                        /* (gCBP/gCGPP) monthly biomass production Efficiency */
+	YEARLY_BPE,                         /* (gCBP/gCGPP) annual biomass production Efficiency */
 
 	/* water use efficiency */
 	WUE,                                /* daily Water Use Efficiency */
@@ -375,6 +379,9 @@ enum {
 	NPP_tC,                             /* (tC/cell/day) Daily Net Primary Production */
 	MONTHLY_NPP_tC,                     /* (tC/cell/month) Monthly Net Primary Production */
 	YEARLY_NPP_tC,                      /* (tC/cell/day) Yearly Net Primary Production */
+	BP,                                 /* (gC/m2/day) Daily Biomass Production */
+	MONTHLY_BP,                         /* (gC/m2/monthly) Monthly Biomass Production */
+	YEARLY_BP,                          /* (gC/m2/year) Yearly Biomass Production */
 
 	/* nitrogen fluxes */
 	NPP_gN_DEMAND,                      /* (gN/m2/day) Daily Net Primary Production demand */

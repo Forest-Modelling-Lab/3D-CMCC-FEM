@@ -28,7 +28,7 @@ void peak_lai( age_t *const a, species_t *const s, const int day, const int mont
 	s->value[MAX_LEAF_C]   = ( ( s->value[PEAK_LAI_PROJ] / s->value[SLA_AVG] ) / 1e3 ) * ( s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell );
 
 	/* then compute fine root carbon (tC/cell) at Peak Projected Lai */
-	s->value[MAX_FROOT_C]  = s->value[MAX_LEAF_C] * ( 1. - s->value[FROOT_LEAF_FRAC] );
+	s->value[MAX_FROOT_C]  = s->value[MAX_LEAF_C] * s->value[FINE_ROOT_LEAF];
 
 	/***************************************************************************************************************/
 
