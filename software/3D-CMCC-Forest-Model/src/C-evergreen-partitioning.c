@@ -42,6 +42,13 @@ void daily_C_evergreen_partitioning (cell_t *const c, const int layer, const int
 	double Light_trasm;
 	double npp_to_alloc;
 
+	double delta_leaf   = 0.;
+	double delta_froot  = 0.;
+	double delta_croot  = 0.;
+	double delta_branch = 0.;
+	double delta_stem   = 0.;
+	double delta_fruit  = 0.;
+
 	age_t *a;
 	species_t *s;
 
@@ -389,9 +396,6 @@ void daily_C_evergreen_partitioning (cell_t *const c, const int layer, const int
 
 			}
 
-			/* biomass production */
-			s->value[BP]            += ( ( s->value[C_TO_LEAF] + s->value[C_TO_FROOT] + s->value[C_TO_CROOT] + s->value[C_TO_STEM] + s->value[C_TO_BRANCH] ) * 1e6 / g_settings->sizeCell );
-
 			/********************************************************************************************************************************************/
 		}
 		/* it needs */
@@ -481,7 +485,23 @@ void daily_C_evergreen_partitioning (cell_t *const c, const int layer, const int
 	logger(g_debug_log, "C_TO_BRANCH  = %f tC/cell\n", s->value[C_TO_BRANCH]);
 	logger(g_debug_log, "C_TO_RESERVE = %f tC/cell\n", s->value[C_TO_RESERVE]);
 
-	s->value[BP] *= (1. - s->value[EFF_GRPERC]);
+	if ( s->value[C_TO_LEAF]   > 0. ) delta_leaf   = s->value[C_TO_LEAF];
+	else delta_leaf   = 0.;
+	if ( s->value[C_TO_FROOT]  > 0. ) delta_froot  = s->value[C_TO_FROOT];
+	else delta_froot  = 0.;
+	if ( s->value[C_TO_STEM]   > 0. ) delta_stem   = s->value[C_TO_STEM];
+	else delta_stem   = 0.;
+	if ( s->value[C_TO_CROOT]  > 0. ) delta_croot  = s->value[C_TO_CROOT];
+	else delta_croot  = 0.;
+	if ( s->value[C_TO_BRANCH] > 0. ) delta_branch = s->value[C_TO_BRANCH];
+	else delta_branch = 0.;
+	if ( s->value[C_TO_FRUIT]  > 0. ) delta_fruit  = s->value[C_TO_FRUIT];
+	else delta_fruit  = 0.;
+
+	/* biomass production */
+	s->value[BP] += ( ( delta_leaf + delta_froot + delta_stem + delta_branch + delta_croot + delta_fruit ) * 1e6 / g_settings->sizeCell );
+
+	s->value[BP] *= ( 1. - s->value[EFF_GRPERC] );
 
 	/* leaf and fine root fall */
 	leaffall_evergreen ( c, height, dbh, age, species, year );

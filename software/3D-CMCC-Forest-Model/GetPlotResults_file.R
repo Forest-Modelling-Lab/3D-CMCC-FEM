@@ -37,7 +37,7 @@ GetPlotResults_file <- function(df_t,color_variable = NULL,
     }
     
     mpt = ggplot(df_single_value) +
-      geom_line(aes(x = Date, y = v1, color = color_var),size = 1.5) +
+      geom_line(aes(x = Date, y = v1, color = color_var),size = 0.5) +
       ylab(colnames(df_t[i])) +
       theme(legend.position = "top",
             axis.title = element_text(size = 20),
