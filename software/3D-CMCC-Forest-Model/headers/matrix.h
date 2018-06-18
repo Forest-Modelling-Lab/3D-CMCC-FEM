@@ -432,6 +432,9 @@ enum {
 	TOT_C_RESERVE_TO_LEAF_BUDBURST,     /* (tC/cell/day) Total tC from Reserve pool to Leaf root Budburst */
 	TOT_C_RESERVE_TO_FROOT_BUDBURST,    /* (tC/cell/day) Total tC from Reserve pool to Fine root Budburst */
 
+	YEARLY_RESERVE_ALLOC,
+	YEARLY_RESERVE_USAGE,
+
 	YEARLY_C_TO_STEM,                   /* (tC/cell/year) Annual Stem biomass for turnover */
 	YEARLY_C_TO_CROOT,                  /* (tC/cell/year) Annual Coarse root biomass for turnover */
 	YEARLY_C_TO_BRANCH,                 /* (tC/cell/year) Annual Branch biomass for turnover */

@@ -32,12 +32,13 @@ void daily_C_deciduous_partitioning (cell_t *const c, const int layer, const int
 	double Light_trasm;
 	int i;
 
-	double delta_leaf   = 0.;
-	double delta_froot  = 0.;
-	double delta_croot  = 0.;
-	double delta_branch = 0.;
-	double delta_stem   = 0.;
-	double delta_fruit  = 0.;
+	double delta_leaf     = 0.;
+	double delta_froot    = 0.;
+	double delta_croot    = 0.;
+	double delta_branch   = 0.;
+	double delta_stem     = 0.;
+	double delta_fruit    = 0.;
+	double delta_reserve  = 0.;
 
 	/* for check */
 	double npp_to_alloc;
@@ -136,7 +137,7 @@ void daily_C_deciduous_partitioning (cell_t *const c, const int layer, const int
 
 				for ( i = 0; i < s->counter[DAYS_FOR_BUDBURST]; ++i )
 				{
-					s->counter[BUDBURST_A]       +=1;
+					s->counter[BUDBURST_A]       += 1;
 					s->counter[BUDBURST_B]       += s->counter[BUDBURST_A];
 					s->counter[BUD_BURST_WEIGHT] += s->counter[BUDBURST_B];
 				}
@@ -191,7 +192,7 @@ void daily_C_deciduous_partitioning (cell_t *const c, const int layer, const int
 			}
 
 			/* check for fine root C > max fine root C */
-			if ( ( (s->value[C_TO_FROOT] * ( 1. - s->value[EFF_GRPERC] ) ) + s->value[FROOT_C] ) > s->value[MAX_FROOT_C])
+			if ( ( (s->value[C_TO_FROOT] * ( 1. - s->value[EFF_GRPERC] ) ) + s->value[FROOT_C] ) > s->value[MAX_FROOT_C] )
 			{
 				double max_frootC;
 
@@ -347,18 +348,26 @@ void daily_C_deciduous_partitioning (cell_t *const c, const int layer, const int
 		/**********************************************************************/
 	}
 
-	if ( s->value[C_TO_LEAF]   > 0. ) delta_leaf   = s->value[C_TO_LEAF];
-	else delta_leaf   = 0.;
-	if ( s->value[C_TO_FROOT]  > 0. ) delta_froot  = s->value[C_TO_FROOT];
-	else delta_froot  = 0.;
-	if ( s->value[C_TO_STEM]   > 0. ) delta_stem   = s->value[C_TO_STEM];
-	else delta_stem   = 0.;
-	if ( s->value[C_TO_CROOT]  > 0. ) delta_croot  = s->value[C_TO_CROOT];
-	else delta_croot  = 0.;
-	if ( s->value[C_TO_BRANCH] > 0. ) delta_branch = s->value[C_TO_BRANCH];
-	else delta_branch = 0.;
-	if ( s->value[C_TO_FRUIT]  > 0. ) delta_fruit  = s->value[C_TO_FRUIT];
-	else delta_fruit  = 0.;
+	if ( s->value[C_TO_LEAF]     > 0. ) delta_leaf     = s->value[C_TO_LEAF];
+	else delta_leaf     = 0.;
+	if ( s->value[C_TO_FROOT]    > 0. ) delta_froot    = s->value[C_TO_FROOT];
+	else delta_froot    = 0.;
+	if ( s->value[C_TO_STEM]     > 0. ) delta_stem     = s->value[C_TO_STEM];
+	else delta_stem     = 0.;
+	if ( s->value[C_TO_CROOT]    > 0. ) delta_croot    = s->value[C_TO_CROOT];
+	else delta_croot    = 0.;
+	if ( s->value[C_TO_BRANCH]   > 0. ) delta_branch   = s->value[C_TO_BRANCH];
+	else delta_branch   = 0.;
+	if ( s->value[C_TO_FRUIT]    > 0. ) delta_fruit    = s->value[C_TO_FRUIT];
+	else delta_fruit    = 0.;
+	if ( s->value[C_TO_RESERVE]  > 0. ) delta_reserve  = s->value[C_TO_RESERVE];
+	else delta_reserve  = 0.;
+
+
+	s->value[YEARLY_RESERVE_ALLOC] += ( delta_reserve * 1e6 / g_settings->sizeCell );
+
+	s->value[YEARLY_RESERVE_USAGE] += ( s->value[C_TO_RESERVE] * 1e6 / g_settings->sizeCell );
+
 
 	/* biomass production */
 	s->value[BP] += ( ( delta_leaf + delta_froot + delta_stem + delta_branch + delta_croot + delta_fruit ) * 1e6 / g_settings->sizeCell );
