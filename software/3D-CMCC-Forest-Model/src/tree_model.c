@@ -345,7 +345,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							if ( c->doy == ( IS_LEAP_YEAR ( c->years[year].year ) ? 366 : 365) )
 							{
 								/* ISIMIP: exclude age mortality function when management is "var" and year < year start management */
-								if ( c->years[year].year > g_settings->year_start_management && g_settings->management != MANAGEMENT_VAR)
+								if ( c->years[year].year > g_settings->year_start_management && g_settings->management != MANAGEMENT_VAR )
 								{
 									/* Mortality based on tree Age (LPJ) */
 									age_mortality ( c, height, dbh, age, species );

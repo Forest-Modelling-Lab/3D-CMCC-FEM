@@ -469,8 +469,8 @@ enum {
 	CROOT_DEADWOOD_C,                   /* (tC/cell) Current Coarse root dead wood carbon pool */
 	BRANCH_LIVEWOOD_C,                  /* (tC/cell) Current Branch live wood carbon pool */
 	BRANCH_DEADWOOD_C,                  /* (tC/cell) Current Branch dead wood carbon pool */
-	SAPWOOD_C,                          /* (tC/cell) Current total sapwood carbon pool */
-	HEARTWOOD_C,                        /* (tC/cell) Current total heartwood carbon pool */
+	TOT_SAPWOOD_C,                      /* (tC/cell) Current total sapwood carbon pool */
+	TOT_HEARTWOOD_C,                    /* (tC/cell) Current total heartwood carbon pool */
 	STEM_SAPWOOD_C,                     /* (tC/cell) Current Stem sapwood carbon pool */
 	STEM_HEARTWOOD_C,                   /* (tC/cell) Current Stem heartwood carbon pool */
 	CROOT_SAPWOOD_C,                    /* (tC/cell) Current Coarse root sapwood carbon pool */
@@ -522,8 +522,8 @@ enum {
 	BRANCH_DM,                          /* (tDM/cell) Current Branch dry matter pool */
 	RESERVE_DM,                         /* (tDM/cell) Current Reserve dry matter pool */
 	FRUIT_DM,                           /* (tDM/cell) Current Fruit dry matter pool */
-	SAPWOOD_DM,                         /* (tDM/cell) Current Sapwood dry matter pool */
-	HEARTWOOD_DM,                       /* (tDM/cell) Current Heartwood dry matter pool */
+	TOT_SAPWOOD_DM,                     /* (tDM/cell) Current Sapwood dry matter pool */
+	TOT_HEARTWOOD_DM,                   /* (tDM/cell) Current Heartwood dry matter pool */
 	STEM_SAPWOOD_DM,                    /* (tDM/cell) Current Live Stem dry matter pool */
 	STEM_HEARTWOOD_DM,                  /* (tDM/cell) Current Dead Stem dry matter pool */
 	CROOT_SAPWOOD_DM,                   /* (tDM/cell) Current Live Coarse root dry matter pool */

@@ -126,6 +126,11 @@ void carbon_allocation ( cell_t *const c, age_t *const a, species_t *const s, co
 	s->value[RESERVE_C]   += s->value[C_TO_RESERVE];
 	s->value[FRUIT_C]     += s->value[C_TO_FRUIT];
 
+	/*** update live carbon mass pools **/
+	s->value[TOT_LIVEWOOD_C]           = ( s->value[STEM_LIVEWOOD_C] + s->value[CROOT_LIVEWOOD_C] + s->value[BRANCH_LIVEWOOD_C] );
+	s->value[TOT_SAPWOOD_C]            = ( s->value[STEM_SAPWOOD_C]  + s->value[CROOT_SAPWOOD_C]  + s->value[BRANCH_SAPWOOD_C] );
+
+
 	/*** update heartwood and dead carbon mass pools **/
 	s->value[STEM_HEARTWOOD_C]         = s->value[STEM_C]   - s->value[STEM_SAPWOOD_C];
 	s->value[STEM_DEADWOOD_C]          = s->value[STEM_C]   - s->value[STEM_LIVEWOOD_C];
@@ -133,6 +138,7 @@ void carbon_allocation ( cell_t *const c, age_t *const a, species_t *const s, co
 	s->value[CROOT_DEADWOOD_C]         = s->value[CROOT_C]  - s->value[CROOT_LIVEWOOD_C];
 	s->value[BRANCH_HEARTWOOD_C]       = s->value[BRANCH_C] - s->value[BRANCH_SAPWOOD_C];
 	s->value[BRANCH_DEADWOOD_C]        = s->value[BRANCH_C] - s->value[BRANCH_LIVEWOOD_C];
+	s->value[TOT_DEADWOOD_C]           = (s->value[STEM_DEADWOOD_C] + s->value[CROOT_DEADWOOD_C] + s->value[BRANCH_DEADWOOD_C] );
 
 	/***************************************************************************************/
 

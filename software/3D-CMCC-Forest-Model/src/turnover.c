@@ -97,8 +97,8 @@ void turnover( cell_t *const c, age_t *const a, species_t *const s, const int da
 
 	/* Overall sapwood and heartwood stocks */
 
-	s->value[SAPWOOD_C]   = s->value[STEM_SAPWOOD_C]   + s->value[CROOT_SAPWOOD_C]   + s->value[BRANCH_SAPWOOD_C];
-	s->value[HEARTWOOD_C] = s->value[STEM_HEARTWOOD_C] + s->value[CROOT_HEARTWOOD_C] + s->value[BRANCH_HEARTWOOD_C];
+	s->value[TOT_SAPWOOD_C]   = s->value[STEM_SAPWOOD_C]   + s->value[CROOT_SAPWOOD_C]   + s->value[BRANCH_SAPWOOD_C];
+	s->value[TOT_HEARTWOOD_C] = s->value[STEM_HEARTWOOD_C] + s->value[CROOT_HEARTWOOD_C] + s->value[BRANCH_HEARTWOOD_C];
 
 	/*******************************************************************************************************************/
 

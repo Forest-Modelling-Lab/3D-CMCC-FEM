@@ -35,7 +35,7 @@ SWPOPEN                  -0.5 //in KPa for P. sylvestris from Pietsch et al 2005
 SWPCLOSE                 -2.2 //in KPa for P. sylvestris from Pietsch et al 2005, -2.5 for Tatarinov et al., 2006
 OMEGA_CTEM                0.5 //ALLOCATION PARAMETER control the sensitivity of allocation to changes in water and light availability for Needlleleaf deciduous from Arora et al 2005
 S0CTEM            0.2 // 0.3 //   0.05 //   0.10 //PARAMETER CONTROLLING ALLOCATION TO STEM/MINIMUM RATIO TO C TO STEM 
-R0CTEM            0.4 // 0.3 //   0.60 //   0.55 //PARAMETER CONTROLLING ALLOCATION TO ROOT/MINIMUM RATIO TO C TO ROOTS 
+R0CTEM             0.4 //   0.60 //   0.55 //PARAMETER CONTROLLING ALLOCATION TO ROOT/MINIMUM RATIO TO C TO ROOTS 
 F0CTEM             0.4 //   0.35 //   0.35 //PARAMETER CONTROLLING ALLOCATION TO FOLIAGE/MINIMUM RATIO TO C TO STEM 
 FRUIT_PERC             0.20   //fraction of NPP allocated for reproduction for P. sylvestris 0.15 from Xiao et al., 2003, 0.2 from Yuste et al., 2005, 
 CONES_LIFE_SPAN             3 //Life span for cones (yrs)

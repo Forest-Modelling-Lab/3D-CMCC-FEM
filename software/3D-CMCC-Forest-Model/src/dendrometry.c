@@ -172,7 +172,7 @@ void dendrometry_old(cell_t *const c, const int layer, const int height, const i
 	logger(g_debug_log, "SAPWOOD_PERC     = %f%%\n",       s->value[SAPWOOD_PERC] * 100.);
 	logger(g_debug_log, "CROOT_SAPWOOD_C  = %f tC cell\n", s->value[CROOT_SAPWOOD_C]);
 	logger(g_debug_log, "BRANCH_SAPWOOD_C = %f tC cell\n", s->value[BRANCH_SAPWOOD_C]);
-	logger(g_debug_log, "TOT_SAPWOOD_C    = %f tc cell\n", s->value[SAPWOOD_C]);
+	logger(g_debug_log, "TOT_SAPWOOD_C    = %f tc cell\n", s->value[TOT_SAPWOOD_C]);
 }
 
 
@@ -257,11 +257,11 @@ void annual_minimum_reserve (species_t *const s)
 	 * FOR STEM:  1.8 (+-0.1 s.d.) % of total DM (evergreen) and 4.7 (+-0.1 s.d.) (deciduous)
 	 * see: Hoch G. et al., (2003), Plant Cell and Environment (26: 1067-1081) */
 
-	s->value[SAPWOOD_DM] = s->value[SAPWOOD_C] * GC_GDM;
-	logger(g_debug_log, "--WTOT_sap_tDM = %f tDM/class \n", s->value[SAPWOOD_DM]);
+	s->value[TOT_SAPWOOD_DM] = s->value[TOT_SAPWOOD_C] * GC_GDM;
+	logger(g_debug_log, "--WTOT_sap_tDM = %f tDM/class \n", s->value[TOT_SAPWOOD_DM]);
 
 	/* compute minimum annual reserve */
-	s->value[MIN_RESERVE_C]= s->value[SAPWOOD_DM] * s->value[SAP_WRES];
+	s->value[MIN_RESERVE_C]  = s->value[TOT_SAPWOOD_DM] * s->value[SAP_WRES];
 	logger(g_debug_log, "--MINIMUM Reserve Biomass = %f t res/class \n", s->value[RESERVE_C]);
 
 	s->value[TREE_MIN_RESERVE_C] = s->value[MIN_RESERVE_C] / (double)s->counter[N_TREE];
