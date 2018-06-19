@@ -2466,6 +2466,8 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 										",BRANCHLIVE_PERC"
 										",FRUIT_C"
 										",MAX_FRUIT_C"
+										",TOT_SAPWOOD_C"
+										",TOT_HEARTWOOD_C"
 										",RESERVE_N"
 										",STEM_N"
 										",STEMLIVE_N"
@@ -2588,34 +2590,34 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 								logger(g_annual_log,",%6.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%d,%d,%d,%d,%d,%3.4f"
 										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
 										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
-										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",
+										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",
 										s->value[YEARLY_GPP],
-										s->value[YEARLY_GPP_SUN]  /s->value[YEARLY_GPP],
-										s->value[YEARLY_GPP_SHADE]/s->value[YEARLY_GPP],
-										s->value[YEARLY_Av_SUN]   /s->value[YEARLY_A_SUN],
-										s->value[YEARLY_Aj_SUN]   /s->value[YEARLY_A_SUN],
-										s->value[YEARLY_Av_SHADE] /s->value[YEARLY_A_SHADE],
-										s->value[YEARLY_Aj_SHADE] /s->value[YEARLY_A_SHADE],
-										s->value[YEARLY_Av_TOT]   /s->value[YEARLY_A_TOT],
-										s->value[YEARLY_Aj_TOT]   /s->value[YEARLY_A_TOT],
+										s->value[YEARLY_GPP_SUN]  / s->value[YEARLY_GPP],
+										s->value[YEARLY_GPP_SHADE]/ s->value[YEARLY_GPP],
+										s->value[YEARLY_Av_SUN]   / s->value[YEARLY_A_SUN],
+										s->value[YEARLY_Aj_SUN]   / s->value[YEARLY_A_SUN],
+										s->value[YEARLY_Av_SHADE] / s->value[YEARLY_A_SHADE],
+										s->value[YEARLY_Aj_SHADE] / s->value[YEARLY_A_SHADE],
+										s->value[YEARLY_Av_TOT]   / s->value[YEARLY_A_TOT],
+										s->value[YEARLY_Aj_TOT]   / s->value[YEARLY_A_TOT],
 										s->value[YEARLY_TOTAL_GROWTH_RESP],
 										s->value[YEARLY_TOTAL_MAINT_RESP],
 										s->value[YEARLY_TOTAL_AUT_RESP],
 										s->value[YEARLY_NPP],
 										s->value[YEARLY_BP],
-										(s->value[YEARLY_NPP]-s->value[YEARLY_BP]),
+										(s->value[YEARLY_NPP] - s->value[YEARLY_BP]),
 										s->value[YEARLY_RESERVE_ALLOC],
 										s->value[YEARLY_RESERVE_USAGE],
-										(s->value[YEARLY_BP]/s->value[YEARLY_NPP]),
-										(s->value[YEARLY_RESERVE_ALLOC]/s->value[YEARLY_NPP]),
-										(s->value[YEARLY_RESERVE_ALLOC]/s->value[YEARLY_BP]),
-										(s->value[YEARLY_RESERVE_USAGE]/s->value[YEARLY_NPP]),
-										(s->value[YEARLY_RESERVE_USAGE]/s->value[YEARLY_BP]),
+										(s->value[YEARLY_BP] / s->value[YEARLY_NPP]),
+										(s->value[YEARLY_RESERVE_ALLOC] / s->value[YEARLY_NPP]),
+										(s->value[YEARLY_RESERVE_ALLOC] / s->value[YEARLY_BP]),
+										(s->value[YEARLY_RESERVE_USAGE] / s->value[YEARLY_NPP]),
+										(s->value[YEARLY_RESERVE_USAGE] / s->value[YEARLY_BP]),
 										s->value[YEARLY_CUE],
 										s->value[YEARLY_BPE],
 										(s->value[YEARLY_CUE] - s->value[YEARLY_BPE]),
-										s->value[YEARLY_TOTAL_AUT_RESP]/s->value[YEARLY_GPP]*100.,
-										(s->value[RESERVE_C]/(s->value[TOT_SAPWOOD_C] * GC_GDM))/100.,
+										s->value[YEARLY_TOTAL_AUT_RESP] / s->value[YEARLY_GPP] * 100.,
+										s->value[RESERVE_C] / (s->value[TOT_SAPWOOD_C] * GC_GDM ) * 100.,
 										s->value[PEAK_LAI_PROJ],
 										s->value[MAX_LAI_PROJ],
 										s->value[SLA_PROJ],
@@ -2656,6 +2658,8 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 										(s->value[BRANCH_LIVEWOOD_C] * 100. ) / s->value[BRANCH_C],
 										s->value[FRUIT_C],
 										s->value[MAX_FRUIT_C],
+										s->value[TOT_SAPWOOD_C],
+										s->value[TOT_HEARTWOOD_C],
 										s->value[RESERVE_N],
 										s->value[STEM_N],
 										s->value[STEM_LIVEWOOD_N],
