@@ -31,6 +31,9 @@ void carbon_allocation ( cell_t *const c, age_t *const a, species_t *const s, co
 	/* it allocates daily assimilated carbon for both deciduous and evergreen daily
 	 * and removes the respired and dead parts */
 
+
+	s->value[OLD_RESERVE_C] = s->value[RESERVE_C];
+
 	logger(g_debug_log, "\n**CARBON ALLOCATION**\n");
 
 	/*** removing growth respiration from carbon flux pools ***/
@@ -178,6 +181,11 @@ void carbon_allocation ( cell_t *const c, age_t *const a, species_t *const s, co
 	{
 		/* special case for fruit */
 		s->value[MAX_FRUIT_C] += s->value[C_TO_FRUIT];
+	}
+
+	if ( s->value[RESERVE_C] > s->value[OLD_RESERVE_C] )
+	{
+		s->value[MAX_RESERVE_C_CONC] = ( s->value[RESERVE_C] / (s->value[TOT_SAPWOOD_C] * GC_GDM )) *100.;
 	}
 
 	/*** update cell level carbon fluxes (gC/m2/day)***/

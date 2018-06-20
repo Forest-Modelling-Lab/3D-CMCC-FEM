@@ -717,7 +717,9 @@ void reset_annual_class_variables(cell_t *const c)
 					s->counter[N_TREE_SAP] =                0;
 
 					s->value[YEARLY_RESERVE_ALLOC] =        0.;
+					s->value[YEARLY_RESERVE_DEPLE] =        0.;
 					s->value[YEARLY_RESERVE_USAGE] =        0.;
+					s->value[MAX_RESERVE_C_CONC]   =        0.;
 
 					s->value[YEARLY_ASSIMILATION] =         0.;
 					s->value[YEARLY_ASSIMILATION_SUN] =     0.;

@@ -1577,8 +1577,8 @@ extern char *g_sz_co2_conc_file;
 
 extern const char sz_launched[];
 
-extern int MonthLength [];
-extern int MonthLength_Leap [];
+//extern int MonthLength [];
+//extern int MonthLength_Leap [];
 
 static const char sz_management[] = "TCN";
 
@@ -2415,10 +2415,13 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 										",BP"
 										",reser_as_diff"
 										",ResAlloc"
+										",ResDeple"
 										",ResUsage"
 										",BP/NPP"
 										",ResAlloc/NPP"
 										",ResAlloc/BP"
+										",ResDeple/NPP"
+										",ResDeple/BP"
 										",ResUsage/NPP"
 										",ResUsage/BP"
 										",CUE"
@@ -2587,7 +2590,7 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 								logger(g_annual_log,",%c", sz_management[c->heights[height].dbhs[dbh].ages[age].species[species].management]);
 
 								/* print variables at layer-class level */
-								logger(g_annual_log,",%6.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%d,%d,%d,%d,%d,%3.4f"
+								logger(g_annual_log,",%6.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%d,%d,%d,%d,%d,%3.4f"
 										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
 										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
 										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",
@@ -2607,17 +2610,20 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 										s->value[YEARLY_BP],
 										(s->value[YEARLY_NPP] - s->value[YEARLY_BP]),
 										s->value[YEARLY_RESERVE_ALLOC],
+										s->value[YEARLY_RESERVE_DEPLE],
 										s->value[YEARLY_RESERVE_USAGE],
 										(s->value[YEARLY_BP] / s->value[YEARLY_NPP]),
 										(s->value[YEARLY_RESERVE_ALLOC] / s->value[YEARLY_NPP]),
 										(s->value[YEARLY_RESERVE_ALLOC] / s->value[YEARLY_BP]),
+										(s->value[YEARLY_RESERVE_DEPLE] / s->value[YEARLY_NPP]),
+										(s->value[YEARLY_RESERVE_DEPLE] / s->value[YEARLY_BP]),
 										(s->value[YEARLY_RESERVE_USAGE] / s->value[YEARLY_NPP]),
 										(s->value[YEARLY_RESERVE_USAGE] / s->value[YEARLY_BP]),
 										s->value[YEARLY_CUE],
 										s->value[YEARLY_BPE],
 										(s->value[YEARLY_CUE] - s->value[YEARLY_BPE]),
 										s->value[YEARLY_TOTAL_AUT_RESP] / s->value[YEARLY_GPP] * 100.,
-										s->value[RESERVE_C] / (s->value[TOT_SAPWOOD_C] * GC_GDM ) * 100.,
+										s->value[TREE_RESERVE_C] / (s->value[TREE_SAPWOOD_C] * GC_GDM ) * 100.,
 										s->value[PEAK_LAI_PROJ],
 										s->value[MAX_LAI_PROJ],
 										s->value[SLA_PROJ],

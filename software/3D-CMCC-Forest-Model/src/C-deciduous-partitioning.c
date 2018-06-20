@@ -38,7 +38,8 @@ void daily_C_deciduous_partitioning (cell_t *const c, const int layer, const int
 	double delta_branch   = 0.;
 	double delta_stem     = 0.;
 	double delta_fruit    = 0.;
-	double delta_reserve  = 0.;
+	double delta_reserve_alloc  = 0.;
+	double delta_reserve_deple  = 0.;
 
 	/* for check */
 	double npp_to_alloc;
@@ -360,14 +361,14 @@ void daily_C_deciduous_partitioning (cell_t *const c, const int layer, const int
 	else delta_branch   = 0.;
 	if ( s->value[C_TO_FRUIT]    > 0. ) delta_fruit    = s->value[C_TO_FRUIT];
 	else delta_fruit    = 0.;
-	if ( s->value[C_TO_RESERVE]  > 0. ) delta_reserve  = s->value[C_TO_RESERVE];
-	else delta_reserve  = 0.;
+	if ( s->value[C_TO_RESERVE]  > 0. ) delta_reserve_alloc  = s->value[C_TO_RESERVE];
+	else delta_reserve_deple  = fabs(s->value[C_TO_RESERVE]);
 
 
-	s->value[YEARLY_RESERVE_ALLOC] += ( delta_reserve * 1e6 / g_settings->sizeCell );
+	s->value[YEARLY_RESERVE_ALLOC] += ( delta_reserve_alloc * 1e6 / g_settings->sizeCell );
+	s->value[YEARLY_RESERVE_DEPLE] += ( delta_reserve_deple * 1e6 / g_settings->sizeCell );
 
 	s->value[YEARLY_RESERVE_USAGE] += ( s->value[C_TO_RESERVE] * 1e6 / g_settings->sizeCell );
-
 
 	/* biomass production */
 	s->value[BP] += ( ( delta_leaf + delta_froot + delta_stem + delta_branch + delta_croot + delta_fruit ) * 1e6 / g_settings->sizeCell );
