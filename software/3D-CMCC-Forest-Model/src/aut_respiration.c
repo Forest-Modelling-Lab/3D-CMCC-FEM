@@ -1,5 +1,5 @@
 /*
-- * autotrophic_respiration.c
+ * autotrophic_respiration.c
  *
  *  Created on: 25/set/2013
  *      Author: alessio
@@ -32,7 +32,7 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 	double q10_tnight = 2.;                  /* fractional change in rate with a T 10 °C increase in temperature: 2.2 from Schwalm & Ek, 2004; Kimball et al., 1997, 1.5 Mahecha Science, 2010 */
 	double q10_tsoil  = 2.;                  /* fractional change in rate with a T 10 °C increase in temperature: 2.2 from Schwalm & Ek, 2004; Kimball et al., 1997, 1.5 Mahecha Science, 2010 */
 
-	double acc_const = -0.00703;             /* temperature correction factor for acclimation -0.00703 Atkin et al., 2008 GCB, -0.00794 Smith & Dukes 2012; 0.0078 Hidy et al., 2016 GMD */
+	double acc_const  = -0.00794; // -0.00703;             /* temperature correction factor for acclimation -0.00703 Atkin et al., 2008 GCB, -0.00794 Smith & Dukes 2012; 0.0078 Hidy et al., 2016 GMD */
 
 	/* exponent for Temperature */
 	double exponent_tday;

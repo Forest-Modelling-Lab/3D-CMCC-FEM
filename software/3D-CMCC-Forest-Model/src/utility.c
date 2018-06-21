@@ -720,6 +720,10 @@ void reset_annual_class_variables(cell_t *const c)
 					s->value[YEARLY_RESERVE_DEPLE] =        0.;
 					s->value[YEARLY_RESERVE_USAGE] =        0.;
 					s->value[MAX_RESERVE_C_CONC]   =        0.;
+					s->value[MIN_RESERVE_C_CONC]   =        0.;
+
+					s->value[MAX_RESERVE_C]        =        0.;
+					s->value[MIN_RESERVE_C]        =        0.;
 
 					s->value[YEARLY_ASSIMILATION] =         0.;
 					s->value[YEARLY_ASSIMILATION_SUN] =     0.;

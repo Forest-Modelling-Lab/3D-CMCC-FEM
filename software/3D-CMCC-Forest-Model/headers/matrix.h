@@ -455,7 +455,9 @@ enum {
 	STEM_C,                             /* (tC/cell) Current Stem carbon pool */
 	BRANCH_C,                           /* (tC/cell) Current Branch carbon pool */
 	MIN_RESERVE_C,                      /* (tC/cell) Current Minimum reserve carbon pool */
+	MAX_RESERVE_C,                      /* (tC/cell) Current Minimum reserve carbon pool */
 	MAX_RESERVE_C_CONC,                 /* (tC/cell) Current Maximum reserve concentration carbon pool */
+	MIN_RESERVE_C_CONC,                 /* (tC/cell) Current Minimum reserve concentration carbon pool */
 	RESERVE_C,                          /* (tC/cell) Current Reserve carbon pool */
 	FRUIT_C,                            /* (tC/cell) Current Fruit carbon pool */
 	MAX_FRUIT_C,                        /* (tC/cell/year) Annual Fruit carbon pool */
@@ -489,7 +491,7 @@ enum {
 	VOLUME_HWP,                         /* (m3/cell/yr) annual volume harvested woody products removed from stand */
 	CUM_VOLUME_HWP,                     /* (m3/cell) annual volume harvested woody products removed from stand */
 
-	OLD_RESERVE_C,    /* TO REMOVE */   /* (tC/cell) Old Max reserve carbon pool */
+	OLD_RESERVE_C,    /* TO REMOVE */   /* (tC/cell) Old reserve carbon pool */
 
 	/* per tree in tC */
 	TREE_LEAF_C,                        /* (tC/tree) Single Tree Leaf carbon pool */
