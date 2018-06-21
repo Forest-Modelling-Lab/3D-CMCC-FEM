@@ -1768,7 +1768,8 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 										",BRANCHLIVE_C"
 										",BRANCHDEAD_C"
 										",FRUIT_C"
-										",DELTARESERVE_C"
+										",TOT_SAPWOOD_C"
+										",DELTA_RESERVE_C"
 										",DELTA_STEM_C"
 										",DELTA_LEAF_C"
 										",DELTA_FROOT_C"
@@ -1896,7 +1897,7 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 							/* print variables at layer-class level */
 							logger(g_daily_log,",%6.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,"
 									"%d,%d,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
-									",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
+									",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
 									",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",
 									s->value[GPP],
 									s->value[Av_TOT],
@@ -1943,6 +1944,7 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 									s->value[BRANCH_LIVEWOOD_C],
 									s->value[BRANCH_DEADWOOD_C],
 									s->value[FRUIT_C],
+									s->value[TOT_SAPWOOD_C],
 									s->value[C_TO_RESERVE],
 									s->value[C_TO_STEM],
 									s->value[C_TO_LEAF],
@@ -2428,7 +2430,8 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 										",BPE"
 										",diffCUE-BPE"
 										",Y(perc)"
-										",[NSC]"
+										",MAX_NSC_CONC"
+										",MIN_NSC_CONC"
 										",PeakLAI"
 										",MaxLAI"
 										",SLA"
@@ -2448,6 +2451,7 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 										",CINT"
 										",CLE"
 										",WUE"
+										",MAX_RESERVE_C"
 										",MIN_RESERVE_C"
 										",RESERVE_C"
 										",STEM_C"
@@ -2590,19 +2594,19 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 								logger(g_annual_log,",%c", sz_management[c->heights[height].dbhs[dbh].ages[age].species[species].management]);
 
 								/* print variables at layer-class level */
-								logger(g_annual_log,",%6.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%d,%d,%d,%d,%d,%3.4f"
-										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
+								logger(g_annual_log,",%6.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%d,%d,%d,%d,%d,%3.4f"
+										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
 										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
 										",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",
 										s->value[YEARLY_GPP],
-										s->value[YEARLY_GPP_SUN]  / s->value[YEARLY_GPP],
-										s->value[YEARLY_GPP_SHADE]/ s->value[YEARLY_GPP],
-										s->value[YEARLY_Av_SUN]   / s->value[YEARLY_A_SUN],
-										s->value[YEARLY_Aj_SUN]   / s->value[YEARLY_A_SUN],
-										s->value[YEARLY_Av_SHADE] / s->value[YEARLY_A_SHADE],
-										s->value[YEARLY_Aj_SHADE] / s->value[YEARLY_A_SHADE],
-										s->value[YEARLY_Av_TOT]   / s->value[YEARLY_A_TOT],
-										s->value[YEARLY_Aj_TOT]   / s->value[YEARLY_A_TOT],
+										s->value[YEARLY_GPP_SUN]   / s->value[YEARLY_GPP],
+										s->value[YEARLY_GPP_SHADE] / s->value[YEARLY_GPP],
+										s->value[YEARLY_Av_SUN]    / s->value[YEARLY_A_SUN],
+										s->value[YEARLY_Aj_SUN]    / s->value[YEARLY_A_SUN],
+										s->value[YEARLY_Av_SHADE]  / s->value[YEARLY_A_SHADE],
+										s->value[YEARLY_Aj_SHADE]  / s->value[YEARLY_A_SHADE],
+										s->value[YEARLY_Av_TOT]    / s->value[YEARLY_A_TOT],
+										s->value[YEARLY_Aj_TOT]    / s->value[YEARLY_A_TOT],
 										s->value[YEARLY_TOTAL_GROWTH_RESP],
 										s->value[YEARLY_TOTAL_MAINT_RESP],
 										s->value[YEARLY_TOTAL_AUT_RESP],
@@ -2623,7 +2627,8 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 										s->value[YEARLY_BPE],
 										(s->value[YEARLY_CUE] - s->value[YEARLY_BPE]),
 										s->value[YEARLY_TOTAL_AUT_RESP] / s->value[YEARLY_GPP] * 100.,
-										s->value[TREE_RESERVE_C] / (s->value[TREE_SAPWOOD_C] * GC_GDM ) * 100.,
+										s->value[MAX_RESERVE_C_CONC],
+										s->value[MIN_RESERVE_C_CONC],
 										s->value[PEAK_LAI_PROJ],
 										s->value[MAX_LAI_PROJ],
 										s->value[SLA_PROJ],
@@ -2643,6 +2648,7 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 										s->value[YEARLY_CANOPY_INT],
 										s->value[YEARLY_CANOPY_LATENT_HEAT],
 										s->value[YEARLY_WUE],
+										s->value[MAX_RESERVE_C],
 										s->value[MIN_RESERVE_C],
 										s->value[RESERVE_C],
 										s->value[STEM_C],

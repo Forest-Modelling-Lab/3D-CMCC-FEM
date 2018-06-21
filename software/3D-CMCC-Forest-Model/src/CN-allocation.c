@@ -31,7 +31,6 @@ void carbon_allocation ( cell_t *const c, age_t *const a, species_t *const s, co
 	/* it allocates daily assimilated carbon for both deciduous and evergreen daily
 	 * and removes the respired and dead parts */
 
-
 	s->value[OLD_RESERVE_C] = s->value[RESERVE_C];
 
 	logger(g_debug_log, "\n**CARBON ALLOCATION**\n");
@@ -150,8 +149,6 @@ void carbon_allocation ( cell_t *const c, age_t *const a, species_t *const s, co
 	CHECK_CONDITION(fabs((s->value[CROOT_SAPWOOD_C]  + s->value[CROOT_HEARTWOOD_C]) - s->value[CROOT_C]), >,eps);
 	CHECK_CONDITION(fabs((s->value[BRANCH_SAPWOOD_C] + s->value[BRANCH_HEARTWOOD_C])- s->value[BRANCH_C]),>,eps);
 
-
-
 	/* check */
 	CHECK_CONDITION ( s->value[LEAF_C],     < , ZERO );
 	CHECK_CONDITION ( s->value[FROOT_C],    < , ZERO );
@@ -166,7 +163,6 @@ void carbon_allocation ( cell_t *const c, age_t *const a, species_t *const s, co
 	CHECK_CONDITION ( s->value[CROOT_HEARTWOOD_C],  < , ZERO );
 	CHECK_CONDITION ( s->value[BRANCH_SAPWOOD_C],   < , ZERO );
 	CHECK_CONDITION ( s->value[BRANCH_HEARTWOOD_C], < , ZERO );
-
 
 	s->value[TOTAL_C] = s->value[LEAF_C] +
 			s->value[FROOT_C]            +
@@ -183,9 +179,16 @@ void carbon_allocation ( cell_t *const c, age_t *const a, species_t *const s, co
 		s->value[MAX_FRUIT_C] += s->value[C_TO_FRUIT];
 	}
 
+	/* compute maximum and minimum annual NSC concentration */
 	if ( s->value[RESERVE_C] > s->value[OLD_RESERVE_C] )
 	{
-		s->value[MAX_RESERVE_C_CONC] = ( s->value[RESERVE_C] / (s->value[TOT_SAPWOOD_C] * GC_GDM )) *100.;
+		s->value[MAX_RESERVE_C]      = s->value[RESERVE_C];
+
+		s->value[MAX_RESERVE_C_CONC] = ( s->value[MAX_RESERVE_C] / (s->value[TOT_SAPWOOD_C] * GC_GDM ) ) * 100.;
+	}
+	else
+	{
+		s->value[MIN_RESERVE_C_CONC] = ( s->value[RESERVE_C]     / (s->value[TOT_SAPWOOD_C] * GC_GDM ) ) * 100.;
 	}
 
 	/*** update cell level carbon fluxes (gC/m2/day)***/
