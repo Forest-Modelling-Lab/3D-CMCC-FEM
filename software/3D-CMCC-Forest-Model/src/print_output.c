@@ -1764,7 +1764,7 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 										",CROOTLIVE_C"
 										",CROOTDEAD_C"
 										",BRANCH_C"
-										",BRANCH_C"
+										",BRANCHSAP_C"
 										",BRANCHLIVE_C"
 										",BRANCHDEAD_C"
 										",FRUIT_C"

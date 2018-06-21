@@ -30,6 +30,7 @@ enum {
 	, SETTINGS_YEAR_START_CO2_FIXED
 	, SETTINGS_NDEP_FIXED
 	, SETTINGS_TBASE_RESP
+	, SETTINGS_PHOTO_ACCL
 	, SETTINGS_RESP_ACCL
 	, SETTINGS_REGENERATION
 	, SETTINGS_MANAGEMENT
@@ -102,6 +103,7 @@ const char* sz_settings[SETTINGS_COUNT] = {
 	, "YEAR_START_CO2_FIXED"
 	, "NDEP_FIXED"
 	, "TBASE_RESP"
+	, "PHOTO_ACCL"
 	, "RESP_ACCL"
 	, "REGENERATION"
 	, "MANAGEMENT"
@@ -320,6 +322,7 @@ static int settings_replanted_import(const char* const filename, settings_t* s)
 
 		if ( ! current )
 		{
+			fclose(f);
 			return 0;
 		}
 
@@ -535,10 +538,10 @@ settings_t* settings_import(const char *const filename) {
 		if ( ! token ) {
 			int flag;
 
-			printf("no value specified for %s", token);
+			printf("no value specified for %s\n", sz_settings[index]);
 			/* check if is an optional parameter */
 			flag = 0;
-			for ( i = 0; i < SIZE_OF_ARRAY(optional); ++i ) {
+			for ( i = 0; i < (int)SIZE_OF_ARRAY(optional); ++i ) {
 				if ( index == optional[i] ) {
 					flag = 1;
 					break;
@@ -636,6 +639,12 @@ settings_t* settings_import(const char *const filename) {
 			case SETTINGS_NDEP_FIXED:
 				if ( ! string_compare_i(token, "on") ) {
 					s->Ndep_fixed = 1;
+				}
+			break;
+
+			case SETTINGS_PHOTO_ACCL:
+				if ( ! string_compare_i(token, "on") ) {
+					s->Photo_accl = 1;
 				}
 			break;
 
@@ -806,7 +815,7 @@ settings_t* settings_import(const char *const filename) {
 
 			/* check for optional parameter */
 			flag = 0;
-			for ( y = 0; y < SIZE_OF_ARRAY(optional); ++y ) {
+			for ( y = 0; y < (int)SIZE_OF_ARRAY(optional); ++y ) {
 				if ( i == optional[y] ) {
 					flag = 1;
 					break;
@@ -819,10 +828,8 @@ settings_t* settings_import(const char *const filename) {
 				puts("");
 				settings_free(s);
 				return 0;
-			}
-			else
-			{
-				printf(" optional.\n", sz_settings[i]);
+			} else {
+				puts(" optional.");
 			}
 		}
 	}
