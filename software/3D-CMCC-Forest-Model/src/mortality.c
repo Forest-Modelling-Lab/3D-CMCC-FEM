@@ -87,11 +87,15 @@ void self_thinning_mortality (cell_t *const c, const int layer, const int year)
 					//FIXME FOR MULTICLASS IN THE SAME LAYER POURPOSES
 //					while ( c->tree_layers[layer].layer_cover_proj >= g_settings->max_layer_cover )
 //					{
-					while (s->value[DBHDC_EFF] <  s->value[DBHDCMIN])
+					while (s->value[DBHDC_EFF] <  s->value[DBHDCMIN] )
 					{
+
 						/* remove one single tree at each run */
 						++deadtree;
 						--livetree;
+
+						/* check */
+						CHECK_CONDITION(livetree, ==, 0);
 
 						/* impose DBHDC_EFF = DBHDCMIN */
 						//s->value[DBHDC_EFF] = s->value[DBHDCMIN];
@@ -122,7 +126,6 @@ void self_thinning_mortality (cell_t *const c, const int layer, const int year)
 							/* check for recompued canopy cover */
 							c->tree_layers[layer].layer_cover_proj += s->value[CANOPY_COVER_PROJ];
 						}
-
 					}
 
 					//fixme this is not correct for multilayer

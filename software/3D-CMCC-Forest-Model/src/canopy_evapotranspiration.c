@@ -87,9 +87,6 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 	double melt;                                                           /* (kg/m2/s) snow sublimation flux */
 	double subl;                                                           /* (kg/m2/s) snow melt flux */
 	double subl_melt;                                                      /* (kg/m2/s) snow sublimation or melt flux */
-	static int days_with_canopy_wet;
-	static int days_with_canopy_snow;
-
 
 
 	species_t *s;
@@ -236,7 +233,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 			{
 				/* NO Canopy transpiration (Canopy completely Wet) */
 
-				++days_with_canopy_wet;
+				++ s->counter[DAYS_WITH_CANOPY_WET];
 
 				/* adjust day length for transpiration */
 				transp_daylength_sec             = 0.;
@@ -259,7 +256,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 			else
 			{
 				/* all intercepted water evaporated */
-				days_with_canopy_wet = 0;
+				s->counter[DAYS_WITH_CANOPY_WET] = 0;
 
 				/* all canopy water evaporates */
 				evapo = s->value[CANOPY_WATER];
@@ -385,7 +382,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 
 				/* NO CANOPY TRANSPIRATION (Canopy completely Snowed)!!! */
 
-				++days_with_canopy_snow;
+				++s->counter[DAYS_WITH_CANOPY_SNOW];
 
 				/* adjust day length for transpiration */
 				transp_daylength_sec             = 0.;
@@ -409,7 +406,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 			else
 			{
 				/* all intercepted snow evaporated */
-				days_with_canopy_snow = 0;
+				s->counter[DAYS_WITH_CANOPY_SNOW] = 0;
 
 				/* all canopy snow sublimates or melts */
 				subl_melt = s->value[CANOPY_SNOW];

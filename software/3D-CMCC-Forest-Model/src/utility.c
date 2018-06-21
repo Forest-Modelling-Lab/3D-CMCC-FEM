@@ -275,7 +275,7 @@ void reset_daily_layer_variables(cell_t *const c)
 		l->layer_avg_tree_height =      0.;
 		l->layer_tree_height_modifier = 0.;
 		l->daily_layer_cover_proj =     0.;
-		l->daily_layer_cover_exp =      0.;
+		//l->daily_layer_cover_exp =      0.;
 	}
 }
 void reset_monthly_layer_variables(cell_t *const c)
@@ -374,9 +374,11 @@ void reset_daily_class_variables(cell_t *const c)
 					/* reset daily carbon fluxes */
 					s->value[GPP] =                       0.;
 					s->value[NPP] =                       0.;
+					s->value[BP] =                        0.;
 					s->value[NPP_tC] =                    0.;
 					s->value[C_FLUX] =                    0.;
 					s->value[CUE] =                       0.;
+					s->value[BPE] =                       0.;
 					s->value[ASSIMILATION] =              0.;
 					s->value[ASSIMILATION_SUN] =          0.;
 					s->value[ASSIMILATION_SHADE] =        0.;
@@ -574,7 +576,9 @@ void reset_monthly_class_variables(cell_t *const c)
 					s->value[MONTHLY_GPP] =                  0.;
 					s->value[MONTHLY_TOTAL_AUT_RESP] =       0.;
 					s->value[MONTHLY_NPP] =                  0.;
+					s->value[MONTHLY_BP] =                   0.;
 					s->value[MONTHLY_CUE] =                  0.;
+					s->value[MONTHLY_BPE] =                  0.;
 					s->value[MONTHLY_WUE] =                  0.;
 					s->value[MONTHLY_iWUE] =                 0.;
 					s->value[MONTHLY_iWUE_SUN] =             0.;
@@ -650,7 +654,7 @@ void reset_annual_class_variables(cell_t *const c)
 					s->value[MAX_FROOT_C] =                 0.;
 					s->value[MAX_FRUIT_C] =                 0.;
 					s->value[MAX_LAI_LEAFFALL_PROJ] =       0.;
-					s->value[CANOPY_COVER_EXP] =            0.;
+					//s->value[CANOPY_COVER_EXP] =            0.;
 					s->value[CROWN_AREA] =                  0.;
 					s->value[CROWN_VOLUME] =                0.;
 
@@ -686,7 +690,9 @@ void reset_annual_class_variables(cell_t *const c)
 					s->value[YEARLY_GPP_SHADE] =            0.;
 					s->value[YEARLY_NPP] =                  0.;
 					s->value[YEARLY_NPP_tC] =               0.;
+					s->value[YEARLY_BP] =                   0.;
 					s->value[YEARLY_CUE] =                  0.;
+					s->value[YEARLY_BPE] =                  0.;
 					s->value[YEARLY_WUE] =                  0.;
 					s->value[YEARLY_iWUE] =                 0.;
 					s->value[YEARLY_iWUE_SUN] =             0.;
@@ -709,6 +715,11 @@ void reset_annual_class_variables(cell_t *const c)
 					s->value[YEARLY_CANOPY_EVAPO_TRANSP] =  0.;
 					s->value[YEARLY_CANOPY_LATENT_HEAT] =   0.;
 					s->counter[N_TREE_SAP] =                0;
+
+					s->value[YEARLY_RESERVE_ALLOC] =        0.;
+					s->value[YEARLY_RESERVE_DEPLE] =        0.;
+					s->value[YEARLY_RESERVE_USAGE] =        0.;
+					s->value[MAX_RESERVE_C_CONC]   =        0.;
 
 					s->value[YEARLY_ASSIMILATION] =         0.;
 					s->value[YEARLY_ASSIMILATION_SUN] =     0.;

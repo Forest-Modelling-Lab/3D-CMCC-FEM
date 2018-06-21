@@ -21,8 +21,6 @@ extern settings_t* g_settings;
 
 void soil_water_balance(cell_t *c, const meteo_daily_t *const meteo_daily, int year)
 {
-	static double cum_asw;
-
 	logger(g_debug_log, "\n**SOIL-SNOW WATER BALANCE**\n");
 
 	/* update balance */
@@ -83,14 +81,14 @@ void soil_water_balance(cell_t *c, const meteo_daily_t *const meteo_daily, int y
 	CHECK_CONDITION(c->snow_pack, <, ZERO);
 
 	/* compute annual mean asw */
-	if ( c-> doy == 1 ) cum_asw = 0.;
+	if ( c-> doy == 1 ) c->cum_asw = 0.;
 
-	cum_asw += c->asw;
+	c->cum_asw += c->asw;
 
 	if ( c->doy == ( IS_LEAP_YEAR ( c->years[year].year ) ? 364 : 365  ) )
 	{
-		c->years[year].yearly .asw = cum_asw / c->doy;
-		cum_asw = 0.;
+		c->years[year].yearly.asw = c->cum_asw / c->doy;
+		c->cum_asw = 0.;
 	}
 
 }

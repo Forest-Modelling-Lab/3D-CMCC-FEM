@@ -31,6 +31,7 @@ enum {
 	, SETTINGS_YEAR_START_CO2_FIXED
 	, SETTINGS_NDEP_FIXED
 	, SETTINGS_TBASE_RESP
+	, SETTINGS_PHOTO_ACCL
 	, SETTINGS_RESP_ACCL
 	, SETTINGS_REGENERATION
 	, SETTINGS_MANAGEMENT
@@ -104,6 +105,7 @@ const char* sz_settings[SETTINGS_COUNT] = {
 	, "YEAR_START_CO2_FIXED"
 	, "NDEP_FIXED"
 	, "TBASE_RESP"
+	, "PHOTO_ACCL"
 	, "RESP_ACCL"
 	, "REGENERATION"
 	, "MANAGEMENT"
@@ -666,6 +668,12 @@ settings_t* settings_import(const char *const filename) {
 			case SETTINGS_NDEP_FIXED:
 				if ( ! string_compare_i(token, "on") ) {
 					s->Ndep_fixed = 1;
+				}
+			break;
+
+			case SETTINGS_PHOTO_ACCL:
+				if ( ! string_compare_i(token, "on") ) {
+					s->Photo_accl = 1;
 				}
 			break;
 

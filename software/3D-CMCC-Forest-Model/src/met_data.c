@@ -439,11 +439,8 @@ void Daily_Nightime_avg_temperature(meteo_d_t *const met, const int day, const i
 	}
 }
 
-void Daily_Thermic_sum (meteo_d_t *met, const int day, const int month, const int year)
+void Daily_Thermic_sum (cell_t* c, meteo_d_t *met, const int day, const int month, const int year)
 {
-	static double previous_thermic_sum;
-
-	//assert(DAILY == g_settings->time);
 
 	if (!day && !month)
 	{
@@ -452,12 +449,12 @@ void Daily_Thermic_sum (meteo_d_t *met, const int day, const int month, const in
 		if(met[month].d[day].tavg > GDD_BASIS)
 		{
 			met[month].d[day].thermic_sum = met[month].d[day].tavg - GDD_BASIS;
-			previous_thermic_sum = met[month].d[day].thermic_sum;
+			c->previous_thermic_sum = met[month].d[day].thermic_sum;
 		}
 		else
 		{
 			met[month].d[day].thermic_sum = 0.;
-			previous_thermic_sum          = 0.;
+			c->previous_thermic_sum          = 0.;
 		}
 		if (met[month].d[day].tavg == NO_DATA)
 			logger(g_debug_log, "tavg NO_DATA!!\n");
@@ -466,12 +463,12 @@ void Daily_Thermic_sum (meteo_d_t *met, const int day, const int month, const in
 	{
 		if(met[month].d[day].tavg > GDD_BASIS)
 		{
-			met[month].d[day].thermic_sum = previous_thermic_sum + (met[month].d[day].tavg - GDD_BASIS);
-			previous_thermic_sum = met[month].d[day].thermic_sum;
+			met[month].d[day].thermic_sum = c->previous_thermic_sum + (met[month].d[day].tavg - GDD_BASIS);
+			c->previous_thermic_sum = met[month].d[day].thermic_sum;
 		}
 		else
 		{
-			met[month].d[day].thermic_sum = previous_thermic_sum;
+			met[month].d[day].thermic_sum = c->previous_thermic_sum;
 		}
 		if (met[month].d[day].tavg == NO_DATA)
 			logger(g_debug_log, "tavg NO_DATA!!\n");
@@ -481,8 +478,6 @@ void Daily_Thermic_sum (meteo_d_t *met, const int day, const int month, const in
 void Daily_Air_pressure(meteo_d_t *met, const int day, const int month)
 {
 	double t1, t2;
-
-	//assert(DAILY == g_settings->time);
 
 	/* compute air pressure */
 	/* BIOME-BGC version */
@@ -501,8 +496,6 @@ void Daily_Air_pressure(meteo_d_t *met, const int day, const int month)
 
 
 void Daily_Air_density (meteo_d_t *met, const int day, const int month) {
-
-	//assert(DAILY == g_settings->time);
 
 	/* compute density of air (in kg/m3) */
 	/* following Solantie R., 2004, Boreal Environmental Research, 9: 319-333, the model uses tday if available */
@@ -767,8 +760,6 @@ void Daily_Averaged_temperature(const cell_t *const c, const e_averaged_var var,
 
 void Daily_Dew_temperature (meteo_d_t *const met, const int day, const int month)
 {
-	//assert(DAILY == g_settings->time);
-
 	/* dew point temperature based on Allen et al., 1998; Bosen, 1958; Murray, 1967 */
 	met[month].d[day].tdew = (116.91 + 237.3 * log(met[month].d[day].ea))/(16.78 - log(met[month].d[day].ea));
 }
@@ -776,8 +767,6 @@ void Daily_Dew_temperature (meteo_d_t *const met, const int day, const int month
 void Daily_Ndeposition (const cell_t *const c, int day, int month, int year)
 {
 	int doy;
-
-	//assert(DAILY == g_settings->time);
 
 	if ( IS_LEAP_YEAR(c->years[year].year)) doy = 366;
 	else doy = 365;

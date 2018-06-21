@@ -48,6 +48,7 @@ typedef struct {
 	int year_start_co2_fixed;            /* for CO2_trans = var, year at which CO2 is fixed */
 	char Ndep_fixed;                     /* fixed Nitrogen deposition must be 'on' or 'off' */
 	double Tbase_resp;                   /* T base temperature for respiration (°C) */
+	char Photo_accl;
 	char Resp_accl;                      /* acclimation of repiration must be 'on' or 'off' */
 	char regeneration;                   /* regeneration must be 'on' or 'off' */
 	char management;                     /* management must be 'on' of 'off' */

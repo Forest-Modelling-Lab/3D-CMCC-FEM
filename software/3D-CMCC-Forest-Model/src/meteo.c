@@ -1576,7 +1576,7 @@ static int meteo_from_arr(double *const values, const int rows_count, const int 
 #undef VALUE_AT
 }
 
-static int import_nc(const char* const filename, meteo_annual_t** pyos, int* const yos_count) {
+static int import_nc(const char* const filename, meteo_annual_t** pyos, int* const yos_count, cell_t*const cell) {
 #define COLUMN_AT(c)	((c)*dims_size[ROWS_DIM])
 #define VALUE_AT(r,c)	((r)+(COLUMN_AT((c))))
 	int i;
@@ -1812,7 +1812,7 @@ static int import_nc(const char* const filename, meteo_annual_t** pyos, int* con
 		fclose(f);
 	}
 #endif
-	if ( ! meteo_from_arr(values, dims_size[ROWS_DIM], MET_COLUMNS_COUNT, pyos, yos_count) ) {
+	if ( ! meteo_from_arr(values, dims_size[ROWS_DIM], MET_COLUMNS_COUNT, pyos, yos_count, cell) ) {
 		free(values);
 		return 0;
 	}
@@ -1834,7 +1834,7 @@ static int import_nc(const char* const filename, meteo_annual_t** pyos, int* con
 }
 
 
-static int import_lst(const char *const filename, meteo_annual_t** p_yos, int *const yos_count, const int x_cell, const int y_cell) {
+static int import_lst(const char *const filename, meteo_annual_t** p_yos, int *const yos_count, cell_t*const cell) {
 #define VARS_COUNT		((MET_COLUMNS_COUNT)-5)	/* we remove first 5 columns: year, month, day, hour and halfhour */
 #define COLUMN_AT(c)	((c)*rows_count)
 #define VALUE_AT(r,c)	((r)+(COLUMN_AT(c)))
@@ -1896,6 +1896,10 @@ static int import_lst(const char *const filename, meteo_annual_t** p_yos, int *c
 	int date_imported;
 	float lat;
 	float lon;
+
+	assert(filename);
+	assert(p_yos);
+	assert(cell);
 
 	/* init */
 	rows_count = 0;
@@ -1991,8 +1995,8 @@ static int import_lst(const char *const filename, meteo_annual_t** p_yos, int *c
 		}
 
 		/* check if x_cell is >= x_dim */
-		if ( x_cell >= dims_size[X_DIM] ) {
-			printf("x_cell >= x_dim: %d,%d\n", x_cell, dims_size[X_DIM]);
+		if ( cell->x >= dims_size[X_DIM] ) {
+			printf("cell->x >= x_dim: %d,%d\n", cell->x, dims_size[X_DIM]);
 			goto quit_no_nc_err;
 		}
 
@@ -2001,12 +2005,12 @@ static int import_lst(const char *const filename, meteo_annual_t** p_yos, int *c
 			x_cells_count = dims_size[X_DIM];
 			y_cells_count = dims_size[Y_DIM];
 		}
-		*/
+		 */
 
 		/* check if y_cell is >= y_dim */
-		if ( y_cell >= dims_size[Y_DIM] ) {
+		if ( cell->y >= dims_size[Y_DIM] ) {
 			//logger(g_debug_log, "y_cell >= y_dim: %d,%d\n", y_cell, dims_size[Y_DIM]);
-			printf("y_cell >= y_dim: %d,%d\n", y_cell, dims_size[Y_DIM]);
+			printf("cell->y >= y_dim: %d,%d\n", cell->y, dims_size[Y_DIM]);
 			goto quit_no_nc_err;
 		}
 
@@ -2071,12 +2075,12 @@ static int import_lst(const char *const filename, meteo_annual_t** p_yos, int *c
 				/* who cames first ? x or y ? */
 				if ( dims_id[X_DIM] == ids[0] ) {
 					/* x first */
-					start[0] = x_cell;
-					start[1] = y_cell;
+					start[0] = cell->x;
+					start[1] = cell->y;
 				} else {
 					/* y first */
-					start[0] = y_cell;
-					start[1] = x_cell;
+					start[0] = cell->y;
+					start[1] = cell->x;
 				}
 				count[0] = count[1] = 1;
 				ret = nc_get_vara_float(id_file, i, start, count, &lat);
@@ -2091,12 +2095,12 @@ static int import_lst(const char *const filename, meteo_annual_t** p_yos, int *c
 				/* who cames first ? x or y ? */
 				if ( dims_id[X_DIM] == ids[0] ) {
 					/* x first */
-					start[0] = x_cell;
-					start[1] = y_cell;
+					start[0] = cell->x;
+					start[1] = cell->y;
 				} else {
 					/* y first */
-					start[0] = y_cell;
-					start[1] = x_cell;
+					start[0] = cell->y;
+					start[1] = cell->x;
 				}
 				count[0] = count[1] = 1;
 				ret = nc_get_vara_float(id_file, i, start, count, &lon);
@@ -2136,10 +2140,10 @@ static int import_lst(const char *const filename, meteo_annual_t** p_yos, int *c
 						}
 						/* ALESSIOR...do a clean up here...too much code! */
 						if ( dims_id[X_DIM] == ids[0] ) {
-							start[0] = x_cell;
+							start[0] = cell->x;
 							count[0] = 1;
 						} else if ( dims_id[Y_DIM] == ids[0] ) {
-							start[0] = y_cell;
+							start[0] = cell->y;
 							count[0] = 1;
 						} else if ( dims_id[TIME_DIM] == ids[0] ) {
 							start[0] = 0;
@@ -2149,10 +2153,10 @@ static int import_lst(const char *const filename, meteo_annual_t** p_yos, int *c
 							count[ids[0]] = dims_size[HEIGHT_DIM];
 						}
 						if ( dims_id[X_DIM] == ids[1] ) {
-							start[1] = x_cell;
+							start[1] = cell->x;
 							count[1] = 1;
 						} else if ( dims_id[Y_DIM] == ids[1] ) {
-							start[1] = y_cell;
+							start[1] = cell->y;
 							count[1] = 1;
 						} else if ( dims_id[TIME_DIM] == ids[1] ) {
 							start[1] = 0;
@@ -2162,10 +2166,10 @@ static int import_lst(const char *const filename, meteo_annual_t** p_yos, int *c
 							count[1] = dims_size[HEIGHT_DIM];
 						}
 						if ( dims_id[X_DIM] == ids[2] ) {
-							start[2] = x_cell;
+							start[2] = cell->x;
 							count[2] = 1;
 						} else if ( dims_id[Y_DIM] == ids[2] ) {
-							start[2] = y_cell;
+							start[2] = cell->y;
 							count[2] = 1;
 						} else if ( dims_id[TIME_DIM] == ids[2] ) {
 							start[2] = 0;
@@ -2176,10 +2180,10 @@ static int import_lst(const char *const filename, meteo_annual_t** p_yos, int *c
 						}
 						if ( dims_id[HEIGHT_DIM] != -1 ) {
 							if ( dims_id[X_DIM] == ids[3] ) {
-								start[3] = x_cell;
+								start[3] = cell->x;
 								count[3] = 1;
 							} else if ( dims_id[Y_DIM] == ids[3] ) {
-								start[3] = y_cell;
+								start[3] = cell->y;
 								count[3] = 1;
 							} else if ( dims_id[TIME_DIM] == ids[3] ) {
 								start[3] = 0;
@@ -2341,7 +2345,7 @@ static int import_lst(const char *const filename, meteo_annual_t** p_yos, int *c
 		FILE *f;
 		int row;
 		char buffer[64];
-		sprintf(buffer, "debug_file_%g_%g_%d_%d.txt", lat, lon, x_cell, y_cell);
+		sprintf(buffer, "debug_file_%g_%g_%d_%d.txt", lat, lon, cell->x, cell->y);
 		f = fopen(buffer, "w");
 		if ( ! f ) {
 			logger_error(g_debug_log, "unable to create output file!");
@@ -2375,7 +2379,7 @@ static int import_lst(const char *const filename, meteo_annual_t** p_yos, int *c
 #endif
 #endif
 
-	i = meteo_from_arr(values, rows_count, MET_COLUMNS_COUNT, p_yos, yos_count);
+	i = meteo_from_arr(values, rows_count, MET_COLUMNS_COUNT, p_yos, yos_count, cell);
 	free(values);
 	return i;
 
@@ -2392,7 +2396,7 @@ quit_no_nc_err:
 #undef VARS_COUNT
 }
 
-static int import_txt(const char *const filename, meteo_annual_t** p_yos, int *const yos_count) {
+static int import_txt(const char *const filename, meteo_annual_t** p_yos, int *const yos_count, cell_t*const cell) {
 #define BUFFER_SIZE	1024
 #define VALUE_AT(r,c)	((r)+((c)*rows_count))
 	int i = 0,
@@ -2414,7 +2418,7 @@ static int import_txt(const char *const filename, meteo_annual_t** p_yos, int *c
 
 	FILE *f;
 
-	assert(p_yos);
+	assert(p_yos && cell);
 
 	// open file for rows count
 	f = fopen(filename, "r");
@@ -2522,7 +2526,7 @@ static int import_txt(const char *const filename, meteo_annual_t** p_yos, int *c
 			{
 				if  ( -1 != columns[i] )
 				{
-					logger_error(g_debug_log, "column '%s' already assigned.\n\n", token2);
+					logger_error(g_debug_log, "met column %s already assigned.\n\n", token2);
 					free(values);
 					fclose(f);
 					return 0;
@@ -2589,7 +2593,7 @@ static int import_txt(const char *const filename, meteo_annual_t** p_yos, int *c
 				}
 			}
 
-			logger_error(g_debug_log, "column '%s' not found.\n\n", sz_met_columns[i]);
+			logger_error(g_debug_log, "met column %s not found.\n\n", sz_met_columns[i]);
 			free(values);
 			fclose(f);
 			return 0;
@@ -2779,7 +2783,7 @@ void meteo_annual_free(meteo_annual_t* p, const int count)
 }
 
 /* file is the comma separated files list!!! not a single file, initially yos_count is equal to 0 */
-meteo_annual_t* import_meteo_data(const char *const file, int *const yos_count, const int x, const int y) {
+int import_meteo_data(const char *const file, int *const yos_count, void* _cell) {
 	char *token;
 	char *p;
 	char *p2;
@@ -2787,16 +2791,19 @@ meteo_annual_t* import_meteo_data(const char *const file, int *const yos_count, 
 	char *temp;
 	int i;
 	int year_start_co2_fixed_index;
+	cell_t* cell;
 	meteo_annual_t *meteo_annual;
 
 	const char comma_delimiter[] = ",\r\n";
 
-	assert(file && yos_count);
+	assert(file && yos_count && _cell);
 
+	cell = (cell_t*)_cell;
+	
 	temp = string_copy(file);
 	if ( ! temp ) {
 		logger_error(g_debug_log, sz_err_out_of_memory);
-		return NULL;
+		return 0;
 	}
 
 	meteo_annual = NULL;
@@ -2828,16 +2835,16 @@ meteo_annual_t* import_meteo_data(const char *const file, int *const yos_count, 
 			}
 		}
 		if ( i ) {
-			i = import_nc(token, &meteo_annual, yos_count);
+			i = import_nc(token, &meteo_annual, yos_count, cell);
 		} else if ( ! string_compare_i(p2, "lst") ) {
-			i = import_lst(token, &meteo_annual, yos_count, x, y);
+			i = import_lst(token, &meteo_annual, yos_count, cell);
 		} else {
-			i = import_txt(token, &meteo_annual, yos_count);
+			i = import_txt(token, &meteo_annual, yos_count, cell);
 		}
 		if ( ! i ) {
 			free(temp);
-			meteo_annual_free(meteo_annual, *yos_count);
-			return NULL;
+			free(meteo_annual);
+			return 0;
 		}
 	}
 	free(temp);
@@ -2863,8 +2870,8 @@ meteo_annual_t* import_meteo_data(const char *const file, int *const yos_count, 
 
 		if ( ! g_sz_co2_conc_file ) {
 			logger_error(g_debug_log, "co2 concentration file not specified!");
-			meteo_annual_free(meteo_annual, *yos_count);
-			return NULL;
+			free(meteo_annual);
+			return 0;
 		}
 
 		for ( i = 0; i < *yos_count; ++i ) {
@@ -2875,8 +2882,8 @@ meteo_annual_t* import_meteo_data(const char *const file, int *const yos_count, 
 				if ( meteo_annual[i].year >= g_settings->year_start_co2_fixed ) {
 					if ( -1 == year_start_co2_fixed_index ) {
 						logger_error(g_debug_log, "year_start_co2_fixed_index not found!");
-						meteo_annual_free(meteo_annual, *yos_count);
-						return NULL;
+						free(meteo_annual);
+						return 0;
 					}
 					meteo_annual[i].co2Conc = meteo_annual[year_start_co2_fixed_index].co2Conc;
 				}
@@ -2884,8 +2891,8 @@ meteo_annual_t* import_meteo_data(const char *const file, int *const yos_count, 
 
 			if ( /*err &&*/ IS_INVALID_VALUE(meteo_annual[i].co2Conc) ) {
 				logger_error(g_debug_log, "co2 concentration not found!!\n");
-				meteo_annual_free(meteo_annual, *yos_count);
-				return NULL;
+				free(meteo_annual);
+				return 0;
 			}
 		}
 	}
@@ -2904,8 +2911,8 @@ meteo_annual_t* import_meteo_data(const char *const file, int *const yos_count, 
 			meteo_annual[i].Ndep = get_ndep(meteo_annual[i].year, &err);
 			if ( err ) {
 				logger_error(g_debug_log, "Ndep not found for year %d on %s!!\n", meteo_annual[i].year, g_sz_ndep_file);
-				meteo_annual_free(meteo_annual, *yos_count);
-				return NULL;
+				free(meteo_annual);
+				return 0;
 			}
 		}
 	} else {
@@ -2920,23 +2927,36 @@ meteo_annual_t* import_meteo_data(const char *const file, int *const yos_count, 
 #if 0
 	/* save imported yos for debugging purposes */
 	{
-		char buffer[64];
 		int i;
 		int month;
 		int z;
 		FILE *f;
 
+		f = fopen("debug_met_daily.csv", "w");
+		if ( ! f ) {
+			puts("unable to create debug_met_daily.csv");
+			free(meteo_annual);
+			return NULL;
+		}
+		fputs("year,month,day,co2_conc,n_days,solar_rad,tavg,tmax,tmin,tday,tnight,vpd,ts_f"
+				",rain,swc,ndvi_lai,daylength,thermic_sum"
+				",rho_air,tsoil,et,windspeed\n", f);
+
 		for ( i = 0; i < *yos_count; ++i ) {
-			sprintf(buffer, "debug_met_daily_%d.csv", yos[i].year);
+			/*
+			char buffer[64];
+
+			sprintf(buffer, "debug_met_daily_%d.csv", meteo_annual[i].year);
 			f = fopen(buffer, "w");
 			if ( ! f ) {
 				printf("unable to create %s\n", buffer);
-				free(yos);
+				free(meteo_annual);
 				return NULL;
 			}
 			fputs("year,month,day,co2_conc,n_days,solar_rad,tavg,tmax,tmin,tday,tnight,vpd,ts_f"
 					",rain,swc,ndvi_lai,daylength,thermic_sum"
 					",rho_air,tsoil,et,windspeed\n", f);
+					*/
 
 			for ( month = 0; month < 12; ++month ) {
 				for ( z = 0; z < 31; ++z ) {
@@ -2944,11 +2964,13 @@ meteo_annual_t* import_meteo_data(const char *const file, int *const yos_count, 
 					{
 						break;
 					}
-					fprintf(f, "%d,%d,%d,%g,%d,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g\n"
+					fprintf(f, "%d,%d,%d,"
+								//"%g,"
+								"%d,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g\n"
 							, meteo_annual[i].year
 							, month+1
 							, z+1
-							, meteo_annual[i].co2_conc
+							//, meteo_annual[i].co2_conc
 							, meteo_annual[i].m[month].d[z].n_days
 							, meteo_annual[i].m[month].d[z].solar_rad
 							, meteo_annual[i].m[month].d[z].tavg
@@ -2975,5 +2997,6 @@ meteo_annual_t* import_meteo_data(const char *const file, int *const yos_count, 
 	}
 #endif
 
-	return meteo_annual;
+	cell->years = meteo_annual;
+	return 1;
 }

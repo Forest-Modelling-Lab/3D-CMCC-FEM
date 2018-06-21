@@ -42,6 +42,15 @@ void daily_C_evergreen_partitioning (cell_t *const c, const int layer, const int
 	double Light_trasm;
 	double npp_to_alloc;
 
+	double delta_leaf    = 0.;
+	double delta_froot   = 0.;
+	double delta_croot   = 0.;
+	double delta_branch  = 0.;
+	double delta_stem    = 0.;
+	double delta_fruit   = 0.;
+	double delta_reserve_alloc  = 0.;
+	double delta_reserve_deple  = 0.;
+
 	age_t *a;
 	species_t *s;
 
@@ -53,13 +62,13 @@ void daily_C_evergreen_partitioning (cell_t *const c, const int layer, const int
 	omega = s->value[OMEGA_CTEM];    /* controls the sensitivity of allocation to changes in water and light availability */
 
 	//fixme it should takes into account above layers
-	Light_trasm = exp(- s->value[K] * s->value[LAI_PROJ]);
+	Light_trasm = exp( - s->value[K] * s->value[LAI_PROJ] );
 
 	/* Marconi: here the allocation of biomass reserve is divided in fine root and leaves following the
 	 * allocation ratio parameter between them. That because
 	 * in evergreen we don't have bud burst phenology phase, and indeed there are two phenology phases;
 	 * the former in which carbon is allocated in fine root and foliage, the latter in
-	 * every pool except foliage*/
+	 * every pool except foliage and fine root */
 
 	logger(g_debug_log, "\n**C-PARTITIONING**\n");
 	logger(g_debug_log, "Carbon partitioning for evergreen\n");
@@ -70,15 +79,15 @@ void daily_C_evergreen_partitioning (cell_t *const c, const int layer, const int
 	logger(g_debug_log, "*Partitioning ratios*\n");
 
 	/* roots */
-	pR = (r0 + (omega * ( 1. - s->value[F_SW]))) / (1. + (omega * (2. - Light_trasm - s->value[F_SW])));
+	pR = ( r0 + ( omega * ( 1. - s->value[F_SW] ) ) ) / ( 1. + ( omega * ( 2. - Light_trasm - s->value[F_SW] ) ) );
 	//logger(g_debug_log, "Roots CTEM ratio = %g %%\n", pR * 100.);
 
 	/* stem */
-	pS = (s0 + (omega * ( 1. - Light_trasm))) / (1. + ( omega * (2. - Light_trasm - s->value[F_SW])));
+	pS = ( s0 + ( omega * ( 1. - Light_trasm ) ) ) / ( 1. + ( omega * ( 2. - Light_trasm - s->value[F_SW] ) ) );
 	//logger(g_debug_log, "Stem CTEM ratio = %g %%\n", pS * 100.);
 
 	/* reserve and leaves */
-	pL = (1. - pS - pR);
+	pL = ( 1. - pS - pR );
 	logger(g_debug_log, "Reserve CTEM ratio = %g %%\n", pL * 100.);
 	CHECK_CONDITION( fabs ( pR + pS + pL ), >, 1 + eps );
 
@@ -97,11 +106,14 @@ void daily_C_evergreen_partitioning (cell_t *const c, const int layer, const int
 		/* assign NPP to local variables and remove the prognostic respiration */
 		npp_to_alloc = s->value[GPP_tC] * ( 1. - g_settings->Fixed_Aut_Resp_rate );
 	}
-
+	logger(g_debug_log, "s->value[GPP_tC] = %g\n", s->value[GPP_tC]);
+	logger(g_debug_log, "s->value[TOTAL_MAINT_RESP_tC]  = %g\n", s->value[TOTAL_MAINT_RESP_tC]);
 	logger(g_debug_log, "npp_to_alloc = %g tC/sizecell/day\n", npp_to_alloc);
 
 	/* note: none carbon pool is refilled if reserve is lower than minimum */
 	/* reserves have priority before all other pools!!! */
+	/* "...species-specific minimum pool (of NSC) sizes of stored C may be necessary to avoid catastrophic xylem failure" 
+	   Sala et al., 2012, Tree Physiology */ 
 
 
 #if 0
@@ -262,11 +274,11 @@ void daily_C_evergreen_partitioning (cell_t *const c, const int layer, const int
 	/*note: for patterns and NSC usage behavior in conifer see also Woodruff & Meinzer, 2011, Plant Cell and Environment */
 
 	/* partitioning */
-	if (npp_to_alloc > 0.0)
+	if ( npp_to_alloc > 0. )
 	{
 		/* check if minimum reserve pool needs to be refilled */
 		/* it doesn't need */
-		if(s->value[RESERVE_C] >= s->value[MIN_RESERVE_C])
+		if( s->value[RESERVE_C] >= s->value[MIN_RESERVE_C] )
 		{
 			double max_leafC        = 0.;
 			double exceeding_leafC  = 0.;
@@ -290,21 +302,23 @@ void daily_C_evergreen_partitioning (cell_t *const c, const int layer, const int
 					/* check for leaf C > max leaf C */
 					if ( ( ( s->value[C_TO_LEAF] * ( 1. - s->value[EFF_GRPERC] ) ) + s->value[LEAF_C] ) > s->value[MAX_LEAF_C] )
 					{
+						logger(g_debug_log, "..exceeding leaf carbon to other pools\n");
 
-						max_leafC       = s->value[MAX_LEAF_C] - s->value[LEAF_C];
+						max_leafC           = s->value[MAX_LEAF_C] - s->value[LEAF_C];
 
-						exceeding_leafC = ( ( npp_to_alloc * ( 1. - s->value[FROOT_LEAF_FRAC] ) ) - ( max_leafC + ( max_leafC * s->value[EFF_GRPERC] ) ) );
+						exceeding_leafC     = ( ( npp_to_alloc * ( 1. - s->value[FROOT_LEAF_FRAC] ) ) - ( max_leafC + ( max_leafC * s->value[EFF_GRPERC] ) ) );
 
 						s->value[C_TO_LEAF] = max_leafC + ( max_leafC * s->value[EFF_GRPERC] );
 					}
 
 					/* check for fine root C > max fine root C */
-					if ( ( (s->value[C_TO_FROOT] * ( 1. - s->value[EFF_GRPERC] ) ) + s->value[FROOT_C] ) > s->value[MAX_FROOT_C])
+					if ( ( ( s->value[C_TO_FROOT] * ( 1. - s->value[EFF_GRPERC] ) ) + s->value[FROOT_C] ) > s->value[MAX_FROOT_C] )
 					{
+						logger(g_debug_log, "..exceeding fine root carbon to other pools\n");
 
-						max_frootC       = s->value[MAX_FROOT_C] - s->value[FROOT_C];
+						max_frootC           = s->value[MAX_FROOT_C] - s->value[FROOT_C];
 
-						exceeding_frootC = ( ( npp_to_alloc * s->value[FROOT_LEAF_FRAC] ) - ( max_frootC + ( max_frootC * s->value[EFF_GRPERC] ) ) );
+						exceeding_frootC     = ( ( npp_to_alloc * s->value[FROOT_LEAF_FRAC] ) - ( max_frootC + ( max_frootC * s->value[EFF_GRPERC] ) ) );
 
 						s->value[C_TO_FROOT] = max_frootC + ( max_frootC * s->value[EFF_GRPERC] );
 					}
@@ -321,6 +335,7 @@ void daily_C_evergreen_partitioning (cell_t *const c, const int layer, const int
 					s->value[C_TO_CROOT]     = (exceeding_C * pR1);
 					s->value[C_TO_STEM]      = (exceeding_C * pS1) * (1. - s->value[FRACBB]);
 					s->value[C_TO_BRANCH]    = (exceeding_C * pS1) * s->value[FRACBB];
+
 				}
 				else
 				{
@@ -378,7 +393,7 @@ void daily_C_evergreen_partitioning (cell_t *const c, const int layer, const int
 
 				/* to other carbon pools */
 				s->value[C_TO_CROOT]    += (exceeding_C * pR1);
-				s->value[C_TO_STEM]     += (exceeding_C * pS1) * (1. - s->value[FRACBB]);
+				s->value[C_TO_STEM]     += (exceeding_C * pS1) * ( 1. - s->value[FRACBB] );
 				s->value[C_TO_BRANCH]   += (exceeding_C * pS1) * s->value[FRACBB];
 
 			}
@@ -471,6 +486,32 @@ void daily_C_evergreen_partitioning (cell_t *const c, const int layer, const int
 	logger(g_debug_log, "C_TO_CROOT   = %f tC/cell\n", s->value[C_TO_CROOT]);
 	logger(g_debug_log, "C_TO_BRANCH  = %f tC/cell\n", s->value[C_TO_BRANCH]);
 	logger(g_debug_log, "C_TO_RESERVE = %f tC/cell\n", s->value[C_TO_RESERVE]);
+
+	if ( s->value[C_TO_LEAF]     > 0. ) delta_leaf     = s->value[C_TO_LEAF];
+	else delta_leaf     = 0.;
+	if ( s->value[C_TO_FROOT]    > 0. ) delta_froot    = s->value[C_TO_FROOT];
+	else delta_froot    = 0.;
+	if ( s->value[C_TO_STEM]     > 0. ) delta_stem     = s->value[C_TO_STEM];
+	else delta_stem     = 0.;
+	if ( s->value[C_TO_CROOT]    > 0. ) delta_croot    = s->value[C_TO_CROOT];
+	else delta_croot    = 0.;
+	if ( s->value[C_TO_BRANCH]   > 0. ) delta_branch   = s->value[C_TO_BRANCH];
+	else delta_branch   = 0.;
+	if ( s->value[C_TO_FRUIT]    > 0. ) delta_fruit    = s->value[C_TO_FRUIT];
+	else delta_fruit    = 0.;
+	if ( s->value[C_TO_RESERVE]  > 0. ) delta_reserve_alloc  = s->value[C_TO_RESERVE];
+	else delta_reserve_deple  = fabs(s->value[C_TO_RESERVE]);
+
+
+	s->value[YEARLY_RESERVE_ALLOC] += ( delta_reserve_alloc * 1e6 / g_settings->sizeCell );
+	s->value[YEARLY_RESERVE_DEPLE] += ( delta_reserve_deple * 1e6 / g_settings->sizeCell );
+
+	s->value[YEARLY_RESERVE_USAGE] += ( s->value[C_TO_RESERVE] * 1e6 / g_settings->sizeCell );
+
+	/* biomass production */
+	s->value[BP] += ( ( delta_leaf + delta_froot + delta_stem + delta_branch + delta_croot + delta_fruit ) * 1e6 / g_settings->sizeCell );
+
+	s->value[BP] *= ( 1. - s->value[EFF_GRPERC] );
 
 	/* leaf and fine root fall */
 	leaffall_evergreen ( c, height, dbh, age, species, year );

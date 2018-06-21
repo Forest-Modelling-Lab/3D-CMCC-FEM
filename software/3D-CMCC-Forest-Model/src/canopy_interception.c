@@ -20,11 +20,6 @@
 
 void canopy_interception(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, meteo_daily_t *const meteo_daily)
 {
-	static int cell_height_class_counter;
-	static int layer_height_class_counter;
-
-	static double temp_int_rain;
-	static double temp_int_snow;
 
 	tree_layer_t *l;
 	species_t *s;
@@ -38,11 +33,11 @@ void canopy_interception(cell_t *const c, const int layer, const int height, con
 	/* CANOPY INTERCEPTION */
 
 	/* first height class in the cell is processed */
-	if( ! layer_height_class_counter && ! cell_height_class_counter )
+	if( ! l->canopy_int_layer_height_class_counter && ! c->canopy_int_cell_height_class_counter )
 	{
 		/* reset temporary values when the first height class in layer is processed */
-		temp_int_rain = 0.;
-		temp_int_snow = 0.;
+		c->temp_int_rain = 0.;
+		c->temp_int_snow = 0.;
 
 		/* assign meteo variables to cell variables */
 		/* assign incoming rain */
@@ -53,8 +48,8 @@ void canopy_interception(cell_t *const c, const int layer, const int height, con
 
 	/*****************************************************************************************************************/
 	/* counters */
-	layer_height_class_counter ++;
-	cell_height_class_counter++;
+	l->canopy_int_layer_height_class_counter ++;
+	c->canopy_int_cell_height_class_counter++;
 
 	/*************************************************************************/
 	/* shared functions among all class/layers */
@@ -124,38 +119,38 @@ void canopy_interception(cell_t *const c, const int layer, const int height, con
 	/**********************************************************************************************************/
 
 	/* update temporary rain and snow */
-	temp_int_rain += s->value[CANOPY_INT_RAIN];
-	temp_int_snow += s->value[CANOPY_INT_SNOW];
+	c->temp_int_rain += s->value[CANOPY_INT_RAIN];
+	c->temp_int_snow += s->value[CANOPY_INT_SNOW];
 
 	/**********************************************************************************************************/
 
 	/* when matches the last height class in the layer is processed */
-	if ( l->layer_n_height_class == layer_height_class_counter )
+	if ( l->layer_n_height_class == l->canopy_int_layer_height_class_counter )
 	{
 		/* compute interceptable rain for lower layers */
 		c->daily_canopy_rain_int += s->value[CANOPY_INT_RAIN];
-		meteo_daily->rain        -= temp_int_rain;
+		meteo_daily->rain        -= c->temp_int_rain;
 
 		/* compute interceptable snow for lower layers */
 		c->daily_canopy_snow_int += s->value[CANOPY_INT_SNOW];
-		meteo_daily->snow        -= temp_int_snow;
+		meteo_daily->snow        -= c->temp_int_snow;
 
 		/* reset temporary values when the last height class in layer is processed */
-		temp_int_rain = 0.;
-		temp_int_snow = 0.;
+		c->temp_int_rain = 0.;
+		c->temp_int_snow = 0.;
 
 		/* reset counter */
-		layer_height_class_counter = 0;
+		l->canopy_int_layer_height_class_counter = 0;
 	}
 
 	/**********************************************************************************************************/
 	/* when it matches the last height class in the cell is processed */
-	if ( c->heights_count == cell_height_class_counter )
+	if ( c->heights_count == c->canopy_int_cell_height_class_counter )
 	{
 		/* last height class in cell processed */
 
 		/* reset counter */
-		cell_height_class_counter = 0;
+		c->canopy_int_cell_height_class_counter = 0;
 	}
 	/*****************************************************************************************************************/
 

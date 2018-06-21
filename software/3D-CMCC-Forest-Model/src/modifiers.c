@@ -24,42 +24,42 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	/* constants and variables for Veroustraete's CO2 modifier computation */
 	/* CO2 dependence */
 	double KmCO2;	                       /* (ppmv CO2) affinity coefficients temperature dependent according to Arrhenius relationship */
-	double Ea1   = 59400.0;                /* (J mol-1) Activation energy for CO2 fixation (KmCO2 temp dependence)  Badger and Collatz 1977 */
-	double A1    = 2.419 * pow(10,13);     /* (ppmv) Arrhenius constant for KmCO2 tø dependence in ppm for t>=15  */
-	double Ea2   = 109600.0;	           /* (J mol-1) Activation energy for CO2 fixation for t<15 C */
-	double A2    = 1.976 * pow(10,22);     /* (ppmv) Arrhenius constant for KmCO2 tø dependence in ppm for t<15 C */
+	const double Ea1   = 59400.0;                /* (J mol-1) Activation energy for CO2 fixation (KmCO2 temp dependence)  Badger and Collatz 1977 */
+	const double A1    = 2.419 * pow(10,13);     /* (ppmv) Arrhenius constant for KmCO2 tø dependence in ppm for t>=15  */
+	const double Ea2   = 109600.0;	           /* (J mol-1) Activation energy for CO2 fixation for t<15 C */
+	const double A2    = 1.976 * pow(10,22);     /* (ppmv) Arrhenius constant for KmCO2 tø dependence in ppm for t<15 C */
 	/* O2 dependence */
 	double KO2;	                           /* (% O2) Inhibition constant for 02 */
-	double EaKO2 = 13913.5;                /* (J mol-1) Activation energy for O2 inhibition */
-	double AKO2  = 8240;                   /* Arrhenius constantfor KO2 to dependence */
+	const double EaKO2 = 13913.5;                /* (J mol-1) Activation energy for O2 inhibition */
+	const double AKO2  = 8240;                   /* Arrhenius constantfor KO2 to dependence */
 
 	/* CO2/O2 dependence */
 	double tau;	                           /* CO2/O2 specifity ratio */
-	double Eatau = -42896.9;               /* (J mol-1) Activation energy for CO2/O2 specificity */
-	double Atau  = 7.87 * pow(10,-5);      /* (dimensionless) Arrhenius constant */
+	const double Eatau = -42896.9;               /* (J mol-1) Activation energy for CO2/O2 specificity */
+	const double Atau  = 7.87 * pow(10,-5);      /* (dimensionless) Arrhenius constant */
 
 	double tleaf;                          /* (°C) daily leaf temperature */
 	double tleaf_K;                        /* (K) daily leaf temperature */
 	double v1, v2;
 
 	/* constants for Wang et al., 2016 Nature Plants CO2 modifiers computation */
-	static double beta   = 240.;   /* (dimensionless) definition ? */
-	static double ni     = 0.89;   /* (dimensionless) vicosity of water relative to its value at 25 °C */
-	static double ci     = 0.41;   /* (dimensionless) carbon cost unit for the maintenance of electron transport capacity */
-	static double q10Kc  = 2.1;    /* (DIM) Q_10 for Kc */
-	static double q10Ko  = 1.2;    /* (DIM) Q_10 for Ko */
+	const double beta   = 240.;   /* (dimensionless) definition ? */
+	const double ni     = 0.89;   /* (dimensionless) vicosity of water relative to its value at 25 °C */
+	const double ci     = 0.41;   /* (dimensionless) carbon cost unit for the maintenance of electron transport capacity */
+	const double q10Kc  = 2.1;    /* (DIM) Q_10 for Kc */
+	const double q10Ko  = 1.2;    /* (DIM) Q_10 for Ko */
 
 	/* Badger and Collatz 1977 */
-	static double Kc25          = 404;    /* (ubar or umol mol-1) Michaelis-Menten const carboxylase, 25 deg C  Badger and Collatz value*/
-	static double Ea_Kc         = 59400;  /* (J mol-1) Activation energy for carboxylase */
-	static double Ko25          = 248000; /* (ubar or umol mol-1) Michaelis-Menten const oxygenase, 25 deg C 248 Badger and Collatz, 278.4 Bernacchi et al., 2001 */
-	static double Ea_Ko         = 36000;  /* (J mol-1) Activation energy for oxygenase */
+	const double Kc25   = 404;    /* (ubar or umol mol-1) Michaelis-Menten const carboxylase, 25 deg C  Badger and Collatz value*/
+	const double Ea_Kc  = 59400;  /* (J mol-1) Activation energy for carboxylase */
+	const double Ko25   = 248000; /* (ubar or umol mol-1) Michaelis-Menten const oxygenase, 25 deg C 248 Badger and Collatz, 278.4 Bernacchi et al., 2001 */
+	const double Ea_Ko  = 36000;  /* (J mol-1) Activation energy for oxygenase */
 
 //	/* Bernacchi et al., 2001 */
-//	static double Kc25          = 404.9;  /* (ubar or umol mol-1) Michaelis-Menten const carboxylase, 25 deg C  Badger and Collatz value*/
-//	static double Ea_Kc         = 79430;  /* (kJ mol-1) Activation energy for carboxylase */
-//	static double Ko25          = 278400; /* (ubar or umol mol-1) Michaelis-Menten const oxygenase, 25 deg C 248 Badger and Collatz, 278.4 Bernacchi et al., 2001 */
-//	static double Ea_Ko         = 36380;  /* (J mol-1) Activation energy for oxygenase */
+//	const double Kc25          = 404.9;  /* (ubar or umol mol-1) Michaelis-Menten const carboxylase, 25 deg C  Badger and Collatz value*/
+//	const double Ea_Kc         = 79430;  /* (kJ mol-1) Activation energy for carboxylase */
+//	const double Ko25          = 278400; /* (ubar or umol mol-1) Michaelis-Menten const oxygenase, 25 deg C 248 Badger and Collatz, 278.4 Bernacchi et al., 2001 */
+//	const double Ea_Ko         = 36380;  /* (J mol-1) Activation energy for oxygenase */
 
 	/* variables for Wang et al., 2016 Nature Plants CO2 modifiers computation */
 	double Kc;           /* (ppm) effective Michaelis-Menten coefficienct for Rubisco */

@@ -77,11 +77,11 @@ extern settings_t* g_settings;
 /*****************************************************************************************************************/
 int Tree_model(matrix_t *const m, const int cell, const int halfhour, const int hour, const int day, const int month, const int year)
 {
-	static int layer;
-	static int height;
+	int layer;
+	int height;
 	int dbh;
-	static int age;
-	static int species;
+	int age;
+	int species;
 	//int management = 0;
 
 	/* shortcuts */
@@ -372,6 +372,9 @@ int Tree_model(matrix_t *const m, const int cell, const int halfhour, const int 
 
 								/* carbon use efficiency */
 								carbon_use_efficiency ( c, height, dbh, age, species, day, month, year );
+
+								/* biomass production efficiency */
+								biomass_production_efficiency ( c, height, dbh, age, species, day, month, year );
 
 								/* water use efficiency */
 								water_use_efficiency  ( c, height, dbh, age, species, day, month, year );

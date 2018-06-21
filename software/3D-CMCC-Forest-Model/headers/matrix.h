@@ -130,11 +130,11 @@ enum {
 	CROWN_HEIGHT,                        /* (m) Crown height */
 	CROWN_AREA,                          /* (m2) Crown Area */
 	CROWN_AREA_PROJ,                     /* (m2) Crown Projected Area (at zenith angle) */
-	CROWN_AREA_EXP,                      /* (m2) Crown Exposed Area (considered as the area that can intercepts light) */
+	//CROWN_AREA_EXP,                      /* (m2) Crown Exposed Area (considered as the area that can intercepts light) */
 	CROWN_VOLUME,                        /* (m3) Crown Volume */
 	CROWN_DENSITY,                       /* (m) Crown density */
 	CANOPY_COVER_PROJ,                   /* (DIM) Canopy Projected Cover % of pixel covered (at zenith angle) */
-	CANOPY_COVER_EXP,                    /* (DIM) Canopy Exposed Cover % of pixel exposed (integrated all over all viewing angles) */
+	//CANOPY_COVER_EXP,                    /* (DIM) Canopy Exposed Cover % of pixel exposed (integrated all over all viewing angles) */
 	DAILY_CANOPY_COVER_PROJ,             /* (DIM) Daily Canopy Projected Cover % of pixel covered (at zenith angle) */
 	DAILY_CANOPY_COVER_EXP,              /* (DIM) Daily Canopy Exposed Cover % of pixel exposed (integrated all over the daylength) */
 	HD_EFF,                              /* (DIM) Effective Height/Diameter ratio */
@@ -284,6 +284,10 @@ enum {
 	CUE,                                /* (gCNPP/gCGPP) daily Carbon Use Efficiency */
 	MONTHLY_CUE,                        /* (gCNPP/gCGPP) monthly Carbon Use Efficiency */
 	YEARLY_CUE,                         /* (gCNPP/gCGPP) annual Carbon Use Efficiency */
+	/* biomass production efficiency */
+	BPE,                                /* (gCBP/gCGPP) biomass production Efficiency */
+	MONTHLY_BPE,                        /* (gCBP/gCGPP) monthly biomass production Efficiency */
+	YEARLY_BPE,                         /* (gCBP/gCGPP) annual biomass production Efficiency */
 
 	/* water use efficiency */
 	WUE,                                /* daily Water Use Efficiency */
@@ -375,6 +379,9 @@ enum {
 	NPP_tC,                             /* (tC/cell/day) Daily Net Primary Production */
 	MONTHLY_NPP_tC,                     /* (tC/cell/month) Monthly Net Primary Production */
 	YEARLY_NPP_tC,                      /* (tC/cell/day) Yearly Net Primary Production */
+	BP,                                 /* (gC/m2/day) Daily Biomass Production */
+	MONTHLY_BP,                         /* (gC/m2/monthly) Monthly Biomass Production */
+	YEARLY_BP,                          /* (gC/m2/year) Yearly Biomass Production */
 
 	/* nitrogen fluxes */
 	NPP_gN_DEMAND,                      /* (gN/m2/day) Daily Net Primary Production demand */
@@ -419,6 +426,15 @@ enum {
 	C_STEM_LIVEWOOD_TO_DEADWOOD,        /* (tC/cell/day) Daily tC from Stem live wood pool to Stem dead wood */
 	C_CROOT_LIVEWOOD_TO_DEADWOOD,       /* (tC/cell/day) Daily tC from Coarse live wood pool to Coarse dead wood */
 	C_BRANCH_LIVEWOOD_TO_DEADWOOD,      /* (tC/cell/day) Daily tC from Branch live wood pool to Branch dead wood */
+	C_RESERVE_TO_LEAF_BUDBURST,         /* (tC/cell/day) Daily tC from Reserve pool to Leaf Budburst */
+	C_RESERVE_TO_FROOT_BUDBURST,        /* (tC/cell/day) Daily tC from Reserve pool to Fine root Budburst */
+	C_RESERVE_TO_BUDBURST,              /* (tC/cell/day) Daily tC from Reserve pool to Budburst */
+	TOT_C_RESERVE_TO_LEAF_BUDBURST,     /* (tC/cell/day) Total tC from Reserve pool to Leaf root Budburst */
+	TOT_C_RESERVE_TO_FROOT_BUDBURST,    /* (tC/cell/day) Total tC from Reserve pool to Fine root Budburst */
+
+	YEARLY_RESERVE_ALLOC,
+	YEARLY_RESERVE_DEPLE,
+	YEARLY_RESERVE_USAGE,
 
 	YEARLY_C_TO_STEM,                   /* (tC/cell/year) Annual Stem biomass for turnover */
 	YEARLY_C_TO_CROOT,                  /* (tC/cell/year) Annual Coarse root biomass for turnover */
@@ -439,6 +455,9 @@ enum {
 	STEM_C,                             /* (tC/cell) Current Stem carbon pool */
 	BRANCH_C,                           /* (tC/cell) Current Branch carbon pool */
 	MIN_RESERVE_C,                      /* (tC/cell) Current Minimum reserve carbon pool */
+	MAX_RESERVE_C,                      /* (tC/cell) Current Minimum reserve carbon pool */
+	MAX_RESERVE_C_CONC,                 /* (tC/cell) Current Maximum reserve concentration carbon pool */
+	MIN_RESERVE_C_CONC,                 /* (tC/cell) Current Minimum reserve concentration carbon pool */
 	RESERVE_C,                          /* (tC/cell) Current Reserve carbon pool */
 	FRUIT_C,                            /* (tC/cell) Current Fruit carbon pool */
 	MAX_FRUIT_C,                        /* (tC/cell/year) Annual Fruit carbon pool */
@@ -454,8 +473,8 @@ enum {
 	CROOT_DEADWOOD_C,                   /* (tC/cell) Current Coarse root dead wood carbon pool */
 	BRANCH_LIVEWOOD_C,                  /* (tC/cell) Current Branch live wood carbon pool */
 	BRANCH_DEADWOOD_C,                  /* (tC/cell) Current Branch dead wood carbon pool */
-	SAPWOOD_C,                          /* (tC/cell) Current total sapwood carbon pool */
-	HEARTWOOD_C,                        /* (tC/cell) Current total heartwood carbon pool */
+	TOT_SAPWOOD_C,                      /* (tC/cell) Current total sapwood carbon pool */
+	TOT_HEARTWOOD_C,                    /* (tC/cell) Current total heartwood carbon pool */
 	STEM_SAPWOOD_C,                     /* (tC/cell) Current Stem sapwood carbon pool */
 	STEM_HEARTWOOD_C,                   /* (tC/cell) Current Stem heartwood carbon pool */
 	CROOT_SAPWOOD_C,                    /* (tC/cell) Current Coarse root sapwood carbon pool */
@@ -471,6 +490,8 @@ enum {
 	CUM_C_HWP,                          /* (tC/cell) cumulated harvested woody products removed from stand */
 	VOLUME_HWP,                         /* (m3/cell/yr) annual volume harvested woody products removed from stand */
 	CUM_VOLUME_HWP,                     /* (m3/cell) annual volume harvested woody products removed from stand */
+
+	OLD_RESERVE_C,    /* TO REMOVE */   /* (tC/cell) Old reserve carbon pool */
 
 	/* per tree in tC */
 	TREE_LEAF_C,                        /* (tC/tree) Single Tree Leaf carbon pool */
@@ -507,8 +528,8 @@ enum {
 	BRANCH_DM,                          /* (tDM/cell) Current Branch dry matter pool */
 	RESERVE_DM,                         /* (tDM/cell) Current Reserve dry matter pool */
 	FRUIT_DM,                           /* (tDM/cell) Current Fruit dry matter pool */
-	SAPWOOD_DM,                         /* (tDM/cell) Current Sapwood dry matter pool */
-	HEARTWOOD_DM,                       /* (tDM/cell) Current Heartwood dry matter pool */
+	TOT_SAPWOOD_DM,                     /* (tDM/cell) Current Sapwood dry matter pool */
+	TOT_HEARTWOOD_DM,                   /* (tDM/cell) Current Heartwood dry matter pool */
 	STEM_SAPWOOD_DM,                    /* (tDM/cell) Current Live Stem dry matter pool */
 	STEM_HEARTWOOD_DM,                  /* (tDM/cell) Current Dead Stem dry matter pool */
 	CROOT_SAPWOOD_DM,                   /* (tDM/cell) Current Live Coarse root dry matter pool */
@@ -526,11 +547,15 @@ enum {
 
 	/* Above and Below Ground Biomass */
 	AGB,                                /* (tC/cell) Above Ground Biomass pool */
+	OLD_AGB,                            /* (tC/cell) Previous year Above Ground Biomass pool */
 	BGB,                                /* (tC/cell) Below Ground Biomass pool */
+	OLD_BGB,                            /* (tC/cell) Previous year Below Ground Biomass pool */
 	DELTA_AGB,                          /* (tC/cell/year) Above Ground Biomass increment */
 	DELTA_BGB,                          /* (tC/cell/year) Below Ground Biomass increment */
 	TREE_AGB,                           /* (tC/tree) Above Ground Biomass pool */
+	TREE_OLD_AGB,                       /* (tC/cell) Previous year Above Ground Biomass pool */
 	TREE_BGB,                           /* (tC/tree) Below Ground Biomass pool */
+	TREE_OLD_BGB,                       /* (tC/cell) Previous year Below Ground Biomass pool */
 	DELTA_TREE_AGB,                     /* (tC/tree/year) Above Ground Biomass increment */
 	DELTA_TREE_BGB,                     /* (tC/tree/year) Below Ground Biomass increment */
 
@@ -775,11 +800,18 @@ enum {
 	VEG_DAYS,                           /* (days/year) day of vegetative period for class if != 0 is in veg period */
 	FIRST_VEG_DAYS,                     /* (DIM) first annual day of veg period */
 	YEARLY_VEG_DAYS,                    /* (days/year) annual number of vegetative days */
-	BUD_BURST_COUNTER,                  /* (days/year) days of budburst per class */
+	BUD_BURST_COUNTER,                  /* (days/year) counter days of budburst per class */
+	DAYS_FOR_BUDBURST,                  /* (days/year) days of budburst per class */
+	BUD_BURST_DAY_COUNTER,              /* (days/year) days of budburst per class */
+	BUD_BURST_WEIGHT,                   /* */
+	BUDBURST_A,                         /* */
+	BUDBURST_B,                         /* */
 	DAYS_LEAFFALL,                      /* (days/year) days of leaf fall per class */
 	DAY_VEG_FOR_LEAF_FALL,              /* (days/year) days for leaf fall */
 	LEAF_FALL_COUNTER,                  /* (DIM) counter for leaf fall */
 	SENESCENCE_DAY_ONE,                 /* (DIM) doy at first day of the senescence */
+	DAYS_WITH_CANOPY_WET,               /* (days/year) with canopy wet */
+	DAYS_WITH_CANOPY_SNOW,              /* (days/year) with canopy snow */
 	DOS,                                /* (days) day of simulation */
 	MOS,                                /* (months) month of simulation */
 	YOS,                                /* (years) year of simulation */
@@ -866,11 +898,13 @@ typedef struct
 	int layer_z;                        //fixme remove
 	int layer_n_height_class;           /* number of height class per layer */
 	int layer_n_trees;                  /* number of trees per layer */
+	int layer_height_class_counter;
+	int canopy_int_layer_height_class_counter;
 	double layer_density;               /* tree density per layer (n_tree/sizecell) */
 	double layer_cover_proj;            /* layer canopy cover projected per layer */
 	double layer_cover_exp;             /* layer canopy cover exposed per layer */
 	double daily_layer_cover_proj;      /* layer canopy cover projected per layer */
-	double daily_layer_cover_exp;       /* layer canopy cover exposed per layer */
+	//double daily_layer_cover_exp;       /* layer canopy cover exposed per layer */
 	double layer_avg_tree_height;       /* average tree layer height */
 	double layer_tree_height_modifier;  /* layer level tree height modifier (see Wallace et al., 1991; Cannell & Grace 1993) */
 
@@ -957,6 +991,8 @@ typedef struct
 	int cell_dbhs_count;                                                  /* (dbh/cell) number of different dbh */
 	int cell_ages_count;                                                  /* (ages/cell) number of different ages */
 	int cell_species_count;                                               /* (species/cell) number of different species */
+	int cell_height_class_counter;
+	int canopy_int_cell_height_class_counter;
 
 	int year_stand;                                                       /* input stand.txt row stand year */
 
@@ -964,6 +1000,19 @@ typedef struct
 	int y;                                                                /* cell index within the matrix */
 	double elev;                                                          /* cell elevation (m) */
 	int north;                                                            /* northern hemisphere north = 0, south hemisphere south = 1 */
+	int doy_daylength;
+
+	//fixme ALESSIOR move to meteo struct!
+	double previous_thermic_sum;
+	double previous_solar_rad;
+	double previous_tavg;
+	double previous_tmax;
+	double previous_tmin;
+	double previous_vpd;
+	double previous_ts_f;
+	double previous_prcp;
+	double previous_swc;
+	double previous_ndvi_lai;
 
 	/* annual met values */
 	double abscission_daylength;                                          /* (hrs/day) day length for starting abscission (not used) */
@@ -1011,6 +1060,8 @@ typedef struct
 	double net_rad_refl_snow;
 	double net_rad_abs_soil;
 	double net_rad_abs_snow;
+	double temp_net_rad_abs;                                              /* (W/m2) temporary absorbed Net radiation for layer */
+	double temp_net_rad_refl;                                             /* (W/m2) temporary reflected Net radiation for layer */
 
 	/* long wave radiation */
 	double long_wave_radiation_upward_MJ;                                 /* (MJ/m2/day) Upward long wave radiation flux */
@@ -1023,6 +1074,8 @@ typedef struct
 	double soil_long_wave_emitted;                                        /* (W/m2) Soil emitted long wave radiation flux */
 	double net_lw_rad_for_soil;                                           /* (W/m2) Net Long Wave radiation to soil level */
 	double net_rad_for_soil;                                              /* (W/m2) Net radiation to soil level */
+	double temp_sw_rad_abs;                                               /* (W/m2) temporary absorbed short wave for layer */
+	double temp_sw_rad_refl;                                              /* (W/m2) temporary reflected short wave for layer */
 
 	/* PAR radiation */
 	double apar;                                                          /* (molPAR/m2/day) cumulated absorbed PAR at tree level */
@@ -1032,6 +1085,9 @@ typedef struct
 	double par_refl;                                                      /* (molPAR/m2/day) cumulated reflected PAR at cell level */
 	double par_refl_soil;                                                 /* (molPAR/m2/day) reflected PAR by the soil */
 	double par_refl_snow;                                                 /* (molPAR/m2/day) reflected PAR by the snow */
+	double temp_apar;                                                     /* (molPAR/m2/day) temporary absorbed PAR for layer */
+	double temp_par_refl;                                                 /* (molPAR/m2/day) temporary reflected PAR for layer */
+
 
 	/************************************************** forest trees **************************************************/
 
@@ -1092,6 +1148,17 @@ typedef struct
 	double reserve_carbon;                                                /* (gC/m2) reserve at cell level */
 	double fruit_carbon;                                                  /* (gC/m2) fruit at cell level */
 
+	/* old tree carbon pools (used for mass balance) */
+	double old_leaf_carbon;
+	double old_froot_carbon;
+	double old_croot_carbon;
+	double old_stem_carbon;
+	double old_branch_carbon;
+	double old_reserve_carbon;
+	double old_fruit_carbon;
+	double old_litrC;
+	double old_soilC;
+
 	/* nitrogen fluxes */
 	double daily_leaf_nitrogen;                                             /* (gN/m2/day) daily nitrogen assimilated to c pool at cell level */
 	double daily_stem_nitrogen;                                             /* (gN/m2/day) daily nitrogen assimilated to c pool at cell level */
@@ -1119,6 +1186,17 @@ typedef struct
 	double reserve_nitrogen;                                              /* (gN/m2) reserve at cell level */
 	double fruit_nitrogen;                                                /* (gN/m2) fruit at cell level */
 
+	/* old tree nitrogen pools (used for mass balance) */
+	double old_leaf_nitrogen;
+	double old_froot_nitrogen;
+	double old_croot_nitrogen;
+	double old_stem_nitrogen;
+	double old_branch_nitrogen;
+	double old_reserve_nitrogen;
+	double old_fruit_nitrogen;
+	double old_litrN;
+	double old_soilN;
+
 	/* carbon use efficiency */
 	double daily_cue;                                                     /* (DIM) daily carbon use efficiency */
 	double monthly_cue;                                                   /* (DIM) monthly carbon use efficiency */
@@ -1133,6 +1211,8 @@ typedef struct
 	double annual_iwue;                                                   /* (DIM) annual intrinsic water use efficiency */
 
 	/* energy fluxes */
+	double temp_int_rain;                                                 /* (mm/m2) temporary intercepted rain */
+	double temp_int_snow;                                                 /* (mm/m2) temporary intercepted snow */
 	double daily_canopy_transp_watt;                                      /* (W/m2) daily canopy transpiration at cell level */
 	double daily_canopy_evapo_watt;                                       /* (W/m2) daily canopy evaporation at cell level */
 	double daily_canopy_et_watt;                                          /* (W/m2) daily canopy evapotranspiration at cell level */
@@ -1350,11 +1430,13 @@ typedef struct
 
 	/* pools */
 	double asw;                                                           /* (mm/volume) current available soil water  */
+	double cum_asw;
 	double max_asw_fc;                                                    /* (mmKgH2O/m3) max available soil water at field capacity */
 	double max_asw_sat;                                                   /* (mmKgH2O/m3) max available soil water at field capacity */
 	double snow_pack;                                                     /* (Kg/m2)current amount of snow */
 	double canopy_water_stored;                                           /* (mm/m2) canopy water stored at cell level */
 	double canopy_snow_stored;                                            /* (mm/m2) canopy snow stored at cell level */
+	double old_water_store;                                               /* (mm/m2) previous day soil water stored */													
 
 	/* fluxes */
 	double daily_snow_melt;                                               /* (mm/m2/time) current amount of melted snow  */

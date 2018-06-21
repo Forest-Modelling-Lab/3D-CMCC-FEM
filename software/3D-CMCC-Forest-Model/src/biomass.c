@@ -52,11 +52,6 @@ void live_total_wood_age(const age_t *const a, species_t *const s)
 
 void abg_bgb_biomass(cell_t *const c, const int height, const int dbh, const int age, const int species)
 {
-	static double old_agb;       //fixme this should be moved to matrix since classes can change
-	static double old_bgb;       //fixme this should be moved to matrix since classes can change
-	static double tree_old_agb;  //fixme this should be moved to matrix since classes can change
-	static double tree_old_bgb;  //fixme this should be moved to matrix since classes can change
-
 	species_t *s;
 
 	//ALESSIOR
@@ -70,10 +65,10 @@ void abg_bgb_biomass(cell_t *const c, const int height, const int dbh, const int
 
 	logger(g_debug_log, "**AGB & BGB**\n");
 
-	old_agb = s->value[AGB];
-	old_bgb = s->value[BGB];
-	tree_old_agb = s->value[TREE_AGB];
-	tree_old_bgb = s->value[TREE_BGB];
+	s->value[OLD_AGB]      = s->value[AGB];
+	s->value[OLD_BGB]      = s->value[BGB];
+	s->value[TREE_OLD_AGB] = s->value[TREE_AGB];
+	s->value[TREE_OLD_BGB] = s->value[TREE_BGB];
 
 	s->value[AGB]            = s->value[LEAF_C]  + s->value[STEM_C] + s->value[BRANCH_C] +s->value[FRUIT_C];
 	logger(g_debug_log, "AGB              = %f tC/cell\n", s->value[AGB]);
@@ -84,10 +79,10 @@ void abg_bgb_biomass(cell_t *const c, const int height, const int dbh, const int
 	s->value[STANDING_WOOD]  = s->value[STEM_C] + s->value[BRANCH_C] + s->value[CROOT_C];
 	logger(g_debug_log, "STANDING_WOOD    = %f tC/cell\n", s->value[STANDING_WOOD]);
 
-	s->value[DELTA_AGB]      = s->value[AGB] - old_agb;
+	s->value[DELTA_AGB]      = s->value[AGB] - s->value[OLD_AGB];
 	logger(g_debug_log, "DELTA_AGB        = %f tC/cell/year\n", s->value[DELTA_AGB]);
 
-	s->value[DELTA_BGB]      = s->value[BGB] - old_bgb;
+	s->value[DELTA_BGB]      = s->value[BGB] - s->value[OLD_BGB];
 	logger(g_debug_log, "DELTA_BGB        = %f tC/cell/year\n", s->value[DELTA_BGB]);
 
 	s->value[TREE_AGB]       = s->value[AGB] / (double)s->counter[N_TREE];
@@ -96,10 +91,10 @@ void abg_bgb_biomass(cell_t *const c, const int height, const int dbh, const int
 	s->value[TREE_BGB]       = s->value[BGB] / (double)s->counter[N_TREE];
 	logger(g_debug_log, "Yearly Class BGB = %f tC/tree\n", s->value[TREE_BGB]);
 
-	s->value[DELTA_TREE_AGB] = s->value[TREE_AGB] - tree_old_agb;
+	s->value[DELTA_TREE_AGB] = s->value[TREE_AGB] - s->value[TREE_OLD_AGB];
 	logger(g_debug_log, "DELTA_TREE_AGB   = %f tC/tree/year\n", s->value[DELTA_TREE_AGB]);
 
-	s->value[DELTA_TREE_BGB] = s->value[TREE_BGB] - tree_old_bgb;
+	s->value[DELTA_TREE_BGB] = s->value[TREE_BGB] - s->value[TREE_OLD_BGB];
 	logger(g_debug_log, "DELTA_TREE_BGB   = %f tC/tree/year\n", s->value[DELTA_TREE_BGB]);
 }
 
@@ -142,8 +137,8 @@ void average_tree_pools(cell_t *const c)
 					s->value[TREE_CROOT_HEARTWOOD_C]     = (s->value[CROOT_HEARTWOOD_C]  / (double)s->counter[N_TREE]);
 					s->value[TREE_BRANCH_SAPWOOD_C]      = (s->value[BRANCH_SAPWOOD_C]   / (double)s->counter[N_TREE]);
 					s->value[TREE_BRANCH_HEARTWOOD_C]    = (s->value[BRANCH_HEARTWOOD_C] / (double)s->counter[N_TREE]);
-					s->value[TREE_SAPWOOD_C]             = (s->value[SAPWOOD_C]          / (double)s->counter[N_TREE]);
-					s->value[TREE_HEARTWOOD_C]           = (s->value[HEARTWOOD_C]        / (double)s->counter[N_TREE]);
+					s->value[TREE_SAPWOOD_C]             = (s->value[TOT_SAPWOOD_C]      / (double)s->counter[N_TREE]);
+					s->value[TREE_HEARTWOOD_C]           = (s->value[TOT_HEARTWOOD_C]    / (double)s->counter[N_TREE]);
 					s->value[TREE_STEM_LIVEWOOD_C]       = (s->value[STEM_LIVEWOOD_C]    / (double)s->counter[N_TREE]);
 					s->value[TREE_STEM_DEADWOOD_C]       = (s->value[STEM_DEADWOOD_C]    / (double)s->counter[N_TREE]);
 					s->value[TREE_CROOT_LIVEWOOD_C]      = (s->value[CROOT_LIVEWOOD_C]   / (double)s->counter[N_TREE]);
@@ -213,6 +208,7 @@ void tree_biomass_remove (cell_t *const c, const int height, const int dbh, cons
 	s->value[C_RESERVE_TO_CWD]   += (s->value[TREE_RESERVE_C] * tree_remove);
 
 	s->value[C_FRUIT_TO_CWD]     += (s->value[TREE_FRUIT_C]   * tree_remove);
+
 
 	if ( ! nat_man )
 	{

@@ -75,10 +75,28 @@ void dbhdc_function (cell_t *const c, const int layer, const int height, const i
 
 	/* note: max_dbhdc_incr corresponds to an arbitrary increment of n value */
 	/* note: not used in the first year of simulation */
-	if ( ( s->counter[YOS] ) && ( s->value[DBHDC_EFF] > ( previous_dbhdc_eff + (previous_dbhdc_eff * max_dbhdc_incr ) ) ) )
+	if ( ( s->counter[YOS] ) && ( s->value[DBHDC_EFF] > ( previous_dbhdc_eff + ( previous_dbhdc_eff * max_dbhdc_incr ) ) ) )
 	{
 		s->value[DBHDC_EFF] = previous_dbhdc_eff + ( previous_dbhdc_eff * max_dbhdc_incr );
 	}
+
+
+	/***************************************************************************************************/
+	//note test: 18 June 2018
+	//data obtained by:	Ritter and Nothdurft et al., 2018 forests
+	//dbhdcmax decreases as dbh increases
+
+#if 1
+	if ( s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2 )
+	{
+		s->value[DBHDCMAX] = 0.9667 * pow ( d->value , -0.287 );
+	}
+	else
+	{
+		s->value[DBHDCMAX] = 0.8543 * pow ( d->value , -0.254 );
+	}
+#endif
+	/**************************************************************************************************/
 
 	/* check */
 	if (s->value[DBHDC_EFF] > s->value[DBHDCMAX])
@@ -88,25 +106,12 @@ void dbhdc_function (cell_t *const c, const int layer, const int height, const i
 	}
 
 	/************************************************************************************************************************/
-
-	/* check if current dbhdc_eff decreases too much (case when there's reduction in layers) */
-	/* this is checked to avoid unrealistic crown area decrement */
-
-	/* note: max_dbhdc_decr corresponds to an arbitrary increment of n value */
-#if 0
-	if ( s->value[DBHDC_EFF] < ( previous_dbhdc_eff - (previous_dbhdc_eff * max_dbhdc_decr ) ) )
-	{
-		s->value[DBHDC_EFF] = previous_dbhdc_eff - ( previous_dbhdc_eff * max_dbhdc_decr );
-	}
-#endif
-
 	/* test: if dbhdc decreases than with the same proportion also branch and coarse root fractions decrease */
 	if ( s->counter[YOS] && ( previous_dbhdc_eff > s->value[DBHDC_EFF] ) )
 	{
 		/******** self pruning ********/
 		self_pruning ( c, height, dbh, age, species, previous_dbhdc_eff, s->value[DBHDC_EFF] );
 	}
-
 
 	logger(g_debug_log,"-DBHDC effective     = %f\n", s->value[DBHDC_EFF]);
 
@@ -133,10 +138,12 @@ void canopy_cover (cell_t *const c, const int height, const int dbh, const int a
 	CHECK_CONDITION( s->value[CANOPY_COVER_PROJ] ,  > , s->value[CANOPY_COVER_PROJ] + eps );
 
 	/* Canopy cover able to absorb light (integrated all over all viewing angles) */
-	s->value[CANOPY_COVER_EXP] = (s->value[CROWN_AREA_EXP] * s->counter[N_TREE]) / g_settings->sizeCell ;
-	logger(g_debug_log, "-Canopy Exposed Cover     = %f %%\n", s->value[CANOPY_COVER_EXP]  * 100.);
+	//s->value[CANOPY_COVER_EXP] = (s->value[CROWN_AREA_EXP] * s->counter[N_TREE]) / g_settings->sizeCell ;
+	//logger(g_debug_log, "-Canopy Exposed Cover     = %f %%\n", s->value[CANOPY_COVER_EXP]  * 100.);
 
-	if (s->value[CANOPY_COVER_EXP] > 1)s->value[CANOPY_COVER_EXP] = 1.;
+	//printf("CANOPY_COVER_EXP = %f\n", s->value[CANOPY_COVER_EXP]);
+
+	//if (s->value[CANOPY_COVER_EXP] > 1)s->value[CANOPY_COVER_EXP] = 1.;
 
 
 }

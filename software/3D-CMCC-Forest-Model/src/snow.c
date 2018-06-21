@@ -21,8 +21,8 @@ void snow_melt_subl(cell_t *const c, meteo_daily_t *meteo_daily)
 	/* temperature and radiation snowmelt,
 		from Joseph Coughlan PhD thesis, 1991 */
 
-	static double snow_abs = 0.6;             /* absorptivity of snow */
-	static double t_coeff = 0.65;             /* (kg/m2/deg C/d) temp. snowmelt coeff */
+	const double snow_abs = 0.6;              /* absorptivity of snow */
+	const double t_coeff  = 0.65;             /* (kg/m2/deg C/d) temp. snowmelt coeff */
 	double incident_rad;                      /* incident radiation(kJ/m2/d) */
 	double t_melt, r_melt, r_sub;
 

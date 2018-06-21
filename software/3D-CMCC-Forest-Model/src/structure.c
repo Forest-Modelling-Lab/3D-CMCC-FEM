@@ -80,12 +80,20 @@ int annual_forest_structure(cell_t* const c, const int year)
 
 	logger(g_debug_log, "\n***ANNUAL FOREST STRUCTURE***\n");
 
+	// TODO
+	// ALESSIOR
+	// check if following code is useful!
+
+	/*
 	assert( ! c->tree_layers_count );
 
 	for ( height = 0; height < c->heights_count; ++height )
 	{
 		assert( ! c->heights[height].height_z );
+		exit(1);
 	}
+	*/
+
 
 	/***************************************************************************************************************/
 
@@ -179,12 +187,7 @@ int annual_forest_structure(cell_t* const c, const int year)
 		{
 			c->heights[height].height_z = zeta_count;
 		}
-		logger(g_debug_log, "*value %f z = %d*\n\n", c->heights[height].value, c->heights[height].height_z);
 	}
-
-	logger(g_debug_log, "-Number of height classes = %d per cell\n", c->heights_count);
-	logger(g_debug_log, "-Number of layers         = %d per cell\n\n", c->tree_layers_count);
-	logger(g_debug_log,"***********************************\n");
 
 	/* check */
 	CHECK_CONDITION(c->tree_layers_count, <, 1);
@@ -385,7 +388,8 @@ int annual_forest_structure(cell_t* const c, const int year)
 
 							/*************** self-thinning ****************/
 							/* note: special case for ISIMIP, avoid self thinning when management is 'var' */
-							if ( ( c->years[year].year >= g_settings->year_start_management ) && ( MANAGEMENT_VAR == g_settings->management ) )
+							if ( ( ( c->years[year].year >= g_settings->year_start_management ) && ( MANAGEMENT_VAR == g_settings->management ) )
+									|| ( MANAGEMENT_OFF == g_settings->management ) )
 							{
 								if ( s->value[DBHDC_EFF] <= s->value[DBHDCMIN] )
 								{
@@ -647,20 +651,20 @@ int daily_forest_structure ( cell_t *const c, const meteo_daily_t *const meteo_d
 								/*******************************************************************************************/
 
 								/* compute daily canopy exposed cover */
-								s->value[DAILY_CANOPY_COVER_EXP] = s->value[CANOPY_COVER_EXP];
+								//s->value[DAILY_CANOPY_COVER_EXP] = s->value[CANOPY_COVER_EXP];
 
 								/* canopy cannot absorb more than 100% of incoming flux (e.g. light) */
-								if( s->value[DAILY_CANOPY_COVER_EXP] > 1. ) s->value[DAILY_CANOPY_COVER_EXP] = 1.;
+								//if( s->value[DAILY_CANOPY_COVER_EXP] > 1. ) s->value[DAILY_CANOPY_COVER_EXP] = 1.;
 
 								/*******************************************************************************************/
 #if TEST
 								/* integrate with layer TREE HEIGHT MODIFIER */
-								if ( layer == c->heights[height].height_z ) s->value[DAILY_CANOPY_COVER_EXP] *= l->layer_tree_height_modifier ;
+								//if ( layer == c->heights[height].height_z ) s->value[DAILY_CANOPY_COVER_EXP] *= l->layer_tree_height_modifier ;
 #endif
 								/*******************************************************************************************/
 
 								/* canopy cannot absorb more than 100% of incoming flux (e.g. light) */
-								if( s->value[DAILY_CANOPY_COVER_EXP] > 1. ) s->value[DAILY_CANOPY_COVER_EXP] = 1.;
+								//if( s->value[DAILY_CANOPY_COVER_EXP] > 1. ) s->value[DAILY_CANOPY_COVER_EXP] = 1.;
 
 								/*******************************************************************************************/
 
@@ -668,14 +672,14 @@ int daily_forest_structure ( cell_t *const c, const meteo_daily_t *const meteo_d
 								c->tree_layers[layer].daily_layer_cover_proj += s->value[DAILY_CANOPY_COVER_PROJ];
 
 								/* sum all over canopy cover exposed for each layer */
-								c->tree_layers[layer].daily_layer_cover_exp  += s->value[DAILY_CANOPY_COVER_EXP];
+								//c->tree_layers[layer].daily_layer_cover_exp  += s->value[DAILY_CANOPY_COVER_EXP];
 							}
 
 							logger(g_debug_log, "-Species %s DAILY_CANOPY_COVER_PROJ = %f\n", s->name, s->value[DAILY_CANOPY_COVER_PROJ]);
-							logger(g_debug_log, "-Species %s DAILY_CANOPY_COVER_EXP  = %f\n", s->name, s->value[DAILY_CANOPY_COVER_EXP]);
+							//logger(g_debug_log, "-Species %s DAILY_CANOPY_COVER_EXP  = %f\n", s->name, s->value[DAILY_CANOPY_COVER_EXP]);
 
 							logger(g_debug_log, "-Layer %d daily_layer_cover_proj = %f\n", layer, l->daily_layer_cover_proj);
-							logger(g_debug_log, "-Layer %d daily_layer_cover_exp  = %f\n", layer, l->daily_layer_cover_exp);
+							//logger(g_debug_log, "-Layer %d daily_layer_cover_exp  = %f\n", layer, l->daily_layer_cover_exp);
 						}
 					}
 				}

@@ -154,7 +154,6 @@ typedef struct {
 	meteo_mean_t yearly;
 } meteo_annual_t;
 
-meteo_annual_t* import_meteo_data(const char *const file, int *const yos_count, const int x, const int y);
-void meteo_annual_free(meteo_annual_t* p, const int count);
+int import_meteo_data(const char *const file, int *const yos_count, void* _cell);
 
 #endif /* METEO_H_ */

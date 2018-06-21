@@ -258,7 +258,7 @@ static void clean_up(void)
 	_CrtSetReportMode(_CRT_ASSERT, _CRTDBG_MODE_FILE);
 	_CrtSetReportFile(_CRT_ASSERT, _CRTDBG_FILE_STDOUT);
 	_CrtDumpMemoryLeaks();
-	
+
 	system("PAUSE");
 #endif
 #endif
@@ -287,7 +287,7 @@ static int output_path_create(void)
 		sprintf(date, "%04d_%s_%02d"
 				, ptm->tm_year + 1900
 				, szMonth[ptm->tm_mon]
-				, ptm->tm_mday
+						  , ptm->tm_mday
 		);
 	}
 
@@ -399,13 +399,6 @@ static int log_start(const char* const sitename)
 	case MANAGEMENT_VAR:
 		p = "VAR";
 		break;
-
-		// not in 5.4
-		/*
-	case MANAGEMENT_VAR1:
-		p = "VAR1";
-		break;
-		*/
 
 	default:
 		puts("bad management value in settings file!\n");
@@ -1027,13 +1020,13 @@ static int log_rename(void)
 	int i;
 	logger_t* logs[LOG_TYPES_COUNT] =
 	{
-		g_debug_log
-		, g_daily_log
-		, g_monthly_log
-		, g_annual_log
-		, g_daily_soil_log
-		, g_monthly_soil_log
-		, g_annual_soil_log
+			g_debug_log
+			, g_daily_log
+			, g_monthly_log
+			, g_annual_log
+			, g_daily_soil_log
+			, g_monthly_soil_log
+			, g_annual_soil_log
 	};
 
 	sprintf(end_year, "%d", g_settings->year_end);
@@ -1066,7 +1059,7 @@ static int log_rename(void)
 			{
 				remove(new_filename);
 			}
-			
+
 			ret = rename(logs[i]->filename, new_filename);
 			if ( -1 == ret )
 			{
@@ -1108,7 +1101,7 @@ void sort_all(matrix_t* m)
 						// re-index species
 						m->cells[cell].heights[height].dbhs[dbh].ages[age].species[species].index = species;
 					}
-					*/
+					 */
 					// sort ages
 					qsort(m->cells[cell].heights[height].dbhs[dbh].ages, m->cells[cell].heights[height].dbhs[dbh].ages_count, sizeof(age_t),sort_by_ages_desc);
 					// re-index
@@ -1229,7 +1222,7 @@ int main(int argc, char *argv[]) {
 	{
 		char *p;
 		char buffer[256];
-		
+
 		sprintf(buffer, "ISIMIP/%s_management_ISIMIP.txt", g_settings->sitename);
 
 		printf("import management file %s...", buffer);
@@ -1246,10 +1239,9 @@ int main(int argc, char *argv[]) {
 		{
 			p = buffer;
 		}
-		
+
 		g_management = management_load(p);
 		if ( g_sz_input_path ) free(p);
-		// commented in v5.4
 		//if ( ! g_management ) goto err;
 		puts(msg_ok);
 	}
@@ -1276,7 +1268,7 @@ int main(int argc, char *argv[]) {
 	matrix = matrix_create(s, soil_settings_count, g_sz_dataset_file, &g_dataset);
 	if ( ! matrix ) goto err;
 	puts(msg_ok);
-	
+
 	// save input data files
 	if ( ! file_copy(g_sz_dataset_file, g_sz_input_data_path) )
 	{
@@ -1420,9 +1412,7 @@ int main(int argc, char *argv[]) {
 		logger(g_debug_log, "input_met_path = %s\n", g_sz_input_met_file);
 		logger_error(g_debug_log, "importing met data...");
 
-		matrix->cells[cell].years = import_meteo_data(g_sz_input_met_file, &years_of_simulation, matrix->cells[cell].x, matrix->cells[cell].y);
-		if ( ! matrix->cells[cell].years ) goto err;
-		matrix->cells[cell].years_count = years_of_simulation;
+		if ( ! import_meteo_data(g_sz_input_met_file, &years_of_simulation, &matrix->cells[cell]) ) goto err;
 		logger_error(g_debug_log, "ok\n");
 
 		/* set start year index */
@@ -1438,7 +1428,7 @@ int main(int argc, char *argv[]) {
 				}
 			}
 			if ( -1 == g_year_start_index ) {
-				logger_error(g_debug_log, "start year (%d) not found. range is %d-%d\n"
+				logger_error(g_debug_log, "start year (%d) not found. range is %d-%d.\n"
 						, g_settings->year_start
 						, matrix->cells[0].years[0].year
 						, matrix->cells[0].years[years_of_simulation-1].year
@@ -1485,190 +1475,14 @@ int main(int argc, char *argv[]) {
 
 			years_of_simulation = i - g_year_start_index;
 		}
+		else
+		{
+			years_of_simulation -= g_year_start_index;
+		}
 
 		/* move pointer for year */
 		matrix->cells[cell].years += g_year_start_index;
-
-		// clear spinup seasonal matrix
-		// not in v5.4
-		#if 0
-		if ( g_settings->spinup )
-		{
-			int i;
-			int y;
-
-			for ( i = 0; i < METEO_MONTHS_COUNT; ++i )
-			{
-				for ( y = 0; y < METEO_DAYS_COUNT; ++y )
-				{
-					// meteo values cannot be invalid
-					// so we can initialize it to 0
-					matrix->cells[cell].meteo_spinup[i].d[y].solar_rad = 0.;
-					matrix->cells[cell].meteo_spinup[i].d[y].tavg = 0.;
-					matrix->cells[cell].meteo_spinup[i].d[y].tmax = 0.;
-					matrix->cells[cell].meteo_spinup[i].d[y].tmin = 0.;
-					matrix->cells[cell].meteo_spinup[i].d[y].rh_f = 0.;
-					matrix->cells[cell].meteo_spinup[i].d[y].ts_f = 0.;
-					matrix->cells[cell].meteo_spinup[i].d[y].prcp = 0.;
-					matrix->cells[cell].meteo_spinup[i].d[y].swc = 0.;
-					matrix->cells[cell].meteo_spinup[i].d[y].ndvi_lai = 0.;
-					matrix->cells[cell].meteo_spinup[i].d[y].et = 0.;
-					matrix->cells[cell].meteo_spinup[i].d[y].windspeed = 0.;
-				}
-			}
-		}
-		#endif
 	}
-
-	// compute seasonal means
-	// disabled in v5.4
-	#if 0
-	if ( g_settings->spinup )
-	{
-		int days_per_month;
-
-		for ( cell = 0; cell < matrix->cells_count; ++cell )
-		{
-			for ( month = 0; month < METEO_MONTHS_COUNT; ++month )
-			{
-				days_per_month = DaysInMonth[month];
-				if ( FEBRUARY == month )
-				{
-					// we made all years as leap years
-					++days_per_month;
-				}
-
-				for ( day = 0; day < METEO_DAYS_COUNT; ++day )
-				{
-					int years_count;
-
-					if ( day >= days_per_month )
-					{
-						break;
-					}
-
-					// we compare against 28
-					// instead of 29 'cause we start from 0
-					if ( (FEBRUARY == month) && ( 28 == day ))
-					{
-						years_count = 0;
-					}
-					else
-					{
-						years_count =  matrix->cells[cell].years_count;
-					}
-					for ( year = 0; year < matrix->cells[cell].years_count; ++year )
-					{
-						if ( (FEBRUARY == month)
-								&& ( 28 == day )
-								&& IS_LEAP_YEAR(matrix->cells[cell].years[year].year) )
-						{
-							++years_count;
-						}
-
-						if ( ! IS_INVALID_VALUE(matrix->cells[cell].years[year].daily[month].d[day].solar_rad) )
-								matrix->cells[cell].meteo_spinup[month].d[day].solar_rad += matrix->cells[cell].years[year].daily[month].d[day].solar_rad;
-
-						if ( ! IS_INVALID_VALUE(matrix->cells[cell].years[year].daily[month].d[day].tavg) )
-							matrix->cells[cell].meteo_spinup[month].d[day].tavg += matrix->cells[cell].years[year].daily[month].d[day].tavg;
-
-						if ( ! IS_INVALID_VALUE(matrix->cells[cell].years[year].daily[month].d[day].tmax) )
-							matrix->cells[cell].meteo_spinup[month].d[day].tmax += matrix->cells[cell].years[year].daily[month].d[day].tmax;
-
-						if ( ! IS_INVALID_VALUE(matrix->cells[cell].years[year].daily[month].d[day].tmin) )
-							matrix->cells[cell].meteo_spinup[month].d[day].tmin += matrix->cells[cell].years[year].daily[month].d[day].tmin;
-
-						if ( ! IS_INVALID_VALUE(matrix->cells[cell].years[year].daily[month].d[day].rh_f) )
-							matrix->cells[cell].meteo_spinup[month].d[day].rh_f += matrix->cells[cell].years[year].daily[month].d[day].rh_f;
-
-						if ( ! IS_INVALID_VALUE(matrix->cells[cell].years[year].daily[month].d[day].ts_f) )
-							matrix->cells[cell].meteo_spinup[month].d[day].ts_f += matrix->cells[cell].years[year].daily[month].d[day].ts_f;
-
-						if ( ! IS_INVALID_VALUE(matrix->cells[cell].years[year].daily[month].d[day].prcp) )
-							matrix->cells[cell].meteo_spinup[month].d[day].prcp += matrix->cells[cell].years[year].daily[month].d[day].prcp;
-
-						if ( ! IS_INVALID_VALUE(matrix->cells[cell].years[year].daily[month].d[day].swc) )
-							matrix->cells[cell].meteo_spinup[month].d[day].swc += matrix->cells[cell].years[year].daily[month].d[day].swc;
-
-						if ( ! IS_INVALID_VALUE(matrix->cells[cell].years[year].daily[month].d[day].ndvi_lai) )
-							matrix->cells[cell].meteo_spinup[month].d[day].ndvi_lai += matrix->cells[cell].years[year].daily[month].d[day].ndvi_lai;
-
-						if ( ! IS_INVALID_VALUE(matrix->cells[cell].years[year].daily[month].d[day].et) )
-							matrix->cells[cell].meteo_spinup[month].d[day].et += matrix->cells[cell].years[year].daily[month].d[day].et;
-
-						if ( ! IS_INVALID_VALUE(matrix->cells[cell].years[year].daily[month].d[day].windspeed) )
-							matrix->cells[cell].meteo_spinup[month].d[day].windspeed += matrix->cells[cell].years[year].daily[month].d[day].windspeed;
-					}
-
-					// dataset can have no leap years
-					// so prevent division by zero error!
-					if ( years_count )
-					{
-						matrix->cells[cell].meteo_spinup[month].d[day].solar_rad /= years_count;
-						matrix->cells[cell].meteo_spinup[month].d[day].tavg /= years_count;
-						matrix->cells[cell].meteo_spinup[month].d[day].tmax /= years_count;
-						matrix->cells[cell].meteo_spinup[month].d[day].tmin /= years_count;
-						matrix->cells[cell].meteo_spinup[month].d[day].rh_f /= years_count;
-						matrix->cells[cell].meteo_spinup[month].d[day].ts_f /= years_count;
-						matrix->cells[cell].meteo_spinup[month].d[day].prcp /= years_count;
-						matrix->cells[cell].meteo_spinup[month].d[day].swc /= years_count;
-						matrix->cells[cell].meteo_spinup[month].d[day].ndvi_lai /= years_count;
-						matrix->cells[cell].meteo_spinup[month].d[day].et /= years_count;
-						matrix->cells[cell].meteo_spinup[month].d[day].windspeed /= years_count;
-					}
-				}
-			}
-		}
-	#ifdef _WIN32
-	#ifdef _DEBUG
-		{
-			FILE *f;
-			f = fopen("debug_spinup_seasonal_means.csv", "w");
-			if ( ! f ) {
-				logger_error(g_debug_log, "unable to create debug_spinup_seasonal_means.csv");
-				goto err;
-			}
-			/* write header */
-			fputs("CELL,MONTH,DAY,RAD,TAVG,TMAX,TMIN,RH,TS,P,SWC,LAI,ET,WS\n", f);
-
-			for ( cell = 0; cell < matrix->cells_count; ++cell )
-			{
-				for ( month = 0; month < METEO_MONTHS_COUNT; ++month )
-				{
-					days_per_month = DaysInMonth[month];
-					if ( FEBRUARY == month )
-					{
-						// we made all years as leap years
-						++days_per_month;
-					}
-
-					for ( day = 0; day < days_per_month; ++day )
-					{
-						fprintf(f, "%d,%d,%d,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g\n"
-										, cell
-										, month + 1
-										, day + 1
-										, matrix->cells[cell].meteo_spinup[month].d[day].solar_rad
-										, matrix->cells[cell].meteo_spinup[month].d[day].tavg
-										, matrix->cells[cell].meteo_spinup[month].d[day].tmax
-										, matrix->cells[cell].meteo_spinup[month].d[day].tmin
-										, matrix->cells[cell].meteo_spinup[month].d[day].rh_f
-										, matrix->cells[cell].meteo_spinup[month].d[day].ts_f
-										, matrix->cells[cell].meteo_spinup[month].d[day].prcp
-										, matrix->cells[cell].meteo_spinup[month].d[day].swc
-										, matrix->cells[cell].meteo_spinup[month].d[day].ndvi_lai
-										, matrix->cells[cell].meteo_spinup[month].d[day].et
-										, matrix->cells[cell].meteo_spinup[month].d[day].windspeed
-						);
-					}
-				}
-			}
-			fclose(f);
-		}
-	#endif
-	#endif
-	}
-	#endif
 
 	logger(g_debug_log, "Total years_of_simulation = %d\n", years_of_simulation);
 	logger(g_debug_log, "***************************************************\n\n");
@@ -1728,6 +1542,7 @@ int main(int argc, char *argv[]) {
 			}
 		}
 	}
+
 
 	for ( year = 0; year < years_of_simulation; ++year )
 	{
@@ -1792,6 +1607,7 @@ int main(int argc, char *argv[]) {
 
 					/* soil initialization */
 					soil_initialization   ( matrix, day, month, year );
+
 				}
 
 				for ( cell = 0; cell < matrix->cells_count; ++cell )
@@ -1969,7 +1785,11 @@ int main(int argc, char *argv[]) {
 												}
 												else
 												{
-													printf("ok tree_model (%02d-%02d-%d)\n", day+1, month+1, year+g_settings->year_start);
+													printf("ok tree_model (x=%d,y=%d) (%02d-%02d-%d)\n"
+														, matrix->cells[cell].x
+														, matrix->cells[cell].y
+														, day+1, month+1, year+g_settings->year_start
+													);
 												}
 											}
 										}
@@ -1989,7 +1809,11 @@ int main(int argc, char *argv[]) {
 							}
 							else
 							{
-								printf("ok litr_model (%02d-%02d-%d)\n", day+1, month+1, year+g_settings->year_start);
+								printf("ok litr_model (x=%d,y=%d) (%02d-%02d-%d)\n"
+									, matrix->cells[cell].x
+									, matrix->cells[cell].y
+									, day+1, month+1, year+g_settings->year_start
+								);
 							}
 
 							/************************************************************************/
@@ -2001,7 +1825,11 @@ int main(int argc, char *argv[]) {
 							}
 							else
 							{
-								printf("ok soil_model (%02d-%02d-%d)\n", day+1, month+1, year+g_settings->year_start);
+								printf("ok soil_model (x=%d,y=%d) (%02d-%02d-%d)\n"
+									, matrix->cells[cell].x
+									, matrix->cells[cell].y
+									, day+1, month+1, year+g_settings->year_start
+								);
 							}
 							/************************************************************************/
 							/* run for cell model */
@@ -2012,7 +1840,11 @@ int main(int argc, char *argv[]) {
 							}
 							else
 							{
-								printf("ok cell_model (%02d-%02d-%d)\n", day+1, month+1, year+g_settings->year_start);
+								printf("ok cell_model (x=%d,y=%d) (%02d-%02d-%d)\n"
+										, matrix->cells[cell].x
+										, matrix->cells[cell].y
+										, day+1, month+1, year+g_settings->year_start
+								);
 							}
 							/*************************************************************************/
 
@@ -2063,44 +1895,28 @@ int main(int argc, char *argv[]) {
 		}
 	}
 
+	EOD_cell_msg();
+	EOD_soil_msg();
+	EOM_cell_msg();
+	EOM_soil_msg();
+	EOY_cell_msg();
+	EOY_soil_msg();
+
 	for ( cell = 0; cell < matrix->cells_count; ++cell )
 	{
 		if ( ! matrix->cells_count ) break;
-		// v5.4 use other method
-	#if 0
-	{
-		int i;
-		if ( g_year_start_index != -1 ) {
-			matrix->cells[cell].years -= g_year_start_index;
-		}
 
-		for ( i = 0; i < matrix->cells[cell].years_count; ++i ) {
-			if ( matrix->cells[cell].years[i].hourly ) {
-				 free(matrix->cells[cell].years[i].hourly);
-			}
-			if ( matrix->cells[cell].years[i].halfhourly ) {
-				 free(matrix->cells[cell].years[i].halfhourly);
-			}
-		}
-		free (matrix->cells[cell].years);
-	}
-	#else
-	{
-		meteo_annual_t* p;
-			
-		p = matrix->cells[cell].years;
 		if ( g_year_start_index != -1 ) {
-			p -= g_year_start_index;
+			free(matrix->cells[cell].years-g_year_start_index);
+		} else {
+			free(matrix->cells[cell].years);
 		}
-		meteo_annual_free(p, matrix->cells[cell].years_count);
-	}
-	#endif
 		matrix->cells[cell].years = NULL; /* required */
 	}
-	
+
 	/* free memory */
 	matrix_free(matrix); matrix = NULL;
-	
+
 	/* create nc files */
 	if ( g_daily_log && g_settings->netcdf_output ) {
 		printf("creating nc daily files...");
@@ -2137,10 +1953,9 @@ int main(int argc, char *argv[]) {
 
 	err:
 
-	/*
-		cleanup memory...
-		please do not remove assign to null pointer
-		it prevent doubled free with clean_up func
+	/* cleanup memory...
+		do not remove null pointer to prevent
+		double free with clean_up func
 	 */
 
 	/* close logger */
