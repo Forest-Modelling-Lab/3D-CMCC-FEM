@@ -1654,7 +1654,8 @@ void print_model_settings(logger_t*const log)
 		logger(log, "#year %d at which co2 concentration is fixed at value = %g ppmv\n", g_settings->year_start_co2_fixed, g_settings->co2Conc);
 	}
 
-	logger(log, "#Resp accl = %s\n", g_settings->Resp_accl ? "on" : "off");
+	logger(log, "#Photo accl = %s\n", g_settings->Photo_accl ? "on" : "off");
+	logger(log, "#Resp  accl = %s\n", g_settings->Resp_accl ? "on" : "off");
 	logger(log, "#regeneration = %s\n", g_settings->regeneration ? "on" : "off");
 	logger(log, "#Management = %s\n", (MANAGEMENT_VAR == g_settings->management) ? "var" : (MANAGEMENT_ON == g_settings->management) ? "on" : "off");
 	if ( g_settings->management )

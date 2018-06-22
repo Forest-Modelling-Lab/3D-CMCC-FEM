@@ -228,10 +228,10 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 
 	/* temperature control */
 	const double Ea_V          = 51560;  /* (J mol-1) Activation energy for J see Maespa */
-	double S_V           = 472.;   /* (JK-1 mol) Vmax temperature response parameter */
+	double S_V                 = 472.;   /* (JK-1 mol) Vmax temperature response parameter */
 	const double H_V           = 144568; /* (J mol-1) Vmax curvature parameter */
 	const double Ea_J          = 43790;  /* (J mol-1) Activation energy for J see Maespa */
-	double S_J           = 710 ;   /* (JK-1 mol) electron-transport temperature response parameter */
+	double S_J                 = 710 ;   /* (JK-1 mol) electron-transport temperature response parameter */
 	const double H_J           = 220000; /* (J mol-1) curvature parameter of J */
 	//const double Ea_Rub        = ?????;  /* (kJ mol-1) Activation energy for Rubisco */
 
@@ -265,7 +265,7 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 
 
 	//todo todo todo todo todo move in species.txt (this should be the only variable for all photosynthesis)
-	const double beta       = 1.67; /* Jmax:Vcmax note: in Medlyn et al., 2002*/
+	const double beta       = 1.67;       /* Jmax:Vcmax Medlyn et al., 2002 but see Kattge and Knorr 2007 at 1.89 */
 	//const double beta       = 2.1; /* ratio between Vcmax and Jmax see dePury and Farquhar 1997; for fagus see Liozon et al., (2000) and Castanea */
 
 	const double test_Vcmax = 55 ; /* (umol/m2/sec) Vcmax for fagus see Deckmyn et al., 2004 GCB */
@@ -463,7 +463,8 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	if ( g_settings->Photo_accl )
 	{
 		/** acclimation for temperature as in Kattge and Knorr (2007) and CLM5.0 version **/
-		/* acclimation for Jmax25 as in Kattge and Knorr (2007) */
+
+		/* change for Jmax/Vcmax ratio with growth temperature as in Kattge and Knorr (2007) */
 		Jmax25    = ( 2.59 - 0.035 * ( tleaf10_K - TempAbs ) ) * Vcmax25;
 	}
 
@@ -475,6 +476,7 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	if ( g_settings->Photo_accl )
 	{
 		/** acclimation for temperature as in Kattge and Knorr (2007) and CLM5.0 version **/
+
 		/* for Jmax */
 		S_J = 659.70 - 0.75 * ( tleaf10_K - TempAbs );
 	}

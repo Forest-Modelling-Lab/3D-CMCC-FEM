@@ -7,7 +7,7 @@ SPINUP_YEARS 6000                   //Number of years for spinup
 SCREEN_OUTPUT off                   //Must be  'on' or 'off'
 DEBUG_OUTPUT off                    //Must be 'on' or 'off'
 DAILY_OUTPUT on                     //Must be 'on' or 'off'
-MONTHLY_OUTPUT off                   //Must be 'on' or 'off'
+MONTHLY_OUTPUT off                  //Must be 'on' or 'off'
 ANNUAL_OUTPUT on                    //Must be 'on' or 'off'
 SOIL_OUTPUT off                     //Must be 'on' or 'off'
 NETCDF_OUTPUT off
