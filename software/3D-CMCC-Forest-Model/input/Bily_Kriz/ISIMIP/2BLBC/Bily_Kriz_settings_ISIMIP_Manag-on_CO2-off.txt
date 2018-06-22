@@ -18,6 +18,7 @@ PSN_mod 0                           //Must be '0' (FvCB) or '1' (LUE) for photos
 CO2_trans var                       //Must be 'on' or 'off'
 YEAR_START_CO2_FIXED 2005           //When Co2_trans = var, year at which fix [CO2]
 Ndep_fixed on                       //Must be 'on' or 'off'
+Photo_accl on                       //Photosynthesis temperature acclimatation Must be 'on' or 'off'
 Resp_accl on                        //Q10 temperature acclimatation Must be 'on' or 'off'
 regeneration off                    //Must be 'on' or 'off'
 management var                      //Must be 'on' or 'off'

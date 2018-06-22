@@ -14,10 +14,11 @@ NETCDF_OUTPUT off
 YEAR_START 2007                       // Starting year simulation
 YEAR_END 2095                         // Ending year simulation
 YEAR_RESTART off                      // Year to restart
-PSN_mod 0                           //Must be '0' (FvCB) or '1' (LUE) for photosynthesis approach
+PSN_mod 0                             //Must be '0' (FvCB) or '1' (LUE) for photosynthesis approach
 CO2_trans off                         // Must be 'on' or 'off'
 YEAR_START_CO2_FIXED 2000             // When Co2_trans = var, year at which fix [CO2]
 Ndep_fixed on                         // Must be 'on' or 'off' 
+Photo_accl on                         //Photosynthesis temperature acclimatation Must be 'on' or 'off'
 Resp_accl on                          // Q10 temperature acclimatation Must be 'on' or 'off'
 regeneration off                      // Must be 'on' or 'off'
 management on                         // Must be 'on' or 'off'

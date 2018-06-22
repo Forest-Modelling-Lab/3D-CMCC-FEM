@@ -259,6 +259,8 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	double tleaf10_K;                     /* (Kelvin) 10 day mean leaf temperature (assumed equal to Tair) */
 	double temp_corr;                     /* temperature function */
 	double high_temp_corr;                /* high temperature inhibition */
+	double kT_Vcmax;                      /* temperature dependence Vcmax */
+	double kT_Jmax;                       /* temperature dependence Jmax */
 	double var_a, var_b, var_c, det;
 
 
@@ -397,11 +399,11 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	Vcmax25   = leafN * s->value[N_RUBISCO] * fnr * act25 /** s->value[F_NUTR]*/;
 
 	/* temperature corrector factor */
-	temp_corr      = exp ( Ea_V * ( tleaf - 25. ) / ( Rgas * tleaf_K * 298.) );
+	temp_corr = exp ( Ea_V * ( tleaf - 25. ) / ( Rgas * tleaf_K * 298.) );
 
 	if ( g_settings->Photo_accl )
 	{
-		/** acclimation for temperature as in Kattge and Knorr (2007) and CLM5.0 version **/
+		/** acclimation for temperature as in Kattge and Knorr (2007)  and CLM5.0 version **/
 		/* for Vcmax */
 		S_V = 668.39 - 1.07 * ( tleaf10_K - TempAbs );
 	}
@@ -417,15 +419,20 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 		high_temp_corr =  1.;
 	}
 
+	/* temperature dependence of Vcmax */
+	kT_Vcmax = temp_corr * high_temp_corr;
+
 	/* check condition */
-	CHECK_CONDITION( temp_corr      , < , 0.0 );
-	CHECK_CONDITION( high_temp_corr , < , 0.0 );
+	CHECK_CONDITION( kT_Vcmax       , < , 0. );
+	CHECK_CONDITION( temp_corr      , < , 0. );
+	CHECK_CONDITION( high_temp_corr , < , 0. );
 
 	/* correct Vcmax25 for temperature Medlyn et al., (1999) with F_SW from Bonan et al., (2011) */
-	Vcmax     = Vcmax25 * temp_corr * high_temp_corr * s->value[F_SW];
+	/* see Kattge and Knorr (2007) (eq. 9) */
+	Vcmax     = Vcmax25 * kT_Vcmax * s->value[F_SW];
 
 	/* check condition */
-	CHECK_CONDITION( Vcmax , <, 0.0);
+	CHECK_CONDITION( Vcmax , < , 0. );
 
 #endif
 
@@ -451,7 +458,7 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	 * Medlyn et al., (1999); Peterson et al., (1999); Liozon et al., (2000); Leuning et al., (2002); Bonan et al., (2011)*/
 
 	/* compute Jmax at 25 °C Bonan et al., (2011) */
-	Jmax25         = beta * Vcmax25;
+	Jmax25        = beta * Vcmax25;
 
 	if ( g_settings->Photo_accl )
 	{
@@ -483,15 +490,20 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 		high_temp_corr = 1.;
 	}
 
+	/* temperature dependence of Jmax */
+	kT_Jmax = temp_corr * high_temp_corr;
+
 	/* check condition */
-	CHECK_CONDITION( temp_corr      , <, 0.0);
-	CHECK_CONDITION( high_temp_corr , <, 0.0);
+	CHECK_CONDITION( kT_Jmax        , < , 0. );
+	CHECK_CONDITION( temp_corr      , < , 0. );
+	CHECK_CONDITION( high_temp_corr , < , 0. );
 
 	/* correct Jmax25 for temperature dePury and Farquhar (1997) */
-	Jmax           = Jmax25 * temp_corr * high_temp_corr;
+	/* see Kattge and Knorr (2007) (eq. 10) */
+	Jmax           = Jmax25 * kT_Jmax;
 
 	/* check condition */
-	CHECK_CONDITION( Jmax , <, 0.0);
+	CHECK_CONDITION( Jmax , < , 0.);
 
 #endif
 
