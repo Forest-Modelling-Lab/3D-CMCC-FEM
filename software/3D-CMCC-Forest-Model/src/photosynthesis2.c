@@ -301,8 +301,15 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	tleaf     = meteo_daily->tday;
 	tleaf_K   = meteo_daily->tday + TempAbs;
 
-	tleaf10   = meteo_daily->ten_day_avg_tday;
-	tleaf10_K = meteo_daily->ten_day_avg_tday + TempAbs;
+	//note: using simple or weighted average did not reveal any practical difference */
+
+	/* using ten day average */
+	//tleaf10   = meteo_daily->ten_day_avg_tday;
+	//tleaf10_K = meteo_daily->ten_day_avg_tday + TempAbs;
+
+	/* using ten day weighted average */
+	tleaf10   = meteo_daily->ten_day_weighted_avg_tday;
+	tleaf10_K = meteo_daily->ten_day_weighted_avg_tday + TempAbs;
 
 
 	/****************************** ARRHENIUS KINETICS *****************************/
