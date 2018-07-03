@@ -12,6 +12,8 @@
 
 void carbon_allocation   ( cell_t *const c, age_t *const a, species_t *const s, const int day, const int month, const int year );
 
+void carbon_allocation_new   ( cell_t *const c, age_t *const a, species_t *const s, const int day, const int month, const int year );
+
 void nitrogen_allocation ( cell_t *const c, species_t *const s, const int day, const int month, const int year );
 
 

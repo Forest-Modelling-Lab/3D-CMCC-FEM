@@ -311,9 +311,15 @@ enum {
 	SLA_PROJ,                           /* (m2/KgC) Current Age-related Average Specific Leaf Area */
 	SLA_SUN_PROJ,                       /* (m2/KgC) Current Age-related Porjected Average Specific Leaf Area for sun leaves*/
 	SLA_SHADE_PROJ,                     /* (m2/KgC) Current Age-related Porjected Average Specific Leaf Area for shaded leaves*/
+	LEAF_AREA,                          /* (m2) Leaf area */
+	LEAF_AREA_SUN,                      /* (m2) Leaf Area for sun leaves */
+	LEAF_AREA_SHADE,                    /* (m2) Leaf Area for shaded leaves */
 	LAI_PROJ,                           /* (m2/m2) LAI for Projected Area covered (at zenith angle) */
 	LAI_SUN_PROJ,                       /* (m2/m2) LAI for sun leaves for Projected Area covered (at zenith angle) */
 	LAI_SHADE_PROJ,                     /* (m2/m2) LAI for shaded leaves for Projected Area covered (at zenith angle) */
+	TREE_LAI_PROJ,                           /* (m2/m2) LAI for Projected Area covered (at zenith angle) */
+	TREE_LAI_SUN_PROJ,                       /* (m2/m2) LAI for sun leaves for Projected Area covered (at zenith angle) */
+	TREE_LAI_SHADE_PROJ,                     /* (m2/m2) LAI for shaded leaves for Projected Area covered (at zenith angle) */
 	MAX_LAI_PROJ,                       /* (m2/m2) Maximum annual LAI */
 	PEAK_LAI_PROJ,                      /* (m2/m2) Peak Projected LAI */
 	ALL_LAI_PROJ,                       /* (m2) All side Projected LAI */
@@ -415,6 +421,12 @@ enum {
 	C_BRANCH_TO_CWD,                    /* (tC/cell/day) Daily tC from Branch pool to Coarse Woody Debris */
 	C_RESERVE_TO_CWD,                   /* (tC/cell/day) Daily tC from Reserve pool to Coarse Woody Debris */
 	C_FRUIT_TO_CWD,                     /* (tC/cell/day) Daily tC from Fruit pool to Coarse Woody Debris */
+	C_STEM_LIVEWOOD_TO_CWD,             /* (tC/cell/day) Daily tC from Stem livewood to Coarse Woody Debris */
+	C_CROOT_LIVEWOOD_TO_CWD,            /* (tC/cell/day) Daily tC from Coarse root livewood to Coarse Woody Debris */
+	C_BRANCH_LIVEWOOD_TO_CWD,           /* (tC/cell/day) Daily tC from Branch livewood to Coarse Woody Debris */
+	C_STEM_DEADWOOD_TO_CWD,             /* (tC/cell/day) Daily tC from Stem deadwood to Coarse Woody Debris */
+	C_CROOT_DEADWOOD_TO_CWD,            /* (tC/cell/day) Daily tC from Coarse root deadwood to Coarse Woody Debris */
+	C_BRANCH_DEADWOOD_TO_CWD,           /* (tC/cell/day) Daily tC from Branch deadwood to Coarse Woody Debris */
 	C_STEM_SAPWOOD_TO_CWD,              /* (tC/cell/day) Daily tC from Stem Sapwood to Coarse Woody Debris */
 	C_CROOT_SAPWOOD_TO_CWD,             /* (tC/cell/day) Daily tC from Coarse root Sapwood to Coarse Woody Debris */
 	C_BRANCH_SAPWOOD_TO_CWD,            /* (tC/cell/day) Daily tC from Branch Sapwood to Coarse Woody Debris */
@@ -426,6 +438,9 @@ enum {
 	C_STEM_LIVEWOOD_TO_DEADWOOD,        /* (tC/cell/day) Daily tC from Stem live wood pool to Stem dead wood */
 	C_CROOT_LIVEWOOD_TO_DEADWOOD,       /* (tC/cell/day) Daily tC from Coarse live wood pool to Coarse dead wood */
 	C_BRANCH_LIVEWOOD_TO_DEADWOOD,      /* (tC/cell/day) Daily tC from Branch live wood pool to Branch dead wood */
+	C_STEM_SAPWOOD_TO_HEARTWOOD,        /* (tC/cell/day) Daily tC from Stem sapwood pool to Stem heartwood */
+	C_CROOT_SAPWOOD_TO_HEARTWOOD,       /* (tC/cell/day) Daily tC from Coarse sapwood pool to Coarse heartwood */
+	C_BRANCH_SAPWOOD_TO_HEARTWOOD,      /* (tC/cell/day) Daily tC from Branch sapwood pool to Branch heartwood */
 	C_RESERVE_TO_LEAF_BUDBURST,         /* (tC/cell/day) Daily tC from Reserve pool to Leaf Budburst */
 	C_RESERVE_TO_FROOT_BUDBURST,        /* (tC/cell/day) Daily tC from Reserve pool to Fine root Budburst */
 	C_RESERVE_TO_BUDBURST,              /* (tC/cell/day) Daily tC from Reserve pool to Budburst */
@@ -439,6 +454,22 @@ enum {
 	YEARLY_C_TO_STEM,                   /* (tC/cell/year) Annual Stem biomass for turnover */
 	YEARLY_C_TO_CROOT,                  /* (tC/cell/year) Annual Coarse root biomass for turnover */
 	YEARLY_C_TO_BRANCH,                 /* (tC/cell/year) Annual Branch biomass for turnover */
+
+	YEARLY_C_TO_STEM_LIVEWOOD,           /* (tC/cell/year) Annual Stem biomass for turnover */
+	YEARLY_C_TO_CROOT_LIVEWOOD,          /* (tC/cell/year) Annual Coarse root biomass for turnover */
+	YEARLY_C_TO_BRANCH_LIVEWOOD,         /* (tC/cell/year) Annual Branch biomass for turnover */
+
+	YEARLY_STEM_LIVEWOOD_TO_DEADWOOD,   /* (tC/cell/year) Annual Stem biomass for turnover */
+	YEARLY_CROOT_LIVEWOOD_TO_DEADWOOD,  /* (tC/cell/year) Annual Coarse root biomass for turnover */
+	YEARLY_BRANCH_LIVEWOOD_TO_DEADWOOD, /* (tC/cell/year) Annual Branch biomass for turnover */
+
+	YEARLY_C_TO_STEM_SAPWOOD,           /* (tC/cell/year) Annual Stem biomass for turnover */
+	YEARLY_C_TO_CROOT_SAPWOOD,          /* (tC/cell/year) Annual Coarse root biomass for turnover */
+	YEARLY_C_TO_BRANCH_SAPWOOD,         /* (tC/cell/year) Annual Branch biomass for turnover */
+
+	YEARLY_STEM_SAPWOOD_TO_HEARTWOOD,   /* (tC/cell/year) Annual Stem biomass for turnover */
+	YEARLY_CROOT_SAPWOOD_TO_HEARTWOOD,  /* (tC/cell/year) Annual Coarse root biomass for turnover */
+	YEARLY_BRANCH_SAPWOOD_TO_HEARTWOOD, /* (tC/cell/year) Annual Branch biomass for turnover */
 
 	YEARLY_C_TO_WOOD,                   /* (tC/cell/year) Annual Carbon stocked into wood pool */
 	CUM_YEARLY_C_TO_WOOD,               /* (tC/cell) Cumulated Annual Carbon stocked into wood pool */
@@ -483,6 +514,7 @@ enum {
 	BRANCH_HEARTWOOD_C,                 /* (tC/cell) Current Branch heartwood carbon pool */
 	EFF_LIVE_TOTAL_WOOD_FRAC,           /* (DIM) Age-related fraction of Live biomass per Total biomass */
 	DAILY_LIVEWOOD_TURNOVER,            /* (tC/cell/day) Daily live wood turnover rate */
+	DAILY_SAPWOOD_TURNOVER,             /* (tC/cell/day) Daily sapwood turnover rate */
 	STANDING_WOOD,                      /* (tC/cell) standing wood carbon */
 
 	/* management C */

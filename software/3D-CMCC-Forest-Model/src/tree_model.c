@@ -353,7 +353,11 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							}
 
 							/* allocate daily carbon */
+#if 0
 							carbon_allocation       ( c, a, s, day, month, year );
+#else
+							carbon_allocation_new   ( c, a, s, day, month, year );
+#endif
 
 							/* allocate daily nitrogen */
 							nitrogen_allocation     ( c, s, day, month, year );
@@ -363,9 +367,14 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							/* note: when it happens the overall class is removed */
 							if ( ! growth_efficiency_mortality ( c, height, dbh, age, species ) )
 							{
+#if 0
 								/* turnover */
 								turnover ( c, a, s, day, month, year );
-
+#else
+								//fixme move into turnover function
+								sapwood_turnover ( c, a, s, day, month, year );
+								livewood_turnover ( c, a, s, day, month, year );
+#endif
 								/* carbon use efficiency */
 								carbon_use_efficiency ( c, height, dbh, age, species, day, month, year );
 

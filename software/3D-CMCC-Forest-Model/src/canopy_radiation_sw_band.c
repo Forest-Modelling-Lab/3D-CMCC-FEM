@@ -59,10 +59,10 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 	s->value[PAR]             = meteo_daily->par  * s->value[DAILY_CANOPY_COVER_PROJ];
 
 	/** sun leaves **/
-	s->value[PAR_REFL_SUN]    = s->value[PAR]     * Light_refl_par_frac_sun;
-	s->value[PAR_SUN]         = s->value[PAR]     - s->value[PAR_REFL_SUN];
-	s->value[APAR_SUN]        = s->value[PAR_SUN] * Light_abs_frac_sun;
-	s->value[TRANSM_PAR_SUN]  = s->value[PAR_SUN] - s->value[APAR_SUN];
+	s->value[PAR_REFL_SUN]     = s->value[PAR]     * Light_refl_par_frac_sun;
+	s->value[PAR_SUN]          = s->value[PAR]     - s->value[PAR_REFL_SUN];
+	s->value[APAR_SUN]         = s->value[PAR_SUN] * Light_abs_frac_sun;
+	s->value[TRANSM_PAR_SUN]   = s->value[PAR_SUN] - s->value[APAR_SUN];
 
 	/* check PAR balance for sun leaves */
 	CHECK_CONDITION ( fabs ( ( s->value[PAR_SUN] - s->value[TRANSM_PAR_SUN] ) - s->value[APAR_SUN] ), >, eps );
@@ -89,7 +89,7 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 	/* compute fAPAR */
 	if ( s->value[PAR] )
 	{
-		s->value[fAPAR]        = s->value[APAR]/s->value[PAR];
+		s->value[fAPAR]        = s->value[APAR] / s->value[PAR];
 	}
 	else
 	{
@@ -143,7 +143,7 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 	CHECK_CONDITION(s->value[SW_RAD_ABS],    <, ZERO );
 	CHECK_CONDITION(s->value[SW_RAD_TRANSM], <, ZERO);
 	CHECK_CONDITION(s->value[SW_RAD_ABS] + s->value[SW_RAD_TRANSM], <, ZERO );
-	CHECK_CONDITION(fabs((s->value[SW_RAD_ABS] + s->value[SW_RAD_TRANSM] + s->value[SW_RAD_REFL] )-s->value[SW_RAD]), >, eps);
+	CHECK_CONDITION(fabs((s->value[SW_RAD_ABS] + s->value[SW_RAD_TRANSM] + s->value[SW_RAD_REFL] ) - s->value[SW_RAD]), >, eps);
 
 	/***********************************************************************************************/
 	//test 25 June 2017
@@ -241,16 +241,7 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 
 	/***********************************************************************************************************/
 
-#if 0
-	/* TEST: following Duursma and Makela 2007, Tree Phys. 27, 2007 */
-
-	k_eff = (s->value[CANOPY_COVER_EXP] / s->value[ALL_LAI_PROJ]) * ( 1. - exp (- s->value[K] * s->value[LAI_EXP]));
-
-	/* assign to K variable */
-	k     = k_eff;
-#else
 	k = s->value[K];
-#endif
 
 	/***********************************************************************************************************/
 	/* SHORT WAVE RADIATION FRACTIONS */
@@ -261,14 +252,21 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 	/* see method from Cannel and Grace, Can. J. For: Res. Vol. 23, 1993 [Eq.8]  */
 	/* see method from Duursma and Makela, Tree Phys: Vol. 27, 859-870, 2007 [Eq.4] */
 
+#if 1
+	//fixme this is a very bad assumption (I know!!) to avoid that under low density gpp is too low
+	Light_trasm_frac       = exp ( - k * s->value[LAI_PROJ]) * s->value[DAILY_CANOPY_COVER_PROJ];
+	Light_trasm_frac_sun   = exp ( - k * s->value[LAI_SUN_PROJ]) * s->value[DAILY_CANOPY_COVER_PROJ];
+	Light_trasm_frac_shade = exp ( - k * s->value[LAI_SHADE_PROJ]) * s->value[DAILY_CANOPY_COVER_PROJ] ;
+#else
 	Light_trasm_frac       = exp ( - k * s->value[LAI_PROJ]);
 	Light_trasm_frac_sun   = exp ( - k * s->value[LAI_SUN_PROJ]);
 	Light_trasm_frac_shade = exp ( - k * s->value[LAI_SHADE_PROJ]);
+#endif
 
 	/** fraction of light absorbed by the canopy **/
-	Light_abs_frac       = 1. - Light_trasm_frac;
-	Light_abs_frac_sun   = 1. - Light_trasm_frac_sun;
-	Light_abs_frac_shade = 1. - Light_trasm_frac_shade;
+	Light_abs_frac         = 1. - Light_trasm_frac;
+	Light_abs_frac_sun     = 1. - Light_trasm_frac_sun;
+	Light_abs_frac_shade   = 1. - Light_trasm_frac_shade;
 
 	/** fraction of light reflected by the canopy **/
 	/* for Short Wave radiation and PAR */
@@ -276,17 +274,17 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 	/* calculated similarly to sw except that albedo is 1/3 for PAR because less */
 	/* PAR is reflected than sw_radiation (Jones 1992) */
 
-	Light_refl_sw_frac        = s->value[ALBEDO];
-	Light_refl_sw_frac_sun    = s->value[ALBEDO] * ( 1 - exp ( - k * s->value[LAI_SUN_PROJ]));
-	Light_refl_sw_frac_shade  = s->value[ALBEDO] * ( 1 - exp ( - k * s->value[LAI_SHADE_PROJ]));
+	Light_refl_sw_frac             = s->value[ALBEDO];
+	Light_refl_sw_frac_sun         = s->value[ALBEDO]         /* * Light_abs_frac_sun */;
+	Light_refl_sw_frac_shade       = s->value[ALBEDO]         /* * Light_abs_frac_shade */;
 
 	Light_refl_net_rad_frac        = s->value[ALBEDO];
-	Light_refl_net_rad_frac_sun    = s->value[ALBEDO] * ( 1 - exp ( - k * s->value[LAI_SUN_PROJ]));
-	Light_refl_net_rad_frac_shade  = s->value[ALBEDO] * ( 1 - exp ( - k * s->value[LAI_SHADE_PROJ]));
+	Light_refl_net_rad_frac_sun    = s->value[ALBEDO]         /* * Light_abs_frac_sun */;
+	Light_refl_net_rad_frac_shade  = s->value[ALBEDO]         /* * Light_abs_frac_shade */;
 
-	Light_refl_par_frac       = (s->value[ALBEDO] /3. );
-	Light_refl_par_frac_sun   = (s->value[ALBEDO] /3. ) * ( 1 - exp ( - k * s->value[LAI_SUN_PROJ]));
-	Light_refl_par_frac_shade = (s->value[ALBEDO] /3. ) * ( 1 - exp ( - k * s->value[LAI_SHADE_PROJ]));
+	Light_refl_par_frac            = (s->value[ALBEDO] / 3. );
+	Light_refl_par_frac_sun        = (s->value[ALBEDO] / 3. ) /* * Light_abs_frac_sun */;
+	Light_refl_par_frac_shade      = (s->value[ALBEDO] / 3. ) /* * Light_abs_frac_shade */;
 
 	//fixme set that if gapcover is bigger then 0.5 albedo should be considered also in dominated layer!!!!
 	//fixme following MAESPA (Duursma et al.,) and from Campbell & Norman (2000, p. 259) dominated layers should have just shaded leaves
@@ -382,7 +380,7 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 	}
 
 	/*************************************************************************/
-	/* when matches the last height class in the cell is processed */
+	/* when it matches the last height class in the cell is processed */
 	//fixme sometimes it doesn't go in caused by the a jump in "cell_height_class_counter"
 	//as it is now is used just for print data but it should be fixed
 	if ( c->heights_count == c->cell_height_class_counter )

@@ -64,10 +64,10 @@ time_list_output = c('annual','monthly','daily')
 
 # single or multiple simulations
 build_list<-c('Debug')#, 'Release')
-site_list<-c("Hyytiala")
+site_list<-c("Soroe")
 esm_list <-c("0")# ("1","2","3","4","5", "All")
-rcp_list <-c("8p5")# ("0p0","2p6","4p5","6p0","8p5","All")
-man_list <-c("off")# ("on",'off', "All")
+rcp_list <-c("0p0")# ("0p0","2p6","4p5","6p0","8p5","All")
+man_list <-c("All")# ("on",'off', "All")
 co2_list <-c("on")# , "on",off", "All")
 protocol_list<-c("FT")# ("2A","2B", "All") 
 local_list<-c('off')
@@ -94,7 +94,7 @@ if ( length(which(co2_list == 'All')) > 0 ) {
   co2_list = c("on",'off')
 }
 if ( length(which(protocol_list == 'All')) > 0 ) {
-  protocol_list = c('FT',"LOCAL") #'2A','2B',"2BLBC","2Bpico","2BLBCpico")#'LOCAL',
+  protocol_list = c('FT',"LOCAL", "2B") #'2A','2B',"2BLBC","2Bpico","2BLBCpico")#'LOCAL',
 }
 if ( length(which(time_list == 'All')) > 0 ) {
   time_list = c('annual','monthly','daily')
