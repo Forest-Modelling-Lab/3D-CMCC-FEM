@@ -65,11 +65,11 @@ time_list_output = c('annual','monthly','daily')
 # single or multiple simulations
 build_list<-c('Debug')#, 'Release')
 site_list<-c("Soroe")
-esm_list <-c("0")# ("1","2","3","4","5", "All")
-rcp_list <-c("All")# ("0p0","2p6","4p5","6p0","8p5","All")
+esm_list <-c("2")# ("1","2","3","4","5", "All")
+rcp_list <-c("2p6")# ("0p0","2p6","4p5","6p0","8p5","All")
 man_list <-c("All")# ("on",'off', "All")
-co2_list <-c("off")# , "on",off", "All")
-protocol_list<-c("FT")# ("2A","2B", "All") 
+co2_list <-c("on")# , "on",off", "All")
+protocol_list<-c("2B")# ("2A","2B", "All") 
 local_list<-c('off')
 climate_off_list<-c('off') # for climate off and co2 on
 
@@ -79,7 +79,7 @@ time_list = c('annual')
 output_folder = paste0("Test_output_Rstudio_ct_TEST_", protocol_list,'_CO2_',co2_list,'_Man_',man_list)
 
 if ( length(which(site_list == 'All' )) > 0 ) {
-  site_list = c("Soroe","Hyytiala","Bily_Kriz","Collelongo")#,"Solling_beech","Peitz","Solling_spruce")
+  site_list = c("Soroe","Hyytiala","Bily_Kriz","Collelongo","Solling_beech","Peitz","Solling_spruce")
 }
 if ( length(which(esm_list == 'All' )) > 0 ) {
   esm_list = c("0","1","2","3","4","5","6","7","8","9","10")
@@ -158,7 +158,7 @@ if ( run_model == 1 ) {
                                   "-m"," ", "ISIMIP/", protocol,"/",protocol, "_hist.txt", " ",
                                   "-s"," ", "ISIMIP/", site,"_soil_ISIMIP.txt", " ",
                                   "-t"," ", "ISIMIP/", site,"_topo_ISIMIP.txt", " ",
-                                  "-c"," ", "ISIMIP/", protocol, "/", site,"_settings_ISIMIP_Manag-on_CO2-", co2,".txt", " ",
+                                  "-c"," ", "ISIMIP/", protocol, "/", site,"_settings_ISIMIP_Manag-on_CO2-on.txt", " ",
                                   "-k"," ", "ISIMIP/", "/CO2/CO2_hist.txt",
                                   ">output/",output_folder,"-", version, "-", site,"/",protocol,"_log_",site,"_LOCAL_Manag-on_CO2-", co2,".txt"
             )

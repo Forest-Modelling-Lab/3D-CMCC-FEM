@@ -23,7 +23,12 @@ void sapwood_turnover( cell_t *const c, age_t *const a, species_t *const s, cons
 	int t_age;                              /* age at which TURNOVER = (juvenile_sapwood_turnover_frac/mature_sapwood_turnover_frac)/2 */
 	double n = 2.;
 
+
 	/** age related function for sapwood turnover **/
+
+	/* "Similar analyses of Norway spruce, Scots pine, Sessile oak, and European beech
+		show a species-specific decrease in the proportion of sapwood from f sw = 1.0 in
+		the juvenile phase to 0.25–0.50 in the mature phase. Forest Dynamics, Growth and Yield book Hans Pretzsch (pg. 99) "
 
 	/* assumption: this function assumes that turnover rate increases with increasing tree age */
 	juv_sapwood_turnover_frac = 0.1;                        //fixme it should be moved to species.txt
@@ -48,12 +53,12 @@ void sapwood_turnover( cell_t *const c, age_t *const a, species_t *const s, cons
 
 	if ( ! day &&  ! month )
 	{
-//		if ( s->counter[YOS] == 1 )
-//		{
-//			s->value[YEARLY_C_TO_STEM_SAPWOOD]   = s->value[STEM_SAPWOOD_C];
-//			s->value[YEARLY_C_TO_CROOT_SAPWOOD]  = s->value[CROOT_SAPWOOD_C];
-//			s->value[YEARLY_C_TO_BRANCH_SAPWOOD] = s->value[BRANCH_SAPWOOD_C];
-//		}
+		//		if ( s->counter[YOS] == 1 )
+		//		{
+		//			s->value[YEARLY_C_TO_STEM_SAPWOOD]   = s->value[STEM_SAPWOOD_C];
+		//			s->value[YEARLY_C_TO_CROOT_SAPWOOD]  = s->value[CROOT_SAPWOOD_C];
+		//			s->value[YEARLY_C_TO_BRANCH_SAPWOOD] = s->value[BRANCH_SAPWOOD_C];
+		//		}
 		/* as in: LPJ, Sitch et al., 2003 and  Orchidee, Krinner et al., 2005; all sapwood tunovers each year */
 
 		/* stem sapwood */
@@ -140,12 +145,12 @@ void livewood_turnover( cell_t *const c, age_t *const a, species_t *const s, con
 
 	if ( ! day &&  ! month )
 	{
-//		if ( s->counter[YOS] == 1 )
-//		{
-//			s->value[YEARLY_C_TO_STEM_SAPWOOD]   = s->value[STEM_LIVEWOOD_C];
-//			s->value[YEARLY_C_TO_CROOT_SAPWOOD]  = s->value[CROOT_LIVEWOOD_C];
-//			s->value[YEARLY_C_TO_BRANCH_SAPWOOD] = s->value[BRANCH_LIVEWOOD_C];
-//		}
+		//		if ( s->counter[YOS] == 1 )
+		//		{
+		//			s->value[YEARLY_C_TO_STEM_SAPWOOD]   = s->value[STEM_LIVEWOOD_C];
+		//			s->value[YEARLY_C_TO_CROOT_SAPWOOD]  = s->value[CROOT_LIVEWOOD_C];
+		//			s->value[YEARLY_C_TO_BRANCH_SAPWOOD] = s->value[BRANCH_LIVEWOOD_C];
+		//		}
 
 		/* stem livewood */
 		s->value[C_STEM_LIVEWOOD_TO_DEADWOOD]   = s->value[YEARLY_C_TO_STEM_LIVEWOOD]   * s->value[DAILY_LIVEWOOD_TURNOVER];
