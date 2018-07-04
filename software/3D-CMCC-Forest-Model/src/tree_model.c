@@ -76,6 +76,8 @@ extern settings_t* g_settings;
 //extern int MonthLength_Leap [];
 
 /*****************************************************************************************************************/
+/*****************************************************************************************************************/
+/*****************************************************************************************************************/
 int Tree_model_daily (matrix_t *const m, const int cell, const int day, const int month, const int year)
 {
 	int layer;
@@ -348,7 +350,10 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 								if ( c->years[year].year > g_settings->year_start_management && g_settings->management != MANAGEMENT_VAR )
 								{
 									/* Mortality based on tree Age (LPJ) */
-									age_mortality ( c, height, dbh, age, species );
+									age_mortality        ( c, height, dbh, age, species );
+
+									/* Mortality based on stochasticity */
+									stochastic_mortality ( c, height, dbh, age, species );
 								}
 							}
 
@@ -356,9 +361,9 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 #if 0
 							carbon_allocation       ( c, a, s, day, month, year );
 #else
+							//note: this is basically the new function in version v.5.5
 							carbon_allocation_new   ( c, a, s, day, month, year );
 #endif
-
 							/* allocate daily nitrogen */
 							nitrogen_allocation     ( c, s, day, month, year );
 
@@ -372,6 +377,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 								turnover ( c, a, s, day, month, year );
 #else
 								//fixme move into turnover function
+								//note: this is basically the new function in version v.5.5
 								sapwood_turnover ( c, a, s, day, month, year );
 								livewood_turnover ( c, a, s, day, month, year );
 #endif
@@ -455,9 +461,11 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 		logger(g_debug_log, "****************END OF HEIGHT CLASS***************\n");
 	}
 	logger(g_debug_log, "****************END OF LAYER CLASS***************\n");
-
 	/* ok */
 	return 1;
 }
+/*****************************************************************************************************************/
+/*****************************************************************************************************************/
+/*****************************************************************************************************************/
 
 

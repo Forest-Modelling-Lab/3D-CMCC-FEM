@@ -23,6 +23,9 @@
 extern settings_t* g_settings;
 extern logger_t* g_debug_log;
 
+/******************************************************************************************************************/
+/******************************************************************************************************************/
+
 void self_thinning_mortality (cell_t *const c, const int layer, const int year)
 {
 	int height;
@@ -59,9 +62,9 @@ void self_thinning_mortality (cell_t *const c, const int layer, const int year)
 	{
 		/* first of all sort by descending height */
 		/* model makes die before lower height in each later */
-	#ifndef USE_NEW_OUTPUT
+#ifndef USE_NEW_OUTPUT
 		qsort (c->heights, c->heights_count, sizeof (height_t), sort_by_heights_desc);
-	#endif
+#endif
 
 		h = &c->heights[height];
 
@@ -85,8 +88,8 @@ void self_thinning_mortality (cell_t *const c, const int layer, const int year)
 
 					/* mortality */
 					//FIXME FOR MULTICLASS IN THE SAME LAYER POURPOSES
-//					while ( c->tree_layers[layer].layer_cover_proj >= g_settings->max_layer_cover )
-//					{
+					//					while ( c->tree_layers[layer].layer_cover_proj >= g_settings->max_layer_cover )
+					//					{
 					while (s->value[DBHDC_EFF] <  s->value[DBHDCMIN] )
 					{
 
@@ -195,6 +198,9 @@ void self_thinning_mortality (cell_t *const c, const int layer, const int year)
 
 }
 
+/******************************************************************************************************************/
+/******************************************************************************************************************/
+
 int growth_efficiency_mortality ( cell_t *const c, const int height, const int dbh, const int age, const int species )
 {
 	/* this function superimpose mortality for all trees in class when reserves
@@ -206,7 +212,7 @@ int growth_efficiency_mortality ( cell_t *const c, const int height, const int d
 	species_t* s;
 
 	nat_man = 0;
-	
+
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 	if( s->value[RESERVE_C] < 0 )
@@ -262,6 +268,9 @@ int growth_efficiency_mortality ( cell_t *const c, const int height, const int d
 	return 0;
 }
 
+/******************************************************************************************************************/
+/******************************************************************************************************************/
+
 int annual_growth_efficiency_mortality ( cell_t *const c, const int height, const int dbh, const int age, const int species )
 {
 	/* this function superimpose mortality for all trees in class when reserves
@@ -272,7 +281,7 @@ int annual_growth_efficiency_mortality ( cell_t *const c, const int height, cons
 	species_t* s;
 
 	nat_man = 0;
-	
+
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 	if( s->value[RESERVE_C] < 0 )
@@ -297,8 +306,11 @@ int annual_growth_efficiency_mortality ( cell_t *const c, const int height, cons
 	return 0;
 }
 
+/******************************************************************************************************************/
+/******************************************************************************************************************/
+
 /* Age mortality function from LPJ-GUESS */
-void age_mortality (cell_t *const c, const int height, const int dbh, const int age, const int species)
+void age_mortality ( cell_t *const c, const int height, const int dbh, const int age, const int species )
 {
 	int livetree       = 0;
 	int deadtree       = 0;
@@ -364,6 +376,81 @@ void age_mortality (cell_t *const c, const int height, const int dbh, const int 
 
 	}
 }
+
+/******************************************************************************************************************/
+/******************************************************************************************************************/
+
+void stochastic_mortality ( cell_t *const c, const int height, const int dbh, const int age, const int species )
+{
+	int livetree         = 0;
+	int deadtree         = 0;
+	double age_mort_fact = 0.01;   /* ntrees years-1 */
+
+	int nat_man;   /* natural or managed mortality 0 = natural; 1 = managed */
+
+	/* stochastic mortality factor which considers that (see BIOME-BGC) a stochastic mortality happens
+	 * BUT for reasons differet (e.g. pests) to age mortality factor */
+
+
+	age_t *a;
+	species_t *s;
+
+	nat_man = 0;
+
+	a = &c->heights[height].dbhs[dbh].ages[age];
+	// ALESSIOR
+	//if ( ! a ) return;
+	s = &a->species[species];
+
+	livetree = s->counter[N_TREE];
+
+	/* stochastic probability function */
+	deadtree = (int)( livetree * age_mort_fact );
+
+	logger(g_debug_log, "dead trees = %d\n", deadtree);
+
+	if ( ( deadtree ) > 1 )
+	{
+		logger(g_debug_log, "**MORTALITY based on stochasticity **\n");
+
+		if ( livetree > deadtree)
+		{
+			/* update C and N biomass */
+			tree_biomass_remove ( c, height, dbh, age, species, deadtree, nat_man );
+		}
+		else
+		{
+			if ( ! tree_class_remove(c, height, dbh, age, species) )
+			{
+				logger_error(g_debug_log, "unable to remove tree class");
+				exit(1);
+			}
+		}
+
+		/* update at class level */
+		s->counter[DEAD_TREE] += deadtree;
+		s->counter[N_TREE]    -= deadtree;
+
+		/* check */
+		CHECK_CONDITION(s->counter[N_TREE],    <=, 0);
+		CHECK_CONDITION(s->counter[DEAD_TREE], <, 0);
+
+		/* update at cell level */
+		c->daily_dead_tree   += deadtree;
+		c->monthly_dead_tree += deadtree;
+		c->annual_dead_tree  += deadtree;
+		c->n_trees           -= deadtree;
+
+		/* check */
+		CHECK_CONDITION(c->daily_dead_tree  , <, 0);
+		CHECK_CONDITION(c->monthly_dead_tree, <, 0);
+		CHECK_CONDITION(c->annual_dead_tree , <, 0);
+
+	}
+}
+
+/******************************************************************************************************************/
+/******************************************************************************************************************/
 
 void self_pruning ( cell_t *const c, const int height, const int dbh, const int age, const int species, const double old, const double current )
 {
@@ -442,6 +529,9 @@ void self_pruning ( cell_t *const c, const int height, const int dbh, const int 
 	s->value[N_TO_RESERVE]                  += s->value[N_CROOT_TO_RESERVE];
 	s->value[N_TO_CWD]                      += s->value[N_CROOT_TO_CWD];
 }
+
+/******************************************************************************************************************/
+/******************************************************************************************************************/
 
 
 /* Self-thinnig mortality function from 3PG */

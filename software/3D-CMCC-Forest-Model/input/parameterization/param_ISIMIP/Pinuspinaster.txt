@@ -59,7 +59,8 @@ DEADWOOD_LIGN_FRAC   0.30     //dead wood litter lignin fraction for Pinus from 
 BUD_BURST 0.3                 //days of bud burst at the beginning of growing season for P. sylvestris from Tatarinov
 LEAF_FALL_FRAC_GROWING  0     //proportions of the growing season of leaf fall 
 LEAF_FINEROOT_TURNOVER  0.25  //Average YEARLY leaves and fine root turnover rate for P. pinaster Moro et al., 1996 Annals of Botany, for sylvestris 0.18 from Pietsch, 0.39 Tatarinov, 0.25 Makela et al., 1997
-LIVE_WOOD_TURNOVER  0.7       //Annual yearly live wood turnover rate for P. sylvestris from Pietsch
+LIVEWOOD_TURNOVER        0.7  //Annual yearly livewood turnover rate 
+SAPWOOD_TURNOVER         0.7  //Annual yearly sapwood turnover rate 
 DBHDCMAX  0.55                //Low Density for P. pinaster deducted from Delzon et al., 2004
 DBHDCMIN  0.14                //to be checked//High Density for P. pinaster Jimènez et al., 2013
 SAP_A	0.321202044449747

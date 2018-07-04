@@ -90,7 +90,8 @@ LEAF_FALL_FRAC_GROWING  0.2       //proportions of the growing season of leaf fa
 
 //TURNOVER
 LEAF_FINEROOT_TURNOVER  1       //Average YEARLY fine root turnover rate 
-LIVE_WOOD_TURNOVER  0.7 //Annual yearly live wood turnover rate
+LIVEWOOD_TURNOVER        0.7  //Annual yearly livewood turnover rate 
+SAPWOOD_TURNOVER         0.7  //Annual yearly sapwood turnover rate 
 
 //ALLOMETRIC RELATIONSHIPS
 DBHDCMAX    0.24    //Low Density from P. sylvestris from Ameztegui et al., 2012 1  //CUURENTLY NOT USED

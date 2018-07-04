@@ -9,9 +9,193 @@
 #include "constants.h"
 #include "logger.h"
 
+void sapwood_turnover( cell_t *const c, age_t *const a, species_t *const s, const int day, const int month, const int year )
+{
+	double effective_sapwood_turnover;       /* effective sapwood turnover */
+
+	/*****************************************************************************************************************/
+	/*****************************************************************************************************************/
+
+#if 1
+
+	double juv_sapwood_turnover_frac;       /* juvenile fraction of turnover */
+	double mat_sapwood_turnover_frac;       /* mature fraction of turnover */
+	int t_age;                              /* age at which TURNOVER = (juvenile_sapwood_turnover_frac/mature_sapwood_turnover_frac)/2 */
+	double n = 2.;
+
+	/** age related function for sapwood turnover **/
+
+	/* assumption: this function assumes that turnover rate increases with increasing tree age */
+	juv_sapwood_turnover_frac = 0.1;                        //fixme it should be moved to species.txt
+	mat_sapwood_turnover_frac = s->value[SAPWOOD_TURNOVER]; //fixme it should be moved to species.txt
+	t_age                     = 30;                         //fixme it should be moved to species.txt
+
+	/* note: it recomputes variables in species.txt */
+	effective_sapwood_turnover = mat_sapwood_turnover_frac + ( juv_sapwood_turnover_frac - mat_sapwood_turnover_frac ) *
+			exp( -LN2 * pow( ( (double)a->value / t_age ), n ) );
+
+#else
+
+	/* note: assumes fixed value in species.txt */
+	effective_sapwood_turnover = s->value[SAPWOOD_TURNOVER];
+
+#endif
+
+	s->value[DAILY_SAPWOOD_TURNOVER] = effective_sapwood_turnover / ( IS_LEAP_YEAR ( c->years[year].year ) ? 366 : 365 );
+
+	/*****************************************************************************************************************/
+	/************************************************ sapwood turnover ***********************************************/
+
+	if ( ! day &&  ! month )
+	{
+//		if ( s->counter[YOS] == 1 )
+//		{
+//			s->value[YEARLY_C_TO_STEM_SAPWOOD]   = s->value[STEM_SAPWOOD_C];
+//			s->value[YEARLY_C_TO_CROOT_SAPWOOD]  = s->value[CROOT_SAPWOOD_C];
+//			s->value[YEARLY_C_TO_BRANCH_SAPWOOD] = s->value[BRANCH_SAPWOOD_C];
+//		}
+		/* as in: LPJ, Sitch et al., 2003 and  Orchidee, Krinner et al., 2005; all sapwood tunovers each year */
+
+		/* stem sapwood */
+		s->value[C_STEM_SAPWOOD_TO_HEARTWOOD]   = s->value[YEARLY_C_TO_STEM_SAPWOOD]   * s->value[DAILY_SAPWOOD_TURNOVER];
+
+		/* coarse root sapwood */
+		s->value[C_CROOT_SAPWOOD_TO_HEARTWOOD]  = s->value[YEARLY_C_TO_CROOT_SAPWOOD]  * s->value[DAILY_SAPWOOD_TURNOVER];
+
+		/* branch sapwood */
+		s->value[C_BRANCH_SAPWOOD_TO_HEARTWOOD] = s->value[YEARLY_C_TO_BRANCH_SAPWOOD] * s->value[DAILY_SAPWOOD_TURNOVER];
+
+		/* reset annual sapwood values once used */
+		s->value[YEARLY_C_TO_STEM_SAPWOOD]   = 0.;
+		s->value[YEARLY_C_TO_CROOT_SAPWOOD]  = 0.;
+		s->value[YEARLY_C_TO_BRANCH_SAPWOOD] = 0.;
+	}
+
+	/* daily stem turnover sapwood to heartwood*/
+
+	s->value[STEM_SAPWOOD_C]     -= s->value[C_STEM_SAPWOOD_TO_HEARTWOOD];
+	s->value[STEM_HEARTWOOD_C]   += s->value[C_STEM_SAPWOOD_TO_HEARTWOOD];
+
+	/* daily coarse root turnover sapwood to heartwood */
+
+	s->value[CROOT_SAPWOOD_C]    -= s->value[C_CROOT_SAPWOOD_TO_HEARTWOOD];
+	s->value[CROOT_HEARTWOOD_C]  += s->value[C_CROOT_SAPWOOD_TO_HEARTWOOD];
+
+	/* daily branch turnover sapwood to heartwood */
+
+	s->value[BRANCH_SAPWOOD_C]   -= s->value[C_BRANCH_SAPWOOD_TO_HEARTWOOD];
+	s->value[BRANCH_HEARTWOOD_C] += s->value[C_BRANCH_SAPWOOD_TO_HEARTWOOD];
+
+
+	/* Overall sapwood and heartwood stocks */
+
+	s->value[TOT_SAPWOOD_C]       = s->value[STEM_SAPWOOD_C]   + s->value[CROOT_SAPWOOD_C]   + s->value[BRANCH_SAPWOOD_C];
+	s->value[TOT_HEARTWOOD_C]     = s->value[STEM_HEARTWOOD_C] + s->value[CROOT_HEARTWOOD_C] + s->value[BRANCH_HEARTWOOD_C];
+
+	/******************************************************************************************************************/
+	/******************************************************************************************************************/
+
+}
+
+void livewood_turnover( cell_t *const c, age_t *const a, species_t *const s, const int day, const int month, const int year )
+{
+	double effective_livewood_turnover;      /* effective livewood turnover */
+
+	/*****************************************************************************************************************/
+	/*****************************************************************************************************************/
+
+#if 1
+
+	double juv_livewood_turnover_frac;       /* juvenile fraction of turnover */
+	double mat_livewood_turnover_frac;       /* mature fraction of turnover */
+	int t_age;                               /* age at which TURNOVER = (juvenile_livewood_turnover_frac/mature_livewood_turnover_frac)/2 */
+	double n = 2.;
+
+	/** age related function for livewood turnover **/
+
+	/* assumption: this function assumes that turnover rate increases with increasing tree age */
+	juv_livewood_turnover_frac = 0.1;                         //fixme it should be moved to species.txt
+	mat_livewood_turnover_frac = s->value[LIVEWOOD_TURNOVER]; //fixme it should be moved to species.txt
+	t_age                      = 30;                          //fixme it should be moved to species.txt
+
+	/* note: it recomputes variables in species.txt */
+	effective_livewood_turnover = mat_livewood_turnover_frac + ( juv_livewood_turnover_frac - mat_livewood_turnover_frac ) *
+			exp( -LN2 * pow( ( (double)a->value / t_age ), n ) );
+
+#else
+
+	/* note: assumes fixed value in species.txt */
+	effective_livewood_turnover = s->value[LIVEWOOD_TURNOVER];
+
+#endif
+
+	/* test it accounts for fractions for previous year carbon biomass for daily turnover */
+	/* following Krinner et al., 2005 turnover occurs every day of the year */
+
+	/* daily fraction of biomass to remove */
+	s->value[DAILY_LIVEWOOD_TURNOVER] = effective_livewood_turnover / ( IS_LEAP_YEAR ( c->years[year].year ) ? 366 : 365 );
+
+	/*****************************************************************************************************************/
+	/************************************************ livewood turnover ***********************************************/
+
+	if ( ! day &&  ! month )
+	{
+//		if ( s->counter[YOS] == 1 )
+//		{
+//			s->value[YEARLY_C_TO_STEM_SAPWOOD]   = s->value[STEM_LIVEWOOD_C];
+//			s->value[YEARLY_C_TO_CROOT_SAPWOOD]  = s->value[CROOT_LIVEWOOD_C];
+//			s->value[YEARLY_C_TO_BRANCH_SAPWOOD] = s->value[BRANCH_LIVEWOOD_C];
+//		}
+
+		/* stem livewood */
+		s->value[C_STEM_LIVEWOOD_TO_DEADWOOD]   = s->value[YEARLY_C_TO_STEM_LIVEWOOD]   * s->value[DAILY_LIVEWOOD_TURNOVER];
+
+		/* coarse root livewood */
+		s->value[C_CROOT_LIVEWOOD_TO_DEADWOOD]  = s->value[YEARLY_C_TO_CROOT_LIVEWOOD]  * s->value[DAILY_LIVEWOOD_TURNOVER];
+
+		/* branch livewood */
+		s->value[C_BRANCH_LIVEWOOD_TO_DEADWOOD] = s->value[YEARLY_C_TO_BRANCH_LIVEWOOD] * s->value[DAILY_LIVEWOOD_TURNOVER];
+
+		/* reset annual  livewood values once used */
+		s->value[YEARLY_C_TO_STEM_LIVEWOOD]   = 0.;
+		s->value[YEARLY_C_TO_CROOT_LIVEWOOD]  = 0.;
+		s->value[YEARLY_C_TO_BRANCH_LIVEWOOD] = 0.;
+
+	}
+
+	/* daily stem turnover livewood to heartwood */
+
+	s->value[STEM_LIVEWOOD_C]   -= s->value[C_STEM_LIVEWOOD_TO_DEADWOOD];
+	s->value[STEM_DEADWOOD_C]   += s->value[C_STEM_LIVEWOOD_TO_DEADWOOD];
+
+	/* daily coarse root turnover livewood to heartwood */
+
+	s->value[CROOT_LIVEWOOD_C]  -= s->value[C_CROOT_LIVEWOOD_TO_DEADWOOD];
+	s->value[CROOT_DEADWOOD_C]  += s->value[C_CROOT_LIVEWOOD_TO_DEADWOOD];
+
+	/* daily branch turnover livewood to heartwood */
+
+	s->value[BRANCH_LIVEWOOD_C] -= s->value[C_BRANCH_LIVEWOOD_TO_DEADWOOD];
+	s->value[BRANCH_DEADWOOD_C] += s->value[C_BRANCH_LIVEWOOD_TO_DEADWOOD];
+
+
+	/* Overall livewood and heartwood stocks */
+
+	s->value[TOT_LIVEWOOD_C] = s->value[STEM_LIVEWOOD_C] + s->value[CROOT_LIVEWOOD_C] + s->value[BRANCH_LIVEWOOD_C];
+	s->value[TOT_DEADWOOD_C] = s->value[STEM_DEADWOOD_C] + s->value[CROOT_DEADWOOD_C] + s->value[BRANCH_DEADWOOD_C];
+
+	/******************************************************************************************************************/
+	/******************************************************************************************************************/
+}
+
+
+//this is the old version used in the 5.4 version (and lower)
 void turnover( cell_t *const c, age_t *const a, species_t *const s, const int day, const int month, const int year )
 {
 	double effective_livewood_turnover;      /* effective livewood turnover */
+
+	/*****************************************************************************************************************/
+	/*****************************************************************************************************************/
 
 #if 1
 
@@ -102,156 +286,5 @@ void turnover( cell_t *const c, age_t *const a, species_t *const s, const int da
 
 	/*******************************************************************************************************************/
 
-}
-
-void sapwood_turnover( cell_t *const c, age_t *const a, species_t *const s, const int day, const int month, const int year )
-{
-	double sapwood_turnover;                 /* annual sapwood turnover */
-
-
-	sapwood_turnover = 0.7; //1.; /* is 1 in Orchidee (Krinner et al., 2005) and LPJ (Sitch et al., 2003) */
-
-	s->value[DAILY_SAPWOOD_TURNOVER] = sapwood_turnover / ( IS_LEAP_YEAR ( c->years[year].year ) ? 366 : 365 );
-
-	/*****************************************************************************************************************/
-	/************************************************ sapwood turnover ***********************************************/
-
-	if ( ! day &&  ! month )
-	{
-//		if ( s->counter[YOS] == 1 )
-//		{
-//			s->value[YEARLY_C_TO_STEM_SAPWOOD]   = s->value[STEM_SAPWOOD_C];
-//			s->value[YEARLY_C_TO_CROOT_SAPWOOD]  = s->value[CROOT_SAPWOOD_C];
-//			s->value[YEARLY_C_TO_BRANCH_SAPWOOD] = s->value[BRANCH_SAPWOOD_C];
-//		}
-		/* as in: LPJ, Sitch et al., 2003 and  Orchidee, Krinner et al., 2005; all sapwood tunovers each year */
-
-		/* stem sapwood */
-		s->value[C_STEM_SAPWOOD_TO_HEARTWOOD]   = s->value[YEARLY_C_TO_STEM_SAPWOOD]   * s->value[DAILY_SAPWOOD_TURNOVER];
-
-		/* coarse root sapwood */
-		s->value[C_CROOT_SAPWOOD_TO_HEARTWOOD]  = s->value[YEARLY_C_TO_CROOT_SAPWOOD]  * s->value[DAILY_SAPWOOD_TURNOVER];
-
-		/* branch sapwood */
-		s->value[C_BRANCH_SAPWOOD_TO_HEARTWOOD] = s->value[YEARLY_C_TO_BRANCH_SAPWOOD] * s->value[DAILY_SAPWOOD_TURNOVER];
-
-		/* reset annual sapwood values once used */
-		s->value[YEARLY_C_TO_STEM_SAPWOOD]   = 0.;
-		s->value[YEARLY_C_TO_CROOT_SAPWOOD]  = 0.;
-		s->value[YEARLY_C_TO_BRANCH_SAPWOOD] = 0.;
-	}
-
-	/* daily stem turnover sapwood to heartwood*/
-
-	s->value[STEM_SAPWOOD_C]     -= s->value[C_STEM_SAPWOOD_TO_HEARTWOOD];
-	s->value[STEM_HEARTWOOD_C]   += s->value[C_STEM_SAPWOOD_TO_HEARTWOOD];
-
-	/* daily coarse root turnover sapwood to heartwood */
-
-	s->value[CROOT_SAPWOOD_C]    -= s->value[C_CROOT_SAPWOOD_TO_HEARTWOOD];
-	s->value[CROOT_HEARTWOOD_C]  += s->value[C_CROOT_SAPWOOD_TO_HEARTWOOD];
-
-	/* daily branch turnover sapwood to heartwood */
-
-	s->value[BRANCH_SAPWOOD_C]   -= s->value[C_BRANCH_SAPWOOD_TO_HEARTWOOD];
-	s->value[BRANCH_HEARTWOOD_C] += s->value[C_BRANCH_SAPWOOD_TO_HEARTWOOD];
-
-
-	/* Overall sapwood and heartwood stocks */
-
-	s->value[TOT_SAPWOOD_C]       = s->value[STEM_SAPWOOD_C]   + s->value[CROOT_SAPWOOD_C]   + s->value[BRANCH_SAPWOOD_C];
-	s->value[TOT_HEARTWOOD_C]     = s->value[STEM_HEARTWOOD_C] + s->value[CROOT_HEARTWOOD_C] + s->value[BRANCH_HEARTWOOD_C];
-
-	/******************************************************************************************************************/
-	/******************************************************************************************************************/
-
-}
-
-void livewood_turnover( cell_t *const c, age_t *const a, species_t *const s, const int day, const int month, const int year )
-{
-	double effective_livewood_turnover;      /* effective livewood turnover */
-
-#if 0
-
-	double juv_livewood_turnover_frac;       /* juvenile fraction of turnover */
-	double mat_livewood_turnover_frac;       /* mature fraction of turnover */
-	int t_age;                               /* age at which TURNOVER = (juvenile_livewood_turnover_frac/mature_livewood_turnover_frac)/2 */
-	double n = 2.;
-
-	/** age related function for turnover **/
-
-	/* assumption: this function assumes that turnover rate increases with increasing tree age */
-	juv_livewood_turnover_frac = 0.1;                         //fixme it should be moved to species.txt
-	mat_livewood_turnover_frac = s->value[LIVEWOOD_TURNOVER]; //fixme it should be moved to species.txt
-	t_age                      = 30;                          //fixme it should be moved to species.txt
-
-	/* note: it recomputes variables in species.txt */
-	effective_livewood_turnover = mat_livewood_turnover_frac + ( juv_livewood_turnover_frac - mat_livewood_turnover_frac ) *
-			exp( -LN2 * pow( ( (double)a->value / t_age ), n ) );
-
-#else
-
-	/* note: assumes fixed value in species.txt */
-	effective_livewood_turnover = s->value[LIVEWOOD_TURNOVER];
-
-#endif
-
-	/* test it accounts for fractions for previous year carbon biomass for daily turnover */
-	/* following Krinner et al., 2005 turnover occurs every day of the year */
-
-	/* daily fraction of biomass to remove */
-	s->value[DAILY_LIVEWOOD_TURNOVER] = effective_livewood_turnover / ( IS_LEAP_YEAR ( c->years[year].year ) ? 366 : 365 );
-
-	/*****************************************************************************************************************/
-	/************************************************ livewood turnover ***********************************************/
-
-	if ( ! day &&  ! month )
-	{
-//		if ( s->counter[YOS] == 1 )
-//		{
-//			s->value[YEARLY_C_TO_STEM_SAPWOOD]   = s->value[STEM_LIVEWOOD_C];
-//			s->value[YEARLY_C_TO_CROOT_SAPWOOD]  = s->value[CROOT_LIVEWOOD_C];
-//			s->value[YEARLY_C_TO_BRANCH_SAPWOOD] = s->value[BRANCH_LIVEWOOD_C];
-//		}
-
-		/* stem livewood */
-		s->value[C_STEM_LIVEWOOD_TO_DEADWOOD]   = s->value[YEARLY_C_TO_STEM_LIVEWOOD]   * s->value[DAILY_LIVEWOOD_TURNOVER];
-
-		/* coarse root livewood */
-		s->value[C_CROOT_LIVEWOOD_TO_DEADWOOD]  = s->value[YEARLY_C_TO_CROOT_LIVEWOOD]  * s->value[DAILY_LIVEWOOD_TURNOVER];
-
-		/* branch livewood */
-		s->value[C_BRANCH_LIVEWOOD_TO_DEADWOOD] = s->value[YEARLY_C_TO_BRANCH_LIVEWOOD] * s->value[DAILY_LIVEWOOD_TURNOVER];
-
-		/* reset annual  livewood values once used */
-		s->value[YEARLY_C_TO_STEM_LIVEWOOD]   = 0.;
-		s->value[YEARLY_C_TO_CROOT_LIVEWOOD]  = 0.;
-		s->value[YEARLY_C_TO_BRANCH_LIVEWOOD] = 0.;
-
-	}
-
-	/* daily stem turnover livewood to heartwood */
-
-	s->value[STEM_LIVEWOOD_C]   -= s->value[C_STEM_LIVEWOOD_TO_DEADWOOD];
-	s->value[STEM_DEADWOOD_C]   += s->value[C_STEM_LIVEWOOD_TO_DEADWOOD];
-
-	/* daily coarse root turnover livewood to heartwood */
-
-	s->value[CROOT_LIVEWOOD_C]  -= s->value[C_CROOT_LIVEWOOD_TO_DEADWOOD];
-	s->value[CROOT_DEADWOOD_C]  += s->value[C_CROOT_LIVEWOOD_TO_DEADWOOD];
-
-	/* daily branch turnover livewood to heartwood */
-
-	s->value[BRANCH_LIVEWOOD_C] -= s->value[C_BRANCH_LIVEWOOD_TO_DEADWOOD];
-	s->value[BRANCH_DEADWOOD_C] += s->value[C_BRANCH_LIVEWOOD_TO_DEADWOOD];
-
-
-	/* Overall livewood and heartwood stocks */
-
-	s->value[TOT_LIVEWOOD_C] = s->value[STEM_LIVEWOOD_C] + s->value[CROOT_LIVEWOOD_C] + s->value[BRANCH_LIVEWOOD_C];
-	s->value[TOT_DEADWOOD_C] = s->value[STEM_DEADWOOD_C] + s->value[CROOT_DEADWOOD_C] + s->value[BRANCH_DEADWOOD_C];
-
-	/******************************************************************************************************************/
-	/******************************************************************************************************************/
 }
 

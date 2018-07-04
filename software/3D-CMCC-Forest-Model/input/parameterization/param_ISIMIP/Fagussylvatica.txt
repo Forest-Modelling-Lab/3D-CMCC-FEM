@@ -60,7 +60,8 @@ DEADWOOD_LIGN_FRAC      0.25  //dead wood litter lignin fraction for F. sylvatic
 BUD_BURST                 15  //days of bud burst at the beginning of growing season (only for deciduous)
 LEAF_FALL_FRAC_GROWING   0.2  //proportions of the growing season of leaf fall from Pietsch et al., 2005
 LEAF_FINEROOT_TURNOVER     1  //Average yearly fine root turnover rate Rasse et al 2001
-LIVE_WOOD_TURNOVER       0.7  //Annual yearly live wood turnover rate 
+LIVEWOOD_TURNOVER        0.7  //Annual yearly livewood turnover rate 
+SAPWOOD_TURNOVER         0.7  //Annual yearly sapwood turnover rate 
 DBHDCMAX                0.50  //Low Density Condes & Sterba 2005
 DBHDCMIN                0.14  //High Density from ettore
 SAP_A          0.778 //0.674  //a value 0.674 from Kostner, 0.778 Gebauer et al., 2008, for Fagus sylvatica

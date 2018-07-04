@@ -60,7 +60,8 @@ DEADWOOD_LIGN_FRAC   0.23     //dead wood litter lignin fraction for Quercus cer
 BUD_BURST	30                //days of bud burst at the beginning of growing season (only for deciduous)
 LEAF_FALL_FRAC_GROWING	0.2   //proportions of the growing season of leaf fall
 LEAF_FINEROOT_TURNOVER	1     //Average yearly fine root turnover rate
-LIVE_WOOD_TURNOVER	0.7       //Annual yearly live wood turnover rate 
+LIVEWOOD_TURNOVER        0.7  //Annual yearly livewood turnover rate 
+SAPWOOD_TURNOVER         0.7  //Annual yearly sapwood turnover rate 
 DBHDCMAX     0.45             //Condes & Sterba 2005              //Low Density
 DBHDCMIN	0.16              //High Density
 SAP_A	0.674                 //a value from Kostner for Q. petreae in cm

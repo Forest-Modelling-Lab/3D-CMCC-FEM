@@ -59,7 +59,8 @@ DEADWOOD_LIGN_FRAC   0.24      //dead wood litter lignin fraction for Larix deci
 BUD_BURST   15                   //days of bud burst at the beginning of growing season (only for deciduous)
 LEAF_FALL_FRAC_GROWING  0.2       //proportions of the growing season of leaf fall 
 LEAF_FINEROOT_TURNOVER  1       //Average YEARLY fine root turnover rate 
-LIVE_WOOD_TURNOVER  0.7 //Annual yearly live wood turnover rate
+LIVEWOOD_TURNOVER        0.7  //Annual yearly livewood turnover rate 
+SAPWOOD_TURNOVER         0.7  //Annual yearly sapwood turnover rate 
 DBHDCMAX    0.24    //Low Density from P. sylvestris from Ameztegui et al., 2012 1  //CUURENTLY NOT USED
 DBHDCMIN    0.14    //High Density for P. sylvestris from Ameztegui et al., 2012 0.14
 SAP_A   2.5 //a value for Larix d. deducted from Kolcun dissertation

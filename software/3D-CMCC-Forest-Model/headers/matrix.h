@@ -82,7 +82,8 @@ enum {
 	BUD_BURST,                           /* days of bud burst at the beginning of growing season (only for deciduous) */
 	LEAF_FALL_FRAC_GROWING,              /* proportions of the growing season of leaf fall */
 	LEAF_FROOT_TURNOVER,                 /* Average yearly leaves and fine root turnover rate */
-	LIVEWOOD_TURNOVER,                   /* Average yearly live wood turnover rate */
+	LIVEWOOD_TURNOVER,                   /* Average yearly livewood turnover rate */
+	SAPWOOD_TURNOVER,                    /* Average yearly sapwood turnover rate */
 	DBHDCMAX,                            /* maximum dbh crown diameter relationship when minimum density */
 	DBHDCMIN,                            /* minimum dbh crown diameter relationship when maximum density */
 	SAP_A,                               /* a coefficient for sapwood */

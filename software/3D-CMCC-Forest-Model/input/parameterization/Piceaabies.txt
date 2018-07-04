@@ -60,7 +60,8 @@ DEADWOOD_LIGN_FRAC      0.30    //dead wood litter lignin fraction for Picea abi
 BUD_BURST               0       //days of bud burst at the beginning of growing season (only for deciduous)
 LEAF_FALL_FRAC_GROWING  0       //proportions of the growing season of leaf fall 
 LEAF_FINEROOT_TURNOVER  0.195   //Average YEARLY leaves and fine root turnover rate for Picea abies from Pietsch et al., 2005, 0.11 for Picea abies Seidl et al., 2012
-LIVE_WOOD_TURNOVER      0.7     //Annual yearly live wood turnover rate for Picea abies from Pietsch et al., 2005
+LIVEWOOD_TURNOVER       0.7     //Annual yearly livewood turnover rate 
+SAPWOOD_TURNOVER        0.7     //Annual yearly sapwood turnover rate 
 DBHDCMAX                0.40    //Low Density for Picea abies 0.255 Seidl et al., 2012, 0.18 from Kalliovirta and Tokola 2005, 0.25 Bossel 1996, 0.20 Urban et al., 2012
 DBHDCMIN                0.14    //High Density for P. sylvestris from Ameztegui et al., 2012 0.14, 0.2 from Grote 2001, 0.14 Urban et al., 2012
 SAP_A                   0.851   //a value for Picea abies 0.851 deducted from  p.c. Kostner and Clausnitzer et al., 2011 CHECK IT!!!!!!!!!

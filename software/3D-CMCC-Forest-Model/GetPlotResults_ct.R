@@ -66,9 +66,9 @@ time_list_output = c('annual','monthly','daily')
 build_list<-c('Debug')#, 'Release')
 site_list<-c("Soroe")
 esm_list <-c("0")# ("1","2","3","4","5", "All")
-rcp_list <-c("0p0")# ("0p0","2p6","4p5","6p0","8p5","All")
+rcp_list <-c("All")# ("0p0","2p6","4p5","6p0","8p5","All")
 man_list <-c("All")# ("on",'off', "All")
-co2_list <-c("on")# , "on",off", "All")
+co2_list <-c("off")# , "on",off", "All")
 protocol_list<-c("FT")# ("2A","2B", "All") 
 local_list<-c('off')
 climate_off_list<-c('off') # for climate off and co2 on
@@ -76,15 +76,15 @@ climate_off_list<-c('off') # for climate off and co2 on
 time_list = c('annual')
 
 #  output folder name
-output_folder = paste0("Test_output_Rstudio_ct_TEST_", protocol_list,'_',co2_list)
+output_folder = paste0("Test_output_Rstudio_ct_TEST_", protocol_list,'_CO2_',co2_list,'_Man_',man_list)
 
-if ( length(which(site_list == 'All')) > 0 ) {
-  site_list = c("Soroe","Hyytiala","Bily_Kriz")#,"Solling_beech","Peitz","Solling_spruce")
+if ( length(which(site_list == 'All' )) > 0 ) {
+  site_list = c("Soroe","Hyytiala","Bily_Kriz","Collelongo")#,"Solling_beech","Peitz","Solling_spruce")
 }
-if ( length(which(esm_list == 'All')) > 0 ) {
+if ( length(which(esm_list == 'All' )) > 0 ) {
   esm_list = c("0","1","2","3","4","5","6","7","8","9","10")
 }
-if ( length(which(rcp_list == 'All')) > 0 ) {
+if ( length(which(rcp_list == 'All' )) > 0 ) {
   rcp_list = c("0p0","2p6","4p5","6p0","8p5")
 }
 if ( length(which(man_list == 'All')) > 0 ) {

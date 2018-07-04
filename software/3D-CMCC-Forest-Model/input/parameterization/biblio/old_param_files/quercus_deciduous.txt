@@ -90,7 +90,8 @@ LEAF_FALL_FRAC_GROWING  0.3     //proportions of the growing season of leaf fall
 
 //TURNOVER
 LEAF_FINEROOT_TURNOVER  1       //Average yearly fine root turnover rate Q. robur from Pietsch et al 2005
-LIVE_WOOD_TURNOVER  0.7 //Annual yearly live wood turnover rate 
+LIVEWOOD_TURNOVER        0.7  //Annual yearly livewood turnover rate 
+SAPWOOD_TURNOVER         0.7  //Annual yearly sapwood turnover rate 
 //ALLOMETRIC RELATIONSHIPS
 DBHDCMAX    0.26    //Low Density 0.26 for Q. robur from Bellio and Pividori, 2009 //CUURENTLY NOT USED
 DBHDCMIN    0.1   //High Density 0.20 for Q. robur from Bellio and Pividori, 2009
