@@ -119,7 +119,8 @@ static const char banner[] = "\n#"PROGRAM_FULL_NAME"\n"
 		"Alessio Collalti [alessio.collalti@cmcc.it, alessio.collalti@isafom.cnr.it],\n"
 		"Alessio Ribeca [alessio.ribeca@cmcc.it]\n"
 		"Carlo Trotta [trottacarlo@unitus.it]\n"
-		"Monia Santini [monia.santini@cmcc.it]\n"
+		"Corrado Biondo [corrado.biondo@cmcc.it]\n"
+		"Giorgio Matteucci [giorgio.matteucci@isafom.cnr.it]\n"
 		"euroMediterranean Center on Climate Changes (CMCC),\n"
 		"IAFES division,\n"
 		"Viale Trieste 120, 01100 - Viterbo, Italy,\n"
@@ -146,6 +147,8 @@ static const char banner[] = "\n#"PROGRAM_FULL_NAME"\n"
 		"for more information see:\n"
 		"-Collalti et al., 2014 Ecological Modelling,\n"
 		"-Collalti et al., 2016 Geoscientific Model Development\n"
+		"-Marconi et al., 2017 Forests\n"
+		"-Collalti et al., 2017 Forest@\n"
 		"--------------------------------------------------------------------------------\n";
 static const char msg_input_path[]				=	"input path = %s\n";
 static const char msg_parameterization_path[]	=	"parameterization path = %s\n";

@@ -111,16 +111,15 @@ static double get_co2_conc(const int year, int*const err) {
 	int flag;
 	double co2_conc;
 	FILE *f;
-
+	
 	assert(err);
+	assert(g_sz_co2_conc_file);
 
 	flag = 0;
 	co2_conc = INVALID_VALUE;
 	f = NULL;
 
 	*err = 0;
-
-	if ( ! g_sz_co2_conc_file ) { *err = 1; goto quit; }
 
 	f = fopen(g_sz_co2_conc_file, "r");
 	if ( ! f )  { *err = 1; goto quit; }
@@ -132,8 +131,6 @@ static double get_co2_conc(const int year, int*const err) {
 			}
 		}
 	}
-
-	if ( ! flag ) *err = 1;
 
 	quit:
 	if ( f )fclose(f);
@@ -1764,11 +1761,61 @@ static int import_txt(const char *const filename, meteo_annual_t** p_yos, int *c
 			*p,
 			buffer[BUFFER_SIZE] = { 0 };
 	int rows_count;
+	int rows_skipped;
+	int flag;
 	double *values;
 
 	FILE *f;
 
 	assert(p_yos && cell);
+
+	// check if we found year
+	rows_skipped = 0;
+	f = fopen(filename, "r");
+	if ( !f )
+	{
+		logger_error(g_debug_log, "unable to open met data file, problems in filename !\n");
+		return 0;
+	}
+
+	// consume header
+	fgets(buffer, BUFFER_SIZE, f);
+
+	flag = 0;
+	for ( ; ; )
+	{
+		if ( ! fgets(buffer, BUFFER_SIZE, f) )
+		{
+			break;			
+		}
+
+		// remove initial spaces and tabs (if any)
+		p = buffer;
+		while ( isspace(*p) ) ++p;
+
+		if ( 1 != sscanf(p, "%d", &year) )
+		{
+			logger_error(g_debug_log, "unable to parse met file!");
+			error_flag = 1;
+			break;
+		}
+
+		if ( year == g_settings->year_start ) {
+			flag = 1;
+			break;
+		}
+		++rows_skipped;
+	}
+	fclose(f);
+
+	if ( error_flag ) {
+		return 0;
+	}
+
+	if ( ! flag ) {
+		logger_error(g_debug_log, "year_start not found in met file!");
+		return 0;	
+	}
 
 	// open file for rows count
 	f = fopen(filename, "r");
@@ -1796,6 +1843,7 @@ static int import_txt(const char *const filename, meteo_annual_t** p_yos, int *c
 			++rows_count;
 		}	
 	}
+	rows_count -= rows_skipped;
 
 	// close file
 	fclose(f);
@@ -1931,6 +1979,12 @@ static int import_txt(const char *const filename, meteo_annual_t** p_yos, int *c
 		free(values);
 		fclose(f);
 		return 0;
+	}
+
+	// skip rows
+	for ( i = 0; i < rows_skipped; ++i )
+	{
+		fgets(buffer, BUFFER_SIZE, f);
 	}
 
 	// parse rows
@@ -2170,19 +2224,23 @@ int import_meteo_data(const char *const file, int *const yos_count, void* _cell)
 		int err;
 
 		if ( ! g_sz_co2_conc_file ) {
-			logger_error(g_debug_log, "co2 concentration file not specified!");
+			logger_error(g_debug_log, "co2 concentration file not specified!\n");
 			free(meteo_annual);
 			return 0;
 		}
 
 		for ( i = 0; i < *yos_count; ++i ) {
-
 			meteo_annual[i].co2Conc = get_co2_conc(meteo_annual[i].year, &err);
+			if ( err ) {
+				logger_error(g_debug_log, "year_start_co2 not found!\n");
+				free(meteo_annual);
+				return 0;
+			}
 
 			if ( CO2_TRANS_VAR == g_settings->CO2_trans ) {
 				if ( meteo_annual[i].year >= g_settings->year_start_co2_fixed ) {
 					if ( -1 == year_start_co2_fixed_index ) {
-						logger_error(g_debug_log, "year_start_co2_fixed_index not found!");
+						logger_error(g_debug_log, "year_start_co2_fixed_index not found!\n");
 						free(meteo_annual);
 						return 0;
 					}
@@ -2202,7 +2260,6 @@ int import_meteo_data(const char *const file, int *const yos_count, void* _cell)
 			meteo_annual[i].co2Conc = g_settings->co2Conc;
 		}
 	}
-
 
 	/* import ndep ? */
 	if ( ! g_settings->Ndep_fixed )

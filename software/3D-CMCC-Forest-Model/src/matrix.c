@@ -1478,7 +1478,7 @@ matrix_t* matrix_create(const soil_settings_t*const s, const int count, const ch
 		*dataset = d;
 
 		if ( ! flag2 ) {
-			logger_error(g_debug_log, "year_start = %d not found in %s\n", d->rows[0].year_stand, filename);
+			logger_error(g_debug_log, "year_start = %d not found in %s\n", g_settings->year_start, filename);
 			matrix_free(m);
 			return NULL;
 		}
