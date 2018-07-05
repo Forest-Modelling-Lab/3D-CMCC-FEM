@@ -3,7 +3,7 @@
 #define COMMON_H
 
 #define PROGRAM_NAME		"3D-CMCC-CNR Forest Ecosystem Model"
-#define PROGRAM_VERSION		"5.4"
+#define PROGRAM_VERSION		"5.5"
 #define PROGRAM_FULL_NAME	PROGRAM_NAME" v."PROGRAM_VERSION""
 
 #ifdef _WIN32
