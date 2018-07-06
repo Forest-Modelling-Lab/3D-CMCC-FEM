@@ -119,7 +119,8 @@ static const char banner[] = "\n#"PROGRAM_FULL_NAME"\n"
 		"Alessio Collalti [alessio.collalti@cmcc.it, alessio.collalti@isafom.cnr.it],\n"
 		"Alessio Ribeca [alessio.ribeca@cmcc.it]\n"
 		"Carlo Trotta [trottacarlo@unitus.it]\n"
-		"Monia Santini [monia.santini@cmcc.it]\n"
+		"Corrado Biondo [corrado.biondo@cmcc.it]\n"
+		"Giorgio Matteucci [giorgio.matteucci@isafom.cnr.it]\n"
 		"euroMediterranean Center on Climate Changes (CMCC),\n"
 		"IAFES division,\n"
 		"Viale Trieste 120, 01100 - Viterbo, Italy,\n"
@@ -146,6 +147,8 @@ static const char banner[] = "\n#"PROGRAM_FULL_NAME"\n"
 		"for more information see:\n"
 		"-Collalti et al., 2014 Ecological Modelling,\n"
 		"-Collalti et al., 2016 Geoscientific Model Development\n"
+		"-Marconi et al., 2017 Forests\n"
+		"-Collalti et al., 2017 Forest@\n"
 		"--------------------------------------------------------------------------------\n";
 static const char msg_input_path[]				=	"input path = %s\n";
 static const char msg_parameterization_path[]	=	"parameterization path = %s\n";
@@ -1412,7 +1415,8 @@ int main(int argc, char *argv[]) {
 		logger(g_debug_log, "input_met_path = %s\n", g_sz_input_met_file);
 		logger_error(g_debug_log, "importing met data...");
 
-		if ( ! import_meteo_data(g_sz_input_met_file, &years_of_simulation, &matrix->cells[cell]) ) goto err;
+		if ( ! import_meteo_data(g_sz_input_met_file, &years_of_simulation, &matrix->cells[cell]) )
+			goto err;
 		logger_error(g_debug_log, "ok\n");
 
 		/* set start year index */
@@ -1622,7 +1626,7 @@ int main(int argc, char *argv[]) {
 						Daylight_avg_temperature    ( m, day, month );
 						Daily_Nightime_avg_temperature    ( m, day, month );
 						Daily_Soil_temperature            ( &matrix->cells[cell], day, month, year );
-						Daily_Thermic_sum                 ( m, day, month, year );
+						Daily_Thermic_sum                 ( &matrix->cells[cell], m, day, month, year );
 						Daily_Air_density                 ( m, day, month );
 						Day_Length						  ( &matrix->cells[cell], day, month, year );
 						Daily_Latent_heat                 ( m, day, month );

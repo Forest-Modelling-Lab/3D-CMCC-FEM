@@ -131,6 +131,7 @@ void average_tree_pools(cell_t *const c)
 					s->value[TREE_RESERVE_C]             = (s->value[RESERVE_C]          / (double)s->counter[N_TREE]);
 					s->value[TREE_BRANCH_C]              = (s->value[BRANCH_C]           / (double)s->counter[N_TREE]);
 					s->value[TREE_FRUIT_C]               = (s->value[FRUIT_C]            / (double)s->counter[N_TREE]);
+
 					s->value[TREE_STEM_SAPWOOD_C]        = (s->value[STEM_SAPWOOD_C]     / (double)s->counter[N_TREE]);
 					s->value[TREE_STEM_HEARTWOOD_C]      = (s->value[STEM_HEARTWOOD_C]   / (double)s->counter[N_TREE]);
 					s->value[TREE_CROOT_SAPWOOD_C]       = (s->value[CROOT_SAPWOOD_C]    / (double)s->counter[N_TREE]);
@@ -139,6 +140,7 @@ void average_tree_pools(cell_t *const c)
 					s->value[TREE_BRANCH_HEARTWOOD_C]    = (s->value[BRANCH_HEARTWOOD_C] / (double)s->counter[N_TREE]);
 					s->value[TREE_SAPWOOD_C]             = (s->value[TOT_SAPWOOD_C]      / (double)s->counter[N_TREE]);
 					s->value[TREE_HEARTWOOD_C]           = (s->value[TOT_HEARTWOOD_C]    / (double)s->counter[N_TREE]);
+
 					s->value[TREE_STEM_LIVEWOOD_C]       = (s->value[STEM_LIVEWOOD_C]    / (double)s->counter[N_TREE]);
 					s->value[TREE_STEM_DEADWOOD_C]       = (s->value[STEM_DEADWOOD_C]    / (double)s->counter[N_TREE]);
 					s->value[TREE_CROOT_LIVEWOOD_C]      = (s->value[CROOT_LIVEWOOD_C]   / (double)s->counter[N_TREE]);
@@ -185,17 +187,19 @@ void tree_biomass_remove (cell_t *const c, const int height, const int dbh, cons
 	species_t *s;
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
-	logger(g_debug_log, "\n*TREE BIOMASS REMOVE*\n");
+	logger(g_debug_log, "\n* TREE BIOMASS REMOVE *\n");
+
+	/******************************************************************************************/
 
 	/* update class carbon pools */
 
 	/* carbon to litter fluxes */
-	s->value[C_LEAF_TO_LITR]          += (s->value[TREE_LEAF_C]    * tree_remove);
+	s->value[C_LEAF_TO_LITR]     += (s->value[TREE_LEAF_C]    * tree_remove);
 
-	s->value[C_FROOT_TO_LITR]         += (s->value[TREE_FROOT_C]   * tree_remove);
+	s->value[C_FROOT_TO_LITR]    += (s->value[TREE_FROOT_C]   * tree_remove);
 
 	/* overall litter */
-	s->value[C_TO_LITR]               += s->value[C_LEAF_TO_LITR] +
+	s->value[C_TO_LITR]          += s->value[C_LEAF_TO_LITR] +
 			s->value[C_FROOT_TO_LITR];
 
 	/* carbon to cwd fluxes */
@@ -209,6 +213,39 @@ void tree_biomass_remove (cell_t *const c, const int height, const int dbh, cons
 
 	s->value[C_FRUIT_TO_CWD]     += (s->value[TREE_FRUIT_C]   * tree_remove);
 
+	/******************************************************************************************/
+
+	/* sapwood and heartwood */
+
+	s->value[C_STEM_SAPWOOD_TO_CWD]     += (s->value[TREE_STEM_SAPWOOD_C]     * tree_remove);
+
+	s->value[C_CROOT_SAPWOOD_TO_CWD]    += (s->value[TREE_CROOT_SAPWOOD_C]    * tree_remove);
+
+	s->value[C_BRANCH_SAPWOOD_TO_CWD]   += (s->value[TREE_BRANCH_SAPWOOD_C]   * tree_remove);
+
+	s->value[C_STEM_HEARTWOOD_TO_CWD]   += (s->value[TREE_STEM_HEARTWOOD_C]   * tree_remove);
+
+	s->value[C_CROOT_HEARTWOOD_TO_CWD]  += (s->value[TREE_CROOT_HEARTWOOD_C]  * tree_remove);
+
+	s->value[C_BRANCH_HEARTWOOD_TO_CWD] += (s->value[TREE_BRANCH_HEARTWOOD_C] * tree_remove);
+
+	/******************************************************************************************/
+
+	/* livewood and deadwood */
+
+	s->value[C_STEM_LIVEWOOD_TO_CWD]    += (s->value[TREE_STEM_LIVEWOOD_C]     * tree_remove);
+
+	s->value[C_CROOT_LIVEWOOD_TO_CWD]   += (s->value[TREE_CROOT_LIVEWOOD_C]    * tree_remove);
+
+	s->value[C_BRANCH_LIVEWOOD_TO_CWD]  += (s->value[TREE_BRANCH_LIVEWOOD_C]   * tree_remove);
+
+	s->value[C_STEM_DEADWOOD_TO_CWD]    += (s->value[TREE_STEM_DEADWOOD_C]     * tree_remove);
+
+	s->value[C_CROOT_DEADWOOD_TO_CWD]   += (s->value[TREE_CROOT_DEADWOOD_C]    * tree_remove);
+
+	s->value[C_BRANCH_DEADWOOD_TO_CWD]  += (s->value[TREE_BRANCH_DEADWOOD_C]   * tree_remove);
+
+	/******************************************************************************************/
 
 	if ( ! nat_man )
 	{
@@ -296,19 +333,6 @@ void tree_biomass_remove (cell_t *const c, const int height, const int dbh, cons
 		CHECK_CONDITION ( c->cwd_2C + c->cwd_3C + c->cwd_4C , == , c->cwd_C + eps );
 	}
 
-	/* sapwood and heartwood */
-	s->value[C_STEM_SAPWOOD_TO_CWD]     += (s->value[TREE_STEM_SAPWOOD_C]     * tree_remove);
-
-	s->value[C_CROOT_SAPWOOD_TO_CWD]    += (s->value[TREE_CROOT_SAPWOOD_C]    * tree_remove);
-
-	s->value[C_BRANCH_SAPWOOD_TO_CWD]   += (s->value[TREE_BRANCH_SAPWOOD_C]   * tree_remove);
-
-	s->value[C_STEM_HEARTWOOD_TO_CWD]   += (s->value[TREE_STEM_HEARTWOOD_C]   * tree_remove);
-
-	s->value[C_CROOT_HEARTWOOD_TO_CWD]  += (s->value[TREE_CROOT_HEARTWOOD_C]  * tree_remove);
-
-	s->value[C_BRANCH_HEARTWOOD_TO_CWD] += (s->value[TREE_BRANCH_HEARTWOOD_C] * tree_remove);
-
 	/******************************************************************************************/
 
 	/* accounting for harvested/thinned wood products (HWP) */
@@ -326,9 +350,17 @@ void tree_biomass_remove (cell_t *const c, const int height, const int dbh, cons
 
 	/* note: special case for turnover when mortality and thinning management happen */
 	/* removing biomass to NOT consider in turnover of the subsequent year */
-	s->value[YEARLY_C_TO_STEM]   -= ((s->value[YEARLY_C_TO_STEM]   / s->counter[N_TREE]) * tree_remove);
-	s->value[YEARLY_C_TO_CROOT]  -= ((s->value[YEARLY_C_TO_CROOT]  / s->counter[N_TREE]) * tree_remove);
-	s->value[YEARLY_C_TO_BRANCH] -= ((s->value[YEARLY_C_TO_BRANCH] / s->counter[N_TREE]) * tree_remove);
+//	s->value[YEARLY_C_TO_STEM]            -= ((s->value[YEARLY_C_TO_STEM]            / s->counter[N_TREE]) * tree_remove);
+//	s->value[YEARLY_C_TO_CROOT]           -= ((s->value[YEARLY_C_TO_CROOT]           / s->counter[N_TREE]) * tree_remove);
+//	s->value[YEARLY_C_TO_BRANCH]          -= ((s->value[YEARLY_C_TO_BRANCH]          / s->counter[N_TREE]) * tree_remove);
+//
+//	s->value[YEARLY_C_TO_STEM_SAPWOOD]    -= ((s->value[YEARLY_C_TO_STEM_SAPWOOD]    / s->counter[N_TREE]) * tree_remove);
+//	s->value[YEARLY_C_TO_CROOT_SAPWOOD]   -= ((s->value[YEARLY_C_TO_CROOT_SAPWOOD]   / s->counter[N_TREE]) * tree_remove);
+//	s->value[YEARLY_C_TO_BRANCH_SAPWOOD]  -= ((s->value[YEARLY_C_TO_BRANCH_SAPWOOD]  / s->counter[N_TREE]) * tree_remove);
+//
+//	s->value[YEARLY_C_TO_STEM_LIVEWOOD]   -= ((s->value[YEARLY_C_TO_STEM_LIVEWOOD]   / s->counter[N_TREE]) * tree_remove);
+//	s->value[YEARLY_C_TO_CROOT_LIVEWOOD]  -= ((s->value[YEARLY_C_TO_CROOT_LIVEWOOD]  / s->counter[N_TREE]) * tree_remove);
+//	s->value[YEARLY_C_TO_BRANCH_LIVEWOOD] -= ((s->value[YEARLY_C_TO_BRANCH_LIVEWOOD] / s->counter[N_TREE]) * tree_remove);
 
 	/******************************************************************************************/
 
@@ -338,23 +370,22 @@ void tree_biomass_remove (cell_t *const c, const int height, const int dbh, cons
 	s->value[N_FROOT_TO_LITR]         += (s->value[TREE_FROOT_N]      * tree_remove);
 
 	/* overall litter */
-	s->value[N_TO_LITR]               += s->value[N_LEAF_TO_LITR] +
-			s->value[N_FROOT_TO_LITR];
+	s->value[N_TO_LITR]               += s->value[N_LEAF_TO_LITR] +	s->value[N_FROOT_TO_LITR];
 
 	s->value[LITR_N]                  += s->value[N_TO_LITR];
 
 	/* nitrogen to cwd fluxes */
-	s->value[N_STEM_TO_CWD]      += (s->value[TREE_STEM_N]       * tree_remove);
+	s->value[N_STEM_TO_CWD]           += (s->value[TREE_STEM_N]       * tree_remove);
 
-	s->value[N_CROOT_TO_CWD]     += (s->value[TREE_CROOT_N]      * tree_remove);
+	s->value[N_CROOT_TO_CWD]          += (s->value[TREE_CROOT_N]      * tree_remove);
 
-	s->value[N_BRANCH_TO_CWD]    += (s->value[TREE_BRANCH_N]     * tree_remove);
+	s->value[N_BRANCH_TO_CWD]         += (s->value[TREE_BRANCH_N]     * tree_remove);
 
-	s->value[N_BRANCH_TO_CWD]    += (s->value[TREE_RESERVE_N]    * tree_remove);
+	s->value[N_BRANCH_TO_CWD]         += (s->value[TREE_RESERVE_N]    * tree_remove);
 
-	s->value[N_FRUIT_TO_CWD]     += (s->value[TREE_FRUIT_N]      * tree_remove);
+	s->value[N_FRUIT_TO_CWD]          += (s->value[TREE_FRUIT_N]      * tree_remove);
 
-	s->value[N_RESERVE_TO_CWD]   += (s->value[TREE_RESERVE_N]    * tree_remove);
+	s->value[N_RESERVE_TO_CWD]        += (s->value[TREE_RESERVE_N]    * tree_remove);
 
 	if ( ! nat_man )
 	{

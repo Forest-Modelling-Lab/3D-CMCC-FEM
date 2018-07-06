@@ -4,6 +4,8 @@
 
 #include "matrix.h"
 
-void turnover ( cell_t *const c, age_t *const a, species_t *const s, const int day, const int month, const int year );
+void turnover          ( cell_t *const c, age_t *const a, species_t *const s, const int day, const int month, const int year );
+void sapwood_turnover  ( cell_t *const c, age_t *const a, species_t *const s, const int day, const int month, const int year );
+void livewood_turnover ( cell_t *const c, age_t *const a, species_t *const s, const int day, const int month, const int year );
 
 #endif /* TURNOVER_H_ */

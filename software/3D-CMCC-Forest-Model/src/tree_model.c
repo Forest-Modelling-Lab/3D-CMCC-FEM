@@ -63,6 +63,7 @@ extern logger_t* g_debug_log;
 extern soil_settings_t* g_soil_settings;
 extern settings_t* g_settings;
 
+
 //extern const char sz_err_out_of_memory[];
 
 //extern const char *szMonth[MONTHS_COUNT];
@@ -93,8 +94,6 @@ int Tree_model(matrix_t *const m, const int cell, const int halfhour, const int 
 	species_t *s;
 	meteo_daily_t *meteo_daily;
 	meteo_annual_t *meteo_annual;
-		
-	assert(m);
 
 	/* assign shortcuts */
 	c = &m->cells[cell];
@@ -162,9 +161,9 @@ int Tree_model(matrix_t *const m, const int cell, const int halfhour, const int 
 			h = &m->cells[cell].heights[height];
 
 			/* sort dbhs in descending order */
-		#ifndef USE_NEW_OUTPUT
+#ifndef USE_NEW_OUTPUT
 			qsort ( h->dbhs, h->dbhs_count, sizeof (dbh_t), sort_by_dbhs_desc );
-		#endif
+#endif
 			//ALESSIOC FIXME
 			c->cell_heights_count ++;
 
@@ -182,9 +181,9 @@ int Tree_model(matrix_t *const m, const int cell, const int halfhour, const int 
 					d = &h->dbhs[dbh];
 
 					/* sort ages in descending order */
-				#ifndef USE_NEW_OUTPUT
+#ifndef USE_NEW_OUTPUT
 					qsort ( d->ages, d->ages_count, sizeof (age_t), sort_by_ages_desc );
-				#endif
+#endif
 
 					logger(g_debug_log,"*****************************************************************************\n"
 							"                              dbh = %f                              \n"
@@ -228,9 +227,9 @@ int Tree_model(matrix_t *const m, const int cell, const int halfhour, const int 
 							{
 								/* compute annual minimum reserve for incoming year */
 								annual_minimum_reserve( s );
-								
+
 								/* compute annual potential Maximum LAI */
-								peak_lai(a,  s, day, month, year );
+								peak_lai                ( a, s, day, month, year );
 
 								/* compute growth respiration fraction */
 								growth_respiration_frac ( a, s );
@@ -255,7 +254,7 @@ int Tree_model(matrix_t *const m, const int cell, const int halfhour, const int 
 							canopy_radiation_lw_band ( c, layer, height, dbh, age, species, meteo_daily );
 
 							/* net radiation */
-							canopy_net_radiation ( c, layer, height, dbh, age, species );
+							canopy_net_radiation     ( c, layer, height, dbh, age, species );
 
 							/**********************************************************************/
 
@@ -265,7 +264,7 @@ int Tree_model(matrix_t *const m, const int cell, const int halfhour, const int 
 							/* daily modifier */
 							modifiers ( c, layer, height, dbh, age, species, meteo_daily, meteo_annual );
 
-														if ( ! g_settings->PSN_mod )
+							if ( ! g_settings->PSN_mod )
 							{
 								/**********************************************************************/
 								/** FvCB + Jarvis **/
@@ -348,16 +347,23 @@ int Tree_model(matrix_t *const m, const int cell, const int halfhour, const int 
 							if ( c->doy == ( IS_LEAP_YEAR ( c->years[year].year ) ? 366 : 365) )
 							{
 								/* ISIMIP: exclude age mortality function when management is "var" and year < year start management */
-								if ( c->years[year].year > g_settings->year_start_management && g_settings->management != MANAGEMENT_VAR)
+								if ( c->years[year].year > g_settings->year_start_management && g_settings->management != MANAGEMENT_VAR )
 								{
 									/* Mortality based on tree Age (LPJ) */
-									age_mortality ( c, height, dbh, age, species );
+									age_mortality        ( c, height, dbh, age, species );
+
+									/* Mortality based on stochasticity */
+									stochastic_mortality ( c, height, dbh, age, species );
 								}
 							}
 
 							/* allocate daily carbon */
+#if 0
 							carbon_allocation       ( c, a, s, day, month, year );
-
+#else
+							//note: this is basically the new function in version v.5.5
+							carbon_allocation_new   ( c, a, s, day, month, year );
+#endif
 							/* allocate daily nitrogen */
 							nitrogen_allocation     ( c, s, day, month, year );
 
@@ -366,10 +372,15 @@ int Tree_model(matrix_t *const m, const int cell, const int halfhour, const int 
 							/* note: when it happens the overall class is removed */
 							if ( ! growth_efficiency_mortality ( c, height, dbh, age, species ) )
 							{
-
+#if 0
 								/* turnover */
 								turnover ( c, a, s, day, month, year );
-
+#else
+								//fixme move into turnover function
+								//note: this is basically the new function in version v.5.5
+								sapwood_turnover ( c, a, s, day, month, year );
+								livewood_turnover ( c, a, s, day, month, year );
+#endif
 								/* carbon use efficiency */
 								carbon_use_efficiency ( c, height, dbh, age, species, day, month, year );
 
@@ -389,6 +400,7 @@ int Tree_model(matrix_t *const m, const int cell, const int halfhour, const int 
 								dendrometry_old       ( c, layer, height, dbh, age, species, year );
 
 								/** END OF YEAR **/
+
 								/* last day of the year */
 								if ( c->doy == ( IS_LEAP_YEAR ( c->years[year].year ) ? 366 : 365) )
 								{
@@ -422,7 +434,7 @@ int Tree_model(matrix_t *const m, const int cell, const int halfhour, const int 
 								/* 5 */ if ( ! check_tree_class_carbon_mass_balance    ( c, layer, height, dbh, age, species ) ) return 0;
 
 								/* check for nitrogen mass balance closure */
-								/* 6 */ //fixme if ( ! check_tree_class_nitrogen_mass_balance  ( c, layer, height, dbh, age, species ) ) return 0;
+								/* 6 */  //fixme if ( ! check_tree_class_nitrogen_mass_balance  ( c, layer, height, dbh, age, species ) ) return 0;
 							}
 							else
 							{
@@ -438,20 +450,22 @@ int Tree_model(matrix_t *const m, const int cell, const int halfhour, const int 
 						}
 						logger(g_debug_log, "****************END OF SPECIES CLASS***************\n");
 					}
-				age_end:
+					age_end:
 					logger(g_debug_log, "****************END OF AGES CLASS***************\n");
 				}
-			dbh_end:
+				dbh_end:
 				logger(g_debug_log, "****************END OF DBH CLASS***************\n");
 			}
 		}
-	height_end:
+		height_end:
 		logger(g_debug_log, "****************END OF HEIGHT CLASS***************\n");
 	}
 	logger(g_debug_log, "****************END OF LAYER CLASS***************\n");
-
 	/* ok */
 	return 1;
 }
+/*****************************************************************************************************************/
+/*****************************************************************************************************************/
+/*****************************************************************************************************************/
 
 

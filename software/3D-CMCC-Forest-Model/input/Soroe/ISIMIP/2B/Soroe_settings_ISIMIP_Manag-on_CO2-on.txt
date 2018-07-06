@@ -6,18 +6,20 @@ SPINUP off                          //Must be 'on' or 'off'
 SPINUP_YEARS 6000                   //Number of years for spinup
 SCREEN_OUTPUT off                   //Must be 'on' or 'off'
 DEBUG_OUTPUT off                    //Must be 'on' or 'off'
+HALFHOURLY_OUTPUT off               //Must be 'on' or 'off'
 DAILY_OUTPUT on                     //Must be 'on' or 'off'
 MONTHLY_OUTPUT off                   //Must be 'on' or 'off'
 ANNUAL_OUTPUT on                    //Must be 'on' or 'off'
 SOIL_OUTPUT off                     //Must be 'on' or 'off'
 NETCDF_OUTPUT off                     //Must be 'on' or 'off'
-YEAR_START 1944                     //Starting year simulation
+YEAR_START 1950                     //Starting year simulation
 YEAR_END 2299                       //Ending year simulation
 YEAR_RESTART off                    //Year to restart
 PSN_mod 0                           //Must be '0' (FvCB) or '1' (LUE) for photosynthesis approach
 CO2_trans on                        //Must be 'on' or 'off'
 YEAR_START_CO2_FIXED -9999          //When Co2_trans = var, year at which fix [CO2]
 Ndep_fixed on                       //Must be 'on' or 'off'
+Photo_accl on                       //Photosynthesis temperature acclimation Must be 'on' or 'off'
 Resp_accl on                        //Q10 temperature acclimatation Must be 'on' or 'off'
 regeneration off                    //Must be 'on' or 'off'
 management var                       //Must be 'on' or 'off'

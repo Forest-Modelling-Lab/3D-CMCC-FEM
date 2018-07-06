@@ -943,7 +943,8 @@ static const char *sz_species_values[] =
 		"BUD_BURST",                  /* days of bud burst at the beginning of growing season (only for deciduous) */
 		"LEAF_FALL_FRAC_GROWING",     /* proportions of the growing season of leaf fall */
 		"LEAF_FINEROOT_TURNOVER",     /* Average yearly leaves and fine root turnover rate */
-		"LIVE_WOOD_TURNOVER",         /* Average yearly live wood turnover rate */
+		"LIVEWOOD_TURNOVER",         /* Average yearly live wood turnover rate */
+		"SAPWOOD_TURNOVER",          /* Average yearly sap wood turnover rate */
 		"DBHDCMAX",                   /* maximum dbh crown diameter relationship when minimum density */
 		"DBHDCMIN",                   /* minimum dbh crown diameter relationship when maximum density */
 		"SAP_A",                      /* a coefficient for sapwood */
@@ -1477,7 +1478,7 @@ matrix_t* matrix_create(const soil_settings_t*const s, const int count, const ch
 		*dataset = d;
 
 		if ( ! flag2 ) {
-			logger_error(g_debug_log, "year_start = %d not found in %s\n", d->rows[0].year_stand, filename);
+			logger_error(g_debug_log, "year_start = %d not found in %s\n", g_settings->year_start, filename);
 			matrix_free(m);
 			return NULL;
 		}

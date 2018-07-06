@@ -41,11 +41,22 @@ void daily_lai (cell_t *const c, age_t *const a, species_t *const s)
 
 	/**************************************************************************************************/
 
+	/* total (m2) */
+	s->value[LEAF_AREA]       = ( ( s->value[LEAF_C] * 1e3 / g_settings->sizeCell) * s->value[SLA_AVG] ) ;
+
+	/* sun */
+	s->value[LEAF_AREA_SUN]   = 1. - exp ( - s->value[LEAF_AREA] );
+
+	/* shade */
+	s->value[LEAF_AREA_SHADE] = s->value[LEAF_AREA] - s->value[LEAF_AREA_SUN];
+
+	/**************************************************************************************************/
+
 	/* compute LAI for Projected Area "Big-leaf sun/shade-model" as in DePury and Farquhar (1997)*/
 	/* see Campbell and Norman, Environmental Biophysics 2nd Edition pg 259 */
 
 	/* total */
-	s->value[LAI_PROJ]       = ( ( s->value[LEAF_C]  * s->value[SLA_AVG] ) * 1e3 ) / ( s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell );
+	s->value[LAI_PROJ]       = s->value[LEAF_AREA] / s->value[CANOPY_COVER_PROJ];
 
 	/* sun */
 	s->value[LAI_SUN_PROJ]   = 1. - exp ( - s->value[LAI_PROJ] );
@@ -55,6 +66,19 @@ void daily_lai (cell_t *const c, age_t *const a, species_t *const s)
 
 	/* assign max annual LAI */
 	s->value[MAX_LAI_PROJ]   = MAX(s->value[MAX_LAI_PROJ], s->value[LAI_PROJ]);
+
+	/**************************************************************************************************/
+	/* compute LAI for Projected Area "Big-leaf sun/shade-model" as in DePury and Farquhar (1997)*/
+	/* see Campbell and Norman, Environmental Biophysics 2nd Edition pg 259 */
+
+	/* total */
+	s->value[TREE_LAI_PROJ]       = ( ( s->value[LEAF_C] * 1e3 / (double)s->counter[N_TREE] ) * s->value[SLA_AVG] ) / s->value[CROWN_AREA];
+
+	/* sun */
+	s->value[TREE_LAI_SUN_PROJ]   = 1. - exp ( - s->value[TREE_LAI_PROJ] );
+
+	/* shade */
+	s->value[TREE_LAI_SHADE_PROJ] = s->value[TREE_LAI_PROJ] - s->value[TREE_LAI_SUN_PROJ];
 
 	/**************************************************************************************************/
 

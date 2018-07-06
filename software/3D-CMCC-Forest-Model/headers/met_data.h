@@ -13,6 +13,7 @@ typedef enum {
 
 	, WEIGHTED_MEAN_COUNT
 } e_weighted_average_var;
+
 typedef enum {
 	AVERAGED_TAVG
 	, AVERAGED_TDAY
@@ -26,7 +27,7 @@ void Daily_Radiation (cell_t *const c, const int day, const int month, const int
 void Daily_avg_temperature(meteo_d_t *met, const int day, const int month);
 void Daylight_avg_temperature(meteo_d_t *const met, const int day, const int month);
 void Daily_Nightime_avg_temperature(meteo_d_t *const met, const int day, const int month);
-void Daily_Thermic_sum (meteo_d_t *met, const int day, const int month, const int year);
+void Daily_Thermic_sum (cell_t* c, meteo_d_t *met, const int day, const int month, const int year);
 void Daily_Air_pressure(meteo_d_t *met, const int day, const int month);
 void Daily_Air_density (meteo_d_t *met, const int day, const int month);
 void Day_Length(cell_t *c, const int day, const int month, const int year);

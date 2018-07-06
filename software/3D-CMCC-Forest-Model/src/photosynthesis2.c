@@ -228,10 +228,10 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 
 	/* temperature control */
 	const double Ea_V          = 51560;  /* (J mol-1) Activation energy for J see Maespa */
-	double S_V           = 472.;   /* (JK-1 mol) Vmax temperature response parameter */
+	double S_V                 = 472.;   /* (JK-1 mol) Vmax temperature response parameter */
 	const double H_V           = 144568; /* (J mol-1) Vmax curvature parameter */
 	const double Ea_J          = 43790;  /* (J mol-1) Activation energy for J see Maespa */
-	double S_J           = 710 ;   /* (JK-1 mol) electron-transport temperature response parameter */
+	double S_J                 = 710 ;   /* (JK-1 mol) electron-transport temperature response parameter */
 	const double H_J           = 220000; /* (J mol-1) curvature parameter of J */
 	//const double Ea_Rub        = ?????;  /* (kJ mol-1) Activation energy for Rubisco */
 
@@ -259,11 +259,13 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	double tleaf10_K;                     /* (Kelvin) 10 day mean leaf temperature (assumed equal to Tair) */
 	double temp_corr;                     /* temperature function */
 	double high_temp_corr;                /* high temperature inhibition */
+	double kT_Vcmax;                      /* temperature dependence Vcmax */
+	double kT_Jmax;                       /* temperature dependence Jmax */
 	double var_a, var_b, var_c, det;
 
 
 	//todo todo todo todo todo move in species.txt (this should be the only variable for all photosynthesis)
-	const double beta       = 1.67; /* Jmax:Vcmax note: in Medlyn et al., 2002*/
+	const double beta       = 1.67;       /* Jmax:Vcmax Medlyn et al., 2002 but see Kattge and Knorr 2007 at 1.89 */
 	//const double beta       = 2.1; /* ratio between Vcmax and Jmax see dePury and Farquhar 1997; for fagus see Liozon et al., (2000) and Castanea */
 
 	const double test_Vcmax = 55 ; /* (umol/m2/sec) Vcmax for fagus see Deckmyn et al., 2004 GCB */
@@ -299,8 +301,15 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	tleaf     = meteo_daily->tday;
 	tleaf_K   = meteo_daily->tday + TempAbs;
 
-	tleaf10   = meteo_daily->ten_day_avg_tday;
-	tleaf10_K = meteo_daily->ten_day_avg_tday + TempAbs;
+	//note: using simple or weighted average did not reveal any practical difference */
+
+	/* using ten day average */
+	//tleaf10   = meteo_daily->ten_day_avg_tday;
+	//tleaf10_K = meteo_daily->ten_day_avg_tday + TempAbs;
+
+	/* using ten day weighted average */
+	tleaf10   = meteo_daily->ten_day_weighted_avg_tday;
+	tleaf10_K = meteo_daily->ten_day_weighted_avg_tday + TempAbs;
 
 
 	/****************************** ARRHENIUS KINETICS *****************************/
@@ -397,11 +406,11 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	Vcmax25   = leafN * s->value[N_RUBISCO] * fnr * act25 /** s->value[F_NUTR]*/;
 
 	/* temperature corrector factor */
-	temp_corr      = exp ( Ea_V * ( tleaf - 25. ) / ( Rgas * tleaf_K * 298.) );
+	temp_corr = exp ( Ea_V * ( tleaf - 25. ) / ( Rgas * tleaf_K * 298.) );
 
 	if ( g_settings->Photo_accl )
 	{
-		/** acclimation for temperature as in Kattge and Knorr (2007) and CLM5.0 version **/
+		/** acclimation for temperature as in Kattge and Knorr (2007)  and CLM5.0 version **/
 		/* for Vcmax */
 		S_V = 668.39 - 1.07 * ( tleaf10_K - TempAbs );
 	}
@@ -417,15 +426,20 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 		high_temp_corr =  1.;
 	}
 
+	/* temperature dependence of Vcmax */
+	kT_Vcmax = temp_corr * high_temp_corr;
+
 	/* check condition */
-	CHECK_CONDITION( temp_corr      , < , 0.0 );
-	CHECK_CONDITION( high_temp_corr , < , 0.0 );
+	CHECK_CONDITION( kT_Vcmax       , < , 0. );
+	CHECK_CONDITION( temp_corr      , < , 0. );
+	CHECK_CONDITION( high_temp_corr , < , 0. );
 
 	/* correct Vcmax25 for temperature Medlyn et al., (1999) with F_SW from Bonan et al., (2011) */
-	Vcmax     = Vcmax25 * temp_corr * high_temp_corr * s->value[F_SW];
+	/* see Kattge and Knorr (2007) (eq. 9) */
+	Vcmax     = Vcmax25 * kT_Vcmax * s->value[F_SW];
 
 	/* check condition */
-	CHECK_CONDITION( Vcmax , <, 0.0);
+	CHECK_CONDITION( Vcmax , < , 0. );
 
 #endif
 
@@ -451,12 +465,13 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	 * Medlyn et al., (1999); Peterson et al., (1999); Liozon et al., (2000); Leuning et al., (2002); Bonan et al., (2011)*/
 
 	/* compute Jmax at 25 °C Bonan et al., (2011) */
-	Jmax25         = beta * Vcmax25;
+	Jmax25        = beta * Vcmax25;
 
 	if ( g_settings->Photo_accl )
 	{
 		/** acclimation for temperature as in Kattge and Knorr (2007) and CLM5.0 version **/
-		/* acclimation for Jmax25 as in Kattge and Knorr (2007) */
+
+		/* change for Jmax/Vcmax ratio with growth temperature as in Kattge and Knorr (2007) */
 		Jmax25    = ( 2.59 - 0.035 * ( tleaf10_K - TempAbs ) ) * Vcmax25;
 	}
 
@@ -468,6 +483,7 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	if ( g_settings->Photo_accl )
 	{
 		/** acclimation for temperature as in Kattge and Knorr (2007) and CLM5.0 version **/
+
 		/* for Jmax */
 		S_J = 659.70 - 0.75 * ( tleaf10_K - TempAbs );
 	}
@@ -483,15 +499,20 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 		high_temp_corr = 1.;
 	}
 
+	/* temperature dependence of Jmax */
+	kT_Jmax = temp_corr * high_temp_corr;
+
 	/* check condition */
-	CHECK_CONDITION( temp_corr      , <, 0.0);
-	CHECK_CONDITION( high_temp_corr , <, 0.0);
+	CHECK_CONDITION( kT_Jmax        , < , 0. );
+	CHECK_CONDITION( temp_corr      , < , 0. );
+	CHECK_CONDITION( high_temp_corr , < , 0. );
 
 	/* correct Jmax25 for temperature dePury and Farquhar (1997) */
-	Jmax           = Jmax25 * temp_corr * high_temp_corr;
+	/* see Kattge and Knorr (2007) (eq. 10) */
+	Jmax           = Jmax25 * kT_Jmax;
 
 	/* check condition */
-	CHECK_CONDITION( Jmax , <, 0.0);
+	CHECK_CONDITION( Jmax , < , 0.);
 
 #endif
 

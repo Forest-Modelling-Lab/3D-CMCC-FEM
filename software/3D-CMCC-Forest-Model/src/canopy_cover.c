@@ -28,14 +28,14 @@ extern logger_t* g_debug_log;
 extern settings_t* g_settings;
 
 
-void dbhdc_function (cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, const int year)
+void dbhdc_function ( cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, const int year)
 {
 	double temp_crown_area     = 0.;
 	double temp_crown_radius   = 0.;
 	double temp_crown_diameter = 0.;
 	double previous_dbhdc_eff  = 0.;
-	double max_dbhdc_incr      = 0.001;               /* fraction of maximum dbhdc increment */
-	//double max_dbhdc_decr      = 0.001;               /* fraction of maximum dbhdc decrement */
+	double max_dbhdc_incr      = 0.1;               /* fraction of maximum dbhdc increment */
+	//double max_dbhdc_decr      = 0.001;           /* fraction of maximum dbhdc decrement */
 
 
 	dbh_t *d;
@@ -86,7 +86,7 @@ void dbhdc_function (cell_t *const c, const int layer, const int height, const i
 	//data obtained by:	Ritter and Nothdurft et al., 2018 forests
 	//dbhdcmax decreases as dbh increases
 
-#if 1
+#if 0
 	if ( s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2 )
 	{
 		s->value[DBHDCMAX] = 0.9667 * pow ( d->value , -0.287 );
@@ -99,7 +99,7 @@ void dbhdc_function (cell_t *const c, const int layer, const int height, const i
 	/**************************************************************************************************/
 
 	/* check */
-	if (s->value[DBHDC_EFF] > s->value[DBHDCMAX])
+	if ( s->value[DBHDC_EFF] > s->value[DBHDCMAX] )
 	{
 		logger(g_debug_log,"-DBHDC effective (%f) > DBHDCMAX (%f) \n", s->value[DBHDC_EFF] , s->value[DBHDCMAX]);
 		s->value[DBHDC_EFF] = s->value[DBHDCMAX];

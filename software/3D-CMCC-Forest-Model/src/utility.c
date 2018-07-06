@@ -451,6 +451,15 @@ void reset_daily_class_variables(cell_t *const c)
 					s->value[C_STEM_SAPWOOD_TO_CWD] =     0.;
 					s->value[C_CROOT_SAPWOOD_TO_CWD] =    0.;
 					s->value[C_BRANCH_SAPWOOD_TO_CWD] =   0.;
+					s->value[C_STEM_LIVEWOOD_TO_CWD] =    0.;
+					s->value[C_CROOT_LIVEWOOD_TO_CWD] =   0.;
+					s->value[C_BRANCH_LIVEWOOD_TO_CWD] =  0.;
+					s->value[C_STEM_HEARTWOOD_TO_CWD] =   0.;
+					s->value[C_CROOT_HEARTWOOD_TO_CWD] =  0.;
+					s->value[C_BRANCH_HEARTWOOD_TO_CWD] = 0.;
+					s->value[C_STEM_DEADWOOD_TO_CWD] =    0.;
+					s->value[C_CROOT_DEADWOOD_TO_CWD] =   0.;
+					s->value[C_BRANCH_DEADWOOD_TO_CWD] =  0.;
 					s->value[LEAF_TO_LITRC] =             0.;
 					s->value[LEAF_TO_LITR1C] =            0.;
 					s->value[LEAF_TO_LITR2C] =            0.;
@@ -720,6 +729,10 @@ void reset_annual_class_variables(cell_t *const c)
 					s->value[YEARLY_RESERVE_DEPLE] =        0.;
 					s->value[YEARLY_RESERVE_USAGE] =        0.;
 					s->value[MAX_RESERVE_C_CONC]   =        0.;
+					s->value[MIN_RESERVE_C_CONC]   =        0.;
+
+					s->value[MAX_RESERVE_C]        =        0.;
+					s->value[MIN_RESERVE_C]        =        0.;
 
 					s->value[YEARLY_ASSIMILATION] =         0.;
 					s->value[YEARLY_ASSIMILATION_SUN] =     0.;
