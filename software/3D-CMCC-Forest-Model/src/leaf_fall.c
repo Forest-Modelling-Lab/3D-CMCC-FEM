@@ -87,7 +87,7 @@ void leaffall_deciduous ( cell_t *const c, const int height, const int dbh, cons
 
 		/* last day of leaf fall remove all fruits */
 		s->value[FRUIT_C_TO_REMOVE]   = s->value[FRUIT_C];
-		s->value[FRUIT_C_TO_REMOVE]   = s->value[FRUIT_N];
+		s->value[FRUIT_N_TO_REMOVE]   = s->value[FRUIT_N];
 	}
 
 	/*************************************************************************************************************/
