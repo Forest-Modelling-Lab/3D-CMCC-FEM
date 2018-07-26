@@ -18,4 +18,6 @@ void stochastic_mortality              ( cell_t *const c, const int height, cons
 
 void mortality                         (cell_t *const c, const int height, const int dbh, const int age, const int species, const int tree_remove);
 
+void pruning_daily						(matrix_t* m, int cell_index, pruning_t* p);
+
 #endif /* MORTALITY_H_ */

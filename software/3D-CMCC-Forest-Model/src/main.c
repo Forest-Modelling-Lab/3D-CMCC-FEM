@@ -43,6 +43,8 @@
 #include "litter_model.h"
 #include "compare.h"
 #include "management.h"
+#include "mortality.h"
+#include "soil_water_balance.h"
 
 //#define BENCHMARK_ONLY
 
@@ -550,29 +552,6 @@ char* path_copy(const char *const s) {
 		}
 	}
 	return NULL;
-}
-
-char* concatenate_path(char* s1, char* s2) {
-	char *p;
-	int i;
-	int ii;
-	int flag;
-
-	assert(s1 && s2);
-
-	i = strlen(s1);
-	flag = ! (('\\' == s1[i-1]) || ('/' == s1[i-1]));
-	ii = strlen(s2);
-
-	i += flag + ii + 1;
-
-	p = malloc(i*sizeof*p);
-	if ( p ) {
-		sprintf(p, "%s%s%s", s1
-				, flag ? FOLDER_DELIMITER : ""
-						, s2);
-	}
-	return p;
 }
 
 /*
@@ -1131,6 +1110,7 @@ void sort_all(matrix_t* m)
 		}
 	}
 }
+
 
 
 
@@ -1768,6 +1748,20 @@ int main(int argc, char *argv[]) {
 							}
 						}
 					}
+					/************************************************************************/
+					/* pruning */
+					if ( g_settings->prunings_count ) {
+						int i;
+
+						for ( i = 0; i < g_settings->prunings_count; ++i ) {
+							if ( (year+g_settings->year_start == g_settings->prunings[i].year)
+									&& (month == g_settings->prunings[i].month-1)
+									&& (day == g_settings->prunings[i].day-1) ) {
+										pruning_daily(matrix, cell, &g_settings->prunings[i]);
+							}
+						}
+					}
+					
 					/************************************************************************/
 					/* run for litter model */
 					if ( ! Litter_model_daily(matrix, cell, day, month, year) )

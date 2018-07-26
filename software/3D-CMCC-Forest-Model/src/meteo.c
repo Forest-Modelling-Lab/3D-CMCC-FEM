@@ -898,7 +898,7 @@ static int meteo_from_arr(double *const values, const int rows_count, const int 
 			printf ("Tmax (%g) < Tavg (%g) at %d year, %d month, %d day\n",
 					yos[*yos_count-1].m[month].d[day].tmax,
 					yos[*yos_count-1].m[month].d[day].tavg,
-					*yos_count-1, month+1, day+1);
+					g_settings->year_start + *yos_count-1, month+1, day+1);
 			exit(1);
 		}
 		if (yos[*yos_count-1].m[month].d[day].tmax < yos[*yos_count-1].m[month].d[day].tmin)
@@ -906,7 +906,7 @@ static int meteo_from_arr(double *const values, const int rows_count, const int 
 			printf ("Tmax (%g) < Tmin (%g) at %d year, %d month, %d day\n",
 					yos[*yos_count-1].m[month].d[day].tmax,
 					yos[*yos_count-1].m[month].d[day].tmin,
-					*yos_count-1, month+1, day+1);
+					g_settings->year_start + *yos_count-1, month+1, day+1);
 			exit(1);
 		}
 		if (yos[*yos_count-1].m[month].d[day].tavg < yos[*yos_count-1].m[month].d[day].tmin)
@@ -914,7 +914,7 @@ static int meteo_from_arr(double *const values, const int rows_count, const int 
 			printf ("Tavg (%g) < Tmin (%g) at %d year, %d month, %d day\n",
 					yos[*yos_count-1].m[month].d[day].tavg,
 					yos[*yos_count-1].m[month].d[day].tmin,
-					*yos_count-1, month+1, day+1);
+					g_settings->year_start + *yos_count-1, month+1, day+1);
 			exit(1);
 		}
 	}

@@ -4,6 +4,7 @@
 
 enum { CO2_TRANS_OFF, CO2_TRANS_ON, CO2_TRANS_VAR };
 enum { MANAGEMENT_OFF, MANAGEMENT_ON, MANAGEMENT_VAR, MANAGEMENT_VAR1 };
+enum { IRRIGATION_OFF, IRRIGATION_ON, IRRIGATION_VAR };// carlo_irrigation
 enum { THINNING_REGIME_ABOVE, THINNING_REGIME_BELOW };
 
 #define SETTINGS_SITENAME_MAX_SIZE					(255+1)
@@ -21,6 +22,27 @@ typedef struct
 	double height;
 
 } replanted_vars_t;
+
+typedef struct
+{
+	int day;
+	int month;
+	int year;
+
+	double intensity;
+	double height; /* height after pruning */
+
+} pruning_t;
+
+typedef struct
+{
+	int day;
+	int month;
+	int year;
+
+	double amount; 
+
+} irrigation_t;
 
 typedef struct {
 	char sitename[SETTINGS_SITENAME_MAX_SIZE];
@@ -82,6 +104,15 @@ typedef struct {
 	double regeneration_avdbh;           /* dbh for regeneration (cm) */
 	double regeneration_lai;             /* regeneration LAI (m2/m2) (mandatory for evergreen) */
 	double regeneration_height;          /* regeneration height (meter) */
+
+	/* pruning */
+	pruning_t* prunings;
+	int prunings_count;
+
+	/* irrigation */
+	irrigation_t* irrigations;
+	int irrigations_count;
+
 } settings_t;
 
 settings_t* settings_import(const char *const filename);
