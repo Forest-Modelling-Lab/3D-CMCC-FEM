@@ -1890,9 +1890,11 @@ void matrix_free(matrix_t *m)
 				}
 				if ( m->cells[cell].years ) {
 					if ( g_year_start_index != -1 ) {
-						free (m->cells[cell].years-g_year_start_index);
+						//free (m->cells[cell].years-g_year_start_index);
+						meteo_annual_free(m->cells[cell].years-g_year_start_index, m->cells[cell].years_count);
 					} else {
-						free (m->cells[cell].years);
+						meteo_annual_free(m->cells[cell].years, m->cells[cell].years_count);
+						//free (m->cells[cell].years);
 					}
 				}
 			}

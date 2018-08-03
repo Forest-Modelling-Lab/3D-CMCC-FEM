@@ -2897,7 +2897,7 @@ int import_meteo_data(const char *const file, int *const yos_count, void* _cell)
 		}
 		if ( ! i ) {
 			free(temp);
-			free(meteo_annual);
+			meteo_annual_free(meteo_annual, *yos_count);
 			return 0;
 		}
 	}
@@ -2921,7 +2921,7 @@ int import_meteo_data(const char *const file, int *const yos_count, void* _cell)
 
 		if ( ! g_sz_co2_conc_file ) {
 			logger_error(g_debug_log, "co2 concentration file not specified!\n");
-			free(meteo_annual);
+			meteo_annual_free(meteo_annual, *yos_count);
 			return 0;
 		}
 
@@ -2932,7 +2932,7 @@ int import_meteo_data(const char *const file, int *const yos_count, void* _cell)
 				if ( meteo_annual[i].year >= g_settings->year_start_co2_fixed ) {
 					if ( -1 == year_start_co2_fixed_index ) {
 						logger_error(g_debug_log, "year_start_co2_fixed_index not found!\n");
-						free(meteo_annual);
+						meteo_annual_free(meteo_annual, *yos_count);
 						return 0;
 					}
 					meteo_annual[i].co2Conc = meteo_annual[year_start_co2_fixed_index].co2Conc;
@@ -2941,7 +2941,7 @@ int import_meteo_data(const char *const file, int *const yos_count, void* _cell)
 
 			if ( /*err &&*/ IS_INVALID_VALUE(meteo_annual[i].co2Conc) ) {
 				logger_error(g_debug_log, "co2 concentration not found!!\n");
-				free(meteo_annual);
+				meteo_annual_free(meteo_annual, *yos_count);
 				return 0;
 			}
 		}
@@ -2961,7 +2961,7 @@ int import_meteo_data(const char *const file, int *const yos_count, void* _cell)
 			meteo_annual[i].Ndep = get_ndep(meteo_annual[i].year, &err);
 			if ( err ) {
 				logger_error(g_debug_log, "Ndep not found for year %d on %s!!\n", meteo_annual[i].year, g_sz_ndep_file);
-				free(meteo_annual);
+				meteo_annual_free(meteo_annual, *yos_count);
 				return 0;
 			}
 		}

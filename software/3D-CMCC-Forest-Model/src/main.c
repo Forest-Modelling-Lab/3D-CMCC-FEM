@@ -1911,9 +1911,11 @@ int main(int argc, char *argv[]) {
 		if ( ! matrix->cells_count ) break;
 
 		if ( g_year_start_index != -1 ) {
-			free(matrix->cells[cell].years-g_year_start_index);
+			//free (m->cells[cell].years-g_year_start_index);
+			meteo_annual_free(matrix->cells[cell].years-g_year_start_index, years_of_simulation);
 		} else {
-			free(matrix->cells[cell].years);
+			meteo_annual_free(matrix->cells[cell].years, years_of_simulation);
+			//free (m->cells[cell].years);
 		}
 		matrix->cells[cell].years = NULL; /* required */
 	}
