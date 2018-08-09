@@ -21,12 +21,15 @@ extern settings_t* g_settings;
 
 void soil_water_balance(cell_t *c, const meteo_daily_t *const meteo_daily, int year)
 {
-	logger(g_debug_log, "\n**SOIL-SNOW WATER BALANCE**\n");
+	if ( c->daily_irrigation > 0. )
+		logger(g_debug_log, "\n**SOIL-SNOW WATER BALANCE IRRIGATION**\n");
+	else
+		logger(g_debug_log, "\n**SOIL-SNOW WATER BALANCE**\n");
 
 	/* update balance */
 
 	/* soil water balance */
-	c->asw += ( ( meteo_daily->rain + c->daily_snow_melt ) - ( c->daily_canopy_transp + c->daily_soil_evapo ) );
+	c->asw += ( ( c->daily_irrigation + meteo_daily->rain + c->daily_snow_melt ) - ( c->daily_canopy_transp + c->daily_soil_evapo ) );
 	logger(g_debug_log, "asw = %g\n", c->asw);
 	logger(g_debug_log, "rain = %g\n", meteo_daily->rain);
 	logger(g_debug_log, "daily_snow_melt = %g\n", c->daily_snow_melt);
@@ -90,5 +93,4 @@ void soil_water_balance(cell_t *c, const meteo_daily_t *const meteo_daily, int y
 		c->years[year].yearly.asw = c->cum_asw / c->doy;
 		c->cum_asw = 0.;
 	}
-
 }

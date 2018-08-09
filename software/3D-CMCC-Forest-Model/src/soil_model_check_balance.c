@@ -338,7 +338,7 @@ int check_soil_water_flux_balance(cell_t *const c, const meteo_daily_t *const me
 	/* it takes into account soil-atmosphere fluxes */
 
 	/* sum of sources (rain + snow melt) */
-	in      = meteo_daily->rain + c->daily_snow_melt;
+	in      = meteo_daily->rain + c->daily_snow_melt + c->daily_irrigation;
 
 	/* sum of sinks */
 	out     = c->daily_soil_evapo + c->daily_out_flow + c->daily_canopy_transp;

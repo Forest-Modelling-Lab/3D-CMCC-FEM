@@ -79,8 +79,26 @@ int Soil_model(matrix_t *const m, const int cell, const int day, const int month
 			}
 		}
 
-		/* compute soil water balance */
-		soil_water_balance             ( c, meteo_daily, year );
+		{
+			/* reset value */
+			c->daily_irrigation = 0.;
+
+			/* get amount from external file ? */
+			if ( g_settings->irrigations_count ) {
+				int i;
+
+				for ( i = 0; i < g_settings->irrigations_count; ++i ) {
+					if ( (year+g_settings->year_start == g_settings->irrigations[i].year)
+							&& (month == g_settings->irrigations[i].month-1)
+							&& (day == g_settings->irrigations[i].day-1) ) {
+								c->daily_irrigation = g_settings->irrigations[i].amount;
+								break;
+					}
+				}
+			}
+
+			soil_water_balance          ( c, meteo_daily, year );
+		}
 
 		/* compute soil decomposition */
 		soil_decomposition             ( c, meteo_daily );

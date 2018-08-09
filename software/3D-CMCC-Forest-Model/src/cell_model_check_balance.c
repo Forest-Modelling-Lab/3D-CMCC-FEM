@@ -482,7 +482,7 @@ int check_cell_water_flux_balance(cell_t *const c, const meteo_daily_t *const me
 	/* it takes into account soil-atmosphere fluxes */
 
 	/* sum of sources (rain + snow) */
-	c->cell_water_in      = meteo_daily->prcp;
+	c->cell_water_in      = meteo_daily->prcp + c->daily_irrigation;
 
 	/* sum of sinks */
 	c->cell_water_out     = c->daily_canopy_transp + c->daily_canopy_evapo + c->daily_soil_evapo + c->daily_snow_subl + c->daily_out_flow;

@@ -1491,6 +1491,8 @@ typedef struct
 	double daily_r_eco, monthly_r_eco, annual_r_eco;                      /* (gC/m2/time) daily, monthly and annual ecosystem resp */
 	double daily_het_resp, monthly_het_resp, annual_het_resp;             /* (gC/m2/time) daily, monthly and annual heterotrophic resp */
 
+	double daily_irrigation;
+
 	double daily_nep, monthly_nep, annual_nep;                            /* (gC/m2/time) daily, monthly and annual net ecosystem production */
 	double daily_nee, monthly_nee, annual_nee;                            /* (gC/m2/time) daily, monthly and annual net ecosystem exchange */
 	/************************************************** BALANCES VARIABLES **************************************************/

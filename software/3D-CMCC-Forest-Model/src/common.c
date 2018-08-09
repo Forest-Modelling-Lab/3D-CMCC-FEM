@@ -641,3 +641,27 @@ int is_inf(double x)
     return ( (unsigned)(ieee754.u >> 32) & 0x7fffffff ) == 0x7ff00000 &&
            ( (unsigned)ieee754.u == 0 );
 }
+
+char* concatenate_path(char* s1, char* s2)
+{
+	char *p;
+	int i;
+	int ii;
+	int flag;
+
+	assert(s1 && s2);
+
+	i = strlen(s1);
+	flag = ! (('\\' == s1[i-1]) || ('/' == s1[i-1]));
+	ii = strlen(s2);
+
+	i += flag + ii + 1;
+
+	p = malloc(i*sizeof*p);
+	if ( p ) {
+		sprintf(p, "%s%s%s", s1
+				, flag ? FOLDER_DELIMITER : ""
+						, s2);
+	}
+	return p;
+}

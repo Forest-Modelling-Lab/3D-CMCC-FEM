@@ -54,6 +54,8 @@ enum {
 	, SETTINGS_REGENERATION_AVDBH
 	, SETTINGS_REGENERATION_LAI
 	, SETTINGS_REGENERATION_HEIGHT
+	, SETTINGS_PRUNING
+	, SETTINGS_IRRIGATION
 
 	, SETTINGS_COUNT
 };
@@ -79,7 +81,7 @@ typedef struct
 
 } replanted_temp_t;
 
-
+extern char* g_sz_input_path;
 extern const char sz_err_out_of_memory[];
 
 const char* sz_settings[SETTINGS_COUNT] = {
@@ -128,6 +130,8 @@ const char* sz_settings[SETTINGS_COUNT] = {
 	, "REGENERATION_AVDBH"
 	, "REGENERATION_LAI"
 	, "REGENERATION_HEIGHT"
+	, "PRUNING"
+	, "IRRIGATION"
 };
 
 const int optional[] = {
@@ -466,6 +470,482 @@ static int settings_replanted_import(const char* const filename, settings_t* s)
 #undef BUFFER_SIZE
 }
 
+static int setting_pruning_import(settings_t* s) {
+#define PRUNING_FILENAME "pruning.csv"
+	char* path;
+	int ret;
+	int rows_count;
+	int prunings_count;
+	FILE *f;
+	pruning_t* prunings;
+
+	assert(s);
+	// must be empty!
+	assert(!s->prunings);
+
+	ret = 0; // defaults to err;
+	path = NULL;
+	f = NULL;
+
+	// compute path
+	if ( g_sz_input_path ) {
+		path = concatenate_path(g_sz_input_path, PRUNING_FILENAME);
+	} else {
+		path = string_copy(PRUNING_FILENAME);
+	}
+	if ( ! path ) {
+		puts(sz_err_out_of_memory);
+		goto quit;
+	}
+
+	// TODO fix path
+	// returns -1 if file not found
+	// returns -2 if out of memory
+	// returns -3 if read error
+	rows_count = file_get_rows_count(path);
+	if ( rows_count <= 0 ) {
+		printf("%s", path);
+		if (  0 == rows_count ) puts(" is empty");
+		if ( -1 == rows_count ) puts(" not found");
+		if ( -2 == rows_count ) printf(": %s\n", sz_err_out_of_memory);
+		if ( -3 == rows_count ) puts(" read error");
+		goto quit;
+	}
+
+	// remove header
+	if ( ! --rows_count ) {
+		printf("%s is empty\n", path);
+		goto quit;
+	}
+
+	s->prunings = malloc(rows_count*sizeof*prunings);
+	if ( ! s->prunings ) {
+		puts(sz_err_out_of_memory);
+		goto quit;
+	}
+
+	// import file
+	{
+	#define BUFFER_SIZE	256
+	#define COLUMNS_COUNT 5
+		char buffer[BUFFER_SIZE];
+		char* token;
+		char* p;
+		int row;
+		int imported_rows;
+
+		const char header[] = "YEAR,MONTH,DAY,INTESITY,HEIGHT";
+
+		f = fopen(path, "r");
+		if ( ! f ) {
+			printf("unable to open %s\n", path);
+			goto quit;
+		}
+
+		// get header
+		if ( ! fgets(buffer, BUFFER_SIZE, f) ) {
+			printf("%s is empty\n", path);
+			goto quit;
+		}
+
+		// remove endline
+		for ( row = 0; buffer[row]; ++row ) {
+			if ( ('\r' == buffer[row]) || ('\n' == buffer[row]) ) {
+				buffer[row] = '\0';
+				break;
+			}
+		}
+
+		// check if header is compliant
+		if ( string_compare_i(buffer, header) ) {
+			printf("%s has an invalid header, must be: %s\n", path, header);
+			goto quit;
+		}
+
+		row = -1;
+		imported_rows = 0;
+		prunings_count = 0;
+		while ( fgets(buffer, BUFFER_SIZE, f) ) {
+			int i;
+			int imported_columns;
+
+			const char delimiter[] = ",";
+
+			// on crash there's an error during rows_count computation!
+			// ( file_get_rows_count func inside common.c )
+			++row; // DO NOT INCREMENT INSIDE CHECK CONDITION
+			CHECK_CONDITION(row, >=, rows_count);
+
+			// remove endlines
+			for ( i = 0; buffer[i]; ++i ) {
+				if ( ('\r' == buffer[i]) || ('\n' == buffer[i]) ) {
+					buffer[i] = '\0';
+					break;
+				}
+			}
+			// skip empty row
+			if ( ! buffer[0] )
+				continue;
+
+			imported_columns = 0;
+			for ( i = 0, token = string_tokenizer(buffer, delimiter, &p); token; token = string_tokenizer(NULL, delimiter, &p), ++i ) {
+				int err;
+				double v;
+
+				if ( i >= COLUMNS_COUNT ) {
+					printf("%s has too many columns at row %d\n", path, row+1);
+					goto quit;
+				}
+
+				v = convert_string_to_float(token, &err);
+				if ( err ) {
+					printf("%s: unable to convert value '%s' at row %d, column %d\n", token, row+1, i+1);
+					goto quit;
+				}
+
+				switch ( i )
+				{
+					// year
+					case 0:
+						s->prunings[row].year = (int)v;
+					break;
+
+					// month
+					case 1:
+						s->prunings[row].month = (int)v;
+					break;
+
+					// day
+					case 2:
+						s->prunings[row].day = (int)v;
+					break;
+
+					// intensity
+					case 3:
+						s->prunings[row].intensity = v;
+					break;
+
+					// height
+					case 4:
+						s->prunings[row].height = v;
+					break;
+				}
+				++imported_columns;
+			}
+
+			if ( imported_columns != COLUMNS_COUNT ) {
+				printf("%s has %d columns instead of %d columns at row %d\n", path, imported_columns, COLUMNS_COUNT, row+1);
+				goto quit;
+			}
+			++imported_rows;
+		}
+
+		s->prunings_count = imported_rows;
+
+	#undef COLUMNS_COUNT
+	#undef BUFFER_SIZE
+	}
+
+	if ( ! s->prunings_count ) {
+		printf("%s is empty\n", path);
+		goto quit;
+	}
+
+	// check valid date inside struct
+	{
+		int i;
+
+		const int days_per_month[] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+
+		for ( i = 0; i < s->prunings_count; ++i )
+		{
+			int year;
+			int month;
+			int day;
+			int days;
+						
+			year = s->prunings[i].year;
+			if ( year < 0 ) {
+				printf("%s has invalid year (%d) at row %d\n", path, year, i+1+1); // we start from zero and add header too
+				goto quit;
+			}
+			
+			month = s->prunings[i].month;
+			if ( (month < 1) || (month > 12) ) {
+				printf("%s has invalid month (%d) at row %d\n", path, month, i+1+1); // we start from zero and add header too
+				goto quit;
+			}
+
+			days = days_per_month[month-1];
+			// fix for leap year
+			if ( (2 == month) && IS_LEAP_YEAR(year) ) {
+				++days;
+			}
+			day = s->prunings[i].day;
+			if ( (day < 1) || (day > days) ) {
+				printf("%s has invalid day (%d) at row %d\n", path, day, i+1+1); // we start from zero and add header too
+				goto quit;
+			}
+		}
+	}
+
+	ret = 1; // OK
+
+quit:
+	if ( f )
+		fclose(f);
+
+	if ( path )
+		free(path);
+
+	if ( ! ret ) {
+		s->prunings_count = 0;
+		if ( s->prunings ) {
+			free(s->prunings);
+			s->prunings = NULL;
+		}
+	}
+
+	return ret;
+#undef PRUNING_FILENAME
+}
+
+static int setting_irrigation_import(settings_t* s) {
+#define IRRIGATION_FILENAME "irrigation.csv"
+	char* path;
+	int ret;
+	int rows_count;
+	int irrigations_count;
+	FILE *f;
+	irrigation_t* irrigations;
+
+	assert(s);
+	// must be empty!
+	assert(!s->irrigations);
+
+	ret = 0; // defaults to err;
+	path = NULL;
+	f = NULL;
+
+	// compute path
+	if ( g_sz_input_path ) {
+		path = concatenate_path(g_sz_input_path, IRRIGATION_FILENAME);
+	} else {
+		path = string_copy(IRRIGATION_FILENAME);
+	}
+	if ( ! path ) {
+		puts(sz_err_out_of_memory);
+		goto quit;
+	}
+
+	// TODO fix path
+	// returns -1 if file not found
+	// returns -2 if out of memory
+	// returns -3 if read error
+	rows_count = file_get_rows_count(path);
+	if ( rows_count <= 0 ) {
+		printf("%s", path);
+		if (  0 == rows_count ) puts(" is empty");
+		if ( -1 == rows_count ) puts(" not found");
+		if ( -2 == rows_count ) printf(": %s\n", sz_err_out_of_memory);
+		if ( -3 == rows_count ) puts(" read error");
+		goto quit;
+	}
+
+	// remove header
+	if ( ! --rows_count ) {
+		printf("%s is empty\n", path);
+		goto quit;
+	}
+
+	s->irrigations = malloc(rows_count*sizeof*irrigations);
+	if ( ! s->irrigations ) {
+		puts(sz_err_out_of_memory);
+		goto quit;
+	}
+
+	// import file
+	{
+	#define BUFFER_SIZE	256
+	#define COLUMNS_COUNT 4
+		char buffer[BUFFER_SIZE];
+		char* token;
+		char* p;
+		int row;
+		int imported_rows;
+
+		const char header[] = "YEAR,MONTH,DAY,AMOUNT";
+
+		f = fopen(path, "r");
+		if ( ! f ) {
+			printf("unable to open %s\n", path);
+			goto quit;
+		}
+
+		// get header
+		if ( ! fgets(buffer, BUFFER_SIZE, f) ) {
+			printf("%s is empty\n", path);
+			goto quit;
+		}
+
+		// remove endline
+		for ( row = 0; buffer[row]; ++row ) {
+			if ( ('\r' == buffer[row]) || ('\n' == buffer[row]) ) {
+				buffer[row] = '\0';
+				break;
+			}
+		}
+
+		// check if header is compliant
+		if ( string_compare_i(buffer, header) ) {
+			printf("%s has an invalid header, must be: %s\n", path, header);
+			goto quit;
+		}
+
+		row = -1;
+		imported_rows = 0;
+		irrigations_count = 0;
+		while ( fgets(buffer, BUFFER_SIZE, f) ) {
+			int i;
+			int imported_columns;
+
+			const char delimiter[] = ",";
+
+			// on crash there's an error during rows_count computation!
+			// ( file_get_rows_count func inside common.c )
+			++row; // DO NOT INCREMENT INSIDE CHECK CONDITION
+			CHECK_CONDITION(row, >=, rows_count);
+
+			// remove endlines
+			for ( i = 0; buffer[i]; ++i ) {
+				if ( ('\r' == buffer[i]) || ('\n' == buffer[i]) ) {
+					buffer[i] = '\0';
+					break;
+				}
+			}
+			// skip empty row
+			if ( ! buffer[0] )
+				continue;
+
+			imported_columns = 0;
+			for ( i = 0, token = string_tokenizer(buffer, delimiter, &p); token; token = string_tokenizer(NULL, delimiter, &p), ++i ) {
+				int err;
+				double v;
+
+				if ( i >= COLUMNS_COUNT ) {
+					printf("%s has too many columns at row %d\n", path, row+1);
+					goto quit;
+				}
+
+				v = convert_string_to_float(token, &err);
+				if ( err ) {
+					printf("%s: unable to convert value '%s' at row %d, column %d\n", token, row+1, i+1);
+					goto quit;
+				}
+
+				switch ( i )
+				{
+					// year
+					case 0:
+						s->irrigations[row].year = (int)v;
+					break;
+
+					// month
+					case 1:
+						s->irrigations[row].month = (int)v;
+					break;
+
+					// day
+					case 2:
+						s->irrigations[row].day = (int)v;
+					break;
+
+					// amount
+					case 3:
+						s->irrigations[row].amount = v;
+					break;
+				}
+				++imported_columns;
+			}
+
+			if ( imported_columns != COLUMNS_COUNT ) {
+				printf("%s has %d columns instead of %d columns at row %d\n", path, imported_columns, COLUMNS_COUNT, row+1);
+				goto quit;
+			}
+
+			++imported_rows;
+		}
+
+		s->irrigations_count = imported_rows;
+
+	#undef COLUMNS_COUNT
+	#undef BUFFER_SIZE
+	}
+
+	if ( ! s->irrigations_count ) {
+		printf("%s is empty\n", path);
+		goto quit;
+	}
+
+	// check valid date inside struct
+	{
+		int i;
+
+		const int days_per_month[] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+
+		for ( i = 0; i < s->irrigations_count; ++i )
+		{
+			int year;
+			int month;
+			int day;
+			int days;
+						
+			year = s->irrigations[i].year;
+			if ( year < 0 ) {
+				printf("%s has invalid year (%d) at row %d\n", path, year, i+1+1); // we start from zero and add header too
+				goto quit;
+			}
+			
+			month = s->irrigations[i].month;
+			if ( (month < 1) || (month > 12) ) {
+				printf("%s has invalid month (%d) at row %d\n", path, month, i+1+1); // we start from zero and add header too
+				goto quit;
+			}
+
+			days = days_per_month[month-1];
+			// fix for leap year
+			if ( (2 == month) && IS_LEAP_YEAR(year) ) {
+				++days;
+			}
+			day = s->irrigations[i].day;
+			if ( (day < 1) || (day > days) ) {
+				printf("%s has invalid day (%d) at row %d\n", path, day, i+1+1); // we start from zero and add header too
+				goto quit;
+			}
+		}
+	}
+
+	ret = 1; // OK
+
+quit:
+	if ( f )
+		fclose(f);
+
+	if ( path )
+		free(path);
+
+	if ( ! ret ) {
+		s->irrigations_count = 0;
+		if ( s->irrigations ) {
+			free(s->irrigations);
+			s->irrigations = NULL;
+		}
+	}
+
+	return ret;
+#undef IRRIGATION_FILENAME
+}
+
 settings_t* settings_import(const char *const filename) {
 #define BUFFER_SIZE	256
 	char buffer[BUFFER_SIZE];
@@ -473,6 +953,8 @@ settings_t* settings_import(const char *const filename) {
 	int index;
 	int err;
 	settings_t* s;
+	int pruning;
+	int irrigation;
 	int imported[SETTINGS_COUNT] = { 0 };
 	FILE *f;
 
@@ -494,6 +976,8 @@ settings_t* settings_import(const char *const filename) {
 	memset(s, 0, sizeof*s);
 	memset(imported, 0, (sizeof*imported)*SETTINGS_COUNT);
 
+	pruning = 0;
+	irrigation = 0;
 	while ( fgets(buffer, BUFFER_SIZE, f) ) {
 		char *p;
 		char *p2;
@@ -730,6 +1214,18 @@ settings_t* settings_import(const char *const filename) {
 				}
 			break;
 
+			case SETTINGS_PRUNING:
+				if ( ! string_compare_i(token, "on") ) {
+					pruning = 1;
+				}
+			break;
+
+			case SETTINGS_IRRIGATION:
+				if ( ! string_compare_i(token, "on") ) {
+					irrigation = 1;
+				}
+			break;
+
 			default:
 				value = convert_string_to_float(token, &err);
 				if ( err ) {
@@ -882,6 +1378,17 @@ settings_t* settings_import(const char *const filename) {
 		s = NULL;
 	}
 
+	if ( pruning && ! setting_pruning_import(s) )
+	{
+		settings_free(s);
+		s = NULL;
+	}
+	else if ( irrigation && ! setting_irrigation_import(s) )
+	{
+		settings_free(s);
+		s = NULL;
+	}
+
 	return s;
 #undef BUFFER_SIZE
 }
@@ -889,6 +1396,16 @@ settings_t* settings_import(const char *const filename) {
 void settings_free(settings_t* s) {
 	if ( s )
 	{
+		if ( s->irrigations_count )
+		{
+			free(s->irrigations);
+		}
+
+		if ( s->prunings_count )
+		{
+			free(s->prunings);
+		}
+
 		if ( s->replanted_count )
 		{
 			free(s->replanted);
