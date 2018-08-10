@@ -25,7 +25,7 @@
 
 extern settings_t* g_settings;
 
-int Litter_model(matrix_t *const m, const int cell, const int half_hour, const int hour, const int day, const int month, const int year)
+int Litter_model(matrix_t *const m, const int cell, /*const int half_hour, const int hour, */const int day, const int month, const int year)
 {
 	/* shortcuts */
 	cell_t *c;

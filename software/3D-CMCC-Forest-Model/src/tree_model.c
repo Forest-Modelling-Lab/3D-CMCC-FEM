@@ -76,7 +76,7 @@ extern settings_t* g_settings;
 //extern int MonthLength_Leap [];
 
 /*****************************************************************************************************************/
-int Tree_model(matrix_t *const m, const int cell, const int halfhour, const int hour, const int day, const int month, const int year)
+int Tree_model(matrix_t *const m, const int cell, /*const int halfhour, const int hour, */const int day, const int month, const int year)
 {
 	int layer;
 	int height;
@@ -244,6 +244,33 @@ int Tree_model(matrix_t *const m, const int cell, const int halfhour, const int 
 							phenology ( c, layer, height, dbh, age, species, meteo_daily, day, month, year );
 
 							logger(g_debug_log, "--PHYSIOLOGICAL PROCESSES LAYER %d --\n", l->layer_z);
+
+							/*********************************************************************/
+
+							if ( HALFHOURLY == g_settings->time )
+							{
+								int h;
+								int hh;
+
+								for ( h = 0; h < METEO_HOURS_COUNT; ++h ) // 0-23
+								{
+									for ( hh = 0; hh < METEO_HALFHOURS_COUNT; ++hh ) // 0-1
+									{
+										// example
+										//c->years[year].halfhourly[month].d[day].h[h].hh[hh]...
+									}
+								}
+							}
+							else if ( HOURLY == g_settings->time )
+							{
+								int h;
+
+								for ( h = 0; h < METEO_HOURS_COUNT; ++h ) // 0-23
+								{
+									// example
+									//c->years[year].hourly[month].d[day].h[h].air_pressure;
+								}
+							}
 
 							/*********************************************************************/
 

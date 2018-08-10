@@ -1121,10 +1121,10 @@ int main(int argc, char *argv[]) {
 	int year;
 	int month;
 	int day;
-	int hour;
-	int halfhour;
-	int hours_count;
-	int halfhours_count;
+	//int hour;
+	//int halfhour;
+	//int hours_count;
+	//int halfhours_count;
 	int cell;
 	int prog_ret;
 	int soil_settings_count;
@@ -1475,8 +1475,8 @@ int main(int argc, char *argv[]) {
 	sort_all(matrix);
 #endif
 
-	hours_count = 1;
-	halfhours_count = 1;
+	//hours_count = 1;
+	//halfhours_count = 1;
 #if 0
 	switch ( g_settings->time ) {
 		case HOURLY:
@@ -1728,9 +1728,9 @@ int main(int argc, char *argv[]) {
 					break;
 				}
 				
-				for ( hour = 0; hour < hours_count; ++hour )
+				//for ( hour = 0; hour < hours_count; ++hour )
 				{
-					for ( halfhour = 0; halfhour < halfhours_count; ++halfhour )
+					//for ( halfhour = 0; halfhour < halfhours_count; ++halfhour )
 					{
 						for ( cell = 0; cell < matrix->cells_count; ++cell )
 						{
@@ -1761,7 +1761,7 @@ int main(int argc, char *argv[]) {
 										{
 											if ( matrix->cells[cell].n_trees > 0 )
 											{
-												if ( !Tree_model( matrix, cell, halfhour, hour, day, month, year ) )
+												if ( !Tree_model( matrix, cell, /*halfhour, hour,*/ day, month, year ) )
 												{
 													logger(g_debug_log, "tree model daily failed!!!\n");
 													goto err;
@@ -1783,22 +1783,22 @@ int main(int argc, char *argv[]) {
 									}
 								}
 							}
-/************************************************************************/
-					/* pruning */
-					if ( g_settings->prunings_count ) {
-						int i;
+							/************************************************************************/
+							/* pruning */
+							if ( g_settings->prunings_count ) {
+								int i;
 
-						for ( i = 0; i < g_settings->prunings_count; ++i ) {
-							if ( (year+g_settings->year_start == g_settings->prunings[i].year)
-									&& (month == g_settings->prunings[i].month-1)
-									&& (day == g_settings->prunings[i].day-1) ) {
-										pruning_daily(matrix, cell, &g_settings->prunings[i]);
+								for ( i = 0; i < g_settings->prunings_count; ++i ) {
+									if ( (year+g_settings->year_start == g_settings->prunings[i].year)
+											&& (month == g_settings->prunings[i].month-1)
+											&& (day == g_settings->prunings[i].day-1) ) {
+												pruning_daily(matrix, cell, &g_settings->prunings[i]);
+									}
+								}
 							}
-						}
-					}
 							/************************************************************************/
 							/* run for litter model */
-							if ( ! Litter_model(matrix, cell, halfhour, hour, day, month, year) )
+							if ( ! Litter_model(matrix, cell, /*halfhour, hour,*/ day, month, year) )
 							{
 								logger_error(g_debug_log, "litter model daily failed!!!\n");
 								goto err;
