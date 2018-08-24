@@ -305,8 +305,8 @@ dataset_t* dataset_import(const char* const filename)
 	if ( ! _strnicmp(filename + has_path + i, "local", 5) )
 	{
 		strcpy(exp, "local");
-		// TODO remove const value
-		esm = 10; //SIZEOF_ARRAY(gcms);
+		// this set localclim
+		esm = 10;
 
 		// get stuff
 		if ( 6 != sscanf(filename + has_path + i + 5 + 1, "%[^.].txt_(%d-%d)_CO2_%[^_]_%[^.].txt_Man_%[^_]_"
