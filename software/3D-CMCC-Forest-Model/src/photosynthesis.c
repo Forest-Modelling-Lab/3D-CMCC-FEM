@@ -45,6 +45,8 @@ void photosynthesis_LUE(cell_t *const c, const int layer, const int height, cons
 		//fixme use or not s->value[F_CO2_TR]???????
 		Epsilon_C = s->value[EPSILONgCMJ] * s->value[F_CO2] * s->value[F_NUTR] * s->value[F_T] * s->value[PHYS_MOD] /* * s->value[F_CO2_TR] */;
 
+		s->value[ALPHA] = s->value[EPSILONgCMJ] / (MOLPAR_MJ * GC_MOL);
+
 		/* gC/MJ/m2/day --> molC/molPAR/m2/day */
 		Alpha_C   = Epsilon_C / (MOLPAR_MJ * GC_MOL);
 	}
