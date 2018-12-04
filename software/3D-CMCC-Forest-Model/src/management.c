@@ -211,7 +211,7 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 
 						/* species found ? */
 						CHECK_CONDITION(rsi, ==, g_settings->replanted_count );
-						
+
 						/* remove tree class */
 						if (  ! harvesting ( c, height, dbh, age, species, rsi ) )
 						{
@@ -250,10 +250,10 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 							/* reset years_for_thinning */
 							s->counter[YEARS_THINNING] = 1;
 						}
-						
+
 						s->counter[THINNING_HAPPENS] = 1;
 						c->harvesting                = 1;
-					}				
+					}
 				}
 			}
 		}

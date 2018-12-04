@@ -27,13 +27,10 @@ CO2CONC "380" //CO2 concentration
 CO2_INCR "0.01" //1% increment
 MIN_FRAC_MAXASW "0.46" //Minimum fraction of asw based on maxasw (wilting point)
 TREE_LAYER_LIMIT "1.5"  //define differences among tree heights in meters classes to define number of layers in unspatial version
-
 SOIL_LAYER "1"	//define soil layer/s to consider
 MAX_LAYER_COVER "1"
-
 //co2 annual increment
 CO2_INCR "0.01"
-
 //NATURAL/HUMAN (management)REGENERATION CLASS BIOMASS VALUES
 //MANAGMENT (optional)
 THINNING_REGIME  Above              // thinning regime (Above or Below)
@@ -49,7 +46,6 @@ REPLANTED_WCR "0"           // (tDM/ha) coarse root biomass of replanted trees (
 REPLANTED_WFR "0"           // (tDM/ha) fine root biomass of replanted trees (optional)
 REPLANTED_WL "0"            // (tDM/ha) leaf biomass of replanted trees (optional for evergreen if LAI!= 0, otherwise useless)
 REPLANTED_WBB "0"           // (tDM/ha) branch biomass of replanted trees (optional)
-
 //REGENERATION (optional)
 REGENERATION_N_TREE "-9999"           //NOT USED 
 REGENERATION_AGE "1"
@@ -61,5 +57,5 @@ REGENERATION_WCR "0"                  // (tDM/ha) coarse root biomass of regener
 REGENERATION_WFR "0"                  // (tDM/ha) fine root biomass of regeneration trees (optional)
 REGENERATION_WL "0"                   // (tDM/ha) leaf biomass of regeneration trees (optional for evergreen if LAI!= 0, otherwise useless)
 REGENERATION_WBB "0"                  // (tDM/ha) branch biomass of regeneration trees (optional)
-
-
+PRUNING off                          //Must be 'on' or 'off'
+IRRIGATION off                       //Must be 'on' or 'off'

@@ -57,5 +57,5 @@ REGENERATION_WCR 0                  // (tDM/ha) coarse root biomass of regenerat
 REGENERATION_WFR 0                  // (tDM/ha) fine root biomass of regeneration trees (optional)
 REGENERATION_WL 0                   // (tDM/ha) leaf biomass of regeneration trees (optional for evergreen if LAI!= 0, otherwise useless)
 REGENERATION_WBB 0                  // (tDM/ha) branch biomass of regeneration trees (optional)
-
-
+PRUNING off                          //Must be 'on' or 'off'
+IRRIGATION off                       //Must be 'on' or 'off'
