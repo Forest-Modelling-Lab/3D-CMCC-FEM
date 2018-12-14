@@ -48,11 +48,9 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 	double croot_N;
 	double stem_N;
 	double branch_N;
-	double light_inhib;                       /* (ratio) light inhibition in day-time leaf resp, see Dufrene et al., 2005 */
 	double live_stemC_frac;                   /* fraction of live stem into stem carbon */
 	double live_branchC_frac;                 /* fraction of live branch into branch carbon */
 	double live_crootC_frac;                  /* fraction of live croot into coarse root carbon */
-
 
 	//fixme to remove once imported into species.txt
 	/* CN ratios */
@@ -61,6 +59,15 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 	double stem_CN;
 	double branch_CN;
 	double froot_CN;
+
+	/* light inhibition */
+	double light_inhib;                       /* (ratio) light inhibition in day-time leaf resp, see Dufrene et al., 2005 */
+	double light_inhib_sun;                   /* (ratio) light inhibition for sun leaves in day-time leaf resp, see Dufrene et al., 2005 */
+	double light_inhib_shade;                 /* (ratio) light inhibition for shaded leaves in day-time leaf resp, see Dufrene et al., 2005 */
+	double umol_par;                          /* (umol photons/m2/sec) par converted */
+	double umol_par_sun;                      /* (umol photons/m2/sec) par sun leaves converted */
+	double umol_par_shade;                    /* (umol photons/m2/sec) par shade leaves converted */
+
 
 	/* NOTE: No respiration happens for reserve pool (see Schwalm and Ek 2004) */
 
@@ -225,6 +232,24 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 
 
 		/*******************************************************************************************************************/
+
+		/* note: respiration values are computed in gC/m2/day */
+		/* Leaf maintenance respiration is calculated separately for day and night */
+
+		/********************************************************************************/
+
+		/** night-time leaf maintenance respiration **/
+
+		/* tot leaf maintenance respiration */
+		s->value[NIGHTLY_LEAF_MAINT_RESP]     = ( leaf_N       * MR_ref * pow(q10_tnight, exponent_tnight) * ( 1. - ( meteo_daily->daylength_sec / 86400. ) ) );
+
+		/* for sun and shaded leaves */
+		s->value[DAILY_LEAF_SUN_MAINT_RESP]   = ( leaf_sun_N   * MR_ref * pow(q10_tnight, exponent_tnight) * ( 1. - ( meteo_daily->daylength_sec / 86400. ) ) );
+		s->value[DAILY_LEAF_SHADE_MAINT_RESP] = ( leaf_shade_N * MR_ref * pow(q10_tnight, exponent_tnight) * ( 1. - ( meteo_daily->daylength_sec / 86400. ) ) );
+
+		/********************************************************************************/
+
+		/** day-time leaf maintenance respiration **/
 #if 1
 		//test NEW considering day-time light inhibition for leaf respiration ("Kok effect")
 
@@ -242,30 +267,81 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 
 		if ( s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2 )
 		{
-			light_inhib = 0.62; /* for deciduous */
+			light_inhib       = 0.62; /* for deciduous */
+			light_inhib_sun   = 0.62; /* for deciduous */
+			light_inhib_shade = 0.62; /* for deciduous */
 		}
 		else
 		{
-			light_inhib = 0.51; /* for evergreen */
+			light_inhib       = 0.51; /* for evergreen */
+			light_inhib_sun   = 0.51; /* for evergreen */
+			light_inhib_shade = 0.51; /* for evergreen */
 		}
-#else
-		//test OLD
 
-		light_inhib = 1.;
-#endif
-
-		/* note: respiration values are computed in gC/m2/day */
-		/* Leaf maintenance respiration is calculated separately for day and night */
-
-		/* day time leaf maintenance respiration */
+		/* tot leaf maintenance respiration */
 		s->value[DAILY_LEAF_MAINT_RESP]       = ( leaf_N       * MR_ref * pow(q10_tday,   exponent_tday)   * ( meteo_daily->daylength_sec / 86400. ) ) * light_inhib;
 
 		/* for sun and shaded leaves */
-		s->value[DAILY_LEAF_SUN_MAINT_RESP]   = ( leaf_sun_N   * MR_ref * pow(q10_tday,   exponent_tday)   * ( meteo_daily->daylength_sec / 86400. ) ) * light_inhib;
-		s->value[DAILY_LEAF_SHADE_MAINT_RESP] = ( leaf_shade_N * MR_ref * pow(q10_tday,   exponent_tday)   * ( meteo_daily->daylength_sec / 86400. ) ) * light_inhib;
+		s->value[DAILY_LEAF_SUN_MAINT_RESP]   = ( leaf_sun_N   * MR_ref * pow(q10_tday,   exponent_tday)   * ( meteo_daily->daylength_sec / 86400. ) ) * light_inhib_sun;
+		s->value[DAILY_LEAF_SHADE_MAINT_RESP] = ( leaf_shade_N * MR_ref * pow(q10_tday,   exponent_tday)   * ( meteo_daily->daylength_sec / 86400. ) ) * light_inhib_shade;
 
-		/* night time leaf maintenance respiration */
-		s->value[NIGHTLY_LEAF_MAINT_RESP]     = ( leaf_N       * MR_ref * pow(q10_tnight, exponent_tnight) * ( 1. - ( meteo_daily->daylength_sec / 86400. ) ) );
+#else
+		// test following JULES approach (eq. 3, Mercado et al. 2007; Clark et al., 2011)
+
+		/* molPAR/m2/day --> umolPAR/m2/sec */
+		umol_par       = s->value[PAR]       * 1e6 / 86400.;
+		umol_par_sun   = s->value[PAR_SUN]   * 1e6 / 86400.;
+		umol_par_shade = s->value[PAR_SHADE] * 1e6 / 86400.;
+
+		/* assuming as in Mercado et al. (2007) that below 10 umol/m2/sec no light inhibition */
+		/* tot leaf maintenance respiration */
+		if ( umol_par > 10. )
+		{
+			light_inhib = 0.5 - 0.05 * log (umol_par);
+		}
+		else
+		{
+			light_inhib = 1.;
+		}
+		/* for sun leaves */
+		if ( umol_par_sun > 10. )
+		{
+			light_inhib_sun = 0.5 - 0.05 * log (umol_par_sun);
+		}
+		else
+		{
+			light_inhib_sun = 1.;
+		}
+		/* for shaded leaves */
+		if ( umol_par_shade > 10. )
+		{
+			light_inhib_shade = 0.5 - 0.05 * log (umol_par_shade);
+		}
+		else
+		{
+			light_inhib_shade = 1.;
+		}
+
+		if ( meteo_daily->tday > 15 )
+		{
+			printf("daylength_sec = %g\n", meteo_daily->daylength_sec);
+			printf("par = %g\n", s->value[PAR]);
+			printf("umol_par = %g\n", umol_par);
+			printf("light_inhib = %g\n", light_inhib);
+			getchar();
+		}
+
+		/* tot leaf maintenance respiration */
+		s->value[DAILY_LEAF_MAINT_RESP]       = ( ( s->value[NIGHTLY_LEAF_MAINT_RESP]       / ( 86400. - meteo_daily->daylength_sec ) ) * meteo_daily->daylength_sec ) * light_inhib;
+
+		/* for sun and shaded leaves */
+		s->value[DAILY_LEAF_SUN_MAINT_RESP]   = ( ( s->value[NIGHTLY_LEAF_SUN_MAINT_RESP]   / ( 86400. - meteo_daily->daylength_sec ) ) * meteo_daily->daylength_sec ) * light_inhib_sun;
+		s->value[DAILY_LEAF_SHADE_MAINT_RESP] = ( ( s->value[NIGHTLY_LEAF_SHADE_MAINT_RESP] / ( 86400. - meteo_daily->daylength_sec ) ) * meteo_daily->daylength_sec ) * light_inhib_shade;
+#endif
+
+		/********************************************************************************/
+
+		/** total leaf maintenance respiration **/
 
 		/* total (all day) leaf maintenance respiration */
 		s->value[TOT_LEAF_MAINT_RESP]         = s->value[DAILY_LEAF_MAINT_RESP] + s->value[NIGHTLY_LEAF_MAINT_RESP];

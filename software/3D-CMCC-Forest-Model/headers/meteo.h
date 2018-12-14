@@ -22,8 +22,8 @@ typedef struct {
 	double snow;                                /* (cm/m2) daily snow */
 	double swc;                                 /* (% vol) daily soil wtaer content from data file */
 	double ndvi_lai;                            /* (m2/m2) daily LAI from data file */
-	double daylength;                           /* (hours) day length */
-	double daylength_sec;                       /* (seconds) day length */
+	double daylength;                           /* (hours) day time length */
+	double daylength_sec;                       /* (seconds) day time length */
 	double ni;                                  /* (ratio) fraction of day length */
 	double thermic_sum;                         /* (deg C) daily thermic sum */
 	double rho_air;                             /* (kg/m3) daily air density */

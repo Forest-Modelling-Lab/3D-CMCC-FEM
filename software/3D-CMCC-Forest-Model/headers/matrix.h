@@ -601,10 +601,12 @@ enum {
 	FRACBB,                             /* (DIM) Fraction branch and bark to stem */
 
 	/* Maintenance respiration */
-	DAILY_LEAF_MAINT_RESP,              /* (gC/m2/day) Daytime leaf maintenance respiration */
-	DAILY_LEAF_SUN_MAINT_RESP,          /* (gC/m2/day) Daytime leaf maintenance respiration */
-	DAILY_LEAF_SHADE_MAINT_RESP,        /* (gC/m2/day) Daytime leaf maintenance respiration */
-	NIGHTLY_LEAF_MAINT_RESP,            /* (gC/m2/day) Night time leaf maintenance respiration */
+	DAILY_LEAF_MAINT_RESP,              /* (gC/m2/day) Day-time leaf maintenance respiration */
+	DAILY_LEAF_SUN_MAINT_RESP,          /* (gC/m2/day) Day-time leaf sun maintenance respiration */
+	DAILY_LEAF_SHADE_MAINT_RESP,        /* (gC/m2/day) Day-time leaf shade maintenance respiration */
+	NIGHTLY_LEAF_MAINT_RESP,            /* (gC/m2/day) Night-time leaf maintenance respiration */
+	NIGHTLY_LEAF_SUN_MAINT_RESP,        /* (gC/m2/day) Night-time leaf sun maintenance respiration */
+	NIGHTLY_LEAF_SHADE_MAINT_RESP,      /* (gC/m2/day) Night-time leaf shade maintenance respiration */
 	TOT_LEAF_MAINT_RESP,                /* (gC/m2/day) Leaf maintenance respiration */
 	FROOT_MAINT_RESP,                   /* (gC/m2/day) Fine root maintenance respiration */
 	STEM_MAINT_RESP,                    /* (gC/m2/day) Stem maintenance respiration */
