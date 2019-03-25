@@ -11,11 +11,11 @@ MONTHLY_OUTPUT on                   //Must be 'on' or 'off'
 ANNUAL_OUTPUT on                    //Must be 'on' or 'off'
 SOIL_OUTPUT off                     //Must be 'on' or 'off'
 NETCDF_OUTPUT off                     //Must be 'on' or 'off'
-YEAR_START 1944                     //Starting year simulation
+YEAR_START 1950                     //Starting year simulation
 YEAR_END 2299                       //Ending year simulation
 YEAR_RESTART off                    //Year to restart
 PSN_mod 0                           //Must be '0' (FvCB) or '1' (LUE) for photosynthesis approach
-CO2_trans var                       //Must be 'on' or 'off'
+CO2_trans off                       //Must be 'on' or 'off'
 YEAR_START_CO2_FIXED 1860           //When Co2_trans = var, year at which fix [CO2]
 Ndep_fixed on                       //Must be 'on' or 'off'
 Photo_accl on                       //Photosynthesis temperature acclimation Must be 'on' or 'off'
@@ -26,7 +26,7 @@ YEAR_START_MANAGEMENT 2020          //First year of management
 Progn_Aut_Resp on                   //Prognostic autotrophic respiration, Must be 'on' or 'off', if off Y values are used
 SIZECELL 100                        //Its value must be within 10 and 100 (unity measure is meter: 10 = 10x10 = 100m^2) 
 Y 0.48                              //Fixed_Aut_Resp_rate Assimilate use efficiency-Respiration rate-GPP/NPP
-CO2CONC 368.865                     //CO2 concentration refers to 2000 as ISIMIP PROTOCOL
+CO2CONC 286.225                     //CO2 concentration refers to 2000 as ISIMIP PROTOCOL
 CO2_INCR 0.01                       //1% increment
 INIT_FRAC_MAXASW 1                  //0.1 Minimum fraction of asw based on maxasw (wilting point) (unchanged)
 TREE_LAYER_LIMIT 3                  //define differences among tree heights in meters classes to define number of layers in unspatial version

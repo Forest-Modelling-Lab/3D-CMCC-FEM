@@ -380,6 +380,52 @@ void carbon_allocation_new ( cell_t *const c, age_t *const a, species_t *const s
 	CHECK_CONDITION ( s->value[CROOT_C],    < , ZERO );
 	CHECK_CONDITION ( s->value[FRUIT_C],    < , ZERO );
 
+	/*********************************************************************/
+
+	//fixme
+	if ( s->value[STEM_SAPWOOD_C] <  ZERO )
+	{
+		s->value[STEM_SAPWOOD_C]   = 0.;
+		s->value[STEM_HEARTWOOD_C] = s->value[STEM_C];
+		printf("Warning: s->value[STEM_SAPWOOD_C] < ZERO\n");
+	}
+	if ( s->value[STEM_HEARTWOOD_C] < ZERO )
+	{
+		s->value[STEM_HEARTWOOD_C]   = 0.;
+		s->value[STEM_SAPWOOD_C] = s->value[STEM_C];
+		printf("Warning: s->value[STEM_HEARTWOOD_C] < ZERO\n");
+	}
+	/**/
+	//fixme
+	if ( s->value[CROOT_SAPWOOD_C] <  ZERO )
+	{
+		s->value[CROOT_SAPWOOD_C]   = 0.;
+		s->value[CROOT_HEARTWOOD_C] = s->value[CROOT_C];
+		printf("Warning: s->value[CROOT_SAPWOOD_C] < ZERO\n");
+	}
+	if ( s->value[CROOT_HEARTWOOD_C] < ZERO )
+	{
+		s->value[CROOT_HEARTWOOD_C]   = 0.;
+		s->value[CROOT_SAPWOOD_C] = s->value[CROOT_C];
+		printf("Warning: s->value[CROOT_HEARTWOOD_C] < ZERO\n");
+	}
+	/**/
+	//fixme
+	if ( s->value[BRANCH_SAPWOOD_C] <  ZERO )
+	{
+		s->value[BRANCH_SAPWOOD_C]   = 0.;
+		s->value[BRANCH_HEARTWOOD_C] = s->value[BRANCH_C];
+		printf("Warning: s->value[BRANCH_SAPWOOD_C] < ZERO\n");
+	}
+	if ( s->value[BRANCH_HEARTWOOD_C] < ZERO )
+	{
+		s->value[BRANCH_HEARTWOOD_C]   = 0.;
+		s->value[BRANCH_SAPWOOD_C] = s->value[BRANCH_C];
+		printf("Warning: s->value[BRANCH_HEARTWOOD_C] < ZERO\n");
+	}
+
+	/*********************************************************************/
+
 	/* sub pools */
 	CHECK_CONDITION ( s->value[STEM_SAPWOOD_C],     < , ZERO );
 	CHECK_CONDITION ( s->value[STEM_HEARTWOOD_C],   < , ZERO );

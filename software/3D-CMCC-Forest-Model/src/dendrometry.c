@@ -160,6 +160,19 @@ void dendrometry_old(cell_t *const c, const int layer, const int height, const i
 	s->value[TOT_SAPWOOD_C]    = s->value[STEM_SAPWOOD_C] + s->value[CROOT_SAPWOOD_C] + s->value[BRANCH_SAPWOOD_C];
 #endif
 
+	//fixme
+	if ( s->value[SAPWOOD_AREA] > s->value[BASAL_AREA] + eps3 )
+	{
+		s->value[SAPWOOD_AREA] = s->value[BASAL_AREA];
+		printf("Warning: s->value[SAPWOOD_AREA] > s->value[BASAL_AREA]\n");
+	}
+	/**/
+	//fixme
+	if ( s->value[HEARTWOOD_AREA] > s->value[BASAL_AREA] + eps3 )
+	{
+		s->value[HEARTWOOD_AREA] = s->value[BASAL_AREA];
+		printf("Warning: s->value[HEARTWOOD_AREA] > s->value[BASAL_AREA]\n");
+	}
 
 	/* check */
 	CHECK_CONDITION( s->value[SAPWOOD_AREA]   , > , s->value[BASAL_AREA] + eps3);
