@@ -1,42 +1,39 @@
-January 2017
-User’s Guide for 3D-CMCC-FEM, Version 5.x.x for 64 bit 
+
+August 2019
+
+User’s Guide for 3D-CMCC-CNR FEM, Version 5.x.x for 64 bit 
 Source:
 Alessio Collalti
-Monia Santini
 Alessio Ribeca
 Sergio Marconi 
-
-euroMediterranean Center for Climate Changes (CMCC)
-http://.cmcc.it/
-Impacts on Agriculture, Forest and Ecosystem Service Division (IAFES)
-Viale Trieste 127, 01100 Viterbo (Italy)
-email: alessio.collalti@cmcc.it
+Carlo Trotta
+Corrado Biondo
 _________________________________________________________
-Forest Ecology Lab.
-Department for innovation in biological, agro-food and forest systems (DIBAF)
-University of Tuscia Viterbo, ITALY
-email: a.collalti@unitus.it
-Mobile +393299841220
-Skype alessio.collalti 
 
-General notes on 3D-CMCC-FEM, Version 5.x
-3D-CMCC Forest Ecosystem Model (FEM) is a software model that simulates the storage and fluxes of water, carbon and energy, within the
-vegetation, litter, and soil components of a forest ecosystem. 3D-CMCC is primarily a research tool, and many
-versions have been developed for particular purposes. The CMCC and the University of Tuscia (Viterbo) maintain benchmark code versions for
+CNR-ISAFOM
+National Research Council of Italy
+Institute for Agricultural and Forestry Systems in the Mediterranean(ISAFOM)
+Via Cavour, 4-6 I-87036 Rende (CS) Italy
+
+_________________________________________________________
+
+General notes on 3D-CMCC-CNR (Coupled Model Carbon Cycle) FEM, Version 5.x
+3D-CMCC-CNR Forest Ecosystem Model (FEM) is a software model that simulates the storage and fluxes of water, carbon and energy, within the
+vegetation, litter, and soil components of a forest ecosystem. 3D-CMCC-CNR is primarily a research tool, and many
+versions have been developed for particular purposes. The CNR and the University of Tuscia (Viterbo) maintain benchmark code versions for
 public release, and update these benchmark versions periodically as new knowledge is gained on the research front.
 The code and executables accompanying this file represent the most recent benchmark version.
 IMPORTANT NOTE: COPYING
-The 3D-CMCC-FEM, Version 5.x.x code is copyrighted. You may not make copies of any part of the code for distribution to
-any other person or group. However, anyone can get a free copy of the code from Alessio Collalti (alessio.collalti@cmcc.it).
+The 3D-CMCC-CNR FEM, Version 5.x.x code is copyrighted. You may not make copies of any part of the code for distribution to
+any other person or group. However, anyone can get a free copy of the code from Alessio Collalti (alessio.collalti@cnr.it).
 The purpose for this restriction is to keep track of who has a specific version of the public release benchmark code, so that
 we can let our user community know when there are updates. We will appreciate your cooperation with this policy.
-Referencing 3D-CMCC-FEM:
-If you use 3D-CMCC-FEM in your research, we request that you include the following acknowledgement in the relevant
+Referencing 3D-CMCC-CNR FEM:
+If you use 3D-CMCC-CNR FEM in your research, we request that you include the following acknowledgement in the relevant
 manuscripts:
 
-3D-CMCC-FEM, Version 5.x.x was provided by Alessio Collalti, from:
+3D-CMCC-CNR FEM, Version 5.x.x was provided by Alessio Collalti, from:
 
--euroMediterranean Center on Climate Changes (CMCC)  IAFES division (Viterbo)
 -National Research Council of Italy, Institute for Agricultural and Forestry Systems in the Mediterranean (ISAFOM), 
 -University of Tuscia (Viterbo),
 
@@ -54,8 +51,31 @@ A. Collalti, S. Marconi, A. Ibrom, C. Trotta, A. Anav, E. D’Andrea, G. Matteuc
 A. Knohl, F. Berninger, Y. Zhao, R. Valentini and M. Santini, Geosci. Model Dev., 9, 479-504, 2016
 http://www.geosci-model-dev.net/9/479/2016, doi:10.5194/gmd-9-479-2016
 
+v.PSM (not more developed)
+“The role of Respiration in estimation of the net Carbon cycle: coupling soil Carbon dynamics and canopy turnover in a novel 
+version of 3D-CMCC Forest Ecosystem Model”, S. Marconi, T. Chiti, R. Valentini, A. Collalti. Forests, 8, 220, doi:10.3390/f8060220, 2017.
+
+v.5.3.3-ISIMIP
+“Protocollo di simulazione, calibrazione e validazione del modello 3D-CMCC-CNR FEM: il caso studio del bacino altamente strumentato del Bonis in Calabria”, 
+A. Collalti, Biondo C., Buttafuoco G., Maesano M., Caloiero T., Lucà F., Pellicone G., Ricca N., Salvati R., Veltri A., Scarascia Mugnozza. G., Matteucci G.; 
+Forest@, 14: 247-256, doi: 10.3832/efor2368-014, 2017
+
+“Thinning can reduce losses in carbon use efficiency and carbon stocks in managed forests under warmer climate”. 
+A. Collalti , C. Trotta, T. Keenan, A. Ibrom, B. Bond-Lamberty, B. R. Grote, S. Vicca, C.P.O. Reyer, M. Migliavacca, 
+F. Veroustraete, A. Anav, M. Campioli, E. Scoccimarro, E. Grieco, A. Cescatti, G. Matteucci. 2018. 
+Journal of Advances in Modelling Earth Systems, doi.org/10.1029/2018MS001275
+
+v.5.5
+"The sensitivity of the forest carbon budget shifts between different parameters and processes along stand development and climate change”. 
+A. Collalti, P. E. Thornton, A. Cescatti, A. Rita, A. Nolè, M. Borghetti, C. Trotta, P. Ciais, G. Matteucci. 2018, Ecological Applications, doi.org/110.1002/eap.1837
+
+“Plant respiration: controlled by photosynthesis or biomass?” 
+Collalti A., Tjoelker M.G., Hoch G., Mäkelä A., Guidolotti G., Heskel M., Petit G., Ryan M.G., Matteucci G., Battipaglia G.,
+Prentice I.C. bioRxiv, doi: https://doi.org/10.1101/705400 
+
+
 If you have made any significant modifications to the code, please mention them in your manuscript.
-This User’s Guide is the only documentation released with 3D-CMCC-FEM. The code itself contains extensive internal
+This User’s Guide is the only documentation released with 3D-CMCC-CNR FEM. The code itself contains extensive internal
 documentation, and users with specific questions about the algorithms used to estimate particular processes should read
 the comments in the appropriate source code files. The file treemodel.c contains references to all the core science routines,
 and is a good starting point for this kind of inquiry. The files matrix.c defines the data structures that are used to
@@ -63,24 +83,23 @@ pass information between the process modules, and includes both a short text des
 variable. If you have questions about the code, appropriate model applications, possible programming errors, etc.,
 please read this entire guide first, then feel free to contact:
 
-Alessio Collalti (alessio.collalti@cmcc.it)
-Monia Santini (monia.santini@cmcc.it)
-Alessio Ribeca (alessio.ribeca@cmcc.it)
+Alessio Collalti (alessio.collalti@cnr.it)
+Alessio Ribeca (alessio.ribeca@unitus.it)
 Carlo Trotta (trotca@unitus.it)
+Corrado Biondo (corrado.biondo@cmcc.it)
 
 
 CODE CHARACTERISTIC
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-3D-CMCC-FEM is primarily developed on UNIX-Linux, Ubuntu 1x.x with Eclipse IDE Platforms and is compiled using GNU GCC 4.7.2
+3D-CMCC-CNR FEM is primarily developed on UNIX-Linux, Ubuntu 1x.x with Eclipse IDE Platforms and is compiled using GNU GCC 4.7.2
 
-IMPORTANT: BE SURE TO EXECUTE 3D-CMCC FEM ON A LINUX MACHINE WITH ARCHITECTURE X86_64 (64 bit), otherwise you firstly need to
+IMPORTANT: BE SURE TO EXECUTE 3D-CMCC-CNR FEM ON A LINUX MACHINE WITH ARCHITECTURE X86_64 (64 bit), otherwise you firstly need to
 rebuild code to obtain the object files needed for runs.
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
-Usage
-
-3D-CMCC-FEM is a command line program, and its behaviour is controlled by several command line options:
+Usage:
+3D-CMCC-CNR FEM is a command line program, and its behaviour is controlled by several command line options:
 
 	-i input path (i.e.: -i c:\input\directory\)
 	-o output path (i.e.: -o c:\output\directory\)
@@ -522,7 +541,7 @@ IMPORTANT: If any required parameter is left unset by all files an error will be
 
 OUTPUT FILES: OVERVIEW
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-For each simulation 3D-CMCC-FEM creates or rewrites into the output folder a file named "output.txt".
+For each simulation 3D-CMCC-CNR FEM creates or rewrites into the output folder a file named "output.txt".
 In this folder 4 other subfolders based on time scale should created.
 These files contain every result for debug (if necessary) daily, monthly and annual simulations.
 It is also useful to check which model functions have been used. 
@@ -537,7 +556,7 @@ IMPORTANT: be sure to use the correct declaration of the output as grep paramete
 -ECLIPSE-
 
 To Run the model in Eclipse, using a non subvertioned version of the model simply follow these steps:
-1) save the 3D-CMCC-Forest-Model directory in the path you are going to use as Eclipse Workspace 
+1) save the 3D-CMCC-CNR Forest-Model directory in the path you are going to use as Eclipse Workspace 
 2) open Eclipse (3.7 or higher have been tested to be working) and set your Workspace as the same path in which you've placed the Model's folder
     - to do so click on File, then "switch Workspace" and click on "Other..."; here input your corrent path
 3) create a new C project (File -> New -> C project)
@@ -591,9 +610,9 @@ to make the model work under eclipse4.3 using git you shall follow this guide
     2.3) extract the eclipse folder in the directory you want
 3) install egit from Eclipse Marketplace (Help->Eclipse Marketplace)
 
-4) import the project from master [3D-CMCC-FEM master]
+4) import the project from master [3D-CMCC-CNR FEM master]
     4.1) click on file->import. then click on Git folder and on projects from git
-    4.2) click on url and then paste this into the url box "http://dev.cmcc.it/git/3D-CMCC-FEM.git"
+    4.2) click on url and then paste this into the url box "https://github.com/3D-CMCC-CNR-FEM/3D-CMCC-CNR.git"
     4.3) remember to fill authentication boxes with your credentials
     4.4) import the project
 
@@ -608,8 +627,8 @@ to make the model work under eclipse4.3 using git you shall follow this guide
 
 HOW TO CREATE A NEW BRANCH IN GIT
 
-The 3D-CMCC-FEM project is currently hosted by the repo https://github.com/CMCC-Foundation/3D-CMCC-LAND. It is developed under the GITHUB version control system and password protected. 
-Please ask to Alessio Collalti for access to the source code.
+The 3D-CMCC-CNR FEM project is currently hosted by the repo https://github.com/3D-CMCC-CNR-FEM/3D-CMCC-CNR. It is developed under the GITHUB version control system and password protected. 
+Please ask to Alessio Collalti, Carlo Trotta or Corrado Biondo for access to the source code.
 Git allows you to create a local branch which can be committed and pushed to the repository. To do that follow the following steps:
 1) install git on your machine and the Egit plugin in Eclipse
 2) after importing the git project right click on the project folder, go to "team", then to "switch to" and finally click on "new branch"
@@ -621,10 +640,13 @@ HOW TO WORK ON ECLIPSE FOR BASH SCRIPTS
 To work in Bash Shell scripts within the ECLISPE IDE you need to install ShellED eclipse package through the web
 
 If you encounter issues with the code, or if you have suggestions on how it could be improved, we’d love to hear from
-you. Also, please send us copies of any manuscripts or reports that include the use of 3D-CMCC-FEM, especially if you
-have compared 3D-CMCC-FEM estimates to measurements. This information helps us to better understand model
+you. Also, please send us copies of any manuscripts or reports that include the use of 3D-CMCC-CNR FEM, especially if you
+have compared 3D-CMCC-CNR FEM estimates to measurements. This information helps us to better understand model
 performance and improve it. For questions on how to parameterize or run the code, please read
 everything in this file first.
+
 Contact:
+
 Alessio Collalti
-alessio.collalti@cmcc.it
+
+alessio.collalti@cnr.it
