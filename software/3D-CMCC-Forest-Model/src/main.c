@@ -118,60 +118,56 @@ static const char banner[] = "\n#"PROGRAM_FULL_NAME"\n"
 		 */
 		"(use -h parameter for more information)\n\n"
 		"The "PROGRAM_FULL_NAME" has been developed by:\n"
-		"Alessio Collalti [alessio.collalti@cmcc.it, alessio.collalti@isafom.cnr.it],\n"
+		"Alessio Collalti [alessio.collalti@cnr.it, alessio.collalti@isafom.cnr.it],\n"
 		"Alessio Ribeca [alessio.ribeca@cmcc.it]\n"
 		"Carlo Trotta [trottacarlo@unitus.it]\n"
 		"Corrado Biondo [corrado.biondo@cmcc.it]\n"
 		"Giorgio Matteucci [giorgio.matteucci@isafom.cnr.it]\n"
-		"euroMediterranean Center on Climate Changes (CMCC),\n"
-		"IAFES division,\n"
-		"Viale Trieste 120, 01100 - Viterbo, Italy,\n"
+		"National Research Council of Italy (CNR),\n"
+		"Institute for Agricultural and Forestry Systems in the Mediterranean(ISAFOM),\n"
+		"Via Cavour, 4-6 I-87036 Rende (CS) Italy\n"
+		"\n"
 		"and \n"
 		"Tuscia University (UNITUS),\n"
 		"Department for innovation in biological, agro-food and forest systems (DIBAF),\n"
 		"Forest Ecology Lab\n"
-		"\n"
-		"and \n"
-		"National Research Council of Italy (CNR),\n"
-		"Institute for Agricultural and Forestry Systems in the Mediterranean(ISAFOM),\n"
-		"Via Cavour, 4-6 I-87036 Rende (CS) Italy\n"
-		"Programmers: Alessio Collalti - Alessio Ribeca - Carlo Trotta - Monia Santini\n"
+		"Programmers: Alessio Collalti - Alessio Ribeca - Carlo Trotta\n"
 		"\n"
 		"\"DISCLAIMER\"\n"
-		"CMCC-UNITUS-CNR\n"
-		"accepts no responsibility for the use of the 3D_CMCC FEM in\n"
+		"CNR-UNITUS\n"
+		"accepts no responsibility for the use of the 3D-CMCC-CNR FEM in\n"
 		"the form supplied or as subsequently modified by third parties.\n"
-		"CMCC and UNITUS disclaims liability for all losses,\n"
+		"CNR and UNITUS disclaims liability for all losses,\n"
 		"damages and costs incurred by any person as a result of relying on this software.\n"
 		"Use of this software assumes agreement to this condition of use.\n"
-		"Removal of this statement violates the spirit in which 3D-CMCC FEM,\n"
-		"was released by CMCC-UNITUS-CNR.\n"
+		"Removal of this statement violates the spirit in which 3D-CMCC-CNR FEM,\n"
+		"was released by CNR-UNITUS-CNR.\n"
 		"for more information see:\n"
 		"-Collalti et al., 2014 Ecological Modelling,\n"
 		"-Collalti et al., 2016 Geoscientific Model Development\n"
 		"-Marconi  et al., 2017 Forests\n"
 		"-Collalti et al., 2017 Forest@\n"
 		"-Collalti et al., 2018 Journal of Advances in Earth System Modeling\n"
-		"-Collalti et al., 2018 Ecological Applications\n"
+		"-Collalti et al., 2019 Ecological Applications\n"
 		"--------------------------------------------------------------------------------\n";
-static const char msg_input_path[]				=	"input path = %s\n";
-static const char msg_parameterization_path[]	=	"parameterization path = %s\n";
-static const char msg_soil_file[]				=	"soil file = %s\n";
-static const char msg_topo_file[]				=	"topo file = %s\n";
-static const char msg_met_path[]				=	"met path = %s\n";
-static const char msg_settings_path[]			=	"settings path = %s\n";
-static const char msg_co2_conc_file[]			=	"co2 conc file path = %s\n";
-static const char msg_ndep_file[]				=	"ndep file path = %s\n";
-static const char msg_debug_output_file[]		=	"debug output file path = %s\n";
-static const char msg_daily_output_file[]		=	"daily output file path = %s\n";
-static const char msg_monthly_output_file[]		=	"monthly output file path = %s\n";
-static const char msg_annual_output_file[]		=	"annual output file path = %s\n";
+static const char msg_input_path[]					=	"input path = %s\n";
+static const char msg_parameterization_path[]		=	"parameterization path = %s\n";
+static const char msg_soil_file[]					=	"soil file = %s\n";
+static const char msg_topo_file[]					=	"topo file = %s\n";
+static const char msg_met_path[]					=	"met path = %s\n";
+static const char msg_settings_path[]				=	"settings path = %s\n";
+static const char msg_co2_conc_file[]				=	"co2 conc file path = %s\n";
+static const char msg_ndep_file[]					=	"ndep file path = %s\n";
+static const char msg_debug_output_file[]			=	"debug output file path = %s\n";
+static const char msg_daily_output_file[]			=	"daily output file path = %s\n";
+static const char msg_monthly_output_file[]			=	"monthly output file path = %s\n";
+static const char msg_annual_output_file[]			=	"annual output file path = %s\n";
 static const char msg_soil_daily_output_file[]		=	"soil daily output file path = %s\n";
 static const char msg_soil_monthly_output_file[]	=	"soil monthly output file path = %s\n";
 static const char msg_soil_annual_output_file[]		=	"soil annual output file path = %s\n";
-static const char msg_ok[]						=	"ok ";
-static const char msg_usage[]					=	"\nusage:\n"
-		"  3D-CMCC-Forest-Model -i INPUT_DIR -d DATASET_FILENAME -m MET_FILE_LIST -s SITE_FILENAME -c SETTINGS_FILENAME [-o OUTPUT_FILENAME] [-h]\n"
+static const char msg_ok[]							=	"ok ";
+static const char msg_usage[]						=	"\nusage:\n"
+		"  3D-CMCC-CNR-Forest-Model -i INPUT_DIR -d DATASET_FILENAME -m MET_FILE_LIST -s SITE_FILENAME -c SETTINGS_FILENAME [-o OUTPUT_FILENAME] [-h]\n"
 		"  required options:\n"
 #ifdef _WIN32
 		"    -i input path (i.e.: -i c:\\input\\directory\\)\n"
@@ -1363,7 +1359,7 @@ int main(int argc, char *argv[]) {
 			if ( ! log_start(g_settings->sitename) ) {
 				goto err;
 			}
-			logger(g_debug_log, "\n3D-CMCC LAND START....\n\n");
+			logger(g_debug_log, "\n3D-CMCC-CNR START....\n\n");
 		}
 
 		/* check soil values */
