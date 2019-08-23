@@ -964,13 +964,12 @@ static int nc_conv(reimported_dataset_t* dataset, char* folder)
 	const char sz_title_desc[] = "3D-CMCC-CNR-BGC";
 
 	const char sz_contact[] = "contact";
-	const char sz_contact_desc[] = "Alessio Collalti (alessio.collalti@cmcc.it, alessio.collalti@isafom.cnr.it) - "
+	const char sz_contact_desc[] = "Alessio Collalti (alessio.collalti@cnr.it, alessio.collalti@isafom.cnr.it) - "
 									"Alessio Ribeca (alessio.ribeca@cmcc.it, a.ribeca@unitus.it)"
 	;
 
 	const char sz_institution[] = "institution";
-	const char sz_institution_desc[] =	"Foundation euroMediterranean Center on Climate Change (CMCC) Division Impacts on Agriculture, Forest and Ecosystem Services (IAFES) - "
-										"CNR-ISAFOM National Research Council of Italy Institute for Agricultural and Forestry Systems in the Mediterranean(ISAFOM)"
+	const char sz_institution_desc[] =	"CNR-ISAFOM National Research Council of Italy Institute for Agricultural and Forestry Systems in the Mediterranean(ISAFOM)"
 	;
 
 	ret = 0; // default to err
