@@ -228,7 +228,7 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 	logger(g_debug_log, "-Total wood = %f tC/tree\n",s->value[TREE_TOT_WOOD_C]);
 
 	/* basal area */
-	s->value[BASAL_AREA]          = ( ( pow ( ( d->value / 2.), 2. ) ) * Pi);
+	s->value[BASAL_AREA]          = ( ( pow ( ( d->value / 2.), 2. ) ) * Pi );
 	s->value[BASAL_AREA_m2]       = s->value[BASAL_AREA] * 0.0001;
 	s->value[STAND_BASAL_AREA]    = s->value[BASAL_AREA] * s->counter[N_TREE];
 	s->value[STAND_BASAL_AREA_m2] = s->value[BASAL_AREA_m2] * s->counter[N_TREE];

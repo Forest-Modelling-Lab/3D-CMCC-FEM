@@ -47,7 +47,6 @@ void carbon_allocation ( cell_t *const c, age_t *const a, species_t *const s, co
 	/* stem */
 	s->value[STEM_SAPWOOD_C]          += s->value[C_TO_STEM] - s->value[C_STEM_SAPWOOD_TO_CWD];
 
-
 	/* live stem */
 	s->value[STEM_LIVEWOOD_C]          = s->value[STEM_SAPWOOD_C] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC];
 
@@ -94,28 +93,6 @@ void carbon_allocation ( cell_t *const c, age_t *const a, species_t *const s, co
 	if ( s->value[C_TO_CROOT]  > 0. ) s->value[YEARLY_C_TO_WOOD]     += s->value[C_TO_BRANCH];
 	if ( s->value[C_TO_BRANCH] > 0. ) s->value[YEARLY_C_TO_WOOD]     += s->value[C_TO_CROOT];
 	if ( s->value[C_TO_STEM]   > 0. ) s->value[CUM_YEARLY_C_TO_WOOD] += s->value[C_TO_STEM];
-	if ( s->value[C_TO_CROOT]  > 0. ) s->value[CUM_YEARLY_C_TO_WOOD] += s->value[C_TO_BRANCH];
-	if ( s->value[C_TO_BRANCH] > 0. ) s->value[CUM_YEARLY_C_TO_WOOD] += s->value[C_TO_CROOT];
-
-	/***************************************************************************************/
-//
-//	/* update Leaf Area Index */
-//	daily_lai             ( c, a, s );
-//
-//	/***************************************************************************************/
-//
-//	/* computing leaf sun and shaded Carbon pools (tC/ha) */
-//	if ( ! s->value[LEAF_C] )
-//	{
-//		s->value[LEAF_SUN_C]   = 0.;
-//		s->value[LEAF_SHADE_C] = 0.;
-//	}
-//	else
-//	{
-//		/* compute based on SLA Leaf carbon for sun and shaded leaves */
-//		s->value[LEAF_SUN_C]   = ( ( s->value[LAI_SUN_PROJ]   * ( s->value[CANOPY_COVER_EXP] * g_settings->sizeCell ) ) / s->value[SLA_SUN_PROJ] )   / 1e3;
-//		s->value[LEAF_SHADE_C] = ( ( s->value[LAI_SHADE_PROJ] * ( s->value[CANOPY_COVER_EXP] * g_settings->sizeCell ) ) / s->value[SLA_SHADE_PROJ] ) / 1e3;
-//	}
 
 	/***************************************************************************************/
 
@@ -131,7 +108,6 @@ void carbon_allocation ( cell_t *const c, age_t *const a, species_t *const s, co
 	/*** update live carbon mass pools **/
 	s->value[TOT_LIVEWOOD_C]           = ( s->value[STEM_LIVEWOOD_C] + s->value[CROOT_LIVEWOOD_C] + s->value[BRANCH_LIVEWOOD_C] );
 	s->value[TOT_SAPWOOD_C]            = ( s->value[STEM_SAPWOOD_C]  + s->value[CROOT_SAPWOOD_C]  + s->value[BRANCH_SAPWOOD_C] );
-
 
 	/*** update heartwood and dead carbon mass pools **/
 	s->value[STEM_HEARTWOOD_C]         = s->value[STEM_C]   - s->value[STEM_SAPWOOD_C];

@@ -51,10 +51,14 @@ void daily_C_evergreen_partitioning (cell_t *const c, const int layer, const int
 	double delta_reserve_alloc  = 0.;
 	double delta_reserve_deple  = 0.;
 
+	height_t *h;
+	dbh_t *d;
 	age_t *a;
 	species_t *s;
 
-	a = &c->heights[height].dbhs[dbh].ages[age];
+	h = &c->heights[height];
+	d = &h->dbhs[dbh];
+	a = &d->ages[age];
 	s = &a->species[species];
 
 	s0    = s->value[S0CTEM];        /* parameter controlling allocation to stem (minimum ratio to stem pool) */
@@ -395,7 +399,6 @@ void daily_C_evergreen_partitioning (cell_t *const c, const int layer, const int
 				s->value[C_TO_CROOT]    += (exceeding_C * pR1);
 				s->value[C_TO_STEM]     += (exceeding_C * pS1) * ( 1. - s->value[FRACBB] );
 				s->value[C_TO_BRANCH]   += (exceeding_C * pS1) * s->value[FRACBB];
-
 			}
 
 			/********************************************************************************************************************************************/
@@ -477,6 +480,13 @@ void daily_C_evergreen_partitioning (cell_t *const c, const int layer, const int
 #endif
 	}
 
+	/* check for Maximum DBH */
+	/* if dbh exceeds its maximum all C goes to branches */
+	if ( d->value > DBH_MAX )
+	{
+		s->value[C_TO_BRANCH]    += s->value[C_TO_STEM];
+		s->value[C_TO_STEM]       = 0.;
+	}
 
 #endif
 
