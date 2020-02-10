@@ -76,6 +76,7 @@ enum {
 #define GRPERCMIN               0.25      /* (DIM) MINIMUM percentage of growth resp per unit of C grown see Ryan et al., */
 #define GRPERCMAX             0.30 //  0.35      /* (DIM) MAXIMUM percentage of growth resp per unit of C grown see Ryan et al., */
 #define O2CONC                  20.946    /* % of [O2] see Verustraete 1994, 2002 */
+#define DBH_MAX                  200      /* Maximum stem diameter at breast height (in cm) */
 #define STEMPOWER_A	            2.08      /* Power in the Stem Mass v. diameter relationship for DBH < 9 cm */
 #define STEMPOWER_B	            2.64      /* Power in the Stem Mass v. diameter relationship for 9 < DBH < 15 cm */
 #define STEMPOWER_C	            2.51      /* Power in the Stem Mass v. diameter relationship for DBH > 15 cm */
