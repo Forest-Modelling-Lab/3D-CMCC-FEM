@@ -141,8 +141,8 @@ static const char banner[] = "\n#"PROGRAM_FULL_NAME"\n"
 		"CNR and UNITUS disclaims liability for all losses,\n"
 		"damages and costs incurred by any person as a result of relying on this software.\n"
 		"Use of this software assumes agreement to this condition of use.\n"
-		"Removal of this statement violates the spirit in which 3D-CMCC-CNR FEM,\n"
-		"was released by CNR-UNITUS-CNR.\n"
+		"Removal of this statement violates the spirit in which 3D-CMCC-FEM,\n"
+		"was released by CNR-UNITUS.\n"
 		"for more information see:\n"
 		"-Collalti et al., 2014 Ecological Modelling,\n"
 		"-Collalti et al., 2016 Geoscientific Model Development\n"
@@ -169,7 +169,7 @@ static const char msg_soil_monthly_output_file[]	=	"soil monthly output file pat
 static const char msg_soil_annual_output_file[]		=	"soil annual output file path = %s\n";
 static const char msg_ok[]							=	"ok ";
 static const char msg_usage[]						=	"\nusage:\n"
-		"  3D-CMCC-CNR-Forest-Model -i INPUT_DIR -d DATASET_FILENAME -m MET_FILE_LIST -s SITE_FILENAME -c SETTINGS_FILENAME [-o OUTPUT_FILENAME] [-h]\n"
+		"  3D-CMCC-FEM -i INPUT_DIR -d DATASET_FILENAME -m MET_FILE_LIST -s SITE_FILENAME -c SETTINGS_FILENAME [-o OUTPUT_FILENAME] [-h]\n"
 		"  required options:\n"
 #ifdef _WIN32
 		"    -i input path (i.e.: -i c:\\input\\directory\\)\n"
@@ -1361,7 +1361,7 @@ int main(int argc, char *argv[]) {
 			if ( ! log_start(g_settings->sitename) ) {
 				goto err;
 			}
-			logger(g_debug_log, "\n3D-CMCC-CNR START....\n\n");
+			logger(g_debug_log, "\n3D-CMCC-FEM STARTs....\n\n");
 		}
 
 		/* check soil values */

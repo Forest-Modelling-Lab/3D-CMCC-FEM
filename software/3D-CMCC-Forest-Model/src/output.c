@@ -961,7 +961,7 @@ static int nc_conv(reimported_dataset_t* dataset, char* folder)
 	const char sz_missing_value[] = "missing_value";
 	
 	const char sz_title[] = "title";
-	const char sz_title_desc[] = "3D-CMCC-CNR-BGC";
+	const char sz_title_desc[] = "3D-CMCC-FEM";
 
 	const char sz_contact[] = "contact";
 	const char sz_contact_desc[] = "Alessio Collalti (alessio.collalti@cnr.it, alessio.collalti@isafom.cnr.it) - "

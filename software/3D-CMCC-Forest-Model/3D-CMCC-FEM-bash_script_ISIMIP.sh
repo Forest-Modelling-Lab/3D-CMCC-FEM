@@ -5,7 +5,7 @@
 # starting date: 13 November 2016
 
 MODEL="3D-CMCC-CNR FEM"
-VERSION="v.5.4-FvCB"
+VERSION="v.5.5-ISIMIP-FvCB"
 PROJECT="ISIMIP"
 
 echo "***************************************************************"
@@ -14,9 +14,9 @@ echo "***************************************************************"
 
 launch="./"
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
-	executable="3D_CMCC_Forest_Model"
+	executable="3D_CMCC_FEM"
 elif [[ "$OSTYPE" == "cygwin" ]]; then
-	executable="3D-CMCC-Forest-Model"
+	executable="3D-CMCC-FEM"
 fi
 
 #input paths

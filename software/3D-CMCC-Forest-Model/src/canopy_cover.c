@@ -34,8 +34,8 @@ void dbhdc_function ( cell_t *const c, const int layer, const int height, const 
 	double temp_crown_radius   = 0.;
 	double temp_crown_diameter = 0.;
 	double previous_dbhdc_eff  = 0.;
-	double max_dbhdc_incr      = 0.1;               /* fraction of maximum dbhdc increment */
-	//double max_dbhdc_decr      = 0.001;           /* fraction of maximum dbhdc decrement */
+	double max_dbhdc_incr      = 0.1;      /* fraction of maximum dbhdc increment */ //note: this was 0.001 in v.5.4
+	//double max_dbhdc_decr      = 0.001;  /* fraction of maximum dbhdc decrement */
 
 
 	dbh_t *d;
@@ -86,7 +86,8 @@ void dbhdc_function ( cell_t *const c, const int layer, const int height, const 
 	//data obtained by:	Ritter and Nothdurft et al., 2018 forests
 	//dbhdcmax decreases as dbh increases
 
-#if 0
+#if 1
+
 	if ( s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2 )
 	{
 		s->value[DBHDCMAX] = 0.9667 * pow ( d->value , -0.287 );
@@ -95,6 +96,7 @@ void dbhdc_function ( cell_t *const c, const int layer, const int height, const 
 	{
 		s->value[DBHDCMAX] = 0.8543 * pow ( d->value , -0.254 );
 	}
+
 #endif
 	/**************************************************************************************************/
 

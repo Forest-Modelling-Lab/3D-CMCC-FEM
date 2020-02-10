@@ -20,7 +20,7 @@ enum {
 };
 
 #define NO_DATA                -9999
-/* constants */
+/** constants **/
 #define Q0                    1376.1      /* Solar constant (W/m^2) */
 #define Q0_MJ                  0.082      /* Solar constant (MJ/m^2/day) */
 #define QA                       -90      /* Intercept of Net vs Solar Radiation (W/m^2) */
@@ -74,8 +74,8 @@ enum {
 #define DBH_ref                  1.3      /* reference DBH value */
 #define GRPERC                   0.3      /* (DIM) percentage of growth resp per unit of C grown see BIOME, 0.25 for LPJ */
 #define GRPERCMIN               0.25      /* (DIM) MINIMUM percentage of growth resp per unit of C grown see Ryan et al., */
-#define GRPERCMAX             0.30 //  0.35      /* (DIM) MAXIMUM percentage of growth resp per unit of C grown see Ryan et al., */
-#define O2CONC                  20.946    /* % of [O2] see Verustraete 1994, 2002 */
+#define GRPERCMAX               0.30      /* (DIM) MAXIMUM percentage of growth resp per unit of C grown see Ryan et al., */
+#define O2CONC                20.946      /* % of [O2] see Verustraete 1994, 2002 */
 #define DBH_MAX                  200      /* Maximum stem diameter at breast height (in cm) */
 #define STEMPOWER_A	            2.08      /* Power in the Stem Mass v. diameter relationship for DBH < 9 cm */
 #define STEMPOWER_B	            2.64      /* Power in the Stem Mass v. diameter relationship for 9 < DBH < 15 cm */
@@ -83,7 +83,7 @@ enum {
 #define MAX_N_TREE_LAYER           3      /* define the maximum number for tree layers (todo move into setting.txt) */
 #define C_FRAC_TO_RETRANSL       0.1      /* fraction of C to re-translocate (see Bossell et al., 2006 and Campioli et al., 2013; 0.2 Hoffmann 1995 */
 #define N_FRAC_TO_RETRANSL       0.1      /* fraction of N to re-translocate (see Bossell et al., 2006 and Campioli et al., 2013; 0.2 Hoffmann 1995 */
-#define MAX_PEAK_LAI_PROJ          6   //ISIMIP 6.5      /* Maximum Peak Lai (m2/m2) */
+#define MAX_PEAK_LAI_PROJ          6      /* Maximum Peak Lai (m2/m2) */
 #define WATER_STRESS_LIMIT       0.3      /* Minimum imposed water stress limit to soil water modifier */
 #define SNOW_ABS                 0.6      /* Absorptivity of snow */
 

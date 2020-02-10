@@ -98,26 +98,6 @@ void carbon_allocation ( cell_t *const c, age_t *const a, species_t *const s, co
 	if ( s->value[C_TO_BRANCH] > 0. ) s->value[CUM_YEARLY_C_TO_WOOD] += s->value[C_TO_CROOT];
 
 	/***************************************************************************************/
-//
-//	/* update Leaf Area Index */
-//	daily_lai             ( c, a, s );
-//
-//	/***************************************************************************************/
-//
-//	/* computing leaf sun and shaded Carbon pools (tC/ha) */
-//	if ( ! s->value[LEAF_C] )
-//	{
-//		s->value[LEAF_SUN_C]   = 0.;
-//		s->value[LEAF_SHADE_C] = 0.;
-//	}
-//	else
-//	{
-//		/* compute based on SLA Leaf carbon for sun and shaded leaves */
-//		s->value[LEAF_SUN_C]   = ( ( s->value[LAI_SUN_PROJ]   * ( s->value[CANOPY_COVER_EXP] * g_settings->sizeCell ) ) / s->value[SLA_SUN_PROJ] )   / 1e3;
-//		s->value[LEAF_SHADE_C] = ( ( s->value[LAI_SHADE_PROJ] * ( s->value[CANOPY_COVER_EXP] * g_settings->sizeCell ) ) / s->value[SLA_SHADE_PROJ] ) / 1e3;
-//	}
-
-	/***************************************************************************************/
 
 	/*** update class level carbon mass pools ***/
 	s->value[LEAF_C]      += s->value[C_TO_LEAF];
@@ -142,8 +122,8 @@ void carbon_allocation ( cell_t *const c, age_t *const a, species_t *const s, co
 	s->value[BRANCH_DEADWOOD_C]        = s->value[BRANCH_C] - s->value[BRANCH_LIVEWOOD_C];
 
 	/*** update dead carbon mass pools **/
-	s->value[TOT_DEADWOOD_C]           = (s->value[STEM_DEADWOOD_C]  + s->value[CROOT_DEADWOOD_C]  + s->value[BRANCH_DEADWOOD_C] );
 	s->value[TOT_HEARTWOOD_C]          = (s->value[STEM_HEARTWOOD_C] + s->value[CROOT_HEARTWOOD_C] + s->value[BRANCH_HEARTWOOD_C] );
+	s->value[TOT_DEADWOOD_C]           = (s->value[STEM_DEADWOOD_C]  + s->value[CROOT_DEADWOOD_C]  + s->value[BRANCH_DEADWOOD_C] );
 
 	/***************************************************************************************/
 
@@ -230,6 +210,7 @@ void carbon_allocation_new ( cell_t *const c, age_t *const a, species_t *const s
 
 	/* it allocates daily assimilated carbon for both deciduous and evergreen daily
 	 * and removes the respired and dead parts */
+	/* note: this mostly differentiates the 5.4. to 5.5 (and subsequests) versions */
 
 	s->value[OLD_RESERVE_C] = s->value[RESERVE_C];
 
@@ -318,26 +299,6 @@ void carbon_allocation_new ( cell_t *const c, age_t *const a, species_t *const s
 	if ( s->value[C_TO_BRANCH] > 0. ) s->value[CUM_YEARLY_C_TO_WOOD] += s->value[C_TO_CROOT];
 
 	/***************************************************************************************/
-//
-//	/* update Leaf Area Index */
-//	daily_lai             ( c, a, s );
-//
-//	/***************************************************************************************/
-//
-//	/* computing leaf sun and shaded Carbon pools (tC/ha) */
-//	if ( ! s->value[LEAF_C] )
-//	{
-//		s->value[LEAF_SUN_C]   = 0.;
-//		s->value[LEAF_SHADE_C] = 0.;
-//	}
-//	else
-//	{
-//		/* compute based on SLA Leaf carbon for sun and shaded leaves */
-//		s->value[LEAF_SUN_C]   = ( ( s->value[LAI_SUN_PROJ]   * ( s->value[CANOPY_COVER_EXP] * g_settings->sizeCell ) ) / s->value[SLA_SUN_PROJ] )   / 1e3;
-//		s->value[LEAF_SHADE_C] = ( ( s->value[LAI_SHADE_PROJ] * ( s->value[CANOPY_COVER_EXP] * g_settings->sizeCell ) ) / s->value[SLA_SHADE_PROJ] ) / 1e3;
-//	}
-
-	/***************************************************************************************/
 
 	/*** update class level carbon mass pools ***/
 	s->value[LEAF_C]      += s->value[C_TO_LEAF];
@@ -382,6 +343,7 @@ void carbon_allocation_new ( cell_t *const c, age_t *const a, species_t *const s
 
 	/*********************************************************************/
 
+	/**/
 	//fixme
 	if ( s->value[STEM_SAPWOOD_C] <  ZERO )
 	{

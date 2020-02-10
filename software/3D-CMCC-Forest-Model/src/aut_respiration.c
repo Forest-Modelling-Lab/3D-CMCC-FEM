@@ -244,8 +244,8 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 		s->value[NIGHTLY_LEAF_MAINT_RESP]     = ( leaf_N       * MR_ref * pow(q10_tnight, exponent_tnight) * ( 1. - ( meteo_daily->daylength_sec / 86400. ) ) );
 
 		/* for sun and shaded leaves */
-		s->value[DAILY_LEAF_SUN_MAINT_RESP]   = ( leaf_sun_N   * MR_ref * pow(q10_tnight, exponent_tnight) * ( 1. - ( meteo_daily->daylength_sec / 86400. ) ) );
-		s->value[DAILY_LEAF_SHADE_MAINT_RESP] = ( leaf_shade_N * MR_ref * pow(q10_tnight, exponent_tnight) * ( 1. - ( meteo_daily->daylength_sec / 86400. ) ) );
+		s->value[NIGHTLY_LEAF_SUN_MAINT_RESP]   = ( leaf_sun_N   * MR_ref * pow(q10_tnight, exponent_tnight) * ( 1. - ( meteo_daily->daylength_sec / 86400. ) ) );
+		s->value[NIGHTLY_LEAF_SHADE_MAINT_RESP] = ( leaf_shade_N * MR_ref * pow(q10_tnight, exponent_tnight) * ( 1. - ( meteo_daily->daylength_sec / 86400. ) ) );
 
 		/********************************************************************************/
 
@@ -413,14 +413,18 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 			/*******************************************************************************************************************/
 #else
 			/* day time leaf maintenance respiration */
-			s->value[DAILY_LEAF_MAINT_RESP]       *= pow ( 10., ( acc_const * ( meteo_daily->ten_day_weighted_avg_tday   - Q10_temp ) ) );
+			s->value[DAILY_LEAF_MAINT_RESP]         *= pow ( 10., ( acc_const * ( meteo_daily->ten_day_weighted_avg_tday   - Q10_temp ) ) );
 
-			/* for sun and shaded leaves */
-			s->value[DAILY_LEAF_SUN_MAINT_RESP]   *= pow ( 10., ( acc_const * ( meteo_daily->ten_day_weighted_avg_tday   - Q10_temp ) ) );
-			s->value[DAILY_LEAF_SHADE_MAINT_RESP] *= pow ( 10., ( acc_const * ( meteo_daily->ten_day_weighted_avg_tday   - Q10_temp ) ) );
+			/* day time leaf maintenance respiratio for sun and shaded leaves */
+			s->value[DAILY_LEAF_SUN_MAINT_RESP]     *= pow ( 10., ( acc_const * ( meteo_daily->ten_day_weighted_avg_tday   - Q10_temp ) ) );
+			s->value[DAILY_LEAF_SHADE_MAINT_RESP]   *= pow ( 10., ( acc_const * ( meteo_daily->ten_day_weighted_avg_tday   - Q10_temp ) ) );
 
 			/* night time leaf maintenance respiration */
-			s->value[NIGHTLY_LEAF_MAINT_RESP]     *= pow ( 10., ( acc_const * ( meteo_daily->ten_day_weighted_avg_tnight - Q10_temp ) ) );
+			s->value[NIGHTLY_LEAF_MAINT_RESP]       *= pow ( 10., ( acc_const * ( meteo_daily->ten_day_weighted_avg_tnight - Q10_temp ) ) );
+
+			/* night time leaf maintenance respiration for sun and shaded leaves */
+			s->value[NIGHTLY_LEAF_SUN_MAINT_RESP]   *= pow ( 10., ( acc_const * ( meteo_daily->ten_day_weighted_avg_tnight - Q10_temp ) ) );
+			s->value[NIGHTLY_LEAF_SHADE_MAINT_RESP] *= pow ( 10., ( acc_const * ( meteo_daily->ten_day_weighted_avg_tnight - Q10_temp ) ) );
 
 			/* total (all day) leaf maintenance respiration */
 			s->value[TOT_LEAF_MAINT_RESP]          = s->value[DAILY_LEAF_MAINT_RESP] + s->value[NIGHTLY_LEAF_MAINT_RESP];

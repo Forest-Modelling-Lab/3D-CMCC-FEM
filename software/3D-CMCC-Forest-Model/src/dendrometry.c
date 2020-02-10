@@ -160,6 +160,7 @@ void dendrometry_old(cell_t *const c, const int layer, const int height, const i
 	s->value[TOT_SAPWOOD_C]    = s->value[STEM_SAPWOOD_C] + s->value[CROOT_SAPWOOD_C] + s->value[BRANCH_SAPWOOD_C];
 #endif
 
+	/**/	
 	//fixme
 	if ( s->value[SAPWOOD_AREA] > s->value[BASAL_AREA] + eps3 )
 	{

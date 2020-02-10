@@ -216,6 +216,7 @@ void tree_biomass_remove (cell_t *const c, const int height, const int dbh, cons
 	/******************************************************************************************/
 
 	/* sapwood and heartwood */
+	/* note: this mostly differentiates the 5.4. to 5.5 (and subsequests) versions */
 
 	s->value[C_STEM_SAPWOOD_TO_CWD]     += (s->value[TREE_STEM_SAPWOOD_C]     * tree_remove);
 

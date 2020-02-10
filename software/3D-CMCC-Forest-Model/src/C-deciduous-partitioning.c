@@ -59,7 +59,7 @@ void daily_C_deciduous_partitioning (cell_t *const c, const int layer, const int
 	omega = s->value[OMEGA_CTEM];    /* controls the sensitivity of allocation to changes in water and light availability */
 
 	//fixme it should takes into account above layers
-	Light_trasm = exp(- s->value[K] * s->value[LAI_PROJ]);
+	Light_trasm = exp ( - s->value[K] * s->value[LAI_PROJ] );
 
 	/* note: in Biome a constant proportion (50%) (Growth:storage parameter) of NPP that goes to the c-pools is allocated
 	 * to each storage_pool, i.e. each carbon pools receive just a part of NPP (50%) the remaining remain as storage
