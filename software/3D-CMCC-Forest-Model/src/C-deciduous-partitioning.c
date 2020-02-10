@@ -349,6 +349,14 @@ void daily_C_deciduous_partitioning (cell_t *const c, const int layer, const int
 		/**********************************************************************/
 	}
 
+	/* check for Maximum DBH */
+	/* if dbh exceeds its maximum all C goes to branches */
+	if ( d->value > DBH_MAX )
+	{
+		s->value[C_TO_BRANCH]    += s->value[C_TO_STEM];
+		s->value[C_TO_STEM]       = 0.;
+	}
+
 	if ( s->value[C_TO_LEAF]     > 0. ) delta_leaf     = s->value[C_TO_LEAF];
 	else delta_leaf     = 0.;
 	if ( s->value[C_TO_FROOT]    > 0. ) delta_froot    = s->value[C_TO_FROOT];
