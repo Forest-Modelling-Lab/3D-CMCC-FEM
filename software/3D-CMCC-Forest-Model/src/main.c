@@ -148,7 +148,8 @@ static const char banner[] = "\n#"PROGRAM_FULL_NAME"\n"
 		"-Marconi  et al., 2017 Forests\n"
 		"-Collalti et al., 2017 Forest@\n"
 		"-Collalti et al., 2018 Journal of Advances in Earth System Modeling\n"
-		"-Collalti et al., 2019 Ecological Applications\n"
+		"-Collalti et al., 2019a Ecological Applications\n"
+		"-Collalti et al., 2019b Global Change Biology\n"
 		"--------------------------------------------------------------------------------\n";
 static const char msg_input_path[]					=	"input path = %s\n";
 static const char msg_parameterization_path[]		=	"parameterization path = %s\n";
