@@ -88,7 +88,6 @@ enum {
 #define WATER_STRESS_LIMIT       0.3      /* Minimum imposed water stress limit to soil water modifier */
 #define SNOW_ABS                 0.6      /* Absorptivity of snow */
 
-
 /* soil constants (BIOME-BGC method) */
 #define BULK_DENITRIF_FRAC       0.5      /* Fraction of Nitrogen lost through Denitrification when N demand is lower than N available */
 #define SOIL1_CN                12.0      /* C:N for fast microbial recycling pool */
