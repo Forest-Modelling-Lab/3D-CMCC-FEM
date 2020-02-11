@@ -15,4 +15,4 @@ for references on 3D-CMCC-FEM:
 
 6. “The sensitivity of the forest carbon budget shifts between different parameters and processes along stand development and climate change”. A. Collalti, P. E. Thornton,  A. Cescatti, A. Rita, A. Nolè, M. Borghetti, C. Trotta, P. Ciais, G. Matteucci. 2018, Ecological Applications, DOI: 10.1002/eap.1837 
 
-
+7. “Plant respiration: controlled by photosynthesis or biomass?”. Collalti A., Tjoelker M.G., Hoch G., Mäkelä A., Guidolotti G., Heskel M., Petit G., Ryan M.G., Battipaglia G., Prentice I.C.. Global Change Biology, https://doi.org/10.1111/gcb.14857, 2019
