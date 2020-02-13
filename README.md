@@ -1,11 +1,12 @@
 d# 3D-CMCC-FEM
 **3D-CMCC-FEM repository**
 
-For questions: > alessio.collalti@cnr.it\
-               > trottacarlo@unitus.it\
-               > daniela.dalmonech@gmail.com\
-               > corrado.biondo@cmcc.it\
-               > gina.marano@unina.it\
+For questions: 
+-alessio.collalti@cnr.it\
+-trottacarlo@unitus.it\
+-daniela.dalmonech@gmail.com\
+-corrado.biondo@cmcc.it\
+-gina.marano@unina.it\
 
 Please at the website also: https://www.3d-cmcc-fem.com/
 
