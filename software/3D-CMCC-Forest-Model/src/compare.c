@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include <dirent.h>
+#include "dirent.h"
 #include <sys/stat.h>
 #include <assert.h>
 #include "common.h"

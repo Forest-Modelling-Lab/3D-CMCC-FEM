@@ -3,10 +3,16 @@
 # Carlo Trotta (trottacarlo@unitus.it)
 # starting date: 18 April 2017
 rm(list = ls())
+cat('\014')
+main_dir = dirname(rstudioapi::getActiveDocumentContext()$path)
+main_dir = paste0(main_dir,'/')
 
 # working directory
+setwd(main_dir)
+rm(main_dir)
+# working directory
 # setwd('/home/alessio-cmcc/git/3D-CMCC-LAND/software/3D-CMCC-Forest-Model/')
-setwd(getwd())
+#setwd(getwd())
 #setwd('/home/alessio-cmcc/git/3D-CMCC-LAND/software/3D-CMCC-Forest-Model/')
 
 library(ggplot2)
@@ -34,11 +40,11 @@ file_db_corrisp = paste0(getwd(),'/stand_mod_vs_stand_profound.txt')
 file_stand = paste0(getwd(),'/STAND.csv')
 
 model<-"3D-CMCC-FEM"
-version="5.5"
+version="v.5.5-ISIMIP"
 
-print("*******************************************************")
-print(paste0("* ", model, " version: ", version, " R script *"))
-print("*******************************************************")
+cat("*******************************************************\n")
+cat(paste0("* ", model, " version: ", version, " R script *\n"))
+cat("*******************************************************\n")
 
 # Sys.setlocale(category = "LC_TIME", locale="en_GB.UTF-8") 
 # 
@@ -58,34 +64,34 @@ print("*******************************************************")
 nr_plot_per_page = 24
 nr_col_per_page  = 4
 
-
 # list to rename output files
-time_list_output = c('annual','monthly','daily')
+time_list_output = c('annual','daily')
 
 # single or multiple simulations
-build_list<-c('Debug')#, 'Release')
-site_list<-c("Peitz")
-esm_list <-c("3")# ("1","2","3","4","5", "All")
-rcp_list <-c("8p5")# ("0p0","2p6","4p5","6p0","8p5","All")
+build_list<-c('./bin/')#, 'Release')
+site_list<-c("All")
+esm_list <-c("All")# ("1","2","3","4","5", "All")
+rcp_list <-c("All")# ("0p0","2p6","4p5","6p0","8p5","All")
 man_list <-c("All")# ("on",'off', "All")
 co2_list <-c("All")# , "on",off", "All")
-protocol_list<-c("FT")# ("2A","2B", "All") 
-local_list<-c('off')
-climate_off_list<-c('off') # for climate off and co2 on
+protocol_list<-c("All")# ("2A","2B", "All") 
+local_list<-c('on')
+climate_off_list<-c('All') # for climate off and co2 on
 
-time_list = c('annual')
+time_list = c('daily','annual')
 
 #  output folder name
-output_folder = paste0("Test_output_Rstudio_ct_TEST_", protocol_list,'_CO2_',co2_list,'_Man_',man_list)
+output_folder = paste0("Test")
 
 if ( length(which(site_list == 'All' )) > 0 ) {
-  site_list = c("Soroe","Hyytiala","Bily_Kriz","Collelongo","Solling_beech","Peitz","Solling_spruce")
+  site_list = c("Bily_Kriz","Collelongo","Hyytiala","LeBray","Peitz","Solling_beech","Solling_spruce","Soroe")
+  site_list = sort(site_list)
 }
 if ( length(which(esm_list == 'All' )) > 0 ) {
-  esm_list = c("0","1","2","3","4","5","6","7","8","9","10")
+  esm_list = c("1","2","3","4","5","6","7","8","9","10")#"0",
 }
 if ( length(which(rcp_list == 'All' )) > 0 ) {
-  rcp_list = c("0p0","2p6","4p5","6p0","8p5")
+  rcp_list = c("2p6","4p5","6p0","8p5")#"0p0",
 }
 if ( length(which(man_list == 'All')) > 0 ) {
   man_list = c("on",'off')
@@ -100,21 +106,25 @@ if ( length(which(time_list == 'All')) > 0 ) {
   time_list = c('annual','monthly','daily')
 }
 
+
 ## a way to time an R expression: system.time is preferred
 run_model = 1
 if ( run_model == 1 ) {
-  start.time <- Sys.time()
   
   error_list = c()
-  
+
   for (site in site_list) {
+    # questo serve per evitare che vengano fatti i local più volte
+    run_model_local = 1
     for (man in man_list) {
       for (co2 in co2_list) {
         protocol = 'LOCAL'
         # LOCAL simulation run in all cases
-        
-        if (local_list == 'on' || protocol_list == 'LOCAL')
-        {
+        if (local_list == 'on' || protocol_list == 'LOCAL') {
+          if (co2 == 'off')
+            next
+          if (run_model_local == 0)
+            next
           # check if ALL input files exists
           files_to_check_id = 0
           files_to_check = c(
@@ -126,6 +136,7 @@ if ( run_model == 1 ) {
             paste0( protocol, "/", site,"_settings_ISIMIP_Manag-on_CO2-", co2,".txt"),
             paste0( "/CO2/CO2_hist.txt")
           )
+          
           for ( zz in files_to_check ) {
             file_name_tmp = paste0(getwd(),'/input/',site,"/ISIMIP/",zz)
             list_ck = list.files(path = dirname(file_name_tmp),pattern = basename(file_name_tmp))
@@ -137,10 +148,11 @@ if ( run_model == 1 ) {
               error_list = c(error_list,str)
               files_to_check_id = 1
               rm(str)
-              break
+              next
             }
             rm(file_name_tmp)
           }
+          rm(zz)
           
           if ( files_to_check_id == 0 ) {
             
@@ -148,32 +160,43 @@ if ( run_model == 1 ) {
             dir.create(paste0(getwd(),"/output/",output_folder,"-", version, "-", site),showWarnings = FALSE)
             dir.create(paste0(getwd(),"/output/",output_folder,"-", version, "-", site,"/",protocol),showWarnings = FALSE)
             
-            cat(paste0("\nstart", model," ",version," ","protocol: ",protocol, " site: ", site,'\n'))
+            cat(paste0("\nstart ", model," ",version," ","protocol: ",protocol, " site: ", site,'\n'))
             
-            systemCall  <- paste0(build_list,'/3D_CMCC_Forest_Model', " ",
-                                  "-i"," ", "input/", site, " ",
-                                  "-p"," ", "input/parameterization", " ",
-                                  "-o"," ", "output/",output_folder,"-", version, "-", site,"/",protocol," ",
-                                  "-d"," ", "ISIMIP/", site,"_stand_ISIMIP.txt", " ",
-                                  "-m"," ", "ISIMIP/", protocol,"/",protocol, "_hist.txt", " ",
-                                  "-s"," ", "ISIMIP/", site,"_soil_ISIMIP.txt", " ",
-                                  "-t"," ", "ISIMIP/", site,"_topo_ISIMIP.txt", " ",
-                                  "-c"," ", "ISIMIP/", protocol, "/", site,"_settings_ISIMIP_Manag-on_CO2-on.txt", " ",
-                                  "-k"," ", "ISIMIP/", "/CO2/CO2_hist.txt",
-                                  ">output/",output_folder,"-", version, "-", site,"/",protocol,"_log_",site,"_LOCAL_Manag-on_CO2-", co2,".txt"
+            systemCall  <- paste0('"',build_list,'/3D-CMCC-Forest-Model"', " ",
+                                '-i "', 'input/', site,'" ',
+                                '-p "', 'input/parameterization" ',
+                                '-o "', 'output/',output_folder,"-", version, "-", site,"/",protocol,'" ',
+                                '-d "', 'ISIMIP/', site,"_stand_ISIMIP.txt",'" ',
+                                '-m "', 'ISIMIP/', protocol,"/",protocol, "_hist.txt",'" ',
+                                '-s "', 'ISIMIP/', site,"_soil_ISIMIP.txt",'" ',
+                                '-t "', 'ISIMIP/', site,"_topo_ISIMIP.txt",'" ',
+                                '-c "', 'ISIMIP/', protocol, "/", site,"_settings_ISIMIP_Manag-on_CO2-", co2,".txt",'" ',
+                                '-k "', 'ISIMIP', "/CO2/CO2_hist.txt",'"',
+                                '>"output/',output_folder,"-", version, "-", site,"/",protocol,"_log_",site,"_LOCAL_Manag-on_CO2-", co2,'.txt"'
             )
             # launch execution
-            system(systemCall)
-            outputCMCC<- list()
+            sysinf <- Sys.info()
+            if (unname(sysinf["sysname"]) == "Windows") {#write batch file
+              systemCall = c('@echo off',systemCall)
+              fid = file('launch.bat','w')
+              writeLines(systemCall,fid)
+              close(fid)
+              system(command = 'launch.bat')
+              file.remove('launch.bat')
+              run_model_local = 0
+            }
+            #system(systemCall)
+            #outputCMCC<- list()
             cat(paste0("start 3D-CMCC ",
                        "protocol: ",protocol, " site: ", site, '... COMPLETE!\n'))
           }
+          # files_to_check_id
         }
         
         for (protocol in protocol_list) {
-          if (protocol == 'LOCAL') {
+          if (protocol == 'LOCAL')
             next
-          }
+          
           for ( esm in esm_list) {
             for (rcp in rcp_list) {
               
@@ -202,7 +225,7 @@ if ( run_model == 1 ) {
                 }
                 rm(file_name_tmp)
               }
-              
+              rm(zz)
               if ( files_to_check_id2 == 0 ) {
                 
                 dir.create(paste0(getwd(),"/output/"),showWarnings = FALSE)
@@ -213,61 +236,73 @@ if ( run_model == 1 ) {
                            "protocol: ",protocol, " site: ", site, 
                            " ESM: ", esm," RCP: ", rcp," CO2 RCP: ", rcp," Manag-", man, " CO2-", co2,'\n'))
                 
-                systemCall  <- paste0(build_list,'/3D_CMCC_Forest_Model', " ",
-                                      "-i"," ", "input/", site, " ",
-                                      "-p"," ", "input/parameterization", " ",
-                                      "-o"," ", "output/",output_folder,"-", version, "-", site,"/",protocol," ",
-                                      "-d"," ", "ISIMIP/", site,"_stand_ISIMIP.txt", " ",
-                                      "-m"," ", "ISIMIP/", protocol, "/ESM", esm,"/", protocol,"_","ESM", esm,"_", "rcp", rcp, ".txt", " ",
-                                      "-s"," ", "ISIMIP/", site,"_soil_ISIMIP.txt", " ",
-                                      "-t"," ", "ISIMIP/", site,"_topo_ISIMIP.txt", " ",
-                                      "-c"," ", "ISIMIP/", protocol, "/", site,"_settings_ISIMIP_Manag-", man, "_CO2-", co2,".txt", " ",
-                                      "-k"," ", "ISIMIP/", "/CO2/CO2_", "rcp",rcp, ".txt",
+                systemCall  <- paste0('"',build_list,'/3D-CMCC-Forest-Model"', " ",
+                                      '-i "', 'input/', site,'" ',
+                                      '-p "', 'input/parameterization" ',
+                                      '-o "', 'output/',output_folder,"-", version, "-", site,"/",protocol,'" ',
+                                      '-d "', 'ISIMIP/', site,"_stand_ISIMIP.txt",'" ',
+                                      '-m "', 'ISIMIP/', protocol, "/ESM", esm,"/", protocol,"_","ESM", esm,"_", "rcp", rcp, ".txt",'" ',
+                                      '-s "', 'ISIMIP/', site,"_soil_ISIMIP.txt",'" ',
+                                      '-t "', 'ISIMIP/', site,"_topo_ISIMIP.txt",'" ',
+                                      '-c "', 'ISIMIP/', protocol, "/", site,"_settings_ISIMIP_Manag-", man, "_CO2-", co2,".txt",'" ',
+                                      '-k "', 'ISIMIP/', "/CO2/CO2_", "rcp",rcp, ".txt",'"',
                                       ">output/",output_folder,"-", version, "-", site,"/",protocol,"_log_",site,"_",protocol,
                                       "_ESM_", esm,"_RCP_", rcp,"_CO2_RCP_", rcp,"_Manag-", man, "_CO2-", co2,".txt"
                 )
-                
                 # launch execution
-                system(systemCall)
-                outputCMCC<- list()
+                sysinf <- Sys.info()
+                if (unname(sysinf["sysname"]) == "Windows") {#write batch file
+                  systemCall = c('@echo off',systemCall)
+                  fid = file('launch.bat','w')
+                  writeLines(systemCall,fid)
+                  close(fid)
+                  system(command = 'launch.bat')
+                  file.remove('launch.bat')
+                }
                 
                 cat(paste0("start 3D-CMCC ",
                            "protocol: ",protocol, " site: ", site, 
                            " ESM: ", esm," RCP: ", rcp," CO2 RCP: ", rcp," Manag-", man, " CO2-", co2,' ... COMPLETE!\n'))
                 
                 # THIS RUN FIXING CLIMATE TO CURRENT AND CHANGES CO2 CONCENTRATIONS
-                if ( rcp == '0p0' && co2 == 'on' && climate_off_list == 'on' )
-                 {
-                   for (rcp2 in rcp_list)
-                   {
+                if ( rcp == '0p0' && co2 == 'on' && climate_off_list == 'on' ) {
+                   for (rcp2 in rcp_list) {
                      cat(paste0("start 3D-CMCC ",
                                 "protocol: ",protocol, " site: ", site, 
                                 " ESM: ", esm," RCP: ", rcp," CO2 RCP: ", rcp2," Manag-", man, " CO2-", co2,'\n'))
                      
-                     systemCall  <- paste0(build_list,'/3D_CMCC_Forest_Model', " ",
-                                           "-i"," ", "input/", site, " ",
-                                           "-p"," ", "input/parameterization", " ",
-                                           "-o"," ", "output/",output_folder,"-", version, "-", site,"/",protocol," ",
-                                           "-d"," ", "ISIMIP/", site,"_stand_ISIMIP.txt", " ",
-                                           "-m"," ", "ISIMIP/", protocol, "/ESM", esm,"/", protocol,"_","ESM", esm,"_", "rcp", rcp, ".txt", " ",
-                                           "-s"," ", "ISIMIP/", site,"_soil_ISIMIP.txt", " ",
-                                           "-t"," ", "ISIMIP/", site,"_topo_ISIMIP.txt", " ",
-                                           "-c"," ", "ISIMIP/", protocol, "/", site,"_settings_ISIMIP_Manag-", man, "_CO2-", co2,".txt", " ",
-                                           "-k"," ", "ISIMIP/", "/CO2/CO2_", "rcp",rcp2, ".txt",
+                     systemCall  <- paste0('"',build_list,'/3D-CMCC-Forest-Model"', " ",
+                                           '-i "', 'input/', site,'" ',
+                                           '-p "', 'input/parameterization" ',
+                                           '-o "', 'output/',output_folder,"-", version, "-", site,"/",protocol,'" ',
+                                           '-d "', 'ISIMIP/', site,"_stand_ISIMIP.txt",'" ',
+                                           '-m "', 'ISIMIP/', protocol, "/ESM", esm,"/", protocol,"_","ESM", esm,"_", "rcp", rcp, ".txt",'" ',
+                                           '-s "', 'ISIMIP/', site,"_soil_ISIMIP.txt",'" ',
+                                           '-t "', 'ISIMIP/', site,"_topo_ISIMIP.txt",'" ',
+                                           '-c "', 'ISIMIP/', protocol, "/", site,"_settings_ISIMIP_Manag-", man, "_CO2-", co2,".txt",'" ',
+                                           '-k "', 'ISIMIP/', "/CO2/CO2_", "rcp",rcp, ".txt",'"',
                                            ">output/",output_folder,"-", version, "-", site,"/",protocol,"_log_",site,"_",protocol,
-                                           "_ESM_", esm,"_RCP_",rcp,"_CO2_RCP_",rcp2,"_Manag-", man, "_CO2-", co2,".txt"
+                                           "_ESM_", esm,"_RCP_", rcp,"_CO2_RCP_", rcp,"_Manag-", man, "_CO2-", co2,".txt"
                      )
-                     
                      # launch execution
-                     system(systemCall)
-                     outputCMCC<- list()
+                     sysinf <- Sys.info()
+                     if (unname(sysinf["sysname"]) == "Windows") {#write batch file
+                       systemCall = c('@echo off',systemCall)
+                       fid = file('launch.bat','w')
+                       writeLines(systemCall,fid)
+                       close(fid)
+                       system(command = 'launch.bat')
+                       file.remove('launch.bat')
+                     }
                      
                      cat(paste0("start 3D-CMCC ",
                                 "protocol: ",protocol, " site: ", site, 
                                 " ESM: ", esm," RCP: ", rcp," CO2 RCP: ", rcp2," Manag-", man, " CO2-", co2,' ... COMPLETE!\n'))
                    }
-                 }
+                    rm(rcp2)
+                }
               }
+              rm(files_to_check_id2)
             }
             rm(rcp)
           }
@@ -281,9 +316,8 @@ if ( run_model == 1 ) {
           all_out_files = list.files(paste0("output/",output_folder,"-", version, "-", site,"/"),
                                      recursive = TRUE, full.names = TRUE)
           
-          if ( length(all_out_files) == 0) {
+          if ( length(all_out_files) == 0)
             next
-          }
           
           all_out_files = all_out_files[grep(cy_time,all_out_files)]
           
@@ -360,15 +394,11 @@ if ( run_model == 1 ) {
     }
     rm(tt)
   }
-  
-  end.time <- Sys.time()
-  print(end.time - start.time)
 }
-
 
 # create the comparison plots ----
 
-print("\n\nCOMPARSION PLOTS START....\n\n")
+cat("\n\nCOMPARSION PLOTS START....\n\n")
 
 for (site in site_list) {
   for(cy_time in time_list) {
@@ -414,12 +444,11 @@ for (site in site_list) {
 rm(site)
 rm(lf)
 
-print("\n\nCOMPARSION PLOTS COMPLETE\n\n")
-
+cat("\n\nCOMPARSION PLOTS COMPLETE\n\n")
 
 # validazione degli stand ----
 
-print("\n\nCOMPARSION PLOTS STAND START....\n\n")
+cat("\n\nCOMPARSION PLOTS STAND START....\n\n")
 # db con i nomi e gli ID dei siti
 df_siti = read.csv('sites_isimip.csv')
 lista_time = c('annual')
@@ -638,11 +667,11 @@ for (cy_time in lista_time) {
 }
 rm(dir_in_gen)
 
-cat(sprintf("\n\nCOMPARSION PLOTS STAND COMPLETE\n\n"))
+cat("\n\nCOMPARSION PLOTS STAND COMPLETE\n\n")
 
 # validazione dei flussi ----
 
-cat(sprintf("\n\nFLUX VALIDATION PLOTS START.....\n\n"))
+cat("\n\nFLUX VALIDATION PLOTS START.....\n\n")
 
 df_siti = read.csv('sites_isimip.csv')
 
@@ -714,7 +743,7 @@ for (cy_s in site_list) {
 }
 rm(cy_s)
 
-cat(sprintf("\n\nFLUX VALIDATION PLOTS COMPLETE\n\n"))
+cat("\n\nFLUX VALIDATION PLOTS COMPLETE\n\n")
 
 # validazione di tutti gli output ----
 # 
