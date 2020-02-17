@@ -19,7 +19,7 @@
   -Carlo Trotta: trottacarlo@unitus.it  
   -Daniela Dalmonech: daniela.dalmonech@gmail.com  
   -Corrado Biondo: corrado.biondo@cmcc.it  
-  -Gina Marano: gina.marano@unina.it
+  -Gina Marano: gina.marano@unina.it  
   -The model: 3d_cmcc_fem@gmail.com 
   
   
