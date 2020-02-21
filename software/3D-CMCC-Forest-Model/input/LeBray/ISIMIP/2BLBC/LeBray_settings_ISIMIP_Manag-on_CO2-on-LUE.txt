@@ -1,0 +1,61 @@
+SITENAME LeBray
+VERSION f                           //Must be 'f' for FEM version or 'b', for BGC version for FOREST LANDUSE
+SPATIAL u                           //Must be 's' or 'u', spatial or unspatial
+TIME d                              //Must be 'm' or 'd', monthly or daily
+SPINUP off                          //Must be 'on' or 'off'
+SPINUP_YEARS 6000                   //Number of years for spinup
+SCREEN_OUTPUT off                   //Must be 'on' or 'off'
+DEBUG_OUTPUT off                    //Must be 'on' or 'off'
+DAILY_OUTPUT on                     //Must be 'on' or 'off'
+MONTHLY_OUTPUT off                  //Must be 'on' or 'off'
+ANNUAL_OUTPUT on                    //Must be 'on' or 'off'
+SOIL_OUTPUT off                     //Must be 'on' or 'off'
+NETCDF_OUTPUT off
+YEAR_START 1986                     //Starting year simulation
+YEAR_END 2299                       //Ending year simulation
+YEAR_RESTART off                    //Year to restart
+PSN_mod 1 //Must be '0' (FvCB) or '1' (LUE) for photosynthesis approach
+CO2_trans on                        //Must be 'on' or 'off'
+YEAR_START_CO2_FIXED -9999          //When Co2_trans = var, year at which fix [CO2]
+Ndep_fixed on                       //Must be 'on' or 'off'
+Photo_accl on                       //Photosynthesis temperature acclimation Must be 'on' or 'off'
+Resp_accl on                        //Q10 temperature acclimatation Must be 'on' or 'off'
+regeneration off                    //Must be 'on' or 'off'
+management var                       //Must be 'on' or 'off'
+YEAR_START_MANAGEMENT 2015          //First year of management
+Progn_Aut_Resp on                   //Prognostic autotrophic respiration, Must be 'on' or 'off', if off Y values are used
+SIZECELL 100                        //Its value must be within 10 and 100 (unity measure is meter: 10 = 10x10 = 100m^2) 
+Y 0.48                              //Fixed_Aut_Resp_rate Assimilate use efficiency-Respiration rate-GPP/NPP
+CO2CONC 368.865                     //CO2 concentration refers to 2000 as ISIMIP PROTOCOL
+CO2_INCR 0.01                       //1% increment
+INIT_FRAC_MAXASW 1                  //0.1 Minimum fraction of asw based on maxasw (wilting point) (unchanged)
+TREE_LAYER_LIMIT 3                  //define differences among tree heights in meters classes to define number of layers in unspatial version
+SOIL_LAYER 1                        //define soil layer/s to consider
+MAX_LAYER_COVER 1
+THINNING_REGIME  Above              // thinning regime (Above or Below)
+REPLANTED_SPECIES Pinuspinaster     // species name of replanted trees (mandatory)
+REPLANTED_MANAGEMENT T              // (T) management of replanted trees (should be only T)(mandatory)
+REPLANTED_TREE 1250                 // number of replanted trees (mandatory)
+REPLANTED_AGE 1                     // (yr) age of replanted trees (mandatory)
+REPLANTED_AVDBH 1                   // (cm) average dbh of replanted trees (mandatory)
+REPLANTED_LAI 0                     // (m2/m2) lai for replanted trees (mandatory for evergreen, useless for deciduous)
+REPLANTED_HEIGHT 1.3                // (m) height of replanted trees (mandatory)
+REPLANTED_WS 0                      // (tDM/ha) stem biomass of replanted trees (optional)
+REPLANTED_WCR 0                     // (tDM/ha) coarse root biomass of replanted trees (optional)
+REPLANTED_WFR 0                     // (tDM/ha) fine root biomass of replanted trees (optional)
+REPLANTED_WL 0                      // (tDM/ha) leaf biomass of replanted trees (optional for evergreen if LAI!= 0, otherwise useless)
+REPLANTED_WBB 0                     // (tDM/ha) branch biomass of replanted trees (optional)
+REGENERATION_SPECIES none           // NOT USED it comes from species that produces seeds
+REGENERATION_MANAGEMENT T           // (T) management of replated trees (should be only T)(mandatory)
+REGENERATION_N_TREE -9999           // number of replanted trees (mandatory) (NOT USED)
+REGENERATION_AGE 1                  // (yr) age of regeneration trees (mandatory) (SHOULD BE ALWAYS 1)
+REGENERATION_AVDBH 0.1              // (cm) average dbh of regeneration trees (mandatory)
+REGENERATION_LAI 0.0                // (m2/m2) lai for regeneration trees (mandatory for evergreen, useless for deciduous)
+REGENERATION_HEIGHT 1.2             // (m) height of replanted trees (mandatory) 
+REGENERATION_WS 0                   // (tDM/ha) stem biomass of regeneration trees (optional)
+REGENERATION_WCR 0                  // (tDM/ha) coarse root biomass of regeneration trees (optional)
+REGENERATION_WFR 0                  // (tDM/ha) fine root biomass of regeneration trees (optional)
+REGENERATION_WL 0                   // (tDM/ha) leaf biomass of regeneration trees (optional for evergreen if LAI!= 0, otherwise useless)
+REGENERATION_WBB 0                  // (tDM/ha) branch biomass of regeneration trees (optional)
+PRUNING off                          //Must be 'on' or 'off'
+IRRIGATION off                       //Must be 'on' or 'off'
