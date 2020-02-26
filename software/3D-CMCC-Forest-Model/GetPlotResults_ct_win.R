@@ -54,15 +54,15 @@ time_list_output = c('annual','monthly','daily')
 build_list<-c('Debug')#, 'Release')
 #site_list<-c("All")
 site_list<-c("All")
-esm_list <-c("4")# ("1","2","3","4","5", "All")
-rcp_list <-c("8p5")# ("0p0","2p6","4p5","6p0","8p5","All")
+esm_list <-c("All")# ("1","2","3","4","5", "All")
+rcp_list <-c("All")# ("0p0","2p6","4p5","6p0","8p5","All")
 man_list <-c("All")# ("on",'off', "All")
 co2_list <-c("All")# , "on",off", "All")
 protocol_list<-c("LOCAL")# ("2A","2B", "All") 
 
 local_list<-c('on')# decido se fare le simulazioni LOCAL o NO
 
-climate_off_list<-c('off') # for climate off and co2 on
+climate_off_list<-c('on','off') # for climate off and co2 on
 psn_list = c('BGC','LUE')
 
 time_list = c('annual')
@@ -170,9 +170,10 @@ if ( run_model == 1 ) {
                 rm(fid)
                 system('launch.bat')
                 file.remove('launch.bat')
+                # system(systemCall)
                 local_sim_ck = 1
               } else {
-                #TODO
+                 #TODO
               }
               
               cat(paste0("\nstart 3D-CMCC ",
@@ -180,7 +181,7 @@ if ( run_model == 1 ) {
             }
             
           }
-          next
+          
           for (protocol in protocol_list) {
             if (protocol == 'LOCAL') {
               next
@@ -245,7 +246,18 @@ if ( run_model == 1 ) {
                      "_log_",site, "_ESM_", esm,"_RCP_", rcp,"_CO2_RCP_", rcp,"_Manag-on_CO2-", co2,"-",cy_psn,'.txt\"'
                   )
                   # launch execution
-                  system(systemCall,show.output.on.console = F)
+                  # launch execution
+                  if (unname(Sys.info()['sysname']) == "Windows") {
+                    fid = file('launch.bat','w')
+                    writeLines(systemCall,fid)
+                    close(fid)
+                    rm(fid)
+                    system('launch.bat')
+                    file.remove('launch.bat')
+                    # system(systemCall)
+                  } else {
+                    #TODO
+                  }
 
                   cat(paste0("\nstart 3D-CMCC ",
                      "protocol: ",protocol, " site: ", site," PSN: ",cy_psn,
@@ -284,7 +296,17 @@ if ( run_model == 1 ) {
                          "_log_",site, "_ESM_", esm,"_RCP_", rcp,"_CO2_RCP_", rcp2,"_Manag-on_CO2-", co2,"-",cy_psn,'.txt\"'
                       )
                       # launch execution
-                      system(systemCall,show.output.on.console = F)
+                      if (unname(Sys.info()['sysname']) == "Windows") {
+                        fid = file('launch.bat','w')
+                        writeLines(systemCall,fid)
+                        close(fid)
+                        rm(fid)
+                        system('launch.bat')
+                        file.remove('launch.bat')
+                        # system(systemCall)
+                      } else {
+                        #TODO
+                      }
                       
                       cat(paste0("\nstart 3D-CMCC ",
                                  "protocol: ",protocol, " site: ", site," PSN: ",cy_psn,
