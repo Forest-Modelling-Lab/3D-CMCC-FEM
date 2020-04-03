@@ -2,12 +2,12 @@ d# 3D-CMCC-FEM
 **3D-CMCC-FEM repository**
 
 For any further information please contact us:
--Alessio Collalti (Lab. Head and Model Principal Investigator): alessio.collalti@cnr.it
--Carlo Trotta: trottacarlo@unitus.it
--Daniela Dalmonech: daniela.dalmonech@gmail.com
--Corrado Biondo: corrado.biondo@cmcc.it
--Gina Marano: gina.marano@unina.it
--The model: forest.modelling.lab@gmail.com
+-Alessio Collalti (Lab. Head and Model Principal Investigator): alessio.collalti@cnr.it  
+-Carlo Trotta: trottacarlo@unitus.it  
+-Daniela Dalmonech: daniela.dalmonech@gmail.com  
+-Corrado Biondo: corrado.biondo@cmcc.it  
+-Gina Marano: gina.marano@unina.it  
+-The model: forest.modelling.lab@gmail.com  
 
 or look at the 3D-CMCC-FEM web-site:https://www.forest-modelling-lab.com/the-3d-cmcc-model
 
