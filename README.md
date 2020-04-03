@@ -1,7 +1,7 @@
 d# 3D-CMCC-FEM
 **3D-CMCC-FEM repository**
 
-For any further information please contact us:
+For any further information please contact us:  
 -Alessio Collalti (Lab. Head and Model Principal Investigator): alessio.collalti@cnr.it  
 -Carlo Trotta: trottacarlo@unitus.it  
 -Daniela Dalmonech: daniela.dalmonech@gmail.com  
