@@ -15,15 +15,15 @@
   We maintain this MASTER version on the repository only for historical and affectional reasons. 
   
   For any further information please contact us:  
-  -Alessio Collalti *(Lab. Head)*: alessio.collalti@cnr.it  
+  -Alessio Collalti *(Lab. Head and Model Principal Investigator)*: alessio.collalti@cnr.it  
   -Carlo Trotta: trottacarlo@unitus.it  
   -Daniela Dalmonech: daniela.dalmonech@gmail.com  
   -Corrado Biondo: corrado.biondo@cmcc.it  
   -Gina Marano: gina.marano@unina.it  
-  -The model: 3d_cmcc_fem@gmail.com 
+  -The model: forest.modelling.lab@gmail.com 
   
   
-  or look at the 3D-CMCC-FEM web-site:https://www.3d-cmcc-fem.com/
+  or look at the 3D-CMCC-FEM web-site:https://www.forest-modelling-lab.com/the-3d-cmcc-model
   
   For references on 3D-CMCC-FEM:
   
