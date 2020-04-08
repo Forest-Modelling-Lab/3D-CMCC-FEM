@@ -1,12 +1,14 @@
-d# 3D-CMCC-FEM
+# 3D-CMCC-FEM
 **3D-CMCC-FEM repository**
 
 For any further information please contact us:  
 -Alessio Collalti (Lab. Head and Model Principal Investigator): alessio.collalti@cnr.it  
 -Carlo Trotta: trottacarlo@unitus.it  
 -Daniela Dalmonech: daniela.dalmonech@gmail.com  
+-Alessio Ribeca: a.ribeca@unitus.it  
 -Corrado Biondo: corrado.biondo@cmcc.it  
 -Gina Marano: gina.marano@unina.it  
+-The model: 3d-cmcc-fem@gmail.com
 -The lab: forest.modelling.lab@gmail.com  
 
 or look at the 3D-CMCC-FEM web-site:https://www.forest-modelling-lab.com/the-3d-cmcc-model
@@ -30,3 +32,5 @@ For references on 3D-CMCC-FEM:
 8. “The sensitivity of the forest carbon budget shifts between different parameters and processes along stand development and climate change”. A. Collalti, P. E. Thornton,  A. Cescatti, A. Rita, A. Nolè, M. Borghetti, C. Trotta, P. Ciais, G. Matteucci.*Ecological Applications*,  https://doi.org/10.1002/eap.1837, 2019
 
 9. “Plant respiration: controlled by photosynthesis or biomass?”. Collalti A., Tjoelker M.G., Hoch G., Mäkelä A., Guidolotti G., Heskel M., Petit G., Ryan M.G., Battipaglia G., Prentice I.C.. *Global Change Biology*, https://doi.org/10.1111/gcb.14857, 2019
+
+see also at: https://www.forest-modelling-lab.com/publications
