@@ -384,6 +384,8 @@ void stochastic_mortality ( cell_t *const c, const int height, const int dbh, co
 {
 	int livetree         = 0;
 	int deadtree         = 0;
+
+	//todo move 'age_mort_fact' in species.txt
 	double age_mort_fact = 0.01;   /* ntrees years-1 */
 
 	int nat_man;   /* natural or managed mortality 0 = natural; 1 = managed */
