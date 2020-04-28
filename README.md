@@ -8,7 +8,7 @@ For any further information please contact us:
 -Alessio Ribeca: a.ribeca@unitus.it  
 -Corrado Biondo: corrado.biondo@cmcc.it  
 -Gina Marano: gina.marano@unina.it  
--The model: 3d-cmcc-fem@gmail.com
+-The model: 3d-cmcc-fem@gmail.com  
 -The lab: forest.modelling.lab@gmail.com  
 
 or look at the 3D-CMCC-FEM web-site:https://www.forest-modelling-lab.com/the-3d-cmcc-model
