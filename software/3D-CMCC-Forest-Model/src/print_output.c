@@ -2993,6 +2993,7 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 	logger(g_annual_log,"\n");
 }
 
+
 void EOY_cell_msg(void)
 {
 	if  ( g_annual_log )
