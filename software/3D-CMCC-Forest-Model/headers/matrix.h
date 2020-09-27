@@ -1195,14 +1195,14 @@ typedef struct
 	double old_soilC;
 
 	/* nitrogen fluxes */
-	double daily_leaf_nitrogen;                                             /* (gN/m2/day) daily nitrogen assimilated to c pool at cell level */
-	double daily_stem_nitrogen;                                             /* (gN/m2/day) daily nitrogen assimilated to c pool at cell level */
-	double daily_froot_nitrogen;                                            /* (gN/m2/day) daily nitrogen assimilated to c pool at cell level */
-	double daily_croot_nitrogen;                                            /* (gN/m2/day) daily nitrogen assimilated to c pool at cell level */
-	double daily_root_nitrogen;                                             /* (gN/m2/day) daily nitrogen assimilated to c pool at cell level */
-	double daily_branch_nitrogen;                                           /* (gN/m2/day) daily nitrogen assimilated to c pool at cell level */
-	double daily_reserve_nitrogen;                                          /* (gN/m2/day) daily nitrogen assimilated to c pool at cell level */
-	double daily_fruit_nitrogen;                                            /* (gN/m2/day) daily nitrogen assimilated to fruit c pool at cell level */
+	double daily_leaf_nitrogen;                                           /* (gN/m2/day) daily nitrogen assimilated to c pool at cell level */
+	double daily_stem_nitrogen;                                           /* (gN/m2/day) daily nitrogen assimilated to c pool at cell level */
+	double daily_froot_nitrogen;                                          /* (gN/m2/day) daily nitrogen assimilated to c pool at cell level */
+	double daily_croot_nitrogen;                                          /* (gN/m2/day) daily nitrogen assimilated to c pool at cell level */
+	double daily_root_nitrogen;                                           /* (gN/m2/day) daily nitrogen assimilated to c pool at cell level */
+	double daily_branch_nitrogen;                                         /* (gN/m2/day) daily nitrogen assimilated to c pool at cell level */
+	double daily_reserve_nitrogen;                                        /* (gN/m2/day) daily nitrogen assimilated to c pool at cell level */
+	double daily_fruit_nitrogen;                                          /* (gN/m2/day) daily nitrogen assimilated to fruit c pool at cell level */
 
 	/* tree nitrogen pools */
 	double leaf_nitrogen;                                                 /* (gN/m2) leaf carbon at cell level */
