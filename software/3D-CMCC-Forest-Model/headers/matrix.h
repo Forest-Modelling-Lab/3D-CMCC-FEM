@@ -1445,6 +1445,7 @@ typedef struct
 	/* soil */
 	//ALESSIOR TO MOVE INTO SOIL LAYER STRUCTURE
 	/* soil water */
+	double soil_depth;                                                    /* (cm) soil depth */
 	double bulk_density;                                                  /* (g/cm3) soil bulk density */
 	double wilting_point;                                                 /* (mm/day) volumetric water content at wilting point */
 	double field_capacity;                                                /* volumetric water content at field capacity */
