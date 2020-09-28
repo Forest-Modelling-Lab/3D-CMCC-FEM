@@ -64,7 +64,7 @@ soil_settings_t* import_txt(const char *const filename, int* const p_settings_co
 		logger_error(g_debug_log, "unable to open %s, file not found.\n", filename);
 		return 0;
 	}
-	
+
 	/* get header ( skip comments ) */
 	do {
 		if ( ! fgets(buffer, SOIL_BUFFER_SIZE, f) ) {
@@ -122,7 +122,7 @@ soil_settings_t* import_txt(const char *const filename, int* const p_settings_co
 	while ( fgets(buffer, SOIL_BUFFER_SIZE, f) ) {
 		char* p2;
 		int y; /* keep track of imported values */
-		
+
 		/* remove initial spaces (if any) */
 		p2 = buffer;
 		while ( isspace(*p2) ) ++p2;
@@ -187,7 +187,7 @@ soil_settings_t* import_txt(const char *const filename, int* const p_settings_co
 				}
 				s.values[k] = value;
 			}
-			
+
 			// skip comments
 			if ( ++y == SOIL_VARS_COUNT )
 			{
@@ -241,7 +241,7 @@ soil_settings_t* import_txt(const char *const filename, int* const p_settings_co
 		{
 			ps[*p_settings_count].values[y] = s.values[y];
 		}
-		
+
 		++*p_settings_count;
 	}
 	fclose(f);

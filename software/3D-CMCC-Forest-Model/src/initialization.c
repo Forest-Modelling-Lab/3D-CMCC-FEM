@@ -1262,8 +1262,6 @@ void initialization_cell_soil_physic(cell_t *const c)
 
 	logger(g_debug_log, "BIOME soil characteristics\n");
 
-	/* assign to local soil depth settings soil depth */
-	c->soil_depth = g_soil_settings->values[SOIL_DEPTH];
 
 	/* (DIM) Clapp-Hornberger "b" parameter */
 	c->soil_b = -( 3.10 + 0.157 * g_soil_settings->values[SOIL_CLAY_PERC] - 0.003 * g_soil_settings->values[SOIL_SAND_PERC] ); /* ok for schwalm*/

@@ -1818,6 +1818,7 @@ void soil_initialization ( const matrix_t* const m, const int day, const int mon
 	assert (m);
 	for ( cell = 0; cell < m->cells_count; ++cell )
 	{
+
 		/* initialization cell soil physical pools */
 		initialization_cell_soil_physic     ( &m->cells[cell] );
 

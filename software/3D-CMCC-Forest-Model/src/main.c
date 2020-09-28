@@ -1382,6 +1382,31 @@ int main(int argc, char *argv[]) {
 			matrix->cells[cell].north = 1;
 		}
 
+
+		//todo make it better!
+		/* import SOIL data from soil.txt and assign to matrix cells variables */
+		/* (assign global g_soil_setting_variables to single cells) */
+		matrix->cells[cell].lat           = g_soil_settings->values[SOIL_LAT];
+		matrix->cells[cell].lon           = g_soil_settings->values[SOIL_LON];
+		matrix->cells[cell].clay_perc     = g_soil_settings->values[SOIL_CLAY_PERC];
+		matrix->cells[cell].silt_perc     = g_soil_settings->values[SOIL_SILT_PERC];
+		matrix->cells[cell].sand_perc     = g_soil_settings->values[SOIL_SAND_PERC];
+		matrix->cells[cell].soil_depth    = g_soil_settings->values[SOIL_DEPTH];
+		matrix->cells[cell].fr            = g_soil_settings->values[SOIL_FR];
+		matrix->cells[cell].fn0           = g_soil_settings->values[SOIL_FN0];
+		matrix->cells[cell].fnn           = g_soil_settings->values[SOIL_FNN];
+		matrix->cells[cell].m0            = g_soil_settings->values[SOIL_M0];
+		matrix->cells[cell].init_litter_C = g_soil_settings->values[LITTERC];
+		matrix->cells[cell].init_litter_N = g_soil_settings->values[LITTERN];
+		matrix->cells[cell].init_soil_C   = g_soil_settings->values[SOILC];
+		matrix->cells[cell].init_soil_N   = g_soil_settings->values[SOILN];
+		matrix->cells[cell].init_dead_C   = g_soil_settings->values[DEADWOODC];
+
+		/* import TOPO data from topo.txt and assign to matrix cells variables */
+		/* (assign global g_topo variables to single cells) */
+		matrix->cells[cell].elev          = g_topo->values[TOPO_ELEV];
+
+
 		/********************************** IMPORT MET DATA **********************************/
 		logger(g_debug_log, "Processing met data files for cell at %d,%d...\n", matrix->cells[cell].x, matrix->cells[cell].y);
 		logger(g_debug_log, "input_met_path = %s\n", g_sz_input_met_file);
@@ -1562,16 +1587,11 @@ int main(int argc, char *argv[]) {
 						}
 					}
 
-					//todo ADD HERE
-					/* initialize all cells */
-					//for ( cell = 0; cell < matrix->cells_count; ++cell )
-					//{
 					/* litter initialization */
 					litter_initialization ( matrix, day, month, year );
 
 					/* soil initialization */
 					soil_initialization   ( matrix, day, month, year );
-					//}
 
 				}
 
@@ -1704,6 +1724,7 @@ int main(int argc, char *argv[]) {
 
 				for ( cell = 0; cell < matrix->cells_count; ++cell )
 				{
+
 					/* counter "day of the year" */
 					if( !day && !month )matrix->cells[cell].doy = 1;
 					else ++matrix->cells[cell].doy;

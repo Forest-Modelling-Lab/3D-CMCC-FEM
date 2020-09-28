@@ -133,7 +133,7 @@ double decomposition ( cell_t *const c, const meteo_daily_t *const meteo_daily, 
 	}
 	else
 	{
-		soil_scalar = ( 1. - 0.75 * ( ( g_soil_settings->values[SOIL_CLAY_PERC] / 100. ) + ( g_soil_settings->values[SOIL_SILT_PERC] / 100. ) ) );
+		soil_scalar = ( 1. - 0.75 * ( ( c->clay_perc / 100. ) + ( c->silt_perc / 100. ) ) );
 	}
 	if ( soil_scalar > 1 ) soil_scalar = 1.;
 
