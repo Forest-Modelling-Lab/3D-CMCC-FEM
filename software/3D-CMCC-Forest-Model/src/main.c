@@ -1562,11 +1562,16 @@ int main(int argc, char *argv[]) {
 						}
 					}
 
+					//todo ADD HERE
+					/* initialize all cells */
+					//for ( cell = 0; cell < matrix->cells_count; ++cell )
+					//{
 					/* litter initialization */
 					litter_initialization ( matrix, day, month, year );
 
 					/* soil initialization */
 					soil_initialization   ( matrix, day, month, year );
+					//}
 
 				}
 
@@ -1734,9 +1739,9 @@ int main(int argc, char *argv[]) {
 										else
 										{
 											printf("ok tree_model (x=%d,y=%d) (%02d-%02d-%d)\n"
-														, matrix->cells[cell].x
-														, matrix->cells[cell].y
-														, day+1, month+1, year+g_settings->year_start
+													, matrix->cells[cell].x
+													, matrix->cells[cell].y
+													, day+1, month+1, year+g_settings->year_start
 											);
 										}
 									}
@@ -1757,11 +1762,11 @@ int main(int argc, char *argv[]) {
 							if ( (year+g_settings->year_start == g_settings->prunings[i].year)
 									&& (month == g_settings->prunings[i].month-1)
 									&& (day == g_settings->prunings[i].day-1) ) {
-										pruning_daily(matrix, cell, &g_settings->prunings[i]);
+								pruning_daily(matrix, cell, &g_settings->prunings[i]);
 							}
 						}
 					}
-					
+
 					/************************************************************************/
 					/* run for litter model */
 					if ( ! Litter_model_daily(matrix, cell, day, month, year) )
@@ -1772,9 +1777,9 @@ int main(int argc, char *argv[]) {
 					else
 					{
 						printf("ok litr_model (x=%d,y=%d) (%02d-%02d-%d)\n"
-									, matrix->cells[cell].x
-									, matrix->cells[cell].y
-									, day+1, month+1, year+g_settings->year_start
+								, matrix->cells[cell].x
+								, matrix->cells[cell].y
+								, day+1, month+1, year+g_settings->year_start
 						);
 					}
 					/************************************************************************/
@@ -1787,9 +1792,9 @@ int main(int argc, char *argv[]) {
 					else
 					{
 						printf("ok soil_model (x=%d,y=%d) (%02d-%02d-%d)\n"
-									, matrix->cells[cell].x
-									, matrix->cells[cell].y
-									, day+1, month+1, year+g_settings->year_start
+								, matrix->cells[cell].x
+								, matrix->cells[cell].y
+								, day+1, month+1, year+g_settings->year_start
 						);
 					}
 					/************************************************************************/
@@ -1802,9 +1807,9 @@ int main(int argc, char *argv[]) {
 					else
 					{
 						printf("ok cell_model (x=%d,y=%d) (%02d-%02d-%d)\n"
-									, matrix->cells[cell].x
-									, matrix->cells[cell].y
-									, day+1, month+1, year+g_settings->year_start
+								, matrix->cells[cell].x
+								, matrix->cells[cell].y
+								, day+1, month+1, year+g_settings->year_start
 						);
 					}
 					/*************************************************************************/
