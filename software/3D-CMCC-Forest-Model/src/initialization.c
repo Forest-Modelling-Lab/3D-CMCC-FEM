@@ -1261,6 +1261,7 @@ void initialization_cell_soil_physic(cell_t *const c)
 	 */
 
 	logger(g_debug_log, "BIOME soil characteristics\n");
+
 	/* assign to local soil depth settings soil depth */
 	c->soil_depth = g_soil_settings->values[SOIL_DEPTH];
 

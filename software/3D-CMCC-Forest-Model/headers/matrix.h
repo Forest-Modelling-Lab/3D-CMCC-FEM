@@ -1033,8 +1033,12 @@ typedef struct
 
 	int x;                                                                /* cell index within the matrix */
 	int y;                                                                /* cell index within the matrix */
-	double elev;                                                          /* cell elevation (m) */
+
+	/* topo file */
+	//double elev;                                                          /* cell elevation (m) */
+
 	int north;                                                            /* northern hemisphere north = 0, south hemisphere south = 1 */
+
 	int doy_daylength;
 
 	//fixme ALESSIOR move to meteo struct!
@@ -1256,7 +1260,41 @@ typedef struct
 	double daily_lh_flux, monthly_lh_flux, annual_lh_flux;                /* (W/m2) daily, monthly and annual latent heat flux at cell level */
 	double daily_sh_flux, monthly_sh_flux, annual_sh_flux;                /* (W/m2) daily, monthly and annual sensible heat flux at cell level */
 
-	/************************************************** litter and soil **************************************************/
+
+	/************************************************** LITTER AND SOIL **************************************************/
+
+	/* SOIL AND LITETR INITIALIZATION */
+	/* from "soil.txt" file */
+	double lat;                                                           /* latitude */
+	double lon;                                                           /* longitude */
+	double clay_perc;                                                     /* (%) clay percentage */
+	double silt_perc;   												  /* (%) silt percentage */
+	double sand_perc;                                                     /* (%) sand percentage */
+	double soil_depth;                                                    /* (cm) soil depth */
+	double fr;                                                            /* fertility rate */
+	double fn0;                                                           /* */
+	double fnn;                                                           /* */
+	double m0;                                                            /* */
+	double init_litter_C;                                                 /* initial litter carbon */
+	double init_litter_N;                                                 /* initial litter nitrogen */
+	double init_soil_C;                                                   /* initial soil carbon */
+	double init_soil_N;                                                   /* initial soil nitrogen */
+	double init_dead_C;                                                   /* initial dead carbon */
+
+	/* computed internally during initialization */
+	double bulk_density;                                                  /* (g/cm3) soil bulk density */
+	double wilting_point;                                                 /* (mm/day) volumetric water content at wilting point */
+	double field_capacity;                                                /* volumetric water content at field capacity */
+	double sat_hydr_conduct;                                              /* (mm/day) saturated hydraulic conductivity (mm/day) */
+	double psi;                                                           /* (MPa) water potential of soil and leaves */
+	double soil_moist_ratio;                                              /* (DIM) soil moisture ratio */
+	double vwc;                                                           /* (mm/day) soil volumetric water content */
+	double vwc_fc;                                                        /* (mm/day) soil volumetric water content at field capacity */
+	double vwc_sat;                                                       /* (mm/day) soil volumetric water content at saturation */
+	double psi_sat;                                                       /* (MPa) soil matric potential */
+	double soil_b;                                                        /* (DIM) slope of log(psi) vs log(rwc) */
+	double soilw_fc;                                                      /* (kgH2O/day) soil water at field capacity */
+	double soilw_sat;                                                     /* (kgH2O/day) soil water at saturation */
 
 	/* soil scalars */
 	double tsoil_scalar;                                                  /* (DIM) soil temperature scalar for decomposition */
@@ -1368,8 +1406,6 @@ typedef struct
 	double soil3C;                                                        /* (gC/m2) microbial recycling pool carbon (slow) */
 	double soil4C;                                                        /* (gC/m2) recalcitrant SOM carbon (humus, slowest) */
 
-
-
 	/* litter and soil nitrogen pools */
 	double litrN;                                                         /* (gN/m2) litter nitrogen */
 	double litr1N;                                                        /* (gN/m2) litter labile nitrogen */
@@ -1442,29 +1478,11 @@ typedef struct
 	double deadwood_scel_frac;                                            /* (DIM) dead wood litter shielded cellulose fraction */
 	double deadwood_uscel_frac;                                           /* (DIM) dead wood litter unshielded fraction */
 
-	/* soil */
-	//ALESSIOR TO MOVE INTO SOIL LAYER STRUCTURE
-	/* soil water */
-	double soil_depth;                                                    /* (cm) soil depth */
-	double bulk_density;                                                  /* (g/cm3) soil bulk density */
-	double wilting_point;                                                 /* (mm/day) volumetric water content at wilting point */
-	double field_capacity;                                                /* volumetric water content at field capacity */
-	double sat_hydr_conduct;                                              /* (mm/day) saturated hydraulic conductivity (mm/day) */
-	double psi;                                                           /* (MPa) water potential of soil and leaves */
-	double soil_moist_ratio;                                              /* (DIM) soil moisture ratio */
-	double vwc;                                                           /* (mm/day) soil volumetric water content */
-	double vwc_fc;                                                        /* (mm/day) soil volumetric water content at field capacity */
-	double vwc_sat;                                                       /* (mm/day) soil volumetric water content at saturation */
-	double psi_sat;                                                       /* (MPa) soil matric potential */
-	double soil_b;                                                        /* (DIM) slope of log(psi) vs log(rwc) */
-	double soilw_fc;                                                      /* (kgH2O/day) soil water at field capacity */
-	double soilw_sat;                                                     /* (kgH2O/day) soil water at saturation */
-	double swc;                                                           /* (kgH2O/day) soil Water content */
-
 	/* water */
 	int days_since_rain;                                                  /* (days) consecutive days without rain */
 
 	/* pools */
+	double swc;                                                           /* (kgH2O/day) soil Water content */
 	double asw;                                                           /* (mm/volume) current available soil water  */
 	double cum_asw;
 	double max_asw_fc;                                                    /* (mmKgH2O/m3) max available soil water at field capacity */
@@ -1472,7 +1490,7 @@ typedef struct
 	double snow_pack;                                                     /* (Kg/m2)current amount of snow */
 	double canopy_water_stored;                                           /* (mm/m2) canopy water stored at cell level */
 	double canopy_snow_stored;                                            /* (mm/m2) canopy snow stored at cell level */
-	double old_water_store;                                               /* (mm/m2) previous day soil water stored */													
+	double old_water_store;                                               /* (mm/m2) previous day soil water stored */
 
 	/* fluxes */
 	double daily_snow_melt;                                               /* (mm/m2/time) current amount of melted snow  */
@@ -1498,6 +1516,7 @@ typedef struct
 
 	double daily_nep, monthly_nep, annual_nep;                            /* (gC/m2/time) daily, monthly and annual net ecosystem production */
 	double daily_nee, monthly_nee, annual_nee;                            /* (gC/m2/time) daily, monthly and annual net ecosystem exchange */
+
 	/************************************************** BALANCES VARIABLES **************************************************/
 	/* cell */
 	double cell_carbon_in;                                                /* (gC/day/day) cell carbon balances in */
@@ -1561,6 +1580,13 @@ typedef struct
 	double soil_nitrogen_store;                                           /* (gN/day) cell nitrogen balances store */
 	double soil_nitrogen_old_store;                                       /* (gN/day) cell nitrogen balances old_store */
 	double soil_nitrogen_balance;                                         /* (gN/day/day) cell nitrogen balances balance */
+
+	/********************************************** TOPOGRAPHIC VARIABLES *******************************************************/
+
+	/* TOPOGRAPHIC CELL INITIALIZATION */
+	/* from "topo.txt" file */
+	double elev;                                                          /* (m) elevation */
+
 } cell_t;
 
 typedef struct {
