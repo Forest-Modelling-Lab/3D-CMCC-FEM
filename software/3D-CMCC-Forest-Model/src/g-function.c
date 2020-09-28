@@ -10,7 +10,7 @@
 #include "matrix.h"
 
 extern logger_t* g_debug_log;
-extern soil_settings_t *g_soil_settings;
+//extern soil_settings_t *g_soil_settings;
 
 int sort_by_years(const void *a, const void *b)
 {
@@ -292,7 +292,7 @@ void Abscission_DayLength (cell_t *c)
 	/*to compute day length for stopping growth*/
 	//from Schwalm and Ek, 2004
 	//but it considers a value independently from species
-	c->abscission_daylength = (39132 + (pow (1.088, (g_soil_settings->values[SOIL_LAT] + 60.753))))/(60*60);
+	c->abscission_daylength = (39132 + (pow (1.088, (c->lat + 60.753))))/(60*60);
 	//logger(g_debug_log, "Abscission day length = %f hrs\n", c->abscission_daylength);
 }
 
