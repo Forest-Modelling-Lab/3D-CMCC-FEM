@@ -18,7 +18,7 @@
 #include "littering.h"
 
 extern settings_t* g_settings;
-extern soil_settings_t *g_soil_settings;
+//extern soil_settings_t *g_soil_settings;
 
 #define BIOME 0 /* 0 is off and uses CENTURY approach */
 

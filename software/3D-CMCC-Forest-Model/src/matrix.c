@@ -1588,47 +1588,61 @@ void site_summary(const matrix_t* const m)
 {
 	assert(m);
 
-	/* Site definition */
-	logger(g_debug_log, "***************************************************\n\n");
-	logger(g_debug_log, "SITE DATASET\n");
-	logger(g_debug_log, "Site Name = %s\n", g_settings->sitename);
-	logger(g_debug_log, "Latitude = %f° \n", g_soil_settings->values[SOIL_LAT]);
-	logger(g_debug_log, "Longitude = %f° \n", g_soil_settings->values[SOIL_LON]);
-	if (g_soil_settings->values[SOIL_LAT] > 0) logger(g_debug_log, "North hemisphere\n");
-	else logger(g_debug_log, "South hemisphere\n");
+	if (m->cells_count > 0)
+	{
+		/* Site definition */
+		logger(g_debug_log, "***************************************************\n\n");
+		logger(g_debug_log, "SITE DATASET\n");
+		logger(g_debug_log, "Site Name = %s\n",    g_settings->sitename);
+		logger(g_debug_log, "Latitude = %f° \n",   g_soil_settings->values[SOIL_LAT]);
+		logger(g_debug_log, "Longitude = %f° \n",  g_soil_settings->values[SOIL_LON]);
+		if (g_soil_settings->values[SOIL_LAT] > 0) logger(g_debug_log, "North hemisphere\n");
+		else logger(g_debug_log, "South hemisphere\n");
+	}
+	else
+	{
+		logger(g_debug_log, "***************************************************\n\n");
+		logger(g_debug_log, "MULTICELL SIMULATION\n");
+	}
 }
 
 void topo_summary(const matrix_t* const m)
 {
 	assert(m);
 
-	/* Topography definition */
-	logger(g_debug_log, "***************************************************\n\n");
-	logger(g_debug_log, "TOPOGRAPHY DATASET\n");
-	logger(g_debug_log, "Elevation = %g m\n", g_topo->values[TOPO_ELEV]);
+	if (m->cells_count > 0)
+	{
+		/* Topography definition */
+		logger(g_debug_log, "***************************************************\n\n");
+		logger(g_debug_log, "TOPOGRAPHY DATASET\n");
+		logger(g_debug_log, "Elevation = %g m\n", g_topo->values[TOPO_ELEV]);
+	}
 }
 
 void soil_summary(const matrix_t* const m, const cell_t* const cell)
 {
 	assert(m);
 
-	/* Soil definition and initialization */
-	logger(g_debug_log, "***************************************************\n\n");
-	logger(g_debug_log, "SOIL DATASET\n");
-	logger(g_debug_log, "-Number of soil layers = %g\n", g_settings->number_of_soil_layer);
-	logger(g_debug_log, "-Soil depth = %g cm\n", g_soil_settings->values[SOIL_DEPTH]);
-	logger(g_debug_log, "-Clay Percentage = %g %%\n", g_soil_settings->values[SOIL_CLAY_PERC]);
-	logger(g_debug_log, "-Silt Percentage = %g %%\n", g_soil_settings->values[SOIL_SILT_PERC]);
-	logger(g_debug_log, "-Sand Percentage = %g %%\n", g_soil_settings->values[SOIL_SAND_PERC]);
-	logger(g_debug_log, "-Soil FR = %g\n", g_soil_settings->values[SOIL_FR]);
-	logger(g_debug_log, "-Soil FN0 = %g\n", g_soil_settings->values[SOIL_FN0]);
-	logger(g_debug_log, "-Soil FNN = %g\n", g_soil_settings->values[SOIL_FNN]);
-	logger(g_debug_log, "-Soil M0 = %g\n", g_soil_settings->values[SOIL_M0]);
-	logger(g_debug_log, "-Litter = %g tC/ha\n", g_soil_settings->values[LITTERC]);
-	logger(g_debug_log, "-Litter = %g tN/ha\n", g_soil_settings->values[LITTERN]);
-	logger(g_debug_log, "-Soil = %g tC/ha\n", g_soil_settings->values[SOILC]);
-	logger(g_debug_log, "-Soil = %g tN/ha\n", g_soil_settings->values[SOILN]);
-	logger(g_debug_log, "***************************************************\n\n");
+	if (m->cells_count > 0)
+	{
+		/* Soil definition and initialization */
+		logger(g_debug_log, "***************************************************\n\n");
+		logger(g_debug_log, "SOIL DATASET\n");
+		logger(g_debug_log, "-Number of soil layers = %g\n", g_settings->number_of_soil_layer);
+		logger(g_debug_log, "-Soil depth = %g cm\n",         g_soil_settings->values[SOIL_DEPTH]);
+		logger(g_debug_log, "-Clay Percentage = %g %%\n",    g_soil_settings->values[SOIL_CLAY_PERC]);
+		logger(g_debug_log, "-Silt Percentage = %g %%\n",    g_soil_settings->values[SOIL_SILT_PERC]);
+		logger(g_debug_log, "-Sand Percentage = %g %%\n",    g_soil_settings->values[SOIL_SAND_PERC]);
+		logger(g_debug_log, "-Soil FR = %g\n",               g_soil_settings->values[SOIL_FR]);
+		logger(g_debug_log, "-Soil FN0 = %g\n",              g_soil_settings->values[SOIL_FN0]);
+		logger(g_debug_log, "-Soil FNN = %g\n",              g_soil_settings->values[SOIL_FNN]);
+		logger(g_debug_log, "-Soil M0 = %g\n",               g_soil_settings->values[SOIL_M0]);
+		logger(g_debug_log, "-Litter = %g tC/ha\n",          g_soil_settings->values[LITTERC]);
+		logger(g_debug_log, "-Litter = %g tN/ha\n",          g_soil_settings->values[LITTERN]);
+		logger(g_debug_log, "-Soil = %g tC/ha\n",            g_soil_settings->values[SOILC]);
+		logger(g_debug_log, "-Soil = %g tN/ha\n",            g_soil_settings->values[SOILN]);
+		logger(g_debug_log, "***************************************************\n\n");
+	}
 }
 
 void forest_initialization ( const matrix_t* const m, const int day, const int month, const int year )
@@ -1783,6 +1797,7 @@ void forest_initialization ( const matrix_t* const m, const int day, const int m
 		logger(g_debug_log, "----branch_dead_wood_carbon   = %f gC/m2\n", m->cells[cell].branch_dead_wood_carbon);
 		logger(g_debug_log, "----reserve_carbon            = %f gC/m2\n", m->cells[cell].reserve_carbon);
 		logger(g_debug_log, "----fruit_carbon              = %f gC/m2\n", m->cells[cell].fruit_carbon);
+
 		logger(g_debug_log, "\n***FOREST CELL POOLS (NITROGEN)***\n");
 		logger(g_debug_log, "----leaf_nitrogen             = %f gN/m2\n", m->cells[cell].leaf_nitrogen);
 		logger(g_debug_log, "----froot_nitrogen            = %f gN/m2\n", m->cells[cell].froot_nitrogen);

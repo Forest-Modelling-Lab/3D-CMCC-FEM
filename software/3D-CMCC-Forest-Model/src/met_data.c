@@ -15,7 +15,7 @@
 #define WEIGHTED_DAYS	10
 #define AVERAGED_DAYS	10
 
-extern soil_settings_t *g_soil_settings;
+//extern soil_settings_t *g_soil_settings;
 extern topo_t *g_topo;
 extern logger_t* g_debug_log;
 
@@ -236,7 +236,7 @@ void Radiation (cell_t *const c, const int day, const int month, const int year)
 	met[month].d[day].incoming_sw_downward_W = met[month].d[day].sw_downward_MJ * MJ_TO_W;
 	met[month].d[day].sw_downward_W          = met[month].d[day].incoming_sw_downward_W ;
 
-	met[month].d[day].sw_pot_downward_W      = compute_potential_rad(g_soil_settings->values[SOIL_LAT], g_soil_settings->values[SOIL_LON], day);
+	met[month].d[day].sw_pot_downward_W      = compute_potential_rad(c->lat, c->lon, day);
 
 	/* convert incoming Short-Wave flux in PAR from MJ/m2/day to molPAR/m2/day (Biome-BGC method) */
 	met[month].d[day].incoming_par           = met[month].d[day].sw_downward_MJ * RAD2PAR * EPAR;
@@ -347,7 +347,7 @@ void Day_Length(cell_t *c, const int day, const int month, const int year)
 	//	met[month].d[day].daylength = ampl * (sin ((doy - 79) * 0.01721)) + 12;
 	//logger(g_debug_log, "with altitude = %f\n", met[month].d[day].daylength);
 
-	ampl = ( exp ( 7.42 + ( 0.045 * g_soil_settings->values[SOIL_LAT] ) ) ) / 3600.;
+	ampl = ( exp ( 7.42 + ( 0.045 * c->lat ) ) ) / 3600.;
 
 	/* compute daylength in hours */
 	met[month].d[day].daylength     = ampl * ( sin ( ( c->doy_daylength - 79. ) * 0.01721 ) ) + 12.;

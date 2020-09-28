@@ -14,7 +14,7 @@
 /* externs */
 extern settings_t* g_settings;
 extern logger_t* g_debug_log;
-extern soil_settings_t *g_soil_settings;
+//extern soil_settings_t *g_soil_settings;
 
 void modifiers(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, const meteo_daily_t *const meteo_daily,
 		const meteo_annual_t *const meteo_annual)
@@ -418,7 +418,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	/********************************************************************************************/
 
 	/* SOIL NUTRIENT MODIFIER */
-	s->value[F_NUTR] = 1. - ( 1. - g_soil_settings->values[SOIL_FN0] ) * pow ( ( 1. - g_soil_settings->values[SOIL_FR]), g_soil_settings->values[SOIL_FNN] );
+	s->value[F_NUTR] = 1. - ( 1. - c->fn0 ) * pow ( ( 1. - c->fr), c->fnn );
 	logger(g_debug_log, "fNutr = %f\n", s->value[F_NUTR]);
 
 	/* check */

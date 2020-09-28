@@ -1408,6 +1408,7 @@ int main(int argc, char *argv[]) {
 
 
 		/********************************** IMPORT MET DATA **********************************/
+
 		logger(g_debug_log, "Processing met data files for cell at %d,%d...\n", matrix->cells[cell].x, matrix->cells[cell].y);
 		logger(g_debug_log, "input_met_path = %s\n", g_sz_input_met_file);
 		logger_error(g_debug_log, "importing met data...");
@@ -1734,10 +1735,10 @@ int main(int argc, char *argv[]) {
 					else ++matrix->cells[cell].dos;
 
 					/* print daily met data */
-					print_daily_met_data (&matrix->cells[cell], day, month, year);
+					if (matrix->cells_count > 0.) print_daily_met_data (&matrix->cells[cell], day, month, year);
 
 					/* print cell data */
-					print_daily_cell_data ( &matrix->cells[cell] );
+					if (matrix->cells_count > 0.) print_daily_cell_data ( &matrix->cells[cell] );
 
 					/************************************************************************/
 					/* note: if spinup 'on' tree_model_daily doesn't run */

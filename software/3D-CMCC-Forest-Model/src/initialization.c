@@ -16,7 +16,7 @@
 
 extern settings_t *g_settings;
 extern logger_t* g_debug_log;
-extern soil_settings_t *g_soil_settings;
+//extern soil_settings_t *g_soil_settings;
 
 extern const char sz_err_out_of_memory[];
 
@@ -437,7 +437,7 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 	/***** INITIALIZE LITTER POOL *****/
 
 
-	if ( ! g_soil_settings->values[LITTERC] || g_soil_settings->values[LITTERC] == NO_DATA )
+	if ( ! c->init_litter_C || c->init_litter_C == NO_DATA )
 	{
 		/* compute leaf litter (assuming that at year zero litter is composed by the amount of peak lai of the previous year */
 		s->value[LEAF_LITRC]  = ( ( s->value[PEAK_LAI_PROJ] / s->value[SLA_AVG] ) / 1e3 * ( s->value[CANOPY_COVER_PROJ] * g_settings->sizeCell ) ) / GC_GDM;
@@ -454,8 +454,8 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 	else
 	{
 		/* get data from soil setting file */
-		s->value[LEAF_LITRC]  = g_soil_settings->values[LITTERC] * s->value[FROOT_LEAF_FRAC];
-		s->value[FROOT_LITRC] = g_soil_settings->values[LITTERC] * ( 1. - s->value[FINE_ROOT_LEAF]);
+		s->value[LEAF_LITRC]  = c->init_litter_C * s->value[FROOT_LEAF_FRAC];
+		s->value[FROOT_LITRC] = c->init_litter_C * ( 1. - s->value[FINE_ROOT_LEAF]);
 	}
 
 	/***** COMPUTE LIVE DEAD BIOMASS *****/
@@ -812,9 +812,9 @@ void initialization_forest_class_N (cell_t *const c, const int height, const int
 		s->value[FROOT_N]       = s->value[FROOT_C] / s->value[CN_FINE_ROOTS];
 	}
 
-	s->value[DEADWOODN]         = g_soil_settings->values[DEADWOODC] / s->value[CN_DEADWOOD];
+	s->value[DEADWOODN]         = c->init_dead_C / s->value[CN_DEADWOOD];
 
-	if ( ! g_soil_settings->values[LITTERN] || g_soil_settings->values[LITTERN] == NO_DATA )
+	if ( ! c->init_litter_N || c->init_litter_N == NO_DATA )
 	{
 		s->value[LEAF_LITRN]    = (s->value[LEAF_LITRC]  / s->value[CN_LEAVES])    * (1. - N_FRAC_TO_RETRANSL);
 		s->value[FROOT_LITRN]   = s->value[FROOT_LITRC]  / s->value[CN_FINE_ROOTS] * (1. - N_FRAC_TO_RETRANSL);
@@ -822,8 +822,8 @@ void initialization_forest_class_N (cell_t *const c, const int height, const int
 	else
 	{
 		/* get data from soil setting file */
-		s->value[LEAF_LITRN]    = g_soil_settings->values[LITTERN] * s->value[FROOT_LEAF_FRAC];
-		s->value[FROOT_LITRN]   = g_soil_settings->values[LITTERN] * ( 1. - s->value[FINE_ROOT_LEAF]);
+		s->value[LEAF_LITRN]    = c->init_litter_N * s->value[FROOT_LEAF_FRAC];
+		s->value[FROOT_LITRN]   = c->init_litter_N * ( 1. - s->value[FINE_ROOT_LEAF]);
 	}
 
 	s->value[RESERVE_N]         = 0.;
@@ -933,14 +933,14 @@ void initialization_forest_class_litter (cell_t *const c, const int height, cons
 	if ( ! g_settings->spinup )
 	{
 		/*** compute coarse woody debris carbon pools ****/
-		if ( ! g_soil_settings->values[DEADWOODC] || g_soil_settings->values[DEADWOODC] == NO_DATA )
+		if ( ! c->init_dead_C || c->init_dead_C == NO_DATA )
 		{
 			//note:this must be initialized although to a minimum value to avoid model crashes
 			s->value[CWD_LITRC]  = 0.001;
 		}
 		else
 		{
-			s->value[CWD_LITRC]  =   g_soil_settings->values[DEADWOODC];
+			s->value[CWD_LITRC]  =   c->init_dead_C;
 		}
 		s->value[CWD_LITR2C]     = s->value[CWD_LITRC]    * s->value[DEADWOOD_USCEL_FRAC];
 		s->value[CWD_LITR3C]     = s->value[CWD_LITRC]    * s->value[DEADWOOD_SCEL_FRAC] ;
@@ -1205,13 +1205,13 @@ void initialization_cell_litter_biochem ( cell_t *const c )
 void initialization_cell_soil_biochem (cell_t *const c)
 {
 	/* initialize soil carbon */
-	if ( ! g_soil_settings->values[SOILC] || g_soil_settings->values[SOILC] == NO_DATA )
+	if ( ! c->init_soil_C || c->init_soil_C == NO_DATA )
 	{
 		c->soilC      = 0.001;
 	}
 	else
 	{
-		c->soilC      = g_soil_settings->values[SOILC];
+		c->soilC      = c->init_soil_C;
 	}
 	c->soil1C         = 0.001;
 	c->soil2C         = 0.001;
@@ -1219,13 +1219,13 @@ void initialization_cell_soil_biochem (cell_t *const c)
 	c->soil4C         = 0.001;
 
 	/* initialize soil nitrogen */
-	if ( ! g_soil_settings->values[SOILN] || g_soil_settings->values[SOILN] == NO_DATA )
+	if ( ! c->init_soil_N || c->init_soil_N == NO_DATA )
 	{
 		c->soilN      = 0.001;
 	}
 	else
 	{
-		c->soilN      = g_soil_settings->values[SOILN];
+		c->soilN      = c->init_soil_N;
 	}
 	c->soil1N         = 0.001;
 	c->soil2N         = 0.001;
@@ -1242,10 +1242,10 @@ void initialization_cell_soil_physic(cell_t *const c)
 	float volumetric_field_capacity;
 	float volumetric_saturated_hydraulic_conductivity;
 
-	logger(g_debug_log,"\n*******INITIALIZE SOIL *******\n");
+	logger(g_debug_log,"\n******* INITIALIZE SOIL *******\n");
 
 	/*soil matric potential*/
-	CHECK_CONDITION(fabs((g_soil_settings->values[SOIL_SAND_PERC] + g_soil_settings->values[SOIL_CLAY_PERC] + g_soil_settings->values[SOIL_SILT_PERC]) -100.0 ), >, eps);
+	CHECK_CONDITION(fabs((c->sand_perc + c->clay_perc + c->silt_perc) -100.0 ), >, eps);
 
 	/* BIOME-BGC METHOD */
 	/*
@@ -1264,7 +1264,7 @@ void initialization_cell_soil_physic(cell_t *const c)
 
 
 	/* (DIM) Clapp-Hornberger "b" parameter */
-	c->soil_b = -( 3.10 + 0.157 * g_soil_settings->values[SOIL_CLAY_PERC] - 0.003 * g_soil_settings->values[SOIL_SAND_PERC] ); /* ok for schwalm*/
+	c->soil_b = -( 3.10 + 0.157 * c->clay_perc - 0.003 * c->sand_perc); /* ok for schwalm*/
 	logger(g_debug_log, "soil_b = %f (DIM)\n", c->soil_b);
 
 	//test
@@ -1275,10 +1275,10 @@ void initialization_cell_soil_physic(cell_t *const c)
 	/* calculate the soil pressure-volume coefficients from texture data */
 	/* Uses the multivariate regressions from Cosby et al., 1984 */
 	/* (DIM) Soil volumetric water content at saturation */
-	c->vwc_sat = ( 50.5 - 0.142 * g_soil_settings->values[SOIL_SAND_PERC] - 0.037 * g_soil_settings->values[SOIL_CLAY_PERC] ) / 100.; /* ok for schwalm*/
+	c->vwc_sat = ( 50.5 - 0.142 * c->sand_perc - 0.037 * c->clay_perc ) / 100.; /* ok for schwalm*/
 	logger(g_debug_log, "volumetric water content at saturation (BIOME) = %f %%(vol)\n", c->vwc_sat);
 	/* (MPa) soil matric potential at saturation */
-	c->psi_sat = -( exp ( ( 1.54 - 0.0095 * g_soil_settings->values[SOIL_SAND_PERC] + 0.0063 * g_soil_settings->values[SOIL_SILT_PERC] ) * log ( 10.) ) * 9.8e-5 ); /* ok for schwalm*/
+	c->psi_sat = -( exp ( ( 1.54 - 0.0095 * c->sand_perc + 0.0063 * c->silt_perc ) * log ( 10.) ) * 9.8e-5 ); /* ok for schwalm*/
 	logger(g_debug_log, "psi_sat = %f MPa \n", c->psi_sat);
 	/* Clapp-Hornenberger function 1978 (DIM) Soil Field Capacity Volumetric Water Content at field capacity ( = -0.015 MPa) */
 	c->vwc_fc = c->vwc_sat * pow ( ( -0.015 / c->psi_sat ) , ( 1. / c->soil_b ) );
@@ -1288,12 +1288,12 @@ void initialization_cell_soil_physic(cell_t *const c)
 	/* converts volumetric water content (m3/m3) --> (kg/m2) */
 
 	/* (kgH2O/m2) soil water at field capacity */
-	c->soilw_fc = ( g_soil_settings->values[SOIL_DEPTH] / 100. ) * c->vwc_fc * 1e3;
+	c->soilw_fc = ( c->soil_depth / 100. ) * c->vwc_fc * 1e3;
 	logger(g_debug_log, "soilw_fc BIOME (MAXASW FC BIOME)= %f (kgH2O/m2)\n", c->soilw_fc);
 	//equal to MAXASW
 
 	/* (kgH2O/m2) soil water at saturation */
-	c->soilw_sat = ( g_soil_settings->values[SOIL_DEPTH] / 100. ) * c->vwc_sat * 1e3;
+	c->soilw_sat = ( c->soil_depth / 100. ) * c->vwc_sat * 1e3;
 	logger(g_debug_log, "soilw_sat BIOME (MAXASW SAT BIOME)= %f (kgH2O/m2)\n", c->soilw_sat);
 
 	/* (kgH2O/m2) maximum soil water at field capacity */
@@ -1309,16 +1309,16 @@ void initialization_cell_soil_physic(cell_t *const c)
 	/* soil data from https://www.nrel.colostate.edu/projects/century/soilCalculatorHelp.htm */
 	/* following Saxton et al 1986, 2006, 2008 */
 	logger(g_debug_log, "CENTURY soil characteristics\n");
-	acoeff = (float)exp(-4.396 - 0.0715 * g_soil_settings->values[SOIL_CLAY_PERC] - 4.88e-4 * pow(g_soil_settings->values[SOIL_SAND_PERC],2) - 4.285e-5 * pow(g_soil_settings->values[SOIL_SAND_PERC],2)*g_soil_settings->values[SOIL_CLAY_PERC]);
-	bcoeff = (float)(-3.14 - 0.00222 * pow(g_soil_settings->values[SOIL_CLAY_PERC],2) - 3.484e-5 * pow(g_soil_settings->values[SOIL_SAND_PERC],2) * g_soil_settings->values[SOIL_CLAY_PERC]);
-	sat    = (float)(0.332 - 7.251e-4 * g_soil_settings->values[SOIL_SAND_PERC] + 0.1276 * log10(g_soil_settings->values[SOIL_CLAY_PERC]));
+	acoeff = (float)exp(-4.396 - 0.0715 * c->clay_perc - 4.88e-4 * pow(c->sand_perc, 2) - 4.285e-5 * pow( c->sand_perc, 2 ) * c->clay_perc);
+	bcoeff = (float)(-3.14 - 0.00222 * pow(c->clay_perc, 2) - 3.484e-5 * pow(c->sand_perc, 2) * c->clay_perc);
+	sat    = (float)(0.332 - 7.251e-4 * c->sand_perc + 0.1276 * log10(c->clay_perc));
 
 	/* volumetric percentage for wilting point */
 	volumetric_wilting_point = (float)pow((15.0/acoeff), (1.0/bcoeff));
 	/* volumetric percentage for field capacity */
 	volumetric_field_capacity = (float)pow((0.333/acoeff),(1.0/bcoeff));
 	/* volumetric percentage for saturated hydraulic conductivity */
-	volumetric_saturated_hydraulic_conductivity = (float)exp((12.012 - 0.0755 * g_soil_settings->values[SOIL_SAND_PERC]) + (-3.895 + 0.03671 * g_soil_settings->values[SOIL_SAND_PERC] - 0.1103 * g_soil_settings->values[SOIL_CLAY_PERC] + 8.7546e-4 * pow(g_soil_settings->values[SOIL_CLAY_PERC],2))/sat);
+	volumetric_saturated_hydraulic_conductivity = (float)exp((12.012 - 0.0755 * c->sand_perc) + (-3.895 + 0.03671 * c->sand_perc - 0.1103 * c->clay_perc + 8.7546e-4 * pow(c->clay_perc, 2))/sat);
 	/* bulk density g/cm3 */
 	c->bulk_density = (1 - sat) * 2.65;
 
@@ -1327,14 +1327,14 @@ void initialization_cell_soil_physic(cell_t *const c)
 	volumetric_wilting_point += (float)(-0.15 * volumetric_wilting_point);
 	logger(g_debug_log, "volumetric water content at wilting point (CENTURY) = %f %%(vol)\n", volumetric_wilting_point);
 	/* (kgH2O/m2) soil water at wilting point */
-	c->wilting_point = ( g_soil_settings->values[SOIL_DEPTH] / 100. ) * volumetric_wilting_point * 1e3;
+	c->wilting_point = ( c->soil_depth / 100. ) * volumetric_wilting_point * 1e3;
 	logger(g_debug_log, "Wilting point (CENTURY) = %f mm/m2\n", c->wilting_point);
 
 	/* volumetric percentage field capacity */
 	volumetric_field_capacity += (float)(0.07 * volumetric_field_capacity);
 	logger(g_debug_log, "volumetric water content at field capacity (CENTURY) = %f %%(vol)\n", volumetric_field_capacity);
 	/* (kgH2O/m2) soil water at field capacity */
-	c->field_capacity = ( g_soil_settings->values[SOIL_DEPTH] / 100. ) * volumetric_field_capacity * 1e3;
+	c->field_capacity = ( c->soil_depth / 100. ) * volumetric_field_capacity * 1e3;
 	logger(g_debug_log, "Field capacity (CENTURY) = %f mm/m2\n", c->field_capacity);
 
 	/* volumetric percentage saturated hydraulic conductivity */
@@ -1342,7 +1342,7 @@ void initialization_cell_soil_physic(cell_t *const c)
 	logger(g_debug_log, "volumetric water content at saturated hydraulic conductance (CENTURY) = %f %%(vol)\n", volumetric_saturated_hydraulic_conductivity);
 
 	/* (kgH2O/m2) soil water at saturated hydraulic conductivity */
-	c->sat_hydr_conduct = (g_soil_settings->values[SOIL_DEPTH] / 100.) * volumetric_saturated_hydraulic_conductivity * 1e3;
+	c->sat_hydr_conduct = (c->soil_depth / 100.) * volumetric_saturated_hydraulic_conductivity * 1e3;
 	logger(g_debug_log, "Saturated hydraulic conductivity (CENTURY) = %f mm/m2\n", c->sat_hydr_conduct);
 
 	/* bulk density g/cm3 */

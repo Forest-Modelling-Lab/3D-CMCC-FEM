@@ -60,7 +60,7 @@
 #include "CN-balance.h"
 
 extern logger_t* g_debug_log;
-extern soil_settings_t* g_soil_settings;
+//extern soil_settings_t* g_soil_settings;
 extern settings_t* g_settings;
 
 
@@ -222,8 +222,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							/**********************************/
 
 							/* beginning of simulation (every year included the first one) */
-							if ( ( g_soil_settings->values[SOIL_LAT]    > 0. && c->doy == 1 )  ||
-									( g_soil_settings->values[SOIL_LAT] < 0. && c->doy == 180 ) )
+							if ( ( c->lat > 0. && c->doy == 1 ) || ( c->lat < 0. && c->doy == 180 ) )
 							{
 								/* compute annual minimum reserve for incoming year */
 								annual_minimum_reserve( s );
