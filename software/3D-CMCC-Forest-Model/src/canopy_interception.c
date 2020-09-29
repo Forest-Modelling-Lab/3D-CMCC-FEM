@@ -53,6 +53,13 @@ void canopy_interception(cell_t *const c, const int layer, const int height, con
 
 	/*************************************************************************/
 	/* shared functions among all class/layers */
+//ddalmo correction 13-2-2020  On some compilators LAI_PROJ!= 0 also when 
+// it should be ==0
+
+if ( s->value[LAI_PROJ] < 0.000001 )
+ {s->value[LAI_PROJ]=0. ;
+ }
+
 
 	//note: not accumulation of rain or snow happens if canopy is wet or snowed */
 	if( ( meteo_daily->prcp > 0.) && ( s->value[LAI_PROJ] > 0. ) && ( ! s->value[CANOPY_WATER] ) && ( ! s->value[CANOPY_SNOW] ) )

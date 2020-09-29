@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include "logger.h"
-//#include "netcdf.h"
+#include "netcdf.h"  //used by ddalmo
 #include "common.h"
 #include "constants.h"
 #include "settings.h"
@@ -923,825 +923,825 @@ static int meteo_from_arr(double *const values, const int rows_count, const int 
 #undef VALUE_AT
 }
 
-//static int import_nc(const char* const filename, meteo_annual_t** pyos, int* const yos_count, cell_t*const cell) {
-//#define COLUMN_AT(c)	((c)*dims_size[ROWS_DIM])
-//#define VALUE_AT(r,c)	((r)+(COLUMN_AT((c))))
-//	int i;
-//	int y;
-//	int z;
-//	int id_file;
-//	int ret;
-//
-//	int dims_count;	/* dimensions */
-//	int vars_count;
-//	int atts_count;	/* attributes */
-//	int unl_count;	/* unlimited dimensions */
-//	char name[NC_MAX_NAME+1];
-//	nc_type type;
-//	size_t size;
-//	int *i_values = NULL; /* required */
-//	double *values = NULL; /* required */
-//	int columns[MET_COLUMNS_COUNT];
-//
-//	/* DO NOT CHANGE THIS ORDER */
-//	enum {
-//		ROWS_DIM,
-//		X_DIM,
-//		Y_DIM,
-//
-//		DIMS_COUNT
-//	};
-//
-//	int dims_size[DIMS_COUNT];
-//	const char *sz_dims[DIMS_COUNT] = { "row", "x", "y" }; /* DO NOT CHANGE THIS ORDER...please see top */
-//
-//	/* */
-//	ret = nc_open(filename, NC_NOWRITE, &id_file);
-//	if ( ret != NC_NOERR ) goto quit;
-//
-//	ret = nc_inq(id_file, &dims_count, &vars_count, &atts_count, &unl_count);
-//	if ( ret != NC_NOERR ) goto quit;
-//
-//	if ( ! dims_count || ! vars_count ) {
-//		printf("bad nc file! %d dimensions and %d vars\n\n", dims_count, vars_count);
-//		nc_close(id_file);
-//		return 0;
-//	}
-//
-//	/* check if vars count are at least MET_COLUMNS+2 */
-//	if ( vars_count < MET_COLUMNS_COUNT+2 ) {
-//		printf("bad nc file! Vars count should be %d at least.\n\n", vars_count);
-//		nc_close(id_file);
-//		return 0;
-//	}
-//
-//	/* reset */
-//	for ( i = 0; i < MET_COLUMNS_COUNT; ++i ) {
-//		columns[i] = 0;
-//	}
-//	for ( i = 0; i < DIMS_COUNT; ++i ) {
-//		dims_size[i] = -1;
-//	}
-//
-//	/* get dimensions */
-//	for ( i = 0; i < dims_count; ++i ) {
-//		ret = nc_inq_dim(id_file, i, name, &size);
-//		if ( ret != NC_NOERR ) goto quit;
-//		for ( y = 0; y < DIMS_COUNT; ++y ) {
-//			if ( ! string_compare_i(sz_dims[y], name) ) {
-//				if ( dims_size[y] != -1 ) {
-//					printf("dimension %s already found!\n", sz_dims[y]);
-//					nc_close(id_file);
-//					return 0;
-//				}
-//				dims_size[y] = size;
-//				break;
-//			}
-//		}
-//	}
-//
-//	/* check if we have all dimensions */
-//	for ( i = 0; i < DIMS_COUNT; ++i ) {
-//		if ( -1 == dims_size[i] ) {
-//			logger_error(g_debug_log, "dimension %s not found!\n", sz_dims[i]);
-//			nc_close(id_file);
-//			return 0;
-//		}
-//	}
-//
-//	/* check x and y */
-//	if( (dims_size[X_DIM] != 1) || (dims_size[Y_DIM] != 1) ) {
-//		logger_error(g_debug_log, "x and y must be 1!");
-//		nc_close(id_file);
-//		return 0;
-//	}
-//
-//	/* alloc memory for int values */
-//	i_values = malloc(dims_size[ROWS_DIM]*sizeof*values);
-//	if ( ! i_values ) {
-//		logger_error(g_debug_log, sz_err_out_of_memory);
-//		nc_close(id_file);
-//		return 0;
-//	}
-//
-//	/* alloc memory for double values */
-//	/* please note that we alloc double for year,month,day too */
-//	values = malloc(dims_size[ROWS_DIM]*MET_COLUMNS_COUNT*sizeof*values);
-//	if ( ! values ) {
-//		logger_error(g_debug_log, sz_err_out_of_memory);
-//		free(i_values);
-//		nc_close(id_file);
-//		return 0;
-//	}
-//
-//	/* set all double values to -9999 */
-//	for ( i = 0; i < dims_size[ROWS_DIM]*MET_COLUMNS_COUNT; ++i ) {
-//		values[i] = INVALID_VALUE;
-//	}
-//
-//	/* get vars */
-//	for ( i = 0; i < vars_count; ++i ) {
-//		ret = nc_inq_var(id_file, i, name, &type, NULL, NULL, NULL);
-//		if ( ret != NC_NOERR ) goto quit;
-//		/* check if we need that var */
-//		for ( y = 0; y  < MET_COLUMNS_COUNT; ++y ) {
-//			if ( ! string_compare_i(name, sz_met_columns[y]) ) {
-//				/* check if we've already get that var */
-//				if ( columns[y] ) {
-//					//logger(g_debug_log, "column %s already imported!", name);
-//					printf("column %s already imported!", name);
-//					free(values);
-//					free(i_values);
-//					nc_close(id_file);
-//					return 0;
-//				} else {
-//					columns[y] = 1;
-//				}
-//				/* get values */
-//				if ( NC_DOUBLE == type ) {
-//					ret = nc_get_var_double(id_file, i, &values[COLUMN_AT(y)]);
-//					if ( ret != NC_NOERR ) goto quit;
-//				} else if ( NC_INT == type ) {
-//					ret = nc_get_var_int(id_file, i, i_values);
-//					if ( ret != NC_NOERR ) goto quit;
-//					for ( z = 0; z < dims_size[ROWS_DIM]; ++z ) {
-//						values[VALUE_AT(z, y)] = (double)i_values[z];
-//					}
-//				} else {
-//					/* type format not supported! */
-//					//logger(g_debug_log, "type format for %s column not supported", name);
-//					printf("type format for %s column not supported", name);
-//					free(values);
-//					free(i_values);
-//					nc_close(id_file);
-//					return 0;
-//				}
-//
-//				break;
-//			}
-//		}
-//	}
-//	free(i_values);
-//	i_values = NULL;
-//#if 0
-//	/* check if we've all needed vars */
-//	for ( i = 0; i < MET_COLUMNS_COUNT; ++i ) {
-//		if ( ((VPD_F == i) && (-1 == columns[RH_F])) || ((RH_F == i) && (-1 == columns[VPD_F])) ) {
-//			logger(g_debug_log, "met columns %s and %s are missing!\n\n", sz_met_columns[VPD_F], sz_met_columns[RH_F]);
-//			free(values);
-//			free(i_values);
-//			nc_close(id_file);
-//			return 0;
-//		} else if ( -1 == columns[i] ) {
-//			logger(g_debug_log, "met column %s not found.\n\n", sz_met_columns[i]);
-//			free(values);
-//			free(i_values);
-//			nc_close(id_file);
-//			return 0;
-//		}
-//	}
-//
-//	/* compute vpd ?*/
-//	if ( -1 == columns[VPD_F] ) {
-//		compute_vpd(values, dims_size[ROWS_DIM], MET_COLUMNS_COUNT);
-//	}
-//#endif
-//
-//	/* save file */
-//#if 0
-//	{
-//		FILE *f;
-//		int row;
-//		f = fopen("debug_file", "w");
-//		if ( ! f ) {
-//			puts("unable to create output file!");
-//			nc_close(id_file);
-//			free(values);
-//			free(i_values);
-//			return 0;
-//		}
-//		/* write header */
-//		fputs("Year\tMonth\tn_days\tRg_f\tTa_f\tTmax\tTmin\tVPD_f\tTs_f\tPrecip\tSWC\tLAI\tET\tWS_F\n", f);
-//		for ( row = 0; row < dims_size[ROWS_DIM]; ++row ) {
-//			fprintf(f, "%d\t%d\t%d\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\n",
-//					/*
-//						(int)values[VALUE_AT(0,0,row,YEAR)]
-//						, (int)values[VALUE_AT(0,0,row,MONTH)]
-//						, (int)values[VALUE_AT(0,0,row,DAY)]
-//						, values[VALUE_AT(0,0,row,RG_F)]
-//						, values[VALUE_AT(0,0,row,TA_F)]
-//						, values[VALUE_AT(0,0,row,TMAX)]
-//						, values[VALUE_AT(0,0,row,TMIN)]
-//						, values[VALUE_AT(0,0,row,VPD_F)]
-//						, values[VALUE_AT(0,0,row,TS_F)]
-//						, values[VALUE_AT(0,0,row,PRECIP)]
-//						, values[VALUE_AT(0,0,row,NDVI_LAI)]
-//						, values[VALUE_AT(0,0,row,ET)]
-//						, values[VALUE_AT(0,0,row,WS)]
-//					 */
-//					(int)values[VALUE_AT(row,YEAR)]
-//					            , (int)values[VALUE_AT(row,MONTH)]
-//					                          , (int)values[VALUE_AT(row,DAY)]
-//					                                        , values[VALUE_AT(row,RG_F)]
-//					                                                 , values[VALUE_AT(row,TA_F)]
-//					                                                          , values[VALUE_AT(row,TMAX)]
-//					                                                                   , values[VALUE_AT(row,TMIN)]
-//					                                                                            , values[VALUE_AT(row,VPD_F)]
-//					                                                                                     , values[VALUE_AT(row,TS_F)]
-//					                                                                                              , values[VALUE_AT(row,PRECIP)]
-//					                                                                                                       , values[VALUE_AT(row,SWC)]
-//					                                                                                                                , values[VALUE_AT(row,NDVI_LAI)]
-//					                                                                                                                         , values[VALUE_AT(row,ET)]
-//					                                                                                                                                  /* ALESSIOC */
-//					                                                                                                                                  , values[VALUE_AT(row,WS_F)]
-//			);
-//		}
-//		fclose(f);
-//	}
-//#endif
-//	if ( ! meteo_from_arr(values, dims_size[ROWS_DIM], MET_COLUMNS_COUNT, pyos, yos_count, cell) ) {
-//		free(values);
-//		return 0;
-//	}
-//	/* hack */
-//	ret = 0;
-//
-//	quit:
-//	nc_close(id_file);
-//	free(values);
-//	free(i_values);
-//	if ( ret ) {
-//		logger_error(g_debug_log, nc_strerror(ret));
-//		ret = 1;
-//	}
-//	return ! ret;
-//
-//#undef COLUMN_AT
-//#undef VALUE_AT
-//}
-//
+static int import_nc(const char* const filename, meteo_annual_t** pyos, int* const yos_count, cell_t*const cell) {
+#define COLUMN_AT(c)	((c)*dims_size[ROWS_DIM])
+#define VALUE_AT(r,c)	((r)+(COLUMN_AT((c))))
+	int i;
+	int y;
+	int z;
+	int id_file;
+	int ret;
 
-//static int import_lst(const char *const filename, meteo_annual_t** p_yos, int *const yos_count, cell_t*const cell) {
-//#define VARS_COUNT		((MET_COLUMNS_COUNT)-3)	/* we remove first 3 columns: year, month and day */
-//#define COLUMN_AT(c)	((c)*rows_count)
-//#define VALUE_AT(r,c)	((r)+(COLUMN_AT(c)))
-//
-//	/* TODO: fix sz_path and sz_nc_filename size...can't be same of buffer */
-//	char buffer[256];
-//	char sz_path[256];
-//	char sz_nc_filename[256];
-//	char *p;
-//	char *p2;
-//	int i;
-//	int z;
-//	FILE *f;
-//	int rows_count;
-//	int vars[VARS_COUNT];
-//	float *f_values;
-//	double *values;
-//	enum {
-//		X_DIM,
-//		Y_DIM,
-//		TIME_DIM,
-//		HEIGHT_DIM,
-//
-//		DIMS_COUNT
-//	};
-//	int dims_id[DIMS_COUNT];
-//	int dims_size[DIMS_COUNT];
-//	const char *sz_lat = "lat";
-//	const char *sz_lon = "lon";
-//	const char *sz_time = "time";
-//	const char *sz_dims[DIMS_COUNT] = { "x", "y", "time", "height_2m" }; /* DO NOT CHANGE THIS ORDER...please see above */
-//	const char *sz_vars[VARS_COUNT] = { "RADS"
-//			, "T_2M"
-//			, "TMAX_2M"
-//			, "TMIN_2M"
-//			, "VPD"
-//			, "TSOIL"
-//			, "TOT_PREC"
-//			, "SWC"
-//			, "LAI"
-//			, "ET"
-//			, "WS_F"
-//			, "RH"
-//	};
-//
-//	int y;
-//	int id_file;
-//	int ret;
-//	int dims_count;	/* dimensions */
-//	int vars_count;
-//	int atts_count;	/* attributes */
-//	int unl_count;	/* unlimited dimensions */
-//	char name[NC_MAX_NAME+1];
-//	nc_type type;
-//	size_t size;
-//	int n_dims;
-//	int ids[NC_MAX_VAR_DIMS];
-//	int flag;
-//	int date_imported;
-//	float lat;
-//	float lon;
-//
-//	assert(filename);
-//	assert(p_yos);
-//	assert(cell);
-//
-//	/* init */
-//	rows_count = 0;
-//	values = NULL;
-//	f_values = NULL;
-//	date_imported = 0;
-//	for ( i = 0; i < VARS_COUNT; i++ ) {
-//		vars[i] = 0;
-//	}
-//
-//	/* open lst file */
-//	f = fopen(filename, "r");
-//	if ( ! f ) {
-//		logger_error(g_debug_log, "unable to open met data file, problem in open list file !\n");
-//		return 0;
-//	}
-//
-//	/* get filename path */
-//	sz_path[0] = '\0';
-//	if ( filename[1] != ':' ) {
-//		strncpy(sz_path, g_sz_input_path, 256);
-//	}
-//	/* check for buffer overflow */
-//	strcat(sz_path, filename);
-//	p = (strrchr(sz_path, '\\'));
-//	if ( p ) ++p;
-//	p2 = (strrchr(sz_path, '/'));
-//	if ( p2 ) ++p2;
-//	if  ( p2 > p ) p = p2;
-//	*p = '\0';
-//
-//	/* parse lst file */
-//	while ( fgets(buffer, 256, f) ) {
-//		/* remove \r\n and skip blank line */
-//		for ( i = 0; buffer[i]; ++i ) {
-//			if ( '\r' == buffer[i] || '\n' == buffer[i] ) {
-//				buffer[i] = '\0';
-//				break;
-//			}
-//		}
-//		if ( ! buffer[0] ) {
-//			continue;
-//		}
-//
-//		/* TODO: check for buffer overflow */
-//		sprintf(sz_nc_filename, "%s%s", sz_path, buffer);
-//
-//		/* try to open nc file */
-//		ret = nc_open(sz_nc_filename, NC_NOWRITE, &id_file);
-//		if ( ret != NC_NOERR ) goto quit;
-//
-//		ret = nc_inq(id_file, &dims_count, &vars_count, &atts_count, &unl_count);
-//		if ( ret != NC_NOERR ) goto quit;
-//
-//		if ( ! dims_count || ! vars_count ) {
-//			//logger(g_debug_log, "bad nc file! %d dimensions and %d vars\n\n", dims_count, vars_count);
-//			printf("bad nc file! %d dimensions and %d vars\n\n", dims_count, vars_count);
-//			goto quit_no_nc_err;
-//		}
-//
-//		/* reset */
-//		for ( i = 0; i < DIMS_COUNT; ++i ) {
-//			dims_id[i] = -1;
-//			dims_size[i] = -1;
-//		}
-//
-//		/* get dimensions */
-//		for ( i = 0; i < dims_count; ++i ) {
-//			ret = nc_inq_dim(id_file, i, name, &size);
-//			if ( ret != NC_NOERR ) goto quit;
-//			for ( y = 0; y < DIMS_COUNT; ++y ) {
-//				if ( ! string_compare_i(sz_dims[y], name) ) {
-//					if ( dims_size[y] != -1 ) {
-//						//logger(g_debug_log, "dimension %s already found!\n", sz_dims[y]);
-//						printf("dimension %s already found!\n", sz_dims[y]);
-//						goto quit_no_nc_err;
-//					}
-//					dims_size[y] = size;
-//					dims_id[y] = i;
-//					break;
-//				}
-//			}
-//		}
-//
-//		/* check if we have all dimensions */
-//		for ( i = 0; i < DIMS_COUNT; ++i ) {
-//			/* height_2m can be missing */
-//			if ( (-1 == dims_size[i]) && (i != HEIGHT_DIM) ) {
-//				//logger(g_debug_log, "dimension %s not found!\n", sz_dims[i]);
-//				printf("dimension %s not found!\n", sz_dims[i]);
-//				goto quit_no_nc_err;
-//			}
-//		}
-//
-//		/* check if x_cell is >= x_dim */
-//		if ( cell->x >= dims_size[X_DIM] ) {
-//			printf("cell->x >= x_dim: %d,%d\n", cell->x, dims_size[X_DIM]);
-//			goto quit_no_nc_err;
-//		}
-//
-//		/*
-//		if ( ! x_cells_count ) {
-//			x_cells_count = dims_size[X_DIM];
-//			y_cells_count = dims_size[Y_DIM];
-//		}
-//		 */
-//
-//		/* check if y_cell is >= y_dim */
-//		if ( cell->y >= dims_size[Y_DIM] ) {
-//			//logger(g_debug_log, "y_cell >= y_dim: %d,%d\n", y_cell, dims_size[Y_DIM]);
-//			printf("cell->y >= y_dim: %d,%d\n", cell->y, dims_size[Y_DIM]);
-//			goto quit_no_nc_err;
-//		}
-//
-//		/* if we have height, it cannot be > 1 */
-//		if ( dims_size[HEIGHT_DIM] > 1 ) {
-//			//logger(g_debug_log, "height_2m cannot be > 1 : (%d)\n", dims_size[HEIGHT_DIM]);
-//			printf("height_2m cannot be > 1 : (%d)\n", dims_size[HEIGHT_DIM]);
-//			goto quit_no_nc_err;
-//		}
-//
-//		/* check rows_count */
-//		if ( ! rows_count ) {
-//			rows_count = dims_size[TIME_DIM];
-//			/* alloc memory for double values */
-//			values = malloc(rows_count*MET_COLUMNS_COUNT*sizeof*values);
-//			if ( ! values ) {
-//				logger_error(g_debug_log, sz_err_out_of_memory);
-//				nc_close(id_file);
-//				fclose(f);
-//				return 0;
-//			}
-//			/* set all double values to -9999 */
-//			for ( i = 0; i < rows_count*MET_COLUMNS_COUNT; ++i ) {
-//				values[i] = INVALID_VALUE;
-//			}
-//			/* alloc memory for float values */
-//			f_values = malloc(rows_count*sizeof*f_values);
-//			if ( ! f_values ) {
-//				logger_error(g_debug_log, sz_err_out_of_memory);
-//				nc_close(id_file);
-//				fclose(f);
-//				free(values);
-//				return 0;
-//			}
-//			/* set all float values to -9999..not really needed */
-//			for ( i = 0; i < rows_count; ++i ) {
-//				f_values[i] = INVALID_VALUE;
-//			}
-//		} else {
-//			if ( rows_count != dims_size[TIME_DIM] ) {
-//				//logger(g_debug_log, "rows count inside %s should be %d not %d\n\n", buffer, rows_count, dims_size[TIME_DIM]);
-//				printf("rows count inside %s should be %d not %d\n\n", buffer, rows_count, dims_size[TIME_DIM]);
-//				goto quit_no_nc_err;
-//			}
-//		}
-//
-//		/* get var */
-//		flag = 0;
-//		for ( i = 0; i < vars_count; ++i ) {
-//			size_t start[DIMS_COUNT];
-//			size_t count[DIMS_COUNT];
-//
-//			ret = nc_inq_var(id_file, i, name, &type, &n_dims, ids, NULL);
-//			if ( ret != NC_NOERR ) goto quit;
-//			if ( ! string_compare_i(name, sz_lat) ) {
-//				/* n_dims can be only 2 and ids only x and y */
-//				if ( 2 != n_dims ) {
-//					//logger(g_debug_log, "bad %s dimension size. It should be 2 not %d\n", sz_lat, n_dims);
-//					printf("bad %s dimension size. It should be 2 not %d\n", sz_lat, n_dims);
-//					goto quit_no_nc_err;
-//				}
-//				/* who cames first ? x or y ? */
-//				if ( dims_id[X_DIM] == ids[0] ) {
-//					/* x first */
-//					start[0] = cell->x;
-//					start[1] = cell->y;
-//				} else {
-//					/* y first */
-//					start[0] = cell->y;
-//					start[1] = cell->x;
-//				}
-//				count[0] = count[1] = 1;
-//				ret = nc_get_vara_float(id_file, i, start, count, &lat);
-//				if ( ret != NC_NOERR ) goto quit;
-//			} else if ( ! string_compare_i(name, sz_lon) ) {
-//				/* n_dims can be only 2 and ids only x and y */
-//				if ( 2 != n_dims ) {
-//					//logger(g_debug_log, "bad %s dimension size. It should be 2 not %d\n", sz_lon, n_dims);
-//					printf("bad %s dimension size. It should be 2 not %d\n", sz_lon, n_dims);
-//					goto quit_no_nc_err;
-//				}
-//				/* who cames first ? x or y ? */
-//				if ( dims_id[X_DIM] == ids[0] ) {
-//					/* x first */
-//					start[0] = cell->x;
-//					start[1] = cell->y;
-//				} else {
-//					/* y first */
-//					start[0] = cell->y;
-//					start[1] = cell->x;
-//				}
-//				count[0] = count[1] = 1;
-//				ret = nc_get_vara_float(id_file, i, start, count, &lon);
-//				if ( ret != NC_NOERR ) goto quit;
-//			} else if ( ! string_compare_i(name, sz_time) ) {
-//				if ( ! date_imported ) {
-//					if ( type != NC_DOUBLE ) {
-//						//logger(g_debug_log, "type format in %s for time column not supported\n\n", buffer);
-//						printf("type format in %s for time column not supported\n\n", buffer);
-//						goto quit_no_nc_err;
-//					}
-//					ret = nc_get_var_double(id_file, i, &values[COLUMN_AT(YEAR)]);
-//					if ( ret != NC_NOERR ) goto quit;
-//
-//					/* adjust time to YYYY,MM,DD */
-//					for ( z = 0; z < rows_count; ++z ) {
-//						int YYYY;
-//						int MM;
-//						int DD;
-//						timestamp_split(values[VALUE_AT(z, YEAR)], &YYYY, &MM, &DD);
-//						values[VALUE_AT(z, YEAR)] = YYYY;
-//						values[VALUE_AT(z, MONTH)] = MM;
-//						values[VALUE_AT(z, DAY)] = DD;
-//					}
-//					date_imported = 1;
-//				} else {
-//					/* ALESSIOR...add a datetime compare for each variable ? */
-//				}
-//			} else {
-//				for ( y = 0; y  < VARS_COUNT; ++y ) {
-//					if ( ! string_compare_i(name, sz_vars[y]) ) {
-//						/* check if we already have imported that var */
-//						if ( vars[y] ) {
-//							//logger(g_debug_log, "var %s already imported\n", sz_vars[y]);
-//							printf("var %s already imported\n", sz_vars[y]);
-//							goto quit_no_nc_err;
-//						}
-//						/* ALESSIOR...do a clean up here...too much code! */
-//						if ( dims_id[X_DIM] == ids[0] ) {
-//							start[0] = cell->x;
-//							count[0] = 1;
-//						} else if ( dims_id[Y_DIM] == ids[0] ) {
-//							start[0] = cell->y;
-//							count[0] = 1;
-//						} else if ( dims_id[TIME_DIM] == ids[0] ) {
-//							start[0] = 0;
-//							count[0] = dims_size[TIME_DIM];
-//						} else {
-//							start[ids[0]] = 0;
-//							count[ids[0]] = dims_size[HEIGHT_DIM];
-//						}
-//						if ( dims_id[X_DIM] == ids[1] ) {
-//							start[1] = cell->x;
-//							count[1] = 1;
-//						} else if ( dims_id[Y_DIM] == ids[1] ) {
-//							start[1] = cell->y;
-//							count[1] = 1;
-//						} else if ( dims_id[TIME_DIM] == ids[1] ) {
-//							start[1] = 0;
-//							count[1] = dims_size[TIME_DIM];
-//						} else {
-//							start[1] = 0;
-//							count[1] = dims_size[HEIGHT_DIM];
-//						}
-//						if ( dims_id[X_DIM] == ids[2] ) {
-//							start[2] = cell->x;
-//							count[2] = 1;
-//						} else if ( dims_id[Y_DIM] == ids[2] ) {
-//							start[2] = cell->y;
-//							count[2] = 1;
-//						} else if ( dims_id[TIME_DIM] == ids[2] ) {
-//							start[2] = 0;
-//							count[2] = dims_size[TIME_DIM];
-//						} else {
-//							start[2] = 0;
-//							count[2] = dims_size[HEIGHT_DIM];
-//						}
-//						if ( dims_id[HEIGHT_DIM] != -1 ) {
-//							if ( dims_id[X_DIM] == ids[3] ) {
-//								start[3] = cell->x;
-//								count[3] = 1;
-//							} else if ( dims_id[Y_DIM] == ids[3] ) {
-//								start[3] = cell->y;
-//								count[3] = 1;
-//							} else if ( dims_id[TIME_DIM] == ids[3] ) {
-//								start[3] = 0;
-//								count[3] = dims_size[TIME_DIM];
-//							} else {
-//								start[3] = 0;
-//								count[3] = dims_size[HEIGHT_DIM];
-//							}
-//						}
-//						/* get values */
-//						if ( NC_FLOAT == type ) {
-//							ret = nc_get_vara_float(id_file, i, start, count, f_values);
-//							if ( ret != NC_NOERR ) goto quit;
-//							for ( z = 0; z < rows_count; ++z ) {
-//								values[VALUE_AT(z, y + 3)] = f_values[z];
-//							}
-//						} else if ( NC_DOUBLE == type ) {
-//							ret = nc_get_vara_double(id_file, i, start, count, &values[COLUMN_AT(y + 3)]);
-//							if ( ret != NC_NOERR ) goto quit;
-//						} else {
-//							/* type format not supported! */
-//							//logger(g_debug_log, "type format in %s for %s column not supported\n\n", buffer, sz_vars[y]);
-//							printf("type format in %s for %s column not supported\n\n", buffer, sz_vars[y]);
-//							goto quit_no_nc_err;
-//						}
-//						vars[y] = 1;
-//						flag = 1;
-//						break;
-//					}
-//				}
-//			}
-//		}
-//		if ( ! flag ) {
-//			//logger(g_debug_log, "var not found inside %s\n\n", buffer);
-//			printf("var not found inside %s\n\n", buffer);
-//			goto quit_no_nc_err;
-//		}
-//		nc_close(id_file);
-//	}
-//	fclose(f);
-//	free(f_values);
-//	f_values = NULL;
-//
-//#if 0
-//	/* check for TA, TMIN && TMAX */
-//	if ( ! vars[TA_F-3] ) {
-//		if ( ! vars[VPD_F-3] && ! vars[VPD_F-3] ) {
-//			logger(g_debug_log, "VPD and RH columns are missing!\n\n");
-//			free(values);
-//			return 0;
-//		}
-//	}
-//
-//	/* check for missing vars */
-//	for ( i = 0; i < VARS_COUNT; ++i ) {
-//		switch ( i ) {
-//		case VPD_F-3:
-//		case RH_F-3:
-//		if ( ! vars[VPD_F-3] && ! vars[RH_F-3] ) {
-//			logger(g_debug_log, "VPD and RH columns are missing!\n\n");
-//			free(values);
-//			return 0;
-//		}
-//		break;
-//
-//		case TA_F-3:
-//		if ( ! vars[i] && ! vars[TMIN-3] && ! vars[TMAX-3] ) {
-//			logger(g_debug_log, "TA, TMIN and TMAX columns are missing!\n\n");
-//			free(values);
-//			return 0;
-//		}
-//		break;
-//
-//		case TMIN-3:
-//		case TMAX-3:
-//		if ( ! vars[i] && ! vars[TA_F-3]) {
-//			logger(g_debug_log, "%s is missing!\n\n", sz_vars[i]);
-//			free(values);
-//			return 0;
-//		}
-//		break;
-//
-//		default:
-//			if ( ! vars[i] ) {
-//				logger(g_debug_log, "met columns %s is missing!\n\n", sz_vars[i]);
-//				free(values);
-//				return 0;
-//			}
-//		}
-//	}
-//
-//	/* check if RH is valid ( not all -9999 ) */
-//	if ( vars[RH_F-3] ) {
-//		int current_row = 0; /* used as rows count for valid RH */
-//		for ( i = 0; i < rows_count; ++i ) {
-//			if ( ! IS_INVALID_VALUE(values[VALUE_AT(i, RH_F)]) ) {
-//				++current_row;
-//			}
-//		}
-//		if ( ! current_row ) {
-//			vars[RH_F-3] = 0;
-//		}
-//	}
-//
-//	/* check if VPD is valid ( not all -9999 ) */
-//	if ( vars[VPD_F] ) {
-//		int current_row = 0; /* used as rows count for valid VPD */
-//		for ( i = 0; i < rows_count; ++i ) {
-//			if ( ! IS_INVALID_VALUE(values[VALUE_AT(i, VPD_F)]) ) {
-//				++current_row;
-//			}
-//		}
-//		if ( ! current_row ) {
-//			vars[VPD_F-3] = 0;
-//		}
-//	}
-//
-//	if ( ! vars[RH_F-3] && ! vars[VPD_F-3] ) {
-//		logger(g_debug_log, "rh and vpd not found!");
-//		free(values);
-//		return 0;
-//	}
-//
-//	/* compute ta ? */
-//	if ( vars[TA_F-3] ) {
-//		int missings_count = 0;
-//		for ( i = 0; i < rows_count; ++i ) {
-//			if ( IS_INVALID_VALUE(values[VALUE_AT(i, TA_F)]) ) {
-//				++missings_count;
-//			}
-//		}
-//		if ( missings_count == rows_count ) {
-//			vars[TA_F-3] = 0;
-//		}
-//	}
-//
-//	/* compute ta ! */
-//	if ( ! vars[TA_F-3] ) {
-//		for ( i = 0; i < rows_count; ++i ) {
-//			if ( ! IS_INVALID_VALUE(values[VALUE_AT(i, TMAX)])
-//					&& ! IS_INVALID_VALUE(values[VALUE_AT(i, TMIN)]) ) {
-//				values[VALUE_AT(i, TA_F)] = (0.606 * values[VALUE_AT(i, TMAX)]) + (0.394 * values[VALUE_AT(i, TMIN)]);
-//			}
-//		}
-//	}
-//
-//	/* compute vpd ? or rh ?*/
-//	/* please note that we must have TA, so computing is done after computing TA (if needed) */
-//	if ( ! vars[VPD_F-3] ) {
-//		compute_vpd(values, rows_count, MET_COLUMNS_COUNT);
-//	} else if ( ! vars[RH_F-3] ) {
-//		compute_rh(values, rows_count, MET_COLUMNS_COUNT);
-//	}
-//#endif
-//
-//#ifdef _WIN32
-//#ifdef _DEBUG
-//	{
-//		FILE *f;
-//		int row;
-//		char buffer[64];
-//		sprintf(buffer, "debug_file_%g_%g_%d_%d.txt", lat, lon, cell->x, cell->y);
-//		f = fopen(buffer, "w");
-//		if ( ! f ) {
-//			logger_error(g_debug_log, "unable to create output file!");
-//			free(values);
-//			return 0;
-//		}
-//		/* write header */
-//		fputs("LAT,LON,DATE,ET,LAI,RADS,SWC,TMAX,TMIN,TOT_PREC,TSOIL,VPD,WS_f\n", f);
-//		for ( row = 0; row < dims_size[TIME_DIM]; ++row ) {
-//			fprintf(f, "%g,%g,%02d/%02d/%d,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g\n"
-//					, lat
-//					, lon
-//					,(int)values[VALUE_AT(row,DAY)]
-//					             , (int)values[VALUE_AT(row,MONTH)]
-//					                           , (int)values[VALUE_AT(row,YEAR)]
-//					                                         , values[VALUE_AT(row,ET)]
-//					                                                  , values[VALUE_AT(row,NDVI_LAI)]
-//					                                                           , values[VALUE_AT(row,RG_F)]
-//					                                                                    , values[VALUE_AT(row,SWC)]
-//					                                                                             , values[VALUE_AT(row,TMAX)]
-//					                                                                                      , values[VALUE_AT(row,TMIN)]
-//					                                                                                               , values[VALUE_AT(row,PRECIP)]
-//					                                                                                                        , values[VALUE_AT(row,TS_F)]
-//					                                                                                                                 , values[VALUE_AT(row,VPD_F)]
-//					                                                                                                                          , values[VALUE_AT(row,WS_F)]
-//
-//			);
-//		}
-//		fclose(f);
-//	}
-//#endif
-//#endif
-//
-//	i = meteo_from_arr(values, rows_count, MET_COLUMNS_COUNT, p_yos, yos_count, cell);
-//	free(values);
-//	return i;
-//
-//	quit:
-//	logger_error(g_debug_log, nc_strerror(ret));
-//	quit_no_nc_err:
-//	nc_close(id_file);
-//	if ( f_values ) free(f_values);
-//	if ( values ) free(values);
-//	return 0;
-//
-//#undef VALUE_AT
-//#undef COLUMN_AT
-//#undef VARS_COUNT
-//}
+	int dims_count;	/* dimensions */
+	int vars_count;
+	int atts_count;	/* attributes */
+	int unl_count;	/* unlimited dimensions */
+	char name[NC_MAX_NAME+1];
+	nc_type type;
+	size_t size;
+	int *i_values = NULL; /* required */
+	double *values = NULL; /* required */
+	int columns[MET_COLUMNS_COUNT];
+
+	/* DO NOT CHANGE THIS ORDER */
+	enum {
+		ROWS_DIM,
+		X_DIM,
+		Y_DIM,
+
+		DIMS_COUNT
+	};
+
+	int dims_size[DIMS_COUNT];
+	const char *sz_dims[DIMS_COUNT] = { "row", "x", "y" }; /* DO NOT CHANGE THIS ORDER...please see top */
+
+	/* */
+	ret = nc_open(filename, NC_NOWRITE, &id_file);
+	if ( ret != NC_NOERR ) goto quit;
+
+	ret = nc_inq(id_file, &dims_count, &vars_count, &atts_count, &unl_count);
+	if ( ret != NC_NOERR ) goto quit;
+
+	if ( ! dims_count || ! vars_count ) {
+		printf("bad nc file! %d dimensions and %d vars\n\n", dims_count, vars_count);
+		nc_close(id_file);
+		return 0;
+	}
+
+	/* check if vars count are at least MET_COLUMNS+2 */
+	if ( vars_count < MET_COLUMNS_COUNT+2 ) {
+		printf("bad nc file! Vars count should be %d at least.\n\n", vars_count);
+		nc_close(id_file);
+		return 0;
+	}
+
+	/* reset */
+	for ( i = 0; i < MET_COLUMNS_COUNT; ++i ) {
+		columns[i] = 0;
+	}
+	for ( i = 0; i < DIMS_COUNT; ++i ) {
+		dims_size[i] = -1;
+	}
+
+	/* get dimensions */
+	for ( i = 0; i < dims_count; ++i ) {
+		ret = nc_inq_dim(id_file, i, name, &size);
+		if ( ret != NC_NOERR ) goto quit;
+		for ( y = 0; y < DIMS_COUNT; ++y ) {
+			if ( ! string_compare_i(sz_dims[y], name) ) {
+				if ( dims_size[y] != -1 ) {
+					printf("dimension %s already found!\n", sz_dims[y]);
+					nc_close(id_file);
+					return 0;
+				}
+				dims_size[y] = size;
+				break;
+			}
+		}
+	}
+
+	/* check if we have all dimensions */
+	for ( i = 0; i < DIMS_COUNT; ++i ) {
+		if ( -1 == dims_size[i] ) {
+			logger_error(g_debug_log, "dimension %s not found!\n", sz_dims[i]);
+			nc_close(id_file);
+			return 0;
+		}
+	}
+
+	/* check x and y */
+	if( (dims_size[X_DIM] != 1) || (dims_size[Y_DIM] != 1) ) {
+		logger_error(g_debug_log, "x and y must be 1!");
+		nc_close(id_file);
+		return 0;
+	}
+
+	/* alloc memory for int values */
+	i_values = malloc(dims_size[ROWS_DIM]*sizeof*values);
+	if ( ! i_values ) {
+		logger_error(g_debug_log, sz_err_out_of_memory);
+		nc_close(id_file);
+		return 0;
+	}
+
+	/* alloc memory for double values */
+	/* please note that we alloc double for year,month,day too */
+	values = malloc(dims_size[ROWS_DIM]*MET_COLUMNS_COUNT*sizeof*values);
+	if ( ! values ) {
+		logger_error(g_debug_log, sz_err_out_of_memory);
+		free(i_values);
+		nc_close(id_file);
+		return 0;
+	}
+
+	/* set all double values to -9999 */
+	for ( i = 0; i < dims_size[ROWS_DIM]*MET_COLUMNS_COUNT; ++i ) {
+		values[i] = INVALID_VALUE;
+	}
+
+	/* get vars */
+	for ( i = 0; i < vars_count; ++i ) {
+		ret = nc_inq_var(id_file, i, name, &type, NULL, NULL, NULL);
+		if ( ret != NC_NOERR ) goto quit;
+		/* check if we need that var */
+		for ( y = 0; y  < MET_COLUMNS_COUNT; ++y ) {
+			if ( ! string_compare_i(name, sz_met_columns[y]) ) {
+				/* check if we've already get that var */
+				if ( columns[y] ) {
+					//logger(g_debug_log, "column %s already imported!", name);
+					printf("column %s already imported!", name);
+					free(values);
+					free(i_values);
+					nc_close(id_file);
+					return 0;
+				} else {
+					columns[y] = 1;
+				}
+				/* get values */
+				if ( NC_DOUBLE == type ) {
+					ret = nc_get_var_double(id_file, i, &values[COLUMN_AT(y)]);
+					if ( ret != NC_NOERR ) goto quit;
+				} else if ( NC_INT == type ) {
+					ret = nc_get_var_int(id_file, i, i_values);
+					if ( ret != NC_NOERR ) goto quit;
+					for ( z = 0; z < dims_size[ROWS_DIM]; ++z ) {
+						values[VALUE_AT(z, y)] = (double)i_values[z];
+					}
+				} else {
+					/* type format not supported! */
+					//logger(g_debug_log, "type format for %s column not supported", name);
+					printf("type format for %s column not supported", name);
+					free(values);
+					free(i_values);
+					nc_close(id_file);
+					return 0;
+				}
+
+				break;
+			}
+		}
+	}
+	free(i_values);
+	i_values = NULL;
+#if 0
+	/* check if we've all needed vars */
+	for ( i = 0; i < MET_COLUMNS_COUNT; ++i ) {
+		if ( ((VPD_F == i) && (-1 == columns[RH_F])) || ((RH_F == i) && (-1 == columns[VPD_F])) ) {
+			logger(g_debug_log, "met columns %s and %s are missing!\n\n", sz_met_columns[VPD_F], sz_met_columns[RH_F]);
+			free(values);
+			free(i_values);
+			nc_close(id_file);
+			return 0;
+		} else if ( -1 == columns[i] ) {
+			logger(g_debug_log, "met column %s not found.\n\n", sz_met_columns[i]);
+			free(values);
+			free(i_values);
+			nc_close(id_file);
+			return 0;
+		}
+	}
+
+	/* compute vpd ?*/
+	if ( -1 == columns[VPD_F] ) {
+		compute_vpd(values, dims_size[ROWS_DIM], MET_COLUMNS_COUNT);
+	}
+#endif
+
+	/* save file */
+#if 0
+	{
+		FILE *f;
+		int row;
+		f = fopen("debug_file", "w");
+		if ( ! f ) {
+			puts("unable to create output file!");
+			nc_close(id_file);
+			free(values);
+			free(i_values);
+			return 0;
+		}
+		/* write header */
+		fputs("Year\tMonth\tn_days\tRg_f\tTa_f\tTmax\tTmin\tVPD_f\tTs_f\tPrecip\tSWC\tLAI\tET\tWS_F\n", f);
+		for ( row = 0; row < dims_size[ROWS_DIM]; ++row ) {
+			fprintf(f, "%d\t%d\t%d\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\n",
+					/*
+						(int)values[VALUE_AT(0,0,row,YEAR)]
+						, (int)values[VALUE_AT(0,0,row,MONTH)]
+						, (int)values[VALUE_AT(0,0,row,DAY)]
+						, values[VALUE_AT(0,0,row,RG_F)]
+						, values[VALUE_AT(0,0,row,TA_F)]
+						, values[VALUE_AT(0,0,row,TMAX)]
+						, values[VALUE_AT(0,0,row,TMIN)]
+						, values[VALUE_AT(0,0,row,VPD_F)]
+						, values[VALUE_AT(0,0,row,TS_F)]
+						, values[VALUE_AT(0,0,row,PRECIP)]
+						, values[VALUE_AT(0,0,row,NDVI_LAI)]
+						, values[VALUE_AT(0,0,row,ET)]
+						, values[VALUE_AT(0,0,row,WS)]
+					 */
+					(int)values[VALUE_AT(row,YEAR)]
+					            , (int)values[VALUE_AT(row,MONTH)]
+					                          , (int)values[VALUE_AT(row,DAY)]
+					                                        , values[VALUE_AT(row,RG_F)]
+					                                                 , values[VALUE_AT(row,TA_F)]
+					                                                          , values[VALUE_AT(row,TMAX)]
+					                                                                   , values[VALUE_AT(row,TMIN)]
+					                                                                            , values[VALUE_AT(row,VPD_F)]
+					                                                                                     , values[VALUE_AT(row,TS_F)]
+					                                                                                              , values[VALUE_AT(row,PRECIP)]
+					                                                                                                       , values[VALUE_AT(row,SWC)]
+					                                                                                                                , values[VALUE_AT(row,NDVI_LAI)]
+					                                                                                                                         , values[VALUE_AT(row,ET)]
+					                                                                                                                                  /* ALESSIOC */
+					                                                                                                                                  , values[VALUE_AT(row,WS_F)]
+			);
+		}
+		fclose(f);
+	}
+#endif
+	if ( ! meteo_from_arr(values, dims_size[ROWS_DIM], MET_COLUMNS_COUNT, pyos, yos_count, cell) ) {
+		free(values);
+		return 0;
+	}
+	/* hack */
+	ret = 0;
+
+	quit:
+	nc_close(id_file);
+	free(values);
+	free(i_values);
+	if ( ret ) {
+		logger_error(g_debug_log, nc_strerror(ret));
+		ret = 1;
+	}
+	return ! ret;
+
+#undef COLUMN_AT
+#undef VALUE_AT
+}
+
+
+static int import_lst(const char *const filename, meteo_annual_t** p_yos, int *const yos_count, cell_t*const cell) {
+#define VARS_COUNT		((MET_COLUMNS_COUNT)-3)	/* we remove first 3 columns: year, month and day */
+#define COLUMN_AT(c)	((c)*rows_count)
+#define VALUE_AT(r,c)	((r)+(COLUMN_AT(c)))
+
+	/* TODO: fix sz_path and sz_nc_filename size...can't be same of buffer */
+	char buffer[256];
+	char sz_path[256];
+	char sz_nc_filename[256];
+	char *p;
+	char *p2;
+	int i;
+	int z;
+	FILE *f;
+	int rows_count;
+	int vars[VARS_COUNT];
+	float *f_values;
+	double *values;
+	enum {
+		X_DIM,
+		Y_DIM,
+		TIME_DIM,
+		HEIGHT_DIM,
+
+		DIMS_COUNT
+	};
+	int dims_id[DIMS_COUNT];
+	int dims_size[DIMS_COUNT];
+	const char *sz_lat = "lat";
+	const char *sz_lon = "lon";
+	const char *sz_time = "time";
+	const char *sz_dims[DIMS_COUNT] = { "x", "y", "time", "height_2m" }; /* DO NOT CHANGE THIS ORDER...please see above */
+	const char *sz_vars[VARS_COUNT] = { "RADS"
+			, "T_2M"
+			, "TMAX_2M"
+			, "TMIN_2M"
+			, "VPD"
+			, "TSOIL"
+			, "TOT_PREC"
+			, "SWC"
+			, "LAI"
+			, "ET"
+			, "WS_F"
+			, "RH"
+	};
+
+	int y;
+	int id_file;
+	int ret;
+	int dims_count;	/* dimensions */
+	int vars_count;
+	int atts_count;	/* attributes */
+	int unl_count;	/* unlimited dimensions */
+	char name[NC_MAX_NAME+1];
+	nc_type type;
+	size_t size;
+	int n_dims;
+	int ids[NC_MAX_VAR_DIMS];
+	int flag;
+	int date_imported;
+	float lat;
+	float lon;
+
+	assert(filename);
+	assert(p_yos);
+	assert(cell);
+
+	/* init */
+	rows_count = 0;
+	values = NULL;
+	f_values = NULL;
+	date_imported = 0;
+	for ( i = 0; i < VARS_COUNT; i++ ) {
+		vars[i] = 0;
+	}
+
+	/* open lst file */
+	f = fopen(filename, "r");
+	if ( ! f ) {
+		logger_error(g_debug_log, "unable to open met data file, problem in open list file !\n");
+		return 0;
+	}
+
+	/* get filename path */
+	sz_path[0] = '\0';
+	if ( filename[1] != ':' ) {
+		strncpy(sz_path, g_sz_input_path, 256);
+	}
+	/* check for buffer overflow */
+	strcat(sz_path, filename);
+	p = (strrchr(sz_path, '\\'));
+	if ( p ) ++p;
+	p2 = (strrchr(sz_path, '/'));
+	if ( p2 ) ++p2;
+	if  ( p2 > p ) p = p2;
+	*p = '\0';
+
+	/* parse lst file */
+	while ( fgets(buffer, 256, f) ) {
+		/* remove \r\n and skip blank line */
+		for ( i = 0; buffer[i]; ++i ) {
+			if ( '\r' == buffer[i] || '\n' == buffer[i] ) {
+				buffer[i] = '\0';
+				break;
+			}
+		}
+		if ( ! buffer[0] ) {
+			continue;
+		}
+
+		/* TODO: check for buffer overflow */
+		sprintf(sz_nc_filename, "%s%s", sz_path, buffer);
+
+		/* try to open nc file */
+		ret = nc_open(sz_nc_filename, NC_NOWRITE, &id_file);
+		if ( ret != NC_NOERR ) goto quit;
+
+		ret = nc_inq(id_file, &dims_count, &vars_count, &atts_count, &unl_count);
+		if ( ret != NC_NOERR ) goto quit;
+
+		if ( ! dims_count || ! vars_count ) {
+			//logger(g_debug_log, "bad nc file! %d dimensions and %d vars\n\n", dims_count, vars_count);
+			printf("bad nc file! %d dimensions and %d vars\n\n", dims_count, vars_count);
+			goto quit_no_nc_err;
+		}
+
+		/* reset */
+		for ( i = 0; i < DIMS_COUNT; ++i ) {
+			dims_id[i] = -1;
+			dims_size[i] = -1;
+		}
+
+		/* get dimensions */
+		for ( i = 0; i < dims_count; ++i ) {
+			ret = nc_inq_dim(id_file, i, name, &size);
+			if ( ret != NC_NOERR ) goto quit;
+			for ( y = 0; y < DIMS_COUNT; ++y ) {
+				if ( ! string_compare_i(sz_dims[y], name) ) {
+					if ( dims_size[y] != -1 ) {
+						//logger(g_debug_log, "dimension %s already found!\n", sz_dims[y]);
+						printf("dimension %s already found!\n", sz_dims[y]);
+						goto quit_no_nc_err;
+					}
+					dims_size[y] = size;
+					dims_id[y] = i;
+					break;
+				}
+			}
+		}
+
+		/* check if we have all dimensions */
+		for ( i = 0; i < DIMS_COUNT; ++i ) {
+			/* height_2m can be missing */
+			if ( (-1 == dims_size[i]) && (i != HEIGHT_DIM) ) {
+				//logger(g_debug_log, "dimension %s not found!\n", sz_dims[i]);
+				printf("dimension %s not found!\n", sz_dims[i]);
+				goto quit_no_nc_err;
+			}
+		}
+
+		/* check if x_cell is >= x_dim */
+		if ( cell->x >= dims_size[X_DIM] ) {
+			printf("cell->x >= x_dim: %d,%d\n", cell->x, dims_size[X_DIM]);
+			goto quit_no_nc_err;
+		}
+
+		/*
+		if ( ! x_cells_count ) {
+			x_cells_count = dims_size[X_DIM];
+			y_cells_count = dims_size[Y_DIM];
+		}
+		 */
+
+		/* check if y_cell is >= y_dim */
+		if ( cell->y >= dims_size[Y_DIM] ) {
+			//logger(g_debug_log, "y_cell >= y_dim: %d,%d\n", y_cell, dims_size[Y_DIM]);
+			printf("cell->y >= y_dim: %d,%d\n", cell->y, dims_size[Y_DIM]);
+			goto quit_no_nc_err;
+		}
+
+		/* if we have height, it cannot be > 1 */
+		if ( dims_size[HEIGHT_DIM] > 1 ) {
+			//logger(g_debug_log, "height_2m cannot be > 1 : (%d)\n", dims_size[HEIGHT_DIM]);
+			printf("height_2m cannot be > 1 : (%d)\n", dims_size[HEIGHT_DIM]);
+			goto quit_no_nc_err;
+		}
+
+		/* check rows_count */
+		if ( ! rows_count ) {
+			rows_count = dims_size[TIME_DIM];
+			/* alloc memory for double values */
+			values = malloc(rows_count*MET_COLUMNS_COUNT*sizeof*values);
+			if ( ! values ) {
+				logger_error(g_debug_log, sz_err_out_of_memory);
+				nc_close(id_file);
+				fclose(f);
+				return 0;
+			}
+			/* set all double values to -9999 */
+			for ( i = 0; i < rows_count*MET_COLUMNS_COUNT; ++i ) {
+				values[i] = INVALID_VALUE;
+			}
+			/* alloc memory for float values */
+			f_values = malloc(rows_count*sizeof*f_values);
+			if ( ! f_values ) {
+				logger_error(g_debug_log, sz_err_out_of_memory);
+				nc_close(id_file);
+				fclose(f);
+				free(values);
+				return 0;
+			}
+			/* set all float values to -9999..not really needed */
+			for ( i = 0; i < rows_count; ++i ) {
+				f_values[i] = INVALID_VALUE;
+			}
+		} else {
+			if ( rows_count != dims_size[TIME_DIM] ) {
+				//logger(g_debug_log, "rows count inside %s should be %d not %d\n\n", buffer, rows_count, dims_size[TIME_DIM]);
+				printf("rows count inside %s should be %d not %d\n\n", buffer, rows_count, dims_size[TIME_DIM]);
+				goto quit_no_nc_err;
+			}
+		}
+
+		/* get var */
+		flag = 0;
+		for ( i = 0; i < vars_count; ++i ) {
+			size_t start[DIMS_COUNT];
+			size_t count[DIMS_COUNT];
+
+			ret = nc_inq_var(id_file, i, name, &type, &n_dims, ids, NULL);
+			if ( ret != NC_NOERR ) goto quit;
+			if ( ! string_compare_i(name, sz_lat) ) {
+				/* n_dims can be only 2 and ids only x and y */
+				if ( 2 != n_dims ) {
+					//logger(g_debug_log, "bad %s dimension size. It should be 2 not %d\n", sz_lat, n_dims);
+					printf("bad %s dimension size. It should be 2 not %d\n", sz_lat, n_dims);
+					goto quit_no_nc_err;
+				}
+				/* who cames first ? x or y ? */
+				if ( dims_id[X_DIM] == ids[0] ) {
+					/* x first */
+					start[0] = cell->x;
+					start[1] = cell->y;
+				} else {
+					/* y first */
+					start[0] = cell->y;
+					start[1] = cell->x;
+				}
+				count[0] = count[1] = 1;
+				ret = nc_get_vara_float(id_file, i, start, count, &lat);
+				if ( ret != NC_NOERR ) goto quit;
+			} else if ( ! string_compare_i(name, sz_lon) ) {
+				/* n_dims can be only 2 and ids only x and y */
+				if ( 2 != n_dims ) {
+					//logger(g_debug_log, "bad %s dimension size. It should be 2 not %d\n", sz_lon, n_dims);
+					printf("bad %s dimension size. It should be 2 not %d\n", sz_lon, n_dims);
+					goto quit_no_nc_err;
+				}
+				/* who cames first ? x or y ? */
+				if ( dims_id[X_DIM] == ids[0] ) {
+					/* x first */
+					start[0] = cell->x;
+					start[1] = cell->y;
+				} else {
+					/* y first */
+					start[0] = cell->y;
+					start[1] = cell->x;
+				}
+				count[0] = count[1] = 1;
+				ret = nc_get_vara_float(id_file, i, start, count, &lon);
+				if ( ret != NC_NOERR ) goto quit;
+			} else if ( ! string_compare_i(name, sz_time) ) {
+				if ( ! date_imported ) {
+					if ( type != NC_DOUBLE ) {
+						//logger(g_debug_log, "type format in %s for time column not supported\n\n", buffer);
+						printf("type format in %s for time column not supported\n\n", buffer);
+						goto quit_no_nc_err;
+					}
+					ret = nc_get_var_double(id_file, i, &values[COLUMN_AT(YEAR)]);
+					if ( ret != NC_NOERR ) goto quit;
+
+					/* adjust time to YYYY,MM,DD */
+					for ( z = 0; z < rows_count; ++z ) {
+						int YYYY;
+						int MM;
+						int DD;
+						timestamp_split(values[VALUE_AT(z, YEAR)], &YYYY, &MM, &DD);
+						values[VALUE_AT(z, YEAR)] = YYYY;
+						values[VALUE_AT(z, MONTH)] = MM;
+						values[VALUE_AT(z, DAY)] = DD;
+					}
+					date_imported = 1;
+				} else {
+					/* ALESSIOR...add a datetime compare for each variable ? */
+				}
+			} else {
+				for ( y = 0; y  < VARS_COUNT; ++y ) {
+					if ( ! string_compare_i(name, sz_vars[y]) ) {
+						/* check if we already have imported that var */
+						if ( vars[y] ) {
+							//logger(g_debug_log, "var %s already imported\n", sz_vars[y]);
+							printf("var %s already imported\n", sz_vars[y]);
+							goto quit_no_nc_err;
+						}
+						/* ALESSIOR...do a clean up here...too much code! */
+						if ( dims_id[X_DIM] == ids[0] ) {
+							start[0] = cell->x;
+							count[0] = 1;
+						} else if ( dims_id[Y_DIM] == ids[0] ) {
+							start[0] = cell->y;
+							count[0] = 1;
+						} else if ( dims_id[TIME_DIM] == ids[0] ) {
+							start[0] = 0;
+							count[0] = dims_size[TIME_DIM];
+						} else {
+							start[ids[0]] = 0;
+							count[ids[0]] = dims_size[HEIGHT_DIM];
+						}
+						if ( dims_id[X_DIM] == ids[1] ) {
+							start[1] = cell->x;
+							count[1] = 1;
+						} else if ( dims_id[Y_DIM] == ids[1] ) {
+							start[1] = cell->y;
+							count[1] = 1;
+						} else if ( dims_id[TIME_DIM] == ids[1] ) {
+							start[1] = 0;
+							count[1] = dims_size[TIME_DIM];
+						} else {
+							start[1] = 0;
+							count[1] = dims_size[HEIGHT_DIM];
+						}
+						if ( dims_id[X_DIM] == ids[2] ) {
+							start[2] = cell->x;
+							count[2] = 1;
+						} else if ( dims_id[Y_DIM] == ids[2] ) {
+							start[2] = cell->y;
+							count[2] = 1;
+						} else if ( dims_id[TIME_DIM] == ids[2] ) {
+							start[2] = 0;
+							count[2] = dims_size[TIME_DIM];
+						} else {
+							start[2] = 0;
+							count[2] = dims_size[HEIGHT_DIM];
+						}
+						if ( dims_id[HEIGHT_DIM] != -1 ) {
+							if ( dims_id[X_DIM] == ids[3] ) {
+								start[3] = cell->x;
+								count[3] = 1;
+							} else if ( dims_id[Y_DIM] == ids[3] ) {
+								start[3] = cell->y;
+								count[3] = 1;
+							} else if ( dims_id[TIME_DIM] == ids[3] ) {
+								start[3] = 0;
+								count[3] = dims_size[TIME_DIM];
+							} else {
+								start[3] = 0;
+								count[3] = dims_size[HEIGHT_DIM];
+							}
+						}
+						/* get values */
+						if ( NC_FLOAT == type ) {
+							ret = nc_get_vara_float(id_file, i, start, count, f_values);
+							if ( ret != NC_NOERR ) goto quit;
+							for ( z = 0; z < rows_count; ++z ) {
+								values[VALUE_AT(z, y + 3)] = f_values[z];
+							}
+						} else if ( NC_DOUBLE == type ) {
+							ret = nc_get_vara_double(id_file, i, start, count, &values[COLUMN_AT(y + 3)]);
+							if ( ret != NC_NOERR ) goto quit;
+						} else {
+							/* type format not supported! */
+							//logger(g_debug_log, "type format in %s for %s column not supported\n\n", buffer, sz_vars[y]);
+							printf("type format in %s for %s column not supported\n\n", buffer, sz_vars[y]);
+							goto quit_no_nc_err;
+						}
+						vars[y] = 1;
+						flag = 1;
+						break;
+					}
+				}
+			}
+		}
+		if ( ! flag ) {
+			//logger(g_debug_log, "var not found inside %s\n\n", buffer);
+			printf("var not found inside %s\n\n", buffer);
+			goto quit_no_nc_err;
+		}
+		nc_close(id_file);
+	}
+	fclose(f);
+	free(f_values);
+	f_values = NULL;
+
+#if 0
+	/* check for TA, TMIN && TMAX */
+	if ( ! vars[TA_F-3] ) {
+		if ( ! vars[VPD_F-3] && ! vars[VPD_F-3] ) {
+			logger(g_debug_log, "VPD and RH columns are missing!\n\n");
+			free(values);
+			return 0;
+		}
+	}
+
+	/* check for missing vars */
+	for ( i = 0; i < VARS_COUNT; ++i ) {
+		switch ( i ) {
+		case VPD_F-3:
+		case RH_F-3:
+		if ( ! vars[VPD_F-3] && ! vars[RH_F-3] ) {
+			logger(g_debug_log, "VPD and RH columns are missing!\n\n");
+			free(values);
+			return 0;
+		}
+		break;
+
+		case TA_F-3:
+		if ( ! vars[i] && ! vars[TMIN-3] && ! vars[TMAX-3] ) {
+			logger(g_debug_log, "TA, TMIN and TMAX columns are missing!\n\n");
+			free(values);
+			return 0;
+		}
+		break;
+
+		case TMIN-3:
+		case TMAX-3:
+		if ( ! vars[i] && ! vars[TA_F-3]) {
+			logger(g_debug_log, "%s is missing!\n\n", sz_vars[i]);
+			free(values);
+			return 0;
+		}
+		break;
+
+		default:
+			if ( ! vars[i] ) {
+				logger(g_debug_log, "met columns %s is missing!\n\n", sz_vars[i]);
+				free(values);
+				return 0;
+			}
+		}
+	}
+
+	/* check if RH is valid ( not all -9999 ) */
+	if ( vars[RH_F-3] ) {
+		int current_row = 0; /* used as rows count for valid RH */
+		for ( i = 0; i < rows_count; ++i ) {
+			if ( ! IS_INVALID_VALUE(values[VALUE_AT(i, RH_F)]) ) {
+				++current_row;
+			}
+		}
+		if ( ! current_row ) {
+			vars[RH_F-3] = 0;
+		}
+	}
+
+	/* check if VPD is valid ( not all -9999 ) */
+	if ( vars[VPD_F] ) {
+		int current_row = 0; /* used as rows count for valid VPD */
+		for ( i = 0; i < rows_count; ++i ) {
+			if ( ! IS_INVALID_VALUE(values[VALUE_AT(i, VPD_F)]) ) {
+				++current_row;
+			}
+		}
+		if ( ! current_row ) {
+			vars[VPD_F-3] = 0;
+		}
+	}
+
+	if ( ! vars[RH_F-3] && ! vars[VPD_F-3] ) {
+		logger(g_debug_log, "rh and vpd not found!");
+		free(values);
+		return 0;
+	}
+
+	/* compute ta ? */
+	if ( vars[TA_F-3] ) {
+		int missings_count = 0;
+		for ( i = 0; i < rows_count; ++i ) {
+			if ( IS_INVALID_VALUE(values[VALUE_AT(i, TA_F)]) ) {
+				++missings_count;
+			}
+		}
+		if ( missings_count == rows_count ) {
+			vars[TA_F-3] = 0;
+		}
+	}
+
+	/* compute ta ! */
+	if ( ! vars[TA_F-3] ) {
+		for ( i = 0; i < rows_count; ++i ) {
+			if ( ! IS_INVALID_VALUE(values[VALUE_AT(i, TMAX)])
+					&& ! IS_INVALID_VALUE(values[VALUE_AT(i, TMIN)]) ) {
+				values[VALUE_AT(i, TA_F)] = (0.606 * values[VALUE_AT(i, TMAX)]) + (0.394 * values[VALUE_AT(i, TMIN)]);
+			}
+		}
+	}
+
+	/* compute vpd ? or rh ?*/
+	/* please note that we must have TA, so computing is done after computing TA (if needed) */
+	if ( ! vars[VPD_F-3] ) {
+		compute_vpd(values, rows_count, MET_COLUMNS_COUNT);
+	} else if ( ! vars[RH_F-3] ) {
+		compute_rh(values, rows_count, MET_COLUMNS_COUNT);
+	}
+#endif
+
+#ifdef _WIN32
+#ifdef _DEBUG
+	{
+		FILE *f;
+		int row;
+		char buffer[64];
+		sprintf(buffer, "debug_file_%g_%g_%d_%d.txt", lat, lon, cell->x, cell->y);
+		f = fopen(buffer, "w");
+		if ( ! f ) {
+			logger_error(g_debug_log, "unable to create output file!");
+			free(values);
+			return 0;
+		}
+		/* write header */
+		fputs("LAT,LON,DATE,ET,LAI,RADS,SWC,TMAX,TMIN,TOT_PREC,TSOIL,VPD,WS_f\n", f);
+		for ( row = 0; row < dims_size[TIME_DIM]; ++row ) {
+			fprintf(f, "%g,%g,%02d/%02d/%d,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g\n"
+					, lat
+					, lon
+					,(int)values[VALUE_AT(row,DAY)]
+					             , (int)values[VALUE_AT(row,MONTH)]
+					                           , (int)values[VALUE_AT(row,YEAR)]
+					                                         , values[VALUE_AT(row,ET)]
+					                                                  , values[VALUE_AT(row,NDVI_LAI)]
+					                                                           , values[VALUE_AT(row,RG_F)]
+					                                                                    , values[VALUE_AT(row,SWC)]
+					                                                                             , values[VALUE_AT(row,TMAX)]
+					                                                                                      , values[VALUE_AT(row,TMIN)]
+					                                                                                               , values[VALUE_AT(row,PRECIP)]
+					                                                                                                        , values[VALUE_AT(row,TS_F)]
+					                                                                                                                 , values[VALUE_AT(row,VPD_F)]
+					                                                                                                                          , values[VALUE_AT(row,WS_F)]
+
+			);
+		}
+		fclose(f);
+	}
+#endif
+#endif
+
+	i = meteo_from_arr(values, rows_count, MET_COLUMNS_COUNT, p_yos, yos_count, cell);
+	free(values);
+	return i;
+
+	quit:
+	logger_error(g_debug_log, nc_strerror(ret));
+	quit_no_nc_err:
+	nc_close(id_file);
+	if ( f_values ) free(f_values);
+	if ( values ) free(values);
+	return 0;
+
+#undef VALUE_AT
+#undef COLUMN_AT
+#undef VARS_COUNT
+}
 
 static int import_txt(const char *const filename, meteo_annual_t** p_yos, int *const yos_count, cell_t*const cell) {
 #define BUFFER_SIZE	1024
@@ -1837,8 +1837,9 @@ static int import_txt(const char *const filename, meteo_annual_t** p_yos, int *c
 		// remove initial spaces and tabs (if any)
 		p = buffer;
 		while ( isspace(*p) ) ++p;
-
-		if ( ('/r' != p[0]) && ('/n' != p[0]) && ('/' != p[0]) && ('/0' != p[0]) )
+               //ddalmo correction 
+		//if ( ('/r' != p[0]) && ('/n' != p[0]) && ('/' != p[0]) && ('/0' != p[0]) )
+		if ( ('\r' != p[0]) && ('\n' != p[0]) && ('/' != p[0]) && ('\0' != p[0]) )
 		{
 			++rows_count;
 		}	
@@ -1900,7 +1901,10 @@ static int import_txt(const char *const filename, meteo_annual_t** p_yos, int *c
 		while ( isspace(*p) ) ++p;
 
 		// skip empty lines and comments
-	} while ( ('/0' == p[0]) || ('/' == p[0]) );
+	//} while ( ('/0' == p[0]) || ('/' == p[0]) );
+	//ddalmo correction
+	} while ( ('\0' == p[0]) || ('/' == p[0]) );
+	
 	if ( ! p || ! p[0] ) {
 		logger_error(g_debug_log, "empty met data file ?\n");
 		free(values);
@@ -2192,9 +2196,10 @@ int import_meteo_data(const char *const file, int *const yos_count, void* _cell)
 			}
 		}
 		if ( i ) {
-			//i = import_nc(token, &meteo_annual, yos_count, cell);
+		//ddalmo use of nc
+			i = import_nc(token, &meteo_annual, yos_count, cell);
 		} else if ( ! string_compare_i(p2, "lst") ) {
-			//i = import_lst(token, &meteo_annual, yos_count, cell);
+			i = import_lst(token, &meteo_annual, yos_count, cell);
 		} else {
 			i = import_txt(token, &meteo_annual, yos_count, cell);
 		}

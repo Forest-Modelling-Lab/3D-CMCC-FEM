@@ -72,6 +72,8 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	double Ca_ref;       /* (ppmv) CO2 atmospheric concentration */
 
 	double Av_rel, Aj_rel;
+ 
+  double test;  //ddalmo
 
 	static int modifier;
 	static int test_assimilation;
@@ -452,6 +454,20 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 
 	c->vwc = c->asw / c->max_asw_fc;
 	c->psi = c->psi_sat * pow((c->vwc/c->vwc_sat), c->soil_b);
+  test<-(c->vwc/c->vwc_sat);
+  //printf("psi %f\n",c->psi);
+  //printf("saturation degree %f\n",c->vwc/c->vwc_sat);
+  //printf("vwc %f\n",c->vwc);
+  //printf("vwcsat %f\n",c->vwc_sat);
+  printf("asw %f\n",c->asw);
+  
+  // ddalmo test correction
+  c->vwc = c->asw/(g_soil_settings->values[SOIL_DEPTH]*10);
+  c->psi = c->psi_sat * pow((c->vwc/c->vwc_sat), c->soil_b); 
+  printf("new_vwc %f\n",c->vwc);
+  printf("new_psi %f\n",c->psi);
+  //printf("psi_sat %f\n",c->psi_sat);
+  // printf("soil_b %f\n", c->soil_b);
 
 	/* no water stress */
 	if (c->psi > s->value[SWPOPEN])
@@ -473,6 +489,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 		/* for consistency with complete stress values */
 		if(s->value[F_PSI] < WATER_STRESS_LIMIT) s->value[F_PSI] = WATER_STRESS_LIMIT;
 	}
+  printf("F_PSI %f\n", s->value[F_PSI]);
 
 	s->value[F_SW] = s->value[F_PSI];
 	logger(g_debug_log, "fSW = %f\n", s->value[F_PSI]);

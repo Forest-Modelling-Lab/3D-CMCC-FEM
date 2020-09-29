@@ -438,7 +438,7 @@ double Farquhar_BB (cell_t *const c, species_t *const s,const meteo_daily_t *con
 	/*
 	                            g1         An
 	 	 gs = g0 + 1.6 (1 + ----------) * ----
-							radq(vpd)      Ca
+						             	radq(vpd)      Ca
 	*/
 
 	/* stomatal conductance divided by Assimilation (gs/An) in units of H2O */
@@ -454,7 +454,7 @@ double Farquhar_BB (cell_t *const c, species_t *const s,const meteo_daily_t *con
 
 #if 0
 
-	//not currently used
+ 	//not currently used
 	//note: modified version of the BIOME-BGC original code
 	//note: if accepted move to species.txt
 

@@ -1880,18 +1880,20 @@ int main(int argc, char *argv[]) {
 	if ( g_daily_log && g_settings->netcdf_output ) {
 		printf("creating nc daily files...");
 		logger_flush(g_daily_log);
-		/*if ( ! convert_to_nc(g_daily_log->filename) ) {
+		//ddalmo removed comments to use ncdfile output
+		if ( ! convert_to_nc(g_daily_log->filename) ) {
 			goto err;
-		}*/
+		}
 		puts("ok");
 	}
 
 	if ( g_annual_log && g_settings->netcdf_output ) {
 		printf("creating nc annual files...");
 		logger_flush(g_annual_log);
-		/*if ( ! convert_to_nc(g_annual_log->filename) ) {
+		//ddalmo removed comments
+		if ( ! convert_to_nc(g_annual_log->filename) ) {
 			goto err;
-		}*/
+		}
 		puts("ok");
 	}
 
