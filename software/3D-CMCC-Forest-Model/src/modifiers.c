@@ -452,15 +452,16 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	/* Uses the multivariate regressions from Cosby et al., 1984 */
 	/* volumetric water content */
 
-	//c->vwc = c->asw / c->max_asw_fc;
-	//c->psi = c->psi_sat * pow((c->vwc/c->vwc_sat), c->soil_b);
 
-  
-  // ddalmo test correction
-  c->vwc = c->asw/((c->soil_depth/100)*1000);   // from cm to m, multiplied by water density to get m3 m-3
-  c->psi = c->psi_sat * pow((c->vwc/c->vwc_sat), c->soil_b); 
-  
+	//test Daniela bug-fix psi September 2020
+	// c->vwc = c->asw / c->max_asw_fc; this was the old (bugged) equation
 
+	/* volumetric water content */
+	c->vwc = c-> asw/((c->soil_depth/100.)*1000.);
+
+	/* soil matric potential */
+	c->psi = c->psi_sat * pow((c->vwc/c->vwc_sat), c->soil_b);
+>>>>>>> 8fcecf21... small bug fixed into the vwc computation (actually it wasn't an error
 
 	/* no water stress */
 	if (c->psi > s->value[SWPOPEN])
