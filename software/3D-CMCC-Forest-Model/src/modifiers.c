@@ -452,20 +452,21 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	/* Uses the multivariate regressions from Cosby et al., 1984 */
 	/* volumetric water content */
 
-	c->vwc = c->asw / c->max_asw_fc;
-	c->psi = c->psi_sat * pow((c->vwc/c->vwc_sat), c->soil_b);
-  test<-(c->vwc/c->vwc_sat);
+	//c->vwc = c->asw / c->max_asw_fc;
+	//c->psi = c->psi_sat * pow((c->vwc/c->vwc_sat), c->soil_b);
+ 
   //printf("psi %f\n",c->psi);
   //printf("saturation degree %f\n",c->vwc/c->vwc_sat);
   //printf("vwc %f\n",c->vwc);
   //printf("vwcsat %f\n",c->vwc_sat);
-  printf("asw %f\n",c->asw);
+  //printf("asw %f\n",c->asw);
   
   // ddalmo test correction
-  c->vwc = c->asw/(g_soil_settings->values[SOIL_DEPTH]*10);
+  c->vwc = c->asw/((c->soil_depth/100)*1000);   // from cm to m, multiplied by water density to get m3 m-3
   c->psi = c->psi_sat * pow((c->vwc/c->vwc_sat), c->soil_b); 
-  printf("new_vwc %f\n",c->vwc);
-  printf("new_psi %f\n",c->psi);
+  
+  //printf("new_vwc %f\n",c->vwc);
+  //printf("new_psi %f\n",c->psi);
   //printf("psi_sat %f\n",c->psi_sat);
   // printf("soil_b %f\n", c->soil_b);
 

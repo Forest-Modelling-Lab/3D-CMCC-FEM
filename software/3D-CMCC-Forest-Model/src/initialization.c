@@ -1236,7 +1236,7 @@ void initialization_cell_soil_biochem (cell_t *const c)
 	c->soil4N         = 0.001;
 }
 
-void initialization_cell_soil_physic(cell_t *const c)
+void initialization_cell_soil_physic(cell_t *const c)   // ddalmo: here it has to be fixed...read the soil total C from the soil.txt if provided
 {
 	float acoeff;
 	float bcoeff;

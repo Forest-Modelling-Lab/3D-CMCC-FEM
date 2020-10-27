@@ -79,6 +79,8 @@ void leaffall_deciduous ( cell_t *const c, const int height, const int dbh, cons
 		logger(g_debug_log, "Last day of leaf fall\n");
 
 		//assumption: last day of leaf fall all carbon goes to litter and cwd with no retranslocation
+                //ddalmo note: yet in leaffall, from LEAF_C_TO_REMOVE, a part is actually retraslocate...
+ 
 		s->value[LEAF_C_TO_REMOVE]    = s->value[LEAF_C];
 		s->value[LEAF_N_TO_REMOVE]    = s->value[LEAF_N];
 

@@ -70,31 +70,31 @@
 #define HAVE_UNISTD_H 1
 
 /* Name of package */
-#define PACKAGE "3d_cmcc_forest_ecosystem_model"
+#define PACKAGE "3d_cmcc_forest_model"
 
 /* Define to the address where bug reports for this package should be sent. */
-#define PACKAGE_BUGREPORT "alessio.collalti@cmcc.it"
+#define PACKAGE_BUGREPORT "daniela.dalmonech@gmail.com"
 
 /* Define to the full name of this package. */
-#define PACKAGE_NAME "3D_CMCC_Forest_Ecosystem_Model"
+#define PACKAGE_NAME "3D_CMCC_Forest_Model"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "3D_CMCC_Forest_Ecosystem_Model 4.1"
+#define PACKAGE_STRING "3D_CMCC_Forest_Model 5.5"
 
 /* Define to the one symbol short name of this package. */
-#define PACKAGE_TARNAME "3d_cmcc_forest_ecosystem_model"
+#define PACKAGE_TARNAME "3d_cmcc_forest_model"
 
 /* Define to the home page for this package. */
 #define PACKAGE_URL ""
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "4.1"
+#define PACKAGE_VERSION "5.5"
 
 /* Define to 1 if you have the ANSI C header files. */
 #define STDC_HEADERS 1
 
 /* Version number of package */
-#define VERSION "4.1"
+#define VERSION "5.5"
 
 /* Define to rpl_malloc if the replacement function should be used. */
 /* #undef malloc */
