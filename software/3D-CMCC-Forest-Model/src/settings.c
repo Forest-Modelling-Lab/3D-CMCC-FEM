@@ -598,7 +598,7 @@ static int setting_pruning_import(settings_t* s) {
 				v = convert_string_to_float(token, &err);
 				if ( err ) {
 					//printf("%s: unable to convert value '%s' at row %d, column %d\n", token, row+1, i+1);
-					//ddalmo correction
+					//ddalmo format correction
 					 printf(" unable to convert value %s at row %d, column %d\n", token, row+1, i+1);
 				
 					goto quit;
@@ -841,7 +841,7 @@ static int setting_irrigation_import(settings_t* s) {
 				v = convert_string_to_float(token, &err);
 				if ( err ) {
 					//printf("%s: unable to convert value '%s' at row %d, column %d\n", token, row+1, i+1);
-					// ddalmo correction
+					// ddalmo format correction
 					printf(" unable to convert value %s at row %d, column %d\n", token, row+1, i+1);
 					goto quit;
 				}

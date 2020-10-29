@@ -1212,7 +1212,7 @@ static int nc_conv(reimported_dataset_t* dataset, char* folder)
 				goto err;
 			if ( (ret = nc_put_att_text(nc_id, time_id, sz_long_name, strlen(sz_time), sz_time)) )
 				goto err;
-                     //ddalmo correction 
+                     //ddalmo format correction 
 			// put attributes for var
 			j = sprintf(buf2,"%s", (ANNUAL_DATASET_TYPE == dataset->type) ? annual_vars[i].standard_name : daily_vars[i].standard_name);
 			if ( (ret = nc_put_att_text(nc_id, var_id, sz_standard_name, strlen(buf2), buf2)) )
@@ -1506,7 +1506,7 @@ static int nc_conv(reimported_dataset_t* dataset, char* folder)
 					goto err;
 				if ( (ret = nc_put_att_text(nc_id, time_id, sz_long_name, strlen(sz_time), sz_time)) )
 					goto err;
-//ddalmo correction
+                            //ddalmo correction
 				// put attributes for var
 				j = sprintf(buf2,"%s", (ANNUAL_DATASET_TYPE == dataset->type) ? annual_vars[i].standard_name : daily_vars[i].standard_name);
 				if ( (ret = nc_put_att_text(nc_id, var_id, sz_standard_name, strlen(buf2), buf2)) )

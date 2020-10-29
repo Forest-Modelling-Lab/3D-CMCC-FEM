@@ -1837,7 +1837,7 @@ static int import_txt(const char *const filename, meteo_annual_t** p_yos, int *c
 		// remove initial spaces and tabs (if any)
 		p = buffer;
 		while ( isspace(*p) ) ++p;
-               //ddalmo correction 
+               //ddalmo correction in the format (compilator-related issue)
 		//if ( ('/r' != p[0]) && ('/n' != p[0]) && ('/' != p[0]) && ('/0' != p[0]) )
 		if ( ('\r' != p[0]) && ('\n' != p[0]) && ('/' != p[0]) && ('\0' != p[0]) )
 		{
@@ -1902,7 +1902,7 @@ static int import_txt(const char *const filename, meteo_annual_t** p_yos, int *c
 
 		// skip empty lines and comments
 	//} while ( ('/0' == p[0]) || ('/' == p[0]) );
-	//ddalmo correction
+	//ddalmo correction (compilator-related issue)
 	} while ( ('\0' == p[0]) || ('/' == p[0]) );
 	
 	if ( ! p || ! p[0] ) {

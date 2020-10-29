@@ -73,7 +73,6 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 
 	double Av_rel, Aj_rel;
  
-  double test;  //ddalmo
 
 	static int modifier;
 	static int test_assimilation;
@@ -461,7 +460,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 
 	/* soil matric potential */
 	c->psi = c->psi_sat * pow((c->vwc/c->vwc_sat), c->soil_b);
->>>>>>> 8fcecf21... small bug fixed into the vwc computation (actually it wasn't an error
+
 
 	/* no water stress */
 	if (c->psi > s->value[SWPOPEN])
@@ -483,7 +482,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 		/* for consistency with complete stress values */
 		if(s->value[F_PSI] < WATER_STRESS_LIMIT) s->value[F_PSI] = WATER_STRESS_LIMIT;
 	}
-  printf("F_PSI %f\n", s->value[F_PSI]);
+
 
 	s->value[F_SW] = s->value[F_PSI];
 	logger(g_debug_log, "fSW = %f\n", s->value[F_PSI]);

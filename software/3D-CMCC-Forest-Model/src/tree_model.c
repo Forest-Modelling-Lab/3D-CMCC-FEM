@@ -361,7 +361,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							carbon_allocation       ( c, a, s, day, month, year );
 #else
 							//note: this is basically the new function in version v.5.5
-							carbon_allocation_new   ( c, a, s, day, month, year );
+							carbon_allocation_new   ( c, a, s, day, month, year );    //FIXME here it has to be corrected the LEAF_C,when too small send it to the litter 
 #endif
 							/* allocate daily nitrogen */
 							nitrogen_allocation     ( c, s, day, month, year );

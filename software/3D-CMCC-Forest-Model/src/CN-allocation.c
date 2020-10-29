@@ -309,6 +309,12 @@ void carbon_allocation_new ( cell_t *const c, age_t *const a, species_t *const s
 	s->value[RESERVE_C]   += s->value[C_TO_RESERVE];
 	s->value[FRUIT_C]     += s->value[C_TO_FRUIT];
 
+        /* ddalmo Feb.2020: in order to avoid precision-related issue, when LEAF_C is very low, it is set to 0
+        /* Otherwise, if the LEAF_C value is not exactly == 0, this leads the model to compute LAI_PROJ, and in cascade
+        /* all the leaf-related processes (e.g.radiation, water interception) are carried, even if the growing season is over.
+
+        
+
 	/*** update live carbon mass pools **/
 	s->value[TOT_LIVEWOOD_C]           = ( s->value[STEM_LIVEWOOD_C] + s->value[CROOT_LIVEWOOD_C] + s->value[BRANCH_LIVEWOOD_C] );
 	s->value[TOT_SAPWOOD_C]            = ( s->value[STEM_SAPWOOD_C]  + s->value[CROOT_SAPWOOD_C]  + s->value[BRANCH_SAPWOOD_C] );

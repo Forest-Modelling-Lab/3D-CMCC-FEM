@@ -53,8 +53,9 @@ void canopy_interception(cell_t *const c, const int layer, const int height, con
 
 	/*************************************************************************/
 	/* shared functions among all class/layers */
+
 //ddalmo correction 13-2-2020  On some compilators LAI_PROJ!= 0 also when 
-// it should be ==0
+// it should be ==0. The issue is related to LEAF_C at the end of the growing season, where the value should be==0, but there are precision issues..
 
 if ( s->value[LAI_PROJ] < 0.000001 )
  {s->value[LAI_PROJ]=0. ;

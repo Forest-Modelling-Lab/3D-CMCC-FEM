@@ -1547,7 +1547,7 @@ void EOY_print_output_soil_cell_level(cell_t *const c, const int year, const int
 		print_model_settings(g_annual_soil_log);
 	}
 }
-#else  //ddalmo use old output format?
+#else  
 
 #include <stdlib.h>
 #include <string.h>
@@ -1855,10 +1855,6 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 				"litrN,litr1N,litr2N,litr3N,litr4N,deadwoodN,deadwood2N,deadwood3N,deadwood4N,soilN,soil1N,soil2N,soil3N,soil4N,"
 				"Tsoil,Daylength\n");
 
-         
-// ddalmo include also unit in the output 
-// eventually include here the new lines of code 
-//
 
 	}
 	/*****************************************************************************************************/
