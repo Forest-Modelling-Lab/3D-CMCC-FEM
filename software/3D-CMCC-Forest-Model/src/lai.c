@@ -57,7 +57,7 @@ void daily_lai (cell_t *const c, age_t *const a, species_t *const s)
 
 	/* total */
 	s->value[LAI_PROJ]       = s->value[LEAF_AREA] / s->value[CANOPY_COVER_PROJ];
-
+ 
 	/* sun */
 	s->value[LAI_SUN_PROJ]   = 1. - exp ( - s->value[LAI_PROJ] );
 
@@ -134,6 +134,8 @@ void daily_lai (cell_t *const c, age_t *const a, species_t *const s)
 	/**************************************************************************************************/
 
 	/* checks */
+
+
 	CHECK_CONDITION(s->value[LAI_PROJ],       <, ZERO);
 	CHECK_CONDITION(s->value[LAI_SUN_PROJ],   <, ZERO);
 	CHECK_CONDITION(s->value[LAI_SHADE_PROJ], <, ZERO);

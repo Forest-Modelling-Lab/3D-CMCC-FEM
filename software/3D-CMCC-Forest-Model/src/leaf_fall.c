@@ -43,13 +43,22 @@ void leaffall_deciduous ( cell_t *const c, const int height, const int dbh, cons
 	{
 		/* load previous LAI */
 		previousLai = s->value[LAI_PROJ];
-
+// ddalmo
+                printf("previousLAi in leaf_fall, %f\n", s->value[LAI_PROJ]);    
 		/* sigmoid shape drives LAI reduction during leaf fall */
 		currentLai  = MAX(0,s->value[MAX_LAI_LEAFFALL_PROJ] / (1 + exp(-(s->counter[DAYS_LEAFFALL] / 2. + s->counter[SENESCENCE_DAY_ONE] - c->doy)
 				/(s->counter[DAYS_LEAFFALL] / (log(9. * s->counter[DAYS_LEAFFALL] / 2. + s->counter[SENESCENCE_DAY_ONE]) -
 						log(.11111111111))))));
 
 		/* check */
+ 
+              // ddalmo oct.2020 force current LAI to 0 if the leaf C has been forced to 0 (leafC < 1 mg C m-2) (and hence previous LAI)
+
+               if( previousLai == 0. )
+                {  
+                currentLai = 0. ;
+                }
+              
 		CHECK_CONDITION(previousLai, <, currentLai);
 
 		/* determine Leaf Area Index from leaf carbon */
@@ -70,6 +79,8 @@ void leaffall_deciduous ( cell_t *const c, const int height, const int dbh, cons
 		/* update fruit carbon */
 		s->value[FRUIT_C_TO_REMOVE]  = ( s->value[FRUIT_C] * s->value[LEAF_C_TO_REMOVE]) / s->value[LEAF_C];
 		s->value[FRUIT_N_TO_REMOVE]  = ( s->value[FRUIT_N] * s->value[LEAF_N_TO_REMOVE]) / s->value[LEAF_N];
+// ddalmo
+printf("currentLAi in leaf_fall, %f\n", currentLai); 
 
 	}
 	else
@@ -90,6 +101,9 @@ void leaffall_deciduous ( cell_t *const c, const int height, const int dbh, cons
 		/* last day of leaf fall remove all fruits */
 		s->value[FRUIT_C_TO_REMOVE]   = s->value[FRUIT_C];
 		s->value[FRUIT_N_TO_REMOVE]   = s->value[FRUIT_N];
+
+                /*ddalmo 29.10.20 force LEAF_C to go to 0 */
+ 
 	}
 
 	/*************************************************************************************************************/
@@ -217,7 +231,7 @@ void leaffall (species_t *const s)
 	CHECK_CONDITION ( s->value[FROOT_N], <, 0. );
 	CHECK_CONDITION ( s->value[FRUIT_N], <, 0. );
 
-}
+} 
 
 
 

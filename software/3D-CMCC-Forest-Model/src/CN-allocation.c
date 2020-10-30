@@ -308,13 +308,7 @@ void carbon_allocation_new ( cell_t *const c, age_t *const a, species_t *const s
 	s->value[BRANCH_C]    += s->value[C_TO_BRANCH];
 	s->value[RESERVE_C]   += s->value[C_TO_RESERVE];
 	s->value[FRUIT_C]     += s->value[C_TO_FRUIT];
-
-        /* ddalmo Feb.2020: in order to avoid precision-related issue, when LEAF_C is very low, it is set to 0
-        /* Otherwise, if the LEAF_C value is not exactly == 0, this leads the model to compute LAI_PROJ, and in cascade
-        /* all the leaf-related processes (e.g.radiation, water interception) are carried, even if the growing season is over.
-
-        
-
+ 
 	/*** update live carbon mass pools **/
 	s->value[TOT_LIVEWOOD_C]           = ( s->value[STEM_LIVEWOOD_C] + s->value[CROOT_LIVEWOOD_C] + s->value[BRANCH_LIVEWOOD_C] );
 	s->value[TOT_SAPWOOD_C]            = ( s->value[STEM_SAPWOOD_C]  + s->value[CROOT_SAPWOOD_C]  + s->value[BRANCH_SAPWOOD_C] );
@@ -454,6 +448,24 @@ void carbon_allocation_new ( cell_t *const c, age_t *const a, species_t *const s
 	c->croot_carbon             += (s->value[C_TO_CROOT]   * 1e6 / g_settings->sizeCell);
 	c->reserve_carbon           += (s->value[C_TO_RESERVE] * 1e6 / g_settings->sizeCell);
 	c->fruit_carbon             += (s->value[C_TO_FRUIT]   * 1e6 / g_settings->sizeCell);
+
+        /* ddalmo 29.10.2020: in order to avoid precision-related issue, when LEAF_C is very low, it is set to 0
+        /* Otherwise, if the LEAF_C value/ leaf_carbon is not exactly == 0, this leads the model to compute LAI_PROJ, and in cascade
+        /* all the leaf-related processes (e.g.radiation, water interception) are carried, even if the growing season is over. */
+
+        if (c->leaf_carbon < eps)             // eps =10-6  it means 1 mg m-2
+         { 
+            
+            s->value[C_LEAF_TO_LITR]     += s->value[LEAF_C];
+
+            s->value[TOTAL_C] = s->value[TOTAL_C] - s->value[LEAF_C];
+
+            s->value[LEAF_C] = 0. ;
+            
+            c-> leaf_carbon = 0. ;
+
+
+         } 
 
 
 	/* check */
@@ -599,6 +611,9 @@ void nitrogen_allocation ( cell_t *const c, species_t *const s, const int day, c
 	/* computing leaf sun and shaded Nitrogen pools (tN/ha) */
 	if ( ! s->value[LEAF_C] )
 	{
+          //ddalmo:0ct.2010 we add an additional condition, to reconcilie when LEAF_C is forced to be 0
+                s->value[N_LEAF_TO_LITR]     += s->value[LEAF_N];
+   
 		s->value[LEAF_N]            = 0.;
 	}
 	else
