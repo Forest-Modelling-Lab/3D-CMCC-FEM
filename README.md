@@ -1,6 +1,14 @@
 # 3D-CMCC-FEM
 **3D-CMCC-FEM repository**
 
+The **3D-CMCC-FEM** is basically a research tool which is freely available ***only*** for non-commercial use. We have developed the **3D-CMCC-FEM** software relying solely on open source components, in order to facilitate its use and further development by others. 
+
+The **3D-CMCC-FEM** software is released under the GNU General Public Licence (GPL).
+
+This page contains all the software releases developed over the time.
+
+In case you have copied and modified the **3D-CMCC-FEM** code or software overall or even in small parts of it, you may not publish data from it using the name **3D-CMCC-FEM** or any **3D-CMCC-FEM** variants unless you have either coordinated your changes with the developers listed below, or publish enough details about your changes so that they could be replicated.
+
 For any further information please contact us:  
 -Alessio Collalti (Lab. Head and Model Principal Investigator): alessio.collalti@cnr.it  
 -Carlo Trotta: trottacarlo@unitus.it  
@@ -11,9 +19,9 @@ For any further information please contact us:
 -The model: 3d-cmcc-fem@gmail.com  
 -The lab: forest.modelling.lab@gmail.com  
 
-or look at the 3D-CMCC-FEM web-site:https://www.forest-modelling-lab.com/the-3d-cmcc-model
+or look at the **3D-CMCC-FEM** web-site:https://www.forest-modelling-lab.com/the-3d-cmcc-model
 
-For references on 3D-CMCC-FEM:
+For references on **3D-CMCC-FEM**:
 
 1. "Sviluppo di un modello ecologico-forestale per foreste a struttura complessa". Collalti A., Valentini R.. *PhD Thesis*, University of Tuscia, 2011
 
