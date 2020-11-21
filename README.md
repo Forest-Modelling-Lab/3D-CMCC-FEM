@@ -7,7 +7,7 @@ The **3D-CMCC-FEM** software is released under the GNU General Public Licence (G
 
 This page contains all the software releases developed over the time.
 
-In case you have copied and modified the **3D-CMCC-FEM** code or software overall or even in small parts of it, you may not publish data from it using the name **3D-CMCC-FEM** or any **3D-CMCC-FEM** variants unless you have either coordinated your changes with the developers listed below, or publish enough details about your changes so that they could be replicated.
+In case you have copied and/or modified the **3D-CMCC-FEM** code or overall software or even in small parts of it, you may not publish data from it using the name **3D-CMCC-FEM** or any **3D-CMCC-FEM** variants unless you have either coordinated your changes with the developers listed below, or publish enough details about your changes so that they could be replicated.
 
 For any further information please contact us:  
 -Alessio Collalti (Lab. Head and Model Principal Investigator): alessio.collalti@cnr.it  
