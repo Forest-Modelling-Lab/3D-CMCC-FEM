@@ -6,7 +6,7 @@
 
 LICENSE:
 
-Copyright (c) 2020, 3D-CMCC-FEM  
+Copyright (c) 2020, Forest Modelling Laboratory – 3D-CMCC-FEM  
 All rights reserved
 
 
