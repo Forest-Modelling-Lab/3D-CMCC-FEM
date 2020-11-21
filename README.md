@@ -1,5 +1,11 @@
 # 3D-CMCC-FEM
-**3D-CMCC-FEM repository**
+**3D-CMCC-FEM *(Three Dimensional - Coupled Model Carbon Cycle - Forest Ecosystem Model)* repository**
+
+LICENSE:
+
+Copyright (c) 2020, 3D-CMCC-FEM
+All rights reserved
+
 
 The **3D-CMCC-FEM** is basically a research tool which is freely available ***only*** for non-commercial use. We have developed the **3D-CMCC-FEM** code relying solely on open source components, in order to facilitate its use and further development by others. 
 
