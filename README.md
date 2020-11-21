@@ -14,7 +14,7 @@ The **3D-CMCC-FEM** is basically a research tool which is freely available ***on
 
 The **3D-CMCC-FEM** code is released under the GNU General Public Licence (GPL).
 
-This page contains all the code releases developed over the time on the open source distribution of the computer simulation forest model **3D-CMCC-FEM**. The model has been developed and is maintained by the <u>Forest Modelling Laboratory</u> at the *National Research Council of Italy, Institute for Agricultural and Forestry Systems in the Mediterranean (CNR-ISAFOM)*, Perugia, and at the *University of Tuscia, Department of Innovation in Biological, Agro-food and Forest Systems (UNITUS-DIBAF)*, Viterbo.  
+This page contains all the code releases developed over the time on the open source distribution of the computer simulation forest model **3D-CMCC-FEM**. The model has been developed and is maintained by the **Forest Modelling Laboratory** at the National Research Council of Italy, Institute for Agricultural and Forestry Systems in the Mediterranean (CNR-ISAFOM), Perugia, and at the University of Tuscia, Department of Innovation in Biological, Agro-food and Forest Systems (UNITUS-DIBAF), Viterbo.  
 
 All source code and documents provided here are subject to copyright (c) by the CNR-ISAFOM and UNITUS-DIBAF.   
 </u>
