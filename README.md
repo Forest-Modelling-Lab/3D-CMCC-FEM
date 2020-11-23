@@ -39,7 +39,6 @@ For any further information please contact us:
 -Carlo Trotta: trottacarlo@unitus.it  
 -Daniela Dalmonech: daniela.dalmonech@gmail.com  
 -Alessio Ribeca: a.ribeca@unitus.it  
--Corrado Biondo: corrado.biondo@cmcc.it  
 -Gina Marano: gina.marano@unina.it  
 -The model: 3d-cmcc-fem@gmail.com  
 -The lab: forest.modelling.lab@gmail.com  
