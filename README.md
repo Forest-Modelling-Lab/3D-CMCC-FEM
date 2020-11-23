@@ -18,20 +18,22 @@ You should have received a copy of the GNU General Public License along with thi
 
 This page contains all the code releases developed over the time on the open source distribution of the computer simulation forest model **3D-CMCC-FEM**. The model has been developed and is maintained by the **Forest Modelling Laboratory** at the National Research Council of Italy, Institute for Agricultural and Forestry Systems in the Mediterranean (CNR-ISAFOM), Perugia, and at the University of Tuscia, Department of Innovation in Biological, Agro-food and Forest Systems (UNITUS-DIBAF), Viterbo.  
 
-All source code and documents provided here are subject to copyright (c) by the CNR-ISAFOM and UNITUS-DIBAF.   
-</u>
+All source code and documents provided here are subject to copyright (c) by the CNR-ISAFOM and UNITUS-DIBAF.     
+
 In case you have copied and/or modified the **3D-CMCC-FEM** code overall, even in small parts of it, you may not publish data from it using the name **3D-CMCC-FEM** or any **3D-CMCC-FEM** variants unless you have either coordinated your usage and their changes with the developers listed below, or publish enough details about your changes so that they could be replicated.
 
-The **3D-CMCC-FEM** has been developed by:
+The **3D-CMCC-FEM** has been developed by:  
 Alessio Collalti  
 Alessio Ribeca
 Carlo Trotta
 Daniela Dalmonech
-National Research Council of Italy (CNR),Institute for Agricultural and Forestry Systems in the Mediterranean(ISAFOM)
-Via della Madonna Alta, 128, 06128 Perugia (PG) Italy
-and
+Gina Marano
+Forest Ecology Lab at the National Research Council of Italy (CNR),Institute for Agricultural and Forestry Systems in the Mediterranean(ISAFOM)
+Via della Madonna Alta, 128, 06128 Perugia (PG) Italy    
+and  
 Tuscia University (UNITUS),Department for innovation in biological, agro-food and forest systems (DIBAF) 
-Forest Ecology Lab
+
+
 
 Programmers: Alessio Collalti - Alessio Ribeca - Carlo Trotta - Daniela Dalmonech - Gina Marano
 
