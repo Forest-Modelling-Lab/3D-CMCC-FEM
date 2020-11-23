@@ -12,13 +12,31 @@ All rights reserved
 
 The **3D-CMCC-FEM** is basically a research tool which is freely available ***only*** for non-commercial use. We have developed the **3D-CMCC-FEM** code relying solely on open source components, in order to facilitate its use and further development by others. 
 
-The **3D-CMCC-FEM** code is released under the GNU General Public Licence (GPL).
+The **3D-CMCC-FEM** is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. The **3D-CMCC-FEM** code is released under the GNU General Public Licence (GPL). See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see http://www.gnu.org/licenses/gpl.html.
 
 This page contains all the code releases developed over the time on the open source distribution of the computer simulation forest model **3D-CMCC-FEM**. The model has been developed and is maintained by the **Forest Modelling Laboratory** at the National Research Council of Italy, Institute for Agricultural and Forestry Systems in the Mediterranean (CNR-ISAFOM), Perugia, and at the University of Tuscia, Department of Innovation in Biological, Agro-food and Forest Systems (UNITUS-DIBAF), Viterbo.  
 
 All source code and documents provided here are subject to copyright (c) by the CNR-ISAFOM and UNITUS-DIBAF.   
 </u>
 In case you have copied and/or modified the **3D-CMCC-FEM** code overall, even in small parts of it, you may not publish data from it using the name **3D-CMCC-FEM** or any **3D-CMCC-FEM** variants unless you have either coordinated your usage and their changes with the developers listed below, or publish enough details about your changes so that they could be replicated.
+
+The **3D-CMCC-FEM** has been developed by:
+Alessio Collalti  
+Alessio Ribeca
+Carlo Trotta
+Daniela Dalmonech
+National Research Council of Italy (CNR),Institute for Agricultural and Forestry Systems in the Mediterranean(ISAFOM)
+Via della Madonna Alta, 128, 06128 Perugia (PG) Italy
+and
+Tuscia University (UNITUS),Department for innovation in biological, agro-food and forest systems (DIBAF) 
+Forest Ecology Lab
+
+Programmers: Alessio Collalti - Alessio Ribeca - Carlo Trotta - Daniela Dalmonech - Gina Marano
+
+**DISCLAIMER**
+CNR-UNITUS accepts no responsibility for the use of the **3D-CMCC-FEM** the form supplied or as subsequently modified by third parties. CNR and UNITUS disclaims liability for all losses,damages and costs incurred by any person as a result of relying on this software. Use of this software assumes agreement to this condition of use. Removal of this statement violates the spirit in which 3D-CMCC-FEM, was released by CNR-UNITUS.
 
 For any further information please contact us:  
 -Alessio Collalti (Lab. Head and Model Principal Investigator): alessio.collalti@cnr.it  
