@@ -1,4 +1,4 @@
-# 3D-CMCC-FEM
+# 3D-CMCC-FEM *(Three Dimensional - Coupled Model Carbon Cycle - Forest Ecosystem Model)*
 
 ![FML_4](https://user-images.githubusercontent.com/27204956/99875955-c8bfea80-2bf3-11eb-821c-c02a068990d4.jpg)
 
@@ -23,22 +23,16 @@ All source code and documents provided here are subject to copyright (c) by the 
 In case you have copied and/or modified the **3D-CMCC-FEM** code overall, even in small parts of it, you may not publish data from it using the name **3D-CMCC-FEM** or any **3D-CMCC-FEM** variants unless you have either coordinated your usage and their changes with the developers listed below, or publish enough details about your changes so that they could be replicated.
 
 The **3D-CMCC-FEM** has been developed by:  
-Alessio Collalti  
-Alessio Ribeca
-Carlo Trotta
-Daniela Dalmonech
-Gina Marano
-Forest Ecology Lab at the National Research Council of Italy (CNR),Institute for Agricultural and Forestry Systems in the Mediterranean(ISAFOM)
-Via della Madonna Alta, 128, 06128 Perugia (PG) Italy    
-and  
-Tuscia University (UNITUS),Department for innovation in biological, agro-food and forest systems (DIBAF) 
+Alessio Collalti    
+Alessio Ribeca  
+Carlo Trotta  
+Daniela Dalmonech  
+Gina Marano  
 
-
-
-Programmers: Alessio Collalti - Alessio Ribeca - Carlo Trotta - Daniela Dalmonech - Gina Marano
+Forest Ecology Lab at the National Research Council of Italy (CNR),Institute for Agricultural and Forestry Systems in the Mediterranean(ISAFOM) Via della Madonna Alta, 128, 06128 Perugia (PG) Italy and Tuscia University (UNITUS),Department for innovation in biological, agro-food and forest systems (DIBAF).   
 
 **DISCLAIMER**
-CNR-UNITUS accepts no responsibility for the use of the **3D-CMCC-FEM** the form supplied or as subsequently modified by third parties. CNR and UNITUS disclaims liability for all losses,damages and costs incurred by any person as a result of relying on this software. Use of this software assumes agreement to this condition of use. Removal of this statement violates the spirit in which 3D-CMCC-FEM, was released by CNR-UNITUS.
+CNR-UNITUS accepts no responsibility for the use of the **3D-CMCC-FEM** the form supplied or as subsequently modified by third parties. CNR and UNITUS disclaims liability for all losses,damages and costs incurred by any person as a result of relying on this software. Use of this software assumes agreement to this condition of use. Removal of this statement violates the spirit in which **3D-CMCC-FEM**, was released by CNR-UNITUS.
 
 For any further information please contact us:  
 -Alessio Collalti (Lab. Head and Model Principal Investigator): alessio.collalti@cnr.it  
