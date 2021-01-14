@@ -3,7 +3,7 @@
 
 ![FML_4](https://user-images.githubusercontent.com/27204956/99875955-c8bfea80-2bf3-11eb-821c-c02a068990d4.jpg)
 
-**3D-CMCC-FEM *Three Dimensional - Coupled Model Carbon Cycle - Forest Ecosystem Model* repository**
+**3D-CMCC-FEM *(Three Dimensional - Coupled Model Carbon Cycle - Forest Ecosystem Model)* official repository**
 
 LICENSE:
 
