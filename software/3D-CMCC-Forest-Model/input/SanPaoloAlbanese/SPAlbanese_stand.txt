@@ -1,0 +1,4 @@
+Year,x,y,Age,Species,Management,N,Stool,AvDBH,Height,Wf,Wrc,Wrf,Ws,Wbb,Wres,Lai
+2000,0,0,129,Quercusfrainetto,T,348,0,30.65,17,0,0,0,0,0,0,0  // SPA
+//2000,0,0,79,Fagussylvatica,T,329,0,25.6631307,21.65550152,0,0,0,0,0,0,0  // data for Soroe
+//2000,0,0,129,Quercusfrainetto,T,458,0,31,19,0,0,0,0,0,0,0    // data from parcella 11
