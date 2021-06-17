@@ -28,7 +28,7 @@ void sapwood_turnover( cell_t *const c, age_t *const a, species_t *const s, cons
 
 	/* "Similar analyses of Norway spruce, Scots pine, Sessile oak, and European beech
 		show a species-specific decrease in the proportion of sapwood from f sw = 1.0 in
-		the juvenile phase to 0.25–0.50 in the mature phase. Forest Dynamics, Growth and Yield book Hans Pretzsch (pg. 99) "
+		the juvenile phase to 0.25–0.50 in the mature phase. Forest Dynamics, Growth and Yield book Hans Pretzsch (pg. 99) " */
 
 	/* assumption: this function assumes that turnover rate increases with increasing tree age */
 	juv_sapwood_turnover_frac = 0.1;                        //fixme it should be moved to species.txt

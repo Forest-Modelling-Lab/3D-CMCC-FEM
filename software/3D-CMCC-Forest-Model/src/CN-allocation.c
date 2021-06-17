@@ -230,7 +230,7 @@ void carbon_allocation_new ( cell_t *const c, age_t *const a, species_t *const s
 	s->value[STEM_SAPWOOD_C]          += ( s->value[C_TO_STEM] - s->value[C_STEM_SAPWOOD_TO_CWD] );
 
 	/* to avoid that self-thinning mortality happens to remove too much biomass */
-	if ( day && month ) s->value[YEARLY_C_TO_STEM_SAPWOOD] += (s->value[C_TO_STEM] - s->value[C_STEM_SAPWOOD_TO_CWD]);
+	if ( c->doy > 1. ) s->value[YEARLY_C_TO_STEM_SAPWOOD] += (s->value[C_TO_STEM] - s->value[C_STEM_SAPWOOD_TO_CWD]);
 
 	/***************************************************************************************/
 
@@ -238,7 +238,7 @@ void carbon_allocation_new ( cell_t *const c, age_t *const a, species_t *const s
 	s->value[STEM_LIVEWOOD_C]         += ( ( s->value[C_TO_STEM] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC] ) - s->value[C_STEM_LIVEWOOD_TO_CWD] ) ;
 
 	/* to avoid that self-thinning mortality happens to remove too much biomass */
-	if ( day && month ) s->value[YEARLY_C_TO_STEM_LIVEWOOD] += ( ( s->value[C_TO_STEM] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC] ) - s->value[C_STEM_LIVEWOOD_TO_CWD] );
+	if ( c->doy > 1. ) s->value[YEARLY_C_TO_STEM_LIVEWOOD] += ( ( s->value[C_TO_STEM] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC] ) - s->value[C_STEM_LIVEWOOD_TO_CWD] );
 
 	/***************************************************************************************/
 	/***************************************************************************************/
@@ -247,7 +247,7 @@ void carbon_allocation_new ( cell_t *const c, age_t *const a, species_t *const s
 	s->value[CROOT_SAPWOOD_C]         += ( s->value[C_TO_CROOT] - s->value[C_CROOT_SAPWOOD_TO_CWD] );
 
 	/* to avoid that self-thinning mortality happens to remove too much biomass */
-	if ( day && month ) s->value[YEARLY_C_TO_CROOT_SAPWOOD] += (s->value[C_TO_CROOT] - s->value[C_CROOT_SAPWOOD_TO_CWD]);
+	if ( c->doy > 1. ) s->value[YEARLY_C_TO_CROOT_SAPWOOD] += (s->value[C_TO_CROOT] - s->value[C_CROOT_SAPWOOD_TO_CWD]);
 
 	/***************************************************************************************/
 
@@ -255,7 +255,7 @@ void carbon_allocation_new ( cell_t *const c, age_t *const a, species_t *const s
 	s->value[CROOT_LIVEWOOD_C]        += ( ( s->value[C_TO_CROOT] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC] ) - s->value[C_CROOT_LIVEWOOD_TO_CWD] );
 
 	/* to avoid that self-thinning mortality happens to remove too much biomass */
-	if ( day && month ) s->value[YEARLY_C_TO_CROOT_LIVEWOOD] += ( ( s->value[C_TO_CROOT] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC] ) - s->value[C_CROOT_LIVEWOOD_TO_CWD] ) ;
+	if ( c->doy > 1. ) s->value[YEARLY_C_TO_CROOT_LIVEWOOD] += ( ( s->value[C_TO_CROOT] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC] ) - s->value[C_CROOT_LIVEWOOD_TO_CWD] ) ;
 
 	/***************************************************************************************/
 	/***************************************************************************************/
@@ -264,7 +264,7 @@ void carbon_allocation_new ( cell_t *const c, age_t *const a, species_t *const s
 	s->value[BRANCH_SAPWOOD_C]        += ( s->value[C_TO_BRANCH] - s->value[C_BRANCH_SAPWOOD_TO_CWD] );
 
 	/* to avoid that self-thinning mortality happens to remove too much biomass */
-	if ( day && month ) s->value[YEARLY_C_TO_BRANCH_SAPWOOD]      += (s->value[C_TO_BRANCH] - s->value[C_BRANCH_SAPWOOD_TO_CWD]);
+	if ( c->doy > 1. ) s->value[YEARLY_C_TO_BRANCH_SAPWOOD]      += (s->value[C_TO_BRANCH] - s->value[C_BRANCH_SAPWOOD_TO_CWD]);
 
 	/***************************************************************************************/
 
@@ -272,7 +272,7 @@ void carbon_allocation_new ( cell_t *const c, age_t *const a, species_t *const s
 	s->value[BRANCH_LIVEWOOD_C]       += ( ( s->value[C_TO_BRANCH] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC] ) - s->value[C_BRANCH_LIVEWOOD_TO_CWD] );
 
 	/* to avoid that self-thinning mortality happens to remove too much biomass */
-	if ( day && month ) s->value[YEARLY_C_TO_BRANCH_LIVEWOOD] += ( ( s->value[C_TO_BRANCH] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC] ) - s->value[C_BRANCH_LIVEWOOD_TO_CWD] );
+	if ( c->doy > 1. ) s->value[YEARLY_C_TO_BRANCH_LIVEWOOD] += ( ( s->value[C_TO_BRANCH] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC] ) - s->value[C_BRANCH_LIVEWOOD_TO_CWD] );
 
 	/***************************************************************************************/
 	/***************************************************************************************/

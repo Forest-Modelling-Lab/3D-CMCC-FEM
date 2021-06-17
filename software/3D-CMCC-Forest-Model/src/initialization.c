@@ -65,7 +65,8 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 	CHECK_CONDITION (s->value[FRUIT_PERC],             >, 1.);
 	CHECK_CONDITION (s->value[LEAF_FALL_FRAC_GROWING], >, 1.);
 	CHECK_CONDITION (s->value[LIVEWOOD_TURNOVER],      >, 1.);
-	CHECK_CONDITION (s->value[S0CTEM] + s->value[R0CTEM] + s->value[F0CTEM], !=, 1);
+	CHECK_CONDITION (fabs(s->value[S0CTEM] + s->value[R0CTEM] + s->value[F0CTEM]), > , 1 + eps);
+	CHECK_CONDITION (fabs(s->value[S0CTEM] + s->value[R0CTEM] + s->value[F0CTEM]), < , 1 - eps);
 
 	if (s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2)
 	{
