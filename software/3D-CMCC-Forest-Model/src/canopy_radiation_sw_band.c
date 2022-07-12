@@ -26,9 +26,11 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 	species_t *s;
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
-	/* note: This function works at layer/class level computing absorbed, transmitted and reflected PAR, Short Wave
-	 * and PPFD through different height classes/layers considering at square meter takes into account coverage,
-	 * it means that a square meter grid cell * represents overall grid cell (see Duursma and Makela, 2007) */
+	// note: This function works at layer/class level computing absorbed, transmitted and reflected PAR, Short Wave
+	// and PPFD through different height classes/layers considering at square meter takes into account coverage,
+	// it means that a square meter grid cell * represents overall grid cell (see Duursma and Makela, 2007) 
+	// The scheme is similar to CLM(ED) Norman scheme.
+	// the radiation onto the understory layer is a spatial (canopy-projecton) weighted value 
 
 	/* it follows a little bit different rationale compared to BIOME-BGC approach
 	 * in BIOME-BGC:
@@ -146,16 +148,30 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 	CHECK_CONDITION(fabs((s->value[SW_RAD_ABS] + s->value[SW_RAD_TRANSM] + s->value[SW_RAD_REFL] ) - s->value[SW_RAD]), >, eps);
 
 	/***********************************************************************************************/
-	//test 25 June 2017
+	//test 25 June 2017: currently use and modify on february 2022
+	
 #if 1
-	/* Net Radiation computation (W/m2 covered) computed with 3-PG method */
+	// Net Radiation computation (W/m2 covered) computed with 3-PG method //
+	// see Landsberg Terrestrial ecology Chapter 2: Weather and Energy Balance //
+	
+	// Note: this is a NET RADIATION, hence reflection is already included (no need to compute it)
+	// This is a very rough approximation and has to be FIXME
+		
 	logger(g_debug_log,"\n-Net Radiation-\n");
 
 	/** available Net Radiation **/
 	s->value[NET_RAD]              = meteo_daily->Net_rad_threePG * s->value[DAILY_CANOPY_COVER_PROJ];
 
+        // to avoid negative Transpiration values (e.g. at night transpiration is assumed 0)
+        // yet, net radiation can be negative and lead to e.g. dew formation)
+        
+        if ( s->value[NET_RAD] <= 0. )
+	{
+				s->value[NET_RAD] = 0.;
+	}
+			
 	/** sun leaves **/
-	s->value[NET_RAD_REFL_SUN]     = s->value[NET_RAD]     * Light_refl_sw_frac_sun;
+	s->value[NET_RAD_REFL_SUN]     = 0.  ; // s->value[NET_RAD] * Light_refl_sw_frac_sun;
 	s->value[NET_RAD_SUN]          = s->value[NET_RAD]     - s->value[NET_RAD_REFL_SUN];
 	s->value[NET_RAD_ABS_SUN]      = s->value[NET_RAD_SUN] * Light_abs_frac_sun;
 	s->value[NET_RAD_TRANSM_SUN]   = s->value[NET_RAD_SUN] - s->value[NET_RAD_ABS_SUN];
@@ -165,7 +181,7 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 	CHECK_CONDITION ( fabs ( ( s->value[NET_RAD]     - s->value[NET_RAD_TRANSM_SUN] ) - ( s->value[NET_RAD_REFL_SUN] + s->value[NET_RAD_ABS_SUN] ) ), >, eps );
 
 	/** shaded leaves **/
-	s->value[NET_RAD_REFL_SHADE]   = s->value[NET_RAD_TRANSM_SUN] * Light_refl_sw_frac_shade;
+	s->value[NET_RAD_REFL_SHADE]   = 0. ; // s->value[NET_RAD_TRANSM_SUN] * Light_refl_sw_frac_shade;
 	s->value[NET_RAD_SHADE]        = s->value[NET_RAD_TRANSM_SUN] - s->value[NET_RAD_REFL_SHADE];
 	s->value[NET_RAD_ABS_SHADE]    = s->value[NET_RAD_SHADE]      * Light_abs_frac_shade;
 	s->value[NET_RAD_TRANSM_SHADE] = s->value[NET_RAD_SHADE]      - s->value[NET_RAD_ABS_SHADE];
@@ -182,12 +198,12 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 	logger(g_debug_log,"NET_RAD_ABS = %f W/m2\n", s->value[NET_RAD_ABS]);
 
 	/* check */
-	/*
-	CHECK_CONDITION(s->value[NET_RAD_ABS],    <, ZERO );
+	
+	CHECK_CONDITION(s->value[NET_RAD_ABS],    <, ZERO );   // NET_RAD forced to 0 if negative to avoid Transpiration values <0 
 	CHECK_CONDITION(s->value[NET_RAD_TRANSM], <, ZERO);
 	CHECK_CONDITION(s->value[NET_RAD_ABS] + s->value[NET_RAD_TRANSM], <, ZERO );
 	CHECK_CONDITION(fabs((s->value[NET_RAD_ABS] + s->value[NET_RAD_TRANSM] + s->value[NET_RAD_REFL] )-s->value[NET_RAD]), >, eps);
-	*/
+	
 #endif
 
 	/* it follows rationale of BIOME-BGC to obtain m2 instead m2/m2 */

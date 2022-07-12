@@ -281,7 +281,11 @@ void Radiation (cell_t *const c, const int day, const int month, const int year)
 
 	/* NET RADIATION */
 
-	/* net radiation based on 3-PG method */
+	// net radiation based on 3-PG method // see Landsberg Terrestrial ecology Chapter 2: Weather and Energy Balance //
+	// Note: Jan 2022  we set the long radiation terms QA as an average value, 
+	// for both coniferous and broadleaved forests, -60 instead of -90 (QA) 
+	// This has of course to be FIXME  
+	
 	met[month].d[day].Net_rad_threePG = QA + QB * ( met[month].d[day].solar_rad * pow ( 10., 6 ) / ( met[month].d[day].daylength * 3600. ) );
 
 	/***************************************************************************************************************************************/

@@ -198,6 +198,8 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 	/* note: as in Campbell and Norman, Environmental Biophysics,
 	model should use Absorbed Radiation (instead just incident) but
 	composed of Short and Long wave radiation */
+	
+	// comment. TODO consider dew formation (when net-radiation is negative)
 
 	if( s->value[LAI_PROJ] > 0. )
 	{
@@ -210,7 +212,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 			rh = 1. / gc_sh;
 
 			/* radiation */
-			/* note: Net Rad is Short wave flux */
+			/* note: Biome-bgc used SW radiation */
 #if 0
 			net_rad = s->value[SW_RAD_ABS];
 #else
@@ -283,9 +285,9 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 				/* resistance for sun canopy fraction */
 				rv = 1. / s->value[LEAF_SUN_CONDUCTANCE];
 
-				/* note: Net Rad is Short wave flux */
+				/* note: Net Rad is Short wave flux in Biome-bgc*/
 				/* convert radiation to stomatal scale */
-				//fixme why??????????
+				// FIXME: compute correctly the net_radiation
 #if 0
 				net_rad = ( s->value[SW_RAD_ABS_SUN]  / s->value[LAI_SUN_PROJ] ) * s->value[F_LIGHT_SUN_MAKELA];
 #else
@@ -301,9 +303,9 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 				/* resistance for shaded canopy fraction */
 				rv = 1. / s->value[LEAF_SHADE_CONDUCTANCE];
 
-				/* note: Net Rad is Short wave flux */
+				/* note: Net Rad is Short wave flux in Biome-bgc*/
 				/* convert radiation to stomatal scale */
-				//fixme why??????????
+				// FIXME: compute correctly the net_radiation
 #if 0
 				net_rad = ( s->value[SW_RAD_ABS_SHADE]  / s->value[LAI_SHADE_PROJ] ) * s->value[F_LIGHT_SHADE_MAKELA];
 #else
@@ -352,7 +354,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 
 			/* radiation */
 			/* convert from W/m2 --> KJ/m2/sec */
-#if 0
+#if 0                  // Biome-bgc used SW Radiation
 			net_rad = s->value[SW_RAD_ABS]  * SNOW_ABS * 0.001 ;
 #else
 			net_rad = s->value[NET_RAD_ABS] * SNOW_ABS * 0.001 ;
@@ -369,7 +371,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 			if ( meteo_daily->tavg < 0. ) subl_melt = subl;
 			else                          subl_melt = melt;
 
-			//fixme
+			//FIXME
 			s->value[CANOPY_EVAPO] = subl_melt;
 
 			/* calculate the time required to sublimate all the canopy snow */
@@ -392,7 +394,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 				s->value[CANOPY_TRANSP] = 0.;
 
 				/* day length limits canopy sublimation */
-				//todo remove in latent heat computation the sublimation since it is computed still here!!!!
+				//TODO remove in latent heat computation the sublimation since it is computed still here!!!!
 				subl_melt             *= meteo_daily->daylength_sec;
 				s->value[CANOPY_EVAPO] = subl_melt;
 
@@ -432,9 +434,9 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 				/* resistance for sun canopy fraction */
 				rv = 1. / s->value[LEAF_SUN_CONDUCTANCE];
 
-				/* note: Net Rad is Short wave flux */
+				/* note: Net Rad is Short wave flux in Biome-bgc*/
 				/* convert radiation to stomatal scale */
-				//fixme why??????????
+				// FIXME: compute correctly the net_radiation
 #if 0
 				net_rad = ( s->value[SW_RAD_ABS_SUN]  / s->value[LAI_SUN_PROJ] ) * s->value[F_LIGHT_SUN_MAKELA];
 #else
@@ -451,9 +453,9 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 				/* resistance for shaded canopy fraction */
 				rv = 1. / s->value[LEAF_SHADE_CONDUCTANCE];
 
-				/* note: Net Rad is Short wave flux */
+				/* note: Net Rad is Short wave flux in Biome-bgc*/
 				/* convert radiation to stomatal scale */
-				//fixme why??????????
+				// FIXME: compute correctly the net_radiation
 #if 0
 				net_rad = ( s->value[SW_RAD_ABS_SHADE]  / s->value[LAI_SHADE_PROJ] ) * s->value[F_LIGHT_SHADE_MAKELA];
 #else
@@ -521,9 +523,9 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 			/* resistance for sun canopy fraction */
 			rv = 1. / s->value[LEAF_SUN_CONDUCTANCE];
 
-			/* note: Net Rad is Short wave flux */
+			/* note: Net Rad is Short wave flux in Biome-bgc*/
 			/* convert radiation to stomatal scale */
-			//fixme why??????????
+			// FIXME: compute correctly the net_radiation
 #if 0
 			net_rad = ( s->value[SW_RAD_ABS_SUN] / s->value[LAI_SUN_PROJ] ) * s->value[F_LIGHT_SUN_MAKELA];
 #else
@@ -541,9 +543,9 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 			/* resistance for shaded canopy fraction */
 			rv = 1. / s->value[LEAF_SHADE_CONDUCTANCE];
 
-			/* note: Net Rad is Short wave flux */
+			/* note: Net Rad is Short wave flux in Biome-bgc*/
 			/* convert radiation to stomatal scale */
-			//fixme why??????????
+			// FIXME: compute correctly the net_radiation
 #if 0
 			net_rad = ( s->value[SW_RAD_ABS_SHADE] / s->value[LAI_SHADE_PROJ] ) * s->value[F_LIGHT_SHADE_MAKELA];
 #else
@@ -583,6 +585,8 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 	/* control if canopy transpiration exceeds available soil water */
 	/* in case it happens firstly down-regulate transpiration to soil water modifier
 	 * if it is not enough than superimpose to zero */
+	// TODO correct for the multiclass case. or set a proper priority/competition rule.
+	 
 	if ( s->value[CANOPY_TRANSP] > c->asw )
 	{
 		printf("ATTENTION CANOPY TRANSPIRATION EXCEEDS ASW!!!!!!\n");
