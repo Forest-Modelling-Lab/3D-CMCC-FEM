@@ -25,7 +25,7 @@ The **3D-CMCC-FEM** has been developed by:
 Alessio Collalti    
 Alessio Ribeca  
 Carlo Trotta        
-Daniela Dalmonech 
+Daniela Dalmonech  
 Gina Marano       
 
 
