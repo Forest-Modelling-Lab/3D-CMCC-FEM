@@ -29,12 +29,12 @@ enum {
 	, SETTINGS_CO2_TRANS
 	, SETTINGS_YEAR_START_CO2_FIXED
 	, SETTINGS_NDEP_FIXED
-	, SETTINGS_TBASE_RESP
+	, SETTINGS_TBASE_RESP        // ddalmo : currently this setting is not available in the ifle  OPTIONAL 
 	, SETTINGS_PHOTO_ACCL
 	, SETTINGS_RESP_ACCL
 	, SETTINGS_REGENERATION
 	, SETTINGS_MANAGEMENT
-	, SETTINGS_MANAGEMENT_TYPE
+	, SETTINGS_MANAGEMENT_TYPE  //ddalmo this value/setting is actually not reported in the setting file OPTIONAL 
 	, SETTINGS_YEAR_START_MANAGEMENT
 	, SETTINGS_PROGN_AUT_RESP
 	, SETTINGS_SIZECELL
@@ -449,6 +449,9 @@ static int settings_replanted_import(const char* const filename, settings_t* s)
 		free(temp);
 		return 0;
 	}
+
+    
+
 
 	for ( i = 0; i < s->replanted_count; i++ )
 	{
@@ -1148,7 +1151,7 @@ settings_t* settings_import(const char *const filename) {
 					s->regeneration = 1;
 				}
 			break;
-
+                                 
 			case SETTINGS_MANAGEMENT:
 				if ( ! string_compare_i(token, "on") ) {
 					s->management = MANAGEMENT_ON;
@@ -1158,7 +1161,7 @@ settings_t* settings_import(const char *const filename) {
 					s->management = MANAGEMENT_VAR1;
 				}
 			break;
-
+                             
 			case SETTINGS_PROGN_AUT_RESP:
 				if ( ! string_compare_i(token, "on") ) {
 					s->Prog_Aut_Resp = 1;
@@ -1189,7 +1192,7 @@ settings_t* settings_import(const char *const filename) {
 					return 0;
 				}
 			break;
-
+                                  
 			case SETTINGS_PRUNING:
 				if ( ! string_compare_i(token, "on") ) {
 					pruning = 1;
@@ -1334,6 +1337,8 @@ settings_t* settings_import(const char *const filename) {
 			}
 		}
 	}
+
+       
 
 	/* check for restart year */
 	if ( 0 == s->year_restart ) {

@@ -858,7 +858,8 @@ static void lowercase(char *s)
 		s[i] = tolower(s[i]);
 	}
 }
-// ddalmo: uncomment and correct file writing for netcdf format
+//  file writing for netcdf format
+#ifdef NC_USE
 
 static int nc_conv(reimported_dataset_t* dataset, char* folder)
 {
@@ -1586,7 +1587,7 @@ int convert_to_nc(const char* const filename)
 	d = reimport_dataset(filename);
 	if ( ! d ) goto quit;
 
-	/* get path */
+	// get path 
 	{
 		char* p;
 		char* p2;
@@ -1615,3 +1616,5 @@ quit:
 	return ret;
 #undef BUF_SIZE
 }
+
+#endif //  NC_USE

@@ -305,9 +305,9 @@ int check_tree_class_nitrogen_flux_balance ( cell_t *const c, const int layer, c
 
 	/* DAILY CHECK ON CLASS LEVEL NITROGEN BALANCE */
 	/* check complete tree level nitrogen balance */
-
-	printf("%f \n", s->value[N_LEAF_TO_LITR]);
-	printf("%d \n", s->counter[N_TREE]);
+        //ddalmo
+	//printf("%f \n", s->value[N_LEAF_TO_LITR]);
+	//printf("%d \n", s->counter[N_TREE]);
 
 	/* sum of sources */
 	in      = s->value[NPP_tN_DEMAND];

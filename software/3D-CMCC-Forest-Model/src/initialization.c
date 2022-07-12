@@ -72,12 +72,15 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 
 	if (s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2)
 	{
+
 		CHECK_CONDITION (s->value[LEAF_FROOT_TURNOVER],    !=, 1.);
 	}
 	else
 	{
+             
 		CHECK_CONDITION (s->value[LEAF_FROOT_TURNOVER],     >, 1.);
 	}
+   
 
 	/* compute growth respiration fraction */
 	growth_respiration_frac ( a, s );
@@ -256,12 +259,14 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 
 	/* sapwood and heartwood biomass */
 	/* stem */
-	s->value[STEM_SAPWOOD_DM]         = s->value[STEM_DM] * s->value[SAPWOOD_PERC];
+	s->value[STEM_SAPWOOD_DM]         = s->value[STEM_DM] * s->value[SAPWOOD_PERC];    // FIXME sapwood_perc is simply the ration of two areas,not really correct to apply then the relationship to mass (and hence volume)
 	s->value[STEM_SAPWOOD_C]          = s->value[STEM_C]  * s->value[SAPWOOD_PERC];
 	s->value[STEM_HEARTWOOD_DM]       = s->value[STEM_DM] - s->value[STEM_SAPWOOD_DM];
 	s->value[STEM_HEARTWOOD_C]        = s->value[STEM_C]  - s->value[STEM_SAPWOOD_C];
 	s->value[TREE_STEM_SAPWOOD_C]     = s->value[STEM_SAPWOOD_C] / (double)s->counter[N_TREE];
-	s->value[TREE_STEM_HEARTWOOD_C]   = (s->value[STEM_C] - s->value[TREE_STEM_SAPWOOD_C]) / (double)s->counter[N_TREE];
+  	//s->value[TREE_STEM_HEARTWOOD_C]   = (s->value[STEM_C] - s->value[TREE_STEM_SAPWOOD_C]) / (double)s->counter[N_TREE];
+        //ddalmo august 2021 correction
+        s->value[TREE_STEM_HEARTWOOD_C]   = (s->value[STEM_C] - s->value[STEM_SAPWOOD_C]) / (double)s->counter[N_TREE];     
 
 	/* coarse root */
 	s->value[CROOT_SAPWOOD_DM]        = s->value[CROOT_DM] * s->value[SAPWOOD_PERC];
@@ -269,7 +274,9 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 	s->value[CROOT_HEARTWOOD_DM]      = s->value[CROOT_DM] - s->value[CROOT_SAPWOOD_DM];
 	s->value[CROOT_HEARTWOOD_C]       = s->value[CROOT_C]  - s->value[CROOT_SAPWOOD_C];
 	s->value[TREE_CROOT_SAPWOOD_C]    = s->value[CROOT_SAPWOOD_C] / (double)s->counter[N_TREE];
-	s->value[TREE_CROOT_HEARTWOOD_C]  = (s->value[CROOT_C] - s->value[TREE_CROOT_SAPWOOD_C] ) / (double)s->counter[N_TREE];
+	//s->value[TREE_CROOT_HEARTWOOD_C]  = (s->value[CROOT_C] - s->value[TREE_CROOT_SAPWOOD_C] ) / (double)s->counter[N_TREE];
+        //ddalmo august 2021 correction
+        s->value[TREE_CROOT_HEARTWOOD_C]  = (s->value[CROOT_C] - s->value[CROOT_SAPWOOD_C] ) / (double)s->counter[N_TREE];
 
 	/* branch */
 	s->value[BRANCH_SAPWOOD_DM]       = s->value[BRANCH_DM] * s->value[SAPWOOD_PERC];
@@ -277,15 +284,21 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 	s->value[BRANCH_HEARTWOOD_DM]     = s->value[BRANCH_DM] - s->value[BRANCH_SAPWOOD_DM];
 	s->value[BRANCH_HEARTWOOD_C]      = s->value[BRANCH_C]  - s->value[BRANCH_SAPWOOD_C];
 	s->value[TREE_BRANCH_SAPWOOD_C]   = s->value[BRANCH_SAPWOOD_C] / (double)s->counter[N_TREE];
-	s->value[TREE_BRANCH_HEARTWOOD_C] = (s->value[BRANCH_C] - s->value[TREE_BRANCH_SAPWOOD_C]) / (double)s->counter[N_TREE];
-
+	//s->value[TREE_BRANCH_HEARTWOOD_C] = (s->value[BRANCH_C] - s->value[TREE_BRANCH_SAPWOOD_C]) / (double)s->counter[N_TREE];
+        //ddalmo august 2021 correction
+        s->value[TREE_BRANCH_HEARTWOOD_C] = (s->value[BRANCH_C] - s->value[BRANCH_SAPWOOD_C]) / (double)s->counter[N_TREE];
+ 
 	/* overall */
 	s->value[TOT_SAPWOOD_DM]          = s->value[STEM_SAPWOOD_DM]   + s->value[CROOT_SAPWOOD_DM]   + s->value[BRANCH_SAPWOOD_DM];
 	s->value[TOT_SAPWOOD_C]           = s->value[STEM_SAPWOOD_C]    + s->value[CROOT_SAPWOOD_C]    + s->value[BRANCH_SAPWOOD_C];
 	s->value[TOT_HEARTWOOD_DM]        = s->value[STEM_HEARTWOOD_DM] + s->value[CROOT_HEARTWOOD_DM] + s->value[BRANCH_HEARTWOOD_DM];
 	s->value[TOT_HEARTWOOD_C]         = s->value[STEM_HEARTWOOD_C]  + s->value[CROOT_HEARTWOOD_C]  + s->value[BRANCH_HEARTWOOD_C];
-	s->value[TREE_SAPWOOD_C]          = s->value[TREE_SAPWOOD_C] / (double)s->counter[N_TREE];
-	s->value[TREE_HEARTWOOD_C]        = (s->value[TREE_TOT_WOOD_C] - s->value[TREE_SAPWOOD_C]) / (double)s->counter[N_TREE];
+	//s->value[TREE_SAPWOOD_C]          = s->value[TREE_SAPWOOD_C] / (double)s->counter[N_TREE];
+	//ddalmo august 2021 correction
+        s->value[TREE_SAPWOOD_C]          = s->value[TOT_SAPWOOD_C] / (double)s->counter[N_TREE];
+        //s->value[TREE_HEARTWOOD_C]        = (s->value[TREE_TOT_WOOD_C] - s->value[TREE_SAPWOOD_C]) / (double)s->counter[N_TREE]; 
+        //ddalmo august 2021 correction
+        s->value[TREE_HEARTWOOD_C]        = (s->value[TOT_WOOD_C] - s->value[TOT_SAPWOOD_C]) / (double)s->counter[N_TREE];
 
 	logger(g_debug_log, "-Sapwood stem biomass             = %f tC/cell\n",  s->value[STEM_SAPWOOD_C]);
 	logger(g_debug_log, "-Heartwood stem biomass           = %f tC/cell\n",  s->value[STEM_HEARTWOOD_C]);
@@ -435,8 +448,7 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 	}
 
 	s->value[TREE_FROOT_C]    = s->value[FROOT_C] / (double)s->counter[N_TREE];
-
-
+ 
 	/***** INITIALIZE LITTER POOL *****/
 
 
@@ -739,7 +751,7 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 	CHECK_CONDITION(s->value[AGB],                     <=, ZERO);
 	CHECK_CONDITION(s->value[BGB],                     <=, ZERO);
 	CHECK_CONDITION(s->value[VOLUME],                  <=, ZERO);
-	CHECK_CONDITION(s->value[TREE_VOLUME],             <=, ZERO);
+	CHECK_CONDITION(s->value[TREE_VOLUME],             <=, ZERO);  
 }
 
 void initialization_forest_cell_C (cell_t *const c, const int height, const int dbh, const int age, const int species)
@@ -761,7 +773,7 @@ void initialization_forest_cell_C (cell_t *const c, const int height, const int 
 	c->branch_dead_wood_carbon  += (s->value[BRANCH_DEADWOOD_C]  * 1e6 / g_settings->sizeCell);
 	c->reserve_carbon           += (s->value[RESERVE_C]          * 1e6 / g_settings->sizeCell);
 	c->fruit_carbon             += (s->value[FRUIT_C]            * 1e6 / g_settings->sizeCell);
-
+ 
 	c->agb                      += ((s->value[LEAF_C] + s->value[STEM_C] + s->value[BRANCH_C] + s->value[FRUIT_C]) * 1e6 / g_settings->sizeCell);
 	c->bgb                      += ((s->value[FROOT_C] + s->value[CROOT_C]) * 1e6 / g_settings->sizeCell);
 

@@ -117,11 +117,11 @@ am_3D_CMCC_Forest_Model_OBJECTS = allometry.$(OBJEXT) \
 	soil_radiation_sw_band.$(OBJEXT) \
 	canopy_net_radiation.$(OBJEXT) g-function.$(OBJEXT) \
 	mortality.$(OBJEXT) soil_respiration.$(OBJEXT) \
-	canopy_radiation_lw_band.$(OBJEXT) nc.$(OBJEXT) \
-	soil_settings.$(OBJEXT) canopy_radiation_sw_band.$(OBJEXT) \
-	heat_fluxes.$(OBJEXT) new_forest_tree_class.$(OBJEXT) \
-	soil_water_balance.$(OBJEXT) canopy_sensible_heat.$(OBJEXT) \
-	het_respiration.$(OBJEXT) output.$(OBJEXT) structure.$(OBJEXT) \
+	canopy_radiation_lw_band.$(OBJEXT) soil_settings.$(OBJEXT) \
+	canopy_radiation_sw_band.$(OBJEXT) heat_fluxes.$(OBJEXT) \
+	new_forest_tree_class.$(OBJEXT) soil_water_balance.$(OBJEXT) \
+	canopy_sensible_heat.$(OBJEXT) het_respiration.$(OBJEXT) \
+	output.$(OBJEXT) nc.$(OBJEXT) structure.$(OBJEXT) \
 	canopy_temperature.$(OBJEXT) initialization.$(OBJEXT) \
 	peak_lai.$(OBJEXT) topo.$(OBJEXT) C-assimilation.$(OBJEXT) \
 	lai.$(OBJEXT) Penman_Monteith.$(OBJEXT) tree_model.$(OBJEXT) \
@@ -405,7 +405,7 @@ AM_DEFAULT_VERBOSITY = 1
 AUTOCONF = ${SHELL} /home/ddalmo/FEM_MODEL/3D_CMCC_FEM/software/3D-CMCC-Forest-Model/missing autoconf
 AUTOHEADER = ${SHELL} /home/ddalmo/FEM_MODEL/3D_CMCC_FEM/software/3D-CMCC-Forest-Model/missing autoheader
 AUTOMAKE = ${SHELL} /home/ddalmo/FEM_MODEL/3D_CMCC_FEM/software/3D-CMCC-Forest-Model/missing automake-1.15
-AWK = mawk
+AWK = gawk
 CC = gcc
 CCDEPMODE = depmode=gcc3
 CFLAGS = -w -g -p -ggdb -ffpe-trap=invalid,zero,overflow,underflow -finit-real=snan -fbacktrace -fcheck=all -Wall
@@ -417,9 +417,9 @@ DEPDIR = .deps
 ECHO_C = 
 ECHO_N = -n
 ECHO_T = 
-EGREP = /bin/grep -E
+EGREP = /usr/bin/grep -E
 EXEEXT = 
-GREP = /bin/grep
+GREP = /usr/bin/grep
 INSTALL = /usr/bin/install -c
 INSTALL_DATA = ${INSTALL} -m 644
 INSTALL_PROGRAM = ${INSTALL}
@@ -427,10 +427,10 @@ INSTALL_SCRIPT = ${INSTALL}
 INSTALL_STRIP_PROGRAM = $(install_sh) -c -s
 LDFLAGS = -L/usr/local/lib/
 LIBOBJS = 
-LIBS = -lm -lnetcdf
+LIBS = -lm 
 LTLIBOBJS = 
 MAKEINFO = ${SHELL} /home/ddalmo/FEM_MODEL/3D_CMCC_FEM/software/3D-CMCC-Forest-Model/missing makeinfo
-MKDIR_P = /bin/mkdir -p
+MKDIR_P = /usr/bin/mkdir -p
 OBJEXT = o
 PACKAGE = 3d_cmcc_forest_model
 PACKAGE_BUGREPORT = daniela.dalmonech@gmail.com
@@ -529,7 +529,6 @@ g-function.c\
 mortality.c\
 soil_respiration.c\
 canopy_radiation_lw_band.c\
-nc.c\
 soil_settings.c\
 canopy_radiation_sw_band.c\
 heat_fluxes.c\
@@ -538,6 +537,7 @@ soil_water_balance.c\
 canopy_sensible_heat.c\
 het_respiration.c\
 output.c\
+nc.c\
 structure.c\
 canopy_temperature.c\
 initialization.c\

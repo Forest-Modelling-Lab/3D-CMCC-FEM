@@ -41,7 +41,6 @@ g-function.c\
 mortality.c\
 soil_respiration.c\
 canopy_radiation_lw_band.c\
-nc.c\
 soil_settings.c\
 canopy_radiation_sw_band.c\
 heat_fluxes.c\
@@ -50,6 +49,7 @@ soil_water_balance.c\
 canopy_sensible_heat.c\
 het_respiration.c\
 output.c\
+nc.c\
 structure.c\
 canopy_temperature.c\
 initialization.c\

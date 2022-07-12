@@ -25,7 +25,7 @@ extern settings_t* g_settings;
 extern logger_t* g_debug_log;
 extern dataset_t* g_dataset;
 
-static int harvesting (cell_t *const c, const int height, const int dbh, const int age, const int species)
+static int harvesting (cell_t *const c, const int height, const int dbh, const int age, const int species, const int rsi)
 {
 	int nat_man;   /* natural or managed mortality 0 = natural; 1 = managed */
 	species_t *s;
@@ -109,18 +109,9 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 	);
 #endif
 
-	/* loop on each heights starting from highest to lower */  // ddalmo note: this works with man = ON, monolayer and multilayer, with one specie for each layer.
-                                                                   // in the latter case a list of replanting setting for each specie should be 
-                                                                   // provided (and the code should be changed
-                                                                   // as currently only one replanted-specie info can be provided)
-                                                                   // and with man = VAR && regeneration = OFF 
-    
-        if (!g_settings->regeneration)
-        { 
-
-         for ( height = c->heights_count -1 ; height >= 0; --height )
-         {
-        
+	/* loop on each heights starting from highest to lower */
+	for ( height = c->heights_count -1 ; height >= 0; --height )
+	{
 		/* assign shortcut */
 		h = &c->heights[height];
 
@@ -147,6 +138,7 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 					/* initilIze management */
 					s->counter[THINNING_HAPPENS] = 0;
 					c->harvesting                = 0;
+                                        //s->value[THINNING_INDEX]=      0.;
 
 					if ( MANAGEMENT_ON == g_settings->management )
 					{
@@ -174,7 +166,7 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 
 							prescribed_thinning ( c, height, dbh, age, species, c->years[year].year );
 						}
-  
+
                                                 // ddalmo june2021: management prescribed by external file 
 						if ( g_management && g_management->thinning_years_count )
 						{
@@ -188,7 +180,7 @@ int forest_management (cell_t *const c, const int day, const int month, const in
                                                                         //s->value[THINNING_INDEX]= i;    
                                                                         THINNING_INDEX= i;            // to set eventually the 
                                                                                                       // intensity of the thinning from external file
-                                                                     
+                                                                       //printf(" thinning index= %d\n"); //ddalmo 
 									break;
 								}
 							}
@@ -200,7 +192,7 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 					{
 						logger(g_debug_log,"**FOREST MANAGEMENT**\n");
 						logger(g_debug_log,"**THINNING**\n");
-                                             
+                                              // printf(" i am in forest_management function, cutting prescribed \n"); //ddalmo
 						s->counter[THINNING_HAPPENS] = 1;
 
 						thinning ( c, height, dbh, age, species, year ,THINNING_INDEX);
@@ -212,7 +204,7 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 					/* increment counter */
 					++s->counter[YEARS_THINNING];
 
-					/*************************************** HARVESTING AND REPLANTING *************************************/
+					/*************************************** HARVESTING *************************************/
 				     
 					flag = 0;
 					if ( MANAGEMENT_ON == g_settings->management )
@@ -269,48 +261,49 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 						/* species found ? */
 						CHECK_CONDITION(rsi, ==, g_settings->replanted_count );
 #endif
-                                                thinned_plants =       s->counter[N_TREE] ; //save number of harvested trees 
 
-						/* remove tree class */
-						//if (  ! harvesting ( c, height, dbh, age, species, rsi ) ) //ddamo: no need to pass rsi
-                                                if (  ! harvesting ( c, height, dbh, age, species ) )  
-						{
-							logger_error(g_debug_log, "unable to harvesting! (exit)\n");
-							exit(1);
-						}
-
-						/* note: RESET c->dos */
-						c->dos = 0;  
- 
-                                                // ddalmo august 2021
-
-                                                // with 'harvest' we remove the class, with replanting we create a new class in the same  
-                                                // virtual space (as result the value of e.g. s->value[C_HWP] is simply set to 0 once the replanted class  
-                                                // is added. For this reason We save hence some key variables belonging to the old removed layer 
-                                                // and we save it in the new replanted layer object.
-                                                // no tests have been yet performed With multilayer or multispecie
-                                                
-                                                
-                                                
-                                                harvested_carbon =      s->value[C_HWP]     ;      /* woody biomass removed (tC/ha/yr) */
-                                                harvested_carbon_cum =  s->value[CUM_C_HWP] ;
-                                                harvested_volume =      s->value[VOLUME_HWP]     ; /*  stem volume removed (m3/ha/yr) */
-                                                harvested_volume_cum =  s->value[CUM_VOLUME_HWP] ;
-
-
-						/* compute single tree average biomass */
-						//fixme it should be also here!!!!
-						//average_tree_pools ( c );  // ddalmo note: actually when initializating the new forest class after replanting
-                                                                             // the new average tree pools are also computed
-
-
-                                                //ddalmo note august 2021
+                                            	//ddalmo note august 2021
                                             	// As currently set, we need to assume that the clear cut is performed in one layer/specie only, and 
                                             	// only one new class is added (thus in the setting file, only one replanting dataset is provided)
                                             	// And the replanted specie can be different from the removed old layer. 
                                             	// rsi is simply g_settings->replanted_count -1
                                       
                                             	rsi =  g_settings->replanted_count -1 ;
+
+                                                thinned_plants =       s->counter[N_TREE] ; //save number of harvested trees 
+
+						/* remove tree class */
+						if (  ! harvesting ( c, height, dbh, age, species, rsi ) )
+						{
+							logger_error(g_debug_log, "unable to harvesting! (exit)\n");
+							exit(1);
+						}
+
+						/* note: RESET c->dos */
+						c->dos = 0;
+                                             
+#if 1
+                                                 // ddalmo august 2021
+
+                                                 // with 'harvest' we remove the class, with replanting we create a new class in the same  
+                                                 // virtual space (as result the value of e.g. s->value[C_HWP] is simply set to 0 once the replanted class  
+                                                 // is added. This happens with the version with only one layer/class/species.  With multilayer or multispecie
+                                                 // no tests have been yet performed.
+
+                                                 // We save hence some key variables belonging to the old removed layer and we save it in the new replanted 
+                                                 // layer object
+
+                                                 harvested_carbon =      s->value[C_HWP]     ;      /* woody biomass removed (tC/ha/yr) */
+                                                 harvested_carbon_cum =  s->value[CUM_C_HWP] ;
+                                                 harvested_volume =      s->value[VOLUME_HWP]     ; /*  stem volume removed (m3/ha/yr) */
+                                                 harvested_volume_cum =  s->value[CUM_VOLUME_HWP] ;
+
+#endif
+
+						/* compute single tree average biomass */
+						//fixme it should be also here!!!!
+						//average_tree_pools ( c );  // ddalmo note: actually when initializating the new forest class after replanting
+                                                                             // the new average tree pools are also computed
 
 						/* check that all mandatory variables are filled */
 						CHECK_CONDITION (g_settings->replanted[rsi].n_tree, <, ZERO);
@@ -320,7 +313,7 @@ int forest_management (cell_t *const c, const int day, const int month, const in
                                                 
 						/* re-planting tree class */
 						if( g_settings->replanted[rsi].n_tree )
-						  {
+						{
 							if ( ! add_tree_class_for_replanting( c , day, month, year, rsi ) )
 							{
 								logger_error(g_debug_log, "unable to add new replanted class! (exit)\n");
@@ -335,207 +328,34 @@ int forest_management (cell_t *const c, const int day, const int month, const in
     
 							/* reset years_for_thinning */
 							s->counter[YEARS_THINNING] = 1;
-                                                        
+                                                     
+#if 1                                                   
                                                         // ddalmo august 2021 
-                                                  	// save in the new class object the following variables wich refer to the 
-                                                  	// removed old class.
+                                                        // save in the new class object the following variables wich refer to the 
+                                                        // removed old class.
                             
-                                                  	s->value[C_HWP]          =  harvested_carbon      ;  
-                                                  	s->value[CUM_C_HWP]      =  harvested_carbon_cum  ;  
-                                                  	s->value[VOLUME_HWP]     =  harvested_volume      ;
-                                                  	s->value[CUM_VOLUME_HWP] =  harvested_volume_cum  ;
-                                                  	s->counter[THINNED_TREE] =  thinned_plants        ;        
-
-                                                }  
-
-                                                s->counter[THINNING_HAPPENS] = 1; 
-						c->harvesting                = 1;  
-         
-			                }
-				}
-			}
-		}
-	 } 
-
-        } 
-        else  // SHELTERWOOD CASE WITH PRESCRIBED REGENERATION : only in combination with MAN = VAR
-        {
- 
-       // ddalmo august 2021: at this stage we assume we perform management only on a monolayer/monospecie alone or with a regeneration layer
-       // in this case we assume management is only performed in the dominant layer
-       // ddalmo august 2021: management supposed to be performed to one layer only, eventually if a regeneration layer is present,management
-       // is performed in the dominant layer only (i.e. shelterwood option)
-     
-             height = c->heights_count -1 ;
-        
-		/* assign shortcut */
-		h = &c->heights[height];
-
-		/* loop on each dbh starting from highest to lower */
-		for ( dbh = h->dbhs_count - 1; dbh >= 0; --dbh )
-		{
-			/* assign shortcut */
-			d = &h->dbhs[dbh];
-
-			/* loop on each age class */
-			for ( age = d->ages_count - 1 ; age >= 0 ; --age )
-			{
-				/* assign shortcut */
-				a = &d->ages[age];
-
-				/* loop on each species class */
-				for ( species = 0; species < a->species_count; ++species )
-				{
-					int flag = 0;
-
-					/* assign shortcut */
-					s = &a->species[species];
-
-					/* initilIze management */
-					s->counter[THINNING_HAPPENS] = 0;
-					c->harvesting                = 0;
-
-					//MANAGEMENT = VAR when REGENERATION = ON
-
-				        /* management forced by stand data */
-					if ( year )
-					 {
-						s->counter[THINNING_HAPPENS] = 1;
-
-						prescribed_thinning ( c, height, dbh, age, species, c->years[year].year );
-					  }
-  
-                                        // ddalmo june2021: management prescribed by external file 
-					if ( g_management && g_management->thinning_years_count )
-					 {
-      
-					   int i;
-						for ( i = 0; i < g_management->thinning_years_count; i++ )
-						 {
-						   if ( c->years[year].year == g_management->thinning_years[i] )
-						     {
-							flag = 1;
-                                                        //s->value[THINNING_INDEX]= i;    
-                                                        THINNING_INDEX= i;            // to set eventually the 
-                                                                                      // intensity of the thinning from external file
-                                                                     
-							break;
-						     }
-						 }
-					}
-					
-
-					/* thinning */
-					if ( flag )
-					{
-						logger(g_debug_log,"**FOREST MANAGEMENT**\n");
-						logger(g_debug_log,"**THINNING**\n");
-                                             
-						s->counter[THINNING_HAPPENS] = 1;
-
-						thinning ( c, height, dbh, age, species, year ,THINNING_INDEX);
-                                                
-						/* reset counter */
-						s->counter[YEARS_THINNING] = 0;
-					}
-
-					/* increment counter */
-					++s->counter[YEARS_THINNING];
-
-					/*************************************** HARVESTING *************************************/
-				     
-					flag = 0;
-
-					if ( g_management && g_management->harvesting_years_count )
-					{
-						int i;
-						for ( i = 0; i < g_management->harvesting_years_count; i++ )
-						{
-							if ( c->years[year].year == g_management->harvesting_years[i] )
-							{
-								flag = 1;
-								break;
-							}
-						}						
-					}							
-					
-					if ( flag )
-					{
-						logger(g_debug_log,"**FOREST MANAGEMENT**\n");
-						logger(g_debug_log,"**HARVESTING AFTER ADDED REGENERATION LAYER**\n");
-
-                                                thinned_plants =       s->counter[N_TREE] ; //save number of harvested trees 
-
-						/* remove tree class */
-				
-                                                if (  ! harvesting ( c, height, dbh, age, species ) )  
-						{
-							logger_error(g_debug_log, "unable to harvesting! (exit)\n");
-							exit(1);
+                                                        s->value[C_HWP]          =  harvested_carbon      ;  
+                                                        s->value[CUM_C_HWP]      =  harvested_carbon_cum  ;  
+                                                        s->value[VOLUME_HWP]     =  harvested_volume      ;
+                                                        s->value[CUM_VOLUME_HWP] =  harvested_volume_cum  ;
+                                                        s->counter[THINNED_TREE] =  thinned_plants        ;  
+                       
+#endif                                             
+                                                     
 						}
 
-						/* note: RESET c->dos */
-						c->dos = 0;    //ddalmo comment: however, when there is a simulated regeneration, is not stricly
-                                                               //speaking starting from scratch
-                                             
-
-                                                 // ddalmo august 2021
-
-                                                 
-                                                 harvested_carbon =      s->value[C_HWP]     ;      /* woody biomass removed (tC/ha/yr) */
-                                                 harvested_carbon_cum =  s->value[CUM_C_HWP] ;
-                                                 harvested_volume =      s->value[VOLUME_HWP]     ; /*  stem volume removed (m3/ha/yr) */
-                                                 harvested_volume_cum =  s->value[CUM_VOLUME_HWP] ;
-
-
-
-						/* compute single tree average biomass */
-						//fixme it should be also here!!!!
-						//average_tree_pools ( c );  // ddalmo note: actually when initializating the new forest class after replanting
-                                                                             // the new average tree pools are also computed
-
-                                                     
-                                                 annual_forest_structure ( c, year );
-                                                   
-                                                 height = c->heights_count -  1;         //a questo punto dovrei avere solo un layer, quello di regen che diventa0
-	                                         dbh = c->heights[height].dbhs_count - 1;
-	                                         age = c->heights[height].dbhs[dbh].ages_count - 1;
-	                                         species = c->heights[height].dbhs[dbh].ages[age].species_count - 1;
-
-                                                 // with one regeneration and one harveste layer, all the indexes should be = 0
-                                                 //printf("height %d\n",height); //ddalmo
-                                                 //printf("dbh%d\n",dbh); //ddalmo
-					         //printf(" age %d\n", age); //ddalmo
-						 //printf("species  %d\n",species ); //ddalmo
-
-                                          
-                                                 // indexes of the remaining layer after harves, i.e. the regeneration layer
-					         h = &c->heights[height];
-						 d = &h->dbhs[dbh];
-						 a = &d->ages[age];
-					         s = &a->species[species];
-
-                                                 // ddalmo august 2021 
-                                                 // save in the class object of the regeneration layer  
-                                                 // the data of the removed old class.
-                            
-                                                 s->value[C_HWP]          =  harvested_carbon      ;  
-                                                 s->value[CUM_C_HWP]      =  harvested_carbon_cum  ;  
-                                                 s->value[VOLUME_HWP]     =  harvested_volume      ;
-                                                 s->value[CUM_VOLUME_HWP] =  harvested_volume_cum  ;
-                                                 s->counter[THINNED_TREE] =  thinned_plants        ;
-                                         
-                                                s->counter[THINNING_HAPPENS] = 1; //let this way
-						c->harvesting                = 1;    
+						s->counter[THINNING_HAPPENS] = 1;
+						c->harvesting                = 1;
+                                                
 					}
 
                                         /*************************************** PRESCRIBED REGENERATION *************************************/
 
                                         //ddalmo august 2021
 
-                                        //if( g_settings->regeneration && (MANAGEMENT_VAR == g_settings->management))
-                                        //{
-                           
+                                        if( g_settings->regeneration || (MANAGEMENT_VAR == g_settings->management))
+                                        {
+   
                                         flag = 0; 
                                         if ( g_management->regeneration_years_count )
 						{
@@ -551,9 +371,18 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 						}			
 
 
-                                          if ( flag )   //add layer for regeneration 
+                                          if ( flag )    
+                                          //if (year == 5 )  // current test to see if it works
                                           {
-                                  
+                                          printf("YEAR %d\n",year);// ddalmo
+                                           //int rsi;               /* replanted species index */
+                                           //rsi =  g_settings->replanted_count -1 ;
+
+                                           printf("management.c g_settings->regeneration_management %d\n", g_settings->regeneration);// ddalm
+
+                                 
+                 
+                                           
                                           /* check that all mandatory variables are filled */
                                                  
 						CHECK_CONDITION (g_settings->regeneration_n_tree, <, ZERO); 
@@ -569,27 +398,28 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 							exit(1);
 						}
 
-						// indexes  
-						h = &c->heights[height]; //height should be = 0
-                                                //printf("height %d\n",height); //ddalmo
+						// indexes
+						h = &c->heights[height];
 						d = &h->dbhs[dbh];
 						a = &d->ages[age];
 						s = &a->species[species];
-
-                                                /* reset years_for_thinning */
-						s->counter[YEARS_THINNING] =   1;
+                                                               
+        					printf("management.c height %d\n",height); //ddalmo
+        					printf("amanagement.c dbh %d\n",dbh); //ddalmo
+        					printf("management.c age  %d\n",age ); //ddalmo
+ 						printf("management.c age specie specie %d\n",species ); //ddalmo
                                                 
  						c->harvesting                = 1;   //ddalmo comment: in this way the annual_structure function is not 
                                                                                     // called in the tree_model.c
                                           
                                           }
-                                        //} 
+                                        } 
 
 				}
 			}
 		}
+	}
 
-        }
 	return 0;
 }
 
@@ -824,7 +654,7 @@ void management_free(management_t* p)
 	}
 }
 
-#if 0  //ddalmo new function is repoted below
+#if 0  //ddalmo test
 management_t* management_load(const char* const filename)
 {
 #define BUFFER_SIZE 512
@@ -965,13 +795,13 @@ management_t* management_load_dani(const char* const filename)
 	int* p_years_count;
         int** p_years_int;        // ddalmo for each year the intensity of removal is provided
         int* p_years_int_count;
-        int** p_years_reg;        // ddalmo: the year when regeneration has to happened is provided
+        int** p_years_reg;        // ddalmo for each year the intensity of removal is provided
         int* p_years_reg_count;
    
-	int thinning_flag     = 0;
-        int harvesting_flag   = 0; 
-        int thinning_int_flag = 0; 
-        int regeneration_flag = 0; 
+	int thinning_flag = 0;
+         int harvesting_flag = 0; //ddalmo
+        int thinning_int_flag = 0; //ddalmo
+        int regeneration_flag = 0; //ddalmo
 	
         FILE *f;
 	management_t* management;
@@ -1127,8 +957,13 @@ management_t* management_load_dani(const char* const filename)
 	}
         
 	fclose(f);
-
-        //DATA INPUT CHECK!
+printf("management->thinning_years[1]  %d\n",management->thinning_years[1] );
+printf("management->thinning_years[0]  %d\n",management->thinning_years[0] );
+printf("management->harvesting_years[1]  %d\n",management->harvesting_years[1] );
+printf("management->thinning_int_years[3]  %d\n",management->thinning_intensity[3] );
+printf("management->regeneration_years[0]  %d\n",management->regeneration_years[0] );
+printf("management->regeneration_int_years[2]  %d\n",management->regeneration_years[2] );
+        //CHECK!
 
 	if ( ! management->harvesting_years_count && ! management->thinning_years_count)
 	{

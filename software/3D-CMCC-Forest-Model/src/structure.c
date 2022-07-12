@@ -17,6 +17,8 @@
 
 extern settings_t* g_settings;
 extern logger_t* g_debug_log;
+extern dataset_t* g_dataset;   //ddalmo 
+
 //extern int MonthLength [];
 //extern int MonthLength_Leap [];
 
@@ -63,6 +65,11 @@ int annual_forest_structure(cell_t* const c, const int year)
 	int species;
 	int light_tol;
 	int zeta_count = 0;
+        int row;
+        int year_dens_fin = 0;  // only used if MANAGEMENT == VAR or VAR1
+
+         //ddalmo
+       assert(g_dataset); 
 
 	species_t *s;
 
@@ -83,7 +90,7 @@ int annual_forest_structure(cell_t* const c, const int year)
 	// TODO
 	// ALESSIOR
 	// check if following code is useful!
-
+     
 	/*
 	assert( ! c->tree_layers_count );
 
@@ -170,7 +177,7 @@ int annual_forest_structure(cell_t* const c, const int year)
 	logger(g_debug_log, "*zeta_count %d*\n\n", zeta_count);
 	logger(g_debug_log, "*c->t_layers_count %d*\n\n", c->tree_layers_count);
 
-	/*****************************************************************************************/
+ 	/*****************************************************************************************/
 
 	/** assign zeta for each height class **/
 
@@ -219,6 +226,8 @@ int annual_forest_structure(cell_t* const c, const int year)
 
 	/** compute numbers of trees within each layer **/
 
+
+
 	logger(g_debug_log, "*compute numbers of trees within each layer*\n\n");
 
 	for ( layer = c->tree_layers_count - 1; layer >= 0; --layer )
@@ -229,16 +238,20 @@ int annual_forest_structure(cell_t* const c, const int year)
 			{
 				for ( dbh = 0; dbh < c->heights[height].dbhs_count; ++dbh )
 				{
+                                               
+
 					for ( age = 0; age < c->heights[height].dbhs[dbh].ages_count ; ++age )
 					{
+
 						for ( species = 0; species < c->heights[height].dbhs[dbh].ages[age].species_count; ++species )
 						{
-							if( layer == c->heights[height].height_z )
-							{
+							//if( layer == c->heights[height].height_z ) //ddalmo: there is already this condition
+							//{
 								s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
+
 								c->tree_layers[layer].layer_n_trees += s->counter[N_TREE];
-							}
+							//}
 						}
 					}
 				}
@@ -346,6 +359,7 @@ int annual_forest_structure(cell_t* const c, const int year)
 
 							c->tree_layers[layer].layer_cover_proj += s->value[CANOPY_COVER_PROJ];
 							logger(g_debug_log, "layer %d cover_proj         = %f\n", layer, c->tree_layers[layer].layer_cover_proj);
+
 						}
 					}
 				}
@@ -358,14 +372,16 @@ int annual_forest_structure(cell_t* const c, const int year)
 
 	/** check if layer cover exceeds maximum layer cover **/
 
-	logger(g_debug_log, "*check if layer cover exceeds maximum layer cover*\n\n");
+    
+	logger(g_debug_log, "*check if layer cover exceeds maximum layer cover*\n\n");  // ddalmo: where it is checked?
+                                                                                        // the DBHDC_eff is already computed fixing the maximum layer cover!
 
 	for (layer = c->tree_layers_count - 1; layer >= 0; --layer)
 	{
 
 		/* note: 04 Oct 2016 */
 		/* call of this function is due to the assumption that:
-			-overall layer canopy cover cannot exceeds its maximum
+			-overall layer canopy cover cannot exceeds its maximum   //DDALMO: where is this condition checked????
 			-DBHDC_EFF cannot be < DBHDCMIN (otherwise self-thinning mortality is called)
 		 */
 
@@ -387,15 +403,44 @@ int annual_forest_structure(cell_t* const c, const int year)
 							s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 							/*************** self-thinning ****************/
+
+     
+                                                        // compute last year of available stand density data 
+                                                        // note: in case of multilayer or multispecies, check if the correct information has been read
+                                                        row = g_dataset->rows_count ;
+
+                                                        year_dens_fin = g_dataset->rows[row-1].year_stand;                                                             
+                                                      
+
+                                                        // ddalmo skip self thinning only if stand density data is prescribed
+                                                        // i.e. case MAN ON or OFF, year_dens_fin == first year of model inizialization
+                                                        //      case MAN VAR , year_dens_fin == last year of measured stand density data
+
+                                                        // NOTE: to be check that in case of multilayer/multispecies the year_dens_fin is read correctly
+                                                      // printf("DBHDC eff %f \n",s->value[DBHDC_EFF] );
+                                                      // printf("DBHDCMIN %f \n",s->value[DBHDCMIN] );
+
+                                                        if ( c->years[year].year > year_dens_fin ) 
+							{
+                                                          
+								if ( s->value[DBHDC_EFF] <= s->value[DBHDCMIN] )
+								{
+                                                              
+									self_thinning_mortality ( c, layer, year );
+								}
+							}
+
+
 							/* note: special case for ISIMIP, avoid self thinning when management is 'var' */
-							if ( ( ( c->years[year].year >= g_settings->year_start_management ) && ( MANAGEMENT_VAR == g_settings->management ) )
+							/*if ( ( ( c->years[year].year >= g_settings->year_start_management ) && ( MANAGEMENT_VAR == g_settings->management ) )
 									|| ( MANAGEMENT_OFF == g_settings->management ) )
 							{
+                                                
 								if ( s->value[DBHDC_EFF] <= s->value[DBHDCMIN] )
 								{
 									self_thinning_mortality ( c, layer, year );
 								}
-							}
+							} */
 						}
 					}
 				}

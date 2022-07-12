@@ -351,6 +351,8 @@ void reset_daily_class_variables(cell_t *const c)
 					s->counter[THINNING_HAPPENS] =         0;
 					s->counter[HARVESTING_HAPPENS] =       0;
 
+                                        
+
 					s->value[DAILY_CANOPY_COVER_PROJ] =   0.;
 					s->value[DAILY_CANOPY_COVER_EXP] =    0.;
 
@@ -731,8 +733,11 @@ void reset_annual_class_variables(cell_t *const c)
 					s->value[MAX_RESERVE_C_CONC]   =        0.;
 					s->value[MIN_RESERVE_C_CONC]   =        0.;
 
-					s->value[MAX_RESERVE_C]        =        0.;
-					s->value[MIN_RESERVE_C]        =        0.;
+					s->value[MAX_ANN_RESERVE_C]    =        0.; //ddalmo comment: annual maximum value of reserve total
+					s->value[MIN_RESERVE_C]        =        0.; // comment: for each year the minimum reserve pool to be guaranteed
+                                        s->value[MIN_ANN_RESERVE_C]    =        0.; //ddalmo:  annual minimum value of reserve total
+                                        s->value[TREE_MAX_ANN_RESERVE_C]    =        0.; //ddalmo comment: annual maximum value of reserve/ tree 
+                                        s->value[TREE_MIN_ANN_RESERVE_C]    =        0.; //ddalmo:  annual minimum value of reserve /tree
 
 					s->value[YEARLY_ASSIMILATION] =         0.;
 					s->value[YEARLY_ASSIMILATION_SUN] =     0.;

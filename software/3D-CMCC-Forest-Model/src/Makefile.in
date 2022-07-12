@@ -117,11 +117,11 @@ am_3D_CMCC_Forest_Model_OBJECTS = allometry.$(OBJEXT) \
 	soil_radiation_sw_band.$(OBJEXT) \
 	canopy_net_radiation.$(OBJEXT) g-function.$(OBJEXT) \
 	mortality.$(OBJEXT) soil_respiration.$(OBJEXT) \
-	canopy_radiation_lw_band.$(OBJEXT) nc.$(OBJEXT) \
-	soil_settings.$(OBJEXT) canopy_radiation_sw_band.$(OBJEXT) \
-	heat_fluxes.$(OBJEXT) new_forest_tree_class.$(OBJEXT) \
-	soil_water_balance.$(OBJEXT) canopy_sensible_heat.$(OBJEXT) \
-	het_respiration.$(OBJEXT) output.$(OBJEXT) structure.$(OBJEXT) \
+	canopy_radiation_lw_band.$(OBJEXT) soil_settings.$(OBJEXT) \
+	canopy_radiation_sw_band.$(OBJEXT) heat_fluxes.$(OBJEXT) \
+	new_forest_tree_class.$(OBJEXT) soil_water_balance.$(OBJEXT) \
+	canopy_sensible_heat.$(OBJEXT) het_respiration.$(OBJEXT) \
+	output.$(OBJEXT) nc.$(OBJEXT) structure.$(OBJEXT) \
 	canopy_temperature.$(OBJEXT) initialization.$(OBJEXT) \
 	peak_lai.$(OBJEXT) topo.$(OBJEXT) C-assimilation.$(OBJEXT) \
 	lai.$(OBJEXT) Penman_Monteith.$(OBJEXT) tree_model.$(OBJEXT) \
@@ -529,7 +529,6 @@ g-function.c\
 mortality.c\
 soil_respiration.c\
 canopy_radiation_lw_band.c\
-nc.c\
 soil_settings.c\
 canopy_radiation_sw_band.c\
 heat_fluxes.c\
@@ -538,6 +537,7 @@ soil_water_balance.c\
 canopy_sensible_heat.c\
 het_respiration.c\
 output.c\
+nc.c\
 structure.c\
 canopy_temperature.c\
 initialization.c\

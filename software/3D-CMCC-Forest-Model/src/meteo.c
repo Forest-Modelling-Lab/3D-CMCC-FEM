@@ -4,7 +4,9 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include "logger.h"
+#ifdef NC_USE
 #include "netcdf.h"  //used by ddalmo
+#endif
 #include "common.h"
 #include "constants.h"
 #include "settings.h"
@@ -923,6 +925,8 @@ static int meteo_from_arr(double *const values, const int rows_count, const int 
 #undef VALUE_AT
 }
 
+#ifdef NC_USE
+
 static int import_nc(const char* const filename, meteo_annual_t** pyos, int* const yos_count, cell_t*const cell) {
 #define COLUMN_AT(c)	((c)*dims_size[ROWS_DIM])
 #define VALUE_AT(r,c)	((r)+(COLUMN_AT((c))))
@@ -932,18 +936,18 @@ static int import_nc(const char* const filename, meteo_annual_t** pyos, int* con
 	int id_file;
 	int ret;
 
-	int dims_count;	/* dimensions */
+	int dims_count;	// dimensions //
 	int vars_count;
-	int atts_count;	/* attributes */
-	int unl_count;	/* unlimited dimensions */
+	int atts_count;	// attributes //
+	int unl_count;	// unlimited dimensions 
 	char name[NC_MAX_NAME+1];
 	nc_type type;
 	size_t size;
-	int *i_values = NULL; /* required */
-	double *values = NULL; /* required */
+	int *i_values = NULL; // required //
+	double *values = NULL; // required //
 	int columns[MET_COLUMNS_COUNT];
 
-	/* DO NOT CHANGE THIS ORDER */
+	// DO NOT CHANGE THIS ORDER //
 	enum {
 		ROWS_DIM,
 		X_DIM,
@@ -953,9 +957,9 @@ static int import_nc(const char* const filename, meteo_annual_t** pyos, int* con
 	};
 
 	int dims_size[DIMS_COUNT];
-	const char *sz_dims[DIMS_COUNT] = { "row", "x", "y" }; /* DO NOT CHANGE THIS ORDER...please see top */
+	const char *sz_dims[DIMS_COUNT] = { "row", "x", "y" }; // DO NOT CHANGE THIS ORDER...please see top //
 
-	/* */
+	//
 	ret = nc_open(filename, NC_NOWRITE, &id_file);
 	if ( ret != NC_NOERR ) goto quit;
 
@@ -968,14 +972,14 @@ static int import_nc(const char* const filename, meteo_annual_t** pyos, int* con
 		return 0;
 	}
 
-	/* check if vars count are at least MET_COLUMNS+2 */
+	// check if vars count are at least MET_COLUMNS+2 //
 	if ( vars_count < MET_COLUMNS_COUNT+2 ) {
 		printf("bad nc file! Vars count should be %d at least.\n\n", vars_count);
 		nc_close(id_file);
 		return 0;
 	}
 
-	/* reset */
+	// reset //
 	for ( i = 0; i < MET_COLUMNS_COUNT; ++i ) {
 		columns[i] = 0;
 	}
@@ -983,7 +987,7 @@ static int import_nc(const char* const filename, meteo_annual_t** pyos, int* con
 		dims_size[i] = -1;
 	}
 
-	/* get dimensions */
+	// get dimensions //
 	for ( i = 0; i < dims_count; ++i ) {
 		ret = nc_inq_dim(id_file, i, name, &size);
 		if ( ret != NC_NOERR ) goto quit;
@@ -1000,7 +1004,7 @@ static int import_nc(const char* const filename, meteo_annual_t** pyos, int* con
 		}
 	}
 
-	/* check if we have all dimensions */
+	// check if we have all dimensions //
 	for ( i = 0; i < DIMS_COUNT; ++i ) {
 		if ( -1 == dims_size[i] ) {
 			logger_error(g_debug_log, "dimension %s not found!\n", sz_dims[i]);
@@ -1009,14 +1013,14 @@ static int import_nc(const char* const filename, meteo_annual_t** pyos, int* con
 		}
 	}
 
-	/* check x and y */
+	// check x and y //
 	if( (dims_size[X_DIM] != 1) || (dims_size[Y_DIM] != 1) ) {
 		logger_error(g_debug_log, "x and y must be 1!");
 		nc_close(id_file);
 		return 0;
 	}
 
-	/* alloc memory for int values */
+	// alloc memory for int values //
 	i_values = malloc(dims_size[ROWS_DIM]*sizeof*values);
 	if ( ! i_values ) {
 		logger_error(g_debug_log, sz_err_out_of_memory);
@@ -1024,8 +1028,8 @@ static int import_nc(const char* const filename, meteo_annual_t** pyos, int* con
 		return 0;
 	}
 
-	/* alloc memory for double values */
-	/* please note that we alloc double for year,month,day too */
+	// alloc memory for double values //
+	// please note that we alloc double for year,month,day too //
 	values = malloc(dims_size[ROWS_DIM]*MET_COLUMNS_COUNT*sizeof*values);
 	if ( ! values ) {
 		logger_error(g_debug_log, sz_err_out_of_memory);
@@ -1034,19 +1038,19 @@ static int import_nc(const char* const filename, meteo_annual_t** pyos, int* con
 		return 0;
 	}
 
-	/* set all double values to -9999 */
+	// set all double values to -9999 //
 	for ( i = 0; i < dims_size[ROWS_DIM]*MET_COLUMNS_COUNT; ++i ) {
 		values[i] = INVALID_VALUE;
 	}
 
-	/* get vars */
+	// get vars //
 	for ( i = 0; i < vars_count; ++i ) {
 		ret = nc_inq_var(id_file, i, name, &type, NULL, NULL, NULL);
 		if ( ret != NC_NOERR ) goto quit;
-		/* check if we need that var */
+		// check if we need that var //
 		for ( y = 0; y  < MET_COLUMNS_COUNT; ++y ) {
 			if ( ! string_compare_i(name, sz_met_columns[y]) ) {
-				/* check if we've already get that var */
+				// check if we've already get that var //
 				if ( columns[y] ) {
 					//logger(g_debug_log, "column %s already imported!", name);
 					printf("column %s already imported!", name);
@@ -1057,7 +1061,7 @@ static int import_nc(const char* const filename, meteo_annual_t** pyos, int* con
 				} else {
 					columns[y] = 1;
 				}
-				/* get values */
+				// get values //
 				if ( NC_DOUBLE == type ) {
 					ret = nc_get_var_double(id_file, i, &values[COLUMN_AT(y)]);
 					if ( ret != NC_NOERR ) goto quit;
@@ -1068,7 +1072,7 @@ static int import_nc(const char* const filename, meteo_annual_t** pyos, int* con
 						values[VALUE_AT(z, y)] = (double)i_values[z];
 					}
 				} else {
-					/* type format not supported! */
+					// type format not supported! //
 					//logger(g_debug_log, "type format for %s column not supported", name);
 					printf("type format for %s column not supported", name);
 					free(values);
@@ -1084,7 +1088,7 @@ static int import_nc(const char* const filename, meteo_annual_t** pyos, int* con
 	free(i_values);
 	i_values = NULL;
 #if 0
-	/* check if we've all needed vars */
+	// check if we've all needed vars //
 	for ( i = 0; i < MET_COLUMNS_COUNT; ++i ) {
 		if ( ((VPD_F == i) && (-1 == columns[RH_F])) || ((RH_F == i) && (-1 == columns[VPD_F])) ) {
 			logger(g_debug_log, "met columns %s and %s are missing!\n\n", sz_met_columns[VPD_F], sz_met_columns[RH_F]);
@@ -1101,13 +1105,13 @@ static int import_nc(const char* const filename, meteo_annual_t** pyos, int* con
 		}
 	}
 
-	/* compute vpd ?*/
+	//compute vpd ?//
 	if ( -1 == columns[VPD_F] ) {
 		compute_vpd(values, dims_size[ROWS_DIM], MET_COLUMNS_COUNT);
 	}
 #endif
 
-	/* save file */
+	// save file //
 #if 0
 	{
 		FILE *f;
@@ -1120,7 +1124,7 @@ static int import_nc(const char* const filename, meteo_annual_t** pyos, int* con
 			free(i_values);
 			return 0;
 		}
-		/* write header */
+		// write header //
 		fputs("Year\tMonth\tn_days\tRg_f\tTa_f\tTmax\tTmin\tVPD_f\tTs_f\tPrecip\tSWC\tLAI\tET\tWS_F\n", f);
 		for ( row = 0; row < dims_size[ROWS_DIM]; ++row ) {
 			fprintf(f, "%d\t%d\t%d\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\n",
@@ -1163,7 +1167,7 @@ static int import_nc(const char* const filename, meteo_annual_t** pyos, int* con
 		free(values);
 		return 0;
 	}
-	/* hack */
+	// hack //
 	ret = 0;
 
 	quit:
@@ -1179,7 +1183,9 @@ static int import_nc(const char* const filename, meteo_annual_t** pyos, int* con
 #undef COLUMN_AT
 #undef VALUE_AT
 }
+#endif 
 
+#ifdef NC_USE
 
 static int import_lst(const char *const filename, meteo_annual_t** p_yos, int *const yos_count, cell_t*const cell) {
 #define VARS_COUNT		((MET_COLUMNS_COUNT)-3)	/* we remove first 3 columns: year, month and day */
@@ -1454,7 +1460,8 @@ static int import_lst(const char *const filename, meteo_annual_t** p_yos, int *c
 				if ( ret != NC_NOERR ) goto quit;
 			} else if ( ! string_compare_i(name, sz_time) ) {
 				if ( ! date_imported ) {
-					if ( type != NC_DOUBLE ) {
+				   
+                                	if ( type != NC_DOUBLE ) {
 						//logger(g_debug_log, "type format in %s for time column not supported\n\n", buffer);
 						printf("type format in %s for time column not supported\n\n", buffer);
 						goto quit_no_nc_err;
@@ -1742,6 +1749,8 @@ static int import_lst(const char *const filename, meteo_annual_t** p_yos, int *c
 #undef COLUMN_AT
 #undef VARS_COUNT
 }
+
+#endif  // to remove the function related to netcdf 
 
 static int import_txt(const char *const filename, meteo_annual_t** p_yos, int *const yos_count, cell_t*const cell) {
 #define BUFFER_SIZE	1024
@@ -2197,9 +2206,13 @@ int import_meteo_data(const char *const file, int *const yos_count, void* _cell)
 		}
 		if ( i ) {
 		//ddalmo use of nc
+#ifdef NC_USE 
 			i = import_nc(token, &meteo_annual, yos_count, cell);
+#endif
 		} else if ( ! string_compare_i(p2, "lst") ) {
+#ifdef NC_USE 
 			i = import_lst(token, &meteo_annual, yos_count, cell);
+#endif
 		} else {
 			i = import_txt(token, &meteo_annual, yos_count, cell);
 		}

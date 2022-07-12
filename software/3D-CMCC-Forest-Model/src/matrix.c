@@ -16,7 +16,9 @@
 #include "initialization.h"
 #include "structure.h"
 //ddalmo use of netcdf
+#ifdef NC_USE
 #include "netcdf.h"
+#endif
 
 extern logger_t* g_debug_log;
 extern settings_t* g_settings;
@@ -124,6 +126,8 @@ void dataset_free(dataset_t *p) {
 		free(p);
 	}
 }
+
+#ifdef NC_USE
 
 #if 0
 static dataset_t* dataset_import_nc(const char* const filename, int* const px_cells_count, int* const py_cells_count) {
@@ -594,6 +598,8 @@ static dataset_t* dataset_import_nc(const char* const filename, int* const px_ce
 }
 #endif
 
+#endif // NC_USE
+
 static dataset_t* dataset_import_txt(const char* const filename) {
 #define BUFFER_SIZE	1024
 	int i = 0;
@@ -1019,6 +1025,8 @@ static int fill_cell_from_species(age_t* const a, const row_t* const row) {
 	a->species[a->species_count-1].value[RESERVE_DM]  = row ? row->wres : INVALID_VALUE;
 	a->species[a->species_count-1].value[LAI_PROJ]    = row ? row->lai  : INVALID_VALUE;
 
+
+
 	return 1;
 }
 
@@ -1147,6 +1155,7 @@ int fill_species_from_file(species_t *const s) {
 	if ( ! s->name ) return 0;
 
 	species_count = SIZE_OF_ARRAY(sz_species_values);
+ 
 	species_flags = malloc(sizeof*species_flags*species_count);
 	if ( ! species_flags ) {
 		puts(sz_err_out_of_memory);
@@ -1156,6 +1165,7 @@ int fill_species_from_file(species_t *const s) {
 	for ( i = 0; i < species_count; ++i ) {
 		species_flags[i] = 0;
 	}
+
 	sprintf(filename, "%s%s.txt", g_sz_parameterization_path, s->name);
 	f = fopen(filename, "r");
 	if ( ! f ){
@@ -1398,9 +1408,12 @@ matrix_t* matrix_create(const soil_settings_t*const s, const int count, const ch
 			p = strrchr(filename, '.');
 			if ( p ) {
 				++p;
+
 				if ( ! string_compare_i(p, "nc") || ! string_compare_i(p, "nc4") ) {
 				//ddalmo correction use of nc file
+#ifdef NC_USE 
 					d = dataset_import_nc(filename, &x_cells_count, &y_cells_count);
+#endif
 				} else {
 					d = dataset_import_txt(filename);
 				}

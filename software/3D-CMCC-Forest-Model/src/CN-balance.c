@@ -22,7 +22,7 @@ void carbon_balance (cell_t *const c, const int height, const int dbh, const int
 	species_t *s;
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
-
+ 
 	/*** update class level carbon mass pools ***/
 	s->value[LEAF_C]     -= (s->value[C_LEAF_TO_LITR]  + s->value[C_LEAF_TO_RESERVE]);
 	s->value[FROOT_C]    -= (s->value[C_FROOT_TO_LITR] + s->value[C_FROOT_TO_RESERVE]);

@@ -81,8 +81,9 @@ void crown_allometry (cell_t *const c, const int height, const int dbh, const in
 	{
 	case 0: /* cylinder */
 		logger(g_debug_log, "-Crown form factor        = cylinder\n");
-
-		s->value[CROWN_AREA]     = ( 2. * s->value[CROWN_AREA]) + (2 * Pi * s->value[CROWN_RADIUS] * s->value[CROWN_HEIGHT]);
+                //ddalmo correction??
+		//s->value[CROWN_AREA]     = ( 2. * s->value[CROWN_AREA]) + (2 * Pi * s->value[CROWN_RADIUS] * s->value[CROWN_HEIGHT]);
+                s->value[CROWN_AREA]     = ( 2. * s->value[CROWN_AREA_PROJ]) + (2 * Pi * s->value[CROWN_RADIUS] * s->value[CROWN_HEIGHT]);
 		s->value[CROWN_VOLUME]   = s->value[CROWN_AREA_PROJ] * s->value[CROWN_HEIGHT];
 		break;
 
@@ -101,7 +102,7 @@ void crown_allometry (cell_t *const c, const int height, const int dbh, const in
 		break;
 
 	case 3: /* tri-bi-axial ellipsoid */
-		logger(g_debug_log, "-Crown form factor        = ellipsoid \n");
+		logger(g_debug_log, "-Crown form factor        = ellipsoid prolate \n");
 
 		c_diameter = s->value[CROWN_DIAMETER] / 2.;
 		c_height   = s->value[CROWN_HEIGHT]   / 2.;
@@ -112,6 +113,21 @@ void crown_allometry (cell_t *const c, const int height, const int dbh, const in
 		s->value[CROWN_VOLUME]   = ( 4. / 3. ) * Pi * pow ( c_diameter , 2. ) * c_height;
 
 		break;
+
+         // ddalmo : for pino d'aleppo (ellissoide oblato)
+         case 4: /* tri-bi-axial ellipsoid */
+		logger(g_debug_log, "-Crown form factor        = ellipsoid oblate\n");
+
+		c_diameter = s->value[CROWN_DIAMETER] / 2.;
+		c_height   = s->value[CROWN_HEIGHT]   / 2.;
+		ce = acos (c_diameter / c_height);
+
+		/* ellissoide oblato */
+		s->value[CROWN_AREA]     = 2. * Pi * ( (pow(c_height, 2.) / sin(ce)) * log ((1. + sin(ce))/(cos(ce))) );
+		s->value[CROWN_VOLUME]   = ( 4. / 3. ) * Pi * pow ( c_diameter , 2. ) * c_height;
+
+		break;
+
 	}
 
 	/****************************************************************************/
@@ -176,6 +192,7 @@ void allometry_power_function(cell_t *const c)
 						s->value[STEMCONST] = pow (e, -3.51 + 1.27 * s->value[MASS_DENSITY]);
 					}
 					logger(g_debug_log, "-Stem const = %f\n", s->value[STEMCONST]);
+                                  
 				}
 			}
 		}

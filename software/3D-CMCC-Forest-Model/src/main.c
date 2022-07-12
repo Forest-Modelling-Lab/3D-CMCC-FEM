@@ -6,6 +6,7 @@
 #ifdef _WIN32
 #ifdef _DEBUG
 #define _CRTDBG_MAP_ALLOC
+//#define  NC_USE  //added by ddalmo, so to define if NC related functions has to be used (and allowing to build an exe for windows). To use ncdf library,just un-comment!
 #include <crtdbg.h>
 #endif
 #endif
@@ -79,6 +80,7 @@ char	*g_sz_parameterization_path = NULL
 		, *g_sz_soil_file = NULL
 		, *g_sz_topo_file = NULL
 		, *g_sz_settings_file =	NULL
+                , *g_sz_manag_file =	NULL
 		, *g_sz_ndep_file = NULL
 		, *g_sz_co2_conc_file = NULL
 		, *g_sz_output_vars_file = NULL
@@ -241,6 +243,7 @@ static void clean_up(void)
 	if ( g_sz_ndep_file ) free(g_sz_ndep_file);
 	if ( g_sz_co2_conc_file ) free(g_sz_co2_conc_file);
 	if ( g_sz_settings_file ) free(g_sz_settings_file);
+        if ( g_sz_manag_file ) free(g_sz_manag_file);
 	if ( g_sz_parameterization_path ) free(g_sz_parameterization_path);
 	if ( g_sz_output_path ) free(g_sz_output_path);
 	if ( g_sz_input_path ) free(g_sz_input_path);
@@ -403,6 +406,10 @@ static int log_start(const char* const sitename)
 
 	case MANAGEMENT_VAR:
 		p = "VAR";
+		break;
+
+        case MANAGEMENT_VAR1:   //in case an additional management type will be used.
+		p = "VAR1";
 		break;
 
 	default:
@@ -570,8 +577,12 @@ static int parse_args(int argc, char *argv[])
 	g_sz_soil_file = NULL;
 	g_sz_topo_file = NULL;
 	g_sz_settings_file = NULL;
+        g_sz_manag_file    = NULL; //ddalmo
+        g_sz_input_met_file = NULL;
 	g_sz_output_vars_file = NULL;
 	g_sz_benchmark_path = NULL;
+
+           printf("check files");
 
 	for ( i = 1; i < argc; ++i ) {
 		if ( argv[i][0] != '-' ) {
@@ -706,6 +717,23 @@ static int parse_args(int argc, char *argv[])
 			}
 			g_sz_output_vars_file = string_copy(argv[i+1]);
 			if( ! g_sz_output_vars_file ) {
+				puts(sz_err_out_of_memory);
+				goto err;
+			}
+			break;
+
+              // ddalmo  prescribed-management file (e.g. SETTINGS, where settings file is also saved)
+
+                 case 'q': // 
+ 			if ( ! argv[i+1] ) {
+				puts("output path not specified!");
+				goto err;
+			}
+			g_sz_manag_file = string_copy(argv[i+1]);
+ 
+                        //printf("management file case -q  %s\n",g_sz_manag_file); //ddalmo check
+
+			if( ! g_sz_manag_file ) {
 				puts(sz_err_out_of_memory);
 				goto err;
 			}
@@ -1161,7 +1189,7 @@ int main(int argc, char *argv[]) {
 		return 1;
 	}
 	puts(msg_ok);
-
+      
 	if ( ! output_path_create() ) {
 		return 0;
 	}
@@ -1185,17 +1213,19 @@ int main(int argc, char *argv[]) {
 	if ( ! g_settings ) {
 		goto err;
 	}
-	puts(msg_ok);
+        puts(msg_ok);
 
 	if ( ! g_settings->Ndep_fixed && ! g_sz_ndep_file ) {
 		puts("ndep file not specified for ndep_fixed off");
 		goto err;
 	}
+	
 
-	// load management ?
-	if ( MANAGEMENT_VAR == g_settings->management )
-	{
-		char *p;
+       // below old part of the code v5.5
+
+	 /* if ( MANAGEMENT_VAR == g_settings->management )   
+          {    
+          char *p;
 		char buffer[256];
 
 		sprintf(buffer, "ISIMIP/%s_management_ISIMIP.txt", g_settings->sitename);
@@ -1219,7 +1249,44 @@ int main(int argc, char *argv[]) {
 		if ( g_sz_input_path ) free(p);
 		//if ( ! g_management ) goto err;
 		puts(msg_ok);
-	}
+	}  */
+        
+           // load management file (when MANAGEMENT == VAR and the thinning/clear cut is prescribed)
+
+           if ( MANAGEMENT_VAR == g_settings->management )  
+	   {
+		char *p;
+		char buffer[256];
+ 
+
+                // if management file info is provided, check if the file exists
+               // g_sz_manag_file  : gives already the path to the file
+   
+	        if ( g_sz_manag_file ) {      // not necessarily we do need the management file (e.s.if MAN=VAR and the simulation cover the historical only 
+                                              // with all density data observed
+		  p = concatenate_path(g_sz_input_path, g_sz_manag_file); 
+                  printf("g_sz_manag_file concatenate P  %s\n", p);
+		  if ( ! p ) 
+	     	  {
+			puts(sz_err_out_of_memory);
+			goto err;
+		  }
+		  //free(g_sz_manag_file);
+		  ////  g_sz_manag_file = p;  //commentato july 2021
+
+                  g_management = management_load_dani(p);
+ 
+                  if ( g_sz_input_path ) free(p);
+                  if ( ! g_management ) goto err;
+
+		  puts(msg_ok);
+
+	        }            
+	   }
+        
+
+ // ddalmo         
+   
 
 	printf("soil import...");
 	s = soil_settings_import(g_sz_soil_file, &soil_settings_count);
@@ -1227,20 +1294,24 @@ int main(int argc, char *argv[]) {
 		goto err;
 	}
 	puts(msg_ok);
+       
 
 	printf("topo import...");
 	t = topo_import(g_sz_topo_file, &topos_count);
 	if ( ! t ) {
 		goto err;
 	}
+   
 	puts(msg_ok);
-
+       
 	printf("build matrix");
 	if ( g_sz_dataset_file )
-		printf(" using %s...", g_sz_dataset_file);
+                printf(" using %s...", g_sz_dataset_file);		
 	else
 		printf("...");
+       
 	matrix = matrix_create(s, soil_settings_count, g_sz_dataset_file, &g_dataset);
+        
 	if ( ! matrix ) goto err;
 	puts(msg_ok);
 
@@ -1760,11 +1831,11 @@ int main(int argc, char *argv[]) {
 										}
 										else
 										{
-											printf("ok tree_model (x=%d,y=%d) (%02d-%02d-%d)\n"
-													, matrix->cells[cell].x
-													, matrix->cells[cell].y
-													, day+1, month+1, year+g_settings->year_start
-											);
+											//printf("ok tree_model (x=%d,y=%d) (%02d-%02d-%d)\n"
+											//		, matrix->cells[cell].x
+											//		, matrix->cells[cell].y
+											//		, day+1, month+1, year+g_settings->year_start
+											//);
 										}
 									}
 								}
@@ -1798,11 +1869,11 @@ int main(int argc, char *argv[]) {
 					}
 					else
 					{
-						printf("ok litr_model (x=%d,y=%d) (%02d-%02d-%d)\n"
-								, matrix->cells[cell].x
-								, matrix->cells[cell].y
-								, day+1, month+1, year+g_settings->year_start
-						);
+						//printf("ok litr_model (x=%d,y=%d) (%02d-%02d-%d)\n"
+						//		, matrix->cells[cell].x
+						//		, matrix->cells[cell].y
+						//		, day+1, month+1, year+g_settings->year_start
+						//);
 					}
 					/************************************************************************/
 					/* run for soil model */
@@ -1813,11 +1884,11 @@ int main(int argc, char *argv[]) {
 					}
 					else
 					{
-						printf("ok soil_model (x=%d,y=%d) (%02d-%02d-%d)\n"
-								, matrix->cells[cell].x
-								, matrix->cells[cell].y
-								, day+1, month+1, year+g_settings->year_start
-						);
+						//printf("ok soil_model (x=%d,y=%d) (%02d-%02d-%d)\n"
+						//		, matrix->cells[cell].x
+						//		, matrix->cells[cell].y
+						//		, day+1, month+1, year+g_settings->year_start
+						//);
 					}
 					/************************************************************************/
 					/* run for cell model */
@@ -1828,17 +1899,18 @@ int main(int argc, char *argv[]) {
 					}
 					else
 					{
-						printf("ok cell_model (x=%d,y=%d) (%02d-%02d-%d)\n"
-								, matrix->cells[cell].x
-								, matrix->cells[cell].y
-								, day+1, month+1, year+g_settings->year_start
-						);
+						//printf("ok cell_model (x=%d,y=%d) (%02d-%02d-%d)\n"
+						//		, matrix->cells[cell].x
+						//		, matrix->cells[cell].y
+						//		, day+1, month+1, year+g_settings->year_start
+						//);
 					}
 					/*************************************************************************/
 
 					/******************************************************************************/
 					/* print daily output */
-					EOD_print_output_cell_level (&matrix->cells[cell], day, month, year, years_of_simulation );
+					//EOD_print_output_cell_level (&matrix->cells[cell], day, month, year, years_of_simulation );
+                                        EOD_print_output_cell_level_ddalmo (&matrix->cells[cell], day, month, year, years_of_simulation );
 					EOD_print_output_soil_cell_level (&matrix->cells[cell], day, month, year, years_of_simulation );
 
 					/* reset daily variables once printed */
@@ -1852,7 +1924,8 @@ int main(int argc, char *argv[]) {
 					if ( current_doy == matrix->cells[cell].doy )
 					{
 						/* print monthly output */
-						EOM_print_output_cell_level( &matrix->cells[cell], month, year, years_of_simulation );
+						//EOM_print_output_cell_level( &matrix->cells[cell], month, year, years_of_simulation );
+                                                EOM_print_output_cell_level_ddalmo( &matrix->cells[cell], month, year, years_of_simulation );
 						EOM_print_output_soil_cell_level( &matrix->cells[cell], month, year, years_of_simulation );
 
 						reset_monthly_class_variables ( &matrix->cells[cell] );
@@ -1867,7 +1940,9 @@ int main(int argc, char *argv[]) {
 					{
 
 						/* print annual output */
-						EOY_print_output_cell_level( &matrix->cells[cell], year, years_of_simulation );
+
+						//EOY_print_output_cell_level( &matrix->cells[cell], year, years_of_simulation );
+                                                EOY_print_output_cell_level_ddalmo( &matrix->cells[cell], year, years_of_simulation );
 						EOY_print_output_soil_cell_level( &matrix->cells[cell], year, years_of_simulation );
 
 						reset_annual_class_variables ( &matrix->cells[cell] );
@@ -1903,6 +1978,7 @@ int main(int argc, char *argv[]) {
 	/* free memory */
 	matrix_free(matrix); matrix = NULL;
 
+#ifdef NC_USE       
 	/* create nc files */
 	if ( g_daily_log && g_settings->netcdf_output ) {
 		printf("creating nc daily files...");
@@ -1923,7 +1999,7 @@ int main(int argc, char *argv[]) {
 		}
 		puts("ok");
 	}
-
+#endif
 	/* ok ! */
 	prog_ret = 0;
 
@@ -2067,11 +2143,14 @@ int main(int argc, char *argv[]) {
 #endif
 
 	printf("import settings file %s...", g_sz_settings_file);
+        
 	g_settings = settings_import(g_sz_settings_file);
 	if ( ! g_settings )
 	{
 		goto err;
 	}
+          
+      
 	if ( g_settings->time != 'd' ) {
 		puts("uncorrect time step choiced!");
 		goto err;
@@ -2083,6 +2162,8 @@ int main(int argc, char *argv[]) {
 		puts("ndep file not specified for ndep_fixed off");
 		goto err;
 	}
+        
+       
 
 	printf("soil import...");
 	s = soil_settings_import(g_sz_soil_file, &soil_settings_count);
@@ -2090,13 +2171,18 @@ int main(int argc, char *argv[]) {
 		goto err;
 	}
 	puts(msg_ok);
-
+     
+        
 	printf("topo import...");
+      
 	t = topo_import(g_sz_topo_file, &topos_count);
 	if ( ! t ) {
 		goto err;
 	}
+        
 	puts(msg_ok);
+         
+       
 
 	printf("build matrix");
 	if ( g_sz_dataset_file )
@@ -2377,7 +2463,7 @@ int main(int argc, char *argv[]) {
 								}
 								else
 								{
-									printf("ok tree_model (%02d-%02d-%d)\n", day+1, month+1, year+g_settings->year_start);
+									//printf("ok tree_model (%02d-%02d-%d)\n", day+1, month+1, year+g_settings->year_start);
 								}
 							}
 							else
@@ -2408,7 +2494,7 @@ int main(int argc, char *argv[]) {
 					}
 					else
 					{
-						printf("ok soil_model (%02d-%02d-%d)\n", day+1, month+1, year+g_settings->year_start);
+						//printf("ok soil_model (%02d-%02d-%d)\n", day+1, month+1, year+g_settings->year_start);
 					}
 					/************************************************************************/
 					/* run for cell model */
@@ -2418,7 +2504,7 @@ int main(int argc, char *argv[]) {
 					}
 					else
 					{
-						printf("ok cell_model (%02d-%02d-%d)\n", day+1, month+1, year+g_settings->year_start);
+						//printf("ok cell_model (%02d-%02d-%d)\n", day+1, month+1, year+g_settings->year_start);
 					}
 					/*************************************************************************/
 
@@ -2455,6 +2541,7 @@ int main(int argc, char *argv[]) {
 			/******************************************************************************/
 			/* print annual output */
 			EOY_print_output_cell_level( &matrix->cells[cell], year, years_of_simulation );
+                        
 
 			/* reset annual variables once printed */
 			if ( ( IS_LEAP_YEAR( matrix->cells[cell].years[year].year ) ? (MonthLength_Leap[DECEMBER]) : (MonthLength[DECEMBER] )) == matrix->cells[cell].doy )

@@ -254,6 +254,9 @@ int growth_efficiency_mortality ( cell_t *const c, const int height, const int d
 		CHECK_CONDITION ( c->reserve_carbon, < , ZERO );
 		CHECK_CONDITION ( c->fruit_carbon,   < , ZERO );
 
+   
+                //ddalmo August 2021 FIXME : to update the cell level N pools too!
+
 		/* litter fluxes and pools */
 		littering             ( c, s );
 
@@ -337,7 +340,8 @@ void age_mortality ( cell_t *const c, const int height, const int dbh, const int
 	deadtree = (int)(livetree * age_mort);
 	logger(g_debug_log, "dead trees = %d\n", deadtree);
 
-	if ( ( deadtree ) > 1 )
+//	if ( ( deadtree ) >= 1 ) //ddalmo
+        if ( ( deadtree ) > 1 )
 	{
 		logger(g_debug_log, "**MORTALITY based on Tree Age (LPJ)**\n");
 
@@ -407,9 +411,10 @@ void stochastic_mortality ( cell_t *const c, const int height, const int dbh, co
 	/* stochastic probability function */
 	deadtree = (int)( livetree * age_mort_fact );
 
+
 	logger(g_debug_log, "dead trees = %d\n", deadtree);
 
-	if ( ( deadtree ) > 1 )
+	if ( ( deadtree ) >= 1 )  // ddalmo correction
 	{
 		logger(g_debug_log, "**MORTALITY based on stochasticity **\n");
 

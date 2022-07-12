@@ -31,34 +31,47 @@ void sapwood_turnover( cell_t *const c, age_t *const a, species_t *const s, cons
 		the juvenile phase to 0.25–0.50 in the mature phase. Forest Dynamics, Growth and Yield book Hans Pretzsch (pg. 99) "
 
 	/* assumption: this function assumes that turnover rate increases with increasing tree age */
-	juv_sapwood_turnover_frac = 0.1;                        //fixme it should be moved to species.txt
+
+        // ddalmo test using LPJ data
+        //juv_sapwood_turnover_frac = 0.01; 
+        //juv_sapwood_turnover_frac = 0.005; 
+        juv_sapwood_turnover_frac = 0.016;   
+	
+        //juv_sapwood_turnover_frac = 0.1;                        //fixme it should be moved to species.txt
 	mat_sapwood_turnover_frac = s->value[SAPWOOD_TURNOVER]; //fixme it should be moved to species.txt
 	t_age                     = 30;                         //fixme it should be moved to species.txt
 
 	/* note: it recomputes variables in species.txt */
 	effective_sapwood_turnover = mat_sapwood_turnover_frac + ( juv_sapwood_turnover_frac - mat_sapwood_turnover_frac ) *
 			exp( -LN2 * pow( ( (double)a->value / t_age ), n ) );
-
+       
 #else
 
 	/* note: assumes fixed value in species.txt */
 	effective_sapwood_turnover = s->value[SAPWOOD_TURNOVER];
 
 #endif
-
+      
 	s->value[DAILY_SAPWOOD_TURNOVER] = effective_sapwood_turnover / ( IS_LEAP_YEAR ( c->years[year].year ) ? 366 : 365 );
 
 	/*****************************************************************************************************************/
 	/************************************************ sapwood turnover ***********************************************/
 
-	if ( ! day &&  ! month )
+	if ( ! day &&  ! month )  // first january
 	{
+
+     
 		//		if ( s->counter[YOS] == 1 )
 		//		{
 		//			s->value[YEARLY_C_TO_STEM_SAPWOOD]   = s->value[STEM_SAPWOOD_C];
 		//			s->value[YEARLY_C_TO_CROOT_SAPWOOD]  = s->value[CROOT_SAPWOOD_C];
 		//			s->value[YEARLY_C_TO_BRANCH_SAPWOOD] = s->value[BRANCH_SAPWOOD_C];
 		//		}
+
+#if 0
+             
+            
+
 		/* as in: LPJ, Sitch et al., 2003 and  Orchidee, Krinner et al., 2005; all sapwood tunovers each year */
 
 		/* stem sapwood */
@@ -70,16 +83,50 @@ void sapwood_turnover( cell_t *const c, age_t *const a, species_t *const s, cons
 		/* branch sapwood */
 		s->value[C_BRANCH_SAPWOOD_TO_HEARTWOOD] = s->value[YEARLY_C_TO_BRANCH_SAPWOOD] * s->value[DAILY_SAPWOOD_TURNOVER];
 
+                /* reset annual sapwood values once used */
+		s->value[YEARLY_C_TO_STEM_SAPWOOD]   = 0.;
+		s->value[YEARLY_C_TO_CROOT_SAPWOOD]  = 0.;
+		s->value[YEARLY_C_TO_BRANCH_SAPWOOD] = 0.;
+
+#else
+
+               // ddalmo june 2021 test: according to experiments in GCB 2019 paper 
+                /* stem sapwood */
+		s->value[C_STEM_SAPWOOD_TO_HEARTWOOD]   = s->value[STEM_SAPWOOD_C]   * s->value[DAILY_SAPWOOD_TURNOVER];
+
+		/* coarse root sapwood */
+		s->value[C_CROOT_SAPWOOD_TO_HEARTWOOD]  = s->value[CROOT_SAPWOOD_C]  * s->value[DAILY_SAPWOOD_TURNOVER];
+
+		/* branch sapwood */
+		s->value[C_BRANCH_SAPWOOD_TO_HEARTWOOD] = s->value[BRANCH_SAPWOOD_C] * s->value[DAILY_SAPWOOD_TURNOVER];
+
+
+              //ddalmo test the first day of the year
+             // printf("Computing sapwood to heartwood \n");
+             // printf("YEARLY_C_TO_STEM_SAPWOOD %f\n",s->value[YEARLY_C_TO_STEM_SAPWOOD] );
+
 		/* reset annual sapwood values once used */
 		s->value[YEARLY_C_TO_STEM_SAPWOOD]   = 0.;
 		s->value[YEARLY_C_TO_CROOT_SAPWOOD]  = 0.;
 		s->value[YEARLY_C_TO_BRANCH_SAPWOOD] = 0.;
+
+#endif
+
 	}
+
+       
 
 	/* daily stem turnover sapwood to heartwood*/
 
 	s->value[STEM_SAPWOOD_C]     -= s->value[C_STEM_SAPWOOD_TO_HEARTWOOD];
 	s->value[STEM_HEARTWOOD_C]   += s->value[C_STEM_SAPWOOD_TO_HEARTWOOD];
+
+   //ddalmo : put some check hier! as ste
+
+
+              //ddalmo 
+      //printf("C_STEM_SAPWOOD_TO_HEARTWOOD %f\n",s->value[C_STEM_SAPWOOD_TO_HEARTWOOD]);
+      //printf("STEM HEARTWOOD after turnover %f\n",s->value[STEM_HEARTWOOD_C]);
 
 	/* daily coarse root turnover sapwood to heartwood */
 
@@ -119,7 +166,16 @@ void livewood_turnover( cell_t *const c, age_t *const a, species_t *const s, con
 	/** age related function for livewood turnover **/
 
 	/* assumption: this function assumes that turnover rate increases with increasing tree age */
-	juv_livewood_turnover_frac = 0.1;                         //fixme it should be moved to species.txt
+
+             
+         // ddalmo test using LPJ data
+         //juv_livewood_turnover_frac = 0.01; 
+         //juv_livewood_turnover_frac = 0.005; 
+        juv_livewood_turnover_frac = 0.016; 
+
+	//
+
+	//juv_livewood_turnover_frac = 0.1;                         //fixme it should be moved to species.txt
 	mat_livewood_turnover_frac = s->value[LIVEWOOD_TURNOVER]; //fixme it should be moved to species.txt
 	t_age                      = 30;                          //fixme it should be moved to species.txt
 
@@ -127,13 +183,16 @@ void livewood_turnover( cell_t *const c, age_t *const a, species_t *const s, con
 	effective_livewood_turnover = mat_livewood_turnover_frac + ( juv_livewood_turnover_frac - mat_livewood_turnover_frac ) *
 			exp( -LN2 * pow( ( (double)a->value / t_age ), n ) );
 
+      //ddalmo 
+   //       printf("effective_livewood_turn %f\n",effective_livewood_turnover);
+
 #else
 
 	/* note: assumes fixed value in species.txt */
 	effective_livewood_turnover = s->value[LIVEWOOD_TURNOVER];
 
 #endif
-
+     
 	/* test it accounts for fractions for previous year carbon biomass for daily turnover */
 	/* following Krinner et al., 2005 turnover occurs every day of the year */
 
@@ -143,7 +202,7 @@ void livewood_turnover( cell_t *const c, age_t *const a, species_t *const s, con
 	/*****************************************************************************************************************/
 	/************************************************ livewood turnover ***********************************************/
 
-	if ( ! day &&  ! month )
+	if ( ! day &&  ! month ) // first january
 	{
 		//		if ( s->counter[YOS] == 1 )
 		//		{
@@ -151,6 +210,9 @@ void livewood_turnover( cell_t *const c, age_t *const a, species_t *const s, con
 		//			s->value[YEARLY_C_TO_CROOT_SAPWOOD]  = s->value[CROOT_LIVEWOOD_C];
 		//			s->value[YEARLY_C_TO_BRANCH_SAPWOOD] = s->value[BRANCH_LIVEWOOD_C];
 		//		}
+
+#if 0
+           
 
 		/* stem livewood */
 		s->value[C_STEM_LIVEWOOD_TO_DEADWOOD]   = s->value[YEARLY_C_TO_STEM_LIVEWOOD]   * s->value[DAILY_LIVEWOOD_TURNOVER];
@@ -161,10 +223,36 @@ void livewood_turnover( cell_t *const c, age_t *const a, species_t *const s, con
 		/* branch livewood */
 		s->value[C_BRANCH_LIVEWOOD_TO_DEADWOOD] = s->value[YEARLY_C_TO_BRANCH_LIVEWOOD] * s->value[DAILY_LIVEWOOD_TURNOVER];
 
+             //  printf("Computing livewood to deadwood \n");
+             // printf("C_STEM_LIVEWOOD_TO_DEADWOOD %f\n",s->value[C_STEM_LIVEWOOD_TO_DEADWOOD] );
+
+
+                /* reset annual  livewood values once used */
+		s->value[YEARLY_C_TO_STEM_LIVEWOOD]   = 0.;
+		s->value[YEARLY_C_TO_CROOT_LIVEWOOD]  = 0.;
+		s->value[YEARLY_C_TO_BRANCH_LIVEWOOD] = 0.;
+     
+#else
+              //ddalmo june 2021 test: run across different values of turnover as in Collalti GCB paper 2019 
+
+                s->value[C_STEM_LIVEWOOD_TO_DEADWOOD]   = s->value[STEM_LIVEWOOD_C]   * s->value[DAILY_LIVEWOOD_TURNOVER];
+
+		/* coarse root livewood */
+		s->value[C_CROOT_LIVEWOOD_TO_DEADWOOD]  = s->value[CROOT_LIVEWOOD_C] * s->value[DAILY_LIVEWOOD_TURNOVER];
+
+		/* branch livewood */
+		s->value[C_BRANCH_LIVEWOOD_TO_DEADWOOD] = s->value[BRANCH_LIVEWOOD_C] * s->value[DAILY_LIVEWOOD_TURNOVER];
+
+              //printf("Computing livewood to deadwood \n");
+              //printf("YEARLY_C_TO_STEM_LIVEWOOD %f\n",s->value[YEARLY_C_TO_STEM_LIVEWOOD] );
+   
+
 		/* reset annual  livewood values once used */
 		s->value[YEARLY_C_TO_STEM_LIVEWOOD]   = 0.;
 		s->value[YEARLY_C_TO_CROOT_LIVEWOOD]  = 0.;
 		s->value[YEARLY_C_TO_BRANCH_LIVEWOOD] = 0.;
+
+#endif
 
 	}
 
@@ -172,6 +260,12 @@ void livewood_turnover( cell_t *const c, age_t *const a, species_t *const s, con
 
 	s->value[STEM_LIVEWOOD_C]   -= s->value[C_STEM_LIVEWOOD_TO_DEADWOOD];
 	s->value[STEM_DEADWOOD_C]   += s->value[C_STEM_LIVEWOOD_TO_DEADWOOD];
+
+        
+              //ddalmo 
+      // printf("C_STEM_LIVEWOOD_TO_DEADWOOD %f\n",s->value[C_STEM_LIVEWOOD_TO_DEADWOOD]);
+      // printf("STEM DEADWOOD after turnover %f\n",s->value[STEM_DEADWOOD_C]);
+
 
 	/* daily coarse root turnover livewood to heartwood */
 
@@ -212,7 +306,8 @@ void turnover( cell_t *const c, age_t *const a, species_t *const s, const int da
 	/** age related function for turnover **/
 
 	/* assumption: this function assumes that turnover rate increases with increasing tree age */
-	juv_livewood_turnover_frac = 0.1;                         //fixme it should be moved to species.txt
+        
+        juv_livewood_turnover_frac = 0.1;                         //fixme it should be moved to species.txt
 	mat_livewood_turnover_frac = s->value[LIVEWOOD_TURNOVER]; //fixme it should be moved to species.txt
 	t_age                      = 30;                          //fixme it should be moved to species.txt
 

@@ -292,5 +292,6 @@ int tree_class_remove(cell_t *const c, const int height, const int dbh, const in
 		if ( ! species_zeroed(c, height, dbh, age, species) ) return 0;
 	}
 #endif
+
 	return 1;
 }

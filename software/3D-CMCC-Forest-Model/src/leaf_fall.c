@@ -44,7 +44,8 @@ void leaffall_deciduous ( cell_t *const c, const int height, const int dbh, cons
 		/* load previous LAI */
 		previousLai = s->value[LAI_PROJ];
 // ddalmo
-                printf("previousLAi in leaf_fall, %f\n", s->value[LAI_PROJ]);    
+               // printf("previousLAi in leaf_fall, %f\n", s->value[LAI_PROJ]);   
+ 
 		/* sigmoid shape drives LAI reduction during leaf fall */
 		currentLai  = MAX(0,s->value[MAX_LAI_LEAFFALL_PROJ] / (1 + exp(-(s->counter[DAYS_LEAFFALL] / 2. + s->counter[SENESCENCE_DAY_ONE] - c->doy)
 				/(s->counter[DAYS_LEAFFALL] / (log(9. * s->counter[DAYS_LEAFFALL] / 2. + s->counter[SENESCENCE_DAY_ONE]) -
@@ -80,7 +81,7 @@ void leaffall_deciduous ( cell_t *const c, const int height, const int dbh, cons
 		s->value[FRUIT_C_TO_REMOVE]  = ( s->value[FRUIT_C] * s->value[LEAF_C_TO_REMOVE]) / s->value[LEAF_C];
 		s->value[FRUIT_N_TO_REMOVE]  = ( s->value[FRUIT_N] * s->value[LEAF_N_TO_REMOVE]) / s->value[LEAF_N];
 // ddalmo
-printf("currentLAi in leaf_fall, %f\n", currentLai); 
+//printf("currentLAi in leaf_fall, %f\n", currentLai); 
 
 	}
 	else
@@ -139,10 +140,14 @@ void leaffall_evergreen ( cell_t *const c, const int height, const int dbh, cons
 
 		if ( s->counter[YOS] > s->value[CONES_LIFE_SPAN] )
 		{
+
+
 			/* daily fruit turnover rate */
 			s->value[FRUIT_C_TO_REMOVE]   = (s->value[FRUIT_C] * (1. / s->value[CONES_LIFE_SPAN])) / days_for_leaffall;
 			s->value[FRUIT_N_TO_REMOVE]   = (s->value[FRUIT_N] * (1. / s->value[CONES_LIFE_SPAN])) / days_for_leaffall;
 		}
+
+
 	}
 
 	//fixme
@@ -150,6 +155,7 @@ void leaffall_evergreen ( cell_t *const c, const int height, const int dbh, cons
 	{
 		s->value[FRUIT_C_TO_REMOVE] = s->value[FRUIT_C];
 	}
+  
 
 	/*************************************************************************************************************/
 

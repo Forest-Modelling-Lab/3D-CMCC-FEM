@@ -114,6 +114,8 @@ void daily_C_evergreen_partitioning (cell_t *const c, const int layer, const int
 	logger(g_debug_log, "s->value[TOTAL_MAINT_RESP_tC]  = %g\n", s->value[TOTAL_MAINT_RESP_tC]);
 	logger(g_debug_log, "npp_to_alloc = %g tC/sizecell/day\n", npp_to_alloc);
 
+       
+
 	/* note: none carbon pool is refilled if reserve is lower than minimum */
 	/* reserves have priority before all other pools!!! */
 	/* "...species-specific minimum pool (of NSC) sizes of stored C may be necessary to avoid catastrophic xylem failure" 
@@ -291,17 +293,18 @@ void daily_C_evergreen_partitioning (cell_t *const c, const int layer, const int
 			double exceeding_C      = 0.;
 			double pR1              = 0.;
 			double pS1              = 0.;
-
+                     
 			if ( month < JULY )
 			{
+
 				/* if management doens't happen (this to avoid problems in carbon balance) */
 				if ( ! s->counter[THINNING_HAPPENS] )
 				{
-
+                                    
 					/* update carbon flux */
 					s->value[C_TO_LEAF]      = npp_to_alloc * ( 1. - s->value[FROOT_LEAF_FRAC] );
 					s->value[C_TO_FROOT]     = npp_to_alloc * s->value[FROOT_LEAF_FRAC];
-
+                                                 
 					/********************************************************************************************************************************************/
 					/* check for leaf C > max leaf C */
 					if ( ( ( s->value[C_TO_LEAF] * ( 1. - s->value[EFF_GRPERC] ) ) + s->value[LEAF_C] ) > s->value[MAX_LEAF_C] )
@@ -325,6 +328,7 @@ void daily_C_evergreen_partitioning (cell_t *const c, const int layer, const int
 						exceeding_frootC     = ( ( npp_to_alloc * s->value[FROOT_LEAF_FRAC] ) - ( max_frootC + ( max_frootC * s->value[EFF_GRPERC] ) ) );
 
 						s->value[C_TO_FROOT] = max_frootC + ( max_frootC * s->value[EFF_GRPERC] );
+                                         
 					}
 
 					/* exceeding carbon */
@@ -339,11 +343,13 @@ void daily_C_evergreen_partitioning (cell_t *const c, const int layer, const int
 					s->value[C_TO_CROOT]     = (exceeding_C * pR1);
 					s->value[C_TO_STEM]      = (exceeding_C * pS1) * (1. - s->value[FRACBB]);
 					s->value[C_TO_BRANCH]    = (exceeding_C * pS1) * s->value[FRACBB];
+                                      
 
 				}
 				else
 				{
 					s->value[C_TO_RESERVE] = npp_to_alloc;
+
 				}
 			}
 			else
@@ -490,6 +496,7 @@ void daily_C_evergreen_partitioning (cell_t *const c, const int layer, const int
 	}
 
 #endif
+
 
 	logger(g_debug_log, "C_TO_LEAF    = %f tC/cell\n", s->value[C_TO_LEAF]);
 	logger(g_debug_log, "C_TO_FROOT   = %f tC/cell\n", s->value[C_TO_FROOT]);

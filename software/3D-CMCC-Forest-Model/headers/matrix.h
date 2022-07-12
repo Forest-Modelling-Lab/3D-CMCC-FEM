@@ -8,7 +8,7 @@
 #define MAXTURNTIME 5000
 
 typedef enum {
-	T		/* timber */ //fixme change with H (high forest)
+	T		/* timber */ // FIXME change with H (high forest)
 	, C		/* coppice */
 	, N		/* natural (no management) */
 } e_management;
@@ -333,7 +333,7 @@ enum {
 	LEAF_TEMP_K,                        /* (K) leaf temperature */
 	CANOPY_TEMP_K,                      /* (K) canopy temperature */
 	CANOPY_TEMP_K_OLD,                  /* (K) previous time canopy temperature */
-
+        MONTHLY_LAI_PROJ,                  /* (m2/m2) monthly mean LAI */
 	/* assimilation Farqhuar */
 	A_SUN,
 	Av_SUN,
@@ -486,10 +486,11 @@ enum {
 	MAX_BUD_BURST_C,                    /* (tC/cell) Maximum Current Leaf carbon pool for BudBurst */
 	STEM_C,                             /* (tC/cell) Current Stem carbon pool */
 	BRANCH_C,                           /* (tC/cell) Current Branch carbon pool */
-	MIN_RESERVE_C,                      /* (tC/cell) Current Minimum reserve carbon pool */
-	MAX_RESERVE_C,                      /* (tC/cell) Current Minimum reserve carbon pool */
-	MAX_RESERVE_C_CONC,                 /* (tC/cell) Current Maximum reserve concentration carbon pool */
-	MIN_RESERVE_C_CONC,                 /* (tC/cell) Current Minimum reserve concentration carbon pool */
+	MIN_RESERVE_C,                      /* (tC/cell) Current Minimum reserve carbon pool */  // corr:  minimum reserve pool which has to be guaranteed that year.
+        MIN_ANN_RESERVE_C,                  /* (tC/cell) Current Minimum reserve carbon pool */  // corr:  minimum reserve value for that year
+	MAX_ANN_RESERVE_C,                  /* (tC/cell) Current Minimum reserve carbon pool */  // corr:  maximum reserve value for that year
+	MAX_RESERVE_C_CONC,                 /* (tC/cell) Current Maximum reserve concentration carbon pool */  // max for the year
+	MIN_RESERVE_C_CONC,                 /* (tC/cell) Current Minimum reserve concentration carbon pool */  // min for the year
 	RESERVE_C,                          /* (tC/cell) Current Reserve carbon pool */
 	FRUIT_C,                            /* (tC/cell) Current Fruit carbon pool */
 	MAX_FRUIT_C,                        /* (tC/cell/year) Annual Fruit carbon pool */
@@ -533,6 +534,8 @@ enum {
 	TREE_CROOT_C,                       /* (tC/tree) Single Tree Coarse carbon pool */
 	TREE_RESERVE_C,                     /* (tC/tree) Single Tree Reserve carbon pool */
 	TREE_MIN_RESERVE_C,                 /* (tC/tree) Single Tree Minimum Reserve carbon pool */
+        TREE_MIN_ANN_RESERVE_C,             /* (tC/tree) Minimum reserve carbon pool */  // ddalmo corr:  minimum reserve value for that year
+	TREE_MAX_ANN_RESERVE_C,             /* (tC/tree) Minimum reserve carbon pool */  // ddalmo corr:  maximum reserve value for that year
 	TREE_FRUIT_C,                       /* (tC/tree) Single Tree Fruit carbon pool */
 	TREE_BRANCH_C,                      /* (tC/tree) Single Tree Branch carbon pool */
 	TREE_STEM_SAPWOOD_C,                /* (tC/tree) Single Tree Sapwood Stem carbon pool */

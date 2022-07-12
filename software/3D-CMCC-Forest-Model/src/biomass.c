@@ -123,6 +123,7 @@ void average_tree_pools(cell_t *const c)
 
 					/* note: it takes into account previous biomass to remove if function is called twice in a day */
 
+
 					/* compute tree average C pools */
 					s->value[TREE_LEAF_C]                = (s->value[LEAF_C]             / (double)s->counter[N_TREE]);
 					s->value[TREE_STEM_C]                = (s->value[STEM_C]             / (double)s->counter[N_TREE]);
@@ -277,7 +278,7 @@ void tree_biomass_remove (cell_t *const c, const int height, const int dbh, cons
 	else
 	{
 		/* managed mortality */
-		/* note: we consider that just tree stems are removed from stand during management */
+		/* note: we consider that just tree stems are removed from stand during management */  //ddalmo note: NOT TRUE:see below!
 		/* overall cwd */
 		if ( s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2 )
 		{

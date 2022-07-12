@@ -7,7 +7,9 @@
 #include <assert.h>
 #include "matrix.h"
 #include "common.h"
+#ifdef NC_USE
 #include "netcdf.h" //ddalmo use of netcdf
+#endif
 #include "logger.h"
 
 extern logger_t* g_debug_log;
@@ -197,6 +199,8 @@ topo_t* import_topo_txt(const char *const filename, int* const p_topos_count) {
 	return pt;
 #undef TOPO_BUFFER_SIZE
 }
+
+#ifdef NC_USE
 
 static topo_t* import_nc(const char *const sz_filename, int*const p_topo_count) {
 	enum {
@@ -390,6 +394,8 @@ quit_no_nc_err:
 	return NULL;
 }
 
+#endif 
+
 topo_t* topo_import(const char *const filename, int*const topos_count)
 {
 	char *p;
@@ -399,10 +405,10 @@ topo_t* topo_import(const char *const filename, int*const topos_count)
 	p = strrchr(filename, '.');
 	if ( p ) {
 		++p;
-		//ddalmo use of netcdf
-		if ( ! string_compare_i(p, "nc") || ! string_compare_i(p, "nc4") ) {
-			return import_nc(filename, topos_count);
-		}
+		//ddalmo use of netcdf  // currently commented
+		//if ( ! string_compare_i(p, "nc") || ! string_compare_i(p, "nc4") ) {
+		//	return import_nc(filename, topos_count);
+		//}
 	}
 	return import_topo_txt(filename, topos_count);
 }

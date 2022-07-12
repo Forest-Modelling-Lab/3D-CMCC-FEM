@@ -1,5 +1,6 @@
 /* common.c */
 #include <stdio.h>
+#include <stdint.h> //ddalmo august 2021
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
@@ -628,7 +629,7 @@ int istab(const int c) {
 
 int is_nan(double x)
 {
-    union { uint64 u; double f; } ieee754;
+    union { uint64_t u; double f; } ieee754;  //changed from uint64 to uint64_t to have the .exe on windows
     ieee754.f = x;
     return ( (unsigned)(ieee754.u >> 32) & 0x7fffffff ) +
            ( (unsigned)ieee754.u != 0 ) > 0x7ff00000;
@@ -636,7 +637,7 @@ int is_nan(double x)
 
 int is_inf(double x)
 {
-    union { uint64 u; double f; } ieee754;
+    union { uint64_t u; double f; } ieee754; //changed from uint64 to uint64_t
     ieee754.f = x;
     return ( (unsigned)(ieee754.u >> 32) & 0x7fffffff ) == 0x7ff00000 &&
            ( (unsigned)ieee754.u == 0 );

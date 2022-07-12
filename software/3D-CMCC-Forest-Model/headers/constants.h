@@ -68,6 +68,7 @@ enum {
 #define LN2              0.693147181      /* logarithm constant */
 #define eps3                    1e-3      /* differences in comparison */
 #define eps                     1e-6      /* differences in comparison */
+#define eps_pr                  1e-15      /* critical precision */
 #define ZERO                  -1e-10      /* power limit of state variables before they are set to 0.0 to control rounding and overflow errors */
 #define CRIT_PREC              1e-20      /* precision control */
 #define e                 2.71828183      /* nepero/eulero constant */
