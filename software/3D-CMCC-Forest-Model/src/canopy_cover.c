@@ -98,6 +98,35 @@ void dbhdc_function ( cell_t *const c, const int layer, const int height, const 
 	}
 
 #endif
+
+  
+       // 5p6 addition
+       // check again the Ritter papers and re-did the equations
+       // @VS:  this function defines how fast the canopy can horizontally develop when DBH increase (it is suppose than when the 
+       // the density is low), and it defines in turn the chance
+       // for the regeneration layer to growh       
+
+#if 0
+
+	if ( s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2 )
+	{
+		s->value[DBHDCMAX] = 2.3298 * pow ( d->value , -0.643 );  //  the canopy_cover_projection increase less compared to the parameters set above 
+	
+		if (d->value < 10.) 
+	{
+		
+		s->value[DBHDCMAX] = 0.9667* pow ( d->value , -0.287);  
+		} 
+	}
+	else
+	{
+	
+	s->value[DBHDCMAX] = 0.5045 * pow ( d->value , -0.309 );  // Ritter's equation for conifer
+	
+	//	s->value[DBHDCMAX] = 0.8543 * pow ( d->value , -0.254 );  // correct this one for conifers
+	}
+
+#endif
 	/**************************************************************************************************/
 
 	/* check */
