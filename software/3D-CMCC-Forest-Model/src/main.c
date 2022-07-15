@@ -1278,6 +1278,12 @@ int main(int argc, char *argv[]) {
 		  }
 		  //free(g_sz_manag_file);
 		  ////  g_sz_manag_file = p;  //
+		  
+		   if ( ! file_copy(p, g_sz_input_data_path) )
+	           {
+		    printf("warning: unable to copy management file %s to %s\n", g_sz_manag_file, g_sz_input_data_path);
+	           }
+	
 
                   g_management = management_load_presc(p);
  
