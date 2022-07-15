@@ -55,11 +55,14 @@ void soil_radiation_sw_band ( cell_t *const c, meteo_daily_t *meteo_daily )
 	/* compute values for soil layer when last height class in cell is processed */
 	// the input radiation-values take into account the fraction absorbed by vegetation
 	
-	// remove reflected part
+	/* Par Short Wave radiation and PPFD for the soil */
+
 	logger(g_debug_log,"*incoming light for soil*\n");
 	logger(g_debug_log,"incoming PAR for soil         = %g molPAR/m^2/day\n", meteo_daily->par);
 	logger(g_debug_log,"incoming Short Wave radiation = %g W/m2\n", meteo_daily->sw_downward_W);
 	logger(g_debug_log,"incoming       Net radiation  = %g W/m2\n", meteo_daily->Net_rad_threePG);
+	
+         // remove reflected part
 
 	if ( ! c->snow_pack )
 	{
@@ -82,11 +85,7 @@ void soil_radiation_sw_band ( cell_t *const c, meteo_daily_t *meteo_daily )
 		logger(g_debug_log,"net_rad_for_snow_refl = %g W/m2\n", c->net_rad_refl_snow);
 	}
 
-	/* Par Short Wave radiation and PPFD for the soil */
-	logger(g_debug_log, "*incoming light for soil less reflected part*\n");
-	logger(g_debug_log, "PAR for soil                  = %g molPAR/m^2/day\n", meteo_daily->par);
-	logger(g_debug_log, "Short Wave radiation for soil = %g W/m2\n", meteo_daily->sw_downward_W);
-	logger(g_debug_log, "Net radiation for soil        = %g W/m2\n", meteo_daily->Net_rad_threePG);
+
 
 	if ( ! c->snow_pack )
 	{
@@ -94,6 +93,10 @@ void soil_radiation_sw_band ( cell_t *const c, meteo_daily_t *meteo_daily )
 		c->apar_soil        = meteo_daily->par             - c->par_refl_soil;
 		c->sw_rad_abs_soil  = meteo_daily->sw_downward_W   - c->sw_rad_refl_soil;
 		c->net_rad_abs_soil = meteo_daily->Net_rad_threePG - c->net_rad_refl_soil;
+		logger(g_debug_log, "absorbed soil radiation *\n");
+	        logger(g_debug_log, "soil aPAR                            = %g molPAR/m^2/day\n", c->apar_soil );
+	        logger(g_debug_log, "soil absorbed Short Wave radiation   = %g W/m2\n", c->sw_rad_abs_soil);
+	        logger(g_debug_log, "soil absorbed Net radiation for soil = %g W/m2\n", c->net_rad_abs_soil);
 	}
 	else
 	{
@@ -102,4 +105,6 @@ void soil_radiation_sw_band ( cell_t *const c, meteo_daily_t *meteo_daily )
 		c->sw_rad_abs_snow  = meteo_daily->sw_downward_W   - c->sw_rad_refl_snow;
 		c->net_rad_abs_snow = meteo_daily->Net_rad_threePG - c->net_rad_refl_snow;
 	}
+	
+
 }
