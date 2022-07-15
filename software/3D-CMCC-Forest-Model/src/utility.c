@@ -613,7 +613,7 @@ void reset_monthly_class_variables(cell_t *const c)
 					s->value[MONTHLY_ASSIMILATION]  =        0.;
 					s->value[MONTHLY_ASSIMILATION_SUN] =     0.;
 					s->value[MONTHLY_ASSIMILATION_SHADE] =   0.;
-					//s->value[MONTHLY_LAI_PROJ]           =   0.;  //ddalmo jan 22
+					s->value[MONTHLY_LAI_PROJ]           =   0.;  //5p6
 				}
 			}
 		}

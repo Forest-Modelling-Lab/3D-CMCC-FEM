@@ -153,7 +153,7 @@ void daily_lai (cell_t *const c, age_t *const a, species_t *const s)
         
 	c->max_lai_proj = s->value[MAX_LAI_PROJ];
 	
-	//s->value[MONTHLY_LAI_PROJ] += s->value[LAI_PROJ];
+	s->value[MONTHLY_LAI_PROJ] += s->value[LAI_PROJ];
 
 }
 

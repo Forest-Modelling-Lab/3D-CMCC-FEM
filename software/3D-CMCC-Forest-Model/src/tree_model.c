@@ -123,11 +123,11 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
                 printf("\n anno, year= %d\n",c->years[year].year); 
                 
                // ddalmo at some point: let's perform the if statement here
-               // if (MANAGEMENT_VAR == g_settings->management || MANAGEMENT_ON == g_settings->management)
+               //if (MANAGEMENT_VAR == g_settings->management || MANAGEMENT_ON == g_settings->management)
                // {
 		/* management blocks */
-		forest_management ( c, day, month, year ); 
-               // }  
+	     //	forest_management ( c, day, month, year ); 
+             // }  
  
 	}
   

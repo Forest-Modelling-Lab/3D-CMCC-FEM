@@ -2589,6 +2589,7 @@ void EOM_print_output_cell_level(cell_t *const c, const int month, const int yea
 										",CTRANSP"
 										",CET"
 										",CLE"
+										",LAI"
 										",CC"
 										",DBHDC"
 										",HD_EFF"
@@ -2691,7 +2692,7 @@ void EOM_print_output_cell_level(cell_t *const c, const int month, const int yea
 							logger(g_monthly_log,",%c", sz_management[c->heights[height].dbhs[dbh].ages[age].species[species].management]);
 
 							/* print variables at layer-class level */
-							logger(g_monthly_log,",%6.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%d,%3.4f,%3.4f,%3.4f,%3.4f"
+							logger(g_monthly_log,",%6.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%d,%3.4f,%3.4f,%3.4f,%3.4f"
 									",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",
 									s->value[MONTHLY_GPP],
 									s->value[MONTHLY_ASSIMILATION],
@@ -2701,6 +2702,7 @@ void EOM_print_output_cell_level(cell_t *const c, const int month, const int yea
 									s->value[MONTHLY_CANOPY_TRANSP],
 									s->value[MONTHLY_CANOPY_EVAPO_TRANSP],
 									s->value[MONTHLY_CANOPY_LATENT_HEAT],
+									s->value[MONTHLY_LAI_PROJ]/31.,   //5p6 
 									s->value[CANOPY_COVER_PROJ],
 									s->value[DBHDC_EFF],
 									s->value[HD_EFF],
@@ -2834,6 +2836,7 @@ void EOM_print_output_cell_level_ddalmo(cell_t *const c, const int month, const 
 										",CTRANSP"
 										",CET"
 										",CLE"
+										",LAI"
 										",CC"
 										",DBHDC"
 										",HD_EFF"
@@ -2940,7 +2943,7 @@ void EOM_print_output_cell_level_ddalmo(cell_t *const c, const int month, const 
 							logger(g_monthly_log,",%c", sz_management[c->heights[height].dbhs[dbh].ages[age].species[species].management]);
 
 							/* print variables at layer-class level */
-							logger(g_monthly_log,",%6.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%d,%3.4f,%3.4f,%3.4f,%3.4f"
+							logger(g_monthly_log,",%6.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%d,%3.4f,%3.4f,%3.4f,%3.4f"
 									",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",
 									s->value[MONTHLY_GPP],
 									s->value[MONTHLY_ASSIMILATION],
@@ -2950,6 +2953,7 @@ void EOM_print_output_cell_level_ddalmo(cell_t *const c, const int month, const 
 									s->value[MONTHLY_CANOPY_TRANSP],
 									s->value[MONTHLY_CANOPY_EVAPO_TRANSP],
 									s->value[MONTHLY_CANOPY_LATENT_HEAT],
+								       s->value[MONTHLY_LAI_PROJ]/31.,   //5p6 divided by 31, otherwise we have value higher than the PEAK_LAI
 									s->value[CANOPY_COVER_PROJ],
 									s->value[DBHDC_EFF],
 									s->value[HD_EFF],
