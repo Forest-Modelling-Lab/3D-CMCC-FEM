@@ -7,8 +7,7 @@
 #include "common.h"
 #include "logger.h"
 #include "output.h"
-//#include "netcdf.h"
-#include "netcdf.h"  //ddalmo uses netcdf
+//#include "netcdf.h"  // no more available 
 
 
 #ifdef _WIN32
