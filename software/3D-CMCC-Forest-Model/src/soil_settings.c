@@ -8,7 +8,7 @@
 #include "matrix.h"
 #include "common.h"
 #ifdef NC_USE
-#include "netcdf.h" //ddalmo use of netcd
+#include "netcdf.h" // use of netcd
 #endif
 #include "logger.h"
 
@@ -469,10 +469,12 @@ soil_settings_t* soil_settings_import(const char *const filename, int*const soil
 	p = strrchr(filename, '.');
 	if ( p ) {
 		++p;
-		//ddalmo use of netcdf: currently commented
-		//if ( ! string_compare_i(p, "nc") || ! string_compare_i(p, "nc4") ) {
-		//	return import_nc(filename, soil_settings_count);
-		//}
+		//use of netcdf
+		#ifdef NC_USE  
+		if ( ! string_compare_i(p, "nc") || ! string_compare_i(p, "nc4") ) {
+			return import_nc(filename, soil_settings_count);
+		}
+		#endif
 	}
 	return import_txt(filename, soil_settings_count);
 }

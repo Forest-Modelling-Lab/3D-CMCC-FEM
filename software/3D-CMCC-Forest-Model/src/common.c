@@ -1,6 +1,6 @@
 /* common.c */
 #include <stdio.h>
-#include <stdint.h> //ddalmo august 2021
+#include <stdint.h> 
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>

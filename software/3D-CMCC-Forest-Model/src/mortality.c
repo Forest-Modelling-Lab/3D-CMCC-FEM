@@ -131,7 +131,7 @@ void self_thinning_mortality (cell_t *const c, const int layer, const int year)
 						}
 					}
 
-					//fixme this is not correct for multilayer
+					//FIXME this is not correct for multilayer
 					/* remove dead C and N biomass */
 					tree_biomass_remove ( c, height, dbh, age, species, deadtree, nat_man );
 
@@ -255,7 +255,7 @@ int growth_efficiency_mortality ( cell_t *const c, const int height, const int d
 		CHECK_CONDITION ( c->fruit_carbon,   < , ZERO );
 
    
-                //ddalmo August 2021 FIXME : to update the cell level N pools too!
+                //FIXME : to update the cell level N pools too!
 
 		/* litter fluxes and pools */
 		littering             ( c, s );
@@ -320,7 +320,7 @@ void age_mortality ( cell_t *const c, const int height, const int dbh, const int
 	double mort_factor = 3;     /* age mortality factor 3 as in Smith et al., (LPJ-Guess) */
 	double mort_log    = 0.001; /* age mortality log 0.001 as in Smith et al., (LPJ-Guess) */
 	double age_mort;
-	int nat_man;   /* natural or managed mortality 0 = natural; 1 = managed */
+	int nat_man;                /* natural or managed mortality 0 = natural; 1 = managed */
 
 	age_t *a;
 	species_t *s;
@@ -340,8 +340,7 @@ void age_mortality ( cell_t *const c, const int height, const int dbh, const int
 	deadtree = (int)(livetree * age_mort);
 	logger(g_debug_log, "dead trees = %d\n", deadtree);
 
-//	if ( ( deadtree ) >= 1 ) //ddalmo
-        if ( ( deadtree ) > 1 )
+        if ( ( deadtree ) > 1 )  //FIXME set >=1 
 	{
 		logger(g_debug_log, "**MORTALITY based on Tree Age (LPJ)**\n");
 
@@ -411,16 +410,15 @@ void stochastic_mortality ( cell_t *const c, const int height, const int dbh, co
 	/* stochastic probability function */
 	deadtree = (int)( livetree * age_mort_fact );
 
-
 	logger(g_debug_log, "dead trees = %d\n", deadtree);
 
-	if ( ( deadtree ) >= 1 )  // ddalmo correction
+	if ( ( deadtree ) >= 1 )  // //FIXME set >1 
 	{
 		logger(g_debug_log, "**MORTALITY based on stochasticity **\n");
 
 		if ( livetree > deadtree)
 		{
-			/* update C and N biomass */
+			/* remove C and N biomass */
 			tree_biomass_remove ( c, height, dbh, age, species, deadtree, nat_man );
 		}
 		else

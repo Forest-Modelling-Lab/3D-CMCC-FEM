@@ -148,9 +148,12 @@ void daily_lai (cell_t *const c, age_t *const a, species_t *const s)
 	CHECK_CONDITION(fabs( ( s->value[LEAF_SUN_N] + s->value[LEAF_SHADE_N] ) - s->value[LEAF_N]) , > , eps);
 
 	/* test: computing cell level max_lai */
-	//fixme in case of multi-class!!!!!
-
+	//FIXME in case of multi-class!!!!!
+        // ddalmo note: it should be maybe the max across class-level max value?
+        
 	c->max_lai_proj = s->value[MAX_LAI_PROJ];
+	
+	//s->value[MONTHLY_LAI_PROJ] += s->value[LAI_PROJ];
 
 }
 

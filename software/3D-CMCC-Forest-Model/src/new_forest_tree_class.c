@@ -157,14 +157,13 @@ int add_tree_class_for_replanting (cell_t *const c, const int day, const int mon
 	return 1;
 }
 /************************************************************************************************************/
-//  DDalmo August 2021
+//  5p6 August 2021
 //  it is included the possibility to mimic the regeneration via replanting process (i.e. adding a new class of saplings).
 //  the data of the new class are taken from the regeneration 'settings'.
 //  Currently it is advisable to add the regeneration class to an existing layer alone, as the multilayer option has not been tested yet (FIXME)
 //  Currently it is assumed that regeneration setting is used in combination with management (e.g.shelterwood)
 //  hence the information about when to add the new young (saplings -DBH age) class is provided in the management.txt file
 //  The only crucial variable to be provided is the density of the saplings.
-// 
 
 static int fill_cell_for_replanting_reg(cell_t *const c )
 {
@@ -248,7 +247,7 @@ int add_tree_class_for_replanting_reg (cell_t *const c, const int day, const int
 	age = c->heights[height].dbhs[dbh].ages_count - 1;
 	species = c->heights[height].dbhs[dbh].ages[age].species_count - 1;
   
-        // ddalmo comment: at this point the new class simply has been added and has 
+        // comment: at this point the new class simply has been added and has 
         // an height index = c->heights_count - 1
 
 	/* fill with species values from parameterization file */
@@ -285,7 +284,7 @@ int add_tree_class_for_replanting_reg (cell_t *const c, const int day, const int
 	/* initialize new forest structure */ 
 	initialization_forest_structure    (c , day, month, year);
 
-        // ddalmo comment: in the initialization_forest_structure the new added layer has height index = 0 and the 
+        // comment: in the initialization_forest_structure the new added layer has height index = 0 and the 
         // dominant layers index >= 1 ordered according to descending height
 
         height= 0;  // so to initialize the new layer only! Which is the new added 'regeneration-layer'

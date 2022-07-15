@@ -142,7 +142,8 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 
 		/* Nitrogen content tN/cell --> gN/m2 */
 #if 1
-		//test OLD method:
+		//OLD method: constant C/N ratio of the key compartments and livewood
+		// the fraction of livewood is the same for every pool (branch,stem etc)
 
 		leaf_N          = (s->value[LEAF_N]            * 1e6 / g_settings->sizeCell);
 		leaf_sun_N      = (s->value[LEAF_SUN_N]        * 1e6 / g_settings->sizeCell);
@@ -153,7 +154,7 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 		branch_N        = (s->value[BRANCH_LIVEWOOD_N] * 1e6 / g_settings->sizeCell);
 
 #else
-		//test NEW method:
+		//TODO UNDER TEST NEW method:
 		//note: differently from the old one it can (activating or NOT each single comment):
 		//1 use different values for parameters
 		//2 use for each live respiring C-N pools a specific-pool CN ratio
@@ -233,7 +234,7 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 
 		/*******************************************************************************************************************/
 
-		/* note: respiration values are computed in gC/m2/day */
+		/* note: respiration values are computed in gC/m2/day at cell level*/
 		/* Leaf maintenance respiration is calculated separately for day and night */
 
 		/********************************************************************************/
@@ -251,7 +252,7 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 
 		/** day-time leaf maintenance respiration **/
 #if 1
-		//test NEW considering day-time light inhibition for leaf respiration ("Kok effect")
+		//NEW considering day-time light inhibition for leaf respiration ("Kok effect")
 
 		//new 05/11/2017
 		/* assign day-time light inhibition for leaf resp */
@@ -286,7 +287,7 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 		s->value[DAILY_LEAF_SHADE_MAINT_RESP] = ( leaf_shade_N * MR_ref * pow(q10_tday,   exponent_tday)   * ( meteo_daily->daylength_sec / 86400. ) ) * light_inhib_shade;
 
 #else
-		// test following JULES approach (eq. 3, Mercado et al. 2007; Clark et al., 2011)
+		// old: following JULES approach (eq. 3, Mercado et al. 2007; Clark et al., 2011)
 
 		/* molPAR/m2/day --> umolPAR/m2/sec */
 		umol_par       = s->value[PAR]       * 1e6 / 86400.;

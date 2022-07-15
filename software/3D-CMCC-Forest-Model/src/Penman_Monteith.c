@@ -85,8 +85,9 @@ double Penman_Monteith(const meteo_daily_t *const meteo_daily, const double rv, 
 	evap_or_transp /= meteo_daily->lh_vap;
 
 	/* check */
-	//deleted to avoid dew fall formation
-	//if (evap_or_transp < 0.0) evap_or_transp = 0.0;
+	// to avoid dew fall formation
+	// if (evap_or_transp < 0.0) evap_or_transp = 0.0; // note: canopy_evapo is however set to 0 if negative. and transpiration is always >= 0
+	                                                   // as we forced net radiation to be >= 0
 
 	logger(g_debug_log, "Penmon evap_or_transp = %g mm/m2/sec\n", evap_or_transp);
 

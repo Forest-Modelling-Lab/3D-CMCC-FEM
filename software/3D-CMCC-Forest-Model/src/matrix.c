@@ -15,8 +15,7 @@
 #include "g-function.h"
 #include "initialization.h"
 #include "structure.h"
-//ddalmo use of netcdf
-#ifdef NC_USE
+#ifdef NC_USE  //use of netcdf
 #include "netcdf.h"
 #endif
 
@@ -1410,7 +1409,7 @@ matrix_t* matrix_create(const soil_settings_t*const s, const int count, const ch
 				++p;
 
 				if ( ! string_compare_i(p, "nc") || ! string_compare_i(p, "nc4") ) {
-				//ddalmo correction use of nc file
+				//correction use of nc file
 #ifdef NC_USE 
 					d = dataset_import_nc(filename, &x_cells_count, &y_cells_count);
 #endif

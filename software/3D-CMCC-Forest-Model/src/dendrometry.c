@@ -60,8 +60,9 @@ void dendrometry_old(cell_t *const c, const int layer, const int height, const i
 	}
 	else
 	{
-           // ddalmo june 2021 recompute tree_stem_C based on the new stem_c and the new N_tree!
-           // otherwise it  use the value of the day before
+           // 5p6 recompute tree_stem_C based on the new stem_c and the new N_tree!
+           // otherwise it  use the value of the day before. The differences would be anyhow minimal.
+           
                 s->value[TREE_STEM_C]                = (s->value[STEM_C]             / (double)s->counter[N_TREE]);
 
 		/* use site specific stemconst stempower values */
@@ -98,24 +99,9 @@ void dendrometry_old(cell_t *const c, const int layer, const int height, const i
 	/* note: this shouldn't be applied to saplings that are lower than 1.3 meter */
 	h->value = DBH_ref + s->value[CRA] * pow (1. - exp ( - s->value[CRB] * d->value) , s->value[CRC]);
 
+       // 5p6 Check
 
-
-#if 0
-
-	if ( h->value > s->value[CRA] )    // ddalmo! attenzione! qui il massimo valore di H non e' CRA, ma DBH_ref + CRA according to that equation!!!
-	{
-		h->value = s->value[CRA];
-	}
-	logger(g_debug_log, "-Tree Height using Chapman-Richard function = %f m\n", h->value);
-
-        /* check */
-	CHECK_CONDITION (h->value, >, s->value[CRA] + eps )
-
-#else
-
-       //ddalmo correction on june 2021
-
-       if ( h->value > (s->value[CRA] + DBH_ref) )    // ddalmo! attenzione! qui il massimo valore di H non e' CRA, ma DBH_ref + CRA according to that equation!!!
+       if ( h->value > (s->value[CRA] + DBH_ref) )    // according to the RC equation, the max value of HA is DBH_ref + CRA (asymptotic value)
 	{
 		h->value = (s->value[CRA]+ DBH_ref);
 	}
@@ -123,8 +109,6 @@ void dendrometry_old(cell_t *const c, const int layer, const int height, const i
 
         /* check */
 	CHECK_CONDITION (h->value, >, (s->value[CRA] + DBH_ref + eps) )
-
-#endif
 
          
 
@@ -168,16 +152,11 @@ void dendrometry_old(cell_t *const c, const int layer, const int height, const i
 
 	/*************************************************************************************************************************/
 #if 1
-	//new 10 May 2017
+	// 5p5
 	/* compute sapwood and heartwood area as fraction proportional to stem/sapwood/heartwood carbon */
 	s->value[SAPWOOD_AREA]   = ( s->value[BASAL_AREA] * s->value[STEM_SAPWOOD_C] ) / s->value[STEM_C];
 	s->value[HEARTWOOD_AREA] = ( s->value[BASAL_AREA] - s->value[SAPWOOD_AREA]) ;
 
-         //printf("STEM_SAPWOOD %f\n",s->value[STEM_SAPWOOD_C] );
-       //printf("STEM_C %f\n",s->value[STEM_C] );
-    //  double test =0.;
-    //  test=s->value[SAPWOOD_AREA]/s->value[BASAL_AREA]  ;
-    //   printf("DENDROMETRY STEM_SAPWOOD_AREA/BASAL_A %f\n",test ); 
 
 #else
 	//
@@ -194,14 +173,14 @@ void dendrometry_old(cell_t *const c, const int layer, const int height, const i
 #endif
 
 	/**/	
-	//fixme
+	// NOTE: this should not anyhow happen as the sapwood area eventually is going to decrease with time or stress events
 	if ( s->value[SAPWOOD_AREA] > s->value[BASAL_AREA] + eps3 )
 	{
 		s->value[SAPWOOD_AREA] = s->value[BASAL_AREA];
 		printf("Warning: s->value[SAPWOOD_AREA] > s->value[BASAL_AREA]\n");
 	}
 	/**/
-	//fixme
+	//NOTE: this should not anyhow happen 
 	if ( s->value[HEARTWOOD_AREA] > s->value[BASAL_AREA] + eps3 )
 	{
 		s->value[HEARTWOOD_AREA] = s->value[BASAL_AREA];
@@ -307,24 +286,11 @@ void annual_minimum_reserve (species_t *const s)
 	 * FOR STEM:  1.8 (+-0.1 s.d.) % of total DM (evergreen) and 4.7 (+-0.1 s.d.) (deciduous)
 	 * see: Hoch G. et al., (2003), Plant Cell and Environment (26: 1067-1081) */
 
-       // ddalmo change july 2021: after the thinning is performed, the number of living trees is updated but not the actuall standing biomass (
-      // the update of the biomass is done in CN_allocation). This means that in order to correctly compute the MIN_RESERVE_C
-      // we need to consider the total sapwood_C after thinning as:
+       // 5p6: after the thinning is performed, the number of living trees is updated but not the actuall standing biomass (
+       // the update of the biomass is done in CN_allocation). This means that in order to correctly compute the MIN_RESERVE_C
+       // we need to consider the total sapwood_C after thinning as:
 
-        
-#if 0
-	s->value[TOT_SAPWOOD_DM] = s->value[TOT_SAPWOOD_C] * GC_GDM;
-	logger(g_debug_log, "--WTOT_sap_tDM = %f tDM/class \n", s->value[TOT_SAPWOOD_DM]);
-
-	/* compute minimum annual reserve */
-	s->value[MIN_RESERVE_C]  = s->value[TOT_SAPWOOD_DM] * s->value[SAP_WRES];
-	logger(g_debug_log, "--MINIMUM Reserve Biomass = %f t res/class \n", s->value[RESERVE_C]);
-
-	s->value[TREE_MIN_RESERVE_C] = s->value[MIN_RESERVE_C] / (double)s->counter[N_TREE];
-	logger(g_debug_log, "--Average MINIMUM Reserve Biomass = %f tC/class tree \n", s->value[RESERVE_C]);
-
-#else
-        //correction ddalmo juny 2021  
+        //5p6   
         actuall_sapwood = s->value[TREE_SAPWOOD_C] * s->counter[N_TREE];  //N tree is updated if thinning happend 
 
         s->value[TOT_SAPWOOD_DM] = actuall_sapwood * GC_GDM;
@@ -337,9 +303,8 @@ void annual_minimum_reserve (species_t *const s)
 	s->value[TREE_MIN_RESERVE_C] = s->value[MIN_RESERVE_C] / (double)s->counter[N_TREE];
 	logger(g_debug_log, "--Average MINIMUM Reserve Biomass = %f tC/class tree \n", s->value[TREE_MIN_RESERVE_C]);
 
-#endif
 
-        // ddalmo july2021
+        // 5p6
         // set min and max reserve annual value as the previous day value (or the value set in the initialization)
         // in case it is the 
        

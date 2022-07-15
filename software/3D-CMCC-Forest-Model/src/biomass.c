@@ -200,8 +200,7 @@ void tree_biomass_remove (cell_t *const c, const int height, const int dbh, cons
 	s->value[C_FROOT_TO_LITR]    += (s->value[TREE_FROOT_C]   * tree_remove);
 
 	/* overall litter */
-	s->value[C_TO_LITR]          += s->value[C_LEAF_TO_LITR] +
-			s->value[C_FROOT_TO_LITR];
+	s->value[C_TO_LITR]          += s->value[C_LEAF_TO_LITR] + s->value[C_FROOT_TO_LITR];
 
 	/* carbon to cwd fluxes */
 	s->value[C_STEM_TO_CWD]      += (s->value[TREE_STEM_C]    * tree_remove);
@@ -300,8 +299,9 @@ void tree_biomass_remove (cell_t *const c, const int height, const int dbh, cons
 		}
 	}
 
-	if ( s->counter[HARVESTING_HAPPENS] == 1 )
-	{
+	if ( s->counter[HARVESTING_HAPPENS] == 1 ) 
+	{      // TODO check this! as this should also be the case for thinning, if only stem is removed..and mortality in general. for N cycle too.
+	
 		/*** compute class-level Coarse Woody Debris carbon fluxes (tC/sizecell/day) ****/
 		s->value[CWD_TO_LITRC]           = s->value[C_TO_CWD];
 		s->value[CWD_TO_LITR2C]          = s->value[C_TO_CWD] * s->value[DEADWOOD_USCEL_FRAC];
@@ -338,7 +338,7 @@ void tree_biomass_remove (cell_t *const c, const int height, const int dbh, cons
 	/******************************************************************************************/
 
 	/* accounting for harvested/thinned wood products (HWP) */
-	if ( s->counter[THINNING_HAPPENS] == 1 || s->counter[HARVESTING_HAPPENS] == 1 )
+	if ( s->counter[THINNING_HAPPENS] == 1 || s->counter[HARVESTING_HAPPENS] == 1 )   // TODO include the condition nat_man=1  
 	{
 		/* compute woody biomass removed (tC/ha/yr) */
 		s->value[C_HWP]          += s->value[C_STEM_TO_CWD] + s->value[C_CROOT_TO_CWD] + s->value[C_BRANCH_TO_CWD] ;

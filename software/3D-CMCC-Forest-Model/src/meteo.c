@@ -5,7 +5,7 @@
 #include <ctype.h>
 #include "logger.h"
 #ifdef NC_USE
-#include "netcdf.h"  //used by ddalmo
+   #include "netcdf.h"  
 #endif
 #include "common.h"
 #include "constants.h"
@@ -1846,7 +1846,7 @@ static int import_txt(const char *const filename, meteo_annual_t** p_yos, int *c
 		// remove initial spaces and tabs (if any)
 		p = buffer;
 		while ( isspace(*p) ) ++p;
-               //ddalmo correction in the format (compilator-related issue)
+               // correction in the format (compilator-related issue)
 		//if ( ('/r' != p[0]) && ('/n' != p[0]) && ('/' != p[0]) && ('/0' != p[0]) )
 		if ( ('\r' != p[0]) && ('\n' != p[0]) && ('/' != p[0]) && ('\0' != p[0]) )
 		{
@@ -1911,7 +1911,7 @@ static int import_txt(const char *const filename, meteo_annual_t** p_yos, int *c
 
 		// skip empty lines and comments
 	//} while ( ('/0' == p[0]) || ('/' == p[0]) );
-	//ddalmo correction (compilator-related issue)
+	//correction (compilator-related issue)
 	} while ( ('\0' == p[0]) || ('/' == p[0]) );
 	
 	if ( ! p || ! p[0] ) {
@@ -2205,7 +2205,6 @@ int import_meteo_data(const char *const file, int *const yos_count, void* _cell)
 			}
 		}
 		if ( i ) {
-		//ddalmo use of nc
 #ifdef NC_USE 
 			i = import_nc(token, &meteo_annual, yos_count, cell);
 #endif

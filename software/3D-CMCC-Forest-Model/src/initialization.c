@@ -65,9 +65,6 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 	CHECK_CONDITION (s->value[FRUIT_PERC],             >, 1.);
 	CHECK_CONDITION (s->value[LEAF_FALL_FRAC_GROWING], >, 1.);
 	CHECK_CONDITION (s->value[LIVEWOOD_TURNOVER],      >, 1.);
-	
-       //CHECK_CONDITION (s->value[S0CTEM] + s->value[R0CTEM] + s->value[F0CTEM], !=, 1);
-       /*ddalmo: the condition is not met on some compilators even though the parameters values sum up to 1, because of a precision issue */ 
 	CHECK_CONDITION ( fabs (s->value[S0CTEM] + s->value[R0CTEM] + s->value[F0CTEM]), >, 1 + eps)
 
 	if (s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2)
@@ -259,13 +256,13 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 
 	/* sapwood and heartwood biomass */
 	/* stem */
-	s->value[STEM_SAPWOOD_DM]         = s->value[STEM_DM] * s->value[SAPWOOD_PERC];    // FIXME sapwood_perc is simply the ration of two areas,not really correct to apply then the relationship to mass (and hence volume)
+	s->value[STEM_SAPWOOD_DM]         = s->value[STEM_DM] * s->value[SAPWOOD_PERC];    // FIXME sapwood_perc is simply the ration of two areas,
+	                                                                                   // not really correct to apply then the relationship to mass
+	                                                                                   //  (and hence volume)
 	s->value[STEM_SAPWOOD_C]          = s->value[STEM_C]  * s->value[SAPWOOD_PERC];
 	s->value[STEM_HEARTWOOD_DM]       = s->value[STEM_DM] - s->value[STEM_SAPWOOD_DM];
 	s->value[STEM_HEARTWOOD_C]        = s->value[STEM_C]  - s->value[STEM_SAPWOOD_C];
 	s->value[TREE_STEM_SAPWOOD_C]     = s->value[STEM_SAPWOOD_C] / (double)s->counter[N_TREE];
-  	//s->value[TREE_STEM_HEARTWOOD_C]   = (s->value[STEM_C] - s->value[TREE_STEM_SAPWOOD_C]) / (double)s->counter[N_TREE];
-        //ddalmo august 2021 correction
         s->value[TREE_STEM_HEARTWOOD_C]   = (s->value[STEM_C] - s->value[STEM_SAPWOOD_C]) / (double)s->counter[N_TREE];     
 
 	/* coarse root */
@@ -274,8 +271,6 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 	s->value[CROOT_HEARTWOOD_DM]      = s->value[CROOT_DM] - s->value[CROOT_SAPWOOD_DM];
 	s->value[CROOT_HEARTWOOD_C]       = s->value[CROOT_C]  - s->value[CROOT_SAPWOOD_C];
 	s->value[TREE_CROOT_SAPWOOD_C]    = s->value[CROOT_SAPWOOD_C] / (double)s->counter[N_TREE];
-	//s->value[TREE_CROOT_HEARTWOOD_C]  = (s->value[CROOT_C] - s->value[TREE_CROOT_SAPWOOD_C] ) / (double)s->counter[N_TREE];
-        //ddalmo august 2021 correction
         s->value[TREE_CROOT_HEARTWOOD_C]  = (s->value[CROOT_C] - s->value[CROOT_SAPWOOD_C] ) / (double)s->counter[N_TREE];
 
 	/* branch */
@@ -284,8 +279,6 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 	s->value[BRANCH_HEARTWOOD_DM]     = s->value[BRANCH_DM] - s->value[BRANCH_SAPWOOD_DM];
 	s->value[BRANCH_HEARTWOOD_C]      = s->value[BRANCH_C]  - s->value[BRANCH_SAPWOOD_C];
 	s->value[TREE_BRANCH_SAPWOOD_C]   = s->value[BRANCH_SAPWOOD_C] / (double)s->counter[N_TREE];
-	//s->value[TREE_BRANCH_HEARTWOOD_C] = (s->value[BRANCH_C] - s->value[TREE_BRANCH_SAPWOOD_C]) / (double)s->counter[N_TREE];
-        //ddalmo august 2021 correction
         s->value[TREE_BRANCH_HEARTWOOD_C] = (s->value[BRANCH_C] - s->value[BRANCH_SAPWOOD_C]) / (double)s->counter[N_TREE];
  
 	/* overall */
@@ -293,11 +286,7 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 	s->value[TOT_SAPWOOD_C]           = s->value[STEM_SAPWOOD_C]    + s->value[CROOT_SAPWOOD_C]    + s->value[BRANCH_SAPWOOD_C];
 	s->value[TOT_HEARTWOOD_DM]        = s->value[STEM_HEARTWOOD_DM] + s->value[CROOT_HEARTWOOD_DM] + s->value[BRANCH_HEARTWOOD_DM];
 	s->value[TOT_HEARTWOOD_C]         = s->value[STEM_HEARTWOOD_C]  + s->value[CROOT_HEARTWOOD_C]  + s->value[BRANCH_HEARTWOOD_C];
-	//s->value[TREE_SAPWOOD_C]          = s->value[TREE_SAPWOOD_C] / (double)s->counter[N_TREE];
-	//ddalmo august 2021 correction
         s->value[TREE_SAPWOOD_C]          = s->value[TOT_SAPWOOD_C] / (double)s->counter[N_TREE];
-        //s->value[TREE_HEARTWOOD_C]        = (s->value[TREE_TOT_WOOD_C] - s->value[TREE_SAPWOOD_C]) / (double)s->counter[N_TREE]; 
-        //ddalmo august 2021 correction
         s->value[TREE_HEARTWOOD_C]        = (s->value[TOT_WOOD_C] - s->value[TOT_SAPWOOD_C]) / (double)s->counter[N_TREE];
 
 	logger(g_debug_log, "-Sapwood stem biomass             = %f tC/cell\n",  s->value[STEM_SAPWOOD_C]);
@@ -320,20 +309,19 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 		logger(g_debug_log, "...Generating input Reserve Biomass biomass data\n");
 
 		/* note: these values are taken from: Schwalm and Ek, 2004 Ecological Modelling */
-		//see if change with the ratio reported from Barbaroux et al., 2002 (using DryMatter)
-		/* NSC are initialized at the minimum annual value at the beginning of simulation 
+		// see if change with the ratio reported from Barbaroux et al., 2002 (using DryMatter)
+		/* NSC are initialized at the minimum annual value at the beginning of simulation (1. january hence winter)
 		   see Woodruff and Meinzer 2011, Plant Cell and Environment */
 
 		/* IMPORTANT! reserve computation if not in initialized is computed from DryMatter */
 		s->value[RESERVE_DM] = s->value[TOT_SAPWOOD_DM] * s->value[SAP_WRES];
 
-		//fixme how it does??
 		s->value[RESERVE_C]  = s->value[TOT_SAPWOOD_DM] * s->value[SAP_WRES];
 	}
 
 	s->value[TREE_RESERVE_C]    = s->value[RESERVE_C] / (double)s->counter[N_TREE];
 
-	/* compute minimum reserve pool */
+	/* set minimum reserve pool */
 	s->value[MIN_RESERVE_C]      = s->value[RESERVE_C];
 	s->value[TREE_MIN_RESERVE_C] = s->value[MIN_RESERVE_C] / (double)s->counter[N_TREE];
 

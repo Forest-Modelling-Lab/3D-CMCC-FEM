@@ -60,7 +60,7 @@ void soil_evaporation(cell_t *const c, const meteo_daily_t *const meteo_daily)
 		rh = rbl;
 
 		/* assign net radiation as local variable */
-		//fixme it should net rad
+		//FIXME radiatitve budget
 #if 0
 		net_rad = c->sw_rad_abs_soil;
 #else
@@ -112,7 +112,7 @@ void soil_evaporation(cell_t *const c, const meteo_daily_t *const meteo_daily)
 	else
 	{
 		c->daily_soil_evapo = c->daily_snow_subl;
-		//todo get functions from snow_melt_subl snow subl (evaporated) or melt (that goes to soil pool) for canopy intercepted snow
+		//TODO get functions from snow_melt_subl snow subl (evaporated) or melt (that goes to soil pool) for canopy intercepted snow
 	}
 
 	c->monthly_soil_evapo += c->daily_soil_evapo;
@@ -125,11 +125,11 @@ void soil_evaporation(cell_t *const c, const meteo_daily_t *const meteo_daily)
 	c->daily_soil_lh_flux          = c->daily_soil_evapo_watt;
 
 
-	//test 9 May 2016 following Maes & Steppe 2012 as in JULES model (Best et al., GMD)
+	//following Maes & Steppe 2012 as in JULES model (Best et al., GMD)
 	/* soil sensible heat flux */
 	if( ! c->snow_pack )
 	{
-		//test 11 May 2016 following Webber et al., 2016 as in JULES model (Best et al., GMD)
+		// following Webber et al., 2016 as in JULES model (Best et al., GMD)
 		/* soil sensible heat flux */
 		/* calculate resistance to radiative heat transfer through air, rr */
 		rr = meteo_daily->rho_air * CP / ( 4. * SBC_W * ( pow ( tsoilK , 3. ) ) );
@@ -167,7 +167,7 @@ void Soil_evaporation_old(cell_t *const c, const meteo_daily_t *const meteo_dail
 	if ( meteo_daily->tsoil > 0. )
 	{
 
-		//FIXME SHOULD ADD PART OF NET RAD TRASMITTED THORUGH THE CANOPIES
+		//fixme SHOULD ADD PART OF NET RAD TRASMITTED THORUGH THE CANOPIES
 		/* converting W/m^2 in Joule/m^2/day */
 		PotEvap = ( sat / ( sat + gamma ) ) * ( meteo_daily->sw_downward_W * 86400. ) / meteo_daily->lh_vap_soil;
 

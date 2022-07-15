@@ -6,7 +6,7 @@
 #ifdef _WIN32
 #ifdef _DEBUG
 #define _CRTDBG_MAP_ALLOC
-//#define  NC_USE  //added by ddalmo, so to define if NC related functions has to be used (and allowing to build an exe for windows). To use ncdf library,just un-comment!
+//#define  NC_USE  // to define if NC related functions have to be used (and if not, allowing to build an exe for windows). To use ncdf library,just un-comment!
 #include <crtdbg.h>
 #endif
 #endif
@@ -123,18 +123,19 @@ static const char banner[] = "\n#"PROGRAM_FULL_NAME"\n"
 		"Alessio Collalti [alessio.collalti@cnr.it, alessio.collalti@isafom.cnr.it],\n"
 		"Alessio Ribeca [alessio.ribeca@cmcc.it]\n"
 		"Carlo Trotta [trottacarlo@unitus.it]\n"
-		"Corrado Biondo [corrado.biondo@cmcc.it]\n"
+		"Corrado Biondo [@CMCC]\n"
 		"Gina Marano [gina.marano@unina.it]\n"
 		"Giorgio Matteucci [giorgio.matteucci@isafom.cnr.it]\n"
+		"Daniela Dalmonech [daniela.dalmonech@isafom.cnr.it]\n"
 		"National Research Council of Italy (CNR),\n"
 		"Institute for Agricultural and Forestry Systems in the Mediterranean(ISAFOM),\n"
-		"Via Cavour, 4-6 I-87036 Rende (CS) Italy\n"
+		"Via della Madonna Alta, 128, 06128 - Perugia (PG), Italy\n"
 		"\n"
 		"and \n"
 		"Tuscia University (UNITUS),\n"
 		"Department for innovation in biological, agro-food and forest systems (DIBAF),\n"
 		"Forest Ecology Lab\n"
-		"Programmers: Alessio Collalti - Alessio Ribeca - Carlo Trotta\n"
+		"Programmers: Alessio Collalti - Alessio Ribeca - Carlo Trotta  \n"
 		"\n"
 		"\"DISCLAIMER\"\n"
 		"CNR-UNITUS\n"
@@ -188,6 +189,7 @@ static const char msg_usage[]						=	"\nusage:\n"
 		"    -t topo filename stored into input directory (i.e.: -t topo.txt or topo.nc)\n"
 		"    -c settings filename stored into input directory (i.e.: -c settings.txt)\n"
 		"    -k co2 concentration file (i.e.: -k co2_conc.txt)\n"
+		"    -q management scheme file stored into input directory (i.e.: -q management.txt)\n"
 		"    -n ndep file (i.e.: -n ndep.txt)\n"
 		"    -u benchmark path\n"
 		"    -h print this help\n"
@@ -577,7 +579,7 @@ static int parse_args(int argc, char *argv[])
 	g_sz_soil_file = NULL;
 	g_sz_topo_file = NULL;
 	g_sz_settings_file = NULL;
-        g_sz_manag_file    = NULL; //ddalmo
+        g_sz_manag_file    = NULL; 
         g_sz_input_met_file = NULL;
 	g_sz_output_vars_file = NULL;
 	g_sz_benchmark_path = NULL;
@@ -722,7 +724,7 @@ static int parse_args(int argc, char *argv[])
 			}
 			break;
 
-              // ddalmo  prescribed-management file (e.g. SETTINGS, where settings file is also saved)
+              //  prescribed-management file (e.g. SETTINGS, where settings file is also saved)
 
                  case 'q': // 
  			if ( ! argv[i+1] ) {
@@ -730,8 +732,7 @@ static int parse_args(int argc, char *argv[])
 				goto err;
 			}
 			g_sz_manag_file = string_copy(argv[i+1]);
- 
-                        //printf("management file case -q  %s\n",g_sz_manag_file); //ddalmo check
+
 
 			if( ! g_sz_manag_file ) {
 				puts(sz_err_out_of_memory);
@@ -1144,7 +1145,9 @@ void sort_all(matrix_t* m)
 
 #if 1
 //note: 02/february/2017
-//now model runs for one day and then changes the cell
+// the model runs for all days/months/years and then changes cell
+// Currently testes extensively only with one cell
+// TODO test with more cells in combination with netcdf files
 
 int main(int argc, char *argv[]) {
 	int year;
@@ -1251,7 +1254,7 @@ int main(int argc, char *argv[]) {
 		puts(msg_ok);
 	}  */
         
-           // load management file (when MANAGEMENT == VAR and the thinning/clear cut is prescribed)
+           // 5p6 load management file (when MANAGEMENT == VAR and the thinning/clear cut is prescribed)
 
            if ( MANAGEMENT_VAR == g_settings->management )  
 	   {
@@ -1259,7 +1262,7 @@ int main(int argc, char *argv[]) {
 		char buffer[256];
  
 
-                // if management file info is provided, check if the file exists
+               // if management file info is provided, check if the file exists
                // g_sz_manag_file  : gives already the path to the file
    
 	        if ( g_sz_manag_file ) {      // not necessarily we do need the management file (e.s.if MAN=VAR and the simulation cover the historical only 
@@ -1272,9 +1275,9 @@ int main(int argc, char *argv[]) {
 			goto err;
 		  }
 		  //free(g_sz_manag_file);
-		  ////  g_sz_manag_file = p;  //commentato july 2021
+		  ////  g_sz_manag_file = p;  //
 
-                  g_management = management_load_dani(p);
+                  g_management = management_load_presc(p);
  
                   if ( g_sz_input_path ) free(p);
                   if ( ! g_management ) goto err;
@@ -1283,11 +1286,7 @@ int main(int argc, char *argv[]) {
 
 	        }            
 	   }
-        
-
- // ddalmo         
-   
-
+ 
 	printf("soil import...");
 	s = soil_settings_import(g_sz_soil_file, &soil_settings_count);
 	if ( ! s ) {
@@ -1454,7 +1453,7 @@ int main(int argc, char *argv[]) {
 		}
 
 
-		//todo make it better!
+		// TODO make it better!
 		/* import SOIL data from soil.txt and assign to matrix cells variables */
 		/* (assign global g_soil_setting_variables to single cells) */
 		matrix->cells[cell].lat           = g_soil_settings->values[SOIL_LAT];
@@ -1669,13 +1668,7 @@ int main(int argc, char *argv[]) {
 
 				for ( cell = 0; cell < matrix->cells_count; ++cell )
 				{
-#if 0
-					if ( g_settings->time == 'd' )
-					{
-					}
-#else
 
-#endif
 					/* compute daily climate variables not coming from met data */
 					Daily_avg_temperature       ( matrix->cells[cell].years[year].m, day, month );
 					Daylight_avg_temperature    ( matrix->cells[cell].years[year].m, day, month );
@@ -1911,7 +1904,7 @@ int main(int argc, char *argv[]) {
 					/* print daily output */
 					//EOD_print_output_cell_level (&matrix->cells[cell], day, month, year, years_of_simulation );
                                         EOD_print_output_cell_level_ddalmo (&matrix->cells[cell], day, month, year, years_of_simulation );
-					EOD_print_output_soil_cell_level (&matrix->cells[cell], day, month, year, years_of_simulation );
+					 EOD_print_output_soil_cell_level (&matrix->cells[cell], day, month, year, years_of_simulation );
 
 					/* reset daily variables once printed */
 					reset_daily_class_variables ( &matrix->cells[cell] );
@@ -1925,7 +1918,7 @@ int main(int argc, char *argv[]) {
 					{
 						/* print monthly output */
 						//EOM_print_output_cell_level( &matrix->cells[cell], month, year, years_of_simulation );
-                                                EOM_print_output_cell_level_ddalmo( &matrix->cells[cell], month, year, years_of_simulation );
+                                               EOM_print_output_cell_level_ddalmo( &matrix->cells[cell], month, year, years_of_simulation );
 						EOM_print_output_soil_cell_level( &matrix->cells[cell], month, year, years_of_simulation );
 
 						reset_monthly_class_variables ( &matrix->cells[cell] );
@@ -1942,7 +1935,7 @@ int main(int argc, char *argv[]) {
 						/* print annual output */
 
 						//EOY_print_output_cell_level( &matrix->cells[cell], year, years_of_simulation );
-                                                EOY_print_output_cell_level_ddalmo( &matrix->cells[cell], year, years_of_simulation );
+                                               EOY_print_output_cell_level_ddalmo( &matrix->cells[cell], year, years_of_simulation );
 						EOY_print_output_soil_cell_level( &matrix->cells[cell], year, years_of_simulation );
 
 						reset_annual_class_variables ( &matrix->cells[cell] );
@@ -1983,7 +1976,7 @@ int main(int argc, char *argv[]) {
 	if ( g_daily_log && g_settings->netcdf_output ) {
 		printf("creating nc daily files...");
 		logger_flush(g_daily_log);
-		//ddalmo removed comments to use ncdfile output
+		
 		if ( ! convert_to_nc(g_daily_log->filename) ) {
 			goto err;
 		}
@@ -1993,7 +1986,7 @@ int main(int argc, char *argv[]) {
 	if ( g_annual_log && g_settings->netcdf_output ) {
 		printf("creating nc annual files...");
 		logger_flush(g_annual_log);
-		//ddalmo removed comments
+		
 		if ( ! convert_to_nc(g_annual_log->filename) ) {
 			goto err;
 		}
@@ -2051,8 +2044,8 @@ int main(int argc, char *argv[]) {
 	return prog_ret;
 }
 #else
-//note: 02/february/2017
-//befire model run for all daus months and years and then changed cell
+//note: 02/february/2017 
+// the model runs for all days/months/years and then changes cell
 
 int main(int argc, char *argv[]) {
 	char sz_date[32]; // should be enough

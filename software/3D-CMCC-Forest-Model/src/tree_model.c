@@ -62,7 +62,7 @@
 extern logger_t* g_debug_log;
 //extern soil_settings_t* g_soil_settings;
 extern settings_t* g_settings;
-extern dataset_t* g_dataset;   //ddalmo 
+extern dataset_t* g_dataset;   
 
 
 //extern const char sz_err_out_of_memory[];
@@ -88,7 +88,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	int species;
         int row = 0;
         int year_dens_fin = 0;  // only used if MANAGEMENT == VAR or VAR1
-	//int management = 0;
+	
 
 	/* shortcuts */
 	cell_t *c;
@@ -107,7 +107,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 
 	/* check parameters */
 	assert( m );
-        //ddalmo
+    
         assert(g_dataset);
 
 	logger (g_debug_log, "\n********* TREE_MODEL_DAILY *********\n");
@@ -120,8 +120,9 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 
 	if ( ! day && ! month )
 	{
-                printf("\n anno, year= %d\n",c->years[year].year); //ddalmo
-
+                printf("\n anno, year= %d\n",c->years[year].year); 
+                
+               // ddalmo at some point: let's perform the if statement here
                // if (MANAGEMENT_VAR == g_settings->management || MANAGEMENT_ON == g_settings->management)
                // {
 		/* management blocks */
@@ -235,8 +236,6 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							if ( ! day && ! month ) ++s->counter[MOS];
 							if ( ! day && ! month ) ++s->counter[YOS];
 
-                                                      
- 
 							/**********************************/
 
 							/* beginning of simulation (every year included the first one) */
@@ -341,13 +340,13 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							/* C-N-partitioning */
 							if ( s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2 )
 							{
-								/* deciduous */
-								daily_C_deciduous_partitioning ( c, layer, height, dbh, age, species, meteo_daily, day, month, year );
+							/* deciduous */
+							 daily_C_deciduous_partitioning ( c, layer, height, dbh, age, species, meteo_daily, day, month, year );
 							}
 							else
 							{
-								/* evergreen */
-								daily_C_evergreen_partitioning ( c, layer, height, dbh, age, species, meteo_daily, day, month, year );
+							/* evergreen */
+							 daily_C_evergreen_partitioning ( c, layer, height, dbh, age, species, meteo_daily, day, month, year );
 							}
 
 							/* growth respiration */
@@ -366,12 +365,16 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							{
   
 #if 1    //set to 1 . set to 0 only for testing purpose
-                                                            //ddalmo new mai 2021
+                                                 
                                                             
-                                                             if ( g_settings->management == MANAGEMENT_VAR ||  g_settings->management == MANAGEMENT_VAR1) 
+                                                             //if ( g_settings->management == MANAGEMENT_VAR || g_settings->management == MANAGEMENT_VAR1) 
+                                                             if ( g_settings->management == MANAGEMENT_VAR) 
                                                              {
 
                                                               // compute last year of available stand density data 
+                                                              // (in the stand.txt file each layer or class has to have 
+                                                              // the same number of stand density data)
+                                                               
                                                               row = g_dataset->rows_count ;
 
                                                               year_dens_fin = g_dataset->rows[row-1].year_stand;     
@@ -391,7 +394,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
                                                    
                                                              }  
                                                              else       
-                                                             {             // with management ON or OFF always compute mortality 
+                                                             {         // with management ON or OFF always compute mortality 
                 
 									/* Mortality based on tree Age (LPJ) */
 									age_mortality        ( c, height, dbh, age, species );
@@ -404,7 +407,8 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 
 #else   // this option is wrongly formulated: to be excluded. use only for testing
 
-								/* ISIMIP: exclude age mortality function when management is "var" and year < year start management */
+								/* ISIMIP: exclude age mortality function when management is "var" 
+								//  and year < year start management */
 								if ( c->years[year].year > g_settings->year_start_management && g_settings->management != MANAGEMENT_VAR )
 								{
 									/* Mortality based on tree Age (LPJ) */
@@ -418,13 +422,12 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							}
 
 							/* allocate daily carbon */
-#if 0
-							carbon_allocation       ( c, a, s, day, month, year );
-#else
+
+							// carbon_allocation       ( c, a, s, day, month, year ); // old subroutine
 
 							//note: this is basically the new function in version v.5.5
 							carbon_allocation_new   ( c, a, s, day, month, year );   
-#endif
+
 							/* allocate daily nitrogen */
 							nitrogen_allocation     ( c, s, day, month, year );
 
@@ -434,15 +437,14 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 
 							if ( ! growth_efficiency_mortality ( c, height, dbh, age, species ) )
 							{
-#if 0
+
 								/* turnover */
-								turnover ( c, a, s, day, month, year );
-#else
-								//fixme move into turnover function
+								// turnover ( c, a, s, day, month, year ); // old function
+
 								//note: this is basically the new function in version v.5.5
 								sapwood_turnover ( c, a, s, day, month, year );
 								livewood_turnover ( c, a, s, day, month, year );
-#endif
+
 								/* carbon use efficiency */
 								carbon_use_efficiency ( c, height, dbh, age, species, day, month, year );
 
@@ -452,21 +454,13 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 								/* water use efficiency */
 								water_use_efficiency  ( c, height, dbh, age, species, day, month, year );
 
-                                                                //ddalmo july 2021 update canopy cover projection considering the 
-                                                                // number of living trees after natural mortality
-                                                                // which occurs at the end of the year
-                                                                // this should not bring so much differences from the other version.
-                                                                // in theory we should also update the crown_area_projection 
-                                                                // but we assume the day-to-day difference is minimal
-#if 0
+                                                               // update canopy cover projection considering the     
+                                                               // number of living trees after natural mortality
 
-
-#else
                                                                  if ( c->doy == ( IS_LEAP_YEAR ( c->years[year].year ) ? 366 : 365) )
 	                                                         {
                                                                   canopy_cover    ( c, height, dbh, age, species );
                                                                  }
-#endif
 
 
 								/* update Leaf Area Index */
@@ -517,7 +511,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							}
 							else
 							{
-								//fixme here model should remove class just after have checked that the balances are closed
+								//FIXME here model should remove class just after have checked that the balances are closed
 								//so model has to include c fluxes that go out to litter and cwd
 								if ( height >= m->cells[cell].heights_count ) goto height_end;
 								if ( dbh >= m->cells[cell].heights[height].dbhs_count ) goto dbh_end;

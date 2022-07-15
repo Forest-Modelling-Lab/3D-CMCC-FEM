@@ -8,7 +8,7 @@ void evapotranspiration(cell_t* const c)
 {
 	logger(g_debug_log, "\n**EVAPOTRANSPIRATION_ROUTINE**\n");
 
-	//ALESSIOC TO ALESSIOR BUG WHEN NO TREES
+	//FIXME BUG WHEN NO TREES
 	c->daily_et = c->daily_canopy_et + c->daily_soil_evapo;
 	logger(g_debug_log, "Daily EVAPOTRANSPIRATION = %f \n", c->daily_et);
 	c->monthly_et += c->daily_et;

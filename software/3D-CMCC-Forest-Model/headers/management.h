@@ -36,7 +36,7 @@ void prescribed_thinning (cell_t *const c, const int height, const int dbh, cons
 void clearcut_coppice(cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species);
 
 //management_t* management_load(const char* const filename);
-management_t* management_load_dani(const char* const filename);  //ddalmo new
+management_t* management_load_presc(const char* const filename);  //5p6
 
 void management_free(management_t* p);
 

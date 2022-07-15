@@ -42,6 +42,8 @@ void latent_heat_fluxes (cell_t *const c, const meteo_daily_t *const meteo_daily
 	c->daily_lh_flux = c->daily_canopy_et_watt + c->daily_soil_evapo_watt;
 
 	/*in case of snow formation or dew fall*/
+	// TODO include dew formation related processes
+	
 	if(meteo_daily->snow != 0.0)
 	{
 		logger(g_debug_log, "implement negative heat fluxes!\n");

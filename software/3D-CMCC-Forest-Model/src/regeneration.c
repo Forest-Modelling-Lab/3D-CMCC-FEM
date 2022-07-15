@@ -29,6 +29,7 @@ void regeneration (cell_t *const c, const int height, const int dbh, const int a
 
 	species_t *s;
 
+        // TODO UNDER DEVELOPMENT 
 	// ALESSIOR
 	//if ( ! c->heights[height].dbhs[dbh].ages ) return;
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
@@ -54,11 +55,11 @@ void regeneration (cell_t *const c, const int height, const int dbh, const int a
 	logger(g_debug_log, "name = %s\n", s->name);
 
 	/* assign values */
-	//ALESSIOC ALESSIOR FIXME PORCATA
+	//FIXME currently prescribed, 
 	g_settings->regeneration_n_tree = saplings_number;
 
 	/* it gets name of species that produces seeds */
-	//ALESSIOC ALESSIOR FIXME PORCATA
+	//FIXME
 	strncpy(g_settings->regeneration_species, ((const char*)s->name), SETTINGS_REGENERATION_SPECIES_MAX_SIZE-1);
 
 	/* replanting tree class */

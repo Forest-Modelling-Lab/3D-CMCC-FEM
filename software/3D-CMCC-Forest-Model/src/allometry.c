@@ -30,6 +30,8 @@ void crown_allometry (cell_t *const c, const int height, const int dbh, const in
 	s = &a->species[species];
 
 	/*** Crown allometry ***/
+	
+	// NOTE: in the version 5.6 no information of crown geoemtry are used
 
 	logger(g_debug_log,"\n*CROWN ALLOMETRY for %s *\n", s->name);
 
@@ -81,7 +83,7 @@ void crown_allometry (cell_t *const c, const int height, const int dbh, const in
 	{
 	case 0: /* cylinder */
 		logger(g_debug_log, "-Crown form factor        = cylinder\n");
-                //ddalmo correction??
+                //correction
 		//s->value[CROWN_AREA]     = ( 2. * s->value[CROWN_AREA]) + (2 * Pi * s->value[CROWN_RADIUS] * s->value[CROWN_HEIGHT]);
                 s->value[CROWN_AREA]     = ( 2. * s->value[CROWN_AREA_PROJ]) + (2 * Pi * s->value[CROWN_RADIUS] * s->value[CROWN_HEIGHT]);
 		s->value[CROWN_VOLUME]   = s->value[CROWN_AREA_PROJ] * s->value[CROWN_HEIGHT];
@@ -114,8 +116,7 @@ void crown_allometry (cell_t *const c, const int height, const int dbh, const in
 
 		break;
 
-         // ddalmo : for pino d'aleppo (ellissoide oblato)
-         case 4: /* tri-bi-axial ellipsoid */
+         case 4: /* tri-bi-axial ellipsoid  (e.g. Pinus Halepensis) */
 		logger(g_debug_log, "-Crown form factor        = ellipsoid oblate\n");
 
 		c_diameter = s->value[CROWN_DIAMETER] / 2.;

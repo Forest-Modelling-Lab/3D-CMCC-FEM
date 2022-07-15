@@ -223,7 +223,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 			evapo = Penman_Monteith ( meteo_daily, rv, rh, net_rad );
 
 			/* check for negative values */
-			if( evapo < 0. ) evapo  = 0.;
+			if( evapo < 0. ) evapo  = 0.;    //FIXME dew formation
 
 			s->value[CANOPY_EVAPO] = evapo;
 

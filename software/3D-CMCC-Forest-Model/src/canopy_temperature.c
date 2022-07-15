@@ -120,7 +120,7 @@ void canopy_temperature(cell_t *const c, const int layer, const int height, cons
 		s->value[CANOPY_TEMP_K] = 0.;
 	}
 
-	//fixme it hasn't sense at cell level just to print
+	//FIXME it hasn't sense at cell level just to print
 	c->canopy_temp = s->value[CANOPY_TEMP_K] - TempAbs;
 	logger(g_debug_log, "canopy_temp = %g (K)\n",c->canopy_temp);
 	c->canopy_temp_k = s->value[CANOPY_TEMP_K];

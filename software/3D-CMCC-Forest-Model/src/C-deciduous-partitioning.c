@@ -58,7 +58,7 @@ void daily_C_deciduous_partitioning (cell_t *const c, const int layer, const int
 	r0    = s->value[R0CTEM];        /* parameter controlling allocation to roots (minimum ratio to root pools */
 	omega = s->value[OMEGA_CTEM];    /* controls the sensitivity of allocation to changes in water and light availability */
 
-	//fixme it should takes into account above layers
+	//FIXME it should takes into account above layers
 	Light_trasm = exp ( - s->value[K] * s->value[LAI_PROJ] );
 
 	/* note: in Biome a constant proportion (50%) (Growth:storage parameter) of NPP that goes to the c-pools is allocated
@@ -127,9 +127,9 @@ void daily_C_deciduous_partitioning (cell_t *const c, const int layer, const int
 			s->counter[DAYS_FOR_BUDBURST] = s->value[BUD_BURST] - 1.;
 
 #if 1
-			//test: 2 Dec 2017 Carbon "injection" function
-			//fixme these should be all class dependent variables
-			//fixme somehow there's a time lag by which model reduces allocation before to finish to allocate
+			//Dec 2017: Carbon "injection" function
+			//FIXME these should be all class dependent variables
+			//somehow there's a time lag by which model reduces allocation before to finish to allocate
 			if ( ! s->counter[BUD_BURST_DAY_COUNTER] )
 			{
 				s->counter[BUDBURST_A]       = 0;
@@ -158,7 +158,7 @@ void daily_C_deciduous_partitioning (cell_t *const c, const int layer, const int
 			s->counter[BUD_BURST_DAY_COUNTER] ++;
 
 #else
-			/* test "This has recently been confirmed by Dyckmans et al. (2000)
+			/* "This has recently been confirmed by Dyckmans et al. (2000)
 			who showed that only 44% of carbon in leaves came from
 			carbon reserves in beech trees" (Barbaroux et al., 2003) */
 
@@ -288,7 +288,7 @@ void daily_C_deciduous_partitioning (cell_t *const c, const int layer, const int
 				/* consuming reserve carbon pools */
 				s->value[C_TO_RESERVE]     = npp_to_alloc;
 
-				/* TEST special case when DEFOLIATION happens */
+				/* special case when DEFOLIATION happens */
 
 				leaf_froot_ratio = s->value[LEAF_C] / ( s->value[LEAF_C] + s->value[FROOT_C] );
 
@@ -351,6 +351,7 @@ void daily_C_deciduous_partitioning (cell_t *const c, const int layer, const int
 
 	/* check for Maximum DBH */
 	/* if dbh exceeds its maximum all C goes to branches */
+	
 	if ( d->value > DBH_MAX )
 	{
 		s->value[C_TO_BRANCH]    += s->value[C_TO_STEM];

@@ -17,11 +17,18 @@ extern logger_t* g_debug_log;
 
 void soil_radiation_sw_band ( cell_t *const c, meteo_daily_t *meteo_daily )
 {
+        // FIXME compute net radiation correctly
+        // so to consider effectively the incoming radiation and the amount
+        // that has to be reflected
+        
 	//fixme move soil and snow albedo into soil.txt file
 	const double soil_albedo = 0.15;                                                      /* (ratio) soil albedo without snow (see MAESPA model) */
-	const double snow_albedo = 0.65;                                                      /* (ratio) snow albedo as an average between freshly fallen snow and 0.4 for melting snow */
-	double Light_refl_rad_soil_frac = 0.;                                                   /* (ratio) fraction of Short Wave radiation reflected from the soil */
-	double Light_refl_rad_snow_frac = 0.;                                                   /* (ratio) fraction of Short Wave radiation reflected from the snow */
+	const double snow_albedo = 0.65;                                                      /* (ratio) snow albedo as an average between freshly 
+	                                                                                          fallen snow and 0.4 for melting snow */
+	double Light_refl_rad_soil_frac = 0.;                                                 /* (ratio) fraction of Short Wave radiation reflected 
+	                                                                                         from the soil */
+	double Light_refl_rad_snow_frac = 0.;                                                 /* (ratio) fraction of Short Wave radiation reflected 
+	                                                                                         from the snow */
 
 	/* check parameters */
 	assert ( c );
@@ -46,11 +53,13 @@ void soil_radiation_sw_band ( cell_t *const c, meteo_daily_t *meteo_daily )
 	logger(g_debug_log, "******************************************************\n");
 
 	/* compute values for soil layer when last height class in cell is processed */
-	/* remove reflected part */
+	// the input radiation-values take into account the fraction absorbed by vegetation
+	
+	// remove reflected part
 	logger(g_debug_log,"*incoming light for soil*\n");
 	logger(g_debug_log,"incoming PAR for soil         = %g molPAR/m^2/day\n", meteo_daily->par);
 	logger(g_debug_log,"incoming Short Wave radiation = %g W/m2\n", meteo_daily->sw_downward_W);
-	logger(g_debug_log,"incoming Short Net radiation  = %g W/m2\n", meteo_daily->Net_rad_threePG);
+	logger(g_debug_log,"incoming       Net radiation  = %g W/m2\n", meteo_daily->Net_rad_threePG);
 
 	if ( ! c->snow_pack )
 	{

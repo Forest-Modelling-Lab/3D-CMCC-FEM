@@ -17,7 +17,7 @@
 
 extern settings_t* g_settings;
 extern logger_t* g_debug_log;
-extern dataset_t* g_dataset;   //ddalmo 
+extern dataset_t* g_dataset;   
 
 //extern int MonthLength [];
 //extern int MonthLength_Leap [];
@@ -406,30 +406,20 @@ int annual_forest_structure(cell_t* const c, const int year)
 
      
                                                         // compute last year of available stand density data 
-                                                        // note: in case of multilayer or multispecies, check if the correct information has been read
+                                                        // note: in case of multi-class forest, for each class 
+                                                        // the same number of stand observations has to be provided
                                                         row = g_dataset->rows_count ;
 
-                                                        year_dens_fin = g_dataset->rows[row-1].year_stand;                                                             
-                                                      
+                                                        year_dens_fin = g_dataset->rows[row-1].year_stand; 
 
-                                                        // ddalmo skip self thinning only if stand density data is prescribed
-                                                        // i.e. case MAN ON or OFF, year_dens_fin == first year of model inizialization
-                                                        //      case MAN VAR , year_dens_fin == last year of measured stand density data
-
-                                                        // NOTE: to be check that in case of multilayer/multispecies the year_dens_fin is read correctly
-                                                      // printf("DBHDC eff %f \n",s->value[DBHDC_EFF] );
-                                                      // printf("DBHDCMIN %f \n",s->value[DBHDCMIN] );
 
                                                         if ( c->years[year].year > year_dens_fin ) 
-							{
-                                                          
+							  {
 								if ( s->value[DBHDC_EFF] <= s->value[DBHDCMIN] )
 								{
-                                                              
 									self_thinning_mortality ( c, layer, year );
 								}
-							}
-
+							  }
 
 							/* note: special case for ISIMIP, avoid self thinning when management is 'var' */
 							/*if ( ( ( c->years[year].year >= g_settings->year_start_management ) && ( MANAGEMENT_VAR == g_settings->management ) )

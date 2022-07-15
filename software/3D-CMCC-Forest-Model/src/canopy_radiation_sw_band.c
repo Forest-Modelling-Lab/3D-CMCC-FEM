@@ -269,7 +269,7 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 	/* see method from Duursma and Makela, Tree Phys: Vol. 27, 859-870, 2007 [Eq.4] */
 
 #if 1
-	//fixme this is a very bad assumption (I know!!) to avoid that under low density gpp is too low
+	//FIXME this is a very bad assumption (I know!!) to avoid that under low density gpp is too low
 	Light_trasm_frac       = exp ( - k * s->value[LAI_PROJ]) * s->value[DAILY_CANOPY_COVER_PROJ];
 	Light_trasm_frac_sun   = exp ( - k * s->value[LAI_SUN_PROJ]) * s->value[DAILY_CANOPY_COVER_PROJ];
 	Light_trasm_frac_shade = exp ( - k * s->value[LAI_SHADE_PROJ]) * s->value[DAILY_CANOPY_COVER_PROJ] ;

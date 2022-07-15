@@ -613,6 +613,7 @@ void reset_monthly_class_variables(cell_t *const c)
 					s->value[MONTHLY_ASSIMILATION]  =        0.;
 					s->value[MONTHLY_ASSIMILATION_SUN] =     0.;
 					s->value[MONTHLY_ASSIMILATION_SHADE] =   0.;
+					//s->value[MONTHLY_LAI_PROJ]           =   0.;  //ddalmo jan 22
 				}
 			}
 		}
@@ -733,11 +734,11 @@ void reset_annual_class_variables(cell_t *const c)
 					s->value[MAX_RESERVE_C_CONC]   =        0.;
 					s->value[MIN_RESERVE_C_CONC]   =        0.;
 
-					s->value[MAX_ANN_RESERVE_C]    =        0.; //ddalmo comment: annual maximum value of reserve total
-					s->value[MIN_RESERVE_C]        =        0.; // comment: for each year the minimum reserve pool to be guaranteed
-                                        s->value[MIN_ANN_RESERVE_C]    =        0.; //ddalmo:  annual minimum value of reserve total
-                                        s->value[TREE_MAX_ANN_RESERVE_C]    =        0.; //ddalmo comment: annual maximum value of reserve/ tree 
-                                        s->value[TREE_MIN_ANN_RESERVE_C]    =        0.; //ddalmo:  annual minimum value of reserve /tree
+					s->value[MAX_ANN_RESERVE_C]    =        0.; //5p6 annual maximum value of reserve total
+					s->value[MIN_RESERVE_C]        =        0.; //5p6 for each year the minimum reserve pool to be guaranteed
+                                       s->value[MIN_ANN_RESERVE_C]    =        0.; //5p6 annual minimum value of reserve total
+                                       s->value[TREE_MAX_ANN_RESERVE_C]    =   0.; //5p6 annual maximum value of reserve/ tree 
+                                       s->value[TREE_MIN_ANN_RESERVE_C]    =   0.; //5p6 annual minimum value of reserve /tree
 
 					s->value[YEARLY_ASSIMILATION] =         0.;
 					s->value[YEARLY_ASSIMILATION_SUN] =     0.;

@@ -70,9 +70,6 @@ void dbhdc_function ( cell_t *const c, const int layer, const int height, const 
 	s->value[DBHDC_EFF] = temp_crown_diameter / d->value;
 	logger(g_debug_log,"-DBHDC (new)         = %f\n", s->value[DBHDC_EFF]);
 
-         //ddalmo
-       //printf("function, DBHDC_EFF = %f\n ",s->value[DBHDC_EFF]);
-
 	/* check if current dbhdc_eff grows too much (case when there's thinning) */
 	/* this is checked to avoid unrealistic crown area increment */
 
@@ -102,7 +99,7 @@ void dbhdc_function ( cell_t *const c, const int layer, const int height, const 
 
 #endif
 	/**************************************************************************************************/
-        //printf("nuovo DBHDCMAX %f\n",s->value[DBHDCMAX]); //ddalmo
+
 	/* check */
 	if ( s->value[DBHDC_EFF] > s->value[DBHDCMAX] )
 	{
@@ -135,11 +132,9 @@ void canopy_cover (cell_t *const c, const int height, const int dbh, const int a
 
 	logger(g_debug_log,"\n*CANOPY COVER for %s *\n", s->name);
 
-	/* Canopy and Soil Projected Cover using DBH-DC (at zenith angle) */
+	/* Canopy and Soil Projected Cover using DBH-DC (at zenith angle)  it is never higher than max_cover_proj */
 	s->value[CANOPY_COVER_PROJ] = s->value[CROWN_AREA_PROJ] * s->counter[N_TREE] / g_settings->sizeCell;
 	logger(g_debug_log, "-Canopy Projected Cover   = %f %%\n", s->value[CANOPY_COVER_PROJ] * 100.);
-
-         //printf("s->canopy cover projection %f\n",s->value[CANOPY_COVER_PROJ]); //ddalmo : it is never higher than max cover proj
 
 	/* check */
 	CHECK_CONDITION( s->value[CANOPY_COVER_PROJ] ,  > , s->value[CANOPY_COVER_PROJ] + eps );

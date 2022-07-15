@@ -452,16 +452,11 @@ void modifiers(cell_t *const c, const int layer, const int height, const int dbh
 	/* volumetric water content */
 
 
-	//test Daniela bug-fix psi September 2020
-
-#if 0
-	 c->vwc = c->asw / c->max_asw_fc; //this was the old (bugged) equation
-
-#else
+	// c->vwc = c->asw / c->max_asw_fc; //this was the old (bugged) equation
 
 	/* volumetric water content */
 	c->vwc = c-> asw/((c->soil_depth/100.)*1000.);
-#endif
+
 	/* soil matric potential */
 	c->psi = c->psi_sat * pow((c->vwc/c->vwc_sat), c->soil_b);
 

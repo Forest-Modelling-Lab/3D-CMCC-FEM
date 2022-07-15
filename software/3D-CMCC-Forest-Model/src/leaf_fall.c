@@ -43,8 +43,7 @@ void leaffall_deciduous ( cell_t *const c, const int height, const int dbh, cons
 	{
 		/* load previous LAI */
 		previousLai = s->value[LAI_PROJ];
-// ddalmo
-               // printf("previousLAi in leaf_fall, %f\n", s->value[LAI_PROJ]);   
+ 
  
 		/* sigmoid shape drives LAI reduction during leaf fall */
 		currentLai  = MAX(0,s->value[MAX_LAI_LEAFFALL_PROJ] / (1 + exp(-(s->counter[DAYS_LEAFFALL] / 2. + s->counter[SENESCENCE_DAY_ONE] - c->doy)
@@ -53,11 +52,11 @@ void leaffall_deciduous ( cell_t *const c, const int height, const int dbh, cons
 
 		/* check */
  
-              // ddalmo oct.2020 force current LAI to 0 if the leaf C has been forced to 0 (leafC < 1 mg C m-2) (and hence previous LAI)
+                // force current LAI to 0 if the leaf C has been forced to 0 (leafC < 1 mg C m-2) (and hence previous LAI)
 
-               if( previousLai == 0. )
-                {  
-                currentLai = 0. ;
+                if( previousLai == 0. )
+                 {  
+                  currentLai = 0. ;
                 }
               
 		CHECK_CONDITION(previousLai, <, currentLai);
@@ -80,9 +79,6 @@ void leaffall_deciduous ( cell_t *const c, const int height, const int dbh, cons
 		/* update fruit carbon */
 		s->value[FRUIT_C_TO_REMOVE]  = ( s->value[FRUIT_C] * s->value[LEAF_C_TO_REMOVE]) / s->value[LEAF_C];
 		s->value[FRUIT_N_TO_REMOVE]  = ( s->value[FRUIT_N] * s->value[LEAF_N_TO_REMOVE]) / s->value[LEAF_N];
-// ddalmo
-//printf("currentLAi in leaf_fall, %f\n", currentLai); 
-
 	}
 	else
 	{
@@ -91,7 +87,7 @@ void leaffall_deciduous ( cell_t *const c, const int height, const int dbh, cons
 		logger(g_debug_log, "Last day of leaf fall\n");
 
 		//assumption: last day of leaf fall all carbon goes to litter and cwd with no retranslocation
-                //ddalmo note: yet in leaffall, from LEAF_C_TO_REMOVE, a part is actually retraslocate...
+                //note FIXME: yet in leaffall, from LEAF_C_TO_REMOVE, a part is actually retraslocate...
  
 		s->value[LEAF_C_TO_REMOVE]    = s->value[LEAF_C];
 		s->value[LEAF_N_TO_REMOVE]    = s->value[LEAF_N];
@@ -103,8 +99,6 @@ void leaffall_deciduous ( cell_t *const c, const int height, const int dbh, cons
 		s->value[FRUIT_C_TO_REMOVE]   = s->value[FRUIT_C];
 		s->value[FRUIT_N_TO_REMOVE]   = s->value[FRUIT_N];
 
-                /*ddalmo 29.10.20 force LEAF_C to go to 0 */
- 
 	}
 
 	/*************************************************************************************************************/
@@ -150,7 +144,7 @@ void leaffall_evergreen ( cell_t *const c, const int height, const int dbh, cons
 
 	}
 
-	//fixme
+	//FIXME
 	if (s->value[FRUIT_C_TO_REMOVE] > s->value[FRUIT_C])
 	{
 		s->value[FRUIT_C_TO_REMOVE] = s->value[FRUIT_C];

@@ -297,7 +297,7 @@ void carbon_allocation_new ( cell_t *const c, age_t *const a, species_t *const s
 
 	/* to avoid that self-thinning mortality happens to remove too much biomass */
         //if ( day && month ) 
-       if (c->doy > 1 )
+        if (c->doy > 1 )
         {
          s->value[YEARLY_C_TO_BRANCH_LIVEWOOD] += ( ( s->value[C_TO_BRANCH] * s->value[EFF_LIVE_TOTAL_WOOD_FRAC] ) - s->value[C_BRANCH_LIVEWOOD_TO_CWD] ); 
         }
