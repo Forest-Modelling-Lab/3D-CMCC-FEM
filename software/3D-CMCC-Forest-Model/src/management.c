@@ -399,8 +399,9 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 				        /* management forced by stand data */
 					if ( year )
 					 {
-						// s->counter[THINNING_HAPPENS] = 1; FIXME the removed trees as prescribed from stand_file.txt
-						// are not then saved as HWP, but we should be consistent the option MAN=VAR & REG=OFF 
+						 s->counter[THINNING_HAPPENS] = 1; // FIXME the removed trees as prescribed from stand_file.txt
+						// are then saved as HWP, to be consistent with the option MAN=VAR & REG=OFF
+						// however the observed density in the stand could be due to mortality and not thinning 
 
 						prescribed_thinning ( c, height, dbh, age, species, c->years[year].year );
 					  }
