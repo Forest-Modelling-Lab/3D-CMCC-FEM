@@ -342,7 +342,8 @@ int annual_forest_structure(cell_t* const c, const int year)
 
 	logger(g_debug_log, "*compute layer canopy cover within each layer (layer level)*\n\n");
 
-	//todo: control if with a drastic tree number reduction (e.g. management) there's a unrealistic strong variation in DBHDCeffective
+        // note; this variable is however not used. Yet it should be considered in the canopy radiative subroutine (e.g. competition when overlapping classes)
+	
 	for (layer = c->tree_layers_count - 1; layer >= 0; --layer)
 	{
 		for ( height = 0; height < c->heights_count ; ++height )
