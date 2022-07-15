@@ -195,6 +195,8 @@ static const char msg_usage[]						=	"\nusage:\n"
 		"    -h print this help\n"
 		;
 
+// COMMENT: 5p6 Version used for regional simulations in Basilicata
+
 /* error messages */
 extern const char sz_err_out_of_memory[];
 const char err_unable_open_file[] = "unable to open file.";
