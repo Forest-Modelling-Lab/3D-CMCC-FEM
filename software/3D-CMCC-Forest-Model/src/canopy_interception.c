@@ -63,7 +63,15 @@ void canopy_interception(cell_t *const c, const int layer, const int height, con
 			/* compute maximum water storage (interception) (mm/m2 area covered) */
 
 			double Int_max_rain;    /* maximum intercepted rain (mm/m2) */
+#if 0
+			/* (1) compute rain interception for dry canopy (Lawrence et al., 2006) */
+			s->value[CANOPY_INT]      = s->value[INT_COEFF] * meteo_daily->rain * ( 1. - exp(-0.5 * s->value[LAI_PROJ])) * s->value[DAILY_CANOPY_COVER_PROJ];
 
+			/* (2) compute rain interception for dry canopy (Tatarinov et al., 2007) */
+			Int_max_rain              = 0.3 * s->value[ALL_LAI_PROJ];
+			s->value[CANOPY_INT_RAIN] = MIN( Int_max_rain , meteo_daily->rain );
+
+#else
 			//june 2017
 			/* following Jiao et al., 2016, Water Eq. [8] pg. 9 */
 			{
@@ -71,7 +79,7 @@ void canopy_interception(cell_t *const c, const int layer, const int height, con
 				s->value[CANOPY_INT_RAIN] = MIN( Int_max_rain , meteo_daily->rain );
 			}
 
-
+#endif
 			/* update pool */
 			s->value[CANOPY_WATER]    = s->value[CANOPY_INT_RAIN];
 
@@ -93,7 +101,9 @@ void canopy_interception(cell_t *const c, const int layer, const int height, con
 #if 0
 			s->value[CANOPY_INT_SNOW] = 0.;
 #else
-			s->value[CANOPY_INT_SNOW] = s->value[CANOPY_SNOW] + 0.7 * ( Int_max_snow - s->value[CANOPY_SNOW] ) * (1. - exp( - ( meteo_daily->snow / Int_max_snow ) ) ) * s->value[DAILY_CANOPY_COVER_PROJ];
+			//s->value[CANOPY_INT_SNOW] = s->value[CANOPY_SNOW] + 0.7 * ( Int_max_snow - s->value[CANOPY_SNOW] ) * (1. - exp( - ( meteo_daily->snow / Int_max_snow ) ) ) * s->value[DAILY_CANOPY_COVER_PROJ];
+			//5p6 we multiply later for the cc_proj
+			s->value[CANOPY_INT_SNOW] = s->value[CANOPY_SNOW] + 0.7 * ( Int_max_snow - s->value[CANOPY_SNOW] ) * (1. - exp( - ( meteo_daily->snow / Int_max_snow ) ) ) ;
 #endif
 
 			/* update pool */
@@ -105,13 +115,31 @@ void canopy_interception(cell_t *const c, const int layer, const int height, con
 
 			CHECK_CONDITION(s->value[CANOPY_INT_SNOW], > , meteo_daily->snow);
 		}
+		 // 5p6 convert stored canopy snow and water as value per m2 of grid cell
+                 // note that canopy water and snow can not accumulate
+                 s->value[CANOPY_SNOW]  = s->value[CANOPY_SNOW]  * s->value[DAILY_CANOPY_COVER_PROJ];
+                 s->value[CANOPY_WATER] = s->value[CANOPY_WATER] * s->value[DAILY_CANOPY_COVER_PROJ];
 	}
 
 	/**********************************************************************************************************/
 
 	/* update temporary rain and snow */
-	c->temp_int_rain += s->value[CANOPY_INT_RAIN];
-	c->temp_int_snow += s->value[CANOPY_INT_SNOW];
+	
+	// 5p6: please note that CANOPY_INT_RAIN/SNOW refer to m2 of canopy, hence, in order to compute the average amount of rain 
+	// reaching the lower layer, it should account for the CC_PROJ and TODO the overlapping of classes within the same layer!
+	// this is also important in order to compute ASW at cell level.
+	
+	// TODO check and correct if whithin the same laver overlapping of classe occurrs
+	
+	c->temp_int_rain += s->value[CANOPY_INT_RAIN]* s->value[DAILY_CANOPY_COVER_PROJ];
+	c->temp_int_snow += s->value[CANOPY_INT_SNOW]* s->value[DAILY_CANOPY_COVER_PROJ];
+	
+	CHECK_CONDITION( c->temp_int_rain, > , meteo_daily->rain );  // controll on the value at cell/layer-level
+        CHECK_CONDITION( c->temp_int_snow, > , meteo_daily->snow );
+
+
+	//c->temp_int_rain += s->value[CANOPY_INT_RAIN];
+	//c->temp_int_snow += s->value[CANOPY_INT_SNOW];
 
 	/**********************************************************************************************************/
 
@@ -119,11 +147,15 @@ void canopy_interception(cell_t *const c, const int layer, const int height, con
 	if ( l->layer_n_height_class == l->canopy_int_layer_height_class_counter )
 	{
 		/* compute interceptable rain for lower layers */
-		c->daily_canopy_rain_int += s->value[CANOPY_INT_RAIN];
+		//c->daily_canopy_rain_int += s->value[CANOPY_INT_RAIN];
+		c->daily_canopy_rain_int += s->value[CANOPY_INT_RAIN]* s->value[DAILY_CANOPY_COVER_PROJ];
 		meteo_daily->rain        -= c->temp_int_rain;
 
+                CHECK_CONDITION( meteo_daily->rain , <, 0. );
+                 
 		/* compute interceptable snow for lower layers */
-		c->daily_canopy_snow_int += s->value[CANOPY_INT_SNOW];
+		//c->daily_canopy_snow_int += s->value[CANOPY_INT_SNOW];
+		c->daily_canopy_snow_int += s->value[CANOPY_INT_SNOW]* s->value[DAILY_CANOPY_COVER_PROJ];
 		meteo_daily->snow        -= c->temp_int_snow;
 
 		/* reset temporary values when the last height class in layer is processed */
@@ -148,4 +180,8 @@ void canopy_interception(cell_t *const c, const int layer, const int height, con
 	/* cumulate */
 	s->value[MONTHLY_CANOPY_INT] += (s->value[CANOPY_INT_RAIN] + s->value[CANOPY_INT_SNOW]);
 	s->value[YEARLY_CANOPY_INT]  += (s->value[CANOPY_INT_RAIN] + s->value[CANOPY_INT_SNOW]);
+	
+	// 5p6 convert intercepted canopy snow and water as value per m2 of grid cell
+        s->value[CANOPY_INT_SNOW] = s->value[CANOPY_INT_SNOW] * s->value[DAILY_CANOPY_COVER_PROJ];
+        s->value[CANOPY_INT_RAIN] = s->value[CANOPY_INT_RAIN] * s->value[DAILY_CANOPY_COVER_PROJ];
 }
