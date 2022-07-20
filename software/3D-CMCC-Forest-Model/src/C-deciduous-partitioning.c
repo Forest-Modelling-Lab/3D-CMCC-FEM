@@ -127,7 +127,7 @@ void daily_C_deciduous_partitioning (cell_t *const c, const int layer, const int
 			s->counter[DAYS_FOR_BUDBURST] = s->value[BUD_BURST] - 1.;
 
 #if 1
-			//Dec 2017: Carbon "injection" function
+		
 			//FIXME these should be all class dependent variables
 			//somehow there's a time lag by which model reduces allocation before to finish to allocate
 			if ( ! s->counter[BUD_BURST_DAY_COUNTER] )
