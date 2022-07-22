@@ -5427,6 +5427,7 @@ void EOY_print_output_cell_level_mc(cell_t *const c, const int year, const int y
                                                                                s->value[MIN_ANN_RESERVE_C],       //5p6
                                                                                s->value[TREE_MAX_ANN_RESERVE_C],  //5p6
                                                                                s->value[TREE_MIN_ANN_RESERVE_C],  //5p6
+                                                                               s->value[MIN_RESERVE_C],
 										s->value[RESERVE_C],
 										s->value[STEM_C],
 										s->value[STEM_SAPWOOD_C],
