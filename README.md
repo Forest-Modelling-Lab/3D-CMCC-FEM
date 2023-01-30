@@ -36,7 +36,7 @@ For any further information please contact us:
 -Alessio Collalti (Lab. Head and Model Principal Investigator): alessio.collalti@cnr.it  
 -Daniela Dalmonech: daniela.dalmonech@isafom.cnr.it  
 -Alessio Ribeca: a.ribeca@unitus.it  
--Elia Vangi: elia.vangi@isafom.cnr.it
+-Elia Vangi: elia.vangi@isafom.cnr.it  
 -Gina Marano: gina.marano@usys.ethz.ch 
 -The model: 3d-cmcc-fem@gmail.com  
 -The lab: forest.modelling.lab@gmail.com  
