@@ -24,7 +24,6 @@ In case you have copied and/or modified the **3D-CMCC-FEM** code overall, even i
 The **3D-CMCC-FEM** has been developed by:  
 Alessio Collalti    
 Alessio Ribeca  
-Carlo Trotta  
 Daniela Dalmonech  
 Gina Marano  
 
@@ -35,10 +34,10 @@ CNR and UNITUS accept no responsibility for the use of the **3D-CMCC-FEM** in th
 
 For any further information please contact us:  
 -Alessio Collalti (Lab. Head and Model Principal Investigator): alessio.collalti@cnr.it  
--Carlo Trotta: trottacarlo@unitus.it  
--Daniela Dalmonech: daniela.dalmonech@gmail.com  
+-Daniela Dalmonech: daniela.dalmonech@isafom.cnr.it  
 -Alessio Ribeca: a.ribeca@unitus.it  
--Gina Marano: gina.marano@unina.it  
+-Elia Vangi: elia.vangi@isafom.cnr.it
+-Gina Marano: gina.marano@usys.ethz.ch 
 -The model: 3d-cmcc-fem@gmail.com  
 -The lab: forest.modelling.lab@gmail.com  
 
