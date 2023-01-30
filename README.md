@@ -37,9 +37,9 @@ For any further information please contact us:
 -Daniela Dalmonech: daniela.dalmonech@isafom.cnr.it  
 -Alessio Ribeca: a.ribeca@unitus.it  
 -Elia Vangi: elia.vangi@isafom.cnr.it  
--Gina Marano: gina.marano@usys.ethz.ch 
--The model: 3d-cmcc-fem@gmail.com  
--The lab: forest.modelling.lab@gmail.com  
+-Gina Marano: gina.marano@usys.ethz.ch   
+-The model: 3d-cmcc-fem@gmail.com    
+-The lab: forest.modelling.lab@gmail.com    
 
 or look at the **3D-CMCC-FEM** web-site:https://www.forest-modelling-lab.com/the-3d-cmcc-model
 
