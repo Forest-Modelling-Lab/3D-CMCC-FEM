@@ -7,7 +7,7 @@
 
 LICENSE:
 
-Copyright(c) 2020, Forest Modelling Laboratory – 3D-CMCC-FEM  
+Copyright(c) 2023, Forest Modelling Laboratory – 3D-CMCC-FEM  
 All rights reserved
 
 
@@ -15,9 +15,9 @@ The **3D-CMCC-FEM** is basically a research tool which is freely available ***on
 
 The **3D-CMCC-FEM** is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. The **3D-CMCC-FEM** code is released under the GNU General Public Licence v3.0 (GPL). See the LICENSE file along with this program for more details.  If not, see http://www.gnu.org/licenses/gpl.html.
 
-This page contains all the code releases developed over the time at CNR on the open source distribution of the computer simulation forest model **3D-CMCC-FEM**. The model has been developed and is maintained by the **Forest Modelling Laboratory** at the National Research Council of Italy, Institute for Agricultural and Forestry Systems in the Mediterranean (CNR-ISAFOM), Perugia, and at the University of Tuscia, Department of Innovation in Biological, Agro-food and Forest Systems (UNITUS-DIBAF), Viterbo.  
+This page contains all the code releases developed over the time at CNR on the open source distribution of the computer simulation forest model **3D-CMCC-FEM**. The model has been developed and is maintained by the **Forest Modelling Laboratory** at the National Research Council of Italy, Institute for Agricultural and Forestry Systems in the Mediterranean (CNR-ISAFOM), Perugia, and at the University of Tuscia, Department of Agriculture and Forest Sciences (UNITUS-DAFNE), Viterbo.  
 
-All source code and documents provided here are subject to copyright(c) by the CNR and UNITUS.     
+All source code and documents provided here are subject to copyright(c) by the CNR.     
 
 In case you have copied and/or modified the **3D-CMCC-FEM** code overall, even in small parts of it, you may not publish data from it using the name **3D-CMCC-FEM** or any **3D-CMCC-FEM** variants unless you have either coordinated your usage and their changes with the developers listed below, or publish enough details about your changes so that they could be replicated.
 
@@ -27,10 +27,10 @@ Alessio Ribeca
 Daniela Dalmonech  
 Gina Marano  
 
-*Forest Ecology Laboratory* at the National Research Council of Italy (CNR),Institute for Agricultural and Forestry Systems in the Mediterranean (ISAFOM), Via della Madonna Alta, 128, 06128 - Perugia (PG), Italy, and Tuscia University (UNITUS), Department for innovation in biological, agro-food and forest systems (DIBAF), Via S. Camillo de Lellis, snc 01100 - Viterbo, Italy.   
+*Forest Ecology Laboratory* at the National Research Council of Italy (CNR),Institute for Agricultural and Forestry Systems in the Mediterranean (ISAFOM), Via della Madonna Alta, 128, 06128 - Perugia (PG), Italy, and Tuscia University (UNITUS), Department of Agriculture and Forest Sciences (UNITUS-DAFNE), Via S. Camillo de Lellis, snc 01100 - Viterbo, Italy.   
 
 *DISCLAIMER*  
-CNR and UNITUS accept no responsibility for the use of the **3D-CMCC-FEM** in the form supplied or as subsequently modified by third parties. CNR and UNITUS disclaims liability for all losses,damages and costs incurred by any person as a result of relying on this software. Use of this software assumes agreement to this condition of use. Removal of this statement violates the spirit in which **3D-CMCC-FEM** was released by CNR and UNITUS.
+CNR accepts no responsibility for the use of the **3D-CMCC-FEM** in the form supplied or as subsequently modified by third parties. CNR disclaims liability for all losses,damages and costs incurred by any person as a result of relying on this software. Use of this software assumes agreement to this condition of use. Removal of this statement violates the spirit in which **3D-CMCC-FEM** was released by CNR and UNITUS.
 
 For any further information please contact us:  
 -Alessio Collalti (Lab. Head and Model Principal Investigator): alessio.collalti@cnr.it  
@@ -66,6 +66,14 @@ For references on **3D-CMCC-FEM**:
 
 10. *“Plant respiration: Controlled by photosynthesis or biomass?”*, Collalti A., Tjoelker M.G., Hoch G., Mäkelä A., Guidolotti G., Heskel M., Petit G., Ryan M.G., Battipaglia G., Matteucci G., Prentice I.C.. *Global Change Biology*, 26: 1739–1753, https://doi.org/10.1111/gcb.14857, 2020.
 
-11. *“Simulating the effects of thinning and species mixing on stands of oak (Quercus petrea (Matt.) Liebl. / Quercus robur L.) and pine (Pinus sylvestris L.) across Europe"*, Vorspernik E.M., Toigo M., Morin X., Tomao A., Trotta C., Steckel M., Barbati A., Nothdurft A., Trezsch H, del Rio M., Skrzyszewski J., Ponette Q., Lof M., Jansons A., Brazaitis G. *Ecological Modelling*, (in print), https://doi.org/10.1016/j.ecolmodel.2020.109406, 2021.
+11. *“Simulating the effects of thinning and species mixing on stands of oak (Quercus petrea (Matt.) Liebl. / Quercus robur L.) and pine (Pinus sylvestris L.) across Europe"*, Vorspernik E.M., Toigo M., Morin X., Tomao A., Trotta C., Steckel M., Barbati A., Nothdurft A., Trezsch H, del Rio M., Skrzyszewski J., Ponette Q., Lof M., Jansons A., Brazaitis G. *Ecological Modelling*, https://doi.org/10.1016/j.ecolmodel.2020.109406, 2021.
+
+12. *“Feasibility of enhancing carbon sequestration and stock capacity in temperate and boreal European forests via changes to forest management"*, Dalmonech D. , Marano G. , Amthor J., Cescatti A., Lindner M., Trotta C., Collalti A. *Agricultural and Forest Meteorology*,  https://doi.org/10.1016/j.agrformet.2022.109203, 2022.
+
+13. *“Accuracy, realism and general applicability of European forest models"*, Mahnken M., Cailleret M., Collalti A., Trotta C., Biondo C., D'Andrea E., Dalmonech D., Marano G., Mäkelä A., Minunno F., Peltoniemi M., Trotsiuk V., Nadal-Sala D., Sabaté S., Vallet P., Aussenac R., Cameron D.R., Bohn F.J., Grote R., Augustynczik A.L.D., Yousefpour R., Huber N., Bugmann H., Merganikova K., Merganic J., Valent P., Lash-Born P., Hartig F., Vega del Valle I.D., Volkholz J., Gustch M., Matteucci G., Krejza J., Ibrom A., Meesenburg H., Rötzer T., van der Maaten-Theunissen M., van der Maaten E., Reyer C.P.O. *Global Change Biology*,  https://doi.org/10.1111/gcb.16384, 2022.
+
+14. *“Simulating diverse forest management in a changing climate on a Pinus nigra subsp. Laricio plantation in Southern Italy"*, Testolin R., Dalmonech D., Marano G., D’Andrea E., Matteucci G., Noce S., Collalti A. *Science of the Total Envinronment*,  https://doi.org/10.1016/j.scitotenv.2022.159361, 2023.
+
+
 
 see also at: https://www.forest-modelling-lab.com/publications
