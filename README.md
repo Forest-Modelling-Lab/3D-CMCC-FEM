@@ -15,7 +15,7 @@ The **3D-CMCC-FEM** is basically a research tool which is freely available ***on
 
 The **3D-CMCC-FEM** is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. The **3D-CMCC-FEM** code is released under the GNU General Public Licence v3.0 (GPL). See the LICENSE file along with this program for more details.  If not, see http://www.gnu.org/licenses/gpl.html.
 
-This page contains all the code releases developed over the time at CNR on the open source distribution of the computer simulation forest model **3D-CMCC-FEM**. The model has been developed and is maintained by the **Forest Modelling Laboratory** at the National Research Council of Italy, Institute for Agricultural and Forestry Systems in the Mediterranean (CNR-ISAFOM), Perugia, and at the University of Tuscia, Department of Agriculture and Forest Sciences (UNITUS-DAFNE), Viterbo.  
+This page contains all the code releases developed over the time at CNR on the open source distribution of the computer simulation forest model **3D-CMCC-FEM**. The model has been developed and is maintained by the **Forest Modelling Laboratory** at the National Research Council of Italy, Institute for Agricultural and Forestry Systems in the Mediterranean (CNR-ISAFOM), Perugia.  
 
 All source code and documents provided here are subject to copyright(c) by the CNR.     
 
@@ -27,10 +27,10 @@ Alessio Ribeca
 Daniela Dalmonech  
 Gina Marano  
 
-*Forest Ecology Laboratory* at the National Research Council of Italy (CNR),Institute for Agricultural and Forestry Systems in the Mediterranean (ISAFOM), Via della Madonna Alta, 128, 06128 - Perugia (PG), Italy, and Tuscia University (UNITUS), Department of Agriculture and Forest Sciences (UNITUS-DAFNE), Via S. Camillo de Lellis, snc 01100 - Viterbo, Italy.   
+*Forest Ecology Laboratory* at the National Research Council of Italy (CNR),Institute for Agricultural and Forestry Systems in the Mediterranean (ISAFOM), Via della Madonna Alta, 128, 06128 - Perugia (PG), Italy.   
 
 *DISCLAIMER*  
-CNR accepts no responsibility for the use of the **3D-CMCC-FEM** in the form supplied or as subsequently modified by third parties. CNR disclaims liability for all losses,damages and costs incurred by any person as a result of relying on this software. Use of this software assumes agreement to this condition of use. Removal of this statement violates the spirit in which **3D-CMCC-FEM** was released by CNR and UNITUS.
+CNR accepts no responsibility for the use of the **3D-CMCC-FEM** in the form supplied or as subsequently modified by third parties. CNR disclaims liability for all losses,damages and costs incurred by any person as a result of relying on this software. Use of this software assumes agreement to this condition of use. Removal of this statement violates the spirit in which **3D-CMCC-FEM** was released by CNR.
 
 For any further information please contact us:  
 -Alessio Collalti (Lab. Head and Model Principal Investigator): alessio.collalti@cnr.it  
@@ -40,7 +40,7 @@ For any further information please contact us:
 -Elia Vangi: elia.vangi@isafom.cnr.it  
 -Gina Marano: gina.marano@usys.ethz.ch   
 -The model: 3d-cmcc-fem@gmail.com    
--The lab: forest.modelling.lab@gmail.com    
+-The lab: forest.modelling.lab@isafom.cnr.it   
 
 or look at the **3D-CMCC-FEM** web-site:https://www.forest-modelling-lab.com/the-3d-cmcc-model
 
