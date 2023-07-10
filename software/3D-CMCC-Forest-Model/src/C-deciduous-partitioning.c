@@ -263,7 +263,7 @@ void daily_C_deciduous_partitioning (cell_t *const c, const int layer, const int
 				s->value[C_TO_RESERVE]     = npp_to_alloc;
 			}
 		}
-		else
+		else  // npp < 0
 		{
 			if ( s->value[RESERVE_C] >= s->value[MIN_RESERVE_C] )
 			{

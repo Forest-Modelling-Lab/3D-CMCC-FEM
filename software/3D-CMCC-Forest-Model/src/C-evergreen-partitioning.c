@@ -426,6 +426,7 @@ void daily_C_evergreen_partitioning (cell_t *const c, const int layer, const int
 
 		s->value[C_TO_RESERVE]     = npp_to_alloc;
 
+
 #if 0 //TODO to be tested
 		if ( s->value[RESERVE_C] >= s->value[MIN_RESERVE_C] )
 		{

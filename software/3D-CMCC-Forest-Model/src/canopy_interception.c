@@ -124,16 +124,17 @@ void canopy_interception(cell_t *const c, const int layer, const int height, con
 	/**********************************************************************************************************/
 
 	/* update temporary rain and snow */
-	
-	// 5p6: please note that CANOPY_INT_RAIN/SNOW refer to m2 of canopy, hence, in order to compute the average amount of rain 
-	// reaching the lower layer, it should account for the CC_PROJ and TODO the overlapping of classes within the same layer!
+
+	// 5p6: please note that CANOPY_INT_RAIN/SNOW refer to m2 of canopy, hence, in order to compute the average amount of rain
+	// reaching the lower layer, it should account for the CC_PROJ
+	//  TODO the overlapping of classes within the same layer!
 	// this is also important in order to compute ASW at cell level.
-	
-	// TODO check and correct if whithin the same laver overlapping of classe occurrs
-	
+
+	/** TODO **/ //check and correct if whithin the same laver overlapping of classe occurrs
+
 	c->temp_int_rain += s->value[CANOPY_INT_RAIN]* s->value[DAILY_CANOPY_COVER_PROJ];
 	c->temp_int_snow += s->value[CANOPY_INT_SNOW]* s->value[DAILY_CANOPY_COVER_PROJ];
-	
+
 	CHECK_CONDITION( c->temp_int_rain, > , meteo_daily->rain );  // controll on the value at cell/layer-level
         CHECK_CONDITION( c->temp_int_snow, > , meteo_daily->snow );
 
@@ -152,7 +153,7 @@ void canopy_interception(cell_t *const c, const int layer, const int height, con
 		meteo_daily->rain        -= c->temp_int_rain;
 
                 CHECK_CONDITION( meteo_daily->rain , <, 0. );
-                 
+
 		/* compute interceptable snow for lower layers */
 		//c->daily_canopy_snow_int += s->value[CANOPY_INT_SNOW];
 		c->daily_canopy_snow_int += s->value[CANOPY_INT_SNOW]* s->value[DAILY_CANOPY_COVER_PROJ];
@@ -180,7 +181,7 @@ void canopy_interception(cell_t *const c, const int layer, const int height, con
 	/* cumulate */
 	s->value[MONTHLY_CANOPY_INT] += (s->value[CANOPY_INT_RAIN] + s->value[CANOPY_INT_SNOW]);
 	s->value[YEARLY_CANOPY_INT]  += (s->value[CANOPY_INT_RAIN] + s->value[CANOPY_INT_SNOW]);
-	
+
 	// 5p6 convert intercepted canopy snow and water as value per m2 of grid cell
         s->value[CANOPY_INT_SNOW] = s->value[CANOPY_INT_SNOW] * s->value[DAILY_CANOPY_COVER_PROJ];
         s->value[CANOPY_INT_RAIN] = s->value[CANOPY_INT_RAIN] * s->value[DAILY_CANOPY_COVER_PROJ];

@@ -149,10 +149,10 @@ void daily_lai (cell_t *const c, age_t *const a, species_t *const s)
 
 	/* test: computing cell level max_lai */
 	//FIXME in case of multi-class!!!!!
-        // ddalmo note: it should be maybe the max across class-level max value?
-        
+        // note: it should be maybe the max across class-level max value?
+
 	c->max_lai_proj = s->value[MAX_LAI_PROJ];
-	
+
 	s->value[MONTHLY_LAI_PROJ] += s->value[LAI_PROJ];
 
 }

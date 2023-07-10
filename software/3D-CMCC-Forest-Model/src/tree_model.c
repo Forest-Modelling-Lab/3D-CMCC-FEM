@@ -62,7 +62,7 @@
 extern logger_t* g_debug_log;
 //extern soil_settings_t* g_soil_settings;
 extern settings_t* g_settings;
-extern dataset_t* g_dataset;   
+extern dataset_t* g_dataset;
 
 
 //extern const char sz_err_out_of_memory[];
@@ -88,7 +88,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	int species;
         int row = 0;
         int year_dens_fin = 0;  // only used if MANAGEMENT == VAR or VAR1
-	
+
 
 	/* shortcuts */
 	cell_t *c;
@@ -107,7 +107,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 
 	/* check parameters */
 	assert( m );
-    
+
         assert(g_dataset);
 
 	logger (g_debug_log, "\n********* TREE_MODEL_DAILY *********\n");
@@ -120,29 +120,30 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 
 	if ( ! day && ! month )
 	{
-                printf("\n anno, year= %d\n",c->years[year].year); 
-                
+                printf("\n anno, year= %d\n",c->years[year].year);
+
                // ddalmo at some point: let's perform the if statement here
                //if (MANAGEMENT_VAR == g_settings->management || MANAGEMENT_ON == g_settings->management)
                // {
-		/* management blocks */
-	     	forest_management ( c, day, month, year ); 
-             // }  
- 
+		    /* management blocks */
+	     	forest_management ( c, day, month, year );
+             // }
+
 	}
-  
+
 	/****************************************************************************/
-        
+
 	/* annual forest structure (only the year after the first) */
 	if ( ( ! day && ! month && year ) && ( ! c->harvesting ) )
 	{
 
 		annual_forest_structure ( c, year );
+
 	}
 
 	/* daily forest structure*/
 	daily_forest_structure ( c,  meteo_daily);
-      
+
 	/* print forest cell data */
 	print_daily_forest_data ( c );
 
@@ -183,6 +184,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 			c->cell_heights_count ++;
 
 			/* check if tree height class matches with corresponding cell layer */
+
 			if( h->height_z == l->layer_z )
 			{
 				logger(g_debug_log,"*****************************************************************************\n"
@@ -227,7 +229,6 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							logger(g_debug_log,"*****************************************************************************\n"
 									"*                              species = %s                         *\n"
 									"*****************************************************************************\n", s->name);
-
 							/**********************************/
 
 
@@ -251,7 +252,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 								/* compute growth respiration fraction */
 								growth_respiration_frac ( a, s );
 							}
-                                                        
+
 							/***************************************************************/
 
 							/* print at the beginning of simulation forest class data */
@@ -361,59 +362,62 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							/* C productivity */
 							carbon_productivity                ( c, height, dbh, age, species );
 
+
+
 							if ( c->doy == ( IS_LEAP_YEAR ( c->years[year].year ) ? 366 : 365) )
 							{
-  
+
 #if 1    //set to 1 . set to 0 only for testing purpose
-                                                 
-                                                            
-                                                             //if ( g_settings->management == MANAGEMENT_VAR || g_settings->management == MANAGEMENT_VAR1) 
-                                                             if ( g_settings->management == MANAGEMENT_VAR) 
+
+
+                                                             //if ( g_settings->management == MANAGEMENT_VAR || g_settings->management == MANAGEMENT_VAR1)
+                                                             if ( g_settings->management == MANAGEMENT_VAR)
                                                              {
 
-                                                              // compute last year of available stand density data 
-                                                              // (in the stand.txt file each layer or class has to have 
+                                                              // compute last year of available stand density data
+                                                              // (in the stand.txt file each layer or class has to have
                                                               // the same number of stand density data)
-                                                               
+
                                                               row = g_dataset->rows_count ;
 
-                                                              year_dens_fin = g_dataset->rows[row-1].year_stand;     
+                                                              year_dens_fin = g_dataset->rows[row-1].year_stand;
 
-                                                    
-                                                                 if (c->years[year].year > year_dens_fin)   
+
+                                                                 if (c->years[year].year > year_dens_fin)
                                                                  {
+
 
                                                                    /* Mortality based on tree Age (LPJ) */
 									age_mortality        ( c, height, dbh, age, species );
-                                                                    
+
 
 							           /* Mortality based on stochasticity */
 									stochastic_mortality ( c, height, dbh, age, species );
 
                                                                   }
-                                                   
-                                                             }  
-                                                             else       
-                                                             {         // with management ON or OFF always compute mortality 
-                
+
+                                                             }
+                                                             else
+                                                             {         // with management ON or OFF always compute mortality
+
 									/* Mortality based on tree Age (LPJ) */
 									age_mortality        ( c, height, dbh, age, species );
-                                                                    
+
 
 									/* Mortality based on stochasticity */
 									stochastic_mortality ( c, height, dbh, age, species );
 							      }
-                                                         
+
 
 #else   // this option is wrongly formulated: to be excluded. use only for testing
 
-								/* ISIMIP: exclude age mortality function when management is "var" 
+								/* ISIMIP: exclude age mortality function when management is "var"
 								//  and year < year start management */
 								if ( c->years[year].year > g_settings->year_start_management && g_settings->management != MANAGEMENT_VAR )
 								{
 									/* Mortality based on tree Age (LPJ) */
 									age_mortality        ( c, height, dbh, age, species );
-                                                                    
+
 
 									/* Mortality based on stochasticity */
 									stochastic_mortality ( c, height, dbh, age, species );
@@ -423,10 +427,11 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 
 							/* allocate daily carbon */
 
+
 							// carbon_allocation       ( c, a, s, day, month, year ); // old subroutine
 
 							//note: this is basically the new function in version v.5.5
-							carbon_allocation_new   ( c, a, s, day, month, year );   
+							carbon_allocation_new   ( c, a, s, day, month, year );
 
 							/* allocate daily nitrogen */
 							nitrogen_allocation     ( c, s, day, month, year );
@@ -454,7 +459,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 								/* water use efficiency */
 								water_use_efficiency  ( c, height, dbh, age, species, day, month, year );
 
-                                                               // update canopy cover projection considering the     
+                                                               // update canopy cover projection considering the
                                                                // number of living trees after natural mortality
 
                                                                  if ( c->doy == ( IS_LEAP_YEAR ( c->years[year].year ) ? 366 : 365) )
@@ -537,6 +542,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	/* ok */
 	return 1;
 }
+
 /*****************************************************************************************************************/
 /*****************************************************************************************************************/
 /*****************************************************************************************************************/

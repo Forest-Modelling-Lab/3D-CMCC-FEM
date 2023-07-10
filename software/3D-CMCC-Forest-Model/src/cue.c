@@ -8,6 +8,8 @@
 #include <stdlib.h>
 #include <math.h>
 #include "wue.h"
+#include "cue.h"
+
 #include "common.h"
 
 /* Last cumulative days in months */

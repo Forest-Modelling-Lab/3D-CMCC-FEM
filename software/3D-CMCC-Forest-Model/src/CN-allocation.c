@@ -228,6 +228,7 @@ void carbon_allocation_new ( cell_t *const c, age_t *const a, species_t *const s
 	/***************************************************************************************/
 	/***************************************************************************************/
 
+
 	/* stem sapwood */
 	s->value[STEM_SAPWOOD_C]          += ( s->value[C_TO_STEM] - s->value[C_STEM_SAPWOOD_TO_CWD] );
 
@@ -343,7 +344,7 @@ void carbon_allocation_new ( cell_t *const c, age_t *const a, species_t *const s
 	/*** update live carbon mass pools **/
 	s->value[TOT_LIVEWOOD_C]           = ( s->value[STEM_LIVEWOOD_C] + s->value[CROOT_LIVEWOOD_C] + s->value[BRANCH_LIVEWOOD_C] );
 	s->value[TOT_SAPWOOD_C]            = ( s->value[STEM_SAPWOOD_C]  + s->value[CROOT_SAPWOOD_C]  + s->value[BRANCH_SAPWOOD_C] );
-
+  
 	/*** update heartwood and dead carbon mass pools **/
 	s->value[STEM_HEARTWOOD_C]         = s->value[STEM_C]   - s->value[STEM_SAPWOOD_C];
 	s->value[STEM_DEADWOOD_C]          = s->value[STEM_C]   - s->value[STEM_LIVEWOOD_C];
@@ -374,6 +375,7 @@ void carbon_allocation_new ( cell_t *const c, age_t *const a, species_t *const s
 	/*********************************************************************/
 
 	//Note: this should not happen from the the 5.6
+	// however if this happen, better to sort out why
 	  
 	if ( s->value[STEM_SAPWOOD_C] <  ZERO )
 	{
@@ -395,10 +397,11 @@ void carbon_allocation_new ( cell_t *const c, age_t *const a, species_t *const s
 		printf("Warning: s->value[CROOT_SAPWOOD_C] < ZERO\n");
 	}
 	if ( s->value[CROOT_HEARTWOOD_C] < ZERO )
-	{
+	{	
 		s->value[CROOT_HEARTWOOD_C]   = 0.;
 		s->value[CROOT_SAPWOOD_C] = s->value[CROOT_C];
 		printf("Warning: s->value[CROOT_HEARTWOOD_C] < ZERO\n");
+
 	}
 
 	if ( s->value[BRANCH_SAPWOOD_C] <  ZERO )

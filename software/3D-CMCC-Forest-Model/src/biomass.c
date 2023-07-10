@@ -475,4 +475,5 @@ void tree_biomass_remove (cell_t *const c, const int height, const int dbh, cons
 		CHECK_CONDITION ( c->cwd_2N + c->cwd_3N + c->cwd_4N , == , c->cwd_N + eps );
 	}
 
+
 }

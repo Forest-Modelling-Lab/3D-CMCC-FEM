@@ -17,7 +17,7 @@
 
 extern settings_t* g_settings;
 extern logger_t* g_debug_log;
-extern dataset_t* g_dataset;   
+extern dataset_t* g_dataset;
 
 //extern int MonthLength [];
 //extern int MonthLength_Leap [];
@@ -69,7 +69,7 @@ int annual_forest_structure(cell_t* const c, const int year)
         int year_dens_fin = 0;  // only used if MANAGEMENT == VAR or VAR1
 
          //ddalmo
-       assert(g_dataset); 
+       assert(g_dataset);
 
 	species_t *s;
 
@@ -90,7 +90,7 @@ int annual_forest_structure(cell_t* const c, const int year)
 	// TODO
 	// ALESSIOR
 	// check if following code is useful!
-     
+
 	/*
 	assert( ! c->tree_layers_count );
 
@@ -238,7 +238,7 @@ int annual_forest_structure(cell_t* const c, const int year)
 			{
 				for ( dbh = 0; dbh < c->heights[height].dbhs_count; ++dbh )
 				{
-                                               
+
 
 					for ( age = 0; age < c->heights[height].dbhs[dbh].ages_count ; ++age )
 					{
@@ -328,6 +328,7 @@ int annual_forest_structure(cell_t* const c, const int year)
 						{
 							crown_allometry ( c, height, dbh, age, species );
 							canopy_cover    ( c, height, dbh, age, species );
+
 						}
 					}
 				}
@@ -343,7 +344,7 @@ int annual_forest_structure(cell_t* const c, const int year)
 	logger(g_debug_log, "*compute layer canopy cover within each layer (layer level)*\n\n");
 
         // note; this variable is however not used. Yet it should be considered in the canopy radiative subroutine (e.g. competition when overlapping classes)
-	
+
 	for (layer = c->tree_layers_count - 1; layer >= 0; --layer)
 	{
 		for ( height = 0; height < c->heights_count ; ++height )
@@ -373,9 +374,9 @@ int annual_forest_structure(cell_t* const c, const int year)
 
 	/** check if layer cover exceeds maximum layer cover **/
 
-    
+
 	logger(g_debug_log, "*check if layer cover exceeds maximum layer cover*\n\n");  // ddalmo: where it is checked?
-                                                                                        // the DBHDC_eff is already computed fixing the maximum layer cover!
+                                                                                        // the DBHDC_eff is already computed fixing the maximum layer cover of the SPECIES!!
 
 	for (layer = c->tree_layers_count - 1; layer >= 0; --layer)
 	{
@@ -405,20 +406,20 @@ int annual_forest_structure(cell_t* const c, const int year)
 
 							/*************** self-thinning ****************/
 
-     
-                                                        // compute last year of available stand density data 
-                                                        // note: in case of multi-class forest, for each class 
+                                                        // compute last year of available stand density data
+                                                        // note: in case of multi-class forest, for each class
                                                         // the same number of stand observations has to be provided
                                                         row = g_dataset->rows_count ;
 
-                                                        year_dens_fin = g_dataset->rows[row-1].year_stand; 
+                                                        year_dens_fin = g_dataset->rows[row-1].year_stand;
 
 
-                                                        if ( c->years[year].year > year_dens_fin ) 
+                                                        if ( c->years[year].year > year_dens_fin )
 							  {
-								if ( s->value[DBHDC_EFF] <= s->value[DBHDCMIN] )
+								if ( s->value[DBHDC_EFF] <= s->value[DBHDCMIN] )   //ddalmo may23: test include if layer_cc_proj > max_layer_cc_proj
 								{
 									self_thinning_mortality ( c, layer, year );
+
 								}
 							  }
 
@@ -426,12 +427,14 @@ int annual_forest_structure(cell_t* const c, const int year)
 							/*if ( ( ( c->years[year].year >= g_settings->year_start_management ) && ( MANAGEMENT_VAR == g_settings->management ) )
 									|| ( MANAGEMENT_OFF == g_settings->management ) )
 							{
-                                                
+
 								if ( s->value[DBHDC_EFF] <= s->value[DBHDCMIN] )
 								{
 									self_thinning_mortality ( c, layer, year );
 								}
 							} */
+
+
 						}
 					}
 				}

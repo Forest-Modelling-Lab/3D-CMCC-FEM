@@ -30,7 +30,7 @@ void crown_allometry (cell_t *const c, const int height, const int dbh, const in
 	s = &a->species[species];
 
 	/*** Crown allometry ***/
-	
+
 	// NOTE: in the version 5.6 no information of crown geoemtry are used
 
 	logger(g_debug_log,"\n*CROWN ALLOMETRY for %s *\n", s->name);
@@ -52,12 +52,18 @@ void crown_allometry (cell_t *const c, const int height, const int dbh, const in
 	logger(g_debug_log, "-Crown Projected Area     = %f m2\n", s->value[CROWN_AREA_PROJ]);
 
 
+        // 5p6 check for self_pruning   : in one simulations i was having a strange result!
+        /**FIXME**/
+        //
+
+#if 1
 	/* check if current canopy cover has been reduced */
 	if ( s->counter[YOS] && ( old_crown_proj > s->value[CROWN_AREA_PROJ] ) )
 	{
 		/******** self pruning ********/
 		self_pruning ( c, height, dbh, age, species, old_crown_proj, s->value[CROWN_AREA_PROJ] );
 	}
+#endif
 
 	/* Crown Height */
 	/* it mainly follows SORTIE-ND approach in the form of x = a*tree height^c */
@@ -193,7 +199,7 @@ void allometry_power_function(cell_t *const c)
 						s->value[STEMCONST] = pow (e, -3.51 + 1.27 * s->value[MASS_DENSITY]);
 					}
 					logger(g_debug_log, "-Stem const = %f\n", s->value[STEMCONST]);
-                                  
+
 				}
 			}
 		}

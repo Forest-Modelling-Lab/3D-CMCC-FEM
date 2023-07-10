@@ -191,7 +191,7 @@ static const char msg_usage[]						=	"\nusage:\n"
 		"    -k co2 concentration file (i.e.: -k co2_conc.txt)\n"
 		"    -q management scheme file stored into input directory (i.e.: -q management.txt)\n"
 		"    -n ndep file (i.e.: -n ndep.txt)\n"
-		"    -u benchmark path\n"
+		"    -u benchmark path\n"   // not used in the current version
 		"    -h print this help\n"
 		;
 
@@ -1849,6 +1849,7 @@ int main(int argc, char *argv[]) {
 					}
 					/************************************************************************/
 					/* pruning */
+					// v 5p6 not yet active
 					if ( g_settings->prunings_count ) {
 						int i;
 
