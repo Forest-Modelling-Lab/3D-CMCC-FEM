@@ -58,7 +58,7 @@ void dbhdc_function ( cell_t *const c, const int layer, const int height, const 
 	logger(g_debug_log,"-DBHDC (old)         = %f\n", s->value[DBHDC_EFF]);
 
 	 //ddalmo
-     printf("DBHDC_EFF  previous   = %f\n", previous_dbhdc_eff);
+     //printf("DBHDC_EFF  previous   = %f\n", previous_dbhdc_eff);
 
 	temp_crown_area     = ( s->value[MAX_LAYER_COVER] * g_settings->sizeCell ) / ( c->tree_layers[layer].layer_density * g_settings->sizeCell );
 	logger(g_debug_log,"-temp_crown_area     = %f\n", temp_crown_area);
