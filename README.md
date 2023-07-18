@@ -22,10 +22,9 @@ All source code and documents provided here are subject to copyright(c) by the C
 In case you have copied and/or modified the **3D-CMCC-FEM** code overall, even in small parts of it, you may not publish data from it using the name **3D-CMCC-FEM** or any **3D-CMCC-FEM** variants unless you have either coordinated your usage and their changes with the developers listed below, or publish enough details about your changes so that they could be replicated.
 
 The **3D-CMCC-FEM** has been developed by:  
-Alessio Collalti    
-Alessio Ribeca  
-Carlo Trotta        
+Alessio Collalti  
 Daniela Dalmonech  
+Alessio Ribeca     
 Gina Marano       
 
 
@@ -36,7 +35,6 @@ CNR and UNITUS accept no responsibility for the use of the **3D-CMCC-FEM** in th
 
 For any further information please contact us:  
 -Alessio Collalti (Lab. Head and Model Principal Investigator): alessio.collalti@cnr.it  
--Carlo Trotta: trottacarlo@unitus.it  
 -Daniela Dalmonech: daniela.dalmonech@isafom.cnr.it  
 -Alessio Ribeca: a.ribeca@unitus.it  
 -Gina Marano: ginamarano.forest@gmail.com  
@@ -59,7 +57,7 @@ For references on **3D-CMCC-FEM**:
 
 6. *“Climate change mitigation by forests: a case study on the role of management on carbon dynamics of a pine forest in South Italy”* Pellicone G., Scarascia-Mugnozza G., Matteucci G., Collalti. A. *PhD Thesis*, University of Tuscia, 2018.
 
-7. *“Thinning can reduce losses in carbon use efficiency and carbon stocks in managed forests under warmer climate”. A. Collalti , C. Trotta, T. Keenan, A. Ibrom, B. Bond-Lamberty, B. R. Grote, S. Vicca, C.P.O. Reyer, M. Migliavacca, F. Veroustraete, A. Anav, M. Campioli, E. Scoccimarro, E. Grieco, A. Cescatti, G. Matteucci. *Journal of Advances in  Modelling Earth Systems*, 10(10):2427-2452, https://doi.org/10.1029/2018MS001275, 2018.
+7. *“Thinning can reduce losses in carbon use efficiency and carbon stocks in managed forests under warmer climate”*. A. Collalti , C. Trotta, T. Keenan, A. Ibrom, B. Bond-Lamberty, B. R. Grote, S. Vicca, C.P.O. Reyer, M. Migliavacca, F. Veroustraete, A. Anav, M. Campioli, E. Scoccimarro, E. Grieco, A. Cescatti, G. Matteucci. *Journal of Advances in  Modelling Earth Systems*, 10(10):2427-2452, https://doi.org/10.1029/2018MS001275, 2018.
 
 8. *“The sensitivity of the forest carbon budget shifts between different parameters and processes along stand development and climate change”*, Collalti A., Thornton P. E., Cescatti A., Rita A., Nolè A., Borghetti M., Trotta C., Ciais P., Matteucci G..*Ecological Applications*, 29(2):1-18, https://doi.org/10.1002/eap.1837, 2019.
 
