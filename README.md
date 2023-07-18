@@ -67,7 +67,11 @@ For references on **3D-CMCC-FEM**:
 
 10. *“Plant respiration: Controlled by photosynthesis or biomass?”*, Collalti A., Tjoelker M.G., Hoch G., Mäkelä A., Guidolotti G., Heskel M., Petit G., Ryan M.G., Battipaglia G., Matteucci G., Prentice I.C.. *Global Change Biology*, 26: 1739–1753, https://doi.org/10.1111/gcb.14857, 2020.
 
-11. *“Simulating the effects of thinning and species mixing on stands of oak (Quercus petrea (Matt.) Liebl. / Quercus robur L.) and pine (Pinus sylvestris L.) across Europe"*, Vorspernik E.M., Toigo M., Morin X., Tomao A., Trotta C., Steckel M., Barbati A., Nothdurft A., Trezsch H, del Rio M., Skrzyszewski J., Ponette Q., Lof M., Jansons A., Brazaitis G. *Ecological Modelling*, (in print), https://doi.org/10.1016/j.ecolmodel.2020.109406, 2021.
+11. *“Simulating the effects of thinning and species mixing on stands of oak (Quercus petrea (Matt.) Liebl. / Quercus robur L.) and pine (Pinus sylvestris L.) across Europe"*, Vorspernik E.M., Toigo M., Morin X., Tomao A., Trotta C., Steckel M., Barbati A., Nothdurft A., Trezsch H, del Rio M., Skrzyszewski J., Ponette Q., Lof M., Jansons A., Brazaitis G. *Ecological Modelling*, https://doi.org/10.1016/j.ecolmodel.2020.109406, 2021.
+
+14. *“Feasibility of enhancing carbon sequestration and stock capacity in temperate and boreal European forests via changes to forest management"*, Dalmonech D. , Marano G. , Amthor J., Cescatti A., Lindner M., Trotta C., Collalti A.. *Agricultural and Forest Meteorology*, 327: 109203, https://doi.org/10.1016/j.agrformet.2022.109203, 2022.
+
+15. *“Simulating diverse forest management in a changing climate on a Pinus nigra subsp. Laricio plantation in Southern Italy"*, Testolin R., Dalmonech D., Marano G., D’Andrea E., Matteucci G., Noce S., Collalti A.. *Science of the Total Environment*, 857: 159361, https://doi.org/10.1016/j.scitotenv.2022.159361, 2023.
 
 see also at: https://www.forest-modelling-lab.com/publications
 
