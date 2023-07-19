@@ -1,0 +1,333 @@
+---
+title: "Appendix C - Performing Sensitivity Analysis on LPJ-GUESS with `Rlpj`"
+author: "Attached to 'Rlpj: an R package facilitating sensitivity analysis, calibration and forward simulations with the LPJ-GUESS dynamic vegetation model' "
+output: pdf_document
+---
+
+```{r,echo=FALSE,message=FALSE,warning=FALSE}
+library(knitr)
+opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE)
+opts_knit$set(root.dir = '~/Desktop/RlpjPaper/Appendix/TestCode')
+```
+In this script, we will show how to perform a sensitivity analysis with Rlpj. It is assumed that you have run the code in Appendix A and B. Alternatively, install the package as shown in Appendix A, set your working directory to `TestCode` and load the SingleRuns.Rdata file provided in the `ProvidedResults/` folder.
+
+```{r}
+rm(list=ls())
+library(Rlpj)
+load("ProvidedResults/SingleRuns.Rdata")
+```
+
+We use the results on *F. sylvatica* created during the previous simulation as reference data for the sensitivity, and we set both C biomass and LAI as target variables. We therefore investigate how much the variation of the parameter values will impact on the model outputs for C biomass and LAI.
+The simulations settings will remain the same as in Appendix B throughout the analysis, only they need to be specific to your working directory.
+
+```{r}
+typeList <- c("cmass","lai")
+calibList <- typeList
+species <- c("Fag_syl")
+referenceData<-results_Fag@dataTypes
+for (i in calibList) referenceData[[i]]<-referenceData[[i]][,species]
+
+mainDir <- file.path(getwd(),"LPJrunTest")
+LPJsettings$file.co2  <-  file.path(mainDir, "crudata", "co2_1765-2500_RCP3.txt")
+LPJsettings$file.cru <- file.path(mainDir, "crudata", "cru_1901_2006.bin")
+LPJsettings$file.cru.misc <- file.path(mainDir, "crudata", "cru_1901_2006misc.bin")
+LPJsettings$file.ndep <- file.path(mainDir, "crudata", "GlobalNitrogenDeposition.bin")
+LPJsettings$file.temp <- file.path(mainDir,"temp.nc")
+LPJsettings$file.prec <- file.path(mainDir,"prec.nc")
+LPJsettings$file.insol <- file.path(mainDir,"rad.nc")
+```
+
+To run a sensitivity analysis, we also need more information on the parameters we are going to test (not only default values, but also their possible range of variation). `Rlpj` includes a table of possible parameter ranges collected from the existing literature, specific to this particular exercise, in the `TestCode` folder:
+
+```{r}
+LPJparameters <- read.csv("LPJParameters_calibrate.csv",  sep = ";")
+LPJparameters <- LPJparameters[LPJparameters$type == "calibrate",]
+```
+
+As before, we modify the parameter values to include only *F. sylvatica* in our simulations:
+
+```{r}
+parameterStandard <- as.matrix(LPJparameters$Standard_Values_test)
+rownames(parameterStandard) <- LPJparameters$name
+spp <- getParameterList(scaleLPJ, list = F)
+spp <- as.matrix(spp[rownames(spp)[grep("_include", rownames(spp))],])
+speciesRows <- c()
+for (i in species) speciesRows <- c(speciesRows,grep(i,rownames(spp)) )
+spp[-speciesRows, 1] <- 0
+parameterStandard <- rbind(parameterStandard, spp)
+```
+
+The next step is to add noise to the reference data, to avoid the possibility (however unlikely) that a parameter combination will yield exactly the same results. We do this by adding 2 additional parameters, responsible for the error around the variables we consider.
+
+```{r}
+for (i in calibList) assign(x = paste("errpar",i,sep="_"),
+                            value = sd(referenceData[[i]],na.rm=T)/20)
+for (i in ls()[grep("errpar",ls())]) {x <- get(i)
+                                      names(x) <- i
+                                      assign(i,x)
+}
+```
+
+And we add the error parameters to our parameter table:
+
+```{r}
+for (i in ls()[grep("errpar",ls())]) {errp <- get(i)
+                                      err <- as.data.frame(matrix(NA,ncol=ncol(LPJparameters)))
+                                      colnames(err) <- colnames(LPJparameters)
+                                      err$name <- names(errp)
+                                      err$Standard_Values_test <- as.numeric(errp)
+                                      err$Range_min_test <- err$Standard_Values_test-err$Standard_Values_test*.5
+                                      err$Range_max_test <- err$Standard_Values_test+err$Standard_Values_test*.5
+                                      LPJparameters <- rbind(LPJparameters,err)
+                                      
+}
+```
+
+Here we create the new reference data, including the noise:
+
+```{r}
+referenceDataNoise <- referenceData
+for (i in calibList){
+  referenceDataNoise[[i]]  <-  referenceData[[i]] + c(rnorm(length(referenceData[[i]]),mean = 0, sd =  get(ls()[grep(paste("errpar",i,sep="_"),ls())])))
+  referenceDataNoise[[i]][which(referenceDataNoise[[i]]<0)] <- 0
+}
+```
+## Performing One-at-A-Time (OAT) Sensitivity Analysis
+
+In the following section, we perform a OAT sensitivity analysis, making use of the parallelization options of `Rlpj`.  We will therefore change one parameter at a time and estimate its importance based on the variation in the model outputs.
+
+To do so, we will get several parameter values from each parameter range, and run the model with each one of them. The number of these values is set depending on the number of cores in the computer (leaving one free), and the `LPJsetup` objec is built accordingly:
+
+```{r}
+numCores <- parallel::detectCores()-1
+LPJsetup <- setupLPJParallel(numCores= numCores, clusterType = "SOCK", mainDir=mainDir)
+```
+
+Next we define a target function that will compute the variation in the model outputs in respect to the reference data. Given that the C biomass and LAI do not have consistent units of measurements, we define our target function based on a log-likelihood approach, with the error parameters responsible for its standard deviation:
+
+```{r}
+predict <- function(parms){  
+  assign("parms",parms,envir = .GlobalEnv)
+
+  parDefault <- as.matrix(parameterStandard[!rownames(parameterStandard) %in% colnames(parms), ])
+  parDefault <- do.call(rbind, replicate(nrow(parms), t(parDefault), simplify=FALSE))
+  par <- cbind(parms, parDefault)
+  assign("par",par,envir = .GlobalEnv)
+  x2 <- par[,!colnames(par) %in% colnames(par)[grep("errpar",colnames(par))]]
+  assign("x2",x2,envir = .GlobalEnv)
+  outputLPJ<- runLPJ(x=LPJsetup,
+                     parameterList=x2,
+                     typeList=typeList,
+                     settings=LPJsettings) 
+  likelihoods<-c() 
+  nruns <- nrow(x2)
+  pb <- txtProgressBar(min = 0, max = nruns, style = 3) 
+  for (nparticles in 1:nruns) {
+    output<-outputLPJ[[nparticles]]@dataTypes
+    output<-output[calibList]   
+    sumll<-NA
+    for (out in calibList) {
+      predicted <- as.data.frame(subset(output[[out]][,species]))
+      observed <- as.data.frame(subset(referenceDataNoise[[out]]))
+      llobj <- merge(observed,predicted,all=FALSE,by="row.names")[,-1]
+      res <- llobj[,2]-llobj[,1]
+      err <- as.numeric(par[nparticles,grep(out,colnames(par))])
+      x<-dnorm(res,sd=err,log=T)
+      sumll <- sum(sumll,x,na.rm = TRUE)   
+    }
+    likelihoods[nparticles]<- sumll
+    setTxtProgressBar(pb, nparticles)
+  }
+  close(pb)
+  
+  result <- vector("list",length = length(calibList)+1)
+  names(result) <- c("response",calibList)
+  result[["response"]] <- likelihoods  
+  
+  for (i in calibList) {
+    values <- lapply(outputLPJ, function(x){    
+      value <-x[i][,species]
+      return(value)
+    }) 
+    values <- Reduce(cbind, values)
+    values <- t(data.matrix(values))
+    result[[i]] <- values
+  }
+  return(result)
+}
+```
+
+And we create a utility function for plotting the results:
+
+```{r}
+plotResponse <- function(response, parameters, responseName, ylim, ylab){
+  parameterName <- unique(response[, "parameter"])
+  plot(response[, c(parameterName, responseName)],
+       main = parameterName, 
+       type = "l", col = "red",
+       xlab =paste("parameter values (n =",steps, ")", sep=""),
+       ylab = ylab,  ylim  = ylim)
+}
+```
+
+We then run the sensitivity analysis:
+
+```{r,warnings=FALSE,message=FALSE,results='hide',eval=FALSE}
+parameterNames <- LPJparameters$name 
+parameterData <- vector("list", length (parameterNames))
+names(parameterData) <- parameterNames
+
+steps <- numCores
+for (i in 1:length(parameterNames)){
+  
+  parameterTest <- as.matrix(seq(LPJparameters[LPJparameters$name== parameterNames[i],
+                                               "Range_min_test"],
+                                 LPJparameters[LPJparameters$name== parameterNames[i], "Range_max_test"],
+                                 length.out = steps))
+  colnames(parameterTest) <- parameterNames[i]
+  
+  response <- try(predict(parameterTest), T)
+  if ('try-error' %in% class(response)){
+    cat("Error!!");cat("\n")
+    response <- list(response = NA)
+  }
+  
+  parameter <- as.character(parameterNames[i])
+  parameterData[[i]] <- cbind(parameter, parameterTest, response$response )
+  colnames(parameterData[[i]])[3] <- "response"
+  
+}
+
+rangeResponse <- range(unlist(lapply(parameterData, function(x){  
+  rangeResponse <- range(as.numeric(as.character(x[,c("response")])), na.rm = T)  
+})))
+```
+
+The parallelization of the OAT analysis greatly speeds up the calculations, but requires an appropriate number of cores to cover the entire parameter range in a satisfactory way. We provide the relevant results from a OAT analysis using 13 cores in the `OatResults.Rdata` file in the `TestCode/ProvidedResults` folder. 
+
+```{r}
+load("ProvidedResults/OatResults.Rdata")
+```
+
+We plot the results, to check the variation of the response (in this case, the likelihood value) along the parameter range 
+
+```{r,fig.height=3,fig.width=7}
+par(mfrow= c(1,2),las=0,mar=c(7,4,3,2))
+for (i in 1:length(parameterData)){
+  plotResponse(response = parameterData[[i]], parameters =  LPJparameters,
+               responseName = "response",  ylim = rangeResponse,  ylab = "likelihood")
+}
+```
+
+## Performing Morris Sensitivity Analysis
+
+In the following section, we will couple `Rlpj` to the `sensitivity` R-package, to perform a global sensitivity analysis with the `morris` method.
+
+```{r}
+library(sensitivity)
+```
+
+The `morris` method has different requirements in respect to the OAT approach applied in the previous section. We therefore need to define a different target function, still based on the log-likelihood approach to quantify the variation in the model outputs:
+
+```{r}
+predict <- function(parms){  
+  assign("parms",parms,envir = .GlobalEnv)
+  parDefault <- as.matrix(parameterStandard[!rownames(parameterStandard) %in% colnames(parms), ])
+  parDefault <- do.call(rbind, replicate(nrow(parms), t(parDefault), simplify=FALSE))
+  par <- cbind(parms, parDefault)
+  assign("par",par,envir = .GlobalEnv)
+  x2 <- par[,!colnames(par) %in% colnames(par)[grep("errpar",colnames(par))]]
+  assign("x2",x2,envir = .GlobalEnv) 
+  outputLPJ<- runLPJ(x=LPJsetup,
+                     parameterList=x2,
+                     typeList=typeList,
+                     settings=LPJsettings)  
+  likelihoods<-c() 
+  nruns <- nrow(x2)
+  pb <- txtProgressBar(min = 0, max = nruns, style = 3)  
+  for (nparticles in 1:nruns) {
+    output<-outputLPJ[[nparticles]]@dataTypes
+    output<-output[calibList]   
+    sumll<-NA
+    for (out in calibList) {
+      predicted <- as.data.frame(subset(output[[out]][,species]))
+      observed <- as.data.frame(subset(referenceDataNoise[[out]]))
+      llobj <- merge(observed,predicted,all=FALSE,by="row.names")[,-1]
+      res <- llobj[,2]-llobj[,1]
+      err <- as.numeric(par[nparticles,grep(out,colnames(par))])
+      x<-dnorm(res,sd=err,log=T)
+      sumll <- sum(sumll,x,na.rm = TRUE)      
+    }
+    likelihoods[nparticles]<- sumll
+  }
+ likelihoods <- data.matrix(likelihoods)
+ return(likelihoods)
+}
+```
+
+Next, we define the settings for the sensitivity analysis (for details, see `?morris`)
+
+```{r}
+levels <- 20
+grid.jump <- round(levels/2)
+N <- 200
+
+factors <- as.character(LPJparameters$name)
+
+binf <- as.numeric(LPJparameters$Range_min_test)
+bsup <- as.numeric(LPJparameters$Range_max_test)
+
+design <- list(type="oat", levels=levels, grid.jump=grid.jump)
+
+```
+
+The total number of model runs is `N (length(factors)+1)`. We can now run the analysis:
+
+```{r,warnings=FALSE,message=FALSE,results='hide',eval=F}
+morrisOut <- morris(model=predict, factors = factors, r=N, design=design, binf, bsup, scale = TRUE) 
+
+mu <- apply(morrisOut$ee, 3, function(M){   apply(M, 2, mean) }) 
+mu.star <- apply(abs(morrisOut$ee), 3, function(M){   apply(M, 2, mean) })
+sigma <- apply(morrisOut$ee, 3, function(M){   apply(M, 2, sd) })
+
+df <- cbind(mu.star, sigma)
+colnames(df) <- c("mu.star", "sigma")
+df <- df[order(df[,1]),]
+
+```
+
+Given the amount of time required to run a full sensitivity analysis with the `morris` method, we provide the relevant results in the `MorrisResults.Rdata` file in the `TestCode/ProvidedResults` folder. 
+
+```{r,eval=T}
+load("ProvidedResults/MorrisResults.Rdata")
+```
+
+We now plot the results of the sensitivity analysis:
+
+```{r,fig.height=7}
+par(mar=c(16,4,1,1),cex.axis=.7)
+M <- t(df)
+barplot(M, beside=T, 
+        col=c("black","red"), border=c("black","red"),
+        las=2,names.arg=colnames(M))
+
+legend("topleft", c(expression(sigma),expression(mu*"*")), pch=15, 
+col=c("red","black"), 
+       bty="n",cex=1)
+```
+
+Or we can build a plot more similar to the default `morris` plot. We build our own plot, since the default plot from `morris` can be sometimes overpopulated with parameters and labels:
+
+```{r,fig.height=5,fig.width=5}
+par(mfrow=c(1,1))
+df <- as.data.frame(df)
+plot(df, ylim = c(0, max(df$sigma)+0.25*max(df$sigma)), xlim = c(0, max(df$mu.star)+0.25*max(df$mu.star)), main = "Morris SA", pch = 3, ylab = "sigma", xlab = "mu.star",cex=1)
+text(df[c(TRUE,FALSE),], row.names(df)[c(TRUE,FALSE)], cex= .7, pos=4, col="black", offset =0.5)
+text(df[c(FALSE, TRUE),], row.names(df)[c(FALSE, TRUE)], cex= .7, pos=3, col="black", offset = 0.5)
+```
+
+And we store all results for the subsequent analysis:
+
+```{r}
+save.image("Sensitivity.Rdata")
+```

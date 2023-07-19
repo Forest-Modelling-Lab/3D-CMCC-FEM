@@ -1,0 +1,13 @@
+# tabella di corrispondenza tra i nomi delle variabili prodotte dal modello e quelle del db profound
+"model variable","model variable description","profound dataset","profound variable","profound variable type","profound variable units","profound variable description","profound variable comments","profound variable source"
+"YEAR","Year of simulation","STAND","year","INTEGER","YYYY","Year with century as decimal number (0000-9999)","NA","local site data provider"
+"HEIGHT","Average height of a species (m)","STAND","heightArith_m","REAL","m","Arithmetic mean height","NA","local site data provider"
+"DBH","Average diameter at breast height of a species (cm)","STAND","dbhArith_cm","REAL","cm","Arithmetic mean diameter","NA","local site data provider"
+"SPECIES","The species considered","STAND","species","TEXT","adimensional","Species name","NA","local site data provider"
+"MaxLAI","Maximum of LAI (maximum reached LAI) (m^2/m^2)","STAND","lai","REAL","adimensional","Leaf Area Index","local site data provider"
+"STEM_C","Stem carbon pool (tC/cell)","STAND","stemBiomass_kgha","REAL","kg ha-1","Stem biomass","NA","local site data provider"
+"AGB","Aboveground Biomass pool (tC/cell)","STAND","aboveGroundBiomass_kgha","REAL","kg ha-1","Above ground biomass","NA","local site data provider"
+"LIVETREE","Number of trees (n tree /sizecell)","STAND","density_treeha","REAL","tree ha-1","Number of tree per ha","NA","local site data provider"
+"BRANCH_C","Branch carbon pool (tC/cell)","STAND","branchesBiomass_kgha","REAL","kg ha-1","Branches biomass","NA","local site data provider"
+"MAX_LEAF_C","Maximum Current Leaf carbon pool (tC/cell)","STAND","foliageBiomass_kgha","REAL","kg ha-1","Foliage biomass","NA","local site data provider"
+"BGB","Belowground Biomass pool (tC/cell)","STAND","rootBiomass_kgha","REAL","kg ha-1","Root biomass","NA","local site data provider"

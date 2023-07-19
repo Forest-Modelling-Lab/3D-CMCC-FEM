@@ -1,0 +1,652 @@
+
+August 2019
+
+User’s Guide for 3D-CMCC-CNR FEM, Version 5.x.x for 64 bit 
+Source:
+Alessio Collalti
+Alessio Ribeca
+Sergio Marconi 
+Carlo Trotta
+Corrado Biondo
+_________________________________________________________
+
+CNR-ISAFOM
+National Research Council of Italy
+Institute for Agricultural and Forestry Systems in the Mediterranean(ISAFOM)
+Via Cavour, 4-6 I-87036 Rende (CS) Italy
+
+_________________________________________________________
+
+General notes on 3D-CMCC-CNR (Coupled Model Carbon Cycle) FEM, Version 5.x
+3D-CMCC-CNR Forest Ecosystem Model (FEM) is a software model that simulates the storage and fluxes of water, carbon and energy, within the
+vegetation, litter, and soil components of a forest ecosystem. 3D-CMCC-CNR is primarily a research tool, and many
+versions have been developed for particular purposes. The CNR and the University of Tuscia (Viterbo) maintain benchmark code versions for
+public release, and update these benchmark versions periodically as new knowledge is gained on the research front.
+The code and executables accompanying this file represent the most recent benchmark version.
+IMPORTANT NOTE: COPYING
+The 3D-CMCC-CNR FEM, Version 5.x.x code is copyrighted. You may not make copies of any part of the code for distribution to
+any other person or group. However, anyone can get a free copy of the code from Alessio Collalti (alessio.collalti@cnr.it).
+The purpose for this restriction is to keep track of who has a specific version of the public release benchmark code, so that
+we can let our user community know when there are updates. We will appreciate your cooperation with this policy.
+Referencing 3D-CMCC-CNR FEM:
+If you use 3D-CMCC-CNR FEM in your research, we request that you include the following acknowledgement in the relevant
+manuscripts:
+
+3D-CMCC-CNR FEM, Version 5.x.x was provided by Alessio Collalti, from:
+
+-National Research Council of Italy, Institute for Agricultural and Forestry Systems in the Mediterranean (ISAFOM), 
+-University of Tuscia (Viterbo),
+
+Please also reference the following citation as the most recent and complete description of the current model version:
+
+v.4.0
+"A process-based model to simulate growth and dynamics in forests with complex structure: evaluation and use of 3D-CMCC Forest Ecosystem Model
+in a deciduous forest in Central Italy"
+A. Collalti, L. Perugini, T. Chiti, A. Nolè, G. Matteucci, R. Valentini
+Ecological modeling 2014
+
+v.5.1.1
+"Validation of 3D-CMCC Forest Ecosystem Model (v.5.1) against eddy covariance data for 10 European forest sites"
+A. Collalti, S. Marconi, A. Ibrom, C. Trotta, A. Anav, E. D’Andrea, G. Matteucci, L. Montagnani, B. Gielen, I. Mammarella, T. Grünwald, 
+A. Knohl, F. Berninger, Y. Zhao, R. Valentini and M. Santini, Geosci. Model Dev., 9, 479-504, 2016
+http://www.geosci-model-dev.net/9/479/2016, doi:10.5194/gmd-9-479-2016
+
+v.PSM (not more developed)
+“The role of Respiration in estimation of the net Carbon cycle: coupling soil Carbon dynamics and canopy turnover in a novel 
+version of 3D-CMCC Forest Ecosystem Model”, S. Marconi, T. Chiti, R. Valentini, A. Collalti. Forests, 8, 220, doi:10.3390/f8060220, 2017.
+
+v.5.3.3-ISIMIP
+“Protocollo di simulazione, calibrazione e validazione del modello 3D-CMCC-CNR FEM: il caso studio del bacino altamente strumentato del Bonis in Calabria”, 
+A. Collalti, Biondo C., Buttafuoco G., Maesano M., Caloiero T., Lucà F., Pellicone G., Ricca N., Salvati R., Veltri A., Scarascia Mugnozza. G., Matteucci G.; 
+Forest@, 14: 247-256, doi: 10.3832/efor2368-014, 2017
+
+“Thinning can reduce losses in carbon use efficiency and carbon stocks in managed forests under warmer climate”. 
+A. Collalti , C. Trotta, T. Keenan, A. Ibrom, B. Bond-Lamberty, B. R. Grote, S. Vicca, C.P.O. Reyer, M. Migliavacca, 
+F. Veroustraete, A. Anav, M. Campioli, E. Scoccimarro, E. Grieco, A. Cescatti, G. Matteucci. 2018. 
+Journal of Advances in Modelling Earth Systems, doi.org/10.1029/2018MS001275
+
+v.5.5
+"The sensitivity of the forest carbon budget shifts between different parameters and processes along stand development and climate change”. 
+A. Collalti, P. E. Thornton, A. Cescatti, A. Rita, A. Nolè, M. Borghetti, C. Trotta, P. Ciais, G. Matteucci. 2018, Ecological Applications, doi.org/110.1002/eap.1837
+
+“Plant respiration: controlled by photosynthesis or biomass?” 
+Collalti A., Tjoelker M.G., Hoch G., Mäkelä A., Guidolotti G., Heskel M., Petit G., Ryan M.G., Matteucci G., Battipaglia G.,
+Prentice I.C. bioRxiv, doi: https://doi.org/10.1101/705400 
+
+
+If you have made any significant modifications to the code, please mention them in your manuscript.
+This User’s Guide is the only documentation released with 3D-CMCC-CNR FEM. The code itself contains extensive internal
+documentation, and users with specific questions about the algorithms used to estimate particular processes should read
+the comments in the appropriate source code files. The file treemodel.c contains references to all the core science routines,
+and is a good starting point for this kind of inquiry. The files matrix.c defines the data structures that are used to
+pass information between the process modules, and includes both a short text description and the units for each internal
+variable. If you have questions about the code, appropriate model applications, possible programming errors, etc.,
+please read this entire guide first, then feel free to contact:
+
+Alessio Collalti (alessio.collalti@cnr.it)
+Alessio Ribeca (alessio.ribeca@unitus.it)
+Carlo Trotta (trotca@unitus.it)
+Corrado Biondo (corrado.biondo@cmcc.it)
+
+
+CODE CHARACTERISTIC
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+3D-CMCC-CNR FEM is primarily developed on UNIX-Linux, Ubuntu 1x.x with Eclipse IDE Platforms and is compiled using GNU GCC 4.7.2
+
+IMPORTANT: BE SURE TO EXECUTE 3D-CMCC-CNR FEM ON A LINUX MACHINE WITH ARCHITECTURE X86_64 (64 bit), otherwise you firstly need to
+rebuild code to obtain the object files needed for runs.
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+Usage:
+3D-CMCC-CNR FEM is a command line program, and its behaviour is controlled by several command line options:
+
+	-i input path (i.e.: -i c:\input\directory\)
+	-o output path (i.e.: -o c:\output\directory\)
+	-p parameterization directory (i.e.: -i c:\parameterization\directory\)
+	-d dataset filename stored into input directory (i.e.: -d input.txt)
+	-m met filename list stored into input directory (i.e.: -m 1999.txt,2003.txt,2009.txt)
+	-s soil filename stored into input directory (i.e.: -s soil.txt or soil.nc)
+	-t topo filename stored into input directory (i.e.: -t topo.txt or topo.nc)
+	-c settings filename stored into input directory (i.e.: -c settings.txt)
+	-k co2 concentration file (i.e.: -k co2_conc.txt)
+	-n ndep file (i.e.: -n ndep.txt)
+	-r output vars list (i.e.: -r output_vars.lst)
+	-u benchmark path
+	-h print this help
+	
+
+-i	this is not a mandatory parameter. if not used, input files will be searched where program is.
+
+-o	this is not a mandatory parameter. if not used, output files will be created where program is.
+
+-p	this is not a mandatory parameter. if not used, parameterization file will be searched where program is.
+
+-d	mandatory parameter. This file will be searched in input path, if specified.
+	It can be an ASCII or NETCDF file. You can use '//' for comment it.
+	ASCII file must have following header, separated by a comma :
+	
+		Year,x,y,Age,Species,Management,N,Stool,AvDBH,Height,Wf,Wrc,Wrf,Ws,Wbb,Wres,Lai
+		
+	Please see [SPECIES] section and [MANAGEMENT] section to check allowed values.
+	Same columns name applies to variables name in NETCDF version of file.
+	
+-m	mandatory parameter. This file will be searched in input path, if specified.
+	It can be an ASCII or NETCDF file.
+	You can specify a .lst ( list ) file if you have separated values.
+	List file must contains name of NETCDF files to import, one row for variable i.e. :
+	
+		6_WS_f_2000_2001_123_456.nc
+		6_TOT_PREC_2000_2001_123_456.nc
+		6_SWC_2000_2001_123_456.nc
+		6_TMAX_2M_2000_2001_123_456.nc
+		6_TMIN_2M_2000_2001_123_456.nc
+		6_TSOIL_2000_2001_123_456.nc
+		6_VPD_2000_2001_123_456.nc
+		6_ET_2000_2001_123_456.nc
+		6_LAI_2000_2001_123_456.nc
+		6_RADS_2000_2001_123_456.nc
+	
+	ASCII file must have following header, separated by a tab (/t) or comma(,):
+	
+		Year	Month	n_days	Rg_f	Ta_f	Tmax	Tmin	Rh_f	Ts_f	Precip	SWC	LAI	ET	WS_f
+		
+	Same columns name applies to variables name in NETCDF version of file.
+	
+-s	mandatory parameter. This file will be searched in input path, if specified.
+	It can be an ASCII or NETCDF file.
+	
+	ASCII file must have following header, separated by a comma :
+
+	X,Y,LANDUSE,LAT,LON,CLAY_PERC,SILT_PERC,SAND_PERC,SOIL_DEPTH,FR,FN0,FNN,M0,SN,...,....
+	
+	Please see [LANDUSE] section to check allowed values.
+	Same columns name applies to variables name in NETCDF version of file.
+	
+-t	mandatory parameter. This file will be searched in input path, if specified.
+	It can be an ASCII or NETCDF file.
+	
+	ASCII file must have following header, separated by a comma :
+	
+	X,Y,ELEV
+	
+	Same columns name applies to variables name in NETCDF version of file.
+	
+-c	mandatory parameter. This file will be searched in input path, if specified.
+	It must be an ASCII file. You can put comment using '//' token;
+	The file must contains following rows:
+	
+	SITENAME Soroe
+	VERSION f                           //Must be 'f' for FEM version or 'b', for BGC version for FOREST LANDUSE
+	SPATIAL u                           //Must be 's' or 'u', spatial or unspatial
+	TIME d                              //Must be 'm' or 'd', monthly or daily
+	SPINUP off                          //Must be 'on' or 'off'
+	SPINUP_YEARS 6000                   //Number of years for spinup
+	SCREEN_OUTPUT off                   //Must be  'on' or 'off'
+	DEBUG_OUTPUT off                    //Must be 'on' or 'off'
+	DAILY_OUTPUT on                     //Must be 'on' or 'off'
+	MONTHLY_OUTPUT on                   //Must be 'on' or 'off'
+	ANNUAL_OUTPUT on                    //Must be 'on' or 'off'
+	YEAR_START 1996                     //Starting year simulation
+	YEAR_END 2099                       //Ending year simulation
+	SOIL_OUTPUT off                     //Must be 'on' or 'off'
+	NETCDF_OUTPUT off                   //Must be 'on' or 'off'
+	CO2_mod on                          //Must be 'on' or 'off'
+	CO2_trans var                       //Must be 'on' or 'off' or 'var'
+	YEAR_START_CO2_FIXED 2000           //When Co2_trans = var, year at which fix [CO2]
+	Ndep_fixed on                       //Must be 'on' or 'off'
+	Q10_fixed off                        //Q10 temperature acclimatation Must be 'on' or 'off'
+	regeneration off                    //Must be 'on' or 'off'
+	management on                       //Must be 'on' ,'off', 'var' (with 'var' model  gets stand density from stand data when available), 'var1' (with 'var1' model gets also changes in dbh and height)
+	management_type                     //optional parameter. default is 0. 0 = BAU, 1 = local
+	YEAR_START_MANAGEMENT 2005          //First year of management
+	Progn_Aut_Resp on                   //Prognostic autotrophic respiration, Must be 'on' or 'off', if off Y values are used
+	SIZECELL 100                        //Its value must be within 10 and 100 (unity measure is meter: 10 = 10x10 = 100m^2) 
+	Y 0.48                              //Fixed_Aut_Resp_rate Assimilate use efficiency-Respiration rate-GPP/NPP
+	CO2CONC 368.865                     //CO2 concentration refers to 2000 as ISIMIP PROTOCOL
+	CO2_INCR 0.01                       //1% increment
+	INIT_FRAC_MAXASW 1                  //0.1 Minimum fraction of asw based on maxasw (wilting point) (unchanged)
+	TREE_LAYER_LIMIT 3                  //define differences among tree heights in meters classes to define number of layers in unspatial version
+	SOIL_LAYER 1                        //define soil layer/s to consider
+	MAX_LAYER_COVER 1.2
+	THINNING_REGIME  Above              // thinning regime (Above or Below)
+	REPLANTED_SPECIES Fagussylvatica    // species name of replanted trees (mandatory)
+	REPLANTED_MANAGEMENT T              // (T) management of replated trees (should be only T)(mandatory)
+	REPLANTED_TREE 10000                // number of replanted trees (mandatory)
+	REPLANTED_AGE 1                     // (yr) age of replanted trees (mandatory)
+	REPLANTED_AVDBH 1                   // (cm) average dbh of replanted trees (mandatory)
+	REPLANTED_LAI 0                     // (m2/m2) lai for replanted trees (mandatory for evergreen, useless for deciduous)
+	REPLANTED_HEIGHT 1.3                // (m) height of replanted trees (mandatory)
+	REPLANTED_WS 0                      // (tDM/ha) stem biomass of replanted trees (optional)
+	REPLANTED_WCR 0                     // (tDM/ha) coarse root biomass of replanted trees (optional)
+	REPLANTED_WFR 0                     // (tDM/ha) fine root biomass of replanted trees (optional)
+	REPLANTED_WL 0                      // (tDM/ha) leaf biomass of replanted trees (optional for evergreen if LAI!= 0, otherwise useless)
+	REPLANTED_WBB 0                     // (tDM/ha) branch biomass of replanted trees (optional)
+	REGENERATION_SPECIES none           // NOT USED it comes from species that produces seeds
+	REGENERATION_MANAGEMENT T           // (T) management of replated trees (should be only T)(mandatory)
+	REGENERATION_N_TREE -9999           // number of replanted trees (mandatory) (NOT USED)
+	REGENERATION_AGE 1                  // (yr) age of regeneration trees (mandatory) (SHOULD BE ALWAYS 1)
+	REGENERATION_AVDBH 0.1              // (cm) average dbh of regeneration trees (mandatory)
+	REGENERATION_LAI 0.0                // (m2/m2) lai for regeneration trees (mandatory for evergreen, useless for deciduous)
+	REGENERATION_HEIGHT 1.2             // (m) height of replanted trees (mandatory) 
+	REGENERATION_WS 0                   // (tDM/ha) stem biomass of regeneration trees (optional)
+	REGENERATION_WCR 0                  // (tDM/ha) coarse root biomass of regeneration trees (optional)
+	REGENERATION_WFR 0                  // (tDM/ha) fine root biomass of regeneration trees (optional)
+	REGENERATION_WL 0                   // (tDM/ha) leaf biomass of regeneration trees (optional for evergreen if LAI!= 0, otherwise useless)
+	REGENERATION_WBB 0                  // (tDM/ha) branch biomass of regeneration trees (optional)
+	NO_SPREADSHEET on                   // (optional) if 'on', use crazy delimiters (tab and spaces) instead of a simple comma on output files. for people that are unable to use a spreadsheet.
+	
+-k	mandatory parameter only if CO2_trans in settings file is setted on 'on' or 'var'.
+	This file will be searched in input path, if specified.
+	It must be an ASCII file and must have following header, separated by a tab (/t) :
+	
+		year	CO2_ppm
+		
+-n	mandatory parameter only if Ndep_fixed in settings file is setted on 'off'
+	This file will be searched in input path, if specified.
+	It must be an ASCII file and must have following header, separated by a tab (/t) :
+	
+		year	ndep
+		
+-r	not mandatory. Use it if you want export variables values inside a NETCDF file.
+	You can specify more variables per row using a comma as delimiter.
+	Each variable must have "daily_", "monthly_" or "annual_" prefix. i.e. :
+
+		daily_gpp, Annual_GPP
+		daily_ar
+		monthly_ar
+		annual_npp
+		
+	In previous example, daily values for GPP and AR are exported.
+	Monthly values for AR are exported and annual values for GPP and NPP are exported.
+	Files will be created in output path if any or where program is.
+		
+
+[SPECIES]
+
+Following species can be used on relative column inside an ASCII dataset (without indexes)
+Please note that you must use their indexes if you use a NETCDF file.
+
+0,Fagussylvatica
+1,Castaneasativa
+2,Fraxinusangustifolia
+3,Larixdecidua
+4,Piceaabies
+5,Pinussylvestris
+6,Quercuscerris
+7,Quercusilex
+8,Quercusrobur
+9,quercus_deciduous
+10,quercus_evergreen
+
+Species file must contains folliwing content:
+
+//Fagus_sylvatica parameterization file
+LIGHT_TOL                  3  //4 = very shade intolerant (cc = 90%), 3 = shade intolerant (cc = 100%), 2 = shade tolerant (cc = 110%), 1 = very shade tolerant (cc = 120%)
+PHENOLOGY                0.1  //PHENOLOGY 0.1 = deciduous broadleaf, 0.2 = deciduous needle leaf, 1.1 = broad leaf evergreen, 1.2 = needle leaf evergreen 
+ALPHA                  0.057  //Canopy quantum efficiency (molC/molPAR) (0.057) Peltionemi et al., 2012, (0.05) from Williams 199, (0.056) Rotzer et al., 2010
+EPSILONgCMJ             0.69  //Light Use Efficiency  (gC/MJ)(used if ALPHA is not available) Peltionemi et al., 2012,
+GAMMA_LIGHT           0.0025  // Empirical parameter for Light modifiers 
+K                0.65 //0.60  //Extinction coefficient for absorption of PAR by canopy 0.71 for F. sylvatica Vitale et al., 2012, 0.5 from Williams 1996, 0.65 Hoffmann 1995, 0.45 Forrester et al., 2014
+ALBEDO           0.13 //0.15  //Albedo, 0.15 (varying from 0.13-0.17) from OTTO et al., BGS 2014
+INT_COEFF                0.3  //precip interception coefficient for F. sylvatica fom Tatarinov
+SLA_AVG0             80 //60  //Average Specific Leaf Area m^2/KgC (juvenile) sunlit/shaded leaves for Fagus s.60  Adriaenssens et al., 2011; 27.8 to 48 from Pietsch 2005, 35 for Tatarinov et al., 2006
+SLA_AVG1                  30  //Average Specific Leaf Area m^2/KgC (mature) sunlit/shaded leaves for Fagus s. Holscher et al., 2004; 27.8 to 48 from Pietsch 2005, 35 for Tatarinov et al., 2006
+TSLA                     150  //Age at which SLA_AVG = (SLA_AVG1 + SLA_AVG0 )/2 for Fagus s. Forrester et al., 2017
+SLA_RATIO                  2  //(DIM) ratio of shaded to sunlit projected SLA  for F. sylvatyica from Mollicone et al., 2002 , 2.0 from Pietsch 2005
+LAI_RATIO                  2  //(DIM) all-sided to projected leaf area ratio for F. sylvatyica from Mollicone et al., 2002 , 2.0 from Pietsch 2005
+FRACBB0                 0.20  //Branch and Bark fraction at age 0
+FRACBB1                0.125  //Branch and Bark fraction for mature stands (0.125 from Damesin et al., 2003)(0.1 from Hoffmann 1995)
+TBB                       20  //Age at which fracBB = (FRACBB0 + FRACBB1 )/ 2
+RHO0                    0.64  //Minimum Basic Density for young Trees tDM/m^3 0.72 Bouriaud et al., 2004, 0.64 ettore, 0.68 Seidl et al., 2012, 0.58 Bartelink 1997
+RHO1                    0.64  //Maximum Basic Density for young Trees tDM/m^3 0.79 Bouriaud et al., 2004, 0.64 ettore, 0.68 Seidl et al., 2012, 0.58 Bartelink 1997
+TRHO                     100  //Age at which rho = (RHOMIN + RHOMAX )/2
+FORM_FACTOR            0.433  //Form factor Seidl et al., 2012
+COEFFCOND        0.08 //0.06  //Define stomatal responsee to VPD in mbar see Pietsch et al., 2005
+BLCOND                  0.01  //Canopy Boundary Layer conductance see 0.01 for stomatal Pietsch et al., 2005
+MAXCOND                0.005  //Maximum Stomatal Conductance in m/sec 0,005 for Tatarinov et al., 2006, 0.006 Pietsch, 0.003 Breuer et al., 2003
+CUTCOND                6e-05  //Cuticul conductance in m/sec for F sylvatica 0.000006 Tatarinov et al., 2006
+MAXAGE                   400  //Determines rate of "physiological decline" of forest
+RAGE                    0.95  //Relative Age to give fAGE = 0.5
+NAGE                      10  //Power of relative Age in function for Age
+GROWTHTMIN                 0  //Minimum temperature for growth 5  Rasse et al 2001 0 from Williams 1996, -2 Hoffmann 1995
+GROWTHTMAX           40 //35  //Maximum temperature for growth 40 from Williams 1996 35 from calibration
+GROWTHTOPT                20  //Optimum temperature for growth 19.4 Rasse et al 2001, 20 from Lyr & Garbe, 1994, 22 Hoffmann 1995
+GROWTHSTART              100  //(5 °C)average temperature or (GDD) thermic sum for starting growth in °C 130 ettore with t base = 5°C, 130 from Hoffmann et al., 1995 
+MINDAYLENGTH              12  //minimum day length for fagus from ettore, 12 through satellite images
+SWPOPEN                -0.34  //Leaf water potential: start of reduction for Fagus sylvatica -0.6 Mollicone et al., 2002, -0.34 Tatarinov et al., 2006
+SWPCLOSE                -2.2  //Leaf water potential: complete reduction for Fagus sylvatica -2.3 Mollicone et al., 2002, -2.2 Tatarinov et al., 2006
+OMEGA_CTEM               0.8  //ALLOCATION PARAMETER control the sensitivity of allocation to changes in water and light availability
+S0CTEM         0.35 //  0.40 //0.45  //PARAMETER CONTROLLING ALLOCATION TO STEM/MINIMUM RATIO TO C TO STEM
+R0CTEM         0.35 //  0.30 //0.25  //PARAMETER CONTROLLING ALLOCATION TO ROOT/MINIMUM RATIO TO C TO ROOTS
+F0CTEM                  0.30  //PARAMETER CONTROLLING ALLOCATION TO FOLIAGE
+FRUIT_PERC             0.025  //fraction of annual NPP allocated for reproduction see 0.05 Fernandez-Martinez et al., 2016
+CONES_LIFE_SPAN            0  //Life span for cones (yr)
+FINE_ROOT_LEAF         0.545  //allocation new fine root C:new leaf (ratio) 1.4 see Mollicone et al 2002, 0.545 see Pietsch et al 2005, 1.1 Tatarinov
+STEM_LEAF                3.8  //allocation new stem C:new leaf (ratio) 3.8 pietsch - 1 see Mollicone et al 2002, 2.71 Tatarinov
+COARSE_ROOT_STEM       0.115  //allocation new coarse root C:new stem (ratio) 0.36 see Mollicone et al 2002 0.15 Tatarinov
+LIVE_TOTAL_WOOD  0.13 //0.15  //new live C:new total wood (ratio) 0.15 for deciduous P. Thornton pers. comm. (about 13%), 0.154 from Pietsch et al., 2015 20% Proportion of living cells in trunks for F. sylvatica from Dufrene et al., 2005, 20.6% Ceschia etal 2002
+N_RUBISCO               0.01  //Fraction of leaf N in Rubisco (ratio)
+CN_LEAVES                 27  //CN of leaves (kgC/kgN) 27 for Tatarinov et al., 2006 20.3 for F. sylvatica from Mollicone et al., 2002, 19.52 ettore, 18.6 Campioli, 19.67 Guidolotti
+CN_FALLING_LEAVES         44  //CN of leaf litter (kgC/kgN) 38 for F. sylvatica from Mollicone et al., 2002, 
+CN_FINE_ROOTS             72  //CN of fine roots (kgC/kgN) 72 for Tatarinov et al., 2006 112 for F. sylvatica from Mollicone et al., 2002, 38.28 ettore, 9., 45 Campioli
+CN_LIVEWOOD               70  //CN of live woods (kgC/kgN) 70 for Tatarinov et al., 2006 48.2 for F. sylvatica from Mollicone et 92,5 for dbl Bond Lamberty 2006
+CN_DEADWOOD              550  //CN of dead woods (kgC/kgN)  for F. sylvatica from Pietsch et al., 2005 112 ettore
+LEAF_LITT_LAB_FRAC      0.12  //leaf litter labile fraction for F. sylvatica from Cenciala & Tatarinov 2006
+LEAF_LITT_CEL_FRAC      0.56  //leaf litter cellulose fraction for F. sylvatica from Cenciala & Tatarinov 2006
+LEAF_LITT_LIGN_FRAC     0.32  //leaf litter lignin fraction for F. sylvatica from Cenciala & Tatarinov 2006
+FROOT_LITT_LAB_FRAC     0.30  //fine root litter labile fraction for F. sylvatica from Cenciala & Tatarinov 2006
+FROOT_LITT_CEL_FRAC     0.45  //fine root litter cellulose fraction for F. sylvatica from Cenciala & Tatarinov 2006
+FROOT_LITT_LIGN_FRAC    0.25  //fine root litter lignin fraction for F. sylvatica from Cenciala & Tatarinov 2006
+DEADWOOD_CEL_FRAC       0.75  //dead wood litter cellulose fraction for F. sylvatica from Cenciala & Tatarinov 2006
+DEADWOOD_LIGN_FRAC      0.25  //dead wood litter lignin fraction for F. sylvatica from Cenciala & Tatarinov 2006
+BUD_BURST                 15  //days of bud burst at the beginning of growing season (only for deciduous)
+LEAF_FALL_FRAC_GROWING   0.2  //proportions of the growing season of leaf fall from Pietsch et al., 2005
+LEAF_FINEROOT_TURNOVER     1  //Average yearly fine root turnover rate Rasse et al 2001
+LIVEWOOD_TURNOVER        0.7  //Annual yearly livewood turnover rate 
+SAPWOOD_TURNOVER         0.7  //Annual yearly sapwood turnover rate 
+DBHDCMAX                0.50  //Low Density Condes & Sterba 2005
+DBHDCMIN                0.14  //High Density from ettore
+SAP_A          0.778 //0.674  //a value 0.674 from Kostner, 0.778 Gebauer et al., 2008, for Fagus sylvatica
+SAP_B          1.917 //1.992  //b value 1.992 from Kostner, 1.917 Gebauer et al., 2008,for Fagus sylvatica
+SAP_LEAF         4040 //5400  //leaf area/sapwood max ratio in pipe model 5400 McDowell et al 2002, 1850 from Williams 1996, 3310. 3410 Bartelink 1997, 1998 , 2100 from Kostner, 3310 from ettore
+SAP_WRES                0.11  //Sapwood-Reserve biomass ratio gTNC/100gDM 0.043 in January for fagus see Barbaroux 2002 0.11 for deciduous 0.05 for evergreen see Schwalm and Ek, 2004 Ecological Modelling
+STEMCONST_P           0.2837  //a parameter for F. sylvatica for allometric equation from ettore, 0.70 Seidl et al., 2012
+STEMPOWER_P            2.134  //b parameter for F. sylvatica for allometric equation from ettore, 3.00 Seidl et al., 2012
+CRA                       35  //Chapman-Richards Maximum height H_MAX (48) for f. sylvatica Seidl et al., 2012 , 30.6323 for F. sylvatica Pilli et al., 2016
+CRB                    0.038  //Chapman_Richards b parameter, 0.04343 for F. sylvatica Pilli et al., 2016
+CRC                    1.104  //Chapman_Richards c parameter, 1.17241 for F. sylvatica Pilli et al., 2016
+HDMAX_A                323.6  //A parameter for Height (m) to Base diameter (m) ratio MAX Seidl et al., 2012
+HDMAX_B               -0.368  //B parameter for Height (m) to Base diameter (m) ratio MAX Seidl et al., 2012
+HDMIN_A                100.9  //A parameter for Height (m) to Base diameter (m) ratio MIN Seidl et al., 2012
+HDMIN_B               -0.243  //B parameter for Height (m) to Base diameter (m) ratio MIN Seidl et al., 2012
+CROWN_FORM_FACTOR          0  //Crown form factor (0 = cylinder, 1 = cone, 2 = sphere)
+CROWN_A                  0.3  //Crown relationship with tree height for Fagus sylvatica from Petritan et al., 2009
+CROWN_B                    1  //Crown exponential with tree height (Fixed to 1 as in Sorie-ND)
+MAXSEED                20000  //numero massimo semi prodotti dalla pianta (da TREEMIG) (NOT USED)
+MASTSEED                   5  //ricorrenza anni di pasciona (da TREEMIG) (NOT USED)
+WEIGHTSEED                 7  //peso frutto in g FOR Quercus sp (Bernetti) 3.5 from Williams 1996 
+SEXAGE                    30  //Age at Sexual Maturity FOR Quercus sp (per Bernetti 75)
+GERMCAPACITY            0.70  //Geminability (Lischke H. & Loffler T. J.) 0.286 from Williams 1996 
+ROTATION                 140  //Forest Rotation for harvesting for F. sylvatica ISIMIP protocol see Schuetz 2006; Mund et al., 2004; Hein and Dhote 2006; Cescatti and Piutti 1998
+THINNING                  15  //Thinning (years) for F. sylvatica from ISIMIP protocol
+THINNING_REGIME            0  //Thinning regime (0 = above, 1 = below) for Q. robur from ISIMIP protocol
+THINNING_INTENSITY        30  //Thinning intensity (% of Basal Area/N-tree to remove) for F. sylvatica ISIMIP protocol
+MINSTOCKGROW           -9999  // optional parameter used with LOCAL management
+THINNING_80            -9999  // optional parameter used with LOCAL management
+THINNING_60_80         -9999  // optional parameter used with LOCAL management
+THINNING_40_60         -9999  // optional parameter used with LOCAL management
+THINNING_40_20         -9999  // optional parameter used with LOCAL management
+THINNING_0             -9999  // optional parameter used with LOCAL management
+
+[MANAGEMENT]
+
+Following type of management can be used on relative column inside as ASCII dataset (without indexes)
+Please note that you must use their indexes if you use a NETCDF file.
+T is for timber.
+C is for coppice. (not currently working!)
+
+0,T
+1,C
+
+[LANDUSE]
+
+Following type of landuse can be used on relative column inside as ASCII dataset (without indexes)
+Please note that you must use their indexes if you use a NETCDF file.
+F is for forest
+Z is for crop
+
+0,F
+1,Z
+
+RUN THE MODEL
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Be sure to set the right arguments passed to the project 
+
+# Example usage (UNIX OS):
+# Go into into bin directory:
+cd bin
+# Run executable with default parameters:
+./3D_CMCC_Forest_Model -i ../input -o ../output/output.txt -d ../input/1526_962_input.txt -m ../input/1526_962_2007.txt,../input/1526_962_2008.txt -s ../input/site.txt -c ../input/settings.txt
+
+
+the model runs daily starting from the row 0,0 -> 0,n and then starts to process a new row every single day
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+SETTING MODEL:
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+The file "settings.txt" permits to set the model run, choosing:
+- its cell resolution 
+- ...
+- other parameters to run the model.
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+INPUT FILES: OVERVIEW
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+INITIALIZATION DATA (Stand data)
+The first required input file is called the "stand.txt". It provides information about the stand conditions at year "Year"
+(multiple years are allowed)
+Example for a cell resolution of 10x10 meters cell X = 0, Y = 0:
+
+Year,x,y,Age,Species,Management,N,Stool,AvDBH,Height,Lai,
+2000,0,0,42,Fagussylvatica,T,34,0,8.46,9.66,1
+2000,0,0,26,Quercuscerris,T,45,0,7.23,6.42,1
+2000,0,0,11,Quercuscerris,T,54,0,6.4,2.21,1
+..,..,..,..,..,..,..,..,..,..
+..,..,..,..,..,..,..,..,..,..
+..,..,..,..,..,..,..,..,..,..
+..,..,..,..,..,..,..,..,..,..
+..,..,..,..,..,..,..,..,..,..
+2000,150,87,42,Fagussylvatica,T,34,0,8.46,9.66,1
+2000,150,87,26,Quercuscerris,T,45,0,7.23,6.42,1
+2000,150,87,11,Quercuscerris,T,54,0,6.4,2.21,1
+
+The text file must be created following this logic architecture
+- for each tree height class define the number of age classes and their values
+-- for each height->dbh class 
+--- for each height->dbh->age class
+---- for each height->dbh->age->species class define its state variables:
+
+---- Management (T = timber, C = coppice)
+---- N = number of trees per area related to that class
+---- Stool = number of stool per area (only if Management is setted to C)
+---- AvDBH = average diameter at breast height in cm for that class
+---- Height = tree height in meters for that class
+---- Lai = leaf area index (m^2m^-2), (optional only for evergreen)
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+METEOROLOGICAL DATA (e.g. rcp8.5.txt)
+The second required input file is the meteorological data file named using the year of simulation (optionally), 
+(e.g. "2007_2010.txt") containing the daily meteorological data information for that years.
+Years of simulation depends on the number years included in the met file. 
+Some met data are mandatory: temperature, precipitation, humidity, radiation, and number of days of the month at the simulation site.
+Others are optional: Soil Temperature (Ts) and Soil Water Content (SWC).
+If the model runs in "spatial version" daily or monthly LAI values are mandatory otherwise they are not considered in processes.
+
+Each variable must be separated by one tab character.
+
+Model considers leap years, so 29th of February ahs to be included
+
+example for year 2007-200x in daily/unspatial version
+
+Year	Month	n_days	Rg_f	Ta_f	Tmax	Tmin	VPD_f	Ts_f	Precip	SWC	LAI 
+2007	1       1       5.1     -9999   13.1    7.1     0.2     7.8     1       -9999   0
+2007	1       2       6.1     -9999   10.4    5.8     0.2     6.3     0.2     0.27    0
+2007    1       3       6.1     -9999   9.9     3.1     0.2     3.3     0       0.39    0
+2007    1       4       6.1     -9999   10      1.9     0.2     0.5     0       0.2     0
+...
+
+if you don't have optional data set value as -9999
+-9999 = NO DATA
+
+-Units:
+-Rg_f = Mean daily global radiation (MJ m^-2 day^-1)
+-Ta_f = Daily average temperature (°C)
+-Tmax = Daily Maximum temperature (°C)
+-Tmin = Daily Minimum temperature (°C)
+-VPD_f or RH_f = Daily Vapour Pressure Deficit (mbar-hPa) or Relative humidity (%)
+-Ts_f = Daily Soil temperature (°C)
+-Precip = Cumulated daily precipitation (mm day^-1)
+-SWC = Soil water content (mm day^-1)
+-LAI = Leaf area Index (m^2 m^-2) (Only in spatial version)
+-WS_f = Windspeed (m/sec)
+
+
+model gets the value of the previous if a mandatory variable is a -9999 starting from the 2 January of the first year of simulation
+IMPORTANT: for now the model can't hold any -9999 on january the first for the very first year of simulation!!!!
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SPECIES PARAMETERIZATION (e.g. Fagussylvatica.txt)
+The third required input file is the species eco-physiological constants file, named with species names to simulate (e.g."Fagussylvatica.txt").
+It contains parameters such as Quantum canopy efficiency, Specific Leaf Area and allocation ratios for example.
+IMPORTANT: use the same characters used within input.txt file to rename this file.
+
+Comments are allowed in the parameter file. Comments can appear almost anywhere, must begin with two forward slash characters 
+'//', at the end of the line. Example parameter files are provided. Parameter definition and its value must be separated by one tab character.
+
+example:
+ALPHA          0.055	 // Canopy quantum efficiency (molC/molPAR)
+EPSILONgCPAR   0         // Light Use Efficiency  (gC/molPAR)(used if ALPHA is not available) 
+K	           0.60		 // Extinction coefficient for absorption of PAR by canopy 
+.....
+.....
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SOIL PARAMETRIZATION (e.g. soil.txt)
+The fourth required input file is "soil.txt". It contains information about soil and fertility of the test site.
+
+Comments are allowed in the parameter file. Comments can appear almost anywhere, must begin with two forward slash characters 
+'//', at the end of the line. Example parameter files are provided.
+
+In general, the format of parameters file is one parameter per line, with the parameter name being enclosed in double quotes, with a 
+tab character separating the parameter name and its value.
+
+IMPORTANT: Values are referred to the SIZECELL dimensions specified in the setting.txt file (e.g. if SIZECELL = 100 meters -> tC/ha)
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+TOPO PARAMETRIZATION (e.g. topo.txt)
+The fifth required input file is "topo.txt". It contains information about topography of the test site.
+
+Comments are allowed in the parameter file. Comments can appear almost anywhere, must begin with two forward slash characters 
+'//', at the end of the line. Example parameter files are provided.
+
+In general, the format of parameters file is one parameter per line, with the parameter name being enclosed in double quotes, with a 
+tab character separating the parameter name and its value.
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+IMPORTANT: If any required parameter is left unset by all files an error will be written and the program terminates.
+
+OUTPUT FILES: OVERVIEW
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+For each simulation 3D-CMCC-CNR FEM creates or rewrites into the output folder a file named "output.txt".
+In this folder 4 other subfolders based on time scale should created.
+These files contain every result for debug (if necessary) daily, monthly and annual simulations.
+It is also useful to check which model functions have been used. 
+These results can be obtained at stand level or for each type of class level (layer, dbh, age or species class)
+On Unix like platforms, if you need to extrapolate a variable it is advised to use the "grep" tool.
+E.g. open a terminal into the output folder and for the variable NPP type:
+"cat output.txt | grep 'Stand NPP' " if you want to see grep output into terminal;
+"cat output.txt | grep 'Stand NPP' > NPP.txt" if you want to redirect grep output into an NPP file inside the output folder
+IMPORTANT: be sure to use the correct declaration of the output as grep parameter.
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+-ECLIPSE-
+
+To Run the model in Eclipse, using a non subvertioned version of the model simply follow these steps:
+1) save the 3D-CMCC-CNR Forest-Model directory in the path you are going to use as Eclipse Workspace 
+2) open Eclipse (3.7 or higher have been tested to be working) and set your Workspace as the same path in which you've placed the Model's folder
+    - to do so click on File, then "switch Workspace" and click on "Other..."; here input your corrent path
+3) create a new C project (File -> New -> C project)
+4) EXTREMELY IMPORTANT! Call the new project with the very same name of the model directory (e.g. 3D_CMCC_Forest_Model)
+5) click next then finish (use cross GCC compiler as compiler, since is the one tested to work)
+6) you'll be asked to override the previous project having the same specified name; answer ok 
+    (it will use the model's source code, while it seems to replace old compiler with the new project's one)   
+
+HOW TO INCREASE ECLIPSE AVAILABLE HEAP SIZE
+Some JVMs put restrictions on the total amount of memory available on the heap. If you are getting OutOfMemoryErrors while running Eclipse, 
+the VM can be told to let the heap grow to a larger amount by passing the -vmargs command to the Eclipse launcher (http://wiki.eclipse.org/FAQ_How_do_I_increase_the_heap_size_available_to_Eclipse%3F)
+
+follows a short how to:
+1) search for the location of your eclipse.ini file (usually usr/lib/eclipse)
+2) open eclipse.ini using gedit command from terminal as super user (sudo gedit eclipse.ini)
+3) BE EXTREMELY CAREFUL TO FOLLOW ECLIPSE DEVELOPERS RULES 
+    - Each option and each argument to an option must be on its own line.    
+    - All lines after -vmargs are passed as arguments to the JVM, so all arguments and options 
+      for eclipse must be specified before -vmargs (just like when you use arguments on the command-line)
+    - Any use of -vmargs on the command-line replaces all -vmargs settings in the .ini file unless --launcher
+      .appendVmargs is specified either in the .ini file or on the command-line. (doc) 
+4) in line 12 change -Xms40m into -Xms512m  (just replace 40 with 512 without changing the rest of the line)
+5) in line 13 change -Xmx256m into -Xmx1024m  (just replace 256 with 11024 without changing the rest of the line)
+6) save eclipse.ini and restart eclipse
+
+FOR RUN IT INTO ECLIPSE PLATFORM YOU NEED TO INSTALL CDT 8.0.2 OR MORE from:
+http://www.eclipse.org/downloads/download.php?file=/tools/cdt/releases/indigo/dist/cdt-master-8.0.2.zip&mirror_id=189
+
+FOR SUBVERSION YOU NEED TO INSTALL SUBCLIPSE v. 1.8.16 FROM: http://subclipse.tigris.org/archive/subclipse_1.8.16
+
+FOR COLOR THEMES HERE http://eclipse-color-theme.github.com/update
+
+FOR NETCDF FILE YOU NEED TO ADD LIBRARIES within eclipse THROUGH:
+Project->Properties->C/C++ Build->Settings->Cross G++ Linker->Libraries-> in Libraries (-l) add "netcdf"->OK
+
+to prevent error from netcdf.h, open terminal: 
+$ sudo apt-get install netcdf-bin
+$ sudo apt-get install libnetcdf-dev
+
+HOW TO MIGRATE AND CORRECTLY INSTALL ECLIPSE 4.3 or subsequents versions (e.g. Eclipse Mars2)
+
+to make the model work under eclipse4.3 using git you shall follow this guide
+1) download from terminal git and build-essential
+    1.1) sudo apt-get install build-essential
+    1.2) sudo apt-get install git
+    1.3) sudo apt-get install automake (don't know if it is still necessary)
+    1.4) download from ubuntu software center jre 7-8 or jdk (if not installed)
+2) download from eclipse site the most recent version of Eclipse IDE for C/C++ Developers
+    2.1) 32 bit version: http://www.eclipse.org/downloads/download.php?file=/technology/epp/downloads/release/kepler/R/eclipse-cpp-kepler-R-linux-gtk.tar.gz
+    2.2) 64 bit version: http://www.eclipse.org/downloads/download.php?file=/technology/epp/downloads/release/kepler/R/eclipse-cpp-kepler-R-linux-gtk-x86_64.tar.gz
+    2.3) extract the eclipse folder in the directory you want
+3) install egit from Eclipse Marketplace (Help->Eclipse Marketplace)
+
+4) import the project from master [3D-CMCC-CNR FEM master]
+    4.1) click on file->import. then click on Git folder and on projects from git
+    4.2) click on url and then paste this into the url box "https://github.com/3D-CMCC-CNR-FEM/3D-CMCC-CNR.git"
+    4.3) remember to fill authentication boxes with your credentials
+    4.4) import the project
+
+5) create a desktop icon launcher
+    5.1) open "/usr/share/applications"
+    5.2) copy a launcher to desktop (right click on a .destop file in applications, and click on copy to; then copy to desktop or any other folder you like to copy it in
+    5.3) right click on the .desktop file copied to the desktop, click on Properties
+    5.4) FIRSTLY change icon by clicking on the icon picture
+    5.5) then change the name in Eclipse4.3, descritpion in whatever you want, 
+    5.6) in command box enter the path of the directory you have extracted eclipse folder in, followed by "/eclipse)
+    5.7) try if everything has gone allright; if that's so, drag the icon on the unity bar
+
+HOW TO CREATE A NEW BRANCH IN GIT
+
+The 3D-CMCC-CNR FEM project is currently hosted by the repo https://github.com/3D-CMCC-CNR-FEM/3D-CMCC-CNR. It is developed under the GITHUB version control system and password protected. 
+Please ask to Alessio Collalti, Carlo Trotta or Corrado Biondo for access to the source code.
+Git allows you to create a local branch which can be committed and pushed to the repository. To do that follow the following steps:
+1) install git on your machine and the Egit plugin in Eclipse
+2) after importing the git project right click on the project folder, go to "team", then to "switch to" and finally click on "new branch"
+3) name the new branch and then check it out as a new local branch
+4) after that make a modify and commit and push; you should be able to commit that on the repo without any problem; otherwise contact us
+
+HOW TO WORK ON ECLIPSE FOR BASH SCRIPTS
+
+To work in Bash Shell scripts within the ECLISPE IDE you need to install ShellED eclipse package through the web
+
+If you encounter issues with the code, or if you have suggestions on how it could be improved, we’d love to hear from
+you. Also, please send us copies of any manuscripts or reports that include the use of 3D-CMCC-CNR FEM, especially if you
+have compared 3D-CMCC-CNR FEM estimates to measurements. This information helps us to better understand model
+performance and improve it. For questions on how to parameterize or run the code, please read
+everything in this file first.
+
+Contact:
+
+Alessio Collalti
+
+alessio.collalti@cnr.it

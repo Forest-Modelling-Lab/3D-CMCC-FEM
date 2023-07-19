@@ -1,0 +1,111 @@
+May 2016
+User’s Guide for 3D-CMCC-CNR-FEM Bash script version
+Source:
+Alessio Collalti
+Monia Santini
+Alessio Ribeca
+
+euroMediterranean Center on Climate Changes (CMCC)
+Division Impact on Agriculture, Forest and Natural Ecosystems (IAFENT)
+Viale Trieste 127, 01100 Viterbo (VT) Italy
+
+National Research Council of Italy (CNR-ISAFOM)
+Institute for Agricultural and Forestry Systems in the Mediterranean(ISAFOM)
+Via Cavour, 4-6 I-87036 Rende (CS) Italy
+
+University of Tuscia Viterbo, ITALY
+Department for innovation in biological, agro-food and forest systems (DIBAF)
+Via S. Camillo de Lellis snc
+01100 - Viterbo (VT) Italy
+
+General notes on 3D-CMCC-CNR-FEM Bash Script tool,
+3D-CMCC-CNR Forest Ecosystem Model (FEM) is a software bash tool to help user to run 3D-CMCC-CNR C code that simulates
+the storage and fluxes of water, carbon and energy, within the vegetation, litter, and soil components of a forest ecosystem. 
+3D-CMCC-CNR-FEM is primarily a research tool, and many versions have been developed for particular purposes. 
+The CMCC, CNR and the University of Tuscia (Viterbo) maintain benchmark code versions for
+public release, and update these benchmark versions periodically as new knowledge is gained on the research front.
+The bash script and the model executables accompanying this file represent the most recent benchmark version.
+
+IMPORTANT NOTE: COPYING
+The 3D-CMCC-CNR-FEM Basch script and Model C code, Version x.x.x code are both copyrighted. 
+You may not make copies of any part of the code for distribution to
+any other person or group. However, anyone can get a free copy of the code from Alessio Collalti (alessio.collalti@cmcc.it).
+The purpose for this restriction is to keep track of who has a specific version of the public release benchmark code, so that
+we can let our user community know when there are updates. We will appreciate your cooperation with this policy.
+Referencing 3D-CMCC-FEM:
+If you use 3D-CMCC-CNR-FEM in your research, we request that you include the following acknowledgement in the relevant
+manuscripts:
+"3D-CMCC-FEM, Version 5.x.x was provided by Alessio Collalti, euroMediterranean Center for Climate Changes (CMCC) and University of Tuscia Viterbo,"
+Please also reference the following citation as the most recent and complete description of the current model version:
+
+"A process-based model to simulate growth and dynamics in forests with complex structure: evaluation and use of 3D-CMCC Forest Ecosystem Model
+in a deciduous forest in Central Italy"
+A. Collalti, L. Perugini, T. Chiti, A. Nolè, G. Matteucci, R. Valentini
+Ecological modeling 2014
+
+"Validation of 3D-CMCC Forest Ecosystem Model (v.5.1) against eddy covariance data for 10 European forest sites"
+A. Collalti, S. Marconi, A. Ibrom, C. Trotta, A. Anav, E. D’Andrea, G. Matteucci, L. Montagnani, B. Gielen, I. Mammarella, T. Grünwald, 
+A. Knohl, F. Berninger, Y. Zhao, R. Valentini and M. Santini, Geosci. Model Dev., 9, 479-504, 2016
+http://www.geosci-model-dev.net/9/479/2016, doi:10.5194/gmd-9-479-2016
+
+If you have made any significant modifications to the code, please mention them in your manuscript.
+This User’s Guide is the only documentation released with 3D-CMCC-FEM. The code itself contains extensive internal
+documentation, and users with specific questions about the algorithms used to estimate particular processes should read
+the comments in the appropriate source code files. The file treemodel.c contains references to all the core science routines,
+and is a good starting point for this kind of inquiry. The files matrix.c defines the data structures that are used to
+pass information between the process modules, and includes both a short text description and the units for each internal
+variable. If you have questions about the code, appropriate model applications, possible programming errors, etc.,
+please read this entire guide first, then feel free to contact:
+Alessio Collalti (alessio.collalti@cmcc.it)
+Monia Santini (monia.santini@cmcc.it)
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+The 3D-CMCC-CNR-FEM Basch script is intended to help users to run model C code answering to a series of stdin quesions about
+simulations you want to do or if you want simulate a site not included in site list at first of all make sure to create 
+mandatory files to run model.
+
+3D-CMCC-CNR-FEM model is a primarly a stand scale model, script logs a list of possible sites where run the model 
+(if data are enough) or it is allowed to include other sites in this way:
+ 
+ [1] create site folder in /input/ "site name"
+ 
+ >within /input/site_name you need to create:
+ 
+ *****************************************************************************************************************************
+ [a] create in: /input/"sitename"/"stand folder (e.g. /input/Soroe/stand)
+ 
+ -STAND INPUT DATA that refers to forest stand data at initial condition (see model user's guide)
+  signature of stand file needs to be in this way:
+  
+  FILE NAME: "sitename"_"stand"_"year at which stand status refers" (e.g. Soroe_stand_2003.txt)
+ 
+ *****************************************************************************************************************************
+ [b] create in: /input/"sitename"/"meteo" folder (e.g. /input/Soroe/meteo)
+
+ -METEO INPUT DATA: that refers to meteo dataset used in simulation (the first year is the year in which model srats to simulate
+  so be carefull that stand data matches with meteo data". For data to be included in and units see model user's guide
+  
+  FILE NAME: "sitename"_"meteo"_"first_year" (e.g. Soroe_meteo_2003.txt)
+  
+ *****************************************************************************************************************************
+ [a] put in: /input/"sitename"/"stand folder (e.g. /input/Soroe/stand)
+  
+ -SOIL INPUT DATA: that refers to stand soil datased used in simulation
+ 
+  FILE NAME: "sitename"_"soil" (e.g. Soroe_soil.txt)
+ 
+ *****************************************************************************************************************************
+ [a] put in: /input/"sitename"/"stand folder (e.g. /input/Soroe/stand)
+ 
+ -TOPO INPUT DATA: that refers to stand topographic datased used in simulation
+ 
+  FILE NAME: "sitename"_"topo" (e.g. Soroe_topo.txt)
+  
+ *****************************************************************************************************************************
+ [c] put in: /input/"sitename" (e.g. /input/Soroe)
+ -MODEL SETTINGS: that refers to model settings used in simulation
+ 
+  FILE NAME: "sitename"_"settings" (e.g. Soroe_settings.txt)
+  
+ *****************************************************************************************************************************
+ 

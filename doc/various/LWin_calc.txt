@@ -1,0 +1,45 @@
+PARAMETRI FISSI:
+sigma = 0.0019
+T0 = 273.15
+EPS = 0.622
+Tsta = T0
+Tstro = 36
+ESTAR = 611
+A = 17.27
+
+INPUT:
+Ta = Ta_m+T0
+Rg = SWin_m
+VPD = VPD_m * 100
+Rpot = SWin_pot
+
+Ta_qc = Ta_m_qc
+Rg_qc = SWin_m_qc
+VPD_qc = VPD_m_qc
+
+
+
+CALCOLO:
+1) FPAR = MAX(0, (Rg/Rpot));
+
+2) dove Rpot=0 -> FPAR = Media FPAR del giorno (quindi nelle notti mette come FPAR la media dei valori del giorno)
+
+3) se ci sono altri gap -> FPAR = media FPAR dell'anno
+
+4) CCov = MAX(0, MIN(1,(1-((FPAR-0.5)/0.4))))
+
+5) RClo = 1+(0.22*(CCov^2))
+
+6) ESAT = ESTAR*exp(A*((Ta-Tsta)/(Ta-Tstro))) [OCCHIO, exp significa e^ dove "e" è la costante di Eulero (2.7182818)]
+
+7) VP = ESAT-VPD
+
+8) dove VP<0 -> VP = exp(-8) [exp come sopra]
+
+9) EPSA = 0.64 * ((VP/Ta)^0.14285714)
+
+10) LWin_calc = RClo * EPSA * sigma * (Ta^4)
+
+11) dove LWin_calc>1000 o LWin_calc<10 o LWin_calc=NaN -> LWin_calc=-9999
+
+12) LWin_calc_qc = MAX(Ta_qc, Rg_qc, VPD_qc)

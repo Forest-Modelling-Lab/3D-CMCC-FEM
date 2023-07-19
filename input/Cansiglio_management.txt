@@ -1,0 +1,3 @@
+Thinning,2030
+regeneration,2015
+Thinning_int,30
