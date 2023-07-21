@@ -28,7 +28,6 @@ typedef struct {
 	double thermic_sum;                         /* (deg C) daily thermic sum */
 	double rho_air;                             /* (kg/m3) daily air density */
 	double tsoil;                               /* (deg C) daily soil temperature computed by the model */
-	//double Winter_tsoil;
 	double et;                                  /* (mm) daily evapo-transpiration (not used)*/
 	double windspeed;                           /* (m/sec) daily wind speed */
 	double lh_vap;                              /* (J/Kg) daily latent heat of vaporization trees */
@@ -62,6 +61,8 @@ typedef struct {
 	double cloud_cover_frac;                    /* (ratio) daily cloud cover fraction */
 	double cloud_cover_frac_corr;               /* (ratio) daily cloud cover fraction */
 	double Ndeposition;                         /* (gN/m2/day) nitrogen deposition scaled from annual */
+	double Spring_thermic_sum;                  /* Thermic sum for spring months (March-May) */   //SAPONARO
+	double Winter_soil_t;                       /* Thermic sum for winter months (March-May) */   //SAPONARO
 
 	double Net_rad_threePG;
 } meteo_daily_t;

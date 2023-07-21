@@ -86,30 +86,35 @@ void regeneration (cell_t *const c, const int height, const int dbh, const int a
 // SAPONARO 12/2022
         /*******************************************REGENERATION MODULE*******************************************************/
 
-#if 0 /*******************USE THIS********************/
+#if 0                                 /*******************USE THIS********************/
 
-int germination (cell_t *const c, const meteo_daily_t *const meteo_daily, species_t *const s, const int day, const int month, const int year) {
+void germination (cell_t *const c, const meteo_daily_t *const meteo_daily, species_t *const s, const int day, const int month, const int year) {
 
 
  int Seedlings_Number = 0.;          //Number of seedlings per species
- int Seedlings_pool = 0.;            //Seedlings pool
 
-  meteo_t *met;
-  met = c->years[year].m;
+ float Soil_T;                       //Soil mean temperature variable of the Winter condition for germination
+ float swp ;                         //Soil water potential variable of the Winter condition for germination
 
-   // Winter condition (Jan-March)
-   if( c->doy >= 1 && c->doy <= 120) {
 
-     float SumTerm = meteo_daily->thermic_sum;
-     //printf("Thermicsum = %f\n", SumTerm);
-     float Soil_T = c->years[year].m[month].d[day].tsoil;
-     //printf("Soiltemp = %f\n", Soil_T);
-     float swp = c->psi;
-     //printf("swp: %f\n", swp);
 
+   // Spring condition (March-May)
+   if (month >= MARCH && month <= MAY) {
+
+   // Soil_T = c->years[year].m[month].d[day].tsoil;
+
+   // swp = c->psi;
+
+   } else {
+
+ //   Soil_T = 0.;
+
+ //   swp = 0.;
+
+   }
 
 	    // FIXME replace asw with Soil Water Potential (see E.Falleri et al.,2004)
-        if (SumTerm >= s->value[GDD_SEED] && Soil_T > 5. && swp >= -0.2) {
+        if (meteo_daily->Spring_thermic_sum >= s->value[GDD_SEED] && Soil_T > 5. && swp >= -0.2) {
 
                 //Germination capacity is the average between 0 and -0.2 MPa (see table 2 in E.Falleri et al.,2004)
     			Seedlings_Number = ((s->counter[TANK_SEEDS] * 0.50) * 0.62);
@@ -118,29 +123,30 @@ int germination (cell_t *const c, const meteo_daily_t *const meteo_daily, specie
     			//Assigned seedling number to a species vector
                 s->counter[SEEDLINGS] = Seedlings_Number;
                 //Accumulate seedlings in a pool
-                s->counter[SEEDLINGS_POOL] += s->counter[SEEDLINGS];
-
+                //s->counter[SEEDLINGS_POOL] += Seedlings_Number;
+                //printf("Seedlings pool = %d\n", s->counter[SEEDLINGS_POOL]);
     			}
 
-        else if (SumTerm >= s->value[GDD_SEED] && Soil_T > 5. && swp < -0.2 && swp >= -0.6) {
+        else if (meteo_daily->Spring_thermic_sum >= s->value[GDD_SEED] && Soil_T > 5. && swp < -0.2 && swp >= -0.6) {
     			Seedlings_Number = ((s->counter[TANK_SEEDS] * 0.50) * 0.48);
 
     			s->counter[TANK_SEEDS] = 0.;
 
                 s->counter[SEEDLINGS] = Seedlings_Number;
 
-                s->counter[SEEDLINGS_POOL] += s->counter[SEEDLINGS];
-
+                //s->counter[SEEDLINGS_POOL] += Seedlings_Number;
+                //printf("Seedlings pool = %d\n", s->counter[SEEDLINGS_POOL]);
     			}
 
-        else if (SumTerm >= s->value[GDD_SEED] && Soil_T > 5. && swp < -0.6 && swp >= -1.2) {
+        else if (meteo_daily->Spring_thermic_sum >= s->value[GDD_SEED] && Soil_T > 5. && swp < -0.6 && swp >= -1.2) {
     			Seedlings_Number = ((s->counter[TANK_SEEDS] *0.50) * 0.20);
 
                 s->counter[TANK_SEEDS] = 0.;
 
                 s->counter[SEEDLINGS] = Seedlings_Number;
 
-                s->counter[SEEDLINGS_POOL] += s->counter[SEEDLINGS];
+               // s->counter[SEEDLINGS_POOL] += Seedlings_Number;
+               // printf("Seedlings pool = %d\n", s->counter[SEEDLINGS_POOL]);
 
                 }
 
@@ -148,8 +154,10 @@ int germination (cell_t *const c, const meteo_daily_t *const meteo_daily, specie
                 Seedlings_Number = 0.;
               }
 
-    }
- return 0;
+
+              printf("Thermicsum = %f\n", meteo_daily->Spring_thermic_sum);
+              //printf("Soiltemp = %f\n", Soil_T);
+              //printf("swp: %f\n", swp);
 }
 
 #endif // 0
@@ -378,30 +386,30 @@ int establishment (cell_t *const c, const meteo_daily_t *const meteo_daily, spec
 
 
         //Optimal condition for light and temperature (case1)
-		if (Sum_soil_PAR >= s->value[SURV_PAR] && Sum_avg_temp <= s->value[SURV_TEMP] && s->counter[SEEDLINGS_POOL] > 0.) {
+		if (Sum_soil_PAR >= s->value[SURV_PAR] && Sum_avg_temp <= s->value[SURV_TEMP] && s->counter[SEEDLINGS] > 0.) {
 
-			Seedlings_surv = (s->counter[SEEDLINGS_POOL] * 0.0001); //L.Muffler et al.2021 0.70
+			Seedlings_surv = (s->counter[SEEDLINGS] * 0.1); //L.Muffler et al.2021 0.70
             s->counter[SEEDLINGS_SURV] = Seedlings_surv;
              }
 
         //Optimal condition for light but not for temperature (case2)
-        else if (Sum_soil_PAR >= s->value[SURV_PAR] && Sum_avg_temp > s->value[SURV_TEMP] && s->counter[SEEDLINGS_POOL] > 0.) {
+        else if (Sum_soil_PAR >= s->value[SURV_PAR] && Sum_avg_temp > s->value[SURV_TEMP] && s->counter[SEEDLINGS] > 0.) {
 
-	        Seedlings_surv = (s->counter[SEEDLINGS_POOL] * 0.0001); //L.Muffler et al.2021 0.55
+	        Seedlings_surv = (s->counter[SEEDLINGS] * 0.1); //L.Muffler et al.2021 0.55
             s->counter[SEEDLINGS_SURV] = Seedlings_surv;
              }
 
         //Optimal condition for temperature but not for light (case3)
-        else if (Sum_soil_PAR < s->value[SURV_PAR] && Sum_avg_temp < s->value[SURV_TEMP] && s->counter[SEEDLINGS_POOL] > 0.) {
+        else if (Sum_soil_PAR < s->value[SURV_PAR] && Sum_avg_temp < s->value[SURV_TEMP] && s->counter[SEEDLINGS] > 0.) {
 
-			Seedlings_surv = (s->counter[SEEDLINGS_POOL] * 0.0001); //L.Muffler et al.2021 0.30
+			Seedlings_surv = (s->counter[SEEDLINGS] * 0.1); //L.Muffler et al.2021 0.30
             s->counter[SEEDLINGS_SURV] = Seedlings_surv;
              }
 
 		//Non-Optimal condition for Light and Temperature (case 4)
-        else if (Sum_soil_PAR < s->value[SURV_PAR] && Sum_avg_temp > s->value[SURV_TEMP] && s->counter[SEEDLINGS_POOL] > 0.) {
+        else if (Sum_soil_PAR < s->value[SURV_PAR] && Sum_avg_temp > s->value[SURV_TEMP] && s->counter[SEEDLINGS] > 0.) {
 
-			Seedlings_surv = (s->counter[SEEDLINGS_POOL] * 0.0001); //L.Muffler et al.2021 0.20
+			Seedlings_surv = (s->counter[SEEDLINGS] * 0.1); //L.Muffler et al.2021 0.20
             s->counter[SEEDLINGS_SURV] = Seedlings_surv;
 
                }
@@ -409,18 +417,6 @@ int establishment (cell_t *const c, const meteo_daily_t *const meteo_daily, spec
 	    Seedlings_surv = 0.;
 	    //printf("All seedlings died.\n");
 	     }
-	    }
-
-    if ( c->doy == ( IS_LEAP_YEAR( c->years[year].year ) ? 366 : 365 )) {
-
-      //Counter the seedlings survived at the end of the year of simulation.
-      //Needed to create another counter as helper variable (Variabile d'appoggio).
-      s->counter[SEEDLINGS_TO_SAPLINGS] = s->counter[SEEDLINGS_SURV];
-      //printf("Seedlings Survived = %d\n", s->counter[SEEDLINGS_SURV]);
-
-    //printf("Indirizzo Seedlings_surv = %x\n", &Seedlings_surv);
-    //printf("Indirizzo memorizzato nel puntatore = %x\n", Seedlings_survival);
-   // printf("Valore della variabile puntata = %d\n", *Seedlings_survival);
 
   }
  return 0;

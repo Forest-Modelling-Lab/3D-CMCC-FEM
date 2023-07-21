@@ -282,10 +282,10 @@ void Radiation (cell_t *const c, const int day, const int month, const int year)
 	/* NET RADIATION */
 
 	// net radiation based on 3-PG method // see Landsberg Terrestrial ecology Chapter 2: Weather and Energy Balance //
-	// Note: Jan 2022  we set the long radiation terms QA as an average value, 
-	// for both coniferous and broadleaved forests, -60 instead of -90 (QA) 
-	// This has of course to be FIXME  
-	
+	// Note: Jan 2022  we set the long radiation terms QA as an average value,
+	// for both coniferous and broadleaved forests, -60 instead of -90 (QA)
+	// This has of course to be FIXME
+
 	met[month].d[day].Net_rad_threePG = QA + QB * ( met[month].d[day].solar_rad * pow ( 10., 6 ) / ( met[month].d[day].daylength * 3600. ) );
 
 	/***************************************************************************************************************************************/
@@ -581,40 +581,6 @@ void Soil_temperature(const cell_t *const c, int day, int month, int year)
 		c->years[current_year_index].m[current_month].d[current_day].tsoil = met[month].d[day].ts_f;
 	}
 }
-          //TEST SAPONARO
-/*
-void Soil_winter_temperature(const cell_t *const c, int day, int month, int year) {
-
-    int i;
-    int avg_winter = 120;
-    float Winter_tsoil;
-	int current_day = day;
-	int current_month = month;
-	int current_year_index = year;
-	meteo_t *met;
-	met = (meteo_t*) c->years[year].m;
-
-
-    if ( -9999 == met[month].d[day].ts_f )
-	{
-
-		assert(c);
-
-		for (i = 0; i <= 120; i++)
-		{
-		  Winter_tsoil = c->years[year].m[month].d[day].tsoil / avg_winter;
-		 // printf("Soiltemp = %f\n", Winter_tsoil);
-		}
-
-	}
-	else
-	{
-		c->years[current_year_index].m[current_month].d[current_day].tsoil = met[month].d[day].ts_f;
-	}
-    //printf("Soiltemp = %f\n", Winter_tsoil);
-return 0;
-}
-*/
 
 void Weighted_average_temperature(const cell_t *const c, const e_weighted_average_var var, int day, int month, int year)
 {
@@ -784,6 +750,44 @@ void Daily_Ndeposition (const cell_t *const c, int day, int month, int year)
 
 	c->years[year].m[month].d[day].Ndeposition = c->years[year].Ndep / doy;
 
+}
+
+//SAPONARO
+
+void Thermic_sum_spring (const cell_t *const c, const meteo_daily_t *const meteo_daily, const int day, const int month, const int year) {
+
+
+  float Spring_thermic_sum = 0.;           //Thermic sum variable of the Winter condition for germination
+
+   // Spring condition (March-May)
+   if (month >= MARCH && month <= MAY) {
+
+    Spring_thermic_sum = meteo_daily->thermic_sum;
+
+   } else {
+
+    Spring_thermic_sum = 0.;
+
+   }
+   //printf("Thermicsum = %f\n", Spring_thermic_sum);
+}
+
+void Soil_winter_temperature (const cell_t *const c, int day, int month, int year) {
+
+
+   float Winter_soil_t = 0.;
+
+    //Winter condition (January-March)
+    if (month >= JANUARY && month <= MARCH) {
+
+    Winter_soil_t = c->years[year].m[month].d[day].tsoil;
+
+    } else {
+
+    Winter_soil_t = 0.;
+
+    }
+  printf("Winter soil temp = %f\n", Winter_soil_t);
 }
 
 

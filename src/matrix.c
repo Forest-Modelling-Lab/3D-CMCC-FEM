@@ -204,7 +204,7 @@ static dataset_t* dataset_import_nc(const char* const filename, int* const px_ce
 				}
 				dims_size[y] = size;
 				if ( X_DIM == y ) x_id = i;
-				break;			
+				break;
 			}
 		}
 	}
@@ -247,7 +247,7 @@ static dataset_t* dataset_import_nc(const char* const filename, int* const px_ce
 				if ( x_id == ids[0] ) {
 					/* x first */
 					start[0] = _x;
-					start[1] = _y;			
+					start[1] = _y;
 				} else {
 					/* y first */
 					start[0] = _y;
@@ -1159,7 +1159,7 @@ int fill_species_from_file(species_t *const s) {
 	if ( ! s->name ) return 0;
 
 	species_count = SIZE_OF_ARRAY(sz_species_values);
- 
+
 	species_flags = malloc(sizeof*species_flags*species_count);
 	if ( ! species_flags ) {
 		puts(sz_err_out_of_memory);
@@ -1325,7 +1325,7 @@ static int compute_x_y_cells_count(matrix_t* const m) {
 		}
 	}
 
-	/* 
+	/*
 		TODO:
 		ALESSIOR
 
@@ -1415,7 +1415,7 @@ matrix_t* matrix_create(const soil_settings_t*const s, const int count, const ch
 
 				if ( ! string_compare_i(p, "nc") || ! string_compare_i(p, "nc4") ) {
 				//correction use of nc file
-#ifdef NC_USE 
+#ifdef NC_USE
 					d = dataset_import_nc(filename, &x_cells_count, &y_cells_count);
 #endif
 				} else {

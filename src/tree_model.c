@@ -494,21 +494,14 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 									/* annual volume, MAI and CAI */
 									annual_tree_increment ( c, height, dbh, age, species, year );
 
-									 /****************************NATURAL REGENERATION PROCESS******************************************/
+                    /**************************** NATURAL REGENERATION PROCESS (SEEDS) ******************************************/
 
-                                        // Regeneration process (Saponaro)
-                                        Fruit_to_seeds_function ( c, a, s );
 
-								}
+                                          // Regeneration process (Saponaro)
+                                          Fruit_to_seeds_function ( c, a, s);
+                                         }
 
-                                // Seeds germination (Saponaro)
-                                //germination (c, meteo_daily, s, day, month, year);
-
-                                // Establishment (Saponaro)
-                               // establishment (c, meteo_daily, s, day, month, year);
-
-                               // printf("Seedlings = %d\n", s->counter[SEEDLINGS]);
-                               // printf("Seedlings Pool = %d\n", s->counter[SEEDLINGS_POOL]);
+                        /***************************************************************************************************/
 
 								/** check for fluxes and mass balance closure at the tree class level **/
 
@@ -559,32 +552,37 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	logger(g_debug_log, "****************END OF LAYER CLASS***************\n");
 
 	 /****************************NATURAL REGENERATION PROCESS******************************************/
+
+        if (g_settings->Natural_regeneration) {
+
+        //Compute spring thermic sum before germination
+        Thermic_sum_spring          ( c, meteo_daily, day, month, year ); //SAPONARO
+
+        //Seeds germination (Saponaro)
+       // germination (c, meteo_daily, s, day, month, year);
+
+        //Compute spring mean temperature in winter
+        Soil_winter_temperature (c, day, month, year);
+
+       // Establishment (Saponaro)
+       //establishment (c, meteo_daily, s, day, month, year);
+      }
 /*
-                                // Seeds germination (Saponaro)
-                                germination (c, meteo_daily, s, day, month, year);
 
-                                // Establishment (Saponaro)
-                                establishment (c, meteo_daily, s, day, month, year);
+    if (( ! day && ! month && year ) && g_settings->Natural_regeneration)  {
+
+      // Saplings formation (Saponaro)
+      recruitment (c, day, month, year);
+
+      if ( ! recruitment( c , day, month, year) )
+
+            {
+              logger_error(g_debug_log, "unable to add new replanted class! (exit)\n");
+              exit(1);
+                }
 
 
-                              if (( ! day && ! month && year ) && g_settings->Natural_regeneration)  {
-
-                               // Saplings formation (Saponaro)
-                               recruitment (c, day, month, year);
-
-                                  if ( ! recruitment( c , day, month, year) )
-                                      {
-                                    logger_error(g_debug_log, "unable to add new replanted class! (exit)\n");
-                                    exit(1);
-                                     }
-
-                                          // indexes
-                                        h = &c->heights[height];  // should be = 0
-                                        d = &h->dbhs[dbh];
-                                        a = &d->ages[age];
-                                        s = &a->species[species];
-
-                                   }
+            }
 
 */
 	/* ok */

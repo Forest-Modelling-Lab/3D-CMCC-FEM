@@ -216,7 +216,6 @@ int Fruit_to_seeds_function (cell_t *const c, const age_t *const a, species_t *c
  long int NumberSeed = 0.;                    //Number of Seeds
  long int NumberFruit = 0.;                   //Number of Fruit
  double carbon_tank = 0.;                     //Carbon for seeds
- double tank_seeds = 0.;                      //Seeds accumulation over year
 
  //static seed_t *seed = {0};
 
@@ -227,8 +226,8 @@ int Fruit_to_seeds_function (cell_t *const c, const age_t *const a, species_t *c
    // Assign shortcuts //
    //n = &c->heights[height].dbhs[dbh].ages[age].species[species].seeds[NumberSeed];
 
-   seed_t *seed;
-   seed = (seed_t *) malloc(sizeof(seed_t));
+   //seed_t *seed;
+   //seed = (seed_t *) malloc(sizeof(seed_t));
 
 
    if (a->value >= s->value[SEXAGE]) {
@@ -247,18 +246,19 @@ int Fruit_to_seeds_function (cell_t *const c, const age_t *const a, species_t *c
                //printf("Number seed = %ld\n", NumberSeed);
 
                //Number of seed per species (nseed/cell/year)
-               seed->counter[N_SEED] = NumberSeed;
-               printf("N_SEED = %ld\n", seed->counter[N_SEED]);
+               s->counter[N_SEED] = NumberSeed;
+               //printf("N_SEED = %ld\n", s->counter[N_SEED]);
                //printf("NumberSeed = %ld\n", NumberSeed);
 
               //Accumulation of seeds over years
-               seed->counter[TANK_SEEDS] += NumberSeed;
-               printf("TANK_SEED = %ld\n", seed->counter[TANK_SEEDS]);
+               s->counter[TANK_SEEDS] += NumberSeed;
+               //printf("TANK_SEED = %ld\n", s->counter[TANK_SEEDS]);
 
              } else {
 
              NumberFruit = 0.;
-            NumberSeed = 0.;
+
+             NumberSeed = 0.;
         }
 
   // seed->seedling;

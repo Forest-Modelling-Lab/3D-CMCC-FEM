@@ -497,7 +497,7 @@ static int log_start(const char* const sitename)
 	}
 
 	/* disable screen output when "off" */
-	if ( ! g_settings->screen_output ) { 
+	if ( ! g_settings->screen_output ) {
 		logger_disable_std(g_debug_log);
 	}
 
@@ -514,10 +514,10 @@ static int log_start(const char* const sitename)
 	logger(g_debug_log, msg_topo_file, g_sz_topo_file);
 	logger(g_debug_log, msg_met_path, g_sz_input_met_file);
 
-	if ( g_sz_co2_conc_file ) 
+	if ( g_sz_co2_conc_file )
 		logger(g_debug_log, msg_co2_conc_file, g_sz_co2_conc_file);
 
-	if ( g_sz_ndep_file ) 
+	if ( g_sz_ndep_file )
 		logger(g_debug_log, msg_ndep_file, g_sz_ndep_file);
 
 	logger(g_debug_log, msg_settings_path, g_sz_settings_file);
@@ -581,7 +581,7 @@ static int parse_args(int argc, char *argv[])
 	g_sz_soil_file = NULL;
 	g_sz_topo_file = NULL;
 	g_sz_settings_file = NULL;
-        g_sz_manag_file    = NULL; 
+        g_sz_manag_file    = NULL;
         g_sz_input_met_file = NULL;
 	g_sz_output_vars_file = NULL;
 	g_sz_benchmark_path = NULL;
@@ -728,7 +728,7 @@ static int parse_args(int argc, char *argv[])
 
               //  prescribed-management file (e.g. SETTINGS, where settings file is also saved)
 
-                 case 'q': // 
+                 case 'q': //
  			if ( ! argv[i+1] ) {
 				puts("output path not specified!");
 				goto err;
@@ -781,7 +781,7 @@ static int parse_args(int argc, char *argv[])
 	}
 
 	if ( g_sz_dataset_file && g_sz_input_path ) {
-		p = concatenate_path(g_sz_input_path, g_sz_dataset_file); 
+		p = concatenate_path(g_sz_input_path, g_sz_dataset_file);
 		if ( ! p )
 		{
 			puts(sz_err_out_of_memory);
@@ -795,7 +795,7 @@ static int parse_args(int argc, char *argv[])
 		puts("met file list is missing!");
 		goto err_show_usage;
 	}  else if ( g_sz_input_path ) {
-		p = concatenate_path(g_sz_input_path, g_sz_input_met_file); 
+		p = concatenate_path(g_sz_input_path, g_sz_input_met_file);
 		if ( ! p )
 		{
 			puts(sz_err_out_of_memory);
@@ -809,7 +809,7 @@ static int parse_args(int argc, char *argv[])
 		puts("soil filename not specified!");
 		goto err_show_usage;
 	} else if ( g_sz_input_path ) {
-		p = concatenate_path(g_sz_input_path, g_sz_soil_file); 
+		p = concatenate_path(g_sz_input_path, g_sz_soil_file);
 		if ( ! p )
 		{
 			puts(sz_err_out_of_memory);
@@ -823,7 +823,7 @@ static int parse_args(int argc, char *argv[])
 		puts("topo filename option is missing!");
 		goto err_show_usage;
 	} else if ( g_sz_input_path ) {
-		p = concatenate_path(g_sz_input_path, g_sz_topo_file); 
+		p = concatenate_path(g_sz_input_path, g_sz_topo_file);
 		if ( ! p )
 		{
 			puts(sz_err_out_of_memory);
@@ -837,7 +837,7 @@ static int parse_args(int argc, char *argv[])
 		puts("settings filename option is missing!");
 		goto err_show_usage;
 	} else if ( g_sz_input_path ) {
-		p = concatenate_path(g_sz_input_path, g_sz_settings_file); 
+		p = concatenate_path(g_sz_input_path, g_sz_settings_file);
 		if ( ! p )
 		{
 			puts(sz_err_out_of_memory);
@@ -870,7 +870,7 @@ static int parse_args(int argc, char *argv[])
 	}
 
 	if ( g_sz_output_vars_file ) {
-		p = concatenate_path(g_sz_input_path, g_sz_output_vars_file); 
+		p = concatenate_path(g_sz_input_path, g_sz_output_vars_file);
 		if ( ! p )
 		{
 			puts(sz_err_out_of_memory);
@@ -1080,7 +1080,7 @@ static int log_rename(void)
 				return 0;
 			}
 			free(logs[i]->filename);
-			logs[i]->filename = new_filename;		
+			logs[i]->filename = new_filename;
 			logs[i]->f = fopen(logs[i]->filename, "a");
 			if ( ! logs[i]->f ) return 0;
 		}
@@ -1194,7 +1194,7 @@ int main(int argc, char *argv[]) {
 		return 1;
 	}
 	puts(msg_ok);
-      
+
 	if ( ! output_path_create() ) {
 		return 0;
 	}
@@ -1224,12 +1224,12 @@ int main(int argc, char *argv[]) {
 		puts("ndep file not specified for ndep_fixed off");
 		goto err;
 	}
-	
+
 
        // below old part of the code v5.5
 
-	 /* if ( MANAGEMENT_VAR == g_settings->management )   
-          {    
+	 /* if ( MANAGEMENT_VAR == g_settings->management )
+          {
           char *p;
 		char buffer[256];
 
@@ -1238,7 +1238,7 @@ int main(int argc, char *argv[]) {
 		printf("import management file %s...", buffer);
 		if ( g_sz_input_path )
 		{
-			p = concatenate_path(g_sz_input_path, buffer); 
+			p = concatenate_path(g_sz_input_path, buffer);
 			if ( ! p )
 			{
 				puts(sz_err_out_of_memory);
@@ -1255,70 +1255,70 @@ int main(int argc, char *argv[]) {
 		//if ( ! g_management ) goto err;
 		puts(msg_ok);
 	}  */
-        
+
            // 5p6 load management file (when MANAGEMENT == VAR and the thinning/clear cut is prescribed)
 
-           if ( MANAGEMENT_VAR == g_settings->management )  
+           if ( MANAGEMENT_VAR == g_settings->management )
 	   {
 		char *p;
 		char buffer[256];
- 
+
 
                // if management file info is provided, check if the file exists
                // g_sz_manag_file  : gives already the path to the file
-   
-	        if ( g_sz_manag_file ) {      // not necessarily we do need the management file (e.s.if MAN=VAR and the simulation cover the historical only 
+
+	        if ( g_sz_manag_file ) {      // not necessarily we do need the management file (e.s.if MAN=VAR and the simulation cover the historical only
                                               // with all density data observed
-		  p = concatenate_path(g_sz_input_path, g_sz_manag_file); 
+		  p = concatenate_path(g_sz_input_path, g_sz_manag_file);
                   printf("g_sz_manag_file concatenate P  %s\n", p);
-		  if ( ! p ) 
+		  if ( ! p )
 	     	  {
 			puts(sz_err_out_of_memory);
 			goto err;
 		  }
 		  //free(g_sz_manag_file);
 		  ////  g_sz_manag_file = p;  //
-		  
+
 		   if ( ! file_copy(p, g_sz_input_data_path) )
 	           {
 		    printf("warning: unable to copy management file %s to %s\n", g_sz_manag_file, g_sz_input_data_path);
 	           }
-	
+
 
                   g_management = management_load_presc(p);
- 
+
                   if ( g_sz_input_path ) free(p);
                   if ( ! g_management ) goto err;
 
 		  puts(msg_ok);
 
-	        }            
+	        }
 	   }
- 
+
 	printf("soil import...");
 	s = soil_settings_import(g_sz_soil_file, &soil_settings_count);
 	if ( ! s ) {
 		goto err;
 	}
 	puts(msg_ok);
-       
+
 
 	printf("topo import...");
 	t = topo_import(g_sz_topo_file, &topos_count);
 	if ( ! t ) {
 		goto err;
 	}
-   
+
 	puts(msg_ok);
-       
+
 	printf("build matrix");
 	if ( g_sz_dataset_file )
-                printf(" using %s...", g_sz_dataset_file);		
+                printf(" using %s...", g_sz_dataset_file);
 	else
 		printf("...");
-       
+
 	matrix = matrix_create(s, soil_settings_count, g_sz_dataset_file, &g_dataset);
-        
+
 	if ( ! matrix ) goto err;
 	puts(msg_ok);
 
@@ -1633,7 +1633,7 @@ int main(int argc, char *argv[]) {
 
 			for ( day = 0; day < 31; ++day )
 			{
-				if ( day >= days_per_month ) 
+				if ( day >= days_per_month )
 				{
 					break;
 				}
@@ -1682,8 +1682,9 @@ int main(int argc, char *argv[]) {
 					Daylight_avg_temperature    ( matrix->cells[cell].years[year].m, day, month );
 					Nightime_avg_temperature    ( matrix->cells[cell].years[year].m, day, month );
 					Soil_temperature            ( &matrix->cells[cell], day, month, year );
-					//Soil_winter_temperature     (&matrix->cells[cell], day, month, year); //SAPONARO TEST
+					Soil_winter_temperature     ( &matrix->cells[cell], day, month, year); //SAPONARO
 					Thermic_sum                 ( &matrix->cells[cell], matrix->cells[cell].years[year].m, day, month, year );
+					Thermic_sum_spring          ( &matrix->cells[cell], matrix->cells[cell].years[year].m, day, month, year ); //SAPONARO
 					Air_density                 ( matrix->cells[cell].years[year].m, day, month );
 					Day_Length                  ( &matrix->cells[cell], day, month, year );
 					Latent_heat                 ( matrix->cells[cell].years[year].m, day, month );
@@ -1791,7 +1792,7 @@ int main(int argc, char *argv[]) {
 
 			for ( day = 0; day < 31; ++day )
 			{
-				if ( day >= days_per_month ) 
+				if ( day >= days_per_month )
 				{
 					break;
 				}
@@ -1984,12 +1985,12 @@ int main(int argc, char *argv[]) {
 	/* free memory */
 	matrix_free(matrix); matrix = NULL;
 
-#ifdef NC_USE       
+#ifdef NC_USE
 	/* create nc files */
 	if ( g_daily_log && g_settings->netcdf_output ) {
 		printf("creating nc daily files...");
 		logger_flush(g_daily_log);
-		
+
 		if ( ! convert_to_nc(g_daily_log->filename) ) {
 			goto err;
 		}
@@ -1999,7 +2000,7 @@ int main(int argc, char *argv[]) {
 	if ( g_annual_log && g_settings->netcdf_output ) {
 		printf("creating nc annual files...");
 		logger_flush(g_annual_log);
-		
+
 		if ( ! convert_to_nc(g_annual_log->filename) ) {
 			goto err;
 		}
@@ -2057,7 +2058,7 @@ int main(int argc, char *argv[]) {
 	return prog_ret;
 }
 #else
-//note: 02/february/2017 
+//note: 02/february/2017
 // the model runs for all days/months/years and then changes cell
 
 int main(int argc, char *argv[]) {
@@ -2149,14 +2150,14 @@ int main(int argc, char *argv[]) {
 #endif
 
 	printf("import settings file %s...", g_sz_settings_file);
-        
+
 	g_settings = settings_import(g_sz_settings_file);
 	if ( ! g_settings )
 	{
 		goto err;
 	}
-          
-      
+
+
 	if ( g_settings->time != 'd' ) {
 		puts("uncorrect time step choiced!");
 		goto err;
@@ -2168,8 +2169,8 @@ int main(int argc, char *argv[]) {
 		puts("ndep file not specified for ndep_fixed off");
 		goto err;
 	}
-        
-       
+
+
 
 	printf("soil import...");
 	s = soil_settings_import(g_sz_soil_file, &soil_settings_count);
@@ -2177,18 +2178,18 @@ int main(int argc, char *argv[]) {
 		goto err;
 	}
 	puts(msg_ok);
-     
-        
+
+
 	printf("topo import...");
-      
+
 	t = topo_import(g_sz_topo_file, &topos_count);
 	if ( ! t ) {
 		goto err;
 	}
-        
+
 	puts(msg_ok);
-         
-       
+
+
 
 	printf("build matrix");
 	if ( g_sz_dataset_file )
@@ -2547,7 +2548,7 @@ int main(int argc, char *argv[]) {
 			/******************************************************************************/
 			/* print annual output */
 			EOY_print_output_cell_level( &matrix->cells[cell], year, years_of_simulation );
-                        
+
 
 			/* reset annual variables once printed */
 			if ( ( IS_LEAP_YEAR( matrix->cells[cell].years[year].year ) ? (MonthLength_Leap[DECEMBER]) : (MonthLength[DECEMBER] )) == matrix->cells[cell].doy )

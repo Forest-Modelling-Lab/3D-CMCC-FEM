@@ -296,9 +296,6 @@ enum {
 	MONTHLY_BPE,                        /* (gCBP/gCGPP) monthly biomass production Efficiency */
 	YEARLY_BPE,                         /* (gCBP/gCGPP) annual biomass production Efficiency */
 
-	/* C-Fruit annual */
-	CARBON_TANK,                         /* (gC/cell/year) carbon tank seed */ //SAPONARO
-
 	/* water use efficiency */
 	WUE,                                /* daily Water Use Efficiency */
 	MONTHLY_WUE,                        /* monthly Water Use Efficiency */
@@ -841,7 +838,7 @@ enum {
 	DEAD_TREE,                          /* (tree/cell) Dead Tree per class */
 	THINNED_TREE,                       /* (tree/cell) Tree removed for thinning or harvesting */
 	N_STUMP,                            /* (stump/cell) Number of stumps for coppice per class */
-	N_TREE_SAP,                         /* (saplings/cell) Numbers of Saplings per class */
+	//N_TREE_SAP,                         /* (saplings/cell) Numbers of Saplings per class */ //COLLALTI
 	VEG_UNVEG,                          /* (DIM) vegetative-un vegetative period per class */
 	VEG_DAYS,                           /* (days/year) day of vegetative period for class if != 0 is in veg period */
 	FIRST_VEG_DAYS,                     /* (DIM) first annual day of veg period */
@@ -864,22 +861,30 @@ enum {
 	YEARS_THINNING,
 	THINNING_HAPPENS,                   /* 0 = thinning off, 1 = thinning on */
 	HARVESTING_HAPPENS,                 /* 0 = harvesting off, 1 = harvesting on */
+    N_SEED,                             // (seeds/cell) Seeds number per class //
+    TANK_SEEDS,                         // (seeds/cell/years) Number of seeds accumulated over year //
+	SEEDLINGS,                          // (seedlings/cell) Number of seedlings per species //
+	//SEEDLINGS_POOL,                     // (seedlings/cell) Number of seedlings accumulated over years //
+    SEEDLINGS_SURV,                     // (seedlings/cell) Number of seedlings survived after germination //
+    SEEDLINGS_TO_SAPLINGS,              // (seedlings/cell) Number of seedlings available to become Saplings //
 
 	COUNTERS
 };
-
+/*
 enum {
 
-    N_SEED,                             /* (seeds/cell) Seeds number per class */
-    TANK_SEEDS,                         /* (seeds/cell/years) Number of seeds accumulated over year */
-	SEEDLINGS,                          /* (seedlings/cell) Number of seedlings per species */
-	SEEDLINGS_POOL,                     /* (seedlings/cell) Number of seedlings accumulated over years */
-    SEEDLINGS_SURV,                     /* (seedlings/cell) Number of seedlings survived after germination */
-    SEEDLINGS_TO_SAPLINGS,              /* (seedlings/cell) Number of seedlings available to become Saplings */
+    N_SEED,                             // (seeds/cell) Seeds number per class //
+    TANK_SEEDS,                         // (seeds/cell/years) Number of seeds accumulated over year //
+
+	SEEDLINGS,                          // (seedlings/cell) Number of seedlings per species //
+	SEEDLINGS_POOL,                     // (seedlings/cell) Number of seedlings accumulated over years //
+
+    SEEDLINGS_SURV,                     // (seedlings/cell) Number of seedlings survived after germination //
+    SEEDLINGS_TO_SAPLINGS,              // (seedlings/cell) Number of seedlings available to become Saplings //
 
     COUNTERS_R
 };
-
+*/
 typedef struct
 {
 	int year_stand;
@@ -907,35 +912,34 @@ typedef struct
 	int rows_count;
 
 } dataset_t;
-
+/*
 typedef struct {
 
  char *name;
- int counter[COUNTERS_R];        /** saplings cell **/
+ int counter[COUNTERS_R];        // saplings cell /
 
 } sapling_t;
 
 typedef struct {
 
- char *name;
- sapling_t *sapling;                    /** seedlings cell **/
+
+ sapling_t *sapling;                    // seedlings cell //
  int counter[COUNTERS_R];
 
 } seedling_t;
 
 typedef struct {
 
- char *name;                           /** seeds cell **/
+                                         // seeds cell //
  seedling_t *seedling;
  long int counter[COUNTERS_R];
- long int tank_seeds;
 
 } seed_t;
-
+*/
 typedef struct
 {
 	int index;
-    seed_t *seed;
+    //seed_t *seed;
 	e_management management;
 
 	char *name;                         /** species name **/
@@ -1089,6 +1093,7 @@ typedef struct
 	int doy_daylength;
 
 	//fixme ALESSIOR move to meteo struct!
+	double previous_thermic_sum_winter; //SAPONARO
 	double previous_thermic_sum;
 	double previous_solar_rad;
 	double previous_tavg;

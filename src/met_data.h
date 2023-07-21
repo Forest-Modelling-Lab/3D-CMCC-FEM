@@ -37,7 +37,8 @@ void Check_prcp(cell_t *c, const int day, const int month, const int year);
 void Averaged_temperature(const cell_t *const c, const e_averaged_var var, int day, int month, int year);
 void Weighted_average_temperature(const cell_t *const c, const e_weighted_average_var var, int day, int month, int year);
 void Soil_temperature(const cell_t *const c, int day, int month, int year);
-//void Soil_winter_temperature(const cell_t *const c, int day, int month, int year);
 void Daily_Ndeposition(const cell_t *const c, int day, int month, int year_iyearndex);
+void Thermic_sum_spring (const cell_t *const c, const meteo_daily_t *const meteo_daily, const int day, const int month, const int year);
+void Soil_winter_temperature (const cell_t *const c, int day, int month, int year);
 
 #endif /* MET_DATA_H_ */
