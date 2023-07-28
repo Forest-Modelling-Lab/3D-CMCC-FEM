@@ -198,7 +198,7 @@ static void yos_clear(meteo_annual_t *const meteo_annual) {
 				meteo_annual->m[i].d[y].ndvi_lai = INVALID_VALUE;
 				meteo_annual->m[i].d[y].daylength = INVALID_VALUE;
 				meteo_annual->m[i].d[y].thermic_sum = INVALID_VALUE;
-				//meteo_annual->m[i].d[y].Winter_thermic_sum = INVALID_VALUE; //SAPONARO
+				meteo_annual->m[i].d[y].spring_thermic_sum = INVALID_VALUE; //SAPONARO
 				meteo_annual->m[i].d[y].rho_air = INVALID_VALUE;
 				meteo_annual->m[i].d[y].tsoil = INVALID_VALUE;
 				meteo_annual->m[i].d[y].et = INVALID_VALUE;

@@ -864,7 +864,7 @@ enum {
     N_SEED,                             // (seeds/cell) Seeds number per class //
     TANK_SEEDS,                         // (seeds/cell/years) Number of seeds accumulated over year //
 	SEEDLINGS,                          // (seedlings/cell) Number of seedlings per species //
-	//SEEDLINGS_POOL,                     // (seedlings/cell) Number of seedlings accumulated over years //
+	SEEDLINGS_POOL,                     // (seedlings/cell) Number of seedlings accumulated over years //
     SEEDLINGS_SURV,                     // (seedlings/cell) Number of seedlings survived after germination //
     SEEDLINGS_TO_SAPLINGS,              // (seedlings/cell) Number of seedlings available to become Saplings //
 
@@ -1093,7 +1093,6 @@ typedef struct
 	int doy_daylength;
 
 	//fixme ALESSIOR move to meteo struct!
-	double previous_thermic_sum_winter; //SAPONARO
 	double previous_thermic_sum;
 	double previous_solar_rad;
 	double previous_tavg;

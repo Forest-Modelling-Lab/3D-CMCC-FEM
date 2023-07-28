@@ -61,6 +61,7 @@
 #include "regeneration.h"
 #include "recruitment.h"
 #include "canopy_cover.h"
+#include "met_data.h"
 
 extern logger_t* g_debug_log;
 //extern soil_settings_t* g_soil_settings;
@@ -480,6 +481,36 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 								/* tree level dendrometry */
 								dendrometry_old       ( c, layer, height, dbh, age, species, year );
 
+								/**************** NATURAL REGENERATION PROCESS (SEEDS) **********************/
+
+                                  if ( g_settings->Natural_regeneration) {
+
+                                        // Regeneration process
+                                        Fruit_to_seeds_function ( c, a, s, day, month, year);
+
+
+
+                                    //Putting this function the germination appear the year after the first
+                                     //if ( year ) {
+                                                    //Compute spring thermic sum before germination
+                                                    Thermic_sum_spring (c, meteo_daily, day, month, year);
+                                                    //printf("Thermicsum = %f\n", meteo_daily->spring_thermic_sum);
+
+                                                    //Compute spring mean temperature in winter
+                                                    Soil_winter_temperature (c, meteo_daily, day, month, year);
+                                                    //printf("Winter soil temp = %f\n", meteo_daily->winter_soil);
+
+                                                    //Seeds germination
+                                                    germination (c, meteo_daily, s, day, month, year);
+                                                    //printf("Seedlings = \t%d\n", s->counter[SEEDLINGS]);
+
+                                                    // Establishment (Saponaro)
+                                                    // establishment (c, meteo_daily, s, day, month, year);
+                                               // }
+                                            }
+
+
+
 								/** END OF YEAR **/
 
 								/* last day of the year */
@@ -494,12 +525,16 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 									/* annual volume, MAI and CAI */
 									annual_tree_increment ( c, height, dbh, age, species, year );
 
-                    /**************************** NATURAL REGENERATION PROCESS (SEEDS) ******************************************/
+                                  printf("Seed = %ld\n", s->counter[N_SEED]);
+                                  printf("tank =   %ld\n", s->counter[TANK_SEEDS]);
+                                  printf("Seedlings = \t%d\n", s->counter[SEEDLINGS]);
+
+                                }
 
 
-                                          // Regeneration process (Saponaro)
-                                          Fruit_to_seeds_function ( c, a, s);
-                                         }
+
+
+
 
                         /***************************************************************************************************/
 
@@ -553,20 +588,23 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 
 	 /****************************NATURAL REGENERATION PROCESS******************************************/
 
-        if (g_settings->Natural_regeneration) {
+
+       // if (g_settings->Natural_regeneration) {
 
         //Compute spring thermic sum before germination
-        Thermic_sum_spring          ( c, meteo_daily, day, month, year ); //SAPONARO
-
-        //Seeds germination (Saponaro)
-       // germination (c, meteo_daily, s, day, month, year);
+       // Thermic_sum_spring (c, meteo_daily, day, month, year);
 
         //Compute spring mean temperature in winter
-        Soil_winter_temperature (c, day, month, year);
+       // Soil_winter_temperature (c, meteo_daily, day, month, year);
+
+        //Seeds germination (Saponaro)
+      //  germination (c, meteo_daily, s, day, month, year);
+       //printf("Seedlings_pool = %d\n", s->counter[SEEDLINGS_POOL]);
 
        // Establishment (Saponaro)
-       //establishment (c, meteo_daily, s, day, month, year);
-      }
+      // establishment (c, meteo_daily, s, day, month, year);
+
+    //  }
 /*
 
     if (( ! day && ! month && year ) && g_settings->Natural_regeneration)  {

@@ -753,41 +753,41 @@ void Daily_Ndeposition (const cell_t *const c, int day, int month, int year)
 }
 
 //SAPONARO
+void Thermic_sum_spring (const cell_t * c, const meteo_daily_t *const meteo_daily, const int day, const int month, const int year) {
 
-void Thermic_sum_spring (const cell_t *const c, const meteo_daily_t *const meteo_daily, const int day, const int month, const int year) {
-
-
-  float Spring_thermic_sum = 0.;           //Thermic sum variable of the Winter condition for germination
+   double spring_thermic_sum = 0.;
 
    // Spring condition (March-May)
    if (month >= MARCH && month <= MAY) {
 
-    Spring_thermic_sum = meteo_daily->thermic_sum;
+   //Adding this chain of vector can export the results in other modules
+   c->years[year].m[month].d[day].spring_thermic_sum = c->years[year].m[month].d[day].thermic_sum;
 
    } else {
 
-    Spring_thermic_sum = 0.;
+   c->years[year].m[month].d[day].thermic_sum = 0.;
+   c->years[year].m[month].d[day].spring_thermic_sum = 0.;
 
    }
-   //printf("Thermicsum = %f\n", Spring_thermic_sum);
+
+   //printf("Thermicsum = %f\n", c->years[year].m[month].d[day].spring_thermic_sum);
 }
 
-void Soil_winter_temperature (const cell_t *const c, int day, int month, int year) {
+void Soil_winter_temperature (const cell_t *const c, const meteo_daily_t *const meteo_daily, int day, int month, int year) {
 
 
-   float Winter_soil_t = 0.;
+   double winter_soil = 0.;
 
     //Winter condition (January-March)
     if (month >= JANUARY && month <= MARCH) {
 
-    Winter_soil_t = c->years[year].m[month].d[day].tsoil;
+    c->years[year].m[month].d[day].winter_soil = c->years[year].m[month].d[day].tsoil;
 
     } else {
 
-    Winter_soil_t = 0.;
+    winter_soil = 0.;
 
     }
-  printf("Winter soil temp = %f\n", Winter_soil_t);
+  //printf("Winter soil temp = %f\n", c->years[year].m[month].d[day].winter_soil);
 }
-
 

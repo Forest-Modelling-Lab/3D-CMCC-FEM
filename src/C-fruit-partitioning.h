@@ -28,7 +28,7 @@ void Daily_C_Evergreen_Partitioning_Allocation (species_t *const s, cell_t *cons
 #include "matrix.h"
 
 //int Fruit_to_seeds_function (cell_t *const c, const int layer, const age_t *const a, species_t *const s, const int year);
-int Fruit_to_seeds_function (cell_t *const c, const age_t *const a, species_t *const s);
+int Fruit_to_seeds_function (cell_t *const c, const age_t *const a, species_t *const s, const int day, const int month, const int year);
 
 
 #endif /* C_FRUIT_PARTITIONING_H_ */

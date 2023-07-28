@@ -61,8 +61,8 @@ typedef struct {
 	double cloud_cover_frac;                    /* (ratio) daily cloud cover fraction */
 	double cloud_cover_frac_corr;               /* (ratio) daily cloud cover fraction */
 	double Ndeposition;                         /* (gN/m2/day) nitrogen deposition scaled from annual */
-	double Spring_thermic_sum;                  /* Thermic sum for spring months (March-May) */   //SAPONARO
-	double Winter_soil_t;                       /* Thermic sum for winter months (March-May) */   //SAPONARO
+	double spring_thermic_sum;                  /* Thermic sum for spring months (March-May) */   //SAPONARO
+    double winter_soil;                         /* Mean soil temp for winter (Jan-March) */   //SAPONARO
 
 	double Net_rad_threePG;
 } meteo_daily_t;

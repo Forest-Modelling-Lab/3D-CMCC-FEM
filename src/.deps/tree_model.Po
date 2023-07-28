@@ -71,7 +71,7 @@ tree_model.o: tree_model.c /usr/include/stdc-predef.h \
  evapotranspiration.h heat_fluxes.h soil_water_balance.h leaf_fall.h \
  tree_model.h remove_tree_class.h decomposition.h littering.h \
  CN-balance.h C-fruit-partitioning.h regeneration.h recruitment.h \
- canopy_cover.h
+ canopy_cover.h met_data.h
 /usr/include/stdc-predef.h:
 /usr/include/stdio.h:
 /usr/include/x86_64-linux-gnu/bits/libc-header-start.h:
@@ -192,3 +192,4 @@ C-fruit-partitioning.h:
 regeneration.h:
 recruitment.h:
 canopy_cover.h:
+met_data.h:

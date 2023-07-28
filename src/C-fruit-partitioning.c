@@ -210,27 +210,16 @@ int Fruit_to_seeds_function (cell_t *const c, const int layer, const age_t *cons
 
 #if 1
 
-int Fruit_to_seeds_function (cell_t *const c, const age_t *const a, species_t *const s) {
+int Fruit_to_seeds_function (cell_t *const c, const age_t *const a, species_t *const s, const int day, const int month, const int year) {
 
 
  long int NumberSeed = 0.;                    //Number of Seeds
  long int NumberFruit = 0.;                   //Number of Fruit
  double carbon_tank = 0.;                     //Carbon for seeds
 
- //static seed_t *seed = {0};
 
+           if (a->value >= s->value[SEXAGE]) {
 
-   // Shortcuts //
-  //n = &s->seeds[NumberSeed];
-
-   // Assign shortcuts //
-   //n = &c->heights[height].dbhs[dbh].ages[age].species[species].seeds[NumberSeed];
-
-   //seed_t *seed;
-   //seed = (seed_t *) malloc(sizeof(seed_t));
-
-
-   if (a->value >= s->value[SEXAGE]) {
 
                carbon_tank = (s->value[MAX_FRUIT_C] * 1000000); // convert tC(fruit) to gC/cell/year(fruit); MAX_FRUIT_C expressed as (tC/cell/year)
               //printf("MAX_FRUIT_C = %f\n", s->value[MAX_FRUIT_C]);
@@ -250,10 +239,6 @@ int Fruit_to_seeds_function (cell_t *const c, const age_t *const a, species_t *c
                //printf("N_SEED = %ld\n", s->counter[N_SEED]);
                //printf("NumberSeed = %ld\n", NumberSeed);
 
-              //Accumulation of seeds over years
-               s->counter[TANK_SEEDS] += NumberSeed;
-               //printf("TANK_SEED = %ld\n", s->counter[TANK_SEEDS]);
-
              } else {
 
              NumberFruit = 0.;
@@ -261,7 +246,13 @@ int Fruit_to_seeds_function (cell_t *const c, const age_t *const a, species_t *c
              NumberSeed = 0.;
         }
 
-  // seed->seedling;
+    //This is mandatory cause at the end of the year of simulation tou can accumulate the last number of the seeds simulated
+    //(you can't put this routine in a tree_model.c)
+    if ( c->doy == ( IS_LEAP_YEAR ( c->years[year].year ) ? 366 : 365) ) {
+
+        //Accumulate seeds over years
+        s->counter[TANK_SEEDS] += s->counter[N_SEED];
+    }
 
   return 0;
 }
