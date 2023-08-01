@@ -1693,6 +1693,7 @@ int main(int argc, char *argv[]) {
 					Sat_vapour_pressure         ( &matrix->cells[cell], day, month, year );
 					Dew_temperature             ( matrix->cells[cell].years[year].m, day, month );
 					Radiation                   ( &matrix->cells[cell], day, month, year );
+					Seedling_soil_par           ( &matrix->cells[cell],  matrix->cells[cell].years[year].m, day, month, year ); //SAPONARO
 					Check_prcp                  ( &matrix->cells[cell], day, month, year );
 					Daily_Ndeposition           ( &matrix->cells[cell], day, month, year );
 					Averaged_temperature        ( &matrix->cells[cell], AVERAGED_TAVG, day, month, year );
@@ -1703,6 +1704,7 @@ int main(int argc, char *argv[]) {
 					Weighted_average_temperature( &matrix->cells[cell], WEIGHTED_MEAN_TDAY, day, month, year );
 					Weighted_average_temperature( &matrix->cells[cell], WEIGHTED_MEAN_TNIGHT, day, month, year );
 					Weighted_average_temperature( &matrix->cells[cell], WEIGHTED_MEAN_TSOIL, day, month, year );
+					Seedling_temp               ( &matrix->cells[cell], AVERAGED_TAVG, day, month, year ); // SAPONARO
 
 					if ( LANDUSE_F == g_soil_settings->landuse )
 					{

@@ -1,0 +1,250 @@
+aut_respiration.c:			q10_tday        = var_a - var_b * meteo_daily->tday;
+aut_respiration.c:			q10_tnight      = var_a - var_b * meteo_daily->tnight;
+aut_respiration.c:			q10_tavg        = var_a - var_b * meteo_daily->tavg;
+aut_respiration.c:			q10_tsoil       = var_a - var_b * meteo_daily->tsoil;
+aut_respiration.c:		exponent_tday   = ( meteo_daily->tday   - Q10_temp ) / 10.;
+aut_respiration.c:		exponent_tnight = ( meteo_daily->tnight - Q10_temp ) / 10.;
+aut_respiration.c:		exponent_tavg   = ( meteo_daily->tavg   - Q10_temp ) / 10.;
+aut_respiration.c:		exponent_tsoil  = ( meteo_daily->tsoil  - Q10_temp ) / 10.;
+aut_respiration.c:		s->value[NIGHTLY_LEAF_MAINT_RESP]     = ( leaf_N       * MR_ref * pow(q10_tnight, exponent_tnight) * ( 1. - ( meteo_daily->daylength_sec / 86400. ) ) );
+aut_respiration.c:		s->value[NIGHTLY_LEAF_SUN_MAINT_RESP]   = ( leaf_sun_N   * MR_ref * pow(q10_tnight, exponent_tnight) * ( 1. - ( meteo_daily->daylength_sec / 86400. ) ) );
+aut_respiration.c:		s->value[NIGHTLY_LEAF_SHADE_MAINT_RESP] = ( leaf_shade_N * MR_ref * pow(q10_tnight, exponent_tnight) * ( 1. - ( meteo_daily->daylength_sec / 86400. ) ) );
+aut_respiration.c:		s->value[DAILY_LEAF_MAINT_RESP]       = ( leaf_N       * MR_ref * pow(q10_tday,   exponent_tday)   * ( meteo_daily->daylength_sec / 86400. ) ) * light_inhib;
+aut_respiration.c:		s->value[DAILY_LEAF_SUN_MAINT_RESP]   = ( leaf_sun_N   * MR_ref * pow(q10_tday,   exponent_tday)   * ( meteo_daily->daylength_sec / 86400. ) ) * light_inhib_sun;
+aut_respiration.c:		s->value[DAILY_LEAF_SHADE_MAINT_RESP] = ( leaf_shade_N * MR_ref * pow(q10_tday,   exponent_tday)   * ( meteo_daily->daylength_sec / 86400. ) ) * light_inhib_shade;
+aut_respiration.c:		if ( meteo_daily->tday > 15 )
+aut_respiration.c:			printf("daylength_sec = %g\n", meteo_daily->daylength_sec);
+aut_respiration.c:		s->value[DAILY_LEAF_MAINT_RESP]       = ( ( s->value[NIGHTLY_LEAF_MAINT_RESP]       / ( 86400. - meteo_daily->daylength_sec ) ) * meteo_daily->daylength_sec ) * light_inhib;
+aut_respiration.c:		s->value[DAILY_LEAF_SUN_MAINT_RESP]   = ( ( s->value[NIGHTLY_LEAF_SUN_MAINT_RESP]   / ( 86400. - meteo_daily->daylength_sec ) ) * meteo_daily->daylength_sec ) * light_inhib_sun;
+aut_respiration.c:		s->value[DAILY_LEAF_SHADE_MAINT_RESP] = ( ( s->value[NIGHTLY_LEAF_SHADE_MAINT_RESP] / ( 86400. - meteo_daily->daylength_sec ) ) * meteo_daily->daylength_sec ) * light_inhib_shade;
+aut_respiration.c:			s->value[DAILY_LEAF_MAINT_RESP]       *= pow ( 10., ( acc_const * ( meteo_daily->ten_day_avg_tday   - Q10_temp ) ) );
+aut_respiration.c:			s->value[DAILY_LEAF_SUN_MAINT_RESP]   *= pow ( 10., ( acc_const * ( meteo_daily->ten_day_avg_tday   - Q10_temp ) ) );
+aut_respiration.c:			s->value[DAILY_LEAF_SHADE_MAINT_RESP] *= pow ( 10., ( acc_const * ( meteo_daily->ten_day_avg_tday   - Q10_temp ) ) );
+aut_respiration.c:			s->value[NIGHTLY_LEAF_MAINT_RESP]     *= pow ( 10., ( acc_const * ( meteo_daily->ten_day_avg_tnight - Q10_temp ) ) );
+aut_respiration.c:			s->value[FROOT_MAINT_RESP]            *= pow ( 10., ( acc_const * ( meteo_daily->ten_day_avg_tsoil - Q10_temp ) ) );
+aut_respiration.c:			s->value[CROOT_MAINT_RESP]            *= pow ( 10., ( acc_const * ( meteo_daily->ten_day_avg_tsoil - Q10_temp ) ) );
+aut_respiration.c:			s->value[STEM_MAINT_RESP]             *= pow ( 10., ( acc_const * ( meteo_daily->ten_day_avg_tavg - Q10_temp ) ) );
+aut_respiration.c:			s->value[BRANCH_MAINT_RESP]           *= pow ( 10., ( acc_const * ( meteo_daily->ten_day_avg_tavg - Q10_temp ) ) );
+aut_respiration.c:			s->value[DAILY_LEAF_MAINT_RESP]         *= pow ( 10., ( acc_const * ( meteo_daily->ten_day_weighted_avg_tday   - Q10_temp ) ) );
+aut_respiration.c:			s->value[DAILY_LEAF_SUN_MAINT_RESP]     *= pow ( 10., ( acc_const * ( meteo_daily->ten_day_weighted_avg_tday   - Q10_temp ) ) );
+aut_respiration.c:			s->value[DAILY_LEAF_SHADE_MAINT_RESP]   *= pow ( 10., ( acc_const * ( meteo_daily->ten_day_weighted_avg_tday   - Q10_temp ) ) );
+aut_respiration.c:			s->value[NIGHTLY_LEAF_MAINT_RESP]       *= pow ( 10., ( acc_const * ( meteo_daily->ten_day_weighted_avg_tnight - Q10_temp ) ) );
+aut_respiration.c:			s->value[NIGHTLY_LEAF_SUN_MAINT_RESP]   *= pow ( 10., ( acc_const * ( meteo_daily->ten_day_weighted_avg_tnight - Q10_temp ) ) );
+aut_respiration.c:			s->value[NIGHTLY_LEAF_SHADE_MAINT_RESP] *= pow ( 10., ( acc_const * ( meteo_daily->ten_day_weighted_avg_tnight - Q10_temp ) ) );
+aut_respiration.c:			s->value[FROOT_MAINT_RESP]            *= pow ( 10., ( acc_const * ( meteo_daily->ten_day_weighted_avg_tsoil - Q10_temp ) ) );
+aut_respiration.c:			s->value[CROOT_MAINT_RESP]            *= pow ( 10., ( acc_const * ( meteo_daily->ten_day_weighted_avg_tsoil - Q10_temp ) ) );
+aut_respiration.c:			s->value[STEM_MAINT_RESP]             *= pow ( 10., ( acc_const * ( meteo_daily->ten_day_weighted_avg_tavg - Q10_temp ) ) );
+aut_respiration.c:			s->value[BRANCH_MAINT_RESP]           *= pow ( 10., ( acc_const * ( meteo_daily->ten_day_weighted_avg_tavg - Q10_temp ) ) );
+canopy_evapotranspiration.c:	g_corr = pow( ( meteo_daily->tday + TempAbs ) / 293.15, 1.75) * 101300. / meteo_daily->air_pressure;
+canopy_evapotranspiration.c:	if ( meteo_daily->windspeed != NO_DATA)
+canopy_evapotranspiration.c:		//printf("wind speed = %f gl_bl corrected for wind speed and corrected for g_corr %f\n", meteo_daily->windspeed, gl_bl);
+canopy_evapotranspiration.c:			if( evap_daylength_sec > meteo_daily->daylength_sec )
+canopy_evapotranspiration.c:				evapo *= meteo_daily->daylength_sec;
+canopy_evapotranspiration.c:				transp_daylength_sec   = meteo_daily->daylength_sec - evap_daylength_sec;
+canopy_evapotranspiration.c:				s->value[CANOPY_FRAC_DAY_TRANSP] = transp_daylength_sec / meteo_daily->daylength_sec;
+canopy_evapotranspiration.c:			subl = net_rad / meteo_daily->lh_sub;
+canopy_evapotranspiration.c:			melt = net_rad / meteo_daily->lh_fus;
+canopy_evapotranspiration.c:			if ( meteo_daily->tavg < 0. ) subl_melt = subl;
+canopy_evapotranspiration.c:			if( subl_melt_daylength_sec > meteo_daily->daylength_sec )
+canopy_evapotranspiration.c:				subl_melt             *= meteo_daily->daylength_sec;
+canopy_evapotranspiration.c:				transp_daylength_sec      = meteo_daily->daylength_sec - subl_melt_daylength_sec;
+canopy_evapotranspiration.c:				s->value[CANOPY_FRAC_DAY_TRANSP] = subl_melt_daylength_sec / meteo_daily->daylength_sec;
+canopy_evapotranspiration.c:			transp_daylength_sec             = meteo_daily->daylength_sec;
+canopy_interception.c:		//c->rain = meteo_daily->rain;
+canopy_interception.c:		//c->snow = meteo_daily->snow;
+canopy_interception.c:	if( ( meteo_daily->prcp > 0.) && ( s->value[LAI_PROJ] > 0. ) && ( ! s->value[CANOPY_WATER] ) && ( ! s->value[CANOPY_SNOW] ) )
+canopy_interception.c:		if( meteo_daily->rain )
+canopy_interception.c:			s->value[CANOPY_INT]      = s->value[INT_COEFF] * meteo_daily->rain * ( 1. - exp(-0.5 * s->value[LAI_PROJ])) * s->value[DAILY_CANOPY_COVER_PROJ];
+canopy_interception.c:			s->value[CANOPY_INT_RAIN] = MIN( Int_max_rain , meteo_daily->rain );
+canopy_interception.c:				Int_max_rain = 0.284 + 0.092 * s->value[LAI_PROJ] * ( 1. - exp ( -0.231 * meteo_daily->rain ) );
+canopy_interception.c:				s->value[CANOPY_INT_RAIN] = MIN( Int_max_rain , meteo_daily->rain );
+canopy_interception.c:			CHECK_CONDITION( s->value[CANOPY_INT_RAIN], > , meteo_daily->rain );
+canopy_interception.c:			//s->value[CANOPY_INT_SNOW] = s->value[CANOPY_SNOW] + 0.7 * ( Int_max_snow - s->value[CANOPY_SNOW] ) * (1. - exp( - ( meteo_daily->snow / Int_max_snow ) ) ) * s->value[DAILY_CANOPY_COVER_PROJ];
+canopy_interception.c:			s->value[CANOPY_INT_SNOW] = s->value[CANOPY_SNOW] + 0.7 * ( Int_max_snow - s->value[CANOPY_SNOW] ) * (1. - exp( - ( meteo_daily->snow / Int_max_snow ) ) ) ;
+canopy_interception.c:			CHECK_CONDITION(s->value[CANOPY_INT_SNOW], > , meteo_daily->snow);
+canopy_interception.c:	CHECK_CONDITION( c->temp_int_rain, > , meteo_daily->rain );  // controll on the value at cell/layer-level
+canopy_interception.c:        CHECK_CONDITION( c->temp_int_snow, > , meteo_daily->snow );
+canopy_interception.c:		meteo_daily->rain        -= c->temp_int_rain;
+canopy_interception.c:                CHECK_CONDITION( meteo_daily->rain , <, 0. );
+canopy_interception.c:		meteo_daily->snow        -= c->temp_int_snow;
+canopy_radiation_lw_band.c:	logger(g_debug_log, "-ATMOSPHERE DOWNWARD LONGWAVE RADIATION = %g  (W/m2)\n", meteo_daily->atm_lw_downward_W);
+canopy_radiation_lw_band.c:	TsoilK = meteo_daily->tsoil + TempAbs;
+canopy_radiation_lw_band.c:			(LW_emis_canopy_frac * ((1. + (1. - EMSOIL) * (1 - LW_emis_canopy_frac)) * meteo_daily->atm_lw_downward_W));
+canopy_radiation_lw_band.c:	s->value[LW_RAD_TRANSM] = (((1. - LW_emis_canopy_frac) * meteo_daily->atm_lw_downward_W) +
+canopy_radiation_lw_band.c:			(meteo_daily->atm_lw_downward_W * (1. - /*leaf_cell_cover_eff*/ s->value[CANOPY_COVER_PROJ]));
+canopy_radiation_lw_band.c:	c->net_lw_rad_for_soil = c->soil_long_wave_emitted - (EMSOIL * s->value[LW_RAD_TRANSM]) - (EMSOIL * meteo_daily->atm_lw_downward_W);
+canopy_radiation_lw_band.c://	s->value[LW_RAD_ABS] = LW_abs_canopy_frac * (meteo_daily->atm_lw_downward_W + lw_soil_emit - (2. * s->value[LW_RAD_EMIT]));
+canopy_radiation_lw_band.c://	s->value[LW_RAD_ABS] = LW_abs_canopy_frac *(meteo_daily->atm_lw_downward_W + lw_soil_emit - (2. * s->value[LW_RAD_EMIT])) * /*leaf_cell_cover_eff*/ s->value[CANOPY_COVER_EXP];
+canopy_radiation_lw_band.c://	lw_atm_trasm_canopy_to_soil = meteo_daily->atm_lw_downward_W * LW_transm_canopy_frac;
+canopy_radiation_lw_band.c://	lw_atm_temp = (lw_atm_trasm_canopy_to_soil * /*leaf_cell_cover_eff*/ s->value[CANOPY_COVER_EXP]) + (meteo_daily->atm_lw_downward_W * (1. - /*leaf_cell_cover_eff*/ s->value[CANOPY_COVER_EXP]));
+canopy_radiation_lw_band.c://	net_lw_canopy = meteo_daily->atm_lw_downward_W - lw_total_upward_to_atm;
+canopy_radiation_sw_band.c:	s->value[PAR]             = meteo_daily->par  * s->value[DAILY_CANOPY_COVER_PROJ];
+canopy_radiation_sw_band.c:	s->value[SW_RAD]              = meteo_daily->sw_downward_W * s->value[DAILY_CANOPY_COVER_PROJ];
+canopy_radiation_sw_band.c:	s->value[NET_RAD]              = meteo_daily->Net_rad_threePG * s->value[DAILY_CANOPY_COVER_PROJ];
+canopy_radiation_sw_band.c:		meteo_daily->par           -= (c->temp_apar + c->temp_par_refl);
+canopy_radiation_sw_band.c:		meteo_daily->sw_downward_W -= (c->temp_sw_rad_abs + c->temp_sw_rad_refl);
+canopy_radiation_sw_band.c:		meteo_daily->Net_rad_threePG -= (c->temp_net_rad_abs + c->temp_net_rad_refl);
+canopy_radiation_sw_band.c:		logger(g_debug_log, "PAR                   = %f molPAR/m2/day\n", meteo_daily->par);
+canopy_radiation_sw_band.c:		logger(g_debug_log, "Short Wave            = %f W/m2\n", meteo_daily->sw_downward_W);
+canopy_radiation_sw_band.c:		logger(g_debug_log, "Short Net_rad_threePG = %f W/m2\n", meteo_daily->Net_rad_threePG);
+canopy_radiation_sw_band.c:		logger(g_debug_log, "PAR                   = %f molPAR/m2/day\n", meteo_daily->par);
+canopy_radiation_sw_band.c:		logger(g_debug_log, "Short Wave            = %f W/m2\n", meteo_daily->sw_downward_W);
+canopy_radiation_sw_band.c:		logger(g_debug_log, "Net_rad_threePG       = %f W/m2\n", meteo_daily->Net_rad_threePG);
+canopy_temperature.c:	TairK = meteo_daily->tavg + TempAbs;
+canopy_temperature.c:	g_corr = pow((meteo_daily->tavg+TempAbs)/293.15, 1.75) * 101300/meteo_daily->air_pressure;
+canopy_temperature.c:	t1 = meteo_daily->tavg+dt;
+canopy_temperature.c:	t2 = meteo_daily->tavg-dt;
+canopy_temperature.c:	psych_p = meteo_daily->psych * (1. + ( rc / ra ));
+canopy_temperature.c:				((s->value[NET_RAD] * ra)/(meteo_daily->rho_air * CP)) *
+canopy_temperature.c:				((meteo_daily->es - meteo_daily->ea)/(delta +psych_p));
+cell_model_check_balance.c:	in = meteo_daily->incoming_par;
+cell_model_check_balance.c:		error_log("incoming par     = %f molPAR/m2/day\n", meteo_daily->incoming_par);
+cell_model_check_balance.c:	in = meteo_daily->incoming_sw_downward_W;
+cell_model_check_balance.c:		error_log("incoming radiation      = %f W/m2\n", meteo_daily->incoming_sw_downward_W);
+cell_model_check_balance.c:	in    = meteo_daily->Ndeposition + c->Nfix;
+cell_model_check_balance.c:		error_log("meteo_daily->Ndep = %f gN/m2\n",     meteo_daily->Ndeposition);
+cell_model_check_balance.c:	c->cell_nitrogen_in    = meteo_daily->Ndeposition + c->Nfix;
+cell_model_check_balance.c:		error_log("Ndep = %f gN/m2\n",                     meteo_daily->Ndeposition);
+cell_model_check_balance.c:	c->cell_water_in      = meteo_daily->prcp + c->daily_irrigation;
+cell_model_check_balance.c:		error_log("meteo_daily->prcp      = %f\n", meteo_daily->prcp);
+cell_model_check_balance.c:	c->cell_snow_in      = meteo_daily->snow;
+cell_model_check_balance.c:		error_log("meteo_daily->snow  = %f\n", meteo_daily->snow);
+decomposition.c:	if ( meteo_daily->tsoil < -10. )
+decomposition.c:		TsoilK      = meteo_daily->tsoil + TempAbs;
+decomposition.c:		temp_scalar = pow((( 45. - meteo_daily->tsoil ) / 20. ) , 0.2 ) * exp (0.076 * ( 1. - pow((( 45. - meteo_daily->tsoil ) / 20. ) , 4.9 ) ) );
+decomposition.c:		temp_scalar = pow((( 45. - meteo_daily->tsoil ) / 10. ) , 0.2 ) * exp (0.076 * ( 1. - pow((( 45. - meteo_daily->tsoil ) / 10. ) , 2.63 ) ) );
+dendrometry.c:	//		pot_par = meteo_daily->incoming_par - (meteo_daily->incoming_par * Light_refl_par_frac * s->value[DAILY_CANOPY_COVER_EXP]);
+fluxes.c://	c->daily_tot_w_flux = c->water_to_soil + meteo_daily->snow - c->water_to_atmosphere - c->out_flow;
+heat_fluxes.c:	s->value[CANOPY_LATENT_HEAT] = s->value[CANOPY_EVAPO_TRANSP] * meteo_daily->lh_vap / 86400;
+heat_fluxes.c:	c->daily_canopy_evapo_watt  = c->daily_canopy_evapo  * meteo_daily->lh_vap / 86400.0;
+heat_fluxes.c:	c->daily_canopy_transp_watt = c->daily_canopy_transp * meteo_daily->lh_vap / 86400.0;
+heat_fluxes.c:	if(meteo_daily->snow != 0.0)
+heat_fluxes.c:		c->daily_lh_flux += c->daily_snow_subl * ( meteo_daily->lh_sub * 1000. ) / 86400.;
+met_data.c:  c->years[year].m[month].d[day].seedling_par = meteo_daily->par;
+modifiers.c:	tleaf    = meteo_daily->tday;
+modifiers.c:	tleaf_K  = meteo_daily->tday + TempAbs;
+modifiers.c:	vpd = meteo_daily->vpd / 100.;
+modifiers.c:	Ko /= ( meteo_daily->air_pressure / 1e6 );
+modifiers.c:	Kc /= ( meteo_daily->air_pressure / 1e6 );
+modifiers.c:	gamma_star /= ( meteo_daily->air_pressure / 1e6 );
+modifiers.c:	if ( meteo_daily->tday == NO_DATA )
+modifiers.c:		if ( ( meteo_daily->tavg <= s->value[GROWTHTMIN]) || (meteo_daily->tavg >= s->value[GROWTHTMAX] ) )
+modifiers.c:			s->value[F_T] = ( ( meteo_daily->tavg - s->value[GROWTHTMIN]) / (s->value[GROWTHTOPT] - s->value[GROWTHTMIN] ) ) *
+modifiers.c:					pow ( ( ( s->value[GROWTHTMAX] - meteo_daily->tavg) / (s->value[GROWTHTMAX] - s->value[GROWTHTOPT] ) ),
+modifiers.c:		if ( ( meteo_daily->tday <= s->value[GROWTHTMIN]) || (meteo_daily->tday >= s->value[GROWTHTMAX] ) )
+modifiers.c:			s->value[F_T] = ( ( meteo_daily->tday - s->value[GROWTHTMIN]) / (s->value[GROWTHTOPT] - s->value[GROWTHTMIN] ) ) *
+modifiers.c:					pow ( ( ( s->value[GROWTHTMAX] - meteo_daily->tday) / (s->value[GROWTHTMAX] - s->value[GROWTHTOPT] ) ),
+modifiers.c:	s->value[F_VPD] = exp ( - s->value[COEFFCOND] * meteo_daily->vpd );
+modifiers.c:	if (meteo_daily->vpd < vpd_open)    /* no vpd effect */
+modifiers.c:	else if (meteo_daily->vpd > vpd_close)   /* full vpd effect */
+modifiers.c:		s->value[F_VPD] = (vpd_close - meteo_daily->vpd) / (vpd_close - vpd_open);
+Penman_Monteith.c:	tairK = meteo_daily->tday + TempAbs;
+Penman_Monteith.c:	vpdPa =  meteo_daily->vpd * 100.0;
+Penman_Monteith.c:	rr = meteo_daily->rho_air * CP / (4.0 * SBC_W * (pow(tairK, 3)));
+Penman_Monteith.c:	t1 = meteo_daily->tday+dt;
+Penman_Monteith.c:	t2 = meteo_daily->tday-dt;
+Penman_Monteith.c:	evap_or_transp = ( ( delta * net_rad ) + ( meteo_daily->rho_air * CP * vpdPa / rhr ) ) /
+Penman_Monteith.c:			( ( ( meteo_daily->air_pressure * CP * rv ) / ( meteo_daily->lh_vap * EPS * rhr ) ) + delta );
+Penman_Monteith.c:	evap_or_transp /= meteo_daily->lh_vap;
+phenology.c:						if ((meteo_daily->thermic_sum >= s->value[GROWTHSTART] && month <= 6) ||
+phenology.c:								(meteo_daily->daylength >= mdl  && month >= 6 && c->north == 0))
+phenology.c:							if (meteo_daily->daylength <= mdl  && month >= 6 && c->north == 0 )
+phenology.c:					if ( meteo_daily->daylength > mdl )
+phenology.c:		// old if ( meteo_daily->thermic_sum >= s->value[GROWTHSTART] && s->value[LAI] < s->value[PEAK_LAI] )
+photosynthesis2.c:		cond_corr                    = s->value[LEAF_SUN_CONDUCTANCE] * 1e6 / ( GCtoGW * Rgas * ( meteo_daily->tday + TempAbs ) );
+photosynthesis2.c:		s->value[ASSIMILATION_SUN]   = psn * s->value[LAI_SUN_PROJ] * meteo_daily->daylength_sec * GC_MOL * 1e-6;
+photosynthesis2.c:		cond_corr                    = s->value[LEAF_SHADE_CONDUCTANCE] * 1e6 / ( GCtoGW * Rgas * ( meteo_daily->tday + TempAbs ) );
+photosynthesis2.c:		s->value[ASSIMILATION_SHADE] = psn * s->value[LAI_SHADE_PROJ] * meteo_daily->daylength_sec * GC_MOL * 1e-6;
+photosynthesis2.c:	Ca  = meteo_annual->co2Conc * meteo_daily->air_pressure / 1e6;
+photosynthesis2.c:	O2  = (O2CONC / 100. ) * meteo_daily->air_pressure;
+photosynthesis2.c:	tleaf     = meteo_daily->tday;
+photosynthesis2.c:	tleaf_K   = meteo_daily->tday + TempAbs;
+photosynthesis2.c:	//tleaf10   = meteo_daily->ten_day_avg_tday;
+photosynthesis2.c:	//tleaf10_K = meteo_daily->ten_day_avg_tday + TempAbs;
+photosynthesis2.c:	tleaf10   = meteo_daily->ten_day_weighted_avg_tday;
+photosynthesis2.c:	tleaf10_K = meteo_daily->ten_day_weighted_avg_tday + TempAbs;
+photosynthesis3.c:		s->value[ASSIMILATION_SUN]   = psn * s->value[LAI_SUN_PROJ] * meteo_daily->daylength_sec * GC_MOL * 1e-6;
+photosynthesis3.c:		s->value[ASSIMILATION_SHADE] = psn * s->value[LAI_SHADE_PROJ] * meteo_daily->daylength_sec * GC_MOL * 1e-6;
+photosynthesis3.c:	conv = ( meteo_daily->air_pressure / 1e3 ) / ( Rgas * ( meteo_daily->tday + TempAbs ) );
+photosynthesis3.c:	rel_hum   = meteo_daily->rh_f / 100.;
+photosynthesis3.c:	vpd       = meteo_daily->vpd / 10.;
+photosynthesis3.c:	tleaf     = meteo_daily->tday;
+photosynthesis3.c:	tleaf_K   = meteo_daily->tday + TempAbs;
+photosynthesis3.c:	tleaf10   = meteo_daily->ten_day_avg_tday;
+photosynthesis3.c:	tleaf10_K = meteo_daily->ten_day_avg_tday + TempAbs;
+photosynthesis3.c:	gamma_unstar = CP * AIRMASS * meteo_daily->air_pressure / ( meteo_daily->lh_vap * WATERMASS);
+photosynthesis3.c:		s->value[STOMATAL_SUN_CONDUCTANCE]  = gs / 1e3 * ( GCtoGW * Rgas * ( meteo_daily->tday + TempAbs ) );
+photosynthesis3.c:		s->value[STOMATAL_SHADE_CONDUCTANCE] = gs / 1e3 * ( GCtoGW * Rgas * ( meteo_daily->tday + TempAbs ) );
+recruitment.c:	EstabRate = (s->value[GERMCAPACITY] * (1 - exp((-5) * (1 - meteo_daily->par))) * (1 - meteo_daily->par)) / s->counter[N_TREE];
+recruitment.c:	logger(g_debug_log, "Light absorb for establishment = %f \n", meteo_daily->par);
+regeneration.c:   if (meteo_daily->spring_thermic_sum >= s->value[GDD_SEED]) {
+regeneration.c:    //printf("Thermic sum = %f\n", meteo_daily->spring_thermic_sum);
+regeneration.c:     float SumTerm = meteo_daily->thermic_sum;
+regeneration.c:    if ( meteo_daily->thermic_sum >= s->value[GDD_SEED] &&  meteo_daily->sw_downward_W >= 0. && c->asw >= 0. && c->psi < min_psi) {
+regeneration.c:  if (meteo_daily->par >= 7 && meteo_daily->rh_f >= 65) {
+regeneration.c:     // printf("parsoil = %f\n", meteo_daily->par);
+regeneration.c:     // printf("rh = %f\n", meteo_daily->rh_f);
+regeneration.c:  //printf("parsoil = %f\n", meteo_daily->par);
+regeneration.c:     //printf("rh = %f\n", meteo_daily->rh_f);
+regeneration.c:      float Sum_soil_PAR = meteo_daily->par;   //PAR available for regeneration layer in summer
+regeneration.c:      //printf("Summer Soilpar = %f\n", meteo_daily->par);
+regeneration.c:      float Sum_avg_temp = meteo_daily->tavg;  //Average air temperature for regeneration layer in summer
+regeneration.c:      //printf("Summer avgTemp = %f\n", meteo_daily->tavg);
+snow.c:	t_melt = t_coeff * meteo_daily->tavg;
+snow.c:	incident_rad = (c->sw_rad_abs_snow * meteo_daily->daylength_sec) * SNOW_ABS * 0.001;
+snow.c:	incident_rad = ( c->net_rad_abs_snow * meteo_daily->daylength_sec) * SNOW_ABS * 0.001 ;
+snow.c:	if ( meteo_daily->tavg > 0. )
+snow.c:			r_melt             = incident_rad / meteo_daily->lh_fus;
+snow.c:		r_sub = incident_rad / meteo_daily->lh_sub;
+snow.c:	//if( c->snow_pack ) meteo_daily->tsoil = 0.0;
+soil_evaporation.c:	tairK  = meteo_daily->tavg  + TempAbs;
+soil_evaporation.c:	tsoilK = meteo_daily->tsoil + TempAbs;
+soil_evaporation.c:	rcorr = 1. / ( pow ( ( meteo_daily->tday + TempAbs ) / 293.15 , 1.75 ) * 101300 / meteo_daily->air_pressure );
+soil_evaporation.c:		pot_soil_evap *= meteo_daily->daylength_sec;
+soil_evaporation.c:		if ( meteo_daily->rain >= pot_soil_evap )
+soil_evaporation.c:			if ( meteo_daily->rain > c->daily_soil_evapo )
+soil_evaporation.c:				c->daily_soil_evapo = meteo_daily->rain;
+soil_evaporation.c:	c->daily_soil_evapo_watt       = c->daily_soil_evapo * meteo_daily->lh_vap_soil / 86400.;
+soil_evaporation.c:		rr = meteo_daily->rho_air * CP / ( 4. * SBC_W * ( pow ( tsoilK , 3. ) ) );
+soil_evaporation.c:		c->daily_soil_sh_flux = meteo_daily->rho_air * CP * ( ( tairK - tsoilK ) / rhr );
+soil_evaporation.c:		rr = meteo_daily->rho_air * CP / ( 4. * SBC_W * ( pow ( tsnowK , 3. ) ) );
+soil_evaporation.c:		c->daily_soil_sensible_heat_flux = meteo_daily->rho_air * CP * ((tairK-tsnowK)/rhr);
+soil_evaporation.c:	gamma = 65.05 + meteo_daily->tday * 0.064;
+soil_evaporation.c:	sat   = ( ( 2.503e6 * exp ( ( 17.268 * meteo_daily->tday ) / ( 237.3 + meteo_daily->tday ) ) ) )/
+soil_evaporation.c:			pow( ( 237.3 + meteo_daily->tday ) , 2. );
+soil_evaporation.c:	if ( meteo_daily->tsoil > 0. )
+soil_evaporation.c:		PotEvap = ( sat / ( sat + gamma ) ) * ( meteo_daily->sw_downward_W * 86400. ) / meteo_daily->lh_vap_soil;
+soil_evaporation.c:	c->daily_soil_evapo_watt = c->daily_soil_evapo * meteo_daily->lh_vap_soil / 86400.;
+soil_model.c:			c->daily_to_soilN += meteo_daily->Ndeposition;
+soil_model_check_balance.c:	in      = meteo_daily->par;
+soil_model_check_balance.c:		error_log("incoming par = %g molPAR/m2/day\n", meteo_daily->par);
+soil_model_check_balance.c:	in      =  meteo_daily->sw_downward_W;
+soil_model_check_balance.c:		error_log("incoming radiation = %g W/m2\n", meteo_daily->sw_downward_W);
+soil_model_check_balance.c:	in      = meteo_daily->rain + c->daily_snow_melt + c->daily_irrigation;
+soil_model_check_balance.c:		error_log("meteo_daily->rain = %g\n", meteo_daily->rain);
+soil_radiation_sw_band.c:	logger(g_debug_log,"incoming PAR for soil         = %g molPAR/m^2/day\n", meteo_daily->par);
+soil_radiation_sw_band.c:	logger(g_debug_log,"incoming Short Wave radiation = %g W/m2\n", meteo_daily->sw_downward_W);
+soil_radiation_sw_band.c:	logger(g_debug_log,"incoming       Net radiation  = %g W/m2\n", meteo_daily->Net_rad_threePG);
+soil_radiation_sw_band.c:		c->par_refl_soil     = meteo_daily->par             * Light_refl_rad_soil_frac;
+soil_radiation_sw_band.c:		c->sw_rad_refl_soil  = meteo_daily->sw_downward_W   * Light_refl_rad_soil_frac;
+soil_radiation_sw_band.c:		c->net_rad_refl_soil = meteo_daily->Net_rad_threePG * Light_refl_rad_soil_frac;
+soil_radiation_sw_band.c:		c->par_refl_snow     = meteo_daily->par             * Light_refl_rad_snow_frac;
+soil_radiation_sw_band.c:		c->sw_rad_refl_snow  = meteo_daily->sw_downward_W   * Light_refl_rad_snow_frac;
+soil_radiation_sw_band.c:		c->net_rad_refl_snow = meteo_daily->Net_rad_threePG * Light_refl_rad_snow_frac;
+soil_radiation_sw_band.c:		c->apar_soil        = meteo_daily->par             - c->par_refl_soil;
+soil_radiation_sw_band.c:		c->sw_rad_abs_soil  = meteo_daily->sw_downward_W   - c->sw_rad_refl_soil;
+soil_radiation_sw_band.c:		c->net_rad_abs_soil = meteo_daily->Net_rad_threePG - c->net_rad_refl_soil;
+soil_radiation_sw_band.c:		c->apar_snow        = meteo_daily->par             - c->par_refl_snow;
+soil_radiation_sw_band.c:		c->sw_rad_abs_snow  = meteo_daily->sw_downward_W   - c->sw_rad_refl_snow;
+soil_radiation_sw_band.c:		c->net_rad_abs_snow = meteo_daily->Net_rad_threePG - c->net_rad_refl_snow;
+soil_respiration.c:	temp_scalar = exp( 51609. / 8.314 ) * ( ( 1. / TempAbs ) - 1. / ( meteo_daily->tsoil + TempAbs ) );
+soil_respiration.c:	Tsoil = meteo_daily->tsoil;
+soil_water_balance.c:	c->asw += ( ( c->daily_irrigation + meteo_daily->rain + c->daily_snow_melt ) - ( c->daily_canopy_transp + c->daily_soil_evapo ) );
+soil_water_balance.c:	logger(g_debug_log, "rain = %g\n", meteo_daily->rain);
+soil_water_balance.c:	c->snow_pack += meteo_daily->snow - (c->daily_snow_melt + c->daily_snow_subl);
+soil_water_balance.c:	//	if ( -9999 == meteo_daily->swc )
+soil_water_balance.c:	//		c->soil_moist_ratio = meteo_daily->swc ;
+structure.c://								int daylength = ROUND(meteo_daily->daylength);
+structure.c://								temp_diff_cover = diff_cover / ( meteo_daily->daylength / 2. );
+tree_model.c:                                                //printf("Thermicsum = %f\n", meteo_daily->spring_thermic_sum);
+tree_model.c:                                                //printf("Winter soil temp = %f\n", meteo_daily->winter_soil);

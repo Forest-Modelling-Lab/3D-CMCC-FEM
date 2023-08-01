@@ -63,6 +63,8 @@ typedef struct {
 	double Ndeposition;                         /* (gN/m2/day) nitrogen deposition scaled from annual */
 	double spring_thermic_sum;                  /* Thermic sum for spring months (March-May) */   //SAPONARO
     double winter_soil;                         /* Mean soil temp for winter (Jan-March) */   //SAPONARO
+    double seedling_par;                        /* Soil par for summer (June-August) */   //SAPONARO
+    double seedling_temp;                       /* Average temp in summer (June-August) */   //SAPONARO
 
 	double Net_rad_threePG;
 } meteo_daily_t;

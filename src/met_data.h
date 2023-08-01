@@ -40,5 +40,7 @@ void Soil_temperature(const cell_t *const c, int day, int month, int year);
 void Daily_Ndeposition(const cell_t *const c, int day, int month, int year_iyearndex);
 void Thermic_sum_spring (const cell_t * c, const meteo_daily_t *const meteo_daily, const int day, const int month, const int year);
 void Soil_winter_temperature (const cell_t *const c, const meteo_daily_t *const meteo_daily, int day, int month, int year);
+void Seedling_soil_par (const cell_t *const c, const meteo_daily_t *const meteo_daily, int day, int month, int year);
+void Seedling_temp (const cell_t *const c, const meteo_daily_t *const meteo_daily , int day, int month, int year);
 
 #endif /* MET_DATA_H_ */
