@@ -163,67 +163,97 @@ int recruitment (cell_t *const c, const int day, const int month, const int year
 
 #endif // 0
 
-#if 0     //TEST THIS CODE
+#if 1     //CURRENTLY UNDER DEVELOPMENT
 
-static int fill_cell_for_regeneration (cell_t *const c)
-{
-
-	char* p;
-	height_t* h;
-	dbh_t* d;
-	age_t* a;
-	species_t* s;
+static int fill_cell_for_regeneration (cell_t *const c, species_t *const s) {
 
 
-	static height_t height   = { 0 };
-	static dbh_t dbh         = { 0 };
-	static age_t age         = { 0 };
-	static species_t species = { 0 };
+	char* p;      //Creates a variable p that point a string
+	height_t* h;  //Creates a pointer for height
+	dbh_t* d;     //Same for dbh
+	age_t* a;     //Same for age
 
+
+	static height_t height   = { 0 }; //Initializes a variable named height of typedef struct height_t and sets its value to { 0 }
+	static dbh_t dbh         = { 0 }; //Same for dbh
+	static age_t age         = { 0 }; //Same for age
+	static species_t species = { 0 }; //Same for species
+
+	//Is a preprocessor macro (<assert.h>) that checks the truthiness of the expression (c)
 	assert(c);
 
-	/* alloc memory for heights */
+	//Allocation memory for heights using the structure.c module function
 	if ( ! alloc_struct((void **)&c->heights, &c->heights_count, &c->heights_avail, sizeof(height_t)) )
-	{
-		return 0;
-	}
+    {
+        //printf("Memory not allocated.\n");
+        exit(1);
+     }
+     else
+     {
+        //printf("Memory allocated for heights.\n");
+    }
 	c->heights[c->heights_count-1]       = height;
-	c->heights[c->heights_count-1].value = 1.4;
+	c->heights[c->heights_count-1].value = (double)1.3;
 	h = &c->heights[c->heights_count-1];
 
-	/* alloc memory for dbhs */
+	//Allocation memory for dbhs using the structure.c module function
 	if ( ! alloc_struct((void **)&h->dbhs, &h->dbhs_count, &h->dbhs_avail, sizeof(dbh_t)) )
 	{
-		return 0;
+        //printf("Memory not allocated.\n");
+        exit(1);
+     }
+     else
+     {
+         //printf("Memory allocated for dbhs.\n");
 	}
 	h->dbhs[h->dbhs_count-1]       = dbh;
-	h->dbhs[h->dbhs_count-1].value = 1.;
+	h->dbhs[h->dbhs_count-1].value = (double)1.0;
 	d = &h->dbhs[h->dbhs_count-1];
 
-	/* alloc memory for ages */
+	//Allocation memory for ages using the structure.c module function
 	if ( ! alloc_struct((void **)&d->ages, &d->ages_count, &d->ages_avail, sizeof(age_t)) )
 	{
-		return 0;
+        //printf("Memory not allocated.\n");
+        exit(1);
+     }
+     else
+     {
+         //printf("Memory allocated for ages.\n");
 	}
 	d->ages[d->ages_count-1]       = age;
-	d->ages[d->ages_count-1].value = 2;
+	d->ages[d->ages_count-1].value = (int)2;
 	a = &d->ages[d->ages_count-1];
 
-	/* alloc memory for species */
+	//Allocation memory for species using the structure.c module function
 	if ( ! alloc_struct((void **)&a->species, &a->species_count, &a->species_avail, sizeof(species_t)) )
 	{
-		return 0;
+        //printf("Memory not allocated.\n");
+        exit(1);
+     }
+     else
+     {
+         //printf("Memory allocated for species.\n");
 	}
-
-	p =string_copy (g_settings->regeneration_species);
+    //Species name is got by the structure
+	p = string_copy(s->name);
 	if ( ! p ) return 0;
+	//printf("Name species = %s\n", p);
 
+	//All of these pointer and vector below refers to species typedef struct
 	a->species[a->species_count-1]                  = species;
 	a->species[a->species_count-1].management       = T;
 	a->species[a->species_count-1].name             = p;
-	a->species[a->species_count-1].counter[N_TREE]  = s->counter[SEEDLINGS_TO_SAPLINGS];
+    a->species[a->species_count-1].counter[N_TREE] = 10; //a->species[a->species_count-1].counter[SEEDLINGS_SURV];
 	a->species[a->species_count-1].counter[N_STUMP] = 0;
-	a->species[a->species_count-1].value[LAI_PROJ]  = 1.;
+	a->species[a->species_count-1].value[LAI_PROJ]  = 1.5;
+
+/*
+        printf("altezza = %f\n", c->heights[c->heights_count-1].value);
+        printf("dbh =      %f\n", h->dbhs[h->dbhs_count-1].value);
+        printf("age =      \t%d\n", d->ages[d->ages_count-1].value);
+        printf("Number of seedlings = %d", a->species[a->species_count-1].counter[SEEDLINGS_SURV]);
+*/
+
 
 	return 0;
 }
@@ -231,35 +261,60 @@ static int fill_cell_for_regeneration (cell_t *const c)
 int recruitment (cell_t *const c, const int day, const int month, const int year)
 {
 
-	int height;
-	int dbh;
-	int age;
-	int species;
-	int day_temp;
-	int month_temp;
-	int DaysInMonth [] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+    int height;  //Used to assign a position in a vector of heights
+	int dbh;     // Same for dbhs
+	int age;     // Same for ages
+	int species; // Same for species
+	int day_temp;  // Used to calculates vegetative days
+	int month_temp; // Same above
+	int DaysInMonth [] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 }; //Vector of days with its value (days per month)
 
 
-	if (! fill_cell_for_regeneration (c))
-	{
-	  logger_error(g_debug_log, "unable to fill cell memory! (exit)\n");
-                        exit(1);
-     }
+	height_t *h; //Used to assign pointer to a shortcut height
+	dbh_t *d;    //Same for dbh
+	age_t *a;    //Same for age
+    species_t *s;  //I can't put species cause in the funtion variables there is const species /**FIXME**/
 
-	height = c->heights_count - 1;
+	//if ( ! fill_cell_for_regeneration ( c, s ) ) {
+
+   //    return 0;
+	//}
+
+	//c->dos = 0; // Restart the day to 0 (maybe is useless)
+
+	// annual_forest_structure ( c, year ); //Is it right its position in the code?
+
+	height = c->heights_count - 1;   //Assigned the value of the last index of the array
 	dbh = c->heights[height].dbhs_count - 1;
 	age = c->heights[height].dbhs[dbh].ages_count - 1;
 	species = c->heights[height].dbhs[dbh].ages[age].species_count - 1;
 
+	                                    h = &c->heights[height];
+						                d = &h->dbhs[dbh];
+						                a = &d->ages[age];
+						                s = &a->species[species];
+
+	/* fill with species values from parameterization file */
 	if ( ! fill_species_from_file ( &c->heights[height].dbhs[dbh].ages[age].species[species]) )
 	{
-		return 0;
-	}
+      printf("Cell not filled.\n");
+	  exit(1);
 
-	// check for veg days
+	  }
+
+	  else
+	  {
+
+	  printf("Cell filled.\n");
+
+	} /*end if check*/
+
+	c->dos = 0; // Restart the day to 0 (maybe is useless)
+
+	/* check for veg days */
 	for (month_temp = 0; month_temp < 12; ++month_temp)
 	{
-		// for handling leap years
+		/* for handling leap years */
 		int days_per_month;
 
 		days_per_month = DaysInMonth[month_temp];
@@ -270,42 +325,43 @@ int recruitment (cell_t *const c, const int day, const int month, const int year
 
 		for ( day_temp = 0; day_temp < days_per_month; ++day_temp )
 		{
-			// compute annually the days for the growing season before any other process
+			/* compute annually the days for the growing season before any other process */
 			Veg_Days ( c , day_temp, month_temp, year );
 		}
-	}
+
+	} /*end for*/
 
 
-	// initialize new power function
+	// initialize new power function //
 	allometry_power_function           ( c );
 
-	// initialize new carbon pool fraction
+	// initialize new carbon pool fraction //
 	carbon_pool_fraction               ( c );
 
-	// initialize new forest structure
-	//initialization_forest_structure    (c , day, month, year);
-	annual_forest_structure(c, year);
+	// initialize new forest structure //
+	initialization_forest_structure    (c , day, month, year); //IL PROBLEMA È QUI CHE FA BLOCCARE LA SIMULAZIONE
 
     // comment: in the initialization_forest_structure the new added layer has height index = 0 and the
     // dominant layers index >= 1 ordered according to descending height
 
-    height = 0;  // so to initialize the new layer only! Which is the new added 'regeneration-layer'
+    height= 0;  // so to initialize the new layer only! Which is the new added 'regeneration-layer'
 
-	// initialize new forest class pools
-	initialization_forest_class_C      ( c, height, dbh, age, species );
+	// initialize new forest class pools //
+	//initialization_forest_class_C      ( c, height, dbh, age, species ); //ANCHE QUESTO RESTITUISCE ERRORE, FORSE PERCHÈ MANCA L'INIZIALIZZAZIONE
 
-	// initialize new nitrogen pools
+	// initialize new nitrogen pools //
 	initialization_forest_class_N      ( c, height, dbh, age, species );
 
-	// initialize new litter pools
+	// initialize new litter pools //
 	initialization_forest_class_litter ( c, height, dbh, age, species );
 
         //ddalmo august 2021
-        // update forest cell pool
+        // update forest cell pool //
 	initialization_forest_cell_C ( c, height, dbh, age, species );
 
-	// print new forest class dataset
+	// print new forest class dataset //
 	print_new_daily_forest_class_data  ( c, height, dbh, age, species );
+
 
 	return 1;
 }

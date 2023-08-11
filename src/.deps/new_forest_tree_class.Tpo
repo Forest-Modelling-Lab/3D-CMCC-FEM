@@ -1,4 +1,5 @@
-met_data.o: met_data.c /usr/include/stdc-predef.h /usr/include/stdio.h \
+new_forest_tree_class.o: new_forest_tree_class.c \
+ /usr/include/stdc-predef.h /usr/include/stdio.h \
  /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
  /usr/include/features.h /usr/include/features-time64.h \
  /usr/include/x86_64-linux-gnu/bits/wordsize.h \
@@ -50,16 +51,22 @@ met_data.o: met_data.c /usr/include/stdc-predef.h /usr/include/stdio.h \
  /usr/include/x86_64-linux-gnu/bits/struct_rwlock.h /usr/include/alloca.h \
  /usr/include/x86_64-linux-gnu/bits/stdlib-bsearch.h \
  /usr/include/x86_64-linux-gnu/bits/stdlib-float.h \
- /usr/include/x86_64-linux-gnu/bits/stdlib.h /usr/include/assert.h \
+ /usr/include/x86_64-linux-gnu/bits/stdlib.h /usr/include/string.h \
+ /usr/include/x86_64-linux-gnu/bits/types/locale_t.h \
+ /usr/include/x86_64-linux-gnu/bits/types/__locale_t.h \
+ /usr/include/strings.h \
+ /usr/include/x86_64-linux-gnu/bits/strings_fortified.h \
+ /usr/include/x86_64-linux-gnu/bits/string_fortified.h \
  /usr/include/math.h /usr/include/x86_64-linux-gnu/bits/math-vector.h \
  /usr/include/x86_64-linux-gnu/bits/libm-simd-decl-stubs.h \
  /usr/include/x86_64-linux-gnu/bits/flt-eval-method.h \
  /usr/include/x86_64-linux-gnu/bits/fp-logb.h \
  /usr/include/x86_64-linux-gnu/bits/fp-fast.h \
  /usr/include/x86_64-linux-gnu/bits/mathcalls-helper-functions.h \
- /usr/include/x86_64-linux-gnu/bits/mathcalls.h constants.h \
- soil_settings.h topo.h settings.h logger.h matrix.h meteo.h met_data.h \
- common.h
+ /usr/include/x86_64-linux-gnu/bits/mathcalls.h /usr/include/assert.h \
+ new_forest_tree_class.h matrix.h meteo.h soil_settings.h management.h \
+ constants.h settings.h common.h logger.h initialization.h structure.h \
+ biomass.h allometry.h g-function.h print.h regeneration.h
 /usr/include/stdc-predef.h:
 /usr/include/stdio.h:
 /usr/include/x86_64-linux-gnu/bits/libc-header-start.h:
@@ -118,7 +125,12 @@ met_data.o: met_data.c /usr/include/stdc-predef.h /usr/include/stdio.h \
 /usr/include/x86_64-linux-gnu/bits/stdlib-bsearch.h:
 /usr/include/x86_64-linux-gnu/bits/stdlib-float.h:
 /usr/include/x86_64-linux-gnu/bits/stdlib.h:
-/usr/include/assert.h:
+/usr/include/string.h:
+/usr/include/x86_64-linux-gnu/bits/types/locale_t.h:
+/usr/include/x86_64-linux-gnu/bits/types/__locale_t.h:
+/usr/include/strings.h:
+/usr/include/x86_64-linux-gnu/bits/strings_fortified.h:
+/usr/include/x86_64-linux-gnu/bits/string_fortified.h:
 /usr/include/math.h:
 /usr/include/x86_64-linux-gnu/bits/math-vector.h:
 /usr/include/x86_64-linux-gnu/bits/libm-simd-decl-stubs.h:
@@ -127,12 +139,20 @@ met_data.o: met_data.c /usr/include/stdc-predef.h /usr/include/stdio.h \
 /usr/include/x86_64-linux-gnu/bits/fp-fast.h:
 /usr/include/x86_64-linux-gnu/bits/mathcalls-helper-functions.h:
 /usr/include/x86_64-linux-gnu/bits/mathcalls.h:
-constants.h:
-soil_settings.h:
-topo.h:
-settings.h:
-logger.h:
+/usr/include/assert.h:
+new_forest_tree_class.h:
 matrix.h:
 meteo.h:
-met_data.h:
+soil_settings.h:
+management.h:
+constants.h:
+settings.h:
 common.h:
+logger.h:
+initialization.h:
+structure.h:
+biomass.h:
+allometry.h:
+g-function.h:
+print.h:
+regeneration.h:

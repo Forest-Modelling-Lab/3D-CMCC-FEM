@@ -481,38 +481,42 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 								/* tree level dendrometry */
 								dendrometry_old       ( c, layer, height, dbh, age, species, year );
 
-								/**************** NATURAL REGENERATION PROCESS **********************/
 
-                                  if ( g_settings->Natural_regeneration) {
-
-                                        // Seeds production function
-                                        Fruit_to_seeds_function ( c, a, s, day, month, year);
+    /*************************************** NATURAL REGENERATION PROCESS **************************************************/
 
 
+                            if ( g_settings->Natural_regeneration) {
+
+                                // Seeds production function
+                                Fruit_to_seeds_function ( c, a, s, day, month, year);
 
 
-                                            //Compute spring thermic sum before germination
-                                            Thermic_sum_spring (c, meteo_daily, day, month, year);
-                                            //printf("Thermicsum = %f\n", meteo_daily->spring_thermic_sum);
+                                //Compute spring thermic sum before germination
+                                Thermic_sum_spring (c, meteo_daily, day, month, year);
+                                //printf("Thermicsum = %f\n", meteo_daily->spring_thermic_sum);
 
-                                            //Compute winter soil mean temperature before germination
-                                            //Soil_winter_temperature (c, meteo_daily, day, month, year);
-                                            //printf("Winter soil temp = %f\n", meteo_daily->winter_soil);
+                                //Compute winter soil mean temperature before germination
+                                //Soil_winter_temperature (c, meteo_daily, day, month, year);
+                                //printf("Winter soil temp = %f\n", meteo_daily->winter_soil);
 
-                                            //Seeds germination
-                                            germination (c, meteo_daily, s, day, month, year);
-                                            //printf("Seedlings = \t%d\n", s->counter[SEEDLINGS]);
+                                //Compute par that rech the soil in summer
+                                Seedling_soil_par (c, meteo_daily, day, month, year);
 
-                                            //Compute par that rech the soil in summer
-                                            Seedling_soil_par (c, meteo_daily, day, month, year);
+                                //Compute air temperature in summer
+                                Seedling_temp (c, meteo_daily, day, month, year);
 
-                                            //Compute air temperature in summer
-                                            Seedling_temp (c, meteo_daily, day, month, year);
 
-                                            // Establishment
-                                            establishment (c, meteo_daily, s, day, month, year);
+                                //Seeds germination
+                                germination (c, meteo_daily, s, day, month, year);
 
-                                            }
+
+                                // Establishment
+                                establishment (c, meteo_daily, s, day, month, year);
+
+
+                                } /*end natural regeneration settings (on-off)*/
+
+
 
 
 
@@ -530,15 +534,21 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 									/* annual volume, MAI and CAI */
 									annual_tree_increment ( c, height, dbh, age, species, year );
 
-                                  //printf("Seed = %ld\n", s->counter[N_SEED]);
-                                  //printf("tank =   %ld\n", s->counter[TANK_SEEDS]);
-                                  //printf("Seedlings = \t%d\n", s->counter[SEEDLINGS]);
-                                  //printf("Seedlings surv =  \t%d\n", s->counter[SEEDLINGS_SURV]);
-                                  //printf("Seedlings pool =    \t%d\n", s->counter[SEEDLINGS_POOL]);
+									if ( g_settings->Natural_regeneration) {
 
-                                }
+                                       recruitment(c, day, month, year);
 
 
+                                   } /*end of nat reg*/
+
+
+
+                                    // printf("Seed = %ld\n", s->counter[N_SEED]);
+                                    // printf("tank =   %ld\n", s->counter[TANK_SEEDS]);
+                                    // printf("Seedlings = \t%d\n", s->counter[SEEDLINGS]);
+                                    //printf("Seedlings surv =  \t%d\n", s->counter[SEEDLINGS_SURV]);
+
+                                } /*end of year*/
 
 
 
@@ -593,43 +603,6 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	}
 	logger(g_debug_log, "****************END OF LAYER CLASS***************\n");
 
-	 /****************************NATURAL REGENERATION PROCESS******************************************/
-
-
-       // if (g_settings->Natural_regeneration) {
-
-        //Compute spring thermic sum before germination
-       // Thermic_sum_spring (c, meteo_daily, day, month, year);
-
-        //Compute spring mean temperature in winter
-       // Soil_winter_temperature (c, meteo_daily, day, month, year);
-
-        //Seeds germination (Saponaro)
-      //  germination (c, meteo_daily, s, day, month, year);
-       //printf("Seedlings_pool = %d\n", s->counter[SEEDLINGS_POOL]);
-
-       // Establishment (Saponaro)
-      // establishment (c, meteo_daily, s, day, month, year);
-
-    //  }
-/*
-
-    if (( ! day && ! month && year ) && g_settings->Natural_regeneration)  {
-
-      // Saplings formation (Saponaro)
-      recruitment (c, day, month, year);
-
-      if ( ! recruitment( c , day, month, year) )
-
-            {
-              logger_error(g_debug_log, "unable to add new replanted class! (exit)\n");
-              exit(1);
-                }
-
-
-            }
-
-*/
 	/* ok */
 	return 1;
 }

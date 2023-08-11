@@ -16,8 +16,8 @@
 #include "CN-allocation.h"
 #include "C-fruit-partitioning.h"
 
-//extern logger_t* g_debug_log;
-//extern settings_t* g_settings;
+extern logger_t* g_debug_log;
+extern settings_t* g_settings;
 
 #if 0
 
@@ -221,7 +221,7 @@ int Fruit_to_seeds_function (cell_t *const c, const age_t *const a, species_t *c
            if (a->value >= s->value[SEXAGE]) {
 
 
-               carbon_tank = (s->value[MAX_FRUIT_C] * 1000000); // convert tC(fruit) to gC/cell/year(fruit); MAX_FRUIT_C expressed as (tC/cell/year)
+               carbon_tank = (s->value[MAX_FRUIT_C] * 1e6); //Convert tC(fruit) to gC/cell(fruit);
               //printf("MAX_FRUIT_C = %f\n", s->value[MAX_FRUIT_C]);
               //printf("Carbontank = %f\n", carbon_tank);
               //printf("AGE = %d\n", a->value);
@@ -230,14 +230,14 @@ int Fruit_to_seeds_function (cell_t *const c, const age_t *const a, species_t *c
                NumberFruit = (carbon_tank / s->value[WEIGHTFRUIT]);
                //printf("Number fruit = %ld\n", NumberFruit);
 
-               // Calculates the number of seed per stand based on species specific weight of seed (nseed/tree/year)
+               //Calculates the number of seed per stand based on species specific weight of seed (nseed/tree/year)
                NumberSeed = (NumberFruit / s->value[WEIGHTSHELL]);
                //printf("Number seed = %ld\n", NumberSeed);
 
                //Number of seed per species (nseed/cell/year)
                s->counter[N_SEED] = NumberSeed;
                //printf("N_SEED = %ld\n", s->counter[N_SEED]);
-               //printf("NumberSeed = %ld\n", NumberSeed);
+
 
              } else {
 
@@ -245,14 +245,13 @@ int Fruit_to_seeds_function (cell_t *const c, const age_t *const a, species_t *c
 
              NumberSeed = 0.;
         }
+/*
+        if ( c->doy == ( IS_LEAP_YEAR ( c->years[year].year ) ? 366 : 365)) {
 
-    //This is mandatory cause at the end of the year of simulation tou can accumulate the last number of the seeds simulated
-    //(you can't put this routine in a tree_model.c)
-    if ( c->doy == ( IS_LEAP_YEAR ( c->years[year].year ) ? 366 : 365) ) {
+       s->counter[TANK_SEEDS] += NumberSeed;
 
-        //Accumulate seeds over years
-        s->counter[TANK_SEEDS] += s->counter[N_SEED];
     }
+*/
 
   return 0;
 }

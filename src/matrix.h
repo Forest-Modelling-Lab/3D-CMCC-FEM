@@ -866,25 +866,11 @@ enum {
 	SEEDLINGS,                          // (seedlings/cell) Number of seedlings per species //
 	SEEDLINGS_POOL,                     // (seedlings/cell) Number of seedlings accumulated over years //
     SEEDLINGS_SURV,                     // (seedlings/cell) Number of seedlings survived after germination //
-    SEEDLINGS_TO_SAPLINGS,              // (seedlings/cell) Number of seedlings available to become Saplings //
+    //SAPLINGS,                         // (saplings/cell) Number of saplings
 
 	COUNTERS
 };
-/*
-enum {
 
-    N_SEED,                             // (seeds/cell) Seeds number per class //
-    TANK_SEEDS,                         // (seeds/cell/years) Number of seeds accumulated over year //
-
-	SEEDLINGS,                          // (seedlings/cell) Number of seedlings per species //
-	SEEDLINGS_POOL,                     // (seedlings/cell) Number of seedlings accumulated over years //
-
-    SEEDLINGS_SURV,                     // (seedlings/cell) Number of seedlings survived after germination //
-    SEEDLINGS_TO_SAPLINGS,              // (seedlings/cell) Number of seedlings available to become Saplings //
-
-    COUNTERS_R
-};
-*/
 typedef struct
 {
 	int year_stand;
@@ -912,34 +898,10 @@ typedef struct
 	int rows_count;
 
 } dataset_t;
-/*
-typedef struct {
 
- char *name;
- int counter[COUNTERS_R];        // saplings cell /
-
-} sapling_t;
-
-typedef struct {
-
-
- sapling_t *sapling;                    // seedlings cell //
- int counter[COUNTERS_R];
-
-} seedling_t;
-
-typedef struct {
-
-                                         // seeds cell //
- seedling_t *seedling;
- long int counter[COUNTERS_R];
-
-} seed_t;
-*/
 typedef struct
 {
 	int index;
-    //seed_t *seed;
 	e_management management;
 
 	char *name;                         /** species name **/
@@ -1314,16 +1276,15 @@ typedef struct
 	/************************************************** TREE REGENERATION **************************************************/
 
 	/*Seeds*/
-	//long int NumberFruit;                   //(nfruit/cell/year) Number of Fruit
-	//long int NumberSeed;                    //(nseed/cell/year) Number of Seeds
-    //double carbon_tank;                     //(gC/m2) seed carbon at cell level
+	long int NumberFruit;                   //(nfruit/cell/year) Number of Fruit
+	long int NumberSeed;                    //(nseed/cell/year) Number of Seeds
+    double carbon_tank;                     //(gC/m2) seed carbon at cell level
 
     /*Seedlings*/
-    //int Seedlings_Number;                   //(Seedlings/cell) Number of seedlings per species
-    //int Seedlings_pool;                     //(Seedlings/cell) Number of seedling over years
-    //int Seedlings_surv;                   //(Seedlings/cell) Number of saplings over years
-    //int Seedlings;                          //(Seedlings/cell) Number of saplings over years
-    /*Saplings*/
+    int Seedlings_Number;                   //(Seedlings/cell) Number of seedlings per species
+    int Seedlings_pool;                     //(Seedlings/cell) Number of seedling over years
+    int Seedlings_surv;                   //(Seedlings/cell) Number of saplings over years
+    int Seedlings;                          //(Seedlings/cell) Number of saplings over years
 
 	/************************************************** LITTER AND SOIL **************************************************/
 

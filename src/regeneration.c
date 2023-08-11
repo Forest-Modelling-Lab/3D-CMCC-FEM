@@ -95,31 +95,25 @@ int germination (cell_t *const c, const meteo_daily_t *const meteo_daily, specie
     int Seedlings_Number = 0.;
 
 
-
     //Calculate Seedlings Number
    if (meteo_daily->spring_thermic_sum >= s->value[GDD_SEED]) {
 
 
             //Perform number of seeds vitality
-            N_seed_vitality = s->counter[TANK_SEEDS] * SEED_VITALITY;
+            N_seed_vitality = s->counter[N_SEED] * SEED_VITALITY;
 
             //Perform number of seedlings
             Seedlings_Number = N_seed_vitality * s->value[GERMCAPACITY];
 
+
+
+
             //Assigned seedling number to a species vector
             s->counter[SEEDLINGS] = Seedlings_Number;
-
 
            } else {
 
            Seedlings_Number = 0;
-
-    }
-
-    //Reset the tank of the seed to zero cause all the seeds became seedlings
-    if ( c->doy == ( IS_LEAP_YEAR ( c->years[year].year ) ? 366 : 365) && s->counter[SEEDLINGS] > 0.) {
-
-    s->counter[TANK_SEEDS] = 0.;
 
     }
 
@@ -335,6 +329,7 @@ int establishment (cell_t *const c, const meteo_daily_t *const meteo_daily, spec
     int Seedlings_surv = 0.; //Seedlings number that survive after first year
 
 
+
        //Note: Radiation that reachs the soil surface in Muffler L. et al., 2021 is in (max surv)80 micromol/m2*sec.
        //The model calculates the radiation in mol/m2*day (in this case is 7 mol/m2*day).
 
@@ -372,14 +367,14 @@ int establishment (cell_t *const c, const meteo_daily_t *const meteo_daily, spec
 	    Seedlings_surv = 0.;
 	    //printf("All seedlings died.\n");
     }
-
+/*
     if ( c->doy == ( IS_LEAP_YEAR ( c->years[year].year ) ? 366 : 365) ) {
 
       //Accumulate seedlings until become saplings
       s->counter[SEEDLINGS_POOL] += s->counter[SEEDLINGS_SURV];
 
     }
-
+*/
     //printf("Soil par seedlings = \t%f\n", meteo_daily->seedling_par);
     //printf(" Temp seedlings = \t%f\n", meteo_daily->seedling_temp);
 
