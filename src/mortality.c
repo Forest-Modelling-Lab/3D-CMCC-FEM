@@ -19,6 +19,7 @@
 #include "canopy_cover.h"
 #include "allometry.h"
 #include "littering.h"
+#include "regeneration.h"
 
 extern settings_t* g_settings;
 extern logger_t* g_debug_log;
@@ -774,3 +775,25 @@ void pruning_daily(matrix_t* m, int cell_index, pruning_t* p)
 	s->value[N_TO_RESERVE]                  += s->value[N_CROOT_TO_RESERVE];
 	s->value[N_TO_CWD]                      += s->value[N_CROOT_TO_CWD];
 }
+
+#if 0     //Saponaro test for seedlings mortality
+
+void seedlings_mortality (cell_t *const c, const meteo_daily_t *const meteo_daily, species_t *const s, const int day, const int month, const int year)
+{
+
+ int Seedling_dead = 0;
+ age_t* a;
+
+
+ if (establishment (c, meteo_daily, s, day, month, year) )
+  {
+
+     Seedling_dead = s->counter[SEEDLINGS] * (0.0023 * pow(a->value, 2) + (0.1195 * a->value) + 1.03);
+
+  }
+
+ return 0;
+
+}
+
+#endif // 0

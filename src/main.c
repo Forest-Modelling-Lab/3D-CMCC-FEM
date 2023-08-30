@@ -1684,7 +1684,7 @@ int main(int argc, char *argv[]) {
 					Soil_temperature            ( &matrix->cells[cell], day, month, year );
 					Soil_winter_temperature     ( &matrix->cells[cell], matrix->cells[cell].years[year].m, day, month, year); //SAPONARO
 					Thermic_sum                 ( &matrix->cells[cell], matrix->cells[cell].years[year].m, day, month, year );
-					Thermic_sum_spring          ( &matrix->cells[cell], matrix->cells[cell].years[year].m, day, month, year  ); //SAPONARO
+					//Thermic_sum_spring          ( &matrix->cells[cell], matrix->cells[cell].years[year].m, day, month, year  ); //SAPONARO
 					Air_density                 ( matrix->cells[cell].years[year].m, day, month );
 					Day_Length                  ( &matrix->cells[cell], day, month, year );
 					Latent_heat                 ( matrix->cells[cell].years[year].m, day, month );

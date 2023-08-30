@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
+#include <stdbool.h>
 #include "matrix.h"
 #include "constants.h"
 #include "logger.h"
@@ -91,34 +92,30 @@ void regeneration (cell_t *const c, const int height, const int dbh, const int a
 int germination (cell_t *const c, const meteo_daily_t *const meteo_daily, species_t *const s, const int day, const int month, const int year) {
 
 
-    int N_seed_vitality = 0.;
-    int Seedlings_Number = 0.;
-
-
-    //Calculate Seedlings Number
-   if (meteo_daily->spring_thermic_sum >= s->value[GDD_SEED]) {
+    int N_seed_vitality = 0;
+    int Seedlings_Number = 0;
+    //int *ptr_Seedlings;
 
 
             //Perform number of seeds vitality
             N_seed_vitality = s->counter[N_SEED] * SEED_VITALITY;
+            //printf("Seed vitality = %d\n", N_seed_vitality);
 
             //Perform number of seedlings
             Seedlings_Number = N_seed_vitality * s->value[GERMCAPACITY];
 
-
-
-
             //Assigned seedling number to a species vector
             s->counter[SEEDLINGS] = Seedlings_Number;
+            //printf("Seedlings = \t%d\n", s->counter[SEEDLINGS])
 
-           } else {
+            //Assign variable to pointer
+            //ptr_Seedlings = &Seedlings_Number;
 
-           Seedlings_Number = 0;
 
-    }
-
-    //printf("Thermic sum = %f\n", meteo_daily->spring_thermic_sum);
     //printf("Seedlings = \t%d\n", s->counter[SEEDLINGS]);
+    //printf("Thermicsum = %f\n", meteo_daily->spring_thermic_sum);
+    //printf("ptr seedlings = %d\n", *ptr_Seedlings);
+
 
     return 0;
 }
@@ -326,7 +323,7 @@ int establishment(cell_t *const c, const meteo_daily_t *const meteo_daily, speci
 int establishment (cell_t *const c, const meteo_daily_t *const meteo_daily, species_t *const s, const int day, const int month, const int year) {
 
 
-    int Seedlings_surv = 0.; //Seedlings number that survive after first year
+    int Seedlings_surv = 0; //Seedlings number that survive after first year
 
 
 
@@ -364,7 +361,7 @@ int establishment (cell_t *const c, const meteo_daily_t *const meteo_daily, spec
 
        } else {
 
-	    Seedlings_surv = 0.;
+	    Seedlings_surv = 0;
 	    //printf("All seedlings died.\n");
     }
 /*

@@ -759,7 +759,7 @@ void Thermic_sum_spring (const cell_t * c, const meteo_daily_t *const meteo_dail
    double spring_thermic_sum = 0.;
 
    // Spring condition (March-May)
-   if (month >= MARCH && month <= MAY) {
+   if ( day == 30 && month == MAY) {
 
    //Adding this chain of vector can export the results in other modules
    c->years[year].m[month].d[day].spring_thermic_sum = c->years[year].m[month].d[day].thermic_sum;
@@ -771,7 +771,7 @@ void Thermic_sum_spring (const cell_t * c, const meteo_daily_t *const meteo_dail
 
    }
 
-   //printf("Thermicsum = %f\n", c->years[year].m[month].d[day].spring_thermic_sum);
+   //printf("Thermicsum = %f\n", meteo_daily->spring_thermic_sum);
 }
 
 void Soil_winter_temperature (const cell_t *const c, const meteo_daily_t *const meteo_daily, int day, int month, int year) {

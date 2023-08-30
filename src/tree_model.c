@@ -485,38 +485,55 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
     /*************************************** NATURAL REGENERATION PROCESS **************************************************/
 
 
-                            if ( g_settings->Natural_regeneration) {
+                        if ( g_settings->Natural_regeneration) {
+
+                            if ( c->doy == ( IS_LEAP_YEAR ( c->years[year].year ) ? 366 : 365) )
+								{
 
                                 // Seeds production function
                                 Fruit_to_seeds_function ( c, a, s, day, month, year);
+                                //printf("Carbon fruit = %f\n", s->value[MAX_FRUIT_C]);
+                                //printf("Seed = %ld\n", s->counter[N_SEED]);
 
+                                } //end of leap year
 
                                 //Compute spring thermic sum before germination
                                 Thermic_sum_spring (c, meteo_daily, day, month, year);
                                 //printf("Thermicsum = %f\n", meteo_daily->spring_thermic_sum);
 
+                                if (year && meteo_daily->spring_thermic_sum >= s->value[GDD_SEED])
+                                {
+                                   //Seeds germination
+                                   germination (c, meteo_daily, s, day, month, year);
+                                   //printf("Seedlings = \t%d\n", s->counter[SEEDLINGS]);
+
+                                  } // end of condition
+                                   else
+                                  {
+
+                                  c->Seedlings_Number = 0;
+
+                                }
+
                                 //Compute winter soil mean temperature before germination
                                 //Soil_winter_temperature (c, meteo_daily, day, month, year);
                                 //printf("Winter soil temp = %f\n", meteo_daily->winter_soil);
 
-                                //Compute par that rech the soil in summer
+                                //Compute par that reach the soil in summer
                                 Seedling_soil_par (c, meteo_daily, day, month, year);
 
                                 //Compute air temperature in summer
                                 Seedling_temp (c, meteo_daily, day, month, year);
 
 
-                                //Seeds germination
-                                germination (c, meteo_daily, s, day, month, year);
-
-
                                 // Establishment
                                 establishment (c, meteo_daily, s, day, month, year);
 
+                                //Mortality Establishment
+                                //seedlings_mortality (c, meteo_daily, s, day, month, year);
 
-                                } /*end natural regeneration settings (on-off)*/
 
-
+                                } /*end natural regeneration settings (on || off)*/
 
 
 
@@ -536,17 +553,17 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 
 									if ( g_settings->Natural_regeneration) {
 
-                                       recruitment(c, day, month, year);
+
+                                       //recruitment(c, s, day, month, year);
 
 
                                    } /*end of nat reg*/
 
-
-
-                                    // printf("Seed = %ld\n", s->counter[N_SEED]);
-                                    // printf("tank =   %ld\n", s->counter[TANK_SEEDS]);
-                                    // printf("Seedlings = \t%d\n", s->counter[SEEDLINGS]);
-                                    //printf("Seedlings surv =  \t%d\n", s->counter[SEEDLINGS_SURV]);
+                                     //printf("Seed = %ld\n", s->counter[N_SEED]);
+                                     //printf("tank =   %ld\n", s->counter[TANK_SEEDS]);
+                                     //printf("Seedlings = \t%d\n", s->counter[SEEDLINGS]);
+                                     //printf("Seedlings pool = %d\n", s->counter[SEEDLINGS_POOL]);
+                                     //printf("Seedlings surv =  \t%d\n", s->counter[SEEDLINGS_SURV]);
 
                                 } /*end of year*/
 

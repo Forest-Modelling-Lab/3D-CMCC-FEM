@@ -213,8 +213,8 @@ int Fruit_to_seeds_function (cell_t *const c, const int layer, const age_t *cons
 int Fruit_to_seeds_function (cell_t *const c, const age_t *const a, species_t *const s, const int day, const int month, const int year) {
 
 
- long int NumberSeed = 0.;                    //Number of Seeds
- long int NumberFruit = 0.;                   //Number of Fruit
+ long int NumberSeed = 0;                    //Number of Seeds
+ long int NumberFruit = 0;                   //Number of Fruit
  double carbon_tank = 0.;                     //Carbon for seeds
 
 
@@ -241,14 +241,15 @@ int Fruit_to_seeds_function (cell_t *const c, const age_t *const a, species_t *c
 
              } else {
 
-             NumberFruit = 0.;
+             NumberFruit = 0;
 
-             NumberSeed = 0.;
+             NumberSeed = 0;
         }
 /*
         if ( c->doy == ( IS_LEAP_YEAR ( c->years[year].year ) ? 366 : 365)) {
 
        s->counter[TANK_SEEDS] += NumberSeed;
+       s->counter[N_SEED] = 0.;
 
     }
 */

@@ -243,22 +243,23 @@ static int fill_cell_for_regeneration (cell_t *const c, species_t *const s) {
 	a->species[a->species_count-1]                  = species;
 	a->species[a->species_count-1].management       = T;
 	a->species[a->species_count-1].name             = p;
-    a->species[a->species_count-1].counter[N_TREE] = 10; //a->species[a->species_count-1].counter[SEEDLINGS_SURV];
+    a->species[a->species_count-1].counter[N_TREE] = 100;//s->counter[SEEDLINGS_SURV];
 	a->species[a->species_count-1].counter[N_STUMP] = 0;
-	a->species[a->species_count-1].value[LAI_PROJ]  = 1.5;
+	a->species[a->species_count-1].value[LAI_PROJ]  = (double)1.5;
 
 /*
         printf("altezza = %f\n", c->heights[c->heights_count-1].value);
         printf("dbh =      %f\n", h->dbhs[h->dbhs_count-1].value);
         printf("age =      \t%d\n", d->ages[d->ages_count-1].value);
-        printf("Number of seedlings = %d", a->species[a->species_count-1].counter[SEEDLINGS_SURV]);
+        printf("Number of seedlings =  \t%d\n", a->species[a->species_count-1].counter[N_TREE]);
+        printf("LAI =   %f\n", a->species[a->species_count-1].value[LAI_PROJ]);
 */
 
 
 	return 0;
 }
 
-int recruitment (cell_t *const c, const int day, const int month, const int year)
+int recruitment (cell_t *const c, species_t *const s, const int day, const int month, const int year)
 {
 
     int height;  //Used to assign a position in a vector of heights
@@ -269,52 +270,45 @@ int recruitment (cell_t *const c, const int day, const int month, const int year
 	int month_temp; // Same above
 	int DaysInMonth [] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 }; //Vector of days with its value (days per month)
 
-
+/*
 	height_t *h; //Used to assign pointer to a shortcut height
 	dbh_t *d;    //Same for dbh
 	age_t *a;    //Same for age
-    species_t *s;  //I can't put species cause in the funtion variables there is const species /**FIXME**/
+    species_t *s; //Same for species
 
-	//if ( ! fill_cell_for_regeneration ( c, s ) ) {
+    h = &c->heights[height]; //Here you're accessing the structure nested (typedef) to read the data
+    d = &h->dbhs[dbh];
+    a = &d->ages[age];
+    s = &a->species[species];
+*/
+	if ( ! fill_cell_for_regeneration ( c, s ) )
+	{
+       return 0;
+	}
 
-   //    return 0;
-	//}
+       //printf("Name species = %s\n", s->name);
+       //printf("altezza = %f\n", h);
+       //printf("dbh =      %f\n", h->dbhs[h->dbhs_count-1].value);
+       //printf("age =      \t%d\n", d->ages[d->ages_count-1].value);
+       //printf("Number of seedlings =  \t%d\n", a->species[a->species_count-1].counter[N_TREE]);
+       //printf("LAI =   %f\n", a->species[a->species_count-1].value[LAI_PROJ]);
 
-	//c->dos = 0; // Restart the day to 0 (maybe is useless)
-
-	// annual_forest_structure ( c, year ); //Is it right its position in the code?
 
 	height = c->heights_count - 1;   //Assigned the value of the last index of the array
 	dbh = c->heights[height].dbhs_count - 1;
 	age = c->heights[height].dbhs[dbh].ages_count - 1;
 	species = c->heights[height].dbhs[dbh].ages[age].species_count - 1;
 
-	                                    h = &c->heights[height];
-						                d = &h->dbhs[dbh];
-						                a = &d->ages[age];
-						                s = &a->species[species];
-
 	/* fill with species values from parameterization file */
 	if ( ! fill_species_from_file ( &c->heights[height].dbhs[dbh].ages[age].species[species]) )
-	{
-      printf("Cell not filled.\n");
-	  exit(1);
+	 {
+      return 0;
+     }
 
-	  }
-
-	  else
-	  {
-
-	  printf("Cell filled.\n");
-
-	} /*end if check*/
-
-	c->dos = 0; // Restart the day to 0 (maybe is useless)
-
-	/* check for veg days */
+	// check for veg days
 	for (month_temp = 0; month_temp < 12; ++month_temp)
 	{
-		/* for handling leap years */
+		// for handling leap years
 		int days_per_month;
 
 		days_per_month = DaysInMonth[month_temp];
@@ -325,45 +319,41 @@ int recruitment (cell_t *const c, const int day, const int month, const int year
 
 		for ( day_temp = 0; day_temp < days_per_month; ++day_temp )
 		{
-			/* compute annually the days for the growing season before any other process */
+			// compute annually the days for the growing season before any other process
 			Veg_Days ( c , day_temp, month_temp, year );
 		}
 
-	} /*end for*/
+	} //end for
 
 
-	// initialize new power function //
+	// initialize new power function
 	allometry_power_function           ( c );
 
-	// initialize new carbon pool fraction //
+	// initialize new carbon pool fraction
 	carbon_pool_fraction               ( c );
 
-	// initialize new forest structure //
-	initialization_forest_structure    (c , day, month, year); //IL PROBLEMA È QUI CHE FA BLOCCARE LA SIMULAZIONE
+	// initialize new forest structure
+	initialization_forest_structure    (c , day, month, year);
 
-    // comment: in the initialization_forest_structure the new added layer has height index = 0 and the
-    // dominant layers index >= 1 ordered according to descending height
+	height= 0;
 
-    height= 0;  // so to initialize the new layer only! Which is the new added 'regeneration-layer'
+	// initialize new forest class pools
+	initialization_forest_class_C      ( c, height, dbh, age, species );
 
-	// initialize new forest class pools //
-	//initialization_forest_class_C      ( c, height, dbh, age, species ); //ANCHE QUESTO RESTITUISCE ERRORE, FORSE PERCHÈ MANCA L'INIZIALIZZAZIONE
-
-	// initialize new nitrogen pools //
+	// initialize new nitrogen pools
 	initialization_forest_class_N      ( c, height, dbh, age, species );
 
-	// initialize new litter pools //
+	// initialize new litter pools
 	initialization_forest_class_litter ( c, height, dbh, age, species );
 
-        //ddalmo august 2021
-        // update forest cell pool //
+    //ddalmo august 2021 update forest cell pool
 	initialization_forest_cell_C ( c, height, dbh, age, species );
 
-	// print new forest class dataset //
+	// print new forest class dataset
 	print_new_daily_forest_class_data  ( c, height, dbh, age, species );
 
 
-	return 1;
+	return 0;
 }
 
 #endif // 1
