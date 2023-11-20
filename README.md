@@ -25,7 +25,7 @@ The **3D-CMCC-FEM** has been developed by:
 Alessio Collalti  
 Daniela Dalmonech  
 Alessio Ribeca     
-Gina Marano       
+ 
 
 
 *Forest Ecology Laboratory* at the National Research Council of Italy (CNR),Institute for Agricultural and Forestry Systems in the Mediterranean (ISAFOM), Via della Madonna Alta, 128, 06128 - Perugia (PG), Italy, and Tuscia University (UNITUS), Department for innovation in biological, agro-food and forest systems (DIBAF), Via S. Camillo de Lellis, snc 01100 - Viterbo, Italy.   
@@ -35,9 +35,10 @@ CNR and UNITUS accept no responsibility for the use of the **3D-CMCC-FEM** in th
 
 For any further information please contact us:  
 -Alessio Collalti (Lab. Head and Model Principal Investigator): alessio.collalti@cnr.it  
--Daniela Dalmonech: daniela.dalmonech@isafom.cnr.it  
--Alessio Ribeca: a.ribeca@unitus.it  
--Gina Marano: ginamarano.forest@gmail.com  
+-Daniela Dalmonech: daniela.dalmonech@cnr.it  
+-Mauro Morichetti: mauro.morichetti@cnr.it
+-Elia Vangi: elia.vangi@isafom.cnr.it
+-Elisa Grieco: elisa.grieco@cnr.it
 -The model: 3d-cmcc-fem@gmail.com  
 -The lab: forest.modelling.lab@gmail.com  
 
