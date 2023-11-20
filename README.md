@@ -36,9 +36,9 @@ CNR accepts no responsibility for the use of the **3D-CMCC-FEM** in the form sup
 For any further information please contact us:  
 -Alessio Collalti (Lab. Head and Model Principal Investigator): alessio.collalti@cnr.it  
 -Daniela Dalmonech: daniela.dalmonech@cnr.it  
--Mauro Morichetti: mauro.morichetti@cnr.it
--Elia Vangi: elia.vangi@isafom.cnr.it
--Elisa Grieco: elisa.grieco@cnr.it
+-Mauro Morichetti: mauro.morichetti@cnr.it  
+-Elia Vangi: elia.vangi@isafom.cnr.it  
+-Elisa Grieco: elisa.grieco@cnr.it  
 -The model: 3d-cmcc-fem@gmail.com  
 -The lab: forest.modelling.lab@gmail.com  
 
