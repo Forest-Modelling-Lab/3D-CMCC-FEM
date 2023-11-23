@@ -72,7 +72,9 @@ For references on **3D-CMCC-FEM**:
 
 13. *“Feasibility of enhancing carbon sequestration and stock capacity in temperate and boreal European forests via changes to forest management"*, Dalmonech D. , Marano G. , Amthor J., Cescatti A., Lindner M., Trotta C., Collalti A.. *Agricultural and Forest Meteorology*, 327: 109203, https://doi.org/10.1016/j.agrformet.2022.109203, 2022.
 
-14. *“Simulating diverse forest management in a changing climate on a Pinus nigra subsp. Laricio plantation in Southern Italy"*, Testolin R., Dalmonech D., Marano G., D’Andrea E., Matteucci G., Noce S., Collalti A.. *Science of the Total Environment*, 857: 159361, https://doi.org/10.1016/j.scitotenv.2022.159361, 2023.
+14. *"3D-CMCC-FEM User’s Guide"*, Collalti A., Dalmonech D., Marano G., Vangi E., Puchi P., Grieco E., Orrico M., *CNR Edizioni*,  ISBN 978-88-8080-573-1, https://doi.org/10.32018/3D-CMCC-FEM-2022, 2022.
+
+15. *“Simulating diverse forest management in a changing climate on a Pinus nigra subsp. Laricio plantation in Southern Italy"*, Testolin R., Dalmonech D., Marano G., D’Andrea E., Matteucci G., Noce S., Collalti A.. *Science of the Total Environment*, 857: 159361, https://doi.org/10.1016/j.scitotenv.2022.159361, 2023.
 
 see also at: https://www.forest-modelling-lab.com/publications
 
