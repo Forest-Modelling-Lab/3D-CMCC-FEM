@@ -105,7 +105,7 @@ enum {
 	MAXSEED,                             /* maximum seeds number (see TREEMIG) */
 	MASTSEED,                            /* Musting year (see TREEMIG) */
 	WEIGHTSHELL,                         /* single shell fruit weight in grams */
-	SEXAGE,                              /* Age for sexual maturity */
+	SEXAGE,                              /* Age for sexual maturity at high density */
 	GERMCAPACITY,                        /* Geminability rate */
 	ROTATION,                            /* rotation for final harvest (based on tree age) */
 	THINNING,                            /* thinning regime (based on year simulation) */
@@ -866,7 +866,6 @@ enum {
 	SEEDLINGS,                          // (seedlings/cell) Number of seedlings per species //
 	SEEDLINGS_POOL,                     // (seedlings/cell) Number of seedlings accumulated over years //
     SEEDLINGS_SURV,                     // (seedlings/cell) Number of seedlings survived after germination //
-    //SAPLINGS,                         // (saplings/cell) Number of saplings
 
 	COUNTERS
 };
@@ -1028,6 +1027,7 @@ typedef struct
 	int dos;                                                              /* day of simulation */
 
 	int harvesting;                                                       /* 0 = off, 1 = on */
+	int recr; //INSERITO DA DANIELA
 
 	/* for logger */
 	int initial_tree_layers_count;

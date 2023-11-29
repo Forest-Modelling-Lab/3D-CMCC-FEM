@@ -39,11 +39,14 @@ void daily_lai (cell_t *const c, age_t *const a, species_t *const s)
 	/* compute age-related sla */
 	specific_leaf_area      ( a, s );
 
+
+	
+        
 	/**************************************************************************************************/
 
 	/* total (m2) */
 	s->value[LEAF_AREA]       = ( ( s->value[LEAF_C] * 1e3 / g_settings->sizeCell) * s->value[SLA_AVG] ) ;
-
+	        
 	/* sun */
 	s->value[LEAF_AREA_SUN]   = 1. - exp ( - s->value[LEAF_AREA] );
 
@@ -57,6 +60,11 @@ void daily_lai (cell_t *const c, age_t *const a, species_t *const s)
 
 	/* total */
 	s->value[LAI_PROJ]       = s->value[LEAF_AREA] / s->value[CANOPY_COVER_PROJ];
+	
+		//ddalmo
+        
+        //printf("cc proj = %f \n",s->value[CANOPY_COVER_PROJ]) ;
+     
 
 	/* sun */
 	s->value[LAI_SUN_PROJ]   = 1. - exp ( - s->value[LAI_PROJ] );

@@ -131,6 +131,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
                // {
 		    /* management blocks */
 	     	forest_management ( c, day, month, year );
+
              // }
 
 	}
@@ -142,8 +143,10 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	{
 
 		annual_forest_structure ( c, year );
+		//printf("\n after annual_forest_structure\n");
 
 	}
+
 
 	/* daily forest structure*/
 	daily_forest_structure ( c,  meteo_daily);
@@ -374,35 +377,35 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 #if 1    //set to 1 . set to 0 only for testing purpose
 
 
-                                                             //if ( g_settings->management == MANAGEMENT_VAR || g_settings->management == MANAGEMENT_VAR1)
-                                                             if ( g_settings->management == MANAGEMENT_VAR)
-                                                             {
+                                        //if ( g_settings->management == MANAGEMENT_VAR || g_settings->management == MANAGEMENT_VAR1)
+                                        if ( g_settings->management == MANAGEMENT_VAR)
+                                        {
 
-                                                              // compute last year of available stand density data
-                                                              // (in the stand.txt file each layer or class has to have
-                                                              // the same number of stand density data)
+                                            // compute last year of available stand density data
+                                            // (in the stand.txt file each layer or class has to have
+                                            // the same number of stand density data)
 
-                                                              row = g_dataset->rows_count ;
+                                             row = g_dataset->rows_count ;
 
-                                                              year_dens_fin = g_dataset->rows[row-1].year_stand;
-
-
-                                                                 if (c->years[year].year > year_dens_fin)
-                                                                 {
+                                             year_dens_fin = g_dataset->rows[row-1].year_stand;
 
 
-                                                                   /* Mortality based on tree Age (LPJ) */
+                                                if (c->years[year].year > year_dens_fin)
+                                                    {
+
+
+                                    /* Mortality based on tree Age (LPJ) */
 									age_mortality        ( c, height, dbh, age, species );
 
 
-							           /* Mortality based on stochasticity */
+                                    /* Mortality based on stochasticity */
 									stochastic_mortality ( c, height, dbh, age, species );
 
-                                                                  }
+                                                        }
 
-                                                             }
-                                                             else
-                                                             {         // with management ON or OFF always compute mortality
+                                                    }
+                                                    else
+                                                    { // with management ON or OFF always compute mortality
 
 									/* Mortality based on tree Age (LPJ) */
 									age_mortality        ( c, height, dbh, age, species );
@@ -463,14 +466,15 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 								/* water use efficiency */
 								water_use_efficiency  ( c, height, dbh, age, species, day, month, year );
 
-                                                               // update canopy cover projection considering the
-                                                               // number of living trees after natural mortality
+                                // update canopy cover projection considering the
+                                // number of living trees after natural mortality
 
-                                                                 if ( c->doy == ( IS_LEAP_YEAR ( c->years[year].year ) ? 366 : 365) )
-	                                                         {
-                                                                  canopy_cover    ( c, height, dbh, age, species );
-                                                                 }
+                                  if ( c->doy == ( IS_LEAP_YEAR ( c->years[year].year ) ? 366 : 365) )
+                                    {
 
+                                     canopy_cover    ( c, height, dbh, age, species );
+
+                                    }
 
 								/* update Leaf Area Index */
 								daily_lai             ( c, a, s );
@@ -481,61 +485,80 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 								/* tree level dendrometry */
 								dendrometry_old       ( c, layer, height, dbh, age, species, year );
 
-
+#if 0
     /*************************************** NATURAL REGENERATION PROCESS **************************************************/
 
 
                         if ( g_settings->Natural_regeneration) {
 
                             if ( c->doy == ( IS_LEAP_YEAR ( c->years[year].year ) ? 366 : 365) )
+
 								{
+                                   // Seeds production function
+                                   Fruit_to_seeds_function ( c, a, s, day, month, year);
+                                   //printf("Carbon fruit = %f\n", s->value[MAX_FRUIT_C]);
+                                   //printf("Seed = %ld\n", s->counter[N_SEED]);
 
-                                // Seeds production function
-                                Fruit_to_seeds_function ( c, a, s, day, month, year);
-                                //printf("Carbon fruit = %f\n", s->value[MAX_FRUIT_C]);
-                                //printf("Seed = %ld\n", s->counter[N_SEED]);
+                                   } //end of leap year
 
-                                } //end of leap year
+                                     //Compute spring thermic sum before germination
+                                     Thermic_sum_spring (c, meteo_daily, day, month, year);
+                                     //printf("Thermicsum = %f\n", meteo_daily->spring_thermic_sum);
 
-                                //Compute spring thermic sum before germination
-                                Thermic_sum_spring (c, meteo_daily, day, month, year);
-                                //printf("Thermicsum = %f\n", meteo_daily->spring_thermic_sum);
+                                     if (year && meteo_daily->spring_thermic_sum >= s->value[GDD_SEED])
+//if ( meteo_daily->spring_thermic_sum >= s->value[GDD_SEED])
+                                        {
+                                         //Seeds germination
+                                         germination (c, meteo_daily, s, day, month, year);
+                                         //printf("Seedlings = \t%d\n", s->counter[SEEDLINGS]);
+                                          // ddalmo
+                                           //printf("Sono in gertmination");
+                                        }
+                                        else
+                                        {
 
-                                if (year && meteo_daily->spring_thermic_sum >= s->value[GDD_SEED])
-                                {
-                                   //Seeds germination
-                                   germination (c, meteo_daily, s, day, month, year);
-                                   //printf("Seedlings = \t%d\n", s->counter[SEEDLINGS]);
+                                        c->Seedlings_Number = 0;
 
-                                  } // end of condition
-                                   else
-                                  {
+                                    }
 
-                                  c->Seedlings_Number = 0;
+                                   //Compute winter soil mean temperature before germination
+                                   //Soil_winter_temperature (c, meteo_daily, day, month, year);
+                                   //printf("Winter soil temp = %f\n", meteo_daily->winter_soil);
 
-                                }
+                                   //Compute par that reach the soil in summer
+                                   Seedling_soil_par (c, meteo_daily, day, month, year);
 
-                                //Compute winter soil mean temperature before germination
-                                //Soil_winter_temperature (c, meteo_daily, day, month, year);
-                                //printf("Winter soil temp = %f\n", meteo_daily->winter_soil);
+                                   //Compute air temperature in summer
+                                   Seedling_temp (c, meteo_daily, day, month, year);
 
-                                //Compute par that reach the soil in summer
-                                Seedling_soil_par (c, meteo_daily, day, month, year);
+                                   // Establishment
+                                   establishment (c, meteo_daily, s, day, month, year);
 
-                                //Compute air temperature in summer
-                                Seedling_temp (c, meteo_daily, day, month, year);
+                                   //Mortality Establishment
+                                   //seedlings_mortality (c, meteo_daily, s, day, month, year);
+                                   // ddalmo test to see when we let the new stratum tu appear
+                                  // if ( year==1 && c->doy == ( IS_LEAP_YEAR ( c->years[year].year ) ? 366 : 365) ) // questo funziona
+                                    if ( year && c->doy == ( IS_LEAP_YEAR ( c->years[year].year ) ? 366 : 365) )  // dal secondo anno
+				    {
+                                  printf("in recr 4 \n") ;
+                                  //if (!day && !month && year)
+                                  //{
+                                    if( !recruitment (c, s, day, month, year) )
+                                     {
+                                        logger_error(g_debug_log, "unable to add new regeneration class! (exit)\n");
+                                        exit(1);
+                                    }
+                                    }
+                                // }
 
 
-                                // Establishment
-                                establishment (c, meteo_daily, s, day, month, year);
 
-                                //Mortality Establishment
-                                //seedlings_mortality (c, meteo_daily, s, day, month, year);
+                                  } /*end natural regeneration settings (on || off)*/
 
 
-                                } /*end natural regeneration settings (on || off)*/
+#endif
 
-
+#//------------------------------------------------------------------------------------------------------------------------------------------------
 
 								/** END OF YEAR **/
 
@@ -551,14 +574,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 									/* annual volume, MAI and CAI */
 									annual_tree_increment ( c, height, dbh, age, species, year );
 
-									if ( g_settings->Natural_regeneration) {
-
-
-                                       //recruitment(c, s, day, month, year);
-
-
-                                   } /*end of nat reg*/
-
+                                     //printf("Carbon fruit = %f\n", s->value[MAX_FRUIT_C]);
                                      //printf("Seed = %ld\n", s->counter[N_SEED]);
                                      //printf("tank =   %ld\n", s->counter[TANK_SEEDS]);
                                      //printf("Seedlings = \t%d\n", s->counter[SEEDLINGS]);
@@ -582,6 +598,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 								/* check for carbon flux balance closure */
 								/* 2 */ if ( ! check_tree_class_carbon_flux_balance    ( c, layer, height, dbh, age, species ) ) return 0;
 
+
 								/* check for nitrogen flux balance closure */
 								/* 3 */ //fixme if ( ! check_tree_class_nitrogen_flux_balance  ( c, layer, height, dbh, age, species ) ) return 0;
 
@@ -589,9 +606,12 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 								/* 4 */ if ( ! check_tree_class_water_flux_balance     ( c, layer, height, dbh, age, species ) ) return 0;
 
 								/* check for carbon mass balance closure */
-								/* 5 */ if ( ! check_tree_class_carbon_mass_balance    ( c, layer, height, dbh, age, species ) ) return 0;
 
-								/* check for nitrogen mass balance closure */
+
+
+         								/* 5 */ if ( ! check_tree_class_carbon_mass_balance    ( c, layer, height, dbh, age, species ) ) return 0;
+
+						/* check for nitrogen mass balance closure */
 								/* 6 */  //fixme if ( ! check_tree_class_nitrogen_mass_balance  ( c, layer, height, dbh, age, species ) ) return 0;
 							}
 							else
@@ -619,6 +639,79 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 		logger(g_debug_log, "****************END OF HEIGHT CLASS***************\n");
 	}
 	logger(g_debug_log, "****************END OF LAYER CLASS***************\n");
+
+
+    /*************************************** NATURAL REGENERATION PROCESS **************************************************/
+
+
+        if ( g_settings->Natural_regeneration) {
+
+            if ( c->doy == ( IS_LEAP_YEAR ( c->years[year].year ) ? 366 : 365) )
+
+                {
+                  /** Compute seeds production function **/
+                  Fruit_to_seeds_function_npp ( c, a, s, day, month, year);
+                  //printf("Carbon fruit = %f\n", s->value[MAX_FRUIT_C]);
+                  //printf("Seed = %ld\n", s->counter[N_SEED]);
+
+                    } //end of leap year
+
+                      /** Compute spring thermic sum before germination **/
+                      Thermic_sum_spring (c, meteo_daily, day, month, year);
+                      //printf("Thermicsum = %f\n", meteo_daily->spring_thermic_sum);
+
+                        if (year && meteo_daily->spring_thermic_sum >= s->value[GDD_SEED])
+
+                         {
+                           /** Compute seeds germination **/
+                           germination (c, meteo_daily, s, day, month, year);
+                           //printf("Seedlings = \t%d\n", s->counter[SEEDLINGS]);
+
+                            }
+                            else
+                            {
+
+                             c->Seedlings_Number = 0;
+
+                            }
+
+                             /** Compute winter soil mean temperature before germination **/
+                             //Soil_winter_temperature (c, meteo_daily, day, month, year);
+                             //printf("Winter soil temp = %f\n", meteo_daily->winter_soil);
+
+                              //Compute par that reach the soil in summer
+                              Seedling_soil_par (c, meteo_daily, day, month, year);
+
+                              //Compute air temperature in summer
+                              Seedling_temp (c, meteo_daily, day, month, year);
+
+                              /** Establishment appearing **/
+                              establishment (c, meteo_daily, s, day, month, year);
+
+                              //Mortality Establishment
+                              //seedlings_mortality (c, meteo_daily, s, day, month, year);
+
+                                if ( year ==1 && c->doy == ( IS_LEAP_YEAR ( c->years[year].year ) ? 366 : 365) ) //it works
+
+                                    //if ( year == 1 && c->doy == 1 )
+                                    {
+                                     //printf("sono in tree model e il name of species is = %s\n", s->name);
+                                     //if (!day && !month && year)
+                                     //{
+                                     /** Recruitment **/
+                                      if( !recruitment (c, s, day, month, year) )
+                                     {
+                                        logger_error(g_debug_log, "unable to add new regeneration class! (exit)\n");
+                                        exit(1);
+                                     }
+                                     //printf("Name species = %s\n", s->name);
+
+                                    }
+                                // }
+
+
+                                  } /*end natural regeneration settings (on || off)*/
+
 
 	/* ok */
 	return 1;

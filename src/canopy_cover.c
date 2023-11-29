@@ -187,8 +187,11 @@ void canopy_cover (cell_t *const c, const int height, const int dbh, const int a
 
 	logger(g_debug_log,"\n*CANOPY COVER for %s *\n", s->name);
 
+
 	/* Canopy and Soil Projected Cover using DBH-DC (at zenith angle)  it is never higher than max_cover_proj */
 	s->value[CANOPY_COVER_PROJ] = s->value[CROWN_AREA_PROJ] * s->counter[N_TREE] / g_settings->sizeCell;
+
+
 	logger(g_debug_log, "-Canopy Projected Cover   = %f %%\n", s->value[CANOPY_COVER_PROJ] * 100.);
 
 	/* check */

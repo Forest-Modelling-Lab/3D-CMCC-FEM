@@ -156,61 +156,11 @@ int Fruit_to_seeds_function (cell_t *const c, const int layer, const age_t *cons
 
 #endif
 
-       //***************************************SEEDS PRODUCTION EVERY YEAR WRONG**********************************************//
-
-#if 0
-
-int Fruit_to_seeds_function (cell_t *const c, const int layer, const age_t *const a, species_t *const s, const int year) {
-
-
- long int NumberSeed = 0.;                    //Number of Seeds
- long int NumberFruit = 0.;                   //Number of Fruit
- double carbon_tank = 0.;                     //Carbon for seeds
-
-
-   if (a->value >= s->value[SEXAGE]) {
-
-               carbon_tank = (s->value[MAX_FRUIT_C] * 1000000); // convert tC(fruit) to gC/cell/year(fruit); MAX_FRUIT_C expressed as (tC/cell/year)
-              //printf("MAX_FRUIT_C = %f\n", s->value[MAX_FRUIT_C]);
-              //printf("Carbontank = %f\n", carbon_tank);
-              //printf("AGE = %d\n", a->value);
-
-               //Calculates the number of fruit per stand based on species specific weight of fruit(nfruit/ha)
-               NumberFruit = (carbon_tank / s->value[WEIGHTFRUIT]);
-               //printf("Number fruit = %ld\n", NumberFruit);
-
-               // Calculates the number of seed per stand based on species specific weight of seed (nseed/tree/year)
-               NumberSeed = (NumberFruit / s->value[WEIGHTSHELL]);
-               //printf("Number seed = %ld\n", NumberSeed);
-
-
-               //Number of seed per population (nseed/cell/year)
-               s->counter[N_SEED] = NumberSeed;
-               //printf("N_SEED = %ld\n", s->counter[N_SEED]);
-
-             } else {
-
-             NumberFruit = 0.;
-            NumberSeed = 0.;
-        }
-
-       if ( c->doy == ( IS_LEAP_YEAR( c->years[year].year ) ? 366 : 365 )) {
-
-       //Accumulation of seeds over years
-       s->counter[TANK_SEEDS] += s->counter[N_SEED];
-       //printf("TANK_SEED = %ld\n", s->counter[TANK_SEEDS]);
-
-     }
-
-  return 0;
-}
-
-#endif
             //***************************************SEEDS PRODUCTION EVERY YEAR**********************************************//
 
 #if 1
 
-int Fruit_to_seeds_function (cell_t *const c, const age_t *const a, species_t *const s, const int day, const int month, const int year) {
+void Fruit_to_seeds_function (cell_t *const c, const age_t *const a, species_t *const s, const int day, const int month, const int year) {
 
 
  long int NumberSeed = 0;                    //Number of Seeds

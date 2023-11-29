@@ -27,7 +27,7 @@ extern dataset_t* g_dataset;
 
 static int harvesting (cell_t *const c, const int height, const int dbh, const int age, const int species)
 {
-	int nat_man;   /* natural or managed mortality 0 = natural; 1 = managed */
+	int nat_man;   // natural or managed mortality 0 = natural; 1 = managed
 	species_t *s;
 
 	nat_man = 1;
@@ -35,19 +35,19 @@ static int harvesting (cell_t *const c, const int height, const int dbh, const i
 
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
-	/* at the moment it considers a complete harvesting for all classes (if considered) */
+	// at the moment it considers a complete harvesting for all classes (if considered)
 	logger(g_debug_log, "\n** Management options: Harvesting ** \n");
 
-	/* add harvested trees */
+	// add harvested trees
 	s->counter[THINNED_TREE]  += s->counter[N_TREE];
 	s->counter[HARVESTING_HAPPENS] = 1;
 
-	/* update C and N biomass */
+	// update C and N biomass
 	tree_biomass_remove ( c, height, dbh, age, species, s->counter[N_TREE], nat_man );
 
         // update cell level C and N pools
 
-	/*** update cell level carbon pools (tC/cell) ***/
+	// update cell level carbon pools (tC/cell)
 	c->leaf_carbon              -= (s->value[C_LEAF_TO_LITR]   * 1e6 / g_settings->sizeCell);
 	c->froot_carbon             -= (s->value[C_FROOT_TO_LITR]  * 1e6 / g_settings->sizeCell);
 	c->stem_carbon              -= (s->value[C_STEM_TO_CWD]    * 1e6 / g_settings->sizeCell);
@@ -56,7 +56,7 @@ static int harvesting (cell_t *const c, const int height, const int dbh, const i
 	c->reserve_carbon           -= (s->value[C_RESERVE_TO_CWD] * 1e6 / g_settings->sizeCell);
 	c->fruit_carbon             -= (s->value[C_FRUIT_TO_CWD]   * 1e6 / g_settings->sizeCell);
 
-	/* check */
+	// check
 	CHECK_CONDITION ( c->leaf_carbon,    < , ZERO );
 	CHECK_CONDITION ( c->froot_carbon,   < , ZERO );
 	CHECK_CONDITION ( c->stem_carbon,    < , ZERO );
@@ -67,11 +67,10 @@ static int harvesting (cell_t *const c, const int height, const int dbh, const i
 
         //FIXME : update the cell level N pools too!
 
-	/* remove completely all trees */
+	// remove completely all trees
 
 	return tree_class_remove (c, height, dbh, age, species );
 }
-
 
 int forest_management (cell_t *const c, const int day, const int month, const int year)
 {
@@ -491,7 +490,7 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 
                                                  annual_forest_structure ( c, year );
 
-                                                 height = c->heights_count -  1;         //a questo punto dovrei avere solo un layer, quello di regen che diventa0
+                                             height = c->heights_count -  1; //a questo punto dovrei avere solo un layer, quello di regen che diventa0
 	                                         dbh = c->heights[height].dbhs_count - 1;
 	                                         age = c->heights[height].dbhs[dbh].ages_count - 1;
 	                                         species = c->heights[height].dbhs[dbh].ages[age].species_count - 1;
@@ -549,9 +548,8 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 						CHECK_CONDITION (g_settings->regeneration_avdbh,  <, ZERO);
 						CHECK_CONDITION (g_settings->regeneration_age,    <, ZERO);
 
-                                          /* mimic natural regeneration with a re-planting tree class */
-
-	                                        if ( ! add_tree_class_for_replanting_reg( c , day, month, year) )
+                        /* mimic natural regeneration with a re-planting tree class */
+                        if ( ! add_tree_class_for_replanting_reg( c , day, month, year) )
 						{
 							logger_error(g_debug_log, "unable to add new replanted class! (exit)\n");
 							exit(1);
@@ -563,11 +561,10 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 						a = &d->ages[age];
 						s = &a->species[species];
 
-                                                /* reset years_for_thinning */
+                        /* reset years_for_thinning */
 						s->counter[YEARS_THINNING] =   1;
 
- 						c->harvesting              =   1;    //  in this way the annual_structure function is not
-                                                                                    // called in the tree_model.c
+ 						c->harvesting              =   1; //in this way the annual_forest_structure function is not called in the tree_model.c
 
                                           }
                                         //}

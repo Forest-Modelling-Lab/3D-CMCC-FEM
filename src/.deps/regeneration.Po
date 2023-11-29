@@ -63,7 +63,8 @@ regeneration.o: regeneration.c /usr/include/stdc-predef.h \
  /usr/include/x86_64-linux-gnu/bits/types/__locale_t.h \
  /usr/include/strings.h \
  /usr/include/x86_64-linux-gnu/bits/strings_fortified.h \
- /usr/include/x86_64-linux-gnu/bits/string_fortified.h matrix.h meteo.h \
+ /usr/include/x86_64-linux-gnu/bits/string_fortified.h \
+ /usr/lib/gcc/x86_64-linux-gnu/11/include/stdbool.h matrix.h meteo.h \
  soil_settings.h constants.h logger.h common.h settings.h regeneration.h \
  soil_radiation_sw_band.h met_data.h C-fruit-partitioning.h soil_model.h
 /usr/include/stdc-predef.h:
@@ -138,6 +139,7 @@ regeneration.o: regeneration.c /usr/include/stdc-predef.h \
 /usr/include/strings.h:
 /usr/include/x86_64-linux-gnu/bits/strings_fortified.h:
 /usr/include/x86_64-linux-gnu/bits/string_fortified.h:
+/usr/lib/gcc/x86_64-linux-gnu/11/include/stdbool.h:
 matrix.h:
 meteo.h:
 soil_settings.h:

@@ -23,7 +23,7 @@
 #include "meteo.h"
 #include "soil_model.h"
 
-#define SEED_VITALITY 0.5
+#define SEED_VITALITY 0.1
 
 extern logger_t* g_debug_log;
 extern settings_t* g_settings;
@@ -106,7 +106,11 @@ int germination (cell_t *const c, const meteo_daily_t *const meteo_daily, specie
 
             //Assigned seedling number to a species vector
             s->counter[SEEDLINGS] = Seedlings_Number;
-            //printf("Seedlings = \t%d\n", s->counter[SEEDLINGS])
+
+
+           // printf("Seedlings = \t%d\n", s->counter[SEEDLINGS]);
+
+
 
             //Assign variable to pointer
             //ptr_Seedlings = &Seedlings_Number;
@@ -335,6 +339,9 @@ int establishment (cell_t *const c, const meteo_daily_t *const meteo_daily, spec
 		if (meteo_daily->seedling_par >= s->value[SURV_PAR] && meteo_daily->seedling_temp <= s->value[SURV_TEMP]) {
 
 			Seedlings_surv = (s->counter[SEEDLINGS] * 0.7); //L.Muffler et al.2021 0.70
+
+
+
             s->counter[SEEDLINGS_SURV] = Seedlings_surv;
              }
 
@@ -343,6 +350,7 @@ int establishment (cell_t *const c, const meteo_daily_t *const meteo_daily, spec
 
 	        Seedlings_surv = (s->counter[SEEDLINGS] * 0.55); //L.Muffler et al.2021 0.55
             s->counter[SEEDLINGS_SURV] = Seedlings_surv;
+
              }
 
         //Optimal condition for temperature but not for light (case3)
@@ -350,6 +358,10 @@ int establishment (cell_t *const c, const meteo_daily_t *const meteo_daily, spec
 
 			Seedlings_surv = (s->counter[SEEDLINGS] * 0.3); //L.Muffler et al.2021 0.30
             s->counter[SEEDLINGS_SURV] = Seedlings_surv;
+
+
+
+
              }
 
 		//Non-Optimal condition for Light and Temperature (case 4)
@@ -359,11 +371,16 @@ int establishment (cell_t *const c, const meteo_daily_t *const meteo_daily, spec
             s->counter[SEEDLINGS_SURV] = Seedlings_surv;
 
 
+
        } else {
 
 	    Seedlings_surv = 0;
 	    //printf("All seedlings died.\n");
+
     }
+
+    //printf("Rad = %f\n", meteo_daily->par);
+    //printf("Temperature = \t%f\n", meteo_daily->tavg);
 /*
     if ( c->doy == ( IS_LEAP_YEAR ( c->years[year].year ) ? 366 : 365) ) {
 
@@ -374,6 +391,8 @@ int establishment (cell_t *const c, const meteo_daily_t *const meteo_daily, spec
 */
     //printf("Soil par seedlings = \t%f\n", meteo_daily->seedling_par);
     //printf(" Temp seedlings = \t%f\n", meteo_daily->seedling_temp);
+
+
 
  return 0;
 }

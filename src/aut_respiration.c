@@ -461,6 +461,11 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 				s->value[STEM_MAINT_RESP]                              +
 				s->value[CROOT_MAINT_RESP]                             +
 				s->value[BRANCH_MAINT_RESP])                           ;
+				
+				//ddalmo
+				
+				//printf("mant respirs  in aut_resp            = %g \n", s->value[TOTAL_MAINT_RESP]);
+				
 
 		/***********************************************************************************************************************/
 

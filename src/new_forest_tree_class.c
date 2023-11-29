@@ -292,7 +292,7 @@ int add_tree_class_for_replanting_reg (cell_t *const c, const int day, const int
     // comment: in the initialization_forest_structure the new added layer has height index = 0 and the
     // dominant layers index >= 1 ordered according to descending height
 
-    height= 0;  // so to initialize the new layer only! Which is the new added 'regeneration-layer'
+    height = 0;  // so to initialize the new layer only! Which is the new added 'regeneration-layer'
 
 	/* initialize new forest class pools */
 	initialization_forest_class_C      ( c, height, dbh, age, species );

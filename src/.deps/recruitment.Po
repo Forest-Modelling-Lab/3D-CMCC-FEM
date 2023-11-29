@@ -67,7 +67,8 @@ recruitment.o: recruitment.c /usr/include/stdc-predef.h \
  /usr/include/x86_64-linux-gnu/bits/string_fortified.h matrix.h meteo.h \
  soil_settings.h constants.h settings.h structure.h logger.h common.h \
  initialization.h biomass.h allometry.h g-function.h print.h \
- C-fruit-partitioning.h regeneration.h recruitment.h management.h
+ C-fruit-partitioning.h regeneration.h recruitment.h management.h \
+ remove_tree_class.h
 /usr/include/stdc-predef.h:
 /usr/include/stdio.h:
 /usr/include/x86_64-linux-gnu/bits/libc-header-start.h:
@@ -158,3 +159,4 @@ C-fruit-partitioning.h:
 regeneration.h:
 recruitment.h:
 management.h:
+remove_tree_class.h:

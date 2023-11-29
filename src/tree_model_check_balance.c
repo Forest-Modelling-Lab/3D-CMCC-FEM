@@ -225,6 +225,24 @@ int check_tree_class_carbon_mass_balance ( cell_t *const c, const int layer, con
 	/* DAILY CHECK ON CLASS LEVEL CARBON MASS BALANCE */
 	/* check complete tree level carbon mass balance */
 
+   
+       	     //ddalmo
+        // printf("check layer = %d\n",layer) ;	
+        // printf("check altez = %d\n",height) ;
+        // printf("check dbh = %d\n",dbh) ;
+        // printf("check eta = %d\n",age) ;
+        // printf("check specie = %d\n",species) ;
+         //printf("LEAF_C               = %g tC/cell/day\n", s->value[LEAF_C]);
+		//printf("FROOT_C              = %g tC/cell/day\n", s->value[FROOT_C]);
+		//printf("CROOT_C              = %g tC/cell/day\n", s->value[CROOT_C]);
+		//printf("STEM_C               = %g tC/cell/day\n", s->value[STEM_C]);
+		//printf("BRANCH_C             = %g tC/cell/day\n", s->value[BRANCH_C]);
+		//printf("RESERVE_C            = %g tC/cell/day\n", s->value[RESERVE_C]);
+		//printf("FRUIT_C              = %g tC/cell/day\n", s->value[FRUIT_C]);
+		//printf("ntree              = %d npiante/class\n", s->counter[N_TREE]);
+		//printf("mant respirs2             = %g tC/cell/day\n", s->value[TOTAL_MAINT_RESP_tC]);
+         
+
 	/* sum of sources */
 	s->value[TREEC_IN]    = s->value[GPP_tC];
 

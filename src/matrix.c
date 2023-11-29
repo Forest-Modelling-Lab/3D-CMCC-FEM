@@ -972,7 +972,7 @@ static const char *sz_species_values[] =
 		"MAXSEED",                    /* numero massimo semi prodotti dalla pianta (da TREEMIG) */
 		"MASTSEED",                   /* ricorrenza anni di pasciona (da TREEMIG) */
 		"WEIGHTSHELL",                /* fruit shell weight in g */
-		"SEXAGE",                     /* Age for sexual maturity */
+		"SEXAGE",                     /* Age for sexual maturity at hight density */
 		"GERMCAPACITY",               /* Geminability */
 		"ROTATION",                   /* rotation for final harvest (based on tree age) */
 		"THINNING",                   /* thinning regime (based on year simulation) */

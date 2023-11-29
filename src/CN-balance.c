@@ -49,6 +49,7 @@ void carbon_balance (cell_t *const c, const int height, const int dbh, const int
 	CHECK_CONDITION ( s->value[LITR_C],     < , ZERO );
 	CHECK_CONDITION ( s->value[CWD_C],      < , ZERO );
 
+      
 	/*** update cell level carbon pools ***/
 
 	/* tree */

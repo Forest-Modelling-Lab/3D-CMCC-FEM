@@ -51,6 +51,7 @@ int layer_add(cell_t* const c)
 	if ( ret )
 	{
 		c->tree_layers[c->tree_layers_count-1] = t_layer;
+
 	}
 
 	return ret;
@@ -145,8 +146,17 @@ int annual_forest_structure(cell_t* const c, const int year)
 
 	/* note: it starts from the lowest height values up to the highest */
 
-	/* add 1 layer by default */
-	if ( ! layer_add(c) ) return 0;
+        if (c->recr)
+        {
+
+         c->recr = 0;
+
+        } else {
+
+        /* add 1 layer by default */
+        if ( ! layer_add(c) ) return 0;
+
+        }
 
 	logger(g_debug_log, "*compute height_z*\n");
 
@@ -168,6 +178,7 @@ int annual_forest_structure(cell_t* const c, const int year)
 			if ( (c->heights[height+1].value - c->heights[height].value) > g_settings->tree_layer_limit )
 			{
 				++zeta_count;
+
 
 				/* compute layer number and alloc memory for each one */
 				if ( ! layer_add(c) ) return 0;

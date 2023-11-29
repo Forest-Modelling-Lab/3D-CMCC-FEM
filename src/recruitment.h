@@ -12,6 +12,6 @@
 
 //static int fill_cell_for_regeneration (cell_t *const c);
 
-int recruitment (cell_t *const c, species_t *const s, const int day, const int month, const int year);
+int recruitment (cell_t *const c, species_t * s, const int day, const int month, const int year);
 
 #endif /* RECRUITMENT_H_ */

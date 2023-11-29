@@ -19,10 +19,12 @@
 #include "regeneration.h"
 #include "recruitment.h"
 #include "management.h"
+#include "remove_tree_class.h"
 
-extern settings_t *g_settings;
+extern management_t* g_management;
+extern settings_t* g_settings;
 extern logger_t* g_debug_log;
-
+extern dataset_t* g_dataset;
 
 #if 0
 /**/
@@ -185,13 +187,9 @@ static int fill_cell_for_regeneration (cell_t *const c, species_t *const s) {
 	//Allocation memory for heights using the structure.c module function
 	if ( ! alloc_struct((void **)&c->heights, &c->heights_count, &c->heights_avail, sizeof(height_t)) )
     {
-        //printf("Memory not allocated.\n");
-        exit(1);
+        return 0;
      }
-     else
-     {
-        //printf("Memory allocated for heights.\n");
-    }
+
 	c->heights[c->heights_count-1]       = height;
 	c->heights[c->heights_count-1].value = (double)1.3;
 	h = &c->heights[c->heights_count-1];
@@ -199,13 +197,9 @@ static int fill_cell_for_regeneration (cell_t *const c, species_t *const s) {
 	//Allocation memory for dbhs using the structure.c module function
 	if ( ! alloc_struct((void **)&h->dbhs, &h->dbhs_count, &h->dbhs_avail, sizeof(dbh_t)) )
 	{
-        //printf("Memory not allocated.\n");
-        exit(1);
-     }
-     else
-     {
-         //printf("Memory allocated for dbhs.\n");
-	}
+         return 0;
+	 }
+
 	h->dbhs[h->dbhs_count-1]       = dbh;
 	h->dbhs[h->dbhs_count-1].value = (double)1.0;
 	d = &h->dbhs[h->dbhs_count-1];
@@ -213,13 +207,9 @@ static int fill_cell_for_regeneration (cell_t *const c, species_t *const s) {
 	//Allocation memory for ages using the structure.c module function
 	if ( ! alloc_struct((void **)&d->ages, &d->ages_count, &d->ages_avail, sizeof(age_t)) )
 	{
-        //printf("Memory not allocated.\n");
-        exit(1);
+         return 0;
      }
-     else
-     {
-         //printf("Memory allocated for ages.\n");
-	}
+
 	d->ages[d->ages_count-1]       = age;
 	d->ages[d->ages_count-1].value = (int)2;
 	a = &d->ages[d->ages_count-1];
@@ -227,23 +217,22 @@ static int fill_cell_for_regeneration (cell_t *const c, species_t *const s) {
 	//Allocation memory for species using the structure.c module function
 	if ( ! alloc_struct((void **)&a->species, &a->species_count, &a->species_avail, sizeof(species_t)) )
 	{
-        //printf("Memory not allocated.\n");
-        exit(1);
+         return 0;
      }
-     else
-     {
-         //printf("Memory allocated for species.\n");
-	}
+
     //Species name is got by the structure
 	p = string_copy(s->name);
-	if ( ! p ) return 0;
+	if ( ! p )
+	{
+	 return 0;
 	//printf("Name species = %s\n", p);
+	 }
 
 	//All of these pointer and vector below refers to species typedef struct
 	a->species[a->species_count-1]                  = species;
 	a->species[a->species_count-1].management       = T;
 	a->species[a->species_count-1].name             = p;
-    a->species[a->species_count-1].counter[N_TREE] = 100;//s->counter[SEEDLINGS_SURV];
+    a->species[a->species_count-1].counter[N_TREE]  = s->counter[SEEDLINGS_SURV];
 	a->species[a->species_count-1].counter[N_STUMP] = 0;
 	a->species[a->species_count-1].value[LAI_PROJ]  = (double)1.5;
 
@@ -256,10 +245,10 @@ static int fill_cell_for_regeneration (cell_t *const c, species_t *const s) {
 */
 
 
-	return 0;
+	return 1;
 }
 
-int recruitment (cell_t *const c, species_t *const s, const int day, const int month, const int year)
+int recruitment (cell_t *const c, species_t *s, const int day, const int month, const int year)
 {
 
     int height;  //Used to assign a position in a vector of heights
@@ -270,21 +259,32 @@ int recruitment (cell_t *const c, species_t *const s, const int day, const int m
 	int month_temp; // Same above
 	int DaysInMonth [] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 }; //Vector of days with its value (days per month)
 
-/*
+        int recr = 1;
+
+
+
 	height_t *h; //Used to assign pointer to a shortcut height
 	dbh_t *d;    //Same for dbh
 	age_t *a;    //Same for age
-    species_t *s; //Same for species
+    //species_t *s; //Same for species
 
-    h = &c->heights[height]; //Here you're accessing the structure nested (typedef) to read the data
-    d = &h->dbhs[dbh];
-    a = &d->ages[age];
-    s = &a->species[species];
-*/
-	if ( ! fill_cell_for_regeneration ( c, s ) )
+
+        if ( ! fill_cell_for_regeneration ( c, s ) )
+	//if ( ! fill_cell_for_regeneration ( c) )
 	{
        return 0;
-	}
+	 }
+
+
+	 height = c->heights_count - 1;   //Assigned the value of the last index of the array
+	 dbh = c->heights[height].dbhs_count - 1;
+	 age = c->heights[height].dbhs[dbh].ages_count - 1;
+	 species = c->heights[height].dbhs[dbh].ages[age].species_count - 1;
+
+	 h = &c->heights[height]; //Here you're accessing the structure nested (typedef) to read the data
+     d = &h->dbhs[dbh];
+     a = &d->ages[age];
+     s = &a->species[species];
 
        //printf("Name species = %s\n", s->name);
        //printf("altezza = %f\n", h);
@@ -294,10 +294,6 @@ int recruitment (cell_t *const c, species_t *const s, const int day, const int m
        //printf("LAI =   %f\n", a->species[a->species_count-1].value[LAI_PROJ]);
 
 
-	height = c->heights_count - 1;   //Assigned the value of the last index of the array
-	dbh = c->heights[height].dbhs_count - 1;
-	age = c->heights[height].dbhs[dbh].ages_count - 1;
-	species = c->heights[height].dbhs[dbh].ages[age].species_count - 1;
 
 	/* fill with species values from parameterization file */
 	if ( ! fill_species_from_file ( &c->heights[height].dbhs[dbh].ages[age].species[species]) )
@@ -325,17 +321,21 @@ int recruitment (cell_t *const c, species_t *const s, const int day, const int m
 
 	} //end for
 
-
 	// initialize new power function
 	allometry_power_function           ( c );
 
 	// initialize new carbon pool fraction
 	carbon_pool_fraction               ( c );
 
+    //Flag in structure.c
+    c->recr = 1;
+
 	// initialize new forest structure
 	initialization_forest_structure    (c , day, month, year);
+	//annual_forest_structure ( c, year );
 
-	height= 0;
+	//Need to put zero height for the new layer
+	height = 0;
 
 	// initialize new forest class pools
 	initialization_forest_class_C      ( c, height, dbh, age, species );
@@ -353,7 +353,8 @@ int recruitment (cell_t *const c, species_t *const s, const int day, const int m
 	print_new_daily_forest_class_data  ( c, height, dbh, age, species );
 
 
-	return 0;
+
+	return 1;
 }
 
 #endif // 1

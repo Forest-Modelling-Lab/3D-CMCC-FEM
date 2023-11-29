@@ -127,7 +127,7 @@ void daily_C_deciduous_partitioning (cell_t *const c, const int layer, const int
 			s->counter[DAYS_FOR_BUDBURST] = s->value[BUD_BURST] - 1.;
 
 #if 1
-		
+
 			//FIXME these should be all class dependent variables
 			//somehow there's a time lag by which model reduces allocation before to finish to allocate
 			if ( ! s->counter[BUD_BURST_DAY_COUNTER] )
@@ -238,7 +238,8 @@ void daily_C_deciduous_partitioning (cell_t *const c, const int layer, const int
 					logger(g_debug_log, "allocating into fruit pool\n");
 
 					//s->value[C_TO_FRUIT] = npp_to_alloc * s->value[FRUIT_PERC];
-					s->value[C_TO_FRUIT] = npp_to_alloc * (-0.00004 * pow(a->value, 2) + (0.0098 * a->value) - 0.3872); //SAPONARO
+					//s->value[C_TO_FRUIT] = npp_to_alloc * (-0.00004 * pow(a->value, 2) + (0.0098 * a->value) - 0.3872); //SAPONARO
+					s->value[C_TO_FRUIT] = npp_to_alloc * (-0.00001 * pow(a->value, 2) + (0.0036 * a->value) -0.0651); //SAPONARO(H.Genet,2015)
 					npp_to_alloc        -= s->value[C_TO_FRUIT];
 				}
 				else
@@ -354,7 +355,7 @@ void daily_C_deciduous_partitioning (cell_t *const c, const int layer, const int
 
 	/* check for Maximum DBH */
 	/* if dbh exceeds its maximum all C goes to branches */
-	
+
 	if ( d->value > DBH_MAX )
 	{
 		s->value[C_TO_BRANCH]    += s->value[C_TO_STEM];

@@ -107,6 +107,11 @@ void carbon_allocation ( cell_t *const c, age_t *const a, species_t *const s, co
 	s->value[BRANCH_C]    += s->value[C_TO_BRANCH];
 	s->value[RESERVE_C]   += s->value[C_TO_RESERVE];
 	s->value[FRUIT_C]     += s->value[C_TO_FRUIT];
+	
+	
+      // ddalmo
+      //printf("reserve in CN_allocation            = %g tC/cell/day\n", s->value[RESERVE_C]);
+      
 
 	/*** update live carbon mass pools **/
 	s->value[TOT_LIVEWOOD_C]           = ( s->value[STEM_LIVEWOOD_C] + s->value[CROOT_LIVEWOOD_C] + s->value[BRANCH_LIVEWOOD_C] );
