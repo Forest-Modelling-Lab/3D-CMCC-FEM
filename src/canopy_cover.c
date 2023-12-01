@@ -99,7 +99,7 @@ void dbhdc_function ( cell_t *const c, const int layer, const int height, const 
 	//data obtained by:	Ritter and Nothdurft et al., 2018 forests
 	//dbhdcmax decreases as dbh increases
 
-#if 1
+#if 0
 
 	if ( s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2 )
 	{
@@ -118,8 +118,8 @@ void dbhdc_function ( cell_t *const c, const int layer, const int height, const 
        // @VS:  this function defines how fast the canopy can horizontally develop when DBH increase (it is suppose than when the
        // the density is low), and it defines in turn the chance
        // for the regeneration layer to growh
-
-#if 0
+       /** RITTER FROM DANIELA D. **/
+#if 1
 
 	if ( s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2 )
 	{

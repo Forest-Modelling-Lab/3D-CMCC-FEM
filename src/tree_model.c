@@ -609,7 +609,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 
 
 
-         								/* 5 */ if ( ! check_tree_class_carbon_mass_balance    ( c, layer, height, dbh, age, species ) ) return 0;
+                                /* 5 */ if ( ! check_tree_class_carbon_mass_balance    ( c, layer, height, dbh, age, species ) ) return 0;
 
 						/* check for nitrogen mass balance closure */
 								/* 6 */  //fixme if ( ! check_tree_class_nitrogen_mass_balance  ( c, layer, height, dbh, age, species ) ) return 0;
@@ -670,8 +670,8 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
                             }
                             else
                             {
-
-                             c->Seedlings_Number = 0;
+                             s->counter[SEEDLINGS_SURV] = 0;
+                             //c->Seedlings_Number = 0;
 
                             }
 
@@ -691,26 +691,26 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
                               //Mortality Establishment
                               //seedlings_mortality (c, meteo_daily, s, day, month, year);
 
-                                if ( year ==1 && c->doy == ( IS_LEAP_YEAR ( c->years[year].year ) ? 366 : 365) ) //it works
+                            if ( year ==1 && c->doy == ( IS_LEAP_YEAR ( c->years[year].year ) ? 366 : 365) )
 
                                     //if ( year == 1 && c->doy == 1 )
                                     {
-                                     //printf("sono in tree model e il name of species is = %s\n", s->name);
+
                                      //if (!day && !month && year)
                                      //{
                                      /** Recruitment **/
-                                      if( !recruitment (c, s, day, month, year) )
-                                     {
-                                        logger_error(g_debug_log, "unable to add new regeneration class! (exit)\n");
-                                        exit(1);
+                                    if( !recruitment (c, s, day, month, year) )
+                                    {
+                                     logger_error(g_debug_log, "unable to add new regeneration class! (exit)\n");
+                                      exit(1);
                                      }
-                                     //printf("Name species = %s\n", s->name);
+                                //printf("Name species = %s\n", s->name);
 
-                                    }
-                                // }
+                              }
+                        // }
 
 
-                                  } /*end natural regeneration settings (on || off)*/
+                    } /*end natural regeneration settings (on || off)*/
 
 
 	/* ok */

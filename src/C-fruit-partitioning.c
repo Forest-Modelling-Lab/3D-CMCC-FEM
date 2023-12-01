@@ -156,11 +156,11 @@ int Fruit_to_seeds_function (cell_t *const c, const int layer, const age_t *cons
 
 #endif
 
-            //***************************************SEEDS PRODUCTION EVERY YEAR**********************************************//
+            /******************SEEDS PRODUCTION EVERY YEAR NPP FIXED***********************/
 
 #if 1
 
-void Fruit_to_seeds_function (cell_t *const c, const age_t *const a, species_t *const s, const int day, const int month, const int year) {
+void Fruit_to_seeds_function_npp (cell_t *const c, const age_t *const a, species_t *const s, const int day, const int month, const int year) {
 
 
  long int NumberSeed = 0;                    //Number of Seeds
@@ -204,6 +204,97 @@ void Fruit_to_seeds_function (cell_t *const c, const age_t *const a, species_t *
     }
 */
 
-  return 0;
+  //return 0;
+}
+#endif // 1
+                             /******************SEEDS PRODUCTION EVERY YEAR STRUCTURE***********************/
+#if 0
+void Fruit_to_seeds_function_structure(cell_t *const c, const int height, const int dbh, const int age, const int species, const int day, const int month, const int year) {
+
+
+    long int NumberSeed = 0; //Number of simulated seeds
+
+    //Coefficient of the first equation derived from the ManFor sites observation
+    double coeff_a = 1.276e6;
+    double coeff_b = -7.326e3;
+    double coeff_c = 2.608e5;
+    double coeff_d = 2.666;
+    double coeff_e = -3.327e3;
+
+    //Coefficient of the second equation
+    double coeff_f = 2.072e6;
+    double coeff_g = -2.891e3;
+    double coeff_h = 2.037e4;
+    double coeff_i = 1.012;
+    double coeff_l = -8.468e2;
+
+    height_t *h;
+    dbh_t *d;
+    age_t *a;
+    species_t *s;
+
+    h = &c->heights[height];
+    d = &c->heights[height].dbhs[dbh];
+    a = &c->heights[height].dbhs[dbh].ages[age];
+    s = &c->heights[height].dbhs[dbh].ages[age].species[species];
+
+    if (a->value >= s->value[SEXAGE] && s->counter[N_TREE] <= 1500) {
+
+        //First equation used if density is less than 1500 tree/ha
+        NumberSeed = coeff_a + (coeff_b * (s->counter[N_TREE])) + (coeff_c * (d->value)) + (coeff_d * pow(s->counter[N_TREE], 2)) + (coeff_e * pow(d->value, 2));
+
+
+      } else if (a->value >= s->value[SEXAGE] && s->counter[N_TREE] > 1500) {
+
+      //Second equation used if density is more than 1500 tree/ha
+      NumberSeed = coeff_f + (coeff_g * (s->counter[N_TREE])) + (coeff_h * (d->value)) + (coeff_i * pow(s->counter[N_TREE], 2)) + (coeff_l * pow(d->value, 2));
+
+    } else {
+
+    NumberSeed = 0;
+  }
+
+  // Number of seed per species (nseed/cell/year)
+  s->counter[N_SEED] = NumberSeed;
+
+}
+
+ #endif // 1
+                            /******************** AGE FUNCTION *********************/
+#if 0
+void Fruit_to_seeds_function_age(cell_t *const c, const int height, const int dbh, const int age, const int species, const int day, const int month, const int year) {
+
+
+    long int NumberSeed = 0; //Number of simulated seeds
+
+    //Coefficient of the first equation derived from the ManFor sites observation
+    double coeff_a = 4.309e6;
+    double coeff_b = 8.367e1;
+    double coeff_c = -1.977e1;
+
+    height_t *h;
+    dbh_t *d;
+    age_t *a;
+    species_t *s;
+
+    h = &c->heights[height];
+    d = &c->heights[height].dbhs[dbh];
+    a = &c->heights[height].dbhs[dbh].ages[age];
+    s = &c->heights[height].dbhs[dbh].ages[age].species[species];
+
+    if (a->value >= s->value[SEXAGE]) {
+
+        //First equation used if density is less than 1500 tree/ha
+        NumberSeed = coeff_a / (1 + pow(a->value / coeff_b, coeff_c));
+
+
+    } else {
+
+    NumberSeed = 0;
+  }
+
+  // Number of seed per species (nseed/cell/year)
+  s->counter[N_SEED] = NumberSeed;
+
 }
 #endif // 1

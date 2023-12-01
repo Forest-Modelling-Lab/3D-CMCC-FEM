@@ -211,7 +211,7 @@ static int fill_cell_for_regeneration (cell_t *const c, species_t *const s) {
      }
 
 	d->ages[d->ages_count-1]       = age;
-	d->ages[d->ages_count-1].value = (int)2;
+	d->ages[d->ages_count-1].value = (int)1;
 	a = &d->ages[d->ages_count-1];
 
 	//Allocation memory for species using the structure.c module function
@@ -258,8 +258,7 @@ int recruitment (cell_t *const c, species_t *s, const int day, const int month, 
 	int day_temp;  // Used to calculates vegetative days
 	int month_temp; // Same above
 	int DaysInMonth [] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 }; //Vector of days with its value (days per month)
-
-        int recr = 1;
+    int recr = 1;
 
 
 
@@ -270,7 +269,6 @@ int recruitment (cell_t *const c, species_t *s, const int day, const int month, 
 
 
         if ( ! fill_cell_for_regeneration ( c, s ) )
-	//if ( ! fill_cell_for_regeneration ( c) )
 	{
        return 0;
 	 }
@@ -351,7 +349,6 @@ int recruitment (cell_t *const c, species_t *s, const int day, const int month, 
 
 	// print new forest class dataset
 	print_new_daily_forest_class_data  ( c, height, dbh, age, species );
-
 
 
 	return 1;

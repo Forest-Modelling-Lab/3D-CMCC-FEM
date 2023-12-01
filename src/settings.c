@@ -29,13 +29,13 @@ enum {
 	, SETTINGS_CO2_TRANS
 	, SETTINGS_YEAR_START_CO2_FIXED
 	, SETTINGS_NDEP_FIXED
-	, SETTINGS_TBASE_RESP        // ddalmo : currently this setting is not available in the ifle  OPTIONAL 
+	, SETTINGS_TBASE_RESP        // ddalmo : currently this setting is not available in the ifle  OPTIONAL
 	, SETTINGS_PHOTO_ACCL
 	, SETTINGS_RESP_ACCL
 	, SETTINGS_REGENERATION
 	, SETTINGS_NATURAL_REGENERATION //SAPONARO
 	, SETTINGS_MANAGEMENT
-	, SETTINGS_MANAGEMENT_TYPE  //ddalmo this value/setting is actually not reported in the setting file OPTIONAL 
+	, SETTINGS_MANAGEMENT_TYPE  //ddalmo this value/setting is actually not reported in the setting file OPTIONAL
 	, SETTINGS_YEAR_START_MANAGEMENT
 	, SETTINGS_PROGN_AUT_RESP
 	, SETTINGS_SIZECELL
@@ -189,7 +189,7 @@ static int settings_replanted_import(const char* const filename, settings_t* s)
 	//int imported[REPLANTED_SETTINGS_COUNT] = { 0 };
 	replanted_temp_t* temp;
 	int temp_count;
-	
+
 	replanted_vars_t replanted = { 0 };
 	FILE* f;
 
@@ -234,7 +234,7 @@ static int settings_replanted_import(const char* const filename, settings_t* s)
 		for ( i = 0; i < REPLANTED_SETTINGS_COUNT; i++ )
 		{
 			if ( ! string_compare_i(token, sz_replanted_settings[i]) )
-			{ 
+			{
 				// token found, without index
 
 				current = get_current_by_index(temp, temp_count, 0);
@@ -320,7 +320,7 @@ static int settings_replanted_import(const char* const filename, settings_t* s)
 				}
 			}
 		}
-		
+
 		if ( REPLANTED_SETTINGS_COUNT == i )
 		{
 			continue;
@@ -452,7 +452,7 @@ static int settings_replanted_import(const char* const filename, settings_t* s)
 		return 0;
 	}
 
-    
+
 
 
 	for ( i = 0; i < s->replanted_count; i++ )
@@ -605,7 +605,7 @@ static int setting_pruning_import(settings_t* s) {
 					//printf("%s: unable to convert value '%s' at row %d, column %d\n", token, row+1, i+1);
 					//format correction
 					 printf(" unable to convert value %s at row %d, column %d\n", token, row+1, i+1);
-				
+
 					goto quit;
 				}
 
@@ -669,13 +669,13 @@ static int setting_pruning_import(settings_t* s) {
 			int month;
 			int day;
 			int days;
-						
+
 			year = s->prunings[i].year;
 			if ( year < 0 ) {
 				printf("%s has invalid year (%d) at row %d\n", path, year, i+1+1); // we start from zero and add header too
 				goto quit;
 			}
-			
+
 			month = s->prunings[i].month;
 			if ( (month < 1) || (month > 12) ) {
 				printf("%s has invalid month (%d) at row %d\n", path, month, i+1+1); // we start from zero and add header too
@@ -907,13 +907,13 @@ static int setting_irrigation_import(settings_t* s) {
 			int month;
 			int day;
 			int days;
-						
+
 			year = s->irrigations[i].year;
 			if ( year < 0 ) {
 				printf("%s has invalid year (%d) at row %d\n", path, year, i+1+1); // we start from zero and add header too
 				goto quit;
 			}
-			
+
 			month = s->irrigations[i].month;
 			if ( (month < 1) || (month > 12) ) {
 				printf("%s has invalid month (%d) at row %d\n", path, month, i+1+1); // we start from zero and add header too
