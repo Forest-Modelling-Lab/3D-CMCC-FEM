@@ -76,7 +76,7 @@ For references on **3D-CMCC-FEM**:
 
 15. *“Simulating diverse forest management in a changing climate on a Pinus nigra subsp. Laricio plantation in Southern Italy"*, Testolin R., Dalmonech D., Marano G., D’Andrea E., Matteucci G., Noce S., Collalti A.. *Science of the Total Environment*, 857: 159361, https://doi.org/10.1016/j.scitotenv.2022.159361, 2023.
 
-16. *“Regional estimates of gross primary production applying the Process-Based Model 3D-CMCC-FEM vs. Remote-Sensing multiple datasets"*, Dalmonech D., Vangi E., Chiesi M., Chirici G., Fibbi L., Giannetti F., Marano G., Massari C., Nolè A., Xiao J., Collalti A.. *European Journal of Remote Sensing*, https://doi.org/10.1080/22797254.2023.2301657, 2024.
+16. *“Regional estimates of gross primary production applying the Process-Based Model 3D-CMCC-FEM vs. Remote-Sensing multiple datasets"*, Dalmonech D., Vangi E., Chiesi M., Chirici G., Fibbi L., Giannetti F., Marano G., Massari C., Nolè A., Xiao J., Collalti A.. *European Journal of Remote Sensing*, 57(1): 2301657, https://doi.org/10.1080/22797254.2023.2301657, 2024.
 
 see also at: https://www.forest-modelling-lab.com/publications
 
