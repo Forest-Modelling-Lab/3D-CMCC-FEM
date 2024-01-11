@@ -644,7 +644,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
     /*************************************** NATURAL REGENERATION PROCESS **************************************************/
 
 
-        if ( g_settings->Natural_regeneration) {
+        if ( g_settings->Regeneration) {
 
             if ( c->doy == ( IS_LEAP_YEAR ( c->years[year].year ) ? 366 : 365) )
 

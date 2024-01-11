@@ -16,9 +16,9 @@ typedef struct {
 	int *harvesting_years;
 	int harvesting_years_count;
         int *thinning_intensity;     //added by ddalmo may 2021
-        int thinning_intensity_count; 
-        int *regeneration_years;     //added by ddalmo august 2021
-        int regeneration_years_count; 
+        int thinning_intensity_count;
+        int *replanting_years;     //added by ddalmo august 2021
+        int replanting_years_count;
 } management_t;
 
 int forest_management (cell_t *const c, const int day, const int month, const int year);

@@ -32,8 +32,8 @@ enum {
 	, SETTINGS_TBASE_RESP        // ddalmo : currently this setting is not available in the ifle  OPTIONAL
 	, SETTINGS_PHOTO_ACCL
 	, SETTINGS_RESP_ACCL
-	, SETTINGS_REGENERATION
-	, SETTINGS_NATURAL_REGENERATION //SAPONARO
+	, SETTINGS_REPLANTING
+	, SETTINGS_REGENERATION //SAPONARO
 	, SETTINGS_MANAGEMENT
 	, SETTINGS_MANAGEMENT_TYPE  //ddalmo this value/setting is actually not reported in the setting file OPTIONAL
 	, SETTINGS_YEAR_START_MANAGEMENT
@@ -47,13 +47,13 @@ enum {
 	, SETTINGS_SOIL_LAYER
 	, SETTINGS_MAX_LAYER_COVER
 	, SETTINGS_THINNING_REGIME
-	, SETTINGS_REGENERATION_SPECIES
-	, SETTINGS_REGENERATION_MANAGEMENT
-	, SETTINGS_REGENERATION_N_TREE
-	, SETTINGS_REGENERATION_AGE
-	, SETTINGS_REGENERATION_AVDBH
-	, SETTINGS_REGENERATION_LAI
-	, SETTINGS_REGENERATION_HEIGHT
+	, SETTINGS_REPLANTING_SPECIES
+	, SETTINGS_REPLANTING_MANAGEMENT
+	, SETTINGS_REPLANTING_N_TREE
+	, SETTINGS_REPLANTING_AGE
+	, SETTINGS_REPLANTING_AVDBH
+	, SETTINGS_REPLANTING_LAI
+	, SETTINGS_REPLANTING_HEIGHT
 	, SETTINGS_PRUNING
 	, SETTINGS_IRRIGATION
 
@@ -108,8 +108,8 @@ const char* sz_settings[SETTINGS_COUNT] = {
 	, "TBASE_RESP"
 	, "PHOTO_ACCL"
 	, "RESP_ACCL"
-	, "REGENERATION"
-	, "NATURAL_REGENERATION" //SAPONARO
+	, "REPLANTING"
+	, "REGENERATION" //SAPONARO
 	, "MANAGEMENT"
 	, "MANAGEMENT_TYPE"
 	, "YEAR_START_MANAGEMENT"
@@ -123,13 +123,13 @@ const char* sz_settings[SETTINGS_COUNT] = {
 	, "SOIL_LAYER"
 	, "MAX_LAYER_COVER"
 	, "THINNING_REGIME"
-	, "REGENERATION_SPECIES"
-	, "REGENERATION_MANAGEMENT"
-	, "REGENERATION_N_TREE"
-	, "REGENERATION_AGE"
-	, "REGENERATION_AVDBH"
-	, "REGENERATION_LAI"
-	, "REGENERATION_HEIGHT"
+	, "REPLANTING_SPECIES"
+	, "REPLANTING_MANAGEMENT"
+	, "REPLANTING_N_TREE"
+	, "REPLANTING_AGE"
+	, "REPLANTING_AVDBH"
+	, "REPLANTING_LAI"
+	, "REPLANTING_HEIGHT"
 	, "PRUNING"
 	, "IRRIGATION"
 };
@@ -137,7 +137,7 @@ const char* sz_settings[SETTINGS_COUNT] = {
 const int optional[] = {
 	SETTINGS_YEAR_RESTART
 	, SETTINGS_MANAGEMENT_TYPE
-	, SETTINGS_REGENERATION_SPECIES
+	, SETTINGS_REPLANTING_SPECIES
 	, SETTINGS_TBASE_RESP
 };
 
@@ -1148,15 +1148,15 @@ settings_t* settings_import(const char *const filename) {
 				}
 			break;
 
-			case SETTINGS_REGENERATION:
+			case SETTINGS_REPLANTING:
 				if ( ! string_compare_i(token, "on") ) {
-					s->regeneration = 1;
+					s->replanting = 1;
 				}
 			break;
 
-			case SETTINGS_NATURAL_REGENERATION:
+			case SETTINGS_REGENERATION:
 			    if ( ! string_compare_i(token, "on")){
-			        s->Natural_regeneration = 1;
+			        s->Regeneration = 1;
 			    }
 			    break;
 
@@ -1182,19 +1182,19 @@ settings_t* settings_import(const char *const filename) {
 				}
 			break;
 
-			case SETTINGS_REGENERATION_SPECIES:
-				strncpy(s->regeneration_species, (const char*)token, SETTINGS_REGENERATION_SPECIES_MAX_SIZE-1);
+			case SETTINGS_REPLANTING_SPECIES:
+				strncpy(s->replanting_species, (const char*)token, SETTINGS_REPLANTING_SPECIES_MAX_SIZE-1);
 			break;
 
-			case SETTINGS_REGENERATION_MANAGEMENT:
+			case SETTINGS_REPLANTING_MANAGEMENT:
 				if ( ('T' == token[0]) || ('t' == token[0]) ) {
-					s->regeneration_management = T;
+					s->replanting_management = T;
 				} else if ( ('C' == token[0]) || ('c' == token[0]) ) {
-					s->regeneration_management = C;
+					s->replanting_management = C;
 				} else if ( ('N' == token[0]) || ('n' == token[0]) ) {
-					s->regeneration_management = N;
+					s->replanting_management = N;
 				} else {
-					printf("bad regeneration habitus specified: %s\n", token);
+					printf("bad replanting habitus specified: %s\n", token);
 					settings_free(s);
 					fclose(f);
 					return 0;
@@ -1294,24 +1294,24 @@ settings_t* settings_import(const char *const filename) {
 						s->max_layer_cover = value;
 					break;
 
-					case SETTINGS_REGENERATION_N_TREE:
-						s->regeneration_n_tree = value;
+					case SETTINGS_REPLANTING_N_TREE:
+						s->replanting_n_tree = value;
 					break;
 
-					case SETTINGS_REGENERATION_AGE:
-						s->regeneration_age = value;
+					case SETTINGS_REPLANTING_AGE:
+						s->replanting_age = value;
 					break;
 
-					case SETTINGS_REGENERATION_AVDBH:
-						s->regeneration_avdbh = value;
+					case SETTINGS_REPLANTING_AVDBH:
+						s->replanting_avdbh = value;
 					break;
 
-					case SETTINGS_REGENERATION_LAI:
-						s->regeneration_lai = value;
+					case SETTINGS_REPLANTING_LAI:
+						s->replanting_lai = value;
 					break;
 
-					case SETTINGS_REGENERATION_HEIGHT:
-						s->regeneration_height = value;
+					case SETTINGS_REPLANTING_HEIGHT:
+						s->replanting_height = value;
 					break;
 				}
 		}

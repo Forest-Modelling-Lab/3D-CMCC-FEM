@@ -9,7 +9,7 @@ enum { THINNING_REGIME_ABOVE, THINNING_REGIME_BELOW };
 
 #define SETTINGS_SITENAME_MAX_SIZE					(255+1)
 #define SETTINGS_REPLANTED_SPECIES_MAX_SIZE			(32+1)
-#define SETTINGS_REGENERATION_SPECIES_MAX_SIZE		(32+1)
+#define SETTINGS_REPLANTING_SPECIES_MAX_SIZE		(32+1)
 
 typedef struct
 {
@@ -68,16 +68,16 @@ typedef struct {
 	double Tbase_resp;                   /* T base temperature for respiration (°C) */
 	char Photo_accl;
 	char Resp_accl;                      /* acclimation of repiration must be 'on' or 'off' */
-	char regeneration;                   /* regeneration must be 'on' or 'off' */
-	char Natural_regeneration;           /* Natural regeneration must be 'on' or 'off' */  //SAPONARO
+	char replanting;                   /* replantation must be 'on' or 'off' */
+	char Regeneration;                   /* Natural regeneration must be 'on' or 'off' */  //SAPONARO
 	char management;                     /* management must be 'on' of 'off' */
 	char management_type;                /* optional: 0 ( default ) for bau, 1 for local */
 	int year_start_management;           /* start year management (if management is on) */
 	char Prog_Aut_Resp;                  /* Prognostic autotrophic respiration */
 	char thinning_regime;                /* thinning regime above = A or below = B */
-	char regeneration_species[SETTINGS_REGENERATION_SPECIES_MAX_SIZE]; /* species name of regeneration species */
+	char replanting_species[SETTINGS_REPLANTING_SPECIES_MAX_SIZE]; /* species name of regeneration species */
 	// ALESSIOR: use e_management from matrix.h not char
-	char regeneration_management;        /*this is a mandatory variables that each class has to have AND DETERMINES HABITUS OF PLANT*/
+	char replanting_management;        /*this is a mandatory variables that each class has to have AND DETERMINES HABITUS OF PLANT*/
 
 	/* DO NOT MODIFY BELOW, PLEASE INSERT STUFF IN SPACE ABOVE */
 
@@ -100,11 +100,11 @@ typedef struct {
 	int replanted_count;
 
 	/* regeneration input (Regeneration options)*/
-	double regeneration_n_tree;
-	double regeneration_age;             /* age of regeneration (1 year) */
-	double regeneration_avdbh;           /* dbh for regeneration (cm) */
-	double regeneration_lai;             /* regeneration LAI (m2/m2) (mandatory for evergreen) */
-	double regeneration_height;          /* regeneration height (meter) */
+	double replanting_n_tree;
+	double replanting_age;             /* age of regeneration (1 year) */
+	double replanting_avdbh;           /* dbh for regeneration (cm) */
+	double replanting_lai;             /* regeneration LAI (m2/m2) (mandatory for evergreen) */
+	double replanting_height;          /* regeneration height (meter) */
 
 	/* pruning */
 	pruning_t* prunings;

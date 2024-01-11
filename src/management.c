@@ -114,7 +114,7 @@ int forest_management (cell_t *const c, const int day, const int month, const in
                                                                    // as currently only one replanted-specie info can be provided)
                                                                    // and with man = VAR && regeneration = OFF
 
-        if (!g_settings->regeneration)
+        if (!g_settings->replanting)
         {
 
          for ( height = c->heights_count -1 ; height >= 0; --height )
@@ -524,12 +524,12 @@ int forest_management (cell_t *const c, const int day, const int month, const in
                                         //{
 
                                         flag = 0;
-                                        if ( g_management->regeneration_years_count )
+                                        if ( g_management->replanting_years_count )
 						{
 							int i;
-							for ( i = 0; i < g_management->regeneration_years_count; i++ )
+							for ( i = 0; i < g_management->replanting_years_count; i++ )
 							{
-								if ( c->years[year].year == g_management->regeneration_years[i] )
+								if ( c->years[year].year == g_management->replanting_years[i] )
 								{
 									flag = 1;
 									break;
@@ -543,10 +543,10 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 
                                           /* check that all mandatory variables are filled */
 
-						CHECK_CONDITION (g_settings->regeneration_n_tree, <, ZERO);
-						CHECK_CONDITION (g_settings->regeneration_height, <, 1.3);
-						CHECK_CONDITION (g_settings->regeneration_avdbh,  <, ZERO);
-						CHECK_CONDITION (g_settings->regeneration_age,    <, ZERO);
+						CHECK_CONDITION (g_settings->replanting_n_tree, <, ZERO);
+						CHECK_CONDITION (g_settings->replanting_height, <, 1.3);
+						CHECK_CONDITION (g_settings->replanting_avdbh,  <, ZERO);
+						CHECK_CONDITION (g_settings->replanting_age,    <, ZERO);
 
                         /* mimic natural regeneration with a re-planting tree class */
                         if ( ! add_tree_class_for_replanting_reg( c , day, month, year) )
@@ -960,7 +960,7 @@ management_t* management_load_presc(const char* const filename)
 	int thinning_flag     = 0;
         int harvesting_flag   = 0;
         int thinning_int_flag = 0;
-        int regeneration_flag = 0;
+        int replanting_flag = 0;
 
         FILE *f;
 	management_t* management;
@@ -969,7 +969,7 @@ management_t* management_load_presc(const char* const filename)
 	const char sz_harvesting[] = "harvesting";
 	const char sz_thinning[]   = "thinning";
         const char sz_thinning_int[] = "thinning_int";
-        const char sz_regeneration[] = "regeneration";   //august 2021 :add also years where a new regeneration layer can be added (shelterwood cut)
+        const char sz_replanting[] = "replanting";   //august 2021 :add also years where a new regeneration layer can be added (shelterwood cut)
 
 	assert(filename);
 
@@ -1006,7 +1006,7 @@ management_t* management_load_presc(const char* const filename)
                         harvesting_flag = 1;
 			thinning_flag = 0;
                         thinning_int_flag = 0;
-                        regeneration_flag = 0;
+                        replanting_flag = 0;
 		}
 		else if ( ! string_compare_i(token, sz_thinning) )
 		{
@@ -1014,7 +1014,7 @@ management_t* management_load_presc(const char* const filename)
                         harvesting_flag = 0;
 			thinning_flag = 1;
                         thinning_int_flag = 0;
-                        regeneration_flag = 0;
+                        replanting_flag = 0;
 		}
                 else if ( ! string_compare_i(token, sz_thinning_int) )  //5p6
 		{
@@ -1022,15 +1022,15 @@ management_t* management_load_presc(const char* const filename)
                         harvesting_flag = 0;
 			thinning_int_flag = 1;
                         thinning_flag = 0;
-                        regeneration_flag = 0;
+                        replanting_flag = 0;
 		}
-                else if ( ! string_compare_i(token, sz_regeneration) )  //5p6
+                else if ( ! string_compare_i(token, sz_replanting) )  //5p6
 		{
 			// parse regeneration
                         harvesting_flag = 0;
 			thinning_int_flag = 0;
                         thinning_flag = 0;
-                        regeneration_flag = 1;
+                        replanting_flag = 1;
 		}
 		else
 		{
@@ -1056,10 +1056,10 @@ management_t* management_load_presc(const char* const filename)
 			p_years = &management->thinning_intensity;
 			p_years_count = &management->thinning_intensity_count;
 		}
-                else if ( regeneration_flag )
+                else if ( replanting_flag )
 		{
-			p_years = &management->regeneration_years;
-			p_years_count = &management->regeneration_years_count;
+			p_years = &management->replanting_years;
+			p_years_count = &management->replanting_years_count;
 		}
                 else
 		{
@@ -1133,7 +1133,7 @@ management_t* management_load_presc(const char* const filename)
 		management = NULL;
 	}
 
-        if ( g_settings->regeneration && ! management->regeneration_years_count)
+        if ( g_settings->replanting && ! management->replanting_years_count)
 	{
 		logger_error(g_debug_log, "Missing prescribed years for regeneration while regeneration= ON\n");
 		management_free(management);

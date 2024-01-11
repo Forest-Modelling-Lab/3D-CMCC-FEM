@@ -1659,7 +1659,7 @@ void print_model_settings(logger_t*const log)
 
 	logger(log, "#Photo accl = %s\n", g_settings->Photo_accl ? "on" : "off");
 	logger(log, "#Resp  accl = %s\n", g_settings->Resp_accl ? "on" : "off");
-	logger(log, "#regeneration = %s\n", g_settings->regeneration ? "on" : "off");
+	logger(log, "#replanting = %s\n", g_settings->replanting ? "on" : "off");
 	logger(log, "#Management = %s\n", (MANAGEMENT_VAR == g_settings->management) ? "var" : (MANAGEMENT_ON == g_settings->management) ? "on" : "off");
 	if ( g_settings->management )
 	{
@@ -1852,7 +1852,7 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 			 */
 		}
 		/************************************************************************/
-                if (!g_settings->regeneration)
+                if (!g_settings->replanting)
                 {
 		/* heading variables only at cell level */
 		logger(g_daily_log,",gpp,npp,ar,hr,rsoil,reco,nee,nep,et,le,soil_evapo,snow_pack,asw,moist_ratio,iWue,"
@@ -2027,7 +2027,7 @@ void EOD_print_output_cell_level(cell_t *const c, const int day, const int month
 		}
 	}
 	/************************************************************************/
-        if (!g_settings->regeneration)
+        if (!g_settings->replanting)
         {
 	/* printing variables only at cell level */
 
@@ -2265,7 +2265,7 @@ void EOD_print_output_cell_level_ddalmo(cell_t *const c, const int day, const in
 		//}
 
 		  /************************************************************************/
-                  if (!g_settings->regeneration)
+                  if (!g_settings->replanting)
                   {
 		  /* heading variables only at cell level */
 		  logger(g_daily_log,",gpp,npp,ar,hr,rsoil,reco,nee,nep,et,le,soil_evapo,snow_pack,asw,moist_ratio,iWue,"
@@ -2444,7 +2444,7 @@ void EOD_print_output_cell_level_ddalmo(cell_t *const c, const int day, const in
 		//}
 	 //}
 	  /************************************************************************/
-          if (!g_settings->regeneration)
+          if (!g_settings->replanting)
           {
 	  /* printing variables only at cell level */
 
@@ -2997,7 +2997,7 @@ void EOM_print_output_cell_level(cell_t *const c, const int month, const int yea
 			}
 		}
 		/************************************************************************/
-                if (!g_settings->regeneration)
+                if (!g_settings->replanting)
                 {
 		/* heading variables at cell level only if there's more than one layer */
 
@@ -3108,7 +3108,7 @@ void EOM_print_output_cell_level(cell_t *const c, const int month, const int yea
 		}
 	}
 	/************************************************************************/
-         if (!g_settings->regeneration)
+         if (!g_settings->replanting)
                  {
 	/* printing variables at cell level only if there's more than one layer */
 
@@ -3244,7 +3244,7 @@ void EOM_print_output_cell_level_ddalmo(cell_t *const c, const int month, const 
 			//}
 		//}
 		/************************************************************************/
-                if (!g_settings->regeneration)
+                if (!g_settings->replanting)
                 {
 		/* heading variables at cell level only if there's more than one layer */
 
@@ -3359,7 +3359,7 @@ void EOM_print_output_cell_level_ddalmo(cell_t *const c, const int month, const 
 		//}
 	//}
 	/************************************************************************/
-         if (!g_settings->regeneration)
+         if (!g_settings->replanting)
                  {
 	/* printing variables at cell level only if there's more than one layer */
 
@@ -4311,7 +4311,7 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 		}
 		/************************************************************************/
 
-                 if (!g_settings->regeneration)
+                 if (!g_settings->replanting)
                  {
 		/* heading cell variables */
 		logger(g_annual_log,",gpp,npp,ar,hr,rsoil,rsoilCO2,reco,nee,nep,et,le,soil-evapo,avg_asw,iWue,vol,cum_vol,run_off,"   // put avg_asw
@@ -4524,7 +4524,7 @@ void EOY_print_output_cell_level(cell_t *const c, const int year, const int year
 	}
 	/************************************************************************/
 	/* printing variables at cell level only if there's more than one layer */  //Note: this is actually not true
- if (!g_settings->regeneration)
+ if (!g_settings->replanting)
                  {
         logger(g_annual_log, ",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f"
 			",%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f",
@@ -4820,7 +4820,7 @@ void EOY_print_output_cell_level_ddalmo(cell_t *const c, const int year, const i
 		//} //loop on layer
 		/************************************************************************/
 
-                 if (!g_settings->regeneration)
+                 if (!g_settings->replanting)
                  {
 		  /* heading cell variables */
 		  logger(g_annual_log,",gpp,npp,ar,hr,rsoil,rsoilCO2,reco,nee,nep,et,le,soil-evapo,avg_asw,iWue,vol,cum_vol,run_off,"   // put avg_asw
@@ -5037,7 +5037,7 @@ void EOY_print_output_cell_level_ddalmo(cell_t *const c, const int year, const i
 
                         /************************************************************************/
 	          /* printing variables at cell level only if there's more than one layer */  //Note: this is actually not true
-                  if (!g_settings->regeneration)
+                  if (!g_settings->replanting)
                    {
                         logger(g_annual_log,",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f"
 			",%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f",
