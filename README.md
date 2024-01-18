@@ -58,7 +58,7 @@ For references on **3D-CMCC-FEM**:
 
 6. *“The role of Respiration in estimation of the net Carbon cycle: coupling soil Carbon dynamics and canopy turnover in a novel version of 3D-CMCC Forest Ecosystem Model”*, Marconi S., Chiti T., Valentini R., Collalti A.. *Forests*, 8:220, https://doi.org/10.3390/f8060220, 2017.
 
-7. *“Climate change mitigation by forests: a case study on the role of management on carbon dynamics of a pine forest in South Italy”* Pellicone G., Scarascia-Mugnozza G., Matteucci G., Collalti. A. *PhD Thesis*, University of Tuscia, 2018.
+7. *“Climate change mitigation by forests: a case study on the role of management on carbon dynamics of a pine forest in South Italy”* Pellicone G., Scarascia-Mugnozza G., Matteucci G., Collalti. A. https://dspace.unitus.it/handle/2067/42735, *PhD Thesis*, University of Tuscia, 2018.
 
 8. *“Thinning can reduce losses in carbon use efficiency and carbon stocks in managed forests under warmer climate”*. A. Collalti , C. Trotta, T. Keenan, A. Ibrom, B. Bond-Lamberty, B. R. Grote, S. Vicca, C.P.O. Reyer, M. Migliavacca, F. Veroustraete, A. Anav, M. Campioli, E. Scoccimarro, E. Grieco, A. Cescatti, G. Matteucci. *Journal of Advances in  Modelling Earth Systems*, 10(10):2427-2452, https://doi.org/10.1029/2018MS001275, 2018.
 
