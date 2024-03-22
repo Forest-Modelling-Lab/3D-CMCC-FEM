@@ -165,7 +165,7 @@ int recruitment (cell_t *const c, const int day, const int month, const int year
 
 #endif // 0
 
-#if 1     //CURRENTLY UNDER DEVELOPMENT
+#if 1     //THIS FUNCTION WORKS
 
 static int fill_cell_for_regeneration (cell_t *const c, species_t *const s) {
 

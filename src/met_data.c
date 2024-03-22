@@ -771,6 +771,7 @@ void Thermic_sum_spring (const cell_t * c, const meteo_daily_t *const meteo_dail
 
    }
 
+   return spring_thermic_sum;
    //printf("Thermicsum = %f\n", meteo_daily->spring_thermic_sum);
 }
 

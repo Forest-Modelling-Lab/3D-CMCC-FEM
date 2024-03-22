@@ -24,7 +24,7 @@ enum {
 #define Q0                    1376.1      /* Solar constant (W/m^2) */
 #define Q0_MJ                  0.082      /* Solar constant (MJ/m^2/day) */
 #define QA                       -60      /* Intercept of Net vs Solar Radiation (W/m^2) - that is the net long wave radiation, here set as average value -60 instead of -90 */
-#define QB                       0.8      /* Slope of Net vs Solar Radiation - that is more or less 1-ALBEDO*/ 
+#define QB                       0.8      /* Slope of Net vs Solar Radiation - that is more or less 1-ALBEDO*/
 #define RAD2PAR                 0.45      /* (DIM) ratio PAR / SWtotal */
 #define RAD2PPFD                0.45      /* (DIM) ratio PPFD / SWtotal */
 #define GC_GDM                     2      /* convert grams C to grams DM (Campioli et al., 2013) */
@@ -114,6 +114,9 @@ enum {
 #define KS3_BASE             0.0014       /* slow microbial recycling pool */
 #define KS4_BASE             0.0001       /* recalcitrant SOM (humus) pool */
 #define KFRAG_BASE            0.001       /* physical fragmentation of coarse woody debris */
+
+/** REGENERATION CONSTANTS **/
+#define EMPTY_SEEDS 0.40
 
 
 

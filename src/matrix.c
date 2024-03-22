@@ -971,15 +971,15 @@ static const char *sz_species_values[] =
 		"CROWN_B",                    /* Crown b parameter */
 		"MAXSEED",                    /* numero massimo semi prodotti dalla pianta (da TREEMIG) */
 		"MASTSEED",                   /* ricorrenza anni di pasciona (da TREEMIG) */
-		"WEIGHTSHELL",                /* fruit shell weight in g */
 		"SEXAGE",                     /* Age for sexual maturity at hight density */
 		"GERMCAPACITY",               /* Geminability */
 		"ROTATION",                   /* rotation for final harvest (based on tree age) */
 		"THINNING",                   /* thinning regime (based on year simulation) */
 		"THINNING_REGIME",            /* thinning regime (0 = above, 1 = below) */
 		"THINNING_INTENSITY",         /* thinning intensity (% of Basal Area/N-tree to remove) */
-		//"MAX_CS",                     /* Maximum Carbon accumulation in grams over the years available for seeds production */
-		"WEIGHTFRUIT",                /* weight of fruit that contain seed or seeds in grams */
+		//"MAX_CS",                   /* Maximum Carbon accumulation in grams over the years available for seeds production */
+		"WEIGHTFRUIT",                /* weight of fruit that contain seed or seeds in grams (DM)*/
+		"FRUIT_SEED",                 /* Mean number of seeds */
 		"GDD_SEED",                   /* growing degree days for seed germination */
 		"SURV_TEMP",                  /* Optimal survival mean temperature for seedling in summer (°C) */
 		"SURV_PAR",                   /* Optimal summer PAR for maximum survival value (mol/m2 day)*/

@@ -163,28 +163,28 @@ int Fruit_to_seeds_function (cell_t *const c, const int layer, const age_t *cons
 void Fruit_to_seeds_function_npp (cell_t *const c, const age_t *const a, species_t *const s, const int day, const int month, const int year) {
 
 
- long int NumberSeed = 0;                    //Number of Seeds
- long int NumberFruit = 0;                   //Number of Fruit
- double carbon_tank = 0.;                     //Carbon for seeds
+ long int NumberSeed = 0.;   //Number of Seeds
+ long int NumberFruit = 0.;  //Number of Fruit
+ double carbon_tank = 0.;   //Carbon available for fruits in gC/cell/yr (DM)
 
 
            if (a->value >= s->value[SEXAGE]) {
 
 
-               carbon_tank = (s->value[MAX_FRUIT_C] * 1e6); //Convert tC(fruit) to gC/cell(fruit);
-              //printf("MAX_FRUIT_C = %f\n", s->value[MAX_FRUIT_C]);
-              //printf("Carbontank = %f\n", carbon_tank);
-              //printf("AGE = %d\n", a->value);
+               carbon_tank = (s->value[MAX_FRUIT_C] * 1e6); //Convert tC/cell/yr(fruit) to gC/cell/yr(fruit);
+               //printf("MAX_FRUIT_C = %f\n", s->value[MAX_FRUIT_C]);
+               //printf("Carbontank = %f\n", carbon_tank);
+               //printf("AGE = %d\n", a->value);
 
-               //Calculates the number of fruit per stand based on species specific weight of fruit(nfruit/ha)
+               //Calculates the number of fruit per stand, based on species specific weight of fruit(nfruit/cell/yr)
                NumberFruit = (carbon_tank / s->value[WEIGHTFRUIT]);
                //printf("Number fruit = %ld\n", NumberFruit);
 
-               //Calculates the number of seed per stand based on species specific weight of seed (nseed/tree/year)
-               NumberSeed = (NumberFruit / s->value[WEIGHTSHELL]);
-               //printf("Number seed = %ld\n", NumberSeed);
+               //Calculates the effective number of seeds
+               NumberSeed = (NumberFruit * s->value[FRUIT_SEED]);
+               //printf("Number of seeds = %ld\n", NumberSeed);
 
-               //Number of seed per species (nseed/cell/year)
+               //Assigned in a counter the number of seed per species (nseed/cell/year)
                s->counter[N_SEED] = NumberSeed;
                //printf("N_SEED = %ld\n", s->counter[N_SEED]);
 
@@ -192,7 +192,6 @@ void Fruit_to_seeds_function_npp (cell_t *const c, const age_t *const a, species
              } else {
 
              NumberFruit = 0;
-
              NumberSeed = 0;
         }
 /*

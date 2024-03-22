@@ -665,7 +665,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
                          {
                            /** Compute seeds germination **/
                            germination (c, meteo_daily, s, day, month, year);
-                           //printf("Seedlings = \t%d\n", s->counter[SEEDLINGS]);
+                           //printf("Seedlings = \t%ld\n", s->counter[SEEDLINGS]);
 
                             }
                             else
@@ -687,18 +687,19 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 
                               /** Establishment appearing **/
                               establishment (c, meteo_daily, s, day, month, year);
+                              //printf("Seedlings survived = %ld\n", s->counter[SEEDLINGS_SURV]);
 
                               //Mortality Establishment
                               //seedlings_mortality (c, meteo_daily, s, day, month, year);
 
                             if ( year ==1 && c->doy == ( IS_LEAP_YEAR ( c->years[year].year ) ? 366 : 365) )
 
-                                    //if ( year == 1 && c->doy == 1 )
+                                    //if ( year == 1 && c->doy == 1 ) test Sapo
                                     {
 
-                                     //if (!day && !month && year)
+                                     //if (!day && !month && year) test Sapo
                                      //{
-                                     /** Recruitment **/
+                                     // Recruitment //
                                     if( !recruitment (c, s, day, month, year) )
                                     {
                                      logger_error(g_debug_log, "unable to add new regeneration class! (exit)\n");

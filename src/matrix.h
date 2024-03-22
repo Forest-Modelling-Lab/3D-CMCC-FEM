@@ -104,15 +104,15 @@ enum {
 	CROWN_B,                             /* Crown b parameter */
 	MAXSEED,                             /* maximum seeds number (see TREEMIG) */
 	MASTSEED,                            /* Musting year (see TREEMIG) */
-	WEIGHTSHELL,                         /* single shell fruit weight in grams */
 	SEXAGE,                              /* Age for sexual maturity at high density */
 	GERMCAPACITY,                        /* Geminability rate */
 	ROTATION,                            /* rotation for final harvest (based on tree age) */
 	THINNING,                            /* thinning regime (based on year simulation) */
 	THINNING_REGIME,                     /* thinning regime (0 = above, 1 = below) */
 	THINNING_INTENSITY,                  /* thinning intensity (% of Basal Area/N-tree to remove) */
-	//MAX_CS,                              /* maximum Carbon accumulation in grams over the years available for seeds production */
-	WEIGHTFRUIT,                         /* weight of fruit that contain seed or seeds in grams */
+	//MAX_CS,                            /* maximum Carbon accumulation in grams over the years available for seeds production */
+	WEIGHTFRUIT,                         /* weight of fruit that contain seed or seeds in grams (DM) */
+	FRUIT_SEED,                          /* Mean number of seeds per fruit */
 	GDD_SEED,                            /* growing degree days for seed germination */
 	SURV_TEMP,                           /* Optimal survival mean temperature for seedling in summer (°C) */
 	SURV_PAR,                            /* Optimal summer PAR for maximum survival value (mol/m2 day)*/
@@ -1281,10 +1281,10 @@ typedef struct
     double carbon_tank;                     //(gC/m2) seed carbon at cell level
 
     /*Seedlings*/
-    int Seedlings_Number;                   //(Seedlings/cell) Number of seedlings per species
-    int Seedlings_pool;                     //(Seedlings/cell) Number of seedling over years
-    int Seedlings_surv;                   //(Seedlings/cell) Number of saplings over years
-    int Seedlings;                          //(Seedlings/cell) Number of saplings over years
+    long int Seedlings_Number;                   //(Seedlings/cell) Number of seedlings per species
+    //int Seedlings_pool;                     //(Seedlings/cell) Number of seedling over years
+    long int Seedlings_surv;                     //(Seedlings/cell) Number of saplings over years
+    //int Seedlings;                          //(Seedlings/cell) Number of saplings over years
 
 	/************************************************** LITTER AND SOIL **************************************************/
 

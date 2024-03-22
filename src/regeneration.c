@@ -23,8 +23,6 @@
 #include "meteo.h"
 #include "soil_model.h"
 
-#define SEED_VITALITY 0.1
-
 extern logger_t* g_debug_log;
 extern settings_t* g_settings;
 
@@ -93,12 +91,13 @@ int germination (cell_t *const c, const meteo_daily_t *const meteo_daily, specie
 
 
     int N_seed_vitality = 0;
-    int Seedlings_Number = 0;
+    long int Seedlings_Number = 0;
     //int *ptr_Seedlings;
 
 
+
             //Perform number of seeds vitality
-            N_seed_vitality = s->counter[N_SEED] * SEED_VITALITY;
+            N_seed_vitality = s->counter[N_SEED] * EMPTY_SEEDS;
             //printf("Seed vitality = %d\n", N_seed_vitality);
 
             //Perform number of seedlings
@@ -106,11 +105,7 @@ int germination (cell_t *const c, const meteo_daily_t *const meteo_daily, specie
 
             //Assigned seedling number to a species vector
             s->counter[SEEDLINGS] = Seedlings_Number;
-
-
-           // printf("Seedlings = \t%d\n", s->counter[SEEDLINGS]);
-
-
+            //printf("Seedlings = \t%d\n", s->counter[SEEDLINGS]);
 
             //Assign variable to pointer
             //ptr_Seedlings = &Seedlings_Number;
@@ -327,22 +322,18 @@ int establishment(cell_t *const c, const meteo_daily_t *const meteo_daily, speci
 int establishment (cell_t *const c, const meteo_daily_t *const meteo_daily, species_t *const s, const int day, const int month, const int year) {
 
 
-    int Seedlings_surv = 0; //Seedlings number that survive after first year
-
-
+    long int Seedlings_surv = 0; //Seedlings number that survive after first year
 
        //Note: Radiation that reachs the soil surface in Muffler L. et al., 2021 is in (max surv)80 micromol/m2*sec.
        //The model calculates the radiation in mol/m2*day (in this case is 7 mol/m2*day).
-
 
         //Optimal condition for light and temperature (case1)
 		if (meteo_daily->seedling_par >= s->value[SURV_PAR] && meteo_daily->seedling_temp <= s->value[SURV_TEMP]) {
 
 			Seedlings_surv = (s->counter[SEEDLINGS] * 0.7); //L.Muffler et al.2021 0.70
 
-
-
             s->counter[SEEDLINGS_SURV] = Seedlings_surv;
+
              }
 
         //Optimal condition for light but not for temperature (case2)
@@ -359,9 +350,6 @@ int establishment (cell_t *const c, const meteo_daily_t *const meteo_daily, spec
 			Seedlings_surv = (s->counter[SEEDLINGS] * 0.3); //L.Muffler et al.2021 0.30
             s->counter[SEEDLINGS_SURV] = Seedlings_surv;
 
-
-
-
              }
 
 		//Non-Optimal condition for Light and Temperature (case 4)
@@ -369,7 +357,6 @@ int establishment (cell_t *const c, const meteo_daily_t *const meteo_daily, spec
 
 			Seedlings_surv = (s->counter[SEEDLINGS] * 0.2); //L.Muffler et al.2021 0.20
             s->counter[SEEDLINGS_SURV] = Seedlings_surv;
-
 
 
        } else {
