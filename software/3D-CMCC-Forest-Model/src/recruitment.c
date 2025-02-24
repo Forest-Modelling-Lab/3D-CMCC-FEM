@@ -75,6 +75,11 @@ void Establishment_LPJ (cell_t *const c, const int layer, const int height, cons
 
  /*********************************** SAPONARO 04/2023 RECRUITMENT MODULE*********************************************/
 
+// below the new part of the code developped by Vincenzo --------------------
+// as it is currently not used, we exclude entirely this part from the compilation
+
+#if 0 
+
 #if 0      //***********This is just a test to allocation dynamic memory (DO NOT USE) *********************//
 
 int recruitment (cell_t *const c, const int day, const int month, const int year) {
@@ -505,6 +510,9 @@ static int recruitment_memory (cell_t *const c)
 }
 
 #endif // 1
+
+
+#endif // 0  // february 2025 currently we exclude this part from the compilation 
 
 #if 0   //TESTARE
 static int recruitment_memory (cell_t *const c)
