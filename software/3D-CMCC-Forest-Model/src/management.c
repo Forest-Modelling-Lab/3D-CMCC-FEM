@@ -100,6 +100,9 @@ int forest_management (cell_t *const c, const int day, const int month, const in
     // 5p7
 	int counter_thinning = 0; 
 
+	// @ISSAM  change here
+	double Prmin = 120.;  // Vallombrosa minimum provision for Pinus Nigra m3 ha-1
+
 	// variable initialization
 	c->removal = 0; // flag to indicate if thinning or harvest happens
 	// this is important as it set if we need to enter the annual_forest_structure function 
@@ -123,7 +126,7 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 	c->PRINT_MAN_HEADER = 1 ; 
    #endif 
 
-    // REGENERATION WHEN MAN = OFF 
+    // REGENERATION =ON MAN = OFF 
 
 	if ( (g_settings->regeneration) & (MANAGEMENT_OFF == g_settings->management) )
     {
@@ -377,6 +380,52 @@ int forest_management (cell_t *const c, const int day, const int month, const in
 		);
 		#endif
 
+
+		// version for VAllombrosa - Issam PhD thesis
+		// compute the provision over the minimum
+
+		if (2 == g_settings->management_type)
+		{
+
+           // compute current stand volume or ...
+           double Volt = 0.0 ;
+		   int thinning_prescribed;
+		  
+
+		   if ( year==0 ) // if we are in the first year of simulation
+		   {
+			c->Volt_intensity = 0. ;
+
+		   } else {
+		   // note: in the first year of simulation c->volume2 is set to 0 and computed at the end of the year
+		   Volt = ((c->volume2 - Prmin)*100)/c->volume2 ; // in %
+
+		   // NOTE We assume here that every 5 years, the intensity never change 
+
+		   thinning_prescribed= g_management->thinning_intensity[0];
+ 
+		 //  printf("Volt before entering in the classes  %f \n",Volt); 
+		 // // printf("cell volume c->volume2  before entering in the classes  %f \n",c->volume2 ); 
+		//   printf(" thinning_prescribed  before entering in the classes  %d \n",thinning_prescribed);
+
+		    if (Volt >= thinning_prescribed)
+			{
+				c->Volt_intensity = thinning_prescribed/100. ; 
+
+			} else if (Volt >=0 & Volt < thinning_prescribed)
+			{
+				c->Volt_intensity = Volt/100. ; 
+
+			} else if ( Volt < 0.)
+			{
+				c->Volt_intensity = 0. ; 
+
+			}   
+			//printf("volume to be removed as fraction before entering in the classes  Volt_intensity %f \n",c->Volt_intensity);
+		    
+		    }                     
+		}
+
         // Thinning/harvest is performed in the dominant layer only: to do this
 		// and with a good approximation, we avoid cutting when age class is lower than
 		// a specific treshold e.g. 35 years
@@ -576,6 +625,9 @@ int forest_management (cell_t *const c, const int day, const int month, const in
        c->harvesting  = 1;  // it does not enter annual structure. 
 	 }
     }
+    // set here to 0 this variable, as for management_type=2 is needed
+	c->volume2 =                         0.; 
+
 	end_tree1 :
 	return 0;
 }
@@ -588,8 +640,12 @@ void thinning (cell_t *const c, const int height, const int dbh, const int age, 
 	int nat_man;                        /* natural or managed mortality 0 = natural; 1 = managed */
     int thinning_intensity_prescribed;
 
+	  
     int index= 0 ;
     float BA_TBR ;  // basal area to be removed 
+
+	float VOL_TBR ;  //  volume to be remove from each forest class (management_type=3) 
+    float Volt_intensity ;
 
 	species_t *s;
 
@@ -677,7 +733,54 @@ void thinning (cell_t *const c, const int height, const int dbh, const int age, 
     //   thinning based on stand volume to be left in the stand/based on growth  
 	// TBD with Alessio and Issam for 5p7
 
-	} else if ( 2 == g_settings->management_type )
+	} else if ( 2 == g_settings->management_type )  
+	{
+	
+    // VAllombrosa Issam phd thesis 
+
+	 if (c->Volt_intensity == 0.)
+	 {
+		trees_to_remove = 0 ;
+
+	  } else 
+     {
+
+			if (counter_thinning == 0 )  // compute only for the first time entering
+			{ 
+			VOL_TBR  = c->volume2 * (c->Volt_intensity) ;
+			}
+			
+			//printf("volume to be removed %f \n",VOL_TBR);
+			//printf("volume to be removed as fraction %f \n",c->Volt_intensity);
+
+			// check 
+			if (VOL_TBR  > eps && VOL_TBR   <= s->value[VOLUME2] ) 
+			{
+				// remove  BA_TBR from the class 
+
+				trees_to_remove = ROUND(VOL_TBR/s->value[TREE_VOLUME2]);
+
+				VOL_TBR = 0. ;
+                //printf(" SONO QUA 1  \n");
+			} 
+
+				// remove entire class and update 
+			if (VOL_TBR > eps && VOL_TBR > s->value[VOLUME2] ) 
+			{
+				trees_to_remove = s->counter[N_TREE];
+				// update BA to be removed for the next DBH class 
+
+				VOL_TBR -= s->value[VOLUME2] ;
+
+				//printf(" SONO QUA 2  \n");
+
+			}
+			
+
+	 }
+
+	}	
+	else if ( 3 == g_settings->management_type )
 	{
     	// set as function of the minimum GS we want to let in the stand, and according to how far are we, we change 
     	// the percentage of removal. (we can do it as for management 2. from above and below )
