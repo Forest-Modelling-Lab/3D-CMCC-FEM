@@ -448,7 +448,7 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 
 	s->value[TREE_FROOT_C]    = s->value[FROOT_C] / (double)s->counter[N_TREE];
  
-	/***** INITIALIZE LITTER POOL *****/
+	//********************************* INITIALIZE LITTER POOL *****************************************//
 
     // values are then only used in the function 'initialization_forest_class_litter'
 
@@ -470,6 +470,7 @@ void initialization_forest_class_C (cell_t *const c, const int height, const int
 	else
 	{
 		/* get data from soil setting file */
+
 		s->value[LEAF_LITRC]  = c->init_litter_C * s->value[FROOT_LEAF_FRAC];
 		s->value[FROOT_LITRC] = c->init_litter_C * ( 1. - s->value[FINE_ROOT_LEAF]);
 	}
@@ -913,6 +914,18 @@ void initialization_forest_cell_N (cell_t *const c, const int height, const int 
 
 }
 
+
+
+ 
+
+//-----------------------------------------------------------------------------------------------------//
+ 
+
+// ---------------- LITTER AND SOIL COMPARTMENTS ----------------------------------------------------- //
+ 
+
+//-----------------------------------------------------------------------------------------------------//
+
 void initialization_forest_class_litter (cell_t *const c, const int height, const int dbh, const int age, const int species)
 {
 	double cwd_litrC;
@@ -957,6 +970,7 @@ void initialization_forest_class_litter (cell_t *const c, const int height, cons
 			s->value[CWD_LITRC]  = 0.001;
 			s->value[CWD_LITRC]  = 10.;  // ddalmo rough estimates for the forest Mg C /ha
 			s->value[CWD_LITRC]  = 3.;  // we use this value to initialize the litter pool Mg C /ha
+
 		}
 		else
 		{
@@ -1239,6 +1253,14 @@ void initialization_cell_soil_biochem (cell_t *const c)
 	c->soil2C         = 0.;
 	c->soil3C         = 0.;
 	c->soil4C         = 0.;
+
+	// usefull to start, when spinup is performed (running long time simulation until equilibrium
+	// veg and soil togheter)
+
+    c->soil1C         = c->init_soil_C/4.;
+	c->soil2C         = c->init_soil_C/4.;
+	c->soil3C         = c->init_soil_C/4.;
+	c->soil4C         = c->init_soil_C/4.;
 
 	/* initialize soil nitrogen */
 	if ( ! c->init_soil_N || c->init_soil_N == NO_DATA )
