@@ -147,7 +147,8 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 
     // i.e. this condition might occurr when harvest happens, without replanting 
 	if ( c->n_trees ==0 ) goto end_tree;
-
+ 
+	 
 
 	/****************************************************************************/
 
