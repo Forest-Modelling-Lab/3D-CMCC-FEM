@@ -124,6 +124,7 @@ enum {
 #define reg_threshold      30        /* [year] age threshold of the youngest forest class to set seedl_layer to 1 (regeneration layer exists) */
                                       // this is needed when the natural-regeneration is performed.
 #define self_thinning_treshold    30.0     // cm DBH treshold to activate self thinning within a layer (compared to the smalled class in the layer) 
+                                           // i.e. larger trees are not going under selfthinning.
 #define self_thinning_rf           0.10       /* reduction factor of self-thinning number of stems deafult 0.1 */ 
 
 //MARCONI CONSTANTS::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
