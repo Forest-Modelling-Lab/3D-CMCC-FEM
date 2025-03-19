@@ -304,15 +304,16 @@ void soil_decomposition (cell_t *const c, const meteo_daily_t *const meteo_daily
 {
 	double rate_scalar;
 	double soil_decomp_rate1;     /* labile soil decomposition rate */
-	double soil_decomp_rate2;     /* cellulose unshielded soil decomposition rate */
-	double soil_decomp_rate3;     /* cellulose schielded soil decomposition rate */
-	double soil_decomp_rate4;     /* lignin soil decomposition rate */
+	double soil_decomp_rate2;     /*  decomposition rate of medium microbial recycling C pool */
+	double soil_decomp_rate3;     /* decomposition rate of slow microbial recycling C pool */
+	double soil_decomp_rate4;     /* decomposition rate of recalcitrant/quasy stable soil C pool */
 	double pot_soil1C_loss;       /* potential labile soil loss */
 	double pot_soil2C_loss;       /* potential unshielded soil loss */
 	double pot_soil3C_loss;       /* potential shielded soil loss */
 	double pot_soil4C_loss;       /* potential lignin soil loss */
 
 	/* calculate the final rate scalar as the product of the temperature and water scalars */
+
 	rate_scalar     = decomposition ( c, meteo_daily, 1 );
 
 	/* soil decomposition rate */
@@ -359,6 +360,7 @@ void soil_decomposition (cell_t *const c, const meteo_daily_t *const meteo_daily
 		/* carbon */
 		c->daily_soil1_het_resp   = pot_soil1C_loss * RFS1S2;
 		c->daily_soil1C_to_soil2C = pot_soil1C_loss * ( 1. - RFS1S2 );
+
 		/* nitrogen */
 		c->daily_soil1N_to_soil2N = pot_soil1C_loss / SOIL1_CN;
 	}
@@ -369,6 +371,7 @@ void soil_decomposition (cell_t *const c, const meteo_daily_t *const meteo_daily
 		/* carbon */
 		c->daily_soil2_het_resp   = pot_soil2C_loss * RFS2S3;
 		c->daily_soil2C_to_soil3C = pot_soil2C_loss * ( 1. - RFS2S3 );
+
 		/* nitrogen */
 		c->daily_soil2N_to_soil3N = pot_soil2C_loss / SOIL2_CN;
 	}
@@ -377,8 +380,9 @@ void soil_decomposition (cell_t *const c, const meteo_daily_t *const meteo_daily
 	if ( c->soil3C > 0. )
 	{
 		/* carbon */
-		c->daily_soil2_het_resp   = pot_soil2C_loss * RFS2S3;
-		c->daily_soil3C_to_soil4C = pot_soil2C_loss * ( 1. - RFS2S3 );
+		c->daily_soil3_het_resp   = pot_soil3C_loss * RFS3S4;
+		c->daily_soil3C_to_soil4C = pot_soil3C_loss * ( 1. - RFS3S4 );
+
 		/* nitrogen */
 		c->daily_soil3N_to_soil4N = pot_soil3C_loss / SOIL3_CN;
 	}
