@@ -905,9 +905,7 @@ enum {
 	                                    // FIXME the followings should be moved to a different ENUM
 	THINNING_HAPPENS,                   /* 0 = thinning off, 1 = thinning on */
 	HARVESTING_HAPPENS,                 /* 0 = harvesting off, 1 = harvesting on */
-
-	
-	                                     
+                                   
 	COUNTERS
 };
 
@@ -1072,13 +1070,14 @@ typedef struct
 	int dos;                                                              /* day of simulation */
 
     // FLAGS 
-	int harvesting;                                                       /* 0 = off, 1 = on */
-    int removal;                                                          // 0=off, 1 =0n (set if removal in the stand is performed)
+	int harvesting;                          /* 0 = off, 1 = on */
+    int removal;                           // 0=off, 1 =0n (set if removal in the stand is performed)
     int GREFFMORT_HAPPENS;                 /* 0 = no classes removed because of growth efficiency mortality, 1 = at least one class removed  */
     int PRINT_MAN_HEADER;                  /* 0 = printing header, 1 = printing off */
 	int seedl_reg ;                        /* 0 = no conditions for seedlings/regeneration, 1 = conditions for regeneration */
     int seedl_layer ;                      /* 0 = no regeneration layer , 1 = regeneration layer exist */
-
+	//int flag_turn ;                        // 0 all species have the same end of turn in the species file, 1 otherwise 
+ 
 
 	/* for logger */
 	int initial_tree_layers_count;
