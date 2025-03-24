@@ -119,7 +119,9 @@ enum {
 #define KFRAG_BASE            0.001       /* physical fragmentation of coarse woody debris */
                                         // at some point, it would be worth to include this as a species specific or settings parameter.
 // thresholds/constant  5p7
-#define thinning_threshold      35        /* [year] age limit to perform thinning when shelterwood/continuos forest covery is performed */
+#define thinning_threshold_timber      35        /* [year] age limit to perform thinning when shelterwood/continuos forest covery is performed */
+#define thinning_threshold_coppice  10    /* [year] age limit to perform thinning when coppice forest covery is performed */
+
 #define coppice_rf              0.10       /* reduction factor of stem density-replanting after each clear cut for coppice */
 #define reg_threshold      30        /* [year] age threshold of the youngest forest class to set seedl_layer to 1 (regeneration layer exists) */
                                       // this is needed when the natural-regeneration is performed.
