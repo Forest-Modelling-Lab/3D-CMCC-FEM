@@ -251,8 +251,11 @@ void reset_annual_cell_variables(cell_t *const c)
 	c->agb =                            0.;
 	c->bgb =                            0.;
 	c->volume =                         0.;
-	//c->volume2 =                         0.;  // per VAllombrosa 
-	c->Volt_intensity =                 0.;  // per VAllombrosa used in management_type =3  
+	//c->volume2 =                         0.; // it is set to 0 at the end of the management subroutine (which is called anyhow yeach year the first of jan) 
+	c->Volt_intensity =                 0.;  //  used in management_type =2  
+	c->VOL_TBR =                		0.;  //  used in management_type =2  
+	c->BA_TBR =                 		0.;  // used in management_type =1  
+	
 	c->yearly_C_to_wood =               0.;	
 	//c->dead_tree =                    0;
 	c->daily_dead_tree  =               0;
