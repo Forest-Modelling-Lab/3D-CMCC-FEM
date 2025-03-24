@@ -1591,7 +1591,6 @@ void EOY_print_output_class_level_mortality(cell_t *const c, const int height, c
 				c->thinned_stem_to_print,
 				c->thinned_stem2_to_print);
 		
-
 				// set to 0 
 
 				c->dead_tree_to_print     =       0;  
