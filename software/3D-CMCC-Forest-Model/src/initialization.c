@@ -1192,10 +1192,20 @@ void initialization_cell_litter_biochem ( cell_t *const c )
 	c->litrC          = c->leaf_litrC + c->froot_litrC + c->cwd_C;
 
 	/* cumulate carbon pools */
+	//c->litr1C         = c->leaf_litr1C + c->froot_litr1C;
+	//c->litr2C         = c->leaf_litr2C + c->froot_litr2C + c->cwd_2C;
+	//c->litr3C         = c->leaf_litr3C + c->froot_litr3C + c->cwd_3C;
+	//c->litr4C         = c->leaf_litr4C + c->froot_litr4C + c->cwd_4C;
+
+	// Correction proposed by Issam: to start, we neglect the cwd  contribution
+	// as currenctly is simply computed at the entire CWD pool split in to the different litter pools
+	// this has to be fixed considering the daily fragmentation rate.
+	// this approximation should affect only the first years of simulations
+
 	c->litr1C         = c->leaf_litr1C + c->froot_litr1C;
-	c->litr2C         = c->leaf_litr2C + c->froot_litr2C + c->cwd_2C;
-	c->litr3C         = c->leaf_litr3C + c->froot_litr3C + c->cwd_3C;
-	c->litr4C         = c->leaf_litr4C + c->froot_litr4C + c->cwd_4C;
+	c->litr2C         = c->leaf_litr2C + c->froot_litr2C ;
+	c->litr3C         = c->leaf_litr3C + c->froot_litr3C ;
+	c->litr4C         = c->leaf_litr4C + c->froot_litr4C ;
 
 	/******************************************************************************************************************************************************************/
 
@@ -1249,13 +1259,14 @@ void initialization_cell_soil_biochem (cell_t *const c)
 		c->soilC      = c->init_soil_C;
 	}
 
-    c->soil1C         = 0.;
-	c->soil2C         = 0.;
-	c->soil3C         = 0.;
-	c->soil4C         = 0.;
+   // c->soil1C         = 0.;
+	//c->soil2C         = 0.;
+	//c->soil3C         = 0.;
+	//c->soil4C         = 0.;
 
 	// usefull to start, when spinup is performed (running long time simulation until equilibrium
-	// veg and soil togheter)
+	// veg and soil togheter). When restarting the simulations, the soil partitioning coefficients
+	// obtained from the spinup are used to initialize the soil pools.
 
     c->soil1C         = c->init_soil_C/4.;
 	c->soil2C         = c->init_soil_C/4.;
