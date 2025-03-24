@@ -1163,7 +1163,10 @@ typedef struct
 	double yearly_C_to_wood;                                              /* (tC/cell/year) Annual Carbon stocked into wood pool */
 	double cum_yearly_C_to_wood;                                          /* (tC/cell) Cumulated Annual Carbon stocked into wood pool */
 	double cum_npp;                                                       /* (tC/cell) Cumulated Annual npp */
-    double Volt_intensity;                                                // used in management_type 2 : volume to be removed as % from the stand
+    double Volt_intensity;                                                // used in management_type 2 : volume to be removed as fraction from the stand
+	double VOL_TBR ;  												     // volume m2/cell to be removed from the stand according to management_type=2
+	float BA_TBR ;  												     // Basal Area m2/cell to be removed from the stand according to management_type=1 
+	
 	double lai;                                                           //fixme
 	double max_lai_proj;                                                  //fixme
 
