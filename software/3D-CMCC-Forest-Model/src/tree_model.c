@@ -684,7 +684,8 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 		 double seedlings_par_ave ;
 		 double seedl_par_threshold;
 
-		 seedl_par_threshold = 4.0 ;  // mmol etetc (intanto lo settiamo internamente)
+		 seedl_par_threshold = 4.0 ;  // mol/m2/day   Source Muffler et al. 2020 (assuming is the summer average)
+		                                            // range 3.45 to 6.9 to garantee establishemnt of seedlings
 
          seedlings_par_cum = c->years[year].seedling_par ;
 
