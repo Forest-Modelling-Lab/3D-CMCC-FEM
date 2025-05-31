@@ -65,7 +65,7 @@ For references on **3D-CMCC-FEM**:
 
 7. *“Climate change mitigation by forests: a case study on the role of management on carbon dynamics of a pine forest in South Italy”* Pellicone G., Scarascia-Mugnozza G., Matteucci G., Collalti. A. https://dspace.unitus.it/handle/2067/42735, *PhD Thesis*, University of Tuscia, 2018.
 
-8. *“Thinning can reduce losses in carbon use efficiency and carbon stocks in managed forests under warmer climate”*. A. Collalti , C. Trotta, T. Keenan, A. Ibrom, B. Bond-Lamberty, B. R. Grote, S. Vicca, C.P.O. Reyer, M. Migliavacca, F. Veroustraete, A. Anav, M. Campioli, E. Scoccimarro, E. Grieco, A. Cescatti, G. Matteucci. *Journal of Advances in  Modelling Earth Systems*, 10(10):2427-2452, https://doi.org/10.1029/2018MS001275, 2018.
+8. *“Thinning can reduce losses in carbon use efficiency and carbon stocks in managed forests under warmer climate”*. A. Collalti, C. Trotta, T. Keenan, A. Ibrom, B. Bond-Lamberty, B. R. Grote, S. Vicca, C.P.O. Reyer, M. Migliavacca, F. Veroustraete, A. Anav, M. Campioli, E. Scoccimarro, E. Grieco, A. Cescatti, G. Matteucci. *Journal of Advances in  Modelling Earth Systems*, 10(10):2427-2452, https://doi.org/10.1029/2018MS001275, 2018.
 
 9. *“The sensitivity of the forest carbon budget shifts between different parameters and processes along stand development and climate change”*, Collalti A., Thornton P. E., Cescatti A., Rita A., Nolè A., Borghetti M., Trotta C., Ciais P., Matteucci G..*Ecological Applications*, 29(2):1-18, https://doi.org/10.1002/eap.1837, 2019.
 
@@ -77,7 +77,7 @@ For references on **3D-CMCC-FEM**:
     
 13. *“Accuracy, realism and general applicability of European forest models"*, Mahnken M., Cailleret M., Collalti A., Trotta C., Biondo C., D'Andrea E., Dalmonech D., Marano G., Mäkelä A., Minunno F., Peltoniemi M., Trotsiuk V., Nadal-Sala D., Sabaté S., Vallet P., Aussenac R., Cameron D.R., Bohn F.J., Grote R., Augustynczik A.L.D., Yousefpour R., Huber N., Bugmann H., Merganikova K., Merganic J., Valent P., Lash-Born P., Hartig F., Vega del Valle I.D., Volkholz J., Gustch M., Matteucci G., Krejza J., Ibrom A., Meesenburg H., Rötzer T., van der Maaten-Theunissen M., van der Maaten E., Reyer C.P.O. *Global Change Biology*,  https://doi.org/10.1111/gcb.16384, 2022.
 
-14. *“Feasibility of enhancing carbon sequestration and stock capacity in temperate and boreal European forests via changes to forest management"*, Dalmonech D. , Marano G. , Amthor J., Cescatti A., Lindner M., Trotta C., Collalti A.. *Agricultural and Forest Meteorology*, 327: 109203, https://doi.org/10.1016/j.agrformet.2022.109203, 2022.
+14. *“Feasibility of enhancing carbon sequestration and stock capacity in temperate and boreal European forests via changes to forest management"*, Dalmonech D., Marano G., Amthor J., Cescatti A., Lindner M., Trotta C., Collalti A.. *Agricultural and Forest Meteorology*, 327: 109203, https://doi.org/10.1016/j.agrformet.2022.109203, 2022.
 
 15. *"3D-CMCC-FEM User’s Guide"*, Collalti A., Dalmonech D., Marano G., Vangi E., Puchi P., Grieco E., Orrico M., *CNR Edizioni*,  ISBN 978-88-8080-573-1, https://doi.org/10.32018/3D-CMCC-FEM-2022, 2022.
 
@@ -95,9 +95,9 @@ For references on **3D-CMCC-FEM**:
 
 22. *"Assessing the combined effects of forest management and climate change on carbon and water fluxes in European beech forests"*, Saponaro V., De Càceres M., Dalmonech D., D'Andrea E., Vangi E., Collalti A.. *Forest Ecosystems*, 12:100290, https://doi.org/10.1016/j.fecs.2024.100290, 2025
 
-23. *"Modelling forest growth under current and future climate"*, Boukhris I., Marano G., Dalmonech D., Valentini R., Collalti A.. *Current Forestry Reports*, (in print), http://doi.org/10.1007/s40725-025-00249-5, 2025
+23. *"Modelling forest growth under current and future climate"*, Boukhris I., Marano G., Dalmonech D., Valentini R., Collalti A.. *Current Forestry Reports*, 11:17, http://doi.org/10.1007/s40725-025-00249-5, 2025
 
-24. *"TimberTracer: A Comprehensive Framework for the Evaluation of Carbon Sequestration by Forest Management and Substitution of Harvested Wood Products"*, Boukhris I., Collalti A., Lahssini S., Dalmonech D., Nakhle F., R. Testolin R., ..., Valentini R., *Carbon Balance and Management*, (in print), 2025  
+25. *"TimberTracer: A Comprehensive Framework for the Evaluation of Carbon Sequestration by Forest Management and Substitution of Harvested Wood Products"*, Boukhris I., Collalti A., Lahssini S., Dalmonech D., Nakhle F., R. Testolin R., ..., Valentini R., *Carbon Balance and Management*, 20:12, https://doi.org/10.1186/s13021-025-00296-2, 2025  
 
 see also at: https://www.forest-modelling-lab.com/publications
 
