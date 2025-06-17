@@ -28,6 +28,7 @@ int sort_by_species_index_asc(const void* a, const void* b);
 
 void carbon_pool_fraction(cell_t *const c);
 
-void Veg_Days(cell_t *const c, const int day, const int month, const int year);
+void Veg_Days(cell_t *const c, const int day, const int month, const int year, const int  n_doy) ; // if chilling days are used
+
 
 #endif /* G_FUNCTION_H_ */
