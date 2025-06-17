@@ -697,7 +697,12 @@ void reset_annual_class_variables(cell_t *const c)
 
 					s->counter[DEAD_TREE] =                0;  // 5p7 then for every year it is clear how many trees for each species and classes died
 					s->counter[THINNED_TREE] =                0;  // 5p7 then for every year it is clear how many trees for each species and classes died
-
+                    
+					// 5p7 April 2025
+					s->counter[eos] =                      0; // 5p7 can have 0 or 1 as valyue. 0 if End of Growins season has not been yet set
+					s->value[chill_sum] =                  0. ;              // 5p7 
+					s->value[previous_chill_sum] =         0. ; 
+					s->value[mdl] =                        0.  ;            //5p7
 
 					s->value[C_HWP] =                       0.;
 					s->value[VOLUME_HWP] =                  0.;
