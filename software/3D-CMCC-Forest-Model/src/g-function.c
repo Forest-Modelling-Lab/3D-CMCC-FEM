@@ -303,8 +303,6 @@ void Veg_Days(cell_t *const c, const int day, const int month, const int year , 
 											if (temp_SOS < 0.15 )  
 											{ 
 
-												printf("SONO QUA 222222222222 !!! \n ") ;
-
 												s->value[mdl] = s->value[MINDAYLENGTH] -(5 - (5/0.15)*temp_SOS) ; 
 												//s->value[mdl] = s->value[MINDAYLENGTH] * (1- temp_SOS) ; 
 											}  
