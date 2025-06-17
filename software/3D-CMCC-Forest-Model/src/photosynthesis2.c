@@ -253,6 +253,10 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	const double Ea_V          = 51560;  /* (J mol-1) Activation energy for J see Maespa */
 	double S_V                 = 472.;   /* (JK-1 mol) Vmax temperature response parameter */
 	const double H_V           = 144568; /* (J mol-1) Vmax curvature parameter */
+
+	//UKESM2
+	//const double H_V           = 200000. ; // 144568; /* (J mol-1) Vmax curvature parameter */
+
 	const double Ea_J          = 43790;  /* (J mol-1) Activation energy for J see Maespa */
 	double S_J                 = 710 ;   /* (JK-1 mol) electron-transport temperature response parameter */
 	const double H_J           = 220000; /* (J mol-1) curvature parameter of J */
@@ -431,17 +435,30 @@ double Farquhar (cell_t *const c, species_t *const s,const meteo_daily_t *const 
 	/* temperature corrector factor */
 	temp_corr = exp ( Ea_V * ( tleaf - 25. ) / ( Rgas * tleaf_K * 298.) );
 
+
+	// test using the formulation in UKESM2 
+	//double Ea_V_tmp = 42600. -1140.*( tleaf10_K - TempAbs );
+	//temp_corr = exp ( Ea_V_tmp * ( tleaf - 25. ) / ( Rgas * tleaf_K * 298.) );
+
 	if ( g_settings->Photo_accl )
 	{
 		/** acclimation for temperature as in Kattge and Knorr (2007)  and CLM5.0 version **/
 		/* for Vcmax */
 		S_V = 668.39 - 1.07 * ( tleaf10_K - TempAbs );
+
+		//S_V = 645.13 - 0.38 * ( tleaf10_K - TempAbs ); // UKESM2
 	}
 
 	/* high temperature inhibition factor */
 	if ( tleaf > 0.)
 	{
-		high_temp_corr = ( 1. + exp ( ( S_V * 298. - H_V ) / ( Rgas * tleaf_K ) ) )/ ( 1. + exp ( ( S_V * tleaf_K - H_V ) / ( Rgas * tleaf_K ) ) );
+	// as in CLM4.5: acclimation is only applied for a range of temperatures.
+		//if ( (( tleaf10_K - TempAbs ) > 11.) & (( tleaf10_K - TempAbs ) < 35.) )
+	//{
+
+		// high_temp_corr = ( 1. + exp ( ( S_V * 298. - H_V ) / ( Rgas * tleaf_K ) ) )/ ( 1. + exp ( ( S_V * tleaf_K - H_V ) / ( Rgas * tleaf_K ) ) );
+	 
+		high_temp_corr = ( 1. + exp ( ( S_V * 298. - H_V ) / ( Rgas * 298. ) ) )/ ( 1. + exp ( ( S_V * tleaf_K - H_V ) / ( Rgas * tleaf_K ) ) ); 
 	}
 	else
 	{
