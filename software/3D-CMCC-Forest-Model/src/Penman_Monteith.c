@@ -78,7 +78,8 @@ double Penman_Monteith(const meteo_daily_t *const meteo_daily, const double rv, 
 
 	/* latent heat fluxes of evaporation or transpiration W/m2 */
 	evap_or_transp = ( ( delta * net_rad ) + ( meteo_daily->rho_air * CP * vpdPa / rhr ) ) /
-			( ( ( meteo_daily->air_pressure * CP * rv ) / ( meteo_daily->lh_vap * EPS * rhr ) ) + delta );
+		( ( ( meteo_daily->air_pressure * CP * rv ) / ( meteo_daily->lh_vap * EPS * rhr ) ) + delta );
+
 	logger(g_debug_log, "evap_or_transp = %g mm/m2/day\n", evap_or_transp);
 
 	/* evaporation or transpiration is converted into kg-mm/m2/sec */
