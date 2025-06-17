@@ -214,7 +214,7 @@ void carbon_pool_fraction(cell_t *c)
 	}
 }
 
-void Veg_Days(cell_t *const c, const int day, const int month, const int year)
+void Veg_Days(cell_t *const c, const int day, const int month, const int year , const int n_doy)
 {
 	int height;
 	int dbh;
@@ -223,6 +223,10 @@ void Veg_Days(cell_t *const c, const int day, const int month, const int year)
 
 	meteo_t *met;
 	species_t *s;
+	double CDD = 0.; // chilling degree days after DElpierre et al.2009 (for testing purpose)
+
+	CDD = 400.0 ;  // Tbase from Predicting Climate Change Impacts on the Amount and Duration of Autumn Colors in a New England Forest
+	           // Archetti et al. 2013
 
 	met = c->years[year].m;
 
@@ -243,46 +247,160 @@ void Veg_Days(cell_t *const c, const int day, const int month, const int year)
 						/* reset 'annual day_veg_for_litterfall_rate'*/
 						if (day == 0 && month == JANUARY)
 						{
-							s->counter[DAY_VEG_FOR_LEAF_FALL] = 0;
-						}
 
-						if ((met[month].d[day].thermic_sum >= s->value[GROWTHSTART] && month <= 6)
-								|| (met[month].d[day].daylength >= s->value[MINDAYLENGTH] && month >= 6))
-						{
-							s->counter[DAY_VEG_FOR_LEAF_FALL] += 1;
+							s->counter[DAY_VEG_FOR_LEAF_FALL] = 0;
+
+                            s->value[mdl] = s->value[MINDAYLENGTH] ;
+
+							// prescribe senescence phase
+								// NOTE: for testing
+							//if ( c->years[year].year == 2016 ) 
+							//	{ 
+							//		s->value[mdl]  =10.4;
+
+							 //		printf("in g-function.c mdl = 11 ; %g,\n", mdl);
+
+							//}  
+							
 						}
+                        
+
+                        #if 1  // computing EoS according to hours of light
+
+								if ((met[month].d[day].thermic_sum >= s->value[GROWTHSTART] && month <= 6)
+										|| (met[month].d[day].daylength >=  s->value[mdl] && month >= 6))
+								{
+
+									#if 1
+
+
+									#else  // TEST if changing the MINDAYLENGTH according to the start of the growing season
+									
+										/* set first veg days */
+
+										if ( ! s->counter[FIRST_VEG_DAYS] )
+										{
+											s->counter[FIRST_VEG_DAYS] =  n_doy;
+							
+											printf("in G-FUNCTION.c  s->counter[FIRST_VEG_DAYS]  ; %d,\n",s->counter[FIRST_VEG_DAYS] );
+
+									
+                                            // TEST
+										    // Correct mdl when the start of the GS is too close to July (in the Northern Emisphere)
+
+											temp_SOS =((182.-n_doy))/182.;
+
+											printf("in G-FUNCTION.c  temp_SOS  %g,\n",temp_SOS );
+					
+											// after 1 of june and until 1. july, the vegetative season is 15% of 
+											// first half of the year. 
+											// this is to avoid a too short vegetative season in the northern hemisphere
+											// for example, if the first day of veg is 1 of June, the daylength minimum to activate the 
+											// senescence is kept as the average (MINDAYLENGTH). When the first day of vegetat. season is in the 
+											// month of june, MINDAYLENGHT is increased up to a 15 % .
+
+
+											if (temp_SOS < 0.15 )  
+											{ 
+
+												printf("SONO QUA 222222222222 !!! \n ") ;
+
+												s->value[mdl] = s->value[MINDAYLENGTH] -(5 - (5/0.15)*temp_SOS) ; 
+												//s->value[mdl] = s->value[MINDAYLENGTH] * (1- temp_SOS) ; 
+											}  
+								        }
+									#endif 
+
+										//printf("in G-FUNCTION.c  mdl ; %g,\n",  s->value[mdl]);
+
+										s->counter[DAY_VEG_FOR_LEAF_FALL] += 1; 
+								
+								
+								}
+
+								
+							 
+                        
+						#else   // use CHILLING SUM
+						
+								chilling_sum( c, met ,day, month, year ,height,dbh,age, species); //ddalmo 2025
+
+								printf("g-function.c s->value[chill_sum] %g,\n",s->value[chill_sum]);
+
+
+								if (month >= 6 && met[month].d[day].daylength <=  s->value[mdl] && s->value[chill_sum] <= CDD)	
+								{ 
+
+									printf("DDALMO   SONO IN g-FUNCTION \n");
+
+									s->counter[DAY_VEG_FOR_LEAF_FALL] += 1;
+								}	
+
+						#endif 
+
 					}
-					else
+						else  // evergreen species
 					{
-						if ( IS_LEAP_YEAR( c->years[year].year ) )
-						{
-							s->counter[DAY_VEG_FOR_LEAF_FALL] = 366;
-						}
-						else
-						{
-							s->counter[DAY_VEG_FOR_LEAF_FALL] = 365;
-						}
+							if ( IS_LEAP_YEAR( c->years[year].year ) )
+							{
+								s->counter[DAY_VEG_FOR_LEAF_FALL] = 366;
+							}
+							else
+							{
+								s->counter[DAY_VEG_FOR_LEAF_FALL] = 365;
+							}
 					}
+						
+					
 					/* compute last year day the number of days for leaf fall */
+					
 					if (day == 30 && month == DECEMBER)
-					{
-						s->counter[DAYS_LEAFFALL] =  (int) (s->value[LEAF_FALL_FRAC_GROWING] *
+					  {
+
+						#if 1
+
+						        // note that DAYS_LEAFFALL is computed again in phenology, hence the 
+								// value below is in the end not used.
+
+						        s->counter[DAYS_LEAFFALL] =  (int) (s->value[LEAF_FALL_FRAC_GROWING] *
 								s->counter[DAY_VEG_FOR_LEAF_FALL]);
-						logger(g_debug_log, "Days of leaf fall = %d\n", s->counter[DAYS_LEAFFALL] );
-						//add leaf fall days
+						
+						 		logger(g_debug_log, "Days of leaf fall = %d\n", s->counter[DAYS_LEAFFALL] );
+
+								//printf("in g-function.c s->counter[DAY_VEG_FOR_LEAF_FALL] ; %d,\n", s->counter[DAY_VEG_FOR_LEAF_FALL]);
+								//printf("in g-function.c s->counter[DAYS_LEAFFALL]; %d,\n",s->counter[DAYS_LEAFFALL]);
+
+
+						#else  // if Chilling sum is used, DAY_VEG_FOR_LEAF_FALL is the actual number of days for leaf
+
+								s->counter[DAYS_LEAFFALL] = s->counter[DAY_VEG_FOR_LEAF_FALL] ; 
+
+								printf("in g-function.c s->counter[DAY_VEG_FOR_LEAF_FALL] ; %d,\n", s->counter[DAY_VEG_FOR_LEAF_FALL]);
+								printf("in g-function.c s->counter[DAYS_LEAFFALL]; %d,\n",s->counter[DAYS_LEAFFALL]);
+						
+
+						#endif
+
+						// Add leaf fall days: from this  value, days available for leaf-fall is
+						// computed in phenology.c
+
 						if (s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2)
 						{
 							s->counter[DAY_VEG_FOR_LEAF_FALL] += (int)(s->counter[DAY_VEG_FOR_LEAF_FALL] *
 									s->value[LEAF_FALL_FRAC_GROWING]);
 
 						}
+						
 						logger(g_debug_log, "-species %s annual vegetative days = %d \n", s->name, s->counter[DAY_VEG_FOR_LEAF_FALL]);
+					
+					    
 					}
 
 				}
 			}
 		}
 	}
+  
 }
 
 
