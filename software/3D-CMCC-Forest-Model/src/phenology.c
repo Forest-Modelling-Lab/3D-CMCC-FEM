@@ -24,10 +24,11 @@ void prephenology (cell_t *const c, const meteo_daily_t *const meteo_daily, cons
 	int dbh;
 	int age;
 	int species;
-        int mdl=0;   // ddalmo test
+
         
 	species_t *s;
 
+	
         
 	/* it computes the vegetative state for each species class,
 	 * the number of days of leaf fall and
@@ -47,23 +48,38 @@ void prephenology (cell_t *const c, const meteo_daily_t *const meteo_daily, cons
 				{
 					s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 					
-					mdl = s->value[MINDAYLENGTH] ;
+					s->value[mdl]= s->value[MINDAYLENGTH] ;
 					// for test purpose: to prescribe the beginning of the senescence phase
-					 // if ( c->years[year].year == 2016 ) 
+					// 
+					//if ( c->years[year].year == 2016 ) 
 					// { 
-					//  mdl = 10.4 ;
+					//  s->value[mdl] = 10.4 ;
 					//  }  
 
 					/** FOR DECIDUOUS **/
+					
 					if (s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2)
 					{
 						/* compute days for leaf fall based on the annual number of veg days */
+
+						#if 1
 						s->counter[DAYS_LEAFFALL] = (int)(s->value[LEAF_FALL_FRAC_GROWING] * s->counter[DAY_VEG_FOR_LEAF_FALL]);
+						
+					//	printf("in phenology.c s->counter[DAYS_LEAFFALL]; %d,\n",s->counter[DAYS_LEAFFALL]);
+
+						#else 
+						
+						// if chilling sum is used
+						
+                        #endif
+
+						
+
 						logger(g_debug_log, "-days of leaf fall for %s = %d day\n", c->heights[height].dbhs[dbh].ages[age].species[species].name, s->counter[DAYS_LEAFFALL]);
 
 						//note: currently model can simulate only forests in boreal hemisphere
 						if ((meteo_daily->thermic_sum >= s->value[GROWTHSTART] && month <= 6) ||
-								(meteo_daily->daylength >= mdl  && month >= 6 && c->north == 0))
+								(meteo_daily->daylength >= s->value[mdl]  && month >= 6 && c->north == 0))
 						{
 							s->counter[VEG_UNVEG] = 1;
 
@@ -71,15 +87,20 @@ void prephenology (cell_t *const c, const meteo_daily_t *const meteo_daily, cons
 							if ( ! s->counter[FIRST_VEG_DAYS] )
 							{
 								s->counter[FIRST_VEG_DAYS] = c->doy;
+
 							}
 
 							logger(g_debug_log, "-%s is in veg period\n", s->name);
+
+                       	 	// dovrebbe averlo tenuto in memoria
+						//	printf("in PHENOLOGY.c  s->counter[FIRST_VEG_DAYS]  ; %d,\n",s->counter[FIRST_VEG_DAYS] );
+
 						}
 						else
 						{
 				
 					
-							if (meteo_daily->daylength <= mdl  && month >= 6 && c->north == 0 )
+							if (meteo_daily->daylength <= s->value[mdl] && month >= 6 && c->north == 0 )
 							{
 								s->counter[LEAF_FALL_COUNTER] += 1;
 
@@ -120,7 +141,7 @@ void phenology(cell_t *const c, const int layer, const int height, const int dbh
 {
 
  
-        int mdl=0;   // ddalmo test
+       // int mdl=0;   // ddalmo test per Torgnon
         
 	species_t *s;
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
@@ -131,6 +152,7 @@ void phenology(cell_t *const c, const int layer, const int height, const int dbh
 	/*for deciduous*/
 	if (s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2)
 	{
+
 		if (s->counter[VEG_UNVEG] == 1 )
 		{
 			/* Beginning of growing season */
@@ -157,15 +179,9 @@ void phenology(cell_t *const c, const int layer, const int height, const int dbh
 				}
 				else
 				{
-				mdl = s->value[MINDAYLENGTH] ;
-				// for test purpose to prescribe senescence phase
-				//if ( c->years[year].year == 2016 ) 
-				//	 { 
-				//	  mdl = 10.4 ;
-				//	  }  
 					  
 					/* Normal growth */
-					if ( meteo_daily->daylength > mdl )
+					if ( meteo_daily->daylength > s->value[mdl] )
 					{
 						s->phenology_phase = 2;
 					}
@@ -173,6 +189,9 @@ void phenology(cell_t *const c, const int layer, const int height, const int dbh
 					else
 					{
 						s->phenology_phase = 3;
+
+						// printf("in PHENOLOGY.c s->phenology_phase = 3 \n" );
+
 					}
 				}
 			}
