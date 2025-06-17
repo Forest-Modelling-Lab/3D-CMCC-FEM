@@ -3,6 +3,8 @@
  *
  *  Created on: 10/set/2016
  *      Author: alessio-cmcc
+ * 
+ *  Other authors: Ddalmo @CNR
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -62,17 +64,15 @@ void soil_radiation_sw_band ( cell_t *const c, meteo_daily_t *meteo_daily )
 	logger(g_debug_log,"incoming Short Wave radiation = %g W/m2\n", meteo_daily->sw_downward_W);
 	logger(g_debug_log,"incoming       Net radiation  = %g W/m2\n", meteo_daily->Net_rad_threePG);
 
-	// accumulate par at the soil and compute average value for the summer period )
-
 	
-	
-         // remove reflected part
+    // remove reflected part
 
 	if ( ! c->snow_pack )
 	{
 		c->par_refl_soil     = meteo_daily->par             * Light_refl_rad_soil_frac;
 		c->sw_rad_refl_soil  = meteo_daily->sw_downward_W   * Light_refl_rad_soil_frac;
 		c->net_rad_refl_soil = meteo_daily->Net_rad_threePG * Light_refl_rad_soil_frac;
+
 		logger(g_debug_log,"reflected light from the soil\n");
 		logger(g_debug_log,"par_refl_soil         = %g molPAR/m^2/day\n", c->par_refl_soil);
 		logger(g_debug_log,"sw_rad_for_soil_refl  = %g W/m2\n", c->sw_rad_refl_soil);
@@ -82,7 +82,7 @@ void soil_radiation_sw_band ( cell_t *const c, meteo_daily_t *meteo_daily )
 	{
 		c->par_refl_snow     = meteo_daily->par             * Light_refl_rad_snow_frac;
 		c->sw_rad_refl_snow  = meteo_daily->sw_downward_W   * Light_refl_rad_snow_frac;
-		c->net_rad_refl_snow = meteo_daily->Net_rad_threePG * Light_refl_rad_snow_frac;
+		c->net_rad_refl_snow = meteo_daily->Net_rad_threePG* Light_refl_rad_snow_frac;
 		logger(g_debug_log,"reflected light from the snow\n");
 		logger(g_debug_log,"par_refl_snow         = %g molPAR/m^2/day\n", c->par_refl_snow);
 		logger(g_debug_log,"sw_rad_for_snow_refl  = %g W/m2\n", c->sw_rad_refl_snow);
@@ -96,7 +96,15 @@ void soil_radiation_sw_band ( cell_t *const c, meteo_daily_t *meteo_daily )
 		/* compute absorbed part from soil */
 		c->apar_soil        = meteo_daily->par             - c->par_refl_soil;
 		c->sw_rad_abs_soil  = meteo_daily->sw_downward_W   - c->sw_rad_refl_soil;
-		c->net_rad_abs_soil = meteo_daily->Net_rad_threePG - c->net_rad_refl_soil;
+
+		// Net_rad_threePG is the net radiation for the whole canopy and skin surface , hence also 
+		// for the soil and snow pack (see below), there is no need to include the reflected part.
+        // meteo_daily->Net_rad_threePG is the part of the net radiation trasmitted from the canopy layer
+		// after removing the absorbed part.
+
+
+		c->net_rad_abs_soil = meteo_daily->Net_rad_threePG ; // - c->net_rad_refl_soil;
+
 		logger(g_debug_log, "absorbed soil radiation *\n");
 	        logger(g_debug_log, "soil aPAR                            = %g molPAR/m^2/day\n", c->apar_soil );
 	        logger(g_debug_log, "soil absorbed Short Wave radiation   = %g W/m2\n", c->sw_rad_abs_soil);
@@ -107,7 +115,8 @@ void soil_radiation_sw_band ( cell_t *const c, meteo_daily_t *meteo_daily )
 		/* compute absorbed part from snow */
 		c->apar_snow        = meteo_daily->par             - c->par_refl_snow;
 		c->sw_rad_abs_snow  = meteo_daily->sw_downward_W   - c->sw_rad_refl_snow;
-		c->net_rad_abs_snow = meteo_daily->Net_rad_threePG - c->net_rad_refl_snow;
+		c->net_rad_abs_snow = meteo_daily->Net_rad_threePG  - c->net_rad_refl_snow;
+
 	}
 	
 
