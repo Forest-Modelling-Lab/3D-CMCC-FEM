@@ -187,6 +187,10 @@ int add_tree_class_for_replanting (cell_t *const c, const int day, const int mon
 
 	} // end classes added 
 
+	 
+	int n_doy =0 ;
+
+
 	/* check for veg days */
 	for (month_temp = 0; month_temp < 12; ++month_temp)
 	{
@@ -201,8 +205,9 @@ int add_tree_class_for_replanting (cell_t *const c, const int day, const int mon
 
 		for ( day_temp = 0; day_temp < days_per_month; ++day_temp )
 		{
+			n_doy += 1;
 			/* compute annually the days for the growing season before any other process */
-			Veg_Days ( c , day_temp, month_temp, year );
+			Veg_Days ( c , day_temp, month_temp, year ,n_doy  );
 		}
 	}
 
@@ -461,6 +466,8 @@ int add_tree_class_for_replanting_reg (cell_t *const c, const int day, const int
 
   #endif 
 
+    int n_doy =0 ;
+
 	/* check for veg days */
 	for (month_temp = 0; month_temp < 12; ++month_temp)
 	{
@@ -475,8 +482,9 @@ int add_tree_class_for_replanting_reg (cell_t *const c, const int day, const int
 
 		for ( day_temp = 0; day_temp < days_per_month; ++day_temp )
 		{
+			n_doy += 1;
 			/* compute annually the days for the growing season before any other process */
-			Veg_Days ( c , day_temp, month_temp, year );
+			Veg_Days ( c , day_temp, month_temp, year ,n_doy );
 		}
 	}
 
