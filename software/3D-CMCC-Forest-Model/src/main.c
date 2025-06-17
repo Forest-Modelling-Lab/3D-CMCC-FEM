@@ -1660,6 +1660,9 @@ int main(int argc, char *argv[]) {
 		current_doy = 0;
 		leap_year = IS_LEAP_YEAR(g_settings->year_start + year);
 
+		
+		int n_doy =0 ;
+
 
 		if ( g_settings->year_restart == g_settings->year_start+year )
 		{
@@ -1681,6 +1684,9 @@ int main(int argc, char *argv[]) {
 				{
 					break;
 				}
+
+				n_doy += 1;
+
 
 				if( !day && !month && !year )
 				{
@@ -1718,7 +1724,8 @@ int main(int argc, char *argv[]) {
 
 				}
 				
-
+		
+     
 				for ( cell = 0; cell < matrix->cells_count; ++cell )
 				{
 
@@ -1747,10 +1754,14 @@ int main(int argc, char *argv[]) {
 					Weighted_average_temperature( &matrix->cells[cell], WEIGHTED_MEAN_TNIGHT, day, month, year );
 					Weighted_average_temperature( &matrix->cells[cell], WEIGHTED_MEAN_TSOIL, day, month, year );
 
+                  
+					
+
+
 					if ( LANDUSE_F == g_soil_settings->landuse )
 					{
 						/* compute annually the days for the growing season BEFORE any other process */
-						Veg_Days (&matrix->cells[cell], day, month, year);
+						Veg_Days (&matrix->cells[cell], day, month, year,n_doy);
 					}
 					else
 					{
@@ -1822,9 +1833,7 @@ int main(int argc, char *argv[]) {
 			matrix->cells[cell].years[year].yearly_mean.par /= MONTHS_COUNT;
 			
 		}
-
-
-
+ 
 		for ( month = 0; month < MONTHS_COUNT; ++month )
 		{
 			days_per_month = DaysInMonth[month];
