@@ -61,11 +61,11 @@ void soil_evaporation(cell_t *const c, const meteo_daily_t *const meteo_daily)
 
 		/* assign net radiation as local variable */
 		//FIXME radiatitve budget
-#if 0
-		net_rad = c->sw_rad_abs_soil;
-#else
-		net_rad = c->net_rad_abs_soil;
-#endif
+		#if 0
+				net_rad = c->sw_rad_abs_soil;
+		#else
+				net_rad = c->net_rad_abs_soil;
+		#endif
 
 		/* calculate pot_evap in kg/m2/s */
 		pot_soil_evap = Penman_Monteith ( meteo_daily, rv, rh, net_rad );
