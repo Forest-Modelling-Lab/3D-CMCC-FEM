@@ -456,6 +456,96 @@ void Thermic_sum (cell_t * c, meteo_t *met, const int day, const int month, cons
 	}
 }
 
+// ddalmo april 2025 - FBNC 
+
+void chilling_sum (cell_t *const c, meteo_t *met, const int day, const int month, const int year, const int height, const int dbh, const int age, const int species)
+{
+
+	// end of growing season defined according to the cumulative chilling days according to the formulation
+	// reported in  Delpierre et al.2009, Archetti et al.2013, discussed in Keenan and Richardson 2015 GCB
+
+	species_t *s;
+
+	printf(" SONO IN CHILLING SUM \n");
+
+	int mdl_temp  ;   
+    double mdl_frac = 0.0; 
+	
+	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
+    
+	double Tbase = 30. ; // Tbase from Predicting Climate Change Impacts on the Amount and Duration of Autumn Colors in a New England Forest
+	                       // estaimtes from Archetti et al. 2013
+
+	mdl_temp = s->value[MINDAYLENGTH] ;
+
+	mdl_frac = pow( (met[month].d[day].daylength / s->value[MINDAYLENGTH]),2.) ;
+
+	if (month >= 6 && met[month].d[day].daylength <=  mdl_temp )
+	{
+
+		printf(" SONO IN CHILLING SUM 333 \n");
+
+
+		if ( !day && !month )
+		{
+			printf(" SONO IN CHILLING SUM 444 \n");
+
+			//met[month].d[day].chill_sum = 0.;
+
+			s->value[chill_sum] = 0.;
+
+			if(met[month].d[day].tavg < Tbase)
+			{
+				//met[month].d[day].chill_sum = Tbase - met[month].d[day].tavg ;
+
+				s->value[chill_sum] = (Tbase - met[month].d[day].tavg)* mdl_frac ;
+
+				//c->previous_chill_sum = met[month].d[day].chill_sum;
+
+				s->value[previous_chill_sum] = s->value[chill_sum];
+			}
+			else
+			{
+				//met[month].d[day].chill_sum = 0.;
+				//c->previous_chill_sum          = 0.;
+
+				s->value[chill_sum] = 0.;
+
+				s->value[previous_chill_sum] =   0.;
+			}
+			if (met[month].d[day].tavg == NO_DATA)
+				logger(g_debug_log, "tavg NO_DATA!!\n");
+		}
+		else
+		{
+
+			//printf(" SONO IN CHILLING SUM 555 \n");
+
+			if(met[month].d[day].tavg < Tbase)
+			{
+				//met[month].d[day].chill_sum = c->previous_chill_sum + (Tbase - met[month].d[day].tavg);
+				//c->previous_chill_sum = met[month].d[day].chill_sum;
+
+				s->value[chill_sum] = s->value[previous_chill_sum] + (Tbase - met[month].d[day].tavg)*mdl_frac ;
+				s->value[previous_chill_sum] = s->value[chill_sum];
+
+
+			}
+			else
+			{
+				//met[month].d[day].chill_sum = c->previous_chill_sum;
+				
+				s->value[chill_sum] = s->value[previous_chill_sum];
+			}
+			if (met[month].d[day].tavg == NO_DATA)
+				logger(g_debug_log, "tavg NO_DATA!!\n");
+
+				printf("in met_data.c s->value[chill_sum] %g,\n",s->value[chill_sum]);
+
+		}
+   }
+}
+
 void Air_pressure(meteo_t *met, const int day, const int month)
 {
 	double t1, t2;
@@ -480,6 +570,7 @@ void Air_density (meteo_t *met, const int day, const int month) {
 	/* compute density of air (in kg/m3) */
 	/* following Solantie R., 2004, Boreal Environmental Research, 9: 319-333, the model uses tday if available */
 
+	//  1.292  air density at 0°C and 1013.25 hPa ? 
 	if(met[month].d[day].tday == NO_DATA)
 	{
 		met[month].d[day].rho_air = 1.292 - (0.00428 * met[month].d[day].tavg);
