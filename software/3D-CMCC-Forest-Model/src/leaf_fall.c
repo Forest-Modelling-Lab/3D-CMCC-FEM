@@ -25,9 +25,17 @@ void leaffall_deciduous ( cell_t *const c, const int height, const int dbh, cons
 
 	logger(g_debug_log, "\n**LEAF FALL DECIDUOUS **\n");
 
+	//printf("in leaffall_deciduous  all'inizio LAI_PROJ  %g,\n", s->value[LAI_PROJ]);
+	//printf("in leaffall_deciduous  all'inizio s->counter[LEAF_FALL_COUNTER]  %d,\n", s->counter[LEAF_FALL_COUNTER] );
+	//printf("in leaffall_deciduous  s->counter[DAYS_LEAFFALL]; %d,\n",s->counter[DAYS_LEAFFALL]);
+
+
 	if( s->counter[LEAF_FALL_COUNTER] == 1 )
 	{
 		logger(g_debug_log, "First day of Leaf fall\n");
+
+
+		//printf("in leaffall_deciduous  all'inizio 2 LAI_PROJ  %g,\n", s->value[LAI_PROJ]);
 
 		/* note: assuming that fine roots and fruit for deciduous species progressively die together with leaves */
 		/* note: due to reduction during vegetative period for reduction in canopy cover MAX_LAI != PEAK_LAI */
@@ -35,12 +43,16 @@ void leaffall_deciduous ( cell_t *const c, const int height, const int dbh, cons
 		/* assign Maximum LAI values at the beginning of the sigmoid shape */
 		s->value[MAX_LAI_LEAFFALL_PROJ] = s->value[LAI_PROJ];
 
-		 // printf("in LEAF_FALL AT THE BEGINNING   **** MAX_LAI_LEAFFALL_PROJ  %g,\n", s->value[LAI_PROJ]);
+		// printf("in LEAF_FALL AT THE BEGINNING   **** MAX_LAI_LEAFFALL_PROJ  %g,\n", s->value[LAI_PROJ]);
 
 		/* assign senescence doy */
 		s->counter[SENESCENCE_DAY_ONE] = c->doy;
 	}
 
+//	printf("in leaffall_deciduous 22  all'inizio s->counter[LEAF_FALL_COUNTER]  %d,\n", s->counter[LEAF_FALL_COUNTER] );
+//	printf("in leaffall_deciduous 22  s->counter[DAYS_LEAFFALL]; %d,\n",s->counter[DAYS_LEAFFALL]);
+
+	 
 	if( s->counter[LEAF_FALL_COUNTER] < s->counter[DAYS_LEAFFALL] )
 	{
 		/* load previous LAI */
@@ -52,12 +64,12 @@ void leaffall_deciduous ( cell_t *const c, const int height, const int dbh, cons
 				/(s->counter[DAYS_LEAFFALL] / (log(9. * s->counter[DAYS_LEAFFALL] / 2. + s->counter[SENESCENCE_DAY_ONE]) -
 						log(.11111111111))))));
   
-     //printf("in LEAF FALLLLLL  s->value[MAX_LAI_LEAFFALL_PROJ] %g,\n",s->value[MAX_LAI_LEAFFALL_PROJ]);
-     // printf("in LEAF FALLLLLL  s->counter[DAYS_LEAFFALL] %d,\n",s->counter[DAYS_LEAFFALL]);
-     //printf("in LEAF FALLLLLL  s->counter[SENESCENCE_DAY_ONE]%d,\n",s->counter[SENESCENCE_DAY_ONE]);
-     //printf("in LEAF FALLLLLL  c->doy %d,\n",c->doy);
+   //  printf("in LEAF FALLLLLL  s->value[MAX_LAI_LEAFFALL_PROJ] %g,\n",s->value[MAX_LAI_LEAFFALL_PROJ]);
+   //   printf("in LEAF FALLLLLL  s->counter[DAYS_LEAFFALL] %d,\n",s->counter[DAYS_LEAFFALL]);
+   //  printf("in LEAF FALLLLLL  s->counter[SENESCENCE_DAY_ONE]%d,\n",s->counter[SENESCENCE_DAY_ONE]);
+   //  printf("in LEAF FALLLLLL  c->doy %d,\n",c->doy);
 
-     //printf("in LEAF FALLLLLL  currentLai  %g,\n",currentLai );
+   //  printf("in LEAF FALLLLLL  currentLai  %g,\n",currentLai );
 		/* check */
  
                 // force current LAI to 0 if the leaf C has been forced to 0 (leafC < 1 mg C m-2) (and hence previous LAI)
