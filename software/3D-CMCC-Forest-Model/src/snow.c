@@ -58,6 +58,8 @@ void snow_melt_subl(cell_t *const c, meteo_daily_t *meteo_daily)
 			else
 			{
 				/*snow pack melts partially*/
+
+				
 			}
 		}
 	}
@@ -83,11 +85,14 @@ void snow_melt_subl(cell_t *const c, meteo_daily_t *meteo_daily)
 				else
 				{
 					/*snow pack sublimate partially*/
+					
 				}
 			}
 			else
 			{
-				c->daily_snow_subl = 0.;
+				// ddalmo 2025  small fix
+				c->daily_snow_subl=r_sub  ; // first approximation
+				//c->daily_snow_subl = 0.;
 			}
 		}
 	}
