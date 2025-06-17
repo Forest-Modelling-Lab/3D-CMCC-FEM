@@ -26,6 +26,7 @@ typedef struct {
 	double daylength_sec;                       /* (seconds) day time length */
 	double ni;                                  /* (ratio) fraction of day length */
 	double thermic_sum;                         /* (deg C) daily thermic sum */
+	double chill_sum;                           /* (deg C) daily chilling sum */ // april 2025 
 	double rho_air;                             /* (kg/m3) daily air density */
 	double tsoil;                               /* (deg C) daily soil temperature computed by the model */
 	double et;                                  /* (mm) daily evapo-transpiration (not used)*/
