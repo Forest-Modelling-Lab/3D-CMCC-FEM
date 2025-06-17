@@ -339,7 +339,7 @@ void daily_C_deciduous_partitioning (cell_t *const c, const int layer, const int
 		/* including retranslocated C */
 
 		s->value[C_TO_RESERVE] += npp_to_alloc ;
-    
+		
 		/* leaf fall */
 		leaffall_deciduous( c, height, dbh, age, species );
 
