@@ -1338,7 +1338,7 @@ void initialization_cell_soil_physic(cell_t *const c)
 	/* Clapp-Hornenberger function 1978 (DIM) Soil Field Capacity Volumetric Water Content at field capacity ( = -0.015 MPa) */
 	c->vwc_fc = c->vwc_sat * pow ( ( -0.015 / c->psi_sat ) , ( 1. / c->soil_b ) );
 	logger(g_debug_log, "volumetric water content at field capacity (BIOME) = %f %%(vol) \n", c->vwc_fc);
-
+    
 	/* define maximum soilwater content, for outflow calculation */
 	/* converts volumetric water content (m3/m3) --> (kg/m2) */
 
