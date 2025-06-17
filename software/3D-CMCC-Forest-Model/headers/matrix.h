@@ -162,7 +162,10 @@ enum {
 	TREE_MAI,                            /* (m3/tree/year) Single Tree-stem  Mean Annual Volume Increment */
 	GROSS_INCR,                           /* (m3/tree/year) class level annual gross increment (i.e. before mortaliy) - stem level -*/
     
-    
+	chill_sum,                           // currnt chilling sum  (5p7) 
+ 	previous_chill_sum,                  /* (DIM) previous chill sum */
+  
+	mdl,                                 // minddaylenght (to be eventually updated if short GS)
 
 	VOLUME2,                              /* (m3/class) Stem Volume using conversion factor  */
 	TREE_VOLUME2,                         /* (m3/tree) Single Tree-stem  Volume using conversion factor*/
@@ -905,7 +908,8 @@ enum {
 	                                    // FIXME the followings should be moved to a different ENUM
 	THINNING_HAPPENS,                   /* 0 = thinning off, 1 = thinning on */
 	HARVESTING_HAPPENS,                 /* 0 = harvesting off, 1 = harvesting on */
-                                   
+    eos,                                /* 0 = end of growins season not identifed, 1 = end of season identified */
+
 	COUNTERS
 };
 
@@ -1110,6 +1114,7 @@ typedef struct
 
 	//fixme ALESSIOR move to meteo struct!
 	double previous_thermic_sum;
+	double previous_chill_sum;  // april 2025 ddalmo
 	double previous_solar_rad;
 	double previous_tavg;
 	double previous_tmax;
