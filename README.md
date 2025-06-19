@@ -16,7 +16,7 @@ Copyright(c) 2020, Forest Modelling Laboratory – 3D-CMCC-FEM
 All rights reserved
 
 
-The **3D-CMCC-FEM** is a research tool which is freely available ***only*** for non-commercial use. We have developed the **3D-CMCC-FEM** code relying solely on open-source components, to facilitate its use and further development by others. 
+The **3D-CMCC-FEM** is a research tool which is freely available ***only*** for non-commercial use. We have developed the **3D-CMCC-FEM** code relying solely on open-source components to facilitate its use and further development by others. 
 
 The **3D-CMCC-FEM** is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. The **3D-CMCC-FEM** code is released under the GNU General Public Licence v3.0 (GPL). See the LICENSE file along with this program for more details.  If not, see http://www.gnu.org/licenses/gpl.html.
 
@@ -97,7 +97,9 @@ For references on **3D-CMCC-FEM**:
 
 23. *"Modelling forest growth under current and future climate"*, Boukhris I., Marano G., Dalmonech D., Valentini R., Collalti A.. *Current Forestry Reports*, 11:17, http://doi.org/10.1007/s40725-025-00249-5, 2025
 
-25. *"TimberTracer: A Comprehensive Framework for the Evaluation of Carbon Sequestration by Forest Management and Substitution of Harvested Wood Products"*, Boukhris I., Collalti A., Lahssini S., Dalmonech D., Nakhle F., R. Testolin R., ..., Valentini R., *Carbon Balance and Management*, 20:12, https://doi.org/10.1186/s13021-025-00296-2, 2025  
+25. *"TimberTracer: A Comprehensive Framework for the Evaluation of Carbon Sequestration by Forest Management and Substitution of Harvested Wood Products"*, Boukhris I., Collalti A., Lahssini S., Dalmonech D., Nakhle F., R. Testolin R., ..., Valentini R., *Carbon Balance and Management*, 20:12, https://doi.org/10.1186/s13021-025-00296-2, 2025
+
+26. *"R3DFEM: an R package for running the 3D-CMCC-FEM model"*, Vangi E., Dalmonech D., Collalti A., *Earth Science Informatics*, (in print), 2025
 
 see also at: https://www.forest-modelling-lab.com/publications
 
