@@ -6,13 +6,16 @@
 #include "logger.h"
 
 
-void EOD_print_output_cell_level(cell_t *const, const int, const int, const int, const int);
+//void EOD_print_output_cell_level(cell_t *const, const int, const int, const int, const int);
+void EOD_print_output_cell_level_mc(cell_t *const, const int, const int, const int, const int);
 void EOD_cell_msg(void);
 
-void EOM_print_output_cell_level(cell_t *const, const int, const int, const int);
+//void EOM_print_output_cell_level(cell_t *const, const int, const int, const int);
+void EOM_print_output_cell_level_mc(cell_t *const, const int, const int, const int);
 void EOM_cell_msg(void);
 
-void EOY_print_output_cell_level(cell_t *const, const int, const int);
+//void EOY_print_output_cell_level(cell_t *const, const int, const int);
+void EOY_print_output_cell_level_mc(cell_t *const, const int, const int);
 void EOY_cell_msg(void);
 
 void EOY_print_output_class_level_mortality(cell_t *const c, const int height, const int dbh , const int age , const int species, const int year );
