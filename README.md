@@ -99,7 +99,7 @@ For references on **3D-CMCC-FEM**:
 
 25. *"TimberTracer: A Comprehensive Framework for the Evaluation of Carbon Sequestration by Forest Management and Substitution of Harvested Wood Products"*, Boukhris I., Collalti A., Lahssini S., Dalmonech D., Nakhle F., R. Testolin R., ..., Valentini R., *Carbon Balance and Management*, 20:12, https://doi.org/10.1186/s13021-025-00296-2, 2025
 
-26. *"R3DFEM: an R package for running the 3D-CMCC-FEM model"*, Vangi E., Dalmonech D., Collalti A., *Earth Science Informatics*, (in print), 2025
+26. *"R3DFEM: an R package for running the 3D-CMCC-FEM model"*, Vangi E., Dalmonech D., Collalti A., *Earth Science Informatics*, 18:459, 2025
 
 see also at: https://www.forest-modelling-lab.com/publications
 
