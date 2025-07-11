@@ -65,6 +65,7 @@ void canopy_interception(cell_t *const c, const int layer, const int height, con
 		/* for rain */
 		if( meteo_daily->rain )
 		{
+		 
 			/* compute maximum water storage (interception) (mm/m2 area covered) */
 
 			double Int_max_rain;    /* maximum intercepted rain (mm/m2) */
@@ -86,10 +87,6 @@ void canopy_interception(cell_t *const c, const int layer, const int height, con
 			}
 
 #endif
-
-//printf("in CANOPY INTERCEPTION  1 s->value[CANOPY_INT_RAIN]  %g,\n",s->value[CANOPY_INT_RAIN]);
-//printf("in CANOPY INTERCEPTION  1 meteo_daily->rain   %g,\n",meteo_daily->rain );
-
 			// 5p606
 			// check condition when we have several classes within the same layer and the total canopy cover projection is higher than 1
 		
@@ -97,19 +94,15 @@ void canopy_interception(cell_t *const c, const int layer, const int height, con
 
 			CHECK_CONDITION( r_int, > , meteo_daily->rain );
 
-
-
-//printf("in CANOPY INTERCEPTION  1 c->tree_layers[layer].daily_layer_cover_proj    %g,\n",c->tree_layers[layer].daily_layer_cover_proj );
-
-
 			 c->temp_int_rain += r_int* s->value[DAILY_CANOPY_COVER_PROJ]; 
 
 			  s->value[CANOPY_INT_RAIN] =  r_int ;
 
-			  if (c->temp_int_rain > meteo_daily->rain)   // all precipitation intercepted within the layer
+			  if (c->temp_int_rain >= meteo_daily->rain)   // all precipitation intercepted within the layer
    	          { 
+   	          
+   	                   
 		        r_int= r_int - ((c->temp_int_rain -  meteo_daily->rain)/s->value[DAILY_CANOPY_COVER_PROJ]); 
-
 
 		    	c->temp_int_rain = meteo_daily->rain; // we set to the value of the rain at cell level
 
@@ -118,10 +111,13 @@ void canopy_interception(cell_t *const c, const int layer, const int height, con
 				// no rain for the classes and layer below
 				meteo_daily->rain=0.0 ; 
 
-					r_int =0. ;
+				r_int =0. ;
+					
+			}  else {
+			
+			CHECK_CONDITION( s->value[CANOPY_INT_RAIN], > , meteo_daily->rain );
+			
 			}
-
-
 
 			/* update pool */
 			s->value[CANOPY_WATER]    = s->value[CANOPY_INT_RAIN];
@@ -129,14 +125,15 @@ void canopy_interception(cell_t *const c, const int layer, const int height, con
 			/* make zero snow */
 			s->value[CANOPY_INT_SNOW] = 0.;
 
-			CHECK_CONDITION( s->value[CANOPY_INT_RAIN], > , meteo_daily->rain );
+			// moved condition earlier in the code
+			// CHECK_CONDITION( s->value[CANOPY_INT_RAIN], > , meteo_daily->rain );
 			
 		}
 		/* for snow */
 		// else
 		if( meteo_daily->snow )
 		{
-		
+			
 			/* following Dewire (PhD thesis) and Pomeroy et al., 1998., Hedstrom & Pomeroy, 1998 */
 
 			double Int_max_snow;      /* maximum intercepted snow (mm/m2)*/
@@ -157,13 +154,9 @@ void canopy_interception(cell_t *const c, const int layer, const int height, con
 
 			#endif
 
- 			//printf("in CANOPY INTERCEPTION  1 s_int   %g,\n",s_int );
- 
                          //5p606
 			// check condition when we have several classes within the same layer and the total canopy cover projection is higher than 1
-			
-	
-                   
+			                   
 			 c->temp_int_snow += s_int* s->value[DAILY_CANOPY_COVER_PROJ]; 
 
 			 s->value[CANOPY_INT_SNOW] =  s_int ;
@@ -183,7 +176,12 @@ void canopy_interception(cell_t *const c, const int layer, const int height, con
 				meteo_daily->snow=0.0 ; 
 
 				s_int =0. ; 
-			}             
+			}   else {
+			
+			CHECK_CONDITION( s->value[CANOPY_INT_SNOW], > , meteo_daily->snow );
+			
+			}
+
 
 			/* update pool */
 			//fixme for now assuming no snow accumulation
@@ -192,7 +190,7 @@ void canopy_interception(cell_t *const c, const int layer, const int height, con
 			/* make zero rain */
 			s->value[CANOPY_INT_RAIN] = 0.;
 
-			CHECK_CONDITION(s->value[CANOPY_INT_SNOW], > , meteo_daily->snow);
+			// CHECK_CONDITION(s->value[CANOPY_INT_SNOW], > , meteo_daily->snow);
 		}
 		 // 5p6 convert stored canopy snow and water as value per m2 of grid cell
                  // note that canopy water and snow can not accumulate
@@ -237,9 +235,12 @@ void canopy_interception(cell_t *const c, const int layer, const int height, con
 		//c->daily_canopy_rain_int += s->value[CANOPY_INT_RAIN]* s->value[DAILY_CANOPY_COVER_PROJ];
 		
 		
+		printf("in last height in the layer, meteo_daily->rain  %g,\n",meteo_daily->rain);
+		
 		if (meteo_daily->rain)   // if == 0 it means it has been all intercepted
 		{
            meteo_daily->rain        -= c->temp_int_rain;
+           
 		}
 		
 
