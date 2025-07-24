@@ -10,6 +10,8 @@
 
 #include "matrix.h"
 
+int add_tree_class_for_replanting_reg(cell_t *const c, const int day, const int month, const int year);
+
 //int add_tree_class_for_replanting (cell_t *const c, const int day, const int month, const int year, const int rsi);
 int add_tree_class_for_replanting (cell_t *const c, const int day, const int month, const int year);
 // int add_tree_class_for_replanting_single (cell_t *const c, const int day, const int month, const int year, const int rsi);
