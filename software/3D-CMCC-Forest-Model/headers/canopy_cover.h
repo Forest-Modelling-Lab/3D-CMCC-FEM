@@ -5,8 +5,11 @@
  *      Author: alessio-cmcc
  */
 
+
 #ifndef CANOPY_COVER_H_
 #define CANOPY_COVER_H_
+
+#include "matrix.h"  // required for cell_t
 
 void dbhdc_function (cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, const int year);
 
