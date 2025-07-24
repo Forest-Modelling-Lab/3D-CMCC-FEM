@@ -14,6 +14,8 @@
 #include "g-function.h"
 #include "allometry.h"
 #include "canopy_cover.h"
+#include "utility.h"
+#include "lai.h"
 
 extern settings_t* g_settings;
 extern logger_t* g_debug_log;
