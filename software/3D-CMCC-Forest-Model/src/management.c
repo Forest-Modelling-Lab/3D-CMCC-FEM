@@ -19,6 +19,8 @@
 #include "allometry.h"
 #include "structure.h"
 #include "initialization.h"
+#include "print_output.h"
+#include "littering.h"
 
 extern management_t* g_management;
 extern settings_t* g_settings;
