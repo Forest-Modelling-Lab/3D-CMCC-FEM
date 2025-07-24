@@ -58,6 +58,8 @@
 #include "decomposition.h"
 #include "littering.h"
 #include "CN-balance.h"
+#include "canopy_cover.h"
+#include "met_data.h"
 
 extern logger_t* g_debug_log;
 //extern soil_settings_t* g_soil_settings;
