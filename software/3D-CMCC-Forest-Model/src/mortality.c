@@ -19,6 +19,7 @@
 #include "canopy_cover.h"
 #include "allometry.h"
 #include "littering.h"
+#include "print_output.h"
 
 extern settings_t* g_settings;
 extern logger_t* g_debug_log;
