@@ -1378,6 +1378,10 @@ typedef struct
 	double init_soil_C;                                                   /* initial soil carbon */
 	double init_soil_N;                                                   /* initial soil nitrogen */
 	double init_dead_C;                                                   /* initial dead carbon */
+
+	double init_dead_2C;                                                   /* initial dead 2 carbon */
+	double init_dead_3C;                                                   /* initial dead 3 carbon */
+	double init_dead_4C;                                                   /* initial dead 4 carbon */
      
     /* UMM 27 June 2025*/
 	double init_soil_1C;                                                   /* initial soil 1 carbon */
