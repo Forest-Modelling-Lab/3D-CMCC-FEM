@@ -727,7 +727,8 @@ static int parse_args(int argc, char *argv[])
 			break;
 
 		case 'n': /* ndep file */
-			if ( ! argv[i+1] ) {
+			if ( ! argv[i+1] ) 
+			{    
 				puts("ndep file not specified!");
 				goto err;
 			}
@@ -975,6 +976,42 @@ static int check_soil_values(void)
 		g_soil_settings->values[SOILC] = 0.;
 		logger_error(g_debug_log, "NO SOIL DATA AVAILABLE (Carbon soil value)\n");
 	}
+	#if 1
+	/* UMM 27 June 2025*/
+	/* soil carbon 1 */
+	if (IS_INVALID_VALUE(g_soil_settings->values[SOIL1C]))
+	{
+	
+	  printf(" SONO QUI, checking SOIL1C values \n");
+		/* initialize to zero value */
+		g_soil_settings->values[SOIL1C] = 0.;
+		logger_error(g_debug_log, "NO SOIL DATA AVAILABLE (Carbon soil 1 value)\n");
+	}
+	
+		
+	/* soil carbon 2 */
+	if (IS_INVALID_VALUE(g_soil_settings->values[SOIL2C]))
+	{
+		/* initialize to zero value */
+		g_soil_settings->values[SOIL2C] = 0.;
+		logger_error(g_debug_log, "NO SOIL DATA AVAILABLE (Carbon soil 2 value)\n");
+	}
+	/* soil carbon 3 */
+	if (IS_INVALID_VALUE(g_soil_settings->values[SOIL3C]))
+	{
+		/* initialize to zero value */
+		g_soil_settings->values[SOIL3C] = 0.;
+		logger_error(g_debug_log, "NO SOIL DATA AVAILABLE (Carbon soil 3 value)\n");
+	}
+	/* soil carbon 4 */
+	if (IS_INVALID_VALUE(g_soil_settings->values[SOIL4C]))
+	{
+		/* initialize to zero value */
+		g_soil_settings->values[SOIL4C] = 0.;
+		logger_error(g_debug_log, "NO SOIL DATA AVAILABLE (Carbon soil 4 value)\n");
+	}
+	/* UMM 27 June 2025*/
+	#endif
 	/* soil nitrogen */
 	if (IS_INVALID_VALUE(g_soil_settings->values[SOILN]))
 	{
@@ -1477,7 +1514,7 @@ int main(int argc, char *argv[]) {
 		if ( ! check_soil_values() ) {
 			goto err;
 		}
-
+	
 		/* check topo values */
 		if ( ! check_topo_values() ) {
 			goto err;
@@ -1508,6 +1545,12 @@ int main(int argc, char *argv[]) {
 		matrix->cells[cell].init_litter_C = g_soil_settings->values[LITTERC];
 		matrix->cells[cell].init_litter_N = g_soil_settings->values[LITTERN];
 		matrix->cells[cell].init_soil_C   = g_soil_settings->values[SOILC];
+		  /* UMM 27 June 2025*/
+		matrix->cells[cell].init_soil_1C  = g_soil_settings->values[SOIL1C];
+		matrix->cells[cell].init_soil_2C  = g_soil_settings->values[SOIL2C];
+		matrix->cells[cell].init_soil_3C  = g_soil_settings->values[SOIL3C];
+		matrix->cells[cell].init_soil_4C  = g_soil_settings->values[SOIL4C];
+	        /* UMM 27 June 2025*/	        
 		matrix->cells[cell].init_soil_N   = g_soil_settings->values[SOILN];
 		matrix->cells[cell].init_dead_C   = g_soil_settings->values[DEADWOODC];
 
@@ -1978,7 +2021,7 @@ int main(int argc, char *argv[]) {
 						//		, day+1, month+1, year+g_settings->year_start
 						//);
 
-							#if 1  
+							#if 1
 								printf("ok cell_model BALANCE CLOSURE (%02d-%02d-%d)\n"
 								, day+1, month+1, year+g_settings->year_start
 						    );
