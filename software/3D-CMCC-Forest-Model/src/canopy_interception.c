@@ -235,7 +235,7 @@ void canopy_interception(cell_t *const c, const int layer, const int height, con
 		//c->daily_canopy_rain_int += s->value[CANOPY_INT_RAIN]* s->value[DAILY_CANOPY_COVER_PROJ];
 		
 		
-		printf("in last height in the layer, meteo_daily->rain  %g,\n",meteo_daily->rain);
+		//printf("in last height in the layer, meteo_daily->rain  %g,\n",meteo_daily->rain);
 		
 		if (meteo_daily->rain)   // if == 0 it means it has been all intercepted
 		{
