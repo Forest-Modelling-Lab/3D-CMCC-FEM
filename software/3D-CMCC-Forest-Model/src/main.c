@@ -969,6 +969,30 @@ static int check_soil_values(void)
 		g_soil_settings->values[DEADWOODC] = 0.;
 		logger_error(g_debug_log, "NO SOIL DATA AVAILABLE (Coarse woody debris carbon value)\n");
 	}
+    //july 2025 
+	/* CWD 2 */
+	if (IS_INVALID_VALUE(g_soil_settings->values[DEADWOOD2C]))
+	{
+		/* initialize to zero value */
+		g_soil_settings->values[SOIL2C] = 0.;
+		logger_error(g_debug_log, "NO SOIL DATA AVAILABLE (CWD pool 2 value)\n");
+	}
+	/* CWD 3 */
+	if (IS_INVALID_VALUE(g_soil_settings->values[DEADWOOD3C]))
+	{
+		/* initialize to zero value */
+		g_soil_settings->values[DEADWOOD2C] = 0.;
+		logger_error(g_debug_log, "NO SOIL DATA AVAILABLE (CWD pool 3 value)\n");
+	}
+
+	/* CWD 4 */
+	if (IS_INVALID_VALUE(g_soil_settings->values[DEADWOOD4C]))
+	{
+		/* initialize to zero value */
+		g_soil_settings->values[DEADWOOD4C] = 0.;
+		logger_error(g_debug_log, "NO SOIL DATA AVAILABLE (Carbon soil 4 value)\n");
+	}
+
 	/* soil carbon */
 	if (IS_INVALID_VALUE(g_soil_settings->values[SOILC]))
 	{
@@ -1553,6 +1577,10 @@ int main(int argc, char *argv[]) {
 	        /* UMM 27 June 2025*/	        
 		matrix->cells[cell].init_soil_N   = g_soil_settings->values[SOILN];
 		matrix->cells[cell].init_dead_C   = g_soil_settings->values[DEADWOODC];
+
+		matrix->cells[cell].init_dead_2C   = g_soil_settings->values[DEADWOOD2C];
+		matrix->cells[cell].init_dead_3C   = g_soil_settings->values[DEADWOOD3C];
+		matrix->cells[cell].init_dead_4C   = g_soil_settings->values[DEADWOOD4C];
 
 		/* import TOPO data from topo.txt and assign to matrix cells variables */
 		/* (assign global g_topo variables to single cells) */
