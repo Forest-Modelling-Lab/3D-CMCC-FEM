@@ -8,7 +8,8 @@ typedef enum {
 } e_landuse;
 
 enum {
-	SOIL_X = 0
+// SOIL_LANDUSE                      /* Cell landuse */	
+	 SOIL_X = 0
 	, SOIL_Y
 	, SOIL_LAT                          /* Cell latitude */
 	, SOIL_LON                          /* Cell longitude */
@@ -22,15 +23,20 @@ enum {
 	, SOIL_M0                           /* parameter for soil fertility modifier (3-PG) */
 	, LITTERC                           /* Litter in tons of Carbon / SizeCell */
 	, LITTERN                           /* Litter in tons of Nitrogen / SizeCell */
-	, SOILC                             /* Soil in tons of Carbon / SizeCell */
+	, SOILC                             /* Soil in tons of Carbon / SizeCell */	
 	, SOILN                             /* Soil in tons of Nitrogen / SizeCell */
 	, DEADWOODC                        /* Coarse woody debris in tons of Carbon / SizeCell */
-
-	/* please keep it here! */
-	, SOIL_LANDUSE                      /* Cell landuse */
-
+	/* UMM 27 June 2025*/
+	, SOIL1C                             /* Soil 1 in tons of Carbon / SizeCell */
+	, SOIL2C                             /* Soil 2 in tons of Carbon / SizeCell */
+	, SOIL3C                             /* Soil 3 in tons of Carbon / SizeCell */
+	, SOIL4C                             /* Soil 4 in tons of Carbon / SizeCell */
+        /* UMM 27 June 2025*/
+	/* please keep it here! */ // the last place on this record
+	, SOIL_LANDUSE                      /* Cell landuse */	
 	, SOIL_VARS_COUNT
 };
+
 
 typedef struct {
 	e_landuse landuse;
