@@ -1661,16 +1661,16 @@ void soil_summary(const matrix_t* const m, const cell_t* const cell)
 		logger(g_debug_log, "-Soil FN0 = %g\n",              g_soil_settings->values[SOIL_FN0]);
 		logger(g_debug_log, "-Soil FNN = %g\n",              g_soil_settings->values[SOIL_FNN]);
 		logger(g_debug_log, "-Soil M0 = %g\n",               g_soil_settings->values[SOIL_M0]);
-		logger(g_debug_log, "-Litter = %g tC/ha\n",          g_soil_settings->values[LITTERC]);
-		logger(g_debug_log, "-Litter = %g tN/ha\n",          g_soil_settings->values[LITTERN]);
-		logger(g_debug_log, "-Soil = %g tC/ha\n",            g_soil_settings->values[SOILC]);
+		logger(g_debug_log, "-Litter = %g gC/m2\n",          g_soil_settings->values[LITTERC]);
+		logger(g_debug_log, "-Litter = %g gN/m2\n",          g_soil_settings->values[LITTERN]);
+		logger(g_debug_log, "-Soil = %g  gC/m2\n",            g_soil_settings->values[SOILC]);
 		  /* UMM 27 June 2025*/
-		logger(g_debug_log, "-Soil1 = %g tC/ha\n",            g_soil_settings->values[SOIL1C]);
-		logger(g_debug_log, "-Soil2 = %g tC/ha\n",            g_soil_settings->values[SOIL2C]);
-		logger(g_debug_log, "-Soil3 = %g tC/ha\n",            g_soil_settings->values[SOIL3C]);
-		logger(g_debug_log, "-Soil4 = %g tC/ha\n",            g_soil_settings->values[SOIL4C]);
+		logger(g_debug_log, "-Soil1 = %g gC/m2\n",            g_soil_settings->values[SOIL1C]);
+		logger(g_debug_log, "-Soil2 = %g gC/m2\n",            g_soil_settings->values[SOIL2C]);
+		logger(g_debug_log, "-Soil3 = %g gC/m2\n",            g_soil_settings->values[SOIL3C]);
+		logger(g_debug_log, "-Soil4 = %g gC/m2\n",            g_soil_settings->values[SOIL4C]);
 	        /* UMM 27 June 2025*/
-		logger(g_debug_log, "-Soil = %g tN/ha\n",            g_soil_settings->values[SOILN]);
+		logger(g_debug_log, "-Soil = %g gN/m2\n",            g_soil_settings->values[SOILN]);
 		logger(g_debug_log, "***************************************************\n\n");
 	}
 }
