@@ -1,4 +1,8 @@
 /* soil_settings.c */
+//
+// authors Alessio Collalti
+// Daniela Dalmonech
+
 #include "soil_settings.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -19,7 +23,8 @@ static const char err_bad_landuse[] ="bad landuse %c at row %d\n";
 
 static const char *sz_vars[SOIL_VARS_COUNT] =
 {
-	"X"
+    // "LANDUSE"   // kep LANDUSE at the last place of this record
+	 "X"
 	, "Y"
 	, "LAT"
 	, "LON"
@@ -34,11 +39,24 @@ static const char *sz_vars[SOIL_VARS_COUNT] =
 	, "LITTERC"
 	, "LITTERN"
 	, "SOILC"
+
 	, "SOILN"
 	, "DEADWOODC"
-
-	, "LANDUSE"
+#if 1	
+	/* UMM 27 June 2025*/
+	, "SOIL1C"
+	, "SOIL2C"
+	, "SOIL3C"
+	, "SOIL4C"
+/* UMM 27 June 2025*/
+	, "DEADWOOD2C"
+	, "DEADWOOD3C"
+	, "DEADWOOD4C"
+	, "LANDUSE"   // kep LANDUSE at the last place of this record
+	
+#endif
 };
+
 
 soil_settings_t* import_txt(const char *const filename, int* const p_settings_count) {
 #define SOIL_BUFFER_SIZE 1024
@@ -47,6 +65,11 @@ soil_settings_t* import_txt(const char *const filename, int* const p_settings_co
 	char buffer[SOIL_BUFFER_SIZE];
 	int i;
 	int columns[SOIL_VARS_COUNT];
+	
+	int SOIL_VARS_COUNT_min = 18; // minimum column expected in the soil file  
+	int SOIL_VARS_COUNT_def ;     // final number of soil columns we need to read from the file 
+	
+	//int columns[SOIL_VARS_COUNT_ALL];
 	FILE *f;
 	soil_settings_t *ps;
 	soil_settings_t s = { 0 };
@@ -82,18 +105,19 @@ soil_settings_t* import_txt(const char *const filename, int* const p_settings_co
 		/* skip empty lines and comments */
 	} while ( ('\r' == p[0]) || ('\n' == p[0]) || ('/' == p[0]) || ('\0' == p[0]) );
 
-	/* reset columns */
+    /* reset columns */
 	for ( i = 0; i < SOIL_VARS_COUNT; i++ )
 	{
 		columns[i] = -1;
 	}
-
-	/* parse header */
+		
+/* parse header */
 	for ( i = 0, token = string_tokenizer(buffer, delimiters, &p); token; token = string_tokenizer(NULL, delimiters, &p), ++i )
 	{
 		int y;
 		for ( y = 0; y < SOIL_VARS_COUNT; ++y )
 		{
+		    
 			if ( ! string_compare_i(token, sz_vars[y]) )
 			{
 				/* check if column is not already assigned */
@@ -108,17 +132,39 @@ soil_settings_t* import_txt(const char *const filename, int* const p_settings_co
 			}
 		}
 	}
+	
+    // check how many columns are detected in the soil-file
 
+	SOIL_VARS_COUNT_def = 0;
+	for (i = 0; i < SOIL_VARS_COUNT; ++i) {
+		if (columns[i] != -1) {
+			SOIL_VARS_COUNT_def++;
+		}	
+	}
+
+	if ( SOIL_VARS_COUNT_def < SOIL_VARS_COUNT_min )
+		{
+		  	logger_error(g_debug_log, " detected number of columns in the soil file lower than the minimum espected (18)  \n");
+			
+			if ( ps ) free(ps);
+			fclose(f);
+			return 0;
+		}
+
+	#if 0	 // no need anymore to check for missing columns, we already check it in the header
 	/* check missing columns */
 	for ( i = 0; i < SOIL_VARS_COUNT; ++i )
 	{
 		if ( -1 == columns[i] )
 		{
-			logger_error(g_debug_log, "columm %s not found in %s\n", sz_vars[i], filename);
-			fclose(f);
-			return NULL;
+						//logger_error(g_debug_log, "columm %s not found in %s\n", sz_vars[i], filename);
+						//fclose(f);
+						//return NULL;
+			
 		}
+		
 	}
+	#endif 
 
 	/* import values */
 	while ( fgets(buffer, SOIL_BUFFER_SIZE, f) ) {
@@ -145,6 +191,7 @@ soil_settings_t* import_txt(const char *const filename, int* const p_settings_co
 
 			for ( k = 0; k < SOIL_VARS_COUNT; ++k )
 			{
+			
 				if ( i == columns[k] )
 				{
 					break;
@@ -155,9 +202,9 @@ soil_settings_t* import_txt(const char *const filename, int* const p_settings_co
 			{
 				continue;
 			}
-
 			// check landuse
 			if ( SOIL_LANDUSE == k ) {
+	
 				/* check landuse length */
 				if ( 1 != strlen(token) ) {
 					printf(err_bad_landuse_length, *p_settings_count + 1);
@@ -180,6 +227,9 @@ soil_settings_t* import_txt(const char *const filename, int* const p_settings_co
 				}
 			} else {
 				value = convert_string_to_float(token, &err);
+				
+				// printf("SONO QUI 55 , READING DATA  value %g  \n",value);
+				 
 				if ( err )
 				{
 					logger_error(g_debug_log, "unable to convert '%s' for %s columm in %s\n", token, sz_vars[k], filename);
@@ -188,6 +238,7 @@ soil_settings_t* import_txt(const char *const filename, int* const p_settings_co
 					return NULL;
 				}
 				s.values[k] = value;
+							  	
 			}
 
 			// skip comments
@@ -198,14 +249,17 @@ soil_settings_t* import_txt(const char *const filename, int* const p_settings_co
 		}
 
 		/* check imported stuff */
-		if ( y != SOIL_VARS_COUNT )
+		if ( y != SOIL_VARS_COUNT_def )
 		{
-			logger_error(g_debug_log, "imported values for row %d in %s should be %d not %d\n"
+		
+		  	logger_error(g_debug_log, "imported values for row %d in %s should be %d not %d\n"
 									, *p_settings_count + 1
 									, filename
-									, SOIL_VARS_COUNT
+									, SOIL_VARS_COUNT_def
 									, y
+	          		
 			);
+			
 			if ( ps ) free(ps);
 			fclose(f);
 			return 0;
@@ -242,12 +296,13 @@ soil_settings_t* import_txt(const char *const filename, int* const p_settings_co
 		for ( y = 0; y < SOIL_VARS_COUNT-1; ++y ) // -1 remove landuse
 		{
 			ps[*p_settings_count].values[y] = s.values[y];
+
 		}
 
 		++*p_settings_count;
 	}
 	fclose(f);
-
+       
 	if (  ! *p_settings_count )
 	{
 		logger_error(g_debug_log, "no values found in %s\n", filename);
@@ -309,8 +364,8 @@ static soil_settings_t* import_nc(const char *const sz_filename, int*const p_set
 		goto quit_no_nc_err;
 	}
 
-	if ( vars_count < SOIL_VARS_COUNT ) {
-		logger_error(g_debug_log, "bad nc file! %d vars but expected %d\n\n", vars_count, SOIL_VARS_COUNT);
+	if ( vars_count < SOIL_VARS_COUNT_def ) {
+		logger_error(g_debug_log, "bad nc file! %d vars but expected %d\n\n", vars_count, SOIL_VARS_COUNT_def);
 		goto quit_no_nc_err;
 	}
 
@@ -352,17 +407,17 @@ static soil_settings_t* import_nc(const char *const sz_filename, int*const p_set
 
 	/* check if we have all columns */
 	{
-		int vars[SOIL_VARS_COUNT] = { 0 };
+		int vars[SOIL_VARS_COUNT_def] = { 0 };
 		for ( i = 0; i < vars_count; ++i ) {
 			ret = nc_inq_var(id_file, i, name, &type, &n_dims, ids, NULL);
-			for ( z = 0; z  < SOIL_VARS_COUNT; ++z ) {
+			for ( z = 0; z  < SOIL_VARS_COUNT_def; ++z ) {
 				if ( ! string_compare_i(name, sz_vars[z]) ) {
 					vars[z] = 1;
 					break;
 				}
 			}
 		}
-		for ( i = 0; i < SOIL_VARS_COUNT; ++i ) {
+		for ( i = 0; i < SOIL_VARS_COUNT_def; ++i ) {
 			if ( ! vars[i] ) {
 				logger_error(g_debug_log, "%s column not found!\n", sz_vars[i]);
 				goto quit_no_nc_err;
@@ -401,7 +456,7 @@ static soil_settings_t* import_nc(const char *const sz_filename, int*const p_set
 					start[1] = x;
 				}
 
-				for ( z = 0; z  < SOIL_VARS_COUNT; ++z ) {
+				for ( z = 0; z  < SOIL_VARS_COUNT_def; ++z ) {
 					float f;
 					double d;
 
@@ -440,8 +495,8 @@ static soil_settings_t* import_nc(const char *const sz_filename, int*const p_set
 				}
 			}
 
-			if ( assigned != SOIL_VARS_COUNT ) {
-				logger_error(g_debug_log, "imported %s columns instead of %d\n\n", assigned, SOIL_VARS_COUNT);
+			if ( assigned != SOIL_VARS_COUNT_def ) {
+				logger_error(g_debug_log, "imported %s columns instead of %d\n\n", assigned, SOIL_VARS_COUNT_def);
 				goto quit_no_nc_err;
 			}
 
