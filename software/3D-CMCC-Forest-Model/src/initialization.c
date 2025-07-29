@@ -32,7 +32,7 @@ void initialization_forest_structure(cell_t *const c, const int day, const int m
 	{
 		puts(sz_err_out_of_memory);
 		exit(1);
-	}
+	}	
 }
 
 void initialization_forest_class_C (cell_t *const c, const int height, const int dbh, const int age, const int species)
@@ -914,20 +914,16 @@ void initialization_forest_cell_N (cell_t *const c, const int height, const int 
 
 }
 
-
-
- 
-
 //-----------------------------------------------------------------------------------------------------//
  
-
 // ---------------- LITTER AND SOIL COMPARTMENTS ----------------------------------------------------- //
  
-
 //-----------------------------------------------------------------------------------------------------//
 
 void initialization_forest_class_litter (cell_t *const c, const int height, const int dbh, const int age, const int species)
 {
+
+	// subrouting only used at the beginning of the simulation to initialize the litter pools
 	double cwd_litrC;
 	double cwd_litr2C;
 	double cwd_litr3C;
@@ -963,19 +959,25 @@ void initialization_forest_class_litter (cell_t *const c, const int height, cons
 	/* if spinup is off */
 	if ( ! g_settings->spinup )
 	{
-		/*** compute coarse woody debris carbon pools ****/
+
+		 // july 2025
+
+	     /*** compute coarse woody debris carbon pools ****/
+
 		if ( ! c->init_dead_C || c->init_dead_C == NO_DATA )
 		{
-			//note:this must be initialized although to a minimum value to avoid model crashes
-			s->value[CWD_LITRC]  = 0.001;
-			s->value[CWD_LITRC]  = 10.;  // ddalmo rough estimates for the forest Mg C /ha
-			s->value[CWD_LITRC]  = 3.;  // we use this value to initialize the litter pool Mg C /ha
-
+			// used only in this phase to provide an initial  value for c->cwd 
+			//note:this must be initialized although to a minimum value to avoid model crashes ?? (comment from Alessio)
+			s->value[CWD_LITRC]  = 0.001; // we use this value to initialize the litter pool Mg C /ha
 		}
 		else
 		{
-			s->value[CWD_LITRC]  =   c->init_dead_C;
+			// set initial value for all classes to 0 
+	
+			s->value[CWD_LITRC]  =  0.;
+
 		}
+
 		s->value[CWD_LITR2C]     = s->value[CWD_LITRC]    * s->value[DEADWOOD_USCEL_FRAC];
 		s->value[CWD_LITR3C]     = s->value[CWD_LITRC]    * s->value[DEADWOOD_SCEL_FRAC] ;
 		s->value[CWD_LITR4C]     = s->value[CWD_LITRC]    * s->value[DEADWOOD_LIGN_FRAC] ;
@@ -987,6 +989,7 @@ void initialization_forest_class_litter (cell_t *const c, const int height, cons
 		cwd_litr3C               = s->value[CWD_LITR3C];
 		cwd_litr4C               = s->value[CWD_LITR4C];
 
+	
 		/*** compute leaf litter carbon pools ****/
 		s->value[LEAF_LITR1C]         = s->value[LEAF_LITRC]        * s->value[LEAF_LITR_LAB_FRAC]  ;
 		s->value[LEAF_LITR2C]         = s->value[LEAF_LITRC]        * s->value[LEAF_LITR_USCEL_FRAC];
@@ -1162,13 +1165,37 @@ void initialization_cell_litter_biochem ( cell_t *const c )
 	/******************************************************************************************************************************************************************/
 
 	/*** create cwd carbon pools fractions (gC/m2) ***/
-	//fixme it should sum throughout all classes...
-	c->cwd_C     = c->daily_cwd_to_litrC;
-	c->cwd_2C    = c->daily_cwd_to_litr2C;
-	c->cwd_3C    = c->daily_cwd_to_litr3C;
-	c->cwd_4C    = c->daily_cwd_to_litr4C;
-	/* check */
-	CHECK_CONDITION ( fabs ( c->cwd_2C + c->cwd_3C + c->cwd_4C ) , > , c->cwd_C + eps );
+
+     if ( ! c->init_dead_C || c->init_dead_C == NO_DATA )
+	{
+		   c->cwd_C     = c->daily_cwd_to_litrC;
+	       c->cwd_2C    = c->daily_cwd_to_litr2C;
+	       c->cwd_3C    = c->daily_cwd_to_litr3C;
+	       c->cwd_4C    = c->daily_cwd_to_litr4C; 
+
+	} 
+	else if ( (! c->init_dead_2C) && (c->init_dead_C))  // use init_dead C to do the spinup
+	{
+
+	 c->cwd_C     = c->init_dead_C;
+	
+	 c->cwd_2C    = c->init_dead_C*0.25;
+	 c->cwd_3C    = c->init_dead_C*0.25;
+	 c->cwd_4C    = c->init_dead_C*0.5;
+	
+	} else {  // all deadwood data available  
+
+    c->cwd_C     = c->init_dead_C;
+	
+	c->cwd_2C    = c->init_dead_2C;
+	c->cwd_3C    = c->init_dead_3C;
+	c->cwd_4C    = c->init_dead_4C;
+	
+	}
+
+    // check the consistency of the soil pools data
+	CHECK_CONDITION ( fabs ( c->cwd_C - ( c->cwd_2C+ c->cwd_3C+c->cwd_4C) ) , > , eps );
+
 
 	/*** create leaf litter carbon pools fractions (gC/m2) ****/
 	c->leaf_litrC     = c->daily_leaf_to_litrC;
@@ -1189,7 +1216,7 @@ void initialization_cell_litter_biochem ( cell_t *const c )
 	CHECK_CONDITION ( fabs ( c->froot_litr1C + c->froot_litr2C + c->froot_litr3C + c->froot_litr4C ) , > , c->froot_litrC + eps );
 
 	/* cumulate overall */
-	c->litrC          = c->leaf_litrC + c->froot_litrC + c->cwd_C;
+	//c->litrC          = c->leaf_litrC + c->froot_litrC + c->cwd_C;
 
 	/* cumulate carbon pools */
 	//c->litr1C         = c->leaf_litr1C + c->froot_litr1C;
@@ -1197,15 +1224,14 @@ void initialization_cell_litter_biochem ( cell_t *const c )
 	//c->litr3C         = c->leaf_litr3C + c->froot_litr3C + c->cwd_3C;
 	//c->litr4C         = c->leaf_litr4C + c->froot_litr4C + c->cwd_4C;
 
-	// Correction proposed by Issam: to start, we neglect the cwd  contribution
-	// as currenctly is simply computed at the entire CWD pool split in to the different litter pools
-	// this has to be fixed considering the daily fragmentation rate.
-	// this approximation should affect only the first years of simulations
+	// CORRECTION: in the litter pools, the CWD is not considered. 
+
+	c->litrC          = c->leaf_litrC + c->froot_litrC ; 
 
 	c->litr1C         = c->leaf_litr1C + c->froot_litr1C;
-	c->litr2C         = c->leaf_litr2C + c->froot_litr2C ;
-	c->litr3C         = c->leaf_litr3C + c->froot_litr3C ;
-	c->litr4C         = c->leaf_litr4C + c->froot_litr4C ;
+	c->litr2C         = c->leaf_litr2C + c->froot_litr2C;
+	c->litr3C         = c->leaf_litr3C + c->froot_litr3C;
+	c->litr4C         = c->leaf_litr4C + c->froot_litr4C;
 
 	/******************************************************************************************************************************************************************/
 
@@ -1246,33 +1272,50 @@ void initialization_cell_litter_biochem ( cell_t *const c )
 	c->litr4N         = c->leaf_litr4N + c->froot_litr4N + c->cwd_4N;
 
 }
+
 void initialization_cell_soil_biochem (cell_t *const c)
 {
+
 	/* initialize soil carbon */
 	if ( ! c->init_soil_C || c->init_soil_C == NO_DATA )
 	{
-		//c->soilC      = 0.001;
-		c->soilC      = 0.;
-	}
-	else
+		    //c->soilC      = 0.001;
+		    c->soilC      = 0.;
+
+	/* UMM 27 June 2025*/
+            c->soil1C         = 0.;
+	        c->soil2C         = 0.;
+	        c->soil3C         = 0.;
+	        c->soil4C         = 0.;
+	/* UMM 27 June 2025*/
+
+	} 
+	else if ( (! c->init_soil_1C) && (c->init_soil_C))  // use init_soil C to do the spinup
 	{
-		c->soilC      = c->init_soil_C;
+	
+		    c->soilC      = c->init_soil_C;
+	
+            c->soil1C         = c->init_soil_C/4.;
+	        c->soil2C         = c->init_soil_C/4.;
+	        c->soil3C         = c->init_soil_C/4.;
+	        c->soil4C         = c->init_soil_C/4.;
+
+	
+	} else {  // all soil data available 
+
+            c->soilC      = c->init_soil_C;
+	/* UMM 27 June 2025*/
+            c->soil1C         = c->init_soil_1C;
+	        c->soil2C         = c->init_soil_2C;
+	        c->soil3C         = c->init_soil_3C;
+	        c->soil4C         = c->init_soil_4C;
+	/* UMM 27 June 2025*/
+
+	// check the consistency of the soil pools data
+	CHECK_CONDITION ( fabs ( c->soilC - ( c->soil1C+ c->soil2C+c->soil3C+c->soil4C) ) , > , eps );
+
 	}
-
-   // c->soil1C         = 0.;
-	//c->soil2C         = 0.;
-	//c->soil3C         = 0.;
-	//c->soil4C         = 0.;
-
-	// usefull to start, when spinup is performed (running long time simulation until equilibrium
-	// veg and soil togheter). When restarting the simulations, the soil partitioning coefficients
-	// obtained from the spinup are used to initialize the soil pools.
-
-    c->soil1C         = c->init_soil_C/4.;
-	c->soil2C         = c->init_soil_C/4.;
-	c->soil3C         = c->init_soil_C/4.;
-	c->soil4C         = c->init_soil_C/4.;
-
+        
 	/* initialize soil nitrogen */
 	if ( ! c->init_soil_N || c->init_soil_N == NO_DATA )
 	{
