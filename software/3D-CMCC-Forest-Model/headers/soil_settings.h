@@ -23,15 +23,18 @@ enum {
 	, SOIL_M0                           /* parameter for soil fertility modifier (3-PG) */
 	, LITTERC                           /* Litter in tons of Carbon / SizeCell */
 	, LITTERN                           /* Litter in tons of Nitrogen / SizeCell */
-	, SOILC                             /* Soil in tons of Carbon / SizeCell */	
-	, SOILN                             /* Soil in tons of Nitrogen / SizeCell */
-	, DEADWOODC                        /* Coarse woody debris in tons of Carbon / SizeCell */
+	, SOILC                             /* Soil in g of Carbon / m2 */	
+	, SOILN                             /* Soil in g of Nitrogen / m2 */
+	, DEADWOODC                        /* Coarse woody debris in g of Carbon / m2 */
 	/* UMM 27 June 2025*/
-	, SOIL1C                             /* Soil 1 in tons of Carbon / SizeCell */
-	, SOIL2C                             /* Soil 2 in tons of Carbon / SizeCell */
-	, SOIL3C                             /* Soil 3 in tons of Carbon / SizeCell */
-	, SOIL4C                             /* Soil 4 in tons of Carbon / SizeCell */
+	, SOIL1C                             /* Soil 1 in g of Carbon / m2 */
+	, SOIL2C                             /* Soil 2 in g of Carbon / m2*/
+	, SOIL3C                             /* Soil 3 in g of Carbon / m2 */
+	, SOIL4C                             /* Soil 4 in g of Carbon / m2*/
         /* UMM 27 June 2025*/
+	, DEADWOOD2C                             /* Coarse woody debris 2 in g of Carbon / m2 */
+	, DEADWOOD3C                             /* Coarse woody debris 3 in g of Carbon / m2 */
+	, DEADWOOD4C                             /* Coarse woody debris  4 in g of Carbon / m2 */
 	/* please keep it here! */ // the last place on this record
 	, SOIL_LANDUSE                      /* Cell landuse */	
 	, SOIL_VARS_COUNT
