@@ -115,7 +115,8 @@ void canopy_interception(cell_t *const c, const int layer, const int height, con
 					
 			}  else {
 			
-			CHECK_CONDITION( s->value[CANOPY_INT_RAIN], > , meteo_daily->rain );
+
+			CHECK_CONDITION ( ( s->value[CANOPY_INT_RAIN] - meteo_daily->rain ) , > , eps );
 			
 			}
 
@@ -178,7 +179,8 @@ void canopy_interception(cell_t *const c, const int layer, const int height, con
 				s_int =0. ; 
 			}   else {
 			
-			CHECK_CONDITION( s->value[CANOPY_INT_SNOW], > , meteo_daily->snow );
+
+				CHECK_CONDITION (  ( s->value[CANOPY_INT_SNOW] - meteo_daily->snow ) , > , eps );
 			
 			}
 
