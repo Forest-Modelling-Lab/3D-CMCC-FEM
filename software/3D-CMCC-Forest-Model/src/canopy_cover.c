@@ -27,6 +27,7 @@
 extern logger_t* g_debug_log;
 extern settings_t* g_settings;
 
+static const char sz_management[] = "TCN";
 
 void dbhdc_function ( cell_t *const c, const int layer, const int height, const int dbh, const int age, const int species, const int year)
 {
@@ -66,7 +67,7 @@ void dbhdc_function ( cell_t *const c, const int layer, const int height, const 
    
    // printf(" IN CANOPY COVER LAYER DENSITY  %f!!!\n",c->tree_layers[layer].layer_density* g_settings->sizeCell );
     tree_l_number = (int)(c->tree_layers[layer].layer_density* g_settings->sizeCell); 
-    //printf(" IN CANOPY COVER tree_l_number   %d!!!\n",tree_l_number);
+   // printf(" IN CANOPY COVER tree_l_number   %d!!!\n",tree_l_number);
 
 	temp_crown_area     = ( s->value[MAX_LAYER_COVER] * g_settings->sizeCell ) / ( c->tree_layers[layer].layer_density * g_settings->sizeCell );
 	logger(g_debug_log,"-temp_crown_area     = %f\n", temp_crown_area);
@@ -80,8 +81,8 @@ void dbhdc_function ( cell_t *const c, const int layer, const int height, const 
 	s->value[DBHDC_EFF] = temp_crown_diameter / d->value;
 	logger(g_debug_log,"-DBHDC (new)         = %f\n", s->value[DBHDC_EFF]);
 
-   // printf(" CANOPY _ COVER 1 s->value[DBHDC_EFF] %g!!!\n", s->value[DBHDC_EFF]);
-
+   //printf(" CANOPY _ COVER 1 s->value[DBHDC_EFF] %g!!!\n", s->value[DBHDC_EFF]);
+   //printf(" CANOPY _ COVER 1 d->value %g!!!\n", d->value);
 
    // 5p7 switching from year to year to a new conditions (e.g. from a forest class in one layer to a layer with other forest class/species)
    // can lead to unrealistic and dratisc increment/decrement of DBHDC. For this reason, and with a very simplify
@@ -98,17 +99,19 @@ void dbhdc_function ( cell_t *const c, const int layer, const int height, const 
    // TBD: if ( ( s->counter[YOS] > 1 )) if use constrain starting in the 3rd year
    // because of issue when the 'observed' height in the classes do not match the 'heiths'
    // of the allometric equations (problem in defining the layers)
- 
+
+   
 	if ( ( s->counter[YOS] ) && ( s->value[DBHDC_EFF] > ( previous_dbhdc_eff + ( previous_dbhdc_eff * max_dbhdc_incr ) ) ) )
 	{
 		s->value[DBHDC_EFF] = previous_dbhdc_eff + ( previous_dbhdc_eff * max_dbhdc_incr );
-		//printf(" CRESCE TROPPO IN FRETTA \n") ;
+		printf(" CRESCE TROPPO IN FRETTA \n") ;
 	}
 
+	   
     if ( ( s->counter[YOS] ) && ( s->value[DBHDC_EFF] < ( previous_dbhdc_eff - ( previous_dbhdc_eff * max_dbhdc_incr ) ) ) )
 	{
 		s->value[DBHDC_EFF] = previous_dbhdc_eff - ( previous_dbhdc_eff * max_dbhdc_incr );
-		//printf(" CRESCE TROPPO IN FRETTA \n") ;
+		printf(" CRESCE TROPPO IN FRETTA \n") ;
 	}
 	
      //printf(" CANOPY _ COVER s->counter[YOS] %d!!!\n", s->counter[YOS]);
@@ -153,6 +156,13 @@ void dbhdc_function ( cell_t *const c, const int layer, const int height, const 
             //}
 	
 	    if (s->value[DBHDCMAX] < s->value[DBHDCMIN] )   s->value[DBHDCMAX] = s->value[DBHDCMIN] ;
+
+
+       //printf(" IN CANOPY COVER  %f !!!\n",s->value[DBHDCMAX] );
+
+		
+ 
+
         }
 	else
 	{
@@ -164,6 +174,9 @@ void dbhdc_function ( cell_t *const c, const int layer, const int height, const 
 	}
 
 #endif
+
+ 
+
 	/**************************************************************************************************/
 
 	/* check */
@@ -207,6 +220,7 @@ void dbhdc_function ( cell_t *const c, const int layer, const int height, const 
     // printf(" CANOPY _ COVER s->value[tree_remove_crowded]  %g!!!\n", s->value[tree_remove_crowded] );
     //printf(" CANOPY _ COVER 3 s->value[DBHDC_EFF]  %g!!!\n", s->value[DBHDC_EFF] );
    
+	 //printf(" CANOPY _ COVER 3 s->value[DBHDC_EFF]  %g!!!\n", s->value[DBHDC_EFF] );
 
 
 	/* check */
