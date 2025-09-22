@@ -547,8 +547,22 @@ int growth_efficiency_mortality ( cell_t *const c, const int height, const int d
 
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
-	if( s->value[RESERVE_C] < 0 )
+	// ddalmo sept 25: to fix
+	// when only one tree is in the class, we remove the entire class here to avoid
+	// issues when removing later in the mortality subroutine
+
+	if   (s->counter[N_TREE] ==1 )
+     {
+		printf(" LAST TREE IN THE FOREST CLASS REMOVED \n");
+	 }
+	 
+
+	//if( s->value[RESERVE_C] < 0 )
+	// {
+
+	if( (s->value[RESERVE_C] < 0) |  (s->counter[N_TREE] ==1 ))
 	{
+
 		//printf("** IN GROWTH EFFICIENCY MORTALITY **\n");
 		printf("growth efficiency mortality species %s!!!\n", s->name);
   
@@ -663,6 +677,8 @@ void age_mortality ( cell_t *const c, const int height, const int dbh, const int
 	double age_mort;
 	int nat_man;                /* natural or managed mortality 0 = natural; 1 = managed */
 
+	double mort_frac = 0.0;   /* ntrees years-1 */
+
 	age_t *a;
 	species_t *s;
 
@@ -687,10 +703,19 @@ void age_mortality ( cell_t *const c, const int height, const int dbh, const int
 
 	deadtree = (int)(livetree * age_mort);
 
+	//mort_frac = (livetree * age_mort);
+
+	//printf("ddalmo mort_frac  = %f \n",mort_frac );
+	//printf("ddalmo deadtree  = %d \n",deadtree );
+
 	logger(g_debug_log, "dead trees = %d\n", deadtree);
 
-    if ( ( deadtree ) > 1 )  //FIXME set >=1
+
+    if ( ( deadtree ) > 1 ) 
 	{
+
+		//printf(" deadtree REMOVING  = %d \n",deadtree );
+
 		logger(g_debug_log, "**MORTALITY based on Tree Age (LPJ)**\n");
 
 		if ( livetree > deadtree)
@@ -709,7 +734,36 @@ void age_mortality ( cell_t *const c, const int height, const int dbh, const int
 		}
 		else
 		{
+           deadtree = 1 ;  // considering the previous conditions, we enter this section
+		                   // if livetree = 2 at minimum
+
+		   /* update C and N biomass */
+			tree_biomass_remove ( c, height, dbh, age, species, deadtree, nat_man );
+
+            /* update at class level */
+		    s->counter[DEAD_TREE] += deadtree;
+		    s->counter[N_TREE]    -= deadtree;
+
+		    /* check */
+		    CHECK_CONDITION(s->counter[N_TREE],    <=, 0);
+		    CHECK_CONDITION(s->counter[DEAD_TREE], <, 0);
+ 
+
+
+          #if 0
+			// TO FIX THIS: still is not working in this function when removing the entire class 
+
             deadtree =    s->counter[N_TREE];
+
+			//printf("ddalmo  s->counter[N_TREE] = %d \n", s->counter[N_TREE]);
+
+			//printf("ddalmo mort_frac SONO QUI 22 \n");
+
+			/* reset to zero n_trees */
+		    s->counter[DEAD_TREE] += deadtree;
+		    s->counter[N_TREE]    = 0;
+		    c->n_trees -= deadtree;
+
 
 			// jan 2025 save mortality data / save info for printing
         	// if entire class is remove, call here the output print function
@@ -740,7 +794,9 @@ void age_mortality ( cell_t *const c, const int height, const int dbh, const int
 			{
 				logger_error(g_debug_log, "unable to remove tree class");
 				exit(1);
-			}
+		     }
+		  	#endif		
+
 		}
 
 		
@@ -749,7 +805,7 @@ void age_mortality ( cell_t *const c, const int height, const int dbh, const int
 		c->daily_dead_tree   += deadtree;
 		c->monthly_dead_tree += deadtree;
 		c->annual_dead_tree  += deadtree;
-		c->n_trees           -= deadtree;
+		//c->n_trees           -= deadtree;
         
 		/* check */
 		CHECK_CONDITION(c->daily_dead_tree  , <, 0);
@@ -768,7 +824,7 @@ void stochastic_mortality ( cell_t *const c, const int height, const int dbh, co
 	int livetree         = 0;
 	int deadtree         = 0;
 	double age_mort_fact = 0.01;   /* ntrees years-1 */
-
+   
 	int nat_man;   /* natural or managed mortality 0 = natural; 1 = managed */
 
 	/* stochastic mortality factor which considers that (see BIOME-BGC) a stochastic mortality happens
@@ -789,10 +845,12 @@ void stochastic_mortality ( cell_t *const c, const int height, const int dbh, co
 	/* stochastic probability function */
 	deadtree = (int)( livetree * age_mort_fact );
 	//printf("livetree %d \n",livetree );
-
 	//printf("s->counter[DEAD_TREE] %d \n",s->counter[DEAD_TREE]);
 
+    // currently, below 100 trees ha-1 no stochastic mortality
+
 	logger(g_debug_log, "dead trees = %d\n", deadtree);
+
 
 	if ( ( deadtree ) >= 1 )  // //FIXME set >1
 	{
@@ -814,12 +872,34 @@ void stochastic_mortality ( cell_t *const c, const int height, const int dbh, co
 			/* check */
 			CHECK_CONDITION(s->counter[N_TREE],    <=, 0);
 			CHECK_CONDITION(s->counter[DEAD_TREE], <, 0);
-
+ 
 		}
 		else
-		{
+		{	
+			deadtree = 1 ;  // see in previous mortality subroutine
+
+			/* remove C and N biomass */
+			tree_biomass_remove ( c, height, dbh, age, species, deadtree, nat_man );
+
 			
+			/* update at class level */
+			s->counter[DEAD_TREE] += deadtree;
+			s->counter[N_TREE]    -= deadtree;
+
+			//printf("s->counter[N_TREE]  %d \n",s->counter[N_TREE] );
+			//printf("c->daily_dead_tree 1 %d \n",c->daily_dead_tree );
+			/* check */
+			CHECK_CONDITION(s->counter[N_TREE],    <=, 0);
+			CHECK_CONDITION(s->counter[DEAD_TREE], <, 0);
+
+			#if 0  // not working yet, the removal of the entire class here.
+
 			deadtree =   s->counter[N_TREE];
+
+				/* reset to zero n_trees */
+	    	s->counter[DEAD_TREE] += deadtree;
+		    s->counter[N_TREE]    = 0;
+	    	c->n_trees -= deadtree;
 
 			// jan 2025 save mortality data / save info for printing
        		// if entire class is remove, call here the output print function
@@ -851,13 +931,16 @@ void stochastic_mortality ( cell_t *const c, const int height, const int dbh, co
 				logger_error(g_debug_log, "unable to remove tree class");
 				exit(1);
 			}
+			#endif
+
+			
 		}
 
 		/* update at cell level */
 		c->daily_dead_tree   += deadtree;
 		c->monthly_dead_tree += deadtree;
 		c->annual_dead_tree  += deadtree;
-		c->n_trees           -= deadtree;
+		//c->n_trees           -= deadtree;
 
 		/* check */
 		CHECK_CONDITION(c->daily_dead_tree  , <, 0);
