@@ -90,11 +90,14 @@ static int fill_cell_for_replanting(cell_t *const c, const int species_index)
 	if (sz_management[a->species[a->species_count-1].management] == 'C')
 	{
 
-     //printf(" IN TREE replanting COPPICE \n");
-     temp_density = (int)g_settings->replanted[species_index].n_tree * (1.- 0.10 * c->cell_coppice_count) ;
+	 c->cell_coppice_count =1; // we prescribe this way at the moment. as it works only with coppice with one
+	                           // species and when clear cut is performed.
+	  
+    // temp_density = (int)g_settings->replanted[species_index].n_tree * (1.- 0.10 * c->cell_coppice_count) ;
      
 	 //printf(" IN TREE replanting type for the MANAGEMENT c->cell_coppice_count  %d !!!\n", c->cell_coppice_count);
 
+     temp_density = 	(int)g_settings->replanted[species_index].n_tree;
 
 	 ++c->cell_coppice_count ; 
 
