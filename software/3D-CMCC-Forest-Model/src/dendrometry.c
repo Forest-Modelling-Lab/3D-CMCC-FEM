@@ -295,7 +295,7 @@ void annual_tree_increment(cell_t *const c, const int height, const int dbh, con
 	s->value[TREE_VOLUME2] = (s->value[TREE_STEM_C]*GC_GDM)/s->value[CONV_VOL_FACTOR] ; //(Pi * s->value[FORM_FACTOR] * pow((d->value / 100.) , 2.) * h->value) / 4.;
 	logger(g_debug_log, "-Single tree-stem volume2 = %g m3/tree\n", s->value[TREE_VOLUME2]);
 
-	/* compute class volume */
+	/* compute class volume */ //annual_tree
 	s->value[VOLUME2]      = s->value[TREE_VOLUME2] * s->counter[N_TREE];
 	logger(g_debug_log, "-Class volume2 = %g m3/sizeCell\n", s->value[VOLUME2]);
 
@@ -319,6 +319,7 @@ void annual_tree_increment(cell_t *const c, const int height, const int dbh, con
 	/* check every year after the first */
 	if ( ! s->counter[YOS] ) { CHECK_CONDITION( ( tree_prev_vol2 - s->value[TREE_VOLUME2] ), > , max_diff ); }
 	else { CHECK_CONDITION( s->value[TREE_VOLUME2], < , tree_prev_vol2 - eps ); }
+
 }
 
 
@@ -333,6 +334,10 @@ void annual_gross_tree_increment(cell_t *const c, const int height, const int db
 	double current_vol2;
 	double tree_current_vol2;
 
+	double tree_prev_vol;
+	double tree_prev_vol2;
+
+
 	height_t *h;
 	dbh_t *d;
 	age_t *a;
@@ -343,6 +348,8 @@ void annual_gross_tree_increment(cell_t *const c, const int height, const int db
 	a = &c->heights[height].dbhs[dbh].ages[age];
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
+
+	#if 0
 	/* in m^3/cell/yr */
 
 	/* CURRENT GROSS ANNUAL INCREMENT */
@@ -390,6 +397,62 @@ void annual_gross_tree_increment(cell_t *const c, const int height, const int db
 	/* Current GROSS Annual Increment */
 	s->value[GROSS_INCR2]         = current_vol2      - prev_vol2;
 	logger(g_debug_log, "CAI2-Current Annual Increment = %f m^3DM/cell/yr\n", s->value[GROSS_INCR2]);
+
+
+   #else
+
+   // correct annual gross increment 
+    
+    // using Form factor and DBH and Height to compute the current volume
+
+	// compute single tree CAI (which is equivalent to the gross increment at tree level)	 
+    /* compute single tree volume */
+    tree_prev_vol         = s->value[TREE_VOLUME];
+	logger(g_debug_log, "Previous single tree volume2  = %f m^3DM/tree\n", tree_prev_vol2 );
+
+	
+	tree_current_vol  = (Pi * s->value[FORM_FACTOR] * pow((d->value / 100.) , 2.) * h->value) / 4.;
+    logger(g_debug_log, "-Single tree-stem volume = %g m3/tree\n", tree_current_vol );
+
+	CHECK_CONDITION( tree_current_vol, < , tree_prev_vol - eps );
+
+    /* Current GROSS Annual Increment */
+	// tree currenti increment * number of trees (living, dead and also the ones which will be removed at the 1 of
+	 // january if thinning/harvest happens)
+	
+	s->value[GROSS_INCR] = (tree_current_vol - tree_prev_vol)*(s->counter[N_TREE]);
+
+	logger(g_debug_log, "GAI-Gross Annual Increment = %f m^3DM/cell/yr\n", s->value[GROSS_INCR]);
+	
+
+
+     // compute GROSS ANNUAL INCREMENT 
+	 // compute data from volume2 (Vangi Elia's conversion factors)
+    logger(g_debug_log, "*** GROSS ANNUAL INCREMENT 2 (Vangi's factors) ***\n");
+
+		// /* in m^3/cell/yr */
+
+ 	// compute single tree CAI (which is equivalent to the gross increment at tree level)	 
+    /* compute single tree volume */
+    tree_prev_vol2         = s->value[TREE_VOLUME2];
+	logger(g_debug_log, "Previous single tree volume2  = %f m^3DM/tree\n", tree_prev_vol2 );
+
+	
+	tree_current_vol2  = (s->value[TREE_STEM_C]*GC_GDM)/s->value[CONV_VOL_FACTOR] ; //(Pi * s->value[FORM_FACTOR] * pow((d->value / 100.) , 2.) * h->value) / 4.;
+    logger(g_debug_log, "-Single tree-stem volume2 = %g m3/tree\n", tree_current_vol2 );
+
+	CHECK_CONDITION( tree_current_vol2, < , tree_prev_vol2 - eps );
+
+    /* Current GROSS Annual Increment */
+	// tree currenti increment * number of trees (living, dead and also the ones which will be removed at the 1 of
+	 // january if thinning/harvest happens)
+	
+	s->value[GROSS_INCR2] = (tree_current_vol2 - tree_prev_vol2)*(s->counter[N_TREE]);
+
+	logger(g_debug_log, "GAI2-Gross Annual Increment = %f m^3DM/cell/yr\n", s->value[GROSS_INCR2]);
+	
+
+   #endif
 
 
 }
