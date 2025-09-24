@@ -97,9 +97,14 @@ For references on **3D-CMCC-FEM**:
 
 23. *"Modelling forest growth under current and future climate"*, Boukhris I., Marano G., Dalmonech D., Valentini R., Collalti A.. *Current Forestry Reports*, 11:17, http://doi.org/10.1007/s40725-025-00249-5, 2025
 
-25. *"TimberTracer: A Comprehensive Framework for the Evaluation of Carbon Sequestration by Forest Management and Substitution of Harvested Wood Products"*, Boukhris I., Collalti A., Lahssini S., Dalmonech D., Nakhle F., R. Testolin R., ..., Valentini R., *Carbon Balance and Management*, 20:12, https://doi.org/10.1186/s13021-025-00296-2, 2025
+24. *"TimberTracer: A Comprehensive Framework for the Evaluation of Carbon Sequestration by Forest Management and Substitution of Harvested Wood Products"*, Boukhris I., Collalti A., Lahssini S., Dalmonech D., Nakhle F., R. Testolin R., ..., Valentini R., *Carbon Balance and Management*, 20:12, https://doi.org/10.1186/s13021-025-00296-2, 2025
 
-26. *"R3DFEM: an R package for running the 3D-CMCC-FEM model"*, Vangi E., Dalmonech D., Collalti A., *Earth Science Informatics*, 18:459, 2025
+25. *"R3DFEM: an R package for running the 3D-CMCC-FEM model"*, Vangi E., Dalmonech D., Collalti A., *Earth Science Informatics*, 18:459, https://doi.org/10.1007/s12145-025-01956-0, 2025
+
+26. *"Climate change, more than management, drives short- and long-term changes in iWUE in a sub-Alpine beech forest"*, Saponaro V., Dalmonech D., Vangi E., Puchi P.F., Rezaie N., D'andrea E., Tomelleri E., Collalti A., 
+*Journal of Forestry Research* (accepted), 2025
+
+27. *"Enhancing ecosystem service provision through the silvicultural management of European black pine stands from afforestation and reforestation"*, Vangi E., Sacchelli S., Nocentini S., Plutino M., Dalmonech D.,  Collalti A., Travaglini D., Corona P., *Journal of Forestry Research* (accepted), 2025
 
 see also at: https://www.forest-modelling-lab.com/publications
 
