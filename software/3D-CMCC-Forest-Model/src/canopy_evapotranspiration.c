@@ -632,14 +632,14 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 	 
 	if ( s->value[CANOPY_TRANSP] > c->asw )
 	{
-		printf("ATTENTION CANOPY TRANSPIRATION EXCEEDS ASW!!!!!!\n");
+		  //printf("ATTENTION CANOPY TRANSPIRATION EXCEEDS ASW!!!!!!\n");
 
 		s->value[CANOPY_TRANSP] *= s->value[F_SW];
 
 		if ( s->value[CANOPY_TRANSP] > c->asw )
 		{
 			s->value[CANOPY_TRANSP] = 0.;
-			printf("CANOPY_TRANSP = 0 !!!!!!\n");
+			// printf("CANOPY_TRANSP = 0 !!!!!!\n");
 		}
 		/* check */
 		CHECK_CONDITION ( s->value[CANOPY_TRANSP] , > , c->asw );
