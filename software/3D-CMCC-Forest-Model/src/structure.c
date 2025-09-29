@@ -702,7 +702,7 @@ int daily_forest_structure ( cell_t *const c, const meteo_daily_t *const meteo_d
 
     //	annual_forest_structure ( c, year );
 
-   printf(" c->doy           = %d \n ", c->doy);
+    // printf(" c->doy           = %d \n ", c->doy);
     
 	/***************************************************************************************************************/
 
