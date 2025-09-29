@@ -125,7 +125,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 
 	if ( ! day && ! month )
 	{
-                printf("\n anno, year= %d\n",c->years[year].year);
+                //printf("\n anno, year= %d\n",c->years[year].year);
 
             //if ( (c->dos == 1) & ((MANAGEMENT_VAR == g_settings->management) || (MANAGEMENT_ON == g_settings->management)))
 	  if ( (c->dos == 1))
@@ -626,7 +626,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 								  
 								if ( height >= m->cells[cell].heights_count ) 
 								   { 
-									printf("GO TO HEIGHT END  \n ") ;
+									// printf("GO TO HEIGHT END  \n ") ;
 									goto height_end; 
 									}
 								if ( dbh >= m->cells[cell].heights[height].dbhs_count ) goto dbh_end;
