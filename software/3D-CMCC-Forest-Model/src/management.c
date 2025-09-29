@@ -679,7 +679,7 @@ void thinning (cell_t *const c, const int height, const int dbh, const int age, 
 
 	if ( 0 == g_settings->management_type )
 	{
-	 printf("SONO IN MANAGEMENT TYPE 0 \n");
+	   // printf("SONO IN MANAGEMENT TYPE 0 \n");
       // 5p6: added the possibility to prescribe thinning intensity for each thinning event via the management file.
         if ( g_management && g_management->thinning_intensity_count )
 		{
@@ -704,7 +704,7 @@ void thinning (cell_t *const c, const int height, const int dbh, const int age, 
 
 	else if ( 1 == g_settings->management_type )  
 	{
-	printf("SONO IN MANAGEMENT TYPE 1 \n");
+	 // printf("SONO IN MANAGEMENT TYPE 1 \n");
     // check c->basal_area is annually reset. it has to be computed at the beginning of the year
 
 	// compute thinning intensity 
@@ -754,7 +754,7 @@ void thinning (cell_t *const c, const int height, const int dbh, const int age, 
 	} else if ( 2 == g_settings->management_type )  
 	{
 
-		printf("SONO IN MANAGEMENT TYPE 2 \n");
+		//printf("SONO IN MANAGEMENT TYPE 2 \n");
 	
     // VAllombrosa Issam phd thesis 
 
@@ -803,7 +803,7 @@ void thinning (cell_t *const c, const int height, const int dbh, const int age, 
     	// set as function of the minimum GS we want to let in the stand, and according to how far are we, we change 
     	// the percentage of removal. (we can do it as for management 2. from above and below )
 
-    	printf("SONO IN MANAGEMENT TYPE 3 \n");
+    	//printf("SONO IN MANAGEMENT TYPE 3 \n");
 
 		/* LOCAL MANAGEMENT */
 		if ( ! IS_INVALID_VALUE(s->value[MINSTOCKGROW]) && ! IS_INVALID_VALUE(s->value[VOLUME]) )
@@ -936,7 +936,7 @@ void prescribed_thinning (cell_t *const c, const int height, const int dbh, cons
 
 	assert(g_dataset);
 
-    printf("** IN PRESCRIBED_THINNING **\n");
+    // printf("** IN PRESCRIBED_THINNING **\n");
 
 	for ( row = 0; row < g_dataset->rows_count; ++row )
 	{
