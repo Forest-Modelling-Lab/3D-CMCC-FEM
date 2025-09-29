@@ -805,7 +805,7 @@ void age_mortality ( cell_t *const c, const int height, const int dbh, const int
 		c->daily_dead_tree   += deadtree;
 		c->monthly_dead_tree += deadtree;
 		c->annual_dead_tree  += deadtree;
-		//c->n_trees           -= deadtree;
+		c->n_trees           -= deadtree;
         
 		/* check */
 		CHECK_CONDITION(c->daily_dead_tree  , <, 0);
@@ -940,7 +940,7 @@ void stochastic_mortality ( cell_t *const c, const int height, const int dbh, co
 		c->daily_dead_tree   += deadtree;
 		c->monthly_dead_tree += deadtree;
 		c->annual_dead_tree  += deadtree;
-		//c->n_trees           -= deadtree;
+		c->n_trees           -= deadtree;
 
 		/* check */
 		CHECK_CONDITION(c->daily_dead_tree  , <, 0);
