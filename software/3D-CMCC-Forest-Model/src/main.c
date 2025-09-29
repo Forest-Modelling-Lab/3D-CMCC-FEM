@@ -1006,7 +1006,7 @@ static int check_soil_values(void)
 	if (IS_INVALID_VALUE(g_soil_settings->values[SOIL1C]))
 	{
 	
-	  printf(" SONO QUI, checking SOIL1C values \n");
+	  printf(" checking SOIL1C values \n");
 		/* initialize to zero value */
 		g_soil_settings->values[SOIL1C] = 0.;
 		logger_error(g_debug_log, "NO SOIL DATA AVAILABLE (Carbon soil 1 value)\n");
@@ -2049,7 +2049,7 @@ int main(int argc, char *argv[]) {
 						//		, day+1, month+1, year+g_settings->year_start
 						//);
 
-							#if 1
+							#if 0
 								printf("ok cell_model BALANCE CLOSURE (%02d-%02d-%d)\n"
 								, day+1, month+1, year+g_settings->year_start
 						    );
