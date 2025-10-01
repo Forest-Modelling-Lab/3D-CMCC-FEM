@@ -1705,16 +1705,17 @@ void EOY_cell_msg(void)
 		print_model_settings(g_annual_log);
 	}
 
-	if  ( g_annual_man_log )
-	{
-		g_annual_man_log->std_output = 1;
-		logger(g_annual_man_log, sz_launched, netcdf_get_version(), datetime_current());
-		print_model_paths(g_annual_man_log);
-		//const char* p;
-		//p = file_get_name_only(g_annual_log->filename);
-		logger(g_annual_man_log, "#output file = %s\n", g_annual_man_log->filename);
-		print_model_settings(g_annual_man_log);
-	}
+	 // not needed 
+	//if  ( g_annual_man_log )
+	//{
+	//	g_annual_man_log->std_output = 1;
+	//	logger(g_annual_man_log, sz_launched, netcdf_get_version(), datetime_current());
+	//	print_model_paths(g_annual_man_log);
+	//	//const char* p;
+	//	//p = file_get_name_only(g_annual_log->filename);
+	//	logger(g_annual_man_log, "#output file = %s\n", g_annual_man_log->filename);
+	//	print_model_settings(g_annual_man_log);
+	//}
 }
 
 /*************************************************************************************************************************************/
