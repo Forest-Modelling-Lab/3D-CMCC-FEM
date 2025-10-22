@@ -106,5 +106,7 @@ For references on **3D-CMCC-FEM**:
 
 27. *"Enhancing ecosystem service provision through the silvicultural management of European black pine stands from afforestation and reforestation"*, Vangi E., Sacchelli S., Nocentini S., Plutino M., Dalmonech D.,  Collalti A., Travaglini D., Corona P., *Journal of Forestry Research* (accepted), 2025
 
+28. *"Monitoring forest attributes, C-fluxes, and C-stocks in Italian forests through a process-based model (3D-CMCC-FEM) at the national level"*, Vangi E., Dalmonech D., D’Amico G., Grieco E., Morichetti M., Puchi P.F., Francini S., Fares S., Giannetti F., Corona P., Barbetti R., Chirici G., Collalti A., *Ecological Informatics* (accepted), 2025
+
 see also at: https://www.forest-modelling-lab.com/publications
 
