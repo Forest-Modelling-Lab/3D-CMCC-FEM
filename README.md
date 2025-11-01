@@ -108,5 +108,7 @@ For references on **3D-CMCC-FEM**:
 
 28. *"Monitoring forest attributes, C-fluxes, and C-stocks in Italian forests through a process-based model (3D-CMCC-FEM) at the national level"*, Vangi E., Dalmonech D., D’Amico G., Grieco E., Morichetti M., Puchi P.F., Francini S., Fares S., Giannetti F., Corona P., Barbetti R., Chirici G., Collalti A., *Ecological Informatics*, 92:103489, https://doi.org/10.1016/j.ecoinf.2025.103489, 2025
 
+29. *"Decoding carbon allocation in boreal forest: integrating multi-proxy observations and process-based modelling"*, Puchi P.F., Dalmonech D., Castagneri D., Genovese G., Helgason W., Khomik M., Brilli L., Collalti A., *Agricultural and Forest Meteorology* (accepted), 2025
+
 see also at: https://www.forest-modelling-lab.com/publications
 
