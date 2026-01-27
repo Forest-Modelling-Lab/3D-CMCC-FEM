@@ -1154,8 +1154,7 @@ typedef struct
     double dead_stem_b_to_print      ;      // total stem biomass (dead wood)
     double dead_branch_b_to_print    ;      // total branch biomass (dead wood)
     double dead_croot_b_to_print     ;      // total croot biomass (dead wood)
-
-
+    //int layer_from_which_trees_mort  ;    // layer from which trees are removed because of any kind of mortality 
 	
 	double basal_area;                                                    /* (m2/cell) cumulated basal area at cell level */
 	double agb;                                                           /* (tC/cell) current above ground biomass at cell level */
