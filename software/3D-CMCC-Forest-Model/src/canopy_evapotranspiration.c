@@ -111,7 +111,9 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 	double subl;                                                           /* (kg/m2/s) snow melt flux */
 	double subl_melt;                                                      /* (kg/m2/s) snow sublimation or melt flux */
 
-
+   // double conv_cond = 0.02 ;                                    // m/s conductance for convective heat flux. this could be 
+	                                                             // then parametrized according to canopy height and wind, LAI etc
+                                                                 // this is then combined to the radiative heat transfer. 
 	species_t *s;
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
@@ -133,6 +135,8 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 
 	/* calculate leaf- and canopy-level conductances to water vapor and
 		sensible heat fluxes */
+
+		// ddalmo jan 2026 this is not strictly speaking correct: we should keep it separated as gl_bl 
 
 	/* leaf aerodynamic-boundary-layer conductance */
 	gl_bl = s->value[BLCOND] * g_corr;
@@ -191,7 +195,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 		canopy evaporation and canopy transpiration */
 
 	/* Leaf conductance to evaporated water vapor, per unit projected LAI */
-	gl_e_wv       = gl_bl;
+	    gl_e_wv       = gl_bl;
 
 	/** leaf conductance **/
 	/* Leaf conductance to transpired water vapor, per unit projected
@@ -203,7 +207,9 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 	s->value[LEAF_SHADE_CONDUCTANCE] = (gl_bl * (s->value[STOMATAL_SHADE_CONDUCTANCE] + gl_c)) / (gl_bl + s->value[STOMATAL_SHADE_CONDUCTANCE] + gl_c);
 
 	/* Leaf conductance to sensible heat, per unit all-sided LAI */
-	gl_sh         = gl_bl;
+	 gl_sh         = gl_bl; 
+
+    // gl_sh = conv_cond * g_corr ;  // to be used in the future 
 
 	/* Canopy conductance to evaporated water vapor */
 	gc_e_wv       = gl_e_wv * s->value[LAI_PROJ];
