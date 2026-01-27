@@ -223,7 +223,7 @@ void self_thinning_mortality_new(cell_t *const c, const int layer, const int yea
 								c->dead_stem_b_to_print   =       deadtree * s->value[TREE_STEM_C]  ; 
 								c->dead_branch_b_to_print  =      deadtree * s->value[TREE_BRANCH_C]  ; 
 								c->dead_croot_b_to_print   =      deadtree * s->value[TREE_CROOT_C] ; 
-
+    	
 								c->thinned_tree_to_print   =       0    ;     
 								c->hwp_to_print            =       0.   ;
 								c->thinned_branch_to_print =      0.  ; /*  branch volume removed (m3/ha/yr) */
@@ -582,7 +582,7 @@ int growth_efficiency_mortality ( cell_t *const c, const int height, const int d
 		c->dead_stem_b_to_print   =       deadtree * s->value[TREE_STEM_C]  ; 
 		c->dead_branch_b_to_print  =      deadtree * s->value[TREE_BRANCH_C]  ; 
 		c->dead_croot_b_to_print   =      deadtree * s->value[TREE_CROOT_C] ; 
-
+        
 		c->thinned_tree_to_print   =       0    ;     
 		c->hwp_to_print            =       0.;
 		c->thinned_branch_to_print =      0.  ; /*  stem volume removed (m3/ha/yr) */
