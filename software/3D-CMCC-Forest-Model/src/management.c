@@ -70,7 +70,7 @@ static int harvesting (cell_t *const c, const int height, const int dbh, const i
 	c->thinned_branch_to_print =      s->value[C_BRANCH_TO_HWP]     ; /*  stem volume removed (m3/ha/yr) */
     c->thinned_stem_to_print   =  s->value[VOLUME_HWP] ;
 	c->thinned_stem2_to_print  =   s->value[VOLUME2_HWP];
-
+	
     EOY_print_output_class_level_mortality(c, height, dbh, age, species, year);
 
     /* litter fluxes and pools */
@@ -879,7 +879,7 @@ void thinning (cell_t *const c, const int height, const int dbh, const int age, 
             c->thinned_branch_to_print =      s->value[C_BRANCH_TO_HWP]     ;
             c->thinned_stem_to_print   =  s->value[VOLUME_HWP] ;
 			c->thinned_stem2_to_print  =   s->value[VOLUME2_HWP];
-                  
+
             // we need to trasfer the information to print 
             EOY_print_output_class_level_mortality(c, height, dbh, age, species, year);
 
@@ -905,7 +905,7 @@ void thinning (cell_t *const c, const int height, const int dbh, const int age, 
             c->thinned_branch_to_print =      s->value[C_BRANCH_TO_HWP]     ; 
             c->thinned_stem_to_print   =  s->value[VOLUME_HWP] ;
 			c->thinned_stem2_to_print  =   s->value[VOLUME2_HWP];
-
+		
             EOY_print_output_class_level_mortality(c, height, dbh, age, species, year);	  
 
 			/* remove completely all trees */
