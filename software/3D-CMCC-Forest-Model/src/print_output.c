@@ -1603,7 +1603,7 @@ void EOY_print_output_class_level_mortality(cell_t *const c, const int height, c
             	c->thinned_branch_to_print =   0. ;    
             	c->thinned_stem_to_print   = 0. ;
 				c->thinned_stem2_to_print  =  0. ;
-							
+										
 		/************************************************************************/
 	    /* printing variables at cell level only if there's more than one layer */  //Note: in the 5p6 we write the data anyhow
                   
