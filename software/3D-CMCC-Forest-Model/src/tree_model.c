@@ -504,7 +504,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 												c->dead_stem_b_to_print   =       s->counter[DEAD_TREE] * s->value[TREE_STEM_C]  ; 
 												c->dead_branch_b_to_print  =      s->counter[DEAD_TREE] * s->value[TREE_BRANCH_C]  ; 
 												c->dead_croot_b_to_print   =      s->counter[DEAD_TREE] * s->value[TREE_CROOT_C] ; 
-
+                                              
 												c->thinned_tree_to_print   =       0    ;     
 												c->hwp_to_print            =       0.;
 												c->thinned_branch_to_print =      0.  ; /*  stem volume removed (m3/ha/yr) */
@@ -539,6 +539,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 												c->dead_branch_b_to_print  =      s->counter[DEAD_TREE] * s->value[TREE_BRANCH_C]  ; 
 												c->dead_croot_b_to_print   =      s->counter[DEAD_TREE] * s->value[TREE_CROOT_C] ; 
 
+											
 												c->thinned_tree_to_print   =       0    ;     
 												c->hwp_to_print            =       0.;
 												c->thinned_branch_to_print =      0.  ; /*  stem volume removed (m3/ha/yr) */
@@ -666,6 +667,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	logger(g_debug_log, "****************END OF LAYER CLASS***************\n");
 	/* ok */
 
+	
     //Compute par that reach the soil in summer
     Seedling_soil_par (c, meteo_daily, month, year);
 
