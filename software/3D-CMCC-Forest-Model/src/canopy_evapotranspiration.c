@@ -3,6 +3,9 @@
  *
  *  Created on: 23/mar/2016
  *      Author: alessio
+ * 
+ *  Modified by ddalmo June 2024 
+ *  last modified by ddalmo Jan 2026   
  */
 
 
@@ -111,10 +114,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 	double subl;                                                           /* (kg/m2/s) snow melt flux */
 	double subl_melt;                                                      /* (kg/m2/s) snow sublimation or melt flux */
 
-   // double conv_cond = 0.02 ;                                    // m/s conductance for convective heat flux. this could be 
-	                                                             // then parametrized according to canopy height and wind, LAI etc
-                                                                 // this is then combined to the radiative heat transfer. 
-	species_t *s;
+    species_t *s;
 	s = &c->heights[height].dbhs[dbh].ages[age].species[species];
 
 
@@ -207,11 +207,17 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 	s->value[LEAF_SHADE_CONDUCTANCE] = (gl_bl * (s->value[STOMATAL_SHADE_CONDUCTANCE] + gl_c)) / (gl_bl + s->value[STOMATAL_SHADE_CONDUCTANCE] + gl_c);
 
 	/* Leaf conductance to sensible heat, per unit all-sided LAI */
-	 gl_sh         = gl_bl; 
+	// leaf and canopy conductance needs to be kepts separated
+	// using the big leaf approach, gl_bl is the conductance for the water vapor
+	// while gl_sh is the conductance for the sensible heat which is dominated by 
+	// atmospheric conditions. 
 
-    // gl_sh = conv_cond * g_corr ;  // to be used in the future 
+	//  gl_sh         = gl_bl; 
+
+    gl_sh = CONV_COND * g_corr ;  
 
 	/* Canopy conductance to evaporated water vapor */
+
 	gc_e_wv       = gl_e_wv * s->value[LAI_PROJ];
 
 	/* Canopy conductance to sensible heat */
@@ -305,6 +311,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 				s->value[CANOPY_FRAC_DAY_TRANSP] = transp_daylength_sec / meteo_daily->daylength_sec;
 
 				/* Leaf-Canopy resistance to sensible heat */
+
 				rh = 1. / gl_sh;
 
 				/************************************************************************************/
@@ -323,7 +330,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 				net_rad = ( s->value[NET_RAD_ABS_SUN] / s->value[LAI_SUN_PROJ] ) * s->value[F_LIGHT_SUN_MAKELA];
 #endif
 				/* call Penman-Monteith function, returns e in kg/m2/s for transpiration and W/m2 for latent heat */
-				//fixme use correct net radiation
+				
 				leaf_transp                 = Penman_Monteith ( meteo_daily, rv, rh, net_rad );
 				s->value[CANOPY_TRANSP_SUN] = leaf_transp *  ( transp_daylength_sec * s->value[LAI_SUN_PROJ] ); //* s->value[DAILY_CANOPY_COVER_PROJ] );
                 //s->value[CANOPY_TRANSP_SUN] = leaf_transp *  ( transp_daylength_sec * s->value[LAI_SUN_PROJ] )* s->value[DAILY_CANOPY_COVER_PROJ] ;
@@ -335,7 +342,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 
 				/* note: Net Rad is Short wave flux in Biome-bgc*/
 				/* convert radiation to stomatal scale */
-				// FIXME: compute correctly the net_radiation
+				
 #if 0
 				net_rad = ( s->value[SW_RAD_ABS_SHADE]  / s->value[LAI_SHADE_PROJ] ) * s->value[F_LIGHT_SHADE_MAKELA];
 #else
@@ -343,7 +350,8 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 #endif
 
 				/* call Penman-Monteith function, returns e in kg/m2/s for transpiration and W/m2 for latent heat*/
-				//fixme use correct net radiation
+				
+
 				leaf_transp                   = Penman_Monteith ( meteo_daily, rv, rh, net_rad );
 				s->value[CANOPY_TRANSP_SHADE] = leaf_transp * ( transp_daylength_sec * s->value[LAI_SHADE_PROJ] ); //* s->value[DAILY_CANOPY_COVER_PROJ] );
                 //s->value[CANOPY_TRANSP_SHADE] = leaf_transp * ( transp_daylength_sec * s->value[LAI_SHADE_PROJ] )* s->value[DAILY_CANOPY_COVER_PROJ] ;
@@ -385,8 +393,9 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 			/********************************************************************************************************************************/
 			/* CANOPY SNOW SUBLIMATION OR MELTING (Canopy Snow) */
 
-			rv = 1. / gc_e_wv;
-			rh = 1. / gc_sh;
+			// rv and rh not used in computing snow sublimation or melting from canopy 
+			//rv = 1. / gc_e_wv;
+			//rh = 1. / gc_sh;
 
 			/* radiation */
 			/* convert from W/m2 --> KJ/m2/sec */
@@ -499,7 +508,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 				net_rad = ( s->value[NET_RAD_ABS_SHADE] / s->value[LAI_SHADE_PROJ] ) * s->value[F_LIGHT_SHADE_MAKELA];
 #endif
 				/* call Penman-Monteith function, returns e in kg/m2/s for transpiration and W/m2 for latent heat*/
-				//fixme use correct net radiation
+				
 				leaf_transp                   = Penman_Monteith ( meteo_daily, rv, rh, net_rad );
 				s->value[CANOPY_TRANSP_SHADE] = leaf_transp * ( transp_daylength_sec * s->value[LAI_SHADE_PROJ] ); //* s->value[DAILY_CANOPY_COVER_PROJ] );
                 //s->value[CANOPY_TRANSP_SHADE] = leaf_transp * ( transp_daylength_sec * s->value[LAI_SHADE_PROJ])* s->value[DAILY_CANOPY_COVER_PROJ];
@@ -554,6 +563,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 			s->value[CANOPY_FRAC_DAY_TRANSP] = 1.;
 
 			/* Leaf-Canopy resistance to sensible heat */
+
 			rh = 1. / gl_sh;
 
 			/************************************************************************************/
