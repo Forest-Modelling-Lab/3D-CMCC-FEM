@@ -174,7 +174,7 @@ int annual_forest_structure(cell_t* const c, const int year)
 	/* add 1 layer by default */
 	if ( ! layer_add(c) ) return 0;
 	}
-	//printf(" ANNUAL STRUCTURE 2b c->tree_layers_count %d\n",c->tree_layers_count);
+//	printf(" ANNUAL STRUCTURE 2b c->tree_layers_count %d\n",c->tree_layers_count);
 
 	logger(g_debug_log, "*compute height_z*\n");
 
