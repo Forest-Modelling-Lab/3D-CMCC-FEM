@@ -88,7 +88,9 @@ enum {
 #define MAX_PEAK_LAI_PROJ          6      /* Maximum Peak Lai (m2/m2) */
 #define WATER_STRESS_LIMIT       0.3      /* Minimum imposed water stress limit to soil water modifier */
 #define SNOW_ABS                 0.6      /* Absorptivity of snow */
-
+#define CONV_COND			  0.02        //  m/s conductance for convective heat flux. A rough estimate for forests.
+                                          //  this could be then parametrized according to canopy height and wind, LAI etc
+										  //  related to atmospheric conditions.  
 
 /* soil constants (BIOME-BGC method) */
 #define BULK_DENITRIF_FRAC       0.5      /* Fraction of Nitrogen lost through Denitrification when N demand is lower than N available */
@@ -119,7 +121,8 @@ enum {
 #define KFRAG_BASE            0.001       /* physical fragmentation of coarse woody debris */
                                         // at some point, it would be worth to include this as a species specific or settings parameter.
 // thresholds/constant  5p7
-#define thinning_threshold_timber      30 // we lower the value, so with 30 years the stand can be cut 35        /* [year] age limit to perform thinning when shelterwood/continuos forest covery is performed */
+#define thinning_threshold_timber      30 // we lower the value, so with 30 years the stand can be cut 35  
+//#define thinning_threshold_timber      35 // 35      /* [year] age limit to perform thinning when shelterwood/continuos forest covery is performed */
 #define thinning_threshold_coppice  10    /* [year] age limit to perform thinning when coppice forest covery is performed */
 
 #define coppice_rf              0.10       /* reduction factor of stem density-replanting after each clear cut for coppice */
