@@ -112,5 +112,7 @@ For references on **3D-CMCC-FEM**:
 
 30. *"Climate change will increase forest disturbances in Europe throughout the 21st century"*, Grünig M., Rammer W., Senf C., Albrich K., André F., Augustynczik A. L. D., Baumann M., Bohn F. J., Bouwman M., Bugmann H., Collalti A., Cristal I., Dalmonech D., De Coligny F., Dobor L., Dollinger C., Espelta J. M., Forrester D. I., Garcia-Gonzalo J., González-Olabarria J. R., Hiltner U., Hlásny T., Honkaniemi J., Huber N., Jonard M., Jönsson A. M., Kunstler G., Lagergren F., Lindner M., Mina M., Moos C., Morin X., Muys B., Nabuurs G.-J., Nieberg M., Patacca M., Peltoniemi M., Reyer C. P. O., Schelhaas M.-J., Storms I., Thom D., Toïgo M., Seidl R., *Science*, https://doi.org/10.1126/science.adx6329, 2026
 
+31. *"Long-term forest-sector mitigation and radiative forcing under contrasting management, climate, and substitution pathways"*, Boukhris I., Cherubini F., Collalti A., Dalmonech D., Vonderach C., Marano G., Giannetti F., Lahssini S., Santini M., Valentini R., *Journal of Environmental Management*, 405:129586, https://doi.org/10.1016/j.jenvman.2026.129586, 2026 
+
 see also at: https://www.forest-modelling-lab.com/publications
 
