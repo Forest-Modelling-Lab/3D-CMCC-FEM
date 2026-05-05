@@ -104,11 +104,11 @@ For references on **3D-CMCC-FEM**:
 26. *"Monitoring forest attributes, C-fluxes, and C-stocks in Italian forests through a process-based model (3D-CMCC-FEM) at the national level"*, Vangi E., Dalmonech D., D’Amico G., Grieco E., Morichetti M., Puchi P.F., Francini S., Fares S., Giannetti F., Corona P., Barbetti R., Chirici G., Collalti A., *Ecological Informatics*, 92:103489, https://doi.org/10.1016/j.ecoinf.2025.103489, 2025
 
 27. *"Climate change, more than management, drives short- and long-term changes in iWUE in a sub-Alpine beech forest"*, Saponaro V., Dalmonech D., Vangi E., Puchi P.F., Rezaie N., D'andrea E., Tomelleri E., Collalti A., 
-*Journal of Forestry Research*, https://doi.org/10.1007/s11676-025-01942-8, 2026
+*Journal of Forestry Research*, 37, 16, https://doi.org/10.1007/s11676-025-01942-8, 2026
 
-28. *"Enhancing ecosystem service provision through the silvicultural management of European black pine stands from afforestation and reforestation"*, Vangi E., Sacchelli S., Nocentini S., Plutino M., Dalmonech D.,  Collalti A., Travaglini D., Corona P., *Journal of Forestry Research*, https://doi.org/10.1007/s11676-025-01975-z, 2026
+28. *"Enhancing ecosystem service provision through the silvicultural management of European black pine stands from afforestation and reforestation"*, Vangi E., Sacchelli S., Nocentini S., Plutino M., Dalmonech D.,  Collalti A., Travaglini D., Corona P., 37, 44, *Journal of Forestry Research*, https://doi.org/10.1007/s11676-025-01975-z, 2026
 
-29. *"Decoding carbon allocation in boreal forest: integrating multi-proxy observations and process-based modelling"*, Puchi P.F., Dalmonech D., Castagneri D., Genovese G., Helgason W., Khomik M., Brilli L., Collalti A., *Agricultural and Forest Meteorology*, https://doi.org/10.1016/j.agrformet.2025.110923, 2026
+29. *"Decoding carbon allocation in boreal forest: integrating multi-proxy observations and process-based modelling"*, Puchi P.F., Dalmonech D., Castagneri D., Genovese G., Helgason W., Khomik M., Brilli L., Collalti A., *Agricultural and Forest Meteorology*, 378: 110923, https://doi.org/10.1016/j.agrformet.2025.110923, 2026
 
 30. *"Climate change will increase forest disturbances in Europe throughout the 21st century"*, Grünig M., Rammer W., Senf C., Albrich K., André F., Augustynczik A. L. D., Baumann M., Bohn F. J., Bouwman M., Bugmann H., Collalti A., Cristal I., Dalmonech D., De Coligny F., Dobor L., Dollinger C., Espelta J. M., Forrester D. I., Garcia-Gonzalo J., González-Olabarria J. R., Hiltner U., Hlásny T., Honkaniemi J., Huber N., Jonard M., Jönsson A. M., Kunstler G., Lagergren F., Lindner M., Mina M., Moos C., Morin X., Muys B., Nabuurs G.-J., Nieberg M., Patacca M., Peltoniemi M., Reyer C. P. O., Schelhaas M.-J., Storms I., Thom D., Toïgo M., Seidl R., *Science*, https://doi.org/10.1126/science.adx6329, 2026
 
@@ -117,7 +117,7 @@ For references on **3D-CMCC-FEM**:
 32. *"Loss in competitive strength of major European tree species"*, Grünig M., Rammer W., Baumann M., Albrich K., André F., Augustynczik A. L. D., Bohn F. J., Bouwman M., Bugmann H., Collalti A.,
 Cristal I., Dalmonech D., De Caceres M., De Coligny F., Dobor L., Dollinger C., Forrester D. I., Garcia-Gonzalo J., González-Olabarria J. R., Hiltner U., Hlásny T., Honkaniemi J., Huber N., Huth A., Jonard M., Jönsson A. M., Lagergren F., Mina M., Mohren F., Moos C., Morin X., Muys B., Nieberg M., Peltoniemi M., Reyer C. P. O., Storms I., Thom D., Toïgo M., Seidl R.. *Communications Earth and Environment* (accepted), 2026
 
-33. *"Decadal climate-driven decoupling between gross primary productivity and tree growth in Mediterranean forests”*, Dalmonech D., Vangi E., Quesada-Chacón D., Collalti A., *Forest Ecology and Management* (accepted), 2026
+33. *"Decadal climate-driven decoupling between gross primary productivity and tree growth in Mediterranean forests”*, Dalmonech D., Vangi E., Quesada-Chacón D., Collalti A., *Forest Ecology and Management*, 615:123843, https://doi.org/10.1016/j.foreco.2026.123843, 2026
 
 see also at: https://www.forest-modelling-lab.com/publications
 
