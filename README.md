@@ -115,7 +115,7 @@ For references on **3D-CMCC-FEM**:
 31. *"Long-term forest-sector mitigation and radiative forcing under contrasting management, climate, and substitution pathways"*, Boukhris I., Cherubini F., Collalti A., Dalmonech D., Vonderach C., Marano G., Giannetti F., Lahssini S., Santini M., Valentini R., *Journal of Environmental Management*, 405:129586, https://doi.org/10.1016/j.jenvman.2026.129586, 2026
 
 32. *"Loss in competitive strength of major European tree species"*, Grünig M., Rammer W., Baumann M., Albrich K., André F., Augustynczik A. L. D., Bohn F. J., Bouwman M., Bugmann H., Collalti A.,
-Cristal I., Dalmonech D., De Caceres M., De Coligny F., Dobor L., Dollinger C., Forrester D. I., Garcia-Gonzalo J., González-Olabarria J. R., Hiltner U., Hlásny T., Honkaniemi J., Huber N., Huth A., Jonard M., Jönsson A. M., Lagergren F., Mina M., Mohren F., Moos C., Morin X., Muys B., Nieberg M., Peltoniemi M., Reyer C. P. O., Storms I., Thom D., Toïgo M., Seidl R.. *Communications Earth and Environment* (accepted), 2026
+Cristal I., Dalmonech D., De Caceres M., De Coligny F., Dobor L., Dollinger C., Forrester D. I., Garcia-Gonzalo J., González-Olabarria J. R., Hiltner U., Hlásny T., Honkaniemi J., Huber N., Huth A., Jonard M., Jönsson A. M., Lagergren F., Mina M., Mohren F., Moos C., Morin X., Muys B., Nieberg M., Peltoniemi M., Reyer C. P. O., Storms I., Thom D., Toïgo M., Seidl R.. *Communications Earth and Environment*, 7, 401, https://doi.org/10.1038/s43247-026-03582-0, 2026
 
 33. *"Decadal climate-driven decoupling between gross primary productivity and tree growth in Mediterranean forests”*, Dalmonech D., Vangi E., Quesada-Chacón D., Collalti A., *Forest Ecology and Management*, 615:123843, https://doi.org/10.1016/j.foreco.2026.123843, 2026
 
