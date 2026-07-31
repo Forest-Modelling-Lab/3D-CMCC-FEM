@@ -119,5 +119,7 @@ Cristal I., Dalmonech D., De Caceres M., De Coligny F., Dobor L., Dollinger C., 
 
 33. *"Decadal climate-driven decoupling between gross primary productivity and tree growth in Mediterranean forests”*, Dalmonech D., Vangi E., Quesada-Chacón D., Collalti A., *Forest Ecology and Management*, 615:123843, https://doi.org/10.1016/j.foreco.2026.123843, 2026
 
+34. *"Structural Complexity and Tree-Related Microhabitat Diversity Shape Beetle Richness Under Future Climates"*, Vangi E., D'Amico G., Francini S., Borghi C., Collalti A., Dalmonech D., Marchetti M., Chirici G., Travaglini D., Parisi F., *Forests*, 17, 896, https://doi.org/10.3390/f17080896, 2026
+
 see also at: https://www.forest-modelling-lab.com/publications
 
