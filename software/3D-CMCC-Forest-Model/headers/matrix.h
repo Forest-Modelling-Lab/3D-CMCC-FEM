@@ -274,6 +274,9 @@ enum {
 	CANOPY_SNOW,                        /* (mm/m2) canopy snow pool  */
 
 	/* fluxes */
+	GS_mol,                             //(mol/m2 sec) stomatal conductance for sun and shade leaves // Saponaro V.
+	GS_mol_sun,                         //(mol/m2 sec) stomatal conductance for sun leaves           // Saponaro V.
+	GS_mol_shade,                       //(mol/m2 sec) stomatal conductance for shade leaves         // Saponaro V.
 	STOMATAL_CONDUCTANCE,               /* (m/sec) stomatal conductance */
 	STOMATAL_SUN_CONDUCTANCE,           /* (m/sec) stomatal conductance for sun leaves */
 	STOMATAL_SHADE_CONDUCTANCE,         /* (m/sec) stomatal conductance for shade leaves */
@@ -1228,8 +1231,11 @@ typedef struct
 	double canopy_temp_diff;                                              /* (K) daily canopy temperature */
 
 	/* carbon fluxes */
+
+	double gs_mol;                                                        // (mol/m2 sec) stomatal conductance // V. Saponaro                                               
 	double daily_gpp, monthly_gpp, annual_gpp;                            /* (gC/m2/time) daily, monthly and annual GPP at cell level */
 	double daily_ass, monthly_ass, annual_ass;                            /* (gC/m2/time) daily, monthly and annual assimilation at cell level */
+	double net_ass_umolsec;                                               // umolCO2/m2/sec Net assimilation (without dark respiration) // V. Saponaro       
 	double daily_gpp_tC, monthly_gpp_tC, annual_gpp_tC;                   /* (tC/m2/time) daily, monthly and annual GPP at cell level */
 	double daily_npp, monthly_npp, annual_npp;                            /* (gC/m2/time) daily, monthly and annual NPP at cell level */
 	double daily_npp_tC, monthly_npp_tC, annual_npp_tC;                   /* (tC/m2/time) daily, monthly and annual NPP at cell level */
