@@ -4,6 +4,10 @@
  *  Created on: 05 lug 2016
  *      Author: alessio
  */
+ // contribute by D. Dalmonech @CNR-ISAFOM 2024-2025
+ // correction of the canopy radiation scheme (net energy at ecosystem level) 
+ // and correct consistency with multylayer canopy radiation scheme 
+
 
 #include <stdio.h>
 #include <stdlib.h>
