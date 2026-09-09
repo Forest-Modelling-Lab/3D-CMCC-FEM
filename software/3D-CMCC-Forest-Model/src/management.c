@@ -1,3 +1,14 @@
+
+// *  created by : alessio collalti 
+
+// contribute by D. Dalmonech (external collaborator) 2021
+// shelterwood + change of species
+
+// D. Dalmonech @CNR-ISAFOM 2023-2025 (NBFC and ForestNAvigator project)
+// coppice management, thinning from above and below, residue after removal (branch),
+// replanting of more than one species; natural regeneration for pure stand simulations
+
+
 /*management.c*/
 
 /* includes */
