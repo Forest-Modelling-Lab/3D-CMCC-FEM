@@ -1,3 +1,7 @@
+// contribute by V. Saponaro (PhD student) 2022-2023
+// computation of meteorological variables to be used to set the conditions
+// for seedling establishment and regeneration
+
 /* met_data.c */
 #include <stdio.h>
 #include <stdlib.h>
