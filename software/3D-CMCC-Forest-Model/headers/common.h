@@ -3,7 +3,8 @@
 #define COMMON_H
 
 #define PROGRAM_NAME		"3D (Three Dimensional) CMCC (Coupled Model Carbon Cycle) FEM (Forest Ecosystem Module)"
-#define PROGRAM_VERSION		"5.606"
+#define PROGRAM_VERSION		"5.7"     // Project NBFC and ForestNavigator/Opt4EU yet in these projects the output file name still retains the previous version number, i.e. 5.606
+//#define PROGRAM_VERSION	"5.606"   // Prin Clicfor 2022
 #define PROGRAM_FULL_NAME	PROGRAM_NAME" v."PROGRAM_VERSION""
 
 #ifdef _WIN32
