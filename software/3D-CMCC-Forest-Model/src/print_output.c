@@ -1,3 +1,9 @@
+// contribute by D. Dalmonech (external collaborator) 2021
+// output in the matrix format for each forest class 
+
+// D. Dalmonech @CNR-ISAFOM 2023-2025 (NBFC and ForestNAvigator project)
+// new output file for harvested/thinned and dead trees, provided separately 
+
 //USE_NEW_OUTPUT //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 // 5p6 and 5p7
 
@@ -201,6 +207,8 @@ void EOD_print_output_cell_level_mc(cell_t *const c, const int day, const int mo
 										",ET"
 										",LE"
 										",WUE"
+										",iWUE"    // V. Saponaro***********
+										",GS_mol"  // V. Saponaro
 										",RESERVE_C"
 										",STEM_C"
 										",STEMSAP_C"
@@ -340,7 +348,7 @@ void EOD_print_output_cell_level_mc(cell_t *const c, const int day, const int mo
 
 							
 							logger(g_daily_log,",%6.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%d,"
-									"%d,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
+									"%d,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
 									",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f"
 									",%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f,%3.4f",
 									s->value[GPP],
@@ -372,6 +380,8 @@ void EOD_print_output_cell_level_mc(cell_t *const c, const int day, const int mo
 									s->value[CANOPY_EVAPO_TRANSP],
 									s->value[CANOPY_LATENT_HEAT],
 									s->value[WUE],
+									s->value[gsWUE],    // V. Saponaro
+									s->value[GS_mol],   // V. Saponaro********
 									s->value[RESERVE_C],
 									s->value[STEM_C],
 									s->value[STEM_SAPWOOD_C],
@@ -546,7 +556,7 @@ void EOD_print_output_cell_level_mc(cell_t *const c, const int day, const int mo
 				0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
 				0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
 				0,0,
-                0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
+                0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
 				0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
                 0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
 				0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
