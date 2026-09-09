@@ -1,3 +1,6 @@
+// contribute by D. Dalmonech (external collaborator) 2021
+// reformulation of the sapwood and hardwood turnover scheme 
+
 /*turnover.c*/
 
 /* includes */
