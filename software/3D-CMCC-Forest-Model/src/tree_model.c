@@ -450,7 +450,9 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 								biomass_production_efficiency ( c, height, dbh, age, species, day, month, year );
 
 								/* water use efficiency */
-								water_use_efficiency  ( c, height, dbh, age, species, day, month, year );
+								//water_use_efficiency_old( c, height, dbh, age, species, day, month, year );
+     
+								water_use_efficiency  ( c, meteo_daily, height, dbh, age, species, day, month, year ); 
 
 								/* update Leaf Area Index */
 								daily_lai             ( c, a, s );
