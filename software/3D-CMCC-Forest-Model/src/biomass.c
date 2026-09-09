@@ -1,3 +1,7 @@
+// contribute by D. Dalmonech @CNR-ISAFOM 2024-2025
+// closure of the cell level carbon balance (including soil carbon pools and CWD input)
+ 
+
 /* biomass.c */
 #include <stdio.h>
 #include <stdlib.h>
