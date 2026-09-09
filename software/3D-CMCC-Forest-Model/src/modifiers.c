@@ -1,5 +1,8 @@
 /*modifiers.c*/
 
+// with contributions from D. Dalmonech @CNR-ISAFOM 2023-2025 (NBFC and ForestNAvigator project)
+// cold acclimation factor, downregulation of the GPP via soil fertility is again activated
+
 /* includes */
 #include <stdio.h>
 #include <stdlib.h>
