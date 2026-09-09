@@ -426,7 +426,11 @@ void reset_daily_class_variables(cell_t *const c)
 					s->value[iWUE] =                      0.;
 					s->value[iWUE_SUN] =                  0.;
 					s->value[iWUE_SHADE] =                0.;
-
+					s->value[gsWUE]       =               0.; //V. Saponaro new subroutine to compute iWUE
+                    s->value[gsWUE_SUN]   =               0.; //V. Saponaro
+		            s->value[gsWUE_SHADE] =               0.; //V. Saponaro
+                    s->value[GS_mol] =                    0.; // ddalmo
+					 
 					/* reset daily multipliers */
 					s->value[F_CO2_VER] =                 0.;
 					s->value[F_CO2_WANG] =                0.;
