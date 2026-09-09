@@ -3,7 +3,10 @@
  *
  *  Created on: 03 apr 2017
  *      Author: alessio
- */
+ */ 
+ // contribute by D. Dalmonech @CNR-ISAFOM 
+ // 2025 closure of the carbon balance at cell level (including soil carbon pools) 
+ // and check on the radiative balance at cell level 
 
 
 /* includes */
