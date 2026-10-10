@@ -121,5 +121,7 @@ Cristal I., Dalmonech D., De Caceres M., De Coligny F., Dobor L., Dollinger C., 
 
 34. *"Structural Complexity and Tree-Related Microhabitat Diversity Shape Beetle Richness Under Future Climates"*, Vangi E., D'Amico G., Francini S., Borghi C., Collalti A., Dalmonech D., Marchetti M., Chirici G., Travaglini D., Parisi F., *Forests*, 17, 896, https://doi.org/10.3390/f17080896, 2026
 
+35. *"Does higher-resolution climate forcing improve impact model performance?"*, Malle J.T., Reyer C.P.O., Amitai Y., Augustynczik A.L.D., Be'eri-Shlevin Y., Ben-Zur E., Burek P., Chaudhari T., Chang J., Collalti A., Dalmonech D., Dasgupta S., Didovets I., Djahangard M., Dobor L., François L., Gosling S.N., Hattermann F.F., Huang S., Lischke H., Lorimer T., Merganicova K., Minunno F., Nieberg M., Robinson E.J.Z., Schmid M., Smilovic M., Srinet R., Vangi E., Yang X., Yousefpour R., Ayala A.I., Mercado-Bettin D., Quesada-Chacón D., Karger D.N., *Environmental Research Letter*, (in print), https://doi.org/10.1088/1748-9326/aeb279, 2026
+
 see also at: https://www.forest-modelling-lab.com/publications
 
