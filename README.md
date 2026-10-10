@@ -16,7 +16,7 @@ Copyright(c) 2020, Forest Modelling Laboratory – 3D-CMCC-FEM
 All rights reserved
 
 
-The **3D-CMCC-FEM** is a research tool which is freely available ***only*** for non-commercial use. We have developed the **3D-CMCC-FEM** code relying solely on open-source components to facilitate its use and further development by others. 
+The **3D-CMCC-FEM** is a research tool which is freely available ***only*** for non-commercial use. We have developed the **3D-CMCC-FEM** code relying solely on open-source components, to facilitate its use and further development by others. 
 
 The **3D-CMCC-FEM** is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. The **3D-CMCC-FEM** code is released under the GNU General Public Licence v3.0 (GPL). See the LICENSE file along with this program for more details.  If not, see http://www.gnu.org/licenses/gpl.html.
 
@@ -65,7 +65,7 @@ For references on **3D-CMCC-FEM**:
 
 7. *“Climate change mitigation by forests: a case study on the role of management on carbon dynamics of a pine forest in South Italy”* Pellicone G., Scarascia-Mugnozza G., Matteucci G., Collalti. A. https://dspace.unitus.it/handle/2067/42735, *PhD Thesis*, University of Tuscia, 2018.
 
-8. *“Thinning can reduce losses in carbon use efficiency and carbon stocks in managed forests under warmer climate”*. A. Collalti, C. Trotta, T. Keenan, A. Ibrom, B. Bond-Lamberty, B. R. Grote, S. Vicca, C.P.O. Reyer, M. Migliavacca, F. Veroustraete, A. Anav, M. Campioli, E. Scoccimarro, E. Grieco, A. Cescatti, G. Matteucci. *Journal of Advances in  Modelling Earth Systems*, 10(10):2427-2452, https://doi.org/10.1029/2018MS001275, 2018.
+8. *“Thinning can reduce losses in carbon use efficiency and carbon stocks in managed forests under warmer climate”*. A. Collalti , C. Trotta, T. Keenan, A. Ibrom, B. Bond-Lamberty, B. R. Grote, S. Vicca, C.P.O. Reyer, M. Migliavacca, F. Veroustraete, A. Anav, M. Campioli, E. Scoccimarro, E. Grieco, A. Cescatti, G. Matteucci. *Journal of Advances in  Modelling Earth Systems*, 10(10):2427-2452, https://doi.org/10.1029/2018MS001275, 2018.
 
 9. *“The sensitivity of the forest carbon budget shifts between different parameters and processes along stand development and climate change”*, Collalti A., Thornton P. E., Cescatti A., Rita A., Nolè A., Borghetti M., Trotta C., Ciais P., Matteucci G..*Ecological Applications*, 29(2):1-18, https://doi.org/10.1002/eap.1837, 2019.
 
@@ -77,7 +77,7 @@ For references on **3D-CMCC-FEM**:
     
 13. *“Accuracy, realism and general applicability of European forest models"*, Mahnken M., Cailleret M., Collalti A., Trotta C., Biondo C., D'Andrea E., Dalmonech D., Marano G., Mäkelä A., Minunno F., Peltoniemi M., Trotsiuk V., Nadal-Sala D., Sabaté S., Vallet P., Aussenac R., Cameron D.R., Bohn F.J., Grote R., Augustynczik A.L.D., Yousefpour R., Huber N., Bugmann H., Merganikova K., Merganic J., Valent P., Lash-Born P., Hartig F., Vega del Valle I.D., Volkholz J., Gustch M., Matteucci G., Krejza J., Ibrom A., Meesenburg H., Rötzer T., van der Maaten-Theunissen M., van der Maaten E., Reyer C.P.O. *Global Change Biology*,  https://doi.org/10.1111/gcb.16384, 2022.
 
-14. *“Feasibility of enhancing carbon sequestration and stock capacity in temperate and boreal European forests via changes to forest management"*, Dalmonech D., Marano G., Amthor J., Cescatti A., Lindner M., Trotta C., Collalti A.. *Agricultural and Forest Meteorology*, 327: 109203, https://doi.org/10.1016/j.agrformet.2022.109203, 2022.
+14. *“Feasibility of enhancing carbon sequestration and stock capacity in temperate and boreal European forests via changes to forest management"*, Dalmonech D. , Marano G. , Amthor J., Cescatti A., Lindner M., Trotta C., Collalti A.. *Agricultural and Forest Meteorology*, 327: 109203, https://doi.org/10.1016/j.agrformet.2022.109203, 2022.
 
 15. *"3D-CMCC-FEM User’s Guide"*, Collalti A., Dalmonech D., Marano G., Vangi E., Puchi P., Grieco E., Orrico M., *CNR Edizioni*,  ISBN 978-88-8080-573-1, https://doi.org/10.32018/3D-CMCC-FEM-2022, 2022.
 
@@ -97,9 +97,31 @@ For references on **3D-CMCC-FEM**:
 
 23. *"Modelling forest growth under current and future climate"*, Boukhris I., Marano G., Dalmonech D., Valentini R., Collalti A.. *Current Forestry Reports*, 11:17, http://doi.org/10.1007/s40725-025-00249-5, 2025
 
-25. *"TimberTracer: A Comprehensive Framework for the Evaluation of Carbon Sequestration by Forest Management and Substitution of Harvested Wood Products"*, Boukhris I., Collalti A., Lahssini S., Dalmonech D., Nakhle F., R. Testolin R., ..., Valentini R., *Carbon Balance and Management*, 20:12, https://doi.org/10.1186/s13021-025-00296-2, 2025
+24. *"TimberTracer: A Comprehensive Framework for the Evaluation of Carbon Sequestration by Forest Management and Substitution of Harvested Wood Products"*, Boukhris I., Collalti A., Lahssini S., Dalmonech D., Nakhle F., R. Testolin R., ..., Valentini R., *Carbon Balance and Management*, 20:12, https://doi.org/10.1186/s13021-025-00296-2, 2025
 
-26. *"R3DFEM: an R package for running the 3D-CMCC-FEM model"*, Vangi E., Dalmonech D., Collalti A., *Earth Science Informatics*, 18:459, 2025
+25. *"R3DFEM: an R package for running the 3D-CMCC-FEM model"*, Vangi E., Dalmonech D., Collalti A., *Earth Science Informatics*, 18:459, https://doi.org/10.1007/s12145-025-01956-0, 2025
+    
+26. *"Monitoring forest attributes, C-fluxes, and C-stocks in Italian forests through a process-based model (3D-CMCC-FEM) at the national level"*, Vangi E., Dalmonech D., D’Amico G., Grieco E., Morichetti M., Puchi P.F., Francini S., Fares S., Giannetti F., Corona P., Barbetti R., Chirici G., Collalti A., *Ecological Informatics*, 92:103489, https://doi.org/10.1016/j.ecoinf.2025.103489, 2025
+
+27. *"Climate change, more than management, drives short- and long-term changes in iWUE in a sub-Alpine beech forest"*, Saponaro V., Dalmonech D., Vangi E., Puchi P.F., Rezaie N., D'andrea E., Tomelleri E., Collalti A., 
+*Journal of Forestry Research*, 37, 16, https://doi.org/10.1007/s11676-025-01942-8, 2026
+
+28. *"Enhancing ecosystem service provision through the silvicultural management of European black pine stands from afforestation and reforestation"*, Vangi E., Sacchelli S., Nocentini S., Plutino M., Dalmonech D.,  Collalti A., Travaglini D., Corona P., 37, 44, *Journal of Forestry Research*, https://doi.org/10.1007/s11676-025-01975-z, 2026
+
+29. *"Decoding carbon allocation in boreal forest: integrating multi-proxy observations and process-based modelling"*, Puchi P.F., Dalmonech D., Castagneri D., Genovese G., Helgason W., Khomik M., Brilli L., Collalti A., *Agricultural and Forest Meteorology*, 378: 110923, https://doi.org/10.1016/j.agrformet.2025.110923, 2026
+
+30. *"Climate change will increase forest disturbances in Europe throughout the 21st century"*, Grünig M., Rammer W., Senf C., Albrich K., André F., Augustynczik A. L. D., Baumann M., Bohn F. J., Bouwman M., Bugmann H., Collalti A., Cristal I., Dalmonech D., De Coligny F., Dobor L., Dollinger C., Espelta J. M., Forrester D. I., Garcia-Gonzalo J., González-Olabarria J. R., Hiltner U., Hlásny T., Honkaniemi J., Huber N., Jonard M., Jönsson A. M., Kunstler G., Lagergren F., Lindner M., Mina M., Moos C., Morin X., Muys B., Nabuurs G.-J., Nieberg M., Patacca M., Peltoniemi M., Reyer C. P. O., Schelhaas M.-J., Storms I., Thom D., Toïgo M., Seidl R., *Science*, https://doi.org/10.1126/science.adx6329, 2026
+
+31. *"Long-term forest-sector mitigation and radiative forcing under contrasting management, climate, and substitution pathways"*, Boukhris I., Cherubini F., Collalti A., Dalmonech D., Vonderach C., Marano G., Giannetti F., Lahssini S., Santini M., Valentini R., *Journal of Environmental Management*, 405:129586, https://doi.org/10.1016/j.jenvman.2026.129586, 2026
+
+32. *"Loss in competitive strength of major European tree species"*, Grünig M., Rammer W., Baumann M., Albrich K., André F., Augustynczik A. L. D., Bohn F. J., Bouwman M., Bugmann H., Collalti A.,
+Cristal I., Dalmonech D., De Caceres M., De Coligny F., Dobor L., Dollinger C., Forrester D. I., Garcia-Gonzalo J., González-Olabarria J. R., Hiltner U., Hlásny T., Honkaniemi J., Huber N., Huth A., Jonard M., Jönsson A. M., Lagergren F., Mina M., Mohren F., Moos C., Morin X., Muys B., Nieberg M., Peltoniemi M., Reyer C. P. O., Storms I., Thom D., Toïgo M., Seidl R.. *Communications Earth and Environment*, 7, 401, https://doi.org/10.1038/s43247-026-03582-0, 2026
+
+33. *"Decadal climate-driven decoupling between gross primary productivity and tree growth in Mediterranean forests”*, Dalmonech D., Vangi E., Quesada-Chacón D., Collalti A., *Forest Ecology and Management*, 615:123843, https://doi.org/10.1016/j.foreco.2026.123843, 2026
+
+34. *"Structural Complexity and Tree-Related Microhabitat Diversity Shape Beetle Richness Under Future Climates"*, Vangi E., D'Amico G., Francini S., Borghi C., Collalti A., Dalmonech D., Marchetti M., Chirici G., Travaglini D., Parisi F., *Forests*, 17, 896, https://doi.org/10.3390/f17080896, 2026
+
+35. *"Does higher-resolution climate forcing improve impact model performance?"*, Malle J.T., Reyer C.P.O., Amitai Y., Augustynczik A.L.D., Be'eri-Shlevin Y., Ben-Zur E., Burek P., Chaudhari T., Chang J., Collalti A., Dalmonech D., Dasgupta S., Didovets I., Djahangard M., Dobor L., François L., Gosling S.N., Hattermann F.F., Huang S., Lischke H., Lorimer T., Merganicova K., Minunno F., Nieberg M., Robinson E.J.Z., Schmid M., Smilovic M., Srinet R., Vangi E., Yang X., Yousefpour R., Ayala A.I., Mercado-Bettin D., Quesada-Chacón D., Karger D.N., *Environmental Research Letter*, (in print), https://doi.org/10.1088/1748-9326/aeb279, 2026
 
 see also at: https://www.forest-modelling-lab.com/publications
 
