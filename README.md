@@ -7,40 +7,87 @@
 
 
 
+## LICENSE AND CONDITIONS OF USE
 
-**3D-CMCC-FEM *(Three Dimensional - Coupled Model Carbon Cycle - Forest Ecosystem Module)* official repository**
+**CNR-ISAFOM RESTRICTED USE LICENSE**  
+**ALL RIGHTS RESERVED – PRIOR WRITTEN AUTHORIZATION REQUIRED**
 
-LICENSE:
+Copyright © 2020–2026, National Research Council of Italy (CNR) Institute for Agricultural and Forestry Systems in the Mediterranean, Forest Modelling Laboratory, subject to the rights of other legitimate copyright holders.
 
-Copyright(c) 2020, Forest Modelling Laboratory – 3D-CMCC-FEM  
-All rights reserved
+The 3D-CMCC-FEM ("Three Dimensional - Coupled Model Carbon Cycle - Forest Ecosystem Module") model is a scientific research tool developed and maintained within the Forest Modelling Laboratory of the Institute for Agricultural and Forestry Systems in the Mediterranean (CNR-ISAFOM), Perugia, Italy.
+
+The model, its source code, associated modules, documentation and related materials are protected by applicable intellectual property laws.
+
+**No general permission is granted to use, reproduce, modify, distribute, incorporate or exploit the model or its protected components without prior express written authorization from CNR, obtained through the Head of the CNR-ISAFOM Forest Modelling Laboratory Dr. Alessio Collalti, in accordance with the applicable institutional procedures.**
+
+### 1. RESTRICTIONS ON SCIENTIFIC AND COMMERCIAL USE
+
+Unless expressly authorized in writing, the use of 3D-CMCC-FEM is prohibited for:
+
+- Scientific publications, manuscripts, conference presentations and other research outputs.
+- Research proposals, grant applications and funded projects, including national, European and international funding programmes.
+- Technical reports, scientific deliverables, consultancy activities and professional services.
+- Commercial purposes and activities generating, or potentially generating, direct or indirect economic benefits.
+- Research activities or collaborations conducted independently of the CNR-ISAFOM Forest Modelling Laboratory.
+- Development, modification, integration or distribution of the model or its protected components within external research initiatives.
+
+These restrictions apply to activities requiring authorization under the intellectual property rights held by CNR-ISAFOM and Forest Modelling Laboratory and to any additional conditions established through valid access or collaboration agreements.
+
+### 2. APPLICATION TO ALL MODEL VERSIONS
+
+**The present licensing policy is intended to apply to all versions and distributions of 3D-CMCC-FEM for which the Forest Modelling Laboratory of the CNR-ISAFOM Perugia holds the necessary licensing rights**, including:
+
+- The original `master` branch and any subsequent `master` or `main` branches.
+- All numbered releases, including versions 5.6, 5.7 and subsequent versions.
+- All development branches, commits, tags and experimental releases.
+- Forks, modifications, extensions and derivative developments containing protected components subject to this license.
+- All associated modules, scripts, libraries, documentation and other materials covered by CNR intellectual property rights.
+
+The application of this policy is not limited to the latest version(s) of the model.
 
 
-The **3D-CMCC-FEM** is a research tool which is freely available ***only*** for non-commercial use. We have developed the **3D-CMCC-FEM** code relying solely on open-source components, to facilitate its use and further development by others. 
+### 3. FORMER CONTRIBUTORS AND EXTERNAL COLLABORATORS
 
-The **3D-CMCC-FEM** is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. The **3D-CMCC-FEM** code is released under the GNU General Public Licence v3.0 (GPL). See the LICENSE file along with this program for more details.  If not, see http://www.gnu.org/licenses/gpl.html.
+Previous participation in the development, maintenance or application of 3D-CMCC-FEM does not automatically constitute authorization to use restricted versions or protected Laboratory resources for new, unauthorised and independent scientific activities.
 
-This page contains all the code releases developed over time at CNR on the open-source distribution of the computer simulation forest model **3D-CMCC-FEM**. The model has been developed and is maintained by the **Forest Modelling Laboratory** at the National Research Council of Italy, Institute for Agricultural and Forestry Systems in the Mediterranean (CNR-ISAFOM), Perugia (Italy). 
+The same principle applies to former Laboratory members, previous collaborators, visiting researchers and external institutions.
 
-All source code and documents provided here are subject to copyright(c) by the CNR
+Where prior authorization is required, neither previous authorship, earlier access to the code nor an invitation to participate as a co-author constitutes a substitute for such authorization.
 
-In case you have copied and/or modified the **3D-CMCC-FEM** code overall, even in small parts of it, you may not publish data from it using the name **3D-CMCC-FEM** or any **3D-CMCC-FEM** variants unless you have either coordinated your usage and their changes with the developers listed below or publish enough details about your changes so that they could be replicated.
+### 4. REQUESTS FOR AUTHORIZATION
 
-The **3D-CMCC-FEM** has been developed by:  
-Alessio Collalti  
-Daniela Dalmonech  
-Alessio Ribeca     
- 
+Requests for authorization must be submitted before initiating the intended activity and must specify:
 
+- The version of 3D-CMCC-FEM to be used.
+- The scientific or technical purpose.
+- The institutions and researchers involved.
+- The expected outputs, including publications, proposals or deliverables.
+- Any anticipated commercial application or financial benefit.
 
-*Forest Ecology Laboratory* at the National Research Council of Italy (CNR), Institute for Agricultural and Forestry Systems in the Mediterranean (ISAFOM), Via della Madonna Alta, 128, 06128 - Perugia (PG), Italy.   
+Requests should be addressed to:
 
-*DISCLAIMER*  
-CNR accepts no responsibility for the use of the **3D-CMCC-FEM** in the form supplied or as subsequently modified by third parties. CNR disclaims liability for all losses, damages and costs incurred by any person as a result of relying on this software. Use of this software assumes agreement to this condition of use. Removal of this statement violates the spirit in which **3D-CMCC-FEM** was released by CNR.
+Dr. Alessio Collalti  
+Head of the Forest Modelling Laboratory  
+CNR-ISAFOM, Perugia, Italy  
+alessio.collalti@cnr.it
+
+Any permission must be granted in writing by the competent CNR authority, following scientific clearance by the Laboratory Head where applicable.
+
+### 5. DISCLAIMER
+
+The software is provided “AS IS”, without warranties of any kind, express or implied, including warranties of merchantability or fitness for a particular purpose.
+
+To the extent permitted by applicable law, CNR shall not be liable for damages, losses or costs arising from the use, modification or application of the software.
+
+### 6. THIRD-PARTY COMPONENTS AND PREVIOUS LICENSES
+
+Third-party open-source components retain their respective licenses.
+
+The restrictions stated herein are enforceable only to the extent permitted by applicable law, the rights held by CNR and the relevant contractual arrangements.
+
 
 For any further information please contact us:  
 -Alessio Collalti (Lab. Head and Model Principal Investigator): alessio.collalti@cnr.it  
--Daniela Dalmonech: daniela.dalmonech@cnr.it  
 -Mauro Morichetti: mauro.morichetti@cnr.it  
 -Elia Vangi: elia.vangi@isafom.cnr.it  
 -Elisa Grieco: elisa.grieco@cnr.it  
